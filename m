@@ -1,110 +1,129 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D726A1AC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 06:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7F0345EDD
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 06:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788935441; cv=none; b=e7BFbiTqquZDocbxTN9zDKvbjBfb4lKC1s9MsTOjEzrD9bBoI766wloaNTg2M2LSb4Vo2D4PQE1GLlsgHqEZZEQR73gWJxpSfxa5g21bweee8gJ1OBdBYoL4JIaAP144qXntR0bUOOKntY9BLAay5va63JkZS2SMRlKwTbmBUFw=
+	t=1788936022; cv=none; b=eGOOGD2EhS1nea2FJ+oumyy2Ffhgt8/f5eQMhZ9e1afQGPrWBl2fHRywrwXOW7F2uRlKFCNa33g+Jiay96kHDxrn79/+rGWw3InFKoma7IvvJr+vjOCmVLu7gY8BHLcd0XMLI97mw+8ljxpJbF9aoO5+3ZyzxXv9FISbBwNYuGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788935441; c=relaxed/simple;
-	bh=TbvdMU5uBRwk78kw9thSCvNvr4Qo+KDKUggC7rePmx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DRVWbMdgDmvz222v8X5PR1oaZrC5ZMJN045av9tmN9evUyuQj6Py0HiJ96/v155Qn3l2lhCd9J19U61UuaUWcNKGhelTXx0o8VpyIvh091FFW/iE3bzasVooshTTBt5Yik5KwXZhQk6c+NCl93VanCplyP366dvQkx3k4B81UW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEdYQeKO; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788936022; c=relaxed/simple;
+	bh=qUw3nUc1OVsOPX+nR/7pEzuAQxXoIkSn0R7ToufWBlM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y2dlW+K0n1VxMdJNYr4agbJhSFFv9hjwcaqvhZ8Px7GnJxjD6qKLG9NjCIyFJsCMRWsoqld1T3/qHSYVD8Q9qFnu/WROJCmj/SVJ1N1lmLUFWiYGnYfetyMyzJ4vvfUfyonsHI/g1MIKzA/AMoNECxJbjiF0GDvCPrau9kK5Bxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVHaqXLd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEdYQeKO"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-482ea739de2so3735591f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 23:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788935438; x=1789540238; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oWVSfJYhAn6e2RRpwRhzeBGFUz50IiA+3fKcwx4qg9M=;
-        b=MEdYQeKOgiP8FUwSk1uE6xe4E6ThKnBqsC+0BKoi59ZVWG7xuyC4OVHUdqLIrC0LGk
-         SihcSvqN851j4K3exSigNIuRIKNB5avu/JLzMGTXppGpnKMYhV18RnZTvdOGRpUP55XB
-         6Ve+XetMcXZnnla1XttT3TTXYFuogrR+A7f4SFL+8HsQgyMWozKqU0oe7pCCLQsX5LMe
-         wqxUa5FjrE+17wl7MfZs29A+RvOl1dZrIMi1FaV8AOk4w/9UlyqU6Fr+mvkTEy/Rvefb
-         XZ5KePngDG965WhEFJdgjVCU9bhfAuzTNmfM09S1UNxKF503hLxpUR8n8d7WSZTYHngd
-         5QtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788935438; x=1789540238;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oWVSfJYhAn6e2RRpwRhzeBGFUz50IiA+3fKcwx4qg9M=;
-        b=NxG7Kp70lps4q/RlZ29ZgaArIOVXTDK/D851m7pHGICPNZtDDe+HkY/XGhdY8uaPFj
-         OTSW/Wvz+8IUfPR0TK8ydYyUsEZ5z7VGC0b27qj98mCEfRDW6uh+A6SAeJhA6qbVyIgY
-         xRgE1T9egppKGQytOceOuynyw2JpEucs8Tv5Sti6IcHSWheX7fRORmqtLRlWI3PDUGy/
-         aa5OJKVCPe7oxWRd6ijQnJsJvmR+gMeUs3kk8uury+LMSDg6fH0tLgUPuzwaOrjQfdTE
-         7MjY0llIhEWtzOUQJV4xu8SvtFUYWOfJCdRC+GlLAp/22WqLFPVlTATAlYjhAfyJPN7O
-         j4tg==
-X-Forwarded-Encrypted: i=1; AKwUvBydLKbUOEErxOEvYzsaePZTZye2Thjnb/VNQ0zhAwIvsAJIejbYoMRzd9YcKtKG3BT3wqmLYKCDyt+pZE3udOUe0TI=@vger.kernel.org
-X-Gm-Message-State: AFuF++kFKUGmt1sC1yoPgjLmQVBnUGa2+ylBmM+MiO3qRx3x/DJoSfSO
-	HbdGzhnwD2dkZtQGbiRVOvFUuipNO6uqqadk3dQU9+/VWnyIzyGCDh3l
-X-Gm-Gg: AYBFou1IAVFMois4cCrYb+xrVXOVbBj2hyF4zg30PMlv3sANmY/oEmsy12W6j67NC03
-	jYbApGehpHrQhSXwmuk+s/4aaF8D3eDRE9Ta1NUdHQbti+1QYF1CkBhWlPKu/91x9aq8WegXwiO
-	9bTJsiNHHoNDHd7X1k5n6RixnFq/Tz2fuZIvb978eDlfBZnxFvrcCk+szP0GZ0E61X01VKaojmu
-	w0mB2LVK3jFJmusEsSa3QKoEOzeIJZzh/JYfC9VP6zPQLiMUK6kvq9ZnzTJpZyj/HAy/xvFYonP
-	gb04UAsX87CBJUrueiuRVj1s9vIxLmPUeZxmneOQJ3Du0n7fAEywQKlYdxWW0fr5qxWpB5WfO40
-	TayjSYcJxD/kEPQpkH83iUuvqf7Kz5IjBBwUV+K6D1ssDJ4J0QHsx/FhHZ3rO4Gn/01+YBFTomw
-	1tHenRAODQG3srJuBf09JEBky2gqwhv9gbX+6Svheo0ICTXRCD9xocill137EFCI79+imy6Welm
-	KKUGwpT6BttTsUOnQBmRWRTmXgVB48cgQEp8lrtPEzQNM/hKAvfD3SZEHPbAlZGx+wI3YgQoVS1
-	R2qKAKhfRPpFlAo2fMSeENBvrrOw0WEPdA8VFThLcc9DxxMbWdWU
-X-Received: by 2002:adf:e19e:0:b0:47f:e377:8d61 with SMTP id ffacd0b85a97d-485872a3f3dmr36403866f8f.11.1788935438109;
-        Tue, 08 Sep 2026 23:30:38 -0700 (PDT)
-Received: from MacBook-Pro-von-Karl.localdomain (dynamic-095-114-212-219.95.114.pool.telefonica.de. [95.114.212.219])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485885bfe14sm41956154f8f.35.2026.09.08.23.30.36
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 08 Sep 2026 23:30:37 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Fix ring_buffer_read_page_size() kernel-doc
-Date: Wed,  9 Sep 2026 08:29:17 +0200
-Message-Id: <20260909062917.89482-1-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVHaqXLd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5301F0155C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 06:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788936021;
+	bh=DUIpC49PUmusVJC7vwQlTM5YfwPWfFaooGvwBV89sWs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=kVHaqXLdNh1pWSRvnWeYdjAvn1xp9g+a9Xl3QZ02PKRnj6PWvpa49/L1tmuwZ5hyx
+	 FDdwRtA3893Bl35MWF0aT4BsdPxizB/uV5kpgpurt3+aVVki7Z8itlBm5V5E978Uas
+	 WaFdSw4tKUOT9IU26xle1shTB+lnI5CsCVgE4X2qPCWfsX5h1D+6kPtHUUSpybsQ3G
+	 cy3j8e5lNy5yLsnT2WqEo8yVW6iBcvNscbZ+pUTwg3+DQUnVkhmL7qX7EIeNf4s81Y
+	 Zxsf1BWCAboPGnDibMtAEG8jZZSXwjuvkFhZfsV0Kx+NSSEc9pghTXLEPsE/izwXqf
+	 nWEXRZI/nRojg==
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-939b8a5584eso195551985a.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 23:40:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwfyEckzzTGBb+06hMhoj1WIyvliOhPbjrAgMepNiUuoS9Wlx6z2PlIx173zUuXoNZAYWdT/Xc2/5l4Vpq9fSuPWKs=@vger.kernel.org
+X-Gm-Message-State: AFuF++naYpWVcDfwySIagGLA1tJ9fyL65kc/fEC4XpsytRm16UELqw6S
+	V/u7LW0o2m1QfjYARf/YlKT7n74kjEcUV8SZiGnML3burW69T/PLAD8v3RFjFbcT4WeV19YwyuX
+	8KMt6d3bRgjzEvJfEdzgqHs1zTPaWo0A=
+X-Received: by 2002:a05:620a:9502:b0:939:6de8:43d8 with SMTP id
+ af79cd13be357-9398048ebcdmr2825220685a.44.1788936020200; Tue, 08 Sep 2026
+ 23:40:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260907042447.2450663-1-ridong.chen@linux.dev> <20260907042447.2450663-2-ridong.chen@linux.dev>
+In-Reply-To: <20260907042447.2450663-2-ridong.chen@linux.dev>
+From: Barry Song <baohua@kernel.org>
+Date: Wed, 9 Sep 2026 14:40:08 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4zT0HcbkQjdPFPBeaqbGcYp4WE6sghDzz=0evhhupCs3g@mail.gmail.com>
+X-Gm-Features: AcwNN1XF81pARNfV8NupKBE8bmsecrn-XPHu6HZ3n4QG9cW4OnnnSsqVFmMC4Qw
+Message-ID: <CAGsJ_4zT0HcbkQjdPFPBeaqbGcYp4WE6sghDzz=0evhhupCs3g@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] mm/mglru: add tracepoint for folio isolation
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand <david@kernel.org>, 
+	Michal Hocko <mhocko@kernel.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Ridong Chen <chenridong@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ring_buffer_read_page_size() takes a parameter named rpage, but its
-kernel-doc describes page. As a result, kernel-doc reports rpage as
-undescribed and page as an excess parameter description.
+On Mon, Sep 7, 2026 at 12:25=E2=80=AFPM Ridong Chen <ridong.chen@linux.dev>=
+ wrote:
+>
+> From: Ridong Chen <chenridong@xiaomi.com>
+>
+> MGLRU's scan_folios() and evict_folios() emit the classic-LRU
+> tracepoints trace_mm_vmscan_lru_isolate() and
+> trace_mm_vmscan_lru_shrink_inactive(). Those predate MGLRU and are
+> indistinguishable from the classic-LRU path: they carry no generation,
+> sequence, memcg or swappiness context, so a trace of an MGLRU run cannot
+> tell which memcg a given scan/evict belongs to, nor how far reclaim has
+> progressed through the generations.
+>
+> Add mm_mglru_isolate_folios, emitted once per isolate_folios() call with
+> the memcg id, the type actually scanned, the effective swappiness, the
+> scanned/isolated counts, and the anon/file min_seq and max_seq. The
+> min_seq/max_seq triplet ties each isolation to the generation layout it
+> ran against, which the classic-LRU tracepoints cannot express.
+>
+> This is emitted at the isolate_folios() layer, which is MGLRU-specific
+> and has no classic-LRU counterpart, so it neither changes nor duplicates
+> the existing scan/evict tracepoints.
+>
 
-Rename the documentation entry to match the function.
+I have no objection to MGLRU having some tracepoints. However, one
+major concern is that the code is changing rapidly, so the tracepoints
+may not be stable. We would need to maintain them as the code evolves.
 
-Fixes: dae8dda341d2 ("tracing: Fix subbuf resize races with trace_pipe_raw readers")
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
----
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
+> ---
+>  include/trace/events/vmscan.h | 47 +++++++++++++++++++++++++++++++++++
+>  mm/vmscan.c                   |  9 ++++++-
+>  2 files changed, 55 insertions(+), 1 deletion(-)
+>
+[...]
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 8409ea4bbf37..771fe6827939 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+[...]
+> @@ -4876,6 +4877,12 @@ static int isolate_folios(unsigned long nr_to_scan=
+, struct lruvec *lruvec,
+>                 goto retry;
+>         }
+>
+> +done:
+> +       trace_mm_mglru_isolate_folios(mem_cgroup_id(lruvec_memcg(lruvec))=
+,
+> +                                     type, swappiness, total_scanned, *i=
+solated,
+> +                                     lrugen->min_seq[LRU_GEN_ANON],
+> +                                     lrugen->min_seq[LRU_GEN_FILE],
+> +                                     lrugen->max_seq);
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9c03a555a6ba..0e30c7bd6045 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7384,7 +7384,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page_data);
- 
- /**
-  * ring_buffer_read_page_size - get size of the read page.
-- * @page:  the page to get the size from
-+ * @rpage:  the page to get the size from
-  *
-  * Returns size of the page in bytes.
-  */
+Maybe `scan_folios()` would be a better place for this, as it can more
+directly reflect what we're doing for each type.
 
-base-commit: 893e11787f78e43b534e252249ac3fff4d1333f8
--- 
-2.53.0
+
+>         return total_scanned;
+>  }
+>
+
+Best Regards
+Barry
