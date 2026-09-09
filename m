@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785B328CF5F;
-	Wed,  9 Sep 2026 15:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F4054A7CF;
+	Wed,  9 Sep 2026 15:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968600; cv=none; b=k4rlI3zNXhskLcN6ja1S5ro1VblqxUcW0gjs20XC3npGUJcKxzCkBk4qIZuyO50PVukpASZXBpiBOpbq1Ale6DoAnpJrsrlId7rUf70IHqPiKHIgf7l1gwiGMLo6aRtPsBq4qJvWn7/2xiRzU34aAMc+zz8lRvbZ+qqHLd/aooQ=
+	t=1788968850; cv=none; b=Pj+G59KgDB8x322+DLVFQxDvrMXbfUCWItLiAWJjOXvbnQDWKxvhtpFUwQRQm4+u7eUnrOOtYqupvMCeyPgjPV6XcoFpPPTL9mJrgUqHLqwj7WIkiL6esXIVIuDNKwadxin1ALmRSvDJHwFN2dHWr7iodlAskhVC9oaH7hA3gcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788968600; c=relaxed/simple;
-	bh=BKOjuZe/TjsyErnkKp4gXbWAgqDfmYIiNG/rqw5kX0Q=;
+	s=arc-20240116; t=1788968850; c=relaxed/simple;
+	bh=wKulJA5WaTPngsbarg3L1eHbRUXM4vQLL+RcO+gzAik=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Za5zOXICf1xwD2dOcqdApg4KBr0lFTNBer/uFAo16BCNU87Sl0xm8OhCh/5s4PS1BN9XpCEDnrak+8woa4FcS7j362HRzuDF3gabwBmkfV0QPxsPLaGIo1+RIm6AmoCmydSnyD1NrX70elnxFGqAwX/k1g0piQ3qs3Jr/a3TIko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3xLF1ge; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=OjdZIuWUlz/b8ok5oTQz84uVhmnYHFjWz0pUt9Q+KFj/+hU6dAYd5mI4NrHWtcLlA3tSlh6/qiPDuk/Bd9oRKBSMjMYBLJjd0wJ1985NZkAdJEYbXVTcICQrQiqM3IrT+1Pgo5K7+C5RpGdgskd0geDq+hYCD2+G4TUfv0OIsd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3hCuoRu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3xLF1ge"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAC91F00A3D;
-	Wed,  9 Sep 2026 15:43:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3hCuoRu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2261F00A3A;
+	Wed,  9 Sep 2026 15:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788968598;
-	bh=QVOhNByUr6r71RUlJ+rEEyf00velzFdvLZ3C2AMRt2U=;
+	s=k20260515; t=1788968848;
+	bh=UPlEwDATkKsdnhPipJ/RnZzY8Ea9kWNibxkB8VtNG/0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=S3xLF1ge328RJxZlMfKf+h+Rr0rHffvj//0Ye1Nj1Yt/3i0Hs+6FpVCIz2UjPtSzt
-	 e+epimZH/KIvzoG2oeXzFOD0U50ZJvPBPStJncIs/6C0r3nsk6FGUgTY6zCR8HNv69
-	 dq3an9Q5ssTHyCNCKLMAeLq0QO9QDq9cEFs4ekvkctLo8VZCdnqI2dF5ps8LSluE/x
-	 nkB5iPG1HttRVac8M9rvpQgB23RrqYPtAKueLaetQFCJEUc5DTCb8R0Y9YBxrdPqbx
-	 kRFiRPgn7mg+NcwDvqbVgyBb6fbw0LEzPcjJ/4xY+6CxdE+1Aeq7+9dVWL6aIZmrOb
-	 U76GUSckln3BQ==
-Message-ID: <cc6eb4bd-3c4d-42f4-ab48-d381f7b6a2f5@kernel.org>
-Date: Wed, 9 Sep 2026 17:43:00 +0200
+	b=U3hCuoRuyOU4wAxDDZm3tqdyOYQ78j7gRNdobasTRZ3EyQ1BOVPWRhY4lOwidY6lo
+	 jq7/GojnIOSmrMOZPidFbFfVXltqqH3hfyKAwIoSo7hIvZWMS12AMK1eTt4Icp05Ps
+	 JQjzUXEXm7//EFMSL5ari8t3V7m5xzxzctzZmvfkBzmk92jg/g4Hfh5ihWaKQ/WXZ8
+	 EDZp+Cy4KdsgXxo8l9uIDUArYMHe+dXYGoIlLsxIpPjshMXO6NyowsV73R9NqaowsS
+	 9mKET6R5YNCOe7BOvcBMmZWibyg1/HGmGF4bHeaXacxPQ7N7hXNuof4OonTVGbPLlS
+	 jd3+jD0Y+b5Mg==
+Message-ID: <c47b91f2-6c95-4def-93d2-edfcadad5a23@kernel.org>
+Date: Wed, 9 Sep 2026 17:47:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 19/45] KVM: guest_memfd: Zero page while getting pfn
+Subject: Re: [PATCH v12 23/45] KVM: Let userspace disable per-VM mem
+ attributes, enable per-gmem attributes
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -71,7 +72,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-19-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-23-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -118,55 +119,82 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-19-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-23-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> Move the folio initialization logic from kvm_gmem_get_pfn() into
-> __kvm_gmem_get_pfn() to also zero pages if the page is to be used in
-> kvm_gmem_populate().
+> Allow the user to disable KVM_VM_MEMORY_ATTRIBUTES even when KVM supports
+> PRIVATE and SHARED attributes, and expose gmem_in_place_conversion as a
+> module parameter when per-VM attributes are supported.  I.e. let userspace
+> enable in-place PRIVATE<=>SHARED conversion of guest_memfd pages.
 > 
-> With in-place conversion, the existing data in a guest_memfd page can be
-> populated into guest memory through platform-specific ioctls.
+> Provide both a Kconfig option and a (conditional) module param so that
+> deployments that use a custom kernel can fully disable per-VM tracking,
+> while not forcing distros to ship two separate kernels in order to provide
+> backwards compatibility for downstream users.
 > 
-> Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
-> might contain uninitialized host memory, which would leak to the guest if
-> the populate completes.
+> Don't allow running VMs with mixed tracking for a given instance of KVM,
+> i.e. disallow toggling the module param after KVM is loaded, as the extra
+> complexity needed to handle per-VM behavior far outweighs any potential
+> benefit.  E.g. neither TDX nor SNP supports live migration, so in effect
+> the requirement is that existing deployments that want to support both the
+> old and the new models would need to tell their VMM which flavor of
+> tracking to use.
 > 
-> guest_memfd pages are zeroed at most once in the page's entire lifetime
-> with guest_memfd, and that is tracked using the uptodate flag.
-> 
-> Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
-> kvm_gmem_get_folio() since other flows, such as a future write() syscall,
-> can get a page, write to the page and then set page uptodate without
-> zeroing.
-> 
-> There may be some performance penalty due to redundant zeroing, but this
-> would pale in comparison to the cost of actually assigning the page to the
-> VM.
-> 
-> This aligns with the concept of zeroing before first use - the other place
-> where zeroing happens is in kvm_gmem_fault_user_mapping().
-> 
-> On populate failure, the page is not re-zeroed, since on SNP, if firmware
-> rejects a CPUID page, the expected CPUID values provided by firmware are
-> returned to userspace via page contents. More generally, page contents may
-> be modified on populate failure.
-> 
-> Don't mark the page uptodate again after populating, since the page would
-> already be marked uptodate before the post_populate() call.
-> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Reviewed-by: Fuad Tabba <tabba@google.com>
 > Tested-by: Shivank Garg <shivankg@amd.com>
+> [Define module_param only if CONFIG_KVM_VM_MEMORY_ATTRIBUTES is enabled]
+> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
+>  Documentation/admin-guide/kernel-parameters.txt | 25 +++++++++++++++++++++++++
+>  arch/x86/include/asm/kvm_host.h                 |  4 +++-
+>  arch/x86/kvm/Kconfig                            | 14 ++++++++++----
+>  virt/kvm/kvm_main.c                             |  5 ++++-
+>  4 files changed, 42 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 68647ff4bdd24..b5719714458fb 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3156,6 +3156,31 @@ Kernel parameters
+>  	kvm.enable_vmware_backdoor=[KVM] Support VMware backdoor PV interface.
+>  				   Default is false (don't support).
+>  
+> +	kvm.gmem_in_place_conversion=
+> +			[KVM] Controls whether KVM enables in-place conversion
+> +			support for guest_memfd and tracks the private/shared
+> +			state of memory per guest_memfd instead of per VM.
+> +
+> +			If enabled, KVM enables the KVM_SET_MEMORY_ATTRIBUTES2
+> +			ioctl on guest_memfd file descriptors and disables the
+> +			legacy VM-scoped KVM_SET_MEMORY_ATTRIBUTES ioctl for
+> +			private memory state tracking. Only the
+> +			KVM_MEMORY_ATTRIBUTE_PRIVATE attribute moves to
+> +			per-guest_memfd tracking; other attributes remain
+> +			per-VM.
+> +
+> +			This parameter toggles KVM's in-place conversion
+> +			capability support. Whether a VMM uses separate backends
+> +			or out-of-place memory management is determined by
+> +			userspace VMM design.
+> +
+> +			Note, this parameter is only available when
+> +			CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y. When
+> +			CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not set, in-place
+> +			conversion is unconditionally enabled.
+> +
+> +			Default is Y (on).
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+With the doc fixed
+
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
