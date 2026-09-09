@@ -1,258 +1,305 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012031.outbound.protection.outlook.com [40.107.200.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E316568528
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 14:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EFF550DB2;
+	Wed,  9 Sep 2026 14:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.31
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788964586; cv=pass; b=I14mAyjvzEOkO08N1ESXc2OdQJm09/T2ujtNqYN7r8GYdzWy7oEURBiDhB9fcWhq5revskNlfPwxYxnWwWIMTu7DXWyeq2zd8mVKOE32eWznL3Fitz4GJgY4V0pJNUFlz+4NDxUFnb1engBeaDfe3/IEOTL5D1dOV3EhAPA9zpg=
+	t=1788965313; cv=fail; b=m6SmUxSOI1ZLIkAXfMG5TQ/cu0orcYLWXUBDQ7313fH/AGffCAQb5Pdh9OnqnwooJZkjoFuE6hPI1NZ0Z+wOTPwZTEQYJPW49FMSzRVnTuhB89gAgH0h5bW2cA/oOc2V27qCi/nV1rUGcFJxdUWM25QoreQDjj3iAmI3c2FZqD4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788964586; c=relaxed/simple;
-	bh=7AyHAWTKyqNTciVM9XLOxi3jtsvJfGFJongziGZ+beM=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B8D9OCL3AAxQ0Dgx/gxIOepHhY/WTeyB+u9iTWUXUfXJIKpmHFlGmj4R9TYT6e4DHwbBPZbGaWvyMfX+VwfOtq1IrRoI2ghfXritQGPFdDMpbkQZCsuwcwYIC9/svDRl7VvCNF68pXV1EgPk0UVTkrlf78HRpkkTVADHuGqdpbw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dGsiYTKa; arc=pass smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1788965313; c=relaxed/simple;
+	bh=aYUIUlmxhaMhY+RnHZON+8ZvAbAWrnDe3Ch+XSvXJ54=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qzL5VO5KLBMLYKHmfqX64glRHLGwRf1ZkS4zYSaz8bX5rXwJDsC3T+lCKeBmFLRqQIq/Sb72pmBIl1YGWSg2wYPlRIMOK4Ur4fefe2s6g6BoywoSXM4DVr7aRjmJj6UFqXOkbwd4pxsJcLJVbKMpRMHxH5skasf3yqpLY5Nrl7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uGE6BNwQ; arc=fail smtp.client-ip=40.107.200.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dGsiYTKa"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-90e7bde5596so75347346d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Sep 2026 07:36:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788964582; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mNKcE8naJUxQvrmwxG037qYx9b9UEuLai2s8BVhHk8Yq5anZzsvVqLfC+wNed4rIZ0
-         fOLhiMetmd0KdAW5yX2IUPpZ3bPXgVFaQFynb1V5GZ3KwzS7qM5hkFcEMJs+mw+UTt+4
-         JaShcM7nmfJ5Ix0SnyEpLdOWYuOyAGZkAw5q7rHzuYV0HaVkVD+ycasFQ3Y7cQQb8ghI
-         puO9FRnkcy/qT7A0rCIeiFOOt4FAJ417UJe1LXwxB4cqb2/9D3zY9TAb2nivfg2N4Z0P
-         IchgxCGM2bpsbh4pOX+rdm2KiBW1Ksd4dD5kUN49BOZmh3C+jc0u/ouY4S6ahPYWPdw4
-         l10w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=WOdNfCxlVFqMCNwG5WAXrbnbeG8MIfsFEPI5I8fCsWw=;
-        fh=HFI0rKQsmo/XMXsVwkCeU7WX9d1MJUc2hrXuhRZFCoo=;
-        b=VxmKbvEzoWcYy9M3RKCzoJUS7YM1xPgnafo1DZ7mmhhkqH2wtZIUikBmhVZI8t/oT0
-         nnsvzjNO+OQczBZtqR3Vw0y1OTIzmLDKWxpxJGH3hDRGd7wFzPXiGbVfnxWM0TC/YiHV
-         MhxiBGbwqKfXlQ+mImVQ8BebnxDqcgSC/sbZWktBVUaSJfc/tPsYyYkjRbVQ7Rs8/jhs
-         5p7nwi4itC7BHvTsMF7EDEHlUTlmaasyVx+f6Sf2zB9AuSfYqI+m5QysdE3ZIiosrLQS
-         a1QjfNt0fLsheu/23yI4IiTs8ppepZxWbPI9wk6Di8IbOCp+Oox8tvSdWwDxUOUFns58
-         SJkQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788964582; x=1789569382; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WOdNfCxlVFqMCNwG5WAXrbnbeG8MIfsFEPI5I8fCsWw=;
-        b=dGsiYTKaFp9FGDwKvEsAeUcOdGsL74uWemUti0nr4w33aRRJErCdwdKueOTKyD5QAJ
-         JIjJ3YKQ9H32NXQen63CtE80VKgenxExiWL/Ev/1cBnKtjnJMqQvmW3q/0+CS6BeRl5y
-         QYuFNrMPHAH+uboqqIpzvVcd+PcqQTVq9vi3hojyk58+7B92Gg/DHY6VZ2DIInsq9cBR
-         fkR2wDtUxI2pb8qZiYYKUIq5ifPOyPhDqTR6QBmjuzp0in7cZyOKFEr4g+MoEzc3H1b+
-         M2lFJkShzuoJ8Ezbui+5tOjMjTZL6WiKCYg0lSc4oA0ZGb5l5J76QdQv/3qkxmW/gcCW
-         yEBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788964582; x=1789569382;
-        h=content-type:cc:to:subject:message-id:date:mime-version:references
-         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WOdNfCxlVFqMCNwG5WAXrbnbeG8MIfsFEPI5I8fCsWw=;
-        b=j2LR0BoC23ywGC+uKWGllS889PKCxkt+6eQm13eoszElMhBATScYTb/zNWDSVUnfy4
-         E4xVXK+Xm25Or5bWyHuQ0Pi6aJYbpDOsm2Kt55nVmUsl4A1s6i1JPUlZrprXVH6qAkgs
-         db7nDwpKRXQ9wrzZo3Nsjq0C8+6NXBv7GQ7ESFC2O9bskqg4wftw5FKxz6UV//KUtBYq
-         6gNxYW03jI8oUybDVV6LmGYx6XFUVUZitb8xUEAjXQlh5MwdBwfDccxbNHpoXT6W57YE
-         mMEJKTadMGWa8R5nHtDKg/Uz+tHXsKZLVIoYtBMoFs81ruol7SZK+i734K2wqmtOAIdP
-         b8cA==
-X-Forwarded-Encrypted: i=1; AKwUvBw+MovfihkICn1XvHmurUUSbXVurzv+e3/sbyVaXHiyCMLY5TnAJF6hD/x28xJVGSqVGzHvZxStjNaTLyajnLms3bk=@vger.kernel.org
-X-Gm-Message-State: AFuF++mfK7/xZxzM6tqIqL3ZkEq+I2OWToqCfkt6dXLtT0rZf7Z+xc/c
-	d+omkE5acPLlV1keCA+O6orVQageOYEOJKbhmiPNAPAajC8Xd0NcJ1stnRvu+ej38DK2OZIVkrM
-	g0iYwFq+gQUlWLBPhCeDOQZ4BizUtxyfwI6SvIQtV
-X-Gm-Gg: AYBFou2Mu6QfELu/HER4BSrrsXkQuSvq/mbD5MCn0lARdv/PbWsqk0jOJ0xCfRzI2NS
-	hFhDKdPRvWuFwP64c4qBlvomG6+/UsMyXHoZ8kRm9Hb1KnV05ZXSwpwWItoBYqjgGRTiyMaAaIP
-	uz+a22GwR8s4XWnEPm5yBuWvxJX1D41V3wTe4DBIJ6VwRJgQbIpfsy3FlcBixIx6eC++tRWVjLZ
-	W6ab9Vfqls3+2n4jpfveFWniqV1FklEe9nDUtYrTwqL1v8pTB/t6BolJWRNobukg11qkkvm3ZJJ
-	g8BTB9xTqX4eUidadEE2JtCJ4NOXbfINiEUROOZkt1o9dRh77j1JB7+KaxQU6+K5l6Ka5kAZIVD
-	0vSpbbYislkM=
-X-Received: by 2002:a05:6214:2f8c:b0:910:3451:341 with SMTP id
- 6a1803df08f44-9103efb48afmr490270826d6.32.1788964580576; Wed, 09 Sep 2026
- 07:36:20 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 9 Sep 2026 07:36:19 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 9 Sep 2026 07:36:19 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <apetw3aqXSawLBt0@yzhao56-desk.sh.intel.com>
-References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com> <apetw3aqXSawLBt0@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uGE6BNwQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DNEu/CEF5RzvyJSrrW9OQUs+hEO/GO8tw6iShtYLkmLTsDK/NHSuxv7flyV+8e5jDAzemqd6Vj0d3SPa+IwZ7H+UXLXYBJSYUgolZImLBBIzAio9o8Mm4G912vslhjdjj2ia2RWLCrfmnDPZB/XIH+4LrclsDj5+2GTkUR+3c/W69CFiJmWVoIYqtcVa5xHv5FO+IZZIeyOVoCBECD3LhOVaiQ6xxikVWNA3DwkX2uquj6PS66RhHc+2dkJ8Z2Vr6xXgMKSytip8F2lsnNTKLufIFGqDjv3ZD1Mwigge+iB0n/ch7WLd8TuF0I383haeoMgL51h7BQU2OXGeBPSJ/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3PaKJDXf1CdCLll5w/H0cIiqsEtxn1GDr+VgVQGTUTk=;
+ b=BX2+ISy/alIe2RIYl1SEl0KI8vead9ecFBIMvN7pCMzc4EAeyjdMpGZNEQaMrex9inoZhG+FZWVJHubiUm/WKsrLmJxnlQYZJjyODXsXSU1DOgJT+zQ3lWnCREqlJFHBPLmaZ9VY44yKNUno53TqbvU7sS3ZyoFahVRvtPznQuGYn/reWZoX9l81FQra+ffZCSyLL+asM/Vgnof6rLE6IoQqrwsG6Y/tRD7ka2UTlWTEyUaemzkhBSg3NQAeMpNurxmbvnZwN3jZQjX9IRcLmuPAHxt8q5RH/+KySc7606vDn36gzRezERJs79V4VikhRMG6nQygZpZOSLW93sGJfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3PaKJDXf1CdCLll5w/H0cIiqsEtxn1GDr+VgVQGTUTk=;
+ b=uGE6BNwQhF1bEB/3dw25ddxdOn/rP7QGhFVykYprWIjyisPw5+uPRBG3lt8/+E4RRvwrtKLluclaird6eUG+uvF9nM2Ev7xc3LancJw5KZdhA+eohBhLU+9F19vbVLTYzrLp/cO7P9isHyDwEb7/gQAssJAhGJsxHVYwU/tKjzc7ZrXKdcTU1hw8ySSbdTPRwvjEYQV7LQ7YlcA3R2QKwwRWa91hCWiMrTg5WYedV5CzwYguUEk0LJR17vILXPgrvz1k8g9FNZFgljs5aoHIrwfZe0tzSPwiS2a1CEy6G18mo0cxRgI2/cHoedSaq52vOuph62dmOayriKBy1qF7yQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by CY5PR12MB6406.namprd12.prod.outlook.com (2603:10b6:930:3d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.8; Wed, 9 Sep 2026
+ 14:48:19 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0406.007; Wed, 9 Sep 2026
+ 14:48:19 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Kairui Song <kasong@tencent.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Baoquan He <baoquan.he@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 14/14] mm/page-flags: remove PG_private
+Date: Wed, 09 Sep 2026 10:48:17 -0400
+X-Mailer: MailMate (3.0r7028)
+Message-ID: <1BF58667-A9AE-48AA-BA04-F02FB6D5ECF4@nvidia.com>
+In-Reply-To: <d8e9b629-4198-4281-a3b2-d54445201fd2@kernel.org>
+References: <20260907-remove-pg_private-v3-0-6ae22f9d9272@nvidia.com>
+ <20260907-remove-pg_private-v3-14-6ae22f9d9272@nvidia.com>
+ <d8e9b629-4198-4281-a3b2-d54445201fd2@kernel.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-MS-Reactions: disallow
+X-ClientProxiedBy: BL1PR13CA0268.namprd13.prod.outlook.com
+ (2603:10b6:208:2ba::33) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 9 Sep 2026 07:36:19 -0700
-X-Gm-Features: AcwNN1VdQII_SBwvozqnLJxonm84Qmsr9AHJ5M73oMtr5q_ETKWllQrAhks6iFI
-Message-ID: <CAEvNRgEmO-R35susJd+U+k-nB_yFE_gfh+ACrnaOR=ECJdWGuA@mail.gmail.com>
-Subject: Re: [PATCH v12 12/45] KVM: guest_memfd: Always fault from guest_memfd
- if in-place conversion is enabled
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
-	jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
-	oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
-	steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
-	forkloop@google.com, pratyush@kernel.org, suzuki.poulose@arm.com, 
-	aneesh.kumar@kernel.org, liam@infradead.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
-	Randy Dunlap <rdunlap@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Fuad Tabba <fuad.tabba@linux.dev>, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|CY5PR12MB6406:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e36a449-7863-40ee-247c-08df0e816332
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|366016|7416014|376014|6133799003|10067099003|11063799006|4143699003|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	gHZkhrlo2Dlduo0qqPNmk/ck3tigfa+qdshlTz7N2T84ki59fqAvUfQ9nIOYdID6QeikvgIzFjXmU7qNjxPh1uE8A1/j6cWDuTE67SnYLd4SyJQ8HACc/ON+AOe40O1WVQuWIU5bxzfmWmfMNgr03SCoyFYPiO6VQJsZ+t6tO9JDfg3/RQb6byplfL3wL1W+OfuHdo9oVw+t8HpQmWTbuyy0rKhMWq4Bi6VqzQf76hiToqjM2FqKZTN7blcqEvyOdjl5fi7oq4mhOsX+Qz+W4cqNCg3CSZLJKNted3Xxfpm4+ODfq1FG8LE+AJ066D+Gj7j9bPUC2imPqyCf8wkfBoZkTKe8NLkhz/ywZMZZKaprdlO8skU5shOcPUusWUcR7MaZ+5Qlu2WeWF9im/s3fzw+EC5/JPoO9oInmuVVQZvJ/nuPEDkL8Spcbkymc1CEz/lup/uCUe0lBoDNJlDjmij4fDppvxgUEvgT9J4s67YtoKQMk8HZbpovl0Iduiie+VwbY8na3+SAcPl5NLf+UN/pjs8Scnl6HRmjQYZOGVLSCl6PQ1MynXBcHg2WaygYXm27TvFraTPH9L74uFRFTE+gChxwhEYbJ7aFwK5QALVPY9SoJuLAGNS0FPxitBKckPipfMwyrlXbaHeziK9q3ZfQH03pOEMdjgGNpiqz0Zg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(7416014)(376014)(6133799003)(10067099003)(11063799006)(4143699003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?an0bGcgXOM433sgRgHC/KNPbThso0gxMPGb6WtE/97slExf2aXADK8QAKBk3?=
+ =?us-ascii?Q?zzACDFClnNoPQzoshnfJzHzkFazmE0gIzNl5cEF1JaQSp2WLm45io8nFwRRf?=
+ =?us-ascii?Q?5o/xdJBN6pSVBMJbjkAm14W/j5XUHzDhhezdA9LgZmXtZ6E0tPWaedoGm3V0?=
+ =?us-ascii?Q?h8sMm2a8788suGTcuSL5VaPjQOuQyEIhqTOv28EjMpd7bUZQQeSEv8wmxnM+?=
+ =?us-ascii?Q?QbvKREp3sX8ONRD+3Qd7GAvUw66UflWJ3t+yIoviaAaDrWkDkEumoKVhH8PJ?=
+ =?us-ascii?Q?4cOPWqtrZ5In/IXBhTWyBqyIiY9dWXmIJk8h3ZtjcoQLoX/fu/ckQ6X1r6as?=
+ =?us-ascii?Q?P1XPq0t4Uo4vuAvbNQNKPGU8zLQFRGM8nrHmijNYjjtpuOTVvWfBI7JtKcC5?=
+ =?us-ascii?Q?Eu8tDle9xsoWIS4RqXgSWhmUcaTBfnMczYfSQwM/wQ/+WIeFlsWpDSwNEdnN?=
+ =?us-ascii?Q?COSF1R1kzSa9gMiHyXAz2vz+L5tY7xK02F/OUDFRTH2pvZpcrpt23sn0cyQ7?=
+ =?us-ascii?Q?wjdozUTfyJNrbsawXMviXeoH+mwsWC+t1fT5f1HX8gqJkxgNXlf0zhDQ2CFX?=
+ =?us-ascii?Q?e/ePOQNUG+ZzujrxWg1szfJTS9rGQg53tI1PEcKJYZ21yEIOzPewHUVChdka?=
+ =?us-ascii?Q?69mXPZj5qEHS1/uJv5wdOMn0wpmRfZn//sm3QUPSzq55/9RafkwScVRr542U?=
+ =?us-ascii?Q?wv1XqTo4YvUrxhA8M9CoQuCgYg14sUDNCCNrAHlm/IRnnFCzckteXfHIhF/5?=
+ =?us-ascii?Q?dxEOnUeorsl+Sd17G9Faw3GgYJXZ0eW4BWHFCqQnLm4KPXIAzmz3w1p+oPja?=
+ =?us-ascii?Q?yzXwyICIl2zgPCXwcAa91J9Q+rD+8d/IMPav01PiRASHdYBpfCT9GoZ2+vXV?=
+ =?us-ascii?Q?j+a+y3y/6t0UATzx35BBln8xcB1LLDcHr2pbZ8r108o+UNEVCCrCWz18q+Dp?=
+ =?us-ascii?Q?h0YXcm0KpZsnoGANeyJ6f1xe9h39VPp02m19/vt08snIZGAGx2t0OEpjctKj?=
+ =?us-ascii?Q?tn2DhzaPsN/GM2UFwWjC4JzBonvlq8fyTCCnydw0MZB2Nsk/veFDp2jY39/o?=
+ =?us-ascii?Q?aB8V6fuEWAKcnHF9j1a/+28e/XKAsR4J9+cAH7S0DGDMrOJ8ZgJVC9g+t3Ll?=
+ =?us-ascii?Q?i2lnqGxaOkcF3QpAkBXt1xtu7Po3HZq9PvDu6bais+d56mHTaav7YRyKlkET?=
+ =?us-ascii?Q?0IJ/wgGWBTvSQ9Bl/KWPz9unnTwq7exmyslmMwUCQH6wye+WHhT/3avCFFsu?=
+ =?us-ascii?Q?ANmatDHksyPhO41qUDSZpmS8V317ZYsDu2R+Os42tnInM940kZsUsHOnf9we?=
+ =?us-ascii?Q?RHMaeL4ye3BCzYf/XcqidSXOuNAGFNMVFt/2nqjC/teO3teDqtaGAj7uF4lu?=
+ =?us-ascii?Q?rosdEnVrbkqmsBLT5jVNGV+CRoqrSvpusUuM8v1Whp1l+sF+hXg1EvpAKzOs?=
+ =?us-ascii?Q?yTL7lSTrCFnb+l17zLcDQxUiQfPHDiQX76QcjmLKPkm5OepM+J5AMIHo+ny6?=
+ =?us-ascii?Q?aZBf9WyKticT5KRJ6mAJnz6X54SLTZnR5632dHr7QHOD/7KZ6vddz5Nsu19f?=
+ =?us-ascii?Q?yrzEOsb+QgMzuR3P9yrquuzrj4v4Apx2AhnwU8UXRLNAfPon1S4wjGz+nPvu?=
+ =?us-ascii?Q?MNOUekqvjU0huUtfx13VU1HxZd6Yqn2e2drPkbmOwusRleAFpwR5yOvIPNbh?=
+ =?us-ascii?Q?ZwtBmG+4rx9DEOgodiaO66NbMJ1yj2ZtpQlByQTBYEupTjTe?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e36a449-7863-40ee-247c-08df0e816332
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2026 14:48:18.9376
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pxgnQgbxOAG0LjhgRcQQOrnaJ02IgYw92HStHGX0usgVEjMN4HnukJVwoZCCi2bz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6406
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On 9 Sep 2026, at 10:31, David Hildenbrand (Arm) wrote:
 
-> On Sun, Aug 30, 2026 at 05:25:13PM -0700, Ackerley Tng via B4 Relay wrote:
->> From: Ackerley Tng <ackerleytng@google.com>
+> On 9/8/26 04:56, Zi Yan wrote:
+>> folio->private !=3D NULL indicates a folio carries private data, repla=
+cing
+>> PG_private. All PG_private users are converted. Remove PG_private and
+>> reserve the space as __PG_folio for future use.
 >>
->> If a guest_memfd memslot is created but the guest_memfd does not have the
->> GUEST_MEMFD_FLAG_MMAP set, KVM still fulfils guest faults by looking up the
->> memslot's userspace_addr.
+>> __DEF_PAGEFLAG_NAME() is added to show __PG_folio.
 >>
->> Set KVM_MEMSLOT_GMEM_ONLY if in-place conversion is enabled so that the
->> guest_memfd's memory will be used for both shared and private memory. With
->> in-place conversion, guest_memfd will be the only backing memory for the
->> memslot.
+>> Also update files in Documentation. hugetlbfs_reserv.rst is outdated a=
+nd
+>> left unchanged. It should be rewritten.
 >>
->> No validation is performed to require userspace_addr to be a mapping from
->> the associated guest_memfd because even after validation, userspace is free
->> to remap something else at the provided userspace_addr.
->>
->> userspace_addr will still be used by functions like kvm_read_guest(), and
->> if userspace_addr does not match up with the corresponding memory in the
->> memslot's guest_memfd (whether userspace_addr points to the wrong offset or
->> some non-guest_memfd memory, etc), that is a user error.
->>
->> Requiring both shared and private memory to come from the only associated
->> guest_memfd simplifies invalidation in stage 2 page tables. On a PUNCH_HOLE
->> operation on a guest_memfd, the invalidation is now guaranteed to be
->> invalidating only memory mapped from the given guest_memfd.
->>
->> Suggested-by: Sean Christopherson <seanjc@google.com>
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> Assisted-by: Claude:claude-opus-4-8
+>> Assisted-by: Codex:gpt-5
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> To: Andrew Morton <akpm@linux-foundation.org>
+>> To: Baoquan He <baoquan.he@linux.dev>
+>> To: Mike Rapoport <rppt@kernel.org>
+>> To: Pasha Tatashin <pasha.tatashin@soleen.com>
+>> To: Pratyush Yadav <pratyush@kernel.org>
+>> To: Jonathan Corbet <corbet@lwn.net>
+>> To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>> To: Jan Kara <jack@suse.cz>
+>> To: David Hildenbrand <david@kernel.org>
+>> To: Steven Rostedt <rostedt@goodmis.org>
+>> To: Masami Hiramatsu <mhiramat@kernel.org>
+>> Cc: Dave Young <ruirui.yang@linux.dev>
+>> Cc: Shuah Khan <skhan@linuxfoundation.org>
+>> Cc: Lorenzo Stoakes <ljs@kernel.org>
+>> Cc: "Liam R. Howlett" <liam@infradead.org>
+>> Cc: Vlastimil Babka <vbabka@kernel.org>
+>> Cc: Suren Baghdasaryan <surenb@google.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> Cc: kexec@lists.infradead.org
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: linux-fsdevel@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-trace-kernel@vger.kernel.org
 >> ---
->>  Documentation/virt/kvm/api.rst | 22 ++++++++++++++--------
->>  virt/kvm/guest_memfd.c         |  2 +-
->>  2 files changed, 15 insertions(+), 9 deletions(-)
+>>  Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
+>>  Documentation/filesystems/vfs.rst              |  6 +++---
+>>  include/linux/page-flags.h                     | 19 ++---------------=
+--
+>>  include/trace/events/mmflags.h                 |  3 ++-
+>>  kernel/vmcore_info.c                           |  1 -
+>>  5 files changed, 8 insertions(+), 23 deletions(-)
 >>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 90a29424c54c8..668886f50024d 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -6381,10 +6381,16 @@ mapping for userspace_addr is not required to be valid/populated at the time of
->>  KVM_SET_USER_MEMORY_REGION2, e.g. shared memory can be lazily mapped/allocated
->>  on-demand.
+>> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Document=
+ation/admin-guide/kdump/vmcoreinfo.rst
+>> index 7663c610fe901..5f1df6d080508 100644
+>> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+>> @@ -325,7 +325,7 @@ NR_FREE_PAGES
+>>  On linux-2.6.21 or later, the number of free pages is in
+>>  vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
 >>
->> -When mapping a gfn into the guest, KVM selects shared vs. private, i.e consumes
->> -userspace_addr vs. guest_memfd, based on the state in guest_memfd, which is the
->> -sole authority on private vs. shared memory.  See :ref:`KVM_CREATE_GUEST_MEMFD`
->> -to find out more about the creation-time shared/private status.
->> +When mapping a gfn into the guest, guest faults are always serviced from
->> +guest_memfd regardless of whether memory is shared or private.  KVM determines
->> +shared vs. private based on the state in guest_memfd, which is the sole
->> +authority on private vs. shared memory.  See :ref:`KVM_CREATE_GUEST_MEMFD` to
->> +find out more about the creation-time shared/private status.
->> +
->> +userspace_addr is expected to be the mmap()-ed address corresponding to the
->> +right offset within the guest_memfd. Any mismatch between userspace_addr and
->> +guest_memfd is not validated and is a user error. userspace_addr is only used
->> +for host-side guest accesses such as kvm_read_guest().
+>> -PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask=
+
+>> +PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
+>>  ---------------------------------------------------------------------=
+-----
 >>
->>  If in-place conversion is disabled, KVM selects shared vs. private, i.e consumes
->>  userspace_addr vs. guest_memfd, based on the gfn's KVM_MEMORY_ATTRIBUTE_PRIVATE
->> @@ -6490,10 +6496,10 @@ specified via KVM_CREATE_GUEST_MEMFD.  Currently defined flags:
->>                                 page tables. Private memory cannot.
->>    ============================ ================================================
+>>  Page attributes. These flags are used to filter various unnecessary f=
+or
+>> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesys=
+tems/vfs.rst
+>> index d3a93eec3945f..dec7816303c6a 100644
+>> --- a/Documentation/filesystems/vfs.rst
+>> +++ b/Documentation/filesystems/vfs.rst
+>> @@ -649,8 +649,8 @@ Writeback.
 >>
->> -When the KVM MMU performs a PFN lookup to service a guest fault and the backing
->> -guest_memfd has the GUEST_MEMFD_FLAG_MMAP set, then the fault will always be
->> -consumed from guest_memfd, regardless of whether it is a shared or a private
->> -fault.
->> +When the KVM MMU performs a PFN lookup to service a guest fault, the fault will
->> +always be consumed from guest_memfd, regardless of whether it is a shared or a
->> +private fault (unless in-place conversion is disabled and the backing
->> +guest_memfd does not have the GUEST_MEMFD_FLAG_MMAP flag set).
->>
->>  See KVM_SET_USER_MEMORY_REGION2 for additional details.
->>
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index 0afe1468d2d9d..e41802944756b 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -746,7 +746,7 @@ int kvm_gmem_bind(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  	 */
->>  	WRITE_ONCE(slot->gmem.file, file);
->>  	slot->gmem.pgoff = start;
->> -	if (kvm_gmem_supports_mmap(inode))
->> +	if (gmem_in_place_conversion || kvm_gmem_supports_mmap(inode))
->>  		slot->flags |= KVM_MEMSLOT_GMEM_ONLY;
-> I like this change, which actually enforces in-place conversion -- when
-> gmem_in_place_conversion is true, if userspace sets slot->userspace_addr to a
-> different backend, the host and guest will no longer be able to access the same
-> backend.
+>>  The first can be used independently to the others.  The VM can try to=
+
+>>  release clean pages in order to reuse them.  To do this it can call
+>> -->release_folio on clean folios with the private
+>> -flag set.  Clean pages without PagePrivate and with no external refer=
+ences
+>> +->release_folio on clean folios with folio->private set. Clean pages
+>> +without folio->private set and with no external references
+>>  will be released without notice being given to the address_space.
 >
-> However, since gmem_in_place_conversion is globally and statically specified, it
-> essentially disables the coexistence of VMs using out-of-place conversions when
-> gmem_in_place_conversion is true. Previously, VMs using out-of-place conversions
-> could still boot successfully as long as they switched to using per-gmem memory
-> attributes. Is this change intended?
+> This reads like it would belong into patch #13?
 >
+>>
+>>  To achieve this functionality, pages need to be placed on an LRU with=
 
-Yes, this is intended. gmem_in_place_conversion is intended to be global
-for the entire host.
-
-> On a separate note, is kvm_gmem_supports_mmap() still a necessary requirement
-> for setting KVM_MEMSLOT_GMEM_ONLY? When gmem_in_place_conversion is false, if
-> userspace mmap()s the gmem but sets slot->userspace_addr to a different backend,
-> should the KVM_MEMSLOT_GMEM_ONLY flag still be set?
+>> @@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback=
+ to complete.
+>>
+>>  An address_space handler may attach extra information to a page,
+>>  typically using the 'private' field in the 'struct page'.  If such
+>> -information is attached, the PG_Private flag should be set.  This wil=
+l
+>> +information is attached, non-NULL 'private' field will
 >
+> Same here?
+>
+> Likely this could have been restructured to cause less head scratches. =
+I'd
+> expect any documentation that refers to PG_private to get removed befor=
+e finally
+> removing the bit.
+>
+> Not the end of the world, just a bit confusing while reviewing.
 
-Before this patch, requesting an MMAP-able gmem will set
-KVM_MEMSLOT_GMEM_ONLY, so if we change that behavior, we'd be breaking
-the existing contract.
+Yeah, I will fold the document changes into the corresponding code change=
+ patches.
 
-If userspace requests an MMAP-able gmem and then sets up
-slot->userspace_addr to something else, I think that should be
-considered user error? MMAP-able => use gmem for all faults has been a
-thing since before this patch.
+>
+>>  cause various VM routines to make extra calls into the address_space
+>>  handler to deal with that data.
+>>
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index ce7fccd90367b..7b7783c0a5216 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+>> @@ -44,10 +44,6 @@
+>>   * Consequently, PG_reserved for a page mapped into user space can in=
+dicate
+>>   * the zero page, the vDSO, MMIO pages or device memory.
+>>   *
+>> - * The PG_private bitflag is set on pagecache pages if they contain f=
+ilesystem
+>> - * specific data (which is normally at page->private). It can be used=
+ by
+>> - * private allocations for its own usage.
+>> - *
+>>   * During initiation of disk I/O, PG_locked is set. This bit is set b=
+efore I/O
+>>   * and cleared when writeback _starts_ or when read _completes_. PG_w=
+riteback
+>>   * is set before writeback starts and cleared when it finishes.
+>> @@ -105,7 +101,7 @@ enum pageflags {
+>>  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+>>  	PG_arch_1,
+>>  	PG_reserved,
+>> -	PG_private,		/* If pagecache, has fs-private data */
+>> +	__PG_folio,		/* Do not use: reserved for folio identification */
+>
+> Do we really have to annotate it with __PG_folio ? I'd just keep it sim=
+ple and
+> have the comment. That also avoids __DEF_PAGEFLAG_NAME just for this us=
+e case.
+>
+> (sorry if this was discussed in previous review rounds)
 
-Just like how there's no good way to check and maintain the validity of
-the mapped memory behind slot->userspace_addr in relation to the
-provided guest_memfd, the mapping can't be used to determine whether to
-set KVM_MEMSLOT_GMEM_ONLY either.
+No one complained about this yet. :)
 
->>
->>  	xa_store_range(&f->bindings, start, end - 1, slot, GFP_KERNEL);
->>
->> --
->> 2.55.0.897.gb25b4bd76c-goog
->>
->>
+I do this because I do not want to change PG_* values after PG_private af=
+ter
+PG_private is removed. And they will be changed back to their original va=
+lues
+when I add PG_folio. That PG_* value churn might be a headache for kdump?=
+
+If I add PG_folio the last page flag, it can be a one-time change though.=
+
+
+Best Regards,
+Yan, Zi
