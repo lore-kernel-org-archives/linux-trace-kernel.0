@@ -1,107 +1,164 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E15B3B38BC;
-	Wed,  9 Sep 2026 21:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96FC489FB0;
+	Wed,  9 Sep 2026 22:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788990414; cv=none; b=XWhDCqXpz/0q7tlvf7tVUEo1njuMrLRxAWrob9snTyzSALG7/PHvc1CRSX6M2J2CdAE6fq21snvoMpxTVef5hfIHhDQE49YTMxJljLi/ZPUJX+mUVzJcvkVzi4JT0em0rwDSA/ZFoafVkl4p/SNZHV5bf7SxUO9ASnI9mIlyQQA=
+	t=1788991925; cv=none; b=n3kAgOughI2dBIbJLjqDbmGd9RdUEoTON/Nmc5kjx8Dj58DN7HeGpRwMkGqMHAnBtzpw4YCC3JEID7dSrhU7a8y2GGJkU0ac0qTfvkVnKyvwETX/yv8NmlF55M5PYNdgxbDC7/jMeWNLpBYcTG0qpmK/mM1JdblAGNHSCmXA6Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788990414; c=relaxed/simple;
-	bh=ZHl08cqEOBKSJmhhtJEkeOTc5gq+R7I+L0XkKJK3IUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MheYwmTWHWy2a60SdmsoBgOF5fceKXjHYtpbCSNfCtjtxZw3PO//AMPjFGjBCV60m75e9kYYx0BvG4zN4xLOzZSNcfVxUuNboznLDJBn7+MTcGsCJBp5d3iR7mk88idExFSThpbagmtVXR2mPzALcXi6XFD0vRIgDfqIBbjltHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Bfg77qhx; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1788991925; c=relaxed/simple;
+	bh=q6BP5kP6oQ5TjB3bb3azGPE1liI5ZOIwuttsZ7zJzzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DJht4yMtW8m2SlJhu4bWXaxNhyMCb/Dc/NAIH1cM64bpxdfJzG/uA2eJOy7Ls6qgMqsLG7UdVl56v4NCKdde1oWmMkV9f0UxCLN/G2Z5KX5wX/8bfMkXo1mIS7zATeBDPedbPuNDXMt6GvvMkvPCA+vQ97RFQn1MAGvQkHabv4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=vOFfGjk7; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bfg77qhx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=f6WNUc7+ccLtCGhgxedehU0mIM9y5RDc0/iE/jkmqtI=; b=Bfg77qhxtGC5hNL12v7G11D26v
-	PcgN347bttFKmlJs3saw2LMy5Dm9HZ05mQKT4Vs6Ewcvz/Ja6XyCuqW7bnmza0oHiIiUquT49JFek
-	UNZgChWp72DD5/QTWqEPXZg4k5HYipU+4t6dPPCfT61eCUjWZFeXAz8nBGnuzKRKqxgV9bq8rKVnl
-	SYZnDvMQXYlvoeSqpnTB9MCP5IJX1mfyOWWn64+h0dEMVcs2OUCEUS2ozbF65MZw5fMy4NWQPCTds
-	VIBdAjzRtxCqZHgpDwoJARhg2Nwetd3qJ2h0mCP5IVnKGjlksK8muVBthSusdvJBPwpXSeWHmYSof
-	c3f14PAA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1x4Q7m-00000001iSF-2woe;
-	Wed, 09 Sep 2026 21:46:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2D25F300A9A; Wed, 09 Sep 2026 23:46:33 +0200 (CEST)
-Date: Wed, 9 Sep 2026 23:46:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ye Liu <ye.liu@linux.dev>, Thomas Gleixner <tglx@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>,
-	Michal Hocko <mhocko@suse.com>, mic@digikod.net, oleg@redhat.com,
-	david@kernel.org, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
-	gnoack3000@gmail.com, ljs@kernel.org, sj@kernel.org,
-	rientjes@google.com, shakeel.butt@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, tony.luck@intel.com,
-	reinette.chatre@intel.com, x86@kernel.org, paul@paul-moore.com,
-	jmorris@namei.org, serge@hallyn.com, pavel@kernel.org,
-	lance.yang@linux.dev, pmladek@suse.com, longman@redhat.com,
-	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev, dietmar.eggemann@arm.com, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com,
-	mark.rutland@arm.com, Dave.Martin@arm.com, james.morse@arm.com,
-	babu.moger@amd.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] kernel: convert process/thread iterators to
- for_each_*_rculock
-Message-ID: <20260909214633.GN776954@noisy.programming.kicks-ass.net>
-References: <20260907081334.1152889-1-ye.liu@linux.dev>
- <20260907081334.1152889-6-ye.liu@linux.dev>
- <20260908074228.GW4120091@noisy.programming.kicks-ass.net>
- <20260909120911.39032d13@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="vOFfGjk7"
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id F10E61C20C9;
+	Wed,  9 Sep 2026 22:12:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 2ABF235;
+	Wed,  9 Sep 2026 22:11:59 +0000 (UTC)
+Date: Wed, 9 Sep 2026 18:13:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] tracing/remotes: Account for ring buffer page
+ header in size calculation
+Message-ID: <20260909181316.676b8c56@gandalf.local.home>
+In-Reply-To: <20260907192643.42513-2-vdonnefort@google.com>
+References: <20260907192643.42513-1-vdonnefort@google.com>
+	<20260907192643.42513-2-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260909120911.39032d13@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 2ABF235
+X-Stat-Signature: h9nwnykqsmf76yqrew5qupwtypbpudof
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+ePOxhzE5KStr96hifsCzIMWLdzhARa50=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=eqXWwhqo/0nztHxRHXstiAZes63YtobY2JN7TKFKusA=; b=vOFfGjk7zCB+iAOupKachDe3ujyORrKRL5IIMngOYGIDwIzia3kexlRdKu2renJqLWVo9EFBqtP+8H34+3AY/Q0KzynrNgSCOPKZ91xasgifPf47yWRBN7niXc83fSYwmaq4R8EQs5n6KzSZJR65T4B7liCf035fm+bLx9lRlH4=
+X-HE-Tag: 1788991919-707952
+X-HE-Meta: U2FsdGVkX19QsI0T5PDaIBswzPQYJWu+alnRVNcBuTBA567brb/QsxLXdOXN1ZOlWTbFDe8IgwIJVxj1aJD4BCs9Bzhp4Cygnfw9opjN0TUmC7olDuc5P53S+E1eXiMSWGMkMrIMOPF1blnK+UWPcF7S5TBSVhSI9H5CusL/n9pyX0LLLaieynQxC2TDHduDAbeWyeUAa4wuAue7N3McAfuDBHeYimrsq/V01yNshPJXGpk/jOtlO3w+Zfekp6U4WOpU3/zlyD9cqWbxuuHTyR7jYI0BCdlifVUIRgxO1lKBoHnKgQ8040xgsHrglXLEKiEEYZkmZ86YBfJPtdOdGLyOHCwDfL/Y3MVD7HEoKg/gro5ewGFIpK+Th3Nqq151
 
-On Wed, Sep 09, 2026 at 12:09:11PM -0400, Steven Rostedt wrote:
-> On Tue, 8 Sep 2026 09:42:28 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > >  kernel/cpu.c             |  4 +---
-> > >  kernel/freezer.c         |  4 +---
-> > >  kernel/hung_task.c       | 11 ++++-------
-> > >  kernel/locking/lockdep.c |  4 +---
-> > >  kernel/rcu/update.c      |  4 +---
-> > >  kernel/sched/core.c      |  3 +--
-> > >  kernel/sched/debug.c     |  4 +---
-> > >  kernel/trace/fgraph.c    |  8 ++------
-> > >  kernel/unwind/deferred.c |  3 +--
-> > >  9 files changed, 13 insertions(+), 32 deletions(-)  
-> > 
-> > This is not something that can be applied.
-> 
-> I believe you mean to break it up into individual subsystems. kernel/ is
-> not its own subsystem, it contains many different ones.
+On Mon,  7 Sep 2026 20:26:42 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Just so.
+> trace_buffer_desc_size() and trace_remote_alloc_buffer undercount the
+> required pages because every ring buffer page contains a header
+> (BUF_PAGE_HDR_SIZE). Account for that header to ensure allocated remote
+> ring buffers aren't smaller than requested by the user.
+> 
+> While at it, ensure those functions catch nr_pages overflow.
+
+Fixes patches should never have "while at it". That means it belongs as a
+separate patch. The only "while at it" that is acceptable is white space
+fixes or other formatting changes along with new code that is not a fix.
+
+> 
+> Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index afc7daa6ee7d..7a1a92f87650 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+> @@ -8,6 +8,8 @@
+>  
+>  #include <uapi/linux/trace_mmap.h>
+>  
+> +#include <linux/ring_buffer_types.h>
+
+Hmm, why is this after the uapi header? It should be part of the linux/
+headers.
+
+> +
+>  struct trace_buffer;
+>  struct ring_buffer_iter;
+>  
+> @@ -281,9 +283,14 @@ static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buf
+>  
+>  static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
+>  {
+> -	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
+> +	unsigned long nr_pages =
+> +		max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
+
+This is getting a little unwieldy. Let's break it up:
+
+	unsigned long pages_req = DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE);
+	unsigned long nr_pages = max(pages_req, 2UL) + 1;
+
+Or better yet, let's add a new helper function:
+
+static inline unsigned long calculate_nr_pages(size_t buffer_size)
+{
+	unsigned long req_pages = DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE);
+	return max(pages_req, 2UL) + 1;
+}
+
+Then this could be simply:
+
+	unsigned long nr_pages = calculate_nr_pages(buffer_size);
+
+>  	struct ring_buffer_desc *rbdesc;
+>  
+> +	/* Capped by ring_buffer_desc::nr_page_va */
+> +	if (nr_pages > UINT_MAX)
+> +		return SIZE_MAX;
+
+Separate patch.
+
+> +
+>  	return size_add(offsetof(struct trace_buffer_desc, __data),
+>  			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
+>  }
+> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 75fa1ffc4c96..2e0fdbb730b7 100644
+> --- a/kernel/trace/trace_remote.c
+> +++ b/kernel/trace/trace_remote.c
+> @@ -980,9 +980,12 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+>  			      const struct cpumask *cpumask)
+>  {
+>  	size_t min_desc_size = trace_buffer_desc_size(buffer_size, cpumask_weight(cpumask));
+> -	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
+>  	struct ring_buffer_desc *rb_desc;
+>  	int cpu, ret = -ENOMEM;
+> +	unsigned int nr_pages;
+> +
+
+
+> +	if (min_desc_size == SIZE_MAX)
+> +		return -E2BIG;
+
+Looks like this should be a separate patch too.
+
+>  
+>  	if (desc_size < min_desc_size)
+>  		return -EINVAL;
+> @@ -991,6 +994,7 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+>  	desc->struct_len = min_desc_size;
+>  
+>  	rb_desc = __first_ring_buffer_desc(desc);
+> +	nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
+
+And here we can have;
+
+	nr_pages = calculate_nr_pages(buffer_size);
+
+-- Steve
+
+>  
+>  	for_each_cpu(cpu, cpumask) {
+>  		unsigned int id;
+
