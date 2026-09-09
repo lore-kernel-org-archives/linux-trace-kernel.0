@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F4054A7CF;
-	Wed,  9 Sep 2026 15:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E01271443;
+	Wed,  9 Sep 2026 15:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968850; cv=none; b=Pj+G59KgDB8x322+DLVFQxDvrMXbfUCWItLiAWJjOXvbnQDWKxvhtpFUwQRQm4+u7eUnrOOtYqupvMCeyPgjPV6XcoFpPPTL9mJrgUqHLqwj7WIkiL6esXIVIuDNKwadxin1ALmRSvDJHwFN2dHWr7iodlAskhVC9oaH7hA3gcs=
+	t=1788969152; cv=none; b=E4pYGxvAeXctgUfSChXP2uElrmS1zaKHrXAeE7Utw7vGXkiefa27/p7RfrtEDzbgGA26y+U13Jy4A1MdKuZmQ3FD+FQnGcK2i8v1HJP3yen4h5PDLMWXgZfzAZntY9dA5dIe2s7g3BDdumIM/pO21oN1xybzKJv26Ocn2wlNgd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788968850; c=relaxed/simple;
-	bh=wKulJA5WaTPngsbarg3L1eHbRUXM4vQLL+RcO+gzAik=;
+	s=arc-20240116; t=1788969152; c=relaxed/simple;
+	bh=8uu58u3aS8UdObhf3RPlu8z4SvBJfQNrl35A4FAtf+c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjdZIuWUlz/b8ok5oTQz84uVhmnYHFjWz0pUt9Q+KFj/+hU6dAYd5mI4NrHWtcLlA3tSlh6/qiPDuk/Bd9oRKBSMjMYBLJjd0wJ1985NZkAdJEYbXVTcICQrQiqM3IrT+1Pgo5K7+C5RpGdgskd0geDq+hYCD2+G4TUfv0OIsd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3hCuoRu; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=nve7ur9+CagV3V0ai2EyBacfxY0V+PavLsABEr+CmH3WAdETKhCr5ledykvC2mUZ1YnKgQ04mi4VYmDFQJ/80cyCr41JSuyhcUzxAcb80LqmFFR9Qzjh6f4mgVVCT/kIMVkR7y8Gl4lYii6Iqk8pPJWPenawWJWAu9RBeZqmt/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQBsMdka; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3hCuoRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2261F00A3A;
-	Wed,  9 Sep 2026 15:47:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQBsMdka"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D481F00A3A;
+	Wed,  9 Sep 2026 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788968848;
-	bh=UPlEwDATkKsdnhPipJ/RnZzY8Ea9kWNibxkB8VtNG/0=;
+	s=k20260515; t=1788969150;
+	bh=u91uFesTnFbGp/0SROsL3Fce0KUie7u3CWxoraS7oAQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=U3hCuoRuyOU4wAxDDZm3tqdyOYQ78j7gRNdobasTRZ3EyQ1BOVPWRhY4lOwidY6lo
-	 jq7/GojnIOSmrMOZPidFbFfVXltqqH3hfyKAwIoSo7hIvZWMS12AMK1eTt4Icp05Ps
-	 JQjzUXEXm7//EFMSL5ari8t3V7m5xzxzctzZmvfkBzmk92jg/g4Hfh5ihWaKQ/WXZ8
-	 EDZp+Cy4KdsgXxo8l9uIDUArYMHe+dXYGoIlLsxIpPjshMXO6NyowsV73R9NqaowsS
-	 9mKET6R5YNCOe7BOvcBMmZWibyg1/HGmGF4bHeaXacxPQ7N7hXNuof4OonTVGbPLlS
-	 jd3+jD0Y+b5Mg==
-Message-ID: <c47b91f2-6c95-4def-93d2-edfcadad5a23@kernel.org>
-Date: Wed, 9 Sep 2026 17:47:07 +0200
+	b=FQBsMdka6q3yJt4PU5XM/w8brLU7gUN6lqri9XYHBVnNyH62B5rbtWvnsDcuDDstR
+	 yUYGausmecFcZ01xcp9jcXh6Ho5wsTQC/KHLYEhhxTdAcpoZL5xbh02s+2mdoJKJ3H
+	 Cp0MTYHR4h+lAxicsGveorC67zzpo0UPgSBxoxYCK68UEpTQW1y77SCx6ZwpV/csrz
+	 raXx29Z1Se41gtjEI1U2vIhXIn7MET8plb8HrdSDx/6+Iyyu8xI3OQ7cdLk6+LSork
+	 xm7TREyRSVsrnCKckGjwZONbqeCoEzk9VmOK+gkVKpkdILm+SY4p/AoaYniCXdOkqG
+	 ruQAOmRiKrwxg==
+Message-ID: <13f2c56c-b55b-4245-8190-7038f4eab98f@kernel.org>
+Date: Wed, 9 Sep 2026 17:52:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 23/45] KVM: Let userspace disable per-VM mem
- attributes, enable per-gmem attributes
+Subject: Re: [PATCH v12 18/45] KVM: guest_memfd: Handle lru_add fbatch
+ refcounts during conversion safety check
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -70,9 +70,9 @@ To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
+ linux-coco@lists.linux.dev
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-23-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-18-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,82 +119,49 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-23-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-18-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
-> 
-> Allow the user to disable KVM_VM_MEMORY_ATTRIBUTES even when KVM supports
-> PRIVATE and SHARED attributes, and expose gmem_in_place_conversion as a
-> module parameter when per-VM attributes are supported.  I.e. let userspace
-> enable in-place PRIVATE<=>SHARED conversion of guest_memfd pages.
-> 
-> Provide both a Kconfig option and a (conditional) module param so that
-> deployments that use a custom kernel can fully disable per-VM tracking,
-> while not forcing distros to ship two separate kernels in order to provide
-> backwards compatibility for downstream users.
-> 
-> Don't allow running VMs with mixed tracking for a given instance of KVM,
-> i.e. disallow toggling the module param after KVM is loaded, as the extra
-> complexity needed to handle per-VM behavior far outweighs any potential
-> benefit.  E.g. neither TDX nor SNP supports live migration, so in effect
-> the requirement is that existing deployments that want to support both the
-> old and the new models would need to tell their VMM which flavor of
-> tracking to use.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> [Define module_param only if CONFIG_KVM_VM_MEMORY_ATTRIBUTES is enabled]
-> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 25 +++++++++++++++++++++++++
->  arch/x86/include/asm/kvm_host.h                 |  4 +++-
->  arch/x86/kvm/Kconfig                            | 14 ++++++++++----
->  virt/kvm/kvm_main.c                             |  5 ++++-
->  4 files changed, 42 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 68647ff4bdd24..b5719714458fb 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3156,6 +3156,31 @@ Kernel parameters
->  	kvm.enable_vmware_backdoor=[KVM] Support VMware backdoor PV interface.
->  				   Default is false (don't support).
+
+> +
+>  static bool kvm_gmem_has_outstanding_references(struct inode *inode,
+>  						pgoff_t start, size_t nr_pages,
+>  						pgoff_t *err_index)
+>  {
+> +	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
+>  	struct address_space *mapping = inode->i_mapping;
+>  	pgoff_t last = start + nr_pages - 1;
+>  	bool has_outstanding = false;
+> @@ -570,17 +589,12 @@ static bool kvm_gmem_has_outstanding_references(struct inode *inode,
+>  	folio_batch_init(&fbatch);
 >  
-> +	kvm.gmem_in_place_conversion=
-> +			[KVM] Controls whether KVM enables in-place conversion
-> +			support for guest_memfd and tracks the private/shared
-> +			state of memory per guest_memfd instead of per VM.
-> +
-> +			If enabled, KVM enables the KVM_SET_MEMORY_ATTRIBUTES2
-> +			ioctl on guest_memfd file descriptors and disables the
-> +			legacy VM-scoped KVM_SET_MEMORY_ATTRIBUTES ioctl for
-> +			private memory state tracking. Only the
-> +			KVM_MEMORY_ATTRIBUTE_PRIVATE attribute moves to
-> +			per-guest_memfd tracking; other attributes remain
-> +			per-VM.
-> +
-> +			This parameter toggles KVM's in-place conversion
-> +			capability support. Whether a VMM uses separate backends
-> +			or out-of-place memory management is determined by
-> +			userspace VMM design.
-> +
-> +			Note, this parameter is only available when
-> +			CONFIG_KVM_VM_MEMORY_ATTRIBUTES=y. When
-> +			CONFIG_KVM_VM_MEMORY_ATTRIBUTES is not set, in-place
-> +			conversion is unconditionally enabled.
-> +
-> +			Default is Y (on).
+>  	next = start;
+> -	while (has_outstanding && filemap_get_folios(mapping, &next, last, &fbatch)) {
+> +	while (!has_outstanding && filemap_get_folios(mapping, &next, last, &fbatch)) {
+>  		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
+>  			struct folio *folio = fbatch.folios[i];
+>  
+> -			/*
+> -			 * Outstanding references are anything other than those
+> -			 * from the page cache, plus 1 temporary reference held
+> -			 * by filemap_get_folios() in the folio batch.
+> -			 */
+> -			if (folio_ref_count(folio) != folio_nr_pages(folio) + 1) {
+> -				has_outstanding = true;
+> +			has_outstanding = __folio_has_outstanding_references(folio, &drained);
+> +			if (has_outstanding) {
+>  				*err_index = max(start, folio->index);
+>  				break;
+>  			}
+> 
 
-With the doc fixed
+Having the folio.c bits go upstream early is certainly cleaner; without Hugh's
+series an ack from MM maintainers would have been sufficient, though.
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+In any case, on the revised patch with only guest_memfd changes:
+
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
