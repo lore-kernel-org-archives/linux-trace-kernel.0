@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A11C58123D;
-	Wed,  9 Sep 2026 15:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8157268E;
+	Wed,  9 Sep 2026 15:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788969238; cv=none; b=GoDNJAbnhQa6txGUyAn3l6+NdpteqVYQl7T9zU5DEcN5Gbi8Lc4Q2pBUm8SBCVdzYfqak/GAQRQrYnSZSFIPfi/no2xMun7m+BF2po/OTvGDiOhJUTJ5cfg0G8EDa5eOB6MNMglHZg/f2XjTzFWQtJbqsAkG6H/g7tWX2zHtlHM=
+	t=1788969247; cv=none; b=uIqXIdT1Gc27GHSsPsk/U/gkPDOPJZdII0+OkcPC1A8ecWem22eSvbrTywdZ51RHm0/hYg5F/V2HelvaHZj0/V2eXzalLwSTX8Nu6G5rsk9O5sZSCBkuJ+dEp2vj6RagvhDBRFmTuk5zJzAhizF7wMNc0GqG+UBUbtIZ3Ae6aBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788969238; c=relaxed/simple;
-	bh=IpypP2UXfMQrqE7LCaYtWwmwQ2MQS6kVNgWvILji1o0=;
+	s=arc-20240116; t=1788969247; c=relaxed/simple;
+	bh=iiCqDt9mQIBQuWEbYlHKIjXIwZW1+sg6Y68w5Rr5kBg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sWSQW3YGw4QzT6LhmHEYUX/wlxcb4ByBLW8LrPg7rnOztXJ1Ml0Bg/sLUsmFZH5aM55CRLNiaYRUlqWEIXVb7SCyiSOi9lyfLFmpwIX+gAZ1PaKuX+i9V9gJAV6eONV4A9l2tMhWXJ7l27NgI3tnoSJ7nGacLcXSgvUPUyZXTIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rg5HvFLF; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=hMnrQr1HV7Jzw4zg1ep6hhsBJxgQ1QuHcQkZfIP5Rz+KiSlNDRjAxXMpl76+8HltogX66+ISAEfQ37RmaW2nxfQJgKtjjmtCg6U1FvWaGsSGZgxJPnJ1Rpzk3WL89DMCY1inkxBfg/R+a5na/3MC7BH4U6FgMg2ctC5j2Zh8hTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWYtl8p3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rg5HvFLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1024E1F00A3A;
-	Wed,  9 Sep 2026 15:53:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWYtl8p3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE59B1F00A3A;
+	Wed,  9 Sep 2026 15:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788969237;
-	bh=/8BAaxZyXXosOe7u2XcIyvstoN4X+pMzG1qOfmfe3A0=;
+	s=k20260515; t=1788969246;
+	bh=lc9EDpaTK/r+zWTBkBXV/JPAZb/7ckGcnzP62wQl6z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Rg5HvFLF1EetVjlkYKD05Y/Lc4ShWCixbc10YPriVZPBjKuMwniw1foYEl2bkUPEW
-	 KOf+46PLhrmIoQUDRGl5pdEoG0mnl8cNw1FyBi8gMZY9xr3UdOoQu1HHMlLRRJi9N7
-	 QJoGPk+rZvN+tNQvb9IJ+jl44RQol3FZZ/r6V6TofT7gVPOkQQWdggsuSMTZulHnpl
-	 mWAT44J9aLLL1i7pvjfw8YhV1qthlK8esg5ppYN+5novVdXjVREjfDdP6GVi+ziitR
-	 EkeiJueaOm9nXBfPDpGJe9/L45EpWaCgWmzmjpR4oC2RCiQyZb99WQsW39gliX+OmW
-	 Dvwvg+gTBoDMg==
+	b=TWYtl8p3uOWUXs4D4RIv5xoYkOoVPkr9NyxuLKKuHCCO52wcy8xmkpJpy5e4p0Ovk
+	 YQ5cMI6qyCWLVVd+2cIb5ERmEOvQk9nR3cY9yqECQIC2y/k+HJxTXHZ/cufz8EFJPS
+	 Fi6ujPTEsr0d9BQ/1HHj6R7uFMZa9KoULjvW/29WLlAncIdbrB+EBR2flEz04MS7ga
+	 DdoYJSmQxzwMIccBe1hgezt76XAq+t+hMUKEQq4yS+h0rqFhAC6sTjOuWnxZHG0yTO
+	 AMjmXcmqC8+HXQBda/rOOsQ91wSTzP3gUvauFvgnti52H6uHYMQcp2kCieAbUwjPhZ
+	 vN0bzUCwfONQw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Sang-Heon Jeon <ekffu200098@gmail.com>
-Subject: [PATCH 2/3] tools/bootconfig: Consolidate xbc_init() to error message wrapper
-Date: Thu, 10 Sep 2026 00:53:53 +0900
-Message-ID: <178896923375.177508.14682854552827605824.stgit@devnote2>
+Subject: [PATCH 3/3] bootconfig: Skip internal tree sanity checks in kernel
+Date: Thu, 10 Sep 2026 00:54:02 +0900
+Message-ID: <178896924262.177508.71609739247457811.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178896921555.177508.434402948295885560.stgit@devnote2>
 References: <178896921555.177508.434402948295885560.stgit@devnote2>
@@ -50,170 +50,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use init_xbc_with_error() for all bootconfig initialization in the
-bootconfig tool instead of showing errors in different way.
+In xbc_verify_tree(), the loop iterating through all nodes to check that
+xbc_nodes[i].next < xbc_node_num and xbc_nodes[i].child < xbc_node_num
+is a defensive sanity check against implementation regressions (such
+an out-of-bounds index cannot be produced by malformed input).
 
-This simplifies the code logic and make it easy to maintain.
+Running this check in the kernel adds unnecessary boot-time overhead.
+Split this check out into xbc_sanity_check_tree() for userspace, so
+that it continues to run during userspace bootconfig validation (e.g.
+when applying or testing bootconfig with tools/bootconfig), but is
+omitted in the kernel to speed up initialization.
 
+Reported-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+Closes: https://lore.kernel.org/all/20260905141637.1547429-1-ekffu200098@gmail.com/
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- tools/bootconfig/main.c |  108 ++++++++++++++++++++++-------------------------
- 1 file changed, 51 insertions(+), 57 deletions(-)
+ lib/bootconfig.c |   38 ++++++++++++++++++++++++++------------
+ 1 file changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 6035404733c3..7117aa9b2a83 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -21,6 +21,47 @@
- #define BOOTCONFIG_FOOTER_SIZE	\
- 	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
- 
-+static void show_xbc_error(const char *data, const char *msg, int pos)
-+{
-+	int lin = 1, col, i;
-+
-+	if (pos < 0) {
-+		pr_err("Error: %s.\n", msg);
-+		return;
-+	}
-+
-+	/* Note that pos starts from 0 but lin and col should start from 1. */
-+	col = pos + 1;
-+	for (i = 0; i < pos; i++) {
-+		if (data[i] == '\n') {
-+			lin++;
-+			col = pos - i;
-+		}
-+	}
-+	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
-+
-+}
-+
-+static int init_xbc_with_error(char *buf, int len)
-+{
-+	char *copy = malloc(len);
-+	const char *msg;
-+	int ret, pos;
-+
-+	if (!copy)
-+		return -ENOMEM;
-+
-+	memcpy(copy, buf, len);
-+	/* We do not terminate the copy with \0 for sanity checking */
-+
-+	ret = xbc_init(buf, len, &msg, &pos);
-+	if (ret < 0)
-+		show_xbc_error(copy, msg, pos);
-+	free(copy);
-+
-+	return ret;
-+}
-+
- static int xbc_show_value(struct xbc_node *node, bool semicolon)
- {
- 	const char *val, *eol;
-@@ -187,7 +228,6 @@ static int load_xbc_from_initrd(int fd, char **buf)
- 	int ret;
- 	uint32_t size = 0, csum = 0, rcsum;
- 	char magic[BOOTCONFIG_MAGIC_LEN];
--	const char *msg;
- 
- 	ret = fstat(fd, &stat);
- 	if (ret < 0)
-@@ -238,52 +278,9 @@ static int load_xbc_from_initrd(int fd, char **buf)
- 		return -EINVAL;
- 	}
- 
--	ret = xbc_init(*buf, size, &msg, NULL);
--	/* Wrong data */
--	if (ret < 0) {
--		pr_err("parse error: %s.\n", msg);
--		return ret;
--	}
-+	ret = init_xbc_with_error(*buf, size);
- 
--	return size;
--}
--
--static void show_xbc_error(const char *data, const char *msg, int pos)
--{
--	int lin = 1, col, i;
--
--	if (pos < 0) {
--		pr_err("Error: %s.\n", msg);
--		return;
--	}
--
--	/* Note that pos starts from 0 but lin and col should start from 1. */
--	col = pos + 1;
--	for (i = 0; i < pos; i++) {
--		if (data[i] == '\n') {
--			lin++;
--			col = pos - i;
--		}
--	}
--	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
--
--}
--
--static int init_xbc_with_error(char *buf, int len)
--{
--	char *copy = strdup(buf);
--	const char *msg;
--	int ret, pos;
--
--	if (!copy)
--		return -ENOMEM;
--
--	ret = xbc_init(buf, len, &msg, &pos);
--	if (ret < 0)
--		show_xbc_error(copy, msg, pos);
--	free(copy);
--
--	return ret;
-+	return ret < 0 ? ret : size;
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 0ec2874db9c7..884f186b1989 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -1000,9 +1000,30 @@ static int __init xbc_close_brace(char **k, char *n)
+ 	return __xbc_close_brace(n - 1);
  }
  
- static int show_xbc_kernel_cmdline(void)
-@@ -412,9 +409,8 @@ static int apply_xbc(const char *path, const char *xbc_path)
- 	char *buf, *data;
- 	size_t total_size;
- 	struct stat stat;
--	const char *msg;
- 	uint32_t size, csum;
--	int pos, pad;
-+	int pad;
- 	int ret, fd;
- 
- 	ret = load_xbc_file(xbc_path, &buf);
-@@ -427,6 +423,13 @@ static int apply_xbc(const char *path, const char *xbc_path)
- 		size++;
- 	csum = xbc_calc_checksum(buf, size);
- 
-+	/* Verify the data format */
-+	ret = init_xbc_with_error(buf, size);
-+	if (ret < 0) {
-+		free(buf);
-+		return ret;
++#ifndef __KERNEL__
++/* Sanity check for regression: node indices must be within bounds */
++static int __init xbc_sanity_check_tree(void)
++{
++	int i;
++
++	for (i = 0; i < xbc_node_num; i++) {
++		if (xbc_nodes[i].next >= xbc_node_num) {
++			return xbc_parse_error("No closing brace",
++				xbc_node_get_data(xbc_nodes + i));
++		}
++		if (xbc_nodes[i].child >= xbc_node_num) {
++			return xbc_parse_error("Broken child node",
++				xbc_node_get_data(xbc_nodes + i));
++		}
 +	}
 +
- 	/* Backup the bootconfig data */
- 	data = calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE, 1);
- 	if (!data) {
-@@ -435,15 +438,6 @@ static int apply_xbc(const char *path, const char *xbc_path)
- 	}
- 	memcpy(data, buf, size);
++	return 0;
++}
++#endif
++
+ static int __init xbc_verify_tree(void)
+ {
+-	int i, depth;
++	int depth;
+ 	size_t len, wlen;
+ 	struct xbc_node *n, *m;
  
--	/* Check the data format */
--	ret = xbc_init(buf, size, &msg, &pos);
--	if (ret < 0) {
--		show_xbc_error(data, msg, pos);
--		free(data);
--		free(buf);
--
--		return ret;
+@@ -1019,17 +1040,6 @@ static int __init xbc_verify_tree(void)
+ 		return -ENOENT;
+ 	}
+ 
+-	for (i = 0; i < xbc_node_num; i++) {
+-		if (xbc_nodes[i].next >= xbc_node_num) {
+-			return xbc_parse_error("No closing brace",
+-				xbc_node_get_data(xbc_nodes + i));
+-		}
+-		if (xbc_nodes[i].child >= xbc_node_num) {
+-			return xbc_parse_error("Broken child node",
+-				xbc_node_get_data(xbc_nodes + i));
+-		}
 -	}
- 	printf("Apply %s to %s\n", xbc_path, path);
- 	xbc_get_info(&ret, NULL);
- 	printf("\tNumber of nodes: %d\n", ret);
+-
+ 	/* Key tree limitation check */
+ 	n = &xbc_nodes[0];
+ 	depth = 1;
+@@ -1199,6 +1209,10 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+ 	ret = xbc_parse_tree();
+ 	if (!ret)
+ 		ret = xbc_verify_tree();
++#ifndef __KERNEL__
++	if (!ret)
++		ret = xbc_sanity_check_tree();
++#endif
+ 
+ 	if (ret < 0) {
+ 		if (epos)
 
