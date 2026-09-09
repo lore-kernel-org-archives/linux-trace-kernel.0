@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE55582BAD;
-	Wed,  9 Sep 2026 16:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C712155D865;
+	Wed,  9 Sep 2026 16:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788971533; cv=none; b=XNag6qsbarmKPMDKwt3pghG+XUDV6IqnT0dIn7PvaIcj5Y6DCpJw3A44IrpV4QcP2s3kF5uN7/9mmVLC+L0HuttCLMN4K2/CEuLTewljue1leN4jJttd8H+jDLpgBU4wHrZAjMZoSXnreLvAbOLup7d+c+4cr4GQkJOLByi3he4=
+	t=1788971803; cv=none; b=uZBPMifcqjqNPRjVIDlQKsBLK77D79/e7QeTgdf9bciLVwgaxsLGeZdx9lKsDDQU5qQG+QSSJRUDDzny151R5iKHaZ45XLywwtqi9j3PmBdexefWnPTekeR4cPnPUQOnelIG3Nz9p63yFtDLVfnQx5JU6Qw+ug2ee+8xoyIgDMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788971533; c=relaxed/simple;
-	bh=2nSEuaJsEC2Ji1FLee2Ctn4KAUGv6K2n3B6kzSTMdUo=;
+	s=arc-20240116; t=1788971803; c=relaxed/simple;
+	bh=ivQODqGc8KFRbT+CDhnacTUmIisuYelCOQ7C8DxNKCM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hArV0kf2V4iWX4nJ73PICjbGo058FmxSGAuxlpyaqB/S6+ET4kMM5ScdAdmIGfkimjua3vIxShxUBU2jVoBYaG536pOMmbGgfd60H7bF1F4wRejET4m/CuoTEmldgNmCmikjdrazcDB125vJAiE6OQ1TedY0w7vlt/bRqw0SJVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1MDOxOt; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=j2uIUfN4r9fEKL1vK8q0P/sfasC170plCnZGFVgaByDwi+e3aszxCDQzvLZaIi3hviI2MOZtNLhVI6deBcXAzIycyRH6h9O1gxkT53SiB/dy/XM+v6dly3axnvJ9sLHEoYlknSDu/bW6xlImtzgFG1HiOjWMiAJ/pVgxiK0LWD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dx70I1I+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1MDOxOt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF521F000FF;
-	Wed,  9 Sep 2026 16:32:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dx70I1I+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E26281F00893;
+	Wed,  9 Sep 2026 16:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788971531;
-	bh=4SKUtPs8a80QUZEjrbIxEcVDtl2+iAWi22AK5QJBWqA=;
+	s=k20260515; t=1788971801;
+	bh=nDQ3BlVROek4PxaLywwCvD6/LeA/synqwhaOMOah7lE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B1MDOxOtc21xwKh7SHFCTEztlajLCD7N9/Ve1DrFhoeMQxuNxh2PqZXAJxX1r+4Nn
-	 HNJ3c6i7HQVb6Kg89epC4wfqi3MmDgJd9ARqZOHdtN0F242ipnT7NAoMxAKQEZ5y5q
-	 vj5cGGwG7yCeV44vEqbIy2q0TSv6vQFK+jr2K7CmogYHEv3ydj6DrwMVrO47/FZ+Je
-	 kgMK2IH4d4s/VSUv7q6dKKpnc0StSk3ltwcZwv5BO6zFFVgOqPn3Lub2eXzkukXtvp
-	 mEIGtWSUkwHGrMKpjKpusOco52BxNYVIwBf/+KhHsPsVypS9F7jmPK62wjXgLKyTA4
-	 IZfP/oiq7ND/w==
+	b=dx70I1I+8UJyr/VBOxcjZH9n5kihC+kb27i9VnPrDp1ipyea5JH6DRYBTXNJ3aHJY
+	 tK/lTlLld6Mvv7CaO7FT8M6c5n1GYf9rlDfs9yhitsA/IXKiamVj7l1M3n8UHZJ5IL
+	 m7z4Moz1bEehf5qcj1SHdImqffS1Cu1dM14AYN4P9z184AZ+ga7ltA5bZ1z3wI57G4
+	 EeU31nzGMeRyayLgVWtVu4tewA7jtJa5PaPmpdPh8+X2MyFDHES2XPpzl75tdtpAMC
+	 vqtNyPXNE76OqzpHTp0UaEJFZjHyS0j1zW12o+fRCKt/82SUkmevuYH1JhPAXvRx1u
+	 xAViDSWb1GEHA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/4] dmaengine: add union chan_dev for dma_chan::dev
- for clarity
+Subject: Re: [PATCH v4 1/4] dmaengine: vchan: add vchan_chan_name() to get
+ channel device name
 Reply-To: sashiko-reviews@lists.linux.dev
 To: Frank.Li@oss.nxp.com
-Cc: linux-trace-kernel@vger.kernel.org, dmaengine@vger.kernel.org, imx@lists.linux.dev, vkoul@kernel.org, linux-sunxi@lists.linux.dev, Frank.Li@kernel.org
-In-Reply-To: <20260909-dma-chan_dev-rename-v4-4-d8fb6892a70f@nxp.com>
+Cc: linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260909-dma-chan_dev-rename-v4-1-d8fb6892a70f@nxp.com>
 References: <20260909-dma-chan_dev-rename-v4-0-d8fb6892a70f@nxp.com>
- <20260909-dma-chan_dev-rename-v4-4-d8fb6892a70f@nxp.com>
+ <20260909-dma-chan_dev-rename-v4-1-d8fb6892a70f@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 16:32:10 +0000
-Message-Id: <20260909163210.DFF521F000FF@smtp.kernel.org>
+Date: Wed, 09 Sep 2026 16:36:40 +0000
+Message-Id: <20260909163640.E26281F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,66 +47,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] Kernel-doc build warning introduced by removing the `@dev:` documen=
-tation tag while retaining `dev` in the structure.
+
+Pre-existing issues:
+- [High] Use-After-Free of DMA channel name in probe error path due to devm=
+/manual cleanup mismatch
 --
 
-commit 0443f99a737aae399ea7d93dad586cf7543a34af
+commit 6477701933e50dc5df4ddb73cea43b46ef1b83f8
 Author: Frank Li <Frank.Li@nxp.com>
 
-dmaengine: add union chan_dev for dma_chan::dev for clarity
-
-This commit introduces an anonymous union in struct dma_chan to provide=20
-a chan_dev member alongside the existing dev member, clarifying its purpose=
- as=20
-the per-channel device. It also updates the kernel-doc to document chan_dev=
-=20
-instead of dev.
-
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 33aa1bfc8fb84..c3a49a33307c6 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -325,7 +325,8 @@ struct dma_router {
->   * @lock: protect between config and prepare transfer when driver have n=
-ot
->   *	  implemented callback device_prep_config_sg().
->   * @chan_id: channel ID for sysfs
-> - * @dev: class device for sysfs
-> + * @chan_dev: class channel device for sysfs, some device use it for per=
--channel
-> + *            IOMMU mapping.
->   * @name: backlink name for sysfs
->   * @dbg_client_name: slave name for debugfs in format:
+    dmaengine: vchan: add vchan_chan_name() to get channel device name
+   =20
+    Introduce vchan_chan_name() to obtain the DMA channel device name.
+   =20
+    Use a dedicated helper instead of directly accessing dma_chan::dev
+    so callers remain unaffected by an upcoming rename of the struct member.
 
 [ ... ]
 
-> @@ -351,7 +352,14 @@ struct dma_chan {
+> diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
+> index d3ad78562a140..3e8151e2ad75a 100644
+> --- a/drivers/dma/stm32/stm32-dma.c
+> +++ b/drivers/dma/stm32/stm32-dma.c
+> @@ -1668,7 +1668,7 @@ static int stm32_dma_probe(struct platform_device *=
+pdev)
 > =20
->  	/* sysfs */
->  	int chan_id;
-> -	struct dma_chan_dev *dev;
-> +	union {
-> +		struct dma_chan_dev *chan_dev;
-> +		/*
-> +		 * Use chan_dev; dev will be removed once all users are
-> +		 * converted.
-> +		 */
-> +		struct dma_chan_dev *dev;
-> +	};
+>  		ret =3D devm_request_irq(&pdev->dev, chan->irq,
+>  				       stm32_dma_chan_irq, 0,
+> -				       dev_name(chan2dev(chan)), chan);
+> +				       vchan_chan_name(&chan->vchan), chan);
+>  		if (ret) {
+>  			dev_err(&pdev->dev,
+>  				"request_irq failed with err %d channel %d\n",
 
-[Severity: Low]
-Does this removal of the @dev kernel-doc tag trigger a kernel-doc build=20
-warning?
+[Severity: High]
+This is a pre-existing issue, but in drivers/dma/stm32/stm32-dma.c at
+stm32_dma_probe(), devm_request_irq() stores the dynamically allocated DMA
+channel name (vchan_chan_name()) as the IRQ name.
 
-Since the dev member is kept inside an anonymous union for backward=20
-compatibility, and the kernel-doc parser flattens anonymous unions, it=20
-typically expects all non-private members to be explicitly documented.=20
+If a subsequent initialization step fails, such as a failure in
+of_dma_controller_register(), the code jumps to err_unregister:
 
-Would it be better to retain the @dev documentation tag with a note=20
-indicating it is deprecated, or mark it as private to avoid the build=20
-warning?
+drivers/dma/stm32/stm32-dma.c:stm32_dma_probe() {
+    ...
+err_unregister:
+	dma_async_device_unregister(dd);
+    ...
+}
+
+Because dma_async_device_unregister() is called manually, it frees the DMA
+device and its associated channel name string immediately. However, since t=
+he
+IRQ is managed by devm, its cleanup is deferred until devres runs after pro=
+be
+returns.
+
+Could this create a use-after-free window where the IRQ subsystem retains a
+dangling pointer to the freed string? If an interrupt fires or if a user
+reads /proc/interrupts concurrently during this window, could this lead to =
+an
+oops or memory corruption?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909-dma-chan_d=
-ev-rename-v4-0-d8fb6892a70f@nxp.com?part=3D4
+ev-rename-v4-0-d8fb6892a70f@nxp.com?part=3D1
