@@ -1,200 +1,85 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mta1.migadu.com (out-115.mta1.migadu.com [95.215.58.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D8A2877DE
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 01:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788917293; cv=pass; b=HSuch6tTSnlKYv7lwWHuIblKyVOE+LB9EEtSjGZWrMigWpTJeKKmr64d8Rb9kdArTJ50Kzj9Gq2T1r3orrnbwGwPUWNjZHpzRZeF/ZnSEuwt+7nC6KVKkU+Wf/JJSj5gMWfJAp47xJTHxGiwqBjrGasNd3EzY+R+Wg+sf0CnIeE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788917293; c=relaxed/simple;
-	bh=rg09NumjJVb6JGXaO1c3ZQFhkdw+QlXYZhVa8vQZJiw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dR9qNMOXWWOM1ClZyS5f1CWjWuFuf2yIhrlBQpkLAlGFNTVAetVW1X0wVgXrvAf6cDZPAZnGNQ72PgocUh81Zk2MRvIzYehkqrV6e6q9qJPh4zAGO1LllEIQdS6PGa6dCM01lk0VPNC1shGziUZPWUEDiPGhdUDGlWiKJuHdjvo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QvegMzZB; arc=pass smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4694E2F7ACE
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 02:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.115
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788920816; cv=none; b=qiZryk8VM42LOfY3T0JnZbKBjJ4JaowdL2oxqM4NqpVN+CFgz73pdmMgQ6Mm2vdYw0mUvDwODNNrFEqGkufbMjTywsR45/1NKn1auOutzEkgdHggEZTudvSeU9XJbJaYSvfzMIbNbSO/W3PH2F0EtCpsTYAOeGGkuavm8Fwc0Ws=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788920816; c=relaxed/simple;
+	bh=hhi3c8zU+U+EE/Oqa9R3g7YzwauRmJN/Xy5b4xnh/b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Phc4HaeSgOrdrGHqOOb3hxA5SSjJuw2JKXs99+IKtL3VjX/y346QCAJXMvwmbyQc5jIINM+m3s0Uuhb2BaOe7fbD+Wx96AzVt8nBv1kSyBB8nUrNHC73rpTmAdab8In8RKKptwltaj9F+RmHV27rMewPN24MI2EkLeS1anhXKU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AfNlsM7o; arc=none smtp.client-ip=95.215.58.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvegMzZB"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-87ffa98d4a9so1523437b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 18:28:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788917290; cv=none;
-        d=google.com; s=arc-20260327;
-        b=IPRB5CDgkbq65fEfTQxUaviiu1cvNL8orTbGeE9CAZotlhu9zblOZ0719mOodFkPlb
-         oegjdKlyhDVuZVVMwzE8eTFzrzRT1iJ1fvMlu1gNpfUyI7mtT8yNDUwIntorg0FxXL1d
-         GtxiNFSCrWuUcVjQiNgPfrkcTqabu3MC3kS41Kl9kakxaIiGpnOTUD58BA9gxRkv0ZOV
-         PAYCpKLF2bud5nBVBBtGJ0hR9NyQrY1GxYHL10Aru2X//qQhxtTyMyLmZ2nbIH14Q7zK
-         o1jhmbww6QfFZXtKKHmO9Rdij2xTJnKKk3Qjkm57U0m4zGvhc6treaIQN3KinUC3APU3
-         cq6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0NgzDuMC6qQnqEWdLlOg5dxhc1fTYoeWB4Qtn/gBX70=;
-        fh=geddXwn4DiuUlqLuHhaKm1K3LcsIE/gXvDUISAzQWb0=;
-        b=HeIKZMa2yhRWLMRw0bN47YNnMzZK3cShj6/zSQBxHOJL5pN97LlMymLgb1VU+kzXB+
-         Z6O72TUL2FtO571Si89AEfyqjfNlavWFBs4XEWGhzY+aVG4KYVmLoMjNoIN9sAsbT6CE
-         Zh7pVZSmJVKwvgISKDaFG9bswmteqAN84/kzFSvmWw6LkdBMRD7OJ2gvFBZD65qg2K04
-         rETUaGaIbcdgM7AaPffvLlOwoly8xFIpu5mPPGifAIaGkdcdccJ2vNHYHlUWk52ajelj
-         I7ZQfq+G9Q7TCL2qEnuv3tsL8lTjswVOOe3yt3OYN04BiFhicGd+Y6aE7GbWPkClaohR
-         5wnA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788917290; x=1789522090; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=0NgzDuMC6qQnqEWdLlOg5dxhc1fTYoeWB4Qtn/gBX70=;
-        b=QvegMzZBT/Ms6Jjmz0HuDT5Rg/Wd6I/nJviU16lxnc3TUwsHBDsdCbiTnLjFeXhvKw
-         7S+NkFa1A4ld/cMTOlQ29B5BAu2b9z5WPG02JADdec7ScN9ibg7Sv5GNnm74Mqv+SOr/
-         b0SepHZWWZMHAaykg9bfySjL/5SwL42FqFhYrcHjrtTYjK4QaVDgJAELmeXrhpbSc81k
-         ii2nFBc90/tZg/E3KVZlOO4pWWzYuC//k7Ts20222RBFS6P7qoCLMdWN970QBJvRDoSn
-         y5K+DAf/Vl7HFS6o7uVKvO1HUhp8By7fDASD4XWljr31CmIIOfNZGufP0SHzpyPHMzbD
-         UfQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788917290; x=1789522090;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0NgzDuMC6qQnqEWdLlOg5dxhc1fTYoeWB4Qtn/gBX70=;
-        b=nVMmk2lDXwyPQgXTqjwKZeuFjjpN7W8XQ6kViedSAvsBae0L3V9wh9XD7/s7ICC/gq
-         F90c7/Q10qde7/Ukz4k1V8lE7cYyY+DFPtXlOsi/dNYIZHPmmvNtyieriUtMZ0B2H7hz
-         4LPZpxF3ySm3N0zRf5VI6PNpoEhSHnchlZWTkwwyn9omNDz7zxtigQFVux+rFaYhb3kP
-         zUi4re32YKBMZbVHQdkpYZtI+M8Kj+y7Dbd0gBV+MWEYa2snjgZGMxtVCSTUCCUFi2X1
-         T9AC+njEUB/jigpU/Rc0U8ft9nMRLjpPiRvJyBD7Wy2vfmTtb4wFNPWmigX3gnelonR7
-         nk/Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwaiWQ9fpdsCZocAH3XERhrXQ2D/ona1fmofKlJat43pJNCHoqnBjrNOLkZsipOXVAtAID+jHrBgH2uFEbU+io3b98=@vger.kernel.org
-X-Gm-Message-State: AFuF++kdy2zP7PE2iLSyB2HR6kUrNi03VgACIeM9E7gujynR1qrVs7aH
-	0gb+s1+eggfmaq9u8BQAGEyqtcRQRrBXDWM73wcLKIopn0CEegy2rVPZv8YbDo2IIobo8gJlKcv
-	9mt3DuhKdlrEMlI1r5ZfmjrvPOXbWWijLaNGh81I=
-X-Gm-Gg: AYBFou3bvzofig6nn1lbVMazq3c+WPgs66OJsdzVmq/PTXNcC2M1ktvbsOL+lbpBXgU
-	mlmLEaAyy3p+okGoSZTJu5v5Bz1gMM5BMvaotElOqurXLOS4XWXx9yYA3lZD/Oa3gadb0P4ssBl
-	A7odZWNZ8sIhKSuTplq5nsUhFWVEGZaCRe7YCxtd8wSubvxUSsaeRkN6o9K/D5kad4jVcNS1FLr
-	kR6AvG+LAzqQhxG4TEQQMA9+EFOLT0FjCJy/Okuw7oklj0FgbpB0R0iBHUDjRixL/sL2/qujLZ0
-	MMkPFBmf7Pr6tKnZqp5D0UO+5gt7pCIcCRcOWa5bcMwvCP0z+9DZ
-X-Received: by 2002:a05:690e:4419:b0:66f:c1be:a64b with SMTP id
- 956f58d0204a3-66fc1bef5acmr5609196d50.61.1788917290484; Tue, 08 Sep 2026
- 18:28:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AfNlsM7o"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=hhi3c8zU+U+EE/Oqa9R3g7YzwauRmJN/Xy5b4xnh/b4=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788920812; v=1; x=1789525612;
+ b=AfNlsM7o97Br2/sCy3LyFv1cglqrdHrc/mwfcaIcqTIcOatLtpd3zaOEr6eM0C7axcNcxvBm
+ +7vOidl348F6u5exW8gV3var8GPZBMJEG6emqdXty5JT/TUT9NgM4adB8xs3szxpTkwa9sNvn+d
+ I6NbUW9SyoJK4BTEtjt54v0M=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 23bb6d8fa3f5e24a;
+	Wed, 09 Sep 2026 02:26:51 +0000
+X-Mizu-Trace-ID: 23bb6d8fa3f5e24a
+X-Migadu-Flow: FLOW_OUT
+Date: Wed, 9 Sep 2026 02:26:36 +0000
+From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, 
+	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, Leon Hwang <leon.hwang@linux.dev>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	bpf@vger.kernel.org, linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Ben Cressey <ben@cressey.dev>, "Florent Revest (Anthropic)" <florent.revest@linux.dev>
+Subject: Re: [PATCH RFC 8/8] arm64: ftrace: Allow CALL_OPS on kCFI kernels
+ built with Rust
+Message-ID: <aqDCSBRtnH4wVQDu@linux.dev>
+References: <20260904-b4-arm64-callops-kcfi-v1-0-ce6687739b0c@linux.dev>
+ <20260904-b4-arm64-callops-kcfi-v1-8-ce6687739b0c@linux.dev>
+ <CANiq72=xOrSXBBdmrKYfX1=qgF37LRAMzMJd4GJkXaYHMVe9yQ@mail.gmail.com>
+ <ap3Z-YDtzmdtMiMk@linux.dev>
+ <CANiq72mVXNmqh-RdOunFLBKRwMgYHFBqJOP7NbXrd8WHPb3sAw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260905141637.1547429-1-ekffu200098@gmail.com>
- <20260908104629.e7a85a90e376b843dbc51dc7@kernel.org> <CABFDxMEot48G141HrLT-4_H1xKez58UhK8yFMNkWpqT_MOXu7Q@mail.gmail.com>
- <20260909082459.77701fe379794a39242ebff4@kernel.org>
-In-Reply-To: <20260909082459.77701fe379794a39242ebff4@kernel.org>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Wed, 9 Sep 2026 10:27:58 +0900
-X-Gm-Features: AcwNN1WJNPYAYEo1b4MQYmQ4q0QD4KX_fon2xC_2quLuxHMjfNtwLt9MAQHa8nM
-Message-ID: <CABFDxME2bpyDOHpoesSNZBd8QsrDfPb-knz0Mzq0AhnwSs-unw@mail.gmail.com>
-Subject: Re: [PATCH] bootconfig: remove unreachable index checks in xbc_verify_tree()
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72mVXNmqh-RdOunFLBKRwMgYHFBqJOP7NbXrd8WHPb3sAw@mail.gmail.com>
 
-On Wed, Sep 9, 2026 at 8:25=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Wed, 9 Sep 2026 00:34:35 +0900
-> Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
->
-> > Hi,
-> >
-> > On Tue, Sep 8, 2026 at 10:46=E2=80=AFAM Masami Hiramatsu <mhiramat@kern=
-el.org> wrote:
-> > >
-> > > On Sat,  5 Sep 2026 23:16:36 +0900
-> > > Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
-> > >
-> > > > xbc_verify_tree() checks that every node's next and child are below
-> > > > xbc_node_num. Both fields store the index of an existing node, whic=
-h
-> > > > is below xbc_node_num.
-> > >
-> > > This is a kind of foolpoof/defensive checking. (so I call it verify.)
-> > >
-> > > >
-> > > > So remove the checks.
-> > > >
-> > > > No functional change.
-> > >
-> > > Hmm, OK, I think we should decouple the logic/implementation
-> > > verification from runtime verification (e.g. wrong format)
-> > > and move the former to tools/bootconfig.
-> > >
-> > > Thank you,
-> >
-> > Thanks for the review, Masami.
-> >
-> > To make sure I understand, you mean moving the foolproof check after
-> > xbc_init() in tools/bootconfig?
->
-> Instead of just removing this, move this verification into tools/bootconf=
-ig.
-> (we still need verification of user given broken bootconfig.)
-> Let me handle it.
+On Mon, 7 Sep 2026 21:33:03 +0200, Miguel Ojeda wrote:
+> i.e. I guess I would have expected something like "...: its libclang
+> may not support the section argument (Clang >= 21) and the removal of
+> the flag does not change the ABI" or similar.
 
-Thank you for clarifying. I'm looking forward to it!
+I will use that in v2, thanks!
 
-> Thank you,
->
-> >
-> > > >
-> > > > Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> > > > ---
-> > > >  lib/bootconfig.c | 13 +------------
-> > > >  1 file changed, 1 insertion(+), 12 deletions(-)
-> > > >
-> > > > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> > > > index 89c88e359179..d383430637ee 100644
-> > > > --- a/lib/bootconfig.c
-> > > > +++ b/lib/bootconfig.c
-> > > > @@ -1005,7 +1005,7 @@ static int __init xbc_close_brace(char **k, c=
-har *n)
-> > > >
-> > > >  static int __init xbc_verify_tree(void)
-> > > >  {
-> > > > -     int i, depth;
-> > > > +     int depth;
-> > > >       size_t len, wlen;
-> > > >       struct xbc_node *n, *m;
-> > > >
-> > > > @@ -1022,17 +1022,6 @@ static int __init xbc_verify_tree(void)
-> > > >               return -ENOENT;
-> > > >       }
-> > > >
-> > > > -     for (i =3D 0; i < xbc_node_num; i++) {
-> > > > -             if (xbc_nodes[i].next >=3D xbc_node_num) {
-> > > > -                     return xbc_parse_error("No closing brace",
-> > > > -                             xbc_node_get_data(xbc_nodes + i));
-> > > > -             }
-> > > > -             if (xbc_nodes[i].child >=3D xbc_node_num) {
-> > > > -                     return xbc_parse_error("Broken child node",
-> > > > -                             xbc_node_get_data(xbc_nodes + i));
-> > > > -             }
-> > > > -     }
-> > > > -
-> > > >       /* Key tree limitation check */
-> > > >       n =3D &xbc_nodes[0];
-> > > >       depth =3D 1;
-> > > > --
-> > > > 2.43.0
-> > > >
-> > >
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Best regards,
-> > Sang-Heon Jeon
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Best regards,
-Sang-Heon Jeon
+- Jose
