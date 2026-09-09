@@ -1,73 +1,96 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26C13AA1A9;
-	Wed,  9 Sep 2026 22:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC35042464B;
+	Wed,  9 Sep 2026 23:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788992271; cv=none; b=htzK9Fi7RuqoJotIZCHIQgZEgCZa5RUATZl34N296P3LOXhEag5HtB3/utwekZjym9eacVDTcTRDfttAmKieZAVpe5FS4FlmFswwpFJBgdD7onjG0LlRzl9JvD2Fg84D4ktUKMObYJZtjJnOZjR80OXYcI+cpjZfu9m3q7JoOZQ=
+	t=1788997297; cv=none; b=F2aUOJ+V8t2k0okozBSxB17f4AIkWyYJbMC8bwZrgz6MQgep9xI9UpuMT0Z42ejB3ixwRAeN6ndggDFQuVWqBg4R4MWKUaWVOm6pmTQ0buLnLKeZbmMZqfKNzfbwUp1q0cUaYdIBvPbh5fGKqWKM0a1Uw3S0s3aqN/yND1JIRsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788992271; c=relaxed/simple;
-	bh=wXZu2weoWUsh9gF9sie1LyRlZ56J29uo8uXb7hampxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c8YCW35B4yZMTRa1LIV6GFvJedqzH4QvzbuG7gcGbxFN0I8/vCchL3CpPsKSAH+omuSNkRC3StgSfWTWP7/KPlw+ju1E7f5XMt36fPZg6d1KKHuzDhMaHvaEcBFyBuNWxHio1EkR5d5+lXuRYOGQfWLvGRtlY3pfALhwHWnwK/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=VC+DYLWp; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788997297; c=relaxed/simple;
+	bh=FILuQt1DMDpTEzS8BJcO4mtA+1dGkW/Mz6ptobLdNMw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mPOzNhoMng89rzOoLK+wi/9nzFrzOAKtZQhepaQpcn0j2LiuHV8y0444sib7lgPCtn4H14AJ6tenpvq0En2co/1kvbb34HqmbqC20FB+oNKly6PB9uvznb+OQtzfl3bl08GzjriH54D6t6FBSafuOeO2DtEn+gY/5MVeCcNpDvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWMRYlbr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="VC+DYLWp"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 3D6D5160382;
-	Wed,  9 Sep 2026 22:17:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 65DDD20027;
-	Wed,  9 Sep 2026 22:17:46 +0000 (UTC)
-Date: Wed, 9 Sep 2026 18:19:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] ring-buffer: Unify ring buffer minimum page
- calculations
-Message-ID: <20260909181903.403c7fc1@gandalf.local.home>
-In-Reply-To: <20260907192643.42513-3-vdonnefort@google.com>
-References: <20260907192643.42513-1-vdonnefort@google.com>
-	<20260907192643.42513-3-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWMRYlbr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B60F1F000FF;
+	Wed,  9 Sep 2026 23:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788997295;
+	bh=FB0oTa7ZeTIoXN149EygwWFlLgtj9V3NiJgcBzuDbPo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=KWMRYlbrBV1oPuNuNAajTPWEnzMVhBM9GhRdRqqRHpfz2lcooNX8sGDJoV/MJRuwP
+	 Vr1Or9aXMcZ3J4iFSR7ugWvIKoRaO5lPmo+YMm886vB+KDlB5Rv4c1bIjbAssUzmKE
+	 JI+9KkUdmWVcf6EAuCpExC+yCnPEx2WLfVO7DOzgF82mdSCHrWy+tmy883OInnAjyx
+	 ltWkgk0VozR/U8osdcJ2w5Ci/e6nD+bJ6bveGFtT3WUNKTkmi8kmnCe1IC2jVvJ0h1
+	 bLWt1JG8GrzymJ7gr0bSFanHgfw3uWnnkM0EOWtmnoezbYLrbpAb/issWV1zyyuZsZ
+	 hRemVoZJYw+Yg==
+Date: Thu, 10 Sep 2026 08:41:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Fix unique symbol check in
+ kprobe_non_uniq_symbol.tc
+Message-Id: <20260910084130.c19c45e1d4582835979aa241@kernel.org>
+In-Reply-To: <20260909092954.2200558-1-svens@linux.ibm.com>
+References: <20260909092954.2200558-1-svens@linux.ibm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: pycsogbm71zprx3ckd19kfcdcyoej35c
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 65DDD20027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18IHE3qDdDDeC/wXePHzMVA7xF2by98uzU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=CZba2QB2HqPPAIsOcT2uuuVSMqTcqSspKCQ3+oFzbzw=; b=VC+DYLWpvhzaQgNHgLPL3LOXx8gftJDCZzvqarOal20ZITx1zJo0CuY+XBEzMw7nmSCufqeaj+lzkigohViGZiWqGqsSbEf8Vumnhpnmp4tXGqQLHjCOjDDTd8o3Ni1IfREHrwl4swyUm6f3mrPbeJK0EwLSUF5Qo0Pfx8zQM5I=
-X-HE-Tag: 1788992266-618164
-X-HE-Meta: U2FsdGVkX1+Hy9d4BffhehlmNEid7/rPSC/soUXfBvBFe6K0x26KXkf+lffn4ZKCTg3mzLdQt7DhFIglPhfPBN5FRmK6V95y8ESJkVEKt9w3wvBjwY4FgK1A/N/BUQpccJxZzn7B1yAydK4bMjWVRcp2INC6UEJ1vw/bc7jloOtmIDMtgbz4ec1kH1hjXkFWj8VkP2pWQ6/yzykUz3g8p/o90wuH8dEGnp4Lfp5sItFtbOOPALHTlXTmlgLW5S3qbZK5IjKzOhadm9q78hNr6DKGg/c7Z1hetAjlePRd03PQ7B0WmhhTtV9cK1TOY/DBEEXOwYdHI2vrmUKWz3OMj4XJxJ39IGlm
 
-On Mon,  7 Sep 2026 20:26:43 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Wed,  9 Sep 2026 11:29:53 +0200
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> The codebase scatters hardcoded minimum page limits across multiple
-> places. Introduce RING_BUFFER_MIN_NR_PAGES and rb_size_to_nr_pages() to
-> formalize the requirement of two pages in a ring buffer.
+> The current regex also matches symbols in modules, which makes the
+> test fail on s390 where name_show is present only once in the kernel,
+> but also multiple times in modules:
+> 
+> 000001b1401cdc20 t name_show
+> 000001b0c05e6c40 t name_show    [mdev]
+> 000001b0c0495f30 t name_show    [i2c_core]
+> 
+> Fix this by changing the regular expression to only match the function
+> name.
 
-Now I read this after I replied to patch 1 :-)
+Ah, nice catch! I'll add this fixes tag.
 
-Anyway, I like my calculate_nr_pages() better than rb_size_to_nr_pages()
-but I'm not really picky ;-)
+Fixes: 03b80ff8023a ("selftests/ftrace: Add new test case which checks non unique symbol")
 
-I would make the helper function part of the first patch as you introduce
-the duplication of the code there. Whenever I introduce a duplicate code, I
-will usually do it by creating a helper function and using that function in
-the places of the duplication instead of making it into two steps.
+Thanks,
 
-The use of the MIN_NR_PAGES macro can stay as a separate patch.
+> 
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> ---
+>  .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> index bc9514428dba..07b1177c1634 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+> @@ -6,7 +6,7 @@
+>  SYMBOL='name_show'
+>  
+>  # We skip this test on kernel where SYMBOL is unique or does not exist.
+> -if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}" /proc/kallsyms)" -le '1' ]; then
+> +if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
+>  	exit_unsupported
+>  fi
+>  
+> -- 
+> 2.53.0
+> 
 
--- Steve
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
