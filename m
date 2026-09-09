@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6015650ED;
-	Wed,  9 Sep 2026 15:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785B328CF5F;
+	Wed,  9 Sep 2026 15:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968422; cv=none; b=Z+Bm9ffwGXEsc/JBO5L9ANmI7PgzQ3mnICftiYfjtyErznLY9VCDlS/130yExj/YZNsaWPOinucrrY2QEE4z6RAiyH5J3b1oqKE8efXp0YKM8hlZsm//jyqrn5aiIZAahMvvPirUtwPVOUKw7fdzEuVVWjLLWQjbz83MoMw4mDQ=
+	t=1788968600; cv=none; b=k4rlI3zNXhskLcN6ja1S5ro1VblqxUcW0gjs20XC3npGUJcKxzCkBk4qIZuyO50PVukpASZXBpiBOpbq1Ale6DoAnpJrsrlId7rUf70IHqPiKHIgf7l1gwiGMLo6aRtPsBq4qJvWn7/2xiRzU34aAMc+zz8lRvbZ+qqHLd/aooQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788968422; c=relaxed/simple;
-	bh=OTpD1mn++QZ6cnu/XQdOkc8XsknDB0Wm8sUuOPNTh+g=;
+	s=arc-20240116; t=1788968600; c=relaxed/simple;
+	bh=BKOjuZe/TjsyErnkKp4gXbWAgqDfmYIiNG/rqw5kX0Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PyMNCtlU0ByJfui+vLt27A7oib1QEahPfYXGxD9sCGeyAVSGIj9bypt0ti0DU+9JKurOJtmchmkXnsYLn1sH8Vy5CrWnF8zUJd+Iu+7hNyWoQSljGemAcynZ+KdorWS7/L6qUEJuJYVFaqBk3wkEvdmwaNJrxvENXXwdNfMjwYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b67FWDHV; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Za5zOXICf1xwD2dOcqdApg4KBr0lFTNBer/uFAo16BCNU87Sl0xm8OhCh/5s4PS1BN9XpCEDnrak+8woa4FcS7j362HRzuDF3gabwBmkfV0QPxsPLaGIo1+RIm6AmoCmydSnyD1NrX70elnxFGqAwX/k1g0piQ3qs3Jr/a3TIko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3xLF1ge; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b67FWDHV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5D41F00A3A;
-	Wed,  9 Sep 2026 15:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3xLF1ge"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAC91F00A3D;
+	Wed,  9 Sep 2026 15:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788968421;
-	bh=AXYYQlIGAZBrAHu4CUr6VQDiXrusLKFHKO4tw/xbR/o=;
+	s=k20260515; t=1788968598;
+	bh=QVOhNByUr6r71RUlJ+rEEyf00velzFdvLZ3C2AMRt2U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=b67FWDHVrvKlADudVooPhLmJOQAbQa4r/JfwC9gUSiN2XwdjDzXh8PDhLIbwBJ2Bl
-	 N6Vzk3XSxn9iwept0h4EbsT1QjEwa1ArTZoWsrAUs3sRxTkLtG3u6Tqn48pqVF4w42
-	 Hbr0VynPh2dln0S6/KgjarMmfPtDZf/8puPSLa3d6dAowUIbor3F3E8wZW4gfkHAy7
-	 ioBnUGH/HGUgh73jIHLXiP9er2c5LG71oVhLkOGVgFSr+kjgVMlPqHXLGlxCQA7ZS5
-	 LcMe5V5KBReJ3ihsKdA8eubDNI8HqYBjN9XKnu0HuBHiiD05yVhAVNYtvLFO27T70K
-	 2JOkNN9/OsV+Q==
-Message-ID: <26f620c7-043a-4cb3-a74b-29069bded0dd@kernel.org>
-Date: Wed, 9 Sep 2026 17:40:00 +0200
+	b=S3xLF1ge328RJxZlMfKf+h+Rr0rHffvj//0Ye1Nj1Yt/3i0Hs+6FpVCIz2UjPtSzt
+	 e+epimZH/KIvzoG2oeXzFOD0U50ZJvPBPStJncIs/6C0r3nsk6FGUgTY6zCR8HNv69
+	 dq3an9Q5ssTHyCNCKLMAeLq0QO9QDq9cEFs4ekvkctLo8VZCdnqI2dF5ps8LSluE/x
+	 nkB5iPG1HttRVac8M9rvpQgB23RrqYPtAKueLaetQFCJEUc5DTCb8R0Y9YBxrdPqbx
+	 kRFiRPgn7mg+NcwDvqbVgyBb6fbw0LEzPcjJ/4xY+6CxdE+1Aeq7+9dVWL6aIZmrOb
+	 U76GUSckln3BQ==
+Message-ID: <cc6eb4bd-3c4d-42f4-ab48-d381f7b6a2f5@kernel.org>
+Date: Wed, 9 Sep 2026 17:43:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 12/45] KVM: guest_memfd: Always fault from guest_memfd
- if in-place conversion is enabled
+Subject: Re: [PATCH v12 19/45] KVM: guest_memfd: Zero page while getting pfn
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -70,9 +69,9 @@ To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev
+ linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-19-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,41 +118,53 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-12-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-19-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
 > From: Ackerley Tng <ackerleytng@google.com>
 > 
-> If a guest_memfd memslot is created but the guest_memfd does not have the
-> GUEST_MEMFD_FLAG_MMAP set, KVM still fulfils guest faults by looking up the
-> memslot's userspace_addr.
+> Move the folio initialization logic from kvm_gmem_get_pfn() into
+> __kvm_gmem_get_pfn() to also zero pages if the page is to be used in
+> kvm_gmem_populate().
 > 
-> Set KVM_MEMSLOT_GMEM_ONLY if in-place conversion is enabled so that the
-> guest_memfd's memory will be used for both shared and private memory. With
-> in-place conversion, guest_memfd will be the only backing memory for the
-> memslot.
+> With in-place conversion, the existing data in a guest_memfd page can be
+> populated into guest memory through platform-specific ioctls.
 > 
-> No validation is performed to require userspace_addr to be a mapping from
-> the associated guest_memfd because even after validation, userspace is free
-> to remap something else at the provided userspace_addr.
+> Without first zeroing the page obtained using __kvm_gmem_get_pfn(), it
+> might contain uninitialized host memory, which would leak to the guest if
+> the populate completes.
 > 
-> userspace_addr will still be used by functions like kvm_read_guest(), and
-> if userspace_addr does not match up with the corresponding memory in the
-> memslot's guest_memfd (whether userspace_addr points to the wrong offset or
-> some non-guest_memfd memory, etc), that is a user error.
+> guest_memfd pages are zeroed at most once in the page's entire lifetime
+> with guest_memfd, and that is tracked using the uptodate flag.
 > 
-> Requiring both shared and private memory to come from the only associated
-> guest_memfd simplifies invalidation in stage 2 page tables. On a PUNCH_HOLE
-> operation on a guest_memfd, the invalidation is now guaranteed to be
-> invalidating only memory mapped from the given guest_memfd.
+> Zeroing the page in __kvm_gmem_get_pfn() is chosen over zeroing in
+> kvm_gmem_get_folio() since other flows, such as a future write() syscall,
+> can get a page, write to the page and then set page uptodate without
+> zeroing.
 > 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
+> There may be some performance penalty due to redundant zeroing, but this
+> would pale in comparison to the cost of actually assigning the page to the
+> VM.
+> 
+> This aligns with the concept of zeroing before first use - the other place
+> where zeroing happens is in kvm_gmem_fault_user_mapping().
+> 
+> On populate failure, the page is not re-zeroed, since on SNP, if firmware
+> rejects a CPUID page, the expected CPUID values provided by firmware are
+> returned to userspace via page contents. More generally, page contents may
+> be modified on populate failure.
+> 
+> Don't mark the page uptodate again after populating, since the page would
+> already be marked uptodate before the post_populate() call.
+> 
+> Reviewed-by: Fuad Tabba <tabba@google.com>
+> Tested-by: Shivank Garg <shivankg@amd.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
-
-Yeah, that matches what we discussed in the call
 
 Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
