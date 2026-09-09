@@ -1,210 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471A557C9F;
-	Wed,  9 Sep 2026 05:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D726A1AC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 06:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788931390; cv=none; b=FJblEErXb+lcmRb3y8u16PbuofKh7RqzXzYuRNtLSI8Oos38eljqEUuN5J6e/s4rKa4/Zp2nfvaqAk0Wl1C9vnp4kInfMKYdWXToaPcEHKbTNyU3QmxElD5QcJo30xBhN+6K6nyLwbBK3imWp+U276ZVfnG4Bnh9OGJYJXldlkY=
+	t=1788935441; cv=none; b=e7BFbiTqquZDocbxTN9zDKvbjBfb4lKC1s9MsTOjEzrD9bBoI766wloaNTg2M2LSb4Vo2D4PQE1GLlsgHqEZZEQR73gWJxpSfxa5g21bweee8gJ1OBdBYoL4JIaAP144qXntR0bUOOKntY9BLAay5va63JkZS2SMRlKwTbmBUFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788931390; c=relaxed/simple;
-	bh=m3VyOJdfEt4CBBiIc/oklURgJpvvE8vpsqAJdcPDoME=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UWvKsrpiQ6Jtryb+Lozga0F/fTfSNeIXz6CdlqTGjJ8D+Wej0diN+rX/OXX+s6J+8xxnuGSw+27eWk3eyN0VzIj8HCMMJKZn9zXqi3ndp9unK5Yz/2DCFUqkUvwaqN1/kkksZSl/BPCMZPzo8JNjT3zUyjg4BwixU/o8dh4BkFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8ZWJuLD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788935441; c=relaxed/simple;
+	bh=TbvdMU5uBRwk78kw9thSCvNvr4Qo+KDKUggC7rePmx8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DRVWbMdgDmvz222v8X5PR1oaZrC5ZMJN045av9tmN9evUyuQj6Py0HiJ96/v155Qn3l2lhCd9J19U61UuaUWcNKGhelTXx0o8VpyIvh091FFW/iE3bzasVooshTTBt5Yik5KwXZhQk6c+NCl93VanCplyP366dvQkx3k4B81UW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEdYQeKO; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8ZWJuLD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27C41F00A3A;
-	Wed,  9 Sep 2026 05:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788931388;
-	bh=bBGI5+0TaCJ5LUAwyqXocT8JVAJ0iIwwH3Wb66JKBzg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z8ZWJuLD0eTfZi+HXdwHHdrJYQHbw1y0uXXmPmdpjh02AYyYK41Bg9UcglPYqLpHz
-	 ZPft/+SpNfazmkjBxI00/dqO5xnbDUj3KcMf3dSx3QWMEAEBVpH2/DumvpnvAAtPmi
-	 ylRyfenDmOl/deAHg7pe3pWeL5XJ4mG+AXmxP5ST580FOJhnscDdJ6UCirwGGFoFXt
-	 3HRvEEn1COMoR1oVXfPuhLqOXNxt8XwDjzRGUHI2oQukdxFKe3mImOFJIj3EayIE1t
-	 ouNAyBIlnF/+1FOhPZXWR3qlvJ/PiqQ7Flsbz7WetiwiFj8ZmIg7ICif0XuDi189Dc
-	 LxhnBvsl6ln7g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/3] dmaengine: qcom: gpi: Add trace event support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Praveen Talari" <praveen.talari@oss.qualcomm.com>
-Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260909-add-trace-support-gpio-v2-2-01f81739bb88@oss.qualcomm.com>
-References: <20260909-add-trace-support-gpio-v2-0-01f81739bb88@oss.qualcomm.com>
- <20260909-add-trace-support-gpio-v2-2-01f81739bb88@oss.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 05:23:08 +0000
-Message-Id: <20260909052308.A27C41F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEdYQeKO"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-482ea739de2so3735591f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Sep 2026 23:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788935438; x=1789540238; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oWVSfJYhAn6e2RRpwRhzeBGFUz50IiA+3fKcwx4qg9M=;
+        b=MEdYQeKOgiP8FUwSk1uE6xe4E6ThKnBqsC+0BKoi59ZVWG7xuyC4OVHUdqLIrC0LGk
+         SihcSvqN851j4K3exSigNIuRIKNB5avu/JLzMGTXppGpnKMYhV18RnZTvdOGRpUP55XB
+         6Ve+XetMcXZnnla1XttT3TTXYFuogrR+A7f4SFL+8HsQgyMWozKqU0oe7pCCLQsX5LMe
+         wqxUa5FjrE+17wl7MfZs29A+RvOl1dZrIMi1FaV8AOk4w/9UlyqU6Fr+mvkTEy/Rvefb
+         XZ5KePngDG965WhEFJdgjVCU9bhfAuzTNmfM09S1UNxKF503hLxpUR8n8d7WSZTYHngd
+         5QtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788935438; x=1789540238;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oWVSfJYhAn6e2RRpwRhzeBGFUz50IiA+3fKcwx4qg9M=;
+        b=NxG7Kp70lps4q/RlZ29ZgaArIOVXTDK/D851m7pHGICPNZtDDe+HkY/XGhdY8uaPFj
+         OTSW/Wvz+8IUfPR0TK8ydYyUsEZ5z7VGC0b27qj98mCEfRDW6uh+A6SAeJhA6qbVyIgY
+         xRgE1T9egppKGQytOceOuynyw2JpEucs8Tv5Sti6IcHSWheX7fRORmqtLRlWI3PDUGy/
+         aa5OJKVCPe7oxWRd6ijQnJsJvmR+gMeUs3kk8uury+LMSDg6fH0tLgUPuzwaOrjQfdTE
+         7MjY0llIhEWtzOUQJV4xu8SvtFUYWOfJCdRC+GlLAp/22WqLFPVlTATAlYjhAfyJPN7O
+         j4tg==
+X-Forwarded-Encrypted: i=1; AKwUvBydLKbUOEErxOEvYzsaePZTZye2Thjnb/VNQ0zhAwIvsAJIejbYoMRzd9YcKtKG3BT3wqmLYKCDyt+pZE3udOUe0TI=@vger.kernel.org
+X-Gm-Message-State: AFuF++kFKUGmt1sC1yoPgjLmQVBnUGa2+ylBmM+MiO3qRx3x/DJoSfSO
+	HbdGzhnwD2dkZtQGbiRVOvFUuipNO6uqqadk3dQU9+/VWnyIzyGCDh3l
+X-Gm-Gg: AYBFou1IAVFMois4cCrYb+xrVXOVbBj2hyF4zg30PMlv3sANmY/oEmsy12W6j67NC03
+	jYbApGehpHrQhSXwmuk+s/4aaF8D3eDRE9Ta1NUdHQbti+1QYF1CkBhWlPKu/91x9aq8WegXwiO
+	9bTJsiNHHoNDHd7X1k5n6RixnFq/Tz2fuZIvb978eDlfBZnxFvrcCk+szP0GZ0E61X01VKaojmu
+	w0mB2LVK3jFJmusEsSa3QKoEOzeIJZzh/JYfC9VP6zPQLiMUK6kvq9ZnzTJpZyj/HAy/xvFYonP
+	gb04UAsX87CBJUrueiuRVj1s9vIxLmPUeZxmneOQJ3Du0n7fAEywQKlYdxWW0fr5qxWpB5WfO40
+	TayjSYcJxD/kEPQpkH83iUuvqf7Kz5IjBBwUV+K6D1ssDJ4J0QHsx/FhHZ3rO4Gn/01+YBFTomw
+	1tHenRAODQG3srJuBf09JEBky2gqwhv9gbX+6Svheo0ICTXRCD9xocill137EFCI79+imy6Welm
+	KKUGwpT6BttTsUOnQBmRWRTmXgVB48cgQEp8lrtPEzQNM/hKAvfD3SZEHPbAlZGx+wI3YgQoVS1
+	R2qKAKhfRPpFlAo2fMSeENBvrrOw0WEPdA8VFThLcc9DxxMbWdWU
+X-Received: by 2002:adf:e19e:0:b0:47f:e377:8d61 with SMTP id ffacd0b85a97d-485872a3f3dmr36403866f8f.11.1788935438109;
+        Tue, 08 Sep 2026 23:30:38 -0700 (PDT)
+Received: from MacBook-Pro-von-Karl.localdomain (dynamic-095-114-212-219.95.114.pool.telefonica.de. [95.114.212.219])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485885bfe14sm41956154f8f.35.2026.09.08.23.30.36
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 08 Sep 2026 23:30:37 -0700 (PDT)
+From: Karl Mehltretter <kmehltretter@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Karl Mehltretter <kmehltretter@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Fix ring_buffer_read_page_size() kernel-doc
+Date: Wed,  9 Sep 2026 08:29:17 +0200
+Message-Id: <20260909062917.89482-1-kmehltretter@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
+ring_buffer_read_page_size() takes a parameter named rpage, but its
+kernel-doc describes page. As a result, kernel-doc reports rpage as
+undescribed and page as an excess parameter description.
 
-New issues:
-- [Medium] The `gpi_irq_status` tracepoint is only called before the interr=
-upt processing loop, silently omitting back-to-back interrupts.
+Rename the documentation entry to match the function.
 
-Pre-existing issues:
-- [High] Tasklet Use-After-Free due to incorrect teardown order in gpi_free=
-_chan_resources.
-- [High] Incorrect channel cleanup in gpi_ch_init error path.
-- [High] Leak of transfer ring DMA memory when gpi_ch_init fails.
-- [High] Missing dma_wmb() barrier before writing to the channel doorbell r=
-egister, which may cause the hardware to read stale descriptors.
-- [High] Missing dma_rmb() barrier before reading event ring descriptors, r=
-isking processing of stale event data.
---
+Fixes: dae8dda341d2 ("tracing: Fix subbuf resize races with trace_pipe_raw readers")
+Assisted-by: LLM
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 4cf86dc6d78f8720092d0dce56c8bcfee50f39a4
-Author: Praveen Talari <praveen.talari@oss.qualcomm.com>
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9c03a555a6ba..0e30c7bd6045 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7384,7 +7384,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page_data);
+ 
+ /**
+  * ring_buffer_read_page_size - get size of the read page.
+- * @page:  the page to get the size from
++ * @rpage:  the page to get the size from
+  *
+  * Returns size of the page in bytes.
+  */
 
-    dmaengine: qcom: gpi: Add trace event support
-   =20
-    Wire up the qcom_gpi tracepoints into the GPI DMA engine driver to
-    provide runtime visibility into driver behavior without requiring
-    invasive debug patches.
-
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index a5055a6273af6..b09354a73b46e 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-
-[ ... ]
-
-> @@ -841,6 +846,7 @@ static irqreturn_t gpi_handle_irq(int irq, void *data)
-> =20
->  	offset =3D GPII_n_CNTXT_TYPE_IRQ_OFFS(gpii->gpii_id);
->  	type =3D gpi_read_reg(gpii, gpii->regs + offset);
-> +	trace_gpi_irq_status(gpii->gpi_dev->dev, gpii_id, type);
-> =20
->  	do {
->  		/* global gpii error */
-
-[Severity: Medium]
-Will this tracepoint miss subsequent back-to-back interrupts?
-
-In drivers/dma/qcom/gpi.c:gpi_handle_irq(), the hardware can trigger
-back-to-back interrupts. The function reads the type register before the
-loop, traces it, and then processes the interrupt. It reads the type
-register again at the end of the loop and finds another interrupt, but
-continues the loop without invoking trace_gpi_irq_status() for the newly
-read type.
-
-[ ... ]
-
-> @@ -1887,6 +1897,7 @@ static void gpi_issue_pending(struct dma_chan *chan)
->  	}
-> =20
->  	gpi_desc =3D to_gpi_desc(vd);
-> +	trace_gpi_queue_xfer(gpii->gpi_dev->dev, gchan->chid, gpi_desc->num_tre=
-);
->  	for (i =3D 0; i < gpi_desc->num_tre; i++) {
->  		tre =3D &gpi_desc->tre[i];
->  		gpi_queue_xfer(gpii, gchan, tre, &wp);
-
-[Severity: High]
-This is a pre-existing issue, but is there a missing dma_wmb() barrier
-before writing to the channel doorbell register?
-
-After the loop populates descriptors in
-drivers/dma/qcom/gpi.c:gpi_issue_pending(), the doorbell is rung:
-
-	gpi_desc->db =3D ch_ring->wp;
-	gpi_write_ch_db(gchan, &gchan->ch_ring, gpi_desc->db);
-
-Since gpi_write_ch_db() uses writel_relaxed(), without a preceding
-dma_wmb(), could the CPU reorder the relaxed MMIO doorbell write before
-the main memory TRE writes become globally visible, causing the hardware
-to process uninitialized or stale descriptors?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does
-gpi_free_chan_resources() in drivers/dma/qcom/gpi.c have a race
-condition that could lead to a use-after-free?
-
-	tasklet_kill(&gpii->ev_task);
-
-	/* send command to de allocate event ring */
-	if (cur_state =3D=3D ACTIVE_STATE)
-		gpi_send_cmd(gpii, NULL, GPI_EV_CMD_DEALLOC);
-
-	gpi_free_ring(&gpii->ev_ring, gpii);
-
-	/* disable interrupts */
-	if (cur_state =3D=3D ACTIVE_STATE)
-		gpi_disable_interrupts(gpii);
-
-The tasklet is killed and the ring is freed before the interrupt is
-disabled. If a delayed or spurious hardware interrupt occurs in this
-window, the interrupt handler will read pm_state as PREPARE_TERMINATE,
-and could schedule the tasklet again. The tasklet would then run and
-access the freed ev_ring.
-
-[Severity: High]
-This is a pre-existing issue, but does gpi_ch_init() in
-drivers/dma/qcom/gpi.c have an incorrect channel cleanup in its
-error path?
-
-error_start_chan:
-	for (i =3D i - 1; i >=3D 0; i--) {
-		gpi_stop_chan(&gpii->gchan[i]);
-		gpi_send_cmd(gpii, gchan, GPI_CH_CMD_RESET);
-	}
-	i =3D 2;
-error_alloc_chan:
-	for (i =3D i - 1; i >=3D 0; i--)
-		gpi_reset_chan(gchan, GPI_CH_CMD_DE_ALLOC);
-
-If initialization fails, it jumps to the error path. The loop iterates
-over i, but it erroneously passes the single argument gchan to
-gpi_stop_chan(), gpi_send_cmd(), and gpi_reset_chan() instead of
-&gpii->gchan[i]. Could this repeatedly reset the same channel while
-abandoning the other channel in a partially initialized state?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does
-gpi_alloc_chan_resources() in drivers/dma/qcom/gpi.c leak the transfer
-ring DMA memory when gpi_ch_init() fails?
-
-	ret =3D gpi_alloc_ring(&gchan->ch_ring, CHAN_TRES,
-			     sizeof(struct gpi_tre), gpii);
-	if (ret)
-		goto xfer_alloc_err;
-
-	ret =3D gpi_ch_init(gchan);
-
-	mutex_unlock(&gpii->ctrl_lock);
-
-	return ret;
-
-When gpi_ch_init() returns an error, the function exits without calling
-gpi_free_ring() to release the locally allocated gchan->ch_ring.
-
-[Severity: High]
-This is a pre-existing issue, but is there a missing dma_rmb() barrier
-before reading event ring descriptors in
-drivers/dma/qcom/gpi.c:gpi_process_events()?
-
-	cntxt_rp =3D gpi_read_reg(gpii, gpii->ev_ring_rp_lsb_reg);
-	rp =3D to_virtual(ev_ring, cntxt_rp);
-
-	do {
-		while (rp !=3D ev_ring->rp) {
-			gpi_event =3D ev_ring->rp;
-
-The CPU reads the hardware progress register via gpi_read_reg() which
-uses readl_relaxed(). It then immediately reads the corresponding DMA
-memory at ev_ring->rp. Without an intervening dma_rmb(), could the CPU
-speculatively fetch the descriptors from memory before the progress
-pointer read completes, reading stale events?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909-add-trace-=
-support-gpio-v2-0-01f81739bb88@oss.qualcomm.com?part=3D2
+base-commit: 893e11787f78e43b534e252249ac3fff4d1333f8
+-- 
+2.53.0
