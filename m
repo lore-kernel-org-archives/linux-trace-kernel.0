@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C61958038B;
-	Wed,  9 Sep 2026 16:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC67579820;
+	Wed,  9 Sep 2026 16:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788969862; cv=none; b=KrBH4Fnbdk0BZiYhJm6fp7w4Dp1L3WNAGLppq8ixDLxj41pRPISpQnsdtelfgv4vREYatzq+yCbJnx+SHjQ6LLNSA1m9XOyp/MxLR1hHiPWReXPZfdCQkKBAa6Vx4OPJSD/dN9BDLJtwy78RMq1NNsA8+I9wqWgLTVOf4KpgpvQ=
+	t=1788969900; cv=none; b=MCfzkMqJlA1zy0N678/pJdSMFgeJiD6k42JBQs5nQ1A+3g77RoKSy1AQA3vEq6yURKW+Flcx9jAjkjiEEr5sSxP72dpan5vNbQPQkXHM2BiCDXag38hUHvgudi3wg4gfkixLRISx70W7dhuz8sJA3dqVIBtvspGkwsYHf2Uli5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788969862; c=relaxed/simple;
-	bh=ylVAzHN5WSnTzmFrbCkgMZvebBClP/wgCU5mvMgmll0=;
+	s=arc-20240116; t=1788969900; c=relaxed/simple;
+	bh=p1apJEXp31TKeLeR3ttjxNEVSD0Zt9qM4dWFKQrlCkU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R/WdErDVfkP7bNDfb6KqIWvxYFcxQUwqSVwlyLwGPTlDMDiOf1KbcOhzlkctvMRAdLdEomPDq6AkFdPOD3JX1Lq+Bb9yW2O9HhqmESaRqbYLNXKsbTPPMP8pdC4omuVT4GYSfdoU3Qhym/9ctdx/ycdOFXpmsVDv/XDLtFFHJHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5Byjyq7; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=fb7zOgJXRGmWojqSjZBBbWBB4t/ys1AzMUHnWgUyjNwSnD4bqt6Jqhrq6uj41pJaht8cT8dhXYYHSNEyWpNqGhTY2YEOxRBVzeS/yDTdM9M3fnSVYsUa0Dj0ch93vWY5ujuvI8mHgmI997dOSAgoLGgtJJK5C8o2gGWgb2jMUoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSJrAWqA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5Byjyq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA101F00A3D;
-	Wed,  9 Sep 2026 16:03:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSJrAWqA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A801F00A3A;
+	Wed,  9 Sep 2026 16:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788969859;
-	bh=Dk4sipXK68/lmwCc15T8zbjLDSh1adJ4SNP0vi3NXZ4=;
+	s=k20260515; t=1788969899;
+	bh=rF99J4DPqDZwvdeRAV2rOWG+wx4Fr7bIPdeKiooYGDs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=N5Byjyq7obOB27n73VYuETuGMgxQqZ+4uhJtACmOFqhcEPaUoNKD2aXjdV+ITaH+G
-	 UnPbxBOmzkYV55oRKDkAQbky+J+Vpfri7xM6m3QbpgNkWbe5uTJcxn15Nv/D6cNIvS
-	 tl/lEN++DrWlUG8ihLFwAdERRhpxECLPBAjwSuL/8bmKXMJ6MgTEJlK6EvNYlYI88T
-	 T48dYf95LW8RuQrgH/FByYkSqQVNdGlgkKg5PKSuoYijMxSTnFrRK5RB6zrjjEGw1Z
-	 YGU5DL38OYmPx6qPPWdZzz84LGm+oNBNJtnNRAKKkTzfx+1XAdUdVWFeVpgtUxIicK
-	 JK65Sc+BlJsQw==
-Message-ID: <307df445-8b53-4de9-8e69-3c586a44be9f@kernel.org>
-Date: Wed, 9 Sep 2026 18:03:56 +0200
+	b=YSJrAWqAgJ4HGitZJW/Kp2bBGS/9k+MWEQUyLrU5a/vKIVLec54gy6J8nnSmFsYy1
+	 7zv+juF2wgV6znk6KQgyrRCPrrM5nqbwN3F1BCrPybqz2ebJiprekwharnVG0Ik0nH
+	 8Uugm3KWR64rZ0btW5ETHAks8KNlbq7rO2fI35bKigqAZfmcfaiKV/j9TSJapiMyLo
+	 1Ipcqs2HIktnksREgspscY41vI+XGNNNt+8rkfeEUdKfomDE3xBG/bZXFcmcpA55B/
+	 FNWMs8srNW2Y6NwRE4mP6KupjgiBwlYkzXnlz1dgrxbjvhksbmxalogLCp1BoyUwwv
+	 +lbd5OkgZtKTA==
+Message-ID: <7f85c47c-10ff-49f3-bc88-096d3e433650@kernel.org>
+Date: Wed, 9 Sep 2026 18:04:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 11/45] KVM: guest_memfd: Invalidate both SHARED and
- PRIVATE mappings for in-place conversions
+Subject: Re: [PATCH v12 13/45] KVM: guest_memfd: Pass mapping type filter to
+ invalidation helper
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -72,7 +72,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-11-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-13-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,41 +119,25 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-11-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-13-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> When removing one or more folios from a guest_memfd instance, invalidate
-> both SHARED and PRIVATE mappings if in-place conversion is enabled, because
-> stating the obvious, KVM needs to ensure that all mappings to the folio(s)
-> are dropped.
+> Accept the mapping type filter as a parameter in the invalidation start
+> helper instead of querying it internally. This allows callers to specify
+> which mappings (shared, private, or both) should be invalidated.
 > 
-> Opportunistically rename the helper to capture that it returns a filter for
-> all gfns in anticipation of zapping only the previous mapping types on
-> conversion.  I.e. when doing in-place conversion to PRIVATE, only SHARED
-> mappings need to be zapped (ignoring that KVM would ideally not invalidate
-> ranges whose attributes aren't changing in the first place).
+> In the next patch, the conversion process will use this new parameter to
+> invalidate mappings only when they're different from the target state of
+> the conversion, i.e. invalidate only shared mappings on a shared to private
+> conversion and not both.
 > 
-> Note, precisely zapping only the possible mapping types when in-place
-> conversion is disabled is important for functional correctness, not just
-> for performance.  Specifically, if KVM zaps both when SHARED vs. PRIVATE is
-> tracked per-VM, then a PUNCH_HOLE operation on a PRIVATE guest_memfd will
-> incorrectly zap SHARED mappings that have nothing to do with that gmem
-> instance (because they're mapped via a VMA, not a gmem fd).
+> No functional change intended.
 > 
-> The incorrect over-zapping of SHARED memory that doesn't belong to the gmem
-> fd requesting the zapping will be resolved in a later patch, where, if
-> in-place conversion is enabled, KVM will use both shared and private memory
-> from the guest_memfd. If both shared and private memory are from the
-> guest_memfd, invalidation will only zap memory belonging to the given gmem
-> instance.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
 
 Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
