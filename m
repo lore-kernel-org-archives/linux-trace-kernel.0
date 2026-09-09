@@ -1,180 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE7D3002B9;
-	Wed,  9 Sep 2026 07:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC03F1075;
+	Wed,  9 Sep 2026 09:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788939485; cv=none; b=LPpDvO14P9dvovPn8DBpbgZboEWgWseOh56r4Yl3HRsELiuo6wI5iGUvzvwyG7C2cybqA2tGiUKe2XyOvDNn17v21zvSMlnoP/DWtW19w+kjr4mq8hfcJYaeIMQkZuEmjQKtYsjAJRIVumrnWTQ1eFr4PDHQJUlqspWXIOWdwrs=
+	t=1788946237; cv=none; b=MSOCgjPpDrhheIGXGzn7RPjxL4qgeIrz61dDpGDYPDz+endmMCiJUeCQPpBNj7EW5zrgmRJEPkxRMtvCWpuxVVPiWauVvedLDPdA0meMTj9ZpEoQ81uNWepd35GtKv5J5rVsNwEOLopkNLD3BejzCiJnHNA8g3I82jNDo9CmKME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788939485; c=relaxed/simple;
-	bh=nTAm35845aAqmOQtS6HyRYHkKn+bOdSMAV3QF5uJvY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdQmzFnen4pGM4M62lN7CkOLWz1/1MCEJEt2hgKO7FlRi4xKC9STZLFtV+TYQNNzy6w4guOP7Nnf0JOeDgs+Fl7UJqdo2lV+8wa+WPR92q+n7cn+23HaVocVKLhTHI0KyyiHyqIHIp0yxOlO+SUikaYa/YdguoVldsNeaQK4tos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fMvwOMtK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788946237; c=relaxed/simple;
+	bh=Uy8+fa3cDu11VwKyL+MkTAWtr9qRvo3T55ynaHdO+DQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GUq6fBhz3WspdMGE+fJf52lG/4/HMQt7r4AZ9u7ISaNZ5A/XGuV+4WCRQQA0HyKRN1dAgnf+CZ8ZxSH/IaGAr52qwD/5fxo1GpAInbLR6wKvMt78kQLiCox7alYG2iSdmPYHvDuj3fpq7gA22JvE2veQEX5oBpAwssz6pWgi4BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OONcIadS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fMvwOMtK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8484C1F00A3A;
-	Wed,  9 Sep 2026 07:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1788939483;
-	bh=z7WoiQ3kTHyw/Ii8U53W3jB43VLKD3M/+zE0Et0v4Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fMvwOMtKjnQJHWqbGOBFRkxLXNBsibipPgj2Q6P064WQJWMW7wfdq4gqVuVvBLOBi
-	 mw2LdSGq7nWqdIa6eYDVqIpvJUSLUA2zonOikKUX6K36rwbteoOJo/Gwa7LLNDfbhI
-	 EHt9w7bjV4yHdhIGfrHtCRftSsoS+o6rrCDY1usY=
-Date: Wed, 9 Sep 2026 09:37:54 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
-	Doug Gilbert <dgilbert@interlog.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>,
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oupton@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>,
-	Kairui Song <kasong@tencent.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>,
-	Youngjun Park <youngjun.park@lge.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org,
-	selinux@vger.kernel.org, linux-sound@vger.kernel.org,
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH 09/39] drivers/usb/mon: update to use mmap_prepare + map
- kernel pages
-Message-ID: <2026090947-daycare-gentleman-9796@gregkh>
-References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
- <20260908-b4-mmap-prepare-vma-flag-sanify-v1-9-dacf19cce22b@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OONcIadS"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 688N1d7F2126182;
+	Wed, 9 Sep 2026 09:30:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2+5prjKPMANylfWIFutZLxvCEaQqhpeANJvVheqI3
+	t8=; b=OONcIadSGHKzrBWHjXsBOwtUKhny3nEgAO9qKBbikKSd6nWZnL17YIwU+
+	SBrPArJxcgue0+Zd/GpsBkJxwdanom9oFE7k8p/JGb+RNXxVRGDBEIeRdMaIo/xd
+	KiXP9AWZpQTSzyiQUq1Kgfj9ccJlXo8wCGlVx3WWisqgGoknudw+QekJ9EDgkAdQ
+	Q+PnSuJgT+k+MQJRRkuXNVLrIBp07rhGyf7mBJy8xK4kwrVrBAeFQYVnTh2OTWVR
+	CrQSuGfUbD6aPdQbtc5qCTThGGJuVx4bamSLSgLqY9D9TGSrrmbsI6UO0g0ltwzJ
+	Uv41ndXHVwjETtC4IMKAPGUN2VGHw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ggbj8cknp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Sep 2026 09:30:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6899QGvc020749;
+	Wed, 9 Sep 2026 09:30:07 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ggwsw9jey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Sep 2026 09:30:07 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6899U5U152101456
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Sep 2026 09:30:05 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5A05C20043;
+	Wed,  9 Sep 2026 09:30:05 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C42620040;
+	Wed,  9 Sep 2026 09:30:05 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Wed,  9 Sep 2026 09:30:05 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+	id 059DC160DFE; Wed, 09 Sep 2026 11:30:05 +0200 (CEST)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Fix unique symbol check in kprobe_non_uniq_symbol.tc
+Date: Wed,  9 Sep 2026 11:29:53 +0200
+Message-ID: <20260909092954.2200558-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-9-dacf19cce22b@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6pSV8Uo2XJFQeN7f1gTIe3kPkKM4nOwj
+X-Proofpoint-ORIG-GUID: 6pSV8Uo2XJFQeN7f1gTIe3kPkKM4nOwj
+X-Authority-Analysis: v=2.4 cv=RNCD2Yi+ c=1 sm=1 tr=0 ts=6aa12720 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=8iogyDQ46Larf4JUBJoA:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA5MDEwMCBTYWx0ZWRfX2JGVe8HRpP1I
+ K/pDg858DJMLTsRUFKvRMLCudfChvnDdqgogP0MuE8xaNN5xUK87Mmw9/t/8g3BMQAP1bItL4Cm
+ Filo4f7WHLhVzcorLvAcImoScIc/sFU=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA5MDEwMCBTYWx0ZWRfXyIvu1WNtEaJ5
+ gyVVCSbbWtFCXH9tC/rt0ynHRMQTnKwdY2V2W09dW1aHx06fQCaif5wWMbKwDKUJKYyRwKNypGt
+ +7Nh/AlMmxXaY+WrjOiqNK7jJaF45TwAKnwdUTuAZ0mRIJdk0MIGXYbO9mUdBGPeNyFuviyZKzV
+ qpHkGer9RPuWGjSuBixOmYmH0d/fHmTi75M8bMJdh0J/Qt9/zCA4tTaEdVmJMekKTmChjH7gF6N
+ KMl3BoQw8Yavr9K+ktSOAr0bNnk/HwVXDrkY7zYH3CmSIk0y6ToqEh6GDQhBaObqoE2aK7pTibb
+ QyFLNB+9uritXQIqUPvmGblYDI+zZf8LW6sgE8nF2nRK01ilmF9EsLlNf9yQY3MWNwxVCxYzYFY
+ gF1iA40eU9erwUgTT7x1Irw2vTyok8DuJvUYqvz3PP/5b3cWRoJMWxNPj7d4R1MLd/j5ZwIdXZ2
+ NZE1UXy/MaXAcSSBrng==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-08_03,2026-09-08_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 clxscore=1011 spamscore=0
+ impostorscore=0 adultscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609090100
 
-On Tue, Sep 08, 2026 at 09:01:13PM +0100, Lorenzo Stoakes (ARM) wrote:
-> Replace the deprecated .mmap hook with its replacement .mmap_prepare. As
-> part of this change, additionally take the approach of mapping pages upon
-> mmap rather than providing a fault handler.
-> 
-> The page span cannot be mutated when an mmap mapping is in place, so this
-> is safe to do in advance (the MON_IOCT_RING_SIZE ioctl operation exits
-> -EBUSY if it's attempted, gated by the rp->mmap_active reference count).
-> 
-> Utilise the newly introduced mmap_action_map_discontig_kernel_pages() to do
-> this, which allows for iteration over pages in mon_bin_discontig_get().
-> 
-> mon_bin_discontig_init() increments the rp->mmap_active reference count to
-> stabilise page spans. Should an error arise the core unmaps the VMA and
-> mon_bin_vma_close() drops the reference again.
-> 
-> The vm_ops->close hook implemented in mon_bin_vma_close() will ensure
-> correct reference count arithmetic upon unmap (with mon_bin_vma_open()
-> accounting for splitting).
-> 
-> The existing semantics are all retained, including not mapping past the
-> range of available pages, with a SIGBUS being raised in a userland process
-> that attempts to access past this point.
-> 
-> Ultimately insert_page() is invoked to insert each page, which increments
-> the reference count on each mapped page. This mimics what was being done
-> previously, only we pre-map the entire range rather than doing so on
-> demand.
-> 
-> The existing fault handler did nothing that required demand paging, and was
-> presumably implemented this way due for historic reasons.
-> 
-> One behavioural difference: pages are no longer faulted in on demand, so a
-> page discarded with MADV_DONTNEED is not repopulated and a subsequent
-> access raises SIGBUS, as with other pre-populated kernel mappings.
-> 
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+The current regex also matches symbols in modules, which makes the
+test fail on s390 where name_show is present only once in the kernel,
+but also multiple times in modules:
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+000001b1401cdc20 t name_show
+000001b0c05e6c40 t name_show    [mdev]
+000001b0c0495f30 t name_show    [i2c_core]
+
+Fix this by changing the regular expression to only match the function
+name.
+
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+---
+ .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq=
+_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq=
+_symbol.tc
+index bc9514428dba..07b1177c1634 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol=
+.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol=
+.tc
+@@ -6,7 +6,7 @@
+ SYMBOL=3D'name_show'
+=20
+ # We skip this test on kernel where SYMBOL is unique or does not exist.
+-if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}" /proc/kallsyms)" -le '1' ]=
+; then
++if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' =
+]; then
+ 	exit_unsupported
+ fi
+=20
+--=20
+2.53.0
+
