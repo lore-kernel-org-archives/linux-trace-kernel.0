@@ -1,164 +1,144 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96FC489FB0;
-	Wed,  9 Sep 2026 22:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067B83C660C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Sep 2026 22:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788991925; cv=none; b=n3kAgOughI2dBIbJLjqDbmGd9RdUEoTON/Nmc5kjx8Dj58DN7HeGpRwMkGqMHAnBtzpw4YCC3JEID7dSrhU7a8y2GGJkU0ac0qTfvkVnKyvwETX/yv8NmlF55M5PYNdgxbDC7/jMeWNLpBYcTG0qpmK/mM1JdblAGNHSCmXA6Ws=
+	t=1788992081; cv=none; b=MkD2ecTKPk5Rmp/eILuOF64tjpd0xMgMyi9ZRkXqEbi/5FjDhFS2FdwE3zPJxCM+0IBrlNz864YzVwq71xmh3uRzuv1soLilKA1f3Sbn1gxtpwmvc6tW9hbnZXyDT6nGn9tOFcBuW5Ay/DobywIrI3oTxMf4XO/LAu+/s1bcyDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788991925; c=relaxed/simple;
-	bh=q6BP5kP6oQ5TjB3bb3azGPE1liI5ZOIwuttsZ7zJzzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DJht4yMtW8m2SlJhu4bWXaxNhyMCb/Dc/NAIH1cM64bpxdfJzG/uA2eJOy7Ls6qgMqsLG7UdVl56v4NCKdde1oWmMkV9f0UxCLN/G2Z5KX5wX/8bfMkXo1mIS7zATeBDPedbPuNDXMt6GvvMkvPCA+vQ97RFQn1MAGvQkHabv4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=vOFfGjk7; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788992081; c=relaxed/simple;
+	bh=aQvz0ZYLQXdqqzd85lD3v43R3LA7HgRcKMR5C2XkRss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hzf7J929/2YPDgWg7lB03r0YNwu1ar74bs1rykj17dv0yPU3CBuSYKyebBno0P7N5rzZvyBwwklz/5vmgpLEvpSowXg69Q4MwzfOeBHmo52TebqnNMpgsfZY0TPau0yqECqoi/WF4WhcpDtRFyhz0ll/odNcrZE6vybVTur+sUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fnpdwSN4; arc=none smtp.client-ip=74.125.230.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="vOFfGjk7"
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id F10E61C20C9;
-	Wed,  9 Sep 2026 22:12:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 2ABF235;
-	Wed,  9 Sep 2026 22:11:59 +0000 (UTC)
-Date: Wed, 9 Sep 2026 18:13:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] tracing/remotes: Account for ring buffer page
- header in size calculation
-Message-ID: <20260909181316.676b8c56@gandalf.local.home>
-In-Reply-To: <20260907192643.42513-2-vdonnefort@google.com>
-References: <20260907192643.42513-1-vdonnefort@google.com>
-	<20260907192643.42513-2-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fnpdwSN4"
+Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-90cdfc6db0aso9977286d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Sep 2026 15:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1788992078; x=1789596878; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=C5NkJw6oWjdsiphJVaybRhCdoPAeWbsi0cRS0OiEPYM=;
+        b=fnpdwSN41Bd+nnSwZXD6W0gZ8eetbtEli2koOI5k6o2p/h7yS80w3XqZmsAcB0S7tC
+         rlBEAKgyCm2vYnBGj1pW6sW9JZNN1TUVAXB1nw2NHkMJew3X+9bbwGs+8lNnznKSSrlO
+         I327dzeyexcEYxFLf4xRuBu25dekSSqijcF8IvX31Zn+fbBi0w71OaADpEgR8fFiVeao
+         RG42i7/xclhYVIYtPmE6evMDntSEZN6eOF2DBDdLkeGS/1heYbdXs26/V4GbzDo9UgM0
+         eMxaYopC9+m5yXS87uifPq0UhH2vm6QtyBePAG0QqFe3/eA4t4jyjM06d+KiES0jsiGj
+         iiMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788992078; x=1789596878;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=C5NkJw6oWjdsiphJVaybRhCdoPAeWbsi0cRS0OiEPYM=;
+        b=aEhQRVpiVSHP6OlJcXWDd6QG2eWuC2fLrCLoRn4Gv10Xf02ViV0igAd7A2L+ZZcFdH
+         1GRuQQRgQL/4gLiGwDJ0J6SM2DE7r0yIUWFkaKSYf6YO6dToEsuW7vM7Ib+mvWt1D+KV
+         GuRqKkD5xK4HKuPbZL4isUz/4oWvGnmAvXgWfTqyv48EmBVnCHzmuL4cumf4ujJRTR4I
+         ZTtTVrZjaRocgVLPhJ1eaDI3CS9p7fJXF3It0hTyKHWnj1wYGfx91ahw/vyVSlr2yRpW
+         xKkKFrsoY6aLyQOyqp+KgnI22SIT3h0I6I06z+1ivxAeRIk2+Kqhxv8Srbk2XKdt6TAM
+         Ccow==
+X-Forwarded-Encrypted: i=1; AKwUvBzqbizuKHOzNpoG5rOuC0JGr2MDyd7G8kJFFgFKkjEIuAvGY2Vl4RgQVhlZtXDztBXrds582iYZHOSv2WTqFlZP+Ms=@vger.kernel.org
+X-Gm-Message-State: AFuF++kUOGl9H2oQvH6J1nsT5RgM9w8/OOm5iNUn1U+6Xt5KrfbNzcNW
+	cxnGZ3QcSrtC0VuoBiW0Xu2DHE1SdD/WkWdVA1GfzZMS9BkOfLqaRJKKU7E+aFbW/z4=
+X-Gm-Gg: AYBFou0FPceiFjxxAZ6BxcgWTOnQk/N/Ojk0yT96jjJ2ooSOBBHTGX8dlbQwZgXBDq9
+	M7RVQ/FNg3r0Z29kinP2rijSR8/uxr5G9/FqwcvXzdzKfdvYJxGQ2/ZH4s6QgWdWQZZVD549p8g
+	iMUClUjQwIAKGLtvKhfIBQzAoEw87uMG1dqevk0ysB2bCAok/X76CIOLNnlPOD/JXIoy0MFq6/U
+	UGl17QfcOr/b4atRYX0a1m2zBcNI2zhxc72EhHhT/yMAp3b3jt7JftdUmVLY/QuJ9iabddyVvRj
+	knwCKLvtfYc+SwFBE8RUrVOxxnvTRSWkAgBgzPMOaK/zZMByDnZGEgGLdCO3sPFhZbuXZUnIrIh
+	y1TvCVzVmKtwDEH+wUsVrovJmHbuq/4ag+FfPtB3gb2lg5Ih2ZP5SX1rO7X1uD9x3pQHCtgxXby
+	8PGcWRjX1OmUhPj/c7Zp1rr+yoqgOPtIhggB73NjmwYltM8FR5hWaxoCd9HgjkQAE8qL7zHkQvC
+	QUKUhUs0sGDpY3KNIn7X7ha0XwmR1mdUcCVU9x1UvLwdLjr1qTte9k=
+X-Received: by 2002:a05:6214:761:b0:8f2:fbb1:cec4 with SMTP id 6a1803df08f44-910d104c019mr49748076d6.19.1788992077664;
+        Wed, 09 Sep 2026 15:14:37 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-910406475f5sm151951376d6.9.2026.09.09.15.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2026 15:14:36 -0700 (PDT)
+Date: Wed, 9 Sep 2026 18:14:33 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Ye Liu <ye.liu@linux.dev>, 
+	Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Ye Liu <liuye@kylinos.cn>, Michal Hocko <mhocko@suse.com>, 
+	mic@digikod.net, david@kernel.org, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
+	gnoack3000@gmail.com, ljs@kernel.org, sj@kernel.org, rientjes@google.com, 
+	shakeel.butt@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev, 
+	tony.luck@intel.com, reinette.chatre@intel.com, x86@kernel.org, paul@paul-moore.com, 
+	jmorris@namei.org, serge@hallyn.com, pavel@kernel.org, lance.yang@linux.dev, 
+	pmladek@suse.com, longman@redhat.com, mathieu.desnoyers@efficios.com, 
+	jiangshanlai@gmail.com, qiang.zhang@linux.dev, dietmar.eggemann@arm.com, 
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, mark.rutland@arm.com, 
+	Dave.Martin@arm.com, james.morse@arm.com, babu.moger@amd.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] kernel: convert process/thread iterators to
+ for_each_*_rculock
+Message-ID: <aqHZ7lZQnugGJ0ig@gourry-fedora-PF4VCD3F>
+References: <20260907081334.1152889-1-ye.liu@linux.dev>
+ <20260907081334.1152889-6-ye.liu@linux.dev>
+ <ap7dC-LWNaoPYJvv@gourry-fedora-PF4VCD3F>
+ <ap76-0-hN6CAcYXX@redhat.com>
+ <ap8mgnpE7D4TTrno@gourry-fedora-PF4VCD3F>
+ <ap8yoW37GY17pHYS@redhat.com>
+ <e618ace1-6a8b-42c5-8a97-44b39dd1a7c7@amd.com>
+ <ap-spMNyMvYFga5k@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 2ABF235
-X-Stat-Signature: h9nwnykqsmf76yqrew5qupwtypbpudof
-X-Rspamd-Server: rspamout03
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+ePOxhzE5KStr96hifsCzIMWLdzhARa50=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=eqXWwhqo/0nztHxRHXstiAZes63YtobY2JN7TKFKusA=; b=vOFfGjk7zCB+iAOupKachDe3ujyORrKRL5IIMngOYGIDwIzia3kexlRdKu2renJqLWVo9EFBqtP+8H34+3AY/Q0KzynrNgSCOPKZ91xasgifPf47yWRBN7niXc83fSYwmaq4R8EQs5n6KzSZJR65T4B7liCf035fm+bLx9lRlH4=
-X-HE-Tag: 1788991919-707952
-X-HE-Meta: U2FsdGVkX19QsI0T5PDaIBswzPQYJWu+alnRVNcBuTBA567brb/QsxLXdOXN1ZOlWTbFDe8IgwIJVxj1aJD4BCs9Bzhp4Cygnfw9opjN0TUmC7olDuc5P53S+E1eXiMSWGMkMrIMOPF1blnK+UWPcF7S5TBSVhSI9H5CusL/n9pyX0LLLaieynQxC2TDHduDAbeWyeUAa4wuAue7N3McAfuDBHeYimrsq/V01yNshPJXGpk/jOtlO3w+Zfekp6U4WOpU3/zlyD9cqWbxuuHTyR7jYI0BCdlifVUIRgxO1lKBoHnKgQ8040xgsHrglXLEKiEEYZkmZ86YBfJPtdOdGLyOHCwDfL/Y3MVD7HEoKg/gro5ewGFIpK+Th3Nqq151
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ap-spMNyMvYFga5k@redhat.com>
 
-On Mon,  7 Sep 2026 20:26:42 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> trace_buffer_desc_size() and trace_remote_alloc_buffer undercount the
-> required pages because every ring buffer page contains a header
-> (BUF_PAGE_HDR_SIZE). Account for that header to ensure allocated remote
-> ring buffers aren't smaller than requested by the user.
+On Tue, Sep 08, 2026 at 08:35:16AM +0200, Oleg Nesterov wrote:
+> On 09/08, K Prateek Nayak wrote:
+> >
+> > On 9/8/2026 3:24 AM, Oleg Nesterov wrote:
+> > >> This might be my - admittedly shallow - understanding of scoped_guard,
+> > >> but does scoped guard handle goto correctly?
+> > >
+> > > Yes, it does,
+> > >
+> > >> and why it's generally discouraged to mix cleanup.h and goto.
+> > >
+> > > Hmm, why? I didn't know...
+> >
+> > Apparently older GCC would allow subtle bugs with cleanup + goto to slip
+> > by but clang has always caught those bugs and refused to compile so as
+> > long as clang builds are happy, things should be good.
+> >
+> > Here is an older explanation from Peter:
+> > https://lore.kernel.org/lkml/20260327154136.GL3739106@noisy.programming.kicks-ass.net/
 > 
-> While at it, ensure those functions catch nr_pages overflow.
-
-Fixes patches should never have "while at it". That means it belongs as a
-separate patch. The only "while at it" that is acceptable is white space
-fixes or other formatting changes along with new code that is not a fix.
-
+> Ah, but in this case the code is buggy, "goto unregister" jumps
+> into the scope of __free.
 > 
-> Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Anyway, I agree that mixing cleanup and goto can make the code
+> confusing or buggy, but this particular case still looks fine
+> to me...
 > 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index afc7daa6ee7d..7a1a92f87650 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -8,6 +8,8 @@
->  
->  #include <uapi/linux/trace_mmap.h>
->  
-> +#include <linux/ring_buffer_types.h>
 
-Hmm, why is this after the uapi header? It should be part of the linux/
-headers.
+Seems jump-out is ok, thanks for the confirmation Peter.
 
-> +
->  struct trace_buffer;
->  struct ring_buffer_iter;
->  
-> @@ -281,9 +283,14 @@ static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buf
->  
->  static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
->  {
-> -	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
-> +	unsigned long nr_pages =
-> +		max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
+I do agree the general improvement is nice, but maybe worth considering
+taking cleanup.h all the way if we're going to use it - that's all.
 
-This is getting a little unwieldy. Let's break it up:
+The improvement is clearly welcome.
 
-	unsigned long pages_req = DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE);
-	unsigned long nr_pages = max(pages_req, 2UL) + 1;
-
-Or better yet, let's add a new helper function:
-
-static inline unsigned long calculate_nr_pages(size_t buffer_size)
-{
-	unsigned long req_pages = DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE);
-	return max(pages_req, 2UL) + 1;
-}
-
-Then this could be simply:
-
-	unsigned long nr_pages = calculate_nr_pages(buffer_size);
-
->  	struct ring_buffer_desc *rbdesc;
->  
-> +	/* Capped by ring_buffer_desc::nr_page_va */
-> +	if (nr_pages > UINT_MAX)
-> +		return SIZE_MAX;
-
-Separate patch.
-
-> +
->  	return size_add(offsetof(struct trace_buffer_desc, __data),
->  			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
->  }
-> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index 75fa1ffc4c96..2e0fdbb730b7 100644
-> --- a/kernel/trace/trace_remote.c
-> +++ b/kernel/trace/trace_remote.c
-> @@ -980,9 +980,12 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
->  			      const struct cpumask *cpumask)
->  {
->  	size_t min_desc_size = trace_buffer_desc_size(buffer_size, cpumask_weight(cpumask));
-> -	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
->  	struct ring_buffer_desc *rb_desc;
->  	int cpu, ret = -ENOMEM;
-> +	unsigned int nr_pages;
-> +
-
-
-> +	if (min_desc_size == SIZE_MAX)
-> +		return -E2BIG;
-
-Looks like this should be a separate patch too.
-
->  
->  	if (desc_size < min_desc_size)
->  		return -EINVAL;
-> @@ -991,6 +994,7 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
->  	desc->struct_len = min_desc_size;
->  
->  	rb_desc = __first_ring_buffer_desc(desc);
-> +	nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
-
-And here we can have;
-
-	nr_pages = calculate_nr_pages(buffer_size);
-
--- Steve
-
->  
->  	for_each_cpu(cpu, cpumask) {
->  		unsigned int id;
-
+~Gregory
