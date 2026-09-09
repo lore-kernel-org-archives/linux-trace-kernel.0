@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C1F57ED98;
-	Wed,  9 Sep 2026 15:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F8654A7E7;
+	Wed,  9 Sep 2026 16:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788969279; cv=none; b=QJSLqWb6P3hhSwPQr7yFYRVg8YnNsHXuc3jtxJc3AALVc/ypPJOufLk8MbjakTbS6qLv8eqkaltgj/s2kg1yhUCSe6QjJeIs8U5mkx4UspUT2vyNjyAAv/KCPRhMhkFAFFSErbO6aoNNRMCllV3uM0I4Us3RK+LUFotRL2n1B1U=
+	t=1788969712; cv=none; b=TNXwpht0+QGcjUudkZz2htsRA0cGTSoNuVOzmSTg1KAUCxOfFsvAs8aY8G0V6SO9B32EP174v47l/NECst0tDaMHGdXI112/Olc2HFliYLxLw1B2vHiKtXLD2BO4o1RshAetKddCJQ/ya188uv3BRr5lkVobJYiWBMowA7RUwzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788969279; c=relaxed/simple;
-	bh=4tmuZy0j5vGxvsm2FOetliQpL82hSpmRGpvP0VKkcoM=;
+	s=arc-20240116; t=1788969712; c=relaxed/simple;
+	bh=x+wNB4YAvun4OnvxjY0BRElQYfJzAYdDORRux8Afbm8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DA2qCyOcfqx1Ze395hwl7znTFJ5Hm951om2eUqJrmfAVjTHFy7gYqQjTq+vddOudnIJ/qkH5rCwdn9y++sGcp5rICifXwUo2fVlaEf5gVxx0tHWVBhOUdnZ8QoXHkdaFk30VSJAvnq0WUHe62KlfauOSs4Q66olIXbr8OOz3B+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bo/nwc6d; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=MJkt3+XPBvMTJX7rwUmMDWs9Rx1PhyDrkz6AxP1fgJU2ZcEDwFyW37ExLnhokxInyws2IxZtTGoIlC5LOg4daWbKdziQimWJ/kcyYKExinq+3ASyiKhu2Kj5iyYwze5hvd931347IcGlXdX3DmmKN0+eBIQfEO3SlkVxBCbk6Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPO2z0RN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bo/nwc6d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE9E1F00A3A;
-	Wed,  9 Sep 2026 15:54:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPO2z0RN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5691F00A3A;
+	Wed,  9 Sep 2026 16:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788969278;
-	bh=o582C2XKLMWHOHeMahz3iW/6hgf1cGSAiI6ze6eSDVo=;
+	s=k20260515; t=1788969710;
+	bh=bhcglVIg8zXwSbsWI5h+bfoKubERpLnIudVPxLA0UXE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bo/nwc6dS99ISeSpfGwn+iPwXI9V9uwQ4onbV0KtT2I/oMD4xZ5Xgd6icDQxHE53D
-	 1QHdm7AwvJw6FLfmN0QtUcnvlAQnsrS2d6N/8pJmkKUJ/XHHMKVJaSAgDG5IIXnzi7
-	 sbV/X8VlO7038kF1MC9CnN+7QRmws3kfAtkYR/08G4TRQnrrHmbhkQsKrATTir9Hdv
-	 6Jx8KDhSTrH7DWq9IU1lCWsur9ORkdIT8FIovsCuu53xEHAZbQINr7dQ4jBN480huT
-	 X1ZNDPsTpIsDY3dJcV8Z7usILLGTfa24PnjkNL6g9aIUrKBbUO+RGYolago2/t5buD
-	 1Di4Pnhtbw5bQ==
-Message-ID: <b6b5e12a-c3aa-4e73-9fc0-d7200141e0e0@kernel.org>
-Date: Wed, 9 Sep 2026 17:54:19 +0200
+	b=bPO2z0RN/ugIIn93vzjrYlhlc2+pGIpRrg5dV5Kj/x+S6uhDNu0gQ2Tflt0XBK6NZ
+	 jDcXvHPqx1BBKEOrsn47W7//Qk0M439jzhJpDgsxOwCD3kA+BWBWKG/0jn2cnDg4Ib
+	 b7cH3RBinpH2xiv24FnxMbSnohKTLg7YKmDTL0zHGuQBmV3vDDHRdBW8nioUBR2Two
+	 heDpq9ffJlY5U4/hXC3UGIszHmT+RXWbw1ja5L3l7kYf1okUEI2IxyE6+Bta+MsGca
+	 PD1BDBVM/FNAIg5rwx9A4TI6cKScsTTkLCgkXAamR1T877nPjhNQIcmGlnqavyLUz8
+	 jQaRJZ24rjmqA==
+Message-ID: <c910f084-07f8-4264-a33e-ee29b65bee87@kernel.org>
+Date: Wed, 9 Sep 2026 18:01:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 17/45] KVM: guest_memfd: Return early if range already
- has requested attributes
+Subject: Re: [PATCH v12 09/45] KVM: guest_memfd: Stub in ability to enable
+ in-place shared<=>private conversion
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  jmattson@google.com, jthoughton@google.com, michael.roth@amd.com,
@@ -72,7 +72,7 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
 References: <20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com>
- <20260830-gmem-inplace-conversion-v12-17-85e5fd25252a@google.com>
+ <20260830-gmem-inplace-conversion-v12-9-85e5fd25252a@google.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -119,44 +119,25 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260830-gmem-inplace-conversion-v12-17-85e5fd25252a@google.com>
+In-Reply-To: <20260830-gmem-inplace-conversion-v12-9-85e5fd25252a@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/31/26 02:25, Ackerley Tng via B4 Relay wrote:
-> From: Ackerley Tng <ackerleytng@google.com>
+> From: Sean Christopherson <seanjc@google.com>
 > 
-> Provide a function to check that a range has given attributes.
+> Stub in global variable to enable in-place guest_memfd private<=>shared
+> memory conversion, which will eventually be exposed to userspace via a
+> module param, and wire up the __kvm_is_private_gfn() static call to the
+> guest_memfd version when in-place conversion is enabled, i.e. when gmem is
+> the sole authority on private vs. shared memory.
 > 
-> Optimize setting memory attributes by returning early if all pages in the
-> requested range already have the requested attributes.
-> 
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > ---
->  virt/kvm/guest_memfd.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index d14a7024bdc7b..ac8e0c6d6e942 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -98,6 +98,24 @@ static bool kvm_gmem_is_shared_mem(struct inode *inode, pgoff_t index)
->  	return !kvm_gmem_is_private_mem(inode, index);
->  }
->  
-> +static bool kvm_gmem_range_has_attributes(struct inode *inode,
-> +					  pgoff_t index, size_t nr_pages,
-> +					  u64 attributes)
-
-"has_attributes" could be confused with "has any attributes", not "has exactly
-these matching attributes and no others".
-
-Anyhow, I'm out of puff for naming suggestions today and this gets the hob done
-;) (kvm_gmem_range_has_matching_attributes is a bit mouthful)
 
 Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
