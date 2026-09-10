@@ -1,243 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F981F91E3;
-	Thu, 10 Sep 2026 22:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F3849E122;
+	Thu, 10 Sep 2026 23:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789081191; cv=none; b=Q9vSHejCB5z/eFTSnYf1zWZbuOvCWrWQ9giOObu8Zr5RumuzdeNdgbKpkmI+2MbkMXmrk5WWD3wfMgcMDiTqnkxCAZmCyJeUmcKTVJJV+n7rlGdmjscbiwFaBbJHtjzD3c3IHmY4NWenrOBNoPE9i05Cm4hdradTijext15Yq+4=
+	t=1789084536; cv=none; b=obL6l7uFLw/dK5na87gxUkanw6DI+FjKzbab4LbR6JaunW8yFXGu6BnNajJyRh7C7PbugH/LaaS90/UZaIo3n39lIPgGWMZtqKlJQDYQutQZOMh1ZefmVwl+1llDDoU8ONltTlqp0+0hk5P9pxE6nMlBHcmf5YkHoztcOIQ6WIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789081191; c=relaxed/simple;
-	bh=b93kSlyyskeLR1NOznw0GSJ+G7cZVrNE1HMM/+xoPQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hl1m1dxDCnbQiTClvjeSZAOZMsjrjC7feTPbdshWk6ousiPQDwnBCLLf92kY/TySAFWjrh2tva92/vye5oCMgNwehF1um2gM9gQoUkdqd9RYtGMUJyCBLX71BH5Tn8vD+Ky8eie9+aTfR14mss6SVj3XGUlCYhGG9KjoWCDi4BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hU0ytUBb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789084536; c=relaxed/simple;
+	bh=3xAm8x8BxRzgrAQrSXJX3gnFRneXWjklDL9ZXrCM6gA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kBj9FEudRBkHdz11V9lSsav1mRY+R4rsHxrtfGmQ4h75OO1t0ULQGMaMesezZwbFAPBsArN4lDdHPH6swECKfmwHO1cVv+OA5LNw+UKxY5AMdf5fFm0+uhKh+l191K2wuL6vrRbSU8S+qFTd0vjZxJL0gOcKP/Dfm6unCP8ClcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRJyfS+I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hU0ytUBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EAED1F000FF;
-	Thu, 10 Sep 2026 22:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789081189;
-	bh=xz6PHByUgP1AVWjuJD1V+UfaCDrDqHgI9zDHmq+c8Zw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=hU0ytUBbxQNF/Ko7N4RIPT+JpPrgy8HZNvPMTUrRfxisMxs5GCtiCGdeUFowkvPdK
-	 gIqFbvrR4RjOl9bLAeekCSVXFxuJFuWmJdZjFTcs1Drp4EGBGmfsQ6bly0WhLbGsJk
-	 YVi2xQANuoU42iGwEFZTYbC3tkBpj/y6afENFzesX5gYoNUgfdpCroQNA3NKNXitbd
-	 95cHu9S6+S8rC+OkT9IXy2r7sLCQ+ukD8hNx7p4T/moocJkTDYjo9NBYlWjNnnRTWR
-	 rkZt/TbetwuCw7Ke6a6H2HBqDZ1YQoHH+zwt9DAHhIVGSL3kGJiBBiHt0ZpRENDNG/
-	 0oc4cpzesfhWg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 54E1CCE19CD; Thu, 10 Sep 2026 15:59:49 -0700 (PDT)
-Date: Thu, 10 Sep 2026 15:59:49 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Josef Bacik <josef@toxicpanda.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC 00/13] rcu-tasks: let preemption outside trampolines
- be a quiescent state
-Message-ID: <eef8c574-2360-4a5b-8fe8-628f8dfa269a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
- <20260910154450.7b770882@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRJyfS+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6FB53C2BCF5;
+	Thu, 10 Sep 2026 23:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1789084536;
+	bh=3xAm8x8BxRzgrAQrSXJX3gnFRneXWjklDL9ZXrCM6gA=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=aRJyfS+I/6oQ7NgCYNS5fmaQR+KsYLywWvIOhh67twUSNtYkyOUbNPbVUUIIrpi51
+	 6GP9p4pbnVML0vJ2nd8LWSfjo+PnrGERiWFu0eRqSLwZ9UqNVjplFT0CRm9Phg4C2w
+	 oAKM4jE9zC9smkbSe0E4fDbbdhYc3jAZGKRoVOLytlKI76wYKWHNu/D8+0Qo/N+x2w
+	 AhCL13x6FpPQSPkNeUWTLHDPUwzeRe5sZ2tzwcShlzKvdPbhL/0KmtpFn0jfjmMYG/
+	 ehWoEaMOC7YdTLGP8Rbontj1HibTUE3fuYSJWwKpFAMyksKL0ANtyQLSDn74/zZqIt
+	 sC2rzmYHMxyIQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E354C88E45;
+	Thu, 10 Sep 2026 23:55:36 +0000 (UTC)
+From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
+Subject: [PATCH v13 00/44] guest_memfd: In-place conversion support
+Date: Thu, 10 Sep 2026 16:55:26 -0700
+Message-Id: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260910154450.7b770882@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG9Do2oC/33T226cMBAG4FdBXNepPcYnrvoeVS8Ge7yLGmBrC
+ EoU5d1jdhVBREFcGXk+jw//ezlSamks6+K9TDS3Yzv0eSDkj6L0V+wvxNqQf5TAQXMAxS4ddaz
+ tb8/oifmhnyktRawJPDRBOqMklrn6lii2r3f69588bnAk1iTs/XXx/s7dz55ep2XqtR2nIb3dm
+ 5jlUvBYTgp5uNwsGWcqegFoOHnrfl2G4fJMT37oymW9udpAoI+hKkOUp0VyiscYdpBaoQrsMaQ
+ yFKzm1vvoEWAH6RVS3BxDOkNOYKPQNsJhtYPMBgI4hkyGIPKIVDmtJN9BdoW0ONmaXToK4JSTy
+ lgld5BbIXN2Ri5DUkWH5AEp7M9I8FWyZ4ck+H1zXlgiHWSDe0psqLMXIESmOAoVLBrn8D8UbCj
+ JTyjIlFWkYgCVv+/UxyMXif695KRNj3CUHY0j3oNWFxys0Z6QKQOGgceKNYSBGamVI9SR/Lfns
+ I1pXTz6+7rIfmCJppfUs9vCa1E5MAguOlPndHxlMjNdO9XFbJ4kSx5ymx+fPyXVBRgEAAA=
+X-Change-ID: 20260225-gmem-inplace-conversion-bd0dbd39753a
+To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
+ brauner@kernel.org, chao.p.peng@linux.intel.com, david@kernel.org, 
+ jmattson@google.com, jthoughton@google.com, michael.roth@amd.com, 
+ oupton@kernel.org, pankaj.gupta@amd.com, qperret@google.com, 
+ rick.p.edgecombe@intel.com, rientjes@google.com, shivankg@amd.com, 
+ steven.price@arm.com, willy@infradead.org, wyihan@google.com, 
+ yan.y.zhao@intel.com, forkloop@google.com, pratyush@kernel.org, 
+ suzuki.poulose@arm.com, aneesh.kumar@kernel.org, liam@infradead.org, 
+ Paolo Bonzini <pbonzini@redhat.com>, 
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+ Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+ Peter Xu <peterx@redhat.com>, tarunsahu@google.com, 
+ Randy Dunlap <rdunlap@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, Fuad Tabba <fuad.tabba@linux.dev>, 
+ Vlastimil Babka <vbabka@kernel.org>, Baoquan He <baoquan.he@linux.dev>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+ linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
+ Fuad Tabba <fuad.tabba@linux.dev>, Xiaoyao Li <xiaoyao.li@intel.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=8646;
+ i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
+ bh=3xAm8x8BxRzgrAQrSXJX3gnFRneXWjklDL9ZXrCM6gA=;
+ b=tBwALuhzAg1A20WwgjQXyyFKIY1ex8U5p5pDeeO9K/+7xIvJd7mdEmNUHHn+JEMBtMbo+WCcs
+ /jqpzD96MFVDmtkwsJhys5mJeDZWb0Xhotl8vQrEiE9Jea5+I28Sxwc
+X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
+ pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
+X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
+ auth_id=649
+X-Original-From: Ackerley Tng <ackerleytng@google.com>
+Reply-To: ackerleytng@google.com
 
-On Thu, Sep 10, 2026 at 03:44:50PM -0400, Steven Rostedt wrote:
-> On Thu, 10 Sep 2026 18:50:23 +0000
-> Josef Bacik <josef@toxicpanda.com> wrote:
-> 
-> > Tasks RCU only treats a voluntary context switch, usermode or idle as a
-> > quiescent state, because a preempted task may be sitting in a trampoline
-> > that is about to be freed. That was a fine trade when PREEMPT_NONE
-> > servers compiled Tasks RCU away and PREEMPT desktops rarely ran
-> > long-lived in-kernel loops. PREEMPT_LAZY changes both halves at once:
-> > Tasks RCU is now real on server configs, and cond_resched() is a no-op,
-> > so a CPU-bound kthread or kworker only ever loses the CPU by being
-> > preempted, which is exactly the event Tasks RCU refuses to count.
-> > 
-> > The way this showed up for us was a cgroup writeback worker draining a
-> > very large cgwb for around eleven minutes on an arm64 box. Nothing wrong
-> 
-> So you have a kernel thread running for 11 minutes without a schedule?
+Here's v13. Thanks everyone for the comments and fast responses!
+We're now at ~3 weeks to soft-close at 7.3-rc5.
 
-We have seen this from time to time here as well.
+v13 is based on 7.3-rc2 and:
 
-> You could still put in a cond_resched_tasks_rcu_qs() in that loop. But I
-> guess you are trying to get rid of doing that too.
++ Hugh's patch to export lru_cache_drain_for_folio()
++ Another series [1], which makes kvm_gmem_get_pfn() NOT return a
+  refcounted page to KVM.
 
-And we have done this a few times, but if this proves to be an acceptable
-alternative, that would be wonderful.  ;-)
+Here's everything stitched together for your convenience:
 
-> > with that on its own, but a BPF program detach on another CPU went
-> > bpf_trampoline_update() -> ftrace_shutdown() -> synchronize_rcu_tasks()
-> > while holding trampoline_mutex, forty-odd tasks piled up behind the
-> > mutex, and the hung task detector panicked the machine. The kprobe jump
-> > optimizer is worse in principle: it does synchronize_rcu_tasks() under
-> > kprobe_mutex, text_mutex and cpus_read_lock(), so one long-running
-> > kthread can stall static key updates and CPU hotplug for its whole run.
-> > The current answer is to find each such loop and add
-> > cond_resched_tasks_rcu_qs() to it, which is the kind of annotation
-> > PREEMPT_LAZY was supposed to let us stop writing.
-> > 
-> > This series tries the other direction: have the trampolines say when a
-> > task is inside them, so that a preemption anywhere else can be a
-> > quiescent state.
-> > 
-> >  - task_struct grows an int, rcu_tramp_nesting. Every trampoline whose
-> >    lifetime Tasks RCU guards increments it before calling out and
-> >    decrements it before returning: ftrace_caller and its dynamic copies,
-> >    the BPF trampoline (which drops it again around the call to the
-> >    original function, since im->pcref covers that), the x86 optprobe
-> >    template, and out-of-line register_ftrace_direct() trampolines. Only
-> >    current writes it and nested users are balanced, so it is a plain
-> >    non-atomic inc/dec, one load of current plus one RMW per entry/exit.
-> > 
-> >  - The inc/dec are inside the trampoline, so there is a window of a few
-> >    instructions on each side where the count is zero but the task is in
-> >    (or on its way into) trampoline text. Nothing there can be preempted
-> >    synchronously, only from an interrupt, so the irq-exit preemption path
-> >    looks at regs->ip and holds the count across preempt_schedule_irq()
-> >    when the IP is somewhere the counter cannot cover: outside core and
-> >    module text (all the dynamically allocated trampolines and slots), in
-> >    the static ftrace stubs or the x86 return thunks that still hold a
-> >    direct-call target, in a module that hosts its own direct trampoline,
-> >    or inside the bytes after a kprobe that the jump optimizer may be
-> >    about to rewrite (the one synchronize_rcu_tasks() user that is not
-> >    about trampolines at all).
-> 
-> So basically if the preemption happens outside of core or module text
-> (which should be the case of any dynamically allocated trampoline), the
-> task is marked to be in the grace period across its schedule, so that the
-> RCU_TASK cannot move forward?
+https://github.com/googleprodkernel/linux-cc/commits/guest_memfd-inplace-conversion-v13
 
-If I understand correctly, the difference with Josef's patch is
-that rcu_tasks_classic_qs(current, true), when called without the
-direct or indirect aid of a trampoline, will provide an RCU Tasks
-quiescent state.  In contrast, without Josef's patch, no call to
-rcu_tasks_classic_qs(current, true) will provide such a quiescent state.
+Changes in v13:
 
-More to the point, because rcu_tasks_classic_qs(current, false) is
-invoked from rcu_note_context_switch(), any preemption to kernel code not
-within or called from a trampoline will now provide a quiescent state.
-Keeping in mind that cond_resched() is treated as a preemption, this
-change could potentially greatly reduce the need for sprinkling calls
-to cond_resched_tasks_rcu_qs() throughout the kernel.  (Except that
-the call to cond_resched() has to actually invoke the scheduler for
-anything to happen.)
++ Picked up Reviewed-bys
++ Fixed bug Fuad pointed out in "Ensure pages are not in use before
+  conversion", and squashed the lru draining in, adopted Sean's
+  suggestion.
++ Fixed documentation bug that Fuad pointed out in
+  kernel-parameters.txt.
 
-Which, if it works, would of course be a good thing.  ;-)
+Here's v13 with tests:
 
-> >  - With those in place, rcu_tasks_classic_qs() also clears the holdout
-> >    flag on a preemption when the count is zero, on architectures that
-> >    opt in. x86-64 and arm64 do so here. Everyone else keeps the
-> >    voluntary-only rule and is untouched apart from the (unused) field.
-> > 
-> > A running holdout already gets poked via rcu_request_urgent_qs_task(),
-> > which makes the next tick set NEED_RESCHED, so with this the resulting
-> > preemption retires it and a Tasks RCU grace period is bounded by roughly
-> > a tick plus the longest preempt-off section rather than by the longest
-> > stretch without a voluntary schedule().
-> > 
-> > Patches 1-12 are scaffolding and change no behaviour on their own; patch
-> > 13 flips the rule and selects the option for the two architectures.
-> > 
-> > Testing so far is QEMU only: x86-64, PREEMPT_LAZY with PREEMPT_RCU=n,
-> > PROVE_RCU and lockdep, with and without PREEMPT_DYNAMIC. A kthread
-> > spinning in-kernel for 30s with the function tracer, an ftrace kprobe,
-> > an optimized kprobe and fentry/fexit programs attached:
-> > synchronize_rcu_tasks() goes from 29.7s to 0.1-0.3s, tearing down a
-> > DYNAMIC ftrace_ops (tracefs instance function -> nop) from 27s to
-> > 0.2-0.8s, and the ftrace-direct sample modules load, fire and unload in
-> > about 2.5s each while the spinner runs, with no warnings and the new
-> > return-to-user assertion quiet. arm64 is build-tested only at this
-> > point; real hardware numbers for both are the obvious next step and I
-> > did not want to sit on the idea waiting for them.
-> > 
-> > Things I would particularly like opinions on:
-> > 
-> >  - Whether hooking rcu_tasks_classic_qs() is the right place, or whether
-> >    Paul would rather see this expressed differently inside Tasks RCU.
+https://github.com/googleprodkernel/linux-cc/commits/guest_memfd-inplace-conversion-coco-selftests-v13
 
-We might well need more:
+Tested with both CONFIG_KVM_VM_MEMORY_ATTRIBUTES enabled and disabled:
 
-o	The rcu_tasks_pertask() might need to check to see if task "t"
-	is in a quiescent state.  The task_call_func() function might
-	be helpful in safely accessing that task's state remotely in
-	the common case where the task is blocked or preempted.
++ tools/testing/selftests/kvm/guest_memfd_test.c
++ tools/testing/selftests/kvm/pre_fault_memory_test.c
++ tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
++ tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++ tools/testing/selftests/kvm/x86/private_mem_kvm_exits_test.c
 
-o	Given a task that runs for a very long time on a CPU that has
-	nothing else to do (so that cond_resched() does nothing and
-	there are no preemptions), and does so in a code path that never
-	invokes cond_resched_tasks_rcu_qs(), it might be necessary to IPI
-	to CPU that this task is running on.  Or to invoke resched_cpu()
-	in order to force a context switch on that CPU, whether it needs
-	one or not.  (Which makes the scheduler do the IPI for us.)
+[1] https://lore.kernel.org/all/20260826-gmem-no-return-page-v4-0-3bb9c1ddb4e3@google.com/
 
-o	PREEMPT_RT kernels might want memory ordering on the nesting count
-	increments and decrements, along with READ_ONCE() and WRITE_ONCE()
-	or similar, in order to avoid the aforementioned IPIs.  But this
-	increases overhead, so !PREEMPT_RT kernels would *not* want this.
+v12: https://lore.kernel.org/r/20260830-gmem-inplace-conversion-v12-0-85e5fd25252a@google.com
+v11: https://lore.kernel.org/r/20260826-gmem-inplace-conversion-v11-0-0a15d8a799aa@google.com
+v10: https://lore.kernel.org/r/20260807-gmem-inplace-conversion-v10-0-2fc18ee6d3ba@google.com
+v9: https://lore.kernel.org/r/20260728-gmem-inplace-conversion-v9-0-35f9aec2aed2@google.com
+v8: https://lore.kernel.org/r/20260618-gmem-inplace-conversion-v8-0-9d2959357853@google.com
+v7: https://lore.kernel.org/r/20260522-gmem-inplace-conversion-v7-0-2f0fae496530@google.com
+v6: https://lore.kernel.org/r/20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com
+RFC v5: https://lore.kernel.org/r/20260428-gmem-inplace-conversion-v5-0-d8608ccfca22@google.com
+RFC v4: https://lore.kernel.org/r/20260326-gmem-inplace-conversion-v4-0-e202fe950ffd@google.com
+RFC v3: https://lore.kernel.org/r/20260313-gmem-inplace-conversion-v3-0-5fc12a70ec89@google.com
+RFC v2: https://lore.kernel.org/r/cover.1770071243.git.ackerleytng@google.com
+RFC v1: https://lore.kernel.org/r/cover.1760731772.git.ackerleytng@google.com
 
-And probably other things that I am not yet seeing.  ;-)
+Previous versions of this feature, part of other series, are available at:
 
-> >  - return_to_handler and the rethook/kretprobe trampolines are not
-> >    instrumented. Their C callees take the ftrace recursion lock before
-> >    touching any ops and the trampolines themselves are static text, so I
-> >    believe they do not need it, but I would like Steven and Masami to
-> >    confirm.
-> 
-> Note, there has been some work in the past (and may happen again in the
-> future) that will remove the preempt_disable() from the trace_recursion
-> locking. If that happens, then I believe the trace_recursion would need to
-> increment (and decrement) your counter. Probably need a comment there to
-> let whomever know about it if they decide to remove the preempt_disable().
-> 
-> >  - The register_ftrace_direct() contract change: out-of-line direct
-> >    trampolines now have to maintain the count themselves (the samples
-> >    are converted). I do not know of out-of-tree users beyond BPF, but
-> >    this is the one place an existing user could be silently weakened.
-> >  - Whether arm64 folks are comfortable with the ldr/add/str in
-> >    ftrace_caller and the BPF trampoline, and with treating all of
-> >    ftrace_caller as trampoline text for the IP check.
-> >  - If this holds up, cond_resched_tasks_rcu_qs() and
-> >    rcu_softirq_qs_periodic() become unnecessary on the opted-in
-> >    architectures; I have not touched them here.
-> 
-> I don't know. It may work, but I have a feeling there's a devil in the
-> details here that is waiting to bite us in the underside when we are not
-> (RCU) watching.
++ https://lore.kernel.org/all/bd163de3118b626d1005aa88e71ef2fb72f0be0f.1726009989.git.ackerleytng@google.com/
++ https://lore.kernel.org/all/20250117163001.2326672-6-tabba@google.com/
++ https://lore.kernel.org/all/b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com/
 
-Well, that is RCU for you!  ;-)
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+---
+Ackerley Tng (22):
+      KVM: Rename kvm_mem_is_private() to kvm_is_private_gfn()
+      KVM: guest_memfd: Always fault from guest_memfd if in-place conversion is enabled
+      KVM: guest_memfd: Pass mapping type filter to invalidation helper
+      KVM: guest_memfd: Add base support for KVM_SET_MEMORY_ATTRIBUTES2
+      KVM: guest_memfd: Ensure pages are not in use before conversion
+      KVM: guest_memfd: Call arch make_shared callback for to-shared conversion
+      KVM: guest_memfd: Return early if range already has requested attributes
+      KVM: guest_memfd: Zero page while getting pfn
+      KVM: TDX: Make source page optional for KVM_TDX_INIT_MEM_REGION
+      KVM: selftests: Test basic single-page conversion flow
+      KVM: selftests: Test conversion flow when INIT_SHARED
+      KVM: selftests: Test conversion precision in guest_memfd
+      KVM: selftests: Test conversion before allocation
+      KVM: selftests: Convert with allocated folios in different layouts
+      KVM: selftests: Test that truncation does not change shared/private status
+      KVM: selftests: Add helpers to pin pages with CONFIG_GUP_TEST
+      KVM: selftests: Test conversion with elevated page refcount
+      KVM: selftests: Reset shared memory after hole-punching
+      KVM: selftests: Provide function to look up guest_memfd details from gpa
+      KVM: selftests: Make TEST_EXPECT_SIGBUS thread-safe
+      KVM: selftests: Set up page size and alignment independently for guest_memfd
+      KVM: selftests: Update private_mem_conversions_test for in-place conversions
 
-							Thanx, Paul
+Michael Roth (1):
+      KVM: SEV: Make 'uaddr' parameter optional for KVM_SEV_SNP_LAUNCH_UPDATE
+
+Sean Christopherson (21):
+      KVM: guest_memfd: Optimize away conversion overheads via dead-code elimination
+      KVM: guest_memfd: Use kvm_mem_is_private() when populating guest_memfd memory
+      KVM: guest_memfd: Introduce per-gmem attributes, use to guard user mappings
+      KVM: Rename KVM_GENERIC_MEMORY_ATTRIBUTES to KVM_VM_MEMORY_ATTRIBUTES
+      KVM: Enumerate support for PRIVATE memory iff kvm_arch_has_private_mem is defined
+      KVM: Rename memory attribute APIs to prepare for in-place gmem conversion
+      KVM: Provide generic interface for checking memory private/shared status
+      KVM: guest_memfd: Stub in ability to enable in-place shared<=>private conversion
+      KVM: Consolidate private memory and guest_memfd ifdeffery in kvm_host.h
+      KVM: guest_memfd: Invalidate both SHARED and PRIVATE mappings for in-place conversions
+      KVM: Move KVM_VM_MEMORY_ATTRIBUTES config definition to x86
+      KVM: Let userspace disable per-VM mem attributes, enable per-gmem attributes
+      KVM: guest_memfd: Enable INIT_SHARED on guest_memfd for x86 Coco VMs
+      KVM: selftests: Create gmem fd before "regular" fd when adding memslot
+      KVM: selftests: Rename guest_memfd{,_offset} to gmem_{fd,offset}
+      KVM: selftests: Add support for mmap() on guest_memfd in core library
+      KVM: selftests: Add selftests global for guest memory attributes capability
+      KVM: selftests: Add helpers for calling ioctls on guest_memfd
+      KVM: selftests: Test that shared/private status is consistent across processes
+      KVM: selftests: Provide common function to set memory attributes
+      KVM: selftests: Update private memory exits test to work with per-gmem attributes
+
+ Documentation/admin-guide/kernel-parameters.txt    |  25 +
+ Documentation/virt/kvm/api.rst                     | 110 ++++-
+ .../virt/kvm/x86/amd-memory-encryption.rst         |  14 +-
+ Documentation/virt/kvm/x86/intel-tdx.rst           |   4 +
+ arch/x86/include/asm/kvm-x86-ops.h                 |   2 +-
+ arch/x86/include/asm/kvm_host.h                    |   9 +-
+ arch/x86/kvm/Kconfig                               |  15 +-
+ arch/x86/kvm/mmu/mmu.c                             |  28 +-
+ arch/x86/kvm/svm/sev.c                             |  13 +-
+ arch/x86/kvm/vmx/tdx.c                             |   8 +-
+ arch/x86/kvm/x86.c                                 |  20 +-
+ include/linux/kvm_host.h                           |  83 ++--
+ include/trace/events/kvm.h                         |   6 +-
+ include/uapi/linux/kvm.h                           |  16 +
+ tools/testing/selftests/kvm/Makefile.kvm           |   1 +
+ tools/testing/selftests/kvm/include/kvm_util.h     | 139 +++++-
+ tools/testing/selftests/kvm/include/test_util.h    |  34 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c         | 222 +++++----
+ tools/testing/selftests/kvm/lib/test_util.c        |   7 -
+ .../kvm/x86/guest_memfd_conversions_test.c         | 512 +++++++++++++++++++++
+ .../kvm/x86/private_mem_conversions_test.c         |  66 ++-
+ .../selftests/kvm/x86/private_mem_kvm_exits_test.c |  36 +-
+ virt/kvm/Kconfig                                   |   3 -
+ virt/kvm/guest_memfd.c                             | 468 +++++++++++++++++--
+ virt/kvm/kvm_main.c                                |  92 ++--
+ 25 files changed, 1642 insertions(+), 291 deletions(-)
+---
+base-commit: 5e036ce12de91c6fd674dad33b169c6150be2a7a
+change-id: 20260225-gmem-inplace-conversion-bd0dbd39753a
+prerequisite-message-id: 02876cea-5727-2ca4-bead-73659ea6fec4@google.com
+prerequisite-patch-id: 28922a76dee80792da6e445a55cdbb4bedc85374
+prerequisite-change-id: 20260818-gmem-no-return-page-614927a29f97:v4
+prerequisite-patch-id: 38553271bcb80c17dbae29cef5c20bcf95e804f9
+prerequisite-patch-id: 0d4b50926073ba4f5e5d8b2c0cdae8869a278863
+prerequisite-patch-id: bf39277ddc12818fe562a006f31d7992e5c7d42a
+prerequisite-patch-id: 74fe849c04c187074bd380e664e536a07076292d
+prerequisite-patch-id: f92bdb4870dd7c1a2026fca1083e4400c2be11d8
+
+Best regards,
+--
+Ackerley Tng <ackerleytng@google.com>
+
+
