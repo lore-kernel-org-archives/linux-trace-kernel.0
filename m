@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD083CB8F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84713CF95A;
 	Thu, 10 Sep 2026 23:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789084540; cv=none; b=KMqKiSEUBEdG66EU07oXT1sHjsM4HxV65ikp1a+lVmfyO2VaZhtM17AFu8bdey7g2Rc3uMRvGe8nPxVDnzZid4bjq68qdXVQM57cXJ8KUtv3uXtn+Qh9FD2cJGv/EmAwccWKBlibKr2BSdO2HPtWCoFy3/S0SjAvP72LJ2dHMSs=
+	t=1789084540; cv=none; b=AZXw7gy5zhjN1NNpvZNwZOsmKUTTx7zQnBSkhNP7giwrn3zNdDNKP9/aA+97//O1gNUzg/Ct0nJShhWLu/rH/xvhwyPhA/VeqHODwLqYQ55sBCOmXVg4G8su5XMV/fDHU9QwtLgWVB5Epq8rTj6buyFxN4z0t7wghoo49iKDCOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789084540; c=relaxed/simple;
-	bh=Yz7iUg9XRAXZM972/G4cSghk6ltxCAFhgfYTOLvch18=;
+	bh=NQ+m2Gp6DBcXXd5O+sEgVmXG2eWA72DV+yeLNCYqr7E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g710516I/KIxEO9Sqm+92ey0SjDZvplrtB5xhUph8ZPzLk8H9SuAwC7IQbnUIPC5w8XCRvLdCDAUH/7KXGPV1dv33xcAuQFXcKPIRoArbnqXBYI8FVHWllgzDjSOSWatfzFg293L+i2beqG7fiUpzZvBIdiYR/YYHXpM0l8DS48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VboHqZwc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=k6YREOupsCN/j4+vZ6X8eqgCSrMWFU3rRkautMFiqRk//xpzTmFdbQgTlBZmQXlOPYCQoAlSoYMOvw0fvD9Ow8QW+2BkQaXxRWsF9bjDnrjecRJyeCO2HOnJyTCjqcGo6wjAoWHQ93URnlQ/DIJzwDckm1g5rBOfXKuvQ4fuLiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2T9AwJQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VboHqZwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 303C6C2BCFA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2T9AwJQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A1E3C4AF0C;
 	Thu, 10 Sep 2026 23:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789084540;
-	bh=Yz7iUg9XRAXZM972/G4cSghk6ltxCAFhgfYTOLvch18=;
+	bh=NQ+m2Gp6DBcXXd5O+sEgVmXG2eWA72DV+yeLNCYqr7E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VboHqZwcv6d/maaY68WHAEOz/Kux2D0iDxPbIuhpXUYrivzcE8uJN2KBBnd7oqYF5
-	 FDGNwrZ8yqIc7Zgd004/dxErDaC7LKl6+1yhOnTMYWyJAmpPa1lMqdsa++bsGYURPG
-	 89Q27z5BfE2Clr/9VHRbFvG3Gn0ETFAC8y2bz+ykHzMKgGBzvcmTlcUU+vRPNw5RV9
-	 pfm99/OwPK+hhJ66FDhpwl86qYcbIRWtTGIIQS9usJow8lcJSs+jBNzorRRYe1SCB1
-	 iXnnzuMUGogCrfgomPF3WvDLLMga9CEwPic4Qd3oHzimSRlkoiZRcET3rWiTyADpxt
-	 tWf2/teslRWaA==
+	b=h2T9AwJQhFo60X2vZP1almbLppH5PPFJf1tv2HbB4BTl/Ti/3EXAw+NTO9hLmex84
+	 PIbnBJ5LC6t8RJHRYYd57rIK7DazBa+pkNzjL5OAzLpzXspxHrpgc5LTuAETGIRK3K
+	 F/2czMLaiHVIoMc8JuRMROSXTDU6CP49T/OGM/xBiW26ov0ENG95Hz4HDP5WeXrvWX
+	 kYf1VZEb6lY9xhtINXk0FdGQRVLN4abC/tIPkD17ToSDvjd3/xiUFe6u41ylUSafNi
+	 ACUmhK02No4s8urbBOtAPggN++lk736x39WxTiuQcQFxbu+tidgN3/ioY4N2QiuCAc
+	 oP4wbFuQ3F+vw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D8FC88E4D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AD3C88E41;
 	Thu, 10 Sep 2026 23:55:40 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 10 Sep 2026 16:56:00 -0700
-Subject: [PATCH v13 34/44] KVM: selftests: Test that truncation does not
- change shared/private status
+Date: Thu, 10 Sep 2026 16:56:04 -0700
+Subject: [PATCH v13 38/44] KVM: selftests: Reset shared memory after
+ hole-punching
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-gmem-inplace-conversion-v13-34-dd6fbf94f4e1@google.com>
+Message-Id: <20260910-gmem-inplace-conversion-v13-38-dd6fbf94f4e1@google.com>
 References: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 In-Reply-To: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -80,11 +80,11 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=2067;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=2580;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=d5eJ++IcGJazUQlXjFIkV06g9Z71l71yIBb6tdneXIQ=;
- b=CCElrqX7WC07ExlLLucnumRJXtfcIFU5A0IFsjwOodS95cWs8AaEL3dO9LwUCG0xZAVvPANHu
- nCEsakHy2uFDjJUuYbdZTTBOC2Q3vwdX0IF5ERAVZ6iqrBWmoYFqggf
+ bh=qgSSV+iztWlncds2pkMoO3mYfZ9NMVIVqTr/vN3QCpY=;
+ b=oTD8dzGF0eTeqnTFELLylphUqFsvuDNQhEUUaeqL+Ct1dCms1Th/dK3+Vy9QGPTpOa+xmlRa3
+ 2RqXbEeLGoaCbEGFqawd7O1aQyzJrjsLVziOSsdgZqmt8VrTUVP4isQ
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,56 +94,63 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Add a test to verify that deallocating a page in a guest memfd region via
-fallocate() with FALLOC_FL_PUNCH_HOLE does not alter the shared or private
-status of the corresponding memory range.
+private_mem_conversions_test used to reset the shared memory that was used
+for the test to an initial pattern at the end of each test iteration. Then,
+it would punch out the pages, which would zero memory.
 
-When a page backing a guest memfd mapping is deallocated, e.g., by punching
-a hole or truncating the file, and then subsequently faulted back in, the
-new page must inherit the correct shared/private status tracked by
-guest_memfd.
+Without in-place conversion, the resetting would write shared memory, and
+hole-punching will zero private memory, hence resetting the test to the
+state at the beginning of the for loop.
 
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+With in-place conversion, resetting writes memory as shared, and
+hole-punching zeroes the same physical memory, hence undoing the reset
+done before the hole punch.
+
+Move the resetting after the hole-punching, and reset the entire
+PER_CPU_DATA_SIZE instead of just the tested range.
+
+With in-place conversion, this zeroes and then resets the same physical
+memory. Without in-place conversion, the private memory is zeroed, and the
+shared memory is reset to init_p.
+
+This is sufficient since at each test stage, the memory is assumed to start
+as shared, and private memory is always assumed to start zeroed. Conversion
+zeroes memory, so the future test stages will work as expected.
+
+Fixes: 43f623f350ce1 ("KVM: selftests: Add x86-only selftest for private memory conversions")
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 Tested-by: Shivank Garg <shivankg@amd.com>
 Reviewed-by: Fuad Tabba <tabba@google.com>
 ---
- .../selftests/kvm/x86/guest_memfd_conversions_test.c       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/testing/selftests/kvm/x86/private_mem_conversions_test.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-index acdff2d154046..b7a54d2a90928 100644
---- a/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-+++ b/tools/testing/selftests/kvm/x86/guest_memfd_conversions_test.c
-@@ -10,6 +10,7 @@
- #include <linux/sizes.h>
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+index f3de2a4ab0551..cf50e9a332c5b 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+@@ -202,15 +202,18 @@ static void guest_test_explicit_conversion(u64 base_gpa, bool do_fallocate)
+ 		guest_sync_shared(gpa, size, p3, p4);
+ 		memcmp_g(gpa, p4, size);
  
- #include "kvm_util.h"
-+#include "kvm_syscalls.h"
- #include "kselftest_harness.h"
- #include "test_util.h"
- #include "ucall_common.h"
-@@ -312,6 +313,19 @@ GMEM_CONVERSION_MULTIPAGE_TEST_INIT_SHARED(unallocated_folios, 8)
- 		test_convert_to_shared(t, i, 'B', 'C', 'D');
+-		/* Reset the shared memory back to the initial pattern. */
+-		memset((void *)gpa, init_p, size);
+-
+ 		/*
+ 		 * Free (via PUNCH_HOLE) *all* private memory so that the next
+ 		 * iteration starts from a clean slate, e.g. with respect to
+ 		 * whether or not there are pages/folios in guest_mem.
+ 		 */
+ 		guest_map_shared(base_gpa, PER_CPU_DATA_SIZE, true);
++
++		/*
++		 * Hole-punching above zeroed private memory. Reset shared
++		 * memory in preparation for the next GUEST_STAGE.
++		 */
++		memset((void *)base_gpa, init_p, PER_CPU_DATA_SIZE);
+ 	}
  }
  
-+/* Truncation should not affect shared/private status. */
-+GMEM_CONVERSION_TEST_INIT_SHARED(truncate)
-+{
-+	host_do_rmw(t->mem, 0, 0, 'A');
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	host_do_rmw(t->mem, 0, 0, 'A');
-+
-+	test_convert_to_private(t, 0, 'A', 'B');
-+
-+	kvm_fallocate(t->gmem_fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	test_private(t, 0, 0, 'A');
-+}
-+
- int main(int argc, char *argv[])
- {
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
 
 -- 
 2.55.0.1007.g17ff1f9808-goog
