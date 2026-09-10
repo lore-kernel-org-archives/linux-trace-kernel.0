@@ -1,120 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3D818DB35;
-	Thu, 10 Sep 2026 10:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB7837475B;
+	Thu, 10 Sep 2026 14:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789037527; cv=none; b=TGfNgZ4T0c6cVhcapzVtlDfE1tDyQ7osukiyrrJJa//7T9yL4zF5AqSUvWGpPkDlGjqHkR4NyBQTDi/BPFdKlaSZwyCHQ9TVfAwgos55H2TKKBt6TaK3vS6zorP9XuEHO2Z+Vy+AVk+55cymIfA9UhmLfJZNf5dvfDEXk4w9dyM=
+	t=1789050771; cv=none; b=LxlK8GZ3K5Ve01Cwq28YTgGcYIHIovJFx+Zhnuc91iAtU/c6GcKyNoGwEU+0bHkecCuyickfQpdVkUC+qgfi1+H2m2N+WjeYC1x3Rref4elUVxZ6IK4T7yeaCtTsjY4Pt40i2Qbgr9m2rEvWN2nzbwTzOsf4bn+8W4lsH7AWIQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789037527; c=relaxed/simple;
-	bh=N7tjoMh0VJ0JjF10mqJOPD7b1ih9SO6rgWyfI3+RTmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RhWIJOJaaV4obJosx6iNVAsGP28PPfDgNMAZVwvQ/bJHSKZ8qrpJ///IMXPJ4UTWNhE83tuVX5zmNtRW0AmozAywd1O/ra8AIfYwok1szrE6Zy7JUbw918KZqVxzFXrp2Y3IbqWeU1mCPaJ+b2pjunpwRdjbXbsj6xdfZvh5T9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkBWkbqs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789050771; c=relaxed/simple;
+	bh=rOx8eV9OuL83QEvT5j9vhIhsiErUhRCiznN3invJ8d0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CsjayvtaTQY3i2i2a+VCOpStvv11qEJ2lCTu5Ln1Yfvn7ohRRZdhYKVS3vARmwOO7J8SSfTsqAWGi00CDIoGiuJFFFPFKDQEOjmIa4taUA57IPyfR32H0YZshor8CXXQZAgxZgmxYYMC5q834Q4OBSVEX+dxDKmpDZAbhjfSy24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9qTJ2+/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkBWkbqs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB61D1F000FF;
-	Thu, 10 Sep 2026 10:52:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9qTJ2+/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAEAB1F000FF;
+	Thu, 10 Sep 2026 14:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789037526;
-	bh=N7tjoMh0VJ0JjF10mqJOPD7b1ih9SO6rgWyfI3+RTmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jkBWkbqsUtrXGjvzs9ejgfK4XpAo0fpqaDkZEwyYUh3nsky2zY+18Vn27mS7241TL
-	 MvCu5S/EUOKRuRIWcemqgqVR0X7r6k4w/oYOXZqhYTVtmn5cDR0ZWuVJ+EoGIOf31K
-	 si2Vs3AQL0JW0JfVnduAaNtpDg+K6Gjxl/jEwtzpEcPUiZ4rezgSm0nh5PAkQQUFO1
-	 GwPIbbmKXcJaxgmpF9ohj/yHw0Jk801NrDXApGybMo/hVriULWRHefHhXwmI/BEyuR
-	 x75hp2NlH3/kPyBXNr+tNycCgJ1d5N0BstAe2eFHBEpUaMX8cbJ1kv4UK65a/OEoEn
-	 o+nS3JzDYdGyw==
-Date: Thu, 10 Sep 2026 12:52:03 +0200
-From: Thierry Reding <thierry.reding@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Sowjanya Komatineni <skomatineni@nvidia.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Mikko Perttunen <mperttunen@nvidia.com>, 
-	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Russell King <linux@armlinux.org.uk>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Chun Ng <chunn@nvidia.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
-	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v6 06/12] of: Export of_node_to_nid()
-Message-ID: <aqKLkeg0iRBqa3bo@orome>
-References: <20260904-tegra-vpr-v6-0-79042cfa8de5@nvidia.com>
- <20260904-tegra-vpr-v6-6-79042cfa8de5@nvidia.com>
- <20260908145929.GB3123582-robh@kernel.org>
+	s=k20260515; t=1789050769;
+	bh=fegjRSkc9C+qKzqCJvJ2d7s7VIC+fu2qJYVP0KhxvSk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=O9qTJ2+/M6LjrIJS6LgFdy5QThbvtHtN0Rdxg8zTDIfimNndVJO/3UgyLx03j3rOP
+	 vg0p5EA9ZhFrQDUWnyLJQxJaeeUz5iQC/FGTuNCDBT4OMJM28RHeF7QUnqNRqnm6rV
+	 Ix939EETXM3mn3boGPj6TtKJtWlxPYEI0rkWzOrRYJomXoyNhOuYGcy29Hxlo+tk3M
+	 lF2Y+7IgDvM2mueV6tmUHaPVsio/BwreqsBf9QRSo+IBMe1lbcDf4qYK9keazupX31
+	 KNUaTER7QhY65mXPa9DYPfSSRyTHbpwAHMxiiBwU6x6glz2n2MRwthal6HoUsVDTD1
+	 NwlEhTEF586tg==
+Date: Thu, 10 Sep 2026 23:32:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] bootconfig: Fix integer overflow in initrd size
+ check
+Message-Id: <20260910233246.5b9d279ceb72e821ac58d921@kernel.org>
+In-Reply-To: <20260910020902.193961F000FF@smtp.kernel.org>
+References: <178900555453.200943.4719889510443114485.stgit@devnote2>
+	<178900557529.200943.11099215789605267709.stgit@devnote2>
+	<20260910020902.193961F000FF@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pochtu3uujjsdg7m"
-Content-Disposition: inline
-In-Reply-To: <20260908145929.GB3123582-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Thu, 10 Sep 2026 02:09:01 +0000
+sashiko-bot@kernel.org wrote:
+
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] Mismatched boundary checks for XBC_DATA_MAX cause inconsistent fallback behavior for embedded bootconfigs.
+> - [Low] Misleading error message when bootconfig size exceeds XBC_DATA_MAX.
+> --
+> 
+> commit a24325c6fe0374f1cfc3fc8cbe63efbad0f22f32
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> bootconfig: Fix integer overflow in initrd size check
+> 
+> This commit fixes an integer overflow where a crafted initrd with a huge
+> bootconfig size can cause pointer arithmetic wrap-around. It ensures the
+> initrd bounds are respected and verifies the size does not exceed max limits.
+> 
+> Closes: https://lore.kernel.org/all/20260910010137.EE0431F000FF@smtp.kernel.org/
+> 
+> > diff --git a/init/main.c b/init/main.c
+> > index a9362b2cc258a..de24c41ce815e 100644
+> > --- a/init/main.c
+> > +++ b/init/main.c
+> 
+> [ ... ]
+> 
+> > @@ -294,16 +295,21 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
+> >  
+> >  found:
+> >  	hdr = (u8 *)(data - 8);
+> > +	if ((unsigned long)hdr < initrd_start)
+> > +		return NULL;
+> > +
+> >  	size = get_unaligned_le32(hdr);
+> >  	csum = get_unaligned_le32(hdr + 4);
+> >  
+> > -	data = ((void *)hdr) - size;
+> > -	if ((unsigned long)data < initrd_start) {
+> > -		pr_err("bootconfig size %d is greater than initrd size %ld\n",
+> > +	if (size > XBC_DATA_MAX ||
+> 
+> [Severity: Medium]
+> If the size is exactly equal to XBC_DATA_MAX, this check passes and the
+> function returns a valid data pointer. This prevents the caller from falling
+> back to the embedded bootconfig:
+> 
+> init/main.c:setup_boot_config() {
+> 	...
+> 	data = get_boot_config_from_initrd(&size);
+> 	if (!data) {
+> 		data = xbc_get_embedded_bootconfig(&size);
+> 		...
+> 	}
+> 	...
+> }
+> 
+> However, setup_boot_config() uses inclusive inequality for XBC_DATA_MAX:
+> 
+> init/main.c:setup_boot_config() {
+> 	...
+> 	if (size >= XBC_DATA_MAX) {
+> 		pr_err("bootconfig size %ld greater than max size %d\n", ...);
+> 		return;
+> 	}
+> 	...
+> }
+
+Hmm, this is wrong. Since XBC_DATA_MAX is including maximum size, 
+setup_boot_config() should change this condition.
+
+> 
+> Because the limits don't match, an exact size of XBC_DATA_MAX causes
+> setup_boot_config() to reject the payload and abort without attempting
+> the fallback. Should this check use size >= XBC_DATA_MAX to match?
+> 
+> > +	    size > ((unsigned long)hdr - initrd_start)) {
+> > +		pr_err("bootconfig size %u is greater than initrd size %lu\n",
+> > +			size, initrd_end - initrd_start);
+> 
+> [Severity: Low]
+> If this error path is taken specifically because size > XBC_DATA_MAX, the
+> error message claims the bootconfig size is greater than the initrd size.
+> Can this message be updated to accurately reflect which limit was exceeded?
+
+Ah, good catch :)
+
+Thanks,
+
+> 
+> >  		return NULL;
+> >  	}
+> >  
+> > +	data = ((void *)hdr) - size;
+> > +
+> >  	if (xbc_calc_checksum(data, size) != csum) {
+> >  		pr_err("bootconfig checksum failed\n");
+> >  		return NULL;
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/178900555453.200943.4719889510443114485.stgit@devnote2?part=2
 
 
---pochtu3uujjsdg7m
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 06/12] of: Export of_node_to_nid()
-MIME-Version: 1.0
-
-On Tue, Sep 08, 2026 at 09:59:29AM -0500, Rob Herring wrote:
-> On Fri, Sep 04, 2026 at 12:44:57PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > Drivers buildable as a module may want to use this, so export it.
->=20
-> We need a specific reason/driver. Otherwise, that's every API function.=
-=20
->=20
-> It doesn't look to me like the VPR driver ever actually uses the NID.
-
-You're right, we currently don't need this. The plan is to use this to
-differentiate between VPR instances on NUMA systems, but we don't have
-any such system yet. I'll drop this patch for now.
-
-Thierry
-
---pochtu3uujjsdg7m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmqii9MACgkQ3SOs138+
-s6G+LA/7BGayHietSWcjHsnMEamaB/I04lj2qpSvcwlZK/2E94CCzDouik55LAg2
-7yFNbMU0VYi2oxec0RMMlAfo/OEN8iG+3X3tcTwQ6Hv7fPxlsffyKDIAb0SxAalQ
-3gXrYnaeeUS8oWlfyapzTnArDHz1wkolZluRr9R3cj73ED8jdi0XuHkTjlbGKVko
-KaZTIYUo9uB5G1wLUs0TOP3pAfJJa97LpAtMPIdytlgwy8wLXa5ti4A79opsZzIa
-5kTsTXx5D9Xg+/kJuuvpr/5lanW+hYPWVbL8w37xwjKV5EoQW5kSdUnXXuZiE5p6
-zM5tKM16OssvhPhZkYaYwdR4QwrJz2wpGE1R8NV9W0IMpW4HtsIRJPbTQhQOqn0L
-DdKwKKwPYYEAshOJ/vel7xA5/rnfbFAtxOI8CvPpjM6mv0y8AFM8fApzzcfjlJvW
-D+mJVr7IHD3+E4MZeA44MUvJpuK9a6tZg80Z0ixPnnbtl7th8/3nrj6vpW2ANmjk
-aeh2Rud7YKP1TJThucNGvzzl9zmePpUiapF47cWCkR13ooM8opgzSHkeGBkU4Oaa
-HsXVrm8Ie+po6BAMLKsduZrB2KFkFyJ68bMGbHwuwqmVSux9BnT+Mc65Yc7fWEF7
-9+pu4BoTZZ32aJXzpyx8RcxV9jADGugXNEA88fHQpAxDbtyg5lc=
-=XC4p
------END PGP SIGNATURE-----
-
---pochtu3uujjsdg7m--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
