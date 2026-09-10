@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412203AD510;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4387D3AD515;
 	Thu, 10 Sep 2026 23:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789084537; cv=none; b=I7vi/FHpoRzoIVokCtYAI5ENdGGiD+i29g/WOktnc8dGqX0tCgBVzW4qbHEkjoiYcTu1+UKnt+TgRnbuDrUOtg/ylACkGsm2UsGgrjb2Wk0akhl0Xz1ecxFCBvtnZUaUzmJdIQu2jEU4SnG4cDvCJ4LogqMViwbIx6oxxfwl/I4=
+	t=1789084537; cv=none; b=U0Qs9BtxSHv7HXyjacmju3LoLzrBnYtkPZb/DU3bT2UcJ+EUyUlZSmyk7B5++cFbQCGgyCSWXcfoU3niCCPwsz21S+VGmNswXhBDEWykP9TlsJ9D6JU+jOVxCObdzItzkhDJkeU6scngVEcJYsX3HbkI1GqKt2EQXmJeB5xqozQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789084537; c=relaxed/simple;
-	bh=Kemej0jCw7h7ikYa35Qx9+U1O1Ro3V7ZhJlVculzUsU=;
+	bh=BhQ5IW1cdYY4/D+Pfwjb2BH2ZNvlUKlV4VeivpRJOSY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Iy0Gvzd5MozQOp/mxFkIntK7JHZT7S7BPQbK+cC2loMVguMnT371jiWmipuUf8BFVDXjJubzGE1v+wS575tP6Mm02AzoqDvo5DGXepM9q089r5CkyeDAbJIWamJCB23xJ6u19YGstq7Lk/0VHKHczXfnduRtCiNODMcj2TYe40s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7P/JVmN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=s4UYZpF3Eyj+P+VAN3VjIzRDU83ENb7CxiQMxstUynW8i35HAdLke/60DISTMSUUR2RhKnWUGvCKIb1CZNEyrP0Brg2RABs0gmoPCDo0a33bEgP6X/+JXOSOvoX7oW0iyK2zSbZ9QP4Oy9NnbjgifQXNGs/aWLhOq0P+NfGXDIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGIJEKj8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7P/JVmN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A45BC4AF10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGIJEKj8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B3309C32782;
 	Thu, 10 Sep 2026 23:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789084536;
-	bh=Kemej0jCw7h7ikYa35Qx9+U1O1Ro3V7ZhJlVculzUsU=;
+	bh=BhQ5IW1cdYY4/D+Pfwjb2BH2ZNvlUKlV4VeivpRJOSY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=O7P/JVmNLI1EnSEz6RH5llteFY1N0sqCt052QXTIH3HbEiyHGVNP/Aj9g26JJMdoP
-	 xoyb7fN7h6GUpLDE9bRzpyopk9lXNYmVDHnSsjx1LUWuErnWxoaIehRjwPgWqo4Ksn
-	 KwO1QIg5OkGoW1/Hg/7A7+TSkU35IuI+h+2tmcjFdslMtg654lQpApP7wPmDL6Mzde
-	 BkRS781mYl0heuRUt7oAo2EfsvVcdpRPYb/FrkMi8gO6U1lTlVUE1KuglEIQ6JBDr1
-	 swVKYWP+RGNWQe4eb5k7QtDn8tPtxjgAEcPB6ky83r0no8X23bunc1hRpH+RjZbSdp
-	 ogzBhEhO5bpyQ==
+	b=BGIJEKj8Oq1+UDALX+ziDvBiXlbgEWGrZIaXV6mJMCsHWYaK3cilkTceEck54954i
+	 RFolxUsihSJpeH6N4NqmVWSuOr8GyP40I2N/nTJVV8Sg24H5s1IultFS6i4oY1n8fI
+	 PcebJG1lZ2thUGIcQY8tuYWN6SWy9UZkbDh4582V6nWdDi1beliixUhJCSyS23HvOA
+	 fciZwuCcRrNCV2v8xOyhf/TC5lS538ObcHZKOMLXb751F6TIPE98yl9AIH3CycrLeK
+	 GXVzOk1MWo/bkDQflK2gsoW+Vn5c4Tk28HMxgtXDL8FkiMcM2f6/nuW8qWzb7wd3yc
+	 ajnUGiZe9chKw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F56C79FBB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDCBC88E41;
 	Thu, 10 Sep 2026 23:55:36 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 10 Sep 2026 16:55:27 -0700
-Subject: [PATCH v13 01/44] KVM: guest_memfd: Optimize away conversion
- overheads via dead-code elimination
+Date: Thu, 10 Sep 2026 16:55:28 -0700
+Subject: [PATCH v13 02/44] KVM: guest_memfd: Use kvm_mem_is_private() when
+ populating guest_memfd memory
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-gmem-inplace-conversion-v13-1-dd6fbf94f4e1@google.com>
+Message-Id: <20260910-gmem-inplace-conversion-v13-2-dd6fbf94f4e1@google.com>
 References: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 In-Reply-To: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -79,13 +79,13 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
  linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
- Fuad Tabba <fuad.tabba@linux.dev>
+ Xiaoyao Li <xiaoyao.li@intel.com>, Fuad Tabba <fuad.tabba@linux.dev>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=3368;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=1294;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=jdeuN8QAludHAg4pQOQtYLnhlGiFogxOH8nIW0ZEBXU=;
- b=sww7etsIuwKRvcfuD8DJ8EQ6FFI8MsNcKxp95SrzPjrCWGonLp4p47TacW9Do8Uk33c+xvNLV
- eZ8ISUk5/WfAr0WBMyA/jilQOtj6AdalhDVD7M/1i+snixje8pJKuVS
+ bh=xBY4/PDaaQtcraLoiAXWiRvSzJvbVV+mCywqqocyhZQ=;
+ b=jHExpGn19+46TGPhs2mSl/iRUELt5TmexnGBnzViqDnulHKSXZHs6JhnFrc0k/g5LfTsHjFl8
+ V2SEJMaaAvDAthuaxmPPzBuyzANiE73i2fVJSedDfp0EMUynAudIhb8
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -95,82 +95,39 @@ Reply-To: ackerleytng@google.com
 
 From: Sean Christopherson <seanjc@google.com>
 
-Add and use kvm_arch_has_gmem_convert() to guard guest_memfd's invocation
-of arch hooks related to converting memory between private and shared, as
-only one half of the x86 CoCo duo needs the runtime hooks (any pre-work is
-pure overhead for TDX).  At this exact moment, the overhead is negligible,
-but that will change when in-place conversion comes along, at which point
-to-shared conversions will "need" to find all affected folios prior to
-calling into arch code.  In quotes because very technically that work could
-be pushed to arch code, but that would bleed guest_memfd details into arch
-code and would be far worse than adding yet another kvm_arch_has... hook.
+Use kvm_mem_is_private() when populating guest_memfd instead of using an
+open coded equivalent.  In addition to simplifying the populate code *now*,
+this avoids the need to provide a range-based gmem lookup API in the future
+as well.
 
-Opportunistically provide the kvm_arch_gmem_make_private() declaration, and
-rely on dead-code elimination to eliminate the call to non-existent code
-when CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT=n.
+No functional change intended.
 
-Reported-by: Binbin Wu <binbin.wu@linux.intel.com>
-Closes: https://lore.kernel.org/all/1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com
-Suggested-by: Ackerley Tng <ackerleytng@google.com>
+Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- arch/x86/include/asm/kvm_host.h | 3 +++
- include/linux/kvm_host.h        | 3 ++-
- virt/kvm/guest_memfd.c          | 5 ++---
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ virt/kvm/guest_memfd.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 683bb8bf43a94..6beddd8a0c749 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1854,6 +1854,9 @@ enum kvm_intr_type {
- #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
- #define kvm_arch_has_private_mem(kvm) ((kvm)->arch.has_private_mem)
- #endif
-+#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-+#define kvm_arch_has_gmem_convert() (!!kvm_x86_ops.gmem_make_private)
-+#endif
- 
- #define kvm_arch_has_readonly_mem(kvm) (!(kvm)->arch.has_protected_state)
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 502465119ca0c..b7516e19ef419 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2597,9 +2597,10 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
- }
- #endif /* CONFIG_KVM_GUEST_MEMFD */
- 
--#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
- int kvm_arch_gmem_make_private(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
- 			       kvm_pfn_t nr_pages);
-+#ifndef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
-+#define kvm_arch_has_gmem_convert() false
- #endif
- 
- #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_POPULATE
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 798d91df69537..2190e4d6b6bea 100644
+index 2190e4d6b6bea..69612bf146be1 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -772,11 +772,10 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		folio_mark_uptodate(folio);
- 	}
- 
--#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
--	if (kvm_gmem_is_private_mem(file_inode(file), index))
-+	if (kvm_arch_has_gmem_convert() &&
-+	    kvm_gmem_is_private_mem(file_inode(file), index))
- 		r = kvm_arch_gmem_make_private(kvm, gfn, *pfn,
- 					       (kvm_pfn_t)1 << *max_order);
--#endif
+@@ -805,9 +805,7 @@ static long __kvm_gmem_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
  
  	folio_unlock(folio);
- 	folio_put(folio);
+ 
+-	if (!kvm_range_has_memory_attributes(kvm, gfn, gfn + 1,
+-					     KVM_MEMORY_ATTRIBUTE_PRIVATE,
+-					     KVM_MEMORY_ATTRIBUTE_PRIVATE)) {
++	if (!kvm_mem_is_private(kvm, gfn)) {
+ 		ret = -EINVAL;
+ 		goto out_put_folio;
+ 	}
 
 -- 
 2.55.0.1007.g17ff1f9808-goog
