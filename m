@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5B8CA6B;
-	Thu, 10 Sep 2026 00:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D345165F16;
+	Thu, 10 Sep 2026 00:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788998467; cv=none; b=CsSkh0KMUebjeYvAn6hoSQ6Dt89Zth3TfVQsKG5eFkSJtPRwDT/goM9fK1Cxv0cG5YNEA5RkVzZTgs/mp+2bX2SgrrVen7+6Ry5riOT3LSQKECWg14rjQVNTj4or93cec9Ox9+EA+jUrt3BJLFhf4ZSxXTQfEVylh/yy0eHMDoU=
+	t=1788998860; cv=none; b=TCCzVxI4ItSanhVM0pmp2da7lV6jcqhR8wUve4VWhZXRZ3JE5eix5xZFokQ86S/GaIz5jmeqgkYKUbeQED+/dUIJn2jyg8ugw+9qhZyDppPvgohjdCaE/QwBp/MFA70aO3fvJqPGjpNJyaBCi88/HhCfygePXWx8LzsZXHyVAlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788998467; c=relaxed/simple;
-	bh=OMU8A5Ao2vJA9l52y1pszwIUhaM632Tt+NqriLJ2ZGA=;
+	s=arc-20240116; t=1788998860; c=relaxed/simple;
+	bh=OPZFJNx/s2XWlF51Hy5Gd1Cr3scc8wwvsKweOUdLwSY=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Qg9bEwT43jIxToMTxRhwotKGzH00SQyM3KSe93T1Br9pWs24cCFWqVRMA1oyQ9OnSz39w0PJ8d8ly4FxtfE3W9L4x5gGsd7BfEZtWnel1ZCeUeJMpz4ISycQfR1sEsy6lznn1WeFPHXC7SmTriZznow9QW/zbzftySPeCPGGNeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgbcjTgE; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=KFlNAnz0RlifsMTPfS1XL5Cc1KXbNpLsGks2kNMcT6t1Ka+BP8K+/weETEE78Oz/ie1n6VJWmOssi3/cyN8cROQAeNpB78hMVycrocTtIDh1EW4m4PNQ9wtAxEKCuPW6/3LoIvduYJYvbrVuxx8ksLRE9xZlt5msQoMZtcyJLvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aH4U0svR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgbcjTgE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552261F000FF;
-	Thu, 10 Sep 2026 00:01:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aH4U0svR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD2461F000FF;
+	Thu, 10 Sep 2026 00:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788998466;
-	bh=bA2EBsGvtwkWzRL0EMLdqaw14JhPYVO1zwoXiTZVb5c=;
+	s=k20260515; t=1788998852;
+	bh=S8zizNtknzRdfObMVl3dtL2J95NxjW9qMbW6IPe+Ih0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=SgbcjTgE/bZQnQ6CwRAw9MyhxAX3oF4XATZ7JKlTqYVmOpR6LUi23TaBD/XLLdNNM
-	 VvD4w1JoieN7uYWBH0ovjDvW3t+AXOUt53X0SF9p5FB8GK3BwybSygtVp9HuOoF2fh
-	 ljFC7TI/v3kBnMCARiqoaE286HSW9AF69U7qtW+m8hcvLA05rx/01T8wzPyvJcyt+M
-	 YEHhGgBsPGV3bCDAM4UZlLyp5WW5NPcC/7n9iltn/XJMb0vFgFF9Yn7e1dNg0Wc0Dg
-	 F8PgkHd57CViAeLctuSNk+dojp8ohachDLBAah2XqrP49bsrI3vKdoE+4PpnLyHxTF
-	 1cAS9AtMz8sKA==
-Date: Thu, 10 Sep 2026 09:01:02 +0900
+	b=aH4U0svRXUfUSaOnD1zdYrDm+Mqe9IGJu07GGsKmAMFXMzz51Ft1DxHw6ueXN/YxA
+	 rPq5l+ZblKWH3OP86gXSaDybj28fWOefPlea9jvSLTQyK8f/MHbIUvUXbt4fizPgq/
+	 OnWI/rEyiW1DHDsM2JmObCouE9/HR1M46zwsjt+CfUli/Dxu8L35dmIY+wOd0jrWA+
+	 qbnWk0Lc3t3uxXF2hB+AXNCJHmgeqy+LC2RTg9zDaU5AXF/AemkaKQCZ9Z3vl3Ofo8
+	 SMBWHhPAHYqTAXWdZqNRBsJwuYXrH59i+475xH0SDoTT+vpiMv3ARxkUUdDbkgom+w
+	 YTBGTqhtEsF2Q==
+Date: Thu, 10 Sep 2026 09:07:29 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Fix unique symbol check in
- kprobe_non_uniq_symbol.tc
-Message-Id: <20260910090102.5ba6c7993bc0a7bf1fbc4426@kernel.org>
-In-Reply-To: <20260909134156.6425e8b0@gandalf.local.home>
-References: <20260909092954.2200558-1-svens@linux.ibm.com>
-	<20260909134156.6425e8b0@gandalf.local.home>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] tools/bootconfig: Consolidate xbc_init() to error
+ message wrapper
+Message-Id: <20260910090729.d18eb065753da71daccefb3f@kernel.org>
+In-Reply-To: <20260909161113.16C691F00A3A@smtp.kernel.org>
+References: <178896921555.177508.434402948295885560.stgit@devnote2>
+	<178896923375.177508.14682854552827605824.stgit@devnote2>
+	<20260909161113.16C691F00A3A@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,64 +47,100 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 9 Sep 2026 13:41:56 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 09 Sep 2026 16:11:12 +0000
+sashiko-bot@kernel.org wrote:
 
-> On Wed,  9 Sep 2026 11:29:53 +0200
-> Sven Schnelle <svens@linux.ibm.com> wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
-> > The current regex also matches symbols in modules, which makes the
-> > test fail on s390 where name_show is present only once in the kernel,
-> > but also multiple times in modules:
-> > 
-> > 000001b1401cdc20 t name_show
-> > 000001b0c05e6c40 t name_show    [mdev]
-> > 000001b0c0495f30 t name_show    [i2c_core]
-> > 
-> > Fix this by changing the regular expression to only match the function
-> > name.
-> > 
-> > Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> > ---
-> >  .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-> > index bc9514428dba..07b1177c1634 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-> > @@ -6,7 +6,7 @@
-> >  SYMBOL='name_show'
+> Pre-existing issues:
+> - [High] Integer overflow in initrd bootconfig size calculation leading to a heap buffer overflow.
+> --
+> 
+> commit 51beb61f7aa059b732b7d7560c90f8155150ccd7
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tools/bootconfig: Consolidate xbc_init() to error message wrapper
+> 
+> Use init_xbc_with_error() for all bootconfig initialization in the
+> bootconfig tool instead of showing errors in different way.
+> 
+> This simplifies the code logic and make it easy to maintain.
+> 
+> > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> > index 6035404733c38..7117aa9b2a839 100644
+> > --- a/tools/bootconfig/main.c
+> > +++ b/tools/bootconfig/main.c
+> [ ... ]
+> > @@ -238,52 +278,9 @@ static int load_xbc_from_initrd(int fd, char **buf)
+> >  		return -EINVAL;
+> >  	}
 > >  
-> >  # We skip this test on kernel where SYMBOL is unique or does not exist.
-> > -if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}" /proc/kallsyms)" -le '1' ]; then
-> > +if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
-> >  	exit_unsupported
-> >  fi
-> >  
+> > -	ret = xbc_init(*buf, size, &msg, NULL);
+> > -	/* Wrong data */
+> > -	if (ret < 0) {
+> > -		pr_err("parse error: %s.\n", msg);
+> > -		return ret;
+> > -	}
+> > +	ret = init_xbc_with_error(*buf, size);
 > 
-> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+> [Severity: High]
+> This is a pre-existing issue, but is it possible for a 32-bit integer overflow
+> to bypass the size validation check in load_xbc_from_initrd()?
+
+Oh, I never thought I could shoot myself in the foot like that.
+
+Anyway, since bootconfig file size should be smaller than 32KB,
+so we can check the file size before opening it.
+
 > 
-> But I wonder if "type_show" or "init_once" is a better option than
-> "name_show"?
+> In load_xbc_from_initrd(), size is read from the file as a uint32_t:
+> 
+> tools/bootconfig/main.c:load_xbc_from_initrd() {
+>     ...
+>     if (read(fd, &size, sizeof(uint32_t)) < 0)
+>         return pr_errno("Failed to read size", -errno);
+>     size = le32toh(size);
+>     ...
+>     if (stat.st_size < size + BOOTCONFIG_FOOTER_SIZE) {
+>         pr_err("bootconfig size is too big\n");
+>         return -E2BIG;
+>     }
+>     ...
+> }
+> 
+> On 32-bit systems, if an attacker crafts size such that adding
+> BOOTCONFIG_FOOTER_SIZE (20) wraps around (for instance, if size is 0xFFFFFFFF),
+> the stat.st_size < size + BOOTCONFIG_FOOTER_SIZE check can be bypassed.
+> 
+> This would lead to load_xbc_fd() being called with size evaluating to -1:
+> 
+> tools/bootconfig/main.c:load_xbc_fd() {
+>     ...
+>     *buf = malloc(size + 1);
+>     if (!*buf)
+>         return -ENOMEM;
+> 
+>     ret = read(fd, *buf, size);
+>     if (ret < 0)
+>         return -errno;
+>     (*buf)[size] = '\0';
+>     ...
+> }
+> 
+> The malloc(size + 1) would result in a 0-byte allocation, while the
+> read(fd, *buf, size) would cast the negative size to size_t (0xFFFFFFFF) and
+> overflow the chunk. Finally, (*buf)[size] = '\0' would write to a negative
+> index (-1), which corrupts heap metadata.
 
-Yeah, we have many other candidates :)
+Good catch!
 
-$ grep -E '[[:alnum:]]+ t [[:alpha:]][[:alnum:]_]+$' /proc/kallsyms | cut -d " " -f 3  | sort | uniq -cd | sort -nr | head 
-     27 p4d_offset
-     20 type_show
-     20 dev_attr_name
-     17 dev_attr_modalias
-     16 pfn_to_mfn
-     15 name_show
-     14 modalias_show
-     14 dev_attr_type
-     13 init_once
-     13 format_attr_event
+> 
+> Could we make this size check more robust against integer overflow?
 
-Maybe we can just fallback to this logic for finding available symbols?
+ OK, let me fix it too.
 
-Thanks,
+Thanks!
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
