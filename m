@@ -1,226 +1,254 @@
-Received: from mail-oo2-f43.google.com (mail-oo2-f43.google.com [74.125.231.171])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E52756C62C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 18:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.231.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789063894; cv=pass; b=VZSE3SLCp+8kSEecqCtHoJedwLLoIfuxfijMnAhqaozWMJekL71dhie4sqfnTrzoMgyL89KZxxR79jsCqPqFWtl6LkHIBLgUCVGfEZkHbxfLcuYTeYXTK6QSyZjM15pO3VsH6F0QKDXQMNmm5TudONKcfcheTMPcKRzY4z8Gz3o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789063894; c=relaxed/simple;
-	bh=NT0Z/LF1SMhtkavx81DR2GGYYK6aB7iX5ZVgmCMPgvQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZYsn5FJzHBlrtMZlwj7sTq5yUgdUctMHOewEkRnWqpTn3on4sIlnhAXdLl5K5bV39Ysv12Li1wPizJ6rzF5VZumoshU9wOB8oeGxfn885uk+SftANcI4IdoLIfzKd4T90AaTqv1/9LR6v2kXQgv6ypkWL7469yx7V35BKx6gd6g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FKybIG7v; arc=pass smtp.client-ip=74.125.231.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E7D566C68
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 18:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789066255; cv=none; b=ezbhvZfQCh9TXq2NBWbDVLPDjOzIGUC3l0hV9LYgXS8Cvp+TidQddFza12ms88Z/S5gkjfA7hE8H6+9+UwiqMkpIu1cvsEk9ImbzOYL53sPBIng8Difgr4dzhEqKrJphNV6aSkjLfY8pECkdXyll197tyWSyp31UhCFq7pTsa/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789066255; c=relaxed/simple;
+	bh=5rKSSYdl2NLVDmAkfdBaLImmLnTw/j3b/n1VGeW4msc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=f+4JNgQVz+aYUFZsd8dOC5A/SCMXtRluu6B0Hs/3hdkb0a9PwA+KH4wVQ+fqMU8e1FtEVnfW50RbSIXTZmSkpCq3BQqUDuVW/ZNtNDy2R5S/RVUACyV05GdZKIN5rVkvgfnlCqSw7au4RcNdT4JeBXV8DQ5fPb4x1oqieOJiFl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=jz9Gm+cg; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKybIG7v"
-Received: by mail-oo2-f43.google.com with SMTP id 006d021491bc7-6b1ae716890so82907eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 11:11:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789063890; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LN0fXawqzPsrNeLJmjA/qnVfusxBYd9AXnZYzRZ88ufpVQKlByOyuSkWlVAs6ozPmZ
-         81E/kMaxDnJetZTFBi8dZW7414jL1utu8mGYy1JJiBBSdaL++Et3PHdodzfhKZbIOjXL
-         F5T6L6q0X0t9tkOtvt9hGGe3ZpY5ngOigHUB147hcVLprUt5wjtaQBffuYWxH02HarYe
-         d8ghZVFyuB51fzhpF0jJ+NB+46BbjpgR8wvCcbNfHvaa+2JrnykIw1GJHyGvky4B3nJa
-         FfRUWPYbvhsn9VOCEksfUsO7mV8TqJII+rl+hJ269UmuUrMbqZ9yTYAILAZ/rEtfS7eo
-         b+ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=gxuS67QpsgmiVo7SJODgVn7jNGL8PaTVeXELBYXj9Vc=;
-        fh=nhk0A0sskzbz3WP7uA9+FLfPy2pyMcHbYIZYoaMgHHc=;
-        b=K6HIJCwyWncv2KjjPyK8hjU9CpCTvjghRboA+16Wi7Ndl1xhEHMWbhQN8f3MbNyOSI
-         +BHqp6at4sy6l0tVX766a5ZujoYNSW0zSIr5BMqD/OdxINqMheUKDuUF6SSKsH3NN7Lf
-         hBapCVsFSyU7TQgys16/c2VNANi+w3koAfygo/9s5/wlLl67l/I3gqGP7LXCCfn/C55P
-         sDTMwa9NwgGRoEKvcSlQKZ+BBBSKKvQfjITciHWuUONC0qg6dD5pVeOXjz9NibQ8H8Me
-         mMab8wXDyHbqW5TiF5Jojjb68fHwhK81/kCt8slOyCn2hjT7vGYQlI6Ydfphfbe27TzF
-         9HHA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="jz9Gm+cg"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-939d917fee3so120930785a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 11:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789063890; x=1789668690; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gxuS67QpsgmiVo7SJODgVn7jNGL8PaTVeXELBYXj9Vc=;
-        b=FKybIG7vbPrID6z1nHaj6kVvqnRQk9kvLUdCSO2+2ma9Rrzv9SNsMhpf6H6ntsMUds
-         JkyN3NfvnmjEM6fiuIEbDJ9ubreYKGMr4WB5YW+WP8daIgGmV93h2QhGZncGxUruNTVl
-         xb2WebfNbk637VrINs16GyzSfy6Udi4tcRoeH/5/HvD6JJC39vardYEfjksmVtn+eq90
-         6nNKA546KE5FFVTONnyAW7NH0ZI0JriDM3YVglc1gMZq/J8BylnjF7IuIBmBXSUxR5sk
-         pKWbcKzTldmYVXmq15a181+DQWmWqY+Hy9X3XmqX1apU7j5PpWG+JMXCx6tSMMlVkN1h
-         l9ew==
+        d=toxicpanda.com; s=google; t=1789066249; x=1789671049; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=04sGP5fC6+EWQ5zQqoL4aDa3rNDPdOaXISOWt+zm6Kw=;
+        b=jz9Gm+cgGUs1xQF2/GuzRkLxBAc8+mpQ1Tc1X4EWpBhkou2Pak3LzXFYAG0MGdvUs+
+         juIKQIdd0GMSDi6czQ0RgJjM0w5aBjyUGYhgfMBOSOiLX7g4dB13PU2ZtY8gMBohqLwP
+         oG4mOOZwciiL/oltcklCn3c4JyqBBMQsiZapKQzaPB2A9JEEUm2/oTQPPBWAKltm0KiO
+         S5zSvn4g7fDJxB/9RH4LYft1/nZGp0TNpd0qPPwfGcaMYbLU2Xt7yg5r0C1gU5byDYmk
+         nwdyWzq0cqDyAHfmvLDknLHsoAbVK6iuG0x+jLZAF1EQOsz/9uECot6OgEkLnSadHFUE
+         2bjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789063890; x=1789668690;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gxuS67QpsgmiVo7SJODgVn7jNGL8PaTVeXELBYXj9Vc=;
-        b=Ydx6C76Gr5QyvxddtpPKrRoIsmiNx7Da2RViyuamBOBX3GjDGxOv/HFo+mtdtveEHQ
-         tYuFIOahkglE37LEBPvIGRb2R7iVjvjIj6iStyKPNBmYS/6WM9yptr34f44V6xtNyGZx
-         IFQ3vxYPcwrvFGO8NEon5DXPZIeeNF3tv8vh3MLADvmmielZ7Uy5T3C0gIkUdwANkpsv
-         BAxPdVYr4OFI2lso6An34Ik/hK/9jfR/UBLYYgriwJwjV1Y8kh0RrEkab0FhiOPjA5AN
-         pOAlcxTxnJ6vseRDJ725mHfEIgG7LwjKB+ZWG9WxUXqmn08KM4Zt6RW/s9I0bDBxfxYw
-         JE9A==
-X-Forwarded-Encrypted: i=1; AKwUvBxCyPZMo//tv1j65RjDq5G1Pb2HX2o6+0BrH1tP3O4IsH/FeVGFuSBD/z1nAkhANY4gBUEYBeZgEvUpOt05Yw+YByU=@vger.kernel.org
-X-Gm-Message-State: AFuF++l4V4ggTb0X5Crn0NKBGxD1EQObTxzcWRhH4Fp8jR3FwF9I60Pz
-	ZlCvgLQIFc2DU0MSWjQCWOAwgvNZy9N48ny2+OnvsAOVT+AGtkLJvClgXazIEV5n6x/raUl2nPs
-	6nm0xfICwxzsa3BN1yeguSzZwQ09zwvw=
-X-Gm-Gg: AYBFou2MbI4HoBTmp58UQqXc8bMPAYaGjrRzxDuLzaZ4pg6hs0csb/Ai9WpNBtUafbv
-	TlaDn5oIqSou88EBorHlcPHM0DvbanZJrds0Hl5Wr4N5e0c6SbO6RMbquhyZxqMJ4q5CHzxHRgY
-	lZUDULjl6uy9PQMduPlYpvDm4xmcpTyJAFJ6RqhDrLRlZ0Ja9xG+SV3q6QvU/iBRBxtyklLupiE
-	/+gnueJIQev1yq7XFcafdHlFvCssl2wWIg+P/J25563wx4rBqv2wcI+AN0v8fZLeZn/Rjp0mt+1
-	RKmCI5xoMDnvwc1yguBwapl8lVb9+YSCaPT1tePknOga+2IvHJkn8V4=
-X-Received: by 2002:a05:6820:55d3:20b0:6b1:ac4f:f708 with SMTP id
- 006d021491bc7-6c0bc1d3ad3mr241038eaf.17.1789063890425; Thu, 10 Sep 2026
- 11:11:30 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1789066249; x=1789671049;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=04sGP5fC6+EWQ5zQqoL4aDa3rNDPdOaXISOWt+zm6Kw=;
+        b=Px4NxiNU6SMUcUOQh+JxUqeamcd5+KzWHrWJveAP5aCDnzKCCKOraEzSrb8//20v17
+         W00EHnp7HWhvAaVRjUrU+37KatpVp0hu0dJDVBu7U3HWJIOmI7+lBfl3wvP+hMkMRKF/
+         GcUTm3ioks7GURuIexGL4nnlgqXuAPYF93XSDLIcrYk0A6igLz6FUprsFt59cL2GKEfT
+         Pv5XYpVJKn7Dx5l/vSQ9gq/l5qJWxQGwZsso5DtgEvALFyho961SWu5Pew2hH+QE0xwu
+         TMY6K45cLjBdYatBIORzBj+emyqvv+CIaDa4Zmhg4KnUHqOvn+ZBoK6h+Me00FWGKxsA
+         O+ZQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxCURiPFlA99okEcJrnYHf+IMqDcxOoEiaHXBpGCB5FkMwV/wDzHNN7Q0LI0rsSeg6Qv65BEq+7vcGInklpVf0kD7k=@vger.kernel.org
+X-Gm-Message-State: AFuF++kZLZspvLRAg86P0SMk75YjWKMrh86ftW2KvpuS+jnVZSigcWQQ
+	3VPIvNXWtGu/H0ROl/9W89+GSXZyLfUUp4BF8hZiHnkCKQH0j1QUh9J6AdbY1uA66YM=
+X-Gm-Gg: AYBFou3qg+YENgeoofh6dom1wWJvB1jOpYw+wbrmRm9N3fyY00fjKREt13IPpR5m63d
+	W0GlA+g3GCYeNjcDXRwgesgLikOQX8XJDdOcyPhwQ4GFxjcJhDx4PRitTalDmqTvNU9hQM13EZd
+	j72D+jeoL4B2luVPdzBB86WekcGWgLWHOG5HvfFo5H/Q+wEByp6NjHUM4BrxWTMtu3m/7XI13yO
+	1V7eCZ9G0BwAceW4sjkJEQFV6oZgeaEopZayXNs30/Hy49hqwM4m6V1gYGICqhD42Mq0cik5i6Z
+	ZkWrSqzpS3Q/eae1ofOT6AWkq5valYodtcSWzdpIsUWbo/MywgGaYfqej19H7gmf69PekGnvsXb
+	CYnCjB96e91bayeqg7ApLuQfkZB5Wf0Dt1t+2ivY0qoCoLaZq6qj40T2ngW4qS0khovdthGRcG9
+	wUhcBbCMU990aJc+PpxJbAWGFIqhU2xEbcIFEoA6xono2F/XesNSIzCefdftFRt9F1agPZ/T89r
+	tchO1WFhwize9DA44ytxxbS7dDH4hVXQ3qTifv/aZW3qIYcuQz/x78q
+X-Received: by 2002:a05:620a:454a:b0:939:8e05:27e0 with SMTP id af79cd13be357-939ea013111mr26869085a.1.1789066249021;
+        Thu, 10 Sep 2026 11:50:49 -0700 (PDT)
+Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-939e86b7424sm40754785a.32.2026.09.10.11.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2026 11:50:48 -0700 (PDT)
+From: Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH RFC 00/13] rcu-tasks: let preemption outside trampolines be
+ a quiescent state
+Date: Thu, 10 Sep 2026 18:50:23 +0000
+Message-Id: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
- <20260908-b4-mmap-prepare-vma-flag-sanify-v1-11-dacf19cce22b@kernel.org>
-In-Reply-To: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-11-dacf19cce22b@kernel.org>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Thu, 10 Sep 2026 14:11:18 -0400
-X-Gm-Features: AcwNN1XLr_yN2lEzELD3PcXDse2cuW9BBHCwsQpnROCV_SxzPvFmiqhSaiK704I
-Message-ID: <CAEjxPJ7hXSi=oLtQPV+7GEvN+txfYwZ-u-v_EysNHM0gSGNrCw@mail.gmail.com>
-Subject: Re: [PATCH 11/39] selinux: reject writable opens of policy file, drop
- mmap shared/write check
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, 
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	fuse-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPH7omoC/22Nyw7CIBBFf6WZtZPShtbo1sQPcGtcAA4WH4gMN
+ SZN/12oW5f33NcETNERw7aaINLbsXv6LJpVBWZQ/kLozllDK9pebBqBWmI0IybFN8YQiR4h4Yt
+ RisZa2cm+M2vI7WxZ91mWj3DY7+D0gzzqK5lUNktMKybUUXkzFHQPtZb1Av+9wDx/AYKBPpKyA
+ AAA
+X-Change-ID: 20260910-b4-rcu-tasks-preempt-qs-401ff45465c7
+To: "Paul E. McKenney" <paulmck@kernel.org>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+ Xu Kuohai <xukuohai@huaweicloud.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+ Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
+ Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, 
+ rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
+X-Mailer: b4 0.15.2
 
-On Tue, Sep 8, 2026 at 4:07=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.or=
-g> wrote:
->
-> The policy file has no write method and is exposed read-only (S_IRUGO in
-> selinux_files[]), yet sel_open_policy() performs no open mode check, so a
-> CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at open, a=
-s
-> kernfs does.
->
-> The file can then never be mapped with FMODE_WRITE, so do_mmap() always
-> clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_SHARE=
-D
-> check in sel_mmap_policy() cannot be reached. Remove it.
->
-> This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping that =
-is
-> neither a PFN map nor a mixed map, ahead of the core enforcing that only
-> such mappings may do so.
->
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Tasks RCU only treats a voluntary context switch, usermode or idle as a
+quiescent state, because a preempted task may be sitting in a trampoline
+that is about to be freed. That was a fine trade when PREEMPT_NONE
+servers compiled Tasks RCU away and PREEMPT desktops rarely ran
+long-lived in-kernel loops. PREEMPT_LAZY changes both halves at once:
+Tasks RCU is now real on server configs, and cond_resched() is a no-op,
+so a CPU-bound kthread or kworker only ever loses the CPU by being
+preempted, which is exactly the event Tasks RCU refuses to count.
 
-We should likely do something similar for the other sel_open_*() and
-sel_mmap_*() functions too.
-In particular, truncation of the status file can bring down systemd
-since it is mapped by libselinux.
+The way this showed up for us was a cgroup writeback worker draining a
+very large cgwb for around eleven minutes on an arm64 box. Nothing wrong
+with that on its own, but a BPF program detach on another CPU went
+bpf_trampoline_update() -> ftrace_shutdown() -> synchronize_rcu_tasks()
+while holding trampoline_mutex, forty-odd tasks piled up behind the
+mutex, and the hung task detector panicked the machine. The kprobe jump
+optimizer is worse in principle: it does synchronize_rcu_tasks() under
+kprobe_mutex, text_mutex and cpus_read_lock(), so one long-running
+kthread can stall static key updates and CPU hotplug for its whole run.
+The current answer is to find each such loop and add
+cond_resched_tasks_rcu_qs() to it, which is the kind of annotation
+PREEMPT_LAZY was supposed to let us stop writing.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+This series tries the other direction: have the trampolines say when a
+task is inside them, so that a preemption anywhere else can be a
+quiescent state.
 
-> ---
->  security/selinux/selinuxfs.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
->
-> diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-> index c7d91476971c..545a6f89f9e7 100644
-> --- a/security/selinux/selinuxfs.c
-> +++ b/security/selinux/selinuxfs.c
-> @@ -340,6 +340,9 @@ static int sel_open_policy(struct inode *inode, struc=
-t file *filp)
->         struct policy_load_memory *plm =3D NULL;
->         int rc;
->
-> +       if (filp->f_mode & FMODE_WRITE)
-> +               return -EACCES;
-> +
->         rc =3D avc_has_perm(current_sid(), SECINITSID_SECURITY,
->                           SECCLASS_SECURITY, SECURITY__READ_POLICY, NULL)=
-;
->         if (rc)
-> @@ -424,14 +427,6 @@ static const struct vm_operations_struct sel_mmap_po=
-licy_ops =3D {
->
->  static int sel_mmap_policy(struct file *filp, struct vm_area_struct *vma=
-)
->  {
-> -       if (vma->vm_flags & VM_SHARED) {
-> -               /* do not allow mprotect to make mapping writable */
-> -               vm_flags_clear(vma, VM_MAYWRITE);
-> -
-> -               if (vma->vm_flags & VM_WRITE)
-> -                       return -EACCES;
-> -       }
-> -
->         vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
->         vma->vm_ops =3D &sel_mmap_policy_ops;
->
->
-> --
-> 2.55.0
->
+ - task_struct grows an int, rcu_tramp_nesting. Every trampoline whose
+   lifetime Tasks RCU guards increments it before calling out and
+   decrements it before returning: ftrace_caller and its dynamic copies,
+   the BPF trampoline (which drops it again around the call to the
+   original function, since im->pcref covers that), the x86 optprobe
+   template, and out-of-line register_ftrace_direct() trampolines. Only
+   current writes it and nested users are balanced, so it is a plain
+   non-atomic inc/dec, one load of current plus one RMW per entry/exit.
+
+ - The inc/dec are inside the trampoline, so there is a window of a few
+   instructions on each side where the count is zero but the task is in
+   (or on its way into) trampoline text. Nothing there can be preempted
+   synchronously, only from an interrupt, so the irq-exit preemption path
+   looks at regs->ip and holds the count across preempt_schedule_irq()
+   when the IP is somewhere the counter cannot cover: outside core and
+   module text (all the dynamically allocated trampolines and slots), in
+   the static ftrace stubs or the x86 return thunks that still hold a
+   direct-call target, in a module that hosts its own direct trampoline,
+   or inside the bytes after a kprobe that the jump optimizer may be
+   about to rewrite (the one synchronize_rcu_tasks() user that is not
+   about trampolines at all).
+
+ - With those in place, rcu_tasks_classic_qs() also clears the holdout
+   flag on a preemption when the count is zero, on architectures that
+   opt in. x86-64 and arm64 do so here. Everyone else keeps the
+   voluntary-only rule and is untouched apart from the (unused) field.
+
+A running holdout already gets poked via rcu_request_urgent_qs_task(),
+which makes the next tick set NEED_RESCHED, so with this the resulting
+preemption retires it and a Tasks RCU grace period is bounded by roughly
+a tick plus the longest preempt-off section rather than by the longest
+stretch without a voluntary schedule().
+
+Patches 1-12 are scaffolding and change no behaviour on their own; patch
+13 flips the rule and selects the option for the two architectures.
+
+Testing so far is QEMU only: x86-64, PREEMPT_LAZY with PREEMPT_RCU=n,
+PROVE_RCU and lockdep, with and without PREEMPT_DYNAMIC. A kthread
+spinning in-kernel for 30s with the function tracer, an ftrace kprobe,
+an optimized kprobe and fentry/fexit programs attached:
+synchronize_rcu_tasks() goes from 29.7s to 0.1-0.3s, tearing down a
+DYNAMIC ftrace_ops (tracefs instance function -> nop) from 27s to
+0.2-0.8s, and the ftrace-direct sample modules load, fire and unload in
+about 2.5s each while the spinner runs, with no warnings and the new
+return-to-user assertion quiet. arm64 is build-tested only at this
+point; real hardware numbers for both are the obvious next step and I
+did not want to sit on the idea waiting for them.
+
+Things I would particularly like opinions on:
+
+ - Whether hooking rcu_tasks_classic_qs() is the right place, or whether
+   Paul would rather see this expressed differently inside Tasks RCU.
+ - return_to_handler and the rethook/kretprobe trampolines are not
+   instrumented. Their C callees take the ftrace recursion lock before
+   touching any ops and the trampolines themselves are static text, so I
+   believe they do not need it, but I would like Steven and Masami to
+   confirm.
+ - The register_ftrace_direct() contract change: out-of-line direct
+   trampolines now have to maintain the count themselves (the samples
+   are converted). I do not know of out-of-tree users beyond BPF, but
+   this is the one place an existing user could be silently weakened.
+ - Whether arm64 folks are comfortable with the ldr/add/str in
+   ftrace_caller and the BPF trampoline, and with treating all of
+   ftrace_caller as trampoline text for the IP check.
+ - If this holds up, cond_resched_tasks_rcu_qs() and
+   rcu_softirq_qs_periodic() become unnecessary on the opted-in
+   architectures; I have not touched them here.
+
+Based on v7.3-rc2+ (893e11787f78).
+
+---
+Josef Bacik (13):
+      rcu-tasks: Add per-task trampoline nesting count
+      entry: Pass pt_regs to irqentry_exit_cond_resched()
+      rcu-tasks: Hold trampoline nesting across irq-exit preemption in trampoline text
+      kprobes: Let Tasks RCU recognise tasks preempted in an optprobe jump window
+      ftrace: Mark modules hosting direct-call trampolines for Tasks RCU
+      x86/ftrace: Maintain Tasks RCU trampoline nesting in ftrace_caller
+      x86/kprobes: Maintain Tasks RCU trampoline nesting in the optprobe template
+      bpf, x86: Maintain Tasks RCU trampoline nesting in the BPF trampoline
+      arm64: ftrace: Maintain Tasks RCU trampoline nesting in ftrace_caller
+      bpf, arm64: Maintain Tasks RCU trampoline nesting in the BPF trampoline
+      samples: ftrace: Maintain Tasks RCU trampoline nesting in direct-call trampolines
+      rcutorture: Bracket Tasks RCU readers with trampoline nesting
+      rcu-tasks: Treat preemption outside trampolines as a quiescent state
+
+ arch/arm64/Kconfig                          |  1 +
+ arch/arm64/kernel/asm-offsets.c             |  3 ++
+ arch/arm64/kernel/entry-ftrace.S            | 35 +++++++++++++
+ arch/arm64/kernel/ftrace.c                  | 16 ++++++
+ arch/arm64/net/bpf_jit_comp.c               | 46 ++++++++++++++++
+ arch/x86/Kconfig                            |  1 +
+ arch/x86/kernel/asm-offsets.c               |  3 ++
+ arch/x86/kernel/ftrace.c                    | 37 +++++++++++++
+ arch/x86/kernel/ftrace_64.S                 | 43 +++++++++++++++
+ arch/x86/kernel/kprobes/opt.c               | 20 +++++++
+ arch/x86/kernel/vmlinux.lds.S               |  4 ++
+ arch/x86/net/bpf_jit_comp.c                 | 43 +++++++++++++++
+ arch/x86/xen/enlighten_pv.c                 |  2 +-
+ include/linux/irq-entry-common.h            | 14 ++---
+ include/linux/kprobes.h                     |  8 ++-
+ include/linux/module.h                      |  7 +++
+ include/linux/rcupdate.h                    | 70 ++++++++++++++++++++++++-
+ include/linux/sched.h                       |  1 +
+ kernel/entry/common.c                       | 29 +++++++++--
+ kernel/fork.c                               |  1 +
+ kernel/kprobes.c                            | 24 +++++++++
+ kernel/rcu/Kconfig                          | 17 ++++--
+ kernel/rcu/rcutorture.c                     |  6 +++
+ kernel/rcu/tasks.h                          | 81 +++++++++++++++++++++++++++--
+ kernel/rcu/update.c                         |  2 +
+ kernel/trace/ftrace.c                       | 39 ++++++++++++++
+ samples/ftrace/ftrace-direct-modify.c       |  9 ++++
+ samples/ftrace/ftrace-direct-multi-modify.c |  9 ++++
+ samples/ftrace/ftrace-direct-multi.c        |  5 ++
+ samples/ftrace/ftrace-direct-too.c          |  5 ++
+ samples/ftrace/ftrace-direct.c              |  5 ++
+ samples/ftrace/ftrace-direct.h              | 64 +++++++++++++++++++++++
+ 32 files changed, 629 insertions(+), 21 deletions(-)
+---
+base-commit: 893e11787f78e43b534e252249ac3fff4d1333f8
+change-id: 20260910-b4-rcu-tasks-preempt-qs-401ff45465c7
+
+Best regards,
+--  
+Josef Bacik <josef@toxicpanda.com>
+
