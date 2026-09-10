@@ -1,68 +1,69 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74591581230
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 18:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDDE58B6AB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 18:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789066261; cv=none; b=kH27Msxff2H7Cvvg6Wf0U7afKzOQz07M7fs5F6QGcfgu1EIWTSI4mrV5PlxINDz5FfPA1Zkh1IyPIOapPesy4p+SDKBNVcDquAzb8lw9kgp1LYIqhWGCwDXaQGQvzg34R6zKK+h2yD9ptSifcjjD22pJ//38wxMvQ048I6td48E=
+	t=1789066262; cv=none; b=IOTh/EmOle9WFllFIe3d6pH3QKjq2vl0myFbYL4Xpk0//9dpNEMg8VhXvnDZvwtARSYAZDzE6rSj0zAkK8+gvW2/iCyZ6dFGxu/Mvch3+jUivl0urnr7PqbzSi/Seq5zm5JqqgJD29g4DIqjE+byn4ztbwJOwvCxnDAjSsxEvVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789066261; c=relaxed/simple;
-	bh=JGB9TElpRBgk6QzCzF9poMsfUxxS/A8RtDDCOyt7z54=;
+	s=arc-20240116; t=1789066262; c=relaxed/simple;
+	bh=lYdFz9QIpBbv18s7vNFL415owdJ/HvkbTUnKX5a6LVk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lcjO9glACWh/aOnmXeayd4D1a9EqBGJqAJZf2ImkxwAXr35MDHpbW6FmcdanT5oqbv4fGfR+3B9VdHd+3dLPffR7TRhxDiLdn8Ha1UPj9zTQTYJcMU3AA+dSIIaI3o4m8++SsKEpA2SD6h+gQjgV9xASY47hniN6c/2/jAlxhTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=Ka0MeZUG; arc=none smtp.client-ip=74.125.230.204
+	 In-Reply-To:To:Cc; b=QUzhLStJqias5t/1dQXfrcbO5BEHfJ/i989c/N7bX83SSse7qh6JkXP0UpXEW0xAh60i8g+X2dSMKBu5tuhk2CSWobEbPLFnZGrlGDcp2im+cOIKc4jDzyJzJIVNvLJYhZq14R3eArWQlJfYkSojVQu1+NsmHpOYDtqi9aL3AnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=ZTFsEcMs; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="Ka0MeZUG"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5308fc4b67cso1475971cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 11:50:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="ZTFsEcMs"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-939adff838bso1717785a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 11:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789066252; x=1789671052; darn=vger.kernel.org;
+        d=toxicpanda.com; s=google; t=1789066255; x=1789671055; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AwJvzjOst2er6K+UDT8eDw5lj3PdpLVthroXGjj7dNM=;
-        b=Ka0MeZUG+ShhGpead4iP9O+duhA9gbSP9HyHbPYEvdJYzZPxFqV6HleLkID4gZjja7
-         Zl2MdzZF0MoCLpPw9k7sAe3QhzzxW/NcH2KllXG8sqCB6rZ1jjnXmk4rfAwXIvObl9wW
-         siS2GozR+X77q5xGmvXQULPYYSlvR+639QufTlIdiipbL9CkG/WznfHonhqXBHGJX2Ud
-         ihhuRtZ5QatIUumWL+ASG6ntwEb0YBQxDsCmlBekG3lau1TKlCzzrDFjkcGna/cR6MnV
-         s0+7hNV1jfD+/Yx5bPkjJHg0iFsCX3v1zKGQF3c3H4PvkxuVs53o3BKtH8IgAd6pPe4N
-         QDgw==
+        bh=dxBJRgyuHY3W/iJApny4mLX1c4wnn/TYh39J8mu564M=;
+        b=ZTFsEcMsBBq2ulmPb/BCrMfdkASo0w8240Jh0XomclfIovxMdLGkkwRDpL2Xi9sRBM
+         yks9hjEOCb8ZaeXAZPTi/g5x5RHucCIvIWWKpRuByBFJ503E9Ufb9Z8ugl/d9o5EhJD4
+         RItdJ0JzZcRrZI+uP+nv9HZBuaU7We4jWpLZGLvMoUhmnCrreCmQbTZWoEc73GIom8v0
+         t/jN7fuXqCsvCmztVVHSd8hnOqHzRC37fw33186SJVTM4YVUZI7c1FqS0UXlXfm6OSgo
+         PHrd4W/6LRiMVK6CcbC1MX0TO7isQnFcm2FQZxZTDWA71Gq3yURC+BldsyFKyg2eU6vZ
+         8G+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789066252; x=1789671052;
+        d=1e100.net; s=20251104; t=1789066255; x=1789671055;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AwJvzjOst2er6K+UDT8eDw5lj3PdpLVthroXGjj7dNM=;
-        b=sn7GGewwu9SwFY5vSMCCNw+jFrd/zTsu2KHGHOA4aMdMKtLjgydGw2zWP1dQOddFBS
-         Fjy8Aokc7T1w0fgYwefxAKuj3h9OiYNNoOSyj1xxnKok+IBJAjgkcgrV8p9tRtxX6oTf
-         ZcmNVpvkgUeZ6cyXtvesLj3ynyQTnmBYJhiu2iKR43StpKFElvkg6RH3Fi1jQkfWBAxx
-         dxAhkcG3OncdTLTWw1Y9xHEsUxDhSTUM1bDjCfuCSb6MKVlRX+SXAPodW81qXUP8EdE6
-         rPrcByPWvkt1lgam2KDLsbpr9WXDO0q5uG86Mlsln4qVIlo3k84Rfvsou9tapyfCFAZR
-         N2ow==
-X-Forwarded-Encrypted: i=1; AKwUvBy7MGYr918G9SjZuIudV4s/VOE/6EHyhM0Jgk+viz/MCwvIK9mHRjIvTiTEvLoh7cIpLPB+gZLhQ9mC67yOiJmYO7c=@vger.kernel.org
-X-Gm-Message-State: AFuF++noCX35dvLbE+bt/SyHU01my9e3sU51ELyYE2tY2IYvf3MapOoR
-	uWRaWTsnnjvrZZjghUFwLqVjo/gjyF7eAW2neKEzu3MOLmPq/I36qwIf36gltmwc/HE=
-X-Gm-Gg: AYBFou22DSngnQhd69mo7kc08XPjJquZKFYH0hcxPMnrRh9772iRztDvsZ+5LoGsmyN
-	E1rAs8TMh37s5E7AENWQs5Pc0jxVNUkFn4o0jLUooanfnIEQKwSZ3FGkxN/Pv6ILcPiCLrExFpr
-	4Kx4Hr3f/ZbrMlrN0C+dkfGRzwZAkMR4e6NUzGigyQ/VI8YZQw1CGnPMbQ2KK0YECSs5V5U/9Do
-	AWC3vJN4LD+i2Xq+e1mm4DQoAvVvMMNHy+788ZqKOAFMd7E06/rCz51Qk872unTKCKbwgh2wPvc
-	EU5d1o59/7GBkBbSKMObzSw83WSp7tGfuM9QVae7GXFuTtieTM8T9+nqqNYhjyM9kB4TZEAXMRC
-	yp3ZVMnN4trDdculGNXfxn/i/keDgOXmRft0lsN3ohSgg3wlIedNKwg/xGg8b9SaM9PysNpVPjK
-	DE+1LcuFIYoKENdqjIlxj00CtdLYvyAq/+pWLw4XoaKu40J7Gy0vt6xN5JGEIj/UEWB6fVMdb2f
-	WsriWfQdkTyelUC31+fRNSWpGn/zCFgGmVcrxH0D5MM5UnC9HckdtGhBQ==
-X-Received: by 2002:a05:622a:1b8b:b0:530:5ed1:561a with SMTP id d75a77b69052e-530c876e50amr12423551cf.43.1789066252311;
-        Thu, 10 Sep 2026 11:50:52 -0700 (PDT)
+        bh=dxBJRgyuHY3W/iJApny4mLX1c4wnn/TYh39J8mu564M=;
+        b=Na+lu2i76I8q+q74P0fXpmdkw/6wJKbpDxJNLFmT/iWNNs/sh1yuMrbVxkHArH8OIH
+         YYjQbcmMrrTHCDB6tDZk85LQqJERZ0gGJ/dzPdskrCkv3hhBGDj0WpqqMlZRBomYGLRc
+         t37bF6CkSFLkdjqAb9HGvX5ymO4eJCn4AJzld5xG0gZbxDmWjp1eM9FZBfQnn9tQTrR8
+         jeOPbA1JoUTlZ6S+j7+bbdLWiVOHQCJhhLd+KXi+w4EoXNtZlNi2kYf6IY3zhTsC1DBS
+         yfmh1Gt9AU/84Ki+mtyBbEV4GdBf2dSmxOP7mlzInW+1ji9/tl85Q0Ip143BHV96Xm6/
+         MqTg==
+X-Forwarded-Encrypted: i=1; AKwUvBz176lyDDmF6tBTdtQqf+20RxFpcwtGiKD4LmQjLHEerH8u71WrfHcWz1pRKM9ImPHkd1iC3vBIV2mY/sq3z9j+7pE=@vger.kernel.org
+X-Gm-Message-State: AFuF++lonZcmcJTy/2bOmcx+78JS10qHAx1izI4pxNH/n+4boW2CIh4+
+	UH4VzSlgnEHlFEvzBcdbfSHisY2pzKpSnaS0LieHsFulcYPY16J8patlY3Vvon/+9f4=
+X-Gm-Gg: AYBFou0Iz3UskdF79kvHgsKKb6saLzuWmhWj9Wh2WokBQGEddBoZQShiVE6ra9PLZMi
+	QDe28W6lHCMbm1uBl1LJ7X7WMT3+8HD9f67+fL3LdYtMfEaHJ0k6EWrxy5PA06cba9c9R0uXiq0
+	zJg9iVEGVcizVMIBcDGRQ7nTrVHeLAivSfKnHbqjRg6Qd6Ic8V+At4wXhDPn8HGj12rQzKgDsbn
+	CtuPQdLRuzT/NrJAQc0iJH45mHxMRD+hb+3mTVGmeiuHqhmofrOK1ibgwMKuxRNmiMcPBrYcoz+
+	fndpfFbNVoOm7ABYj+O3A79bSElkvh4YbTuBl8Utla7zdvdGpO+EgdnFXmyUqqb89WJHzvvfZGo
+	awKhHZMBHYxmNaahBVCr3o3zn1BaNq/aI9PB3ISmrZ/PJhlkhpgpB6x7pS9u27G3i0OdsJf3fbz
+	4C7+G/K5WIl/s2u89QIaDPO5EX+viDp8PKWhFjV2LtVDvYVREuuGquPsyiKw/jvET0xX2fu8kXI
+	ielc6SdeyHusgY87sIlUWRGUUotOIwZTzon5s6sMnYwNBeMX4d5Ho0/
+X-Received: by 2002:a05:620a:280d:b0:939:78ab:3c5f with SMTP id af79cd13be357-939ea0137a8mr26249085a.9.1789066254480;
+        Thu, 10 Sep 2026 11:50:54 -0700 (PDT)
 Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530ca45b61dsm239421cf.6.2026.09.10.11.50.51
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-939e8bf9d51sm34965885a.14.2026.09.10.11.50.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2026 11:50:51 -0700 (PDT)
+        Thu, 10 Sep 2026 11:50:53 -0700 (PDT)
 From: Josef Bacik <josef@toxicpanda.com>
-Date: Thu, 10 Sep 2026 18:50:24 +0000
-Subject: [PATCH RFC 01/13] rcu-tasks: Add per-task trampoline nesting count
+Date: Thu, 10 Sep 2026 18:50:25 +0000
+Subject: [PATCH RFC 02/13] entry: Pass pt_regs to
+ irqentry_exit_cond_resched()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,7 +72,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-b4-rcu-tasks-preempt-qs-v1-1-d4469f4cc101@toxicpanda.com>
+Message-Id: <20260910-b4-rcu-tasks-preempt-qs-v1-2-d4469f4cc101@toxicpanda.com>
 References: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
 In-Reply-To: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
 To: "Paul E. McKenney" <paulmck@kernel.org>, 
@@ -97,159 +98,104 @@ Cc: Andy Lutomirski <luto@kernel.org>,
  xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
 X-Mailer: b4 0.15.2
 
-Tasks RCU exists so that ftrace, BPF and kprobes can free trampoline
-text once no task can still be executing in it.  Today the only way a
-task tells Tasks RCU "I am not in a trampoline" is a voluntary context
-switch, so a preempted task is always assumed to be inside one.
+The irq-exit preemption path is about to need the interrupted context's
+registers to decide whether the preemption may be reported to Tasks RCU
+as a quiescent state.  irqentry_exit_to_kernel_mode_preempt() already
+has them; hand them down through irqentry_exit_cond_resched(), its
+PREEMPT_DYNAMIC static-call and static-key variants, and
+raw_irqentry_exit_cond_resched().  The only caller outside the generic
+entry code is Xen PV's upcall handler, which has regs as well.
 
-Add task_struct::rcu_tramp_nesting so that trampolines can say so
-directly: a trampoline increments it before calling out and decrements
-it before returning, and while it is non-zero the task must not be
-treated as Tasks-RCU quiescent.  Provide rcu_tasks_trampoline_enter()
-and rcu_tasks_trampoline_exit() for C users, report the count in the
-Tasks RCU stall output, and, under CONFIG_PROVE_RCU, assert that it is
-zero on every return to userspace since no task can legitimately reach
-userspace with a trampoline on its stack.
-
-Only current ever writes the count and every nested user (interrupts
-running their own trampolines) is balanced, so plain accesses suffice.
-
-Nothing increments the count and nothing consults it for quiescent-state
-decisions yet; both come in later patches.
+No functional change.
 
 Assisted-by: LLM
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- include/linux/irq-entry-common.h |  2 ++
- include/linux/rcupdate.h         | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/sched.h            |  1 +
- kernel/fork.c                    |  1 +
- kernel/rcu/tasks.h               |  3 ++-
- 5 files changed, 43 insertions(+), 1 deletion(-)
+ arch/x86/xen/enlighten_pv.c      |  2 +-
+ include/linux/irq-entry-common.h | 12 ++++++------
+ kernel/entry/common.c            |  6 +++---
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 2c64b388f616..3d85035f5624 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -739,7 +739,7 @@ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ 
+ 	inhcall = get_and_clear_inhcall();
+ 	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
+-		irqentry_exit_cond_resched();
++		irqentry_exit_cond_resched(regs);
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
 diff --git a/include/linux/irq-entry-common.h b/include/linux/irq-entry-common.h
-index 0bb6c03481fa..8da571622000 100644
+index 8da571622000..fc04725ae46b 100644
 --- a/include/linux/irq-entry-common.h
 +++ b/include/linux/irq-entry-common.h
-@@ -5,6 +5,7 @@
- #include <linux/context_tracking.h>
- #include <linux/hrtimer_rearm.h>
- #include <linux/kmsan.h>
-+#include <linux/rcupdate.h>
- #include <linux/rseq_entry.h>
- #include <linux/static_call_types.h>
- #include <linux/syscalls.h>
-@@ -214,6 +215,7 @@ static __always_inline void __exit_to_user_mode_validate(void)
+@@ -348,21 +348,21 @@ typedef struct irqentry_state {
+  *
+  * Conditional reschedule with additional sanity checks.
+  */
+-void raw_irqentry_exit_cond_resched(void);
++void raw_irqentry_exit_cond_resched(struct pt_regs *regs);
+ 
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ #if defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
+ #define irqentry_exit_cond_resched_dynamic_enabled	raw_irqentry_exit_cond_resched
+ #define irqentry_exit_cond_resched_dynamic_disabled	NULL
+ DECLARE_STATIC_CALL(irqentry_exit_cond_resched, raw_irqentry_exit_cond_resched);
+-#define irqentry_exit_cond_resched()	static_call(irqentry_exit_cond_resched)()
++#define irqentry_exit_cond_resched(regs)	static_call(irqentry_exit_cond_resched)(regs)
+ #elif defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
+ DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+-void dynamic_irqentry_exit_cond_resched(void);
+-#define irqentry_exit_cond_resched()	dynamic_irqentry_exit_cond_resched()
++void dynamic_irqentry_exit_cond_resched(struct pt_regs *regs);
++#define irqentry_exit_cond_resched(regs)	dynamic_irqentry_exit_cond_resched(regs)
+ #endif
+ #else /* CONFIG_PREEMPT_DYNAMIC */
+-#define irqentry_exit_cond_resched()	raw_irqentry_exit_cond_resched()
++#define irqentry_exit_cond_resched(regs)	raw_irqentry_exit_cond_resched(regs)
+ #endif /* CONFIG_PREEMPT_DYNAMIC */
+ 
+ /**
+@@ -467,7 +467,7 @@ static inline void irqentry_exit_to_kernel_mode_preempt(struct pt_regs *regs,
+ 		return;
+ 
+ 	if (IS_ENABLED(CONFIG_PREEMPTION))
+-		irqentry_exit_cond_resched();
++		irqentry_exit_cond_resched(regs);
+ }
+ 
+ /**
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index e3d381fd3d25..e4acd50bd81a 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -134,7 +134,7 @@ static inline bool arch_irqentry_exit_need_resched(void);
+ static inline bool arch_irqentry_exit_need_resched(void) { return true; }
+ #endif
+ 
+-void raw_irqentry_exit_cond_resched(void)
++void raw_irqentry_exit_cond_resched(struct pt_regs *regs)
  {
- 	/* Ensure that kernel state is sane for a return to userspace */
- 	kmap_assert_nomap();
-+	rcu_tasks_trampoline_assert_none();
- 	lockdep_assert_irqs_disabled();
- 	lockdep_sys_exit();
+ 	if (!preempt_count()) {
+ 		/* Sanity check RCU and thread stack */
+@@ -150,11 +150,11 @@ void raw_irqentry_exit_cond_resched(void)
+ DEFINE_STATIC_CALL(irqentry_exit_cond_resched, raw_irqentry_exit_cond_resched);
+ #elif defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
+ DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+-void dynamic_irqentry_exit_cond_resched(void)
++void dynamic_irqentry_exit_cond_resched(struct pt_regs *regs)
+ {
+ 	if (!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+ 		return;
+-	raw_irqentry_exit_cond_resched();
++	raw_irqentry_exit_cond_resched(regs);
  }
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 44c07a66edff..b5c666c82479 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -180,6 +180,37 @@ static inline void rcu_nocb_flush_deferred_wakeup(void) { }
- #ifdef CONFIG_TASKS_RCU_GENERIC
- 
- # ifdef CONFIG_TASKS_RCU
-+
-+/*
-+ * Trampoline nesting: dynamically allocated text (ftrace trampolines, BPF
-+ * trampoline images, kprobe optinsn slots) that relies on Tasks RCU for its
-+ * lifetime brackets itself with an increment/decrement of
-+ * current->rcu_tramp_nesting.  While the count is non-zero the task is inside,
-+ * or was called from, such text and an involuntary context switch must not be
-+ * treated as a Tasks RCU quiescent state.
-+ *
-+ * Only current writes the count and only current (or an interrupt on the same
-+ * CPU) reads it, so plain accesses suffice.
-+ */
-+static __always_inline void rcu_tasks_trampoline_enter(void)
-+{
-+	current->rcu_tramp_nesting++;
-+	barrier();
-+}
-+
-+static __always_inline void rcu_tasks_trampoline_exit(void)
-+{
-+	barrier();
-+	current->rcu_tramp_nesting--;
-+}
-+
-+/* A task must never reach userspace with a trampoline on its stack. */
-+static __always_inline void rcu_tasks_trampoline_assert_none(void)
-+{
-+	if (IS_ENABLED(CONFIG_PROVE_RCU))
-+		WARN_ON_ONCE(current->rcu_tramp_nesting);
-+}
-+
- # define rcu_tasks_classic_qs(t, preempt)				\
- 	do {								\
- 		if (!(preempt) && READ_ONCE((t)->rcu_tasks_holdout))	\
-@@ -192,6 +223,9 @@ void rcu_tasks_torture_stats_print(char *tt, char *tf);
- # define rcu_tasks_classic_qs(t, preempt) do { } while (0)
- # define call_rcu_tasks call_rcu
- # define synchronize_rcu_tasks synchronize_rcu
-+static inline void rcu_tasks_trampoline_enter(void) { }
-+static inline void rcu_tasks_trampoline_exit(void) { }
-+static inline void rcu_tasks_trampoline_assert_none(void) { }
- # endif
- 
- #define rcu_tasks_qs(t, preempt) rcu_tasks_classic_qs((t), (preempt))
-@@ -208,6 +242,9 @@ void exit_tasks_rcu_finish(void);
- #define rcu_tasks_classic_qs(t, preempt) do { } while (0)
- #define rcu_tasks_qs(t, preempt) do { } while (0)
- #define rcu_note_voluntary_context_switch(t) do { } while (0)
-+static inline void rcu_tasks_trampoline_enter(void) { }
-+static inline void rcu_tasks_trampoline_exit(void) { }
-+static inline void rcu_tasks_trampoline_assert_none(void) { }
- #define call_rcu_tasks call_rcu
- #define synchronize_rcu_tasks synchronize_rcu
- static inline void exit_tasks_rcu_start(void) { }
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 8b3d47a325cc..d2e7b1b3c9d2 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -956,6 +956,7 @@ struct task_struct {
- 	unsigned long			rcu_tasks_nvcsw;
- 	u8				rcu_tasks_holdout;
- 	u8				rcu_tasks_idx;
-+	int				rcu_tramp_nesting;
- 	int				rcu_tasks_idle_cpu;
- 	struct list_head		rcu_tasks_holdout_list;
- 	int				rcu_tasks_exit_cpu;
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 416758c8a3d4..cfe3a8e53fbd 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1869,6 +1869,7 @@ static inline void rcu_copy_process(struct task_struct *p)
- #endif /* #ifdef CONFIG_PREEMPT_RCU */
- #ifdef CONFIG_TASKS_RCU
- 	p->rcu_tasks_holdout = false;
-+	p->rcu_tramp_nesting = 0;
- 	INIT_LIST_HEAD(&p->rcu_tasks_holdout_list);
- 	p->rcu_tasks_idle_cpu = -1;
- 	INIT_LIST_HEAD(&p->rcu_tasks_exit_list);
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 627295396cd9..1662ba18bf34 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -1113,10 +1113,11 @@ static void check_holdout_task(struct task_struct *t,
- 		*firstreport = false;
- 	}
- 	cpu = task_cpu(t);
--	pr_alert("%p: %c%c nvcsw: %lu/%lu holdout: %d idle_cpu: %d/%d\n",
-+	pr_alert("%p: %c%c nvcsw: %lu/%lu holdout: %d tramp_nesting: %d idle_cpu: %d/%d\n",
- 		 t, ".I"[is_idle_task(t)],
- 		 "N."[cpu < 0 || !tick_nohz_full_cpu(cpu)],
- 		 t->rcu_tasks_nvcsw, t->nvcsw, t->rcu_tasks_holdout,
-+		 data_race(t->rcu_tramp_nesting),
- 		 data_race(t->rcu_tasks_idle_cpu), cpu);
- 	sched_show_task(t);
- }
+ #endif
+ #endif
 
 -- 
 2.55.0
