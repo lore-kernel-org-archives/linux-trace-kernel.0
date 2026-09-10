@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B753B71B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95633BAD95;
 	Thu, 10 Sep 2026 23:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789084538; cv=none; b=uiGAFmtQrxU3FM0/huu60v8CQnsPJJzlIHi0Q1Z38LvIcICeLZ/zJfSA3gNjpizvH8Qy7HFKaolWTFqUjyyrK3lB/t3tostkzwp4XC7inrIkiWSbo7ioN9iXNb4nAno8/qsDGBsB0m77r4P+18b0KGjJbbehCRAcgM9aqn04Zkk=
+	t=1789084539; cv=none; b=rZG6uS7eWMgHxUJ5RnpsY3L9s8oNnvKsEdM5xNsDZSojRpOEHvO7DPjQK0SzQ7XG7Qi+OpqfVqASX3l991PF/5A1w/l7QBJ7K8XNYQhaXa8wp7OjJLBccYpb7P/6l+Scm5v4/RH+79tVApFURM1tYPQblHMjezvgCHDfi5N7WF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789084538; c=relaxed/simple;
-	bh=dzzHKnLaHtatS2247i19T9JMQUuRjUg24xPk1W6Kpn4=;
+	s=arc-20240116; t=1789084539; c=relaxed/simple;
+	bh=gGM6cYb630gdWoJEJn4fvEBtwAcYmnpAVbuU3m8hixg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pmE6X26mY6a0VbPRLN/c9EVKzMv5c7lG9b1Pn1PTXWzP24uf/g9Q/EIZgXxNThXH67/+PTvURwuTQfVYFNQSnBrV9CRc/gyqqyVGnGv1sCX+uLa1dzwriXs9yZI7b4/+Pvo8UAvFa2hq5S1ZQCnz7nduRYQ1JHw9cW7tokbsmWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Swlk+eHz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tfB0Y3Pl7T9P8h09VI7whXTmu1c2jWu3dQwXvXE49AOg6t6BUtBwQSGNiWGZXP2HkYhSUrV7Uwxk941Q07+qeE4xXVgBVmTwJQCzJCcNUJa0FKZjhVDJv55jf1DYkZjJTQXqrV+UI/MxSVVBLKZyQ+9e6Izz8QddIuwenQupPNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCyKGBzL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Swlk+eHz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 23A16C2BD01;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCyKGBzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F5A9C2BCC7;
 	Thu, 10 Sep 2026 23:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789084538;
-	bh=dzzHKnLaHtatS2247i19T9JMQUuRjUg24xPk1W6Kpn4=;
+	bh=gGM6cYb630gdWoJEJn4fvEBtwAcYmnpAVbuU3m8hixg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Swlk+eHzO4VJ2EXiikAIxZBXrLrmKlOlYUPNbvFs7EE/U4lIxwV/oBWKkpXyBeOOj
-	 g7/F9s9LFgPNUF6ULGj29Qfae48kKPD4IPFMh9VAh46xBfHF699E0IpkPGd3Rk2jNQ
-	 okHLiwHrjO32yTXMuITbWEDorZP879VmbDyCqC9sF6sQTBiqzl4+pGLbpo7sqJXCqw
-	 hqDu9crfRUrJnkyW2W5EaVv5eRkizXjpgpZi+OXDLczSIGdN9UQv0MRl/5ufHXthdh
-	 hnRH9Hx7wK2LuX5py9i7r/G4hwMWCD7+h5TZnL6MrmxeIZ5yldD8sH0Exl/snbQ/+F
-	 uovfZdE8voukg==
+	b=rCyKGBzLHZWHjByQEvp/3J+bhaghA38hro0nxowD1vP4RKw0B1LAa3zU7l9MJmkje
+	 FYMTzDXJQu99FujV0FHz4M56GC0TI5f73xy3qYXDSMiX2hm9wLISM6lwzMDuf2cHAE
+	 TbSNIGlHEvf3e/acZnayLgtk9UzjeYt7b3EwNQLdF7VIV/0S5J+AW3djIrmIU7t/YW
+	 w/3zJO4V4rlcYidR7ob3cFGPDwCRqGa8dKlMJR3D/Y0kmzd3vXcA0kKTgbBv9xRmuG
+	 DebQPv3jLe+zobRMgPuiHWwaSncHCEgeu44Uy3wkH3oP5Bxurtk4PMZcV8qLELcqwk
+	 xOcJ0BaBQQpsQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EFCC88E45;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46592C79FBB;
 	Thu, 10 Sep 2026 23:55:38 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Thu, 10 Sep 2026 16:55:41 -0700
-Subject: [PATCH v13 15/44] KVM: guest_memfd: Ensure pages are not in use
- before conversion
+Date: Thu, 10 Sep 2026 16:55:42 -0700
+Subject: [PATCH v13 16/44] KVM: guest_memfd: Call arch make_shared callback
+ for to-shared conversion
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260910-gmem-inplace-conversion-v13-15-dd6fbf94f4e1@google.com>
+Message-Id: <20260910-gmem-inplace-conversion-v13-16-dd6fbf94f4e1@google.com>
 References: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 In-Reply-To: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
 To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com, 
@@ -78,13 +78,14 @@ To: aik@amd.com, andrew.jones@linux.dev, binbin.wu@linux.intel.com,
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
- linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>
+ linux-coco@lists.linux.dev, Ackerley Tng <ackerleytng@google.com>, 
+ Fuad Tabba <fuad.tabba@linux.dev>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=8638;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789084533; l=5988;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=bSH0XLAck9JRuUcQsy3NOevga72VUfUd+daf8lXu/qs=;
- b=M2DwPEFrdMLQA52kG1SZOQ5yDt1mcDcBoE0ddXB9a6DJlhwiRUP/+Zgp16DVmCdBiG/YxtANG
- W7oNlD14eHsDPxh6/GNQyoNgbr7N4SwcBCltvEmikV87mDiAWyG3APU
+ bh=pnjcuYiGgOrTACJiDuCpEUUXJmfVPZdc0nxxctxlq1I=;
+ b=8n/zqT12bJsDEGglxVJpV0qF7heq6Y/6E8z8+2TPGozDYy2KIXFbkJruoR9CqjTm5xYcISqXB
+ uNl2w215XnvChWobjBOo60K/Wh3YvU13WDJU5+Z2PMtVpViNfPkT54t
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -94,238 +95,152 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-When converting memory to private in guest_memfd, it is necessary to ensure
-that the pages are not currently being accessed by any other part of the
-kernel or userspace to avoid any current user writing to guest private
-memory.
+When doing in-place conversion from PRIVATE to SHARED, immediately inform
+arch code of the conversion for all allocated pages/folios, e.g. so that
+arch code can put hardware metadata tables in the correct state.  Eagerly
+updating the table for to SHARED conversions avoids having to implement
+on-demand updates, e.g. when faulting in host userspace mappings.  Skip the
+entire flow if the arch doesn't implement conversion callbacks, as getting
+folios from the filemap is noticeably expensive, especially when converting
+large chunks of memory.
 
-guest_memfd checks for any outstanding references to determine whether a
-page is still in use. The only expected references after unmapping the
-range requested for conversion are those that are held by guest_memfd
-itself.
+Deliberately don't eagerly update the metadata table on conversions from
+SHARED to PRIVATE, because assigning a page to a VM (versus "returning" it
+to the host) requires the exact GFN associated with the page, i.e would
+require walking the memslot bindings.  And because KVM *must* do on-demand
+metadata updates when getting a PFN for KVM-internal usage, as that's the
+only time a relevant memslot binding is guaranteed to exist.
 
-A folio will have outstanding references if it is present in a per-CPU
-lru_add fbatch. guest_memfd does not actually participate in LRU, but
-freshly-allocated folios are still added to the lru_add fbatch for batch
-LRU statistics processing.
+Note!  Inform arch code of the conversion within the protection of the
+invalidation sequence, to ensure that any existing mappings are dropped
+before hardware is updated, and to ensure that new mappings can't be
+established until after the conversion is complete.
 
-A folio may also have extra refcounts if it is on the mlock fbatch.
-
-These two known usages of the folio are handled by draining both the
-lru_add and mlock fbatches for the folio. After draining, if the refcount
-is still elevated, then there are truly outstanding references.
-
-If the page may be DMA-pinned, DMA is using it and hence there are
-outstanding references. Checking if the page may be DMA-pinned can have
-false positives, but that is only with a significant number of refcounts,
-at which point draining LRU is not going to move the needle - it can still
-be concluded that the folio has outstanding references.
-
-If the page is still mapped after guest_memfd tried to unmap it earlier in
-the conversion process, it also has outstanding references.
-
-Exit early to avoid unnecessary draining in these two cases. If an
-outstanding reference is detected, stop scanning, record the failing
-offset, and return immediately.
-
-Track the drain status to avoid repeatedly draining LRU caches across
-multiple folios while scanning the requested range.
-
-Update the kvm_memory_attributes2 structure to include an error_offset
-field. This allows KVM to report the exact offset where a conversion
-failed. If the safety check fails, return -EAGAIN and copy the error_offset
-back to userspace so that it can potentially retry the operation or handle
-the failure gracefully.
-
-Report error_offset if preallocating memory to track attributes fails with
--ENOMEM as well, in which case the start offset of the range is returned.
-
-Update documentation to document the error_offset field and the possible
--EAGAIN error.
-
-Suggested-by: David Hildenbrand <david@kernel.org>
-Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-Signed-off-by: Vishal Annapurve <vannapurve@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Tested-by: Shivank Garg <shivankg@amd.com>
-Reviewed-by: Fuad Tabba <tabba@google.com>
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- Documentation/virt/kvm/api.rst | 10 +++++
- include/uapi/linux/kvm.h       |  3 +-
- virt/kvm/guest_memfd.c         | 90 +++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 97 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm-x86-ops.h |  2 +-
+ arch/x86/include/asm/kvm_host.h    |  2 +-
+ arch/x86/kvm/x86.c                 |  5 +++++
+ include/linux/kvm_host.h           |  1 +
+ virt/kvm/guest_memfd.c             | 42 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 027156508d04b..67f0f290797ab 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6741,6 +6741,16 @@ which includes operations such as unmapping pages from the host or
- stage-2 page tables, may result in side effects on memory contents
- that vary across different trusted firmware implementations.
- 
-+If this ioctl returns -EAGAIN, the offset of the page with unexpected
-+refcounts will be returned in ``error_offset``. This can occur if
-+there are transient refcounts on the pages, taken by other parts of
-+the kernel.
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index e213c9ae3e301..67b43c167045b 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -150,7 +150,7 @@ KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
+ KVM_X86_OP_OPTIONAL_RET0(gmem_make_private)
+ #endif
+-#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_RECLAIM
++#if defined(CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT) || defined(CONFIG_HAVE_KVM_ARCH_GMEM_RECLAIM)
+ KVM_X86_OP_OPTIONAL(gmem_make_shared)
+ #endif
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 744c1f6ff03ed..83e26ce45fb79 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1732,7 +1732,7 @@ struct kvm_x86_ops {
+ 	int (*gmem_make_private)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 				 kvm_pfn_t nr_pages);
+ #endif
+-#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_RECLAIM
++#if defined(CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT) || defined(CONFIG_HAVE_KVM_ARCH_GMEM_RECLAIM)
+ 	void (*gmem_make_shared)(kvm_pfn_t pfn, kvm_pfn_t nr_pages);
+ #endif
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_INVALIDATE
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2292249570314..75e03a2f79db2 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10653,6 +10653,11 @@ int kvm_arch_gmem_make_private(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ {
+ 	return kvm_x86_call(gmem_make_private)(kvm, gfn, pfn, nr_pages);
+ }
 +
-+Userspace is expected to figure out how to remove all known refcounts
-+on the shared pages, such as refcounts taken by get_user_pages(), and
-+try the ioctl again. A possible source of these long term refcounts is
-+if the guest_memfd memory was pinned in IOMMU page tables.
-+
- See also: :ref:`KVM_SET_MEMORY_ATTRIBUTES`.
++void kvm_arch_gmem_make_shared(kvm_pfn_t pfn, kvm_pfn_t nr_pages)
++{
++	kvm_x86_call(gmem_make_shared)(pfn, nr_pages);
++}
+ #endif
  
- .. _kvm_run:
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index ac371a50041c9..8dff2fc1972e9 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1665,7 +1665,8 @@ struct kvm_memory_attributes2 {
- 	__u64 size;
- 	__u64 attributes;
- 	__u64 flags;
--	__u64 reserved[12];
-+	__u64 error_offset;
-+	__u64 reserved[11];
- };
+ #ifdef CONFIG_HAVE_KVM_ARCH_GMEM_RECLAIM
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index ab87effdd221f..485f18454eb45 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2610,6 +2610,7 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
  
- #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+ int kvm_arch_gmem_make_private(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
+ 			       kvm_pfn_t nr_pages);
++void kvm_arch_gmem_make_shared(kvm_pfn_t pfn, kvm_pfn_t nr_pages);
+ #ifndef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
+ #define kvm_arch_has_gmem_convert() false
+ #endif
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 803c7cdbbe0f6..2de39ce8aec13 100644
+index 2de39ce8aec13..85446fe720603 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -8,6 +8,7 @@
- #include <linux/mempolicy.h>
- #include <linux/pseudo_fs.h>
- #include <linux/pagemap.h>
-+#include <linux/swap.h>
- 
- #include "kvm_mm.h"
- #include "guest_memfd.h"
-@@ -538,8 +539,58 @@ static int kvm_gmem_mas_preallocate(struct ma_state *mas, u64 attributes,
- 	return mas_preallocate(mas, xa_mk_value(attributes), GFP_KERNEL);
+@@ -588,6 +588,43 @@ static bool kvm_gmem_has_outstanding_references(struct inode *inode,
+ 	return false;
  }
  
-+static bool __folio_has_outstanding_references(struct folio *folio,
-+					       enum lru_cache_drained *drained)
++#ifdef CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT
++static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end)
 +{
-+	if (folio_maybe_dma_pinned(folio) || folio_mapped(folio))
-+		return true;
-+
-+	/* 1 reference held by filemap_get_folios() in the folio batch. */
-+	lru_cache_drain_for_folio(folio, 1, drained);
-+
-+	/*
-+	 * Outstanding references are anything other than those from the page
-+	 * cache, plus 1 temporary reference held by filemap_get_folios() in the
-+	 * folio batch.
-+	 */
-+	return folio_ref_count(folio) != folio_nr_pages(folio) + 1;
-+}
-+
-+static bool kvm_gmem_has_outstanding_references(struct inode *inode,
-+						pgoff_t start, size_t nr_pages,
-+						pgoff_t *err_index)
-+{
-+	enum lru_cache_drained drained = LRU_CACHE_NOT_DRAINED;
-+	struct address_space *mapping = inode->i_mapping;
-+	pgoff_t last = start + nr_pages - 1;
 +	struct folio_batch fbatch;
-+	pgoff_t next;
++	pgoff_t next = start;
 +	int i;
 +
 +	folio_batch_init(&fbatch);
-+
-+	next = start;
-+	while (filemap_get_folios(mapping, &next, last, &fbatch)) {
++	while (filemap_get_folios(inode->i_mapping, &next, end - 1, &fbatch)) {
 +		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
 +			struct folio *folio = fbatch.folios[i];
++			pgoff_t start_index, end_index;
++			kvm_pfn_t start_pfn;
++			kvm_pfn_t nr_pages;
 +
-+			if (__folio_has_outstanding_references(folio, &drained)) {
-+				*err_index = max(start, folio->index);
-+				folio_batch_release(&fbatch);
-+				return true;
-+			}
++			start_index = max(start, folio->index);
++			end_index = min(end, folio_next_index(folio));
++			/*
++			 * end_index is either in folio or points to
++			 * the first page of the next folio. Hence,
++			 * all pages in range [start_index, end_index)
++			 * are contiguous.
++			 */
++			start_pfn = folio_file_pfn(folio, start_index);
++			nr_pages = end_index - start_index;
++
++			kvm_arch_gmem_make_shared(start_pfn, nr_pages);
 +		}
 +
 +		folio_batch_release(&fbatch);
 +		cond_resched();
 +	}
-+
-+	return false;
 +}
++#else
++static void kvm_gmem_make_shared(struct inode *inode, pgoff_t start, pgoff_t end) {}
++#endif
 +
  static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
--				     size_t nr_pages, uint64_t attrs)
-+				     size_t nr_pages, uint64_t attrs,
-+				     pgoff_t *err_index)
- {
- 	bool to_private = attrs & KVM_MEMORY_ATTRIBUTE_PRIVATE;
- 	struct address_space *mapping = inode->i_mapping;
-@@ -556,8 +607,28 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
+ 				     size_t nr_pages, uint64_t attrs,
+ 				     pgoff_t *err_index)
+@@ -637,7 +674,12 @@ static int __kvm_gmem_set_attributes(struct inode *inode, pgoff_t start,
  
- 	mas_init(&mas, mt, start);
- 	r = kvm_gmem_mas_preallocate(&mas, attrs, start, nr_pages);
--	if (r)
-+	if (r) {
-+		*err_index = start;
- 		goto out;
-+	}
+ 	filter = to_private ? KVM_FILTER_SHARED : KVM_FILTER_PRIVATE;
+ 	kvm_gmem_invalidate_start(inode, start, end, filter);
 +
-+	if (to_private) {
-+		/*
-+		 * Forcefully unmap the pages from all userspace page tables,
-+		 * and then verify there are no outstanding references, e.g.
-+		 * acquired via GUP or similar.  Tell userspace to try again if
-+		 * there are outstanding references and hope that whatever has
-+		 * pinned the page will put its reference "soon".
-+		 */
-+		unmap_mapping_pages(mapping, start, nr_pages, false);
++	if (!to_private && kvm_arch_has_gmem_convert())
++		kvm_gmem_make_shared(inode, start, end);
 +
-+		if (kvm_gmem_has_outstanding_references(inode, start, nr_pages,
-+							err_index)) {
-+			mas_destroy(&mas);
-+			r = -EAGAIN;
-+			goto out;
-+		}
-+	}
- 
- 	/*
- 	 * From this point on guest_memfd has performed necessary
-@@ -578,9 +649,10 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 	struct gmem_file *f = file->private_data;
- 	struct inode *inode = file_inode(file);
- 	struct kvm_memory_attributes2 attrs;
-+	pgoff_t err_index;
- 	size_t nr_pages;
- 	pgoff_t index;
--	int i;
-+	int i, r;
- 
- 	if (copy_from_user(&attrs, argp, sizeof(attrs)))
- 		return -EFAULT;
-@@ -606,8 +678,16 @@ static long kvm_gmem_set_attributes(struct file *file, void __user *argp)
- 
- 	nr_pages = attrs.size >> PAGE_SHIFT;
- 	index = attrs.offset >> PAGE_SHIFT;
--	return __kvm_gmem_set_attributes(inode, index, nr_pages,
--					 attrs.attributes);
-+	r = __kvm_gmem_set_attributes(inode, index, nr_pages, attrs.attributes,
-+				      &err_index);
-+	if (r) {
-+		attrs.error_offset = ((uint64_t)err_index) << PAGE_SHIFT;
+ 	mas_store_prealloc(&mas, xa_mk_value(attrs));
 +
-+		if (copy_to_user(argp, &attrs, sizeof(attrs)))
-+			return -EFAULT;
-+	}
-+
-+	return r;
- }
- 
- static long kvm_gmem_ioctl(struct file *file, unsigned int ioctl,
+ 	kvm_gmem_invalidate_end(inode, start, end);
+ out:
+ 	filemap_invalidate_unlock(mapping);
 
 -- 
 2.55.0.1007.g17ff1f9808-goog
