@@ -1,180 +1,110 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0221653ECE9;
-	Thu, 10 Sep 2026 16:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D978C4CCDE1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 16:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789059011; cv=none; b=RtOAISAYBb9/gUvyf0VpSkPh+MzVhJpAlWA3i6qevdaeptN5zoIqHRkC82NpH2mulIwZwxODCsP1rGRLDPAJlyaPOCel7N9GRo/2+Zh625z+fDfzyeYGAdqD23xGmtrJMpC4NMKqdaAkusPa3Lx2DzJdVSQ4W9AB8d6vbQ1LBjw=
+	t=1789059529; cv=none; b=ZaQadkgmrlMv+k9oX01J+TJdNvCjCCuahuU8VJqHu3uuinTjByPEBvviuijv5dZivwc0KARwiOuKaQdqgGUQTZw/m560cmb/YKuNcJ9CRWRHCD54xniVLSi+qoq0IIBesSujF3f45HLF53s6RGmcDfUxj4HwF6EqTAkXqIlkOnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789059011; c=relaxed/simple;
-	bh=ZobS2slsYgymP728EIsS1ZZzI/jDqEeK66f+TXlhRLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BmoxuR/l2deJbXkIN+z/32Zw/BWWaaENGHfspAS9VG0/T06XvJU8l3D+yQIYJFfBUQcW1zEs8UnW5goU95N3y7cqwL/agb88f20jqdGVGrf9HEDZNUI4HpL+yG98vi98AbWAckUaiiCLBHrGA3vrP95mabo7aH0ujPVf3fIoqys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XgKzfBTS; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1789059529; c=relaxed/simple;
+	bh=62NcunostMjYWulkrRK1QeMNYeaLxQKZctku0U/gOAU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=jTbY8iHno/X5Ss/HErqOh+/NZjfpZsNTzJXyg/6OlJ3jT72Jc43p/6/tEHe001IjEILng18ND5XJiupiJX6lCad5x92JIinhIbYoq+LIv+H+Swy2Jc3wcBPtAknAzVWLQ2M3cos2wN2aJPPiEqebunvkF+5UUGazs1fvWeq7inQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msjKHcvs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XgKzfBTS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:From:Reply-To;
-	bh=yEhMQLJIbP2So5XydAfHqKEdD7p0FcLEoTOB/mDNo2A=; b=XgKzfBTStCdsvTd4feuEEWqHBK
-	c/YwChzbakcux2jWKS3mVcP+hlWrxBcSNl/EVcm00WoyINZpyl/SeI4nEuyx5DsmOucg1tMizMSGb
-	LBeMHFiIOYEr2CiZzoZ7PzWHVf5oPqHZl0aOFd57yS85eZnXBtuatz2Nfp8hWrat3q6gWSDANou5I
-	I7jg8gh6x+fMNGt/JCcDsE0v2O9PqD6qzkcQbGVpGMw6vs7e4BOC/Rzln9WoQnu6rRaCfgsTFp0rB
-	L4l6ALJSYgBKN8NlGgKV2scyyU7lyMVA9T7XGnOFCeGJFMGh1OR/J2GGuk17HZnzW6vfSddk0a49r
-	DdETPr0w==;
-Received: from [177.172.123.122] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1x4hyO-000GV1-5R; Thu, 10 Sep 2026 18:50:04 +0200
-From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Date: Thu, 10 Sep 2026 13:49:28 -0300
-Subject: [PATCH v6 6/6] selftests: prctl: Add test for long thread names
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msjKHcvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F961F00893;
+	Thu, 10 Sep 2026 16:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789059522;
+	bh=vmOFciyCtbqwq4E3Us48R8dWySxBytQY2xY8Bt48Jh8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=msjKHcvsMQHBc2n89Cc/sgoukQAMHSCTAKu/9SNoUHtbPeo/f0D+oSbj57+R7ENPV
+	 1yvkUvOnkBhfSwbmz5SrSbsavBzw5yURUtMFfC6eyTBhKs72zlUzYck2gW8FEcOoWH
+	 dPmwBd1LjJHuYTaum2GzU9yTQxwnkZV4CT9Bguct44/GjQC0qlkyB5NHXCmt3tlNvR
+	 rDzdLZ+LsGvfxT5tEx0nU7HRMJnrhXu0DNle/Ica1UZTdQ5+xO4jqWCx7EZRlYmMNY
+	 RAaW2zEOBdBIi0q/CAN8NUgAlArjeRls7+UAZhhJTybigoC+kO9+7uRRXoYkXwrlD4
+	 agn7CFAaZQ9gQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 1/6] treewide: Get rid of get_task_comm()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260910-tonyk-long_name-v6-1-d70afbf194c5@igalia.com>
+References: <20260910-tonyk-long_name-v6-0-d70afbf194c5@igalia.com>
+ <20260910-tonyk-long_name-v6-1-d70afbf194c5@igalia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Sep 2026 16:58:42 +0000
+Message-Id: <20260910165842.B4F961F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260910-tonyk-long_name-v6-6-d70afbf194c5@igalia.com>
-References: <20260910-tonyk-long_name-v6-0-d70afbf194c5@igalia.com>
-In-Reply-To: <20260910-tonyk-long_name-v6-0-d70afbf194c5@igalia.com>
-To: Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, willy@infradead.org, 
- mathieu.desnoyers@efficios.com, David Laight <david.laight.linux@gmail.com>, 
- Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
- Yafang Shao <laoar.shao@gmail.com>, andrii.nakryiko@gmail.com, 
- arnaldo.melo@gmail.com, Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, kernel-dev@igalia.com, linux-mm@kvack.org, 
- linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-X-Mailer: b4 0.15.2
 
-Add tests for the new interface to set and get long thread names. The
-kernel should accept the LONG_NAME and returning it accordingly. For the
-old PR_GET_NAME interface, the kernel should truncate the name up to 16
-chars. /proc/<task>/comm should return the same string ad PR_GET_NAME.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Passing a pointer to `struct task_struct` instead of its `comm` fi=
+eld to `strscpy_pad()` leads to an incompatible pointer cast and a kernel m=
+emory info leak.
+--
 
-While here, fix the check_is_name_correct() logic. It currently returns 1
-for success, or a negative number for error. EXPECT_TRUE() evaluates any
-non-zero value as true, so the error will be evaluated as a success. Make
-the logic more robust and straightforward by returning the results of
-strcmp() and expecting zero as success.
+commit 90523a0d5e26d2bcb762f02d00c73857b4ad6c5d
+Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-Changes in v5:
- - fix check_is_name_correct() return logic
----
- tools/testing/selftests/prctl/set-process-name.c | 53 +++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 5 deletions(-)
+treewide: Get rid of get_task_comm()
 
-diff --git a/tools/testing/selftests/prctl/set-process-name.c b/tools/testing/selftests/prctl/set-process-name.c
-index 3f7b146d36df..27a0dbbce4db 100644
---- a/tools/testing/selftests/prctl/set-process-name.c
-+++ b/tools/testing/selftests/prctl/set-process-name.c
-@@ -9,9 +9,17 @@
- 
- #include "kselftest_harness.h"
- 
-+#ifndef PR_SET_EXT_NAME
-+# define PR_SET_EXT_NAME 17
-+# define PR_GET_EXT_NAME 18
-+#endif
-+
- #define CHANGE_NAME "changename"
-+#define LONG_NAME	"change_to_very_long_extended_name"
-+#define LONG_NAME_CAP	"change_to_very_"
- #define EMPTY_NAME ""
- #define TASK_COMM_LEN 16
-+#define TASK_COMM_EXT_LEN 64
- #define MAX_PATH_LEN 50
- 
- int set_name(char *name)
-@@ -25,6 +33,20 @@ int set_name(char *name)
- 	return res;
- }
- 
-+int set_ext_name(char *name)
-+{
-+	int res;
-+
-+	res = prctl(PR_SET_EXT_NAME, name, NULL, NULL, NULL);
-+
-+	if (res < 0)
-+		return -errno;
-+	return res;
-+}
-+
-+/*
-+ * Return 0 if strings match
-+ */
- int check_is_name_correct(char *check_name)
- {
- 	char name[TASK_COMM_LEN];
-@@ -35,7 +57,23 @@ int check_is_name_correct(char *check_name)
- 	if (res < 0)
- 		return -errno;
- 
--	return !strcmp(name, check_name);
-+	return strcmp(name, check_name);
-+}
-+
-+/*
-+ * Return 0 if strings match
-+ */
-+int check_is_ext_name_correct(char *check_name)
-+{
-+	char name[TASK_COMM_EXT_LEN];
-+	int res;
-+
-+	res = prctl(PR_GET_EXT_NAME, name, NULL, NULL, NULL);
-+
-+	if (res < 0)
-+		return -errno;
-+
-+	return strcmp(name, check_name);
- }
- 
- int check_null_pointer(char *check_name)
-@@ -56,8 +94,8 @@ int check_name(void)
- 	pid = getpid();
- 	FILE *fptr = NULL;
- 	char path[MAX_PATH_LEN] = {};
--	char name[TASK_COMM_LEN] = {};
--	char output[TASK_COMM_LEN] = {};
-+	char name[TASK_COMM_EXT_LEN] = {};
-+	char output[TASK_COMM_EXT_LEN] = {};
- 	int j;
- 
- 	j = snprintf(path, MAX_PATH_LEN, "/proc/self/task/%d/comm", pid);
-@@ -80,10 +118,15 @@ int check_name(void)
- TEST(rename_process) {
- 
- 	EXPECT_GE(set_name(CHANGE_NAME), 0);
--	EXPECT_TRUE(check_is_name_correct(CHANGE_NAME));
-+	EXPECT_FALSE(check_is_name_correct(CHANGE_NAME));
-+
-+	EXPECT_GE(set_ext_name(LONG_NAME), 0);
-+	EXPECT_FALSE(check_is_ext_name_correct(LONG_NAME));
-+	EXPECT_FALSE(check_is_name_correct(LONG_NAME_CAP));
-+	EXPECT_TRUE(check_name());
- 
- 	EXPECT_GE(set_name(EMPTY_NAME), 0);
--	EXPECT_TRUE(check_is_name_correct(EMPTY_NAME));
-+	EXPECT_FALSE(check_is_name_correct(EMPTY_NAME));
- 
- 	EXPECT_GE(set_name(CHANGE_NAME), 0);
- 	EXPECT_LT(check_null_pointer(CHANGE_NAME), 0);
+This commit replaces calls to get_task_comm() with strscpy_pad() across the
+tree. It aims to properly handle buffer padding and truncation depending on
+buffer sizes.
 
--- 
-2.55.0
+Link: https://lore.kernel.org/lkml/CAHk-=3Dwi5c=3D_-FBGo_88CowJd_F-Gi6Ud9d=
+=3DTALm65ReN7YjrMw@mail.gmail.com/
 
+[ ... ]
+
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 8e88ac65fd7fc..0e1aa2bb4a7ca 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -138,6 +138,8 @@ smk_bu_tsk_to_obj(struct task_struct *tsk, const stru=
+ct task_smack *tsp,
+>  	char acc[SMK_NUM_ACCESS_TYPE + 1];
+>  	char comm[TASK_COMM_LEN];
+> =20
+> +	strscpy_pad(comm, tsk);
+
+[Severity: High]
+Could this lead to a kernel memory info leak by passing the task_struct
+pointer instead of the process name string?
+
+strscpy_pad() expects a const char * as its second argument, but it receives
+a struct task_struct * here instead of tsk->comm.
+
+If this compiles (e.g., without -Werror), this copies up to 16 bytes starti=
+ng
+at the base of the task_struct into the comm buffer. When this buffer is
+later printed via pr_info() during a Smack Bringup log, it dumps raw kernel
+memory to dmesg, which could be leveraged to bypass KASLR or read sensitive
+struct fields.
+
+> +
+>  	if (rc <=3D 0)
+>  		return rc;
+>  	if (rc > SMACK_UNCONFINED_OBJECT)
+> @@ -147,7 +149,7 @@ smk_bu_tsk_to_obj(struct task_struct *tsk, const stru=
+ct task_smack *tsp,
+> =20
+>  	pr_info("Smack %s: (%s %s %s) %s %s\n", smk_bu_mess[rc],
+>  		smk_of_task(tsp)->smk_known, oskp->smk_known,
+> -		acc, get_task_comm(comm, tsk), note);
+> +		acc, comm, note);
+>  	return 0;
+>  #else
+>  	return rc;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910-tonyk-long=
+_name-v6-0-d70afbf194c5@igalia.com?part=3D1
