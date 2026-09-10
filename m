@@ -1,132 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7F03AB498;
-	Thu, 10 Sep 2026 19:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8469B599A32;
+	Thu, 10 Sep 2026 19:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789067796; cv=none; b=TbWgyx1pETy37uGx2Mt1ntc9g+4nbYFAOJxRvlB97r3cHLs4eo13ZI6MawbF5mS4ocXeqgEdxDo5tBxoVk7Qf21x6EhfbRx3powSrHaEmTGTguXDU5L689vvGncQWMKTT4MAquERyaGXrTen9U/Jx0uzBlLwG8vy4axlaXXWVhM=
+	t=1789069433; cv=none; b=GI8dPYae3b0bzeH/YVF/Xz9NS/FGBmr7rjxe9+2bw+0KdLkH7a+1oLmRoWD8HNXLz8YuyMoYnAfDpCRMPLl60RJp1KRzxwxdOOlEAge1eJfogybHZpIGdIUN3A3WtrSPQRQjaspwpK4HnZkEj5Emy4ssJDID71oJS0milTjGSfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789067796; c=relaxed/simple;
-	bh=BAdCt9RS3clpRWFXQ2FQLe4e57p616vRG6XQpvCmoiM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bUv5T8dAh0BETo07Ktc/rKd88sP5/JsZW9Xqqe/mga03lUWycTTdPB8z3vVSrp8JsOAqvtzEkVrpKf5GK2pL1KqF3qoEdLZcKYXgzA12crP7KJkQ3t7WKG12xZylRV8sSH1DSbtuktWFX3qLafuhPkCAeSYeRsG6E+4Z5wLc4qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3ZEWQ1Q; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789069433; c=relaxed/simple;
+	bh=bcQ/RDxXpEbKtU8+/6rPlebuLUugxjVcb8NGz+wSC6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=re6S0lR4YM6GOURHSgYEmtCwv7gOHhBpb/brp+wcn7OjTfhVdmEzzZZS2Kr9cofGhph4qw4FdrUU4hjHmOU252gQDPt13Vf0du1ub2xlIFDnCw9+J+Hjc2uIQXOk+cuzobdPU1gDSqfuetwnr2vcG8bTaF4VuxFORSRDLqeF6xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=XDaxsPus; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3ZEWQ1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7C21F00893;
-	Thu, 10 Sep 2026 19:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789067794;
-	bh=jXfsaX1BfQOAVNb87FA7OjU8P/nSxR0EPutIjtn2a+c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=T3ZEWQ1QIJRrcdLlqtLxokcmey9PCv7cLsA+OeWwc2Z5Wtrl68Al6V9WaL4hImpgb
-	 XfeYN+hH8aycLhTeP/jiE6AFz+7e3o4i3vt2fRm8kVHEDb/TyB3n0NQ0oraePdHg10
-	 Rijny+s8Oh83vPz1HSVnFOR/VQQlbqUnkzyDKZ8fLhRLUbD7OCxeQ/uVyQCrzcMfpK
-	 YTnRTCbWMEVu7PfHS8CRtEBD7X+BJ+xPVYd9XpAmfT1t5nbYgfIQrjLKYAtTvFf9+0
-	 E8tqd6fTk8Ru994+9n4iH3iI8/i/ybvqNdGiqZPpinZBic8a5/x2bgr85tT4Na9baz
-	 s6Tsbefz0aUOg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC 04/13] kprobes: Let Tasks RCU recognise tasks
- preempted in an optprobe jump window
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Josef Bacik" <josef@toxicpanda.com>
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260910-b4-rcu-tasks-preempt-qs-v1-4-d4469f4cc101@toxicpanda.com>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="XDaxsPus"
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 39693160690;
+	Thu, 10 Sep 2026 19:43:40 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 30FD46000B;
+	Thu, 10 Sep 2026 19:43:32 +0000 (UTC)
+Date: Thu, 10 Sep 2026 15:44:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker
+ <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel
+ Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, Thomas
+ Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri
+ Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai
+ <xukuohai@huaweicloud.com>, Andy Lutomirski <luto@kernel.org>, Josh
+ Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, Juergen Gross
+ <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, Ihor Solodrai
+ <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC 00/13] rcu-tasks: let preemption outside trampolines
+ be a quiescent state
+Message-ID: <20260910154450.7b770882@gandalf.local.home>
+In-Reply-To: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
 References: <20260910-b4-rcu-tasks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com>
- <20260910-b4-rcu-tasks-preempt-qs-v1-4-d4469f4cc101@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 10 Sep 2026 19:16:33 +0000
-Message-Id: <20260910191634.5D7C21F00893@smtp.kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 30FD46000B
+X-Stat-Signature: q4rice5dx4toq6agt9e6os3uux3h5f5q
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/TvSOAPfmV5w9v9DlVemvWAF7fAQiQXhI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=0G8Y9/xY0kMl88nV4+aK7L6N6EzC6UwclJFLiIWbzwM=; b=XDaxsPusoW6gsn6QQqwKwtOsezn5XGTPhAZBWTmLI2a3wTTy4g9M8GxTBfx7IxRyYNyRuYQGkIUa70KldFVZ7BxD/P2CsoJAlMMiCFX8YSS1drmpdXopT7vrVM/O17FPu1+y62DsM8b0wE++rILKnKFPiYk8n6rvTHLZaMP183M=
+X-HE-Tag: 1789069412-378097
+X-HE-Meta: U2FsdGVkX1+2Ct3iQoLtuMkYa1cI50miBEnTqrhRYa+BXsr0BkuI+iyjkwhW+Ob8C5dT11n+jxKJvSyznZnLsxh0O/QKV9P9WQecOj/+21jACCNK26r6q8zwQqBN/ayZXuQ+GMG++J9Taw+/zJCowVnrggoyzv6dApRYuUizRVkjRykDXYfNTF0KQwLTeMZALOSsT8m10cqWJg1D25InukFaP+COzppk9X5R5JJAc9OQyO5V0RV7ia7UcNgjuOHSeTTxARbLsAo0lo+Cw5KvWdAoNn3RpyiQlWsoqM2E7xoqV45XznycLnrdwTWnybGDasUZEZxhn2u7O6k5MAY1bcSxESD/EVVf6gvruYYB/+VKBnRpc7lRNYR8i0iaqzQA
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Massive performance overhead in the kernel preemption fast-path du=
-e to unbounded hash table lookups.
-- [High] kprobe_optimizer() frees kprobes without synchronize_rcu(), causin=
-g a Use-After-Free when get_kprobe() is called from irqentry_preempt() on i=
-dle CPUs.
---
+On Thu, 10 Sep 2026 18:50:23 +0000
+Josef Bacik <josef@toxicpanda.com> wrote:
 
-commit c6c38cd5a975e6f9c2037bf63fa6d732d6cd1fab
-Author: Josef Bacik <josef@toxicpanda.com>
+> Tasks RCU only treats a voluntary context switch, usermode or idle as a
+> quiescent state, because a preempted task may be sitting in a trampoline
+> that is about to be freed. That was a fine trade when PREEMPT_NONE
+> servers compiled Tasks RCU away and PREEMPT desktops rarely ran
+> long-lived in-kernel loops. PREEMPT_LAZY changes both halves at once:
+> Tasks RCU is now real on server configs, and cond_resched() is a no-op,
+> so a CPU-bound kthread or kworker only ever loses the CPU by being
+> preempted, which is exactly the event Tasks RCU refuses to count.
+> 
+> The way this showed up for us was a cgroup writeback worker draining a
+> very large cgwb for around eleven minutes on an arm64 box. Nothing wrong
 
-kprobes: Let Tasks RCU recognise tasks preempted in an optprobe jump window
+So you have a kernel thread running for 11 minutes without a schedule?
 
-This patch adds kprobe_in_optimized_region() to determine if an instruction
-pointer falls within the bytes of an optimized kprobe. It then updates
-rcu_tasks_ip_in_trampoline() to use this check, allowing Tasks RCU to
-recognize and hold off grace periods for tasks preempted within these jump
-windows.
+You could still put in a cond_resched_tasks_rcu_qs() in that loop. But I
+guess you are trying to get rid of doing that too.
 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
+> with that on its own, but a BPF program detach on another CPU went
+> bpf_trampoline_update() -> ftrace_shutdown() -> synchronize_rcu_tasks()
+> while holding trampoline_mutex, forty-odd tasks piled up behind the
+> mutex, and the hung task detector panicked the machine. The kprobe jump
+> optimizer is worse in principle: it does synchronize_rcu_tasks() under
+> kprobe_mutex, text_mutex and cpus_read_lock(), so one long-running
+> kthread can stall static key updates and CPU hotplug for its whole run.
+> The current answer is to find each such loop and add
+> cond_resched_tasks_rcu_qs() to it, which is the kind of annotation
+> PREEMPT_LAZY was supposed to let us stop writing.
+> 
+> This series tries the other direction: have the trampolines say when a
+> task is inside them, so that a preemption anywhere else can be a
+> quiescent state.
+> 
+>  - task_struct grows an int, rcu_tramp_nesting. Every trampoline whose
+>    lifetime Tasks RCU guards increments it before calling out and
+>    decrements it before returning: ftrace_caller and its dynamic copies,
+>    the BPF trampoline (which drops it again around the call to the
+>    original function, since im->pcref covers that), the x86 optprobe
+>    template, and out-of-line register_ftrace_direct() trampolines. Only
+>    current writes it and nested users are balanced, so it is a plain
+>    non-atomic inc/dec, one load of current plus one RMW per entry/exit.
+> 
+>  - The inc/dec are inside the trampoline, so there is a window of a few
+>    instructions on each side where the count is zero but the task is in
+>    (or on its way into) trampoline text. Nothing there can be preempted
+>    synchronously, only from an interrupt, so the irq-exit preemption path
+>    looks at regs->ip and holds the count across preempt_schedule_irq()
+>    when the IP is somewhere the counter cannot cover: outside core and
+>    module text (all the dynamically allocated trampolines and slots), in
+>    the static ftrace stubs or the x86 return thunks that still hold a
+>    direct-call target, in a module that hosts its own direct trampoline,
+>    or inside the bytes after a kprobe that the jump optimizer may be
+>    about to rewrite (the one synchronize_rcu_tasks() user that is not
+>    about trampolines at all).
 
-[ ... ]
+So basically if the preemption happens outside of core or module text
+(which should be the case of any dynamically allocated trampoline), the
+task is marked to be in the grace period across its schedule, so that the
+RCU_TASK cannot move forward?
 
-> +bool kprobe_in_optimized_region(unsigned long addr)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 1; i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
-> +		if (get_kprobe((kprobe_opcode_t *)addr - i))
+> 
+>  - With those in place, rcu_tasks_classic_qs() also clears the holdout
+>    flag on a preemption when the count is zero, on architectures that
+>    opt in. x86-64 and arm64 do so here. Everyone else keeps the
+>    voluntary-only rule and is untouched apart from the (unused) field.
+> 
+> A running holdout already gets poked via rcu_request_urgent_qs_task(),
+> which makes the next tick set NEED_RESCHED, so with this the resulting
+> preemption retires it and a Tasks RCU grace period is bounded by roughly
+> a tick plus the longest preempt-off section rather than by the longest
+> stretch without a voluntary schedule().
+> 
+> Patches 1-12 are scaffolding and change no behaviour on their own; patch
+> 13 flips the rule and selects the option for the two architectures.
+> 
+> Testing so far is QEMU only: x86-64, PREEMPT_LAZY with PREEMPT_RCU=n,
+> PROVE_RCU and lockdep, with and without PREEMPT_DYNAMIC. A kthread
+> spinning in-kernel for 30s with the function tracer, an ftrace kprobe,
+> an optimized kprobe and fentry/fexit programs attached:
+> synchronize_rcu_tasks() goes from 29.7s to 0.1-0.3s, tearing down a
+> DYNAMIC ftrace_ops (tracefs instance function -> nop) from 27s to
+> 0.2-0.8s, and the ftrace-direct sample modules load, fire and unload in
+> about 2.5s each while the spinner runs, with no warnings and the new
+> return-to-user assertion quiet. arm64 is build-tested only at this
+> point; real hardware numbers for both are the obvious next step and I
+> did not want to sit on the idea waiting for them.
+> 
+> Things I would particularly like opinions on:
+> 
+>  - Whether hooking rcu_tasks_classic_qs() is the right place, or whether
+>    Paul would rather see this expressed differently inside Tasks RCU.
+>  - return_to_handler and the rethook/kretprobe trampolines are not
+>    instrumented. Their C callees take the ftrace recursion lock before
+>    touching any ops and the trampolines themselves are static text, so I
+>    believe they do not need it, but I would like Steven and Masami to
+>    confirm.
 
-[Severity: High]
-Could this loop introduce significant overhead in the preemption fast-path?
+Note, there has been some work in the past (and may happen again in the
+future) that will remove the preempt_disable() from the trace_recursion
+locking. If that happens, then I believe the trace_recursion would need to
+increment (and decrement) your counter. Probably need a comment there to
+let whomever know about it if they decide to remove the preempt_disable().
 
-On architectures like x86, this loop executes up to 18 times, querying the
-kprobe hash table via get_kprobe() on each iteration. Since the hash table
-can have long chains on systems with many active kprobes, this could result
-in thousands of pointer dereferences during a preemption event.
+>  - The register_ftrace_direct() contract change: out-of-line direct
+>    trampolines now have to maintain the count themselves (the samples
+>    are converted). I do not know of out-of-tree users beyond BPF, but
+>    this is the one place an existing user could be silently weakened.
+>  - Whether arm64 folks are comfortable with the ldr/add/str in
+>    ftrace_caller and the BPF trampoline, and with treating all of
+>    ftrace_caller as trampoline text for the IP check.
+>  - If this holds up, cond_resched_tasks_rcu_qs() and
+>    rcu_softirq_qs_periodic() become unnecessary on the opted-in
+>    architectures; I have not touched them here.
 
-Also, does this introduce a use-after-free risk for interrupted idle tasks?
+I don't know. It may work, but I have a feeling there's a devil in the
+details here that is waiting to bite us in the underside when we are not
+(RCU) watching.
 
-kprobe_optimizer() unlinks kprobes and frees them after waiting only for
-synchronize_rcu_tasks(). Because synchronize_rcu_tasks() explicitly ignores
-idle tasks, an idle CPU that is interrupted could end up traversing the
-kprobe_table here via get_kprobe() while the kprobe is concurrently freed,
-as Tasks RCU will not wait for the idle task's traversal to finish.
-
-> +			return true;
-> +	return false;
-> +}
-
-[ ... ]
-
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
-
-[ ... ]
-
->  bool rcu_tasks_ip_in_trampoline(unsigned long ip)
->  {
-> +	if (kprobe_in_optimized_region(ip))
-
-[Severity: High]
-Is it safe to place this expensive check unconditionally at the start of th=
-is
-function?
-
-When CONFIG_RCU_TASKS_PREEMPT_QS is enabled, rcu_tasks_ip_in_trampoline()
-is called on every kernel preemption via irqentry_preempt(). By placing
-kprobe_in_optimized_region() before cheaper checks like
-core_kernel_text(ip), every preemption event incurs the cost of the loop
-and hash table lookups, which could severely degrade system performance.
-
-> +		return true;
-> +
->  	if (core_kernel_text(ip))
->  		return arch_rcu_tasks_ip_in_trampoline(ip);
->  	return !is_module_text_address(ip);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910-b4-rcu-tas=
-ks-preempt-qs-v1-0-d4469f4cc101@toxicpanda.com?part=3D4
+-- Steve
