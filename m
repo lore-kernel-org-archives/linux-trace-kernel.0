@@ -1,106 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DAE4BFE68;
-	Thu, 10 Sep 2026 00:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173C12ED141
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 00:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789000467; cv=none; b=O+zId+TXFAgXZV7QMGq9aQe3dXKuQzCZ/FQx1KCdw44a1YbqpcyayqnNaufM9R3QXL4qXD3WS6ULfRAiI9PLkHbE2ruNjKh5qv+1BnzKuBcp/BZTXswI8tlSuLB5cvvy1m3FD1LZfX9HDfSsWtnVTSR4hZdNHFjhZ3RK3ZW1dt8=
+	t=1789000858; cv=none; b=kIS9GTwOZ9bzzzjj9dkLKGQt5aprOUQFWmLWuIoQF3Du9BTou2WPRH6IUkhbvFEwweSmAJvt6sdF1W8FDMy8xIqX7JFeOit5nfPgKm0smC8EAnTwi+et3gPy+gsnIhdA0wGigdD+A8UjaE+PfVVJXDkhxH46uV+txpTUIZE+uAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789000467; c=relaxed/simple;
-	bh=nfI70XfbB8Tg08XHW1UBeBZaszVmOJvGajs6CmBmAVM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PUMxIE3w02AEQtLOtlGon98TQ0W9pe70k84KgjU9fzON4nH8o6E9/3TmrBEPfENTAIPFK+r9rbDEJj2QnyxVT0vPN5h1WRdWHgeaMOwmrCPMgNIQk0HrplzubhdV8uK67ybrcxvJ1+RMdrkyT3dWprywmZNHAlKAYNZSJDF9gmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAEoLplI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789000858; c=relaxed/simple;
+	bh=74ygga/reqr1ZEsDkm+e0wMz8cJ0eU972ALo5rbotsc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rMecbRszNqF1XMpz+W9Z4SWemX4VvbEb12R2F3lMgXCaqQKobpMfP0Mh4AirRtrtgmoAVgXcoshqamfO4FitnynXoz3LjNYVNUSmaoTBbyYXn70uCn+AtqYFqJmiJEiBj8WdwLpF5pJFbElF9MQ13dLgYbrjee183FfF3xZfRp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pu9nXWdQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAEoLplI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989391F000FF;
-	Thu, 10 Sep 2026 00:34:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pu9nXWdQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE9A1F000FF;
+	Thu, 10 Sep 2026 00:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789000466;
-	bh=QD05iClpjTuKrQBi/AfupCRZI4bkgKtjfdTZMjzNS6E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=bAEoLplI6y5a5YG488KxlFSq8y3bnNNaWrNO+UktuWu85Zm8O8EIf2kDMpR+mzoyS
-	 FBzVw2YCkYh8LNWKoG/i4OikOXrEooIAZCjdwfSJ7Oi8juik+n/WdpXEs37nsuJYYq
-	 jp6UASYnabRrCOgOGgxFjEh0PVMkarAKBNdLRWkjc6hZQtqcp4h0xwLHFkbENvllyV
-	 MBWattOSdZhBCr1EmBbBMIzW6aJ1Fws4nZ2ZiDLbCSOrHsEXHjYNeuC7nRMJjSFNO7
-	 mFP+30rhKB40Gbdy8vrppitnchfBspDkNB61bWdj+/40PaMQaQ/MYHUG3b835Px4vv
-	 4kKYa/fxkc9Fw==
-Date: Thu, 10 Sep 2026 09:34:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Sang-Heon Jeon <ekffu200098@gmail.com>,
- stable@vger.kernel.org
+	s=k20260515; t=1789000856;
+	bh=rePHv9eCVyrUL/t2Av8JoORaG5gSxN2vxEfxNiEzjYU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Pu9nXWdQ05m76BRnaWs+rxiaaVSP6Cl4GpzBs6wNBJuNxLadfpQa/shNWq7skf2u7
+	 xYC/p5j8+ag919SX6F34ysbCTV+nFLFLqJ5gvdoNCCPCAsFJNUDL0do4K0d5YIYLgH
+	 hC3luivRmePUusJP7/phJJrd/aF3qqEXNCzcvLeYM8Jw0Xn2qrI1MSD5XQBt+AN1v+
+	 C2GVOT4b7VHDsDI6RqFpSudXG4ZRhTRH84DVBflhutZiO1Gv5fpHRnFjso6/XP+Ct5
+	 bw0mJqD3UTIFRYM6lSKZEePXNtjr2M3dlwXdS4ydV5kFpyZcqZY2lFj5gaOtlAvijA
+	 vQhVv8rMh1x5w==
+From: sashiko-bot@kernel.org
 Subject: Re: [PATCH] tools/bootconfig: Fix integer overflow in size check
-Message-Id: <20260910093422.e24e680b0506c16af51b2bbd@kernel.org>
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
 In-Reply-To: <178900024679.183840.10345859264677533824.stgit@devnote2>
 References: <178900024679.183840.10345859264677533824.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Sep 2026 00:40:55 +0000
+Message-Id: <20260910004056.6FE9A1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Sep 2026 09:30:46 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Sashiko reported that on 32-bit systems, if the size in the bootconfig
-> footer is corrupted such that adding BOOTCONFIG_FOOTER_SIZE wraps
-> around (for instance, if size is 0xFFFFFFFF), the size check in
-> load_xbc_from_initrd() can be bypassed:
-> 
->     if (stat.st_size < size + BOOTCONFIG_FOOTER_SIZE) {
->         pr_err("bootconfig size is too big\n");
->         return -E2BIG;
->     }
-> 
-> This would lead to load_xbc_fd() being called with a negative size,
-> resulting in an undersized allocation, heap overflow on read, and
-> out-of-bounds write on the terminating null byte.
-> 
-> Avoid the integer overflow by checking whether size is greater than
-> stat.st_size - BOOTCONFIG_FOOTER_SIZE. Since stat.st_size is already
-> verified to be at least BOOTCONFIG_FOOTER_SIZE earlier in the function,
-> this subtraction will never underflow.
-> 
-> Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/all/20260909161113.16C691F00A3A@smtp.kernel.org/
-> Assisted-by: Antigravity:gemini-3.8-flash
+Pre-existing issues:
+- [High] Incomplete Fix / Integer Truncation Leading to Heap Overflow
+--
 
-OOps, I forgot to add:
+commit 2d027c4ee8625f17122dea0afb65c1e4b21ae531
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Cc: stable@vger.kernel.org
+    tools/bootconfig: Fix integer overflow in size check
+   =20
+    This commit modifies the size check in load_xbc_from_initrd() to prevent
+    an integer overflow on 32-bit systems. It changes the condition to
+    subtract BOOTCONFIG_FOOTER_SIZE from stat.st_size instead of adding it
+    to the bootconfig size.
 
-Thanks,
+    Closes: https://lore.kernel.org/all/20260909161113.16C691F00A3A@smtp.ke=
+rnel.org/
 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  tools/bootconfig/main.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
 > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index 7dc9fff9b637..b380ad6777fa 100644
+> index 7dc9fff9b6370..b380ad6777faa 100644
 > --- a/tools/bootconfig/main.c
 > +++ b/tools/bootconfig/main.c
 > @@ -218,7 +218,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
->  	csum = le32toh(csum);
->  
+>  	csum =3D le32toh(csum);
+> =20
 >  	/* Wrong size error  */
 > -	if (stat.st_size < size + BOOTCONFIG_FOOTER_SIZE) {
 > +	if (size > stat.st_size - BOOTCONFIG_FOOTER_SIZE) {
+
+[Severity: High]
+This is a pre-existing issue, but the fix doesn't seem to completely resolve
+the integer truncation and heap overflow vulnerabilities.
+
+Can this size check still be bypassed for large files? Since stat.st_size i=
+s a
+64-bit off_t, if the file size is larger than 4.29 GB, stat.st_size -
+BOOTCONFIG_FOOTER_SIZE can exceed UINT32_MAX. A corrupted uint32_t size of
+0xFFFFFFFF would bypass this check because it is always smaller than the
+right side.
+
+If bypassed, does passing 0xFFFFFFFF to load_xbc_fd() cause an integer
+truncation and heap overflow?
+
+tools/bootconfig/main.c:load_xbc_fd() {
+    ...
+    static int load_xbc_fd(int fd, char **buf, int size)
+    ...
+        *buf =3D malloc(size + 1);
+        if (!*buf)
+            return -ENOMEM;
+   =20
+        ret =3D read(fd, *buf, size);
+    ...
+        (*buf)[size] =3D '\0';
+    ...
+}
+
+Because size is an int, 0xFFFFFFFF is truncated to -1. This results in
+malloc(0) which returns a valid heap chunk. The read() call then receives -1
+which gets cast to SIZE_MAX, overflowing the heap chunk. Finally, a null by=
+te
+is written to a negative array index (-1), causing an out-of-bounds write.
+
+Does this same vulnerability also affect load_xbc_file() when processing
+standalone files >=3D 2GB?
+
+tools/bootconfig/main.c:load_xbc_file() {
+    ...
+    ret =3D fstat(fd, &stat);
+    ...
+    ret =3D load_xbc_fd(fd, buf, stat.st_size);
+    ...
+}
+
+This implicitly truncates the 64-bit off_t stat.st_size into the 32-bit int
+size parameter of load_xbc_fd().
+
 >  		pr_err("bootconfig size is too big\n");
 >  		return -E2BIG;
 >  	}
-> 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178900024679.183840=
+.10345859264677533824.stgit@devnote2?part=3D1
