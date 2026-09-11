@@ -1,165 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7648371889;
-	Fri, 11 Sep 2026 18:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062DB53FD54
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 19:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789152385; cv=none; b=Sj5Jj6QTnDN7u5qJBg1ydbivdps1BT7B4mzSmjagHsIDQw91gGJ6pI6NOJFmFHvauO9/mk6PKl5A1AQqh+8MFS8vVrTFxzPjANo6cZQK2JkGj+wX26ICb8rkppT0UW259uVbyXAgR4n2s52g4Oq7tWY0WnbtHaN+DFk/VRMI2gE=
+	t=1789155604; cv=none; b=oXI5adlO1fRoHotUGV6kVqX/vUNAue6BqcL9jb0znIdd4T6W9YqgeCBd6T4HDFThzVL7eUXV3SblhbrilaRYf6nVoqpcmH5noRGGqaJc09aaujko3/4zltQMjakqJqC0MOALXvRAWzM5iZ9SFr4laSnx8sbRU/ba8uQlp9V/4hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789152385; c=relaxed/simple;
-	bh=xH88kKB/TWb1etYT/yCGES3CbrdWa7hLAr9ou1VFtHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=etiGbeBgj9t4+RuiTU41jCmQtJyewNk0oiU1rAazH5rEp9rpxzhYW0sHb6M2Nt7tsso/KMgNJ+OQg0LpY7Y/wR/qh1Nuv0qbFdZPlnXiUPMwQ+I7x88YP2MK9ixxxnj6cJZyvqmJ1Ku4KUL+87LWwAoQe4utlAKgf7NHwjWl8LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9R+fJHe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789155604; c=relaxed/simple;
+	bh=p/PNA9lb1ujgnjktgM201CRXtbHR6ZSSOZ1hHyPZfg4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ru0iKNuZmC6x9EoqM1tlEL/Ssq3UAn3UGh75Io3gnOtSR8ug/BR2znBbYflQSTyXUr4LH1QMOzn4h/Wg1yLaGeTthRqvBta+9lhkP/suI61OENO81gH1JfYhlIA5EuUNzk3ZxlTxCX+XMCUlpOnTuxNq7pg4QkO02/PVYiBqDmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UoDyFOQj; arc=none smtp.client-ip=209.85.218.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9R+fJHe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E991F000FF;
-	Fri, 11 Sep 2026 18:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789152384;
-	bh=BEH5L0y3LixWWPpE999YsoF8vwfZIA/JtkIUSaMP+LE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=M9R+fJHeZmy6WEfJ+D6CNLH+c3kjB5rut7ErP2+h8nVsKa7j3etNfbwtdp8rS80MS
-	 fPhFABuFdrUdvOlZdTQAQCr61orU4wm/RjC2OU7poW1VrwvZyfgZGrC+qE1sarkPq0
-	 QuxzQZPObBkWqJyMQach0VVskbIlHcGS9oQDOKxfOvJgnVD5bycCjFRDIgaYdLH17Q
-	 UJmHrZwzXcEdIcRWoMRdQtTKfYNAHGRWaw/E2J3Bjse6JBE5JIuSHCfhhwe6AtNnRq
-	 Z179pIn76KHvhsX6T+IKzErceu3YloUEBWmwjn5CgynJh7djSuiFdwsOpDYYGmPtoi
-	 fH4mBz7X+Zqjw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 17178CE1902; Fri, 11 Sep 2026 11:46:24 -0700 (PDT)
-Date: Fri, 11 Sep 2026 11:46:24 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v2 15/15] rcu-tasks: Kick running holdouts through
- the scheduler
-Message-ID: <78c438b0-9c9a-4307-a6f7-19e69adc20c0@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
- <20260911-b4-rcu-tasks-preempt-qs-v2-15-eaaa61ed2da4@toxicpanda.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UoDyFOQj"
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c293743f5cdso133859766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 12:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789155593; x=1789760393; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WeMy/DaNVJkSXZ0N2fL3KCM+KXX4amcR67/b0vTZpco=;
+        b=UoDyFOQjNmHA1HUmVNlBfCpdLI4VuGA2MJEe62TAs68xZyToe4JdePa2HKFpXbwH54
+         eu502RxzOqqpJTzbHHlNr4jdXh0wZfHTgdQRxSRSLv0YHsa4JEl4pfYAYALAWHJ/cVN2
+         xOy97sOmVOe1oqT32+SItDHs/OMcSWHIV2HOiHPzE+tqleRwABNU45tySQo73yGmb/qi
+         uKyd0oWswPRD+Bbi1qgdV5lE443FrEr+uKqAzT8JW4YTPnNobrvdql5DwcTZOdQxosPb
+         ccxkZcU1hKWYYEjyHwSaR5C/wZbLiraaBGmpao6zPR+PSk46iK7v2Vr/C/WPUu6ps7cn
+         MaAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789155593; x=1789760393;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WeMy/DaNVJkSXZ0N2fL3KCM+KXX4amcR67/b0vTZpco=;
+        b=SGWNz+p+8ZP+nULSjcJwTj09qH0DKIm3W9PIS7g6t7dg5QO3i3px8hfzzllwg0zx1y
+         lyw9pOsiEsnolr2lXdl3f6xFJb7VxhndXPDm7D59aKQcfoBmX5/VgougBFtN+faI0veG
+         l+ylaB/7wKPs0+Ukl7vB2XkDc1qZZhg4Nv6MqOW/uBC3t1CLMr+LkwK+q+nHFEEj2H9l
+         ntAwr33a/3Q9z2F0wy0AV8pr66fFCgTwgWoe2RGHLdFVGwFlFWzXq6V8eL/DHqV22IFg
+         iYC229fFA081Y8AIX+24DBYuN6SIG8U+HgELTOU49gmJTfqS3kyzEqz/oczDOLt5I6+M
+         yOnw==
+X-Forwarded-Encrypted: i=1; AKwUvByFF+0/B+l0IEcuREz67S46Af1B3AoApfK4UNmBpPu4z/xJsmE48BvrQKRXA+6fTFknUNPPrD6aaHj0ehrPiuZkEAA=@vger.kernel.org
+X-Gm-Message-State: AFuF++mm/lf157oWXziby5LYnMhudqM54ft8IQTC57FvDiuF7bVMhIKc
+	/17d4jEQPIiWViOOB1faSPRy1zEuiYrqIY2kB612/AXm9JARYY1RiCRmGkQoAyc/5uFQKN56QCO
+	cdwJZdP397KWy+QpHpMzjOw==
+X-Received: from ejbox4.prod.google.com ([2002:a17:907:1004:b0:c29:6e48:1427])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:906:c14f:b0:c29:4d53:787f with SMTP id a640c23a62f3a-c2966737ef4mr240602566b.41.1789155592434;
+ Fri, 11 Sep 2026 12:39:52 -0700 (PDT)
+Date: Fri, 11 Sep 2026 20:39:35 +0100
+In-Reply-To: <20260911193937.602202-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260911-b4-rcu-tasks-preempt-qs-v2-15-eaaa61ed2da4@toxicpanda.com>
+Mime-Version: 1.0
+References: <20260911193937.602202-1-vdonnefort@google.com>
+X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
+Message-ID: <20260911193937.602202-2-vdonnefort@google.com>
+Subject: [PATCH v2 1/3] tracing/remotes: Account for ring buffer page header
+ in size calculation
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 11, 2026 at 02:08:53PM +0000, Josef Bacik wrote:
-> A holdout that is running on a CPU with nothing else runnable is only
-> preempted if the tick acts on rcu_request_urgent_qs_task()'s flag, and
-> there may be no tick.  Now that a preemption outside a trampoline is a
-> quiescent state, have check_holdout_task() call resched_cpu() on a
-> running holdout as well, so the scheduler IPIs it and it goes through
-> __schedule() and reports (or, if it is inside a trampoline, does not
-> report) its own state with purely local ordering.  Nothing reads a
-> running task's rcu_tramp_nesting remotely.
-> 
-> Only under CONFIG_RCU_TASKS_PREEMPT_QS; other architectures are
-> unchanged.
-> 
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Assisted-by: LLM
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+trace_buffer_desc_size() and trace_remote_alloc_buffer undercount the
+required pages because every ring buffer page contains a header
+(BUF_PAGE_HDR_SIZE). Account for that header to ensure allocated remote
+ring buffers aren't smaller than requested by the user.
 
-Much better!  But please see below.
+The newly introduced helper __calc_nr_pages_ring_buffer_desc() can
+return a value that overflows the descriptor nr_pages field (32 bits).
 
-							Thanx, Paul
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ include/linux/ring_buffer.h | 15 +++++++++++++--
+ kernel/trace/trace_remote.c |  2 +-
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-> ---
->  kernel/rcu/tasks.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> index ba432bd922e2..02d2592ab7a3 100644
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
-> @@ -1038,8 +1038,18 @@ static bool rcu_tasks_preempted_qs(struct task_struct *t)
->  {
->  	return task_call_func(t, rcu_tasks_switched_out_clean, NULL);
->  }
-> +
-> +/* Make a running holdout pass through __schedule() soon, tick or no tick. */
-> +static void rcu_tasks_kick_running(struct task_struct *t)
-> +{
-> +	int cpu = task_cpu(t);
-> +
-> +	if (task_curr(t) && cpu_online(cpu))
-> +		resched_cpu(cpu);
-> +}
->  #else
->  static bool rcu_tasks_preempted_qs(struct task_struct *t) { return false; }
-> +static void rcu_tasks_kick_running(struct task_struct *t) { }
->  #endif
->  
->  /* Per-task initial processing. */
-> @@ -1219,6 +1229,7 @@ static void check_holdout_task(struct task_struct *t,
->  		return;
->  	}
->  	rcu_request_urgent_qs_task(t);
-> +	rcu_tasks_kick_running(t);
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index afc7daa6ee7d..11bffb6a142d 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -3,8 +3,9 @@
+ #define _LINUX_RING_BUFFER_H
+ 
+ #include <linux/mm.h>
+-#include <linux/seq_file.h>
+ #include <linux/poll.h>
++#include <linux/ring_buffer_types.h>
++#include <linux/seq_file.h>
+ 
+ #include <uapi/linux/trace_mmap.h>
+ 
+@@ -279,9 +280,19 @@ static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buf
+ 	return (struct ring_buffer_desc *)(&desc->__data[0]);
+ }
+ 
++/*
++ * Returns the number of pages for a ring_buffer_desc. The caller must ensure it
++ * does not overflow ring_buffer_desc::nr_page_va.
++ */
++static inline unsigned long __calc_nr_pages_ring_buffer_desc(size_t size)
++{
++	/* Takes into account the reader page */
++	return max(DIV_ROUND_UP(size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
++}
++
+ static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
+ {
+-	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
++	unsigned long nr_pages = __calc_nr_pages_ring_buffer_desc(buffer_size);
+ 	struct ring_buffer_desc *rbdesc;
+ 
+ 	return size_add(offsetof(struct trace_buffer_desc, __data),
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index 75fa1ffc4c96..c17902e42ef1 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -980,7 +980,7 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+ 			      const struct cpumask *cpumask)
+ {
+ 	size_t min_desc_size = trace_buffer_desc_size(buffer_size, cpumask_weight(cpumask));
+-	unsigned int nr_pages = max(DIV_ROUND_UP(buffer_size, PAGE_SIZE), 2UL) + 1;
++	unsigned int nr_pages = __calc_nr_pages_ring_buffer_desc(buffer_size);
+ 	struct ring_buffer_desc *rb_desc;
+ 	int cpu, ret = -ENOMEM;
+ 
+-- 
+2.55.0.1007.g17ff1f9808-goog
 
-Something I learned the hard way, though Google paid most of the tuition
-for this lesson:  There can be a *lot* of tasks on large systems, as
-in hundreds of thousands of them.  If these tasks are consuming CPU in
-very short bursts, we could easily repeatedly invoke resched_cpu() on
-the same CPU, and all invocations other than the last one are redundant.
-
-I instead suggest doing something similar to force_qs_rnp(), where a
-cpumask is accumulated and at the end resched_cpu() is invoked for each
-CPU with a bit set in that mask.
-
-Of course, if a CPU appears twice while traversing the tasks list, then
-each of those tasks did a context switch, which would have reported a
-Tasks RCU quiescent state.  Unless those tasks happened to have non-zero
-->rcu_tramp_nesting at that time.
-
-Which suggests that each task have a pair of counters.  Or that
-rcu_tasks_trampoline_exit() should check for zero ->rcu_tramp_nesting,
-and report a quiescent state at that point.
-
-Either way, if a CPU appears only once in the tasks_list traversal,
-hitting it with resched_cpu() makes sense.  Though we might also
-need to suppress calls to resched_cpu() for grace periods that are
-(say) less than one second old.
-
-Thoughts?
-
-							Thanx, Paul
-
->  	if (!needreport)
->  		return;
->  	if (*firstreport) {
-> 
-> -- 
-> 2.55.0
-> 
-> 
