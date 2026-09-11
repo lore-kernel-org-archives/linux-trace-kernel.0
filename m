@@ -1,88 +1,82 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-95.mta0.migadu.com [91.218.175.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B73246ED;
-	Fri, 11 Sep 2026 14:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C7E3346A0
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 14:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789136043; cv=none; b=JBhkjhjTmyJkTk0VOv0s7PYLe6xJJI92mwFNlADn/NZuUAg0MHP47hqfRbjRIq8wjNj2Z8H5WkBSLkN7AlUcR15To27+XODxlH3UBive/GEDX2SKtVew1mf5o9bJ98k/xcPb8kO9WLKjHH3Xz4ne0y1tkkAAdqpWlpwBA5UY0XI=
+	t=1789136755; cv=none; b=sSYpMl7ptdgAjZkXOjA7hnHR45nXC4z1PODynT6UrvsiSUbHiAFNBF1gx2yVYrvcToEE62ISfFXkDkxQtkq7rLWfMaNV0hT+JqvSriHlLb0GXjnQPkJ1l9pD6uo6YHx+nkb1yhScyuZ3rZjwpJm+NBraaBKaAKDRnP0LVZmoDsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789136043; c=relaxed/simple;
-	bh=S6vlzaHOdAux3Ddwra4hz2bRHO+mzq2XjnWcy5LThPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DL3v/UR0whFOGRlVpt9cQYoZTvZG0CuFHJYGLaFqvJliaw/ZK8MtTNW9ourdXpr7nmlrSoyoVGSNVmyK4SRh/YhXW38n1AXSwwc22mPnitIM6HNskbYAzjuMRDnsbzss60t8InW6HLF+xwTSm/EN7UfU3GY3g7tDVzdlUJnBsD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=gMEucxCm; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1789136755; c=relaxed/simple;
+	bh=LIh/S8T5o/CU1HWeagMhA13QdCfh/QmlKPI5N+uayiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2rpvAdAP9nQIvPp293YA2qkVF7SA9DN9Zm4zueqef4oKHw+SyT7SHz42Wvg6eThx+T3UbE0L8uxBPtUKTPJKZkXOwNgJ6/Yubu97/F1Gd8VYwyAgxDf56aFcbgNndBaG8wYJsuQBKqGSfqjDp8ZLjVVMJch68Sx78NF0Jeoax8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dSGBPJzi; arc=none smtp.client-ip=91.218.175.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="gMEucxCm"
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id A0465120233;
-	Fri, 11 Sep 2026 14:13:57 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 8732930;
-	Fri, 11 Sep 2026 14:13:53 +0000 (UTC)
-Date: Fri, 11 Sep 2026 10:15:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Kairui Song
- <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
- <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>,
- Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org (open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)),
- Ridong Chen <chenridong@xiaomi.com>
-Subject: Re: [PATCH 3/3] mm/mglru: add tracepoint for inc_max_seq()
-Message-ID: <20260911101514.1fe0d543@gandalf.local.home>
-In-Reply-To: <20260911072848.2346073-4-ridong.chen@linux.dev>
-References: <20260911072848.2346073-1-ridong.chen@linux.dev>
-	<20260911072848.2346073-4-ridong.chen@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dSGBPJzi"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=LIh/S8T5o/CU1HWeagMhA13QdCfh/QmlKPI5N+uayiY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789136751; v=1; x=1789741551;
+ b=dSGBPJzi3Qdd85NnnK36mPRG1BRaIikikfSQLugVR2kYjv2H1CLHTftUZ+ej4CJyZFRLXZVv
+ yUPChdfWd471k3z+wm/uMn9MeFGwLsVUqBypeVBkIkXoVg6MsHO1NdOX8X5xS85om9uVaBmke08
+ LCPQUFk4uYEqrKxRTB1EQKug=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id d2f3ea6285dbf305;
+	Fri, 11 Sep 2026 14:25:40 +0000
+X-Mizu-Trace-ID: d2f3ea6285dbf305
+X-Migadu-Flow: FLOW_OUT
+From: Leon Hwang <leon.hwang@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Leon Hwang <leon.hwang@linux.dev>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] ftrace: Use rcu_assign_pointer() for tmp_ops filter hash
+Date: Fri, 11 Sep 2026 22:25:12 +0800
+Message-ID: <20260911142512.19344-1-leon.hwang@linux.dev>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: qr4g4u3oti97w6r1wxsyfguoh8eifpso
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 8732930
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/kRIOymlh/yRyLjmb/AHjuhpRO+qc1TOM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=5pF7UOjJ0Hc92aoK/fGuwkSEqe18l+crBILfTSieFQI=; b=gMEucxCmj+6pFz+an9E4ANtASc6LfKKjFrswxZXbzlFzbRl3RMdZLezICim3m1D1g+EltbA0AAxcxjZFkzndutpjigSaREYcKBm39wpsCuSHyuYubGObgHzIORQtGzsUOg33YwZFKldCDQEv6aFsY6RAuM/Ir1V8sGRif+8R4bk=
-X-HE-Tag: 1789136033-909403
-X-HE-Meta: U2FsdGVkX18Qy0hiLDQcFnE98ah35wCu1vIZzyuKl27gM6+rsq3zuBhpsZz4DS2UvGVcZDbYIned2LtehysThjsjLGLHrdUWkQO224ES2ZkL301BaOUl6XrGBSbFka66RgDtbg6JYpyv9aO8iiY3TRMnOWzfyTrcUqfSAY3/ToMushNHQRVdRsO1VY0kvWMhsLznxmy3891Dh/u+rzgtmDUGFHgWmliyPOkVS5FgDqE72MLKWKK8Cnh3hg1lRCnBkS/HUCLJycBe3E4PEJywVWOxSdwPI6+AI8tfPz/4xya2HNCyXd89jbSacEhJYkeY
+Content-Transfer-Encoding: 8bit
 
-On Fri, 11 Sep 2026 15:28:48 +0800
-Ridong Chen <ridong.chen@linux.dev> wrote:
+tmp_ops.func_hash->filter_hash is annotated __rcu, but
+update_ftrace_direct_mod() assigns hash to it directly. Sparse reports an
+address-space mismatch.
 
-> +static void trace_inc_max_seq(struct lruvec *lruvec)
-> +{
-> +	int type, gen;
-> +	unsigned long nr[ANON_AND_FILE][MAX_NR_GENS];
-> +	struct lru_gen_folio *lrugen = &lruvec->lrugen;
-> +
-> +	if (!trace_mm_mglru_inc_max_seq_enabled())
-> +		return;
-> +
-> +	for (type = 0; type < ANON_AND_FILE; type++)
-> +		for (gen = 0; gen < MAX_NR_GENS; gen++)
-> +			nr[type][gen] = lru_gen_seq_nr_pages(lrugen, gen, type);
-> +
-> +	trace_mm_mglru_inc_max_seq(mem_cgroup_id(lruvec_memcg(lruvec)),
-> +				   lrugen->max_seq,
-> +				   lrugen->min_seq[LRU_GEN_ANON],
-> +				   lrugen->min_seq[LRU_GEN_FILE],
-> +				   nr[LRU_GEN_ANON], nr[LRU_GEN_FILE]);
-> +}
+Use rcu_assign_pointer() for the assignment.
 
-I would always look at trying to move as much logic into the
-TP_fast_assign() and not have it be where the tracepoint is called.
+Fixes: 50b35c9e50a8 ("ftrace: Use hash argument for tmp_ops in update_ftrace_direct_mod")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202609110704.Q3M5vCDV-lkp@intel.com/
+Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+---
+ kernel/trace/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- Steve
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 53d5db60bfa5..673a54fdf392 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6675,7 +6675,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
+ 
+ 	/* Enable the tmp_ops to have the same functions as the hash object. */
+ 	ftrace_ops_init(&tmp_ops);
+-	tmp_ops.func_hash->filter_hash = hash;
++	rcu_assign_pointer(tmp_ops.func_hash->filter_hash, hash);
+ 
+ 	err = register_ftrace_function_nolock(&tmp_ops);
+ 	if (err)
+-- 
+2.55.0
+
