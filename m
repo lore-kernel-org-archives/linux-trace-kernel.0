@@ -1,202 +1,189 @@
-Received: from mail-oo2-f43.google.com (mail-oo2-f43.google.com [74.125.231.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55E437267C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 15:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.231.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789139172; cv=pass; b=aDZeZhkiqToCfAMt6O2v9es1QRP2GuNlnCxHaAJvbZSh2lLkPJPYjfinnV9Kqtsihyhhko/DWiijSfR6+ZmqqntBUTeYW2AOb91mq8RNAr/hY462TqYRZTELFNHPT0R256uu1vHrK+dHny7qfUGPmmNEbm2YubeqCoDiWUKyEg0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789139172; c=relaxed/simple;
-	bh=31WGPI9CsS8AEb1QmZigfY8oBbhGb6+EPuGPGJKusUg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U5DYTZ4xX4V9pkspm2qDXQ4Ufj9THVqSA2yxpZRhIY+JwbWiztwGs6qYBJAwjs9HjXdWCmIv+wdij4nZwZ0DjN7IkJUcQfgQ/zQlTCO6CnC6jC5v2IHU8lj3kREv82jzolPcEC8Ij1VUyY6912y+P0OuM2E26lQeU7cfR5NsExc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qUJmVijz; arc=pass smtp.client-ip=74.125.231.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA7368D7E;
+	Fri, 11 Sep 2026 15:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789139909; cv=none; b=OAMveDLtjGelmiFoD0656DF4/wkWztfWIWmVMqM0Hxt9dJvGKov1aSnsCgILmx8Qxc0/X/3png3aApoKmK8o6YUtjJ54OKtfSPRbQ79/9qJjNTjRwCefWAIO8xkEpbACtbtOdPEKyQY3L2ynTtE6Nz/XhFSAazDv4rojx8vW56g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789139909; c=relaxed/simple;
+	bh=EmcvLDNd0Paz7dTy2pySpcGOrrthTH7KTzUaOeq+0zI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LtHwlJGeaKGJJef+Q7k1qLLu5bKv5Ffuz4rooKFs0gEKXBo69XPypas11u/DP8OQB9LhSdIeJoxLO7jXDbUvIFe5qW66nNCsWYtQpGgb+8dGtEqW4JhA+jhwNjF2rIqT0dHzmLK9NKblJoMOJ9hQiuRR+1Lfwf5QmDmKoI96dvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kaPjB6sD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUJmVijz"
-Received: by mail-oo2-f43.google.com with SMTP id 006d021491bc7-6b1ae6f5fc7so647606eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 08:06:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789139169; cv=none;
-        d=google.com; s=arc-20260327;
-        b=hjQBr4z47e6aIDSfAgFi1u0Xi4fsDs6WBnuU8aoISMHQrfCqQ5nPVZF+//5HFDqlZ8
-         Ww/nNeQIFczEPz/VHa6Wa49artF/ijsNHBMM4NPZEQ7Nck834TzQouaORniuM3EKtLr/
-         OMln+eDjkCciTEnF1tIKk3Qqbnjl2Yl9yTqB1YVZCQnJmebGuHgJKoGLtmv/hberweVi
-         oh0iI2b+tzDMGG6KaE99KGjrKHptnpAgcrBtXXUCTGyB/C/qcwYhLNRRxpuOFlpq/YxJ
-         HNkZ+JauHrZztwWk/9nfi4dM0uD4Tu95eetKuU2m/i2HWctq8ri1gTqwG9Wxn+3smAMZ
-         FKWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=31WGPI9CsS8AEb1QmZigfY8oBbhGb6+EPuGPGJKusUg=;
-        fh=crXJgwqv7aYaoIoMiZll38TJm20e/7gXaAfQEz6fDao=;
-        b=PFSNoC/+X5tsYRvp/XGgxAijtedY856JRGzpSXEobF8qQS55I/fOiliPTeYXi6oQdc
-         yUaQ58yiAkQSyZkj/4kaIyEKTK0wFV8CsXW+LarQJYFnP+6bMK7k3YgQhBiYLibfGckY
-         cx7MIZ/y2QYuzbYeEIDgrYrOY5XW/HgfnI8zULHVBeYbc2qASf4hSGWRIujLxqzGJUQ4
-         NcZsi8VrnUu9H0+syakBbxqJfrLuLuHfTA+zTvCLjHRPJ8qaYJPwgp3PmZsXTYU3EUbt
-         iXwxG9QbtDJ9gAhrK9ea5HpRZLAjymrSasZDLESWncMFRnXeroCuYazcDsTjhFhHugWS
-         ozbA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789139169; x=1789743969; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=31WGPI9CsS8AEb1QmZigfY8oBbhGb6+EPuGPGJKusUg=;
-        b=qUJmVijzNEk2CFd/2JKrWKzj5OmgEMFOKvrh0RGm0n62p5d07lbv7bYFKZ4eoKjugP
-         QYSUcrsAA+c0AC27+gjFGpBkZ1a1c9ABcQ1Fl8BDYr6h86r5AUW0twP+0XWZRX7zfazr
-         WEe6kAFGuCoQJNfIOrlZ1Y4cXE0+DuMMuYG5O6jqgitmJVAWNdT6ULGieq+wSEvSt+GR
-         VLr9QgoNO08ZRPxx3H1SiOPsijt847d48Y5SbIVoEaG8wcJJK23s+hXBs0U+z63F9Nr0
-         c/S7CJ9EFmUrGuwhSykK1cuReZLfisdthyJt0xRBaUYoDFWgwq9cl6gQg/hPBAD3m+j/
-         rUvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789139169; x=1789743969;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=31WGPI9CsS8AEb1QmZigfY8oBbhGb6+EPuGPGJKusUg=;
-        b=VYxxuzCSTL/EJ+wwGokjQ5GSZBhVhsdnvWlLuCy/SxJMlII/YMO6mhrMBoTbXb+5m5
-         Cpze4kD9c9jdAqu5UjGT47quXvhUNyEkzm/xNVOJ7uweBb3R/w0YnJ/QAFDYnjtlVC8t
-         3qNCu9+ep7jRN0wFsHOumlYNa4v9XoJWY8lIaIjBZ/WsrTLyqLjwlPGGhprfwiFvQ+S5
-         1JLy9Pg+yPY9vQzdja8De4iJZh7wbasQMd7HqXd+rQi+dU8NXsVG8cYuFPSCzCaNzBOQ
-         6YB6lZeDbqlO8/aESuhtOJPZbQMQf3ZgHA/AxF56rTDT1eaKEXeeNNZHfcwCFxcjhX6h
-         ZWxw==
-X-Forwarded-Encrypted: i=1; AKwUvBzoA9wzVS+X5BEJwiOmViZ32beUUxm/+9HD8AWTNac9c3yB0vrCnOIYKh95M1h3ZPhamUt34UPsL1ICruN4YiI2V3A=@vger.kernel.org
-X-Gm-Message-State: AFuF++kmQDaT3ZvD3kywUlYi66DqnVwBZAz2alL4Nffm7muHtpW/16fE
-	E6HxW4fkzQzFjf25TW7D2EidxOesm6J78p2baQtHlHf4RSXhzkOQDyWDlwO9y0mWInz9pKQ4de/
-	/2NpUht4fzC5JIEU/9jvu4zeuRFkbJuI=
-X-Gm-Gg: AYBFou3IS5yqug35XmsmDujW48VsTpazRyF4QaaIR4GZOcgkWeAXcUl40LC9yquV/R7
-	Ha32yQnItFOqoAMPusqK/Amg1dIVDMNS1q3W4q77nKaE7/pn3X1iJ1sVRJGKg4smNPIn7iDUjzq
-	8rtyuSh0bDheAK1ZvX1Ca8CBYlojivs1x+D8XTiROX//oAw2BBqiNhZtnR79fqeNG360iaXX3yd
-	ctP7USjHcTRtqZhA6AcHa/ggKfUzKy8hiyPx+qDxc8T+2Ye90XBqOh5wOeLF/yNMs7jse41HvyC
-	5epl72cZcukofpwr0vas1g1kZSczZztk7Wb0bHvE9MlXABU7GZq1dnk=
-X-Received: by 2002:a05:6820:8585:20b0:6b1:be9f:ce6c with SMTP id
- 006d021491bc7-6c0b9d4e35dmr4967721eaf.4.1789139168581; Fri, 11 Sep 2026
- 08:06:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kaPjB6sD"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68BF1Wlp235551;
+	Fri, 11 Sep 2026 15:18:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=frXvLE
+	F9zGLwcmL0j8JCZ1dJCCZ5gp4kGM/fUAe0N+I=; b=kaPjB6sDiLQGbqbzW5QBbI
+	fFZhCAcRyQkD5lzY3IjSlFBNN6xLiKenbXmBgSumm+Vdz5IZFger1nVQdU1CUKo6
+	6jJPgppWtb73JGM3XhCMaENXoLcJZGuT57WNYQgvyBDk0Cwdg11vykZPOeanvezf
+	eTvM8pd6KgMaCyWOlleGBQqW5G10vsZEAZKnC95KCGM26Y6YPRGT4SAGNLQky7D5
+	+VMJIeCRNIpws8aXY1+73NfggINxgL2EdBCNWQ4SMlICIeWnATS9d6xx3NkM2zSi
+	bDhLBEUSQWJIh9UgVblM+QotYpO/6vv59lnWlP9t5BDUgeTCeet4DyYVev88wy9Q
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gkd8ncb6n-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 11 Sep 2026 15:18:22 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68BEo81V1764851;
+	Fri, 11 Sep 2026 15:18:22 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gkvvrf0aa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Sep 2026 15:18:21 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68BFIHgf16253426
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Sep 2026 15:18:18 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D160A20043;
+	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2D9C42004B;
+	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
+Received: from [9.111.140.161] (unknown [9.111.140.161])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
+Message-ID: <ae89a482-96ac-46ee-87a8-6d850035206b@linux.ibm.com>
+Date: Fri, 11 Sep 2026 17:18:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
- <20260908-b4-mmap-prepare-vma-flag-sanify-v1-11-dacf19cce22b@kernel.org>
- <CAEjxPJ7hXSi=oLtQPV+7GEvN+txfYwZ-u-v_EysNHM0gSGNrCw@mail.gmail.com> <aqPUqU3eZeFrykj3@gremlin>
-In-Reply-To: <aqPUqU3eZeFrykj3@gremlin>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Fri, 11 Sep 2026 11:05:57 -0400
-X-Gm-Features: AcwNN1UL9TCHStClpz4OqpdpVCOHFGRlTtL1ELl-GfcxGBMtPjfBSuHNlaSY27Y
-Message-ID: <CAEjxPJ6P19eKF-c+mm2BSr5_WpmhMTZjjUfSamv3SfOPO4SGVw@mail.gmail.com>
-Subject: Re: [PATCH 11/39] selinux: reject writable opens of policy file, drop
- mmap shared/write check
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, 
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	fuse-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 08/24] unwind_user/eh_frame: Store .eh_frame_hdr
+ section data in per-mm maple tree
+To: sashiko-reviews@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-trace-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>
+References: <20260821195259.2688377-1-jremus@linux.ibm.com>
+ <20260821195259.2688377-9-jremus@linux.ibm.com>
+ <20260821201338.86FF71F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20260821201338.86FF71F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=NMVAaE6g c=1 sm=1 tr=0 ts=6aa41bbf cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=VwQbUJbxAAAA:8 a=LFt20mCCc4CE-LtB3JUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: jGKOmhl9wkzpTvGwodVpf0hrsp2vwaEB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTExMDIxMCBTYWx0ZWRfXzp87lMWBlOoY
+ cl2U5Qrrgb6Ng/+xPbOwRh+6nk4fdcuTjqQaaIDQh3kGuhIj3v533eBYApe4GWHbPj/UjGMT17m
+ PmXkcCCrGc+OsWKwQiZmf6TLy9QF4e7PO1dOcqozhnY4OOSsVj6G6czU9dQZx1z1XdNtdtL/ElP
+ 0E9s8pL1eRU0Og77pxNIdSTCOzj567g0PvcVzPcLsd7ANnIHiuU/3xj2M6dLG81AJ4qxn4G25gc
+ nlrpowJWyEPwbrz8/hIWsMjHUVjg753lkfg6bqV8XmaCiAPZkS9JbU5i7wZWeoIWaEk3qdWEne6
+ U8ljVMDiAMa+4LMX3KkwmW3Q773797rTStRGfo/x3waCi72HGhWoCz7FsXm0M2cEeM6mvnb20eg
+ LIdxC/G0JngtR5lk63SHNMYyvPt3sa11pMvl03Fydjy5+x6dftqVEfIptyjI6omo5H8hsHt0myJ
+ 43GlTyzN4xwdGjLamKw==
+X-Proofpoint-ORIG-GUID: jGKOmhl9wkzpTvGwodVpf0hrsp2vwaEB
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTExMDIxMCBTYWx0ZWRfX+K7JrA9iOC/Z
+ RClIyK63kNp9LxwRJyFpmRtOUSXJF50G2Q3yvJomrPdeNkE2wX9n6QYcaBzbMPH+3rBIChP9F7h
+ tERmdtMQy58TNDl86snIda3yxNdYeeM=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-11_05,2026-09-11_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 bulkscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609110210
 
-On Fri, Sep 11, 2026 at 6:16=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.o=
-rg> wrote:
->
-> On Thu, Sep 10, 2026 at 02:11:18PM -0400, Stephen Smalley wrote:
-> > On Tue, Sep 8, 2026 at 4:07=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kerne=
-l.org> wrote:
-> > >
-> > > The policy file has no write method and is exposed read-only (S_IRUGO=
- in
-> > > selinux_files[]), yet sel_open_policy() performs no open mode check, =
-so a
-> > > CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at ope=
-n, as
-> > > kernfs does.
-> > >
-> > > The file can then never be mapped with FMODE_WRITE, so do_mmap() alwa=
-ys
-> > > clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_S=
-HARED
-> > > check in sel_mmap_policy() cannot be reached. Remove it.
-> > >
-> > > This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping t=
-hat is
-> > > neither a PFN map nor a mixed map, ahead of the core enforcing that o=
-nly
-> > > such mappings may do so.
-> > >
-> > > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> >
-> > We should likely do something similar for the other sel_open_*() and
-> > sel_mmap_*() functions too.
-> > In particular, truncation of the status file can bring down systemd
-> > since it is mapped by libselinux.
->
-> Yeah I think there's definitely more that can be done there.
->
-> Though I think obviously that kind of stuff is better as a follow up as t=
-his
-> patch is focused on eliminating a case where VMA_MAYWRITE_BIT is cleared
-> incorrectly.
+On 8/21/2026 10:13 PM, sashiko-bot@kernel.org wrote:
 
-Agreed, posted one for the status handlers at:
-https://lore.kernel.org/selinux/20260911145840.19039-2-stephen.smalley.work=
-@gmail.com/
+> This commit associates .eh_frame_hdr sections with their mm_struct by
+> adding them to a per-mm maple tree. The tree is indexed by the
+> corresponding text address ranges.
+
+>> diff --git a/kernel/unwind/eh_frame.c b/kernel/unwind/eh_frame.c
+
+>> +static int __eh_frame_remove_section(struct ma_state *mas,
+>> +				     struct eh_frame_section *sec)
+>> +{
+	struct eh_frame_section *erased;
+
+	erased = mas_erase(mas);
+
+>> +	if (mas_erase(mas) != sec) {
+
+	if (mas_is_err(mas) || erased != sec) {
+
+>> +		dbg("mas_erase failed: text=%lx\n", sec->text_start);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	call_srcu(&eh_frame_srcu, &sec->rcu, eh_frame_free_srcu);
+> 
+> [Severity: Critical]
+> Can this cause a use-after-free if the maple tree erase operation fails?
+
+Seems valid.  Fixed in next version.
+
+> 
+> If mas_erase fails due to memory exhaustion (for example, during tree
+> rebalancing), it leaves the entry in the tree, sets mas_is_err(mas), and
+> returns the pointer to the entry.
+> 
+> Because it returns the entry pointer, the condition mas_erase(mas) != sec
+> will evaluate to false, skipping the error block.
+> 
+> The code would then proceed to call call_srcu and free the section while
+> it remains linked in the maple tree, potentially causing a crash when the
+> tree is traversed later. Should this check mas_is_err(mas) instead?
+> 
+>> +
+>> +	return 0;
+>> +}
+
+>> diff --git a/mm/init-mm.c b/mm/init-mm.c
+
+>> @@ -48,6 +49,7 @@ struct mm_struct init_mm = {
+>>  #endif
+>>  	.flexible_array	= MM_STRUCT_FLEXIBLE_ARRAY_INIT,
+>>  	INIT_MM_CONTEXT(init_mm)
+>> +	INIT_MM_EH_FRAME
+>>  };
+> 
+> [Severity: Low]
+> Does efi_mm in drivers/firmware/efi/efi.c also need this initializer?
+
+Steven, Josh, I doubt that is required.  Do you agree?
+
+Otherwise tboot_mm in arch/x86/kernel/tboot.c would be affected as well.
+
+> 
+> When a new initializer like INIT_MM_EH_FRAME is added to init_mm, it usually
+> needs to be added to all static mm_struct definitions.
+> 
+> Leaving it out means the eh_frame_mt maple tree inside efi_mm remains
+> zero-initialized rather than properly initialized with MTREE_INIT, which
+> might lead to lock splats or crashes if accessed.
+
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
