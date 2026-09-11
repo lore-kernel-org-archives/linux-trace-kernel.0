@@ -1,37 +1,34 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619662E7378;
-	Fri, 11 Sep 2026 02:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDE83E122D;
+	Fri, 11 Sep 2026 02:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789092302; cv=none; b=pj1ORsCBvPrSF/jimd9pueU7M940qsI2NVMoyFisOdbu2TJ4yzHwc8NRkdANedlZmg2xlPsvM8qRGX7rel03HDKuVZ59HWhIepuluBTwDBfCklMafTULPVTetIfZbL6AZ+uRgPs98Usc3JUt3MzBtCeqfZpfFq3vth3sieKJPGY=
+	t=1789093171; cv=none; b=BUK9QDg20Hvu+kqZhLUyYKaJsFfQzDpu2mcEC3VNxaJs6CeaRLskVux7YdlxIGpYhwqD9IS8QuYvPcUXr876RahQDTmpUng5NiVKxtivtfS8GBA7Jp7nydSfZGVWEOkawhiWhs38oUYsZmDuDeSnXQHCrwIFib59ot86Z5ya1Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789092302; c=relaxed/simple;
-	bh=TYpfiFfDUTuz8CCrKNOzv5uaoVPCzB3XcJABRIO64ZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GGxhwZ+sA8LID9xHjiczxX1VcuhDq9H7wjo2t8zdXEUADYZPXCPNi4oL9+X5I0VVok9VlBK1Zi6lIMG8RSaPUFxfMyVFsZANO4MsMwV45LihI8YdSh/NlSvqFxX3kOgR/2oXA7fi7Glxt6A2EJOcdtJ5y3xjo78bOU2W/gLg79g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=XpZVwqpO; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1789093171; c=relaxed/simple;
+	bh=3/4A7WGA2zMIswo1jmitErW5tnaewjrFCdOj85kCees=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nTFKCrRZHWox2spqk02NMoGhUAgRVkFocnwspJPjOlfGM7vu7qXJqDUfqY1ih68SeryUq8ZBH/fKQ1NqviDJeRD7IFX+mCNEKwj42wQtRAina0Nd5JZVFhXYog9rDbG4SsmB/FK7V2VRRdw2AI1Bif22DqTXTq19oFKgIIRSCQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=VBSM05rz; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="XpZVwqpO"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 5675D1A06FF;
-	Fri, 11 Sep 2026 02:04:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 8B0482002B;
-	Fri, 11 Sep 2026 02:04:51 +0000 (UTC)
-Date: Thu, 10 Sep 2026 22:04:50 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="VBSM05rz"
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id AD6E7A4F28;
+	Fri, 11 Sep 2026 02:12:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 005B132;
+	Fri, 11 Sep 2026 02:12:10 +0000 (UTC)
+Date: Thu, 10 Sep 2026 22:12:09 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>
-Subject: Re: PATCH] tracing: Revert commit 5ad289336148 ("tracing: Use a
- single array to represent tracer options files")
-Message-ID: <20260910220450.25118948@robin>
-In-Reply-To: <20260910214008.4c63211f@robin>
-References: <20260910214008.4c63211f@robin>
+Subject: [PATCH v2] tracing: Take trace_array reference when opening a
+ tracer options file
+Message-ID: <20260910221209.62dad8d3@robin>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,262 +38,145 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uwkwo8xbo976io75izkuwwqh1y14s1xo
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 8B0482002B
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 005B132
+X-Stat-Signature: 5bx994e36jeg1atgzhiepy6zg3pdrhj7
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18FdZczie6GhAnoDKYkcW/f0ARaAJtPxa8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=/qMTGW1WJLI+b/x0TygSOtfQ4D1ZGeZfzzEtkG3t3E0=; b=XpZVwqpOz0YyUzA48sfglJLyiKFPQSeO+NCxzPcEZk7Y6RHPu/+fWdL4Epk8wk1XF3Nxl8qHxstYYdXpTgLKBbTbUd8x7fwYyu5ShVoeBu0s+KrPJa+JnHAFZNTzI5+Twlq+X+GNTSsgWKTvJNIXOWAzhXn/cmU+mARiY1N+gR4=
-X-HE-Tag: 1789092291-404136
-X-HE-Meta: U2FsdGVkX18gRKhFy00eJv+HWzJOhhz2M6jtKU9KN5kqp5/IqtoL82bLcfoQo4utkQoX8n3SLEFGJ7naJE4sR+XYOEbBl+P7ntRU6JNbYhbD5bS1bJeN1bbfUMilcO8FnLRh7J+WWRMvzIRfSjzHQqB55nKgLWVCwwCb7hSkBbcX8lxhw3P+fgjBU0cNDpbTjX9N+NoAxQdLe5uraSkkGpKBSMyLN2Apvy4+5hLKs5/1sFNnU8wtmqsnCxD+bW+yzn5cpbq2gzbcY+WTaKcIUngZHLRdkHHjpTSNtARHACTgNii0ETPiofL2tYsI8qcPLoGo91hr7VDJde9+p8pqGixaJKHecaT7tuoCIDem/ogLTJnnUZOyRB6fvXiJva4tlOgQyln7ZHadCBxknkIWQEupDgyvIOUw
+X-Session-ID: U2FsdGVkX1/gdEGTUyGzxT4PkW2JOMG+8HqjAnGODMA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=vgWuFu8zSlq6fFOSGQhSrn+ThxkXehWqmmUN9j1Csy8=; b=VBSM05rzdkC8Nht9eWcXNl9YOJKPFn5B2WRTqmwf62a6mDI82zQudVNG+fcEYAm+K05TVGaXr6KyHc6XKjfUWX9GsWAR3v2bNATOimRH467+bCME4vN5plFxJLOsVuReK+bHlZI0AV7l7Tb0Xz7Rxvh5+K1aHl1XTnSirQ1LHp8=
+X-HE-Tag: 1789092730-236229
+X-HE-Meta: U2FsdGVkX19+bMyW8Dwa08cSK2Yd9YQFfuzsiMOQMP7ovjpVXOb35f7X+8cUn8NiLmMp+99tmD2cClKFpIqOPWFWivYTD4QhvgN4ULFICSiNyQdMHZjCOv4VkQPFMbBrh418M3H6t/F8U4TtGxCDkto6OxY2MKRmwr+vSp93HCukVUuex7vfGz1QCXBVXN+kvRyZbR5RTQH6gNqjIkGusdJKX0vxElqKZHf/tkwZj2MWSwDpPpN7lgVYZPRbTJ4KdlGk9k81ssDq8o8rbBJbkICHGA9Ap4K9wh9XPUUUyZzO3ak1VAPPVb/T/KRNqDUr1NBux4YofHPsiU4MLLyV2Aqar2A9yf9FjHJhhBaG+1Y/X2GbJnLAxpQlTxBLnJnUd9FiEsu82+VVmxk2lX96gTh5waJO3EXG41WP1Rx/BQNQD7hz9ymP0YuZEoVurbkScoBc/yYhR4ny0tbXMASXbjURFUa0k3SssvSguD6n/08=
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Oh good, this commit was never pushed to Linus, so I can just fold it
-all together. Phew!
+When a tracer option file is opened, it is passed a descriptor that points
+to an element on the trace_array's topts array. This element has
+information to find the trace array and other information. It uses this
+element to take a reference of the trace_array so that the trace_array
+does not get removed while this file is opened.
 
-[ sorry for the noise ]
+Unfortunately, there's a race condition where the element itself could be
+freed by the removal of the instance the trace_array represents causing a
+use-after-free as this element that is used to find the trace_array to
+increment its reference counter is also freed when the instance is
+removed.
 
--- Steve
+To solve this, add a trace_array_tracer_options_get() helper function that
+will take the address of the element that is passed to the open function
+by the inode->i_private pointer and search all the trace_arrays under a
+lock to find the one that the element's address is in the range of the
+trace_arrays topts array elements. When a match happens, that trace_array's
+reference would be increased.
 
+Note, there's a race where if an admin was deleting and creating trace
+instances at the same time and the memory of the old trace_array's array
+matched the memory of the new trace_array that it could in theory open the
+option from the wrong trace array. But we do not care because it would be
+stupid to perform that kind of action. As long as the only thing that can
+happen is that the option from the wrong trace array is used and doesn't
+crash the kernel it will only make the user confused. But if they are
+doing something stupid like this, they are already confused, so no harm
+done.
 
-On Thu, 10 Sep 2026 21:40:08 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Cc: stable@vger.kernel.org
+Fixes: 7e2cfbd2d3c86 ("tracing: Have option files inc the trace array ref count")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/linux-trace-kernel/20260902121918.5a9e9d1b@gandalf.local.home/
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+Changes since v1: https://patch.msgid.link/20260902212638.065669192@kernel.org
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The commit 5ad289336148 ("tracing: Use a single array to represent tracer
-> options files") simplified the array that stores the individual tracer
-> options within the trace_array from being a multi array where each tracer
-> had its own array for its options to a single array where all the tracers
-> options were in a single array of the trace_array.
-> 
-> Testing has shown why it was done with multiple arrays in the first place.
-> The single array use krealloc() to increase the size of the array when new
-> tracers are added. A krealloc can change the location of the array if it
-> needs more memory than the current location can provide. The files
-> associated with the arrays passed in the address of these elements, and
-> when the array changed, the elements became stale and no longer pointed to
-> the element that represented the option.
-> 
-> Luckily, the reason this was done was also to check on open if the element
-> still existed or if it was removed when an instance directory was removed.
-> On opening a file with a stale element due to the array moving from a
-> krealloc(), it would not find a corresponding trace_array and the open
-> would return -ENODEV.
-> 
-> Revert the code back to multi-array where only the outer array gets
-> resized and its elements point to the allocated arrays for each tracer.
-> 
-> Update the trace_array_trace_options_get() function to search each tracer
-> array of the main array of the trace_array using a new helper function
-> tr_option_match(). This preserves the logic to find an existing
-> trace_array corresponding to the trace options descriptor and doesn't
-> suffer from krealloc() moving the elements around.
-> 
-> Fixes: e8ea6a874574 ("tracing: Take trace_array reference when opening a tracer options file")
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c | 63 +++++++++++++++++++++++++++++---------------
->  kernel/trace/trace.h | 22 ++++++++++------
->  2 files changed, 56 insertions(+), 29 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 7cc3fac70216..e4a490d3d08c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7678,7 +7678,7 @@ static ssize_t
->  trace_options_read(struct file *filp, char __user *ubuf, size_t cnt,
->  			loff_t *ppos)
->  {
-> -	struct trace_options *topt = filp->private_data;
-> +	struct trace_option_dentry *topt = filp->private_data;
->  	char *buf;
->  
->  	if (topt->flags->val & topt->opt->bit)
-> @@ -7693,7 +7693,7 @@ static ssize_t
->  trace_options_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  			 loff_t *ppos)
->  {
-> -	struct trace_options *topt = filp->private_data;
-> +	struct trace_option_dentry *topt = filp->private_data;
->  	unsigned long val;
->  	int ret;
->  
-> @@ -7717,6 +7717,18 @@ trace_options_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  	return cnt;
->  }
->  
-> +static bool tr_option_match(struct trace_array *tr, void *topt)
-> +{
-> +	for (int i = 0; i < tr->nr_topts; i++) {
-> +		struct trace_options *tr_topts = &tr->topts[i];
-> +
-> +		if (topt >= (void *)&tr_topts->topts[0] &&
-> +		    topt < (void *)&tr_topts->topts[tr_topts->nr_topts])
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
->  /*
->   * The topt is the address of a trace_array->topts[] element that holds the
->   * the tracer options descriptor. But since the trace_array reference has not
-> @@ -7742,8 +7754,7 @@ static int trace_array_tracer_options_get(void *topt)
->  
->  	guard(mutex)(&trace_types_lock);
->  	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> -		if (topt >= (void *)&tr->topts[0] &&
-> -		    topt < (void *)&tr->topts[tr->nr_topts])
-> +		if (tr_option_match(tr, topt))
->  			return __trace_array_get(tr);
->  	}
->  	return -ENODEV;
-> @@ -7751,7 +7762,7 @@ static int trace_array_tracer_options_get(void *topt)
->  
->  static int tracing_open_options(struct inode *inode, struct file *filp)
->  {
-> -	struct trace_options *topt = inode->i_private;
-> +	struct trace_option_dentry *topt = inode->i_private;
->  	int ret;
->  
->  	ret = trace_array_tracer_options_get(topt);
-> @@ -7764,7 +7775,7 @@ static int tracing_open_options(struct inode *inode, struct file *filp)
->  
->  static int tracing_release_options(struct inode *inode, struct file *file)
->  {
-> -	struct trace_options *topt = file->private_data;
-> +	struct trace_option_dentry *topt = file->private_data;
->  
->  	trace_array_put(topt->tr);
->  	return 0;
-> @@ -7967,9 +7978,8 @@ static struct dentry *trace_options_init_dentry(struct trace_array *tr)
->  
->  static void
->  create_trace_option_file(struct trace_array *tr,
-> -			 struct trace_options *topt,
-> +			 struct trace_option_dentry *topt,
->  			 struct tracer_flags *flags,
-> -			 struct tracer *tracer,
->  			 struct tracer_opt *opt)
->  {
->  	struct dentry *t_options;
-> @@ -7981,7 +7991,6 @@ create_trace_option_file(struct trace_array *tr,
->  	topt->flags = flags;
->  	topt->opt = opt;
->  	topt->tr = tr;
-> -	topt->tracer = tracer;
->  
->  	topt->entry = trace_create_file(opt->name, TRACE_MODE_WRITE,
->  					t_options, topt, &trace_options_fops);
-> @@ -7991,9 +8000,10 @@ static int
->  create_trace_option_files(struct trace_array *tr, struct tracer *tracer,
->  			  struct tracer_flags *flags)
->  {
-> -	struct trace_options *topts;
-> +	struct trace_option_dentry *topts;
-> +	struct trace_options *tr_topts;
->  	struct tracer_opt *opts;
-> -	int i, cnt;
-> +	int cnt;
->  
->  	if (!flags || !flags->opts)
->  		return 0;
-> @@ -8003,22 +8013,30 @@ create_trace_option_files(struct trace_array *tr, struct tracer *tracer,
->  	for (cnt = 0; opts[cnt].name; cnt++)
->  		;
->  
-> -	topts = krealloc_array(tr->topts, tr->nr_topts + cnt, sizeof(*tr->topts),
-> -				  GFP_KERNEL);
-> +	topts = kzalloc_objs(*topts, cnt + 1);
->  	if (!topts)
-> +		return 0;
-> +
-> +	tr_topts = krealloc_array(tr->topts, tr->nr_topts + 1, sizeof(*tr->topts),
-> +				  GFP_KERNEL);
-> +	if (!tr_topts) {
-> +		kfree(topts);
->  		return -ENOMEM;
-> +	}
->  
-> -	tr->topts = topts;
-> +	tr->topts = tr_topts;
-> +	tr->topts[tr->nr_topts].tracer = tracer;
-> +	tr->topts[tr->nr_topts].topts = topts;
-> +	tr->topts[tr->nr_topts].nr_topts = cnt;
-> +	tr->nr_topts++;
->  
-> -	for (topts += tr->nr_topts, i = 0; i < cnt; topts++, i++) {
-> -		create_trace_option_file(tr, topts, flags, tracer,
-> -					 &opts[i]);
-> -		MEM_FAIL(topts->entry == NULL,
-> +	for (cnt = 0; opts[cnt].name; cnt++) {
-> +		create_trace_option_file(tr, &topts[cnt], flags,
-> +					 &opts[cnt]);
-> +		MEM_FAIL(topts[cnt].entry == NULL,
->  			  "Failed to create trace option: %s",
-> -			  opts[i].name);
-> +			  opts[cnt].name);
->  	}
-> -
-> -	tr->nr_topts += cnt;
->  	return 0;
->  }
->  
-> @@ -8880,6 +8898,9 @@ static int __remove_instance(struct trace_array *tr)
->  	if (tr->flags & TRACE_ARRAY_FL_VMALLOC)
->  		vfree((void *)tr->range_addr_start);
->  
-> +	for (i = 0; i < tr->nr_topts; i++) {
-> +		kfree(tr->topts[i].topts);
-> +	}
->  	kfree(tr->topts);
->  
->  	free_cpumask_var(tr->pipe_cpumask);
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index fd0919a2c375..bd3c8f80300f 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -224,6 +224,12 @@ struct array_buffer {
->  
->  #define TRACE_FLAGS_MAX_SIZE		64
->  
-> +struct trace_options {
-> +	struct tracer			*tracer;
-> +	struct trace_option_dentry	*topts;
-> +	int				nr_topts;
-> +};
-> +
->  struct trace_pid_list *trace_pid_list_alloc(void);
->  void trace_pid_list_free(struct trace_pid_list *pid_list);
->  bool trace_pid_list_is_set(struct trace_pid_list *pid_list, unsigned int pid);
-> @@ -320,14 +326,6 @@ struct trace_module_delta {
->  	long		delta[];
->  };
->  
-> -struct trace_options {
-> -	struct tracer_opt		*opt;
-> -	struct tracer_flags		*flags;
-> -	struct trace_array		*tr;
-> -	struct tracer			*tracer;
-> -	struct dentry			*entry;
-> -};
-> -
->  /*
->   * The trace array - an array of per-CPU trace arrays. This is the
->   * highest level data structure that individual tracers deal with.
-> @@ -608,6 +606,14 @@ struct tracer_flags {
->  /* Makes more easy to define a tracer opt */
->  #define TRACER_OPT(s, b)	.name = #s, .bit = b
->  
-> +
-> +struct trace_option_dentry {
-> +	struct tracer_opt		*opt;
-> +	struct tracer_flags		*flags;
-> +	struct trace_array		*tr;
-> +	struct dentry			*entry;
-> +};
-> +
->  /**
->   * struct tracer - a specific tracer and its callbacks to interact with tracefs
->   * @name: the name chosen to select it on the available_tracers file
+- Removed the change to make the trace options array a single array in the
+  trace_array as it grows via krealloc(). Making it a single array may
+  cause it to change address locations if the krealloc() needs more space.
+  Instead, add a tr_option_match() helper function that will iterate all
+  the tracer options in the topt array and return if there's a match.
+
+ kernel/trace/trace.c | 46 +++++++++++++++++++++++++++++++++++++++++++-
+ kernel/trace/trace.h |  1 +
+ 2 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8658cad53cb5..e4a490d3d08c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7717,12 +7717,55 @@ trace_options_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	return cnt;
+ }
+ 
++static bool tr_option_match(struct trace_array *tr, void *topt)
++{
++	for (int i = 0; i < tr->nr_topts; i++) {
++		struct trace_options *tr_topts = &tr->topts[i];
++
++		if (topt >= (void *)&tr_topts->topts[0] &&
++		    topt < (void *)&tr_topts->topts[tr_topts->nr_topts])
++			return true;
++	}
++	return false;
++}
++
++/*
++ * The topt is the address of a trace_array->topts[] element that holds the
++ * the tracer options descriptor. But since the trace_array reference has not
++ * been taken yet, it cannot be dereferenced as it could have been freed by
++ * a rmdir of the instance the trace_array represents.
++ *
++ * Search the list of trace_arrays and compare the topt to the address of
++ * the entire trace_array topts array for each trace_array in the list.
++ * If one is matched, then take the reference and return it. If not, the
++ * trace_array no longer exits.
++ */
++static int trace_array_tracer_options_get(void *topt)
++{
++	struct trace_array *tr;
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
++		return ret;
++
++	if (tracing_disabled)
++		return -ENODEV;
++
++	guard(mutex)(&trace_types_lock);
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++		if (tr_option_match(tr, topt))
++			return __trace_array_get(tr);
++	}
++	return -ENODEV;
++}
++
+ static int tracing_open_options(struct inode *inode, struct file *filp)
+ {
+ 	struct trace_option_dentry *topt = inode->i_private;
+ 	int ret;
+ 
+-	ret = tracing_check_open_get_tr(topt->tr);
++	ret = trace_array_tracer_options_get(topt);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -7984,6 +8027,7 @@ create_trace_option_files(struct trace_array *tr, struct tracer *tracer,
+ 	tr->topts = tr_topts;
+ 	tr->topts[tr->nr_topts].tracer = tracer;
+ 	tr->topts[tr->nr_topts].topts = topts;
++	tr->topts[tr->nr_topts].nr_topts = cnt;
+ 	tr->nr_topts++;
+ 
+ 	for (cnt = 0; opts[cnt].name; cnt++) {
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 5e76f94e7a80..bd3c8f80300f 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -227,6 +227,7 @@ struct array_buffer {
+ struct trace_options {
+ 	struct tracer			*tracer;
+ 	struct trace_option_dentry	*topts;
++	int				nr_topts;
+ };
+ 
+ struct trace_pid_list *trace_pid_list_alloc(void);
+-- 
+2.53.0
 
