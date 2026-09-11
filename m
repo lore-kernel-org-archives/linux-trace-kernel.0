@@ -1,113 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37BF3515C7;
-	Fri, 11 Sep 2026 14:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B73246ED;
+	Fri, 11 Sep 2026 14:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789136019; cv=none; b=WTGNozFOyxTNiJTT3tpFi3Xyle0YPHfW+d6GNCQ2hAb2x2BjJzG78exEneXqn+P/skiV7qtOR8KrL/J9/J6312IR0TiGpm9R+tm/6dJQ+AJE4tm8MTek6xTP0ALYjFu/3nQfWGfRf90f9a0G/pPRxtoMlKQxmjDU9mADKb6D9kI=
+	t=1789136043; cv=none; b=JBhkjhjTmyJkTk0VOv0s7PYLe6xJJI92mwFNlADn/NZuUAg0MHP47hqfRbjRIq8wjNj2Z8H5WkBSLkN7AlUcR15To27+XODxlH3UBive/GEDX2SKtVew1mf5o9bJ98k/xcPb8kO9WLKjHH3Xz4ne0y1tkkAAdqpWlpwBA5UY0XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789136019; c=relaxed/simple;
-	bh=HjdMvu+amrfZ+Yjum6DNCwuv95VOPcYse8XIGVa3Hsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kS7Z9No4b4bxY9XtVpSvCExdKgMPJMtPgspHFrXVwSNCOl//8G76O/CBljdZ2h9hLlVsx9hlWdg10nSxWUCWL9HSI7i3hI+IsfyrUNeXlHpFX8zRD4jd8DHlTBAfWlteZI9o3QYKRXtYqIU1YnDbNngJpSSLPmlTgNrIjC445KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW0jORBH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789136043; c=relaxed/simple;
+	bh=S6vlzaHOdAux3Ddwra4hz2bRHO+mzq2XjnWcy5LThPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DL3v/UR0whFOGRlVpt9cQYoZTvZG0CuFHJYGLaFqvJliaw/ZK8MtTNW9ourdXpr7nmlrSoyoVGSNVmyK4SRh/YhXW38n1AXSwwc22mPnitIM6HNskbYAzjuMRDnsbzss60t8InW6HLF+xwTSm/EN7UfU3GY3g7tDVzdlUJnBsD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=gMEucxCm; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW0jORBH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026651F008A2;
-	Fri, 11 Sep 2026 14:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789136017;
-	bh=5ITgpds4xl58Ygn2uPHYZZiX61DZ+QftRJbMlAz/1Js=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dW0jORBHvt7NTMCMA5myakN4a7nziqA5V2p5sdelKnBENyMAGL7ow5qQqtSyfN18B
-	 1vOi3DrbZYYy0lCmWc52F5B8vRMw7J31ZJxxpBnLVEIar8f8NuqgWZIHXqiP3AKqiM
-	 C1sAZHb0QcGDm4voSJGTWBTd3+k9SMQN0vyjdcUPWOnzuQ0R0VTcH3qxbl9OYtOHxg
-	 SmYFH/38PhBxoz7J8/qquUy6CkCicLcEwfpRxkGx1mgGMCr2jWaVQC99MnzZ/zOqwh
-	 gzKFiL9rKEKbrJAFAb48G48X3srNp/E9p9crYZYiv5T2J1TZftv5OgcW8ET7ma3GY5
-	 i7elDyBhblsSA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Sang-Heon Jeon <ekffu200098@gmail.com>
-Subject: [PATCH v2 4/4] bootconfig: Move BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h
-Date: Fri, 11 Sep 2026 23:13:33 +0900
-Message-ID: <178913601321.248794.4786502771058559887.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178913597653.248794.1237187523153227751.stgit@devnote2>
-References: <178913597653.248794.1237187523153227751.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="gMEucxCm"
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id A0465120233;
+	Fri, 11 Sep 2026 14:13:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 8732930;
+	Fri, 11 Sep 2026 14:13:53 +0000 (UTC)
+Date: Fri, 11 Sep 2026 10:15:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Kairui Song
+ <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
+ <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>,
+ Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org (open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)),
+ Ridong Chen <chenridong@xiaomi.com>
+Subject: Re: [PATCH 3/3] mm/mglru: add tracepoint for inc_max_seq()
+Message-ID: <20260911101514.1fe0d543@gandalf.local.home>
+In-Reply-To: <20260911072848.2346073-4-ridong.chen@linux.dev>
+References: <20260911072848.2346073-1-ridong.chen@linux.dev>
+	<20260911072848.2346073-4-ridong.chen@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: qr4g4u3oti97w6r1wxsyfguoh8eifpso
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 8732930
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/kRIOymlh/yRyLjmb/AHjuhpRO+qc1TOM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=5pF7UOjJ0Hc92aoK/fGuwkSEqe18l+crBILfTSieFQI=; b=gMEucxCmj+6pFz+an9E4ANtASc6LfKKjFrswxZXbzlFzbRl3RMdZLezICim3m1D1g+EltbA0AAxcxjZFkzndutpjigSaREYcKBm39wpsCuSHyuYubGObgHzIORQtGzsUOg33YwZFKldCDQEv6aFsY6RAuM/Ir1V8sGRif+8R4bk=
+X-HE-Tag: 1789136033-909403
+X-HE-Meta: U2FsdGVkX18Qy0hiLDQcFnE98ah35wCu1vIZzyuKl27gM6+rsq3zuBhpsZz4DS2UvGVcZDbYIned2LtehysThjsjLGLHrdUWkQO224ES2ZkL301BaOUl6XrGBSbFka66RgDtbg6JYpyv9aO8iiY3TRMnOWzfyTrcUqfSAY3/ToMushNHQRVdRsO1VY0kvWMhsLznxmy3891Dh/u+rzgtmDUGFHgWmliyPOkVS5FgDqE72MLKWKK8Cnh3hg1lRCnBkS/HUCLJycBe3E4PEJywVWOxSdwPI6+AI8tfPz/4xya2HNCyXd89jbSacEhJYkeY
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, 11 Sep 2026 15:28:48 +0800
+Ridong Chen <ridong.chen@linux.dev> wrote:
 
-BOOTCONFIG_FOOTER_SIZE was defined locally in tools/bootconfig/main.c.
-Move it to include/linux/bootconfig.h so that it can be shared with
-the kernel and user-space tools. Also, use it in init/main.c instead
-of the hardcoded (BOOTCONFIG_MAGIC_LEN + 8) expression when checking
-the initrd size.
+> +static void trace_inc_max_seq(struct lruvec *lruvec)
+> +{
+> +	int type, gen;
+> +	unsigned long nr[ANON_AND_FILE][MAX_NR_GENS];
+> +	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+> +
+> +	if (!trace_mm_mglru_inc_max_seq_enabled())
+> +		return;
+> +
+> +	for (type = 0; type < ANON_AND_FILE; type++)
+> +		for (gen = 0; gen < MAX_NR_GENS; gen++)
+> +			nr[type][gen] = lru_gen_seq_nr_pages(lrugen, gen, type);
+> +
+> +	trace_mm_mglru_inc_max_seq(mem_cgroup_id(lruvec_memcg(lruvec)),
+> +				   lrugen->max_seq,
+> +				   lrugen->min_seq[LRU_GEN_ANON],
+> +				   lrugen->min_seq[LRU_GEN_FILE],
+> +				   nr[LRU_GEN_ANON], nr[LRU_GEN_FILE]);
+> +}
 
-Suggested-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Newly added.
----
- include/linux/bootconfig.h |    4 ++++
- init/main.c                |    2 +-
- tools/bootconfig/main.c    |    4 ----
- 3 files changed, 5 insertions(+), 5 deletions(-)
+I would always look at trying to move as much logic into the
+TP_fast_assign() and not have it be where the tracepoint is called.
 
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index deda507500da..6f23ec11baab 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(void);
- #define BOOTCONFIG_ALIGN	(1 << BOOTCONFIG_ALIGN_SHIFT)
- #define BOOTCONFIG_ALIGN_MASK	(BOOTCONFIG_ALIGN - 1)
- 
-+/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
-+#define BOOTCONFIG_FOOTER_SIZE	\
-+	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
-+
- /**
-  * xbc_calc_checksum() - Calculate checksum of bootconfig
-  * @data: Bootconfig data.
-diff --git a/init/main.c b/init/main.c
-index 16749bb7a219..37168bd68126 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -278,7 +278,7 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
- 	int i;
- 
- 	if (!initrd_end || initrd_end < initrd_start ||
--	    initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
-+	    initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
- 		return NULL;
- 
- 	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 652e491b9c33..d4aa96da970e 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -17,10 +17,6 @@
- 
- #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
- 
--/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
--#define BOOTCONFIG_FOOTER_SIZE	\
--	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
--
- static void show_xbc_error(const char *data, const char *msg, int pos)
- {
- 	int lin = 1, col, i;
-
+-- Steve
