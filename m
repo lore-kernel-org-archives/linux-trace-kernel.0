@@ -1,68 +1,133 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6596A49B201;
-	Fri, 11 Sep 2026 16:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEC72E7F39
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 16:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789142431; cv=none; b=MmgNssqGGbT/odCURG3hEKLXSqkcTPVo3ZlUj6CqgddLR70oMALRkCOOIcDnYXsos2jwEe/wO6zHYGj7UqSuAqG0LGd9eCYY6Aq3XyxiQg6QfxscDg6Zh/vytt98zdXa+RQORc2YImBOD4fiGRmlW754DV1Km23MbYrgmHvUxVU=
+	t=1789142643; cv=none; b=F5+ZfkCvdDMXGLIHI0MTd9tRuSbqBCB3atJ3NmoCaaUvmnLBGR1Ez1rIcLt0SfSymfOwvrVP6wbe+/iYCeXhneUoFuE8XNLSQkttQ4G4AEp922Mi4Ora8vvAUQjOBaeCPvzaucTi+0wiHkjz9Ynu8nRwcekHXNXOCN8n1mqdqP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789142431; c=relaxed/simple;
-	bh=+QEQyKkJoiMrA/3HTit19JPln4erh+u17aGYAdQZSM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=In6F3UpLlWCqtN195zDrbXTVY/lF4O6LbP82dYP0cdjbXwEtcCdHjtTCOyqyb8LD2ZMsKnnLj5SbIXbUeGxW8lEt9Dqv5tA/5QKiqRoODgsiHizDAabH4DI7SQpd9ea9GULpxMeRWdxT5t+LciWNHt9fu6avh6fjuUXWMc0gq3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=SLoD59aq; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1789142643; c=relaxed/simple;
+	bh=TzhXSUyC+YT7sZPZoc+ZofKh6sYTPNX4cJRtMjQl9Os=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Kx7GwkVPrJfs1nHLGpnFpNmY/QDMDNmbr5b83IC4Nw/TOBMksoAnZzy0T5TTwl0dKjm5i3EgDkPnmf+ji1kJaZ9Qh997kd1tzjVlP2IJOEYeffvN9C82lNLIr0GdPo4nu6dqRB74UHmkbXTrd6vsUqik+mt2HYXCmkd9PuOAqLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWGCA8Ur; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="SLoD59aq"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6CD32809D8;
-	Fri, 11 Sep 2026 18:00:27 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id hp5OaKgBkdr5; Fri, 11 Sep 2026 18:00:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1789142426; bh=+QEQyKkJoiMrA/3HTit19JPln4erh+u17aGYAdQZSM8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SLoD59aqxSs996kB13PggG5d5KZSymG6FrTn/9qyt9fCyre211izYGiY6fXvoZDFU
-	 zglLAO4aKZXzC0B9EXg8jUT677zWP1T9n//Yy1UzljXKJ5td7EuPaSM0zsdVkxytGV
-	 tTZf7TMnWHZ1VxWn1Y2XiznRWhIOj5rlVlXJ4DhCF8pD46Y/V8xqPg/4PyHLom0W/m
-	 lI4enV+zi0Ex2DReM7t2kUGCp8tk7UrRDaj258gRG2ed674dEWA9JWr976eHb1mbJQ
-	 WlELrzcVjeVCqk2TpUWHY/2GHdg0tDHkhekUVeSGI5KRfZ+QEWHMlSGMWAZntPJkmy
-	 OyqJHqCOTFUjA==
-From: =?UTF-8?q?Ali=20Ahmet=20Memi=C5=9F?= <aliamemis@disroot.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH] tracing: Delay module ref count for "enable_event" trigger
-Date: Fri, 11 Sep 2026 19:00:13 +0300
-Message-ID: <20260911160016.355492-1-aliamemis@disroot.org>
-In-Reply-To: <20260828134340.2501683A24-agordeev@linux.ibm.com>
-References: <20260724132415.1b5005db@gandalf.local.home> <20260828134340.2501683A24-agordeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWGCA8Ur"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917071F000FF;
+	Fri, 11 Sep 2026 16:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789142641;
+	bh=++FlJyVVW7K3nHa8uMo5N4ycPjKluZj3OHRZPoTJfWE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cWGCA8UrD67mPgOauuAwhIGRUhyatdg+hczr8Mz6+VXdAE1oM7RhS6TYaNlC3Uc7M
+	 R4D+7GdioMsnf174AEbQEL4ZHG/2K3U448VOib9rczXaGV1zVtKQefJbz578fzGB1V
+	 o7PQS9MM899X8Sn6a4fi/f2DIm2YyvdR7l3tfBOkQiteI0S/A79x6KeZPKVL/PkwEc
+	 T+4KVktFt6knBEm1nwj2PWnKgHB82A/61qFCrQtCgLPi0l00aE92tGWRv0wgVP3hmO
+	 4LhyhNBzYSgpEMd/2UnqtN25uaViuwTGOxF4E3PZCUw+Gso507BX4JwZErqmstnuNS
+	 1viaILqr8wMvg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: add ring-buffer memory usage statistics
+ in tracefs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xiang Gao" <gxxa03070307@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260911155017.3377254-2-gaoxiang17@xiaomi.com>
+References: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
+ <20260911155017.3377254-1-gaoxiang17@xiaomi.com>
+ <20260911155017.3377254-2-gaoxiang17@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 11 Sep 2026 16:04:01 +0000
+Message-Id: <20260911160401.917071F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 28, 2026 at 03:43:40PM +0200, Alexander Gordeev wrote:
-> This patch increasingly looks as a regression on s390.
-> We are hitting this once in a while when running the ftrace selftests:
-[...]
-> I did not manage to come up with a reproducer - if you have any idea,
-> please let me know.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] Persistent memory-mapped trace buffers are incorrectly accounted=
+ as page-allocator memory, leading to double-counting in lost RAM calculati=
+ons.
+- [Low] Evaluation of a struct type as a boolean condition causes a hard co=
+mpilation error.
+--
 
-Sent a fix:
+commit 339a95b19ea8f13ff179992c9814bfee94fa38b3
+Author: Xiang Gao <gxxa03070307@gmail.com>
 
-https://lore.kernel.org/all/20260911155650.354844-1-aliamemis@disroot.org/
+tracing: add ring-buffer memory usage statistics in tracefs
 
-It's the deferred trace_event_put_ref() reading file->event_call after the
-instance rmdir already freed the trace_event_file. Could you give it a run?
+This commit adds memory usage reporting for tracing ring buffers to calcula=
+te
+memory footprint more accurately than relying on buffer capacity. It exposes
+a new memory_usage_kb file in tracefs which sums up the page allocator memo=
+ry
+used by the data pages and reader pages.
+
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 9c03a555a6ba2..73e79c86035c2 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+[ ... ]
+> @@ -6560,6 +6560,47 @@ unsigned long ring_buffer_size(struct trace_buffer=
+ *buffer, int cpu)
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_size);
+> =20
+> +/**
+> + * ring_buffer_memory_size - return the memory used by the buffer (in by=
+tes)
+[ ... ]
+> + */
+> +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int c=
+pu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long subbuf_size;
+> +	unsigned long size;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return 0;
+> +
+> +	/* Remote buffers use externally owned memory. */
+> +	if (buffer->remote)
+> +		return 0;
+
+[Severity: Medium]
+Does this check also need to exclude persistent memory-mapped trace buffers
+where buffer->range_addr_start is set? Since those buffers also use
+externally owned or reserved memory bypassing the page-allocator, not
+skipping them here might result in double-counting their memory in lost
+RAM calculations.
+
+> +
+> +	cpu_buffer =3D buffer->buffers[cpu];
+> +	subbuf_size =3D PAGE_SIZE << READ_ONCE(buffer->subbuf_order);
+> +
+> +	/* Data sub-buffers plus the reader page. */
+> +	size =3D (cpu_buffer->nr_pages + 1) * subbuf_size;
+> +
+> +	/* The cached read page, if present, is a full sub-buffer page. */
+> +	if (cpu_buffer->free_page)
+> +		size +=3D subbuf_size;
+
+[Severity: Low]
+Does evaluating cpu_buffer->free_page directly as a boolean condition
+cause a compiler error here, since free_page is an embedded struct
+(struct buffer_data_read_page) rather than a pointer? Should this check its
+internal data pointer instead, such as if (cpu_buffer->free_page.data)?
+
+> +
+> +	/* The mmap metadata page is a single system page. */
+> +	if (cpu_buffer->meta_page)
+> +		size +=3D PAGE_SIZE;
+> +
+> +	return size;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911155017.3377=
+254-1-gaoxiang17@xiaomi.com?part=3D1
