@@ -1,130 +1,165 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F34A3F1F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 17:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7648371889;
+	Fri, 11 Sep 2026 18:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789147669; cv=none; b=uc7GVnpzWZRgk2fuZlS6RYvmRyGE5KPSjWSJX/+dHXeWgglJRNB3qhHi+arDiCoMpsOLkbpxnWzpQTzm2UTvuBuRog5qzIGdydVFgXErJz2t/4u9gy1YccdWI04m4QmkLPY5iPqbCOyv9KYDVcanaPXEIjdtMCMlJx11N6sOsqs=
+	t=1789152385; cv=none; b=Sj5Jj6QTnDN7u5qJBg1ydbivdps1BT7B4mzSmjagHsIDQw91gGJ6pI6NOJFmFHvauO9/mk6PKl5A1AQqh+8MFS8vVrTFxzPjANo6cZQK2JkGj+wX26ICb8rkppT0UW259uVbyXAgR4n2s52g4Oq7tWY0WnbtHaN+DFk/VRMI2gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789147669; c=relaxed/simple;
-	bh=rnZThFAGnmGU0UQlPMjaym4BCAvWP6M7XNsFuKOmtjA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+UWproX9bym2U7akq895fNW7LVSXOsAe69nesMGedQjXUUam2hsAFF5XrdvTevaTXjBw0nHp2It15DGWd99sklgAiYclNZFzUwA+jtir6Wz5sBck87XjcphwwWeXedzpDJE0YRG9WQf0IVUj0E1kQBERhnZb74pwoDiyqm3jKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=Jbvg9AfN; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1789152385; c=relaxed/simple;
+	bh=xH88kKB/TWb1etYT/yCGES3CbrdWa7hLAr9ou1VFtHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=etiGbeBgj9t4+RuiTU41jCmQtJyewNk0oiU1rAazH5rEp9rpxzhYW0sHb6M2Nt7tsso/KMgNJ+OQg0LpY7Y/wR/qh1Nuv0qbFdZPlnXiUPMwQ+I7x88YP2MK9ixxxnj6cJZyvqmJ1Ku4KUL+87LWwAoQe4utlAKgf7NHwjWl8LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9R+fJHe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="Jbvg9AfN"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-5306baf6b53so16954591cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 10:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789147667; x=1789752467; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=wpUPEQIS9yTOB1sr1PlCn6Mv7jz37PgyvzgihSoDlVQ=;
-        b=Jbvg9AfNLYI4qikHoIzvbELyxNuZxN1QLABAbhccO04+YCQOauVECvdQRtiWu7ms4f
-         zEdjlsAjjvu27Bc+YIpL0UBZuCciMFDerKQ3cTD2GRo7XmhfhbQHCRJ3KY07kqlDdEJM
-         NGVo+RAnh3v1HM7f48xOk0qJ/4+TRV9UNruP5/4nulHaIMOH3ptGC7lCcQeL8XWuNh3W
-         M1TBfrq0g7LXA2t4gXI6lpRk4TRUBSJ2W0vK72PoEh0QgnDPhybthijTMBPIuaqB4MVY
-         kIJnexYit57zgSRHKsz/8qWo7XJR7EVsgSDW/4oXZTaOjsv7ISmGsPVpHUyrgPjDdCui
-         kz3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789147667; x=1789752467;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wpUPEQIS9yTOB1sr1PlCn6Mv7jz37PgyvzgihSoDlVQ=;
-        b=DlWdfRHr8OSHc3MvdwJBWl96k84/tbq6z0rBa6Yw7TxabBpj9I7HKXxVOv7EeycluG
-         Vgsi6pt7BFrxV2c88GGuhQUQ5j27aAVIm2SFBFdXnAAkKyoEb09Z34f5HO+kboEcEylQ
-         DmTz4buVmnahcoHZtvkGoMk9f8PgjAYGxDRq1kSyokFzVy8FPGuNQ+pA+uKyuHIUtrOG
-         V0BzAixToKR6zchtO/kbASNcLybnpwHOfSib+JGhI2JIvY0oXdfVZ1BTNlKD6Q9Fvk3B
-         nnKUtNEG/u+1WJjzrMCglSzUjjplFME77eiStIwRY7b2jx+tIY/6/uBKGmFDGFY3+yPI
-         vm8w==
-X-Gm-Message-State: AFuF++k5lNWZbRpTn0+/Ql3HSFvDIVbJRcBKh+nA/got7WBvf0GpVvpX
-	hyyA8EOV2FFxgdQn8UGAhommreaa5Fi0vz7tHJa2gAmMmSR9b0qnURFy7gSH6ZewS18=
-X-Gm-Gg: AYBFou2o9M3qu3Jj5P4BpYbgPFzouIcme/D6UdGG9s2zcxwf81x1bPvLBWOAOZONy60
-	0eW8KgdGJEMgcyiURtH7NqshVPRQhnm1LFm6iMLffUXRA1C37ZIL027qkRaQRCMHOhCziicPZzu
-	kYxyTCwl1wKCgsFc3qapHlxFn9JG2/QrEcvHEF+x2Sc5Ve5sGJlTooc3XSsNyqzBAYS3gaWvR5n
-	RWifFiZUrDFYu3xyuhviffcb3r9UQpABh6L5s6Dixd3jbMduTMwel6PRzRBq+oPwsr4fyHk4+hd
-	X2178ApEyvXwdlCxt4XIFgoS4+HvU8zJ+74n7dVD5qE+IVwKRvrsQfEj3Db9aNr/98ug11BS9+3
-	+taPN+KWbafIjfKVkB3mXR3/tAw4JYVSZpZ8HA7baZnSs3CcMtBeljKIPXs13gcJyAH0kHCbRQc
-	CNGyLpAZJ4xYewAeCd1LVDtjg9RmAHm30aDlbJIEH20kk2ureAQyAc6uJMZapd1KiC194N0yMIo
-	1bZIlf8LI2qBcHhcS+LAkDhmMvU6wov00scfx/fpUP94KQN1Y30kUIn
-X-Received: by 2002:a05:622a:1309:b0:530:42e4:effc with SMTP id d75a77b69052e-530c87566f0mr75877761cf.41.1789147666875;
-        Fri, 11 Sep 2026 10:27:46 -0700 (PDT)
-Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530ca30855csm24883061cf.1.2026.09.11.10.27.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 10:27:42 -0700 (PDT)
-Date: Fri, 11 Sep 2026 17:27:24 +0000
-Message-ID: <59aed05db0d993f69088fba21576792d.josef@toxicpanda.com>
-From: Josef Bacik <josef@toxicpanda.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH RFC v2 04/15] kprobes: Let Tasks RCU recognise tasks preempted in an optprobe jump window
-In-Reply-To: <20260911142626.ACAED1F000FF@smtp.kernel.org>
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com> <20260911-b4-rcu-tasks-preempt-qs-v2-4-eaaa61ed2da4@toxicpanda.com> <20260911142626.ACAED1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9R+fJHe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E991F000FF;
+	Fri, 11 Sep 2026 18:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789152384;
+	bh=BEH5L0y3LixWWPpE999YsoF8vwfZIA/JtkIUSaMP+LE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=M9R+fJHeZmy6WEfJ+D6CNLH+c3kjB5rut7ErP2+h8nVsKa7j3etNfbwtdp8rS80MS
+	 fPhFABuFdrUdvOlZdTQAQCr61orU4wm/RjC2OU7poW1VrwvZyfgZGrC+qE1sarkPq0
+	 QuxzQZPObBkWqJyMQach0VVskbIlHcGS9oQDOKxfOvJgnVD5bycCjFRDIgaYdLH17Q
+	 UJmHrZwzXcEdIcRWoMRdQtTKfYNAHGRWaw/E2J3Bjse6JBE5JIuSHCfhhwe6AtNnRq
+	 Z179pIn76KHvhsX6T+IKzErceu3YloUEBWmwjn5CgynJh7djSuiFdwsOpDYYGmPtoi
+	 fH4mBz7X+Zqjw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 17178CE1902; Fri, 11 Sep 2026 11:46:24 -0700 (PDT)
+Date: Fri, 11 Sep 2026 11:46:24 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC v2 15/15] rcu-tasks: Kick running holdouts through
+ the scheduler
+Message-ID: <78c438b0-9c9a-4307-a6f7-19e69adc20c0@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
+ <20260911-b4-rcu-tasks-preempt-qs-v2-15-eaaa61ed2da4@toxicpanda.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260911-b4-rcu-tasks-preempt-qs-v2-15-eaaa61ed2da4@toxicpanda.com>
 
-On Fri, 11 Sep 2026 14:26:26 +0000, sashiko-bot@kernel.org wrote:
-> > +	for (i = 1; i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
-> > +		if (get_kprobe((kprobe_opcode_t *)addr - i))
->
-> [Severity: Medium]
-> When kprobe_in_optimized_region() calls get_kprobe(), neither rcu_read_lock()
-> nor kprobe_mutex is held (for example, when called from the Tasks RCU GP
-> kthread).
->
-> get_kprobe() iterates the hash list using:
->
->     hlist_for_each_entry_rcu(p, head, hlist,
->                              lockdep_is_held(&kprobe_mutex)) {
->
-> Without explicitly acquiring rcu_read_lock() around get_kprobe(), lockdep
-> will complain about suspicious RCU usage, because preempt_disable() (or
-> running from a kthread) does not satisfy rcu_read_lock_held() on
-> CONFIG_PREEMPT_RCU.
+On Fri, Sep 11, 2026 at 02:08:53PM +0000, Josef Bacik wrote:
+> A holdout that is running on a CPU with nothing else runnable is only
+> preempted if the tick acts on rcu_request_urgent_qs_task()'s flag, and
+> there may be no tick.  Now that a preemption outside a trampoline is a
+> quiescent state, have check_holdout_task() call resched_cpu() on a
+> running holdout as well, so the scheduler IPIs it and it goes through
+> __schedule() and reports (or, if it is inside a trampoline, does not
+> report) its own state with purely local ordering.  Nothing reads a
+> running task's rcu_tramp_nesting remotely.
+> 
+> Only under CONFIG_RCU_TASKS_PREEMPT_QS; other architectures are
+> unchanged.
+> 
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 
-This is not right. The list iterator's check is not rcu_read_lock_held(),
-it is
+Much better!  But please see below.
 
-	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(), ...)
+							Thanx, Paul
 
-and rcu_read_lock_any_held() ends in "return !preemptible();", so any
-caller with preemption or interrupts disabled satisfies it regardless of
-PREEMPT_RCU. That is also the actual RCU guarantee since the flavor
-consolidation: synchronize_rcu() waits for preempt/irq-disabled regions
-on PREEMPT_RCU kernels too, which is what the kprobe free paths rely on
-here.
+> ---
+>  kernel/rcu/tasks.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index ba432bd922e2..02d2592ab7a3 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+> @@ -1038,8 +1038,18 @@ static bool rcu_tasks_preempted_qs(struct task_struct *t)
+>  {
+>  	return task_call_func(t, rcu_tasks_switched_out_clean, NULL);
+>  }
+> +
+> +/* Make a running holdout pass through __schedule() soon, tick or no tick. */
+> +static void rcu_tasks_kick_running(struct task_struct *t)
+> +{
+> +	int cpu = task_cpu(t);
+> +
+> +	if (task_curr(t) && cpu_online(cpu))
+> +		resched_cpu(cpu);
+> +}
+>  #else
+>  static bool rcu_tasks_preempted_qs(struct task_struct *t) { return false; }
+> +static void rcu_tasks_kick_running(struct task_struct *t) { }
+>  #endif
+>  
+>  /* Per-task initial processing. */
+> @@ -1219,6 +1229,7 @@ static void check_holdout_task(struct task_struct *t,
+>  		return;
+>  	}
+>  	rcu_request_urgent_qs_task(t);
+> +	rcu_tasks_kick_running(t);
 
-Every caller is in such a region. rcu_tasks_preempt_is_qs() runs from
-rcu_note_context_switch() inside __schedule() after local_irq_disable();
-the grace-period kthread only evaluates it from the task_call_func()
-callback in 14/15, which runs under p->pi_lock taken with irqsave; and
-the preempt == false callers (cond_resched_tasks_rcu_qs(),
-rcu_softirq_qs()) short-circuit before rcu_tasks_preempt_is_qs() is
-evaluated at all. Nothing calls this bare from kthread context.
+Something I learned the hard way, though Google paid most of the tuition
+for this lesson:  There can be a *lot* of tasks on large systems, as
+in hundreds of thousands of them.  If these tasks are consuming CPU in
+very short bursts, we could easily repeatedly invoke resched_cpu() on
+the same CPU, and all invocations other than the last one are redundant.
 
-I also checked it the boring way: PREEMPT_DYNAMIC=y (so PREEMPT_RCU=y),
-PROVE_RCU, PROVE_LOCKING, booted preempt=lazy, registering and
-unregistering optimized kprobes in a loop while a kthread spins and gets
-irq-preempted, which is exactly the path that reaches get_kprobe() with
-kprobe_optimizer_waiting set. No lockdep output.
+I instead suggest doing something similar to force_qs_rnp(), where a
+cpumask is accumulated and at the end resched_cpu() is invoked for each
+CPU with a bit set in that mask.
 
-For the tool: when flagging hlist_for_each_entry_rcu() callers, check
-against rcu_read_lock_any_held() (the condition __list_check_rcu()
-actually uses), not rcu_read_lock_held().
+Of course, if a CPU appears twice while traversing the tasks list, then
+each of those tasks did a context switch, which would have reported a
+Tasks RCU quiescent state.  Unless those tasks happened to have non-zero
+->rcu_tramp_nesting at that time.
 
-Thanks,
+Which suggests that each task have a pair of counters.  Or that
+rcu_tasks_trampoline_exit() should check for zero ->rcu_tramp_nesting,
+and report a quiescent state at that point.
 
-Josef
+Either way, if a CPU appears only once in the tasks_list traversal,
+hitting it with resched_cpu() makes sense.  Though we might also
+need to suppress calls to resched_cpu() for grace periods that are
+(say) less than one second old.
+
+Thoughts?
+
+							Thanx, Paul
+
+>  	if (!needreport)
+>  		return;
+>  	if (*firstreport) {
+> 
+> -- 
+> 2.55.0
+> 
+> 
