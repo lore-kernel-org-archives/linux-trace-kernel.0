@@ -1,56 +1,56 @@
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1B143F8D7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29E95616BF
 	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 19:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789155612; cv=none; b=TtT24d7vZz18i5WhBb0+ilFOtuo6KMFMLbTktKpgkBAnukDgWL77OSLlgBSMulheRNFtP6NAxbqNNyAhWMKUhMC5sHV/1GZzZIB8cY/oC3ke+8ZDCW95hoG1f3KcER98zWkiW3WZAX3RM6NGY93oXIp0DfckK5mB1lYKdtHB0M8=
+	t=1789155614; cv=none; b=shuxNUbDD38r8nLvoY3UTF/DU7np/lORQYSyBhRRNNeJ/7qhB41bpShlEotUbOukVzhozx2/xhFEbWG8mIU79b4NP+fECR69Yp6m5dRkVGc03TyNGxtprI+qfqAUHNQ+9u6cdSUZOlK4o/C+U1s9G1TC4jBGToS4BgFwGAX5sCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789155612; c=relaxed/simple;
-	bh=hHw7yRoGhvN7MS5FpP2lX23LuKJXsj+eKlavKiGW0rA=;
+	s=arc-20240116; t=1789155614; c=relaxed/simple;
+	bh=M6S66wtLpyo+yveSpW5ETKNDeT9jMUeCPYSrX3fey7U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jBV+SYmFhpr+66RierraipWDDgdPamgFJeqvI2FMfGyH4CFoloz6bCT5axPQT+fuJo5ZarzqqG0GyHz3Ps6Fzp0Nv4fUIBTZJO5mQAoqEykvUGHs9D/cf/hRy/ThAlhMCemNAkQJfp9fOJpRKCAUmgfm/17P8hUKu0cMfYZ4ohA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P/S3ST0L; arc=none smtp.client-ip=209.85.221.69
+	 To:Cc:Content-Type; b=niY+zcRVEQx1csigDZhd6/dr0Pd+ZYS7U8mfL/Bx3kpXjHWwFDzcLdzX5wTJJPMAQ5jPfuUvHpK+ZPOrvH0dqcZ7O0qQc5e8qIKXD9QkzB847nS3qHC1KPoifRaq8QYJ3REn0z9V1QVNPOk2jYHoQp+LpPjhtyxqTVrXjgQCucc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AR1S8AnJ; arc=none smtp.client-ip=209.85.128.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P/S3ST0L"
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-486f18da958so549504f8f.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AR1S8AnJ"
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49ccfad90f1so7655565e9.0
         for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 12:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789155595; x=1789760395; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789155594; x=1789760394; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=y+HXnPMMIZpskweD6Y6dmHOP8zh8fc/lEgtzHbrvfOQ=;
-        b=P/S3ST0LySyP8FyzSRxlCptHKzPuatNMp4Xx4QWQGxFlAAXFpnAX6gAUiyMzy61ZP0
-         q7FG0R6MuXyQoJth7irrwG2j69KkR/jE/93JmPOmXF7RaNCPcLzoaLaon7lI4etV7kZ4
-         t8UPhypeK7r2yDe6U4KW3/cC13KKxQV7xzasVmoioG1EG1fiFKHaZ6V2zAJoKmqChkf5
-         UOQW/b5ixwoRDuUNxv7/Wd94zoZD4Hc7rQEpG5Upp4MjrWPXHxe4PQ9vpCexcX4xdtFT
-         RroCrXIKTVQ797+3xpSqnFgCpairnxE763/fbG+bqA34KWpndzlAbbhDjGS4GqxOJHB9
-         fXAA==
+        bh=/U2nrxWGjJiKW1yLpk0W49cM4yF19DMUslRfhb7YXzY=;
+        b=AR1S8AnJlihss39i/NHT942fFdDRlQzKZk7acsFkXc5IDY5/jr9X+297YIRe5D4TX3
+         Fu7BtDcd7O1QAxlPoMARMGYn1EQihbUtkwVSzUFnobPigSO+s+0711SvLppC8yYA7kSM
+         S1mZL+Z4dDq9z1ORk4ddk+LHTtzS2QVbIl+pm36dxw+ZX9codVUyKw0h4jdvJwf917Ae
+         oDlPi0oezp8TL9uNEDrfZJK9mCE++jzsoCPQ+HbVok2HZ7DPKNWXLx/y5JInwMIt3XhE
+         eMVSkk8cpyTaXeMdMOX1jnwx/tUr4fUoS2GIghmE+AMgL6RFOT0Vw96whIIG8NZBFUcv
+         ufyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789155595; x=1789760395;
+        d=1e100.net; s=20251104; t=1789155594; x=1789760394;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=y+HXnPMMIZpskweD6Y6dmHOP8zh8fc/lEgtzHbrvfOQ=;
-        b=mxYFJKo30b7li4/Wvos5okw9pjCGiHEHp7HHSW9HSQJJBxUG+CfyZQm7BHY31pfJaU
-         1Py1KFobJ24Q8YmIjHMbqsTtRWFMBUw9vRlMrYDWvLA3lYnmfENRN5kkJtPNA+B6+QbL
-         5WTscM+4qTXbwsZXQsKWi0qZkqw4bBppx3xB614sE1HlQD/Y1Idl0tPphtLqCbQvFlsr
-         jzoOSPWlOXIXEVGhbBh7QUm3yrBvP1A9cZNYq09vo+5hJMyy8hfMClQUbfnNm8QJ5Tyk
-         iu1lOEgF8AglWOczbUmawyUuFWH/3T/f8Jw4wolfa78JpccCnNtcX3pHCY25a/giH3XI
-         Iu2A==
-X-Forwarded-Encrypted: i=1; AKwUvBwYa5a6vHB9r8PBwEJywy+VDl+xCGDAUXSL5PhvuKQudGAez94od6X1jukviFwC3DWc5UwsAVc4lgj/IPTwU/ZvQu8=@vger.kernel.org
-X-Gm-Message-State: AFuF++lme5ig/7YtPVPBelcwEHKQmp2vREbYAHw8E8eT+pIZSYAWnVCa
-	ML9wPsUc1reEzPyIGrASif1qCw2yr3v0msEBdlBBrdeU5vEUAr3xQPcKCYvyyEdtWjOG62Bca8w
-	HgLqI4vsaiWUs6j1EKDHcBg==
-X-Received: from wrtl11.prod.google.com ([2002:a5d:4bcb:0:b0:47f:472f:4e85])
+        bh=/U2nrxWGjJiKW1yLpk0W49cM4yF19DMUslRfhb7YXzY=;
+        b=IyzyX1rxmeMGTSFCkKO0vKq0ZQrYHzVSyOy7Bism2RQx+otLh7cHP0MbInTXW4j6yS
+         sGT2e7N1Q5exS0xVU5SfaSv06QQPtmfGXKsck145dmrZZ/h+yt+cYZ8BXZi96uS0T5tA
+         uPbEAgXqewAdSX/PArUrKHCAY01P5jQIFlvc4G/dSA99jqMXPK9gCO2nAUqJg3K1NtiH
+         bZbVGp8AaE3DQTQrN1JRuUWyj7yL8L+AldJexyGsTuQf1lvsvB5aCNHYCRmL9aVBPupm
+         b8LR0uf3Df6fX9yc1atukA0aj+hTS+JoiuX94X+XB8SV3TJ+A59VNZGhYwyrk/cwhoWF
+         3U9w==
+X-Forwarded-Encrypted: i=1; AKwUvByKpZyBgbWz10kSCXGfXxic0CmNKc+CvC8CA7XQFNctR8l3VX7Z33STrU4lkT6tokRO2wGamQtFGcvWBjm2ixh8Ypk=@vger.kernel.org
+X-Gm-Message-State: AFuF++l9S0HG2KCW5dokf3EVQH5GckPrdocZgAi0VCz8p5M77+rZ2X8d
+	iqBiApo+bFDkDpLTLVIUyTpV77GFwO9hETlY5+XWHaZCdOaGWspadMokY9B0kGFDdZ7p8nIKxkC
+	ROk070A3ZY4AeBWXz7EHYsQ==
+X-Received: from wmoi19.prod.google.com ([2002:a05:600c:4813:b0:499:b7b4:7c4])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1001:b0:485:8ea0:da8c with SMTP id ffacd0b85a97d-486e987d543mr5838331f8f.16.1789155595237;
- Fri, 11 Sep 2026 12:39:55 -0700 (PDT)
-Date: Fri, 11 Sep 2026 20:39:37 +0100
+ 2002:a05:600c:3b1f:b0:49c:cee2:1697 with SMTP id 5b1f17b1804b1-49e619e0f85mr68949845e9.16.1789155593836;
+ Fri, 11 Sep 2026 12:39:53 -0700 (PDT)
+Date: Fri, 11 Sep 2026 20:39:36 +0100
 In-Reply-To: <20260911193937.602202-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260911193937.602202-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
-Message-ID: <20260911193937.602202-4-vdonnefort@google.com>
-Subject: [PATCH v2 3/3] ring-buffer: Unify ring buffer minimum page calculations
+Message-ID: <20260911193937.602202-3-vdonnefort@google.com>
+Subject: [PATCH v2 2/3] tracing/remotes: Catch nr_page_va overflow in
+ ring_buffer_desc sizing
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,146 +70,61 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The codebase scatters hardcoded minimum page limits across multiple
-places. Introduce RING_BUFFER_MIN_NR_PAGES and rb_calculate_nr_pages()
-to formalize the requirement of two pages in a ring buffer.
+The number of pages per remote ring buffer is capped by
+ring_buffer_desc::nr_page_va (32 bits). A buffer_size large enough to
+overflow that field would silently allocate a descriptor smaller than
+what was asked for.
 
+Return SIZE_MAX from trace_buffer_desc_size() on nr_page_va overflow.
+
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- include/linux/ring_buffer.h       |  9 ++++++++-
- kernel/trace/ring_buffer.c        | 32 +++++++++++++------------------
- kernel/trace/simple_ring_buffer.c |  4 ++--
- 3 files changed, 23 insertions(+), 22 deletions(-)
+ include/linux/ring_buffer.h | 4 ++++
+ kernel/trace/trace_remote.c | 6 +++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index eac3e9080c3c..e4370064273e 100644
+index 11bffb6a142d..eac3e9080c3c 100644
 --- a/include/linux/ring_buffer.h
 +++ b/include/linux/ring_buffer.h
-@@ -98,6 +98,13 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+@@ -295,6 +295,10 @@ static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_
+ 	unsigned long nr_pages = __calc_nr_pages_ring_buffer_desc(buffer_size);
+ 	struct ring_buffer_desc *rbdesc;
  
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
- 
-+/*
-+ * A minimum of 2 pages ensures we can always swap a page out of the ring
-+ * buffer. This does not account for the reader page or any other page
-+ * containing meta data used by static ring buffers.
-+ */
-+#define RING_BUFFER_MIN_NR_PAGES 2UL
++	/* Capped by ring_buffer_desc::nr_page_va */
++	if (nr_pages > UINT_MAX)
++		return SIZE_MAX;
 +
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-@@ -287,7 +294,7 @@ static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buf
- static inline unsigned long __calc_nr_pages_ring_buffer_desc(size_t size)
+ 	return size_add(offsetof(struct trace_buffer_desc, __data),
+ 			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
+ }
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index c17902e42ef1..2d5bc423efca 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -980,9 +980,12 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+ 			      const struct cpumask *cpumask)
  {
- 	/* Takes into account the reader page */
--	return max(DIV_ROUND_UP(size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), 2UL) + 1;
-+	return max(DIV_ROUND_UP(size, PAGE_SIZE - BUF_PAGE_HDR_SIZE), RING_BUFFER_MIN_NR_PAGES) + 1;
- }
- 
- static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9c03a555a6ba..7137781ab0b8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -642,6 +642,11 @@ static __always_inline unsigned int rb_subbuf_max_data_size(struct trace_buffer
- 	return rb_subbuf_capacity(buffer) - RB_EVNT_HDR_SIZE - sizeof(event->array[0]);
- }
- 
-+static unsigned long rb_calculate_nr_pages(struct trace_buffer *buffer, unsigned long size)
-+{
-+	return max(DIV_ROUND_UP(size, rb_subbuf_capacity(buffer)), RING_BUFFER_MIN_NR_PAGES);
-+}
+ 	size_t min_desc_size = trace_buffer_desc_size(buffer_size, cpumask_weight(cpumask));
+-	unsigned int nr_pages = __calc_nr_pages_ring_buffer_desc(buffer_size);
+ 	struct ring_buffer_desc *rb_desc;
+ 	int cpu, ret = -ENOMEM;
++	unsigned int nr_pages;
 +
- /**
-  * rb_subbuf_start - Get the start address of a subbuffer
-  * @buffer:	A trace buffer
-@@ -2865,7 +2870,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 			goto fail_free_buffers;
++	if (min_desc_size == SIZE_MAX)
++		return -E2BIG;
  
- 		/* Need at least two pages plus the reader page */
--		if (nr_pages < 3)
-+		if (nr_pages < RING_BUFFER_MIN_NR_PAGES + 1)
- 			goto fail_free_buffers;
- 
-  again:
-@@ -2877,7 +2882,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 			ptr += subbuf_size * nr_pages;
- 		}
- 		if (ptr > end) {
--			if (nr_pages <= 3)
-+			if (nr_pages <= RING_BUFFER_MIN_NR_PAGES + 1)
- 				goto fail_free_buffers;
- 			nr_pages--;
- 			goto again;
-@@ -2900,13 +2905,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 		if (nr_pages > rb_static_max_pages())
- 			goto fail_free_buffers;
- 
--		if (nr_pages < 2)
-+		if (nr_pages < RING_BUFFER_MIN_NR_PAGES)
- 			goto fail_free_buffers;
- 	} else {
--		/* need at least two pages */
--		nr_pages = DIV_ROUND_UP(size, rb_subbuf_capacity(buffer));
--		if (nr_pages < 2)
--			nr_pages = 2;
-+		nr_pages = rb_calculate_nr_pages(buffer, size);
- 	}
- 
- 	cpumask_set_cpu(cpu, buffer->cpumask);
-@@ -3319,11 +3321,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 	mutex_lock(&buffer->mutex);
- 	atomic_inc(&buffer->resizing);
- 
--	nr_pages = DIV_ROUND_UP(size, rb_subbuf_capacity(buffer));
--
--	/* we need a minimum of two pages */
--	if (nr_pages < 2)
--		nr_pages = 2;
-+	nr_pages = rb_calculate_nr_pages(buffer, size);
- 
- 	if (cpu_id == RING_BUFFER_ALL_CPUS) {
- 		/*
-@@ -7495,12 +7493,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 		}
- 
- 		/* Update the number of pages to match the new size */
--		nr_pages = old_capacity * buffer->buffers[cpu]->nr_pages;
--		nr_pages = DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
--
--		/* we need a minimum of two pages */
--		if (nr_pages < 2)
--			nr_pages = 2;
-+		nr_pages = rb_calculate_nr_pages(buffer,
-+						 old_capacity * buffer->buffers[cpu]->nr_pages);
- 
- 		cpu_buffer->nr_pages_to_update = nr_pages;
- 
-@@ -8095,7 +8089,7 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 	}
- 	/* allocate minimum pages, user can later expand it */
- 	if (!nr_pages_same)
--		nr_pages = 2;
-+		nr_pages = RING_BUFFER_MIN_NR_PAGES;
- 	buffer->buffers[cpu] =
- 		rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu]) {
-diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-index 49913bb0057a..abfaf9bee12e 100644
---- a/kernel/trace/simple_ring_buffer.c
-+++ b/kernel/trace/simple_ring_buffer.c
-@@ -383,8 +383,8 @@ int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
- 	void *page;
- 	int i;
- 
--	/* At least 1 reader page and two pages in the ring-buffer */
--	if (desc->nr_page_va < 3)
-+	/* At least RING_BUFFER_MIN_NR_PAGES and 1 reader page */
-+	if (desc->nr_page_va < RING_BUFFER_MIN_NR_PAGES + 1)
+ 	if (desc_size < min_desc_size)
  		return -EINVAL;
+@@ -991,6 +994,7 @@ int trace_remote_alloc_buffer(struct trace_buffer_desc *desc, size_t desc_size,
+ 	desc->struct_len = min_desc_size;
  
- 	memset(cpu_buffer, 0, sizeof(*cpu_buffer));
+ 	rb_desc = __first_ring_buffer_desc(desc);
++	nr_pages = __calc_nr_pages_ring_buffer_desc(buffer_size);
+ 
+ 	for_each_cpu(cpu, cpumask) {
+ 		unsigned int id;
 -- 
 2.55.0.1007.g17ff1f9808-goog
 
