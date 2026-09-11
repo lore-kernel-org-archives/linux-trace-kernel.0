@@ -1,224 +1,220 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6E235F60A;
-	Fri, 11 Sep 2026 14:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1822B362153
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 14:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789135811; cv=none; b=ZpmSQW46RoWsEVK/+8J6MyEYOSCUwz+FCtS+H2qXheRuHMRZVZy+nyttXcu7aeZ3ZIAqZYaZgUHLUVNhvSMyo0KFokx0s6MCqUTb2TgBhQjMsuk17zeIpwmDMfQWlkjnAVsjW7dzu6d/lAEDYPqxLSxdfrdKqlAS68NW8OcR6lE=
+	t=1789135812; cv=none; b=TRwzoufQYdqzbAApSbvnXlEA0A9n0BW8BBemkcK9WtDe7JP5D9Kbz/hHebrWpUcj8uU4vkIhl99r5KdT9WVh0ivi24SW1aV5Ixy4BY5Ydhe/Nu9fTEdobaT3WskGOCLi4ffPZNfiOeVpA7jPj7w5rS+Ryaeo1KEyygQxEB69ISU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789135811; c=relaxed/simple;
-	bh=hZ9xzrt4yyeD9cnR2YBm71XlWbyTcuBCsTUisFq7y8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e3DQxUmU/3K8qMaq2BTkDtt3JOCn98U4HHkthP2dJ9r3A2kscGllD1NMSpicEin2U4/+SP+vFdc5bduD306UfqOCvCD+0jsJMcDBfKc4LTm1SHID/SAJKqLHO9qhJsOYJ1ZXT3O2cJNZFqhMawIzGWb8TOJeSb5vv7Yr0IFryZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Y2VxROuq; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1789135812; c=relaxed/simple;
+	bh=ZoHASPcgXPkyj8nhWq6Qxe/k1AFcC7iFexyU3IrpvR8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nD5t7ACbbhktLqPvNU/1tZCevXZgfDYV2S8UYITPGuCJ2mIVLJJPzsOkcPvwkJryTjCz5AYOlsOEZbZ7S/zhdlfI7A0Vm/6I51WSajzPxLFXvssYvEZWGDmmJOqr1MeXMgV1xagdZY21QDhSLritsQBcHAZaToH9vRDRT4Tb7zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=QW7FHd+Y; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Y2VxROuq"
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6324E1C1C17;
-	Fri, 11 Sep 2026 14:10:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 7288820028;
-	Fri, 11 Sep 2026 14:09:59 +0000 (UTC)
-Date: Fri, 11 Sep 2026 10:11:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Kairui Song
- <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
- <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>,
- Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org (open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)),
- Ridong Chen <chenridong@xiaomi.com>
-Subject: Re: [PATCH 2/3] mm/mglru: add tracepoint for scan_folios()
-Message-ID: <20260911101120.25e3495a@gandalf.local.home>
-In-Reply-To: <20260911072848.2346073-3-ridong.chen@linux.dev>
-References: <20260911072848.2346073-1-ridong.chen@linux.dev>
-	<20260911072848.2346073-3-ridong.chen@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="QW7FHd+Y"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-939f48b80d6so47326185a.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 07:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda.com; s=google; t=1789135808; x=1789740608; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7VM45t8rF8CqlHWPsaSwdk7BD4ox5LDNpAeDrj6m5qM=;
+        b=QW7FHd+YQu+cdbwUAwPHWl6S8SJLFgDyTumlkSiN1QY5ehnv0dCylT926iFmEqJpok
+         32Qx9mxvXEMsm1hYeNmA5d/m7nCtpNiLceDs1HQEYHE9dhdYkjFCYdLZ/3YToNKP3H3n
+         wbpxURtuKoxXDKvhUsCs894yOY2p9P2SeT7jZH8/5JflFVem6A++FLKgvEzGOmXB2BZf
+         V3z9XclxwiteNQC2991FKaQQlmm/RsTxVriIVBe0DTKXlKaO1bERJnX0MLH2/CpVUYJX
+         6+xcC3O4i4HysTWL0mdzZ/uR8/hnk/SpHCh8R3Sjw3O25/y9FG9K0NTTQjC201ow5QnU
+         KLIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789135808; x=1789740608;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7VM45t8rF8CqlHWPsaSwdk7BD4ox5LDNpAeDrj6m5qM=;
+        b=ExERiPnmw/gSW4Amh66REm1LZ0zPobp2cu+T33KE6dsSTslPZPYzz+Muj3GmODUVOe
+         Epm8JmSLHdy8tjkJH4fSleF7BxZhR2NXC6shjOykCdq8hgLnoiTp0P8o7T7n60pEC+2d
+         XfjVIjiqqFzVcqnj8D+OEa2SXyk9yVkFZcpji5tXCsm1ldSBnH9nFs04EG2k3vYUAJCZ
+         6rEZkO4qGYIw28SRkoJDrvCPCTt1pagh427qaRp5PdENnDfufqBBdJl/yhC0h/yy67Dm
+         BGv6Cor8SK8UjvReRkpYXT/555e/o4IAqFuXCR3okuo8wwEUoITad6n0J9Qn2wyjSlk1
+         30jQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxAWYuWe1b2fyQRpbS4SpNZ2vA5lMHu2YFWuS0B54E6VtqBwyybn04x2cE6LZ+pzMr6/MjhngJV56LykPy0t540oqI=@vger.kernel.org
+X-Gm-Message-State: AFuF++kJwt0p4ccbxiKSAS5XYn/Oszgejgnjuqk9GhDmLecnyEPik7wk
+	vaojtErtH6qbwW3qqsGBWPulNWyzhgwYQLzZOPT2azY+Mbk10jBkGderrZM6ZQKTrAQ=
+X-Gm-Gg: AYBFou3HBFZ2ebSGG8N+Ry9VLpBmiZ5xOmyXmTkhE+5HO1HMpgtIZ7iSi5bQJY2clEZ
+	fES6nUmcVA4pCGLtPNNwzVLBNIeowCb4+kpuqLL4RGR3qHDnHutw4exNymwRdLg5x/X+1GGqLfS
+	1rgThiruGCBXsWWzux7W2rfNNk/NUVOGj7Gy5ty/Q4eTq1CarPpZoX298w4yjDS0ZxW18ffTR93
+	GqioGEdZurseGhSh0K2xD2kwgjQbXf4BPhXXd2vmVcQRJGToGii53tUkJjCRTJddYkKRQsf2xAg
+	NnRmgIZjIFpLqpVMjvpdxwRJHrd/GmmLoNTfPPwZAyYiwml8grgJ9+7jtscMlHa4eH3M/noya9G
+	EVFJP2E3x3jthkpc6nvJVB7CNd0rZK1CvqCUw0O7gvJsoqsgbYB1Y9EQQfzg+j7huAmlv/Ei23d
+	gqAaAhZrNebHSSBZ382L/a8LnGvimcl52+AqcFGUJi1lpT4d4WPGLYLCveBsRACUe3/iNLIdc3h
+	Kak4UBFkdXST4Dwk5UoV0aTuUN5olq9AyKN+vq37YCYziic9Yn5XcQ7
+X-Received: by 2002:a05:620a:25c7:b0:939:bd4e:b2fe with SMTP id af79cd13be357-939ea2877e9mr555790285a.40.1789135808266;
+        Fri, 11 Sep 2026 07:10:08 -0700 (PDT)
+Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-939e7f184d9sm254193785a.12.2026.09.11.07.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2026 07:10:05 -0700 (PDT)
+From: Josef Bacik <josef@toxicpanda.com>
+Date: Fri, 11 Sep 2026 14:08:46 +0000
+Subject: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
+ nesting in the BPF trampoline
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: z4qikr9ze6ijf13jt3i4esh36hxubsui
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 7288820028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19T0oTOyvjgt5li9uFXcMUJERRsN76FEGY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=mNBI0OlIe4nzIdsfwzVCeMqFH4qZxaPBgm0tmhtgZaE=; b=Y2VxROuqMdZ4zfgK9/f6AKrfKHXGoeUDmeQv85XnbiZZQOMTF84x1FM/RTeVyxo4c567bHvNLMv8fTaprArehqeBQaXu9+F3Fwb7c2U9XoNA2SABG8sRvSLIVDKgnIixjSDjNqUuEvsMg+yDH0sL5ZDc4JhdSUkDNxS7ijgRmm4=
-X-HE-Tag: 1789135799-473225
-X-HE-Meta: U2FsdGVkX1+EGFXRnXr/J3wqoz/KqkpAHbA33YbqajygCWkhwg0wfXJt4aZhAuaXRBNKSnOvt5Z3reG4g4wu6PCXgzdWSCgHqVcFVkESUfxoMO/77XBjhN99o1EqRO41WYpphK4aOzeD0N1FBkMjLmsBujhRKUu/j4e/7ZyF7tAFOB+E5VfYDkQQ7ywkxfGmY11K29qi83HDWYmpUgikZxAp408wyXkvXPXELwZXt2ND5qHAPSv4zy2c8iVVDfodX1h/OMI5ap/AS19+U1ehwrEg+EO8tBTvAO3Bqn+HsYG9dTSgMQb1FqtrqWMTU9l0
+Message-Id: <20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com>
+References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
+In-Reply-To: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+ Xu Kuohai <xukuohai@huaweicloud.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+ Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
+ Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, 
+ rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openssh-sha256; t=1789135736; l=4464;
+ i=josef@toxicpanda.com; h=from:subject:message-id;
+ bh=ZoHASPcgXPkyj8nhWq6Qxe/k1AFcC7iFexyU3IrpvR8=;
+ b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgUBr36M/n0nWN0DNbnxwzIiCZez6MG
+ JiruuNaSCI/zXsAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
+ QNGMQXlnJ9mLTB5EylkME94aCeeA53rjkqD+SHndTEJHVSfeCPYIUtSGAIP6GARv7tJy5dM1hBK
+ jP1T+H+zt3A0=
+X-Developer-Key: i=josef@toxicpanda.com; a=openssh;
+ fpr=SHA256:C8kOX2QUJCMqnCX+KEeoqRAjLo9L+ELOSH2NSAJHqGA
 
-On Fri, 11 Sep 2026 15:28:47 +0800
-Ridong Chen <ridong.chen@linux.dev> wrote:
+Emit an increment of current->rcu_tramp_nesting once the trampoline's
+frame is set up and a decrement before the final register restore, so
+that a task preempted while running fentry/fexit/fmod_ret/LSM programs
+or the __bpf_tramp_enter()/__bpf_tramp_exit() glue is not treated as
+Tasks-RCU quiescent.  Drop the count around the call to the original
+function: that may run arbitrarily long without sleeping and must not pin
+a Tasks RCU grace period, and the trampoline frame above it is held by
+im->pcref rather than by Tasks RCU (see bpf_tramp_image_put()).  The
+fmod_ret early-exit branch and the ip_after_call -> ip_epilogue poke both
+skip the decrement/increment pair around the original call, so the count
+stays balanced on every path.
 
-> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-> index 8a872990b4be..c39dfacef033 100644
-> --- a/include/trace/events/vmscan.h
-> +++ b/include/trace/events/vmscan.h
-> @@ -392,6 +392,69 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
->  		__print_symbolic(__entry->lru, LRU_NAMES))
->  );
->  
-> +TRACE_EVENT(mm_mglru_scan_folios,
-> +
-> +	TP_PROTO(u64 memcg_id,
-> +		int highest_zoneidx,
-> +		int order,
-> +		unsigned long nr_requested,
-> +		unsigned long nr_scanned,
-> +		unsigned long nr_sorted,
-> +		unsigned long nr_skipped,
-> +		unsigned long nr_taken,
-> +		int lru,
-> +		unsigned long max_seq,
-> +		int tier,
-> +		unsigned long min_seq),
-> +
-> +	TP_ARGS(memcg_id, highest_zoneidx, order, nr_requested, nr_scanned,
-> +		nr_sorted, nr_skipped, nr_taken, lru, max_seq, tier, min_seq),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(u64, memcg_id)
-> +		__field(int, highest_zoneidx)
-> +		__field(int, order)
-> +		__field(unsigned long, nr_requested)
-> +		__field(unsigned long, nr_scanned)
-> +		__field(unsigned long, nr_sorted)
-> +		__field(unsigned long, nr_skipped)
-> +		__field(unsigned long, nr_taken)
-> +		__field(int, lru)
-> +		__field(unsigned long, max_seq)
-> +		__field(int, tier)
-> +		__field(unsigned long, min_seq)
+The sequence is "mov r11, gs:[current_task]; inc/dec dword [r11 + off]";
+r11 is scratch at every emission point and (u32)&current_task is a valid
+sign-extended %gs-absolute with the current per-CPU layout, the same form
+the JIT already uses for this_cpu_off.  The image is dynamically
+allocated text, so the instructions outside the bracketed region are
+covered by the irq-exit IP check.
 
-Please keep "int"s together. This creates a structure that is used to write
-into the ring buffer. On 64bit machines, the above would add 4 bytes of
-padding after each int, whereas:
+Assisted-by: LLM
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+---
+ arch/x86/net/bpf_jit_comp.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-		__field(unsigned long, max_seq)
-		__field(unsigned long, min_seq)
-		__field(int, lru)
-		__field(int, tier)
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 2853e87797a7..a375c1b7bd50 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -722,6 +722,31 @@ static void emit_indirect_jump(u8 **pprog, int bpf_reg, u8 *ip)
+ 	*pprog = prog;
+ }
+ 
++/*
++ * Tasks RCU trampoline nesting, see rcu_tasks_trampoline_enter().
++ *
++ *   mov r11, QWORD PTR gs:[current_task]
++ *   inc/dec DWORD PTR [r11 + offsetof(struct task_struct, rcu_tramp_nesting)]
++ *
++ * r11 (AUX_REG) is scratch in the trampoline at every point this is emitted.
++ */
++static void emit_rcu_tasks_tramp_nesting(u8 **pprog, bool enter)
++{
++#ifdef CONFIG_TASKS_RCU
++	u8 *prog = *pprog;
++
++	/* mov r11, gs:[abs32] */
++	EMIT2(0x65, 0x4C);
++	EMIT3(0x8B, 0x1C, 0x25);
++	EMIT((u32)(unsigned long)&current_task, 4);
++	/* inc/dec dword ptr [r11 + disp32] */
++	EMIT3(0x41, 0xFF, enter ? 0x83 : 0x8B);
++	EMIT(offsetof(struct task_struct, rcu_tramp_nesting), 4);
++
++	*pprog = prog;
++#endif
++}
++
+ static void emit_return(u8 **pprog, u8 *ip)
+ {
+ 	u8 *prog = *pprog;
+@@ -3610,6 +3635,13 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
+ 	/* mov QWORD PTR [rbp - rbx_off], rbx */
+ 	emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_6, -rbx_off);
+ 
++	/*
++	 * From here until the matching decrement before the final return, a
++	 * preemption of this task is not a Tasks RCU quiescent state.  The
++	 * instructions above this point are covered by the irq-exit IP check.
++	 */
++	emit_rcu_tasks_tramp_nesting(&prog, true);
++
+ 	func_meta = nr_regs;
+ 	/* Store number of argument registers of the traced function */
+ 	emit_store_stack_imm64(&prog, BPF_REG_0, -func_meta_off, func_meta);
+@@ -3670,6 +3702,13 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
+ 			LOAD_TRAMP_TAIL_CALL_CNT_PTR(stack_size);
+ 		}
+ 
++		/*
++		 * The original function may run for a long time without
++		 * sleeping; do not let it pin a Tasks RCU grace period.  The
++		 * trampoline frame above it is held by im->pcref
++		 * (__bpf_tramp_enter()), not by Tasks RCU, across the call.
++		 */
++		emit_rcu_tasks_tramp_nesting(&prog, false);
+ 		if (flags & BPF_TRAMP_F_ORIG_STACK) {
+ 			emit_ldx(&prog, BPF_DW, BPF_REG_6, BPF_REG_FP, 8);
+ 			EMIT2(0xff, 0xd3); /* call *rbx */
+@@ -3680,6 +3719,7 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
+ 				goto cleanup;
+ 			}
+ 		}
++		emit_rcu_tasks_tramp_nesting(&prog, true);
+ 		/* remember return value in a stack for bpf prog to access */
+ 		emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
+ 		im->ip_after_call = image + (prog - (u8 *)rw_image);
+@@ -3741,6 +3781,9 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
+ 	if (save_ret)
+ 		emit_ldx(&prog, BPF_DW, BPF_REG_0, BPF_REG_FP, -8);
+ 
++	/* Remaining instructions are covered by the irq-exit IP check. */
++	emit_rcu_tasks_tramp_nesting(&prog, false);
++
+ 	emit_ldx(&prog, BPF_DW, BPF_REG_6, BPF_REG_FP, -rbx_off);
+ 
+ 	EMIT1(0xC9); /* leave */
 
+-- 
+2.55.0
 
-would not.
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->memcg_id = memcg_id;
-> +		__entry->highest_zoneidx = highest_zoneidx;
-> +		__entry->order = order;
-> +		__entry->nr_requested = nr_requested;
-> +		__entry->nr_scanned = nr_scanned;
-> +		__entry->nr_sorted = nr_sorted;
-> +		__entry->nr_skipped = nr_skipped;
-> +		__entry->nr_taken = nr_taken;
-> +		__entry->lru = lru;
-> +		__entry->max_seq = max_seq;
-> +		__entry->tier = tier;
-> +		__entry->min_seq = min_seq;
-> +	),
-> +
-> +	TP_printk("memcg_id=%llu classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_sorted=%lu nr_skipped=%lu nr_taken=%lu lru=%s max_seq=%lu tier=%d min_seq=%lu",
-> +		__entry->memcg_id,
-> +		__entry->highest_zoneidx,
-> +		__entry->order,
-> +		__entry->nr_requested,
-> +		__entry->nr_scanned,
-> +		__entry->nr_sorted,
-> +		__entry->nr_skipped,
-> +		__entry->nr_taken,
-> +		__print_symbolic(__entry->lru, LRU_NAMES),
-> +		__entry->max_seq,
-> +		__entry->tier,
-> +		__entry->min_seq)
-> +);
-> +
->  TRACE_EVENT(mm_vmscan_write_folio,
->  
->  	TP_PROTO(struct folio *folio),
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 2554a6513aa8..bd1b9ecf2e84 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -4876,6 +4876,12 @@ static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
->  	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
->  				scanned, skipped, isolated,
->  				type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
-> +	trace_mm_mglru_scan_folios(mem_cgroup_id(lruvec_memcg(lruvec)),
-> +				   sc->reclaim_idx, sc->order, nr_to_scan,
-> +				   scanned, sorted, skipped, isolated,
-> +				   type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON,
-> +				   lrugen->max_seq, tier,
-> +				   lrugen->min_seq[type]);
-
-Can't this information be processed in the tracepoint? That is:
-
-	TP_PROTO(struct lruvec *lruvec,
-		 struct scan_control *sc,
-		 struct lru_gen_folio *lrugen,
-		 unsigned long nr_requested,
-		 unsigned long nr_scanned,
-		 unsigned long nr_sorted,
-		 unsigned long nr_skipped,
-		 unsigned long nr_taken,
-		 int type),
-
-	TP_ARGS(lruvec, sc, lrugen, nr_requested, nr_scanned,
-		nr_sorted, nr_skipped, nr_taken, type),
-
-	TP_STRUCT__entry(
-		__field(u64, memcg_id)
-		__field(int, highest_zoneidx)
-		__field(int, order)
-		__field(unsigned long, nr_requested)
-		__field(unsigned long, nr_scanned)
-		__field(unsigned long, nr_sorted)
-		__field(unsigned long, nr_skipped)
-		__field(unsigned long, nr_taken)
-		__field(unsigned long, max_seq)
-		__field(unsigned long, min_seq)
-		__field(int, lru)
-		__field(int, tier)
-	),
-
-	TP_fast_assign(
-		__entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
-		__entry->highest_zoneidx = sc->reclaim_idx;
-		__entry->order = sc->order;
-		__entry->nr_requested = nr_requested;
-		__entry->nr_scanned = nr_scanned;
-		__entry->nr_sorted = nr_sorted;
-		__entry->nr_skipped = nr_skipped;
-		__entry->nr_taken = nr_taken;
-		__entry->lru = type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON;
-		__entry->max_seq = lrugen->max_seq;
-		__entry->tier = tier;
-		__entry->min_seq = lrugen->min_seq;
-	),
-
-
-This moves the code to generate the parameters into the TP_fast_assign()
-which is in a separate text section. It remove code from the work flow
-improving instruction cache.
-
-Same can be done for that trace_mm_vmscan_lru_isolate() trace event.
-
--- Steve
-
->  
->  	*isolatedp = isolated;
->  	return scanned;
-> -- 
