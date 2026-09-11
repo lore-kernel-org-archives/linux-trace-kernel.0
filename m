@@ -1,116 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E264534AE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 07:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1071044F546
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 07:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789112569; cv=none; b=pDNRj7JFGDSkESKAph/mpFTAZnY+/fFyxx331EsPax/Ed9aTblH9ECnB19ZMbVl2AOqgrIt2BTJDdlN2Cuxx5JERVDXhM6vENr18fgeZaSDfMA83fKT1tytyPcZmG24dnYNpAITOP1GvRqqHmJ5vBFPZzZQPDgVGIMt9wGNfydQ=
+	t=1789113501; cv=none; b=LPeSE/tYwLwLyClB7yaKJabRyj2OJQGcH9AXHnUQNioVa+v2/d3fLJgKDSbzIkhFbXjih2QqSj0FvDHl1FniAAgn7rJhMig8I6wd0g4ItfquJHEYbzyxkQq5DzR2Q/1gkVHzl+6pNOo4Fy3Yq/QYfFT4r/TV7clwaVUjHJYibKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789112569; c=relaxed/simple;
-	bh=AgXohcXYxTOYFDGUisGC8NK1A/jY5U9xvZmpnbRFk/s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=djms9y/8ngCBbmlMglMbR/xesHxrXW/U+7H8iZGcKhhAhb2ZzjDBIyP+e9lLnwWL3GvlCf8GfWO6eboTzL+gOCmNBBEEoPbTYvFJRhxNHOGG4amnelavtgYnyIF43bEXqQtTq+v6NILs//v0znoXCbCXXft6S9KdJOMewHJe52c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chVAjX7n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789113501; c=relaxed/simple;
+	bh=2z6K28VZFghAvaOC2rxcV8P37YjNcXnY9WqrSWMHQ/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HyQhLPFIw4L5kuV8gwz0gyWTp96o+Y+qKhV4uxdm+TDdyiY+J+JJzj0rRiPfHZQcjCijcxb8CQebHe2Hgp3HX/NBaCpJSQifMveJqbmBjYKs63sQsfxM59/dePUl6ErrFaJuuDQymMQFoKIneTmnYSkZjdlgE0nou7jGOzJFWYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=czgAtOF3; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chVAjX7n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03CA11F000FF;
-	Fri, 11 Sep 2026 07:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789112566;
-	bh=db2tScTkNeCi2YKa2bBBhQKol1ydzSzEyWhDKsdPGdE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=chVAjX7naCy8WrzV7VP6ZIBYB16ozJePzD+P3IZB3AeMlkzRPJvdcXOo6EervelxB
-	 zMxDYOUNLzvK2CidAnQHGIiQo98oocWqf2lA82Ga7EyqMnu57+5M/Kn8iWbn7o1N6v
-	 +Mzz7Oy86LkWUikmxz3EidP7b53yQtiCQahF4/nII7YQkBG0CCDzFoAKNlYeZCs4PF
-	 pEjNh75KX4CO8jGJSCY0TI3HE4BH5gQH3fzpQMe5DL7LeNkytf2a6zEfWPUpeuytUO
-	 wAWW4Bxbz6KtfE7TJW8SQ6Oz7Kg6F0vg3Ybh+W5eErRM6ctxCsTkf6INJJ5tjY9mDn
-	 do97qyFN975rg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] mm/mglru: add tracepoint for scan_folios()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ridong Chen" <ridong.chen@linux.dev>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260911072848.2346073-3-ridong.chen@linux.dev>
-References: <20260911072848.2346073-1-ridong.chen@linux.dev>
- <20260911072848.2346073-3-ridong.chen@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Sep 2026 07:42:45 +0000
-Message-Id: <20260911074246.03CA11F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="czgAtOF3"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=2z6K28VZFghAvaOC2rxcV8P37YjNcXnY9WqrSWMHQ/k=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789113497; v=1; x=1789718297;
+ b=czgAtOF3JlWxuaKbHd6nJn+3vEEx++yytKytXfhgizpNlKXoBu0iIPbhZbr1uCfHrYUvkPQD
+ pkP6XMVK5eXLDp8cDD9X27POKFZ1M6XVUvSlRcXc7oWwe48CfuZxUSc6jmc7O3rXoKS75h0w7Ex
+ c/9gvUSCt+YiV0IBUdtl2XfQ=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 08c4df989fc31bb8;
+	Fri, 11 Sep 2026 07:58:16 +0000
+X-Mizu-Trace-ID: 08c4df989fc31bb8
+X-Migadu-Flow: FLOW_OUT
+From: Ye Liu <ye.liu@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Ye Liu <liuye@kylinos.cn>,
+	David Hildenbrand <david@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	SJ Park <sj@kernel.org>,
+	Gregory Price <gourry@gourry.net>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	rientjes@google.com,
+	shakeel.butt@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	will@kernel.org,
+	boqun@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	tony.luck@intel.com,
+	reinette.chatre@intel.com,
+	x86@kernel.org,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	pavel@kernel.org,
+	lance.yang@linux.dev,
+	mhiramat@kernel.org,
+	pmladek@suse.com,
+	longman@redhat.com,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	kprateek.nayak@amd.com,
+	mark.rutland@arm.com,
+	Dave.Martin@arm.com,
+	james.morse@arm.com,
+	babu.moger@amd.com
+Subject: [PATCH v3 00/15] sched: introduce for_each_process_rculock and for_each_thread_rculock
+Date: Fri, 11 Sep 2026 15:57:45 +0800
+Message-Id: <20260911075800.491472-1-ye.liu@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Evaluating pointer dereferences at the tracepoint call site adds=
- unnecessary overhead when tracing is disabled.
+From: Ye Liu <liuye@kylinos.cn>
+
+Introduce for_each_process_rculock(), for_each_thread_rculock() and
+for_each_process_thread_rculock() macros that combine the existing
+iteration macros with scoped_guard(rcu), so that the RCU read lock
+is automatically acquired before iteration and released when the
+loop exits — including via break, goto, or return.
+
+The rest of the series converts manual rcu_read_lock()/
+rcu_read_unlock() and guard(rcu)() pairs across mm/, kernel/, fs/,
+lib/ and security/ to use the new macros.
+
+Suggested by Michal Hocko for the oom_kill path [2].
+
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+
+---
+Changes since v2 [3]:
+  - Split the kernel/ patch into per-subsystem patches, as the
+    combined patch could not be applied (Peter Zijlstra, Steven
+    Rostedt).
+  - Move changelog below the --- separator so it is excluded from
+    the commit message (Lorenzo Stoakes).
+  - Indent loop body in macro definitions to show scoped_guard
+    scope (Lorenzo Stoakes).
+
+Changes since v1 [1]:
+  - Rename macros from *_rcu to *_rculock, as suggested by Steven
+    Rostedt and acked by Thomas Gleixner, to avoid confusion with
+    existing *_rcu() list iterators that expect the caller to hold
+    the RCU read lock.
+  - Improve the comment on for_each_process_thread_rculock() to
+    document that 'break' only exits the inner loop and 'goto' is
+    needed to exit both loops (Thomas Gleixner).
+  - Rename the stale 'unlock:' label to 'out:' in hung_task.c, as
+    noted by Günther Noack.
+  - Clarify in patch 4 that page_pgoff() is safe outside the RCU
+    read-side critical section (SJ Park).
+  - CC all relevant maintainers on every patch (Lorenzo Stoakes).
+  - Drop the mm: prefix from patch 1, as the macros are in
+    include/linux/sched/signal.h (Michal Hocko).
+
+[1] https://lore.kernel.org/all/20260904083001.553587-1-ye.liu@linux.dev/
+[2] https://lore.kernel.org/all/20260813092933.562028-1-ye.liu@linux.dev/
+[3] https://lore.kernel.org/all/20260907081334.1152889-1-ye.liu@linux.dev/
+
+Ye Liu (15):
+  sched: introduce for_each_process_rculock and for_each_thread_rculock
+  mm/oom_kill: convert process/thread iterators to for_each_*_rculock
+  mm/ksm: convert process iterator to for_each_process_rculock
+  mm/memory-failure: convert process iterator to for_each_process_rculock
+  cpu/hotplug: convert thread iterator to for_each_thread_rculock
+  freezer: convert thread iterator to for_each_thread_rculock
+  hung_task: convert process/thread iterators to for_each_*_rculock
+  locking/lockdep: convert process/thread iterators to for_each_*_rculock
+  rcu: convert process/thread iterator to for_each_process_thread_rculock
+  sched: convert process/thread iterators to for_each_*_rculock
+  tracing/fgraph: convert process/thread iterator to for_each_process_thread_rculock
+  unwind: convert process/thread iterator to for_each_process_thread_rculock
+  fs: convert process/thread iterators to for_each_*_rculock
+  lib: convert process iterator to for_each_process_rculock
+  security/landlock: convert thread iterator to for_each_thread_rculock
+
+ fs/proc/base.c               |  4 +---
+ fs/resctrl/rdtgroup.c        |  8 ++------
+ include/linux/sched/signal.h | 26 ++++++++++++++++++++++++++
+ kernel/cpu.c                 |  4 +---
+ kernel/freezer.c             |  4 +---
+ kernel/hung_task.c           | 11 ++++-------
+ kernel/locking/lockdep.c     |  4 +---
+ kernel/rcu/update.c          |  4 +---
+ kernel/sched/core.c          |  3 +--
+ kernel/sched/debug.c         |  4 +---
+ kernel/trace/fgraph.c        |  8 ++------
+ kernel/unwind/deferred.c     |  3 +--
+ lib/is_single_threaded.c     |  5 +----
+ mm/ksm.c                     |  4 +---
+ mm/memory-failure.c          | 16 ++++------------
+ mm/oom_kill.c                | 20 +++++---------------
+ security/landlock/tsync.c    |  8 ++------
+ 17 files changed, 55 insertions(+), 81 deletions(-)
+
 --
-
-commit 3d7b5caa2f51b1f8f623f8379f3a020ee141f537
-Author: Ridong Chen <chenridong@xiaomi.com>
-
-mm/mglru: add tracepoint for scan_folios()
-
-This commit introduces a new MGLRU-specific tracepoint,
-mm_mglru_scan_folios, to report scan and isolate counts along with
-MGLRU-specific context like memcg ID, generation, and tier. The tracepoint
-is placed alongside the classic-LRU tracepoint in scan_folios().
-
-> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-> --- a/include/trace/events/vmscan.h
-> +++ b/include/trace/events/vmscan.h
-[ ... ]
-> +TRACE_EVENT(mm_mglru_scan_folios,
-> +
-> +	TP_PROTO(u64 memcg_id,
-> +		int highest_zoneidx,
-
-[Severity: Medium]
-Does this prototype incorrectly accept an evaluated u64 instead of a pointe=
-r?
-
-Accepting the evaluated value here forces evaluation at the call site.
-Could we pass the struct lruvec pointer in the prototype instead, so the
-expensive pointer dereferences can happen safely inside TP_fast_assign
-where they only execute when tracing is enabled?
-
-> +		int order,
-[ ... ]
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-[ ... ]
-> @@ -4927,6 +4927,12 @@ static int scan_folios(unsigned long nr_to_scan, s=
-truct lruvec *lruvec,
->  	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
->  				scanned, skipped, isolated,
->  				type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
-> +	trace_mm_mglru_scan_folios(mem_cgroup_id(lruvec_memcg(lruvec)),
-> +				   sc->reclaim_idx, sc->order, nr_to_scan,
-
-[Severity: Medium]
-Can this introduce unnecessary overhead on the memory reclaim hot path?
-
-Because trace_mm_mglru_scan_folios evaluates its arguments before checking
-the tracepoint's static key, calling mem_cgroup_id(lruvec_memcg(lruvec))
-here forces multiple pointer dereferences to happen unconditionally.
-
-The compiler cannot optimize them into the inactive branch because it cannot
-prove the arbitrary pointer accesses won't trap. Placing the dereferences
-inside TP_fast_assign avoids this execution when tracing is disabled.
-
-> +				   scanned, sorted, skipped, isolated,
-> +				   type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON,
-> +				   lrugen->max_seq, tier,
-> +				   lrugen->min_seq[type]);
-> =20
->  	*isolatedp =3D isolated;
->  	return scanned;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911072848.2346=
-073-1-ridong.chen@linux.dev?part=3D2
+2.25.1
