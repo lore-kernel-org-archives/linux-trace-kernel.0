@@ -1,189 +1,133 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA7368D7E;
-	Fri, 11 Sep 2026 15:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C921493D54
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 15:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789139909; cv=none; b=OAMveDLtjGelmiFoD0656DF4/wkWztfWIWmVMqM0Hxt9dJvGKov1aSnsCgILmx8Qxc0/X/3png3aApoKmK8o6YUtjJ54OKtfSPRbQ79/9qJjNTjRwCefWAIO8xkEpbACtbtOdPEKyQY3L2ynTtE6Nz/XhFSAazDv4rojx8vW56g=
+	t=1789141827; cv=none; b=jJboOuR7Gq+2StAoGURnjuyoInnRVY+sj3uf+n0P5f2PeNjM5bPYBcrfdtb+BOYv7vWM7KcMBggcBt6MEdHVelWZyiQRS/0Eah09fo9kzcEfm+ssT8DdvuOWu7aJ7TgOusb+MXEqsigas6Hfd5hXQIiDZyGLQLgErSe25C5Vq34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789139909; c=relaxed/simple;
-	bh=EmcvLDNd0Paz7dTy2pySpcGOrrthTH7KTzUaOeq+0zI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LtHwlJGeaKGJJef+Q7k1qLLu5bKv5Ffuz4rooKFs0gEKXBo69XPypas11u/DP8OQB9LhSdIeJoxLO7jXDbUvIFe5qW66nNCsWYtQpGgb+8dGtEqW4JhA+jhwNjF2rIqT0dHzmLK9NKblJoMOJ9hQiuRR+1Lfwf5QmDmKoI96dvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kaPjB6sD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1789141827; c=relaxed/simple;
+	bh=su1nVbB/LmrwcbgIHEdASzbwPqD+yvkGmESjKpyOAkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mFHA/UMRGMBRCMRWIHbQcBxOxWE6DgCFoO3J2Cwx44c6IAgtkvrvqRbxxHHAgecoRbW65aGW8faP0b08zFNtesOAkkTUI/T/7/FUx0S481NHw+Js9JamIZXWPkDtrYvD6zDJ7UCDja+qNCfc4+pW819YOAHcVKz7w7Z98TAF/GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZghBkiK; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kaPjB6sD"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68BF1Wlp235551;
-	Fri, 11 Sep 2026 15:18:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=frXvLE
-	F9zGLwcmL0j8JCZ1dJCCZ5gp4kGM/fUAe0N+I=; b=kaPjB6sDiLQGbqbzW5QBbI
-	fFZhCAcRyQkD5lzY3IjSlFBNN6xLiKenbXmBgSumm+Vdz5IZFger1nVQdU1CUKo6
-	6jJPgppWtb73JGM3XhCMaENXoLcJZGuT57WNYQgvyBDk0Cwdg11vykZPOeanvezf
-	eTvM8pd6KgMaCyWOlleGBQqW5G10vsZEAZKnC95KCGM26Y6YPRGT4SAGNLQky7D5
-	+VMJIeCRNIpws8aXY1+73NfggINxgL2EdBCNWQ4SMlICIeWnATS9d6xx3NkM2zSi
-	bDhLBEUSQWJIh9UgVblM+QotYpO/6vv59lnWlP9t5BDUgeTCeet4DyYVev88wy9Q
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gkd8ncb6n-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 11 Sep 2026 15:18:22 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68BEo81V1764851;
-	Fri, 11 Sep 2026 15:18:22 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gkvvrf0aa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Sep 2026 15:18:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68BFIHgf16253426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Sep 2026 15:18:18 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D160A20043;
-	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D9C42004B;
-	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
-Received: from [9.111.140.161] (unknown [9.111.140.161])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 11 Sep 2026 15:18:17 +0000 (GMT)
-Message-ID: <ae89a482-96ac-46ee-87a8-6d850035206b@linux.ibm.com>
-Date: Fri, 11 Sep 2026 17:18:16 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZghBkiK"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cc4d03f95dfso463083a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 08:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789141825; x=1789746625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=50ghC1gu7q8PYuqZviUTnNaIyk8GwN9m0Bvx8/rbGZI=;
+        b=WZghBkiKUuL3rKPB1nmAUPxFHYhVDok4E1qBqh1+VKb9huTtXGNSAIFEkv/OZXrUYv
+         RTt2sQ17Sz8LTijork8YXK0FbmOe6wanW73zwJcXGJBpZli1SWnW/8Nv/kF001tUFqOj
+         VQFCawVgReB1mvxpTu2bDLq/17kcrN3WuDjk1MKI86r6Mg6ukCXFe19eGKRoUal05K1v
+         lZb1HVoVUezGqdiDlz868U4llnftK5OP7KnBnebkVaAHPJoV7+R9zN04lBHCP1zPAOQT
+         gIG9ZvnHNz3XdUBnpd5V80S7DYYEntYxoG1ErJYQ5uocg1A15cAXRMcG5oT4k53OShKg
+         rdOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789141825; x=1789746625;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=50ghC1gu7q8PYuqZviUTnNaIyk8GwN9m0Bvx8/rbGZI=;
+        b=Gcjs8vqUtFFeWU7uSvUz7xCgDoQ/OhKL3PkuPQTMo/Wzesjp8pjLfSLE5xfA4XGx59
+         xkRNZjh8GSm10yr/aHe26EP56yJguOSwt22fMB3AExqN/UHUm+J0PYSpSmBQmSoxa+P9
+         V9i193JGwy2Y7Emgbdz/0j4bXra6RuEnl53jYqACOo43Xss/aejLK/+P/lmqgVmB3lNO
+         8SsfU7ZX0T/i9HZnL9Rr5Yptce700bNVT8Z+crYkBQWjJR1ntq66EVWbk2btE15izSrb
+         dWoNSDEKgc9XruivBYVT216id5mCPfmCHuY+j2e57qxNpxuhn1G3ZoEIDL8kk7zS8Dre
+         focA==
+X-Forwarded-Encrypted: i=1; AKwUvBypFBEBJ6bXRXeerSxSdnjyuJWqOwECTwRuOv2GVgpT0ibdvXGV09SOKDsgn8C5QKQZym4fttfe4lSckLwKsiFUK88=@vger.kernel.org
+X-Gm-Message-State: AFuF++n39mtEkiS1zebpWNPB77o8g5hIiJLwpOUXU1aAWFBGAnytZKky
+	jxCY2GGMOcfgpJRn+5paNwD/rtrAIJFr9NgKuhHI2nmcTjDT+NqSkRqsWEIIlQ==
+X-Gm-Gg: AYBFou0UTotgfD1W12y3uuwMxa+eq0TN9ojDa2gSETFmkMQvLXKgbTcl1NnwJHLU8ga
+	7QX56zucfPQGfjUBxDDvLWcryGtTDkeiEklnoezItDYubrjiaRACTNmyqpzY2f1cD1EOE0yZXW+
+	b3IAno8QoFkd4IKgfRBeIfD7kvCv/hFmXkA4T+rCv1ivN+kk4ETI+haa+kEkhCNJnumT1dHvk/Y
+	znQvDE/hIX9W3YysVGH7TuTwA3cRYbBomj32Il56a+e4oK6PsLpzKnTdafjGyiBQTrNk083XNe6
+	qcSJmWBS6oj+XboAZno905CrjesdePonzW5HEUT4uNC55rNPBJMpEZirSewy5k3aDVeOi9xq2HI
+	VnY4JZSDuqlaofclj6g3RV7M+/DjxOuUujrUWM39+6mSKz+Bi07NispCGxmTfDWNYD6scZ4277G
+	4XUmsW2QAP3fj4hNxc3L5Uqt+lgJ84eIhv5u9npvz+OHnruNW+CzOfzom3xPQOoypzd5+VKPhng
+	XytSK8DJ6vZNm7xQ3JqPvIUGdnmdWmpXy0lzrM=
+X-Received: by 2002:a17:90b:4a8d:b0:39d:8222:6436 with SMTP id 98e67ed59e1d1-39d9bd8f51cmr8027254a91.7.1789141824694;
+        Fri, 11 Sep 2026 08:50:24 -0700 (PDT)
+Received: from bj-kjy-standalone-gaoxiang17.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd2cfcefb6sm13634895ad.56.2026.09.11.08.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2026 08:50:24 -0700 (PDT)
+From: Xiang Gao <gxxa03070307@gmail.com>
+X-Google-Original-From: Xiang Gao <gaoxiang17@xiaomi.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Donnefort <vdonnefort@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	gao xu <gaoxu2@honor.com>,
+	yinchuang1@xiaomi.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiang Gao <gaoxiang17@xiaomi.com>
+Subject: [PATCH v2 0/2] tracing: add ring-buffer memory usage statistics
+Date: Fri, 11 Sep 2026 23:50:15 +0800
+Message-Id: <20260911155017.3377254-1-gaoxiang17@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
+References: <20260905112732.3705405-1-gaoxiang17@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 08/24] unwind_user/eh_frame: Store .eh_frame_hdr
- section data in per-mm maple tree
-To: sashiko-reviews@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-trace-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-References: <20260821195259.2688377-1-jremus@linux.ibm.com>
- <20260821195259.2688377-9-jremus@linux.ibm.com>
- <20260821201338.86FF71F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260821201338.86FF71F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=NMVAaE6g c=1 sm=1 tr=0 ts=6aa41bbf cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=LFt20mCCc4CE-LtB3JUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: jGKOmhl9wkzpTvGwodVpf0hrsp2vwaEB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTExMDIxMCBTYWx0ZWRfXzp87lMWBlOoY
- cl2U5Qrrgb6Ng/+xPbOwRh+6nk4fdcuTjqQaaIDQh3kGuhIj3v533eBYApe4GWHbPj/UjGMT17m
- PmXkcCCrGc+OsWKwQiZmf6TLy9QF4e7PO1dOcqozhnY4OOSsVj6G6czU9dQZx1z1XdNtdtL/ElP
- 0E9s8pL1eRU0Og77pxNIdSTCOzj567g0PvcVzPcLsd7ANnIHiuU/3xj2M6dLG81AJ4qxn4G25gc
- nlrpowJWyEPwbrz8/hIWsMjHUVjg753lkfg6bqV8XmaCiAPZkS9JbU5i7wZWeoIWaEk3qdWEne6
- U8ljVMDiAMa+4LMX3KkwmW3Q773797rTStRGfo/x3waCi72HGhWoCz7FsXm0M2cEeM6mvnb20eg
- LIdxC/G0JngtR5lk63SHNMYyvPt3sa11pMvl03Fydjy5+x6dftqVEfIptyjI6omo5H8hsHt0myJ
- 43GlTyzN4xwdGjLamKw==
-X-Proofpoint-ORIG-GUID: jGKOmhl9wkzpTvGwodVpf0hrsp2vwaEB
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTExMDIxMCBTYWx0ZWRfX+K7JrA9iOC/Z
- RClIyK63kNp9LxwRJyFpmRtOUSXJF50G2Q3yvJomrPdeNkE2wX9n6QYcaBzbMPH+3rBIChP9F7h
- tERmdtMQy58TNDl86snIda3yxNdYeeM=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-11_05,2026-09-11_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609110210
 
-On 8/21/2026 10:13 PM, sashiko-bot@kernel.org wrote:
+Report the memory consumed by the tracing ring buffers, rather than the
+usable data capacity exposed by buffer_size_kb. Android low-memory
+diagnostics need this to attribute the memory used by tracing when
+calculating lost RAM.
 
-> This commit associates .eh_frame_hdr sections with their mm_struct by
-> adding them to a per-mm maple tree. The tree is indexed by the
-> corresponding text address ranges.
+The buffers can be spread across the global trace array, dynamically
+created instances, and snapshot buffers. Userspace currently has to
+discover and sum every instance, and snapshot memory is not exposed by
+the per-instance totals.
 
->> diff --git a/kernel/unwind/eh_frame.c b/kernel/unwind/eh_frame.c
+Patch 1 adds:
 
->> +static int __eh_frame_remove_section(struct ma_state *mas,
->> +				     struct eh_frame_section *sec)
->> +{
-	struct eh_frame_section *erased;
+  /sys/kernel/tracing/trace_stats/memory_usage_kb
 
-	erased = mas_erase(mas);
+reporting:
 
->> +	if (mas_erase(mas) != sec) {
+  buffers: ...
+  snapshot_buffers: ...
 
-	if (mas_is_err(mas) || erased != sec) {
+covering the global trace array and all instances across all CPUs.
 
->> +		dbg("mas_erase failed: text=%lx\n", sec->text_start);
->> +		return -EINVAL;
->> +	}
->> +
->> +	call_srcu(&eh_frame_srcu, &sec->rcu, eh_frame_free_srcu);
-> 
-> [Severity: Critical]
-> Can this cause a use-after-free if the maple tree erase operation fails?
+Patch 2 adds the per-CPU view under
+trace_stats/per_cpu/cpuN/memory_usage_kb.
 
-Seems valid.  Fixed in next version.
+The values account for the full pages backing the data sub-buffers and
+reader page, plus the cached read page and mmap metadata page when
+present. Slab-allocated ring-buffer metadata is not included.
 
-> 
-> If mas_erase fails due to memory exhaustion (for example, during tree
-> rebalancing), it leaves the entry in the tree, sets mas_is_err(mas), and
-> returns the pointer to the entry.
-> 
-> Because it returns the entry pointer, the condition mas_erase(mas) != sec
-> will evaluate to false, skipping the error block.
-> 
-> The code would then proceed to call call_srcu and free the section while
-> it remains linked in the maple tree, potentially causing a crash when the
-> tree is traversed later. Should this check mas_is_err(mas) instead?
-> 
->> +
->> +	return 0;
->> +}
+Changes since v1:
+- Include range buffers in the accounting (Vincent Donnefort).
+- Use READ_ONCE() for buffer->subbuf_order (Vincent Donnefort).
+- Keep remote buffers excluded.
 
->> diff --git a/mm/init-mm.c b/mm/init-mm.c
+Xiang Gao (2):
+  tracing: add ring-buffer memory usage statistics in tracefs
+  tracing: add per-CPU memory usage statistics in tracefs
 
->> @@ -48,6 +49,7 @@ struct mm_struct init_mm = {
->>  #endif
->>  	.flexible_array	= MM_STRUCT_FLEXIBLE_ARRAY_INIT,
->>  	INIT_MM_CONTEXT(init_mm)
->> +	INIT_MM_EH_FRAME
->>  };
-> 
-> [Severity: Low]
-> Does efi_mm in drivers/firmware/efi/efi.c also need this initializer?
+ Documentation/trace/ftrace.rst |  15 +++++
+ include/linux/ring_buffer.h    |   1 +
+ kernel/trace/ring_buffer.c     |  41 +++++++++++++
+ kernel/trace/trace.c           | 104 +++++++++++++++++++++++++++++++++
+ 4 files changed, 161 insertions(+)
 
-Steven, Josh, I doubt that is required.  Do you agree?
-
-Otherwise tboot_mm in arch/x86/kernel/tboot.c would be affected as well.
-
-> 
-> When a new initializer like INIT_MM_EH_FRAME is added to init_mm, it usually
-> needs to be added to all static mm_struct definitions.
-> 
-> Leaving it out means the eh_frame_mt maple tree inside efi_mm remains
-> zero-initialized rather than properly initialized with MTREE_INIT, which
-> might lead to lock splats or crashes if accessed.
-
-Thanks and regards,
-Jens
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.34.1
 
