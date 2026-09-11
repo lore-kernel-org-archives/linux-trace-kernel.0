@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2173835950;
-	Fri, 11 Sep 2026 14:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37BF3515C7;
+	Fri, 11 Sep 2026 14:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789136009; cv=none; b=WOIwqwiPp14rjDLbEUDxGQiFThjFp6vAs64Ckud64u3f4MIl/JKbt3uivh7BuacppQOlFl6rwjvTFY/J0p5G3esnIcosPo15YbOxkXEyEFQ6FUx8UrFTjUkzYi5iLHNxoHUruj0vJn1/jD5ddcFkJGYHvbD+ue7y2wJgiTXoTnM=
+	t=1789136019; cv=none; b=WTGNozFOyxTNiJTT3tpFi3Xyle0YPHfW+d6GNCQ2hAb2x2BjJzG78exEneXqn+P/skiV7qtOR8KrL/J9/J6312IR0TiGpm9R+tm/6dJQ+AJE4tm8MTek6xTP0ALYjFu/3nQfWGfRf90f9a0G/pPRxtoMlKQxmjDU9mADKb6D9kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789136009; c=relaxed/simple;
-	bh=gaQ5Xs18z39QaJwI9yW27cWzRZ5tq/OyB+9wrAfaws0=;
+	s=arc-20240116; t=1789136019; c=relaxed/simple;
+	bh=HjdMvu+amrfZ+Yjum6DNCwuv95VOPcYse8XIGVa3Hsc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HbN1AGUdL6JqcNKZTqJ/aoRCrkia8SxF+1touUr2VFLQfiZupOjoXoaFRMbWzEWOPvNF5L0jfwiSmE4O5bK/yV59K8K8yRDls0U/lPEDTY6TVhtWSFngZuw/ngPntj1Y0t5wm0ZQmi3JdbYwTuzq9/JhUz3gwaLv/BVg5jtYLhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqkP9GEr; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=kS7Z9No4b4bxY9XtVpSvCExdKgMPJMtPgspHFrXVwSNCOl//8G76O/CBljdZ2h9hLlVsx9hlWdg10nSxWUCWL9HSI7i3hI+IsfyrUNeXlHpFX8zRD4jd8DHlTBAfWlteZI9o3QYKRXtYqIU1YnDbNngJpSSLPmlTgNrIjC445KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW0jORBH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqkP9GEr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB8F1F008A2;
-	Fri, 11 Sep 2026 14:13:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW0jORBH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026651F008A2;
+	Fri, 11 Sep 2026 14:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789136007;
-	bh=/HV0MLuSBgaL1qmMEBUkUTq3L2F/ZFCkWyKIdA3nReA=;
+	s=k20260515; t=1789136017;
+	bh=5ITgpds4xl58Ygn2uPHYZZiX61DZ+QftRJbMlAz/1Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eqkP9GEruSBlvtmbGkL7qPBurTs91QbfUWPdGC97TW+KsJHXT62weW0bZIxFx94lK
-	 Cahw1Zz/P4CKmuVODHRG4EIeGzfYwr/rko5YGPIlKVXKmObVL2FaiPr25fDkgtQvyL
-	 Et63Edj5jqQ4EW1lDjLtZpDihUDjybEvxrbBKxxfMh0Vf2Er3AOjG+7SX1i639pDRI
-	 QVzHHgSKqausbQNOP8eT4twx3UHwhsVEFGqVP2UHmyPq3jykUtphmVRejT3wRqiVqd
-	 IVP+xsjQE3ZoAb5qTYUUp/bH5UNgv6NbLoTo7C/yVhbFMsmUoEDD/0MdZL9yLXVT9d
-	 FgAw0SKrfQLWw==
+	b=dW0jORBHvt7NTMCMA5myakN4a7nziqA5V2p5sdelKnBENyMAGL7ow5qQqtSyfN18B
+	 1vOi3DrbZYYy0lCmWc52F5B8vRMw7J31ZJxxpBnLVEIar8f8NuqgWZIHXqiP3AKqiM
+	 C1sAZHb0QcGDm4voSJGTWBTd3+k9SMQN0vyjdcUPWOnzuQ0R0VTcH3qxbl9OYtOHxg
+	 SmYFH/38PhBxoz7J8/qquUy6CkCicLcEwfpRxkGx1mgGMCr2jWaVQC99MnzZ/zOqwh
+	 gzKFiL9rKEKbrJAFAb48G48X3srNp/E9p9crYZYiv5T2J1TZftv5OgcW8ET7ma3GY5
+	 i7elDyBhblsSA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Sang-Heon Jeon <ekffu200098@gmail.com>
-Subject: [PATCH v2 3/4] bootconfig: Skip internal tree sanity checks in kernel
-Date: Fri, 11 Sep 2026 23:13:24 +0900
-Message-ID: <178913600409.248794.12941798680046327623.stgit@devnote2>
+Subject: [PATCH v2 4/4] bootconfig: Move BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h
+Date: Fri, 11 Sep 2026 23:13:33 +0900
+Message-ID: <178913601321.248794.4786502771058559887.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178913597653.248794.1237187523153227751.stgit@devnote2>
 References: <178913597653.248794.1237187523153227751.stgit@devnote2>
@@ -50,88 +50,64 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In xbc_verify_tree(), the loop iterating through all nodes to check that
-xbc_nodes[i].next < xbc_node_num and xbc_nodes[i].child < xbc_node_num
-is a defensive sanity check against implementation regressions (such
-an out-of-bounds index cannot be produced by malformed input).
+BOOTCONFIG_FOOTER_SIZE was defined locally in tools/bootconfig/main.c.
+Move it to include/linux/bootconfig.h so that it can be shared with
+the kernel and user-space tools. Also, use it in init/main.c instead
+of the hardcoded (BOOTCONFIG_MAGIC_LEN + 8) expression when checking
+the initrd size.
 
-Running this check in the kernel adds unnecessary boot-time overhead.
-Split this check out into xbc_sanity_check_tree() for userspace, so
-that it continues to run during userspace bootconfig validation (e.g.
-when applying or testing bootconfig with tools/bootconfig), but is
-omitted in the kernel to speed up initialization.
-
-Reported-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-Closes: https://lore.kernel.org/all/20260905141637.1547429-1-ekffu200098@gmail.com/
+Suggested-by: Sang-Heon Jeon <ekffu200098@gmail.com>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Sang-Heon Jeon <ekffu200098@gmail.com>
 ---
- lib/bootconfig.c |   38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+ Changes in v2:
+  - Newly added.
+---
+ include/linux/bootconfig.h |    4 ++++
+ init/main.c                |    2 +-
+ tools/bootconfig/main.c    |    4 ----
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 61cae6d6e3f8..20b3d6e78fea 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -1003,9 +1003,30 @@ static int __init xbc_close_brace(char **k, char *n)
- 	return __xbc_close_brace(n - 1);
- }
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index deda507500da..6f23ec11baab 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(void);
+ #define BOOTCONFIG_ALIGN	(1 << BOOTCONFIG_ALIGN_SHIFT)
+ #define BOOTCONFIG_ALIGN_MASK	(BOOTCONFIG_ALIGN - 1)
  
-+#ifndef __KERNEL__
-+/* Sanity check for regression: node indices must be within bounds */
-+static int __init xbc_sanity_check_tree(void)
-+{
-+	int i;
++/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
++#define BOOTCONFIG_FOOTER_SIZE	\
++	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
 +
-+	for (i = 0; i < xbc_node_num; i++) {
-+		if (xbc_nodes[i].next >= xbc_node_num) {
-+			return xbc_parse_error("No closing brace",
-+				xbc_node_get_data(xbc_nodes + i));
-+		}
-+		if (xbc_nodes[i].child >= xbc_node_num) {
-+			return xbc_parse_error("Broken child node",
-+				xbc_node_get_data(xbc_nodes + i));
-+		}
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- static int __init xbc_verify_tree(void)
- {
--	int i, depth;
-+	int depth;
- 	size_t len, wlen;
- 	struct xbc_node *n, *m;
+ /**
+  * xbc_calc_checksum() - Calculate checksum of bootconfig
+  * @data: Bootconfig data.
+diff --git a/init/main.c b/init/main.c
+index 16749bb7a219..37168bd68126 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -278,7 +278,7 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
+ 	int i;
  
-@@ -1022,17 +1043,6 @@ static int __init xbc_verify_tree(void)
- 		return -ENOENT;
- 	}
+ 	if (!initrd_end || initrd_end < initrd_start ||
+-	    initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
++	    initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
+ 		return NULL;
  
--	for (i = 0; i < xbc_node_num; i++) {
--		if (xbc_nodes[i].next >= xbc_node_num) {
--			return xbc_parse_error("No closing brace",
--				xbc_node_get_data(xbc_nodes + i));
--		}
--		if (xbc_nodes[i].child >= xbc_node_num) {
--			return xbc_parse_error("Broken child node",
--				xbc_node_get_data(xbc_nodes + i));
--		}
--	}
+ 	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 652e491b9c33..d4aa96da970e 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -17,10 +17,6 @@
+ 
+ #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+ 
+-/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+-#define BOOTCONFIG_FOOTER_SIZE	\
+-	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
 -
- 	/* Key tree limitation check */
- 	n = &xbc_nodes[0];
- 	depth = 1;
-@@ -1203,6 +1213,10 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
- 	ret = xbc_parse_tree();
- 	if (!ret)
- 		ret = xbc_verify_tree();
-+#ifndef __KERNEL__
-+	if (!ret)
-+		ret = xbc_sanity_check_tree();
-+#endif
- 
- 	if (ret < 0) {
- 		if (epos)
+ static void show_xbc_error(const char *data, const char *msg, int pos)
+ {
+ 	int lin = 1, col, i;
 
