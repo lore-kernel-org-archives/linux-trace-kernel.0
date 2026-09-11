@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2806633BBC0;
-	Fri, 11 Sep 2026 14:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BE7345EB5;
+	Fri, 11 Sep 2026 14:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789135991; cv=none; b=QwMOF8LtqFN6dquyB4ZdiXtJs0NZE22SSnqkYpGVbWCP7hpqDXH6TB+hrZP1qrq+Qjatfi2Y+p3lx92ap4Jq33Nb6XiTSIKOvynnDmN6+//WEeJ09nyd0L8Bo1YwCHKmWCAHbjdGBP4FvuaXJHl62Q7qs22KB2UMsYgkC8Hh1EI=
+	t=1789136001; cv=none; b=tH8dV7IeWTgGnC0zXUjfo1+YJsGUE2YJiyic8AGE8XmmGyDpkylYrVtBrosgKM+B+iaA6rf9vHOXRtspxKoSdax16HP5gYosT6Ap12nzNLENQksw6UNGl6yenuwD2gbmI3AnGMjxDj/BFhdRRvtJ3/EYAYJlFIcgCut5Yqppb5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789135991; c=relaxed/simple;
-	bh=VmLDgc8FVwCH7jfA1bK7WOgcB3UTbmunEsoUbXc5vCg=;
+	s=arc-20240116; t=1789136001; c=relaxed/simple;
+	bh=RpGhfmje8DtH4utSvgsNEPl0BOr3tnmw3jdfbnBUi28=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e2xvSHGdTtXsF+7N9NNas3wUisYhwg49CWdv4V+LsMShfe+3NKPBDgkvFh6pVdCNSxidhf28DgUJBlGbrtWH9nnrcg/LPKzWtA43OBZ/w9NlpRXq5TpV+eGoLNLKPM/dW9QkZmbnBaQE+ipIznonnkbUzefBMyPaISYuR/T+yQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h96ZLCnX; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ON4GayGaTTIzUJ2PpcbGz8wxGm/nNm3iKQrDaCAxXp2BmicRmXJGM97ci+9AtqZhGrljJ4ipCTNQZiybjKFAwOx6J99ixXdk7a5xkn1QbYYn7v0N2uAJnZZvxToTDDuGwcFmpveipE/PWybNx9+P/DIueHypVMWxla/g3q+/iYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKJIR5/n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h96ZLCnX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 717BB1F008A2;
-	Fri, 11 Sep 2026 14:13:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKJIR5/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFEF1F008A2;
+	Fri, 11 Sep 2026 14:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789135989;
-	bh=mSgtp3Oo1RMv/XNAhQwl71O3GqsJP7J7NxfICduxt3U=;
+	s=k20260515; t=1789135998;
+	bh=fl2Id8u8e/0eGxzUx0pnL/Xk1CZne/k9PIjfKtGd7ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=h96ZLCnXcBiPd3a7J4hu9EhKZIH5/dyEAi9sA0WhjI/Ccti0br7B08lqrLgSwhzJb
-	 CgEshrwBgNGdiU8xHAm3t/T50vik4Za9TaBhEuapxu+uDJro6Gd+Hhig7Jn7h1xavo
-	 pjo4At2NcAHKDqJuLiLjQ0O+a2hlu+C5T2SEEYV6x+vsI4ZIp49UVP/4rXPh/dklL/
-	 Bgp85ljH1RvUA4ICYtdrC1omTMncbseNh5vG0b7Q67JkaGLjWRiH8k3l8hRPNPU51h
-	 0udvn9ZMgmv+B/4sw96rM/34f5ZFuy50w5QyyhRpqYZnOgb3cQJq1zFzXvE47V/WEX
-	 2aaMHceYra4aw==
+	b=NKJIR5/nl8HqQcWp9JTQSFX/afUCf3z+Foj/JuOuONreSrbSlcfvpIMOZbdoK/ENA
+	 nZKiLIiT8rYbrePcZNHSqieUsemRcfpGSbBUU03qyR/YbfgU2Jrh0w27pAM8byT41I
+	 fhtQ3cfZDapKcTxDBRNXPjLO91QeKp3W0JlGlWwkLkrMFMWQIADmKam7EYcOSdtAYm
+	 C3Y5bapNJym35vSsfn7dfSXZJy/LiQ+HJqzz3LixZrmjGIwR1qxj1+zRfrGU5EpWtv
+	 qkAxl4eBmk5TEGqCjaB6AqXC6N2QL3PZYFRG71heW1vBfLrNwC81+mx4ZqpJ8ON2nY
+	 yjcmrB5q830Hw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Sang-Heon Jeon <ekffu200098@gmail.com>
-Subject: [PATCH v2 1/4] bootconfig: Reject unexpected data after null character
-Date: Fri, 11 Sep 2026 23:13:06 +0900
-Message-ID: <178913598628.248794.1048773774471250986.stgit@devnote2>
+Subject: [PATCH v2 2/4] tools/bootconfig: Consolidate xbc_init() to error message wrapper
+Date: Fri, 11 Sep 2026 23:13:15 +0900
+Message-ID: <178913599508.248794.10388592925402087434.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178913597653.248794.1237187523153227751.stgit@devnote2>
 References: <178913597653.248794.1237187523153227751.stgit@devnote2>
@@ -50,87 +50,165 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If a bootconfig buffer contains an intermediate null character in the
-middle of the configuration, xbc_parse_tree() stops at the null character
-because string delimiter searches (e.g. strpbrk()) stop at '\0', and
-cleanly breaks out of the loop without error. As a result, any
-configuration data following the intermediate null character is silently
-ignored, allowing unparsed or potentially malicious data to be hidden
-after an early termination.
+Use init_xbc_with_error() for all bootconfig initialization in the
+bootconfig tool instead of showing errors in different way.
 
-Fix this in xbc_parse_tree() by checking that no non-null data remains
-between the parser termination point and the end of the input buffer.
-Trailing null characters (such as alignment padding in initrd) continue
-to be accepted as valid.
+This simplifies the code logic and make it easy to maintain.
 
-Also update apply_xbc() in tools/bootconfig/main.c to calculate the
-buffer size based on the loaded file size rather than strlen(), so that
-files with intermediate null characters are not truncated before
-validation.
-
-Assisted-by: Antigravity:gemini-3.8-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Sang-Heon Jeon <ekffu200098@gmail.com>
 ---
- lib/bootconfig.c                    |    7 +++++++
- tools/bootconfig/main.c             |    4 +++-
- tools/bootconfig/test-bootconfig.sh |   12 ++++++++++++
- 3 files changed, 22 insertions(+), 1 deletion(-)
+Changes in v2:
+ - Remove redundant buffer copy in init_xbc_with_error().
+---
+ tools/bootconfig/main.c |  100 ++++++++++++++++++++---------------------------
+ 1 file changed, 43 insertions(+), 57 deletions(-)
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 89c88e359179..61cae6d6e3f8 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -1119,6 +1119,13 @@ static int __init xbc_parse_tree(void)
- 		}
- 	} while (!ret);
- 
-+	if (!ret) {
-+		while (p < xbc_data + xbc_data_size - 1 && *p == '\0')
-+			p++;
-+		if (p < xbc_data + xbc_data_size - 1)
-+			ret = xbc_parse_error("Unexpected data after null character", p);
-+	}
-+
- 	return ret;
- }
- 
 diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 17d971d47f87..aff169ba75b8 100644
+index aff169ba75b8..652e491b9c33 100644
 --- a/tools/bootconfig/main.c
 +++ b/tools/bootconfig/main.c
-@@ -433,7 +433,9 @@ static int apply_xbc(const char *path, const char *xbc_path)
- 		pr_err("Failed to load %s : %d\n", xbc_path, ret);
- 		return ret;
+@@ -21,6 +21,39 @@
+ #define BOOTCONFIG_FOOTER_SIZE	\
+ 	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+ 
++static void show_xbc_error(const char *data, const char *msg, int pos)
++{
++	int lin = 1, col, i;
++
++	if (pos < 0) {
++		pr_err("Error: %s.\n", msg);
++		return;
++	}
++
++	/* Note that pos starts from 0 but lin and col should start from 1. */
++	col = pos + 1;
++	for (i = 0; i < pos; i++) {
++		if (data[i] == '\n') {
++			lin++;
++			col = pos - i;
++		}
++	}
++	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
++
++}
++
++static int init_xbc_with_error(char *buf, int len)
++{
++	const char *msg;
++	int ret, pos;
++
++	ret = xbc_init(buf, len, &msg, &pos);
++	if (ret < 0)
++		show_xbc_error(buf, msg, pos);
++
++	return ret;
++}
++
+ static int xbc_show_value(struct xbc_node *node, bool semicolon)
+ {
+ 	const char *val, *eol;
+@@ -197,7 +230,6 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 	int ret;
+ 	uint32_t size = 0, csum = 0, rcsum;
+ 	char magic[BOOTCONFIG_MAGIC_LEN];
+-	const char *msg;
+ 
+ 	ret = fstat(fd, &stat);
+ 	if (ret < 0)
+@@ -249,52 +281,9 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 		return -EINVAL;
  	}
--	size = strlen(buf) + 1;
-+	size = ret;
-+	if (size == 0 || buf[size - 1] != '\0')
-+		size++;
+ 
+-	ret = xbc_init(*buf, size, &msg, NULL);
+-	/* Wrong data */
+-	if (ret < 0) {
+-		pr_err("parse error: %s.\n", msg);
+-		return ret;
+-	}
+-
+-	return size;
+-}
+-
+-static void show_xbc_error(const char *data, const char *msg, int pos)
+-{
+-	int lin = 1, col, i;
+-
+-	if (pos < 0) {
+-		pr_err("Error: %s.\n", msg);
+-		return;
+-	}
+-
+-	/* Note that pos starts from 0 but lin and col should start from 1. */
+-	col = pos + 1;
+-	for (i = 0; i < pos; i++) {
+-		if (data[i] == '\n') {
+-			lin++;
+-			col = pos - i;
+-		}
+-	}
+-	pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
++	ret = init_xbc_with_error(*buf, size);
+ 
+-}
+-
+-static int init_xbc_with_error(char *buf, int len)
+-{
+-	char *copy = strdup(buf);
+-	const char *msg;
+-	int ret, pos;
+-
+-	if (!copy)
+-		return -ENOMEM;
+-
+-	ret = xbc_init(buf, len, &msg, &pos);
+-	if (ret < 0)
+-		show_xbc_error(copy, msg, pos);
+-	free(copy);
+-
+-	return ret;
++	return ret < 0 ? ret : size;
+ }
+ 
+ static int show_xbc_kernel_cmdline(void)
+@@ -423,9 +412,8 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 	char *buf, *data;
+ 	size_t total_size;
+ 	struct stat stat;
+-	const char *msg;
+ 	uint32_t size, csum;
+-	int pos, pad;
++	int pad;
+ 	int ret, fd;
+ 
+ 	ret = load_xbc_file(xbc_path, &buf);
+@@ -438,6 +426,13 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 		size++;
  	csum = xbc_calc_checksum(buf, size);
  
++	/* Verify the data format */
++	ret = init_xbc_with_error(buf, size);
++	if (ret < 0) {
++		free(buf);
++		return ret;
++	}
++
  	/* Backup the bootconfig data */
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index fc69f815ce4a..530ce7e28d63 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -180,6 +180,18 @@ EOF
- $BOOTCONF -a $TEMPCONF $INITRD 2> $OUTFILE
- xpass grep -q "1:1" $OUTFILE
+ 	data = calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE, 1);
+ 	if (!data) {
+@@ -446,15 +441,6 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 	}
+ 	memcpy(data, buf, size);
  
-+echo "Intermediate null character test"
-+printf "key = value\n\0extra = data\n" > $TEMPCONF
-+xfail $BOOTCONF -a $TEMPCONF $INITRD
-+$BOOTCONF -a $TEMPCONF $INITRD 2> $OUTFILE
-+xpass grep -q "Unexpected" $OUTFILE
-+
-+echo "Trailing null character test"
-+printf "key = value\n\0" > $TEMPCONF
-+xpass $BOOTCONF -a $TEMPCONF $INITRD
-+$BOOTCONF $INITRD > $OUTFILE
-+xpass grep -q "value" $OUTFILE
-+
- echo "=== expected failure cases ==="
- for i in samples/bad-* ; do
-   xfail $BOOTCONF -a $i $INITRD
+-	/* Check the data format */
+-	ret = xbc_init(buf, size, &msg, &pos);
+-	if (ret < 0) {
+-		show_xbc_error(data, msg, pos);
+-		free(data);
+-		free(buf);
+-
+-		return ret;
+-	}
+ 	printf("Apply %s to %s\n", xbc_path, path);
+ 	xbc_get_info(&ret, NULL);
+ 	printf("\tNumber of nodes: %d\n", ret);
 
