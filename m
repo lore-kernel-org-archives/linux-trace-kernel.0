@@ -1,115 +1,131 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFB858124E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 19:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AD43D8107;
+	Fri, 11 Sep 2026 22:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789156579; cv=none; b=CEARzOUp6+K8uhU48ay03KCQeEczPpbC+HBwgSc2+mefFYBdDICFL4pL5VdYUoUXtlLLWpjMHARq3GC9bo/3YhRKD0KECF69UQMY2gF0pOj3ZV0i6MV+GMr3HWtRFeoDKWJs0zpCE9fqgmdu3/JuE1wocsj9j8N8Rd0oAzFxyPM=
+	t=1789167553; cv=none; b=Qe+rjO4E2X7ODPvDN91DoSX14xU/73FMY9USVEQRxi2JpUPnMdmA3XE9pPsqYHSdunPwNyhR6Mo8A2nR+KiUDZS+3fNf8OpIeVIH6/PfiDpW9adp89/qqYnX2mUf8cN6fwVwHVCx/1hofMjUGoEUJeaVH7nCCKYkIOMv0chmCRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789156579; c=relaxed/simple;
-	bh=MuXg6y241kQAFFXgtK2Q3UkQFZr1v0D+y3gdcjdSvI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oiYWlhQIxJyj7amfuDTe9xxVEILjRKuODmMMdbDIxde3n8iQa+ObESu9cv4e3B2QlPC+YK5TP3X8e0Gy+8MLLlXzICL6fsP8I3yheMuAFrQhOE/T6bgT9Sj7hfX5CJvPOLmWKPKHcxAJjJ1fXz3zApxMXx6fMaM9hFBb4DSVHrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNN24k9M; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789167553; c=relaxed/simple;
+	bh=ifRCjs3PH652jLbyOuCHtqUqbYgTkGoi+j+DH4gUOFc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WmGn4uNixTWlQlAahu/iyAE3h6L5qMkXhKM8mQbYpE8xai4Z8BwaBrgYYdtttKVrNmnR2oRqfE5FgXLMWLGapJc+i1Oz096SntYQwcG3yySYHcbmZw5E+xX5KNy75+Rv857YOSFOrOUF5F6EPc/UZ1WBEWodbZ9IPNHGBOCgP1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dvHTofRr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNN24k9M"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c2055573c8cso204932066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 12:56:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dvHTofRr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986C21F000FF;
+	Fri, 11 Sep 2026 22:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789156563; x=1789761363; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VbxJsFTbQ+RydGePFrpF5dFVh+W/MFXSp8uy2MJMaaU=;
-        b=PNN24k9M8dVAGL8x7ciTQZ44C20MJ8Kj2jfC8cWHrn60dNP5vW6DzIwEI95FGciRUr
-         zVDqyAkqgwGWNqsAAeJEXUkoNllXuMG0h4OKmnxE6ee1Vm+HrAZ1Wm/trBrOrzfYm9fo
-         QrtLKwA9yrsg1t5oD2NFqn936poJJgcZidGWT+LRjFrLm87ikyxRVIDOnXwsjQQgC6Z4
-         4M8PYa++upd5egNnZ6qJ7wTMLxTnj4g/btxW2u0438RDq6EsIf/yMWgmzmUdIn/8cs5l
-         AvswYJrh8qSRdRNnbZglzvycyT8qOhYRAFzJ7B4BGePPICvaIu+533364JEOc96YGFig
-         dPiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789156563; x=1789761363;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VbxJsFTbQ+RydGePFrpF5dFVh+W/MFXSp8uy2MJMaaU=;
-        b=B5VDG1OWbBZuxkNRtPe1r76jZkuAJMRdlfxW3RUV1PX+vyiBUyEt7t6HM7XU43+74q
-         6+P44K1OFC+6Z60JvQB3OQp8MAPRO9ePj5RBrOPcsQL+GIuVbX9DKSW2n3Mko1Dyefx8
-         F2R4hKpvBk2thq8lq11n915N9IUsLcryNbxJjq9mNQoDRP2R8lI/Tsw/cvR0cKCYHD0W
-         0KFvaHMyPx/CmH/nxDKf6XWioz1YfPy7c2sz6nF3fjnU9t+ydERVg5CurxR4/61rjhJi
-         B7va926W0mzqTDlTMqmx6350OKqmWia7cJ18TvQzSAtGzQW0bBTfcOmLxRtGz5lG9B6G
-         Pk8w==
-X-Forwarded-Encrypted: i=1; AKwUvBysg4klKNpL0HeGQipKwHE7UtqcBkSeKKuJdpV5BvYN2tlgbwbbdYLGQD0LhHN3d0Sbbad59BbRjvmJmRRaIGAeusc=@vger.kernel.org
-X-Gm-Message-State: AFuF++l5Wj7wqwYOIwSmI5DN0OCmu6v/PXweW6GK2Gcv7FhkqUJCjb/0
-	r67sOg91XGQAPs9QrC8B4C15J9j2cslQkA/7TFwtwnW7bvYPUmP0IdgE
-X-Gm-Gg: AYBFou3WoYeS7KLJ/uhOZhtM5GP2wTubUS/v1E4fncKKwpT0WrqV9i95sv12vJNjela
-	Ss6cn5SIh3ys1cIRm9luGNIZqnWaPsfvlOjEW2vUhdseqWakJjd8cPu3VTMq8G9KxZDP3FVpRa+
-	D7eCVnIs1ugJg3V9yMu7tKQd+Af2pGixPPDvxFJHY/C92Q7nXShrp9WsEokGiTt3aufPwIQzNRO
-	PWUZfHQONk78tO1a/8uIG/4AvlAhHNW70agNC6F+S+nR78HGspq3R40xPC9Vwcy13KjfKjj1QPc
-	PL2ZB7zaQbctR/UhEInxDDFWmxSgdtsk59jNX4XwbNU0pepjZeYWZQTVoUBKtTRGxE9VL1RpMsJ
-	b6RpA7c1trlDjokBRbXwwD1Ny0DkBzCk2IPDQvFIqDPpUHuw9N7kt4cCaXtJZVJbT8JGsmIikiB
-	F5Vp1J+q+91S1zW8xfD23Gmdhdk74pQNT9V/I6upCakt0llGMkdmSql4xTvsjHymfe6PuVBkPaO
-	ARFs/38XDsnMw8UBRXiwY9ypnpfSs5PVQyFeMPPer1oy6X9JnWZJqVY2rY=
-X-Received: by 2002:a17:907:c28:b0:c25:34c7:44d1 with SMTP id a640c23a62f3a-c2966235aabmr287609966b.0.1789156562685;
-        Fri, 11 Sep 2026 12:56:02 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2965c4cf01sm121013966b.1.2026.09.11.12.56.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 12:56:02 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Martin Kaiser <martin@kaiser.cx>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] fprobe: Clear the unused part of the fgraph_data reservation
-Date: Fri, 11 Sep 2026 20:55:59 +0100
-Message-ID: <20260911195559.230709-1-devnexen@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	d=linux-foundation.org; s=korg; t=1789167551;
+	bh=t2S/m2h7UEB/CuumUnvTIa59is7Da5KmNcWpzEuJtu4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=dvHTofRrArBU1ooBY0qjprP0moPGMOQvfmyw3bctxWRnvnPYxKgQePr1matk2uZib
+	 CRmfPv2wQVEp7/uPCHczMScRzLYQoFUNwE+eAgoUDDwnMbCEc3+qnD6S1skgbnZz8O
+	 wWSL/P5u6uKIxWkGG+zbpD2cUmZbkXHq5keiODMg=
+Date: Fri, 11 Sep 2026 15:59:11 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Sang-Heon Jeon <ekffu200098@gmail.com>
+Subject: Re: [PATCH v2 0/4] bootconfig: Reject unexpected data after null
+ character and cleanups
+Message-Id: <20260911155911.1cccfa39dd2e3c6e3a84e03f@linux-foundation.org>
+In-Reply-To: <178913597653.248794.1237187523153227751.stgit@devnote2>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-fprobe_fgraph_entry() reserves shadow stack space for every fprobe with
-an exit handler, but only fills it for those whose entry handler returns
-0. fprobe_return() walks the whole reservation, so the unused tail is
-parsed as stale headers from an earlier call, and an exit handler can
-run twice or despite its entry handler asking to skip it.
+On Fri, 11 Sep 2026 23:12:56 +0900 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-The original memset cleared only (reserved_words - used) bytes, and
-commit e0a384434ae1 ("tracing: fprobe: do not zero out unused
-fgraph_data") removed it. Clear the whole tail.
+> Hi,
+> 
+> Here are v2 patches for bootconfig to rejects unexpected config data after
+> null character and other cleanups including tools/bootconfig to consolidate
+> bootconfig initialization with errors, and skipping internal tree sanity
+> check in kernel.
+> 
+> ...
+>
 
-Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-Cc: stable@vger.kernel.org
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
- kernel/trace/fprobe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks, I've updateed mm.git's mm-nonmm-unstable branch to this version,
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 1e9b00997ff2..bd84a982961a 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -635,6 +635,10 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
- 		}
- 	}
+> This version removes redundant buffer copy in init_xbc_with_error() [2/4]
+> and moves BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h[4/4].
+
+Here's how v2 altered mm.git:
+
+
+ include/linux/bootconfig.h |    4 ++++
+ init/main.c                |    2 +-
+ tools/bootconfig/main.c    |   14 +-------------
+ 3 files changed, 6 insertions(+), 14 deletions(-)
+
+--- a/include/linux/bootconfig.h~b
++++ a/include/linux/bootconfig.h
+@@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(vo
+ #define BOOTCONFIG_ALIGN	(1 << BOOTCONFIG_ALIGN_SHIFT)
+ #define BOOTCONFIG_ALIGN_MASK	(BOOTCONFIG_ALIGN - 1)
  
-+	/* Clear unused slots so fprobe_return() does not see stale headers. */
-+	if (used < reserved_words)
-+		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
++/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
++#define BOOTCONFIG_FOOTER_SIZE	\
++	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
 +
- 	/* If any exit_handler is set, data must be used. */
- 	return used != 0;
+ /**
+  * xbc_calc_checksum() - Calculate checksum of bootconfig
+  * @data: Bootconfig data.
+--- a/init/main.c~b
++++ a/init/main.c
+@@ -278,7 +278,7 @@ static void * __init get_boot_config_fro
+ 	int i;
+ 
+ 	if (!initrd_end || initrd_end < initrd_start ||
+-	    initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
++	    initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
+ 		return NULL;
+ 
+ 	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
+--- a/tools/bootconfig/main.c~b
++++ a/tools/bootconfig/main.c
+@@ -17,10 +17,6 @@
+ 
+ #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+ 
+-/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+-#define BOOTCONFIG_FOOTER_SIZE	\
+-	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+-
+ static void show_xbc_error(const char *data, const char *msg, int pos)
+ {
+ 	int lin = 1, col, i;
+@@ -44,20 +40,12 @@ static void show_xbc_error(const char *d
+ 
+ static int init_xbc_with_error(char *buf, int len)
+ {
+-	char *copy = malloc(len);
+ 	const char *msg;
+ 	int ret, pos;
+ 
+-	if (!copy)
+-		return -ENOMEM;
+-
+-	memcpy(copy, buf, len);
+-	/* We do not terminate the copy with \0 for sanity checking */
+-
+ 	ret = xbc_init(buf, len, &msg, &pos);
+ 	if (ret < 0)
+-		show_xbc_error(copy, msg, pos);
+-	free(copy);
++		show_xbc_error(buf, msg, pos);
+ 
+ 	return ret;
  }
--- 
-2.55.0
+_
 
