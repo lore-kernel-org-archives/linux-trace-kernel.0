@@ -1,336 +1,345 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi2-f12.google.com (mail-oi2-f12.google.com [74.125.231.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CE0440630
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 06:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAD61A6838
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 07:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789109627; cv=none; b=SvGNn1fSAJqNcGkdlmS1v8PK9A6yAAqv/shet+wXJ8WQ2myFWalpp9sSX9tWv6gLub34+yTE2+9X3ikV3zI6FvnyfuKtSmgg5XZF10keAON5yJIKj4hV668mq7HRlW2m49O+OCuushB4smrO7NDX0U815q3G3AP+Wk11nTAARCo=
+	t=1789111675; cv=none; b=FXgekOVrheaiqYMqplA7mZIJ2V2EFpGFw2v/3fug+aKFPyy8x0j30BRjZMazfvexIv4WniEZooO3JG0p3UJ/Zr4cMnjUgHHkWOLcwULYAR27azhKzdTdNl+vsB26DhDkAPavcEWh5m6/XPeZOOaYigM2psq5SNCm7JW7+eT+VR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789109627; c=relaxed/simple;
-	bh=Ohd1NFB0IXU8jz8CK7K7mRmN+2gXKpvVzdyDRVnvAkw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qSdUM6X6N1VFjXJ/YdmOMX/5NTxVhIuFCD4dhFBNeRCH1/A4BudGVW+vvpTycV3OEfU5Eo4HYxESQP37WppZCi5NzKuDMyjh/SBqT79mATVGIQcosQhCf4UG0EfQBeAZ7JhK1Nkw/Hb9jMhZ0ewqbbHwBNx7k7bCpZ/uyVyVclU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNTw+uM7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1789111675; c=relaxed/simple;
+	bh=tlKXicP68mvDD8epUYHfxWJsPL4pCrrhzzFZISH5/wo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A827jt7P4UuHWrCaxk8PfDjrx/xHDsx+nOVyud/h9DpUfDYWLFTnb+Qf3bSFsN1xfc5VimhT+d1ALhn87xiDY/U+odYZ0lpB3fNMXzq8IhwVObvEQ9DOkASt4gJVovdZ9tG1p4+62P4aQaleAsVHzNhRtrt0kHb94l69DoEBf4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XVnA8FMY; arc=none smtp.client-ip=74.125.231.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNTw+uM7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1789109618;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ohd1NFB0IXU8jz8CK7K7mRmN+2gXKpvVzdyDRVnvAkw=;
-	b=PNTw+uM7bcAnd+Rq2Q9CfjPZWDqnKmwYF0ldyfvO4GwReHkRuSFnIag5qo/DFqcX6jBdn9
-	8gqHoMdmqZrRu30m3NydsIdflUQ4YfK2+jYKFw27twOg1jUYmAvWJsm98oqtWqrt/wi/Tz
-	JRyOqjNRzLNOjVdAOOCveR8FfKoUgXk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-haPDqdfAOnuaVtqz13tFNg-1; Fri, 11 Sep 2026 02:53:37 -0400
-X-MC-Unique: haPDqdfAOnuaVtqz13tFNg-1
-X-Mimecast-MFC-AGG-ID: haPDqdfAOnuaVtqz13tFNg_1789109616
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-485835753caso372421f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Sep 2026 23:53:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVnA8FMY"
+Received: by mail-oi2-f12.google.com with SMTP id 5614622812f47-4b37a30eac5so488297b6e.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 00:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789111672; x=1789716472; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Sk5Zw3zB+tKbZjukRzXRoZkYqPkXDjjNC32OYp6g6yE=;
+        b=XVnA8FMYbWFYOxFm+mNVfsi1dQ7KcFLqtPj7UtFP82K09HftBoXskkWslAB9oxVAsl
+         34LiYvsy5RyRga900ujMq9umJOKNKlfm14tj2UuVLmhqqu0v6GGGwX+2b4LaGqhuyr/X
+         NKFGfoBdaCeDE4E1OZ4O0hJNzeX1WXVjKCLKtbaylZAGLWrLKVtBlm/Qx8fIoWLNv66D
+         AoqtzB2LezQ7oS3b0O8mty/Oknsr/uuqry+h9Lu+I+CCzBAb0UBjoRUEAx5uffDQ1Agn
+         wi30WjokuDm6HyDuebAEqac3V2l0Ly6yPgTfIgXlJodEJ06kAH+86tS6lrOPrRhqjBSt
+         D6eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789109616; x=1789714416;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=CUiWZRov/457RXv0Axbnnwf3f4Hs0T8xh/BGp2XYrEo=;
-        b=crvS4nw9T4TJIbp7xFxeGRMR6MpHuaIAFjOrQLiP18VLd+JuJjCuOzhY/j10R8fHkF
-         FhLZJ2NZ0mf44Dz5G5zxM4/hOlWkl9gJTnRtJ0vgkScc0ZdoXMGdokIu7EsMJfrBzr9b
-         rjIcW0EQf+5If9VCUWIoK8zbV7cGAY6i9YhIo6h+H+H7Bzsy9xlrmgiSS+yQXCE7fM1I
-         cEG1oo5uXNQt0uwquqsV2yS+jqUYDPb33ap9hAksvOKgJNUOEWnqRPWjzlT3a1LCHl5Z
-         iXZJe+eLGEersJHI+ZaEsW66O17pFfWx7IQkYhyLL+IFPjC2M2eCVNTy7PR3w5hJpX0R
-         aH8w==
-X-Forwarded-Encrypted: i=1; AKwUvBxGlLF/2EQEHKW8fc530ndSvQlLdo/r3x3JWy7w3sFoQyikxQALYo7jmSFuu6h4ENbO4OEOaA7HxoumwM8dhxPn69E=@vger.kernel.org
-X-Gm-Message-State: AFuF++ntL727RXx2PTuO9F+96Z/6W25v1JBYwQ7d3rK/VOHgznkmq0/A
-	gcoC/gFD/w5B/Qwl3Z4ml5jCPEP9T3ypUeEcs1cF3IXbpnQP+IO2e2QJo6jWI8OZI2U78rm6bpJ
-	DHCkAE2RUxXGTt3RUHFFSk7OJe3xBhcN8NM5cd38/O2ghIy+tso8Vs+PjtHY/JNQdaT/+F6yuWG
-	zcWcwqs/sz
-X-Gm-Gg: AYBFou3gQViv5gK2H2ymirqrewa8N1141/+RHILrvjyF0d/YWqYiowy2no5512oGDlE
-	pcoIPISSaCYl92X0F+QB4A3MjBoMi1VEJtFb8oHjtgR9g0GBgi1kYp4JoZ5hVDpH9hPYDyA2qVY
-	hGxxTlRH15GSzSccsrOTmBRYIuYuXhv0SVBj9X4PFWGDusNzluon6lTfT9bYkswgecuzoEZ4Hzo
-	YDzy8y89BpqIt7P6VdJAaZflJ0UqEOJgoIkhNVLpB8Q6R8U0/4c4sTAIq+e3xORggUvMfAHgjBZ
-	uHT79YL/fwplNg4WcGrUjV3aOJthzoMNCYVQZUeMcx5ACF8BDjmrj/S1o1mnrYVgfMlEPkalblc
-	U73bpv1rHB1PXg6f61OhRPHnbR9WzeQ==
-X-Received: by 2002:a05:6000:25f4:b0:486:e723:efb with SMTP id ffacd0b85a97d-486eb46ae78mr2581468f8f.57.1789109615874;
-        Thu, 10 Sep 2026 23:53:35 -0700 (PDT)
-X-Received: by 2002:a05:6000:25f4:b0:486:e723:efb with SMTP id ffacd0b85a97d-486eb46ae78mr2581456f8f.57.1789109615462;
-        Thu, 10 Sep 2026 23:53:35 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb32d3c7sm3615184f8f.10.2026.09.10.23.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2026 23:53:34 -0700 (PDT)
-Message-ID: <b5ec9da630968a5f801623c8d6e2aaeb0bb509d8.camel@redhat.com>
-Subject: Re: [PATCH v5 3/5] rv/reactors: export rv_register_reactor() and
- rv_unregister_reactor()
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 11 Sep 2026 08:53:33 +0200
-In-Reply-To: <7c931773dacd7c3da35a22629c3d7dc286b5a0fe.1788705281.git.wen.yang@linux.dev>
-References: <cover.1788705281.git.wen.yang@linux.dev>
-	 <7c931773dacd7c3da35a22629c3d7dc286b5a0fe.1788705281.git.wen.yang@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+        d=1e100.net; s=20251104; t=1789111672; x=1789716472;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Sk5Zw3zB+tKbZjukRzXRoZkYqPkXDjjNC32OYp6g6yE=;
+        b=Ud0vv1taXbMz3qxLiSL86KhI2qH2cASx1yxzxrCAutZoVHiw4hHIlI8bpPxKqoaWFX
+         a+07YzbLsqcXlUOqDRJrqYralbIM/1vlWk37jzq4V1KiaI1knDGu0Ik+1iUWPeBgzCDm
+         zxjxTjzSJgB0jZxy89jdfoNmnIENZYTK2KyGKdTVCXg2rheMQXZEYik+V6touoohFJD2
+         ChUvSltaq5XTF2khaT8RtDpeH6SPKfiIPQU9eOJE+CClcsd4UpaCVQ3LiMxnbHOCGA/K
+         oViUj8rl8xoAUvBOL5jvscl1a9BaUZFnLhmxydkydxwW7l4Zpr2drN5//fVtMx875Gvm
+         wv8g==
+X-Forwarded-Encrypted: i=1; AKwUvBwQ9u1g1bQ+5A9tuaCql+2ct/O0My9jYufuhy2m7n8ZyQvSSrLQ1GM+xyBHe0oB8vuKAHSZrQYXaKG16iQ4+3/6hVc=@vger.kernel.org
+X-Gm-Message-State: AFuF++nEDCFlkgQl0jK7bRMKDNy6dYTTCmXxlSj+scw0svsWEEiGGI9k
+	8MtVPk+LCD/P48Xa8bZvk10mU1V0h4KqmOSr6lBDVIsVyE9NTH+KxaQUXTt8MOLi
+X-Gm-Gg: AYBFou328/vXkDgapU824gyqSO5qy4xfd9fOvGPGFjdfKmR0XEvpzYUJpA5yOaFVpHq
+	LTNxu4uB+FCCgZr1Nf2xWMebmmke6m5Q7RBxTQYGXXXarw2EKa2wmsfYVZ1p4IUUX68upY/UiYx
+	GoVpijudF5MhX1jddIfs8VQZsVADMyVpxsKMNsXRVDO6U1Pf5w/WLVjT7SMIKCWzitdnrN8XeIg
+	IiY3OcigFtxyLVHAtJBqitMbh4TD2+r5fRnysPSUCfjZEz9O4ix8434oKYAXJhFe/6RoPrq0nim
+	CbaXjtjtQzNPFxkxlDh8mAjPXlLzC7zfL7XRApfWxVfoWg5O4XbyFbYWa3xNaW/qQSKkzye0OBz
+	MIrebwUa9wv/OX/sQjudzrO4TMXD3PfnXBOdWpsaGc4T+Vi0fV7z1eDVkwtMvwBxxBjkYVqUJQC
+	hVvaxtaRnesgnywXLzlZBwROv0FvNczZ4zQvJZZc2DWlbRZKt1BCUCAaOITApIbd5Mb+e09/2I
+X-Received: by 2002:a05:6809:344:20b0:4c3:6d05:18b2 with SMTP id 5614622812f47-4c36d051ba9mr1617046b6e.21.1789111671795;
+        Fri, 11 Sep 2026 00:27:51 -0700 (PDT)
+Received: from [127.0.0.1] ([144.24.58.22])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4c3314b1b12sm1546853b6e.7.2026.09.11.00.27.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2026 00:27:50 -0700 (PDT)
+Message-ID: <307d6fd5-a8fa-4777-b513-9a8cce46f38a@gmail.com>
+Date: Fri, 11 Sep 2026 15:27:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XGhGVUry4SmTngGYZYqyHo4idu7B5ikblVm3TETR-j4_1789109616
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 00/12] tracing: wprobe: x86: Add wprobe for watchpoint
+Content-Language: en-US
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <178875277830.93794.14247844688761142429.stgit@devnote2>
+From: Jinchao Wang <wangjinchao600@gmail.com>
+In-Reply-To: <178875277830.93794.14247844688761142429.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2026-09-07 at 01:10 +0800, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
->=20
-> rv_react() is exported to modules, but the reactor registration helpers
-> are not.=C2=A0 Export them with EXPORT_SYMBOL_GPL() so reactor modules an=
-d
-> the tristate KUnit test module can register and unregister reactors
-> without hitting undefined symbol errors at link time(modpost).
->=20
-> Commit 3d3800b4f7f4 ("rv: Remove reactor's reference counter") noted
-> that if module-based reactors are supported, try_module_get()/module_put(=
-)
-> should be used. Add struct module *owner to struct rv_reactor so a module
-> cat set owner =3D THIS_MODULE; pin the module in monitor_swap_reactors_gi=
-ngle()
-> and release it when a monitor detaches or is unregistered.
+On 9/7/2026 11:46 AM, Masami Hiramatsu (Google) wrote:
+> Hi,
+> 
+> Here is the 15th version of the series for adding new wprobe (watch probe)
+> which provides memory access tracing event. Moreover, this can be used
+> via event trigger. Thus it can trace memory access on dynamically
+> allocated objects too.
+> The previous version is here:
+> 
+>   https://lore.kernel.org/all/178810001186.64882.2161016469449127450.stgit@devnote2/
+> 
+> In this version, previous bugfix patches for BTF kflag resolution and
+> RCU-protected kprobe blacklist were sent to Linus via probe/fixes, reducing
+> the series to 12 patches. This version addresses feedbacks from Sashiko on
+> v14[1], and more local fixes such as x86 debug register manipulation, validates
+> watched address and natural alignment, tracks missed events on SMP update
+> failures(*), prevents in-place command string modification during trigger
+> parsing, adds explicit failure checks in selftests, and documents BTF
+> typecast and struct offset syntax. I also added Assited-by: tags for this
+> update.
+> 
+> [1] https://sashiko.dev/#/patchset/178810001186.64882.2161016469449127450.stgit%40devnote2
+> (*) currently it just increase a missed counter.
+> 
+> Detailed changes are here.
+> 
+> Changes in v15:
+>  - x86/mce: Move local_db_save() to entry of exc_machine_check_kernel()
+>    and restore it on early return from mce_check_crashing_cpu() to
+>    prevent nested #DB on watched variables.
+>  - x86/hw_breakpoints: Always preserve DR7_FIXED_1 in
+>    arch_install_hw_breakpoint(), arch_uninstall_hw_breakpoint(), and
+>    hw_breakpoint_restore() for architectural compliance.
+>  - x86/hw_breakpoints: Wrap local_db_save() in a cpu_dr7_seq loop to
+>    detect NMI breakpoint updates and ensure DR7 is disabled before entry.
+>  - x86/hw_breakpoints: In local_db_restore(), restore DR7_FIXED_1 if
+>    saved dr7 is 0 and an NMI updated breakpoints, preserving KVM guest
+>    isolation.
+>  - x86/hw_breakpoints: Always write "val | DR7_FIXED_1" to hardware DR7
+>    in local_db_restore() for architectural compliance.
+>  - x86/hw_breakpoints: Avoid modifying saved dr7 in-place across retry
+>    loops.
+>  - x86/hw_breakpoints: Temporarily clear breakpoint enable bit in DR7
+>    before updating debug address register and re-enable it afterward to
+>    comply with x86 specification and avoid spurious #DBs.
+>  - HWBP: Annotate counter_arch_bp(bp)->address and bp->attr.bp_addr with
+>    WRITE_ONCE() in both update and rollback paths to prevent data races
+>    with concurrent readers (e.g. NMI handlers).
+>  - tracing/wprobe: Introduce trace_wprobe_is_valid_addr() to validate
+>    target address and natural alignment for wprobe length during event
+>    creation and trigger setup.
+>  - tracing/wprobe: Initialize irq_work and work immediately after
+>    allocation in alloc_trace_wprobe() and check tw->work.func in
+>    free_trace_wprobe() to prevent WARN_ON(!work->func) on early failures.
+>  - tracing/wprobe: Record SMP local update failures in tw->missed counter
+>    and expose missed event count as a trailing comment in trigger file.
+>  - tracing/wprobe: Duplicate field string in wprobe_trigger_typecast_parse()
+>    to avoid modifying glob in place so tracing_log_err() logs the pristine
+>    command string.
+>  - tracing/wprobe: Remove leftover offset and adjust debug print in
+>    wprobe_trigger_print().
+>  - tracing/wprobe: Add set_wprobe and clear_wprobe triggers to readme_msg
+>    in trace.c.
+>  - tracing/wprobe: Move variable declarations to function entry in
+>    trace_wprobe_show(), fix tab indentation in trace.c, and wrap lines
+>    exceeding 100 columns.
+>  - Documentation: Document BTF typecast in fetchargs and BTF struct
+>    offset resolution in set_wprobe trigger in wprobetrace.rst.
+>  - selftests/ftrace: Add explicit failure checks with fail helper across
+>    trigger-wprobe.tc, trigger-wprobe-btf-typecast.tc, and
+>    trigger-wprobe-btf-offset.tc.
+>  - selftests/ftrace: Declare fprobe README requirement in trigger tests
+>    and trigger file check in trigger-wprobe-syntax-errors.tc requires line.
+> 
+> 
+> Public branch
+> -------------
+> I will push this branch as topic/wprobe-v2 to my tree so that it
+> can be easily tested.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2
+> 
+> This is based on linux-trace tree's linux-trace/probes/fixes.
+> 
+> Usage
+> -----
+> 
+> The basic usage of this wprobe is similar to other probes;
+> 
+>   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LEN] [FETCHARGS]
+> 
+> This defines a new wprobe event. For example, to trace jiffies update,
+> you can do;
+> 
+>  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+>  echo 1 > events/wprobes/my_jiffies/enable
+> 
+> Moreover, this can be combined with event trigger to trace the memory
+> access on slab objects. The trigger syntax is;
+> 
+>   set_wprobe:WPROBE_EVENT:FIELD[+|-OFFSET][:COUNT] [if FILTER]
+>   clear_wprobe:WPROBE_EVENT[:FIELD[+|-OFFSET][:COUNT]] [if FILTER]
+> 
+> set_wprobe sets WPROBE_EVENT's watch address on FIELD[+|-OFFSET].
+> clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+> FIELD[+|-OFFSET]. If FIELD is omitted, forcibly clear the watch address
+> when trigger event is hit.
+> 
+> For example, trace the first 8 byte of the dentry data structure passed
+> to do_truncate() until it is deleted by dentry_kill().
+> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+> 
+>   # echo 'w:watch rw@-1:8 address=$addr value=+0($addr)' > dynamic_events
+> 
+>   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+>   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+> 
+>   # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+>   # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+> 
+>   # echo 1 >> events/fprobes/truncate/enable
+>   # echo 1 >> events/fprobes/dentry_kill/enable
+> 
+>   # echo aaa > /tmp/hoge
+>   # echo bbb > /tmp/hoge
+>   # echo ccc > /tmp/hoge
+>   # rm /tmp/hoge
+> 
+> Then, the trace data will show;
+> 
+>  # tracer: nop
+>  #
+>  # entries-in-buffer/entries-written: 32/32   #P:8
+>  #
+>  #                                _-----=> irqs-off/BH-disabled
+>  #                               / _----=> need-resched
+>  #                              | / _---=> hardirq/softirq
+>  #                              || / _--=> preempt-depth
+>  #                              ||| / _-=> migrate-disable
+>  #                              |||| /     delay
+>  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>  #              | |         |   |||||     |         |
+>                sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+>                sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+>                sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+>                sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+>                sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+>                sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+>                sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+>                sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+>                rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+>                rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+>                rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+>                rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+>                sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+>                sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+>                sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+>                sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+>                sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+>                sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+> 
+> 
+> Thank you,
+> 
+> ---
+> base-commit: 0c4256196b3a105307e2235fbfd85e768bbcdd0f
+> 
+> Jinchao Wang (2):
+>       x86/hw_breakpoints: Make DR7 updates NMI safe
+>       x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+> 
+> Masami Hiramatsu (Google) (10):
+>       x86/mce: Fix hardware debug register corruption on task migration
+>       HWBP: Add modify_local_hw_breakpoint_addr() API
+>       tracing/wprobe: Add wprobe (watchpoint probe) trace event support
+>       x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+>       selftests: tracing: Add a basic testcase for wprobe
+>       selftests: tracing: Add syntax testcase for wprobe
+>       tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+>       selftests: tracing: Add wprobe trigger testcase
+>       tracing/wprobe: Support BTF typecast in fetchargs
+>       tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+> 
+> 
+>  Documentation/trace/index.rst                      |    1 
+>  Documentation/trace/wprobetrace.rst                |  200 +++
+>  arch/Kconfig                                       |   18 
+>  arch/x86/Kconfig                                   |    2 
+>  arch/x86/include/asm/debugreg.h                    |   67 +
+>  arch/x86/include/asm/hw_breakpoint.h               |    2 
+>  arch/x86/kernel/cpu/mce/core.c                     |   29 
+>  arch/x86/kernel/hw_breakpoint.c                    |  151 +-
+>  arch/x86/kernel/nmi.c                              |    7 
+>  arch/x86/kernel/traps.c                            |   10 
+>  include/linux/hw_breakpoint.h                      |    6 
+>  include/linux/trace_events.h                       |    3 
+>  kernel/events/hw_breakpoint.c                      |   48 +
+>  kernel/trace/Kconfig                               |   24 
+>  kernel/trace/Makefile                              |    1 
+>  kernel/trace/trace.c                               |   13 
+>  kernel/trace/trace.h                               |    6 
+>  kernel/trace/trace_events_trigger.c                |    2 
+>  kernel/trace/trace_probe.c                         |   36 
+>  kernel/trace/trace_probe.h                         |   22 
+>  kernel/trace/trace_wprobe.c                        | 1522 ++++++++++++++++++++
+>  tools/testing/selftests/ftrace/config              |    3 
+>  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+>  .../test.d/dynevent/wprobes_syntax_errors.tc       |   23 
+>  .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   85 +
+>  .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   85 +
+>  .../test.d/trigger/trigger-wprobe-syntax-errors.tc |   37 
+>  .../ftrace/test.d/trigger/trigger-wprobe.tc        |  107 +
+>  28 files changed, 2476 insertions(+), 97 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax-errors.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi Masami,
 
-You needed these symbols in KUnit and we are exporting them for /potential/
-future support of reactors as modules. I don't see any technical reason why=
- we
-shouldn't support this, but they are currently /not/ supported.
+I see the watch address update currently goes irq_work -> workqueue ->
+on_each_cpu().  I would like to discuss that path.
 
-I know sashiko and other LLMs complain about this, and they have a point, b=
-ut
-you can ignore them. At most state in this commit message that this does NO=
-T add
-support for reactors as modules.
+The race window wprobe may be used to watch can be very narrow --
+sometimes it lives entirely inside a single function -- and the trigger
+does not always run in in_task() context.  The current path defers the
+update to a work item, so by the time the debug registers are updated the
+window may already be gone.
 
-Let's focus this series on its original intent (fix a lockdep warning and a=
-dd
-some KUnit tests that expose a reproducer), then if adding support for reac=
-tors
-as modules is so simple, you can do it in another series.
+Now that we have modify_local_hw_breakpoint_addr(), the trigger could arm
+the local CPU directly and use smp_call_function_single_async() for the
+remote ones.  That should improve the overlap between the watch and the window.
 
-If you really want to /also/ add support for reactors as modules in this se=
-ries,
-you need to make that very explicit (not just a vague line in the changelog=
-, but
-rather rewrite the entire cover letter and commit message).
-And mind that this would mean your series needs to go through another round=
- of
-review and serious testing: you are adding a new feature.
-
-> In-tree reactors leave owner =3D NULL and are unaffected.
->=20
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-Please, whenever you significantly change an already reviewed patch, remove=
- the
-reviewed-by, so I can quickly see I need to review it again.
+What do you think?
 
 Thanks,
-Gabriele
-
-> Signed-off-by: Wen Yang <wen.yang@linux.dev>
-> ---
-> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +++
-> =C2=A0kernel/trace/rv/rv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 5 +++++
-> =C2=A0kernel/trace/rv/rv_reactors.c | 38 +++++++++++++++++++++++++++++---=
----
-> =C2=A03 files changed, 40 insertions(+), 6 deletions(-)
->=20
-> diff --git a/include/linux/rv.h b/include/linux/rv.h
-> index 541ba404926a..ff3289ba4f02 100644
-> --- a/include/linux/rv.h
-> +++ b/include/linux/rv.h
-> @@ -128,10 +128,13 @@ union rv_task_monitor {
-> =C2=A0};
-> =C2=A0
-> =C2=A0#ifdef CONFIG_RV_REACTORS
-> +struct module;
-> +
-> =C2=A0struct rv_reactor {
-> =C2=A0=09const char=09=09*name;
-> =C2=A0=09const char=09=09*description;
-> =C2=A0=09__printf(1, 0) void=09(*react)(const char *msg, va_list args);
-> +=09struct module=09=09*owner;
-> =C2=A0=09struct list_head=09list;
-> =C2=A0};
-> =C2=A0#endif
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 29f155c6968b..458b17c005b3 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -803,6 +803,11 @@ int rv_unregister_monitor(struct rv_monitor *monitor=
-)
-> =C2=A0=09guard(mutex)(&rv_interface_lock);
-> =C2=A0
-> =C2=A0=09rv_disable_monitor(monitor);
-> +#ifdef CONFIG_RV_REACTORS
-> +=09if (monitor->reactor)
-> +=09=09module_put(monitor->reactor->owner);
-> +
-> +#endif
-> =C2=A0=09list_del(&monitor->list);
-> =C2=A0=09destroy_monitor_dir(monitor);
-> =C2=A0
-> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
-c
-> index ff7d478227c3..136eb7f47c4a 100644
-> --- a/kernel/trace/rv/rv_reactors.c
-> +++ b/kernel/trace/rv/rv_reactors.c
-> @@ -62,6 +62,7 @@
-> =C2=A0 */
-> =C2=A0
-> =C2=A0#include <linux/lockdep.h>
-> +#include <linux/module.h>
-> =C2=A0#include <linux/slab.h>
-> =C2=A0
-> =C2=A0#include "rv.h"
-> @@ -159,7 +160,7 @@ static const struct seq_operations
-> monitor_reactors_seq_ops =3D {
-> =C2=A0=09.show=09=3D monitor_reactor_show
-> =C2=A0};
-> =C2=A0
-> -static void monitor_swap_reactors_single(struct rv_monitor *mon,
-> +static int monitor_swap_reactors_single(struct rv_monitor *mon,
-> =C2=A0=09=09=09=09=09 struct rv_reactor *reactor,
-> =C2=A0=09=09=09=09=09 bool nested)
-> =C2=A0{
-> @@ -167,29 +168,39 @@ static void monitor_swap_reactors_single(struct
-> rv_monitor *mon,
-> =C2=A0
-> =C2=A0=09/* nothing to do */
-> =C2=A0=09if (mon->reactor =3D=3D reactor)
-> -=09=09return;
-> +=09=09return 0;
-> +
-> +=09if (reactor->owner && !try_module_get(reactor->owner))
-> +=09=09return -EBUSY;
-> =C2=A0
-> =C2=A0=09monitor_enabled =3D mon->enabled;
-> =C2=A0=09if (monitor_enabled)
-> =C2=A0=09=09rv_disable_monitor(mon);
-> =C2=A0
-> +=09if (mon->reactor)
-> +=09=09module_put(mon->reactor->owner);
-> =C2=A0=09mon->reactor =3D reactor;
-> =C2=A0=09mon->react =3D reactor->react;
-> =C2=A0
-> =C2=A0=09/* enable only once if iterating through a container */
-> =C2=A0=09if (monitor_enabled && !nested)
-> =C2=A0=09=09rv_enable_monitor(mon);
-> +
-> +=09return 0;
-> =C2=A0}
-> =C2=A0
-> -static void monitor_swap_reactors(struct rv_monitor *mon, struct rv_reac=
-tor
-> *reactor)
-> +static int monitor_swap_reactors(struct rv_monitor *mon, struct rv_react=
-or
-> *reactor)
-> =C2=A0{
-> =C2=A0=09struct rv_monitor *p =3D mon;
-> +=09int ret;
-> =C2=A0
-> =C2=A0=09if (rv_is_container_monitor(mon))
-> =C2=A0=09=09list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> =C2=A0=09=09=09if (p->parent !=3D mon)
-> =C2=A0=09=09=09=09break;
-> -=09=09=09monitor_swap_reactors_single(p, reactor, true);
-> +=09=09=09ret =3D monitor_swap_reactors_single(p, reactor, true);
-> +=09=09=09if (ret)
-> +=09=09=09=09return ret;
-> =C2=A0=09=09}
-> =C2=A0=09/*
-> =C2=A0=09 * This call enables and disables the monitor if they were activ=
-e.
-> @@ -197,7 +208,7 @@ static void monitor_swap_reactors(struct rv_monitor *=
-mon,
-> struct rv_reactor *rea
-> =C2=A0=09 * All nested monitors are enabled also if they were off, we may
-> refine
-> =C2=A0=09 * this logic in the future.
-> =C2=A0=09 */
-> -=09monitor_swap_reactors_single(mon, reactor, false);
-> +=09return monitor_swap_reactors_single(mon, reactor, false);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static ssize_t
-> @@ -236,10 +247,14 @@ monitor_reactors_write(struct file *file, const cha=
-r
-> __user *user_buf,
-> =C2=A0=09guard(mutex)(&rv_interface_lock);
-> =C2=A0
-> =C2=A0=09list_for_each_entry(reactor, &rv_reactors_list, list) {
-> +=09=09int ret;
-> +
-> =C2=A0=09=09if (strcmp(ptr, reactor->name) !=3D 0)
-> =C2=A0=09=09=09continue;
-> =C2=A0
-> -=09=09monitor_swap_reactors(mon, reactor);
-> +=09=09ret =3D monitor_swap_reactors(mon, reactor);
-> +=09=09if (ret)
-> +=09=09=09return ret;
-> =C2=A0
-> =C2=A0=09=09return count;
-> =C2=A0=09}
-> @@ -314,6 +329,7 @@ int rv_register_reactor(struct rv_reactor *reactor)
-> =C2=A0=09guard(mutex)(&rv_interface_lock);
-> =C2=A0=09return __rv_register_reactor(reactor);
-> =C2=A0}
-> +EXPORT_SYMBOL_GPL(rv_register_reactor);
-> =C2=A0
-> =C2=A0/**
-> =C2=A0 * rv_unregister_reactor - unregister a rv reactor.
-> @@ -327,6 +343,7 @@ int rv_unregister_reactor(struct rv_reactor *reactor)
-> =C2=A0=09list_del(&reactor->list);
-> =C2=A0=09return 0;
-> =C2=A0}
-> +EXPORT_SYMBOL_GPL(rv_unregister_reactor);
-> =C2=A0
-> =C2=A0/*
-> =C2=A0 * reacting_on interface.
-> @@ -421,6 +438,15 @@ int reactor_populate_monitor(struct rv_monitor *mon,
-> struct dentry *root)
-> =C2=A0=09 * Configure as the rv_nop reactor.
-> =C2=A0=09 */
-> =C2=A0=09mon->reactor =3D get_reactor_rdef_by_name("nop");
-> +=09if (WARN_ON(!mon->reactor)) {
-> +=09=09rv_remove(tmp);
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09if (mon->reactor->owner && !try_module_get(mon->reactor->owner)) {
-> +=09=09rv_remove(tmp);
-> +=09=09return -EBUSY;
-> +=09}
-> =C2=A0
-> =C2=A0=09return 0;
-> =C2=A0}
-
+Jinchao
