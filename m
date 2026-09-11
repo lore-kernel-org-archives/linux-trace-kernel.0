@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B171E459AE6;
-	Fri, 11 Sep 2026 09:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D7D471CF9;
+	Fri, 11 Sep 2026 09:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789118293; cv=none; b=bcT2vTB3nGzvRcaCl4tD/kwq1l5K3unONkO8pWLxSqheT8GWxZc8OSIO3w8fRZQW7z3ULJev97WAi8ZgslWy77pgZCKhvd8mpazG3InJxbyd2Wc8ubKC88fPPpK2ZkGRm1+ZAxhnZcXtVPyGTJ/722gFALnPD3zTuWTDjaWKye8=
+	t=1789118397; cv=none; b=XjmN9P3Cv5tUJL+1//wIIiqztXSabJ+HJr7uEIPnYGxYt1xuZtPNqIwXhcy/25Se96nNbid8iH+DHrCTU9It9Z+kDqdDs4JJHdRV+JYvx3svbqFIwQnqAidu0HJ0v73E63h5PBw6kXD3vkdSM3oSXfi45QhGzxvOFUlF4VJ/ggQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789118293; c=relaxed/simple;
-	bh=F4gYdBbmajqkyCINPzu7zVwcdxrJlsDCWKhr3p++93k=;
+	s=arc-20240116; t=1789118397; c=relaxed/simple;
+	bh=x4HjFt9hC9MVbkBet+CRb0bKBH7jlDEbqN+Sd6H1xzQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SMXdRe5T2OF6MXuwEcJEkbS6EBrUEhIeFeccDAK97hK/iirEopIe5ln7CDgl24wgmgqcNu0z8P+4jni3TChgSQjY12XP8HtbvedzH/XJBtxz4ONcfKWvT4WFEIQv5GJcoX/BdgDUVj6b6+GLeC7d1vtvvCXt8/xuKQqZ3fH1i/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cKjeL3h4; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=Kf4sjjJZgBuF2ovSUX86aT7NCeUlK4RoprS5AClvSZceEPtqwndlEZkHqaBujFUlBpdHextArFC9JRobTQMKmyn5A6kRvLOEdaaOWIlkO/XiTo05GHwlOzJRWBzrf9SAJTVfe4DxHFm03uAA4MZ9Sg22vlQtEtlhBIdKXKLxzLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7qvj7a5; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cKjeL3h4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7qvj7a5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789118292; x=1820654292;
+  t=1789118395; x=1820654395;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=F4gYdBbmajqkyCINPzu7zVwcdxrJlsDCWKhr3p++93k=;
-  b=cKjeL3h4cMrXQMYZQFCNkOx3Qwhjz1mofLO5X/wGpZffn4/8DHBgsK/D
-   qsHcKYeG/QhjcoeMXSwdEt9bbjH8lDommF9nXkkB/4YJc1Tdxn6qFqmbv
-   QgdZfW+Nq4EZrJsj/Z19bKN3JRo9h7lPxg+eBlcsCwxNzTDdMg41P8WMW
-   /XAk6BpmVHcY7HVpILFlUCFDJx62kfGiJ1MkcjcflfAwfF2npbWyDobC6
-   g0k3EKViwjiRqDaABuueyR6Ni2a9a2tXS08lWBsYgbz7HiFiv88xDdXNM
-   VBtRdsGuY2oDPBjcDszGxT8zmyACtfZ4llu4BDcpZP875PvbApxJzbrje
+  bh=x4HjFt9hC9MVbkBet+CRb0bKBH7jlDEbqN+Sd6H1xzQ=;
+  b=J7qvj7a55nlLrV5x7REGY6PdWmij4sDhuUixRXnOnHmi7PV3dHfgquLy
+   utap1X+l4qw2A8jykIaxyuJmvn8HlGu3/s8Re/Sp54sbzJ67cXqvEOqBP
+   4ru65v2MeziGVcIc4cKtuj5aFlZwhUH8bjJV5aCqi14sXfLsUN/4rVVic
+   wNHQBxuuHx8WywjDGrCJ6+srpezu+6NF33lyQBekAIFDIS8zUP+q3KeV9
+   2pfA+FSguBd4+QPcCMM3uUfXYC4OmQk2dAHV4lWKGelJ0lGJub4nks+rf
+   M4SnsrNyz+vFc3gPyGyHehpVdEqQufCCobEaHQ/5AiOROPnXcPhNvS3kk
    A==;
-X-CSE-ConnectionGUID: zavHJylTQcK5ZYtluKCF+g==
-X-CSE-MsgGUID: qez/0h88TW+fM9Ee8B8vgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11901"; a="89450907"
+X-CSE-ConnectionGUID: rCwkunblS4S+foQUGV0AIg==
+X-CSE-MsgGUID: TkiKeaWATF+YU3Eoc90KDQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11901"; a="89451016"
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="89450907"
+   d="scan'208";a="89451016"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:18:11 -0700
-X-CSE-ConnectionGUID: LGX/EWeHSPeVzgyLApP5NA==
-X-CSE-MsgGUID: IuTtAxozTIW46d9/CqObww==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:19:54 -0700
+X-CSE-ConnectionGUID: MskVPNAUQaecybhe4vi6ug==
+X-CSE-MsgGUID: MyILX2DsQcKOmEi/YU31iQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="238127"
+   d="scan'208";a="238657"
 Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.240.119]) ([10.124.240.119])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:17:54 -0700
-Message-ID: <9eee9ca8-3818-435f-ae09-78b241050e9e@intel.com>
-Date: Fri, 11 Sep 2026 17:17:51 +0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:19:37 -0700
+Message-ID: <e84d09bf-2c15-4d2b-967f-e6ae47d0e87c@intel.com>
+Date: Fri, 11 Sep 2026 17:19:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 01/44] KVM: guest_memfd: Optimize away conversion
- overheads via dead-code elimination
+Subject: Re: [PATCH v13 07/44] KVM: Rename kvm_mem_is_private() to
+ kvm_is_private_gfn()
 To: ackerleytng@google.com, aik@amd.com, andrew.jones@linux.dev,
  binbin.wu@linux.intel.com, brauner@kernel.org, chao.p.peng@linux.intel.com,
  david@kernel.org, jmattson@google.com, jthoughton@google.com,
@@ -89,36 +89,26 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
  linux-coco@lists.linux.dev
 References: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
- <20260910-gmem-inplace-conversion-v13-1-dd6fbf94f4e1@google.com>
+ <20260910-gmem-inplace-conversion-v13-7-dd6fbf94f4e1@google.com>
 Content-Language: en-US
 From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20260910-gmem-inplace-conversion-v13-1-dd6fbf94f4e1@google.com>
+In-Reply-To: <20260910-gmem-inplace-conversion-v13-7-dd6fbf94f4e1@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 9/11/2026 7:55 AM, Ackerley Tng via B4 Relay wrote:
-> From: Sean Christopherson <seanjc@google.com>
+> From: Ackerley Tng <ackerleytng@google.com>
 > 
-> Add and use kvm_arch_has_gmem_convert() to guard guest_memfd's invocation
-> of arch hooks related to converting memory between private and shared, as
-> only one half of the x86 CoCo duo needs the runtime hooks (any pre-work is
-> pure overhead for TDX).  At this exact moment, the overhead is negligible,
-> but that will change when in-place conversion comes along, at which point
-> to-shared conversions will "need" to find all affected folios prior to
-> calling into arch code.  In quotes because very technically that work could
-> be pushed to arch code, but that would bleed guest_memfd details into arch
-> code and would be far worse than adding yet another kvm_arch_has... hook.
+> Rename kvm_mem_is_private() to kvm_is_private_gfn() to prepare for in-place
+> conversion, where there will be two lookup functions,
+> kvm_vm_is_private_gfn() and kvm_gmem_is_private_gfn().
 > 
-> Opportunistically provide the kvm_arch_gmem_make_private() declaration, and
-> rely on dead-code elimination to eliminate the call to non-existent code
-> when CONFIG_HAVE_KVM_ARCH_GMEM_CONVERT=n.
+> This renaming allows consistent prefixing of "vm" vs "gmem" for
+> kvm_*_is_private_gfn(), as opposed to kvm_gmem_mem_is_private(), which
+> looks like a typo.
 > 
-> Reported-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Closes: https://lore.kernel.org/all/1ec08cd8-3072-4753-ad5e-cd34956647f8@linux.intel.com
-> Suggested-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
 > Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 > Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 > Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
