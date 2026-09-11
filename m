@@ -1,184 +1,224 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C887D35B63F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 14:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6E235F60A;
+	Fri, 11 Sep 2026 14:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789135808; cv=none; b=UiKPQHxQ1G9DxtVVabz0MDolaVFFSmetPIte5tb5+uTJOmPYTqfWJJXwU7tykWajssusuYIInDwmZrk91J2DLYlOcuxmJUapFSbmRBMtbu97C7SeNKbxs038bnnibvODvJuVmRCezRQCAw0I0GC7b+OcI4/Wr8dg/70t4UCkqOY=
+	t=1789135811; cv=none; b=ZpmSQW46RoWsEVK/+8J6MyEYOSCUwz+FCtS+H2qXheRuHMRZVZy+nyttXcu7aeZ3ZIAqZYaZgUHLUVNhvSMyo0KFokx0s6MCqUTb2TgBhQjMsuk17zeIpwmDMfQWlkjnAVsjW7dzu6d/lAEDYPqxLSxdfrdKqlAS68NW8OcR6lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789135808; c=relaxed/simple;
-	bh=8cFDFeD2IXPN8Vlj1EymtW9Bi32PSZwsbXS468MRSTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uzyT/YiHkx5iX1wyhaVon5/QH7hP/u7ln//en12uQxqOZD/baorjsBZeGnR32y+hLjx5GYYM7u/s4W0ifWhGe2pGDBhBPAaGiHgDZ7xcEoHlfwQpW8KXFaCWhRbIt19bxSRYke9MckTzSusMFqNFfMd0DBS5fjlEJkYXbO/kl1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=AO0u/AX8; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1789135811; c=relaxed/simple;
+	bh=hZ9xzrt4yyeD9cnR2YBm71XlWbyTcuBCsTUisFq7y8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e3DQxUmU/3K8qMaq2BTkDtt3JOCn98U4HHkthP2dJ9r3A2kscGllD1NMSpicEin2U4/+SP+vFdc5bduD306UfqOCvCD+0jsJMcDBfKc4LTm1SHID/SAJKqLHO9qhJsOYJ1ZXT3O2cJNZFqhMawIzGWb8TOJeSb5vv7Yr0IFryZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Y2VxROuq; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="AO0u/AX8"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-92f0b5ed131so121693985a.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Sep 2026 07:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789135804; x=1789740604; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=hbVlQmHCpb9zv+5BDFsE+SK081jwlXFhk4tZhnaWY5k=;
-        b=AO0u/AX8T2KO9cUT21S8NZRAtESkc/8lg+v96HISVkTT7B10Mjmvm8BmfwPFrST/Ea
-         eHAw7XB0udEm4icZnkQxCqHzVeES3CSJFA/jmnILW85HT4C+GozarSvEh+N3OPILfXNn
-         Hb2DXQGzHE07x0W/wCsgPkopcf60quSzzFv7BjvxE9CQ29+58ttPSF+RleZKLtOAvJL5
-         xDjsow38dudkVjd+2EjMtOniOpMgAJ6gvOdCW6m+1L8UD8/XeCmjM9IQNUVeoLFPBUjI
-         +2qLeWf9wL+LL1De3OC7dOk9Rek4M4/hZTsrTcsUl520tXWy37O4+V/SmPQZ9SGRmGsU
-         WdAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789135804; x=1789740604;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hbVlQmHCpb9zv+5BDFsE+SK081jwlXFhk4tZhnaWY5k=;
-        b=U95wEdSLUF0RDJ0FA711270RdtWXfjp9nxREHlxbYFd93B6nA2ZlD0OHoFAPKIwOyq
-         VjzXSaYwxM5BFxrYwdBX8kcVhywAHmUMugPxFye8WDSgGzbULX0U8Kq7X8VwBekd2zpB
-         RcxCDpjTPvpuL0wiQ/3Nq5SY4FrXeklrFy4gJ1ubt6XVjhCAzN/w6eaTExpElw0Mks9D
-         NjgEux+RFMBgvcyiH5KpRnmk7NZ79jVJGRAPnPLlGwSvzI7wWRaCoHp1Dux/Qy/riqIU
-         9RZhexJMbQ2en9uI0E1NIOy3wdNgs+Ump3HmmciFE7KBYSdRoxgxOi3Raf1ALVoo21xd
-         eUmg==
-X-Forwarded-Encrypted: i=1; AKwUvByt6c+JTKmt4fWx70DsojEB+Zzxe4WpICakhFP6QZNzN7FHMBKjIMm7y1ZG2aOlf+zNMJ9QXCs8ZI3pH5hyzKsE7Fk=@vger.kernel.org
-X-Gm-Message-State: AFuF++nQMNlDc9Ah6G2gI6zzr3gdhLQ2LLcVztDTV1ort6Tw9a2kWKfI
-	Del9smsw5sn5afZkkgz+5dq5+G3IomPVn2RjTJF9fnZ8Z6w4K6Qqg8AWzG14KNXIMrg=
-X-Gm-Gg: AYBFou2u+7udTN8U0p/5fuvPHnZtpq1en1lUDw5kRi1w6Ht0e7uSjDgX8u4Zd+3Hwad
-	ML2vYZJOijAR/ajU493xerGlsNuP4z2TqK2jAWhnTvjXGPwU2cnayHm1oEv5PfaQ/xl1Lrjf8jD
-	mERUKH0fjh8uTZ+Jy6c/JJHWThRrgWzk5rOVtzQTLYDOwxEjHNGm1KCzyUv1X70Uuf6ITCJ1hi5
-	jYVJenK6mRaKe+mrF6D05ql/EUXHwAFmz/jWolFYuJ4mrkiVbJyYlrdnAijqCVnII1sn10iJvrs
-	n3C19d+Db8TNqU1CqkGI0HtJ5zyqsA1f9YqIpEQS/8GxX9R0OENv5b26ZFPO2iz11O8i5sTsMZK
-	1vh3a0YM6gO8BbQ+kpLAtHMUYB4LmHcDPUPBHOqnlGWKypYU0Q2usSKxo63uIYUn/pMYOBXi6Hj
-	4EHAfst3/K2qOLmisdcN5YVRNHxswIDgdGuLaY46ZyOi0XoCWdPpPJNAcPKSfhDOaLK0gCxZtqW
-	2hL9//XOLDWpqA5fT+PVwEds/T5S+tdIMf60S6nIldOwkpCqIqJDd6Z
-X-Received: by 2002:a05:620a:198d:b0:939:3a81:326 with SMTP id af79cd13be357-939ea18c166mr526461185a.37.1789135803738;
-        Fri, 11 Sep 2026 07:10:03 -0700 (PDT)
-Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-939f1dd527asm125166385a.16.2026.09.11.07.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 07:10:01 -0700 (PDT)
-From: Josef Bacik <josef@toxicpanda.com>
-Date: Fri, 11 Sep 2026 14:08:45 +0000
-Subject: [PATCH RFC v2 07/15] x86/kprobes: Maintain Tasks RCU trampoline
- nesting in the optprobe template
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Y2VxROuq"
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6324E1C1C17;
+	Fri, 11 Sep 2026 14:10:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 7288820028;
+	Fri, 11 Sep 2026 14:09:59 +0000 (UTC)
+Date: Fri, 11 Sep 2026 10:11:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Kairui Song
+ <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
+ <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>,
+ Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org (open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)),
+ Ridong Chen <chenridong@xiaomi.com>
+Subject: Re: [PATCH 2/3] mm/mglru: add tracepoint for scan_folios()
+Message-ID: <20260911101120.25e3495a@gandalf.local.home>
+In-Reply-To: <20260911072848.2346073-3-ridong.chen@linux.dev>
+References: <20260911072848.2346073-1-ridong.chen@linux.dev>
+	<20260911072848.2346073-3-ridong.chen@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260911-b4-rcu-tasks-preempt-qs-v2-7-eaaa61ed2da4@toxicpanda.com>
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
-In-Reply-To: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
- Joel Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
- Xu Kuohai <xukuohai@huaweicloud.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
- Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
- Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, 
- rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openssh-sha256; t=1789135736; l=2636;
- i=josef@toxicpanda.com; h=from:subject:message-id;
- bh=8cFDFeD2IXPN8Vlj1EymtW9Bi32PSZwsbXS468MRSTs=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgUBr36M/n0nWN0DNbnxwzIiCZez6MG
- JiruuNaSCI/zXsAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QE88Fo4D8KnMZviii3UcxtNsSOWitctfeeqTUeKrfDl5ze3tUkJnL+Us2LrW6ea29znHZAO8PVa
- SQS9QIpNv5Ao=
-X-Developer-Key: i=josef@toxicpanda.com; a=openssh;
- fpr=SHA256:C8kOX2QUJCMqnCX+KEeoqRAjLo9L+ELOSH2NSAJHqGA
+X-Stat-Signature: z4qikr9ze6ijf13jt3i4esh36hxubsui
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 7288820028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19T0oTOyvjgt5li9uFXcMUJERRsN76FEGY=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=mNBI0OlIe4nzIdsfwzVCeMqFH4qZxaPBgm0tmhtgZaE=; b=Y2VxROuqMdZ4zfgK9/f6AKrfKHXGoeUDmeQv85XnbiZZQOMTF84x1FM/RTeVyxo4c567bHvNLMv8fTaprArehqeBQaXu9+F3Fwb7c2U9XoNA2SABG8sRvSLIVDKgnIixjSDjNqUuEvsMg+yDH0sL5ZDc4JhdSUkDNxS7ijgRmm4=
+X-HE-Tag: 1789135799-473225
+X-HE-Meta: U2FsdGVkX1+EGFXRnXr/J3wqoz/KqkpAHbA33YbqajygCWkhwg0wfXJt4aZhAuaXRBNKSnOvt5Z3reG4g4wu6PCXgzdWSCgHqVcFVkESUfxoMO/77XBjhN99o1EqRO41WYpphK4aOzeD0N1FBkMjLmsBujhRKUu/j4e/7ZyF7tAFOB+E5VfYDkQQ7ywkxfGmY11K29qi83HDWYmpUgikZxAp408wyXkvXPXELwZXt2ND5qHAPSv4zy2c8iVVDfodX1h/OMI5ap/AS19+U1ehwrEg+EO8tBTvAO3Bqn+HsYG9dTSgMQb1FqtrqWMTU9l0
 
-The jump-optimized kprobe template calls optimized_callback() with
-preemption still enabled for its first few instructions, so bracket the
-call with an increment/decrement of current->rcu_tramp_nesting.  The
-template lives in .rodata and is memcpy()d into each optinsn slot without
-relocation processing, so the per-CPU reference to current_task must be
-an absolute %gs: address (R_X86_64_32S, relocated for KASLR like any
-other) rather than %rip-relative.  %rax has already been saved by
-SAVE_REGS_STRING and is dead after the call.
+On Fri, 11 Sep 2026 15:28:47 +0800
+Ridong Chen <ridong.chen@linux.dev> wrote:
 
-The slot itself is dynamically allocated text, so the instructions before
-the increment and after the decrement are covered by the irq-exit IP
-check.  64-bit only; 32-bit x86 does not take part.
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index 8a872990b4be..c39dfacef033 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -392,6 +392,69 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+>  		__print_symbolic(__entry->lru, LRU_NAMES))
+>  );
+>  
+> +TRACE_EVENT(mm_mglru_scan_folios,
+> +
+> +	TP_PROTO(u64 memcg_id,
+> +		int highest_zoneidx,
+> +		int order,
+> +		unsigned long nr_requested,
+> +		unsigned long nr_scanned,
+> +		unsigned long nr_sorted,
+> +		unsigned long nr_skipped,
+> +		unsigned long nr_taken,
+> +		int lru,
+> +		unsigned long max_seq,
+> +		int tier,
+> +		unsigned long min_seq),
+> +
+> +	TP_ARGS(memcg_id, highest_zoneidx, order, nr_requested, nr_scanned,
+> +		nr_sorted, nr_skipped, nr_taken, lru, max_seq, tier, min_seq),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u64, memcg_id)
+> +		__field(int, highest_zoneidx)
+> +		__field(int, order)
+> +		__field(unsigned long, nr_requested)
+> +		__field(unsigned long, nr_scanned)
+> +		__field(unsigned long, nr_sorted)
+> +		__field(unsigned long, nr_skipped)
+> +		__field(unsigned long, nr_taken)
+> +		__field(int, lru)
+> +		__field(unsigned long, max_seq)
+> +		__field(int, tier)
+> +		__field(unsigned long, min_seq)
 
-Assisted-by: LLM
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- arch/x86/kernel/kprobes/opt.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Please keep "int"s together. This creates a structure that is used to write
+into the ring buffer. On 64bit machines, the above would add 4 bytes of
+padding after each int, whereas:
 
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 3f8fea52619f..f722520bb989 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -31,6 +31,7 @@
- #include <asm/set_memory.h>
- #include <asm/sections.h>
- #include <asm/nospec-branch.h>
-+#include <asm/asm-offsets.h>
- 
- #include "common.h"
- 
-@@ -101,6 +102,23 @@ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
- 	*(unsigned long *)addr = val;
- }
- 
-+/*
-+ * Tasks RCU trampoline nesting, see rcu_tasks_trampoline_enter().  The
-+ * template is memcpy()d into the slot without relocation processing, so the
-+ * per-CPU reference must be absolute, not %rip-relative.
-+ */
-+#if defined(CONFIG_TASKS_RCU) && defined(CONFIG_X86_64)
-+#define OPTPROBE_RCU_TASKS_ENTER					\
-+			"	movq %gs:current_task, %rax\n"		\
-+			"	incl " __stringify(TASK_rcu_tramp_nesting) "(%rax)\n"
-+#define OPTPROBE_RCU_TASKS_EXIT					\
-+			"	movq %gs:current_task, %rax\n"		\
-+			"	decl " __stringify(TASK_rcu_tramp_nesting) "(%rax)\n"
-+#else
-+#define OPTPROBE_RCU_TASKS_ENTER
-+#define OPTPROBE_RCU_TASKS_EXIT
-+#endif
-+
- asm (
- 			".pushsection .rodata\n"
- 			".global optprobe_template_entry\n"
-@@ -114,6 +132,7 @@ asm (
- 			"optprobe_template_clac:\n"
- 			ASM_NOP3
- 			SAVE_REGS_STRING
-+			OPTPROBE_RCU_TASKS_ENTER
- 			"	movq %rsp, %rsi\n"
- 			".global optprobe_template_val\n"
- 			"optprobe_template_val:\n"
-@@ -122,6 +141,7 @@ asm (
- 			".global optprobe_template_call\n"
- 			"optprobe_template_call:\n"
- 			ASM_NOP5
-+			OPTPROBE_RCU_TASKS_EXIT
- 			/* Copy 'regs->flags' into 'regs->ss'. */
- 			"	movq 18*8(%rsp), %rdx\n"
- 			"	movq %rdx, 20*8(%rsp)\n"
+		__field(unsigned long, max_seq)
+		__field(unsigned long, min_seq)
+		__field(int, lru)
+		__field(int, tier)
 
--- 
-2.55.0
 
+would not.
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->memcg_id = memcg_id;
+> +		__entry->highest_zoneidx = highest_zoneidx;
+> +		__entry->order = order;
+> +		__entry->nr_requested = nr_requested;
+> +		__entry->nr_scanned = nr_scanned;
+> +		__entry->nr_sorted = nr_sorted;
+> +		__entry->nr_skipped = nr_skipped;
+> +		__entry->nr_taken = nr_taken;
+> +		__entry->lru = lru;
+> +		__entry->max_seq = max_seq;
+> +		__entry->tier = tier;
+> +		__entry->min_seq = min_seq;
+> +	),
+> +
+> +	TP_printk("memcg_id=%llu classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_sorted=%lu nr_skipped=%lu nr_taken=%lu lru=%s max_seq=%lu tier=%d min_seq=%lu",
+> +		__entry->memcg_id,
+> +		__entry->highest_zoneidx,
+> +		__entry->order,
+> +		__entry->nr_requested,
+> +		__entry->nr_scanned,
+> +		__entry->nr_sorted,
+> +		__entry->nr_skipped,
+> +		__entry->nr_taken,
+> +		__print_symbolic(__entry->lru, LRU_NAMES),
+> +		__entry->max_seq,
+> +		__entry->tier,
+> +		__entry->min_seq)
+> +);
+> +
+>  TRACE_EVENT(mm_vmscan_write_folio,
+>  
+>  	TP_PROTO(struct folio *folio),
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 2554a6513aa8..bd1b9ecf2e84 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -4876,6 +4876,12 @@ static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
+>  	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
+>  				scanned, skipped, isolated,
+>  				type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
+> +	trace_mm_mglru_scan_folios(mem_cgroup_id(lruvec_memcg(lruvec)),
+> +				   sc->reclaim_idx, sc->order, nr_to_scan,
+> +				   scanned, sorted, skipped, isolated,
+> +				   type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON,
+> +				   lrugen->max_seq, tier,
+> +				   lrugen->min_seq[type]);
+
+Can't this information be processed in the tracepoint? That is:
+
+	TP_PROTO(struct lruvec *lruvec,
+		 struct scan_control *sc,
+		 struct lru_gen_folio *lrugen,
+		 unsigned long nr_requested,
+		 unsigned long nr_scanned,
+		 unsigned long nr_sorted,
+		 unsigned long nr_skipped,
+		 unsigned long nr_taken,
+		 int type),
+
+	TP_ARGS(lruvec, sc, lrugen, nr_requested, nr_scanned,
+		nr_sorted, nr_skipped, nr_taken, type),
+
+	TP_STRUCT__entry(
+		__field(u64, memcg_id)
+		__field(int, highest_zoneidx)
+		__field(int, order)
+		__field(unsigned long, nr_requested)
+		__field(unsigned long, nr_scanned)
+		__field(unsigned long, nr_sorted)
+		__field(unsigned long, nr_skipped)
+		__field(unsigned long, nr_taken)
+		__field(unsigned long, max_seq)
+		__field(unsigned long, min_seq)
+		__field(int, lru)
+		__field(int, tier)
+	),
+
+	TP_fast_assign(
+		__entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
+		__entry->highest_zoneidx = sc->reclaim_idx;
+		__entry->order = sc->order;
+		__entry->nr_requested = nr_requested;
+		__entry->nr_scanned = nr_scanned;
+		__entry->nr_sorted = nr_sorted;
+		__entry->nr_skipped = nr_skipped;
+		__entry->nr_taken = nr_taken;
+		__entry->lru = type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON;
+		__entry->max_seq = lrugen->max_seq;
+		__entry->tier = tier;
+		__entry->min_seq = lrugen->min_seq;
+	),
+
+
+This moves the code to generate the parameters into the TP_fast_assign()
+which is in a separate text section. It remove code from the work flow
+improving instruction cache.
+
+Same can be done for that trace_mm_vmscan_lru_isolate() trace event.
+
+-- Steve
+
+>  
+>  	*isolatedp = isolated;
+>  	return scanned;
+> -- 
