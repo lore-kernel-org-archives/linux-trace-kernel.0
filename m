@@ -1,65 +1,64 @@
-Received: from mail-pz2-f32.google.com (mail-pz2-f32.google.com [74.125.228.32])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07548415F36
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 08:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84725417BDE
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 08:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789202327; cv=none; b=QyGc5TYwcMdpA2+Wqmos1sVlem4QalyVc0E6QlQQWo1wjQawDbEUYyKpOEtAwz7v1E481JXxASZe71KuZTGhX8476IOmUfz2SoQjOWxsPYEUlqPpMZNmkLAOUnz5ULiGQlxoAfmIaanJppuNnB2eTw1wrAZIOJmsm4aOE4QkTYU=
+	t=1789202337; cv=none; b=rFlfWqHjiLhCuAwSdyNMQHtbBg+AuCa+qiHKgYQGe9DoASEwqKviCj26ZCs933UIAx2FOJRBqGP6zNxh6xevYxLlWMgS+CRQLqQ3iDkWaNgxZjGT42v5I/EMtbl2jHFrEM3jDdFR1v+OPYHxI0B/FQqCRlB2RPV5xxTOPG7lTok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789202327; c=relaxed/simple;
-	bh=PzCZBjJWaCCKdMcSxGra6Fz+22Hq1J9zwQ18FQBKIA4=;
+	s=arc-20240116; t=1789202337; c=relaxed/simple;
+	bh=RMZ5Ojt7tRoxpXeJqlOVmExYpI5ftfStyo6eyH9EPXc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bzao+o+bNAGty4SOyf4AIct7LBeF5lBYzS+rEqHwFJSjl6PHyHr0crR/HRJtN8kPpFO0Bh8Xn0b+1HR2vTbsHwR7mUdjOe0XtvusDKBUVITASmjc8mgI9t8h0O+NARw42jq+OB5wTy48R/+D0sgxN+63rLiN8tOpLpEoMINRmm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/w/ZqED; arc=none smtp.client-ip=74.125.228.32
+	 MIME-Version; b=uF/1XwBlcpHEctx7T0V66CYRaOmO0DX5CtrvZOXTCg4HhH2A0t3PO7ieQJPjjgZq8neZeIUct2c9ufCXfQCfkbpma/KjGWgi1VaTqmM9CYdIHilcS7+1l8BIVgqEjcT3x/LiP1W5df4MwWcsQXG3VC3c0H/TITufy2ofmYh/c9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3FK2nzs; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/w/ZqED"
-Received: by mail-pz2-f32.google.com with SMTP id 41be03b00d2f7-cc4d04d73b8so306805a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 01:38:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3FK2nzs"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-383b4a3755fso1841864a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 01:38:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789202324; x=1789807124; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=bnGyTrhGQ9hlSyKFOD2fzct0ljWaLr72VtuDV6nx8cw=;
-        b=k/w/ZqEDS7stp/4A2pjoIB6WE9+SI0noGVQnbCKoLJkueUmAHZ7iuUplXkFqgwQjMl
-         uiN7u+KqfsEB4vGt67iK6VfCgMBZWX0L8pLAwXovvwEU2klTbs+9MFO/dQZL2oD3j+9x
-         sErcOQFBbvlG1sUHajNkHNa7gXmPfAAziEH/MOnHldw/iBqp9xWgGgxU6yPtBrWPlPwJ
-         VqVb0ag8QiBZV42vi6CFXCmUSdF1xtgpwD0kWzxdaupdhxfohyBk8egvdEzZMv3rqI9j
-         S/duRnaRsa3iTvJDz0oPp5CU+hBbd4X8vcqW63vniIkF1ZXlh65fWKVGf5Vn+/kYIpqQ
-         mlgQ==
+        d=gmail.com; s=20251104; t=1789202334; x=1789807134; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fyuF0yFCrhdiykpjO34vI8hr0DzKjbLjL0w/H1QMS8c=;
+        b=e3FK2nzsz6UJzxlSEIFy2H9KWZukFt+qwZ5TwfQnr+sCXrIdBFSx6NJeUD9xSlta93
+         l6SHZHuugeszrgcHk3cv7RQBc1xE2MTVrRcf93dZsUsln53x3g6/hx7Qn17gSpkYYhCn
+         7dk8VUCP3lq1vg3jVx8+woQsQffcqnl2fqKKrmQv4OJ70wgLODNbnpwU9sLfEA3FieNM
+         vmf4D+EqIp8g+D9s8ExhbC5LXj385lRxW/KWUsULRIqGxTCY42oydFLYODWfMIKjZzUl
+         4Js2tdtyGiY7bnPkXzuB56Wz9Kv7FPZVrFIB8puVGvmagFUO7ueVb0oI6CVk9VuOiakH
+         iCYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789202324; x=1789807124;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bnGyTrhGQ9hlSyKFOD2fzct0ljWaLr72VtuDV6nx8cw=;
-        b=ITUKdJ7YE+oSvyPKedHy8gScfTGzWZpXVaDp0NQyJ6SdVCJNtkLUJXRVphqVo7yLaK
-         1dJtbTkyaGiqm1jZASP9ARWpih3FkrK++XigYy2Zw4miZlUGkvgAJFDNnetk8IeRWLgb
-         BLXnOuvQ5mP+zF8U4V05AQf3pOaj5daG+kGV9pEfMTM2YvU1YTrPJwuTnsUj97W76l0P
-         dd6HJmSICGlCuFYQT8bFwyqizS+EyWMXTrFmwCQhkaH59bz18ofypD5GCUbkA8G/Zc40
-         ndcEeQ3sz43ZQ23F88JR9Qs2mbACOI+ev2bsgTRC4dcOFcI1NrjaOBuvHu4YuZCVGrDY
-         Ofiw==
-X-Forwarded-Encrypted: i=1; AKwUvBy7WT4APtaRrMUnpZmxHMBMezdjgyW9McpqMV9woRjKUmjYUDHYqzPvcH4q+7N44zOMiH4bv+jQlr9RZ7VcP2Amny4=@vger.kernel.org
-X-Gm-Message-State: AFuF++nFO3bODGHTQ1uQjUImtqVmAK3Hq86IUnL8Qpdjq38Qvyisa3on
-	R6HnXpUrptB4PRCH4uiPn5dwPpuQpQF3no0NESk3QT4QNMhk4u05Ga/S
-X-Gm-Gg: AYBFou0Hr5Zhtf+HtRN2sa1OEp+li0KlSZmjXoEdKWM85FGVjrtMKwg0NqIjG6daS7Z
-	Y++BQel9WxTdsfUgvJyHe5VC2Yrhn+bWpSzKEiXVMR7Rnsy4sBpKSCelkHkba6w1YsTjt+pOec0
-	Qzo6BASSSmLNunJETeHatrb0Xl2Yk112vn7vOSOqh85f7Elp2thlwBiKkIP4wdw3rW1fTxSFUuD
-	32XoMXNVLoZPuqtw2bYXmuFkJISWGtYnX9m+GJj4jWWv7HWP7Ydqb6OvuMyN2GkjdG3HdgVuPmN
-	pZnjwJcgMGxtgimClCS4wLefJ4X3gbJ2kVIltytfZAFDrm7yO/lIoxxz2ejZYvDLkbOPyS9v/+J
-	VhATAa+9Vx4IMrZeucO6jEDM5iuBvAsPquAyQOj4KAvPaY23lMQt8W7JOc+9cnjRI5XjH/XPakO
-	lqR4Xy0BZVY1IcsP52dDVwZaK8lTow+MY6YGTD3mrWa1PHX3fZi8JeJtmS4+tPnzuXdOcATYFwA
-	VfywLfeO8+r1pBqAgxwPxuXrpivPSDp2C+PN9YA
-X-Received: by 2002:a17:90b:3b92:b0:398:cb56:e92 with SMTP id 98e67ed59e1d1-39dbc1d95fbmr3492502a91.11.1789202323873;
-        Sat, 12 Sep 2026 01:38:43 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1789202334; x=1789807134;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fyuF0yFCrhdiykpjO34vI8hr0DzKjbLjL0w/H1QMS8c=;
+        b=IBR9YOvLIhQZx93oudIsMw4wmoamoee+8RuH5ZIzAwpDi3HEP4kNqM3BZE96KqVHgR
+         LsknMZYY6tkZ9po3xCKCKYSfr4j470eZs98NtUaqlHUGreOSXlteoEbeVc+Qyd7425jQ
+         scdXbBineiIpsx4U8U0Ip7D+FlZxKJaO+FREvoCc5gE/Jr4kjVkv1Aey56EFd0xOMfsu
+         U/d1+fxYryAz+4hvlpRoq21nTGummtn3MrooJXwO/UPvxxM03n+66CcrgE5GfMXzoR62
+         Ox8pJz2KfvFed1ISLe5IfULobTDbeYEy7f13tw+lEGaSfs1FNYN89CV3oHpuH79QD+0o
+         +hkA==
+X-Forwarded-Encrypted: i=1; AKwUvBwDH4UZqcABLqOxcaB7O8Vv5L9Wo0fe7M652X+zBRI0KA7F1PWBQ20owPdN4UCd2J8aBGpW8FQ0krrN18E6WZZMu+U=@vger.kernel.org
+X-Gm-Message-State: AFuF++kLz0FbvWr7nIcP8Zo6sFl9y40HcN7extkpPcIZeXM3G5Ynn3Pk
+	jwHI23R4i3VHKTFR3k3Xikl4IziIoxMaaE1tvZkJDHnsNDC4kHn16gO55p2gzw==
+X-Gm-Gg: AYBFou0+166Dh52KZjcXylWJiEgXKGthKxt+csCfOH3mzVKRIpMZdtFSd2Qw53kqXOr
+	rTqQ3haYflCnKMBzSW+OMxGHlfs+NfV8SXhdFeIwjSXoITrJe2Dp0GHBldW1Ek0uiRDl+0Sd93t
+	S11GhTnv2iS+uq93U6oML5pQ4P2VFHZb1+6bBXoaYx6OT7zjYXRcWZf8P1k/L1K2Rv5tWB3oVfi
+	3EOG7WWzT+elQe5uJAA3T29agSVlse4CsBon9wopjkqC4rbdcRIlavUefTkQdFl048Ex8nESCRQ
+	dIUNddzsBB1RHbKRjS8M8y6RwcUbseZtYloT9v8dIGeZyP5OHeGj6+bs+owGG7LP3M9yu5G8Go4
+	6QhdOc9BJ1gGhUCzo09gQitRj3syjNfHfZvkOz3s8dffmZBz0re9A+cLo+8LidVb2CZmTU9PftM
+	hUZeG6zq0lRZU3JdXLeKjXGvcr/CpTVhUdZyLJW54AgV3+PdrJqaVBMpFpDA0lmHWUn4o9AbB/T
+	liKnA7JTMF0++XPj73tECQyUyL5b/3GbZbeux3J
+X-Received: by 2002:a17:90b:1650:b0:398:d8eb:cb2a with SMTP id 98e67ed59e1d1-39d9c34266emr4425177a91.23.1789202334437;
+        Sat, 12 Sep 2026 01:38:54 -0700 (PDT)
 Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:16a3:d08b:6ddb:dec6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39d95091214sm9790583a91.3.2026.09.12.01.38.33
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39d95091214sm9790583a91.3.2026.09.12.01.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Sep 2026 01:38:41 -0700 (PDT)
+        Sat, 12 Sep 2026 01:38:53 -0700 (PDT)
 From: Li Pengfei <ljdlns1987@gmail.com>
 X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
 To: rostedt@goodmis.org,
@@ -75,9 +74,9 @@ Cc: mathieu.desnoyers@efficios.com,
 	linux-kselftest@vger.kernel.org,
 	zhangbo56@xiaomi.com,
 	lipengfei28@xiaomi.com
-Subject: [RFC PATCH v7 01/10] trace: add lock-free stackmap for stack trace deduplication
-Date: Sat, 12 Sep 2026 16:37:44 +0800
-Message-Id: <20260912083753.3426176-2-lipengfei28@xiaomi.com>
+Subject: [RFC PATCH v7 02/10] trace: use the stackmap from the ftrace stack recording path
+Date: Sat, 12 Sep 2026 16:37:45 +0800
+Message-Id: <20260912083753.3426176-3-lipengfei28@xiaomi.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260912083753.3426176-1-lipengfei28@xiaomi.com>
 References: <20260912083753.3426176-1-lipengfei28@xiaomi.com>
@@ -87,873 +86,492 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Pengfei Li <lipengfei28@xiaomi.com>
 
-Add ftrace_stackmap, a lock-free hash map that stores kernel stack
-records so the ftrace ring buffer can reference a stack by a 4-byte id
-instead of carrying all of its frames. This patch adds the map, its text
-export and reset path; the recording path is converted separately.
+Wire ftrace_stackmap into __ftrace_trace_stack(). With 'stackmap' and
+'stacktrace' enabled, the recording path tries to place a 4-byte
+stack_id in the ring buffer and stack_map resolves the id.
 
-The implementation follows tracing_map.c's non-blocking design:
+Reserve the stack-id ring-buffer slot before consulting the map. This
+keeps map records and counters untouched when that reservation fails.
+If get_id() then fails, discard the reserved slot. Both paths try the
+existing full-stack fallback, whose own ring-buffer reservation can
+still fail under normal ring-buffer semantics.
 
-- cmpxchg-based insertion is usable from NMI, IRQ and process context
-- a preallocated element pool keeps allocation out of the hot path
-- linear probing uses a 2x table and a bounded probe length
-- one map belongs to one trace_array
+Stacks deeper than FTRACE_STACKMAP_MAX_DEPTH bypass the map so a
+recorded stack is never silently truncated or merged with another stack
+sharing the same prefix. Other map failures, including capacity,
+reset, and an unpublished map, also try the full-stack path.
 
-The Kconfig entry depends on ARCH_HAVE_NMI_SAFE_CMPXCHG because the hot
-path is reachable from NMI context. Per-CPU atomic_long_t counters avoid
-cross-CPU cacheline contention, use native-long operations instead of the
-generic atomic64_t spinlock fallback on 32-bit systems, and saturate
-rather than wrap.
+Confine the option to the global trace instance through
+TOP_LEVEL_TRACE_FLAGS, ZEROED_TRACE_FLAGS and a set_tracer_flag()
+check. This also rejects writes through a secondary instance's
+aggregate trace_options file.
 
-Capacity is fixed here at 2^14 stack records, using about 8 MB for the
-element pool. Concurrent insertion races can create duplicate records,
-so this is not a strict unique-stack count. Boot-time sizing is added
-separately.
+Create stack_map before publishing global_trace.stackmap. Boot-time
+options may be set while initialization is pending; the recording path
+uses full-stack fallback until publication. A permanent initialization
+failure clears and rejects the option.
 
-ftrace_stackmap_get_id() rejects stacks deeper than 64 frames instead
-of truncating them. entry->val uses release/acquire publication and
-entry->key is read with READ_ONCE(). Claimed slots without an element
-remain bounded gravestones when the pool is exhausted.
-
-Reset clears only map-owned storage. It leaves the ring buffer intact
-and can run while tracing is active, so older stack ids may stop
-resolving or may resolve to a reused slot. Every valid get_id() call
-enters an explicit rcu_read_lock_sched_notrace() section before checking
-the resetting flag. Callers that observe an active reset leave without
-touching map storage; admitted callers are drained before storage is
-cleared. synchronize_rcu_tasks_rude() covers RCU-not-watching tracing
-contexts, synchronize_rcu() covers the explicit RCU-sched sections,
-including interrupt and NMI handlers, and reader_sem serializes tracefs
-readers against clearing.
-
-The text seq_file resolves adjusted addresses, renders the ftrace
-trampoline marker, and accepts "0" or "reset" to clear the map.
+Also add TRACE_STACK_ID, its output handler, and validation needed by
+ftrace startup selftests.
 
 Signed-off-by: Pengfei Li <lipengfei28@xiaomi.com>
 ---
- kernel/trace/Kconfig          |  23 ++
- kernel/trace/Makefile         |   1 +
- kernel/trace/trace_stackmap.c | 718 ++++++++++++++++++++++++++++++++++
- kernel/trace/trace_stackmap.h |  34 ++
- 4 files changed, 776 insertions(+)
- create mode 100644 kernel/trace/trace_stackmap.c
- create mode 100644 kernel/trace/trace_stackmap.h
+ kernel/trace/Kconfig                 |   9 ++
+ kernel/trace/trace.c                 | 218 ++++++++++++++++++++++++++-
+ kernel/trace/trace.h                 |  16 ++
+ kernel/trace/trace_entries.h         |  15 ++
+ kernel/trace/trace_functions_graph.c |   1 +
+ kernel/trace/trace_output.c          |  23 +++
+ kernel/trace/trace_selftest.c        |   1 +
+ 7 files changed, 280 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 084f34dc6c9f..6c40535a46e1 100644
+index 6c40535a46e1..7001453bbfd3 100644
 --- a/kernel/trace/Kconfig
 +++ b/kernel/trace/Kconfig
-@@ -412,6 +412,29 @@ config STACK_TRACER
+@@ -426,6 +426,15 @@ config FTRACE_STACKMAP
+ 	  significantly reducing trace buffer usage when the same call stacks
+ 	  appear repeatedly.
  
- 	  Say N if unsure.
++	  Automatic per-event stack capture requires the stacktrace option:
++
++	    echo 1 > /sys/kernel/debug/tracing/options/stacktrace
++	    echo 1 > /sys/kernel/debug/tracing/options/stackmap
++
++	  Explicit stack records requested through tracing APIs are also
++	  deduplicated when stackmap is enabled for their trace array. Stackmap
++	  is currently available only for the global trace array.
++
+ 	  The deduplicated stacks are exported via:
+ 	    /sys/kernel/debug/tracing/stack_map
  
-+config FTRACE_STACKMAP
-+	bool "Ftrace stack map deduplication"
-+	depends on TRACING
-+	depends on STACKTRACE
-+	depends on ARCH_HAVE_NMI_SAFE_CMPXCHG
-+	select KALLSYMS
-+	select TASKS_RUDE_RCU
-+	help
-+	  This enables a global stack trace hash table for ftrace, inspired
-+	  by eBPF's BPF_MAP_TYPE_STACK_TRACE. When enabled, ftrace can store
-+	  only a stack_id in the ring buffer instead of the full stack trace,
-+	  significantly reducing trace buffer usage when the same call stacks
-+	  appear repeatedly.
-+
-+	  The deduplicated stacks are exported via:
-+	    /sys/kernel/debug/tracing/stack_map
-+
-+	  Writing to this file resets the stack map. Reading shows all stack
-+	  records with their stack_id and reference count.
-+
-+	  Say Y if you want to reduce ftrace buffer usage for stack traces.
-+	  Say N if unsure.
-+
- config TRACE_PREEMPT_TOGGLE
- 	bool
- 	help
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index f934ff586bd4..7710ec2659e9 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_HWLAT_TRACER) += trace_hwlat.o
- obj-$(CONFIG_OSNOISE_TRACER) += trace_osnoise.o
- obj-$(CONFIG_NOP_TRACER) += trace_nop.o
- obj-$(CONFIG_STACK_TRACER) += trace_stack.o
-+obj-$(CONFIG_FTRACE_STACKMAP) += trace_stackmap.o
- obj-$(CONFIG_MMIOTRACE) += trace_mmiotrace.o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += trace_functions_graph.o
- obj-$(CONFIG_TRACE_BRANCH_PROFILING) += trace_branch.o
-diff --git a/kernel/trace/trace_stackmap.c b/kernel/trace/trace_stackmap.c
-new file mode 100644
-index 000000000000..b2e2115a15f9
---- /dev/null
-+++ b/kernel/trace/trace_stackmap.c
-@@ -0,0 +1,718 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ftrace Stack Map - Lock-free stack trace deduplication for ftrace
-+ *
-+ * Modeled after tracing_map.c (used by hist triggers), this provides
-+ * a lock-free hash map optimized for the ftrace hot path. The design
-+ * is based on Dr. Cliff Click's non-blocking hash table algorithm.
-+ *
-+ * Key properties:
-+ * - Lock-free insert via cmpxchg, safe in NMI/IRQ/any context
-+ * - Pre-allocated element pool (zero allocation on hot path)
-+ * - Linear probing with 2x over-provisioned table; probe length
-+ *   bounded by FTRACE_STACKMAP_MAX_PROBE to keep worst-case lookup
-+ *   cost constant even when the table is heavily loaded
-+ * - Single global instance (initialized for the global trace array)
-+ *
-+ * Reset is a control-path operation that clears the map only. It
-+ * does not touch the ring buffer and does not require tracing to be
-+ * stopped. The protocol is:
-+ *
-+ *   - Every admitted get_id() operation enters an explicit notrace
-+ *     RCU-sched read-side section before checking resetting. A caller
-+ *     that observes resetting=1 returns -EINVAL.
-+ *   - synchronize_rcu_tasks_rude() drains callers running where RCU is
-+ *     not watching on architectures that permit tracing there. A normal
-+ *     RCU grace period then drains the explicit read-side sections in
-+ *     the RCU-watching tracing path, including interrupt and NMI handlers.
-+ *
-+ * A trace collected before a reset can therefore still contain
-+ * TRACE_STACK_ID records whose id no longer resolves, or resolves to
-+ * a slot that has since been reused. That is misleading userspace
-+ * output, not corruption; see ftrace_stackmap_reset().
-+ *
-+ * The 32-bit jhash of the stack IPs is the hash table key. On hash
-+ * collision, linear probing finds the next slot and full memcmp
-+ * confirms the match.
-+ *
-+ * Concurrent userspace readers (cat stack_map) get a best-effort
-+ * snapshot. They are coherent with the hot path (smp_load_acquire on
-+ * entry->val); they are also serialized against reset via
-+ * smap->reader_sem (readers take it in shared mode, reset in
-+ * exclusive mode), so a reset cannot tear a single seq_file pass --
-+ * it waits for the active read() pass to drop the rwsem before clearing
-+ * the map. The hot path is coordinated with reset separately, via
-+ * acquire/release on smap->resetting.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/jhash.h>
-+#include <linux/seq_file.h>
-+#include <linux/kallsyms.h>
-+#include <linux/vmalloc.h>
-+#include <linux/atomic.h>
-+#include <linux/percpu.h>
-+#include <linux/random.h>
-+#include <linux/rcupdate.h>
-+#include <linux/log2.h>
-+#include <asm/local.h>
-+
-+#include "trace.h"
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 18710c190c92..06ae8ed11475 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -57,6 +57,7 @@
+ 
+ #include "trace.h"
+ #include "trace_output.h"
 +#include "trace_stackmap.h"
-+
-+/*
-+ * Bound the linear-probe scan length. With a 2x over-provisioned table,
-+ * a well-distributed hash gives very short probe chains. Capping at 64
-+ * keeps worst-case lookup O(1) even when the table is heavily loaded
-+ * with claimed-but-empty slots from pool exhaustion.
-+ */
-+#define FTRACE_STACKMAP_MAX_PROBE	64
-+
-+/*
-+ * Memory ordering of entry->val: published with smp_store_release()
-+ * by the inserter; consumed with smp_load_acquire() by every reader
-+ * that dereferences the elt (get_id, seq_show). This pairs
-+ * the writes to elt->{nr,ips,ref_count} (initialized BEFORE the
-+ * publish) with the reads of those fields (which happen AFTER the
-+ * load). seq_start / seq_next only test val for NULL and use the
-+ * acquire load purely to keep memory ordering symmetric.
-+ */
-+
-+/*
-+ * Each pre-allocated element holds one stack trace record.
-+ * Fixed size: MAX_DEPTH entries regardless of actual depth.
-+ */
-+struct stackmap_elt {
-+	u32		nr;		/* actual number of IPs */
-+	atomic_t	ref_count;
-+	unsigned long	ips[FTRACE_STACKMAP_MAX_DEPTH];
-+};
-+
-+/*
-+ * Hash table entry: a 32-bit key (jhash of stack) + pointer to elt.
-+ * key == 0 means the slot is free.
-+ */
-+struct stackmap_entry {
-+	u32			key;	/* 0 = free, non-zero = jhash */
-+	struct stackmap_elt	*val;	/* NULL until fully published */
-+};
-+
-+static struct stackmap_elt *stackmap_load_elt(struct stackmap_entry *entry)
-+{
+ 
+ #ifdef CONFIG_FTRACE_STARTUP_TEST
+ /*
+@@ -509,12 +510,13 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ /* trace_options that are only supported by global_trace */
+ #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER(PRINTK) |			\
+ 	       TRACE_ITER(PRINTK_MSGONLY) | TRACE_ITER(RECORD_CMD) |	\
+-	       TRACE_ITER(PROF_TEXT_OFFSET) | FPROFILE_DEFAULT_FLAGS)
++	       TRACE_ITER(PROF_TEXT_OFFSET) | TRACE_ITER(STACKMAP) |	\
++	       FPROFILE_DEFAULT_FLAGS)
+ 
+ /* trace_flags that are default zero for instances */
+ #define ZEROED_TRACE_FLAGS \
+ 	(TRACE_ITER(EVENT_FORK) | TRACE_ITER(FUNC_FORK) | TRACE_ITER(TRACE_PRINTK) | \
+-	 TRACE_ITER(COPY_MARKER))
++	 TRACE_ITER(COPY_MARKER) | TRACE_ITER(STACKMAP))
+ 
+ /*
+  * The global_trace is the descriptor that holds the top-level tracing
+@@ -2184,6 +2186,76 @@ void __ftrace_trace_stack(struct trace_array *tr,
+ 	}
+ #endif
+ 
++#ifdef CONFIG_FTRACE_STACKMAP
 +	/*
-+	 * Pairs with the smp_store_release() that publishes entry->val
-+	 * after fully initializing the element payload.
++	 * If stackmap dedup is enabled, try to store only the stack_id
++	 * in the ring buffer instead of the full stack trace.
++	 *
++	 * Reserve the TRACE_STACK_ID ring-buffer slot BEFORE calling
++	 * get_id(). This guarantees get_id(), and therefore any map mutation
++	 * or counter update it performs, is attempted only after the stack-id
++	 * reservation succeeds:
++	 *   - reservation fails  -> try full-stack fallback, map untouched
++	 *   - get_id() fails      -> discard the reserved slot, then try
++	 *                            full-stack fallback
++	 * A failed stack-id reservation therefore never consumes a map slot
++	 * or updates the map counters.
 +	 */
-+	return smp_load_acquire(&entry->val);
-+}
++	if (tr->trace_flags & TRACE_ITER(STACKMAP)) {
++		struct ftrace_stackmap *smap;
++		struct stack_id_entry *sid_entry;
++		int sid;
 +
-+struct ftrace_stackmap {
-+	struct trace_array	*tr;		/* owning trace_array */
-+	unsigned int		map_bits;
-+	unsigned int		map_size;	/* 1 << (map_bits + 1) */
-+	unsigned int		max_elts;	/* 1 << map_bits */
-+	u32			hash_seed;	/* per-instance jhash seed */
-+	atomic_t		next_elt;	/* index into elts pool */
-+	struct stackmap_entry	*entries;	/* hash table */
-+	struct stackmap_elt	*elts;		/* flat element pool */
-+	atomic_t		resetting;
-+	/*
-+	 * Reader/reset serialization. Held in shared mode (read lock)
-+	 * across seq_file iteration; held in exclusive mode (write
-+	 * lock) by reset's clearing phase. The hot path (get_id) does
-+	 * not take this lock — it
-+	 * uses smp_load_acquire/smp_store_release on entry->val and
-+	 * the resetting flag for the lock-free protocol.
-+	 */
-+	struct rw_semaphore	reader_sem;
-+	/*
-+	 * Per-CPU atomic-long counters keep cross-CPU contention out of the
-+	 * NMI-capable hot path. atomic_long_add_unless() uses the native long
-+	 * width, so 32-bit kernels do not enter the generic atomic64_t
-+	 * hashed-spinlock implementation. ARCH_HAVE_NMI_SAFE_CMPXCHG makes
-+	 * the saturating update safe against same-CPU NMI interruption.
-+	 */
-+	atomic_long_t __percpu	*successes;	/* hits + new inserts */
-+	atomic_long_t __percpu	*drops;
-+};
++		/*
++		 * Pairs with the smp_store_release() that publishes the
++		 * fully initialized global stackmap at tracefs init.
++		 */
++		smap = smp_load_acquire(&tr->stackmap);
++		if (!smap)
++			goto full_stack;
 +
-+/*
-+ * Map capacity: 2^FTRACE_STACKMAP_BITS stack records, with the hash
-+ * table over-provisioned 2x on top of that. This gives 16K elements
-+ * and a ~8 MB element pool, sized for the repetitive-stack workloads
-+ * the map targets.
-+ */
-+#define FTRACE_STACKMAP_BITS		14
++		/*
++		 * The stackmap stores at most FTRACE_STACKMAP_MAX_DEPTH
++		 * frames per entry. A deeper trace would be truncated, and
++		 * two distinct stacks that share the first MAX_DEPTH frames
++		 * would hash and compare equal, silently merging into one
++		 * stack_id. Use the conservative full-stack path for deep
++		 * traces to avoid truncating or misattributing a recorded stack.
++		 * The ring-buffer reservation can still fail.
++		 */
++		if (nr_entries > FTRACE_STACKMAP_MAX_DEPTH)
++			goto full_stack;
 +
-+/* --- Element pool --- */
++		event = __trace_buffer_lock_reserve(buffer, TRACE_STACK_ID,
++						    sizeof(*sid_entry), trace_ctx);
++		if (!event)
++			goto full_stack;
 +
-+static struct stackmap_elt *stackmap_get_elt(struct ftrace_stackmap *smap)
-+{
-+	int idx;
++		sid = ftrace_stackmap_get_id(smap, fstack->calls, nr_entries);
++		if (sid < 0) {
++			/*
++			 * If get_id() cannot return an ID, discard the reserved
++			 * stack_id slot, then try the full-stack fallback. Its
++			 * ring-buffer reservation can still fail.
++			 */
++			__trace_event_discard_commit(buffer, event);
++			goto full_stack;
++		}
 +
-+	/*
-+	 * Fast-path early-out once the pool is fully consumed. Avoids
-+	 * the contended atomic RMW on next_elt for every traced event
-+	 * after the pool is exhausted.
-+	 */
-+	if (atomic_read(&smap->next_elt) >= smap->max_elts)
-+		return NULL;
-+
-+	idx = atomic_fetch_add_unless(&smap->next_elt, 1, smap->max_elts);
-+	if (idx < smap->max_elts)
-+		return &smap->elts[idx];
-+	return NULL;
-+}
-+
-+/* --- Create / Destroy / Reset --- */
-+
-+struct ftrace_stackmap *ftrace_stackmap_create(struct trace_array *tr)
-+{
-+	struct ftrace_stackmap *smap;
-+	unsigned int bits = FTRACE_STACKMAP_BITS;
-+
-+	smap = kzalloc_obj(*smap, GFP_KERNEL);
-+	if (!smap)
-+		return ERR_PTR(-ENOMEM);
-+
-+	smap->tr = tr;
-+	smap->map_bits = bits;
-+	smap->max_elts = 1U << bits;
-+	smap->map_size = 1U << (bits + 1);	/* 2x over-provision */
-+
-+	smap->entries = vcalloc(smap->map_size, sizeof(*smap->entries));
-+	if (!smap->entries)
-+		goto fail;
-+
-+	/*
-+	 * Single large vmalloc of the element pool, indexed flat.
-+	 * At bits=18 this is 256K * sizeof(struct stackmap_elt). The
-+	 * struct is ~520 B (8 + 4 + 4 + 64*8), so total ~135 MB.
-+	 */
-+	smap->elts = vcalloc(smap->max_elts, sizeof(*smap->elts));
-+	if (!smap->elts)
-+		goto fail;
-+
-+	smap->successes = alloc_percpu(atomic_long_t);
-+	if (!smap->successes)
-+		goto fail;
-+	smap->drops = alloc_percpu(atomic_long_t);
-+	if (!smap->drops)
-+		goto fail;
-+
-+	smap->hash_seed = get_random_u32();
-+	atomic_set(&smap->next_elt, 0);
-+	atomic_set(&smap->resetting, 0);
-+	init_rwsem(&smap->reader_sem);
-+
-+	return smap;
-+
-+fail:
-+	/*
-+	 * free_percpu()/vfree()/kfree() all handle NULL, and smap was
-+	 * zero-initialized, so unwind in reverse allocation order.
-+	 */
-+	free_percpu(smap->drops);
-+	free_percpu(smap->successes);
-+	vfree(smap->elts);
-+	vfree(smap->entries);
-+	kfree(smap);
-+	return ERR_PTR(-ENOMEM);
-+}
-+
-+void ftrace_stackmap_destroy(struct ftrace_stackmap *smap)
-+{
-+	if (!smap || IS_ERR(smap))
-+		return;
-+	free_percpu(smap->drops);
-+	free_percpu(smap->successes);
-+	vfree(smap->elts);
-+	vfree(smap->entries);
-+	kfree(smap);
-+}
-+
-+/**
-+ * ftrace_stackmap_reset - clear all entries in the stackmap
-+ * @smap: the stackmap to reset
-+ *
-+ * Returns 0 on success, or -EBUSY if another reset is already in
-+ * progress.
-+ *
-+ * Clears the map only. The ring buffer is left alone and tracing does
-+ * not need to be stopped, so a trace can still contain TRACE_STACK_ID
-+ * records after the map has been cleared. Such an id either has no
-+ * entry in stack_map, or -- once tracing continues and the slot is
-+ * reused -- resolves to an unrelated stack. Both are misleading
-+ * userspace output rather than corruption: reset frees nothing, it
-+ * only memsets storage the map still owns.
-+ *
-+ * Caller is process context (the tracefs write handler).
-+ *
-+ * Protocol:
-+ *   1. Atomically claim reset rights via cmpxchg on @resetting, which
-+ *      makes subsequent get_id() callers leave their read-side section
-+ *      without touching map storage.
-+ *   2. synchronize_rcu_tasks_rude() drains callers running where RCU is
-+ *      not watching on architectures that allow tracing there. Then
-+ *      synchronize_rcu() drains the explicit notrace RCU-sched sections
-+ *      in the RCU-watching tracing path, including interrupt and NMI
-+ *      handlers.
-+ *   3. Take @reader_sem exclusively to exclude tracefs readers, then
-+ *      memset entries, elts, and counters.
-+ *   4. Release the resetting flag with release semantics so any new
-+ *      get_id() observes a fully cleared map.
-+ *
-+ * Why no get_id() can run concurrently with the memsets, given that its
-+ * admission test is a plain flag read rather than a lock. Consider any
-+ * get_id() RCU-sched read-side section, and note that the flag store in
-+ * step 1 precedes the grace period in step 2:
-+ *
-+ *   - The section ends before synchronize_rcu() returns. The memsets run
-+ *     after it returns, so the two cannot overlap, whichever value of
-+ *     resetting that section happened to observe.
-+ *   - The section ends after synchronize_rcu() returns. RCU then
-+ *     guarantees a full memory barrier between the start of the grace
-+ *     period and the start of that section, so the section observes
-+ *     resetting == 1 and returns -EINVAL without touching map storage.
-+ *
-+ * A section that reads a stale zero and still runs during the memsets
-+ * would have to satisfy both cases at once, so it cannot exist. See
-+ * "Memory-Barrier Guarantees" in
-+ * Documentation/RCU/Design/Requirements/Requirements.rst.
-+ */
-+static int ftrace_stackmap_reset(struct ftrace_stackmap *smap)
-+{
-+	int cpu;
-+
-+	if (!smap)
-+		return 0;
-+
-+	if (atomic_cmpxchg(&smap->resetting, 0, 1) != 0)
-+		return -EBUSY;
-+
-+	/*
-+	 * Each get_id() operation enters an explicit notrace RCU-sched
-+	 * read-side section before checking resetting. On RCU-watching CPUs,
-+	 * the normal grace period waits for those sections, including callers
-+	 * from interrupt and NMI context. On architectures that permit tracing
-+	 * while RCU is not watching, the rude grace period covers the remaining
-+	 * context; it is intentionally a no-op on ARCH_WANTS_NO_INSTR
-+	 * architectures.
-+	 */
-+	synchronize_rcu_tasks_rude();
-+	synchronize_rcu();
-+
-+	/*
-+	 * Take the reader_sem in exclusive mode. This serializes the
-+	 * memset against any tracefs reader (seq_file iteration) that
-+	 * may currently hold the rwsem for read. The Tasks RCU grace
-+	 * periods already drained the hot path; this rwsem covers
-+	 * process-context export readers.
-+	 */
-+	down_write(&smap->reader_sem);
-+
-+	memset(smap->entries, 0, sizeof(*smap->entries) * smap->map_size);
-+	memset(smap->elts, 0, sizeof(*smap->elts) * (size_t)smap->max_elts);
-+
-+	atomic_set(&smap->next_elt, 0);
-+	for_each_possible_cpu(cpu) {
-+		atomic_long_set(per_cpu_ptr(smap->successes, cpu), 0);
-+		atomic_long_set(per_cpu_ptr(smap->drops, cpu), 0);
-+	}
-+
-+	up_write(&smap->reader_sem);
-+
-+	/* Release resetting=0 so new get_id() observes a cleared map. */
-+	atomic_set_release(&smap->resetting, 0);
-+	return 0;
-+}
-+
-+/* --- Core: get_id (lock-free, NMI-safe) --- */
-+
-+int ftrace_stackmap_get_id(struct ftrace_stackmap *smap,
-+			   unsigned long *ips, unsigned int nr_entries)
-+{
-+	u32 key_hash, idx, test_key, trace_len;
-+	struct stackmap_entry *entry;
-+	struct stackmap_elt *val;
-+	int probes = 0;
-+	int ret;
-+
-+	if (!smap || !nr_entries)
-+		return -EINVAL;
-+	/*
-+	 * Never truncate: a stack deeper than the map can hold must not be
-+	 * silently shortened, or two distinct traces sharing their first
-+	 * FTRACE_STACKMAP_MAX_DEPTH frames would be merged into one
-+	 * stack_id. The caller is expected to fall back to a full stack
-+	 * trace for such events. Reject defensively in case of a future
-+	 * caller that forgets this contract.
-+	 */
-+	if (nr_entries > FTRACE_STACKMAP_MAX_DEPTH)
-+		return -E2BIG;
-+
-+	/*
-+	 * Enter the read-side section before checking resetting. If reset
-+	 * has already claimed the map, reject the operation. Otherwise the
-+	 * reset grace periods wait until this operation leaves the section
-+	 * before clearing storage. The notrace variant is required because
-+	 * this is part of the tracing hot path.
-+	 */
-+	rcu_read_lock_sched_notrace();
-+	/*
-+	 * atomic_read_acquire() pairs with atomic_set_release() in the
-+	 * reset path. This ensures that subsequent reads of entry->key
-+	 * and entry->val are ordered after this check; without acquire,
-+	 * the CPU would only have a control dependency, which orders
-+	 * subsequent stores but not loads (per LKMM).
-+	 */
-+	if (atomic_read_acquire(&smap->resetting)) {
-+		ret = -EINVAL;
++		sid_entry = ring_buffer_event_data(event);
++		sid_entry->stack_id = sid;
++		/*
++		 * stack_id is a synthetic side-event attached to a
++		 * primary trace event that was already subject to
++		 * filtering. No per-event filter is defined for
++		 * TRACE_STACK_ID, so commit unconditionally.
++		 */
++		__buffer_unlock_commit(buffer, event);
 +		goto out;
 +	}
++full_stack:
++#endif
 +
-+	trace_len = nr_entries * sizeof(unsigned long);
-+	/*
-+	 * jhash2() requires the length in u32 units and the data to be
-+	 * u32-aligned. On 64-bit kernels sizeof(unsigned long)==8, so
-+	 * trace_len is always a multiple of 8 (hence of 4). Use jhash2
-+	 * directly; the cast to u32* is safe because ips[] is naturally
-+	 * aligned to sizeof(unsigned long) >= 4.
-+	 */
-+	key_hash = jhash2((const u32 *)ips, trace_len / sizeof(u32),
-+			  smap->hash_seed);
-+	if (key_hash == 0)
-+		key_hash = 1;	/* 0 means free slot */
-+
-+	idx = key_hash >> (32 - (smap->map_bits + 1));
-+
-+	while (probes < FTRACE_STACKMAP_MAX_PROBE) {
-+		idx &= (smap->map_size - 1);
-+		entry = &smap->entries[idx];
-+		/*
-+		 * READ_ONCE() to avoid LKMM data race with concurrent
-+		 * cmpxchg(&entry->key, 0, key_hash) on this slot.
-+		 */
-+		test_key = READ_ONCE(entry->key);
-+
-+		if (test_key == key_hash) {
-+			val = stackmap_load_elt(entry);
-+			/*
-+			 * READ_ONCE(val->nr) keeps style consistent with
-+			 * the seq_show reader. nr is write-once
-+			 * (set before publish, never modified afterwards),
-+			 * so the load is data-race-free, but READ_ONCE
-+			 * silences any analysis tool that flags a plain
-+			 * read of a field that is also read under acquire
-+			 * elsewhere.
-+			 */
-+			if (val && READ_ONCE(val->nr) == nr_entries &&
-+			    memcmp(val->ips, ips, trace_len) == 0) {
-+				/*
-+				 * ref_count is a best-effort popularity
-+				 * counter. On a long (from-boot, multi-hour)
-+				 * trace a hot stack can be hit billions of
-+				 * times. atomic_add_unless() gives true
-+				 * saturation at INT_MAX even under concurrent
-+				 * hits on multiple CPUs (a plain
-+				 * check-then-inc could let several CPUs past
-+				 * the check near the cap and still wrap).
-+				 */
-+				atomic_add_unless(&val->ref_count, 1, INT_MAX);
-+				/*
-+				 * successes/drops are saturating throughput
-+				 * counters. Keep them per-CPU to avoid
-+				 * cross-CPU cacheline contention.
-+				 */
-+				atomic_long_add_unless(
-+					this_cpu_ptr(smap->successes), 1, LONG_MAX);
-+				ret = (int)idx;
-+				goto out;
-+			}
-+			/*
-+			 * val == NULL: another CPU is mid-insert, or this
-+			 * slot is "claimed but empty" (pool exhausted).
-+			 * val != NULL but mismatch: 32-bit hash collision
-+			 * with a different stack. In both cases, advance.
-+			 */
-+		} else if (!test_key) {
-+			/*
-+			 * Free slot: try to claim it.
-+			 *
-+			 * If two CPUs race here with the same key_hash
-+			 * (same stack), one loses the cmpxchg, advances,
-+			 * and may insert the same stack at a later slot.
-+			 * This can produce a small number of duplicate
-+			 * entries under heavy contention. The trade-off
-+			 * is accepted to keep the hot path lock-free;
-+			 * ref_count is split across the duplicates and
-+			 * total memory cost is bounded by the element
-+			 * pool size.
-+			 */
-+			if (cmpxchg(&entry->key, 0, key_hash) == 0) {
-+				struct stackmap_elt *elt;
-+
-+				elt = stackmap_get_elt(smap);
-+				if (!elt) {
-+					/*
-+					 * Pool exhausted. Keep the claimed
-+					 * slot as a gravestone. Readers skip
-+					 * a NULL val, and the explicit probe
-+					 * bound prevents accumulated
-+					 * gravestones from turning a miss
-+					 * into an unbounded table walk.
-+					 */
-+					atomic_long_add_unless(
-+						this_cpu_ptr(smap->drops), 1,
-+						LONG_MAX);
-+					ret = -ENOSPC;
-+					goto out;
-+				}
-+
-+				elt->nr = nr_entries;
-+				atomic_set(&elt->ref_count, 1);
-+				memcpy(elt->ips, ips, trace_len);
-+
-+				/*
-+				 * Publish elt with release semantics so the
-+				 * reader's smp_load_acquire can safely
-+				 * dereference val->nr / val->ips.
-+				 */
-+				smp_store_release(&entry->val, elt);
-+				atomic_long_add_unless(
-+					this_cpu_ptr(smap->successes), 1, LONG_MAX);
-+				ret = (int)idx;
-+				goto out;
-+			}
-+			/* cmpxchg failed; another CPU claimed this slot. */
-+		}
-+
-+		idx++;
-+		probes++;
-+	}
-+
-+	atomic_long_add_unless(this_cpu_ptr(smap->drops), 1, LONG_MAX);
-+	ret = -ENOSPC;
-+out:
-+	rcu_read_unlock_sched_notrace();
-+	return ret;
-+}
-+
-+/* --- Text export: /sys/kernel/debug/tracing/stack_map --- */
-+
-+struct stackmap_seq_private {
-+	struct ftrace_stackmap	*smap;
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
+ 				    struct_size(entry, caller, nr_entries),
+ 				    trace_ctx);
+@@ -3976,6 +4048,50 @@ int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_FTRACE_STACKMAP
++/*
++ * Tracks tracefs-time initialization of the global stackmap so that
++ * set_tracer_flag() can distinguish "not initialized yet" from
++ * "initialization permanently failed".
++ *
++ * Boot-time options (trace_options=stackmap,stacktrace) are applied
++ * very early, before tracer_init_tracefs() creates and publishes the
++ * map. We must allow the STACKMAP flag to be set during that window
++ * (the hot path falls back to a full stack while tr->stackmap is NULL,
++ * then starts using the map once it is published). We must, however,
++ * reject the enable once init has *failed*, so options/stackmap never
++ * reports an enabled no-op.
++ *
++ * Written once from the tracefs init work before any concurrent
++ * userspace writer to trace_options can run, then only read; a plain
++ * int is therefore sufficient.
++ */
++enum {
++	STACKMAP_INIT_PENDING,	/* tracer_init_tracefs() not run yet */
++	STACKMAP_INIT_DONE,	/* map published, stack_map file created */
++	STACKMAP_INIT_FAILED,	/* permanent failure, never available */
 +};
 +
-+static void *stackmap_seq_start(struct seq_file *m, loff_t *pos)
-+{
-+	struct stackmap_seq_private *priv = m->private;
-+	struct ftrace_stackmap *smap = priv->smap;
-+	loff_t i;
-+
-+	if (!smap)
-+		return NULL;
-+	/*
-+	 * Take the reader_sem to serialize against ftrace_stackmap_reset(),
-+	 * which holds it for write while clearing the table. Released in
-+	 * stackmap_seq_stop(), which seq_file calls regardless of whether
-+	 * start() returned an element or NULL (per Documentation/filesystems
-+	 * /seq_file.rst: "the iterator value returned by start() or next()
-+	 * is guaranteed to be passed to a subsequent next() or stop()").
-+	 */
-+	down_read(&smap->reader_sem);
-+	for (i = *pos; i < smap->map_size; i++) {
-+		if (READ_ONCE(smap->entries[i].key) &&
-+		    stackmap_load_elt(&smap->entries[i])) {
-+			*pos = i;
-+			return &smap->entries[i];
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static void *stackmap_seq_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	struct stackmap_seq_private *priv = m->private;
-+	struct ftrace_stackmap *smap = priv->smap;
-+	loff_t i;
-+
-+	if (!smap)
-+		return NULL;
-+	for (i = *pos + 1; i < smap->map_size; i++) {
-+		if (READ_ONCE(smap->entries[i].key) &&
-+		    stackmap_load_elt(&smap->entries[i])) {
-+			*pos = i;
-+			return &smap->entries[i];
-+		}
-+	}
-+	/*
-+	 * Advance *pos past the end so that on the next read() the
-+	 * subsequent stackmap_seq_start() call returns NULL and the
-+	 * iteration terminates. Without this, seq_read() would loop
-+	 * on the last element.
-+	 */
-+	*pos = smap->map_size;
-+	return NULL;
-+}
-+
-+static void stackmap_seq_stop(struct seq_file *m, void *v)
-+{
-+	struct stackmap_seq_private *priv = m->private;
-+	struct ftrace_stackmap *smap = priv->smap;
-+
-+	/*
-+	 * seq_file invokes stop() unconditionally after each iteration
-+	 * pass (see seq_read_iter / traverse), even when start() returned
-+	 * NULL. Always release here, balanced against the down_read in
-+	 * stackmap_seq_start().
-+	 */
-+	if (smap)
-+		up_read(&smap->reader_sem);
-+}
-+
-+static int stackmap_seq_show(struct seq_file *m, void *v)
-+{
-+	struct stackmap_entry *entry = v;
-+	struct stackmap_seq_private *priv = m->private;
-+	struct stackmap_elt *elt;
-+	u32 idx = entry - priv->smap->entries;
-+	u32 i, nr;
-+
-+	elt = stackmap_load_elt(entry);
-+	if (!elt)
-+		return 0;
-+
-+	nr = READ_ONCE(elt->nr);
-+	if (nr > FTRACE_STACKMAP_MAX_DEPTH)
-+		nr = FTRACE_STACKMAP_MAX_DEPTH;
-+
-+	seq_printf(m, "stack_id %u [ref %u, depth %u]\n",
-+		   idx, atomic_read(&elt->ref_count), nr);
-+	for (i = 0; i < nr; i++) {
-+		unsigned long ip = elt->ips[i];
-+
-+		/*
-+		 * Mirror trace_stack_print(): __ftrace_trace_stack()
-+		 * may replace trampoline addresses with
-+		 * FTRACE_TRAMPOLINE_MARKER before the stack reaches the
-+		 * map, and normal addresses must go through
-+		 * trace_adjust_address() (KASLR / module text delta)
-+		 * before symbolization. Without this the export would
-+		 * print a bogus symbol for the marker and unadjusted
-+		 * addresses for everything else.
-+		 */
-+		if (ip == FTRACE_TRAMPOLINE_MARKER) {
-+			seq_printf(m, "  [%u] [FTRACE TRAMPOLINE]\n", i);
-+			continue;
-+		}
-+		seq_printf(m, "  [%u] %pS\n", i,
-+			   (void *)trace_adjust_address(priv->smap->tr, ip));
-+	}
-+	seq_putc(m, '\n');
-+	return 0;
-+}
-+
-+static const struct seq_operations stackmap_seq_ops = {
-+	.start	= stackmap_seq_start,
-+	.next	= stackmap_seq_next,
-+	.stop	= stackmap_seq_stop,
-+	.show	= stackmap_seq_show,
-+};
-+
-+static int stackmap_open(struct inode *inode, struct file *file)
-+{
-+	struct ftrace_stackmap *smap = inode->i_private;
-+	struct stackmap_seq_private *priv;
-+	struct seq_file *m;
-+	int ret;
-+
-+	if (!smap)
-+		return -ENODEV;
-+
-+	/*
-+	 * The text export symbolizes recorded kernel text addresses and
-+	 * doubles as the reset control file, so it takes the same open-time
-+	 * tracing policy as the other stackmap files: reject the open under
-+	 * LOCKDOWN_TRACEFS or when tracing is globally disabled, and pin the
-+	 * owning trace array for the lifetime of the fd.
-+	 */
-+	ret = tracing_check_open_get_tr(smap->tr);
-+	if (ret)
-+		return ret;
-+
-+	ret = seq_open_private(file, &stackmap_seq_ops,
-+			       sizeof(struct stackmap_seq_private));
-+	if (ret)
-+		goto put_tr;
-+
-+	m = file->private_data;
-+	priv = m->private;
-+	priv->smap = smap;
-+	return 0;
-+
-+put_tr:
-+	trace_array_put(smap->tr);
-+	return ret;
-+}
-+
-+static int stackmap_release(struct inode *inode, struct file *file)
-+{
-+	struct seq_file *m = file->private_data;
-+	struct stackmap_seq_private *priv = m->private;
-+	struct ftrace_stackmap *smap = priv->smap;
-+	int ret;
-+
-+	ret = seq_release_private(inode, file);
-+	trace_array_put(smap->tr);
-+	return ret;
-+}
++static int stackmap_init_state = STACKMAP_INIT_PENDING;
 +
 +/*
-+ * Accept exactly "0" or "reset" (optionally followed by a single newline).
++ * Mark the global stackmap init as permanently failed.
++ *
++ * Clears any boot-time STACKMAP flag (trace_options=stackmap applied before
++ * the map was created) so options/stackmap does not report an enabled no-op
++ * and later userspace enables return -EINVAL. The flag is cleared under
++ * trace_types_lock because set_tracer_flag() updates trace_flags under that
++ * lock; the tracefs init runs in an unlocked workqueue context that can race
++ * with a concurrent trace_options write.
 + */
-+static bool stackmap_write_is_reset(const char *buf, size_t n)
++static void __init stackmap_mark_init_failed(void)
 +{
-+	if (n > 0 && buf[n - 1] == '\n')
-+		n--;
-+	return (n == 1 && buf[0] == '0') ||
-+	       (n == 5 && memcmp(buf, "reset", 5) == 0);
++	guard(mutex)(&trace_types_lock);
++	WRITE_ONCE(stackmap_init_state, STACKMAP_INIT_FAILED);
++	global_trace.trace_flags &= ~TRACE_ITER(STACKMAP);
 +}
-+
-+static ssize_t stackmap_write(struct file *file, const char __user *ubuf,
-+			      size_t count, loff_t *ppos)
-+{
-+	struct seq_file *m = file->private_data;
-+	struct stackmap_seq_private *priv = m->private;
-+	char buf[8];
-+	size_t n = min(count, sizeof(buf) - 1);
-+	int ret;
-+
-+	if (n == 0)
-+		return -EINVAL;
-+	if (copy_from_user(buf, ubuf, n))
-+		return -EFAULT;
-+	buf[n] = '\0';
-+
-+	if (!stackmap_write_is_reset(buf, n))
-+		return -EINVAL;
-+
-+	/*
-+	 * ftrace_stackmap_reset() atomically claims reset rights via
-+	 * cmpxchg and returns -EBUSY if another reset is already in
-+	 * progress.
-+	 */
-+	ret = ftrace_stackmap_reset(priv->smap);
-+	if (ret)
-+		return ret;
-+	return count;
-+}
-+
-+const struct file_operations ftrace_stackmap_fops = {
-+	.open		= stackmap_open,
-+	.read		= seq_read,
-+	.write		= stackmap_write,
-+	.llseek		= seq_lseek,
-+	.release	= stackmap_release,
-+};
-diff --git a/kernel/trace/trace_stackmap.h b/kernel/trace/trace_stackmap.h
-new file mode 100644
-index 000000000000..979d6fd76460
---- /dev/null
-+++ b/kernel/trace/trace_stackmap.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _TRACE_STACKMAP_H
-+#define _TRACE_STACKMAP_H
-+
-+#include <linux/types.h>
-+#include <linux/atomic.h>
-+
-+#define FTRACE_STACKMAP_MAX_DEPTH	64
-+
-+struct trace_array;
-+
-+#ifdef CONFIG_FTRACE_STACKMAP
-+
-+struct ftrace_stackmap;
-+
-+struct ftrace_stackmap *ftrace_stackmap_create(struct trace_array *tr);
-+void ftrace_stackmap_destroy(struct ftrace_stackmap *smap);
-+int ftrace_stackmap_get_id(struct ftrace_stackmap *smap,
-+			   unsigned long *ips, unsigned int nr_entries);
-+
-+extern const struct file_operations ftrace_stackmap_fops;
-+
-+#else
-+
-+struct ftrace_stackmap;
-+static inline struct ftrace_stackmap *
-+ftrace_stackmap_create(struct trace_array *tr) { return NULL; }
-+static inline void ftrace_stackmap_destroy(struct ftrace_stackmap *s) { }
-+static inline int ftrace_stackmap_get_id(struct ftrace_stackmap *s,
-+					 unsigned long *ips, unsigned int n)
-+{ return -EOPNOTSUPP; }
-+
 +#endif
-+#endif /* _TRACE_STACKMAP_H */
++
+ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+ {
+ 	switch (mask) {
+@@ -3990,6 +4106,33 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+ 	if (!!(tr->trace_flags & mask) == !!enabled)
+ 		return 0;
+ 
++#ifdef CONFIG_FTRACE_STACKMAP
++	/*
++	 * STACKMAP is intentionally global-instance-only: the dedup map,
++	 * its tracefs files and the lifetime/reset semantics are tied
++	 * to the global trace
++	 * array. options/stackmap is hidden on secondary instances via
++	 * TOP_LEVEL_TRACE_FLAGS, but writes still reach set_tracer_flag()
++	 * through the aggregate trace_options file. Reject the enable on
++	 * a secondary instance so it cannot be silently accepted and then
++	 * become a no-op in the hot path (where tr->stackmap is NULL and
++	 * the code falls back to a full stack trace).
++	 *
++	 * On the global instance, allow the enable while init is still
++	 * pending (boot-time trace_options=stackmap is applied before the
++	 * tracefs init work creates the map; the hot path falls back
++	 * until the map is published). Only reject once init has
++	 * permanently failed, so options/stackmap never reports an
++	 * enabled no-op. READ_ONCE() suffices: this only inspects the
++	 * init state, it does not dereference the map (the hot path uses
++	 * smp_load_acquire(&tr->stackmap) for that).
++	 */
++	if (mask == TRACE_ITER(STACKMAP) && enabled &&
++	    (tr != &global_trace ||
++	     READ_ONCE(stackmap_init_state) == STACKMAP_INIT_FAILED))
++		return -EINVAL;
++#endif
++
+ 	/* Give the tracer a chance to approve the change */
+ 	if (tr->current_trace->flag_changed)
+ 		if (tr->current_trace->flag_changed(tr, mask, !!enabled))
+@@ -9222,6 +9365,70 @@ static __init void tracer_init_tracefs_work_func(struct work_struct *work)
+ 			NULL, &tracing_dyn_info_fops);
+ #endif
+ 
++#ifdef CONFIG_FTRACE_STACKMAP
++	{
++		struct ftrace_stackmap *smap;
++		struct dentry *map_file;
++
++		smap = ftrace_stackmap_create(&global_trace);
++		if (!IS_ERR(smap)) {
++			/*
++			 * Failure-atomic init: stack_map is the single
++			 * required tracefs file (it doubles as the reset
++			 * interface and the human-readable resolver). If
++			 * we cannot create it, the hot path must not be
++			 * able to emit <stack_id N> events that no one can
++			 * resolve or clear, so refuse to publish the map
++			 * and tear it down.
++			 *
++			 * Create stack_map BEFORE smp_store_release() so an
++			 * observed non-NULL global_trace.stackmap implies
++			 * its resolver/reset file exists.
++			 */
++			map_file = trace_create_file("stack_map",
++						     TRACE_MODE_WRITE, NULL,
++						     smap,
++						     &ftrace_stackmap_fops);
++			if (!map_file) {
++				pr_warn("ftrace stackmap init: stack_map create failed, dedup disabled\n");
++				ftrace_stackmap_destroy(smap);
++				/*
++				 * Permanent failure. Record it and clear a
++				 * boot-time STACKMAP flag (under
++				 * trace_types_lock) so options/stackmap does
++				 * not report an enabled no-op and later
++				 * userspace enables return -EINVAL.
++				 */
++				stackmap_mark_init_failed();
++			} else {
++				/*
++				 * smp_store_release pairs with the
++				 * smp_load_acquire() in
++				 * __ftrace_trace_stack(). Publishing only
++				 * after the required file exists keeps
++				 * "smap visible" => "resolver/reset
++				 * available".
++				 */
++				smp_store_release(&global_trace.stackmap, smap);
++				WRITE_ONCE(stackmap_init_state, STACKMAP_INIT_DONE);
++			}
++		} else {
++			pr_warn("ftrace stackmap init failed, dedup disabled\n");
++			/*
++			 * global_trace is statically defined; its stackmap
++			 * field is zero-initialized via BSS, so leaving it
++			 * NULL ensures the smp_load_acquire() in
++			 * __ftrace_trace_stack() falls back to full stack.
++			 * Mark init failed and clear any boot-time STACKMAP
++			 * flag so userspace enables are rejected rather than
++			 * becoming silent no-ops. Use the helper so the flag
++			 * clear happens under trace_types_lock, matching the
++			 * stack_map-create failure path above.
++			 */
++			stackmap_mark_init_failed();
++		}
++	}
++#endif
+ 	create_trace_instances(NULL);
+ 
+ 	update_tracer_options();
+@@ -9234,8 +9441,13 @@ static __init int tracer_init_tracefs(void)
+ 	trace_access_lock_init();
+ 
+ 	ret = tracing_init_dentry();
+-	if (ret)
++	if (ret) {
++#ifdef CONFIG_FTRACE_STACKMAP
++		/* No later path can create or publish the global stackmap. */
++		stackmap_mark_init_failed();
++#endif
+ 		return 0;
++	}
+ 
+ 	if (trace_init_wq) {
+ 		INIT_WORK(&tracerfs_init_work, tracer_init_tracefs_work_func);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 80fe152af1dd..7e7d5e5a35ff 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -57,6 +57,7 @@ enum trace_type {
+ 	TRACE_TIMERLAT,
+ 	TRACE_RAW_DATA,
+ 	TRACE_FUNC_REPEATS,
++	TRACE_STACK_ID,
+ 
+ 	__TRACE_LAST_TYPE,
+ };
+@@ -453,6 +454,9 @@ struct trace_array {
+ 	struct cond_snapshot	*cond_snapshot;
+ #endif
+ 	struct trace_func_repeats	__percpu *last_func_repeats;
++#ifdef CONFIG_FTRACE_STACKMAP
++	struct ftrace_stackmap		*stackmap;
++#endif
+ 	/*
+ 	 * On boot up, the ring buffer is set to the minimum size, so that
+ 	 * we do not waste memory on systems that are not using tracing.
+@@ -579,6 +583,8 @@ extern void __ftrace_bad_type(void);
+ 			  TRACE_GRAPH_RET);		\
+ 		IF_ASSIGN(var, ent, struct func_repeats_entry,		\
+ 			  TRACE_FUNC_REPEATS);				\
++		IF_ASSIGN(var, ent, struct stack_id_entry,		\
++			  TRACE_STACK_ID);				\
+ 		__ftrace_bad_type();					\
+ 	} while (0)
+ 
+@@ -1449,7 +1455,16 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ # define STACK_FLAGS
+ #endif
+ 
++#ifdef CONFIG_FTRACE_STACKMAP
++# define STACKMAP_FLAGS				\
++			C(STACKMAP,		"stackmap"),
++#else
++# define STACKMAP_FLAGS
++# define TRACE_ITER_STACKMAP_BIT	-1
++#endif
++
+ #ifdef CONFIG_FUNCTION_PROFILER
++
+ # define PROFILER_FLAGS					\
+ 		C(PROF_TEXT_OFFSET,	"prof-text-offset"),
+ # ifdef CONFIG_FUNCTION_GRAPH_TRACER
+@@ -1506,6 +1521,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
++		STACKMAP_FLAGS					\
+ 		BRANCH_FLAGS					\
+ 		PROFILER_FLAGS					\
+ 		FPROFILE_FLAGS
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 54417468fdeb..89ed14b7e5fd 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -250,6 +250,21 @@ FTRACE_ENTRY(user_stack, userstack_entry,
+ 		 (void *)__entry->caller[6], (void *)__entry->caller[7])
+ );
+ 
++/*
++ * Stack ID entry - stores only a stack_id referencing the stackmap.
++ * Used when CONFIG_FTRACE_STACKMAP is enabled to deduplicate stacks.
++ */
++FTRACE_ENTRY(stack_id, stack_id_entry,
++
++	TRACE_STACK_ID,
++
++	F_STRUCT(
++		__field(	int,		stack_id	)
++	),
++
++	F_printk("<stack_id %d>", __entry->stack_id)
++);
++
+ /*
+  * trace_printk entry:
+  */
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 0d2d3a2ea7dd..0e1a390a6130 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -1492,6 +1492,7 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
+ 		return print_graph_return(field, s, entry, iter, flags);
+ 	}
+ 	case TRACE_STACK:
++	case TRACE_STACK_ID:
+ 	case TRACE_FN:
+ 		/* dont trace stack and functions as comments */
+ 		return TRACE_TYPE_UNHANDLED;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index a5ad76175d10..68678ea88159 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1517,6 +1517,28 @@ static struct trace_event trace_user_stack_event = {
+ 	.funcs		= &trace_user_stack_funcs,
+ };
+ 
++/* TRACE_STACK_ID */
++static enum print_line_t trace_stack_id_print(struct trace_iterator *iter,
++					      int flags, struct trace_event *event)
++{
++	struct stack_id_entry *field;
++	struct trace_seq *s = &iter->seq;
++
++	trace_assign_type(field, iter->ent);
++	trace_seq_printf(s, "<stack_id %d>\n", field->stack_id);
++
++	return trace_handle_return(s);
++}
++
++static struct trace_event_functions trace_stack_id_funcs = {
++	.trace		= trace_stack_id_print,
++};
++
++static struct trace_event trace_stack_id_event = {
++	.type		= TRACE_STACK_ID,
++	.funcs		= &trace_stack_id_funcs,
++};
++
+ /* TRACE_HWLAT */
+ static enum print_line_t
+ trace_hwlat_print(struct trace_iterator *iter, int flags,
+@@ -1908,6 +1930,7 @@ static struct trace_event *events[] __initdata = {
+ 	&trace_wake_event,
+ 	&trace_stack_event,
+ 	&trace_user_stack_event,
++	&trace_stack_id_event,
+ 	&trace_bputs_event,
+ 	&trace_bprint_event,
+ 	&trace_print_event,
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index 929c84075315..0c97065b0d68 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -14,6 +14,7 @@ static inline int trace_valid_entry(struct trace_entry *entry)
+ 	case TRACE_CTX:
+ 	case TRACE_WAKE:
+ 	case TRACE_STACK:
++	case TRACE_STACK_ID:
+ 	case TRACE_PRINT:
+ 	case TRACE_BRANCH:
+ 	case TRACE_GRAPH_ENT:
 -- 
 2.34.1
 
