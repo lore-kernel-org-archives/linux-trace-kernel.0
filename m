@@ -1,130 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from bg-bec.cloudflare-smtp.org (bg-bec.cloudflare-smtp.org [104.30.16.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F77C34887E
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 01:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4021381EA7
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 02:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.30.16.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789177586; cv=none; b=n+caJSc3Q8af/WusKn9THaqYOCGOA5RBWyHnvXUXkAMaSeZ3DvUpLX4G5Y097Gx4heL1yBONBd3zhgH5Y/htKpTE4TlJ4+guLTv00LMHc/StTQf9eQeV42daq66yFfvmPjzUQWdh3DLvSeSs3YW7roiTEiVPmN/jeaqsdro8hjI=
+	t=1789179040; cv=none; b=BYmrc9TTbbnI02LIFe5ofEjebj8++ruiz9Ts1/kvZCJiAQs8hkxADQNabcCeFAHe+5SbHCkd/uG2fK7eOUpTxhSCD98wf/cmfegZSErIl0RmSEFwes7Q5Tlgvsj2//Jptb6w36pvrKmpfmV5hrZnl7N17C5M113ZDu2gUpHXFXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789177586; c=relaxed/simple;
-	bh=/6LlnANIZe3SO0uKJmHvAh0i773OZbL7WI4g97EAoGk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eKlEDKZwbKdUrsdaCX/FolgalaCMNQpIj40VVwrvXbh8Q4/GcIOPcvPSUS6OAI0KwOuXwZysTWpuNZKfqXaog31wg+MKMlw4KZuN9YK4OhU6a6Pv0dNCnE1tivDE0lO4Gf9zenhB/YE/Z/Iia3rFRZ09HkJMnUwQlfqLYioRUCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3GZpjXY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789179040; c=relaxed/simple;
+	bh=8A3oLo8LuuTSCijHhNkQBPtxwm3NAZCSJkKadgMSfTw=;
+	h=From:Message-ID:Date:Subject:To:Cc:MIME-Version:Content-Type; b=XaiUGxsTVVNG5Z2VlxQAR8CqrFg0Hb/Css81Qu+7js3gjQSHBTFZ0kJ+iqBsyipkE5K3ePGHjAC3jZd5aIbpjqPAlJgvWit9tNgtsvQKfAN3TXUDSDLkDjZcozKiUDxR2VZ7erfRe8pjBCm5VpX7sI0JJOYty+b3MAkFCo0G4Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bugs.sh; spf=pass smtp.mailfrom=cf-bounce.bugs.sh; dkim=pass (2048-bit key) header.d=cloudflare-smtp.org header.i=@cloudflare-smtp.org header.b=UOwQAL8M; dkim=pass (2048-bit key) header.d=bugs.sh header.i=@bugs.sh header.b=g+IcSL6t; arc=none smtp.client-ip=104.30.16.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bugs.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cf-bounce.bugs.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3GZpjXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391661F000FF;
-	Sat, 12 Sep 2026 01:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789177583;
-	bh=XPWAtIXeLErjBOW7mxgort3FEXSPhfgZ88Fa8nJ5KlY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c3GZpjXYYoJHLFwmIKd2KhgDXvSxg3unbVV+EEJ9Y6HVjl3gQt1t3dmijb8Pruhpg
-	 JxV0tztu6sKOR6GAjeklH449fWKnIodQT8dr51s8cMdyTE6qxXaoNR7+8hGiseF4Xt
-	 57NwvezQ61PluHeljfGYvDiestWakOoTb0APOBG4F1o0bviB8B8LXIW1UN3ZeZOHEo
-	 7q7wuUwW+0d9OaoGhTDMmX4pfvcRse0emJJMdtCG4uNObD+YDg4H2G1SL//Go6JFSl
-	 4v72VJtaiHXgF+CkFIXpNN+ucK3pOxFgoy+VcGlOEjaGNeZhWHRTu3Wgv76Db5nHG+
-	 QOhQQV88VDdaQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 4/6] sched: Extend task command name with
- TASK_COMM_EXT_LEN
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260911-tonyk-long_name-v7-4-34e1ee1564ae@igalia.com>
-References: <20260911-tonyk-long_name-v7-0-34e1ee1564ae@igalia.com>
- <20260911-tonyk-long_name-v7-4-34e1ee1564ae@igalia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 12 Sep 2026 01:46:22 +0000
-Message-Id: <20260912014623.391661F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=cloudflare-smtp.org header.i=@cloudflare-smtp.org header.b="UOwQAL8M";
+	dkim=pass (2048-bit key) header.d=bugs.sh header.i=@bugs.sh header.b="g+IcSL6t"
+DKIM-Signature: v=1; a=rsa-sha256; s=cf2024-1; d=cloudflare-smtp.org; c=relaxed/relaxed;
+	h=Cc:To:Subject:Date:From:Feedback-ID:from:reply-to:resent-date
+	:resent-from:resent-to:resent-cc:in-reply-to:references:list-id:list-help
+	:list-unsubscribe:list-unsubscribe-post:list-subscribe:list-post
+	:list-owner:list-archive; t=1789179037; x=1789783837; bh=HCVJT/QjQELAeWV+pY
+	JmoNACy+thGG2HLHwQvJ9TMgw=; b=UOwQAL8MIkWP4LNPV7M22MTthPhVuIGyqwCBEirTQMRCA
+	++Bw2Pb1mqr7Jco25jIsBSYWRzVHL9La/1C30WFefsFLWaxQFupWuuCPuYNdyD2wGHmAnvRrHWJ
+	Oo9/mEXBUc21MLy3tM3EG3QWkYnaTgZjFyo4fDPxlMmfJ7ngLfwZfTyvXJxPVkr1uYrrexEvAma
+	MG5Ra8YqqLxHArtvwn1KbNMSRNv0cQp7IrZ9EyF6Sm2adP4Rnj54RUL59Sw8mOvNRegrS4U+EmM
+	CONKl0hilxADTmgknYFHjS7UZZ4S+3QO5zg8IBKRD1jXTWWPrYfxixigzCGAex2QPEciH1UQ==;
+DKIM-Signature: v=1; a=rsa-sha256; s=cf-bounce; d=bugs.sh; c=relaxed/relaxed;
+	h=Cc:To:Subject:Date:From:Feedback-ID:from:reply-to:resent-date
+	:resent-from:resent-to:resent-cc:in-reply-to:references:list-id:list-help
+	:list-unsubscribe:list-unsubscribe-post:list-subscribe:list-post
+	:list-owner:list-archive; t=1789179037; x=1789783837; bh=HCVJT/QjQELAeWV+pY
+	JmoNACy+thGG2HLHwQvJ9TMgw=; b=g+IcSL6t3c1XiHX+ApVQQumDBKGq3dIdhb9kOc0c/ZXh5
+	foF8n41xLID13G3DpluqG7nnA3d7JUqjN1dmZi9mew28dARgkE30Do3ASEEt4FBTNtFfCtw9+3e
+	Z6uamHx4gz6KbLEGQx+hgoLCuVkAbK7fETIuwvzHLvJkzQ2lROfRcCIOzjNAXV9ctL8ofCGjfr8
+	4RL2xORG3TsSC9icdFQ6X1b7l9YSX107I13JwFu1pDLQdS4bgXi/4cw6evMCBLp/cA4GH4Hjf6U
+	IuheJo+FkAF7JjfTXzS62c8TEd2QgwT6YI1QYl51uI/oAMQ9tGgDIXwtrDLD8P5FQbSy674Q==;
+Feedback-ID: bugs.sh:5:6:Cloudflare
+From: co <co+832991690fed76cd@bugs.sh>
+Message-ID: <hCFYOQWUB1gK6CIQOmWL42dTo2SQRG5Iw3ko@bugs.sh>
+Date: Sat, 12 Sep 2026 02:10:31 +0000
+Subject: [BUG] kernel/trace: use-after-free in trace_event_probe_cleanup()
+To: linux-trace-kernel@vger.kernel.org, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>
+Cc: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Beau Belgrave" <beaub@linux.microsoft.com>, linux-kernel@vger.kernel.org, co <co+832991690fed76cd@bugs.sh>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Increasing `tsk->comm` to 64 bytes breaks the implicit null-termin=
-ation API contracts for both `__set_task_comm` and `copy_task_comm`, leadin=
-g to kernel out-of-bounds reads and trace data corruption.
---
+This is a bug report, not a patch submission.
 
-commit 5f2c83bf644707c42f3dee91b932f9dde7986c03
-Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+We found a bug reachable in:
 
-sched: Extend task command name with TASK_COMM_EXT_LEN
-   =20
-This commit extends the task command name from 16 bytes to 64 bytes by
-adding TASK_COMM_EXT_LEN. It caps existing userspace APIs to
-TASK_COMM_LEN to avoid buffer overflows while leaving the full extended
-name for a new interface.
+    path    trace/trace_events_user.c`, `kernel/trace
+    crash   use-after-free in trace_event_probe_cleanup()
+    commit  2f1baf1fc892 ("Merge tag 'trace-v7.2-rc7' of git://git.kernel.o=
+rg/pub/scm/linux/kernel/git/trace/linux-trace")
 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index ba20405664246..c4e0104e7ae9b 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-[ ... ]
-> @@ -1187,7 +1188,7 @@ struct task_struct {
->  	 * - set it with set_task_comm() to ensure it is always
->  	 *   NUL-terminated and zero-padded
->  	 */
-> -	char				comm[TASK_COMM_LEN];
-> +	char				comm[TASK_COMM_EXT_LEN];
+Config, environment, the sanitizer report and a C reproducer follow.
 
-[Severity: High]
-Does this change cause an out-of-bounds read in __set_task_comm()?
+=3D=3D Notes =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+    If you fix this bug, this tag credits the report and lets us
+    close it on our side:
 
-__set_task_comm() in fs/exec.c relies on sizeof(tsk->comm) to limit the read
-length:
+Reported-by: co+832991690fed76cd@bugs.sh
 
-    size_t len =3D strnlen(buf, sizeof(tsk->comm) - 1);
+    Everything in this mail is validated by the reproducer below.
 
-With tsk->comm now being 64 bytes, strnlen() will try to read up to 63 bytes
-from buf. However, the set_task_comm() macro still explicitly permits
-passing 16-byte arrays:
+    We also hold an unreviewed LLM-generated analysis and candidate
+    patch. The same reproducer panics the unpatched kernel and runs
+    clean with that patch applied. Use it as a starting point, or ignore
+    it and write your own:
 
-    #define set_task_comm(tsk, from) ({ \
-        BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN); \
-        __set_task_comm(tsk, from, false); \
-    })
+        patch.diff  https://bugs.sh/b/832991690fed76cd/patch.diff
+        report.md   https://bugs.sh/b/832991690fed76cd/report.md
 
-If a caller passes a 16-byte array without a null terminator, __set_task_co=
-mm()
-will now read up to 48 bytes past the end of the array.
+    A guide to taking it from here to a sendable patch, including the
+    trailers to add: https://bugs.sh/patch.html
 
-[ ... ]
-> @@ -2042,7 +2043,7 @@ extern void __set_task_comm(struct task_struct *tsk=
-, const char *from, bool exec
->  static __always_inline void copy_task_comm(char *dst, struct task_struct=
- *tsk, size_t len)
->  {
->  	const char *_src =3D tsk->comm;
-> -	size_t _len =3D min(len, TASK_COMM_LEN);
-> +	size_t _len =3D min(len, TASK_COMM_EXT_LEN);
-> =20
->  	if (!_len)
->  		return;
+    Happy to test patches. Complaints and suggestions about our work
+    are welcome at:
 
-[Severity: High]
-Can this cause trace data corruption by omitting the null terminator?
+        cedalion@bugs.sh
 
-When copy_task_comm() is called from a tracepoint with len=3D16 and a task =
-name
-longer than 15 characters, it will now copy 16 non-null characters into dst
-without adding a null terminator.
+=3D=3D Environment =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+    Reproduced on  2f1baf1fc892 ("Merge tag 'trace-v7.2-rc7' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/trace/linux-trace")
+    VM setup       https://bugs.sh/b/832991690fed76cd/run.sh
+    config         https://bugs.sh/b/832991690fed76cd/config.gz
+    poc            https://bugs.sh/b/832991690fed76cd/repro.c
 
-Previously, tsk->comm was guaranteed to have a null terminator within the
-first 16 bytes. Now that the name can be longer, the first 16 bytes might
-all be non-null characters.
+=3D=3D Sanitizer Report =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+BUG: KASAN: slab-use-after-free in trace_event_probe_cleanup.part.0 (./incl=
+ude/linux/trace_events.h:430 kernel/trace/trace_eprobe.c:59)
+Read of size 4 at addr ffff8880137e64a8 by task exploit/144
+Call Trace:
+dump_stack_lvl (lib/dump_stack.c:94 lib/dump_stack.c:120)
+print_report (mm/kasan/report.c:378 mm/kasan/report.c:482)
+kasan_report (mm/kasan/report.c:595)
+trace_event_probe_cleanup.part.0 (./include/linux/trace_events.h:430 kernel=
+/trace/trace_eprobe.c:59)
+eprobe_dyn_event_release (kernel/trace/trace_eprobe.c:53 kernel/trace/trace=
+_eprobe.c:120)
+dyn_event_release (kernel/trace/trace_dynevent.c:110)
+trace_parse_run_command (kernel/trace/trace.c:9565)
+vfs_write (fs/read_write.c:685)
+ksys_write (fs/read_write.c:739)
+do_syscall_64 (arch/x86/entry/syscall_64.c:61 arch/x86/entry/syscall_64.c:8=
+4)
+entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+Allocated by task 147:
+kasan_save_stack (mm/kasan/common.c:57)
+kasan_save_track (mm/kasan/common.c:78)
+__kasan_kmalloc (mm/kasan/common.c:398 mm/kasan/common.c:415)
+__kmalloc_cache_noprof (./include/linux/kasan.h:263 mm/slub.c:5489)
+user_event_parse_cmd (./include/linux/slab.h:988 ./include/linux/slab.h:130=
+9 kernel/trace/trace_events_user.c:2133 kernel/trace/trace_events_user.c:10=
+35)
+user_events_ioctl (kernel/trace/trace_events_user.c:2508 kernel/trace/trace=
+_events_user.c:2703)
+__x64_sys_ioctl (fs/ioctl.c:51 fs/ioctl.c:597 fs/ioctl.c:583 fs/ioctl.c:583)
+do_syscall_64 (arch/x86/entry/syscall_64.c:61 arch/x86/entry/syscall_64.c:8=
+4)
+entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+Freed by task 74:
+kasan_save_stack (mm/kasan/common.c:57)
+kasan_save_track (mm/kasan/common.c:78)
+kasan_save_free_info (mm/kasan/generic.c:584)
+__kasan_slab_free (mm/kasan/common.c:253 mm/kasan/common.c:285)
+kfree (./include/linux/kasan.h:235 mm/slub.c:2677 mm/slub.c:6377 mm/slub.c:=
+6692)
+destroy_user_event.part.0 (kernel/trace/trace_events_user.c:1525)
+delayed_destroy_user_event (kernel/trace/trace_events_user.c:262 kernel/tra=
+ce/trace_events_user.c:251)
+process_one_work (kernel/workqueue.c:3322)
+worker_thread (kernel/workqueue.c:3405 kernel/workqueue.c:3486)
+kthread (kernel/kthread.c:436)
+ret_from_fork (arch/x86/kernel/process.c:158)
+ret_from_fork_asm (arch/x86/entry/entry_64.S:245)
+Last potentially related work creation:
+kasan_save_stack (mm/kasan/common.c:57)
+kasan_record_aux_stack (mm/kasan/generic.c:556)
+insert_work (kernel/workqueue.c:2226)
+__queue_work (kernel/workqueue.c:2401)
+queue_work_on (kernel/workqueue.c:2452)
+user_event_put (./include/linux/workqueue.h:699 ./include/linux/workqueue.h=
+:760 kernel/trace/trace_events_user.c:327 kernel/trace/trace_events_user.c:=
+265)
+delayed_user_event_enabler_put (kernel/trace/trace_events_user.c:408)
+process_one_work (kernel/workqueue.c:3322)
+worker_thread (kernel/workqueue.c:3405 kernel/workqueue.c:3486)
+kthread (kernel/kthread.c:436)
+ret_from_fork (arch/x86/kernel/process.c:158)
+ret_from_fork_asm (arch/x86/entry/entry_64.S:245)
+The buggy address belongs to the object at ffff8880137e6400
+which belongs to the cache kmalloc-cg-512 of size 512
+The buggy address is located 168 bytes inside of
+freed 512-byte region [ffff8880137e6400, ffff8880137e6600)
 
-When the trace ring buffer is later formatted using %s, vsnprintf() will re=
-ad
-past the 16-byte array into adjacent ring buffer fields, causing an
-out-of-bounds read and leaking or corrupting trace data.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911-tonyk-long=
-_name-v7-0-34e1ee1564ae@igalia.com?part=3D4
+---
+The report format is based on syzbot bug report.
+
+This report is generated by a bot. It may contain errors.
+See https://github.com/n132/cedalion for more information.
+
+For any issue with this report, reach out to cedalion@bugs.sh
+
+If the report is already addressed, let us know by replying with:
+#co fix: <commit hash>
+
+If the report is a duplicate of another one, reply with:
+#co dup: <lore link>
+
+If you want to undo deduplication, reply with:
+#co undup
+
+
