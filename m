@@ -1,137 +1,117 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1022B36308F
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 19:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075E6368D79
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 21:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789242060; cv=none; b=fhMXkrMbzZYxq8a5ODvDdXApJ14JrQlIzEqvceHjv6cCmv987v3DC06hq1/dxQTRycPOO3wehUh+RFu3v+lyMSh5Xo4GQUraEF5BwYxJlY1dTgOmpL82K49zo/D/mvwxQJbAJ5rKt9Oo1w83ASFX4FC8qKBqKmNHC9Pe1a+x8y4=
+	t=1789247645; cv=none; b=GoSqMHSRCRtWNErFEn8Tf23DKPgPVyEoMb7VrIWNGl4TiXdTd6uTbVcfDsYISD34hA/6P3UD3YxdPVc6zfZrlbCpPp+t/b0X1oa51xZVg6neoKgFWnMi1QrQcLSWGPDpB6cuFVci8YXaLz3JhYi3TGDGcRW1jk/NFe+1DNgokCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789242060; c=relaxed/simple;
-	bh=Fg3k93J+NnauWx+3Z+BYbTT2WHUzh/cuAEcclS6y3ms=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=H16RVmCxE3eSmQVjioNUHKaDlwr4/sJR3MH51Twazhe7/0xNi59ARXzeFCKXZtHfGUo2sYAuj1YYz4tDMnaTqEUT3kg9PPYNwS6/YlS3sCy8bGAvduW/icgmt6oMGeuEXbxdrpFOsDfJFyq6rf+12yij37pU8EoMedAJ/SdetbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hdL8Tpdf; arc=none smtp.client-ip=209.85.161.50
+	s=arc-20240116; t=1789247645; c=relaxed/simple;
+	bh=+aDuxa4ipJlMz1JaxCLfhKnz1rTsjziNdNYQxmJYJ7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=US7LYIl/UcPva3lYe/pioJ4e67Kv/fLA7yQ8+CzGwPdAkMVMsm3spSfj+34TpK+ERv47AppLp/ZOhGr2HtL+aNtsOfYh7EwjvDDddv72nGolFcjQNBN0oyaakxgt6r9g3QxW3pltjenExejMT5Ezu0+MkEXPwU0VdUupvw9R2YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pUALi5ON; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdL8Tpdf"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-6b1b3d7f10eso1664177eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 12:40:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUALi5ON"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4998b5a63e2so22862105e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 14:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789242058; x=1789846858; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=/mW9uIl4IQ84J3enCrJFqvgB+YMh25zxbJWRDQHZcYo=;
-        b=hdL8TpdfrOnsp8icWzp7H9iP1o4b4ff7BeOjoL79h4VOB7Mi6IPUtkUAsdZtSvGWwY
-         G5S4oixFN/qeznuCur5B4gc2bSVe1MLjnzZkQ7sCtiMWHNDvIpW7Njy83RaekEGJfsR8
-         uBar9fpNP8lY8JkBGfS5tr+LkGAtKGPJe5TmeIp8OLJfC6ZUfW1aY64veWs450nV/hiG
-         lAAeDTT4Nb6gB9crfFPc3Hnu0lUOghQtcutwfJGRfdY/gWa0Rle4PGL5cYr/WxeqduxL
-         t9HwIy3rA8i+vi44eDI2IZZE+xh853xSBvG4vdqzZ5ApW6bDRml9lMb+xYwImLjcHGLM
-         YUyg==
+        d=gmail.com; s=20251104; t=1789247642; x=1789852442; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RN6NlWXNxbscB16yrp/7Xyb7tbAGCIZghMiPDdHQJK4=;
+        b=pUALi5ON86yZWWJyWkB1mt6oSZxlDCbQgn9I+Vco8t+HbaOSkeIO1VwjgzqD7aQh3f
+         OYZ7xp3pP6LdiubLFn+WuZpmS8kn9REQ1qX8nyeTjQ9KYwaQb/9cFs6VygZG6uZa8b1H
+         gaaleLq8U/XbC5np1icH0ckgK043LVZhky/3aW/O5JWixxpheYCoRVoW0fhWF+EKkKhY
+         vGINxwsh4gaX7tullJQbxgkBmtMSE+tRQ8jhSzw4/Ri8hUJjLs+Ewoo1fMbubxus0qLO
+         1qC216/sY4X7yEkFQf34vPRzxIq8yIGLnw98LsMCodpdQvU9cM9LnSviYY8aHWhiosDd
+         VRKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789242058; x=1789846858;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+        d=1e100.net; s=20251104; t=1789247642; x=1789852442;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/mW9uIl4IQ84J3enCrJFqvgB+YMh25zxbJWRDQHZcYo=;
-        b=AbEXfJU3a4UoxWKMaqvkJBW+cZ5dhlSMDrIrruZRYYEHG0vfxt3wwIzZSBmqM8iwEa
-         o/Es6ScwH9DCXyBKX+vwZzjHtai9B9NjuKxOiXz/Ktq+eDjshijGQ0UwFal/iKYPoLf9
-         4OOSGde2fNKx+JaBdWkb+9Qg9JKYXylrU0/8ba1YuTGMDWC4/YHqlsd2Z578KS6BiMBa
-         V+8AJV3YaamaqwnxgdYgKaJZ+EQ4RiIF8f48/izboW8NHfE3TLy21xFbpLk1FmUyhPNx
-         ekd+l2Ty9Qp9i6vd01vev6Trh5ZHbK1nuYjaKj8wO4XfELlIdtTW92zC1cM6ifNsUhzo
-         LzXQ==
-X-Forwarded-Encrypted: i=1; AKwUvBw8aNoTFfF60YwX2gUSPFlH/RKioH1onmN6BbBvsDeVEhM7EwA93KFYfU+FCEguvSqmsjTLelonUHlZ0yKMai8SOc4=@vger.kernel.org
-X-Gm-Message-State: AFuF++n8vkJHkeINrs2ZzerJapPy8UnfJbf4itn8XsqxbpWpwreWudS0
-	hIgy8kwN+2fpjDvqgC/KoCJXBZR77RPb0jYRHstCIKdEU5ToWKJd2438
-X-Gm-Gg: AYBFou0hOMUcpBTI2TDv4XowaKA2SnwsQVFNUX3Eb66gs96uw1DBIkujZugjbrrHdT0
-	ItL7ydsg5p5+Uv9wR2L17TMV+jN2jX6CeP39kmwOYiQz0ray9l0BUObEPaBoHpd9XG6EIn4G/2H
-	2UqgORnYM6U6tbl2po3la8D8pVEayGXU0m5/aHX3TjpTuko4sZ0G65sKaqH+/ajolDKRmhjGVWI
-	QRt6NZopVEDG+6Np2VPw3f7/LW3thHlmMJVbtVopz7Y6yu2NBUBByYUg/8P4FdsObRZ31pk+o4J
-	/ffwq3DqsK+b4zO7niY6c1/GVYM85OX5zlt1xh+RqidXzKQY2A+zxl1GkT2iR1QbiP3iJDnktY3
-	00o3wNFKBhDU5rLhWiFyJZznWc25Cna1r2scPYlghgLG3+wNOjKXXC7CcEaHfaNP9+tlpMZrtGP
-	9l99d1stIf/jKnFCKxoUPC0ovRX1ezPeV6jx29cLreGjL0sPkvpwU3IHMaxBJpPXk32snqBe1FA
-	u6oFXl7biX1U2tEmvSfeVEHkYHHlWsp/HPPAtm/nIOJkivdgMQ2hZpmsZfVweLTjnExECh6mZI=
-X-Received: by 2002:a05:6820:f034:b0:6c0:c954:e534 with SMTP id 006d021491bc7-6c0c9550c4dmr5760632eaf.38.1789242057820;
-        Sat, 12 Sep 2026 12:40:57 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:5::])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6c0996dc5a6sm6404372eaf.6.2026.09.12.12.40.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Sep 2026 12:40:57 -0700 (PDT)
+        bh=RN6NlWXNxbscB16yrp/7Xyb7tbAGCIZghMiPDdHQJK4=;
+        b=M3eHKbkAAot/psrzALjCxagHKhVvjU3GyyWcEJSOKgAT9I2bdEnqrew6wyyDWzJjJk
+         nBNb/Ld9OvN4SLhDuBl102p579YF9msR/ErWARtjxZFw90+vIrMmUIhBNGp5yva4YLIS
+         B7OGcafsngDX9BiCv3SG0YPqyCcCRnUrzO+JvFTgzdlddrvu91GcwMfSwgls2qUeOqWT
+         XGmJ0VSzmicIc0fMHcehsqqIyg2wl1eOK29os6jCha/h3PWGGxPwCbhXrMrxSC8mrFyj
+         poUzfLWPxzA+xGMMuQn560tzn7jA55p6SSJUSgAUIp9wSgqkdtyfyax6lpW8bw/j4jGK
+         Ym3A==
+X-Forwarded-Encrypted: i=1; AKwUvByaCOoGenrO7G+oZ+QfCJjrDUyhypIv4cEPzManCGm1g67aNvR1E+t+TLe0kXa3CuDKJDBCS8nWjK7siryJ6AfXlC0=@vger.kernel.org
+X-Gm-Message-State: AFuF++kSaH5O7743hnbUfVqMRCZbnRk3QQvxd7fqKtQw2dcYV7vZu6Pj
+	eqPLHz/516a1fZo8oYkLqUEarM+sLLpd1gRf0QMr1zVaioM9HoY/0Lk1
+X-Gm-Gg: AYBFou2OcwKMYAG0l7Xc7W/joA0KMcS53Ynb2Mc70nvVQoy/glt9zpSXHq4fguEdlmR
+	WmsrmM8H0jIl5N3v/FzmG5iUp1IPfD+X5gZHfxaveBYG9UWqaJ+60nFb0OzYoVSEXz1V/vl3S8g
+	NfE/BDwI16iPkTqt9JmWbsylWNid2r0nLwouR1CMRMdwiLps8S12+SlkqVfBhxl4Cxzn627OOCe
+	l2dfqEP1Z7rux3WJ7+LmoXBKqdMcNfH9zjKCqsJstW/1YCe65zs83G9pAk8WznF3skZIhoeS9s1
+	OzG/GGHJHiZzI+bs5xoZoOTzoiK2THgLoU+NsYc+stkbo9SObTTCOcJMs/hdOEklTjpEAgKoZqx
+	cTzN+0LBw/qhwkG3JfusPj3l2KK8rE0hdgPXc3jbxOM9ExrPsi7RSnTZHdlTYdpmijWB3sIQ0tm
+	Ku/4LKeMRu/TWpiqIta0j5go3NPuh9tvVi0SCHwDCXOO/VGaiTfFf9nxxhY9bBaEYciX7egbUsF
+	P/1iLFJT9V85jRME7c8YsJBgh33WRvWw0NB
+X-Received: by 2002:a05:600c:3513:b0:49d:28c4:b304 with SMTP id 5b1f17b1804b1-49e619d479emr105307385e9.29.1789247641902;
+        Sat, 12 Sep 2026 14:14:01 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d26c39086sm240080175e9.10.2026.09.12.14.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Sep 2026 14:14:01 -0700 (PDT)
+Date: Sat, 12 Sep 2026 22:14:00 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Josef Bacik
+ <josef@toxicpanda.com>, Frederic Weisbecker <frederic@kernel.org>, Neeraj
+ Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, Thomas Gleixner
+ <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, x86@kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Puranjay Mohan
+ <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, Andy
+ Lutomirski <luto@kernel.org>, Josh Triplett <josh@joshtriplett.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>, Luis
+ Chamberlain <mcgrof@kernel.org>, Ihor Solodrai <ihor.solodrai@linux.dev>,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
+ nesting in the BPF trampoline
+Message-ID: <20260912221400.4045198b@pumpkin>
+In-Reply-To: <8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
+References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
+	<20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com>
+	<DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com>
+	<14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
+	<DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com>
+	<8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 12 Sep 2026 12:40:55 -0700
-Message-Id: <DLDLDGTSBHA0.32TYNBSKKPFXH@gmail.com>
-Cc: "Josef Bacik" <josef@toxicpanda.com>, "Frederic Weisbecker"
- <frederic@kernel.org>, "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Boqun Feng" <boqun@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko"
- <andrii@kernel.org>, <x86@kernel.org>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Puranjay
- Mohan" <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andy
- Lutomirski" <luto@kernel.org>, "Josh Triplett" <josh@joshtriplett.org>,
- "Uladzislau Rezki" <urezki@gmail.com>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Lai Jiangshan" <jiangshanlai@gmail.com>,
- "Zqiang" <qiang.zhang@linux.dev>, "Juergen Gross" <jgross@suse.com>, "Luis
- Chamberlain" <mcgrof@kernel.org>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, <linux-kernel@vger.kernel.org>,
- <rcu@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
- nesting in the BPF trampoline
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: <paulmck@kernel.org>
-X-Mailer: aerc
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com> <20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com> <DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com> <14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop> <DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com> <8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
-In-Reply-To: <8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat Sep 12, 2026 at 11:03 AM PDT, Paul E. McKenney wrote:
->
+On Sat, 12 Sep 2026 11:03:34 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
+
 > In the old kernels, yes, we have current->trc_reader_nesting++.
 > In the newer kernels, Tasks Trace RCU is instead implemented in terms
 > of SRCU-fast, which instead increments per-CPU counters.  Which among
 > other thins is a bit faster and does not need to hook into the scheduler.
 
-old kernels? I'm confused.
-rcu_read_lock_trace() in bpf-next is doing t->trc_reader_nesting++
-and then calls __srcu_read_lock_fast().
+Isn't that rather architecture dependant?
+It is fine on x86, but on arm incrementing a per-cpu variable is
+significantly expensive.
 
-Are you talking about some RCU branch that you target for next merge window=
-?
-
->
-> So we have several ways forward:
->
-> 1.	Revert the implementation of RCU Tasks Trace in terms of
-> 	SRCU-fast, and use the existing current->trc_reader_nesting++,
-> 	as you suggest.
->
-> 2.	Deprecate RCU Tasks Trace entirely in favor of RCU Tasks
-> 	augmented by rcu_tasks_trampoline_enter() and friends, as
-> 	I was suggesting.
->
-> 3.	Implement rcu_tasks_trampoline_enter() in terms of SRCU-fast,
-> 	keeping the speedup, and put a synchronize_srcu() in the
-> 	RCU Tasks grace-period mechanism.  This again deprecates
-> 	RCU Tasks Trace entirely in favor of the augmented RCU Tasks.
->
-> 4.	It is always good to explicitly state the apparent status quo,
-> 	which involves redundant trampoline entry/exit overhead.
->
-> 5.	As always, your additional ideas here!
->
-> 							Thanx, Paul
-
+David
