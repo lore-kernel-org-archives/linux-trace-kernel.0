@@ -1,95 +1,94 @@
 Received: from mail-yx2-f12.google.com (mail-yx2-f12.google.com [74.125.224.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E713264D4
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 14:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4402D23A6
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 14:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789222043; cv=pass; b=ZWJhxYDwigw6YF6k9sK4Ff8QBZJ6co+cTpu4Z+4ync+mrbwkHx9cR5hNX/uBqNIt/ZGPaW/voMV6DU+aU7gpLE3/37HS+Z/3MT6Om/k4Og2BYldejxX+lHWdwWAg0XJ4aEC0Nuxu1xTsscFJh25PjR6FE6c/LMXK7Qdu7czpi5U=
+	t=1789222097; cv=pass; b=pHrZsaDZDPZt988sPYplKDFDSQ3APtcPE4w81q2/j2yVsi0ycb5vsA4MW0u103HvEz5IXrPs3VvD1VzEdJYvrHzl0auvFUNZ2U+myp3vJqULQGMLg3rNR/wkKadGt8U908BFx8W61HiA/NDMKJU+tUjrcNO6V2DSwlarjKN2V08=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789222043; c=relaxed/simple;
-	bh=h6brpj5u/nMM7qT8pE96tt0VxTkwoueRws9I0pOLJLY=;
+	s=arc-20240116; t=1789222097; c=relaxed/simple;
+	bh=5uOr8p7DqRt2I5FaIN0QytKVHrrF/qtai+yJg4KKO8s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EksecHu1bGakxOXRi6dN1pJYPaOjx8apjn5NNGfQ2J71Z/BEIt9nqjz9l4qH1fiLbq+c+IBsRCW8ZHZdbEIyx0S4EequbRdSs3bwdLPATIEqtNvLRoqEy4uTYg33yNbkX37ijRxXdx3rSCvlJvRmfJuW3h0dPvhIru1hl3yrM8w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TTQPdNXC; arc=pass smtp.client-ip=74.125.224.140
+	 To:Cc:Content-Type; b=ekZ4SN1ts9vk1yTjctm1/e5Td8XB+DArK+Dw1Yx7ZJtyJYVN9KyI2zbELSlqjEnVV+3jRJSL6egYHj76wvmJ5gk6D9F0fg8zYp4Ch5A+fTJqJ9mv5BJ0hjCxbJR+oSUAL9VJzquDdvkqsueiwIA56gN3vtNmPfs+kCsKzh51unQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrYOCJCS; arc=pass smtp.client-ip=74.125.224.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTQPdNXC"
-Received: by mail-yx2-f12.google.com with SMTP id 956f58d0204a3-66e56a1fe3fso382566d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 07:07:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789222040; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrYOCJCS"
+Received: by mail-yx2-f12.google.com with SMTP id 956f58d0204a3-66e4ab20a32so431758d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 07:08:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789222095; cv=none;
         d=google.com; s=arc-20260327;
-        b=L2DNaB/TyrkPkvWMKFliVul+3JzOmWOTK3vMSnxAtYCUlvrmsrsVDXQ+7/Pu+z7gey
-         A7cFpaVC8vvZQpBHTB3HMwhcmbilU7yRgNdeEfCUuNLmlge7ZQItSSLMbTBydTc/ghQ9
-         gq3yxEACW3USuG+bgvPZNonBSVHQZXXq/ck/zXnRxfBT+y3MTXNUDZWopCQPc7x2gPR3
-         6gmiYEvary7coKKrGmOTuaazhILIN3/RQIqNNzVqdr7wmckD/bNE0cNrAIAoE2Six9nX
-         vOWC0+uQTStJw7iCDrmD+B5/X8NTjLX29+/yBAjwXRf8Zm/JW095jqJZcKUX6Bvg75cv
-         RLRA==
+        b=p8IRjOvp3J0wgeM3LYyFbxtAj4ElVVpoYgO+Q+PgECF1NoTohsN7SVQjudeOZwRlYM
+         a1PPfb/WBSuoyIGcWTvL0AEgrFLF1VwF+K++/Pl3avk0hRVO53zefaE5D7BwKSiuVp5O
+         SEfO2F/muPIxRYGHjiIQZ9rd9UJXWVnkzeSWZV4HcE11cLEj0/a8agkI3/J34xZto3Fg
+         5WoYqm0oh7VdguaNVsI6EU3O/0pqlK7mjLvIFlvcIW7QJpxNDM0Yy+ucbBGlOZ2OsXJ0
+         XIRPU3yG50cHGrjQROyMg8wDm0INXueD5Kx/cDl6Qp0hmCsfsOF3Im9trX2PdeGx1KwB
+         ro8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=uP8joNivVUeq7UCg0aYPViRR5LnStG5aem+LvN65kxY=;
-        fh=j3NWO7NWCVnb/bPV0zmilkuqn3aoh2KxzhHd4GfxZRA=;
-        b=NeZ3YTizRcyW9bEaPH/SFgPmMQEdk8sQimzx049Kg11zzUzedjJxA4RPqiSPiZjhMo
-         SLB8S9FcJWn2096bI/+A8aL/qa0Q0qSFNNYONlflybaNDF1kdrX8YanTvRRAneDnp3JX
-         qXi411rspjDoyuvRGUnaH+N29Xa9/5Bvgkt5b13j7bY1E5qE55fe06ifujSiq9vNMzjP
-         22Adko483FZv2u0O+xpfMu5gPKw3ZUbwBXHCduPO4DkIR/NVEKCGJJ77hwFwcdPMCSAY
-         xf1qqcm0b3EhWoQ077USBwoHaCCqFZ4xxJEEhrv5mcXi/ffjAIpek+7sikcjUyzCc+KD
-         IsQg==;
+        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
+        fh=TCYWiPBi+KGdlSHZEd39pFZEgNujstx1ZD4L0lVcmAs=;
+        b=Rxah8bftuMVyp6CIu0gqBjK9DJxLmVY2HXNFKdhZb0sq3KHTsFAUnZ36XZgnbkNgNW
+         LIeapGeHrcf6FEzhAjxzN4BYfIEQbALZrYIxjwoBU5TgmVgnHDU44MNohKAapvzUEBgl
+         mEN/ma3HgW8dg2rdw1mkbzAQgG5Po2xSLcrTKrg+ycVv+mqgblv113aoCookO/VL8DcX
+         77NqHAFiMI4IRDQn1gx16MQ3qVMab/Y6T7rxF5hEr+EhO50PTZBsjgcaOXMEt+FmStiv
+         K7Hx47lXywQkZk15EtiOgSXEQHZcinC2WLZXZI0RUSohzNrdZCK39aoIvwrw2AUioMYL
+         dhmA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789222040; x=1789826840; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1789222095; x=1789826895; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=uP8joNivVUeq7UCg0aYPViRR5LnStG5aem+LvN65kxY=;
-        b=TTQPdNXCcCUC0qq0kZKN9EDy182+wL0X55DX+1K0Ge3+vxbtwAz3rdWEcGywhn3MJ8
-         0b9xJDInz+BFj4oFVktSCBZD6ioFWE8pwqHJcyZFA5JjRM1q1yfWNYdI1hCjzlGGBzWZ
-         1GZcVYI6ar3k56xOQglyZKGrvuoKZwCXSpcvX9k3Upb76sPYAq3s0nyPLnMlp7YSjYOg
-         doVZUz4MHd09yFchWzl/NdxqpSy6IhU6B/xu0cixfyrGF4Ms2OclwN9NW6itF3rtmubo
-         8KaiZi2UqNSrgtasMDdlGNNkptNYjOjgQdX9Xjj/vIRxFiNfO4/eyGUQzRX9HqVpbndb
-         x6KA==
+        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
+        b=JrYOCJCSRVmAclpH2D9Dr968jjyzcVlZHoPSJxNG62/tD2sVOPz1i9Kbzs5NFY1l26
+         FHUMNTdjTy4Yx49LzDeVB03cbVZGVLpPsD0TuKbMx1a9qLvVYvfznOc1q4nCuCaXnRtQ
+         LMLGTLh50CbB6f7DuqRsj3VSE/WhRVGDH+75gRmcdlvErmcTup9W8bAjPoUeU8wrVu/9
+         Cg0ieRiPn8Nj/2fLIiZnNh/N7rt2LBWfB4SIRCdlWmhtDcuQOzbdJRH/c4YGFBW9ivgH
+         3ukY73GbU/9OJmVejUUTaMC93bK6MNA9A5Z6xnH2/yfEN5H9BFd9lG2Pw4jGTZp43NMa
+         pZLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789222040; x=1789826840;
+        d=1e100.net; s=20251104; t=1789222095; x=1789826895;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=uP8joNivVUeq7UCg0aYPViRR5LnStG5aem+LvN65kxY=;
-        b=loPZGe5EP7vASRWyJIlSwegclJzWZ9CQxJ7/xYBHb3tjsX0WCPpf80tDQjsd9r5vWf
-         092+dyszrz0UNe+z3B1gHwq/W8sOqlfDpYpLtkXrVVQ/uTr42mj7gbGINuJGOyI8Zis3
-         7gnfaQh4d4bfQYc6NmQ59WDADN/rbT6AhyWBzbPEqH2HTeizW527D+saEnDi88Qu7BRw
-         lRaA2PSezj5jyiw/5Za+6lTUgGrZcGpGN/dR0wzbhMk9S0faswqDdqyq0CEAlZZ9Aou4
-         1vxSFIw2nAa5+UD+FNFSdX3mH47BsR9sesRMRrASv+IfmND9Z+z861BSf9buHnHj+Coh
-         UO7w==
-X-Forwarded-Encrypted: i=1; AKwUvBymPM1mLX8qQreUwAg8bZWqs0tc7js0fNOCL6ZuJViLvtntlu1UrrkrxqrgMoeNSeCv/4Hx/Cz0FhbzT5BSWRDXfy0=@vger.kernel.org
-X-Gm-Message-State: AFuF++n7/p2+qVwXsQXqP4eACvn2P5Eu2iftox5NvtPEMWTf2Mspdu5W
-	+jdlVA4ZvK6F7arQnXoWltfWXh8ZRdeQz1wyHz+yuO6ZST/BaPbgWG6FaCem5sp5NAtV7bGgIyt
-	R8nljOJ+l+uIwVGMV35tKUVbLmqNUFZRRCo43Y/g=
-X-Gm-Gg: AYBFou0NWeTtiF5gQvAb5feB0N1BZQ9mgewmOtxlnswTO7DU48CYgjI2jMfTuDl7xLj
-	BQuqfiSDCS5V+KqVI43rxsvkF8KGITCCt8yU1nbRGI0c3H3VFQgsll3mBdYB2gbKPRBrQL4P8HH
-	X8QpFleOKJsQmOTy9BPXxlJDUrsmo6AmE28YQUTcAsaHCFj/jk8XZZbQZnVoXnoP0c+/Q8ZK9ZU
-	SpzHss2UshrtudNZKPLzoo7f6M7P+F6G7qdLXb/Pu/ArkHT4D9C80XA5l7vvQh2JzlcpqpPjF8W
-	i5mU0w1EEr/v5jSZvmko0f1KPZyXXgRjaDVXPD59Kv7e/nnvbFYbPplscu7PS2o=
-X-Received: by 2002:a05:690e:4092:b0:671:3392:7d68 with SMTP id
- 956f58d0204a3-67135bdab56mr487328d50.90.1789222040258; Sat, 12 Sep 2026
- 07:07:20 -0700 (PDT)
+        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
+        b=PloGlU/XpUJqe6qr+fdi5GfZfMaZqN9i/AnF4/PbZlY3Ojy70wzY0mCjIaCgOiox9Q
+         8XEX1IvM2oGhfJWNlGTwrWrXejVYVEkIyFO+epXbg9m8oLdLGwrE1v6WFbJHZm384Vv6
+         5cl9BxON1HGUsQUxmxJKiR7ZtlO6pokiQfbkjkqC0rZuBsY1/gMjuTPHT7qgZJC1PlGI
+         lOom0y87JZhE0vcgaIQIeftwvmhvixmMii/thD3w82gMDiyypJCOk9sqtltlfufxwIKb
+         uGBC4w8iCGWurW8n4PqEDY/TvkBKhLfnle26Kuceoz2l8BKxUDvAAupavlnA5dDndjvS
+         2j+Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwKGz5F+TYNKpckaotQX7V+EfTALeyzeZVxSKNbcgvCZcA0bAsr36PSDxW+BBjAmFIjN9yZtlSzPzOUWgL+hu1sjls=@vger.kernel.org
+X-Gm-Message-State: AFuF++lqSaR9YXmL1ytciS7YPfNZKrWYHfdP3aoj7xt++2Mk/vtShy6Y
+	sccQ8/42oD9UVC6/Ox2OEktVlOdTNduwiOkh+7E7TxGHxGqUofavBQXfCfb8Xb3Dceav1JbECIQ
+	aW7T+2bx9fWckQXuTeUx1eRhC11aFALfmxoy3fwM=
+X-Gm-Gg: AYBFou3QCELOcD7w+Bg5LNqloChy19jVwgxSfVKmuCv5dieWFEvLPGArtTq3ruOtVXn
+	IZNEjNYe+4/CdQPbMnbW+R+vqK86FyZWyIuvtCuWTadZtfihwe3U4Rajqqk2wv4ehAuS8F/LkHh
+	dPjW3IYrb7Tc3QFcz8UQZJ1+it05UX5Zo8PHL4IJHkBpBElIAndARW6KoJHCb2euiepu5Rmrraj
+	nJcFE4Zi8kTiNPJAX7o4VQxNtJIZiWceKKgYnfVrRpSxHvwjyWIicdNy9t9iarD65IIcncmk3Nf
+	+FPufkGNpnfgk5LxXU0trPlXGSHif4ge7B1z7/Zkv+oFYYlbbRVp
+X-Received: by 2002:a53:a0c8:0:b0:671:19a5:895 with SMTP id
+ 956f58d0204a3-67135ac5a6bmr425263d50.66.1789222095116; Sat, 12 Sep 2026
+ 07:08:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <178913597653.248794.1237187523153227751.stgit@devnote2> <178913599508.248794.10388592925402087434.stgit@devnote2>
-In-Reply-To: <178913599508.248794.10388592925402087434.stgit@devnote2>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2> <178913601321.248794.4786502771058559887.stgit@devnote2>
+In-Reply-To: <178913601321.248794.4786502771058559887.stgit@devnote2>
 From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Sat, 12 Sep 2026 23:07:08 +0900
-X-Gm-Features: AcwNN1Vr5VsseriknahGDTNoV_TO5GOKkDRiBZy77mQfG8Sm2DpAE7RopSZc0qs
-Message-ID: <CABFDxMEeej-5AtJeLAsT6sFeS2DKg1pKTkFhxU-Dpqg-AVoQGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] tools/bootconfig: Consolidate xbc_init() to error
- message wrapper
+Date: Sat, 12 Sep 2026 23:08:02 +0900
+X-Gm-Features: AcwNN1XrUgkqLzl5OLmwwDb4kzXPEVcKPgnPsG-Q3skEgQyxDC4sfeIpF9Foyu4
+Message-ID: <CABFDxMG4JZODpPyov2w4N7jsq8YoBsf47QP0oE1fuq5PLFf-Xw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] bootconfig: Move BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -101,174 +100,74 @@ On Fri, Sep 11, 2026 at 11:13=E2=80=AFPM Masami Hiramatsu (Google)
 >
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >
-> Use init_xbc_with_error() for all bootconfig initialization in the
-> bootconfig tool instead of showing errors in different way.
+> BOOTCONFIG_FOOTER_SIZE was defined locally in tools/bootconfig/main.c.
+> Move it to include/linux/bootconfig.h so that it can be shared with
+> the kernel and user-space tools. Also, use it in init/main.c instead
+> of the hardcoded (BOOTCONFIG_MAGIC_LEN + 8) expression when checking
+> the initrd size.
 >
-> This simplifies the code logic and make it easy to maintain.
->
+> Suggested-by: Sang-Heon Jeon <ekffu200098@gmail.com>
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
-> Changes in v2:
->  - Remove redundant buffer copy in init_xbc_with_error().
+>  Changes in v2:
+>   - Newly added.
 > ---
->  tools/bootconfig/main.c |  100 ++++++++++++++++++++---------------------=
-------
->  1 file changed, 43 insertions(+), 57 deletions(-)
+>  include/linux/bootconfig.h |    4 ++++
+>  init/main.c                |    2 +-
+>  tools/bootconfig/main.c    |    4 ----
+>  3 files changed, 5 insertions(+), 5 deletions(-)
 >
+> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+> index deda507500da..6f23ec11baab 100644
+> --- a/include/linux/bootconfig.h
+> +++ b/include/linux/bootconfig.h
+> @@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(void);
+>  #define BOOTCONFIG_ALIGN       (1 << BOOTCONFIG_ALIGN_SHIFT)
+>  #define BOOTCONFIG_ALIGN_MASK  (BOOTCONFIG_ALIGN - 1)
+>
+> +/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+> +#define BOOTCONFIG_FOOTER_SIZE \
+> +       (sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+> +
+>  /**
+>   * xbc_calc_checksum() - Calculate checksum of bootconfig
+>   * @data: Bootconfig data.
+> diff --git a/init/main.c b/init/main.c
+> index 16749bb7a219..37168bd68126 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -278,7 +278,7 @@ static void * __init get_boot_config_from_initrd(size=
+_t *_size)
+>         int i;
+>
+>         if (!initrd_end || initrd_end < initrd_start ||
+> -           initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
+> +           initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
+>                 return NULL;
+
+Cool!
+
+>         data =3D (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
 > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index aff169ba75b8..652e491b9c33 100644
+> index 652e491b9c33..d4aa96da970e 100644
 > --- a/tools/bootconfig/main.c
 > +++ b/tools/bootconfig/main.c
-> @@ -21,6 +21,39 @@
->  #define BOOTCONFIG_FOOTER_SIZE \
->         (sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+> @@ -17,10 +17,6 @@
 >
-> +static void show_xbc_error(const char *data, const char *msg, int pos)
-> +{
-> +       int lin =3D 1, col, i;
-> +
-> +       if (pos < 0) {
-> +               pr_err("Error: %s.\n", msg);
-> +               return;
-> +       }
-> +
-> +       /* Note that pos starts from 0 but lin and col should start from =
-1. */
-> +       col =3D pos + 1;
-> +       for (i =3D 0; i < pos; i++) {
-> +               if (data[i] =3D=3D '\n') {
-> +                       lin++;
-> +                       col =3D pos - i;
-> +               }
-> +       }
-> +       pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
-> +
-> +}
-> +
-> +static int init_xbc_with_error(char *buf, int len)
-> +{
-> +       const char *msg;
-> +       int ret, pos;
-> +
-> +       ret =3D xbc_init(buf, len, &msg, &pos);
-> +       if (ret < 0)
-> +               show_xbc_error(buf, msg, pos);
-> +
-> +       return ret;
-> +}
-> +
->  static int xbc_show_value(struct xbc_node *node, bool semicolon)
+>  #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+>
+> -/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+> -#define BOOTCONFIG_FOOTER_SIZE \
+> -       (sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+> -
+>  static void show_xbc_error(const char *data, const char *msg, int pos)
 >  {
->         const char *val, *eol;
-> @@ -197,7 +230,6 @@ static int load_xbc_from_initrd(int fd, char **buf)
->         int ret;
->         uint32_t size =3D 0, csum =3D 0, rcsum;
->         char magic[BOOTCONFIG_MAGIC_LEN];
-> -       const char *msg;
->
->         ret =3D fstat(fd, &stat);
->         if (ret < 0)
-> @@ -249,52 +281,9 @@ static int load_xbc_from_initrd(int fd, char **buf)
->                 return -EINVAL;
->         }
->
-> -       ret =3D xbc_init(*buf, size, &msg, NULL);
-> -       /* Wrong data */
-> -       if (ret < 0) {
-> -               pr_err("parse error: %s.\n", msg);
-> -               return ret;
-> -       }
-> -
-> -       return size;
-> -}
-> -
-> -static void show_xbc_error(const char *data, const char *msg, int pos)
-> -{
-> -       int lin =3D 1, col, i;
-> -
-> -       if (pos < 0) {
-> -               pr_err("Error: %s.\n", msg);
-> -               return;
-> -       }
-> -
-> -       /* Note that pos starts from 0 but lin and col should start from =
-1. */
-> -       col =3D pos + 1;
-> -       for (i =3D 0; i < pos; i++) {
-> -               if (data[i] =3D=3D '\n') {
-> -                       lin++;
-> -                       col =3D pos - i;
-> -               }
-> -       }
-> -       pr_err("Parse Error: %s at %d:%d\n", msg, lin, col);
-> +       ret =3D init_xbc_with_error(*buf, size);
->
-> -}
-> -
-> -static int init_xbc_with_error(char *buf, int len)
-> -{
-> -       char *copy =3D strdup(buf);
-> -       const char *msg;
-> -       int ret, pos;
-> -
-> -       if (!copy)
-> -               return -ENOMEM;
-> -
-> -       ret =3D xbc_init(buf, len, &msg, &pos);
-> -       if (ret < 0)
-> -               show_xbc_error(copy, msg, pos);
-> -       free(copy);
-> -
-> -       return ret;
-> +       return ret < 0 ? ret : size;
->  }
->
->  static int show_xbc_kernel_cmdline(void)
-> @@ -423,9 +412,8 @@ static int apply_xbc(const char *path, const char *xb=
-c_path)
->         char *buf, *data;
->         size_t total_size;
->         struct stat stat;
-> -       const char *msg;
->         uint32_t size, csum;
-> -       int pos, pad;
-> +       int pad;
->         int ret, fd;
->
->         ret =3D load_xbc_file(xbc_path, &buf);
-> @@ -438,6 +426,13 @@ static int apply_xbc(const char *path, const char *x=
-bc_path)
->                 size++;
->         csum =3D xbc_calc_checksum(buf, size);
->
-> +       /* Verify the data format */
-> +       ret =3D init_xbc_with_error(buf, size);
-> +       if (ret < 0) {
-> +               free(buf);
-> +               return ret;
-> +       }
-> +
->         /* Backup the bootconfig data */
->         data =3D calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE,=
- 1);
->         if (!data) {
-> @@ -446,15 +441,6 @@ static int apply_xbc(const char *path, const char *x=
-bc_path)
->         }
->         memcpy(data, buf, size);
->
-> -       /* Check the data format */
-> -       ret =3D xbc_init(buf, size, &msg, &pos);
-> -       if (ret < 0) {
-> -               show_xbc_error(data, msg, pos);
-> -               free(data);
-> -               free(buf);
-> -
-> -               return ret;
-> -       }
->         printf("Apply %s to %s\n", xbc_path, path);
->         xbc_get_info(&ret, NULL);
->         printf("\tNumber of nodes: %d\n", ret);
+>         int lin =3D 1, col, i;
 >
 
+Thank you :)
+
 Reviewed-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+
+Best regards,
+Sang-Heon Jeon
