@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348CF455639;
-	Sat, 12 Sep 2026 13:37:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8922FFDEA;
+	Sat, 12 Sep 2026 13:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789220225; cv=none; b=HHQTeYyRGLNcs2+hufXh11obPU9EnA3awpFic1OQRM3HPOpWc5op5EbpFDiEswXIhxhWpeOb3YSotZtr37j8OwgjMVj+k/y3jzO8sJdA1vG+CSC8Vv/MWljEk2w4drt13bOxeCkb/hT3qm0++oDWxtYuny92ya2qlI6BPvC904o=
+	t=1789220920; cv=none; b=g4AEE5VDxxMC0hIN+lwLJy1bsO/a1pr8QzPYXS+z9PCyD4ALfQ5H4V051pD9ckpakhXWKLRSQNYPVgHOPLNvTj6UwNYm+D9HA5rmdyUkWyXqp+8cWhMSUiK7pdRMN6ZMMINSOc24GGf3EL0m86TGkczy/8eT/II5Od9ds/L4RZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789220225; c=relaxed/simple;
-	bh=oNST79umTYOnUVPeaIvOX5gmne1rcIc1dIFSgwmJbY0=;
+	s=arc-20240116; t=1789220920; c=relaxed/simple;
+	bh=gOxsz5HXT0QCByERbuD1MVZYSovffvRkqFf7umhpBxc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WnhEcFP/fS5TuD8OuumS7tiUbD8K1qhEa0jd4TYHcilOqy/tWt5+wFUN5IuhmrDiIMrPbxD0qiQglUkuOL5fWuGfnzXWDwKX/VvldnwP+Xkj5qZNX3ZIt4Na6Q+Tj8lF8GgwDyJ6hr/YfsR7fg8DOtBr2kCxg/jFd1DbPZuj0Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lg9J3tjW; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=S2T3FGL//sLjKNKzQgZFWMoccV+LV7ssd9y0Hz1+ZV1NVBXhqKHKRQQU+x14uG3Dpkm0JoS4WH05PqSG0DsYKwZ8Q2cygs0gnzONVsM0P698TueSpfzfclwtcq3aamCs0TQNHD/KalMRRWjyZYQ0dY3HQRZ3j8XolOyeMEwCDK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZ/26ACE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lg9J3tjW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BDC1F000FF;
-	Sat, 12 Sep 2026 13:37:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZ/26ACE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C7D21F000FF;
+	Sat, 12 Sep 2026 13:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789220224;
-	bh=jwd4Rk+LghulteCFZ22CToEe8Fypa34me6oLaUXnTn4=;
+	s=k20260515; t=1789220919;
+	bh=0VJ/mqw67OyMvnuaO2K3Ir8jJ5ldSDsZMgF3x779aBU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Lg9J3tjWv8hrtyNST5+hW8b/otbqwiOm6OjnlTpt+7n+lCWW06FZZfpXKLEu/V9dg
-	 q0LFsRJKg0nW7JrKPw0BInBM1iBIKlex33UOc0XsJTGaeJi6BUTakRPQK6X7JHQBee
-	 EeKJTM/b5CzGiQ8OLKq5G2hDgoZ8Ar8hfhifOnWjeVQA+Wseyo4byuVFzcEEujmWv9
-	 +QiMTexATwKHLauFvivoKoarjHfOn1Q8u5hnaldxchV8rr1rKIb8DYVQbEF7wHLSZk
-	 /cRBK5Yp9JPM3tSzLuOfyxgHMtUakohY1o45O96Gl2Ul7Mmr9DDy9NBtZA4uWmMbSB
-	 lzRza60O8j68Q==
-Date: Sat, 12 Sep 2026 22:36:58 +0900
+	b=UZ/26ACEkZcAzY6sFn3ZLsGshe3F1rBNIrPl7fQQefKof+NVcONv/Pf6U5/xvS4RQ
+	 tz2zCXRjabth5zjM63h3IUgerHvKXqcyWA919XYYcqVTTaMToC4Q1MgCdp+HWshsb0
+	 cuRWGK5/PLqQbv7GDorhVbExBkmA9pE2XXAQUOzE+zKEEBntc9i16fY2g8Hwstpqx3
+	 0xFXetnFd2np1pEhjPE6kfc+VTm3T1lv1/g2Sj/JpGetRkxPB42aUSyGvS6P802fIJ
+	 hC6jTauX9MvXhAHRsY3Nrka8ktIyyUd+/f3vw91VFEWi28U2VHsmTUqzMfS43fhadQ
+	 40xR6qp0H3HKQ==
+Date: Sat, 12 Sep 2026 22:48:35 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v15 00/12] tracing: wprobe: x86: Add wprobe for
- watchpoint
-Message-Id: <20260912223658.c4495241023f72e3cf48bf0c@kernel.org>
-In-Reply-To: <307d6fd5-a8fa-4777-b513-9a8cce46f38a@gmail.com>
-References: <178875277830.93794.14247844688761142429.stgit@devnote2>
-	<307d6fd5-a8fa-4777-b513-9a8cce46f38a@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Sang-Heon Jeon <ekffu200098@gmail.com>
+Subject: Re: [PATCH v2 0/4] bootconfig: Reject unexpected data after null
+ character and cleanups
+Message-Id: <20260912224835.4e5f73b44cee39387554cc70@kernel.org>
+In-Reply-To: <20260911155911.1cccfa39dd2e3c6e3a84e03f@linux-foundation.org>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2>
+	<20260911155911.1cccfa39dd2e3c6e3a84e03f@linux-foundation.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,36 +47,101 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Sep 2026 15:27:41 +0800
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
+On Fri, 11 Sep 2026 15:59:11 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-> Hi Masami,
+> On Fri, 11 Sep 2026 23:12:56 +0900 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> I see the watch address update currently goes irq_work -> workqueue ->
-> on_each_cpu().  I would like to discuss that path.
+> > Hi,
+> > 
+> > Here are v2 patches for bootconfig to rejects unexpected config data after
+> > null character and other cleanups including tools/bootconfig to consolidate
+> > bootconfig initialization with errors, and skipping internal tree sanity
+> > check in kernel.
+> > 
+> > ...
+> >
 > 
-> The race window wprobe may be used to watch can be very narrow --
-> sometimes it lives entirely inside a single function -- and the trigger
-> does not always run in in_task() context.  The current path defers the
-> update to a work item, so by the time the debug registers are updated the
-> window may already be gone.
+> Thanks, I've updateed mm.git's mm-nonmm-unstable branch to this version,
 > 
-> Now that we have modify_local_hw_breakpoint_addr(), the trigger could arm
-> the local CPU directly and use smp_call_function_single_async() for the
-> remote ones.  That should improve the overlap between the watch and the window.
+> > This version removes redundant buffer copy in init_xbc_with_error() [2/4]
+> > and moves BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h[4/4].
 
-Hm, that is a good idea. Maybe we can check the current context and if
-possible call modify_local_hw_breakcpoint_addr() directly for current
-CPU core, and kick irq_work for other cores.
-Does this make sense for you?
+OK, anyway I'll pick this series to bootconfig/for-next.
 
-Thanks,
+Thank you,
 
 > 
-> What do you think?
+> Here's how v2 altered mm.git:
 > 
-> Thanks,
-> Jinchao
+> 
+>  include/linux/bootconfig.h |    4 ++++
+>  init/main.c                |    2 +-
+>  tools/bootconfig/main.c    |   14 +-------------
+>  3 files changed, 6 insertions(+), 14 deletions(-)
+> 
+> --- a/include/linux/bootconfig.h~b
+> +++ a/include/linux/bootconfig.h
+> @@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(vo
+>  #define BOOTCONFIG_ALIGN	(1 << BOOTCONFIG_ALIGN_SHIFT)
+>  #define BOOTCONFIG_ALIGN_MASK	(BOOTCONFIG_ALIGN - 1)
+>  
+> +/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+> +#define BOOTCONFIG_FOOTER_SIZE	\
+> +	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+> +
+>  /**
+>   * xbc_calc_checksum() - Calculate checksum of bootconfig
+>   * @data: Bootconfig data.
+> --- a/init/main.c~b
+> +++ a/init/main.c
+> @@ -278,7 +278,7 @@ static void * __init get_boot_config_fro
+>  	int i;
+>  
+>  	if (!initrd_end || initrd_end < initrd_start ||
+> -	    initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
+> +	    initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
+>  		return NULL;
+>  
+>  	data = (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
+> --- a/tools/bootconfig/main.c~b
+> +++ a/tools/bootconfig/main.c
+> @@ -17,10 +17,6 @@
+>  
+>  #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+>  
+> -/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
+> -#define BOOTCONFIG_FOOTER_SIZE	\
+> -	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
+> -
+>  static void show_xbc_error(const char *data, const char *msg, int pos)
+>  {
+>  	int lin = 1, col, i;
+> @@ -44,20 +40,12 @@ static void show_xbc_error(const char *d
+>  
+>  static int init_xbc_with_error(char *buf, int len)
+>  {
+> -	char *copy = malloc(len);
+>  	const char *msg;
+>  	int ret, pos;
+>  
+> -	if (!copy)
+> -		return -ENOMEM;
+> -
+> -	memcpy(copy, buf, len);
+> -	/* We do not terminate the copy with \0 for sanity checking */
+> -
+>  	ret = xbc_init(buf, len, &msg, &pos);
+>  	if (ret < 0)
+> -		show_xbc_error(copy, msg, pos);
+> -	free(copy);
+> +		show_xbc_error(buf, msg, pos);
+>  
+>  	return ret;
+>  }
+> _
+> 
+> 
 
 
 -- 
