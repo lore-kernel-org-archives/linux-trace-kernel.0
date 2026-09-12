@@ -1,173 +1,192 @@
-Received: from mail-yx2-f12.google.com (mail-yx2-f12.google.com [74.125.224.140])
+Received: from mail-oi2-f13.google.com (mail-oi2-f13.google.com [74.125.231.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4402D23A6
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 14:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789222097; cv=pass; b=pHrZsaDZDPZt988sPYplKDFDSQ3APtcPE4w81q2/j2yVsi0ycb5vsA4MW0u103HvEz5IXrPs3VvD1VzEdJYvrHzl0auvFUNZ2U+myp3vJqULQGMLg3rNR/wkKadGt8U908BFx8W61HiA/NDMKJU+tUjrcNO6V2DSwlarjKN2V08=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789222097; c=relaxed/simple;
-	bh=5uOr8p7DqRt2I5FaIN0QytKVHrrF/qtai+yJg4KKO8s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ekZ4SN1ts9vk1yTjctm1/e5Td8XB+DArK+Dw1Yx7ZJtyJYVN9KyI2zbELSlqjEnVV+3jRJSL6egYHj76wvmJ5gk6D9F0fg8zYp4Ch5A+fTJqJ9mv5BJ0hjCxbJR+oSUAL9VJzquDdvkqsueiwIA56gN3vtNmPfs+kCsKzh51unQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrYOCJCS; arc=pass smtp.client-ip=74.125.224.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3201A27FB37
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 17:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.205
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789233535; cv=none; b=FmFxKVLahpdjqVt7y9Ey7cV6iSTSK6JQ5Ej1mgueyZ9PvWsTbqhYjhVSBwjNHeGLljwIukvVZLY7AP17delsPjWR6n7QVU0GB/SBFlw6eTNoOINdYeau0PfZKhrs5ef3yTHWjpiPznsRqY12n30UdtarzjgjWljM9FzMW0kaKhA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789233535; c=relaxed/simple;
+	bh=jBtZBjDlT8Qi3VYpNIp72jmf1UAXzlM9TkhK/45vnWc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=M7i+B/Tqoh7t0Chs2D/87wvIUW/4ohFAaoJDy0OZMoBslKlp45z32HhiXs2ElvUSkYrdLHGkjn7lrDhMdGG0XIjh4+/jGNAIH3eSGuwkmavK33lj16mV0Q24rR98phsYAIykvie/q/2/aQgbeqoE0uT3k6T7LAbR73CCIjHHKR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLufjg9t; arc=none smtp.client-ip=74.125.231.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrYOCJCS"
-Received: by mail-yx2-f12.google.com with SMTP id 956f58d0204a3-66e4ab20a32so431758d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 07:08:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789222095; cv=none;
-        d=google.com; s=arc-20260327;
-        b=p8IRjOvp3J0wgeM3LYyFbxtAj4ElVVpoYgO+Q+PgECF1NoTohsN7SVQjudeOZwRlYM
-         a1PPfb/WBSuoyIGcWTvL0AEgrFLF1VwF+K++/Pl3avk0hRVO53zefaE5D7BwKSiuVp5O
-         SEfO2F/muPIxRYGHjiIQZ9rd9UJXWVnkzeSWZV4HcE11cLEj0/a8agkI3/J34xZto3Fg
-         5WoYqm0oh7VdguaNVsI6EU3O/0pqlK7mjLvIFlvcIW7QJpxNDM0Yy+ucbBGlOZ2OsXJ0
-         XIRPU3yG50cHGrjQROyMg8wDm0INXueD5Kx/cDl6Qp0hmCsfsOF3Im9trX2PdeGx1KwB
-         ro8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
-        fh=TCYWiPBi+KGdlSHZEd39pFZEgNujstx1ZD4L0lVcmAs=;
-        b=Rxah8bftuMVyp6CIu0gqBjK9DJxLmVY2HXNFKdhZb0sq3KHTsFAUnZ36XZgnbkNgNW
-         LIeapGeHrcf6FEzhAjxzN4BYfIEQbALZrYIxjwoBU5TgmVgnHDU44MNohKAapvzUEBgl
-         mEN/ma3HgW8dg2rdw1mkbzAQgG5Po2xSLcrTKrg+ycVv+mqgblv113aoCookO/VL8DcX
-         77NqHAFiMI4IRDQn1gx16MQ3qVMab/Y6T7rxF5hEr+EhO50PTZBsjgcaOXMEt+FmStiv
-         K7Hx47lXywQkZk15EtiOgSXEQHZcinC2WLZXZI0RUSohzNrdZCK39aoIvwrw2AUioMYL
-         dhmA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLufjg9t"
+Received: by mail-oi2-f13.google.com with SMTP id 5614622812f47-4b37a3ed715so463740b6e.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 10:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789222095; x=1789826895; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
-        b=JrYOCJCSRVmAclpH2D9Dr968jjyzcVlZHoPSJxNG62/tD2sVOPz1i9Kbzs5NFY1l26
-         FHUMNTdjTy4Yx49LzDeVB03cbVZGVLpPsD0TuKbMx1a9qLvVYvfznOc1q4nCuCaXnRtQ
-         LMLGTLh50CbB6f7DuqRsj3VSE/WhRVGDH+75gRmcdlvErmcTup9W8bAjPoUeU8wrVu/9
-         Cg0ieRiPn8Nj/2fLIiZnNh/N7rt2LBWfB4SIRCdlWmhtDcuQOzbdJRH/c4YGFBW9ivgH
-         3ukY73GbU/9OJmVejUUTaMC93bK6MNA9A5Z6xnH2/yfEN5H9BFd9lG2Pw4jGTZp43NMa
-         pZLQ==
+        d=gmail.com; s=20251104; t=1789233531; x=1789838331; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=M1c6suOtzZ2rRuH1TXxQJyOcddxpg3oryXf9dCc4tZI=;
+        b=LLufjg9tkDHfboL43zM8EhB8/3TC5sqvSGrfLsnHpXY5oKIZhyLB12Mpf/1tRBn0Qt
+         aUTmkwDr6K1fXlg42wE3St71lnXgY16DGhmZZsHQvWDX2pFVJrt5xBash1IGri8ujw+K
+         Dos33rufshNrGVyoXmhoAMIEpr8fIqzOJFk56h7oRwrJuSCYgqjWRXrzK1ZwBBeWgsiL
+         mr9G3buIXNvAzpRm2IDzqETuhVXtEVWc5aDnZYcYd8lkAR3CX8wWFuJv8SBGHhH90wdt
+         z0lgJu+7pvtMQKcaKQ+3nUEpjKi4ykmWxRmG4eJoqROjAOq8cGeK8F7PH7wAPuFFmXFw
+         9uoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789222095; x=1789826895;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20251104; t=1789233531; x=1789838331;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=D7WjkJsu7el/anrZUUUZZcrgixqtrFoxXXx7mkONjgg=;
-        b=PloGlU/XpUJqe6qr+fdi5GfZfMaZqN9i/AnF4/PbZlY3Ojy70wzY0mCjIaCgOiox9Q
-         8XEX1IvM2oGhfJWNlGTwrWrXejVYVEkIyFO+epXbg9m8oLdLGwrE1v6WFbJHZm384Vv6
-         5cl9BxON1HGUsQUxmxJKiR7ZtlO6pokiQfbkjkqC0rZuBsY1/gMjuTPHT7qgZJC1PlGI
-         lOom0y87JZhE0vcgaIQIeftwvmhvixmMii/thD3w82gMDiyypJCOk9sqtltlfufxwIKb
-         uGBC4w8iCGWurW8n4PqEDY/TvkBKhLfnle26Kuceoz2l8BKxUDvAAupavlnA5dDndjvS
-         2j+Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwKGz5F+TYNKpckaotQX7V+EfTALeyzeZVxSKNbcgvCZcA0bAsr36PSDxW+BBjAmFIjN9yZtlSzPzOUWgL+hu1sjls=@vger.kernel.org
-X-Gm-Message-State: AFuF++lqSaR9YXmL1ytciS7YPfNZKrWYHfdP3aoj7xt++2Mk/vtShy6Y
-	sccQ8/42oD9UVC6/Ox2OEktVlOdTNduwiOkh+7E7TxGHxGqUofavBQXfCfb8Xb3Dceav1JbECIQ
-	aW7T+2bx9fWckQXuTeUx1eRhC11aFALfmxoy3fwM=
-X-Gm-Gg: AYBFou3QCELOcD7w+Bg5LNqloChy19jVwgxSfVKmuCv5dieWFEvLPGArtTq3ruOtVXn
-	IZNEjNYe+4/CdQPbMnbW+R+vqK86FyZWyIuvtCuWTadZtfihwe3U4Rajqqk2wv4ehAuS8F/LkHh
-	dPjW3IYrb7Tc3QFcz8UQZJ1+it05UX5Zo8PHL4IJHkBpBElIAndARW6KoJHCb2euiepu5Rmrraj
-	nJcFE4Zi8kTiNPJAX7o4VQxNtJIZiWceKKgYnfVrRpSxHvwjyWIicdNy9t9iarD65IIcncmk3Nf
-	+FPufkGNpnfgk5LxXU0trPlXGSHif4ge7B1z7/Zkv+oFYYlbbRVp
-X-Received: by 2002:a53:a0c8:0:b0:671:19a5:895 with SMTP id
- 956f58d0204a3-67135ac5a6bmr425263d50.66.1789222095116; Sat, 12 Sep 2026
- 07:08:15 -0700 (PDT)
+        bh=M1c6suOtzZ2rRuH1TXxQJyOcddxpg3oryXf9dCc4tZI=;
+        b=YI9TPNePnj944iS4P1iUsjYg6JqMcgAuC2CYsTEBu1p2vsoEpmaQYVU5oLy3U2LpiG
+         W8vWGZtDIvswknhQ+2gqqyoh1gls4SRjY6OO9Y/kh8NfJ0kf3JDqDaFu3pSagj7ZNMQE
+         pNdW6ndiC1KAiUrpdL2kPyUWti4ZCSEfBoGCMHBFQSyHrdGO3/8yHdZQir/xLAZsqfoT
+         bcg8Rn1K6hKHJjuLyq8zYu+WBXlBx1cFG7+mngXwjJ2vAb+BMXqKka6cCAeWwCggBzGZ
+         5xAb6T26oorC5/qR4NrIH3/ePy9NfuL3jwy5dF7cXsh2gXO6YI9OJD66f0ERPu9Uwswn
+         BeGw==
+X-Forwarded-Encrypted: i=1; AKwUvBw+ACZ4WpzVnfXdwFCgKgMpiMMlZKno046TBMjUuvbETJZnZ7jAGd4hUznuAmzmnip8UM+LRixGOLy+/O6NtNptAyc=@vger.kernel.org
+X-Gm-Message-State: AFuF++lSt0oKKVYxKgavnjCkbK8Qqj+tZS5iwE3qrDpMeff426uhVOpp
+	CzO2p/KmcRm9oTBsIdYeI3M93nm7fEUYg4NXNQmjmchKLxaXeBqz/eFv
+X-Gm-Gg: AYBFou35qfAORRIVRjkXToXi5DJB+sQDEUSdZ3RTvehbbW1ih1EkQOjOBETyaipC5Om
+	3Q2NAOSkodTf5YQTBNfQomh1NWRAeSnLkeq+GjN74KyuZFE0666cL9HxuUy/MWeXup4lxcv2oRA
+	PTzgeUMm4bqibdAccARExwjYK0n3Q3pG2srMJdP02q4iLTtr+d5m6+88DNmITHHaceE0a56r9ER
+	uDgfgQarH61+n5KI5tK7vrMlVJAj4fi0s4zXcwJ8fqx/RDWDTOfhNdoZr0qn9Nh78rgo1ieF1JV
+	QsdkrdvKw9LYNvzl0BHB9wrfhbnG0PxQxkMiCGqBQp1D33HFQB9sQ/a6gvbce2WiRTD6JPcfiOl
+	uVG2tN3cqLsSbOrnDIj8zcqd2grbfNgTLSoodQUmts/GPUvfnSUQtK2N/5F21DLARN3SFaMGxDN
+	plxvcH1dKAKHSLAnwQqlr43oVbMRahpE9tYuWXdIAVSSK8q8RpRAdlQHr1Ma4bhPii/kVT9MtyU
+	JP0xgBhehM88p1zbc64MURt+si6+FGXsytaZ5WblMgunPwydkOLZ9uB7xY+yRRhlA==
+X-Received: by 2002:a05:6808:3503:b0:4b3:8323:8cd8 with SMTP id 5614622812f47-4c4a751294bmr2617971b6e.5.1789233530981;
+        Sat, 12 Sep 2026 10:18:50 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:72::])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4c3315b19afsm5495263b6e.10.2026.09.12.10.18.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Sep 2026 10:18:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <178913597653.248794.1237187523153227751.stgit@devnote2> <178913601321.248794.4786502771058559887.stgit@devnote2>
-In-Reply-To: <178913601321.248794.4786502771058559887.stgit@devnote2>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Sat, 12 Sep 2026 23:08:02 +0900
-X-Gm-Features: AcwNN1XrUgkqLzl5OLmwwDb4kzXPEVcKPgnPsG-Q3skEgQyxDC4sfeIpF9Foyu4
-Message-ID: <CABFDxMG4JZODpPyov2w4N7jsq8YoBsf47QP0oE1fuq5PLFf-Xw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] bootconfig: Move BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 12 Sep 2026 10:18:48 -0700
+Message-Id: <DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com>
+Cc: "Josef Bacik" <josef@toxicpanda.com>, "Frederic Weisbecker"
+ <frederic@kernel.org>, "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Boqun Feng" <boqun@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko"
+ <andrii@kernel.org>, <x86@kernel.org>, "Catalin Marinas"
+ <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Puranjay
+ Mohan" <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andy
+ Lutomirski" <luto@kernel.org>, "Josh Triplett" <josh@joshtriplett.org>,
+ "Uladzislau Rezki" <urezki@gmail.com>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "Lai Jiangshan" <jiangshanlai@gmail.com>,
+ "Zqiang" <qiang.zhang@linux.dev>, "Juergen Gross" <jgross@suse.com>, "Luis
+ Chamberlain" <mcgrof@kernel.org>, "Ihor Solodrai"
+ <ihor.solodrai@linux.dev>, <linux-kernel@vger.kernel.org>,
+ <rcu@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
+ nesting in the BPF trampoline
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: <paulmck@kernel.org>
+X-Mailer: aerc
+References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com> <20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com> <DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com> <14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
+In-Reply-To: <14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
 
-On Fri, Sep 11, 2026 at 11:13=E2=80=AFPM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
+On Fri Sep 11, 2026 at 10:10 PM PDT, Paul E. McKenney wrote:
+> On Fri, Sep 11, 2026 at 08:27:56PM -0700, Alexei Starovoitov wrote:
+>> On Fri Sep 11, 2026 at 7:08 AM PDT, Josef Bacik wrote:
+>> > Emit an increment of current->rcu_tramp_nesting once the trampoline's
+>> > frame is set up and a decrement before the final register restore, so
+>> > that a task preempted while running fentry/fexit/fmod_ret/LSM programs
+>> > or the __bpf_tramp_enter()/__bpf_tramp_exit() glue is not treated as
+>> > Tasks-RCU quiescent.  Drop the count around the call to the original
+>> > function: that may run arbitrarily long without sleeping and must not =
+pin
+>> > a Tasks RCU grace period, and the trampoline frame above it is held by
+>> > im->pcref rather than by Tasks RCU (see bpf_tramp_image_put()).  The
+>> > fmod_ret early-exit branch and the ip_after_call -> ip_epilogue poke b=
+oth
+>> > skip the decrement/increment pair around the original call, so the cou=
+nt
+>> > stays balanced on every path.
+>> >
+>> > The sequence is "mov r11, gs:[current_task]; inc/dec dword [r11 + off]=
+";
+>> > r11 is scratch at every emission point and (u32)&current_task is a val=
+id
+>> > sign-extended %gs-absolute with the current per-CPU layout, the same f=
+orm
+>> > the JIT already uses for this_cpu_off.  The image is dynamically
+>> > allocated text, so the instructions outside the bracketed region are
+>> > covered by the irq-exit IP check.
+>> >
+>> > Assisted-by: LLM
+>> > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> > ---
+>> >  arch/x86/net/bpf_jit_comp.c | 43 ++++++++++++++++++++++++++++++++++++=
++++++++
+>> >  1 file changed, 43 insertions(+)
+>> >
+>> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+>> > index 2853e87797a7..a375c1b7bd50 100644
+>> > --- a/arch/x86/net/bpf_jit_comp.c
+>> > +++ b/arch/x86/net/bpf_jit_comp.c
+>> > @@ -722,6 +722,31 @@ static void emit_indirect_jump(u8 **pprog, int bp=
+f_reg, u8 *ip)
+>> >  	*pprog =3D prog;
+>> >  }
+>> > =20
+>> > +/*
+>> > + * Tasks RCU trampoline nesting, see rcu_tasks_trampoline_enter().
+>> > + *
+>> > + *   mov r11, QWORD PTR gs:[current_task]
+>> > + *   inc/dec DWORD PTR [r11 + offsetof(struct task_struct, rcu_tramp_=
+nesting)]
+>> > + *
+>> > + * r11 (AUX_REG) is scratch in the trampoline at every point this is =
+emitted.
+>> > + */
+>> > +static void emit_rcu_tasks_tramp_nesting(u8 **pprog, bool enter)
+>> > +{
+>> > +#ifdef CONFIG_TASKS_RCU
+>> > +	u8 *prog =3D *pprog;
+>> > +
+>> > +	/* mov r11, gs:[abs32] */
+>> > +	EMIT2(0x65, 0x4C);
+>> > +	EMIT3(0x8B, 0x1C, 0x25);
+>> > +	EMIT((u32)(unsigned long)&current_task, 4);
+>> > +	/* inc/dec dword ptr [r11 + disp32] */
+>> > +	EMIT3(0x41, 0xFF, enter ? 0x83 : 0x8B);
+>> > +	EMIT(offsetof(struct task_struct, rcu_tramp_nesting), 4);
+>> > +
+>> > +	*pprog =3D prog;
+>> > +#endif
+>>=20
+>> It's not a lot of overhead, but I feel it will be the death by thousand =
+cuts.
+>> rcu_read_lock_trace() in bpf_prog_enter_sleepable is doing the same thin=
+g...
+>> increamenting a variable inside current.
+>> Can they be combined? Like treat current->trc_reader_nesting > 0 as
+>>  current->rcu_tramp_nesting > 0 ?
+>> Or replace one with the other?
+>> Two current->foo++ operations look redundant.
+>>=20
+>> bpf trampoline is already quite heavy. I'd like to find ways to reduce
+>> its overhead instead of adding more.
 >
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> BOOTCONFIG_FOOTER_SIZE was defined locally in tools/bootconfig/main.c.
-> Move it to include/linux/bootconfig.h so that it can be shared with
-> the kernel and user-space tools. Also, use it in init/main.c instead
-> of the hardcoded (BOOTCONFIG_MAGIC_LEN + 8) expression when checking
-> the initrd size.
->
-> Suggested-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v2:
->   - Newly added.
-> ---
->  include/linux/bootconfig.h |    4 ++++
->  init/main.c                |    2 +-
->  tools/bootconfig/main.c    |    4 ----
->  3 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-> index deda507500da..6f23ec11baab 100644
-> --- a/include/linux/bootconfig.h
-> +++ b/include/linux/bootconfig.h
-> @@ -27,6 +27,10 @@ bool __init cmdline_has_extra_options(void);
->  #define BOOTCONFIG_ALIGN       (1 << BOOTCONFIG_ALIGN_SHIFT)
->  #define BOOTCONFIG_ALIGN_MASK  (BOOTCONFIG_ALIGN - 1)
->
-> +/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
-> +#define BOOTCONFIG_FOOTER_SIZE \
-> +       (sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
-> +
->  /**
->   * xbc_calc_checksum() - Calculate checksum of bootconfig
->   * @data: Bootconfig data.
-> diff --git a/init/main.c b/init/main.c
-> index 16749bb7a219..37168bd68126 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -278,7 +278,7 @@ static void * __init get_boot_config_from_initrd(size=
-_t *_size)
->         int i;
->
->         if (!initrd_end || initrd_end < initrd_start ||
-> -           initrd_end - initrd_start < BOOTCONFIG_MAGIC_LEN + 8)
-> +           initrd_end - initrd_start < BOOTCONFIG_FOOTER_SIZE)
->                 return NULL;
+> Replace rcu_read_lock_trace() with Josef's rcu_tasks_trampoline_enter)?
 
-Cool!
+If necessary...
+what I don't understand why we need another rcu_tasks_trampoline_enter-like=
+ counter.
+Can existing rcu_read_lock_trace() current be used ?
+It's already doing current->trc_reader_nesting++
+so use that as a signal ?
 
->         data =3D (char *)initrd_end - BOOTCONFIG_MAGIC_LEN;
-> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> index 652e491b9c33..d4aa96da970e 100644
-> --- a/tools/bootconfig/main.c
-> +++ b/tools/bootconfig/main.c
-> @@ -17,10 +17,6 @@
->
->  #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
->
-> -/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
-> -#define BOOTCONFIG_FOOTER_SIZE \
-> -       (sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
-> -
->  static void show_xbc_error(const char *data, const char *msg, int pos)
->  {
->         int lin =3D 1, col, i;
->
-
-Thank you :)
-
-Reviewed-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-
-Best regards,
-Sang-Heon Jeon
