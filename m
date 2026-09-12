@@ -1,193 +1,130 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D50330E0F2;
-	Sat, 12 Sep 2026 01:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F77C34887E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 01:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789176300; cv=none; b=f1PrBTun2LF3C4x2830QKxsSfsm5cdQVaPWZfyaeL3qnyybG9VREsCAzsjxe4dYr4vjVKTjHEdXXx57KfS94CGfv0B/tZ7mUhsSkUpCtWguIQMi0h3ok87q3LJqV/TZe9IWLifiJUu89mvNAULkNl1M4cNzRB23QFSk457N3rUg=
+	t=1789177586; cv=none; b=n+caJSc3Q8af/WusKn9THaqYOCGOA5RBWyHnvXUXkAMaSeZ3DvUpLX4G5Y097Gx4heL1yBONBd3zhgH5Y/htKpTE4TlJ4+guLTv00LMHc/StTQf9eQeV42daq66yFfvmPjzUQWdh3DLvSeSs3YW7roiTEiVPmN/jeaqsdro8hjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789176300; c=relaxed/simple;
-	bh=hp8HYQQRfq2HGftAqwjfoKMGgu7IXtoPCxAtpHEnYsA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nJr1FP3+Eai24agxFrS2ywz0oIw9GbHIOp2D2qWNU4cOh6B3OjKteNhQBa+Bp6JJ2QhFQ8uKikdgB4PhNrtB/tOVcOvr62RLqzk3ZVSmlrmPexPZeeAKznYts1M7ipU9g5c8eP8KB/Yt/2M+oT+Dgopaij2qUwKdMup27MZ+V+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=G4PjwZTd; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1789177586; c=relaxed/simple;
+	bh=/6LlnANIZe3SO0uKJmHvAh0i773OZbL7WI4g97EAoGk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=eKlEDKZwbKdUrsdaCX/FolgalaCMNQpIj40VVwrvXbh8Q4/GcIOPcvPSUS6OAI0KwOuXwZysTWpuNZKfqXaog31wg+MKMlw4KZuN9YK4OhU6a6Pv0dNCnE1tivDE0lO4Gf9zenhB/YE/Z/Iia3rFRZ09HkJMnUwQlfqLYioRUCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3GZpjXY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="G4PjwZTd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:From:Reply-To;
-	bh=jkk2aKfOtQ1sfSPZp1MlJc6YMLBpwH+7BNfIjU4i5Cc=; b=G4PjwZTdz6s2Wj0Xvl+D4VheFF
-	zQiHRINyszkW3OC64vIaXCjQdeFXZEVvtpeHig8Vuyh7Y30Te+pNAr0BsoPMLk3nMVpthMlIXiROU
-	K+uFqpIc6jbPP7wTEGUIPsuI83iMrB3oJU6BrQ5fNJFl+1OTspXENlGjPlsrTx/SMVJymYqVuFJJe
-	sG/1jiGflCJAOrley8Ih6rtcERIobfEl0uF3ILjRSFSSamujg7Pu2JQFKBao07roSfx1Xo0k7QpTy
-	xbVVUpvzJjNUOAbkS7u7rL6yRWYfXkpeq0INz50r2u0TUxdrBliP7l2WElXGpA8MY77nGrBPx7hTs
-	VOhuuxxQ==;
-Received: from [177.172.123.122] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1x5CU5-000xjI-3T; Sat, 12 Sep 2026 03:24:49 +0200
-From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Date: Fri, 11 Sep 2026 22:24:03 -0300
-Subject: [PATCH v7 6/6] selftests: prctl: Add test for long thread names
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3GZpjXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391661F000FF;
+	Sat, 12 Sep 2026 01:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789177583;
+	bh=XPWAtIXeLErjBOW7mxgort3FEXSPhfgZ88Fa8nJ5KlY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=c3GZpjXYYoJHLFwmIKd2KhgDXvSxg3unbVV+EEJ9Y6HVjl3gQt1t3dmijb8Pruhpg
+	 JxV0tztu6sKOR6GAjeklH449fWKnIodQT8dr51s8cMdyTE6qxXaoNR7+8hGiseF4Xt
+	 57NwvezQ61PluHeljfGYvDiestWakOoTb0APOBG4F1o0bviB8B8LXIW1UN3ZeZOHEo
+	 7q7wuUwW+0d9OaoGhTDMmX4pfvcRse0emJJMdtCG4uNObD+YDg4H2G1SL//Go6JFSl
+	 4v72VJtaiHXgF+CkFIXpNN+ucK3pOxFgoy+VcGlOEjaGNeZhWHRTu3Wgv76Db5nHG+
+	 QOhQQV88VDdaQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 4/6] sched: Extend task command name with
+ TASK_COMM_EXT_LEN
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260911-tonyk-long_name-v7-4-34e1ee1564ae@igalia.com>
+References: <20260911-tonyk-long_name-v7-0-34e1ee1564ae@igalia.com>
+ <20260911-tonyk-long_name-v7-4-34e1ee1564ae@igalia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 12 Sep 2026 01:46:22 +0000
+Message-Id: <20260912014623.391661F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260911-tonyk-long_name-v7-6-34e1ee1564ae@igalia.com>
-References: <20260911-tonyk-long_name-v7-0-34e1ee1564ae@igalia.com>
-In-Reply-To: <20260911-tonyk-long_name-v7-0-34e1ee1564ae@igalia.com>
-To: Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, willy@infradead.org, 
- mathieu.desnoyers@efficios.com, David Laight <david.laight.linux@gmail.com>, 
- Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org, 
- Yafang Shao <laoar.shao@gmail.com>, andrii.nakryiko@gmail.com, 
- arnaldo.melo@gmail.com, Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, kernel-dev@igalia.com, linux-mm@kvack.org, 
- linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-X-Mailer: b4 0.15.2
 
-Add tests for the new interface to set and get long thread names. The
-kernel should accept the LONG_NAME and returning it accordingly. For the
-old PR_GET_NAME interface, the kernel should truncate the name up to 16
-chars. /proc/<task>/comm should return the same string ad PR_GET_NAME.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Increasing `tsk->comm` to 64 bytes breaks the implicit null-termin=
+ation API contracts for both `__set_task_comm` and `copy_task_comm`, leadin=
+g to kernel out-of-bounds reads and trace data corruption.
+--
 
-While here, fix the check_is_name_correct() logic. It currently returns 1
-for success, or a negative number for error. EXPECT_TRUE() evaluates any
-non-zero value as true, so the error will be evaluated as a success. Make
-the logic more robust and straightforward by returning the results of
-strcmp() and expecting zero as success.
+commit 5f2c83bf644707c42f3dee91b932f9dde7986c03
+Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-Changes in v5:
- - fix check_is_name_correct() return logic
----
- tools/testing/selftests/prctl/set-process-name.c | 57 +++++++++++++++++++++---
- 1 file changed, 50 insertions(+), 7 deletions(-)
+sched: Extend task command name with TASK_COMM_EXT_LEN
+   =20
+This commit extends the task command name from 16 bytes to 64 bytes by
+adding TASK_COMM_EXT_LEN. It caps existing userspace APIs to
+TASK_COMM_LEN to avoid buffer overflows while leaving the full extended
+name for a new interface.
 
-diff --git a/tools/testing/selftests/prctl/set-process-name.c b/tools/testing/selftests/prctl/set-process-name.c
-index 3f7b146d36df..f05053aaba85 100644
---- a/tools/testing/selftests/prctl/set-process-name.c
-+++ b/tools/testing/selftests/prctl/set-process-name.c
-@@ -9,9 +9,17 @@
- 
- #include "kselftest_harness.h"
- 
-+#ifndef PR_SET_EXT_NAME
-+# define PR_SET_EXT_NAME 17
-+# define PR_GET_EXT_NAME 18
-+#endif
-+
- #define CHANGE_NAME "changename"
-+#define LONG_NAME	"change_to_very_long_extended_name"
-+#define LONG_NAME_CAP	"change_to_very_"
- #define EMPTY_NAME ""
- #define TASK_COMM_LEN 16
-+#define TASK_COMM_EXT_LEN 64
- #define MAX_PATH_LEN 50
- 
- int set_name(char *name)
-@@ -25,6 +33,20 @@ int set_name(char *name)
- 	return res;
- }
- 
-+int set_ext_name(char *name)
-+{
-+	int res;
-+
-+	res = prctl(PR_SET_EXT_NAME, name, NULL, NULL, NULL);
-+
-+	if (res < 0)
-+		return -errno;
-+	return res;
-+}
-+
-+/*
-+ * Return 0 if strings match
-+ */
- int check_is_name_correct(char *check_name)
- {
- 	char name[TASK_COMM_LEN];
-@@ -35,7 +57,23 @@ int check_is_name_correct(char *check_name)
- 	if (res < 0)
- 		return -errno;
- 
--	return !strcmp(name, check_name);
-+	return strcmp(name, check_name);
-+}
-+
-+/*
-+ * Return 0 if strings match
-+ */
-+int check_is_ext_name_correct(char *check_name)
-+{
-+	char name[TASK_COMM_EXT_LEN];
-+	int res;
-+
-+	res = prctl(PR_GET_EXT_NAME, name, NULL, NULL, NULL);
-+
-+	if (res < 0)
-+		return -errno;
-+
-+	return strcmp(name, check_name);
- }
- 
- int check_null_pointer(char *check_name)
-@@ -56,8 +94,8 @@ int check_name(void)
- 	pid = getpid();
- 	FILE *fptr = NULL;
- 	char path[MAX_PATH_LEN] = {};
--	char name[TASK_COMM_LEN] = {};
--	char output[TASK_COMM_LEN] = {};
-+	char name[TASK_COMM_EXT_LEN] = {};
-+	char output[TASK_COMM_EXT_LEN] = {};
- 	int j;
- 
- 	j = snprintf(path, MAX_PATH_LEN, "/proc/self/task/%d/comm", pid);
-@@ -74,21 +112,26 @@ int check_name(void)
- 	if (res < 0)
- 		return -errno;
- 
--	return !strcmp(output, name);
-+	return strcmp(output, name);
- }
- 
- TEST(rename_process) {
- 
- 	EXPECT_GE(set_name(CHANGE_NAME), 0);
--	EXPECT_TRUE(check_is_name_correct(CHANGE_NAME));
-+	EXPECT_FALSE(check_is_name_correct(CHANGE_NAME));
-+
-+	EXPECT_GE(set_ext_name(LONG_NAME), 0);
-+	EXPECT_FALSE(check_is_ext_name_correct(LONG_NAME));
-+	EXPECT_FALSE(check_is_name_correct(LONG_NAME_CAP));
-+	EXPECT_FALSE(check_name());
- 
- 	EXPECT_GE(set_name(EMPTY_NAME), 0);
--	EXPECT_TRUE(check_is_name_correct(EMPTY_NAME));
-+	EXPECT_FALSE(check_is_name_correct(EMPTY_NAME));
- 
- 	EXPECT_GE(set_name(CHANGE_NAME), 0);
- 	EXPECT_LT(check_null_pointer(CHANGE_NAME), 0);
- 
--	EXPECT_TRUE(check_name());
-+	EXPECT_FALSE(check_name());
- }
- 
- TEST_HARNESS_MAIN
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index ba20405664246..c4e0104e7ae9b 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+[ ... ]
+> @@ -1187,7 +1188,7 @@ struct task_struct {
+>  	 * - set it with set_task_comm() to ensure it is always
+>  	 *   NUL-terminated and zero-padded
+>  	 */
+> -	char				comm[TASK_COMM_LEN];
+> +	char				comm[TASK_COMM_EXT_LEN];
 
--- 
-2.55.0
+[Severity: High]
+Does this change cause an out-of-bounds read in __set_task_comm()?
 
+__set_task_comm() in fs/exec.c relies on sizeof(tsk->comm) to limit the read
+length:
+
+    size_t len =3D strnlen(buf, sizeof(tsk->comm) - 1);
+
+With tsk->comm now being 64 bytes, strnlen() will try to read up to 63 bytes
+from buf. However, the set_task_comm() macro still explicitly permits
+passing 16-byte arrays:
+
+    #define set_task_comm(tsk, from) ({ \
+        BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN); \
+        __set_task_comm(tsk, from, false); \
+    })
+
+If a caller passes a 16-byte array without a null terminator, __set_task_co=
+mm()
+will now read up to 48 bytes past the end of the array.
+
+[ ... ]
+> @@ -2042,7 +2043,7 @@ extern void __set_task_comm(struct task_struct *tsk=
+, const char *from, bool exec
+>  static __always_inline void copy_task_comm(char *dst, struct task_struct=
+ *tsk, size_t len)
+>  {
+>  	const char *_src =3D tsk->comm;
+> -	size_t _len =3D min(len, TASK_COMM_LEN);
+> +	size_t _len =3D min(len, TASK_COMM_EXT_LEN);
+> =20
+>  	if (!_len)
+>  		return;
+
+[Severity: High]
+Can this cause trace data corruption by omitting the null terminator?
+
+When copy_task_comm() is called from a tracepoint with len=3D16 and a task =
+name
+longer than 15 characters, it will now copy 16 non-null characters into dst
+without adding a null terminator.
+
+Previously, tsk->comm was guaranteed to have a null terminator within the
+first 16 bytes. Now that the name can be longer, the first 16 bytes might
+all be non-null characters.
+
+When the trace ring buffer is later formatted using %s, vsnprintf() will re=
+ad
+past the 16-byte array into adjacent ring buffer fields, causing an
+out-of-bounds read and leaking or corrupting trace data.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911-tonyk-long=
+_name-v7-0-34e1ee1564ae@igalia.com?part=3D4
