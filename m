@@ -1,143 +1,135 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54852374A02
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 20:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857D62D2382
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 20:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789332082; cv=none; b=olEclmlsfKLrW7m35aDzBmxWJjJXI5HUtl5vgjCuj32/rihM4MLl+zBX4V/j/AqKN6EwRbOd4oZPZukQJKI5OSYu+Fih6fiG6yoQnpu1DCxRsk7qmHKp93NOsQsTj7A2Bc7A3JDd7nxU+HiEu1qH5v7SKtjAK2Jv07vG08otyRs=
+	t=1789332184; cv=none; b=eXEqv7KHYhMPh4nMh+yWV6Gw4+AgWgFt48r9x22omf1Y9zzdnDKOcpQSCXijg1rUc/840yFBsmoVpLP9S+JXLp3nnroR1wR2vVJ/czcczWUP8r0tKo2OhNyKwpFhiEI12FmIjdWdiDGZIG0SAiOQ7P7yZQ9Gl3Ea+Ey7xDr0Afo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789332082; c=relaxed/simple;
-	bh=C5DsJkXIJoZlAT7IjZCC8I/UwHv4oDRaj3MSbn6+mgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjHn2MeLNZTQA+hpT9PDSXjN5yvo9fAyhpE2LvV0+Omzw2ZPLM4kiXZQngfbYamQoVs0lZuXoftvPRt+JFX0Ajk9WercseDvXQuO7UMPjxp31v6/2iEv4ZYvsHwaZsi84k2xDzPRnsggLHLt6Nuo736YyHtXtJ/8qnEN/ZygtQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jsOv9Cud; arc=none smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1789332184; c=relaxed/simple;
+	bh=0wFFz4ZKooJcTZ9wtwe4fBXDbhoCp8AufKzhTaNrdQs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=fOI96beFzJ08zoOFQeTLcIxLh7ibNt1jKIbB5OFQU9BKGfSPR1mSa+N45HCkwQAsY2rlTftXORUaZGw1xMQKbh0HinVbeHw7KM+Pn1SikcHb5xChKsH1tofCR66ccVQasJvJd7Mu5q/Fp83WhQlffX3OMuthPUn0FicTjRLFmcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXgL8bfk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsOv9Cud"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843378fb37so542602f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 13:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789332078; x=1789936878; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=R6YGWhzsvFbV+PYiTdLNQJwYPXDHjuNqpkT5NJtjU/o=;
-        b=jsOv9CudMOlRXkR4JjxnGu+OLi3A3Msfo0S51B8gssBl7FYemkqXvbUIgWCj0cWNXz
-         gAa6GvzFWJGGxUbOIL/M9ieKZWaPjr1lzC8A93iQjGZ6l2T3n7jsKnhFqGR2KYAfXJrK
-         Gj0JXt3SkzQRvQTL27LrRDQ3QWEk8Jo848FWAzoCssR8+RM4Q++azIkpxFKr37aPurkP
-         QYP0l9euwK0uQKdAe4cr3NJn3I7gXAM1hIC7uYSkadxsw0/I7W4H93NzKriAYjRzWYdC
-         nicdY96yxGeEM81j65CpN8XmA3vsQFtVIsF+A+teAStU7E6mitnGpG206xgBGkHunZGe
-         f93Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789332078; x=1789936878;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=R6YGWhzsvFbV+PYiTdLNQJwYPXDHjuNqpkT5NJtjU/o=;
-        b=ojomlBtNc7a402EeaCauSUvJv3y9gRcQ9i9dxHLR2HCge+L7svCq+A66E0fnHPjPIv
-         VT/iSSR8nuVT3XWeKImbqtbkzorgLU0d4nInXk5rdW8sQO+FsVRcRXniRk0h/EPuZU7Q
-         lY3kasSuzUt0ZB3F9uUfL3N1/D+Q9Ldbw4+qEdwwMG8jOeozbhwiSEWen/Quw7q3Pi+x
-         z5mEfATUjy1QarE+wiAgHtcFPaRA7rgH6CiKZg1Pv21LbG3OxPtYNpyEFWnk68SAE936
-         pt03AkHSJX7Ebsjkfsl33Mys6x84tJN2/IVs0HW/tOjiO87ltOdxETAWmXxEWM9/d8Xt
-         Qvqw==
-X-Forwarded-Encrypted: i=1; AKwUvByhWmQ3fDmoxyk6fIZ//dxwUQE5UqOj3AHG1XJk6R7qm0JzrIBuH8OWkHTeEZcAU8EtoLo4hPwaDgCvYTADUaEuBds=@vger.kernel.org
-X-Gm-Message-State: AFuF++mq2MS9lQSdEQopSB+pyXnvX9EfhT+MpBe1sd2dj56Z9OgcDpZN
-	g4j7qMtq5FO7iU0UvYH7dlExvumfdstuyO7tnPuQxr3NUZbsoIaYb8nJOW3YQ53TJQ==
-X-Gm-Gg: AYBFou1oOVU+pKuB5c5vsQIIe9uzG6ZGSa1elGReG75yxb2N8Vk3JAcxbh31uX6/FQS
-	e3ZVZROxD+Ko66AIAMQi7AFjGHO/4p7BNgi+FZBaPz3eGdcZ4ktR/PwLkbdtTZHggkeSeidLIPa
-	KH+NWKQobFWyJkgvEiVB7dr2DmYzgQ/sTLPhP/KNfmII/+N1C+mgMVWVs9RM/c5lRDWgmzPBzjq
-	f+iVjXYrhWWe9DrScsC4pLHhv/3+KscaVl85z1du5unUl0hixVVqv8JrmVT1iCK5o8BRD+Kpbic
-	y6ocOf0g+4OCYGUxv/uOmUbHQ6GZyZNEYFB0/a1zEvsCyxkFqCT93XrLEronG4DHHC7Meagjo6Y
-	RpZzsQ55SF0PwlVrIwV4rtjGH7aqDOjR/g3T86k3TQxu1WbVHFmPI8TZ+DLMlfzF6EOtEB5ZerN
-	mK0/DVSF9fV22+j3K21KWS9edr7zLHPIuaEn9Rs6j68wK5TMijjj8WoVag+/tRmo33l7mJPREBF
-	xE/xgTaMq3xMHc2Tc7NFYuJJc9XPzHqMBT7KK3M1cA=
-X-Received: by 2002:a05:6000:2082:b0:484:3f15:15f2 with SMTP id ffacd0b85a97d-486f6c17cdbmr7177342f8f.24.1789332078141;
-        Sun, 13 Sep 2026 13:41:18 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb34f1f7sm21666477f8f.24.2026.09.13.13.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Sep 2026 13:41:17 -0700 (PDT)
-Date: Sun, 13 Sep 2026 21:41:14 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: David Carlier <devnexen@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: Check resize_disabled before publishing the
- new subbuf order
-Message-ID: <aqcKav91XJsCLxPJ@google.com>
-References: <20260912103938.1127021-1-devnexen@gmail.com>
- <aqcJq1-R-LaK9uBi@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXgL8bfk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2551F000FF;
+	Sun, 13 Sep 2026 20:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789332183;
+	bh=jZRplENl+04vQRDrR701MxncwntlXA4GQGJesXIAG/I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=UXgL8bfkC69RULn+YmgWpOhixdAMdnidErgr96e+k83TSJB8MMKtU0hM3YwOoOG9t
+	 DBAwP/c0gxgx6KzQcBpFyu7VBNmuJgPwBfl+we/xk6/B2E/kaO2Olm/zgN2uQe13aI
+	 Jnt9Khp5+0yK6wRRcNRZTMiwjk89xFkJCz0NRzlk3ezHP5Si2kIbk+GJEtrGtDvjGM
+	 ZxOiJS+Y38K5nhfaJN8au4TcmeJOGaW4n0WnV0Ov2scKidCoqFJHH1v0dcLC6DChcj
+	 IvuFfkMHUrwYZtnY1E5pVNkE/tKD+rT9Prt+ODrsFmbgz+oFRKXttzu7SbHMH1fHp6
+	 1gq6zos76ULpg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/2] tracing: Fix NULL dereference when copying keys
+ for a field variable
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260913203129.941270-3-donggeunyoo.kernel@gmail.com>
+References: <20260913203129.941270-1-donggeunyoo.kernel@gmail.com>
+ <20260913203129.941270-3-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 13 Sep 2026 20:43:02 +0000
+Message-Id: <20260913204302.DB2551F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqcJq1-R-LaK9uBi@google.com>
 
-On Sun, Sep 13, 2026 at 09:38:03PM +0100, Vincent Donnefort wrote:
-> On Sat, Sep 12, 2026 at 11:39:38AM +0100, David Carlier wrote:
-> > ring_buffer_subbuf_order_set() stores the new order and only then walks
-> > the CPUs, returning -EBUSY if any of them has resizing disabled. A user
-> > mapped buffer has resizing disabled, and __rb_map_vma() reads
-> > buffer->subbuf_order without buffer->mutex, so an mmap of an already
-> > mapped CPU racing the failing order change sizes the mapping with the
-> > new order and inserts pages past the sub-buffer into the VMA.
-> > 
-> > Check the CPUs before storing the new order.
-> > 
-> > Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: David Carlier <devnexen@gmail.com>
-> > ---
-> >  kernel/trace/ring_buffer.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 9c03a555a6ba..d7e5e4620d09 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -7474,6 +7474,14 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> >  
-> >  	old_capacity = rb_subbuf_capacity(buffer);
-> >  
-> > +	/* The mmap fast path reads subbuf_order without buffer->mutex. */
-> > +	for_each_buffer_cpu(buffer, cpu) {
-> > +		if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > +			continue;
-> > +		if (atomic_read(&buffer->buffers[cpu]->resize_disabled))
-> > +			return -EBUSY;
-> > +	}
-> > +
-> >  	atomic_inc(&buffer->record_disabled);
-> >  
-> >  	/* Make sure all commits have finished */
-> > -- 
-> > 2.55.0
-> >
-> 
-> I do not think this is correct.
-> 
-> __rb_map_vma() reads subbuf_order without the the buffer lock __only__ if it is
-> already ->user_mapped, which means it has already the resized disabled.
-> 
-> During the first setup, it takes buffer->mutex.
-> 
-> -- 
-> Vincent
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Ha my bad, that function also modifies the subbuf_order __before__ checking the
-resize_disabled.
+Pre-existing issues:
+- [High] Leaked synthetic field variable histogram triggers on error paths =
+in `create_field_var_hist()` and `event_hist_trigger_parse()`.
+--
 
-Could we also clean the later resize_disabled check in the following loop?
+commit d9bdb20cb47a42dc8d2becde420531d33d458afb
+Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
 
--- 
-Vincent
+tracing: Fix NULL dereference when copying keys for a field variable
+
+This commit fixes a NULL pointer dereference in create_field_var_hist()
+by using expr_field_str() to retrieve the field name instead of accessing
+the name directly. This prevents crashes when handling pseudo field types
+like common_cpu.
+
+Cc: stable@vger.kernel.org
+Fixes: 02205a6752f2 ("tracing: Add support for 'field variables'")
+
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index 9d7ce01fda360..b43b83d7c6f39 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -3097,7 +3097,7 @@ create_field_var_hist(struct hist_trigger_data *tar=
+get_hist_data,
+>  		key_field =3D hist_data->fields[i];
+>  		if (!first)
+>  			seq_buf_putc(&s, ',');
+> -		seq_buf_puts(&s, key_field->field->name);
+> +		expr_field_str(key_field, &s);
+>  		first =3D false;
+>  	}
+> =20
+
+[Severity: High]
+This is a pre-existing issue, but does create_field_var_hist() leak
+synthetic field variable histogram triggers on error paths?
+
+Later in create_field_var_hist(), if the histogram trigger is successfully
+registered but find_synthetic_field_var() subsequently fails:
+
+	ret =3D event_hist_trigger_parse(&trigger_hist_cmd, file,
+				       "", "hist", cmd);
+	if (ret) {
+		...
+	}
+
+	kfree(cmd);
+
+	/* If we can't find the variable, something went wrong */
+	event_var =3D find_synthetic_field_var(target_hist_data, subsys_name,
+					     event_name, field_name);
+	if (IS_ERR_OR_NULL(event_var)) {
+		kfree(var_hist->cmd);
+		kfree(var_hist);
+		hist_err(tr, HIST_ERR_SYNTH_VAR_NOT_FOUND, errpos(field_name));
+		return ERR_PTR(-EINVAL);
+	}
+
+It appears the tracking reference is dropped without unregistering the
+newly created sub-trigger.
+
+Similarly, in event_hist_trigger_parse(), if a subsequent action fails:
+
+		ret =3D create_actions(hist_data);
+		if (ret)
+			goto out_free;
+
+The out_free path destroys the tracking structures via destroy_hist_data()
+but doesn't appear to call unregister_field_var_hists() to unregister them:
+
+ out_free:
+	remove_hist_vars(hist_data);
+
+	trigger_data_free(trigger_data);
+
+	destroy_hist_data(hist_data);
+	goto out;
+
+Could this allow userspace to trigger a memory leak or memory exhaustion
+by repeatedly writing malformed histogram triggers with invalid actions?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913203129.9412=
+70-1-donggeunyoo.kernel@gmail.com?part=3D2
