@@ -1,139 +1,105 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C9524A06D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 11:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6323ED5C9
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 13:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789298949; cv=none; b=lXSHNqTn3A5lPDhzootIGfge4kBFoC90jW1lukTNJ3xwcpb5LlNTtbELe099N44ewzKy1wOouA+GOHH7bc2JvqEInCdxetwP10tRjc20XuSgButXI2Rmp3H3fIicsJLnODt7BInBClVQ/bI+nCcssJ1EsnYTwhHfI6n1PzeGDl8=
+	t=1789306715; cv=none; b=Ezu7VNXjefsXGSCWlfECCCeo427L4T2cRQYU2q3gD7dw0w1EWCs4+KYqziL1NBkhhixbSEl8VEXjve0hSOjalmP8W45ROp/LhuN4vJO/WcdNAoAryNOP4ZczyDVB1ShryUG20fyR3yx6jkOc0Wxmc7bgP5cepAI6hD9BaSKJmRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789298949; c=relaxed/simple;
-	bh=Tj8qk0XwgG6OI6eappubnNJZNj7JVE4Eznyplit1vfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Aw5OSTAP1ZZsSajiTD+AhSI3obuBYjrCPhTq/8+5TCTyUD+rW1Ge+QaaHHXlGUothEYiW6/8EJwfzSxJLTPjv9vobFOsloseopQ7YfBz2RiwwIcIvQQpoIh2zlyisg1+cfuyFuibrUgNPy3l8uxiDb68ws17TsqW65lFyaWumbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCAbM6aM; arc=none smtp.client-ip=74.125.225.140
+	s=arc-20240116; t=1789306715; c=relaxed/simple;
+	bh=Ci44wgDN0GN7PC0pFLwh2qIUZhXRf/cUbP346xyKCR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XrJv8Ni3/8x641RISGiYXC5EfMPWImcu1UpXXiVei5WUMpaEbaxZe9Jf13owLfMRSibNfST2Oo3zXh6GttO4jeBtospVA+RjGh5KqnRGC9UIGdN/4ieAVyQ+IjZ52YjYomUOorZ0kgECp8qpO0Hqh4LLTzpUnZzahqer1b66lvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3SgTIMf; arc=none smtp.client-ip=74.125.228.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCAbM6aM"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd5462b69so6604025e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 04:29:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3SgTIMf"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c29703cb470so244671766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 06:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789298946; x=1789903746; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=U8/tv6bYjr/JxaCBgXPuXjqSK44p/M/ZKAj7rPsQHeE=;
-        b=TCAbM6aMgt4CNBcwAm76o0w4qBImbbdr1uw7o6QOWqjTkAEBk8sC9r0NPDvKkcz7HS
-         OTByZNqKT1gTq7ZS4b/WlCR2kXfuJ8+MXvRbmS/aw1cG48lSQZg0P6guMqB1esqsWH7m
-         EjZnBXlMs1N0dPccOm9gPspEd7iuPafYVHONk9U2QS1A7LKhAuZjjcdqtL9tU2QR/K9Y
-         miTa9ghh0HlG2iwYE/4bTo1oHPMeQwLSQdSlLSumanabf9WkS7E66q18Ii5mKLwx6BHo
-         5IqtJIHyJvxVFSY/3lVF/dOOlhyYsTP1uyCURzY/dVs8HnBoNL2lBT4+JoPlC7v7zSCc
-         pmXg==
+        d=gmail.com; s=20251104; t=1789306712; x=1789911512; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MNT4kKLCYJ3hMXnGWz3Nru1slAulvkgUfWcgV9YmQ6k=;
+        b=X3SgTIMfYgCcgIv8hL3Z5GPOAgQ3VrUzmFd7LHFRZnbcmBtPPPHkPMfAHUI3NuEN+H
+         22YFdtG+A+eJQy4/C5UnzTJOgwen2Y02U4OaF2AqZWnizjFuVHGIZ4/a7MmV6qaFkBX9
+         lGMdscULSDlDX3BrO7aWFdb4dha6eBHBZdqLgS8lhsbqcTNe97EHrzAoQuB2OSl/ihXU
+         FuL91YAZ7vYC2XJlY57l5f3SD2e7X6AdPvVcaWVidyh+mNqaSXi0qexPa3XKuBE12MRw
+         hSjK2Rr88ZpxcO7imihnUKiF1DT8aEwWTdHyTif7D1f8HtXcEGO1Lc7fEYrP8tQGXKvg
+         d0tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789298946; x=1789903746;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=U8/tv6bYjr/JxaCBgXPuXjqSK44p/M/ZKAj7rPsQHeE=;
-        b=Z3vLJ0JP7DjzyUkxivo6UAoTTGvvUVWAjr49RLT9x3Q6iFN7COQwm9pf7shJ33+oHk
-         FIzLclwzmwNrSP49ht1EvZDv7rgGG2M+gNwczlIKOLQMbLQeg1QSK6imx27jYt0KnFo8
-         +y9OVPM0gpZIIXMWu7WESW6KdnSfU05iN3QJ74janv3A9FMAZBCHPHv4reLV70NGjlYM
-         MarIn7qy1ZbuWG6Xj3rilpyBwaETcj+wVSx1yTrJjVWaRDU4XW0DEAe0n35K26h+QQCO
-         NrnoKnqY3C+NATQpgJG+J0g4hnRZuSpyxPBSZPNzJuSmD2pUCKedwegVwmXw4+OcnbJr
-         SNIA==
-X-Forwarded-Encrypted: i=1; AKwUvBzwMU32ld7Z3RrM4FgcwTx6xsjnmufehPIDxHDEw+Spl26n8ayaWawqWgESKck/LbRLI/1AIbB7JkxBktELmwqt3r4=@vger.kernel.org
-X-Gm-Message-State: AFuF++mOZNHWN6y5J0wgHUiOme7SytgE2iRhqbISgU+GlA3dCVRQiJFV
-	ebm8y05Yu3u6a0sZXT5P1kRIbnetBR+BNvji8XYq8L1wZRzC+4TEY9ZU
-X-Gm-Gg: AYBFou1nLsyFhCJ3jBHw2JSmYhMcIgQNwZZqqsf41ror4tnNeNMlygbyCCibERHjobl
-	z/FhFeBWX13qgyUhqKuXxt8lVo1tlALQZioZmc1WMuB/1xMh6esmD6nR4/4wjJRz/jlZLdULBpo
-	WCfzabvwACRa+V3kPMeI6KI6Ci4uTu4enQceyYBd0lSHBMFrY6gKbWa5gC+cw7vDCNzeO0/1StU
-	2arcc/LP0bQqWqZ1/8DhEs3LupQtOrkX71V9H7iWtIvw539sUPhHcibSKe+u1jTZUqOi8f6d2Nh
-	y9kh0p3LigZiZEwBsvNl1LcC9ZLiQRuZyJR4FfjlvOKZrNPD6ZcBgWB10x8/crPeuGB3tS+8u4b
-	ZYWmdXJGYqnb4ggyDzosjPo9kiCZEVPUsyRfXT92jBS+HmMoWQ/lK/vNpCEgV8YarZtFYdHf8lR
-	qtikgK3rYhxByTyLXJ/LLiP8x39H0y1HtuqdqDTyoedLCr2RxHdw0hazv5liodx8wXC5RXd+g/M
-	R/T2/W0x0z9yZBTR/ycQvDZRAHzhncCVrcz
-X-Received: by 2002:a05:600c:4ecc:b0:49e:6be6:d783 with SMTP id 5b1f17b1804b1-49e6be6d9dbmr138768675e9.0.1789298945625;
-        Sun, 13 Sep 2026 04:29:05 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb32d3c7sm17806381f8f.10.2026.09.13.04.29.04
+        d=1e100.net; s=20251104; t=1789306712; x=1789911512;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MNT4kKLCYJ3hMXnGWz3Nru1slAulvkgUfWcgV9YmQ6k=;
+        b=oK4cNuE+rin5nFXzmkFGjb+qxc+bBGktBIG5t6l6Y+li9KvYeew0ZRi8vRhLGkyFxd
+         YFgFKEHami+z2/ZhARXft373eyCdTG2uQ2dl49OsxEkIOlbxDoPU0YFFhc/KAB1wYt5p
+         BMPjozxYYU/EkZ4FMgH1G6BXf5GVf2UEqsopRohrUmsO//htctxzrEwyRCGtT3prfvm5
+         ZmjnNrPJjQnnrFTI8+yrHbt3GnRkKjfVqQkuUN3/VLItWzNyGGyhxaZh7ki/innXa3gt
+         c1PMgaQk2+kv3n+N23NtCmh/df1CAcBoENtBFd8Vy/NCa25W21mG0rOyE8AzIoBYS848
+         XypQ==
+X-Forwarded-Encrypted: i=1; AKwUvBywFa4lUgz4r0xO/NFsKpSQ9m1XOp+g0Io4aCj10aCwrMeqCsrX8SIdKpvmO/thFsMKx4FvsdPIyB0mlTg1/ET0O3M=@vger.kernel.org
+X-Gm-Message-State: AFuF++kqbtzlckT44kAxCqIMubOkv/7HZiwKbAMZ1mK1OSPcxwYNa1Id
+	qiJ2J52xoJiQGYSShx+bkdDXv5ES1jXqZsEXIqAUaf/xkpM2i/zdSao/3jswhw==
+X-Gm-Gg: AYBFou3YkEKC7UnZYYC59rOcqSJV6yv1Zj/kGHbklb1AtVqnM8z1QRK6nN9f9Cbx67c
+	uK/S6sj1UaZtObouAEg2w6Qaf7+rO8sg3e3/5gfhMwU/EYngZ/DjqDGX0hmDpyR2HbECF6/WRX7
+	AsNBINg3CzLG47P5BvhBL7ZewdHLoC802nvVIAoOy9K2WFyoSbGs1LcYDZlff49riOBEvu/W6cu
+	U+j0O/8l10265xnifFfxdBsF2cxLXJ7yLRMeBku8xIWw1zbt0uDJTs20zIP+MY+4OeasQZlKXGf
+	31G/3xH3RLpaFBP2Bva7Z4u8mf3OzI25AvSaQmeZ3gPhDuC9nS7K8p0C5PLYBD4CnXDrQ4xh4j/
+	6K9VJX/6tz21ntgoua8Hnewzd4kIIli+CxR+CTNIvO2pzN2slyIFanrk8zrEMwkJVMtRbca7OrG
+	CMOPT8GldPTUNKYUt7/LjBPJ6OG8zxpUyQADKmr2tezApGKBAxtd+J0WuI869e1MbhdVuG5IhtE
+	xFH+CFe+BuCyr/UPWDu8vlr4tpgeYsefxdl+47TLysq/vDfoWVUtHOUzlI=
+X-Received: by 2002:a17:907:724d:b0:c25:5114:c832 with SMTP id a640c23a62f3a-c29665acdeemr1295728466b.3.1789306711662;
+        Sun, 13 Sep 2026 06:38:31 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2966021c63sm295852866b.13.2026.09.13.06.38.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Sep 2026 04:29:05 -0700 (PDT)
-Date: Sun, 13 Sep 2026 12:28:59 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Josef Bacik
- <josef@toxicpanda.com>, Frederic Weisbecker <frederic@kernel.org>, Neeraj
- Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
- <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, Thomas Gleixner
- <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, x86@kernel.org, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Puranjay Mohan
- <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, Andy
- Lutomirski <luto@kernel.org>, Josh Triplett <josh@joshtriplett.org>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>, Luis
- Chamberlain <mcgrof@kernel.org>, Ihor Solodrai <ihor.solodrai@linux.dev>,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
- nesting in the BPF trampoline
-Message-ID: <20260913122859.4d5067cd@pumpkin>
-In-Reply-To: <ffffa178-c475-4249-a609-c5d222704987@paulmck-laptop>
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
-	<20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com>
-	<DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com>
-	<14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
-	<DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com>
-	<8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
-	<20260912221400.4045198b@pumpkin>
-	<ffffa178-c475-4249-a609-c5d222704987@paulmck-laptop>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 13 Sep 2026 06:38:31 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>
+Subject: [PATCH] tracing: Take trace_types_lock when dropping the buffer_meta reference
+Date: Sun, 13 Sep 2026 14:38:29 +0100
+Message-ID: <20260913133829.15307-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 12 Sep 2026 15:31:24 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+tracing_buffer_meta_open() drops the trace_array reference with
+__trace_array_put() when ring_buffer_meta_seq_init() fails, without
+holding trace_types_lock. Use trace_array_put() like every other open
+error path.
 
-> On Sat, Sep 12, 2026 at 10:14:00PM +0100, David Laight wrote:
-> > On Sat, 12 Sep 2026 11:03:34 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> >   
-> > > In the old kernels, yes, we have current->trc_reader_nesting++.
-> > > In the newer kernels, Tasks Trace RCU is instead implemented in terms
-> > > of SRCU-fast, which instead increments per-CPU counters.  Which among
-> > > other thins is a bit faster and does not need to hook into the scheduler.  
-> > 
-> > Isn't that rather architecture dependant?
-> > It is fine on x86, but on arm incrementing a per-cpu variable is
-> > significantly expensive.  
-> 
-> Last I heard, slow ARM increments of per-CPU variables were to be a
-> transitory phenomemon.  Plus changes late last year greatly sped up the
-> per-CPU increment operations.
+Fixes: 950032ffcee7 ("ring-buffer: Add output of ring buffer meta page")
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are some unapplied patches to improve per-cpu operations for both
-arm64 and s390.
-Without those preemption has to be disabled (in current->xxx) which requires
-a conditional call in the preempt enable path.
-
-David
-
-> Plus this change removed some hundreds
-> of lines of RCU code.
-> 
-> 							Thanx, Paul
-> 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8658cad53cb5..c8295324ffaa 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5881,7 +5881,7 @@ static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+ 
+ 	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
+ 	if (ret < 0)
+-		__trace_array_put(tr);
++		trace_array_put(tr);
+ 	return ret;
+ }
+ 
+-- 
+2.55.0
 
