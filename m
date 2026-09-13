@@ -1,121 +1,128 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D2F28726E
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 20:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6572F0661
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 20:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789330390; cv=none; b=K1hFKdTKVikFm6NgREDpTXvIGJkRQQ6hmzBWQb2cgKlaE6BGIMcAHorM6NjdXT1mUlxWCjeO01kb7gis7Sp7+cr1zu7YOKyhr9nqHqD5jmKN3D6sOCv1qonj8hwkBKbCNTBYlbiSrFM1JWzS/nlR2bgkFrpU6kf28BRsUchceYY=
+	t=1789331498; cv=none; b=UPjOHiUdOPgANHyQ4COHQdgLZq/hwA7velbS8FVUpgzmRdhq7LMfzZZCkihMI1rALBnxmHAyJUCrGxYG09PRFYpHcm7cjpkO75VtmB1Cqz/iJq7F5GTKnAyl3OJ4Rtqwf02U3JDVOF0zbKD9nEqUMLKFV+7KGtWsnpKhqMyq2mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789330390; c=relaxed/simple;
-	bh=aHBF4LPvg2Zd3w4oaY7s8UbFfrBRImr+0PKCbkJaXE4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgakw5dX6UMP9AeWdrFb114+Alv/9NBQEUEFCEOpa2dcFnWb2HHTuDWEu5CMAfWI6JEJ+hEOnNVgMiaC9U4Y4Hms296XIHY7xwtiyLp3NhrVjeHx79JbeyyuuIGoqAe1rgR20NHJDxEajAFCMsuePHLdospiOz7ieZqpOz28v8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mV8K5Odd; arc=none smtp.client-ip=74.125.225.140
+	s=arc-20240116; t=1789331498; c=relaxed/simple;
+	bh=yDn7QK/ba+3RLVHPMTBb8o7wMnI8vkCF4rNDGAc/jgc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DNF1CajSCuG6LWlojRt+wV/gMECKK6ez/5GcJTlBbuiiekBibGzuD2v+Y2cqXUL3xe1Rqv8IF+YJUU82xtvXHu2Ivx4tgg4YoWOlyZgYVBgl3bSCYIwFKHi32fTVXlVKEj5ocVKIeDDSW+aCvi/NvPF8epW1RwnklOMTLx07R2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dg1MKUOP; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mV8K5Odd"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd6185db7so7516945e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 13:13:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dg1MKUOP"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3990fe066ebso2099397a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 13:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789330387; x=1789935187; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=S5P6uH54234ueGuk+BCRhOiLjgsTrePIHYW1areU63o=;
-        b=mV8K5OddZLBzCJXQFLtdPDe2bjlVk8m0OcH3RDqSCG+PDqiTmyOfEy3VMdk2pzo121
-         pkbLlRtp6RnfGkz+C+KlUjcDD1A6J/E5153b1zPfMTNK0qtNdOFgcNnUo7qMu5+TDuy1
-         spgeKxvtQi4R3o0j0F4sp8dkeUyeTAvKWDiTJsN7RGx/YEP2wyWbRNOa1D5CNROfteMz
-         LZkKGF3Vw+Vq/RXwejD+hPCyKRlIe3uvA7yWtwdVZEtq08q2dpY7++BtxcTnsw5W9c/f
-         sOoY1yY3HYxtWkJquJ0qlna555xzyAjO/DZxM2Hufg1LsZ81s7OU7zFWqSe6mhrMM7RR
-         9M7w==
+        d=gmail.com; s=20251104; t=1789331497; x=1789936297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6LszAmsFoGsrZf03eXVx9RZkN93lj99VFwvSyBMy7+c=;
+        b=dg1MKUOPm/Jf/HEBRknTTsIHbkbEzm8H3MerCbHX9gG88ZTZ4d5Bp0y1/SAyGnUYzJ
+         sdnIHukSRgxQSoqHcRLpN7dV9+AmKFIaXk/D3dEPVTDWfuQTFHQqK+XhPvDA4zv41SAL
+         yMqlr44N7s99jWBrv7+5Gv7t8qz8BaebtCutfZex5BDWpT60EbibbfpYW3+hqsAxY6SQ
+         iJmxvqBcTEsGicSREc1L5mL1yIm+FJYviyod36tyrSy3Yiuy+Tt0dU3QirCFQAhrEaFL
+         8tqCC1f/gCQmUEzRBV/ZC7wd6C3HgZJMwda0PmRtD4uDMXp/kLbDEchaE+sRaU0WFE/o
+         4VFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789330387; x=1789935187;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=S5P6uH54234ueGuk+BCRhOiLjgsTrePIHYW1areU63o=;
-        b=ncim6/pUDkEYNVHKnQk69iaaGna59elbCT7mcsURZH7Rjd7oCJeIRrhgxCu58DcB8k
-         8nauQI/n84fs8BnCq0hcQDimPT2ceQBVaRlOSkirNCtT9SpkZdMi7tBvc6FWdz0yh+q1
-         AlKJHHphTv9YaxNkWVwlio/yssLjWMT9lP1U64ANjiwO8520eEsT3IUV2wz8tYHfKval
-         NPgmK+OmAdhJEEQlPzuaZKlc0wn+r8acY8DJVwBxCu9qIM7Tz9x/sAb0F97AiLqQGcZk
-         HKb/obwrVdvP0Tavg+pEYFZHN72TnzJ6ytXhL06MI7TIHx53hPWrypskJ3wzDbx73MFN
-         qx2w==
-X-Forwarded-Encrypted: i=1; AKwUvByKz0hSUP8rsyhp7TyvMDR4mQ5hmaqUy7dvU+dxLz0885v1VMizu8QEsHOA7KnGabKDXSi+++KU/J0/lioLU/5jTp8=@vger.kernel.org
-X-Gm-Message-State: AFuF++l2/ya6niXDlXpnVxbCaqVawD7pr4l5z125zka8h0LlCmGvirsU
-	DoX6FrmSpVtcW1zRA1L0UwBst9WkwpOP+wyDMn/5hfBtecpLzCLW6FqH
-X-Gm-Gg: AYBFou3Caj1gcygy0XytE1lXgs1bt1z8EytoKh5LdhgQtE5spF6mfn2j3xwyfWw/7Bk
-	lXHU8/PnJ/gmgEDvhEXFancR5PnsuWDdkTKCQC8mLBjv8+ZXEJp3TJVsDPh3H2p8dIK24WoJ6X7
-	pjY9/fQGngeDUYEMeD3gDB4Cz9Whqy9c9Uv0eJ2hoM8Nqq2YCZLw9hO2LPWwEbvh9QLNk70pSDG
-	BQ0nR9Raoq1tUDQLs8Z+PG2wCwq8Y84HX8sIcrm0WHBzjmZm8qlR6e0W11t82kJLZ+Mv6U4rEzD
-	bYrgwt6MIpgvUaVGqhs13TAr4u2FMiOSrd1p/KPuzmku4+R8ilx1oeK4tJFMGI1ZvwM3gw8uPmp
-	nDuLYbjmls5LtHC5QIJ/g3XvQpE6RYuSqDTye+cep+Y+RdyF8MHsFKz5ooUXBOu62X1kgato5Em
-	MEUBHZcBEm1DuSGCVo6k0NVCQWk87cXnHeoFWyJTPN/AAE9htheiWxOj5x1w==
-X-Received: by 2002:a05:600c:4f84:b0:49e:715d:95ca with SMTP id 5b1f17b1804b1-49e760727e4mr37982455e9.13.1789330387007;
-        Sun, 13 Sep 2026 13:13:07 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e60ad0614sm277930945e9.10.2026.09.13.13.13.06
+        d=1e100.net; s=20251104; t=1789331497; x=1789936297;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6LszAmsFoGsrZf03eXVx9RZkN93lj99VFwvSyBMy7+c=;
+        b=k9mJuv+GMG4ilADWiqCp3yu2kjyC0Sf2H7z6AV4VopcPfGP2n/T38P4BCx/pjk8sb7
+         z676yYNK6fc2oyLgeqLojVaCwzm7dDx4AOsSh/cCKZw5yJPMhyVXAKumlRxIFxtB77Oi
+         G0cxaHPmbZGRL/YZCvrBf9b3Rp7qjlFz9fjBlJr1fptUtfL7wSsbQ1uaE5X6HUcVf1Us
+         7RJ86yS2MIeaazDu+kv627Cl+b6tuFXUe1vV1clqQSbLQqgSqxJgqf7qFe2/yc/alfTd
+         OiQHavhT6h+UqNd0NTcN2NY7wgWhsR1OdyVRGcoYksArse4OvwYDMP77XFOaRCxg4oaE
+         Re2Q==
+X-Forwarded-Encrypted: i=1; AKwUvByX2jHhmuO9ow+4zx+xejHIBCADFGOJ0iQXg186ARRAiNqXj5nC7Z9idOalkypFRMg1TcKTPhHt1a3mXvv5cmKrJe4=@vger.kernel.org
+X-Gm-Message-State: AFuF++kPDZ30V/4nVG2oy7H0DCiST2w75mE8bgKnGyD9NNccQx3fopTk
+	dNmwjBA0sw7ZglVg9SoNygEH209V+U4Po3xxSDBAsvhrjyPEZoeCpM4=
+X-Gm-Gg: AYBFou20MsN9D0AHkUzdQ10Dxp4zaFDfa20GjoTXZs6SiG3J/yLg72lXDJ61AhJPi4u
+	gwz0/ykjlf8Zpp78sa50rYvPIonZuVCAumusFyuZEimYHhS3J6SpppDRcCYIDOTDMeeVOteDTKm
+	1tbsQHbyVOg1OUWRkdumCE30iBMX7d0X78OlKrK4KGxo1j0drep4o7t7yNstM4pXbYEC5ky9Zfm
+	L9w8LaSChC2WgjXm+BsS1sAQYhn0BIbs52+TSvh7xzeFSow9foMqOVKiV8CyHSMewGMJCHgtBFx
+	wp1Z35IFibFP9SUC0kZPImfm6X5fSpHpcmbN3nNBysP6E9lwASo9kbMrVGxO22v9g13Z1U5ZIXp
+	tC6xLCKm5l3+l/47fcJI/MjsXlTXuLqhYJYfCIYhzwZSj4HePilg1f+5hHimQ9Ud4k/LREf+43V
+	IX2glhr+rCrzaeXhKyLF3NrAv9Is8VJrKBsuxs/OIk7P2ZKkPuUbXWazA6XGDMTtwbYooAvMx+U
+	A2pjRwMsSmr0oP5uir7o0tkx2yKU/5Yf8kE
+X-Received: by 2002:a17:90b:51c8:b0:38e:5b59:c2ff with SMTP id 98e67ed59e1d1-39d9bbc802bmr24389520a91.3.1789331496799;
+        Sun, 13 Sep 2026 13:31:36 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:b91:ff81:c860:362e])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39d94744dfdsm17530220a91.0.2026.09.13.13.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Sep 2026 13:13:06 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 13 Sep 2026 22:13:04 +0200
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] ftrace: Use rcu_assign_pointer() for tmp_ops filter hash
-Message-ID: <aqcD0FsrqV7gkNCD@krava>
-References: <20260911142512.19344-1-leon.hwang@linux.dev>
+        Sun, 13 Sep 2026 13:31:36 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Subject: [PATCH v2 0/2] tracing: Fix NULL dereference when copying keys for a field variable
+Date: Mon, 14 Sep 2026 05:31:27 +0900
+Message-ID: <20260913203129.941270-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260911142512.19344-1-leon.hwang@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 11, 2026 at 10:25:12PM +0800, Leon Hwang wrote:
-> tmp_ops.func_hash->filter_hash is annotated __rcu, but
-> update_ftrace_direct_mod() assigns hash to it directly. Sparse reports an
-> address-space mismatch.
-> 
-> Use rcu_assign_pointer() for the assignment.
-> 
-> Fixes: 50b35c9e50a8 ("ftrace: Use hash argument for tmp_ops in update_ftrace_direct_mod")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202609110704.Q3M5vCDV-lkp@intel.com/
-> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+A hist trigger with an onmatch() action copies the key list of the
+compatible histogram it finds on the matched event.  Reading each key's
+name straight out of key_field->field->name faults on any pseudo-field
+key.  2/2 renders the key with expr_field_str() instead; 1/2 teaches that
+renderer to emit a bucket count, which 2/2 needs before it can use it.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/linux-trace-kernel/20260912094722.3271147-1-donggeunyoo.kernel@gmail.com/
 
-thanks,
-jirka
+Changes since v1:
+ - Split the single patch in two.
+ - Dropped the third change, which gated the ".stacktrace" arm of
+   get_hist_field_flags() on hist_field->field.  It fixes nothing:
+   hist_field_print() excludes FL_STACKTRACE before it ever calls
+   get_hist_field_flags(), and parse_field() takes the "stacktrace"
+   modifier on any field.  Measured with and without it: identical
+   generated command on all nine key kinds below.
+ - 1/2 is not separable from 2/2.  .buckets is refused on a value, so no
+   expression can reach expr_field_str() with a bucketed field, and 2/2
+   alone turns a working .buckets key into a refused one.  In this order
+   no bisection point regresses.
 
-> ---
->  kernel/trace/ftrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 53d5db60bfa5..673a54fdf392 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6675,7 +6675,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
->  
->  	/* Enable the tmp_ops to have the same functions as the hash object. */
->  	ftrace_ops_init(&tmp_ops);
-> -	tmp_ops.func_hash->filter_hash = hash;
-> +	rcu_assign_pointer(tmp_ops.func_hash->filter_hash, hash);
->  
->  	err = register_ftrace_function_nolock(&tmp_ops);
->  	if (err)
-> -- 
-> 2.55.0
-> 
+The command create_field_var_hist() generates, for each kind of key the
+copied histogram can carry:
+
+  WK key                  unpatched   patched
+  pid                     keys=pid    keys=pid
+  pid.log2                keys=pid    keys=pid.log2
+  pid.buckets=10          keys=pid    keys=pid.buckets=10
+  common_cpu              oops        keys=common_cpu
+  common_comm             oops        keys=common_comm
+  common_timestamp        oops        keys=common_timestamp
+  common_timestamp.usecs  oops        keys=common_timestamp.usecs
+  common_stacktrace       oops        keys=common_stacktrace.stacktrace
+  hitcount                oops        keys=hitcount
+
+x86_64 under QEMU, CONFIG_KASAN=y, 4 CPUs, base 2f0c1cf72f46.  A compatible
+histogram on sched_waking keyed on WK, an onmatch() target on sched_switch
+keyed on SK, my_synth($wakeup_lat,prio) forcing a field variable.
+
+Donggeun Yoo (2):
+  tracing: Add the bucket size to expr_field_str()
+  tracing: Fix NULL dereference when copying keys for a field variable
+
+ kernel/trace/trace_events_hist.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+-- 
+2.53.0
+
