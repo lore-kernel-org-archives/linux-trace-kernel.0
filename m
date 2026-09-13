@@ -1,128 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68B74BEE58;
-	Sun, 13 Sep 2026 03:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FE02D8370
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 03:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789268859; cv=none; b=VFDNccYLOTNDTf7SKYhhkKtUY7jnnTzF3Bwwm63Ooo1U5l3N5l6GkLlny/VHcAOyShNOhGaiiftPE6ifn/KmvkZ4Zm5yQ0qagkL68vZP63w1Iky84d5OtxqYJagLDZ/UxjM4O4Ez1JXU2Wpye/b0u4H2pqEaLA/UGiV9UFNJo7A=
+	t=1789269032; cv=none; b=HH0h/6vx5b8qHm+hRWk3RKKZsHJQwcqNz5io5kkkJis6Vo/MwGWLojFbn1OOloTBzbqNL1Qzzig8BcFb0p+EtXD5H1C7QOa2apy/N3Oufor0K0I8PvQpfpmVS6CcOdv6qU6Qp/w7OzJ2MMRhNscLTCUcr+8KlGlBHxg1EOViNY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789268859; c=relaxed/simple;
-	bh=W/3xtVk0o34kiF+8UCp7ZVY3yI8DFhfYs6U4DoIP7kQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+NYXX825vfP+PNksME/SY1d7YfDW6/B2gL+eOqlV2voEHUrbzQj5KXhWcYu7LgLwJ6ZdGB0teNR531oewrH9Sac2hGqwLVOn1FE5AGp3og7bpR3UfLz7t26evlI0DnikpS0OxwG0CH281R1bZuNhbI7hoXGJqfSs3IiF+clvBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CuSv2pXm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789269032; c=relaxed/simple;
+	bh=bxce5jt+FgQ9jUz6tT4GatvNg9Mjo55T081ygcMwaoc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EXD0I2ogp4WnX8SPEeuvtK2PK9+0kHvUkqhkAX1bmaImLAXEjZpQant/HSWVtryu0G9LMJltQL7xsI3/o8u6+9AlyvhtBcDgytKnoqrbVFLRGwCSzX3WEhnXE249k3zoDRgsfX8QDA6xMr+fD+b5pvGItVHD1avHFP2G52SA0Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmVdHmjv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CuSv2pXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524621F000FF;
-	Sun, 13 Sep 2026 03:07:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmVdHmjv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85191F000FF;
+	Sun, 13 Sep 2026 03:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789268857;
-	bh=KdhlkMkoM3bS0HNmhu6FPeXNMD9uLWI8hS4d5wSjOX4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=CuSv2pXmX2je4sRvmHKKZCalCD4vMRFoFyu9Z7kjqib0HJZ0R96u12SmyJngVxR2d
-	 CSNggnMjRbuvaNfpOxA6kKMng4amlgHfCnKyRffj3AMRXMMXauRj9OaXw5P8g9hq4g
-	 0Z6jqwCBeRqIaINZKgWOtW/1/1bcaqhLqkyXwoXoLd2+dn2NIgd0vZi2yb8bASDNLv
-	 piKOj5Fgnde2tv2VXvS/Qdfwbv8zZb8k7djWMTU3jTaLAmygk5QLxZBQxBQre6yGdu
-	 +uOGZV0+QeWDGdOrI+TtWo4puMNcmdgECkEQg0EnCDjhQv4usxIOb1Vf5UzttNUsW+
-	 4U1q7S5+5p0zA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 15EE5CE0ABC; Sat, 12 Sep 2026 20:07:37 -0700 (PDT)
-Date: Sat, 12 Sep 2026 20:07:37 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Josef Bacik <josef@toxicpanda.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, X86 ML <x86@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
- nesting in the BPF trampoline
-Message-ID: <509e8eff-2a9c-4927-956c-73708ee4fe5a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
- <20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com>
- <DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com>
- <14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
- <DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com>
- <8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
- <DLDLDGTSBHA0.32TYNBSKKPFXH@gmail.com>
- <8fbfb3fc-cf5d-4dfb-b144-bc021faa13ff@paulmck-laptop>
- <CAADnVQLQs-+-cu2R3QrHppcxOQt9m7Hi+grr4fOnw8m73kQn0Q@mail.gmail.com>
+	s=k20260515; t=1789269031;
+	bh=oKRJBqejKfbjyrjz3q88Bv0bawEBvGiV/I2mANvYF0E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VmVdHmjvienjH3dwNoaujGHyA/HetQSaS1l90kj1KekLa8laHWrqbndIPsKMSR4Wx
+	 YJBuoPMPP96de5iEwDVqlI1oZjB574dwUfq3rYCyB0b/dkMMIfDtiIPpkj834UY1kH
+	 sHUVsdasD3rspnJcTkExVEnkMjA8k//ytK9kYnyFk1AWYi6vJwkW/hIAKkizm81Jg4
+	 kVJHD530Yka9j+IwXQbJst9bqIBnCUFAkac5A5CnYNfeA+h3qPTO0F4zF0D24ScfvB
+	 gzdJGTc2YiS9W+GQjCWQ4if5o4MhF9tgZTUGkfK4SOQsDtAvfd3LB7knSZss9ShdC1
+	 7rK1xGk21o3Eg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] blktrace: build the synthesized v1 record from the
+ entry's own layout
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260913025827.457116-1-donggeunyoo.kernel@gmail.com>
+References: <20260913025827.457116-1-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 13 Sep 2026 03:10:30 +0000
+Message-Id: <20260913031030.E85191F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQLQs-+-cu2R3QrHppcxOQt9m7Hi+grr4fOnw8m73kQn0Q@mail.gmail.com>
 
-On Sat, Sep 12, 2026 at 04:59:02PM -0700, Alexei Starovoitov wrote:
-> On Sat, Sep 12, 2026 at 3:28 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Sat, Sep 12, 2026 at 12:40:55PM -0700, Alexei Starovoitov wrote:
-> > > On Sat Sep 12, 2026 at 11:03 AM PDT, Paul E. McKenney wrote:
-> > > >
-> > > > In the old kernels, yes, we have current->trc_reader_nesting++.
-> > > > In the newer kernels, Tasks Trace RCU is instead implemented in terms
-> > > > of SRCU-fast, which instead increments per-CPU counters.  Which among
-> > > > other thins is a bit faster and does not need to hook into the scheduler.
-> > >
-> > > old kernels? I'm confused.
-> > > rcu_read_lock_trace() in bpf-next is doing t->trc_reader_nesting++
-> > > and then calls __srcu_read_lock_fast().
-> > >
-> > > Are you talking about some RCU branch that you target for next merge window?
-> >
-> > No, I was thinking of rcu_read_lock_tasks_trace(), forgetting that
-> > rcu_read_lock_trace() is still used.  (For good reason, just be clear.)
-> > Your comments are quite correct for rcu_read_lock_trace().
-> >
-> > Hmmm...  Josep's using t->trc_reader_nesting would break for
-> > partially overlapping RCU Tasks and rcu_read_lock_trace() readers.
-> >
-> > But yes, your #5 makes sense:  Deprecate RCU Tasks, upgrade RCU Tasks
-> > Trace to check for preemption from within trampolines, and move RCU
-> > Tasks users over to the rcu_read_lock_trace() variant of RCU Tasks Trace.
-> > (Or am I still missing your point?)
-> 
-> Pretty much. This way bpf trampoline stays as-is. No extra overhead there.
-> rcu tasks users (faultable tracepoints and what else ? )
-> switch to rcu_read_lock_trace().
-> The only difference for faultable tracepoints is
-> extra t->trc_reader_nesting++.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Size-based differentiation between v1 and v2 events causes v1 en=
+tries with a large PDU (>=3D 16 bytes) to be misidentified as v2 entries, s=
+crambling output fields and truncating the PDU.
+--
 
-Let's see what the other tracing guys think.
+commit 7a0e33d5f62e85ae6d055e44b6cd6349ae56c6ba
+Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
 
-> I have studied the rest of the patches in the series,
-> so this proposal can be completely off the mark.
+blktrace: build the synthesized v1 record from the entry's own layout
 
-This last is highly ambiguous.  Help?  ;-)
+This commit addresses a bug where synthesized v1 blktrace events read from
+incorrect offsets when handling a v2 entry. It attempts to fix this by
+properly differentiating between v1 and v2 records using the entry's size,
+and correctly assigning fields and PDU lengths based on the detected layout.
 
-							Thanx, Paul
+Closes: https://syzkaller.appspot.com/bug?extid=3Df179b16e13624138b0f1
+
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 8cd2520b4c99e..455d761ff84e6 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+
+[ ... ]
+
+> @@ -1768,17 +1768,47 @@ static enum print_line_t blk_trace_event_print(st=
+ruct trace_iterator *iter,
+> =20
+>  static void blk_trace_synthesize_old_trace(struct trace_iterator *iter)
+>  {
+> +	const struct blk_io_trace2 *t2 =3D te_blk_io_trace(iter->ent);
+> +	const struct blk_io_trace *t1 =3D (const struct blk_io_trace *)iter->en=
+t;
+>  	struct trace_seq *s =3D &iter->seq;
+> +	struct blk_io_trace old;
+> +	const void *pdu;
+> +
+> +	if (iter->ent_size >=3D sizeof(*t2)) {
+
+[Severity: Medium]
+Will this size-based heuristic incorrectly classify v1 entries with a large
+PDU as v2 entries?
+
+If a user configures block tracing via BLKTRACESETUP, it uses v1 records
+which have a 48-byte base size. If a BLK_TA_REMAP event is recorded, it
+includes a 16-byte PDU (struct blk_io_trace_remap).
+
+The total size of this event is exactly 64 bytes. Since
+sizeof(struct blk_io_trace2) is also 64 bytes, iter->ent_size >=3D sizeof(*=
+t2)
+evaluates to true (64 >=3D 64), and the v2 branch is taken.
+
+Does this result in the output being scrambled because fields like action,
+pid, device, and cpu are read from incorrect offsets, and the PDU being
+truncated because the calculated length clamps to 0?
+
+> +		old =3D (struct blk_io_trace) {
+> +			.sector   =3D t2->sector,
+> +			.bytes    =3D t2->bytes,
+> +			.action   =3D lower_32_bits(t2->action),
+> +			.pid      =3D t2->pid,
+> +			.device   =3D t2->device,
+> +			.cpu      =3D t2->cpu,
+> +			.error    =3D t2->error,
+> +			.pdu_len  =3D min_t(size_t, t2->pdu_len,
+> +					  iter->ent_size - sizeof(*t2)),
+> +		};
+> +		pdu =3D t2 + 1;
+> +	} else if (iter->ent_size >=3D sizeof(*t1)) {
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913025827.4571=
+16-1-donggeunyoo.kernel@gmail.com?part=3D1
