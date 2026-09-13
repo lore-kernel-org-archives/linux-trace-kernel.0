@@ -1,138 +1,227 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-pz2-f43.google.com (mail-pz2-f43.google.com [74.125.228.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E66E28B7DA
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 01:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0B61FBC8C
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 02:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789262820; cv=none; b=WvOUEx7fUkZ+a0ziTPagvkcNngvb6+hH+SmEgXbZ9Y81D3NmwOL+VBpUdlh+fvTaLAyhWp75y/De2rFvDtRj9mwPvGwOU2QWF52TCc4U+GlvYDRTP06IIWZ0soiUCWtHpwyz13jqg9uvqC4Hl50qQjFYhkqmp4kEmaxNsUSc0+c=
+	t=1789268318; cv=none; b=olhChjZZ91BFq3Rvjs1jZ1QQs4t9MXY3MG37X2UWN1EDedof3NZpF7pPSfr+GRSNUqpAeLu16r6Th247BiRDamSl3rKxx7GDNDX/juU0MnAcYsaPI7wMh8E7eDN9ESwtAW/Wc7JRyxzKPyPX4KijyvY2M7Rb14cUyAeBi6SO4Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789262820; c=relaxed/simple;
-	bh=TSHs88GMB6DHBXH5X+N97OQWghhZeYcRWgEaIBLM84o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=lO5UGnD+VPk1Pa40nYJ2ZaJD1IWJ1c++e7oMqzHaMXgULNfWVDzbL0w3lJNnZ5vHiEWyunbs0EktvQf2sMZ9DfNEbKuYfsNH17Cm6ABpJmU0pdLIb3BUicpCLOlxEl2TOSSnsslG4GBkC3JZDPJLi91G9SJzoqixtFzTBtRQu/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1A0Tq4q; arc=none smtp.client-ip=209.85.210.43
+	s=arc-20240116; t=1789268318; c=relaxed/simple;
+	bh=AggbHlNlS2wRgnp/52kFEhrWoD5wMPtJZEBYqJ5/O0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JSZcwrGWfyMol22l19yJss6tdm8t1miWh9Sdlo8AjwGT/lNBtNRmALs0QKSNUtp7VScpKhP0UV5TVKtlWFxDAsty69IoXcqnnFQKlEdwLSaH80mpe05L4w1464fOwbUmdQcOHknPzVCeehg5WdCAEGYA3hVvoBSfAGaLRpC9qCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhfKd1Uk; arc=none smtp.client-ip=74.125.228.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1A0Tq4q"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-805453b1c0cso1181102a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 18:26:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhfKd1Uk"
+Received: by mail-pz2-f43.google.com with SMTP id d2e1a72fcca58-85469d249c4so1206751b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 12 Sep 2026 19:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789262817; x=1789867617; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=TSHs88GMB6DHBXH5X+N97OQWghhZeYcRWgEaIBLM84o=;
-        b=b1A0Tq4qeTahp1fZe74KI3PV5/kpr0BjIYOKlgrhpVIgvZctHXmrIKiDoUKMzgvfoy
-         Ezv6LVhfXyQhFawgeYB73T5QQNtRgwDL7gpMca09Qfw686QJTGcJycl19HWP+Yc3UNhW
-         uiAFXPkrGGCH3WgZvgWHmeo/faag6bKTZ3BcjBWgAw8/acS/KRyqBcaiG4rwRvupY8WK
-         tXnPt/N52F4NJ8fqZqmuPCidrGFx76zT9RUWECuvUtV/Fuy7sKBlk28uAwCX/vGiewNi
-         B0qWM2VPo0OjQdFlhPd7a3aVgG/sGU7iNXViVH9cRmPmyo13gtpxNc8fEwzVe5UcSiCV
-         Qsyw==
+        d=gmail.com; s=20251104; t=1789268316; x=1789873116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YkNvKOxozlLmolowDJQsMyoByil3F96EgYKhJ/Nv9Lo=;
+        b=IhfKd1UkSbJeBggspUq7h1856Y4vRkph2fxUMX5fY1RctctK3b2iMz7V7r4P0+WH7g
+         Fjh1upuaov+mIAS/dbIZAps0UzYW7O+/DB3kHFjFlQ2B2NSO7J11QmJ16uc3Vh5vMuBI
+         Pgx9VwvzRlDePWBnP96/wyt+G/V9GTytCKCB1pMDcZRv1juSl7Q3pfNzsFT4dEva6QZb
+         YrnE8QS7U6IrI0cxlRvkImLfEYtTY5h2SLiuyjF7JlujgXzVaYEExr+2456JNrkhhEqF
+         W9iMWRVuydYQ8nRm4rIHqffmFL6qf41aUZmBm9gFkbhf15E75N5djv+ISX88K0/QuqmY
+         VlyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789262817; x=1789867617;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TSHs88GMB6DHBXH5X+N97OQWghhZeYcRWgEaIBLM84o=;
-        b=Mt1IPSsuVtvR6bA83gATywUmCkEH2OKAiZYQWbSoaS7l0qE8QudUklHxAxEC+giYdm
-         JHyED0Z9a4tiHWLjqevS17D0IJJOylrYoO9Xac1ahRoplVE4kxPfcoHbfs1DAG13JunC
-         6m+KYrydHPPgWdK3E7UG9bkaIy7WvSnaKH9EYdhIqaIRmaiwppkh4xjgoen1UXU7HXNI
-         CqW5g7xYEDXRLf3m0OOUS1uj8DfQug4mCg4aECa8saQo18lS2A9PZIUBmXupXTlS6dOb
-         ivVGpTiQ6+yXf6oE8r9+ZRX9Zv9HHZiw12bvvhecQfWel4AD/9WLIh8mIY4Ew2ud0o9+
-         pw2w==
-X-Forwarded-Encrypted: i=1; AKwUvBzrY2Ivdt6bF6F33iC0qWXexx6oCGMpKFr32aIzbpC7AHO+Lw+OEzCn2IE6+v0h/tysMH1s5DO5+WlSl1yXiBNeoJo=@vger.kernel.org
-X-Gm-Message-State: AFuF++kmz122LgjZND4E79h+p0AYlWqamaxZDzRCZgtoTrsswA+Fe0MP
-	YqJz6FGyRcmkpAfZoUMPXgmrji436GNw+IPbADp4Z0+24dXVR2yHVKu9
-X-Gm-Gg: AYBFou33hvupAjDTY1ortK3NKBJVlFTol8gHeeRxj9O2hHZGFkWY4Cn8QZ1p3QJShi0
-	lTTBoVrA/qA5YisxtZBafSf+AVv//WHml8YZhulmEb1Mxjr65YWOIH/6NiI/LuGVTJhmzlFuxVT
-	C874ThmfgjHA/WjIoBhL6cdOhL+sTLY1BgphVH7ntdnzgxYICLkYaByxcM5noVHJw37tYOdnfV1
-	fB3JaMdu6FyrhuBEADOSzi9dRiIc8kS902LTAvuCX9zeSxvlOvbr+awd273Em2gVp+66w2gsX8C
-	eO8kXhpHsGDsc3nlDrkLrOqrDkYuNzK2/umwvJdDGnosw+FATBg4sB2fBivXFlFYVF4GhcURQx6
-	sC20p79xN+1IWHhXa8uX3DEwxuFeDJVm0mevXP8NvVbqqpR3ncoJZH64MM9VTEqixKYmrHjWRO7
-	tb1yqQaHOcEtQdL801OiWc8HKahnWnxC4iwHcerXD3dBPxyIKk0a3j5SgomFbVQaMfMXPWuBg6x
-	MTF1GnGkEYPL875di2Me5RqFkKbGUdpdX2Cn7aHiQP/tXiM7cH9hK/up73J8LnAtQ==
-X-Received: by 2002:a05:6820:160e:b0:6c2:3bff:3ef6 with SMTP id 006d021491bc7-6c23bff5dfdmr3227980eaf.29.1789262817080;
-        Sat, 12 Sep 2026 18:26:57 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:17::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-47df90faa62sm5431368fac.12.2026.09.12.18.26.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Sep 2026 18:26:56 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1789268316; x=1789873116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=YkNvKOxozlLmolowDJQsMyoByil3F96EgYKhJ/Nv9Lo=;
+        b=oBgEubOmRehqbwEMI/EPKJgvAZzMXmpebj9BgfwyLoHryCic3MtP2LiRwf2btlBhCc
+         Hk8pRmbnAhnbPeXF8mItzgDdMVvVKTn6WOlfFMpeEIER6+6IqjY77kBgPK5S8T/N+qQ5
+         mqvCo0bFPdTnyy4UWiZccEP09MA3PqF2Exs2xOvtBnPbDKtbhLsLAL7aJ28C2bi53t9x
+         LwDYG5AeoDegmmzw4isuO8C6kZ7B1rpH2ClhxhxMd9tFTEU8zl65KBgA/rA4vyVsJd8S
+         scQsjGkzd3NoyM+Tt5rtrzYIE0AwGdOiTwKanjVbPozqZs0NkL3a/OKs91HTaxi0/zBo
+         DRqA==
+X-Forwarded-Encrypted: i=1; AKwUvBwBaWP0VpYt7m6eoDm94HCNY9W9ogvyKret2nxo8GZ+xvYnPMNOVpMOG/Ddknoj1ZmNFDWyhDQKSCCX/MdbI0fO+TI=@vger.kernel.org
+X-Gm-Message-State: AFuF++ndHVzPm3SjxcNx24qUnXRGjOMfZgu6TMX+3SvpXI9bT44zBnP3
+	UMyMWPKUSfMVwrUGSsh22Bzam743gx/YIAaONzDuE4Kb2qdc0Dh5ne6d+jfWW3c=
+X-Gm-Gg: AYBFou1yWN9gt/CGbFR7Tqh4b4TivwBrOBQJC1OInaW4yqaVEFW8nxUmXTB0UUKkIWt
+	RVd+W4b8nhcbmY1Gu6C5I3ToKXU3q9d2FsvBAUdXLybkj/oWeDxrlJEdGUWhtT9USm0G0vJKYmo
+	b07BnBjEb06u4EQCuEascYA7k8O/VlGd68e0SNdwsT0WhrGT5OQYjrS4YEZO5xAPp6zeB0uBO/h
+	7d3GcLz5N7mH1uElHdMJrd4C1vLUVyosOB72jLugzzact7c+4GiJSdepCjIObTVKb7gwVhOM72r
+	cuuqvy8FDWitxElrubMTIQS+iepJCZvyM/NSW9iHQZJ9KBVFZmhF5DwtQ7xkMBPxa9YkJL1Ta77
+	E/LYk6H59SJO8ro3Ev3wKubfZJXg2HAIDSNPvHpXNkvzEnB8+Vr07dh2KAXjymtFW1lIPBg/vWY
+	dwnp1rXImQJITpeXkNvQH0e6JaSy02zAr6ydw0+KtXFzAk9VMpJI50Uvk69VE4qhdHfPW9NwC17
+	v5SDO0vFAtyBLLrXCp89HKXew==
+X-Received: by 2002:a05:6a21:6f88:b0:398:8870:b58f with SMTP id adf61e73a8af0-3daed319787mr20832624637.14.1789268316064;
+        Sat, 12 Sep 2026 19:58:36 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:b91:ff81:c860:362e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc4c657156bsm3022673a12.21.2026.09.12.19.58.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Sep 2026 19:58:35 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	"Martin K . Petersen" <mkp@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Adriano Cordova <adrianox@gmail.com>,
+	syzbot+f179b16e13624138b0f1@syzkaller.appspotmail.com,
+	linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Subject: [PATCH] blktrace: build the synthesized v1 record from the entry's own layout
+Date: Sun, 13 Sep 2026 11:58:27 +0900
+Message-ID: <20260913025827.457116-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 12 Sep 2026 18:26:55 -0700
-Message-Id: <DLDSQDSVXFHF.18X2UQUL5Y42D@gmail.com>
-Cc: "Nam Cao" <namcao@linutronix.de>, "LKML" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>, "bpf"
- <bpf@vger.kernel.org>, "Wen Yang" <wen.yang@linux.dev>, "Tobias Schaffner"
- <tobias.schaffner@siemens.com>, "Viktor Malik" <vmalik@redhat.com>, "Linus
- Torvalds" <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 00/20] rv: Add support for BPF monitors
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Gabriele Monaco" <gmonaco@redhat.com>, "Steven Rostedt"
- <rostedt@goodmis.org>
-X-Mailer: aerc
-References: <20260831090524.106845-1-gmonaco@redhat.com>
- <87se3sakgi.fsf@yellow.woof>
- <df6e9168cb06c35e21db7f9d17cfbca6bd87005b.camel@redhat.com>
- <DL5B40CU17WD.3KD75URQZ6RRR@gmail.com>
- <eb3dd8158942d663ec8ad4c529eacd666c5f96d9.camel@redhat.com>
- <20260903090211.50d15220@gandalf.local.home>
- <CAADnVQK8e1Qp9rf1zThZxb3vr4Gc_bpo0nqpEO2LdnEwHdKokA@mail.gmail.com>
- <20260904074317.01b2c0e1@robin> <DL6O0KLPXLTA.2HJJUXQUVCP5@gmail.com>
- <20260904123108.1fa1d815@gandalf.local.home>
- <20260904132421.111c0279@gandalf.local.home>
- <DL6XBKITK7ZT.3RXK9YGGUYZZE@gmail.com>
- <20260904194620.0c7a8363@gandalf.local.home>
- <CAADnVQJH1SYR_GN6gewF3w_z_Sex9HFE1T1oXkQe6+v18bDTWA@mail.gmail.com>
- <20260904201741.2986efca@gandalf.local.home>
- <CAADnVQ+x4iRNXOg69nUmuJ53pB3-JtroePcyoReATy9+V1aRPg@mail.gmail.com>
- <228FE969-EBFF-4B60-B0E7-C1E4FD82FB8B@redhat.com>
-In-Reply-To: <228FE969-EBFF-4B60-B0E7-C1E4FD82FB8B@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Sep 4, 2026 at 9:53 PM PDT, Gabriele Monaco wrote:
->
+blk_trace_synthesize_old_trace() emits a classic blk_io_trace for the
+binary trace_pipe output by copying 32 bytes from the ring buffer entry's
+sector onward into a struct blk_io_trace. It reads them at blk_io_trace2
+offsets, and the two layouts diverge after bytes: v2 has a 32-bit pid at
+28 and a 64-bit action at 32, where v1 has a 32-bit action at 28 and pid
+at 32. On a v2 entry every field from action on lands one slot off, so a
+consumer reads the pid as the action, the device as the cpu, and the cpu
+as error and pdu_len.
 
-Sorry for the delay.
+The PDU comes from the wrong offset as well. The copy ends at v2 offset
+48 + pdu_len while the PDU starts at 64, and the emitted pdu_len is taken
+from the v2 cpu, so it reads 0 while extra bytes were appended and the
+consumer resynchronizes on the wrong boundary.
 
-> Alexei, what I read from your opinion is: if you really want to do this R=
-V thing, then you should just implement it all in BPF.
+The entry is not always a v2 record. __blk_add_trace() reserves
+sizeof(struct blk_io_trace) when the trace was set up by BLKTRACESETUP,
+and on such an entry the 32-byte copy is correct. pdu_len is still read
+at v2 offset 50 though, past the end of a 48-byte entry, and drives an
+unbounded copy that desynchronizes the stream. That is what syzbot hit.
 
-yes.
+Take the layout from iter->ent_size, which is the only discriminator the
+entry carries -- magic and sequence are the ftrace header, not a version
+stamp. Assign the v1 fields from their counterparts in that layout and
+append the PDU from the end of it, bounded by the entry size.
 
-> like the panic() one. Something BPF just shouldn't do, as I get it.
+  BUG: KASAN: slab-out-of-bounds in seq_buf_putmem+0x124/0x180
+  Read of size 1352 at addr ffff8880295bdb98 by task syz.2.2551/19243
+   seq_buf_putmem+0x124/0x180 lib/seq_buf.c:241
+   blk_trace_synthesize_old_trace kernel/trace/blktrace.c:1780 [inline]
+   blk_trace_event_print_binary+0x130/0x1b0 kernel/trace/blktrace.c:1788
+   tracing_read_pipe+0x568/0xb50 kernel/trace/trace.c:5444
+   vfs_read+0x213/0xa80 fs/read_write.c:572
 
-There is a disconnect here.
-we have one KF_DESTRUCTIVE kfunc already. bpf_panic() can be another one.
-It will require CAP_SYS_BOOT.
+Fixes: 4d8bc7bd4f73 ("blktrace: move ftrace blk_io_tracer to blk_io_trace2")
+Reported-by: syzbot+f179b16e13624138b0f1@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=f179b16e13624138b0f1
+Cc: stable@vger.kernel.org
+Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Assisted-by: Claude:claude-fable-5
+---
+QEMU x86_64, KASAN, virtio disk, base 5225b8eec4c9. Binary stream read from
+trace_pipe with options/bin set, decoded at v1 offsets.
 
-> I'd rather discuss on what is the best approach /today/. And that's preci=
-sely why I submitted the talk for LPC.
+v2 entry, via /sys/block/vda/trace/enable. Unpatched, offset 28 holds the pid
+and 32 the action; device, cpu, error and pdu_len are each one slot off.
+Patched, every field is in place: action 0x08110001 at 28, pid at 32, device
+0x0fd00000 at 36, cpu at 40, error and pdu_len 0.
 
-Excellent. We can start this discussion over email and continue at LPC.
-My understanding of RV is primitive, but from reading kernel/trace/rv/*.c
-it seems to me that it's a thin glue between tracepoints and monitors,
-a bit of boiler plate code via tracefs to enable monitors and seq file for =
-visibility.
-What you're proposing is "yet another monitor" that is reusing this glue co=
-de,
-and that's my main objection. I don't see the value in kernel/trace/rv/*.c.
-(kernel/trace/rv/monitors/* are useful, of course)
+v1 entry, via a BLKTRACESETUP helper -- the only path that sets
+bt->version = 1. Unpatched, the 48-byte record is right and eight bytes are
+then appended behind it, so the next record's magic no longer lands on a
+record boundary and the stream never recovers. Patched, the record is
+byte-identical and the 64-byte cadence holds across the capture.
 
-What stops you from attaching tracing bpf progs to all tracepoints that you=
- need,
-pinning few "bpf iterator" progs in bpffs that will provide text or binary
-output via seq files, run a state machine inside the prog,
-and do whatever "verification" logic inside them ?
-You don't need the rv/*.c glue. I see no need to introduce new bpf struct-o=
-ps api
-just to look-like-a-monitor from RV glue perspective.
-"runtime verification" as a concept makes sense, so focus on that.
+PDU-carrying entry, via BLK_TA_REMAP from reading a partition. Unpatched, the
+record says pdu_len 0 and then appends 16 bytes taken from v2 offset 48, the
+error/pdu_len/pad trailer, so the reader resynchronizes 16 bytes late.
+Patched, pdu_len is 16 and the bytes are the blk_io_trace_remap:
+device_from 0x0fd00001, device_to 0x0fd00000, sector_from 0.
+
+Not exercised: the splat itself. iter->ent points into a ring buffer
+sub-buffer page, so KASAN sees the over-read only when it crosses the page
+end -- the entry has to sit about a kilobyte short of the tail and be
+followed by an event with a large time delta. 120 rounds over varying buffer
+sizes did not land it. The over-read is visible without KASAN in the v1 arm
+above: those eight appended bytes are out-of-bounds data.
+
+__blk_add_trace() reserving a v1-sized entry at all is a separate defect,
+fixed by Adriano Cordova's "blktrace: always record ftrace events as
+blk_io_trace2", <20260903202932.156278-1-adrianox@gmail.com>. It cites a
+different syzbot report, but removing the short entry closes this one as
+well. Once it lands every entry takes the first arm, so the branch can come
+out; the field assignment is the fix and stays either way. Until then the
+second arm is what keeps this function from reading past a 48-byte entry.
+ kernel/trace/blktrace.c | 48 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 39 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 8cd2520b4c99..455d761ff84e 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1768,17 +1768,47 @@ static enum print_line_t blk_trace_event_print(struct trace_iterator *iter,
+ 
+ static void blk_trace_synthesize_old_trace(struct trace_iterator *iter)
+ {
++	const struct blk_io_trace2 *t2 = te_blk_io_trace(iter->ent);
++	const struct blk_io_trace *t1 = (const struct blk_io_trace *)iter->ent;
+ 	struct trace_seq *s = &iter->seq;
+-	struct blk_io_trace2 *t = (struct blk_io_trace2 *)iter->ent;
+-	const int offset = offsetof(struct blk_io_trace2, sector);
+-	struct blk_io_trace old = {
+-		.magic	  = BLK_IO_TRACE_MAGIC | BLK_IO_TRACE_VERSION,
+-		.time     = iter->ts,
+-	};
++	struct blk_io_trace old;
++	const void *pdu;
++
++	if (iter->ent_size >= sizeof(*t2)) {
++		old = (struct blk_io_trace) {
++			.sector   = t2->sector,
++			.bytes    = t2->bytes,
++			.action   = lower_32_bits(t2->action),
++			.pid      = t2->pid,
++			.device   = t2->device,
++			.cpu      = t2->cpu,
++			.error    = t2->error,
++			.pdu_len  = min_t(size_t, t2->pdu_len,
++					  iter->ent_size - sizeof(*t2)),
++		};
++		pdu = t2 + 1;
++	} else if (iter->ent_size >= sizeof(*t1)) {
++		old = (struct blk_io_trace) {
++			.sector   = t1->sector,
++			.bytes    = t1->bytes,
++			.action   = t1->action,
++			.pid      = t1->pid,
++			.device   = t1->device,
++			.cpu      = t1->cpu,
++			.error    = t1->error,
++			.pdu_len  = min_t(size_t, t1->pdu_len,
++					  iter->ent_size - sizeof(*t1)),
++		};
++		pdu = t1 + 1;
++	} else {
++		return;
++	}
++
++	old.magic = BLK_IO_TRACE_MAGIC | BLK_IO_TRACE_VERSION;
++	old.time = iter->ts;
+ 
+-	trace_seq_putmem(s, &old, offset);
+-	trace_seq_putmem(s, &t->sector,
+-			 sizeof(old) - offset + t->pdu_len);
++	trace_seq_putmem(s, &old, sizeof(old));
++	trace_seq_putmem(s, pdu, old.pdu_len);
+ }
+ 
+ static enum print_line_t
+-- 
+2.53.0
+
