@@ -1,169 +1,68 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D993B305680
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789320209; cv=pass; b=c1z90GTCi1PG8ndjpOK43BPMzmLlV83NJ9qLcSi0eFtatC6P2KCQds/Z3DHPTdy0Qm+npNxmMVx1QJlKvCXwqHhPDe6hF61M+KMriwnGVNnJ/bvyzjYIMhqPAKkFJ5UpnPx4HaZXpyivD9a1RAtwTrfjG71OCJa3X6hRxhvM0NM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789320209; c=relaxed/simple;
-	bh=BLEwIST5LDO00rmpC7KBzeJd7ltokL0w81FVqI46QfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mkqvf74nanRFvXq83cKYzq3qAajAH67qOaLIFEq+77wVsD6B6NEUgGrLuo5nnBFzuh2nQPebLkfV50vJo027lEdhf8fqOwLT5JWlQVrqBD0FCZ6QlCmGMqieZ6JEG4RutPo776519ey2iWmH5AGHMtOzIhMT3coHgkWQtYYZ7eY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=phHKbybF; arc=pass smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2507536F90C;
+	Sun, 13 Sep 2026 17:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789320745; cv=none; b=nymc47bbqVXBjd6PMZAQ5LpUdMiihJD8Q330czYz6a0Q60HgqFM1WsGyxLl/KchTBvQmbfrmvcd0dF1QlX55odsXuLWVr8wrKTC0XnBtUIhVDoT4mwzGgnypiMg0DJOY2xGpZTlwhztoiFqeGFieAXaoiUrMXsGnRU5mGwnwyiU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789320745; c=relaxed/simple;
+	bh=Al1A2jEJx9Ax3hjHbkwl4XDTMg8gmfAfspqn+Yo9li4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kNlwQ7i66kH0KcqIhUV0O2yL62mcFF8X4jvRmDgs+vJPi+vO10gIgXYj+TVuM+nWb25w+hb5X1GMOS8Q/46lPUT27yvSEdzSTwiYEP3jB4Y9eHpp7i6xPvADDEtOdDEustQ97fD/X5xgsPkdiO8oNWrgXaPNmIWOXg8PiCBaOnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=Qkku2Nol; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phHKbybF"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-80576d65d8eso1625210a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 10:23:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789320207; cv=none;
-        d=google.com; s=arc-20260327;
-        b=so9hyv5bQtyYVECDHcRTRUQHyy2nWqQrrfpvpmw+jstsrKdV+6K6EgRhgQS2biuX0K
-         HCM7A9OBM3BZvWcN3VtMkk77eeh3gU1CsI/hOwf/Bg45xKNuRHCtPvOV4xSnmUXr7Hmk
-         aPByIa+gsU94oYEUGpzhXaBfkuvYSq9rT8rmKgY1VVVcxqmxdY9nscCYh5hiyQ/s6S5Z
-         wK8gsGvkEduPKd2w1DD3O+ibVgnvvEHmt8N9rGwaHz6d3KtiHqID+4EgOxuSwmxIYGyB
-         O6ombxTXDxTjpQtVAR/6aYFeHFXJ07RaVcQ+2z0dzpoGOQnZaUEuIkAwu898Ex4Ta1pf
-         3D5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=116h53yk479YgNueOJV8xZVBkZ6OS1X3DH0lCR+acgA=;
-        fh=bzS4lM/aJPXUVVzM7ZXP2ar0QUo2xn/bvWtI5toWN9Y=;
-        b=nUYQuLDmkfRnAjzaJZB7rIDbrudpLLeiO3etqLnqVERtEl2TSBzKc+wUFy6JXKEEuF
-         +dxKxs7k7mCwS1mOK5+tQeNv7gFh7a3oruemsxls1PDCrMwJKxwaOyNf+uPqoTNmswKp
-         EAlsA0v3VUDpp/ETv0/mEEwf4M7pCKGlmD98Mr6uEco62SIY86YI7uFmP4+GCeCdKDYL
-         gRwViJpq4cf3yT00LBh5m9KBhxIK5g+e6epCMcyrQLjFtQUZ2wmi+DpuGk+UBD95Rvsb
-         5P6ctvDbghZ7rpsTsXweDQa0DhkBYjPlfCm1mCFl0mvaZKS/tpr6LCuPJH//TFiToc7y
-         1y2w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789320207; x=1789925007; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=116h53yk479YgNueOJV8xZVBkZ6OS1X3DH0lCR+acgA=;
-        b=phHKbybFFNf+l7D+Ra0bNUn5OZU3YEkQVjJOQc6F8zEEk70aCTp3LFJpkW3770YZ7H
-         40VvOJLgp5H7V84VRI4q4Ba6u5k180f48R9D0CLXKCsT7Q+fPZ09HSMTcvzkrI/fQdDa
-         7ND4l72lIjVIIRq1XJjojw/tuCreLZVjqTnKujClV7DjVsuC7H7rf+VbdjeVntXNVP+U
-         X1NAgNYaaRRPyj1xkzzMNrhjb/8iqDoUOKOBxBp3CDtKsDTAASgSMbegXFs2Fm4mi2GQ
-         O2WvSnyPpytYcr63FHLyoF2a3+0GC7XmXZKrfi6kl8qHln0sumxwxfp0n/jOVMzddELg
-         XWng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789320207; x=1789925007;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=116h53yk479YgNueOJV8xZVBkZ6OS1X3DH0lCR+acgA=;
-        b=bQVqaQ9aXgpEYxdwa3WD1bSKdmvkJ+Q8CcKx9bJ36mMqRe21U8XKsfWSPAnWFxI3Gi
-         TO6ylzCBIPNRFlW7S2Dy7S/JJrVYJucbfo8ZLX02/LHmH6CzndcbOw0mUEbuz3TPchKg
-         00vHwoPMavWiaFkjF6Vs6gkXwBnozP9zag0f6BUhVjwv9ZUCCrvt8JBprIyCF0xxsHw/
-         oySt5OdY80hsqt4Ue/1hNUzbbEQz8nOQ4nRxVrOQ7ni7E9jFYkrRznMscZIMBmKi4f4J
-         0Gvg/R5G0dYYXW7n3BubUD71S7gBRe+xAHxrpJNy/hHHsSM2dn17dHz6wa1Il0yuSy3N
-         nK1Q==
-X-Gm-Message-State: AFuF++m7ft53PlVjitbOH61al+Zt1zl1417zFtvo5CAnVakaVI2VsZN/
-	iFOGZhwbhiF7zV3xsEQBgG1faG1Fau76NswXL9dhd/KidbdZqpzkRPy9bcUl7UH+kli6O1KcYMw
-	ivCYrRFpKCNY046NRR2Cv7iRmEIAZpksybw==
-X-Gm-Gg: AYBFou0QrEqTR0Y27DkOUyl5GSNJVxLHb97lOSytXJRx6hTuEKUn+MChAcT3V1bkiIT
-	sKB5GSZwdaw2BSWLcWZmKeN3fDXAngBi/2uBSqjGzbnGxCRREoeVTTMZzDb5Cf7mrcRbHvcvWG9
-	msB0tLBYNzCgUEsWeRaVueO7l5hWYLgP1QaadA1q4Ksc7FPb6MZUW42ATp1jqAW7xa9CExZYtPx
-	X7CV9pZp3rlFxVGP/6kSWtK0GdmJvqeRT2/DLjd9ZLiQYEIjKdFTUx1FEs4ZxJn0XdxrZQ3+KVB
-	GLZYOthZySk9kwR9grxoM0c8uC8Ig+QYTgFZ+IcrLzdvvlEwNv2s0MaOZG2H6Ju4+YXKkS7CT54
-	ObJsGULZLzw==
-X-Received: by 2002:a05:6830:2815:b0:7fa:ac4f:784 with SMTP id
- 46e09a7af769-80400c14ad7mr10314969a34.16.1789320206490; Sun, 13 Sep 2026
- 10:23:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="Qkku2Nol"
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 219D2160907;
+	Sun, 13 Sep 2026 17:32:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 1605A17;
+	Sun, 13 Sep 2026 17:32:12 +0000 (UTC)
+Date: Sun, 13 Sep 2026 13:32:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix NULL dereference when copying keys for a
+ field variable
+Message-ID: <20260913133210.5561852b@robin>
+In-Reply-To: <20260913122523.30f487d9@robin>
+References: <20260912094722.3271147-1-donggeunyoo.kernel@gmail.com>
+	<20260913122523.30f487d9@robin>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260913133829.15307-1-devnexen@gmail.com> <20260913134906.6E8A01F000FF@smtp.kernel.org>
-In-Reply-To: <20260913134906.6E8A01F000FF@smtp.kernel.org>
-From: David CARLIER <devnexen@gmail.com>
-Date: Sun, 13 Sep 2026 18:23:14 +0100
-X-Gm-Features: AcwNN1WzO-nerU_lJU4svW-jy3jtAyomNFAZ7_LJcxUSoMWwJnch01xQbz8oPGs
-Message-ID: <CA+XhMqz=DgaOjVoNxbm6BUtQ22+5JBQkqYVp6wBD2sSntuFsvg@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Take trace_types_lock when dropping the
- buffer_meta reference
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: hc17cpjw7kuhaz39niowb9q6posbniw1
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 1605A17
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19ogCWbzM9BgxZ0sfvYrv3PtFQRAFABtPQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=sQJR/9ahAbHC3Al6QjAsogGKhzLDVZ5ABLzCD81BeJY=; b=Qkku2Nol9sshs+MtkPJoIQ9lEbXVf9PUklH1LoBlzjfXMSOCHf1Ijdd8mK4CJPeXNDWQ2W9MRjOlijSOuj+W5A+Csxgj2nlQHI1c6aaJJveW3KwNacZ1d7z5V//44EKC4NFgv9i2yIHzpAAxFeHxjdBgYruRt/gZw92t2eDew74=
+X-HE-Tag: 1789320732-294274
+X-HE-Meta: U2FsdGVkX1+hdw3uIB23a6j5lHlvvixl1HSTAnZ4h8DCAkb6p/K2US0EE776tXDBJRl67XQThLVMQqYpRaLax9tc88mFKEZoGOToZpjIbvXhPhMLJEgdn9nr6aZ+yvvX8bl91fXelJtimfUbOKNcc9h47THScY2y8cSO68HBP/EfFSgUm+L4ueFOfBsf1Y85HYL8dge9iliiHEVZtNKIEIoaIpNSak/OoBaS4ONLUh/mEVlb62A13nLNhYdsV0C1zXWomi3NU0SZGZMLZGxJc/9dyNZ6KRG+ztO2jOT/lnJVAsXP/v0MYNMbYIshvm3dqwqKVhy6eVJ8QZZeuFPFQRuPYuXZoCyxScpwiH0uxGjdAdFOKMHY3zIO+pSh0I2S
 
-This time seems legit I ll prepare a v2 at some point.
+On Sun, 13 Sep 2026 12:25:23 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Sun, 13 Sept 2026 at 14:49, <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
->
-> Pre-existing issues:
-> - [High] Reading a per-CPU buffer_meta file for an offline or unallocated=
- CPU causes a NULL pointer dereference.
-> --
->
-> commit f8d13605bef286fcf84c808917e1ab8eeeade189
-> Author: David Carlier <devnexen@gmail.com>
->
-> tracing: Take trace_types_lock when dropping the buffer_meta reference
->
-> This commit fixes the error path in tracing_buffer_meta_open() by using
-> trace_array_put() instead of __trace_array_put(). This ensures the
-> trace_types_lock is properly held when dropping the trace array reference
-> if ring_buffer_meta_seq_init() fails.
->
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -5881,7 +5881,7 @@ static int tracing_buffer_meta_open(struct inode =
-*inode, struct file *filp)
-> >
-> >       ret =3D ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, =
-cpu);
->
-> [Severity: High]
-> This is a pre-existing issue, but reading a per-CPU buffer_meta file for =
-an
-> offline or unallocated CPU causes a NULL pointer dereference.
->
-> A user with privileges to read tracefs can open and read
-> /sys/kernel/tracing/per_cpu/cpuX/buffer_meta where cpuX is a CPU that has
-> never been online. This invokes tracing_buffer_meta_open(), which blindly
-> initializes the seq_file via ring_buffer_meta_seq_init():
->
-> kernel/trace/ring_buffer.c:ring_buffer_meta_seq_init() {
->         ...
->         m =3D file->private_data;
->         m->private =3D buffer->buffers[cpu];
->         ...
-> }
->
-> Because alloc_buffer() only dynamically allocates cpu_buffer structs for
-> currently online CPUs via CPU hotplug callbacks, this pointer is NULL for
-> unallocated CPUs. The subsequent read invokes rbm_start(), which immediat=
-ely
-> dereferences the NULL pointer:
->
-> kernel/trace/ring_buffer.c:rbm_start() {
->         struct ring_buffer_cpu_meta *meta =3D cpu_buffer->ring_meta;
->         ...
-> }
->
-> Should there be NULL validation for buffer->buffers[cpu] before allowing
-> the file to be successfully opened, or perhaps a check inside rbm_start()
-> to handle it gracefully?
->
-> >       if (ret < 0)
-> > -             __trace_array_put(tr);
-> > +             trace_array_put(tr);
-> >       return ret;
-> >  }
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913133829.15=
-307-1-devnexen@gmail.com?part=3D1
+> Oh, and there's another bug here. With your example, where you used
+> "prio" for sched_switch (which isn't a field), there's an error message
+> created, but the command still errors out.
+
+I meant the command still succeeds, it doesn't error out.
+
+-- Steve
+
+> 
+> [  415.300003] hist:sched:sched_switch: error: Couldn't parse field variable
+>   Command: hist:keys=stacktrace:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).my_synth($wakeup_lat,prio)
+
