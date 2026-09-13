@@ -1,133 +1,113 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-116.mta0.migadu.com [91.218.175.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776DC21D00A;
-	Sun, 13 Sep 2026 16:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B29361976
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 16:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789316736; cv=none; b=XHkoJeFQgtPOmK/GXMVjuvjaVssivtwykvFx3Ogn4X7xoZXf/WvGrtwHZ1HozNcV2P2qSQlM8dn88X5FN5L9zS71jMk8QyAs2RPdLX+anJdPOjJ2PjeTINu/I9o+Yg9ghtGScTrutjsaNkNepHfwl/9J8HTN1uRPqlgrU2dyljU=
+	t=1789317222; cv=none; b=BkbJZhcY4IG7KpTehLzWqOtPF6Q2osbzfTlm0afos15B/T+Y1wA5pA3O5ISbSQwszMRaFMdNwUb/DXvAIwH/SR2VBSlbRBvLQBOJ9083qgE/lhtw0xVa5zgEPFjOOZNgDc+GzimKaFkQkQqrLlhn4HpGgII0LDK/znJcUj+wC4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789316736; c=relaxed/simple;
-	bh=t58wA0U2rRkGGxn9d5mJDqR9N1AKdw0A+2xBJiErvIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQhcfa/nPknluKk2fLSY6lQqF21GgRiILsMsE6iF9Ojv+QsorcuRQj37d5sY8qB3hka1EeQrw9lEf/A8dkveW720K+5KVxjaQJiUP+VKOkfEFog3bt4CjK6sSu4bfmQXN0f5AL9Q+x9rGgigFuRaowoc0HOKy+yNKihTmTnK8As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=KREALo7m; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1789317222; c=relaxed/simple;
+	bh=XW9xQV5lA+mLCt7Yhep3pssELWN2b4I7bYx4XskK3w0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GT7Sg8Czc0CZNW9IqS4+qIxCc0yhmVUOzETN07aDOLzMP+sA7XOfRpzfXtj13Kx3TAJ4d4ajt0b7IxCfx1capcpKY7G70HyJXGgl6t5PegMo0PKRxrFddYS17+/fy248aoS5kf/uIovg2Wc5Tq+mFGzNhyA6s0opJYK3cBZKKx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pq+whU6w; arc=none smtp.client-ip=91.218.175.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="KREALo7m"
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id F21BD807FC;
-	Sun, 13 Sep 2026 16:25:26 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 2121D6000F;
-	Sun, 13 Sep 2026 16:25:25 +0000 (UTC)
-Date: Sun, 13 Sep 2026 12:25:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix NULL dereference when copying keys for a
- field variable
-Message-ID: <20260913122523.30f487d9@robin>
-In-Reply-To: <20260912094722.3271147-1-donggeunyoo.kernel@gmail.com>
-References: <20260912094722.3271147-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pq+whU6w"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=XW9xQV5lA+mLCt7Yhep3pssELWN2b4I7bYx4XskK3w0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789317217; v=1; x=1789922017;
+ b=pq+whU6wkV82N8dpF4Ok4g3KOJoKGe54isZgStKTbUegd9I1S0aX8uG8QF9ocvPNjbNIPzU3
+ 1OjdOJ7CnY0RtYY7684pL98U5NUAPh2p0IF57AsJmLB8c0qu5DQy9UZBD+/eve4q/c0S2zjx+vA
+ 2a62Xb9ufWiXh/PAD6cj0Pr0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 976b2f49cafd9a0d;
+	Sun, 13 Sep 2026 16:33:27 +0000
+X-Mizu-Trace-ID: 976b2f49cafd9a0d
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <2c408ff5-9a13-438e-9068-21b3f1516fbd@linux.dev>
+Date: Mon, 14 Sep 2026 00:33:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: rfe1bw7mj8pgdxez1cr8r4r67k1791rr
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 2121D6000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Uu2mIVEUaNY6bZB42XRPP3Vd1zo8Z/Zk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=0xI+e331Zk5EeA2olu0jWNY2IHo+mIOtGgU4Yfq4pi8=; b=KREALo7m63I43hODuK8bjCMvgLRZ+YmbTLdd9bWO8I7vOa9SDu7SFeaH19b6hJX/QtiQXeKVL344CqBkg8Il41eqOR8EHGvQJS1IikV1QczH2q9+3t8IQ31NkkL/fZe9F1U0Ui22TkeBEPm2Zp2gsMP62pgtJEVzqoBsiQtLRdk=
-X-HE-Tag: 1789316725-630573
-X-HE-Meta: U2FsdGVkX194kXgf6Nhi5doGigKmxRRMFykkSSYFV9NU0NcrevSDXhatOHWu781sT3iCwWQwAzhoDMmTn3cvpYUZg9lO6m2Lem7gouCZvfTWNpwRx6Jf2yVrdkGmhneXp0gtgeAShogyglT8x6log4VMstasN/Cey/3qgoybcr/1vIvN9iYlLSoO4Q7K4X+hRBqrLKzPjcXo6pEMSNnmGyIlhMZ35quHQSEJzOgovZ1wn4uKMLqHtSE4BKBAcp85tmCTYOblXb8jyChSKp+kiw9+CNUB4+mvKRg/UzfbgmGmi18lMMwiM6HQqCRblv8/N/Lg9emhnI/ApqAdD6ybaHC3SewXpDV2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] rv/reactors: export rv_register_reactor() and
+ rv_unregister_reactor()
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1788705281.git.wen.yang@linux.dev>
+ <7c931773dacd7c3da35a22629c3d7dc286b5a0fe.1788705281.git.wen.yang@linux.dev>
+ <b5ec9da630968a5f801623c8d6e2aaeb0bb509d8.camel@redhat.com>
+Content-Language: en-US
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <b5ec9da630968a5f801623c8d6e2aaeb0bb509d8.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 12 Sep 2026 18:47:22 +0900
-Donggeun Yoo <donggeunyoo.kernel@gmail.com> wrote:
 
-> create_field_var_hist() builds a hist trigger on the onmatch() event by
-> copying the key list of the compatible histogram found there, reading
-> each name from key_field->field->name. That pointer is NULL when the key
-> is not an event field: parse_field() leaves it NULL for common_cpu,
-> common_comm, common_timestamp, common_stacktrace and hitcount.
-> compatible_keys() compares only the type, size and signedness of each
-> key, so two common_cpu keys match and the loop faults.
+
+On 9/11/26 14:53, Gabriele Monaco wrote:
+> On Mon, 2026-09-07 at 01:10 +0800, wen.yang@linux.dev wrote:
+>> From: Wen Yang <wen.yang@linux.dev>
+>>
+>> rv_react() is exported to modules, but the reactor registration helpers
+>> are not.  Export them with EXPORT_SYMBOL_GPL() so reactor modules and
+>> the tristate KUnit test module can register and unregister reactors
+>> without hitting undefined symbol errors at link time(modpost).
+>>
+>> Commit 3d3800b4f7f4 ("rv: Remove reactor's reference counter") noted
+>> that if module-based reactors are supported, try_module_get()/module_put()
+>> should be used. Add struct module *owner to struct rv_reactor so a module
+>> cat set owner = THIS_MODULE; pin the module in monitor_swap_reactors_gingle()
+>> and release it when a monitor detaches or is unregistered.
 > 
-> The generated trigger is a real histogram whose element the variable is
-> later read out of, so it has to bucket the same way as the one it
-> mirrors. Render the keys with expr_field_str(), which carries .log2 and
-> .usecs, modifiers that change a key's value. Two things it did not carry
-> are added here. get_hist_field_flags() reports .stacktrace for the
-> common_stacktrace pseudo-field too, which parse_field() takes only on a
-> real field, so gate it on having one. And it reports a bare "buckets"
-> with the size held separately in hist_field->buckets, so append that the
-> way hist_field_print() does. expr_field_str() also renders expression
-> operands, so an expression over a bucketed field now prints the size
-> too, matching what hist_field_print() already shows for the key.
+> You needed these symbols in KUnit and we are exporting them for /potential/
+> future support of reactors as modules. I don't see any technical reason why we
+> shouldn't support this, but they are currently /not/ supported.
+> 
+> I know sashiko and other LLMs complain about this, and they have a point, but
+> you can ignore them. At most state in this commit message that this does NOT add
+> support for reactors as modules.
+> 
+> Let's focus this series on its original intent (fix a lockdep warning and add
+> some KUnit tests that expose a reproducer), then if adding support for reactors
+> as modules is so simple, you can do it in another series.
+> 
+> If you really want to /also/ add support for reactors as modules in this series,
+> you need to make that very explicit (not just a vague line in the changelog, but
+> rather rewrite the entire cover letter and commit message).
+> And mind that this would mean your series needs to go through another round of
+> review and serious testing: you are adding a new feature.
+> 
+Thanks for the review, Gabriele, I agree with your points and will 
+follow them.
 
-The above change log is extremely hard to read. Did you get it directly
-from AI? That tends to be overly verbose and adds way more data than
-needed making it harder to find the important parts. Please make the
-change logs more precise to what the issue is and remove the unneeded
-details.
+Just to clarify the background : the struct module * field and the 
+try_module_get()/module_put() logic were added to address the point 
+raised by sashiko. After this change sashiko no longer complains about it.
 
-For this patch, I'm currently testing it, but let me try to decipher it
-(but please clean up future patches)...
+The module-based reactor support, together with its kselftest, will be 
+send as a separate series in a few days.
 
-OK, I gave up on the change log as it's just garbage. I ended up
-triggering the bug mentioned and looking at the code and figured it out
-myself.
+As a side note, we are looking into using the rv framework for 
+functional safety in autonomous driving.  Depending on how internal 
+validation progress, there will likely be further changes to the rv 
+subsystem in the near future. I'll be glad to discuss them as they come.
 
-OK, this patch does three things so it really needs to be three
-different patches. One, it fixes the reported bug by the change to call
-expr_field_str(). The change log for that bug should be:
 
-   In event_hist_trigger_parse() where it needs to create actions like
-   "onmatch", it calls:
+--
+Best wishes,
+Wen
 
-     event_hist_trigger_parse() {
-       create_actions() {
-         action_create() {
-           trace_action_create() {
-             trace_action_create_field_var() {
-               create_field_var_hist()
 
-    Where create_field_var_hist() does a loop on the hist_data
-    representing the keys. The issue is, if the keys uses one of the
-    pseudo field types (like common_cpu), the hist_data field element
-    will have NULL for its field member causing a NULL pointer
-    dereference when accessing the key_field->field->name.
 
-    Instead of accessing it directly, use the proper handler
-    expr_field_str() to get the name.
 
-> @@ -3090,7 +3093,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
->  		key_field = hist_data->fields[i];
->  		if (!first)
->  			seq_buf_putc(&s, ',');
-> -		seq_buf_puts(&s, key_field->field->name);
-> +		expr_field_str(key_field, &s);
->  		first = false;
->  	}
 
-The changes and the change log for the other two is confusing and it
-doesn't show examples of the errors. They can be dropped from the NULL
-pointer dereference fix and sent separately with examples of what is
-actually wrong.
-
-Oh, and there's another bug here. With your example, where you used
-"prio" for sched_switch (which isn't a field), there's an error message
-created, but the command still errors out.
-
-[  415.300003] hist:sched:sched_switch: error: Couldn't parse field variable
-  Command: hist:keys=stacktrace:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).my_synth($wakeup_lat,prio)
-
--- Steve
