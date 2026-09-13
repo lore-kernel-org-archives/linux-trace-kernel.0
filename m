@@ -1,121 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8655A39A04D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 09:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0621D372B50
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 09:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789290803; cv=none; b=Qa+f6vTOBk4ceALbj1XHm93qZm2t0/OqeQCsXLwuKDhcHVVec8ErWj3GyQbj8+GT7CRZCSxz+OBr4/KLmwCcfEkyx4siQT9sJC0tpAmhUmJ9qvrn2TkvwfO/5FZUv/Ycuay1Ee29BKx42ZCult0eewn8SljHSRmM/aILhmuJCjk=
+	t=1789291893; cv=none; b=pLTejhGujN9OH/4JeKUDkzT0DElSiJwRVrsrPXTTQUj7KFx87ehWK+XUFZmyZrvNzUXElwCU5GENoJSxLTYHB6vhL7fQWV7LHQqobgVMJ8SqI/BhMJYhHnkPgCx/xXLObT+SB5A+Pm6CfVFhcd5/yuUG1rRBZZuF61zFLhpAFps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789290803; c=relaxed/simple;
-	bh=LyM7dLrBYjjJkmfTo43Jd8Tpzu6Z/4VzbLgukbW+9OE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N397CenF7AWRURb2gdDfqTqOcODQAa0AeGC7iwCsFj15QA0xms5HtYmXQwWBNjeg4j/D+7yfzMe6jDPqcv1DnZMAhWvAlj7k09rOwfa/Tg009G59dRI/JMUGIt1ixnp7fN1v8sQ8u/i8dbufMzvSz6R1wQTco5L36kk/YKzAaDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnGpRDrX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789291893; c=relaxed/simple;
+	bh=xB5jj8VPvBnGrXDhKdmlbyncIiPk1DJUxDep5ugNJCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FnzddWOoZD+jbIEb1WD6jKLqzWn4xSe/CYruNiClSfiAPz3fxANnw48KFPkY2nqHKWhDE9tjqLBYYdG2MmgWkuKXB+ikYv3rWIjX9hCSxC6Gfw2r5WU/CM25wt+fpARyy+gXH3ozcZXIFTWxHKtolxzBDu2LJfyNHoiYe4NQfIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcLcZ5a8; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnGpRDrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C061F000FF;
-	Sun, 13 Sep 2026 09:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789290801;
-	bh=MjCgd4Gmh+u6DGXnp3R9Dm/j40PvaWzhFwlFffw+Skg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TnGpRDrXqLVDhPcBeXOb4Evuc3A83RLHLOyHgocpf7gcMu43JcgDYAZ3fc7n4ZgNX
-	 DgPT8HYXA0aRisYWUgCYjTWkgUArW9uSWO8aD42Rg9GL6schCfnxFv0tycFuTq1Vcw
-	 nzNks4noQOGTTJBMAW2bjx8x05Fvnr4M/yWUO1NoFfb+OCBi5SrIZ98q/A/d6fK6s6
-	 AfBP05Gfo8KEK3bX888artOURLmI0ii4d4Y5rEmXwZH9PL4A+E9Tk0jji79hARMbxp
-	 sC/G4EpowRaHHh6u8O0NK/Mcafjei8M3idEszoLKPM+i5BgENuIMH2yRHDnGlCGllj
-	 r3TpK3u6RVLDg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] blktrace: fix the field offsets of the synthesized
- v1 record
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260913090232.715798-1-donggeunyoo.kernel@gmail.com>
-References: <20260913090232.715798-1-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 09:13:21 +0000
-Message-Id: <20260913091321.B3C061F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcLcZ5a8"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2cfbbdfa60bso23145315ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 02:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789291891; x=1789896691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xB5jj8VPvBnGrXDhKdmlbyncIiPk1DJUxDep5ugNJCo=;
+        b=bcLcZ5a8DOxb8NmSw2onwbJexq9ZvcVI1bEcyaVGrc98NhBLXyjJfK/12ATbGRxGYl
+         40X1SgI7Q8PIKcU8JFNgOi02srf/NeZixaLYhlWE8sPwH+5xSAuJj417Q7+rijxUq3Hk
+         HL/fUDu47XlOB5Eb4ZYIF4bpPkuFVkxAn9KvMhTJq1/mj/oIdOLys4sK85B8/j9rrcqA
+         jaG2/rI+jXTwsi1ZLU6SPmbP+HtosxEtlvCeUk7iysuRx95yNLvJ2KJIuRgI0Z606whA
+         vciGxcE/H9rWjjnXKjXcIDIYix9lfGlFk40NyY+8Q0BmaSxvVOhPm1ZqSk3VPF+UuPts
+         kBUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789291891; x=1789896691;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xB5jj8VPvBnGrXDhKdmlbyncIiPk1DJUxDep5ugNJCo=;
+        b=muSMsDRVra/jinffYmqxU4bpc7Xguvw/4xdZa6K4xhbQH0bEQ5y/CPVIn2yZyEgzsA
+         MtNycdc4UerKIRLyZogGR/q6zE4B9yQWSHBNExrtLOGXCy09rqfs5PrN/wuZF/L7E+KZ
+         Ig2Vu4qLpjQmaz4W7V51uwcbBpACtGUJI1ImG7eFoGp3sFjLaB4P7v1jL+l7yxPSFF+A
+         sv97hgAm8EWGJxpeTWYwjBy+snuiaLvgZ597IIBYgR/KHVIxthiOEh91YZ6yquR6meIG
+         ZhPUIoY1awyZP2Ed5LO2mpW7APjNb5D47Web0gE9/0BumQSN8dwXXqVDzgbiilyhAZDB
+         lPAQ==
+X-Gm-Message-State: AFuF++lLJz0LE3X8RJw2/EHxL642PCchWRtJpk7n+CEnl754KWm2oaBE
+	WToaGToObrtI33NFOq9xfxv3BXO+NaOGEt0qbVk8e+u7DR0TsIbCJ8s=
+X-Gm-Gg: AYBFou3u1mWuS+eNqMtX8XmT1+S9Cmxl3kKZulDEmh24PfKptMBuYt+mGzLNlf/N/sG
+	bAjPjDA5RGy7sJF+GoiGGeQ0WSPehfb3FsfBn6/QjZHyrU1w5FIdZOdtVbnLjEewbBnMHa1j3KR
+	kzT2UGeq5cL7CcrBIgClK2UqcEwxNVUgd0yIX2/qdIpf2bQ9Qgu41oKaWfBi1gYbT5AKcpwB3YX
+	lV2k7uX5PjKWZHa18wqpUFfr7tobwPo6tc1bxW7QexcRF7KpSGAUqCfCe7EfH24DyDP4L78m6ll
+	tge4IxkOctJRsHw6dV+xo+baD2n/bCXUm417Lil/jOjiFrLsTjXnwZQjHjGeTEmv+C4m8kGovcp
+	ggZ9xHU1sPqJGXJMrfBi7gDXWRcI4ghmJhCHHHzXbK6VytU6VqUZH08Zuy+qZSNJczwzWfLDffq
+	Gr2QeZYnykY6S+rFrdZ3a8RBjQD8GiLIxoqY23MMa9aEO8a8VnYRYr0aM2bED5ymqDZHwanRcUC
+	XtUNfOZcy7hEDQwS3PJm27+/A==
+X-Received: by 2002:a17:902:db04:b0:2dd:3ddf:b87a with SMTP id d9443c01a7336-2dd3ddfbb26mr152670615ad.0.1789291890999;
+        Sun, 13 Sep 2026 02:31:30 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:b91:ff81:c860:362e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd2cff67aasm31954125ad.79.2026.09.13.02.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Sep 2026 02:31:30 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Adriano Cordova <adrianox@gmail.com>,
+	donggeunyoo.kernel@gmail.com
+Subject: Re: [PATCH v3] blktrace: fix the field offsets of the synthesized v1 record
+Date: Sun, 13 Sep 2026 18:31:24 +0900
+Message-ID: <20260913093124.717495-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260913091321.B3C061F000FF@smtp.kernel.org>
+References: <20260913090232.715798-1-donggeunyoo.kernel@gmail.com> <20260913091321.B3C061F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] blk_trace_synthesize_old_trace unconditionally parses ring buffer =
-entries as 64-byte blk_io_trace2 structures, resulting in an out-of-bounds =
-read and info leak when processing 48-byte v1 entries because the required =
-dependency patch is missing.
---
+On Sun, 13 Sep 2026 09:13:21 +0000, sashiko-bot@kernel.org wrote:
+> - [High] blk_trace_synthesize_old_trace unconditionally parses ring buffer
+> entries as 64-byte blk_io_trace2 structures, resulting in an out-of-bounds
+> read and info leak when processing 48-byte v1 entries because the required
+> dependency patch is missing.
 
-commit d247914d4d21399a0ee1cb2876aa1eda1b802a86
-Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Correct, and as the patch says, Adriano Cordova's patch has to be applied
+first.
 
-blktrace: fix the field offsets of the synthesized v1 record
-
-This commit fixes the field offsets of the synthesized v1 record in
-blk_trace_synthesize_old_trace(). It assigns each v1 field from its v2
-counterpart and appends the pdu from the end of the v2 record to prevent
-reading garbage data.
-
-Link: https://lore.kernel.org/all/20260903202932.156278-1-adrianox@gmail.co=
-m/
-
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 8cd2520b4c99e..99c00cdae42b4 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -1768,17 +1768,23 @@ static enum print_line_t blk_trace_event_print(st=
-ruct trace_iterator *iter,
-> =20
->  static void blk_trace_synthesize_old_trace(struct trace_iterator *iter)
->  {
-> +	const struct blk_io_trace2 *t =3D te_blk_io_trace(iter->ent);
->  	struct trace_seq *s =3D &iter->seq;
-
-[ ... ]
-
-> +		.pdu_len  =3D t->pdu_len,
->  	};
-> =20
-> -	trace_seq_putmem(s, &old, offset);
-> -	trace_seq_putmem(s, &t->sector,
-> -			 sizeof(old) - offset + t->pdu_len);
-> +	trace_seq_putmem(s, &old, sizeof(old));
-> +	trace_seq_putmem(s, t + 1, old.pdu_len);
-
-[Severity: High]
-Does unconditionally parsing ring buffer entries as 64-byte blk_io_trace2
-structures result in an out-of-bounds read and info leak?
-
-If a user configures blktrace via the setup ioctl (which sets
-bt->version =3D 1) enabling the block ftrace plugin, __blk_add_trace()
-still allocates and writes 48-byte struct blk_io_trace events because
-the required dependency patch is missing:
-
-kernel/trace/blktrace.c:__blk_add_trace() {
-    ...
-    case 1:
-        trace_len =3D sizeof(struct blk_io_trace);
-        break;
-    ...
-}
-
-When blk_trace_synthesize_old_trace() casts a 48-byte entry to a 64-byte
-struct blk_io_trace2, reading t->pdu_len accesses offset 50 (which is out
-of bounds and retrieves garbage). Then calling trace_seq_putmem()
-starting at t + 1 reads from offset 64 (16 bytes out of bounds) for
-old.pdu_len bytes.
-
-If the random length pdu_len read from the out-of-bounds offset is large,
-it copies up to 64KB of adjacent kernel memory from the ring buffer to
-userspace, and crosses page boundaries which can trigger a kernel panic if
-kasan is enabled.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913090232.7157=
-98-1-donggeunyoo.kernel@gmail.com?part=3D1
+The read side cannot know the layout: magic and sequence are the ftrace
+trace_entry header and neither writer fills them, and the sizes overlap,
+since a 48-byte v1 record carrying a 16-byte BLK_TA_REMAP PDU is also 64.
+His patch fixes it on the write side, by not recording a v1 entry at all.
+With that applied this patch is correct -- measured on a BLKTRACESETUP
+trace with the blk tracer, reading a partition for that remap.
