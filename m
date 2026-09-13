@@ -1,77 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFE9386C1E;
-	Sun, 13 Sep 2026 18:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D2F28726E
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 20:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789323607; cv=none; b=AE6vIpKlGy9PNPL8XFsMlg++h1ZnPXm2EeUauIy5sjuRkCg9BCVD37F/VT4IvioWvWzQL85+HIYIOePenKvTEx+aqYxSSYn366Pam27QbeKgL4uASbDNRvYpDjyg3nof1cl3r7lMhhwPVZBQlcrDKf0iBeygSUFmxsXZT/ckGqc=
+	t=1789330390; cv=none; b=K1hFKdTKVikFm6NgREDpTXvIGJkRQQ6hmzBWQb2cgKlaE6BGIMcAHorM6NjdXT1mUlxWCjeO01kb7gis7Sp7+cr1zu7YOKyhr9nqHqD5jmKN3D6sOCv1qonj8hwkBKbCNTBYlbiSrFM1JWzS/nlR2bgkFrpU6kf28BRsUchceYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789323607; c=relaxed/simple;
-	bh=Q+nGyMUGaQTwqMQM5whVz6yevzek+nloFB/V7n8BuKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJyqt1a04CnaH1B82lUJYmCQ/fRAekDjStHc9RlSFWWKoI1GGFOlq2sQ7AVruJE/UYVxX0RWasVUwndWOP8i9OokNZSwJWcYBy8kZcu8H6iR2S98WmgKMMKG06JSIGR4Y6lYPLy8x6uK+kEzE8xTYVicq5eHDZhhFcLdOkAk8Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJ27Jmv/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789330390; c=relaxed/simple;
+	bh=aHBF4LPvg2Zd3w4oaY7s8UbFfrBRImr+0PKCbkJaXE4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgakw5dX6UMP9AeWdrFb114+Alv/9NBQEUEFCEOpa2dcFnWb2HHTuDWEu5CMAfWI6JEJ+hEOnNVgMiaC9U4Y4Hms296XIHY7xwtiyLp3NhrVjeHx79JbeyyuuIGoqAe1rgR20NHJDxEajAFCMsuePHLdospiOz7ieZqpOz28v8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mV8K5Odd; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJ27Jmv/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B411F000FF;
-	Sun, 13 Sep 2026 18:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789323606;
-	bh=NVD5gFDBWDGN0X6QVeDbX5tNYhDXBkX15MX3Yd3diVU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=mJ27Jmv/mJW2LDKw6I+T6hZEXq/ZvlwdOOJIHR64P4TERWpoC7uE4AYU4tWeybXKS
-	 IhEEGOMy0Mt1H/gMxVqeZRc1xjWs0hG72HL8fR9lzWZCJc+s6AutqyHSEJpptygnro
-	 0ujyQ1jCJ2NdnkjiFiXL8AbMmC7IeFuaFqdm2wUUxnfYQ0605UquUF6v3IpXy6Hh9K
-	 ExMw4X6yCJv4rFys9evu9uD9jNFtrK5cQCDs3clrr7SgfUfCJke6/bv86T4a0uTWDQ
-	 s4J25tAJVZdbivSXe28DjPBWF9KgO0IoG9LWXGLAfbcUZYrE/yT1BmJCadTMNrOycI
-	 H5sJ25eSRm+gQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 53A0ACE107B; Sun, 13 Sep 2026 11:20:05 -0700 (PDT)
-Date: Sun, 13 Sep 2026 11:20:05 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mV8K5Odd"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd6185db7so7516945e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 13:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789330387; x=1789935187; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=S5P6uH54234ueGuk+BCRhOiLjgsTrePIHYW1areU63o=;
+        b=mV8K5OddZLBzCJXQFLtdPDe2bjlVk8m0OcH3RDqSCG+PDqiTmyOfEy3VMdk2pzo121
+         pkbLlRtp6RnfGkz+C+KlUjcDD1A6J/E5153b1zPfMTNK0qtNdOFgcNnUo7qMu5+TDuy1
+         spgeKxvtQi4R3o0j0F4sp8dkeUyeTAvKWDiTJsN7RGx/YEP2wyWbRNOa1D5CNROfteMz
+         LZkKGF3Vw+Vq/RXwejD+hPCyKRlIe3uvA7yWtwdVZEtq08q2dpY7++BtxcTnsw5W9c/f
+         sOoY1yY3HYxtWkJquJ0qlna555xzyAjO/DZxM2Hufg1LsZ81s7OU7zFWqSe6mhrMM7RR
+         9M7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789330387; x=1789935187;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=S5P6uH54234ueGuk+BCRhOiLjgsTrePIHYW1areU63o=;
+        b=ncim6/pUDkEYNVHKnQk69iaaGna59elbCT7mcsURZH7Rjd7oCJeIRrhgxCu58DcB8k
+         8nauQI/n84fs8BnCq0hcQDimPT2ceQBVaRlOSkirNCtT9SpkZdMi7tBvc6FWdz0yh+q1
+         AlKJHHphTv9YaxNkWVwlio/yssLjWMT9lP1U64ANjiwO8520eEsT3IUV2wz8tYHfKval
+         NPgmK+OmAdhJEEQlPzuaZKlc0wn+r8acY8DJVwBxCu9qIM7Tz9x/sAb0F97AiLqQGcZk
+         HKb/obwrVdvP0Tavg+pEYFZHN72TnzJ6ytXhL06MI7TIHx53hPWrypskJ3wzDbx73MFN
+         qx2w==
+X-Forwarded-Encrypted: i=1; AKwUvByKz0hSUP8rsyhp7TyvMDR4mQ5hmaqUy7dvU+dxLz0885v1VMizu8QEsHOA7KnGabKDXSi+++KU/J0/lioLU/5jTp8=@vger.kernel.org
+X-Gm-Message-State: AFuF++l2/ya6niXDlXpnVxbCaqVawD7pr4l5z125zka8h0LlCmGvirsU
+	DoX6FrmSpVtcW1zRA1L0UwBst9WkwpOP+wyDMn/5hfBtecpLzCLW6FqH
+X-Gm-Gg: AYBFou3Caj1gcygy0XytE1lXgs1bt1z8EytoKh5LdhgQtE5spF6mfn2j3xwyfWw/7Bk
+	lXHU8/PnJ/gmgEDvhEXFancR5PnsuWDdkTKCQC8mLBjv8+ZXEJp3TJVsDPh3H2p8dIK24WoJ6X7
+	pjY9/fQGngeDUYEMeD3gDB4Cz9Whqy9c9Uv0eJ2hoM8Nqq2YCZLw9hO2LPWwEbvh9QLNk70pSDG
+	BQ0nR9Raoq1tUDQLs8Z+PG2wCwq8Y84HX8sIcrm0WHBzjmZm8qlR6e0W11t82kJLZ+Mv6U4rEzD
+	bYrgwt6MIpgvUaVGqhs13TAr4u2FMiOSrd1p/KPuzmku4+R8ilx1oeK4tJFMGI1ZvwM3gw8uPmp
+	nDuLYbjmls5LtHC5QIJ/g3XvQpE6RYuSqDTye+cep+Y+RdyF8MHsFKz5ooUXBOu62X1kgato5Em
+	MEUBHZcBEm1DuSGCVo6k0NVCQWk87cXnHeoFWyJTPN/AAE9htheiWxOj5x1w==
+X-Received: by 2002:a05:600c:4f84:b0:49e:715d:95ca with SMTP id 5b1f17b1804b1-49e760727e4mr37982455e9.13.1789330387007;
+        Sun, 13 Sep 2026 13:13:07 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e60ad0614sm277930945e9.10.2026.09.13.13.13.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Sep 2026 13:13:06 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 13 Sep 2026 22:13:04 +0200
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v2 08/15] bpf, x86: Maintain Tasks RCU trampoline
- nesting in the BPF trampoline
-Message-ID: <e88514c6-296f-431f-a7bc-7429967b01a9@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20260911-b4-rcu-tasks-preempt-qs-v2-0-eaaa61ed2da4@toxicpanda.com>
- <20260911-b4-rcu-tasks-preempt-qs-v2-8-eaaa61ed2da4@toxicpanda.com>
- <DLD0OHX8C4ME.VNR49VC2UYH4@gmail.com>
- <14cb8a91-497d-49f5-aa20-c6cb8b9a27fc@paulmck-laptop>
- <DLDICNLENSRI.2R6EJ0ZFJE45T@gmail.com>
- <8c51a669-eb6b-455b-a829-b537da5209f8@paulmck-laptop>
- <20260912221400.4045198b@pumpkin>
- <ffffa178-c475-4249-a609-c5d222704987@paulmck-laptop>
- <20260913122859.4d5067cd@pumpkin>
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] ftrace: Use rcu_assign_pointer() for tmp_ops filter hash
+Message-ID: <aqcD0FsrqV7gkNCD@krava>
+References: <20260911142512.19344-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,44 +80,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260913122859.4d5067cd@pumpkin>
+In-Reply-To: <20260911142512.19344-1-leon.hwang@linux.dev>
 
-On Sun, Sep 13, 2026 at 12:28:59PM +0100, David Laight wrote:
-> On Sat, 12 Sep 2026 15:31:24 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Fri, Sep 11, 2026 at 10:25:12PM +0800, Leon Hwang wrote:
+> tmp_ops.func_hash->filter_hash is annotated __rcu, but
+> update_ftrace_direct_mod() assigns hash to it directly. Sparse reports an
+> address-space mismatch.
 > 
-> > On Sat, Sep 12, 2026 at 10:14:00PM +0100, David Laight wrote:
-> > > On Sat, 12 Sep 2026 11:03:34 -0700
-> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > >   
-> > > > In the old kernels, yes, we have current->trc_reader_nesting++.
-> > > > In the newer kernels, Tasks Trace RCU is instead implemented in terms
-> > > > of SRCU-fast, which instead increments per-CPU counters.  Which among
-> > > > other thins is a bit faster and does not need to hook into the scheduler.  
-> > > 
-> > > Isn't that rather architecture dependant?
-> > > It is fine on x86, but on arm incrementing a per-cpu variable is
-> > > significantly expensive.  
-> > 
-> > Last I heard, slow ARM increments of per-CPU variables were to be a
-> > transitory phenomemon.  Plus changes late last year greatly sped up the
-> > per-CPU increment operations.
+> Use rcu_assign_pointer() for the assignment.
 > 
-> There are some unapplied patches to improve per-cpu operations for both
-> arm64 and s390.
-> Without those preemption has to be disabled (in current->xxx) which requires
-> a conditional call in the preempt enable path.
+> Fixes: 50b35c9e50a8 ("ftrace: Use hash argument for tmp_ops in update_ftrace_direct_mod")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202609110704.Q3M5vCDV-lkp@intel.com/
+> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
 
-These are on top of the patches that provided an order of magnitude
-improvement late last year?  Very cool if so!
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-							Thanx, Paul
+thanks,
+jirka
 
-> David
+> ---
+>  kernel/trace/ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > Plus this change removed some hundreds
-> > of lines of RCU code.
-> > 
-> > 							Thanx, Paul
-> > 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 53d5db60bfa5..673a54fdf392 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6675,7 +6675,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
+>  
+>  	/* Enable the tmp_ops to have the same functions as the hash object. */
+>  	ftrace_ops_init(&tmp_ops);
+> -	tmp_ops.func_hash->filter_hash = hash;
+> +	rcu_assign_pointer(tmp_ops.func_hash->filter_hash, hash);
+>  
+>  	err = register_ftrace_function_nolock(&tmp_ops);
+>  	if (err)
+> -- 
+> 2.55.0
 > 
