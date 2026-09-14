@@ -1,125 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3190388869;
-	Mon, 14 Sep 2026 20:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3FC492525;
+	Mon, 14 Sep 2026 20:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789416117; cv=none; b=ZIl/gEFzCFhkTSY1WLzMIAg6/89vc2vsFT57F5KdvDYyPDFIhdVHO4p5zExP7dBASSzehvWksg6LSXv4uFl/LEaGDQ9KIS0MkHXR8cuvE46u6JRCEoXNOZPuOE4fumKuDuwxbgh8h1T+qmuO6PfW3cvFy0uvnO4i5W0Iw4h8zb4=
+	t=1789416912; cv=none; b=dOUq/JdEknvhvQWgE9sC9c/CLQG3cwJrUyeKCZ2wORjXTJ9Env8o+4rQ9P7+1SbHSGbMJTmR7hzfWf4uRBbfqpAg60kgynZjyM66ksHDjYIHWYDq28BxSK8ye3ga9Muy4/iNv2a5wpi1H7wkiQD2xWf4GAJGLJErTobpPsqPsOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789416117; c=relaxed/simple;
-	bh=xtoi8dIfejEkTWAeLPXGFp5RGWcZItculWCvd0h11Gs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d+4gGdbFakPc77857lPcrDzdIgWyXhI3pYk7Oc+GzC15j1u0LnHW4nqpvH0rW7DM4RnBEUaeIoK78GU2tkbsSm67uML12MDgHe6s6nEPbMgwPB24xePP/Lr+m+OG160s9PM2fruiHAfKCGEwrTrXZiIR2qyjca8u+3fY3MxXXjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpcG01qh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789416912; c=relaxed/simple;
+	bh=iPU/cUTReClwZBpDhIeEHk/VkpfdLJRH0AkOL0ttLYA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=GYArvMx1IfXbGmE04a+dv6f7jiW43z0P1nPY69ZajFY8yHUETvH7+RHQYdeY1E/633b5m6vkxd5xNfoyYxXa/F1g9Rh9X1nT+VSwpGqTNECmNoZqGruQsdSuw/hSYsdNOdmI6BY8wE8XTGp4b2aK7Jvlf7nmt5TDCrPFYYh0/LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+kYXrIn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpcG01qh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD33F1F000FF;
-	Mon, 14 Sep 2026 20:01:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+kYXrIn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278071F000FF;
+	Mon, 14 Sep 2026 20:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789416116;
-	bh=xtoi8dIfejEkTWAeLPXGFp5RGWcZItculWCvd0h11Gs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=HpcG01qh0ETOkXmq1v11dalFnT4xwAp1eOggjgCwDfxnZXKZ+NRTmoRNj5zvAvoqG
-	 WXGLeIR9w3pXYrd/6TIAWCvum6Qbx14YMnuMAjIffvfhhVzjO4VA47qRf0NZ+jsb9D
-	 FI5iGyoo9s1fWXLi4LxEjWnxdtwdf2Nuebt/9mq4cxmoPEXItrxQrMtKHb7H7htMoY
-	 PmskMiUBlZE6r5V5hluiuxOPEIRdpEpzSqfnhPpInONfoagWMJoHTRu7P8rdXn9WgK
-	 hlbmEJ7nc0tLCG2BUlCJvVbuc4G0BfuTbrMK9KlktC7dH9e9Y2KnSL68OpIPtxBNzT
-	 5Y0A2hx99EwSA==
-Message-ID: <37e36f29e22c1354a18c9ec75ee55ed51d1a49d2.camel@kernel.org>
-Subject: Re: [PATCH v3 0/4] tracing: Fix NULL dereference when copying keys
- for a field variable
-From: Tom Zanussi <zanussi@kernel.org>
-To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Steven Rostedt
-	 <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 14 Sep 2026 15:01:54 -0500
-In-Reply-To: <20260914053443.981201-1-donggeunyoo.kernel@gmail.com>
-References: <20260914053443.981201-1-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	s=k20260515; t=1789416910;
+	bh=iPU/cUTReClwZBpDhIeEHk/VkpfdLJRH0AkOL0ttLYA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=D+kYXrInK5NUw9BZT7ztkUsQGVhQZ+PlOib+lYW/VIcFu9lRIK3W4hXKoslPRuKNe
+	 GaJs4FCU4V8iRgVQnKEgrEJLlmFN3zKxIe8H/cSUtTZB3JL8oT3RZq1i7WQ66uJD0F
+	 9Gm/+XB6hykSt/6jtsVWaLuYMEx62xduyBlZeueT06cfCYFjIckmA3fLmfyEuFXfqr
+	 v9l/HRBv/3p5qQG+1LK73HlvDCrycWiw0RuFKkEzDuoQJ5f3Ao+gnHVzt4/y+tY1l8
+	 K8QX89UDZg/eQxwoxEwofQr/8LWIMOtGIvOJ7v9ia8PWGiITOwJW4XJQx6t2X3Ch4F
+	 uGN/cfcfDwQ6g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 20/40] HSI: cmt_speech: convert mmap hook to
+ mmap_prepare, refactor
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, bpf@vger.kernel.org, linux-s390@vger.kernel.org, kvm@vger.kernel.org, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Marc Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, "Oliver
+ Upton" <oupton@kernel.org>, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, selinux@vger.kernel.org, linux-rdma@vger.kernel.org, dri-devel@lists.freedesktop.org, "Christian
+ Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-20-7d9781ed5361@kernel.org>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+ <20260914-b4-mmap-prepare-vma-flag-sanify-v2-20-7d9781ed5361@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 20:15:09 +0000
+Message-Id: <20260914201510.278071F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-SGksCgpPbiBNb24sIDIwMjYtMDktMTQgYXQgMTQ6MzQgKzA5MDAsIERvbmdnZXVuIFlvbyB3cm90
-ZToKPiBBIGhpc3QgdHJpZ2dlciB3aXRoIGFuIG9ubWF0Y2goKSBhY3Rpb24gY29waWVzIHRoZSBr
-ZXkgbGlzdCBvZiB0aGUKPiBjb21wYXRpYmxlIGhpc3RvZ3JhbSBpdCBmaW5kcyBvbiB0aGUgbWF0
-Y2hlZCBldmVudC7CoCBSZWFkaW5nIGVhY2gga2V5J3MKPiBuYW1lIHN0cmFpZ2h0IG91dCBvZiBr
-ZXlfZmllbGQtPmZpZWxkLT5uYW1lIGZhdWx0cyBvbiBhbnkgcHNldWRvLWZpZWxkCj4ga2V5LsKg
-IDQvNCByZW5kZXJzIHRoZSBrZXkgd2l0aCBleHByX2ZpZWxkX3N0cigpIGluc3RlYWQuwqAgVGhl
-IHRocmVlIGJlZm9yZQo+IGl0IG1ha2UgdGhhdCByZW5kZXJlciBwcm9kdWNlIHNvbWV0aGluZyBw
-YXJzZV9maWVsZCgpIGFjY2VwdHMuCj4gCj4gTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-bGludXgtdHJhY2Uta2VybmVsLzIwMjYwOTEzMjAzMTI5Ljk0MTI3MC0xLWRvbmdnZXVueW9vLmtl
-cm5lbEBnbWFpbC5jb20vCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MjoKPiDCoC0gUmViYXNlZCBvbnRv
-IHY3LjMtcmM0LsKgIHYyIHdhcyBidWlsdCBvbiAyZjBjMWNmNzJmNDYsIGJlZm9yZSB0aGUgdHJh
-Y2luZwo+IMKgwqAgZml4ZXMgbWVyZ2VkLCBhbmQgdGhhdCB0dXJucyBvdXQgdG8gbWF0dGVyIC0t
-IHNlZSB0aGUgbmV4dCBlbnRyeS4KPiDCoC0gUmVpbnN0YXRlZCB0aGUgc3RhY2t0cmFjZSBwYXRj
-aCwgbm93IDMvNC7CoCB2MiBkcm9wcGVkIGl0IGFmdGVyIG1lYXN1cmluZwo+IMKgwqAgdGhhdCBj
-b21tb25fc3RhY2t0cmFjZS5zdGFja3RyYWNlIHBhcnNlZCBmaW5lLsKgIFRoYXQgd2FzIHRydWUg
-b2YKPiDCoMKgIDJmMGMxY2Y3MmY0NiBhbmQgaXMgbm8gbG9uZ2VyIHRydWU6IGE1ZTcwYmE4N2Nh
-OCBub3cgcmVmdXNlcyB0aGUKPiDCoMKgIG1vZGlmaWVyIHVubGVzcyB0aGUgZmllbGQgaXMgYSBy
-ZWFsIG9uZSB3aXRoIEZJTFRFUl9TVEFDS1RSQUNFLCBzbwo+IMKgwqAgd2l0aG91dCAzLzQgYSBj
-b21tb25fc3RhY2t0cmFjZSBrZXkgcmVuZGVycyBpbnRvIGEgY29tbWFuZCB0aGF0IGlzCj4gwqDC
-oCByZWplY3RlZC4KPiDCoC0gMS80IGlzIG5ldzogaGlzdF9maWVsZF9wcmludCgpIHByaW50cyB0
-aGUgYnVja2V0IHNpemUgd2l0aCAlbGQsIHNvIGEKPiDCoMKgIHNpemUgYWJvdmUgTE9OR19NQVgg
-cmVhZHMgYmFjayBuZWdhdGl2ZS7CoCBSZXBvcnRlZCBieSBzYXNoaWtvLWJvdC4KPiDCoC0gMi80
-IHVzZXMgJWx1IGZvciB0aGUgc2FtZSByZWFzb24uCj4gCj4gUGF0Y2hlcyAxLzQgdGhyb3VnaCAz
-LzQgaGF2ZSBubyBlZmZlY3Qgb24gdGhlaXIgb3duIC0tIG5vdGhpbmcgcmVhY2hlcwo+IGV4cHJf
-ZmllbGRfc3RyKCkgd2l0aCBhIGJ1Y2tldGVkIG9yIHN0YWNrdHJhY2UgZmllbGQgdW50aWwgNC80
-IHJlbmRlcnMga2V5cwo+IHdpdGggaXQgLS0gYnV0IGVhY2ggaXMgbmVlZGVkIGJlZm9yZSA0LzQs
-IGFuZCBpbiB0aGlzIG9yZGVyIG5vIGJpc2VjdGlvbgo+IHBvaW50IHJlZ3Jlc3Nlcy4KPiAKPiBU
-aGUgY29tbWFuZCBjcmVhdGVfZmllbGRfdmFyX2hpc3QoKSBnZW5lcmF0ZXMsIGZvciBlYWNoIGtp
-bmQgb2Yga2V5IHRoZQo+IGNvcGllZCBoaXN0b2dyYW0gY2FuIGNhcnJ5Ogo+IAo+IMKgIFdLIGtl
-ecKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5wYXRjaGVkwqDCoCBwYXRjaGVk
-Cj4gwqAgcGlkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZXlzPXBp
-ZMKgwqDCoCBrZXlzPXBpZAo+IMKgIHBpZC5sb2cywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGtleXM9cGlkwqDCoMKgIGtleXM9cGlkLmxvZzIKPiDCoCBwaWQuYnVja2V0cz0xMMKgwqDC
-oMKgwqDCoMKgwqDCoCBrZXlzPXBpZMKgwqDCoCBrZXlzPXBpZC5idWNrZXRzPTEwCj4gwqAgY29t
-bW9uX2NwdcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlz
-PWNvbW1vbl9jcHUKPiDCoCBjb21tb25fY29tbcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvb3Bz
-wqDCoMKgwqDCoMKgwqAga2V5cz1jb21tb25fY29tbQo+IMKgIGNvbW1vbl90aW1lc3RhbXDCoMKg
-wqDCoMKgwqDCoCBvb3BzwqDCoMKgwqDCoMKgwqAga2V5cz1jb21tb25fdGltZXN0YW1wCj4gwqAg
-Y29tbW9uX3RpbWVzdGFtcC51c2Vjc8KgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlzPWNvbW1vbl90
-aW1lc3RhbXAudXNlY3MKPiDCoCBjb21tb25fc3RhY2t0cmFjZcKgwqDCoMKgwqDCoCBvb3BzwqDC
-oMKgwqDCoMKgwqAga2V5cz1jb21tb25fc3RhY2t0cmFjZQo+IMKgIGhpdGNvdW50wqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlzPWhpdGNvdW50Cj4g
-Cj4gVW5wYXRjaGVkLCB0aGUgLmxvZzIgYW5kIC5idWNrZXRzIHJvd3MgZHJvcCB0aGVpciBtb2Rp
-Zmllciwgc28gdGhlCj4gZ2VuZXJhdGVkIGhpc3RvZ3JhbSBkb2VzIG5vdCBidWNrZXQgdGhlIHdh
-eSB0aGUgb25lIGl0IG1pcnJvcnMgZG9lcy7CoCBFYWNoCj4gb29wcyBpcyBhIG51bGwtcHRyLWRl
-cmVmIGF0IGNyZWF0ZV9maWVsZF92YXJfaGlzdCsweDc3MSwgdGFrZW4gaW4gaXRzIG93bgo+IGJv
-b3Q7IHRoZSB0aHJlZSByZWFsLWZpZWxkIHJvd3MgcnVuIHRoZSBzYW1lIGxvb3AgdG8gY29tcGxl
-dGlvbiB3aXRob3V0Cj4gZmF1bHRpbmcsIHNvIHRoZSBzaXggYXJlIHRoZSBsb29wIHJlYWNoaW5n
-IHRoZSBmYXVsdGluZyBsaW5lIHJhdGhlciB0aGFuIGEKPiBib290IGZhaWx1cmUuCj4gCj4gQW5k
-IHRoZSBidWNrZXQgc2l6ZSBhIGtleSBjYW4gY2FycnksIHJlYWQgYmFjayBmcm9tIHRoZSB0cmln
-Z2VyOgo+IAo+IMKgIC5idWNrZXRzPcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgdW5wYXRjaGVkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBhdGNoZWQKPiDC
-oCAwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgcmVqZWN0ZWTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWplY3RlZAo+IMKg
-IC01wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJlamVjdGVkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVqZWN0ZWQKPiDCoCAx
-ODQ0Njc0NDA3MzcwOTU1MTYxNsKgwqDCoMKgwqDCoMKgwqDCoCByZWplY3RlZMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlamVjdGVkCj4gwqAgOTIyMzM3MjAzNjg1NDc3NTgwN8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgIDkyMjMzNzIwMzY4NTQ3NzU4MDfCoMKgwqDCoMKgIDkyMjMzNzIw
-MzY4NTQ3NzU4MDcKPiDCoCA5MjIzMzcyMDM2ODU0Nzc1ODA4wqDCoMKgwqDCoMKgwqDCoMKgwqAg
-LTkyMjMzNzIwMzY4NTQ3NzU4MDjCoMKgwqDCoCA5MjIzMzcyMDM2ODU0Nzc1ODA4Cj4gwqAgMTg0
-NDY3NDQwNzM3MDk1NTE2MTXCoMKgwqDCoMKgwqDCoMKgwqAgLTHCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxODQ0Njc0NDA3MzcwOTU1MTYxNQo+IAo+IHg4Nl82
-NCB1bmRlciBRRU1VLCBDT05GSUdfS0FTQU49eSwgNCBDUFVzLCBiYXNlIDcwNDM0MGYxY2QwZC7C
-oCBBIGNvbXBhdGlibGUKPiBoaXN0b2dyYW0gb24gc2NoZWRfd2FraW5nIGtleWVkIG9uIFdLLCBh
-biBvbm1hdGNoKCkgdGFyZ2V0IG9uIHNjaGVkX3N3aXRjaAo+IGtleWVkIG9uIFNLLCBteV9zeW50
-aCgkd2FrZXVwX2xhdCxwcmlvKSBmb3JjaW5nIGEgZmllbGQgdmFyaWFibGUuCj4gCj4gRG9uZ2dl
-dW4gWW9vICg0KToKPiDCoCB0cmFjaW5nOiBQcmludCB0aGUgYnVja2V0IHNpemUgYXMgdW5zaWdu
-ZWQKPiDCoCB0cmFjaW5nOiBBZGQgdGhlIGJ1Y2tldCBzaXplIHRvIGV4cHJfZmllbGRfc3RyKCkK
-PiDCoCB0cmFjaW5nOiBPbmx5IHJlcG9ydCB0aGUgc3RhY2t0cmFjZSBtb2RpZmllciBvbiBhIHJl
-YWwgZmllbGQKPiDCoCB0cmFjaW5nOiBGaXggTlVMTCBkZXJlZmVyZW5jZSB3aGVuIGNvcHlpbmcg
-a2V5cyBmb3IgYSBmaWVsZCB2YXJpYWJsZQo+IAo+IMKga2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50
-c19oaXN0LmMgfCA5ICsrKysrKy0tLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygr
-KSwgMyBkZWxldGlvbnMoLSkKPiAKClRoZXNlIGxvb2sgZmluZSB0byBtZSwgdGhhbmtzLiBGb3Ig
-dGhlIHNldCwKCkFja2VkLWJ5OiBUb20gWmFudXNzaSA8emFudXNzaUBrZXJuZWwub3JnPgoKCg==
+> Use the mmap_prepare in favour of the deprecated mmap hook as part of the
+> work to convert one to another.
+>=20
+> Since this is simply a refcounted kernel page that has been allocated, it
+> should not be marked VM_IO and should be inserted using the kernel page
+> insertion mechanism, so convert it to do this instead.
+>=20
+> Use the VMA descriptor's private data field as a scratch buffer to store
+> the page in - this stays valid throughout the kernel page mapping
+> operation.
+>=20
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+
+Sashiko has reviewed this patch and found no issues. It looks great!
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
+epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D20
 
