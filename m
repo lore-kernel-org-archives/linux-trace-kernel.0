@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44200378838;
-	Mon, 14 Sep 2026 05:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415F11DED42;
+	Mon, 14 Sep 2026 05:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789362803; cv=none; b=lYMAFpaDGHSbMJinDAw/rb+gCO39x9jT5Dmo0SUJvPeIhxYLNhf/J3ZbnOQ3uevgdshMLdZoU/U0cMMezOxIrKpnKPKB5ABsG4l+eP9xJSTY3LoDgFHIw76SIbC0S0vJiO7yD1UL9zyr5Y9gV8HjlWogdyNdWooqMuMK2vaY1v8=
+	t=1789363516; cv=none; b=TKh7XjBd120YLI3Iv3XYsHL4Xf8S4ZRyOcjNzxr01fbRZFKWfULx1omUozkGlC4R0C2Rb79tXn9GahTcwrrWWmfpgBlijUhmZbaJloeqyVrVitka42pExoUhT4wlT6f84cOaehopEd40T73iEnWiS5/969vHV8FgYHVEn2RoREQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789362803; c=relaxed/simple;
-	bh=ShlXuzxZadkMUnumu1QyerviMgXXNhLujivlqa0nfII=;
+	s=arc-20240116; t=1789363516; c=relaxed/simple;
+	bh=r4kWyzgvFwIeVgCg37+kX+AH8VTAFyeQJt7wUmrPusg=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=enxOt+Rk3PbX0RdkndO+311YFaLRq2HWR0aNrmTypG+gGoKpHifV/cLHjyzcU7qZDcclIppU53iKO0nMi/1dX6s1y7i9Xo2hwwkin/xBgpP6nLl3kEuCw9dHE6wYxTmqoJ2Q4hjRbCroo0X8w2+/+klhJYDoj+QiX+63G7iAKl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZ9jmaGX; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=J4FLTInpF274KgY32i5d5gUoeMJjd4QxiO6PAcSE2YZgK7Sf9kHN8OTz8Z9cPrm3D0z9xk14rqL4AY1XqIyVU/a0t8bHg6ueTKlNf49kUBzqELMZT35nJR9HeHxwoYznGrwsmwmhF6zU/N4GbF4amed6NkpTz5l1oJS5wvLEmRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT2U/VtG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZ9jmaGX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6D91F000FF;
-	Mon, 14 Sep 2026 05:13:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT2U/VtG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822A01F000FF;
+	Mon, 14 Sep 2026 05:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789362801;
-	bh=n3wP1PcBp2+a+o/VLRpTfm9jZUMQauV7lmYuzs9dqlo=;
+	s=k20260515; t=1789363514;
+	bh=hqan0NVWc1HQxdNwE3P314UxIWRFhHCzTru45muAuIQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=fZ9jmaGXC6Fa8AdCItt5L/gUqwfke2JU82ubnyPzu7aUUbaR9Z1AaTjLwaECFOUU4
-	 GyH9FTHtOOmrIdqxuXgXM7KW/+5SSOXd56YX8Zd7xAhs++D7VVIPV8h4rp2XzRXFow
-	 5FbzzDXwZNkbk/3OkjpMIvZ4wbDCzJvJ87lWTtBBLSxGrm3VbaTzue7GlRqneur3RF
-	 jnJPgGT8v7XW1WEr5uSfPBoWzYp5XgPsQFIRjCniRem79V1nXXKxPLhn7r2MVeMfU+
-	 HkM3Cpf9w9wN/ixoj2xZfP0j3t2euVILeqx0iGwTxLXXJtUBVg2vVg7aDmeQl3VMXq
-	 1OYBrjv5sdNEQ==
-Date: Mon, 14 Sep 2026 14:13:18 +0900
+	b=KT2U/VtGlsE1S+EZSAUPnwTN+Uqcraag6+k5RtOICkdkXL2Rt5vx4QqnmRU55ABN3
+	 Wz1hYTf51/mI2GrHV8+dlgSsg0RXOXCmsKvLkMQe1nd4U547zyji9Y6jT7CKPFhZ17
+	 ZrgbEnrWOqdqWFgowDCfrHNYVTfg2cqDCE4bihC/VVYdyFD6ycY5JKersR91A0r/Ur
+	 C9rFotDsTSqFVoZFhu2jRUyi73BVGNiEJEhBj30cx4zDwqGj8unzT6jt73X+aho/EF
+	 oCwz9EX3IlEDaoTGGQXtMShVa/58w85oKxM2pYO+fqm3IJ+Rw5X6yUfHwq7qQf/BQe
+	 lR7mbN/vbKM1g==
+Date: Mon, 14 Sep 2026 14:25:11 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v15 03/12] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
-Message-Id: <20260914141318.0a8d12d9cceb3a50bb3d36f5@kernel.org>
-In-Reply-To: <20260907040203.BA2941F00A3A@smtp.kernel.org>
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v15 05/12] tracing/wprobe: Add wprobe (watchpoint probe)
+ trace event support
+Message-Id: <20260914142511.e8c56e55f2f35c8becfb679d@kernel.org>
+In-Reply-To: <20260907041503.A6DB71F00A3A@smtp.kernel.org>
 References: <178875277830.93794.14247844688761142429.stgit@devnote2>
-	<178875281237.93794.4844650709915505895.stgit@devnote2>
-	<20260907040203.BA2941F00A3A@smtp.kernel.org>
+	<178875283469.93794.8082169522481243792.stgit@devnote2>
+	<20260907041503.A6DB71F00A3A@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,94 +48,55 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 07 Sep 2026 04:02:03 +0000
+On Mon, 07 Sep 2026 04:15:03 +0000
 sashiko-bot@kernel.org wrote:
 
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Modifying a debug address register while the breakpoint is enabled in DR7 violates the Intel SDM. This can occur due to a race condition with an NMI because the `cpu_dr7` shadow state is not temporarily updated.
+> - [Low] The `readme_msg` in `trace.c` instructs users to write to `wprobe_events`, but this file is never created.
 > --
 > 
-> commit ca38cc4e9ed0533dfe16175c78dba60903420a8b
-> Author: Jinchao Wang <wangjinchao600@gmail.com>
+> commit 5c44f59e0b2737617a0b5934e625357ecffcc63d
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+> tracing/wprobe: Add wprobe (watchpoint probe) trace event support
 > 
-> Wprobe needs to move an active per-CPU watchpoint without releasing and
-> reserving its hardware slot.
-> 
-> Add arch_modify_local_hw_breakpoint_addr() as the architecture backend for
-> modify_local_hw_breakpoint_addr(). It validates the new address, finds the
-> installed local slot, and updates the hardware debug register and per-CPU
-> shadow register.
+> This commit introduces hardware-breakpoint-based dynamic trace event support
+> (wprobe). It creates dynamic events on data read/write accesses using
+> hardware breakpoints and logs the access context and fetchargs.
 > 
 > Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
 > 
-> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> > index 312550be3ad2b..99f0926298a85 100644
-> > --- a/arch/x86/kernel/hw_breakpoint.c
-> > +++ b/arch/x86/kernel/hw_breakpoint.c
-> [ ... ]
-> > @@ -129,6 +129,62 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
-> [ ... ]
-> > +	do {
-> > +		seq = this_cpu_inc_return(cpu_dr7_seq);
-> > +
-> > +		/* Disable breakpoint in DR7 before updating address register */
-> > +		dr7 = this_cpu_read(cpu_dr7);
-> > +		set_debugreg((dr7 & ~__encode_dr7(i, info->len, info->type)) | DR7_FIXED_1, 7);
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index a946e0183fd1e..40c3e1543f6e3 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -4294,8 +4294,12 @@ static const char readme_msg[] =
+> >  	"  uprobe_events\t\t- Create/append/remove/show the userspace dynamic events\n"
+> >  	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+> >  #endif
+> > +#ifdef CONFIG_WPROBE_EVENTS
+> > +	"  wprobe_events\t\t- Create/append/remove/show the hardware breakpoint dynamic events\n"
+> > +	"\t\t\t  Write into this file to define/undefine new trace events.\n"
 > 
-> [Severity: High]
-> Does arch_modify_local_hw_breakpoint_addr() need to clear the breakpoint in
-> the shadow cpu_dr7 state as well?
+> [Severity: Low]
+> Does this advertise a non-existent interface file to the user?
+> 
+> The readme_msg instructs users to write to wprobe_events, but it appears
+> this file is never created by this patch.
 
-Ah, OK, let's update cpu_dr7 too.
+Ah, indeed. this is for dynamic_events interface.
 
-> 
-> Since the breakpoint isn't cleared in the cpu_dr7 shadow state, could an NMI
-> that interrupts execution here inadvertently re-enable the breakpoint
-> prematurely?
-> 
-> If an NMI handler (such as kgdb or perf) modifies breakpoints, it increments
-> cpu_dr7_seq and invokes local_db_save() and local_db_restore(). When the NMI
-> completes, local_db_restore() detects the sequence mismatch and restores
-> hardware DR7 using the cpu_dr7 shadow cache. Because cpu_dr7 still has this
-> breakpoint enabled, the target breakpoint gets re-enabled in hardware DR7
-> before the execution below resumes.
-> 
-> > +		barrier();
-> > +
-> > +		this_cpu_write(cpu_debugreg[i], addr);
-> > +		barrier();
-> > +		set_debugreg(addr, i);
-> 
-> [Severity: High]
-> If an NMI prematurely restored DR7 as described above, won't this modify the
-> debug address register while the breakpoint is enabled in DR7?
-
-This also needs to update cpu_dr7.
-
-Thank you,
+Thanks,
 
 > 
-> Modifying a debug address register while its corresponding DR7 enable bit is
-> set violates the Intel SDM and causes spurious #DB exceptions.
-> 
-> While the sequence loop retry mechanism will catch the mismatch, it only does
-> so after this instruction has already executed, which is too late to prevent
-> the spurious exception.
-> 
-> > +		barrier();
-> > +
-> > +		/* Re-enable breakpoint in DR7 */
-> > +		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
-> > +		barrier();
-> > +	} while (seq != this_cpu_read(cpu_dr7_seq));
-> > +
-> > +	return 0;
-> > +}
+> > +#endif
+> >  #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS) || \
+> > -    defined(CONFIG_FPROBE_EVENTS)
+> > +	defined(CONFIG_FPROBE_EVENTS) || defined(CONFIG_WPROBE_EVENTS)
+> >  	"\t  accepts: event-definitions (one definition per line)\n"
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/178875277830.93794.14247844688761142429.stgit@devnote2?part=3
+> Sashiko AI review · https://sashiko.dev/#/patchset/178875277830.93794.14247844688761142429.stgit@devnote2?part=5
 
 
 -- 
