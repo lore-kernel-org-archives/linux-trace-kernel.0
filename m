@@ -1,85 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa2-f12.google.com (mail-oa2-f12.google.com [74.125.231.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E133B9DAB;
-	Mon, 14 Sep 2026 18:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789411854; cv=none; b=gE5mYNjR3XR9AYsMuouyTBdMTYvqUl5EGeX+TN54yvwtytmGGaUx1XTPttSqj2jIumB+swgqAXa5lkzLmvT0NjhpOS+j8gFPawR08xyaKPvmGT9JaM/CvNB6pp3hpEnG/YKXCwXVXqHqQRRCZDUWIIwwG1dvFCtNpvZ7Rn+PLds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789411854; c=relaxed/simple;
-	bh=I9//0LB5K81ZQWzHLCCE2klREXKnr+J5NzqH0/mcr5A=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dIPShaiwIaleMk4LVY3rVy6l366crzQROWoh24Jy8qFUkHKJdNu08dpJ+NHhZpfEP3yAzN5kZXRTL+BefuJAZcqL17kw0f1DPqDhfBKlS45fWaglMyt6HiB+B+EvjZwWhWxuD1WSL+SkFqUzJVZZryWCoIy9x6Ryv7iiiWvBg34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVzMcghq; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA063BBFBE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 19:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.231.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789412983; cv=pass; b=tDu1cQMCqT0VstwrOu7ehT/xsh62h9ZyrCixUUiteVXwNBoSFZgG7mRicHFuA78I8IJKDC3vkX9Qn198UX2tvTSCz37OLEEEgX7H62KzGa8qfuqj78uRV4zzitFY1PYCbSoCtTiTtkvP8K1uBkJth0XcC9aQgDhmwi2eOrbVZ+g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789412983; c=relaxed/simple;
+	bh=xk1YgFzBk6elfDd8JjJVnAZesHkNakF18ab0MQu8l/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M0drPNvZvm+3eofc2XZ9ryATu5FSSsZN2VjMHDMKmHj+Pej0Ocb4VmqR6KneLkh5jjtIzvqosikxW3ZvmAdKEEvEh4e8zIN+kz1PTBSVvru/9Qn8xChJm5tqcOT0p2q/KlfxTK0NuSmgXIDFaBVy81xyIFUOhC47IkEtFW8//yw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YdA41Cqt; arc=pass smtp.client-ip=74.125.231.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVzMcghq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429BD1F000FF;
-	Mon, 14 Sep 2026 18:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789411853;
-	bh=I9//0LB5K81ZQWzHLCCE2klREXKnr+J5NzqH0/mcr5A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eVzMcghq8e9ClZddoNA5Ip+E/BeoV7jDyaXIiVIcm28dczlreWJBO0H/ZqBViXGSL
-	 VKrBwP1QJSkyTapOrXr185pObMtrnMYSaHCJDRtCaCzR/sJAdKSsY66JZWh2TrOPx1
-	 jSPK5VXb4zdSANAwx/k6unl94prcRA0xmuhxHPKSXL9zoKYTh9qbhRi7vjpmkAHqzJ
-	 INsGPqEs2g+pQC2r0/8eGfUWf0ZeCtvOoGAAEqFY2RJ8nbi9GZhV2HilH6RzG1BfOL
-	 hPEXkJ6OpSrb9dJ0i57w8zCXGDqat4ORk2ewMXGa13pvgeceW10O2ANJDEYMSqAffe
-	 uXYeOA8FCPKJQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 15/40] mm/vma: add vma[_flags]_is_kernel_owned()
- predicates
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, linux-rdma@vger.kernel.org, kvm@vger.kernel.org, "Marc
- Zyngier" <maz@kernel.org>, "Alexander Gordeev" <agordeev@linux.ibm.com>, dri-devel@lists.freedesktop.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, bpf@vger.kernel.org, "Christian Borntraeger" <borntraeger@linux.ibm.com>, linux-perf-users@vger.kernel.org, selinux@vger.kernel.org, linux-scsi@vger.kernel.org, kvmarm@lists.linux.dev, "Oliver
- Upton" <oupton@kernel.org>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-15-7d9781ed5361@kernel.org>
-References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
- <20260914-b4-mmap-prepare-vma-flag-sanify-v2-15-7d9781ed5361@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 18:50:51 +0000
-Message-Id: <20260914185052.429BD1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YdA41Cqt"
+Received: by mail-oa2-f12.google.com with SMTP id 586e51a60fabf-466ccde2b71so1713279fac.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 12:09:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789412976; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jS0qoKW8hu5j0N56rKNRM4OP4mhPFALkwnkUBkdk91W5ddGoBzdtMPnkSqmVE0GgML
+         yTsy/sHzs3lnJsJMsHHncarhJ5opkQNVaOspQ1JBSWZ0m1J+9jlpWwPA4k4p8iLfLA3/
+         f98cGT636DKMs2XRRo6yT81KgxFzCa48GJZaTQrYfkwO4ebJ74LtjflWIabgKBeDhfjh
+         r/9AFmBjYujjqXUH1X3h46Gd4kv7Xt8fDjWh8VoDOWDX6nD16Xrn7U2nJk9RvCNJhjq3
+         K4Ks/KSJPO+5chjSlbE0l2NRJsMOHF6pahjsK+rLEjt+MOgufISG5rziMD6Ayvis1r+q
+         i9kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Z4qmyS2vqfHj91Rn4XVyGVsQU3bnE9E4yE+vz/mcM9E=;
+        fh=DBccqF+fFSlF9SMLD86k0w5z9LEKl2+zMemq6g/TBR4=;
+        b=q0lua2OjpdQALOHiqRJES3LQWB8+jb6ZdG6Dhhm1+L1F7BSiaEKSw4vyWsvCy9r+Az
+         6uH/ge15pPv4E3JoHBk4VMS93Xhe+vbt8dIrzlcIDYW5IirSjJ/Om7fvfKlcnHZFWtMJ
+         9XzsXiU+ZH7kcEclGqVvns96LIyonavKOqTOxbfaKZqiFodpIdhuJkgiJeW43Bt9iGMA
+         v0HjndBRDkErD9KNXQoYhwrKgUBWW5/nqLWZyTIRaZExxxXaqm3P2M63Xceo9oD3cy6s
+         7o+nLozdXuzLBPPQPXXFaEnXebIxaA3lRdi2kRKxPYLTuznz3AuVibDFyoYpXsciwtow
+         YPVg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789412976; x=1790017776; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Z4qmyS2vqfHj91Rn4XVyGVsQU3bnE9E4yE+vz/mcM9E=;
+        b=YdA41CqtM0PJru/Pa135R2Pfy2llWQ69KThYyiqzGxBZQI8WrxL1HDos/mtOifBz2W
+         7pc5HkxuV4jDAHfWhEVzMoEMI3dj7Dur+h4xuXUE01gqxXS2ZbkGoDR9bvh3D8OI4CS8
+         qEAYnBS/3kx//ZA4zg15X3V2dAJKf5JbHECdMUEjrzTqbzuq5CGCigPheCkl1nLPAN9q
+         ifyrEho/pgbXUSGCYzCL/+0gwcEODyINll8pbcOFHkHKxVpmFONCq/EcoG0jwsCICM16
+         +9SFSGNrtqSFJHYfhHPqEmFgZFb0HYnBRm7WI0MNZ1HXBxnMw+VrcpyO/mcsVM1XDNeZ
+         BkuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789412976; x=1790017776;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Z4qmyS2vqfHj91Rn4XVyGVsQU3bnE9E4yE+vz/mcM9E=;
+        b=ALYLUeDGDyitVCzUF+ibW7f7meagP06J8oSxg4CCrHOnBJbusJXI4IrntMm5Jnrk4m
+         JyLf69QMDwviJehA/XCVzE2fR3wngZFaiHU9n+3WqEsxUbLnptLNguoCQ/8Vak/w2Czg
+         ex2LisvyrnFOEQYV1VM7KBA++mP7URilEj6AtROECTmDz5pnsBlmvHa8Y8jZymHOzytN
+         QcjVR0ZIMwsSyRdswTTujd0rBeq7WwT3EBiTKDRV38qiWFZKF+Ks0iCu3ZxAkfNlAQad
+         HCEKzv7do3qZzArsNZfhH+gel/eaNbBgAfipvpJl1AnlXI4bEkHYrFqUBlPpbqQzlP+P
+         /W0Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzr2DErgGOXgFgFtDOK6zZTh2XvEqrkOzxOWBhygSYDPPXYEkvHRrcSUvESQPTXxVTSaUNT1y1R8ZXAFXIrKePJOS8=@vger.kernel.org
+X-Gm-Message-State: AFuF++nm2QXmrSrb2IPGiELALdEj4cwlnb0Qzl1QY+MyKtpYTpokRyA9
+	6nqhWecUaTIhRZkO0sHobPm2yh+gfSMdQ7r7pXd2OI6IZX4nUiUaVo9nDleUjU1dq3HhBTa5VXR
+	5vrWu9rpcstLFssJMEiG4djNh5m6PBG0=
+X-Gm-Gg: AYBFou2De5AWVi1RRI7I/Q4qjrNAQ6HulcV4OKq1+oqERRpUlZeVF7c1XdWh2vLiZnM
+	CHVWrtwzEyAzq1H5OVNx1yXUDGstWiiPunfrHyUtDtGllOB9FyWjBeuUIxKROlp9dpeBBUgn4EG
+	yxjwpJNpvk1gVAWjNxeFsOgreXCMkuX7gJw5zrZbrTtS6oIkKydQCCAn0EY+2e7owF1GOpbR3Ll
+	KY/5PH/ylHSDSWKgOENn2bB0gqeBvid2BlgB5NkejjgI4km/KHqRP45a22Ftd3WWZJ4ZCItumfr
+	xZyYl0to225Ntbz/2FV7JnZ2kuIZeqfKKvcOWZa/dn/YIqDki0AgF2MYvXXo3hcPSPPWz3CUFXg
+	bIFSYqCs3NA==
+X-Received: by 2002:a05:6870:458b:b0:45e:4deb:92e7 with SMTP id
+ 586e51a60fabf-481f97f14c8mr3645365fac.10.1789412975663; Mon, 14 Sep 2026
+ 12:09:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260914175907.1027349-1-vdonnefort@google.com>
+In-Reply-To: <20260914175907.1027349-1-vdonnefort@google.com>
+From: David CARLIER <devnexen@gmail.com>
+Date: Mon, 14 Sep 2026 20:09:24 +0100
+X-Gm-Features: AcwNN1XfrufVB7vfooH8sB3z7NEf9B9zed3nYyuX5q2EMKLSurNaKFGzXUBsno8
+Message-ID: <CA+XhMqxp2XOB9PnfHJwBvK0up8Oej4hGcnsM0a=fdoRDyVoEyQ@mail.gmail.com>
+Subject: Re: [PATCH v1] ring-buffer: Clean up resize_disabled checks
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> Rather than referring to VMA flags with uncertain meaning, add a new
-> predicate that explicitly describes what possession of the VMA_PFNMAP_BIT
-> or VMA_MIXEDMAP_BIT flags mean, and then refer to that function for
-> determining VMA mergeability.
->=20
-> Either flag means the contents of the mapping are owned by the kernel,
-> usually a driver, rather than by the core mm: the memory may be MMIO,
-> kernel-allocated pages or even ordinary pages the driver maps itself, but
-> the core must not populate, reclaim, migrate, copy-on-write or merge the
-> range on its own initiative.
->=20
-> We initially also include VMA_IO_BIT here, as by implication, these must =
-be
-> kernel-owned. (mlock() also sets VMA_IO_BIT transiently on ordinary VMAs
-> while locking them, which is addressed later in this series.)
->=20
-> However the intent is to in future remove this, as no mapping should be
-> marked as an I/O mapping without also being marked with VMA_PFNMAP_BIT.
->=20
-> This forms the basis of further work intended to improve how we express V=
-MA
-> properties such as this.
->=20
-> Also update the VMA userland tests to reflect the change.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Hi Vincent.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> +   if (rb_resize_disabled(buffer, cpu_id)) {
+> +           err = -EBUSY;
+> +           goto out_err_unlock;
+> +   }
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
-epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D15
+For a single CPU, this now happens before the nr_pages == cpu_buffer->nr_pages
+early exit, so writing the same size to per_cpu/cpuN/buffer_size_kb on a
+mapped or persistent instance CPU fails with EBUSY instead of succeeding.
+Intended ?
 
+> Additionally, remove the unnecessary cpumask_test_cpu in
+> ring_buffer_subbuf_order_set().
+
+The install loop still has one.
+
+Otherwise removing the second check is fine, the hotplug window is
+covered by the cpus_read_lock() patch I sent separately.
+
+Cheers.
