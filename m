@@ -1,196 +1,159 @@
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAC7494A18
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 17:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52E537F324
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 18:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789408765; cv=none; b=Z7s0v3d0mKcK07KAc/3ptfERYlu6s+qpGDJKWppjjoSUEUyQlSZKJb23+vwAw9Ck5RgDYv60uhV/tgwtbP1VxJbKeHhPHPzIuz/lTh0uNWlsHqN3d8VUwbvdLMd7850h2agfeIgRw9TVq3fWZJLRz1Xw2LjII/urd+8ObSLraYQ=
+	t=1789409950; cv=none; b=q8voBYngHHryCwqT0QG5J+1gSNgYwf2ZlB8NowbH0Zufqvlok6Gsm8LHXF59I5UQ/85ejr1PzjcP1H3dGx5PH564Ci6+WBYV79UJygBoj8mC0dPi9oAzqYt7x6AdYf3e6exsqa7KoXFmpXJ61NoheXkTsGIWzykDoAJgxcE3Tog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789408765; c=relaxed/simple;
-	bh=Hi3KF1rFSlwOgvsXa0YKg6banHYZooWVqpRPGNChmak=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CB7Rz4hlY+Xg59JI/iZZHZjLYoGe0aw2F4H68j1DHw1JbeX0E+saNZ0CkAf/y2DbQDcHEQF5D4N6gqm4P+FcwhO/g8lt2QxeKkk4n5enDjcezxAMkflecTfd6EtBT8RuTaXgIYidZ2o2Y7XfnSxxUljeD7+mJa+auSfkiVNog08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YERxAAA8; arc=none smtp.client-ip=209.85.128.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1789409950; c=relaxed/simple;
+	bh=sFKCnLSvEuAVKGL4NX617NcQz2IADyOJpo5x0ZHrFm8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NIgVwopIjshY1hMcdTPUySFDeYDQGPhVYN/JWn7/99dsKitLivot+jdK5vBPgfSr2f/Qq5u3REEecFPh3FDcjrMB2NSwJZjg4B2YeXUboNQwLYXsegH2i8raYRSabj9GodSOB7hZX7Ls3OHbsIOA8RIAbw5eEfZdO6miejbjUmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOGsSHeJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YERxAAA8"
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49e661c6440so19744165e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 10:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789408761; x=1790013561; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KAmPM9lg8P4nRxDL5AHK8i1KVL3bJ1XhAL6W+r2RlSI=;
-        b=YERxAAA8mGEP+0eHolShXC9DTmdF+gizKwe0RAcoRnJ+2s7BbM4v/w6xnzUzE/WELA
-         4Xo7p0dIZRa55QikcZRScZ3eLi/jn8SFKrinKjcml92PHXsdm1NzQUOvepyJbWLWbX4J
-         scmLpcuOWjBz68eAqiSCwE03SnLKXPflmRwKANb3xR2qvxssXD+wdjw6ZNdmkCI6fXCe
-         2wO7xLywPBpuNnRB/owSV3CQ5LD5uwU7Zau8U5d5kC1YkSpL5I9jSNMJOqGi5kSSeUfj
-         bF2zvGgj3QGMDpIjn5xZW0N6HNIWKwrNJBfH2O223WywvXTCyb1X+m2vkGEBmtR2KECN
-         DTkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789408761; x=1790013561;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=KAmPM9lg8P4nRxDL5AHK8i1KVL3bJ1XhAL6W+r2RlSI=;
-        b=hgPEwTODcy/WYHVgnfCc5s/YOzybB3Sj2FhKBGbTU9zAL9l2hOhxYaocKmoIBHE9Xk
-         wSNmB7Ol9+0zaTdSmWIx9eamB5DuBW/BXptVh8/yRygsfHnPCHginko6mml3Hxxbh+sh
-         YgOAxb2iXVJK80YR45cu/t+Jq6nQwWGZf9vacBdpzvTYlkMEtFs8eDy5d8cJFuAmr8co
-         ojPTXTXAJLnJJQaWniP2lAd/AO+3Vi0/evraKujwsJIhZZudVDVPM2hoOlUw0DTCp0pQ
-         SayCitSNZE7+GCHLsPHALJK2bZOHhTGVggW32pQ1tDdIVgdKCYLFYpyOxHFxnw6fNP8K
-         NpDQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzj3h4zKV/XajEAhU93UA3DshmgewP0XugarCKAxj8+yzHOHQbHPSlEjTX5WWkeugtYWb1vpiwIxnWzjPL3U4kjKxs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mFoDZv4gtoxOkGpRnFfy0fStVMWq9GVfAeAi7JNrXWerrk2rBQ
-	gvxGhQ+DP3MpHiCuHjHr2J2BkUh/ehEP5GXxlZXddGnXPTI29RHTMSKu0bx3E1s23gfiqd0fhER
-	yjahhg6R+luA0PLl2qo3DYQ==
-X-Received: from wmcu10.prod.google.com ([2002:a7b:c04a:0:b0:49e:6b63:7e98])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3484:b0:49c:fa21:e742 with SMTP id 5b1f17b1804b1-49e7a68c148mr51819185e9.24.1789408761238;
- Mon, 14 Sep 2026 10:59:21 -0700 (PDT)
-Date: Mon, 14 Sep 2026 18:59:07 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOGsSHeJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA891F000FF;
+	Mon, 14 Sep 2026 18:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789409948;
+	bh=FdfXQfLKWJ8uu7oOACSqJpMnb09gFJv6T11QeN9DHq4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cOGsSHeJDL92AHtSjSTGNvl5nCLYVDu50YK7/LjS0BsWBxTxJfPFqcmeoSiIpQoOL
+	 qxoTG7f4kAalmAdIyFbJByxCAqcZzPsOIjrnXCmKfbQKNvZmqsBmjNdhsPFMp+LPEc
+	 jLAbUc0vQN4B0DKmOlXbR1D4bOdQY5kZ/Hv8bCTrf7toRf+8+WAPWtU+w+ls2zKM/B
+	 tdQKDR/GHditVgjTIxbvzy0bgAPfRdxeGwFWqFXOuD9a92atw+1P+4AA0nRKpplHQU
+	 It3q4QCSoUg7By5IY5yl3Ucz4/zwRaWhUr4kRTmOjpZYKxLgSqz/hwRgqoOp1VPdB5
+	 gRTiHDKO68tRQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] ring-buffer: Clean up resize_disabled checks
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260914175907.1027349-1-vdonnefort@google.com>
+References: <20260914175907.1027349-1-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 18:19:08 +0000
+Message-Id: <20260914181908.6AA891F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260914175907.1027349-1-vdonnefort@google.com>
-Subject: [PATCH v1] ring-buffer: Clean up resize_disabled checks
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devnexen@gmail.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-ring_buffer_subbuf_order_set() checks for resize_disabled twice under
-the same buffer->mutex hold. Moreover, this check duplicates the logic
-in ring_buffer_resize(). Create a common helper rb_resize_disabled() to
-factor out this code.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Additionally, remove the unnecessary cpumask_test_cpu in
-ring_buffer_subbuf_order_set().
-for_each_buffer_cpu() already iterates over buffer->cpumask.
+Pre-existing issues:
+- [High] Missing CPU hotplug lock in ring_buffer_subbuf_order_set() causes =
+NULL/poison pointer dereference on concurrent hotplug.
+--
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- kernel/trace/ring_buffer.c | 67 ++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 39 deletions(-)
+commit 6a990a7dda41a1ef54e4e559d824ba3e1166dfe2
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 04bb94c29f58..37801ac5e92e 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3280,6 +3280,21 @@ static void update_pages_handler(struct work_struct *work)
- 	complete(&cpu_buffer->update_done);
- }
- 
-+static bool rb_resize_disabled(struct trace_buffer *buffer, int cpu)
-+{
-+	lockdep_assert_held(&buffer->mutex);
-+
-+	if (cpu != RING_BUFFER_ALL_CPUS)
-+		return atomic_read(&buffer->buffers[cpu]->resize_disabled);
-+
-+	for_each_buffer_cpu(buffer, cpu) {
-+		if (atomic_read(&buffer->buffers[cpu]->resize_disabled))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /**
-  * ring_buffer_resize - resize the ring buffer
-  * @buffer: the buffer to resize.
-@@ -3324,20 +3339,17 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 	if (nr_pages < 2)
- 		nr_pages = 2;
- 
--	if (cpu_id == RING_BUFFER_ALL_CPUS) {
--		/*
--		 * Don't succeed if resizing is disabled, as a reader might be
--		 * manipulating the ring buffer and is expecting a sane state while
--		 * this is true.
--		 */
--		for_each_buffer_cpu(buffer, cpu) {
--			cpu_buffer = buffer->buffers[cpu];
--			if (atomic_read(&cpu_buffer->resize_disabled)) {
--				err = -EBUSY;
--				goto out_err_unlock;
--			}
--		}
-+	/*
-+	 * Don't succeed if resizing is disabled, as a reader might be
-+	 * manipulating the ring buffer and is expecting a sane state while
-+	 * this is true.
-+	 */
-+	if (rb_resize_disabled(buffer, cpu_id)) {
-+		err = -EBUSY;
-+		goto out_err_unlock;
-+	}
- 
-+	if (cpu_id == RING_BUFFER_ALL_CPUS) {
- 		/* calculate the pages to update */
- 		for_each_buffer_cpu(buffer, cpu) {
- 			cpu_buffer = buffer->buffers[cpu];
-@@ -3409,16 +3421,6 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		if (nr_pages == cpu_buffer->nr_pages)
- 			goto out;
- 
--		/*
--		 * Don't succeed if resizing is disabled, as a reader might be
--		 * manipulating the ring buffer and is expecting a sane state while
--		 * this is true.
--		 */
--		if (atomic_read(&cpu_buffer->resize_disabled)) {
--			err = -EBUSY;
--			goto out_err_unlock;
--		}
--
- 		cpu_buffer->nr_pages_to_update = nr_pages -
- 						cpu_buffer->nr_pages;
- 
-@@ -7473,13 +7475,9 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 
- 	old_capacity = rb_subbuf_capacity(buffer);
- 
--	/* The mmap fast path reads subbuf_order without buffer->mutex. */
--	for_each_buffer_cpu(buffer, cpu) {
--		if (!cpumask_test_cpu(cpu, buffer->cpumask))
--			continue;
--		if (atomic_read(&buffer->buffers[cpu]->resize_disabled))
--			return -EBUSY;
--	}
-+	/* Check it is resizable before we touch subbuf_order */
-+	if (rb_resize_disabled(buffer, RING_BUFFER_ALL_CPUS))
-+		return -EBUSY;
- 
- 	atomic_inc(&buffer->record_disabled);
- 
-@@ -7490,17 +7488,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 
- 	/* Make sure all new buffers are allocated, before deleting the old ones */
- 	for_each_buffer_cpu(buffer, cpu) {
--
--		if (!cpumask_test_cpu(cpu, buffer->cpumask))
--			continue;
--
- 		cpu_buffer = buffer->buffers[cpu];
- 
--		if (atomic_read(&cpu_buffer->resize_disabled)) {
--			err = -EBUSY;
--			goto error;
--		}
--
- 		/* Update the number of pages to match the new size */
- 		nr_pages = old_capacity * buffer->buffers[cpu]->nr_pages;
- 		nr_pages = DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
+ring-buffer: Clean up resize_disabled checks
 
-base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
--- 
-2.55.0.1032.g73a4cd73de-goog
+This patch creates a common helper rb_resize_disabled() to refactor duplica=
+te
+checks in ring_buffer_subbuf_order_set() and ring_buffer_resize(). It also
+removes an unnecessary cpumask_test_cpu() in ring_buffer_subbuf_order_set().
 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 04bb94c29f587..37801ac5e92e2 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+
+[ ... ]
+
+> @@ -7473,13 +7475,9 @@ int ring_buffer_subbuf_order_set(struct trace_buff=
+er *buffer, int order)
+> =20
+>  	old_capacity =3D rb_subbuf_capacity(buffer);
+> =20
+> -	/* The mmap fast path reads subbuf_order without buffer->mutex. */
+> -	for_each_buffer_cpu(buffer, cpu) {
+> -		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> -			continue;
+> -		if (atomic_read(&buffer->buffers[cpu]->resize_disabled))
+> -			return -EBUSY;
+> -	}
+> +	/* Check it is resizable before we touch subbuf_order */
+> +	if (rb_resize_disabled(buffer, RING_BUFFER_ALL_CPUS))
+> +		return -EBUSY;
+> =20
+>  	atomic_inc(&buffer->record_disabled);
+
+[Severity: High]
+This is a pre-existing issue, but since we are modifying
+ring_buffer_subbuf_order_set(), is there a missing CPU hotplug lock here
+that could cause a crash?
+
+Unlike ring_buffer_resize() which takes cpus_read_lock(), this function
+takes buffer->mutex but fails to protect buffer->cpumask against
+concurrent hotplug modifications.
+
+> =20
+> @@ -7490,17 +7488,8 @@ int ring_buffer_subbuf_order_set(struct trace_buff=
+er *buffer, int order)
+> =20
+>  	/* Make sure all new buffers are allocated, before deleting the old one=
+s */
+>  	for_each_buffer_cpu(buffer, cpu) {
+> -
+> -		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> -			continue;
+> -
+>  		cpu_buffer =3D buffer->buffers[cpu];
+> =20
+> -		if (atomic_read(&cpu_buffer->resize_disabled)) {
+> -			err =3D -EBUSY;
+> -			goto error;
+> -		}
+> -
+
+[Severity: High]
+This is a pre-existing issue related to the missing hotplug lock above.
+In this first loop of ring_buffer_subbuf_order_set(), new pages are allocat=
+ed
+only for CPUs present in the mask at this point:
+
+	for_each_buffer_cpu(buffer, cpu) {
+		...
+		/* Allocate the new size buffer */
+		INIT_LIST_HEAD(&cpu_buffer->new_pages);
+		if (__rb_allocate_pages(cpu_buffer, nr_pages,
+					&cpu_buffer->new_pages)) {
+			...
+		}
+	}
+
+Later, the second loop iterates over the cpumask again:
+
+	for_each_buffer_cpu(buffer, cpu) {
+		...
+		/* One page was allocated for the reader page */
+		cpu_buffer->reader_page =3D list_entry(cpu_buffer->new_pages.next,
+						     struct buffer_page, list);
+		list_del_init(&cpu_buffer->reader_page->list);
+
+If the cpumask expands between the two loops due to concurrent hotplug,
+the second loop will process the newly added CPU.
+
+However, for that new CPU, the new_pages list was not populated by the
+first loop. Instead, trace_rb_cpu_prepare() will have left it in a
+LIST_POISON1 state (via list_del()), causing a deterministic kernel crash
+when dereferencing new_pages.next.
+
+Could cpus_read_lock() be added at the beginning of
+ring_buffer_subbuf_order_set() to protect against this?
+
+>  		/* Update the number of pages to match the new size */
+>  		nr_pages =3D old_capacity * buffer->buffers[cpu]->nr_pages;
+>  		nr_pages =3D DIV_ROUND_UP(nr_pages, rb_subbuf_capacity(buffer));
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914175907.1027=
+349-1-vdonnefort@google.com?part=3D1
