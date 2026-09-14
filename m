@@ -1,188 +1,125 @@
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C28499F2A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 19:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789415865; cv=pass; b=VAWzTkBc36beBOPtVChVxQEDOf8gqD1pZQdvY6rvfXD73efOnrqo7GdVwwTTOaodOE/JD7eqiCorDlmS2sy1FBTpEr9fpefp1GAj5OGSABidQJrajaLNiiubpiDM056cuLpusmH0PgpkgdYPKy83qVYlsqxhIcbH44XiSEsBFVE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789415865; c=relaxed/simple;
-	bh=rm+zdLu0LlzNfMP/vZrBYvi966p9ISS8d4XEb3JQ094=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hzc0udI8PYlHnEX04yz+yl0sXonY4TustVZ/PmnE78hLi1oRAIMRilE5E08XKJO5dBuAMGNZLju8j3WARAlV3N0oC4Mw87JhAg8okNajIdG6ucux4ECvORKj/Zvg/E1mnMXkdDmJxa12OxItirZIaXGTgJlqip+4zNsmGp/SqOw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=VBYIS+ru; arc=pass smtp.client-ip=74.125.228.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3190388869;
+	Mon, 14 Sep 2026 20:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789416117; cv=none; b=ZIl/gEFzCFhkTSY1WLzMIAg6/89vc2vsFT57F5KdvDYyPDFIhdVHO4p5zExP7dBASSzehvWksg6LSXv4uFl/LEaGDQ9KIS0MkHXR8cuvE46u6JRCEoXNOZPuOE4fumKuDuwxbgh8h1T+qmuO6PfW3cvFy0uvnO4i5W0Iw4h8zb4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789416117; c=relaxed/simple;
+	bh=xtoi8dIfejEkTWAeLPXGFp5RGWcZItculWCvd0h11Gs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d+4gGdbFakPc77857lPcrDzdIgWyXhI3pYk7Oc+GzC15j1u0LnHW4nqpvH0rW7DM4RnBEUaeIoK78GU2tkbsSm67uML12MDgHe6s6nEPbMgwPB24xePP/Lr+m+OG160s9PM2fruiHAfKCGEwrTrXZiIR2qyjca8u+3fY3MxXXjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpcG01qh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="VBYIS+ru"
-Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469e25400so1944926b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 12:57:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789415862; cv=none;
-        d=google.com; s=arc-20260327;
-        b=K8NFBpJGmBdUyz2b+1/l4JKaUJFDxUcmyHVIBgVlEY4aUPlGNOGzh2vz6wom5QM+7H
-         3oz/lH66hxoTUH9cGAAGTxgqlEdtr5POGbyjgcy2cI7L6bER0529W7KPL2gFCPBnUvkS
-         +X+0qCr4Ozbl/9cGYneLEbfOb4tZM+mo5b6MWmrro4fdlT6IXU2iyUSZlTt2AUALPb73
-         nd5HE9RWbcqPxFCFOoBeUj3zmEpvOhbOvT94jHECkGHpY8IetFd0RH8n+IErxRvLzIAi
-         DTJv9GKVawsYi0MRUtlCCfXA5XaSv3OQdUkzztF8D60a0Oqgb4N/qlZZriaSdOElclM7
-         nV/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=iEa5EIpxI31VfZhRCWTdUVuFxMmPcLfnD5/j1cH2Le4=;
-        fh=Bq1cozvTioi97dJp7jokAp/mSFitNqcemHZH3HhZo/s=;
-        b=nwcIQE9Vtm21eEV2MMaW19yxHM1Pnyo8Ose25C7l80Dtfg2Gk2gujEViam0UMgwQaZ
-         TRUtWo5EQddAFp7gp4bw7cr8E4rguXslrFiwJy2GqDqz6QvLxrZa442xkJa9KOD5rvQk
-         Xkx8zc3d5a2pbPsHzukdFWRrdp+PBLiBBR38vUK25RGpeMB+GyGQ/zHSLsPSxznnJB5O
-         IjtYHc070Xg4kVg4+A46DnxvhZi3yOmwQ+lZ73lCSUV606GF/8ZolN+q1pa5rkLBpoDd
-         QOj7hDldoKTPVA0mKqF7pnr0P84cqCD9kp9TUanE+a00XHizwMvQV4QBz84TiwBeqpmq
-         argg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1789415862; x=1790020662; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=iEa5EIpxI31VfZhRCWTdUVuFxMmPcLfnD5/j1cH2Le4=;
-        b=VBYIS+ruvec/YQ7NPDSavrBqZkup3jtMUSf2x9fg2vR4Q/ZYGnptCqM7UF9GBEk6Kb
-         pwYbAK2sJEZFDjRFht2ALhGnWfzEgxLd1W4Nqjf3iOyc3C9CQVwNzR9p52/m8eg00t3y
-         i3INHp65zySvAJlrkN0SKQiamBOPK/2OeoXHbM/ieIzmZObIDK9PzOChSRrcM8YAyS56
-         Wpk2JsgEsfietAppzsrHDi7c7Qi8vepD85wgaha++Drvrzfs42k7ryFVO4ohzIir1SFu
-         Dz5Af79neP1/ODat12UTHwq79Ug1vrjKu97+aj6V0fudJlIrOVtfB5xkOELTreMhvqOw
-         VVNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789415862; x=1790020662;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=iEa5EIpxI31VfZhRCWTdUVuFxMmPcLfnD5/j1cH2Le4=;
-        b=Nl6GceaTW51cRf9H2Uxp9bIDX9TSylI9OsoxAJFm9S8rN1mIMhoE33dij5YD0aZf2c
-         DI6dX/Iws5e1MYMmd2yda7S9MLRHSsMjYUK0TYKvIGhHhBZw7rkQCZjgEqgBw92fUASw
-         RYU9gNFy3jJkas7iDoNLlP+ZTVzU+D95MEm+GEyCa/hrZqd8O99AxIIAn+JV/aeYmInr
-         zYF3WH8f7Ki6sPxxQCmr58eCgSJPPLUPOMty9JPHmFTzZ+5cOYFXKMUikfRpbThsx9rL
-         lK6k7EtzGuPKQvGsnCGa7dz/jdBLZtb5qYHOtU7idfKkEOTWO6Omj5j6HuqS4BWWDmy3
-         HfkQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzERxmAP6qaB7RxH/kX/YdoaEpaVxPzCr98881Fr/0fn4vSvdhhmQCa4g6jWiB/dDX6WyXtPa9u7XpxxHK59NKMsSY=@vger.kernel.org
-X-Gm-Message-State: AFuF++l+v/HT+Z/ZCpo1eZpqdGqW/GDVDLwLo1dG2tTwlvIRAvYhiuUp
-	68LG5FcDIWUcsvSMrHv9t4pD6W/xHfNz4Cfo2PmYcLm8gATjm0vOnMBofEQumtc3Izw+/7YkEnX
-	Xl/EdVo2x4cqGunGRt96CXpyEmtUR9QGMULQNLU4p
-X-Gm-Gg: AYBFou18wvghJrargICIf9oc/+cHsD/DWxrV/wyhXT0G7a6oq5AewVwBI+YRQTkrmNR
-	CTeWkIhBVOguJumrCQXh+gIrX4mdLxmGBrw0vsDp/DsYFiyFyyE7xLgXkhLXvmZj0+hlSMH79oh
-	uk78OfN1BydbpkCWs70Hm1/EWik9QJVIZw1msQ6Yp2DjYphNBZuAisIqEcf0lYDrdmIiMidmdww
-	+d2oNSZcc14wAtEdRirt+kgSDAMnAJ5JWClucdB2IrKM4NNAw4aiLDDj8opeNHhV23qoTzwfa8h
-	jNptNv0yrCpixpD1dHEsb7RcWtXPB6lHRI5j4cpsDbpXzbIkqlcNfrFsiDLwZJjIpl9LujfqjdO
-	MhFLSa3d5Jms=
-X-Received: by 2002:a05:6a00:18a9:b0:858:b809:6ec0 with SMTP id
- d2e1a72fcca58-86f869a920dmr8896742b3a.23.1789415862342; Mon, 14 Sep 2026
- 12:57:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpcG01qh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD33F1F000FF;
+	Mon, 14 Sep 2026 20:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789416116;
+	bh=xtoi8dIfejEkTWAeLPXGFp5RGWcZItculWCvd0h11Gs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=HpcG01qh0ETOkXmq1v11dalFnT4xwAp1eOggjgCwDfxnZXKZ+NRTmoRNj5zvAvoqG
+	 WXGLeIR9w3pXYrd/6TIAWCvum6Qbx14YMnuMAjIffvfhhVzjO4VA47qRf0NZ+jsb9D
+	 FI5iGyoo9s1fWXLi4LxEjWnxdtwdf2Nuebt/9mq4cxmoPEXItrxQrMtKHb7H7htMoY
+	 PmskMiUBlZE6r5V5hluiuxOPEIRdpEpzSqfnhPpInONfoagWMJoHTRu7P8rdXn9WgK
+	 hlbmEJ7nc0tLCG2BUlCJvVbuc4G0BfuTbrMK9KlktC7dH9e9Y2KnSL68OpIPtxBNzT
+	 5Y0A2hx99EwSA==
+Message-ID: <37e36f29e22c1354a18c9ec75ee55ed51d1a49d2.camel@kernel.org>
+Subject: Re: [PATCH v3 0/4] tracing: Fix NULL dereference when copying keys
+ for a field variable
+From: Tom Zanussi <zanussi@kernel.org>
+To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Steven Rostedt
+	 <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 14 Sep 2026 15:01:54 -0500
+In-Reply-To: <20260914053443.981201-1-donggeunyoo.kernel@gmail.com>
+References: <20260914053443.981201-1-donggeunyoo.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
- <20260914-b4-mmap-prepare-vma-flag-sanify-v2-12-7d9781ed5361@kernel.org>
-In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-12-7d9781ed5361@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 14 Sep 2026 15:57:29 -0400
-X-Gm-Features: AcwNN1XaLRK0KaZAmfcRvdaBSkZOdh14LF1fb-xWULoFVhBfqyRklsdKoWBmLag
-Message-ID: <CAHC9VhQ3TwdGGH6YtVyMqJX4avJwsadcRvRhAoUhCvJEHk=i=g@mail.gmail.com>
-Subject: Re: [PATCH v2 12/40] selinux: reject writable opens of policy file,
- drop mmap shared/write check
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, 
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	fuse-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 14, 2026 at 11:05=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.=
-org> wrote:
->
-> The policy file has no write method and is exposed read-only (S_IRUGO in
-> selinux_files[]), yet sel_open_policy() performs no open mode check, so a
-> CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at open, a=
-s
-> kernfs does.
->
-> The file can then never be mapped with FMODE_WRITE, so do_mmap() always
-> clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_SHARE=
-D
-> check in sel_mmap_policy() cannot be reached. Remove it.
->
-> This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping that =
-is
-> neither a PFN map nor a mixed map, ahead of the core enforcing that only
-> such mappings may do so.
->
-> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> Reviewed-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> ---
->  security/selinux/selinuxfs.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+SGksCgpPbiBNb24sIDIwMjYtMDktMTQgYXQgMTQ6MzQgKzA5MDAsIERvbmdnZXVuIFlvbyB3cm90
+ZToKPiBBIGhpc3QgdHJpZ2dlciB3aXRoIGFuIG9ubWF0Y2goKSBhY3Rpb24gY29waWVzIHRoZSBr
+ZXkgbGlzdCBvZiB0aGUKPiBjb21wYXRpYmxlIGhpc3RvZ3JhbSBpdCBmaW5kcyBvbiB0aGUgbWF0
+Y2hlZCBldmVudC7CoCBSZWFkaW5nIGVhY2gga2V5J3MKPiBuYW1lIHN0cmFpZ2h0IG91dCBvZiBr
+ZXlfZmllbGQtPmZpZWxkLT5uYW1lIGZhdWx0cyBvbiBhbnkgcHNldWRvLWZpZWxkCj4ga2V5LsKg
+IDQvNCByZW5kZXJzIHRoZSBrZXkgd2l0aCBleHByX2ZpZWxkX3N0cigpIGluc3RlYWQuwqAgVGhl
+IHRocmVlIGJlZm9yZQo+IGl0IG1ha2UgdGhhdCByZW5kZXJlciBwcm9kdWNlIHNvbWV0aGluZyBw
+YXJzZV9maWVsZCgpIGFjY2VwdHMuCj4gCj4gTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
+bGludXgtdHJhY2Uta2VybmVsLzIwMjYwOTEzMjAzMTI5Ljk0MTI3MC0xLWRvbmdnZXVueW9vLmtl
+cm5lbEBnbWFpbC5jb20vCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MjoKPiDCoC0gUmViYXNlZCBvbnRv
+IHY3LjMtcmM0LsKgIHYyIHdhcyBidWlsdCBvbiAyZjBjMWNmNzJmNDYsIGJlZm9yZSB0aGUgdHJh
+Y2luZwo+IMKgwqAgZml4ZXMgbWVyZ2VkLCBhbmQgdGhhdCB0dXJucyBvdXQgdG8gbWF0dGVyIC0t
+IHNlZSB0aGUgbmV4dCBlbnRyeS4KPiDCoC0gUmVpbnN0YXRlZCB0aGUgc3RhY2t0cmFjZSBwYXRj
+aCwgbm93IDMvNC7CoCB2MiBkcm9wcGVkIGl0IGFmdGVyIG1lYXN1cmluZwo+IMKgwqAgdGhhdCBj
+b21tb25fc3RhY2t0cmFjZS5zdGFja3RyYWNlIHBhcnNlZCBmaW5lLsKgIFRoYXQgd2FzIHRydWUg
+b2YKPiDCoMKgIDJmMGMxY2Y3MmY0NiBhbmQgaXMgbm8gbG9uZ2VyIHRydWU6IGE1ZTcwYmE4N2Nh
+OCBub3cgcmVmdXNlcyB0aGUKPiDCoMKgIG1vZGlmaWVyIHVubGVzcyB0aGUgZmllbGQgaXMgYSBy
+ZWFsIG9uZSB3aXRoIEZJTFRFUl9TVEFDS1RSQUNFLCBzbwo+IMKgwqAgd2l0aG91dCAzLzQgYSBj
+b21tb25fc3RhY2t0cmFjZSBrZXkgcmVuZGVycyBpbnRvIGEgY29tbWFuZCB0aGF0IGlzCj4gwqDC
+oCByZWplY3RlZC4KPiDCoC0gMS80IGlzIG5ldzogaGlzdF9maWVsZF9wcmludCgpIHByaW50cyB0
+aGUgYnVja2V0IHNpemUgd2l0aCAlbGQsIHNvIGEKPiDCoMKgIHNpemUgYWJvdmUgTE9OR19NQVgg
+cmVhZHMgYmFjayBuZWdhdGl2ZS7CoCBSZXBvcnRlZCBieSBzYXNoaWtvLWJvdC4KPiDCoC0gMi80
+IHVzZXMgJWx1IGZvciB0aGUgc2FtZSByZWFzb24uCj4gCj4gUGF0Y2hlcyAxLzQgdGhyb3VnaCAz
+LzQgaGF2ZSBubyBlZmZlY3Qgb24gdGhlaXIgb3duIC0tIG5vdGhpbmcgcmVhY2hlcwo+IGV4cHJf
+ZmllbGRfc3RyKCkgd2l0aCBhIGJ1Y2tldGVkIG9yIHN0YWNrdHJhY2UgZmllbGQgdW50aWwgNC80
+IHJlbmRlcnMga2V5cwo+IHdpdGggaXQgLS0gYnV0IGVhY2ggaXMgbmVlZGVkIGJlZm9yZSA0LzQs
+IGFuZCBpbiB0aGlzIG9yZGVyIG5vIGJpc2VjdGlvbgo+IHBvaW50IHJlZ3Jlc3Nlcy4KPiAKPiBU
+aGUgY29tbWFuZCBjcmVhdGVfZmllbGRfdmFyX2hpc3QoKSBnZW5lcmF0ZXMsIGZvciBlYWNoIGtp
+bmQgb2Yga2V5IHRoZQo+IGNvcGllZCBoaXN0b2dyYW0gY2FuIGNhcnJ5Ogo+IAo+IMKgIFdLIGtl
+ecKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5wYXRjaGVkwqDCoCBwYXRjaGVk
+Cj4gwqAgcGlkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZXlzPXBp
+ZMKgwqDCoCBrZXlzPXBpZAo+IMKgIHBpZC5sb2cywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGtleXM9cGlkwqDCoMKgIGtleXM9cGlkLmxvZzIKPiDCoCBwaWQuYnVja2V0cz0xMMKgwqDC
+oMKgwqDCoMKgwqDCoCBrZXlzPXBpZMKgwqDCoCBrZXlzPXBpZC5idWNrZXRzPTEwCj4gwqAgY29t
+bW9uX2NwdcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlz
+PWNvbW1vbl9jcHUKPiDCoCBjb21tb25fY29tbcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvb3Bz
+wqDCoMKgwqDCoMKgwqAga2V5cz1jb21tb25fY29tbQo+IMKgIGNvbW1vbl90aW1lc3RhbXDCoMKg
+wqDCoMKgwqDCoCBvb3BzwqDCoMKgwqDCoMKgwqAga2V5cz1jb21tb25fdGltZXN0YW1wCj4gwqAg
+Y29tbW9uX3RpbWVzdGFtcC51c2Vjc8KgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlzPWNvbW1vbl90
+aW1lc3RhbXAudXNlY3MKPiDCoCBjb21tb25fc3RhY2t0cmFjZcKgwqDCoMKgwqDCoCBvb3BzwqDC
+oMKgwqDCoMKgwqAga2V5cz1jb21tb25fc3RhY2t0cmFjZQo+IMKgIGhpdGNvdW50wqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIG9vcHPCoMKgwqDCoMKgwqDCoCBrZXlzPWhpdGNvdW50Cj4g
+Cj4gVW5wYXRjaGVkLCB0aGUgLmxvZzIgYW5kIC5idWNrZXRzIHJvd3MgZHJvcCB0aGVpciBtb2Rp
+Zmllciwgc28gdGhlCj4gZ2VuZXJhdGVkIGhpc3RvZ3JhbSBkb2VzIG5vdCBidWNrZXQgdGhlIHdh
+eSB0aGUgb25lIGl0IG1pcnJvcnMgZG9lcy7CoCBFYWNoCj4gb29wcyBpcyBhIG51bGwtcHRyLWRl
+cmVmIGF0IGNyZWF0ZV9maWVsZF92YXJfaGlzdCsweDc3MSwgdGFrZW4gaW4gaXRzIG93bgo+IGJv
+b3Q7IHRoZSB0aHJlZSByZWFsLWZpZWxkIHJvd3MgcnVuIHRoZSBzYW1lIGxvb3AgdG8gY29tcGxl
+dGlvbiB3aXRob3V0Cj4gZmF1bHRpbmcsIHNvIHRoZSBzaXggYXJlIHRoZSBsb29wIHJlYWNoaW5n
+IHRoZSBmYXVsdGluZyBsaW5lIHJhdGhlciB0aGFuIGEKPiBib290IGZhaWx1cmUuCj4gCj4gQW5k
+IHRoZSBidWNrZXQgc2l6ZSBhIGtleSBjYW4gY2FycnksIHJlYWQgYmFjayBmcm9tIHRoZSB0cmln
+Z2VyOgo+IAo+IMKgIC5idWNrZXRzPcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgdW5wYXRjaGVkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBhdGNoZWQKPiDC
+oCAwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcmVqZWN0ZWTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWplY3RlZAo+IMKg
+IC01wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHJlamVjdGVkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVqZWN0ZWQKPiDCoCAx
+ODQ0Njc0NDA3MzcwOTU1MTYxNsKgwqDCoMKgwqDCoMKgwqDCoCByZWplY3RlZMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlamVjdGVkCj4gwqAgOTIyMzM3MjAzNjg1NDc3NTgwN8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgIDkyMjMzNzIwMzY4NTQ3NzU4MDfCoMKgwqDCoMKgIDkyMjMzNzIw
+MzY4NTQ3NzU4MDcKPiDCoCA5MjIzMzcyMDM2ODU0Nzc1ODA4wqDCoMKgwqDCoMKgwqDCoMKgwqAg
+LTkyMjMzNzIwMzY4NTQ3NzU4MDjCoMKgwqDCoCA5MjIzMzcyMDM2ODU0Nzc1ODA4Cj4gwqAgMTg0
+NDY3NDQwNzM3MDk1NTE2MTXCoMKgwqDCoMKgwqDCoMKgwqAgLTHCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxODQ0Njc0NDA3MzcwOTU1MTYxNQo+IAo+IHg4Nl82
+NCB1bmRlciBRRU1VLCBDT05GSUdfS0FTQU49eSwgNCBDUFVzLCBiYXNlIDcwNDM0MGYxY2QwZC7C
+oCBBIGNvbXBhdGlibGUKPiBoaXN0b2dyYW0gb24gc2NoZWRfd2FraW5nIGtleWVkIG9uIFdLLCBh
+biBvbm1hdGNoKCkgdGFyZ2V0IG9uIHNjaGVkX3N3aXRjaAo+IGtleWVkIG9uIFNLLCBteV9zeW50
+aCgkd2FrZXVwX2xhdCxwcmlvKSBmb3JjaW5nIGEgZmllbGQgdmFyaWFibGUuCj4gCj4gRG9uZ2dl
+dW4gWW9vICg0KToKPiDCoCB0cmFjaW5nOiBQcmludCB0aGUgYnVja2V0IHNpemUgYXMgdW5zaWdu
+ZWQKPiDCoCB0cmFjaW5nOiBBZGQgdGhlIGJ1Y2tldCBzaXplIHRvIGV4cHJfZmllbGRfc3RyKCkK
+PiDCoCB0cmFjaW5nOiBPbmx5IHJlcG9ydCB0aGUgc3RhY2t0cmFjZSBtb2RpZmllciBvbiBhIHJl
+YWwgZmllbGQKPiDCoCB0cmFjaW5nOiBGaXggTlVMTCBkZXJlZmVyZW5jZSB3aGVuIGNvcHlpbmcg
+a2V5cyBmb3IgYSBmaWVsZCB2YXJpYWJsZQo+IAo+IMKga2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50
+c19oaXN0LmMgfCA5ICsrKysrKy0tLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygr
+KSwgMyBkZWxldGlvbnMoLSkKPiAKClRoZXNlIGxvb2sgZmluZSB0byBtZSwgdGhhbmtzLiBGb3Ig
+dGhlIHNldCwKCkFja2VkLWJ5OiBUb20gWmFudXNzaSA8emFudXNzaUBrZXJuZWwub3JnPgoKCg==
 
-Acked-by: Paul Moore <paul@paul-moore.com>
-
---=20
-paul-moore.com
