@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730DC3D75C7;
-	Mon, 14 Sep 2026 14:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8002547ECE5;
+	Mon, 14 Sep 2026 14:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789395296; cv=none; b=dExQstlvRw4CJlOwAHsT9I58DvXZ5js3yFqDZ7xAw9Olw6magOrWzPfmYjc+nuojz2N4gqdxwX80YY7wnWUzSpaBnKAjJD4S0HAzTocp8W5losp5kccvgnMO8JD3gaXLbwM1L3T1bfOcGvQ2tkWhZmeKTs0ugHH1LCy8ckRVNYE=
+	t=1789395595; cv=none; b=BCELmWVDKLlbw4EHeHRTgZD4lhrUXodss5DGtgnl/gNUpxJiF4VkC1Jh8WewCXHx0A/8SUry4ay1XoNo81sWUqC7luTXBrILUOEOlt1gQFmSIr8UbzfqEYjV3jPeTmOqwQDw3isUoTNRWtyBT26zuE7C5/W/FhUMR8StGhQUyk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789395296; c=relaxed/simple;
-	bh=My6H0/DAK+zl4fRIR24tK+jVkRjRcvNtZjHsDmr54ac=;
+	s=arc-20240116; t=1789395595; c=relaxed/simple;
+	bh=jBhOEv8KsmkFEP90l5bcQC0FGpq8zqVBcca2hH4pHM0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dMHVqypUPIP6LE7qCqfHc8zhIUFgTJQm0wsOe7Rmtb0bFwxUpIdyVi7RMlKO5UXAu48IDA5c1u17Eum+HOJ6Ig6HxpHOOB4cBVXr/cFjTDsweS+3Mk8Li26jHnoY4/IjBDWvLdmyv33wn7Q3RhNu7dtaln/NVppW/iEk08zP7dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huzjlDP4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=njMzV1XIXpZiEsbXnaRqToLuMPurP1bg02T6pzmROZdufCwAsxDqkom3m5HlJdXVzAHuIGvfeyozCjjcJ4iJZl0jOARw1n6EuPuPhNka8DM4SyHZ4k4TB78M7OnocRTWsLCFjEm081Dbl9eThau7ppXmGU8LbaPmHOR7J20lAjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHTvTxq+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huzjlDP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BEAF1F000FF;
-	Mon, 14 Sep 2026 14:14:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHTvTxq+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA90E1F000FF;
+	Mon, 14 Sep 2026 14:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789395293;
-	bh=My6H0/DAK+zl4fRIR24tK+jVkRjRcvNtZjHsDmr54ac=;
+	s=k20260515; t=1789395590;
+	bh=jBhOEv8KsmkFEP90l5bcQC0FGpq8zqVBcca2hH4pHM0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=huzjlDP4dX6usWWYCLmIMMyD7uO8NOHJq2UEBBT7I66VYgsQAlwHIKviaJLn/nRx5
-	 RS7YB9fEqOf6zuxH/DaNDK4CIBHrDk2w8tFaw8Mp7pxT0LVrLP5Tc4kJ1fpAqNBJLy
-	 2//hk80kYKT5rhsI/4PZFA5dNbPWP60OWMi4y4mPKli9vTWSknQzDdXyKPVl0pFmER
-	 /TuQOuQScf93T97UQi0AdlqRld9wRWuDgsqvA5e1nh3/JRMpluKJr9QutJK/+yyXLJ
-	 2V2XH51TDL53m3HywOup/FrdY190He4lj8SktzHvniKvWkBBjc6jo1+3euztazjgMY
-	 ST+p8Rtv3/xuw==
+	b=EHTvTxq+pRVW7TBKREyXLlMitgSCSFWTC2QOnxl/PTSRqclY54E6fxr8mMEPAqlez
+	 8KNtVyG0ueaRCTWepcuFw1kLbggI3x/G4XGYWKyUjbU6eg6fiAngNPTjj9Ijln50Ee
+	 EM2N7KbahvF+tKIWy72CvDhkkvmHLrj1alHQqwGhLfhDYq66k2qHZBWSZotEc+ZpFa
+	 12RleP9VAK7P7PW+PgYjv29+QZkyaoaqlvn7l+O3ApBO0YcW95DrnQ4FIh8SiJxDA4
+	 hAkqglFXLl8fIZI5sEmzJvmSUUEh0JHeokKWco1JlDRlQVLLBGcwTWvAM0l8jpTaV3
+	 Q/5fYixqbZ6NQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 06/13] tracing/wprobe: Add wprobe (watchpoint probe)
- trace event support
+Subject: Re: [PATCH v16 07/13] x86: hw_breakpoint: Add a kconfig to clarify
+ when a breakpoint fires
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178939024764.94750.11181367508605155346.stgit@devnote2>
+Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <178939025972.94750.16829369548375355435.stgit@devnote2>
 References: <178939017565.94750.9431053336761330458.stgit@devnote2>
- <178939024764.94750.11181367508605155346.stgit@devnote2>
+ <178939025972.94750.16829369548375355435.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 14:14:53 +0000
-Message-Id: <20260914141453.9BEAF1F000FF@smtp.kernel.org>
+Date: Mon, 14 Sep 2026 14:19:49 +0000
+Message-Id: <20260914141949.EA90E1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,19 +47,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >=20
-> Add hardware-breakpoint-based dynamic trace event support (wprobe).
-> Wprobe creates a dynamic event on data read/write accesses using
-> hardware breakpoints and logs the access context and fetchargs.
+> Add CONFIG_HAVE_POST_BREAKPOINT_HOOK which indicates the hw_breakpoint
+> on that architecture fires after the target memory has been modified.
+> This is currently x86 only behavior.
 >=20
-> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c=
-2.1785067572.git.wangjinchao600@gmail.com/
->=20
-> Assisted-by: Antigravity:gemini-3.8-flash
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178939017565.94750.=
-9431053336761330458.stgit@devnote2?part=3D6
+9431053336761330458.stgit@devnote2?part=3D7
 
