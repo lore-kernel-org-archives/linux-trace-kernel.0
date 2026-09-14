@@ -1,74 +1,76 @@
-Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89303DEFE2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 13:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E7547A88B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 13:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789392915; cv=none; b=tLJbS3v/A8znu4FUz/wsBZwnMuYC77Ho5tsh/vA+baSziSMwLnfQYvqzXUGDQrCM9XI7vgj3SetfbwuD6Yr/GYhiJElNeos8UWjnaaGPekmJYK19J7qpBUs/OAhQxjlXhgKYOS2Jnp8LBU+x/pae7Tpu+2UrUuTxGmn7T4IYYTA=
+	t=1789392917; cv=none; b=Rfz7qMNbSGWMzzRn3FGRXIT/PbApnA8Jr+mGLZ/8Y7SLBVRCOGuV3t3cpgTjX4QOSHtFC1Mj5xkAhl6XPkuNZgAXtRYIAars7188DB68ooIJCGJaNCirphO/2wJ9T6BhFGO1OnDlUhJBoiC06FtZAmJkddg6EIIokaqna7ykUCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789392915; c=relaxed/simple;
-	bh=Ci44wgDN0GN7PC0pFLwh2qIUZhXRf/cUbP346xyKCR8=;
+	s=arc-20240116; t=1789392917; c=relaxed/simple;
+	bh=rob29vuMJiM6unglL8riKgmWKOv8j0OKpd04pbbohkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PwhA55T6/LAKlBS2OLXILfdU0aZaVoP8KmsZDkepxuZbgXMwsn7dhrqqZ1zo7kfOtskYF2Gd25YTmRC+PUFQvXF9HGoH/s2ExaSmB4QQWJaKtsbSEWCSC0wxK2wcJQGnE/9tIlnUWx0TkRF8TPAZOjL5rXwiHMoIx1jx74GdZwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSaJojxc; arc=none smtp.client-ip=74.125.228.140
+	 MIME-Version; b=chshS3JfRkzzD7f/Wefg1OU0LhmyN+6S0E4C7rll0UMwfoq4L+xMmZZZmMSeV9j2SPCPzSSEbGVC+nc0QUqhFp9Ihino1SlSe1+2dJAEZn9uIyQdq+YCUl99D65VIBE/ow78KSHj+hPXiEyfugVB6LNAx+WNigKxHN12hihU1So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZAT7/a3; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSaJojxc"
-Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c2940ef15d3so281864666b.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 06:35:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZAT7/a3"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c29667ed561so405162766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 06:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789392910; x=1789997710; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1789392912; x=1789997712; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MNT4kKLCYJ3hMXnGWz3Nru1slAulvkgUfWcgV9YmQ6k=;
-        b=nSaJojxcV7zQVAi4KU0Fvywgvo5pXnSLEpW2UE0hsSDE6RYr3DVxO5ZFjKbp978nC+
-         xsu9G/vkSGKI1THdlz0t5xTDCJJ81sTEtWVMnC9lP1EJO5bQY7ZTof7nBVadKPQVJpmX
-         Gxu+fI8CjNfDziuHiyZdPRkswguOYqeKxPYTMTLQVQsbQu5W261d6aoYE5W4CBkHTp5I
-         FtpfiM4Gh0Lk13mkdw0RDu9CVW6M2kDP7FuazCGBywznebtLQpBjz4rY0E6THwpJu7RN
-         a67qo7DEPtPsT9f4IdgPR8j8Rz0xnmDvCTxOY3Q1fs/lcuwc4uiFYnmG7Xrds5ToINNh
-         M/7g==
+        bh=7u5qVr4y53yodZo8gWGizbwm6BRp6jZIIKbBtggqr88=;
+        b=kZAT7/a3mbujJosWxfKTCqT05ZSrRD39fxUF+69ap/lY2cHDGuhz90ofIQJUrYehE0
+         +Xe90th42rikLASkxM7qCuidIGtuzIf2CR0jy1x5UM5SEq912DiWgw45ml2Cv1AgYkQj
+         yUl9PznwmGvwu7RkgeE5ObJweqps9tZ66u0kj7TCsfs9mjB8Rlj1UFU2FX67+cg+cIFc
+         +ehIitYjJcyFcvDy+tgUPuqZPsBXWOt6/lBKp6vt2yCIQOpAHYBS4QcQrW33xk60f5/l
+         6DZSHwMqRcMN9jGrHrT3AioIuexDBhok7pbeCcjf5HVbmkGyhTzp7rBhOtjyHMH/aWz9
+         2Vkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789392910; x=1789997710;
+        d=1e100.net; s=20251104; t=1789392912; x=1789997712;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MNT4kKLCYJ3hMXnGWz3Nru1slAulvkgUfWcgV9YmQ6k=;
-        b=Xcj5oo5BOgVuK1cuBfEAsaSXlwdB7e+EzqMGSrPGIYyT3Nmnv/UqaTiS9rkmKqC8TZ
-         q/6F3YbQis6FnMvAyb7zPbSny6kCyaJwDRW20x+GZTezUcYhSoLLFm/LIumpOJNzcT46
-         xsdFWywBqq/SWNBw3pjax3JqgbxSNo5ui3eb/UZTSw9Jvzx/G3sK8L4XyA57jSde5M0y
-         k9GAdirY2CDsxpWzB+YtUU2thXjmBCxpFXEqMiqFElnrxCurxLwtOgRA68z3Vcb5cY50
-         a9IM6Kp0HQlDwCsDI5LuMbpOVyXYU1Z0+ifnYzMFJw9PYca5j/7UXigFLSnJmXl30EEo
-         CI9Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzngzocTt5znTLUeK7LJ9m+x2ZmXSbo0jmqaEwF7YVPXc8xB+zcM+HqnadvUFhWplFRwU5POo1E7sOj7OHSR0KxgjQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++lz6kuDg8FRQFl1Afs9Sz/DOg903KcmwSNMqA6AM6Ib134MNDvC
-	BByw0OB/o5oP+9XkdW58uO6j3gLnKh56Vn84sm2N5CrIF4iUGweJEQDD
-X-Gm-Gg: AYBFou0qoFf4ZXlJEHyo1W20iIQm/Tbg7xx6GChFqM3k+AZn1EOcF/JUla9xBY1yapE
-	xYUI8QJH5r3uB4GXilvxtVIk4NSf1d7WL0VaA6qd7+kWZmMpUaQBRxQSnXwNqfk0bpaUs8ESYo6
-	+Kqjxw/dNnMIOQqJTLx26jlpa1kp3VJmYGTAAQ9oXyGfczm/3pWGkamcLR0OiNG19HYsLklaCrC
-	7ymE0hadIqrLuqPDis/tIXXNv5eZio8hxm+UUMsEaVHN6uIHnXJQqm1QHry3EpoYy/2d/JZkteA
-	CIY+kbE6masOyf91CSG2PFAUcF21PZg9HuzJPSH8U1PS1nFwdE8da7xpyf4aIslCGmHcw1whl0W
-	tPC0SSFgkWuNv1nWb1GewU7yjkncWg+WvFrt86fZpw6CeE+oOn0dc9Xr1sdvzK++oltKOvPns0t
-	vAafo0hHg/V5sQ6kzb6woOgsXucWNDgRT75vIJPZH20+XE2T0Y56gGP8xmg4nMEjo335Dsbs30b
-	Orc3be2MpPZYYqE/Fpml2ALyZOWUzNq1p+mDHRG4rtZcFCLVJHT7WXWCOI=
-X-Received: by 2002:a17:907:7204:b0:c16:84dc:9607 with SMTP id a640c23a62f3a-c29b86f1119mr352247966b.19.1789392910285;
-        Mon, 14 Sep 2026 06:35:10 -0700 (PDT)
+        bh=7u5qVr4y53yodZo8gWGizbwm6BRp6jZIIKbBtggqr88=;
+        b=bK/83okAaOCYhwKoYz7lMj7CW8EysVAK5y1tBmvR9ti/eoRybsgT2jgsNTs/qol6fN
+         Zwyvsl+sf4USh/dR0tgXLZd/M+XVdMyR7mHo1yVJyLoUgyew5Zf8TA7wgAgzc0ZCx09z
+         h2LlKqiD6f22roV9yKdgOcxpUZz73TAw0BDZNzOV8xA17acFE4lfbs1lPg4+1Fyy/Wki
+         GHs3fw5yfLFdhIyvjej9ZhjSHerJbP8GccexyaruKVhq/Yeptc1byu70VKXx4KUBpO9Z
+         KGlWYN3i1Yx1bNYd98QHN2R0RUR34UH3lUcRHwevPy0L0IlcoOyULnzXhQnyUhBxmot8
+         6gyA==
+X-Forwarded-Encrypted: i=1; AKwUvBzi9i1RMjzJJhMY2w94JCzCqiUPnm1j6wUVAGXlPwkwr+wMgSVaIF4/h5ie9Sgj+EyEAhRNAIY/IGflotnvt1EnIRk=@vger.kernel.org
+X-Gm-Message-State: AFuF++nEXIA7ZjBxd3yvQQ3aCAcej4iEw4OA/RZAMuwmLHjAH7KE9QHj
+	1CwqPkl30l/DijTXiB81xWLoL/80mCZMsd9gad90N6PWrn2irKOSBvpu
+X-Gm-Gg: AYBFou2/zJxeGOrZC48FJp4iQNthduJpBsjh3ilonayMZhQ8Z3n6NzMZ4ZsTJUpPXiF
+	Vr7fnRLTz2ZQrBvSfaRSHVg9t1nrADvUJBLUS7NMuLsYz8cCxiQ1/J7jkS2Z9EcDtVIShkgGJgp
+	Nd/YBd0k62bV3RaGfdH8ewiBtrikGFG1DfaEQpqX3R9JpxPagfxdYNvlC6OA8uApVn+z9+7Zbl6
+	AQ07eMQO9WwOSOJDJQwLZFI6qT1kaZRVjGFhU+q0d6Bf8qINAFiqlkdI+XW2J8fcevoszPqUM52
+	aywJT7OHzVph0gXWVp7jFWApfwQ3mrobAK9fDXaIUXf2ipOZF/8NS3gNlQG4cHEQO+RsfdEKYWY
+	SMRm18g7lBW3khjG3lIKpv2m9dEU3kWlwmf1sGiFHJW6ai90HQEZbSSqBxBK0K4c+70c6L1zzzJ
+	IIN1r0MtyPK2tASaw2L3vQbh7IGYs3Zw301GB62iNpk2UZvNhyBEpkADX5SA2NFBke9RrygIim3
+	7bm5gZCvimvYNtl3W2S4sWJ657+dWGEziNe8sCiFvX8AAnJ1EJJIFbhc8U=
+X-Received: by 2002:a17:907:1c2a:b0:c26:2fc8:4e91 with SMTP id a640c23a62f3a-c29b87055ffmr157187366b.29.1789392911608;
+        Mon, 14 Sep 2026 06:35:11 -0700 (PDT)
 Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2966159c07sm441454566b.63.2026.09.14.06.35.09
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2966159c07sm441454566b.63.2026.09.14.06.35.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2026 06:35:09 -0700 (PDT)
+        Mon, 14 Sep 2026 06:35:11 -0700 (PDT)
 From: David Carlier <devnexen@gmail.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
 Cc: mathieu.desnoyers@efficios.com,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH v2 1/2] tracing: Take trace_types_lock when dropping the buffer_meta reference
-Date: Mon, 14 Sep 2026 14:35:04 +0100
-Message-ID: <20260914133506.4865-2-devnexen@gmail.com>
+	David Carlier <devnexen@gmail.com>,
+	stable@vger.kernel.org,
+	Sashiko <sashiko-bot@kernel.org>
+Subject: [PATCH v2 2/2] ring-buffer: Do not show buffer_meta for CPUs without a buffer
+Date: Mon, 14 Sep 2026 14:35:05 +0100
+Message-ID: <20260914133506.4865-3-devnexen@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260914133506.4865-1-devnexen@gmail.com>
 References: <20260914133506.4865-1-devnexen@gmail.com>
@@ -80,30 +82,37 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tracing_buffer_meta_open() drops the trace_array reference with
-__trace_array_put() when ring_buffer_meta_seq_init() fails, without
-holding trace_types_lock. Use trace_array_put() like every other open
-error path.
+The per_cpu/cpuN/buffer_meta files are created for every possible CPU,
+but buffer->buffers[cpu] is only allocated once that CPU comes online.
+Reading the file of a CPU that never came online dereferences a NULL
+cpu_buffer in rbm_start().
 
+Fail the open with -ENODEV when the CPU has no buffer, as the other
+per CPU ring buffer interfaces do.
+
+Cc: stable@vger.kernel.org
 Fixes: 950032ffcee7 ("ring-buffer: Add output of ring buffer meta page")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/all/20260913134906.6E8A01F000FF@smtp.kernel.org/
 Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8658cad53cb5..c8295324ffaa 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5881,7 +5881,7 @@ static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9c03a555a6ba..8833d04b9fee 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2381,6 +2381,9 @@ int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, in
+ 	struct seq_file *m;
+ 	int ret;
  
- 	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
- 	if (ret < 0)
--		__trace_array_put(tr);
-+		trace_array_put(tr);
- 	return ret;
- }
- 
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return -ENODEV;
++
+ 	ret = seq_open(file, &rb_meta_seq_ops);
+ 	if (ret)
+ 		return ret;
 -- 
 2.55.0
 
