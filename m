@@ -1,298 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A834A480DEC;
-	Mon, 14 Sep 2026 14:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BA748094A;
+	Mon, 14 Sep 2026 14:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789396263; cv=none; b=cwcQcCJUMHfrXwM9yMxGgriRuyu6li7jgm/CJjgYm3MnDZ7gNcVwTl4MtGbiyMKMWgv6MOUCGtsH9ocz8YzBr5CjTTsOR1bcvGwSAk94XyVRvSJCClhnV/LmjvhydaduVLYczIZiBTtpOluTRDE1EnVAnKD2koLiA+nhRXGh7+I=
+	t=1789396356; cv=none; b=oQaL4vaN8RqeKBoxoij76rFX3cD67yV7m+sVvUXMcLBkba4w14k3gDq6GBO+C9PPDgWECraA89u6OV+RJE6+0SEUOo+lfYYerC27kxOgrwm3uLhW2VMYA7vwAmGvNyDShLY6pQj+sabwnmB5yfPLK1b7g3FJDjmwt5IpYkNyXtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789396263; c=relaxed/simple;
-	bh=Z3E1hZeNvURbzCH4DGhMWQZAayLO6QmTSTK8h0higAc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AWdnjTuNq/keWl4o4qGMJHcbqWV/uCsCo2Tglsqexf1OswmDIlDoHXqMLYXLJLCYcv3XDT508GHxkTFovqZFpku5snkm0jrEapqt0REPBuWItX7NwBxNfqglVs3TvBWW+o0lbDxbpvv+KHi6bF/wuoj7TbZeP8mjht5MRDXpD6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oX+q0OYO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789396356; c=relaxed/simple;
+	bh=vfyVWaASYJAa3XBr84CWqbsMBqaQh38W4E06mZRemZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C6mljLUAosUjvNXApY7wog2jCtwaoiNOYQgumbLPjFmrRIUj2D0bPx6XWe36/4sra/I6/yq+7VP07Q5uevr9Rve1qa1pLGEIR6IWwnFQM6hxN+egd5tgXq8zxF5vdd4zwiJOpDIHKLp9p6BJ9zZeUXScdEKjKj2g5rx6hkBqL2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y9YbGuF/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oX+q0OYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824541F000FF;
-	Mon, 14 Sep 2026 14:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789396261;
-	bh=QU/gZVED0AtjJX6+GC2V0P7psA+KVinUaVQghPSJtXw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=oX+q0OYO1Fktez0rwXQHiVnV+hWx4Kv7NlHOJGc7Y4bbZyCPD80FO1KcxhSpBfbYX
-	 X++G0vdPmuBOKbkgMFl2U3G1wS7V1NvnCp4W8x7oTys1xs8hwXO5UaWq2TASnRagEG
-	 zhwpPDJwB20IhdrlkZivltLl7K4/RF0a8GokOf40=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Mon, 14 Sep 2026 16:30:33 +0200
-Subject: [PATCH v4 3/3] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y9YbGuF/"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68EETfGS418792;
+	Mon, 14 Sep 2026 14:32:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=lVy0wc
+	XmbENnS+FIQ0KsOhquQgH/WDKRXcVnniyEvQ8=; b=Y9YbGuF/6yudLXssUg8jCA
+	WHDwi/zo5S+r0wyg40x+9vgo/yA1EfC0aCeAnMePsUFBT0RfgeYVrjLFnxHZosNK
+	t46W4wP8IfM1KUbGvI9sRsxuJ/gSjNJpSdmhopm+fECMlU9vhulcmkRDy/+Agxpi
+	lz0xaWW4MVXk3/fvDSHL+NcYFFx4eOYRljbrgQIn5m6oBR5CfHePtZFfi//RQQLB
+	tBuRb112INMWtkR48+xTstxdC9ggtUmC/3OhEWdKVdDmsQ+Jtx7eYAzW6AY+kkhv
+	HFWgG9NxwRz/NDPhzAi5kTwZSfvrDrRxZtPg9RigMZkjAx993MyrhuEDfggYOGxQ
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmxdq1ymf-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 14 Sep 2026 14:32:22 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68ED54rW2298667;
+	Mon, 14 Sep 2026 14:32:21 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gnj2jxhw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Sep 2026 14:32:21 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68EEWHCn49217820
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Sep 2026 14:32:17 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9E912004E;
+	Mon, 14 Sep 2026 14:32:17 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 64DE220040;
+	Mon, 14 Sep 2026 14:32:17 +0000 (GMT)
+Received: from [9.111.205.105] (unknown [9.111.205.105])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 14 Sep 2026 14:32:17 +0000 (GMT)
+Message-ID: <66cf03dc-fe3b-4853-a5c1-54dd17860e90@linux.ibm.com>
+Date: Mon, 14 Sep 2026 16:32:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-bind_taint-v4-3-eadf8a090903@linuxfoundation.org>
-References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
-In-Reply-To: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
-To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
- Aaron Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Bradley Morgan <brads@mainlining.org>, 
- Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-usb@vger.kernel.org, driver-core@lists.linux.dev, 
- linux-trace-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Johan Hovold <johan@kernel.org>
-X-Mailer: b4 0.17-dev-362b8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10654;
- i=gregkh@linuxfoundation.org; h=from:subject:message-id;
- bh=Z3E1hZeNvURbzCH4DGhMWQZAayLO6QmTSTK8h0higAc=;
- b=owGbwMvMwCRo6H6F97bub03G02pJDFkrWIWK++seileE2bVHfp3Rr9rS6XP9Kp9pw7fmFX/rj
- 95emn6zI5aFQZCJQVZMkeXLNp6j+ysOKXoZ2p6GmcPKBDKEgYtTACZieZxhwaWmQ6+s72aJf4qc
- 8zYtu/qL11G7WoZ51p6S8fsUbC5PsLgtIiRvonpy7aqzAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp;
- fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 14/24] unwind_user/eh_frame: Add .eh_frame[_hdr]
+ validation option
+To: sashiko-reviews@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <20260821195259.2688377-1-jremus@linux.ibm.com>
+ <20260821195259.2688377-15-jremus@linux.ibm.com>
+ <20260821201016.855101F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20260821201016.855101F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE0MDIwMSBTYWx0ZWRfX3jFlJ2EhZ36W
+ sl+hosiaeBmRShwGZU39Nw8kd7/p6niyeAn/ZzZzt15V11xnlYn6Gh8wJfDZmHnZ88ed/TwDIuH
+ MwtP2ZPgeQsTy6BUpzbwVUcT0sOKY/JIurbqGMb98dqeP63R4n+Bg5MjA3wtsO5/il6M25jzLV5
+ yui7vjVDsgE2kT3yA6WhXQz8qhoqY49MXlOjAIVoqZs1XJVx79+v6rUFhOY2zkeIyCqI/Ya81o+
+ zTOORnWO4AW5GrdKbppfcAQ6AlpNkR5/DoX8OfRTb8180wu9zplaS7MoSHovPAFPJ10+OvTi8bE
+ 8kG2aD+QdDdEWioDusaEuecblmSNR61jA3xBAnQi796Sn/zHTD2NbRbE17HKZU77cyMOQC6TBMI
+ RU2aCXLmXXwpQXB4E2EjrG6dz/Lwfc28pAXfrESENJDfMv73HE+zDw0prEFuT2I7o7+hcUj21HD
+ 9XUPTpbUGuF4EouwLTA==
+X-Proofpoint-GUID: 1fRiUsxXqOND91to644MAHhaExCfcnlQ
+X-Authority-Analysis: v=2.4 cv=DobDa2/+ c=1 sm=1 tr=0 ts=6aa80576 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=VwQbUJbxAAAA:8 a=Up-5jpl08WEPYK_orUQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 1fRiUsxXqOND91to644MAHhaExCfcnlQ
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE0MDIwMSBTYWx0ZWRfX4nZtxJsgdccm
+ XWw0z6CWTG+j+UiNWmTpmoDrnPx4iEz6bQd17+DldTc3vHq67UAW0kW/Y4lAF4TWzwPt2h8MsbV
+ ifaWm9ie7uV2K0nkNRzyKAy5dor17qY=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-14_03,2026-09-14_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ spamscore=0 clxscore=1015 adultscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609140201
 
-The ability to add and remove devices from a driver through the sysfs
-"bind" and "unbind" files was created all those decades ago as a way
-that kernel developers can iterate faster, and provide a debugging way
-for users to attempt to add a new device to a driver without having to
-rebuild their kernel.
+On 8/21/2026 10:10 PM, sashiko-bot@kernel.org wrote:
 
-This api over the years has been abused and recently come under a major
-fuzzing "attack" through tools like syzbot which decided that it would
-attempt to just randomly bind any driver to any type of device, causing
-loads of unneeded errors and pointless kernel patches to be generated by
-unsuspecting new developers.
+> Add a debug feature to validate all .eh_frame[_hdr] sections when first
+> loading the file rather than on demand.
 
-Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
-will be set on the driver if the bind/unbind sysfs files are ever
-written to.  This lets kernel developers "know" that a user is
-attempting to do something that is not normal, and as such, if the
-kernel breaks they get to keep the shiny pieces laying around on the
-floor.
+>> diff --git a/kernel/unwind/eh_frame.c b/kernel/unwind/eh_frame.c
 
-The flag is 'Y' which was unused, and can remembered as the user is
-"yeeting" the device being operated on here (thrown with force without
-regard for the thing being thrown).
+>> @@ -1216,6 +1216,92 @@ int eh_frame_find(unsigned long ip, struct unwind_user_frame *frame)
+>>  	return ret;
+>>  }
+>>  
+>> +#ifdef CONFIG_EH_FRAME_VALIDATION
+>> +
+>> +static int eh_frame_validate_section(struct eh_frame_section *sec)
+>> +{
+> [ ... ]
+>> +	table_start_ptr = (void __user *)sec->binary_search_table_start;
+>> +	table_size = sec->binary_search_table_end - sec->binary_search_table_start;
+>> +
+>> +	for (i = 0; i < sec->fde_count; i++) {
+> 
+> [Severity: High]
+> Could this unbounded loop cause CPU stalls or trigger soft lockup warnings?
+> 
+> Since fde_count is controlled by the size of the mapped .eh_frame_hdr VMA,
+> it can be extremely large for maliciously crafted ELF files, potentially
+> stalling the CPU for seconds or minutes.
+> 
+> Because mmap_read_lock is released before this is called, would it be safer
+> to add a cond_resched() in this loop?
 
-Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
-as many times crashes/oops/warnings/failures happen within the callback,
-and the taint flag needs to be there to show what was being attempted.
-If it were to be set after the callback happens, the oops report would
-not properly reflect what foolishness was being attempted.
+According to Steven this is not required.
 
-Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
-the tool from hitting bind/unbind, should be run with panic_on_taint
-enabled so that they fall over and don't continue on, thinking that they
-actually found a real issue.
+> 
+>> +		struct eh_frame_fde fde;
+>> +		unsigned long cur;
+>> +		unsigned long func_addr, fde_addr;
+>> +		int ret;
+>> +
+>> +		cur = sec->binary_search_table_start + i * entry_size;
+>> +
+>> +		scoped_user_read_access_size(table_start_ptr, table_size, Efault) {
+>> +			/* Read function start address from table */
+>> +			ret = read_encoded_pointer(sec, &cur,
+>> +						   sec->binary_search_table_end,
+>> +						   table_enc, &func_addr);
+> 
+> [Severity: High]
+> Does this bypass the Spectre v1 mitigations provided by the scoped access
+> macro?
+> 
+> The scoped_user_read_access_size() macro shadows the table_start_ptr variable
+> to enforce usage of a masked pointer. However, the code ignores that masked
+> pointer and instead uses the unmasked cur pointer derived outside the scope:
+> 
+>     cur = sec->binary_search_table_start + i * entry_size;
+> 
+> When read_encoded_pointer() uses this unmasked pointer inside
+> unsafe_get_user(), the masking mitigations are bypassed, allowing potential
+> arbitrary speculative reads.
 
-Userspace operations that rely on the bind/unbind files to work around
-the lack of will to upgrade a kernel image to a newer version with
-proper support for new devices, or the lack of will to submit valid
-device ids to driver authors, will still work properly, but now the
-kernel will be flagged in a way that will show that perhaps those users
-should reconsider their behavior and work to have the drivers properly
-support these devices in a "native" manner.
+True.  Will resolve as part of resolving the next finding.
 
-Finally, the bind/unbind files can find real use-after-free issues with
-some drivers by forcing the process to happen virtually without having
-to rely on manual removal processes.  Those real bugs should still be
-worked on, but by adding this taint flag, developers can more easily
-determine bug reports that are actually worth looking at.
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
-Tested-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
-Reviewed-by: Bradley Morgan <brads@mainlining.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/admin-guide/tainted-kernels.rst | 52 ++++++++++++++-------------
- drivers/base/bus.c                            |  3 ++
- include/linux/panic.h                         |  3 +-
- include/trace/events/module.h                 |  3 +-
- kernel/panic.c                                |  5 +--
- tools/debugging/kernel-chktaint               |  8 +++++
- 6 files changed, 46 insertions(+), 28 deletions(-)
+> 
+>> +			if (ret) {
+>> +				dbg_sec_ehfh(cur, "table[%lu]: failed to read function start address\n", i);
+> 
+> [Severity: High]
+> Is it safe to call printk wrappers like dbg_sec_ehfh() or dbg_sec() while user
+> access (UACCESS) is enabled?
+> 
+> Calling complex functions like printk inside a scoped_user_read_access_size()
+> block can lead to deadlocks or kernel panics. It does internal locking, can
+> sleep, and may clobber architecture-specific user access state like the SMAP
+> AC flag.
 
-diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
-index 9ead927a37c0..abbf5e3dd749 100644
---- a/Documentation/admin-guide/tainted-kernels.rst
-+++ b/Documentation/admin-guide/tainted-kernels.rst
-@@ -79,30 +79,31 @@ which bits are set::
- Table for decoding tainted state
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--===  ===  ======  ========================================================
--Bit  Log  Number  Reason that got the kernel tainted
--===  ===  ======  ========================================================
--  0  G/P       1  proprietary module was loaded
--  1  _/F       2  module was force loaded
--  2  _/S       4  kernel running on an out of specification system
--  3  _/R       8  module was force unloaded
--  4  _/M      16  processor reported a Machine Check Exception (MCE)
--  5  _/B      32  bad page referenced or some unexpected page flags
--  6  _/U      64  taint requested by userspace application
--  7  _/D     128  kernel died recently, i.e. there was an OOPS or BUG
--  8  _/A     256  ACPI table overridden by user
--  9  _/W     512  kernel issued warning
-- 10  _/C    1024  staging driver was loaded
-- 11  _/I    2048  workaround for bug in platform firmware applied
-- 12  _/O    4096  externally-built ("out-of-tree") module was loaded
-- 13  _/E    8192  unsigned module was loaded
-- 14  _/L   16384  soft lockup occurred
-- 15  _/K   32768  kernel has been live patched
-- 16  _/X   65536  auxiliary taint, defined for and used by distros
-- 17  _/T  131072  kernel was built with the struct randomization plugin
-- 18  _/N  262144  an in-kernel test has been run
-- 19  _/J  524288  userspace used a mutating debug operation in fwctl
--===  ===  ======  ========================================================
-+===  ===  =======  ========================================================
-+Bit  Log  Number   Reason that got the kernel tainted
-+===  ===  =======  ========================================================
-+  0  G/P        1  proprietary module was loaded
-+  1  _/F        2  module was force loaded
-+  2  _/S        4  kernel running on an out of specification system
-+  3  _/R        8  module was force unloaded
-+  4  _/M       16  processor reported a Machine Check Exception (MCE)
-+  5  _/B       32  bad page referenced or some unexpected page flags
-+  6  _/U       64  taint requested by userspace application
-+  7  _/D      128  kernel died recently, i.e. there was an OOPS or BUG
-+  8  _/A      256  ACPI table overridden by user
-+  9  _/W      512  kernel issued warning
-+ 10  _/C     1024  staging driver was loaded
-+ 11  _/I     2048  workaround for bug in platform firmware applied
-+ 12  _/O     4096  externally-built ("out-of-tree") module was loaded
-+ 13  _/E     8192  unsigned module was loaded
-+ 14  _/L    16384  soft lockup occurred
-+ 15  _/K    32768  kernel has been live patched
-+ 16  _/X    65536  auxiliary taint, defined for and used by distros
-+ 17  _/T   131072  kernel was built with the struct randomization plugin
-+ 18  _/N   262144  an in-kernel test has been run
-+ 19  _/J   524288  userspace used a mutating debug operation in fwctl
-+ 20  _/Y  1048576  device was manually bound or unbound from a driver
-+===  ===  =======  ========================================================
- 
- Note: The character ``_`` is representing a blank in this table to make reading
- easier.
-@@ -189,3 +190,6 @@ More detailed explanation for tainting
-  19) ``J`` if userspace opened /dev/fwctl/* and performed a FWTCL_RPC_DEBUG_WRITE
-      to use the devices debugging features. Device debugging features could
-      cause the device to malfunction in undefined ways.
-+
-+ 20) ``Y`` If userspace wrote to the `bind` or `unbind` sysfs files and
-+     successfully bound or removed a device from a driver.
-diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-index d17bd91490ee..c51ad96d4de4 100644
---- a/drivers/base/bus.c
-+++ b/drivers/base/bus.c
-@@ -19,6 +19,7 @@
- #include <linux/string.h>
- #include <linux/mutex.h>
- #include <linux/sysfs.h>
-+#include <linux/panic.h>
- #include "base.h"
- #include "power/power.h"
- 
-@@ -241,6 +242,7 @@ static ssize_t unbind_store(struct device_driver *drv, const char *buf,
- 
- 	dev = bus_find_device_by_name(bus, NULL, buf);
- 	if (dev && dev->driver == drv) {
-+		add_taint_module(drv->owner, TAINT_FORCED_BIND, LOCKDEP_STILL_OK);
- 		device_driver_detach(dev);
- 		err = count;
- 	}
-@@ -264,6 +266,7 @@ static ssize_t bind_store(struct device_driver *drv, const char *buf,
- 
- 	dev = bus_find_device_by_name(bus, NULL, buf);
- 	if (dev && driver_match_device(drv, dev)) {
-+		add_taint_module(drv->owner, TAINT_FORCED_BIND, LOCKDEP_STILL_OK);
- 		err = device_driver_attach(drv, dev);
- 		if (!err) {
- 			/* success */
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index f1dd417e54b2..8e7250b0e913 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -88,7 +88,8 @@ static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
- #define TAINT_RANDSTRUCT		17
- #define TAINT_TEST			18
- #define TAINT_FWCTL			19
--#define TAINT_FLAGS_COUNT		20
-+#define TAINT_FORCED_BIND		20
-+#define TAINT_FLAGS_COUNT		21
- #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
- 
- struct taint_flag {
-diff --git a/include/trace/events/module.h b/include/trace/events/module.h
-index e5a006be9dc6..19df3e39bba4 100644
---- a/include/trace/events/module.h
-+++ b/include/trace/events/module.h
-@@ -26,7 +26,8 @@ struct module;
- 	{ (1UL << TAINT_OOT_MODULE),		"O" },		\
- 	{ (1UL << TAINT_FORCED_MODULE),		"F" },		\
- 	{ (1UL << TAINT_CRAP),			"C" },		\
--	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" })
-+	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" },		\
-+	{ (1UL << TAINT_FORCED_BIND),		"Y" })
- 
- TRACE_EVENT(module_load,
- 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 892045d8409e..a4dbb6b8cd2b 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -826,6 +826,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- 	TAINT_FLAG(RANDSTRUCT,			'T', ' '),
- 	TAINT_FLAG(TEST,			'N', ' '),
- 	TAINT_FLAG(FWCTL,			'J', ' '),
-+	TAINT_FLAG(FORCED_BIND,			'Y', ' '),
- };
- 
- #undef TAINT_FLAG
-@@ -862,9 +863,9 @@ static void print_tainted_seq(struct seq_buf *s, bool verbose)
-  * exact size is allocated dynamically; the initial buffer remains
-  * as a fallback if allocation fails.
-  *
-- * The verbose taint string currently requires up to 327 characters.
-+ * The verbose taint string currently requires up to 344 characters.
-  */
--#define INIT_TAINT_BUF_MAX 350
-+#define INIT_TAINT_BUF_MAX 370
- 
- static char init_taint_buf[INIT_TAINT_BUF_MAX] __initdata;
- static char *taint_buf __refdata = init_taint_buf;
-diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-index e1571c04afb5..d8628be37214 100755
---- a/tools/debugging/kernel-chktaint
-+++ b/tools/debugging/kernel-chktaint
-@@ -211,6 +211,14 @@ else
- 	addout "J"
- 	echo " * fwctl's mutating debug interface was used (#19)"
- fi
-+
-+T=`expr $T / 2`
-+if [ `expr $T % 2` -eq 0 ]; then
-+	addout " "
-+else
-+	addout "Y"
-+	echo " * device was manually bound or unbound from a driver (#20)"
-+fi
- echo "Raw taint value as int/string: $taint/'$out'"
- 
- # report on any tainted loadable modules
+Will resolve by introducing and using a safe_read_encoded_pointer()
+variant, similar to the safe_read_{fde|fre}() in the .sframe series.
+This also gets rid of the scoped user access region and thus resolves
+the previous finding as well.
 
+> 
+>> +				return ret;
+>> +			}
+>> +			if (i && func_addr <= prev_func_addr) {
+>> +				dbg_sec(".eh_frame_hdr: table[%lu]: not sorted\n", i);
+>> +				return -EINVAL;
+>> +			}
+> 
+
+Regards,
+Jens
 -- 
-2.55.0
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
