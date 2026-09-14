@@ -1,226 +1,132 @@
-Received: from mta0.migadu.com (out-85.mta0.migadu.com [91.218.175.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090652EC0A4
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 19:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECCF3BCD3F;
+	Mon, 14 Sep 2026 19:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789413253; cv=none; b=Mu0stuzrX8MLwYkvi9Hfyeh8kRsTH29onU1WluMKsF4i75vC9lnEvtsprEtgaq1FSlLmuEIclbodaYUBCgO7KLyeLCxolPc5SD2LwKibdHBuyX9/e6ZbQB69eGWFaT6I3J8h4vCWPqVrhlw+GWG7lNmRVqLfDZjk40dKwr5TxRg=
+	t=1789413257; cv=none; b=Hm5mRLwOeUAoYrB+qOyhnsf0grcsgO8kCEqRChdpgUC3FwYVfcNmcl2lbYLsYEsob/Z92QuIFkqt9DhhaWIRWRfNto0RWLcE0GAJVoHG3ynttgeGsPXPd0hiWHHMi9JWDja2WdP+diPssiVxs/B3qicwWGr6Ul7Cnj+eHL5Fs6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789413253; c=relaxed/simple;
-	bh=E5rD+GC6hBExNZ+C0zpz9VB7RMnNCVhPsy+cbEyF7II=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mcIB/KTRqWgAM0j/lXoMbQD2entFure0zLCQU3CaJT/v+5Kv0KIZRD3MVBQTQvqrv8gp6nw1YegsEdKawNzcRyktNdeXeHVhUxWmCufRfkCYTh7hZXLY3+liQ2axJiqiVL8ZOF1NioLew6cQFfG9K5QfTREhQvn2qTLWAMJkzB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L6DoL0Vj; arc=none smtp.client-ip=91.218.175.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789413257; c=relaxed/simple;
+	bh=SRFDGk3qpnc8cxJg10D+z8x4vSYb1keyRTEcClt1Qac=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=CeveRaekH8d3G8N0ENUqsj5CgI1wVDNyztLje4TngvTJZMyig7SiHQxoH9vmaAKkkS0T3uX1LBAOp6zZM8jpPUqKCJxcAgjWKPisAYZlD3vJC8ONbQK3DhRCwW2ZF/SL7SoQxXd1nP+iExYH7rn2P/+q2K83a+KMjELxOGPS/Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdyOzcNX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L6DoL0Vj"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=E5rD+GC6hBExNZ+C0zpz9VB7RMnNCVhPsy+cbEyF7II=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789413244; v=1; x=1790018044;
- b=L6DoL0VjSHJapG1NLQ9mH2HPHE4+ogacHPTDmxAUULhBrwL8lARPy/X31kC+Sb2gPOQZjFxi
- Suodqrbvhzjow5Rpcr7ZIntSVkrml2f0ZcIRyNbvLar5/TcygyirmglubDKatJvnLdlTZjBQaVp
- 6Jth1DiSh0TvngOslX7tvzQA=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 7dd95a410480780c;
-	Mon, 14 Sep 2026 19:14:04 +0000
-X-Mizu-Trace-ID: 7dd95a410480780c
-X-Migadu-Flow: FLOW_OUT
-From: wen.yang@linux.dev
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v6 4/4] rv/reactors: add KUnit tests for reactor registration and dispatch
-Date: Tue, 15 Sep 2026 03:13:37 +0800
-Message-Id: <7d213b110815da45595ad8cd7bcce5641fac3404.1789412799.git.wen.yang@linux.dev>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1789412799.git.wen.yang@linux.dev>
-References: <cover.1789412799.git.wen.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdyOzcNX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 601501F000FF;
+	Mon, 14 Sep 2026 19:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789413248;
+	bh=qqxU0Tn+w3Hq00cDDV6qBR7mESGDkdB5AXWrXBPmMYo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fdyOzcNXteGBR+HJ16HFzmf2Ocq5Jt8sfM5EH6vMJ7T+zPMdR4Dl2pc2jPpc8L+Kh
+	 P/KbIo7c59agqkkQ5OZMKCQbzKTfagtUUv2IpxJ29pB6ZOAzWPs4Rmh8frKdylgb5j
+	 j6ZcoEgypvV4fpIvRFM9yU2FJAu2Jf4hUzxgUsTBscpmLrq5X1BRYZ3biRuT67UKO6
+	 f1uhUuQy20b3kMZF+yxm2/yHksUQoGzX3CbwCZTR7J7onEFAr0TABQnjEF8+Jz1wL3
+	 0SEgHEgGUx1j6IKLOUWUlsN22yQB0oUvc0Mn7dv5aSiqh49wd75yuhb28dTQU9MkwJ
+	 QxO8+18KURdZA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 16/40] mm/vma: only allow mmap to clear
+ VMA_MAYWRITE_BIT if kernel-owned
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: bpf@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, linux-scsi@vger.kernel.org, "Marc
+ Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, selinux@vger.kernel.org, linux-s390@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, "Christian
+ Borntraeger" <borntraeger@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Oliver
+ Upton" <oupton@kernel.org>
+In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-16-7d9781ed5361@kernel.org>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+ <20260914-b4-mmap-prepare-vma-flag-sanify-v2-16-7d9781ed5361@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 19:14:06 +0000
+Message-Id: <20260914191407.601501F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Wen Yang <wen.yang@linux.dev>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Add KUnit tests covering the reactor register/unregister lifecycle
-(including duplicate and name-length rejection) and rv_react() dispatch
-(a no-op without a callback, exactly one invocation with one).  The
-mdelay() callback keeps the CPU busy so a timer interrupt lands inside
-rv_react()'s lockdep context, exercising the LD_WAIT_SPIN wait type
-from the previous patch; a spurious lockdep splat there would show up
-in the test output.
+Pre-existing issues:
+- [Critical] VMA flags and `pgoff` modifications performed by `mmap_action_=
+prepare()` are lost in `call_mmap_prepare()`, resulting in missing `VM_MIXE=
+DMAP` / `VM_PFNMAP` flags on the final VMA.
+--
 
-The dispatch tests rely on reacting_on being enabled, since rv_react()
-returns early when it is off.
+commit 7ddd38612e8ff73188b344ec633bfe65678e0dce
+Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Wen Yang <wen.yang@linux.dev>
----
- kernel/trace/rv/Kconfig             |  12 +++
- kernel/trace/rv/Makefile            |   1 +
- kernel/trace/rv/rv_reactors_kunit.c | 111 ++++++++++++++++++++++++++++
- 3 files changed, 124 insertions(+)
- create mode 100644 kernel/trace/rv/rv_reactors_kunit.c
+mm/vma: only allow mmap to clear VMA_MAYWRITE_BIT if kernel-owned
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index efa930f94ea4..9bfd429ffdea 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -113,6 +113,18 @@ config RV_REACT_PANIC
- 	  Enables the panic reactor. The panic reactor emits a printk()
- 	  message if an exception is found and panic()s the system.
- 
-+config RV_REACTORS_KUNIT
-+	tristate "KUnit tests for RV reactors" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	depends on RV_REACTORS
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable KUnit tests for RV reactor registration and dispatch.
-+	  These tests verify the register/unregister lifecycle, duplicate
-+	  rejection, and that rv_react() correctly invokes callbacks.
-+
-+	  If unsure, say N.
-+
- config RV_MONITORS_KUNIT_TEST
- 	tristate "KUnit tests for RV monitors" if !KUNIT_ALL_TESTS
- 	depends on KUNIT && RV && RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index cdbf68c84f5a..c895d81dfdad 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -25,4 +25,5 @@ obj-$(CONFIG_RV_MON_WAKEUP) += monitors/wakeup/wakeup.o
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
- obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
-+obj-$(CONFIG_RV_REACTORS_KUNIT) += rv_reactors_kunit.o
- obj-$(CONFIG_RV_MONITORS_KUNIT_TEST) += rv_monitors_test.o
-diff --git a/kernel/trace/rv/rv_reactors_kunit.c b/kernel/trace/rv/rv_reactors_kunit.c
-new file mode 100644
-index 000000000000..3850c6dda288
---- /dev/null
-+++ b/kernel/trace/rv/rv_reactors_kunit.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit tests for RV reactor registration and dispatch.
-+ *
-+ * The dispatch tests rely on reacting_on being enabled, since rv_react()
-+ * returns early when it is off. It is on by default when the suites run
-+ * built-in; as a module, re-enable it if disabled via
-+ * /sys/kernel/tracing/rv/reacting_on.
-+ */
-+
-+#include <kunit/test.h>
-+#include <linux/build_bug.h>
-+#include <linux/rv.h>
-+#include <linux/delay.h>
-+#include "rv.h"
-+
-+static struct rv_reactor test_reactor = {
-+	.name		= "kunit_test_reactor",
-+	.description	= "KUnit test reactor",
-+};
-+
-+static void reactor_teardown(void *arg)
-+{
-+	rv_unregister_reactor(&test_reactor);
-+}
-+
-+static void register_test_reactor(struct kunit *test)
-+{
-+	KUNIT_ASSERT_EQ(test, rv_register_reactor(&test_reactor), 0);
-+	KUNIT_ASSERT_EQ(test,
-+			kunit_add_action_or_reset(test, reactor_teardown, NULL), 0);
-+}
-+
-+static void test_double_register(struct kunit *test)
-+{
-+	register_test_reactor(test);
-+	KUNIT_EXPECT_EQ(test, rv_register_reactor(&test_reactor), -EINVAL);
-+}
-+
-+static const char long_reactor_name[] = "kunit_reactor_name_too_long_xxx_";
-+static_assert(sizeof(long_reactor_name) - 1 >= MAX_RV_REACTOR_NAME_SIZE,
-+	       "long_reactor_name must be at least MAX_RV_REACTOR_NAME_SIZE chars");
-+
-+static void test_name_too_long(struct kunit *test)
-+{
-+	static struct rv_reactor long_reactor = {
-+		.name = long_reactor_name,
-+	};
-+
-+	KUNIT_EXPECT_EQ(test, rv_register_reactor(&long_reactor), -EINVAL);
-+}
-+
-+static struct kunit_case rv_reactor_registration_cases[] = {
-+	KUNIT_CASE(test_double_register),
-+	KUNIT_CASE(test_name_too_long),
-+	{}
-+};
-+
-+static struct kunit_suite rv_reactor_registration_suite = {
-+	.name		= "rv_reactor_registration",
-+	.test_cases	= rv_reactor_registration_cases,
-+};
-+
-+static int react_call_count;
-+
-+__printf(1, 0) static void mock_react(const char *msg, va_list args)
-+{
-+	react_call_count++;
-+	/* Busy-wait so a timer interrupt fires inside rv_react(). */
-+	mdelay(20);
-+}
-+
-+static void test_react_no_callback(struct kunit *test)
-+{
-+	struct rv_monitor monitor = {
-+		.name = "kunit_null_react",
-+	};
-+
-+	react_call_count = 0;
-+	rv_react(&monitor, "no callback");
-+
-+	KUNIT_EXPECT_EQ(test, react_call_count, 0);
-+}
-+
-+static void test_react_callback_invoked(struct kunit *test)
-+{
-+	struct rv_monitor monitor = {
-+		.name	= "kunit_dispatch_monitor",
-+		.react	= mock_react,
-+	};
-+
-+	react_call_count = 0;
-+	rv_react(&monitor, "callback invocation test");
-+	KUNIT_EXPECT_EQ(test, react_call_count, 1);
-+}
-+
-+static struct kunit_case rv_react_dispatch_cases[] = {
-+	KUNIT_CASE(test_react_no_callback),
-+	KUNIT_CASE(test_react_callback_invoked),
-+	{}
-+};
-+
-+static struct kunit_suite rv_react_dispatch_suite = {
-+	.name		= "rv_react_dispatch",
-+	.test_cases	= rv_react_dispatch_cases,
-+};
-+
-+kunit_test_suites(&rv_reactor_registration_suite, &rv_react_dispatch_suite);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("KUnit tests for RV reactor registration and dispatch");
--- 
-2.25.1
+For ordinary files the only way the VMA_MAYWRITE_BIT flag is cleared is if
+the underlying file is itself read-only.
 
+[ ... ]
+
+As all drivers which clear VMA_MAYWRITE_BIT establish kernel-owned
+mappings, no functional change is intended.
+
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 2648fb0e19959..d71ec51255b18 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -2795,6 +2795,11 @@ static int mmap_validate(unsigned long prev_start,
+>  	if (WARN_ON_ONCE(!was_maywrite && is_maywrite))
+>  		return -EINVAL;
+> =20
+> +	/* Only kernel-owned mappings may clear VMA_MAYWRITE_BIT. */
+> +	if (!vma_flags_is_kernel_owned(curr_flags) &&
+> +	    WARN_ON_ONCE(was_maywrite && !is_maywrite))
+> +		return -EINVAL;
+> +
+>  	return mmap_validate_vma_flags(curr_flags);
+>  }
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but while reviewing mm/vma.c,
+I noticed a potential issue in call_mmap_prepare():
+
+mm/vma.c:call_mmap_prepare() {
+	/* Update fields permitted to be changed. */
+	map->pgoff =3D desc->pgoff;
+	if (desc->vm_file !=3D map->vm_file)
+		map->vm_file =3D desc->vm_file;
+	map->vma_flags =3D desc->vma_flags;
+	map->page_prot =3D desc->page_prot;
+	/* User-defined fields. */
+	map->vm_ops =3D desc->vm_ops;
+	map->vm_private_data =3D desc->private_data;
+
+	/* It's invalid for mmap_prepare hooks to clear vm_ops. */
+	if (!desc->vm_ops)
+		return -EINVAL;
+
+	err =3D call_action_prepare(map, desc);
+	if (err)
+		return err;
+}
+
+Are the VMA flags and pgoff modifications performed by call_action_prepare()
+lost here? Since map->vma_flags and map->pgoff are initialized from desc
+before calling call_action_prepare(), the updated fields in desc are never
+synchronized back to map.
+
+Could this lead to missing VM_MIXEDMAP or VM_PFNMAP flags on the final VMA?
+
+If unprivileged userspace calls mmap() on a driver using remap_pfn_range(),
+might the core memory management subsystem treat hardware/PFN mapped pages
+as normal anonymous or file-backed RAM pages?=20
+
+This could result in the kernel attempting to manage page reference counts =
+on
+arbitrary physical I/O memory PFNs when the VMA is later unmapped or
+accessed, potentially leading to immediate crashes or silent corruption.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
+epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D16
