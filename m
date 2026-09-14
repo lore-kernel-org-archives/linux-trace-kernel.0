@@ -1,32 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BF73BB134;
-	Mon, 14 Sep 2026 14:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D082547FB1A;
+	Mon, 14 Sep 2026 14:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789396255; cv=none; b=dyx3/1t+CQ523ok6vFpG8nLKoezQ+rDXqywydJxTqx7tKrO1aRSsNjBTbnAq6qQApNag9qzogyeX59kkYXY90Cf2dBqjd9r/T3quNihE1oPv+u35bptPSpTJHWxIn9pOZcSQhrhgSzO6AeLhg0/gDZ8zsUepeJ7FXvze7Gv3sFU=
+	t=1789396257; cv=none; b=pvI5KTZZqreeHSkBgl2V39OuUB2BKnar1tHCKnFlo8dw4JKpYdcAu47kKMzetBGr0O4/ZmB6rHbEgxpFY0Qn0YmvGuroyqiUpkfH3Bqf8RsDPB9SEMptyztzNGf6PmsH3FfEjbm3sfIwYHq7teJt+KUMLzrxKm32ZJQBW8ncUxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789396255; c=relaxed/simple;
-	bh=H96wjuuBOZ9l+qPrAsLg02Mb1gl8IaRXEedwtI84byM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=urBBlW3K/HqGI27AHE6t/WjyscWl0YF4L3/CEI07gffloZZDcznkY53L9tmNTYPTM4Zn2UiU4FmVWrQR5u+689Y0ud4GwBvK4td2GhjgKNXPpsZwgeIM4ajhN1C1fkZJhr9gZlh4OHD8Yby7SxogTbhMYGU58vJa/oSoJ7rqErM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UdOka88T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789396257; c=relaxed/simple;
+	bh=URX8vYc8KtPY8CChyuSazeO6itWMsbkI6i5GQUyhLlw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eu4wlxFmZ4GyWPLr4RQR48YcJnjnivNN3Ghn1RvnjrzxAvgDKb0gIGTD1FV/eY/0a4E9qJfvuxZ0plr6RQ267zwfoezJ2MVPZyfC8TB894dmq0mhYz69z1pwz/VkjS94N7ufKL9DfHl0tIwPDOqtuovbG5F6A7M9jQy540MjFNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lEIozhEn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UdOka88T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D841F000FF;
-	Mon, 14 Sep 2026 14:30:51 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lEIozhEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15A51F00893;
+	Mon, 14 Sep 2026 14:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789396252;
-	bh=5DDu/i8F7CfME2M9V7A9fVs9AnBB0/zE0PZdH5IOtd4=;
-	h=From:Subject:Date:To:Cc;
-	b=UdOka88T09ASL0PXRvO30+gEhyo707Onj+bi2XeDQRmMPnUAzRI/r2DJwdr7GsDMK
-	 sCIWQsyGSkx+s4U+MckFMuUab2qymH0amDuDVf2x84+TOKuzWZxi5mIoiCK4jJ6R17
-	 5vz4vtcWGK4A23kUlxrmSa9ClD9vzny+lmLgZgw4=
+	s=korg; t=1789396255;
+	bh=IQgf6xMSaKfx++A8iUCfAMe8Zs9EXdbYSGldWIGIUGQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=lEIozhEn/QZnplosVw+ZvN+WZ3c5S/m8rh9c6aR5hzDauEgIR/q7zWqxHPORZD7vL
+	 zuuwwNAsuwoCgQB3XwbAE6hgq43u70s/nVOXQBS4a1zlAuFT7CGhR9E01Ai7Rpb2Y1
+	 JCpMiDCaBGstJL+HY0XB7QDgdsmDMWTzC/pnYCBo=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Date: Mon, 14 Sep 2026 16:30:30 +0200
-Message-Id: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+Date: Mon, 14 Sep 2026 16:30:31 +0200
+Subject: [PATCH v4 1/3] module: pull out add_taint_module() to be public
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,11 +34,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XOTQrCMBAF4KtI1kYmv62uvIeIJE2qI5JKkhZFe
- ndTRVTQ5YM335sbST6iT2Q1u5HoB0zYhRLkfEaagwl7T9GVTDhwDTVX1GJwu2wwZOokVJWtK7C
- NJOXgHH2Llwe22T5z6u3RN3kSpsYBU+7i9bE2sKn3gvUnPDAKVHELqpVmqVWzPmHoL23XB2dy+
- XDRxT2ZJgb+gQj2hfCCsEI7LRhnwv5HxBtZgvxCREEEAFdSq1bU5jcyjuMdFyR6ZEoBAAA=
-X-Change-ID: 20260825-bind_taint-d4077b870bc4
+Message-Id: <20260914-bind_taint-v4-1-eadf8a090903@linuxfoundation.org>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+In-Reply-To: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
 To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
  Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
  Aaron Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -57,128 +54,94 @@ Cc: Bradley Morgan <brads@mainlining.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Johan Hovold <johan@kernel.org>
 X-Mailer: b4 0.17-dev-362b8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5415;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2729;
  i=gregkh@linuxfoundation.org; h=from:subject:message-id;
- bh=H96wjuuBOZ9l+qPrAsLg02Mb1gl8IaRXEedwtI84byM=;
- b=owGbwMvMwCRo6H6F97bub03G02pJDFkrWAW4Gsorj7c2cE37q1/W1r9eqlTc+teel5MYyhT6t
- gT+ld7dEcvCIMjEICumyPJlG8/R/RWHFL0MbU/DzGFlAhnCwMUpABOJ2Mswz7i9yjY2sn9GY9jq
- HxGbVu6u4Dv1mGEOt8Kk2cHWFTttYp3FVq/8t2PBV98QAA==
+ bh=URX8vYc8KtPY8CChyuSazeO6itWMsbkI6i5GQUyhLlw=;
+ b=owGbwMvMwCRo6H6F97bub03G02pJDFkrWIVueJQWlUx/HlzCmfiVv1jWoT2PP/jHs7hF2szfx
+ ddfitraEcvCIMjEICumyPJlG8/R/RWHFL0MbU/DzGFlAhnCwMUpABNZ1cEwP39dt63PVufqgqa9
+ HRc1o0+UNhzsY5jv8HY6K4OWtqDntusvf7eozqh6U7MHAA==
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp;
  fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 
-The ability to add and remove devices from a driver through the sysfs
-"bind" and "unbind" files was created all those decades ago as a way
-that kernel developers can iterate faster, and provide a debugging way
-for users to attempt to add a new device to a driver without having to
-rebuild their kernel.
+Other kernel code might want to call add_taint_module() so pull it out
+and make it global.  If modules are not enabled, this defaults to a call
+to add_taint(), so all is fine.
 
-This api over the years has been abused and recently come under a major
-fuzzing "attack" through tools like syzbot which decided that it would
-attempt to just randomly bind any driver to any type of device, causing
-loads of unneeded errors and pointless kernel patches to be generated by
-unsuspecting new developers.
-
-Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
-will be set on the driver if the bind/unbind sysfs files are ever
-written to.  This lets kernel developers "know" that a user is
-attempting to do something that is not normal, and as such, if the
-kernel breaks they get to keep the shiny pieces laying around on the
-floor.
-
-The flag is 'Y' which was unused, and can remembered as the user is
-"yeeting" the device being operated on here (thrown with force without
-regard for the thing being thrown).
-
-Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
-as many times crashes/oops/warnings/failures happen within the callback,
-and the taint flag needs to be there to show what was being attempted.
-If it were to be set after the callback happens, the oops report would
-not properly reflect what foolishness was being attempted.
-
-Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
-the tool from hitting bind/unbind, should be run with panic_on_taint
-enabled so that they fall over and don't continue on, thinking that they
-actually found a real issue.
-
-Userspace operations that rely on the bind/unbind files to work around
-the lack of will to upgrade a kernel image to a newer version with
-proper support for new devices, or the lack of will to submit valid
-device ids to driver authors, will still work properly, but now the
-kernel will be flagged in a way that will show that perhaps those users
-should reconsider their behavior and work to have the drivers properly
-support these devices in a "native" manner.
-
-Finally, the bind/unbind files can find real use-after-free issues with
-some drivers by forcing the process to happen virtually without having
-to rely on manual removal processes.  Those real bugs should still be
-worked on, but by adding this taint flag, developers can more easily
-determine bug reports that are actually worth looking at.
-
+Reviewed-by: Johan Hovold <johan@kernel.org>
+Tested-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Bradley Morgan <brads@mainlining.org>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Changes in v4:
-- add documentation fixup for add_taint() and add_taint_module()
-- Link to v3: https://patch.msgid.link/20260904-bind_taint-v3-0-30025465f38a@linuxfoundation.org
+ include/linux/module.h | 10 ++++++++++
+ kernel/module/main.c   | 16 +++++++++++++---
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-Changes in v3:
-- Fixes based on sashiko review:
-  - Fix up prototype for when CONFIG_MODULES is disabled so it will
-    build properly, AGAIN.
-- Link to v2: https://patch.msgid.link/20260831-bind_taint-v2-0-1082d631213b@linuxfoundation.org
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 96cc98568eea..f6f90cd88f15 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -29,6 +29,7 @@
+ #include <linux/srcu.h>
+ #include <linux/static_call_types.h>
+ #include <linux/dynamic_debug.h>
++#include <linux/panic.h>
+ 
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+@@ -770,6 +771,9 @@ static inline bool is_livepatch_module(struct module *mod)
+ 
+ void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
+ 
++void add_taint_module(struct module *mod, unsigned flag,
++		      enum lockdep_ok lockdep_ok);
++
+ #else /* !CONFIG_MODULES... */
+ 
+ static inline struct module *__module_address(unsigned long addr)
+@@ -877,6 +881,12 @@ static inline bool module_is_coming(struct module *mod)
+ static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
+ {
+ }
++
++static inline void add_taint_module(struct module *mod, unsigned flag,
++				    enum lockdep_ok lockdep_ok)
++{
++	add_taint(flag, lockdep_ok);
++}
+ #endif /* CONFIG_MODULES */
+ 
+ #ifdef CONFIG_SYSFS
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index d0e1e0bd2ad0..444d990c9983 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -191,11 +191,21 @@ static inline int strong_try_module_get(struct module *mod)
+ 		return -ENOENT;
+ }
+ 
+-static inline void add_taint_module(struct module *mod, unsigned flag,
+-				    enum lockdep_ok lockdep_ok)
++/**
++ * add_taint_module: add a taint flag if not already set for a specific module
++ * @mod: pointer to the module that caused the problem
++ * @flag: one of the TAINT_* constants.
++ * @lockdep_ok: whether lock debugging is still OK.
++ *
++ * If something bad has gone wrong, you'll want @lockdebug_ok = false, but for
++ * some noteworthy-but-not-corrupting cases, it can be set to true.
++ */
++void add_taint_module(struct module *mod, unsigned flag,
++		      enum lockdep_ok lockdep_ok)
+ {
+ 	add_taint(flag, lockdep_ok);
+-	set_bit(flag, &mod->taints);
++	if (mod)
++		set_bit(flag, &mod->taints);
+ }
+ 
+ /*
 
-Changes in v2:
-- rebase on 7.3-rc1
-- Add changelog text to describe panic_on_taint and how it should be set
-  for tools like syzbot.
-- Add changelog text to describe why 'Y' was picked.
-- Fixes based on sashiko review:
-  - Make add_taint_module() handle a NULL for module pointer, fixing a
-    problem with built-in drivers.
-  - Fix up prototype for when CONFIG_MODULES is disabled so it will
-    actually build properly.
-  - rst table header fixes.
-- Link to v1: https://patch.msgid.link/20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org
-
-To: Luis Chamberlain <mcgrof@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-To: Daniel Gomez <da.gomez@kernel.org>
-To: Sami Tolvanen <samitolvanen@google.com>
-To: Aaron Tomlin <atomlin@atomlin.com>
-To: Jonathan Corbet <corbet@lwn.net>
-To: Shuah Khan <skhan@linuxfoundation.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-modules@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: driver-core@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-
----
-Greg Kroah-Hartman (3):
-      module: pull out add_taint_module() to be public
-      module: fix up documentation for add_taint() and add_taint_module()
-      driver core: add TAINT_FORCED_BIND for when userspace manually messes with devices and drivers
-
- Documentation/admin-guide/tainted-kernels.rst | 52 ++++++++++++++-------------
- drivers/base/bus.c                            |  3 ++
- include/linux/module.h                        | 10 ++++++
- include/linux/panic.h                         |  3 +-
- include/trace/events/module.h                 |  3 +-
- kernel/module/main.c                          | 17 +++++++--
- kernel/panic.c                                | 10 +++---
- tools/debugging/kernel-chktaint               |  8 +++++
- 8 files changed, 73 insertions(+), 33 deletions(-)
----
-base-commit: 704340f1cd0dcef829eb62f5b48ae95a2ce17bdf
-change-id: 20260825-bind_taint-d4077b870bc4
-
-Best regards,
---  
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- 
+2.55.0
 
