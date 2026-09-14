@@ -1,167 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A101632DD
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 05:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26205353ED9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Sep 2026 06:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789364776; cv=none; b=OK7ORtYn7axUZb3DZak0dNtNDcp8jsHzlKePCJNn0b1uwnPMgQXgENCAx3pG0AqGviV0TCfIIv6TqiKKnmdHl/KuBkDeheYznICk9hEr4pxJjT86x1ZCQpIfYtSpL7sKJ9l2kXWiXt8fb3jR3DpjEXbLs7WEJ6cW1PjVkhTD+XM=
+	t=1789366135; cv=none; b=fDoydBklrOTbW3tz52RAsMY6EGtbargGNi3vqXbWTgCOdsEjFiL88TUxYd1vcVWE94Iw5mnL4mAYAfg0NZmatGowYtIqv0bibLPvbbwAq3ugG3nK+1NsCkng23ikg9riS9oEH2Zy7Wt7p1VrVIQsEcaWTG1JOFfwNYB4tsIAjZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789364776; c=relaxed/simple;
-	bh=W+UV36HKCb5faRsvLH1128S9CvAdd8pNG6+QhvRhIb0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YTISQyfKp2KxfgmQxI1N6lcmNYbvuRWOm7X46Pc2ddrz/0/lhzLM38eYMmGfPGnNYRZX11LaKepR/8rG2BzoytOGfjc9KkpjaFCzWr5tROP/vRlcOVjRQ0bU3kXWUX0MebvY9NP2DeylwWrZ4rX+mHEmE+gs5XylVh+XntfNu5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfZye4vX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789366135; c=relaxed/simple;
+	bh=4nrXIJVDXaUkwf+YC5VoiLxfZ+FG+C1MAP9IRBoZSks=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VkiVOPVBR7N6WY+iDf0Zy7Ro9QttB5Bsh8iRnNWFsrLWltcFNZHTYd+jCvwVV6lZMfWaqlAib+01RAX/ithkNd6lODxdTaJnpA0y5c8lxdNT8YER6F45ZYt7AMLphAtXFavvCkfhDrTgkPNu4WWf2xJzK7APlzscmJUxlnhSquY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SngrwB5Q; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfZye4vX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A9B1F000FF;
-	Mon, 14 Sep 2026 05:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789364774;
-	bh=Cz+kCdnag2pxT5jrb2/Bn4m5inG+jzecuU/kuHuL1OE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LfZye4vXUfjI/vxusQ8FfGq53AmNv3f1708vO3W33eBLKkNkl2UQ327pmPHtE9KxZ
-	 6U6DJz4F/xtio6DTgzNjwWuEnnr+7TfoIueManhqYF79u+KBxbQbBYA4oH63xmOyWw
-	 ETigddnfjDVTIEHQuXtfamibRmIGz3jEf8Ti/Ax4EJ7Q3sTzm3DEupILaW33IYc5I5
-	 ZR1xBurilqkOtuw9pXqS2OnhqubaNrpR1Ho0DEjCmd4z0Yofy6h7v8u1tawNHKfaYc
-	 5JhnPkqhyGfaINpZcVQpsNw8wwvP00kL/WvtER5m5u4o/NzXhEt58cgu2/OasaEDJV
-	 PRU5pp2pbtDuQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/4] tracing: Print the bucket size as unsigned
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Donggeun Yoo" <donggeunyoo.kernel@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260914053443.981201-2-donggeunyoo.kernel@gmail.com>
-References: <20260914053443.981201-1-donggeunyoo.kernel@gmail.com>
- <20260914053443.981201-2-donggeunyoo.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 05:46:14 +0000
-Message-Id: <20260914054614.82A9B1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SngrwB5Q"
+Received: by mail-pj2-f13.google.com with SMTP id d9443c01a7336-2d747ed1368so14695595ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Sep 2026 23:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789366133; x=1789970933; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=J7ZLRztZ4qGLXwZmjT6Sfe0hmRUFOBvBkpnxtaBdgb8=;
+        b=SngrwB5QlFLlgcJVXTQdKyiSY1F7Cav+E1EcZAIfIKbc5Bi1Yr6hYFk7jcDmCz8Amr
+         t8IZNXpRo15QIF7IaPJUwl6fRljWgImLGAAkkanK1YVLQamZkywFAv45m7WNccgO3Qbd
+         Y0fF2+FyMTwrLzkoKMD/bUI7LfwiC0RbnyDNCKUt7oz98iFjU/SFKKsxsr2Y0z223eyX
+         MO5X9SdKygY7opegjeZs2PObbSyi8pdffHkAoPJiSS1VsYa9MRWVHdAzCSnlgOvigYzK
+         9rq2bXC2oZ+0gHNrHriKAq5g00+QEiKQTDkT4ttAa7PgSIU0nHzkHS+0mPVOGdGcRbPS
+         Nv9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789366133; x=1789970933;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=J7ZLRztZ4qGLXwZmjT6Sfe0hmRUFOBvBkpnxtaBdgb8=;
+        b=iPRIDnBscKRiARmBoQVpcIp35xZ/Ud51shMYUNdgIxcqj9vsX18x9LaO48vniwkwuK
+         TZGugc7p+XQRkEMIznfkj1FFUIUw85f8BxmCTsRsPKmJf6BoRIj+AHVJolL33Ht7If3z
+         3BVBtqkqeQOIlN5oyeIHNB/1OPLMC3UP2lpAvxZ1+tvW+JbSUNon4ia3GbJNh6Rcto2I
+         L4/lNqwxokp8iU2f5YI2r26QeDotH3ba1qFvWbenHcYnsjwEIrH9D1s4csjzgTqWiLSL
+         WogkZMXNKg6iUlLOV/i2387wzO9reZfhHAcrzB+DLj7CT1OWje6s73c1xwCI6Jt8gfqX
+         zewA==
+X-Forwarded-Encrypted: i=1; AKwUvByZhudlK/mCOgskiU1yAtFbC2chWG0cBvzGPnT1/vV04FrIvIJAVN+LDB/wBh+qhjQIevkY1yQnEpfPN9yBGjo7ATg=@vger.kernel.org
+X-Gm-Message-State: AFuF++kQfhl1lVINsLuerOVkteLTnlGfAsvqN6VagH083dYlfX5ifTd3
+	QDiD6g8UVjqWRWKlRxkoRO3hQ3iNiUks29IrpICXtMK8KrrAN3JEe+KY
+X-Gm-Gg: AYBFou3BjkKhJor1qu2GqM3qB9SmfOJ+gtPfZNWwj7rlfxw+ClSgsAv9ftzkjy1NBJP
+	aLyMaSu+iZY+O89Tiwe946l26OatHyV66QBlhubW+k6tjSnG8IbOGTKkz3pODGGWZvFXEVBLT+q
+	1d5Q9nghGQ4C/tddDql3BG9ILTLFEr6t6hsCVgdMb18HSsyHDzLVBLnT/dSCO+CtPMwPKQUQHI6
+	hLsosjzMO6aQ4T0fNri+YoUITpdOijsayvzINBNHyzJWxdzevAe8DaBNzLsxpbJoMRmCzEgkeOu
+	Jm7+ody3+Dp84WYyNVz/rw+8WiGq2e4y5D6FbKLdD6aPpeOWG6Uqg+wqlgDsDJutuAaTjOtjv05
+	bq9weP3uoLETEP/v5tpcaI59fk63IVUyyGoWzxGCJRZmx2yX+M1E4X8GGJdyHQ5FsayxwhGDK7m
+	eal6PHqRBE3A0HJT+DAXKwSo5sR/0ikcCzz0AL663DS6+irZtBBWSC7cA/h94e/H8/e/bil1PBO
+	hao3QuHNqnIjImEC/kJtV4bIIATMzvQTWAJz34/
+X-Received: by 2002:a17:90b:4b81:b0:398:cb56:e92 with SMTP id 98e67ed59e1d1-39debfb92b4mr2677452a91.11.1789366133460;
+        Sun, 13 Sep 2026 23:08:53 -0700 (PDT)
+Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:a252:ce11:2d53:3638])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39d9959ac65sm18651790a91.16.2026.09.13.23.08.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Sep 2026 23:08:52 -0700 (PDT)
+From: Li Pengfei <ljdlns1987@gmail.com>
+X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
+To: sashiko-bot@kernel.org
+Cc: Pengfei Li <lipengfei28@xiaomi.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	kernel test robot <lkp@intel.com>,
+	Bo Zhang <zhangbo56@xiaomi.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v7 05/10] trace: make the stackmap capacity settable on the kernel command line
+Date: Mon, 14 Sep 2026 14:08:23 +0800
+Message-Id: <20260914060824.4003131-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260912085841.48E7B1F00893@smtp.kernel.org>
+References: <20260912083753.3426176-1-lipengfei28@xiaomi.com> <20260912083753.3426176-6-lipengfei28@xiaomi.com> <20260912085841.48E7B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+From: Pengfei Li <lipengfei28@xiaomi.com>
 
-Pre-existing issues:
-- [High] Data truncation and broken sign-extension of 64-bit trace fields o=
-n 32-bit architectures.
-- [High] Histogram buckets calculate the bucket multiplier using unsigned d=
-ivision, mapping negative signed values to incorrectly shifted intervals.
---
+> Does passing this NULL pointer directly to kstrtoul() cause an immediate NULL
+> pointer dereference and kernel panic, since kstrtoul() does not check for a
+> NULL pointer before dereferencing it?
 
-commit 4cdcc152f0ffdbdcaf7893e1ce7822e2b783d217
-Author: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Yes. Booting with a bare "ftrace_stackmap.bits" panics. Will fix in v8:
 
-tracing: Print the bucket size as unsigned
+	if (!str)
+		return -EINVAL;
 
-This commit fixes how the bucket size is printed in hist_field_print().
-It changes the format specifier from %ld to %lu to prevent negative output
-when the size exceeds LONG_MAX.
+Thanks.
 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 963e0d6b61fdf..ecfdc5ddc2c13 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-[ ... ]
-> @@ -283,28 +283,28 @@ static u64 hist_field_log2(struct hist_field *hist_=
-field,
->  			   struct tracing_map_elt *elt,
->  			   struct trace_buffer *buffer,
->  			   struct ring_buffer_event *rbe,
->  			   void *event)
->  {
->  	struct hist_field *operand =3D hist_field->operands[0];
-> =20
->  	u64 val =3D hist_fn_call(operand, elt, buffer, rbe, event);
-> =20
->  	return (u64) ilog2(roundup_pow_of_two(val));
-
-[Severity: High]
-This is a pre-existing issue, but does roundup_pow_of_two() in
-hist_field_log2() truncate the 64-bit val on 32-bit architectures?
-
-Since roundup_pow_of_two() takes an unsigned long, it appears this will
-discard the upper 32 bits before computing the logarithm for any histogram
-trigger operating on a 64-bit field on a 32-bit architecture.
-
->  }
-> =20
->  static u64 hist_field_bucket(struct hist_field *hist_field,
->  			     struct tracing_map_elt *elt,
->  			     struct trace_buffer *buffer,
->  			     struct ring_buffer_event *rbe,
->  			     void *event)
->  {
->  	struct hist_field *operand =3D hist_field->operands[0];
->  	unsigned long buckets =3D hist_field->buckets;
-> =20
->  	u64 val =3D hist_fn_call(operand, elt, buffer, rbe, event);
-> =20
->  	if (WARN_ON_ONCE(!buckets))
->  		return val;
-> =20
->  	if (val >=3D LONG_MAX)
->  		val =3D div64_ul(val, buckets);
->  	else
->  		val =3D (u64)((unsigned long)val / buckets);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the unsigned division
-in hist_field_bucket() break the bucketing logic for negative numbers?
-
-If the field is signed and negative, its 2's complement representation is
-large. Performing unsigned division via div64_ul() or an unsigned cast
-without checking hist_field->is_signed seems like it would calculate the
-remainder incorrectly. This would happen whenever a histogram is configured
-with buckets over a signed field that takes negative values, mapping them
-to the wrong bucket intervals.
-
->  	return val * buckets;
->  }
-[ ... ]
-> @@ -461,11 +461,11 @@ static u64 hist_field_timestamp(struct hist_field *=
-hist_field,
->  #define DEFINE_HIST_FIELD_FN(type)					\
->  	static u64 hist_field_##type(struct hist_field *hist_field,	\
->  				     struct tracing_map_elt *elt,	\
->  				     struct trace_buffer *buffer,	\
->  				     struct ring_buffer_event *rbe,	\
->  				     void *event)			\
->  {									\
->  	type *addr =3D (type *)(event + hist_field->field->offset);	\
->  									\
->  	return (u64)(unsigned long)*addr;				\
->  }
-
-[Severity: High]
-This is a pre-existing issue, but will casting to unsigned long in the
-DEFINE_HIST_FIELD_FN macro corrupt 64-bit and signed trace fields on 32-bit
-platforms?
-
-It looks like this cast truncates 64-bit trace values to 32 bits, silently
-discarding the upper 32 bits. Additionally, for signed types (s32, s16, s8),
-it appears to break sign extension, causing negative values to become large
-positive 32-bit integers. This would corrupt values for any histogram
-trigger operating on a 64-bit or signed field on a 32-bit architecture.
-
-[ ... ]
-> @@ -6203,7 +6203,7 @@ static void hist_field_print(struct seq_file *m, st=
-ruct hist_field *hist_field)
->  		}
->  	}
->  	if (hist_field->buckets)
-> -		seq_printf(m, "=3D%ld", hist_field->buckets);
-> +		seq_printf(m, "=3D%lu", hist_field->buckets);
->  }
-> =20
->  static int event_hist_trigger_print(struct seq_file *m,
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914053443.9812=
-01-1-donggeunyoo.kernel@gmail.com?part=3D1
+Pengfei
