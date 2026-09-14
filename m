@@ -1,269 +1,68 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011011.outbound.protection.outlook.com [52.101.62.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70291318BB3;
-	Mon, 14 Sep 2026 02:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789352699; cv=fail; b=VDhVd3gHs/muRe8YyRmbdZ5ptsvB8tXGb6xzl7gFswFyIZqUG4rkONVISKHosmPT51uAwQYAiTpxmVj2CoLKmb4O+B2cbSzLzBXeeooVuUi4zDR/OopjsLbPZbXkQPJh9q8QPW1GMpMEWOJ4UkMciK817qQFxMiTxNIoB6VRLDY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789352699; c=relaxed/simple;
-	bh=0XeqZuFuC7aOnceBxrUD1wlCE2NnIYWoGNhRBI4Wqso=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=CL5pcbZdzbrFK7hvfPkCXsBLji3B+78qQNxNhi0R5Uib1BU1yUHYQTyxfrYEiqovIqUr/O8ofFQXQRFKj03hOlWrs8XpBbT4BuPwI1MhPkW1yu1zJQFKU9zR36gl8QlDU4QqdyV011aJqygz+srJG6YrI+hTqp5MN/WOIbZZjUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qoSQdr28; arc=fail smtp.client-ip=52.101.62.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5C81B142D;
+	Mon, 14 Sep 2026 02:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789353614; cv=none; b=twNa4n4TBF/C1VVqBdMdsjkhJ69cUcNL/yDNB5Z7peuvhhRThubFk9+zcoUd4L+fTbAgFtSPGB7LLMyd7r8epiehWzf00DOw5K0DQhSizvYXx76X6IeanJK16rD154hnIva24z7HLHiOEFIAnJnzuxWMyM8qzEugLpq7FBv3Pc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789353614; c=relaxed/simple;
+	bh=BAeAQFVRq5ftmseddP2cfYE2Qx7LuM68pktvYH1u0tc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=onI1earFf1X1ELccM0Ou546BTx6RDveA7Md8kWFGlugaHTXjOOv08JO+GipTt+pXmSvOtb17B3W9WmKaZCck9AkBiK4XmWngOk1c1zk4GyegPjOX8QB9CpTiODl1YT/DHrjigEmMJHHBo+v8bU0+2Q6xtuISu3YycTJwFBpmFo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2ZLsA+Q8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qoSQdr28"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qnYWwJSbl9iCnp8O1wWePNMrJRBPqweLglChZ0rec+n49BxOjT6hXNskgsJdjQpG7/KYtkEE7Zn3thKmKw+oRD73c681YrBgR6GP0v/MzhYAatRq8Ppd1LscnVDHewZMuMvu8F7AyKvuUdIHacbRHFZk875qRIUwUZBDszE/nr/53gXXt4O/qguk/0z7qj1f35ezjBtfi8aD9S66KMz37MXD5K9mxA+I5N+V79+DlSTwTKbp8W+lvuaT7UuWclwXs9VVBeh4voxB3G4rossaiRnGBkvQVabbFJX2o8QXmX8+o74XQjqS64DCYpcu7mTuYXTM795ToYF+HQ9V9bj9Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rN1+a+WbXXMcnQSTG/PwdTVyIvCPX0jjoxiMDHWAUIs=;
- b=j1Rvs3MIp+K56Tb5UF8pcTgdYy01Y1GEOBJzRXrCx5KLyxHJBKptn+RHgWbCnxBB1yXcEfldlAEaA5DN0bqhT+UZuXzs7NBP3DNlQic9C3rZlpBxjsKEG4FnaUNUDBpD5f6rkLE93QagqHYhCg1iT8nXG4wM7czhPSGPQzCaQLgYpfezyMFf768s3dprfhjMztiQZIbBKna9oUcNYHS+4j4tvMdZK39klJ+0oG4p+V/wLaap7RBGFFBWCbMoFI5cn76xlYTQHPowSvwVW604ymjdZb7q+vq6gjvsgCx4Xe5yl5jNTpzaoTP5Oyj6EhG1GMaxKKW0W0QP0Qo2PtLgfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rN1+a+WbXXMcnQSTG/PwdTVyIvCPX0jjoxiMDHWAUIs=;
- b=qoSQdr28E48G3GnJVrdEWlEkcb1LINA76FKQDoDZduly8G+67ecTntoSAOA0JoPpikan+Z5RWLQBitOdGOybktFa8DJHeQFpkLLEElSJDPooMIEdVnS5MJmphXgdKV0p/16YKyRFjITRT8kMWmxA7QlNCkjYUO3J0IKQnAJxoooxQ0LTxY4Kqx5tEooW3MOB7PMKqTAaL1cthhzb6adTsZiu+sRSWbjz8QVYDSWYcRi1v4q/UxhhkHocle/hyjyPFRn81VeEX/xgMLbzJHC0JPW3caIfKxVPwfOCdrLe0+klZoYbCjNEweqJMDtxg5A4PCFiuDSzWphtahftVbJ0dA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DS0PR12MB6486.namprd12.prod.outlook.com (2603:10b6:8:c5::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Mon, 14 Sep
- 2026 02:24:31 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0406.007; Mon, 14 Sep 2026
- 02:24:31 +0000
-From: Zi Yan <ziy@nvidia.com>
-Date: Sun, 13 Sep 2026 22:24:14 -0400
-Subject: [PATCH v4 16/16] mm/page-flags: remove PG_private
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
-In-Reply-To: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
-To: David Hildenbrand <david@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Zi Yan <ziy@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-X-Mailer: b4 0.16.0
-X-ClientProxiedBy: YQBPR0101CA0083.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:4::16) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2ZLsA+Q8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BC51F000FF;
+	Mon, 14 Sep 2026 02:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1789353612;
+	bh=OvEaOOHnqfpkZ8FFeHibxz0bdzDT/zBsmLerOSLV8Fs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=2ZLsA+Q8tqDi/F7b5mlYmV4SExi0QZXzcexLjQOqtEUdafp4UqqihfebXzOlGLWjd
+	 ygR5yj4Kag4rFzm32ja084YoNYsZtl/ZhH+yUtLgvXMQv87yabHsUtXoMO6cdhn3o0
+	 07p1pN1u0vYcUDXyZ1w6elB3UWBMIPNxCvSnQWmc=
+Date: Sun, 13 Sep 2026 19:40:12 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Sang-Heon Jeon <ekffu200098@gmail.com>
+Subject: Re: [PATCH v2 0/4] bootconfig: Reject unexpected data after null
+ character and cleanups
+Message-Id: <20260913194012.284e4a9a13077c5c501919bb@linux-foundation.org>
+In-Reply-To: <20260912224835.4e5f73b44cee39387554cc70@kernel.org>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2>
+	<20260911155911.1cccfa39dd2e3c6e3a84e03f@linux-foundation.org>
+	<20260912224835.4e5f73b44cee39387554cc70@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DS0PR12MB6486:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30c58b29-3f79-4729-a59c-08df12074f21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|366016|376014|1800799024|6133799003|22082099003|18002099003|921020|10067099003|56012099006|11063799006|5023799004;
-X-Microsoft-Antispam-Message-Info:
-	2dfEYJ61jJkyc61FyZejhtGZoce7Dq79QvLrSw1OWVjyshKApmvePFW4W2CoK4XWwuFF/6VLcPrpTVZ0aAIy1HVt96MaHpGL0i9WuxqKoBeormyPcnT2P7cQVRkbprPxkZSuG2/0pHhQryzLuqYXJxpdr+6C0mhgWmjk4z3P4/64cGuH+2EmPYp8lavgRO/M4mR314LzYc7nU0CkXu7k4zZ9aLaGrs2W6PXZuAoLGQ3FflE8K4oQnHoeiYRi5Qey2b2GBk4MYeucYbY5yWIJt88sW2LuG/Cs4g+QscfUw/4aPLAIdKlAr+dgvIMD7tYj2tUtOCIJWIoSrz91WfUYZXQus8lEt16aU7v9KrZxPeYwiSuAJ1nv3oW3W/zmOnV2DCjxlFSPEHKAVQP3qihOYiJi7uUgCqVXwZVb6QKaPYQ5vAFCMRAkyMsWNRgEgpHqZ2IXVpsp7c2ufKLbV/dchC/Vp3owH7LwcWNBXOrsl/+GwWVQihvYJpUyjZiW8e3QXTWl5wCxnMiv2wANXmIDhS+LaV6FK0Cc8Kenxluh6mdlMtwM720SzROkLMYIDM8OevrGAjhfLDmOLXT1OZsQxGgIHQJCiJpt6CvY6bujVvZl9wRV2EijRkmG60ScGjMLWMFhcT73hhPYvYmOnteeoZ6zqZ/9dOXzUShO2xW/2GrCcAmGIF7MCQxjUyjCVQwCHeUkcUWTn0bTvtMfvCzR1w==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(366016)(376014)(1800799024)(6133799003)(22082099003)(18002099003)(921020)(10067099003)(56012099006)(11063799006)(5023799004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SSt2Q0UwelNKVDVreDdmenphVWU0RnE1dG11Z3lPaUxZNmh2WTFkMmNweCtZ?=
- =?utf-8?B?WXdBVXFQWmNDSm1VMEpXVlVEaGRhdC8wclphcy9BRUg3YWU5WkRibHNqYzds?=
- =?utf-8?B?ZzgrbUU1UWVhNlJJSmhBSlVScjYwa3o4VmdSeHAvNEZjV2xSUG9IcjJ3SCtS?=
- =?utf-8?B?Z3pnTThGM1ppc2Z0NmF1cy93Y0VQSGVZQ1IvdmVjUVd4cTJDQXZ4elM4T2sz?=
- =?utf-8?B?N3lWL0YwajFwY0ViNDVXZERpZFU5UnJXSk5IRXI3UjVGV0VIZ3Zhd0VhNHIx?=
- =?utf-8?B?Nm1zYTBTUk9XTmZSR2hTSXJLSktYTUpXZkNFK0pndzQyWnkrRTIwOGcwb1pO?=
- =?utf-8?B?dlNjMTdMVEl4LzBmMGRpemMzN2JDVUZXcHRQNFVEcDdZTjZIWFRPQW5lSysx?=
- =?utf-8?B?eDFpeGhtUjdkMGRpOTRpUVM3Nk5weXNFNXRjanRCbzRJWWMxNjZqZHlBdzkv?=
- =?utf-8?B?OUVnNVpmb1ZDTjFvNFRkZUp5Q3hIcGNHZERXMEs1V29WSE5FSS9RQTNUdEFS?=
- =?utf-8?B?NC9EamJlbWJmZUI5aWdxUW0rbkQ0WkhuN2JkSjNYZkxaNm0xWnc3VURYYXZi?=
- =?utf-8?B?TmhKeU0vNjV0QWRDL3JOeWptdGtDYnk4N0FNdktxNVFXWFd2VW93ZWdiaWwr?=
- =?utf-8?B?YVpNM3BaTjdQNHEyOVlFMllHNkpFTVRaRFBqSHJMTGlzeHROZi9ZQ0o0Wldu?=
- =?utf-8?B?VGEvU0lycFVld3dWbG5EV0JBaGJ4YWFMemlUamZVdDJIbFRZZ1YwalVRUVRq?=
- =?utf-8?B?cS9OazFrYmxRNUoxQ2pZWGxqSmZGWUoxc2ltdVYvbk1sWklLYkRmYzNPcU9N?=
- =?utf-8?B?Q1hTWVJRWHlWL1dzN0dzUWJLZmlZOWFyQVBkcG8wT0szM21EWlZQYURnTkpY?=
- =?utf-8?B?aEFISFR4cng3SnUxcVBWckRmUkgzUzJnYXNCT1lLRzREWG5RcHoybVJiTVZ2?=
- =?utf-8?B?QUxkWnY0TXo3RnFhcGRoeHR1b2E2NXRzRUVhYnArSDJMcXRnNGpyT2c4YjZ1?=
- =?utf-8?B?YWV1a2hJbS95K0ZTWU9tUWErTnBOWEhsbVJ2b3ZTdXdYTmFsZWhwNC9yTSth?=
- =?utf-8?B?YS8xVDdOWXJhUlByMC9UKzBJZHYzL0dNTFh3b1FYSGpydUtsYVJqL1R2QUEy?=
- =?utf-8?B?S0lrdVhKU2VpUUdjenU0dUVxU2NTZkxuOEplUEJ0bHdMSGJHSHVqR1lxajAz?=
- =?utf-8?B?QXhqUDdtRUtCZHhlTHZuNTduSG1Gei8zY2E4cmo4UFFsTEE3OEdmMFpjMTd3?=
- =?utf-8?B?Z3lrMTdzb29uZ1B0VTFDQWNMbWJacTdXUlErV0ZpTkFGZWdVZHc0VnpwT0cy?=
- =?utf-8?B?Z09JZnRrZ2Q1UWhZS3pVOC8zb0FJVE8yQ0g1WDBVL1FoTjUvQmgyQ0lyRnd3?=
- =?utf-8?B?cDVnV1lhZWVrZ01FSlFzaEt2R2tBeWJwWXQ4ckRPY1R4YTAwUXBKcmgrT1ZR?=
- =?utf-8?B?aThtRmhBWUdPdjgxdVp4TmJkVEM4SUhsc3RpOUtiZ1hyUXNpYUlaelE4bGNK?=
- =?utf-8?B?VzFPS2I3ejFQS1FvNGZCb2VFY0ZhNEhwY3pKWEdIdWZpQW1PcXJ5SVF6Y0Nk?=
- =?utf-8?B?RG1wS3JQMTNBbjdLOFRzQmNkamZSbVFUWnZVSDM5SE5ucWxTUDViZzNBdStE?=
- =?utf-8?B?R3ZJdlJGUExxY1FEcE0wVytYNkhERjZoL1diUkhQblc3K2RRL2pSVnRiRUlD?=
- =?utf-8?B?ci8wSEJpUnZZR3RYSW1qeGUzYWRCTXZGdG8ySCtMT1pLRTVWZTJxL1g4eWQ1?=
- =?utf-8?B?Z1FaQis4QmV5TFZraDFmbUI2M3o0TDE1Q3RCakRjRnhvTDVlVG1BajV2V3Jx?=
- =?utf-8?B?YXAwcnA2QjZzNXdyalYwWVVvVDJvOHFraldqU1o5b0hQeUE4SlRoTitwK29N?=
- =?utf-8?B?TVJ0TUg3bTFlSHpCc0NUMExqb0JNMlQ1MnNQTXJlMGttUlNTMStOUXAwTEl5?=
- =?utf-8?B?RXFPcWhTdGtjTkI3L04yME5lTFpSM1NZRkpuK1pyQkxWNW9EOUlaQ1ZZRHNU?=
- =?utf-8?B?OFQ2dFA5b3lMSDBZSHZBL054NmNlS0JaNjMxUVB2RlhtbHFmNTZoVjFEV09W?=
- =?utf-8?B?blFucnZtSENVTzZLdmt4a3Y3NitMb3dhMDJiVkFrMGtCZGlQRnc1N2dqaFhM?=
- =?utf-8?B?Nkt0SVNpcTE3eTZ1bmpoeElpZ1ozK1VXK2E5dkozMHdGdkNDN21rREVFMk1F?=
- =?utf-8?B?MDN0WXFyRTNsWHJwOFBkRlhLbUp4YmlVczZkM1g2V0Rkdk1uQ2hnb0JZRzlh?=
- =?utf-8?B?RVVMQlNwTzdLRmlYQk1TbW9XY2czaHZFcThqblpYM05XY0E4eDBYeDlVNTd6?=
- =?utf-8?Q?q2wq2jEb4D/jcp3Bbk?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30c58b29-3f79-4729-a59c-08df12074f21
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2026 02:24:31.2611
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1cV/qG4beDPnCKyYZaiHFdlLYF93aWukeu6iKxzuDP6p1pfK9036LGKUfqt84Y3F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6486
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-folio->private != NULL indicates a folio carries private data, replacing
-PG_private. All PG_private users are converted. Remove PG_private and
-reserve the space as PG_folio for future use. Unused PG_private functions
-are removed too.
+On Sat, 12 Sep 2026 22:48:35 +0900 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Assisted-by: LLM
-Signed-off-by: Zi Yan <ziy@nvidia.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <baoquan.he@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Jan Kara <jack@suse.cz>
-To: David Hildenbrand <david@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dave Young <ruirui.yang@linux.dev>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: "Liam R. Howlett" <liam@infradead.org>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/linux/page-flags.h     | 19 ++-----------------
- include/trace/events/mmflags.h |  2 +-
- kernel/vmcore_info.c           |  1 -
- 3 files changed, 3 insertions(+), 19 deletions(-)
+> > > ...
+> > >
+> > 
+> > Thanks, I've updateed mm.git's mm-nonmm-unstable branch to this version,
+> > 
+> > > This version removes redundant buffer copy in init_xbc_with_error() [2/4]
+> > > and moves BOOTCONFIG_FOOTER_SIZE to include/linux/bootconfig.h[4/4].
+> 
+> OK, anyway I'll pick this series to bootconfig/for-next.
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 08988877331ba..10f4ad075ea48 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -44,10 +44,6 @@
-  * Consequently, PG_reserved for a page mapped into user space can indicate
-  * the zero page, the vDSO, MMIO pages or device memory.
-  *
-- * The PG_private bitflag is set on pagecache pages if they contain filesystem
-- * specific data (which is normally at page->private). It can be used by
-- * private allocations for its own usage.
-- *
-  * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
-  * and cleared when writeback _starts_ or when read _completes_. PG_writeback
-  * is set before writeback starts and cleared when it finishes.
-@@ -105,7 +101,7 @@ enum pageflags {
- 	PG_owner_2,		/* Owner use. If pagecache, fs may use */
- 	PG_arch_1,
- 	PG_reserved,
--	PG_private,		/* If pagecache, has fs-private data */
-+	PG_folio,		/* Do not use: reserved for folio identification */
- 	PG_private_2,		/* If pagecache, has fs aux data */
- 	PG_reclaim,		/* To be reclaimed asap */
- 	PG_swapbacked,		/* Page is backed by RAM/swap */
-@@ -575,7 +571,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
- /*
-  * Private page markings that may be used by the filesystem that owns the page
-  * for its own purposes.
-- * - PG_private and PG_private_2 cause release_folio() and co to be invoked
-+ * - folio->private and PG_private_2 cause release_folio() and co to be invoked
-  */
- 
- static __always_inline bool folio_test_private(const struct folio *folio)
-@@ -583,17 +579,6 @@ static __always_inline bool folio_test_private(const struct folio *folio)
- 	return folio->private;
- }
- 
--static __always_inline int PagePrivate(const struct page *page)
--{
--	return !!page->private;
--}
--
--/* no-ops during transition */
--static __always_inline void folio_set_private(struct folio *folio) { }
--static __always_inline void folio_clear_private(struct folio *folio) { }
--static __always_inline void SetPagePrivate(struct page *page) { }
--static __always_inline void ClearPagePrivate(struct page *page) { }
--
- FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
- 
- /* owner_2 can be set on tail pages for anon memory */
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index ef9aa388b84f7..3c153b3ad8450 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -144,7 +144,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
- 	DEF_PAGEFLAG_NAME(owner_2),					\
- 	DEF_PAGEFLAG_NAME(arch_1),					\
- 	DEF_PAGEFLAG_NAME(reserved),					\
--	DEF_PAGEFLAG_NAME(private),					\
-+	DEF_PAGEFLAG_NAME(folio),					\
- 	DEF_PAGEFLAG_NAME(private_2),					\
- 	DEF_PAGEFLAG_NAME(writeback),					\
- 	DEF_PAGEFLAG_NAME(head),					\
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 8614430ca212a..5a417f8a922ab 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
- 	VMCOREINFO_NUMBER(PG_lru);
--	VMCOREINFO_NUMBER(PG_private);
- 	VMCOREINFO_NUMBER(PG_swapcache);
- 	VMCOREINFO_NUMBER(PG_swapbacked);
- #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
+Oh, I didn't know such a tree existed.
 
--- 
-2.53.0
+No probs, I'll follow my usual automatic practice: if it appears in
+linux-next, I drop the mm.git copy.
+
+Often after checking that what-you-got matches what-i-got and
+if-not-why-not.  I'm not a trusting soul ;)
+
 
