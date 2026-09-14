@@ -1,235 +1,287 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4D246AA85;
-	Mon, 14 Sep 2026 12:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2BC488206;
+	Mon, 14 Sep 2026 12:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789389635; cv=none; b=RvFt3XvpzoY9n/4GJC+wfmg06b8yWmKysbR/epScyIQecZYjYRvORlnHJQhR+2gnP7hmM0VwYD2RHajBUwKeAB0AEEQs04xe+Tys+eVtxM9PVU0zlSdQF36fc+p/1dbYZy9fM0Q3gD85qSN89SFTWJulyDfaVDr7sK8RW5pDmgU=
+	t=1789390185; cv=none; b=Iv6tfJ3CmIPBylKIgBx54srnfsx2jSoDMJoDiWToHRfgsFDa9DhHwAW/OaixKsx8Azx7BBIND23e7dfmSMtGhi5pM7e0nubTvRrMBrRN3j6SwAqF5vYOGM/hup68a7K2gnUrNzZ1xmoqUJsH2/8qWpuMlPQuFVELDbKWMBtch34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789389635; c=relaxed/simple;
-	bh=WefzKgxG30Cyj+fenxlcnEF2bQNPVRFvkTZFA2rI/zI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=inedgGt+YMamy4fe8PGK+n8MsCdgUTMyhaOiG1BjQOhb35A90twTDic6QGOLhgnKlNl9oDITlNySk9f/fTzpxn142Fnv4NHor7fiKFNHBHGvwsxItF4zmWD+nhjhvqUukew7SowV/1joj/JsgxWhTO+vvzfDgpYXpZMJ5CLT1es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cOrQs4cg; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1789390185; c=relaxed/simple;
+	bh=Ah86zB4RVG+uIcN/elJO/E+NDlTnoyUMVKuIh5hvPTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LImO4FFSBjWrxdErFqf5TEMIaIcNDrzkHWS04HfYt4tF4aMuEvdAJ80hZ/iMsb/sAW++lCQ6kzmEBblhio20Y13GR7oMBC3onGYNynb2Kq2B4Yt4+bWUDLqKOiDsUQ3zdJLCoJElSviFGpoke9hFSR+/BUzf448qJHVM2lqWMG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6Qu9Faj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cOrQs4cg"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68EA1Zon1572335;
-	Mon, 14 Sep 2026 12:40:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=3o859w
-	8koVHGjcJCXqMo2tIp5FaSk7kxdLPqJo3UyII=; b=cOrQs4cg59OfGlT69+wGO6
-	7AZFDlGh18ViLs5wPbm5hh8cgGSAWjvvOnK9ERoOBya3UN9K40kV762zinug4mM/
-	+poATbBQCSP0nYiQ40ICbje0LWcBvwk+85SC/nN84wphTwBsh6qG8WMkHdRONDcq
-	tP13IrKX8uK9BMrSSqWeRWfyP+tzqCZUOAxEtMRsl/Eje15PIbKHfH1mTy0B9fwg
-	7396TFSKrKUryg8KWgUkbD9WPIyS2MVcHaF5npdPk6uZmYuVwsBL7R5/KVhUy9k2
-	YEBColamT3SYPXLJpefu6ocO+0Bjhpnuf512pqcnJptWMJjo4WsMETCf18YODzfg
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmv5hhhy7-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 14 Sep 2026 12:40:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68E9o4nN2133360;
-	Mon, 14 Sep 2026 12:40:27 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gnk9j5ukq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Sep 2026 12:40:27 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68ECeNqY44106138
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Sep 2026 12:40:23 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E5412004B;
-	Mon, 14 Sep 2026 12:40:23 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E53C620043;
-	Mon, 14 Sep 2026 12:40:22 +0000 (GMT)
-Received: from [9.111.205.105] (unknown [9.111.205.105])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Sep 2026 12:40:22 +0000 (GMT)
-Message-ID: <f2fda4cc-1ba1-4944-91e0-00c4ff91b2f9@linux.ibm.com>
-Date: Mon, 14 Sep 2026 14:40:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6Qu9Faj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752061F000FF;
+	Mon, 14 Sep 2026 12:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789390182;
+	bh=R9SUF4YQKVjWUn2HUkixZwwzY6UDTVcqegX2kFC3irY=;
+	h=From:To:Cc:Subject:Date;
+	b=g6Qu9Faj/tlq3eoW4PI1bM2X7wyAqvuegbjwBQ1pvdh8nLGngWR2G8pky7SyE6r5D
+	 Kmu5jOMjosFg2xLxA8jOqvBE/G2D8LOYzgd33AMqStVuSHA4cBvO00Aw+dWmDSzn8z
+	 yZ63LBgBnTdpq1NGTnYttaMZbkSI64Kxv6xg2G9MSBYdQfuu4LfVSx826I/WWvCMKH
+	 MGRrKOHsOdsXORdDlk1aOWRLP3k22BvRzn3g9k7ioq2JQm76E6LrwIMDBuQotuL3Yh
+	 i4l4NNy0Zk8YtyaXSHSXzizfxLJmDcyIBluVPZP3B1NMl0EnEpjzpJDPy1XeENM9OH
+	 6G/wd/aNC3AcQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	kvm@vger.kernel.org
+Subject: [PATCH v16 00/13] tracing: wprobe: x86: Add wprobe for watchpoint
+Date: Mon, 14 Sep 2026 21:49:35 +0900
+Message-ID: <178939017565.94750.9431053336761330458.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 12/24] unwind_user/eh_frame: Remove .eh_frame[_hdr]
- section on detected corruption
-To: sashiko-reviews@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-References: <20260821195259.2688377-1-jremus@linux.ibm.com>
- <20260821195259.2688377-13-jremus@linux.ibm.com>
- <20260821201820.81B8D1F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260821201820.81B8D1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE0MDE3OSBTYWx0ZWRfX3J4bRieoXKE4
- NkCh4AArl1+65uAUtnuThRJ3lUVt2X/BIuFWq0jkX1JaRLHjMmD5LQeSlCE3pY37t/BzjN3HgqI
- ilogZ+mT/ioFYN5xvd3AClSTIB9ipgeEMYVU1qo2NU6l+tBS8pAtdXjzIzMvG0x0gxO78fAgie6
- yj/QcoMv3ldTei3L1Pb+LVF9Dkw78bHr9ajgccJpdA2dXGekINN0V8IPekYwKcqR6k6zYhGapUM
- ymlEH9aV6Be9HMqd376F4uZ2KfU0ny0k5l2Kqh/vhucTn88P0HftU0a8EvncY9l/vWMu8MruojZ
- CeGXQZzx1XEgV7bRvi7y6vVvQlG1FWKkyjFrhDFiTj0wwbKCNeoDo+p7eGZpsxgKApqkQeU9s+9
- dr3XXR7izArlURY3jQA3mksangWIjeN88uYzB/snmGR9nZeQM31BIJV5X6OXweIrs+hlJgsHc1G
- LcR56jB4tcWHn9sJdjQ==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE0MDE3OSBTYWx0ZWRfX39PZNQi/X9fu
- C0/nSqGyqSHckwMqBC6UkI947nB207ZaGraZh/RDwoZRS1n/sfq8WaaM0nRza4pAVd4RX0RZEmH
- 8LT8NRdKz1ZeMA+mtbFY+VTtMrU0lV4=
-X-Authority-Analysis: v=2.4 cv=Zsx4uN7G c=1 sm=1 tr=0 ts=6aa7eb3c cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=PwxMS5Maa9_4Qu9rs20A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: dKC0FBrvRtzc56uzBVVPmQQTqZQVqWVb
-X-Proofpoint-GUID: dKC0FBrvRtzc56uzBVVPmQQTqZQVqWVb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-14_03,2026-09-13_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609140179
 
-On 8/21/2026 10:18 PM, sashiko-bot@kernel.org wrote:
+Hi,
 
-> This commit adds logic to unregister .eh_frame or .eh_frame_hdr sections on
-> demand when corruption is detected during lookup. This prevents repeated
-> attempts to parse bad unwind sections by removing them immediately upon an
-> error return.
+Here is the 16th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on dynamically
+allocated objects too.
+The previous version is here:
 
->> diff --git a/kernel/unwind/eh_frame.c b/kernel/unwind/eh_frame.c
+  https://lore.kernel.org/all/178875277830.93794.14247844688761142429.stgit@devnote2/
 
->> @@ -1202,6 +1202,15 @@ int eh_frame_find(unsigned long ip, struct unwind_user_frame *frame)
->>  	if (!ret)
->>  		ret = __find_frame_row(sec, &fde, ip, frame);
->>  
->> +	/*
->> +	 * Unregister .eh_frame[_hdr] in case of an error,
->> +	 * e.g. EINVAL (corrupted) or EFAULT (inaccessible).
->> +	 * Keep if ENOENT (not found) or EOPNOTSUPP (unsupported CFI).
->> +	 */
->> +	if (ret && (ret != -ENOENT && ret != -EOPNOTSUPP))
->> +		if (eh_frame_remove_section(sec->eh_frame_hdr_start))
->> +			dbg("eh_frame_remove_section() failed\n");
->> +
-> 
-> [Severity: High]
-> Does this introduce a race condition with memory unmapping and mapping?
-> 
-> If a thread is delayed after retrieving sec in eh_frame_find(), another
-> thread could unmap the library and map a new library at the exact same
-> virtual address, registering it with the same eh_frame_hdr_start. When the
-> first thread resumes and fails to parse against the new memory, passing the
-> virtual address sec->eh_frame_hdr_start to eh_frame_remove_section() seems
-> like it would unintentionally remove the newly loaded, valid library's
-> section.
+In this version, a new patch is added to prevent host DR7 debug register
+leaks into KVM guest OSes upon NMI, isolating guest debug state with a
+dedicated per-CPU flag (cpu_dr_in_guest) and memory barriers.
+Furthermore, this version addresses reviewer feedback on v15:
+- Removed hypervisor check in local_db_save() so all paths go through the
+  sequence retry loop, preventing race windows on return instructions.
+- Fixed arch_modify_local_hw_breakpoint_addr() to clear the breakpoint
+  enable bit in shadow cpu_dr7 before touching hardware DR7, preventing
+  intervening NMIs from prematurely re-enabling breakpoints and triggering
+  spurious #DB exceptions.
+- Updated wprobe triggers to program local debug registers directly when
+  a trigger fires, eliminating workqueue latency on the local CPU, while
+  kicking irq_work only for other CPUs.
+- Corrected "unlimited" count keyword matching in clear_wprobe and removed
+  the non-existent wprobe_events file from readme_msg.
 
-I don't think that is possible.  eh_frame_find() and likewise
-eh_frame_remove_section() both guard using eh_frame_srcu.  So while one
-thread has a reference to a section that cannot be removed and replaced.
-I am missing something?
+Detailed changes are here.
 
-> 
-> [Severity: High]
-> Is it safe to assume -EINVAL always means corruption?
-> 
-> Looking at __do_cfi_program(), it also returns -EINVAL when kernel limits
-> are hit, such as exceeding EH_FRAME_CFI_INSN_LIMIT or
-> EH_FRAME_MAX_CODE_ALIGN.
-> 
-> If a valid library simply has a complex function that hits these limits,
-> wouldn't this code globally and permanently disable unwinding for it by
-> removing its section?
+Changes in v16:
+[02/13]
+ - Newly added to prevent host DR7 debug register leak into guest OS
+   on NMI using a cpu_dr_in_guest per-CPU flag.
+[03/13]
+ - In local_db_save(), remove the hypervisor check so all paths go
+   through the sequence retry loop.
+ - Check cpu_dr7_seq before clearing hardware DR7 and reload from shadow
+   cpu_dr7 on sequence retry to avoid clobbering NMI breakpoint updates.
+ - In local_db_restore(), restore from shadow cpu_dr7 whenever
+   cpu_dr7_seq changed instead of evaluating dr7 ? cpu_dr7 : 0.
+[04/13]
+ - Clear breakpoint in shadow cpu_dr7 before setting hardware DR7 in
+   arch_modify_local_hw_breakpoint_addr() to prevent spurious #DB
+   exceptions from intervening NMIs.
+ - Reject modifying local breakpoints with -EBUSY while cpu_dr_in_guest
+   is set.
+[06/13]
+ - Remove non-existent wprobe_events file description from readme_msg
+   in kernel/trace/trace.c.
+[10/13]
+ - Immediately update the hardware breakpoint on the local CPU via
+   trace_wprobe_update_local() in wprobe_trigger() to avoid workqueue
+   latency, and only kick irq_work for other CPUs.
+ - Skip redundant updates in trace_wprobe_update_local() if
+   bp->attr.bp_addr already matches the target address.
+ - Use strcmp() instead of strncmp() for "unlimited" in
+   wprobe_trigger_cmd_parse() to avoid misinterpreting field names
+   starting with "unlimited" as the count keyword.
+ - Normalize "unlimited" and "count=" parameters before creating
+   trigger data.
 
-Following are the used conventions:
-- EINVAL: bad .eh_frame; section should be removed
-- EOPNOTSUPP: unsupported .eh_frame
-- ENOENT: no .eh_frame for IP
+Public branch
+-------------
+I will push this branch as topic/wprobe-v2 to my tree so that it
+can be easily tested.
 
-One can argue whether a CIE/FDE with too many CFI instructions should
-be considered bad or unsupported.  For now I decided for bad, to
-prevent future unwind attempts in case of crafted .eh_frame.
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2
 
-> [Severity: High]
-> This is a pre-existing issue, but looking at eh_frame_remove_section()
-> which is called here, is there a memory leak if mas_erase() drops the lock?
-> 
-> eh_frame_remove_section() holds mtree_lock and iterates via mas_for_each().
-> It calls __eh_frame_remove_section(), which calls mas_erase().
-> 
-> If mas_erase() needs to allocate memory via mas_nomem(mas, GFP_KERNEL), it
-> can drop the tree lock. If a concurrent thread inserts a new section
-> covering the same range during this unlocked window, mas_erase() retries,
-> erases the new section, and returns it.
-> 
-> __eh_frame_remove_section() then sees the returned entry doesn't match sec,
-> returns -EINVAL, and skips call_srcu(), potentially leaking the new section.
+This is based on linux-trace tree's linux-trace/probes/fixes.
 
-Help!  I fail to understand how the (internal) maple tree locking and
-its advanced API are then supposed to be used correctly to iterate over
-the items in the tree and remove some while doing so.  Is that why other
-users use an external lock (MT_FLAGS_LOCK_EXTERN, MTREE_INIT_EXT())?
-See MM_MT_FLAGS.
+Usage
+-----
 
-> [Severity: Critical]
-> This is a pre-existing issue, but looking at __eh_frame_remove_section()
-> called by eh_frame_remove_section(), can a memory allocation failure lead
-> to a use-after-free?
-> 
-> If mas_nomem() fails to allocate memory during mas_erase(), it sets an
-> error state and aborts without removing the node, but still returns the
-> original sec:
-> 
-> __eh_frame_remove_section() {
->     ...
->     if (mas_erase(mas) != sec) {
->         return -EINVAL;
->     }
->     call_srcu(&eh_frame_srcu, &sec->rcu, eh_frame_free_srcu);
->     ...
-> }
-> 
-> Because __eh_frame_remove_section() only checks if the return value does
-> not equal sec, it misses the error state completely. It then calls
-> call_srcu() to free the section while the node remains active in the maple
-> tree. Could subsequent calls to eh_frame_find() load and access this freed
-> memory?
+The basic usage of this wprobe is similar to other probes;
 
-This is resolved in the next version of "[RFC PATCH v2 08/24] unwind_user/
-eh_frame: Store .eh_frame_hdr section data in per-mm maple tree".  See my
-respective reply.
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LEN] [FETCHARGS]
 
-> 
->>  	return ret;
->>  }
->>
-> 
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
 
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Moreover, this can be combined with event trigger to trace the memory
+access on slab objects. The trigger syntax is;
 
+  set_wprobe:WPROBE_EVENT:FIELD[+|-OFFSET][:COUNT] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+|-OFFSET][:COUNT]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+|-OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+|-OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@-1:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 32/32   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+
+
+Thank you,
+
+---
+base-commit: 0c4256196b3a105307e2235fbfd85e768bbcdd0f
+
+Jinchao Wang (2):
+      x86/hw_breakpoints: Make DR7 updates NMI safe
+      x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+
+Masami Hiramatsu (Google) (11):
+      x86/mce: Fix hardware debug register corruption on task migration
+      KVM: x86: Prevent host DR7 debug register leak into guest OS on NMI
+      HWBP: Add modify_local_hw_breakpoint_addr() API
+      tracing/wprobe: Add wprobe (watchpoint probe) trace event support
+      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+      selftests: tracing: Add wprobe trigger testcase
+      tracing/wprobe: Support BTF typecast in fetchargs
+      tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  200 +++
+ arch/Kconfig                                       |   18 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/include/asm/debugreg.h                    |   79 +
+ arch/x86/include/asm/hw_breakpoint.h               |    2 
+ arch/x86/kernel/cpu/mce/core.c                     |   29 
+ arch/x86/kernel/hw_breakpoint.c                    |  166 ++
+ arch/x86/kernel/nmi.c                              |    7 
+ arch/x86/kernel/traps.c                            |   10 
+ arch/x86/kvm/x86.c                                 |    7 
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   48 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    6 
+ kernel/trace/trace_events_trigger.c                |    2 
+ kernel/trace/trace_probe.c                         |   36 
+ kernel/trace/trace_probe.h                         |   22 
+ kernel/trace/trace_wprobe.c                        | 1541 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    3 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   23 
+ .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   85 +
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   85 +
+ .../test.d/trigger/trigger-wprobe-syntax-errors.tc |   37 
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |  107 +
+ 29 files changed, 2526 insertions(+), 96 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax-errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
