@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9A54756DC;
-	Mon, 14 Sep 2026 13:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2316F470440;
+	Mon, 14 Sep 2026 13:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789393068; cv=none; b=N10L4FP8ookRQefEIStVO0q+Tk0VSp5Q6BlSc+RwA4dWSA9guvQKdyl1okWUDTKtonF2ldPusOGXda1Bz0P6Dbl+MJ8xJnKPQC/h2G6/+LmnH4vZmtQtXZCfAFhBDtM+bro77+ZmxDGM0Lw/41G03Ru91iNQ+pUOYGzcVZK8XPA=
+	t=1789393150; cv=none; b=h0InP65seUBrb3iMYn79C3qaTMLPzD2cAPrhKNarNP3gusN6t4/ym2MBQV83QhFHzCkN70N7D6DFqwAgDEXNk3SFbPl06caSYVZjCz/uzKWm6w3Am4CDvvBIu7zjD8yz4ZoyjOlqnY2IKQ5XpgrtUy4+Si+RhsZrs1USvd+kZGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789393068; c=relaxed/simple;
-	bh=FCQVqNyQ6TJ+8EFvDQbM94PSYoBPLvDmtg5bAHSycps=;
+	s=arc-20240116; t=1789393150; c=relaxed/simple;
+	bh=ZA936ApCEhckz5J+rWQzpOatwmkdAJ3FLoJd2POVcn4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qJrutGrIl6+T90Q0Re+kT2zlXzqHec8owGU+/KIqKTNxhJQionlbP9rd4LRZAjhHLP4WX+Ye1LYJymGpp0tjdDbTwtbF8PpGO+p9yEHU4XbIb37piDLM/ljpDkvpVebPbSYUiQBS9SFU75RqSGJTgQOVniK3oQKWrmU0xLYcdSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzWThbVG; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=hUzcP1x0+XpA+3yPYguQiUKxNX4LXd28RpibHVst3Zl+qXft7tw5SS9kAbiRbU7QGwWNcAVNCUW9/xEBEoEQeTiU6ygswcoRct2kVGar2/fj+AEbY/nnx03CvnK5ZiBuhUv90RQc+50evZEEcsOnCGw3eT+csx3P7JDHJzsxX5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbM1o6vT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzWThbVG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7921F000FF;
-	Mon, 14 Sep 2026 13:37:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbM1o6vT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F0AC1F000FF;
+	Mon, 14 Sep 2026 13:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789393067;
-	bh=teIDwwfXFah8NBFRWQRZ+eTRmrLAr0rfuoGSkmAAKdA=;
+	s=k20260515; t=1789393148;
+	bh=9BCqD8kAZuJn9pHsxZwwfpeEhm7EpPULp00Tm/xS4r8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=dzWThbVGDiP+7Kh8Mlz1jnGM9uDygrrjPE0PznQPTZeVLeOHQQlSlJWZOsJOs45GF
-	 0M3ZJK/UHFqpgFIn641k4+JS6FomgiWbSlwEFgmxqW/sLcDbLuBDYrd48YgMxV3hnT
-	 fW+WwewWkWuc2f2sdLu2PHIMXhJpCUJcwYUqSmDF6X5/LpE4P1c2tiVnBGZPtJeFLo
-	 QOHoDP0xqfahJpUiBNiYyltu61DX+V61cCJKBC9t9vQPXCsNCUWimBhiHPG4u7vq4E
-	 A3a1S/3q5lxM9EP8DPj5nGEAVcSD+fgtwFCeLDku8ld4Bn1g4GLsxWZVJMPFL3CO0Z
-	 doE/NDERw9ycQ==
-Message-ID: <76d8c9ee-b994-47a9-b5f3-87d257194eea@kernel.org>
-Date: Mon, 14 Sep 2026 15:37:33 +0200
+	b=QbM1o6vTrDEZV6964roF4n6AhcrTROnyGsSuuU07RFZAt5GA0529PbdCzvBeerMPP
+	 dSXsFcCmoiGOIJ9z0rdabhNGzfShcpecqZa792W8o53k1tNCcxbKMYTIn76NlPYivS
+	 o6lNDIpaoY4pSXfq84dX3tgv4rzDYcq/oivh1LMOc+h5jcsT6fxNz/kcQ9s6wAEREs
+	 c6ehcEF/Vx42vqZaLgOSZ9pL/yopB6aAiEYwqR0LdkCDaakbCzQpTp33BHJxMppKGm
+	 9guiCSmyCYsCh4oinrfdMK2WTTZgm5S+2CSEaxCKN4lZYkmGVMLt1tLKR5UkN5r4hT
+	 uZV8w+oGxTQqg==
+Message-ID: <a4132624-c602-4d93-86fb-7d9369646223@kernel.org>
+Date: Mon, 14 Sep 2026 15:38:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -36,34 +36,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 16/16] mm/page-flags: remove PG_private
-To: sashiko-reviews@lists.linux.dev, Qi Zheng <qi.zheng@linux.dev>,
- Lorenzo Stoakes <ljs@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>,
- Alistair Popple <apopple@nvidia.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Gregory Price <gourry@gourry.net>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Dev Jain
- <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- "Liam R. Howlett" <liam@infradead.org>, Michal Hocko <mhocko@suse.com>,
- Lance Yang <lance.yang@linux.dev>, Ying Huang
- <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
- Muchun Song <muchun.song@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Barry Song <baohua@kernel.org>, Nico Pache <nico.pache@linux.dev>,
- Usama Arif <usama.arif@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jan Kara <jack@suse.cz>,
- Baoquan He <baoquan.he@linux.dev>, linux-mm@kvack.org,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-fsdevel@vger.kernel.org,
- Pratyush Yadav <pratyush@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
+To: Zi Yan <ziy@nvidia.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Jan Kara <jack@suse.cz>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
+ Shuah Khan <skhan@linuxfoundation.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Dave Young <ruirui.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
  <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
- <20260914024800.087EF1F000FF@smtp.kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -110,42 +107,46 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260914024800.087EF1F000FF@smtp.kernel.org>
+In-Reply-To: <20260913-remove-pg_private-v4-16-848550f7574e@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 9/14/26 04:47, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Silent memory leak of folio private data due to missing check for leaked `folio->private` data when a head page is freed.
-> --
-> 
-> commit ebe4dd474a496c46897e3f790e03a43cc0508eaf
-> Author: Zi Yan <ziy@nvidia.com>
-> 
-> mm/page-flags: remove PG_private
-> 
+On 9/14/26 04:24, Zi Yan wrote:
 > folio->private != NULL indicates a folio carries private data, replacing
 > PG_private. All PG_private users are converted. Remove PG_private and
 > reserve the space as PG_folio for future use. Unused PG_private functions
 > are removed too.
 > 
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index 08988877331ba..10f4ad075ea48 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
-> 
-> [ ... ]
-> 
->> @@ -105,7 +101,7 @@ enum pageflags {
->>  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
->>  	PG_arch_1,
->>  	PG_reserved,
->> -	PG_private,		/* If pagecache, has fs-private data */
->> +	PG_folio,		/* Do not use: reserved for folio identification */
-> 
-> [Severity: High]
+> Assisted-by: LLM
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> To: Andrew Morton <akpm@linux-foundation.org>
+> To: Baoquan He <baoquan.he@linux.dev>
+> To: Mike Rapoport <rppt@kernel.org>
+> To: Pasha Tatashin <pasha.tatashin@soleen.com>
+> To: Pratyush Yadav <pratyush@kernel.org>
+> To: Jonathan Corbet <corbet@lwn.net>
+> To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> To: Jan Kara <jack@suse.cz>
+> To: David Hildenbrand <david@kernel.org>
+> To: Steven Rostedt <rostedt@goodmis.org>
+> To: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Dave Young <ruirui.yang@linux.dev>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Lorenzo Stoakes <ljs@kernel.org>
+> Cc: "Liam R. Howlett" <liam@infradead.org>
+> Cc: Vlastimil Babka <vbabka@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: kexec@lists.infradead.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-trace-kernel@vger.kernel.org
+> ---
 
-"High" lol
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
