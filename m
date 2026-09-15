@@ -1,148 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0D03B42F6;
-	Tue, 15 Sep 2026 13:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BEB392C42;
+	Tue, 15 Sep 2026 14:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789478961; cv=none; b=Uqb5iW5/hbApoTXjILjdOkcV3VY3O5UCIwPDtmiNC7r5W0bATKX1o+VTZazMG4qyoLPcovFoaQZB8Ag0ezz6vQasi3xopChlpcZWI9KqOlH2zV+cz9rye3H15VlH1jDD494JhMEgnfa6jTX8YMm55EebpDwqbXMgmnUzc8t8RWo=
+	t=1789481867; cv=none; b=DhNZQ6Z7mKnP9/pe7A3D5HSucXlA7wzXa0WaNdUpc3/Gf/w8nCyRLzUWXSK0ehbqAdodKHoiH0hSWL/lMxtm4uG+clPbHAPZupTl6kw3JcrYv4hdh8DZjXbT35riX9kOEOgBcEyE1rgf0HCIQ0CBJeUyKAnjz/mSmcrpU5M/RZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789478961; c=relaxed/simple;
-	bh=icB4PsDqXVr0bQ0YzhQY7U+ADYrkGT67ZLU7vn+DbVY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cxDDvohW3q93ON+XZt41FkQc0+snD5X0nQ7e04BVdwa1BNvcBewybHZm8neaZz8d5AG5NTy2TdBvWqDeRXc2aZmWEHET7Nh4IPyBkmXIOvlZfIUx1eS8BXvdRK9j/hHRhZC66V/X+4ehrfU/d4Y5WFXFQYLeBw04XGccxsFdFFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnoFFEpb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789481867; c=relaxed/simple;
+	bh=yuOeuiE5qEe30vsAlwsfsOvcs6eYwx8w+NGb4Me8D9k=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=tfRHLJwHnSbax4odTYKr+VHDRvAPLWOeTEdMNF7pFH5f9UQqtlNEnCsbBGGl/pxVw/On7NARIUemgaUGq/mZ/PpC6KGOdZ3e6uIG0h/el11nNRJoKRFnVLtXxAqq9y4snEaoy6ANEFA/sN5v3QOQ5UJd2LOAbpkMAVjdKJsBT18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vgvg6Vf6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnoFFEpb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E868D1F000FF;
-	Tue, 15 Sep 2026 13:29:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vgvg6Vf6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692041F000FF;
+	Tue, 15 Sep 2026 14:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789478960;
-	bh=NVEVSJtUz3xVFwa8+s4VpdC5eHoOE0R2vmOYq10iegc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lnoFFEpb2qrZtRBFWcJpu0Ewaic3x9AUtPvoJvMLhMb7BaPLJOVUMSTKEOzj3xI9S
-	 hC5I2o+1Ku8a6HRosxmrpN9Betz78Xk1/xD4IXU66z18Xa91No8TzO/rlnvw1pH9NI
-	 xkl9lwzHHbaQnQOUvScqNiH3eNtGOt5hA3j/Ey+qlbUYYQDEA6Zh6dJBulza3pNzge
-	 vUp32TN6eGa4gJNay4EzmoUUhLaSfP8vTv/YftOj/hB5tH0m5u5S4RousHrnUTOJtu
-	 APkju2RTRIFqPAncJWglMzyI69OXDgcLEUHJEPvk2M5uo60Os8WeQJeu9Uqn8B6jFo
-	 56LPGbKQDn+Dw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v3 03/13] rcu-tasks: Add a Tasks RCU implementation
- for reader-marked trampolines
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Josef Bacik" <josef@toxicpanda.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260915-b4-rcu-tasks-preempt-qs-v3-3-0ad30c4c5ee7@toxicpanda.com>
-References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com>
- <20260915-b4-rcu-tasks-preempt-qs-v3-3-0ad30c4c5ee7@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 13:29:19 +0000
-Message-Id: <20260915132919.E868D1F000FF@smtp.kernel.org>
+	s=k20260515; t=1789481863;
+	bh=OkMqESzdj+3RbY/kyt0I+HkaA6aNmsfECfxsjJo32bA=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=Vgvg6Vf6N5nvwhVZWf8fGzDXd9ZlEfXfBBG/w2riqNn/dcr/s/Bb1Kjn5xCt4rLZO
+	 /FNDQs2/ZLouDowbLTAoG+bOsccbO7s5T82+OyYwfcX6um3B/KUl0YlT8/pOC1v+5f
+	 qfcdM1Uto9fEVYDQOYHZKjjKOlmt0lChn43XPsBWCwsrLtJFm1HSPrz2wnmJCfJh1M
+	 iDY+pqsv0fXbc6ZC9p6/TRWvhMishNU4m7IfF0kyo4cmqOO3eYQhyXTS5cVMxD4cbH
+	 zUx/KbsD7HuIXt8sdbPnV1BFxKYfT7hprxoA82Tbi0rgBmyLGJtCk7rqFPY/rZT2dM
+	 tUhop+sx6hp9A==
+Content-Type: multipart/mixed; boundary="===============5486250446856456697=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-Id: <2bb91d9868e07bedd1bc7a167a661b1f41e691d975184209c7e617adf551651e@mail.kernel.org>
+In-Reply-To: <20260915-b4-rcu-tasks-preempt-qs-v3-2-0ad30c4c5ee7@toxicpanda.com>
+References: <20260915-b4-rcu-tasks-preempt-qs-v3-2-0ad30c4c5ee7@toxicpanda.com>
+Subject: Re: [PATCH RFC v3 02/13] rcu-tasks-trace: Inline rcu_read_lock_trace() and annotate inside the reader
+From: bot+bpf-ci@kernel.org
+To: josef@toxicpanda.com,paulmck@kernel.org,frederic@kernel.org,neeraj.upadhyay@kernel.org,joelagnelf@nvidia.com,boqun@kernel.org,tglx@kernel.org,peterz@infradead.org,rostedt@goodmis.org,mhiramat@kernel.org,mark.rutland@arm.com,jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,x86@kernel.org,catalin.marinas@arm.com,will@kernel.org,puranjay@kernel.org,xukuohai@huaweicloud.com,paulmck@kernel.org,frederic@kernel.org,neeraj.upadhyay@kernel.org,joelagnelf@nvidia.com,boqun@kernel.org,tglx@kernel.org,peterz@infradead.org,rostedt@goodmis.org,mhiramat@kernel.org,mark.rutland@arm.com,jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,x86@kernel.org,catalin.marinas@arm.com,will@kernel.org,puranjay@kernel.org,xukuohai@huaweicloud.com
+Cc: luto@kernel.org,josh@joshtriplett.org,urezki@gmail.com,mathieu.desnoyers@efficios.com,jiangshanlai@gmail.com,qiang.zhang@linux.dev,jgross@suse.com,mcgrof@kernel.org,ihor.solodrai@linux.dev,linux-kernel@vger.kernel.org,rcu@vger.kernel.org,linux-trace-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-arm-kernel@lists.infradead.org,xen-devel@lists.xenproject.org,luto@kernel.org,josh@joshtriplett.org,urezki@gmail.com,mathieu.desnoyers@efficios.com,jiangshanlai@gmail.com,qiang.zhang@linux.dev,jgross@suse.com,mcgrof@kernel.org,ihor.solodrai@linux.dev,linux-kernel@vger.kernel.org,rcu@vger.kernel.org,linux-trace-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-arm-kernel@lists.infradead.org,xen-devel@lists.xenproject.org,josef@toxicpanda.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Tue, 15 Sep 2026 14:17:40 +0000 (UTC)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] rcu-tasks: Use-after-free in trampolines executed by the idle task
---
+--===============5486250446856456697==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-commit 4dc15eb660eecbf1c68e4f2d97dcdde7b8456c35
-Author: Josef Bacik <josef@toxicpanda.com>
-
-    rcu-tasks: Add a Tasks RCU implementation for reader-marked trampolines
-
-    Tasks RCU waits for every task to pass through a voluntary context swit=
-ch,
-    usermode or idle, because a preempted task might be sitting in a trampo=
-line
-    that is about to be freed and nothing marks it as such. This adds a new
-    Tasks RCU implementation for architectures that make their trampolines =
-Tasks
-    Trace RCU readers.
-
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index e4acd50bd81a1..94318519998c8 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -141,8 +142,13 @@ void raw_irqentry_exit_cond_resched(struct pt_regs *=
-regs)
->  		rcu_irq_exit_check_preempt();
->  		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
->  			WARN_ON_ONCE(!on_thread_stack());
-> -		if (need_resched() && arch_irqentry_exit_need_resched())
-> +		if (need_resched() && arch_irqentry_exit_need_resched()) {
-> +			if (IS_ENABLED(CONFIG_TASKS_RCU_TRAMPOLINE_READERS))
-> +				rcu_tasks_irq_resched_enter(instruction_pointer(regs));
-
-[Severity: High]
-Does this logic leave the idle task off the holdout list if it is
-interrupted while executing trampoline text?
-
-If an IRQ interrupts the idle task (for example, while executing a traced
-function before entering an RCU extended quiescent state) and enters the
-trampoline's unmarked preamble, but does not wake any new tasks,
-need_resched() will be false.
-
-Because need_resched() is false, raw_irqentry_exit_cond_resched() will not
-call rcu_tasks_irq_resched_enter(), meaning the idle task is never added to
-the holdout list.
-
->  			preempt_schedule_irq();
-> +			if (IS_ENABLED(CONFIG_TASKS_RCU_TRAMPOLINE_READERS))
-> +				rcu_tasks_irq_resched_exit();
-> +		}
+> diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
+> index 273c59a032512..4035054309d7c 100644
+> --- a/include/linux/rcupdate_trace.h
+> +++ b/include/linux/rcupdate_trace.h
+> @@ -93,22 +93,20 @@ static inline void rcu_read_unlock_tasks_trace(struct srcu_ctr __percpu *scp)
+>   *
+>   * For more details, please see the documentation for rcu_read_lock().
+>   */
+> -static inline void rcu_read_lock_trace(void)
+> +static __always_inline void rcu_read_lock_trace(void)
+>  {
+>  	int n;
+>  	struct task_struct *t = current;
+>
+> -	rcu_try_lock_acquire(&rcu_tasks_trace_srcu_struct.dep_map);
+>  	n = READ_ONCE(t->trc_reader_nesting);
+>  	WRITE_ONCE(t->trc_reader_nesting, n + 1);
+> -	if (n) {
+> -		// In case we interrupted a Tasks Trace RCU reader.
+> -		return;
+> -	}
+> -	barrier();  // nesting before scp to protect against interrupt handler.
+> -	t->trc_reader_scp = __srcu_read_lock_fast(&rcu_tasks_trace_srcu_struct);
+> -	if (!IS_ENABLED(CONFIG_TASKS_TRACE_RCU_NO_MB))
+> -		smp_mb(); // Placeholder for more selective ordering
+> +	if (!n) {
+> +		barrier();  // nesting before scp to protect against interrupt handler.
+> +		t->trc_reader_scp = __srcu_read_lock_fast(&rcu_tasks_trace_srcu_struct);
+> +		if (!IS_ENABLED(CONFIG_TASKS_TRACE_RCU_NO_MB))
+> +			smp_mb(); // Placeholder for more selective ordering
+> +	} // Else we interrupted a Tasks Trace RCU reader.
+> +	rcu_try_lock_acquire(&rcu_tasks_trace_srcu_struct.dep_map);
+>  }
+>
+>  /**
+> @@ -120,12 +118,13 @@ static inline void rcu_read_lock_trace(void)
+>   *
+>   * For more details, please see the documentation for rcu_read_unlock().
+>   */
+> -static inline void rcu_read_unlock_trace(void)
+> +static __always_inline void rcu_read_unlock_trace(void)
+>  {
+>  	int n;
+>  	struct srcu_ctr __percpu *scp;
+>  	struct task_struct *t = current;
+>
+> +	srcu_lock_release(&rcu_tasks_trace_srcu_struct.dep_map);
+>  	n = READ_ONCE(t->trc_reader_nesting) - 1;
+>  	if (n) {
+>  		WRITE_ONCE(t->trc_reader_nesting, n);
+> @@ -137,7 +136,6 @@ static inline void rcu_read_unlock_trace(void)
+>  			smp_mb(); // Placeholder for more selective ordering
+>  		__srcu_read_unlock_fast(&rcu_tasks_trace_srcu_struct, scp);
 >  	}
+> -	srcu_lock_release(&rcu_tasks_trace_srcu_struct.dep_map);
 >  }
 
-[ ... ]
+This isn't a bug, but the changelog notes that rcu_read_lock_tasks_trace()
+already annotates inside the reader "on the lock side" and then says "Make
+the trace variants match."
 
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> index 627295396cd91..3a7c092361a66 100644
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
+rcu_read_unlock_tasks_trace(), four functions above the changed code in the
+same header, still calls srcu_lock_release() after __srcu_read_unlock_fast(),
+i.e. the exact ordering being corrected in rcu_read_unlock_trace().
 
-[ ... ]
+After this patch the two unlock helpers in the file disagree. This has no
+functional effect (srcu_lock_release() is a lockdep annotation and compiles
+away without CONFIG_DEBUG_LOCK_ALLOC), but would it be worth either flipping
+rcu_read_unlock_tasks_trace() the same way, or saying in the changelog why
+only the rcu_read_{,un}lock_trace() pair is being changed?
 
-> +/* Has @cpu passed a quiescent event since the snapshot, or need it not?=
- */
-> +static bool rcu_tasks_cpu_quiescent(int cpu)
-> +{
-> +	if (!cpu_online(cpu))
-> +		return true;
-> +	/* Pairs with the release in rcu_tasks_qs_event(). */
-> +	if (smp_load_acquire(per_cpu_ptr(&rcu_tasks_qs_seq, cpu)) !=3D
-> +	    per_cpu(rcu_tasks_qs_snap, cpu))
-> +		return true;
-> +	/*
-> +	 * Idle or nohz_full userspace (an RCU extended quiescent state): no
-> +	 * task-level kernel frames there, and whatever ran before has switched
-> +	 * out.  As with the classic flavor, the idle task itself is not waited
-> +	 * for.
-> +	 */
-> +	if (!(ct_rcu_watching_cpu(cpu) & CT_RCU_WATCHING))
-> +		return true;
-> +	return idle_cpu(cpu);
-> +}
 
-[Severity: High]
-Could the unconditional return of idle_cpu() lead to a use-after-free crash
-if the idle task was interrupted in trampoline code?
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-Since the idle task wasn't added to the holdout list during IRQ exit
-(because need_resched() was false in raw_irqentry_exit_cond_resched()), the
-grace period thread relies entirely on rcu_tasks_cpu_quiescent().
-
-Because idle_cpu(cpu) returns true, the QS sequence check for the idle task
-is bypassed. The GP thread will assume the CPU has passed a quiescent state,
-complete the grace period, and free the trampoline memory.
-
-When the IRQ returns, the idle task will resume execution in the now-freed
-trampoline memory, which can lead to a kernel panic.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-b4-rcu-tas=
-ks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com?part=3D3
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34975311706
+--===============5486250446856456697==--
