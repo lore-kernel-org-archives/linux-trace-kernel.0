@@ -1,69 +1,69 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2928043305A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Sep 2026 13:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E049247FAF4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Sep 2026 13:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789478273; cv=none; b=OHXlxm/AFY+U1ZOY4M2MdI5vE82eVoDa+c0DpRFklqg1UEjqekwrZPYPewC8kJ3BfXp0qUjA7iWmEfrj/ePEpMn8QWKXB5lq8gsJYUtkhk2GlqKJ4AfFZgxtaW06OzjEUX5dV5Dx2yVXuSzwgWapb/p/kJLAYIz0VnMnzuhXsIA=
+	t=1789478278; cv=none; b=LRcR58BHEDrlvvSg0R27x5/4DS3B5Kx2+5o5SPu73/SQ7MqoewBXdN+0IZtJGpn3K5o/u0rQGuM4SA8P2p/ynQvy2hl2o7Qey9Htn7uwUJo1jjZpfQnsiQqKWEU0VBpVmJi68uHVGb2b4aawM3uXJBOqe+AbjJ6CaO8YgpLOr/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789478273; c=relaxed/simple;
-	bh=WoSDn4ZEoocgxJI9vrvXQ3qPnrz/LPBQsbDWUONxsf4=;
+	s=arc-20240116; t=1789478278; c=relaxed/simple;
+	bh=2gqgm31o9vakOy6+NG5dFQrZfNnO16Cyr1QKmdk48dg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WlN0DLcjXn7LHo/OljYsotwYpMraImr2f1pvWWXNsNYdkb2BJ31S8x5JY9aS5TynkBcSu0WwIQVEKH4gkU277O8t3Wcc1iQRs1Blp4dFlSIPqdyVHuXhXDgzAOO58wIkYk1wXXJgkpiXcYkPLXWTxcgABM5PO1mkwFwxg0GFYto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=Xn2+ghIO; arc=none smtp.client-ip=74.125.230.204
+	 In-Reply-To:To:Cc; b=BRKwAu+bXCpkNQxXpIkN7SKnOUzJhQPH+Fp0Z1DtpYxzP0NiLDROHZuwVa42KjQJBBiyTDcFiVLiLfrVKcnTyN1NGGPD00IbXKqHzIh/wpDUQlNirOq6Z0uV93Us0Hcgf0Wjz4sFVulmbIliIUki19vRPWYhqC0t/y0KoI9SlOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=iN6GDaYq; arc=none smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="Xn2+ghIO"
-Received: by mail-qk2-f12.google.com with SMTP id af79cd13be357-93910c3e6b1so119269085a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Sep 2026 06:17:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="iN6GDaYq"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530c602630bso34310641cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Sep 2026 06:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789478270; x=1790083070; darn=vger.kernel.org;
+        d=toxicpanda.com; s=google; t=1789478274; x=1790083074; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=IVf/c/k7gzeyhXD1Q6M+2DLwLNI40n7fXEqvG2ZQN0k=;
-        b=Xn2+ghIOGJQnxTFU4k7M4tehgpkLkE74C02xa/6Qm999RKmWt7cr/eHmoFg5fLnXpa
-         9KGuLZrqm7e9PZ8sNDG0951m0z87Niq8Ofvg63Q4X/hSE4a3U6JNIndtF1ZlNKDIcSQL
-         RWQJgPDCX3DcGBklT0gXmZhT3a+htmLxQBxKUa1uRBJk6VWwm/nfRFQMln41HISK0Rac
-         qQynBSkjBGkllS/sW7aVc0+JNT6yoApMKpRiyAS+wywTmi1QDp2vwVZ53drz0i1qQ29T
-         EpwLJo2zE+U8KCg5Qs6lcXVw02ezT1Z+/S//aFWwghcztsBzIAfs09GOWqb2wZVCBKfG
-         Zmww==
+        bh=zOBWKoOt8czuTeNdTxDxvLfMht4h54WO3jEdwibwnr4=;
+        b=iN6GDaYqjkwhMEqcRyjRXtWw/w7oZJwfQuaJA2LCjB4j04J+YjGFdEsEKVYXBzst/P
+         KYi+YoujdruZMKfeAxSULT+AzZW4dmdajByEJsJBK7gmg+nG60lU5Je0yNHK/OxOgP/y
+         Iuo1PFaBp8dlMpzk5GXkwcqb5eX8PXuq8MX9Zgi/tt3q7H8zIvBPiWU+g/XVA7fmnNGu
+         gniRCX0N7mDOi4DBeMJo/bDJAw2r7TMB1piYb7zOC+IaCeqCIPssYBRjjW9rFL7HnIhQ
+         qgcdbEzchV1txav7ojPhVixjkwFE/u/7pbxgAq+O8Flz3vsCcgkAn/Hg/pBUwwy8PgG1
+         c0Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789478270; x=1790083070;
+        d=1e100.net; s=20260707; t=1789478274; x=1790083074;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IVf/c/k7gzeyhXD1Q6M+2DLwLNI40n7fXEqvG2ZQN0k=;
-        b=FtjCxUnknHx7hQbo8KhlmTqeaxgTpwYpIZvoeOcL1iqxfWv3FTqKz21gmfTC08OLNX
-         5qGHqLMnguAtw4F9rEp9RZZdYjabZqljhaZiUE2YP+Nm5MF7hVbbto3D+wEHdE56x2Is
-         0HzAxJi/oV8uDv0TDWEBJv+1nKgCuqJpUmRtI865JXc96tvEb7ea/3ygmZ/ZYgMSHEG1
-         fyrYRFdkb2JKYU43onCK2/YcEN4DaKb2wi5tbLB21iwz5vg03z5IEdHY/zZmQYO9TaLZ
-         20D9z5cumfHVjqq7/nfuuAVRAzKh+aWedmrKRqNmgARJf+L1Uu0B9EhtRAsICAL69Ima
-         QtYQ==
-X-Forwarded-Encrypted: i=1; AKwUvByU2T+xJty9tzGcLB3ll/vrzb28UI3XpI3ku7B5Y03aw0LYZY+xviK3BiUzd2QodOzPq07v3yoaKtQ1sEaPilBuniM=@vger.kernel.org
-X-Gm-Message-State: AFuF++k264z8Ii4XQTMtSh6hQ8bEjfIq6uhdZfBsINZUs8VswN8m3xB7
-	Fdqee9YXPpyNUudbKU5TK7EsEhzOWiannK356OiDCZ42BOohAwOPzaMbR4eZ8ptTWUg=
-X-Gm-Gg: AYBFou3plrFMRjkW/w8okcjYS5xG+3flOUKQ6N9D3NswxGV6fPNj5PPWe1dG06SCwRb
-	+qUmGhbbdhDpwTWvuuAK5l3459r7SjK20OMwwmA87ZDD/nwKl805WTx/ivag0a1/zTG0MjrcTYg
-	YUlB6gQ8IGHVKsGyCoDoo0CtNRI0l5mv2M/bHsTJTeJFJLEPtPZvnJagC4+pFf5GYif287hY7Pq
-	TPm32TgMWtxONS5e6WR/3pEFQAA3NnWcmVfkBZaZshPlKRYwxG2U2unYdDFKIuzxJF1VznumqR7
-	8u3mQF2U2KpLxgiTu5uHL9Lttlwp2l05bvNREXlKbEefYMl+Jbc8S5g7SbZBZAKONvmvWEewakL
-	Z0IPINno/La+CVoyAHIibEXOzSZvHyjIZvXim/Itz6o3CTKPznFhud66zlMJVkihx8Dz+TrGzDl
-	hdZ0/5uFMO8JHocz4BO8wndzkI2A+DX+Fjdq1MHnw6p7XwYCpJ5Yq7nRCjcRkiOBi/uCrZO4rF9
-	wE8SwD572MxrvhVdiUjLbJbGukuHUK2qxFQU84ME64+/xE8VECgCEtG
-X-Received: by 2002:a05:620a:2b8f:b0:936:d00a:4947 with SMTP id af79cd13be357-93a345745demr474274385a.2.1789478269641;
-        Tue, 15 Sep 2026 06:17:49 -0700 (PDT)
+        bh=zOBWKoOt8czuTeNdTxDxvLfMht4h54WO3jEdwibwnr4=;
+        b=GIQ7fuJAN0wgWw3oj0ySAtA9MfqlEDpWWGYNTV0Qih6ZBwPjSncuWGnSFa5TwOD2vU
+         UVX6LdIMqKNvHTOEKoQ8vZA6o6W83uwNiqgwmoPRqkcM4SjmHjaZCGI8XMmP9n7qxTil
+         dNgc7XwVzf01/rosMx+/hshC2Tz3BV6GS+A0saaAQ0REyR8a8G2s4T5QPfwRtNcWTWr2
+         HED16tE3/t4t22PcDBclMFW4Uu74iR1MPsyCznkyY55W9CClroiOHJh+kPzz50HopVXv
+         5r7g0rH7uP4dSNC0FK4/jYrtTAsAHhUAG5Mw8dIVrPFpxz6QJDRODu47d5rp6uLtgkkE
+         0AcQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwdENpdFwqxzfFyKvM7kqZD1okLIsf4V8kZMbct7tEdVv/IG68bTCaSdQOli4gndQR1rJ1jBLBHxo1VgSUY9S38SC4=@vger.kernel.org
+X-Gm-Message-State: AFuF++k154z7dr8o9Zq/JflOOTfil6JoggCW/Ay5TxUC4sqgt6gqin1l
+	uInoum6l5G9ItUyWufk93maLBL1JWWlKtG8Yz7cTfBckj3OP97deeaJ+9l2D+lGw2D8=
+X-Gm-Gg: AYBFou1eGIkTOvQRZakS/qCByuxiEpO3G/hJkUEwsetNOOOdlUJtBwQpYV9ZjZsscJM
+	LNqH9nSk5YzXglSvCyOVacPsAgDgJ4IAYikV2SkQyWJt4UQo3u4Maz1BQeZJNUh+SSqDZ+fex4J
+	Wo2V/Mk+8OrshyZqrb2FzDVv4oN7VsPQBW4jOMD49BlPdJXkkk7gBlFped565HIhqJQ2qqnz8Tb
+	zTq/30yiVh+wBs+4fwQwAkp0TNEhGD51giInl9EnyooIJNU0FRSND4Musah9nJoBQTI6YvdqcrB
+	gbtYUB/Y//rNYJ1CyozwSj96+URD/7p2C72IR1YaieussTY1YhNbaOp2mSbffoeY7/Lqe1JxwlA
+	oyTa1tmEX6llGma2TkT0j0smVB0zG2Lo7hIsf2B5GKFexvn9hggM1NBhAhB9te2ocK2+wFtWz1n
+	Gfgkrzsm5AOqGOPNcOxrCNK4kr3yYwluoVaz9Cy7cCj0VikvDXKkvcuWjaxSaQFjlVZfmmRM+NB
+	1TM9Qpgv+6266hoiDv6vXgW/zeE6QyApvlGFIXZGUoo0M9I/xJGCTJo
+X-Received: by 2002:a05:622a:1646:b0:530:9bb:54ae with SMTP id d75a77b69052e-5310cf32770mr102643101cf.15.1789478273513;
+        Tue, 15 Sep 2026 06:17:53 -0700 (PDT)
 Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-939f19f94a1sm1137880185a.42.2026.09.15.06.17.48
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-530ca4ba156sm126369461cf.19.2026.09.15.06.17.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 06:17:49 -0700 (PDT)
+        Tue, 15 Sep 2026 06:17:52 -0700 (PDT)
 From: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 15 Sep 2026 13:17:29 +0000
-Subject: [PATCH RFC v3 02/13] rcu-tasks-trace: Inline rcu_read_lock_trace()
- and annotate inside the reader
+Date: Tue, 15 Sep 2026 13:17:31 +0000
+Subject: [PATCH RFC v3 04/13] kprobes: Expose the optprobe jump window to
+ Tasks RCU
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -72,7 +72,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-b4-rcu-tasks-preempt-qs-v3-2-0ad30c4c5ee7@toxicpanda.com>
+Message-Id: <20260915-b4-rcu-tasks-preempt-qs-v3-4-0ad30c4c5ee7@toxicpanda.com>
 References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com>
 In-Reply-To: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com>
 To: "Paul E. McKenney" <paulmck@kernel.org>, 
@@ -117,143 +117,178 @@ Cc: Andy Lutomirski <luto@kernel.org>,
  bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openssh-sha256; t=1789478262; l=5472;
+X-Developer-Signature: v=1; a=openssh-sha256; t=1789478262; l=7478;
  i=josef@toxicpanda.com; h=from:subject:message-id;
- bh=WoSDn4ZEoocgxJI9vrvXQ3qPnrz/LPBQsbDWUONxsf4=;
+ bh=2gqgm31o9vakOy6+NG5dFQrZfNnO16Cyr1QKmdk48dg=;
  b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgUBr36M/n0nWN0DNbnxwzIiCZez6MG
  JiruuNaSCI/zXsAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QOqgtWORMkFCOHo3WLOy6WMvyvf/Bd/PX1OTaW4H8LYu/zuiatDpxAZC81QUixDJwPnYFE7C1UL
- 57TTusaQZdwg=
+ QFs4wUTmA5uBGNzmizfs5h8i2jZ+BJEC+ZKMMB4U6RQcjTiVVDPqXAZ9evZNBFK/JcfouDSMfSj
+ BhbWSxMKT7As=
 X-Developer-Key: i=josef@toxicpanda.com; a=openssh;
  fpr=SHA256:C8kOX2QUJCMqnCX+KEeoqRAjLo9L+ELOSH2NSAJHqGA
 
-rcu_read_lock_trace() calls rcu_try_lock_acquire() before it has
-entered the SRCU-fast reader, and rcu_read_unlock_trace() calls
-srcu_lock_release() after it has left it.  rcu_read_lock() and
-rcu_read_unlock() do it the other way around, annotating strictly
-inside the critical section, and rcu_read_lock_tasks_trace() already
-follows that order on the lock side.  Make the trace variants match.
+kprobe_optimizer() is the one synchronize_rcu_tasks() user that is not
+about trampoline text: it waits for tasks that were interrupted on an
+instruction boundary inside the bytes it is about to overwrite with the
+optimized jump, so that none of them resumes into the middle of the new
+instruction.  Those bytes are ordinary kernel or module text with no
+Tasks Trace reader around them, so on CONFIG_TASKS_RCU_TRAMPOLINE_READERS
+kernels the irq-exit quiescent-state check has to be told about them.
 
-Also make them, and the __srcu_read_lock_fast() and
-__srcu_read_unlock_fast() they are built on, __always_inline like
-rcu_read_lock() rather than leaving it to the compiler, which does
-outline all four in KASAN/KCOV builds.
+Add kprobe_in_optimized_region(), a lockless and conservative form of
+get_optimized_kprobe() that reports whether any registered kprobe lies
+within MAX_OPTIMIZED_LENGTH before the given address regardless of its
+optimization state, and have rcu_tasks_trampoline_text() consult it for
+core and module text so that a task interrupted there becomes a holdout
+rather than a quiescent event. The hash walk only runs while
+kprobe_optimizer() is actually inside its synchronize_rcu_tasks(),
+tracked by a flag it sets around the call; otherwise the check is a
+single load. That check cannot see a task that was already preempted in
+the region before the flag went up (possibly before the kprobe even
+existed), and the new grace period does not otherwise wait for a
+preempted task to run again, so before synchronize_rcu_tasks() the
+optimizer calls rcu_tasks_wait_irq_preempted() to wait until no parked
+task's recorded irq-exit preemption IP is inside such a region; its
+leading synchronize_rcu() also publishes the flag to every (interrupts-
+disabled) check in flight. The kprobe hash is RCU-protected and every
+free path waits for a grace period after unhashing, so the lockless walk
+from the irq-exit path is safe.
 
-Besides consistency, this means the first thing a caller of
-rcu_read_lock_trace() does is enter the reader and the last thing
-rcu_read_unlock_trace() does is leave it, with no out-of-line call on
-the outside.  A later patch relies on that for callers whose own text is
-protected by the reader they are about to take.
+On other configurations the flag is set and cleared but nothing reads
+it and rcu_tasks_wait_irq_preempted() is a stub; the classic
+implementation already waits for such tasks.
 
 Assisted-by: LLM
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- include/linux/rcupdate_trace.h | 22 ++++++++++------------
- include/linux/srcutiny.h       |  4 ++--
- include/linux/srcutree.h       |  5 +++--
- 3 files changed, 15 insertions(+), 16 deletions(-)
+ include/linux/kprobes.h |  8 +++++++-
+ kernel/kprobes.c        | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/rcu/tasks.h      | 11 ++++++++---
+ 3 files changed, 65 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
-index 273c59a03251..4035054309d7 100644
---- a/include/linux/rcupdate_trace.h
-+++ b/include/linux/rcupdate_trace.h
-@@ -93,22 +93,20 @@ static inline void rcu_read_unlock_tasks_trace(struct srcu_ctr __percpu *scp)
-  *
-  * For more details, please see the documentation for rcu_read_lock().
-  */
--static inline void rcu_read_lock_trace(void)
-+static __always_inline void rcu_read_lock_trace(void)
- {
- 	int n;
- 	struct task_struct *t = current;
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index e6de7ae55bda..74cc48c04417 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -530,11 +530,17 @@ static inline bool is_kprobe_insn_slot(unsigned long addr)
+ }
+ #endif /* !CONFIG_KPROBES */
  
--	rcu_try_lock_acquire(&rcu_tasks_trace_srcu_struct.dep_map);
- 	n = READ_ONCE(t->trc_reader_nesting);
- 	WRITE_ONCE(t->trc_reader_nesting, n + 1);
--	if (n) {
--		// In case we interrupted a Tasks Trace RCU reader.
--		return;
--	}
--	barrier();  // nesting before scp to protect against interrupt handler.
--	t->trc_reader_scp = __srcu_read_lock_fast(&rcu_tasks_trace_srcu_struct);
--	if (!IS_ENABLED(CONFIG_TASKS_TRACE_RCU_NO_MB))
--		smp_mb(); // Placeholder for more selective ordering
-+	if (!n) {
-+		barrier();  // nesting before scp to protect against interrupt handler.
-+		t->trc_reader_scp = __srcu_read_lock_fast(&rcu_tasks_trace_srcu_struct);
-+		if (!IS_ENABLED(CONFIG_TASKS_TRACE_RCU_NO_MB))
-+			smp_mb(); // Placeholder for more selective ordering
-+	} // Else we interrupted a Tasks Trace RCU reader.
-+	rcu_try_lock_acquire(&rcu_tasks_trace_srcu_struct.dep_map);
+-#ifndef CONFIG_OPTPROBES
++#ifdef CONFIG_OPTPROBES
++bool kprobe_in_optimized_region(unsigned long addr);
++#else /* !CONFIG_OPTPROBES */
+ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+ {
+ 	return false;
+ }
++static inline bool kprobe_in_optimized_region(unsigned long addr)
++{
++	return false;
++}
+ #endif /* !CONFIG_OPTPROBES */
+ 
+ #ifdef CONFIG_KRETPROBES
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 6337da5cab9e..e460fba83e4a 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -511,6 +511,48 @@ static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
+ 	return NULL;
  }
  
- /**
-@@ -120,12 +118,13 @@ static inline void rcu_read_lock_trace(void)
-  *
-  * For more details, please see the documentation for rcu_read_unlock().
-  */
--static inline void rcu_read_unlock_trace(void)
-+static __always_inline void rcu_read_unlock_trace(void)
- {
- 	int n;
- 	struct srcu_ctr __percpu *scp;
- 	struct task_struct *t = current;
++/*
++ * True while kprobe_optimizer() is waiting for its Tasks RCU grace period.
++ * Only in that window can an interruption inside an optprobe's jump region
++ * matter to it, so kprobe_in_optimized_region() does no work otherwise.
++ */
++static bool kprobe_optimizer_waiting;
++
++/**
++ * kprobe_in_optimized_region - Could @addr be inside bytes a jump-optimized
++ *	kprobe replaces?
++ * @addr: kernel text address, typically an interrupted instruction pointer
++ *
++ * kprobe_optimizer() relies on synchronize_rcu_tasks() to wait for tasks that
++ * were interrupted on an instruction boundary inside the region about to be
++ * overwritten by the optimized jump.  Where Tasks RCU is built on
++ * reader-marked trampolines that region has no reader, so the irq-exit
++ * quiescent-state check asks this instead (see rcu_tasks_trampoline_text()).
++ * This is the lockless, conservative form of get_optimized_kprobe(): it does
++ * not care whether the kprobe found is, or ever will be, optimized.  May be
++ * called from any context with preemption disabled; the kprobe hash is
++ * RCU-protected and every free path waits for a grace period after unhashing.
++ *
++ * The hash walk only runs while the optimizer is actually waiting.  A task
++ * that was preempted in such a region before the flag went up is invisible
++ * to that check, so the optimizer first waits those out by their recorded
++ * preemption IP (rcu_tasks_wait_irq_preempted(), whose leading
++ * synchronize_rcu() also publishes the flag to every check in flight).
++ */
++bool kprobe_in_optimized_region(unsigned long addr)
++{
++	int i;
++
++	if (!READ_ONCE(kprobe_optimizer_waiting))
++		return false;
++
++	for (i = 1; i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
++		if (get_kprobe((kprobe_opcode_t *)addr - i))
++			return true;
++	return false;
++}
++NOKPROBE_SYMBOL(kprobe_in_optimized_region);
++
+ /* Optimization staging list, protected by 'kprobe_mutex' */
+ static LIST_HEAD(optimizing_list);
+ static LIST_HEAD(unoptimizing_list);
+@@ -644,8 +686,16 @@ static void kprobe_optimizer(void)
+ 		 * to 2nd-Nth byte of jump instruction. This wait is for avoiding it.
+ 		 * Note that on non-preemptive kernel, this is transparently converted
+ 		 * to synchronoze_sched() to wait for all interrupts to have completed.
++		 * kprobe_optimizer_waiting lets a reader-marked-trampoline Tasks RCU
++		 * recognise tasks interrupted in such a region while we wait, and
++		 * rcu_tasks_wait_irq_preempted() (a no-op elsewhere) first waits
++		 * out any that were preempted there before we said so; see
++		 * kprobe_in_optimized_region().
+ 		 */
++		WRITE_ONCE(kprobe_optimizer_waiting, true);
++		rcu_tasks_wait_irq_preempted(kprobe_in_optimized_region);
+ 		synchronize_rcu_tasks();
++		WRITE_ONCE(kprobe_optimizer_waiting, false);
  
-+	srcu_lock_release(&rcu_tasks_trace_srcu_struct.dep_map);
- 	n = READ_ONCE(t->trc_reader_nesting) - 1;
- 	if (n) {
- 		WRITE_ONCE(t->trc_reader_nesting, n);
-@@ -137,7 +136,6 @@ static inline void rcu_read_unlock_trace(void)
- 			smp_mb(); // Placeholder for more selective ordering
- 		__srcu_read_unlock_fast(&rcu_tasks_trace_srcu_struct, scp);
+ 		/* Step 3: Optimize kprobes after quiesence period */
+ 		do_optimize_kprobes();
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index 3a7c092361a6..866768462850 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -1006,7 +1006,9 @@ bool __weak arch_rcu_tasks_trampoline_text(unsigned long ip)
+  *    text being torn down may already be unregistered there);
+  *  - the .text..rcu_tramp section, C glue called directly from such
+  *    trampolines before it has entered the reader;
+- *  - whatever the architecture adds via arch_rcu_tasks_trampoline_text().
++ *  - whatever the architecture adds via arch_rcu_tasks_trampoline_text();
++ *  - the bytes after a kprobe that a pending jump optimization is about to
++ *    overwrite, the one synchronize_rcu_tasks() user with no trampoline.
+  *
+  * A false positive only makes the task a holdout until its next quiescent
+  * event.  Called with interrupts disabled from the irq-exit path.
+@@ -1017,9 +1019,12 @@ bool rcu_tasks_trampoline_text(unsigned long ip)
+ 		if (ip >= (unsigned long)__rcu_tramp_text_start &&
+ 		    ip <  (unsigned long)__rcu_tramp_text_end)
+ 			return true;
+-		return arch_rcu_tasks_trampoline_text(ip);
++		return arch_rcu_tasks_trampoline_text(ip) ||
++		       kprobe_in_optimized_region(ip);
  	}
--	srcu_lock_release(&rcu_tasks_trace_srcu_struct.dep_map);
+-	return !is_module_text_address(ip);
++	if (is_module_text_address(ip))
++		return kprobe_in_optimized_region(ip);
++	return true;
  }
+ NOKPROBE_SYMBOL(rcu_tasks_trampoline_text);
  
- /**
-diff --git a/include/linux/srcutiny.h b/include/linux/srcutiny.h
-index fbcf13bc12d1..a43bae11c81c 100644
---- a/include/linux/srcutiny.h
-+++ b/include/linux/srcutiny.h
-@@ -101,13 +101,13 @@ static inline struct srcu_ctr __percpu *__srcu_ctr_to_ptr(struct srcu_struct *ss
- 	return (struct srcu_ctr __percpu *)(intptr_t)idx;
- }
- 
--static inline struct srcu_ctr __percpu *__srcu_read_lock_fast(struct srcu_struct *ssp)
-+static __always_inline struct srcu_ctr __percpu *__srcu_read_lock_fast(struct srcu_struct *ssp)
- 	__acquires_shared(ssp)
- {
- 	return __srcu_ctr_to_ptr(ssp, __srcu_read_lock(ssp));
- }
- 
--static inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
-+static __always_inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
- 	__releases_shared(ssp)
- {
- 	__srcu_read_unlock(ssp, __srcu_ptr_to_ctr(ssp, scp));
-diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
-index 75e54e4f963f..fdb42ab50301 100644
---- a/include/linux/srcutree.h
-+++ b/include/linux/srcutree.h
-@@ -286,7 +286,8 @@ static inline struct srcu_ctr __percpu *__srcu_ctr_to_ptr(struct srcu_struct *ss
-  * on architectures that support NMIs but do not supply NMI-safe
-  * implementations of this_cpu_inc().
-  */
--static inline struct srcu_ctr __percpu notrace *__srcu_read_lock_fast(struct srcu_struct *ssp)
-+static __always_inline struct srcu_ctr __percpu notrace *
-+__srcu_read_lock_fast(struct srcu_struct *ssp)
- 	__acquires_shared(ssp)
- {
- 	struct srcu_ctr __percpu *scp = READ_ONCE(ssp->srcu_ctrp);
-@@ -309,7 +310,7 @@ static inline struct srcu_ctr __percpu notrace *__srcu_read_lock_fast(struct src
-  * Please see the __srcu_read_lock_fast() function's header comment for
-  * information on implicit RCU readers and NMI safety.
-  */
--static inline void notrace
-+static __always_inline void notrace
- __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_ctr __percpu *scp)
- 	__releases_shared(ssp)
- {
 
 -- 
 2.55.0
