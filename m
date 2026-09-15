@@ -1,35 +1,94 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFF229B795;
-	Tue, 15 Sep 2026 08:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD5747A0A6;
+	Tue, 15 Sep 2026 10:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789462416; cv=none; b=MOi9qYpqpX8XteBFV1vbdMJ3NayeWbS3/vSM4iN+S6OTwlkXYGGWHJY/ECUuXSEaoKvytt8/+2Wbcfo5cHrw79PGrrD2sxp3gypMJlrfwbGvjRx9hc2LRB0esMMUWSFBBp1jWHNU5ocM5lHEdOzN6CQBF6RyGrAll50LVdNMb8g=
+	t=1789468844; cv=none; b=UatfIZzT2JWXRZEsrPucrcGEWdEYlf+CNj+GjHoxR3+9s8FW1/XTIbZ2wQ2n05I8LLA7amARJFJnc/XbbzNnihU6iEHMcmn2xok4hmRsY3GoLmRb6ZbA2EMQt2dz+7WdrWiI9GrrJHV895GtpUSp5rNgKISFbEgAh8WdhZBN3YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789462416; c=relaxed/simple;
-	bh=SS5rddX69DGcsfgz2G/1cA5l1EzEzoK6HPfY4ZlNrus=;
+	s=arc-20240116; t=1789468844; c=relaxed/simple;
+	bh=A4kgPFQ6UkzFS/sD8VUIM9bIlArc5N4YWEOby/vnMQ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXLX+DC6OX/8bs5+yUjns0TFdxSsB34bwBoTfSjckcWTDZnq5VDzV5llaGe/A/rMrQ6IejJvYkcFiuFAd7kUZnyLzf3GzgipcJiZ0K435CIfxSVtiSZjyVrQrs6mSlMqilgOvWlvM+yDPNKiLxfWZXoA1fT44wobMQXiFXsYL+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
-	(envelope-from <martin@akranes.kaiser.cx>)
-	id 1x6Oun-00000002mtl-3hcx;
-	Tue, 15 Sep 2026 10:53:21 +0200
-Date: Tue, 15 Sep 2026 10:53:21 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: David Carlier <devnexen@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Clear the unused part of the fgraph_data
- reservation
-Message-ID: <aqkHgVWqa5Lp0PWd@akranes.kaiser.cx>
-References: <20260911195559.230709-1-devnexen@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SClGMJ8d01e2hevUFRenpHCPvR16B5+tQFJh1LXImIjFQ93g0B+y/rQa9BBbA1XQYufZkOfGOFiBAylUJ/emC87hMwBGt6yxypK9eWEXemtvE/Wcvn+x4h+pEvkNzcrDqM1x1bzHzXlV7oH1BfYoEhuYgC1/i5ZjW+QmdfG1+cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=lKsecUK6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LnZRN66h; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="lKsecUK6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LnZRN66h"
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailflow.stl.internal (Postfix) with ESMTP id 6AC9F1300501;
+	Tue, 15 Sep 2026 06:40:39 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Tue, 15 Sep 2026 06:40:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1789468839; x=
+	1789476039; bh=GR5i+ZoXZtVmjVFbg/5ljADDJkwxtSAlXIoGrwBZebs=; b=l
+	KsecUK6b0SRJRaq+hc/eB8E8+E+0OS3TOgWMDQbkRUi99Sm6DGJRnpgm8BmabSww
+	94irUqC7athEF5czc5H34GvEV4gCjrkDH9KM/KFN0XAw5nUNvVVq8ZeeSm/NIPw/
+	PUg16rQKCi5d57z4wVR9Yu2ZGdO6Pi0Vhgwli0EWkCkteSF72+SYP3fVidRcnze5
+	pEbe+q4EUL40mUCPAn39M/JQBgEsmy/LAFVXDQyjxIbepLwUH+rvZYaW43SkUwbe
+	FyxzhyuB5/Z9JophI2poul52Ab9s1BBMp64H0JpfyjCaZwvySDR7e5rEtbG3eOD7
+	UoFLCPzfGxpymeQlTS45A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1789468839; x=1789476039; bh=GR5i+ZoXZtVmjVFbg/5ljADDJkwxtSAlXIo
+	GrwBZebs=; b=LnZRN66hWtnwspXOjsG7LYeKMX9nv/hfkWjD/rulqw4ftSSQMIb
+	6Y1xvTgEUtkRJsi2+7XeBVytHuFl9n1BCAdNuR4cf7u+M8fbFeXtoToAU/FrRlKG
+	M5xVcp1J14A1W5A4TAUCW/kqAZbA9oTtFCOsRl+sC0AOdGxZUlHKXa+02PREbtpl
+	q0B3S6azIA90MT3hN1Xhw3mVppbWdJBkGCanFCXWgBd4fSZ1/FVuLBGkPwJsqXa5
+	pQg96MBVgQKXynEQaBjlx2bqLH6yGxnGX0hxMIeXRxAr8ymnzfIMGySzTQXBjbF5
+	Z+31RqMy2PEHzdrEc4FhySNOYxWD6DPzC0Q==
+X-ME-Sender: <xms:piCparUGOh-7OzOBTWJ9bVDSpNpcvcTxlfTEG3iDldDj8AxLeuuxFQ>
+    <xme:piCpakDxqbF2o17pItwMoDiNI7hxLrRQVe9DwAWaaTYA-LJzV41qSF_wbgHG821KO
+    k8J9BC-Y-FIbF2baYXh8fzTQI4xYmhtyQ1n-oE8O6t5O1rd0C9hYo6s>
+X-ME-Received: <xmr:piCpao3Ofeem80nKOe_L-k3lfV1i-3UxZmkarxLkgRSY75RSG5CpoULtF18>
+X-ME-Proxy-Cause: dmFkZTEhemmXWsnAsUPz8NwfFxfaJLXIIfsZPuNrLsudoDyPOrg10URvNaoJjcAhSb4BJ6
+    NGycg3zzbEkaFXLNIYaIayK1e5/D+4SX7QMtqs/19tsC2OTy0fD7MUb/ayjwUbYpRSvsny
+    dWBBTGqUIjlS66WbFOOR0xO4P3cCOQtscZKQqpTDLonV1xgI83aTnwikIox+H2hLH+T6Km
+    Hgh5ZYol3xHjmHDHrcYHJERVc1jNMjSO/LlooMWTYDb7VOTAB0CN7EA0Sskbxhnz6Az/n6
+    ysmT947gDGrbmIdSFz1qxgnaVFaBn+TD6H59jKLDiF5HDUCwv2dSJ9A3WfAg1o/EWxqJoX
+    abUCfAfCQuyjhs1hHxdWdl4efy1FhwNrm7bf3fgzdv8pc9dZNhdHd1rWL0WQkES6aLPrfi
+    +7KysM0c70bc6V7BqYJP+x65hrmyKszDDmY1Ozro56v8Z18cBjhzIFu2zTkzVC8g2+rYaW
+    j3MsQy2Yiq9cBFh31x+Sk45MsPHmV6oWBsxBSfAOr7JKPQ/Im4JL1Au1MSg91IBdqo35qJ
+    uaMgB4SHkBXLNn7s8/qefkzXTZr7CaL+EOmJ2qBJE2v/TJPRaXQ0FpUC1S1mSRgJC5RTcD
+    QNEiW/TiJiUyIKaPsfb3NUIub2mi5cu3cNDEiisw8whWf1yTjs7Kd7pYxY3Q
+X-ME-Proxy: <xmx:piCpamXHynRvRmnQQtsmeNVRFhIOjnlI-4P_hCf6v7bjhgfR7GsGzQ>
+    <xmx:piCpak8QJ1pEaKAxoJXOmqSu7QHC0nQccZmqxIDFeSpNd0H7fd04kw>
+    <xmx:piCpar0mqM4C9apv8P7erX07yB2EwEMo_pV-l94m-zuObpKhC2hb-w>
+    <xmx:piCpavBeIKdVeu0j8h5FkJi7ms2m6pb9RzR7KCnnekk51XsPuvcRbA>
+    <xmx:pyCpaswXJmJy2chSPwK7aUflrlr_ilJw5UxkfOGcWWIEKicpYgcn-w9q>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Sep 2026 06:40:37 -0400 (EDT)
+Date: Tue, 15 Sep 2026 11:40:36 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, akpm@linux-foundation.org, 
+	nico.pache@linux.dev, baolin.wang@linux.alibaba.com, baohua@kernel.org, 
+	dev.jain@arm.com, hughd@google.com, lance.yang@linux.dev, liam@infradead.org, 
+	mhocko@suse.com, rppt@kernel.org, ryan.roberts@arm.com, shuah@kernel.org, 
+	surenb@google.com, usama.arif@linux.dev, vbabka@kernel.org, ziy@nvidia.com, 
+	usama.anjum@arm.com, agordeev@linux.ibm.com, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, jannh@google.com, 
+	willy@infradead.org, pfalcato@suse.de, rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 00/57] mm/collapse: rebuild collapse on migration
+ primitives
+Message-ID: <aqkQSMX6GuXhow-V@thinkstation>
+References: <20260816224609.308019-1-kirill@shutemov.name>
+ <aoLAly-oL2OAa4n8@lucifer>
+ <aoLkMUtmzRVuv2Hx@thinkstation>
+ <aoQ77EcD3M2kjeya@lucifer>
+ <0153303d-f9d6-45ea-a276-fbf2e5625ef9@kernel.org>
+ <aoXn1B7cPnPq7uxd@thinkstation>
+ <25a39c58-a188-4dda-a832-5deff2c8b8c0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,60 +97,46 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260911195559.230709-1-devnexen@gmail.com>
-Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
+In-Reply-To: <25a39c58-a188-4dda-a832-5deff2c8b8c0@kernel.org>
 
-Thus wrote David Carlier (devnexen@gmail.com):
+On Mon, Sep 14, 2026 at 04:54:06PM +0200, David Hildenbrand (Arm) wrote:
+> I saw that you started sending out cleanups, good. :)
 
-> fprobe_fgraph_entry() reserves shadow stack space for every fprobe with
-> an exit handler, but only fills it for those whose entry handler returns
-> 0. fprobe_return() walks the whole reservation, so the unused tail is
-> parsed as stale headers from an earlier call, and an exit handler can
-> run twice or despite its entry handler asking to skip it.
+Right. I have few more cleanup ideas in the queue, before substantive
+changes.
 
-> The original memset cleared only (reserved_words - used) bytes, and
-> commit e0a384434ae1 ("tracing: fprobe: do not zero out unused
-> fgraph_data") removed it. Clear the whole tail.
+> Nobody can really review 39 patches of RFC.
+> 
+> Often it's more helpful to propose an overall design idea, and then discuss if
+> and how to get there.
 
-So we're back at
+Fair.
 
-https://lore.kernel.org/all/20260323104818.0ad25dd5@gandalf.local.home/s
+The overall design one-pager is in comment in mm/collapse.c in 07/57.
 
-where Steven says
+I can pull it out, expand and post as RFD if it helpful.
 
-"So fgraph_data is only used internally between the fprobe_fgraph_entry()
-and fprobe_return() as it only exists on the fgraph shadow stack. I'm not
-even sure if the unused portion needs to be zeroed out."
+> > Do we want to find file collapse candidates by walking the virtual
+> > address space at all?
+> 
+> In guest_memfd, we recently discussed that we actually would want a mechanism to
+> collapse even without walking the VA space .... but maybe guest_memfd is just
+> too special, not sure.
+> 
+> You still need a mmap to identify the candidate file IIRC.
 
-Looking at this again, it seems to me that your patch makes sense.
-AFAICS, fgraph_reserve_data may return memory with dangling data from a
-previous call of the traced function.
+At the moment, yes. But it is not the only option. We can start from
+walking inodes for superblocks that opted in for collapse.
 
-Best regards,
-Martin
+> The churn is always the problem.
+> 
+> Small, controlled increments please.
 
-> Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Carlier <devnexen@gmail.com>
-> ---
->  kernel/trace/fprobe.c | 4 ++++
->  1 file changed, 4 insertions(+)
+Ack.
 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 1e9b00997ff2..bd84a982961a 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -635,6 +635,10 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
->  		}
->  	}
+Just to re-iterate what I told Lorenzo: I never intended to push this as
+one big patchset. The purpose of the RFC was to demonstrate the end
+state I pursue. I am flexible on how we get there.
 
-> +	/* Clear unused slots so fprobe_return() does not see stale headers. */
-> +	if (used < reserved_words)
-> +		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
-> +
->  	/* If any exit_handler is set, data must be used. */
->  	return used != 0;
->  }
-> -- 
-> 2.55.0
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
