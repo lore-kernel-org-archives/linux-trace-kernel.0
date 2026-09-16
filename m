@@ -1,176 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7470517BCF;
-	Wed, 16 Sep 2026 15:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2F5531B0F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 15:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789572219; cv=none; b=VOQ9Xs4Uj2nhVRozO8GoQlPHFv9WYBURMCLrDGKZVydVtVd+JwMmd82dG/gl6yU+nHmL09++hQRiwuoP+Nti/VjzCLtAQNTp+fTC8C8gLJdJQ7bQllQzfs55bEb6Z5/PsBBz7LQYxaU18NtVNxnC90UAT460ZavBe29e39zYF40=
+	t=1789572517; cv=none; b=Yfl8P1hcNkTlXW+GcoQ1BJZ27OZpfd+ScxDZPlJo53BT5Lzj9Kl5q+j8MJPb1C3mA9Kh6gfa9DTBPNQ1OapAwdD7tt3314YFN6/l+pjRL49JzzXEekMGUHTebIcKsjYjJfXt6fTLt/FvNwwlwbCAC5T3TRlzfbnYnJkvWCOJYas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789572219; c=relaxed/simple;
-	bh=thzLCrYQ3VboAbzWifti8NDUYy85OpfsAhtAusOM9ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYs5r3St2d0v+MEnUNVdbizr9Ao4ESE5OcVuuTLI5NOSmsnn0rtinANUXrs9gE2Py4QRISz1GrXevZm3wIlA2i8LmH84dX+FRCq8/gFN0ZHykfv1EiM4v+RQ6KH7WOJtWE0mjLBLupNAzPWqvTtCRfS2GN8UwO3omHyKom5a2uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zms7zbQM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789572517; c=relaxed/simple;
+	bh=b2FawjnBtz5Mv+Hqt1A70ttINqlSdk+8EePa7KvLAGI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BlrllVbNmvxCT3eZf3es8AVFC204xZUwc+jjzICLFPlx2JwCmwydVYbARfUS+ygKgvWG6q79BtvYuKZDHy3iKMiMFgE2MakJFTgzQAJ75O0xjhjhk5ZG6sZL4AGumJMLzYzQy1KlW2VuFe6MkmHLi2hf+OGdlPDjVWGWpewYR4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BAhX2B2N; arc=none smtp.client-ip=209.85.221.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zms7zbQM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 341851F000FF;
-	Wed, 16 Sep 2026 15:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789572213;
-	bh=gUBqB4Fqzqc99qDiZRC6rn2LnblCueCLqVsZm7n7TfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Zms7zbQMXsV+X5ghNSF6YjMl6cJUjNxOkr2rrVhGM0XFYBR9/EjTqpLFG0bk/C0J+
-	 F29El3ZivUeVL99Zn3f4rNP0UQ71wVGtSaM4Wr/EMConrjhwND2seSG6X9LdI8PKKt
-	 wBlIcZKq1r/aZ74++NVwbVmjyfyz5z1nYuTWwX+kD2jkBcYRdj7Mi6GJnPNsh85OIT
-	 Wt/c6bCxiBrWxpCWyEuLB8YAvC09SN9sOOK19ICTHSvz2x5HNnAUJXlBqgbo7+D6OZ
-	 nx0j/Hi/XmglqjOXV6BadfdwTE/hibURx5tCXMkuCpoOvvLMWTRan6RTc2WQiI6iCr
-	 47EQKZi3eSznQ==
-Date: Wed, 16 Sep 2026 17:23:31 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v3 03/13] rcu-tasks: Add a Tasks RCU implementation
- for reader-marked trampolines
-Message-ID: <aqq0cwvRDsorGwgc@localhost.localdomain>
-References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com>
- <20260915-b4-rcu-tasks-preempt-qs-v3-3-0ad30c4c5ee7@toxicpanda.com>
- <aqlgxKGk_AEKls_1@localhost.localdomain>
- <edc7cca2-a5c5-455c-8969-ea05dbdb08f7@paulmck-laptop>
- <aqqONH8flTIpOUqT@localhost.localdomain>
- <91687748-0781-4133-baed-43cf82f35ff5@paulmck-laptop>
- <aqqpRoTfywUuTgoC@localhost.localdomain>
- <aqqsAUVV8a1yrQzX@localhost.localdomain>
- <6afb0afe-e7b8-46b4-9fea-2c7cf4791044@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BAhX2B2N"
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4870487e33aso792782f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 08:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789572507; x=1790177307; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=HAKYIppDzHXSm69+TkNK1O4RBm3XWQ0MkKJ5dia50Yg=;
+        b=BAhX2B2NuO1xxdLoeyqdbGYip/sx7rivnMN4iXQb9fMtmbeVzb/u/toeo6WPPHJB3M
+         V1TnqO/w4z5ALXRnLMXdW9H8Hm+Z043sXq4G0xKniNBcfOCGghLBw1e8j1ssohtas6OY
+         VD9S/rvHLsr+4Ol/bKsfc9/IMxWPEQfiZxQUVXx6rNovrojqH5nl789zzp6UPJUwOgNC
+         +obXF7TqjkMSR4XKg1QWB1m+e9CLoyspQtvjXvI/MWc/GPWViB7JxQxQnZmonjiKSCK/
+         OQ5WdTK3FASlZmyFNzZ8pEE+awC6Yz2GVYLJhnDBBQZXW/BIk4OKybGvd3JbG8RX5vaP
+         3BWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789572507; x=1790177307;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HAKYIppDzHXSm69+TkNK1O4RBm3XWQ0MkKJ5dia50Yg=;
+        b=Z1yqXLJL4a5r3K4+HeWV6TQt/aqJj/N0df520dxQ6lUSyNvSiU0D1RRpVlF0FtewLX
+         qdWsX415h4YK99rvFm5OQKQS4JWPYSx+i5EJTkOCc8pR3VjIn2lpCz4rPiVwROzyTGsa
+         YHxexpSWStzbspxn2749kHpBZjWhshHQbIJyKbDKC5qc15YBHv367EOF47dWPhsR3HWI
+         fOtT8/Ndg5wn2aHUNGyaak91nCnEz2NiteDwNd/NIBNCFPxhUL9RMS4Vyq9pBsjtgxKR
+         Dde8iJMA61Q98mpc+gHJ4RtwuzdOp5F3kmI0lLic0RpNm0OmuOdbkhPnaGAcJ10a+br3
+         x8HQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzq8kgHCxW8HFFwE0CIY3tKbM21eBcXwOJrSXHtJYbmn+o7ZPx3zBy58V026MHdAXU5idgcuMfxLI/GDeTbIaKTsiQ=@vger.kernel.org
+X-Gm-Message-State: AFuF++k7FQo9BcDCjyYrQ/KK2R+GMI485OSbw5ZwlRZUV9f5c/+s8vHn
+	i/8j6pyVeWPZaD43ncaeD5VQBZdjOphyT6lpVLnSpRN4UXWpg8r7wtafY6nqAV20blIEwwRCn63
+	FoPzQyWlQIiAwZGCB9w1Pkw==
+X-Received: from wrnb9.prod.google.com ([2002:adf:e649:0:b0:486:ef61:1eca])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:1acf:b0:487:41c:515b with SMTP id ffacd0b85a97d-4870d05a818mr4089631f8f.30.1789572506148;
+ Wed, 16 Sep 2026 08:28:26 -0700 (PDT)
+Date: Wed, 16 Sep 2026 16:28:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6afb0afe-e7b8-46b4-9fea-2c7cf4791044@paulmck-laptop>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <20260916152813.105082-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/2] ring-buffer: Clean up resize_disabled checks
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, devnexen@gmail.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Le Wed, Sep 16, 2026 at 07:55:02AM -0700, Paul E. McKenney a écrit :
-> On Wed, Sep 16, 2026 at 04:47:29PM +0200, Frederic Weisbecker wrote:
-> > Le Wed, Sep 16, 2026 at 04:35:50PM +0200, Frederic Weisbecker a écrit :
-> > > Le Wed, Sep 16, 2026 at 07:26:35AM -0700, Paul E. McKenney a écrit :
-> > > > On Wed, Sep 16, 2026 at 02:40:20PM +0200, Frederic Weisbecker wrote:
-> > > > > Le Tue, Sep 15, 2026 at 04:56:41PM -0700, Paul E. McKenney a écrit :
-> > > > > > > Alternatively the approach could be generalized to vanilla RCU, it could be
-> > > > > > > possible to define a .text.rcu_no_qs section within which code running is
-> > > > > > > considered as an RCU reader (with a pause while on the explicit RCU tasks
-> > > > > > > section). It would be forbidden to voluntary sleep inside
-> > > > > > > and to put explicit preemption points (CONFIG_PROVE_RCU could report misuses).
-> > > > > > > 
-> > > > > > > Based on IP, RCU could consider those interrupted section as readers. This would
-> > > > > > > require PREEMPT_RCU though.
-> > > > > > > 
-> > > > > > > And then synchronize_rcu() would do the 1, 2, 4 jobs.
-> > > > > > 
-> > > > > > If I am following correctly (ha!), sleepable BPF programs rule out use
-> > > > > > of RCU in this manner.
-> > > > > > 
-> > > > > > But your point is nevertheless valid, in that SRCU could be used.
-> > > > > > And because rcu_read_lock_trace() is a thin wrapper around SRCU-fast, we
-> > > > > > *might* be able to instead use rcu_read_lock_tasks_trace(), which would
-> > > > > > skip the task-struct increment and decrement, saving a few instructions.
-> > > > > > Then, instead of waiting for each task's counter to go to zero, instead
-> > > > > > just invoke synchronize_rcu_tasks_trace().
-> > > > > > 
-> > > > > > Which is pretty close to what Josef is proposing, just with the new RCU
-> > > > > > Tasks Trace read-side primitives.  I think.  ;-)
-> > > > > > 
-> > > > > > This assumes that we do not need to flatten partially overlapping RCU
-> > > > > > Tasks Trace readers into one big reader.
-> > > > > > 
-> > > > > > Or am I missing something here?
-> > > > > 
-> > > > > Yes I think that's what Josef does in this patchset. The problem is about
-> > > > > handling the few instructions:
-> > > > > 
-> > > > > 1) between the begining of the trampoline and the call to rcu_read_lock_trace()
-> > > > > 
-> > > > > 2) between the call to rcu_read_unlock_trace() and the end of the trampoline
-> > > > > 
-> > > > > So what I'm proposing is to make those two parts implicit RCU read lock sections.
-> > > > > 
-> > > > > So the whole trampoline would be .text.rcu_no_qs:
-> > > > > 
-> > > > > .text.rcu_no_qs trampoline:
-> > > > >   __________________________________________________________________________________________
-> > > > >  |Few instructions 1 | rcu_read_lock_trace() .... rcu_read_unlock_trace | Few instructions 2|
-> > > > >  ___________________________________________________________________________________________
-> > > > > 
-> > > > > Then when a tick fires, rcu_flavor_sched_clock_irq() discards the interrupted
-> > > > > code as QS if the IP was within .text.rcu_no_qs _unless_ it is in the
-> > > > > rcu_read_lock_trace. Both are easy and quick to verify.
-> > > > > 
-> > > > > Also preempt_schedule_irq() would make sure to verify the same condition and
-> > > > > enqueue the task as a GP blocker if preempting inside "Few instructions 1"
-> > > > > or "Few instructions 2".
-> > > > 
-> > > > Ah, OK, I might be following now.  ;-)
-> > > > 
-> > > > We also need both versions of rcu_exp_handler() to check the IP as well,
-> > > > given that sooner or later someone is going to want trampoline removal
-> > > > to go faster.  Or am I still missing a turn in here somewhere?
-> 
-> I should add that the thing that I really like about Frederic's approach
-> is that avoids the task-list scan.  Or at least has the potential to
-> do so.  Such scans have proven problematic in the past.
-> 
-> > > Yes indeed, missed the exp part!
-> > 
-> > What remains to handle also is non-preemptible RCU because if the task is
-> > preempted by an IRQ while in the .text.rcu_no_qs, we may still need to keep
-> > track of that somewhere.
-> 
-> Perhaps in rcu_core() in kernels booted with use_softirq?  I am thinking
-> specifically of the checks for deferred quiescent states.  I don't (yet)
-> see a need to modify rcu_check_quiescent_state().
-> 
-> Maybe other places as well.  ;-)
+ring_buffer_subbuf_order_set() checks for resize_disabled twice under
+the same buffer->mutex hold. Moreover, this check duplicates the logic
+in ring_buffer_resize(). Create a common helper rb_resize_disabled() to
+factor out this code and drop redundant checks.
 
-Hmm this tracking would have to happen on preempt_schedule() just like we
-do for PREEMPT_RCU. Or am I missing something? And then we would need a
-list scan of those tasks.
+Additionally, remove the unnecessary cpumask_test_cpu() in
+ring_buffer_subbuf_order_set() as for_each_buffer_cpu() already
+iterates over buffer->cpumask.
 
-Or we can build the blocked task list handling, that we already have for PREEMPT_RCU,
-when CONFIG_RCU_TASKS && !CONFIG_PREEMPT_RCU. We would just only add tasks when
-preempted in .text.rcu_no_qs since rcu_read_lock() would still disable
-preemption on normal explicit readers. So I wouldn't expect more overhead due to
-that blocked list tracking built since it would rarely track tasks.
+v2:
+  - Split cpumask_test_cpu() cleanup into its own patch (Steven)
+  - Remove another unnecessary cpumask_test_cpu() (David)
 
-Thanks.
+v1: https://lore.kernel.org/all/20260914175907.1027349-1-vdonnefort@google.com/
 
+Vincent Donnefort (2):
+  ring-buffer: Clean up resize_disabled checks
+  ring-buffer: Remove unnecessary cpumask_test_cpu
+
+ kernel/trace/ring_buffer.c | 70 +++++++++++++++-----------------------
+ 1 file changed, 28 insertions(+), 42 deletions(-)
+
+
+base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
 -- 
-Frederic Weisbecker
-SUSE Labs
+2.55.0.1082.g2b9226bbc0-goog
+
