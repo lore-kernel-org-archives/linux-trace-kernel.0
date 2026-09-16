@@ -1,162 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2B53DD847
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 06:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E09E43DA49;
+	Wed, 16 Sep 2026 07:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789541416; cv=none; b=ZC5ASThgHEkL3lKWVwgx9pBWXBL9jS1vQiFTTDrUw4J88Jo3yy09FcHHDtsV0MCsvpWfoWD+Km/WOLQTi8qvDLkaQTOa03NkWFqoENyZgDKRJZc3BM2q9VFqqACkQxxJR4j+Bj2YYjseRrYXBed8HarXnGSJk2BaLo3qEXZQeTg=
+	t=1789543665; cv=none; b=hrNgIJAPAdASOBMWVjxAGuxDO/ceGw17JX6ZgHtVNSabhndwpHKalXmznp/JFiXcmZUyQy39fuArTmtDEZiAa4yVd7+V/Eht34iSncF4C+kC/sIH2UXYXZ3GFRjlmdgMR9utoXomWLSbWFLihsLmSHX0Aog5DivtoihHRPPRqZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789541416; c=relaxed/simple;
-	bh=w/AFk4jHZ1BxZstXSRxkGeMbrYS+VC5zoTiMmP2eRBE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DyhfW9KsFKU1F6ViGbPkaJ46jHTmpxOLncvzWcA6LKTFgOrKRQ5O3VBUy6C2RUoXmcP+YBpzkLWMjZwELQ/KfUFXt8qHA71EEKJH30S8J7VH2HEJ1IyOFMIrBjuGcEV/1lJxsM1AmGxKLW/ngLwvXWwfKOLf6r/NBrW1wDuvBXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nojAqYru; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789543665; c=relaxed/simple;
+	bh=NlHbsIISrVqqkiOZSbzxcM1TieM8nE/MqIpNBMGixMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NfQAOwsVBqNEUuO53fmiyYy3hDFg2Ci4psqBFX+k3i8sdgftynnJh1Wc5/jffduJjdt4KUaOoDYSbVFKpVRiWdTVx7aa8f2B/g1X5N5/Plxze/OtqGkGVN1V4bstEC7a8qpfCjlUeRG1Lve6cp47Hu7bH8tqC/GD+iVBtCdPjlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YH5/d1WH; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nojAqYru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A331F000FF;
-	Wed, 16 Sep 2026 06:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789541414;
-	bh=aU7q24Eqpfpep+XPDfTbjusbX4C+pAN5UjaEOyvVbhY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nojAqYru8IdceCJEJyTo86nJHpXAuQKsDvqISzgmHzDdLngiGiuWoLPK1soAOjp/9
-	 F2LnWVE2CvwJyhqQvV2WgMCxuN41/VhbuhlvBEZxP1upVsrNJamStZc5xoMgbjKsBf
-	 6WrxItW8IH+40mQj1tXJkzCO6NrSZER1mkVW306qdE3cXRq5dAequVS4xF4qcY3Evs
-	 znI3wnz4Kchts4fPhp4WXeyiQ5bBz8r59B8ErwFW2D7mYrvuAABsrwrXiKA2PLaUJm
-	 z3SD+H62Idn0xpbjc3URSf13YTllAV1fC+EcmngR0zVWxd0dctCeZJpDQGzPdYjiuJ
-	 0ce++0JpPZ/fg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: add ring-buffer memory usage statistics
- in tracefs
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Xiang Gao" <gxxa03070307@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260916063322.472172-2-gaoxiang17@xiaomi.com>
-References: <20260911155017.3377254-1-gaoxiang17@xiaomi.com>
- <20260916063322.472172-1-gaoxiang17@xiaomi.com>
- <20260916063322.472172-2-gaoxiang17@xiaomi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 06:50:14 +0000
-Message-Id: <20260916065014.A1A331F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YH5/d1WH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789543653; x=1821079653;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NlHbsIISrVqqkiOZSbzxcM1TieM8nE/MqIpNBMGixMM=;
+  b=YH5/d1WHM4Vegsc5uZ1UGGpOxlSmpNI6FmqhFJBwpZhdPealvUiZa6MS
+   9dChZE0R9oXlIwCNCjQUbBvb0T5evV45X9S2rr/b0Gz/380CfswGUMhet
+   KNg6nfzlvT62d1oliql6b5UvVDym/WvaIbJAtTGQPDumB4ubWD6zaBhDn
+   o6O/gL++9CnbUv2WLfHmQ61aKEwjXbAZb5HON7x7ydQJSE4oqjkLk262r
+   Y0XMwaDMCAKJV21sIBYwGOYS0ZiqpEcx3B+Xs3BVZNbZN/YBEbHoJiWvY
+   X7Yg60aliNzpwXOmGXwpFaYpwX/WUOW5ZWsceqa+mUnWDeSrKQsu4dYAz
+   Q==;
+X-CSE-ConnectionGUID: Msmpl3M2SWOZ0vc1G6Fgxg==
+X-CSE-MsgGUID: wYo0OVRZS3ClLcPGg0M2FA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93786463"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="93786463"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 00:27:28 -0700
+X-CSE-ConnectionGUID: 5OaAvg2DR9GkL2KbPhQr+g==
+X-CSE-MsgGUID: nWKT0oB5TWWLgr2HL4AUSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="303143619"
+Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.182.64])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 00:27:26 -0700
+Date: Wed, 16 Sep 2026 15:27:22 +0800
+From: kernel test robot <yi1.lai@intel.com>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, Tejun Heo <tj@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	yi1.lai@intel.com
+Subject: [linux-next:master] [workqueue]  a4d1cdc435:
+ stress-ng.stack.ops_per_sec 18.5% improvement
+Message-ID: <202609161514.be6a4fae-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] tracing: Use-After-Free on temp_buffer and tracing_buffer_mask whe=
-n tracer_alloc_buffers fails
---
 
-commit 74cf4963596c0d99d36452a0e504036b25685bcc
-Author: Xiang Gao <gxxa03070307@gmail.com>
 
-tracing: add ring-buffer memory usage statistics in tracefs
-   =20
-This commit adds a tracefs file, trace_stats/memory_usage_kb, to report
-the memory consumed by tracing ring buffers. It calculates the memory
-usage across the global trace array, instances, and snapshot buffers
-using a new function, ring_buffer_memory_size().
+Hello,
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 8658cad53cb59..5a023018f612e 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-[ ... ]
-> @@ -5771,6 +5771,62 @@ tracing_total_entries_read(struct file *filp, char=
- __user *ubuf,
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
->  }
-> =20
-> +struct trace_mem_stats {
-> +	unsigned long	buffers;
-> +	unsigned long	snapshot;
-> +};
-> +
-> +static void
-> +trace_array_buffer_memory(struct trace_array *tr, int cpu,
-> +			  unsigned long *buffers, unsigned long *snapshot)
-> +{
-> +	if (tr->array_buffer.buffer)
-> +		*buffers +=3D ring_buffer_memory_size(tr->array_buffer.buffer, cpu);
-> +
-> +#ifdef CONFIG_TRACER_SNAPSHOT
-> +	if (tr->snapshot_buffer.buffer)
-> +		*snapshot +=3D ring_buffer_memory_size(tr->snapshot_buffer.buffer, cpu=
-);
-> +#endif
-> +}
-> +
-> +static struct trace_mem_stats trace_buffers_memory(void)
-> +{
-> +	struct trace_mem_stats stats =3D {};
-> +	struct trace_array *tr;
-> +	int cpu;
-> +
-> +	guard(mutex)(&trace_types_lock);
-> +
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> +		for_each_tracing_cpu(cpu)
+kernel test robot noticed a 18.5% improvement of stress-ng.stack.ops_per_sec on:
 
-[Severity: High]
-Does this code trigger a use-after-free if tracer_alloc_buffers() fails dur=
-ing
-early boot?
+commit: a4d1cdc4356de4325b0a9c6fb09afa6e121407b5 ("workqueue: Add workqueue_cpu_intensive tracepoint") https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-If tracer_alloc_buffers() fails in kernel/trace/trace.c, it frees both
-tracing_buffer_mask and temp_buffer but leaves their global pointers dangli=
-ng:
+testcase: stress-ng
+config: x86_64-rhel-9.4
+compiler: gcc-14
+test machine: 256 threads 2 sockets Intel(R) Xeon(R) 6768P  CPU @ 2.4GHz (Granite Rapids) with 64G memory
+parameters:
 
-kernel/trace/trace.c:tracer_alloc_buffers() {
-    ...
-out_free_buffer_mask:
-    ...
-    ring_buffer_free(temp_buffer);
-    free_cpumask_var(tracing_buffer_mask);
-    ...
-}
+	nr_threads: 100%
+	testtime: 60s
+	test: stack
+	cpufreq_governor: performance
 
-Because trace_stats/memory_usage_kb is created unconditionally by
-tracer_init_tracefs_work_func(), and its file operations (trace_mem_fops)
-do not check the tracing_disabled flag, a local user can still read the fil=
-e.
+Details are as below:
+-------------------------------------------------------------------------------------------------->
 
-When trace_mem_show() executes trace_buffers_memory(), the
-for_each_tracing_cpu() macro will dereference the dangling
-tracing_buffer_mask.
 
-> +			trace_array_buffer_memory(tr, cpu, &stats.buffers,
-> +						  &stats.snapshot);
-> +	}
-> +
-> +	/*
-> +	 * temp_buffer is allocated in tracer_alloc_buffers() and is never
-> +	 * attached to a trace array. It temporarily holds event data for
-> +	 * triggers when tracing is off. Account for its pages too.
-> +	 */
-> +	if (temp_buffer) {
-> +		for_each_tracing_cpu(cpu)
-> +			stats.buffers +=3D ring_buffer_memory_size(temp_buffer, cpu);
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20260916/202609161514.be6a4fae-lkp@intel.com
 
-[Severity: High]
-Does this also cause a use-after-free on temp_buffer in trace_buffers_memor=
-y()?
+=========================================================================================
+compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
+  gcc-14/performance/x86_64-rhel-9.4/100%/debian-13-x86_64-20250902.cgz/lkp-gnr-2sp4/stack/stress-ng/60s
 
-If tracer_alloc_buffers() fails, temp_buffer is freed but its pointer
-is never set to NULL on the error path. This branch will evaluate the dangl=
-ing
-pointer as true and pass it to ring_buffer_memory_size(), which will
-dereference the freed memory.
+commit: 
+  ab85b68e63 ("workqueue: rename the pwq slot helpers shared with percpu")
+  a4d1cdc435 ("workqueue: Add workqueue_cpu_intensive tracepoint")
 
-> +	}
-> +
-> +	return stats;
-> +}
+ab85b68e630e8a4d a4d1cdc4356de4325b0a9c6fb09
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+  2.09e+08 ±  2%     +18.4%  2.475e+08        stress-ng.stack.ops
+   3493402 ±  2%     +18.5%    4138262        stress-ng.stack.ops_per_sec
+     92.39 ±  3%     +17.4%     108.49        stress-ng.time.user_time
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916063322.4721=
-72-1-gaoxiang17@xiaomi.com?part=3D1
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
+
