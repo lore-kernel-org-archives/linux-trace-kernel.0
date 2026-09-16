@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823864AC148;
-	Wed, 16 Sep 2026 23:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267D472521;
+	Wed, 16 Sep 2026 23:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789600137; cv=none; b=pdFGAqz6sV1eftW6wQEmf/pTAokAUxo4Osc97V3wx638XyIQ8WiQAqDp4lPHY3qaj90G5HQrJ50o0iHqhDASKVp71UkW3CRk2wsN2Bnn/1nNWOXQZaMSe9FzXgQitThUqGixJqEGdCu6Qlp/UU0Brr5102gCbqTrBsuXJRvKzKA=
+	t=1789602333; cv=none; b=SALJWOO0q/j5/HEs+iYtFXwRlw0ByrHKnazVq6tBpSsL0769PTX2ZTXRiML/9h+O6zy20xKsWUD6QSJoEgpfEgL4K6VM7nO7mYgJg+KQ4fbJClsJaKfCestk2hR/r7VoTPxK8y8o29yb3rdwcmiwnng4ZhfwoaOwa1/mTx33o1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789600137; c=relaxed/simple;
-	bh=GOFL7RaNXqoMY7224a/drIf5k+yrXZaqVSGLWVC2Dh0=;
+	s=arc-20240116; t=1789602333; c=relaxed/simple;
+	bh=Kh3rKS1+K7TDXnwpcYYaSVeBFbOeWE/01LMZJFeCs8k=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n38xDppDcEPa36M/6dFhJyFOjfF6A/XAEBPCWcgv2pEEI4xKmlMgQV2QHW3m1WljG+VOe4svHQbXTUuY8u+6ZOgepekAEbEVX8+91D2TBkgs8gn+1MMErnZ5mwKntIs0Mgx8R6otOHVrIG5r1CHTQqmFWzWYjKQOtHaRqFDYbiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tvi5MzsD; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=I3tzTN5EkEL2uAg7O5FKFbtvaKNajTQfNfMG70Zcke3R//OtbqX8ESgPzlAS78oxd4y3pIsHE90m+E5+UbEut+umlETOVEzh0sSfZ2AmSBAf6I3BApVoUtGDsHNRusIoVEBAy1wijaBYUErUmNKBvXjVc7E+Ktk2jWjLxxoQSC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDmAf4+L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tvi5MzsD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95081F000FF;
-	Wed, 16 Sep 2026 23:08:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDmAf4+L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E282B1F000FF;
+	Wed, 16 Sep 2026 23:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789600136;
-	bh=I5a23cQRfcihY9WZZSlPkSoJLWnDwHQNE5jTh0BrC2Q=;
+	s=k20260515; t=1789602332;
+	bh=Uom+5GiRwnUi0P13tTGi61WOHauRp/h8S/b2KqC1Afk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Tvi5MzsDZyA23wpMGunHmcdfNuu+g2DISs8flBBgzZ128pbr1CNYmraftwCVELk1k
-	 lAZy+Gr8TnAqMIOdoalybj+OXw3z2701U3H/1tnq6NXb4qJOJj0nNU8D5v2fIOA3rx
-	 E2VcMwT01tcqykgbkfRAkhVkpdzM5MD64Zs2UAhjDHxE02id4FO2WrGBsPBy+NfvRO
-	 mihtxCkLTS9iLvCfRCNW9PgmJU4hOuuZalVWnlCgyigyV3fhNXaIbgkiVxS04P7s20
-	 opaPEEk1EUtpbhmzL21qa0c1F68yl8vpOivkXceiYYMQoYVP65irrdeQcO1sMYmTq/
-	 bd2fr9G7AhqJw==
-Date: Thu, 17 Sep 2026 08:08:51 +0900
+	b=HDmAf4+LvbmJSAoQRmaGZ2c2JeChzAbl08VlEepE6bI4BXd4YKpP0Ukb9lhdtMtTF
+	 HNUofo1oxUREMHfcP9KNAjrKP0QQlkeXuYmtD00rDEaFt9fHDKV9BsjZU76LdwXvfg
+	 la9tvag7dT8NkJOmmq0wMp1pWwz4jAtu708Bj05Kv6dYm8XdJevRGR5gyUg5t9oWwa
+	 Aeo8GeMCBIbpx3lCBZKZ8/1HDgBMuCW8G1sL9LbZ9IE0qw29fhud7UzGmUtDH8Ly20
+	 kkh2QcnFg9fsfnmEoImihNReVklcb4lNcN9crUYuyiOyFWHwyAq1J0pCyLvYIDSZ4I
+	 Zx0w60SifExYQ==
+Date: Thu, 17 Sep 2026 08:45:26 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: David Carlier <devnexen@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Martin Kaiser <martin@kaiser.cx>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Clear the unused part of the fgraph_data
- reservation
-Message-Id: <20260917080851.1f803eeb8afb4c1a9a847c8a@kernel.org>
-In-Reply-To: <20260911195559.230709-1-devnexen@gmail.com>
-References: <20260911195559.230709-1-devnexen@gmail.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, Paolo Bonzini
+ <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v16 02/13] KVM: x86: Prevent host DR7 debug register
+ leak into guest OS on NMI
+Message-Id: <20260917084526.18128cef47424990d42bb6ce@kernel.org>
+In-Reply-To: <aqgGRKOE138ePqmX@google.com>
+References: <178939017565.94750.9431053336761330458.stgit@devnote2>
+	<178939019982.94750.4441254006258061798.stgit@devnote2>
+	<aqgGRKOE138ePqmX@google.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,86 +56,138 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Sep 2026 20:55:59 +0100
-David Carlier <devnexen@gmail.com> wrote:
+Hi Sean,
 
-> fprobe_fgraph_entry() reserves shadow stack space for every fprobe with
-> an exit handler, but only fills it for those whose entry handler returns
-> 0. fprobe_return() walks the whole reservation, so the unused tail is
-> parsed as stale headers from an earlier call, and an exit handler can
-> run twice or despite its entry handler asking to skip it.
+Thanks for your review!
+
+On Mon, 14 Sep 2026 07:35:48 -0700
+Sean Christopherson <seanjc@google.com> wrote:
+
+> On Mon, Sep 14, 2026, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > When KVM enters a guest OS, host hardware breakpoints are disabled
+> > before running the guest. However, an NMI can occur during guest
+> > execution, where local_db_save() or arch_install_hw_breakpoint()
+> > can be invoked.
+> > 
+> > In particular, if local_db_save() or arch_install_hw_breakpoint()
+> > is executed from NMI, hardware DR7 can be modified or restored with
+> > host breakpoint settings, leaking host breakpoints into the guest OS
+> > or clobbering the guest's debug registers.
 > 
-> The original memset cleared only (reserved_words - used) bytes, and
-> commit e0a384434ae1 ("tracing: fprobe: do not zero out unused
-> fgraph_data") removed it. Clear the whole tail.
+> Not for local_db_save(), at least not AFAICT.  On VM-Exit, both Intel and AMD
+> purge DR7, i.e. load 0x400, so local_db_save() => local_db_restore() is more or
+> less a nop.  Even if that weren't the case, actually saving/restoring DR7 would
+> be the right thing to do, in any context.
 
-Thanks for reporting! But this does not fix the problem correctly.
-See this;
-
-static inline void read_fprobe_header(unsigned long *stack,
-					struct fprobe **fp, unsigned int *size_words)
-{
-	*fp = arch_decode_fprobe_header_fp(*stack);
-	*size_words = arch_decode_fprobe_header_size(*stack);
-}
-
-#define FPROBE_HEADER_MSB_PATTERN \
-    GENMASK(BITS_PER_LONG - 1, FPROBE_HEADER_MSB_SIZE_SHIFT)
-#define arch_decode_fprobe_header_fp(val) \
-    ((struct fprobe *)(((unsigned long)(val) & FPROBE_HEADER_MSB_MASK) | \
-                       FPROBE_HEADER_MSB_PATTERN))
-
-So even if the *stack is zero, the *fp is not NULL.
-
-We need to add *stack check in read_fprobe_handler()s.
-
-Also, since the fprobe_return() exits the loop if fp == NULL,
-
----
-	while (size_words > curr) {
-		read_fprobe_header(&fgraph_data[curr], &fp, &size);
-		if (!fp)
-			break;
----
-
-What we need is writing 0 to stack[used] if used && used < reserved_words
-instead of memset.
+OK.
 
 > 
-> Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
+> > Introduce a per-CPU flag, cpu_dr_in_guest, to indicate that the CPU
+> > is executing in guest mode. Set this flag in vcpu_enter_guest()
+> > during entering the guest with disabling host breakpoints.
+> > If this flag is set, local_db_save() and local_db_restore() return
+> > immediately, and arch_install_hw_breakpoint() returns an error.
+> > In addition, protect cpu_dr_in_guest in within_cpu_entry() to
+> > prevent recursive #DB exceptions.
+> > 
+> > Fixes: f85d40160691 ("KVM: X86: Disable hardware breakpoints unconditionally before kvm_x86->run()")
+> > Assisted-by: Antigravity:gemini-3.8-flash
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> > Changes in v16:
+> >  - Newly added.
+> > ---
+> >  arch/x86/include/asm/debugreg.h |    6 ++++++
+> >  arch/x86/kernel/hw_breakpoint.c |   10 ++++++++++
+> >  arch/x86/kvm/x86.c              |    7 +++++++
+> >  3 files changed, 23 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+> > index 854d82b88ff4..50f830972698 100644
+> > --- a/arch/x86/include/asm/debugreg.h
+> > +++ b/arch/x86/include/asm/debugreg.h
+> > @@ -18,6 +18,7 @@
+> >  #define DR7_FIXED_1	0x00000400
+> >  
+> >  DECLARE_PER_CPU(unsigned long, cpu_dr7);
+> > +DECLARE_PER_CPU(bool, cpu_dr_in_guest);
+> >  
+> >  #ifndef CONFIG_PARAVIRT_XXL
+> >  /*
+> > @@ -129,6 +130,9 @@ static __always_inline unsigned long local_db_save(void)
+> >  {
+> >  	unsigned long dr7;
+> >  
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return 0;
+> 
+> This is broken.  If an NMI hits between KVM writing cpu_dr_in_guest and clearing
+> DR7, and there are active breakpoints, then local_db_save() won't disable breakpoints
+> as it should, and the relevant code in exc_nmi() will run with breakpoints enabled.
+> 
+> 	kvm_load_xfeatures(vcpu, true);
+> 
+> 	this_cpu_write(cpu_dr_in_guest, true);
+> 	barrier();
+> 
+>   <NMI here is problematic>
+> 
+> 	if (unlikely(vcpu->arch.switch_db_regs &&
+> 		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+> 		set_debugreg(DR7_FIXED_1, 7);
+> 		set_debugreg(vcpu->arch.eff_db[0], 0);
 
-And this should be introduced by below commit.
+Oops, indeed! OK, so local_db_save/restore will just work as it is,
+but modifying DR7 should directly be prohibited.
 
-Fixes: e0a384434ae1 ("tracing: fprobe: do not zero out unused fgraph_data")
+> 
+> > +
+> >  	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+> >  		return 0;
+> >  
+> > @@ -157,6 +161,8 @@ static __always_inline void local_db_restore(unsigned long dr7)
+> >  	 * not be good.
+> >  	 */
+> >  	barrier();
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return;
+> >  	if (dr7)
+> >  		set_debugreg(dr7, 7);
+> >  }
+> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> > index f846c15f21ca..68de7ed79d88 100644
+> > --- a/arch/x86/kernel/hw_breakpoint.c
+> > +++ b/arch/x86/kernel/hw_breakpoint.c
+> > @@ -40,6 +40,9 @@
+> >  DEFINE_PER_CPU(unsigned long, cpu_dr7);
+> >  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+> >  
+> > +DEFINE_PER_CPU(bool, cpu_dr_in_guest);
+> > +EXPORT_PER_CPU_SYMBOL_GPL(cpu_dr_in_guest);
+> > +
+> >  /* Per cpu debug address registers values */
+> >  static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+> >  
+> > @@ -102,6 +105,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+> >  
+> >  	lockdep_assert_irqs_disabled();
+> >  
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return -EBUSY;
+> 
+> If we decide this is how to fix arch_install_hw_breakpoint() clobbering DRs from
+> NMI context, I would rather have more generic flag to tell perf that KVM is about
+> to enter the guest, e.g. so that we don't have to separately solve the same problem
+> for other perf events:
+> 
+> https://lore.kernel.org/all/3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com
+
+OK, so introducing a new (someting like) cpu_in_trans_guest flag and check it
+from all affected places?
 
 Thank you,
-
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Carlier <devnexen@gmail.com>
-> ---
->  kernel/trace/fprobe.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 1e9b00997ff2..bd84a982961a 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -635,6 +635,10 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
->  		}
->  	}
->  
-> +	/* Clear unused slots so fprobe_return() does not see stale headers. */
-> +	if (used < reserved_words)
-> +		memset(fgraph_data + used, 0, (reserved_words - used) * sizeof(long));
-> +
->  	/* If any exit_handler is set, data must be used. */
->  	return used != 0;
->  }
-> -- 
-> 2.55.0
-> 
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
