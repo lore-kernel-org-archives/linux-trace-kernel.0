@@ -1,81 +1,150 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED036501F5E;
-	Wed, 16 Sep 2026 13:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9565221EF;
+	Wed, 16 Sep 2026 14:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789566711; cv=none; b=Hm8rPpjyNTHLJf7V9M4el9SROCkWvY6r2+AOvL2FSXKBGuhyjymjhqbxaOcYhGVR0Y8fy7qgCrNhTqErsibsee9kR+s4os96xGjTz0AVIypqyM832CupydZ6ZjkQK1y+JGBz+xnV/Qw4PQYDJ2/OPVQLsZ8XfZnVNtxu0f2ljus=
+	t=1789568797; cv=none; b=DGPe2yJd2/+GZ5EfkRn1NvJZYc3tn5evCJKxf9OkI/qIwZUdvP9eDfi+yCA76dQV77Yh/ZNrmeLdFrSUO9bv2XJrJYtDfJuo8GWSJ6Nu37+qlmEBudcsvHYELbuldWq03REJWlxxVZbU9PtcJwEkTxvkkUNV9bNBC//4yo6af84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789566711; c=relaxed/simple;
-	bh=CYCUaFKF30v608ok/oaJzEtMb0FXgUyqdiKoxQwP1Mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LZ+51DeBLImjhIrnU2sFbiyqI+S4VNHIFaYqada6Gx+I9XaSCmY+Du/JO/+o9EnpQvjmVv19ow07sNPCUzjRNooHp6+ojhN+xqYQwhx6d6PUUarKOh3TEb0RoA1nzoVHOkKmq9bibfkV5anl7SzMv69HidalXe/dMhojhY2io7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=l1CY+DOM; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1789568797; c=relaxed/simple;
+	bh=5FAMRqjp4KOqSJIjiuk2XIQlxb2HmynTSae9DHgZsQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MXWyDA2sk1y60V9uu6V3kbcu3Of0KHv9spBp72/Jq7pndR/NXnIYyV9B4AKivpmHAkWE1uOy8E7CoQrOnyIAXtVFp9zJbesxhejKtVUoNiCMLiMjFu4KyOZQU0Q2gx7rSUFYpVTaG+vAUinxUaejpQSl5+gaGokpW6EHgz12S/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNFUoDHP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="l1CY+DOM"
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id F3BB780665;
-	Wed, 16 Sep 2026 13:51:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id F091320030;
-	Wed, 16 Sep 2026 13:51:24 +0000 (UTC)
-Date: Wed, 16 Sep 2026 09:51:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Baoquan He <baoquan.he@linux.dev>
-Cc: Ridong Chen <ridong.chen@linux.dev>, Masami Hiramatsu
- <mhiramat@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Johannes
- Weiner <hannes@cmpxchg.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Kairui Song <kasong@tencent.com>, Qi
- Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Barry
- Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>,
- Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, "open
- list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)" <linux-mm@kvack.org>,
- Ridong Chen <chenridong@xiaomi.com>
-Subject: Re: [PATCH v2 2/3] mm/mglru: add tracepoint for scan_folios()
-Message-ID: <20260916095122.50cbb620@robin>
-In-Reply-To: <aqn7h3BVCCRFI2TI@fedora>
-References: <20260911102939.2485750-1-ridong.chen@linux.dev>
-	<20260911102939.2485750-3-ridong.chen@linux.dev>
-	<aqkoeJvFzqpoGeaP@fedora>
-	<e38f2b80-20f2-4787-9e07-fb601552f550@linux.dev>
-	<aqn7h3BVCCRFI2TI@fedora>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNFUoDHP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721FD1F00898;
+	Wed, 16 Sep 2026 14:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789568795;
+	bh=YQpLtInKnNU1c3G2VdhDCkw1r2wibZuZTlQmjanXtRs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=bNFUoDHPGDIHKeQpseuwGqWMM1DE5j1Rk5TojUwfAftuYfcdlx87V1FeTMnCjtl2N
+	 AzZz2tcm6JX+Y1OQc6CtoOxaw5D3FfiXa2dnSchn35L6zymzQspNu5cth2kF7lsF5q
+	 jpNwWJ3uu8kdD0rYYiWAJjzbNTYo7CXS4+AgNb1RdbrKjGhDjwDBgmcBv56HpihnJf
+	 5lAGbidbtuSopBfptp1v/0NgSaHPYv5eiVpr4cDUdhOG39Il9EFme26lRJQ6V++7Fx
+	 IZEnAV/A5Yb1YwrjoCJL+B+GlgcJlLS1josFK4IKPCjqSH/X4mmuQciMXq9yC8zj9q
+	 8uuQhtPvBPadQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 5AEB5CE04DE; Wed, 16 Sep 2026 07:26:35 -0700 (PDT)
+Date: Wed, 16 Sep 2026 07:26:35 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Juergen Gross <jgross@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC v3 03/13] rcu-tasks: Add a Tasks RCU implementation
+ for reader-marked trampolines
+Message-ID: <91687748-0781-4133-baed-43cf82f35ff5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com>
+ <20260915-b4-rcu-tasks-preempt-qs-v3-3-0ad30c4c5ee7@toxicpanda.com>
+ <aqlgxKGk_AEKls_1@localhost.localdomain>
+ <edc7cca2-a5c5-455c-8969-ea05dbdb08f7@paulmck-laptop>
+ <aqqONH8flTIpOUqT@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: irjbtkznaum8zrwiwcezfwryhub1158r
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: F091320030
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18SJirAJj0hlDFf3ly3wdOJRosyZeYeUmk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=oeM1slf5/TlEIZ+/3YKGqvcyO+zDrbVBSRK8hiBB5ps=; b=l1CY+DOMbpJKcpjlzAM2diNrXL7nPJVM2lngLvaKciPGh0uXXpSo40knlfQCPckEtCEolPOGvHeP5c95/CMRQsiC46J0m3lV5/Htpsp3/1pRh2IbalqgqXpdXUYRPkkieTHv4N1wIfRnlJlXDCT5by5Yq/R2grAHT1Tu+uJsCgA=
-X-HE-Tag: 1789566684-7934
-X-HE-Meta: U2FsdGVkX19UJ8lW1xmB0R2mxjz89QBslEjhduHRiY4qlRY5yOWoeny9H58NMlqDwXlP3THcOruj6daUuuul4JVZpmpvlj7i1/ijpeYw2JzEPJJ6ajaF5NxTU1dBURGCnpoeeK//ECSEYTXBLRIu8L9ys9kJvdkaqqLOL8HszlCpbZV1xNu/QranXaw+sY24EEkgWw8svkcU2JbsoDoJ99xGu2T18mLIgRAtscOoamchnegPWe7H8yx4XnV83zhHlqsYu1lIoXYPPYZJJeDpqC7KUy8J/UsvlbLmbdvSQARgBjrtPhQhXPyBQMXtZoT9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aqqONH8flTIpOUqT@localhost.localdomain>
 
-On Wed, 16 Sep 2026 10:14:31 +0800
-Baoquan He <baoquan.he@linux.dev> wrote:
-
-> > However, 'sc' is an internal structure, so sc->order cannot be accessed in
-> > TP_fast_assign(), and I don't think it is worth making scan_control an
-> > external structure just for this.  
+On Wed, Sep 16, 2026 at 02:40:20PM +0200, Frederic Weisbecker wrote:
+> Le Tue, Sep 15, 2026 at 04:56:41PM -0700, Paul E. McKenney a écrit :
+> > > Alternatively the approach could be generalized to vanilla RCU, it could be
+> > > possible to define a .text.rcu_no_qs section within which code running is
+> > > considered as an RCU reader (with a pause while on the explicit RCU tasks
+> > > section). It would be forbidden to voluntary sleep inside
+> > > and to put explicit preemption points (CONFIG_PROVE_RCU could report misuses).
+> > > 
+> > > Based on IP, RCU could consider those interrupted section as readers. This would
+> > > require PREEMPT_RCU though.
+> > > 
+> > > And then synchronize_rcu() would do the 1, 2, 4 jobs.
+> > 
+> > If I am following correctly (ha!), sleepable BPF programs rule out use
+> > of RCU in this manner.
+> > 
+> > But your point is nevertheless valid, in that SRCU could be used.
+> > And because rcu_read_lock_trace() is a thin wrapper around SRCU-fast, we
+> > *might* be able to instead use rcu_read_lock_tasks_trace(), which would
+> > skip the task-struct increment and decrement, saving a few instructions.
+> > Then, instead of waiting for each task's counter to go to zero, instead
+> > just invoke synchronize_rcu_tasks_trace().
+> > 
+> > Which is pretty close to what Josef is proposing, just with the new RCU
+> > Tasks Trace read-side primitives.  I think.  ;-)
+> > 
+> > This assumes that we do not need to flatten partially overlapping RCU
+> > Tasks Trace readers into one big reader.
+> > 
+> > Or am I missing something here?
 > 
-> Agree.
+> Yes I think that's what Josef does in this patchset. The problem is about
+> handling the few instructions:
+> 
+> 1) between the begining of the trampoline and the call to rcu_read_lock_trace()
+> 
+> 2) between the call to rcu_read_unlock_trace() and the end of the trampoline
+> 
+> So what I'm proposing is to make those two parts implicit RCU read lock sections.
+> 
+> So the whole trampoline would be .text.rcu_no_qs:
+> 
+> .text.rcu_no_qs trampoline:
+>   __________________________________________________________________________________________
+>  |Few instructions 1 | rcu_read_lock_trace() .... rcu_read_unlock_trace | Few instructions 2|
+>  ___________________________________________________________________________________________
+> 
+> Then when a tick fires, rcu_flavor_sched_clock_irq() discards the interrupted
+> code as QS if the IP was within .text.rcu_no_qs _unless_ it is in the
+> rcu_read_lock_trace. Both are easy and quick to verify.
+> 
+> Also preempt_schedule_irq() would make sure to verify the same condition and
+> enqueue the task as a GP blocker if preempting inside "Few instructions 1"
+> or "Few instructions 2".
 
-Or what you can do is to move include/trace/events/vmscan.h to
-mm/trace_mm.h (or whatever you want to call it) and struct scan_control
-into "vmscan.h" and then you can use internal structures within the
-trace event.
+Ah, OK, I might be following now.  ;-)
 
-Up to you, but this is what other subsystems have done.
+We also need both versions of rcu_exp_handler() to check the IP as well,
+given that sooner or later someone is going to want trampoline removal
+to go faster.  Or am I still missing a turn in here somewhere?
 
--- Steve
+> And since RCU tasks already does a synchronize RCU before and after the scan,
+> that's all we would have to do.
+
+This is going to need some *serious* documentation.
+
+Also, what would be a good way to add tests for this to rcutorture?
+Designate some new rcutorture function as being in .text.rcu_no_qs and
+add this as another type of rcutorture reader?  Or is there a better way?
+
+							Thanx, Paul
