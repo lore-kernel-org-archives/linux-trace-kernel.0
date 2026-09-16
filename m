@@ -1,192 +1,162 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110AD3B42C5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 06:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2B53DD847
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 06:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789540420; cv=none; b=WUiMffQyba7wy8RYvGQIcmZayjBiQQZCo2gSiwFzBbc8eWF4ZM7aOiCZuGk5nTn7kY3Y4VEAfCcjp+p0kLQ5lnUiH3Pe/GQhkLCF+oldAQPzX2FN9wHj2efHrKKiEog9T44mDW/JuMZ7tSMgPBHbBFTZzpBShbjFIhSWnDhsYco=
+	t=1789541416; cv=none; b=ZC5ASThgHEkL3lKWVwgx9pBWXBL9jS1vQiFTTDrUw4J88Jo3yy09FcHHDtsV0MCsvpWfoWD+Km/WOLQTi8qvDLkaQTOa03NkWFqoENyZgDKRJZc3BM2q9VFqqACkQxxJR4j+Bj2YYjseRrYXBed8HarXnGSJk2BaLo3qEXZQeTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789540420; c=relaxed/simple;
-	bh=lI/RQu6O/Yb93xR3KS65rHWnDrsCP/2IZ0ZL5uBvCg0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=erY3H4RqwGbnjXFYCl83aEDfs0jQMdEZ1jDieHckPuC/99MX3M6E592Z+b3TxPuPbKX6Ee/djpDISqWVq9WVPp6SyR5WsNcLaWvQgDHK5m8Hdr0BCJuqS9P+RvU2c2f+RNcsL27IneExYfTTDO6+yg6hwyHaeoJjG/UCuV+UQOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0CnsHLb; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789541416; c=relaxed/simple;
+	bh=w/AFk4jHZ1BxZstXSRxkGeMbrYS+VC5zoTiMmP2eRBE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DyhfW9KsFKU1F6ViGbPkaJ46jHTmpxOLncvzWcA6LKTFgOrKRQ5O3VBUy6C2RUoXmcP+YBpzkLWMjZwELQ/KfUFXt8qHA71EEKJH30S8J7VH2HEJ1IyOFMIrBjuGcEV/1lJxsM1AmGxKLW/ngLwvXWwfKOLf6r/NBrW1wDuvBXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nojAqYru; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0CnsHLb"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cc147d86bebso2470744a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Sep 2026 23:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789540418; x=1790145218; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tY6wWh08cQpRqAyjRlMP1xTwungU5tZmwZOqcT2GQWo=;
-        b=m0CnsHLbr3rkpZcFgX81D+ZzF4QaWts7E2hsC341PJDA4jC02FAqFH2QtSppPFeArz
-         wtCGlumZouGtH3ULuoPeZEJwO0AeTMmUAB628dnfrX8e10nXlCJ/HtjKaBGXRGYukAOk
-         qgW9lETuoRs2P0RcWQGiyo1n3hsPuoey6TVCkWgGokFzOk9u6cQbM3++yQAHeJLT6D4P
-         ujO9ecuNmOl8fGk1pxoEvBM3/hvuMuZwOp5Gvn8g8mivh4qpj4997z0GPGqc2S+IsUeD
-         nz6rd2+6NVFpC2/6mAL1OW3xyzk8EP6D6jkVa1T0asU1U8K90i3RwqOkHkVWzRNW16LN
-         phJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789540418; x=1790145218;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=tY6wWh08cQpRqAyjRlMP1xTwungU5tZmwZOqcT2GQWo=;
-        b=xG/fa/h5vBN+6lLJCK0Y3k0S9nRrLrd6s49kREfN6jXTz0ds3g9S1UsFeauaSEnV+M
-         REvmUb0DMuZDt4QvdR5fU0X+P5Rvm3A+ycUHiE3EGR0aZPm2Nm7koKK/hPD9QK2iJ8cv
-         lAmRsSU3DcilkXJDd++8AFDVCxgRZR9cvGzZ1djl5Ru+vQyLQ4LsMkCruHHNkUnevOKr
-         Ghh8UUuYXPPlwNUqfT41UboJj980CowpKrjtDriNjQSR0Exdnthp2x/wWtic1gZNobSL
-         qjIQiMjo1yvvMR3TUjRSntftVAOCPMI51AvvIOxtzzssggune5YV2ws0NhR6GW64VXZz
-         Zbpw==
-X-Forwarded-Encrypted: i=1; AKwUvBxsRSq1ui1ahsZ51d9id1t1I/b86W3tnV7CMQG8jUZ+wBf/1ILd7r3TXqQDDo1nnE99Kef9EgmJJS46PFNsyMtfWg4=@vger.kernel.org
-X-Gm-Message-State: AFuF++ldghBD/EQ5WkPQdtkpvLK7zzyvQFaamQ/J8++yXkYGCAHV349Q
-	cTIyp6C7LkaT0AscYi2v/ju47nRoxIc5ofEm8zA5NbygpksdjY6Yl+UT
-X-Gm-Gg: AYBFou0ZIjMkjzuyRFvQOcbVSx42sK4jO/AJunMh9gt0k0peJK/vuzCv/Xcf3NToJEy
-	EQDs4jaPhCSzlFZ7EI11LLN4lfTQ2iF/b1XnV+IWBIW+L9t7k+ko2yYOz3+fhrPj+BmvoZEHLDB
-	IlA7DnKObUwrHk36S1tZNPzDu2KvQjcn6FcSdi65fZtWxZe0Rwyy0lNUL8G/+CrnF5V/p3pZihg
-	13ROowl2p564y/k9nk6bLjMPm3/jVXh2zmqUT4b191FkkTpd+EKGAIpY2+IshxMC2HKm1IrWY4/
-	o+vvKvdiEAS2Xp79RYVVvqHsg6L/AC9hoWtMrs3Z4FRwegUi1zokM42QP2wLi0Wvw+HsLgHu7nX
-	u3lxEHcipCibVHuTM6wRuMz2Yb/YeC7TOBvOc8ImFJfkgkKVQ0uc751c0jsa+jMs0zk0/NzayjR
-	wjScPs1ASxE25ee/iL1wlOUhyqDkGhcyuH0A1GfL1ZHDXJ+iab5UO2ZvwzGxBepq2nQZRouxQsu
-	dQoC6jU8qYfdzP4plSaJa5KEgnk49QQb85Drclk
-X-Received: by 2002:a05:6a21:3b48:b0:3a2:c9a1:2c26 with SMTP id adf61e73a8af0-3db4fb85076mr8790859637.7.1789540418176;
-        Tue, 15 Sep 2026 23:33:38 -0700 (PDT)
-Received: from bj-kjy-standalone-gaoxiang17.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc50aba87basm1005550a12.23.2026.09.15.23.33.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 23:33:37 -0700 (PDT)
-From: Xiang Gao <gxxa03070307@gmail.com>
-X-Google-Original-From: Xiang Gao <gaoxiang17@xiaomi.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	gao xu <gaoxu2@honor.com>,
-	yinchuang1@xiaomi.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xiang Gao <gaoxiang17@xiaomi.com>
-Subject: [PATCH v3 2/2] tracing: add per-CPU memory usage statistics in tracefs
-Date: Wed, 16 Sep 2026 14:33:22 +0800
-Message-Id: <20260916063322.472172-3-gaoxiang17@xiaomi.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260916063322.472172-1-gaoxiang17@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nojAqYru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A331F000FF;
+	Wed, 16 Sep 2026 06:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789541414;
+	bh=aU7q24Eqpfpep+XPDfTbjusbX4C+pAN5UjaEOyvVbhY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nojAqYru8IdceCJEJyTo86nJHpXAuQKsDvqISzgmHzDdLngiGiuWoLPK1soAOjp/9
+	 F2LnWVE2CvwJyhqQvV2WgMCxuN41/VhbuhlvBEZxP1upVsrNJamStZc5xoMgbjKsBf
+	 6WrxItW8IH+40mQj1tXJkzCO6NrSZER1mkVW306qdE3cXRq5dAequVS4xF4qcY3Evs
+	 znI3wnz4Kchts4fPhp4WXeyiQ5bBz8r59B8ErwFW2D7mYrvuAABsrwrXiKA2PLaUJm
+	 z3SD+H62Idn0xpbjc3URSf13YTllAV1fC+EcmngR0zVWxd0dctCeZJpDQGzPdYjiuJ
+	 0ce++0JpPZ/fg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: add ring-buffer memory usage statistics
+ in tracefs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xiang Gao" <gxxa03070307@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260916063322.472172-2-gaoxiang17@xiaomi.com>
 References: <20260911155017.3377254-1-gaoxiang17@xiaomi.com>
  <20260916063322.472172-1-gaoxiang17@xiaomi.com>
+ <20260916063322.472172-2-gaoxiang17@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 16 Sep 2026 06:50:14 +0000
+Message-Id: <20260916065014.A1A331F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Provide a per-CPU view of the tracing ring-buffer memory usage under
-trace_stats/per_cpu/cpuN/memory_usage_kb, using the same format as the
-aggregate file. Each file reports only the buffers belonging to that CPU
-across the global trace array and all tracing instances.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] tracing: Use-After-Free on temp_buffer and tracing_buffer_mask whe=
+n tracer_alloc_buffers fails
+--
 
-Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
----
- Documentation/trace/ftrace.rst |  3 ++
- kernel/trace/trace.c           | 50 +++++++++++++++++++++++++++++++++-
- 2 files changed, 52 insertions(+), 1 deletion(-)
+commit 74cf4963596c0d99d36452a0e504036b25685bcc
+Author: Xiang Gao <gxxa03070307@gmail.com>
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 99ddfe26b7cd..e53cdd8d6702 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -230,6 +230,9 @@ of ftrace. Here is a list of some of the key files:
- 	    buffers: ...
- 	    snapshot_buffers: ...
- 
-+	The same file is provided under trace_stats/per_cpu/cpuN/, reporting
-+	only the buffers belonging to that CPU.
-+
-   buffer_subbuf_size_kb:
- 
- 	This sets or displays the sub buffer size. The ring buffer is broken up
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 796e239fbaf9..280003916677 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5827,6 +5827,35 @@ static int trace_mem_show(struct seq_file *m, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(trace_mem);
- 
-+static struct trace_mem_stats trace_buffers_memory_cpu(int cpu)
-+{
-+	struct trace_mem_stats stats = {};
-+	struct trace_array *tr;
-+
-+	guard(mutex)(&trace_types_lock);
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list)
-+		trace_array_buffer_memory(tr, cpu, &stats.buffers,
-+					  &stats.snapshot);
-+
-+	/* Account for the bootstrapping temp_buffer as well. */
-+	if (temp_buffer)
-+		stats.buffers += ring_buffer_memory_size(temp_buffer, cpu);
-+
-+	return stats;
-+}
-+
-+static int trace_mem_per_cpu_show(struct seq_file *m, void *v)
-+{
-+	struct trace_mem_stats stats = trace_buffers_memory_cpu((long)m->private);
-+
-+	seq_printf(m, "buffers: %lu\n", stats.buffers >> 10);
-+	seq_printf(m, "snapshot_buffers: %lu\n", stats.snapshot >> 10);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(trace_mem_per_cpu);
-+
- #define LAST_BOOT_HEADER ((void *)1)
- 
- static void *l_next(struct seq_file *m, void *v, loff_t *pos)
-@@ -9343,7 +9372,9 @@ static struct notifier_block trace_module_nb = {
- 
- static __init void init_trace_stats_tracefs(void)
- {
--	struct dentry *stats_dir;
-+	struct dentry *stats_dir, *per_cpu_dir, *cpu_dir;
-+	char cpu_dir_name[30];
-+	int cpu;
- 
- 	stats_dir = tracefs_create_dir("trace_stats", NULL);
- 	if (!stats_dir)
-@@ -9351,6 +9382,23 @@ static __init void init_trace_stats_tracefs(void)
- 
- 	trace_create_file("memory_usage_kb", TRACE_MODE_READ, stats_dir,
- 			  NULL, &trace_mem_fops);
-+
-+	per_cpu_dir = tracefs_create_dir("per_cpu", stats_dir);
-+	if (!per_cpu_dir)
-+		return;
-+
-+	for_each_tracing_cpu(cpu) {
-+		snprintf(cpu_dir_name, 30, "cpu%d", cpu);
-+		cpu_dir = tracefs_create_dir(cpu_dir_name, per_cpu_dir);
-+		if (!cpu_dir) {
-+			pr_warn("Could not create tracefs '%s' entry\n",
-+				cpu_dir_name);
-+			continue;
-+		}
-+
-+		trace_create_file("memory_usage_kb", TRACE_MODE_READ, cpu_dir,
-+				  (void *)(long)cpu, &trace_mem_per_cpu_fops);
-+	}
- }
- 
- static __init void tracer_init_tracefs_work_func(struct work_struct *work)
--- 
-2.34.1
+tracing: add ring-buffer memory usage statistics in tracefs
+   =20
+This commit adds a tracefs file, trace_stats/memory_usage_kb, to report
+the memory consumed by tracing ring buffers. It calculates the memory
+usage across the global trace array, instances, and snapshot buffers
+using a new function, ring_buffer_memory_size().
 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 8658cad53cb59..5a023018f612e 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+[ ... ]
+> @@ -5771,6 +5771,62 @@ tracing_total_entries_read(struct file *filp, char=
+ __user *ubuf,
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+>  }
+> =20
+> +struct trace_mem_stats {
+> +	unsigned long	buffers;
+> +	unsigned long	snapshot;
+> +};
+> +
+> +static void
+> +trace_array_buffer_memory(struct trace_array *tr, int cpu,
+> +			  unsigned long *buffers, unsigned long *snapshot)
+> +{
+> +	if (tr->array_buffer.buffer)
+> +		*buffers +=3D ring_buffer_memory_size(tr->array_buffer.buffer, cpu);
+> +
+> +#ifdef CONFIG_TRACER_SNAPSHOT
+> +	if (tr->snapshot_buffer.buffer)
+> +		*snapshot +=3D ring_buffer_memory_size(tr->snapshot_buffer.buffer, cpu=
+);
+> +#endif
+> +}
+> +
+> +static struct trace_mem_stats trace_buffers_memory(void)
+> +{
+> +	struct trace_mem_stats stats =3D {};
+> +	struct trace_array *tr;
+> +	int cpu;
+> +
+> +	guard(mutex)(&trace_types_lock);
+> +
+> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> +		for_each_tracing_cpu(cpu)
+
+[Severity: High]
+Does this code trigger a use-after-free if tracer_alloc_buffers() fails dur=
+ing
+early boot?
+
+If tracer_alloc_buffers() fails in kernel/trace/trace.c, it frees both
+tracing_buffer_mask and temp_buffer but leaves their global pointers dangli=
+ng:
+
+kernel/trace/trace.c:tracer_alloc_buffers() {
+    ...
+out_free_buffer_mask:
+    ...
+    ring_buffer_free(temp_buffer);
+    free_cpumask_var(tracing_buffer_mask);
+    ...
+}
+
+Because trace_stats/memory_usage_kb is created unconditionally by
+tracer_init_tracefs_work_func(), and its file operations (trace_mem_fops)
+do not check the tracing_disabled flag, a local user can still read the fil=
+e.
+
+When trace_mem_show() executes trace_buffers_memory(), the
+for_each_tracing_cpu() macro will dereference the dangling
+tracing_buffer_mask.
+
+> +			trace_array_buffer_memory(tr, cpu, &stats.buffers,
+> +						  &stats.snapshot);
+> +	}
+> +
+> +	/*
+> +	 * temp_buffer is allocated in tracer_alloc_buffers() and is never
+> +	 * attached to a trace array. It temporarily holds event data for
+> +	 * triggers when tracing is off. Account for its pages too.
+> +	 */
+> +	if (temp_buffer) {
+> +		for_each_tracing_cpu(cpu)
+> +			stats.buffers +=3D ring_buffer_memory_size(temp_buffer, cpu);
+
+[Severity: High]
+Does this also cause a use-after-free on temp_buffer in trace_buffers_memor=
+y()?
+
+If tracer_alloc_buffers() fails, temp_buffer is freed but its pointer
+is never set to NULL on the error path. This branch will evaluate the dangl=
+ing
+pointer as true and pass it to ring_buffer_memory_size(), which will
+dereference the freed memory.
+
+> +	}
+> +
+> +	return stats;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916063322.4721=
+72-1-gaoxiang17@xiaomi.com?part=3D1
