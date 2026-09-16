@@ -1,63 +1,67 @@
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2F5531B0F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 15:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3101251D512
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 15:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789572517; cv=none; b=Yfl8P1hcNkTlXW+GcoQ1BJZ27OZpfd+ScxDZPlJo53BT5Lzj9Kl5q+j8MJPb1C3mA9Kh6gfa9DTBPNQ1OapAwdD7tt3314YFN6/l+pjRL49JzzXEekMGUHTebIcKsjYjJfXt6fTLt/FvNwwlwbCAC5T3TRlzfbnYnJkvWCOJYas=
+	t=1789572519; cv=none; b=Y9arjyyTa1WbdFTL9JlsVBxVnAPbJPdnvn7BYif/AWbSh5MUIl4UCmkArud30bEg8FI9Es7dgFTne8qDWvWlv6N8O0sbiEApSf5hL3j6xL1nahl6PhQVPK5BLG5P1g/PsSnyou/zDCLaaa2K0L02cPWyzPO6EEUvcqcPkZH5DEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789572517; c=relaxed/simple;
-	bh=b2FawjnBtz5Mv+Hqt1A70ttINqlSdk+8EePa7KvLAGI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BlrllVbNmvxCT3eZf3es8AVFC204xZUwc+jjzICLFPlx2JwCmwydVYbARfUS+ygKgvWG6q79BtvYuKZDHy3iKMiMFgE2MakJFTgzQAJ75O0xjhjhk5ZG6sZL4AGumJMLzYzQy1KlW2VuFe6MkmHLi2hf+OGdlPDjVWGWpewYR4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BAhX2B2N; arc=none smtp.client-ip=209.85.221.70
+	s=arc-20240116; t=1789572519; c=relaxed/simple;
+	bh=seTCgIroPxqNkO9TjoG0CMQWVPklh/K3GHcYMoDJZ2k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dJxWTDfZenbXWQFJG8LIo+ZadlonxHUlBx5cmKHWF4h0SQ9UKR6XfinrVsfiQWFn1b7QJ2zCXuM9KL3QdUjjW+2otspucFkHtnItDcdewIpDn+/rFKGqla2oP7aW8mMo8FYefRa8e96RDN/Q8FI3sQ5lDt51ruPF28u9EygIs4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EfcRoDPB; arc=none smtp.client-ip=209.85.128.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BAhX2B2N"
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4870487e33aso792782f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 08:28:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EfcRoDPB"
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-490a767c7dcso48095945e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 08:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789572507; x=1790177307; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=HAKYIppDzHXSm69+TkNK1O4RBm3XWQ0MkKJ5dia50Yg=;
-        b=BAhX2B2NuO1xxdLoeyqdbGYip/sx7rivnMN4iXQb9fMtmbeVzb/u/toeo6WPPHJB3M
-         V1TnqO/w4z5ALXRnLMXdW9H8Hm+Z043sXq4G0xKniNBcfOCGghLBw1e8j1ssohtas6OY
-         VD9S/rvHLsr+4Ol/bKsfc9/IMxWPEQfiZxQUVXx6rNovrojqH5nl789zzp6UPJUwOgNC
-         +obXF7TqjkMSR4XKg1QWB1m+e9CLoyspQtvjXvI/MWc/GPWViB7JxQxQnZmonjiKSCK/
-         OQ5WdTK3FASlZmyFNzZ8pEE+awC6Yz2GVYLJhnDBBQZXW/BIk4OKybGvd3JbG8RX5vaP
-         3BWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789572507; x=1790177307;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1789572509; x=1790177309; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HAKYIppDzHXSm69+TkNK1O4RBm3XWQ0MkKJ5dia50Yg=;
-        b=Z1yqXLJL4a5r3K4+HeWV6TQt/aqJj/N0df520dxQ6lUSyNvSiU0D1RRpVlF0FtewLX
-         qdWsX415h4YK99rvFm5OQKQS4JWPYSx+i5EJTkOCc8pR3VjIn2lpCz4rPiVwROzyTGsa
-         YHxexpSWStzbspxn2749kHpBZjWhshHQbIJyKbDKC5qc15YBHv367EOF47dWPhsR3HWI
-         fOtT8/Ndg5wn2aHUNGyaak91nCnEz2NiteDwNd/NIBNCFPxhUL9RMS4Vyq9pBsjtgxKR
-         Dde8iJMA61Q98mpc+gHJ4RtwuzdOp5F3kmI0lLic0RpNm0OmuOdbkhPnaGAcJ10a+br3
-         x8HQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzq8kgHCxW8HFFwE0CIY3tKbM21eBcXwOJrSXHtJYbmn+o7ZPx3zBy58V026MHdAXU5idgcuMfxLI/GDeTbIaKTsiQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++k7FQo9BcDCjyYrQ/KK2R+GMI485OSbw5ZwlRZUV9f5c/+s8vHn
-	i/8j6pyVeWPZaD43ncaeD5VQBZdjOphyT6lpVLnSpRN4UXWpg8r7wtafY6nqAV20blIEwwRCn63
-	FoPzQyWlQIiAwZGCB9w1Pkw==
-X-Received: from wrnb9.prod.google.com ([2002:adf:e649:0:b0:486:ef61:1eca])
+        bh=Z8XwdVS42p1CP6QnGtJO4ImFTQHL4GGRP2dYFUy8/Ek=;
+        b=EfcRoDPBgkU1DqOwtjrWRuGk9TeIyus351PdZPJuQKmhOq6RyTA6FO7vvo4M5KrFjc
+         hGPFQau/Mpv9bY5flzuWyWYNshG7CejZrlsSx/0KIQKxWL53wkCouOB8FaJsS1SHGNXC
+         JmHzgZ+T7Y+VrRzEtki903LmNadrQHdagKiBd1rCzacqNFRGvjuWu6r+6hBxiWmyd7ME
+         b+vSURzkoPR7R6Wr/wmaWYhcIBU8BK93g4XKGTsIk96qZPSLKO3UBJz8qZvTY04ivYN8
+         iVZHYKDPr9IJsPIFxNlHkuj7AXLHynchQwvypkraIpdwQNmqrbERBTIkkZS4Y39hloQz
+         5bzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789572509; x=1790177309;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Z8XwdVS42p1CP6QnGtJO4ImFTQHL4GGRP2dYFUy8/Ek=;
+        b=0cDNa2ksgmzCab/w7jYpfrF6QKs6neZC0/FdjZhGOBkxCOHwGuCn4oq7o9OZ71HXMA
+         XJ6C0+//7Q/yvkyWdEOYzWXAKyHjPs/FKITptg1RTwN5riLRTZqlYpO2jltTBdiNqmrL
+         fprUdhLNYsHh8vp+Ic1zcoUN0visdmeL7EPvE5ev3DUK5KPkpLkGDd0Gu7TaD/70zHDf
+         yZQa/joEKXXaJjP4I7vRKsi8dLcrq/dVfuAb786vtHpwFmturcTSSn2eoNOujAp99ImI
+         KuGMshwlMAdi+CuOCXYlzhIBTePDTNsbJFn+psdOD//XXPJYotaMgf/buA0Yz4ytjsRX
+         9/2A==
+X-Forwarded-Encrypted: i=1; AKwUvBxjDvPeRdvwMjy9wFirB/enVzsm7DfFkC0PEaPAC6SAjPX+QJeQ07bqg++Rm5ml0ARo2tJNDIPd+iiT8KH1oXeLurs=@vger.kernel.org
+X-Gm-Message-State: AFuF++lPcYjyxiiQ3A0Ctfw0FVeg5cbA6hzMOKZNpTFk1P523LFZqHSj
+	AEhICokRbf+L+MaUEyMs6en8Qpygg33dIMxtM5KXvL2ChR7fqWYbVzH8bWnpObSHHUWBaZuqmb9
+	BWqE+lkMir/3ISRlSFbY7/A==
+X-Received: from wrdf7.prod.google.com ([2002:a5d:58e7:0:b0:486:f98c:60be])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1acf:b0:487:41c:515b with SMTP id ffacd0b85a97d-4870d05a818mr4089631f8f.30.1789572506148;
- Wed, 16 Sep 2026 08:28:26 -0700 (PDT)
-Date: Wed, 16 Sep 2026 16:28:11 +0100
+ 2002:a05:600c:34d6:b0:49c:fc6c:bdfa with SMTP id 5b1f17b1804b1-49eb7322c98mr36772795e9.17.1789572508661;
+ Wed, 16 Sep 2026 08:28:28 -0700 (PDT)
+Date: Wed, 16 Sep 2026 16:28:13 +0100
+In-Reply-To: <20260916152813.105082-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260916152813.105082-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260916152813.105082-1-vdonnefort@google.com>
-Subject: [PATCH v2 0/2] ring-buffer: Clean up resize_disabled checks
+Message-ID: <20260916152813.105082-3-vdonnefort@google.com>
+Subject: [PATCH v2 2/2] ring-buffer: Remove unnecessary cpumask_test_cpu
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -66,30 +70,39 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-ring_buffer_subbuf_order_set() checks for resize_disabled twice under
-the same buffer->mutex hold. Moreover, this check duplicates the logic
-in ring_buffer_resize(). Create a common helper rb_resize_disabled() to
-factor out this code and drop redundant checks.
+for_each_buffer_cpu() already iterates over buffer->cpumask. Remove the
+unnecessary cpumask_test_cpu() found in ring_buffer_subbuf_order_set().
 
-Additionally, remove the unnecessary cpumask_test_cpu() in
-ring_buffer_subbuf_order_set() as for_each_buffer_cpu() already
-iterates over buffer->cpumask.
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ kernel/trace/ring_buffer.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-v2:
-  - Split cpumask_test_cpu() cleanup into its own patch (Steven)
-  - Remove another unnecessary cpumask_test_cpu() (David)
-
-v1: https://lore.kernel.org/all/20260914175907.1027349-1-vdonnefort@google.com/
-
-Vincent Donnefort (2):
-  ring-buffer: Clean up resize_disabled checks
-  ring-buffer: Remove unnecessary cpumask_test_cpu
-
- kernel/trace/ring_buffer.c | 70 +++++++++++++++-----------------------
- 1 file changed, 28 insertions(+), 42 deletions(-)
-
-
-base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 73311c4fc556..2087bbfd8f20 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7488,10 +7488,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 
+ 	/* Make sure all new buffers are allocated, before deleting the old ones */
+ 	for_each_buffer_cpu(buffer, cpu) {
+-
+-		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+-			continue;
+-
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+ 		/* Update the number of pages to match the new size */
+@@ -7522,9 +7518,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 		struct list_head old_pages;
+ 		unsigned long flags;
+ 
+-		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+-			continue;
+-
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+ 		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
