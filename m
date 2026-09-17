@@ -1,16 +1,16 @@
 Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5344BD361;
-	Thu, 17 Sep 2026 23:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859537187E;
+	Thu, 17 Sep 2026 23:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789686130; cv=none; b=e76k2xd0Vy74hjV0UyjaIiavj/xTtba5W2gid6ujWimhz/K5NmI7NkbEsLLzaAd5qPyt5SgNHBWUDWzI6zCfTdvfmKPLNh2ziQ0VIdJQeyfrib3kWgkPlxFRiUqMb27MtiCMx/fwkdN0C0PGDZsL2BZdradXRmrelEDYCBAxNPo=
+	t=1789686132; cv=none; b=dXlvlRkHH/24sYiJv/APN/U4rO8hFBNVgfw84P/FpJb/1uPdbIzSPnVW3v4TBvXmH9v+kBW/6Q6tgkWe3b/Y2mwX8Xvj7LxTTivZz+XIntVxq54ypj7sH04IAkQHRbWZoSxqCV2l7rdgrGpWDQDoX4QkNPgDoVVvcCBvBIJREaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789686130; c=relaxed/simple;
-	bh=GJFnYjN3U6Y4NP9Q3OfvNn3/RlNZO3XiJBWG0DCO0Ao=;
+	s=arc-20240116; t=1789686132; c=relaxed/simple;
+	bh=hHnjB80nwFRqYHM/dR8DgVHArEfXQ598EZ+/RHeJ3R8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rzk6iY6IIBd0JEuSeEiBvOuJqJ4dVY1YS4N7xdWAy818ORm96euKS1pQuPxcpAROW8UqPdkzfZcNSNukJumu/gQLrC6DGr7U/lKiJSDI8bz7p9Z6oybx1L87pelur/xfkEiZuz6efk0LlT8lmgRZz3NWHP65CHIMpMmeWryYpMw=
+	 MIME-Version; b=rI5xPJBP+Pq+zxZoJDm5+bYLEHxUADVMSUXv82Df3SI9JuHzhs4V5IFhUEIv7iJbFS9PJ/b5QFI88X4x9f/bQlIsS9j1SQG+zAUAWNJ1n8FLITatDSN0S17B5RBfFm5c1QN7t2EQisSVylN1JbZ9NHLZTzIinY9A798m4nlPEEI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=firstfloor.org; arc=none smtp.client-ip=65.21.254.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
@@ -18,10 +18,10 @@ Received: from firstfloor.org (c-73-11-123-161.hsd1.or.comcast.net [73.11.123.16
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by one.firstfloor.org (Postfix) with ESMTPSA id 0E34C5E8A9;
-	Fri, 18 Sep 2026 01:01:55 +0200 (CEST)
+	by one.firstfloor.org (Postfix) with ESMTPSA id CF6B45E8A5;
+	Fri, 18 Sep 2026 01:01:54 +0200 (CEST)
 Received: by firstfloor.org (Postfix, from userid 1000)
-	id 90FF01622C2; Thu, 17 Sep 2026 16:01:48 -0700 (PDT)
+	id 9342C1622CE; Thu, 17 Sep 2026 16:01:48 -0700 (PDT)
 From: Andi Kleen <ak@kernel.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>,
@@ -34,9 +34,9 @@ Cc: Oleg Nesterov <oleg@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	adrian.hunter@intel.com,
 	Andi Kleen <ak@kernel.org>
-Subject: [RFC PATCH v2 09/11] ptwrite uprobes: Use atomic patching for multinop sites
-Date: Thu, 17 Sep 2026 16:00:36 -0700
-Message-ID: <20260917230127.924985-10-ak@kernel.org>
+Subject: [RFC PATCH v2 10/11] ptwrite uprobes: Add a tutorial and overview documentation
+Date: Thu, 17 Sep 2026 16:00:37 -0700
+Message-ID: <20260917230127.924985-11-ak@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260917230127.924985-1-ak@kernel.org>
 References: <20260917230127.924985-1-ak@kernel.org>
@@ -48,352 +48,422 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The earlier multinop patching is not quite safe because the cross
-modified CPU could be already executing on a later nop when the
-cross patching occurs. The Intel SDM allows cross modification
-by larger stores as long as they are aligned. AMD has a similar
-guarantee.
-
-Support GCC function-entry patch sites is the main motivation for
-multinop, and these sites are always aligned.
-
-So enforce 8 bytes alignment of the multinop and use a safe RMW 8 byte store
-to overwrite the 5 byte sequence. This assumes that the code is not
-changing in parallel, but if that happens cross modification safety
-is probably the smallest of the issues.
+Document the PTWRITE uprobe interface, syntax, requirements,
+limitations, and usage examples.
 
 Assisted-by: omp:gpt-5.6-luna
 Signed-off-by: Andi Kleen <ak@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 183 +++++++++++++++++++++++---------------
- kernel/events/uprobes.c   |  15 +++-
- 2 files changed, 123 insertions(+), 75 deletions(-)
+ Documentation/trace/index.rst           |   1 +
+ Documentation/trace/ptwrite-uprobes.rst | 387 ++++++++++++++++++++++++
+ 2 files changed, 388 insertions(+)
+ create mode 100644 Documentation/trace/ptwrite-uprobes.rst
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index af9b36a219d3..114905bb69a8 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -17,6 +17,7 @@
- #include <linux/kdebug.h>
- #include <linux/highmem.h>
- #include <linux/mm.h>
-+#include <linux/security.h>
- #include <asm/processor.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
-@@ -828,6 +829,8 @@ int uprobe_ptwrite_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm)
- 		kunmap_local(src);
- 		new->vaddr = ptw->vaddr;
- 		new->cursor = ptw->cursor;
-+		new->nblocks = ptw->nblocks;
-+		memcpy(new->index, ptw->index, sizeof(new->index));
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index f4058e8e92e3..4ae7b158804b 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -90,6 +90,7 @@ interactions.
+ .. toctree::
+    :maxdepth: 1
  
- 		vma = install_uprobe_ptwrite_vma(newmm, new->vaddr);
- 		if (IS_ERR(vma)) {
-@@ -1448,7 +1451,7 @@ static_assert((((9 + UPROBE_PTWRITE_SERIALIZE_LFENCES *
- 			  UPROBE_PTWRITE_MAX_ARGS *
- 				  (10 + UPROBE_PTWRITE_SERIALIZE_LFENCES *
- 				   UPROBE_PTWRITE_LFENCE_SIZE) +
--			  5 + 7) & ~7) +
-+			  UPROBE_PTWRITE_COPY_SIZE + 5 + 7) & ~7) +
- 		       8 * (1 + UPROBE_PTWRITE_MAX_ARGS)) <=
- 		      UPROBE_PTWRITE_STUB_SIZE,
- 		      "worst-case ptwrite stub block exceeds UPROBE_PTWRITE_STUB_SIZE");
-@@ -1460,6 +1463,7 @@ static bool ptwrite_has_room(const u8 *base, const u8 *p, size_t len)
- }
++   ptwrite-uprobes
+    user_events
+    uprobetracer
  
- static bool pun_site_is_nop(const u8 *orig, bool allow_nop_run);
-+static bool ptwrite_site_is_multinop(const u8 *orig, bool allow_nop_run);
- static int pun_classify_insn(struct insn *insn, u8 *disp_off, s32 *disp);
- static int pun_decode_site(struct inode *inode, struct file *file,
- 			       loff_t offset, u8 *copy,
-@@ -1494,7 +1498,18 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 		return -EINVAL;
- 
- 	/* The generic registration path copied these bytes before this hook. */
-+	ptw->allow_nop_run =
-+		desc->flags & UPROBE_PTWRITE_FL_ALLOW_NOP_RUN;
- 	memcpy(ptw->orig, auprobe->insn, sizeof(ptw->orig));
-+	/*
-+	 * File mappings preserve page offsets, so an unaligned file offset
-+	 * cannot become an aligned runtime address. Reject it before the probe
-+	 * is exposed; install-time failures for a future mapping are otherwise
-+	 * not observable through the tracefs enable operation.
-+	 */
-+	if (ptwrite_site_is_multinop(ptw->orig, ptw->allow_nop_run) &&
-+	    !IS_ALIGNED(offset, sizeof(u64)))
-+		return -EINVAL;
- 
- 	for (i = 0; i < desc->nargs; i++) {
- 		switch (desc->args[i].src) {
-@@ -1618,7 +1633,7 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 
- 	ptw->stub_len = data_off + 8 * (1 + n_imm);
- 	ptw->ndata = 1 + n_imm;
--	ptw->allow_nop_run = desc->flags & UPROBE_PTWRITE_FL_ALLOW_NOP_RUN;
+diff --git a/Documentation/trace/ptwrite-uprobes.rst b/Documentation/trace/ptwrite-uprobes.rst
+new file mode 100644
+index 000000000000..5268b8aed9de
+--- /dev/null
++++ b/Documentation/trace/ptwrite-uprobes.rst
+@@ -0,0 +1,387 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 
- 	ret = pun_decode_site(inode, file, offset, code + ptw->copy_off,
- 				  &ptw->disp_off, &ptw->disp,
-@@ -1753,8 +1768,9 @@ get_uprobe_ptwrite_page(struct mm_struct *mm, unsigned long vaddr,
- }
- 
- /*
-- * A run of short NOPs is accepted only when requested. This validation does
-- * not make the three-phase poke safe for threads that already passed byte 0.
-+ * A run of short NOPs is accepted only when requested. It is patched with
-+ * an aligned eight-byte read-modify-write, preserving the following bytes;
-+ * code is not expected to change concurrently.
-  */
- static bool ptwrite_is_nop_run(const u8 *orig)
- {
-@@ -1940,6 +1956,42 @@ static int ptwrite_text_poke(struct arch_uprobe *auprobe,
- 	return err;
- }
- 
-+/*
-+ * Replace an aligned five-byte NOP run with a JMP in one eight-byte store.
-+ * The trailing three bytes are read from the existing text. We assume
-+ * nobody else is changing it. This is covered by the Intel/AMD "aligned store"
-+ * cross modifying guarantee.
-+ */
-+static int ptwrite_multinop_text_poke(struct arch_uprobe *auprobe,
-+				      struct vm_area_struct *vma,
-+				      unsigned long vaddr,
-+				      unsigned long stub_addr)
-+{
-+	struct mm_struct *mm = vma->vm_mm;
-+	struct write_opcode_ctx ctx = {
-+		.base = vaddr,
-+		.expect = EXPECT_BYTE,
-+		.expect_byte = 0x90,
-+	};
-+	u8 patch[sizeof(u64)];
-+	s32 rel;
-+	int err;
++===============
++ptwrite uprobes
++===============
 +
-+	if (!IS_ALIGNED(vaddr, sizeof(u64)))
-+		return -EINVAL;
-+	if (!ptwrite_rel32(vaddr + 5, stub_addr, &rel))
-+		return -ERANGE;
-+	err = copy_from_vaddr(mm, vaddr, patch, sizeof(patch));
-+	if (err)
-+		return err;
-+	patch[0] = 0xe9;
-+	memcpy(&patch[1], &rel, sizeof(rel));
-+	err = uprobe_write(auprobe, vma, vaddr, patch, sizeof(patch),
-+			   verify_insn, true, false, &ctx);
-+	if (!err)
-+		smp_text_poke_sync_each_cpu();
-+	return err;
-+}
- static int pun_text_poke(struct arch_uprobe *auprobe,
- 				 struct vm_area_struct *vma,
- 				 unsigned long vaddr, u8 e9,
-@@ -1971,65 +2023,40 @@ static int pun_install(struct arch_uprobe *auprobe,
- 	unsigned long t, page_base, block_off, stub_addr;
- 	s64 site_delta, target;
- 	s32 jump_rel, disp32, orig_rel;
--	u8 site_len;
- 	bool found = false;
--	bool nop_fallback = ptwrite_site_is_multinop(orig,
--						     ptw_a->allow_nop_run) &&
--			    (vaddr & 7);
- 	u8 *kaddr;
- 	int b, ret;
- 
- 	mmap_assert_write_locked(mm);
--	if (nop_fallback) {
--		hlist_for_each_entry(ptw, &state->head_ptwrite, node) {
--			site_delta = (s64)vaddr - (s64)ptw->vaddr;
--			if (site_delta < INT_MIN || site_delta > INT_MAX)
--				continue;
--			for (b = 0; b < smp_load_acquire(&ptw->nblocks); b++)
--				if (!ptw->index[b].pun &&
--				    ptw->index[b].site_off == (s32)site_delta &&
--				    ptw->index[b].site_len == 5 &&
--				    !memcmp(ptw->index[b].site_insn, orig, 5))
--					break;
--			if (b >= smp_load_acquire(&ptw->nblocks))
--				continue;
--			if (!__in_uprobe_ptwrite(mm, ptw->vaddr))
--				continue;
--			return ptwrite_text_poke(auprobe, vma, vaddr,
--						 ptw->vaddr + ptw->index[b].off);
-+	memcpy(&orig_rel, orig + 1, sizeof(orig_rel));
-+	target = (s64)vaddr + 5 + (s64)orig_rel;
-+	if (target < PAGE_SIZE || target >= TASK_SIZE_MAX)
-+		return -EADDRNOTAVAIL;
-+	t = (unsigned long)target;
-+	page_base = t & PAGE_MASK;
-+	ret = security_mmap_addr(page_base);
-+	if (ret)
-+		return ret;
-+	block_off = t & (PAGE_SIZE - 1);
-+	if (block_off + ptw_a->stub_len > PAGE_SIZE)
-+		return -ENOSPC;
++.. contents:: :local:
 +
-+	/* Reuse an existing ptwrite page at the target, else map a new one. */
-+	hlist_for_each_entry(ptw, &state->head_ptwrite, node) {
-+		if (ptw->vaddr == page_base) {
-+			found = true;
-+			break;
- 		}
--		ptw = get_uprobe_ptwrite_page(mm, vaddr, ptw_a->stub_len);
-+	}
-+	if (!found) {
-+		if (vma_lookup(mm, page_base))
-+			return -EADDRNOTAVAIL;
-+		ptw = create_uprobe_ptwrite_page_at(mm, page_base);
- 		if (!ptw)
- 			return -ENOMEM;
--		block_off = ptw->cursor;
--	} else {
--		memcpy(&orig_rel, orig + 1, sizeof(orig_rel));
--		target = (s64)vaddr + 5 + (s64)orig_rel;
--		if (target < PAGE_SIZE || target >= TASK_SIZE_MAX)
--			return -EADDRNOTAVAIL;
--		t = (unsigned long)target;
--		page_base = t & PAGE_MASK;
--		block_off = t & (PAGE_SIZE - 1);
--		if (block_off + ptw_a->stub_len > PAGE_SIZE)
--			return -ENOSPC;
--
--		/* reuse an existing ptwrite page at the target, else map a new one */
--		hlist_for_each_entry(ptw, &state->head_ptwrite, node) {
--			if (ptw->vaddr == page_base) {
--				found = true;
--				break;
--			}
--		}
--		if (!found) {
--			if (vma_lookup(mm, page_base))
--				return -EADDRNOTAVAIL;	/* target page occupied */
--			ptw = create_uprobe_ptwrite_page_at(mm, page_base);
--			if (!ptw)
--				return -ENOMEM;
--			/* Order page initialization before publishing it to fault readers. */
--			smp_wmb();
--			hlist_add_head_rcu(&ptw->node, &state->head_ptwrite);
--		}
-+		/* Publish initialized page fields before fault readers find it. */
-+		smp_wmb();
-+		hlist_add_head_rcu(&ptw->node, &state->head_ptwrite);
- 	}
- 
- 	site_delta = (s64)vaddr - (s64)ptw->vaddr;
-@@ -2068,19 +2095,13 @@ static int pun_install(struct arch_uprobe *auprobe,
- 		disp32 = (s32)d;
- 	}
- 
--	/*
--	 * A NOP fallback needs a synthetic rel32 at the site, so it uses
--	 * the full five-byte poke and restore path rather than punning.
--	 */
--	site_len = nop_fallback ? 5 : ptw_a->len;
- 	ptw->index[ptw->nblocks].off = block_off;
- 	ptw->index[ptw->nblocks].len = ptw_a->stub_len;
--	ptw->index[ptw->nblocks].pun = !nop_fallback;
-+	ptw->index[ptw->nblocks].pun = 1;
- 	ptw->index[ptw->nblocks].orig0 = orig[0];
--	ptw->index[ptw->nblocks].site_len = site_len;
-+	ptw->index[ptw->nblocks].site_len = ptw_a->len;
- 	ptw->index[ptw->nblocks].site_off = (s32)site_delta;
--	memcpy(ptw->index[ptw->nblocks].site_insn, ptw_a->orig, site_len);
--	smp_store_release(&ptw->nblocks, ptw->nblocks + 1);
-+	memcpy(ptw->index[ptw->nblocks].site_insn, ptw_a->orig, ptw_a->len);
- 
- 	kaddr = kmap_local_page(ptw->page);
- 	memcpy(kaddr + block_off, ptw_a->stub, ptw_a->stub_len);
-@@ -2089,11 +2110,10 @@ static int pun_install(struct arch_uprobe *auprobe,
- 		memcpy(kaddr + block_off + ptw_a->copy_off + ptw_a->disp_off,
- 		       &disp32, sizeof(disp32));
- 	kunmap_local(kaddr);
-+	/* Publish initialized metadata before exposing the probe jump. */
-+	smp_store_release(&ptw->nblocks, ptw->nblocks + 1);
- 
--	if (nop_fallback)
--		ret = ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
--	else
--		ret = pun_text_poke(auprobe, vma, vaddr, 0xe9, &ctx);
-+	ret = pun_text_poke(auprobe, vma, vaddr, 0xe9, &ctx);
- 	if (ret) {
- 		/* Publish rollback before readers observe the reduced block count. */
- 		smp_store_release(&ptw->nblocks, ptw->nblocks - 1);
-@@ -2129,6 +2149,9 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 	ret = copy_from_vaddr(mm, vaddr, orig, sizeof(orig));
- 	if (ret)
- 		return ret;
-+	if (ptwrite_site_is_multinop(orig, ptw_a->allow_nop_run) &&
-+	    !IS_ALIGNED(vaddr, sizeof(u64)))
-+		return -EINVAL;
- 	if (ptwrite_is_installed(mm, vaddr, orig))
- 		return 0;
- 
-@@ -2151,8 +2174,13 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 			continue;
- 		if (!__in_uprobe_ptwrite(mm, ptw->vaddr))
- 			continue;
--		return ptwrite_text_poke(auprobe, vma, vaddr,
--					ptw->vaddr + ptw->index[b].off);
-+		if (ptwrite_site_is_multinop(orig, ptw_a->allow_nop_run))
-+			ret = ptwrite_multinop_text_poke(auprobe, vma, vaddr,
-+							ptw->vaddr + ptw->index[b].off);
-+		else
-+			ret = ptwrite_text_poke(auprobe, vma, vaddr,
-+						ptw->vaddr + ptw->index[b].off);
-+		return ret;
- 	}
- 	ptw = get_uprobe_ptwrite_page(mm, vaddr, ptw_a->stub_len);
- 	if (!ptw)
-@@ -2186,10 +2214,17 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 	memcpy(kaddr + block_off + ptw_a->jmp_off, &rel, sizeof(rel));
- 	kunmap_local(kaddr);
- 
--	ret = ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
--	if (!ret)
--		ptw->cursor = block_off + ptw_a->stub_len;
--	return ret;
-+	if (ptwrite_site_is_multinop(orig, ptw_a->allow_nop_run))
-+		ret = ptwrite_multinop_text_poke(auprobe, vma, vaddr, stub_addr);
-+	else
-+		ret = ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
-+	if (ret) {
-+		/* Publish rollback before readers use the reduced block count. */
-+		smp_store_release(&ptw->nblocks, ptw->nblocks - 1);
-+		return ret;
-+	}
-+	ptw->cursor = block_off + ptw_a->stub_len;
-+	return 0;
- }
- 
- int arch_uprobe_uninstall_ptwrite(struct arch_uprobe *auprobe,
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 78bc847d73cc..18c5df46a509 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -192,7 +192,20 @@ void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, in
- static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
- {
- 	void *kaddr = kmap_local_page(page);
--	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
-+	void *dst = kaddr + (vaddr & ~PAGE_MASK);
++Introduction
++============
 +
-+	/*
-+	 * Atomic eight-byte stores are required for safe cross-modification of
-+	 * live user text; other writes use the ordinary byte-copy path.
-+	 */
-+	if (len == sizeof(u64) && IS_ALIGNED(vaddr, sizeof(u64))) {
-+		u64 value;
++A classic uprobe enters the kernel for each probe. That causes overhead
++when the probe is executed frequently.
 +
-+		memcpy(&value, src, sizeof(value));
-+		WRITE_ONCE(*(u64 *)dst, value);
-+	} else {
-+		memcpy(dst, src, len);
-+	}
- 	kunmap_local(kaddr);
- }
- 
++ptwrite uprobes instead rely on hardware tracing that doesn't enter
++the kernel. It uses the ``PTWRITE`` instruction available on modern
++Intel CPUs to log data to the Processor Trace buffer. Processor
++Trace is configured and recorded by Linux perf.
++
++There are some limitations of the scheme (see below)
++but it is a lot faster than classic uprobes.
++
++Performance
++===========
++
++Measured on the development kernel in a KVM guest (2 vCPUs) running
++on an Alder Lake laptop with a probe on a hot function called in a
++tight loop.
++
++    +---------------------------------------+----------------------+--------------------+------------------------+
++    | mode (2-arg probe)                    | PT off (% of classic)| full (% of classic)| snapshot (% of classic)|
++    +=======================================+======================+====================+========================+
++    | classic uprobe (tracefs)              | 100%                 | 100%               | 100%                   |
++    | classic uprobe (perf probe, tracefs)  | 104%                 |                    |                        |
++    | classic uprobe (perf probe, perf ring)|                      | 156%               |                        |
++    | ptwrite %nopace                       | 2%                   | 2%                 | 8%                     |
++    | ptwrite default                       | 7%                   | 7%                 | 11%                    |
++    | perf probe ``--ptwrite``              | 7%                   | 7%                 | 12%                    |
++    +---------------------------------------+----------------------+--------------------+------------------------+
++
++The percentages are normalized to the classic tracefs uprobe in each
++recording mode; lower values represent lower cost per hit.
++
++A ``%nopace`` probe costs roughly **2%** as much as a classic uprobe
++with PT off (about 98% less). The default pacing (on unless ``%nopace``
++is given) costs roughly 7% as much (about 93% less) in the same mode.
++The default pacing slows down the probes to avoid data loss when they are
++too tightly spaced.
++
++``snapshot`` refers to ``perf record`` snapshot mode (``-S``) which doesn't
++save the PT ring buffer constantly.
++
++
++Requirements
++============
++
++- An Intel CPU with Intel PT and PTWRITE. When running as a guest Intel PT
++  needs to be exposed to the guest.
++  PT/PTWRITE are available when ``/sys/devices/intel_pt/format/ptw`` exists.
++- A kernel with ``CONFIG_UPROBE_EVENTS`` enabled.
++
++Quick start (tracefs)
++=====================
++
++Pick a probe site, register a probe at its file offset, enable it, run the
++program under PT, decode.
++
++Example 1: probe an existing instruction (punning)
++--------------------------------------------------
++
++Build a small program and probe the entry of ``main``::
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++
++    __attribute__((noinline, noipa)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        return a * 31 + b;
++    }
++
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 100; i++)
++            acc += target(i, i + 1);
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -fno-inline -o t t.c
++
++``objdump -F`` prints the file offset of every instruction::
++
++    $ objdump -d -F t | sed -n "/<main> (File Offset/,+1p"
++    0000000000401040 <main> (File Offset: 0x1040):
++      401040:	55			push   %rbp
++
++``1040`` is the file offset of ``main``'s first instruction, exactly
++what the probe line needs. Register the probe there, enable it, run
++the program under PT and decode::
++
++    # echo "ptw:e t:0x1040 %di %si" > /sys/kernel/tracing/uprobe_events
++    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 1: event=uprobes/e id=0x6c2 args=[1, 140728356930600]
++    summary: records=1 dropped=0 stray=0 unknown=0 errors=0
++
++Since it isn't a nop the instruction is "punned": byte 0 is changed
++to a jump to a trampoline that logs the data and returns to the
++previous execution.
++
++Punning is a probabilistic method that depends on the existing
++instruction bytes and the placement of the executable in memory.
++It has a high chance of success on PIE/PIC binaries, but tends
++to work poorly on non PIE main executables.
++When punning is not possible the probe is rejected at install
++time. Options in this case:
++
++- Move the probe site to a different instruction which may work.
++- Rebuild with -fPIE if the main executable is not PIE.
++- Enable or disable /proc/sys/kernel/randomize_va_space. If the
++  randomization is enabled it may also just work on a rerun of
++  the program.
++- Fall back to a classic uprobe.
++- Insert a 5-byte NOP which is always supported (see below).
++
++Example 2: an explicit 5-byte NOP (inline assembly)
++---------------------------------------------------
++
++Add a 5-byte NOP at the probe point::
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++
++    __attribute__((noinline)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        asm volatile(".byte 0x0f, 0x1f, 0x44, 0x00, 0x00"); /* nopl */
++        return a * 31 + b;
++    }
++
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 100; i++)
++            acc += target(i, i + 1);
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -o t t.c
++
++    $ objdump -d -F t | sed -n "/<target> (File Offset/,+1p"
++    0000000000401170 <target> (File Offset: 0x1170):
++      401170:	0f 1f 44 00 00		nopl   0x0(%rax,%rax,1)
++
++Probe it exactly like example 1::
++
++    # echo "ptw:e t:0x1170 %di %si" > /sys/kernel/tracing/uprobe_events
++    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 99: event=uprobes/e id=0x6c2 args=[98, 99]
++    record 100: event=uprobes/e id=0x6c2 args=[99, 100]
++    summary: records=100 dropped=0 stray=0 unknown=0 errors=0
++
++Configuring ptwrite uprobes
++===========================
++
++ptwrite uprobes is configured like normal uprobes by writing
++commands to ``/sys/kernel/tracing/uprobe_events``.
++
++  ptw[:[GRP/][EVENT]] PATH:OFFSET [FETCHARGS] : set a ptwrite probe
++  -:[GRP/][EVENT]                             : clear a probe
++
++  GRP      : group name. If omitted, "uprobes" is the default (the
++             event appears under events/uprobes/).
++  EVENT    : event name. If omitted, one is generated from PATH+OFFSET.
++  PATH     : path to an executable or a library.
++  OFFSET   : file offset of the probe site (0x-prefixed hex, see above).
++  FETCHARGS: probe arguments, up to 8 (see "Argument syntax" below).
++
++After creating the ptwrite uprobe it becomes available with its name
++in ``/sys/kernel/tracing/uprobe_events``. There it can be enabled
++by writing 1 to its enable field. However it only logs data
++when a Linux perf PT recording session with ptw=1 is active.
++
++perf probe
++----------
++
++``perf probe --ptwrite -x <file>`` creates ptwrite uprobes instead of
++the classic trap-based ones. The example below uses SDT probes.
++
++(this requires installing systemtap-devel or an equivalent package)
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++    #include <sys/sdt.h>
++    __attribute__((noinline, noclone)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        unsigned long local = a * 2;
++        STAP_PROBE1(test, rarg, a);
++        STAP_PROBE1(test, carg, 42);
++        STAP_PROBE2(test, marg, &local, b);
++        return a * 31 + b;
++    }
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 20; i++) {
++            acc += target(i, i + 1);
++            asm volatile("pause");
++        }
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -o t t.c
++
++The first probe point (``rarg``) is a nop 9 bytes into ``target``::
++
++    $ objdump -d t | sed -n "/<target>:/,+3p"
++    0000000000401180 <target>:
++      401180:	48 8d 04 3f		lea    (%rdi,%rdi,1),%rax
++      401184:	48 89 44 24 f8		mov    %rax,-0x8(%rsp)
++      401189:	90			nop
++
++Probe it with ``perf probe --ptwrite`` using the function+offset
++form, then enable, capture and delete it like any ptwrite probe::
++
++    $ perf probe --ptwrite -x ./t --add "target+9 %di %si"
++    Added new event:
++      probe_t:target      (on target+9 in ./t with %di %si)
++
++    # the tracefs line it wrote:
++    # ptw:probe_t/target ./t:0x1189 arg1=%di arg2=%si
++
++    # echo 1 > /sys/kernel/tracing/events/probe_t/target/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 1: event=probe_t/target id=0x6a9 args=[0, 1]
++    record 20: event=probe_t/target id=0x6a9 args=[19, 20]
++    summary: records=20 dropped=0 stray=0 unknown=0 errors=0
++    # perf probe -d probe_t:target
++
++A ``nop`` instruction, as used by SDT probes, is not guaranteed to
++be ptwrite patchable. It needs a 5-byte NOP, but it can
++often be punned. If punning fails, the kernel reports
++``failed to install`` and the probe has to be moved to another site.
++
++GCC's ``-fpatchable-function-entry=5`` may emit five one-byte NOPs.
++To use that site, add ``%multinop`` to the tracefs probe offset::
++
++    # echo "ptw:e t:0x1170%multinop %di %si" > /sys/kernel/tracing/uprobe_events
++
++The five-byte run must start at an 8-byte-aligned address because it is
++patched with an atomic eight-byte store. An unaligned ``%multinop`` site is
++rejected; without ``%multinop``, the run is treated as a pun and may not
++always succeed.
++
++perf probe uses the standard argument syntax for the ptwrite subset
++(registers, ``$stack``/``$stackN``, ``+disp(%reg)`` memory reads, and
++``\0x2a``-style constants). Strings, arrays and typed suffixes are not
++supported by the ptwrite stub and are rejected by the kernel.
++``%return`` is refused (ptwrite probes are entry-only), and the mode
++requires ``-x``. The probes are enabled, captured and deleted like
++classic probes (``perf probe -l``, ``perf probe -d``).
++They carry the default (LFENCE) pacing. ``%nopace`` cannot be selected
++through perf probe. Write the tracefs line by hand for that.
++
++Argument syntax
++---------------
++
++ptwrite uprobes only support a limited number of argument types
++compared to classic uprobes.
++
++``ptw:<name> <path>:<offset> <arg> ... [options]`` where each ``<arg>`` is one
++of:
++
++- ``%di``, ``%si``, ``%ax`` ...: a live register.
++- ``\IMM``: a fixed constant (stored in the stub), e.g. ``\0x42``.
++- ``$stack``: the stack pointer value (never faults).
++- ``$stackN``: the Nth stack slot (``[%rsp + 8N]``). ``u64`` uses an
++  8-byte load on the fault-fixup path; ``u32``/``s32``/``x32`` use a 4-byte
++  load.
++- ``+<disp>(%reg)``: read memory at ``[reg + disp]``. ``u64`` uses an
++  8-byte load; ``u32``/``s32``/``x32`` use a 4-byte load (``ptwritel``).
++  A bad address writes ``0``.
++
++Options
++-------
++
++``%nopace`` disables artificial slowdown of the probes. This can cause
++data loss when they are tightly spaced or have many arguments, but
++speeds up the probes (see the benchmark section above).
++
++``%multinop`` lets users probe a 5-byte nop sequence that is not one
++instruction. A program could jump to a later nop, which would break when
++the probe rewrites the site.
++
++However there is a common case where gcc's -fpatchable-function-entry=5
++generates 5 nops for each function that are convenient points
++for patching, and nobody jumps into the middle of them.
++
++The five one-byte NOP sequence must be 8-byte aligned.
++
++The encoding format
++===================
++
++Each probe writes a header and the arguments to the PT stream.
++
++The header is a 64-bit word. Each argument is one PTWRITE payload exposed by
++perf as a ``u64`` value.
++
++    header word:      bits 63..48  event id (matches the tracefs id in sysfs)
++                      bits 47..40  number of argument words
++                      bits 39..0   fixed magic 0x5054525731 ("PTRW1")
++    arguments:        one PTWRITE payload per FETCHARG
++
++If the program itself also executes own ``PTWRITE``, those values mix with the
++uprobe output in the stream. The decoder uses the header magic to identify
++uprobe records. Other values are printed as ``manual ptwrite:`` lines (with
++their IP when ``fup_on_ptw`` is set) and counted in the summary's ``stray``
++field.
++
++To also print the decoded branch stream alongside the records, add
++``b`` to the itrace options and drop the ``q``
++
++    # ``perf script --itrace=web -s uprobe-ptwrite-decode.py -i perf.data``
++
++Each decoded branch prints as a ``branch:`` line (from => to, with
++symbols where resolvable), interleaved with the probe records and any
++manual ptwrites in delivery order.
++
++Other events in the recording, including classic uprobes, tracepoints,
++and sample events, are printed as ``event:`` lines unless disabled
++by the decoder.
++
++Unsupported instructions for probes
++===================================
++
++The following instructions are always refused for instrumentation:
++
++- Traps: ``int3``, ``int1``, ``int imm8``, ``into``, ``iret``
++  because they save the IP.
++- System instructions: ``syscall``, ``sysenter``, ``sysexit``
++  for similar reasons.
++- Far control flow: ``jmp far``, ``call far``, and the indirect far
++  forms (call-far, jmp-far).
++- Relative branches: ``jmp rel8/rel32``, ``jcc rel8/rel32``,
++  ``loop*``, ``jecxz/jrcxz``, and ``call rel32``. Out-of-line execution
++  would change their relative targets, and a call's return address would
++  point into the stub.
++- Indirect ``call``: the return-address problem also applies to the
++  register and memory forms.
++- If the 5 byte area of the instruction crosses a page boundary it
++  currently cannot be probed (this applies to nop probes too).
++
++Other restrictions
++==================
++
++- Each probe needs 4K of process memory and roughly 1K extra in the kernel.
++- The probe pages are currently only freed on process exit.
++- Return probes (``%return``/``r:``): ptwrite probes are entry-only
++  and ``%return`` is refused.
++- The SDT reference counter (``(REF)``).
++- EBPF, perf actions, filters, event predicates, histograms, triggers,
++  profiling and similar advanced trace features are all not supported
++  since they would require a kernel entry. However some basic filtering
++  is possible at the perf recording level, for example limit the scope
++  to a CPU or to a process. PT also supports address filter ranges
++  that allow filtering by IP.
++- More than one probe at the same site
++- Only 4 and 8 byte memory references are supported.
++- Fetch argument variety: classic probes fetch strings
++  (``:string``/``:ustring``), arrays, bitfields, nested derefs,
++  ``$retval``, ``$comm`` and ``$argN``. Ptwrite probes only take live
++  registers, ``\IMM`` constants, ``$stack``/``$stackN`` and
++  ``+disp(%reg)`` memory reads. Memory reads are 8-byte words for ``u64``
++  and 4-byte words for ``u32``/``s32``/``x32``.
++  (some of this could be relaxed, but it would require a writable stack)
++- Like normal uprobes one byte of the instruction stream is overwritten
++  (or 5 bytes for the nop case). If the program reads its own code
++  it might see different values.
 -- 
 2.54.0
 
