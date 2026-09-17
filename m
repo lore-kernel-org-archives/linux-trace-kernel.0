@@ -1,204 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-138.mta0.migadu.com [91.218.175.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AE531328E;
-	Thu, 17 Sep 2026 00:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F5A274670
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 01:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789604615; cv=none; b=blGYQ3ZusovvrV0fEaHSuKVs5LmuVV3JjdK58W52LVBMf1fYFVRYmDYmPXYAhGgin9D04CJz2r62FY7wku8MnJohkLDoAEsIMCgkC2BJqoyjzPcokaBeUyFptgTF3iTMXD6cEwxt1s0gUwStZr8JRq2z/C8hc2gK7MAD5AgOSNs=
+	t=1789607295; cv=none; b=O5wcB7BHIrMbxFGaB25EPOR4VUhAobDXvgEkxnjcoGYYjt4LOVLuoHfKoOjxIIQdIafFRB/tQXPqa0NzcKwUh0WeNlPkGeTwqA1dGgZKHbv4/fjTDllSjwwa1NJRbRLav5EbDRWgO23v5mFP+osXVZ9HkSjiBGp0cnEJRcfb1VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789604615; c=relaxed/simple;
-	bh=2dWOoAScSeIiKgVRpgMZ6w+qzOKok7SkSwpny2uNySs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D8eWFuiYLx+Vfe+a9h/eTrCJhU3xDdR/7DrIuxqaNVCQWuuC0ngWAWDYTPasGwOpBc/VvZ6Fs52rFgrkISLtSUyvjTMIPLT/0JVvjOMhfybP3c/LJzNvNkslqfiDIuxweUmcKuH2VVYrKHOuKJ1cXrPq0aBHUQ2PIsE5HnRmgZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO9p4U1j; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789607295; c=relaxed/simple;
+	bh=W+EJo5wy99gMXWuNoS1NOm5WPvUy5H+9fXhyypG8QBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cbt+164a9Lsz+QG/Mt7ipJo30Jj3m6gVwoFA04v0Uzm/gI1LCHSuR9uHbrF4OD/P/twCYxIu53P3v0617OJDD6BqINSGO6xmmL8Gu+eIK9KhEnqb9YAUX2In3D88wzydFYuhVaBVeXHXebjsJlfE0QLjpdVc5unRSLo9zop0Rm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cMDk/M1h; arc=none smtp.client-ip=91.218.175.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO9p4U1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E88A1F00899;
-	Thu, 17 Sep 2026 00:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789604613;
-	bh=/6ZKzbTNPnpfoJwkQzuIsoomBE/MLjH9JGmNsSrwXUQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MO9p4U1j3804lt0V0vU1eY1oxN7NftBFYSKVlTGtFiUUNf1Sb113cgypIoneghn6G
-	 9IZ0gWOmAhOe+Esk58/UbAjWk7pSneRJUQwMoGZosBPzOwafU0ozTbYD9n3rWsUSAi
-	 q/kb6uDrvWSmxa/QJq+D5qV5HxMUsO1p1Y/uqSXWbGuJtmncdLXqtgLgjgsGD+sfaR
-	 y0PTxQVwKlpnzzSe3jUpvxoOY8gmTkb4Eh4Rp5R42uGse51UlXt8dX/cJWtmA3kRwI
-	 qwWEcIaoTMvjLyJ+axt38GH9Tcdna87VyahU6p7Cqt3+gv+iew1z/OUYT1zntVzYrt
-	 ZTrdUyl2HZcSg==
-From: Kees Cook <kees@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cMDk/M1h"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=W+EJo5wy99gMXWuNoS1NOm5WPvUy5H+9fXhyypG8QBg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789607289; v=1; x=1790212089;
+ b=cMDk/M1hP9puCm3+tvyXTzCVEo55bH+P3+63zxXHAdW56NZN+Tu/P5318QvoyF/EoO3ITUs1
+ tu1AX1QSxpH5CcbCO4imWfNVg5VVpkwB5Boha3JoqXrLyW7kjNqOoINRbnff9EOf3saZhWGgrYb
+ BzaIrsm/5R9XXIDbaZrFsplI=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by mta11.migadu.com with ESMTPS id 18a8981867d871f6;
+	Thu, 17 Sep 2026 01:07:59 +0000
+X-Mizu-Trace-ID: 18a8981867d871f6
+X-Migadu-Flow: FLOW_OUT
+Date: Thu, 17 Sep 2026 09:07:54 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Petr Mladek <pmladek@suse.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	David Gow <david@davidgow.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 1/7] seq_buf: Do not pop from an overflowed seq_buf
-Date: Wed, 16 Sep 2026 17:23:13 -0700
-Message-Id: <20260917002333.2306346-1-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260917002312.i.923-kees@kernel.org>
-References: <20260917002312.i.923-kees@kernel.org>
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	"open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)" <linux-mm@kvack.org>,
+	Ridong Chen <chenridong@xiaomi.com>
+Subject: Re: [PATCH v2 2/3] mm/mglru: add tracepoint for scan_folios()
+Message-ID: <aqs9auiVq2EplTha@fedora>
+References: <20260911102939.2485750-1-ridong.chen@linux.dev>
+ <20260911102939.2485750-3-ridong.chen@linux.dev>
+ <aqkoeJvFzqpoGeaP@fedora>
+ <e38f2b80-20f2-4787-9e07-fb601552f550@linux.dev>
+ <aqn7h3BVCCRFI2TI@fedora>
+ <ce8c2ebf-7eb4-4afc-a007-1cfcec439ede@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5368; i=kees@kernel.org; h=from:subject; bh=2dWOoAScSeIiKgVRpgMZ6w+qzOKok7SkSwpny2uNySs=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmrjb4c8Fvl7fgp+XHF6+6UIDHDzOTeb4v9Ik5KmarO1 Px+rqGho5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCIK6Qx/xV1u8hXfnfguY3eK zeGQI0qMl/8ezGn/MvuoX0HQ/v7GWww/GYu6Xp6zbDgQamLDlDl1okLI0x0vitjUAnVfXtu1Yrk nGwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce8c2ebf-7eb4-4afc-a007-1cfcec439ede@linux.dev>
 
-When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
-decrements len to size and reads buffer[size], one byte past the end of
-the buffer. It also leaves len equal to size, which no longer counts as
-overflowed, so a truncated seq_buf then looks like a complete, full one.
+On 09/16/26 at 08:17pm, Ridong Chen wrote:
+> 
+> 
+> On 9/16/2026 10:14 AM, Baoquan He wrote:
+> > On 09/15/26 at 08:17pm, Ridong Chen wrote:
+> > > 
+> > > 
+> > > On 9/15/2026 7:14 PM, Baoquan He wrote:
+> > > > On 09/11/26 at 06:29pm, Ridong Chen wrote:
+> > > > > From: Ridong Chen <chenridong@xiaomi.com>
+> > > > ...snip...
+> > > > > ---
+> > > > >    include/trace/events/vmscan.h | 63 +++++++++++++++++++++++++++++++++++
+> > > > >    mm/vmscan.c                   |  6 ++++
+> > > > >    2 files changed, 69 insertions(+)
+> > > > > 
+> > > > > diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> > > > > index 8a872990b4be..5defa8f6719c 100644
+> > > > > --- a/include/trace/events/vmscan.h
+> > > > > +++ b/include/trace/events/vmscan.h
+> > > > > @@ -392,6 +392,69 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+> > > > >    		__print_symbolic(__entry->lru, LRU_NAMES))
+> > > > >    );
+> > > > > +TRACE_EVENT(mm_mglru_scan_folios,
+> > > > > +
+> > > > > +	TP_PROTO(struct lruvec *lruvec,
+> > > > > +		int highest_zoneidx,
+> > > > > +		int order,
+> > > > > +		unsigned long nr_requested,
+> > > > > +		unsigned long nr_scanned,
+> > > > > +		unsigned long nr_sorted,
+> > > > > +		unsigned long nr_skipped,
+> > > > > +		unsigned long nr_taken,
+> > > > > +		int lru,
+> > > > > +		unsigned long max_seq,
+> > > > > +		int tier,
+> > > > > +		unsigned long min_seq),
+> > > > 
+> > > 
+> > > Thank you for your review.
+> > > 
+> > > > Do we need show nid? Guess phone vendor doesn't care about multi-NUMA
+> > > > system.
+> > > > 
+> > > 
+> > > Eh, nid is not an mglru-specific key. Since there are 12 elements here, it
+> > > can't be added here.
+> > 
+> > Hmm, we print memcg_id but not nid, it may not be so clear. How do you
+                               ^~~~ typo, s/not/no/
 
-An overflowed seq_buf has no last character to pop: the length of what
-was written has been lost, and the last byte of the buffer may be the
-NUL written by vsnprintf() or bytes that were never committed. Return
--1 for an overflowed seq_buf, as for an empty one, and leave it
-overflowed, as the rest of the seq_buf API does until seq_buf_clear()
-or seq_buf_init().
+> > differentiate several lruvec-s on one memcg? I am not very familiar with
+> > trace mechanism, do we have a element number limit?
+> > 
+> 
+> Yes, it will fail to compile if there are more than 12 elements.
+> 
+> With AI's help, see
+> 
+> include/trace/bpf_probe.h
+> ```
+> 30 #define __CAST1(a,...) __CAST_TO_U64(a)
+>  31 #define __CAST2(a,...) __CAST_TO_U64(a), __CAST1(__VA_ARGS__)
+>  32 #define __CAST3(a,...) __CAST_TO_U64(a), __CAST2(__VA_ARGS__)
+>  33 #define __CAST4(a,...) __CAST_TO_U64(a), __CAST3(__VA_ARGS__)
+>  34 #define __CAST5(a,...) __CAST_TO_U64(a), __CAST4(__VA_ARGS__)
+>  35 #define __CAST6(a,...) __CAST_TO_U64(a), __CAST5(__VA_ARGS__)
+>  36 #define __CAST7(a,...) __CAST_TO_U64(a), __CAST6(__VA_ARGS__)
+>  37 #define __CAST8(a,...) __CAST_TO_U64(a), __CAST7(__VA_ARGS__)
+>  38 #define __CAST9(a,...) __CAST_TO_U64(a), __CAST8(__VA_ARGS__)
+>  39 #define __CAST10(a,...) __CAST_TO_U64(a), __CAST9(__VA_ARGS__)
+>  40 #define __CAST11(a,...) __CAST_TO_U64(a), __CAST10(__VA_ARGS__)
+>  41 #define __CAST12(a,...) __CAST_TO_U64(a), __CAST11(__VA_ARGS__)
+> /* tracepoints with more than 12 arguments will hit build error */
+> ```
+> 
+> > Imagine I only want to trace this function, now I can see memcg_id,
+> > zone_idex, while don't know node/lruvec, that's a little pitty. Just my
+> > personal opinion, I could miss anything.
+> > 
+> 
+> Yeah, you are right. In my personal experience, I always enable
+> trace_mm_vmscan_lru_isolate and trace_mm_vmscan_lru_shrink_inactive, which
+> contain node_id. So we can see how the lruvec is scanned and shrunk, and we
+> can get node_id from trace_mm_vmscan_lru_shrink_inactive. I am not arguing
+> that this is exactly the 'correct' way to use these tracepoints, but I think
+> it is a common usage.
+> 
+> I am open to that. If we want to record node_id, we have to remove an
+> element. Maybe tier? But I would strongly recommend record memcg_id, we
+> frequently need to check the reclaim behavior of a memcg, and most of our
 
-The current callers do not reach this, e.g. trace_syscalls only calls
-trace_seq_pop() when the trace_seq it pops from has not overflowed, and
-kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
+Sorry, that's my typo which could cause misunderstanding. I meant "we print
+memcg_id but no nid, it may not be so clear". I agree with you that
+memcg_id is undispensable.
 
-Add tests for the pop corner cases.
+> scenarios are non-NUMA.
 
-Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
+Understood, mobile phone mostly is non-NUMA, while server is different.
+About adding nid, I cousulted AI too, it says it's doable.
 
-Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
-Assisted-by: LLM
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Mickaël Salaün" <mic@digikod.net>
-Cc: "Günther Noack" <gnoack@google.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Shuvam Pandey <shuvampandey1@gmail.com>
-Cc: David Gow <david@davidgow.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Cc: <linux-security-module@vger.kernel.org>
-Cc: <bpf@vger.kernel.org>
----
- include/linux/seq_buf.h   |  4 ++--
- include/linux/trace_seq.h |  4 +++-
- lib/tests/seq_buf_kunit.c | 42 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 47 insertions(+), 3 deletions(-)
+It says The 12-argument limit only counts the TP_PROTO arguments (that's
+the BPF __CAST12/bpf_trace_run12 path), not the __entry fields in
+TP_STRUCT__entry. And nid doesn't have to be a 13th argument at all. We
+already pass lruvec, so nid can be derived from it in TP_fast_assign with
+lruvec_pgdat(lruvec)->node_id.                                                    
+                                                                                                      
+e.g. for mm_mglru_scan_folios:                                                                        
+                                                                                                      
+   TP_STRUCT__entry(                                                                                  
+      __field(u64, memcg_id)                                                                          
+      __field(int, nid)                                                                               
+      __field(int, highest_zoneidx)                                                                   
+      __field(int, order)                                                                             
+      __field(unsigned long, nr_requested)                                                            
+      __field(unsigned long, nr_scanned)                                                              
+      __field(unsigned long, nr_sorted)                                                               
+      __field(unsigned long, nr_skipped)                                                              
+      __field(unsigned long, nr_taken)                                                                
+      __field(int, lru)                                                                               
+      __field(unsigned long, max_seq)                                                                 
+      __field(int, tier)                                                                              
+      __field(unsigned long, min_seq)                                                                 
+   ),                                                                                                 
+                                                                                                      
+   TP_fast_assign(                                                                                    
+      __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));                                        
+      __entry->nid      = lruvec_pgdat(lruvec)->node_id;                                              
+      __entry->highest_zoneidx = highest_zoneidx;                                                     
+      ...                                                                                             
+   ),                                                                                                 
+                                                                                                      
+   TP_printk("memcg_id=%llu nid=%d classzone=%d order=%d ...",                                        
+      __entry->memcg_id,                                                                              
+      __entry->nid,                                                                                   
+      __entry->highest_zoneidx,                                                                       
+      ...)                                                                                            
+                                                                                                      
+lruvec_pgdat() comes from include/linux/mmzone.h, which vmscan.h already                              
+pulls in via linux/mm.h, so no extra include is needed. The same pattern                              
+applies to mm_mglru_inc_max_seq in patch 3 if you want nid there too.
+I didn't try it though, please feel free to give it a shot.
 
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 9f2839e73f8a..f5a350347bc5 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -155,11 +155,11 @@ static inline void seq_buf_commit(struct seq_buf *s, int num)
-  *
-  * Removes the last written character to the seq_buf @s.
-  *
-- * Returns the last character or -1 if it is empty.
-+ * Returns the last character, or -1 if @s is empty or has overflowed.
-  */
- static inline int seq_buf_pop(struct seq_buf *s)
- {
--	if (!s->len)
-+	if (!s->len || seq_buf_has_overflowed(s))
- 		return -1;
- 
- 	s->len--;
-diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
-index 697d619aafdc..9aaa141d0965 100644
---- a/include/linux/trace_seq.h
-+++ b/include/linux/trace_seq.h
-@@ -86,7 +86,9 @@ static inline bool trace_seq_has_overflowed(struct trace_seq *s)
-  *
-  * Removes the last written character to the trace_seq @s.
-  *
-- * Returns the last character or -1 if it is empty.
-+ * Returns the last character, or -1 if @s is empty or its buffer has
-+ * overflowed. Note that a @s that is full, but has not overflowed, still
-+ * pops.
-  */
- static inline int trace_seq_pop(struct trace_seq *s)
- {
-diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index eb466386bbef..9048037f6ba0 100644
---- a/lib/tests/seq_buf_kunit.c
-+++ b/lib/tests/seq_buf_kunit.c
-@@ -113,6 +113,47 @@ static void seq_buf_putc_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
- }
- 
-+static void seq_buf_pop_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 8);
-+	struct seq_buf t;
-+	char *buf;
-+
-+	/* Nothing to pop. */
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
-+	KUNIT_EXPECT_EQ(test, s.len, 0);
-+
-+	seq_buf_puts(&s, "hello");
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'o');
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
-+
-+	/* A 0xff byte must not be mistaken for an empty buffer. */
-+	seq_buf_putc(&s, 0xff);
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 0xff);
-+
-+	/* A full buffer pops its last byte. */
-+	seq_buf_puts(&s, "abc");
-+	seq_buf_putc(&s, 'd');
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 8);
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'd');
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 7);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hellabc");
-+
-+	/*
-+	 * An overflowed buffer has nothing to pop, and stays overflowed. Use
-+	 * a buffer allocated at its exact size, so that KASAN reports any
-+	 * read past its end.
-+	 */
-+	buf = kunit_kmalloc(test, 16, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, buf);
-+	seq_buf_init(&t, buf, 16);
-+	KUNIT_EXPECT_EQ(test, seq_buf_printf(&t, "%s", "longer than sixteen"), -1);
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&t), -1);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
-+}
-+
- static void seq_buf_printf_test(struct kunit *test)
- {
- 	DECLARE_SEQ_BUF(s, 32);
-@@ -223,6 +264,7 @@ static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_puts_test),
- 	KUNIT_CASE(seq_buf_puts_overflow_test),
- 	KUNIT_CASE(seq_buf_putc_test),
-+	KUNIT_CASE(seq_buf_pop_test),
- 	KUNIT_CASE(seq_buf_printf_test),
- 	KUNIT_CASE(seq_buf_printf_overflow_test),
- 	KUNIT_CASE(seq_buf_get_buf_commit_test),
--- 
-2.34.1
+Thanks
+Baoquan
 
+> 
+
+> > > 
+> > > 
+> > > > And I checked v1 thread, seems Steven suggested to move the two int to
+> > > > avoid extra padding.
+> > > > 
+> > > 
+> > > Yeah, I will update it. I updated v2 to fix Sashiko's issue, before Steven
+> > > had any comment.
+> > > 
+> > > 
+> > > > > +
+> > > > > +	TP_ARGS(lruvec, highest_zoneidx, order, nr_requested, nr_scanned,
+> > > > > +		nr_sorted, nr_skipped, nr_taken, lru, max_seq, tier, min_seq),
+> > > > > +
+> > > > > +	TP_STRUCT__entry(
+> > > > > +		__field(u64, memcg_id)
+> > > > > +		__field(int, highest_zoneidx)
+> > > > > +		__field(int, order)
+> > > > > +		__field(unsigned long, nr_requested)
+> > > > > +		__field(unsigned long, nr_scanned)
+> > > > > +		__field(unsigned long, nr_sorted)
+> > > > > +		__field(unsigned long, nr_skipped)
+> > > > > +		__field(unsigned long, nr_taken)
+> > > > > +		__field(int, lru)
+> > > > > +		__field(unsigned long, max_seq)
+> > > > > +		__field(int, tier)
+> > > > > +		__field(unsigned long, min_seq)
+> > > > > +	),
+> > > > > +
+> > > > > +	TP_fast_assign(
+> > > > > +		__entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
+> > > > > +		__entry->highest_zoneidx = highest_zoneidx;
+> > > > > +		__entry->order = order;
+> > > > > +		__entry->nr_requested = nr_requested;
+> > > > > +		__entry->nr_scanned = nr_scanned;
+> > > > > +		__entry->nr_sorted = nr_sorted;
+> > > > > +		__entry->nr_skipped = nr_skipped;
+> > > > > +		__entry->nr_taken = nr_taken;
+> > > > > +		__entry->lru = lru;
+> > > > > +		__entry->max_seq = max_seq;
+> > > > > +		__entry->tier = tier;
+> > > > > +		__entry->min_seq = min_seq;
+> > > > > +	),
+> > > > > +
+> > > > > +	TP_printk("memcg_id=%llu classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_sorted=%lu nr_skipped=%lu nr_taken=%lu lru=%s max_seq=%lu tier=%d min_seq=%lu",
+> > > > > +		__entry->memcg_id,
+> > > > > +		__entry->highest_zoneidx,
+> > > > > +		__entry->order,
+> > > > > +		__entry->nr_requested,
+> > > > > +		__entry->nr_scanned,
+> > > > > +		__entry->nr_sorted,
+> > > > > +		__entry->nr_skipped,
+> > > > > +		__entry->nr_taken,
+> > > > > +		__print_symbolic(__entry->lru, LRU_NAMES),
+> > > > > +		__entry->max_seq,
+> > > > > +		__entry->tier,
+> > > > > +		__entry->min_seq)
+> > > > > +);
+> > > > > +
+> > > > >    TRACE_EVENT(mm_vmscan_write_folio,
+> > > > >    	TP_PROTO(struct folio *folio),
+> > > > > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > > > > index 2554a6513aa8..67f59aa73fb9 100644
+> > > > > --- a/mm/vmscan.c
+> > > > > +++ b/mm/vmscan.c
+> > > > > @@ -4876,6 +4876,12 @@ static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
+> > > > >    	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
+> > > > >    				scanned, skipped, isolated,
+> > > > >    				type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
+> > > > > +	trace_mm_mglru_scan_folios(lruvec,
+> > > > > +				   sc->reclaim_idx, sc->order, nr_to_scan,
+> > > > > +				   scanned, sorted, skipped, isolated,
+> > > > > +				   type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON,
+> > > > > +				   lrugen->max_seq, tier,
+> > > > > +				   lrugen->min_seq[type]);
+> > > > 
+> > > > And seems Steven also suggested to calculate lru, max_seq, min_seq in
+> > > > TP_fast_assign() in v1 which could be missed.
+> > > > 
+> > > 
+> > > Thanks, I will update it following Steven's suggestions.
+> > > 
+> > > 
+> > > >           TP_fast_assign(
+> > > >                   __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
+> > > >                   __entry->highest_zoneidx = sc->reclaim_idx;
+> > > >                   __entry->order = sc->order;
+> > > >                   __entry->nr_requested = nr_requested;
+> > > >                   __entry->nr_scanned = nr_scanned;
+> > > >                   __entry->nr_sorted = nr_sorted;
+> > > >                   __entry->nr_skipped = nr_skipped;
+> > > >                   __entry->nr_taken = nr_taken;
+> > > >                   __entry->lru = type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON;
+> > > >                   __entry->max_seq = lrugen->max_seq;
+> > > >                   __entry->tier = tier;
+> > > >                   __entry->min_seq = lrugen->min_seq;
+> > > >           ),
+> > > > 
+> > > 
+> > > However, 'sc' is an internal structure, so sc->order cannot be accessed in
+> > > TP_fast_assign(), and I don't think it is worth making scan_control an
+> > > external structure just for this.
+> > 
+> > Agree.
+> > 
+> > > 
+> > > > 
+> > > > >    	*isolatedp = isolated;
+> > > > >    	return scanned;
+> > > > > -- 
+> > > > > 2.34.1
+> > > > > 
+> > > 
+> > > -- 
+> > > Best regards
+> > > Ridong
+> > > 
+> 
+> -- 
+> Best regards
+> Ridong
+> 
