@@ -1,134 +1,174 @@
-Received: from mail-pj2-f43.google.com (mail-pj2-f43.google.com [74.125.227.171])
+Received: from mail-pz2-f41.google.com (mail-pz2-f41.google.com [74.125.228.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AABF37F8C7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 02:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DB239A7E1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 02:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789611867; cv=none; b=WnQETUajVlHZnWb3BVS/GkLJhHwE4pRauY1lBh2AY+EPGSnczHizYk7BQVJn6TB8+LpWbkLSgDP+5RolqDEEYfBoU5MAplQ2JGuyptXnlo5UGZRguKzfumtPPNHKcydrcZ9AM8WLvkgTxcic/v8p7iiMMAgM7n4bPEPwSf3fZWM=
+	t=1789612727; cv=none; b=H3Z4/Zf7u8e1G3w4swI1S9KO/jUxND/MJRG4PkKh67BRH4x8Xx9KHqHSO+5xnuinoe0BLpZ8d+gDYPG6RwAVIPc5kvWwIl7+Y3Xk65O05rzHsGB3HvT2bxJ0hCDIr9skr6tYp4cAt8m2GqhymAm09Tc4AuhytIcjvWWvhW57DE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789611867; c=relaxed/simple;
-	bh=E+msnkVkMuv7EW3/XyJSZb0DiTqaEOW4e8lxU2bUdDk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=WHtlHNkGHPbNUhMXtVI0BBEnKP8ObdBpjXBXeiYhwATyu0orihaKiUyqtCFSAVJrsxFEkESwawtAWWiLfIlEbZbNoZAK4hSskQEQkzyDcXZ81REZwe1dp9Ge7W+cYfFTrTLtpRPeAsIqTFKtKxsh3iWnuqx6jIhJN83UavYgrKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DfozeCmU; arc=none smtp.client-ip=74.125.227.171
+	s=arc-20240116; t=1789612727; c=relaxed/simple;
+	bh=SPJ8vYFXxs81oCoPiGRKiXQOHnvvwao8NAhit+FTgnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=noaQ54hF4tqFSPn+8IoIM+R195Eq7L/OQNQg0ohx+E0Q52hL2Oww1fpzfF2HqRhE7FCvm6OhPnGdyfSJ0TbBeys8siFSYr93srWvgAY/s6YmWvgsPzGAfYUmzLRtzxJNM3A0v7RPdzROrawQCdKgayHsb/RmQotmjWu9l7zerpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PViV9wQS; arc=none smtp.client-ip=74.125.228.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfozeCmU"
-Received: by mail-pj2-f43.google.com with SMTP id d9443c01a7336-2d93ff61046so3138595ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 19:24:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PViV9wQS"
+Received: by mail-pz2-f41.google.com with SMTP id d2e1a72fcca58-85469b2e1d7so254798b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 19:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789611865; x=1790216665; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=6EKmqByiGxzJPh+0Mll6vjXYdVK/vy8pIRVPNPfe0KQ=;
-        b=DfozeCmU42c3ZQt6zeu2eLYJawKiY6mKFmktJGlatz7kS0KtK38o/GFcK0d5SnwSzg
-         Mjdec2QO6eboPe2Jz4IkKLjF/iIv0aBkjdGl8vvrUkCEtctay+UHUKqR9DVS+y+KVpob
-         tncm79dXTOTPcDu9g9fjUDBbfMrrWN2AQ9kgDGSwv2d3BckJdz4kWNueJQrwT2QE+PI7
-         EH8vqv5Tjnq6dBxaNOQhZeBpEqZcgXhQglEoY7nbKJDPfzEdiS0Zrafzhhq6OdQYBxWH
-         dbUC21FZJB4V4N6W5UsLx6JZ1N41Q/dd4w4rYK3UVq+xlao0i/8nLQZPfdyxgebsGQDe
-         YxSA==
+        d=gmail.com; s=20251104; t=1789612722; x=1790217522; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=qtIXBwZucUITj0nDXUGS9AW/hdtRHC7e/xSPUpvvawk=;
+        b=PViV9wQSnJxfYg58moSrxWpl2dHav7NebmaDRJHobwlE6VTtH2FdihEemOq3RI+9se
+         XJrfenYd6/busoOM58bmojeDY1dgz3nZHooIpZmIqybwuZ4K56st2VZTHP+82HjdU7be
+         gnjnpyHEQmsdx8cnuetn6UnefI7uEO0q99FDBEARsnmWphbE3D5fUK430+mlM/B1OvNn
+         cyP2oBRI/B/sHCywF5vdUOnbOOKB+utJeMfawWz30HTPL/JZECdhTpxnW8jSaEQB8Z/a
+         loYV/1xccQweA+UrTXdk2dzwfpbgnS4eFvIdXEVi9yX2KMtZ8n6rY07DZnPmlPISObEW
+         Eo6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789611865; x=1790216665;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6EKmqByiGxzJPh+0Mll6vjXYdVK/vy8pIRVPNPfe0KQ=;
-        b=IVtftX1sAoqDLaghxfEhognU6HhOQN+dA6OxuR5UjxWk9tDesGpnLKy5A1p13AnEt5
-         roTsCjehramJAUcQd2clhDAl2wbYdLzE6hUt7pSJcRMBkSSXPgcgA9+hzGF6mLRLvOes
-         727fGVe4u39M9oYCXjWLYSccIJ+ESzYu5Rm1RISkY/hJixZX4QAVxj8Af89O0IP9rdlQ
-         Bq72L3efA8UrFcAJLdYiJe8Z5IqZ7EQwmutO9/vsGq8Wiujgzmf94qj36+lpK0K5VB2y
-         PHioNY7KehgXa00OmOA7dm9q3r2jgjXUm2hALh6ubz8sO4aIbS6SunahrM0KijLmeKTu
-         HHfA==
-X-Forwarded-Encrypted: i=1; AKwUvBwoesFCZelknjVC5pHlYEtUIo2LyjUWKJqIEqQDmeO4LBa50DgtiKgW516qtoXD+qIv5b3MYKacHkjtvJZZES2VIig=@vger.kernel.org
-X-Gm-Message-State: AFuF++ndhw2JKwdTRjdkhYQK96r0DJ3PveSAkUfcqmARtJ+vVwfl7Hmw
-	bhFBN3LMGZ1/mGKH1NyqA/OCX51Q1ubsYgNAyr5L15lrTbA+c65WrhFE
-X-Gm-Gg: AYBFou3UTIGG4cxV6/PJXCH0TCCGrcgJmOJaOjIyWnq8GHbGdIJ6tvLKvFzS2roHyQn
-	zQKzZGuatvajsh0Md8NDHUp/P/bVgKa+5qPThwMl7zgzVTw0XjoU/y9V+iac6Uc6LOHSD2Ucbpb
-	5BHCry0FpFKP1MdwJIegxGnZ3GIOl3E5qIU9+UbBgqEH4pEjMINtaVKWSiGAVlviflWz7lK4mj6
-	ZqNDuHrF672QDwJxPCHvwaDGGuB2ybOu9CYhkJsC/5Vx9+XeceMRW5ls9h1h6RUedzjJwA9othR
-	BXjxk05MCTaLOHsmfPokPU5tHMQZr2xaMcamzvli+sUJMqcunsRCa3Q8a3KR5sYK9t2SLIEX2hD
-	VGpV/O3KfaYnyP9Pi4sSYV7CiTPQFJXJqZH9nd8J4JbbgEcfVkxgcekQVFdzN3iuUHmPSUYiy2R
-	JCVbM+78QgAjahQyrIa/4jK7tjfn3DBh5R0ha3T/s6vqRO8shFv6LSwNqA5trP+OgY6HubSEYR3
-	x4Rwyt4tWPzihbg1JyTLws8T0NDjRM2xDyqwwd1Hrk8XyNpihE7yseHH2gDv5za0IdnOBGqlVAg
-	dCIT
-X-Received: by 2002:a17:903:1ac7:b0:2dd:60d:8b7c with SMTP id d9443c01a7336-2dd8e3f57f8mr114351815ad.13.1789611865419;
-        Wed, 16 Sep 2026 19:24:25 -0700 (PDT)
-Received: from localhost ([153.61.198.242])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd89ee3557sm18694235ad.52.2026.09.16.19.24.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Sep 2026 19:24:24 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1789612722; x=1790217522;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=qtIXBwZucUITj0nDXUGS9AW/hdtRHC7e/xSPUpvvawk=;
+        b=exxd88XLygMHyCzoKbqVbelLq6BQgpfKw9SLfqBqPOWeiRJ3OaRSV/iA5RlLx5A9V3
+         153FjKXYgXxux2X4y/zynxdB4jcMLcKQyHPLkqFg4LcS8my1dsTyujk13hktoLNu6Ax3
+         yNZUbZWUPOzuZXqHGKiofP/Cjy5GSa06+Y8N8LisO0FV8t814+HMvIM5GHpRuFxIlv9u
+         nzUPKjlFhGe5oCoYfrnWM9dc4X95RBZWu4G/L/aaVQuL/9BQCJNNd7PFyKtc0yEm1OBR
+         PC9P14MGpCSQjTDReBJvLPxJTMSo4EvYjFJu3TKAYh4HJVaHzMS4kefTwlhkY8po1240
+         etEg==
+X-Forwarded-Encrypted: i=1; AKwUvBwdcPDeDntUYjVJXcy/++QpliONJG2exu+5TfgttcGoc4zaypfKmp3QFtfNbGVkTTugxNpOEXuBVUX3NpeDB66qgkc=@vger.kernel.org
+X-Gm-Message-State: AFuF++njHJENjqwVuxht72rmQDkuSlYX0iIMfvZJGT9xVresKnnA2VM7
+	HkyDESRrVAfpAZh4WO9Z4I4OWpcV0lNchSpklpH0yCfrbcdEKy/RG1zTi/v3pQ0/vA==
+X-Gm-Gg: AYBFou1b7Wco33tuSE2D2DsGNHh56TDIeSCysbYzOyo6f5XEZS7PWcNtpyYTmNcWM28
+	jaFhKq6rjFv+ZIdh59yovzy7mu5jlbcIAFpUIDvHFpDOL13NWwcJZyFqu4Zlu2zQoO2UYwYvmBf
+	4LctCnSqSX9BEuqIXLllWcB3gXmgjl+8Ix+9GK9NepR/ZhU2CPik51Yr2sPKHcuoI+hHaduzVhv
+	cpMeqZkoAyzZ2+EZMznRkux0FqMERTdp9+bLGYDntIhnCafjbvCJNO+264NfvpTZN3dy+/O9/qS
+	HMpGnxX6Y4iIYfzG6KgNpUTVVSMNyt5IdC/gHRFW/0VShI3RzX2+AzTUYUMu9n8f0TjDBCtNgkg
+	iUPuJujULtgg/3cofDC3XFZ5TQjM3uMFA+N4Hge8JbaxUt9e3tj8Q0V7bpcXYMvV6fmkfKEIqzf
+	5lculOIkml+K7aJZTzhg+hxvX1hLsuL/p2bH0x0rhekUDjoTnU4Ci7vMs0s63XoLvvxH5m1pIYS
+	nKSts/dZs9/7APg9INr1zFBsVA=
+X-Received: by 2002:a05:6a00:b43:b0:857:72ba:ff0b with SMTP id d2e1a72fcca58-8723919dfeemr10247005b3a.19.1789612721914;
+        Wed, 16 Sep 2026 19:38:41 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:b6f9:c198:e14b:34c1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87201d1b275sm2007843b3a.51.2026.09.16.19.38.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 19:38:41 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	namhyung@kernel.org,
+	zanussi@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	donggeunyoo.kernel@gmail.com,
+	stable@vger.kernel.org,
+	sashiko-bot@kernel.org
+Subject: [PATCH v2] tracing: Compute the log2 histogram bucket in 64 bits
+Date: Thu, 17 Sep 2026 11:38:34 +0900
+Message-ID: <20260917023834.216893-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 17 Sep 2026 02:24:24 +0000
-Message-Id: <DLH8GKM4B06Y.3HTSEM5YGFR5D@gmail.com>
-To: "Josef Bacik" <josef@toxicpanda.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Frederic Weisbecker"
- <frederic@kernel.org>, "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Boqun Feng" <boqun@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko"
- <andrii@kernel.org>, <x86@kernel.org>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Puranjay
- Mohan" <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andy
- Lutomirski" <luto@kernel.org>, "Josh Triplett" <josh@joshtriplett.org>,
- "Uladzislau Rezki" <urezki@gmail.com>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Lai Jiangshan" <jiangshanlai@gmail.com>,
- "Zqiang" <qiang.zhang@linux.dev>, "Juergen Gross" <jgross@suse.com>, "Luis
- Chamberlain" <mcgrof@kernel.org>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, <linux-kernel@vger.kernel.org>,
- <rcu@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH RFC v3 06/13] bpf: Take a Tasks Trace reader in the
- trampoline glue
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-X-Mailer: aerc 0.17.0
-References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com> <20260915-b4-rcu-tasks-preempt-qs-v3-6-0ad30c4c5ee7@toxicpanda.com> <DLGFJY2ZSY5M.11K7HK2CLM6I9@gmail.com> <a51c15af0d61414aa780e7646b8e74cd.josef@toxicpanda.com>
-In-Reply-To: <a51c15af0d61414aa780e7646b8e74cd.josef@toxicpanda.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu Sep 17, 2026 at 1:16 AM UTC, Josef Bacik wrote:
-> On Wed, 16 Sep 2026 03:45:16 +0000, Alexei Starovoitov wrote:
-> > On Tue Sep 15, 2026 at 1:17 PM UTC, Josef Bacik wrote:
-> > >  	__acquires(RCU)
-> > >  {
-> > > +	bpf_tramp_read_lock_trace();
-> > >  	rcu_read_lock_dont_migrate();
-> >
-> > This is double increment. rcu_read_lock_dont_migrate() includes
-> > rcu_read_lock_trace().
->
-> Unless I'm looking at the wrong tree it doesn't, on Linus' master and on
-> bpf-next it is
->
-> 	static __always_inline void rcu_read_lock_dont_migrate(void)
-> 	{
-> 		if (IS_ENABLED(CONFIG_PREEMPT_RCU))
-> 			migrate_disable();
-> 		rcu_read_lock();
-> 	}
->
-> so plain RCU plus migrate_disable(), no Tasks Trace reader. That is why
-> the non-sleepable glue needs one added here: on these architectures the
-> trampoline image the glue returns into is only kept alive by Tasks RCU
-> while the task is a rcu_read_lock_trace() reader, and rcu_read_lock()
-> does not give us that.
+The .log2 key modifier files a value under its base-2 order:
 
-Right. I got confused. Since rcu_read_lock_trace() CS will cover
-both sleepable and non-sleepable prog types let's do it once
-per fentry+fmod_ret region and 2nd time for fexit region.
+  # echo 'hist:keys=bytes_req.log2' > events/kmem/kmalloc/trigger
 
-We probably don't want to hold it for the whole trampoline,
-since orig_call will delay freeing of progs.
+hist_field_log2() is handed a u64 and computes that order as
+ilog2(roundup_pow_of_two(val)). Both helpers take an unsigned long, so
+the bucket is wrong wherever the value does not survive the conversion.
+
+The out-of-line roundup_pow_of_two() is
+
+	return 1UL << fls_long(n - 1);
+
+which shifts by BITS_PER_LONG when n is 0, where n - 1 wraps to
+ULONG_MAX, and when n is above 2^(BITS_PER_LONG-1). Both are ordinary
+keys, because the field fetch hands every value over as a u64. On
+x86_64, keying on a u64 field and passing 2^63+1 and U64_MAX puts both
+in bucket 0, and with CONFIG_UBSAN_SHIFT=y the shift is reported:
+
+  UBSAN: shift-out-of-bounds in include/linux/log2.h:57:13
+  shift exponent 64 is too large for 64-bit type 'long unsigned int'
+
+On a 32-bit kernel the conversion drops the upper half of the value
+before any of that runs. Keying on common_timestamp.log2 six seconds
+into boot, where the timestamp needs 33 bits, one build of each gives
+
+  x86_64  { common_timestamp: ~ 2^33 }
+  i386    { common_timestamp: ~ 2^0  }
+
+hist_field_timestamp() returns the u64 unchanged, so hist_field_log2()
+is the only narrowing in that path.
+
+Compute the order from the u64. ilog2() selects __ilog2_u64() for an
+eight-byte argument, so ilog2(val - 1) + 1 for val above 1, and 0 below
+it, is order_base_2() evaluated without narrowing. It returns what the
+old expression returned on every input the old one was defined for.
+Where it was not, 0 stays in bucket 0, and the values an unsigned long
+could not hold move to the bucket their magnitude asks for.
+
+Cc: stable@vger.kernel.org
+Fixes: 4b94f5b7b4a5 ("tracing: Add hist trigger 'log2' modifier")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/all/20260914054614.82A9B1F000FF@smtp.kernel.org/
+Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+---
+Changes since v1
+(https://lore.kernel.org/all/20260916002735.808520-1-donggeunyoo.kernel@gmail.com/):
+- v1 used order_base_2(), which also takes an unsigned long and so fixed
+  only the 64-bit half.  Compute from the u64 instead.
+- Added Reported-by/Closes: the 32-bit half is claim (a) of that report,
+  which v1 did not fix.
+
+QEMU, v7.3-rc3-82-g238650ef6c7c, CONFIG_UBSAN_SHIFT=y, one kernel per arm
+per arch.  A user_events record carries a u64 field; each value is keyed
+with .log2 under its own id, so no two share a row.
+
+  value               x86_64 before  i386 before  after, both
+  0 1 2 3 4 5 2^31    correct        correct      unchanged
+  0x100000000         2^32           2^0          2^32
+  0x100000001         2^33           2^0          2^33
+  0x123456789abc      2^45           2^31         2^45
+  0x8000000000000001  2^0            2^0          2^64
+  0xffffffffffffffff  2^0            2^0          2^64
+  0xffffffffffffff9c  2^0            2^0          2^64
+
+One UBSAN shift report per arch before, none after.
+
+The i386 column needs "tracing: Fix 64-bit and signed histogram fields on
+32-bit kernels" applied; without it the field fetch truncates first and
+nothing in that column is attributable to this function.  The
+common_timestamp figures above the --- do not need it.
+
+The build-tree prefix was trimmed from the UBSAN path above.
+
+ kernel/trace/trace_events_hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 8af97fd4ee2d..86f5767dbb81 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -289,7 +289,7 @@ static u64 hist_field_log2(struct hist_field *hist_field,
+ 
+ 	u64 val = hist_fn_call(operand, elt, buffer, rbe, event);
+ 
+-	return (u64) ilog2(roundup_pow_of_two(val));
++	return val > 1 ? ilog2(val - 1) + 1 : 0;
+ }
+ 
+ static u64 hist_field_bucket(struct hist_field *hist_field,
+-- 
+2.53.0
+
