@@ -1,135 +1,171 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBC8434990
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 06:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F35240EB9C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789628139; cv=none; b=Oql093HNL81Cp36ip9v2Sqx6rJCQlOn3f7FyrzFUSENbErc0XwJLFU7XoAWM6ypr6sM3iON5L+Q6YGZkV08EtCIFB1iI+eI98x9T5Ek/SEfNgkE3JiK3ZBVJoljJEQiQ7TBRkCWrtb0+f/SnrJ2s8iHsIQsvHN0pnIJFmogHTYU=
+	t=1789635768; cv=none; b=ME1/7CTvQQIOFrhtQnjJyAp5oy6lJWdVdRtUT3RvxmfKZ9ZOeHnblpvObhUKt8ZJMMgUjAJNA41Ftx1QPs116QiN/gt8GH8C4O0rE9afJosPc0Vp3/U9sWxxf6QfEBTHJOUBoge4IBCgKAiGu+spilHg6KaTDOkj/Vs+0XM1Cds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789628139; c=relaxed/simple;
-	bh=CS2cwFdXUqiLJJhG9B82sxQOgAkaZzVT0GzQwzD3wv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWs1HpUHjuCNgEPm03QGRHhFKbtUcRenw+chXIbozmQsQpRBkDrSrgsIAo5fmXn+Nn2TAEOUhFV9FUApDyEGZsJ+bxA25fHwml81BA4cVggi4QnzZzRW7BcUiYW4P6PXLGOnX7nidSoRZTiNgDNP3OSc9mjIUyLj0uTz+2Cq8io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DpS/eJq8; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1789635768; c=relaxed/simple;
+	bh=ozQGAIMkvqqhkvZe4pcXRhsZdYTDnzGPu7fLJ+j23Bs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UWAyelpX3azeqqcwkDlBKYUB5plQZM15zGds4W3bD5xoqIEB5ajzPJ3DPN0lCaU5ZJZq6IC7W48kgtVsd64ff72Le9N8YF15EsnB3KP00F/7kP8uEqfY83Wd0/Yv128zH5Wugf+/t2ibIxB18tT+oUdUSoVihcnQd/yAnTk34a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNSjtb2s; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DpS/eJq8"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cc9f581c4so1718975e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 23:55:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNSjtb2s"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49cd5462b69so3347275e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 02:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789628135; x=1790232935; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=30cUCuKfgfqmVMRq8leKktvsIG+ddt8eRO9Ay65U310=;
-        b=DpS/eJq8R5txoU+RHSEOI3RxJDzcL/t1LE9cAdXUBhg5DrJj7MX1/b0uXgIobQRJAH
-         zm4N7vxDBI0vaEkVXaWwPI0N++USG8+U+PQsB6DT5TG7WX6z3TBrB4WHk82A/dodgjsV
-         6Kbv6HRlXlmAoRsAET+KNFOhkwUHlz7uT+UeRF4A8lLh6VmxLt+70naEBjDmZl+hZnA2
-         42kFdEWnqMrLvsNowyHf8nP2vXuCMQtDdra2oToSyRNgFekGeEyhxwPSwGcCeluaqJ+o
-         35cRKlJxL8MymA2YtSzvNAJI1I/aREexMr92N7CFQGz20I5nX/7TruS06jF++ax11Fnq
-         vfjw==
+        d=gmail.com; s=20251104; t=1789635764; x=1790240564; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6V+0YBZBpJih1IEGrwmsUOqpoN+1krggl7KJMKg77no=;
+        b=FNSjtb2s1WTy92cABFdOQXAD92IL850r8F7eq01+3QSpbDoXhvbFrBlCQJMUiBaFLa
+         cwHhIKjCFt6NUEkXjYmSYG/CDTn63IGT1bIlr5rupy97IOiPwD/ihUKPlZp1RU07pAH6
+         3PQ89DfHMSbpzxHSruERc538pLoDER//a7gNWh3BENxOSUW7BRVz2qQZCC7Qv59H+qFS
+         OVd83NBAFGB9p1cumJpZrMbUi/46Mo9qbn7jRfOw9HjG8rfpSlYeQMobyOrHzefLa/7c
+         h1PqDUQm5cqrR7hecG48I+Ejbuxjt8doFhD6h6avHnYAFQnkCQ9jMt8ZeqOaPeqzfK2p
+         DooA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789628135; x=1790232935;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=30cUCuKfgfqmVMRq8leKktvsIG+ddt8eRO9Ay65U310=;
-        b=u0HOhp/pdp5V7d8QB9XztWSrTC8/bZDtJzGhMpR4NGiHc1ihcmxmuOYi+czlZLpYzI
-         4+Ze422ajOroC1HZpZFik70ouuI+Aya4SsI6XjR/ZkyQAgzXoEr0oROQNnQdeKY6I+DI
-         /Wdn+Cdeva9s5EMuUTznaTmd26/51NeMSHD8f23y2J2BTUyv527QlpHCD/ld3ODeVLU8
-         nG1njtkbvKn/NdHBpWz8ow787LYe64imbJaK19c1TP6ZChtMerLUXJoZdkY1GvMLsV3w
-         ByTnDKvYwNavhSXQ+KRW+oMEZi3coDc87XTWySt4sKHGhvERZ3sel+ZntoOiMrRqiyZB
-         OZnw==
-X-Forwarded-Encrypted: i=1; AKwUvBzMol7wH8LZCqSX61MFmJ291pyElAAe+r5sALWkSvOE1bLOB2znD2xNIquusIMOKQ4cTjLfw6S4h9ZhsoQ3tU5LUVo=@vger.kernel.org
-X-Gm-Message-State: AFuF++m4bg+8LQ706PvtQlM8v9PIB1dVhQbKZhEC5ZcvDrJQNfauq+iT
-	tZ1kxiA5EriCKF8Ef+sU80TvQsaoRe9g7YHcjwZ305Nld2FOrYR6KK+w72OHEFuYsw==
-X-Gm-Gg: AYBFou0ykbPv5VuVIZOvjyXYLQFZRUmquebKEsp5RoEtOXROrYol04yXTm4sxNOUyPo
-	1BgGNtmzv14dj3avKEPlUu0OZLJpzUFetLWWz5iZhElJzKgjxl5KjfC9xwpM6B75yW/dE8c3Tdz
-	wTxSxyfbsqAkHKSOTaO5emwrxGioHpO/gk1YW2NTEteaCt1Hl/2xOlb1e3ozCQLMAKcQUTHDhDt
-	PuUjmdOeaniBtsVO1tYl0NZNZSk8yFpxNmflrpOHQ1JDKXgT8cSh9yai2iJLBIAD2fCAyAbw/UM
-	6T1iVIvi6oN370b8VhPyVwTjKz7zaV2gJcf6nVoE2uUWphz+2vaxpASQOLqGNA8zrsJLMzWMLpE
-	7ioeuNPydbW/HfdRcVigJU/LH0+CbLEbix5MyZgNLI5olu34sTspxEE0ImEF2KkQSCDW4A/r+E0
-	oby3dUT/z3PtJ5lbyy2VL2AVPsDK5jrAcjm0S/vEB3PeeBCP0sQW7SrZr26YOFCWAR6HUFGBL9+
-	HgAQUkytEI+83PfcRge225boGtFPGk5D409ZM+eb9k=
-X-Received: by 2002:a05:600c:1992:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-49fbd1af43dmr28764665e9.3.1789628133837;
-        Wed, 16 Sep 2026 23:55:33 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd23a815sm54524765e9.14.2026.09.16.23.55.32
+        d=1e100.net; s=20260707; t=1789635764; x=1790240564;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6V+0YBZBpJih1IEGrwmsUOqpoN+1krggl7KJMKg77no=;
+        b=g+5p5Uo3mX9Q16oK5b501SgZtZmnv6lpNz1r3til4HppJdjuK6YGw1dtLAbWydrG6X
+         tvBjn6XeGetlYE2EaZOawzUqWUd1MHHmxNwWzIi4UMFmKlN2pi+My9ouxU+tJtC9DM/c
+         ngxGxvSyCzDxzH3TRyRNi1tHw5XdG4AGFfM0nO51M4jjNiCf9Ys5eFVeG2hfRQTgkGk7
+         y7QrA3LsM3ROkFCG+QUunT+4R1ON9EoeDpv+zf80YW3gZz1zkKPtwVZpSvQ0XdasQkv3
+         WIcXAPd/qP5xWuJMhHlhFln2ZVmzpP8kRpdCgLx9gYNZTmvq79ZXQ+RlKxTWC2ZuS0HI
+         l4bQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy5kEYOuFR6jVcwFVvQ+MY+EMSFmtQ0R3l1UE7XFZ8bMp/O8pLwT5wOdWfEgNMPsQFA91PNG4JCLsg5uoXKht4a+m4=@vger.kernel.org
+X-Gm-Message-State: AFuF++lR3V2bPSC89gkjIPNtyfXCmoDWvNHXiSNaXI5EEMyXeggFv0nj
+	RspJVR3Ni/MwXuofaaKjvpB0Cz0dcZMKP4AzOIluB215rL4YoCTOyujTw9sOsKg8Sfg=
+X-Gm-Gg: AYBFou0NKjO3YyvSQwNrm0QnTWbmmemoE1bJJ5dBQ3xwtTSHEPdpfJG9NURLBOKlQIe
+	dxXAu2N/Q61KB2B5Hw/v78uquvQDFEglnlqmJWieofEFPV2TI35azGkJfkDJ33C7e0DiCuqbcS0
+	xOJUWERWj5Uy83/c0uRsPE6+x+MAk7QRN5g87J2s38L1lz+uJ9J6pa16X8LntkkSt5XXcytWhS0
+	enVmxaNGiNXptiwtlN139ght2hJWrCniITlmWX24t6cVUGzO+6Bmxnq59WqwTSZzkeqJUvgnhtr
+	EbQFlCZIuwElJLjBWu83ZtowChd/yN0fN02gzn7NT/RnI7/1Q9gSqSn7gzIGfXTn2yogVBxMByc
+	FmQNlWIfxcIUyIoQ81t2HUwAhaS5n2fKhWkMaCn4aSaMG4BODwpIJ339doR3VFbGDAEjE85hYo2
+	CL7vMBsEvemvatB+zjtocRHRupuI9jdHKSxuDrfWA0JvdUBw/d5hlbTpvpKhgo0uYTlsC2e4gdo
+	VV+TxYKrq6aXSItvDuiyS0Nev9ZT1lHgKsvGGaByDMqDelP6Q==
+X-Received: by 2002:a05:600d:1b:b0:49b:9105:cdaf with SMTP id 5b1f17b1804b1-49f1d516a12mr135848715e9.8.1789635763947;
+        Thu, 17 Sep 2026 02:02:43 -0700 (PDT)
+Received: from andreayoga.localdomain (93-42-14-189.ip84.fastwebnet.it. [93.42.14.189])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd967f1csm22095115e9.3.2026.09.17.02.02.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 23:55:32 -0700 (PDT)
-Date: Thu, 17 Sep 2026 07:55:29 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: David Carlier <devnexen@gmail.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] ring-buffer: Take cpus_read_lock() when changing the
- subbuf order
-Message-ID: <aquO4fKay-7zTBRw@google.com>
-References: <20260914182850.21449-1-devnexen@gmail.com>
- <20260916192628.274136-1-devnexen@gmail.com>
+        Thu, 17 Sep 2026 02:02:43 -0700 (PDT)
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [RFC PATCH] ftrace: Fix lost recursion records in ftrace_record_recursion()
+Date: Thu, 17 Sep 2026 11:02:17 +0200
+Message-ID: <20260917090217.6738-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260916192628.274136-1-devnexen@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 16, 2026 at 08:26:28PM +0100, David Carlier wrote:
-> A CPU coming online for the first time gets its per CPU buffer allocated
-> by trace_rb_cpu_prepare(), which then adds it to buffer->cpumask. If that
-> happens while ring_buffer_subbuf_order_set() is running, the CPU shows up
-> after the allocation loop and the install loop walks it with an empty
-> new_pages list, corrupting the buffer.
-> 
-> Take cpus_read_lock() as ring_buffer_resize() does.
-> 
-> Fixes: f9b94daa542a ("ring-buffer: Set new size of the ring buffer sub page")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Carlier <devnexen@gmail.com>
+cached_function is set to the current ip before the cmpxchg() that
+claims a slot in recursed_functions[]. When that cmpxchg() loses a
+race for the same slot, the code bumps index and retries via "goto
+again", but the retry immediately matches its own cached_function
+write and returns without ever reaching the bumped-index cmpxchg().
 
-It is usually good practice to not link the different versions of patches
-together.
+Concretely, for two writers racing on the same index:
 
-Beside,
+  CPU 0 (ip = A)                    CPU 1 (ip = B)
+  --------------                    --------------
+                                     cmpxchg(&recursed_functions[index].ip,
+                                             0, B);      // succeeds
+  cached_function = A;
+  cmpxchg(&recursed_functions[index].ip,
+          0, A);
+    // fails, old == B
+  index++;
+  goto again;
+  if (A == cached_function)         // true: matches A's own store
+          return;                   // A is dropped, not retried
 
-Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
+Once dropped this way, cached_function stays set to A, so every later
+recursion of A also hits the fast path and returns before reaching the
+retry, until some unrelated ip overwrites the cache.
 
-> ---
-> 
-> Notes:
->     v2:
->      - Reword the changelog: offlined CPUs stay in ->cpumask, so only a CPU
->        coming online for the first time can appear mid-flight (Vincent)
->      - Drop the comment above guard(cpus_read_lock)() (Vincent)
->     
->     v1: https://lore.kernel.org/linux-trace-kernel/20260914182850.21449-1-devnexen@gmail.com/
-> 
->  kernel/trace/ring_buffer.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 04bb94c29f58..e78fb4bb2195 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7464,6 +7464,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
->  	if (psize > RB_WRITE_MASK + 1)
->  		return -EINVAL;
->  
-> +	guard(cpus_read_lock)();
-> +
->  	/* prevent another thread from changing buffer sizes */
->  	guard(mutex)(&buffer->mutex);
->  
-> -- 
-> 2.55.0
-> 
+Only set cached_function once the record is confirmed present, either
+because a concurrent writer already added it or because this writer
+just claimed the slot. The retry path leaves it untouched, so it no
+longer matches against a value it just wrote for itself.
 
+Fixes: 773c16705058e ("ftrace: Add recording of functions that caused recursion")
+Assisted-by: LLM
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+---
+Can't claim to fully understand the logic behind ftrace_record_recursion().
+Notably, its smp_mb__after_atomic() calls and the lack of barrier comments
+both look suspicious to my LKMM-trained eyes.  ;)  Hence the RFC.
+---
+ kernel/trace/trace_recursion_record.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_recursion_record.c b/kernel/trace/trace_recursion_record.c
+index bac4bc844ccd8..f42089c30f53c 100644
+--- a/kernel/trace/trace_recursion_record.c
++++ b/kernel/trace/trace_recursion_record.c
+@@ -17,8 +17,8 @@ static struct recursed_functions recursed_functions[CONFIG_FTRACE_RECORD_RECURSI
+ static atomic_t nr_records;
+ 
+ /*
+- * Cache the last found function. Yes, updates to this is racey, but
+- * so is memory cache ;-)
++ * Cache the last function confirmed present in recursed_functions[].
++ * Updates to this are racy, but this is only a best-effort cache.
+  */
+ static unsigned long cached_function;
+ 
+@@ -67,24 +67,27 @@ void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
+ 		}
+ 	}
+ 
+-	cached_function = ip;
+-
+ 	/*
+ 	 * We only want to add a function if it hasn't been added before.
+-	 * Add to the current location before incrementing the count.
+-	 * If it fails to add, then increment the index (save in i)
+-	 * and try again.
++	 * Claim the current slot before incrementing the count. If the slot
++	 * is occupied by another function, advance to the next slot and retry.
++	 *
++	 * Do not update cached_function until ip is known to be present;
++	 * otherwise the retry would match its own cache update.
+ 	 */
+ 	old = cmpxchg(&recursed_functions[index].ip, 0, ip);
+ 	if (old != 0) {
+ 		/* Did something else already added this for us? */
+-		if (old == ip)
++		if (old == ip) {
++			cached_function = ip;
+ 			return;
++		}
+ 		/* Try the next location (use i for the next index) */
+ 		index++;
+ 		goto again;
+ 	}
+ 
++	cached_function = ip;
+ 	recursed_functions[index].parent_ip = parent_ip;
+ 
+ 	/*
 -- 
-Vincent
+2.53.0
+
