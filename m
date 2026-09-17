@@ -1,139 +1,90 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
+Received: from mta0.migadu.com (out-101.mta0.migadu.com [91.218.175.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309322857F0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 01:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DBE2F12AB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 01:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789607833; cv=none; b=UKJciNb0XdqP5EH0jY0XVOQpOZFifIzUSm4ai0y5lSzoWHorrhp7pCVUTTJtkS44haApK/zR3urYbk6zJVeTLenJSk5Q8WGHGznaq+aC0Vymm4cZ7uwvQVRxlQYd97Lg95iCGLKdy5Rjm9l9zcKzQXuHOyeNnC0R/sPt1vQD8Gk=
+	t=1789608230; cv=none; b=mtJpeWP7hyG69QOsnjM8sLCX4k27DtL3B9+vPHxGmF3MJMiL9Y7qweN8a7OxEs3sxsSxI1yUjV6LmB5enTrmVgQ3+naZwUgbk7Vf7f0e2NKI2f+YRCuOWmUX1kffDzw3fZWETLqgHMuZzSLl50ebnmmxhnt8M3XIe9wvZikSktA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789607833; c=relaxed/simple;
-	bh=3fICS9Csi+nlJQK43ytP+dop+wq8MBzte5BeTYJ0koo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mDmS6qNciBzkq8f1+3A7Ad5KVma/39NnJ8LfAE/hh5G2iGhZn1IzgYk4dcQdBdYsYsxMxgIUD89LaTUXukc0nzCF6bVOYQxmWZpACvKHenApcuw8PWymzvCHdPoJgJBFAXLk2IO2Wffx1IQ5NeaZNlVx2xCiH5LWwHi3njwl2rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=NuucbmMw; arc=none smtp.client-ip=74.125.230.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1789608230; c=relaxed/simple;
+	bh=wDg1fKXgo2gnh1KZoLEb6HenGD7qVnWNZCNvYn7EiGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjDl8q63Nps1yb3BxrpuGeQlm3HBIbcPsjUmqdT6oUiaegZKV63GD/xiKCKO2QVxlwdHSmuvbauNv+qk42Q5pdflLoFzODLByWF4PQeSHk0GL23pGGVWcP86f+4lFF1FtRojZZj5n3GLkfSg1SEu/ky2bocqi+svp9A1705MBBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NSXjE+eQ; arc=none smtp.client-ip=91.218.175.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="NuucbmMw"
-Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-52fb767d286so2124241cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 18:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789607831; x=1790212631; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=+5zFJ55cgnEY1OXRIavKUOEIG38H34pgZ3VgFg2bzwY=;
-        b=NuucbmMwYB4rH4LdRz3rj+oUbzdl2pMAlrFl7js/lFG2OHxI06CjJtAFlNYeIWYgWc
-         LOvPOwuYYcIFYxsnkb96dz6qi6uhawdiYNSt7ClpcxkPrPFqFSy2oVhXRQnMCYQuFarC
-         y89aYxmRrxYboR06vMqzQU24Tm8b58j/qalTYBXmRhB6U95wFsU5NbwvWt2xt/FUlp3d
-         fiFbursIuDNdBjHockPrWaBPAZp9jUaJtkvXCYvepgUQyM/blMO4Il8/S2UBMVmebDXn
-         214o8+doZShoWzIX5WWWOTBtWUADeNz5c3TK/HQmyLdLaW96Y3nW7WnE4qNAt3th1kKR
-         xDZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789607831; x=1790212631;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+5zFJ55cgnEY1OXRIavKUOEIG38H34pgZ3VgFg2bzwY=;
-        b=RQScomhjJGVE9gsyPlfjdsWHVJQ6FfWCXQNdeuSKPDRTWTPacDXL4L5YFTgxxS2NAZ
-         ZwJ9zHBGeZHlR2cBq72+pdGfKKqaMpuDvQSYmVEd7f0XhlEKK4c4CQpMSxHk2OmHLMvZ
-         s1uykbePNyaSWsrl3Jf5xQgoTkmsu8j5XYQ0BdHEBMQLcknu67JaQGq+hyCBerEy4kWP
-         jFL+/sjM6agZzmq24IcI09n8LtFXpu0YacPLC3nbKQCM6YvESlGUvLyegfi/T72jKq71
-         Gda4Fsf2tZcoMmPtmSWNNWrJJAuJUQL1dZ1/62tuWd8B4qccD2kBDXEx46SWtXzA4NGh
-         hFOQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxsoHwZdgBVjiR6JOuEe2jG4B3JS+xPXUTGjqF6nGMFJXzaweOeSofU52N6DtVTflR7wfMFetGUn+q+hUDJpECNtEg=@vger.kernel.org
-X-Gm-Message-State: AFuF++kj0X7xeMsnc3R8UoC+Fu7kBM+SrzY24PGtPdgT+wPudiPg3tTJ
-	E5swX9ynjYCY5lmvhWjCJEyF/HxDe9vQaLcZDY0khYJr60taymkFZ/zcUX84w7rrCu4=
-X-Gm-Gg: AYBFou1b1nKyRFxFCx+U9ZwjPJ0wzSFmul613jVAdJH209JihDfw0qoaLO7F9mj9bvo
-	v0sCHpatjGZqJClNSk6ngIctdlsyT17Q3sTi+/4mG8v/+A/snLgaBgY/WVLT7PyBios9qBPjolv
-	0biJEy950lA2UHitqk+mbssaH9LBKTv4hCGYIcfh14KiUYTi9DxmmGlzDGxNul5g+TXLtV7h0HQ
-	7ZUDvMi/GHA3LTeuiF0FwmbrzWts29Y3zcVmMWwrB38X0ymWSXLb5lYW8/IMoUi9lfv8NuZa+KN
-	hUkMkawWuPHfiom55tcbKdyqOlRPTI/ScVK7eP8tJdib68TeI8tnzOySsYIebwvCC7Kqbiyu2uY
-	/QRIC0zS8nlRwOAbxiktcXrsV0nql2P2abdmg7P+FIFG+t3tZkKLUZv6Q6EkVhaXPrAM/3eYmk6
-	I0762C4pDRqBQKfK3fpSuuHU2PzxDqZHqiJiYqB1vizZ2jBxo0lXo5DFLs2cogkuUznYwZVqxIO
-	+G+T8rD5fK8Psmt16E4AQZ5d6fLHfQFLeI3fyVGjU0ATqxEkAg7X4pb
-X-Received: by 2002:a05:622a:1a93:b0:530:4249:e7a9 with SMTP id d75a77b69052e-5327ed78742mr91407171cf.13.1789607830859;
-        Wed, 16 Sep 2026 18:17:10 -0700 (PDT)
-Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5326200b8d1sm35571491cf.12.2026.09.16.18.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 18:17:09 -0700 (PDT)
-Date: Thu, 17 Sep 2026 01:16:58 +0000
-Message-ID: <a51c15af0d61414aa780e7646b8e74cd.josef@toxicpanda.com>
-From: Josef Bacik <josef@toxicpanda.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Andy Lutomirski <luto@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
-	Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH RFC v3 06/13] bpf: Take a Tasks Trace reader in the trampoline glue
-In-Reply-To: <DLGFJY2ZSY5M.11K7HK2CLM6I9@gmail.com>
-References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com> <20260915-b4-rcu-tasks-preempt-qs-v3-6-0ad30c4c5ee7@toxicpanda.com> <DLGFJY2ZSY5M.11K7HK2CLM6I9@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NSXjE+eQ"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=wDg1fKXgo2gnh1KZoLEb6HenGD7qVnWNZCNvYn7EiGM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789608226; v=1; x=1790213026;
+ b=NSXjE+eQjTHs61mS8ahOdvlpL97CYi3Oil7vbxswIjGlHKEgS5xxU62Mx1lYLoYG0Bfa1DrG
+ zOKJP4j8FYwIPImThj88zDmnj7iuq7IKZi1chAB9Lsl/+cfQZh8ej3sNWqww9qhZaAeDv+Dh3Y7
+ 2SAgwrYf/1MAFCRZ6hyVz3cE=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by mta10.migadu.com with ESMTPS id 19db6483ce23b745;
+	Thu, 17 Sep 2026 01:23:46 +0000
+X-Mizu-Trace-ID: 19db6483ce23b745
+X-Migadu-Flow: FLOW_OUT
+Date: Thu, 17 Sep 2026 09:23:39 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Ridong Chen <ridong.chen@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	"open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)" <linux-mm@kvack.org>,
+	Ridong Chen <chenridong@xiaomi.com>
+Subject: Re: [PATCH v2 2/3] mm/mglru: add tracepoint for scan_folios()
+Message-ID: <aqtBG9Oyu-RVI7jv@fedora>
+References: <20260911102939.2485750-1-ridong.chen@linux.dev>
+ <20260911102939.2485750-3-ridong.chen@linux.dev>
+ <aqkoeJvFzqpoGeaP@fedora>
+ <e38f2b80-20f2-4787-9e07-fb601552f550@linux.dev>
+ <aqn7h3BVCCRFI2TI@fedora>
+ <20260916095122.50cbb620@robin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260916095122.50cbb620@robin>
 
-On Wed, 16 Sep 2026 03:45:16 +0000, Alexei Starovoitov wrote:
-> On Tue Sep 15, 2026 at 1:17 PM UTC, Josef Bacik wrote:
-> >  	__acquires(RCU)
-> >  {
-> > +	bpf_tramp_read_lock_trace();
-> >  	rcu_read_lock_dont_migrate();
->
-> This is double increment. rcu_read_lock_dont_migrate() includes
-> rcu_read_lock_trace().
+On 09/16/26 at 09:51am, Steven Rostedt wrote:
+> On Wed, 16 Sep 2026 10:14:31 +0800
+> Baoquan He <baoquan.he@linux.dev> wrote:
+> 
+> > > However, 'sc' is an internal structure, so sc->order cannot be accessed in
+> > > TP_fast_assign(), and I don't think it is worth making scan_control an
+> > > external structure just for this.  
+> > 
+> > Agree.
+> 
+> Or what you can do is to move include/trace/events/vmscan.h to
+> mm/trace_mm.h (or whatever you want to call it) and struct scan_control
+> into "vmscan.h" and then you can use internal structures within the
+> trace event.
 
-Unless I'm looking at the wrong tree it doesn't, on Linus' master and on
-bpf-next it is
+Sounds very reasonable, thanks for the valuable input.
 
-	static __always_inline void rcu_read_lock_dont_migrate(void)
-	{
-		if (IS_ENABLED(CONFIG_PREEMPT_RCU))
-			migrate_disable();
-		rcu_read_lock();
-	}
+> 
+> Up to you, but this is what other subsystems have done.
 
-so plain RCU plus migrate_disable(), no Tasks Trace reader. That is why
-the non-sleepable glue needs one added here: on these architectures the
-trampoline image the glue returns into is only kept alive by Tasks RCU
-while the task is a rcu_read_lock_trace() reader, and rcu_read_lock()
-does not give us that.
+Yeah, leave this to Ridong to decide.
 
-It is two counters for a non-sleepable prog on x86-64/arm64 though,
-rcu_read_lock()'s and trc_reader_nesting plus the SRCU-fast percpu one,
-if that is what you meant. I don't see a way around it short of not
-using Tasks Trace as the trampoline reader: the prog still needs plain
-RCU for everything it dereferences, and the image needs something that
-survives preemption. It is compiled out on every other configuration and
-nothing changes in the JITed image. If you would rather the reader be
-taken once around the whole image in the JIT instead of per prog in the
-glue (which would also let the fentry-only teardown stay a single grace
-period), I can do that for x86 and arm64, it is what v2 did with the
-private counter.
-
-Separately, Junseo's "bpf: keep trampoline progs alive until image
-release" also adds bpf_tramp_image::nr_progs; if that lands first I will
-just use it here.
-
-Thanks,
-
-Josef
