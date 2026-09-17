@@ -1,338 +1,139 @@
-Received: from mta0.migadu.com (out-138.mta0.migadu.com [91.218.175.138])
+Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F5A274670
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 01:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309322857F0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 01:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789607295; cv=none; b=O5wcB7BHIrMbxFGaB25EPOR4VUhAobDXvgEkxnjcoGYYjt4LOVLuoHfKoOjxIIQdIafFRB/tQXPqa0NzcKwUh0WeNlPkGeTwqA1dGgZKHbv4/fjTDllSjwwa1NJRbRLav5EbDRWgO23v5mFP+osXVZ9HkSjiBGp0cnEJRcfb1VE=
+	t=1789607833; cv=none; b=UKJciNb0XdqP5EH0jY0XVOQpOZFifIzUSm4ai0y5lSzoWHorrhp7pCVUTTJtkS44haApK/zR3urYbk6zJVeTLenJSk5Q8WGHGznaq+aC0Vymm4cZ7uwvQVRxlQYd97Lg95iCGLKdy5Rjm9l9zcKzQXuHOyeNnC0R/sPt1vQD8Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789607295; c=relaxed/simple;
-	bh=W+EJo5wy99gMXWuNoS1NOm5WPvUy5H+9fXhyypG8QBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cbt+164a9Lsz+QG/Mt7ipJo30Jj3m6gVwoFA04v0Uzm/gI1LCHSuR9uHbrF4OD/P/twCYxIu53P3v0617OJDD6BqINSGO6xmmL8Gu+eIK9KhEnqb9YAUX2In3D88wzydFYuhVaBVeXHXebjsJlfE0QLjpdVc5unRSLo9zop0Rm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cMDk/M1h; arc=none smtp.client-ip=91.218.175.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789607833; c=relaxed/simple;
+	bh=3fICS9Csi+nlJQK43ytP+dop+wq8MBzte5BeTYJ0koo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mDmS6qNciBzkq8f1+3A7Ad5KVma/39NnJ8LfAE/hh5G2iGhZn1IzgYk4dcQdBdYsYsxMxgIUD89LaTUXukc0nzCF6bVOYQxmWZpACvKHenApcuw8PWymzvCHdPoJgJBFAXLk2IO2Wffx1IQ5NeaZNlVx2xCiH5LWwHi3njwl2rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=NuucbmMw; arc=none smtp.client-ip=74.125.230.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cMDk/M1h"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=W+EJo5wy99gMXWuNoS1NOm5WPvUy5H+9fXhyypG8QBg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789607289; v=1; x=1790212089;
- b=cMDk/M1hP9puCm3+tvyXTzCVEo55bH+P3+63zxXHAdW56NZN+Tu/P5318QvoyF/EoO3ITUs1
- tu1AX1QSxpH5CcbCO4imWfNVg5VVpkwB5Boha3JoqXrLyW7kjNqOoINRbnff9EOf3saZhWGgrYb
- BzaIrsm/5R9XXIDbaZrFsplI=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 18a8981867d871f6;
-	Thu, 17 Sep 2026 01:07:59 +0000
-X-Mizu-Trace-ID: 18a8981867d871f6
-X-Migadu-Flow: FLOW_OUT
-Date: Thu, 17 Sep 2026 09:07:54 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	"open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)" <linux-mm@kvack.org>,
-	Ridong Chen <chenridong@xiaomi.com>
-Subject: Re: [PATCH v2 2/3] mm/mglru: add tracepoint for scan_folios()
-Message-ID: <aqs9auiVq2EplTha@fedora>
-References: <20260911102939.2485750-1-ridong.chen@linux.dev>
- <20260911102939.2485750-3-ridong.chen@linux.dev>
- <aqkoeJvFzqpoGeaP@fedora>
- <e38f2b80-20f2-4787-9e07-fb601552f550@linux.dev>
- <aqn7h3BVCCRFI2TI@fedora>
- <ce8c2ebf-7eb4-4afc-a007-1cfcec439ede@linux.dev>
+	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="NuucbmMw"
+Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-52fb767d286so2124241cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Sep 2026 18:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda.com; s=google; t=1789607831; x=1790212631; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+5zFJ55cgnEY1OXRIavKUOEIG38H34pgZ3VgFg2bzwY=;
+        b=NuucbmMwYB4rH4LdRz3rj+oUbzdl2pMAlrFl7js/lFG2OHxI06CjJtAFlNYeIWYgWc
+         LOvPOwuYYcIFYxsnkb96dz6qi6uhawdiYNSt7ClpcxkPrPFqFSy2oVhXRQnMCYQuFarC
+         y89aYxmRrxYboR06vMqzQU24Tm8b58j/qalTYBXmRhB6U95wFsU5NbwvWt2xt/FUlp3d
+         fiFbursIuDNdBjHockPrWaBPAZp9jUaJtkvXCYvepgUQyM/blMO4Il8/S2UBMVmebDXn
+         214o8+doZShoWzIX5WWWOTBtWUADeNz5c3TK/HQmyLdLaW96Y3nW7WnE4qNAt3th1kKR
+         xDZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789607831; x=1790212631;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+5zFJ55cgnEY1OXRIavKUOEIG38H34pgZ3VgFg2bzwY=;
+        b=RQScomhjJGVE9gsyPlfjdsWHVJQ6FfWCXQNdeuSKPDRTWTPacDXL4L5YFTgxxS2NAZ
+         ZwJ9zHBGeZHlR2cBq72+pdGfKKqaMpuDvQSYmVEd7f0XhlEKK4c4CQpMSxHk2OmHLMvZ
+         s1uykbePNyaSWsrl3Jf5xQgoTkmsu8j5XYQ0BdHEBMQLcknu67JaQGq+hyCBerEy4kWP
+         jFL+/sjM6agZzmq24IcI09n8LtFXpu0YacPLC3nbKQCM6YvESlGUvLyegfi/T72jKq71
+         Gda4Fsf2tZcoMmPtmSWNNWrJJAuJUQL1dZ1/62tuWd8B4qccD2kBDXEx46SWtXzA4NGh
+         hFOQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxsoHwZdgBVjiR6JOuEe2jG4B3JS+xPXUTGjqF6nGMFJXzaweOeSofU52N6DtVTflR7wfMFetGUn+q+hUDJpECNtEg=@vger.kernel.org
+X-Gm-Message-State: AFuF++kj0X7xeMsnc3R8UoC+Fu7kBM+SrzY24PGtPdgT+wPudiPg3tTJ
+	E5swX9ynjYCY5lmvhWjCJEyF/HxDe9vQaLcZDY0khYJr60taymkFZ/zcUX84w7rrCu4=
+X-Gm-Gg: AYBFou1b1nKyRFxFCx+U9ZwjPJ0wzSFmul613jVAdJH209JihDfw0qoaLO7F9mj9bvo
+	v0sCHpatjGZqJClNSk6ngIctdlsyT17Q3sTi+/4mG8v/+A/snLgaBgY/WVLT7PyBios9qBPjolv
+	0biJEy950lA2UHitqk+mbssaH9LBKTv4hCGYIcfh14KiUYTi9DxmmGlzDGxNul5g+TXLtV7h0HQ
+	7ZUDvMi/GHA3LTeuiF0FwmbrzWts29Y3zcVmMWwrB38X0ymWSXLb5lYW8/IMoUi9lfv8NuZa+KN
+	hUkMkawWuPHfiom55tcbKdyqOlRPTI/ScVK7eP8tJdib68TeI8tnzOySsYIebwvCC7Kqbiyu2uY
+	/QRIC0zS8nlRwOAbxiktcXrsV0nql2P2abdmg7P+FIFG+t3tZkKLUZv6Q6EkVhaXPrAM/3eYmk6
+	I0762C4pDRqBQKfK3fpSuuHU2PzxDqZHqiJiYqB1vizZ2jBxo0lXo5DFLs2cogkuUznYwZVqxIO
+	+G+T8rD5fK8Psmt16E4AQZ5d6fLHfQFLeI3fyVGjU0ATqxEkAg7X4pb
+X-Received: by 2002:a05:622a:1a93:b0:530:4249:e7a9 with SMTP id d75a77b69052e-5327ed78742mr91407171cf.13.1789607830859;
+        Wed, 16 Sep 2026 18:17:10 -0700 (PDT)
+Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5326200b8d1sm35571491cf.12.2026.09.16.18.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 18:17:09 -0700 (PDT)
+Date: Thu, 17 Sep 2026 01:16:58 +0000
+Message-ID: <a51c15af0d61414aa780e7646b8e74cd.josef@toxicpanda.com>
+From: Josef Bacik <josef@toxicpanda.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
+	Andy Lutomirski <luto@kernel.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
+	Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC v3 06/13] bpf: Take a Tasks Trace reader in the trampoline glue
+In-Reply-To: <DLGFJY2ZSY5M.11K7HK2CLM6I9@gmail.com>
+References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com> <20260915-b4-rcu-tasks-preempt-qs-v3-6-0ad30c4c5ee7@toxicpanda.com> <DLGFJY2ZSY5M.11K7HK2CLM6I9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce8c2ebf-7eb4-4afc-a007-1cfcec439ede@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 09/16/26 at 08:17pm, Ridong Chen wrote:
-> 
-> 
-> On 9/16/2026 10:14 AM, Baoquan He wrote:
-> > On 09/15/26 at 08:17pm, Ridong Chen wrote:
-> > > 
-> > > 
-> > > On 9/15/2026 7:14 PM, Baoquan He wrote:
-> > > > On 09/11/26 at 06:29pm, Ridong Chen wrote:
-> > > > > From: Ridong Chen <chenridong@xiaomi.com>
-> > > > ...snip...
-> > > > > ---
-> > > > >    include/trace/events/vmscan.h | 63 +++++++++++++++++++++++++++++++++++
-> > > > >    mm/vmscan.c                   |  6 ++++
-> > > > >    2 files changed, 69 insertions(+)
-> > > > > 
-> > > > > diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-> > > > > index 8a872990b4be..5defa8f6719c 100644
-> > > > > --- a/include/trace/events/vmscan.h
-> > > > > +++ b/include/trace/events/vmscan.h
-> > > > > @@ -392,6 +392,69 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
-> > > > >    		__print_symbolic(__entry->lru, LRU_NAMES))
-> > > > >    );
-> > > > > +TRACE_EVENT(mm_mglru_scan_folios,
-> > > > > +
-> > > > > +	TP_PROTO(struct lruvec *lruvec,
-> > > > > +		int highest_zoneidx,
-> > > > > +		int order,
-> > > > > +		unsigned long nr_requested,
-> > > > > +		unsigned long nr_scanned,
-> > > > > +		unsigned long nr_sorted,
-> > > > > +		unsigned long nr_skipped,
-> > > > > +		unsigned long nr_taken,
-> > > > > +		int lru,
-> > > > > +		unsigned long max_seq,
-> > > > > +		int tier,
-> > > > > +		unsigned long min_seq),
-> > > > 
-> > > 
-> > > Thank you for your review.
-> > > 
-> > > > Do we need show nid? Guess phone vendor doesn't care about multi-NUMA
-> > > > system.
-> > > > 
-> > > 
-> > > Eh, nid is not an mglru-specific key. Since there are 12 elements here, it
-> > > can't be added here.
-> > 
-> > Hmm, we print memcg_id but not nid, it may not be so clear. How do you
-                               ^~~~ typo, s/not/no/
+On Wed, 16 Sep 2026 03:45:16 +0000, Alexei Starovoitov wrote:
+> On Tue Sep 15, 2026 at 1:17 PM UTC, Josef Bacik wrote:
+> >  	__acquires(RCU)
+> >  {
+> > +	bpf_tramp_read_lock_trace();
+> >  	rcu_read_lock_dont_migrate();
+>
+> This is double increment. rcu_read_lock_dont_migrate() includes
+> rcu_read_lock_trace().
 
-> > differentiate several lruvec-s on one memcg? I am not very familiar with
-> > trace mechanism, do we have a element number limit?
-> > 
-> 
-> Yes, it will fail to compile if there are more than 12 elements.
-> 
-> With AI's help, see
-> 
-> include/trace/bpf_probe.h
-> ```
-> 30 #define __CAST1(a,...) __CAST_TO_U64(a)
->  31 #define __CAST2(a,...) __CAST_TO_U64(a), __CAST1(__VA_ARGS__)
->  32 #define __CAST3(a,...) __CAST_TO_U64(a), __CAST2(__VA_ARGS__)
->  33 #define __CAST4(a,...) __CAST_TO_U64(a), __CAST3(__VA_ARGS__)
->  34 #define __CAST5(a,...) __CAST_TO_U64(a), __CAST4(__VA_ARGS__)
->  35 #define __CAST6(a,...) __CAST_TO_U64(a), __CAST5(__VA_ARGS__)
->  36 #define __CAST7(a,...) __CAST_TO_U64(a), __CAST6(__VA_ARGS__)
->  37 #define __CAST8(a,...) __CAST_TO_U64(a), __CAST7(__VA_ARGS__)
->  38 #define __CAST9(a,...) __CAST_TO_U64(a), __CAST8(__VA_ARGS__)
->  39 #define __CAST10(a,...) __CAST_TO_U64(a), __CAST9(__VA_ARGS__)
->  40 #define __CAST11(a,...) __CAST_TO_U64(a), __CAST10(__VA_ARGS__)
->  41 #define __CAST12(a,...) __CAST_TO_U64(a), __CAST11(__VA_ARGS__)
-> /* tracepoints with more than 12 arguments will hit build error */
-> ```
-> 
-> > Imagine I only want to trace this function, now I can see memcg_id,
-> > zone_idex, while don't know node/lruvec, that's a little pitty. Just my
-> > personal opinion, I could miss anything.
-> > 
-> 
-> Yeah, you are right. In my personal experience, I always enable
-> trace_mm_vmscan_lru_isolate and trace_mm_vmscan_lru_shrink_inactive, which
-> contain node_id. So we can see how the lruvec is scanned and shrunk, and we
-> can get node_id from trace_mm_vmscan_lru_shrink_inactive. I am not arguing
-> that this is exactly the 'correct' way to use these tracepoints, but I think
-> it is a common usage.
-> 
-> I am open to that. If we want to record node_id, we have to remove an
-> element. Maybe tier? But I would strongly recommend record memcg_id, we
-> frequently need to check the reclaim behavior of a memcg, and most of our
+Unless I'm looking at the wrong tree it doesn't, on Linus' master and on
+bpf-next it is
 
-Sorry, that's my typo which could cause misunderstanding. I meant "we print
-memcg_id but no nid, it may not be so clear". I agree with you that
-memcg_id is undispensable.
+	static __always_inline void rcu_read_lock_dont_migrate(void)
+	{
+		if (IS_ENABLED(CONFIG_PREEMPT_RCU))
+			migrate_disable();
+		rcu_read_lock();
+	}
 
-> scenarios are non-NUMA.
+so plain RCU plus migrate_disable(), no Tasks Trace reader. That is why
+the non-sleepable glue needs one added here: on these architectures the
+trampoline image the glue returns into is only kept alive by Tasks RCU
+while the task is a rcu_read_lock_trace() reader, and rcu_read_lock()
+does not give us that.
 
-Understood, mobile phone mostly is non-NUMA, while server is different.
-About adding nid, I cousulted AI too, it says it's doable.
+It is two counters for a non-sleepable prog on x86-64/arm64 though,
+rcu_read_lock()'s and trc_reader_nesting plus the SRCU-fast percpu one,
+if that is what you meant. I don't see a way around it short of not
+using Tasks Trace as the trampoline reader: the prog still needs plain
+RCU for everything it dereferences, and the image needs something that
+survives preemption. It is compiled out on every other configuration and
+nothing changes in the JITed image. If you would rather the reader be
+taken once around the whole image in the JIT instead of per prog in the
+glue (which would also let the fentry-only teardown stay a single grace
+period), I can do that for x86 and arm64, it is what v2 did with the
+private counter.
 
-It says The 12-argument limit only counts the TP_PROTO arguments (that's
-the BPF __CAST12/bpf_trace_run12 path), not the __entry fields in
-TP_STRUCT__entry. And nid doesn't have to be a 13th argument at all. We
-already pass lruvec, so nid can be derived from it in TP_fast_assign with
-lruvec_pgdat(lruvec)->node_id.                                                    
-                                                                                                      
-e.g. for mm_mglru_scan_folios:                                                                        
-                                                                                                      
-   TP_STRUCT__entry(                                                                                  
-      __field(u64, memcg_id)                                                                          
-      __field(int, nid)                                                                               
-      __field(int, highest_zoneidx)                                                                   
-      __field(int, order)                                                                             
-      __field(unsigned long, nr_requested)                                                            
-      __field(unsigned long, nr_scanned)                                                              
-      __field(unsigned long, nr_sorted)                                                               
-      __field(unsigned long, nr_skipped)                                                              
-      __field(unsigned long, nr_taken)                                                                
-      __field(int, lru)                                                                               
-      __field(unsigned long, max_seq)                                                                 
-      __field(int, tier)                                                                              
-      __field(unsigned long, min_seq)                                                                 
-   ),                                                                                                 
-                                                                                                      
-   TP_fast_assign(                                                                                    
-      __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));                                        
-      __entry->nid      = lruvec_pgdat(lruvec)->node_id;                                              
-      __entry->highest_zoneidx = highest_zoneidx;                                                     
-      ...                                                                                             
-   ),                                                                                                 
-                                                                                                      
-   TP_printk("memcg_id=%llu nid=%d classzone=%d order=%d ...",                                        
-      __entry->memcg_id,                                                                              
-      __entry->nid,                                                                                   
-      __entry->highest_zoneidx,                                                                       
-      ...)                                                                                            
-                                                                                                      
-lruvec_pgdat() comes from include/linux/mmzone.h, which vmscan.h already                              
-pulls in via linux/mm.h, so no extra include is needed. The same pattern                              
-applies to mm_mglru_inc_max_seq in patch 3 if you want nid there too.
-I didn't try it though, please feel free to give it a shot.
+Separately, Junseo's "bpf: keep trampoline progs alive until image
+release" also adds bpf_tramp_image::nr_progs; if that lands first I will
+just use it here.
 
-Thanks
-Baoquan
+Thanks,
 
-> 
-
-> > > 
-> > > 
-> > > > And I checked v1 thread, seems Steven suggested to move the two int to
-> > > > avoid extra padding.
-> > > > 
-> > > 
-> > > Yeah, I will update it. I updated v2 to fix Sashiko's issue, before Steven
-> > > had any comment.
-> > > 
-> > > 
-> > > > > +
-> > > > > +	TP_ARGS(lruvec, highest_zoneidx, order, nr_requested, nr_scanned,
-> > > > > +		nr_sorted, nr_skipped, nr_taken, lru, max_seq, tier, min_seq),
-> > > > > +
-> > > > > +	TP_STRUCT__entry(
-> > > > > +		__field(u64, memcg_id)
-> > > > > +		__field(int, highest_zoneidx)
-> > > > > +		__field(int, order)
-> > > > > +		__field(unsigned long, nr_requested)
-> > > > > +		__field(unsigned long, nr_scanned)
-> > > > > +		__field(unsigned long, nr_sorted)
-> > > > > +		__field(unsigned long, nr_skipped)
-> > > > > +		__field(unsigned long, nr_taken)
-> > > > > +		__field(int, lru)
-> > > > > +		__field(unsigned long, max_seq)
-> > > > > +		__field(int, tier)
-> > > > > +		__field(unsigned long, min_seq)
-> > > > > +	),
-> > > > > +
-> > > > > +	TP_fast_assign(
-> > > > > +		__entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
-> > > > > +		__entry->highest_zoneidx = highest_zoneidx;
-> > > > > +		__entry->order = order;
-> > > > > +		__entry->nr_requested = nr_requested;
-> > > > > +		__entry->nr_scanned = nr_scanned;
-> > > > > +		__entry->nr_sorted = nr_sorted;
-> > > > > +		__entry->nr_skipped = nr_skipped;
-> > > > > +		__entry->nr_taken = nr_taken;
-> > > > > +		__entry->lru = lru;
-> > > > > +		__entry->max_seq = max_seq;
-> > > > > +		__entry->tier = tier;
-> > > > > +		__entry->min_seq = min_seq;
-> > > > > +	),
-> > > > > +
-> > > > > +	TP_printk("memcg_id=%llu classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_sorted=%lu nr_skipped=%lu nr_taken=%lu lru=%s max_seq=%lu tier=%d min_seq=%lu",
-> > > > > +		__entry->memcg_id,
-> > > > > +		__entry->highest_zoneidx,
-> > > > > +		__entry->order,
-> > > > > +		__entry->nr_requested,
-> > > > > +		__entry->nr_scanned,
-> > > > > +		__entry->nr_sorted,
-> > > > > +		__entry->nr_skipped,
-> > > > > +		__entry->nr_taken,
-> > > > > +		__print_symbolic(__entry->lru, LRU_NAMES),
-> > > > > +		__entry->max_seq,
-> > > > > +		__entry->tier,
-> > > > > +		__entry->min_seq)
-> > > > > +);
-> > > > > +
-> > > > >    TRACE_EVENT(mm_vmscan_write_folio,
-> > > > >    	TP_PROTO(struct folio *folio),
-> > > > > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > > > > index 2554a6513aa8..67f59aa73fb9 100644
-> > > > > --- a/mm/vmscan.c
-> > > > > +++ b/mm/vmscan.c
-> > > > > @@ -4876,6 +4876,12 @@ static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
-> > > > >    	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
-> > > > >    				scanned, skipped, isolated,
-> > > > >    				type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
-> > > > > +	trace_mm_mglru_scan_folios(lruvec,
-> > > > > +				   sc->reclaim_idx, sc->order, nr_to_scan,
-> > > > > +				   scanned, sorted, skipped, isolated,
-> > > > > +				   type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON,
-> > > > > +				   lrugen->max_seq, tier,
-> > > > > +				   lrugen->min_seq[type]);
-> > > > 
-> > > > And seems Steven also suggested to calculate lru, max_seq, min_seq in
-> > > > TP_fast_assign() in v1 which could be missed.
-> > > > 
-> > > 
-> > > Thanks, I will update it following Steven's suggestions.
-> > > 
-> > > 
-> > > >           TP_fast_assign(
-> > > >                   __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
-> > > >                   __entry->highest_zoneidx = sc->reclaim_idx;
-> > > >                   __entry->order = sc->order;
-> > > >                   __entry->nr_requested = nr_requested;
-> > > >                   __entry->nr_scanned = nr_scanned;
-> > > >                   __entry->nr_sorted = nr_sorted;
-> > > >                   __entry->nr_skipped = nr_skipped;
-> > > >                   __entry->nr_taken = nr_taken;
-> > > >                   __entry->lru = type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON;
-> > > >                   __entry->max_seq = lrugen->max_seq;
-> > > >                   __entry->tier = tier;
-> > > >                   __entry->min_seq = lrugen->min_seq;
-> > > >           ),
-> > > > 
-> > > 
-> > > However, 'sc' is an internal structure, so sc->order cannot be accessed in
-> > > TP_fast_assign(), and I don't think it is worth making scan_control an
-> > > external structure just for this.
-> > 
-> > Agree.
-> > 
-> > > 
-> > > > 
-> > > > >    	*isolatedp = isolated;
-> > > > >    	return scanned;
-> > > > > -- 
-> > > > > 2.34.1
-> > > > > 
-> > > 
-> > > -- 
-> > > Best regards
-> > > Ridong
-> > > 
-> 
-> -- 
-> Best regards
-> Ridong
-> 
+Josef
