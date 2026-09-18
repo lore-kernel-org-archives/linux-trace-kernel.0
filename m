@@ -1,125 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0353515F9;
-	Fri, 18 Sep 2026 16:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D004FDA76;
+	Fri, 18 Sep 2026 17:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789749549; cv=none; b=fqpg+IN0WbjsntQbWx0tdXlKonUT/c5oIksd6WCxa3iVlnRPs1uj+fRo0t+0y30xXFW+Nzd95piDJPyMamcZrH1lyuXj/FE2Xae8iAEAYu2HekoPLH5JhTgWtZ1Uvt2MiyglH1vPA6iMMZRxmaTOezlz2hb23PcQhco/mAViIvk=
+	t=1789752457; cv=none; b=estObZhX8jdZRvdCv1UCc1FBzKaL0lDdqR6axPaVdAEPAMTT4HF1cHUUeAIhxcbKzWP/gxESQ2VCxT2HjX3kb+U6yQcPpWlZuBhGe1+u65FuMwXY4eTn4xbnEsFyRAHkx51mAVGQXc2bDPw8uIXHOLO1EukL7nG5jVz0ACucVWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789749549; c=relaxed/simple;
-	bh=yKgqDhth18rfq4TSlyCvIyYEuIgAYU4N900hfByc7S0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=MFJZfyyeYURrrVrGFH7LTR0q16blkOw1aSvSxS6u+LQx5EnHaKPDzm4Ys+2B0O4K0jTm6B4boyA4qmdSrVvcswEm+pfthaCs+MhmTMBBrG0t9Doh11jMwZtz5/bYdF/GVTRDIc0cg/6tZtUQgNd7F1vhOgAvn06adwI9Hof+cfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzvJbrnV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789752457; c=relaxed/simple;
+	bh=ZgMfgnNMTTAB7ij0Uen4FKMNSu6zr7dq79w3r1uj5DQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dairw/HrSB18BaBrDOK7TMnioRbro0jmu1tETDsbfxLvMorLfhlCHuHrqEN1XKwef/3iyCD/JMIXNcwO2yRh0rRdK9ivgU+ws2sAHjdlowRVu+G0acJtoqVNd1GPouIDzk8IyNZpoJQZLAzYfzvLrm7oaSAbt4FUURst5lJnW50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nZmMHzoC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzvJbrnV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052EC1F000FF;
-	Fri, 18 Sep 2026 16:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789749548;
-	bh=b5Zrlq13Fo17ThZWJD48N0yBnSkZxyrfKbw9LMfDzNo=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To;
-	b=PzvJbrnVDw1/FGRQjNdgtxkja4g0UKdhJ6ysQeKqAjw3SPoQdbPUDDDVRezIlzPRn
-	 BizmkSglTWN3z27ESnNWnNJ/BNE/5Pf134Kuopamm2cqa+Vg4m4fskohwsleBAZ2kq
-	 8VeG45ejMxOfvV8B5nlzi3rG7isstYgL+7Zzmi6JW51Bc5581vIt00jI9nQCcL0h5r
-	 TJA42xr+2N1e8Upe7jJRd6iYP4RmP4V22zWBn1trh8Pak11rKzlZgEkDRtY82x6XWn
-	 gOXrlr0hA3dXINFz3CQ2chmBvyX/TG7t9RH5RVc3N8nvBO6tGulEJzrciuRym+vaZ4
-	 UoBQJcmt+Ps+Q==
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nZmMHzoC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3AB21F00898;
+	Fri, 18 Sep 2026 17:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1789752454;
+	bh=5sOwLbsuSvuF6ePII3dRbbexDhRaUiT2qlW2RUmkzBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nZmMHzoCublLE0IEK9aHlvlhqE2xLByUWguh+3EqUuN7nBMN6wefu5bJW7NsVI8oo
+	 8cuRfa+t9Y3H9nyGcurlDLAY4ePQ6iB4sPUHg9xbYuB6d5/K8xq5on5u9J9FaPJn9Q
+	 febXPuvZSHNtnT99lN8PelpDzpS5m6r2HuKfDEeA=
+Date: Fri, 18 Sep 2026 18:25:38 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <2026091850-geriatric-overfull-3370@gregkh>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+ <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Sep 2026 18:39:02 +0200
-Message-Id: <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Cc: "Luis Chamberlain" <mcgrof@kernel.org>, "Petr Pavlu"
- <petr.pavlu@suse.com>, "Daniel Gomez" <da.gomez@kernel.org>, "Sami
- Tolvanen" <samitolvanen@google.com>, "Aaron Tomlin" <atomlin@atomlin.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan"
- <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Steven Rostedt"
- <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, "Bradley Morgan"
- <brads@mainlining.org>, "Aleksandr Nogikh" <nogikh@google.com>,
- <linux-modules@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-usb@vger.kernel.org>,
- <driver-core@lists.linux.dev>, <linux-trace-kernel@vger.kernel.org>, "Johan
- Hovold" <johan@kernel.org>
-References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
-In-Reply-To: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
 
-On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
-> The ability to add and remove devices from a driver through the sysfs
-> "bind" and "unbind" files was created all those decades ago as a way
-> that kernel developers can iterate faster, and provide a debugging way
-> for users to attempt to add a new device to a driver without having to
-> rebuild their kernel.
->
-> This api over the years has been abused and recently come under a major
-> fuzzing "attack" through tools like syzbot which decided that it would
-> attempt to just randomly bind any driver to any type of device, causing
-> loads of unneeded errors and pointless kernel patches to be generated by
-> unsuspecting new developers.
->
-> Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
-> will be set on the driver if the bind/unbind sysfs files are ever
-> written to.  This lets kernel developers "know" that a user is
-> attempting to do something that is not normal, and as such, if the
-> kernel breaks they get to keep the shiny pieces laying around on the
-> floor.
->
-> The flag is 'Y' which was unused, and can remembered as the user is
-> "yeeting" the device being operated on here (thrown with force without
-> regard for the thing being thrown).
->
-> Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
-> as many times crashes/oops/warnings/failures happen within the callback,
-> and the taint flag needs to be there to show what was being attempted.
-> If it were to be set after the callback happens, the oops report would
-> not properly reflect what foolishness was being attempted.
->
-> Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
-> the tool from hitting bind/unbind, should be run with panic_on_taint
-> enabled so that they fall over and don't continue on, thinking that they
-> actually found a real issue.
->
-> Userspace operations that rely on the bind/unbind files
+On Fri, Sep 18, 2026 at 06:39:02PM +0200, Danilo Krummrich wrote:
+> On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
+> > The ability to add and remove devices from a driver through the sysfs
+> > "bind" and "unbind" files was created all those decades ago as a way
+> > that kernel developers can iterate faster, and provide a debugging way
+> > for users to attempt to add a new device to a driver without having to
+> > rebuild their kernel.
+> >
+> > This api over the years has been abused and recently come under a major
+> > fuzzing "attack" through tools like syzbot which decided that it would
+> > attempt to just randomly bind any driver to any type of device, causing
+> > loads of unneeded errors and pointless kernel patches to be generated by
+> > unsuspecting new developers.
+> >
+> > Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+> > will be set on the driver if the bind/unbind sysfs files are ever
+> > written to.  This lets kernel developers "know" that a user is
+> > attempting to do something that is not normal, and as such, if the
+> > kernel breaks they get to keep the shiny pieces laying around on the
+> > floor.
+> >
+> > The flag is 'Y' which was unused, and can remembered as the user is
+> > "yeeting" the device being operated on here (thrown with force without
+> > regard for the thing being thrown).
+> >
+> > Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+> > as many times crashes/oops/warnings/failures happen within the callback,
+> > and the taint flag needs to be there to show what was being attempted.
+> > If it were to be set after the callback happens, the oops report would
+> > not properly reflect what foolishness was being attempted.
+> >
+> > Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
+> > the tool from hitting bind/unbind, should be run with panic_on_taint
+> > enabled so that they fall over and don't continue on, thinking that they
+> > actually found a real issue.
+> >
+> > Userspace operations that rely on the bind/unbind files
+> 
+> I agree that this should be avoided.
+> 
+> But I also think the biggest offender really is driver_override. Specifically,
+> on a hot-pluggable bus a driver must be complient with the device driver
+> lifecycle rules and hence shouldn't break on bind/unbind. I think it would be
+> nice to not taint the kernel for such busses, and only taint on driver_override,
+> as I think we'd still want the bug reports for such cases.
+> 
+> But I think this is fine to leave for a follow-up.
 
-I agree that this should be avoided.
+Yeah, let's see how this goes, thanks for the review!
 
-But I also think the biggest offender really is driver_override. Specifical=
-ly,
-on a hot-pluggable bus a driver must be complient with the device driver
-lifecycle rules and hence shouldn't break on bind/unbind. I think it would =
-be
-nice to not taint the kernel for such busses, and only taint on driver_over=
-ride,
-as I think we'd still want the bug reports for such cases.
-
-But I think this is fine to leave for a follow-up.
-
-Acked-by: Danilo Krummrich <dakr@kernel.org>
-
-> to work around
-> the lack of will to upgrade a kernel image to a newer version with
-> proper support for new devices, or the lack of will to submit valid
-> device ids to driver authors, will still work properly, but now the
-> kernel will be flagged in a way that will show that perhaps those users
-> should reconsider their behavior and work to have the drivers properly
-> support these devices in a "native" manner.
->
-> Finally, the bind/unbind files can find real use-after-free issues with
-> some drivers by forcing the process to happen virtually without having
-> to rely on manual removal processes.  Those real bugs should still be
-> worked on, but by adding this taint flag, developers can more easily
-> determine bug reports that are actually worth looking at.
->
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
