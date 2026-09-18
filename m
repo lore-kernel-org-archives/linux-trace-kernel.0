@@ -1,133 +1,124 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C61B51B17C;
-	Fri, 18 Sep 2026 17:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA4551EDE6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 18:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789752630; cv=none; b=U/93TqxUQlPs2bb+L9SWGBjQYJRJ9h6H8uGJLAcDye5l+pMzg1IjFeF1HZD5Z31vBdzxd0O05RLR1ssh0Lo7nV155WlJ4Jm7r6ngn9MBRfMRP+gWhVTMu/U7DSYvfFGDBf+3AHESrDXhHNCn7CUPMW6Pd4ot7JcIz/ax+FxK7Nc=
+	t=1789757462; cv=none; b=TnHT5zd0oMihQwRxnKl09006LZUOxSjHywVfnO2iXP6Vr40H82pYPdp2LoSdOGIZFhMO4q/wb/4oNbrTbx+n3Mw6XdpRMqB+30/vmg4qAswvvB5YdpZAxOARxbC4bxo5+mMgKSncGV1hA5viD63igMuH3CM8FUBxFhVBvSJVgtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789752630; c=relaxed/simple;
-	bh=1tm+AoINV4L0DvNzsG7gAL49kbFMoxpgRosliSqN+rM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=igg484xKveUt3kuxwcbjk8GkLN5uRhOILVydApPJ+e+ipZE+8QS0gmDxCkR7jc/zMS6Mu1+KfLhCk8HTPxXOYaRBzn79FaHtHWGBAVcvBmCNCAdQCk5hWegenYtc03RBUakiW0NZTLaLpsZIno6RPGmXDu3IUV2ceuU2Ku6DjuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=HDkpRqJZ; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=3XiiCKBo; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1789757462; c=relaxed/simple;
+	bh=CI81u7eo9Z0IvKindsUW30a2ArUqaS3RZ3F71i2tONs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hgZUywsV61j1tXIvvaZbT9mVpz20fuHSoy4zwwUz3OQk8IbpRs8cDPiB2rqvVXa94bGcewhDq4Vc8Jl7g+KDqPAfdJMd08A3xNLbQwL6xUhDcCfTHtkkFcP0DAoTya0zpkTdjnMIkngb2pwRj0nn+P8dWT8/QMjUyg8ND/WMrOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=lbdOyKR9; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="HDkpRqJZ";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="3XiiCKBo"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1789752577; bh=1dl4tmqft2dG4MFdNCM1smn
-	Ytjht1tHIKCyecdkRmjI=; b=HDkpRqJZVr8TL8Fkk5XJ1YJQ3JKdWNDF6Dvz6sK7t555pTWVA5
-	9+Cm698R50pHkoL9Mg1ZQoSUcHyOij0yBorfNWlLYUFtmEwsf6f4u23zyvuYV3nDtxpNUYLjQ/P
-	7kqDUrrm3IgKPoObcgI7KnJdt/wVBWhrEyP2ysCNtT7kXYvE6XAMP/mkhc/UKYzH82PJfO0NFI1
-	j3bYCr7pCYuha2nlNCrVh0jfM6o3IbhUoSKFC0zjXdXFLCfE44pO2KNrxDaQuhrGO4o5p2gNkbc
-	47sgj7QQxa6B8/gqZatfx3mRX/i435W+dC74xKppg5/FUmNgZZeUPl8H8yOEge5qKxw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1789752577; bh=1dl4tmqft2dG4MFdNCM1smn
-	Ytjht1tHIKCyecdkRmjI=; b=3XiiCKBoVXkz5w7h2YTLDkGnQG8EO73zQ+/Fv0ZwZfOhKoim5A
-	98WmeNqIRXZ0MA7FUVAIvcxS9vUMB9IHtVDg==;
-Date: Fri, 18 Sep 2026 18:29:37 +0100
-From: Bradley Morgan <brads@mainlining.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- Aaron Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_0/3=5D_driver_co?=
- =?US-ASCII?Q?re=3A_add_TAINT=5FFORCED=5FBIND_fo?=
- =?US-ASCII?Q?r_when_userspace_manually_messes_with_devices_and_drivers?=
-In-Reply-To: <2026091850-geriatric-overfull-3370@gregkh>
-References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org> <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org> <2026091850-geriatric-overfull-3370@gregkh>
-Message-ID: <BF545013-EC9D-4939-BBFC-F51B277EEB84@mainlining.org>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="lbdOyKR9"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hmhXN0bgKzmK4;
+	Fri, 18 Sep 2026 20:50:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1789757443;
+	bh=FTOhGZVoEfxPjlBp4lu1sHfIY58JGyUm8Bc947duE48=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lbdOyKR95vAOEUjZcOcqmOO57hnhjVwywuDezfwPTxFQj4wLFcSQFoO+JWAOg37aV
+	 +0drMLQq3IB8pJpj3Ok9FVhJyg9Atx9KGJxej4J/S0QvikYrhR+gbJF9icEDCzp2GT
+	 lg2DP4pzHTEcyheXqQAOpphdr7h3OhbMyA34rgtU=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hmhXL5VSDzKnh;
+	Fri, 18 Sep 2026 20:50:42 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	bpf@vger.kernel.org,
+	kernel-team@cloudflare.com,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v1 0/9] landlock: Fix tracepoint policy context
+Date: Fri, 18 Sep 2026 20:50:23 +0200
+Message-ID: <20260918185036.608651-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On 18 September 2026 18:25:38 BST, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->On Fri, Sep 18, 2026 at 06:39:02PM +0200, Danilo Krummrich wrote:
->> On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
->> > The ability to add and remove devices from a driver through the sysfs
->> > "bind" and "unbind" files was created all those decades ago as a way
->> > that kernel developers can iterate faster, and provide a debugging way
->> > for users to attempt to add a new device to a driver without having to
->> > rebuild their kernel.
->> >
->> > This api over the years has been abused and recently come under a
->major
->> > fuzzing "attack" through tools like syzbot which decided that it would
->> > attempt to just randomly bind any driver to any type of device,
->causing
->> > loads of unneeded errors and pointless kernel patches to be generated
->by
->> > unsuspecting new developers.
->> >
->> > Handle all of this by adding a new taint flag, TAINT_FORCED_BIND,
->which
->> > will be set on the driver if the bind/unbind sysfs files are ever
->> > written to.  This lets kernel developers "know" that a user is
->> > attempting to do something that is not normal, and as such, if the
->> > kernel breaks they get to keep the shiny pieces laying around on the
->> > floor.
->> >
->> > The flag is 'Y' which was unused, and can remembered as the user is
->> > "yeeting" the device being operated on here (thrown with force without
->> > regard for the thing being thrown).
->> >
->> > Note, the taint flag gets set _BEFORE_ the bind/unbind callback
->happens,
->> > as many times crashes/oops/warnings/failures happen within the
->callback,
->> > and the taint flag needs to be there to show what was being attempted.
->> > If it were to be set after the callback happens, the oops report would
->> > not properly reflect what foolishness was being attempted.
->> >
->> > Fuzzing tools like syzbot, that doesn't have hand-crafted rules to
->keep
->> > the tool from hitting bind/unbind, should be run with panic_on_taint
->> > enabled so that they fall over and don't continue on, thinking that
->they
->> > actually found a real issue.
->> >
->> > Userspace operations that rely on the bind/unbind files
->> 
->> I agree that this should be avoided.
->> 
->> But I also think the biggest offender really is driver_override.
->Specifically,
->> on a hot-pluggable bus a driver must be complient with the device driver
->> lifecycle rules and hence shouldn't break on bind/unbind. I think it
->would be
->> nice to not taint the kernel for such busses, and only taint on
->driver_override,
->> as I think we'd still want the bug reports for such cases.
->> 
->> But I think this is fine to leave for a follow-up.
->
->Yeah, let's see how this goes, thanks for the review!
->
+Hi,
 
-Famous last words :) 
+The Landlock tracepoints added during this development cycle need
+correction before their interface reaches a released kernel.  For typed
+BPF consumers, the number, order, and types of TP_PROTO arguments define
+the callback contract and must be correct before release.  Topology
+denials render as an empty blocker mask, network denials encode one
+checked endpoint through ambiguous source and destination port fields,
+and callbacks omit the actual ptrace tracer, effective signal, and
+add-rule flags.
 
-(I see no regression but AI finds mysteries)
+This series keeps the events focused on Landlock policy context.  It
+uses kernel fixed-width aliases and derives trace blockers from the same
+authoritative request state as audit.  Successful add-rule callbacks
+carry validated per-call flags and access rights, while growable masks
+passed by value use fixed u64 carriers.
 
->greg k-h
+The rule events become landlock_add_rule_path_beneath,
+landlock_add_rule_net_port, landlock_check_rule_inode, and
+landlock_check_rule_net_port.  These pre-release renames necessarily
+update tracefs paths, typed-BPF attachments, selftests, and
+documentation, but avoid carrying misleading names into the released
+interface.
 
---- Thanks!
-https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
+Network denial callbacks receive a sanitized copy of the checked
+endpoint, and tracefs reports one signed port, with -1 meaning that no
+port was checked.  Ptrace and signal callbacks receive the actual tracer
+and effective signal.  Beyond the event-name churn, only blocker and
+port rendering changes are visible through tracefs; the remaining
+context is available to typed BPF.
+
+The series changes no enforcement decision, UAPI, or audit output.
+Event preparation remains behind the existing static-key checks.
+Selftests cover the renamed events and both rendering changes, and the
+documentation limits the contract to policy context while directing
+consumers to generic tracepoints for operational context.
+
+This series applies on top of v7.3-rc3.
+
+Regards,
+
+Mickaël Salaün (9):
+  landlock: Fix tracepoint fixed-width type names
+  landlock: Fix filesystem denial blocker reporting
+  landlock: Fix rule tracepoint context
+  landlock: Fix network denial trace context
+  landlock: Report the actual ptrace tracer
+  landlock: Report the effective signal number
+  selftests/landlock: Test filesystem denial blockers
+  selftests/landlock: Test network denial context
+  landlock: Fix tracepoint contract documentation
+
+ Documentation/trace/events-landlock.rst       |  52 +--
+ include/trace/events/landlock.h               | 291 ++++++++++-------
+ security/landlock/fs.c                        |  10 +-
+ security/landlock/log.h                       |  52 ++-
+ security/landlock/net.c                       |  42 ++-
+ security/landlock/task.c                      |  87 ++++--
+ security/landlock/trace.c                     |  71 ++++-
+ tools/testing/selftests/landlock/fs_test.c    |  28 +-
+ tools/testing/selftests/landlock/net_test.c   | 295 ++++++++++--------
+ tools/testing/selftests/landlock/trace.h      |  59 ++--
+ .../selftests/landlock/trace_fs_test.c        | 130 ++++++--
+ tools/testing/selftests/landlock/trace_test.c |  51 +--
+ 12 files changed, 735 insertions(+), 433 deletions(-)
+
+
+base-commit: fd73f4a6659897191fa0d40695fe370925dd3780
+-- 
+2.55.0
+
