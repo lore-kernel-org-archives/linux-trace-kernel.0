@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D86352F95;
-	Fri, 18 Sep 2026 00:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8EF2749DC;
+	Fri, 18 Sep 2026 01:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789689645; cv=none; b=Ors1ohWRXCL9dCLLjwuXR4VlgvltyO34Pap7By95XTe8ykSODIAtA/CHwkuDiajrcnHwi5ApZlrSWnTpppFEsdMxlwZ8AgjxC/G982oq+eJphZlZmPORFalyGo0SM/RhEYU1agxv7hJE7BR01t4Ay8A0S7INP/IYDC3wjnl9ZA4=
+	t=1789693965; cv=none; b=hHPec4Z4Jjt2o8RrdYFRT/N1uyAO3NmKLpnGjX9hXb1gegTP02/4WAyNrK3vD2tLpwHGOPc3xaeSWeKGw324GzswulGx/wfA/c4xVKR9om1P2Fs4pgXFsZPPWmVxLKeWs2j25ao3mfeZArwrNwwmW6Rheha6x0p1w+fVw7W1q9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789689645; c=relaxed/simple;
-	bh=rl1IPRYrZA5ZJXNeyvLPx6hLjnGt6ykbVMhqaWryNHs=;
+	s=arc-20240116; t=1789693965; c=relaxed/simple;
+	bh=u6p9v/sQpbAvDgX6JM9uTM03Yy7+MS4LqF7SpSntSW8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fzD/4AN3nsy/Mpc9kRE5iOg8TknFjnyKatYm49S2D99U3xhwgt70QdfhCnHGzhFTbtrX7YadK5+Z7xyCHsI3OJ+No6XHDJKmJ1A2mGtRWzzBWdawxXgnrfSklvw+mh3Po3f71lW4Zo8MDD9TLivrUXn8aDjqhFHTsxJHE0q045A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOXsPO3G; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=POhXJbIVHMM/PAdWEAjwiPxoUZI4oUXNB6z2GeLNtguIU/jjj3U3U0yaMnDQujvPQZm2ikfeKhH3S98NMKVH/mb2tjsJFPGb0X4h7HLo3BAFe8aVfwmgcdZXQD0vbxJ9ME+hdSzjz9QQZaoR8y3Q/4KOIrVzX+4fTRh1UIpNV/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWPITrmm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOXsPO3G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C11C1F000FF;
-	Fri, 18 Sep 2026 00:00:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWPITrmm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535D71F000FF;
+	Fri, 18 Sep 2026 01:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789689643;
-	bh=Pwy7lAr6hzhWtQyhO2xpyNkZkRHrhmyKH1VIR30q6HI=;
+	s=k20260515; t=1789693963;
+	bh=F/YlIWDvAo1XjVKHwEMXxvDrzwtCtsm1MWgy0h+IsGo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=LOXsPO3G/AuiYSmXUV0aQv0HKHJcfm7TTeqn/rWxKV/RGlyKCSkC4eEiw/jZNULds
-	 khyrc9CGPyI/hebp7OxaXnDSdXmqEjRc4n5kP/L55S2auvWX7ATFJlnEYNmNX+6mSJ
-	 r6Ii0Q2pB77KlXXUIYJD3/3Lg7puEuDsM5+MKuVIBi8ZFzpuBpuVv2wCo7GCEFe23f
-	 G24V+HAoiz+U+UrABUeuaMbFHwHe4XIEuza/9VvfuUvI1AxJkNn2pGYZJXwzwQfKZv
-	 pDbS0sqoCrVfNhB4B0IhsKsNVo2fwA5KPLExzI2heOOBQ5TaPLRSU9NeufO+EV7ixn
-	 WKa2M9EGLLjXg==
-Date: Fri, 18 Sep 2026 09:00:38 +0900
+	b=mWPITrmmTzETtVKysrDIuRf9zsa3ilEIob2YbzSHsXyA7WH906ymUXY4sUCzEu2A5
+	 ksKouLF+OPo9KYnwHzd8kYd+rENhyGNPAUa5f8w8gOr/eguiZaIZ4nEL6JTfpIl02T
+	 fgwiZU7m6vsW8uvCvv4JXpfB3KV2otl1mo4mJJ/UpCha0Kb3QfGQgYFPEtMoaxUrT1
+	 eDGqWnyiH8DtLZkPXefWXchabKZrJ38og3DRP84TUqGrR/OhII1O/eFk5P4N8Ed2xG
+	 WzDMyAXwEXyLqglGox+HxULYf3WHHh5kIYqyKb/KMGbrVmI5rRBZiAHYLAQbsmWKLB
+	 ySYWUwjZdaZlQ==
+Date: Fri, 18 Sep 2026 10:12:38 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: David Carlier <devnexen@gmail.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, martin@kaiser.cx,
+To: Kees Cook <kees@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook
+ <kees+treewide@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] fprobe: Terminate the fgraph_data list when the
- reservation is not filled
-Message-Id: <20260918090038.8bb79d5b132ea82846a4c9c5@kernel.org>
-In-Reply-To: <20260917212407.384468-1-devnexen@gmail.com>
-References: <20260917212407.384468-1-devnexen@gmail.com>
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing/probes: Add const to new_argv allocation type
+Message-Id: <20260918101238.62bc61f7a4c55bcc1ab83ab8@kernel.org>
+In-Reply-To: <20260917211022.i.677-kees@kernel.org>
+References: <20260917211022.i.677-kees@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,77 +48,57 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Sep 2026 22:24:07 +0100
-David Carlier <devnexen@gmail.com> wrote:
+On Thu, 17 Sep 2026 14:10:23 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-> fprobe_fgraph_entry() reserves shadow stack space for every fprobe with
-> an exit handler, but only fills it for those whose entry handler returns
-> 0. fgraph_reserve_data() does not clear the area, so fprobe_return()
-> parses the unused tail as headers left over from an earlier call, and an
-> exit handler can run twice or despite its entry handler asking to skip
-> it.
+> From: Kees Cook <kees+treewide@kernel.org>
 > 
-> Write a zero word after the last entry to terminate the walk. A zeroed
-> slot does not decode to a NULL fprobe on the arches that encode the
-> header into one unsigned long, since arch_decode_fprobe_header_fp() ORs
-> in FPROBE_HEADER_MSB_PATTERN, so make read_fprobe_header() return NULL
-> for a zeroed slot.
+> In preparation for converting the kmalloc family of allocators to the
+> type-aware kmalloc_obj family, we need to make sure that the returned
+> type from the allocation matches the type of the variable being
+> assigned. (The kmalloc family returns "void *", which can be implicitly
+> cast to any pointer type.)
 > 
+> The assigned type is "const char **", but the converted allocation type
+> would be "char **", which is the same type without the const qualifier.
+> As there is no general way to safely add const qualifiers, take the size
+> from the assignment target instead. No change in allocation size
+> results.
 
-This fix looks good to me. Let me pick this.
+This looks good to me. Let me pick it for-next.
 
 Thanks!
 
-> Fixes: e0a384434ae1 ("tracing: fprobe: do not zero out unused fgraph_data")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: David Carlier <devnexen@gmail.com>
-> ---
->  kernel/trace/fprobe.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
 > 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 1e9b00997ff2..9f2d98181779 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -171,6 +171,11 @@ static inline bool write_fprobe_header(unsigned long *stack,
->  static inline void read_fprobe_header(unsigned long *stack,
->  					struct fprobe **fp, unsigned int *size_words)
->  {
-> +	if (!*stack) {
-> +		*fp = NULL;
-> +		*size_words = 0;
-> +		return;
-> +	}
->  	*fp = arch_decode_fprobe_header_fp(*stack);
->  	*size_words = arch_decode_fprobe_header_size(*stack);
->  }
-> @@ -203,6 +208,12 @@ static inline void read_fprobe_header(unsigned long *stack,
->  {
->  	struct __fprobe_header *fph = (struct __fprobe_header *)stack;
+> Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
+> kernel/trace/trace_probe.o
+> 
+> Assisted-by: LLM coccinelle
+> Signed-off-by: Kees Cook <kees+treewide@kernel.org>
+> ---
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: <linux-trace-kernel@vger.kernel.org>
+> ---
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 804442b2f7d2..cfb710095f65 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -2316,7 +2316,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  	else
+>  		*new_argc = argc;
 >  
-> +	if (!*stack) {
-> +		*fp = NULL;
-> +		*size_words = 0;
-> +		return;
-> +	}
-> +
->  	*fp = fph->fp;
->  	*size_words = fph->size_words;
->  }
-> @@ -635,6 +646,10 @@ static int fprobe_fgraph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops
->  		}
->  	}
+> -	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
+> +	new_argv = kcalloc(*new_argc, sizeof(*new_argv), GFP_KERNEL);
+>  	if (!new_argv)
+>  		return ERR_PTR(-ENOMEM);
 >  
-> +	/* Terminate the list, fgraph_reserve_data() does not clear it. */
-> +	if (used && used < reserved_words)
-> +		fgraph_data[used] = 0;
-> +
->  	/* If any exit_handler is set, data must be used. */
->  	return used != 0;
->  }
 > -- 
-> 2.55.0
+> 2.34.1
 > 
 
 
