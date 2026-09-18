@@ -1,165 +1,128 @@
-Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e234-50.smtp-out.ap-northeast-1.amazonses.com (e234-50.smtp-out.ap-northeast-1.amazonses.com [23.251.234.50])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17813B2FC2
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 07:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B930566D;
+	Fri, 18 Sep 2026 10:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.234.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789715720; cv=none; b=u1Z8kmZmsWV06l6UTDxMAEzIup1lSS3yZf/sE59eOZ7lxeKac1CY6wR8rLnr/YS3J6RdgQkI0Ch4jqdpF9EM0pk/+zGhyDArOobf4qm84vg2dKsuHSM1MG0UPN+A9wDRk3L7Hqo7URIbWXifpT6nbNhepG/dO5s1uKPBkmq6RK8=
+	t=1789726243; cv=none; b=E5tha/0tm0UXvvD2uzu/BA+yLC+LU15YNoKelY3EkB2i/RGh5LDnj/ea2+003mfu5q57DL73/cysk7RvghFPnMKy9jR180mHlf/dYJXUjZWKYOFIvDve8xN2Tz28vZqhZj03L5vkRUdi/CVVI+pGHedV23AaBXsAsLdDKAStR5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789715720; c=relaxed/simple;
-	bh=3TnaohRSjA7u9kb0fvpr5atPg05ZZyGnSCboe6EyYNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cojKFFzh/PDzGd9IrpelVh3rYUPoHsnk0ta+hY878A01U1dlT/o5/XMD7BuqAPPcJ4BM9UDcqYYUejESTHxQpMmI3MLG1FqVHLu9smy5uz8+JM2fxc9OaRfF6ob44Y+9fkECfjYkPNAyfkheKyZsndCn6XUgDawyIazMDHyZzuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTLKQ2IC; arc=none smtp.client-ip=74.125.227.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789726243; c=relaxed/simple;
+	bh=3k0woI/2Pe49Zy+kpvH7k3E8P11LFDlzapFiXAfYPJg=;
+	h=References:In-Reply-To:From:To:Cc:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=p2AZctmL3mlF+5BloCS03kYSEs8FwTDxKATObSRRtBRJZjOHBuA55O7QmHxqIpX1Q6MOfdKA2c+2+VI96y6a9kH1tBejGupjuKKs5w10UXqM5XzKtuW8v5dHZuFPFzwrK+BSNmGBFDrQJbiVQ5KrAOmGCdwL6m7WpxG12Z4Tatw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fqwqf.xyz; spf=pass smtp.mailfrom=send.fqwqf.xyz; dkim=pass (1024-bit key) header.d=fqwqf.xyz header.i=@fqwqf.xyz header.b=sadRIJUP; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=ZrV3vPHm; arc=none smtp.client-ip=23.251.234.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fqwqf.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=send.fqwqf.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTLKQ2IC"
-Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-396ccda24afso307969a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 00:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789715712; x=1790320512; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+Bkp/RFC9ZZAGi4GjN9yJHrX67uXW3aJJkkSzqSHpAE=;
-        b=HTLKQ2IC1KMJpdMOAPV1TwnIIgH2e6utCS/VXMoNg/mhELjZIIuMrusdi0Wvz6h8ya
-         8dKTd/jca5YY1LbGrIVxNrELE/sxIlxaOFD2uWaPqsbN3HklVDVhkoE01F9aBJhsCRXt
-         EMeAJIPrZKSYu/ZDl8AR0SvSsWlArt9ZEHPHsozg4PfOnBG1Ca0sHBKNMg5SYtvd/XJw
-         m34BOSLkBaXEDHOeLrLS4+UWNWv8KSwDF4tUBC7+kIJ3Onl5Le28IHRrugm6f+t4qXRp
-         IF4Ky4pq/4FG/bH5107fHt51vEK4X1vskFUpE6ZNOiApyZuTH38pmhiJalCslf96RMG2
-         tzkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789715712; x=1790320512;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+Bkp/RFC9ZZAGi4GjN9yJHrX67uXW3aJJkkSzqSHpAE=;
-        b=0DPk2WnEo0LcRdm9YvYYsdPBmR5Inmj3hto7FrftKSxYPnFlffglWjx73XKsDElPZS
-         v8UwPugNCJpE21u+mhGLJVDEFsglsyshMMnqGemVtmxoBU0DkS7IIKlBg67OGayGnlbi
-         KQJ7CVD0LZHIWGk02a7GKMj0SGGDDL0adhbLAIM6kVAe9ez1NgXDjH9RQiDmvhdiQQf3
-         GqsaNpQFZsWaVYR3v8kSrJuzz75gSibGsqSbtu4KezAlwELbk7dyPOQKqcIsKt4YRE3q
-         41wdsbBzCrkkLg556DN4FfWn8If7EpfBvwGnsNNtvafRd+eycOCMFtSGZN40tXV7LJbi
-         DGHw==
-X-Forwarded-Encrypted: i=1; AKwUvBy4a5BBIp1V4FFvnpffYcOP5FBySXzioNRjkGgTJ+2KwM0snPj6rLjDjS88yiK0rLpUZTHs9ThM+2g3dKptkAM3jdM=@vger.kernel.org
-X-Gm-Message-State: AFuF++nl2S0nwTKNtc3b8u1tcKXLHoHX4CGycnLqgTW0Hka83jbyTuER
-	GawHFCLTaYIw4Te4+ZGAiCfaOj8f+t3UA7OrTWq9wHCtaBKNxouu2P0=
-X-Gm-Gg: AYBFou3Vs5eOci3TEmhb4m2IUjIIbZxEQnLrMU0QQdSAgS5JNvUq0OoUHaLtsL+XxFh
-	YHt/2hHKyu9QhMCG/ROSpz1POGrNnCedaaastac/KG6D6wlhsjyHjbaHxre9vHZNGNWuSDLJD/9
-	MeQBhINhNa/J7X1TkAsCDlYrQwwrh2nuV21YQcDNMH1ngWq7Zmqx5wigYPb94AKvKFaUpqpzlYr
-	XCdYzmrXMwAAqUVLrv501LbsVEmGIPlHhvHUj+eEHvNDI9OAMLaanzp7lyV9meAA7VmzeO6scdE
-	yeqkqzFahiS/Xgk1AtAfyFvA+v8sSOJFg8hgf5BJrTTs40r7JR39acRYSJYkumU9PyQE061jZQO
-	chnDNnEYZf4mvBB2fiJGEj3c/UYOnmeG+4GkvCWm4OQn0UBUwvGSla4zS7IoXERzYwvkkPZvQA9
-	M7KAAhZ65GFp1JQ7or7FO/HavhQGfQuHF+oJxKYNi5K/FCzJuoEFva6cTLxO3C00odOdVsBkX90
-	b6DHjwlN9y4NdNjlUmhPbvp6Ac=
-X-Received: by 2002:a17:90b:538d:b0:39d:ef3e:9035 with SMTP id 98e67ed59e1d1-39e54e3c190mr6935740a91.10.1789715712538;
-        Fri, 18 Sep 2026 00:15:12 -0700 (PDT)
-Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:d047:17af:bfc7:1a9a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e36170735sm8842180a91.8.2026.09.18.00.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 00:15:12 -0700 (PDT)
-From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	donggeunyoo.kernel@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v1] ring-buffer: Fix the sub-buffer array base in rb_meta_subbuf_idx()
-Date: Fri, 18 Sep 2026 16:15:07 +0900
-Message-ID: <20260918071507.1019251-1-donggeunyoo.kernel@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=fqwqf.xyz header.i=@fqwqf.xyz header.b="sadRIJUP";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ZrV3vPHm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple; s=resend;
+	d=fqwqf.xyz; t=1789726236;
+	h=References:In-Reply-To:From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type;
+	bh=3k0woI/2Pe49Zy+kpvH7k3E8P11LFDlzapFiXAfYPJg=;
+	b=sadRIJUPGaNBwXEF4Y9g2pekeWtieOJsxIPnwcOu3zMmnEOdisJcMZM3fronz/e0
+	RHY/8vmeW+9F8WHdzbRzT/I24cLulQgskeHpBvT+CHfc9naM2rx83sqi55ObM0XhooV
+	3jwmjVaW/d8xZQk67F0WLB9fC+s3a8DaXZJWOkJU=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=zh4gjftm6etwoq6afzugpky45synznly; d=amazonses.com; t=1789726236;
+	h=References:In-Reply-To:From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type:Feedback-ID;
+	bh=3k0woI/2Pe49Zy+kpvH7k3E8P11LFDlzapFiXAfYPJg=;
+	b=ZrV3vPHmBoRF8ofVNfovRfpsd6mPmBQDMdXTPoSPMoIrDblW3mh4F9e+3MvcN4O7
+	LlnOuvYN5RGMDf4tzDoIdv7uaDs+/YSfciTN5U5Jyks3gudyfUo5IsnTuTdG7Pt6P4U
+	7DzEsQpvgpCxG+/Bhv/rQpmwu1hwwDe+KOA1GFG0=
+User-Agent: Mozilla Thunderbird
+References: <20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org>
+Content-Language: en-US
+In-Reply-To: <20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org>
+From: fQwQf <fqwqf@fqwqf.xyz>
+To: jingyliang@chromium.org, jikos@kernel.org, bentiss@kernel.org, 
+	corbet@lwn.net, broonie@kernel.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	hbarnor@chromium.org, tfiga@chromium.org, jaschultz@microsoft.com, 
+	dmanti@microsoft.com, acz@semihalf.com
+Subject: Re: [PATCH v4 00/11] Add spi-hid transport driver
+Message-ID: <010601a0b3ff1cf6-944e2ad5-0ad1-49d4-9e89-c8ab03bbc62c-000000@ap-northeast-1.amazonses.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 18 Sep 2026 10:10:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Feedback-ID: :1.ap-northeast-1.6BGMgStFQE7EJYq5syaCRzdneEHVt/+DAaGDrqUmDs9QLO4/SllUBZ3fHvnZ8rcAX/3IjUyTRgi5JFZsWrikFHwlPJqCkqEMlxDFM4JXh+ycxH/J5Tudg5bGdz6h4331g1L1EFsGR8kuYNfGLsrxz4Nym4YXoPcZxeVkrHry4Zx21n8vEVLEjc7s+OCM8PU9:1.ap-northeast-1.DTXDV/V9GPBWozcllKo8innbNB2qs2O/3F8XZSzd9ZM=:AmazonSES
+X-SES-Outgoing: 2026.09.18-23.251.234.50
 
-On a persistent ring buffer, rb_meta_subbuf_idx() can return an index one
-sub-buffer too high.  rb_setup_ids_meta_page() then fills subbuf_ids[]
-shifted by one and leaves subbuf_ids[0] NULL, which __rb_map_vma()
-dereferences when userspace maps trace_pipe_raw.  rb_update_meta_reader()
-writes two such indices into meta->buffers[], which rb_cpu_meta_valid()
-would reject on the next boot, discarding the previous boot's trace.
+Hi Jingyuan,
 
-A CPU's sub-buffer array starts after its meta header and the nr_subbufs
-integers that follow, aligned up to a sub-buffer.  rb_meta_subbuf_idx()
-inverts that calculation but skips only the integers, not the header, so
-its base is one sub-buffer low whenever the omitted header size crosses
-the alignment boundary.
 
-Invert the calculation with rb_subbufs_from_meta() rather than repeating
-it.  rb_range_buffer() maps an index back to an address through the same
-helper, so the two directions can no longer disagree.
+> This series picks up the spi-hid driver work originally =
+started by
+> Microsoft. The patch breakdown has been modified and the =
+implementation
+> has been refactored to address upstream feedback and =
+testing issues. We
+> are submitting this as a new series while keeping the =
+original sign-off
+> chain to reflect the history.
 
-Cc: <stable@vger.kernel.org>
-Fixes: b14d032973d4 ("ring-buffer: Add ring_buffer_meta data")
-Signed-off-by: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
----
-x86_64_defconfig plus KASAN, FTRACE, TRACING and TRACER_SNAPSHOT, on
-5dd1818b15d9, booted with reserve_mem=<size>:0x1000:trace
-trace_instance=boot_mapped@trace.  head_buffer is from
-instances/boot_mapped/per_cpu/cpuN/buffer_meta, the map of that CPU's
-trace_pipe_raw.
 
-nr_cpus=1, 24 reserved sizes 4096 bytes apart:
+I am working on Linux support for the Surface Laptop 7 (13.8-inch, =
+Snapdragon X series), whose touchpad is a HID-over-SPI device behind a =
+Qualcomm GENI QSPI controller. I noticed that v4 (June 9) is the
+latest revision of this series and has so far only seen automated review =
+feedback, so I would like to coordinate before preparing any upstream =
+submission of my own.
 
-  nr_subbufs      head_buffer  map      head_buffer  map
-                  unpatched             patched
-  997 .. 1004     1            ok       1            ok
-  1005 .. 1012    2            oops     1            ok
-  1013 .. 1019    1            ok       1            ok
+Current state on my side:
 
-nr_cpus=4, nr_subbufs 1017, one boot:
+- I have a working =
+touchpad using a downstream Qualcomm GENI QSPI +=C2=A0 spi-hid stack =
+(originally from scuggo's x1e-nixos work, imported=C2=A0 via ELLX-Kernel). =
+My local adaptations move the transport to spi-mem and add framing, =
+response matching, and DMA/error-path=C2=A0 hardening.
+- Normal touchpad use works on my machine. The latest hardening currently =
+has only build and software-test coverage; I have not validated s.
+2. The SL7 adds a different transport requirement (quad-SPI via GENI, =
+through spi-mem) on topuspend/resume, and I have not yet run your v4 series=
+ on this hardware.
 
-  cpu 0           1            ok       1            ok
-  cpu 1, 2, 3     2            oops     1            ok
+I believe our work may complement each other in two =
+ways:
 
-cpu 0's meta sits after the buffer-wide header and the scratch area and is not
-sub-buffer aligned; every other cpu's is, so the affected nr_subbufs differ
-between them.
+1. The automated review of the series raised DMA cacheline-alignment=
+ concerns for SPI transfer buffers and unchecked reset return values in the=
+ init/resume paths. Both overlap with the hardening I have been doing =
+downstream, and I would be glad to contribute fixes there.
+2. The SL7 adds a different transport requirement (quad-SPI via GENI, =
+through spi-mem) on top of the same HID-over-SPI protocol, which looks like=
+ a natural fit for your generic driver rather than a standalone one.
 
-Unpatched oops:
+Questions:
 
-  Oops: general protection fault, probably for non-canonical address 0xdffffc0000000007: 0000 [#1] SMP KASAN NOPTI
-  KASAN: null-ptr-deref in range [0x0000000000000038-0x000000000000003f]
-  RIP: 0010:__rb_map_vma+0x418/0xa20
+- What tree or series do you recommend working against? Is v4 =
+still your current baseline, or do you have a newer development branch?
+- Would adding the SL7 quad-SPI transport requirements to your generic =
+driver be the preferred upstream approach? Is anyone already working on =
+this?
+- Are you waiting on maintainer review before a v5? A second hardware=
+ platform may help move things along, and I am happy to provide testing on =
+SL7.
 
-With no reserved range at all, both kernels map the global buffer.  On both
-arms, tools/testing/selftests/ring-buffer passes 6/6 with no skips and
-CONFIG_RING_BUFFER_STARTUP_TEST reports "Ring buffer PASSED!".  ftracetest
-gives identical per-test verdicts on the two arms -- 153 pass, 6 fail, 6
-unresolved, 10 unsupported, 2 xfail.  The six failures are the same on both
-arms and their cause was not established; the unresolved and unsupported ones
-need pahole, a hypervisor trace remote, or userspace this initramfs does not
-have.
+I am also tracing the downstream provenance of the Qualcomm QSPI code=
+ with the original authors to ensure a clean sign-off chain; I appreciate =
+that this series handles its own history the same way.
 
-The discarded-trace path is not measured: a fresh QEMU boot gets fresh guest
-memory, so this harness cannot carry a persistent buffer across a reboot.
+Happy to share technical details or a preliminary diff if useful.
 
- kernel/trace/ring_buffer.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I'm not subscribed to the lists; please keep me in CC.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 04bb94c29f58..fa2e2ce683aa 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3627,10 +3627,8 @@ static void rb_inc_iter(struct ring_buffer_iter *iter)
- /* Return the index into the sub-buffers for a given sub-buffer */
- static int rb_meta_subbuf_idx(struct ring_buffer_cpu_meta *meta, void *subbuf)
- {
--	void *subbuf_array;
-+	void *subbuf_array = rb_subbufs_from_meta(meta);
- 
--	subbuf_array = (void *)meta + sizeof(int) * meta->nr_subbufs;
--	subbuf_array = (void *)ALIGN((unsigned long)subbuf_array, meta->subbuf_size);
- 	return (subbuf - subbuf_array) / meta->subbuf_size;
- }
- 
-
-base-commit: 5dd1818b15d98d4a20806cd00b1b40320b06004f
--- 
-2.53.0
-
+Best regards,
+Jizhou Tong
