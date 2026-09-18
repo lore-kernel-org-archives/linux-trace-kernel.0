@@ -1,106 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f31.google.com (mail-pj2-f31.google.com [74.125.227.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8EF2749DC;
-	Fri, 18 Sep 2026 01:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE163A4523
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 06:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789693965; cv=none; b=hHPec4Z4Jjt2o8RrdYFRT/N1uyAO3NmKLpnGjX9hXb1gegTP02/4WAyNrK3vD2tLpwHGOPc3xaeSWeKGw324GzswulGx/wfA/c4xVKR9om1P2Fs4pgXFsZPPWmVxLKeWs2j25ao3mfeZArwrNwwmW6Rheha6x0p1w+fVw7W1q9w=
+	t=1789712451; cv=none; b=WIfpvV6jJfQbxKMftRN4gUTs6dSffTmPV54XxOmMqgFbPIgdt5iW1Vmz/VojsYQVdpTI6ZQyEPckD3rbB4+pMC31YhVMY0BA29TTaHPnAOS33XslYVQB4uvwhp1IsRV0ZJPtn3Ws/jnHilYosN1U2DE/nrTXouzxmgw1Pw7ySPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789693965; c=relaxed/simple;
-	bh=u6p9v/sQpbAvDgX6JM9uTM03Yy7+MS4LqF7SpSntSW8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=POhXJbIVHMM/PAdWEAjwiPxoUZI4oUXNB6z2GeLNtguIU/jjj3U3U0yaMnDQujvPQZm2ikfeKhH3S98NMKVH/mb2tjsJFPGb0X4h7HLo3BAFe8aVfwmgcdZXQD0vbxJ9ME+hdSzjz9QQZaoR8y3Q/4KOIrVzX+4fTRh1UIpNV/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWPITrmm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789712451; c=relaxed/simple;
+	bh=noTLfj6qvE4G/3YGJrqQ+X+o+vSSS9003cx7Jk2ZdtU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rls85CsfQgejulh4ZGOnOQWkKzBwKBFBv08+Zm6KOjsUIqp+0dPVTVk2kzY5SfE2O1JBqHhQlD6yxupn4f3Oih1rbpWwsF+cas/i4LS9k/Ew8hdxm/+EZbplQZjxMthWBmMMMqkHuoGEuLMUITkh8pbcfFU6+AVgfoGTM5YKh6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMkH/tRo; arc=none smtp.client-ip=74.125.227.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWPITrmm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535D71F000FF;
-	Fri, 18 Sep 2026 01:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789693963;
-	bh=F/YlIWDvAo1XjVKHwEMXxvDrzwtCtsm1MWgy0h+IsGo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mWPITrmmTzETtVKysrDIuRf9zsa3ilEIob2YbzSHsXyA7WH906ymUXY4sUCzEu2A5
-	 ksKouLF+OPo9KYnwHzd8kYd+rENhyGNPAUa5f8w8gOr/eguiZaIZ4nEL6JTfpIl02T
-	 fgwiZU7m6vsW8uvCvv4JXpfB3KV2otl1mo4mJJ/UpCha0Kb3QfGQgYFPEtMoaxUrT1
-	 eDGqWnyiH8DtLZkPXefWXchabKZrJ38og3DRP84TUqGrR/OhII1O/eFk5P4N8Ed2xG
-	 WzDMyAXwEXyLqglGox+HxULYf3WHHh5kIYqyKb/KMGbrVmI5rRBZiAHYLAQbsmWKLB
-	 ySYWUwjZdaZlQ==
-Date: Fri, 18 Sep 2026 10:12:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook
- <kees+treewide@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tracing/probes: Add const to new_argv allocation type
-Message-Id: <20260918101238.62bc61f7a4c55bcc1ab83ab8@kernel.org>
-In-Reply-To: <20260917211022.i.677-kees@kernel.org>
-References: <20260917211022.i.677-kees@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMkH/tRo"
+Received: by mail-pj2-f31.google.com with SMTP id d9443c01a7336-2dd53691be5so3356335ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Sep 2026 23:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789712449; x=1790317249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=csLwFhMu2XInJLQYNP1JrwM1YZ634u6gItc/PhWTvTQ=;
+        b=aMkH/tRo0sLLu/oEqaLjgyoWkMaf25hcaqkdSB+rW8er+/aFxrSokxMf4OqUQRUGiS
+         aiU4dbNKz2Smx42Npl/ycb15ZVJA14ULRSjd2vo+mlREGcHefvBGHQxpsDfIcWZgieyj
+         zGxKeJ5Dac294ehAwafIz7FxVglsAvP6iUWSMjdlfhyx+9mGhWL1Rf45cyxo6r3FoLw2
+         rh4eBI18v1y0t2yFqtDJrFX8KhG6xKfWfZuBZg9NqE71chrAQQHm1SnX3IYiv9tsCkyK
+         C5jUXQn/mwkwesFq4bP2XIl8sixzX3A5HJxq0ru3sFaosvUYEpjN/+fLtyMM0Z5GDE1G
+         2iLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789712449; x=1790317249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=csLwFhMu2XInJLQYNP1JrwM1YZ634u6gItc/PhWTvTQ=;
+        b=eSH3FgYiiA8yr+p4jW1szzDa/6gViYxr9Jc95ipzwzJuYfyJtOk05XjDSahedfkwRr
+         W3h2dcYGseUWgdZ2/Ksao0P5XDwApH/32iwL2WhaKE3bSf3mlh3JrVJBV4+hh29Bff7z
+         rzLIZxW9aKkzeFFqRlyz3CQ/A4wuwA3kdflpmEJSn16Zbl/OGQuwiWR6W7/epPtQBHbp
+         xFjQAW7TuRGpiRPzBMJylYmmacjOdgBaBi67/BWlbLAbN4UIdEdxYdMA0qjNMRuEdlET
+         Zwp9BrLhA3VNmW39m4me0ZV8lR1eVol7t+fZo+kh5NCZWmld30qKn3dh1iD3IYz+VjbF
+         GAuQ==
+X-Forwarded-Encrypted: i=1; AKwUvBws+SS/sTnLk9c/QFr/0YkbsVwIBmpKvcVn1sogWsFuWGmNvXeGj6bj/1I4nfSHMkulxRGykERGU/3uJuaWYrrZYo8=@vger.kernel.org
+X-Gm-Message-State: AFuF++kkq+VPQNJUzz+4GcOv1xvDFZVUbYAPPGC+pxa9rTzh4r/FWx4T
+	jR5z2Duov9NMb6AOhpYmc2dObottDBBuTrrmyrhnfLdjkAJIDV11U2r3
+X-Gm-Gg: AYBFou3dUAxVhvQkLmFSWjd7k2AXapc8Yb4ghMfeWzkuqMKujktqKvoHBli+DdHI4Dg
+	x2Adx/Uq6vEk5v8XXVH7pitSThGiUCN2jpxbvi7sUFf4XWCILqkF3EIDoMsxl9Yt1hh4a5/Rz0T
+	1yGu29RGFwqh1FQefk+lEARngV+gnX96jL2EXJ0FKagYPku8lbNWZM4FuvBn3jshzEBnWvVb1hm
+	FOnzMvFFQHs1pJ+4iU/tDB8S/zhLg5r3fzSBLiX92s1PW8bgLS4ZcbUhmdCiIdEUa1pct6D4Gzf
+	FqO9VfjRXozn+IJwDivFJbwJW7oMKtqe0BD+/n93PkQ/MZq0IC9nCkYY7+IItbfRY1MjDsnbUDu
+	/LQXJkDowFNY/JmXVAUd4snX7Dx6YsALr1uRYiD6MMgTfGW8SzTZOIJjLrEQhQTidNrgK11l8XS
+	gfGXDo50q+YpLUjXEcGGHxz3jgPmXUCBeyiSbY/GC/+07OzUlIHig5iDvGknsL+v7i5fujfSrh3
+	+wAVoQhE1rN
+X-Received: by 2002:a17:90b:4484:b0:39d:f97c:bb2f with SMTP id 98e67ed59e1d1-39e54b66cf5mr3597578a91.3.1789712449109;
+        Thu, 17 Sep 2026 23:20:49 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:d8:ce84:354e:5319:44a6:6a2d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e361b7266sm8675903a91.13.2026.09.17.23.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2026 23:20:48 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	inux-trace-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH] tracing/selftests: Fix incorrect invocation of exit_fail
+Date: Fri, 18 Sep 2026 13:19:13 +0700
+Message-ID: <20260918061913.28069-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Sep 2026 14:10:23 -0700
-Kees Cook <kees@kernel.org> wrote:
+Replace all `exit fail` and `exit_fail;` with exit_fail to keep the
+usage of exit_fail consistent across the ftrace selftests. This also
+reduces warning messsege such as 'exit: Illegal number: fail'
+in test logs.
 
-> From: Kees Cook <kees+treewide@kernel.org>
-> 
-> In preparation for converting the kmalloc family of allocators to the
-> type-aware kmalloc_obj family, we need to make sure that the returned
-> type from the allocation matches the type of the variable being
-> assigned. (The kmalloc family returns "void *", which can be implicitly
-> cast to any pointer type.)
-> 
-> The assigned type is "const char **", but the converted allocation type
-> would be "char **", which is the same type without the const qualifier.
-> As there is no general way to safely add const qualifiers, take the size
-> from the assignment target instead. No change in allocation size
-> results.
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+ .../ftrace/test.d/00basic/ringbuffer_subbuf_size.tc         | 6 +++---
+ .../testing/selftests/ftrace/test.d/00basic/trace_marker.tc | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-This looks good to me. Let me pick it for-next.
-
-Thanks!
-
-> 
-> Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-> kernel/trace/trace_probe.o
-> 
-> Assisted-by: LLM coccinelle
-> Signed-off-by: Kees Cook <kees+treewide@kernel.org>
-> ---
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: <linux-trace-kernel@vger.kernel.org>
-> ---
->  kernel/trace/trace_probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 804442b2f7d2..cfb710095f65 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2316,7 +2316,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
->  	else
->  		*new_argc = argc;
->  
-> -	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
-> +	new_argv = kcalloc(*new_argc, sizeof(*new_argv), GFP_KERNEL);
->  	if (!new_argv)
->  		return ERR_PTR(-ENOMEM);
->  
-> -- 
-> 2.34.1
-> 
-
-
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_subbuf_size.tc b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_subbuf_size.tc
+index d44d09a33a74..8cfe59d32b1f 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_subbuf_size.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_subbuf_size.tc
+@@ -60,7 +60,7 @@ test_buffer() {
+ 	# the size must be greater than or equal to page_size - data_offset
+ 	page_size=$((page_size-data_offset))
+ 	if [ $size -lt $page_size ]; then
+-		exit fail
++		exit_fail
+ 	fi
+ 
+ 	# Now add a little more the meta data overhead will overflow
+@@ -71,14 +71,14 @@ test_buffer() {
+ 	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
+ 
+ 	if [ "$new_str" = "$str" ]; then
+-		exit fail;
++		exit_fail
+ 	fi
+ 
+ 	# Make sure the entire line can be found
+ 	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
+ 
+ 	if [ "$new_str" != "$str" ]; then
+-		exit fail;
++		exit_fail
+ 	fi
+ }
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
+index 9aa0db2b84fc..1986c1bf1606 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
+@@ -68,14 +68,14 @@ test_buffer() {
+ 	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
+ 
+ 	if [ "$new_str" = "$str" ]; then
+-		exit fail;
++		exit_fail
+ 	fi
+ 
+ 	# Make sure the entire line can be found
+ 	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
+ 
+ 	if [ "$new_str" != "$str" ]; then
+-		exit fail;
++		exit_fail
+ 	fi
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
