@@ -1,193 +1,133 @@
-Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB37A4FC8E8
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 14:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412813A258;
+	Fri, 18 Sep 2026 15:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789743031; cv=none; b=LYvkiax3acDNuoC2MK5u0VaqswXRA0hXIQCbNpwygepqXQDCteO5bTjeZwzRN3GYMP8nCZKUyrWOumUOyR5UVZXren4fgGzNp1BPLtGRGcLVPYliRvXNV7K1A0q7rXXyyivSsm6I1z6ly+qVcyg9/72dPIK+5Zkbbt5N5DL5c98=
+	t=1789744233; cv=none; b=YyWh0v0e/HDvAqjH+GLke5KK1BVb9wZMk32yWr+v/vnbt3/KPFoq5zxTBc7bCHA8yf6cHlHkPWsaUiJC2ZSWaESyHh7FralqUyLJCVajWch+xM0k4MQq5aED9FAeLeOAww38oYfqXwSvLJjCHPkEqGXe/ZV4n4yJ2ZAr4hwRMao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789743031; c=relaxed/simple;
-	bh=FRa7j81kn+FZifN+tU/RXt2NlHMQaOXWqjJvWoyULIE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oau6LuM4rFzhns4OKUDbUH6Y2OHqbZV6GeWdCujduRArh4xMcNcJ+3EX2h7uIHKipwQVsQCqGEz9w4BmbiBjUsphrN/++oF87w4h36kIBAS9q6Rd6qeBhlDYW1F7CH8ioAanDoOgjGwsQmGnqfMU7aXrmBRtNcEwSrD+jX2S3sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=eaAruMPi; arc=none smtp.client-ip=74.125.230.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1789744233; c=relaxed/simple;
+	bh=x9nI8krNjaf1CacRJy8wh0+FceJVMFXjZNMyCjkWp0M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cEYqGH+PWiPKTLWdSCUvoTym4gqQY4eOL/4X6LhkF227POY/SuNlRD9PPSbp5nMtLhbaGRdFaSIA+RDL3u88wVw37NVUMRsS8MZLMuqlZH2WJyo7/7kW56u0te1cgp/tR6tOSqCdqrXppE2YjWISrBFBZ1ANB6CVap0db5QPz0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVE3NKJ3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="eaAruMPi"
-Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-90ce6d5271dso4554266d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 07:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789743009; x=1790347809; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=z+PbvTl7j6crAVqwwSi1N6wOs6bBuNm88XPaAXlYwG4=;
-        b=eaAruMPiqNCETlndUIMEsTI8wwe4IyMYRp7IY+Jq1Pz5C6glptp6M48r3gAtXl3R3o
-         o0mk+4/fYf/RyVbjMLlqirV3r0k7aLq8D3SJBS9TnmTyroJxI1lWFXcCmVmMQh49977z
-         6BQCEXpuZs7auPVq7cO2mxTj47CQGQVRNaycwaX/MxEuIHuS5LluhN/YiJkMHk4Mwv2V
-         o7U9rfACfUocBZcnkxbCCUpznnuADY5zCOTAOYF19t0uxRlYXEoRTgNXQZgU5edp5tMF
-         Ls0N2NnNmCjfe2UterERkyBV/iPZwAwtdi7ArbkvvGykip2Bk11CMa7dpDOgmU7PrcuI
-         bjfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789743009; x=1790347809;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=z+PbvTl7j6crAVqwwSi1N6wOs6bBuNm88XPaAXlYwG4=;
-        b=lue8a6ZPPIMaPmud8ci7C/XqbonYOcv0eMOYjUJV8a9GVpYAD2NnryB7EvZOkMQQfG
-         h7QYGIuug7pgsM/IUDIFDB62jkXITK7ZayJNZ5Bb1yGpc3o0N7xtUrcr9UQLX/e00QRg
-         PdES4ZBJxu3atNaeTra0dMY5+KaPYNcp3ljU1iydxjAm7OndoVcXsI4+63uKbCfhHyUA
-         wc4atv9oADHONXy2OvA3zbfc2QD3QA5Ydd4KPbofv2iRlNMKhg5d+EZ47upzqjdg7aCB
-         GE8upT0UX4NbPfYUa4fs9RNXaAvC7GBL5N44esPS/536O2HGaxH7IJ+FHcW6Dpq9IbPG
-         ewcQ==
-X-Forwarded-Encrypted: i=1; AKwUvByXN1/CyJeAza7qIBTgnlo9l0EXSuiAY10S7Uoa0+2fcf3sb9JCvKGTTlbOl+aQVpPZCO9H2qrJ2pjtMF5Yd2i/t8A=@vger.kernel.org
-X-Gm-Message-State: AFuF++mV5Fa+aCAZE8//0ArWPC+frc/evhoaQtcAwX1gXqi+CPz0u1nE
-	+8pHAjecybHbDGjfK8Q+9pnLgfaJwFt4Q1W5273KARguAwO7Nf2aBrNpujE7EQ9GA1s=
-X-Gm-Gg: AYBFou1VlaI+dIEqtcBoDEJVSow1+0gLfPDX6VbfSy6DZBAV1FswtEcN1yfPct07jO0
-	tZUnqPMEZ9nv5WpSaVEzAI90CoqxK9FT+1UBoWj+5xfV20S1w3SQ3vuLNHHZ7nUGW/p7/E58sat
-	cEMguIEa6Fm+PbCvRlwKiXJFiAg7bSFgrmm2eK22bxSRdwNCIDn4RdcVwe1ZOLrw6hWcVmwMdnL
-	USaplCVv6kbgSJ1cfyRYzXsqhwQwZvkzhPivhHT5ShiRolBv9xLWmBveddn52Z14kHL593koO2o
-	AYDwbqZHPwva1WdFyxPdtrMuelAQE54XERewDeahLZeB53OuEUVhhq1R4fXQTznAiQWG7jJmn/a
-	agYJxLF+PQLUx1wK4ZIZ52/JrOlwcXwnvgj6B1fGSDD3dWRLinHc2wMlNKHo6WbUVBr7J50nP3p
-	FVfA1zz1yENmkNmQO2BQcXc7t6lBf8Era/lKxqWP6VJtvNS3DucGcKDqM19ZoCFi5SuIVtC7Vf5
-	IHOkqFQuhw7gyfk2W8XbWQ+m9VCO1+rlCbNSKyp9bgz6sVlesLwchTZ9Q==
-X-Received: by 2002:a05:6214:ca6:b0:912:3d05:eb11 with SMTP id 6a1803df08f44-91254e4feadmr40041586d6.5.1789743008667;
-        Fri, 18 Sep 2026 07:50:08 -0700 (PDT)
-Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9125802d79bsm13900886d6.24.2026.09.18.07.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 07:50:06 -0700 (PDT)
-From: Josef Bacik <josef@toxicpanda.com>
-Date: Fri, 18 Sep 2026 14:49:31 +0000
-Subject: [PATCH RFC v4 12/13] rcu-tasks-trace: Assert no reader is held on
- return to userspace
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVE3NKJ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0941F000FF;
+	Fri, 18 Sep 2026 15:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789744231;
+	bh=85SXaRwWcLRL0l9RndOEuK+a4aiLbRSz4zPmmbl/uU8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bVE3NKJ3+tZPF2drH5S0lC/1xDa3kXSu4SK5G3B+/5rOI0oDtnxfCab7o+wdBhK6l
+	 VSQZ6+C/o4c7O3vn7ty+CgvFhnISZvB1Y2TFSepHwxiih2jj9g7DqUEIFSp0IPz/HV
+	 0ckfw1XVUoV9kN4Zmzw1vYbUlmd4ZtK9kTwIIqRYu4Xn0BgYBkW1yvPLcptaIVPIKR
+	 HGIN0ZqDAgu74TO+ltPIUKR+3jf1lSqVpqo5/CuP9PY5KAmT9wFHFzqDYFPPn5iMbk
+	 GjhM/I2UF+AcA0PO2/prS3Rc2gDkhwGODVUk1VZMNBnZTTB0St6qVGkuNqTGKWgCIL
+	 Udy1Ku0pvhUzg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC v4 02/13] rcu-tasks: Add a Tasks RCU implementation
+ for reader-marked trampolines
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Josef Bacik" <josef@toxicpanda.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260918-b4-rcu-tasks-preempt-qs-v4-2-63f0e9d69661@toxicpanda.com>
+References: <20260918-b4-rcu-tasks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com>
+ <20260918-b4-rcu-tasks-preempt-qs-v4-2-63f0e9d69661@toxicpanda.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 18 Sep 2026 15:10:30 +0000
+Message-Id: <20260918151031.2E0941F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260918-b4-rcu-tasks-preempt-qs-v4-12-63f0e9d69661@toxicpanda.com>
-References: <20260918-b4-rcu-tasks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com>
-In-Reply-To: <20260918-b4-rcu-tasks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
- Joel Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
- Xu Kuohai <xukuohai@huaweicloud.com>, 
- "Paul E. McKenney" <paulmck@kernel.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
- Joel Fernandes <joelagnelf@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
- Xu Kuohai <xukuohai@huaweicloud.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
- Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
- Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, 
- rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- xen-devel@lists.xenproject.org, Andy Lutomirski <luto@kernel.org>, 
- Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
- Juergen Gross <jgross@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Ihor Solodrai <ihor.solodrai@linux.dev>, linux-kernel@vger.kernel.org, 
- rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- xen-devel@lists.xenproject.org, Josef Bacik <josef@toxicpanda.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openssh-sha256; t=1789742980; l=2581;
- i=josef@toxicpanda.com; h=from:subject:message-id;
- bh=FRa7j81kn+FZifN+tU/RXt2NlHMQaOXWqjJvWoyULIE=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgUBr36M/n0nWN0DNbnxwzIiCZez6MG
- JiruuNaSCI/zXsAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QAsi6H715Q7GMOS9YXNtKesBwx2lesjeCIIWVvPLg8W7bMTSPfSKqF2zG8KnHJqpv18BR10X5Rc
- 7g2eq40cmPAk=
-X-Developer-Key: i=josef@toxicpanda.com; a=openssh;
- fpr=SHA256:C8kOX2QUJCMqnCX+KEeoqRAjLo9L+ELOSH2NSAJHqGA
 
-With trampolines now taking rcu_read_lock_trace() open-coded from
-assembly and JIT-emitted code, an unbalanced reader would silently
-turn every later Tasks Trace grace period on that task into a stall.
-No task can legitimately reach userspace with current->trc_reader_nesting
-non-zero, so under CONFIG_PROVE_RCU check it in the generic entry
-code's return-to-user validation, next to the existing kmap and lockdep
-assertions.  Compiles away otherwise.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Critical] rcu-tasks: NULL pointer dereference in rcu_tasks_irq_resched_e=
+nter() during early boot
+--
 
-Assisted-by: LLM
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- include/linux/irq-entry-common.h | 2 ++
- include/linux/rcupdate_trace.h   | 7 +++++++
- 2 files changed, 9 insertions(+)
+commit ea4914f1671c6b6ff32f3cbc1cd74fa6dd51744d
+Author: Josef Bacik <josef@toxicpanda.com>
 
-diff --git a/include/linux/irq-entry-common.h b/include/linux/irq-entry-common.h
-index e19b41ee6b18..d42568a488a7 100644
---- a/include/linux/irq-entry-common.h
-+++ b/include/linux/irq-entry-common.h
-@@ -5,6 +5,7 @@
- #include <linux/context_tracking.h>
- #include <linux/hrtimer_rearm.h>
- #include <linux/kmsan.h>
-+#include <linux/rcupdate_trace.h>
- #include <linux/rseq_entry.h>
- #include <linux/static_call_types.h>
- #include <linux/syscalls.h>
-@@ -214,6 +215,7 @@ static __always_inline void __exit_to_user_mode_validate(void)
- {
- 	/* Ensure that kernel state is sane for a return to userspace */
- 	kmap_assert_nomap();
-+	rcu_tasks_trace_assert_idle();
- 	lockdep_assert_irqs_disabled();
- 	lockdep_sys_exit();
- }
-diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
-index 273c59a03251..6034c6b19479 100644
---- a/include/linux/rcupdate_trace.h
-+++ b/include/linux/rcupdate_trace.h
-@@ -211,6 +211,12 @@ unsigned long rcu_tasks_trace_batches_completed(void);
- // Placeholders to enable stepwise transition.
- void __init rcu_tasks_trace_suppress_unused(void);
- 
-+/* A task must never reach userspace inside an rcu_read_lock_trace() reader. */
-+static inline void rcu_tasks_trace_assert_idle(void)
-+{
-+	WARN_ON_ONCE(IS_ENABLED(CONFIG_PROVE_RCU) && READ_ONCE(current->trc_reader_nesting));
-+}
-+
- #else
- static inline unsigned long rcu_tasks_trace_batches_completed(void) { return 0; }
- /*
-@@ -220,6 +226,7 @@ static inline unsigned long rcu_tasks_trace_batches_completed(void) { return 0;
- static inline void call_rcu_tasks_trace(struct rcu_head *rhp, rcu_callback_t func) { BUG(); }
- static inline void rcu_read_lock_trace(void) { BUG(); }
- static inline void rcu_read_unlock_trace(void) { BUG(); }
-+static inline void rcu_tasks_trace_assert_idle(void) { }
- #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
- 
- DEFINE_LOCK_GUARD_0(rcu_tasks_trace,
+rcu-tasks: Add a Tasks RCU implementation for reader-marked trampolines
 
--- 
-2.55.0
+This commit introduces a Tasks RCU implementation for architectures that
+make their trampolines Tasks Trace RCU readers. It hooks into the generic
+irq entry code to track preemptions. The tracking utilizes a per-CPU list
+for tasks preempted during irq exit.
 
+> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+> index e4acd50bd81a1..94318519998c8 100644
+> --- a/kernel/entry/common.c
+> +++ b/kernel/entry/common.c
+
+[ ... ]
+
+> @@ -141,8 +142,13 @@ void raw_irqentry_exit_cond_resched(struct pt_regs *=
+regs)
+>  		rcu_irq_exit_check_preempt();
+>  		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+>  			WARN_ON_ONCE(!on_thread_stack());
+> -		if (need_resched() && arch_irqentry_exit_need_resched())
+> +		if (need_resched() && arch_irqentry_exit_need_resched()) {
+> +			if (IS_ENABLED(CONFIG_TASKS_RCU_TRAMPOLINE_READERS))
+> +				rcu_tasks_irq_resched_enter(instruction_pointer(regs));
+>  			preempt_schedule_irq();
+> +			if (IS_ENABLED(CONFIG_TASKS_RCU_TRAMPOLINE_READERS))
+> +				rcu_tasks_irq_resched_exit();
+> +		}
+>  	}
+>  }
+
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index 627295396cd91..f03be742be48c 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+
+[ ... ]
+
+> +void rcu_tasks_irq_resched_enter(unsigned long ip)
+> +{
+> +	struct task_struct *t =3D current;
+> +	struct rcu_tasks_percpu *rtpcp =3D this_cpu_ptr(rcu_tasks.rtpcpu);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +	WRITE_ONCE(t->rcu_tasks_irq_ip, ip);
+> +	t->rcu_tasks_exit_cpu =3D smp_processor_id();
+> +	raw_spin_lock_rcu_node(rtpcp);
+> +	list_add(&t->rcu_tasks_exit_list, &rtpcp->rtp_exit_list);
+
+[Severity: Critical]
+Could this cause a null pointer dereference regression during early boot?
+
+When the trampoline reader feature is selected,
+raw_irqentry_exit_cond_resched() hooks into the generic irq exit path to
+call rcu_tasks_irq_resched_enter(). During early boot, interrupts are
+enabled via local_irq_enable() in start_kernel(), meaning preemptions can
+begin occurring.
+
+However, the per-cpu rtp_exit_list list head cannot be statically
+initialized and is dynamically initialized via cblist_init_generic() from
+a core_initcall. Since core_initcalls are executed much later by the
+kernel_init thread, any preemption before that phase will attempt to
+list_add() to a zero-initialized (null) rtp_exit_list.
+
+Would this lead to a kernel panic when the list macros dereference the
+uninitialized head pointer?
+
+> +	raw_spin_unlock_rcu_node(rtpcp);
+> +
+> +	if (unlikely(rcu_tasks_trampoline_text(ip)))
+> +		rcu_tasks_tramp_hold(t);
+> +	else
+> +		rcu_tasks_tramp_release(t);
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918-b4-rcu-tas=
+ks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com?part=3D2
