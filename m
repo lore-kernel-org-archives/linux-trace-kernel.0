@@ -1,164 +1,115 @@
-Received: from mail-oi2-f13.google.com (mail-oi2-f13.google.com [74.125.231.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D74E35C1B1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 14:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EF13ACA41;
+	Fri, 18 Sep 2026 14:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789741954; cv=none; b=uOY8u0hB/aQRYLRdaGFkXwEacc1KASOJySz9ZOglve2aXObkzU6QJxaoEDBn6K/LwaIUznhUnlPgkzDNUF3QIPUi1O3GVGNmqeIkD3zs7JPiwQJnDMtNdUdMDtccqZ8mjh1FzFELa3/Ry7aj1exxVw2pOyvjXLrbbO5CPnpZaoc=
+	t=1789742068; cv=none; b=jY+zFhC/hDse2hXhjGAcP7LYTRKgJck7YtSbr2Un/YzjA7Fhx1rb6xT6g4kMiKqcyRjfzx7XjgQBwc1GZ7vTMk7KyGR6hgwfKa4xZxj3RIOFC7Uv3JNbkAVoGX+2gOQtuFJGsqQlx8zKOntHYAruED/WYnFhdCzHiRV6tuN/0QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789741954; c=relaxed/simple;
-	bh=CQALW02Bw6EgY+Vkrvm5u+HSWHMVu+co3R+Z3tCagL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=adqg17vqmvC0o/b/ZWTIkBo3cTV8FluB42+jFZmG9dST/QQ8T6gf6yGddIgF0xohZHdneoiAQLXd8jH5D3dlUnedw+biawchfShn5JE0xsXqA182e+9v2snR6Tt5dJlVzrUFRcQHW/owTxv87yIoBJXjPcGS+LVDfrY9CSj/uZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4IuyXOq; arc=none smtp.client-ip=74.125.231.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789742068; c=relaxed/simple;
+	bh=JwnxHTha4dp87MjmNtDQGDajXNNFtNTVpecKNz9mZL8=;
+	h=From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:Date; b=k3b1/xtV8kUQWXPPV5l/Sf9LozUrjeABcvvUe7UWkDv2OWGoNcvi0rqG1COBe/lgYfxM8qFQu77FO3v4rH54DbQyCKIZ4ffGelfIneLjOFBM8ZGSbhmJUjVZiVjFATL5HEzHxNpi/edUfFOsRUqkt0Mvt0rc7KwzbBh11m6IvII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dfp3jZXJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4IuyXOq"
-Received: by mail-oi2-f13.google.com with SMTP id 5614622812f47-4c4bf3defecso570125b6e.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 07:32:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789741951; x=1790346751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qQmGJgE2Cjr7TfgtQoudFuhaqKbLVncSFW+Ruq92ZCc=;
-        b=Y4IuyXOqvoesxLZiQTJB56SXndTIl5qOaIAW8lc/0M1lqMTzr+Dt5gfBxnEe7A/SKl
-         tBjRCjjw3GRimbblmTvxYpaqhG2BPkP/vZP9dziH1cV9X9fV3mO+jjR+zHN3RaB/fi3a
-         v1cZA5DwFHhARkLq7KiJx++IEwkE9WzeM+OWV0mOupuH2Un5j6dKGxH2jG+gPehJLjPo
-         sOUnul9x0XghvZIvPFyqdxRiCsiqCTJjhfDjlPrn7Z14PpVpAHAwyc+MGaPeWpBVZvLE
-         zMtAfFCvyCFdvmMC0hvuYSs5aRnUW5FoKhE7zKKZ0oFWg6KMADdbWDat7FmOSrAJIfo8
-         6FBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789741951; x=1790346751;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qQmGJgE2Cjr7TfgtQoudFuhaqKbLVncSFW+Ruq92ZCc=;
-        b=RHs4dUr4MobnVBv/RUxoUJoxUKKd2+ZpPKhJlFpHyTfKBuW7edDqIga2XfBk8ww8sx
-         ngkOWXxKxKCOPyIgUWpoCTN8Y32e0FCMhbEJDTQfC8Z/iWRTBo6j+105iXqZ+f0PsXfb
-         PuFa5QL68b1nyE8SKnGf9hCH9xlrIStS98g4seNHD+lKztpkbT9esyYz2BpSlB3lKTxx
-         OoYN946Dk0nVZ66Q83B7DBqWxLq5/c7MCcuSi6MCqJV6xgpZTFnCOpA28SRM8CB9blp6
-         yID3dx351aIiWP+EkzVBeHc8Dbi34THzGPJ45IEyCx9AmUc6c4bdDFQZsUdYZDuCz7JK
-         neug==
-X-Gm-Message-State: AFuF++lpJdYVu/7WMdevC3BGIvvH8RRqFe+hBSYGC5TteGIXQuRnBpQA
-	kse4OA9JL+VXUgWdksPxQd01U0vBYrFFb5G26eeNadT4pAGHJWPfcBIu
-X-Gm-Gg: AYBFou3AuPUHcx5P/6RNGGTb+kCM5V1OWwOgAy0AEYgYImFMLp/8YCEgBhensiQT+K9
-	4mbX7fkvDmR94Bpx7EVkzAoY12+al9Wt6uEBsvCwxqSIKk6dXpTRQNgrsxGhiIriUFv0AR606xA
-	vO8YQRYIfjiTQ7YEaQyBTaV3buiuxFLAQ/6EcYfCTpRM+xTk+ziM8DWmCf27LJJeApyJMmqcHWs
-	CFRbnguEBA2XAv87zm+7g1DAMb61reEijfDTfUgPelkqiTlbwmmJYovFJOQh4RacIfnXH3zOkWx
-	rPJ0O4aX6aeAuIDoZEIjbAIE7uxq49lWUrpJ4y9/GYhv5oq4+y0mj1x8Lmc5BaLzlFLKB02juGO
-	JJlbVOjY3Iotbz+WeJnd9EZYG34x6Y/VlVwWLBdi3ef2d7I1Wp8n4H0AmDwsBo0z3sBnig0vQZI
-	CnRViqqtmiLa/fTzyBN08PNC80O1vJwfLyoMRKU6kI7OngQ2xSTcSuCHQvp/CW02E=
-X-Received: by 2002:a05:6808:5092:b0:4c2:dd8a:fa46 with SMTP id 5614622812f47-4ccf642cfedmr3841440b6e.16.1789741951460;
-        Fri, 18 Sep 2026 07:32:31 -0700 (PDT)
-Received: from adriano ([190.215.95.120])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-80e42815ff2sm1615667a34.3.2026.09.18.07.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 07:32:30 -0700 (PDT)
-From: Adriano Cordova <adrianox@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Adriano Cordova <adrianox@gmail.com>
-Subject: [PATCH 2/2] uprobes: Hide unprepared uprobes from the breakpoint paths
-Date: Fri, 18 Sep 2026 11:32:09 -0300
-Message-ID: <20260918143209.709291-2-adrianox@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260918143209.709291-1-adrianox@gmail.com>
-References: <20260918143209.709291-1-adrianox@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dfp3jZXJ"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id E45DA1F000FF;
+	Fri, 18 Sep 2026 14:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789742066;
+	bh=kaJ2ZAGN9DkRNA1nJeSM2iOiiBiOrcQ6PhfG5PhPlI0=;
+	h=From:To:Cc:Subject:Date;
+	b=Dfp3jZXJycPA+z3dY4/mwv1ehyjLM5ooUQCiB8zwn+BEOYqNVA2OvHqQIV02pRI/z
+	 5Y908AwgMPaf/3FpQGjCLGknJzOLwWSCO1XtNcu8E0aP8cArVJ+jfRAKYMDwema/Ky
+	 Ob8f7CNfxLthbjUMPkpFvM7VifrZMB8UN5Ri/DBscTnVeue+va24SEO0YbCMSp+af4
+	 ceWfdaYgbsipEzj50j+cHvfcMCCdMnNAfrz0OHwKQrRJxSgmqAmkrwNuXIoB9jvsTX
+	 04g+Ty11ufS2H1xI/9bhQ2GkRXG8LX8pYYL87d8mzhvpbGNrVR0kBEoI8fwNYOar9Y
+	 Yk+CcNrO2KMQg==
+From: "syzbot" <syzbot@kernel.org>
+To: syzkaller-bugs@googlegroups.com, Krystian Kaniewski <krystianmkaniewski@gmail.com>, <linux-trace-kernel@vger.kernel.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Vincent Donnefort" <vdonnefort@google.com>
+Cc: linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, syzbot@lists.linux.dev
+Subject: [PATCH] ring-buffer: Fix false warning in ring_buffer_map_get_reader()
+Message-ID: <15bc282f-669e-4a94-911d-bb435513461f@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Date: Fri, 18 Sep 2026 14:34:25 +0000 (UTC)
 
-find_uprobe_rcu() backs handle_swbp() and handle_syscall_uprobe(). Make
-it skip a uprobe whose instruction has not been analyzed yet, so neither
-path can use an uninitialized ->arch. An unprepared uprobe has no
-breakpoint installed (install_breakpoint() prepares before set_swbp()),
-so the trap path treats it as not registered yet. This also gives
-handle_syscall_uprobe() the check it was missing.
+From: Krystian Kaniewski <krystianmkaniewski@gmail.com>
 
-Signed-off-by: Adriano Cordova <adrianox@gmail.com>
+In ring_buffer_map_get_reader(), an unconditional WARN_ON(!reader) is
+triggered when rb_get_reader_page() returns NULL:
+
+WARNING: CPU: 1 PID: 5906 at kernel/trace/ring_buffer.c:7998
+ring_buffer_map_get_reader+0x940/0x9d0
+CPU: 1 UID: 0 PID: 5906 Comm: task Not tainted
+RIP: 0010:ring_buffer_map_get_reader+0x940/0x9d0
+kernel/trace/ring_buffer.c:7998
+Call Trace:
+ <TASK>
+ tracing_buffers_ioctl+0x258/0x300 kernel/trace/trace.c:7381
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+ do_syscall_64+0x166/0x520 arch/x86/entry/syscall_64.c:84
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ </TASK>
+
+This warning is triggered due to a race between a writer committing events
+and a reader mapping the ring buffer via TRACE_MMAP_IOCTL_GET_READER. When
+a writer commits an event in rb_set_commit_to_write(), it advances
+cpu_buffer->commit_page to cpu_buffer->tail_page in its first loop before
+updating the commit counter (commit_page->page->commit) in the second loop.
+If a reader invokes ring_buffer_map_get_reader() at this moment, the
+initial check cpu_buffer->reader_page == cpu_buffer->commit_page is false,
+and it calls rb_get_reader_page(). Inside __rb_get_reader_page(), the
+reader swaps reader_page with the head page (which is the new commit_page).
+Because the writer has not yet updated the commit count on the new page,
+rb_page_size() is zero and reader_page->read < rb_page_size() evaluates to
+false. __rb_get_reader_page() then checks if cpu_buffer->commit_page ==
+cpu_buffer->reader_page. Since both now point to the swapped page, the
+condition evaluates to true and rb_get_reader_page() legitimately returns
+NULL to indicate the reader caught up to the writer.
+
+Furthermore, rb_get_reader_page() can legitimately return NULL when there
+is no data to read. Re-checking mutable writer state such as
+cpu_buffer->reader_page != cpu_buffer->commit_page is insufficient because
+a writer on another CPU can advance commit_page before the check is
+evaluated without being stopped by reader_lock.
+
+Because WARN_ON must not be used for conditions that can legitimately
+happen, and pr_err should be used instead if necessary, remove the
+WARN_ON() entirely since returning NULL here is an expected condition.
+
+Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
+Assisted-by: Gemini:gemini-3.8-flash syzbot
+Reported-by: syzbot+de3d7f9bcc9212f3fae1@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=de3d7f9bcc9212f3fae1
+Link: https://syzkaller.appspot.com/ai_job?id=488adc18-a10e-42d2-a205-25327c38837f
+Signed-off-by: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+
 ---
- kernel/events/uprobes.c | 35 +++++++++++++++--------------------
- 1 file changed, 15 insertions(+), 20 deletions(-)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9c03a555a..1a4da3d47 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7995,7 +7995,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		goto out;
+ 
+ 	reader = rb_get_reader_page(cpu_buffer);
+-	if (WARN_ON(!reader))
++	if (!reader)
+ 		goto out;
+ 
+ 	/* Check if any events were dropped */
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 686585539ebf..bdc05fdce0a0 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -924,8 +924,20 @@ static struct uprobe *find_uprobe_rcu(struct inode *inode, loff_t offset)
- 		 * try again as we might have missed the element (false
- 		 * negative). If seqcount is unchanged, search truly failed.
- 		 */
--		if (node)
--			return __node_2_uprobe(node);
-+		if (node) {
-+			struct uprobe *uprobe = __node_2_uprobe(node);
-+
-+			/*
-+			 * A uprobe is inserted before it is prepared; do
-+			 * not hand it out until ->arch is usable.
-+			 */
-+			if (!test_bit(UPROBE_COPY_INSN, &uprobe->flags))
-+				return NULL;
-+
-+			/* Pairs with the smp_wmb() in prepare_uprobe(). */
-+			smp_rmb();
-+			return uprobe;
-+		}
- 	} while (read_seqcount_retry(&uprobes_seqcount, seq));
- 
- 	return NULL;
-@@ -1123,7 +1135,7 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
- 	if (ret)
- 		goto out;
- 
--	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
-+	smp_wmb(); /* pairs with the smp_rmb() in find_uprobe_rcu() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
- 
-  out:
-@@ -2743,23 +2755,6 @@ static void handle_swbp(struct pt_regs *regs)
- 	/* change it in advance for ->handler() and restart */
- 	instruction_pointer_set(regs, bp_vaddr);
- 
--	/*
--	 * TODO: move copy_insn/etc into _register and remove this hack.
--	 * After we hit the bp, _unregister + _register can install the
--	 * new and not-yet-analyzed uprobe at the same address, restart.
--	 */
--	if (unlikely(!test_bit(UPROBE_COPY_INSN, &uprobe->flags)))
--		goto out;
--
--	/*
--	 * Pairs with the smp_wmb() in prepare_uprobe().
--	 *
--	 * Guarantees that if we see the UPROBE_COPY_INSN bit set, then
--	 * we must also see the stores to &uprobe->arch performed by the
--	 * prepare_uprobe() call.
--	 */
--	smp_rmb();
--
- 	/* Tracing handlers use ->utask to communicate with fetch methods */
- 	if (!get_utask())
- 		goto out;
+
+base-commit: df2908090cda368b01ff43709f51890076c56157
 -- 
-2.51.0
-
+See https://goo.gle/syzbot-ai-patches for information about AI-generated patches.
+The person who has signed off on the patch is responsible for
+addressing comments.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
