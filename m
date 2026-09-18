@@ -1,212 +1,141 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi2-f13.google.com (mail-oi2-f13.google.com [74.125.231.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE1A2ED16D;
-	Fri, 18 Sep 2026 14:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8A4385D97
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 14:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789741824; cv=none; b=Q6/GFD5YBVHoqHR+rgtyeJ6Q/KfqjF5SzXDqRtF5WEjsnC5RFzXOVB9Fckl5N2XeI8/zyQKmnIpPY2G/SaXEqJgL4EFtZN+PyqSeFon3PwYCgpDB9A8JXP1jRcZFjj/UPk8f6YtBS3sfBDvgfDpjThvVPToZyBgeg69+EhI+fQo=
+	t=1789741950; cv=none; b=L44wjtQJs9aJks2hgA83w9b8KmWbYqVPp8+iTF+2+erB6/L3W7d65itLFXR30GFeaW/R650U1tAwAhW5e6SQ+lAdlF25fKsH3Z6fIxn5TJHzJidvhe4UbgDChQ+ItNiEO6YFKjxYzTBs4cV7yOKsAqzWhfobQ6o7A+j0ykETp3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789741824; c=relaxed/simple;
-	bh=5OmomeRB+LD60RpaKuchulaB8gm1HL/uXNHI8PnXFlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nh7QxUIPSD3n3M5khRT+IaAJvQfkjtgQqgGvEPzZSRTOIWBAOxxl/I4S2x8KtGG3pAn3Feczc6jdUnmQeRjyxnTiHmldnrMK15wK1E32mL8qVDl85cU6VIPpoCBOVsu9r7GQBkuU1Vw40YdHh3xBoduKLVSFs0oHBGC0FjWyoy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=clSyf51X; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1789741950; c=relaxed/simple;
+	bh=QD3PxjCXZ6UJPf0E8x4yo7IEgC7LOe9fpYJLiO251GI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SJMpoH0K5JV7K6Xe9T/phYEs1jZdnWA6lE/AE/vnClt78gCwIQhBQEN//Mw7yaNKVB09nVNrWmiBf3kTXH+Q9K7MDC3uENi2nfA2fvfPGpdtpBWJdsHPrxrhoUIHRTM9C8j8TwHUT8RQuvvBV6flCktyA1MBOL+qdpnIWLqayPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XulFdTz8; arc=none smtp.client-ip=74.125.231.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="clSyf51X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z8DxBDctfQle4qPyCLsPEBU1oRIWLoRdyUpwbsFqYLE=; b=clSyf51XrV8aRcbTvneX3p6wBa
-	n2dJgPOcz894gpJOnZdCOcF3UEXESwNBxWownSVKd57lnJYBBwn8UK22mY+Uu9cTVCm4bYkkLdbb9
-	zwnoTjkKMM6lYQMFHN/pynLhjEOj2/5EEiCk+CstXFpuvTmB28MRP3Fdyl1b9KhwvkjSzoEaggt5r
-	4zu+cgayQfsFLqmqeLGe7kyw0337RIawLytCxdWbLSsC8OhbmfdiwFeLxFGinxIHnQj3tRZJIvubH
-	Z5p2yU1Pjs4x4ZBAOVPASiIaB3Jla/kGk5xR5Btk7PaRjSjDUhmPE8iOfBuqPX68vAPFbXjRIpG5J
-	q2qapdRg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x7Za9-006nCZ-3B;
-	Fri, 18 Sep 2026 14:28:54 +0000
-Date: Fri, 18 Sep 2026 07:28:33 -0700
-From: Breno Leitao <leitao@debian.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
-	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v2 01/40] mm/vma: fix mmap_prepare file handling, remove
- file_doesnt_need_get
-Message-ID: <aq1KeFmXBIEd2YhQ@gmail.com>
-References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
- <20260914-b4-mmap-prepare-vma-flag-sanify-v2-1-7d9781ed5361@kernel.org>
- <aquz9Z9JrK_H_E0g@kernel.org>
- <aq01JFp8hRReyY-O@gmail.com>
- <aq06hcheI4OGi_3A@gremlin>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XulFdTz8"
+Received: by mail-oi2-f13.google.com with SMTP id 46e09a7af769-80a71781323so340695a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 07:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789741947; x=1790346747; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6E7ctxafzLuDLf4HoS6Tx9j17d6jseDqLEP/al0ahus=;
+        b=XulFdTz8Q+B5fnHJVuKmSdzT9XulptHj5DveQoJQJX8tINg5TZ9NF5cSJLMdDkJSVa
+         RtKuN/Iebk43gbHWfPje8OI8bRcXhrsJROfU0H8tIB+qWD97RCQvNzJNiLfxuvq5XS47
+         1aQmS+Qq8xdCe5uzJ2lvd04NwJjNXIho0zQA7A/7r4lS4BHFP3ibcud2SEjc46LOlbbQ
+         09uxngZFwCf5ipi3OeMYt1oZ7oc9jHA4fLZTFBSWu4RkMPo3erI8Ff8KmRATsNznBNJ2
+         lcvfTYa6UYxF/ChtTiKi8v0BBo7RvIhGCFh6eiMe75F1pPQ1xrP9tA1FnLRHKhEXwxWn
+         WDKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789741947; x=1790346747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6E7ctxafzLuDLf4HoS6Tx9j17d6jseDqLEP/al0ahus=;
+        b=0vPb4QaBX/Cdgn89cHk4ijKz5h8FNN315r9YMeO8d9dVxAiFwHHJYjZ9DxpJogM8Tq
+         IweIifYBJcGcpYAqIK1uu3fmiJoAGJfXqGeBBuczDpd6xE/rAtfwAibI+h4QrJajU+FX
+         EtHhvb8za84T8g2G/gAr0J64Ud0ueMqzkuUMKzfeA/mr+H6ow5oiUFWtBmRwmlsV1qaD
+         msjBVyapwUqkKgWLRdq0ojYHQqYsZTf/kDLfFB/xJLgAFdDS8vxcoodyNwn31YcsM3Jf
+         TvxtwakWETMVQGrnAROkkgorJGA09qx9RJvVlfSfWuKk+xE8rnkYxCXW72zBUKs1qnUz
+         oRxw==
+X-Gm-Message-State: AFuF++mIhnGbyC+325SlIMWc1Pgj3G9pp+gmDwxklwRRs9UA+CAlWJYU
+	m8YqnPDbLoht7bXq5tDn5yaxwOie4C1QV4fDQfZLoXtvYHOHUj1k3Pph
+X-Gm-Gg: AYBFou35Ch7NX12tC4gOinr0KTcmeDcd4sTwWzs2189pHeXuvZLZHO8m2i4JEgsWhhr
+	MLDJcG/QC+ag1ZOLuhuaGSWvcDB6/hhv2c9DaU1x5G6EbuYS7UAD0w1eF+pFgFe3A+d6iwATND9
+	Yub2WJE9Mi3xSKsoRHycuN4/OI4PHXXGIRNmJnNBr5PCpEAgKrvD2FlwXa/+1ulohiQrs02RJFV
+	Bw3uAsUlC+yhAbTXKVcr53UXPVcEuD0NubK19JPd/H8B+W16PccZ18BG+GZIaBD6R9nNchG+vaR
+	OUsFHWIXmwvp6GRlVeuHOnCAi7Z9kRGf4xWxxm4S8rKZA/EzmQjgvf013e6OpU8zIbVRtw8jIPg
+	Kn1QqOieRk0t40GGVkg2TYHrcQcK5WiUFu17vRM/0SR5fBP490xH/OXRMuT0i5fafy/L55WGZYH
+	vOLXVAgC5aPJTAe9Evt5BlpsOl7HHxji5eSBbhmBCkWhHnktVNagDXGsxI1eDxUBo=
+X-Received: by 2002:a05:6830:6001:b0:7f3:a8ac:45f7 with SMTP id 46e09a7af769-80ddfd69b03mr2915289a34.3.1789741946653;
+        Fri, 18 Sep 2026 07:32:26 -0700 (PDT)
+Received: from adriano ([190.215.95.120])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-80e42815ff2sm1615667a34.3.2026.09.18.07.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2026 07:32:25 -0700 (PDT)
+From: Adriano Cordova <adrianox@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Adriano Cordova <adrianox@gmail.com>
+Subject: [PATCH 1/2] uprobes: Use a dedicated mutex to serialize prepare_uprobe()
+Date: Fri, 18 Sep 2026 11:32:08 -0300
+Message-ID: <20260918143209.709291-1-adrianox@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aq06hcheI4OGi_3A@gremlin>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 18, 2026 at 02:20:34PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Fri, Sep 18, 2026 at 05:57:51AM -0700, Breno Leitao wrote:
-> > On Thu, Sep 17, 2026 at 12:33:41PM +0300, Mike Rapoport wrote:
-> > > On Mon, Sep 14, 2026 at 03:57:21PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > > The map->file_doesnt_need_get flag is confusing and the existing
-> > > > implementation has holes.
-> > > >
-> > > > Drivers are permitted to change the owning file of a mapping. If they do
-> > > > so, they are required to take a reference on that file.
-> > > >
-> > > > The mmap() operation which ultimately invokes __mmap_region() is guaranteed
-> > > > to drop the refcount for the original file the mapping was made under, but
-> > > > this is not true for the replaced file.
-> > > >
-> > > > This has been addressed so far by tracking map->file_doesnt_need_get, which
-> > > > is rather poorly named and unfortunately fails to correctly track whether
-> > > > or not an additional put were needed in a number of cases.
-> > > >
-> > > > Make life easier by removing this flag, and instead drop the reference for
-> > > > both mmap_prepare and the deprecated mmap callback in a new function
-> > > > put_map().
-> > > >
-> > > > Track whether this needs to be done by aligning mmap_state with
-> > > > vm_area_desc and store the original file in the map->file field, keeping
-> > > > the updated file in map->vm_file.
-> > > >
-> > > > In order to have the same behaviour for both types of hooks, only drop the
-> > > > reference __mmap_new_file_vma() itself took in its error path, deferring
-> > > > the replaced file's reference to put_map().
-> > > >
-> > > > To make this work correctly, map->vm_file has to be updated before any
-> > > > error handling, so update __mmap_new_file_vma() and call_mmap_prepare() to
-> > > > set this field first.
-> > > >
-> > > > Also when mmap_prepare() changes the file and is then merged, the reference
-> > > > count also must be decremented, so update the logic to call put_map() in
-> > > > this case too.
-> > > >
-> > > > Also update __compat_vma_mmap() to manually perform this step for stacked
-> > > > file systems using the compatibility layer, and update
-> > > > compat_set_vma_from_desc() to replace vma_set_file() with a correct
-> > > > refcount/file update.
-> > > >
-> > > > No in-tree driver is impacted by the incorrect implementation of this
-> > > > currently (no driver that does this is mergeable for one), so this does not
-> > > > need to be a fix.
-> > >
-> > > But the patch iteslf needs to be fixed :)
-> > >
-> > > It seems to be the change that broke the CI.
-> > >
-> > > The rest is from LLM, take it with a grain of salt :)
-> > >
-> > > mm-ci mm-unstable red build - bisect analysis
-> > > ==============================================
-> > >
-> > > Bad commit: 2a937a04babf1 "mm/vma: fix mmap_prepare file handling, remove
-> > > file_doesnt_need_get" - first patch of Lorenzo Stoakes' 40-patch series
-> > > "mm: make VMA flag semantics explicit, eliminate VM_SPECIAL" (v2).
-> > > https://lore.kernel.org/all/20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org
-> > >
-> > > Symptom: tools/testing/selftests/mm/pfnmap.c triggers
-> > > "BUG: Bad page map in process pfnmap" during __zap_vma_range()/vm_normal_page(),
-> > > seen on process exit/munmap. CI's run-mm-selftests.sh greps guest dmesg for
-> > > BUG|WARNING and fails the job regardless of the test's own exit code.
-> >
-> > I am seeing something similar here and stress-ng can reproduce it:
-> >
-> >       WARNING: mm/memory.c:3225 at do_remap_pfn_range+0x9b4/0x9f0, CPU#25: stress-ng-dev/354858
-> >       Call trace:
-> >        do_remap_pfn_range+0x9b4/0x9f0 (P)
-> >        remap_pfn_range_complete+0xac/0xd0
-> >        mmap_action_complete+0xcc/0x3d8
-> >        mmap_region+0xb54/0x1978
-> >        do_mmap+0x588/0xb18
-> >        vm_mmap_pgoff+0x1e4/0x320
-> >        ksys_mmap_pgoff+0x2d8/0x510
-> >        __arm64_sys_mmap+0x100/0x128
-> >
-> >       BUG: Bad page map in process stress-ng-dev  pte:0160000000000fcf
-> >       addr:0000ffe8d9080000 vm_flags:00000071 anon_vma:0000000000000000 mapping:ffff0000a0c4ea98 index:0 (file) ffe8d9080 (anon)
-> >       file:mem fault:0x0 mmap:0x0 mmap_prepare: mmap_mem_prepare read_folio:0x0
-> >       Call trace:
-> >        print_bad_page_map+0x63c/0x740
-> >        vm_normal_page+0x228/0x240
-> >        __zap_vma_range+0xbe0/0x34a0
-> >        unmap_vmas+0x240/0x318
-> >        unmap_region+0x12c/0x238
-> >        vms_complete_munmap_vmas+0x318/0x958
-> >        do_vmi_align_munmap+0x254/0x2f8
-> >        do_vmi_munmap+0xc4/0xf8
-> >        __vm_munmap+0x174/0x288
-> >        __arm64_sys_munmap+0x70/0x90
-> 
-> Yup I already fixed it and respun the series :)
-> 
-> https://lore.kernel.org/all/20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org/
+prepare_uprobe() serializes its callers by taking consumer_rwsem for
+writing. That rwsem protects the consumer list, not the instruction
+copy.
 
-Very nice, thanks. I will give it a try!
+Give struct uprobe a dedicated prepare_mutex and use it instead.
+
+No functional change.
+
+Signed-off-by: Adriano Cordova <adrianox@gmail.com>
+---
+ kernel/events/uprobes.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 7709ea882477..686585539ebf 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -64,6 +64,7 @@ struct uprobe {
+ 	refcount_t		ref;
+ 	struct rw_semaphore	register_rwsem;
+ 	struct rw_semaphore	consumer_rwsem;
++	struct mutex		prepare_mutex;	/* serializes prepare_uprobe() */
+ 	struct list_head	pending_list;
+ 	struct list_head	consumers;
+ 	struct inode		*inode;		/* Also hold a ref to inode */
+@@ -1007,6 +1008,7 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
+ 	INIT_LIST_HEAD(&uprobe->consumers);
+ 	init_rwsem(&uprobe->register_rwsem);
+ 	init_rwsem(&uprobe->consumer_rwsem);
++	mutex_init(&uprobe->prepare_mutex);
+ 	RB_CLEAR_NODE(&uprobe->rb_node);
+ 	refcount_set(&uprobe->ref, 1);
+ 
+@@ -1104,8 +1106,8 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
+ 	if (test_bit(UPROBE_COPY_INSN, &uprobe->flags))
+ 		return ret;
+ 
+-	/* TODO: move this into _register, until then we abuse this sem. */
+-	down_write(&uprobe->consumer_rwsem);
++	/* Serialize concurrent prepare_uprobe() calls from uprobe_mmap(). */
++	mutex_lock(&uprobe->prepare_mutex);
+ 	if (test_bit(UPROBE_COPY_INSN, &uprobe->flags))
+ 		goto out;
+ 
+@@ -1125,7 +1127,7 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
+ 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+ 
+  out:
+-	up_write(&uprobe->consumer_rwsem);
++	mutex_unlock(&uprobe->prepare_mutex);
+ 
+ 	return ret;
+ }
+-- 
+2.51.0
+
