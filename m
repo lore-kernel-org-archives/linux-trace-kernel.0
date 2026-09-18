@@ -1,97 +1,125 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF9850B8AD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 15:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0353515F9;
+	Fri, 18 Sep 2026 16:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789746521; cv=none; b=Qyv1c899g7SwrXDvH+wYEUORFLDZx6NOsxK4VL20CuNWYe6G4tuUv1NDsUMzXmBf+i5rSNI3vdWb5BvjmqmHGh7WfuPCNIwaXX5G62jW0y8CvySR1OYV6pcELOZ964l9+qfojohPLaglQx8Rnmkg4jhHd919DqbZUtytjjMUJEo=
+	t=1789749549; cv=none; b=fqpg+IN0WbjsntQbWx0tdXlKonUT/c5oIksd6WCxa3iVlnRPs1uj+fRo0t+0y30xXFW+Nzd95piDJPyMamcZrH1lyuXj/FE2Xae8iAEAYu2HekoPLH5JhTgWtZ1Uvt2MiyglH1vPA6iMMZRxmaTOezlz2hb23PcQhco/mAViIvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789746521; c=relaxed/simple;
-	bh=DCEr206mu1fTBop+5gRQZ8IwHub77AxoSPqpcC21zvQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qBR0tGGBU7BiCXQaxc0OCTopk58ChEKiAwhtXN+KktgGxoF0qSk9pB4sGecMny2UJM0fyfoMZaozurMIOkfdJO2/lyTz493sq/nu41KG+yCVIAwaK4U2OTESRmkLBGApUK2V+1Qefw3s2yxjIgYufU6vlH/TSruvl58nWSuoZHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=I9s5XHNo; arc=none smtp.client-ip=74.125.230.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1789749549; c=relaxed/simple;
+	bh=yKgqDhth18rfq4TSlyCvIyYEuIgAYU4N900hfByc7S0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=MFJZfyyeYURrrVrGFH7LTR0q16blkOw1aSvSxS6u+LQx5EnHaKPDzm4Ys+2B0O4K0jTm6B4boyA4qmdSrVvcswEm+pfthaCs+MhmTMBBrG0t9Doh11jMwZtz5/bYdF/GVTRDIc0cg/6tZtUQgNd7F1vhOgAvn06adwI9Hof+cfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzvJbrnV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="I9s5XHNo"
-Received: by mail-qk2-f13.google.com with SMTP id af79cd13be357-93910ad20d4so100620685a.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 08:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1789746518; x=1790351318; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DCEr206mu1fTBop+5gRQZ8IwHub77AxoSPqpcC21zvQ=;
-        b=I9s5XHNoEQAFEpTiKyUBYmi7CvbyYdxKeEMHiUca/70eL3sTULcbyqRvJlF1MqjBmj
-         RNzbAVNCEgJGEal+4RQ8ntr6PLGbP5z0gyXE9+uQdVlhjR63am/plu/wsecYJ1g8pgrd
-         mN34vX4oVkezFjW2UX+PvtK9YaHdkmJQpUK+qnt3y8zAgXrz/eOUSDhwfv4FczHnuvfK
-         9bpOKTWN5zAa+caPL7hRG7ksELAMXLMBBNFR9k170p0AshyaULuWiiDbJ+pBipkBsDFm
-         t9twEAM+LGJWDqQqdM7XW7GAXnxyZrYecfyLLJC7WOzmrH5aK5KlP8q2EFVPzghqa/r5
-         mIKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789746518; x=1790351318;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DCEr206mu1fTBop+5gRQZ8IwHub77AxoSPqpcC21zvQ=;
-        b=jf8ovalqAFadkR49bjszNzaPaegvnBoQmKV+LIwDEOIByQFFVijVCMrAkumvk4vpqK
-         7xfS4V4ne9CZhNkPZO13HbJwFuG7JTKYlHXPtai1GV13X3Q0CCtrECOQYf5VPSTJpgMt
-         OSara6Ftmkn7HfXBahDxkCdrZ/bLdldlCbDbT0X+RCfyQy1fmXKgjs5ZEIl8DHZji/2N
-         AYK6f0X88OUGgAvYQ8aRDLvY62cQ/IfC4mFCZLp1a4AxREbx8L//PlMlhLE2t6aH5lY3
-         jRv8JtlKJUJ90pYr4s7ZvW33Q+dMWtWepyBZfs9u22S+U6t+r4UPhkWb0fLiL0L5p3ii
-         RUIw==
-X-Gm-Message-State: AFuF++nMjsFPnZuXcYGAL0pINM8ZrjiZ+8MxS565JQS2lYagH86kjzeR
-	/gqZdsqOCVjTn5HUodYHNsmAMN6+CLgCi7KigFSaZLuoxfumpvfxSYe6aBWXYADNVuw=
-X-Gm-Gg: AYBFou3pBf+AVT+6N+dcmEZBFz/tGPGsUL/ZR+K81MaC/uoQgbH7B9R8NJ8VE4fsUce
-	DA2NZA57DplhoQf/VlurEZj2cpIHPAjrb5bYOPQ+lSDpbX/mMWM6zbEamMItAPA2xcQ9Z8NFXq/
-	YRv10FX9wRPeJf+zOUjNwx7k9GUrvPkig17MhCcdnTCY3nhBbqF8LSJ8UMeXdvxqswRUAg3mx2b
-	NMlmyUpJj9eMLV2FBhINFxAkwrWgAOVielvqjMkP4j1WAZZHjzSFSP1kvAb2xetXL5mI8Xf5MHD
-	cE5B4q7XqOlRWl/SpLwmCOxjm+vDAkKiwAvBC8VwYndqNPw7Xa54KDtP/QFI1p9jHWmA+Jld/Rr
-	eDMPUHv2A9ApIgBwX9Y61tnMfD5YjG+TTx/9onpTBWUfXSDoyUFG7bSYQRrlvOvZ0HEahhnZoev
-	slFZ9Cv6Ag2e0ZFt5fzcMVlPjzxJJV8V1kcPWG1PiVRhWOS+kD0EyOQh3hkqu4VZ2QwYR5PJCYa
-	O18cHkPFvTlnFhOYbSv9FL60hNd3FLWNYe9VOg32LkNUmCxqEmNdDyyQgN0pfvq6wg=
-X-Received: by 2002:a05:620a:2795:b0:939:6de8:43dd with SMTP id af79cd13be357-93bdc9fd82amr447343685a.49.1789746518332;
-        Fri, 18 Sep 2026 08:48:38 -0700 (PDT)
-Received: from toxicpanda.com (ec2-34-228-114-98.compute-1.amazonaws.com. [34.228.114.98])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93be0ccabecsm172276485a.6.2026.09.18.08.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Sep 2026 08:48:37 -0700 (PDT)
-Date: Fri, 18 Sep 2026 15:48:20 +0000
-Message-ID: <adc0426b5f4c8137c1f97d7b148d7adb.josef@toxicpanda.com>
-From: Josef Bacik <josef@toxicpanda.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC v4 02/13] rcu-tasks: Add a Tasks RCU implementation for reader-marked trampolines
-In-Reply-To: <20260918151031.2E0941F000FF@smtp.kernel.org>
-References: <20260918-b4-rcu-tasks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com> <20260918-b4-rcu-tasks-preempt-qs-v4-2-63f0e9d69661@toxicpanda.com> <20260918151031.2E0941F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzvJbrnV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052EC1F000FF;
+	Fri, 18 Sep 2026 16:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789749548;
+	bh=b5Zrlq13Fo17ThZWJD48N0yBnSkZxyrfKbw9LMfDzNo=;
+	h=Date:To:From:Subject:Cc:References:In-Reply-To;
+	b=PzvJbrnVDw1/FGRQjNdgtxkja4g0UKdhJ6ysQeKqAjw3SPoQdbPUDDDVRezIlzPRn
+	 BizmkSglTWN3z27ESnNWnNJ/BNE/5Pf134Kuopamm2cqa+Vg4m4fskohwsleBAZ2kq
+	 8VeG45ejMxOfvV8B5nlzi3rG7isstYgL+7Zzmi6JW51Bc5581vIt00jI9nQCcL0h5r
+	 TJA42xr+2N1e8Upe7jJRd6iYP4RmP4V22zWBn1trh8Pak11rKzlZgEkDRtY82x6XWn
+	 gOXrlr0hA3dXINFz3CQ2chmBvyX/TG7t9RH5RVc3N8nvBO6tGulEJzrciuRym+vaZ4
+	 UoBQJcmt+Ps+Q==
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Fri, 18 Sep 2026 18:39:02 +0200
+Message-Id: <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Cc: "Luis Chamberlain" <mcgrof@kernel.org>, "Petr Pavlu"
+ <petr.pavlu@suse.com>, "Daniel Gomez" <da.gomez@kernel.org>, "Sami
+ Tolvanen" <samitolvanen@google.com>, "Aaron Tomlin" <atomlin@atomlin.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan"
+ <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Steven Rostedt"
+ <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, "Bradley Morgan"
+ <brads@mainlining.org>, "Aleksandr Nogikh" <nogikh@google.com>,
+ <linux-modules@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+ <driver-core@lists.linux.dev>, <linux-trace-kernel@vger.kernel.org>, "Johan
+ Hovold" <johan@kernel.org>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+In-Reply-To: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
 
-On Fri, 18 Sep 2026 15:10:30 +0000, sashiko-bot@kernel.org wrote:
-> However, the per-cpu rtp_exit_list list head cannot be statically
-> initialized and is dynamically initialized via cblist_init_generic() from
-> a core_initcall. Since core_initcalls are executed much later by the
-> kernel_init thread, any preemption before that phase will attempt to
-> list_add() to a zero-initialized (null) rtp_exit_list.
+On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
+> The ability to add and remove devices from a driver through the sysfs
+> "bind" and "unbind" files was created all those decades ago as a way
+> that kernel developers can iterate faster, and provide a debugging way
+> for users to attempt to add a new device to a driver without having to
+> rebuild their kernel.
+>
+> This api over the years has been abused and recently come under a major
+> fuzzing "attack" through tools like syzbot which decided that it would
+> attempt to just randomly bind any driver to any type of device, causing
+> loads of unneeded errors and pointless kernel patches to be generated by
+> unsuspecting new developers.
+>
+> Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+> will be set on the driver if the bind/unbind sysfs files are ever
+> written to.  This lets kernel developers "know" that a user is
+> attempting to do something that is not normal, and as such, if the
+> kernel breaks they get to keep the shiny pieces laying around on the
+> floor.
+>
+> The flag is 'Y' which was unused, and can remembered as the user is
+> "yeeting" the device being operated on here (thrown with force without
+> regard for the thing being thrown).
+>
+> Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+> as many times crashes/oops/warnings/failures happen within the callback,
+> and the taint flag needs to be there to show what was being attempted.
+> If it were to be set after the callback happens, the oops report would
+> not properly reflect what foolishness was being attempted.
+>
+> Fuzzing tools like syzbot, that doesn't have hand-crafted rules to keep
+> the tool from hitting bind/unbind, should be run with panic_on_taint
+> enabled so that they fall over and don't continue on, thinking that they
+> actually found a real issue.
+>
+> Userspace operations that rely on the bind/unbind files
 
-No, cblist_init_generic() is not run from the core_initcall. It is run
-from rcu_init() -> tasks_cblist_init_generic(), which start_kernel()
-calls with interrupts still disabled (the function asserts as much) and
-well before its local_irq_enable(). The core_initcall only spawns the
-grace-period kthread. So the per-CPU rtp_exit_list heads exist before
-the first interrupt can be taken, let alone an irq-exit preemption; the
-classic flavor's exit_tasks_rcu_start() already depends on the same
-ordering for the same list.
+I agree that this should be avoided.
 
-Thanks,
+But I also think the biggest offender really is driver_override. Specifical=
+ly,
+on a hot-pluggable bus a driver must be complient with the device driver
+lifecycle rules and hence shouldn't break on bind/unbind. I think it would =
+be
+nice to not taint the kernel for such busses, and only taint on driver_over=
+ride,
+as I think we'd still want the bug reports for such cases.
 
-Josef
+But I think this is fine to leave for a follow-up.
+
+Acked-by: Danilo Krummrich <dakr@kernel.org>
+
+> to work around
+> the lack of will to upgrade a kernel image to a newer version with
+> proper support for new devices, or the lack of will to submit valid
+> device ids to driver authors, will still work properly, but now the
+> kernel will be flagged in a way that will show that perhaps those users
+> should reconsider their behavior and work to have the drivers properly
+> support these devices in a "native" manner.
+>
+> Finally, the bind/unbind files can find real use-after-free issues with
+> some drivers by forcing the process to happen virtually without having
+> to rely on manual removal processes.  Those real bugs should still be
+> worked on, but by adding this taint flag, developers can more easily
+> determine bug reports that are actually worth looking at.
+>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
