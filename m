@@ -1,66 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19AB47A871;
-	Fri, 18 Sep 2026 18:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACA251C07D;
+	Fri, 18 Sep 2026 19:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789757896; cv=none; b=B3uHWjQE2lmOy8OjmSFNx60xkMcnJXPbvDoesbNkez3O8t/5i93+vQ6xumI7DrhvNzo+rLUVT6QFg5wqOGujMYMh3OTJB8d2z+jSXTFXVOzUEruAO/DCbHYnhOeozVe2QgJ98DY/+9IgRnRvxoiPIa59XiGoOSHenT2Nb+0IYA8=
+	t=1789758029; cv=none; b=BFbuOYBGV6UVhbJ2MsdEdJg/IXWslJlI/PRBXjd2GSb4Jyec8ytawsPxLAF3B9Vz9e7ctBA8Y57vclKXJyrRj+DLsvS3QlzmxYD7k2P0Qh9YSKaLFfkjfbEY9e05d+nk+iaP6+aNCpd9ORlTui9BXSEEoEZwZCgkhJqJ4hC9FK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789757896; c=relaxed/simple;
-	bh=eX+o0EDMa3Seu/T1lBh2ypWkXgBvgyMumaANqzrOowU=;
+	s=arc-20240116; t=1789758029; c=relaxed/simple;
+	bh=+tWpDvGpNi4+jmypfZitUksv7Kka5HPwlv5DcdqY2ek=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZbR40HdUrtO8fisX12EduaZlCyD9d+If14MqKtWl8eBhlRfaGq8IBPfwLs8iqJCgv1PqIs0AUbp5c9qa+1MBSMTk2gq3cqRtLZDtBBYv0wth12vgD/JCfMD3JBFTM0RpE0jhtH4FHJiywo3kfhUmsjOyNFoEB2AQzf4vGFWJlGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvAONtaG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=gGmrMm3Iw7ggUljkPN7XLUtIE3PTMydqacuZFPqVKE/susU2vfOMAZ5F5HhoobDMauXNKesNwJYPWwDGirquWEBc2IlYdZRimga5x8r/azAcJjxfWF6DfCUnXVHRMOiIWPI0Fy3p0j5eHJtb56m7mLpiSaiMbujZCVEJ13Cy6x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoPAeMU2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvAONtaG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320951F000FF;
-	Fri, 18 Sep 2026 18:58:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoPAeMU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AEDD1F000FF;
+	Fri, 18 Sep 2026 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789757885;
-	bh=5NFALw5GZFKlJOE0iqyKyfLv1G5kiUcTAt2Ki+ybxgs=;
+	s=k20260515; t=1789758016;
+	bh=+tWpDvGpNi4+jmypfZitUksv7Kka5HPwlv5DcdqY2ek=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AvAONtaG0JStxEo7KQzV7aSprAULUPNsTCHutf9Kyal64fq18q3e/4pCcmZ7DSSJW
-	 tOKkR5TK2dxslFhenRS7AFqFJVRr5zqJReDzxYfQ7WXgZqaTcLPLsQNxU3GCI04x+d
-	 UnYI28k6mEpAz3zUyez9hrYnW570Q3pS0kaQAuNwu2gJl6pK4F6YCgk/SyQOvWobje
-	 4kL6BfAw8nWK7SRNLhkgeHVQX5+rq+IpYpkmqHJXUDN7MDvMSzqBqnLcjVahZYT4bs
-	 NP3WWsvIV5MRVFlrEjQLBC1u2eJovfq1Jqiv/BukMP63rBcMChgX4R3W1qfMobmkDn
-	 IXJ2boduOkbIQ==
+	b=MoPAeMU2RVs8pK0gI7UED+Ccvr3PqvWFm+j8vme+biM5MOSrMeZGToTYfr5E6RFLR
+	 HNn3t66YsH6vpoe7TMKGS1Eqpk/WnvYiHTWKrlkrgdJpoVxiFQPyGalVux7AU70+Oc
+	 lT0imhKv3RwKg6IDB+njEyCD7jWsoKbSYrZtfRYOghz7WJ4BGOllBGM1xIKRf+XVyk
+	 Khsb7vkgRGXIL/UtgJr0bkXGhIoLdZ+tOu4ds+iQOSk0en9haRP43oTfcUz0dWI5b/
+	 i4OTpPH1dZ+3QpgIKdzr/yhGA7A2z7pLVyLzYuICGv5Tkz2vXG69iPQ3CHkiRar6Ta
+	 0CdJnvT9v7DGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 8/9] selftests/landlock: Test network denial context
+Subject: Re: [PATCH v1 3/9] landlock: Fix rule tracepoint context
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-In-Reply-To: <20260918185036.608651-9-mic@digikod.net>
+Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+In-Reply-To: <20260918185036.608651-4-mic@digikod.net>
 References: <20260918185036.608651-1-mic@digikod.net>
- <20260918185036.608651-9-mic@digikod.net>
+ <20260918185036.608651-4-mic@digikod.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 18:58:04 +0000
-Message-Id: <20260918185805.320951F000FF@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 19:00:15 +0000
+Message-Id: <20260918190016.2AEDD1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-> Network denial events now report the port from their one authoritative
-> validated address through one signed field.  Verify this value directly
-> without inferring a source or destination role.
+> Name each event after the identity it reports. Add-rule events describe
+> UAPI rule insertion, so rename them after LANDLOCK_RULE_PATH_BENEATH and
+> LANDLOCK_RULE_NET_PORT. Check-rule events describe matches in internal
+> rule trees, so rename them after LANDLOCK_KEY_INODE and
+> LANDLOCK_KEY_NET_PORT. This remains accurate if multiple UAPI rule types
+> share one lookup and stored rule. Keep denial event names based on
+> filesystem and network families because they describe final access
+> decisions.
 >=20
-> Exercise a nonzero IPv4 TCP bind, an explicit-zero IPv4 UDP bind, a
-> synthetic-zero IPv6 UDP autobind, and a family-only AF_UNSPEC UDP send.
-> Require exactly one event with the exact policy blocker for each shape.
-> The value -1 distinguishes a family-only address with no validated port
-> from the two valid port-zero cases.
+> Use u64 for growable access masks passed by value to add-rule and
+> check-rule typed BTF callbacks. CO-RE can relocate pointer-reached
+> fields, but it cannot widen a scalar callback slot declared by a BPF
+> program. Keep native access_mask_t for internal state and trace records.
+>=20
+> For add-rule callbacks, report the normalized per-call contribution
+> passed to landlock_insert_rule() and expose the complete validated flags
+> value. Put the ruleset and flags first as a common invocation prefix.
+> This distinguishes duplicate and effective-zero additions without
+> recovering arguments from saved syscall registers.
 >=20
 > Cc: G=C3=BCnther Noack <gnoack@google.com>
 > Cc: Steven Rostedt <rostedt@goodmis.org>
+> Fixes: 63747c94774d ("landlock: Add landlock_add_rule_fs and landlock_add=
+_rule_net tracepoints")
+> Fixes: 3f1f106e4c14 ("landlock: Add tracepoints for rule checking")
 > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918185036.6086=
-51-1-mic@digikod.net?part=3D8
+51-1-mic@digikod.net?part=3D3
 
