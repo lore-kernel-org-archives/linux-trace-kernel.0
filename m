@@ -1,170 +1,66 @@
-Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF53551DE14
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 18:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAF324A067;
+	Fri, 18 Sep 2026 18:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789757489; cv=none; b=iHC3UdM+6nhBXargdJZUYGnxlcnvF3ew2jlRPjWFjWZOmO4lH56gQ9d48kVXOF6nQDO3Q6k4z2fJlzTMkRKr0UBjbIsftQ8WBjuMwKIHPE+aBRus+LYJVkx8G2Y+AK8gc4lM1fwaKJAtgFuwB4II6kPl6mRE7kbEgassjH1VdAE=
+	t=1789757704; cv=none; b=OE22h9ZcnIeO5KX3ZLepWcOZpULrzFfk1kdz6GxvvTb1Pg5o07REfXJM8QDzKSqU0nneM7kxd5IAmlxqcnwySclN1ND7wMwIEkjPc+Z4Mv8CFqYOdH0DOR2r8VH4dfozHG9yj7DU7PH+zMU7wHzy2TBXsKVjlb6pAlQz1YgqOF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789757489; c=relaxed/simple;
-	bh=hS7n8FSrLhb0Yak6h+t6ivH3bFxKCI3FrWu9LJiLCdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fg7yHIo7vNPCBLXJIRXklm5fkIvrayVKDj0hbzOngpe885kufjCCvleGU5BQ1e+sA8Pi2L/pDFECsMcIKchrqWoe8H2S9xaOBeaMX4rdUSQUt9yK/V35CH7HBbIxB6wED+/l6yjiyxvdbA3F+qB+ilv7vTS8AeCcnlPH16dWWeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DLKCpGTv; arc=none smtp.client-ip=84.16.66.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1789757704; c=relaxed/simple;
+	bh=1ho7vryfn+7mUfOn+cEHuxsk5vR84fsR/ZIVxu1Ld3w=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=i7ZeyZnUECRXft7cqUk9u5XsK4FxuLf1EZKA/Q7qW7vatskvrpSUURktZ1kvEhz4IX7c59UhGZMe1/jkGYKP6ltu2WbDvI3QcF5dn6W4XwJSj9pCnjfos1tFgtP3Fw3vydAluEDca/cTIsp3oMpSz1IGGXsI7Noc1uP6JwHtrx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLrP9ns4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DLKCpGTv"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hmhXY3YkRznVS;
-	Fri, 18 Sep 2026 20:50:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1789757453;
-	bh=YcgcCFigYXu+MysQjR0T0g68rY1ZXkXE52Y9z1gZOiE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DLKCpGTv2vWKRt4+v63FlyDQKeBdctlVyfiby2a7VhdCQYWxTrONvzT/M3zz2UCQd
-	 j/L89sDo1su2Il4EqeyVWbz2HLmP1579R2JQFWVwCofMabvCn3571SJeNveiOx9Pwu
-	 WkH3HEQsU5R8ZrdcUQgtayYd5MOqJLW6Ql+INB9s=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hmhXX5brmzJnY;
-	Fri, 18 Sep 2026 20:50:52 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Paul Moore <paul@paul-moore.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	bpf@vger.kernel.org,
-	kernel-team@cloudflare.com,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v1 7/9] selftests/landlock: Test filesystem denial blockers
-Date: Fri, 18 Sep 2026 20:50:30 +0200
-Message-ID: <20260918185036.608651-8-mic@digikod.net>
-In-Reply-To: <20260918185036.608651-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLrP9ns4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2401F000FF;
+	Fri, 18 Sep 2026 18:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789757682;
+	bh=1ho7vryfn+7mUfOn+cEHuxsk5vR84fsR/ZIVxu1Ld3w=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SLrP9ns4Xy31BS0OKvau56QtM90N4/3yUqduW7vRuiXFw+zJMpFEBuXl1pYuDCjKe
+	 bFNT8GZIzeZVUzj0iKycGFam1WKLzJd0k+spYHF2hw0gzR2RZQgnKyXD7i0LhchZg9
+	 dAFmvbkBmxKqkPQr/ffrEgj7HpyeeuC9aGsP87uL+Xm+Wuna/7RRaHpToFAjQp3NhW
+	 GCUnqfR8hMtNH/VO4n8kPtHjp0rrTTzgi/4rfj2Co93Drsy2jbzdCE2G1XiKLDC5VI
+	 VE9yD7gzVdEwgezgbiHNQZTJDxMiAYcedwvhvyGJ96epJO/kBwa9zKHkC1cMjbwr2p
+	 jH+Qc2uFAhnbA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/9] landlock: Fix tracepoint fixed-width type names
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: linux-trace-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260918185036.608651-2-mic@digikod.net>
 References: <20260918185036.608651-1-mic@digikod.net>
+ <20260918185036.608651-2-mic@digikod.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 18 Sep 2026 18:54:41 +0000
+Message-Id: <20260918185442.4B2401F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 
-Filesystem denial traces identify the policy change needed to allow a
-request, so require exact blocker values rather than merely nonempty
-output. Pin a READ_DIR denial to exactly one event with
-blockers=read_dir. Pin a REFER-only mount denial to EPERM and exactly
-one event with blockers=change_topology.
+> The new Landlock tracepoints use UAPI-prefixed __u32 and __u64 names for
+> callback arguments and record fields, including internal IDs that are
+> not Landlock UAPI values. Typed BPF consumers see callback typedef names
+> through BTF.
+>=20
+> Use the kernel u32 and u64 aliases before release so the tracepoint
+> contract does not present internal values as Landlock UAPI types. This
+> changes BTF-visible typedef spelling but not integer widths, calling
+> conventions, tracefs formats, or record layouts.
+>=20
+> Cc: G=C3=BCnther Noack <gnoack@google.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
 
-The mount child retains CAP_SYS_ADMIN so Landlock is the only expected
-source of EPERM.  This prevents a later capability failure from masking
-a Landlock regression; the trace-collecting parent remains unsandboxed.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Cc: Günther Noack <gnoack@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- .../selftests/landlock/trace_fs_test.c        | 76 ++++++++++++++++++-
- 1 file changed, 73 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/landlock/trace_fs_test.c b/tools/testing/selftests/landlock/trace_fs_test.c
-index 6666d4746cb1..64014ade3a0e 100644
---- a/tools/testing/selftests/landlock/trace_fs_test.c
-+++ b/tools/testing/selftests/landlock/trace_fs_test.c
-@@ -548,7 +548,8 @@ TEST_F(trace_fs, check_rule_nested)
-  */
- TEST_F(trace_fs, deny_access_fs_denied)
- {
--	char *buf;
-+	const char *const event_regex = REGEX_DENY_ACCESS_FS(TRACE_TASK);
-+	char *buf, blockers[64];
- 	int count;
- 
- 	ASSERT_EQ(0, tracefs_clear_buf());
-@@ -564,8 +565,77 @@ TEST_F(trace_fs, deny_access_fs_denied)
- 	buf = tracefs_read_buf();
- 	ASSERT_NE(NULL, buf);
- 
--	count = tracefs_count_matches(buf, REGEX_DENY_ACCESS_FS(TRACE_TASK));
--	EXPECT_LE(1, count);
-+	count = tracefs_count_matches(buf, event_regex);
-+	EXPECT_EQ(1, count)
-+	{
-+		TH_LOG("Expected 1 access denial, got %d\n%s", count, buf);
-+	}
-+	ASSERT_EQ(0, tracefs_extract_field(buf, event_regex, "blockers",
-+					   blockers, sizeof(blockers)));
-+	EXPECT_STREQ("read_dir", blockers);
-+
-+	free(buf);
-+}
-+
-+/*
-+ * Verifies that a denied mount reports the singleton topology blocker rather
-+ * than an empty access mask.
-+ */
-+TEST_F(trace_fs, deny_change_topology)
-+{
-+	const char *const event_regex = REGEX_DENY_ACCESS_FS(TRACE_TASK);
-+	const struct landlock_ruleset_attr ruleset_attr = {
-+		.handled_access_fs = LANDLOCK_ACCESS_FS_REFER,
-+	};
-+	char *buf, blockers[64];
-+	int count, ruleset_fd, status;
-+	pid_t pid;
-+
-+	ruleset_fd =
-+		landlock_create_ruleset(&ruleset_attr, sizeof(ruleset_attr), 0);
-+	ASSERT_LE(0, ruleset_fd);
-+	ASSERT_EQ(0, tracefs_clear_buf());
-+
-+	/* Ensure that Landlock is the only expected mount denial. */
-+	set_cap(_metadata, CAP_SYS_ADMIN);
-+	pid = fork();
-+	ASSERT_LE(0, pid);
-+	if (pid == 0) {
-+		if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-+			close(ruleset_fd);
-+			_exit(1);
-+		}
-+		if (landlock_restrict_self(ruleset_fd, 0)) {
-+			close(ruleset_fd);
-+			_exit(2);
-+		}
-+		close(ruleset_fd);
-+
-+		if (mount(NULL, "/", NULL, MS_PRIVATE | MS_REC, NULL) != -1)
-+			_exit(3);
-+
-+		if (errno != EPERM)
-+			_exit(4);
-+
-+		_exit(0);
-+	}
-+	close(ruleset_fd);
-+	clear_cap(_metadata, CAP_SYS_ADMIN);
-+
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	buf = tracefs_read_buf();
-+	ASSERT_NE(NULL, buf);
-+	count = tracefs_count_matches(buf, event_regex);
-+	EXPECT_EQ(1, count)
-+	{
-+		TH_LOG("Expected 1 topology denial, got %d\n%s", count, buf);
-+	}
-+	ASSERT_EQ(0, tracefs_extract_field(buf, event_regex, "blockers",
-+					   blockers, sizeof(blockers)));
-+	EXPECT_STREQ("change_topology", blockers);
- 
- 	free(buf);
- }
--- 
-2.55.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918185036.6086=
+51-1-mic@digikod.net?part=3D1
 
