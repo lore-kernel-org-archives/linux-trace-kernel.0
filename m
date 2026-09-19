@@ -1,229 +1,208 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6D852BE4D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 21:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177D52DCBEC;
+	Sat, 19 Sep 2026 00:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789766793; cv=none; b=ckMQObJvxf+1HZetJUUk04UR/rKjxq7jnSe2Yx2B6X6Z04dsMfUMvb9EvTg1/hNXFyR6yP/L6/1m+3ik/fTWxNpk32SISFoknKsSNGWGcXxctRgsMgV7i9wbhmET54P8FPvzB08glapq13DTHxuGjW3D4JZncoJRDODdRI4vBCw=
+	t=1789777640; cv=none; b=pEDkvupt/sK2WtPwB7jlMypcd2165fgM2vR0d/X2TRC5lTbh4IpmoButFBusy5ilJf2V0nKRpxBmNtZqe5nw82Jnaq7AaWvoybmntirrYnNtieT98OuNxmlCsaoAiW8hxAXOaznnMDwhWtMm3m5+PWtgg5Ssepwjvzf86MoPHsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789766793; c=relaxed/simple;
-	bh=piQ/qmdh5vGrLseCH4oX99pnj7X0x5hoLNKV1iykz48=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=ZreTyyvZBSAYNVsKJdR8VKVSIMKGJXesKqtARQBMcWUfi8L+YUtLJkpiT4yd/N9skLt98eyM8oW2wLR7O9NRuIx+ErTb+LejVwkT3nhe1mRegpVBSoi5C99gJVFj1Cfrwztj+d+hjRVP7O9skPk9KN9TfGKnrpjZmr8ZC5rFFKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNTv6Alo; arc=none smtp.client-ip=74.125.227.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789777640; c=relaxed/simple;
+	bh=fYjJCoMwHmQye7/VloP5QI8g55DMF1gGv8QsEafA+tA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tq93VuNt78Z6g4HwwNHIXW7l/EghGEMolfkgFjUXbHrDPPzLHM6o9Pl5oD0CMzTvmakwiGZzWhbgcwaDEbWrMaorKEZs6MsLsZZaJsJZih/xRC1byuurgreKYZQbAyZTNEdAZlXYJqz4JyBln/4g6r8QVez/zX3Xk0W5qg0LOY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuV/wG2s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNTv6Alo"
-Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-396ccdaea76so515900a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Sep 2026 14:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789766791; x=1790371591; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=D3SEXFUxByL8NwUA0aascO5krkdBelJ+D590uzi7yTc=;
-        b=mNTv6AlosrVIQyufi0IV0pzu5f2qpw7mTvbw/ZeftIjGRqzWJwG564SNqOMJiA9Skc
-         pY5EC+4gXprPKZGcqHneRSzrmRE7+VEtllgVYe8p18p+bQXz4vLWbnZU1TrszMLYmsfX
-         EONOe3ElNqRi6MyIZgx+pBaKbj3a0yOBWdbS86doDISx+yoQGm0p1Tp5MqdM+FZlWzQp
-         V77igpIA6SK1A89CZnbTSAnhHaRq11TJvZdMjQJiGVF36NUp8FfKonLRhMK1OMJ8w0X2
-         GWpQEtG5y3o/XYUQoTBhYLGMoxM9v4DFFShUeJww4zPctYrMlmPdtBGLgTgm/IHVnuvs
-         dScQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789766791; x=1790371591;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D3SEXFUxByL8NwUA0aascO5krkdBelJ+D590uzi7yTc=;
-        b=djjt57Ytc3Vqnz46+YBbIae+VOI6K67pRSNkYSIZdtjn+MKNHKdjzFpRZhA4wNowgq
-         AOxL+SH18pq+pQyg37uJ6xCsv+mYiPJVR0eAU4jc5i6Y/XZu04hLZb8T/621xwv3UVdp
-         yQWK3fjp3CpWlQhEDWx5bN6s7MQAOEqvxmCMsUa315TGrT3J7MBlWHYBkJUqKqzhl5s3
-         EFYiBVYkhIkplEycuiEq5yAs+oR5V2O/5BzMx7Pp6X+mKedHvPpJb63riyeuer5O0/Ua
-         hI9DsmhDhF7C61GY7GoMM7mjuLQGwhh8nOCmchIihaNKOw8CIeu1dSy4O6v0GIjVtIwN
-         8jBA==
-X-Forwarded-Encrypted: i=1; AKwUvBzEWYMdyIZXdD/iwh9sWKtCA/ym2Y/APWyzKqs2MgyKS62rIhGs8OrEoiYTX0ujGVfT220QzfFKFRwzTGjfP6JuQkI=@vger.kernel.org
-X-Gm-Message-State: AFuF++nV6SBgxLi6eFhvk01AkHQkr2L8BvKGZ6P4nm6LnNluHgWjksx6
-	wnnSlL4VsVh+n4219m3FRcF0rNYp7iEhvZsXjYrKFPfFJRP3oE5ofWCe
-X-Gm-Gg: AYBFou2AFTl9Aj7yrN1A4S9GsSoIpljOS/I7Ah2l1tQAqjUjsE8V/KitPpP4SrGSQrI
-	eezTyjLN/C+NRilvXrU4rt0XRF/97cIxWzZh39z2Odj95fXpxwxrFeuk7hwORnize+8gCvNxYLI
-	SWidiiI9CkXQH/Mb1mxbGMc4cLtvWNMzevkLuwdE/O67Z09OnQ6vIsZ3FRBBfftZNO7S5NE4mD6
-	KG58Abd4+sBeLk3vZfkUz6XILWfP9YbzYlDtmgY+XsjzPjzJHRBUdqmhh1c4v8DRJpHrXxhSEdI
-	sm38cocJfXz0luAmSaBV7wlu4xv6FkaA0BCn7pxa/8W+nBJRXzqD55myxrS0qKAShZE1/8MNiL1
-	zDMlRfkrcxKuu1PH/q5xYPQzM27/Ev90d2vGgxOO/fgBSRsihAEsnI/lqIMInV/7B0aw+vGPtwv
-	bXbOA1LjOxXgys3qIy0r5sykQw2uN74505/ErwMYhobPAftPL/Y59UNCXaUJTA2Pi4RLEFYffFV
-	Djxv8d5g2675SvCJKketHhiO99iUR+OYs7kdzjf3RnaukWaCaDyjkT7N2aRYQondO6PJfME43Z7
-	dscW
-X-Received: by 2002:a17:90b:2584:b0:39e:6c68:fd89 with SMTP id 98e67ed59e1d1-39e6c68feb9mr902813a91.30.1789766791008;
-        Fri, 18 Sep 2026 14:26:31 -0700 (PDT)
-Received: from localhost ([153.61.198.254])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e6cb427casm1165720a91.17.2026.09.18.14.26.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Sep 2026 14:26:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuV/wG2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EE41F000FF;
+	Sat, 19 Sep 2026 00:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789777634;
+	bh=OZopYLFTJlf3PkMhPLbAyetqyxTv3lYaNJu5W/0y9dk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JuV/wG2sz0qCIQSjQxsrReDBEzPo7huMI8B/ftpiCGhQ3UIfd7h8V5pbJkl3Jtn9N
+	 t6I+HuVuH47jco2b0SNsuD7buEfsry8aR9XZU6p3VJn3wq+SKa5nVxpu8O4Nrdhiod
+	 9oiaXsEGWCTtfPW0D9G3gaDarIGcuEk4EdUVM32MvcllbccEAZs7gnWH3eruoVfYk7
+	 2MQVk3fXUiV5KYdrrPzZNZqtbWXsMny/KgpmIkW0wYYHQXxrCtypVFrsrdW5pFfaX9
+	 obyph5+lgJaXEUYndIU2dB2kzbAuxmJEZlCXkbAYI9sBfPlIfqW3L/DSelB88Qy5Cf
+	 hgCGj2lW0NuAg==
+From: Kees Cook <kees@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Gow <david@davidgow.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	nikitash.mariiaw@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 2/9] seq_buf: Do not pop from an overflowed seq_buf
+Date: Fri, 18 Sep 2026 17:27:00 -0700
+Message-Id: <20260919002714.4060307-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260919002658.stay.929-kees@kernel.org>
+References: <20260919002658.stay.929-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Sep 2026 21:26:29 +0000
-Message-Id: <DLIRDKA6G2IQ.2Q62BXX7CJWIW@gmail.com>
-Subject: Re: [PATCH RFC v4 07/13] bpf, x86: Take a Tasks Trace reader in the
- trampoline around its call-outs
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Josef Bacik" <josef@toxicpanda.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, "Frederic Weisbecker" <frederic@kernel.org>, "Neeraj
- Upadhyay" <neeraj.upadhyay@kernel.org>, "Joel Fernandes"
- <joelagnelf@nvidia.com>, "Boqun Feng" <boqun@kernel.org>, "Thomas Gleixner"
- <tglx@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Jiri Olsa" <jolsa@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- <x86@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>, "Xu
- Kuohai" <xukuohai@huaweicloud.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, "Frederic Weisbecker" <frederic@kernel.org>, "Neeraj
- Upadhyay" <neeraj.upadhyay@kernel.org>, "Joel Fernandes"
- <joelagnelf@nvidia.com>, "Boqun Feng" <boqun@kernel.org>, "Thomas Gleixner"
- <tglx@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Jiri Olsa" <jolsa@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- <x86@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>, "Xu
- Kuohai" <xukuohai@huaweicloud.com>
-Cc: "Andy Lutomirski" <luto@kernel.org>, "Josh Triplett"
- <josh@joshtriplett.org>, "Uladzislau Rezki" <urezki@gmail.com>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, "Lai Jiangshan"
- <jiangshanlai@gmail.com>, "Zqiang" <qiang.zhang@linux.dev>, "Juergen Gross"
- <jgross@suse.com>, "Luis Chamberlain" <mcgrof@kernel.org>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, <linux-kernel@vger.kernel.org>,
- <rcu@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <xen-devel@lists.xenproject.org>, "Andy Lutomirski" <luto@kernel.org>,
- "Josh Triplett" <josh@joshtriplett.org>, "Uladzislau Rezki"
- <urezki@gmail.com>, "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Lai Jiangshan" <jiangshanlai@gmail.com>, "Zqiang" <qiang.zhang@linux.dev>,
- "Juergen Gross" <jgross@suse.com>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Ihor Solodrai" <ihor.solodrai@linux.dev>, <linux-kernel@vger.kernel.org>,
- <rcu@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <xen-devel@lists.xenproject.org>
-X-Mailer: aerc 0.17.0
-References: <20260918-b4-rcu-tasks-preempt-qs-v4-0-63f0e9d69661@toxicpanda.com> <20260918-b4-rcu-tasks-preempt-qs-v4-7-63f0e9d69661@toxicpanda.com>
-In-Reply-To: <20260918-b4-rcu-tasks-preempt-qs-v4-7-63f0e9d69661@toxicpanda.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5577; i=kees@kernel.org; h=from:subject; bh=fYjJCoMwHmQye7/VloP5QI8g55DMF1gGv8QsEafA+tA=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrr93IXbp7Ld+m2KjGktU8+ry/9k2bf1eww21LT8Q0l s3KGzdnd5SyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExkjxHD/3TRVR4XOIL2fMwO FDufcllw9wzWJoP7lUnPVl3wyTkv1szwv1z6NO/BO/cY7fcISvstXznZQP6X1MKCUwuTlG/s1qs 6zgsA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri Sep 18, 2026 at 2:49 PM UTC, Josef Bacik wrote:
-> On HAVE_RCU_TRAMPOLINE_READERS kernels Tasks RCU keeps a BPF trampoline
-> image allocated only while a task using it is a Tasks Trace RCU reader
-> or is executing text that rcu_tasks_trampoline_text() recognises.  The
-> image itself is such text, but the C glue and the programs it calls are
-> not, and only sleepable programs take rcu_read_lock_trace() today.
->
-> Have the x86-64 JIT open-code rcu_read_lock_trace() and
-> rcu_read_unlock_trace() in the trampoline, as ftrace_64.S does for
-> ftrace_caller: one reader from just after the frame is set up to just
-> before the original function is called, covering __bpf_tramp_enter()
-> and the fentry and fmod_ret programs, and a second one from just after
-> the original function returns to just before the final register
-> restore, covering the fexit programs and __bpf_tramp_exit().  The
-> original function itself runs outside both, since it may run for a long
-> time and the image is pinned by im->pcref across it.  Trampolines that
-> do not call the original function get a single reader around all their
-> programs.  The second reader is entered before ip_after_call, so the
-> ip_after_call -> ip_epilogue jump that bpf_tramp_image_put() patches in
-> is inside it, and the fmod_ret early-exit branch lands after that point
-> still holding the first reader, so exactly one is held on every path.
->
-> The sequence uses r10 and r11, which are scratch at each emission point,
-> and references current_task and rcu_tasks_trace_srcu_struct by absolute
-> sign-extended address, the form the JIT already relies on for
-> this_cpu_off.  Sleepable programs' own rcu_read_lock_trace() simply
-> nests.  Nothing is emitted on other configurations.
->
-> Suggested-by: Alexei Starovoitov <ast@kernel.org>
-> Assisted-by: LLM
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> ---
->  arch/x86/net/bpf_jit_comp.c | 113 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 113 insertions(+)
->
-> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> index 2853e87797a7..c991f7ceacdf 100644
-> --- a/arch/x86/net/bpf_jit_comp.c
-> +++ b/arch/x86/net/bpf_jit_comp.c
-> @@ -14,6 +14,7 @@
->  #include <linux/memory.h>
->  #include <linux/sort.h>
->  #include <linux/execmem.h>
-> +#include <linux/rcupdate_trace.h>
->  #include <asm/extable.h>
->  #include <asm/ftrace.h>
->  #include <asm/set_memory.h>
-> @@ -722,6 +723,97 @@ static void emit_indirect_jump(u8 **pprog, int bpf_r=
-eg, u8 *ip)
->  	*pprog =3D prog;
->  }
-> =20
-> +/*
-> + * Open-coded rcu_read_lock_trace() / rcu_read_unlock_trace() for the
-> + * trampoline, see CONFIG_HAVE_RCU_TRAMPOLINE_READERS and the equivalent
-> + * macros in arch/x86/kernel/ftrace_64.S.  The image is not relocated, s=
-o
-> + * current_task and rcu_tasks_trace_srcu_struct are referenced by absolu=
-te
-> + * (sign-extended 32-bit) address, the form the JIT already relies on fo=
-r
-> + * this_cpu_off.  Uses r10 and r11, which are scratch at every emission
-> + * point, and clobbers flags.
-> + *
-> + * lock:                                  unlock:
-> + *   mov  r11, gs:[current_task]            mov  r11, gs:[current_task]
-> + *   mov  r10d, [r11+nesting]               mov  r10d, [r11+nesting]
-> + *   inc  dword ptr [r11+nesting]           sub  r10d, 1
-> + *   test r10d, r10d                        jnz  2f
-> + *   jnz  1f                                mov  r10, [r11+scp]
-> + *   mov  r10, [&srcu.srcu_ctrp]            mov  dword ptr [r11+nesting]=
-, 0
-> + *   inc  qword ptr gs:[r10+locks]          (smp_mb)
-> + *   mov  [r11+scp], r10                    inc  qword ptr gs:[r10+unloc=
-ks]
-> + *   (smp_mb)                               jmp  3f
-> + * 1:                                     2: mov [r11+nesting], r10d
-> + *                                        3:
-> + */
-> +static void emit_trace_rcu_reader(u8 **pprog, bool lock)
-> +{
-> +#ifdef CONFIG_TASKS_RCU_TRAMPOLINE_READERS
-> +	const u32 nesting =3D offsetof(struct task_struct, trc_reader_nesting);
-> +	const u32 scp =3D offsetof(struct task_struct, trc_reader_scp);
+When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
+decrements len to size and reads buffer[size], one byte past the end of
+the buffer. It also leaves len equal to size, which no longer counts as
+overflowed, so a truncated seq_buf then looks like a complete, full one.
 
-nesting_off ?
-scp_off ?
-Otherwise
-EMIT(nesting, 4);
-is a bit confusing.
+An overflowed seq_buf logically has no last character to pop: the
+length of what was written has been lost, and the last byte of the
+buffer may be the NUL written by vsnprintf() or bytes that were never
+committed. Return -1 for an overflowed seq_buf, as for an empty one,
+and leave it overflowed, as the rest of the seq_buf API does until
+seq_buf_clear() or seq_buf_init().
 
-> +	const bool mb =3D !IS_ENABLED(CONFIG_TASKS_TRACE_RCU_NO_MB);
-> +	u8 *prog =3D *pprog;
-> +
-> +	BUILD_BUG_ON(IS_ENABLED(CONFIG_NEED_SRCU_NMI_SAFE));
-> +	BUILD_BUG_ON(offsetof(struct srcu_ctr, srcu_locks) !=3D 0);
-> +	BUILD_BUG_ON(offsetof(struct srcu_ctr, srcu_unlocks) !=3D 8);
+The current callers do not reach this, e.g. trace_syscalls only calls
+trace_seq_pop() when the trace_seq it pops from has not overflowed, and
+kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
 
-Looks too hardcoded here.
-Why not to use the same approach as with offsetof() few lines above?
+Add tests for the pop corner cases.
 
-Overall looks ok,
-but I wonder what Paul will say that rcu_read_lock_tasks_trace()
-becomes baked in into JITs and will be pretty hard to change.
+Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
-We also lose rcu_tt lockdep runtime checks.
-So lockdep might get confused?
+Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
+Assisted-by: LLM
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: "Günther Noack" <gnoack@google.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Mickaël Salaün" <mic@digikod.net>
+Cc: <bpf@vger.kernel.org>
+Cc: <linux-security-module@vger.kernel.org>
+Cc: <linux-trace-kernel@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <david@davidgow.net>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Shuvam Pandey <shuvampandey1@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+---
+ include/linux/seq_buf.h   |  4 ++--
+ include/linux/trace_seq.h |  5 ++++-
+ lib/tests/seq_buf_kunit.c | 42 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 9f2839e73f8a..f5a350347bc5 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -155,11 +155,11 @@ static inline void seq_buf_commit(struct seq_buf *s, int num)
+  *
+  * Removes the last written character to the seq_buf @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if @s is empty or has overflowed.
+  */
+ static inline int seq_buf_pop(struct seq_buf *s)
+ {
+-	if (!s->len)
++	if (!s->len || seq_buf_has_overflowed(s))
+ 		return -1;
+ 
+ 	s->len--;
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 697d619aafdc..7174ebf3f015 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -86,7 +86,10 @@ static inline bool trace_seq_has_overflowed(struct trace_seq *s)
+  *
+  * Removes the last written character to the trace_seq @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if the underlying seq_buf is empty or
++ * has overflowed. Note that only that buffer is consulted: a @s marked
++ * full by a write that did not fit, which trace_seq_has_overflowed()
++ * reports as overflowed, still pops the last character written.
+  */
+ static inline int trace_seq_pop(struct trace_seq *s)
+ {
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 9ceccdc3029f..d5a0c618b880 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -115,6 +115,47 @@ static void seq_buf_putc_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
+ }
+ 
++static void seq_buf_pop_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 8);
++	struct seq_buf t;
++	char *buf;
++
++	/* Nothing to pop. */
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
++	KUNIT_EXPECT_EQ(test, s.len, 0);
++
++	seq_buf_puts(&s, "hello");
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'o');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
++
++	/* A 0xff byte must not be mistaken for an empty buffer. */
++	seq_buf_putc(&s, 0xff);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 0xff);
++
++	/* A full buffer pops its last byte. */
++	seq_buf_puts(&s, "abc");
++	seq_buf_putc(&s, 'd');
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 8);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'd');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 7);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hellabc");
++
++	/*
++	 * An overflowed buffer has nothing to pop, and stays overflowed. Use
++	 * a buffer allocated at its exact size, so that KASAN reports any
++	 * read past its end.
++	 */
++	buf = kunit_kmalloc(test, 16, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++	seq_buf_init(&t, buf, 16);
++	KUNIT_EXPECT_EQ(test, seq_buf_printf(&t, "%s", "longer than sixteen"), -1);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&t), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
++}
++
+ static void seq_buf_printf_test(struct kunit *test)
+ {
+ 	DECLARE_SEQ_BUF(s, 32);
+@@ -355,6 +396,7 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_puts_test),
+ 	KUNIT_CASE(seq_buf_puts_overflow_test),
+ 	KUNIT_CASE(seq_buf_putc_test),
++	KUNIT_CASE(seq_buf_pop_test),
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
+-- 
+2.34.1
 
