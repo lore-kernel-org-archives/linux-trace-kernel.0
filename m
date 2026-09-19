@@ -1,79 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7480D2D322E;
-	Sat, 19 Sep 2026 00:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F1449620
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 19 Sep 2026 03:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789778068; cv=none; b=B+LGb3JyN7ey3GO7F0ZmisdhkkMbAEt0N8URTZV7lkLz+KzyhBByGPNyMQoMrBnymdLa0ZteCYCzLpCpcVTWjADoNZqwA+bI3I2BuL9Wx+xdtMjFtL+rdRH0NlJT7q6CeUFY8oIZL5pcj8JzplCskroAdsrDhPL/zftX9t1XpcA=
+	t=1789789079; cv=none; b=VevXbI05Myt+I67hVMfk1xrTo/gf50emyYkOw+i5AAvvpZ4NiBosWfhPKmztUgSuBl8kN4xGKiG4yNE1kNrqY24EvpCtH/7p7XKuvtmqiQP6ntKtAq7YU1oKG3PV0bEpM6a1SmrIFQ1wE9YYJPrk1u6h0VgkVFlw8VPMTae6dZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789778068; c=relaxed/simple;
-	bh=G6v2ZDa/2+F7fA6TsGjMl1PFCCEfccpmbRB5TtXZ4sY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TxG8hArel44b0o0dECY2WWZVe6V89PxUfXLaOPOQY56kzxSIWlqsWyw4A2lb/lmMK09EiVlDMixKmwBNt3O0eBkHtEy8jdAuRCpqXElau9H+6H2bwBhtDsMcs9fS01Ms30zLuH6N3dgggRDMdZMvknfs3U3SIc0DgmrPGg30GNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHzT7Sqy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789789079; c=relaxed/simple;
+	bh=Ae8JSmFXzu2xPCKgoOVtXk9lHBZXVRotM4Ep+vNNIKU=;
+	h=Cc:Message-Id:Date:Mime-Version:Content-Type:To:From:Subject; b=CEcuw5p/08uaqqLKtYXh3VLnweYdcgVBgFUrrm9Go72KXbzbvqPsxamBviV+8q1d6wQ/DxvOm22T1L6GDjtY8wgdXyZbKIHEWB6z+O2lGiMJImYCZ4x9T2+qE7IvQcnn2Y3mguNAFxO49uycQFnw9MZZktMVUEOrtEwHKLmHIs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=CTyfb2m7; arc=none smtp.client-ip=209.127.230.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHzT7Sqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE55E1F000FF;
-	Sat, 19 Sep 2026 00:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789778067;
-	bh=G6v2ZDa/2+F7fA6TsGjMl1PFCCEfccpmbRB5TtXZ4sY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eHzT7SqyZXkagMWICSAgWB1CaI9P2qM43Kf6IthvshAZY93xas/4ozLDwgaAEcjrz
-	 ripmQdMAehqmLjZSJLa+VrZcNF2pZN3tGy/sF9FY0SaU9nOuxL47J/jNDyzn23hQ4h
-	 s48/i5DDv5LZyp8+aKNoMHQ0zxN9/dO1E1gNs8XXdtjQnOiP5nKc+VrlqHP3piVXyc
-	 O5u/U8t+dderkTOYGxKXievEFE2S9ppvvwfOQDKD8/Bd2I0n7MP0yILGnB6SJPKjYd
-	 cK8/jkr5mj+ydQgKgy7jpRx0d1yLeko+VYVlxir79/bO74MOZw+SdwlslWvn0qzeLn
-	 wnX/yET+aYr9Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/9] seq_buf: Do not pop from an overflowed seq_buf
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kees Cook" <kees@kernel.org>
-Cc: linux-security-module@vger.kernel.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260919002714.4060307-2-kees@kernel.org>
-References: <20260919002658.stay.929-kees@kernel.org>
- <20260919002714.4060307-2-kees@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 19 Sep 2026 00:34:26 +0000
-Message-Id: <20260919003426.BE55E1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="CTyfb2m7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1789789067; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=tITefMGqaFRIFOyQ8G6JxHpJ8JHWEXlXUu5h2s/nSBo=;
+ b=CTyfb2m7IkMzLj27iHtTKxQq3349EKzYBps+tEpHqDioDL7pZyMurycIqyK8o5f+o9xrJj
+ Aeb+P3F2HhO+vSss4wKnkzb9aCRBb7bKrFlF3jF9vhi2xS47TypmmlWsdERiYharekfajb
+ W7IMDAIIrYvc+WSdE6einjD6EoYOxQDx6T+N4AqzkwtON6Y8et/697q8WxW54MocWsSWIG
+ x9IdxmJIWT6ZZ+9Gc0XpJvaHarFLsxQw4RmcTezABrXRP+avDWPKtjQ6E1FWspuCvUmjVu
+ 8rzLPNz6lQjOOYVxzEW7XwajukcmzMncR2AS2vz8F13Ov319ESgAp0aP3OWGmg==
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26aae0389+5feafa+vger.kernel.org+qirui.001@bytedance.com>
+Cc: "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>, 
+	=?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>, 
+	"Chunyan Zhang" <zhangchunyan@iscas.ac.cn>, 
+	"Guo Ren" <guoren@kernel.org>, "Jiakai Xu" <xujiakai2025@iscas.ac.cn>, 
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-trace-kernel@vger.kernel.org>, 
+	"Mark Rutland" <mark.rutland@arm.com>, 
+	"Masami Hiramatsu" <mhiramat@kernel.org>, 
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, 
+	"Palmer Dabbelt" <palmer@dabbelt.com>, "Paul Walmsley" <pjw@kernel.org>, 
+	"Song Shuai" <suagrfillet@gmail.com>
+Message-Id: <20260919033726.1361382-1-qirui.001@bytedance.com>
+Date: Sat, 19 Sep 2026 11:37:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.20.1
+Content-Type: text/plain; charset=UTF-8
+To: <rostedt@goodmis.org>
+From: "Rui Qi" <qirui.001@bytedance.com>
+Subject: [PATCH 0/2] riscv: ftrace: use frame CFA as the function graph retp identity
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
 
-> When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
-> decrements len to size and reads buffer[size], one byte past the end of
-> the buffer. It also leaves len equal to size, which no longer counts as
-> overflowed, so a truncated seq_buf then looks like a complete, full one.
->=20
-> An overflowed seq_buf logically has no last character to pop: the
-> length of what was written has been lost, and the last byte of the
-> buffer may be the NUL written by vsnprintf() or bytes that were never
-> committed. Return -1 for an overflowed seq_buf, as for an empty one,
-> and leave it overflowed, as the rest of the seq_buf API does until
-> seq_buf_clear() or seq_buf_init().
->=20
-> The current callers do not reach this, e.g. trace_syscalls only calls
-> trace_seq_pop() when the trace_seq it pops from has not overflowed, and
-> kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
->=20
-> Add tests for the pop corner cases.
->=20
-> Tests passed under qemu on ARCH=3Dx86_64 with GCC 16.2.0 and CONFIG_KASAN=
-=3Dy,
-> and on big-endian ARCH=3Ds390 with GCC s390x-linux-gnu 16.1.0.
->=20
-> Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
-> Assisted-by: LLM
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
+RISC-V dynamic function graph tracing currently saves &fregs->ra as the
+graph retp -- the lookup key that ftrace_graph_ret_addr() matches against
+shadow stack entries. That address points into ftrace_caller's temporary
+fregs frame, which disappears once ftrace_caller returns. Later stack
+unwinding finds return_to_handler in the traced function's own frame and
+looks it up with the frame CFA, so the saved entry can never match. The
+same mismatch breaks function_get_true_parent_ip(), which looks up the
+original parent with the saved entry SP rather than &fregs->ra.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Patch 1 clarifies the ftrace_graph_ret_addr() documentation: retp is
+compared, not dereferenced, and may be any stable frame identity as long
+as the graph entry path and the unwinder use the same value. 
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919002658.stay=
-.929-kees@kernel.org?part=3D2
+Patch 2 makes RISC-V use the frame CFA for that identity: the static _mcount
+path derives it from &frame->ra, the dynamic ftrace path uses the saved
+entry SP, and the frame-pointer unwinder tracks the same CFA when
+recovering graph return addresses.
 
+Build-tested for rv64 with gcc and clang (full vmlinux).
+
+Rui Qi (2):
+  ftrace: Clarify function graph retp identity
+  riscv: ftrace: Use frame CFA for function graph retp
+
+ arch/riscv/kernel/ftrace.c     | 10 ++++++++--
+ arch/riscv/kernel/stacktrace.c |  2 +-
+ kernel/trace/fgraph.c          |  7 +++++--
+ 3 files changed, 14 insertions(+), 5 deletions(-)
+
+-- 
+2.20.1
