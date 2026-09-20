@@ -1,128 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CB23002DD;
-	Sun, 20 Sep 2026 07:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901DC3F4DC7;
+	Sun, 20 Sep 2026 11:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789889451; cv=none; b=edvkCPfeF1SazAEvp2fwIU/q6IQGpOQ+dXZYJ8/zOT4kLBcX3ocIwsHddevs9kzTJ22ZzipRcInbhjly70FT0TeS8DeuSbtnKmvCrVXIVSUtAlKY3vy51AulSI4c62m6Ta8MQrYO6Tl/cs3U4g4MWmPidFbY2enmCh7HGfaOHsY=
+	t=1789903783; cv=none; b=MAgd3RRdcJUxc8bzIS5wGzJ1JUIykd4yAxUk8ZRe9q1jywyozpn1T1HdkQ3kFnBlXy80Wc5Ag0ktNsQi4e0k6MQRe92RSK7DiIksHkP5nTC+bLchbKCDRUyFSVZJUamrAw5dAhclSh5ki51Y0307yX6BIAjLn1jCe7p8wBl2BDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789889451; c=relaxed/simple;
-	bh=hmw7PL6rA600kATIzt8ky7c+Ug3B0QKSJP/gM/Lp/sQ=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=KakmugWpWB4G4qjVuP6zv9udPUwhuB+ta4n0dPQfO0LXT3lsRy4b5cXwpx0CSkkup/fU+Xr5SoL0z3nE/QF8YJnqbjtyylV7uJp+eD3y5S+9uHHHg9Nid38usVua1r7I3w4g/bxZmBwsEY9R0OlAjgS7tL5MRojnqDuKNjRAGig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuD+4cwI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789903783; c=relaxed/simple;
+	bh=2gjJudq4izhq9IkfVOID0c4xvDN+P7P8O8ylW+AveUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z6aXi4Fw3FYaHPXR6Puuta0y014yBRS/Z/X38qP8jkTyKpd3Z8XbBFWa5M2EI5z+uBD1HpSPOtZD5htU6ivEjXN4cY17CAe8bOeH3WIR3JbBUIlm5b7msNds/vzw26+0pqQ7vPnIW0ZA8lhptS3nmXNYO+8QxofJoeV7jn/rRd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=v/epQyRj; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuD+4cwI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751E41F000FF;
-	Sun, 20 Sep 2026 07:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789889450;
-	bh=NlcQPH+hnV8k+jkyyiuMykhGBZ8m+4m85Q2Yy0P4LsI=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=EuD+4cwI1om3+k6trMDbGR6lIg817UZgwYUOnfM8yDv81K9zWwxeJbpxsmu1jYmGU
-	 0ulrGgk8F9dAAxpHHlLBET0+gh0QZQcHDW+NbacBiQ+c2tUOHa1f+0mZ6kqT4jXNM3
-	 KbzM3XlPoS4m8kHdy+0Kivl3nL06N/41gDi4KXqsb82sdWuTsf3k8hXOhlhEbZ5xKf
-	 TClEBYzPuhBHCrl1HXDKleAgiqGsh7dtFSNWQGvUk2E0L+JMsUZNkkZtRX9l3G4lr/
-	 coJG6B8W/j0BEM2R3qSlBJLITnuNPOzDlNmIink8/iZ6GlJJcMk0IkoXZlNndymkMm
-	 g5DB3VXB9cVfg==
-Content-Type: multipart/mixed; boundary="===============8035067619570924591=="
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="v/epQyRj"
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 49A141403EA;
+	Sun, 20 Sep 2026 11:22:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 5F80320026;
+	Sun, 20 Sep 2026 11:22:35 +0000 (UTC)
+Date: Sun, 20 Sep 2026 07:21:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, Peng Fan
+ <peng.fan@nxp.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: use assign_bit() where applicable
+Message-ID: <20260920072151.40637efd@fedora>
+In-Reply-To: <20260920022810.3145921-1-peng.fan@oss.nxp.com>
+References: <20260920022810.3145921-1-peng.fan@oss.nxp.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <4a411cdeff7f7ac68d0c938b22e0acf2c8beb96db88ba1ee7961c981efb3394c@mail.kernel.org>
-In-Reply-To: <20260920063442.499577-1-yangfeng59949@163.com>
-References: <20260920063442.499577-1-yangfeng59949@163.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Reject bpf_skb_output() from return-side tracing
-From: bot+bpf-ci@kernel.org
-To: yangfeng59949@163.com,kpsingh@kernel.org,matt@bobrowski.net,song@kernel.org,jolsa@kernel.org,ihor.solodrai@linux.dev,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Sun, 20 Sep 2026 07:30:47 +0000 (UTC)
-
---===============8035067619570924591==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: g196ure1i8i8sf9jfgon3xcsie8w81r3
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5F80320026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Ql80igF4NtJw0bd/efvVbzTp3DyX0Ris=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=JzLWghkgJwXUDT/eJcnpKGJ9j5om+rM0RNHOLD6uo0Q=; b=v/epQyRj8Hs9jOMCrwTAB9TlRqRuYaKonMqgoCigDkGndvKE774xpv8UOYLSVmAZyCjJwJyF6B9VOcQ7v/2E3NPyc1CDbgE1393Lufg2HS8oFC+dhSCVysNb+vNMNjwI2JeZBcqXLGes8Mz+xCbftYeOTOHkmMeszXPrbvMu66A=
+X-HE-Tag: 1789903355-503385
+X-HE-Meta: U2FsdGVkX18v2tQzrM9VkrDA1quBgUiLCF3bUSfJ6L6ENbBPzSaGs1hJOUtNfN583oaWg5cGBjsfXOfQ0swIzMSMZG8ou7RImSICFprA1Nl3p327IZtw7IaYH+i4ZDWy1b8hm0h9Og1XfJ89ula12MZnhVWN1l0EgbjglINYToHjMFlSw9ap9kMUl7qs8h+4veXamVW9Gfj1rljLDU6JCdH74MEKPx2waqi9qCdT4yzak/xQQ/yJF13F+bM0ebQsRx4GyIU1Ghe/79dXM/qhf7xESRgun8LgVn/0GWrejxgj60lAdgPO5RUj4RCvPKTHpb5zkt0h2LUrzkLHBewQAdeWffbacwuPT6rGIrdj4NJRc4iYoAFkm0MmpOK6KCAeNXsDOz4r3kI26RFzPSfy/et2VEGqV2BR
 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 29260951aa871..cdede3926e5d6 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1339,6 +1339,20 @@ static inline bool is_trace_fsession(const struct bpf_prog *prog)
->  		prog->expected_attach_type == BPF_TRACE_FSESSION_MULTI);
->  }
->
-> +static bool tracing_prog_may_run_after_target(const struct bpf_prog *prog)
-> +{
-> +	/* The target may consume pointer arguments before these programs run. */
-> +	switch (prog->expected_attach_type) {
-> +	case BPF_TRACE_FEXIT:
-> +	case BPF_TRACE_FEXIT_MULTI:
-> +	case BPF_TRACE_FSESSION:
-> +	case BPF_TRACE_FSESSION_MULTI:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
+On Sun, 20 Sep 2026 10:28:10 +0800
+"Peng Fan (OSS)" <peng.fan@oss.nxp.com> wrote:
 
-Does this new helper need to be static inline? The function is defined
-unconditionally here but only referenced inside the CONFIG_NET block of
-tracing_prog_func_proto():
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Convert open-coded if/else with set_bit/clear_bit the assign_bit API.
+> 
+> Done with Coccinelle semantic patch:
+>     // set_bit -> clear_bit => assign_bit
+> 
+>     @@
+>     expression cond, bit, addr;
+>     @@
+> 
+>     -if (cond)
+>     -        set_bit(bit, addr);
+>     -else
+>     -        clear_bit(bit, addr);
+>     +assign_bit(bit, addr, cond);
+> 
+>     // clear_bit -> set_bit => assign_bit
+> 
+>     @@
+>     expression cond, bit, addr;
+>     @@
+> 
+>     -if (cond)
+>     -        clear_bit(bit, addr);
+>     -else
+>     -        set_bit(bit, addr);
+>     +assign_bit(bit, addr, !cond);
+> 
+>     // __set_bit -> __clear_bit => __assign_bit
+> 
+>     @@
+>     expression cond, bit, addr;
+>     @@
+> 
+>     -if (cond)
+>     -        __set_bit(bit, addr);
+>     -else
+>     -        __clear_bit(bit, addr);
+>     +__assign_bit(bit, addr, cond);
+> 
+>     // __clear_bit -> __set_bit => __assign_bit
+> 
+>     @@
+>     expression cond, bit, addr;
+>     @@
+> 
+>     -if (cond)
+>     -        __clear_bit(bit, addr);
+>     -else
+>     -        __set_bit(bit, addr);
+>     +__assign_bit(bit, addr, !cond);
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  kernel/trace/trace_events.c         | 12 ++++--------
+>  kernel/trace/trace_events_trigger.c | 11 +++--------
+>  kernel/trace/trace_events_user.c    |  5 +----
+>  3 files changed, 8 insertions(+), 20 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 30c0ddf90887..72a210da67d6 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -859,10 +859,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+>  			WARN_ON_ONCE(ret);
+>  		}
+>  		/* If in soft mode, just set the SOFT_DISABLE_BIT, else clear it */
+> -		if (soft_mode)
+> -			set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+> -		else
+> -			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+> +		assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags,
+> +			   soft_mode);
 
-kernel/trace/bpf_trace.c:tracing_prog_func_proto() {
-    ...
-    switch (func_id) {
-#ifdef CONFIG_NET
-    case BPF_FUNC_skb_output:
-        if (tracing_prog_may_run_after_target(prog))
-            return NULL;
-        return &bpf_skb_output_proto;
-    ...
-#endif
-    ...
-}
+Please make it a single line. tracing is not strict about the 80 line
+limit if it makes it look worse.
 
-bpf_trace.c is built from CONFIG_BPF_EVENTS (kernel/trace/Makefile) which
-depends on BPF_SYSCALL and (KPROBE_EVENTS || UPROBE_EVENTS) and PERF_EVENTS
-(kernel/trace/Kconfig) -- none of which imply CONFIG_NET.
-
-CONFIG_BPF_EVENTS=y with CONFIG_NET=n is valid, and in that configuration
-tracing_prog_may_run_after_target() becomes a defined-but-unreferenced
-non-inline static:
-
-  kernel/trace/bpf_trace.c:1342:13: warning: 'tracing_prog_may_run_after_target' defined but not used [-Wunused-function]
-
-With CONFIG_WERROR=y (init/Kconfig) this becomes a build failure.
-
-The pre-existing predicates immediately above (is_kprobe_session(),
-is_uprobe_multi(), is_uprobe_session(), is_trace_fsession()) are all
-written as static inline, which is why they don't trigger this warning.
-
-Would declaring tracing_prog_may_run_after_target() as static inline fix
-this?
-
->  static const struct bpf_func_proto *
->  kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  		break;
+>  	case 1:
+>  		/*
+> @@ -4273,10 +4271,8 @@ struct event_probe_data {
+>  
+>  static void update_event_probe(struct event_probe_data *data)
 >  {
-> @@ -1730,6 +1744,8 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->  	switch (func_id) {
->  #ifdef CONFIG_NET
->  	case BPF_FUNC_skb_output:
-> +		if (tracing_prog_may_run_after_target(prog))
-> +			return NULL;
->  		return &bpf_skb_output_proto;
->  	case BPF_FUNC_xdp_output:
->  		return &bpf_xdp_output_proto;
+> -	if (data->enable)
+> -		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags);
+> -	else
+> -		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags);
+> +	assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags,
+> +		   !data->enable);
 
+Ditto.
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+>  }
+>  
+>  static void
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index 4d2fde996c0f..3b5e14fd0dd9 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -674,10 +674,7 @@ void update_cond_flag(struct trace_event_file *file)
+>  		}
+>  	}
+>  
+> -	if (set_cond)
+> -		set_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags);
+> -	else
+> -		clear_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags);
+> +	assign_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags, set_cond);
+>  }
+>  
+>  /**
+> @@ -1673,10 +1670,8 @@ event_enable_trigger(struct event_trigger_data *data,
+>  {
+>  	struct enable_trigger_data *enable_data = data->private_data;
+>  
+> -	if (enable_data->enable)
+> -		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
+> -	else
+> -		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
+> +	assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags,
+> +		   !enable_data->enable);
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35495259029
---===============8035067619570924591==--
+Ditto.
+
+Thanks,
+
+-- Steve
+ 
+>  }
+>  
+>  static bool
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index f658c3a77aa7..055894cb999c 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -590,10 +590,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+>  	ptr = kaddr + (uaddr & ~PAGE_MASK);
+>  
+>  	/* Update bit atomically, user tracers must be atomic as well */
+> -	if (enabler->event && enabler->event->status)
+> -		set_bit(bit, ptr);
+> -	else
+> -		clear_bit(bit, ptr);
+> +	assign_bit(bit, ptr, enabler->event && enabler->event->status);
+>  
+>  	kunmap_local(kaddr);
+>  	unpin_user_pages_dirty_lock(&page, 1, true);
+
