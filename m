@@ -1,150 +1,258 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013036.outbound.protection.outlook.com [52.101.72.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AC737CD37
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 19 Sep 2026 18:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789843372; cv=none; b=VznN7/I6ilu0gZ2NLJrw62l/c3+3/RMK5qxyL5pKcoyCNVsefBJU/+Rp65tB+FXVYM0ALf3YmmhkhjSUFK47hjYCh6lyrZnfvo9Q/psnSeE5O2wc0QQpKP+p1GuSI0DgkNdaqDpb3/zGw3D/RjpF4uy2/yR4hXMvkr6r0TWVnNY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789843372; c=relaxed/simple;
-	bh=L0cJg8bEa3JcDAFMwgJ+PXyC/ThA9AhiO5G7soyuk4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IfUSh1eXYOWAcLfBHY3ERGXWzAuhJG2ZxIaiHpLgAqzxl7VUkxt6XWqrN1BuHKjHA26My9jBWQpSsLKqhBeK/UsGxc13Z/qBHBOfJBsH5uxATJvOpsxCMiy4IO4k+li+1mIyFrZVLqgM37LZP3WWPLMiuyHoZp0RksSOoSpJicA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L+rhnWa9; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9541DFF0;
+	Sun, 20 Sep 2026 02:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789871497; cv=fail; b=m/Rur1G1IW8dJ+TJ7cKghr79zYetIYYRS2YeTA0rx3qmT9mi8qeFvLYUIQsyopPR4rXdeCSb0uYK+KwhrclJfriMeUZuhKWmLhtHFufyONmMH7dCkaP6hZHqbOCo4vVmeQsSlSIDz+DGxxZmLmdHbZr7XlGOIdru3JHMxFDLkXE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789871497; c=relaxed/simple;
+	bh=BBTmoMjGDVJ1Iiuc0tXwI+d6uIlfcsn1a4nkDWExMpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=rSnoC7S8a/4NZe76Xh+5nLOHLDJtg/c5fuZ7BsM35iArL3n0xhUEt55M7hzGpfCuH9hCAVKYb+BczOD/hupw3flX+UpXJDwgoJNRCicQWDOtXllIXF5ifoFVNuH+vGucJvOLggtDFlAvIezE+BeApM42ejRVSz0ho5b9p6ZTf7A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=w1tVqf/o; arc=fail smtp.client-ip=52.101.72.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+rhnWa9"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49e620fa473so10340925e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 19 Sep 2026 11:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789843368; x=1790448168; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EUaG58XyyXj2IYGxruqsBjrWu0FDpmLYKW3X9EM+9DM=;
-        b=L+rhnWa9nQG2h6Uso3aXhrUb1+pFdsXRFDMx5XcAo69q9fXnDxwpUAnp67jjx05WOh
-         UlHlMf0RCkzMdqFJJyX15kVA7PDcV2cDKzmhkkO3id15YNJF8a3BVbLTlGsK/XPtQM29
-         065odsPEekw6UhF8ik+AQ9gQfRZ/kObO4TrxSbY5+hcsn2cCh3iA11HoNAznCt3ea5HY
-         Fv82E4PjgXTB/1vEy1hauB5j7z+9KyIHJvrA0aEP3zEcl69oTsyDYBZWrNnz+Ggvb/th
-         SYtRL3+ZnGtvfXPzXi81+71BDGhMs0KnxACyG2QGoegKiUDa6P+tUSBBVGabEodUxRWn
-         D/lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789843368; x=1790448168;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=EUaG58XyyXj2IYGxruqsBjrWu0FDpmLYKW3X9EM+9DM=;
-        b=w0yQAtq08xhfs0ARF6wBqyfS8eLYRUwLVU1UAD4gzNN8lq5faqWITtcc3N6vwO7/KD
-         0OPNOUligYijfWEG+OaQnyzqZoaxwzCPBIC/YCybByADvBsqFO6PCjDVyamr3qp47amn
-         X9s/ZKV6LIc7Jxm4PJM7zv5kZujs/UtOONZ/kE5Lx4muguHB9lJoMgVZXYpzOeOAlxCl
-         pqevyHxV4qKuo/yDnyB31SDybFLqaetYERZ2eGEyY+USZpO19XMgdrqo1Hbw6jLMaabe
-         PEj5aAovkxC0UbXrq0eRGO/AuJFCUK8ntphparWRKk/qviuOKy3++8TJ45UAAZYZuB3e
-         S2Yw==
-X-Forwarded-Encrypted: i=1; AKwUvBzSHoiXinDzebu/xj0rYotcXOwKv2RMh8FwPoCL56WWU//kH22xVsmcHZfiuoeVV47DJkFunlaHbqhWdlq2qW9izVY=@vger.kernel.org
-X-Gm-Message-State: AFuF++mun2QXfWm/o8ovYUy0v9Ew5xjXVTP2484beQyo4X48sBsU4kfn
-	F3iMffCQnQ+ZEMS56GzZAPD4ohukmLgb+V12Js5VA1jRdOdA7/C+s8wI
-X-Gm-Gg: AYBFou1XBk2u2cFboTQzqdsAsmt+SMyj04Ys7fmEVWHj99jTsoEdFVljxNaHasLyfdY
-	NXFp8aoHNA9bVSEtksDHDOxrXeWD4i/xPP+X+eG1svoyM1X7+HiC5maym/W/6qMkIQ9WF0zWI9Q
-	88opde8EW/eBuGhnl5yG2LCr4M0H5+24/FSOCfVVQiG3Bg7WevPLulegfKhqPgLVLrxGmsYtkjS
-	ccsb7FTBWFyVK/d+wrJlhOgYs+nQ0pxt+JUB9oOMrIl/cHvs2l92pzOl8xPc8pEjAQGGAvR2467
-	b/BIwmsTP2X1TfFt5MZjlULf4rsNAl+7eZ8n+RqWyqU3PUCgugdhiXx+HTj3HPnwk4hQIGvPkiv
-	FX17qc+hykGczknSy1+5FKSICS8zhxCC4NbW9PZ70VdJ/3T3z345MyUS4ChOsKum9IQqfWfTdm0
-	P5T4wSV1TNYcD6khLyjHVF1yqkaHFFdlwRVb4yScuohv1o9l26sf2eM7pW71IC4SllGqJ3FqZCB
-	ksaRUvrEMrGPXPNeO/Mw+XrkrHa
-X-Received: by 2002:a05:600c:4505:b0:49a:a101:4157 with SMTP id 5b1f17b1804b1-49fc56db92fmr86686385e9.7.1789843367901;
-        Sat, 19 Sep 2026 11:42:47 -0700 (PDT)
-Received: from [192.168.1.13] ([185.69.144.71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fcd07cca6sm91087395e9.11.2026.09.19.11.42.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Sep 2026 11:42:47 -0700 (PDT)
-Message-ID: <8427de42-2cdf-4acb-a439-d7c99cd249ca@gmail.com>
-Date: Sat, 19 Sep 2026 19:42:43 +0100
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="w1tVqf/o"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MGXaDH+cQ9P8HIls8Mz7D0PGgiHs+iNTSCJfXxOY8j0FMyoBDbNP1gZyWVmcfoie9whVi7M/58RT6DuBrARKQ8z8Ft3J3PO22q/hJvZJ+wtN2euUdlNS+1F+uwtahSpI28cFOzEHa+Bf+UBJLbTzVnTVoH7UbRILM8ouIMNqb5jVyZ4HYYQPNsHIFVpYUo9NkV2J4QrM2+EXohdW+g5/VdXlu5E6+JSU7ccoyT1Ezu8hrIopya1lxkhOScc07u6u7XuXygl2iEMipRHJLX4c/JjpGV8q94sRiu9pDcb8yETBSjt4a+CiceH36wSKrTjKYWvvJUOQ40bycT8MiDTYqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dRuJ1scbQhM5VQ4UkTG2Dq9HCKGTONl8eZGCU8eLWmM=;
+ b=pEFh9v7oIO2XSjtA41kP9x2rMKVd2y67uFwNunKozfSL8YHfbS3PjAgQGh0QevdesPz8kuddjj0nJAPfLMDjKCpBpM8yWXpiUb8K+Ar2/X2zhcW7cFD8fdmufXz5uKd8p1LzhBbGITYYhJ0mgPAkXbuUqM+YmSkwqiTe/M6qCphs0AMhaymcmXx23GWYEthqQJwNWbbC869su+QG6LZ+rIwdtanCxJtWIVKVtXAUsRTL/V8KC2i/2V0MH9o4z/nOTRfPTFNH8Oisf3Zjf9HsnVr6FW8DmnDUQzyooz4hkhy6bFewESIImHZ3P9ya3S/Ex0dVIYNLvQ2tfG1qc7aCCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dRuJ1scbQhM5VQ4UkTG2Dq9HCKGTONl8eZGCU8eLWmM=;
+ b=w1tVqf/ooWkAZ89fD2688tJCJwKRXBCc5C+wv2jYoYczosmW38kgs7jySP7wa0MNm0Jf5SeTQH4CMoWfrA8afqYUXWB3igpg6juSoooQC069nMVDQwwH6nPEmIlUFWMfj7lUtPmK/psi5lAVEhKNyw6h6XVYkvCcN+QXCk1/YKsAlFdhXC+qSHrK67Zc8c5NIeJU9FjsFYaoxz+W6kpQnXdoXt5TRBVCHpbAYB/Gwgy52FwU556jfvOa1awSS+Z9FLnOyx/JnheaNMHh7nKQjbGIGerkWYpMTHxpvpl7ex5drxYQXF93PO8gdfdz+ZIuIoPkOaO0HBdE+s/zW3kxHg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com (2603:10a6:20b:24d::9)
+ by PAXPR04MB9596.eurprd04.prod.outlook.com (2603:10a6:102:23e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.13; Sun, 20 Sep
+ 2026 02:30:41 +0000
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9]) by AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9%6]) with mapi id 15.21.0428.014; Sun, 20 Sep 2026
+ 02:30:41 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: use assign_bit() where applicable
+Date: Sun, 20 Sep 2026 10:28:10 +0800
+Message-ID: <20260920022810.3145921-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI3PR01CA0001.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:296::17) To AM8PR04MB7874.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24d::9)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/11] Add spi-hid transport driver
-To: fQwQf <fqwqf@fqwqf.xyz>, jingyliang@chromium.org, jikos@kernel.org,
- bentiss@kernel.org, corbet@lwn.net, broonie@kernel.org, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org
-Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- hbarnor@chromium.org, tfiga@chromium.org, jaschultz@microsoft.com,
- dmanti@microsoft.com, acz@semihalf.com
-References: <20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org>
- <010601a0b3ff1cf6-944e2ad5-0ad1-49d4-9e89-c8ab03bbc62c-000000@ap-northeast-1.amazonses.com>
-Content-Language: en-US
-From: Dale Whinham <daleyo@gmail.com>
-In-Reply-To: <010601a0b3ff1cf6-944e2ad5-0ad1-49d4-9e89-c8ab03bbc62c-000000@ap-northeast-1.amazonses.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7874:EE_|PAXPR04MB9596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e7a8a9e-00e5-4120-58ef-08df16bf2a4e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|23010399003|19092799006|366016|18002099003|56012099006|11063799006|6133799003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	c+zcoqRvxbYHbWK/GB3LFnM1PiDDV14FV//odlNDRp1SKDhvpkXnGlXHSXCqEk2c1ttBQlcr67FAus/orirMGX0hYXt5fAtkh+9lKTQo1aN1/tL50DclmPgWyECOslwzZG7YvvYZJHekEhFPhmG0mOfdlXGbLwo30ADFpiOwkTvuQV2EpyCMTs/+fFlVEOIzCVKLOHismd8IhExjHiKkK4R9H330ENnsiIrhODNQTVJe3x8sI/qM58ttVeG7GO9xiZh2kqVRtaLGQXHORY0D1d7qRx3sxdYNFhb4ZLov1FjeT81ooUNplzibx5gWJN7bHdEFXXbYWU/rGJfb//HUfj2UXHVguRDrc+KQF8HLMTNSH4ZRoT2XfH0vO0iQh218Wa/ZoydlDPB1zBdxEh0OANNQI/Ngg3dbvjQ/quRP5oZ81+k/4+ppJXClHB5uxG0p9nrPKERbalSLwHEBPy+6gdjUWSmtBnG5Du01oQl2E6ubnltQhnQLXxI41WqOaODeGGPzXhPeNGmBcemUDImUF0S6/cJ8q6oXSbtDNrrlon4Xp5bz6z78gqWJSioRKW4PDTv0uW0YponBUEMD1jvHqSt++zkj7A+JDWxZh5lUGiAUAWgPxFOjtQO4bVizq27G0E1+Oe2F+KNty4R0j4gjU/MlWc8FWwJu77Qd2Nsxn6w=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7874.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(19092799006)(366016)(18002099003)(56012099006)(11063799006)(6133799003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sgFSi8OOB5uvJjERoMzZsTcyMdSQ/YmaAmOZTl+ywoJViB6JGU3RCghYhHjh?=
+ =?us-ascii?Q?b/kKNEHuDp33sKjlurMcyhkKyE+Z1478/agElTCIHm+mXG3LTkPAXKsHK4E4?=
+ =?us-ascii?Q?mV51Iuj5jsQgdOK7qV1dzQiJy04JWeH0FPGIHUM+TZ95Q9JzXWMYnDxtK7hu?=
+ =?us-ascii?Q?AdLj2Wa915sfLLnIcZzhADMUYwTUsI5+BeF9nGChbn5L4LyOjYWUpC4H/7Zt?=
+ =?us-ascii?Q?3EKX7tTSL7rUDzTR5Vrx4P1ASuKc2d0SatfkL6qFV8P49o+BXJamjZ7JqKdL?=
+ =?us-ascii?Q?/YdeR8XaP8yX6m76UysBgtUePCveCxn3HG9DbML4Guvy8BdsIS0O4HeebLqD?=
+ =?us-ascii?Q?frlCf4/IGRI+4CrT4nyQmu4BFIt14Zfbb005Im71H3cy5LW0axeuk1QbqJ2d?=
+ =?us-ascii?Q?tj7N4K+cqHNpj/gh8pNUyv/Oerq10J1fylA9jJsFZbjLBPIOiGT5ei4x+QH9?=
+ =?us-ascii?Q?5UtCSxoOTPJUr8o2H31krl9Mx8QOqOfgcaNxUqHtF8U0psU2txYHweLQWYRu?=
+ =?us-ascii?Q?nop47fsV9Zd11nGdst0QobEqG/l5owRwWyoQXb4K+twUOFbcxNJrAxqbkU+d?=
+ =?us-ascii?Q?IwgnYspfVQx/N6EPAlmyGVX/oKPhVuYZs/+zHVwNNtqGTEKhOvY8Ppb7w8g4?=
+ =?us-ascii?Q?fVzkFRmyNDc0MwsxcHp1ByBuItBee8cfpxPJ5EMoQMed5o07vbTCyaHIRuu3?=
+ =?us-ascii?Q?+WTWvyZEsfhzaxLT6A4++TrLu1IBP2tJqfK1PXQpjqtiBOGVCYgRteLoZ+AZ?=
+ =?us-ascii?Q?nTA6x3Zmr/TvGPr0W7boIM4/v04lG6Wfu02zm+Q78wQgKQCgSBeMwah73qFr?=
+ =?us-ascii?Q?L4701Y0pDQelafa/dgb3WMX8/EIXBKbMSBAxAEDR6oINbivQWaqvvDn3M+PJ?=
+ =?us-ascii?Q?Ea8LDHY5wi5eKzyN5iUvoM1x3jQ5OqDpsSagJ/rbfkMXsvnUDgP+coxVtSVE?=
+ =?us-ascii?Q?E9QdLGvPqJzyOQe3skzWURMfrP+t7JYhpTO20jKIOWUWtQYqQjzVT838i8yW?=
+ =?us-ascii?Q?SfeAaySjwC00Lfy8W/m16Gg96dU9mTpbIVOvYnX4KPl7KgzfUCbHLHgv8zC0?=
+ =?us-ascii?Q?xQ4UHYEOfp4/fpfif4jjhGHF5o7vr0V/3wp/6XHqyZ0SmIRNkLOBkpATKOF9?=
+ =?us-ascii?Q?9Ki/QZL5sMDO8TliZ4u5rTDwBcCzKbfCKfMSwMIEnVgCjQ61kBuwdN/XmJ0d?=
+ =?us-ascii?Q?sf7V/LqGEGPM1tetg4boNNqkArkH/7eBo3FiB0kcvOcHmx1E0a2GXdSLKP5Z?=
+ =?us-ascii?Q?mzYR/d54RYuDf7Kmo6M5QmpjpI/KSibjVB2cN1dKhpIqu6hpZCPuRxslQeIm?=
+ =?us-ascii?Q?rWCozJ0ajX2hudXbbmHlqvV1LmnUsgP+VY1hCyb17kTHUQQKKUgLOctI4LWf?=
+ =?us-ascii?Q?iARTBturNeJMo2STULBhwytlYffTyuqm6xoesKNdDQ2MsFhFD55Xqn7vZzem?=
+ =?us-ascii?Q?Hsr/f3pVgmMHTV81aiyfk1j2/dmhio1jde8mL61lDH0QndKZYkGsVfV5AxaP?=
+ =?us-ascii?Q?6yU0MnrVrc/73BEFWENK42BLO1x5O3AV8M/plE47NEXm0cCCdZwJG7kV0FzH?=
+ =?us-ascii?Q?1EnYYxVwrfXnqDXXW3j10TT6BvNee/fR1NiEmuSKZV4SzSOFMpX+tnnvTnv9?=
+ =?us-ascii?Q?RVsR6EEej4EsdIszwkvbY9qRfWuB8bcP/8lPYNi5JMUH0f7omnajwZQU+hvG?=
+ =?us-ascii?Q?wm0GLhn8solSFI9XRZzekimgsSIuyIkLGFaCKbvXHur7k9tELomNt/I5YNQy?=
+ =?us-ascii?Q?YP5Gon0wicIwrWbmy8UIQcDb9BkPL4i3kV1/siwZbsDadGXlVQxL?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7a8a9e-00e5-4120-58ef-08df16bf2a4e
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7874.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2026 02:30:41.5825
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 59uXIZv5e3SxgVfs2rIjLhDMU23HaqhSsuwhlEJJsHVdp/1bFytbArEL5ECZIeUSX168s95ZxXj+H6gj6fpk5h7yxlH46n0fKYG08w62Knxc96nkanedx4bgjNZ3ENCM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9596
 
-On 18/09/2026 11:10, fQwQf wrote:
-> Hi Jingyuan,
-> 
-> 
->> This series picks up the spi-hid driver work originally started by
->> Microsoft. The patch breakdown has been modified and the implementation
->> has been refactored to address upstream feedback and testing issues. We
->> are submitting this as a new series while keeping the original sign-off
->> chain to reflect the history.
-> 
-> 
-> I am working on Linux support for the Surface Laptop 7 (13.8-inch, Snapdragon X series), whose touchpad is a HID-over-SPI device behind a Qualcomm GENI QSPI controller. I noticed that v4 (June 9) is the
-> latest revision of this series and has so far only seen automated review feedback, so I would like to coordinate before preparing any upstream submission of my own.
-> 
-> Current state on my side:
-> 
-> - I have a working touchpad using a downstream Qualcomm GENI QSPI +  spi-hid stack (originally from scuggo's x1e-nixos work, imported  via ELLX-Kernel). My local adaptations move the transport to spi-mem and add framing, response matching, and DMA/error-path  hardening.
-> - Normal touchpad use works on my machine. The latest hardening currently has only build and software-test coverage; I have not validated s.
-> 2. The SL7 adds a different transport requirement (quad-SPI via GENI, through spi-mem) on topuspend/resume, and I have not yet run your v4 series on this hardware.
-> 
-> I believe our work may complement each other in two ways:
-> 
-> 1. The automated review of the series raised DMA cacheline-alignment concerns for SPI transfer buffers and unchecked reset return values in the init/resume paths. Both overlap with the hardening I have been doing downstream, and I would be glad to contribute fixes there.
-> 2. The SL7 adds a different transport requirement (quad-SPI via GENI, through spi-mem) on top of the same HID-over-SPI protocol, which looks like a natural fit for your generic driver rather than a standalone one.
-> 
-> Questions:
-> 
-> - What tree or series do you recommend working against? Is v4 still your current baseline, or do you have a newer development branch?
-> - Would adding the SL7 quad-SPI transport requirements to your generic driver be the preferred upstream approach? Is anyone already working on this?
-> - Are you waiting on maintainer review before a v5? A second hardware platform may help move things along, and I am happy to provide testing on SL7.
-> 
-> I am also tracing the downstream provenance of the Qualcomm QSPI code with the original authors to ensure a clean sign-off chain; I appreciate that this series handles its own history the same way.
-> 
-> Happy to share technical details or a preliminary diff if useful.
-> 
-> I'm not subscribed to the lists; please keep me in CC.
-> 
-> Best regards,
-> Jizhou Tong
+From: Peng Fan <peng.fan@nxp.com>
 
-Hi Jizhou, Jingyuan,
+Convert open-coded if/else with set_bit/clear_bit the assign_bit API.
 
-I am working on Surface Pro 11 aka. Denali, Snapdragon X1E80100.
+Done with Coccinelle semantic patch:
+    // set_bit -> clear_bit => assign_bit
 
-This series (v4) has enabled successful bringup of touchscreen and pen 
-on the SP11, which also uses QSPI via GENI.
+    @@
+    expression cond, bit, addr;
+    @@
 
-There is some updated SL7 QSPI 'glue' code at 
-https://github.com/orvitpng/nix1e that reworked the original scuggo nix 
-flake code to work on top of Jingyuan's updated spi-hid series.
+    -if (cond)
+    -        set_bit(bit, addr);
+    -else
+    -        clear_bit(bit, addr);
+    +assign_bit(bit, addr, cond);
 
-With that + some extra pieces to wire it into the Denali devicetree, 
-this series is working well here.
+    // clear_bit -> set_bit => assign_bit
 
-I'm keen to help move things along as the tablet functionality is a key 
-feature of the Surface Pro - please feel free to CC me on further 
-discussions.
+    @@
+    expression cond, bit, addr;
+    @@
 
-Tested-by: Dale Whinham <daleyo@gmail.com>
+    -if (cond)
+    -        clear_bit(bit, addr);
+    -else
+    -        set_bit(bit, addr);
+    +assign_bit(bit, addr, !cond);
+
+    // __set_bit -> __clear_bit => __assign_bit
+
+    @@
+    expression cond, bit, addr;
+    @@
+
+    -if (cond)
+    -        __set_bit(bit, addr);
+    -else
+    -        __clear_bit(bit, addr);
+    +__assign_bit(bit, addr, cond);
+
+    // __clear_bit -> __set_bit => __assign_bit
+
+    @@
+    expression cond, bit, addr;
+    @@
+
+    -if (cond)
+    -        __clear_bit(bit, addr);
+    -else
+    -        __set_bit(bit, addr);
+    +__assign_bit(bit, addr, !cond);
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ kernel/trace/trace_events.c         | 12 ++++--------
+ kernel/trace/trace_events_trigger.c | 11 +++--------
+ kernel/trace/trace_events_user.c    |  5 +----
+ 3 files changed, 8 insertions(+), 20 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 30c0ddf90887..72a210da67d6 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -859,10 +859,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 			WARN_ON_ONCE(ret);
+ 		}
+ 		/* If in soft mode, just set the SOFT_DISABLE_BIT, else clear it */
+-		if (soft_mode)
+-			set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+-		else
+-			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
++		assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags,
++			   soft_mode);
+ 		break;
+ 	case 1:
+ 		/*
+@@ -4273,10 +4271,8 @@ struct event_probe_data {
+ 
+ static void update_event_probe(struct event_probe_data *data)
+ {
+-	if (data->enable)
+-		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags);
+-	else
+-		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags);
++	assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &data->file->flags,
++		   !data->enable);
+ }
+ 
+ static void
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 4d2fde996c0f..3b5e14fd0dd9 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -674,10 +674,7 @@ void update_cond_flag(struct trace_event_file *file)
+ 		}
+ 	}
+ 
+-	if (set_cond)
+-		set_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags);
+-	else
+-		clear_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags);
++	assign_bit(EVENT_FILE_FL_TRIGGER_COND_BIT, &file->flags, set_cond);
+ }
+ 
+ /**
+@@ -1673,10 +1670,8 @@ event_enable_trigger(struct event_trigger_data *data,
+ {
+ 	struct enable_trigger_data *enable_data = data->private_data;
+ 
+-	if (enable_data->enable)
+-		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
+-	else
+-		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
++	assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags,
++		   !enable_data->enable);
+ }
+ 
+ static bool
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index f658c3a77aa7..055894cb999c 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -590,10 +590,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 	ptr = kaddr + (uaddr & ~PAGE_MASK);
+ 
+ 	/* Update bit atomically, user tracers must be atomic as well */
+-	if (enabler->event && enabler->event->status)
+-		set_bit(bit, ptr);
+-	else
+-		clear_bit(bit, ptr);
++	assign_bit(bit, ptr, enabler->event && enabler->event->status);
+ 
+ 	kunmap_local(kaddr);
+ 	unpin_user_pages_dirty_lock(&page, 1, true);
+-- 
+2.51.0
+
