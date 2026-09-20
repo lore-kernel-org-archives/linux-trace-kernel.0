@@ -1,137 +1,128 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2BF3DA7C8;
-	Sun, 20 Sep 2026 06:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CB23002DD;
+	Sun, 20 Sep 2026 07:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789886156; cv=none; b=knVn+iov5egBfaa9NEzWlPECtUmDW5FEgcGCmjk2Cr6HXYvq7/hYRSQzesYNo82cUZVMKw4PxA2IU9w8eKqe7KQNBsAHW2bTAXf5voMZiyg+xgDX33bpxhVCWhkfIVgctPLJf2nXGULq54+nR+WRGUMoIBs6d/i/fUalvvmoE3s=
+	t=1789889451; cv=none; b=edvkCPfeF1SazAEvp2fwIU/q6IQGpOQ+dXZYJ8/zOT4kLBcX3ocIwsHddevs9kzTJ22ZzipRcInbhjly70FT0TeS8DeuSbtnKmvCrVXIVSUtAlKY3vy51AulSI4c62m6Ta8MQrYO6Tl/cs3U4g4MWmPidFbY2enmCh7HGfaOHsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789886156; c=relaxed/simple;
-	bh=f3kEV6qCWROIy4is1IzV6l2A5scYFq8hQZHNNsWqp/M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SBwStihdFAApyW7poW1UXnKVM4MYrEH/LGIrgFJNGJ99aOBwbOuHVS0StPRIE9yQns+9iGCZPYO/qJ2PmGsDZrRb8dz4k/XLAY+9KWq8wwfQnX0JMsZDOXwDKNqjZYaJw5emUJo1BsjNOeTCpRllXxH8SDv8PywyOQy9SbUEUbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LbO4g6Mp; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1789889451; c=relaxed/simple;
+	bh=hmw7PL6rA600kATIzt8ky7c+Ug3B0QKSJP/gM/Lp/sQ=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=KakmugWpWB4G4qjVuP6zv9udPUwhuB+ta4n0dPQfO0LXT3lsRy4b5cXwpx0CSkkup/fU+Xr5SoL0z3nE/QF8YJnqbjtyylV7uJp+eD3y5S+9uHHHg9Nid38usVua1r7I3w4g/bxZmBwsEY9R0OlAjgS7tL5MRojnqDuKNjRAGig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuD+4cwI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LbO4g6Mp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=h+
-	Xk56gXA8V+uCWJm4Hp2x1B0l2K4jdoVWRG3XTXLjw=; b=LbO4g6MpuPBhySYxtq
-	KYjGy6U1rl3Rlm8BJ06V/jgw6oWEe09AcqwYO6Yq3R4pyW2ILslcOUQNs4dsNKJi
-	ATIgk8x3oPQXzHYBumlgFvI82M+caoiId7gR1c3r6ZI3wRmQV7DMSn9qP6CTVk1V
-	0O1jksZrIjiMIjgylAH/nE5xI=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3F8OCfq9qG42sBw--.49698S3;
-	Sun, 20 Sep 2026 14:34:44 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: kpsingh@kernel.org,
-	matt@bobrowski.net,
-	song@kernel.org,
-	jolsa@kernel.org,
-	ihor.solodrai@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	martin.lau@linux.dev,
-	yonghong.song@linux.dev,
-	emil@etsalapatis.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 2/2] selftests/bpf: Check bpf_skb_output() tracing restrictions
-Date: Sun, 20 Sep 2026 14:34:42 +0800
-Message-Id: <20260920063442.499577-2-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260920063442.499577-1-yangfeng59949@163.com>
-References: <20260920063442.499577-1-yangfeng59949@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuD+4cwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751E41F000FF;
+	Sun, 20 Sep 2026 07:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789889450;
+	bh=NlcQPH+hnV8k+jkyyiuMykhGBZ8m+4m85Q2Yy0P4LsI=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=EuD+4cwI1om3+k6trMDbGR6lIg817UZgwYUOnfM8yDv81K9zWwxeJbpxsmu1jYmGU
+	 0ulrGgk8F9dAAxpHHlLBET0+gh0QZQcHDW+NbacBiQ+c2tUOHa1f+0mZ6kqT4jXNM3
+	 KbzM3XlPoS4m8kHdy+0Kivl3nL06N/41gDi4KXqsb82sdWuTsf3k8hXOhlhEbZ5xKf
+	 TClEBYzPuhBHCrl1HXDKleAgiqGsh7dtFSNWQGvUk2E0L+JMsUZNkkZtRX9l3G4lr/
+	 coJG6B8W/j0BEM2R3qSlBJLITnuNPOzDlNmIink8/iZ6GlJJcMk0IkoXZlNndymkMm
+	 g5DB3VXB9cVfg==
+Content-Type: multipart/mixed; boundary="===============8035067619570924591=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3F8OCfq9qG42sBw--.49698S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFy5JrW5AF48KF4rur45ZFb_yoW8uw13p3
-	Wkt39xKrykXF42gw4fAa1xZwnIqa1kZrWYvr4Sqw1ayr43Xrs7XF1IkF4Ygw1fZr4UuryF
-	vrW2gFW7Aw4kAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j12NtUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbC8gVHv2qvfoWOSgAA31
+Message-Id: <4a411cdeff7f7ac68d0c938b22e0acf2c8beb96db88ba1ee7961c981efb3394c@mail.kernel.org>
+In-Reply-To: <20260920063442.499577-1-yangfeng59949@163.com>
+References: <20260920063442.499577-1-yangfeng59949@163.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Reject bpf_skb_output() from return-side tracing
+From: bot+bpf-ci@kernel.org
+To: yangfeng59949@163.com,kpsingh@kernel.org,matt@bobrowski.net,song@kernel.org,jolsa@kernel.org,ihor.solodrai@linux.dev,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Sun, 20 Sep 2026 07:30:47 +0000 (UTC)
 
-From: Feng Yang <yangfeng@kylinos.cn>
+--===============8035067619570924591==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Add verifier coverage for the bpf_skb_output() tracing policy. Verify
-that an fentry program can still use the helper, while the equivalent
-fexit program is rejected at load time.
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 29260951aa871..cdede3926e5d6 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1339,6 +1339,20 @@ static inline bool is_trace_fsession(const struct bpf_prog *prog)
+>  		prog->expected_attach_type == BPF_TRACE_FSESSION_MULTI);
+>  }
+>
+> +static bool tracing_prog_may_run_after_target(const struct bpf_prog *prog)
+> +{
+> +	/* The target may consume pointer arguments before these programs run. */
+> +	switch (prog->expected_attach_type) {
+> +	case BPF_TRACE_FEXIT:
+> +	case BPF_TRACE_FEXIT_MULTI:
+> +	case BPF_TRACE_FSESSION:
+> +	case BPF_TRACE_FSESSION_MULTI:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
 
-Signed-off-by: Yun Lu <luyun_611@163.com>
-Signed-off-by: Feng Yang<yangfeng@kylinos.cn>
+Does this new helper need to be static inline? The function is defined
+unconditionally here but only referenced inside the CONFIG_NET block of
+tracing_prog_func_proto():
+
+kernel/trace/bpf_trace.c:tracing_prog_func_proto() {
+    ...
+    switch (func_id) {
+#ifdef CONFIG_NET
+    case BPF_FUNC_skb_output:
+        if (tracing_prog_may_run_after_target(prog))
+            return NULL;
+        return &bpf_skb_output_proto;
+    ...
+#endif
+    ...
+}
+
+bpf_trace.c is built from CONFIG_BPF_EVENTS (kernel/trace/Makefile) which
+depends on BPF_SYSCALL and (KPROBE_EVENTS || UPROBE_EVENTS) and PERF_EVENTS
+(kernel/trace/Kconfig) -- none of which imply CONFIG_NET.
+
+CONFIG_BPF_EVENTS=y with CONFIG_NET=n is valid, and in that configuration
+tracing_prog_may_run_after_target() becomes a defined-but-unreferenced
+non-inline static:
+
+  kernel/trace/bpf_trace.c:1342:13: warning: 'tracing_prog_may_run_after_target' defined but not used [-Wunused-function]
+
+With CONFIG_WERROR=y (init/Kconfig) this becomes a build failure.
+
+The pre-existing predicates immediately above (is_kprobe_session(),
+is_uprobe_multi(), is_uprobe_session(), is_trace_fsession()) are all
+written as static inline, which is why they don't trigger this warning.
+
+Would declaring tracing_prog_may_run_after_target() as static inline fix
+this?
+
+>  static const struct bpf_func_proto *
+>  kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  {
+> @@ -1730,6 +1744,8 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  	switch (func_id) {
+>  #ifdef CONFIG_NET
+>  	case BPF_FUNC_skb_output:
+> +		if (tracing_prog_may_run_after_target(prog))
+> +			return NULL;
+>  		return &bpf_skb_output_proto;
+>  	case BPF_FUNC_xdp_output:
+>  		return &bpf_xdp_output_proto;
+
+
 ---
- .../bpf/progs/verifier_helper_restricted.c    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c b/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
-index 889c9b78b912..058e71927cd5 100644
---- a/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
- #include "bpf_misc.h"
- 
- struct val {
-@@ -17,6 +18,13 @@ struct {
- 	__type(value, struct val);
- } map_spin_lock SEC(".maps");
- 
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-+	__uint(max_entries, 1);
-+	__type(key, __u32);
-+	__type(value, __u32);
-+} perf_event_map SEC(".maps");
-+
- SEC("kprobe")
- __description("bpf_ktime_get_coarse_ns is forbidden in BPF_PROG_TYPE_KPROBE")
- __failure __msg("program of this type cannot use helper bpf_ktime_get_coarse_ns")
-@@ -165,4 +173,28 @@ l0_%=:	exit;						\
- 	: __clobber_all);
- }
- 
-+SEC("fentry/skb_tx_error")
-+__description("bpf_skb_output is allowed in BPF_TRACE_FENTRY")
-+__success
-+int BPF_PROG(skb_output_fentry, void *skb)
-+{
-+	__u64 meta = 0;
-+
-+	bpf_skb_output(skb, &perf_event_map, BPF_F_CURRENT_CPU,
-+		       &meta, sizeof(meta));
-+	return 0;
-+}
-+
-+SEC("fexit/skb_tx_error")
-+__description("bpf_skb_output is forbidden in BPF_TRACE_FEXIT")
-+__failure __msg("program of this type cannot use helper bpf_skb_output")
-+int BPF_PROG(skb_output_fexit, void *skb)
-+{
-+	__u64 meta = 0;
-+
-+	bpf_skb_output(skb, &perf_event_map, BPF_F_CURRENT_CPU,
-+		       &meta, sizeof(meta));
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.43.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35495259029
+--===============8035067619570924591==--
