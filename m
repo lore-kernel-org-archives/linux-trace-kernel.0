@@ -1,196 +1,202 @@
-Received: from mta1.migadu.com (out-87.mta1.migadu.com [95.215.58.87])
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138884915A1
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 11:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800FD4A3F21
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 14:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789991224; cv=none; b=UP4HRth2GANbBwU9HRsTN82352iD4N4Dnhg++BQzjYfqoOYzl4gatKDaXkJbFG/RtJH0DG/t9yudzTtm+i/f8W3qV82BtS1AK5Tusc67TadQ20hwz7Q4Ul2COO0X4dd3EjDM/FUCazuVp4vkjtv++4VVlii2o57rO3BY0ZihDc0=
+	t=1790000820; cv=none; b=gG1oJCwq/sCzsqJhH9zCZ2D6harXkPgvFoMszl+ru2PTJD88EOvN+LWFBXhbyE+VjkP/UsWYRlYuFuyFIX9YmEOul9Hffex3OMCAMWlTz4xs/HtaR4/vmr8YuL82vlVT8sdLqdFKJ80o9ggxIK78ZQWbW3izDxGgLmqJMIUF0mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789991224; c=relaxed/simple;
-	bh=RS4wOY+QJioWn2TQk9dWx0Y0VJvp9GgHoELvPCPlwGQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kaV/DeDAJaXbv4vfV13WFSNjsiPlRHMcS1qNOR2A8ZZkyswxClhmsB/K1emDqNxofP2AZlx33g2dfl/GzQROYURvAyH0h1Uxob+BNFyORYfkbOMT+mUjHJzNnLSsqJrUMH8m4zZOIP5BM24hZ2ii4rFHi2r+gIWg+F6b8EOcmOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jl4Nnb2D; arc=none smtp.client-ip=95.215.58.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790000820; c=relaxed/simple;
+	bh=tl94ydNshNxi7aJ7mEw1U+VrV58ouK47MG9y//tgBqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hpa3v76qVG0el+cykXA2aUHZvd7A3sPkKcXeTZDYTg7f1p9Of89fLZXdhvAlofEzH5Ll9yd1n8+Sgb1gOD0m84IzObfovauyGeD9zejCF6aWm3gjTYL3GCyxGh/k+GoCVa0v9cSrxmynXsoCgiB2XF19kizSoNYdANu092hxQOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2IddSw/; arc=none smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jl4Nnb2D"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=RS4wOY+QJioWn2TQk9dWx0Y0VJvp9GgHoELvPCPlwGQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789991218; v=1; x=1790596018;
- b=jl4Nnb2Dy5EL9NNWbh8ffmRN3XuCFwvwlrenmQ6KQTBm3Mlk9b+FZWKMoGxQ7eSNSOiOz+3M
- vy70+G6di+SLND3geXfUSii8gl6236BWs+FPkMHhoNOyAuXyAFxlg6Q7lUuIpEnG9yRd+CVomBl
- 9fJ/dhTUXVWrX3kWwgxPSWvg=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id f94b05048a23a332;
-	Mon, 21 Sep 2026 11:46:58 +0000
-X-Mizu-Trace-ID: f94b05048a23a332
-X-Migadu-Flow: FLOW_OUT
-From: Ridong Chen <ridong.chen@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Chinner <david@fromorbit.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
-	linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
-	Ridong Chen <ridong.chen@linux.dev>,
-	Ridong Chen <chenridong@xiaomi.com>
-Subject: [PATCH RFC 4/4] mm/vmscan: pass scan_control to the reclaim-begin tracepoints
-Date: Mon, 21 Sep 2026 19:46:06 +0800
-Message-Id: <20260921114606.3871820-5-ridong.chen@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260921114606.3871820-1-ridong.chen@linux.dev>
-References: <20260921114606.3871820-1-ridong.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2IddSw/"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f63546c5so2404364f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 07:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790000817; x=1790605617; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YFAY4DIx3j9wCojliAf/PgSHhJnyLwniuh3x4CIKL0c=;
+        b=j2IddSw/oh9bJavGtc1iuc9ahQ4Zwkx3rSLjzdo/x6MhhB3DpkFaNE3E3Gtk3HvrO+
+         fGSJljsDKe6tkjIyARA1G1QwJZW5RAZKcIwwi56oEvubyxdyNkqCCti6HagQ97/ZCxWN
+         ZB/wLCiXMPYSIk1Z9R35rSJOmI73OSq6k8i1nLhLYnyogvislHvVsdpQ2AN4PZBHT5AI
+         CnJcAiYipTq6nLrtSnz1wfwvosq2sak1wm10TP/agznSIgA9mcZG7NDP+bp7QfBpqCmH
+         JXZoj2VbwmsauCOCnaQ2zeVzn7wFODTALcXL++sxwsGruqLKqq0bgmNGQxMVd6asAk/h
+         gpBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790000817; x=1790605617;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=YFAY4DIx3j9wCojliAf/PgSHhJnyLwniuh3x4CIKL0c=;
+        b=0vKElNTVRIaPrVB2N5frPChTPhQvBdyaJtRI6761zFVFkUuM/CvOfPAPJwl38iX8Cg
+         WntHTThSpl3ExKeI9Uv3G5tHDfEIL+MzYgA8rn5saAs181pgoPCoHiTsc1oMSf+u2B5y
+         VpvW6rhuPFO2osXOhEW84N63r2I3bv0TVXYlYVGviVN8BXssb8+N2x3K6dxLu0flxqMD
+         aHyzsJpHcVDDk+pE3E8CjKFQJCkqG8M+RCf98YMTA9bWcMj9phlKJCRrDCA1gX8gCu3V
+         cnmVLbzUSW9Ts/hX6gYdZn7y+Eu3goGUzB6ltCEi0qUG3mKRyjz49tSScocxTId1HCIN
+         0RTA==
+X-Forwarded-Encrypted: i=1; AKwUvBwV7PKDC3DjdLy8F7JYDNfWPchsRpnfYGOvpLHkf/ENEnerfLp6fmxLcmjhs8T5RYVwYRLxcDBEnoiOFGF5Lu8HG+M=@vger.kernel.org
+X-Gm-Message-State: AFuF++m8Z2FFO0mSmQVJ1WvBdSayVGM/w4eMTHS8rUW2XMAf2gIy3Le/
+	nGVT+TM+WN1rAVwPPoazVDoBAwTPVmWCLmOEfvfaVm4VC/UMsZTnBaAX
+X-Gm-Gg: AYBFou1YZcSKf5AC8UO1739YyOOt7FbXYt7fjyuk/60Y3yZBYziQdCY68d1TpRMaXkv
+	DpFfmZPBXoxmgGr+4BUyQrZt5X0ADezPoXU5uFiOIvYiqtd1V//DwxbAj4Y16iH91rKlAK0HF9V
+	cJbxcfPaN8CCCrWmO5onFFifAQPTrwJT061XsvnrWJkcddrN1lkwTD8cIPH365Diu6y0gtIECpL
+	a4W7N3KDGqKpCwqw8FmNyQUsTz6oJWyugi5QREc5vLkALfFYdr9Hmq4Bl2OMmObffN0WfklDStG
+	Vf3efSuJe3w9v5KopOlSXmmBidz32ZQouczzbrjgATySQoyqM8iRPTYKdrwtaAtL0DJtXmkFkjE
+	21agtVEzobGH5zYsKXuzCuNAyGKuFW0/qaezsoqiahIA1kpLy+YaP9HjlGx96vEV17m8wsyy6Kz
+	ZAnFlol48L0qbvkaUTBxO0JDdTzLCtitR5NupZAWFzyRp0BX8ZYgPZeCQeSanG6pE9/sa7EXw0h
+	X4GwTPXeAzuGPO4cu7iyqIPm9Zpkl3ZP8zhYgrkYnUm4qoQ7+5C15JsO92bVqqlDLzr+lLP2PcH
+	MD417U8lk2+7cknPs1v9tdhy2ze5/lV0Pz2mFjWPC3tmjIKyxT4iGo0s6EaW3bFff6iWIJIwhHe
+	ydCcODgSXuTh5n0Dar5gBHzGccmL1mKYHeu3IEklM8Sk/yw==
+X-Received: by 2002:a05:600c:3492:b0:49c:fc6e:8cbb with SMTP id 5b1f17b1804b1-49fc574ef31mr134634405e9.31.1790000816493;
+        Mon, 21 Sep 2026 07:26:56 -0700 (PDT)
+Received: from [192.168.100.51] (87-205-15-91.static.ip.netia.com.pl. [87.205.15.91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fcd103325sm272935465e9.9.2026.09.21.07.26.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Sep 2026 07:26:56 -0700 (PDT)
+Message-ID: <5191e6a3-0392-4ead-93a8-3ecb5bd60520@gmail.com>
+Date: Mon, 21 Sep 2026 16:26:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Fix false warning in
+ ring_buffer_map_get_reader()
+To: Vincent Donnefort <vdonnefort@google.com>, syzbot <syzbot@kernel.org>
+Cc: syzkaller-bugs@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, syzbot@lists.linux.dev
+References: <15bc282f-669e-4a94-911d-bb435513461f@mail.kernel.org>
+ <arDm2LvdlWVe9JC1@google.com>
+Content-Language: en-US
+From: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+In-Reply-To: <arDm2LvdlWVe9JC1@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ridong Chen <chenridong@xiaomi.com>
+On 9/21/2026 10:12 AM, Vincent Donnefort wrote:
+> On Fri, Sep 18, 2026 at 02:34:25PM +0000, syzbot wrote:
+>> From: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+>>
+>> In ring_buffer_map_get_reader(), an unconditional WARN_ON(!reader) is
+>> triggered when rb_get_reader_page() returns NULL:
+>>
+>> WARNING: CPU: 1 PID: 5906 at kernel/trace/ring_buffer.c:7998
+>> ring_buffer_map_get_reader+0x940/0x9d0
+>> CPU: 1 UID: 0 PID: 5906 Comm: task Not tainted
+>> RIP: 0010:ring_buffer_map_get_reader+0x940/0x9d0
+>> kernel/trace/ring_buffer.c:7998
+>> Call Trace:
+>>   <TASK>
+>>   tracing_buffers_ioctl+0x258/0x300 kernel/trace/trace.c:7381
+>>   __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
+>>   do_syscall_64+0x166/0x520 arch/x86/entry/syscall_64.c:84
+>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>>   </TASK>
+>>
+>> This warning is triggered due to a race between a writer committing events
+>> and a reader mapping the ring buffer via TRACE_MMAP_IOCTL_GET_READER. When
+>> a writer commits an event in rb_set_commit_to_write(), it advances
+>> cpu_buffer->commit_page to cpu_buffer->tail_page in its first loop before
+>> updating the commit counter (commit_page->page->commit) in the second loop.
+>> If a reader invokes ring_buffer_map_get_reader() at this moment, the
+>> initial check cpu_buffer->reader_page == cpu_buffer->commit_page is false,
+>> and it calls rb_get_reader_page(). Inside __rb_get_reader_page(), the
+>> reader swaps reader_page with the head page (which is the new commit_page).
+>> Because the writer has not yet updated the commit count on the new page,
+>> rb_page_size() is zero and reader_page->read < rb_page_size() evaluates to
+>> false. __rb_get_reader_page() then checks if cpu_buffer->commit_page ==
+>> cpu_buffer->reader_page. Since both now point to the swapped page, the
+>> condition evaluates to true and rb_get_reader_page() legitimately returns
+>> NULL to indicate the reader caught up to the writer.
+> 
+> This seems to make the check above reader_page == commit_page redundant. Doesn't
+> it?
+> 
+>>
+>> Furthermore, rb_get_reader_page() can legitimately return NULL when there
+>> is no data to read. Re-checking mutable writer state such as
+> 
+> We are checking rb_per_cpu_empty() with the reader_lock held few lines above. I
+> don't believe we expect NULL here for that reason.
+> 
+>> cpu_buffer->reader_page != cpu_buffer->commit_page is insufficient because
+>> a writer on another CPU can advance commit_page before the check is
+>> evaluated without being stopped by reader_lock.
+>>
+>> Because WARN_ON must not be used for conditions that can legitimately
+>> happen, and pr_err should be used instead if necessary, remove the
+>> WARN_ON() entirely since returning NULL here is an expected condition.
+>>
+>> Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
+>> Assisted-by: Gemini:gemini-3.8-flash syzbot
+>> Reported-by: syzbot+de3d7f9bcc9212f3fae1@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=de3d7f9bcc9212f3fae1
+>> Link: https://syzkaller.appspot.com/ai_job?id=488adc18-a10e-42d2-a205-25327c38837f
+>> Signed-off-by: Krystian Kaniewski <krystianmkaniewski@gmail.com>
+>>
+>> ---
+>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>> index 9c03a555a..1a4da3d47 100644
+>> --- a/kernel/trace/ring_buffer.c
+>> +++ b/kernel/trace/ring_buffer.c
+>> @@ -7995,7 +7995,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+>>   		goto out;
+>>   
+>>   	reader = rb_get_reader_page(cpu_buffer);
+>> -	if (WARN_ON(!reader))
+>> +	if (!reader)
+>>   		goto out;
+>>   
+>>   	/* Check if any events were dropped */
+>>
+>>
+>> base-commit: df2908090cda368b01ff43709f51890076c56157
+>> -- 
+>> See https://goo.gle/syzbot-ai-patches for information about AI-generated patches.
+>> The person who has signed off on the patch is responsible for
+>> addressing comments.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
 
-The reclaim-begin tracepoints describe the entry conditions of a reclaim
-invocation, which struct scan_control already carries. Now that the struct
-is visible from the trace header, pass sc directly and pick the fields out
-in TP_fast_assign instead of spelling out gfp_mask and order at every
-callsite. The exported event format is unchanged.
+Thanks for taking a look into my patch!
 
-No functional change.
+ >
+ > This seems to make the check above reader_page == commit_page 
+redundant. Doesn't
+ > it?
+ >
 
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
----
- mm/trace_vmscan.h | 24 ++++++++++++------------
- mm/vmscan.c       |  7 +++----
- 2 files changed, 15 insertions(+), 16 deletions(-)
+Yes, it is no longer needed for correctness once a NULL result is 
+handled without a warning. It remains a fast path when the reader has 
+already caught up, avoiding a call to rb_get_reader_page(). I can remove 
+it if you prefer in v2 patch.
 
-diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
-index c8ac5d4e4043..c9f16267c0a2 100644
---- a/mm/trace_vmscan.h
-+++ b/mm/trace_vmscan.h
-@@ -291,9 +291,9 @@ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
- 
- DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
- 
--	TP_PROTO(gfp_t gfp_flags, int order, struct mem_cgroup *memcg),
-+	TP_PROTO(struct scan_control *sc, struct mem_cgroup *memcg),
- 
--	TP_ARGS(gfp_flags, order, memcg),
-+	TP_ARGS(sc, memcg),
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned long,	gfp_flags	)
-@@ -302,8 +302,8 @@ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
- 	),
- 
- 	TP_fast_assign(
--		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
--		__entry->order		= order;
-+		__entry->gfp_flags	= (__force unsigned long)sc->gfp_mask;
-+		__entry->order		= sc->order;
- 		__entry->memcg_id	= mem_cgroup_id(memcg);
- 	),
- 
-@@ -317,17 +317,17 @@ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
- 
--	TP_PROTO(gfp_t gfp_flags, int order, struct mem_cgroup *memcg),
-+	TP_PROTO(struct scan_control *sc, struct mem_cgroup *memcg),
- 
--	TP_ARGS(gfp_flags, order, memcg)
-+	TP_ARGS(sc, memcg)
- );
- 
- #ifdef CONFIG_MEMCG
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
- 
--	TP_PROTO(gfp_t gfp_flags, int order, struct mem_cgroup *memcg),
-+	TP_PROTO(struct scan_control *sc, struct mem_cgroup *memcg),
- 
--	TP_ARGS(gfp_flags, order, memcg)
-+	TP_ARGS(sc, memcg)
- );
- #endif /* CONFIG_MEMCG */
- 
-@@ -664,9 +664,9 @@ TRACE_EVENT(mm_vmscan_lru_shrink_active,
- 
- TRACE_EVENT(mm_vmscan_node_reclaim_begin,
- 
--	TP_PROTO(int nid, int order, gfp_t gfp_flags),
-+	TP_PROTO(int nid, struct scan_control *sc),
- 
--	TP_ARGS(nid, order, gfp_flags),
-+	TP_ARGS(nid, sc),
- 
- 	TP_STRUCT__entry(
- 		__field(int, nid)
-@@ -676,8 +676,8 @@ TRACE_EVENT(mm_vmscan_node_reclaim_begin,
- 
- 	TP_fast_assign(
- 		__entry->nid = nid;
--		__entry->order = order;
--		__entry->gfp_flags = (__force unsigned long)gfp_flags;
-+		__entry->order = sc->order;
-+		__entry->gfp_flags = (__force unsigned long)sc->gfp_mask;
- 	),
- 
- 	TP_printk("nid=%d order=%d gfp_flags=%s",
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2fd9b42f89d8..2fed83738b4b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -6885,7 +6885,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- 		return 1;
- 
- 	set_task_reclaim_state(current, &sc.reclaim_state);
--	trace_mm_vmscan_direct_reclaim_begin(sc.gfp_mask, order, NULL);
-+	trace_mm_vmscan_direct_reclaim_begin(&sc, NULL);
- 
- 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
- 
-@@ -6926,7 +6926,7 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
- 
- 	set_task_reclaim_state(current, &sc.reclaim_state);
--	trace_mm_vmscan_memcg_reclaim_begin(sc.gfp_mask, 0, memcg);
-+	trace_mm_vmscan_memcg_reclaim_begin(&sc, memcg);
- 	noreclaim_flag = memalloc_noreclaim_save();
- 
- 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
-@@ -7882,8 +7882,7 @@ static unsigned long __node_reclaim(struct pglist_data *pgdat,
- 	unsigned int noreclaim_flag;
- 	unsigned long pflags;
- 
--	trace_mm_vmscan_node_reclaim_begin(pgdat->node_id, sc->order,
--					   sc->gfp_mask);
-+	trace_mm_vmscan_node_reclaim_begin(pgdat->node_id, sc);
- 
- 	cond_resched();
- 	psi_memstall_enter(&pflags);
--- 
-2.34.1
+ >>
+ >> Furthermore, rb_get_reader_page() can legitimately return NULL when 
+there
+ >> is no data to read. Re-checking mutable writer state such as
+ >
+ > We are checking rb_per_cpu_empty() with the reader_lock held few 
+lines above. I
+ > don't believe we expect NULL here for that reason.
+ >
 
+Yes, you are right, an empty result exits before the helper. But 
+reader_lock does not stop the writer and a nonempty entry count does not 
+guarantee a committed page. After swapping the reader page, the helper 
+can catch up to commit_page and return NULL. I can clarify the commit 
+message as part of v2 patch if needed.
