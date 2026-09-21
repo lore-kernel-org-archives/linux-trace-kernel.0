@@ -1,195 +1,66 @@
-Received: from mta0.migadu.com (out-49.mta0.migadu.com [91.218.175.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DE046C823
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 09:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4D0486400;
+	Mon, 21 Sep 2026 09:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789982689; cv=none; b=tTUe3vX3cioAKmrrbNXJNrCbckkTneDEEwAKoJe1VhpP0aCq89UGZ3M+VMPOWH3oI6MyhyZ7OGBbTnztBMeypemA0yVRy64MRq2Y65RmLLA/5y/cFFJxh4tIW79t6ZMQP3GD91Tl8x0iiFoWc9hJUbFFbDH3ro4QHb89Dq2qsU4=
+	t=1789983054; cv=none; b=H6zqmKxQr3xwcCAlCXgI6HsvdJwrrONcyblhuRnQQe7dx0JJYIsyhFzpY93bU9RjYm2Lldf0FcOQnwHEMJqz69DArHnz/Y8aGnj7V5bNXE/2SnTCYpIsRaWmdQwh/sr9FLYzdhOBh9qHR4UOo8TiFpPHBSiyKEQUEnfL2vKHGO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789982689; c=relaxed/simple;
-	bh=0W3ikDRTYv+yUei/a0Mgw/XZMKUGQdz8H5UTyurLOdI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rq7BpSQPHYPFSBWiMfxhmc8lIaYi0B91PpHNNbbr+6Abra6uW11ihAFcRbPN7cOTpdxbR6K665sU/anbPZ/ZWXPNdjQBlDeArLy9MAGWe64H4ghnhZDyz9afqMM0nO1fewFuw4SbwTpwlWBcXKNmAnf/3ZwgYm/qmlV/7KhJhM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FwBQ5bUJ; arc=none smtp.client-ip=91.218.175.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789983054; c=relaxed/simple;
+	bh=5cDySu0QzSlCYWQxCjtJGwN078ktI6hZCOH/8vC8+cA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=REHrBdANE4VuLt8x9mkaIcxiIqE4rP3oMJS36juYggiyBn4JZH/UriE1SHnBEJ1+uCc06831rKoVA/w6iRXLgMtFwC6RM8bA/CipAyECFGoUqrOtIFwQbzS61oumBD42H740TIdqWtmRHbCQrJfadN1WhRGB+mp2cvfxQP1ajjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=gFBZVg1j; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FwBQ5bUJ"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=0W3ikDRTYv+yUei/a0Mgw/XZMKUGQdz8H5UTyurLOdI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789982684; v=1; x=1790587484;
- b=FwBQ5bUJzvbXiqI9kD+wPhtVGOuCgPk1yXA85jK65Zfk/fS84cAx1DRDcN1z+BQfS6fqe8KG
- lw/9Re1fKjn+4IxvMEqA4ZemhWuaz+d8OSSmQAsLLhLR7o3XAfn8zNE2JCr3l5Y1yomBUVHs4wo
- N6g5GQ1OMsEaArKSb4YSh+Mc=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id c113fa249d93a37b;
-	Mon, 21 Sep 2026 09:24:43 +0000
-X-Mizu-Trace-ID: c113fa249d93a37b
-X-Migadu-Flow: FLOW_OUT
-From: Ye Liu <ye.liu@linux.dev>
-To: Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	x86@kernel.org,
-	Christian Brauner <brauner@kernel.org>,
-	Jann Horn <jannh@google.com>,
-	Jan Kara <jack@suse.cz>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Ye Liu <liuye@kylinos.cn>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>,
-	SJ Park <sj@kernel.org>,
-	Gregory Price <gourry@gourry.net>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	peterz@infradead.org,
-	paulmck@kernel.org,
-	mingo@redhat.com,
-	rostedt@goodmis.org,
-	jpoimboe@kernel.org,
-	mic@digikod.net,
-	tglx@kernel.org,
-	david@kernel.org,
-	linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com,
-	rafael@kernel.org,
-	gnoack3000@gmail.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	rientjes@google.com,
-	shakeel.butt@linux.dev,
-	xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev,
-	will@kernel.org,
-	boqun@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joelagnelf@nvidia.com,
-	josh@joshtriplett.org,
-	urezki@gmail.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	pavel@kernel.org,
-	lance.yang@linux.dev,
-	mhiramat@kernel.org,
-	pmladek@suse.com,
-	longman@redhat.com,
-	mathieu.desnoyers@efficios.com,
-	jiangshanlai@gmail.com,
-	qiang.zhang@linux.dev,
-	dietmar.eggemann@arm.com,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	kprateek.nayak@amd.com,
-	mark.rutland@arm.com,
-	Dave.Martin@arm.com,
-	james.morse@arm.com,
-	babu.moger@amd.com
-Subject: [PATCH v4 13/15] fs: convert process/thread iterators to for_each_*_rculock
-Date: Mon, 21 Sep 2026 17:20:59 +0800
-Message-Id: <20260921092101.89285-14-ye.liu@linux.dev>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260921092101.89285-1-ye.liu@linux.dev>
-References: <20260921092101.89285-1-ye.liu@linux.dev>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="gFBZVg1j"
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 12DFE1C2F94;
+	Mon, 21 Sep 2026 09:30:45 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id AB04419;
+	Mon, 21 Sep 2026 09:30:42 +0000 (UTC)
+Date: Mon, 21 Sep 2026 05:30:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Vincent Donnefort
+ <vdonnefort@google.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] ring-buffer: Add a MAINTAINERS category specific for
+ the tracing ring-buffer
+Message-ID: <20260921053039.39a66cd9@fedora>
+In-Reply-To: <20260910155058.1ac4c991@gandalf.local.home>
+References: <20260908094035.0b180833@gandalf.local.home>
+	<20260910155058.1ac4c991@gandalf.local.home>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: n15bsssxmnpbp4oe53fodned9jjp71wg
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: AB04419
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/osNYIMhn+z3qh247b1+8b5qq9Ga5Ow9Q=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=X+cV55tlyUWWSONZwVI24Vr8liKGPIV59w+otUBwSQI=; b=gFBZVg1jRyjJoTmej8FIRpF5EmW7vfIuXmVUwedGHCH7kj9fHKf13DJ88h9OVmZ4vgP3hOWeK/+fowpCSbaaaNm2dDNRYewdctEm0LeH/5v+lEwXUnvvSdw/xKY+Moq6kI1V2k9yEZvn4S6+J3jCHcB30N48dRPKzlwQ/Lze/3w=
+X-HE-Tag: 1789983042-408203
+X-HE-Meta: U2FsdGVkX18ORrL3unWLaVk8dtw5Mn29Nf8QDeCrk4HP0PbtB0RSwi4NR/+JORaZVeazaeavwKQvyvNKlAA1BFj/fqHuEFGZEM2XbwNWtavySFSEsEVBhuU60GuNu7X1ZJBWFkUjaw9+9dlYpo4mS+BQfVZfsGazJ+coiueGPPWny2cl4ZbwJ5d5CW55rzV8bqZNmTI8fKttl12t+WweZ3mE3tyF8ytiTkkCQy9o+EBKDtVoZ45yPWGVIb6oEr9tKoFOURo3CaxYOIiZJu7ixoUqZoPDOpkkS85kC3wQjr+uc6ArfbO3560r34iMGHA+866/OogGSxRnzIIrkLQ3zJBjP+rLKRpkxnGJgdvVfJd6b/VZeNaYQM92yAfFphh11+0QrQI1qiUiH2GcVazAMQ==
 
-From: Ye Liu <liuye@kylinos.cn>
+On Thu, 10 Sep 2026 15:50:58 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Replace the manual rcu_read_lock()/rcu_read_unlock() pairs combined
-with for_each_process() and for_each_process_thread() loops in fs/
-with the for_each_*_rculock() macros, which scope the RCU read lock
-to the loop body via scoped_guard(rcu).
+> Masami,
+> 
+> Can I get an official Acked-by on this?
+> 
 
-No functional change.
+Ping!
 
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: SJ Park <sj@kernel.org>
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
----
- fs/proc/base.c        | 4 +---
- fs/resctrl/rdtgroup.c | 8 ++------
- 2 files changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6a39de424f62..3de4f4557e4c 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1160,8 +1160,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
- 	if (mm) {
- 		struct task_struct *p;
- 
--		rcu_read_lock();
--		for_each_process(p) {
-+		for_each_process_rculock(p) {
- 			if (same_thread_group(task, p))
- 				continue;
- 
-@@ -1177,7 +1176,6 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
- 			}
- 			task_unlock(p);
- 		}
--		rcu_read_unlock();
- 		mmdrop(mm);
- 	}
- err_unlock:
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 5dcbb0a964e8..b14df8b23f1a 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -709,14 +709,12 @@ int rdtgroup_tasks_assigned(struct rdtgroup *r)
- 
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
--	rcu_read_lock();
--	for_each_process_thread(p, t) {
-+	for_each_process_thread_rculock(p, t) {
- 		if (is_closid_match(t, r) || is_rmid_match(t, r)) {
- 			ret = 1;
- 			break;
- 		}
- 	}
--	rcu_read_unlock();
- 
- 	return ret;
- }
-@@ -826,15 +824,13 @@ static void show_rdt_tasks(struct rdtgroup *r, struct seq_file *s)
- 	struct task_struct *p, *t;
- 	pid_t pid;
- 
--	rcu_read_lock();
--	for_each_process_thread(p, t) {
-+	for_each_process_thread_rculock(p, t) {
- 		if (is_closid_match(t, r) || is_rmid_match(t, r)) {
- 			pid = task_pid_vnr(t);
- 			if (pid)
- 				seq_printf(s, "%d\n", pid);
- 		}
- 	}
--	rcu_read_unlock();
- }
- 
- static int rdtgroup_tasks_show(struct kernfs_open_file *of,
--- 
-2.25.1
-
+-- Steve
