@@ -1,170 +1,214 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mta1.migadu.com (out-167.mta1.migadu.com [95.215.58.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DBD318146
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 08:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EC2468C3A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 09:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789978337; cv=none; b=HT62h5Bt3amr16Kt8zIl3RpldrrbWaprfsitAoeTNiO2fwqj8lIgrjjVcKmEkc0DxGtp765qS8MMDXANryyFHJ+3YrHLEXFGA6MZ2+WqwIQi6cIKAlbfJXur/1j1D0lSsBSI2jiPNjjEc0QmwPXjbhned2plknGKK3h6lM71P9M=
+	t=1789982484; cv=none; b=Lhwx8iKqlUC9ll867aGncj42cjQ31U2OQXZRdKat5pXcvMbZBWTSdb4wh+zHunItT4t1eN8r6Ekv1P3k4EELMccp8aQJu358Ew0I+Sfq0F8cnKo8vqON6r/QWY5G1aIhPpJ+b4wqz3m9j9R5MMDTCd8dQj6rUFbC+8LzybbnSBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789978337; c=relaxed/simple;
-	bh=81sN4Ta0dN01LUppLMSjudvBu+gzjzhGtkGCssIxgO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cI4rExSne68TIA/SPcCwLx/sjbrZJ3tNM+YQtCx5vo1EROde99xcx4V6bRz4ixpdrdtZ/05kauCC6F3we5uwWc8981dd1LxhIvJqcAyjtgriAvLlrZ2pnIyv1pX6uV85xDXp1caV3FLd3HaU5d3baJZKoMIq54DqKZkAVIXIVsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eKdy3u9G; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1789982484; c=relaxed/simple;
+	bh=SoD6rbNlmdBhL/S9+WOTUPuzd+nRVogzcLA/JJFQNZM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dLcm78XhmiT/kN7qPtJ3+qp6dPSxic71RCdTf7i1WYVqGp8F42vCpytx7iPzJtyvxvoWtEmA9Vh0QbpdQGOPytIN7vld5cFQRqNbsArj3yBjtlbJ6blk1h+Y9s0tp7WuyBX5G6khDRevxZcoGa797/O5YZFX3IhVQiWb3+zv3us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bPUBDz2V; arc=none smtp.client-ip=95.215.58.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eKdy3u9G"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912e2406so13293245e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 01:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789978334; x=1790583134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=XMXYjGcZu2otoIEYefWcT0cnIVDjtKD7spkJocISLVM=;
-        b=eKdy3u9G3hKrgX3qtDSEvx2x0pzbY7psv2KyDny0IU9czqCQeV4+JduZ8KlZwk0JU9
-         qwumDh8KVmdzLZtEOvwtfIGDBKcHzKJYjIf/f6DoVoHgzdgnLfqf3ZjWFQpJoh+Ti6/N
-         aeAI1Y+XES5amwGigFLMhKJFmoY12txcf01UsZKjOq1CaJazL6cXzN7KGwKowXFsmu17
-         bH59N9mFwkpCzZoYWapusKMFMHRW8Slru49ehV7GWh8levkg7CTUd35+PizLCmGVGeqs
-         H1ooaA+1ksuwf8fvrE8u8Oqsobx+Yl/REccpN5BXWlqij3VUU8WIkdJ2Nv9ZbTIquE+u
-         ovTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789978334; x=1790583134;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XMXYjGcZu2otoIEYefWcT0cnIVDjtKD7spkJocISLVM=;
-        b=gz0EomzNM8jb9YsyMUAININFIrXIH1/bY5YIara59LIe3HB0h1h1E4Qm8SxvodYBTz
-         4GhNB7yqlrUU0PbHCeZ5FSsL1UabXYh7ILUHna9vo00pNQQFzZAVbGj55k6f+zpYV/l4
-         0mNwVGzBTmOCgXJDWzbc3ATDIA/HAck9DLYF4z79vEa01Mu6S47KR+taOrWze9miRTaA
-         kYEAKnr75F5IgMlIo/ialrH5PETFRFYAFXPfAcdkc8nudx+nQGbrxEhaqbAemf3ib1DW
-         L+sFwkMLPK2V2YTx8ABPYDdPS1H3YlPKvA2dDfkYaITu9wCCUNCIXAOk5cPMZroTTU8h
-         RJhA==
-X-Forwarded-Encrypted: i=1; AKwUvByhcv2N82Q1EnDvoRR77RFgv3CZopZINzwyOws+0QauPKWt8bSaMqj3wg8DQPXq6OZHUVluO//L/5GD1638tmW0ljM=@vger.kernel.org
-X-Gm-Message-State: AFuF++kFA7UU3yPBysyy123w94+1lSmZa0JsKrFLa3At9KN9ccOz7EWO
-	M/mOp6SmDPN7xVhSujD4dWOQvk85NIglUVMZNXMOukl43Q3Ehfh6CHS+JJgzwr+TNw==
-X-Gm-Gg: AYBFou1h1NDkY92xCO8Vh3049OfdxxI7AsMRMxM6STMJj016u5ygfLOzbgacFLXn7Rq
-	sBM+yVTEExBVGHdwrjiL2OPb7FKYrfg1TJSPMZURnGphWljKkJB/tmFttAdlJr+Dpx3+8pz9M8z
-	b6LrTdmViAGm2HdIrD3XekhMJg3Y9dwdlkbI5GDv94bnYeQpl3CIZzQ2Ukw3TaKaL04dGhqOJ2E
-	86YvKyfgUaZP9SOXfJ0SehqfMpZHma2UlyJRJFkI9OEbxPYmF3RIv8TuOYVOLlKlSklYPGGgbsu
-	6RvUiWj92PRXJqAM3J5KARMJ3k6TIwgFPQewqsjDeBe0GQOMTGVDO2k/CRidh7o9UnQJDaXUrzK
-	I8pfgo9UDb9Gwd5ziUw31NvX596pUKR4FZbG/hszEGRzvBARwaaBdWnolv5U7rGp3pKoVjpM7hj
-	Kqo01H+XPtrr6n8+t+a8sQzSzW+JhDlUKu26QoYX+utl4mfL7ZY+oQbgnUTlkJYhhv/MmY18cMJ
-	7uFOT7uedBLI9am1og4LzFDXyow4814k4jso32/8lA=
-X-Received: by 2002:a05:600c:a49:b0:49e:6865:904e with SMTP id 5b1f17b1804b1-49fc500055cmr155390395e9.12.1789978332658;
-        Mon, 21 Sep 2026 01:12:12 -0700 (PDT)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fcda2140bsm232663265e9.1.2026.09.21.01.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2026 01:12:12 -0700 (PDT)
-Date: Mon, 21 Sep 2026 09:12:08 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: syzbot <syzbot@kernel.org>
-Cc: syzkaller-bugs@googlegroups.com,
-	Krystian Kaniewski <krystianmkaniewski@gmail.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bPUBDz2V"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=SoD6rbNlmdBhL/S9+WOTUPuzd+nRVogzcLA/JJFQNZM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789982480; v=1; x=1790587280;
+ b=bPUBDz2VIyGxyOartNajvdI+c+JjY7hBzrcjVlofzPUL37v9FEcKoJqURJ+2UuSja2hv7j/h
+ PmlAHbUFkOIMZTdyjDVpYocVAyStm7FniK73fDL63jeUrpUu/tN6Glsm7osTxofWvzw2iwtdgsy
+ UEvtC8siMo/2TMxAN9LtXYvg=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id b70590be7f446065;
+	Mon, 21 Sep 2026 09:21:19 +0000
+X-Mizu-Trace-ID: b70590be7f446065
+X-Migadu-Flow: FLOW_OUT
+From: Ye Liu <ye.liu@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Ye Liu <liuye@kylinos.cn>,
+	David Hildenbrand <david@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	SJ Park <sj@kernel.org>,
+	Gregory Price <gourry@gourry.net>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, syzbot@lists.linux.dev
-Subject: Re: [PATCH] ring-buffer: Fix false warning in
- ring_buffer_map_get_reader()
-Message-ID: <arDm2LvdlWVe9JC1@google.com>
-References: <15bc282f-669e-4a94-911d-bb435513461f@mail.kernel.org>
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	rientjes@google.com,
+	shakeel.butt@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	will@kernel.org,
+	boqun@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	tony.luck@intel.com,
+	reinette.chatre@intel.com,
+	x86@kernel.org,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	pavel@kernel.org,
+	lance.yang@linux.dev,
+	mhiramat@kernel.org,
+	pmladek@suse.com,
+	longman@redhat.com,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	kprateek.nayak@amd.com,
+	mark.rutland@arm.com,
+	Dave.Martin@arm.com,
+	james.morse@arm.com,
+	babu.moger@amd.com
+Subject: [PATCH v4 00/15] sched: introduce for_each_process_rculock and for_each_thread_rculock
+Date: Mon, 21 Sep 2026 17:20:46 +0800
+Message-Id: <20260921092101.89285-1-ye.liu@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15bc282f-669e-4a94-911d-bb435513461f@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 18, 2026 at 02:34:25PM +0000, syzbot wrote:
-> From: Krystian Kaniewski <krystianmkaniewski@gmail.com>
-> 
-> In ring_buffer_map_get_reader(), an unconditional WARN_ON(!reader) is
-> triggered when rb_get_reader_page() returns NULL:
-> 
-> WARNING: CPU: 1 PID: 5906 at kernel/trace/ring_buffer.c:7998
-> ring_buffer_map_get_reader+0x940/0x9d0
-> CPU: 1 UID: 0 PID: 5906 Comm: task Not tainted
-> RIP: 0010:ring_buffer_map_get_reader+0x940/0x9d0
-> kernel/trace/ring_buffer.c:7998
-> Call Trace:
->  <TASK>
->  tracing_buffers_ioctl+0x258/0x300 kernel/trace/trace.c:7381
->  __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
->  do_syscall_64+0x166/0x520 arch/x86/entry/syscall_64.c:84
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->  </TASK>
-> 
-> This warning is triggered due to a race between a writer committing events
-> and a reader mapping the ring buffer via TRACE_MMAP_IOCTL_GET_READER. When
-> a writer commits an event in rb_set_commit_to_write(), it advances
-> cpu_buffer->commit_page to cpu_buffer->tail_page in its first loop before
-> updating the commit counter (commit_page->page->commit) in the second loop.
-> If a reader invokes ring_buffer_map_get_reader() at this moment, the
-> initial check cpu_buffer->reader_page == cpu_buffer->commit_page is false,
-> and it calls rb_get_reader_page(). Inside __rb_get_reader_page(), the
-> reader swaps reader_page with the head page (which is the new commit_page).
-> Because the writer has not yet updated the commit count on the new page,
-> rb_page_size() is zero and reader_page->read < rb_page_size() evaluates to
-> false. __rb_get_reader_page() then checks if cpu_buffer->commit_page ==
-> cpu_buffer->reader_page. Since both now point to the swapped page, the
-> condition evaluates to true and rb_get_reader_page() legitimately returns
-> NULL to indicate the reader caught up to the writer.
+From: Ye Liu <liuye@kylinos.cn>
 
-This seems to make the check above reader_page == commit_page redundant. Doesn't
-it?
+Introduce for_each_process_rculock(), for_each_thread_rculock() and
+for_each_process_thread_rculock() macros that combine the existing
+iteration macros with scoped_guard(rcu), so that the RCU read lock
+is automatically acquired before iteration and released when the
+loop exits — including via break, goto, or return.
 
-> 
-> Furthermore, rb_get_reader_page() can legitimately return NULL when there
-> is no data to read. Re-checking mutable writer state such as
+The rest of the series converts manual rcu_read_lock()/
+rcu_read_unlock() and guard(rcu)() pairs across mm/, kernel/, fs/,
+lib/ and security/ to use the new macros.
 
-We are checking rb_per_cpu_empty() with the reader_lock held few lines above. I
-don't believe we expect NULL here for that reason.
+Suggested by Michal Hocko for the oom_kill path [2].
 
-> cpu_buffer->reader_page != cpu_buffer->commit_page is insufficient because
-> a writer on another CPU can advance commit_page before the check is
-> evaluated without being stopped by reader_lock.
-> 
-> Because WARN_ON must not be used for conditions that can legitimately
-> happen, and pr_err should be used instead if necessary, remove the
-> WARN_ON() entirely since returning NULL here is an expected condition.
-> 
-> Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
-> Assisted-by: Gemini:gemini-3.8-flash syzbot
-> Reported-by: syzbot+de3d7f9bcc9212f3fae1@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=de3d7f9bcc9212f3fae1
-> Link: https://syzkaller.appspot.com/ai_job?id=488adc18-a10e-42d2-a205-25327c38837f
-> Signed-off-by: Krystian Kaniewski <krystianmkaniewski@gmail.com>
-> 
-> ---
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 9c03a555a..1a4da3d47 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7995,7 +7995,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
->  		goto out;
->  
->  	reader = rb_get_reader_page(cpu_buffer);
-> -	if (WARN_ON(!reader))
-> +	if (!reader)
->  		goto out;
->  
->  	/* Check if any events were dropped */
-> 
-> 
-> base-commit: df2908090cda368b01ff43709f51890076c56157
-> -- 
-> See https://goo.gle/syzbot-ai-patches for information about AI-generated patches.
-> The person who has signed off on the patch is responsible for
-> addressing comments.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
 
--- 
-Vincent
+---
+Changes since v3 [4]:
+  - Fix patch 5 (cpu/hotplug): title and commit message incorrectly
+    said "thread iterator" and "for_each_thread_rculock" while the
+    code converts for_each_process() to for_each_process_rculock().
+
+Note: Patches 4, 11, and 13 received automated reviews from sashiko-bot
+in the v3 thread [4] that were verified as false positives:
+
+  - Patch 4: claimed the folio lock is dropped before collect_procs(),
+    leading to a NULL deref on folio->mapping; the lock is held in all
+    call paths.
+  - Patch 11: claimed mixing goto/scope-based cleanup in
+    alloc_retstack_tasklist(); the goto free label handles memory
+    cleanup, not lock management.
+  - Patch 13: claimed mixing goto/scope-based cleanup in
+    __set_oom_adj(); goto err_unlock manages oom_adj_mutex while
+    scoped_guard(rcu) manages the RCU read lock — different resources.
+
+Changes since v2 [3]:
+  - Split the kernel/ patch into per-subsystem patches, as the
+    combined patch could not be applied (Peter Zijlstra, Steven
+    Rostedt).
+  - Move changelog below the --- separator so it is excluded from
+    the commit message (Lorenzo Stoakes).
+  - Indent loop body in macro definitions to show scoped_guard
+    scope (Lorenzo Stoakes).
+
+Changes since v1 [1]:
+  - Rename macros from *_rcu to *_rculock, as suggested by Steven
+    Rostedt and acked by Thomas Gleixner, to avoid confusion with
+    existing *_rcu() list iterators that expect the caller to hold
+    the RCU read lock.
+  - Improve the comment on for_each_process_thread_rculock() to
+    document that 'break' only exits the inner loop and 'goto' is
+    needed to exit both loops (Thomas Gleixner).
+  - Rename the stale 'unlock:' label to 'out:' in hung_task.c, as
+    noted by Günther Noack.
+  - Clarify in patch 4 that page_pgoff() is safe outside the RCU
+    read-side critical section (SJ Park).
+  - CC all relevant maintainers on every patch (Lorenzo Stoakes).
+  - Drop the mm: prefix from patch 1, as the macros are in
+    include/linux/sched/signal.h (Michal Hocko).
+
+[1] https://lore.kernel.org/all/20260904083001.553587-1-ye.liu@linux.dev/
+[2] https://lore.kernel.org/all/20260813092933.562028-1-ye.liu@linux.dev/
+[3] https://lore.kernel.org/all/20260907081334.1152889-1-ye.liu@linux.dev/
+[4] https://lore.kernel.org/all/20260911075800.491472-1-ye.liu@linux.dev/
+
+Ye Liu (15):
+  sched: introduce for_each_process_rculock and for_each_thread_rculock
+  mm/oom_kill: convert process/thread iterators to for_each_*_rculock
+  mm/ksm: convert process iterator to for_each_process_rculock
+  mm/memory-failure: convert process iterator to
+    for_each_process_rculock
+  cpu/hotplug: convert process iterator to for_each_process_rculock
+  freezer: convert thread iterator to for_each_thread_rculock
+  hung_task: convert process/thread iterators to for_each_*_rculock
+  locking/lockdep: convert process/thread iterators to
+    for_each_*_rculock
+  rcu: convert process/thread iterator to
+    for_each_process_thread_rculock
+  sched: convert process/thread iterators to for_each_*_rculock
+  tracing/fgraph: convert process/thread iterator to
+    for_each_process_thread_rculock
+  unwind: convert process/thread iterator to
+    for_each_process_thread_rculock
+  fs: convert process/thread iterators to for_each_*_rculock
+  lib: convert process iterator to for_each_process_rculock
+  security/landlock: convert thread iterator to for_each_thread_rculock
+
+ fs/proc/base.c               |  4 +---
+ fs/resctrl/rdtgroup.c        |  8 ++------
+ include/linux/sched/signal.h | 26 ++++++++++++++++++++++++++
+ kernel/cpu.c                 |  4 +---
+ kernel/freezer.c             |  4 +---
+ kernel/hung_task.c           | 11 ++++-------
+ kernel/locking/lockdep.c     |  4 +---
+ kernel/rcu/update.c          |  4 +---
+ kernel/sched/core.c          |  3 +--
+ kernel/sched/debug.c         |  4 +---
+ kernel/trace/fgraph.c        |  8 ++------
+ kernel/unwind/deferred.c     |  3 +--
+ lib/is_single_threaded.c     |  5 +----
+ mm/ksm.c                     |  4 +---
+ mm/memory-failure.c          | 16 ++++------------
+ mm/oom_kill.c                | 20 +++++---------------
+ security/landlock/tsync.c    |  8 ++------
+ 17 files changed, 55 insertions(+), 81 deletions(-)
+
+--
+2.25.1
