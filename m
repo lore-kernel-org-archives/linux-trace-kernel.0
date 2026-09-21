@@ -1,319 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011003.outbound.protection.outlook.com [52.101.65.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1E7405F7;
-	Mon, 21 Sep 2026 04:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789963745; cv=none; b=t8fJXUq0Xvim3UhbfICjHvCyzilxMzi2UVE49JU+G9vfOGGH42oFyVK+T5E3KPYZ/nuI9g/TdCZoK5NnGiujze64rAjnblikQ2ETBxvmFneuzlQotkOcFeeOiAFj11f4mlzdqTuA6hZAdkSamJhEsLX8f3OPIxexjp9GYyuoYUU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789963745; c=relaxed/simple;
-	bh=jiFSmehS/aLx34tFQmus2QM3ICkWqUWOkBZm3R49EqE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ibV5/iO1RzN808fpcHlhzi0CB/e19UhYyf7OblbCIUrA64Q9Zp9WJcv/rh0cps5BFtc+N2YXI4YheN2Hz+oPpz+adK2SBa9t+fF6vltQ+deNjl0ycZV4H0/B0PSPnr3mqWwUH+JW1+cN8h9gr2hKTIOSg0hdvSgzOTfekYAmH7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fgqpk7b6; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287CC36923B;
+	Mon, 21 Sep 2026 06:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789972024; cv=fail; b=VAW3p8rtb7ZhlsByru0xLv3BR5OEx3BvWl9+vvqa+GQNBgg58esJuSbWikVu+3GWnM6FglM69ljxLZGQg41aqS3PXcg9ToxYVB+wWNZwfIThjJKyQ7QSf7jTV2c4mS2BxIwrBv+invgA6gbIaFfZ/bQ/pdSGCUW5zlJR7zaVrnY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789972024; c=relaxed/simple;
+	bh=3HAlrxZlHLS9gMBvR/6ItTwT3M62ErS5kXm1DyLcfpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LPFDdZ1Hbx5D9Dq5b9dZN7cRSnDSIAaw9byY63WUoHRmVIj2UH1/hNX6+re/3olcEYQnu0EqyMLGO7izyF8HIm4BsOzytWi8IcC8E8px6RPB+HoZUoDa9GK3pAYD5r1TUIPxrgqd0xaT3fdZ5yU6ntugUwftxaunFbErXuQkXNU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=SriwEl7a; arc=fail smtp.client-ip=52.101.65.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fgqpk7b6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63C301F000FF;
-	Mon, 21 Sep 2026 04:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1789963743;
-	bh=LZ736WQSm180sbvHtkV3uFqBg4iSSs3xixQmjdddUBk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=fgqpk7b6eCfprR7zmZiJy9qBQZJsbM5f8s3hI8e6nM8wYRmEU0CAVWtHGL4kzcQi0
-	 wEjzAZst11LRJ9q6W6kXCFZAXji7jeST+bAFloveBQOKkO+TvLOqlAUkcR9HD/Se9Q
-	 iZwtpMlXm4chDCNpRM7SRsEPxwlhnoNITtr0Iqy0=
-Date: Sun, 20 Sep 2026 21:08:59 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@kernel.org>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes
- <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka
- <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
- <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
- <usama.arif@linux.dev>, Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, Minchan Kim
- <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, Juergen Gross <jgross@suse.com>, Stefano
- Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, xen-devel@lists.xenproject.org, Eric
- Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk
- Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org, Oscar Salvador
- <osalvador@suse.de>, Chao Yu <chao@kernel.org>,
- linux-f2fs-devel@lists.sourceforge.net, Tal Zussman <tz2294@columbia.edu>,
- Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>, Yue Hu
- <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>, Chunhai
- Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, linux-trace-kernel@vger.kernel.org, Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>, Alex Markuze
- <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
- ceph-devel@vger.kernel.org, Richard Weinberger <richard@nod.at>, Zhihao
- Cheng <chengzhihao1@huawei.com>, linux-mtd@lists.infradead.org, Baoquan He
- <baoquan.he@linux.dev>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 00/17] Remove PG_private by using page/folio->private
- checks instead
-Message-Id: <20260920210859.a0f75483dc4a12202c8b9516@linux-foundation.org>
-In-Reply-To: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
-References: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="SriwEl7a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UOsKpckUaH24I8pVRiZdom4pQsjd38vms4SxXIx6HHofPGv6mVnEBwCEC+OtAHT/aTm33hGHdG0oxfdwrhBCSgEdZNBZg2uU/oV/cSVYPMD/e36RRfc51BJqY3QT3FVf90Ny1YN2oNkvqpy1Je/uj722IAsWboFKOCUtmH1djWd3qp1CoFQynAfpxggvFaiyVyZs1XJ8LDeguWqkizNP8BmMySATuZ6CvbdJOsTyQ5QJxvhibM1tvOtR1UJRL5UeiJrRh2kfwSkQsNgQoNi1IgOGFKb+Vs0m0UHlUqbDrS9oNREXoQWTbdDvdNRDd+CH1l3ykCYZcNIpGLS9NLUNaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=owXzFieGEVt5/28SPjULIEVkoCD/9lxhP5oiOADZvvU=;
+ b=qIE82VdfxsgP3sdMUABQdtIQ7aE7RlxAiq7aMzQsjEtDN7VUcVP9tH8R61pPJBsQvLR4i1n9YpyLcmmb+X0ruZriv0hR6XGGmuen/8B67MgRN5GCm4xb5HOvi3gR2EzrshqKIjdCu+P11DPZcTrv8pq1dL7MQ6NRu9W79ZxANsyapRBOW3h+OuBuOJNxsAR4rcRO/0xM7xa8g5wWV5Vb49s97HElds9gzzSIHsGuE/PV1A49E9qBRbAy7+vvyEHjSouUDF7CgE95ZNJ/iYpIcx59W4V7nlYgvjrnZOZdWXSptF+i4peq5imDGCaSBgLW2EB+f4aFS+6OViuPdI/miA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=owXzFieGEVt5/28SPjULIEVkoCD/9lxhP5oiOADZvvU=;
+ b=SriwEl7aMOtWqWezJPH3HB008t2l2vitnBDWuM7C5S/oBxZnapYcZKx94NtvMOnJuoNsn2TkYdSiN5TaT8gAL8I2KNkvfQS+i6CJD3LucAHaNh42/Du8HVXEAmTEK3q2ht5ldOM6S+FUniH0cM0XNwZR0wMCMw9qhO2aTJvZq0W8IedhBdxqUX7hgj/piJPSG9HFdCnq7u7Fp2cg+MXIm9ytl07Y37bYZN1ehHLwm3+8Sef0kX/rNfVh6pJeBkoJ/PX0F4mZKWaLCUmhd/Pn0In6tHGb7ZpZQI0Wcr4r5GX20++zXIfTRmut7Xf4U5uanrPrfl38kLjKLl6/HZ0jJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com (2603:10a6:20b:24d::9)
+ by AM9PR04MB7585.eurprd04.prod.outlook.com (2603:10a6:20b:280::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
+ 2026 06:27:00 +0000
+Received: from AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9]) by AM8PR04MB7874.eurprd04.prod.outlook.com
+ ([fe80::ac38:1699:6f18:c5d9%6]) with mapi id 15.21.0428.015; Mon, 21 Sep 2026
+ 06:27:00 +0000
+Date: Mon, 21 Sep 2026 14:31:19 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: use assign_bit() where applicable
+Message-ID: <arDPNx/dR0ppjSEK@shlinux89>
+References: <20260920022810.3145921-1-peng.fan@oss.nxp.com>
+ <20260920072151.40637efd@fedora>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260920072151.40637efd@fedora>
+X-ClientProxiedBy: MA5P287CA0335.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:222::10) To AM8PR04MB7874.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24d::9)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7874:EE_|AM9PR04MB7585:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47beeb69-6778-4f6c-1acd-08df17a957f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|19092799006|366016|1800799024|6133799003|22082099003|18002099003|56012099006|11063799006|4143699003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	20hduWDJKoxUvQPgM4eBFLQYDHMP+zrdzRleo6zXC/zGtt3oX44RN/SBesdvEmUwRGcZ6uotJysY5YFC10p/u7FLHb/IFhxXh/TeIIZM07xZOAOreVksta9WhH65jP12yHQJobuEHjz6TcHovvgJOX/MAjOyaBtE2VG0O0JKhVNZfWqsgpeV0k0sWK8QAUSspvq2cjsA7d22qQdfJmv9vz3zwmxiymPCvTSw2Ij2FeQpFhfCkhwd0tz1qCUDuPKMyZfTaIjb0kDc3sJJKdtghiJ7XhXw6Fp4yAdXLIwWRY3AMkYsYoLRpM0eGJF4bfTO2WrDBzfjjMzKg2mv72hFEQXzpTBqEZywkek9Vy35+loM7fHmr4kT8x4j8UYiuJsvsXyn4P6IEmVjZyD/UyJhDjPD4khJioV/v6UOWEB5ENupj1UPB/BqVCUrxc8TJg7vg3hfiaeEjn0e6+2t7780QbYnCGfXvaVpepEuflLGqsWkfo3Fkw0AkaZa+U8gs91Db5OMIDGEJrL9bNXDxmmfoG5hugMFnzo9s0twGVlVCSGPYLpoH9+aesXka4dxn4juZC2QH5faJwZBDCB5v5RoaCuHY4SeAKa8U+LpW0u6SJtlherFuCmKQtARwf8EpD2iPfsR+ujK1Vzp8lLspEMgwQSNwf6Apm0QGDG4xEEnt0M=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7874.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(19092799006)(366016)(1800799024)(6133799003)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jc9SBqH9KuowAjviJXKysmb+4xh1/lvCNFeJNYD5ixr7UY4W+vAOVqynYDzO?=
+ =?us-ascii?Q?2uP99xQBpM01yGLKK7lnxdG9qSDAjt6dvkacyu+Obq2p1zPs6w1ied4ZhgLz?=
+ =?us-ascii?Q?S8o7J798DBu6SmNc8lAsB5Q7oko9bgtdLJyX3F3ImA6PVj3rYAOK2asJK1FU?=
+ =?us-ascii?Q?U83idhP9sChGD6S6GQMphPmZbA0mPq1Yo3IcjGSonSnb6T2oFZ4Y/OTh0tCm?=
+ =?us-ascii?Q?GrX2SVXu5oN2lb3tUt19VroIU2kLq7u9erNdG1qAxcrETlGbDEWCm2u4heEE?=
+ =?us-ascii?Q?DncmQYT+3hARPdKhZX4rsDaXOTJOqarZ7KwKKL4xdzlSPzJxk6IF2fy5ZD8Y?=
+ =?us-ascii?Q?Qe7i1dzXrIgkDyX1OB4UYjU7N1nTHGc0ElyF2O3ASosiIm8JDYCPp1GA3+H4?=
+ =?us-ascii?Q?hr99ht0+Reij2yRZAfCHKlqFeU5Wu4lAu9UwC9nukWmVnUP8SmGFPpnGkkf/?=
+ =?us-ascii?Q?8w3im88AVEfs3PRv9v4p4If+vkG1wAgCfdEAL5T64i+broPOBHuXFY5oH6yl?=
+ =?us-ascii?Q?lMCBUHBRpAod7JgnDH+XFw19D4j14xEIrD1lMo8pQ9AEV6q43HRThNR5IvFj?=
+ =?us-ascii?Q?xHDXwpwxyoXFyke+yRXkYd1v6IyMSEKA0FSMbm6U6rTCHEYTKvVNjYPMGflo?=
+ =?us-ascii?Q?fjYUig4abqoPJEuV0t+s4YzzdPKShpPjFCzjpZXEEntNWVW6y9E6I2WKzDRZ?=
+ =?us-ascii?Q?w/V/c2BdDUsE0yLM6Yz6I2qom0tO4sVZXOrdjskjU7/I4yFegoo0/OEELmbB?=
+ =?us-ascii?Q?dYDVmKpHf0WGwfc4eLl6CImasaeJ9oGJ9BO9QwhK5Y6vXmmeirIHD6mHFotU?=
+ =?us-ascii?Q?UqZ8J2sx0OCqvt2XphiJX7u6Xrmd3iWwX9QwtRf6WIMWFAb+ieH9fgM1SHT3?=
+ =?us-ascii?Q?zK+qLVEHlEGepqVb5Zbhi5B88E8n5gv2fdUA1ESAQvnZdL+Kbx1NfGvao5ER?=
+ =?us-ascii?Q?zIFfk97ZCTx+P3fYqiNi+iZ995TYUqvdI2JYuDSEamVXciIIWNRMgRRyjdF+?=
+ =?us-ascii?Q?bEy4znyapdOQS7P3k2udtczWSB6EWI8nmtA+DAK60bTB0UnRQq6nhyhIaP9j?=
+ =?us-ascii?Q?DI+kUQC+m48r3EmjE1voP1UUPN10R92iq4vEwhyEifchOtho9nBakW1ume3u?=
+ =?us-ascii?Q?UQ1TDZBJaOzYARTzzuqNEUCrOuKlZpF3l4B1yQtyvMugLB62EZyQsg+oxgd4?=
+ =?us-ascii?Q?fvywladItcAA7NiG54ezSVVQ7WXlr1CSbuFlhgrcgrvPExJM97oOZXACJeeR?=
+ =?us-ascii?Q?9m9vHqxaJhL8x02S2UR3qKwMp/vQAIjGvMJWovXScy+AkgbBzrd9pUlxx4Pj?=
+ =?us-ascii?Q?xril4gutG5/YKVzez9yp8pYR30qkkaexcqoFoCbGtYE/Z0Ahhi9zxxGPpVpK?=
+ =?us-ascii?Q?G6jV3+LgB35goisMqTs64TGvIOYDf1/ErTEdETRP12uBMqVt2jxzmnmj1Gst?=
+ =?us-ascii?Q?hwqxE7tCtkz0XxtV3qLGaR0Lxa+ZkChn7zEr0ujpZ+1uGFcQ9BhW2a2Ro1xg?=
+ =?us-ascii?Q?cs5DVzWE5ptfuHsWx1AfC/SUPEUuYcJPnpvk/weOA+vscLQVSTjEXz9JJnmb?=
+ =?us-ascii?Q?wjG/1/YfonNSQaTVufXeXHp0oUHd3TpmovzYujGXGNfxC8l9Fs/O2Q0w7AF5?=
+ =?us-ascii?Q?Kww97C3JpL3CeyBykqy94xqTr+lcbWXVrI3G0vuPbNMiZvD6bkqrADLhuAGs?=
+ =?us-ascii?Q?XPOkTBcdhYswXoX+SDWo4/Yt4SBgPNuqIjiAPj0GbG+LbhtwThjZ6mhSiWUo?=
+ =?us-ascii?Q?ZoYE2cQ6NB20QO++2dypxYYHj6dQ8GIS2VPCxPHv43xl7jMPcuAN?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47beeb69-6778-4f6c-1acd-08df17a957f3
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7874.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 06:27:00.3836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CGhVlohN/kKwAQWzyo+1aTLNtlrb1oJDKyNJeKgQdw88DANfOoo82bdKaXgC8oShX1O0vn1UE1udhrxSGKuJbZpMmWccPevl0bRw8AqfP6esFSOOcaSzV9fH5t1f+tz9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7585
 
-On Sun, 20 Sep 2026 22:27:56 -0400 Zi Yan <ziy@nvidia.com> wrote:
+On Sun, Sep 20, 2026 at 07:21:51AM -0400, Steven Rostedt wrote:
+>On Sun, 20 Sep 2026 10:28:10 +0800
+>"Peng Fan (OSS)" <peng.fan@oss.nxp.com> wrote:
+>
+>> From: Peng Fan <peng.fan@nxp.com>
+>> 
+>> Convert open-coded if/else with set_bit/clear_bit the assign_bit API.
+>> 
+>> Done with Coccinelle semantic patch:
+>>  /**
+>> @@ -1673,10 +1670,8 @@ event_enable_trigger(struct event_trigger_data *data,
+>>  {
+>>  	struct enable_trigger_data *enable_data = data->private_data;
+>>  
+>> -	if (enable_data->enable)
+>> -		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
+>> -	else
+>> -		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags);
+>> +	assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags,
+>> +		   !enable_data->enable);
+>
+>Ditto.
 
-> Hi all,
+This will exceeds 100 columns. Should I keep as it is using two lines?
+
+WARNING: line length of 101 exceeds 100 columns
+#116: FILE: kernel/trace/trace_events_trigger.c:1673:
++       assign_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &enable_data->file->flags, !enable_data->enable);
+
+Thanks,
+Peng
+
+>
+>Thanks,
+>
+>-- Steve
 > 
-> This patchset removes PG_private to make space for upcoming PG_folio for
-> identifying pages from a folio (more details in Note below). Instead of
-> checking PG_private, all code is changed to check page/folio->private !=
-> NULL instead.
-
-Thanks, I updated mm-unstable to this version.
-
-> Changes in v5:
-> 1. replaced md patches (patch 13 and 14 in v4) with Matthew Wilcox's
->    version (see Matthew's replies to v4).
-> 2. used data_race() inside folio_test_private() and PagePrivate(), so that
->    the new versions can be used without KCSAN warnings while not holding
->    folio lock like before.
-> 3. moved folio_has_attached_private() implementation detail comment next to
->    the code.
-
-Here's how v5 altered mm.git:
-
-
- drivers/md/md-bitmap.c         |   17 ++++++++---------
- fs/buffer.c                    |    8 --------
- include/linux/buffer_head.h    |    2 +-
- include/linux/mm.h             |    3 +--
- include/linux/page-flags.h     |   30 +++++++++++++++++++-----------
- include/trace/events/pagemap.h |    3 +--
- mm/huge_memory.c               |    3 +--
- mm/page-writeback.c            |    3 +--
- 8 files changed, 32 insertions(+), 37 deletions(-)
-
---- a/drivers/md/md-bitmap.c~b
-+++ a/drivers/md/md-bitmap.c
-@@ -516,7 +516,8 @@ static void end_bitmap_write(struct bio
- 
- static void write_file_page(struct bitmap *bitmap, struct page *page, int wait)
- {
--	struct buffer_head *bh = (struct buffer_head *)page_private(page);
-+	struct folio *folio = page_folio(page);
-+	struct buffer_head *bh = folio_buffers(folio);
- 
- 	while (bh && bh->b_blocknr) {
- 		atomic_inc(&bitmap->pending_writes);
-@@ -533,18 +534,15 @@ static void write_file_page(struct bitma
- 
- static void free_buffers(struct page *page)
- {
--	struct buffer_head *bh = (struct buffer_head *)page_private(page);
--
--	if (!bh)
--		return;
-+	struct folio *folio = page_folio(page);
-+	struct buffer_head *bh = folio_detach_private(folio);
- 
- 	while (bh) {
- 		struct buffer_head *next = bh->b_this_page;
- 		free_buffer_head(bh);
- 		bh = next;
- 	}
--	detach_page_private(page);
--	put_page(page);
-+	folio_put(folio);
- }
- 
- /* read a page from a file.
-@@ -559,6 +557,7 @@ static int read_file_page(struct file *f
- {
- 	int ret = 0;
- 	struct inode *inode = file_inode(file);
-+	struct folio *folio = page_folio(page);
- 	struct buffer_head *bh;
- 	sector_t block, blk_cur;
- 	unsigned long blocksize = i_blocksize(inode);
-@@ -566,12 +565,12 @@ static int read_file_page(struct file *f
- 	pr_debug("read bitmap file (%dB @ %llu)\n", (int)PAGE_SIZE,
- 		 (unsigned long long)index << PAGE_SHIFT);
- 
--	bh = alloc_page_buffers(page, blocksize);
-+	bh = folio_alloc_buffers(folio, blocksize, GFP_NOFS | __GFP_ACCOUNT);
- 	if (!bh) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
--	attach_page_private(page, bh);
-+	folio_attach_private(folio, bh);
- 	blk_cur = index << (PAGE_SHIFT - inode->i_blkbits);
- 	while (bh) {
- 		block = blk_cur;
---- a/fs/buffer.c~b
-+++ a/fs/buffer.c
-@@ -773,14 +773,6 @@ no_grow:
- }
- EXPORT_SYMBOL_GPL(folio_alloc_buffers);
- 
--struct buffer_head *alloc_page_buffers(struct page *page, unsigned long size)
--{
--	gfp_t gfp = GFP_NOFS | __GFP_ACCOUNT;
--
--	return folio_alloc_buffers(page_folio(page), size, gfp);
--}
--EXPORT_SYMBOL_GPL(alloc_page_buffers);
--
- static inline void link_dev_buffers(struct folio *folio,
- 		struct buffer_head *head)
- {
---- a/include/linux/buffer_head.h~b
-+++ a/include/linux/buffer_head.h
-@@ -175,6 +175,7 @@ static inline unsigned long bh_offset(co
- 	return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
- }
- 
-+/* If we *know* folio->private refers to buffer_heads */
- #define folio_buffers(folio)		folio_get_private(folio)
- 
- void buffer_check_dirty_writeback(struct folio *folio,
-@@ -191,7 +192,6 @@ void folio_set_bh(struct buffer_head *bh
- 		  unsigned long offset);
- struct buffer_head *folio_alloc_buffers(struct folio *folio, unsigned long size,
- 					gfp_t gfp);
--struct buffer_head *alloc_page_buffers(struct page *page, unsigned long size);
- struct buffer_head *create_empty_buffers(struct folio *folio,
- 		unsigned long blocksize, unsigned long b_state);
- void end_buffer_read_sync(struct buffer_head *bh, int uptodate);
---- a/include/linux/mm.h~b
-+++ a/include/linux/mm.h
-@@ -3052,9 +3052,8 @@ static inline int folio_expected_ref_cou
- 		ref_count += !!data_race(folio->mapping) << order;
- 		/*
- 		 * One reference from filesystem private data.
--		 * Use data_race() since folio might not be locked.
- 		 */
--		ref_count += data_race(folio_has_attached_private(folio));
-+		ref_count += folio_has_attached_private(folio);
- 	}
- 
- 	/* One reference per page table mapping. */
---- a/include/linux/page-flags.h~b
-+++ a/include/linux/page-flags.h
-@@ -576,7 +576,12 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
- 
- static __always_inline bool folio_test_private(const struct folio *folio)
- {
--	return folio->private;
-+	/*
-+	 * data_race() is added for readers without holding the folio lock.
-+	 * Only the NULL/non-NULL answer is used and both are valid while
-+	 * private is being attached or detached, so the race is benign.
-+	 */
-+	return data_race(folio->private);
- }
- 
- FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
-@@ -1199,20 +1204,23 @@ static __always_inline void __ClearPageA
-  * @folio: The folio to check.
-  *
-  * Use this in code that may encounter swapcache or hugetlb folios but only
-- * wants to detect attached private data. Swapcache stores swp_entry_t in
-- * folio->swap, a union with folio->private, and hugetlb stores its own flags
-- * in folio->private; both are excluded.
-- *
-- * NOTE: For swapcache, folio->swap.val PG_swapcache are not set as a whole,
-- * so folio_test_swapcache() is not reliable to exclude swapcache.
-- * Use folio_test_swapbacked() instead, since it remains set when a folio is
-- * added to/removed from swapcache.
-+ * wants to detect attached private data.
-  *
-- * Return: true if folio->private is set and the folio is neither swapcache
-- * nor hugetlb.
-+ * Return: true if the folio has private data attached.
-  */
- static inline bool folio_has_attached_private(const struct folio *folio)
- {
-+	/*
-+	 * Swapcache stores swp_entry_t in folio->swap, a union with
-+	 * folio->private, and hugetlb stores its own flags in folio->private;
-+	 * both are excluded.
-+	 *
-+	 * NOTE: For swapcache, folio->swap.val PG_swapcache are not set as
-+	 * a whole, so folio_test_swapcache() is not reliable to exclude
-+	 * swapcache. Use folio_test_swapbacked() instead, since it remains set
-+	 * when a folio is added to/removed from swapcache.
-+	 */
-+
- 	return folio_test_private(folio) && !folio_test_swapbacked(folio) &&
- 	       !folio_test_hugetlb(folio);
- }
---- a/include/trace/events/pagemap.h~b
-+++ a/include/trace/events/pagemap.h
-@@ -22,8 +22,7 @@
- 	(folio_test_swapcache(folio)	? PAGEMAP_SWAPCACHE  : 0) | \
- 	(folio_test_swapbacked(folio)	? PAGEMAP_SWAPBACKED : 0) | \
- 	(folio_test_mappedtodisk(folio)	? PAGEMAP_MAPPEDDISK : 0) | \
--	/* data_race() is used to read attached private locklessly */ \
--	(data_race(folio_has_attached_private(folio))	? PAGEMAP_BUFFERS    : 0) \
-+	(folio_has_attached_private(folio)	? PAGEMAP_BUFFERS    : 0) \
- 	)
- 
- TRACE_EVENT(mm_lru_insertion,
---- a/mm/huge_memory.c~b
-+++ a/mm/huge_memory.c
-@@ -4845,9 +4845,8 @@ static int split_huge_pages_pid(int pid,
- 		 * For folios with private, split_huge_page_to_list_to_order()
- 		 * will try to drop it before split and then check if the folio
- 		 * can be split or not. So skip the check here.
--		 * data_race() is used to read attached private locklessly.
- 		 */
--		if (!data_race(folio_has_attached_private(folio)) &&
-+		if (!folio_has_attached_private(folio) &&
- 		    folio_expected_ref_count(folio) != folio_ref_count(folio))
- 			goto next;
- 
---- a/mm/page-writeback.c~b
-+++ a/mm/page-writeback.c
-@@ -2705,8 +2705,7 @@ bool filemap_dirty_folio(struct address_
- 	if (folio_test_set_dirty(folio))
- 		return false;
- 
--	/* data_race() is used to read attached private locklessly */
--	__folio_mark_dirty(folio, mapping, !data_race(folio_has_attached_private(folio)));
-+	__folio_mark_dirty(folio, mapping, !folio_has_attached_private(folio));
- 
- 	if (mapping->host) {
- 		/* !PageAnon && !swapper_space */
-_
-
+>>  }
+>>  
+>>  static bool
+>> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+>> index f658c3a77aa7..055894cb999c 100644
+>> --- a/kernel/trace/trace_events_user.c
+>> +++ b/kernel/trace/trace_events_user.c
+>> @@ -590,10 +590,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+>>  	ptr = kaddr + (uaddr & ~PAGE_MASK);
+>>  
+>>  	/* Update bit atomically, user tracers must be atomic as well */
+>> -	if (enabler->event && enabler->event->status)
+>> -		set_bit(bit, ptr);
+>> -	else
+>> -		clear_bit(bit, ptr);
+>> +	assign_bit(bit, ptr, enabler->event && enabler->event->status);
+>>  
+>>  	kunmap_local(kaddr);
+>>  	unpin_user_pages_dirty_lock(&page, 1, true);
+>
+>
+>
