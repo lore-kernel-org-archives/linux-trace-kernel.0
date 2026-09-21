@@ -1,124 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f8.google.com (mail-wr2-f8.google.com [74.125.225.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB56C517BAA;
-	Mon, 21 Sep 2026 22:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72C651A154
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 22:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790028188; cv=none; b=gITRsk/I+k3GOROPJ4tIhv6yHV6efr70dc40IejRVxnxoq+HYjR1KJsqZFpffxNHNeL2SNSB3d0zqCkSXbPDH8nVKKDUwayH73cqGOgmZ6hvr5BEh9uiPbnv6uiIdrwNp0qrBZtSHk8CE+U5dGa+Keg5Nd1wixawboAqMMDqMVc=
+	t=1790029441; cv=none; b=cwf2G+/OClWErzOelU/f2sCBF5Qw8jUM6/XixAsHLxd24mCQ6z347ME4gvhz3O17AHJ4+yTiryZlxn/6vXsgsfxSHnCv4N1U3NWXvsHMAxjOmCvm1yHgVO78ZXDONIuP6BpHZHeFjzjgS4tYtxCAXEWo3me4wETZ8jYoyf9mK3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790028188; c=relaxed/simple;
-	bh=qzwhEbKrHp1pC+zFLqhhmXmhnUnAMvP+I9eH5tpySEM=;
+	s=arc-20240116; t=1790029441; c=relaxed/simple;
+	bh=bSLQ8dhyTkMsa0T3MRybn10V2qri87KKmc+w8o1F3xM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8QKVHxVqRmMZjRlhSZTLJMJFU7w7LmnDobCYZg7MP71WBLraM/ozoDZhHvb3BpvNZ62/02J66yNF60o2O78pC81XxXagDdfOcb0xWbm5ESytUbPQKXdiY/lSdqxRcko0+DRhwO/Uoift/ZsFZnEOtaB1j4NyilU6bUaLH31+LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+U7EgtZ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+U7EgtZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC3871F000FF;
-	Mon, 21 Sep 2026 22:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790028187;
-	bh=OAXnnaFrbWs2LIexleuzHe78QyGOjtA34ZgP/GXxDcY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Y+U7EgtZg8c8ElobGhR5EmZgpFoDvoi912XLtUxC8m0SrXKeOPkkhK/gLAbpGJqwg
-	 SyJObZrANQX6u2+isEaepIaD+/etR5rE8Na/lKzKTq5I8ig7mQdol5LpzXrNznUrnC
-	 Wkp6oKmu+m3wpB0yo4qQhtdO52msw1D0XsnUngjrtn/qHWjRr+P6iBkbAObb80K5NH
-	 mXcXqnkfiH4deATpdbVw0KXWoxLvTqb4KIz2bQcGjumW8hz3sq5Ki6Yy0uVs0Vs+D9
-	 CsfpDauMUd89AT74oqyDS9Tll0NvaeLefKk9RtNmfuHvHA0GODbdOerPV8+8bTqU2d
-	 ONEesKkCH3tUQ==
-Message-ID: <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
-Date: Tue, 22 Sep 2026 00:03:01 +0200
+	 In-Reply-To:Content-Type; b=U58G29OLLBF5gF/f7x29bgmoO4cZb/EAPNTAtR5CHW3uWii9bk83HWQQak/wz3Uq3zdiuo6iR+dF31aGw2mBlV+rzI3Pg8Cq8iT6XIQeYAONqZekNc4GFSFCir/+ftUjUj1pjMLW0SQmCdATSzYZZto4+n3gDlUH2lN2rJ12eXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.225.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr2-f8.google.com with SMTP id ffacd0b85a97d-482e1e7a4f6so1429677f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 15:23:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790029438; x=1790634238;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZWKBhus7Q6cGpJkKuYawt2j9PRf/Qc0mjhsFcNxeZ9c=;
+        b=2R0fvpIjTbM3rRKMPr9Vqta4is8ECCYGPg0Q7Q19DcuTQRgc9IA3mvHsIU61S78Zao
+         nEL/RYk1dAsVqglz3lkgzBZvoWBChiBKWQnw1Jyf0ioV8/AWhYF7oQhCZKiS6Y6QbVXP
+         5Y+T4UVcXpk6BH+dpTgZgfy26c8n3CIHRU5KJ3Fi3vpopQFGsQXQQQTUPyT5CENyWdoZ
+         yhQZ1MPPWo34SzUQBmO16wgDfe4tDJT9sreJDH1jSOWcd+5yxdwh8NLV6HXSb5DVlblK
+         G+psmuQxdP30u+VapFoyud+LAILgi7BSTqzZwRgnR4U5N0G5V8R94k7JR43Bf6mfvjit
+         DS7Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxqIMKMjiWTDmx7d4datWtbfc0byxFSoO4VaG8v7dYMbYE9mzK1/XXwnQPi/DpYDEyk6jfbLl9b1KeIvPg9AT3u1Mo=@vger.kernel.org
+X-Gm-Message-State: AFuF++mg8xPiqrXyIAsbCDZ5i8GFO5/LdL4fBNbUUNYXNI0GyRELADQf
+	7mgqyOvDeF2yzo1TrCs1KFZWzTKx7ory/9oPJxNBOfd+nexXxw0bw63G
+X-Gm-Gg: AYBFou1WnpJvO3BkXDZKWEp+J3PeTW5udKWaNMM/KL6+mJj2G0AROwgyL4RGjZYycs5
+	JAgoz7ElrEhAxzhDK5Xqv1yNGFFv5lq/yeHViLepaJL7eZm5B5gz9WDb7b6yIuvDb3W5KhQtLzK
+	Zzxdgor3O/0wK4zOHK4hjsBwNa6XEuV2SP7qraXgCZmS+8N1B6pvFYyKfK6NDn6/j8a7OKO+/tN
+	/Tn4/81uav98r1yeopHKs5XGuC3jFaEaRZ0H6OH/PNETjzkbPM/04ln8hxdoWjVq+YsNtwn8xe4
+	7jVaf4KdhNyQ0Y7f15jwe+Qz2GtCXfFZ4xcjowy/wViPomoxBI8PJi0ZqWKiygkROUAg1gVylzd
+	nrIuwGjuINzy4QXZcCC4X4X02pGbxoLp1OrG6usjNXizNJkFSO3PT7OFcWChhia5w5KcgCbAgbS
+	eRbey5jiuLnLoibF2knhIWy8IXSMVsCo8enrK/wa1eSYrPOhm8gOhmidUypjY651mu0MuhrR2oh
+	k5Gwi1HZHgOFRE+8BwizVPLu/W8EVbuoXkXnfLcu1vTg4FyvA==
+X-Received: by 2002:a05:6000:2301:b0:487:a3f:1ea6 with SMTP id ffacd0b85a97d-4871e211724mr18432556f8f.11.1790029437903;
+        Mon, 21 Sep 2026 15:23:57 -0700 (PDT)
+Received: from [192.168.88.241] (78-80-107-225.customers.tmcz.cz. [78.80.107.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48862244e1asm726393f8f.11.2026.09.21.15.23.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Sep 2026 15:23:57 -0700 (PDT)
+Message-ID: <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
+Date: Tue, 22 Sep 2026 00:23:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
-To: Johannes Berg <johannes@sipsolutions.net>
+To: Matthieu Baerts <matttbe@kernel.org>,
+ Johannes Berg <johannes@sipsolutions.net>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Johannes Berg <johannes.berg@intel.com>, Aaron Conole <aconole@redhat.com>,
  Eelco Chaudron <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>,
  dev@openvswitch.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ Adrian Moreno <amorenoz@redhat.com>, Antoine Tenart <atenart@kernel.org>
 References: <20260921101538.97286-6-johannes@sipsolutions.net>
  <20260921101538.97286-9-johannes@sipsolutions.net>
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: fr
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20260921101538.97286-9-johannes@sipsolutions.net>
+ <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
+Content-Language: en-US
+From: Ilya Maximets <i.maximets@ovn.org>
+Autocrypt: addr=i.maximets@ovn.org; keydata=
+ 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
+In-Reply-To: <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Johannes,
-
-(+Cc openvswitch devs)
-
-On 21/09/2026 12:06, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+On 9/22/26 12:03 AM, Matthieu Baerts wrote:
+> Hi Johannes,
 > 
-> The __print_symbolic() could only ever print the core
-> drop reasons, since that's the way the infrastructure
-> works. Now that we have __print_sym() with all the
-> advantages mentioned in that commit, convert to that
-> and get all the drop reasons from all subsystems. As
-> we already have a list of them, that's really easy.
+> (+Cc openvswitch devs)
 > 
-> This is a little bit of .text (~100 bytes in my build)
-> and saves a lot of .data (~17k).
-Thank you for working on that! But it looks like it breaks the
-openvswitch test:
+> On 21/09/2026 12:06, Johannes Berg wrote:
+>> From: Johannes Berg <johannes.berg@intel.com>
+>>
+>> The __print_symbolic() could only ever print the core
+>> drop reasons, since that's the way the infrastructure
+>> works. Now that we have __print_sym() with all the
+>> advantages mentioned in that commit, convert to that
+>> and get all the drop reasons from all subsystems. As
+>> we already have a list of them, that's really easy.
+>>
+>> This is a little bit of .text (~100 bytes in my build)
+>> and saves a lot of .data (~17k).
+> Thank you for working on that! But it looks like it breaks the
+> openvswitch test:
+> 
+> https://netdev-ctrl.bots.linux.dev/logview.html?f=%2Flogs%2Fvmksft%2Fnet%2Fresults%2F833743%2F9-openvswitch-sh%2Fstdout#L168
+> 
+> Maybe the test needs to be adapted to get the same info differently?
+> (and adding CONFIG_TRACEPOINTS to the selftest config file)
+The parsing in the test will definitely need to be updated, i.e.,
+the numbers swapped with the names of the drop reasons.
 
-https://netdev-ctrl.bots.linux.dev/logview.html?f=%2Flogs%2Fvmksft%2Fnet%2Fresults%2F833743%2F9-openvswitch-sh%2Fstdout#L168
+IIUC, this change only affects the printing and doesn't affect debugging
+tools like retis that attempt to surface the drop reasons.  But, maybe
+Adrian and Antoine (CCed) may want to have a glance as well.
 
-Maybe the test needs to be adapted to get the same info differently?
-(and adding CONFIG_TRACEPOINTS to the selftest config file)
-
-Cheers,
-Matt
+Best regards, Ilya Maximets.
