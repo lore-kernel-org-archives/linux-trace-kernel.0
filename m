@@ -1,114 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B07503BF3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 21:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E099A518128;
+	Mon, 21 Sep 2026 21:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790026563; cv=none; b=ZQGkUsDUM8aC3acZvhmF3zlusTgzPD5pr8b9TIaBpYF3+S78v4exqyhcsoLu30tQEcnH8//Z52PtehMRwoZP36S2ZyszXzN7Snm7/l72Y6+/rqPAwmlehSRR+WD/9sUp4IESb3vokLyi0jxXPqoQZwbOnLhYcgAOPDy4hUbBv+I=
+	t=1790027993; cv=none; b=s78LAY9He7phtHxqknjMjLe4FpvC8wCzUNXxcP4aFLE89Ho24ZAZ9gmqmDB4RD74XSBKCtBzIHJpFBFtwmJF1TGptPR8eSFeXApKaJkj/k4U83VNJjg5wRXRrfjhGPsZP5krK5aSpuzavJFXZnyOahMTtu9F072cKxGoxzhh40Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790026563; c=relaxed/simple;
-	bh=7yizJDGthNwZ7FKc3pzoGYg1087qkfktjgHdeDS3pQQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e4OoqzblL7lmO0F5Hyzl+4valJHSAO2GMVO/8uEAPgoLHUWdqDzO4sSMJLn9tlnEAXzFBfqY7bp6PNvVGZ8JNbdnvY9vQzAB10q8rwDMvAHLKJ1bhwldqFpu30ylbBQUlLvNlf8uOkWuYAvhiHPLfTldlTHcCh5Jy3d/wU7CKJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+wNYE69; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790027993; c=relaxed/simple;
+	bh=P7pJ5ArjsUD9qn9c1DuGNMBaaTalkAC5sKlwzEaj5mY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ThIzGszs3N83ceDV6DQ20Zyx1W0soBpOEe3PSAT7esKNjOO5UbAeOkr3RKjk8GVeIMC2l+KQGLGLROy1kj2yhfPoaaf2/4YrtVwmS2DKTu5/zhRbc48x/P8HIMFYLbQ34cwl8nTSaqS7sNP82b7kmndDCB7wFUnbi9qjWeWI1Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2QhAIGo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+wNYE69"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F291F000FF;
-	Mon, 21 Sep 2026 21:36:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2QhAIGo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB871F000FF;
+	Mon, 21 Sep 2026 21:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790026562;
-	bh=8dA8PAHgKasWIyPocVHJiz56NSBpoVug4ivzXrLAHXE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=S+wNYE69A0m2rS44o52SyzYQBmbRFpRj1rvhinW3bdz/R9li2lcFTbGLFGIwWfB0u
-	 Ek9s2W1bM0B6LZ/+r0Es4Ty6SbiHEpugPxq+O52joDONmI2M7HT0rX93NlCF3iGiRz
-	 rm3kc8bxNetrpPspqEraOLIEXuWWY5g1rihxgtG8DWULOxRZ+azQYO4kjesL15cY52
-	 9wGij11JFQJzat5wbt7dvTh0RFt9rSs9SOufQZF1FGykBW/M31kW6JDsYreLo6s3lv
-	 AAzL3SSmkmBgv4M7NbQNnFnyWuIeavreDxA2hC87bhL75uM40CzI/QWTFICtKw84Bs
-	 dPLEx6Ekiikvw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] alloc_tag: extend allocinfo_filter to support
- tracing queries
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Abhishek Bapat" <abhishekbapat@google.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <c429b37092a4cb33535965163072a63adf57d8e9.1790025465.git.abhishekbapat@google.com>
-References: <cover.1790025465.git.abhishekbapat@google.com>
- <c429b37092a4cb33535965163072a63adf57d8e9.1790025465.git.abhishekbapat@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 21:36:01 +0000
-Message-Id: <20260921213602.01F291F000FF@smtp.kernel.org>
+	s=k20260515; t=1790027991;
+	bh=KtfkV41wGWtsvVI6S5HWa0staeZRL5o4ro13Snucn3o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=H2QhAIGotWytKrhnBZIOgS73q3pGjoZQde0x72/y6IIVXpDBvZ2dQUsX8OgdsEPAl
+	 rLCfwI4dvHxZuw+ESRVAs20R4VXGELDaTtylkv3zxtJpOLNNXCHA5hqV6yStmCWQrh
+	 LqrCv4hi2vMAs3lVZyq8ft9Nzn6zdk2tI2d+lvqjNpSS0ruZDVQkdtymFxpR6csesr
+	 MqxEHRgvZlKh61xhPTvIfQ5tCPg/LLua3NN7l+t4LciHlVdCd3lBSqers9pXfDzWW5
+	 F68Ujrs3IZcmAMoHpAruMzDUZ1/H68katF7I++NbQGFMJICUSDRL8hWpaH9h6BTF2K
+	 gqMXJvOyOVrLA==
+Date: Mon, 21 Sep 2026 14:59:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v6 0/4] tracing: improve symbolic printing
+Message-ID: <20260921145950.62c4a669@kernel.org>
+In-Reply-To: <20260921101538.97286-6-johannes@sipsolutions.net>
+References: <20260921101538.97286-6-johannes@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] uapi: ALLOCINFO_IOC_GET_AT ioctl ABI breakage due to struct si=
-ze increase
---
+On Mon, 21 Sep 2026 12:06:31 +0200 Johannes Berg wrote:
+> Hi,
+> 
+> Alright, this took forever, it never quite made it to the top of
+> my list ... Two years ago Steven reported a crash in v5, and now
+> I finally really looked into it and realized it was because of
+> section placement.
 
-commit e19f22c2c2fb6885ec1ef8ea1659cf1ff9f8e3ae
-Author: Abhishek Bapat <abhishekbapat@google.com>
+Breaks ovs test which tries to catch the drop reasons:
 
-alloc_tag: extend allocinfo_filter to support tracing queries
-
-The commit extends the allocinfo filtering system to allow filtering by tra=
-cing
-state. It adds a trace_on property to struct allocinfo_counter and a tracing
-property to struct allocinfo_filter.
-
-> diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_ta=
-g.h
-> index 069ab8341e87b..e65c32afceee2 100644
-> --- a/include/uapi/linux/alloc_tag.h
-> +++ b/include/uapi/linux/alloc_tag.h
-[ ... ]
-> @@ -75,6 +78,7 @@ struct allocinfo_filter {
->  	__u64 max_size;
->  	/* filter criteria only; see allocinfo_counter.accurate for actual accu=
-racy */
->  	__u64 inaccurate;
-> +	__u64 tracing;
->  };
-
-[Severity: Critical]
-Does adding __u64 tracing here cause an ioctl ABI regression for existing
-userspace applications?
-
-Since struct allocinfo_filter is embedded in struct allocinfo_get_at, adding
-this field increases the size of struct allocinfo_get_at by 8 bytes.
-
-The ioctl command ALLOCINFO_IOC_GET_AT is defined using _IOWR() which
-incorporates the size of struct allocinfo_get_at into the command number:
-
-include/uapi/linux/alloc_tag.h:
-#define ALLOCINFO_IOC_GET_AT \
-        _IOWR(ALLOCINFO_IOC_BASE, _ALLOCINFO_IOC_GET_AT, struct allocinfo_g=
-et_at)
-
-When older userspace tools send the previous ioctl command number, will it
-fail to match the new ALLOCINFO_IOC_GET_AT value in the switch statement
-in allocinfo_ioctl():
-
-mm/alloc_tag.c:allocinfo_ioctl() {
-	switch (cmd) {
-[ ... ]
-	case ALLOCINFO_IOC_GET_AT:
-		ret =3D allocinfo_ioctl_get_at(file->private_data, arg);
-		break;
-[ ... ]
-	default:
-		ret =3D -ENOIOCTLCMD;
-		break;
-	}
-}
-
-and cause requests to fall through to the default handler?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1790025465.gi=
-t.abhishekbapat@google.com?part=3D3
+https://netdev-ctrl.bots.linux.dev/logs/vmksft/net-dbg/results/833743/10-openvswitch-sh/stdout
