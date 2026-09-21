@@ -1,35 +1,35 @@
 Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860BA3DC4B8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F4E3C3F5E;
 	Mon, 21 Sep 2026 10:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789985751; cv=none; b=BgPhcF28OMPOz/8yfPK6Mho1TTLaoQfke09Vt4VB89E1BULAKnMt9X0Vg9q+BkcU9ciYmuBk1gKmSlUUciRGTbxNnjjbBufiYDYtMzx77a2lPPCawRGDeDcImrQluRGvBK9EhEAf8jW1CqzDNSsK3OJnF//ODZwTKnGEH3X74ic=
+	t=1789985751; cv=none; b=NI5dNi1fioH9FGGarNUg7STtMutJGQLh5a1W/mKmpHYbBpqrUioeye6ZHyZSWDBZH/Nc7WXoluw1C9OQFH1fgD4V7zXq8KPWLK/HnxZtwjdYAZi3PGXibQ+rs/BGfXkwekajLj/5LO7qoValQQ6s5WKU2HEkhWYxfw6SyOIsVsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789985751; c=relaxed/simple;
-	bh=yeRGN+0wWYWZ65R9hKxmT90VoewUaS+Ba/MM3Z9frHA=;
+	bh=TU93HLpvR1dP02TFve8ZQG/QDNfXb4wFD5OT8DFmE3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EuQDk+ujqEUMEGmaLcx5G8/M4ZKWlWxeX+AZj/XHszqX0796EZF0bVKyGwZHrMD9EfL9zrEHW8fl3VJ/ssVu8pylljsSl+n2TFgf/2WrbZ/XAuAnnvTDOXFQPaia9RjDpt4azYdHvhyj0aaejGKD+TOmO8zIiH20AGAc1BYbBoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=yGZKC71J; arc=none smtp.client-ip=168.119.38.16
+	 MIME-Version; b=jmYyBMehKJi/tfsKIU/MNOMNRFetRPSDlsDm1lZDw7m4L+ojj2yb8HqT6aLrZ5Piogr6w2sejIjr0SOxmWO5AkZXGbngMRl0rxn1KVTsSbx6gLS7YXnVseYCXg/L64o812Weyk2Iv72bzd8OW07kpxtPT4cCf6LgbRRLrLt6S8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NRuY5dBg; arc=none smtp.client-ip=168.119.38.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="yGZKC71J"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NRuY5dBg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=tETmZyietn5/+Tj0nR7lM4MbsVT0JGLtyF0nww7h+gY=;
-	t=1789985749; x=1791195349; b=yGZKC71JzWwS38jFQHJ3Yoq6a2F+2rx1lcsdYkwIfaYuB72
-	EBWca0bfwXBSI+arHtLJNOCj6O7yYrMsb6xv8WJg/antEUBDhdnA6FKx2c3gTitfZXeZ9JqxDBICZ
-	FjG1qq6nE3XE7x9JyZFtwNG9+kLIkWmmdvp1JmoUwsIjapCM4yZX90w7hrHq554i5uKJ74DAIlnbR
-	F5yBP2HmrMaK/smpLVTE0LzPhTyr1AOP6PC1rs6bpCvWc3B+WN9Dyo9+YXAF6KXTWPpIPDrFPb4wb
-	/SpEV+NubEg4LG20VQp4St5suyRnq51eQ+Bu8oEgHe2INW8Q67NSWF6hXF0mlf3A==;
+	Resent-Cc:Resent-Message-ID; bh=R58cUpihFiNJhRhiocI1VcD6CHdtizckpbaSpUo+PVg=;
+	t=1789985749; x=1791195349; b=NRuY5dBgAkwmMRkDfQYLn55QMSSmUYlS0eo/+5h2ownqiqL
+	zCSNffgOBUIPwabILCLSA5qWxWwbekSUKzdAJ3DNkaxeTrawwciP8+xoKG2cojICKr4QSDDx1m7iN
+	j9UP6ch+7aJ524N8/UgI/ZF0S571TQ9Eo/l1a8OyOvf7w1KfKOmuFA9TN3Sc523RIPt6Y3qrY+6BP
+	ieVQjAM+eWB87AwaEuYTm6zvf1dk+YBon5q3ENJGX29Re05y4Osszhtn529haJ4A4BTtliY7XI3FI
+	H6laQk1RpG+u2FKhEENpoXDLCuE0ISGcmXCsP345FoLExGp1VrVY8fKhj4xh1mtg==;
 Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
 	(Exim 4.98.2)
 	(envelope-from <johannes@sipsolutions.net>)
-	id 1x8b3n-00000005jvH-3VqX;
+	id 1x8b3o-00000005jvH-2LH3;
 	Mon, 21 Sep 2026 12:15:44 +0200
 From: Johannes Berg <johannes@sipsolutions.net>
 To: linux-trace-kernel@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH v6 2/4] tracing/timer: use __print_sym()
-Date: Mon, 21 Sep 2026 12:06:33 +0200
-Message-ID: <20260921101538.97286-8-johannes@sipsolutions.net>
+Subject: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
+Date: Mon, 21 Sep 2026 12:06:34 +0200
+Message-ID: <20260921101538.97286-9-johannes@sipsolutions.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260921101538.97286-6-johannes@sipsolutions.net>
 References: <20260921101538.97286-6-johannes@sipsolutions.net>
@@ -55,62 +55,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Johannes Berg <johannes.berg@intel.com>
 
-Use the new __print_sym() in the timer tracing, just to show
-how to convert something. This adds ~80 bytes of .text for a
-saving of ~1.5K of data in my builds.
+The __print_symbolic() could only ever print the core
+drop reasons, since that's the way the infrastructure
+works. Now that we have __print_sym() with all the
+advantages mentioned in that commit, convert to that
+and get all the drop reasons from all subsystems. As
+we already have a list of them, that's really easy.
 
-Note the format changes from
-
-print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { (1 << 0), "POSIX_TIMER" }, { (1 << 1), "PERF_EVENTS" }, { (1 << 2), "SCHED" }, { (1 << 3), "CLOCK_UNSTABLE" }, { (1 << 4), "RCU" }, { (1 << 5), "RCU_EXP" })
-
-to
-
-print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { 1, "POSIX_TIMER" }, { 2, "PERF_EVENTS" }, { 4, "SCHED" }, { 8, "CLOCK_UNSTABLE" }, { 16, "RCU" }, { 32, "RCU_EXP" })
-
-since the values are now just printed in the show function as
-pure decimal values.
+This is a little bit of .text (~100 bytes in my build)
+and saves a lot of .data (~17k).
 
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 ---
- include/trace/events/timer.h | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+ include/net/dropreason.h   |  5 +++++
+ include/trace/events/skb.h | 13 +++---------
+ net/core/skbuff.c          | 43 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 51 insertions(+), 10 deletions(-)
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index ca82fd62dc30..9a43f4fedaf6 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -441,26 +441,18 @@ TRACE_EVENT(itimer_expire,
- #undef tick_dep_mask_name
- #undef tick_dep_name_end
+diff --git a/include/net/dropreason.h b/include/net/dropreason.h
+index 1df60645fb27..dc4a60130c09 100644
+--- a/include/net/dropreason.h
++++ b/include/net/dropreason.h
+@@ -42,6 +42,11 @@ struct drop_reason_list {
+ extern const struct drop_reason_list __rcu *
+ drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
  
--/* The MASK will convert to their bits and they need to be processed too */
--#define tick_dep_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
--	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
--#define tick_dep_name_end(sdep)  TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
--	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
--/* NONE only has a mask defined for it */
--#define tick_dep_mask_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
-+#define tick_dep_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
-+#define tick_dep_mask_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
-+#define tick_dep_name_end(sdep) { TICK_DEP_MASK_##sdep, #sdep }
++#ifdef CONFIG_TRACEPOINTS
++const char *drop_reason_lookup(unsigned long long value);
++void drop_reason_show(struct seq_file *m);
++#endif
++
+ void drop_reasons_register_subsys(enum skb_drop_reason_subsys subsys,
+ 				  const struct drop_reason_list *list);
+ void drop_reasons_unregister_subsys(enum skb_drop_reason_subsys subsys);
+diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
+index 2945aa7fe9a7..991bf172a6ea 100644
+--- a/include/trace/events/skb.h
++++ b/include/trace/events/skb.h
+@@ -8,15 +8,9 @@
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
+ #include <linux/tracepoint.h>
++#include <net/dropreason.h>
  
--TICK_DEP_NAMES
-+TRACE_DEFINE_SYM_LIST(tick_dep_names, TICK_DEP_NAMES);
- 
- #undef tick_dep_name
- #undef tick_dep_mask_name
- #undef tick_dep_name_end
- 
--#define tick_dep_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
--#define tick_dep_mask_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
--#define tick_dep_name_end(sdep) { TICK_DEP_MASK_##sdep, #sdep }
+-#undef FN
+-#define FN(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
+-DEFINE_DROP_REASON(FN, FN)
 -
- #define show_tick_dep_name(val)				\
--	__print_symbolic(val, TICK_DEP_NAMES)
-+	__print_sym(val, tick_dep_names)
+-#undef FN
+-#undef FNe
+-#define FN(reason)	{ SKB_DROP_REASON_##reason, #reason },
+-#define FNe(reason)	{ SKB_DROP_REASON_##reason, #reason }
++TRACE_DEFINE_SYM_FNS(drop_reason, drop_reason_lookup, drop_reason_show);
  
- TRACE_EVENT(tick_stop,
+ /*
+  * Tracepoint for free an sk_buff:
+@@ -47,8 +41,7 @@ TRACE_EVENT(kfree_skb,
+ 	TP_printk("skbaddr=%p rx_sk=%p protocol=%u location=%pS reason: %s",
+ 		  __entry->skbaddr, __entry->rx_sk, __entry->protocol,
+ 		  __entry->location,
+-		  __print_symbolic(__entry->reason,
+-				   DEFINE_DROP_REASON(FN, FNe)))
++		  __print_sym(__entry->reason, drop_reason))
+ );
  
+ #undef FN
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index ab195b99c853..0c2d43797587 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -154,6 +154,49 @@ drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM] = {
+ };
+ EXPORT_SYMBOL(drop_reasons_by_subsys);
+ 
++#ifdef CONFIG_TRACEPOINTS
++const char *drop_reason_lookup(unsigned long long value)
++{
++	unsigned long long subsys_id = value >> SKB_DROP_REASON_SUBSYS_SHIFT;
++	u32 reason = value & ~SKB_DROP_REASON_SUBSYS_MASK;
++	const struct drop_reason_list *subsys;
++
++	if (subsys_id >= SKB_DROP_REASON_SUBSYS_NUM)
++		return NULL;
++
++	subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
++	if (!subsys)
++		return NULL;
++	if (reason >= subsys->n_reasons)
++		return NULL;
++	return subsys->reasons[reason];
++}
++
++void drop_reason_show(struct seq_file *m)
++{
++	u32 subsys_id;
++
++	rcu_read_lock();
++	for (subsys_id = 0; subsys_id < SKB_DROP_REASON_SUBSYS_NUM; subsys_id++) {
++		const struct drop_reason_list *subsys;
++		u32 i;
++
++		subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
++		if (!subsys)
++			continue;
++
++		for (i = 0; i < subsys->n_reasons; i++) {
++			if (!subsys->reasons[i])
++				continue;
++			seq_printf(m, ", { %u, \"%s\" }",
++				   (subsys_id << SKB_DROP_REASON_SUBSYS_SHIFT) | i,
++				   subsys->reasons[i]);
++		}
++	}
++	rcu_read_unlock();
++}
++#endif
++
+ /**
+  * drop_reasons_register_subsys - register another drop reason subsystem
+  * @subsys: the subsystem to register, must not be the core
 -- 
 2.55.0
 
