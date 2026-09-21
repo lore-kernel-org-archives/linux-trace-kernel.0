@@ -1,104 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-224.mta1.migadu.com [95.215.58.224])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD5746AA95;
-	Mon, 21 Sep 2026 09:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7617B463B6E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 09:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789982504; cv=none; b=D1NoE5VaOS6FtGVH7uI7/qmEfkCoGCXDfvIehSktf9+k5/8w3dsJx7XQkl25UAAHbKQ79SKCsBW8ipBnU0Lu2WLq3WWL53EoPkfRE/9ZdJyvdnGI2Pxv+YsQj+Mj0444HeD5WX64vVIHhunrkpVEfOFuLNbX8wTa8sS+ngSVsDc=
+	t=1789982517; cv=none; b=nKRMa324BH+35pvO785sZy/ELMuA8M59AT4RXTw0Gy0uBkCLBn8nKaGjS4YzTlFjW9eM8QsmvAAWybTkHostn/tn6SwUAf1m63YW1GdXz8tPdHMjogQhQ3iH4jsA6JRcY6aTwtIkjX3u2WWlaWpqmPEhl9qeZ6Cl1kjhQG3UlsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789982504; c=relaxed/simple;
-	bh=6TXcVd6Q7vpkgS2k7WfA5h3gSaKVOaGLRqQoTQSMvQk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Kze0VGfxkV1bHM5j8aQV543JBOXwj/ygxZm9I9ltg7GAiq3TRXEpPLlM4iapF8/GGw1b346mpJr6d8frAnSDEhvYF2GTm6L0ctKeOF7J0BUlcGijHVgsWxBlSRg/l/eVYAO43ZFS+rX5peImodsXDvBJPqDDlbo9i0M2DBkCIc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTpaMZy0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789982517; c=relaxed/simple;
+	bh=ftt2VmSueNigEmRUzim7RcAInXHUvUyDkJasA+sP/sI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XOtGeorUdmfBtLsCGJN8Rfgy8flxeRWnmybxU1oMLLwzsrbvxzHEDo9kAqlrur+3k6uzEvvdZXyQAFUFoonXII+r8sw4M48qFsedlnjrXzqB/M9S2Q87Z6QKf/VC9Lg5bESHOrjBKGTVs6Eu3VmU59h0fCZulPVwaD172S7W8b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jWsbvQJn; arc=none smtp.client-ip=95.215.58.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTpaMZy0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E361F00899;
-	Mon, 21 Sep 2026 09:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789982503;
-	bh=sbAQCh/iiIl8wM8S6UzeolT9aKBn1Y3lk+yQsVY3/qI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=fTpaMZy0a0En7sv3Bmy7pEMZwkJNLJM7DVu8dbUDe2G1qo6cEHhwpFBje7rrklyq/
-	 0lYnTtmQvYk9HmlSEidrSD6CqG+FSiSrU2txwhEnI0iCyjZAW5yfObMondgJzFTedt
-	 jgiQXAq7fVkuT47pvITGA7QnoohmYF0y24KS60DiRsLdlyvo6HmEaKZEVPLY4O/vjz
-	 6+BPCIcKBCeWetRRlJqK79qb5xLfDJczOWCCZpnVF+AS5ovfqY6KoifNlJdlpvTUrG
-	 zUUV+7Biipl7NCwAWAJLVl6Q7yjgBvwwtKxM7HHu8rMN9BuGDO6/VDK98Q3YiI8tlE
-	 Eq9FLv2NgV3aw==
-Date: Mon, 21 Sep 2026 18:21:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v16 08/13] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20260921182134.e21fc14f88cd4c5946d80fab@kernel.org>
-In-Reply-To: <20260914143011.81BA81F000FF@smtp.kernel.org>
-References: <178939017565.94750.9431053336761330458.stgit@devnote2>
-	<178939027201.94750.11818590613347692117.stgit@devnote2>
-	<20260914143011.81BA81F000FF@smtp.kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jWsbvQJn"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=ftt2VmSueNigEmRUzim7RcAInXHUvUyDkJasA+sP/sI=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789982513; v=1; x=1790587313;
+ b=jWsbvQJno9CuCyQVTZB9lhN7qsOidsqwQTyAIOnMC7/GD/rn2vKIe+LgRS26jI5FcznCU58R
+ mIUL3pOsfkgA9Jr6AuJrp73cNcmcaSTvjS0o1R5wKXId1z/TjWu1fFmM0N1QApAjsWPJrdeFXv3
+ L2EIteOtnYoad3rIZ50U9dg0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 63f02883ed771dab;
+	Mon, 21 Sep 2026 09:21:53 +0000
+X-Mizu-Trace-ID: 63f02883ed771dab
+X-Migadu-Flow: FLOW_OUT
+From: Ye Liu <ye.liu@linux.dev>
+To: Michal Hocko <mhocko@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Ye Liu <liuye@kylinos.cn>,
+	SJ Park <sj@kernel.org>,
+	Gregory Price <gourry@gourry.net>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	peterz@infradead.org,
+	paulmck@kernel.org,
+	mingo@redhat.com,
+	rostedt@goodmis.org,
+	jpoimboe@kernel.org,
+	mic@digikod.net,
+	oleg@redhat.com,
+	tglx@kernel.org,
+	david@kernel.org,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com,
+	rafael@kernel.org,
+	gnoack3000@gmail.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	rientjes@google.com,
+	shakeel.butt@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	will@kernel.org,
+	boqun@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	tony.luck@intel.com,
+	reinette.chatre@intel.com,
+	x86@kernel.org,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	pavel@kernel.org,
+	lance.yang@linux.dev,
+	mhiramat@kernel.org,
+	pmladek@suse.com,
+	longman@redhat.com,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	kprateek.nayak@amd.com,
+	mark.rutland@arm.com,
+	Dave.Martin@arm.com,
+	james.morse@arm.com,
+	babu.moger@amd.com
+Subject: [PATCH v4 02/15] mm/oom_kill: convert process/thread iterators to for_each_*_rculock
+Date: Mon, 21 Sep 2026 17:20:48 +0800
+Message-Id: <20260921092101.89285-3-ye.liu@linux.dev>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260921092101.89285-1-ye.liu@linux.dev>
+References: <20260921092101.89285-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Sep 2026 14:30:11 +0000
-sashiko-bot@kernel.org wrote:
+From: Ye Liu <liuye@kylinos.cn>
 
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Unhandled error from `echo 1 > enable` causes false test failure under `set -e` when hardware watchpoints are unsupported.
-> --
-> 
-> commit 70eb02867fbc0203498e0161a5c4b437b562d025
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> selftests: tracing: Add a basic testcase for wprobe
-> 
-> Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-> tests adding and removing operations of the wprobe event.
-> 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
-> > new file mode 100644
-> > index 0000000000000..647c37d5e4c84
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
-> 
-> [ ... ]
-> 
-> > +if [ ! -d events/wprobes/my_wprobe ]; then
-> > +    echo "Failed to create wprobe event directory"
-> > +    exit_fail
-> > +fi
-> > +
-> > +echo 1 > events/wprobes/my_wprobe/enable
-> 
-> [Severity: Medium]
-> Will this script falsely report a failure if hardware watchpoints are
-> exhausted or unsupported on the platform?
-> 
-> Writing to the enable file triggers enable_trace_wprobe() and eventually
-> register_wide_hw_breakpoint(), which allocates physical hardware debug
-> registers. If this allocation fails (e.g., returning -ENOSPC or -EOPNOTSUPP),
-> the echo command will return a non-zero exit status.
-> 
-> Because ftracetest runs test scripts with 'set -e' (errexit) active, this
-> error will abort the script immediately and fail the test instead of safely
-> skipping it.
-> 
-> Should this write be guarded with something like "|| exit_unsupported" to
-> handle expected hardware limitations?
+Replace the manual rcu_read_lock()/rcu_read_unlock() pairs wrapping
+for_each_process()/for_each_thread() loops with for_each_process_rculock()
+and for_each_thread_rculock(), which scope the RCU read lock to the
+loop body via scoped_guard(rcu).
 
-Hmm, this is not unsupported, but unresolved (environmental test
-failure case).
+No functional change.
 
-Thanks,
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: SJ Park <sj@kernel.org>
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+---
+ mm/oom_kill.c | 20 +++++---------------
+ 1 file changed, 5 insertions(+), 15 deletions(-)
 
-
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 5f372f6e26fa..ef2e1c423c1d 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -94,8 +94,7 @@ static bool oom_cpuset_eligible(struct task_struct *start,
+ 	bool ret = false;
+ 	const nodemask_t *mask = oc->nodemask;
+ 
+-	rcu_read_lock();
+-	for_each_thread(start, tsk) {
++	for_each_thread_rculock(start, tsk) {
+ 		if (mask) {
+ 			/*
+ 			 * If this is a mempolicy constrained oom, tsk's
+@@ -114,7 +113,6 @@ static bool oom_cpuset_eligible(struct task_struct *start,
+ 		if (ret)
+ 			break;
+ 	}
+-	rcu_read_unlock();
+ 
+ 	return ret;
+ }
+@@ -368,11 +366,9 @@ static void select_bad_process(struct oom_control *oc)
+ 	else {
+ 		struct task_struct *p;
+ 
+-		rcu_read_lock();
+-		for_each_process(p)
++		for_each_process_rculock(p)
+ 			if (oom_evaluate_task(p, oc))
+ 				break;
+-		rcu_read_unlock();
+ 	}
+ }
+ 
+@@ -430,14 +426,12 @@ static void dump_tasks(struct oom_control *oc)
+ 		struct task_struct *p;
+ 		int i = 0;
+ 
+-		rcu_read_lock();
+-		for_each_process(p) {
++		for_each_process_rculock(p) {
+ 			/* Avoid potential softlockup warning */
+ 			if ((++i & 1023) == 0)
+ 				touch_softlockup_watchdog();
+ 			dump_task(p, oc);
+ 		}
+-		rcu_read_unlock();
+ 	}
+ }
+ 
+@@ -894,8 +888,7 @@ static bool task_will_free_mem(struct task_struct *task)
+ 	 * are dying as well to make sure that a) nobody pins its mm and
+ 	 * b) the task is also reapable by the oom reaper.
+ 	 */
+-	rcu_read_lock();
+-	for_each_process(p) {
++	for_each_process_rculock(p) {
+ 		if (!process_shares_mm(p, mm))
+ 			continue;
+ 		if (same_thread_group(task, p))
+@@ -904,7 +897,6 @@ static bool task_will_free_mem(struct task_struct *task)
+ 		if (!ret)
+ 			break;
+ 	}
+-	rcu_read_unlock();
+ 
+ 	return ret;
+ }
+@@ -960,8 +952,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 * That thread will now get access to memory reserves since it has a
+ 	 * pending fatal signal.
+ 	 */
+-	rcu_read_lock();
+-	for_each_process(p) {
++	for_each_process_rculock(p) {
+ 		if (!process_shares_mm(p, mm))
+ 			continue;
+ 		if (same_thread_group(p, victim))
+@@ -982,7 +973,6 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 			continue;
+ 		do_send_sig_info(SIGKILL, SEND_SIG_PRIV, p, PIDTYPE_TGID);
+ 	}
+-	rcu_read_unlock();
+ 
+ 	if (can_oom_reap)
+ 		queue_oom_reaper(victim);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
