@@ -1,86 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62AF4FE2E2;
-	Tue, 22 Sep 2026 07:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9913F211466
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 07:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790061528; cv=none; b=N7zA3H35PF+Sh/MzN+LS/Tw8JBWBszkyUl/gMXQcl3Tw25Iz4jiEXCxpo/3dkeKgppLokfS1xCmgdQq1iEyaZ/+2yt2Lvo43SwZtmKMsM+O+krQVZaRm7io0oDIbCXFA98RVCFpRG8JiMQngj6MGT4l1sss3+o1JKvxexFU7H+Y=
+	t=1790062145; cv=none; b=qQFeEACGmrzO9M4MawOzLAI7H3sp9VWWh1c/DLvEpTR7B6rEUP2dGjNVMFnThJ9NRvxLXRs7NktJGJ053IFvecFlzCoGgETk0Kb3dis6v3uinHZf0VPVnhhrfJ6VDJLpSh6nkMqAUh6hYMuuOtCo6CsvXGqHH2ENOSR98FtRTCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790061528; c=relaxed/simple;
-	bh=uV7pocMRh8zCF3luyhdWrrGrT1YqzbHFJOU09h4L8+g=;
+	s=arc-20240116; t=1790062145; c=relaxed/simple;
+	bh=XPp/PcjFWgVB5+Bw5ABOkUP0IsKJws4n3xxxAV9CNdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GGt6J6/IPPPE/6Vyw4iuhGCVtqcYvD3m+ylxJZIq38VCpubJ7pvzSDaQDPCQobj2bDftZBeLIrKn7F13KMeW4bsLpE17Y6mYp+FmSN3rhNOYC0EsStmb2OC+m9Y805NbTLmCu9LFEIXuNd919GwiocafOmixmWyXmvtSgFM1ytI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgDnDhi+; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type:Content-Disposition; b=YN7yXZH46RKE5ew35cu3i3hWHwEhB9YI9cR+uoQl1m97QwqS19x8Hmn1AS4OUls9dKjQtzYm+IJtqoLkMLMV6fhI+OI+ck8D76ebylXqddmUTroE5AvdLnMwiMkTiWZTfgAZ05FyBBnfTQEjpdF/ul6l5t8VytdzjpQE/lruFKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I3s/AH7F; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgDnDhi+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECB71F000FF;
-	Tue, 22 Sep 2026 07:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790061522;
-	bh=pTlsg96OYWHuA+B9t5BZYqZhHGwqt3xddf8KM6DyEe4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SgDnDhi+n4gPVBmx54ns+OIrziXlJrCBKgmr6rjUz3yVfElw8VjBd/yEJdN6Y4sqr
-	 ol5PCqJkS/gpUlFghFigeC6+y/Je1JWIRDSC4z7TzVZXIlVnFyreX5sF0DQ0vpfk6n
-	 Cyyf7IfwEHFldY6xSYoqk/pJWBOwya9zzMyIfGYF82Vu2mv9g/yF887NfGGX2MX58K
-	 FecMi41qzp02o5Nm61q/9qc1gKUnyjglfcmoIF3CRi4jXUbrRmsbIrnY7JpL/kx0oH
-	 LhevY1ArNZU2WmsZ3hFMA/eAUbby2ndV5s9jY0AsOOXM48Rv3h0lyAwhPNvsr1+Hzy
-	 +ekTNN56EbgyQ==
-Date: Tue, 22 Sep 2026 09:18:39 +0200
-From: Antoine Tenart <atenart@kernel.org>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Johannes Berg <johannes.berg@intel.com>, Aaron Conole <aconole@redhat.com>, 
-	Eelco Chaudron <echaudro@redhat.com>, dev@openvswitch.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Adrian Moreno <amorenoz@redhat.com>
-Subject: Re: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
-Message-ID: <arIrrr5Kk-XqnqDz@kwain>
-References: <20260921101538.97286-6-johannes@sipsolutions.net>
- <20260921101538.97286-9-johannes@sipsolutions.net>
- <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
- <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3s/AH7F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790062141;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1nV4OYi178lUeQW0YjjIgpTN9nSwgzP2y4G9yO7aqk0=;
+	b=I3s/AH7FZF4OFVZL5DNi0A0QoodJQ6tLy1xdVRBBM0hCJ7T9AVT6FHQAQJD/4ow5no4UWy
+	1OoLU/yRZSeKAGF08HV+rh6EtLLEbHqQmDDMyS35OGLLIy42ehpOLdm42NcGZjlw1PH8oa
+	fCLp8bQ7E90r9jLwtttpoDybtJ5TQ4g=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-JtQeQhCuOTOpX21smiv1SA-1; Tue,
+ 22 Sep 2026 03:28:57 -0400
+X-MC-Unique: JtQeQhCuOTOpX21smiv1SA-1
+X-Mimecast-MFC-AGG-ID: JtQeQhCuOTOpX21smiv1SA_1790062136
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E74F0180A94D;
+	Tue, 22 Sep 2026 07:28:55 +0000 (UTC)
+Received: from fedora (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0492D1956041;
+	Tue, 22 Sep 2026 07:28:52 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 22 Sep 2026 09:28:55 +0200 (CEST)
+Date: Tue, 22 Sep 2026 09:28:51 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Danish Khateeb <danishkhateeb03@gmail.com>
+Cc: Andreas Larsson <andreas@gaisler.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sparc64: uprobes: use kmap_local_page() in copy_to_page()
+Message-ID: <arIuM7PdJ9gi222t@redhat.com>
+References: <20260922023111.49951-1-danishkhateeb03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20260922023111.49951-1-danishkhateeb03@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: 98uykZom8e_SbFZfUpc1qU02GaU_9lKBo5X09VampRM_1790062136
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
 
-On Tue, Sep 22, 2026 at 12:23:55AM +0200, Ilya Maximets wrote:
-> On 9/22/26 12:03 AM, Matthieu Baerts wrote:
-> > Hi Johannes,
-> > 
-> > (+Cc openvswitch devs)
-> > 
-> > On 21/09/2026 12:06, Johannes Berg wrote:
-> >> From: Johannes Berg <johannes.berg@intel.com>
-> >>
-> >> The __print_symbolic() could only ever print the core
-> >> drop reasons, since that's the way the infrastructure
-> >> works. Now that we have __print_sym() with all the
-> >> advantages mentioned in that commit, convert to that
-> >> and get all the drop reasons from all subsystems. As
-> >> we already have a list of them, that's really easy.
-> >>
-> >> This is a little bit of .text (~100 bytes in my build)
-> >> and saves a lot of .data (~17k).
-> > Thank you for working on that! But it looks like it breaks the
-> > openvswitch test:
-> > 
-> > https://netdev-ctrl.bots.linux.dev/logview.html?f=%2Flogs%2Fvmksft%2Fnet%2Fresults%2F833743%2F9-openvswitch-sh%2Fstdout#L168
-> > 
-> > Maybe the test needs to be adapted to get the same info differently?
-> > (and adding CONFIG_TRACEPOINTS to the selftest config file)
-> The parsing in the test will definitely need to be updated, i.e.,
-> the numbers swapped with the names of the drop reasons.
-> 
-> IIUC, this change only affects the printing and doesn't affect debugging
-> tools like retis that attempt to surface the drop reasons.  But, maybe
-> Adrian and Antoine (CCed) may want to have a glance as well.
+On 09/21, Danish Khateeb wrote:
+>
+> --- a/arch/sparc/kernel/uprobes.c
+> +++ b/arch/sparc/kernel/uprobes.c
+> @@ -33,10 +33,10 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
+>  static void copy_to_page(struct page *page, unsigned long vaddr,
+>  			 const void *src, int len)
+>  {
+> -	void *kaddr = kmap_atomic(page);
+> +	void *kaddr = kmap_local_page(page);
+>  
+>  	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
+> -	kunmap_atomic(kaddr);
+> +	kunmap_local(kaddr);
+>  }
 
-Yes, that's fine.
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+
