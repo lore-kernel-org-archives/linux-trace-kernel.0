@@ -1,105 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA2252D2CC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 10:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910BA53978E;
+	Tue, 22 Sep 2026 11:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790072167; cv=none; b=Vzd6HQchDVoH4UZ2v6JeNFLy1ZuIoQ+kjFiWbnirgKbzFidMr5mMYJJs/+ly7kUhbeYqTEFUfLU/3pGXNddRZTQ/tr4PHxiFycFHJrgsp7M5witBvGkio1CMBVW3nKVWBtB1V2lg7hjF2s8RR/FsnHtOnjxq02FAph/VWTvYkfE=
+	t=1790075412; cv=none; b=T+EIBg8zIeQVM4zSlyVYRwKb6ZX6NMb/wcIYKIHSfbHSYVfJsxoMe/j54HGV/DmxDl5ml4dWLoNSdc387kPKb1Ev4XJLjGv42auFjyyzBz/SvK+w52aMOMi9wFdSKRBAI8vpUge/q9nEmx43NvjJUi1ZjfBTGsXtXGKm7pnF7Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790072167; c=relaxed/simple;
-	bh=63xvl/dCNxPpRa7UmMA45Eo3r9o0ixOEnafEzn+SAv8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=q5Fw6UYbcsa0vmrT83ty6ZBiVUNHiw9KnkIY3Kvr77vr1nbA7b5DFKSZjFSk5Imao/MU/p/rKlS1u3hYQsV0ZFxlbOWN7t04E/PwpHqpwV0ozzVzZxO+68nJmOx1HByzEqr1IbJRWqxOu8nCb/HlE5Bq7KI6h9Iar9gFslPR8mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZilu+Lp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790075412; c=relaxed/simple;
+	bh=WkDJvOoP+CW0hWmbIbKnYDnpvPpJ0kxB6wzPOLTKlqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qx7gbBgn90IxwjLwW+MbA1Na9Rgbfdso+ZTphM6IXDtjPQK88VXtXqhYUpzKZUuP5yB3dLDYHdDNcYW+RUTQKcd2Kt/kv13SuhrAdg3Z1Ts+p3otAq4tOhvwSHofFnTNPNbqg8G//IJ4MOuKIXOmm2SlcMKlpYsn6kjGxbgJpIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=XY/KLR+E; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZilu+Lp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1451F00898;
-	Tue, 22 Sep 2026 10:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790072158;
-	bh=62/yT5MZHoqie2TwgVtD1VGhc/73aaWFHRNupMJhNxU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fZilu+LpbuzBTB4qUJQu/wNr7cn1vHbSgb6ZyASO1RkVzUYX56tLlYPVl/Um9xOrw
-	 lIriQQW+qAcZhVsKvaa1KXXKWREurHTDqz8WRdLKC6xPiVQdpFDmm+Fxz6HKLnLNxd
-	 qy6E2SU2vLA6GyvJ3fr0qimVhho0EJzpBJ5XXwauKdX82NuGHhIpo/6f88ZNYb5PVk
-	 m8zfD4yHBlErIz+KEzya+nIILsOEZOMxKFVVG8zwoRQ3VPKO4gUqt2s9LPwKCely1g
-	 WucxXG8H7LAPnSkoBw0Pv1SKwKc2S/3/Bha9cQxpO7efk8xlU3V1l4Zjja6X/CoA18
-	 DXnI60wPuOOjg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 4/4] net: drop_monitor: use drop_reason_lookup()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Johannes Berg" <johannes@sipsolutions.net>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260921101538.97286-10-johannes@sipsolutions.net>
-References: <20260921101538.97286-6-johannes@sipsolutions.net>
- <20260921101538.97286-10-johannes@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 10:15:57 +0000
-Message-Id: <20260922101558.BC1451F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="XY/KLR+E"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
+	Resent-Message-ID:In-Reply-To:References;
+	bh=3MvPJdWCA/rtkiEzKSTMgdlx6FiLQyGC5WVz8c6+6Y4=; t=1790075409; x=1791285009; 
+	b=XY/KLR+E55afSSFH3G2bhpj7qSBj3WQv008AHl5jX8akuF+CZ/Shms56omljGIvdgrmyOtiycKY
+	LiLQqzZTzWqIbE0jTFeCNAV6qJuUc0qVI97LWc3ojJLr7FrdorgmbGaYsrql1uGaPGHZtnoELxUHL
+	fa+8BMCmhCj2dr68FaaR9qyj8Gq+seLilpQE1XxVbKLsUQgdQRs5/apAL2ywtHzR+4Kd1Zc2dZVAf
+	p20phCpR2YTbHVGZnDlKhH5lnE2ycpAd11zzzGB03Pz0W44elYthK+ic4Y4RiwrUOD1lIyKdzRgLF
+	BcAifmPidb24Ht7Oex2uQPhrT5xI0MW04RVg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1x8yNr-00000006qo8-0PlI;
+	Tue, 22 Sep 2026 13:09:59 +0200
+From: Johannes Berg <johannes@sipsolutions.net>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ilya Maximets <i.maximets@ovn.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Aaron Conole <aconole@redhat.com>,
+	Eelco Chaudron <echaudro@redhat.com>,
+	dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Antoine Tenart <atenart@kernel.org>
+Subject: [PATCH v7 0/4] tracing: improve symbolic printing
+Date: Tue, 22 Sep 2026 13:08:39 +0200
+Message-ID: <20260922110955.363677-6-johannes@sipsolutions.net>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] build: missing prototype for drop_reason_lookup() on !CONFIG_TRACEP=
-OINTS
---
+Hi,
 
-commit 052e9cafef9be2c8ee3e8254caa3827b7ac1f5b6
-Author: Johannes Berg <johannes.berg@intel.com>
+Resend with the selftests and the two sashiko findings.
 
-net: drop_monitor: use drop_reason_lookup()
+v2 was:
+ - rebased on 6.9-rc1
+ - always search for __print_sym() and get rid of the DYNPRINT flag
+   and associated code; I think ideally we'll just remove the older
+   __print_symbolic() entirely
+ - use ':' as the separator instead of "//" since that makes searching
+   for it much easier and it's still not a valid char in an identifier
+ - fix RCU
 
-This commit updates drop_monitor to use drop_reason_lookup() instead of
-exporting the drop_reasons_by_subsys list. It unconditionally exposes the
-drop_reason_lookup() function.
+v3:
+ - fix #undef issues
+ - fix drop_monitor default
+ - rebase on linux-trace/for-next (there were no conflicts)
+ - move net patches to 3/4
+ - clarify symbol name matching logic (and remove ")" from it)
 
-> diff --git a/include/net/dropreason.h b/include/net/dropreason.h
-> index dc4a60130c09c..4680da5964ef7 100644
-> --- a/include/net/dropreason.h
-> +++ b/include/net/dropreason.h
-[ ... ]
-> -/* Note: due to dynamic registrations, access must be under RCU */
-> -extern const struct drop_reason_list __rcu *
-> -drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
-> -
->  #ifdef CONFIG_TRACEPOINTS
->  const char *drop_reason_lookup(unsigned long long value);
+v4:
+ - fix non-module build and possibly dynamic event handling
 
-[Severity: Low]
-Will this cause a missing prototype build warning when CONFIG_TRACEPOINTS
-is disabled?
+v5: (https://lore.kernel.org/all/20240614081956.19832-6-johannes@sipsolutions.net/)
+ - fix build warning in non-module build
 
-The drop_reason_lookup() prototype in include/net/dropreason.h is condition=
-ally
-guarded by CONFIG_TRACEPOINTS.
+v6: (https://lore.kernel.org/linux-trace-kernel/20260921101538.97286-6-johannes@sipsolutions.net/)
+ - rebase
+ - fix nit from Paolo (I hope, I don't remember changing it
+   but it looks fixed!)
+ - fix crash due to wrong data placement
 
->  void drop_reason_show(struct seq_file *m);
-[ ... ]
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index de294ce08a32c..a4ae26acc68c2 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-[ ... ]
-> -EXPORT_SYMBOL(drop_reasons_by_subsys);
-> =20
-> -#ifdef CONFIG_TRACEPOINTS
->  const char *drop_reason_lookup(unsigned long long value)
+v7: (this version)
+ - update ovs selftest
+ - don't ifdef drop_reason_lookup() prototype
+ - fix section alignment
 
-However, the function definition in net/core/skbuff.c is now compiled
-unconditionally. This causes a -Wmissing-prototypes compiler warning when
-compiling the kernel with CONFIG_TRACEPOINTS disabled.
 
-Could this break builds where WERROR or W=3D1 is enabled?
+To recap, it's annoying to have
 
->  {
->  	unsigned long long subsys_id =3D value >> SKB_DROP_REASON_SUBSYS_SHIFT;
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: 0x20000
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260921101538.9728=
-6-6-johannes@sipsolutions.net?part=3D4
+and much nicer to see
+
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: RX_DROP_MONITOR
+
+but this doesn't work now because __print_symbolic() can only
+deal with a hard-coded list (which is actually really big.)
+
+So here's __print_sym() which doesn't build the list into the
+kernel image, but creates it at runtime. For userspace, it
+will look the same as __print_symbolic() (it literally shows
+__print_symbolic() to userspace) so no changes are needed,
+but the actual list of values exposed to userspace in there
+is built dynamically. For SKB drop reasons, this then has all
+the reasons known when userspace queries the trace format.
+
+I guess patches 3/4 should go through net-next, so not sure
+how to handle this patch series. Or perhaps, as this will likely
+not cause conflicts (in fact I've been rebasing it for years now),
+go through tracing anyway with an Ack from netdev? But I can
+also just wait for the trace patch(es) to land and resubmit the
+net patches after. Assuming this looks good at all :-)
+
+Thanks,
+johannes
+
