@@ -1,250 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB6C3A16BA;
-	Tue, 22 Sep 2026 02:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E851C2324;
+	Tue, 22 Sep 2026 02:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790044775; cv=none; b=utu6vLYUWwPBttvpn3plRDhG1LLaQeaSDFlsayPtI6xP7sjyZdTJ/wyGssteGf6xLuVMOAqlNjJLViEDXTgZMwpFhh0Pr4usAfsXvWYZF7Ps/hhfg36/1RY8MbZCWeA2Oxm8YjouMpWUnRQhTBtmhtXMWAxgE8hp/QOSRlM/Dic=
+	t=1790045207; cv=none; b=PyBGaRyXkFgUutSbmZ2xazqLTRd7z1tjfEGjl8kKnm/1yS9aN/eIKQ/EXkTj7Vi7pT2MUaq7icffY70PNMbJ/698GRQtMN8E01M6PwzreO1IOUxlfWIMSR6d70YRPr7EBSGZvzF/4pzp/wAyB4SUqnDcAWFAnPX2rC160hnduVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790044775; c=relaxed/simple;
-	bh=oZLpOhucHC43z4ds0CWKTjnSopVVOHC64Q7+aCD2T9U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pVudwEDAqHqQEr5ExLzb8l8sZB7Z20n3NIrgbQadvkkAKLTHJAiA/+cHtOyuYcCG3i/PakLC5s6rQ7Y+2mmpEEyYE8NMabCvGaQHWAOXzBFohjPo5t6VES8fsrkBfi798iaP9E+AJYJ31NMzg7DU2+VXY0+StUXEejuW3Ngd4cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grS8wGjB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790045207; c=relaxed/simple;
+	bh=OXEWaNDjzGTksV7cNFYTonPqUP/XiFeUvgjFF2t/SZw=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=K8g6OgxGzWKkoNoouGMtpXaAX8xEKpvOoqxtMinK4MlIe+QAIyttbjjoOLs0CE8xrcEULW7CYqeKlZUGhCN5BqPae8YxJWDcfVMBAypB5lAelHD0RMOJXZDDbGfcdlndGVPvACBj03PJcYT0tJZay4px6NNpSxM1YdiD23DQAQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqqWGvkK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grS8wGjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 624791F000FF;
-	Tue, 22 Sep 2026 02:39:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqqWGvkK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D961F000FF;
+	Tue, 22 Sep 2026 02:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790044766;
-	bh=/SAfsVYoWNOJHq26yUF7h5nEJM0KRG0iyQixYLdJd5A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=grS8wGjBF4E6C9/mcHeILgxNYrsa6oMXLRS4na/8KMmB4+53iikNfdmTyH5i+6Zf+
-	 8YJg0xNC4ZVXroZwuGKsSRmAuu4/iQz6zUkhLTuWTS9P6QmHtW8yhljyAJfpUkC8Og
-	 ECCn45hx1OOxUswv48gEzLwnzFdcoutxzmBL9LaXNnI9KSuwNjydL4/4hpziCOs/Lm
-	 jl8GrZHIA5LQmZQE3V8TStaJD3/yRG5GjvoHdy6HvjY6avL2qsOTT0z8stwjwJa1VS
-	 SHJTetGRQgyjaUOLjTzH7ZU7dMmY+3j47ThBwh3LDJhd6QBhTN+aKxalTJ/vFmYSqD
-	 b2u0OjWOHrPJg==
-Date: Tue, 22 Sep 2026 11:39:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v16 10/13] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Message-Id: <20260922113923.351783c6db12f18befe1db79@kernel.org>
-In-Reply-To: <20260914145845.1D9D21F000FF@smtp.kernel.org>
-References: <178939017565.94750.9431053336761330458.stgit@devnote2>
-	<178939029574.94750.11636803595861231046.stgit@devnote2>
-	<20260914145845.1D9D21F000FF@smtp.kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1790045205;
+	bh=MOzDwy6eO8/blUPkxP2vb6lYBtsThXRvf8h6GqiRrsM=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=fqqWGvkKP5R4H4IDzDQLhHwjS8qf98iTqGjnN5klxZksBGyg9RIM0K1IMeI+zOdT1
+	 WAW0aPsU49Y0W6gxe3rj6zh8n2VBCDwUFgTVCNtXN9QvfuBXD0wdvJ7kI60h/TLMaV
+	 FKkC2iOAaANbDJY84faspyLJIEkbhIr6dZu1VqS7s81IZbtDfozyJkfSdqZGUwgbeL
+	 wWQw+B2T9h+q9ZeA1OXjS9RaNlfYAoU7Etb4ThIYyqqxfYFJNXcnwC0n3wob0ZN2rn
+	 66oqIcMvj1j3o7E9nwfcOTscSiQWL0XPTkb8JRFirk0wwAaF8z+S+E6+Jjsaa1efEy
+	 lTqPV2/D6qoww==
+Content-Type: multipart/mixed; boundary="===============8280890974195556375=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Message-Id: <8dd3c1cf39ecece85de180fd63a78ea52684202c66ea329fb08d9c444365b1ca@mail.kernel.org>
+In-Reply-To: <20260922015417.130869-2-yangfeng59949@163.com>
+References: <20260922015417.130869-2-yangfeng59949@163.com>
+Subject: Re: [PATCH v2 bpf-next 2/2] selftests/bpf: Check bpf_skb_output() tracing restrictions
+From: bot+bpf-ci@kernel.org
+To: yangfeng59949@163.com,kpsingh@kernel.org,matt@bobrowski.net,song@kernel.org,jolsa@kernel.org,ihor.solodrai@linux.dev,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Tue, 22 Sep 2026 02:46:42 +0000 (UTC)
 
-On Mon, 14 Sep 2026 14:58:44 +0000
-sashiko-bot@kernel.org wrote:
+--===============8280890974195556375==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
-> - [High] Missing RCU synchronization in the error path of wprobe trigger registration leads to a Use-After-Free of hardware breakpoint perf_event structures.
-> - [High] Hardware breakpoint addresses are not updated for offline CPUs, leading to stale addresses when CPUs come online.
-> - [Medium] The 'count' parameter is decremented on trigger evaluation misses, causing the trigger to exhaust its count without actually modifying the watchpoint.
-> - [Medium] The wprobe event permanently leaks as enabled when the trigger is unregistered because `EVENT_FILE_FL_SOFT_DISABLED_BIT` is manually cleared.
-> - [Low] A field named 'unlimited' is silently ignored by `clear_wprobe` if no count keyword is provided.
-> --
-> 
-> commit 146ca411781d7203b266aa3745d30641c87b97d2
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
-> 
-> Add set_wprobe and clear_wprobe event triggers to dynamically attach
-> and detach hardware breakpoint address monitoring based on event field
-> contents.
-> 
-> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
-> 
-> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> > index 9c6100b63e8d9..55a201504bb0b 100644
-> > --- a/kernel/trace/trace_wprobe.c
-> > +++ b/kernel/trace/trace_wprobe.c
-> 
-> [ ... ]
-> 
-> > @@ -231,6 +303,12 @@ static struct trace_wprobe *alloc_trace_wprobe(const char *group,
-> > 
-> > +static void wprobe_work_func(struct work_struct *work)
-> > +{
-> > +	struct trace_wprobe *tw = container_of(work, struct trace_wprobe, work);
-> > +
-> > +	on_each_cpu(wprobe_smp_update_func, tw, true);
-> 
-> [Severity: High]
-> Could this leave hardware breakpoints with stale addresses on offline CPUs?
-> 
-> on_each_cpu() only broadcasts to currently online CPUs, so offline CPUs
-> won't execute trace_wprobe_update_local(). When an offline CPU comes
-> online, won't the perf event core reinstall the hardware breakpoint using
-> the old, stale address since it wasn't updated here?
+> commit 586c31fe079529e232f3760545b476754b91501b
+> Author:     Feng Yang <yangfeng@kylinos.cn>
+> AuthorDate: Tue Sep 22 09:54:17 2026 +0800
+> Commit:     Kernel Patches Daemon <kernel-patches-bot@fb.com>
+> CommitDate: Mon Sep 21 19:02:48 2026 -0700
+>
+>     selftests/bpf: Check bpf_skb_output() tracing restrictions
+>
+>     Add verifier coverage for the bpf_skb_output() tracing policy. Verify
+>     that an fentry program can still use the helper, while the equivalent
+>     fexit program is rejected at load time.
+>
+>     Signed-off-by: Yun Lu <luyun@kylinos.cn>
+>     Signed-off-by: Feng Yang<yangfeng@kylinos.cn>
 
-OK, introduce cpu hotplug callback to handle it.
+There's a formatting issue in the second Signed-off-by line - it's missing
+the space between the name and email address. Should this be:
 
-> 
-> [ ... ]
-> 
-> > @@ -773,3 +866,538 @@ static __init int init_wprobe_trace(void)
-> 
-> [ ... ]
-> 
-> > +static void wprobe_trigger(struct event_trigger_data *data,
-> > +			   struct trace_buffer *buffer,  void *rec,
-> > +			   struct ring_buffer_event *event)
-> > +{
-> > +	struct wprobe_trigger_data *wprobe_data = data->private_data;
-> > +	struct trace_wprobe *tw = wprobe_data->tw;
-> > +	unsigned long addr = 0, flags;
-> > +	bool changed = false;
-> 
-> [ ... ]
-> 
-> > +	raw_spin_lock_irqsave(&tw->lock, flags);
-> > +
-> > +	if (!wprobe_data->clear) {
-> > +		if (!trace_wprobe_is_valid_addr(addr, tw->len)) {
-> > +			atomic_inc(&tw->missed);
-> > +			goto out;
-> > +		}
-> > +		if (tw->addr == WPROBE_DEFAULT_CLEAR_ADDRESS) {
-> > +			/* Skip if a previous work is still propagating the address */
-> > +			if (atomic_read(&tw->work_pending)) {
-> > +				atomic_inc(&tw->missed);
-> > +				goto out;
-> > +			}
-> > +			WRITE_ONCE(tw->addr, addr);
-> > +			changed = true;
-> > +			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &wprobe_data->file->flags);
-> 
-> [Severity: Medium]
-> Does manually clearing EVENT_FILE_FL_SOFT_DISABLED_BIT cause the event to leak
-> as enabled?
-> 
-> When the trigger is unregistered, wprobe_trigger_free() calls
-> trace_event_enable_disable(file, 0, 1). Because the soft-disabled bit was
-> cleared here, won't the core event logic skip the unregister step, leaving
-> the wprobe tracepoint permanently enabled in the kernel?
+  Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
 
-Good catch!
-Hmm, we should set EVENT_FILE_FL_SOFT_DISABLED_BIT when removing
-a wprobe_trigger.
+instead of "Feng Yang<yangfeng@kylinos.cn>"?
 
-> 
-> [ ... ]
-> 
-> > +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
-> > +				    struct trace_event_file *file,
-> > +				    char *glob, char *cmd,
-> > +				    char *param_and_filter)
-> > +{
-> 
-> [ ... ]
-> 
-> > +	} else if (param && (isalpha(param[0]) || param[0] == '_')) {
-> > +		if (strncmp(param, "count=", 6) != 0 &&
-> > +		    strcmp(param, "unlimited") != 0) {
-> 
-> [Severity: Low]
-> Is this intended to skip fields named "unlimited"?
-> 
-> If a user configures a clear_wprobe trigger on an event that happens to have
-> a field named "unlimited", this parser matches the keyword and skips parsing
-> it as a field, which defaults to an unconditional clear action.
+> diff --git a/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c b/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
+> index 889c9b78b912e..058e71927cd5c 100644
+> --- a/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
+> +++ b/tools/testing/selftests/bpf/progs/verifier_helper_restricted.c
+> @@ -3,6 +3,7 @@
+>
+>  #include <linux/bpf.h>
+>  #include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+>  #include "bpf_misc.h"
+>
+>  struct val {
+> @@ -17,6 +18,13 @@ struct {
+>  	__type(value, struct val);
+>  } map_spin_lock SEC(".maps");
+>
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> +	__uint(max_entries, 1);
+> +	__type(key, __u32);
+> +	__type(value, __u32);
+> +} perf_event_map SEC(".maps");
+> +
 
-Hmm, OK. Let's check the event has "unlimited" field or not.
+[ ... ]
 
-> 
-> [ ... ]
-> 
-> > +static int wprobe_register_trigger(char *glob,
-> > +				   struct event_trigger_data *data,
-> > +				   struct trace_event_file *file)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	lockdep_assert_held(&event_mutex);
-> > +
-> > +	/* The same wprobe is not accept on the same file (event) */
-> > +	if (wprobe_trigger_find_same(data, file))
-> > +		return -EEXIST;
-> > +
-> > +	if (data->cmd_ops->init) {
-> > +		ret = data->cmd_ops->init(data);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> > +	list_add_rcu(&data->list, &file->triggers);
-> > +
-> > +	update_cond_flag(file);
-> > +	ret = trace_event_trigger_enable_disable(file, 1);
-> > +	if (ret < 0) {
-> > +		list_del_rcu(&data->list);
-> > +		update_cond_flag(file);
-> > +		if (data->cmd_ops->free)
-> > +			data->cmd_ops->free(data);
-> > +	}
-> 
-> [Severity: High]
-> Does this error path need RCU synchronization?
-> 
-> If trace_event_trigger_enable_disable() fails, list_del_rcu() is called
-> without a subsequent synchronize_rcu(). The cmd_ops->free callback
-> (wprobe_trigger_free) will then synchronously disable the wprobe, which
-> frees the tw->bp_event array.
-> 
-> Could a concurrent tracepoint reader still observe the trigger data,
-> execute wprobe_trigger(), and dereference the freed tw->bp_event via
-> this_cpu_ptr() inside trace_wprobe_update_local()?
+> @@ -165,4 +173,28 @@ l0_%=:	exit;						\
+>  	: __clobber_all);
+>  }
+>
+> +SEC("fentry/skb_tx_error")
+> +__description("bpf_skb_output is allowed in BPF_TRACE_FENTRY")
+> +__success
+> +int BPF_PROG(skb_output_fentry, void *skb)
+> +{
+> +	__u64 meta = 0;
+> +
+> +	bpf_skb_output(skb, &perf_event_map, BPF_F_CURRENT_CPU,
+> +		       &meta, sizeof(meta));
+> +	return 0;
+> +}
+> +
+> +SEC("fexit/skb_tx_error")
+> +__description("bpf_skb_output is forbidden in BPF_TRACE_FEXIT")
+> +__failure __msg("program of this type cannot use helper bpf_skb_output")
+> +int BPF_PROG(skb_output_fexit, void *skb)
+> +{
+> +	__u64 meta = 0;
+> +
+> +	bpf_skb_output(skb, &perf_event_map, BPF_F_CURRENT_CPU,
+> +		       &meta, sizeof(meta));
+> +	return 0;
+> +}
+> +
+>  char _license[] SEC("license") = "GPL";
 
-Yes. Let me add tracepoint_synchronize_unregister() here for
-waiting RCU.
+The kernel change this tests (538d3dadf8d0e) gates bpf_skb_output() on
+four attach types in tracing_prog_may_run_after_target():
 
-> 
-> [ ... ]
-> 
-> > +static struct event_command trigger_wprobe_set_cmd = {
-> > +	.name			= SET_WPROBE_STR,
-> > +	.trigger_type		= ETT_EVENT_WPROBE,
-> > +	/* This triggers after when the event is recorded. */
-> > +	.flags			= EVENT_CMD_FL_NEEDS_REC,
-> > +	.parse			= wprobe_trigger_cmd_parse,
-> > +	.reg			= wprobe_register_trigger,
-> > +	.unreg			= wprobe_unregister_trigger,
-> > +	.set_filter		= set_trigger_filter,
-> > +	.trigger		= wprobe_trigger,
-> > +	.count_func		= event_trigger_count,
-> 
-> [Severity: Medium]
-> Will this unconditionally exhaust the trigger's count parameter even on misses?
-> 
-> Because .count_func is set to event_trigger_count, the count is decremented
-> before wprobe_trigger() runs. If the trigger fails its implicit checks inside
-> wprobe_trigger() (such as checking if the field matches the watched address),
-> the count has already been consumed.
+  case BPF_TRACE_FEXIT:
+  case BPF_TRACE_FEXIT_MULTI:
+  case BPF_TRACE_FSESSION:
+  case BPF_TRACE_FSESSION_MULTI:
+          return true;
 
-Hmm, OK. Let me add wprobe_count_func() to check the condition.
+Only BPF_TRACE_FEXIT gets a test case here. Would it make sense to add
+coverage for BPF_TRACE_FEXIT_MULTI, BPF_TRACE_FSESSION and
+BPF_TRACE_FSESSION_MULTI as well?
 
-Thank you,
+The fsession case in particular is the one whose rationale the parent
+commit message spends a paragraph on - that fsession must be rejected
+because the same program runs on both entry and return and the verifier
+cannot prove that a helper call is entry-only.
 
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/178939017565.94750.9431053336761330458.stgit@devnote2?part=10
+All three have libbpf section prefixes available (tools/lib/bpf/libbpf.c
+has "fsession+", "fsession.multi+", "fexit.multi+"), so the extra test cases
+would be copies of the existing fexit block with different SEC() strings.
+
+Kumar Kartikeya Dwivedi raised a design concern about the overall approach
+in v2:
+
+https://lore.kernel.org/all/DLLHE9PBLDU0.XQGEOQQIR4HV@gmail.com/
+
+  "Sorry, this is not an acceptable fix. This negates usage of the
+  function in all fexit and fession attach points. Unless there is a
+  simpler way to enumerate in which attach points this helper should be
+  disabled, it might not be worth doing and leaving this be as is."
+
+The concern is that disabling bpf_skb_output() in all fexit/fsession
+programs may be too broad. Since this test verifies the blanket restriction
+that was rejected, has this feedback been addressed?
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/35678199634
+--===============8280890974195556375==--
