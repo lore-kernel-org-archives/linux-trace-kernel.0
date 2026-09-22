@@ -1,115 +1,114 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FB833937B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 15:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3BE5625E5
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 15:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790091788; cv=none; b=Pq1uwKa3Wj5uDbqtZkF8kj7+kOqXY7mv2wWqobxzSk3FmRIldomAwtTXyqMUHVIm4W9UbKYo6Dxv4lyxpIZ/+0/ZoN0ve2UdSi2cEaq2ZE9QnzUuwLsG+7cWxS9SEhn3EQ0TLsAosSBErEDfru7ZjkQIBKUw48IGT90KpSbU7SY=
+	t=1790092628; cv=none; b=Otww+QjVPzbqcRrAuhAuF1B3f9KRaW7RJXZruo4jrwIvuRLC0JPWVnH65JyPtJq6oY4ENM5XEi2Qn4UQyFO1PDOeI2Vn5f587Rc5knWpE3TK2lE9fv1GuM2sdKctMTW8D0VczYG7psffFJ4Zykl9RWkvPGOWSIpytv+ShM7Nims=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790091788; c=relaxed/simple;
-	bh=l07At5e/FtwvFEhvmUdFRuvOuYiPaFWdFCcvR7eYvUQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjQXxfO8HWwZF5Y3xarqGPqnMjU2T0ilzjSOrpHFt+6wtSar1Uoh6xRkA6gvJnQIotnwgpH9eeRta32/rSZT9sPWg3uB3HyKxY4QGHGfUPRPi6H1r27PlRL5b3ZIwuJKCwn3wDJ662PgHCxbc1ptw28w4jq1VY3Kw+i1b8jwkQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=HmGRtZ1u; arc=none smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1790092628; c=relaxed/simple;
+	bh=jSIUxZgxSgiyI98U3LfbBokr7Op6qXNEjRhaQVim4+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rhJRMEpLOdagwoeCrzSJYj41VAnQPwtPsPhjDk1j+WVXxv0ujyWPSCLZicMjJz6QlHLhx2zEHpFFKbXAaNRkQ+/0le15DnhTHVKzCaAaNek9JrFEZuG7En1oWFkuJYp7mBpR1+hnlS5WMy7xCoEe3zH/GeNH5+txdbnp5r11nbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMHrVbIz; arc=none smtp.client-ip=74.125.228.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="HmGRtZ1u"
-Received: by mail-qk2-f12.google.com with SMTP id af79cd13be357-939109f067cso3417185a.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 08:43:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMHrVbIz"
+Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-8674704dab1so65026b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 08:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1790091783; x=1790696583; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=NGKku8nyry7LJ3cQ2W+BxzqUbPO2qtN0RpKOVM2oOc8=;
-        b=HmGRtZ1uXSJy5W2bLzIdB1jBwSa2qtnPXke0stGNe+fv+pNP9rnPPL4WDaTnfqr3bt
-         /7mN16YmsLXQjygdMHRJMwD2buCTN0SwoJvV9Xt71/2SJDmRyKHX7Yxant0YMAAeTh+n
-         zMMYMgD9RkdDN6WmPHeeAVOpKlJgusqLOlJYPXWrg6OPzNRnLOF1cumRsSfzMYfMedQo
-         SasVdnkynUDXsyn2hBqYSpiJfXtJLmzc6JYBrZc3FciPxHOnxvkykWzZTP51OwaxXsYW
-         3y9TznhMdcQCZSOBat6hh6sqcQaexAnF22qR4Uwcg6gLuk5bp/ze94gRCCbIZz7PJxHx
-         fp+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790091783; x=1790696583;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1790092627; x=1790697427; darn=vger.kernel.org;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:sender:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NGKku8nyry7LJ3cQ2W+BxzqUbPO2qtN0RpKOVM2oOc8=;
-        b=JTGZ+bamXFoxkGL9IqndPFLj0rZdAIicaQBEVBnYPB+ezTMzjanyH/8+5OkRCTB1Kw
-         XZhLEFYo+brafrGP6dMPURugSLGVwIwUMqp27KPOuhwx2X7BYxVyAvpNxu6VBMjiInj3
-         fSsAq02Ga+pGVp8GtN0sBxKzuhMZKNxMdsgHor+LeCqbugE91I7WVXlX+yfmTQXlStgh
-         7OGlLcrK6pxQMPdU8U6n8IKZlu/MAEnqXtV+/Xuw5if2LdEB0EbL28PItGlEH7930WSF
-         C9NYYFSNaCdwAbtqnP1/GNlcKFVXLaaPzIOdm2OSGkyE3KANkLqD9e08IVJcquEJC21r
-         rNHQ==
-X-Forwarded-Encrypted: i=1; AKwUvBySk8rlNWMm566m4OH8BjVg1v8YLii6V1m3cGlI5V64Z+tOUKY2uN4JKcQxuwD3AmxsIoy3J3bSCzlimSlcEddp5gk=@vger.kernel.org
-X-Gm-Message-State: AFuF++lm+3tLpWq0Y9B70uZjNyxBffkJM2HvTZA+no006+sdjrCx/tz0
-	mbhP5wm0XL5rbcXXhVyg5VD9PgTC8QrQ9BMXkzD6fMakAlIDAqpigvdDeLTYfwcCiMA=
-X-Gm-Gg: AYBFou0A6wngaLKdjicUE0+98IaK55isogKba+2RWNtJ7cpErRsO2AdEQibagxOlP9J
-	5FNsWi/x7b3JgBqYrT/gn3QCAK447M7w1V95Du22iTkWBwoZzwCHwXhBgbq11KOEv4Z2fz/GZyj
-	RdJbddkJfggzg1kfRnbCqSquyKfoesArcyvWpKpvI3sdQf8+0FsxKzRUAsIhFqS6vRzYijN+E/T
-	9XHaX4Z66wlIU6mh8p42Ity8avZmbG9zsb+HtUyxtLJR8l+yQLFvBytAt3/i40OfshmOwoAjpry
-	3ZsJXbQ58CErKetEIaPc/ThJN5UnBt66F0CC+SMJDNyxx6RbsTtAwXiKHRb4rPEMqYY3CM0jdnP
-	tvOhDDQYEOMaHlfSxXB78WI/nVZ+O1xRh7aRdLID/Wwkgsi1Mdm3J/vl52sNAh3UEsiDzihh+eT
-	Q+9phO9u1mUfeOKsH8fQyyzsqfuujIzWuoW3ILCFb8rIaxeFMhefY01CfJpsCo+/LNC3q1R3zS9
-	tpQ8FnFOpYXh7Q=
-X-Received: by 2002:a05:620a:6006:b0:93b:d79f:d955 with SMTP id af79cd13be357-93c15f2e6e5mr588176085a.74.1790091783184;
-        Tue, 22 Sep 2026 08:43:03 -0700 (PDT)
-Received: from toxicpanda.com ([153.61.196.243])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c2485dce4sm1063585a.23.2026.09.22.08.43.01
+        bh=+nINCCexQBjGgqV0IoOg5XqmsdvBTBAWyhS9ytlkhAs=;
+        b=jMHrVbIzSqUZNI9kWIiJ81ylSNoC6SK75489YGjl7A/VVWhqFrEwp7vu0tLjBIEPHf
+         Aw7ZxDcaeLgXvywsQTz/E8IXUSxLkL9T3Lbu/ezmkLtc9qZnQEQS6T1pu+PK3ed61s2G
+         96qzNVOARIvNkIJCjJ9ogqRo1DeI9IGKHy5Ycbue4/ZgM9hOLQ5d1yslDoFzwyjVzzKa
+         5P+T1tCxpgooygt/XzECd7oTffNnKnoH302wfG8WiwQ+wbafxmTiuaktrsKl5sBqV3f2
+         WoFEhwYJsklOCbifxNcT0XB4OoroErEe2w4Y96D8bzfUwhoGLhJrZoJwf65pxqqdI29K
+         qStg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790092627; x=1790697427;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+nINCCexQBjGgqV0IoOg5XqmsdvBTBAWyhS9ytlkhAs=;
+        b=EZWKqjjo94XSN4AOkTaIgfMuaAKL4kKNPd30An536fSYqOQI5/d2P0/HLxBaAot1Su
+         mHDfXzVjZXR8hN3H7fwe5/OWs0egamvBGtlmDukeWgzNKVXD1sQXLyeeRAmBnSmbzRol
+         y3HtWPv8dM85IsKCSNDblpfoLPfA2l182Z1hkedQx7zvMXYX7C+RhShFRBc95UdeR/bP
+         Uf2VV7I8WdHETfoWvLb6ALWtqxFrwLNdslMz3jU9eJj0c7S0IX2EnaJlNYhLZVrwpYmR
+         YkLo7Wp+ZGGtwftg7mc8P92lbAfTGSsTcmpStsHG4cxfXQKxuNFMlwh6rSqnXCQuJFL7
+         4/jg==
+X-Forwarded-Encrypted: i=1; AKwUvBwkMxdFynJLN8uuiHLSKyH92cpxhtO5YhsPr6PzYjKK56VunYmj61t1Xf7rK4DudZmV4DmS3EwYd3ZLQTsJfgryyNc=@vger.kernel.org
+X-Gm-Message-State: AFuF++lLeVMoCi+/7lqkwz9Jo6w9j8PUiuokWD9IJX1ln2Axh6nreqeh
+	i6JpGKjMcqo9z/Z7vuGveg0Il4OEMOhZvbIhUFr9bA2S50V+OltA+Htz
+X-Gm-Gg: AYBFou3fx10pvppQVCSuFwKAIq8g/NuFHWhm/uSyHj5fPC71AYr8m1dwwKIkWJ0PgVM
+	wKstFPpzkBg7aT/0bVdjh6KxS24SQMlvsev41BOT7v44osxOSLQHH+zS9ERjeqokOtK1z5d8c7m
+	3xFCQ5vym8gFJ2AZPlfKPtyiUnz69q1HYuyTCEQgcKilWQ+alxmJ6HQDtdi7bVql23gYEq8TZyJ
+	hYjeACymIOra7ba1oDC7n4szf3ocp23VFAzuSm5qWJ1U94+9DtrgLTtfOI9QWX0ETgPj1Ugt6Wt
+	QobaH3jj3RlccCHw/slXRzDoE+42nHYxAyFXXJNcMC+vGdsobwDXykTG3YgXfnaKDiU+UKP+6Hd
+	cKk5VS9ZDvujBotU41Co3ZMPwdD2EEMtxQ/QsM5lJLLDwpuSzNp0GFXO0l3kpxwojzlUrijKYmr
+	+/XCzmQqX1wz4Ejx2JlNboXvXDzD547KyiiralGniICDX/D0feBazjmGOlRz4SCJKEgnTl4w/ck
+	c/UvGoMDeb0vxliJEWOBLg=
+X-Received: by 2002:a05:6a00:174c:b0:878:34d7:6a30 with SMTP id d2e1a72fcca58-87d1cdc154fmr17054b3a.36.1790092626666;
+        Tue, 22 Sep 2026 08:57:06 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87d1b0b505bsm18582b3a.8.2026.09.22.08.57.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 08:43:01 -0700 (PDT)
-Date: Tue, 22 Sep 2026 15:42:15 +0000
-Message-ID: <d36fdaad78296f3c43f84bc9c5b15a36.josef@toxicpanda.com>
-From: Josef Bacik <josef@toxicpanda.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v3 03/13] rcu-tasks: Add a Tasks RCU implementation for reader-marked trampolines
-In-Reply-To: <aqxLgT41UyA-bV5J@pavilion.home>
-References: <20260915-b4-rcu-tasks-preempt-qs-v3-0-0ad30c4c5ee7@toxicpanda.com> <20260915-b4-rcu-tasks-preempt-qs-v3-3-0ad30c4c5ee7@toxicpanda.com> <aqxLgT41UyA-bV5J@pavilion.home>
+        Tue, 22 Sep 2026 08:57:06 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 22 Sep 2026 08:57:05 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: trace/simple_ring_buffer build failure on parisc, sparc64
+Message-ID: <5574c9e6-9ed2-4ee6-a2b2-fb6ee81e83a1@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 17 Sep 2026 22:20:17 +0200, Frederic Weisbecker wrote:
-> > +	lockdep_assert_irqs_disabled();
-> > +	WRITE_ONCE(t->rcu_tasks_irq_ip, ip);
-> > +	t->rcu_tasks_exit_cpu = smp_processor_id();
-> > +	raw_spin_lock_rcu_node(rtpcp);
-> > +	list_add(&t->rcu_tasks_exit_list, &rtpcp->rtp_exit_list);
-> > +	raw_spin_unlock_rcu_node(rtpcp);
->
-> I don't think we can do that. This is too much unconditional overhead
-> on the hot preemption path. rcu_tasks_trampoline_text() should be
-> a condition here.
+Hi,
 
-Sorry, I missed this one before sending v4/v5. Agreed, and it is gone
-for v6: the hook is now just the WRITE_ONCE() of the IP plus the
-rcu_tasks_trampoline_text() check, and the exit side a single store.
+when trying to build parisc:allmodconfig or sparc64:allmodconfig,
+I get the following errors.
 
-The IP store itself has to stay unconditional because of the kprobe
-jump optimizer: its window is ordinary text, so a task parked there
-before the optimizer decided to patch was not "trampoline text" when it
-was preempted, and the optimizer needs to find it afterwards.
+Building parisc:allmodconfig ... failed
+--------------
+Error log:
+Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+         U __atomic_hash
+         U trace_hardirqs_off
+         U trace_hardirqs_on
+         U warn_bogus_irq_restore
 
-> And do we really need to maintain both lists? I understand that they
-> have different purposes.
-[...]
-> Can the latter replace the former?
+Building sparc64:allmodconfig ... failed
+--------------
+Error log:
+Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                 U 
+                 U 
+                 U current_thread_info_reg
 
-With the above there is only the holdout list left. The optimizer's
-rcu_tasks_wait_irq_preempted() now does what classic does for its scan:
-walk the task list plus the per-CPU exit lists (exit_tasks_rcu_start()
-and friends stay shared between the two flavors for that), checking each
-task's recorded IP. That is a slow path that only kprobe optimization
-hits.
+I always thought this has to do with my environment and/or C compiler, but
+it seems as if the problem appears to be generic.
 
-And thanks for picking up the core-RCU follow-on.
+I have no idea what causes the problem, why only those architectures are
+affected, or how to fix it. If anyone has an idea, please let me know and
+I'll be happy to write a patch and/or test it.
 
-Josef
+I disabled CONFIG_RING_BUFFER for test builds of parisc and sparc64 for
+now, so this does not directly affect my test builds anymore. This is
+primarily a report that the problem exists, not a request to fix it.
+
+Thanks,
+Guenter
