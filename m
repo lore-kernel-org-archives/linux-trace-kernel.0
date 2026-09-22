@@ -1,87 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9913F211466
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 07:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30173478E56
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 07:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790062145; cv=none; b=qQFeEACGmrzO9M4MawOzLAI7H3sp9VWWh1c/DLvEpTR7B6rEUP2dGjNVMFnThJ9NRvxLXRs7NktJGJ053IFvecFlzCoGgETk0Kb3dis6v3uinHZf0VPVnhhrfJ6VDJLpSh6nkMqAUh6hYMuuOtCo6CsvXGqHH2ENOSR98FtRTCk=
+	t=1790062197; cv=none; b=dV8llwiRkNy8aUv/ynHp1QE5aQ6R4gnPM6BOUXWGF52VGzdl3lH+qD3EsKANo+vCvFTklGOPu2+fPJBAynhQ7kU4rx2UOzEGr30RtoBAHvS8oQ6CUAojYs/LiL1BHcSchoeGmquHAylM1cIcMkvoB8mdRi+E6Jss9iGpeOBITbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790062145; c=relaxed/simple;
-	bh=XPp/PcjFWgVB5+Bw5ABOkUP0IsKJws4n3xxxAV9CNdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=YN7yXZH46RKE5ew35cu3i3hWHwEhB9YI9cR+uoQl1m97QwqS19x8Hmn1AS4OUls9dKjQtzYm+IJtqoLkMLMV6fhI+OI+ck8D76ebylXqddmUTroE5AvdLnMwiMkTiWZTfgAZ05FyBBnfTQEjpdF/ul6l5t8VytdzjpQE/lruFKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I3s/AH7F; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1790062197; c=relaxed/simple;
+	bh=wBmoW6SlI+DC5Zo7nszZiPh4qcmH88blCnLCKOLq9Ts=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=V8JyHh8bct4Rs2z8y1Jur6+QCXwYijk//Uf0t7BVmKarO352xX4in9eJ3j5YnspB7pCJzXTAe1hD3UtoJ14IzggBu2/ZXj9qkQOmu3NLzr9p32KbDI4YRjr2yT3jZSCbvVEobpEC4Ue8fLBKivTpN8WfcIq0wD3DXMxNvSofZN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T27D6m2C; arc=none smtp.client-ip=209.85.208.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3s/AH7F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790062141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1nV4OYi178lUeQW0YjjIgpTN9nSwgzP2y4G9yO7aqk0=;
-	b=I3s/AH7FZF4OFVZL5DNi0A0QoodJQ6tLy1xdVRBBM0hCJ7T9AVT6FHQAQJD/4ow5no4UWy
-	1OoLU/yRZSeKAGF08HV+rh6EtLLEbHqQmDDMyS35OGLLIy42ehpOLdm42NcGZjlw1PH8oa
-	fCLp8bQ7E90r9jLwtttpoDybtJ5TQ4g=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-JtQeQhCuOTOpX21smiv1SA-1; Tue,
- 22 Sep 2026 03:28:57 -0400
-X-MC-Unique: JtQeQhCuOTOpX21smiv1SA-1
-X-Mimecast-MFC-AGG-ID: JtQeQhCuOTOpX21smiv1SA_1790062136
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E74F0180A94D;
-	Tue, 22 Sep 2026 07:28:55 +0000 (UTC)
-Received: from fedora (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0492D1956041;
-	Tue, 22 Sep 2026 07:28:52 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 22 Sep 2026 09:28:55 +0200 (CEST)
-Date: Tue, 22 Sep 2026 09:28:51 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Danish Khateeb <danishkhateeb03@gmail.com>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sparc64: uprobes: use kmap_local_page() in copy_to_page()
-Message-ID: <arIuM7PdJ9gi222t@redhat.com>
-References: <20260922023111.49951-1-danishkhateeb03@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T27D6m2C"
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-6a98e5d6e49so5306184a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 00:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790062193; x=1790666993; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=O/74aIvxNYyyoJvw2o9e9799tBrQw2tGF0+8eTzGM4A=;
+        b=T27D6m2CjyhSVbxHZbpuzRzT0ek/8rh9aFF2lyxmRcD8T4Kbep1V3crRDLbM/W7fJG
+         MjpzHLyu1GEb0ulQfm1l00K59yIU2LpvdDyilHbTqLYKkIOMswnaSrlO181qVnRO2XR8
+         UO9jhpvv1+BRwvuU/5vLIV8vdHIe//wS3oMh/k9q+eWUQEgREVkRFviBnKBZ9e9jfJRf
+         yC6ho4d/FFHqvO7eAvTf9+57+b8q6nxd+uAhYSCbCvG5Ai9pJO/Fy1tcK7dY6GF90yu3
+         piV2QZAF/diCHrOLXDxpJnGJ6F6kW/XcKUSniL3t+dCUq/ycRuMbyj5eycCtn8vCdmEg
+         az8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790062193; x=1790666993;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=O/74aIvxNYyyoJvw2o9e9799tBrQw2tGF0+8eTzGM4A=;
+        b=ic3CkCi+lJ+3V+3hSOf69O16/IGl/JdQjVsgEzY1zW9uNbXBgf89CD9HEzkYajsx2p
+         bvzcI+U8t0FNpf0r/ugajKJC7gcZcKcpgFhEEh0wz3ZxzJIVB7fiu6vq73dzSGNyU6wg
+         ZQpBxsGU1uw/qAJb2QxAo1KTHPFc0T9eBNI13QmsD0KKtDkiC6uuQratbpq5iVe8clcI
+         MKWjO5/EcpbuhFUbWEVfhI/k+878pygRjymSmojUravwLsBDC0QAZFcXMcycjYNkG2H6
+         i7rxE/tTux6EnwatHnyAHe8mQE2Y5yzq19d3jHLSYd+viJPaGLBJxk7VIQ3JF5KDGLjM
+         D6PQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwx80dtUc1KgY00bFCd6298zRCPCJGHRDe72pDx1R/tNH8QsfZ4qv2A8u/wWbOLQoLrXKAoqSiXFbUMtuU3kX4Pevw=@vger.kernel.org
+X-Gm-Message-State: AFuF++kXWMQhOhciwkm2ZE+MALzzNPjiZCL6BSulWFgSraQyzs/E6Q3b
+	Z28jy0535zkcJeTtNkQovN2NFMohPGKAVw/K5zBUj7R0hLeIVwbFOyoongr0J9/k9UOR07Utxu6
+	L7zD1SJC8HVONMOh2OyVhpQ==
+X-Received: from edbay21.prod.google.com ([2002:a05:6402:2035:b0:6aa:8682:2b6a])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:20d5:20b0:6aa:734a:a095 with SMTP id 4fb4d7f45d1cf-6aa734aa1a0mr4992621a12.44.1790062193331;
+ Tue, 22 Sep 2026 00:29:53 -0700 (PDT)
+Date: Tue, 22 Sep 2026 08:29:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20260922023111.49951-1-danishkhateeb03@gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: 98uykZom8e_SbFZfUpc1qU02GaU_9lKBo5X09VampRM_1790062136
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <20260922072944.1281427-1-vdonnefort@google.com>
+Subject: [PATCH 0/4] ring-buffer: Use kvmalloc variants for big allocations
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 09/21, Danish Khateeb wrote:
->
-> --- a/arch/sparc/kernel/uprobes.c
-> +++ b/arch/sparc/kernel/uprobes.c
-> @@ -33,10 +33,10 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
->  static void copy_to_page(struct page *page, unsigned long vaddr,
->  			 const void *src, int len)
->  {
-> -	void *kaddr = kmap_atomic(page);
-> +	void *kaddr = kmap_local_page(page);
->  
->  	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
-> -	kunmap_atomic(kaddr);
-> +	kunmap_local(kaddr);
->  }
+Several allocations in the ring buffer code scale with buffer capacity or
+sub-buffer order and require high-order contiguous physical memory when
+using plain kmalloc. Under memory fragmentation or with large buffers,
+these allocations can fail unnecessarily.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+This series converts those allocations to their kvmalloc equivalents.
+
+Vincent Donnefort (4):
+  ring-buffer: Use kvzalloc_objs for user mapping arrays
+  ring-buffer: Use kvzalloc_objs for remote buffer subbuf_ids
+  ring-buffer: Drop redundant ring_buffer_iter::event_size
+  ring-buffer: Use kvmalloc for ring_buffer_iter::event
+
+ kernel/trace/ring_buffer.c | 35 +++++++++++++++++++----------------
+ 1 file changed, 19 insertions(+), 16 deletions(-)
+
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
