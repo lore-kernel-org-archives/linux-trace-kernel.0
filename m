@@ -1,119 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70641F3B85;
-	Tue, 22 Sep 2026 04:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E01E4F474C;
+	Tue, 22 Sep 2026 07:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790052212; cv=none; b=sL97AAAhp8wVxBgEOSivrs7l62pQzD4DhBvuBYeLBQqxm3AB0LS9rH1kWmfBTZrJu2gs5Caa3RR6VbOOfAAUJdBpSiGY5UfgHBM58xa/1JG1FaiNnCyMD3g5F/qmaKeBSKmFsP7r4aWW/8LkbNFe9oJAGkERY7f8NHvOqX+mH4w=
+	t=1790060698; cv=none; b=auBL75oo9UJ0hF07lSHlgpfKZt2DMrqkGNW4CZPsz13G76qj9XQCw9xmeKmf+GGhNRGhq3IRI75VAiV6tk7F581LD8bL6hNZFZtiy/OeJhJW1wOWy8UDnpX4iM7qFg2x6S/0y7GP3/AkicHk+9TasPqAUw3QFtNQXR7GCBy4Ktg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790052212; c=relaxed/simple;
-	bh=p6LiLT4k8KxfHwiOIg8YH2vQC03GDDaEIpIJQj6Hw/0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bji662VM06FrWPNxmIZtw8l3DDXSGuu6V59j+iTdcOWoelQ1W94vpmuAEp7S899w4UAA94fFMN8kNP/72XektpYfyokDXk1Ly99L2LHzOBNGdeVFemqyt1yDp1ea+JHng6ZE651b8YCJtTUEpxs9NyniQoaUDNfQobdOHx1p500=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDcQbD5T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790060698; c=relaxed/simple;
+	bh=xb+ML7B/wsHqkAm4sviLlOgKiMcF/sIlhEKQe7Ac5PE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bH2D4EHZXbKNQ+piRkDkxwD1Y/TBEBxjnIiENEfZbjmxSGLqRvIfSUgMqo8yscCNDSBG/NOZ9hSAf5kpkBThHhXyTNZUR1caUSfEQLRJD7rHaJaqQkcBQyhFk0lYqAXoizyzoHsEifu62Tv2S21G02NEZjPVEhBecHTwpK8e0Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=h2KzUv43; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDcQbD5T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB901F000FF;
-	Tue, 22 Sep 2026 04:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790052211;
-	bh=l7xbQbSyK+hMJedOeFVJ7HE/nZ7PeG57XNuW6CnoDPg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oDcQbD5TYrFIwbRGAlRnmyxYXEtfVaX2reqYkxAXGljtwwigyQQT8L7eOuf+mZKpz
-	 5xifdLzJZ6zwRWzQKl7BBcn6KFKbPBp73R3L99efHblyFzPtxX3Y7JFq8Pj1B+RwBn
-	 2Tmp+VJ5iRN1/Yx9ZPW4lFNVFgAK9UOXH+b3dYw5vQZ7GPZ5tOLksWbu/astYeqtFF
-	 641UIgIhqarxQZlV/lDcMaJcaFNn845ix0QciKsQSjjQe3vHRm4Q2py6vIDFGngMkf
-	 EJAILHmCA4LkTWQ1RHqSIIMuKk4Uzb4XVuQMlrMUaiQtkIOf3Khq3SohIPTCy8/9Wn
-	 A0l00G657ONQg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 13/13] tracing/wprobe: Support BTF struct offset
- resolution in set_wprobe trigger
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179005123942.388919.17930857651144049898.stgit@devnote2>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
- <179005123942.388919.17930857651144049898.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 04:43:30 +0000
-Message-Id: <20260922044331.1EB901F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="h2KzUv43"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=p2
+	qx/98AGIgAs9QaTEUqM74hqQUBcMVIUw0SxZmpelA=; b=h2KzUv43XphVWd8C31
+	RYvVIcweZZ+W8D1oeIRU0qrUFFwcHBfNGe4yLn8hKIH5M2u24rMSHov03enZIOs7
+	gttPDvG53JPkNhACL+06waViHANFlseUZdpy5AJqtIpYgjB+eMgIP2/KV0XeQiUD
+	kQNJbJvfgyszeZSridMaYvBxA=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgBHN29UKLJqJZ4HAw--.12533S2;
+	Tue, 22 Sep 2026 15:03:50 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: memxor@gmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	emil@etsalapatis.com,
+	ihor.solodrai@linux.dev,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	matt@bobrowski.net,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	song@kernel.org,
+	yangfeng59949@163.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH v2 bpf-next 1/2] bpf: Reject bpf_skb_output() from return-side tracing
+Date: Tue, 22 Sep 2026 15:03:48 +0800
+Message-Id: <20260922070348.485673-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <DLLHE9PBLDU0.XQGEOQQIR4HV@gmail.com>
+References: <DLLHE9PBLDU0.XQGEOQQIR4HV@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgBHN29UKLJqJZ4HAw--.12533S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw15KryDWrWfCw4kuFy8Krg_yoW8ury7pa
+	yv93WYkr4DtrW7CwsrAw4Fvr98t395Aw45GrWvy345Zws8Zr97tr48Ka1F9as8A34UC3yq
+	vr4qv34DJ395AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUoOJnUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbCzxZm3mqyKFYL5QAA3p
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] trace: incorrect BTF kflag check in get_offset_of_field() allows=
- wild offsets
---
+On Tue, 22 Sep 2026 04:15:13 +0200, Kumar Kartikeya Dwivedi wrote:
 
-commit 3bc53bf9a42b7270af7bd91985c43e9cafe48496
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On Tue Sep 22, 2026 at 3:54 AM CEST, Feng Yang wrote:
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> >
+> > BPF fexit programs run after the traced function returns, while their
+> > context still contains the original function argument values. A traced
+> > function is free to consume an skb argument before returning, so the
+> > pointer seen by fexit can already be stale.
+> >
+> > The verifier checks that the first argument to bpf_skb_output() has the
+> > BTF type of struct sk_buff, but that does not establish its lifetime.
+> > bpf_skb_event_output() then dereferences skb->len and can trigger a
+> > use-after-free.
+> >
+> > Do not expose bpf_skb_output() to tracing programs which can run after
+> > the target: fexit, fexit.multi, fsession and fsession.multi. Keep it
+> > available to fentry and other tracing attach types where it is already
+> > supported. fsession must be rejected because the same program runs on
+> > both entry and return and the verifier cannot prove that a helper call
+> > is entry-only.
+> >
+> > Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline")
+> > Reported-by: Quan Sun <2022090917019@std.uestc.edu.cn>
+> > Reported-by: Yinhao Hu <dddddd@hust.edu.cn>
+> > Reported-by: Kaiyan Mei <M202472210@hust.edu.cn>
+> > Closes: https://lore.kernel.org/all/9d61b891-2d52-42b9-bc1a-ad963ccb675d@std.uestc.edu.cn/
+> > Signed-off-by: Yun Lu <luyun@kylinos.cn>
+> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > ---
+> 
+> Sorry, this is not an acceptable fix. This negates usage of the function in all
+> fexit and fession attach points. Unless there is a simpler way to enumerate in
+> which attach points this helper should be disabled, it might not be worth doing
+> and leaving this be as is.
+> 
 
-tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+Thanks for your reply. That is indeed correct.
 
-This commit allows the set_wprobe trigger to use BTF struct offset
-resolution to specify the target address field.
+Moreover, the comment for `bpf_skb_output` in `include/uapi/linux/bpf.h`
+reads: "This helper is similar to bpf_perf_event_output() but restricted to
+raw_tracepoint bpf programs.", yet this comment is actually outdated.
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+> pw-bot: cr
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index f1d6aa320f213..121310b72522f 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-
-[ ... ]
-
-> @@ -1165,6 +1166,213 @@ static void wprobe_trigger_free(struct event_trig=
-ger_data *data)
->  	}
->  }
-> =20
-> +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
-> +
-> +static int get_offset_of_field(struct btf *btf, const struct btf_type *t=
-ype, char *field_name)
-> +{
-> +	const struct btf_member *field;
-> +	const struct btf_type *mtype;
-> +	int bitoffs =3D 0;
-> +	u32 anon_offs;
-> +	char *next;
-> +
-> +	do {
-> +		next =3D strchr(field_name, '.');
-> +		if (next)
-> +			*next++ =3D '\0';
-> +
-> +		field =3D btf_find_struct_member(btf, type, field_name, &anon_offs, &m=
-type);
-> +		if (IS_ERR_OR_NULL(field))
-> +			return -ENOENT;
-> +
-> +		if (btf_type_kflag(mtype)) {
-
-[Severity: Medium]
-Is it intentional to check btf_type_kflag() on the member type (mtype)
-instead of the parent struct type (type)?
-
-If the member's kflag is checked instead of the parent struct's kflag,
-bitfield members can bypass the explicit rejection check and compute wildly
-incorrect memory offsets. This happens because field->offset contains the
-bitfield size in the upper 8 bits when the parent struct's kflag is set.
-
-> +			/* Reject bitfield member access */
-> +			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
-> +				return -EINVAL;
-> +			bitoffs +=3D anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
-> +		} else {
-> +			bitoffs +=3D anon_offs + field->offset;
-> +		}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179005108298.388919=
-.4535333252892590932.stgit@devnote2?part=3D13
