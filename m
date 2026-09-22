@@ -1,138 +1,98 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AD14279F8;
-	Mon, 21 Sep 2026 23:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D0B320A00
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 00:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790032850; cv=none; b=EPSAyGENWD4SZ8I+U/oT3itLkeS6XNaYXoFDO4PqM7rKMTNsn8J1PXMCCDQKy9JQPPEF0fFOzH6EAs4TYf9mkW8gAa22a2BGTOvwQ/Zl0t3BNFHkcw7MrgHlzFCq4Qn9NNlwa9PW/N5KnCWkbbd7ARz+T7tBMEvEHAcieTBdKsY=
+	t=1790037491; cv=none; b=cVZL4W4R0vuOKWkypqbEw6xFQ7M7bNcf+eluq03hnJqnrJg6KuANi7vFQwCjDcPlGbsv3Fe8uzq7dL8D9cMxfRWeKe318vgsW1lU1rAhY+73M3t/scJvnoE3mONDBwWcHOlivSm5muceLmE3CsHQfUv3RL6VQiKp6ipGsBzQ2Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790032850; c=relaxed/simple;
-	bh=I8QurwjP3QB4ra+BZpKFn2F56cD706bsO9/irsbGN90=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=liutD5lf3V9FeqLDsRZQFUKRknn1kLQVjOGIePnCQ5JXM8konvHabEowUEq3j8q9C7iNfFd/UIw6sHBkIk0REoVXS/UJ37cN/U0BtihThfaxXpPdwcc9n8CCdUuM+ESjljUJ1ACx1hKPV3j0qb9Uncwdiz7L8Bq85gmSn8lM2vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=iQ2g6fBF; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1790037491; c=relaxed/simple;
+	bh=xtUfDTogkvswBHYd+l0SxFxD1eU2IzxbiBtqrmpreT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Kek3A5dS3XvODd50MCOBD5Dj4eZe2e088DbrRsxuTCoguGVZXw8PpHuAGSzEUuz3jaolNJR4yWkuB8wrIsx1mB5DkCRAUJ9ENB6ujw6PY1VDvXHnWsrRylAPU9ipuZEHuSFq8r2wIxNqSwxTupUdmjggIAGPSYTdIENyugw04gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KfxCRyjZ; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="iQ2g6fBF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=bnzNQlUPAqEqRUkX0JQghfZNPrTJnLP49/ixQIya5nU=;
-	t=1790032848; x=1791242448; b=iQ2g6fBFZZejiRkIRfri67RbIRunWSxTvF/alrhjwg9DYbI
-	k5PMbKiLGygjq1FAS4/SjX3qIjkeYEZhTlkRvzNE1K+xa7snouzg3+TL+SzN1PFm3dAq4uBQiqDeT
-	wsVZNS7FdwN0NfMArQKaDBhInHywVPlfIMfHqWALC/03fGYaabKlsVQ0mswpQHv2dwQ8c1K3Ssofz
-	JkMADtP1iPGcshIudp3ZNnetj9UYQg0J9nkqzFew1+DJ47OCxkVYpREwD4fdGZLgbhQnBKk1h1kCU
-	1vUgkJ8NWOQ3FXsPVjGrOdRTKv51nrkAd0Fkb/RmR9Y3t1r11EUolhhEKVbNrjgA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1x8nJR-000000069H1-1BjS;
-	Tue, 22 Sep 2026 01:20:41 +0200
-Message-ID: <4a0240a7b9ff87302620a95c73f4f265cd428618.camel@sipsolutions.net>
-Subject: Re: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Ilya Maximets <i.maximets@ovn.org>, Matthieu Baerts <matttbe@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Aaron Conole <aconole@redhat.com>, Eelco Chaudron	 <echaudro@redhat.com>,
- dev@openvswitch.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Adrian Moreno	
- <amorenoz@redhat.com>, Antoine Tenart <atenart@kernel.org>
-Date: Tue, 22 Sep 2026 01:20:40 +0200
-In-Reply-To: <99e5f7c0d7debc8a59bac96e93f09600bf488ca8.camel@sipsolutions.net>
-References: <20260921101538.97286-6-johannes@sipsolutions.net>
-		 <20260921101538.97286-9-johannes@sipsolutions.net>
-		 <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
-		 <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
-		 (sfid-20260922_002359_374467_DCE67D5E) <99e5f7c0d7debc8a59bac96e93f09600bf488ca8.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfxCRyjZ"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cc147d86bebso466328a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Sep 2026 17:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790037489; x=1790642289; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vK9yWKbLePV+PhIzuB8+Y294NhkTxfEqJ9/AYRPGsHs=;
+        b=KfxCRyjZajsnFb9ivUs+xhCuHmKO/PGGnrxIivzb74I51zUSN3Bsri+kgG5o+3O7Qs
+         X6diPDceo5NOq5qK1r5EsEQQXeeIyyPyAyqbmIkKWX93BkqDJFTHvROJaKfL5Ma9/IBs
+         qPtjGdjKcP7xbvcPE9YcZfTYlfZMYIpLzYaCeCJiqRUumZ84a1a/f3jGHRW4caQdATWY
+         JHztINCz/tSOkX+ZYh7zEdOE9m7kae4QsQSsRNeN+Zgjp0TpH3PmiWuyX6MjcLJ+4de8
+         QN4oUBihX98sKCf6oLzwaKRKKXhw0X6cPcRlDWTMOzjUFM67dvXpzg03OpBg4lRUXTj+
+         wKqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790037489; x=1790642289;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vK9yWKbLePV+PhIzuB8+Y294NhkTxfEqJ9/AYRPGsHs=;
+        b=sdm6EyVhvS5oX2k/6gfDJ3b9NCvjJUcxtt0GobFMnfHVXsvbkw2qyvdTOy4hdAGpKN
+         TBtddp8V9UYPqSy01qFuIcE0uc+Nw7h61BWVASYGM1+uw0QWJBkN5iJ0K0sJPTPPoOXl
+         nWSaSH2Adq90wUzZLcmi8QKyjp7rmaAKOg7Psw6y/nrYQqZrDmPeb1WWsj9HPJbPyhaO
+         T+Leue5CYCEsHgfYP09zhkPFqxIbwPhSwnFGiic1FZiZJvURaAJ2PhKc8omVFvPZIvff
+         P48+q8FtJWrvs0lAZuxAUxSJ7UdWZ8QTYk06mjySzBsI6l+DugWhsdfrborIpNgqkQsh
+         5kwg==
+X-Forwarded-Encrypted: i=1; AKwUvBxSWFxrjNfF3xFcnnBdujbEf7t2hxqwh0H9w56rSBqyHAo9dz0+jeGcm9oWuYvB4n9ZkhR6ew8pH9dzUnPGuXFCLBk=@vger.kernel.org
+X-Gm-Message-State: AFuF++nCSuT5KFyLrBmg4PqDTQ2uR45Z49FbUJlf0rulFVPOQEtk9bIY
+	M/bo3rmQ/Wn28N7c2iqG/s0fvG3a5ckjQzWftKLuJ96tgySmrfY3fvnlITnD5+E=
+X-Gm-Gg: AYBFou0HUfgOIj2vAMR1acluPLelWJAeAWEFFpRZaSIRiSL6tML9ENRu+J4zzZwLXYI
+	eR8rc9G5IexBsPEfqC0a73lEQCLJmuAI650hVL7r7jbeZh5RC2rnTXZngIzGFDTpS/7C1Nu76PX
+	86lx9WMao+0IGiXxn/cUzE2Q2/i0VDUF+GuNDFCrpFMsNMVmTxA6e83wLClYcOJahq8aBBX7s1N
+	GrOAsPL8AMabq4jhyYPbd1/+yNaUmmdFlTTW8mUM2R5v8imND/MMpjhQqva5qRJRZtocWt4r5/A
+	iWpEphnkkR5Ue9W7cEqNV8YFThjYK1Vbqrfjooe0z2yRcQnm5BKLgl6lTHqR51xey0j7jJpFauG
+	/mG1n3YKrUE5bwIJcJ2bgu2Co7cjx8FZ7IClNOdaqMHQr9nOdE+vpbZnNbu5HtWD1Erg/2Cl+EM
+	h272ZrSpgtRw0MQexLHwiK8yBf4EEo3BXlMDK6FJL8d5USlY02gm7jqvjo/z3LPQN6nhreBJwIn
+	FFk4qya+DqMpuqARFZWnuk3
+X-Received: by 2002:a05:6a21:e8c:b0:3d3:aed2:6f21 with SMTP id adf61e73a8af0-3dde01c1bfcmr1241002637.21.1790037488713;
+        Mon, 21 Sep 2026 17:38:08 -0700 (PDT)
+Received: from ydg-Zenbook-14-UM3406GA ([2001:2d8:7f00:8c85:38b7:a3:b37e:ac86])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc756a18ddbsm15551a12.7.2026.09.21.17.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2026 17:38:07 -0700 (PDT)
+From: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+To: vdonnefort@google.com
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	donggeunyoo.kernel@gmail.com
+Subject: Re: [PATCH v1] ring-buffer: Fix the sub-buffer array base in rb_meta_subbuf_idx()
+Date: Tue, 22 Sep 2026 09:38:02 +0900
+Message-ID: <20260922003802.1270847-1-donggeunyoo.kernel@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <arDlCou_U1nV9Zqq@google.com>
+References: <20260918071507.1019251-1-donggeunyoo.kernel@gmail.com> <arDlCou_U1nV9Zqq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-09-22 at 00:36 +0200, Johannes Berg wrote:
->=20
-> Indeed. Something like this (untested right now, didn't manage to spin
-> up a test yet):
->=20
-> diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/too=
-ls/testing/selftests/net/openvswitch/openvswitch.sh
-> index a31f7fb6882d..9b8edfcd2d1a 100755
-> --- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> +++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> @@ -234,7 +234,7 @@ ovs_drop_reason_count()
->  	local reason=3D$1
-> =20
->  	local perf_output=3D`perf script -i ${ovs_dir}/perf.data -F trace:event=
-,trace`
-> -	local pattern=3D"skb:kfree_skb:.*reason: $reason"
-> +	local pattern=3D"skb:kfree_skb:.*reason: $reason$"
-> =20
->  	return `echo "$perf_output" | grep "$pattern" | wc -l`
->  }
-> @@ -790,15 +790,6 @@ test_psample() {
->  # - drop packets and verify the right drop reason is reported
->  test_drop_reason() {
->  	which perf >/dev/null 2>&1 || return $ksft_skip
-> -	which pahole >/dev/null 2>&1 || return $ksft_skip
-> -
-> -	ovs_drop_subsys=3D$(pahole -C skb_drop_reason_subsys |
-> -			      awk '/OPENVSWITCH/ { print $3; }' |
-> -			      tr -d ,)
-> -	if [ -z "$ovs_drop_subsys" ]; then
-> -		info "failed to get OVS drop subsys ID"
-> -		return $ksft_skip
-> -	fi
-> =20
->  	sbx_add "test_drop_reason" || return $?
-> =20
-> @@ -842,7 +833,7 @@ test_drop_reason() {
->  		"in_port(2),eth(),eth_type(0x0800),ipv4(src=3D172.31.110.20,proto=3D1)=
-,icmp()" 'drop'
-> =20
->  	ovs_drop_record_and_run "test_drop_reason" ip netns exec client ping -c=
- 2 172.31.110.20
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0001 # OVS_DROP_FLOW_ACTION
-> +	ovs_drop_reason_count OVS_DROP_LAST_ACTION
->  	if [[ "$?" -ne "2" ]]; then
->  		info "Did not detect expected drops: $?"
->  		return 1
-> @@ -859,7 +850,7 @@ test_drop_reason() {
-> =20
->  	ovs_drop_record_and_run \
->              "test_drop_reason" ip netns exec client nc -i 1 -zuv 172.31.=
-110.20 6000
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0004 # OVS_DROP_EXPLICIT_ACTI=
-ON_ERROR
-> +	ovs_drop_reason_count OVS_DROP_EXPLICIT_WITH_ERROR
->  	if [[ "$?" -ne "1" ]]; then
->  		info "Did not detect expected explicit error drops: $?"
->  		return 1
-> @@ -867,7 +858,7 @@ test_drop_reason() {
-> =20
->  	ovs_drop_record_and_run \
->              "test_drop_reason" ip netns exec client nc -i 1 -zuv 172.31.=
-110.20 7000
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0003 # OVS_DROP_EXPLICIT_ACTI=
-ON
-> +	ovs_drop_reason_count OVS_DROP_EXPLICIT
->  	if [[ "$?" -ne "1" ]]; then
->  		info "Did not detect expected explicit drops: $?"
->  		return 1
->=20
+On Mon, Sep 21, 2026 at 09:04:26AM +0100, Vincent Donnefort wrote:
+> Looking at the delta between rb_meta_subbuf_idx() and rb_range_align_subbuf, it
+> seems it's just the former didn't include that struct ring_buffer_cpu_meta
+> isn't?
 
-No longer untested, that works.
+Right -- the sizeof(struct ring_buffer_cpu_meta) term was missing.
 
-I might resend tomorrow, but we'll have to wait for Steven to comment on
-patches 1-3 anyway.
+> That is quite long commit description just to say that :)
 
-johannes
+Fair enough.  I will keep them shorter.
+
+Thanks for the review.
+
+Donggeun
