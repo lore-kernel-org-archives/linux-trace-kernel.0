@@ -1,355 +1,250 @@
-Received: from mta0.migadu.com (out-120.mta0.migadu.com [91.218.175.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04E93815E4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 02:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB6C3A16BA;
+	Tue, 22 Sep 2026 02:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790044653; cv=none; b=g0OVZHefWvVUYxzOSG2b15Qs6mlP26Lgd+dDOQcbdQqDE6B3M/sUe9amCZ7LLZhWejDkTUvQElfygtmNT8D/ZInXaEpi0NjEArP7SEw/QReMxXJ0LZlejceZAByOLPZl1iHLAJ5ODClvEL0PGqk60ySx240qT0BNyWpwhoYBC2U=
+	t=1790044775; cv=none; b=utu6vLYUWwPBttvpn3plRDhG1LLaQeaSDFlsayPtI6xP7sjyZdTJ/wyGssteGf6xLuVMOAqlNjJLViEDXTgZMwpFhh0Pr4usAfsXvWYZF7Ps/hhfg36/1RY8MbZCWeA2Oxm8YjouMpWUnRQhTBtmhtXMWAxgE8hp/QOSRlM/Dic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790044653; c=relaxed/simple;
-	bh=oXcuiUEvPpxdNGvwMoDxu13JoB6hGuqYMXZ4T/ilDvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ADV0lBUfR872J9gur6HfwYX7vGOW1A+ErMT5AGlqOdqO+CtkDkT1Y6d//9uVLNkH/CiYip5pzzhVxtGo2gXui9Ul79dPU9VskZFttw110UL1xWtNVEAi/9UR4FPx56J8pTxbAo12giuol3KlzMmUeXj3jcwNyT1oojYsIzR53sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EQth+ETl; arc=none smtp.client-ip=91.218.175.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790044775; c=relaxed/simple;
+	bh=oZLpOhucHC43z4ds0CWKTjnSopVVOHC64Q7+aCD2T9U=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pVudwEDAqHqQEr5ExLzb8l8sZB7Z20n3NIrgbQadvkkAKLTHJAiA/+cHtOyuYcCG3i/PakLC5s6rQ7Y+2mmpEEyYE8NMabCvGaQHWAOXzBFohjPo5t6VES8fsrkBfi798iaP9E+AJYJ31NMzg7DU2+VXY0+StUXEejuW3Ngd4cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grS8wGjB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EQth+ETl"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=oXcuiUEvPpxdNGvwMoDxu13JoB6hGuqYMXZ4T/ilDvE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790044649; v=1; x=1790649449;
- b=EQth+ETl80xFW214zMaf/kRRc8DXbeJAfqSwMA9pD3NSajRyxv/i20xZWyISUB8cPcxJ65li
- T8IKhyN5KGjoagnVOlDbVYmLLmmpUQ97RsetwOct0ar6idMKZh46qE7eka96Tmi37JJHeoHFokH
- m0ukylhRt/d4yYBWEoU5UTcw=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 15abc27bba9dfcd4;
-	Tue, 22 Sep 2026 02:37:29 +0000
-X-Mizu-Trace-ID: 15abc27bba9dfcd4
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <6dfa3c07-932a-4f58-9933-f7bd050d5f51@linux.dev>
-Date: Tue, 22 Sep 2026 10:37:18 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grS8wGjB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 624791F000FF;
+	Tue, 22 Sep 2026 02:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790044766;
+	bh=/SAfsVYoWNOJHq26yUF7h5nEJM0KRG0iyQixYLdJd5A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=grS8wGjBF4E6C9/mcHeILgxNYrsa6oMXLRS4na/8KMmB4+53iikNfdmTyH5i+6Zf+
+	 8YJg0xNC4ZVXroZwuGKsSRmAuu4/iQz6zUkhLTuWTS9P6QmHtW8yhljyAJfpUkC8Og
+	 ECCn45hx1OOxUswv48gEzLwnzFdcoutxzmBL9LaXNnI9KSuwNjydL4/4hpziCOs/Lm
+	 jl8GrZHIA5LQmZQE3V8TStaJD3/yRG5GjvoHdy6HvjY6avL2qsOTT0z8stwjwJa1VS
+	 SHJTetGRQgyjaUOLjTzH7ZU7dMmY+3j47ThBwh3LDJhd6QBhTN+aKxalTJ/vFmYSqD
+	 b2u0OjWOHrPJg==
+Date: Tue, 22 Sep 2026 11:39:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v16 10/13] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
+Message-Id: <20260922113923.351783c6db12f18befe1db79@kernel.org>
+In-Reply-To: <20260914145845.1D9D21F000FF@smtp.kernel.org>
+References: <178939017565.94750.9431053336761330458.stgit@devnote2>
+	<178939029574.94750.11636803595861231046.stgit@devnote2>
+	<20260914145845.1D9D21F000FF@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/4] mm/vmscan: move struct scan_control to the local
- trace header
-To: Baoquan He <baoquan.he@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Johannes Weiner
- <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Dave Chinner
- <david@fromorbit.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)"
- <cgroups@vger.kernel.org>,
- "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)"
- <linux-mm@kvack.org>, Ridong Chen <chenridong@xiaomi.com>
-References: <20260921114606.3871820-1-ridong.chen@linux.dev>
- <20260921114606.3871820-4-ridong.chen@linux.dev> <arHm0PVMaG08bq-Z@fedora>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <arHm0PVMaG08bq-Z@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Mon, 14 Sep 2026 14:58:44 +0000
+sashiko-bot@kernel.org wrote:
 
-
-On 9/22/2026 10:24 AM, Baoquan He wrote:
-> On 09/21/26 at 07:46pm, Ridong Chen wrote:
->> From: Ridong Chen <chenridong@xiaomi.com>
->>
->> Now that the vmscan tracepoints live in mm/trace_vmscan.h, move
->> struct scan_control there as well so the trace events can reference
->> reclaim-internal state directly. The definition is wrapped in its own
->> include guard because the trace header is re-read under
->> TRACE_HEADER_MULTI_READ, while a C struct may only be defined once.
->>
->> No functional change.
->>
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
->> ---
->>   mm/trace_vmscan.h | 115 ++++++++++++++++++++++++++++++++++++++++++++++
->>   mm/vmscan.c       | 108 -------------------------------------------
->>   2 files changed, 115 insertions(+), 108 deletions(-)
->>
->> diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
->> index c5d824fef554..c8ac5d4e4043 100644
->> --- a/mm/trace_vmscan.h
->> +++ b/mm/trace_vmscan.h
+> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
+> - [High] Missing RCU synchronization in the error path of wprobe trigger registration leads to a Use-After-Free of hardware breakpoint perf_event structures.
+> - [High] Hardware breakpoint addresses are not updated for offline CPUs, leading to stale addresses when CPUs come online.
+> - [Medium] The 'count' parameter is decremented on trigger evaluation misses, causing the trigger to exhaust its count without actually modifying the watchpoint.
+> - [Medium] The wprobe event permanently leaks as enabled when the trigger is unregistered because `EVENT_FILE_FL_SOFT_DISABLED_BIT` is manually cleared.
+> - [Low] A field named 'unlimited' is silently ignored by `clear_wprobe` if no count keyword is provided.
+> --
 > 
-> This looks not good, I would rather see it's added in mm/internal.h, or
-> a new mm/vmscan.h. Putting scan_control in mm/trace_vmscan.h is too weird.
+> commit 146ca411781d7203b266aa3745d30641c87b97d2
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
+> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+> 
+> Add set_wprobe and clear_wprobe event triggers to dynamically attach
+> and detach hardware breakpoint address monitoring based on event field
+> contents.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > index 9c6100b63e8d9..55a201504bb0b 100644
+> > --- a/kernel/trace/trace_wprobe.c
+> > +++ b/kernel/trace/trace_wprobe.c
+> 
+> [ ... ]
+> 
+> > @@ -231,6 +303,12 @@ static struct trace_wprobe *alloc_trace_wprobe(const char *group,
+> > 
+> > +static void wprobe_work_func(struct work_struct *work)
+> > +{
+> > +	struct trace_wprobe *tw = container_of(work, struct trace_wprobe, work);
+> > +
+> > +	on_each_cpu(wprobe_smp_update_func, tw, true);
+> 
+> [Severity: High]
+> Could this leave hardware breakpoints with stale addresses on offline CPUs?
+> 
+> on_each_cpu() only broadcasts to currently online CPUs, so offline CPUs
+> won't execute trace_wprobe_update_local(). When an offline CPU comes
+> online, won't the perf event core reinstall the hardware breakpoint using
+> the old, stale address since it wasn't updated here?
 
-Thanks.
+OK, introduce cpu hotplug callback to handle it.
 
-I'm not sure whether the maintainers would be happy to make scan_control
-external. I'd prefer to move scan_control to a new mm/vmscan.h, since
-mm/internal.h is getting larger and larger. So I'd like to hear other
-opinions.
+> 
+> [ ... ]
+> 
+> > @@ -773,3 +866,538 @@ static __init int init_wprobe_trace(void)
+> 
+> [ ... ]
+> 
+> > +static void wprobe_trigger(struct event_trigger_data *data,
+> > +			   struct trace_buffer *buffer,  void *rec,
+> > +			   struct ring_buffer_event *event)
+> > +{
+> > +	struct wprobe_trigger_data *wprobe_data = data->private_data;
+> > +	struct trace_wprobe *tw = wprobe_data->tw;
+> > +	unsigned long addr = 0, flags;
+> > +	bool changed = false;
+> 
+> [ ... ]
+> 
+> > +	raw_spin_lock_irqsave(&tw->lock, flags);
+> > +
+> > +	if (!wprobe_data->clear) {
+> > +		if (!trace_wprobe_is_valid_addr(addr, tw->len)) {
+> > +			atomic_inc(&tw->missed);
+> > +			goto out;
+> > +		}
+> > +		if (tw->addr == WPROBE_DEFAULT_CLEAR_ADDRESS) {
+> > +			/* Skip if a previous work is still propagating the address */
+> > +			if (atomic_read(&tw->work_pending)) {
+> > +				atomic_inc(&tw->missed);
+> > +				goto out;
+> > +			}
+> > +			WRITE_ONCE(tw->addr, addr);
+> > +			changed = true;
+> > +			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &wprobe_data->file->flags);
+> 
+> [Severity: Medium]
+> Does manually clearing EVENT_FILE_FL_SOFT_DISABLED_BIT cause the event to leak
+> as enabled?
+> 
+> When the trigger is unregistered, wprobe_trigger_free() calls
+> trace_event_enable_disable(file, 0, 1). Because the soft-disabled bit was
+> cleared here, won't the core event logic skip the unregister step, leaving
+> the wprobe tracepoint permanently enabled in the kernel?
 
->> @@ -9,8 +9,123 @@
->>   #include <linux/tracepoint.h>
->>   #include <linux/mm.h>
->>   #include <linux/memcontrol.h>
->> +#include <linux/swap.h>
->>   #include <trace/events/mmflags.h>
->>   
->> +/* Guard the struct against define_trace.h's repeated inclusion. */
->> +#ifndef _MM_VMSCAN_INTERNAL_H
->> +#define _MM_VMSCAN_INTERNAL_H
->> +
->> +struct scan_control {
->> +	/* How many pages shrink_list() should reclaim */
->> +	unsigned long nr_to_reclaim;
->> +
->> +	/*
->> +	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
->> +	 * are scanned.
->> +	 */
->> +	const nodemask_t *nodemask;
->> +
->> +	/*
->> +	 * The memory cgroup that hit its limit and as a result is the
->> +	 * primary target of this reclaim invocation.
->> +	 */
->> +	struct mem_cgroup *target_mem_cgroup;
->> +
->> +	/*
->> +	 * Scan pressure balancing between anon and file LRUs
->> +	 */
->> +	unsigned long	anon_cost;
->> +	unsigned long	file_cost;
->> +
->> +	/* Swappiness value for proactive reclaim. Always use sc_swappiness()! */
->> +	int *proactive_swappiness;
->> +
->> +	/* Can active folios be deactivated as part of reclaim? */
->> +#define DEACTIVATE_ANON 1
->> +#define DEACTIVATE_FILE 2
->> +	unsigned int may_deactivate:2;
->> +	unsigned int force_deactivate:1;
->> +	unsigned int skipped_deactivate:1;
->> +
->> +	/* zone_reclaim_mode, boost reclaim */
->> +	unsigned int may_writepage:1;
->> +
->> +	/* zone_reclaim_mode */
->> +	unsigned int may_unmap:1;
->> +
->> +	/* zone_reclaim_mode, boost reclaim, cgroup restrictions */
->> +	unsigned int may_swap:1;
->> +
->> +	/* Not allow cache_trim_mode to be turned on as part of reclaim? */
->> +	unsigned int no_cache_trim_mode:1;
->> +
->> +	/* Has cache_trim_mode failed at least once? */
->> +	unsigned int cache_trim_mode_failed:1;
->> +
->> +	/* Proactive reclaim invoked by userspace */
->> +	unsigned int proactive:1;
->> +
->> +	/*
->> +	 * Cgroup memory below memory.low is protected as long as we
->> +	 * don't threaten to OOM. If any cgroup is reclaimed at
->> +	 * reduced force or passed over entirely due to its memory.low
->> +	 * setting (memcg_low_skipped), and nothing is reclaimed as a
->> +	 * result, then go back for one more cycle that reclaims the protected
->> +	 * memory (memcg_low_reclaim) to avert OOM.
->> +	 */
->> +	unsigned int memcg_low_reclaim:1;
->> +	unsigned int memcg_low_skipped:1;
->> +
->> +	/* Shared cgroup tree walk failed, rescan the whole tree */
->> +	unsigned int memcg_full_walk:1;
->> +
->> +	unsigned int hibernation_mode:1;
->> +
->> +	/* One of the zones is ready for compaction */
->> +	unsigned int compaction_ready:1;
->> +
->> +	/* There is easily reclaimable cold cache in the current node */
->> +	unsigned int cache_trim_mode:1;
->> +
->> +	/* The file folios on the current node are dangerously low */
->> +	unsigned int file_is_tiny:1;
->> +
->> +	/* Always discard instead of demoting to lower tier memory */
->> +	unsigned int no_demotion:1;
->> +
->> +	/* Allocation order */
->> +	s8 order;
->> +
->> +	/* Scan (total_size >> priority) pages at once */
->> +	s8 priority;
->> +
->> +	/* The highest zone to isolate folios for reclaim from */
->> +	s8 reclaim_idx;
->> +
->> +	/* This context's GFP mask */
->> +	gfp_t gfp_mask;
->> +
->> +	/* Incremented by the number of inactive pages that were scanned */
->> +	unsigned long nr_scanned;
->> +
->> +	/* Number of pages freed so far during a call to shrink_zones() */
->> +	unsigned long nr_reclaimed;
->> +
->> +	struct {
->> +		unsigned int dirty;
->> +		unsigned int congested;
->> +		unsigned int writeback;
->> +		unsigned int immediate;
->> +		unsigned int taken;
->> +	} nr;
->> +
->> +	/* for recording the reclaimed slab by now */
->> +	struct reclaim_state reclaim_state;
->> +};
->> +
->> +#endif /* _MM_VMSCAN_INTERNAL_H */
->> +
->>   #define RECLAIM_WB_ANON		0x0001u
->>   #define RECLAIM_WB_FILE		0x0002u
->>   #define RECLAIM_WB_MIXED	0x0010u
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index 0eb7fa8e1d43..2fd9b42f89d8 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -73,114 +73,6 @@
->>   #define CREATE_TRACE_POINTS
->>   #include "trace_vmscan.h"
->>   
->> -struct scan_control {
->> -	/* How many pages shrink_list() should reclaim */
->> -	unsigned long nr_to_reclaim;
->> -
->> -	/*
->> -	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
->> -	 * are scanned.
->> -	 */
->> -	const nodemask_t *nodemask;
->> -
->> -	/*
->> -	 * The memory cgroup that hit its limit and as a result is the
->> -	 * primary target of this reclaim invocation.
->> -	 */
->> -	struct mem_cgroup *target_mem_cgroup;
->> -
->> -	/*
->> -	 * Scan pressure balancing between anon and file LRUs
->> -	 */
->> -	unsigned long	anon_cost;
->> -	unsigned long	file_cost;
->> -
->> -	/* Swappiness value for proactive reclaim. Always use sc_swappiness()! */
->> -	int *proactive_swappiness;
->> -
->> -	/* Can active folios be deactivated as part of reclaim? */
->> -#define DEACTIVATE_ANON 1
->> -#define DEACTIVATE_FILE 2
->> -	unsigned int may_deactivate:2;
->> -	unsigned int force_deactivate:1;
->> -	unsigned int skipped_deactivate:1;
->> -
->> -	/* zone_reclaim_mode, boost reclaim */
->> -	unsigned int may_writepage:1;
->> -
->> -	/* zone_reclaim_mode */
->> -	unsigned int may_unmap:1;
->> -
->> -	/* zone_reclaim_mode, boost reclaim, cgroup restrictions */
->> -	unsigned int may_swap:1;
->> -
->> -	/* Not allow cache_trim_mode to be turned on as part of reclaim? */
->> -	unsigned int no_cache_trim_mode:1;
->> -
->> -	/* Has cache_trim_mode failed at least once? */
->> -	unsigned int cache_trim_mode_failed:1;
->> -
->> -	/* Proactive reclaim invoked by userspace */
->> -	unsigned int proactive:1;
->> -
->> -	/*
->> -	 * Cgroup memory below memory.low is protected as long as we
->> -	 * don't threaten to OOM. If any cgroup is reclaimed at
->> -	 * reduced force or passed over entirely due to its memory.low
->> -	 * setting (memcg_low_skipped), and nothing is reclaimed as a
->> -	 * result, then go back for one more cycle that reclaims the protected
->> -	 * memory (memcg_low_reclaim) to avert OOM.
->> -	 */
->> -	unsigned int memcg_low_reclaim:1;
->> -	unsigned int memcg_low_skipped:1;
->> -
->> -	/* Shared cgroup tree walk failed, rescan the whole tree */
->> -	unsigned int memcg_full_walk:1;
->> -
->> -	unsigned int hibernation_mode:1;
->> -
->> -	/* One of the zones is ready for compaction */
->> -	unsigned int compaction_ready:1;
->> -
->> -	/* There is easily reclaimable cold cache in the current node */
->> -	unsigned int cache_trim_mode:1;
->> -
->> -	/* The file folios on the current node are dangerously low */
->> -	unsigned int file_is_tiny:1;
->> -
->> -	/* Always discard instead of demoting to lower tier memory */
->> -	unsigned int no_demotion:1;
->> -
->> -	/* Allocation order */
->> -	s8 order;
->> -
->> -	/* Scan (total_size >> priority) pages at once */
->> -	s8 priority;
->> -
->> -	/* The highest zone to isolate folios for reclaim from */
->> -	s8 reclaim_idx;
->> -
->> -	/* This context's GFP mask */
->> -	gfp_t gfp_mask;
->> -
->> -	/* Incremented by the number of inactive pages that were scanned */
->> -	unsigned long nr_scanned;
->> -
->> -	/* Number of pages freed so far during a call to shrink_zones() */
->> -	unsigned long nr_reclaimed;
->> -
->> -	struct {
->> -		unsigned int dirty;
->> -		unsigned int congested;
->> -		unsigned int writeback;
->> -		unsigned int immediate;
->> -		unsigned int taken;
->> -	} nr;
->> -
->> -	/* for recording the reclaimed slab by now */
->> -	struct reclaim_state reclaim_state;
->> -};
->> -
->>   #ifdef ARCH_HAS_PREFETCHW
->>   static inline void prefetchw_prev_lru_folio(struct folio *folio,
->>   		struct list_head *base)
->> -- 
->> 2.34.1
->>
+Good catch!
+Hmm, we should set EVENT_FILE_FL_SOFT_DISABLED_BIT when removing
+a wprobe_trigger.
+
+> 
+> [ ... ]
+> 
+> > +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+> > +				    struct trace_event_file *file,
+> > +				    char *glob, char *cmd,
+> > +				    char *param_and_filter)
+> > +{
+> 
+> [ ... ]
+> 
+> > +	} else if (param && (isalpha(param[0]) || param[0] == '_')) {
+> > +		if (strncmp(param, "count=", 6) != 0 &&
+> > +		    strcmp(param, "unlimited") != 0) {
+> 
+> [Severity: Low]
+> Is this intended to skip fields named "unlimited"?
+> 
+> If a user configures a clear_wprobe trigger on an event that happens to have
+> a field named "unlimited", this parser matches the keyword and skips parsing
+> it as a field, which defaults to an unconditional clear action.
+
+Hmm, OK. Let's check the event has "unlimited" field or not.
+
+> 
+> [ ... ]
+> 
+> > +static int wprobe_register_trigger(char *glob,
+> > +				   struct event_trigger_data *data,
+> > +				   struct trace_event_file *file)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	lockdep_assert_held(&event_mutex);
+> > +
+> > +	/* The same wprobe is not accept on the same file (event) */
+> > +	if (wprobe_trigger_find_same(data, file))
+> > +		return -EEXIST;
+> > +
+> > +	if (data->cmd_ops->init) {
+> > +		ret = data->cmd_ops->init(data);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> > +
+> > +	list_add_rcu(&data->list, &file->triggers);
+> > +
+> > +	update_cond_flag(file);
+> > +	ret = trace_event_trigger_enable_disable(file, 1);
+> > +	if (ret < 0) {
+> > +		list_del_rcu(&data->list);
+> > +		update_cond_flag(file);
+> > +		if (data->cmd_ops->free)
+> > +			data->cmd_ops->free(data);
+> > +	}
+> 
+> [Severity: High]
+> Does this error path need RCU synchronization?
+> 
+> If trace_event_trigger_enable_disable() fails, list_del_rcu() is called
+> without a subsequent synchronize_rcu(). The cmd_ops->free callback
+> (wprobe_trigger_free) will then synchronously disable the wprobe, which
+> frees the tw->bp_event array.
+> 
+> Could a concurrent tracepoint reader still observe the trigger data,
+> execute wprobe_trigger(), and dereference the freed tw->bp_event via
+> this_cpu_ptr() inside trace_wprobe_update_local()?
+
+Yes. Let me add tracepoint_synchronize_unregister() here for
+waiting RCU.
+
+> 
+> [ ... ]
+> 
+> > +static struct event_command trigger_wprobe_set_cmd = {
+> > +	.name			= SET_WPROBE_STR,
+> > +	.trigger_type		= ETT_EVENT_WPROBE,
+> > +	/* This triggers after when the event is recorded. */
+> > +	.flags			= EVENT_CMD_FL_NEEDS_REC,
+> > +	.parse			= wprobe_trigger_cmd_parse,
+> > +	.reg			= wprobe_register_trigger,
+> > +	.unreg			= wprobe_unregister_trigger,
+> > +	.set_filter		= set_trigger_filter,
+> > +	.trigger		= wprobe_trigger,
+> > +	.count_func		= event_trigger_count,
+> 
+> [Severity: Medium]
+> Will this unconditionally exhaust the trigger's count parameter even on misses?
+> 
+> Because .count_func is set to event_trigger_count, the count is decremented
+> before wprobe_trigger() runs. If the trigger fails its implicit checks inside
+> wprobe_trigger() (such as checking if the field matches the watched address),
+> the count has already been consumed.
+
+Hmm, OK. Let me add wprobe_count_func() to check the condition.
+
+Thank you,
+
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/178939017565.94750.9431053336761330458.stgit@devnote2?part=10
+
 
 -- 
-Best regards
-Ridong
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
