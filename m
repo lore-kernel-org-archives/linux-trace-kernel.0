@@ -1,113 +1,86 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E01E4F474C;
-	Tue, 22 Sep 2026 07:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62AF4FE2E2;
+	Tue, 22 Sep 2026 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790060698; cv=none; b=auBL75oo9UJ0hF07lSHlgpfKZt2DMrqkGNW4CZPsz13G76qj9XQCw9xmeKmf+GGhNRGhq3IRI75VAiV6tk7F581LD8bL6hNZFZtiy/OeJhJW1wOWy8UDnpX4iM7qFg2x6S/0y7GP3/AkicHk+9TasPqAUw3QFtNQXR7GCBy4Ktg=
+	t=1790061528; cv=none; b=N7zA3H35PF+Sh/MzN+LS/Tw8JBWBszkyUl/gMXQcl3Tw25Iz4jiEXCxpo/3dkeKgppLokfS1xCmgdQq1iEyaZ/+2yt2Lvo43SwZtmKMsM+O+krQVZaRm7io0oDIbCXFA98RVCFpRG8JiMQngj6MGT4l1sss3+o1JKvxexFU7H+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790060698; c=relaxed/simple;
-	bh=xb+ML7B/wsHqkAm4sviLlOgKiMcF/sIlhEKQe7Ac5PE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bH2D4EHZXbKNQ+piRkDkxwD1Y/TBEBxjnIiENEfZbjmxSGLqRvIfSUgMqo8yscCNDSBG/NOZ9hSAf5kpkBThHhXyTNZUR1caUSfEQLRJD7rHaJaqQkcBQyhFk0lYqAXoizyzoHsEifu62Tv2S21G02NEZjPVEhBecHTwpK8e0Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=h2KzUv43; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1790061528; c=relaxed/simple;
+	bh=uV7pocMRh8zCF3luyhdWrrGrT1YqzbHFJOU09h4L8+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGt6J6/IPPPE/6Vyw4iuhGCVtqcYvD3m+ylxJZIq38VCpubJ7pvzSDaQDPCQobj2bDftZBeLIrKn7F13KMeW4bsLpE17Y6mYp+FmSN3rhNOYC0EsStmb2OC+m9Y805NbTLmCu9LFEIXuNd919GwiocafOmixmWyXmvtSgFM1ytI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgDnDhi+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="h2KzUv43"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=p2
-	qx/98AGIgAs9QaTEUqM74hqQUBcMVIUw0SxZmpelA=; b=h2KzUv43XphVWd8C31
-	RYvVIcweZZ+W8D1oeIRU0qrUFFwcHBfNGe4yLn8hKIH5M2u24rMSHov03enZIOs7
-	gttPDvG53JPkNhACL+06waViHANFlseUZdpy5AJqtIpYgjB+eMgIP2/KV0XeQiUD
-	kQNJbJvfgyszeZSridMaYvBxA=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgBHN29UKLJqJZ4HAw--.12533S2;
-	Tue, 22 Sep 2026 15:03:50 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: memxor@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	emil@etsalapatis.com,
-	ihor.solodrai@linux.dev,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	matt@bobrowski.net,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v2 bpf-next 1/2] bpf: Reject bpf_skb_output() from return-side tracing
-Date: Tue, 22 Sep 2026 15:03:48 +0800
-Message-Id: <20260922070348.485673-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <DLLHE9PBLDU0.XQGEOQQIR4HV@gmail.com>
-References: <DLLHE9PBLDU0.XQGEOQQIR4HV@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgDnDhi+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECB71F000FF;
+	Tue, 22 Sep 2026 07:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790061522;
+	bh=pTlsg96OYWHuA+B9t5BZYqZhHGwqt3xddf8KM6DyEe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SgDnDhi+n4gPVBmx54ns+OIrziXlJrCBKgmr6rjUz3yVfElw8VjBd/yEJdN6Y4sqr
+	 ol5PCqJkS/gpUlFghFigeC6+y/Je1JWIRDSC4z7TzVZXIlVnFyreX5sF0DQ0vpfk6n
+	 Cyyf7IfwEHFldY6xSYoqk/pJWBOwya9zzMyIfGYF82Vu2mv9g/yF887NfGGX2MX58K
+	 FecMi41qzp02o5Nm61q/9qc1gKUnyjglfcmoIF3CRi4jXUbrRmsbIrnY7JpL/kx0oH
+	 LhevY1ArNZU2WmsZ3hFMA/eAUbby2ndV5s9jY0AsOOXM48Rv3h0lyAwhPNvsr1+Hzy
+	 +ekTNN56EbgyQ==
+Date: Tue, 22 Sep 2026 09:18:39 +0200
+From: Antoine Tenart <atenart@kernel.org>
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>, 
+	Johannes Berg <johannes@sipsolutions.net>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Johannes Berg <johannes.berg@intel.com>, Aaron Conole <aconole@redhat.com>, 
+	Eelco Chaudron <echaudro@redhat.com>, dev@openvswitch.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Adrian Moreno <amorenoz@redhat.com>
+Subject: Re: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
+Message-ID: <arIrrr5Kk-XqnqDz@kwain>
+References: <20260921101538.97286-6-johannes@sipsolutions.net>
+ <20260921101538.97286-9-johannes@sipsolutions.net>
+ <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
+ <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgBHN29UKLJqJZ4HAw--.12533S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw15KryDWrWfCw4kuFy8Krg_yoW8ury7pa
-	yv93WYkr4DtrW7CwsrAw4Fvr98t395Aw45GrWvy345Zws8Zr97tr48Ka1F9as8A34UC3yq
-	vr4qv34DJ395AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUoOJnUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbCzxZm3mqyKFYL5QAA3p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
 
-On Tue, 22 Sep 2026 04:15:13 +0200, Kumar Kartikeya Dwivedi wrote:
-
-> On Tue Sep 22, 2026 at 3:54 AM CEST, Feng Yang wrote:
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> >
-> > BPF fexit programs run after the traced function returns, while their
-> > context still contains the original function argument values. A traced
-> > function is free to consume an skb argument before returning, so the
-> > pointer seen by fexit can already be stale.
-> >
-> > The verifier checks that the first argument to bpf_skb_output() has the
-> > BTF type of struct sk_buff, but that does not establish its lifetime.
-> > bpf_skb_event_output() then dereferences skb->len and can trigger a
-> > use-after-free.
-> >
-> > Do not expose bpf_skb_output() to tracing programs which can run after
-> > the target: fexit, fexit.multi, fsession and fsession.multi. Keep it
-> > available to fentry and other tracing attach types where it is already
-> > supported. fsession must be rejected because the same program runs on
-> > both entry and return and the verifier cannot prove that a helper call
-> > is entry-only.
-> >
-> > Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline")
-> > Reported-by: Quan Sun <2022090917019@std.uestc.edu.cn>
-> > Reported-by: Yinhao Hu <dddddd@hust.edu.cn>
-> > Reported-by: Kaiyan Mei <M202472210@hust.edu.cn>
-> > Closes: https://lore.kernel.org/all/9d61b891-2d52-42b9-bc1a-ad963ccb675d@std.uestc.edu.cn/
-> > Signed-off-by: Yun Lu <luyun@kylinos.cn>
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > ---
+On Tue, Sep 22, 2026 at 12:23:55AM +0200, Ilya Maximets wrote:
+> On 9/22/26 12:03 AM, Matthieu Baerts wrote:
+> > Hi Johannes,
+> > 
+> > (+Cc openvswitch devs)
+> > 
+> > On 21/09/2026 12:06, Johannes Berg wrote:
+> >> From: Johannes Berg <johannes.berg@intel.com>
+> >>
+> >> The __print_symbolic() could only ever print the core
+> >> drop reasons, since that's the way the infrastructure
+> >> works. Now that we have __print_sym() with all the
+> >> advantages mentioned in that commit, convert to that
+> >> and get all the drop reasons from all subsystems. As
+> >> we already have a list of them, that's really easy.
+> >>
+> >> This is a little bit of .text (~100 bytes in my build)
+> >> and saves a lot of .data (~17k).
+> > Thank you for working on that! But it looks like it breaks the
+> > openvswitch test:
+> > 
+> > https://netdev-ctrl.bots.linux.dev/logview.html?f=%2Flogs%2Fvmksft%2Fnet%2Fresults%2F833743%2F9-openvswitch-sh%2Fstdout#L168
+> > 
+> > Maybe the test needs to be adapted to get the same info differently?
+> > (and adding CONFIG_TRACEPOINTS to the selftest config file)
+> The parsing in the test will definitely need to be updated, i.e.,
+> the numbers swapped with the names of the drop reasons.
 > 
-> Sorry, this is not an acceptable fix. This negates usage of the function in all
-> fexit and fession attach points. Unless there is a simpler way to enumerate in
-> which attach points this helper should be disabled, it might not be worth doing
-> and leaving this be as is.
-> 
+> IIUC, this change only affects the printing and doesn't affect debugging
+> tools like retis that attempt to surface the drop reasons.  But, maybe
+> Adrian and Antoine (CCed) may want to have a glance as well.
 
-Thanks for your reply. That is indeed correct.
-
-Moreover, the comment for `bpf_skb_output` in `include/uapi/linux/bpf.h`
-reads: "This helper is similar to bpf_perf_event_output() but restricted to
-raw_tracepoint bpf programs.", yet this comment is actually outdated.
-
-> pw-bot: cr
-
+Yes, that's fine.
