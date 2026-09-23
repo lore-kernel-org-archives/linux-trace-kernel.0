@@ -1,528 +1,354 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B40585992
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 20:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790194400; cv=pass; b=kM+9WmsKKxFEoQiNEJum7svzZg+EJRQjaJ1XzjMTo5JorNStPbE7+wsGYnCxmTluK1VK4+FKOL89usBkU5DIACaYVI2pZ3Yzgr6TGNgZs88enVJmZR464hloeVzeu0q5sVYKsnKbJaIwVbvxcoLRfprmvkCzdl8fESaJHJBt4hY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790194400; c=relaxed/simple;
-	bh=gWu15iqRJxgX/RGyZaRqm+zMAOUbKzCJkVvlqDFqjUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ku8ze3rcjxxU1K2LEmk89XI0mnMP91JrX+Xf3qIwZptnEqMiL6p4wZEdJz2M5B1EaREvhpEMT+u0ovu4up6JsqCJFX3uCEUcVruPYudM9/KEgL4nOsPK+Dmf1aNaaWNyka4DH7kDoAj1Uq/o7J2LAZiPgzg9bduGdio9JYjv+lQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D6MyiWwo; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90FA56C656;
+	Wed, 23 Sep 2026 20:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790196798; cv=none; b=hPqCO1j7tgf3alI2Tpk+woz/NijoFEL00wu+R8U25qX3nqpmI+4nPitAA/SO1ymLe5WXFwDysU+jZts6KBm0DB3zQVv6poTteMZhKOLicQ9rSl1mMVAOW10ytROFVhfpqZydmPC77Bnryk0JrRyNr7eyMPYcka4fHz8tXjcBnpY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790196798; c=relaxed/simple;
+	bh=gvkBIwlpuKf2zbfq3IB5OsZdYhL4aha6MJt1jdnJmp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bKNDD/J0h+Mvmget4iJHSgQFDIAvLtCyvmDtjK4SFtB9NTZ5FqNVkylfdz21++D+OoCrGhS2apRasnKEd0KE0+u6ibtNXZpwDkCm+PDrbJ/2rkfZTDQzMEFEBMREUlym1KG/xjZenjSmW4LkrhnIU/ixFNbfkY88jVPoy4h1RmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VZ8o6pGj; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D6MyiWwo"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2d8fd7a3f38so3405ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 13:13:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790194378; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LfQagBv9fW3c+xdC4zgUO3hCOXzO1jlhV31mimtAop/dPgPDKH1FSkPJSm30ua9jRH
-         O1V9jsJ/3bc7K95Me9veWgJIxzG2vjH7p192jpVFBinuoGGieCSqH1kPDMsiCwa2uxPX
-         fOmrr9Qrz7uD6izkya4O9dPbwqpx/J2NuA/HsKSXuXsnYMlndGPCW2ba2d8kji9ifjRv
-         IaiTmuKK2LfGy9T7AXEieNUper7d3t38NV7IaxaKoW7i8KNTD40GEktTqAlWqlkn/HSf
-         CKprmsmTdqXIStgntPlPOkVqJTBOxyl7AcJMmS9UeAaYUlY1e/N7fNEXHjm5G3iBEYxA
-         x2bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Q/Qf9KIEloyGlc9WNysMiio4j06l4Rvqcqlp89ks3rI=;
-        fh=TadCEuHZf+w53vVUb9hjoHAMkMya2X2jyp9Tt84nEpU=;
-        b=bp68xqEoiK8W5HG7Fvwem9oK7Q5FxnONLb8pzvTRnJxMX916cAZNj0LzZXP7nyR8Ue
-         jN3wshcVidwXutjOma7K+mr1s3LQU6jjoQkLlzKZCeMiBLIIDPL0MGQiTErOBBPn5PCh
-         0agf7Id/7Fqf2EvVBl7Mo6CTyZ3QahnPUgQWHNXSGmOkZyfJvVTY/ROx2Aon6acXxBcp
-         hLT/Ek4z0jkRUE1jYVwDbh0XRrcjxWD+qiuwtetsSyvOUpmPqTUSDQirxKKWDSTLW8/6
-         5hErWRJBX0HWrzdi5LO4iZTdVftdBngIVkjrUf/KGggFPsaCUzGRhlfqk+G+REMxGpQT
-         +6QQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790194378; x=1790799178; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Q/Qf9KIEloyGlc9WNysMiio4j06l4Rvqcqlp89ks3rI=;
-        b=D6MyiWwoOGEfjRBqhn2Rboi1pPtO0FDcHa1jTAmukEVtb0+4HZ+y/XSkXrq4bSkMr8
-         nBp9IXns4KjzDCQUmL085gMZ9DcioEbZbFfkO9kJwrUX5VtQEFrUt2ll6BxsR2qS2UUf
-         7gjMvRAR0DvIhuyqIKa7PEj008pJENjsLZOKe9qDCsk5HMw6o1cubB4OWvQ2DRW2RGSL
-         oLHzJbCcybToYZuDdKWDPrDRWnOlkV5dyIAZ9k9mFNdpkOqJv7gjrcKOSxR2WnD8g68r
-         wSrXtxVKTTP5hkjc1UgSHLicQD1JT7cxHPbnAwUOtAHg30aoTJFvhGz2ycWEgJyO+fRG
-         IKKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790194378; x=1790799178;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Q/Qf9KIEloyGlc9WNysMiio4j06l4Rvqcqlp89ks3rI=;
-        b=p3lvF4hwAY9aRddGl5XfaJOCyTkAfUfmL4iGiFIorYX2uKrsWqA5YRwEc6CJLrd+Hy
-         wfl9vY24Pw/Zf7FJIDtxyZc2n8Bx3731kyIZlJqLKm6ZgppOuU943IcJFgPzGD5w2Qsn
-         +Sbc0/s3JflRigUijfmVzbqda2KVcMUIyG5YnTsXA+MavJkjqbLgQmFu++0Pi760s6gc
-         zaZ6dWgQSASuYQT5pdAoQo1z1TFapP+AVuaPe2UhVEkaS0vopZsPh6Zd/AI22ZpexBUG
-         PR79nc8K8gF4ZnUMZ3NQ9wgE4KaNVqjxFH7p5Ybq0TZ8yzofIOxOjuEi+CylOzCnwOhf
-         jRyg==
-X-Forwarded-Encrypted: i=1; AKwUvBy8S2jagL3Yd7YafUOEtgzloDB9QLpu8EcVwrCJCh9HvuzeLezaZYWDnBU9qm4ZR4QHZtBcKTTd7q91tOjS/MbQa8w=@vger.kernel.org
-X-Gm-Message-State: AFuF++kkGDhWJWbwkXCx+w+xs4afYfiYqpZ4BVZKRjUIhAnOz/92GHRk
-	P5yNS3hESw+VUfmObAGlI3PpTGnCIawcdF2BNTkjStUffKqgw+IMaRK+YlQXyAgPOwv9GYFBuBL
-	BTvQhCb/bmhQ6SwWw6X6lMtrzJ2noV0m33sHMywRL
-X-Gm-Gg: AYBFou1u7bG2QFHE6piCR+uAM/mpQZJA2Gba0MaT69n0HY7MJDD4QRLmuU/bGE9BeYb
-	MFSt13m+6VtCwp+/Z7fpB1Ga/cTl/elsAq0l/rzueaG/MOALfDBs0pztZSPB2spuMA6ipSP+PbK
-	+pPG4QfQ6WvI+wQkqugtDmLFiMFw2Uu+zm0Mu6Fzd0iRhcmLj26yu68r6vfZzaKUc3pm4GufFuK
-	VupVUTIGAxKbV/RDryVF5KDqNmUwyFUV10SzIdkhlbHKjG3iCvQ2VS/0ofd1o9OtsneLDwXvfBv
-	EYeTS2uqLK8J6NvbRQcc3Mexq3/gzQzbPm2VASV5CFyrg4vBDYy+zGcCD3SmTCNmeGbcUBuoduM
-	VJ4FAMlhK
-X-Received: by 2002:a17:903:90d:b0:2ca:4bb4:4bd with SMTP id
- d9443c01a7336-2df7bbd799fmr1410675ad.5.1790194377700; Wed, 23 Sep 2026
- 13:12:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VZ8o6pGj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1790196748; x=1790801548; i=w_armin@gmx.de;
+	bh=v8NRrgHMXi8+HsQftD6fR7mora2ZqNyrd9EX2fSfU80=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=VZ8o6pGjjcB5UhJ8MrgLZkJotWK7iicMU/Fcpp7OiO5MOQSNakJ61LI7JcfTbIuY
+	 19njRFUe9Qs/RjoMR4gvr4qnX08KdnWiFx0i/HrqYjDgQbBUMHG2qw5X6DX+pEMKk
+	 nW12eEn1BJpN9Wh7Qk5a7dbT0597BiWqKDDgFUtVUPFLBOt7BSoMyK0pWsrFi8gXF
+	 MRT9rR/KGWcybe2b6CvzwUSKBD0//trKAJFkVq7IDYLerNdZXPdRHVDhcxd/5y/mf
+	 2j+cWLRjsjXQU3xeQV9xRH+0gwl50rHJyHwtPqaiWKwbjMqDbg/nKOcnjjM89csdZ
+	 z3fh3vCmcqM1oh7geg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8GMk-1weq7v3pY0-015dxx; Wed, 23
+ Sep 2026 22:52:28 +0200
+Message-ID: <d87fab8e-4f2b-4436-adab-f26782adb474@gmx.de>
+Date: Wed, 23 Sep 2026 22:52:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1790025465.git.abhishekbapat@google.com>
- <06c3a9b52785e6968ea15709a55365b2342c7a15.1790025465.git.abhishekbapat@google.com>
- <e8f65e6d-440b-418d-b7ba-e05ca2b0d712@linux.dev>
-In-Reply-To: <e8f65e6d-440b-418d-b7ba-e05ca2b0d712@linux.dev>
-From: Abhishek Bapat <abhishekbapat@google.com>
-Date: Wed, 23 Sep 2026 13:12:46 -0700
-X-Gm-Features: AclHuK90u3QKMhLOPT-K2l4GMYlhS4sfA0uEIsFHML1VSEDfbP-0xqaYfivaip4
-Message-ID: <CAL41Mv7P3xDAvTGtdSHEG3Cvu70W6uhZ9mThm-OD3PcGDDU17w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] alloc_tag: Add trace events for tracing allocations
-To: Hao Ge <hao.ge@linux.dev>
-Cc: Suren Baghdasaryan <surenb@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Danilo Krummrich <dakr@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Bradley Morgan <brads@mainlining.org>, Aleksandr Nogikh <nogikh@google.com>,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ Johan Hovold <johan@kernel.org>, Richard Weinberger <richard@nod.at>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+ <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org> <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <2026092321-province-yearly-44aa@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Ie2HdETB86El3wsLqazN2n4+oLS3Buc1NZznJwFjnpf2VhVcNtQ
+ kQCWGqv5UMHAOcMwiFUO3COf18yzIoyFIVbhsl/9q/+SkIu+giboId/7Ob8fvpS936gsxNr
+ 9sEQo3xP+fe2U7HJo5VePgxdXIT6QdR3k63FcSFhWkfLmdngRw+RY2oVrrhgjTm3Ew0/mob
+ yAjKFykBdgMmq2JaxzZsA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CfMAKQ81Gpc=;LKYnCDV2QlJxYk2G0ZhPnRKAfyc
+ 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
 
-On Wed, Sep 23, 2026 at 2:55=E2=80=AFAM Hao Ge <hao.ge@linux.dev> wrote:
->
-> Hi Abhishek
->
-> On 2026/9/22 05:26, Abhishek Bapat wrote:
-> > The memory allocation profiling framework intercepts allocations across
-> > the core subsystems, but currently lacks runtime tracing hooks for
-> > standard observability tools to dynamically track the context (stack
-> > traces and lifecycles of the individual memory chunks) of the
-> > allocations made.
-> >
-> > Introduce three standard trace events to allow this tracking:
-> >
-> > 1. `alloc_tag_hit`: Fired at the exact call site. This allows userspace
-> >    tools to trigger and capture a call stack.
-> > 2. `alloc_tag_mem_alloced`: Fired in alloc_tag_add upon successful
-> >    allocation. It records the allocated size, the tag, and the uniquely
-> >    generated codetag_ref metadata pointer.
-> > 3. `alloc_tag_mem_freed`: Fired in alloc_tag_sub right before memory is
-> >    freed, yielding the same codetag_ref to allow tracing tools to find
-> >    the corresponding allocation.
-> >
-> > Because the introduced trace events occur at different stages in the
-> > call stack, userspace tracing tools must stitch them together to form a
-> > complete picture of a buffer's lifetime. Here's an example of how
-> > userspace correlates these three events:
-> >
-> > 1. On `alloc_tag_hit`: The tool captures the stack trace and caches it,
-> >    keyed by the combination of the current thread's PID and the `tag`.
-> > 2. On `alloc_tag_mem_alloced`: The tool extracts the PID and `tag` from
-> >    the event and looks up the stack trace cached in step 1. It creates =
-a
-> >    new active allocation record, mapping the new provided `codetag_ref`
-> >    to this cached stack trace and the newly returned allocation size.
-> > 3. On `alloc_tag_mem_freed`: When the memory is freed, the event yields
-> >    the same `codetag_ref`. The tool uses this reference to look up the
-> >    original allocation record, correlates the free, and safely retires
-> >    the tracking entry.
-> >
-> > Also, introduce `alloc_tag_trace_key` static key to minimize the
-> > overhead when no tags are being traced (the usual case). Once tracing
-> > for any tag is requested, the key is set, opening the path to check
-> > whether tracing is enabled for the current tag.
-> > Nore that the mechanism to enabl tag tracing is implemented in the next
-> > patch, therefore for now, `alloc_tag_trace_key` stays always unset.
-> >
->
-> nit: s/Nore/Note/ s/enabl/enable
->
-Ack.
-> > Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
-> > ---
-> >  MAINTAINERS                      |   1 +
-> >  include/linux/alloc_tag.h        |  57 ++++++++++++---
-> >  include/trace/events/alloc_tag.h | 122 +++++++++++++++++++++++++++++++
-> >  mm/alloc_tag.c                   |  28 +++++++
-> >  4 files changed, 196 insertions(+), 12 deletions(-)
-> >  create mode 100644 include/trace/events/alloc_tag.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 24420a8c06d0..29e1f7915cb9 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -17096,6 +17096,7 @@ S:    Maintained
-> >  F:   Documentation/mm/allocation-profiling.rst
-> >  F:   include/linux/alloc_tag.h
-> >  F:   include/linux/pgalloc_tag.h
-> > +F:   include/trace/events/alloc_tag.h
-> >  F:   include/uapi/linux/alloc_tag.h
-> >  F:   mm/alloc_tag.c
-> >  F:   tools/testing/selftests/alloc_tag/
-> > diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-> > index 7f2d80a59792..2994934cf44a 100644
-> > --- a/include/linux/alloc_tag.h
-> > +++ b/include/linux/alloc_tag.h
-> > @@ -128,12 +128,33 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _share=
-d_alloc_tag);
-> >  DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=
-,
-> >                       mem_alloc_profiling_key);
-> >
-> > +DECLARE_STATIC_KEY_FALSE(alloc_tag_trace_key);
-> > +
-> >  static inline bool mem_alloc_profiling_enabled(void)
-> >  {
-> >       return static_branch_maybe(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_=
-DEFAULT,
-> >                                  &mem_alloc_profiling_key);
-> >  }
-> >
-> > +static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag=
-)
-> > +{
-> > +     return static_branch_unlikely(&alloc_tag_trace_key);
-> > +}
-> > +
->
-> The tag parameter is unused here. Let's remove it for now and add it back=
- when needed,
-> to avoid the -Wno=E2=80=91unused=E2=80=91parameter warning.
-> Some CI bots go through each patch one=E2=80=91by=E2=80=91one, so we can'=
-t leave warnings in
-> intermediate commits.
->
-Ack.
-> One other thought: what about adding a sysctl knob here?
-> It would let users grab all alloc=E2=80=91tag tracked allocations within =
-a time window?
->
-You mean to enable the static key? With the following patches, it
-would mean that the state of the static key would change by writing to
-sysctl and through IOCTLs. I am not sure if letting the static key be
-controlled by two mechanism is a good idea. I'd like to get Suren's
-thoughts on this.
+Am 23.09.26 um 11:27 schrieb Greg Kroah-Hartman:
 
-> Thanks
-> Best Regards
-> Hao
->
-> > +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_ta=
-g *tag,
-> > +                           size_t bytes);
-> > +
-> > +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag=
- *tag,
-> > +                          size_t bytes);
-> > +
-> > +void __alloc_tag_trace_hit(struct alloc_tag *tag);
-> > +
-> > +static inline void alloc_tag_trace_hit(struct alloc_tag *tag)
-> > +{
-> > +     if (alloc_tag_trace_enabled(tag))
-> > +             __alloc_tag_trace_hit(tag);
-> > +}
-> > +
-> >  bool mem_alloc_profiling_permanently_disabled(void);
-> >
-> >  static inline struct alloc_tag_counters alloc_tag_read(struct alloc_ta=
-g *tag)
-> > @@ -200,8 +221,13 @@ static inline bool alloc_tag_ref_set(union codetag=
-_ref *ref, struct alloc_tag *t
-> >
-> >  static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_=
-tag *tag, size_t bytes)
-> >  {
-> > -     if (likely(alloc_tag_ref_set(ref, tag)))
-> > +     if (likely(alloc_tag_ref_set(ref, tag))) {
-> >               this_cpu_add(tag->counters->bytes, bytes);
-> > +
-> > +             if (alloc_tag_trace_enabled(tag))
-> > +                     /* Trace successful allocs with their unique ref =
-*/
-> > +                     alloc_tag_trace_mem_alloc(ref, tag, bytes);
-> > +     }
-> >  }
-> >
-> >  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
-> > @@ -222,6 +248,10 @@ static inline void alloc_tag_sub(union codetag_ref=
- *ref, size_t bytes)
-> >       this_cpu_sub(tag->counters->bytes, bytes);
-> >       this_cpu_dec(tag->counters->calls);
-> >
-> > +     if (alloc_tag_trace_enabled(tag))
-> > +             /* Trace frees with their unique ref */
-> > +             alloc_tag_trace_mem_free(ref, tag, bytes);
-> > +
-> >       ref->ct =3D NULL;
-> >  }
-> >
-> > @@ -247,21 +277,24 @@ static inline void alloc_tag_add(union codetag_re=
-f *ref, struct alloc_tag *tag,
-> >  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)=
- {}
-> >  static inline void alloc_tag_set_inaccurate(struct alloc_tag *tag) {}
-> >  static inline bool alloc_tag_is_inaccurate(struct alloc_tag *tag) { re=
-turn false; }
-> > +#define alloc_tag_trace_hit(_tag)    /* NOOP */
-> >  #define alloc_tag_record(p)  do {} while (0)
-> >
-> >  #endif /* CONFIG_MEM_ALLOC_PROFILING */
-> >
-> > -#define alloc_hooks_tag(_tag, _do_alloc)                             \
-> > -({                                                                   \
-> > -     typeof(_do_alloc) _res;                                         \
-> > -     if (mem_alloc_profiling_enabled()) {                            \
-> > -             struct alloc_tag * __maybe_unused _old;                 \
-> > -             _old =3D alloc_tag_save(_tag);                           =
- \
-> > -             _res =3D _do_alloc;                                      =
- \
-> > -             alloc_tag_restore(_tag, _old);                          \
-> > -     } else                                                          \
-> > -             _res =3D _do_alloc;                                      =
- \
-> > -     _res;                                                           \
-> > +#define alloc_hooks_tag(_tag, _do_alloc)                              =
-       \
-> > +({                                                                    =
-       \
-> > +     typeof(_do_alloc) _res;                                          =
-       \
-> > +     if (mem_alloc_profiling_enabled()) {                             =
-       \
-> > +             struct alloc_tag * __maybe_unused _old;                  =
-       \
-> > +             /* Fired here to cleanly capture the caller's stack trace=
- */    \
-> > +             alloc_tag_trace_hit(_tag);                               =
-       \
-> > +             _old =3D alloc_tag_save(_tag);                           =
-         \
-> > +             _res =3D _do_alloc;                                      =
-         \
-> > +             alloc_tag_restore(_tag, _old);                           =
-       \
-> > +     } else                                                           =
-       \
-> > +             _res =3D _do_alloc;                                      =
-         \
-> > +     _res;                                                            =
-       \
-> >  })
-> >
-> >  #define alloc_hooks(_do_alloc)                                        =
-       \
-> > diff --git a/include/trace/events/alloc_tag.h b/include/trace/events/al=
-loc_tag.h
-> > new file mode 100644
-> > index 000000000000..af2182501864
-> > --- /dev/null
-> > +++ b/include/trace/events/alloc_tag.h
-> > @@ -0,0 +1,122 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#undef TRACE_SYSTEM
-> > +#define TRACE_SYSTEM alloc_tag
-> > +
-> > +#if !defined(_TRACE_ALLOC_TAG_H) || defined(TRACE_HEADER_MULTI_READ)
-> > +#define _TRACE_ALLOC_TAG_H
-> > +
-> > +#include <linux/tracepoint.h>
-> > +
-> > +/*
-> > + * alloc_tag_hit is generated at the exact allocation call site and ca=
-n be
-> > + * used to capture a clean stack trace.
-> > + *
-> > + * To link this stack trace to the actual allocated memory chunk, tool=
-s must
-> > + * correlate this event with the resulting alloc_tag_mem_alloced event=
-. Since
-> > + * multiple threads can hit the same tag simultaneously, tools must ma=
-tch BOTH
-> > + * the `tag` field and the implicitly recorded PID provided by the cor=
+> On Tue, Sep 22, 2026 at 11:04:46PM +0200, Armin Wolf wrote:
+>> Am 22.09.26 um 15:40 schrieb David Lechner:
+>>
+>>> On 9/22/26 2:39 AM, Uwe Kleine-K=C3=B6nig wrote:
+>>>> On Fri, Sep 18, 2026 at 06:39:02PM +0200, Danilo Krummrich wrote:
+>>>>> On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
+>>>>>> The ability to add and remove devices from a driver through the sys=
+fs
+>>>>>> "bind" and "unbind" files was created all those decades ago as a wa=
+y
+>>>>>> that kernel developers can iterate faster, and provide a debugging =
+way
+>>>>>> for users to attempt to add a new device to a driver without having=
+ to
+>>>>>> rebuild their kernel.
+>>>>>>
+>>>>>> This api over the years has been abused and recently come under a m=
+ajor
+>>>>>> fuzzing "attack" through tools like syzbot which decided that it wo=
+uld
+>>>>>> attempt to just randomly bind any driver to any type of device, cau=
+sing
+>>>>>> loads of unneeded errors and pointless kernel patches to be generat=
+ed by
+>>>>>> unsuspecting new developers.
+>>>>>>
+>>>>>> Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, w=
+hich
+>>>>>> will be set on the driver if the bind/unbind sysfs files are ever
+>>>>>> written to.  This lets kernel developers "know" that a user is
+>>>>>> attempting to do something that is not normal, and as such, if the
+>>>>>> kernel breaks they get to keep the shiny pieces laying around on th=
 e
-> > + * tracing subsystem.
-> > + */
-> > +TRACE_EVENT(alloc_tag_hit,
-> > +
-> > +     TP_PROTO(struct alloc_tag *tag),
-> > +
-> > +     TP_ARGS(tag),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __field(struct alloc_tag *, tag)
-> > +             __string(modname, tag->ct.modname ? tag->ct.modname : "NO=
-NE")
-> > +             __string(filename, tag->ct.filename)
-> > +             __string(function, tag->ct.function)
-> > +             __field(unsigned int, lineno)
-> > +     ),
-> > +
-> > +     TP_fast_assign(
-> > +             __entry->tag =3D tag;
-> > +             __assign_str(modname);
-> > +             __assign_str(filename);
-> > +             __assign_str(function);
-> > +             __entry->lineno =3D tag->ct.lineno;
-> > +     ),
-> > +
-> > +     TP_printk("tag %p, module: %s, filename: %s, function %s, lineno =
-%u",
-> > +             __entry->tag,
-> > +             __get_str(modname),
-> > +             __get_str(filename),
-> > +             __get_str(function),
-> > +             __entry->lineno
-> > +     )
-> > +);
-> > +
-> > +/*
-> > + * alloc_tag_mem_alloced is generated after memory is successfully all=
-ocated.
-> > + * It captures the exact byte size.
-> > + *
-> > + * The `ref` pointer identifies the memory chunk for tracking its life=
-cycle
-> > + * (e.g., matching it with alloc_tag_mem_freed).
-> > + *
-> > + * Because the kernel isolates active allocations within the task stru=
-ct
-> > + * (current->alloc_tag), this even will always share the same implicit=
- PID as
-> > + * its corresponding alloc_tag_hit event. Tools should use the combina=
-tion
-> > + * PID + `tag` to correlate them.
-> > + */
-> > +TRACE_EVENT(alloc_tag_mem_alloced,
-> > +
-> > +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t by=
-tes),
-> > +
-> > +     TP_ARGS(ref, tag, bytes),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __field(union codetag_ref *, ref)
-> > +             __field(struct alloc_tag *, tag)
-> > +             __field(size_t, bytes)
-> > +     ),
-> > +
-> > +     TP_fast_assign(
-> > +             __entry->ref =3D ref;
-> > +             __entry->tag =3D tag;
-> > +             __entry->bytes =3D bytes;
-> > +     ),
-> > +
-> > +     TP_printk("reference %p, tag %p, bytes %zu",
-> > +             __entry->ref,
-> > +             __entry->tag,
-> > +             __entry->bytes
-> > +     )
-> > +);
-> > +
-> > +/*
-> > + * alloc_tag_mem_freed event is generated immediately before memory is
-> > + * freed. The `ref` pointer matches the one emitted during allocation,
-> > + * allowing tools to match it to it's corresponding allocation and
-> > + * call stack.
-> > + */
-> > +TRACE_EVENT(alloc_tag_mem_freed,
-> > +
-> > +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t by=
-tes),
-> > +
-> > +     TP_ARGS(ref, tag, bytes),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __field(union codetag_ref *, ref)
-> > +             __field(struct alloc_tag *, tag)
-> > +             __field(size_t, bytes)
-> > +     ),
-> > +
-> > +     TP_fast_assign(
-> > +             __entry->ref =3D ref;
-> > +             __entry->tag =3D tag;
-> > +             __entry->bytes =3D bytes;
-> > +     ),
-> > +
-> > +     TP_printk("reference %p, tag %p, bytes %zu",
-> > +             __entry->ref,
-> > +             __entry->tag,
-> > +             __entry->bytes
-> > +     )
-> > +);
-> > +
-> > +#endif /* _TRACE_ALLOC_TAG_H */
-> > +
-> > +/* This part must be outside protection */
-> > +#include <trace/define_trace.h>
-> > diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> > index f30ef8dd24c7..a5339767efd5 100644
-> > --- a/mm/alloc_tag.c
-> > +++ b/mm/alloc_tag.c
-> > @@ -19,6 +19,9 @@
-> >  #include <linux/kmemleak.h>
-> >  #include <uapi/linux/alloc_tag.h>
-> >
-> > +#define CREATE_TRACE_POINTS
-> > +#include <trace/events/alloc_tag.h>
-> > +
-> >  #include "internal.h"
-> >  #include "page_alloc.h"
-> >
-> > @@ -55,6 +58,9 @@ EXPORT_SYMBOL(mem_alloc_profiling_key);
-> >
-> >  DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
-> >
-> > +DEFINE_STATIC_KEY_FALSE(alloc_tag_trace_key);
-> > +EXPORT_SYMBOL(alloc_tag_trace_key);
-> > +
-> >  struct alloc_tag_kernel_section kernel_tags =3D { NULL, 0 };
-> >  unsigned long alloc_tag_ref_mask;
-> >  int alloc_tag_ref_offs;
-> > @@ -485,6 +491,28 @@ static const struct proc_ops allocinfo_proc_ops =
-=3D {
-> >  #endif
-> >  };
-> >
-> > +void __alloc_tag_trace_hit(struct alloc_tag *tag)
-> > +{
-> > +     if (unlikely(!tag))
-> > +             return;
-> > +     trace_alloc_tag_hit(tag);
-> > +}
-> > +EXPORT_SYMBOL(__alloc_tag_trace_hit);
-> > +
-> > +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_ta=
-g *tag,
-> > +                           size_t bytes)
-> > +{
-> > +     trace_alloc_tag_mem_alloced(ref, tag, bytes);
-> > +}
-> > +EXPORT_SYMBOL(alloc_tag_trace_mem_alloc);
-> > +
-> > +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag=
- *tag,
-> > +                          size_t bytes)
-> > +{
-> > +     trace_alloc_tag_mem_freed(ref, tag, bytes);
-> > +}
-> > +EXPORT_SYMBOL(alloc_tag_trace_mem_free);
-> > +
-> >  size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, b=
-ool can_sleep)
-> >  {
-> >       struct codetag_iterator iter;
+>>>>>> floor.
+>>>>>>
+>>>>>> The flag is 'Y' which was unused, and can remembered as the user is
+>>>>>> "yeeting" the device being operated on here (thrown with force with=
+out
+>>>>>> regard for the thing being thrown).
+>>>>>>
+>>>>>> Note, the taint flag gets set _BEFORE_ the bind/unbind callback hap=
+pens,
+>>>>>> as many times crashes/oops/warnings/failures happen within the call=
+back,
+>>>>>> and the taint flag needs to be there to show what was being attempt=
+ed.
+>>>>>> If it were to be set after the callback happens, the oops report wo=
+uld
+>>>>>> not properly reflect what foolishness was being attempted.
+>>>>>>
+>>>>>> Fuzzing tools like syzbot, that doesn't have hand-crafted rules to =
+keep
+>>>>>> the tool from hitting bind/unbind, should be run with panic_on_tain=
+t
+>>>>>> enabled so that they fall over and don't continue on, thinking that=
+ they
+>>>>>> actually found a real issue.
+>>>>>>
+>>>>>> Userspace operations that rely on the bind/unbind files
+>>>>> I agree that this should be avoided.
+>>>>>
+>>>>> But I also think the biggest offender really is driver_override. Spe=
+cifically,
+>>>>> on a hot-pluggable bus a driver must be complient with the device dr=
+iver
+>>>>> lifecycle rules and hence shouldn't break on bind/unbind. I think it=
+ would be
+>>>>> nice to not taint the kernel for such busses, and only taint on driv=
+er_override,
+>>>>> as I think we'd still want the bug reports for such cases.
+>>>>>
+>>>>> But I think this is fine to leave for a follow-up.
+>>>> I fully agree. I'm fine and support tainting on driver_override, but
+>>>> bind/unbind are used occasionally in my bubble and I consider drivers
+>>>> not handling that properly buggy.
+>> I fully agree with this, drivers should correctly implement the lifecyc=
+le model
+>> and not just break when being unbound at a improper time. Drivers suffe=
+ring from
+>> this can easily break this way when unloading the associated kernel mod=
+ule, so this
+>> taint is no solution.
+> It's a "solution" in that it tells the developer "hey, the user did
+> something odd and unsupported".  rmmod is also not a normal operation,
+> there's no requirement that it actually work as it's usually a "best
+> effort" type of thing.
+
+ From my perspective rmmod and friends are at least expected to not crash =
+the kernel.
+
+>>> In the IIO subsystem, unbind/rebind is the de-facto way to reset a wed=
+ged
+>>> chip.
+>>>
+>>> A few examples where other reset methods were reject in favor of unbin=
+d/bind:
+>>>
+>>> https://lore.kernel.org/linux-iio/20240727160216.2488ed29@jic23-huawei=
+/
+>>>
+>>> 	This needs documenting as it's custom ABI. Note that we don't often
+>>> 	accept custom ABI. Particularly not a hook that seems to reset the
+>>> 	device. If you want to do that, unbind and rebind the whole drive[r]
+>>> 	so we are in a known state etc.
+>>>
+>>> https://lore.kernel.org/linux-iio/20240720163440.03c713dc@jic23-huawei=
+/
+>>>
+>>> 	Firstly as stated below, we don't provide interfaces for this
+>>> 	because it's a heavy weight process that is most of the effort of
+>>> 	unbinding and rebinding the driver. So if you need to reset, do that.
+>>>
+>>> https://lore.kernel.org/linux-iio/20250505200609.54756520@jic23-huawei=
+/
+>>>
+>>> 	The solution is to run it once at driver bind. Similar to reset
+>>> 	below, if the usecase needs to re do it then unbinding and rebinding
+>>> 	the driver reflects the fact we are taking it effectively offline
+>>> 	for a while.
+>>>
+>> I also consider bind/unbind to be an official API to interact with devi=
+ces,
+>> so i want to use them in the future with the WMI subsystem.
+> Why?
+
+Netlink UAPI <-> generic driver <-> WMI device
+
+User will need to manually bind the generic driver (it really supports all=
+ WMI devices!) to
+a given WMI device, something that is only possible with bind/unbind.
+
+>> AFAIK the underlying reason for this series is that some drivers break =
+when
+>> being bound to unsupported devices. However IMHO drivers should verify =
+that
+>> they support a given device inside their .probe callback, and the assoc=
+iated
+>> bus should only match devices with drivers that explicitly claim suppor=
+t for
+>> those devices (ignoring driver_override).
+> No, drivers should NOT have to do that in their .probe() function,
+> that's what we moved away from decades ago!  The match function should
+> handle all of that for you, otherwise it's contant duplication
+> everywhere that is unneeded.
+>
+> Please, learn from our history, don't make the same mistakes.
+
+I meant with that, that drivers should be prepared that for example of_dev=
+ice_get_match_data()
+returns a NULL pointer. In Rust drivers would have to check for this anywa=
+y, so i see little
+reason why drivers written in C should skip this check and as a result bre=
+ak as soon as someone
+uses driver_override (or they are matched against a non-OF device).
+
+> Now I might be convinced that driver_override is the way to go here, but
+> it still feels really odd as again, bind/unbind was created as a driver
+> debugging option only, it should NOT be a normal operation that any user
+> should rely on.  The driver should "just work" properly instead, without
+> requiring manual bind work, as that's not a good model at all.
+>
+> thanks,
+>
+> greg k-h
+
+I understand your concerns, but IMHO it turned out that bind/unbind are us=
+eful
+outside of debugging. I agree that userspace using bind/unbind should not =
+be considered
+normal, but in my opinion its far from being suspicious. Manually unbindin=
+g a specific drivers
+in order to bind a generic driver is unusual, but understandable.
+
+I agree with you that driver_override should be the correct place for such=
+ a taint, because
+using driver_override indeed overrides the bus-specific matching logic and=
+ can therefore
+be dangerous.
+
+Thanks,
+Armin Wolf
+
