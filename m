@@ -1,130 +1,137 @@
-Received: from mta0.migadu.com (out-138.mta0.migadu.com [91.218.175.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457444EFFC8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Sep 2026 22:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB842E0914;
+	Wed, 23 Sep 2026 00:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790117753; cv=none; b=jM+6R1zgZ75W+G8fXZOXSLX59Wh9UB2QaGcrwqmPzsKdxvB5+rv/pKrIcwZ1B0Fh3zIhdXvRxP7O+0UUNKg2H7LUEjE6lQVugyiVx5W39Pp1gyel/Yjy8+vKnX8O5iDR7dIcyAoI3TCgK7LCch0Th751vg8Gb+KT5gyZzHOy0oQ=
+	t=1790123297; cv=none; b=NbRsDLdzZAFNRa7rObyHNh0yc8uZ+7DSt9rwWybpvJgjjFmvZ1/gSB82oKSubZo/hKir1oUXk0YQEo/KpfqvoGILLJZM2hTu5pIb/7guZ6Z/bUovENXpnVl4ZLrlEVcaKW9MJdfnihl2rq1VyJeEuZW04j0jAwsZ0/X45rtX6RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790117753; c=relaxed/simple;
-	bh=GLYDVWUo9vlxL9owdIP78Jsu7Teexjv82ekJ8dgAFIU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bfONAzRrROVaw6PUdMeprXaFsxpNHhVzmviX9IT/U8S2YZC1DMABzWoUY+5Jc+SSZq6n9yXDxbT1U4yHKDoO5qmSa5WHP4DmnjcKoce5vF6oDoWlVFJwPu6AajGW9v+2axs8zsQ2ooNYFrBv+T25QWjEkpHZD28ekWwGw3MkfME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xd7zHWVo; arc=none smtp.client-ip=91.218.175.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790123297; c=relaxed/simple;
+	bh=e/8AUG/U+Kxf1s5zTCI9RybjwZNolay9RX9f+zXPy9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjuxpugz0WrccF7ORp6VEPbU/PlinQ1ULMn3LGo9wGab8cUmrB5MPx1ywLUhJ+mWRwYkJfH+jVaEc3fgXSfREOzWHMc4obSwjOu34iwwXAvkHUtMFDvnQqmPI9bsdmV8m88A5sdzIZwTtWY8TCCsPJ3n0BjcZ6PnR+JOWe+eklE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MQK7JvYj; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xd7zHWVo"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=GLYDVWUo9vlxL9owdIP78Jsu7Teexjv82ekJ8dgAFIU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790117746; v=1; x=1790722546;
- b=Xd7zHWVoi37khI1DqaZyroOpTo4SreMIjIX8LHX+0Q/0gUBIYYoo3W59fyQfGaRMS78n0UGZ
- UPi0fgFHahvlvn+2c+CR9KXeLoKWaN4/gqxnx2RG4VA7mOOuwMm00SurN6C6FUxtBrLeyOiZF7J
- hLuinSE7rHNfqWa5ohjnZG+0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 7fe70d7a76de0350;
-	Tue, 22 Sep 2026 22:55:46 +0000
-X-Mizu-Trace-ID: 7fe70d7a76de0350
-X-Migadu-Flow: FLOW_OUT
-From: Vineet Gupta <vineet.gupta@linux.dev>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	andrii@kernel.org,
-	peterz@infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	kernel-team@meta.com,
-	Vineet Gupta <vineet.gupta@linux.dev>
-Subject: [PATCH 2/2] tracing: fgraph: Add a cond_resched() to the shadow stack retry loop
-Date: Tue, 22 Sep 2026 15:55:26 -0700
-Message-ID: <20260922225526.1554758-3-vineet.gupta@linux.dev>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260922225526.1554758-1-vineet.gupta@linux.dev>
-References: <20260922225526.1554758-1-vineet.gupta@linux.dev>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MQK7JvYj"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1C0D840E0173;
+	Wed, 23 Sep 2026 00:28:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 2CL9VprPB2RT; Wed, 23 Sep 2026 00:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1790123283; bh=Aei0PnNzOTQ4gUUS/HiOefLQYuJlYg4D48KXdNRhLDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MQK7JvYj3uTqo4iUnmytE6B5PDXhZoHcJ3o/w4h4dEhyK+MtCeOiu2G2pxo22Ydds
+	 yO56SIIGgm6XzZST5WFFu7gOeB2fZb4DaznqdN/85dtnA3jMfdSGUEQk8tYxkF64Fq
+	 NHBYNCotYo8eIEZQUf5UzDDXoD3QF8mgGHCS93ThPVcvnwfhQ0uEouyTgzvRoharKx
+	 OA+cwI9oy6qb0rPVAeBL5BRc7UqrsdMDSkUa9QHk8IR6ko52rdlKBS50K1iUnoYVN5
+	 +/XdhL/TckndyuB0WZQB4kTLRrYI9BlpVfqrcmabOl0brkPsDg66U8M+9oO0R/Smr4
+	 O7aGjmfiaVkDXLA1HSeHnFL2qmYHq4PTKFcNvrzLYFEbD2wtKhP3ACspeF4u3IEvOZ
+	 xjyBPOHI+H6jjKDnV0Ycem0FnkLcXVFm8QNb0d6/s7cR5TM6p5oBOgFqnrO9hKbYNf
+	 lFazQltkWOpOC1fIm6wy65dG53wFcrdj6pzDsF6btEHJflW+2afwzSA5pEsNU8IPop
+	 EtyaOCkvwj3n0x8BBaaJNjd7kMNzXbSfM6GuLA5A6nsF+BlBAPisVt/d1Lp4qapRGo
+	 3O5FPuJ6QMqrav1S8AFqxhESdv+FRYQ73VtM3vK3dc9DSrw6gLg8Z3POwVCvg452Ao
+	 gF0g9uZVEPi69dLu4GxxvA2Q=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6899640E015D;
+	Wed, 23 Sep 2026 00:27:43 +0000 (UTC)
+Date: Tue, 22 Sep 2026 17:27:40 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, x86@kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v17 01/13] x86/mce: Fix hardware debug register
+ corruption on task migration
+Message-ID: <20260923002740.GAarMc_PJBsgo8Z-G9@fat_crate.local>
+References: <179005108298.388919.4535333252892590932.stgit@devnote2>
+ <179005109564.388919.3937970081044095776.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <179005109564.388919.3937970081044095776.stgit@devnote2>
 
-This is supplementary to previous patch and is effective only for
-!PREEMPTION kernels.
+On Tue, Sep 22, 2026 at 01:24:55PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> In exc_machine_check_user(), local_db_save() and local_db_restore() are
+> invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
+> DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
+> exc_machine_check_user().
+> 
+> However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
+> which handles pending thread work and may schedule() if TIF_NEED_RESCHED
+> is set. If the task migrates to another CPU during schedule(),
+> local_db_restore() runs on the new CPU with the dr7 state saved from the
+> old CPU. This corrupts the new CPU's DR7 hardware debug register and
+> leaves the old CPU's DR7 disabled.
+> In short, local_db_save() and local_db_restore() pair must be run
+> on the same CPU.
+> 
+> To fix this, move local_db_save() and local_db_restore() inside
+> exc_machine_check_user() and exc_machine_check_kernel(). In
+> exc_machine_check_user(), DR7 is saved and restored strictly around
+> do_machine_check() to avoid schedule() during migration. In
+> exc_machine_check_kernel(), local_db_save() is called at the entry point
+> to prevent early memory accesses from triggering nested #DB exceptions,
+> and restored on all exits.
+> 
+> Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
+> Assisted-by: Antigravity:gemini-3.8-flash
 
-The preceding patch cuts the number of sweeps over the thread list by
-32x, but the loop is still O(N^2). Each pass walks from the same start
-init_task under rcu_read_lock() with no reschedule point. On a kernel
-that cannot preempt the walk, a large enough thread count lets one task
-monopolize a CPU until the walk completes.
+verify_tags: WARNING: Zapping LLM ads tag: ['Antigravity:gemini-3.8-flash'].
 
-Add a cond_resched() between sweeps which is safe since it is outside
-the RCU read-side critical section.
+Needs to be:
 
-It is understood that this is effectively a no-op for CONFIG_PREEMPTION
-builds, which is what default x86 and arm64 kernels are today.
-A CONFIG_PREEMPT_DYNAMIC build with "preempt={none,voluntary}"
-used to work but even that got inhibited since the commit
-7dadeaa6e851 ("sched: Further restrict the preemption modes").
-Measured on a 60-core machine with a PREEMPT_LAZY kernel and 400000
-idle threads, this patch changes neither the runtime nor the yield
-count, which stays at zero.
+Assisted-by: LLM
 
-Where it does have effect is !CONFIG_PREEMPTION builds: architectures
-that still offer PREEMPT_NONE or PREEMPT_VOLUNTARY, and the stable
-kernels where x86 PREEMPT_NONE remains a build-time choice. Verified
-on a 6.16 PREEMPT_NONE kernel, 240000 idle threads, three runs each,
-with the loop instrumented to count passes and cond_resched() yields:
+Please fix all your patches.
 
-	                 time            yields   soft lockup
-	unpatched        51.3-54.6 s     -        3 of 3
-	cond_resched()   52.7-53.0 s     592-609  0 of 3
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v15:
+>  - Move local_db_save() to the entry of exc_machine_check_kernel() and
+>    restore it on early return from mce_check_crashing_cpu() to prevent
+>    nested #DB on watched variables.
+> Changes in v14:
+>  - Newly added.
+> ---
+>  arch/x86/kernel/cpu/mce/core.c |   27 ++++++++++-----------------
+>  1 file changed, 10 insertions(+), 17 deletions(-)
 
-The runtime is unchanged and the soft lockups are gone. Every
-need_resched() converts to a yield, giving an average of about 98 ms
-between reschedules.
+Yah, makes sense.
 
-There is a second effect on those builds. When cond_resched() does not
-reschedule it still calls rcu_all_qs() on !CONFIG_PREEMPT_RCU kernels,
-reporting a quiescent state. So the two failures seen in the field are
-addressed by two mechanisms: the soft lockup by yielding so the
-watchdog can run, and the RCU stall by reporting a quiescent state
-even on passes where no yield happens.
+I'm thinking this needs to be CC:stable and I should take it in now.
 
-This is deliberately separable from the preceding patch. If the view
-is that a no-op on the architectures anyone runs is not worth carrying,
-dropping this one leaves the batch-size fix intact.
+Peter?
 
-Signed-off-by: Vineet Gupta <vineet.gupta@linux.dev>
----
- kernel/trace/fgraph.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index ed455b53513b..86d11217c584 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1249,6 +1249,14 @@ static int start_graph_tracing(void)
- 
- 	do {
- 		ret = alloc_retstack_tasklist(ret_stack_list);
-+		/*
-+		 * Each pass rescans the thread list from the head, so the
-+		 * loop is O(threads^2) overall. The RCU read-side section
-+		 * ends with the pass, and both locks held here (ftrace_lock,
-+		 * and fprobe_mutex for fprobe users) are mutexes, so it is
-+		 * safe to give the CPU up in between.
-+		 */
-+		cond_resched();
- 	} while (ret == -EAGAIN);
- 
- 	if (!ret) {
 -- 
-2.53.0-Meta
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
