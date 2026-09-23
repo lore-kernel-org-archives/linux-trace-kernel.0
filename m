@@ -1,614 +1,630 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99C9560AB7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 16:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790182068; cv=pass; b=bqpa5ox4z0r/ezfgKDsLFLBi/y57kEKV6SarSL8G7UBEkDPMcYCs6RbWhXeIufd8TO160RsvF4FjePn8HW9uFwuR8G7GhgZkT/CJT2DDcVf4PMhUOJw/tywJEBd9uDAmmmNMRcmvfDl7Sr3fshn7Ln1s9HM/kS96riCwxe2u1RY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790182068; c=relaxed/simple;
-	bh=BS1pN1lf2NXiKiQrtVD+Gg5ZPa8iWxon1HWZu0sw6Ec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eMBMSO3pTz++UjFvP7OTPxp0bD/7KV5/LLOMy0/8xhNPWiGW3OKChmjFOat2F1q+9kB5YUO585l+F8qIAJoWX62auLQedfIx9VPdtMloYtDSvS18geoN5SjC9Zj8u7DNkpAiBFMcE6yuGoToq3HjgujjiCKYuUwXkTBlTkl25xQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XVPr+0ur; arc=pass smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AF35616DD;
+	Wed, 23 Sep 2026 16:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790182690; cv=none; b=HDI5HViHkAyEBWIL3asenqrGK54XUqbLcyhpRFUAXjAUw79pOKYqueei6AqJGqwfAKs0k95ALm61sEkCYnbjd564RmL8SHWUBZroR9C2ez3sFIYRT8poZA7QWkC9CK29qjmuBCpLE/cwZgwssaUED+Al9/NZDEF1SbbkG3hyHVQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790182690; c=relaxed/simple;
+	bh=WoqWEem1rEI836zQzhQfFJqP4pi5Ym9GLOuDUXA0trw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1Nwrq4sJaWuxnUjiGlpNaLNBjE6KCs5DTGkqBECHUaM+RQet5SVZChhaF6PCVBHgul4/rzZqFaEYZ3DKpv6eHp8CIE7LF+/CFWAILPZuuie4xZx2OM3r0COXeNHvnJsGHwvf1bckvMCZplTwhHks84A0Wshd2SldVo1eahSpkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1j8dcyh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XVPr+0ur"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-530e8c6fb80so284371cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 09:47:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790182053; cv=none;
-        d=google.com; s=arc-20260327;
-        b=P6mLNZSU0fRO0kB+H4raJ/qzENmwmod9aPbvOeoCO4zC5cvLv4mjVBfKYsUFlVeKOw
-         jXC/QvNNdv3K3fgQFLtnWGeALMhGyMQMMiRoCjqIzgfKJCwlAuyMNXEAd5iWa3toH/JO
-         AsqU+RXCMQxWOY0mTh7RbPxP+gorwcasfyuM45sRfev6aKL6kiPMqStHqsuAxuaq/w5g
-         TWgHv/SvWVa+payWYlY48XOnYCI1UnAFuWxx6CrWx+L+wWo9GwMQTwHR/huIcFxu+pCw
-         CGvSYrWtQQM8KgJg8ftRDxPTSaj+ChEK3336PJzLpAMTntjDcFYJleDAH9HawdSHFsJd
-         YSjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=CmfZqOIcZMi+n6JYS11k53fRFKi7v2MDj9yxHBvJbZg=;
-        fh=PiaxRo2HKeZ7vWrDn3IMDDgGyQ+roNVz5T+sF8K7Iqg=;
-        b=pwVb3EH4UOajcZr0sH/gHPecoHp2v/IvTyXw6FGRcu6kN5S87yQn5HEilOtypAFZCM
-         uWNESFyzHhqO8pvnIz5uyiAM7sJ5C5M/IhFNCUQ0MUa/1C7eFFM4F6GkeT14PxiXWnNE
-         8aBIBJ+U6HwAT0+s6mdxkF1uSNH9wt80/I8r+D1dnS4ox9hKPijGfR3ybfCCcaMzUyvy
-         d71ZudCiJb6LYgxw+ASQtKLZVx8QRR5Gye3xhDTY2A0UfD6zNt3f4nsig7ZDOnluJmoZ
-         UHpktEaodxfT3y+upNiTZB3JJWCrTG4kKQnpt4pxwnbPWpR8GLb6LRS5+Oo2TWCYtbFg
-         /4AA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790182053; x=1790786853; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=CmfZqOIcZMi+n6JYS11k53fRFKi7v2MDj9yxHBvJbZg=;
-        b=XVPr+0urBfnmk++Lo6wc7ymdDqhWWIucsymBdx/ExXtWLlDt1lcXrL272jevqPIi20
-         Hd4UxnMxchipH8EenBV/drUCn66rv32tiqHjg/nZ61pV3VdxwT60e/W7HoHT74s2Kb/x
-         sNK/tby/g42z3zsBYXWaFw4KQIqnF5Ty80m3XrHgNP43ugkM8EFieTZBPMRt/v049iWd
-         MYTxoyw+2utBc0NfZVuzI/ZA7UrqMRw6Qg19H+zAgyxZxmfM2mG+GffOFxg8fE7qiaSe
-         oRj3tkZgvsZ9mPuJUSLlEn8yYkSGMeusc1o+EON3zvpCDPONLLXgNyYpry6oOyiwWysF
-         MUdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790182053; x=1790786853;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CmfZqOIcZMi+n6JYS11k53fRFKi7v2MDj9yxHBvJbZg=;
-        b=SREyWCVicmk8FcUQrHTUxcW5Pc75oqykahOVhrcWBkQI0Lh4N/N4JXPJfcB5fDXS2U
-         zXnMh2jwwN0xfLI0JUTddl73JA+iLRFiJgpxmhmcx+nowlGRBwIjj92Nh2dIyEaOvzir
-         skqTBXY5oYCre0Qx/iFFF/HZaqw3USyZQCV7MTy2YDse0s6W11JP4Ze8n3fGQfrXuXgE
-         Lj63Zh6U9ULFn5sPIrSww3H9X75i8pMqFF0UoJ3PV+IdueA/jSaNh1xLMKhpco/v/Pit
-         Ud5vXxD6FZkpfAJfGCujG8bJ4U3BFcg28ZTI40P68JHXbMinYgWnsE6qV1N8abV6TpTS
-         10RA==
-X-Forwarded-Encrypted: i=1; AKwUvBwcgrPRAec0FM5S0eJlJI0sIUbFxEYLlxILwkuZNvJGwSnH3T0gVe5LLTK5x9rfE5wQ/meuMd4Hlvvv6hSz/Gjdla8=@vger.kernel.org
-X-Gm-Message-State: AFuF++ly2pEkzoudLqAdSAJh1JihpLW4sm3MFAzXb649i7f9mkb44PwD
-	DmOe6IuviBos2/eMbKpL6ZKMxiB16kIwQPsKZtUIRNnSIUBXJNUJqpYHKxdwRj82PZ9utiddVqz
-	Sl2MVisMqUH+AAACm9bym34VVHWfnpyNtCRA2VPXu
-X-Gm-Gg: AYBFou3sBQZoGjl1XmXXtMSBtEU4927CeBia5blFde1oHwpWnqg7eIPubjh/BtJ5yrj
-	teCTnwBGU7lfPNjgSqMC8u5g9q9ZcAede8PTNsVh79aT5PbeTDvcNVVqtHpUQyFXpC9pJjPPMZX
-	fQKSub8m6jZRT4vXjn3SQa8njEM2pFfOjvR6Ff2QRgp+fmBhM1YkhzNd7ggP7wrq2MXPNFKgJma
-	N9PEE8+Jkd63+AT22U0JhA4l8xZ9xG3C3NFjOktp0OnijOxCyw/a2BU3jtdlamqJ/R78x+yCPeC
-	Lpyp/k5YlhgzmX/CyR2bIIYa7mu/HeYcD/8CFR54L+Xl7MnT2avoTeeqNZEHdLWMe+C9sIztv9n
-	NgO3bZQUAENU=
-X-Received: by 2002:ac8:7c43:0:b0:531:475:4ce6 with SMTP id
- d75a77b69052e-532f9c8446amr855061cf.9.1790182051765; Wed, 23 Sep 2026
- 09:47:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1j8dcyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 904A41F000FF;
+	Wed, 23 Sep 2026 16:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790182687;
+	bh=UYUMhqujWDfQOfDJQx1XrfJtM1IEUP7Jd+1gqVWGvH0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=h1j8dcyhG/SQEYEWXNsqOS6e0Zizu03d4EjCve5nFHa8rAp++6498s7MiNat3PUKF
+	 /4CKiP6zgv8jruvxj5FW9jMQ5CtIoCtPi4aZbMa5lwZd4y7W3oaVuXT3dTb86K5uiw
+	 BX6DvNQ4/lASjUa3iTyNf2Chps23XPyLRVDEjVtS6M2M040HQjTT8zV5Gsqn6ghJ//
+	 TmQraekb84PpJ5g9DGp0tv4Ez5olMFzW1ARuhoMrt9SKKjSvZhH356xmpe+RAcQVLy
+	 oFlqtacX2ocNi2WKEzr9wEmrlK6ZeS+JQ5yQ1k06cAAeCuxkJ4BDzTNOhq44TZA4+h
+	 tqhsk9ichkrfg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 46B70CE1598; Wed, 23 Sep 2026 09:58:02 -0700 (PDT)
+Date: Wed, 23 Sep 2026 09:58:02 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Boqun Feng <boqun@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Make optprobe optimizer multi-generational and
+ asynchronous
+Message-ID: <7807d622-b76e-4c7a-b9e2-42667defe918@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20260923164510.f3bbddefea4423f8f1bfecb8@kernel.org>
+ <179017148080.466588.9116221556625712980.stgit@devnote2>
+ <20260924001216.60407f86076bfc26daf4401a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-4-4583d8a23bca@kernel.org>
-In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-4-4583d8a23bca@kernel.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 23 Sep 2026 09:47:20 -0700
-X-Gm-Features: AclHuK83Kla3imZgJxwcVqaZrjkW9LZwYBjsyBrh5q6aKIVAyiuE6uaku1WwNaI
-Message-ID: <CAJuCfpELP9Ups5XeS3PNbF=VtrfkYbkwRj-LuEHd7bLsTw4LUw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/40] mm: consistently validate VMA state after
- mmap[_prepare] hooks
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, 
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	fuse-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260924001216.60407f86076bfc26daf4401a@kernel.org>
 
-On Thu, Sep 17, 2026 at 9:25=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.o=
-rg> wrote:
->
-> When the f_op->mmap_prepare or deprecated f_op->mmap hooks are invoked, t=
-he
-> driver might have done something crazy that is not permitted by the kerne=
-l.
->
-> Currently we check for three such cases in __mmap_new_file_vma(), but onl=
-y
-> if the legacy f_op->mmap hook is used:
->
-> * Did sparc ADI result in invalid flags?
->
-> * Did the driver alter vma->vm_start?
->
-> * Did the driver make a file-backed mapping on a read-only file writable?
->
-> Generalise these checks for both mmap_prepare and mmap and apply to all
-> invocations of mmap_file(), the f_op->mmap and f_op->mmap_prepare handlin=
-g
-> in the core VMA code and the mmap_prepare compatibility layer.
->
-> Also extend the vm_start check to vm_end also - drivers must not change t=
-he
-> VMA range at all.
->
-> We also WARN_ON_ONCE() on these conditions as they are things that should
-> simply not occur in the kernel and it's important to call it out when it
-> does.
->
-> We invoke mmap_prepare_validate() after mmap_action_prepare(), as mmap
-> actions often manipulate state in the descriptor thus providing the final
-> state the VMA will be derived from.
->
-> Also call mmap_validate_vma_flags() in insert_vm_struct() to ensure that
-> special regions which are inserted (such as a VDSO or VVAR) also satisfy
-> the sanity checks.
->
-> This way every VMA established through an mmap hook, whether via mmap() o=
-r
-> the compatibility layer, or inserted via insert_vm_struct(), has been
-> validated. brk() VMAs never pass through a driver hook and so need no suc=
-h
-> check.
->
-> While we're here, also fixup a couple disjoint blocks of #ifdef CONFIG_MM=
-U.
->
-> Finally, update the VMA userland tests to reflect the change.
->
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+On Thu, Sep 24, 2026 at 12:12:16AM +0900, Masami Hiramatsu wrote:
+> Ah, I forgot to add "RFC" to the tag.
+> 
+> BTW, if the RCU synchronization takes too long, all other similar code --
+> calling RCU synchronization under mutex/locks --- are fundamentally having
+> the same issue. If that is correct, we should start adding lockdep check
+> for such synchronizations, to clarify which one needs to be fixed.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Just to be clear, the issue is RCU Tasks specifically, whose grace
+periods can take minutes.  RCU, SRCU, RCU Tasks Trace, and RCU Tasks
+Rude have grace periods that complete well within two minutes, avoiding
+triggering the two-minute hung-task timeout.
 
-> ---
->  mm/internal.h                   |  51 ++++++++++++--------
->  mm/util.c                       |  19 ++++++--
->  mm/vma.c                        | 100 ++++++++++++++++++++++++++++++++++=
-------
->  mm/vma.h                        |  25 ++++++++--
->  tools/testing/vma/include/dup.h |  10 ++++
->  5 files changed, 163 insertions(+), 42 deletions(-)
->
-> diff --git a/mm/internal.h b/mm/internal.h
-> index fe576d468af4..970fb34898b2 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -213,6 +213,24 @@ static inline void *folio_raw_mapping(const struct f=
-olio *folio)
->         return (void *)(mapping & ~FOLIO_MAPPING_FLAGS);
->  }
->
-> +/*
-> + * If the VMA has a close hook then close it, and since closing it might=
- leave
-> + * it in an inconsistent state which makes the use of any hooks suspect,=
- clear
-> + * them down by installing dummy empty hooks.
-> + */
-> +static inline void vma_close(struct vm_area_struct *vma)
-> +{
-> +       if (vma->vm_ops && vma->vm_ops->close) {
-> +               vma->vm_ops->close(vma);
-> +
-> +               /*
-> +                * The mapping is in an inconsistent state, and no furthe=
-r hooks
-> +                * may be invoked upon it.
-> +                */
-> +               vma->vm_ops =3D &vma_dummy_vm_ops;
-> +       }
-> +}
-> +
->  /*
->   * This is a file-backed mapping, and is about to be memory mapped - inv=
-oke its
->   * mmap hook and safely handle error conditions. On error, VMA hooks wil=
-l be
-> @@ -225,8 +243,12 @@ static inline void *folio_raw_mapping(const struct f=
-olio *folio)
->   */
->  static inline int mmap_file(struct file *file, struct vm_area_struct *vm=
-a)
->  {
-> -       int err =3D vfs_mmap(file, vma);
-> +       const unsigned long prev_start =3D vma->vm_start;
-> +       const unsigned long prev_end =3D vma->vm_end;
-> +       const vma_flags_t prev_flags =3D vma->flags;
+Josef is making RCU Tasks go faster by more closely specializing it for
+its trampoline-removal use case.  His approach also could eventually
+remove some hundreds of lines of code from RCU, once all architectures
+are adjusted.
 
-nit: Might be just me but when I see prev_XXX in VMA-related code I
-picture previous VMA in the address space. Maybe call these orig_XXX?
+"Why not both?"  ;-)
 
-> +       int err;
->
-> +       err =3D vfs_mmap(file, vma);
->         /*
->          * Either we tried to call the file hook for mmap() and an error =
-arose
->          * or a driver set vma->vm_ops =3D NULL intending there to be no =
-VMA
-> @@ -239,26 +261,17 @@ static inline int mmap_file(struct file *file, stru=
-ct vm_area_struct *vma)
->          */
->         if (unlikely(err || !vma->vm_ops))
->                 vma->vm_ops =3D &vma_dummy_vm_ops;
-> +       if (unlikely(err))
-> +               return err;
->
-> -       return err;
-> -}
-> -
-> -/*
-> - * If the VMA has a close hook then close it, and since closing it might=
- leave
-> - * it in an inconsistent state which makes the use of any hooks suspect,=
- clear
-> - * them down by installing dummy empty hooks.
-> - */
-> -static inline void vma_close(struct vm_area_struct *vma)
-> -{
-> -       if (vma->vm_ops && vma->vm_ops->close) {
-> -               vma->vm_ops->close(vma);
-> -
-> -               /*
-> -                * The mapping is in an inconsistent state, and no furthe=
-r hooks
-> -                * may be invoked upon it.
-> -                */
-> -               vma->vm_ops =3D &vma_dummy_vm_ops;
-> +       err =3D mmap_hook_validate(prev_start, prev_end, &prev_flags, vma=
-);
-> +       if (unlikely(err)) {
-> +               vma->vm_start =3D prev_start;
-> +               vma->vm_end =3D prev_end;
-> +               vma_close(vma);
->         }
-> +
-> +       return err;
->  }
->
->  /* unmap_vmas is in mm/memory.c */
-> diff --git a/mm/util.c b/mm/util.c
-> index 016932780925..bdd5923eebc7 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -1224,19 +1224,28 @@ EXPORT_SYMBOL(compat_set_desc_from_vma);
->  int __compat_vma_mmap(struct vm_area_desc *desc,
->                       struct vm_area_struct *vma)
->  {
-> +       struct vm_area_desc prev_desc;
->         int err;
->
-> +       /* Derive state prior to mmap_prepare hook. */
-> +       compat_set_desc_from_vma(&prev_desc, desc->file, vma);
->         /* Perform any preparatory tasks for mmap action. */
->         err =3D mmap_action_prepare(desc);
-> -       if (err) {
-> -               if (desc->vm_file !=3D vma->vm_file)
-> -                       fput(desc->vm_file);
-> -               return err;
-> -       }
-> +       if (err)
-> +               goto err_put;
-> +       /* Check the caller did nothing crazy. */
-> +       err =3D mmap_prepare_validate(&prev_desc, desc);
-> +       if (err)
-> +               goto err_put;
->         /* Update the VMA from the descriptor. */
->         compat_set_vma_from_desc(vma, desc);
->         /* Complete any specified mmap actions. */
->         return mmap_action_complete(vma, &desc->action, /*is_compat=3D*/t=
-rue);
-> +
-> +err_put:
-> +       if (desc->vm_file !=3D vma->vm_file)
-> +               fput(desc->vm_file);
-> +       return err;
->  }
->  EXPORT_SYMBOL(__compat_vma_mmap);
->
-> diff --git a/mm/vma.c b/mm/vma.c
-> index 05d2c676672e..d6ed10cefc8f 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -2623,16 +2623,6 @@ static int __mmap_new_file_vma(struct mmap_state *=
-map,
->                 return error;
->         }
->
-> -       /* Drivers cannot alter the address of the VMA. */
-> -       WARN_ON_ONCE(map->addr !=3D vma->vm_start);
-> -       /*
-> -        * Drivers should not permit writability when previously it was
-> -        * disallowed.
-> -        */
-> -       VM_WARN_ON_ONCE(!vma_flags_same_pair(&map->vma_flags, &vma->flags=
-) &&
-> -                       !vma_flags_test(&map->vma_flags, VMA_MAYWRITE_BIT=
-) &&
-> -                       vma_test(vma, VMA_MAYWRITE_BIT));
-> -
->         map->vma_flags =3D vma->flags;
->
->         return 0;
-> @@ -2710,11 +2700,6 @@ static int __mmap_new_vma(struct mmap_state *map, =
-struct vm_area_struct **vmap,
->                 vma->flags =3D map->vma_flags;
->         }
->
-> -#ifdef CONFIG_SPARC64
-> -       /* TODO: Fix SPARC ADI! */
-> -       WARN_ON_ONCE(!arch_validate_flags(map->vm_flags));
-> -#endif
-> -
->         /* Lock the VMA since it is modified after insertion into VMA tre=
-e */
->         vma_start_write(vma);
->         vma_iter_store_new(vmi, vma);
-> @@ -2777,6 +2762,80 @@ static void __mmap_complete(struct mmap_state *map=
-, struct vm_area_struct *vma)
->         vma_set_page_prot(vma);
->  }
->
-> +/* Check to ensure that the VMA flags of a newly mapped VMA are sane. */
-> +static int mmap_validate_vma_flags(const vma_flags_t *flags)
-> +{
-> +#ifdef CONFIG_SPARC64
-> +       const vm_flags_t legacy_flags =3D vma_flags_to_legacy(*flags);
-> +
-> +       /* TODO: Fix SPARC ADI! */
-> +       if (WARN_ON_ONCE(!arch_validate_flags(legacy_flags)))
-> +               return -EINVAL;
-> +#endif
-> +
-> +       return 0;
-> +}
-> +
-> +/* Check to ensure a driver hasn't done something crazy. */
-> +static int mmap_validate(unsigned long prev_start, unsigned long prev_en=
-d,
-> +                        unsigned long curr_start, unsigned long curr_end=
-,
-> +                        const vma_flags_t *prev_flags,
-> +                        const vma_flags_t *curr_flags)
-> +{
-> +       bool was_maywrite, is_maywrite;
-> +
-> +       /* Drivers cannot alter the range of the VMA. */
-> +       if (WARN_ON_ONCE(prev_start !=3D curr_start || prev_end !=3D curr=
-_end))
-> +               return -EINVAL;
-> +
-> +       was_maywrite =3D vma_flags_test(prev_flags, VMA_MAYWRITE_BIT);
-> +       is_maywrite =3D vma_flags_test(curr_flags, VMA_MAYWRITE_BIT);
-> +
-> +       /* A driver may not make a previously unwritable mapping writable=
-. */
-> +       if (WARN_ON_ONCE(!was_maywrite && is_maywrite))
-> +               return -EINVAL;
-> +
-> +       return mmap_validate_vma_flags(curr_flags);
-> +}
-> +
-> +/**
-> + * mmap_prepare_validate() - Ensure the driver hasn't violated invariant=
-s in its
-> + * f_op->mmap_prepare hook.
-> + * @prev_desc: The VMA descriptor prior to the mmap_prepare hook being c=
-alled.
-> + * @desc: The VMA descriptor after the mmap_prepare hook has been called=
-.
-> + *
-> + * Returns: 0 on success, otherwise an error.
-> + */
-> +int mmap_prepare_validate(const struct vm_area_desc *prev_desc,
-> +                         const struct vm_area_desc *desc)
-> +{
-> +       return mmap_validate(prev_desc->start, prev_desc->end,
-> +                            desc->start, desc->end,
-> +                            &prev_desc->vma_flags, &desc->vma_flags);
-> +}
-> +
-> +/**
-> + * mmap_hook_validate() - Ensure the driver hasn't violated invariants i=
-n
-> + * its f_op->mmap hook.
-> + * @prev_start: The start of the mapping prior to the mmap hook.
-> + * @prev_end: The end of the mapping prior to the mmap hook.
-> + * @prev_flags: The VMA flags set for the VMA prior to the mmap hook.
-> + * @vma: The VMA after the hook has been applied.
-> + *
-> + * Returns: 0 on success, otherwise an error.
-> + */
-> +int mmap_hook_validate(unsigned long prev_start, unsigned long prev_end,
-> +                      const vma_flags_t *prev_flags,
-> +                      const struct vm_area_struct *vma)
-> +{
-> +       const unsigned long start =3D vma->vm_start;
-> +       const unsigned long end =3D vma->vm_end;
-> +       const vma_flags_t *flags =3D &vma->flags;
-> +
-> +       return mmap_validate(prev_start, prev_end, start, end, prev_flags=
-,
-> +                            flags);
-> +}
-> +
->  static int call_action_prepare(struct mmap_state *map,
->                                struct vm_area_desc *desc)
->  {
-> @@ -2803,6 +2862,7 @@ static int call_action_prepare(struct mmap_state *m=
-ap,
->  static int call_mmap_prepare(struct mmap_state *map,
->                 struct vm_area_desc *desc)
->  {
-> +       const struct vm_area_desc prev_desc =3D *desc;
->         int err;
->
->         /* Invoke the hook. */
-> @@ -2822,6 +2882,11 @@ static int call_mmap_prepare(struct mmap_state *ma=
-p,
->         if (err)
->                 return err;
->
-> +       /* Check the caller did nothing crazy. */
-> +       err =3D mmap_prepare_validate(&prev_desc, desc);
-> +       if (err)
-> +               return err;
-> +
->         /* Update fields permitted to be changed. */
->         map->pgoff =3D desc->pgoff;
->         map->vma_flags =3D desc->vma_flags;
-> @@ -3457,10 +3522,15 @@ int __vm_munmap(unsigned long start, size_t len, =
-bool unlock)
->  int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
->  {
->         unsigned long charged =3D vma_pages(vma);
-> +       int err;
->
->         if (find_vma_intersection(mm, vma->vm_start, vma->vm_end))
->                 return -ENOMEM;
->
-> +       err =3D mmap_validate_vma_flags(&vma->flags);
-> +       if (err)
-> +               return err;
-> +
->         if (vma_test(vma, VMA_ACCOUNT_BIT) &&
->              security_vm_enough_memory_mm(mm, charged))
->                 return -ENOMEM;
-> diff --git a/mm/vma.h b/mm/vma.h
-> index f15faa83f3d6..b2c3bc832a48 100644
-> --- a/mm/vma.h
-> +++ b/mm/vma.h
-> @@ -782,14 +782,19 @@ struct vm_area_struct *vm_area_alloc(struct mm_stru=
-ct *mm);
->  struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig);
->  void vm_area_free(struct vm_area_struct *vma);
->
-> -/* vma_exec.c */
->  #ifdef CONFIG_MMU
-> +int mmap_prepare_validate(const struct vm_area_desc *prev_desc,
-> +                         const struct vm_area_desc *desc);
-> +
-> +int mmap_hook_validate(unsigned long prev_start, unsigned long prev_end,
-> +                      const vma_flags_t *prev_flags,
-> +                      const struct vm_area_struct *vma);
-> +
-> +/* vma_exec.c */
->  int create_init_stack_vma(struct mm_struct *mm, struct vm_area_struct **=
-vmap,
->                           unsigned long *top_mem_p);
->  int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift);
-> -#endif
->
-> -#ifdef CONFIG_MMU
->  /*
->   * Denies creating a writable executable mapping or gaining executable p=
-ermissions.
->   *
-> @@ -838,6 +843,20 @@ static inline bool map_deny_write_exec(const vma_fla=
-gs_t *old,
->
->         return false;
->  }
-> +#else
-> +static inline int mmap_prepare_validate(const struct vm_area_desc *prev_=
-desc,
-> +                                       const struct vm_area_desc *desc)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int mmap_hook_validate(unsigned long prev_start,
-> +                                    unsigned long prev_end,
-> +                                    const vma_flags_t *prev_flags,
-> +                                    const struct vm_area_struct *vma)
-> +{
-> +       return 0;
-> +}
->  #endif
->
->  struct vm_area_struct *__install_special_mapping(struct mm_struct *mm,
-> diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/=
-dup.h
-> index 2fd422789717..2986ae6ca1e5 100644
-> --- a/tools/testing/vma/include/dup.h
-> +++ b/tools/testing/vma/include/dup.h
-> @@ -1359,13 +1359,23 @@ static inline int vfs_mmap_prepare(struct file *f=
-ile, struct vm_area_desc *desc)
->         return file->f_op->mmap_prepare(desc);
->  }
->
-> +int mmap_prepare_validate(const struct vm_area_desc *prev_desc,
-> +                         const struct vm_area_desc *desc);
-> +
->  static inline int __compat_vma_mmap(struct vm_area_desc *desc,
->                 struct vm_area_struct *vma)
->  {
-> +       struct vm_area_desc prev_desc;
->         int err;
->
-> +       /* Derive state prior to mmap_prepare hook. */
-> +       compat_set_desc_from_vma(&prev_desc, desc->file, vma);
->         /* Perform any preparatory tasks for mmap action. */
->         err =3D mmap_action_prepare(desc);
-> +       if (err)
-> +               return err;
-> +       /* Check the caller did nothing crazy. */
-> +       err =3D mmap_prepare_validate(&prev_desc, desc);
->         if (err)
->                 return err;
->         /* Update the VMA from the descriptor. */
->
-> --
-> 2.55.0
->
+							Thanx, Paul
+
+> Thanks,
+> 
+> On Wed, 23 Sep 2026 22:51:20 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Currently, kprobe_optimizer() holds kprobe_mutex, text_mutex, and
+> > cpus_read_lock() simultaneously while executing synchronize_rcu_tasks().
+> > Under PREEMPT_LAZY and server workloads with long-running CPU-bound kernel
+> > tasks or heavy cgroup writeback loops, synchronize_rcu_tasks() can block
+> > for seconds to minutes. Because text_mutex and cpus_read_lock() are held
+> > during this entire wait, any concurrent static key updates, module
+> > loading/unloading, CPU hotplug, or tracing updates stall, frequently
+> > triggering hung-task detector panics.
+> > 
+> > Instead of penalizing the kernel preemption path with invasive hooks and
+> > global hash lookups, decouple kprobe jump optimization from synchronous
+> > waiting entirely:
+> > 
+> > 1. Replace synchronize_rcu_tasks() with call_rcu_tasks(). Locks
+> >    (text_mutex and cpus_read_lock()) are held only for the brief moment
+> >    needed to patch instructions via arch_unoptimize_kprobes() and
+> >    arch_optimize_kprobes() (microseconds), and are completely released
+> >    while waiting for the Tasks RCU grace period.
+> > 
+> > 2. Introduce a fixed ring of generations (optprobe_gens[OPTPROBE_GEN_MAX])
+> >    to avoid any dynamic memory allocation (kmalloc) or -ENOMEM failure
+> >    modes.
+> > 
+> > 3. The last generation slot in the array is reserved as a "waiting room"
+> >    and is not dispatched to RCU until another in-flight generation has
+> >    finished. While a generation is waiting for its Tasks RCU grace period,
+> >    any newly registered or unregistered probes accumulate in the waiting
+> >    room generation without blocking or requiring additional slots.
+> > 
+> > 4. When the Tasks RCU callback fires, it marks the generation as ready
+> >    and wakes up the optimizer thread to finalize optimization (poking
+> >    the jump instructions) and free cleaned probe slots. Once finalized,
+> >    the generation is marked idle, allowing the waiting room generation
+> >    to be dispatched next.
+> > 
+> > 5. Flushing via wait_for_kprobe_optimizer() waits asynchronously for all
+> >    in-flight and queued generations to drain without stalling other
+> >    kernel subsystems.
+> > 
+> > On non-preemptive kernels or configs where CONFIG_TASKS_RCU=n,
+> > call_rcu_tasks() transparently aliases to call_rcu(), preserving full
+> > portability.
+> > 
+> > Assisted-by: LLM
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/kprobes.c |  319 ++++++++++++++++++++++++++++++++++++++----------------
+> >  1 file changed, 225 insertions(+), 94 deletions(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 6337da5cab9e..1e25980303c4 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -42,6 +42,7 @@
+> >  #include <linux/execmem.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/wait.h>
+> > +#include <linux/rcupdate.h>
+> >  
+> >  #include <asm/sections.h>
+> >  #include <asm/cacheflush.h>
+> > @@ -66,7 +67,7 @@ static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+> >  /* NOTE: change this value only with 'kprobe_mutex' held */
+> >  static bool kprobes_all_disarmed;
+> >  
+> > -/* This protects 'kprobe_table' and 'optimizing_list' */
+> > +/* This protects 'kprobe_table' and 'optprobe_gens' */
+> >  static DEFINE_MUTEX(kprobe_mutex);
+> >  static DEFINE_PER_CPU(struct kprobe *, kprobe_instance);
+> >  
+> > @@ -511,10 +512,32 @@ static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
+> >  	return NULL;
+> >  }
+> >  
+> > -/* Optimization staging list, protected by 'kprobe_mutex' */
+> > -static LIST_HEAD(optimizing_list);
+> > -static LIST_HEAD(unoptimizing_list);
+> > -static LIST_HEAD(freeing_list);
+> > +#define OPTPROBE_GEN_MAX 2
+> > +
+> > +struct optprobe_generation {
+> > +	struct list_head optimizing_list;
+> > +	struct list_head unoptimizing_list;
+> > +	struct list_head freeing_list;
+> > +	struct rcu_head rcu;
+> > +	bool in_flight;
+> > +	bool ready;
+> > +};
+> > +
+> > +/*
+> > + * Generational ring of optprobes.
+> > + *
+> > + * Incoming probe requests are queued into the waiting room generation
+> > + * (optprobe_gens[optprobe_cur_gen]). When dispatched, the generation
+> > + * unoptimizes its probes, invokes call_rcu_tasks(), and optprobe_cur_gen
+> > + * advances to the next slot.
+> > + *
+> > + * To ensure an idle generation is always available to collect incoming
+> > + * requests without dynamic allocation, the last available generation slot
+> > + * is never dispatched until another generation has finished.
+> > + */
+> > +static struct optprobe_generation optprobe_gens[OPTPROBE_GEN_MAX];
+> > +static int optprobe_cur_gen;
+> > +static bool optprobe_flush_requested;
+> >  
+> >  static void optimize_kprobe(struct kprobe *p);
+> >  static struct task_struct *kprobe_optimizer_task;
+> > @@ -530,50 +553,78 @@ static DECLARE_COMPLETION(optimizer_completion);
+> >  
+> >  #define OPTIMIZE_DELAY 5
+> >  
+> > +static bool optprobe_has_queued_probes(void)
+> > +{
+> > +	struct optprobe_generation *gen = &optprobe_gens[optprobe_cur_gen];
+> > +
+> > +	return !list_empty(&gen->optimizing_list) ||
+> > +	       !list_empty(&gen->unoptimizing_list);
+> > +}
+> > +
+> > +static int optprobe_active_gens_count(void)
+> > +{
+> > +	int count = 0;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		if (optprobe_gens[i].in_flight || optprobe_gens[i].ready)
+> > +			count++;
+> > +	}
+> > +	return count;
+> > +}
+> > +
+> >  /*
+> > - * Optimize (replace a breakpoint with a jump) kprobes listed on
+> > - * 'optimizing_list'.
+> > + * The last generation must not be fired until another generation is done.
+> > + * (Thus the last generation acts as the waiting room.)
+> >   */
+> > -static void do_optimize_kprobes(void)
+> > +static bool optprobe_can_fire(void)
+> >  {
+> > -	lockdep_assert_held(&text_mutex);
+> > -	/*
+> > -	 * The optimization/unoptimization refers 'online_cpus' via
+> > -	 * stop_machine() and cpu-hotplug modifies the 'online_cpus'.
+> > -	 * And same time, 'text_mutex' will be held in cpu-hotplug and here.
+> > -	 * This combination can cause a deadlock (cpu-hotplug tries to lock
+> > -	 * 'text_mutex' but stop_machine() can not be done because
+> > -	 * the 'online_cpus' has been changed)
+> > -	 * To avoid this deadlock, caller must have locked cpu-hotplug
+> > -	 * for preventing cpu-hotplug outside of 'text_mutex' locking.
+> > -	 */
+> > -	lockdep_assert_cpus_held();
+> > +	return optprobe_active_gens_count() < OPTPROBE_GEN_MAX - 1;
+> > +}
+> >  
+> > -	/* Optimization never be done when disarmed */
+> > -	if (kprobes_all_disarmed || !kprobes_allow_optimization ||
+> > -	    list_empty(&optimizing_list))
+> > -		return;
+> > +static bool optprobe_has_ready_gens(void)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		if (READ_ONCE(optprobe_gens[i].ready))
+> > +			return true;
+> > +	}
+> > +	return false;
+> > +}
+> >  
+> > -	arch_optimize_kprobes(&optimizing_list);
+> > +static bool optprobe_optimizer_busy(void)
+> > +{
+> > +	return optprobe_has_queued_probes() || (optprobe_active_gens_count() > 0);
+> >  }
+> >  
+> >  /*
+> >   * Unoptimize (replace a jump with a breakpoint and remove the breakpoint
+> > - * if need) kprobes listed on 'unoptimizing_list'.
+> > + * if need) kprobes listed on 'unopt_list'.
+> >   */
+> > -static void do_unoptimize_kprobes(void)
+> > +static void do_unoptimize_kprobes(struct list_head *unopt_list,
+> > +				  struct list_head *free_list)
+> >  {
+> >  	struct optimized_kprobe *op, *tmp;
+> >  
+> >  	lockdep_assert_held(&text_mutex);
+> > -	/* See comment in do_optimize_kprobes() */
+> > +	/*
+> > +	 * The optimization/unoptimization refers 'online_cpus' via
+> > +	 * stop_machine() and cpu-hotplug modifies the 'online_cpus'.
+> > +	 * And same time, 'text_mutex' will be held in cpu-hotplug and here.
+> > +	 * This combination can cause a deadlock (cpu-hotplug tries to lock
+> > +	 * 'text_mutex' but stop_machine() can not be done because
+> > +	 * the 'online_cpus' has been changed)
+> > +	 * To avoid this deadlock, caller must have locked cpu-hotplug
+> > +	 * for preventing cpu-hotplug outside of 'text_mutex' locking.
+> > +	 */
+> >  	lockdep_assert_cpus_held();
+> >  
+> > -	if (!list_empty(&unoptimizing_list))
+> > -		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+> > +	if (!list_empty(unopt_list))
+> > +		arch_unoptimize_kprobes(unopt_list, free_list);
+> >  
+> > -	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
+> > -	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+> > +	/* Loop on 'free_list' for disarming and removing from kprobe hash list */
+> > +	list_for_each_entry_safe(op, tmp, free_list, list) {
+> >  		/* Switching from detour code to origin */
+> >  		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> >  		/* Disarm probes if marked disabled and not gone */
+> > @@ -586,17 +637,20 @@ static void do_unoptimize_kprobes(void)
+> >  			 * (reclaiming is done by do_free_cleaned_kprobes().)
+> >  			 */
+> >  			hlist_del_rcu(&op->kp.hlist);
+> > -		} else
+> > +		} else {
+> >  			list_del_init(&op->list);
+> > +		}
+> >  	}
+> >  }
+> >  
+> > -/* Reclaim all kprobes on the 'freeing_list' */
+> > -static void do_free_cleaned_kprobes(void)
+> > +/* Reclaim all kprobes on the 'free_list' */
+> > +static void do_free_cleaned_kprobes(struct list_head *free_list)
+> >  {
+> >  	struct optimized_kprobe *op, *tmp;
+> >  
+> > -	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+> > +	list_for_each_entry_safe(op, tmp, free_list, list) {
+> > +		struct kprobe *_p;
+> > +
+> >  		list_del_init(&op->list);
+> >  		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
+> >  			/*
+> > @@ -608,11 +662,10 @@ static void do_free_cleaned_kprobes(void)
+> >  
+> >  		/*
+> >  		 * The aggregator was holding back another probe while it sat on the
+> > -		 * unoptimizing/freeing lists.  Now that the aggregator has been fully
+> > +		 * unoptimizing/freeing lists. Now that the aggregator has been fully
+> >  		 * reverted we can safely retry the optimization of that sibling.
+> >  		 */
+> > -
+> > -		struct kprobe *_p = get_optimized_kprobe(op->kp.addr);
+> > +		_p = get_optimized_kprobe(op->kp.addr);
+> >  		if (unlikely(_p))
+> >  			optimize_kprobe(_p);
+> >  
+> > @@ -622,67 +675,119 @@ static void do_free_cleaned_kprobes(void)
+> >  
+> >  static void kick_kprobe_optimizer(void);
+> >  
+> > -/* Kprobe jump optimizer */
+> > -static void kprobe_optimizer(void)
+> > +static void optprobe_generation_rcu_cb(struct rcu_head *rcu)
+> >  {
+> > -	guard(mutex)(&kprobe_mutex);
+> > +	struct optprobe_generation *gen;
+> > +
+> > +	gen = container_of(rcu, struct optprobe_generation, rcu);
+> > +	WRITE_ONCE(gen->ready, true);
+> > +	wake_up(&kprobe_optimizer_wait);
+> > +}
+> > +
+> > +static void optprobe_finalize_generation(struct optprobe_generation *gen)
+> > +{
+> > +	lockdep_assert_held(&kprobe_mutex);
+> >  
+> >  	scoped_guard(cpus_read_lock) {
+> >  		guard(mutex)(&text_mutex);
+> >  
+> > -		/*
+> > -		 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+> > -		 * kprobes before waiting for quiesence period.
+> > -		 */
+> > -		do_unoptimize_kprobes();
+> > +		/* Optimization never be done when disarmed */
+> > +		if (!kprobes_all_disarmed && kprobes_allow_optimization &&
+> > +		    !list_empty(&gen->optimizing_list))
+> > +			arch_optimize_kprobes(&gen->optimizing_list);
+> > +	}
+> > +
+> > +	/* Free cleaned kprobes after quiescence period */
+> > +	do_free_cleaned_kprobes(&gen->freeing_list);
+> > +
+> > +	gen->in_flight = false;
+> > +	WRITE_ONCE(gen->ready, false);
+> > +}
+> > +
+> > +static void optprobe_dispatch_generation(void)
+> > +{
+> > +	struct optprobe_generation *gen;
+> > +
+> > +	lockdep_assert_held(&kprobe_mutex);
+> > +
+> > +	if (!optprobe_can_fire() || !optprobe_has_queued_probes())
+> > +		return;
+> > +
+> > +	gen = &optprobe_gens[optprobe_cur_gen];
+> > +
+> > +	scoped_guard(cpus_read_lock) {
+> > +		guard(mutex)(&text_mutex);
+> >  
+> >  		/*
+> > -		 * Step 2: Wait for quiesence period to ensure all potentially
+> > -		 * preempted tasks to have normally scheduled. Because optprobe
+> > -		 * may modify multiple instructions, there is a chance that Nth
+> > -		 * instruction is preempted. In that case, such tasks can return
+> > -		 * to 2nd-Nth byte of jump instruction. This wait is for avoiding it.
+> > -		 * Note that on non-preemptive kernel, this is transparently converted
+> > -		 * to synchronoze_sched() to wait for all interrupts to have completed.
+> > +		 * Unoptimize kprobes and collect cleaned (unused and disarmed)
+> > +		 * kprobes before waiting for quiescence period.
+> >  		 */
+> > -		synchronize_rcu_tasks();
+> > +		do_unoptimize_kprobes(&gen->unoptimizing_list, &gen->freeing_list);
+> > +	}
+> > +
+> > +	/* Advance cur_gen to the next generation slot */
+> > +	optprobe_cur_gen = (optprobe_cur_gen + 1) % OPTPROBE_GEN_MAX;
+> > +
+> > +	gen->in_flight = true;
+> > +	WRITE_ONCE(gen->ready, false);
+> >  
+> > -		/* Step 3: Optimize kprobes after quiesence period */
+> > -		do_optimize_kprobes();
+> > +	call_rcu_tasks(&gen->rcu, optprobe_generation_rcu_cb);
+> > +}
+> >  
+> > -		/* Step 4: Free cleaned kprobes after quiesence period */
+> > -		do_free_cleaned_kprobes();
+> > +/* Kprobe jump optimizer */
+> > +static void kprobe_optimizer(void)
+> > +{
+> > +	int i;
+> > +
+> > +	guard(mutex)(&kprobe_mutex);
+> > +
+> > +	/* Step 1: Finalize any generation whose Tasks RCU grace period completed */
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		if (READ_ONCE(optprobe_gens[i].ready))
+> > +			optprobe_finalize_generation(&optprobe_gens[i]);
+> >  	}
+> >  
+> > -	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
+> > -	if (completion_done(&optimizer_completion))
+> > -		complete(&optimizer_completion);
+> > +	/* Step 2: Dispatch waiting room generation if allowed */
+> > +	optprobe_dispatch_generation();
+> >  
+> > -	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+> > -		kick_kprobe_optimizer();	/*normal kick*/
+> > +	/* Step 3: Check completion if flush was requested */
+> > +	if (!optprobe_optimizer_busy()) {
+> > +		if (optprobe_flush_requested) {
+> > +			optprobe_flush_requested = false;
+> > +			complete_all(&optimizer_completion);
+> > +		}
+> > +	} else if (optprobe_has_queued_probes() && optprobe_can_fire()) {
+> > +		/* Probes remain and can be fired immediately (e.g. retried siblings) */
+> > +		kick_kprobe_optimizer();
+> > +	}
+> >  }
+> >  
+> >  static int kprobe_optimizer_thread(void *data)
+> >  {
+> >  	while (!kthread_should_stop()) {
+> > -		/* To avoid hung_task, wait in interruptible state. */
+> > +		/* Wait until there is work to do or a generation is ready */
+> >  		wait_event_interruptible(kprobe_optimizer_wait,
+> > -			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
+> > -			   kthread_should_stop());
+> > +			atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
+> > +			optprobe_has_ready_gens() ||
+> > +			kthread_should_stop());
+> >  
+> >  		if (kthread_should_stop())
+> >  			break;
+> >  
+> >  		/*
+> > -		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
+> > -		 * This wait can be interrupted by a flush request.
+> > +		 * If it was a normal kick and no generation is ready to finalize,
+> > +		 * wait for OPTIMIZE_DELAY to batch incoming requests.
+> > +		 * This wait can be interrupted by a flush request or a ready generation.
+> >  		 */
+> > -		if (atomic_read(&optimizer_state) == 1)
+> > +		if (atomic_read(&optimizer_state) == OPTIMIZER_ST_KICKED &&
+> > +		    !optprobe_has_ready_gens()) {
+> >  			wait_event_interruptible_timeout(
+> >  				kprobe_optimizer_wait,
+> >  				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
+> > +				optprobe_has_ready_gens() ||
+> >  				kthread_should_stop(),
+> >  				OPTIMIZE_DELAY);
+> > +		}
+> >  
+> >  		if (kthread_should_stop())
+> >  			break;
+> > @@ -707,12 +812,11 @@ static void wait_for_kprobe_optimizer_locked(void)
+> >  {
+> >  	lockdep_assert_held(&kprobe_mutex);
+> >  
+> > -	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+> > +	while (optprobe_optimizer_busy()) {
+> >  		init_completion(&optimizer_completion);
+> > -		/*
+> > -		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
+> > -		 * idle. If it's already kicked, it will see the state change.
+> > -		 */
+> > +		optprobe_flush_requested = true;
+> > +
+> > +		/* Wake up optimizer thread */
+> >  		if (atomic_xchg_acquire(&optimizer_state,
+> >  			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
+> >  			wake_up(&kprobe_optimizer_wait);
+> > @@ -734,10 +838,28 @@ void wait_for_kprobe_optimizer(void)
+> >  bool optprobe_queued_unopt(struct optimized_kprobe *op)
+> >  {
+> >  	struct optimized_kprobe *_op;
+> > +	int i;
+> >  
+> > -	list_for_each_entry(_op, &unoptimizing_list, list) {
+> > -		if (op == _op)
+> > -			return true;
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		list_for_each_entry(_op, &optprobe_gens[i].unoptimizing_list, list) {
+> > +			if (op == _op)
+> > +				return true;
+> > +		}
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +static bool optprobe_queued_freeing(struct optimized_kprobe *op)
+> > +{
+> > +	struct optimized_kprobe *_op;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		list_for_each_entry(_op, &optprobe_gens[i].freeing_list, list) {
+> > +			if (op == _op)
+> > +				return true;
+> > +		}
+> >  	}
+> >  
+> >  	return false;
+> > @@ -780,7 +902,7 @@ static void optimize_kprobe(struct kprobe *p)
+> >  	if (WARN_ON_ONCE(!list_empty(&op->list)))
+> >  		return;
+> >  
+> > -	list_add(&op->list, &optimizing_list);
+> > +	list_add(&op->list, &optprobe_gens[optprobe_cur_gen].optimizing_list);
+> >  	kick_kprobe_optimizer();
+> >  }
+> >  
+> > @@ -813,7 +935,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+> >  				 * in the freeing list for release afterwards.
+> >  				 */
+> >  				force_unoptimize_kprobe(op);
+> > -				list_move(&op->list, &freeing_list);
+> > +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+> >  			}
+> >  		} else {
+> >  			/* Dequeue from the optimizing queue */
+> > @@ -828,7 +950,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+> >  		/* Forcibly update the code: this is a special case */
+> >  		force_unoptimize_kprobe(op);
+> >  	} else {
+> > -		list_add(&op->list, &unoptimizing_list);
+> > +		list_add(&op->list, &optprobe_gens[optprobe_cur_gen].unoptimizing_list);
+> >  		kick_kprobe_optimizer();
+> >  	}
+> >  }
+> > @@ -860,20 +982,17 @@ static void kill_optimized_kprobe(struct kprobe *p)
+> >  	struct optimized_kprobe *op;
+> >  
+> >  	op = container_of(p, struct optimized_kprobe, kp);
+> > -	if (!list_empty(&op->list))
+> > -		/* Dequeue from the (un)optimization queue */
+> > -		list_del_init(&op->list);
+> > -	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> > -
+> > -	if (kprobe_unused(p)) {
+> > -		/*
+> > -		 * Unused kprobe is on unoptimizing or freeing list. We move it
+> > -		 * to freeing_list and let the kprobe_optimizer() remove it from
+> > -		 * the kprobe hash list and free it.
+> > -		 */
+> > -		if (optprobe_queued_unopt(op))
+> > -			list_move(&op->list, &freeing_list);
+> > +	if (!list_empty(&op->list)) {
+> > +		if (kprobe_unused(p)) {
+> > +			if (optprobe_queued_unopt(op))
+> > +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+> > +			else if (!optprobe_queued_freeing(op))
+> > +				list_del_init(&op->list);
+> > +		} else {
+> > +			list_del_init(&op->list);
+> > +		}
+> >  	}
+> > +	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> >  
+> >  	/* Don't touch the code, because it is already freed. */
+> >  	arch_remove_optimized_kprobe(op);
+> > @@ -1073,11 +1192,23 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+> >  
+> >  static void __init init_optprobe(void)
+> >  {
+> > +	int i;
+> > +
+> >  #ifdef __ARCH_WANT_KPROBES_INSN_SLOT
+> >  	/* Init 'kprobe_optinsn_slots' for allocation */
+> >  	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
+> >  #endif
+> >  
+> > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > +		INIT_LIST_HEAD(&optprobe_gens[i].optimizing_list);
+> > +		INIT_LIST_HEAD(&optprobe_gens[i].unoptimizing_list);
+> > +		INIT_LIST_HEAD(&optprobe_gens[i].freeing_list);
+> > +		optprobe_gens[i].in_flight = false;
+> > +		optprobe_gens[i].ready = false;
+> > +	}
+> > +	optprobe_cur_gen = 0;
+> > +	optprobe_flush_requested = false;
+> > +
+> >  	init_waitqueue_head(&kprobe_optimizer_wait);
+> >  	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
+> >  	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
