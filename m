@@ -1,418 +1,115 @@
-Received: from mta1.migadu.com (out-252.mta1.migadu.com [95.215.58.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAD547C0E1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 09:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6D647FAF3;
+	Wed, 23 Sep 2026 10:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790157354; cv=none; b=VYOzmZDxRsTpHBu/KumsxaNM+pL2RLt8IoRHhnFcvAoEvUBMv9Y3ON+ZHoGLvaiHfguYJLXpmv/iBdsXxRY9rAqy2SHzqMoDB3retfF51bQOfc+TlJ4wIl50TKaut8nxb6HRGupzyeyZzExxgDY3uqAsH0Tl5Q2t+TmzrOmvlk8=
+	t=1790159419; cv=none; b=TiAMJCHaiANN6aLwA3ebbiDM8avj5VKPstVD7nLqscJqyFYRvXxEuyHzwNe2NYrhZQLG0Rm64IjA5i/xUH8ocdQxpz1JYTcU10xt9lN57gC5Je9l5X6E5p3f2xBjI2pOReKGais5Yx9nd+tOhQKTXsVEklSeZ+gHsca57ga5n6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790157354; c=relaxed/simple;
-	bh=5Is7JMNOpQLdWBTlUPSeZum1vcwwGh4zN96nRQEcfxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JkSTa4rLEhNJES2Z7h+6audwlB+hVuwtMIBT8boNtIQoXb5O2XAkN5HOLwLPluk4N+SYWTIxgKH6bHfj4EmXpoTcABV0Ekfoxzh5QcyTF70+GkTK0y32iY2joa5MgBu7MfWPWl+TiIvoksWc98YaLpwcZjEB+FkNhDniqMWBk0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DrQnOgmx; arc=none smtp.client-ip=95.215.58.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790159419; c=relaxed/simple;
+	bh=4apTzgSnK41fmpqyWoxUgweK1yzL409akGVwvF+wtlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sx+Z04u6+rMaU7FjWnWOG5DlT3h8jO21Wd8CosnLU/MMZ8I3Te6aqvv80Mvs2gdLD3SnZeNHo2ouT0hMML5fvqX3SSTQ4iq0CGgo0ytTTzKojaz/uArntoObWpE+EfDHEPH3KSowUD41cPul/x7Od376I0QXxFY5S7nUukSDIqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I+FgPbZ4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DrQnOgmx"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=5Is7JMNOpQLdWBTlUPSeZum1vcwwGh4zN96nRQEcfxc=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790157349; v=1; x=1790762149;
- b=DrQnOgmxr1FAGP4QY/rW7CbrJf4jU5MoRo9767JyoxWhhFdihqYekvqiSzb7zrKFr0fRtQ7n
- jQEQcYWY/QZGhgL3uje5N16ufvu0+XPeIJtY3/jlWZKNAkbylKFCJixlGeKzZHpzqlwrQxNjgfv
- T0dWNTkebyUNqFnGNgwbpNWI=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 585754956f1076bd;
-	Wed, 23 Sep 2026 09:55:49 +0000
-X-Mizu-Trace-ID: 585754956f1076bd
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <e8f65e6d-440b-418d-b7ba-e05ca2b0d712@linux.dev>
-Date: Wed, 23 Sep 2026 17:56:50 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I+FgPbZ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEBA41F000FF;
+	Wed, 23 Sep 2026 10:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1790159399;
+	bh=6mPB5sAXT6Vhv1gBFH2na4lrNkRozl/FMt/dP7OxjRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=I+FgPbZ4GvlC7BewOKRNZweanpyegBPw+Z7yAFipreUI0p/iDWPygp288TTzg9fNW
+	 wG6Yil8IMbspsRFI6ZRrV4LujFy4JyuBlEph2Ub330vypNF3BGsVDnezRyMqqWWtxx
+	 NYdOIla4kATkpDlNoDD//vIXw3e1SpHRXfpR7u/g=
+Date: Wed, 23 Sep 2026 12:29:56 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Thierry Reding <thierry.reding@kernel.org>
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <2026092348-victory-erased-0e5a@gregkh>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+ <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+ <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+ <arOfHEsGGglNse7T@monoceros>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] alloc_tag: Add trace events for tracing allocations
-To: Abhishek Bapat <abhishekbapat@google.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>
-References: <cover.1790025465.git.abhishekbapat@google.com>
- <06c3a9b52785e6968ea15709a55365b2342c7a15.1790025465.git.abhishekbapat@google.com>
-Content-Language: en-US
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <06c3a9b52785e6968ea15709a55365b2342c7a15.1790025465.git.abhishekbapat@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <arOfHEsGGglNse7T@monoceros>
 
-Hi Abhishek
-
-On 2026/9/22 05:26, Abhishek Bapat wrote:
-> The memory allocation profiling framework intercepts allocations across
-> the core subsystems, but currently lacks runtime tracing hooks for
-> standard observability tools to dynamically track the context (stack
-> traces and lifecycles of the individual memory chunks) of the
-> allocations made.
+On Wed, Sep 23, 2026 at 11:54:50AM +0200, Uwe Kleine-K�nig wrote:
+> > No, drivers should NOT have to do that in their .probe() function,
+> > that's what we moved away from decades ago!  The match function should
+> > handle all of that for you, otherwise it's contant duplication
+> > everywhere that is unneeded.
 > 
-> Introduce three standard trace events to allow this tracking:
+> Well then you have to accept that root can provoke a null pointer
+> exception (e.g. by forcing the pwm-tegra driver on a device) because at
+> least with today's platform bus match function such a match is ok.
+
+Agreed, yes, root can cause a crash and can do tons of horrible things
+much worse than this, that's not the issue.
+
+That's why this taint is there, to make it obvious that this is not a
+"real" bug at all.
+
+> > Please, learn from our history, don't make the same mistakes.
+> > 
+> > Now I might be convinced that driver_override is the way to go here, but
+> > it still feels really odd as again, bind/unbind was created as a driver
+> > debugging option only, it should NOT be a normal operation that any user
+> > should rely on.  The driver should "just work" properly instead, without
+> > requiring manual bind work, as that's not a good model at all.
 > 
-> 1. `alloc_tag_hit`: Fired at the exact call site. This allows userspace
->    tools to trigger and capture a call stack.
-> 2. `alloc_tag_mem_alloced`: Fired in alloc_tag_add upon successful
->    allocation. It records the allocated size, the tag, and the uniquely
->    generated codetag_ref metadata pointer.
-> 3. `alloc_tag_mem_freed`: Fired in alloc_tag_sub right before memory is
->    freed, yielding the same codetag_ref to allow tracing tools to find
->    the corresponding allocation.
-> 
-> Because the introduced trace events occur at different stages in the
-> call stack, userspace tracing tools must stitch them together to form a
-> complete picture of a buffer's lifetime. Here's an example of how
-> userspace correlates these three events:
-> 
-> 1. On `alloc_tag_hit`: The tool captures the stack trace and caches it,
->    keyed by the combination of the current thread's PID and the `tag`.
-> 2. On `alloc_tag_mem_alloced`: The tool extracts the PID and `tag` from
->    the event and looks up the stack trace cached in step 1. It creates a
->    new active allocation record, mapping the new provided `codetag_ref`
->    to this cached stack trace and the newly returned allocation size.
-> 3. On `alloc_tag_mem_freed`: When the memory is freed, the event yields
->    the same `codetag_ref`. The tool uses this reference to look up the
->    original allocation record, correlates the free, and safely retires
->    the tracking entry.
-> 
-> Also, introduce `alloc_tag_trace_key` static key to minimize the
-> overhead when no tags are being traced (the usual case). Once tracing
-> for any tag is requested, the key is set, opening the path to check
-> whether tracing is enabled for the current tag.
-> Nore that the mechanism to enabl tag tracing is implemented in the next
-> patch, therefore for now, `alloc_tag_trace_key` stays always unset.
->
+> I agree in principle, but (in my case wifi) drivers are buggy sometimes
+> (due to missing documentation and/or engineering effort) and being able
+> to rebind the driver instead of rebooting to get a working device again
+> is very useful.
 
-nit: s/Nore/Note/ s/enabl/enable
+Fine, use it!  Just don't expect that to be "normal".
 
-> Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
-> ---
->  MAINTAINERS                      |   1 +
->  include/linux/alloc_tag.h        |  57 ++++++++++++---
->  include/trace/events/alloc_tag.h | 122 +++++++++++++++++++++++++++++++
->  mm/alloc_tag.c                   |  28 +++++++
->  4 files changed, 196 insertions(+), 12 deletions(-)
->  create mode 100644 include/trace/events/alloc_tag.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 24420a8c06d0..29e1f7915cb9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17096,6 +17096,7 @@ S:	Maintained
->  F:	Documentation/mm/allocation-profiling.rst
->  F:	include/linux/alloc_tag.h
->  F:	include/linux/pgalloc_tag.h
-> +F:	include/trace/events/alloc_tag.h
->  F:	include/uapi/linux/alloc_tag.h
->  F:	mm/alloc_tag.c
->  F:	tools/testing/selftests/alloc_tag/
-> diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-> index 7f2d80a59792..2994934cf44a 100644
-> --- a/include/linux/alloc_tag.h
-> +++ b/include/linux/alloc_tag.h
-> @@ -128,12 +128,33 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
->  DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
->  			mem_alloc_profiling_key);
->  
-> +DECLARE_STATIC_KEY_FALSE(alloc_tag_trace_key);
-> +
->  static inline bool mem_alloc_profiling_enabled(void)
->  {
->  	return static_branch_maybe(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
->  				   &mem_alloc_profiling_key);
->  }
->  
-> +static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
-> +{
-> +	return static_branch_unlikely(&alloc_tag_trace_key);
-> +}
-> +
+> So yes, theoretically bind/unbind isn't needed, but theory and practise
+> differ in practise.
 
-The tag parameter is unused here. Let's remove it for now and add it back when needed,
-to avoid the -Wno‑unused‑parameter warning.
-Some CI bots go through each patch one‑by‑one, so we can't leave warnings in
-intermediate commits.
+Agreed, but again, don't rely on this as a "real" solution fo ranything.
 
-One other thought: what about adding a sysctl knob here?
-It would let users grab all alloc‑tag tracked allocations within a time window?
+> OK, as a compromise: Let's keep the taint (after all that's not
+> destroying any functionality, just adding a hint for bug reports),
+> and make driver_override opt-in, which should close an attack surface
+> (mostly for fuzzers?) and so reduce the amount of bug reports instead of
+> marking a part of them as tainted only.
 
-Thanks
-Best Regards
-Hao
+How is that going to change anything?  Confused.
 
-> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_tag *tag,
-> +			      size_t bytes);
-> +
-> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag *tag,
-> +			     size_t bytes);
-> +
-> +void __alloc_tag_trace_hit(struct alloc_tag *tag);
-> +
-> +static inline void alloc_tag_trace_hit(struct alloc_tag *tag)
-> +{
-> +	if (alloc_tag_trace_enabled(tag))
-> +		__alloc_tag_trace_hit(tag);
-> +}
-> +
->  bool mem_alloc_profiling_permanently_disabled(void);
->  
->  static inline struct alloc_tag_counters alloc_tag_read(struct alloc_tag *tag)
-> @@ -200,8 +221,13 @@ static inline bool alloc_tag_ref_set(union codetag_ref *ref, struct alloc_tag *t
->  
->  static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes)
->  {
-> -	if (likely(alloc_tag_ref_set(ref, tag)))
-> +	if (likely(alloc_tag_ref_set(ref, tag))) {
->  		this_cpu_add(tag->counters->bytes, bytes);
-> +
-> +		if (alloc_tag_trace_enabled(tag))
-> +			/* Trace successful allocs with their unique ref */
-> +			alloc_tag_trace_mem_alloc(ref, tag, bytes);
-> +	}
->  }
->  
->  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
-> @@ -222,6 +248,10 @@ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
->  	this_cpu_sub(tag->counters->bytes, bytes);
->  	this_cpu_dec(tag->counters->calls);
->  
-> +	if (alloc_tag_trace_enabled(tag))
-> +		/* Trace frees with their unique ref */
-> +		alloc_tag_trace_mem_free(ref, tag, bytes);
-> +
->  	ref->ct = NULL;
->  }
->  
-> @@ -247,21 +277,24 @@ static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_tag *tag,
->  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes) {}
->  static inline void alloc_tag_set_inaccurate(struct alloc_tag *tag) {}
->  static inline bool alloc_tag_is_inaccurate(struct alloc_tag *tag) { return false; }
-> +#define alloc_tag_trace_hit(_tag)	/* NOOP */
->  #define alloc_tag_record(p)	do {} while (0)
->  
->  #endif /* CONFIG_MEM_ALLOC_PROFILING */
->  
-> -#define alloc_hooks_tag(_tag, _do_alloc)				\
-> -({									\
-> -	typeof(_do_alloc) _res;						\
-> -	if (mem_alloc_profiling_enabled()) {				\
-> -		struct alloc_tag * __maybe_unused _old;			\
-> -		_old = alloc_tag_save(_tag);				\
-> -		_res = _do_alloc;					\
-> -		alloc_tag_restore(_tag, _old);				\
-> -	} else								\
-> -		_res = _do_alloc;					\
-> -	_res;								\
-> +#define alloc_hooks_tag(_tag, _do_alloc)					\
-> +({										\
-> +	typeof(_do_alloc) _res;							\
-> +	if (mem_alloc_profiling_enabled()) {					\
-> +		struct alloc_tag * __maybe_unused _old;				\
-> +		/* Fired here to cleanly capture the caller's stack trace */	\
-> +		alloc_tag_trace_hit(_tag);					\
-> +		_old = alloc_tag_save(_tag);					\
-> +		_res = _do_alloc;						\
-> +		alloc_tag_restore(_tag, _old);					\
-> +	} else									\
-> +		_res = _do_alloc;						\
-> +	_res;									\
->  })
->  
->  #define alloc_hooks(_do_alloc)						\
-> diff --git a/include/trace/events/alloc_tag.h b/include/trace/events/alloc_tag.h
-> new file mode 100644
-> index 000000000000..af2182501864
-> --- /dev/null
-> +++ b/include/trace/events/alloc_tag.h
-> @@ -0,0 +1,122 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM alloc_tag
-> +
-> +#if !defined(_TRACE_ALLOC_TAG_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_ALLOC_TAG_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +/*
-> + * alloc_tag_hit is generated at the exact allocation call site and can be
-> + * used to capture a clean stack trace.
-> + *
-> + * To link this stack trace to the actual allocated memory chunk, tools must
-> + * correlate this event with the resulting alloc_tag_mem_alloced event. Since
-> + * multiple threads can hit the same tag simultaneously, tools must match BOTH
-> + * the `tag` field and the implicitly recorded PID provided by the core
-> + * tracing subsystem.
-> + */
-> +TRACE_EVENT(alloc_tag_hit,
-> +
-> +	TP_PROTO(struct alloc_tag *tag),
-> +
-> +	TP_ARGS(tag),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(struct alloc_tag *, tag)
-> +		__string(modname, tag->ct.modname ? tag->ct.modname : "NONE")
-> +		__string(filename, tag->ct.filename)
-> +		__string(function, tag->ct.function)
-> +		__field(unsigned int, lineno)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->tag = tag;
-> +		__assign_str(modname);
-> +		__assign_str(filename);
-> +		__assign_str(function);
-> +		__entry->lineno = tag->ct.lineno;
-> +	),
-> +
-> +	TP_printk("tag %p, module: %s, filename: %s, function %s, lineno %u",
-> +		__entry->tag,
-> +		__get_str(modname),
-> +		__get_str(filename),
-> +		__get_str(function),
-> +		__entry->lineno
-> +	)
-> +);
-> +
-> +/*
-> + * alloc_tag_mem_alloced is generated after memory is successfully allocated.
-> + * It captures the exact byte size.
-> + *
-> + * The `ref` pointer identifies the memory chunk for tracking its lifecycle
-> + * (e.g., matching it with alloc_tag_mem_freed).
-> + *
-> + * Because the kernel isolates active allocations within the task struct
-> + * (current->alloc_tag), this even will always share the same implicit PID as
-> + * its corresponding alloc_tag_hit event. Tools should use the combination
-> + * PID + `tag` to correlate them.
-> + */
-> +TRACE_EVENT(alloc_tag_mem_alloced,
-> +
-> +	TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes),
-> +
-> +	TP_ARGS(ref, tag, bytes),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(union codetag_ref *, ref)
-> +		__field(struct alloc_tag *, tag)
-> +		__field(size_t, bytes)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->ref = ref;
-> +		__entry->tag = tag;
-> +		__entry->bytes = bytes;
-> +	),
-> +
-> +	TP_printk("reference %p, tag %p, bytes %zu",
-> +		__entry->ref,
-> +		__entry->tag,
-> +		__entry->bytes
-> +	)
-> +);
-> +
-> +/*
-> + * alloc_tag_mem_freed event is generated immediately before memory is
-> + * freed. The `ref` pointer matches the one emitted during allocation,
-> + * allowing tools to match it to it's corresponding allocation and
-> + * call stack.
-> + */
-> +TRACE_EVENT(alloc_tag_mem_freed,
-> +
-> +	TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes),
-> +
-> +	TP_ARGS(ref, tag, bytes),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(union codetag_ref *, ref)
-> +		__field(struct alloc_tag *, tag)
-> +		__field(size_t, bytes)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->ref = ref;
-> +		__entry->tag = tag;
-> +		__entry->bytes = bytes;
-> +	),
-> +
-> +	TP_printk("reference %p, tag %p, bytes %zu",
-> +		__entry->ref,
-> +		__entry->tag,
-> +		__entry->bytes
-> +	)
-> +);
-> +
-> +#endif /* _TRACE_ALLOC_TAG_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> index f30ef8dd24c7..a5339767efd5 100644
-> --- a/mm/alloc_tag.c
-> +++ b/mm/alloc_tag.c
-> @@ -19,6 +19,9 @@
->  #include <linux/kmemleak.h>
->  #include <uapi/linux/alloc_tag.h>
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/alloc_tag.h>
-> +
->  #include "internal.h"
->  #include "page_alloc.h"
->  
-> @@ -55,6 +58,9 @@ EXPORT_SYMBOL(mem_alloc_profiling_key);
->  
->  DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
->  
-> +DEFINE_STATIC_KEY_FALSE(alloc_tag_trace_key);
-> +EXPORT_SYMBOL(alloc_tag_trace_key);
-> +
->  struct alloc_tag_kernel_section kernel_tags = { NULL, 0 };
->  unsigned long alloc_tag_ref_mask;
->  int alloc_tag_ref_offs;
-> @@ -485,6 +491,28 @@ static const struct proc_ops allocinfo_proc_ops = {
->  #endif
->  };
->  
-> +void __alloc_tag_trace_hit(struct alloc_tag *tag)
-> +{
-> +	if (unlikely(!tag))
-> +		return;
-> +	trace_alloc_tag_hit(tag);
-> +}
-> +EXPORT_SYMBOL(__alloc_tag_trace_hit);
-> +
-> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_tag *tag,
-> +			      size_t bytes)
-> +{
-> +	trace_alloc_tag_mem_alloced(ref, tag, bytes);
-> +}
-> +EXPORT_SYMBOL(alloc_tag_trace_mem_alloc);
-> +
-> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag *tag,
-> +			     size_t bytes)
-> +{
-> +	trace_alloc_tag_mem_freed(ref, tag, bytes);
-> +}
-> +EXPORT_SYMBOL(alloc_tag_trace_mem_free);
-> +
->  size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sleep)
->  {
->  	struct codetag_iterator iter;
+greg k-h
