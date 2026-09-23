@@ -1,56 +1,56 @@
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF79E45629C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 07:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D6543DEDA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 07:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790149351; cv=none; b=HuVhhoE/5SXQ5jWKmOdIRjLPeNQaFIFVHEZxajvIuKtpjpj70XgL/pVmoS1UbG89RItvxhNWw8CovE4OBm/dup507LRMGkUhF9qRC3SkkbAP15SJspS4IaTleFXBhYzvRgKJkLWw7fFL+zKHPKk6dV0h45FvKMc+IgdNrGNCxmM=
+	t=1790149355; cv=none; b=beGvY3Scn9oXB+8UXJCqfFQfOphesacXpAJBJPNZ1Vmhwe9Hd9uazHsqHl9K0eCBeE7Eaz2spXJYzgmsi+2xGTTQKZC359vt6PGnOTcNIuSK8T5OJ9xOqtDev3Ly7ImXlpDkX1IBA2pWSZtWldZFJFC+XA5yxbmY/ZQ/yxPDfRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790149351; c=relaxed/simple;
-	bh=WpFODar40DMohqmlS0gOpdR8Hzf1EpMWE9H8MvsGOhs=;
+	s=arc-20240116; t=1790149355; c=relaxed/simple;
+	bh=5Zea+MSuSEydmdxFyN5UC+cOhl6spd4XO36pT/qC/8E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pkueGM9zs+DX4r1M618IUTlYWwCz4duJ1qhR8fbiMxhguLS6gMIQwQ/3QjcNHD74YwO6OYeP4j+Of7KTSyXgzqD9y3kxXJKVPT9W/3NBkHl16+w3eqIoF9QLgP0vbWx8ZUtPEIafE5BH52uToDqb7QYaGF6cys0hYjMh9tooc4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LfLJHi4v; arc=none smtp.client-ip=209.85.208.71
+	 To:Cc:Content-Type; b=Kcw5ITgBpguW39B4bhrdYl8ddoh/G3biG/FoDHUZ8C7JKtq3N07IL/YENY9mttyfTs+UTrFt9Oxf4LzvdSAqOn8PsNoLzvq5CnjucPR3tDv+R6xYoKTO/wnP/vi8lp6VQRA70EgsV7IfR2LmOVvCr/Mg5RTNP/K1KkB1c9gnOj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zw4tABZ9; arc=none smtp.client-ip=209.85.128.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LfLJHi4v"
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-6a6735afb87so655764a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 00:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zw4tABZ9"
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-49e6683d48fso5148495e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Sep 2026 00:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790149344; x=1790754144; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790149345; x=1790754145; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=n01qPftWqsYu6YQIAam2h/k+qUdj2gjru4thEeyqswQ=;
-        b=LfLJHi4v/vg4GET/xI2vEU0L5HUco4Z+onXkxuga0NH3Y/8xgkpaZ4a5lE2Wndq01X
-         FIMmjLgjFL4GONWhJnVPvmjuBMltECb/qpprbWzTiQ0UAxRgBEE+2Z7dQyC8WpkuNjPc
-         Y4MWOFQWCj1jDDYeB2o/uvPQUYoYtgxvBfsh6+TwM2DIedhG3sWkApDfkbbRIjGnWPZ7
-         3Q4H9mgBJvPKLlj1gv0Re/3H8CecO/4JH+CbzQeVxXkPdlrUzH7mSspHjxhRKe9GNOwt
-         pB2HhcxPraMW8JxObz617IPPqb4KOJn5pk15NnfNYgv1r7v1prsIlGz7MDNVDpSsfNna
-         bMWQ==
+        bh=8dtLY+YCAN032Sezw8r3fkk6yvb7HL62eMVFXP1TzXo=;
+        b=Zw4tABZ93+1LONG4immrYhic5CCv3+Hf7Riu3zLZXmtf+kVViYmZWBXN8M3Vwy56hq
+         rBbabvRv0O4phZfwJiUg6aC5ILnSNY+xvt1jQxK5OpCIVk64YuzmAhYI2UVbnZAbPCtA
+         FE2LSH8YhRCh2IDK9Xlr3QD+N9X3ksCiEObsq7lxTbvrtqnGk4FeTQTE5J9o3p090FQs
+         zfLIYpw0GFb1v54js3Kkxh42q/JessPj73UHPR/wP0SBMvtXJqoZ1D3DLgjKtILE4WOv
+         vpR+4c2G9JyBB/4G0L8pAf7bR8Kma5Z7nKKiMYE0DyV14hJgN5ZI/yDtYxM/UojcWRMz
+         0f4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790149344; x=1790754144;
+        d=1e100.net; s=20260707; t=1790149345; x=1790754145;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=n01qPftWqsYu6YQIAam2h/k+qUdj2gjru4thEeyqswQ=;
-        b=dLh//ad5TPX/v2hzlJVDukXcSuubOp3b80DnzHuUTYoT8a3UqYqAlXwz6wlP+n6Z1R
-         k7JcQBUb0NGjFER29yE7PH26dsRUDeDhMUQzoIpE/qpZfurKBiCELDmYA3RNINQZ9SF+
-         RatesORei4UNsXAoh4UmOyHdzMXMLk0D10MbDBO96exnfjjmOLEEXoeDDFOXd3ctbbq+
-         Ms0LiRHMeK9LYaWIQ2+YSEzy6Bic0KUja2QvOnvffPaVrvX/sNRoaybzadzQK3HC7pA/
-         C8MRdceOMFOHVLBwS/pocQInnwx3cQ8TeJqesWx+USIeVdtpSmdMKwoz1ECKKigquVZJ
-         XnHg==
-X-Forwarded-Encrypted: i=1; AKwUvBy10MQL4auOqo0Kol6FTvZY/Ov86katqYpZitTvsw96lwuH3w8RPgO0N1+MV4G8NnpWLtaFObRjJjE1xvl8AogV0+c=@vger.kernel.org
-X-Gm-Message-State: AFuF++lzLRCbfpfcnMJguRmYX1dNRMOkSAO7u/8nV1IlGNVvMNCofynn
-	U8ItAFmpo/+8PEKQqNFItiZTmgGNpkUH3a5yyioHHfguLz1LTIWEsxYeVfFundpR7XicmyD9yQn
-	BF8e50jncsjc5BvZqz0cKMQ==
-X-Received: from edbbm14.prod.google.com ([2002:a05:6402:b0e:b0:6a7:e8d7:a57b])
+        bh=8dtLY+YCAN032Sezw8r3fkk6yvb7HL62eMVFXP1TzXo=;
+        b=NUn6RXUklAPo+VFejQYPbIvwMi7/83Spq4WEI8bmYskrYayLi1J+NF68vDenR/FKOv
+         xdlCwt4YRFg4ssooTtjqBYI6YTfp5VHmX5Ho+r8QiOtvYbfkXb6AGjoxPmqJFWBDBCwi
+         XYR31ByDVTHhhOMik9WK7+2KAp2dZAMavtQOblFbDzjww0Vsl4JzcwnXqcGCGJdhym0Z
+         elrA0rPhQmN0Wl7FX6R4TNgQxlAcFk/sUjzpdsa3b/iArkS59EPAor5FJBmx5D5veEGI
+         sOYjHzqUsAds1KgAV6n4B22oVe0miMHMCKUhKG/YJFGXNdgN42f2zXYetu1N3mDcTxqk
+         FLKQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzmP5k/t+F5QtABFUd29HYsLnQYSyj3QNW0QL4A42Wm2wLCf2WYklltCIiNs+OClBjuXlxN5wHpHgECZLdnQiDCuvU=@vger.kernel.org
+X-Gm-Message-State: AFuF++kF36Rwz7mTFmfOvDLr7BUrFYtsXvxW140Ar8mBo4/dVB2sX/zc
+	MySWPubqajvsyw5aS4/mbfjCTuHEFGVgc3bYNX4G4oZXj66TuM2hx8a3WHUbuuYfnXS3waOrFGq
+	MIgmTtDRIQJ/Uszl9udqz5w==
+X-Received: from wmwb13-n2.prod.google.com ([2002:a05:600d:444d:20b0:49e:715b:eab2])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:5d6:b0:6aa:9274:b555 with SMTP id 4fb4d7f45d1cf-6aab3b66e94mr1403176a12.31.1790149344211;
- Wed, 23 Sep 2026 00:42:24 -0700 (PDT)
-Date: Wed, 23 Sep 2026 08:42:12 +0100
+ 2002:a05:600c:6304:b0:499:be2d:c290 with SMTP id 5b1f17b1804b1-49fdeffdddcmr19281615e9.9.1790149345174;
+ Wed, 23 Sep 2026 00:42:25 -0700 (PDT)
+Date: Wed, 23 Sep 2026 08:42:13 +0100
 In-Reply-To: <20260923074213.3077182-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260923074213.3077182-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260923074213.3077182-3-vdonnefort@google.com>
-Subject: [PATCH 2/3] tracing: Fix simple_ring_buffer undef check on parisc
+Message-ID: <20260923074213.3077182-4-vdonnefort@google.com>
+Subject: [PATCH 3/3] tracing: Fix simple_ring_buffer undef check on sparc64
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -70,45 +70,30 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 
-simple_ring_buffer uses local_set() and cmpxchg() on unsigned long. Add
-them to undefsyms_base.c to extend the allowlist for the parisc
-architecture.
+simple_ring_buffer relies on headers that end up including
+<asm/thread_info.h>. On sparc64, this emits the undefined symbol
+current_thread_info_reg. Allow this symbol.
 
 Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
 Reported-by: Guenter Roeck <linux@roeck-us.net>
 Closes: https://lore.kernel.org/all/5574c9e6-9ed2-4ee6-a2b2-fb6ee81e83a1@roeck-us.net/
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/undefsyms_base.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/trace/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/undefsyms_base.c b/kernel/trace/undefsyms_base.c
-index e65baf58e6ff..37310baf706b 100644
---- a/kernel/trace/undefsyms_base.c
-+++ b/kernel/trace/undefsyms_base.c
-@@ -9,6 +9,7 @@
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 0e1846f7dda3..3860bc53a4be 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -146,6 +146,7 @@ KASAN_SANITIZE_undefsyms_base.o := y
  
- #include <linux/atomic.h>
- #include <linux/string.h>
-+#include <asm/local.h>
- #include <asm/page.h>
+ UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
+ 		      __aeabi_unwind_cpp __s390_indirect_jump __x86_indirect_thunk simple_ring_buffer \
++		      current_thread_info_reg \
+ 		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '$$2 {print $$2}')
  
- void undefsyms_base(void *p, int n);
-@@ -18,11 +19,13 @@ static char page[PAGE_SIZE] __aligned(PAGE_SIZE);
- void undefsyms_base(void *p, int n)
- {
- 	char buffer[256] = { 0 };
--
- 	u32 u = 0;
-+
- 	memset((char * volatile)page, 8, PAGE_SIZE);
- 	memset((char * volatile)buffer, 8, sizeof(buffer));
- 	memcpy((void * volatile)p, buffer, sizeof(buffer));
- 	cmpxchg((u32 * volatile)&u, 0, 8);
-+	cmpxchg((unsigned long *)p, 0, 8);
-+	local_set((local_t *)p, 8);
- 	WARN_ON(n == 0xdeadbeef);
- }
+ quiet_cmd_check_undefined = NM      $<
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
