@@ -1,56 +1,56 @@
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3190E49BD92
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 14:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94E83C1985
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 14:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790261915; cv=none; b=GGymZhuOSaElLGpYOgDyb83hOHbENFl7N5WgGEVbDzqqunQvHXF7/ns4NvzWDTpuASkyD702HzoXnPFVRATITliqk6OHQ4hCiCQqlONM+Md5QD/Xm8Ngyp1o1GNviZjxigKIViqvstomeCzkljJ9D1fsn50MMlqRk9F9J6vI66s=
+	t=1790261914; cv=none; b=K3Y94B1wy2W5WBONsXX+4C/6/+MMlTzBDLhhomKBzPAAZf1FXEY1SbPDj1QqQp+zHur1vVSMzf8sw8kOk+k4BOnfNsNApP1Kve6/T/DQ+dQjSNsZ95Uyc9zm639DSOf+82Nin6cehCdHr9RmWJsFhP/eIyiyRAdSm7HDQRiLMvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790261915; c=relaxed/simple;
-	bh=w1cqUyc/Ize4PtxGR8ncKrrTkut9WX1VnYvd2cwe5OE=;
+	s=arc-20240116; t=1790261914; c=relaxed/simple;
+	bh=e2G7J84G1D4XCfSLdP3gUfTkL5hqpo1OoPHtnVanTCI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YqGdTsz0ooy4t414/fwiIL/sKdwrrcv0Y458as4bUJ8cFvgDXio/4l9AlVShkUXRKA+Vc0P8rLO8HK5EHCPvx4qdwnO/jrM9hQULsLQ7zTQpkzQEAGtWFQkVq3FeB9qBuGaw8afcstCDmQtiHOXa323DFF6TifPOA3JEM6mvgDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FApVzSf2; arc=none smtp.client-ip=209.85.128.69
+	 To:Cc:Content-Type; b=HBbM3fyBZfhxJTozBzXpTloWOrFTj1E3oSZUxu0lzOb/8zlFKYYeVJUogFTAu7No5Yb7mCDX4TEBwRthvoujNYqqIahnk2S1spJ8J0wclHiwDM0S4s3Ka4LvBsatvz2MQG7QFKaXYTj8Nhj+MnUlrsDP0RfO3LCKD5Q+Py3Xq4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pLvkzAZN; arc=none smtp.client-ip=209.85.128.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FApVzSf2"
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49cf5bd2f12so25404205e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 07:58:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pLvkzAZN"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4957287363bso14589585e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 07:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790261908; x=1790866708; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790261907; x=1790866707; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Q/4Lk189uH8ybB/G/PRCaP8BERsbtAT8+BPaWTHQHns=;
-        b=FApVzSf2BW279I+jATByGUptkqcd9qo12XJOi99MmMgJPH934cqnyO20E3WAKt63J4
-         Yq1Aj2Z55zn5nxsw5S1E0aERm2aUruCPm9/m7BS9+6PdC7c7XdW7sCbpFJWzm/K+Anaq
-         yJcOSQjPNczGEDviqSNoUzg6mHwYoQZniKqKyiekS5oYwGYg6Bhl2oaK5WImBOZaehmS
-         4k7Bf7vGx4f2FB3a0mFmMtJLJk6IcbBHKs+6w/tPGXOOMAI29Fa2Thzansk4MckQ9n9E
-         CnrQA5Ewt6BYuozj5ccvSUhp2/sAm1wbx5tRwfZe3mLAAW2jzJJ0HWF5F94nET3zEIYH
-         4WBQ==
+        bh=vM356NruxwMMdbIb0iHJaJTYDI/MzfDme3zT783DwBE=;
+        b=pLvkzAZNyoUzqoZCbRSt6bQnN0UniSb5igWj26j2J7itpiDfUD53ny6tTZ0UT8cxyM
+         TJtnNtzW0mNJwuok9QmIBYa4iDrufqmb1a+zqK8NuLt71mRIqoUd5UiDbUyFLZ6hRZoH
+         nY9hyCCwiOZ+OITR0f2O70Anr2zi2Nga7hoEH0YpYHyqoKues5aBq1Mjx0zsRvIo/bBE
+         hbGRo3WJ3J+GabriMM9f9MgFKmsqmK1hN+H3mXC2EI+7H1ziUBlbyDuJO/f5cjBS3V1G
+         F8937akE4qBfzJb9QZrXf/vGRVrz+xwlIJq11/0if4kdPMfj+kNkewSDSAorCIpzHkVz
+         wFSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790261908; x=1790866708;
+        d=1e100.net; s=20260707; t=1790261907; x=1790866707;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Q/4Lk189uH8ybB/G/PRCaP8BERsbtAT8+BPaWTHQHns=;
-        b=dHfq6z2R/RzZYXGxzhaEJuIl2Ij5kNrlRfNMRt2ZgDjdutZdnG8NFcvXGnYcv6h1Va
-         48dFXpVY/jjDy2FFDiyrQSXLUPawlj8q1W9cg+lGNrqux3w6xn7gdfn4IAo8JUfSOuJB
-         xMvbBUuRXxsNOBVgFgk1SChyQBu9YnFeTggNRsLksydf47vyR4WLaxuYeUV5QGFSZmK/
-         s7JNCRybKS198PigsRA5/5n7XfbtOPkfhVllyUJ5ZsTrk7EXdWWGe8IqAyGzkep+jRzc
-         g/YouStGQQLuMcfI0lE9WzMJ0Do2qvf21TM09GqLUkFHwNQlxasODBoOhaVQCGcaFDaJ
-         fb+Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzb8YyLcGePHbAAyUgrbV5Ac4s45JZPvJgSXR020KO0Bb6RsK0RGvrSUeYylVG974MPN/fY9v54cp3MqJWT8nbAkOo=@vger.kernel.org
-X-Gm-Message-State: AFuF++n+8Ra33etb1kvEtqZe2+UaQM36vGp7vVlX+zZDnLzIFuFv7qgQ
-	LM5QgWXjmMy0udtuLpgFTWCUvuqaIcV1SUiHMRwAd26xHHJ0PuTi6QEkRcEN9nHCgfNa5mnUp3i
-	elc1VRqq+vzKZfYMIzfR6Uw==
-X-Received: from wmpg33.prod.google.com ([2002:a05:600c:4ca1:b0:49d:f06:1f0b])
+        bh=vM356NruxwMMdbIb0iHJaJTYDI/MzfDme3zT783DwBE=;
+        b=zahWRXzi3/aaGdVSf8RQ/VDaoSLEPMoRrAXi8JzmX+K0Ajditx2inxTxY15L9KHL1y
+         Bit+HCW1Jksi7eRlNJKwnjn2Kc4Qag6PEafNxc7/4G0qvMpC1fAIjYclxg1Hx42Dj6O/
+         682Vmy/qDS3BIpMwEQdA7gwgNRl6Wrp8c6Bjhk3PfjPEVjMQhLP9IZJ0ON0X8JCfzqnJ
+         JV2jHv3l136LdsGES8a8ludAeaStNQ7SygE2yG4CAcyUMTLqYfN3M/8c+7RZc0UHPbEx
+         Wm6cx8mRigyolUr20l+lb9+/uXVyFeOyFrBOitZzgJKRqXZJMvOC4oNVVX60YRJVa7qv
+         TmEw==
+X-Forwarded-Encrypted: i=1; AKwUvBxN7R1BLfvaBzRY0kw9rtA3njUt/cvt42lAEsc5uR7eyrTiExhVZlIbxt5kdfX/bOTnq6IZ83raYhGw0Lii8Ywz4gE=@vger.kernel.org
+X-Gm-Message-State: AFuF++nnYN1snd7JYnHbYKudrwq4XyjviVFmyHD19p3/v89kzQfAgFqK
+	lazIpn+hME7kAE6eaOxnYCu7LyqU7hemV8zhh/et/h+/0B4IDUQiM22TeDgGogre9suJehy99ME
+	kOAhX2A9dx9h87MStzb5gFw==
+X-Received: from wrbda3.prod.google.com ([2002:a05:6000:1963:b0:488:54c8:2f06])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1d99:b0:49e:6c27:d093 with SMTP id 5b1f17b1804b1-49fe7b739f4mr38613285e9.15.1790261908146;
- Thu, 24 Sep 2026 07:58:28 -0700 (PDT)
-Date: Thu, 24 Sep 2026 15:57:38 +0100
+ 2002:a05:600c:1546:b0:49c:fa20:cc00 with SMTP id 5b1f17b1804b1-49fe66f4f59mr48865125e9.23.1790261907159;
+ Thu, 24 Sep 2026 07:58:27 -0700 (PDT)
+Date: Thu, 24 Sep 2026 15:57:37 +0100
 In-Reply-To: <20260924145754.1285146-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260924145754.1285146-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260924145754.1285146-5-vdonnefort@google.com>
-Subject: [PATCH v7 04/20] tracing/remotes: Initialise pos in trace_start()
+Message-ID: <20260924145754.1285146-4-vdonnefort@google.com>
+Subject: [PATCH v7 03/20] tracing/remotes: Use kstrtobool for boolean tracefs files
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -69,36 +69,57 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When *pos is 0, trace_start() passes a dummy local variable i to
-trace_next() to fetch the first entry without modifying *pos. In that
-branch, i was left uninitialized.
-
-While i is discarded and causes no functional issues, initialise i and
-keep static analysers happy.
+Use kstrtobool in trace_remote.c where possible. This is more user-friendly
+as it allows a better variety of input strings.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/trace_remote.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_remote.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index ae22d13308a5..aa76845a630a 100644
+index a1b84290be2d..ae22d13308a5 100644
 --- a/kernel/trace/trace_remote.c
 +++ b/kernel/trace/trace_remote.c
-@@ -748,12 +748,12 @@ static void *trace_start(struct seq_file *m, loff_t *pos)
+@@ -235,10 +235,10 @@ tracing_on_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t
+ {
+ 	struct seq_file *seq = filp->private_data;
+ 	struct trace_remote *remote = seq->private;
+-	unsigned long val;
++	bool val;
+ 	int ret;
  
- 	trace_remote_iter_read_start(iter);
+-	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
++	ret = kstrtobool_from_user(ubuf, cnt, &val);
+ 	if (ret)
+ 		return ret;
  
-+	i = iter->pos;
- 	if (!*pos) {
- 		iter->pos = -1;
- 		return trace_next(m, NULL, &i);
- 	}
+@@ -1151,10 +1151,10 @@ static ssize_t remote_event_enable_write(struct file *filp, const char __user *u
+ 	struct seq_file *seq = filp->private_data;
+ 	struct remote_event *evt = seq->private;
+ 	struct trace_remote *remote = evt->remote;
+-	u8 enable;
++	bool enable;
+ 	int ret;
  
--	i = iter->pos;
- 	while (i < *pos) {
- 		iter = trace_next(m, NULL, &i);
- 		if (!iter)
+-	ret = kstrtou8_from_user(ubuf, count, 10, &enable);
++	ret = kstrtobool_from_user(ubuf, count, &enable);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1235,10 +1235,10 @@ static ssize_t remote_events_dir_enable_write(struct file *filp, const char __us
+ 					      size_t count, loff_t *ppos)
+ {
+ 	struct trace_remote *remote = file_inode(filp)->i_private;
++	bool enable;
+ 	int i, ret;
+-	u8 enable;
+ 
+-	ret = kstrtou8_from_user(ubuf, count, 10, &enable);
++	ret = kstrtobool_from_user(ubuf, count, &enable);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
