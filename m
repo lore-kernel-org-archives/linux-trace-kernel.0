@@ -1,56 +1,56 @@
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1290E4A092D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 14:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB2D4A2601
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 14:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790261928; cv=none; b=aTNV2/QytFKth46Isoqiut0FIVrlIghufLC7M4lpkK5p5F2xtLwP8/cBLvFzaaY7NgMCu+l/7YOXz6fZiPXiBcx6PXRrL3hTBGnntnossenVR89c+ZEGMcMKTBRY9RybWq9d2LaUTbb6zM+PZW9xWkKTAe3RFJI+lxpKDiCrCKw=
+	t=1790261929; cv=none; b=MXTf5rJqrGvZbDwSXgk+U3jUnplknFY0COq006rXoI+VOp7YYxvI/i0TPJrpP//UMNjhJg6LzrTb1IAHwId7qgV6vebkRymD8KsMA+t+IIjifZc9jekJiFh3U6o2YpemY+YrIZ1vVumQgG6Fe+NT4RnkoCt2En41oxiQGWqg124=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790261928; c=relaxed/simple;
-	bh=x7ZsEPn+08PivkGNNY7yMioERj5C50CMJucDPlVw1Bs=;
+	s=arc-20240116; t=1790261929; c=relaxed/simple;
+	bh=Jrp7mt6cQSQ3EkaTbrA76OUMeNLl2/PHGv5RXvN55+4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NUMjr4w1JfuZRPwInI/VznDWsdCJ79mBhKwjlUZUtS1MtQZyXlzzVSXHckYmUKXEw1Wo4QOIf/U1Aox3XDGwg9HNStqPRIRD+NkRnnP6IdK8khWlTluUoLjBRUxHaw80xevbYfvAqrV7S3p54Gq+keXH0vTK79D22wXSHnvLcj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XKtF21sf; arc=none smtp.client-ip=209.85.128.70
+	 To:Cc:Content-Type; b=co9VUtEZNCYmTPdiWWKVaJnD9p6CF+wVdfemDE/zGMWlV9GqdLWxmwmI+ga5u/9LOKaOFXxa6ZKMtKWoDHV/RG+4lI5u+u2BIvbckHwQiEwalqucUwXtKWYJfv/NwL6tRUw9s6nJ80C8WYm3d5hEpfpUd0WXT/8FvszJAOxoqDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+w7Itjk; arc=none smtp.client-ip=209.85.221.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XKtF21sf"
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49e635a6002so27115735e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 07:58:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+w7Itjk"
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-486f9d150c3so1407080f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 07:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790261922; x=1790866722; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790261924; x=1790866724; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Uku/5cGCHX3mD6RwBtTFznDSRiqK3GB3+4Rvtb284U8=;
-        b=XKtF21sfBfTzuICOUn3I2PpsJwnqsNzMRL3s7FB/9YLfs0NKZ80KGWwQ5uMbkFDa0T
-         4UB5IRYh+Nj6atrfvtqEARjUzGfnAYLa+3gPF8wnMntd+C0K/fsfpuz9KGLnQFacSCuw
-         1c/KX5ensylQI46ytXJ0RIZxItXXJ+7hvluRsJRTg4AF+6oW9/qDhFs0byTp7FpdtARf
-         anPw671gXrXPpTKW+mPcFYha4oZo+m848zT9PncHxnyUfWMRrNmfrU/KpZAOHvVDy364
-         5KHUAfFhgHHNwBEGUjTQCZMnB0yKq4VR2DqmQfFG4WECICHL4uvlxCcwqdU8QB2NUM3g
-         kb4w==
+        bh=GSVp2wd2bElbaVHZ4PZQs4KwrjTqCz18IG8mqkgeKvc=;
+        b=B+w7ItjktoYHM6m8cA4oa//tTiFen4fgn6uUFGJx+Nrt+LH7lAATI2IilVEFF3lAvS
+         StUG0ly5LdkyafYMPfrEHeCMzgAddzTswz2S0fqge716Y9oBQD6eNwo4TNq6LtQPvfdI
+         w3pUQg9VOlvs8knqRH8hhB82Y9FVEuICTfDdyadhBIytPvNzb2I4ENtE++Scir88DgCv
+         hV92Jhp0AP5ujO70DPdY1/55paYZ8uPyZjgxva2rGLNaJsM4IYubL/i7+klxQSYddVOm
+         JuaufW6d27qQhbtyoxXt0EUGRpDQMxT6p4dTFFOALragppUZfH9tRy8xf/UpPkPysGmS
+         /6Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790261922; x=1790866722;
+        d=1e100.net; s=20260707; t=1790261924; x=1790866724;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Uku/5cGCHX3mD6RwBtTFznDSRiqK3GB3+4Rvtb284U8=;
-        b=rKoWYqoSCQqNF6KfeBKLb+BDCfBl64ZkZ8B0n3ak0tw37gnVbAuHlWm+AQ/gWWi9qG
-         S3Ilkv5ybEJmMLMiJg26obFhoj1JPl9OvqlliTbJceEMP+R8BB89hoD6K8mqAflQlOVP
-         nNyrYxAMKufPdpuJyJXgSeq3BkgcESOtaVbOmsLVrks4bbP8DNZuLQTxe0pEC0U7MtcQ
-         fiptpAhLhv5bm8uvBCzD2+VEYIX0iNd1O3pnmGNCyMaXDrj4np01hlbi/w8zaqo1iMVT
-         8wOgBwSRhkZAj/CVzRi1kug5NRfqJcICAuaAS6v1YnCQiyacrRBKBwKpX7eKXUHtMLQ8
-         dpoA==
-X-Forwarded-Encrypted: i=1; AKwUvByH0rwBPTfeNhyJ1svAAamOj4N15jjx0VWhuq/yCZOP3kmA5HApoNiPjg5b23p3Wc4U52EFKRxthH8ZCxxjnVEqxAw=@vger.kernel.org
-X-Gm-Message-State: AFuF++k+f+cufsgJXCS0wtGb2flCI4UruuSwFIuEqRuhB4jwpZ1y9QDl
-	9juuTbsRqZR9ZOwb6p2xngl1/r+ZhBm+yGKX5K6m5Tp1XV717or6+p4AIBH3jw9wnPF2hhpfaXR
-	S/XB087mstlL7/rtFmm3GeQ==
-X-Received: from wmin24.prod.google.com ([2002:a7b:cbd8:0:b0:49f:e42a:bc6a])
+        bh=GSVp2wd2bElbaVHZ4PZQs4KwrjTqCz18IG8mqkgeKvc=;
+        b=FqLoNh0gjPDEzcnOI3kvtq3Yv9RvAsGfLjVv7JP96d33X68UicwK4JrQooTKix1hoB
+         kqApv0lyoPldytedOVOYQ+xoU8iu9tuwMeq+8cuLE2G/V7gB+ijV/8PB8vFsYCtb2U51
+         vwRpER0dqVsq1dU25dngBZbad/aPz1tAZJUUBCbVlQfckq7AGpANGGhJdlZw3i7E9ce9
+         UQ46iiPpDLKRfN0pSrHolj8yM9sWLJbvALOFCfZao7tCtXbY+zm8HMbIfGiBB2TF8g6h
+         n5cPZC/rdJGy/W5ma9a12IyPjvMYpqS5rTf2O2Y3q7RUwivUZ8V7zYFvQ1tyhECwjNx/
+         lTMg==
+X-Forwarded-Encrypted: i=1; AKwUvBwmRydSrcLo9GsxkeEcJ6heU7cbgtI8Lj86XYP5hi2BnsM3iKpnj+XqrE2PHL2iF1b2UbalAgI5MDMjNQu+2HSonDg=@vger.kernel.org
+X-Gm-Message-State: AFuF++nc9R8vVuRCWWarYzHu595vh9Di/pw/qFsWNmolI/qQE+Ubpstk
+	Vrkeq/0wI+ZpJFa1ApFQ/9Alw6Rx9/UMIv9o4xNdHr6tboRkEsG2piruWzSeWxCtPb6qo2fkcQX
+	ldY1lbOW7k10yVOdEk9n1GA==
+X-Received: from wraj5.prod.google.com ([2002:a5d:4525:0:b0:487:2ee:a313])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c48e:b0:49f:ce72:dfe7 with SMTP id 5b1f17b1804b1-49fe6710a41mr43535605e9.35.1790261921755;
- Thu, 24 Sep 2026 07:58:41 -0700 (PDT)
-Date: Thu, 24 Sep 2026 15:57:50 +0100
+ 2002:a05:6000:2088:b0:487:27f6:a4e9 with SMTP id ffacd0b85a97d-488716c3819mr4666334f8f.57.1790261924227;
+ Thu, 24 Sep 2026 07:58:44 -0700 (PDT)
+Date: Thu, 24 Sep 2026 15:57:52 +0100
 In-Reply-To: <20260924145754.1285146-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260924145754.1285146-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260924145754.1285146-17-vdonnefort@google.com>
-Subject: [PATCH v7 16/20] tracing/remotes: selftests: Add a test for the
- dump_on_panic tracefs file
+Message-ID: <20260924145754.1285146-19-vdonnefort@google.com>
+Subject: [PATCH v7 18/20] tracing/remotes: Add trace_remote cmdline options
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -70,103 +69,184 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Exercise the newly introduced dump_on_panic tracefs file that turns on
-or off the trace remote buffer dump on system panic.
+Following the same format as trace_instance, add a cmdline to configure
+a trace remote on registration:
+
+  trace_remote=<remote>^<opt1>^<opt2>,<evt1>,<evt2>
+
+Enabling events automatically turns on tracing.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- .../remotes/00hypervisor/dump_on_panic.tc     | 11 ++++
- .../ftrace/test.d/remotes/dump_on_panic.tc    | 50 +++++++++++++++++++
- .../selftests/ftrace/test.d/remotes/functions |  1 +
- 3 files changed, 62 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+ kernel/trace/trace_remote.c | 137 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
-new file mode 100644
-index 000000000000..1b6bf21c5d9c
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace dump_on_panic
-+# requires: remotes/hypervisor/write_event remotes/hypervisor/dump_on_panic
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index b2547eb117f8..de41f36e9a0e 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -14,6 +14,8 @@
+ #include <linux/trace_seq.h>
+ #include <linux/types.h>
+ 
++#include <asm/setup.h>
 +
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/dump_on_panic.tc
+ #include "trace.h"
+ 
+ #define TRACEFS_DIR		"remotes"
+@@ -1173,6 +1175,128 @@ static int poll_ms_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_TRACE_REMOTE_ATTRIBUTE(poll_ms);
+ 
++static char trace_remote_cmdline[COMMAND_LINE_SIZE];
 +
-+set -e
-+setup_remote "hypervisor"
-+test_dump_on_panic
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
-new file mode 100644
-index 000000000000..ff5ca29fb1b5
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
-@@ -0,0 +1,50 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote dump_on_panic
-+# requires: remotes/test remotes/test/dump_on_panic
-+
-+. $TEST_DIR/remotes/functions
-+
-+test_dump_on_panic()
++static int __init set_trace_remote_cmdline(char *str)
 +{
-+    #
-+    # Toggle when the buffer is loaded
-+    #
-+    assert_loaded
-+    echo 1 > dump_on_panic
-+    echo 0 > dump_on_panic
++	trace_append_boot_param(trace_remote_cmdline, str, '\t', COMMAND_LINE_SIZE);
++	return 1;
++}
++__setup("trace_remote=", set_trace_remote_cmdline);
 +
-+    #
-+    # Toggle when the buffer is unloaded
-+    #
-+    echo 0 > tracing_on
-+    assert_unloaded
-+    echo 1 > dump_on_panic
-+    echo 0 > dump_on_panic
++static bool trace_remote_apply_cmdline_opts(struct trace_remote *remote, char *cmdline)
++{
++	bool dmesg_on = false;
++	char *opt;
 +
-+    #
-+    # Load and unload buffer while dump_on_panic is enabled
-+    #
-+    echo 0 > tracing_on
-+    assert_unloaded
++	while ((opt = strsep(&cmdline, "^"))) {
++		if (!*opt)
++			continue;
 +
-+    echo 1 > dump_on_panic
-+    echo 1 > tracing_on
-+    echo 0 > tracing_on
++		if (!strcmp(opt, "dump_on_panic")) {
++			WRITE_ONCE(remote->panic_on, true);
++		} else if (!strcmp(opt, "dmesg")) {
++			dmesg_on = true;
++		} else if (!strncmp(opt, "buf_size=", 9)) {
++			WRITE_ONCE(remote->trace_buffer_size, memparse(opt + 9, NULL));
++		} else if (!strncmp(opt, "poll=", 5)) {
++			unsigned int poll_ms;
 +
-+    [ -z "$TRIGGER_PANIC" ] && return
++			if (!kstrtouint(opt + 5, 10, &poll_ms) && poll_ms > 0)
++				remote->poll_ms = poll_ms;
++			else
++				pr_warn("Invalid trace remote poll '%s'\n", opt);
++		} else {
++			pr_warn("Unknown trace remote option '%s'\n", opt);
++		}
++	}
 +
-+    echo 1 > tracing_on
-+
-+    for i in $(seq 1 32); do
-+        echo $i > write_event
-+    done
-+
-+    echo c > /proc/sysrq-trigger
++	return dmesg_on;
 +}
 +
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+    setup_remote_test
-+    test_dump_on_panic
-+fi
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index c368dea2ac4e..f0225af23714 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -9,6 +9,7 @@ setup_remote()
- 	cd remotes/$name/
- 	echo 0 > tracing_on
- 	[ -f dmesg ] && echo 0 > dmesg
-+	[ -f dump_on_panic ] && echo 0 > dump_on_panic
- 	clear_trace
- 	echo 7 > buffer_size_kb
- 	echo 0 > events/enable
++static struct remote_event *
++trace_remote_find_event_by_name(struct trace_remote *remote, const char *name);
++
++static int
++trace_remote_enable_event(struct trace_remote *remote, struct remote_event *evt, bool enable);
++
++static bool trace_remote_apply_cmdline_events(struct trace_remote *remote, char *cmdline)
++{
++	bool tracing_on = false;
++	char *token;
++
++	while ((token = strsep(&cmdline, ","))) {
++		struct remote_event *evt;
++		int ret;
++
++		if (!*token)
++			continue;
++
++		evt = trace_remote_find_event_by_name(remote, token);
++		if (!evt) {
++			pr_warn("trace remote event '%s' not found\n", token);
++			continue;
++		}
++
++		ret = trace_remote_enable_event(remote, evt, true);
++		if (ret)
++			pr_warn("Failed to enable trace remote event '%s' (%d)\n", token, ret);
++		else
++			tracing_on = true;
++	}
++
++	return tracing_on;
++}
++
++static void trace_remote_apply_cmdline(const char *name, struct trace_remote *remote)
++{
++	char *cmdline __free(kfree) = NULL;
++	char *events_cmdline = NULL;
++	char *opts_cmdline = NULL;
++	bool tracing_on = false;
++	bool dmesg_on = false;
++	char *curr, *next;
++	int ret;
++
++	if (!trace_remote_cmdline[0])
++		return;
++
++	cmdline = kstrdup(trace_remote_cmdline, GFP_KERNEL);
++	if (!cmdline)
++		return;
++
++	guard(mutex)(&remote->lock);
++
++	next = cmdline;
++	while ((curr = strsep(&next, "\t"))) {
++		char *token = strsep(&curr, ",");
++		char *rname = strsep(&token, "^");
++
++		if (strcmp(rname, name))
++			continue;
++
++		opts_cmdline = token;
++		events_cmdline = curr;
++
++		if (opts_cmdline)
++			dmesg_on |= trace_remote_apply_cmdline_opts(remote, opts_cmdline);
++		if (events_cmdline)
++			tracing_on |= trace_remote_apply_cmdline_events(remote, events_cmdline);
++	}
++
++	if (dmesg_on) {
++		ret = trace_remote_enable_dmesg(remote, true);
++		if (ret)
++			pr_warn("Failed to enable trace remote dmesg (%d)\n", ret);
++	}
++
++	if (tracing_on) {
++		ret = trace_remote_enable_tracing(remote);
++		if (ret)
++			pr_warn("Failed to enable trace remote tracing (%d)\n", ret);
++	}
++}
++
+ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
+ {
+ 	struct dentry *remote_d, *percpu_d, *d;
+@@ -1349,6 +1473,7 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
+ 	}
+ 
+ 	list_add(&remote->node, &trace_remotes);
++	trace_remote_apply_cmdline(name, remote);
+ 	retain_and_null_ptr(remote);
+ 
+ 	return 0;
+@@ -1836,3 +1961,15 @@ static struct remote_event *trace_remote_find_event(struct trace_remote *remote,
+ 	return bsearch((const void *)(unsigned long)id, remote->events, remote->nr_events,
+ 		       sizeof(*remote->events), __cmp_events);
+ }
++
++static struct remote_event *
++trace_remote_find_event_by_name(struct trace_remote *remote, const char *name)
++{
++	int i;
++
++	for (i = 0; i < remote->nr_events; i++) {
++		if (!strcmp(remote->events[i].name, name))
++			return &remote->events[i];
++	}
++	return NULL;
++}
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
