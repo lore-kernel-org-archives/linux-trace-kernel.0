@@ -1,38 +1,38 @@
-Received: from mta0.migadu.com (out-123.mta0.migadu.com [91.218.175.123])
+Received: from mta0.migadu.com (out-142.mta0.migadu.com [91.218.175.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820E93CF032
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 22:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9333909A5
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 22:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790289475; cv=none; b=Od8QAudWrqS6+FqNFq7mhx7dZRFVX4vpWkK6kR/7UM6hPdpzybbwD9RvnS/8Jd92e+Uf7tIJWqLom9ujuzxTP5IOZfK6v28FMpYGwHayLO2N5wdsYtoEKn5V2+uimfTD2hLyyzO8KvaBdf6AAxJjj8EHAFoFmb6iT9N2sK/6fMU=
+	t=1790289491; cv=none; b=oa4IogmyqpooTsbpdECQdPhq24/hDkcw7Knw/hFUHw81hC1E9zM/sYhAQnt+PXAv4xDRNHlypZrNbKG7SITh8Cecwj97mXAJ+DA/MulKKsQkHVUXvrFOM4qTxulBYFLIGjfHq1X/xc9/f/Wox8PBAIqJpWEZoTcjJXIetChQ1wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790289475; c=relaxed/simple;
-	bh=M6XnvhA4rjE605z85iDm8WmXcwxnNbnZIjOfAAtGoPY=;
+	s=arc-20240116; t=1790289491; c=relaxed/simple;
+	bh=vil181D960QvjzpQda7p1iELcQx+1UUMUXoKj0Sxk4U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=su8806Oml2FKzEaKdcBAR+PHcE3f6b1OvDlpmaBtdYxd/d4L/OyMsDe0vXBNXZfwaKcF1EegrHLd1rBFluTEwLZF3F28bqlHrKIRuxdbqi6fBvEipvumLKK69t17nmIo+6dNh3JeBxWELobBUtgpC8hd/yubt0BFtSM2qzb8S6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YoSG2SUa; arc=none smtp.client-ip=91.218.175.123
+	 In-Reply-To:To:Cc; b=Z1ydj6DZY0a2t+mCwpCI/BKjseq5c4InTAqB1azVYam61l+h70/SK8koQ+IQDYT55Hdb1U/V7YRrXFp4ElbcclD5bJAcveCkKO/WvqzytGdB5jxiQb1o/ayjwTDTr3OVwWvOzuL9AjaMLLsX2ba/sxFkqlkSRxzyGnB1aOW9AOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HnjJ/6Is; arc=none smtp.client-ip=91.218.175.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YoSG2SUa"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HnjJ/6Is"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=M6XnvhA4rjE605z85iDm8WmXcwxnNbnZIjOfAAtGoPY=;
+DKIM-Signature: a=rsa-sha256; bh=vil181D960QvjzpQda7p1iELcQx+1UUMUXoKj0Sxk4U=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790289471; v=1; x=1790894271;
- b=YoSG2SUahe3a032L/fRq+fqqYB1WAgeTNxNGaXVQGCe2V244HD9OeJmUPZH/xOyoDs1hbMo1
- WD3ImqyooCZwx8vIaqr4tcvhRK5yc8KWZKQmn/I4XfkbVAOGY53xnr68P2GEqFUCLVvk7UiXug5
- I9xacedUGY2vsZApHKBlRA2A=
+ t=1790289485; v=1; x=1790894285;
+ b=HnjJ/6Isai4cWyPVLf6kloycyAvEOEPfpRwXbdPr5grkxOqJDLSxDqJf3yulgOzfWyoodTgc
+ KH/16n4LUNtLmYEJGggVljZ29uDZqPFmZ+9ImD5BWp0AwiwX7UXr5RqUEGV+KRvqyFMXzCtE8lF
+ QVS+aKoOheljFoyLDpBYiSAI=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 879e9987507ae275;
-	Thu, 24 Sep 2026 22:37:51 +0000
-X-Mizu-Trace-ID: 879e9987507ae275
+Received: by smtp.migadu.com with ESMTPS id f8d638709f166d64;
+	Thu, 24 Sep 2026 22:38:05 +0000
+X-Mizu-Trace-ID: f8d638709f166d64
 X-Migadu-Flow: FLOW_OUT
 From: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
-Date: Thu, 24 Sep 2026 22:35:52 +0000
-Subject: [PATCH v2 8/9] arm64: ftrace: Use five prefix NOPs on ThinLTO
- kernels with BTI
+Date: Thu, 24 Sep 2026 22:35:53 +0000
+Subject: [PATCH v2 9/9] arm64: ftrace: Allow CALL_OPS on kCFI kernels built
+ with Rust
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260924-b4-arm64-callops-kcfi-v2-8-587865b6d991@linux.dev>
+Message-Id: <20260924-b4-arm64-callops-kcfi-v2-9-587865b6d991@linux.dev>
 References: <20260924-b4-arm64-callops-kcfi-v2-0-587865b6d991@linux.dev>
 In-Reply-To: <20260924-b4-arm64-callops-kcfi-v2-0-587865b6d991@linux.dev>
 To: Steven Rostedt <rostedt@goodmis.org>, 
@@ -83,52 +83,79 @@ Cc: Leon Hwang <leon.hwang@linux.dev>,
  "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>
 X-Mailer: b4 0.15.2
 
-Default CONFIG_ARM64_FUNCTION_PREFIX_NOPS to 5 on ThinLTO kernels with
-BTI. Many functions there have a landing pad but no hash. That moves the
-entry point 4 bytes. The 8-byte slot lands on the landing pad and ftrace
-refuses the site. With five NOPs every function has a slot.
+Pass -Zpatchable-function-entry=M,M,.discard.patchable_function_entries
+to rustc when CFI and CALL_OPS are both enabled, so Rust functions get
+the same prefix NOPs as C functions. The section argument needs
+Rust 1.98 [1]. Probe for it, and let ARM64_CFI_PERMITS_CALL_OPS
+accept RUST=y when the probe passes.
 
-Commit d3359af21fc9e ("arm64: bti: Disable in-kernel BTI with recent
-versions of Clang") keeps BTI off on clang 21 or later, so this default
-does not trigger on a mainline build today. Josh Poimboeuf's series to
-bring it back is under review [1].
+[1] https://github.com/rust-lang/rust/pull/157445
 
-With five NOPs the series costs 7.4% of .text on a defconfig-based
-ThinLTO kernel with clang 21.1.4:
-
-  Kernel                 || .text bytes | Delta       | Delta
-  =======================++=============+=============+=======
-  ThinLTO kCFI, base     ||  21,466,256 |             |
-  ThinLTO kCFI, M = 5    ||  23,047,312 |  +1,581,056 | +7.4%
-  -----------------------++-------------+-------------+-------
-
-ftracetest results match with and without this series. The three
-failures on a ThinLTO kernel are pre-existing. The BPF trampoline,
-struct_ops and kprobe_multi selftests pass with CFI enforcing.
-
-[1] https://lore.kernel.org/all/cover.1786768375.git.jpoimboe@kernel.org/
-
+Suggested-by: Ben Cressey <ben@cressey.dev>
 Reviewed-by: Ben Cressey <ben@cressey.dev>
 Reviewed-by: Florent Revest (Anthropic) <florent.revest@linux.dev>
 Assisted-by: LLM
 Signed-off-by: Jose Fernandez (Anthropic) <jose.fernandez@linux.dev>
 ---
- arch/arm64/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/Kconfig  | 7 ++++++-
+ arch/arm64/Makefile | 3 +++
+ rust/Makefile       | 7 ++++++-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6e5fa009c11af..afa566e0fa86c 100644
+index afa566e0fa86c..cad2bdf3456ff 100644
 --- a/arch/arm64/Kconfig
 +++ b/arch/arm64/Kconfig
-@@ -290,6 +290,8 @@ config ARM64_CFI_PERMITS_CALL_OPS
+@@ -282,11 +282,16 @@ config CC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
+ 	# https://github.com/llvm/llvm-project/pull/131230
+ 	def_bool $(cc-option,-fpatchable-function-entry=1$(comma)1$(comma).discard.patchable_function_entries)
+ 
++config RUSTC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
++	# The section argument needs Rust 1.98.0 or later:
++	# https://github.com/rust-lang/rust/pull/157445
++	def_bool $(rustc-option,-Zpatchable-function-entry=1$(comma)1$(comma).discard.patchable_function_entries)
++
+ config ARM64_CFI_PERMITS_CALL_OPS
+ 	def_bool y
+ 	depends on CFI
+ 	depends on CC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
+-	depends on !RUST
++	depends on !RUST || RUSTC_HAS_PATCHABLE_FUNCTION_ENTRY_SECTION
  
  config ARM64_FUNCTION_PREFIX_NOPS
  	int
-+	default 5 if DYNAMIC_FTRACE_WITH_CALL_OPS && CFI && \
-+		     (LTO_CLANG_THIN || LTO_CLANG_THIN_DIST) && ARM64_BTI_KERNEL
- 	default 3 if DYNAMIC_FTRACE_WITH_CALL_OPS && CFI
- 	default 2 if DYNAMIC_FTRACE_WITH_CALL_OPS
- 	default 0
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 653c1ed6ef38f..b23430e2b8567 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -152,6 +152,9 @@ ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS),y)
+ 			 -DCC_USING_PATCHABLE_FUNCTION_PREFIX=$(prefix_nops)
+     KBUILD_CFLAGS += $(CFI_PREFIX_CFLAGS)
+     export CFI_PREFIX_CFLAGS
++    # Rust functions are not patched by ftrace, but they are called indirectly
++    # from C and make indirect calls themselves, so they need the same prefix.
++    KBUILD_RUSTFLAGS += -Zpatchable-function-entry=$(prefix_nops),$(prefix_nops),.discard.patchable_function_entries
+   endif
+ else ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_ARGS),y)
+   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+diff --git a/rust/Makefile b/rust/Makefile
+index da1a7409d9845..b402ab768f729 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -511,7 +511,12 @@ endif
+ # prototypes for functions like `memcpy` -- if this flag is not passed,
+ # `bindgen`-generated prototypes use `c_ulong` or `c_uint` depending on
+ # architecture instead of generating `usize`.
+-bindgen_c_flags_final = $(bindgen_c_flags_lto) -fno-builtin -D__BINDGEN__
++#
++# Do not pass -fpatchable-function-entry to bindgen: its libclang may not
++# support the section argument (Clang >= 21), and removing the flag does not
++# change the ABI.
++bindgen_c_flags_final = $(filter-out -fpatchable-function-entry=%, \
++	$(bindgen_c_flags_lto)) -fno-builtin -D__BINDGEN__
+ 
+ # `--rust-target` points to our minimum supported Rust version.
+ quiet_cmd_bindgen = BINDGEN $@
 
 -- 
 2.52.0
