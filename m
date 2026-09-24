@@ -1,74 +1,74 @@
 Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E6847C0E2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 12:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F5047F3C8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 12:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790252788; cv=none; b=Ga9Bo7m1JcqvseSd8dlKIAO9ZtjK9wwhN98vKKeDfj5g5OcOd2yALbacRB5wzUcH3vAWRAHiDwQXp1J4dx3+rwvX5H5ct84709odpwSjBR3SE/U1yz0eYIA853KGsRheJjRzGb+tQvrjCVhw4HtI+EA6c3C61l9pqCcnj8sQNXQ=
+	t=1790252868; cv=none; b=XI02RlcFPsbv2yRb8mitYn7KIhH9ZqMP+tU7iMv6KmJSzxzWxz/dTgmJgUT/IFFimLgXf+5e8ZAjK0VuMilO+9D2tMG7o3Rj8eW/Et7MUDPsZCBih7yb81bKBiNvs5ZpakViZlyYWl+WxU7UidxUkTs0e6Q9WIV8PBncUGxoPUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790252788; c=relaxed/simple;
-	bh=hYEF9jVGBYNSAPyKRF0WoUj5Wb6jNmc+eEi2HQ3zXIw=;
+	s=arc-20240116; t=1790252868; c=relaxed/simple;
+	bh=wNjl/xCEtzlgT0a5M5KycCUc9Jdogae8+RmVUW7SNzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GNcNEhDqB7GBdfFwcV4meosPNweP5zeoIS8aII8idfoGRFyplWBWh6bzr6pmGj5t7DAKS0f3QWFFSCZAbrAvnAse4ElK8iN/e+R/w6M5RsMBRdqize1ZGNkVj4lfeMSXZ1+I+vjzJQtpqvgvjooaGvdHo6HSvloUpjb564akXbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cvGeXFoj; arc=none smtp.client-ip=74.125.225.141
+	 Content-Type:Content-Disposition:In-Reply-To; b=kv/AbOECKiRhDi9jGscwot0jMgrPoh3TICh1ZnxX7Kk7ZKueNcZRwBhjZK1ds7UOxRLlDFO8CeYfzEoQe7/5hJCgi+j5NRV8unORiDy23VVI/5H4TV/shQ7sxLfWGXWx0+zkCwqh6XQX61v/8aeiy4gGO6iN9s0p3wTF3tGF/iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j2v9brbP; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cvGeXFoj"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49b91369d18so13813365e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 05:26:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j2v9brbP"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e6c0fce17so10830515e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 05:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790252784; x=1790857584; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790252865; x=1790857665; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=sTttv4o9hZeXqnTlw64U0gcVaLM+J7dfrd7tSslnvX8=;
-        b=cvGeXFojBkuaWIdjjLgxKhDtboIN8k3mB7lZLQw5rATeEEU+UoZO1NtNVlHh574EnN
-         HzUoyF6sEbWSCfFScAmfQczZjUWR7WavVCLdhLw+JCp+T+BXeyk41FuvDYSK8XG1L0u+
-         n+FkhVvXqbu43+BDVLs9YA3afwsa2lloDDsTQxLN4u2iSqxAh26eZaHkrERB5k3rb3+n
-         fPk7L7HipTeZrFOFlUzblKon9PisEmpnyGTFpaiNDSX3yT9ww+hb506REV2+kF4GFoFJ
-         fP4GFsfbGX/tpLvGS08tGCNYOPq2AqhAw+SaeCQblRxZ9JRa94hS3/EMUS2lO6EIY7GF
-         kZXQ==
+        bh=oVzT9rV6dRR4JNktA0r62hGHUnd9OU93fg81zd4qkr0=;
+        b=j2v9brbPbatiRgKZcHLo256ch1BXINnX848i6T2hoVaKPsIRbYgYIXxte/9QhJJIbr
+         KfU27boo6iFkGwjRGn+lnR8vp8f+dTTmeX9Fik49ALUUC+gvr+GQcOvWk3l7pPo6Lb7f
+         YDYLh09rncMqTQ/Zi/lAy7QFdYtsmqUrDQQ5yMgylSvWzJDGipFYXgBwJWtWYmE52vEQ
+         07T72rAwr/C5cxAsa/u38o2wtVAHyJnlEHlIjMhE+/gTjgYmLooWQgHxleYSqWDZFmk0
+         u0qRbJ+IsKNSrlJR/DhKWexumu6XywVbUzrC6nZxp9licgedlmW+mxNky8VQp5EHvTsY
+         AWrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790252784; x=1790857584;
+        d=1e100.net; s=20260707; t=1790252865; x=1790857665;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=sTttv4o9hZeXqnTlw64U0gcVaLM+J7dfrd7tSslnvX8=;
-        b=eT/DZfTedxUJjnUsAS3LCyD9kOHVgHtNLoGfvusE3y8wuEwYJ1PjBZkYI1lL9rdQTl
-         XHGK8OnYbhssLIj1P+xIorUnIOMPKU486gTkynfJBLFC96uTkUsix/13wTdcvdIkJMiK
-         Z6ayiY+CruQV+Nr8lBp2TSVg6NynKP58k5IstbbMi4wgPDZuq65meKh3x/HuKPqqN3fX
-         RE60DaApdBvy1IwxK5U+/jCdmJcRQqM/714m2r2InkW+GsFIIuDLwqt1od2C9je7g3Kz
-         5uSGHSIHf1w7XPg/62fN7knrJb4yhdy2lIdZn+vpfP4CZysFc87/ff1j5lufp4hMVHqE
-         8mTQ==
-X-Gm-Message-State: AFuF++mAEijiRGpZmuQrTKudOsYAMOwg7GrZD1JRjKxspWPqXDuEfLCx
-	Ni3hu+bnpFUJoueKn14athmgfv3MKBUWtuu0xSAMe2lYeg4VEtbz2cHJuvBpcnZJDw==
-X-Gm-Gg: AYBFou1Zsj31Quv0G2E4/Te62W2F2t5PZTOica3hDmbTyRXvdLSbD5+/KaqTWM1Mv3U
-	60ct4T9qHJEMam6P+Sf5ffSmMKcUR5R2hU8o8MjTTWqqUG9PygTRzZvmPuF2ZNuJikg56qnY4OA
-	76v8KxJAZJtu4efx09c8426wRIrK3Aqaoy76QH+mdKYhzRj1NG1sZvdEqYzC3HyMtPvchwSGb54
-	Ufmne7io/fOz+Sa230Lt/73JMRLKaIRjiTca0HCNXbBfAjm0VgwG/tM67UujF+Klw+1lFb1H4Py
-	6CdNC5qHuzBn9iHk33rAfKQ+TCiEnz0MhLjH/Z6Ri/czxC3TZJQ2ACQMKYa9IKrcMYhzybA1Ocg
-	agbJcTwj1fotQrUo1l4EuFDLGD7/IEI44jtRa25Bw6yV4jZ4Y2lc3sxYH3km+DC6Pdzma26SZT2
-	geiRZ5o3O/kwmiPRJsVkGiydZe0JwqlVpufMSqFGn7pnrDAvDg1nn1lpFVHv8KxPeKpAuOrf709
-	zMLpG6UxByawvOIyTCRBP+ZboAfXGdhsWtvZ+amZBQ=
-X-Received: by 2002:a05:600c:8411:b0:49c:fc6e:a3da with SMTP id 5b1f17b1804b1-49fe66ef334mr37543295e9.25.1790252783277;
-        Thu, 24 Sep 2026 05:26:23 -0700 (PDT)
+        bh=oVzT9rV6dRR4JNktA0r62hGHUnd9OU93fg81zd4qkr0=;
+        b=0/WClSkncxq/6mbunTgPt1Uy2cCl+qX4EyGPcDQOgj9N9vENMBuPz/gOfbzxrU2ZjI
+         GNy0BpoYX1GQzb2ACytPUumKgwUSjLcEF7H4aeFV+cK4biHQ8pBNz9qzRby0URnln/do
+         sIg/v32J3Cv45HfiLQ3O2cXFV4QCTZeQ1BVA69PRS59s4bInnBgW3Mgj8Bx60coIN7xm
+         pF25l/L6OPPBLxKKWlJUCoBbNZNosaG8lFINzWFV8HxT6H2yOgNa31JAAHQI3TAhxkvk
+         fRUc/NFEdm/aCs7io6Tq05XdgVD7WLcY+PzcL8wg4BkzBULG19FP+m8KI++A30sp/Nem
+         NvDQ==
+X-Gm-Message-State: AFuF++kQUwS8DYvo9SIwv6EXipBKA50EA9w4UXMBpSEOi2X0ozXv97+O
+	tiKN6HvVNZvis6WDynTk6tpUlD4wWIJGDGEDabRqOInFjQnnTxwQ5tWs/hwmSySdaA==
+X-Gm-Gg: AYBFou2CcX1red6jb1Y2AmwByMjdi+9DZS9ID9dGMoEkTpZu09ts2SBco9CoXvOs1uq
+	cxV15ytQFEmUZaWmFe4XOlCZPoA1el6LsZRi2zhUu5S3XLiMjvyAka6tnZL3fwbbumL6b4Cx6t5
+	TBPV6pATSuHEah/B40n9vLiyX5wzfuLdqb7O1UBOu89IgJMQm+OkHYsdrBwqWuG9vlak1QuuugU
+	H69+PXdWGLqVcDlRVovavqCfNbbk9FdkU53VBu2bavCi7s/lfEPfp0ckTPDQxWdSrUGuBj/+173
+	nLTKqff/G3H8v0Cx6T8fj0vQgeQTuS71q9bBotB3St+tJO/bWIF8psRok+bzoTiNFCL6IY9kgVA
+	XNkrJ19+M4XrF6IlZdun1tmuIkZ2AVHmiPkIlZACTeUx6H+RrEnYBdTiH6L/ZfagwpQlJth+WF2
+	2exojvybJgG2EOoQxW5Qa8ENomMp6eMW5qGaT2nlLsNXJ4cks/5rIoKzWXlVQxWm4PmuPKmhMWu
+	xz4280dpmaBySrZUA289WMZVeCGaytInndDi+TZXFU=
+X-Received: by 2002:a05:600c:c8f:b0:49c:dc14:d681 with SMTP id 5b1f17b1804b1-49fe66bdf3bmr38051355e9.3.1790252864624;
+        Thu, 24 Sep 2026 05:27:44 -0700 (PDT)
 Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5b9c59dsm60308195e9.1.2026.09.24.05.26.22
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5ce4941sm63102585e9.6.2026.09.24.05.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 05:26:22 -0700 (PDT)
-Date: Thu, 24 Sep 2026 13:26:18 +0100
+        Thu, 24 Sep 2026 05:27:44 -0700 (PDT)
+Date: Thu, 24 Sep 2026 13:27:40 +0100
 From: Vincent Donnefort <vdonnefort@google.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/18] tracing/remotes: Gate tracefs files opening on
- trace remote registration
-Message-ID: <arUW6hC3vn1EJLYI@google.com>
+Subject: Re: [PATCH v6 03/18] tracing/remotes: Use kstrtobool for boolean
+ tracefs files
+Message-ID: <arUXPG_V-EypPM9i@google.com>
 References: <20260817135517.3919534-1-vdonnefort@google.com>
- <20260817135517.3919534-2-vdonnefort@google.com>
- <20260817140902.EA76D1F00A3A@smtp.kernel.org>
+ <20260817135517.3919534-4-vdonnefort@google.com>
+ <20260817141120.E9E401F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -78,60 +78,77 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260817140902.EA76D1F00A3A@smtp.kernel.org>
+In-Reply-To: <20260817141120.E9E401F000E9@smtp.kernel.org>
 
-On Mon, Aug 17, 2026 at 02:09:02PM +0000, sashiko-bot@kernel.org wrote:
+On Mon, Aug 17, 2026 at 02:11:20PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
 > Pre-existing issues:
-> - [Medium] Error paths in `trace_remote_register()` leak the dynamically allocated `trace_remote` object and tracefs directories when initialization fails.
+> - [High] Kernel infinite loop when reading an oversized trace event from the `trace_pipe` file.
 > --
 > 
-> --- Patch [1]: [PATCH v6 01/18] tracing/remotes: Gate tracefs files opening on trace remote registration ---
-> commit cea65090c9ee422e607003e731a26fe505c23e56
+> --- Patch [3]: [PATCH v6 03/18] tracing/remotes: Use kstrtobool for boolean tracefs files ---
+> commit 2c1ad77f49e430730de7a438ec955b0c042628e4
 > Author: Vincent Donnefort <vdonnefort@google.com>
 > 
-> tracing/remotes: Gate tracefs files opening on trace remote registration
-> 
-> This patch adds a global list to track registered trace remotes, preventing
-> users from accessing tracefs files for remotes that are about to be
-> destroyed. Tracefs open operations are now gated based on whether the
-> remote is present in this list.
+> tracing/remotes: Use kstrtobool for boolean tracefs files
+>     
+> Use kstrtobool in trace_remote.c where possible. This is more user-friendly
+> as it allows a better variety of input strings.
 > 
 > > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> > index 0384277070b9e..0e4d41a93a7ce 100644
 > > --- a/kernel/trace/trace_remote.c
 > > +++ b/kernel/trace/trace_remote.c
+> > @@ -235,10 +235,10 @@ tracing_on_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t
+> >  {
+> >  	struct seq_file *seq = filp->private_data;
+> >  	struct trace_remote *remote = seq->private;
+> > -	unsigned long val;
+> > +	bool val;
+> >  	int ret;
+> >  
+> > -	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+> > +	ret = kstrtobool_from_user(ubuf, cnt, &val);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> 
 > [ ... ]
-> > @@ -932,8 +999,12 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
-> >  	}
-> >  
-> >  	ret = cbs->init ? cbs->init(remote->dentry, priv) : 0;
-> > -	if (ret)
-> > +	if (ret) {
-> >  		pr_err("Init failed for trace remote '%s' (%d)\n", name, ret);
 > 
-> [Severity: Medium]
-> This is a pre-existing issue, but does this error path leak the dynamically
-> allocated trace_remote object and its tracefs directories?
+> [Severity: High]
+> This isn't a bug introduced by this patch, but I noticed a potential
+> regression in trace_pipe_read() when handling oversized trace events:
 > 
-> If cbs->init() or an earlier step like trace_remote_register_events() fails,
-> the function returns an error code without cleaning up the remote pointer or
-> calling tracefs_remove(remote->dentry). Will this prevent the remote from
-> being re-registered later due to tracefs naming collisions?
+> 	while (trace_remote_iter_read_event(iter)) {
+> 		int prev_len = iter->seq.seq.len;
+> 
+> 		if (trace_remote_iter_print_event(iter)) {
+> 			iter->seq.seq.len = prev_len;
+> 			break;
+> 		}
+> 
+> 		trace_remote_iter_move(iter);
+> 	}
+> 
+> When trace_remote_iter_print_event() fails on an oversized event and returns
+> -EOVERFLOW, the loop breaks before calling trace_remote_iter_move(). Does
+> this leave the unformatted event in the buffer?
 
-This is fixed in the following commit.
+I will ignore that for the moment. There is no oversized event and the remote is
+a more privileged component than the kernel anyway. 
 
 > 
-> > +	} else {
-> > +		guard(mutex)(&trace_remotes_lock);
-> > +		list_add(&remote->node, &trace_remotes);
-> > +	}
-> >  
-> >  	return ret;
-> >  }
+> If the event is left in the buffer and the sequence buffer is empty,
+> trace_seq_to_user() will return -EBUSY. The code then calls
+> ring_buffer_wait(), which would immediately return 0 because the event is
+> still in the ring buffer.
+> 
+> Could this cause a CPU lockup where the core infinitely reads the same
+> oversized event and fails to format it?
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260817135517.3919534-1-vdonnefort@google.com?part=1
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260817135517.3919534-1-vdonnefort@google.com?part=3
 
 -- 
 Vincent
