@@ -1,354 +1,645 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90FA56C656;
-	Wed, 23 Sep 2026 20:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B75815746F;
+	Thu, 24 Sep 2026 00:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790196798; cv=none; b=hPqCO1j7tgf3alI2Tpk+woz/NijoFEL00wu+R8U25qX3nqpmI+4nPitAA/SO1ymLe5WXFwDysU+jZts6KBm0DB3zQVv6poTteMZhKOLicQ9rSl1mMVAOW10ytROFVhfpqZydmPC77Bnryk0JrRyNr7eyMPYcka4fHz8tXjcBnpY=
+	t=1790210144; cv=none; b=Kx6Iv0w8bg7S7R7CR3V6y1bIeKe8uj+a1XNdcmltsLJhMM2pO6c9BDud7OVcAnuObrY6ljZVYJ3qmD1uitbldSNlLVFo+Wlu5hQzL7RqBweiLZk0Sh+74mw9L9GWPAgScMjyR8wn7Q3Z+u+feFvnPutx605elbqJ5/y1BXsodq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790196798; c=relaxed/simple;
-	bh=gvkBIwlpuKf2zbfq3IB5OsZdYhL4aha6MJt1jdnJmp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bKNDD/J0h+Mvmget4iJHSgQFDIAvLtCyvmDtjK4SFtB9NTZ5FqNVkylfdz21++D+OoCrGhS2apRasnKEd0KE0+u6ibtNXZpwDkCm+PDrbJ/2rkfZTDQzMEFEBMREUlym1KG/xjZenjSmW4LkrhnIU/ixFNbfkY88jVPoy4h1RmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VZ8o6pGj; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1790210144; c=relaxed/simple;
+	bh=acMclJz9xGOCzpxihbspMif3ShgkC30umnh6CYPsCDM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=i/3DcF/hviv1iDFB0GH6b7P4RLuMtI4LMvXJ2iVyRA0lcBp4K3f/I3OSKh83sk4BWperTbE1SNRep9doNJ8cWl/9JYLgkkAEfkLV2sU3GCrJietySCgar2wyvE/htsnibmqrXw+XQyNDbqh+MLf3V0ay13Yf5fu9DoVZAWkFFd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GV5bRnIW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VZ8o6pGj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1790196748; x=1790801548; i=w_armin@gmx.de;
-	bh=v8NRrgHMXi8+HsQftD6fR7mora2ZqNyrd9EX2fSfU80=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=VZ8o6pGjjcB5UhJ8MrgLZkJotWK7iicMU/Fcpp7OiO5MOQSNakJ61LI7JcfTbIuY
-	 19njRFUe9Qs/RjoMR4gvr4qnX08KdnWiFx0i/HrqYjDgQbBUMHG2qw5X6DX+pEMKk
-	 nW12eEn1BJpN9Wh7Qk5a7dbT0597BiWqKDDgFUtVUPFLBOt7BSoMyK0pWsrFi8gXF
-	 MRT9rR/KGWcybe2b6CvzwUSKBD0//trKAJFkVq7IDYLerNdZXPdRHVDhcxd/5y/mf
-	 2j+cWLRjsjXQU3xeQV9xRH+0gwl50rHJyHwtPqaiWKwbjMqDbg/nKOcnjjM89csdZ
-	 z3fh3vCmcqM1oh7geg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8GMk-1weq7v3pY0-015dxx; Wed, 23
- Sep 2026 22:52:28 +0200
-Message-ID: <d87fab8e-4f2b-4436-adab-f26782adb474@gmx.de>
-Date: Wed, 23 Sep 2026 22:52:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GV5bRnIW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E66821F000FF;
+	Thu, 24 Sep 2026 00:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790210142;
+	bh=TBgsVdfGx0WTi591Ef3a6JCOj/WcrFUi518xwFZ9iP8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=GV5bRnIWaQ1ZyQFCsM5YLRhCxI5MbT2cA37MFNkpv9cjZh6/3vC5iyJ+Xn2X5cvtJ
+	 VRy6IYlDZowNtV+q1hlyoNy0mfGVjn6+8nH9NXg3WylwB/3ysKs9kVInG24XNAfnA8
+	 Iu91wThS+lf2ScJ5IfKuOH+pGmEKBquJxaGtYUg2yvq4q7HDIXQQZsGZRZtJptZVtz
+	 4bGVaYdOfP/abA0nu4qfbZ6GSZ8Ji94xAIcwnqRsrosI1uuCFbBoPe8cvWw7dxGSDc
+	 RrkuIxkBNFdzgy2Ffl9NznICyB3we6Py9JDXEW0JsKBucxZjIpbchUKMo/SEP1Thf8
+	 us+PUC7oSro3w==
+Date: Thu, 24 Sep 2026 09:35:35 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: paulmck@kernel.org
+Cc: Josef Bacik <josef@toxicpanda.com>, Frederic Weisbecker
+ <frederic@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Boqun Feng <boqun@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii
+ Nakryiko <andrii@kernel.org>, Puranjay Mohan <puranjay@kernel.org>,
+ rcu@vger.kernel.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Make optprobe optimizer multi-generational and
+ asynchronous
+Message-Id: <20260924093535.f87b2a8604cf43b57ff6b757@kernel.org>
+In-Reply-To: <7807d622-b76e-4c7a-b9e2-42667defe918@paulmck-laptop>
+References: <20260923164510.f3bbddefea4423f8f1bfecb8@kernel.org>
+	<179017148080.466588.9116221556625712980.stgit@devnote2>
+	<20260924001216.60407f86076bfc26daf4401a@kernel.org>
+	<7807d622-b76e-4c7a-b9e2-42667defe918@paulmck-laptop>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Lechner <dlechner@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Danilo Krummrich <dakr@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Bradley Morgan <brads@mainlining.org>, Aleksandr Nogikh <nogikh@google.com>,
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
- driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- Johan Hovold <johan@kernel.org>, Richard Weinberger <richard@nod.at>
-References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
- <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org> <arIvG0nx4LXG9nlW@monoceros>
- <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
- <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
- <2026092321-province-yearly-44aa@gregkh>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <2026092321-province-yearly-44aa@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ie2HdETB86El3wsLqazN2n4+oLS3Buc1NZznJwFjnpf2VhVcNtQ
- kQCWGqv5UMHAOcMwiFUO3COf18yzIoyFIVbhsl/9q/+SkIu+giboId/7Ob8fvpS936gsxNr
- 9sEQo3xP+fe2U7HJo5VePgxdXIT6QdR3k63FcSFhWkfLmdngRw+RY2oVrrhgjTm3Ew0/mob
- yAjKFykBdgMmq2JaxzZsA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CfMAKQ81Gpc=;LKYnCDV2QlJxYk2G0ZhPnRKAfyc
- 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
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Am 23.09.26 um 11:27 schrieb Greg Kroah-Hartman:
+On Wed, 23 Sep 2026 09:58:02 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-> On Tue, Sep 22, 2026 at 11:04:46PM +0200, Armin Wolf wrote:
->> Am 22.09.26 um 15:40 schrieb David Lechner:
->>
->>> On 9/22/26 2:39 AM, Uwe Kleine-K=C3=B6nig wrote:
->>>> On Fri, Sep 18, 2026 at 06:39:02PM +0200, Danilo Krummrich wrote:
->>>>> On Mon Sep 14, 2026 at 4:30 PM CEST, Greg Kroah-Hartman wrote:
->>>>>> The ability to add and remove devices from a driver through the sys=
-fs
->>>>>> "bind" and "unbind" files was created all those decades ago as a wa=
-y
->>>>>> that kernel developers can iterate faster, and provide a debugging =
-way
->>>>>> for users to attempt to add a new device to a driver without having=
- to
->>>>>> rebuild their kernel.
->>>>>>
->>>>>> This api over the years has been abused and recently come under a m=
-ajor
->>>>>> fuzzing "attack" through tools like syzbot which decided that it wo=
-uld
->>>>>> attempt to just randomly bind any driver to any type of device, cau=
-sing
->>>>>> loads of unneeded errors and pointless kernel patches to be generat=
-ed by
->>>>>> unsuspecting new developers.
->>>>>>
->>>>>> Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, w=
-hich
->>>>>> will be set on the driver if the bind/unbind sysfs files are ever
->>>>>> written to.  This lets kernel developers "know" that a user is
->>>>>> attempting to do something that is not normal, and as such, if the
->>>>>> kernel breaks they get to keep the shiny pieces laying around on th=
-e
->>>>>> floor.
->>>>>>
->>>>>> The flag is 'Y' which was unused, and can remembered as the user is
->>>>>> "yeeting" the device being operated on here (thrown with force with=
-out
->>>>>> regard for the thing being thrown).
->>>>>>
->>>>>> Note, the taint flag gets set _BEFORE_ the bind/unbind callback hap=
-pens,
->>>>>> as many times crashes/oops/warnings/failures happen within the call=
-back,
->>>>>> and the taint flag needs to be there to show what was being attempt=
-ed.
->>>>>> If it were to be set after the callback happens, the oops report wo=
-uld
->>>>>> not properly reflect what foolishness was being attempted.
->>>>>>
->>>>>> Fuzzing tools like syzbot, that doesn't have hand-crafted rules to =
-keep
->>>>>> the tool from hitting bind/unbind, should be run with panic_on_tain=
-t
->>>>>> enabled so that they fall over and don't continue on, thinking that=
- they
->>>>>> actually found a real issue.
->>>>>>
->>>>>> Userspace operations that rely on the bind/unbind files
->>>>> I agree that this should be avoided.
->>>>>
->>>>> But I also think the biggest offender really is driver_override. Spe=
-cifically,
->>>>> on a hot-pluggable bus a driver must be complient with the device dr=
-iver
->>>>> lifecycle rules and hence shouldn't break on bind/unbind. I think it=
- would be
->>>>> nice to not taint the kernel for such busses, and only taint on driv=
-er_override,
->>>>> as I think we'd still want the bug reports for such cases.
->>>>>
->>>>> But I think this is fine to leave for a follow-up.
->>>> I fully agree. I'm fine and support tainting on driver_override, but
->>>> bind/unbind are used occasionally in my bubble and I consider drivers
->>>> not handling that properly buggy.
->> I fully agree with this, drivers should correctly implement the lifecyc=
-le model
->> and not just break when being unbound at a improper time. Drivers suffe=
-ring from
->> this can easily break this way when unloading the associated kernel mod=
-ule, so this
->> taint is no solution.
-> It's a "solution" in that it tells the developer "hey, the user did
-> something odd and unsupported".  rmmod is also not a normal operation,
-> there's no requirement that it actually work as it's usually a "best
-> effort" type of thing.
+> On Thu, Sep 24, 2026 at 12:12:16AM +0900, Masami Hiramatsu wrote:
+> > Ah, I forgot to add "RFC" to the tag.
+> > 
+> > BTW, if the RCU synchronization takes too long, all other similar code --
+> > calling RCU synchronization under mutex/locks --- are fundamentally having
+> > the same issue. If that is correct, we should start adding lockdep check
+> > for such synchronizations, to clarify which one needs to be fixed.
+> 
+> Just to be clear, the issue is RCU Tasks specifically, whose grace
+> periods can take minutes.  RCU, SRCU, RCU Tasks Trace, and RCU Tasks
+> Rude have grace periods that complete well within two minutes, avoiding
+> triggering the two-minute hung-task timeout.
 
- From my perspective rmmod and friends are at least expected to not crash =
-the kernel.
+Hm, OK. And only tracers are using RCU tasks synchronization for
+the trampoline.
 
->>> In the IIO subsystem, unbind/rebind is the de-facto way to reset a wed=
-ged
->>> chip.
->>>
->>> A few examples where other reset methods were reject in favor of unbin=
-d/bind:
->>>
->>> https://lore.kernel.org/linux-iio/20240727160216.2488ed29@jic23-huawei=
-/
->>>
->>> 	This needs documenting as it's custom ABI. Note that we don't often
->>> 	accept custom ABI. Particularly not a hook that seems to reset the
->>> 	device. If you want to do that, unbind and rebind the whole drive[r]
->>> 	so we are in a known state etc.
->>>
->>> https://lore.kernel.org/linux-iio/20240720163440.03c713dc@jic23-huawei=
-/
->>>
->>> 	Firstly as stated below, we don't provide interfaces for this
->>> 	because it's a heavy weight process that is most of the effort of
->>> 	unbinding and rebinding the driver. So if you need to reset, do that.
->>>
->>> https://lore.kernel.org/linux-iio/20250505200609.54756520@jic23-huawei=
-/
->>>
->>> 	The solution is to run it once at driver bind. Similar to reset
->>> 	below, if the usecase needs to re do it then unbinding and rebinding
->>> 	the driver reflects the fact we are taking it effectively offline
->>> 	for a while.
->>>
->> I also consider bind/unbind to be an official API to interact with devi=
-ces,
->> so i want to use them in the future with the WMI subsystem.
-> Why?
+> 
+> Josef is making RCU Tasks go faster by more closely specializing it for
+> its trampoline-removal use case.  His approach also could eventually
+> remove some hundreds of lines of code from RCU, once all architectures
+> are adjusted.
+> 
+> "Why not both?"  ;-)
 
-Netlink UAPI <-> generic driver <-> WMI device
+Yeah, at least we can do it by default until other trampoline users
+changes it to async removal.
 
-User will need to manually bind the generic driver (it really supports all=
- WMI devices!) to
-a given WMI device, something that is only possible with bind/unbind.
+BTW, I'm concerning the overhead of atomic/memory barrier for each
+trampoline entry/exit. Would you have any performance number about
+this change?
 
->> AFAIK the underlying reason for this series is that some drivers break =
-when
->> being bound to unsupported devices. However IMHO drivers should verify =
-that
->> they support a given device inside their .probe callback, and the assoc=
-iated
->> bus should only match devices with drivers that explicitly claim suppor=
-t for
->> those devices (ignoring driver_override).
-> No, drivers should NOT have to do that in their .probe() function,
-> that's what we moved away from decades ago!  The match function should
-> handle all of that for you, otherwise it's contant duplication
-> everywhere that is unneeded.
->
-> Please, learn from our history, don't make the same mistakes.
+> 
+> 							Thanx, Paul
+> 
+> > Thanks,
+> > 
+> > On Wed, 23 Sep 2026 22:51:20 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Currently, kprobe_optimizer() holds kprobe_mutex, text_mutex, and
+> > > cpus_read_lock() simultaneously while executing synchronize_rcu_tasks().
+> > > Under PREEMPT_LAZY and server workloads with long-running CPU-bound kernel
+> > > tasks or heavy cgroup writeback loops, synchronize_rcu_tasks() can block
+> > > for seconds to minutes. Because text_mutex and cpus_read_lock() are held
+> > > during this entire wait, any concurrent static key updates, module
+> > > loading/unloading, CPU hotplug, or tracing updates stall, frequently
+> > > triggering hung-task detector panics.
+> > > 
+> > > Instead of penalizing the kernel preemption path with invasive hooks and
+> > > global hash lookups, decouple kprobe jump optimization from synchronous
+> > > waiting entirely:
+> > > 
+> > > 1. Replace synchronize_rcu_tasks() with call_rcu_tasks(). Locks
+> > >    (text_mutex and cpus_read_lock()) are held only for the brief moment
+> > >    needed to patch instructions via arch_unoptimize_kprobes() and
+> > >    arch_optimize_kprobes() (microseconds), and are completely released
+> > >    while waiting for the Tasks RCU grace period.
+> > > 
+> > > 2. Introduce a fixed ring of generations (optprobe_gens[OPTPROBE_GEN_MAX])
+> > >    to avoid any dynamic memory allocation (kmalloc) or -ENOMEM failure
+> > >    modes.
+> > > 
+> > > 3. The last generation slot in the array is reserved as a "waiting room"
+> > >    and is not dispatched to RCU until another in-flight generation has
+> > >    finished. While a generation is waiting for its Tasks RCU grace period,
+> > >    any newly registered or unregistered probes accumulate in the waiting
+> > >    room generation without blocking or requiring additional slots.
+> > > 
+> > > 4. When the Tasks RCU callback fires, it marks the generation as ready
+> > >    and wakes up the optimizer thread to finalize optimization (poking
+> > >    the jump instructions) and free cleaned probe slots. Once finalized,
+> > >    the generation is marked idle, allowing the waiting room generation
+> > >    to be dispatched next.
+> > > 
+> > > 5. Flushing via wait_for_kprobe_optimizer() waits asynchronously for all
+> > >    in-flight and queued generations to drain without stalling other
+> > >    kernel subsystems.
+> > > 
+> > > On non-preemptive kernels or configs where CONFIG_TASKS_RCU=n,
+> > > call_rcu_tasks() transparently aliases to call_rcu(), preserving full
+> > > portability.
+> > > 
+> > > Assisted-by: LLM
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > ---
+> > >  kernel/kprobes.c |  319 ++++++++++++++++++++++++++++++++++++++----------------
+> > >  1 file changed, 225 insertions(+), 94 deletions(-)
+> > > 
+> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > index 6337da5cab9e..1e25980303c4 100644
+> > > --- a/kernel/kprobes.c
+> > > +++ b/kernel/kprobes.c
+> > > @@ -42,6 +42,7 @@
+> > >  #include <linux/execmem.h>
+> > >  #include <linux/cleanup.h>
+> > >  #include <linux/wait.h>
+> > > +#include <linux/rcupdate.h>
+> > >  
+> > >  #include <asm/sections.h>
+> > >  #include <asm/cacheflush.h>
+> > > @@ -66,7 +67,7 @@ static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+> > >  /* NOTE: change this value only with 'kprobe_mutex' held */
+> > >  static bool kprobes_all_disarmed;
+> > >  
+> > > -/* This protects 'kprobe_table' and 'optimizing_list' */
+> > > +/* This protects 'kprobe_table' and 'optprobe_gens' */
+> > >  static DEFINE_MUTEX(kprobe_mutex);
+> > >  static DEFINE_PER_CPU(struct kprobe *, kprobe_instance);
+> > >  
+> > > @@ -511,10 +512,32 @@ static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
+> > >  	return NULL;
+> > >  }
+> > >  
+> > > -/* Optimization staging list, protected by 'kprobe_mutex' */
+> > > -static LIST_HEAD(optimizing_list);
+> > > -static LIST_HEAD(unoptimizing_list);
+> > > -static LIST_HEAD(freeing_list);
+> > > +#define OPTPROBE_GEN_MAX 2
+> > > +
+> > > +struct optprobe_generation {
+> > > +	struct list_head optimizing_list;
+> > > +	struct list_head unoptimizing_list;
+> > > +	struct list_head freeing_list;
+> > > +	struct rcu_head rcu;
+> > > +	bool in_flight;
+> > > +	bool ready;
+> > > +};
+> > > +
+> > > +/*
+> > > + * Generational ring of optprobes.
+> > > + *
+> > > + * Incoming probe requests are queued into the waiting room generation
+> > > + * (optprobe_gens[optprobe_cur_gen]). When dispatched, the generation
+> > > + * unoptimizes its probes, invokes call_rcu_tasks(), and optprobe_cur_gen
+> > > + * advances to the next slot.
+> > > + *
+> > > + * To ensure an idle generation is always available to collect incoming
+> > > + * requests without dynamic allocation, the last available generation slot
+> > > + * is never dispatched until another generation has finished.
+> > > + */
+> > > +static struct optprobe_generation optprobe_gens[OPTPROBE_GEN_MAX];
+> > > +static int optprobe_cur_gen;
+> > > +static bool optprobe_flush_requested;
+> > >  
+> > >  static void optimize_kprobe(struct kprobe *p);
+> > >  static struct task_struct *kprobe_optimizer_task;
+> > > @@ -530,50 +553,78 @@ static DECLARE_COMPLETION(optimizer_completion);
+> > >  
+> > >  #define OPTIMIZE_DELAY 5
+> > >  
+> > > +static bool optprobe_has_queued_probes(void)
+> > > +{
+> > > +	struct optprobe_generation *gen = &optprobe_gens[optprobe_cur_gen];
+> > > +
+> > > +	return !list_empty(&gen->optimizing_list) ||
+> > > +	       !list_empty(&gen->unoptimizing_list);
+> > > +}
+> > > +
+> > > +static int optprobe_active_gens_count(void)
+> > > +{
+> > > +	int count = 0;
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		if (optprobe_gens[i].in_flight || optprobe_gens[i].ready)
+> > > +			count++;
+> > > +	}
+> > > +	return count;
+> > > +}
+> > > +
+> > >  /*
+> > > - * Optimize (replace a breakpoint with a jump) kprobes listed on
+> > > - * 'optimizing_list'.
+> > > + * The last generation must not be fired until another generation is done.
+> > > + * (Thus the last generation acts as the waiting room.)
+> > >   */
+> > > -static void do_optimize_kprobes(void)
+> > > +static bool optprobe_can_fire(void)
+> > >  {
+> > > -	lockdep_assert_held(&text_mutex);
+> > > -	/*
+> > > -	 * The optimization/unoptimization refers 'online_cpus' via
+> > > -	 * stop_machine() and cpu-hotplug modifies the 'online_cpus'.
+> > > -	 * And same time, 'text_mutex' will be held in cpu-hotplug and here.
+> > > -	 * This combination can cause a deadlock (cpu-hotplug tries to lock
+> > > -	 * 'text_mutex' but stop_machine() can not be done because
+> > > -	 * the 'online_cpus' has been changed)
+> > > -	 * To avoid this deadlock, caller must have locked cpu-hotplug
+> > > -	 * for preventing cpu-hotplug outside of 'text_mutex' locking.
+> > > -	 */
+> > > -	lockdep_assert_cpus_held();
+> > > +	return optprobe_active_gens_count() < OPTPROBE_GEN_MAX - 1;
+> > > +}
+> > >  
+> > > -	/* Optimization never be done when disarmed */
+> > > -	if (kprobes_all_disarmed || !kprobes_allow_optimization ||
+> > > -	    list_empty(&optimizing_list))
+> > > -		return;
+> > > +static bool optprobe_has_ready_gens(void)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		if (READ_ONCE(optprobe_gens[i].ready))
+> > > +			return true;
+> > > +	}
+> > > +	return false;
+> > > +}
+> > >  
+> > > -	arch_optimize_kprobes(&optimizing_list);
+> > > +static bool optprobe_optimizer_busy(void)
+> > > +{
+> > > +	return optprobe_has_queued_probes() || (optprobe_active_gens_count() > 0);
+> > >  }
+> > >  
+> > >  /*
+> > >   * Unoptimize (replace a jump with a breakpoint and remove the breakpoint
+> > > - * if need) kprobes listed on 'unoptimizing_list'.
+> > > + * if need) kprobes listed on 'unopt_list'.
+> > >   */
+> > > -static void do_unoptimize_kprobes(void)
+> > > +static void do_unoptimize_kprobes(struct list_head *unopt_list,
+> > > +				  struct list_head *free_list)
+> > >  {
+> > >  	struct optimized_kprobe *op, *tmp;
+> > >  
+> > >  	lockdep_assert_held(&text_mutex);
+> > > -	/* See comment in do_optimize_kprobes() */
+> > > +	/*
+> > > +	 * The optimization/unoptimization refers 'online_cpus' via
+> > > +	 * stop_machine() and cpu-hotplug modifies the 'online_cpus'.
+> > > +	 * And same time, 'text_mutex' will be held in cpu-hotplug and here.
+> > > +	 * This combination can cause a deadlock (cpu-hotplug tries to lock
+> > > +	 * 'text_mutex' but stop_machine() can not be done because
+> > > +	 * the 'online_cpus' has been changed)
+> > > +	 * To avoid this deadlock, caller must have locked cpu-hotplug
+> > > +	 * for preventing cpu-hotplug outside of 'text_mutex' locking.
+> > > +	 */
+> > >  	lockdep_assert_cpus_held();
+> > >  
+> > > -	if (!list_empty(&unoptimizing_list))
+> > > -		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+> > > +	if (!list_empty(unopt_list))
+> > > +		arch_unoptimize_kprobes(unopt_list, free_list);
+> > >  
+> > > -	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
+> > > -	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+> > > +	/* Loop on 'free_list' for disarming and removing from kprobe hash list */
+> > > +	list_for_each_entry_safe(op, tmp, free_list, list) {
+> > >  		/* Switching from detour code to origin */
+> > >  		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> > >  		/* Disarm probes if marked disabled and not gone */
+> > > @@ -586,17 +637,20 @@ static void do_unoptimize_kprobes(void)
+> > >  			 * (reclaiming is done by do_free_cleaned_kprobes().)
+> > >  			 */
+> > >  			hlist_del_rcu(&op->kp.hlist);
+> > > -		} else
+> > > +		} else {
+> > >  			list_del_init(&op->list);
+> > > +		}
+> > >  	}
+> > >  }
+> > >  
+> > > -/* Reclaim all kprobes on the 'freeing_list' */
+> > > -static void do_free_cleaned_kprobes(void)
+> > > +/* Reclaim all kprobes on the 'free_list' */
+> > > +static void do_free_cleaned_kprobes(struct list_head *free_list)
+> > >  {
+> > >  	struct optimized_kprobe *op, *tmp;
+> > >  
+> > > -	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+> > > +	list_for_each_entry_safe(op, tmp, free_list, list) {
+> > > +		struct kprobe *_p;
+> > > +
+> > >  		list_del_init(&op->list);
+> > >  		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
+> > >  			/*
+> > > @@ -608,11 +662,10 @@ static void do_free_cleaned_kprobes(void)
+> > >  
+> > >  		/*
+> > >  		 * The aggregator was holding back another probe while it sat on the
+> > > -		 * unoptimizing/freeing lists.  Now that the aggregator has been fully
+> > > +		 * unoptimizing/freeing lists. Now that the aggregator has been fully
+> > >  		 * reverted we can safely retry the optimization of that sibling.
+> > >  		 */
+> > > -
+> > > -		struct kprobe *_p = get_optimized_kprobe(op->kp.addr);
+> > > +		_p = get_optimized_kprobe(op->kp.addr);
+> > >  		if (unlikely(_p))
+> > >  			optimize_kprobe(_p);
+> > >  
+> > > @@ -622,67 +675,119 @@ static void do_free_cleaned_kprobes(void)
+> > >  
+> > >  static void kick_kprobe_optimizer(void);
+> > >  
+> > > -/* Kprobe jump optimizer */
+> > > -static void kprobe_optimizer(void)
+> > > +static void optprobe_generation_rcu_cb(struct rcu_head *rcu)
+> > >  {
+> > > -	guard(mutex)(&kprobe_mutex);
+> > > +	struct optprobe_generation *gen;
+> > > +
+> > > +	gen = container_of(rcu, struct optprobe_generation, rcu);
+> > > +	WRITE_ONCE(gen->ready, true);
+> > > +	wake_up(&kprobe_optimizer_wait);
+> > > +}
+> > > +
+> > > +static void optprobe_finalize_generation(struct optprobe_generation *gen)
+> > > +{
+> > > +	lockdep_assert_held(&kprobe_mutex);
+> > >  
+> > >  	scoped_guard(cpus_read_lock) {
+> > >  		guard(mutex)(&text_mutex);
+> > >  
+> > > -		/*
+> > > -		 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+> > > -		 * kprobes before waiting for quiesence period.
+> > > -		 */
+> > > -		do_unoptimize_kprobes();
+> > > +		/* Optimization never be done when disarmed */
+> > > +		if (!kprobes_all_disarmed && kprobes_allow_optimization &&
+> > > +		    !list_empty(&gen->optimizing_list))
+> > > +			arch_optimize_kprobes(&gen->optimizing_list);
+> > > +	}
+> > > +
+> > > +	/* Free cleaned kprobes after quiescence period */
+> > > +	do_free_cleaned_kprobes(&gen->freeing_list);
+> > > +
+> > > +	gen->in_flight = false;
+> > > +	WRITE_ONCE(gen->ready, false);
+> > > +}
+> > > +
+> > > +static void optprobe_dispatch_generation(void)
+> > > +{
+> > > +	struct optprobe_generation *gen;
+> > > +
+> > > +	lockdep_assert_held(&kprobe_mutex);
+> > > +
+> > > +	if (!optprobe_can_fire() || !optprobe_has_queued_probes())
+> > > +		return;
+> > > +
+> > > +	gen = &optprobe_gens[optprobe_cur_gen];
+> > > +
+> > > +	scoped_guard(cpus_read_lock) {
+> > > +		guard(mutex)(&text_mutex);
+> > >  
+> > >  		/*
+> > > -		 * Step 2: Wait for quiesence period to ensure all potentially
+> > > -		 * preempted tasks to have normally scheduled. Because optprobe
+> > > -		 * may modify multiple instructions, there is a chance that Nth
+> > > -		 * instruction is preempted. In that case, such tasks can return
+> > > -		 * to 2nd-Nth byte of jump instruction. This wait is for avoiding it.
+> > > -		 * Note that on non-preemptive kernel, this is transparently converted
+> > > -		 * to synchronoze_sched() to wait for all interrupts to have completed.
+> > > +		 * Unoptimize kprobes and collect cleaned (unused and disarmed)
+> > > +		 * kprobes before waiting for quiescence period.
+> > >  		 */
+> > > -		synchronize_rcu_tasks();
+> > > +		do_unoptimize_kprobes(&gen->unoptimizing_list, &gen->freeing_list);
+> > > +	}
+> > > +
+> > > +	/* Advance cur_gen to the next generation slot */
+> > > +	optprobe_cur_gen = (optprobe_cur_gen + 1) % OPTPROBE_GEN_MAX;
+> > > +
+> > > +	gen->in_flight = true;
+> > > +	WRITE_ONCE(gen->ready, false);
+> > >  
+> > > -		/* Step 3: Optimize kprobes after quiesence period */
+> > > -		do_optimize_kprobes();
+> > > +	call_rcu_tasks(&gen->rcu, optprobe_generation_rcu_cb);
+> > > +}
+> > >  
+> > > -		/* Step 4: Free cleaned kprobes after quiesence period */
+> > > -		do_free_cleaned_kprobes();
+> > > +/* Kprobe jump optimizer */
+> > > +static void kprobe_optimizer(void)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	guard(mutex)(&kprobe_mutex);
+> > > +
+> > > +	/* Step 1: Finalize any generation whose Tasks RCU grace period completed */
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		if (READ_ONCE(optprobe_gens[i].ready))
+> > > +			optprobe_finalize_generation(&optprobe_gens[i]);
+> > >  	}
+> > >  
+> > > -	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
+> > > -	if (completion_done(&optimizer_completion))
+> > > -		complete(&optimizer_completion);
+> > > +	/* Step 2: Dispatch waiting room generation if allowed */
+> > > +	optprobe_dispatch_generation();
+> > >  
+> > > -	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+> > > -		kick_kprobe_optimizer();	/*normal kick*/
+> > > +	/* Step 3: Check completion if flush was requested */
+> > > +	if (!optprobe_optimizer_busy()) {
+> > > +		if (optprobe_flush_requested) {
+> > > +			optprobe_flush_requested = false;
+> > > +			complete_all(&optimizer_completion);
+> > > +		}
+> > > +	} else if (optprobe_has_queued_probes() && optprobe_can_fire()) {
+> > > +		/* Probes remain and can be fired immediately (e.g. retried siblings) */
+> > > +		kick_kprobe_optimizer();
+> > > +	}
+> > >  }
+> > >  
+> > >  static int kprobe_optimizer_thread(void *data)
+> > >  {
+> > >  	while (!kthread_should_stop()) {
+> > > -		/* To avoid hung_task, wait in interruptible state. */
+> > > +		/* Wait until there is work to do or a generation is ready */
+> > >  		wait_event_interruptible(kprobe_optimizer_wait,
+> > > -			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
+> > > -			   kthread_should_stop());
+> > > +			atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
+> > > +			optprobe_has_ready_gens() ||
+> > > +			kthread_should_stop());
+> > >  
+> > >  		if (kthread_should_stop())
+> > >  			break;
+> > >  
+> > >  		/*
+> > > -		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
+> > > -		 * This wait can be interrupted by a flush request.
+> > > +		 * If it was a normal kick and no generation is ready to finalize,
+> > > +		 * wait for OPTIMIZE_DELAY to batch incoming requests.
+> > > +		 * This wait can be interrupted by a flush request or a ready generation.
+> > >  		 */
+> > > -		if (atomic_read(&optimizer_state) == 1)
+> > > +		if (atomic_read(&optimizer_state) == OPTIMIZER_ST_KICKED &&
+> > > +		    !optprobe_has_ready_gens()) {
+> > >  			wait_event_interruptible_timeout(
+> > >  				kprobe_optimizer_wait,
+> > >  				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
+> > > +				optprobe_has_ready_gens() ||
+> > >  				kthread_should_stop(),
+> > >  				OPTIMIZE_DELAY);
+> > > +		}
+> > >  
+> > >  		if (kthread_should_stop())
+> > >  			break;
+> > > @@ -707,12 +812,11 @@ static void wait_for_kprobe_optimizer_locked(void)
+> > >  {
+> > >  	lockdep_assert_held(&kprobe_mutex);
+> > >  
+> > > -	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+> > > +	while (optprobe_optimizer_busy()) {
+> > >  		init_completion(&optimizer_completion);
+> > > -		/*
+> > > -		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
+> > > -		 * idle. If it's already kicked, it will see the state change.
+> > > -		 */
+> > > +		optprobe_flush_requested = true;
+> > > +
+> > > +		/* Wake up optimizer thread */
+> > >  		if (atomic_xchg_acquire(&optimizer_state,
+> > >  			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
+> > >  			wake_up(&kprobe_optimizer_wait);
+> > > @@ -734,10 +838,28 @@ void wait_for_kprobe_optimizer(void)
+> > >  bool optprobe_queued_unopt(struct optimized_kprobe *op)
+> > >  {
+> > >  	struct optimized_kprobe *_op;
+> > > +	int i;
+> > >  
+> > > -	list_for_each_entry(_op, &unoptimizing_list, list) {
+> > > -		if (op == _op)
+> > > -			return true;
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		list_for_each_entry(_op, &optprobe_gens[i].unoptimizing_list, list) {
+> > > +			if (op == _op)
+> > > +				return true;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return false;
+> > > +}
+> > > +
+> > > +static bool optprobe_queued_freeing(struct optimized_kprobe *op)
+> > > +{
+> > > +	struct optimized_kprobe *_op;
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		list_for_each_entry(_op, &optprobe_gens[i].freeing_list, list) {
+> > > +			if (op == _op)
+> > > +				return true;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	return false;
+> > > @@ -780,7 +902,7 @@ static void optimize_kprobe(struct kprobe *p)
+> > >  	if (WARN_ON_ONCE(!list_empty(&op->list)))
+> > >  		return;
+> > >  
+> > > -	list_add(&op->list, &optimizing_list);
+> > > +	list_add(&op->list, &optprobe_gens[optprobe_cur_gen].optimizing_list);
+> > >  	kick_kprobe_optimizer();
+> > >  }
+> > >  
+> > > @@ -813,7 +935,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+> > >  				 * in the freeing list for release afterwards.
+> > >  				 */
+> > >  				force_unoptimize_kprobe(op);
+> > > -				list_move(&op->list, &freeing_list);
+> > > +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+> > >  			}
+> > >  		} else {
+> > >  			/* Dequeue from the optimizing queue */
+> > > @@ -828,7 +950,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+> > >  		/* Forcibly update the code: this is a special case */
+> > >  		force_unoptimize_kprobe(op);
+> > >  	} else {
+> > > -		list_add(&op->list, &unoptimizing_list);
+> > > +		list_add(&op->list, &optprobe_gens[optprobe_cur_gen].unoptimizing_list);
+> > >  		kick_kprobe_optimizer();
+> > >  	}
+> > >  }
+> > > @@ -860,20 +982,17 @@ static void kill_optimized_kprobe(struct kprobe *p)
+> > >  	struct optimized_kprobe *op;
+> > >  
+> > >  	op = container_of(p, struct optimized_kprobe, kp);
+> > > -	if (!list_empty(&op->list))
+> > > -		/* Dequeue from the (un)optimization queue */
+> > > -		list_del_init(&op->list);
+> > > -	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> > > -
+> > > -	if (kprobe_unused(p)) {
+> > > -		/*
+> > > -		 * Unused kprobe is on unoptimizing or freeing list. We move it
+> > > -		 * to freeing_list and let the kprobe_optimizer() remove it from
+> > > -		 * the kprobe hash list and free it.
+> > > -		 */
+> > > -		if (optprobe_queued_unopt(op))
+> > > -			list_move(&op->list, &freeing_list);
+> > > +	if (!list_empty(&op->list)) {
+> > > +		if (kprobe_unused(p)) {
+> > > +			if (optprobe_queued_unopt(op))
+> > > +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+> > > +			else if (!optprobe_queued_freeing(op))
+> > > +				list_del_init(&op->list);
+> > > +		} else {
+> > > +			list_del_init(&op->list);
+> > > +		}
+> > >  	}
+> > > +	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> > >  
+> > >  	/* Don't touch the code, because it is already freed. */
+> > >  	arch_remove_optimized_kprobe(op);
+> > > @@ -1073,11 +1192,23 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+> > >  
+> > >  static void __init init_optprobe(void)
+> > >  {
+> > > +	int i;
+> > > +
+> > >  #ifdef __ARCH_WANT_KPROBES_INSN_SLOT
+> > >  	/* Init 'kprobe_optinsn_slots' for allocation */
+> > >  	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
+> > >  #endif
+> > >  
+> > > +	for (i = 0; i < OPTPROBE_GEN_MAX; i++) {
+> > > +		INIT_LIST_HEAD(&optprobe_gens[i].optimizing_list);
+> > > +		INIT_LIST_HEAD(&optprobe_gens[i].unoptimizing_list);
+> > > +		INIT_LIST_HEAD(&optprobe_gens[i].freeing_list);
+> > > +		optprobe_gens[i].in_flight = false;
+> > > +		optprobe_gens[i].ready = false;
+> > > +	}
+> > > +	optprobe_cur_gen = 0;
+> > > +	optprobe_flush_requested = false;
+> > > +
+> > >  	init_waitqueue_head(&kprobe_optimizer_wait);
+> > >  	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
+> > >  	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
+> > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I meant with that, that drivers should be prepared that for example of_dev=
-ice_get_match_data()
-returns a NULL pointer. In Rust drivers would have to check for this anywa=
-y, so i see little
-reason why drivers written in C should skip this check and as a result bre=
-ak as soon as someone
-uses driver_override (or they are matched against a non-OF device).
 
-> Now I might be convinced that driver_override is the way to go here, but
-> it still feels really odd as again, bind/unbind was created as a driver
-> debugging option only, it should NOT be a normal operation that any user
-> should rely on.  The driver should "just work" properly instead, without
-> requiring manual bind work, as that's not a good model at all.
->
-> thanks,
->
-> greg k-h
-
-I understand your concerns, but IMHO it turned out that bind/unbind are us=
-eful
-outside of debugging. I agree that userspace using bind/unbind should not =
-be considered
-normal, but in my opinion its far from being suspicious. Manually unbindin=
-g a specific drivers
-in order to bind a generic driver is unusual, but understandable.
-
-I agree with you that driver_override should be the correct place for such=
- a taint, because
-using driver_override indeed overrides the bus-specific matching logic and=
- can therefore
-be dangerous.
-
-Thanks,
-Armin Wolf
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
