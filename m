@@ -1,236 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D2E47255A;
-	Thu, 24 Sep 2026 10:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E6847C0E2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 12:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790245342; cv=none; b=CSWHBXrJofu5Q9q6UwjWp/cjDpezTNFtn6x9iS6RFztIejDmXIfzwu5ADUJ8pgOAwH3Askao0lSNfhCf40lFKQuTgKOA3FV/t6iZV5ha0iasxyp6UbS+Bab/eQcHW+bIRLNpmNNIn3reBeHiSViTPQez8igmrHhJ/dag9+0K4NQ=
+	t=1790252788; cv=none; b=Ga9Bo7m1JcqvseSd8dlKIAO9ZtjK9wwhN98vKKeDfj5g5OcOd2yALbacRB5wzUcH3vAWRAHiDwQXp1J4dx3+rwvX5H5ct84709odpwSjBR3SE/U1yz0eYIA853KGsRheJjRzGb+tQvrjCVhw4HtI+EA6c3C61l9pqCcnj8sQNXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790245342; c=relaxed/simple;
-	bh=OEAvVEvSSYrtFac6frED2AShJLA9smPR3WlZU2YjXiA=;
+	s=arc-20240116; t=1790252788; c=relaxed/simple;
+	bh=hYEF9jVGBYNSAPyKRF0WoUj5Wb6jNmc+eEi2HQ3zXIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLk8ZWKAzosq6zgGp9i/GMBo2veFrjj6lUBk4PvN8FKoKl8p8Hzs6b8yiFAMOVFeLW3HV+Yi9ah2G5KDcSd7wpI+jUNfyTQ5RNUitkrjKAXskJ8CVgTIG7MeKFZVelWD/RSC2pu6kIBivC3TcL41GOLyytx5YNZfzODJp0QOInQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bK5oWCb3; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=GNcNEhDqB7GBdfFwcV4meosPNweP5zeoIS8aII8idfoGRFyplWBWh6bzr6pmGj5t7DAKS0f3QWFFSCZAbrAvnAse4ElK8iN/e+R/w6M5RsMBRdqize1ZGNkVj4lfeMSXZ1+I+vjzJQtpqvgvjooaGvdHo6HSvloUpjb564akXbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cvGeXFoj; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bK5oWCb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DC61F000FF;
-	Thu, 24 Sep 2026 10:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790245340;
-	bh=/kufuYs8c40R6+aOEF8XLRCigB/kXlHZjyeo0hfMBwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bK5oWCb3icJZsdzewTtJXUj2g8+OdPY584wvobmFjH9caA6XHPZPOxLC+ENgAYis7
-	 FMWfW3kg0b1pKU0W7dpIcpkH9wgepYgd+Vs0xeodvPvhS2Z2eCR6zzIfxbc+F4vYn1
-	 crr7Q7r6oewUJpom74jt6mX2gF6IAipPmH/f96jRZvGrtuVNztKClju5BP2uHo6kW6
-	 734wktJAnH1jO9c7SkfE4BGx5XUqUo3nH1YffnP3W3u3mHAJ7/dU+/pRlEDaapTJOL
-	 hEriCB9vp3MVrONwH7vOYcoqLNO15CHvH8FuBJLz8aDKeueJxc7YfwK4KfyNmRNl7E
-	 8UCm0PUzGxdsg==
-Date: Thu, 24 Sep 2026 11:21:49 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Doug Gilbert <dgilbert@interlog.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, 
-	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 24/40] mm/mlock: eliminate weird VMA_IO_BIT abuse and
- simplify
-Message-ID: <arT3K71l86fUVldk@gremlin>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-24-4583d8a23bca@kernel.org>
- <93672B94-BB0C-4713-8F8A-3619D81DB7BB@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cvGeXFoj"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49b91369d18so13813365e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 05:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790252784; x=1790857584; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sTttv4o9hZeXqnTlw64U0gcVaLM+J7dfrd7tSslnvX8=;
+        b=cvGeXFojBkuaWIdjjLgxKhDtboIN8k3mB7lZLQw5rATeEEU+UoZO1NtNVlHh574EnN
+         HzUoyF6sEbWSCfFScAmfQczZjUWR7WavVCLdhLw+JCp+T+BXeyk41FuvDYSK8XG1L0u+
+         n+FkhVvXqbu43+BDVLs9YA3afwsa2lloDDsTQxLN4u2iSqxAh26eZaHkrERB5k3rb3+n
+         fPk7L7HipTeZrFOFlUzblKon9PisEmpnyGTFpaiNDSX3yT9ww+hb506REV2+kF4GFoFJ
+         fP4GFsfbGX/tpLvGS08tGCNYOPq2AqhAw+SaeCQblRxZ9JRa94hS3/EMUS2lO6EIY7GF
+         kZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790252784; x=1790857584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=sTttv4o9hZeXqnTlw64U0gcVaLM+J7dfrd7tSslnvX8=;
+        b=eT/DZfTedxUJjnUsAS3LCyD9kOHVgHtNLoGfvusE3y8wuEwYJ1PjBZkYI1lL9rdQTl
+         XHGK8OnYbhssLIj1P+xIorUnIOMPKU486gTkynfJBLFC96uTkUsix/13wTdcvdIkJMiK
+         Z6ayiY+CruQV+Nr8lBp2TSVg6NynKP58k5IstbbMi4wgPDZuq65meKh3x/HuKPqqN3fX
+         RE60DaApdBvy1IwxK5U+/jCdmJcRQqM/714m2r2InkW+GsFIIuDLwqt1od2C9je7g3Kz
+         5uSGHSIHf1w7XPg/62fN7knrJb4yhdy2lIdZn+vpfP4CZysFc87/ff1j5lufp4hMVHqE
+         8mTQ==
+X-Gm-Message-State: AFuF++mAEijiRGpZmuQrTKudOsYAMOwg7GrZD1JRjKxspWPqXDuEfLCx
+	Ni3hu+bnpFUJoueKn14athmgfv3MKBUWtuu0xSAMe2lYeg4VEtbz2cHJuvBpcnZJDw==
+X-Gm-Gg: AYBFou1Zsj31Quv0G2E4/Te62W2F2t5PZTOica3hDmbTyRXvdLSbD5+/KaqTWM1Mv3U
+	60ct4T9qHJEMam6P+Sf5ffSmMKcUR5R2hU8o8MjTTWqqUG9PygTRzZvmPuF2ZNuJikg56qnY4OA
+	76v8KxJAZJtu4efx09c8426wRIrK3Aqaoy76QH+mdKYhzRj1NG1sZvdEqYzC3HyMtPvchwSGb54
+	Ufmne7io/fOz+Sa230Lt/73JMRLKaIRjiTca0HCNXbBfAjm0VgwG/tM67UujF+Klw+1lFb1H4Py
+	6CdNC5qHuzBn9iHk33rAfKQ+TCiEnz0MhLjH/Z6Ri/czxC3TZJQ2ACQMKYa9IKrcMYhzybA1Ocg
+	agbJcTwj1fotQrUo1l4EuFDLGD7/IEI44jtRa25Bw6yV4jZ4Y2lc3sxYH3km+DC6Pdzma26SZT2
+	geiRZ5o3O/kwmiPRJsVkGiydZe0JwqlVpufMSqFGn7pnrDAvDg1nn1lpFVHv8KxPeKpAuOrf709
+	zMLpG6UxByawvOIyTCRBP+ZboAfXGdhsWtvZ+amZBQ=
+X-Received: by 2002:a05:600c:8411:b0:49c:fc6e:a3da with SMTP id 5b1f17b1804b1-49fe66ef334mr37543295e9.25.1790252783277;
+        Thu, 24 Sep 2026 05:26:23 -0700 (PDT)
+Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5b9c59dsm60308195e9.1.2026.09.24.05.26.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 05:26:22 -0700 (PDT)
+Date: Thu, 24 Sep 2026 13:26:18 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 01/18] tracing/remotes: Gate tracefs files opening on
+ trace remote registration
+Message-ID: <arUW6hC3vn1EJLYI@google.com>
+References: <20260817135517.3919534-1-vdonnefort@google.com>
+ <20260817135517.3919534-2-vdonnefort@google.com>
+ <20260817140902.EA76D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <93672B94-BB0C-4713-8F8A-3619D81DB7BB@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260817140902.EA76D1F00A3A@smtp.kernel.org>
 
-On Wed, Sep 23, 2026 at 04:06:14PM -0400, Zi Yan wrote:
-> On 17 Sep 2026, at 12:22, Lorenzo Stoakes (ARM) wrote:
->
-> > When performing mlock() or munlock() otherwise normal VMAs have VMA_IO_BIT
-> > solely to fix a race with migration which might otherwise double-count
-> > mlock VMAs.
-> >
-> > This is unnecessary - at the point of applying folio mlock state, whether
-> > setting or clearing PG_mlocked, we know whether or not we are locking.
-> >
-> > Solve this in two ways - thread a boolean through the page table walk
-> > indicating whether a lock or unlock is being performed, and run a locking
-> > walk with VMA_LOCKONFAULT_BIT set and VMA_LOCKED_BIT cleared.
-> >
-> > This state never occurs otherwise, as VMA_LOCKONFAULT_BIT always implies
-> > VMA_LOCKED_BIT. These are also always cleared together.
-> >
-> > Then, update folio_add_lru_vma() and mlock_folio() to check only for
-> > VMA_LOCKED_BIT, and update try_to_unmap_one() to check for VMA_LOCKED_MASK
-> > instead.
-> >
-> > Also remove the useless invocation of allow_mlock_munlock() which simply
-> > returns true if unlocking and instead rename it to allow_mlock() and only
-> > call it when locking.
-> >
-> > Finally, with the other mlock abuse of VMA_IO_BIT addressed, update
-> > mlock_vma_folio() and folio_add_lru_vma() to simply test for
-> > VMA_LOCKED_BIT. munlock_vma_folio() tests VMA_LOCKED_MASK instead, as an
-> > unmap racing with the locking walk must still munlock folios the walk has
-> > already counted.
-> >
-> > While here, also replace some deprecated VMA flag predicates.
-> >
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
-> >  mm/folio.c    |  2 +-
-> >  mm/internal.h | 10 +++++++---
-> >  mm/mlock.c    | 51 +++++++++++++++++++--------------------------------
-> >  mm/rmap.c     |  4 +++-
-> >  4 files changed, 30 insertions(+), 37 deletions(-)
-> >
-> > diff --git a/mm/folio.c b/mm/folio.c
-> > index 47a437e0f7fd..35e242b48870 100644
-> > --- a/mm/folio.c
-> > +++ b/mm/folio.c
-> > @@ -505,7 +505,7 @@ void folio_add_lru_vma(struct folio *folio, struct vm_area_struct *vma)
-> >  {
-> >  	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
-> >
-> > -	if (unlikely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED))
-> > +	if (vma_test(vma, VMA_LOCKED_BIT))
->
-> I think it is worth documenting VMA_LOCKONFAULT_BIT alone means mlock in
-> progress, like you did in munlock_vma_folio(). Just to keep the protocol
-> explicit for all the readers.
+On Mon, Aug 17, 2026 at 02:09:02PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> 
+> Pre-existing issues:
+> - [Medium] Error paths in `trace_remote_register()` leak the dynamically allocated `trace_remote` object and tracefs directories when initialization fails.
+> --
+> 
+> --- Patch [1]: [PATCH v6 01/18] tracing/remotes: Gate tracefs files opening on trace remote registration ---
+> commit cea65090c9ee422e607003e731a26fe505c23e56
+> Author: Vincent Donnefort <vdonnefort@google.com>
+> 
+> tracing/remotes: Gate tracefs files opening on trace remote registration
+> 
+> This patch adds a global list to track registered trace remotes, preventing
+> users from accessing tracefs files for remotes that are about to be
+> destroyed. Tracefs open operations are now gated based on whether the
+> remote is present in this list.
+> 
+> > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> > --- a/kernel/trace/trace_remote.c
+> > +++ b/kernel/trace/trace_remote.c
+> [ ... ]
+> > @@ -932,8 +999,12 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
+> >  	}
+> >  
+> >  	ret = cbs->init ? cbs->init(remote->dentry, priv) : 0;
+> > -	if (ret)
+> > +	if (ret) {
+> >  		pr_err("Init failed for trace remote '%s' (%d)\n", name, ret);
+> 
+> [Severity: Medium]
+> This is a pre-existing issue, but does this error path leak the dynamically
+> allocated trace_remote object and its tracefs directories?
+> 
+> If cbs->init() or an earlier step like trace_remote_register_events() fails,
+> the function returns an error code without cleaning up the remote pointer or
+> calling tracefs_remove(remote->dentry). Will this prevent the remote from
+> being re-registered later due to tracefs naming collisions?
 
-Well I'm not sure it's necessary here honestly, because this never checked
-VMA_LOCKED_MASK anyway, and VMA_LOCKONFAULT_BIT never made a difference.
+This is fixed in the following commit.
 
-So the meaning of VMA_LOCKED_BIT here is strictly 'is it locked' and it's
-correctly handled.
-
-And I fear that it becomes whack-a-mole - the neat thing about this change is
-that you no longer have to special case the stupid VM_SPECIAL thing, and can in
-fact do the 'normal' thing of _just checking_ VMA_LOCKED_BIT :)
-
-So I think it's better not to.
-
->
-> >  		mlock_new_folio(folio);
-> >  	else
-> >  		folio_add_lru(folio);
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index b2c6c9435021..84aa3e6c8bac 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -971,8 +971,7 @@ void mlock_folio(struct folio *folio);
-> >  static inline void mlock_vma_folio(struct folio *folio,
-> >  				struct vm_area_struct *vma)
-> >  {
-> > -	/* The VM_IO check prevents migration from double-counting during mlock. */
-> > -	if (unlikely((vma->vm_flags & (VM_LOCKED|VM_SPECIAL)) == VM_LOCKED))
-> > +	if (vma_test(vma, VMA_LOCKED_BIT))
->
-> Ditto.
-
-Similar reasoning to above.
-
->
-> >  		mlock_folio(folio);
+> 
+> > +	} else {
+> > +		guard(mutex)(&trace_remotes_lock);
+> > +		list_add(&remote->node, &trace_remotes);
+> > +	}
+> >  
+> >  	return ret;
 > >  }
-> >
-> > @@ -989,7 +988,12 @@ static inline void munlock_vma_folio(struct folio *folio,
-> >  	 * always munlock the folio and page reclaim will correct it
-> >  	 * if it's wrong.
-> >  	 */
-> > -	if (unlikely(vma->vm_flags & VM_LOCKED))
-> > +	/*
-> > +	 * VMA_LOCKONFAULT_BIT alone marks an mlock walk in progress, see
-> > +	 * mlock_vma_pages_range(). An unmap racing with the walk must still
-> > +	 * munlock folios the walk has already counted.
-> > +	 */
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260817135517.3919534-1-vdonnefort@google.com?part=1
 
-Here it's worth mentioning, as it's specifically relying on the new
-behaviour. Although it's neatly using the VMA_LOCKED_MASK to handle both the
-locked case and the 'being locked' case :)
-
-> > +	if (unlikely(vma_test_any_mask(vma, VMA_LOCKED_MASK)))
-> >  		munlock_folio(folio);
-> >  }
-> >
->
-> Why I am commenting in the middle of the series? Because I am taking
-> a quiz given by LLM based on this series to get myself enough background
-> knowledge to review this series. This mlock part came up at part E
-> and I only have part F left before I can do the full review. :)
-
-Thanks! :) I really appreciate you taking the time to look at this! Sorry it's
-so large.
-
-I held this series back from last cycle to help with review load, then spent
-some time fixing various AI-discovered things, and all the patches are necessary
-(well for the most part) to get where the series needs to go.
-
-I think the change is worth it though!
-
->
-> Best Regards,
-> Yan, Zi
-
---
-Cheers, Lorenzo
+-- 
+Vincent
