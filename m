@@ -1,73 +1,74 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1C7222597
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 12:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F722472AF
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 13:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790254738; cv=none; b=R+xVuhc9RCL0MAbqIHwMug3ILFVJWatGIP5kpIGQP+z87wK5mlubbopoV5UIxsjmD9VsTah1I/nM576/gECM/Gk4caYlWt+rBdHOKUDj1SePd3KcHiBQlx92/+o4e4QXS1AqveZJdiroSxPHyesYHno+itKT/KXtUfjhKWaLXvU=
+	t=1790256593; cv=none; b=G2MRt6rg9MwW/mhVf8OK2yi8rtuo1y5w35+gknEyBW5TTKs2eQJ9NSwcdawEPjbKygYChkIithvlkLFDI2vP/ZoB9HsvgXVjSUrKbHKv9XUMUJQ0qBDO6J59y90ZJ6QedlkQUcaNCsyqde3BSYQ0Gbfbrmi5zaPoWZDaAKVS9O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790254738; c=relaxed/simple;
-	bh=BJgGU9Fj+0i4oL+e+TBIeROIT9oFpqq3C0WFl9D1HFY=;
+	s=arc-20240116; t=1790256593; c=relaxed/simple;
+	bh=b6+s+j2E+PamgZmztaZFx+a2tmmlK+zV8zH9cUia+64=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cZf9eDKqove6FlwyOP6CF1Mgj2XRS5nzevfvZ/ZNJ4a1iZMdGi6RWbi4e5xuNpGY5pS0VD1eUQgDUEDEe2zVGJDHMMbgbwDMfbReYEfeTO2Z0vA1+U8lJKn4hSvXlvxPECbPiJfnpBI0tQEDjHAjMs9IiiMwrChYGqyrCtBYKXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TUynySO7; arc=none smtp.client-ip=74.125.225.140
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwOcTceYPLdBjHDIo/N48E3ZoVSc5HXBtCG4fCb7BTduZ05h753CpbFjJN+aW/erZzRl76xDCkFv3gM1Ic4vbfAnko9vxAXKYFwcyeKnrOruQsOkqmC7s2fPKlqETMLiNFLc2MWEHMGFRjt0ia9bYRjhrGpLL+At0J4P298X4t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O6syckze; arc=none smtp.client-ip=74.125.225.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TUynySO7"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cc9f581c4so8117625e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 05:58:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O6syckze"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-485b1d2874aso1645534f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 06:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790254734; x=1790859534; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790256581; x=1790861381; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4ykK/QkBykPoiJ79rpm7Iuac0S65e0jYz1HTpICpqNE=;
-        b=TUynySO7004spq6Et3zvBsNxVSKL64CN1AhlvtMS9gpLHycSnAKdiUxn/7maX0BF2A
-         tx7QMuzYwHZdfYWobLJgZ+JY9kTH4JltjymUtfLLzB2nZ3GWUfBPahSZOGt+hvUESsY3
-         DqNIQcb7SNJYBuVyThmmxT2P/6GjTouBWbw7lIu4KUXC/clcG2oxvKzq/1ei2X9xORky
-         CcMPipH6d+sduawdcJT85Kw3dUkNSQLWl83/fY5ZTZ0d3x3Mraq0SSyQCKhqE/lRcGEq
-         c1jf5Arh9w6yuVG/vJs3FhE/xFX/T+0E4iMoMKWiNkxZArhnum+HP0mrBwlVySO1u6eZ
-         IOCQ==
+        bh=LQQKLzXJaAQsQHa2KS7tADnjrxkQ8I/GwCwJ8DG8zts=;
+        b=O6syckzeVma0xn144n0MetLfiFVCI8TLtxyXWVX4piEm8uwe4l7DFkNxQbeoYHBvVJ
+         HaLxw3V2+RvrQg3CqZ6VCBl4aC5hHKmWKINuSjX6ZepK7Ioin8uz5Ugpzw+EClWSpMxj
+         tGF+VNhzKzDbGi7FLB56xiKXwr6s1m6nBzePWU1ZBhsTHGvYhLX92FIJfAoqX/YkA0K8
+         bHM55bJscetO74rJ1AqPt6A+4KLaK/7Xc1xcopjSk031ZlDfAp0I1ku4FaVF5KzAefir
+         asYmNoTwkRlA/R/nJTDAtWdAz7SKaeDsGf0MRbZQMudI0pyxYEfQruYhVOAgS+s7jfiU
+         mJdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790254734; x=1790859534;
+        d=1e100.net; s=20260707; t=1790256581; x=1790861381;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=4ykK/QkBykPoiJ79rpm7Iuac0S65e0jYz1HTpICpqNE=;
-        b=G1ErwiYYISHNm+UM+JjeOD2LUAw1SUwAWr5n2ciPuFeHmRDyew4Wxfy9/dPqNgFDyS
-         5SHbQGkgVQZ4IXdR1vJpZsqG0+uynrYrWYQXxvSaNnopR+s/MuRXenhzAb/WMg42741C
-         VKxAuyort6DWlfikYbxmhqFSFA87+aRSgRvoGeuQopHPYBLnZ304SvvLID7q6fH1Skzu
-         T14y13DYGSVlHIZgYW0ctYqXZftCA05mlkzrEv6m3ozjNq9DV+jSx+d50fYiHUJaHcm6
-         z4Fc4/ctUGHf5mGhiLLtiQfr62F9U6W7bfFvfBOkLQswHbkAAoDJ+AQdDL86mJ5qOWMR
-         ykvg==
-X-Gm-Message-State: AFuF++mN0h3y0G8Lu4GmOOykLjaLepx3XsdVpLnB2ZJIQvdkZMKukC7S
-	F7kKmi1dOSVt3r4C0rDkoHclXzvEm4T9X45Fjz3EyC34CcoTIc73CBd6puN9ZwLNxg==
-X-Gm-Gg: AYBFou3n3kQe6jDPgkShsu2AGV2pSbLQkKk8RA1O+tfHApAZVZK+ktaCzzkqCQYAtWf
-	l094TjVGUXlIMSVDXlHtA50f/BgGf6DB+YlCW2/P7vWa10X5ChDHhU5JUR4MTVrxvi32C2rKMLm
-	gJCOs6JeNiMiohADNpaRrGZfC5pTMHdpNLvR8+1kcpcYItDYfk72aRdAdxoC4uGwXDpa8iCUKeN
-	XDhO92kad/6goAvrTr+BGrya+gRHJfFFb5GazQ1KOuFCe+SPGj7eO7XCdRD/DfVEInXtP+8SfWZ
-	qhkNtp1OVe5to35nP5WmmJHAcRvGrh0kDZVBFRC29ASCNYkbhZ58K1BWOBCcfzq0/Di0J/Il3xT
-	sL5F8941ajoUvewjLyVqA02xKvujOSNISbPLvde7OFiHIqKms6OKmczd/iOKi8Es3gF1IBWJeA1
-	PfdlUpK738Ng/wQuesYGYMskVZHECgrLfg3NNflPVLWn1Z8b7hMvk1+Wxz1xFPl3l2Tt00Q26Dy
-	mMYs5HwvCzXGnqD1Qsm5p7NPui29BGCasBjZkg9o63b
-X-Received: by 2002:a05:600c:468c:b0:49e:715d:95ca with SMTP id 5b1f17b1804b1-49fe66f9fc1mr40944395e9.13.1790254733024;
-        Thu, 24 Sep 2026 05:58:53 -0700 (PDT)
+        bh=LQQKLzXJaAQsQHa2KS7tADnjrxkQ8I/GwCwJ8DG8zts=;
+        b=PX8xzgijp6Adct9SI7mdLGcAaVw1Pnmcar65z5NruNaYb9mNC1EokeJW6Z3imvP/Xz
+         Bme7bc33ETU4jBuXCNLhZhn5ynEvW86rVDHO5yJkOriszharkK5tSY1VAKm2Empfyegl
+         AsQxz3vZ+VHFhcrCP3EgwKTh4GKnYXP6PvqGNnRo8XkmXCRLQKTya0i/rhfNx7xqFc12
+         NGdt/7ZYUTolg4QuSMgbeQOSrnY9z+QqtUoL9K7EtsxonU43ZukqDJg8HqSvEQwnFGIH
+         Tr9t2KjIaGJIU+M+mhtbGq8yG4siGvgN8mOUjCYNH5r0dVjvA2pIki5OS20pmoPN9Fxg
+         cCLw==
+X-Gm-Message-State: AFuF++mCIcBneCn7SrhXG0EPZfDRNio//T1N2n0oda5GfLxz+jEHByWN
+	4rdWHyIG0pjuD6afjStOYBi2K0oWvy7LM+GRzMNpZ/wVrM8h98Fgyl+VnZjPtTCCSg==
+X-Gm-Gg: AYBFou17B494c4MLUcDDByEl7QRziZnI12DP3GzZItiL8fyJF8FtXSARgzqG54U1q1b
+	MbTS+t28kjI2NmtKIVew8cuYe07VrnamaX0hyeScCWnIoSAO0+dacwbHhUHb+yVOf1x8JxqC2TA
+	JTqs4EPpQPVfMhX5Riom0l1GUbX/uwjuia1B1V+YWjTCtSsG0LHCqbM05yPtRDRs0cHmBuKV48F
+	FDtjNhE3O9GSNlUfUdEXGS4sNupjJNDj4/Yh7MUjlUc10PtAmVIWFMjeQNJ2A8NEkbPXvBXi7jw
+	9KkQ9bhvHhnVdagGVP4JugWNyK2qNM8jLSvCM8X2eszI3Uh37aGB5xKDhjx70TIWnWrC2Q3AP/j
+	YQWC6xClSwTy7WObtuMWivUK0708nkBc3dSbGCy1pgvNjZmKsGzx/CEHC+nZUaDMYtZsrvDCgRX
+	Xzhtw9S3UjYAlV2Y8yKwsrKB1F9/bAXVSLKQJo87wArlR1NcLw0uz1cjCfEOTIJRD65aOS++Wx7
+	2299glVLYgqDZ/b5+zHognP4BfrxMuDoTE/2wkA7xQ=
+X-Received: by 2002:a05:6000:2512:b0:487:da0:df33 with SMTP id ffacd0b85a97d-488716b7498mr3963942f8f.3.1790256580199;
+        Thu, 24 Sep 2026 06:29:40 -0700 (PDT)
 Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5de187asm64662205e9.7.2026.09.24.05.58.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-488684862a3sm13572566f8f.7.2026.09.24.06.29.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 05:58:52 -0700 (PDT)
-Date: Thu, 24 Sep 2026 13:58:49 +0100
+        Thu, 24 Sep 2026 06:29:39 -0700 (PDT)
+Date: Thu, 24 Sep 2026 14:29:36 +0100
 From: Vincent Donnefort <vdonnefort@google.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 13/18] tracing/remotes: Add dump_on_panic tracefs file
-Message-ID: <arUeid6jHB-mK__7@google.com>
+Subject: Re: [PATCH v6 16/18] tracing/remotes: Add trace_remote cmdline
+ options
+Message-ID: <arUlwHtTyvlMDxUP@google.com>
 References: <20260817135517.3919534-1-vdonnefort@google.com>
- <20260817135517.3919534-14-vdonnefort@google.com>
- <20260817141020.330011F00A3D@smtp.kernel.org>
+ <20260817135517.3919534-17-vdonnefort@google.com>
+ <20260817141252.4FD471F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,134 +78,70 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260817141020.330011F00A3D@smtp.kernel.org>
+In-Reply-To: <20260817141252.4FD471F00A3A@smtp.kernel.org>
 
-On Mon, Aug 17, 2026 at 02:10:19PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
-> - [High] The panic handler unconditionally attempts to acquire a per-CPU reader spinlock that may be held by a CPU halted by smp_send_stop(), leading to a permanent deadlock during kernel panic.
-> - [High] Missing touch_nmi_watchdog() in the panic dump loop can cause a secondary panic or hard reset.
-> - [Medium] Mixing goto-based error handling with __free() scope-based cleanup in trace_remote_iter().
-> - [Low] Missing READ_ONCE() when reading remote->panic_on in dump_on_panic_show().
+On Mon, Aug 17, 2026 at 02:12:51PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] The `dump_on_panic` command-line option sets `remote->panic_on = true` but fails to dynamically register the panic handler if the trace buffer is already loaded.
 > --
 > 
-> --- Patch [13]: [PATCH v6 13/18] tracing/remotes: Add dump_on_panic tracefs file ---
-> commit 33a5774bde5e05c9ff209cc5026a9b962c22df16
+> --- Patch [16]: [PATCH v6 16/18] tracing/remotes: Add trace_remote cmdline options ---
+> commit 16551de261e3bdeffe51c1a5227c6a115ddbe725
 > Author: Vincent Donnefort <vdonnefort@google.com>
 > 
-> tracing/remotes: Add dump_on_panic tracefs file
-> 
-> This commit adds a dump_on_panic tracefs file. When enabled, it dumps the
-> content of the trace remote buffer to the console if the system panics.
+> tracing/remotes: Add trace_remote cmdline options
+>     
+> This commit introduces command-line options for trace remotes, allowing
+> configuration of features like dump_on_panic, dmesg, buf_size, and poll,
+> as well as enabling specific trace events automatically on boot.
 > 
 > > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> > index 9e78267d71f8b..5536e0df43795 100644
+> > index 204d5bef7a8c4..34847463d9e43 100644
 > > --- a/kernel/trace/trace_remote.c
 > > +++ b/kernel/trace/trace_remote.c
 > 
 > [ ... ]
 > 
-> > @@ -434,58 +455,68 @@ static void trace_remote_dec_poll(struct trace_remote *remote)
-> >  static struct trace_remote_iterator
-> >  *trace_remote_iter(struct trace_remote *remote, int cpu, enum tri_type type)
-> >  {
-> > -	struct trace_remote_iterator *iter = NULL;
-> > +	struct trace_remote_iterator *iter __free(kfree) = kzalloc_obj(*iter);
+> > @@ -1170,6 +1172,126 @@ static int poll_ms_show(struct seq_file *s, void *unused)
+> > +static void trace_remote_apply_cmdline_opts(struct trace_remote *remote, char *cmdline)
+> > +{
+> > +	bool dmesg_on = false;
+> > +	char *opt;
+> > +	int ret;
+> > +
+> > +	while ((opt = strsep(&cmdline, "^"))) {
+> > +		if (!*opt)
+> > +			continue;
+> > +
+> > +		if (!strcmp(opt, "dump_on_panic")) {
+> > +			remote->panic_on = true;
 > 
 > [Severity: Medium]
-> This isn't a bug, but this function mixes scope-based cleanup (__free) with
-> a goto-based error handling pattern. According to the cleanup subsystem
-> guidelines, mixing goto-based cleanup labels and __free() declarations in
-> the same function is forbidden because it creates confusing ownership
-> semantics.
+> If the trace remote was configured across multiple command line arguments, and
+> an earlier argument already enabled events (which loads the trace buffer via
+> trace_remote_enable_tracing()), will setting remote->panic_on = true here
+> fail to register the panic notifier?
 > 
-> Should this function either use goto-based cleanup exclusively, or be
-> fully converted to scope-based cleanup?
-> 
-> [ ... ]
-> 
-> > @@ -989,6 +1024,117 @@ static int dmesg_show(struct seq_file *s, void *unused)
-> >  }
-> >  DEFINE_TRACE_REMOTE_ATTRIBUTE(dmesg);
-> >  
-> > +static int trace_remote_panic_handler(struct notifier_block *self, unsigned long ev, void *v)
-> > +{
-> > +	struct trace_remote *remote = container_of(self, struct trace_remote, panic_notifier);
-> > +	struct trace_remote_iterator *iter = smp_load_acquire(&remote->panic_iter);
-> > +	int cpu;
-> > +
-> > +	if (!iter) {
-> > +		pr_warn("Unexpected error: no panic iterator for the trace remote\n");
-> > +		return NOTIFY_DONE;
-> > +	}
-> > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		if (iter->rb_iters[cpu]) {
-> > +			/* No RING_BUFFER_ALL_CPUS to avoid taking cpu_read_lock() */
-> > +			ring_buffer_read_remote_meta_page(remote->trace_buffer, cpu);
-> > +			ring_buffer_iter_reset(iter->rb_iters[cpu]);
-> > +		}
-> > +	}
-> 
-> [Severity: High]
-> Can this loop deadlock indefinitely during a panic?
-> 
-> If another CPU is actively reading the remote trace buffer and holds its
-> reader_lock, the panic() function will stop that CPU via smp_send_stop().
-> 
-> When the panicking CPU executes this loop,
-> ring_buffer_read_remote_meta_page() calls rb_reader_lock(). If in_nmi() is
-> false (which happens on a normal oops or SysRq-C), rb_reader_lock() will
-> unconditionally attempt to acquire the lock held by the stopped CPU rather
-> than using a trylock.
-> 
-> Will this cause the panic recovery process to hang forever?
-> 
-> > +
-> > +	while (trace_remote_iter_read_event(iter)) {
-> > +		trace_seq_init(&iter->seq);
-> > +
-> > +		trace_remote_iter_print_event(iter);
-> > +		trace_seq_putc(&iter->seq, 0);
-> > +		pr_emerg("%s", seq_buf_str(&iter->seq.seq));
-> > +
-> > +		trace_remote_iter_move(iter);
-> > +	}
-> 
-> [Severity: High]
-> Since serial consoles can be slow and remote trace buffers can contain
-> many events, could the time spent in this printing loop trigger the NMI
-> watchdog and cause a hard reset before the panic dump completes?
-> 
-> Does this loop need a call to touch_nmi_watchdog()?
+> Since this doesn't call trace_remote_panic_load() if the buffer is already
+> loaded, it appears the panic handler might never be registered under this
+> configuration pattern.
 
-Makes sense. And actually ftrace_dump_one does that too!
+Interesting. I will fix that
 
 > 
-> > +
-> > +	return NOTIFY_DONE;
-> > +}
+> > +		} else if (!strcmp(opt, "dmesg")) {
+> > +			dmesg_on = true;
+> > +		} else if (!strncmp(opt, "buf_size=", 9)) {
+> > +			/* buf_size can only be applied if the buffer is unloaded */
+> > +			if (trace_remote_loaded(remote))
+> > +				pr_warn("Cannot apply buf_size after events are enabled\n");
+> > +			else
+> > +				remote->trace_buffer_size = memparse(opt + 9, NULL);
 > 
 > [ ... ]
-> 
-> > +static int dump_on_panic_show(struct seq_file *s, void *unused)
-> > +{
-> > +	struct trace_remote *remote = s->private;
-> > +
-> > +	seq_printf(s, "%d\n", remote->panic_on);
-> 
-> [Severity: Low]
-> Does this unprotected read of remote->panic_on need a READ_ONCE()?
-> 
-> Since dump_on_panic_write() modifies this flag concurrently under
-> remote->lock, this is formally a data race under the Linux kernel memory
-> model and might be flagged by KCSAN.
-> 
-> > +
-> > +	return 0;
-> > +}
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260817135517.3919534-1-vdonnefort@google.com?part=13
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260817135517.3919534-1-vdonnefort@google.com?part=16
 
 -- 
 Vincent
