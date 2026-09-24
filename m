@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FE748F019
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 15:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B0B49F114
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 15:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790262755; cv=none; b=Q7znLYkVt7hyeWCjZu+crsdEg2Flagq5Z6iPnHlTh4G+CySqxhXJkNLaopgOWc6Cw6T+g1Ak4zWQkJFB/use1x+z6kEjHCVuOF7yfa0ullN9EDHVDWSDN3TV7kD7PwFhPVV7TTz+P80+jFO9kps5u8plq36z1T+Ky0RJiVl0j+s=
+	t=1790262810; cv=none; b=j+nyxYqxkozIuQG1jvrsA5MZ4MadmI6Rh1w1m2m24lhR7BtCZZRRMlcwCad8L4hZskVDBcT65IBEHmeRrWGkExhzbCviQe531EVAC7wGTXi0u0BfBCy510Z8hlr5ipESG/3eF8f3mbg+78k0sToe1yGKbJ/5MAUBrVMCtN7I9iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790262755; c=relaxed/simple;
-	bh=hwkrq45WxUvULe3AVwUtyAVlm2nRIdbYVQHDrocmjg0=;
+	s=arc-20240116; t=1790262810; c=relaxed/simple;
+	bh=0jSXEkd6jEqcLCqFn9SNwNpuBggZ6qtIkdSN/fUIIHg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HXTw2NH1LPVU61oHOwg+CcfizH2++Nw05zp1liHblYS6lESdHFMIDlgNbyusKB9384VV2QMjgNAA3xrS8PEbP8DUqztuUerDaKwc/4uO9DwZ7Dn2P3PxXclMyyOJGK4F3j5O7rdU//LD6/Aoh/kk8kQfcJHKkjM6wAG7xYF7nps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9wcabxt; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=MHFWAv1yOKVX14P8x99dJ2s7nhTW1+FWZBINDEVlsTitkKxuLmhJYgXc3dc2MyDyb8qNNK7yNjsEdGqNepxePbu3OJEEit/VN4Ajm5PjCT8PawBgbF1T+sZwTehHTLJPmP0HCJq5jWDdLVywZLQ7Q2pUdDYNzx42n+W2XWMQtcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kq617Ww4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9wcabxt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D7B1F000FF;
-	Thu, 24 Sep 2026 15:12:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kq617Ww4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644AB1F000FF;
+	Thu, 24 Sep 2026 15:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790262752;
-	bh=5IozuEqsZSN55EPkt+tazsJa9AnDq/Nm5aZWl15TKTE=;
+	s=k20260515; t=1790262803;
+	bh=A7BKoIN2TGV2qPo8ecdoEpXizUXACQ06EzmYKVZANYg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O9wcabxt1yjN9v7gE12dhbNXnt8aIIWhXsEqsflmov4n3l1cG5ISZvdgMAMNx4KdY
-	 o2k/9E/nolYE0u/p3ufZohfu+0BAorcnxmDo0IXy84qjV9uLYSQDzU1m/6ikrLFb0Z
-	 Ze8KWehXUBT+b+plshjbPTML3zUfN4Kg4wM1B7ir/u7yRWs3vx8kdZFzinQ2mJNiEA
-	 YmrfJN9aauWfU0nPhme++mLcaFb7YYclTcXVn8nh0dlNnzDpwTpxD8cToY8PtmuITf
-	 8umeXNMR6ExrPW1LHcMTyhMpQabeEUbEa8ZgEA8wSlCkdGZyHH7EoyapIYYfWOBovC
-	 SL4t5FN3EXflQ==
+	b=Kq617Ww4Hiy4DTwda4eye/6JcYV7r+bgJfNxU4lJQAxv6Rr5gelpHGxX77J/93PDT
+	 6YKgKrUcv83076JpWzDOE61zjQabauFvgMW6D1IOpReY0meteTePhz1anKXPTFcSaZ
+	 iWEhtFiw0vxDs08h2Z5amcGORLGp+P9OWzuBz4je8UWi//RpSRKKUMNwrUEZ+cSjX9
+	 +Q60ZoL3eTkDrWtUqlUtdMy+T/BeYAW4rgjPsvmRgaHicFYLqlO4ONWKruLY0K8pNE
+	 IgASAh3aQR5yU6omMwl3p1IRdUR1JKQPht4IZnjpUVO5GpF6m871Q6el51go0JaS9s
+	 2bUUN8w4OvdBQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 08/20] tracing/remotes: Add dmesg tracefs file
+Subject: Re: [PATCH v7 17/20] tracing/remotes: Add poll_ms tracefs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260924145754.1285146-9-vdonnefort@google.com>
+In-Reply-To: <20260924145754.1285146-18-vdonnefort@google.com>
 References: <20260924145754.1285146-1-vdonnefort@google.com>
- <20260924145754.1285146-9-vdonnefort@google.com>
+ <20260924145754.1285146-18-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 15:12:32 +0000
-Message-Id: <20260924151232.C0D7B1F000FF@smtp.kernel.org>
+Date: Thu, 24 Sep 2026 15:13:23 +0000
+Message-Id: <20260924151323.644AB1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,67 +46,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] tracing: infinite polling loop when pr_info returns 0
+- [Low] tracing: delayed work rescheduled with old poll_ms value due to race
 --
 
-commit 84b99572dcf19a3615c7c7c55a76f23735f8f5c9
+commit 8789c4fba42732f9e8b7a1922700dca27018009e
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-tracing/remotes: Add dmesg tracefs file
+tracing/remotes: Add poll_ms tracefs file
 
-This commit introduces a dmesg tracefs file for the tracing remotes subsyst=
-em.
-When enabled, it redirects all events to dmesg, acting similarly to tp_prin=
-tk.
+This commit adds a tracefs file to configure the trace remote polling perio=
+d.
+It keeps the default value to 100ms.
 
 > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+> index 0a360690b174e..b2547eb117f85 100644
 > --- a/kernel/trace/trace_remote.c
 > +++ b/kernel/trace/trace_remote.c
-
 [ ... ]
-
-> @@ -883,6 +909,87 @@ static const struct file_operations trace_fops =3D {
-> +static bool trace_remote_do_dmesg(struct trace_remote *remote)
+> @@ -1138,6 +1139,40 @@ static int dump_on_panic_show(struct seq_file *s, =
+void *unused)
+>  }
+>  DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
+> =20
+> +static ssize_t poll_ms_write(struct file *filp, const char __user *ubuf,=
+ size_t cnt, loff_t *ppos)
 > +{
-> +	struct trace_remote_iterator *iter =3D smp_load_acquire(&remote->dmesg);
-> +	unsigned int max_events =3D 1000;
+> +	struct seq_file *seq =3D filp->private_data;
+> +	struct trace_remote *remote =3D seq->private;
+> +	unsigned int val;
+> +	int ret;
 > +
-> +	if (!iter)
-> +		return false;
+> +	ret =3D kstrtouint_from_user(ubuf, cnt, 10, &val);
+> +	if (ret)
+> +		return ret;
 > +
-> +	trace_remote_iter_read_start(iter);
+> +	if (!val)
+> +		return -EINVAL;
 > +
-> +	while (trace_remote_iter_read_event(iter)) {
-> +		trace_seq_init(&iter->seq);
+> +	guard(mutex)(&remote->lock);
 > +
-> +		trace_remote_iter_print_event(iter);
-> +		trace_seq_putc(&iter->seq, 0);
-> +		if (!pr_info("%s", seq_buf_str(&iter->seq.seq)))
-> +			break;
+> +	if (val < remote->poll_ms && remote->poll_cnt)
+> +		mod_delayed_work(system_percpu_wq, &remote->poll_work, msecs_to_jiffie=
+s(val));
+> +
+> +	WRITE_ONCE(remote->poll_ms, val);
 
-[Severity: Medium]
-What happens here in trace_remote_do_dmesg() if the kernel is compiled with
-CONFIG_PRINTK disabled?
+[Severity: Low]
+Does this code introduce a race condition where the delayed work reschedule=
+s=20
+with the old polling interval?
 
-When CONFIG_PRINTK=3Dn, the pr_info() macro unconditionally returns 0. If
-pr_info() returns 0, this loop breaks immediately before calling
-trace_remote_iter_move() to consume the event.
+If the delayed worker is expedited via mod_delayed_work(), and it executes=
+=20
+before WRITE_ONCE(remote->poll_ms, val) completes (e.g., if this thread is=
+=20
+preempted or the worker runs concurrently on another CPU), it will read the=
+=20
+old remote->poll_ms value.
 
-Could this result in the same event being infinitely polled without making
-progress, wedging the remote trace integration?
+The worker trace_remote_do_poll() schedules itself like this:
+
+    schedule_delayed_work(&remote->poll_work,
+                          yield ? 0 : msecs_to_jiffies(READ_ONCE(remote->po=
+ll_ms)));
+
+Because it would see the old value, it could reschedule itself with the old=
+=20
+delay, effectively ignoring the user's requested speedup for one entire cyc=
+le.
+
+Should the new state be written before the worker is expedited?
 
 > +
-> +		trace_remote_iter_move(iter);
-> +
-> +		if (!(--max_events))
-> +			break;
-> +	}
-> +
-> +	trace_remote_iter_read_finished(iter);
-> +
-> +	return !max_events;
+> +	return cnt;
 > +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924145754.1285=
-146-1-vdonnefort@google.com?part=3D8
+146-1-vdonnefort@google.com?part=3D17
