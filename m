@@ -1,53 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEECF29B795;
-	Thu, 24 Sep 2026 00:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E3F1AAE17;
+	Thu, 24 Sep 2026 01:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790211392; cv=none; b=W5gLdvWp4+3dFw6PsMgMR9BN5S6p7UuHXqM6PoC2cZ+56jfvzOU0s4brRAGkA+Ngs6V50tX3F1Bys3nNHSvataV5dYIyZq23x8Q5OHPpsMXgc7UenUqthxoZ/tvEFaRKMkEM9RrINP2pv28IQuAzf4tYbDJnqycJqxt1Yfk9tyY=
+	t=1790211823; cv=none; b=hB1KZ07Irsp1HzoKdtLi2+kmGKGXOh0LEXbd9dqeAt7ciBhygBvWXjUCFOG1nA4vOofyRbm0kkroNYvGy2Cd/GymsQQ9cdJI2W3Kw00/M7XSld6l8iptheskiDUcLvGgo51BAdRFkSWKoZUU1aVsNLSf+qHguRk2BmVb+9K5KE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790211392; c=relaxed/simple;
-	bh=jdXlTLlf3jUa4RrM2D3BUMVLd7xgVV710VYzNJz/Wog=;
+	s=arc-20240116; t=1790211823; c=relaxed/simple;
+	bh=Pnc2eG5KpssQK71R6RJZ0Z1lN5ASTvc+bbXex7x/P0o=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bpzmA1Ak8xTVj+lil/giKGHELUzK5lVz1Dh3TP7Ty/GXb8B9RQ7XkrJ6AGiFAXDj/gxKaAuVpvhaf9Goy1gJOWqWTDRkrkodPMFt0owhoWPt6X9Jb170IcSVkV5SIk2xn1pR5RfyFqN/Tw4WD8Hy1A+IVmXCtibqkYC8e3Jd/oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mppRpFV4; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=AyJIawEA9pGDnN3Acbb3RU9BkioQXMv4iaXmQoJ6u9Yidh37XOTsckLCUzGe3/2RVPYhS1UjOnamJMXgvbY4h9kKU65n97rJWLu+Hb79L2meZkQqHjZfi+ngcsF++Am0Mj+6q2QtCTCqpsP4dsAL26SK81hWfDV/q2EyJSDWbPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZe3yRnT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mppRpFV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639731F000FF;
-	Thu, 24 Sep 2026 00:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZe3yRnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8B71F000FF;
+	Thu, 24 Sep 2026 01:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790211390;
-	bh=WoXa/iDV2HbrHjZ10qYpEVqoIC06vqPR1blppfOnTQ8=;
+	s=k20260515; t=1790211821;
+	bh=471CiwhaDOmAQt1rc5Q/KApp2ZszpOYdGXO9pnQREjw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=mppRpFV4LdabrXVBTFLP+RFdG191JPBsakD697PStifVFP2iTUSoZVhATEvbkWa/d
-	 5qtCrwC3zblD+2DXxI+BQz6vTxr3ptzPStQpiQpPkEBVhS3tRhl3AuLlG8vPkD0YKC
-	 QmWgtqm8yf22rN4Skj7F+JgoidaQ042cZtTfqWg3cpXbA6D0MVEqqWyen/Lf1Qax1b
-	 firJhOlLSJnJtCeU2qIe2X/IyWpKaaFHMBpmwUA5ZlGpHXt4nBMb6og9Z3v+9+jSHq
-	 PO/EH9R2HP+KZWSiwdUJKzeQgknj1WrLYqlz5vnFcFZxEE75LE74gSeiksQCsQFWvB
-	 U10sVNTDl7L8A==
-Date: Thu, 24 Sep 2026 09:56:24 +0900
+	b=iZe3yRnTS/wlCZfYNfZwHHnK8yERscMeX2N0nv1rd1r2iwJy5a1M0ZiKER6JEuccO
+	 tCfbRsWcHVudipaGvqaV8/vZ+FUjphX1cI6MYhPgTMn2SW3qtiCgpOVH9xNc/TIVmi
+	 24c8YcKi5MEsSge3aYREqfT0cuVviO/5uxE2A4xp0onOqnMLC+X2uvzn/HO3FAY7CA
+	 lUnH/q1u4uBkD4cH0jww1GghIVG9CX4P4fhSw2Gc9Cy4ib4lHPHnxYq+jayH9Xj1TN
+	 yniiMl2sr3FEB6fGnH4Sx4/gWxAehLsjyC1C859VZKCLgR7DHpozkkdr5DaPRWUKnN
+	 89YBOowa8nu7A==
+Date: Thu, 24 Sep 2026 10:03:37 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar
- <mingo@kernel.org>, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org, x86@kernel.org, Paolo Bonzini
- <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v17 02/13] perf/x86, KVM: Prevent host debug register
- leak into guest OS on NMI
-Message-Id: <20260924095624.dfb77a8a1dd95a957b45f12c@kernel.org>
-In-Reply-To: <arPw-N3HF3ehNGTQ@google.com>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
-	<179005110742.388919.1509641807739909065.stgit@devnote2>
-	<20260923091555.GX776954@noisy.programming.kicks-ass.net>
-	<arPw-N3HF3ehNGTQ@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Vincent Donnefort <vdonnefort@google.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] ring-buffer: Add a MAINTAINERS category specific for
+ the tracing ring-buffer
+Message-Id: <20260924100337.a138c4f2c4e87d6ddbfe0d07@kernel.org>
+In-Reply-To: <20260910155058.1ac4c991@gandalf.local.home>
+References: <20260908094035.0b180833@gandalf.local.home>
+	<20260910155058.1ac4c991@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,110 +50,80 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Sep 2026 08:32:08 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+On Thu, 10 Sep 2026 15:50:58 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, Sep 23, 2026, Peter Zijlstra wrote:
-> > On Tue, Sep 22, 2026 at 01:25:07PM +0900, Masami Hiramatsu (Google) wrote:
-> > > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> > > index f846c15f21ca..0473a5c95856 100644
-> > > --- a/arch/x86/kernel/hw_breakpoint.c
-> > > +++ b/arch/x86/kernel/hw_breakpoint.c
-> > > @@ -102,6 +102,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
-> > >  
-> > >  	lockdep_assert_irqs_disabled();
-> > >  
-> > > +	if (perf_guest_in_guest())
+> 
+> Masami,
+> 
+> Can I get an official Acked-by on this?
+> 
+> Vincent, you can also give an Acked-by too.
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> 
+> -- Steve
+> 
+> 
+> On Tue, 8 Sep 2026 09:40:35 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: Steven Rostedt <rostedt@goodmis.org>
 > > 
-> > That naming is hilariously bad :-)
-
-Agreed.
-
-> 
-> Indeed.  It's also misleading and confusing, because it's really checking for
-> "in KVM's core run loop", whereas the goal of perf_guest_state() returns a
-> non-zero value if and only if the IRQ/NMI really did occur while the guest was
-> active (I say "the goal" because it's imperfect due to architectural limitations,
-> but the goal is purely to detect guest PMIs).
-
-Yeah, I see.
-
-> 
-> Ugh, and routing this through perf was my suggestion[*]:
-> 
->   : If we decide this is how to fix arch_install_hw_breakpoint() clobbering DRs from
->   : NMI context, I would rather have more generic flag to tell perf that KVM is about
->   : to enter the guest, e.g. so that we don't have to separately solve the same problem
->   : for other perf events:
-> 
-> After seeing the code, that feels like a pretty stupid suggestion.  Though in my
-> defense, I was thinking of a per-CPU flag as opposed to a new callback.  Anyways,
-> I don't think we should key off IN_GUEST_MODE and EXITING_GUEST_MODE because they
-> are very much an arch-specific, KVM-internal concept.
-
-OK.
-
-> 
-> What I was trying to say by "more generic flag" is that I would prefer not to have
-> a super specific cpu_dr_in_guest.  I'm not opposed to have a dedicated flag (though
-> if we can avoid one, that would be lovely).  The biggest problem I see with adding
-> a generic flag is how to make it precise enough to be useful, without end up with a
-> confusing name.  E.g. "guest_state_loaded" is terrible because KVM keeps some guest
-> state loaded even when the task is scheduled out.
-
-Something like "cpu_in_guest_transition"?
-
-> 
-> And to Peter's point below, is arch_install_hw_breakpoint() even the right place
-> to handle this?  It seems like KGDB itself should be handling this, at which point
-> maybe we just do something like this?  Then we can provide nop stubs when KGDB
-> support is disabled.
-
-Hmm, so instead of kgdb specific flag, add a per-cpu flag for entering/exiting
-guest, and use it for kgdb and other users like wprobe? (it may work similar to
-in_nmi() check.)
-
-> 
-> diff --git arch/x86/kvm/x86.c arch/x86/kvm/x86.c
-> index 1705e7be46ec..42fa4dc44cbc 100644
-> --- arch/x86/kvm/x86.c
-> +++ arch/x86/kvm/x86.c
-> @@ -8273,6 +8273,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  
->         kvm_load_xfeatures(vcpu, true);
->  
-> +       kgdb_arch_enter_guest();
-> +
->         if (unlikely(vcpu->arch.switch_db_regs &&
->                      !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
->                 set_debugreg(DR7_FIXED_1, 7);
-> @@ -8365,6 +8367,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->         if (hw_breakpoint_active())
->                 hw_breakpoint_restore();
->  
-> +       kgdb_arch_exit_guest();
-> +
->         vcpu->arch.last_vmentry_cpu = vcpu->cpu;
->         vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
->  
-> [*] https://lore.kernel.org/all/aqgGRKOE138ePqmX@google.com
-> 
-> > > +		return -EBUSY;
-> > > +
-> > >  	for (i = 0; i < HBP_NUM; i++) {
-> > >  		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
-> > >  
+> > The ring buffer code in the tracing directory has always been decoupled
+> > from the tracing code. It had a clean abstracted API to allow it to be
+> > used by systems outside of tracing. The API even allowed the ring buffer
+> > code to be drastically changed without affecting the tracing sub-system.
 > > 
-> > Note how the other -EBUSY return is a WARN. Why is silently not doing
-> > anything not a WARN in this case?
+> > Recently, Vincent Donnefort has been contributing a lot of work to enhance
+> > the ring buffer. He implemented the user space mappings and recently
+> > created a version to allow pKVM hypervisors to use the code to trace
+> > the hypervisor and expose the events to the user.
+> > 
+> > Create a separate category for maintaining the ring buffer code so that
+> > Vincent can become an official maintainer of it. His work has little to do
+> > with the tracing code itself. In the future, he may even be the main
+> > maintainer of the ring buffer.
+> > 
+> > Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> > ---
+> >  MAINTAINERS | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 3a19da74d00c..71bd2f57055d 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -27778,6 +27778,22 @@ F:	kernel/trace/trace_irqsoff.c
+> >  F:	kernel/trace/trace_osnoise.c
+> >  F:	kernel/trace/trace_sched_wakeup.c
+> >  
+> > +TRACING RING BUFFER
+> > +M:	Steven Rostedt <rostedt@goodmis.org>
+> > +M:	Vincent Donnefort <vdonnefort@google.com>
+> > +M:	Masami Hiramatsu <mhiramat@kernel.org>
+> > +L:	linux-kernel@vger.kernel.org
+> > +L:	linux-trace-kernel@vger.kernel.org
+> > +S:	Maintained
+> > +Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
+> > +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+> > +F:	Documentation/trace/ring-buffer*
+> > +F:	Documentation/trace/remotes.rst
+> > +F:	include/linux/ring-buffer*.h
+> > +F:	kernel/trace/*ring_buffer*.c
+> > +F:	kernel/trace/remote*.c
+> > +F:	tools/testing/selftests/ring-buffer/
+> > +
+> >  TRADITIONAL CHINESE DOCUMENTATION
+> >  M:	Chen-Yu Yeh <chenyou910331@gmail.com>
+> >  M:	Weijie Yuan <wy@wyuan.org>
 > 
-> Probably because the WARN would trigger anytime KGDB's NMI craziness happens to
-> hit a vCPU, i.e. isn't a kernel bug.
 
-Yeah, this may confuse the caller. OK, let me change it to check
-the state flag in caller side.
-
-Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
