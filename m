@@ -1,131 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49765470E84;
-	Fri, 25 Sep 2026 12:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96304332EBB;
+	Fri, 25 Sep 2026 13:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.117.225.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790340679; cv=none; b=cbxUAt+Bj52HXNmqJdDpnNAZRsjj5Dgd/O161WRAo+DMTGbQdVXlm8ejnc2WCCOLb4Gapqz4iG/ciFfmYUzH3Fb6yyHLPlRKR4mLVMmSNvjuKwgfA7TJfhpfmucvwIfQFGEHOxwGkHf1IfITQQUtKPLI/jwraTzFblbmRySvdxY=
+	t=1790343369; cv=none; b=OstYSOC3rqb14zqYvqdGTcIwG8KYaUpeo3YYBMFgt1QqMaV3o3rmy58JMFdyPG01RCt6rBPn/94fHyTPm9X+/OnMhrbFQGO6Fd7/x0SWCrGoRSdBJ+NBZQ/IJJADftXX2s9Fao0a/ASsU/Md5T3gYGHipMEh3Ipy/liV+BEqlX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790340679; c=relaxed/simple;
-	bh=KO2TEy9loU8QK2IS8vmNyCcNin1HMfXr4zTewREYrSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=na5ry8jNWA+1ZLoi1PtEmAHCFLXpUmeM9lbYdrEhjxGX2OMefczwPmCcKo4Fg/FErgUc9yy27ZLUMGenMb6leAUGwCQ45L2mdjgn34/0FLQS58ub8XJ49V55pFXdiCPQknizWltOxPMGh53WPKJfH1lYSckFVWoQphxnrWQKeFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y53djdWl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790343369; c=relaxed/simple;
+	bh=/Buq5Yxd9oTyoi0yzaGhQAl28zMu9ChgTZ/Ifz/kZqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hfOpxZikPC5/Eq2capz0FquuTEBL0uuwDmn+a3q3BMpatbApkwQYcABFOhfrdRDKkl6ea5nVibG+uXdvi/ZL5rez2jxmy73l3k4yBF9UDAX/AXmvTWSq8EgQzdD93q9Q3TeIsf7hd/6qbkqoDtufpcu+APqjWS+9hdM04ZsvoRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com; spf=pass smtp.mailfrom=virtuozzo.com; dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b=aALP+iof; arc=none smtp.client-ip=130.117.225.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=virtuozzo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=virtuozzo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y53djdWl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E621F00898;
-	Fri, 25 Sep 2026 12:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790340678;
-	bh=D3elFlAcGaZH0VbYl18NIe5+45MZxJu3tV5JyNgmc1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Y53djdWlLd4diT/AvrOcXi2GrVkUMfZOD6dmk5wrBuqGrapZjitCvRDfrBfg9d5x0
-	 BnTKh4bxCfiX0tMKCdrW8JtFurhbBTQYO3LW88thuG01Cb/ZYE7hw59evarzLYTO38
-	 7wZU6lEFZdgk6ZZ7hHn/Dp2Lao89/ocNv/c66cAQXdIQWZDLRciBbhbYw+b5WFshwd
-	 SgfnG/v9weC791zQC+pDBEFG7GNZuzILu4ouO1eex0u514XgRGL7lU1F1WRmmHIXhs
-	 yqzMlC0qHyJaHLn+n3KPUNM1XrW75NKKVif7jm3AOyuuULaCC+82pdP6bc1SuqvtsJ
-	 b7HBLAWBmeiCg==
-Date: Fri, 25 Sep 2026 13:51:09 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 04/40] mm: consistently validate VMA state after
- mmap[_prepare] hooks
-Message-ID: <arZriK1tyOC7DjBw@gremlin>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-4-4583d8a23bca@kernel.org>
- <arVW5i8pvySq6Co2@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="aALP+iof"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=virtuozzo.com; s=relay; h=MIME-Version:Message-ID:Date:Subject:From:
+	Content-Type; bh=NUZFZugQcaUOtbGUptFU8+qpfI74flmUKE/bgA+blDc=; b=aALP+iofqqFy
+	/qvMa65VtnuZy31h7CcyVj3VnpgNKrG1aBbnAbpGFreE7cwClfokn3Oe86wxdtJEoMZ/9AOusxme2
+	rt77bN036G+KINxUs6gE7eiEhwJH/XEWz4nTfQaNVy65q7gBKQRJrEVJfoKr9QRVj7nhF77jzHTVB
+	mqbidsWf8n1iC26JUKQfK6qFu9FDyqH4eC7bim/sSz9uyZdYpThTd6S+PCboZQCOBAtZ6xe8zx3Um
+	JcvqvVWw8BXFlihdJUm8qtT5syJaPVAl7H7qRT8HtWiQ73X2CDh4NqiynZcriXtfa20Ow4D5ZQA08
+	mng77JIJgLyQItd4kmQu/g==;
+Received: from ch-vpn.virtuozzo.com ([130.117.225.6] helo=LekKit-T14)
+	by relay.virtuozzo.com with esmtp (Exim 4.96)
+	(envelope-from <eva.kurchatova@virtuozzo.com>)
+	id 1xA62s-008UcG-0Z;
+	Fri, 25 Sep 2026 15:35:58 +0200
+From: Eva Kurchatova <eva.kurchatova@virtuozzo.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Eva Kurchatova <eva.kurchatova@virtuozzo.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: skip gcov symbols when picking a function to probe
+Date: Fri, 25 Sep 2026 16:35:41 +0300
+Message-ID: <20260925133558.3636030-1-eva.kurchatova@virtuozzo.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arVW5i8pvySq6Co2@gourry-fedora-PF4VCD3F>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 24, 2026 at 01:17:28PM -0400, Gregory Price wrote:
-> On Thu, Sep 17, 2026 at 05:22:13PM +0100, Lorenzo Stoakes (ARM) wrote:
-> >  static inline int mmap_file(struct file *file, struct vm_area_struct *vma)
-> >  {
-> ...
-> > +	err = mmap_hook_validate(prev_start, prev_end, &prev_flags, vma);
-> > +	if (unlikely(err)) {
-> > +		vma->vm_start = prev_start;
-> > +		vma->vm_end = prev_end;
-> > +		vma_close(vma);
-> >  	}
-> > +
-> > +	return err;
-> >  }
-> >
->
-> I indepdeantly validated the sashiko report on this chunk.  Seems like
-> close() should be deferred until after __map_new_file_vma() calls
-> unmap_region().
+kprobe_eventname.tc takes the last kallsyms entry whose name ends in
+vfs_read and puts a probe on it. On a kernel built with
+CONFIG_GCOV_PROFILE_ALL=y the counter symbol gcc emits for the function
+sorts after it:
 
-Ack perhaps too quickly dismissed that one...!
+  ffffffff819bd1e0 T vfs_read
+  ffffffff845013e0 t __gcov_.vfs_read
 
->
-> suggested fix is to drop vma_close() from mmap_file()  and update the
-> cleanup in __mmap_new_file_vma()
->
-> if (error) {
-> 	UNMAP_STATE(unmap, vmi, vma, vma->vm_start, vma->vm_end,
-> 		    map->prev, map->next);
-> 	vma_iter_set(vmi, vma->vm_end);
-> 	unmap_region(&unmap);
->
-> 	/* Release driver state only after its mappings are gone. */
-> 	vma_close(vma);
->
-> 	if (map_same_file(map))
-> 		fput(map->vm_file);
-> 	vma->vm_file = NULL;
->
-> 	return error;
-> }
->
-> Example race:
->
->   Thread A                              Thread B
->
->   mmap(MAP_FIXED, address A)
->     driver remap_pfn_range(A, page P)
->                                          load/store at known address A
->                                          hardware finds the new present PTE
->     validation fails
->     ->close() frees page P
->                                          UAF
->     unmap_region()
->     TLB shootdown
->
-> With that fix
+so the test picks __gcov_.vfs_read, which is not a function entry, and
+the write fails:
 
-Ack, yeah. It's kind of a situation that should never happen, but if validation
-is supposed to actually be run against things then we should keep the kernel
-stable when we do it :)
+  kprobe_eventname.tc: line 10: echo: write error: Invalid argument
 
-Will apply for the respin.
+Leave those symbols out of the choice. The test then picks vfs_read and
+passes; without a coverage build nothing changes, as no such symbol
+exists there.
 
->
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
+This is the same class of problem as commit 23a4b108accc
+("tracing/selftests: Fix kprobe event name test for .isra. functions"),
+where a compiler-generated symbol was picked instead of a real function.
 
-Thanks!
+Signed-off-by: Eva Kurchatova <eva.kurchatova@virtuozzo.com>
+---
+ .../testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> ~Gregory
->
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+index ba19b81cef39..0688a5c47d1e 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+@@ -5,7 +5,7 @@
+ 
+ :;: "Add an event on function without name" ;:
+ 
+-FUNC=`grep " [tT] .*vfs_read$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
++FUNC=`grep " [tT] .*vfs_read$" /proc/kallsyms | grep -v __gcov | tail -n 1 | cut -f 3 -d " "`
+ [ "x" != "x$FUNC" ] || exit_unresolved
+ echo "p $FUNC" > kprobe_events
+ PROBE_NAME=`echo $FUNC | tr ".:" "_"`
+-- 
+2.55.0
 
---
-Cheers, Lorenzo
