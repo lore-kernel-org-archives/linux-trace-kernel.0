@@ -1,77 +1,76 @@
-Received: from mail-pz2-f39.google.com (mail-pz2-f39.google.com [74.125.228.39])
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DDC364E9E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 02:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D95369D40
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 02:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790303485; cv=none; b=UiTU3aORUiuxnFA6jt0Z4Z2fM9zHFkbxXJVufIQ0f5JjDsFWcQkIOtSdvltOmPlq1C1pRgdeaVirokRvAeXfgi9u3cyg+LWBM1NgejEgloCZjMpJ5A6zySwQGMsJixoLSITGOD38J94i1+/9H9N76JdqKX0zmejubmniT/Z/s/A=
+	t=1790303496; cv=none; b=VGUhqeWFuqj0/loGYLGPXVIhLGOYZr84KN049ByoaK8WkiuN+snLGn7bZzxYBr/2fwsFUNHssBeY3x4SvnA06oNvKPTzgCBRPNtaqUfhJkof1CXaAsb5PusNx2Tn5iWlB40Sxocn2uk2xaaQ/y2v29alyhBRbUxsUKeh7aMYRBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790303485; c=relaxed/simple;
-	bh=XXqqfvuuz044nX/aEKeET9DgPsS/vggZM8IWukabHXA=;
+	s=arc-20240116; t=1790303496; c=relaxed/simple;
+	bh=jS2W/bUER37p+AiiJp9pAGcS9BY4dqAFA39GLs13Xyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNPBjI1BP3S0EW8JsDyWQxmSZhVjxGDKERrkduCCYm8sRjH3JtSrkg3oRrA11hRGOzy7yARSmYxr8jHofTQeB2bhlwx7PkkCqVjYYOkaRmrFdPMW68Fidd5qdCRY0tjrwMYhPAsaQO6gW7fKu22cdX8f+Ka3UnfROwUAVq7F1x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXfm3+ZQ; arc=none smtp.client-ip=74.125.228.39
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQopS5myct6/VnCNkeqRd2rskSxUyimBZl4kn08hFuMC7siqqr97kxFHUU6yYipeWXKTBCXYG8Ym0gQhhn+kszdERuYkoEAyUc8PbEotzL5NB6zQQ/ZXB1QTGAwsimnEUwjIVbd/Xuub5lYwsjwOWBHQGvBkl8fyPFlPGYrwa84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c5Gw5YeB; arc=none smtp.client-ip=74.125.227.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXfm3+ZQ"
-Received: by mail-pz2-f39.google.com with SMTP id 41be03b00d2f7-cc78e1a94b8so325a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 19:31:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5Gw5YeB"
+Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-396ccd5cf02so267176a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 19:31:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790303482; x=1790908282; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790303493; x=1790908293; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:sender:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=s1QRu+lGJsmT+0vXomkywkgzh7zQTksmtyo4pAVpxeg=;
-        b=lXfm3+ZQIzqzFssRwsi4aaRGcIKocP5Y8oEmPh4t+Il2/+jY5bPod0LhGukGJn6TRu
-         nGAaxRsZ1XGsj9XYWLgx/elBUGg2gxipP0UAUOzDVLpba/UpAhU+wXbA8JOuhoRnzNfQ
-         kaGyN+15i2zfDq8GHP4tGw3DEyCNQ4x+BvRX4yj6HZXfE1EfPwtqXceREDZ/bdxbQWZW
-         fromew1d4B+2pg5UvcZInUf6PSIJYma+VG8ICZtNqIkVHbr0FSvGHqyDQRIx1ly1SPbF
-         RDXdVT/MNc67N+mMKBMJkPueTO61PFcQCpYltreYkqI30lxJLkK/4ewtWyLc+1LWzBrl
-         MjHw==
+        bh=aKFA6xm6L+MWelDqLaCtGsiYbykSMXyQpjjhRA+8aLg=;
+        b=c5Gw5YeBhKeBSWglXqGAbnAECTapva1KY5zZrqJ++EyFtJ3dtZ04UfBj9oN6zckrP9
+         J2BHm+azYTgZhMA6Mb1hXU8v79vYtFUZkt0KXtun2jDzry5dfy8axshRYlMVbqeFsXbr
+         IyiXdWqm38RH/yZYqNxElKabyXvb/H+B4bmbdeRiHQqsyOV+72lskUsKHFWQkbKrh+8F
+         0f+ljPVR8vEoU6+zBSRqkuw+0eEQ7uMQnTFz0nqjTbwSk8s+JI53ATRMrQl3XZpq9WA5
+         yQPmpTbLuwLWi/ZPXvHrCpGLwLZ7NvrrxDhSypwMtVDrohzWr2iOWfia0GOpe8stVjtV
+         YNDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790303482; x=1790908282;
+        d=1e100.net; s=20260707; t=1790303493; x=1790908293;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=s1QRu+lGJsmT+0vXomkywkgzh7zQTksmtyo4pAVpxeg=;
-        b=yK22qJ8JxHUghe1f86q1VIQOqser2hJCnYuercohTY+TfyMM0rwedmZUHtEolagH8y
-         Y6uwArc6pdUh8YMpYusCkveUy+oozNTe0rU/QAPEMkm197Ic+/JiEERpEsrMqK9R4hYD
-         DBswbNS7XtRbS2qQduKfJKtnL4QM+U2LyT8rXuFnoY0e/J6nSdpvrBjgNh4WklrEFzrN
-         tADq1cf+Ft++XppzZYwBMkZylPQpKtNyGnlVzq7pu+zem7g65+hD+2IaYfxzzcqEyz7F
-         xfAhkR7SflcPKBU0idP85BLT4qoOlS52W+qs+t1XiQtxkDqnpJ41pJ8t1ftZXxwY3yLr
-         1Lvw==
-X-Forwarded-Encrypted: i=1; AKwUvBziZwfaKxvOGdShWR7QLBMqUQtHyy3USV8pP6AXmWgV99ZHhSc6YghbZMPDLBUV5U8zlHf6UU03PW58/8cl1ViI1i4=@vger.kernel.org
-X-Gm-Message-State: AFuF++nUzMEIGAwUHh0MdbcGg431dB/PkKThWWnyy9PtMnN8Q3WJFxLL
-	/M1divH66I+MCe5xiFXQQie77gEdGaA5ihxKoHetRLA9Rsu5c04ol0vM
-X-Gm-Gg: AYBFou1RPOBZEFCWxGJoibcZY/vI+Bb2VHUQzGw8E4jLt+LqhblNIVrgOcWCEunyRSj
-	BKlU0RGW0TQuQwvFxvK5b9eWBC3hhdZDfmj+FiQJ8p6ndX6DIIrkN2A73+oqlKVF7t+2pWFupbj
-	Tfc9zu12rr/m9ayB4lUw0S1KSsgmxlTpjsaO6m9sHJQHlc5GjFJJ7L/a15bZziP4TDcxK4d1OQL
-	LeIDbWJQrf3fRjqBoQf1L4s6DTd5PKIGwCzeg7PFEylcYgpbK/1ng+eJOMYpAfbH/ZgvFDg/v5R
-	It+9fkDG0qFNqZK0/OzJyP3b0e5Dmk89ubuW/yj3uBI7nuMMYotYA7+HmzxZ/sllwT5q1A+PFbz
-	cxVxblKD1hI3QhoxkecCpYnixFizkthYyBClkeDEs8/tXkYCmraCnhKXyasAsUXR0EZqgrNqUpC
-	fZoF+3vXJvURB6HrPnN/oFgBF7oONtkG5revXu+3AQz3UwPraFHQlmuPD46hNAbw1v9Tov7cluH
-	/1QVc2hgsbQ
-X-Received: by 2002:a17:90b:2745:b0:393:19a3:4f1 with SMTP id 98e67ed59e1d1-3a098ae7053mr3838065a91.6.1790303482142;
-        Thu, 24 Sep 2026 19:31:22 -0700 (PDT)
+        bh=aKFA6xm6L+MWelDqLaCtGsiYbykSMXyQpjjhRA+8aLg=;
+        b=fAcQRyXY+kXfJkbvO+ECxPKnBPnluOVY3l1RGfR5OX0ofyopX/Auf+RekYt8uZqbve
+         DKBztGZXj4uV/W6Y7dF3RsNIb2ElHVJ/LWeCNi24jIOpccQZhZSOV2ob4Pu7hMtgn4m1
+         SFrL2k2aVGHE9BCTUrzv8MOAv8o9H63ENPD+2CJSKLWNywWblaIpWr6pk56UyRMDrhRP
+         QeKzgt+rXW7kuDtIKjy25LjOyMuP5PT9WgvbMxR+4QWhEeiiewSDZjSXGZNSzUNHIj17
+         xtoown7fQ/nSsDVNqf/zy/PTpgEro6toG5RDynvSxcT/uxbWFT5RhY/ha51qyDaEp2Xz
+         caAQ==
+X-Forwarded-Encrypted: i=1; AKwUvByjBYyZs/4Y9OMv5DBt5sET21iG9ufzqmpVeVlQNUrbpPOjY34ZFl95RMxHTQt44OcZpJYZujdwP0uE2I3RcDaXdqA=@vger.kernel.org
+X-Gm-Message-State: AFuF++maVrW/uJnyR7hWtHdDnPzbwzr1LdwfJs3RezHlxAhu04AEbxYx
+	TIhHm625AEH6xhs+e5tS/SeWZwGtCTWKa/KfVTTL2EEt/WNnuZHoWd41
+X-Gm-Gg: AYBFou0U3kKJyKRNln/r43x5eIpJRepxYPDy/SrVPrt9pWwfjhU08/6jKdB12Q2WKfx
+	4boDTZtwZ7cBRhr5FsjDhtjpeydZ8fg83ihgibKzeJ0TbEmwfefnunBhxgsrNHK5RyDFE/qECNg
+	GEdJDqKt2tdH281UCpvpDWTIY1N4zordXAkX1538t8nR6hPGFDXXgpbTbXxJbg0NzNnpelFNzzB
+	G5Rt8gZ/PP0hG/tSPtiZ4gJO4+nFWKCPQJVX+GBIMIaDK2VZ6bx92Vm08bpbD6zWyG84/AAoVYf
+	Yj8ZYYVOFwlnuD4QZDSkfoZfiqkH++h2oMK+eutmbQedvnt+enMbSAOCStwt6ifLmdDkj+DanfP
+	XNlfTtn9l1uHUybwTXH9dj0JAZQYwlSpmVhVSfmHC8HgxP6rWBcQu9C4kLtrm242X11YLqznH3v
+	cpKmJQtH0s7jMXJ3JKCAajnx5s0pPI1WuYgcfsavvXQFWFHUwuUxbvlQ4KmkJg7wcC8ZSuxUugf
+	vcZuJ+d0Li1
+X-Received: by 2002:a17:90b:3985:b0:39e:6c69:f482 with SMTP id 98e67ed59e1d1-3a098d5e61fmr3841860a91.65.1790303492904;
+        Thu, 24 Sep 2026 19:31:32 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b99e5711sm1386356a91.17.2026.09.24.19.31.20
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc7879030dasm486783a12.7.2026.09.24.19.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 19:31:21 -0700 (PDT)
+        Thu, 24 Sep 2026 19:31:32 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 24 Sep 2026 19:31:20 -0700
+Date: Thu, 24 Sep 2026 19:31:31 -0700
 From: Guenter Roeck <linux@roeck-us.net>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: rostedt@goodmis.org, mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
 	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] tracing: Fix empty symbol names in
- simple_ring_buffer undef check
-Message-ID: <157373a2-171a-4682-bccb-de4e17577e10@roeck-us.net>
+Subject: Re: [PATCH 2/3] tracing: Fix simple_ring_buffer undef check on parisc
+Message-ID: <ef7578ff-8416-495a-aa2c-035ecd956362@roeck-us.net>
 References: <20260923074213.3077182-1-vdonnefort@google.com>
- <20260923074213.3077182-2-vdonnefort@google.com>
+ <20260923074213.3077182-3-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,11 +79,12 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260923074213.3077182-2-vdonnefort@google.com>
+In-Reply-To: <20260923074213.3077182-3-vdonnefort@google.com>
 
-On Wed, Sep 23, 2026 at 08:42:11AM +0100, Vincent Donnefort wrote:
-> Sparc64 emits empty symmbol names. Skips them when establishing the
-> allowlist and when extracing undefined symbols.
+On Wed, Sep 23, 2026 at 08:42:12AM +0100, Vincent Donnefort wrote:
+> simple_ring_buffer uses local_set() and cmpxchg() on unsigned long. Add
+> them to undefsyms_base.c to extend the allowlist for the parisc
+> architecture.
 > 
 > Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
 > Reported-by: Guenter Roeck <linux@roeck-us.net>
@@ -94,27 +94,36 @@ On Wed, Sep 23, 2026 at 08:42:11AM +0100, Vincent Donnefort wrote:
 Tested-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  kernel/trace/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/trace/undefsyms_base.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index f934ff586bd4..0e1846f7dda3 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -146,11 +146,11 @@ KASAN_SANITIZE_undefsyms_base.o := y
+> diff --git a/kernel/trace/undefsyms_base.c b/kernel/trace/undefsyms_base.c
+> index e65baf58e6ff..37310baf706b 100644
+> --- a/kernel/trace/undefsyms_base.c
+> +++ b/kernel/trace/undefsyms_base.c
+> @@ -9,6 +9,7 @@
 >  
->  UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
->  		      __aeabi_unwind_cpp __s390_indirect_jump __x86_indirect_thunk simple_ring_buffer \
-> -		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
-> +		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '$$2 {print $$2}')
+>  #include <linux/atomic.h>
+>  #include <linux/string.h>
+> +#include <asm/local.h>
+>  #include <asm/page.h>
 >  
->  quiet_cmd_check_undefined = NM      $<
->        cmd_check_undefined = \
-> -          undefsyms=$$($(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST)) || true); \
-> +          undefsyms=$$($(NM) -u $< | awk '$$2 {print $$2}' | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST)) || true); \
->            if [ -n "$$undefsyms" ]; then \
->                echo "Unexpected symbols in $<:" >&2; \
->                echo "$$undefsyms" >&2; \
+>  void undefsyms_base(void *p, int n);
+> @@ -18,11 +19,13 @@ static char page[PAGE_SIZE] __aligned(PAGE_SIZE);
+>  void undefsyms_base(void *p, int n)
+>  {
+>  	char buffer[256] = { 0 };
+> -
+>  	u32 u = 0;
+> +
+>  	memset((char * volatile)page, 8, PAGE_SIZE);
+>  	memset((char * volatile)buffer, 8, sizeof(buffer));
+>  	memcpy((void * volatile)p, buffer, sizeof(buffer));
+>  	cmpxchg((u32 * volatile)&u, 0, 8);
+> +	cmpxchg((unsigned long *)p, 0, 8);
+> +	local_set((local_t *)p, 8);
+>  	WARN_ON(n == 0xdeadbeef);
+>  }
 > -- 
 > 2.55.0.1082.g2b9226bbc0-goog
 > 
