@@ -1,110 +1,129 @@
-Received: from mta1.migadu.com (out-14.mta1.migadu.com [95.215.58.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49613655DA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 02:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267A21A683E;
+	Fri, 25 Sep 2026 03:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790303522; cv=none; b=ElHO2+CVr25Na6TuyqU6JcEEbbu1k1/03fW5Imz1AToCrYqQkktQzt37R/xRARHkVLDZ1pl513sCbKh6XqSairRJ26lLFGm9200CmAtAd3O5M56D5TdU3JqCwxVKCvqoS7Wo2fbCH+JcLhu9TxllCECC5epA8JNG56fyEBMO5ms=
+	t=1790305208; cv=none; b=iit/RXBej3fZJ+hAA5qzXy1v47tvt/TK3l3jmLWafmXz5W/Kfn1+z/dOlwYo0liARakT1+2xw0OwcMu7OPfykgTr0M0cjNChwmdniS4igtr/gzQgJDaWi83iK7wTYIxYhwiHCuHLS/Q1qo2N2X/Xgh4VllO8FtjABN+k87wdTDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790303522; c=relaxed/simple;
-	bh=bZu+je2JPfwqaqOgA9/4AMv6G5hJNl0/HQ6PG7g9Ao4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=INtZu28qZG+BxxvEBfh5F+mSEjD92teBKIzt1JCPBWNajr2wm7g1ax6Nhi5J27MnNHyegv2daWeML2ApoMvvYXKmNvsZv3jVeAtgKh8nTpP2Cxt1TmU8lUKtaGgLgZCc0dNPuGu2+q8j8pXQ2lOhRcAdfA20V3fAOhCcNPp+azw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ALgpCI9G; arc=none smtp.client-ip=95.215.58.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790305208; c=relaxed/simple;
+	bh=5rmfYaGINJ/VuePjbpT1uaCwRMKMO2sSoGuVdwCS+5s=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fIa3xJGMQAq7vZNch3SBl4haNVBJlWzl02YEfwdFrfuvIONB0HAuGA+ro7xaiVTYPX4TpFXbgC+xSW8NaG07t7gtqqELMi2xr/f0Vh72kKfq+kG0q8Trbz4GrJBf8bleWW09UqksrVLSVAnEyQZ/ZfbQM6Z2a9uDIaW0WWAfdy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON1Z6auH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ALgpCI9G"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=bZu+je2JPfwqaqOgA9/4AMv6G5hJNl0/HQ6PG7g9Ao4=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790303517; v=1; x=1790908317;
- b=ALgpCI9Gsrm+AIva2V46+IEmNz1S7Qj6OcwMNjjxBRqwkrRNKP+XhESUW4PEsmcXJsa8I4gP
- cLbDkLRpKcPPzGDOMVHZquSXnmZ/bpKREUDvl4w6dmnJW2lUm0Tw3Io3o7ozIRZ+82PeMnvxz7s
- IWbOIS8geVWQX4BdPjlYVZVQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 25c6c3f62ed55be0;
-	Fri, 25 Sep 2026 02:31:57 +0000
-X-Mizu-Trace-ID: 25c6c3f62ed55be0
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <1cffebd0-57b3-4e59-8595-37a0e157b2a2@linux.dev>
-Date: Thu, 24 Sep 2026 19:31:53 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON1Z6auH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567091F000FF;
+	Fri, 25 Sep 2026 03:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790305206;
+	bh=Tr1nw+NGjFDcIfdU/bYk0r7LrX+jhAPSXpBCk1FzwQ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ON1Z6auHobCB4vhnxx4TrrPV9dzR2u3AzGGz4TPitmbf3fCB1r5LAbI9F0bHddksa
+	 NPUV/1r2rMI+niGrydiVdhgvor3HGDvZwpxAwVvlZtRoAOdPRyEiXojkNyl4cZSqv2
+	 QtJktFO9dYVCnx+ZdjQz4/EENah41clBMA0BYXr08XZinM/QHpZhsXcz8sIct1ILbV
+	 s38b/RSzOGG64E1Nd9PNr5gO4slg7unHHluHYjZ5TOhLXkYxsR3Ovkpf1yGwKWlioE
+	 6jQoAGkBDFjv9vv+gstoCHQcXVx+ts8mzqiG4wrAlD28J3sqc0gDgoaSa95iV3wS56
+	 O9ndU3oiBsptw==
+Date: Fri, 25 Sep 2026 12:00:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v17 13/13] tracing/wprobe: Support BTF struct offset
+ resolution in set_wprobe trigger
+Message-Id: <20260925120002.521be50edaa0e144dbcc97c8@kernel.org>
+In-Reply-To: <20260922044331.1EB901F000FF@smtp.kernel.org>
+References: <179005108298.388919.4535333252892590932.stgit@devnote2>
+	<179005123942.388919.17930857651144049898.stgit@devnote2>
+	<20260922044331.1EB901F000FF@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] tracing: fgraph: cut the cost of the shadow stack
- retry loop
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, andrii@kernel.org, peterz@infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, kernel-team@meta.com
-References: <20260922225526.1554758-1-vineet.gupta@linux.dev>
- <20260924164512.451a5d97@fedora>
-From: Vineet Gupta <vineet.gupta@linux.dev>
-Content-Language: en-US
-In-Reply-To: <20260924164512.451a5d97@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 9/24/26 13:45, Steven Rostedt wrote:
-> Just an FYI. My wife flew into Europe today and I'll be touring Europe
-> with her until Oct 3rd. I may get time to look at patches, but it will
-> be very limited. And then LPC starts and who knows when I'll get a
-> chance.
->
-> Thus I may not be very responsive for the next couple of weeks.
+On Tue, 22 Sep 2026 04:43:30 +0000
+sashiko-bot@kernel.org wrote:
 
-Thx for the reply Steve. I understand it is that time of the year with 
-travels and such.
-No rush, just wanted to push it out of mailbox, to yours :-)
-Besides it might all be moot as Peter's solution is much more elegant 
-and efficient (as always).
-I will reply to that but don't feel pressed to respond.
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] trace: incorrect BTF kflag check in get_offset_of_field() allows wild offsets
+> --
+> 
+> commit 3bc53bf9a42b7270af7bd91985c43e9cafe48496
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+> 
+> This commit allows the set_wprobe trigger to use BTF struct offset
+> resolution to specify the target address field.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > index f1d6aa320f213..121310b72522f 100644
+> > --- a/kernel/trace/trace_wprobe.c
+> > +++ b/kernel/trace/trace_wprobe.c
+> 
+> [ ... ]
+> 
+> > @@ -1165,6 +1166,213 @@ static void wprobe_trigger_free(struct event_trigger_data *data)
+> >  	}
+> >  }
+> >  
+> > +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
+> > +
+> > +static int get_offset_of_field(struct btf *btf, const struct btf_type *type, char *field_name)
+> > +{
+> > +	const struct btf_member *field;
+> > +	const struct btf_type *mtype;
+> > +	int bitoffs = 0;
+> > +	u32 anon_offs;
+> > +	char *next;
+> > +
+> > +	do {
+> > +		next = strchr(field_name, '.');
+> > +		if (next)
+> > +			*next++ = '\0';
+> > +
+> > +		field = btf_find_struct_member(btf, type, field_name, &anon_offs, &mtype);
+> > +		if (IS_ERR_OR_NULL(field))
+> > +			return -ENOENT;
+> > +
+> > +		if (btf_type_kflag(mtype)) {
+> 
+> [Severity: Medium]
+> Is it intentional to check btf_type_kflag() on the member type (mtype)
+> instead of the parent struct type (type)?
 
-Thx,
--Vineet
+Oops, I thought I had fixed this issue...
 
->
-> -- Steve
->
->
-> On Tue, 22 Sep 2026 15:55:24 -0700
-> Vineet Gupta <vineet.gupta@linux.dev> wrote:
->
->> Turning on function-graph tracing, or attaching a kprobe_multi return
->> probe, hands every thread a shadow stack. alloc_retstack_tasklist()
->> does that 32 tasks at a time, and since for_each_process_thread() has
->> no cursor, every sweep restarts from init_task and re-walks the tasks
->> already served. Total work is quadratic O(N^2) on thread count.
->>
->> On a 60-core Sapphire Rapids machine with 400000 idle threads the 0 -> 1
->> transition takes 227 s, inside a single bpf() syscall for the kprobe_multi
->> case. On Meta fleet this showed up as RCU stalls and softlockup panics.
->>
->> Patch 1 raises the batch to 1024, dividing the sweeps by 32:
->> 227 s -> 7.2 s at 400000 threads. It helps on every preemption model.
->>
->> Patch 2 adds a cond_resched() between sweeps. It is supplementary and
->> separable: a no-op on current x86 and arm64, but on !CONFIG_PREEMPTION
->> builds it takes soft lockups from 3-of-3 runs to 0-of-3. Dropping it
->> leaves patch 1 intact.
->>
->> Neither changes the O(N^2) shape; a cursor-based walk would, but
->> task_struct lifetime makes that considerably more involved.
->>
->> Vineet Gupta (2):
->>    tracing: fgraph: Raise FTRACE_RETSTACK_ALLOC_SIZE to 1024
->>    tracing: fgraph: Add a cond_resched() to the shadow stack retry loop
->>
->>   include/linux/ftrace.h | 7 ++++++-
->>   kernel/trace/fgraph.c  | 8 ++++++++
->>   2 files changed, 14 insertions(+), 1 deletion(-)
->>
+> If the member's kflag is checked instead of the parent struct's kflag,
+> bitfield members can bypass the explicit rejection check and compute wildly
+> incorrect memory offsets. This happens because field->offset contains the
+> bitfield size in the upper 8 bits when the parent struct's kflag is set.
 
+Yeah, kflag is the attribute of the  parept structure's type.
+
+Thanks,
+
+> 
+> > +			/* Reject bitfield member access */
+> > +			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
+> > +				return -EINVAL;
+> > +			bitoffs += anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
+> > +		} else {
+> > +			bitoffs += anon_offs + field->offset;
+> > +		}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/179005108298.388919.4535333252892590932.stgit@devnote2?part=13
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
