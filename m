@@ -1,139 +1,261 @@
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60264F93D1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 23:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C223A1B5;
+	Fri, 25 Sep 2026 01:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790293206; cv=none; b=dp6swqouMaceBYezPfGYabPkBAS3H/l/AQd57IVbhIQPVZp6YDs0rJbkZx6AZotd1twoGzJ1mgb9LiLM9l95tPzqTUTtoGs6xxazSEkIE9NERv1U5hgQWJqKtU2RYD/SO5cOW5eJQTlqyi99rvevH3LszAi/xm2X9lyDwlzrLQ4=
+	t=1790298555; cv=none; b=jHk3Igxa7xW9UQNonFKxUQ08EOvgVeRNn2WCbrR4nnAF3xsMwz3PtefBvZEFbCr5UJFLnn5VLvwVSmYRiD/fu3rC6qDkcUh58d15LBmDJbRJSS4lFf6MhThQ/tdo+XLWTNyMIPF8n94/XI7ly9eJ19AR559ExsQQ4AnMZA9X5Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790293206; c=relaxed/simple;
-	bh=4h4cpDObZqi2JEPN69eOCH4YBG2slYUeYHjBIAENU48=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:MIME-Version; b=oZ2W8gwYU4JSWesAgNW+foxNpmKs58gJvZ0xANX0ygqtwMLFAV/l80Mv592g3fpq/0cydnbTFRoFkWlfkXFzB7mqbR3cxX72lgZsm2El8GlF1cYrUIIy+Q5NNXphRvd1n/9pwQqfsE6mAeqYW3H3vDurezBCpUSXBVog9ZmXM1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGFYs1jG; arc=none smtp.client-ip=74.125.228.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790298555; c=relaxed/simple;
+	bh=qB6fHJOTfA6PQMD74N16cYuSENurpQNubc9j37qBuJE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=svOJCUJhhXtYuF8qaZeAH0+0AG3/okrfYhiny54tjg3V8jRzwxKJGE1QgVsOtgmDNktcCuKEBs5YoFO3utPevlAGOTVDBrlnlhQ99h8NnP5SS89D9wK3vY4vSyLZ+/dbbWfxHJtksWYXEMdjYtgRrdJSGLy8vU0T+FJztLPphVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AATyQ69w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGFYs1jG"
-Received: by mail-pz2-f12.google.com with SMTP id 41be03b00d2f7-cc4d04d73b8so96265a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 16:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790293204; x=1790898004; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gn5dD1CJfoor6GODqvLgahaKF8S1PUZ5xI0XuIL5LIc=;
-        b=ZGFYs1jG/Xr4uwPy2133K5sF0poGH1omJ0ns5UwD8enApwiJPDDFi1gLMSA+UY+qrO
-         6lyZmvL2zJXgrS4urBwMTV3vFSBosNfxEeAHC2L0cHJkMBE9Oj9QKSvAuXGCWTgwH0c7
-         yWYOAFlZXJt9BDXnhQUwZElM3+pKqDf9ymR/77Qjhm4q2k9A8H7TmnWzDJf4Vw1zQ8Vz
-         HgO06YL+sF+7Efo+udo1jYXz4T5XB+sMNcQcYJJG3eDGSkCa/UybsOWnOQ+yWqiUaJ9C
-         yc+2TaftdirQziHgwjLgiQLYNZ+cgLnH7mjbZhOQnbR+1/zQ5qgml8qc2Dm7Da1OEro+
-         myTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790293204; x=1790898004;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gn5dD1CJfoor6GODqvLgahaKF8S1PUZ5xI0XuIL5LIc=;
-        b=uOUkZHLDfYJuSKWIW5h+yPk2dW2orp7RtVLpQzC3NB+0RlK0jzgl8BnAeJHqZx2TSG
-         WZ59SL3QIdxH5uiFLQ+QgbyD/DLufIqXve3+IOQ50tKjDieuB4oQddhc2mb6RGByq4HC
-         A/h3DYC/M5bcmYWWV23pYePfdv6pkefPBwBdNYvErz9Dn7bwKAvMXwZ3igpXmF2+Xt66
-         I3+x4oDM6Gb/Qy85WYHn5/Z9oYcDF2ZLzJNlOOxxgaYHyffJY5jiee3WCYQNjJEieN1v
-         sATua12OLPEcQHj0CjX5kX4mayx1GL1L6Q9EEhyMGwac+JAWsVYrnify/UttXntPzQIe
-         e+sA==
-X-Forwarded-Encrypted: i=1; AKwUvBxC5Gm07pL2J94C5Aqjg8nP7TKE0QoTi8E7H3vTQ9zDX3FF9eAlyuvGkEnjjpOIZBZuXCfPrF1yFtj25AEVxhwz+W0=@vger.kernel.org
-X-Gm-Message-State: AFuF++kknZtcZdnJI4BuTWSC6t7bRsbX9/Zrec0GqjNrEv6JvTu7Fgzt
-	i1ZvLcNpenLWVq4d1nRhUF0Oq41G4UpoSYdFYtUWsFRlXjxZCWjugicN
-X-Gm-Gg: AYBFou33ehKcEtCjVV37ZlfDbgBqNJ3HPd6Tfc9bJzcQRYV/3kPLrtfxecdfmkZd6mo
-	Y8e7SOzPyz/3HH+Hz9AlBAtxbe6Y4fYT5U3l2Bs3l3AANyuGtLmlsUpJUtTTITTOcFzAvH2P/c1
-	X0SD9xdc76Hg2dc5fIbKLKkxHRw6I8WokcNeuRi/fN5/kT41AAsh+l2Q37R/VebK1jb+gj9NNR3
-	VtIkiJiLGBpPYGGEclrwktRh9ZyJrGVwY0Nga9p/URSIXZ/1DHQyyTB8u/BAmfNOdfSi7iRSe3/
-	VxD41gV5NWF3Mn11EG3YvkOMFiYbd9Aj7QEmCRVgsHQ9bqvPzZv+wvOvGkK8nzei0GwzoygBCnd
-	Nbw9ZKk+BCD0y0Hf+aPircPMbkelIKJ3zL2UXHjrvZoAZuTi1S+rAuzR8XsUZCbL9Ty0I8y/6gt
-	CvNQsCKISMyzZ4chsQdlECeCmYLir73VfhljTSjkI+uoBTihxWCDQ62hlRe6SRdEqABExg2NlVt
-	WCarBLUHLD7aZCbxHTLoqCsmNhj1jECJXJ/1Lc+hjVjb4OK3Nsdq/R6YfxpiZ2DNe98PZ0bF6wd
-	68c=
-X-Received: by 2002:a17:90b:1648:b0:39e:6c69:34d8 with SMTP id 98e67ed59e1d1-3a098fc574cmr3554656a91.60.1790293203799;
-        Thu, 24 Sep 2026 16:40:03 -0700 (PDT)
-Received: from localhost ([153.61.198.240])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b8efaeb3sm909723a91.2.2026.09.24.16.40.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Sep 2026 16:40:03 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 24 Sep 2026 23:40:01 +0000
-Message-Id: <DLNXZ2WK7TPD.2RZBUNRS4FA4L@gmail.com>
-Cc: "Leon Hwang" <leon.hwang@linux.dev>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, "Josh Poimboeuf" <jpoimboe@kernel.org>,
- <live-patching@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
- <llvm@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
- <bpf@vger.kernel.org>, <linux-efi@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, "Ben Cressey" <ben@cressey.dev>, "Florent
- Revest (Anthropic)" <florent.revest@linux.dev>
-Subject: Re: [PATCH v2 6/9] arm64: cfi: Use
- CONFIG_ARM64_FUNCTION_PREFIX_NOPS for the type hash offset
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Jose Fernandez (Anthropic)" <jose.fernandez@linux.dev>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nsc@kernel.org>, "Nick Desaulniers"
- <ndesaulniers@google.com>, "Bill Wendling" <morbo@google.com>, "Justin
- Stitt" <justinstitt@google.com>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"
- <memxor@gmail.com>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "Jiri Olsa"
- <jolsa@kernel.org>, "Emil Tsalapatis" <emil@etsalapatis.com>, "Puranjay
- Mohan" <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, "Ilias Apalodimas"
- <ilias.apalodimas@linaro.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun
- Feng" <boqun@kernel.org>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Tamir Duberstein" <tamird@kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>, =?utf-8?q?Onur_=C3=96zkan?=
- <work@onurozkan.dev>, "Sami Tolvanen" <samitolvanen@google.com>, "Kees
- Cook" <kees@kernel.org>
-In-Reply-To: <20260924-b4-arm64-callops-kcfi-v2-6-587865b6d991@linux.dev>
-References: <20260924-b4-arm64-callops-kcfi-v2-0-587865b6d991@linux.dev> <20260924-b4-arm64-callops-kcfi-v2-6-587865b6d991@linux.dev>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AATyQ69w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD311F000FF;
+	Fri, 25 Sep 2026 01:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790298553;
+	bh=9Ij28vRxIvZHuJPgdpGDxrNhsIui5GPI4jf+cAlvS9c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=AATyQ69wrNPgSQE/U7XdC3b/4eROqQpEMX+SLjdrvUhI6oPUszCGEmKzMweLjzGyZ
+	 ergSo9z8dg3k65hHMU7WntNe9Br2/gteQWxT81qyoDeNL9g326150pP6n5cylyFXHf
+	 wPGsupgbr0zGFONz9Q+JD8WMkWBqS+91e9fjUaSPagkoSlXui6hQphAaIxS/D1ivoh
+	 ymlwhn9jNc1U5Sr++q6dfFmg7og/gmXH7llH0b7PMKQBByTSXcrzW8omnQAIcqM/ni
+	 TPQn4HJ0UVXU7ifVcs6c5OUUuQLM7iNCLbKBI9fjYe41S3MtCcPVPPH4EDIadDaT4R
+	 Mhnb2eeYTKs9g==
+Date: Fri, 25 Sep 2026 10:09:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Xiang Gao <gxxa03070307@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lorenzo Stoakes
+ <ljs@kernel.org>, gao xu <gaoxu2@honor.com>, yinchuang1@xiaomi.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Xiang Gao
+ <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH v4 1/2] tracing: add ring-buffer memory usage statistics
+ in tracefs
+Message-Id: <20260925100908.66c46353e5a2abeb73b1e15a@kernel.org>
+In-Reply-To: <arTlRPvmR54Fa71o@google.com>
+References: <20260916063322.472172-1-gaoxiang17@xiaomi.com>
+	<20260921113047.1152602-1-gaoxiang17@xiaomi.com>
+	<20260921113047.1152602-2-gaoxiang17@xiaomi.com>
+	<arJNSjKsJ3bK40dH@google.com>
+	<20260924102755.02084435309be26f664e3333@kernel.org>
+	<arTlRPvmR54Fa71o@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 24, 2026 at 10:35 PM Jose Fernandez (Anthropic) <jose.fernandez@linux.dev> wrote:
->  static inline void emit_kcfi(u32 hash, struct jit_ctx *ctx)
->  {
-> -	if (IS_ENABLED(CONFIG_CFI))
-> -		emit_u32_data(hash, ctx);
-> +	if (!IS_ENABLED(CONFIG_CFI))
-> +		return;
-> +
-> +	emit_u32_data(hash, ctx);
-> +	for (int i = 0; i < CONFIG_ARM64_FUNCTION_PREFIX_NOPS; i++)
-> +		emit(A64_NOP, ctx);
->  }
+On Thu, 24 Sep 2026 09:54:28 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-For the series:
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+> On Thu, Sep 24, 2026 at 10:27:55AM +0900, Masami Hiramatsu wrote:
+> > On Tue, 22 Sep 2026 10:41:30 +0100
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > 
+> > > On Mon, Sep 21, 2026 at 07:30:45PM +0800, Xiang Gao wrote:
+> > > > Report the memory consumed by the tracing ring buffers, rather than the
+> > > > usable data capacity exposed by buffer_size_kb. Android low-memory
+> > > > diagnostics need this to attribute the memory used by tracing when
+> > > > calculating lost RAM.
+> > > > 
+> > > > The buffers can be spread across the global trace array, dynamically
+> > > > created instances, and snapshot buffers. Userspace currently has to
+> > > > discover and sum every instance, and snapshot memory is not exposed by
+> > > > the per-instance totals.
+> > > > 
+> > > > Add a trace_stats directory with memory_usage_kb reporting:
+> > > > 
+> > > >   buffers:
+> > > >   snapshot_buffers:
+> > > > 
+> > > > covering the global trace array, all instances, and the bootstrapping
+> > > > temp_buffer across all CPUs.
+> > > > 
+> > > > The values account for the full pages backing the data sub-buffers and
+> > > > reader page, plus the cached read page and mmap metadata page when
+> > > > present. Slab-allocated ring-buffer metadata is not included, as it is
+> > > > already reported through Slab and would be double-counted when
+> > > > subtracting tracing memory from lost RAM. Remote buffers, whose pages
+> > > > are externally owned, report zero.
+> > > 
+> > > For the next version, it is good practice to __not__ in-reply-to with previous
+> > > version.
+> > > 
+> > 
+> > Indeed. This is hard to find which is the latest version.
+> > 
+> > > > 
+> > > > Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+> > > > ---
+> > > >  Documentation/trace/ftrace.rst | 12 +++++
+> > > >  include/linux/ring_buffer.h    |  1 +
+> > > >  kernel/trace/ring_buffer.c     | 41 +++++++++++++++
+> > > >  kernel/trace/trace.c           | 95 ++++++++++++++++++++++++++++++++++
+> > > >  4 files changed, 149 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> > > > index 7261f25f8b4b..99ddfe26b7cd 100644
+> > > > --- a/Documentation/trace/ftrace.rst
+> > > > +++ b/Documentation/trace/ftrace.rst
+> > > > @@ -218,6 +218,18 @@ of ftrace. Here is a list of some of the key files:
+> > > >  
+> > > >  	This displays the total combined size of all the trace buffers.
+> > > >  
+> > > > +  trace_stats/memory_usage_kb:
+> > > > +
+> > > > +	This reports the memory consumed by the ring buffers, as opposed to
+> > > > +	the usable data capacity shown by buffer_size_kb. The value covers the
+> > > > +	main and snapshot buffers of the global trace array and all tracing
+> > > > +	instances. It does not include slab-allocated ring-buffer metadata.
+> > > > +
+> > > > +	Output::
+> > > > +
+> > > > +	    buffers: ...
+> > > > +	    snapshot_buffers: ...
+> > > > +
+> > > >    buffer_subbuf_size_kb:
+> > > >  
+> > > >  	This sets or displays the sub buffer size. The ring buffer is broken up
+> > > > diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> > > > index eac3e9080c3c..96b99e6757d4 100644
+> > > > --- a/include/linux/ring_buffer.h
+> > > > +++ b/include/linux/ring_buffer.h
+> > > > @@ -167,6 +167,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
+> > > >  bool ring_buffer_iter_dropped(struct ring_buffer_iter *iter);
+> > > >  
+> > > >  unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu);
+> > > > +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu);
+> > > >  unsigned long ring_buffer_max_event_size(struct trace_buffer *buffer);
+> > > >  
+> > > >  void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu);
+> > > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > > index 04bb94c29f58..efb88bf8970c 100644
+> > > > --- a/kernel/trace/ring_buffer.c
+> > > > +++ b/kernel/trace/ring_buffer.c
+> > > > @@ -6559,6 +6559,47 @@ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(ring_buffer_size);
+> > > >  
+> > > > +/**
+> > > > + * ring_buffer_memory_size - return the memory used by the buffer (in bytes)
+> > > > + * @buffer: The ring buffer.
+> > > > + * @cpu: The CPU to get ring buffer memory from.
+> > > > + *
+> > > > + * Returns the page-allocator memory consumed by @cpu, including the data
+> > > > + * sub-buffers, the reader page, the cached read page, and the mmap
+> > > > + * metadata page. Unlike ring_buffer_size(), which reports the usable data
+> > > > + * capacity, this accounts for the full pages allocated to the buffer.
+> > > > + * Remote buffers do not own page-allocator memory and report zero.
+> > > > + */
+> > > > +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu)
+> > > > +{
+> > > > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > > > +	unsigned long subbuf_size;
+> > > > +	unsigned long size;
+> > > > +
+> > > > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > > > +		return 0;
+> > > > +
+> > > > +	/* Remote buffers use externally owned memory. */
+> > > > +	if (buffer->remote)
+> > > > +		return 0;
+> > 
+> > For the persistent ring buffer, you also need to check `buffer->range_addr_start`.
+> > That is a reserved memory, which is outside of page allocator.
+> > 
+> > > 
+> > > This is a generic interface. If you want to call this function on a remote
+> > > buffer, you should be able to.
+> > 
+> > But as the comment said, this function returns the size of page-allocator
+> > memory. Is remote ring buffer allocated from host?
+> 
+> It is down to the trace_remote implementer where the memory comes from, but
+> right now, all remote ring buffer are allocated from the buddy allocator.
 
-unrelated minor issue:
-ctx.offset[] is counted from ro_image, but bpf_prog_fill_jited_linfo()
-adds it to prog->bpf_func which is ro_image + cfi_get_offset().
-So with CFI jited_line_info is already off by one insn.
-After this patch it will be off by 4 or 6.
-s390 does
-	jit.addrs[i] -= cfi_get_offset();
-before the call.
-Would be great to send a follow up eventually.
+Ah, I got it, its size should be reported via ring_buffer_memory_size().
+Hmm, maybe we should add a callback for each trace instance so that it
+can return the actual size and the attribute (host memory, guest memory,
+reserved memory, or device memory (e.g. GPU memory?))
 
+> 
+> Although, even coming from a carveout, the low-level function should probably
+> return something in any case, as it has all the informations it needs and to
+> stay as generic as possible.
+> 
+> Then, the caller (trace_stat) should know if the information is relevant or not,
+> or where to account for it. (probably with TRACE_ARRAY_FL_ flags ?). trace_stat
+> shouldn't report only what's relevant for Android. It can however split the
+> report between persistent ring-buffers and the others.
+
+Yeah, this should return the attribute flag with the memory size.
+
+> 
+> Overall, we could have
+> 
+> cat trace_mem
+> 
+>   main:
+>   instances:
+>   snapshots:
+>   persistents: 
+>   remotes:
+> 
+>   total_system:
+>   total_carveout:
+> 
+> Which I believe would be a more accurate picture: First the memory sorted by
+> "type" of buffers and then by "type of memory".
+
+Agreed.
+
+> 
+>  
+> > 
+> > > 
+> > > Moreover, remote buffer in-production current use is for Android... So not only
+> > > ring_buffer_memory_size() should support them, but they should probably be
+> > > actively reported somewhere...
+> > 
+> > Maybe we should have different size accounting interface for remote buffer
+> > and persistent buffer.
+> 
+> For the remote, it should probably sit in trace_remote.c, which can call
+> ring_buffer_memory_size(). trace_stat can then query the memory size from
+> trace_remote.
+
+I think the copy of the persistent ring buffer (backup instance) could be
+implemented as remote, but the persistent ring buffer itself is not remote
+because it is writable. (copy ring buffer is actually like remote, it is
+read only, and it should be auto unloaded.)
+
+Thank you,
+
+> 
+> And actually I have a pending series where I keep the list of trace_remote [1]
+> which would be a prerequisite.
+> 
+> [1] https://lore.kernel.org/all/20260817135517.3919534-2-vdonnefort@google.com/
+> 
+> > 
+> > Thanks,
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> -- 
+> Vincent
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
