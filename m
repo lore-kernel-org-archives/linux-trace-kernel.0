@@ -1,174 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f39.google.com (mail-pz2-f39.google.com [74.125.228.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1FF184;
-	Fri, 25 Sep 2026 02:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DDC364E9E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 02:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790303223; cv=none; b=CQ1NDdLAz54mAJu0Sxo5jR67LqgebVz3xzKgU5TyzhNdvOrQn/6ijX1y4HpYvweKAXKqaJJArP1iBDMOU1y6n286sORw+dtwvRTDpz7POUclJ7BqpyZLnQOvPFqbnedyrvIga7owQChx3MapDquAWZpjEBegQ8Tec7RwomzYqms=
+	t=1790303485; cv=none; b=UiTU3aORUiuxnFA6jt0Z4Z2fM9zHFkbxXJVufIQ0f5JjDsFWcQkIOtSdvltOmPlq1C1pRgdeaVirokRvAeXfgi9u3cyg+LWBM1NgejEgloCZjMpJ5A6zySwQGMsJixoLSITGOD38J94i1+/9H9N76JdqKX0zmejubmniT/Z/s/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790303223; c=relaxed/simple;
-	bh=6PXS7H4wFEJClTzUFNo4UzuQSmfvDpFmThwxZEYbYB8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Fbp50tEInoMlHLI3aS8SanHwDlA3otuqY2mQebFYZRsG7vA+/B4TDx5IIqYgNPX1wUIngdll15fIZx0z7zCJxzx5nWTPF0Xf2lOCr4q149ohrDk/Txej8tFgH8LtH0MWBOx9HtcXfjHTQnvyOTk8SUeOzS7EDuo/z+MC1rEOqxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQIipZNM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790303485; c=relaxed/simple;
+	bh=XXqqfvuuz044nX/aEKeET9DgPsS/vggZM8IWukabHXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZNPBjI1BP3S0EW8JsDyWQxmSZhVjxGDKERrkduCCYm8sRjH3JtSrkg3oRrA11hRGOzy7yARSmYxr8jHofTQeB2bhlwx7PkkCqVjYYOkaRmrFdPMW68Fidd5qdCRY0tjrwMYhPAsaQO6gW7fKu22cdX8f+Ka3UnfROwUAVq7F1x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXfm3+ZQ; arc=none smtp.client-ip=74.125.228.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQIipZNM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C5A1F000FF;
-	Fri, 25 Sep 2026 02:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790303221;
-	bh=xIV86QW+Coqh6Iuh30T332CDhfsBi3YyDaDo9LRNPcg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oQIipZNMlSPo/4Rd0UOQ3e3qgWvs2ojWz933HYzGA4Vlhc/V9spMb266t7N0wa5Vb
-	 aRXPhDyjSyxQUGgBh0UpkGP2Fx9+mwY0DW/Z70JuYW0hinIzy8XNhowlRC0Mm0aKiP
-	 Q0CItD8NRoByJQU0EN1KBi9eblXtpgmLSdnchioIXehUuhFrlaRc3RH7Kie+EqFlxy
-	 zTo6N+TLrZy4UO77r5+fJ1XXyRo9jaA7N6VIVEvJTcGjUPXTbgWb9mx0aA8XQjcijA
-	 BQ+bJA2zn3YskhogbVpDtOsCKlLIxpZd+xj0lyq4P961n89Jg1SgR9oXTub+12QfLS
-	 HqaufgPpI9JvQ==
-Date: Fri, 25 Sep 2026 11:26:57 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v17 10/13] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Message-Id: <20260925112657.541352e9e87b745bd56ea76c@kernel.org>
-In-Reply-To: <20260922044325.587F31F00898@smtp.kernel.org>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
-	<179005120276.388919.1645992887114424511.stgit@devnote2>
-	<20260922044325.587F31F00898@smtp.kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXfm3+ZQ"
+Received: by mail-pz2-f39.google.com with SMTP id 41be03b00d2f7-cc78e1a94b8so325a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Sep 2026 19:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790303482; x=1790908282; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=s1QRu+lGJsmT+0vXomkywkgzh7zQTksmtyo4pAVpxeg=;
+        b=lXfm3+ZQIzqzFssRwsi4aaRGcIKocP5Y8oEmPh4t+Il2/+jY5bPod0LhGukGJn6TRu
+         nGAaxRsZ1XGsj9XYWLgx/elBUGg2gxipP0UAUOzDVLpba/UpAhU+wXbA8JOuhoRnzNfQ
+         kaGyN+15i2zfDq8GHP4tGw3DEyCNQ4x+BvRX4yj6HZXfE1EfPwtqXceREDZ/bdxbQWZW
+         fromew1d4B+2pg5UvcZInUf6PSIJYma+VG8ICZtNqIkVHbr0FSvGHqyDQRIx1ly1SPbF
+         RDXdVT/MNc67N+mMKBMJkPueTO61PFcQCpYltreYkqI30lxJLkK/4ewtWyLc+1LWzBrl
+         MjHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790303482; x=1790908282;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=s1QRu+lGJsmT+0vXomkywkgzh7zQTksmtyo4pAVpxeg=;
+        b=yK22qJ8JxHUghe1f86q1VIQOqser2hJCnYuercohTY+TfyMM0rwedmZUHtEolagH8y
+         Y6uwArc6pdUh8YMpYusCkveUy+oozNTe0rU/QAPEMkm197Ic+/JiEERpEsrMqK9R4hYD
+         DBswbNS7XtRbS2qQduKfJKtnL4QM+U2LyT8rXuFnoY0e/J6nSdpvrBjgNh4WklrEFzrN
+         tADq1cf+Ft++XppzZYwBMkZylPQpKtNyGnlVzq7pu+zem7g65+hD+2IaYfxzzcqEyz7F
+         xfAhkR7SflcPKBU0idP85BLT4qoOlS52W+qs+t1XiQtxkDqnpJ41pJ8t1ftZXxwY3yLr
+         1Lvw==
+X-Forwarded-Encrypted: i=1; AKwUvBziZwfaKxvOGdShWR7QLBMqUQtHyy3USV8pP6AXmWgV99ZHhSc6YghbZMPDLBUV5U8zlHf6UU03PW58/8cl1ViI1i4=@vger.kernel.org
+X-Gm-Message-State: AFuF++nUzMEIGAwUHh0MdbcGg431dB/PkKThWWnyy9PtMnN8Q3WJFxLL
+	/M1divH66I+MCe5xiFXQQie77gEdGaA5ihxKoHetRLA9Rsu5c04ol0vM
+X-Gm-Gg: AYBFou1RPOBZEFCWxGJoibcZY/vI+Bb2VHUQzGw8E4jLt+LqhblNIVrgOcWCEunyRSj
+	BKlU0RGW0TQuQwvFxvK5b9eWBC3hhdZDfmj+FiQJ8p6ndX6DIIrkN2A73+oqlKVF7t+2pWFupbj
+	Tfc9zu12rr/m9ayB4lUw0S1KSsgmxlTpjsaO6m9sHJQHlc5GjFJJ7L/a15bZziP4TDcxK4d1OQL
+	LeIDbWJQrf3fRjqBoQf1L4s6DTd5PKIGwCzeg7PFEylcYgpbK/1ng+eJOMYpAfbH/ZgvFDg/v5R
+	It+9fkDG0qFNqZK0/OzJyP3b0e5Dmk89ubuW/yj3uBI7nuMMYotYA7+HmzxZ/sllwT5q1A+PFbz
+	cxVxblKD1hI3QhoxkecCpYnixFizkthYyBClkeDEs8/tXkYCmraCnhKXyasAsUXR0EZqgrNqUpC
+	fZoF+3vXJvURB6HrPnN/oFgBF7oONtkG5revXu+3AQz3UwPraFHQlmuPD46hNAbw1v9Tov7cluH
+	/1QVc2hgsbQ
+X-Received: by 2002:a17:90b:2745:b0:393:19a3:4f1 with SMTP id 98e67ed59e1d1-3a098ae7053mr3838065a91.6.1790303482142;
+        Thu, 24 Sep 2026 19:31:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b99e5711sm1386356a91.17.2026.09.24.19.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 19:31:21 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 24 Sep 2026 19:31:20 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] tracing: Fix empty symbol names in
+ simple_ring_buffer undef check
+Message-ID: <157373a2-171a-4682-bccb-de4e17577e10@roeck-us.net>
+References: <20260923074213.3077182-1-vdonnefort@google.com>
+ <20260923074213.3077182-2-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260923074213.3077182-2-vdonnefort@google.com>
 
-On Tue, 22 Sep 2026 04:43:24 +0000
-sashiko-bot@kernel.org wrote:
+On Wed, Sep 23, 2026 at 08:42:11AM +0100, Vincent Donnefort wrote:
+> Sparc64 emits empty symmbol names. Skips them when establishing the
+> allowlist and when extracing undefined symbols.
+> 
+> Fixes: 1211907ac0b5 ("tracing: Generate undef symbols allowlist for simple_ring_buffer")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Closes: https://lore.kernel.org/all/5574c9e6-9ed2-4ee6-a2b2-fb6ee81e83a1@roeck-us.net/
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [High] tracing/wprobe: NMI deadlock in wprobe_trigger() when count is not specified
-> - [High] tracing/wprobe: CPU hotplug race in __register_trace_wprobe() misses new CPUs
-> - [Medium] tracing/wprobe: TOCTOU race in wprobe_trigger() corrupts watchpoint address
-> --
-> 
-> commit b9f67542e6bf772512bb8cbf3c3011379c301eb4
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
-> 
-> Add set_wprobe and clear_wprobe event triggers to dynamically attach
-> and detach hardware breakpoint address monitoring based on event field
-> contents.
-> 
-> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
-> 
-> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> > index 9c6100b63e8d9..f1d6aa320f213 100644
-> > --- a/kernel/trace/trace_wprobe.c
-> > +++ b/kernel/trace/trace_wprobe.c
-> > @@ -193,20 +217,130 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
-> 
-> [ ... ]
-> 
-> >  	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
-> >  	if (IS_ERR_PCPU(tw->bp_event)) {
-> >  		int ret = PTR_ERR_PCPU(tw->bp_event);
-> >  
-> >  		tw->bp_event = NULL;
-> >  		return ret;
-> >  	}
-> >  
-> > +	mutex_lock(&wprobe_mutex);
-> > +	list_add(&tw->active_list, &active_wprobes);
-> > +	mutex_unlock(&wprobe_mutex);
-> > +
-> 
-> [Severity: High]
-> Does this code have a race condition with CPU hotplug?
-> 
-> Looking at __register_trace_wprobe(), it calls register_wide_hw_breakpoint()
-> which installs breakpoints and releases the hotplug lock internally.
-> 
-> If a new CPU comes online immediately after that lock is released, but before
-> this wprobe is added to active_wprobes under wprobe_mutex, could the
-> wprobe_cpu_online() callback miss the wprobe? This would leave the new CPU
-> without hardware breakpoints installed for this probe.
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-Hmm, OK. Taking a cpus_read_lock() for both can avoid this issue.
-
+> ---
+>  kernel/trace/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> >  	return 0;
-> >  }
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index f934ff586bd4..0e1846f7dda3 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -146,11 +146,11 @@ KASAN_SANITIZE_undefsyms_base.o := y
+>  
+>  UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sancov __sanitizer __tsan __ubsan __msan \
+>  		      __aeabi_unwind_cpp __s390_indirect_jump __x86_indirect_thunk simple_ring_buffer \
+> -		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+> +		      $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '$$2 {print $$2}')
+>  
+>  quiet_cmd_check_undefined = NM      $<
+>        cmd_check_undefined = \
+> -          undefsyms=$$($(NM) -u $< | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST)) || true); \
+> +          undefsyms=$$($(NM) -u $< | awk '$$2 {print $$2}' | grep -v $(addprefix -e , $(UNDEFINED_ALLOWLIST)) || true); \
+>            if [ -n "$$undefsyms" ]; then \
+>                echo "Unexpected symbols in $<:" >&2; \
+>                echo "$$undefsyms" >&2; \
+> -- 
+> 2.55.0.1082.g2b9226bbc0-goog
 > 
-> [ ... ]
-> 
-> > @@ -767,9 +923,608 @@ static int trace_wprobe_show(struct seq_file *m, struct dyn_event *ev)
-> 
-> [ ... ]
-> 
-> > +static void wprobe_trigger(struct event_trigger_data *data,
-> > +			   struct trace_buffer *buffer,  void *rec,
-> > +			   struct ring_buffer_event *event)
-> > +{
-> > +	struct wprobe_trigger_data *wprobe_data = data->private_data;
-> > +	struct trace_wprobe *tw = wprobe_data->tw;
-> > +	unsigned long target_addr, addr = 0, flags;
-> > +
-> > +	if (wprobe_data->field) {
-> > +		if (!rec)
-> > +			return;
-> > +		addr = *(unsigned long *)((char *)rec + wprobe_data->offset);
-> > +		addr += wprobe_data->adjust;
-> > +	}
-> > +
-> > +	raw_spin_lock_irqsave(&tw->lock, flags);
-> > +
-> 
-> [Severity: High]
-> Could this raw_spin_lock_irqsave() cause a deadlock if interrupted by an NMI?
-> 
-> When no count limit is specified (EVENT_TRIGGER_FL_COUNT is not set),
-> wprobe_trigger() takes tw->lock before calling __wprobe_count_func().
-> 
-> If an NMI interrupts a CPU already holding tw->lock and hits a trace event
-> that fires the same uncounted trigger, it will attempt to acquire tw->lock
-> again here. Since the in_nmi() check is located inside __wprobe_count_func(),
-> the NMI would spin forever before realizing it shouldn't proceed.
-
-Ah, indeed. It should check in_nmi() earlier than the spin lock.
-
-> 
-> > +	if (!(data->flags & EVENT_TRIGGER_FL_COUNT)) {
-> > +		if (!__wprobe_count_func(data, addr)) {
-> > +			atomic_inc(&tw->missed);
-> > +			goto out;
-> > +		}
-> > +	}
-> 
-> [Severity: Medium]
-> Is there a time-of-check to time-of-use (TOCTOU) race here for counted
-> triggers?
-> 
-> For counted triggers, wprobe_count_func() is called locklessly by the trace
-> core, which evaluates __wprobe_count_func(). Then, wprobe_trigger() is called
-> and takes tw->lock. Because EVENT_TRIGGER_FL_COUNT is set, the state
-> validation check (__wprobe_count_func()) is explicitly skipped under the lock.
-> 
-> If a counted trigger fires concurrently on multiple CPUs, both might
-> observe the unset address locklessly. Could the second CPU unconditionally
-> overwrite tw->addr, breaking the exclusive trigger constraint?
-
-Hmm, indeed. I think the current event trigger subsystem is not well
-designed for the concurrency. Let me move the data->count update to
-wprobe_trigger() inside tw->lock critical region.
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
