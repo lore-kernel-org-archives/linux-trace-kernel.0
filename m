@@ -1,222 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f42.google.com (mail-wr2-f42.google.com [74.125.225.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3DE4D9573;
-	Fri, 25 Sep 2026 16:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF6B41D21F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 18:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790354322; cv=none; b=hPOF0KvWGLUjevvlG0119FVG7iXkxek4BX/SzEktpFM/v6wTMLT8O0UxMNo8H9xrKiVHKFpxMiJ9CvuH7sa+Lj2SZyhCVKjvGvQHwJ+6Z9bk60HyaJIY4UmR87mtSVdVubkVqkSZ6i1l3WkJKr4RPi51xNjG7tbeFjqBMPYnjUM=
+	t=1790360458; cv=none; b=TwUTz1vP9YIAsxQLZIMx+kTct0t9TwToAHTZLxGjKlU7JtyiLaz8T6ZqwzbgRR1qhaYC4GlGuqPVc5x/PPQilrciZBL18KvsY/L6EW+w9CPYTf9orQDCwQyuW6rcBGd7kA4aYfnfS69lVns0goIXa+UjWvtTCfsiU7HwLG9SzZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790354322; c=relaxed/simple;
-	bh=7JEZFKX+P/T1np0rBfRn5XbrnUCGgHH+54tJTV1OQXU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oZL4iBqI4JK15ZEzZ3Z6VlXHtRxk7A29EmrRPKk5colh67jJmkAV8ctJoYD0WX+JJBNcnXL6/NjAXuARe8mAWf14pOEbUUVNrfH7hWCJT64Q+taZjikWWLB4KEIIakU2IHeLDHzP3umkT5fdk7+g0TLpVzorOEpiB+tNdiIuSg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER993GLF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790360458; c=relaxed/simple;
+	bh=ZdDl2k6VSNRAjMa5sv67qNx0uk5Bqx9XHKnqQE++CRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qKkahyIO53fVdgyNuYBN7VqLNAGhl54uueulSF7heiJGIiUH4yPnRKDBcLwCqYIlHuVfCjONcK9w1y3ms1EEctnATQvDbowFHNBDT/SQIND0NUUp1Q+KwjfRsdIVju+TaVuvntc0rA9cg+5VrkZ0UAX1XBm2di0JEE5y+L06/nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=WLXuwkeW; arc=none smtp.client-ip=74.125.225.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER993GLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA6201F00893;
-	Fri, 25 Sep 2026 16:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790354316;
-	bh=Ef5AYQYzA6WRtJxzWsmKVPm+wztV1FQUcjUH5RY8340=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ER993GLFdFWegZ1zeJakvYgwmNtNST0z1wbj7yRNKh1rwstT4dVw1BDWN4mx6hRt+
-	 E9q8dgtPMHNudVEujWTF/4jAJ2r+8gLELbFtKKZLSyoOEO6KVpLXgcWItrwUI+oA0Q
-	 CeUlFIdkaIdRVgr1ykl5B1fzAa/gk/ZxMB9IhPCEZv3U2PHJ4mYOsCBXQhliOKU1qV
-	 gfL43YaEpPISCRDVyy/PqZD5z3inJ/Ffsnp+tCCVUmikrnjjZoYhXBmWb24FST4Df1
-	 qIVuDhsBhvztbE1aem5vP93USxJ1GCUTXL64TcW/hargRO7ULBLZWo7eGBSfw80mP4
-	 CUNqT89AnHBUw==
-Date: Sat, 26 Sep 2026 01:38:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Steven Rostedt <rostedt@goodmis.org>, Josef Bacik
- <josef@toxicpanda.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Fix permanent hang when flushing the kprobe
- optimizer
-Message-Id: <20260926013832.abaa63a3903d563655bc60d6@kernel.org>
-In-Reply-To: <20260924092142.199198-1-parri.andrea@gmail.com>
-References: <20260924092142.199198-1-parri.andrea@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="WLXuwkeW"
+Received: by mail-wr2-f42.google.com with SMTP id ffacd0b85a97d-4888598e4f9so62064f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 11:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1790360453; x=1790965253; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HbJed3QIlE5is+wfCiIzfB4icHHTL/FXBZcCdh6MKMc=;
+        b=WLXuwkeW4W8i+u6relJA23AO2ZTEsUeV8Podz5ne6NUwy3CvGclMY3iJ1KLe8FUW2n
+         uL/2sAH5e6lV5W5Zz0xrFpnQH/WinwdC+h+cQtsnKjcevP/VovuI1tlONLwPeiHPkGm4
+         MB9DiLMzopZTLxDxtf+4OVgnN7ILKNIcLnwSWqVZCSEcVO0YMQ9yhrHJNj3u72KEkbW9
+         6gK/4dyWiqDPs+RurAzISqYYWAs1WMCPK295lpqUT42nIPDa6HamtQ0/NMr1qwfQkV8+
+         Q4K0KJ+VUdqtUlMsRhHNquPId6B87c6IFSvgQP1Y1pMLUDd7KZCAgDfy+qtBMNf/t2EZ
+         2esA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790360453; x=1790965253;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HbJed3QIlE5is+wfCiIzfB4icHHTL/FXBZcCdh6MKMc=;
+        b=WeofeuwgwqOl3e91ggtYPqK9VAWWjGH8dJfazajummxfw8wAHmKoXX3U++bAJ/8RdB
+         aghlfm3K1ecQkWOIxRGdcdNqag9O2VqrmEj9OxYy0rNt1t+aowGyeF7CorkDJ626bGUr
+         GBFo7BkKVRT06JnY+mlE+UVJCR4xbWyB4/c14LqiUhtfykvUntqVwNJhU9qpjk9kCk2H
+         /nxY/BtDiJGMc5RTGyzM4996Id5dy6iq1pAVej4utDOt/w0zStKY5WRF2Zzz3qpNblIY
+         kP+3lpH60KuVagEyS5hPgu4owLoFt83sLm+YafZvaOBPneXfMDtFkx62U1OMTidMdVqP
+         va/w==
+X-Forwarded-Encrypted: i=1; AKwUvBxzsMRBgE1mhifwJQYxfcy8VqoXPl5MUw6j/fts/8+7evguLnrFbX+OxIZvslUy5wtOokFF02TlsAZxejScu02uYcU=@vger.kernel.org
+X-Gm-Message-State: AFuF++lLPvm6GnTH8fl71G/4LPU7m+Tk4sIEz+tkrnMPmQaMeWxX8yzI
+	48fdhSO69u7JTC+r6xRDnLkPGUwe41eOZXRO188rCamHH8Wi4C9fwxDJvAjrXRCYf6w=
+X-Gm-Gg: AYBFou2B9m+UASB67Eh4dK4I0N4fuCnmbdMS9W+v10r624nXQHx+goee6J7ZRYSMTgC
+	FPWFvf0d2FxnEEUCnE71FcohkGIUvx8IVCite2owqjCUL7xEhsDIhKcAAGNy2MbZTPnpjY8hDcW
+	aLxQH4xUj437ovQuX5sp3OX8X0S6faNzJh4rvxVl8ZSYvEb44IXz4/9WCk7G2eaTahg49hyUKQ/
+	bQKh9/s7bGGiWv62kLwn+D7HgBezsYzZD8Fe3k0p3du0gpqExDHiUp0YtmLlir8baInl6/FUfho
+	6JP45uZP+dKl7JrEfw5DJ9lm4l00ZaIJ4EU2QQSdEmlU5I2r9xsxm83SLsTYtstlazQexe6+E/r
+	ymB2gXwKFa14RciyjJPuCkPRKWO54w9skQRtxPfSSmRejhtSOTdA4Ef1/jgDxOp0g9kUSU4hYF+
+	QySuFsQH0Vfi7ARz1Qj+fuw9ZZcWTZfzbHyGGvA8r3FJoaaOhmNtS/ENHQTyNIYoEQMMj8Hh1u9
+	QN3p9vQNqIUFxeUaqDxXZuxagT+n3G3aRn2tOLB8IkJXUW/hZDhgyjCuEVAQw==
+X-Received: by 2002:a5d:6f05:0:b0:487:8c7:a275 with SMTP id ffacd0b85a97d-4887166bba6mr12471077f8f.0.1790360453543;
+        Fri, 25 Sep 2026 11:20:53 -0700 (PDT)
+Received: from localhost (p200300f65f19a904b61bffe3a87d7bb6.dip0.t-ipconnect.de. [2003:f6:5f19:a904:b61b:ffe3:a87d:7bb6])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-4887a2acb4dsm8909485f8f.0.2026.09.25.11.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2026 11:20:53 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	linux-kernel@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] Add TAINT_DRIVER_OVERRIDE for usage of driver_override
+Date: Fri, 25 Sep 2026 20:20:40 +0200
+Message-ID: <20260925182041.1025371-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6316; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=ZdDl2k6VSNRAjMa5sv67qNx0uk5Bqx9XHKnqQE++CRc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqtrt5auzK2O3znYA5mSO75OtU4S4MLYgfvL8SR fExzta4CP+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCara7eQAKCRCPgPtYfRL+ TgXBB/4ipbjI6msdOdOEh0N1yvy5qoA1pPLxBUK+WO0FZ4y07WBzGVebN2SFV1WLEuqGhxOGPiA lRoDLT1Y0fv+jICbdribCbx1WDBpkM4Z9ZGpQTpiohUhE/OZG2pFnTRlQWJTGm6C8nFA/2aMC24 WPAmCCkkonSxzTWTWFa8t3Z8pIsyMBv9ZzUL6e2izfQQ+GscGlpdFWHVQqiHrLSCsirRPFXFO8e YBpOgaKJg48nUyjb5K/Tv4JGgyE+jvLtmCRqBP2cs3ebSzP1an54iIN3ttm5LgFetJ2pOpQ4znH F2erxa9l5WWsxpsou0IytKTz1nTp4w5rW38OCCdm/N633Aj5
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Sep 2026 11:21:39 +0200
-Andrea Parri <parri.andrea@gmail.com> wrote:
+Commit fcbfaffee51a ("driver core: add TAINT_FORCED_BIND for when
+userspace manually messes with devices and drivers") introduced a taint
+for usage of bind/unbind sysfs files that manually trigger driver probe
+and remove respectively.
 
-> Writing 0 to /proc/sys/debug/kprobes-optimization while a kprobe is
-> jump-optimized never returns. The writer sleeps in D state forever with
-> kprobe_sysctl_mutex held, so any later read or write of that sysctl
-> hangs as well. For example, with vfs_read+9 as an optimizable address
-> in this build:
-> 
->   # cd /sys/kernel/tracing
->   # echo 'p:myprobe vfs_read+9' >> kprobe_events
->   # echo 1 > events/kprobes/myprobe/enable
->   # # wait until /sys/kernel/debug/kprobes/list shows [OPTIMIZED]
->   # echo 0 > /proc/sys/debug/kprobes-optimization
-> 
->   INFO: task sh:246 blocked for more than 10 seconds.
->   Call Trace:
->    <TASK>
->    __schedule+0x1176/0x4f70
->    schedule+0xdc/0x2c0
->    schedule_timeout+0x17b/0x260
->    wait_for_completion+0x173/0x3c0
->    wait_for_kprobe_optimizer_locked+0xbc/0x130
->    proc_kprobes_optimization_handler+0x156/0x1b0
->    proc_sys_call_handler+0x324/0x490
->    vfs_write+0x52d/0xfe0
->    ksys_write+0xff/0x200
->    do_syscall_64+0x106/0x630
->    entry_SYSCALL_64_after_hwframe+0x77/0x7f
->    </TASK>
->   ...
->   INFO: task cat:265 is blocked on a mutex likely owned by task sh:246.
-> 
-> wait_for_kprobe_optimizer_locked() reinitializes optimizer_completion,
-> asks the optimizer thread to flush and sleeps in wait_for_completion().
-> The thread drains the (un)optimizing lists, but calls complete() only
-> if completion_done() is true, i.e. if the completion is already done,
-> which never happens while someone waits. disarm_all_kprobes() and
-> kprobe_trace_self_tests_init() wait the same way.
-> 
-> Calling complete() unconditionally would not be enough: the waiter
-> drops kprobe_mutex while it sleeps, and nothing else serializes the
-> sysctl handler against the debugfs "enabled" file. A second flusher
-> that still finds the lists non-empty, e.g. because a disabled probe is
-> queued for unoptimizing, reinitializes the completion under the first:
-> 
->   sysctl write                      debugfs "enabled" write
->   unoptimize_all_kprobes()
->     wait_for_kprobe_optimizer_locked()
->       init_completion(c)
->       mutex_unlock(&kprobe_mutex)
->       wait_for_completion(c)
->                                     disarm_all_kprobes()
->                                       wait_for_kprobe_optimizer_locked()
->                                         init_completion(c)
->                                           // c->wait is reset, the first
->                                           // waiter is off the queue
->                                         mutex_unlock(&kprobe_mutex)
->                                         wait_for_completion(c)
->   kprobe_optimizer()
->     complete(c)
->       // wakes the debugfs writer only
-> 
-> where c is &optimizer_completion. Lining up the two writes during an
-> optimizer pass loses the sysctl writer this way.
-> 
-> Replace the completion with a counter of optimizer passes, bumped at the
-> end of each pass and signalled with wake_up_var_locked(), both under
-> kprobe_mutex. A flusher samples the count and waits with
-> wait_var_event_mutex(), which drops kprobe_mutex only while sleeping, so
-> a new count means a whole pass ran in the meantime. Nothing is
-> reinitialized, so several flushers can sleep in the wait at once.
-> 
-> Fixes: 73c12f209462 ("kprobes: Use dedicated kthread for kprobe optimizer")
-> Cc: stable@vger.kernel.org
-> Assisted-by: LLM
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
-> This overlaps with two patches under discussion in the "rcu-tasks: build
-> Tasks RCU on Tasks Trace readers in trampolines" thread:
-> 
->  - Masami's RFC "kprobes: Make optprobe optimizer multi-generational and
->    asynchronous" [1] rewrites the same code.  It drops the
->    completion_done() check, which fixes the hang reported here, but it
->    keeps init_completion() in wait_for_kprobe_optimizer_locked(), so the
->    concurrent-flusher case described above remains.  The two patches
->    conflict textually.
+For drivers that do their resource management correctly (which is also
+needed for module unloading) bind and unbind for matching devices are
+not critical operations. The thing that makes bind and unbind unsafe is
+that drivers can be forced on devices that originally don't match using
+driver_override. The result is that e.g. of_device_get_match_data()
+returns NULL despite all .of_match_table entries having a non-NULL
+.driver_data member which yields a NULL pointer exception for several
+drivers. And given that after setting a driver_override a manual bind is
+only one way a driver can be bound to an unexpected device, a separate
+taint for such an override is justified.
 
-OK, this fix looks good to me. Let me pick this for probes/fixes and
-rebase mine on top of it. Anyway I think we need both.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-Thank you,
+I first considered to just set TAINT_FORCED_BIND when driver_override is
+written to. But IMHO it's very useful to differentiate for reported bugs
+if bind/unbind was used in combination with driver_override or not.
 
-> 
->  - Josef's "kprobes: Expose the optprobe jump window to Tasks RCU" [2]
->    changes kprobe_optimizer() around synchronize_rcu_tasks(); its
->    kernel/kprobes.c hunks still apply on top of this patch.
-> 
-> [1] https://lore.kernel.org/all/179017148080.466588.9116221556625712980.stgit@devnote2/
-> [2] https://lore.kernel.org/all/20260922-b4-rcu-tasks-preempt-qs-v5-3-410f57770bad@toxicpanda.com/
-> 
->  kernel/kprobes.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 6337da5cab9e7..4edd8ca5c6578 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -42,6 +42,7 @@
->  #include <linux/execmem.h>
->  #include <linux/cleanup.h>
->  #include <linux/wait.h>
-> +#include <linux/wait_bit.h>
->  
->  #include <asm/sections.h>
->  #include <asm/cacheflush.h>
-> @@ -526,7 +527,8 @@ enum {
->  	OPTIMIZER_ST_FLUSHING = 2,
->  };
->  
-> -static DECLARE_COMPLETION(optimizer_completion);
-> +/* Bumped at the end of each kprobe_optimizer() pass, under 'kprobe_mutex' */
-> +static unsigned long optimizer_passes;
->  
->  #define OPTIMIZE_DELAY 5
->  
-> @@ -654,9 +656,9 @@ static void kprobe_optimizer(void)
->  		do_free_cleaned_kprobes();
->  	}
->  
-> -	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
-> -	if (completion_done(&optimizer_completion))
-> -		complete(&optimizer_completion);
-> +	/* Step 5: Wake up flushers, and kick optimizer again if needed. */
-> +	optimizer_passes++;
-> +	wake_up_var_locked(&optimizer_passes, &kprobe_mutex);
->  
->  	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
->  		kick_kprobe_optimizer();	/*normal kick*/
-> @@ -708,7 +710,8 @@ static void wait_for_kprobe_optimizer_locked(void)
->  	lockdep_assert_held(&kprobe_mutex);
->  
->  	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
-> -		init_completion(&optimizer_completion);
-> +		unsigned long passes = optimizer_passes;
-> +
->  		/*
->  		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
->  		 * idle. If it's already kicked, it will see the state change.
-> @@ -717,9 +720,12 @@ static void wait_for_kprobe_optimizer_locked(void)
->  			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
->  			wake_up(&kprobe_optimizer_wait);
->  
-> -		mutex_unlock(&kprobe_mutex);
-> -		wait_for_completion(&optimizer_completion);
-> -		mutex_lock(&kprobe_mutex);
-> +		/*
-> +		 * kprobe_optimizer() holds 'kprobe_mutex' for a whole pass, which
-> +		 * this drops while sleeping, so a new count means a full pass ran.
-> +		 */
-> +		wait_var_event_mutex(&optimizer_passes,
-> +				     optimizer_passes != passes, &kprobe_mutex);
->  	}
->  }
->  
-> -- 
-> 2.53.0
-> 
+Also if only bind/unbind was used and driver_override not, a resulting
+problem is worth fixing (opposed to what is considered for
+bind+driver_override).
 
+IMHO it would also be fine to drop TAINT_FORCED_BIND, but let time prove
+how many reports we get with TAINT_FORCED_BIND but without
+TAINT_DRIVER_OVERRIDE.
 
+Best regards
+Uwe
+
+ Documentation/admin-guide/tainted-kernels.rst | 6 +++++-
+ drivers/base/bus.c                            | 1 +
+ include/linux/panic.h                         | 3 ++-
+ include/trace/events/module.h                 | 3 ++-
+ kernel/panic.c                                | 3 ++-
+ tools/debugging/kernel-chktaint               | 8 ++++++++
+ 6 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+index abbf5e3dd749..75750a9533e9 100644
+--- a/Documentation/admin-guide/tainted-kernels.rst
++++ b/Documentation/admin-guide/tainted-kernels.rst
+@@ -74,7 +74,7 @@ a particular type of taint. It's best to leave that to the aforementioned
+ script, but if you need something quick you can use this shell command to check
+ which bits are set::
+ 
+-	$ for i in $(seq 20); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
++	$ for i in $(seq 21); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
+ 
+ Table for decoding tainted state
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -103,6 +103,7 @@ Bit  Log  Number   Reason that got the kernel tainted
+  18  _/N   262144  an in-kernel test has been run
+  19  _/J   524288  userspace used a mutating debug operation in fwctl
+  20  _/Y  1048576  device was manually bound or unbound from a driver
++ 21  _/Z  2097152  a driver was forced on a non-matching device
+ ===  ===  =======  ========================================================
+ 
+ Note: The character ``_`` is representing a blank in this table to make reading
+@@ -193,3 +194,6 @@ More detailed explanation for tainting
+ 
+  20) ``Y`` If userspace wrote to the `bind` or `unbind` sysfs files and
+      successfully bound or removed a device from a driver.
++
++ 21) ``Z`` If userspace wrote to a `driver_override` sysfs file opening the gate
++     for unexpected driver binding.
+diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+index c51ad96d4de4..6e91210aab45 100644
+--- a/drivers/base/bus.c
++++ b/drivers/base/bus.c
+@@ -513,6 +513,7 @@ static ssize_t driver_override_store(struct device *dev,
+ {
+ 	int ret;
+ 
++	add_taint_module(drv->owner, TAINT_DRIVER_OVERRIDE, LOCKDEP_STILL_OK);
+ 	ret = __device_set_driver_override(dev, buf, count);
+ 	if (ret)
+ 		return ret;
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index 23976b1dfdb6..e6e24d8afcf7 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -90,7 +90,8 @@ static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
+ #define TAINT_TEST			18
+ #define TAINT_FWCTL			19
+ #define TAINT_FORCED_BIND		20
+-#define TAINT_FLAGS_COUNT		21
++#define TAINT_DRIVER_OVERRIDE		21
++#define TAINT_FLAGS_COUNT		22
+ #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
+ 
+ struct taint_flag {
+diff --git a/include/trace/events/module.h b/include/trace/events/module.h
+index 19df3e39bba4..c7cdb1f53bc6 100644
+--- a/include/trace/events/module.h
++++ b/include/trace/events/module.h
+@@ -27,7 +27,8 @@ struct module;
+ 	{ (1UL << TAINT_FORCED_MODULE),		"F" },		\
+ 	{ (1UL << TAINT_CRAP),			"C" },		\
+ 	{ (1UL << TAINT_UNSIGNED_MODULE),	"E" },		\
+-	{ (1UL << TAINT_FORCED_BIND),		"Y" })
++	{ (1UL << TAINT_FORCED_BIND),		"Y" },		\
++	{ (1UL << TAINT_DRIVER_OVERRIDE),	"Z" })
+ 
+ TRACE_EVENT(module_load,
+ 
+diff --git a/kernel/panic.c b/kernel/panic.c
+index b824b68fcb08..f5476a61f6f3 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -826,6 +826,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ 	TAINT_FLAG(TEST,			'N', ' '),
+ 	TAINT_FLAG(FWCTL,			'J', ' '),
+ 	TAINT_FLAG(FORCED_BIND,			'Y', ' '),
++	TAINT_FLAG(DRIVER_OVERRIDE,		'Z', ' '),
+ };
+ 
+ #undef TAINT_FLAG
+@@ -862,7 +863,7 @@ static void print_tainted_seq(struct seq_buf *s, bool verbose)
+  * exact size is allocated dynamically; the initial buffer remains
+  * as a fallback if allocation fails.
+  *
+- * The verbose taint string currently requires up to 344 characters.
++ * The verbose taint string currently requires up to 364 characters.
+  */
+ #define INIT_TAINT_BUF_MAX 370
+ 
+diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
+index d8628be37214..14d8febd6b16 100755
+--- a/tools/debugging/kernel-chktaint
++++ b/tools/debugging/kernel-chktaint
+@@ -219,6 +219,14 @@ else
+ 	addout "Y"
+ 	echo " * device was manually bound or unbound from a driver (#20)"
+ fi
++
++T=`expr $T / 2`
++if [ `expr $T % 2` -eq 0 ]; then
++	addout " "
++else
++	addout "Z"
++	echo " * a driver was forced on a non-matching device (#21)"
++fi
+ echo "Raw taint value as int/string: $taint/'$out'"
+ 
+ # report on any tainted loadable modules
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.56.0.rc1
+
