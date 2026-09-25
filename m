@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C223A1B5;
-	Fri, 25 Sep 2026 01:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1FF184;
+	Fri, 25 Sep 2026 02:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790298555; cv=none; b=jHk3Igxa7xW9UQNonFKxUQ08EOvgVeRNn2WCbrR4nnAF3xsMwz3PtefBvZEFbCr5UJFLnn5VLvwVSmYRiD/fu3rC6qDkcUh58d15LBmDJbRJSS4lFf6MhThQ/tdo+XLWTNyMIPF8n94/XI7ly9eJ19AR559ExsQQ4AnMZA9X5Yg=
+	t=1790303223; cv=none; b=CQ1NDdLAz54mAJu0Sxo5jR67LqgebVz3xzKgU5TyzhNdvOrQn/6ijX1y4HpYvweKAXKqaJJArP1iBDMOU1y6n286sORw+dtwvRTDpz7POUclJ7BqpyZLnQOvPFqbnedyrvIga7owQChx3MapDquAWZpjEBegQ8Tec7RwomzYqms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790298555; c=relaxed/simple;
-	bh=qB6fHJOTfA6PQMD74N16cYuSENurpQNubc9j37qBuJE=;
+	s=arc-20240116; t=1790303223; c=relaxed/simple;
+	bh=6PXS7H4wFEJClTzUFNo4UzuQSmfvDpFmThwxZEYbYB8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=svOJCUJhhXtYuF8qaZeAH0+0AG3/okrfYhiny54tjg3V8jRzwxKJGE1QgVsOtgmDNktcCuKEBs5YoFO3utPevlAGOTVDBrlnlhQ99h8NnP5SS89D9wK3vY4vSyLZ+/dbbWfxHJtksWYXEMdjYtgRrdJSGLy8vU0T+FJztLPphVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AATyQ69w; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=Fbp50tEInoMlHLI3aS8SanHwDlA3otuqY2mQebFYZRsG7vA+/B4TDx5IIqYgNPX1wUIngdll15fIZx0z7zCJxzx5nWTPF0Xf2lOCr4q149ohrDk/Txej8tFgH8LtH0MWBOx9HtcXfjHTQnvyOTk8SUeOzS7EDuo/z+MC1rEOqxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQIipZNM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AATyQ69w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD311F000FF;
-	Fri, 25 Sep 2026 01:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQIipZNM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C5A1F000FF;
+	Fri, 25 Sep 2026 02:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790298553;
-	bh=9Ij28vRxIvZHuJPgdpGDxrNhsIui5GPI4jf+cAlvS9c=;
+	s=k20260515; t=1790303221;
+	bh=xIV86QW+Coqh6Iuh30T332CDhfsBi3YyDaDo9LRNPcg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=AATyQ69wrNPgSQE/U7XdC3b/4eROqQpEMX+SLjdrvUhI6oPUszCGEmKzMweLjzGyZ
-	 ergSo9z8dg3k65hHMU7WntNe9Br2/gteQWxT81qyoDeNL9g326150pP6n5cylyFXHf
-	 wPGsupgbr0zGFONz9Q+JD8WMkWBqS+91e9fjUaSPagkoSlXui6hQphAaIxS/D1ivoh
-	 ymlwhn9jNc1U5Sr++q6dfFmg7og/gmXH7llH0b7PMKQBByTSXcrzW8omnQAIcqM/ni
-	 TPQn4HJ0UVXU7ifVcs6c5OUUuQLM7iNCLbKBI9fjYe41S3MtCcPVPPH4EDIadDaT4R
-	 Mhnb2eeYTKs9g==
-Date: Fri, 25 Sep 2026 10:09:08 +0900
+	b=oQIipZNMlSPo/4Rd0UOQ3e3qgWvs2ojWz933HYzGA4Vlhc/V9spMb266t7N0wa5Vb
+	 aRXPhDyjSyxQUGgBh0UpkGP2Fx9+mwY0DW/Z70JuYW0hinIzy8XNhowlRC0Mm0aKiP
+	 Q0CItD8NRoByJQU0EN1KBi9eblXtpgmLSdnchioIXehUuhFrlaRc3RH7Kie+EqFlxy
+	 zTo6N+TLrZy4UO77r5+fJ1XXyRo9jaA7N6VIVEvJTcGjUPXTbgWb9mx0aA8XQjcijA
+	 BQ+bJA2zn3YskhogbVpDtOsCKlLIxpZd+xj0lyq4P961n89Jg1SgR9oXTub+12QfLS
+	 HqaufgPpI9JvQ==
+Date: Fri, 25 Sep 2026 11:26:57 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Xiang Gao <gxxa03070307@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Donggeun Yoo <donggeunyoo.kernel@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lorenzo Stoakes
- <ljs@kernel.org>, gao xu <gaoxu2@honor.com>, yinchuang1@xiaomi.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Xiang Gao
- <gaoxiang17@xiaomi.com>
-Subject: Re: [PATCH v4 1/2] tracing: add ring-buffer memory usage statistics
- in tracefs
-Message-Id: <20260925100908.66c46353e5a2abeb73b1e15a@kernel.org>
-In-Reply-To: <arTlRPvmR54Fa71o@google.com>
-References: <20260916063322.472172-1-gaoxiang17@xiaomi.com>
-	<20260921113047.1152602-1-gaoxiang17@xiaomi.com>
-	<20260921113047.1152602-2-gaoxiang17@xiaomi.com>
-	<arJNSjKsJ3bK40dH@google.com>
-	<20260924102755.02084435309be26f664e3333@kernel.org>
-	<arTlRPvmR54Fa71o@google.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v17 10/13] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
+Message-Id: <20260925112657.541352e9e87b745bd56ea76c@kernel.org>
+In-Reply-To: <20260922044325.587F31F00898@smtp.kernel.org>
+References: <179005108298.388919.4535333252892590932.stgit@devnote2>
+	<179005120276.388919.1645992887114424511.stgit@devnote2>
+	<20260922044325.587F31F00898@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,207 +48,127 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Sep 2026 09:54:28 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Tue, 22 Sep 2026 04:43:24 +0000
+sashiko-bot@kernel.org wrote:
 
-> On Thu, Sep 24, 2026 at 10:27:55AM +0900, Masami Hiramatsu wrote:
-> > On Tue, 22 Sep 2026 10:41:30 +0100
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> > 
-> > > On Mon, Sep 21, 2026 at 07:30:45PM +0800, Xiang Gao wrote:
-> > > > Report the memory consumed by the tracing ring buffers, rather than the
-> > > > usable data capacity exposed by buffer_size_kb. Android low-memory
-> > > > diagnostics need this to attribute the memory used by tracing when
-> > > > calculating lost RAM.
-> > > > 
-> > > > The buffers can be spread across the global trace array, dynamically
-> > > > created instances, and snapshot buffers. Userspace currently has to
-> > > > discover and sum every instance, and snapshot memory is not exposed by
-> > > > the per-instance totals.
-> > > > 
-> > > > Add a trace_stats directory with memory_usage_kb reporting:
-> > > > 
-> > > >   buffers:
-> > > >   snapshot_buffers:
-> > > > 
-> > > > covering the global trace array, all instances, and the bootstrapping
-> > > > temp_buffer across all CPUs.
-> > > > 
-> > > > The values account for the full pages backing the data sub-buffers and
-> > > > reader page, plus the cached read page and mmap metadata page when
-> > > > present. Slab-allocated ring-buffer metadata is not included, as it is
-> > > > already reported through Slab and would be double-counted when
-> > > > subtracting tracing memory from lost RAM. Remote buffers, whose pages
-> > > > are externally owned, report zero.
-> > > 
-> > > For the next version, it is good practice to __not__ in-reply-to with previous
-> > > version.
-> > > 
-> > 
-> > Indeed. This is hard to find which is the latest version.
-> > 
-> > > > 
-> > > > Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
-> > > > ---
-> > > >  Documentation/trace/ftrace.rst | 12 +++++
-> > > >  include/linux/ring_buffer.h    |  1 +
-> > > >  kernel/trace/ring_buffer.c     | 41 +++++++++++++++
-> > > >  kernel/trace/trace.c           | 95 ++++++++++++++++++++++++++++++++++
-> > > >  4 files changed, 149 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> > > > index 7261f25f8b4b..99ddfe26b7cd 100644
-> > > > --- a/Documentation/trace/ftrace.rst
-> > > > +++ b/Documentation/trace/ftrace.rst
-> > > > @@ -218,6 +218,18 @@ of ftrace. Here is a list of some of the key files:
-> > > >  
-> > > >  	This displays the total combined size of all the trace buffers.
-> > > >  
-> > > > +  trace_stats/memory_usage_kb:
-> > > > +
-> > > > +	This reports the memory consumed by the ring buffers, as opposed to
-> > > > +	the usable data capacity shown by buffer_size_kb. The value covers the
-> > > > +	main and snapshot buffers of the global trace array and all tracing
-> > > > +	instances. It does not include slab-allocated ring-buffer metadata.
-> > > > +
-> > > > +	Output::
-> > > > +
-> > > > +	    buffers: ...
-> > > > +	    snapshot_buffers: ...
-> > > > +
-> > > >    buffer_subbuf_size_kb:
-> > > >  
-> > > >  	This sets or displays the sub buffer size. The ring buffer is broken up
-> > > > diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> > > > index eac3e9080c3c..96b99e6757d4 100644
-> > > > --- a/include/linux/ring_buffer.h
-> > > > +++ b/include/linux/ring_buffer.h
-> > > > @@ -167,6 +167,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
-> > > >  bool ring_buffer_iter_dropped(struct ring_buffer_iter *iter);
-> > > >  
-> > > >  unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu);
-> > > > +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu);
-> > > >  unsigned long ring_buffer_max_event_size(struct trace_buffer *buffer);
-> > > >  
-> > > >  void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu);
-> > > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > > index 04bb94c29f58..efb88bf8970c 100644
-> > > > --- a/kernel/trace/ring_buffer.c
-> > > > +++ b/kernel/trace/ring_buffer.c
-> > > > @@ -6559,6 +6559,47 @@ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(ring_buffer_size);
-> > > >  
-> > > > +/**
-> > > > + * ring_buffer_memory_size - return the memory used by the buffer (in bytes)
-> > > > + * @buffer: The ring buffer.
-> > > > + * @cpu: The CPU to get ring buffer memory from.
-> > > > + *
-> > > > + * Returns the page-allocator memory consumed by @cpu, including the data
-> > > > + * sub-buffers, the reader page, the cached read page, and the mmap
-> > > > + * metadata page. Unlike ring_buffer_size(), which reports the usable data
-> > > > + * capacity, this accounts for the full pages allocated to the buffer.
-> > > > + * Remote buffers do not own page-allocator memory and report zero.
-> > > > + */
-> > > > +unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu)
-> > > > +{
-> > > > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > > > +	unsigned long subbuf_size;
-> > > > +	unsigned long size;
-> > > > +
-> > > > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > > > +		return 0;
-> > > > +
-> > > > +	/* Remote buffers use externally owned memory. */
-> > > > +	if (buffer->remote)
-> > > > +		return 0;
-> > 
-> > For the persistent ring buffer, you also need to check `buffer->range_addr_start`.
-> > That is a reserved memory, which is outside of page allocator.
-> > 
-> > > 
-> > > This is a generic interface. If you want to call this function on a remote
-> > > buffer, you should be able to.
-> > 
-> > But as the comment said, this function returns the size of page-allocator
-> > memory. Is remote ring buffer allocated from host?
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] tracing/wprobe: NMI deadlock in wprobe_trigger() when count is not specified
+> - [High] tracing/wprobe: CPU hotplug race in __register_trace_wprobe() misses new CPUs
+> - [Medium] tracing/wprobe: TOCTOU race in wprobe_trigger() corrupts watchpoint address
+> --
 > 
-> It is down to the trace_remote implementer where the memory comes from, but
-> right now, all remote ring buffer are allocated from the buddy allocator.
+> commit b9f67542e6bf772512bb8cbf3c3011379c301eb4
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+> 
+> Add set_wprobe and clear_wprobe event triggers to dynamically attach
+> and detach hardware breakpoint address monitoring based on event field
+> contents.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > index 9c6100b63e8d9..f1d6aa320f213 100644
+> > --- a/kernel/trace/trace_wprobe.c
+> > +++ b/kernel/trace/trace_wprobe.c
+> > @@ -193,20 +217,130 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
+> 
+> [ ... ]
+> 
+> >  	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
+> >  	if (IS_ERR_PCPU(tw->bp_event)) {
+> >  		int ret = PTR_ERR_PCPU(tw->bp_event);
+> >  
+> >  		tw->bp_event = NULL;
+> >  		return ret;
+> >  	}
+> >  
+> > +	mutex_lock(&wprobe_mutex);
+> > +	list_add(&tw->active_list, &active_wprobes);
+> > +	mutex_unlock(&wprobe_mutex);
+> > +
+> 
+> [Severity: High]
+> Does this code have a race condition with CPU hotplug?
+> 
+> Looking at __register_trace_wprobe(), it calls register_wide_hw_breakpoint()
+> which installs breakpoints and releases the hotplug lock internally.
+> 
+> If a new CPU comes online immediately after that lock is released, but before
+> this wprobe is added to active_wprobes under wprobe_mutex, could the
+> wprobe_cpu_online() callback miss the wprobe? This would leave the new CPU
+> without hardware breakpoints installed for this probe.
 
-Ah, I got it, its size should be reported via ring_buffer_memory_size().
-Hmm, maybe we should add a callback for each trace instance so that it
-can return the actual size and the attribute (host memory, guest memory,
-reserved memory, or device memory (e.g. GPU memory?))
+Hmm, OK. Taking a cpus_read_lock() for both can avoid this issue.
 
 > 
-> Although, even coming from a carveout, the low-level function should probably
-> return something in any case, as it has all the informations it needs and to
-> stay as generic as possible.
+> >  	return 0;
+> >  }
 > 
-> Then, the caller (trace_stat) should know if the information is relevant or not,
-> or where to account for it. (probably with TRACE_ARRAY_FL_ flags ?). trace_stat
-> shouldn't report only what's relevant for Android. It can however split the
-> report between persistent ring-buffers and the others.
+> [ ... ]
+> 
+> > @@ -767,9 +923,608 @@ static int trace_wprobe_show(struct seq_file *m, struct dyn_event *ev)
+> 
+> [ ... ]
+> 
+> > +static void wprobe_trigger(struct event_trigger_data *data,
+> > +			   struct trace_buffer *buffer,  void *rec,
+> > +			   struct ring_buffer_event *event)
+> > +{
+> > +	struct wprobe_trigger_data *wprobe_data = data->private_data;
+> > +	struct trace_wprobe *tw = wprobe_data->tw;
+> > +	unsigned long target_addr, addr = 0, flags;
+> > +
+> > +	if (wprobe_data->field) {
+> > +		if (!rec)
+> > +			return;
+> > +		addr = *(unsigned long *)((char *)rec + wprobe_data->offset);
+> > +		addr += wprobe_data->adjust;
+> > +	}
+> > +
+> > +	raw_spin_lock_irqsave(&tw->lock, flags);
+> > +
+> 
+> [Severity: High]
+> Could this raw_spin_lock_irqsave() cause a deadlock if interrupted by an NMI?
+> 
+> When no count limit is specified (EVENT_TRIGGER_FL_COUNT is not set),
+> wprobe_trigger() takes tw->lock before calling __wprobe_count_func().
+> 
+> If an NMI interrupts a CPU already holding tw->lock and hits a trace event
+> that fires the same uncounted trigger, it will attempt to acquire tw->lock
+> again here. Since the in_nmi() check is located inside __wprobe_count_func(),
+> the NMI would spin forever before realizing it shouldn't proceed.
 
-Yeah, this should return the attribute flag with the memory size.
+Ah, indeed. It should check in_nmi() earlier than the spin lock.
 
 > 
-> Overall, we could have
+> > +	if (!(data->flags & EVENT_TRIGGER_FL_COUNT)) {
+> > +		if (!__wprobe_count_func(data, addr)) {
+> > +			atomic_inc(&tw->missed);
+> > +			goto out;
+> > +		}
+> > +	}
 > 
-> cat trace_mem
+> [Severity: Medium]
+> Is there a time-of-check to time-of-use (TOCTOU) race here for counted
+> triggers?
 > 
->   main:
->   instances:
->   snapshots:
->   persistents: 
->   remotes:
+> For counted triggers, wprobe_count_func() is called locklessly by the trace
+> core, which evaluates __wprobe_count_func(). Then, wprobe_trigger() is called
+> and takes tw->lock. Because EVENT_TRIGGER_FL_COUNT is set, the state
+> validation check (__wprobe_count_func()) is explicitly skipped under the lock.
 > 
->   total_system:
->   total_carveout:
-> 
-> Which I believe would be a more accurate picture: First the memory sorted by
-> "type" of buffers and then by "type of memory".
+> If a counted trigger fires concurrently on multiple CPUs, both might
+> observe the unset address locklessly. Could the second CPU unconditionally
+> overwrite tw->addr, breaking the exclusive trigger constraint?
 
-Agreed.
-
-> 
->  
-> > 
-> > > 
-> > > Moreover, remote buffer in-production current use is for Android... So not only
-> > > ring_buffer_memory_size() should support them, but they should probably be
-> > > actively reported somewhere...
-> > 
-> > Maybe we should have different size accounting interface for remote buffer
-> > and persistent buffer.
-> 
-> For the remote, it should probably sit in trace_remote.c, which can call
-> ring_buffer_memory_size(). trace_stat can then query the memory size from
-> trace_remote.
-
-I think the copy of the persistent ring buffer (backup instance) could be
-implemented as remote, but the persistent ring buffer itself is not remote
-because it is writable. (copy ring buffer is actually like remote, it is
-read only, and it should be auto unloaded.)
+Hmm, indeed. I think the current event trigger subsystem is not well
+designed for the concurrency. Let me move the data->count update to
+wprobe_trigger() inside tw->lock critical region.
 
 Thank you,
-
-> 
-> And actually I have a pending series where I keep the list of trace_remote [1]
-> which would be a prerequisite.
-> 
-> [1] https://lore.kernel.org/all/20260817135517.3919534-2-vdonnefort@google.com/
-> 
-> > 
-> > Thanks,
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> -- 
-> Vincent
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
