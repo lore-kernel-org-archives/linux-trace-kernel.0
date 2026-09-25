@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A730395AFB;
-	Fri, 25 Sep 2026 14:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3DE4D9573;
+	Fri, 25 Sep 2026 16:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790346509; cv=none; b=RDds19P0lLGnpWbWel8v7Wtk/gSzlKi4pXTK4y9VxXdTGXHzUGSChiQ0OrCE/7+lCWcD9qsph1UHaeh6UPZRBJzHfPD4PS4zjumkIWgEpCGSup56mxhmylqO+7xTisvrBDfyleJIMzPVXODeUJVA60iW5JTewoJbwMnLRBcqutA=
+	t=1790354322; cv=none; b=hPOF0KvWGLUjevvlG0119FVG7iXkxek4BX/SzEktpFM/v6wTMLT8O0UxMNo8H9xrKiVHKFpxMiJ9CvuH7sa+Lj2SZyhCVKjvGvQHwJ+6Z9bk60HyaJIY4UmR87mtSVdVubkVqkSZ6i1l3WkJKr4RPi51xNjG7tbeFjqBMPYnjUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790346509; c=relaxed/simple;
-	bh=CRZuqGr10cJAsTOWqM27qfJGoBw3MW3h0E/Z6zUfFxs=;
+	s=arc-20240116; t=1790354322; c=relaxed/simple;
+	bh=7JEZFKX+P/T1np0rBfRn5XbrnUCGgHH+54tJTV1OQXU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GqLGAhOIj+fAnRiAvIQKhSPAmw+M06L+PA7DK5VoJ3dVLXUSSNNKqW9xbHrpND4izMZ6JGV7O8TZFxiTjrHubN6ZqgGF1qfVQllOH7meSJxveIu+vMyDiMxuuYbJKJzM9Pi1pbKKi2/aFDbvX4wXvILVIYvkADBr9xJzUqgu4Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V07CjrEI; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=oZL4iBqI4JK15ZEzZ3Z6VlXHtRxk7A29EmrRPKk5colh67jJmkAV8ctJoYD0WX+JJBNcnXL6/NjAXuARe8mAWf14pOEbUUVNrfH7hWCJT64Q+taZjikWWLB4KEIIakU2IHeLDHzP3umkT5fdk7+g0TLpVzorOEpiB+tNdiIuSg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER993GLF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V07CjrEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEA31F000FF;
-	Fri, 25 Sep 2026 14:28:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER993GLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA6201F00893;
+	Fri, 25 Sep 2026 16:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790346507;
-	bh=6LSNpmMhH3IgC836Hc/le3/h3yCpQ5DOv9o6ecFpYpg=;
+	s=k20260515; t=1790354316;
+	bh=Ef5AYQYzA6WRtJxzWsmKVPm+wztV1FQUcjUH5RY8340=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=V07CjrEIi0kH2G/IiBGBqsqP4+5dt4n2L9qyf3zOrBgzbEpaGcG0/TfKdsMnqeDfo
-	 9mingLgE7CLnNkwhBeO9EKUjyXoHcha2hCMx+kV+qm7WTrf3slioXbD6bZeOlVaaIY
-	 KXwduaMqUI2zOBKJBDHPAnuNE0EY+l5Au4n4Jogygt7mTOVtvnKJJEoNlhZ/duCn2u
-	 OT9TSIA1eqsP5NAKMNlxcuYcWtWMgYdAedVvt15mBG9TIFf5a0JAp+AuhJ2KAffBXk
-	 ypeTGO+cg44O4c0uzLo3owf7+6qUIPTBorgf025HjJ3FIQUdii0xbBg5KLWxBGCdLM
-	 ETAkGPEQfDfKA==
-Date: Fri, 25 Sep 2026 23:28:22 +0900
+	b=ER993GLFdFWegZ1zeJakvYgwmNtNST0z1wbj7yRNKh1rwstT4dVw1BDWN4mx6hRt+
+	 E9q8dgtPMHNudVEujWTF/4jAJ2r+8gLELbFtKKZLSyoOEO6KVpLXgcWItrwUI+oA0Q
+	 CeUlFIdkaIdRVgr1ykl5B1fzAa/gk/ZxMB9IhPCEZv3U2PHJ4mYOsCBXQhliOKU1qV
+	 gfL43YaEpPISCRDVyy/PqZD5z3inJ/Ffsnp+tCCVUmikrnjjZoYhXBmWb24FST4Df1
+	 qIVuDhsBhvztbE1aem5vP93USxJ1GCUTXL64TcW/hargRO7ULBLZWo7eGBSfw80mP4
+	 CUNqT89AnHBUw==
+Date: Sat, 26 Sep 2026 01:38:32 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Danish Khateeb <danishkhateeb03@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Allen
- Pais <allen.lkml@gmail.com>, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] sparc64: kprobes: fix relbranch_fixup() for BPr,
- FBfcc and FBPfcc
-Message-Id: <20260925232822.094082fd46fb3b02d9cfff10@kernel.org>
-In-Reply-To: <20260923144909.414968-2-danishkhateeb03@gmail.com>
-References: <20260923144909.414968-1-danishkhateeb03@gmail.com>
-	<20260923144909.414968-2-danishkhateeb03@gmail.com>
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Steven Rostedt <rostedt@goodmis.org>, Josef Bacik
+ <josef@toxicpanda.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Fix permanent hang when flushing the kprobe
+ optimizer
+Message-Id: <20260926013832.abaa63a3903d563655bc60d6@kernel.org>
+In-Reply-To: <20260924092142.199198-1-parri.andrea@gmail.com>
+References: <20260924092142.199198-1-parri.andrea@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,73 +48,173 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Sep 2026 09:49:07 -0500
-Danish Khateeb <danishkhateeb03@gmail.com> wrote:
+On Thu, 24 Sep 2026 11:21:39 +0200
+Andrea Parri <parri.andrea@gmail.com> wrote:
 
-> A kprobe single-steps a copy of the probed instruction in
-> p->ainsn.insn[]. When the copy is a taken PC-relative branch, its target
-> is relative to the copy, and relbranch_fixup() moves it back to the
-> probed code. It only recognizes call, BPcc and Bicc, though. For a taken
-> BPr (brz, brnz, ...), FBfcc or FBPfcc it keeps the target as is, and the
-> kernel continues at the copy's address plus the branch displacement.
+> Writing 0 to /proc/sys/debug/kprobes-optimization while a kprobe is
+> jump-optimized never returns. The writer sleeps in D state forever with
+> kprobe_sysctl_mutex held, so any later read or write of that sysctl
+> hangs as well. For example, with vfs_read+9 as an optimizable address
+> in this build:
 > 
-> GCC often starts a function with a BPr on an argument. For example,
-> __se_sys_getcpu() begins with "brz,pn %o0". With a kprobe on it
-> ("p:kprobes/kgetcpu __se_sys_getcpu" in kprobe_events), the first
-> getcpu(NULL, NULL, NULL) crashes the kernel in QEMU sun4u:
+>   # cd /sys/kernel/tracing
+>   # echo 'p:myprobe vfs_read+9' >> kprobe_events
+>   # echo 1 > events/kprobes/myprobe/enable
+>   # # wait until /sys/kernel/debug/kprobes/list shows [OPTIMIZED]
+>   # echo 0 > /proc/sys/debug/kprobes-optimization
 > 
->   init(1): Kernel illegal instruction [#1]
->   TSTATE: 0000004411001603 TPC: fffff800048d63c0 TNPC: fffff8000492631c
->   Kernel panic - not syncing: Fatal exception
+>   INFO: task sh:246 blocked for more than 10 seconds.
+>   Call Trace:
+>    <TASK>
+>    __schedule+0x1176/0x4f70
+>    schedule+0xdc/0x2c0
+>    schedule_timeout+0x17b/0x260
+>    wait_for_completion+0x173/0x3c0
+>    wait_for_kprobe_optimizer_locked+0xbc/0x130
+>    proc_kprobes_optimization_handler+0x156/0x1b0
+>    proc_sys_call_handler+0x324/0x490
+>    vfs_write+0x52d/0xfe0
+>    ksys_write+0xff/0x200
+>    do_syscall_64+0x106/0x630
+>    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>    </TASK>
+>   ...
+>   INFO: task cat:265 is blocked on a mutex likely owned by task sh:246.
 > 
-> Add the missing branch formats. BPr is matched with bit 28 clear. The
-> CBcond instructions of newer CPUs share its op2 value, but they have no
-> delay slot, so a taken one never reaches the single-step breakpoint and
-> this function.
+> wait_for_kprobe_optimizer_locked() reinitializes optimizer_completion,
+> asks the optimizer thread to flush and sleeps in wait_for_completion().
+> The thread drains the (un)optimizing lists, but calls complete() only
+> if completion_done() is true, i.e. if the completion is already done,
+> which never happens while someone waits. disarm_all_kprobes() and
+> kprobe_trace_self_tests_init() wait the same way.
 > 
-
-Sounds reasonable. From kprobes maintainer point of view:
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
-Thanks,
-
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Calling complete() unconditionally would not be enough: the waiter
+> drops kprobe_mutex while it sleeps, and nothing else serializes the
+> sysctl handler against the debugfs "enabled" file. A second flusher
+> that still finds the lists non-empty, e.g. because a disabled probe is
+> queued for unoptimizing, reinitializes the completion under the first:
+> 
+>   sysctl write                      debugfs "enabled" write
+>   unoptimize_all_kprobes()
+>     wait_for_kprobe_optimizer_locked()
+>       init_completion(c)
+>       mutex_unlock(&kprobe_mutex)
+>       wait_for_completion(c)
+>                                     disarm_all_kprobes()
+>                                       wait_for_kprobe_optimizer_locked()
+>                                         init_completion(c)
+>                                           // c->wait is reset, the first
+>                                           // waiter is off the queue
+>                                         mutex_unlock(&kprobe_mutex)
+>                                         wait_for_completion(c)
+>   kprobe_optimizer()
+>     complete(c)
+>       // wakes the debugfs writer only
+> 
+> where c is &optimizer_completion. Lining up the two writes during an
+> optimizer pass loses the sysctl writer this way.
+> 
+> Replace the completion with a counter of optimizer passes, bumped at the
+> end of each pass and signalled with wake_up_var_locked(), both under
+> kprobe_mutex. A flusher samples the count and waits with
+> wait_var_event_mutex(), which drops kprobe_mutex only while sleeping, so
+> a new count means a whole pass ran in the meantime. Nothing is
+> reinitialized, so several flushers can sleep in the wait at once.
+> 
+> Fixes: 73c12f209462 ("kprobes: Use dedicated kthread for kprobe optimizer")
 > Cc: stable@vger.kernel.org
 > Assisted-by: LLM
-> Signed-off-by: Danish Khateeb <danishkhateeb03@gmail.com>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
 > ---
->  arch/sparc/kernel/kprobes.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
+> This overlaps with two patches under discussion in the "rcu-tasks: build
+> Tasks RCU on Tasks Trace readers in trampolines" thread:
 > 
-> diff --git a/arch/sparc/kernel/kprobes.c b/arch/sparc/kernel/kprobes.c
-> index 191bbaca9921..9a26c57c8d33 100644
-> --- a/arch/sparc/kernel/kprobes.c
-> +++ b/arch/sparc/kernel/kprobes.c
-> @@ -207,12 +207,15 @@ static unsigned long __kprobes relbranch_fixup(u32 insn, struct kprobe *p,
->  	if (regs->tnpc == regs->tpc + 0x4UL)
->  		return real_pc + 0x8UL;
+>  - Masami's RFC "kprobes: Make optprobe optimizer multi-generational and
+>    asynchronous" [1] rewrites the same code.  It drops the
+>    completion_done() check, which fixes the hang reported here, but it
+>    keeps init_completion() in wait_for_kprobe_optimizer_locked(), so the
+>    concurrent-flusher case described above remains.  The two patches
+>    conflict textually.
+
+OK, this fix looks good to me. Let me pick this for probes/fixes and
+rebase mine on top of it. Anyway I think we need both.
+
+Thank you,
+
+> 
+>  - Josef's "kprobes: Expose the optprobe jump window to Tasks RCU" [2]
+>    changes kprobe_optimizer() around synchronize_rcu_tasks(); its
+>    kernel/kprobes.c hunks still apply on top of this patch.
+> 
+> [1] https://lore.kernel.org/all/179017148080.466588.9116221556625712980.stgit@devnote2/
+> [2] https://lore.kernel.org/all/20260922-b4-rcu-tasks-preempt-qs-v5-3-410f57770bad@toxicpanda.com/
+> 
+>  kernel/kprobes.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 6337da5cab9e7..4edd8ca5c6578 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -42,6 +42,7 @@
+>  #include <linux/execmem.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/wait.h>
+> +#include <linux/wait_bit.h>
 >  
-> -	/* The three cases are call, branch w/prediction,
-> -	 * and traditional branch.
-> +	/* The cases are call and the branches with a PC-relative
-> +	 * displacement.
->  	 */
-> -	if ((insn & 0xc0000000) == 0x40000000 ||
-> -	    (insn & 0xc1c00000) == 0x00400000 ||
-> -	    (insn & 0xc1c00000) == 0x00800000) {
-> +	if ((insn & 0xc0000000) == 0x40000000 ||	/* call */
-> +	    (insn & 0xc1c00000) == 0x00400000 ||	/* BPcc */
-> +	    (insn & 0xc1c00000) == 0x00800000 ||	/* Bicc */
-> +	    (insn & 0xd1c00000) == 0x00c00000 ||	/* BPr */
-> +	    (insn & 0xc1c00000) == 0x01400000 ||	/* FBPfcc */
-> +	    (insn & 0xc1c00000) == 0x01800000) {	/* FBfcc */
->  		unsigned long ainsn_addr;
+>  #include <asm/sections.h>
+>  #include <asm/cacheflush.h>
+> @@ -526,7 +527,8 @@ enum {
+>  	OPTIMIZER_ST_FLUSHING = 2,
+>  };
 >  
->  		ainsn_addr = (unsigned long) &p->ainsn.insn[0];
+> -static DECLARE_COMPLETION(optimizer_completion);
+> +/* Bumped at the end of each kprobe_optimizer() pass, under 'kprobe_mutex' */
+> +static unsigned long optimizer_passes;
+>  
+>  #define OPTIMIZE_DELAY 5
+>  
+> @@ -654,9 +656,9 @@ static void kprobe_optimizer(void)
+>  		do_free_cleaned_kprobes();
+>  	}
+>  
+> -	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
+> -	if (completion_done(&optimizer_completion))
+> -		complete(&optimizer_completion);
+> +	/* Step 5: Wake up flushers, and kick optimizer again if needed. */
+> +	optimizer_passes++;
+> +	wake_up_var_locked(&optimizer_passes, &kprobe_mutex);
+>  
+>  	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+>  		kick_kprobe_optimizer();	/*normal kick*/
+> @@ -708,7 +710,8 @@ static void wait_for_kprobe_optimizer_locked(void)
+>  	lockdep_assert_held(&kprobe_mutex);
+>  
+>  	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+> -		init_completion(&optimizer_completion);
+> +		unsigned long passes = optimizer_passes;
+> +
+>  		/*
+>  		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
+>  		 * idle. If it's already kicked, it will see the state change.
+> @@ -717,9 +720,12 @@ static void wait_for_kprobe_optimizer_locked(void)
+>  			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
+>  			wake_up(&kprobe_optimizer_wait);
+>  
+> -		mutex_unlock(&kprobe_mutex);
+> -		wait_for_completion(&optimizer_completion);
+> -		mutex_lock(&kprobe_mutex);
+> +		/*
+> +		 * kprobe_optimizer() holds 'kprobe_mutex' for a whole pass, which
+> +		 * this drops while sleeping, so a new count means a full pass ran.
+> +		 */
+> +		wait_var_event_mutex(&optimizer_passes,
+> +				     optimizer_passes != passes, &kprobe_mutex);
+>  	}
+>  }
+>  
 > -- 
-> 2.55.0
+> 2.53.0
 > 
 
 
