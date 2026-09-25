@@ -1,33 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F033B52F8;
-	Fri, 25 Sep 2026 14:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226C536B930
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 14:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790345037; cv=none; b=o8TGnwXjd3yGG/UyT3r8dF316qPNqvAf/U6p4nismrEjw2+3ic7YRzDEYPS8hxB8cFDlGSlKKQwSy2E2bpjcuwSUqdA+Bgvrzxc4t31844psRPDweiHJAtxO8nEX9daIRWy+DKfslb+Ye3vyJXLqVwF0W0Jm0o9wS5ouqjaPXr4=
+	t=1790345414; cv=none; b=NjUVFew93pRVF1mJbFCqSo9KRxJ7Dpg9BrZC5kevTXQqkkshftrg6dGhzM0Zw9qW9I0Hp7OFoIGBnJGCeNtX7TtBxo4hA8M3TfMH075RLH7kbiAUMb2i7iZ/S10C5JLMrq/3NI3xNJ0M+WFwNimQ0YUcOT/YVbg7ryIcd8/Kyko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790345037; c=relaxed/simple;
-	bh=nGwG0y3l4cxBaRoR6EH21EjZEXS6RkbHZZjT1Ci/uHo=;
+	s=arc-20240116; t=1790345414; c=relaxed/simple;
+	bh=MaqbqWc2/dFkqoXAaoGX/GjWl4wzzfu9GUD+ZiHRzEc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q4c6QGt81dq2fForUHXC71ruFCIJ8LEFWfml1jNP6/xNDFQR0GHePZj5SCGYoaB0SkoJSSSNmLJOosTw8qBmW1CKx6KTefcHE4TBoZHq8CEmOvIzUumkCkHtOZbt7zEOsYNgiq9kURD8ll3ad4F7vTK2PPOhdcm76Exqlwc1C4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVWp1HYs; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=Oj3Q3j/ks+t/5ZnRYUav/WZAnEf039sux8Kkr231ddisXxCJZ/kI0fn7C+p0Xi8oWWSeRTBqG/p6sdA84vPRScf+ZhTdX/qLbIAUkgbjPq0jlXJqU6GQ1eXSTXIlYFnYpOknYugU/B+mwhfTompZDLMW6zeb37SZPL2axvFRPoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kcW744Pl; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BW4fZdsD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVWp1HYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41FF1F00899;
-	Fri, 25 Sep 2026 14:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790345035;
-	bh=moEJ5DD1kCJ2wQs0dyY2lmQMFAV3DitHCHfCeQeaslY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jVWp1HYskHLauwnYvlaUdGxmSJA0e4Ng6vPNyBJltu9Um+fny4d/P9Ar2HgcIM6I8
-	 UEmr4uxjBX8GbrfIXH20gvdTaPzYS9l4DAph/19rnVtTHzbjg+uC5eKKMTcIWqUC2L
-	 ljfZowz4e8o/1+42IEqak7WBI3tgVSrDeoJsvv/PSfuEML/oRcyFn8ZZYRKkpQEt57
-	 U5jIUeXr8tVbGEQz8Qlc29zuO/TDS6ywutxvBmWZrd2qLj8IhzN3K8jJ3am+rS7SZV
-	 q2l/Qk0abhXjp0zD1YTgHwCtuI0zt+RX8kRo00b1sGI47Z04YZP+jcAnNRVip5TAQk
-	 pqOqj32xOf01A==
-Message-ID: <52e41c9f-c91c-42f9-8238-f8c7ff3e8b21@kernel.org>
-Date: Fri, 25 Sep 2026 16:03:35 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kcW744Pl";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BW4fZdsD"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68PE2NI23628196
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 14:10:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	H/EQVVKLz9a3Hib3j2NdYC7VuMgC/jlWCcU786W+/ts=; b=kcW744PldxktVsEr
+	tWdN352+Mos0thb7P7hASOQNLDOmni5xagL4mDoMlY7N/J8Ax2TqM6O23tIuzF2L
+	DFR7t1l6YXkeE+If6dhXErKFXbpuLl97NeA8XxbTe05oKZx8mesPj9qOnhCKWADp
+	RNwFX8QRsY7YrfeGdb0oS1uVu7skN0Zmnr2Qnd6NITXejrJaYRYlasHAV4uPJpd6
+	1NYdoFlPlJL5YdC+KNdrrj+jYA6SCqimI4GEMVRXMsSXwkm/ViAw6j69vgIRtZD+
+	WsnGh4Mp+WkPqu3ob9Ejyg8ACLTNcJ5nkt7aXObzoDyqQkEHEXpp5VuKmPWl0W2o
+	4CsunQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gwjq39nuq-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 14:10:11 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cb11535e6a1so572774a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 07:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1790345410; x=1790950210; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=H/EQVVKLz9a3Hib3j2NdYC7VuMgC/jlWCcU786W+/ts=;
+        b=BW4fZdsDFPEFTbgomRsk/AQF4h7rTpdXyBqXl4lbNGYl0HXoqSUn9N16yHMQsizQEK
+         3JhGLzrOFsDaSmMEHyBzFjYLhpR0pgiDLm2loWGix7XOvWudcN9k3hC/1uSliVTVW0zC
+         UxFhiXzJKZRUEuQz7Eumql0r7K9sXcLIhgjW0+VMYZ/Ni4M2pUIrmF+gw2TUtDKDO8p/
+         kxAZkzB37np/pg0t4RvSt8wHVZ26ZKeiMYFGW1Ibd5jWIYlYrW6ifcSZJCUZNE7Q2BXn
+         Qgp5LW6eAOMePxHQTg69H05xWTSnA7fyPSYsblB+Ys9WAynDNRyh7tdKr0noQQtGhHr3
+         mMJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790345410; x=1790950210;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=H/EQVVKLz9a3Hib3j2NdYC7VuMgC/jlWCcU786W+/ts=;
+        b=kZLZagGR1tUpCpc6yhNa4TBBKya3jTprI7N+sehPl8vWQxUlQosvaPn7iLU452Axai
+         DWph/+CQ545z/GHmgLGH1CVgwAbo2WibzjlTozIZMGgRsmcPuGC3yAWuyxhT9LDQCWYm
+         j+y03s08ZfW4296MRXLMYRz9K0XLIMN/9ehGgoc93jLA7iuvWmaOyxmpLUdX9iq/gJuA
+         S9uGZtksbuYL+Ixt2I0RPGAxDSYzi4YKcmeJnEwEniuTl9aNnhlu1i0uT+ndL0FP56By
+         n+3n9OIei5oLf15IyP1SqhQE3o5+c1v/TZnqIT99y/x1REsucv+7jbOba7kA1tMzlsd0
+         Xjgw==
+X-Forwarded-Encrypted: i=1; AKwUvBxQJ0LSQ7cFh1CNT90CDODhDuZEr0cwjSGF+iR6BIcJGq8RAfELT6KmhioFeXr5r9d0NqGxe0rAKEjvYHmUsDOvKzA=@vger.kernel.org
+X-Gm-Message-State: AFuF++l6UHACokiIBXO1MhgJ3rhzw4/prlJzi2vyENZvTzvOfqQk+Yr5
+	H/1n8mwmB5Jzt3JM19Sf3m6mDGZsJOxhKH1vZEupDAnGH4ikGy9m0eCO28kpxonJSZy2uQXRKBV
+	YjxhRW53hyKATDEiuHghOSSSACNeF2RnT8LcPmy7Vb1U6p1il1dkwW4rC6sW/WAld9qvh5zAEcQ
+	0=
+X-Gm-Gg: AYBFou2aEaE3z/lrVeGu+368iFpujj1UIL1gbATe7V6JE0zGc6icIGnLC1x0we38A37
+	4ajI5o+GSw5kZlNvNgmuXxauoJL+6zD6KR0CCqHOO/PFCLlic4pf1mqDlSgOCL4Ub4e/Ac3sNUy
+	pPQYBYyx+J9FLuSMD1HMz0AAQIUYCTaFvx+7xTBscX4c/yRyF/MM8kkEzPGIXh38Gxo0epvangW
+	AkLN1VvXz3KgUWlto99QfytrLaV/BSEcJ6dufvUF5j4wkC8FBlpFerDDxJxFINvcxlKIvbUGIXR
+	If85ysUim7enduy8ZIP2ETOqVP14gKr95iByUOJ2aUpoT6m/UpNqm6nirfpaoiLs7RSkzutjpIk
+	+Qrlqbp7+Yp9Q/8UQlhL/L4KM5srKZCI=
+X-Received: by 2002:a17:90b:224e:b0:3a0:cbe2:9e0c with SMTP id 98e67ed59e1d1-3a0cbe2a16cmr701474a91.63.1790345410284;
+        Fri, 25 Sep 2026 07:10:10 -0700 (PDT)
+X-Received: by 2002:a17:90b:224e:b0:3a0:cbe2:9e0c with SMTP id 98e67ed59e1d1-3a0cbe2a16cmr701438a91.63.1790345409560;
+        Fri, 25 Sep 2026 07:10:09 -0700 (PDT)
+Received: from [192.168.0.3] ([49.204.107.168])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0b8ce3f12sm1664008a91.2.2026.09.25.07.10.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Sep 2026 07:10:08 -0700 (PDT)
+Message-ID: <4ec85347-1d84-421b-9a49-1d2fc21a2e36@oss.qualcomm.com>
+Date: Fri, 25 Sep 2026 19:40:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,119 +90,409 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 00/44] guest_memfd: In-place conversion support
-To: Ackerley Tng <ackerleytng@google.com>,
- Sean Christopherson <seanjc@google.com>, aik@amd.com,
- andrew.jones@linux.dev, binbin.wu@linux.intel.com, brauner@kernel.org,
- chao.p.peng@linux.intel.com, jmattson@google.com, jthoughton@google.com,
- michael.roth@amd.com, oupton@kernel.org, pankaj.gupta@amd.com,
- qperret@google.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- shivankg@amd.com, steven.price@arm.com, willy@infradead.org,
- wyihan@google.com, yan.y.zhao@intel.com, forkloop@google.com,
- pratyush@kernel.org, suzuki.poulose@arm.com, aneesh.kumar@kernel.org,
- liam@infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Youngjun Park <youngjun.park@lge.com>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Baoquan He <baoquan.he@linux.dev>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, tarunsahu@google.com,
- Randy Dunlap <rdunlap@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Fuad Tabba <fuad.tabba@linux.dev>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-coco@lists.linux.dev, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20260910-gmem-inplace-conversion-v13-0-dd6fbf94f4e1@google.com>
- <179028368162.2007072.12117327378679658047.b4-ty@b4>
- <CAEvNRgFpMwduvHPGJ5fLoVPr_iGn=ELzY4AcMGHESC6CkMyeTw@mail.gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [PATCH v2 1/3] dmaengine: qcom: gpi: trace: Add trace events
+ header for Qualcomm GPI DMA
+To: Frank Li <Frank.li@oss.nxp.com>
+Cc: konrad.dybcio@oss.qualcomm.com, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+        chandana.chiluveru@oss.qualcomm.com, mukesh.savaliya@oss.qualcomm.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+References: <20260909-add-trace-support-gpio-v2-0-01f81739bb88@oss.qualcomm.com>
+ <20260909-add-trace-support-gpio-v2-1-01f81739bb88@oss.qualcomm.com>
+ <aqHH8rliEDTmrW9P@SMW015318>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <CAEvNRgFpMwduvHPGJ5fLoVPr_iGn=ELzY4AcMGHESC6CkMyeTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Praveen Talari <praveen.talari@oss.qualcomm.com>
+In-Reply-To: <aqHH8rliEDTmrW9P@SMW015318>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI1MDA1NiBTYWx0ZWRfX82NBUNKfROL1
+ 1W1839R9UeGdXllWj5JQNxJoOWLMFhwWyr3irYnWRcn/T0KtJl429rnM/05950CTTlwrYfHllIi
+ rOmw0kVSOX9aSmFZ8dZSPmCpFAvot7c=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI1MDA1NiBTYWx0ZWRfXyneRQ6mwNYJD
+ Guqs2RMyOpcvrs7hS71CYjz/DSCIXc92IbldUBLz3gjXds1ZJ2yo2fNwtU6lWAr46oDld5PbxRQ
+ WQwjdwr11+0YaAbIAlYxAQJTklqTOAen7vB7nlLD9f90D8xtSZ+GWB2bfgFDCDXix074+H1FUMk
+ nBKrzPWIOJzVzdEo/M+01BqjIRfL57TDTN6Z1nTiPPfy8noyhzycaY+jDP0nsmwWiOvFv2QRjn/
+ SXnjWsIGM69QtEP5Tnjq8zxiMAtYRDdDHKMVdtD4xXiMrjYxNYJMX2H+99s8T5yINuQ1w+RdwJz
+ Kkof2XrFakRDfYZ4/D3wH5pZT3hIlCNQaLYKDPjG1++9od5r4NbJhkyUWr9/Q9yAsnxJb+0yVJh
+ TADVbaEMmvy7YNZvebqCWaCRT4axwnvTEPyTcr1fr6N0Cm2fo4QWaKfZbSpwBLO3SUpAXBAz02K
+ CSBgKWfhGZdCfULG7rQ==
+X-Authority-Analysis: v=2.4 cv=VuO2kO2n c=1 sm=1 tr=0 ts=6ab680c3 cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=LbQqD9KVPf5lhnc1gAYl9w==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=EUspDBNiAAAA:8 a=9voflSBtY7004n_qTS8A:9 a=QEXdDO2ut3YA:10
+ a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-GUID: V3hesMfPspvPOskLbvr9wMZP04TARTw6
+X-Proofpoint-ORIG-GUID: V3hesMfPspvPOskLbvr9wMZP04TARTw6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-25_02,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609250056
 
-On 9/25/26 00:31, Ackerley Tng wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
->> On Thu, 10 Sep 2026 16:55:26 -0700, Ackerley Tng wrote:
->>> Here's v13. Thanks everyone for the comments and fast responses!
->>> We're now at ~3 weeks to soft-close at 7.3-rc5.
->>>
->>> v13 is based on 7.3-rc2 and:
->>>
->>> + Hugh's patch to export lru_cache_drain_for_folio()
->>> + Another series [1], which makes kvm_gmem_get_pfn() NOT return a
->>>   refcounted page to KVM.
->>>
->>> [...]
+HI Frank LI,
+
+Thank you for review.
+
+On 10-09-2026 02:26, Frank Li wrote:
+> On Wed, Sep 09, 2026 at 10:39:41AM +0530, Praveen Talari wrote:
+>> Add a tracepoint header for the Qualcomm GPI DMA engine driver.
 >>
->> Applied to kvm-x86 coco.  A *huge* thanks to everyone who helped with this!
+>> The events defined here cover channel/event command dispatch, IRQ
+>> type handling, channel/event control state transitions, error IRQ
+>> status, completion event processing (including the no-pending-
+>> descriptor and transfer result paths), per-event processing in the
+>> event ring, ring allocation/programming details, already-in-state
+>> checks for pause/resume, and TRE queuing and contents. Together they
+>> give full runtime visibility into GPI DMA behavior in place of the
+>> driver's former dev_dbg() based debug logging.
 >>
-> 
-> Thank you so much everyone!
+>> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+>> ---
+>>   include/trace/events/qcom_gpi.h | 313 ++++++++++++++++++++++++++++++++++++++++
+> Any user use it outside drivers/dma? if no, move it in drivers/dma
+>
+> and please squash to patch 2, with user together.
 
-Nice, a big milestone!
+Sure, will review and update in next patch-set.
 
-Well, let's cross fingers that it will end up upstream! ;)
 
--- 
-Cheers,
+Thanks,
 
-David
+Praveen Talari
+
+>
+> Frank
+>
+>>   1 file changed, 313 insertions(+)
+>>
+>> diff --git a/include/trace/events/qcom_gpi.h b/include/trace/events/qcom_gpi.h
+>> new file mode 100644
+>> index 000000000000..241d76855ac8
+>> --- /dev/null
+>> +++ b/include/trace/events/qcom_gpi.h
+>> @@ -0,0 +1,313 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM qcom_gpi
+>> +
+>> +#if !defined(_TRACE_QCOM_GPI_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_QCOM_GPI_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +TRACE_EVENT(gpi_send_cmd,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 cmd, const char *cmd_str),
+>> +	    TP_ARGS(dev, chid, cmd, cmd_str),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __string(cmd_str, cmd_str)
+>> +			     __field(u32, chid)
+>> +			     __field(u32, cmd)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __assign_str(cmd_str);
+>> +			   __entry->chid = chid;
+>> +			   __entry->cmd = cmd;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u cmd=%s(%u)",
+>> +		      __get_str(name), __entry->chid, __get_str(cmd_str),
+>> +		      __entry->cmd)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_irq_status,
+>> +	    TP_PROTO(struct device *dev, u32 gpii_id, u32 irq_type),
+>> +	    TP_ARGS(dev, gpii_id, irq_type),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, gpii_id)
+>> +			     __field(u32, irq_type)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->gpii_id = gpii_id;
+>> +			   __entry->irq_type = irq_type;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: gpii=%u irq_type=0x%08x",
+>> +		      __get_str(name), __entry->gpii_id, __entry->irq_type)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_ch_ctrl_irq,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 ch_state),
+>> +	    TP_ARGS(dev, chid, ch_state),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(u32, ch_state)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->ch_state = ch_state;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u ch_state=%u",
+>> +		      __get_str(name), __entry->chid, __entry->ch_state)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_ev_process,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 ev_type, u8 code,
+>> +		     u16 status, u32 length),
+>> +	    TP_ARGS(dev, chid, ev_type, code, status, length),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(u32, ev_type)
+>> +			     __field(u32, length)
+>> +			     __field(u16, status)
+>> +			     __field(u8, code)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->ev_type = ev_type;
+>> +			   __entry->code = code;
+>> +			   __entry->status = status;
+>> +			   __entry->length = length;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u ev_type=0x%02x code=%u status=%u length=%u",
+>> +		      __get_str(name), __entry->chid, __entry->ev_type,
+>> +		      __entry->code, __entry->status, __entry->length)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_queue_xfer,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 num_tre),
+>> +	    TP_ARGS(dev, chid, num_tre),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(u32, num_tre)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->num_tre = num_tre;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u num_tre=%u",
+>> +		      __get_str(name), __entry->chid, __entry->num_tre)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_gen_err_irq,
+>> +	    TP_PROTO(struct device *dev, u32 gpii_id, u32 irq_stts),
+>> +	    TP_ARGS(dev, gpii_id, irq_stts),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, gpii_id)
+>> +			     __field(u32, irq_stts)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->gpii_id = gpii_id;
+>> +			   __entry->irq_stts = irq_stts;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: gpii=%u irq_stts=0x%08x",
+>> +		      __get_str(name), __entry->gpii_id, __entry->irq_stts)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_ev_ctrl_irq,
+>> +	    TP_PROTO(struct device *dev, u32 gpii_id, u32 ev_ch_irq, u32 ev_state),
+>> +	    TP_ARGS(dev, gpii_id, ev_ch_irq, ev_state),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, gpii_id)
+>> +			     __field(u32, ev_ch_irq)
+>> +			     __field(u32, ev_state)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->gpii_id = gpii_id;
+>> +			   __entry->ev_ch_irq = ev_ch_irq;
+>> +			   __entry->ev_state = ev_state;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: gpii=%u ev_ch_irq=0x%08x ev_state=%u",
+>> +		      __get_str(name), __entry->gpii_id, __entry->ev_ch_irq,
+>> +		      __entry->ev_state)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_ev_no_desc,
+>> +	    TP_PROTO(struct device *dev, u32 chid, const u32 *ev_dword,
+>> +		     const u32 *tre_dword),
+>> +	    TP_ARGS(dev, chid, ev_dword, tre_dword),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __array(u32, ev_dword, 4)
+>> +			     __array(u32, tre_dword, 4)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   memcpy(__entry->ev_dword, ev_dword, sizeof(__entry->ev_dword));
+>> +			   memcpy(__entry->tre_dword, tre_dword, sizeof(__entry->tre_dword));
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u event=%08x:%08x:%08x:%08x pending_tre=%08x:%08x:%08x:%08x",
+>> +		      __get_str(name), __entry->chid,
+>> +		      __entry->ev_dword[0], __entry->ev_dword[1],
+>> +		      __entry->ev_dword[2], __entry->ev_dword[3],
+>> +		      __entry->tre_dword[0], __entry->tre_dword[1],
+>> +		      __entry->tre_dword[2], __entry->tre_dword[3])
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_xfer_result,
+>> +	    TP_PROTO(struct device *dev, u32 chid, int result, u32 residue),
+>> +	    TP_ARGS(dev, chid, result, residue),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(int, result)
+>> +			     __field(u32, residue)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->result = result;
+>> +			   __entry->residue = residue;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u result=%d residue=%u",
+>> +		      __get_str(name), __entry->chid, __entry->result,
+>> +		      __entry->residue)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_process_event,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 type, const u32 *dword),
+>> +	    TP_ARGS(dev, chid, type, dword),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(u32, type)
+>> +			     __array(u32, dword, 4)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->type = type;
+>> +			   memcpy(__entry->dword, dword, sizeof(__entry->dword));
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u type=0x%02x %08x:%08x:%08x:%08x",
+>> +		      __get_str(name), __entry->chid, __entry->type,
+>> +		      __entry->dword[0], __entry->dword[1],
+>> +		      __entry->dword[2], __entry->dword[3])
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_alloc_ring,
+>> +	    TP_PROTO(struct device *dev, u32 elements, u32 el_size,
+>> +		     u32 req_len, u64 len, size_t alloc_size),
+>> +	    TP_ARGS(dev, elements, el_size, req_len, len, alloc_size),
+>> +
+>> +	    TP_STRUCT__entry(__field(u64, len)
+>> +			     __field(size_t, alloc_size)
+>> +			     __string(name, dev_name(dev))
+>> +			     __field(u32, elements)
+>> +			     __field(u32, el_size)
+>> +			     __field(u32, req_len)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->elements = elements;
+>> +			   __entry->el_size = el_size;
+>> +			   __entry->req_len = req_len;
+>> +			   __entry->len = len;
+>> +			   __entry->alloc_size = alloc_size;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: elements=%u el_size=%u req_len=%u len=%llu alloc_size=%zu",
+>> +		      __get_str(name), __entry->elements, __entry->el_size,
+>> +		      __entry->req_len, __entry->len, __entry->alloc_size)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_ring_info,
+>> +	    TP_PROTO(struct device *dev, dma_addr_t dma_handle, phys_addr_t phys_addr,
+>> +		     u32 len, u32 el_size, u32 elements),
+>> +	    TP_ARGS(dev, dma_handle, phys_addr, len, el_size, elements),
+>> +
+>> +	    TP_STRUCT__entry(__field(u64, dma_handle)
+>> +			     __field(u64, phys_addr)
+>> +			     __string(name, dev_name(dev))
+>> +			     __field(u32, len)
+>> +			     __field(u32, el_size)
+>> +			     __field(u32, elements)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->dma_handle = dma_handle;
+>> +			   __entry->phys_addr = phys_addr;
+>> +			   __entry->len = len;
+>> +			   __entry->el_size = el_size;
+>> +			   __entry->elements = elements;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: dma_handle=%llx phys_addr=%llx len=%u el_size=%u elements=%u",
+>> +		      __get_str(name), __entry->dma_handle, __entry->phys_addr,
+>> +		      __entry->len, __entry->el_size, __entry->elements)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_already_state,
+>> +	    TP_PROTO(struct device *dev, u32 gpii_id, u32 pm_state),
+>> +	    TP_ARGS(dev, gpii_id, pm_state),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, gpii_id)
+>> +			     __field(u32, pm_state)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->gpii_id = gpii_id;
+>> +			   __entry->pm_state = pm_state;
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: gpii=%u already in pm_state=%u",
+>> +		      __get_str(name), __entry->gpii_id, __entry->pm_state)
+>> +);
+>> +
+>> +TRACE_EVENT(gpi_tre,
+>> +	    TP_PROTO(struct device *dev, u32 chid, u32 idx, const u32 *dword),
+>> +	    TP_ARGS(dev, chid, idx, dword),
+>> +
+>> +	    TP_STRUCT__entry(__string(name, dev_name(dev))
+>> +			     __field(u32, chid)
+>> +			     __field(u32, idx)
+>> +			     __array(u32, dword, 4)
+>> +	    ),
+>> +
+>> +	    TP_fast_assign(__assign_str(name);
+>> +			   __entry->chid = chid;
+>> +			   __entry->idx = idx;
+>> +			   memcpy(__entry->dword, dword, sizeof(__entry->dword));
+>> +	    ),
+>> +
+>> +	    TP_printk("%s: chid=%u tre[%u]=%08x:%08x:%08x:%08x",
+>> +		      __get_str(name), __entry->chid, __entry->idx,
+>> +		      __entry->dword[0], __entry->dword[1],
+>> +		      __entry->dword[2], __entry->dword[3])
+>> +);
+>> +
+>> +#endif /* _TRACE_QCOM_GPI_H */
+>> +
+>> +/* This part must be outside protection */
+>> +#include <trace/define_trace.h>
+>>
+>> --
+>> 2.34.1
+>>
