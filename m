@@ -1,338 +1,248 @@
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012006.outbound.protection.outlook.com [40.93.195.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6512874E1
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 26 Sep 2026 00:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790383657; cv=none; b=L1aAG0vFSHX+3UbKe7GgWKi1svkBtAlkudJ/C5PUI20tx6PpC+aG+1ErYjGMGQe1yOoNVh4UwyTpX+nP3NAAaV9wQvM57F31KteLkLcd5dcp/Ckejw/jJjmHdVNQqm5BB7IQOmuW1RyQoa+WHByRLpk5SUex+BMCBcR/IPkaBvs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790383657; c=relaxed/simple;
-	bh=mdiAinkAXpYmukwdbXC7tbisseyfTRTZ7VY+P5Y1t6M=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TYsLa54Dzptes93f9ZKac5/al1nKVDqMQp1nzGm9Hr1HrE4ycLpxsVAxdyR+FWOBnOyoUX+J2bj25kf2kRCQtNOVmx17+lbbUcBSMLIzn7tEnArK83AJxx/s8mzmcqgZU9dI4ZT7BMJoS4/T1L46Il8LbZRH2Kiqg/XJUWtxYOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4cc89e86e4dso2331332b6e.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Sep 2026 17:47:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790383654; x=1790988454;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NzxPm1cEHIXiNkm6IxNTThQZMsXNUzjdddUDfC8itYU=;
-        b=Jre08u2nxr0bqaovshpL0JBObLcIBoKoQ+KVqQ8+wIA3w0+Ru8cXoNxbZitelmLY3e
-         B22dxScY6zSyZeJX75mIWKU7ohwDbZk+WWCmrd6lQsdlj7tSTgKF+xk9cMiOnhl2s2n0
-         ysImwWLp8eIoshC2KVl3QJfO6IEyj206lBeGAJTgxWuWh+CJMzNjRpu9JJwDSOGE6pjq
-         4agYMuRbX9600wf7Nb9NzUR0IkP31KP3YKmBqeWwwPgcbL9fbtSAhhpMPV0YlY0epZcF
-         /1eVvxT9wKAAVijM6i242eaKGprvkdoTjVPFpU1PdqKsQWfrLEJ30SYQ0Dn5heXogy8q
-         uplQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwyRuoUjYK+T+LEgS2yqVERYWozewFDBWYVhmNmEqzdMV21dlFFcP5igh/e2HSD8b1e/gbjdAuWr+OG6NYxjBEwRHI=@vger.kernel.org
-X-Gm-Message-State: AFuF++lLTYr0AHkTESbZDedP4l6ssk/s1Z/N34zt2Q3jSXoGGGS9Jv4d
-	TvcfE5ERSKjODukLUqMZ38bVcIrIj3dL9KaH0WIcIDdcSIRR+Dq5SPWhMBSBHaqqus5Ov1f6vCb
-	HaV88gSXwt3IoKc9WIHA26jyTeRyQWAWSrNq9PFJyDueVyEftqRV22ei7NTY=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431A23E342;
+	Sat, 26 Sep 2026 01:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790386695; cv=fail; b=UXOhxuiVEECGzNtHDqLSgoxQbTsph8lU9k43lC+CCT5BWNylQvPxJ2nwuMYCIj16G76PMZa9j7O7gv5ZslCl8U0MxLiT/06NQHOyFx2n9mXx+nOzRBeBmwt6SKWdO3sY/lKQutne572BvR3H6f9c9jzrE7cE+diuVfUDbA575Co=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790386695; c=relaxed/simple;
+	bh=hhnMCREZn0wq22a1StCnKPL4mhTvb6SRHqhHvgtkBBA=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:To:From:References:
+	 In-Reply-To:MIME-Version; b=jW3kOpFfLGFIYl/RGdUOBqaj0oSFOLXDSVX91ljv/wn6kWG8DlRkLfJ0fgsRUj5DcSM2jf5gLH1kNo3LEqdKb+l0uxg6O2grZLF/Bhuu6Do658WFzN72RaLafkKkXXlmTBS7pSdocdUuvKrQI2h9XzcCL1Jab6mmolmJqw3Sjmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IlgmnWC0; arc=fail smtp.client-ip=40.93.195.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IlgmnWC0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nvoe+6KAlh9q4MhGIK0UDQg/EYvSIh2qF+dvQtLnaboA6F7xJf45zMPl4q4fHZU0OJUh8HSsJVmE+3Q/i7meFV3A0zxihk9GcXjL1IjsQaOdboX6Dce+eIlFc93YkfHXHKVo/5MYa5stBSjMCAOYLKpsLk0h2f2BGedQT6MezOF4pwePlBRHceI1sEvTRj8IEEdxP3T+E9mzhrZXnAAaMLLAJt3k/I/F4LJqcizZCxxqSYDh9f9k2Z8xDhPcNfvQT57QkUg5W1kZFE/Rlme4J8WpMIW/KloP5mHk3NKbHTA/DzZ3yz2c8vscKf+Ye47u1tRQaB8nC1isIjJKWEsOfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JREHSo7U9IfHqKqetOS7hWZc9sDxByVpwPxnE1Mw09Q=;
+ b=Lyfs+cJXBtFi26dK2WzE1vLfJgTzu0rLEXIprhcRJEtkHEGB3btLmSrHNXF1N7sLQkC89iKPaiDFCn9ujAwXqTHa7ispVK3tEGbXSd3Gt8wHeSCFOG5CP1bA+YIcNg/PFVKw8jh6RynlifufJ18AbHnUwzqAqQJkKRCn3as50kXFz1ABQ4bKZtJ2CcWRc4SF7sAFHEW7993Q7bZ1ilUhGY0vcAfIvthpSWq5gM988ct10JOJGI5YIGfCLU7t+TfdYgntcgjU3rTxMACfI1oaEXlZyJ9Q2yQZxDfyVgrKts1cbtImiXfZIO4zayZKI0WjHAaC/nv7zSsb6vbdMbP1lA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JREHSo7U9IfHqKqetOS7hWZc9sDxByVpwPxnE1Mw09Q=;
+ b=IlgmnWC0rE/hjKPkhzRPb5WBKdrd91VzGb7XPPYpP5meQ00MvavGEh4qjtsyoZP47yfHwesFTsYgyv6rAG7Fg9yAlaLmNQ59TqwjXR29YNzE1THb2BQVwxIHHaCS1hst/i0F4Wguk99xqh/n/K/6xO6icloPdsORyojdNMRxFcd33r4WTjqlHzIC6nA14gkuVNw0pLzhwGdW7DKvTw/lAYVAt0m+xNx8qyfIb30szdMOvYVHyEWp24RWz9knmUEGcWlvd3SwsOlVULHF/7bGWxqtZIugT12i4CjvfOdhDo9P6efBbf2kyfzXQU+9DyJxtO03gsFhkEm1AdMqLvqRXQ==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DM4PR12MB7502.namprd12.prod.outlook.com (2603:10b6:8:112::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.19; Sat, 26 Sep
+ 2026 01:37:58 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0451.014; Sat, 26 Sep 2026
+ 01:37:58 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 25 Sep 2026 21:37:54 -0400
+Message-Id: <DLOV3VTNOBPL.193R3V124JURK@nvidia.com>
+Subject: Re: [PATCH v3 15/40] mm/vma: add vma[_flags]_is_kernel_owned()
+ predicates
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+ <linux-rdma@vger.kernel.org>, <selinux@vger.kernel.org>,
+ <linux-sound@vger.kernel.org>, <bpf@vger.kernel.org>,
+ <linux-scsi@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-perf-users@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <kvmarm@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+ <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
+ <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+ <sparclinux@vger.kernel.org>, <fuse-devel@lists.linux.dev>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka" <vbabka@kernel.org>, "Jann Horn" <jannh@google.com>,
+ "Pedro Falcato" <pfalcato@suse.de>, "David Hildenbrand" <david@kernel.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, "Leon Romanovsky" <leon@kernel.org>, "Paul
+ Moore" <paul@paul-moore.com>, "Stephen Smalley"
+ <stephen.smalley.work@gmail.com>, "Jaroslav Kysela" <perex@perex.cz>,
+ "Takashi Iwai" <tiwai@suse.com>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>, "Kumar
+ Kartikeya Dwivedi" <memxor@gmail.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
+ Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau" <kas@kernel.org>, "Doug
+ Gilbert" <dgilbert@interlog.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <mkp@kernel.org>, "Jaya Kumar" <jayalk@intworks.biz>, "Simona Vetter"
+ <simona@ffwll.ch>, "Helge Deller" <deller@gmx.de>, "Sebastian Reichel"
+ <sre@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Peter Xu"
+ <peterx@redhat.com>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Oleg
+ Nesterov" <oleg@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, "Arnaldo Carvalho de Melo"
+ <acme@kernel.org>, "Namhyung Kim" <namhyung@kernel.org>, "Mark Rutland"
+ <mark.rutland@arm.com>, "Rik van Riel" <riel@surriel.com>, "Harry Yoo"
+ <harry@kernel.org>, "Juri Lelli" <juri.lelli@redhat.com>, "Vincent Guittot"
+ <vincent.guittot@linaro.org>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Will Deacon" <will@kernel.org>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, "Nick Piggin" <npiggin@gmail.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Muchun Song" <muchun.song@linux.dev>, "Oscar
+ Salvador" <osalvador@suse.de>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Marc Zyngier"
+ <maz@kernel.org>, "Oliver Upton" <oupton@kernel.org>, "Catalin Marinas"
+ <catalin.marinas@arm.com>, "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Anup Patel" <anup@brainfault.org>, "Paul Walmsley" <pjw@kernel.org>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Janosch Frank"
+ <frankja@linux.ibm.com>, "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>, "Gerald Schaefer"
+ <gerald.schaefer@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>, "David S. Miller"
+ <davem@davemloft.net>, "Andreas Larsson" <andreas@gaisler.com>, "Alexander
+ Viro" <viro@zeniv.linux.org.uk>, "Christian Brauner" <brauner@kernel.org>,
+ "Matthew Brost" <matthew.brost@intel.com>, "Joshua Hahn"
+ <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Byungchul Park"
+ <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
+ <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
+ "Chris Li" <chrisl@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Kemeng
+ Shi" <shikemeng@huaweicloud.com>, "Nhat Pham" <nphamcs@gmail.com>, "Baoquan
+ He" <baoquan.he@linux.dev>, "Youngjun Park" <youngjun.park@lge.com>,
+ "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng" <qi.zheng@linux.dev>,
+ "Shakeel Butt" <shakeel.butt@linux.dev>, "Axel Rasmussen"
+ <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu"
+ <weixugc@google.com>, "Chengming Zhou" <chengming.zhou@linux.dev>, "Michal
+ Hocko" <mhocko@kernel.org>, "Miklos Szeredi" <miklos@szeredi.hu>, "Xu Xin"
+ <xu.xin@linux.dev>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.22.0
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org> <20260917-b4-mmap-prepare-vma-flag-sanify-v3-15-4583d8a23bca@kernel.org>
+In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-15-4583d8a23bca@kernel.org>
+X-ClientProxiedBy: IA1P220CA0010.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:208:461::7) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6808:1816:b0:4cb:f21b:6f95 with SMTP id
- 5614622812f47-4d73045f8b7mr7440366b6e.40.1790383653981; Fri, 25 Sep 2026
- 17:47:33 -0700 (PDT)
-Date: Fri, 25 Sep 2026 17:47:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6ab71625.80e1c6cc.1e8e5f.003e.GAE@google.com>
-Subject: [syzbot] [trace?] KASAN: slab-use-after-free Read in ring_buffer_lock_reserve
-From: syzbot <syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM4PR12MB7502:EE_
+X-MS-Office365-Filtering-Correlation-Id: 545be6ab-443e-42d1-8b0e-08df1b6ecb54
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|921020|6133799003|10067099003|56012099006|11063799006|4143699003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	eHTozzARUAPxautQc1g9RpS1Mb919g7GvHX3YmPnOtBZeaoLZ2ADMz+gWYvXqcBVfq/FUJK8gjMMH2y0ELwdrLt+g3ZaKBBKL2Aq6L91xZ/b8Z/T5lDVyXK1dpD2Pov8FrLNOeXQs+GYiqCX6OSOY6YCwg5dXXvudw7uPOkLjf8dCh/p6nKZ3dvvozUzcnGsoxrdd1dpdYuTc93yE/y+N5+D6RztFnm/J8jQw2FjjIrAd7FzboO6ea8fUMUExYKd2zdrcq/q6rXQ0vNqbK+BDfGXXojKaFHMZ/Ht64s1CmfYNlDHGgKumfO1ZmvrGqlTyme2BOsPiH4uksM1oDVZOgx69LGbUAZb/kmF0utEFkbjFBOl+uwUelfb54j+xpHwJbyaq5hE8fymtnL5lovlenfoRpXFqj6R7A6Zjjz5aUeC4uUVHjOFBWErnsUaX8QUj78oVnPDlb2FWFZaRY2oxlTG0Vt2r9czLLJip6jcjS9uLAONOZDvyJp79gbotv1T7g4nMpVCZNvu5Xc+OripRjMiQpS6kAI7rioDX/nvLESDj4jSXBmjy8hVDtFp1c477E/59qTwUfyMxhPPCdpTDFUCrfWUYFh3HNdaAfDnmZM0GSzhnOvIKXg4QhY7XRl87YD4E0Gf7XudDGBaDjOJLN61JB85VYqgNqTj8gVDEWrzjYP0XgbOOxT8KgOMnBUdiYItMPnw0O5m5YcY/q7eqA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(921020)(6133799003)(10067099003)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eXZjcnl1QlloWUJQWStML09WWWNZSG9pWHFXZ0lOR3lSUERERUVJZlk1SzVu?=
+ =?utf-8?B?VTZDQ0dOaFJpL3BYWWNKc3FtT1RvS0kxcDdrdWpRTFZta2pxZTRJZ3R6RHhT?=
+ =?utf-8?B?T29ZU1lvSEZpdFh3VGtFN1padUphVEZsZS85SS9SZS9TaTJMd2JHS3FvNDYx?=
+ =?utf-8?B?TnVyQy95SFlnYytwb1ZZZFdXTm1mMitoUmNVYmNNcWpHZUt3NUlFMEZuVGJk?=
+ =?utf-8?B?Q0VqMHNSa3JndVYrbGNUL2NrYjdkelV2d3U2bVBxR1RrbC9QWWtITnR6RGd3?=
+ =?utf-8?B?UTk3K2N5azEwYUx5NytSU0poUnV2cys1NnJaUm1Bclkwd2kzcFBVbnRPVmNU?=
+ =?utf-8?B?R291b2pVYzVEYVdsdUhVSmVVa3F3OXhrMm1yd0lXMFNKTzM3T0lZMmlnd2xE?=
+ =?utf-8?B?RUY0K05IZVlkK3V1cStDdFJOU012RDNBSERJUDdQdmo5cVJnMlFMalJmYUY0?=
+ =?utf-8?B?N29ockJXVWZLRkcwTVlNMXZzZlJwSmdJYWJrcFk2Uk9mWTdITGRmalRFYllw?=
+ =?utf-8?B?dkRObXFCcHI3SGVpcm1Xd3hJb01xYXY3MjZTTVRPV0hyYlJDK2hGZzd5VC9r?=
+ =?utf-8?B?aUR3OStZN1lIckdZaVk2aVRBTE5EZlVpcGFqRENPeHBVS0VPZmNiVUFra29n?=
+ =?utf-8?B?ajRtaTYzb2sraUs2ek5KM2NvTktDOGt2NmY3Tnp4bGZSQ2lDRnEzbUkzRkYw?=
+ =?utf-8?B?S0VBa3dnOEZYT0tQNzNRb2wwSGVYY3hTa083YkhsRmYrdlFiZjhhTmxTc2ho?=
+ =?utf-8?B?SXU1UCswTWs5VDlEVTJjNHZpTy91Q2FUT3dnQ0l1Z2E1RWVpYUxOdjRUa1dN?=
+ =?utf-8?B?R3FaeGNoM01xTFh0NVdvTVZiSXpEcUhmbEUrdXpJNUZTTmFDeit3Y3pQd3ox?=
+ =?utf-8?B?VUtoZjVtcGN6MmN4ZlowcFFCaTlvVmtIWDA0YzlrUmpxQ2RXckxEdzJGanV4?=
+ =?utf-8?B?Y1JMaUtqS0FKUFlwMWRSZkZhcVBJYWV6YTFXZ05HcnRWOStieWQvYkZmdXlx?=
+ =?utf-8?B?dmhwL0ZUS2ZkdnRZcjNhb0M2cENFUzYvV005R2JqbUFXZWlwUmcyRFU0YnJJ?=
+ =?utf-8?B?ZVl2LytselRKOUVCQS9IYUNCeDJ3aURTWEpnRW1kaktsdXluWmREc3JVYW04?=
+ =?utf-8?B?cjlnM3FwK3d6cnkwa1YwMVFUbHF0VS94VVJNMytQNkkrSk5QQXhGZ1J6WWVi?=
+ =?utf-8?B?eC9UUjhtaFpEbUJzVUx1SGJhMVR6aVZyVWJvQ3YvMXlaZW9IVW9JQ2pJUUZp?=
+ =?utf-8?B?N3NYU0xCLzNiMkpxSDc1SndpLzlNenJnTVlCTGNPWXJzdnYrdGk0b2lxRENs?=
+ =?utf-8?B?ZzM0NUQ4UEU0MFJoaDBxSVhjWmRkSW5oYmpEYldISzJRRXRHWmUrV05Fb1du?=
+ =?utf-8?B?c3lCU1FqdXhIbkpWaDhMeFBNTm5WMnRHbXJhY1lwb3hIVktkMWhyUnZjRjhM?=
+ =?utf-8?B?N2JWRWtPbXRjQWo1SVpwRzBSTldzREN3WFZSTDRJUlE1Wi9pNVhwcWRlVEd1?=
+ =?utf-8?B?N1YwY0FNWmMrZjcxR0ZmWEVHbTNVeWs5R3NkNktYemRDL1ZVWUpqdmtLd3Ew?=
+ =?utf-8?B?Mno2ekFjWEdpcmJHME4renB5cFFRMDlPa2VDbUNIdW50VUUvelJ1ZTY5UlB5?=
+ =?utf-8?B?NGNOR3RZck9HWEh1YndsVTEzaVNaOURzUFFJVmY4RmRjRmx3ZXNpL2hTNUpq?=
+ =?utf-8?B?MFltV2hJeXNDOVlWaEY5WTBhc2ZPd3dZd0l6UXdreTdNLytsZ2ZxZlRMbzhQ?=
+ =?utf-8?B?UUlCUGVUYktwVzMyOGFwVlJKVlJlN1NKUy9zeFM5cDNvdG5aSUVReWxXVHFm?=
+ =?utf-8?B?a0Y4OFMyUEVmVFQ5Tk0yeDQxeXQvQmFZaFN0U2ZObnRlMXlxNmJZdG12WldI?=
+ =?utf-8?B?aWh6TlNFb0RsNjdlbmVjdVpXK3RTWnhtVTR2YUVLWHE0VFB4aldNS3dYWVBn?=
+ =?utf-8?B?b0J3MlpTVUVzTFFNR3EzL25Ga1B3MzdFZlNoeWRGWTcyZ0N4SS9BSm05SFJV?=
+ =?utf-8?B?YXUrSDNNTHFQbGJEQ2d5TFpKaVIwSVJPeWM2eGY4QlRxaEVXYTNUc0VOSDRO?=
+ =?utf-8?B?Qk02djV0blVQOWJvWENoK21JYVRwUEI0UURKQ3BCTktaNFpxa3FFNDJ5RXU2?=
+ =?utf-8?B?N1VwSVM2MDIxMzhhUE1xSC9wbU1vRTR2YVBRdDc5SGtFYTlRNHhwWUFqZWha?=
+ =?utf-8?B?a21xTU8xaHF5Q0h2UnZ5cDBMN0cyUkpUS1lNYzlkVVJ0MUdiUGpvOFJEUXNv?=
+ =?utf-8?B?dFVKckJMb3ZEeUlxcFNCRk1zeVpSMzdtb01lMERLSHVaWlBoMnBJbDF1aDZR?=
+ =?utf-8?Q?8VYEs3y2DAyj0D4u5q?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 545be6ab-443e-42d1-8b0e-08df1b6ecb54
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2026 01:37:58.3051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iG06bl6AsetwrGy8rU0jwt7ivW5xr1TeQD552YR9eamAkcxdA76zYOCom8MtghrX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7502
 
-Hello,
+On Thu Sep 17, 2026 at 12:22 PM EDT, Lorenzo Stoakes (ARM) wrote:
+> Rather than referring to VMA flags with uncertain meaning, add a new
+> predicate that explicitly describes what possession of the VMA_PFNMAP_BIT
+> or VMA_MIXEDMAP_BIT flags mean, and then refer to that function for
+> determining VMA mergeability.
+>
+> Either flag means the contents of the mapping are owned by the kernel,
+> usually a driver, rather than by the core mm: the memory may be MMIO,
+> kernel-allocated pages or even ordinary pages the driver maps itself, but
+> the core must not populate, reclaim, migrate, copy-on-write or merge the
+> range on its own initiative.
+>
+> We initially also include VMA_IO_BIT here, as by implication, these must =
+be
+> kernel-owned. (mlock() also sets VMA_IO_BIT transiently on ordinary VMAs
+> while locking them, which is addressed later in this series.)
+>
+> However the intent is to in future remove this, as no mapping should be
+> marked as an I/O mapping without also being marked with VMA_PFNMAP_BIT.
+>
+> This forms the basis of further work intended to improve how we express V=
+MA
+> properties such as this.
+>
+> Also update the VMA userland tests to reflect the change.
+>
+> No functional change intended.
+>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
+>  include/linux/mm.h              | 56 +++++++++++++++++++++++++++++++++++=
++++++-
+>  tools/testing/vma/include/dup.h | 29 ++++++++++++++++++++-
+>  2 files changed, 83 insertions(+), 2 deletions(-)
+>
 
-syzbot found the following issue on:
+LGTM.
 
-HEAD commit:    518e5b794c06 Merge tag 'for-7.3-rc3-tag' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f9a005580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84649d3ff8d550cb
-dashboard link: https://syzkaller.appspot.com/bug?extid=37e1793bdb0061ea3a47
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1e68973061b3/disk-518e5b79.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4a77cf97afca/vmlinux-518e5b79.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/70ecbc754c60/bzImage-518e5b79.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in rb_is_reader_page kernel/trace/ring_buffer.c:1353 [inline]
-BUG: KASAN: slab-use-after-free in rb_move_tail+0x1653/0x19e0 kernel/trace/ring_buffer.c:3964
-Read of size 8 at addr ffff888033712280 by task syz-executor/6764
-
-CPU: 0 UID: 0 PID: 6764 Comm: syz-executor Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/26/2026
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x100/0x190 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x13d/0x4b0 mm/kasan/report.c:482
- kasan_report+0xdf/0x1c0 mm/kasan/report.c:595
- rb_is_reader_page kernel/trace/ring_buffer.c:1353 [inline]
- rb_move_tail+0x1653/0x19e0 kernel/trace/ring_buffer.c:3964
- __rb_reserve_next.constprop.0+0x8cf/0x1640 kernel/trace/ring_buffer.c:4854
- rb_reserve_next_event kernel/trace/ring_buffer.c:5010 [inline]
- ring_buffer_lock_reserve+0x49a/0x1220 kernel/trace/ring_buffer.c:5069
- __trace_buffer_lock_reserve kernel/trace/trace.h:1677 [inline]
- trace_event_buffer_lock_reserve+0x123/0x6f0 kernel/trace/trace.c:1924
- trace_event_buffer_reserve+0x1f9/0x350 kernel/trace/trace_events.c:715
- do_trace_event_raw_event_lock include/trace/events/lock.h:49 [inline]
- trace_event_raw_event_lock+0x124/0x2b0 include/trace/events/lock.h:49
- __do_trace_lock_release include/trace/events/lock.h:68 [inline]
- trace_lock_release include/trace/events/lock.h:68 [inline]
- lock_release+0x218/0x310 kernel/locking/lockdep.c:5954
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:208 [inline]
- _raw_spin_unlock_irqrestore+0x1a/0x80 kernel/locking/spinlock.c:221
- debug_object_activate+0x343/0x4b0 lib/debugobjects.c:891
- debug_hrtimer_activate kernel/time/hrtimer.c:486 [inline]
- debug_activate kernel/time/hrtimer.c:529 [inline]
- enqueue_hrtimer+0x75/0x2f0 kernel/time/hrtimer.c:1136
- __run_hrtimer kernel/time/hrtimer.c:2090 [inline]
- __hrtimer_run_queues+0x6ed/0x9c0 kernel/time/hrtimer.c:2131
- hrtimer_interrupt+0x441/0xaa0 kernel/time/hrtimer.c:2250
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1051 [inline]
- __sysvec_apic_timer_interrupt+0x109/0x470 arch/x86/kernel/apic/apic.c:1068
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1062 [inline]
- sysvec_apic_timer_interrupt+0x51/0xc0 arch/x86/kernel/apic/apic.c:1062
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
-RIP: 0010:in_softirq_really kernel/kcov.c:167 [inline]
-RIP: 0010:check_kcov_mode kernel/kcov.c:179 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x27/0x70 kernel/kcov.c:213
-Code: 90 90 90 f3 0f 1e fa 65 48 8b 05 6c 80 80 12 48 8b 34 24 65 48 8b 15 50 80 80 12 48 63 c8 a9 00 01 00 ff 74 1e f6 c4 01 74 44 <a9> 00 00 00 0f 75 3d f7 c1 00 00 00 f0 75 35 8b 82 3c 17 00 00 85
-RSP: 0018:ffffc90000007c80 EFLAGS: 00000202
-RAX: 0000000000000104 RBX: ffffc90000007d00 RCX: 0000000000000104
-RDX: ffff88802e8e4b00 RSI: ffffffff821554d0 RDI: ffffc90000007d00
-RBP: ffff88801d29d600 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff8edec4a0
-R13: 0000000000000026 R14: ffffffff8bf19b80 R15: ffff88801d29d600
- trace_event_buffer_reserve+0x20/0x350 kernel/trace/trace_events.c:699
- do_trace_event_raw_event_lock include/trace/events/lock.h:49 [inline]
- trace_event_raw_event_lock+0x124/0x2b0 include/trace/events/lock.h:49
- __do_trace_lock_release include/trace/events/lock.h:68 [inline]
- trace_lock_release include/trace/events/lock.h:68 [inline]
- lock_release+0x218/0x310 kernel/locking/lockdep.c:5954
- rcu_lock_release include/linux/rcupdate.h:319 [inline]
- rcu_read_unlock include/linux/rcupdate.h:880 [inline]
- taprio_dequeue+0x161/0x5f0 net/sched/sch_taprio.c:868
- dequeue_skb net/sched/sch_generic.c:322 [inline]
- qdisc_restart net/sched/sch_generic.c:427 [inline]
- __qdisc_run+0x1be/0x1b20 net/sched/sch_generic.c:445
- qdisc_run include/net/pkt_sched.h:121 [inline]
- qdisc_run include/net/pkt_sched.h:118 [inline]
- net_tx_action+0x549/0xf50 net/core/dev.c:5915
- handle_softirqs+0x1e6/0x9d0 kernel/softirq.c:645
- __do_softirq kernel/softirq.c:679 [inline]
- invoke_softirq kernel/softirq.c:519 [inline]
- __irq_exit_rcu+0x16a/0x210 kernel/softirq.c:758
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:775
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1062 [inline]
- sysvec_apic_timer_interrupt+0xa3/0xc0 arch/x86/kernel/apic/apic.c:1062
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
-RIP: 0010:__rb_reserve_next.constprop.0+0x394/0x1640 kernel/trace/ring_buffer.c:4859
-Code: 89 ff e8 8f 2b fd ff 4d 39 e7 0f 85 c4 07 00 00 e8 a1 31 fd ff 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 <0f> 85 f5 0f 00 00 4c 8b 7c 24 28 be 08 00 00 00 4c 8b 23 4c 89 ff
-RSP: 0018:ffffc90005f1f3e8 EFLAGS: 00000246
-RAX: dffffc0000000000 RBX: ffffc90005f1f530 RCX: 0000000000000002
-RDX: 1ffff92000be3ea6 RSI: ffffffff820eee0f RDI: ffff88802e8e4b00
-RBP: ffff88801c095000 R08: 0000000000000006 R09: 0000000000000228
-R10: 0000000000000228 R11: 0000000000000000 R12: 0000000000000228
-R13: ffff88801c095150 R14: ffff88801c08c680 R15: 0000000000000228
- rb_reserve_next_event kernel/trace/ring_buffer.c:5010 [inline]
- ring_buffer_lock_reserve+0x49a/0x1220 kernel/trace/ring_buffer.c:5069
- __trace_buffer_lock_reserve kernel/trace/trace.h:1677 [inline]
- trace_event_buffer_lock_reserve+0x123/0x6f0 kernel/trace/trace.c:1924
- trace_event_buffer_reserve+0x1f9/0x350 kernel/trace/trace_events.c:715
- do_trace_event_raw_event_lock include/trace/events/lock.h:49 [inline]
- trace_event_raw_event_lock+0x124/0x2b0 include/trace/events/lock.h:49
- __do_trace_lock_release include/trace/events/lock.h:68 [inline]
- trace_lock_release include/trace/events/lock.h:68 [inline]
- lock_release+0x218/0x310 kernel/locking/lockdep.c:5954
- might_alloc include/linux/sched/mm.h:316 [inline]
- slab_pre_alloc_hook mm/slub.c:4636 [inline]
- slab_alloc_node mm/slub.c:4974 [inline]
- kmem_cache_alloc_noprof+0x63/0x6a0 mm/slub.c:5010
- anon_vma_alloc mm/rmap.c:94 [inline]
- anon_vma_fork+0x8d/0x6a0 mm/rmap.c:391
- dup_mmap+0x10e6/0x2370 mm/mmap.c:1781
- dup_mm kernel/fork.c:1543 [inline]
- copy_mm kernel/fork.c:1595 [inline]
- copy_process+0x4811/0x8370 kernel/fork.c:2310
- kernel_clone+0x176/0x9d0 kernel/fork.c:2769
- __do_sys_clone+0xd9/0x120 kernel/fork.c:2911
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x123/0x790 arch/x86/entry/syscall_64.c:84
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f122a9c6bd2
-Code: 89 e7 e8 71 8b f7 ff 45 31 c0 31 d2 31 f6 64 48 8b 04 25 10 00 00 00 bf 11 00 20 01 4c 8d 90 d0 02 00 00 b8 38 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 66 89 c5 85 c0 75 3b 64 48 8b 04 25 10 00 00
-RSP: 002b:00007fffda742550 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00007fffda742550 RCX: 00007f122a9c6bd2
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000001200011
-RBP: 00007fffda7426dc R08: 0000000000000000 R09: 0000000000000001
-R10: 000055557d0397d0 R11: 0000000000000246 R12: 0000000000000001
-R13: 000055557d04ca10 R14: 000000000008d88f R15: 00007fffda742730
- </TASK>
-
-Allocated by task 6453:
- kasan_save_stack+0x30/0x50 mm/kasan/common.c:57
- kasan_save_track+0x14/0x30 mm/kasan/common.c:78
- poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:415
- kasan_kmalloc include/linux/kasan.h:263 [inline]
- __do_kmalloc_node mm/slub.c:5414 [inline]
- __kmalloc_node_noprof+0x342/0x880 mm/slub.c:5426
- _kmalloc_node_noprof include/linux/slab.h:1200 [inline]
- __rb_allocate_pages+0x308/0xfc0 kernel/trace/ring_buffer.c:2483
- ring_buffer_resize+0x71c/0x1ed0 kernel/trace/ring_buffer.c:3357
- __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:4740
- __tracing_resize_ring_buffer kernel/trace/trace.c:4734 [inline]
- tracing_update_buffers+0xd4/0xf0 kernel/trace/trace.c:4979
- ftrace_event_write+0x14a/0x2c0 kernel/trace/trace_events.c:1562
- vfs_write+0x2aa/0x1050 fs/read_write.c:685
- ksys_write+0x12a/0x250 fs/read_write.c:739
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x123/0x790 arch/x86/entry/syscall_64.c:84
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 10552:
- kasan_save_stack+0x30/0x50 mm/kasan/common.c:57
- kasan_save_track+0x14/0x30 mm/kasan/common.c:78
- kasan_save_free_info+0x3b/0x70 mm/kasan/generic.c:584
- poison_slab_object mm/kasan/common.c:253 [inline]
- __kasan_slab_free+0x5f/0x80 mm/kasan/common.c:285
- kasan_slab_free include/linux/kasan.h:235 [inline]
- slab_free_hook mm/slub.c:2748 [inline]
- slab_free mm/slub.c:6508 [inline]
- kfree+0x22b/0x6d0 mm/slub.c:6801
- free_buffer_page kernel/trace/ring_buffer.c:418 [inline]
- rb_remove_pages kernel/trace/ring_buffer.c:3169 [inline]
- rb_update_pages+0x675/0xd60 kernel/trace/ring_buffer.c:3268
- update_pages_handler kernel/trace/ring_buffer.c:3279 [inline]
- ring_buffer_resize+0x14af/0x1ed0 kernel/trace/ring_buffer.c:3389
- __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:4740
- __tracing_resize_ring_buffer kernel/trace/trace.c:4734 [inline]
- tracing_resize_ring_buffer+0x10b/0x160 kernel/trace/trace.c:4795
- tracing_entries_write+0x15d/0x220 kernel/trace/trace.c:5741
- do_loop_readv_writev fs/read_write.c:851 [inline]
- do_loop_readv_writev fs/read_write.c:836 [inline]
- vfs_writev+0x5ed/0xdd0 fs/read_write.c:1060
- do_writev+0x13e/0x340 fs/read_write.c:1104
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x123/0x790 arch/x86/entry/syscall_64.c:84
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888033712280
- which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 0 bytes inside of
- freed 64-byte region [ffff888033712280, ffff8880337122c0)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x33712
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801c0348c0 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 12447819587
- set_page_owner include/linux/page_owner.h:33 [inline]
- post_alloc_hook+0xfd/0x120 mm/page_alloc.c:1871
- prep_new_page mm/page_alloc.c:1879 [inline]
- get_page_from_freelist+0x110d/0x35d0 mm/page_alloc.c:3943
- __alloc_frozen_pages_noprof+0x2eb/0x3300 mm/page_alloc.c:5436
- alloc_slab_page mm/slub.c:3347 [inline]
- allocate_slab mm/slub.c:3462 [inline]
- new_slab+0xa9/0x6e0 mm/slub.c:3513
- refill_objects+0xe3/0x410 mm/slub.c:7417
- refill_sheaf mm/slub.c:2885 [inline]
- __pcs_replace_empty_main+0x35e/0x650 mm/slub.c:4774
- alloc_from_pcs mm/slub.c:4850 [inline]
- slab_alloc_node mm/slub.c:4984 [inline]
- __do_kmalloc_node mm/slub.c:5413 [inline]
- __kmalloc_noprof+0x67c/0x840 mm/slub.c:5439
- _kmalloc_noprof include/linux/slab.h:995 [inline]
- _kzalloc_noprof include/linux/slab.h:1312 [inline]
- handler_new_ref+0x1ab/0xc60 drivers/media/v4l2-core/v4l2-ctrls-core.c:1959
- v4l2_ctrl_add_handler drivers/media/v4l2-core/v4l2-ctrls-core.c:2520 [inline]
- v4l2_ctrl_add_handler+0x223/0x300 drivers/media/v4l2-core/v4l2-ctrls-core.c:2494
- vivid_create_controls+0x33bd/0x3e80 drivers/media/test-drivers/vivid/vivid-ctrls.c:2071
- vivid_create_instance drivers/media/test-drivers/vivid/vivid-core.c:1933 [inline]
- vivid_probe.cold+0x4f1e/0x921e drivers/media/test-drivers/vivid/vivid-core.c:2095
- platform_probe+0x106/0x1d0 drivers/base/platform.c:1507
- call_driver_probe drivers/base/dd.c:628 [inline]
- really_probe+0x241/0xa60 drivers/base/dd.c:706
- __driver_probe_device+0x210/0x460 drivers/base/dd.c:868
- driver_probe_device+0x4a/0x140 drivers/base/dd.c:898
- __driver_attach+0x21f/0x5b0 drivers/base/dd.c:1292
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff888033712180: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888033712200: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->ffff888033712280: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                   ^
- ffff888033712300: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
- ffff888033712380: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-==================================================================
-----------------
-Code disassembly (best guess):
-   0:	90                   	nop
-   1:	90                   	nop
-   2:	90                   	nop
-   3:	f3 0f 1e fa          	endbr64
-   7:	65 48 8b 05 6c 80 80 	mov    %gs:0x1280806c(%rip),%rax        # 0x1280807b
-   e:	12
-   f:	48 8b 34 24          	mov    (%rsp),%rsi
-  13:	65 48 8b 15 50 80 80 	mov    %gs:0x12808050(%rip),%rdx        # 0x1280806b
-  1a:	12
-  1b:	48 63 c8             	movslq %eax,%rcx
-  1e:	a9 00 01 00 ff       	test   $0xff000100,%eax
-  23:	74 1e                	je     0x43
-  25:	f6 c4 01             	test   $0x1,%ah
-  28:	74 44                	je     0x6e
-* 2a:	a9 00 00 00 0f       	test   $0xf000000,%eax <-- trapping instruction
-  2f:	75 3d                	jne    0x6e
-  31:	f7 c1 00 00 00 f0    	test   $0xf0000000,%ecx
-  37:	75 35                	jne    0x6e
-  39:	8b 82 3c 17 00 00    	mov    0x173c(%rdx),%eax
-  3f:	85                   	.byte 0x85
+Reviewed-by: Zi Yan <ziy@nvidia.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--=20
+Best Regards,
+Yan, Zi
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
