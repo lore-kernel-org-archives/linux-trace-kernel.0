@@ -1,103 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461D31E832;
-	Sun, 27 Sep 2026 16:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B22041A55D;
+	Sun, 27 Sep 2026 16:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790524956; cv=none; b=ulx0+F5j3JuNLmY//iZ/J2VfTFcgY7fl4tlh9pr6EU22hZ55VOhU1HPN3tcUKWWS/LnDaNicXZOqlPZa6gRk/dGmWADZl0RwswSkxQPUPf50Zoq46gx0ZiO6gtHkxaWPJCUN/9B0ABDbEv2fhKEQW/X5Nw5EU58qFoPeqaYIPD0=
+	t=1790527180; cv=none; b=uGS4VJYILNBk6cFvm/+zGsuWp8XTuLTs0IXb8xRiTPGWw7vYYbgSYRZC0ZhPv1hJHv9/r73giwD2o3hzqWcxwWgPleRSEOEAonYityminphIzIIt7KOfF3tDkeoQ2EZ2900BnLG8YU1JjPSUYYJDAs4One8RioRqurh/GMDs4/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790524956; c=relaxed/simple;
-	bh=CTavZ99JhSancwAsfzE/DN+VXQbwpmkhXZpVZJuivRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=drWgOX0ec6azbBqtsMOXZ/8Ba8kLVqdmAZbNBKxKpDtx0n1M1fxVBACy83FYHr0zhNq0DNZXH53UfzRRd0ia4VgSotqjJ4Vxis/dlfN3NpVszctfvKVRUO2gfPsOdqeIp8b7WpfWGmlSVBDGX+b4eAPIUUdy/Jo37qjSPf4RJbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SYcXrqzi; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1790527180; c=relaxed/simple;
+	bh=FhQzjK+6z6ZIUkFNOPKFSAT+3V/h1heXwjRcjUeTUH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j5hnBnhTi4dalEeqedlCufrzO2S3cRHoVIb0arhtGYqGcCPQ0NuZRdKHtF7edKR0MPDI2Nh+qlgV7rFjh+8k249+Gn6BcLO8vQ5BZMMh/FS6Dafp3GVLj9pwuSjPhYn3GEJtuClFmuYtHP1Y7EU/R7suOJN7GRs1I08nrxIRinY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DiskZ7hW; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYcXrqzi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790524954; x=1822060954;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CTavZ99JhSancwAsfzE/DN+VXQbwpmkhXZpVZJuivRE=;
-  b=SYcXrqziPMGcNFCC4eVnHfFtTZuIVP9DVeGJpJluFiBqVZy1sQM6BD0N
-   sdcOKoohQh6EwdG9ysiAbb2KYHLwstGlkvuoHoQ0W/SJRq4OjeiDQW6K5
-   s1H/ITO70wfiagP6oNfeetogYK7Lo4vlbaXqF6O/TXXjWljb6PhIGpCuM
-   l4YNLr/ofd0CR9N6TCQPPBt8ZP0wL74jxY4hS0eUee1u9FntCGgjSDk+0
-   dywclp/LFJwZagkbNrOj/j/boMkVFRg3HC0eEswHk2LkL7Ut1njYGyDLN
-   vFi4eDNybxaPh3bR/kDqsOaR28SdgZ6dXePUwywBN4jYoxTGlgao7QPps
-   g==;
-X-CSE-ConnectionGUID: NSGXhuqPRZKlxUymqkrNeQ==
-X-CSE-MsgGUID: xbOGoNjHSo2wKcH1ic/j4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="101898215"
-X-IronPort-AV: E=Sophos;i="6.27,126,1787036400"; 
-   d="scan'208";a="101898215"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2026 09:02:33 -0700
-X-CSE-ConnectionGUID: nLEMoT7ET6CiSvxDhsc62g==
-X-CSE-MsgGUID: XdM9XDKSSPyCk3+TQ0yBlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,126,1787036400"; 
-   d="scan'208";a="274358961"
-Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 27 Sep 2026 09:02:31 -0700
-Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xArKe-00000000Mzp-0QOT;
-	Sun, 27 Sep 2026 16:02:28 +0000
-Date: Mon, 28 Sep 2026 00:01:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Abhishek Bapat <abhishekbapat@google.com>,
-	Suren Baghdasaryan <surenb@google.com>, Hao Ge <hao.ge@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Abhishek Bapat <abhishekbapat@google.com>
-Subject: Re: [PATCH 4/4] alloc_tag: add a test for trace state toggle and
- filtering
-Message-ID: <202609272338.hVBNO626-lkp@intel.com>
-References: <988dddb203416668a10bc9c5e6157a78615d2ed2.1790025465.git.abhishekbapat@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DiskZ7hW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=SpN6W4lEFND+VB5enmbsYW3nADzfTCDefHGu6aNuhLI=; b=DiskZ7hWcTpUGtBR+tqkbK0ts1
+	wJKx0tOjugHbL2qFHlP1MVHuvHstCvHwOnRSKgjaZn6h955HQ/gFjeZv59EHMfJjZXhdGoZW74NX5
+	x0GVkbo+uHOfuo89K0DvDQKerl5RCEnij76Cp5t7u5lgPxYDm+uVlQsqmTMna6PaZQORd/UrqGEgG
+	CSgPZeCMpfwb6mWFaFFmT13baDfzLZV3uXzeeKKA7yC6oIndMxgv4GorxglzHfpSeghhlY8nZd0yU
+	ZbcVZOXxPg5NMTP+pdNnfkpYhtCVfSm0TlwPBSiVdf4yzuUGRvmrjLjX4FfPkd0gE6XKzaADONxHl
+	fnCqNjxg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xAruS-0000000GblG-3LYl;
+	Sun, 27 Sep 2026 16:39:28 +0000
+Message-ID: <ff6eb658-3930-47d5-9d5d-3e9460d7c0d3@infradead.org>
+Date: Sun, 27 Sep 2026 09:39:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <988dddb203416668a10bc9c5e6157a78615d2ed2.1790025465.git.abhishekbapat@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] docs: admin-guide: Handle TAINT_FORCED_BIND when
+ parsing /proc/sys/kernel/tainted
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+ Bradley Morgan <brads@mainlining.org>, Danilo Krummrich <dakr@kernel.org>,
+ Thierry Reding <thierry.reding@kernel.org>,
+ David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>,
+ linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+References: <cover.1790495516.git.u.kleine-koenig@baylibre.com>
+ <4f89ceaf98172dbfb788832ad3204c8739653b31.1790495516.git.u.kleine-koenig@baylibre.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <4f89ceaf98172dbfb788832ad3204c8739653b31.1790495516.git.u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Abhishek,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 8d61431ed2607386b427752505379536eb634ce8]
+On 9/27/26 1:03 AM, Uwe Kleine-König wrote:
+> tainted-kernels.rst contains a small script to check which taint bits
+> are set in /proc/sys/kernel/tainted. Add one more loop iteration to also
+> handle the newly added TAINT_FORCED_BIND bit.
+> 
+> Also simplify by starting the loop at 0 and save substracting 1 for each
+> usage of the loop counter.
+> 
+> Fixes: fcbfaffee51a ("driver core: add TAINT_FORCED_BIND for when userspace manually messes with devices and drivers")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Abhishek-Bapat/alloc_tag-Add-trace-events-for-tracing-allocations/20260921-212638
-base:   8d61431ed2607386b427752505379536eb634ce8
-patch link:    https://lore.kernel.org/r/988dddb203416668a10bc9c5e6157a78615d2ed2.1790025465.git.abhishekbapat%40google.com
-patch subject: [PATCH 4/4] alloc_tag: add a test for trace state toggle and filtering
-config: xtensa-randconfig-1001-20260927 (https://download.01.org/0day-ci/archive/20260927/202609272338.hVBNO626-lkp@intel.com/config)
-compiler: xtensa-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260927/202609272338.hVBNO626-lkp@intel.com/reproduce)
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202609272338.hVBNO626-lkp@intel.com/
+thanks.
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> ---
+> Hello,
+> 
+> feel free to squash this into fcbfaffee51a without author attribution if
+> that is considered a good idea.
+> 
+> Best regards
+> Uwe
+> 
+>  Documentation/admin-guide/tainted-kernels.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+> index abbf5e3dd749..a208811ad525 100644
+> --- a/Documentation/admin-guide/tainted-kernels.rst
+> +++ b/Documentation/admin-guide/tainted-kernels.rst
+> @@ -74,7 +74,7 @@ a particular type of taint. It's best to leave that to the aforementioned
+>  script, but if you need something quick you can use this shell command to check
+>  which bits are set::
+>  
+> -	$ for i in $(seq 20); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
+> +	$ for i in $(seq 0 20); do echo $i $(($(cat /proc/sys/kernel/tainted)>>$i&1));done
+>  
+>  Table for decoding tainted state
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
->> WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_trace_hit+0x28 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: run_tracer_selftest+0x250 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+~Randy
