@@ -1,87 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A991F427C;
-	Mon, 28 Sep 2026 17:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9C54E3222;
+	Mon, 28 Sep 2026 17:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790615718; cv=none; b=lnnpMPzgISDY8wS9wLwQBLMcK44ux7TrgWKzHLBs4zwCdJ7C6+P9Xckzba5PcW9OmXZBM/JGlo3I+G/zbdFMCXC5XvX0ytvJGSVOveXdLvzws9HcviLTd+WBP5vSfp6QHH0Wfr4n4NvE8NTCADRtRK9xTLyHe6M9My+gqZi+yas=
+	t=1790616330; cv=none; b=axwEiiyN86mNz5S96JFAEU1ymtmtL++AHZrt2VpIceehzRxMl9ylf8RTAu2+JpkUrtY4zC20/ZtNSDf9JyQtx1X2sa4h+vM0ubF2+ObSMshZ3cga13xNEINAFv8uqxN+fABasE7S+f7lFo/lhuBCPlf9IGFidDcbRBTZgxgLDZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790615718; c=relaxed/simple;
-	bh=qQ2LR/9f8UMs3zllYihv6dnst1HW4XOLUBZavG4K210=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=e+RuvjuOrtvVdGTDrZxUtapO6ajFOfVVgIlJ+jU+AUrRIUGZrHqk0eCjGSUGfunTAc0uQbyJ3mEPARqR4RGPKpEKZe6G22jvTk8EvKfq3IE5hQ3lbBxJP2ruLTFgsuPmE2r+OAKCpj5xOExQqBBfbMoTPLoyzBmUM+o8OIOqfM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkOvZWFW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790616330; c=relaxed/simple;
+	bh=t7ciOat8NBAE1wVSqTyG74L/2dyyeqvgmvIccluNMoo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=h37FWNynmgf31XZkI3gjwvwJyiHuQnmwOZvqv3O7xdbb+rgJagLCgt35EOlbZgQqze/+O8FnRpenbjKMi4Jgh/MFigYrXad1+WEljcXMnm0glID9vOIojE5V1d/QVk/TVq37LO6qwZxCB6I/7v+eCTiMpm5JUvClq69opHEGboo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=A5+Cnyft; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=zm602OBl; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkOvZWFW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924841F000FF;
-	Mon, 28 Sep 2026 17:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790615716;
-	bh=qQ2LR/9f8UMs3zllYihv6dnst1HW4XOLUBZavG4K210=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To;
-	b=bkOvZWFWjc/sTyX8rQkj63kGUBZ81dQArvJRyu4iFNnLXN1QYQ3s8e0dBcBWMLy3x
-	 V4vhw/lvHGDyjpj5z9qIP7lykzd5sG0T0lcs30miO+z9iI9YcK+/fVonUMIzo1wKF3
-	 bnAN/XQFT5pCHLJCYCZUWxBb3cRxzCNVlB06QuiVlvroFiSCESqDWqEUgIQZAeAh2y
-	 tsQ0elSnWNrLgWur/K4NlpC8/TwLV0PdLtyRt/Qwum/a7Nelhh6MXzKwIXmtMip9Xr
-	 3iNAblQg63B/Xt273KXsAVtSV9A5DEZ7aw5uRjYE+v5EDFSAs66UV64BmoQ5xUQQqe
-	 g9ZZ0kdSsl5bA==
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="A5+Cnyft";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="zm602OBl"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1790616300; bh=k126SaJbWbPm3yQDF1Bzvdo
+	RS2fDCbZch92XD1cDkQM=; b=A5+CnyftyhiIVzTrVI/LfoIQuZ4iyLIbPbzW5HLlg+3CeUf9ES
+	Wwwkx/sMv6qdfoyYjhguDmh+rtyxRkPBw/jo3VGJU3p1+zJvg9+Q62IliUEwpkfXPBvZow01IP8
+	Szj2CrJl2WQD2wuBIP4I0oEln+rcU57WhsEZdjbVCEawXxpcxSGaGVPPw+gKkz3xc2xEViEqUUl
+	Ue20Ih9Je2mZF1MqtrQ/l2e4u1P+mXVQvMU0L8WdYjIb68FykwPRphqeOscRs+vuRHrFgZy1EC+
+	y4ZpQ67mjXpIVM6K2kXeSSn6NM0Coe2Z5p5CDgcedW4fkEj6nNjn0g4wm6IL1gN55yQ==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1790616300; bh=k126SaJbWbPm3yQDF1Bzvdo
+	RS2fDCbZch92XD1cDkQM=; b=zm602OBlU9S4vhyB9DWLQZnbUJZTaAHoy+ZYEh1EPWUhxVdHK4
+	+GySt+/tmodn0A2ILZ/wvBzCYXdUDISKOsBw==;
+Date: Mon, 28 Sep 2026 18:25:01 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Johan Hovold <johan@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Thierry Reding <thierry.reding@kernel.org>,
+ David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>,
+ linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_1/3=5D_docs=3A_admin-guide=3A_Handle_TAINT?=
+ =?US-ASCII?Q?=5FFORCED=5FBIND_when_parsing_/proc/sys/kernel/tainted?=
+In-Reply-To: <bf400c123ec86a7192388ad23cfe4194f536937e.1790612298.git.u.kleine-koenig@baylibre.com>
+References: <cover.1790612298.git.u.kleine-koenig@baylibre.com> <bf400c123ec86a7192388ad23cfe4194f536937e.1790612298.git.u.kleine-koenig@baylibre.com>
+Message-ID: <6551F533-E1C1-411E-8EA1-140641E1B84D@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Sep 2026 19:15:12 +0200
-Message-Id: <DLR4AMFM8QZ2.36R6G0LD9D53Q@kernel.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v3 0/3] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Johan Hovold"
- <johan@kernel.org>, "Aaron Tomlin" <atomlin@atomlin.com>, "Bradley Morgan"
- <brads@mainlining.org>, "Thierry Reding" <thierry.reding@kernel.org>,
- "David Lechner" <dlechner@baylibre.com>, "Armin Wolf" <W_Armin@gmx.de>,
- <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
- <linux-trace-kernel@vger.kernel.org>
-References: <cover.1790612298.git.u.kleine-koenig@baylibre.com>
-In-Reply-To: <cover.1790612298.git.u.kleine-koenig@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Mon Sep 28, 2026 at 6:46 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> Note that different to Danilo's suggestion I don't differentiate between
-> driver_overrides setup in userspace and those setup in kernel space.
-> IMHO all are bad and there are alternatives for the legitimate cases.
+On 28 September 2026 17:46:02 BST, "Uwe Kleine-König"
+<u.kleine-koenig@baylibre.com> wrote:
+>tainted-kernels.rst contains a small script to check which taint bits
+>are set in /proc/sys/kernel/tainted. Add one more loop iteration to also
+>handle the newly added TAINT_FORCED_BIND bit.
+>
+>Also simplify by starting the loop at 0 and save substracting 1 for each
+>usage of the loop counter.
+>
+>Acked-by: Randy Dunlap <rdunlap@infradead.org>
+>Tested-by: Randy Dunlap <rdunlap@infradead.org>
+>Fixes: fcbfaffee51a ("driver core: add TAINT_FORCED_BIND for when userspace manually messes with devices and drivers")
+>Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+>---
+> Documentation/admin-guide/tainted-kernels.rst | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+>index abbf5e3dd749..a208811ad525 100644
+>--- a/Documentation/admin-guide/tainted-kernels.rst
+>+++ b/Documentation/admin-guide/tainted-kernels.rst
+>@@ -74,7 +74,7 @@ a particular type of taint. It's best to leave that to the aforementioned
+> script, but if you need something quick you can use this shell command to
+> check
+> which bits are set::
+> 
+>-	$ for i in $(seq 20); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
+>+	$ for i in $(seq 0 20); do echo $i $(($(cat /proc/sys/kernel/tainted)>>$i&1));done
+> 
+> Table for decoding tainted state
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+Reviewed-by: Bradley Morgan <brads@mainlining.org>
 
-I agree that the implementation - i.e. (ab)using driver override - the affe=
-cted
-subsystems have chosen is wrong.
+Tested-by: Bradley Morgan <brads@mainlining.org> # Power10
 
-But, there is a difference between picking the wrong implementation and bei=
-ng
-semantically wrong to a point that we need to taint the kernel.
-
-So, yes this should be cleaned up, but we should not taint the kernel for
-otherwise correct code. Otherwise we could as well taint the kernel for eve=
-ry
-other abuse of an API.
-
-> I think applying this complete patch set and keeping fcbfaffee51a ("drive=
-r
-> core: add TAINT_FORCED_BIND for when userspace manually messes with devic=
-es and
-> drivers") is too much, so this series serves mainly as discussion ground =
-for
-> choosing a sane way to prevent fuzzing results of only mild interest and =
-stop
-> patch sets harding drivers for driver_override handling.
-> My preference would be to revert (or drop) fcbfaffee51a and then only
-> apply patch #3. Maybe also keep patch #2 to taint if
-> "allow_driver_override" is provided.
-
-Agreed, but as mentioned in [1], I think it is also reasonable to only keep
-TAINT_FORCED_BIND for buses that do not support hotplug in the first place.
-
-[1] https://lore.kernel.org/driver-core/DLIL9H50MALI.3JROXYEEUM3KU@kernel.o=
-rg/
+--- Thanks!
+"I'm not a very positive person" - Linus torvalds
