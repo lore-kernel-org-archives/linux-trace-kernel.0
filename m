@@ -1,138 +1,111 @@
-Received: from mta1.migadu.com (out-117.mta1.migadu.com [95.215.58.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759444B2038
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 11:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F624B8280
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 11:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790596098; cv=none; b=m5UYn00cepDe/qies3pcrtN9qBASOEvE4Vt+VcvhILexY+cox6yWEYa/bbWAPRsBXKdGP9HmnSVVNzSpr2md/HJclCL+6rjsY7QPhAhlC4xPlezKC6s9W4CIVnLImA1wwYsI8xr7wiLeCaLgsHn4HTqAEskisjcUdLFagXUQopE=
+	t=1790596708; cv=none; b=ru2CummMdBBgITLs+RVnVbwm86Mkmu7Wzq3f1fxm2KJMTwkSorJnI6Om6urYPTrCBglkGEgEWUrQ2EpSUUAXXB5caNvidAayHAi9RZpRjtaDvE3vIQKfgY/xXFntXSWdxjhM1u5EoJlpbBz8PAZqt4xkSQcKPMIgagw1TwLL7w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790596098; c=relaxed/simple;
-	bh=tt7LGshuqhNxDtoKCH/LZTI4ttNHcJzRhKME5HBY9Uw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hrKfaR25WueMbF+aSnolmHjRAH6irYb0KWBoIp55vufuMLwJiWORrt9vatBu13JR+zLSqgjJn+3oYe+mIS6vvryA5WkgxE30nR3gpP2pRDUEn8J7cqO2Z0/3EhJ19v6QfEfP78e2kKl+0ksUFF8njpXInBqrwxm94fQhF7mW1DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UDtqHTvX; arc=none smtp.client-ip=95.215.58.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790596708; c=relaxed/simple;
+	bh=E7W6OJqrArXZwdvGEx7J3Iy0KtBFzD++01Q5349IKX8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=vFv+n7yNW5cwRmQWrwsw6BNoE/OStxDLfdiQpPXg7wEf6jqPovyNd7ACA9Y6UXr9v54aMFGsirAkfyRpvnLpXkY6FyeYZMoci2DVsLOt4ekz8OYW5duNSDhniHLA4Xl3u3fQAq8yTA8Xo0BbU8TpzwebWcq7pUTBPknCAu90fpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNdaacVP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UDtqHTvX"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=tt7LGshuqhNxDtoKCH/LZTI4ttNHcJzRhKME5HBY9Uw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790596094; v=1; x=1791200894;
- b=UDtqHTvX165RknbB241mgGwmNCIveH0xUbj48b0WW73B2ZkDKd3SIGsgEgK5BowKVUYYgJJ7
- WtkOKGkzXhYGt2JlGwPlkBAiRhNcMxoApEgwYHA/Wrga7cwyKhqjrh6pgQDfpxO/ogch5XIVfIX
- pTImSctQcfExyTUv9LQDPXRk=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id cc434b568fabe6dc;
-	Mon, 28 Sep 2026 11:48:14 +0000
-X-Mizu-Trace-ID: cc434b568fabe6dc
-X-Migadu-Flow: FLOW_OUT
-From: Ridong Chen <ridong.chen@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Chinner <david@fromorbit.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
-	linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
-	Ridong Chen <ridong.chen@linux.dev>,
-	Ridong Chen <chenridong@xiaomi.com>
-Subject: [PATCH RFC v2 7/7] mm/vmscan: pass scan_control to mm_vmscan_balance_pgdat_end
-Date: Mon, 28 Sep 2026 19:46:24 +0800
-Message-Id: <20260928114625.3609130-8-ridong.chen@linux.dev>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260928114625.3609130-1-ridong.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNdaacVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B291F00893;
+	Mon, 28 Sep 2026 11:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790596707;
+	bh=AJsffS0MEBK8gh7T/d5kNFzV3w+EQT2pZ0V14SA6fVo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=BNdaacVPQ2qgmwtpHr8Ed2Ir7WiueycKo0KQlnZolBP+D2DfVXF9PXHlPUa6dCANT
+	 B7evcr8CAg8QQJyNtAXTK5rSJEN7pi1rUNDdpCwz0fjfNCC17cI3O7LjsU4/5sFEh/
+	 sf6GGELmdwQNXjH0JbAdHoIYVItjSo6MRtCp1E8hm3u++eA4SDW7IXchfRz5qwYoES
+	 6xaoHCoHypa2eiaNHwn6fGjqcMJia5JRZOb7e4nDKbz38xUCcEtYvbOZa9mDp1uGWZ
+	 WPwK+RVggORhmkKRoqRp4Tpr9tfk1VTnI6hioVbIsDZ5rxuCosKaEN/Z5hbvtTf3YN
+	 GyS+PJLhAhgDw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC v2 7/7] mm/vmscan: pass scan_control to
+ mm_vmscan_balance_pgdat_end
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ridong Chen" <ridong.chen@linux.dev>
+Cc: hannes@cmpxchg.org, linux-trace-kernel@vger.kernel.org, tj@kernel.org, mkoutny@suse.com
+In-Reply-To: <20260928114625.3609130-8-ridong.chen@linux.dev>
 References: <20260928114625.3609130-1-ridong.chen@linux.dev>
+ <20260928114625.3609130-8-ridong.chen@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 11:58:26 +0000
+Message-Id: <20260928115827.18B291F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Ridong Chen <chenridong@xiaomi.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] mm: BPF raw tracepoint ABI breakage and commit message mismatch =
+in mm_vmscan_balance_pgdat_end
+--
 
-balance_pgdat() passes sc.order and sc.nr_reclaimed to
-mm_vmscan_balance_pgdat_end as bare arguments. Pass the enclosing
-struct scan_control instead and read the fields out in TP_fast_assign,
-mirroring mm_vmscan_balance_pgdat_begin. highest_zoneidx stays a
-separate argument as it is a local of balance_pgdat() rather than a
-scan_control field.
+commit eb8bc6091aab714af4b68f316fecfc08d43c39dc
+Author: Ridong Chen <chenridong@xiaomi.com>
 
-The exported event format is unchanged.
+mm/vmscan: pass scan_control to mm_vmscan_balance_pgdat_end
 
-No functional change.
+This commit updates the mm_vmscan_balance_pgdat_end tracepoint to receive
+a struct scan_control pointer rather than passing individual struct fields.
+It updates the TP_PROTO and TP_ARGS while leaving the exported event format
+unchanged.
 
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
----
- mm/trace_vmscan.h | 9 ++++-----
- mm/vmscan.c       | 3 +--
- 2 files changed, 5 insertions(+), 7 deletions(-)
+>     balance_pgdat() passes sc.order and sc.nr_reclaimed to
+>     mm_vmscan_balance_pgdat_end as bare arguments. Pass the enclosing
+>     struct scan_control instead and read the fields out in TP_fast_assign,
+>     mirroring mm_vmscan_balance_pgdat_begin. highest_zoneidx stays a
 
-diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
-index 04f285e77659..c27bc7cc6063 100644
---- a/mm/trace_vmscan.h
-+++ b/mm/trace_vmscan.h
-@@ -124,10 +124,9 @@ TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
- 
- TRACE_EVENT(mm_vmscan_balance_pgdat_end,
- 
--	TP_PROTO(int nid, int order, int highest_zoneidx,
--		 unsigned long nr_reclaimed),
-+	TP_PROTO(int nid, struct scan_control *sc, int highest_zoneidx),
- 
--	TP_ARGS(nid, order, highest_zoneidx, nr_reclaimed),
-+	TP_ARGS(nid, sc, highest_zoneidx),
- 
- 	TP_STRUCT__entry(
- 		__field(int, nid)
-@@ -138,9 +137,9 @@ TRACE_EVENT(mm_vmscan_balance_pgdat_end,
- 
- 	TP_fast_assign(
- 		__entry->nid = nid;
--		__entry->order = order;
-+		__entry->order = sc->order;
- 		__entry->highest_zoneidx = highest_zoneidx;
--		__entry->nr_reclaimed = nr_reclaimed;
-+		__entry->nr_reclaimed = sc->nr_reclaimed;
- 	),
- 
- 	TP_printk("nid=%d order=%d highest_zoneidx=%-8s nr_reclaimed=%lu",
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6ec84390ee2a..52d90a32091e 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -7403,8 +7403,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 	psi_memstall_leave(&pflags);
- 	set_task_reclaim_state(current, NULL);
- 
--	trace_mm_vmscan_balance_pgdat_end(pgdat->node_id, sc.order,
--					  highest_zoneidx, sc.nr_reclaimed);
-+	trace_mm_vmscan_balance_pgdat_end(pgdat->node_id, &sc, highest_zoneidx);
- 
- 	/*
- 	 * Return the order kswapd stopped reclaiming at as
--- 
-2.34.1
+[Severity: Medium]
+The commit message states this change is "mirroring
+mm_vmscan_balance_pgdat_begin." Is this description accurate?
 
+Looking at mm_vmscan_balance_pgdat_begin in mm/trace_vmscan.h, it still tak=
+es
+individual arguments and was not updated to take struct scan_control *sc:
+
+TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
+        TP_PROTO(int nid, int order, int highest_zoneidx),
+
+Could the commit message be more precise about the rationale?
+
+> diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
+> index 04f285e776596..c27bc7cc60630 100644
+> --- a/mm/trace_vmscan.h
+> +++ b/mm/trace_vmscan.h
+[ ... ]
+> @@ -124,10 +124,9 @@ TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
+> =20
+>  TRACE_EVENT(mm_vmscan_balance_pgdat_end,
+> =20
+> -	TP_PROTO(int nid, int order, int highest_zoneidx,
+> -		 unsigned long nr_reclaimed),
+> +	TP_PROTO(int nid, struct scan_control *sc, int highest_zoneidx),
+> =20
+> -	TP_ARGS(nid, order, highest_zoneidx, nr_reclaimed),
+> +	TP_ARGS(nid, sc, highest_zoneidx),
+
+[Severity: Medium]
+The commit message mentions there is "No functional change", but could this
+modification break existing BPF programs hooked to this tracepoint?
+
+While standard trace events parse the formatted output, BPF raw tracepoints
+consume the TP_PROTO arguments directly via ctx->args. Changing the number
+and type of arguments alters the BPF raw tracepoint ABI for this event.
+
+Does this inadvertently break user space tools that attach to this raw
+tracepoint and expect the 4 original arguments?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928114625.3609=
+130-1-ridong.chen@linux.dev?part=3D7
