@@ -1,113 +1,136 @@
-Received: from e234-60.smtp-out.ap-northeast-1.amazonses.com (e234-60.smtp-out.ap-northeast-1.amazonses.com [23.251.234.60])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from mta1.migadu.com (out-42.mta1.migadu.com [95.215.58.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284E4497396;
-	Mon, 28 Sep 2026 10:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.234.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8BC4B0E58
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 11:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790590119; cv=none; b=cgpoLnn/wWa+5Iqr5KQMTJ/KD/tWv9ho8hqBw7TWRxuaac+WbHLZPliBGwy0Zd8N1gylxuuA3oBEl9dl5YlPEoLcgtpNo9hTMtshpRg80HA0cQoroAcj0JdWHqDNu3p3eVmC22TEAvBTnIC9ZP/lZLZ8+lhcwA8En2edRNIpE2A=
+	t=1790596015; cv=none; b=Cvd/FhCo1WrMrO/qZe0G9JRZL268i5O7FvHr4HwB4Ja0DhMFSdgcoaQFH7BkcYV7zdRGtoNSeXHmlePhipYfet/AjRETtBTdYRluyXd5R/hDmBCBUIUKXD1+SQ6zc9BvwgTj9+k7gKmV92jhPbZeDPewXfJrG4q2+A6KQiq7mAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790590119; c=relaxed/simple;
-	bh=yMSif6ynx6nwdCbZHY+fd5kWOasUfWU6Tx1mGHdyWwI=;
-	h=In-Reply-To:From:To:Cc:Subject:Message-ID:Date:MIME-Version:
-	 Content-Type; b=LQV6jwp92k4+cuW8Xm9VMI3G2sHadjIVWFdUrAs/DeSUww3rVTj4EQv+kjKMx3EwSKvkPaLK4QsDlIvym7a4gbxUvZb+ipttVffsYtV5fj0noy0OPahA/10uXYyoLcUy6OAPtUm17/qedDrWrFNhH0O6xB8qOeshRNGdm7Xsli4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fqwqf.xyz; spf=pass smtp.mailfrom=send.fqwqf.xyz; dkim=pass (1024-bit key) header.d=fqwqf.xyz header.i=@fqwqf.xyz header.b=I8IgdS8+; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=HQ6p/NJR; arc=none smtp.client-ip=23.251.234.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fqwqf.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=send.fqwqf.xyz
+	s=arc-20240116; t=1790596015; c=relaxed/simple;
+	bh=xFoYoTFmea6JwFgNn0/x7qB+AzppySK65jVPEEVi/4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NRITduwmST/XtN7NrH0iZBWKfzZZ2NiPnYQys8KiFojl/EoyB3vNG5y7YQjf4gVTmArGdoEe6pUhLe8fPFi/C+90YB1zFNJO9QhhdCVMEGgFasyvSlNcjwjoybbkqYLlTDGDUaxseb2N2BR9JJDKW1+D7Tk2AQyeu3YrRpZFeRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gjxE1ep/; arc=none smtp.client-ip=95.215.58.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fqwqf.xyz header.i=@fqwqf.xyz header.b="I8IgdS8+";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="HQ6p/NJR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple; s=resend;
-	d=fqwqf.xyz; t=1790590116;
-	h=In-Reply-To:From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type;
-	bh=yMSif6ynx6nwdCbZHY+fd5kWOasUfWU6Tx1mGHdyWwI=;
-	b=I8IgdS8+wA2fQ+k0Oy2LH+foCXQKmKHNbJkqBMOblk727ycomb2VIXFVuH4Rn4V+
-	4qHdDFvR1ENxEbyEIcnoASM86dKxoBVBPIbYDty5sW7Ak62XkIsbQnKJjE4t0GEO6RD
-	EnxHGoQhXDqIatm6eAobiqz7BJpp6eXNtNTIt+h4=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=zh4gjftm6etwoq6afzugpky45synznly; d=amazonses.com; t=1790590116;
-	h=In-Reply-To:From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type:Feedback-ID;
-	bh=yMSif6ynx6nwdCbZHY+fd5kWOasUfWU6Tx1mGHdyWwI=;
-	b=HQ6p/NJR4eW+L5zLl6mf+qsbfcDrQicaTYDNmW39mddiGyWgXrkvkkbV0QEvvn1s
-	tdu2Q7XChE7FG7TA5+GfRWf0rB1qUN+aNz6Vyjogg4Fmuh27OMf+KYUlr8/eRTFC8pm
-	H1nBYIaKgvkzSJd7A7RVDnL9FcFigmAEQ/QfoEBo=
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-In-Reply-To:
- <CAEe3GZE9pVyV=PRxo_1V39dXCEHz_wx1fa5P3U=686b0fweOng@mail.gmail.com>
-From: fQwQf <fqwqf@fqwqf.xyz>
-To: jingyliang@chromium.org, daleyo@gmail.com
-Cc: jikos@kernel.org, bentiss@kernel.org, corbet@lwn.net, broonie@kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, dmitry.torokhov@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	hbarnor@chromium.org, tfiga@chromium.org
-Subject: Re: [PATCH v4 00/11] Add spi-hid transport driver
-Message-ID: <010601a0e77ce26e-204b61a2-f41e-4d77-b585-228c5da788dc-000000@ap-northeast-1.amazonses.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 10:08:36 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gjxE1ep/"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=xFoYoTFmea6JwFgNn0/x7qB+AzppySK65jVPEEVi/4Q=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790596011; v=1; x=1791200811;
+ b=gjxE1ep/x/NJCUyfdEEKuEFLbKn+0EDEDuEmX+lPVI8NET2fk5EQKMM/Y0wpt5A4uP052Bmg
+ iHGNDXaYioc96iVVC+Mm3T738pkGW3fnL7Xf95Q3T8YvI8s1XsY/gIZSK9fjlyIbarH03iNbbcQ
+ f2qHo9yiBrE28pUvdOa4k8P4=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id a1c51cc4e3403e67;
+	Mon, 28 Sep 2026 11:46:50 +0000
+X-Mizu-Trace-ID: a1c51cc4e3403e67
+X-Migadu-Flow: FLOW_OUT
+From: Ridong Chen <ridong.chen@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Chinner <david@fromorbit.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Kairui Song <kasong@tencent.com>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
+	linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
+	Ridong Chen <ridong.chen@linux.dev>,
+	Ridong Chen <chenridong@xiaomi.com>
+Subject: [PATCH RFC v2 0/7] mm/vmscan: move vmscan tracepoints to a local header
+Date: Mon, 28 Sep 2026 19:46:17 +0800
+Message-Id: <20260928114625.3609130-1-ridong.chen@linux.dev>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Feedback-ID: :1.ap-northeast-1.6BGMgStFQE7EJYq5syaCRzdneEHVt/+DAaGDrqUmDs9QLO4/SllUBZ3fHvnZ8rcAX/3IjUyTRgi5JFZsWrikFHwlPJqCkqEMlxDFM4JXh+ycxH/J5Tudg5bGdz6h4331g1L1EFsGR8kuYNfGLsrxz4Nym4YXoPcZxeVkrHry4Zx21n8vEVLEjc7s+OCM8PU9:1.ap-northeast-1.DTXDV/V9GPBWozcllKo8innbNB2qs2O/3F8XZSzd9ZM=:AmazonSES
-X-SES-Outgoing: 2026.09.28-23.251.234.60
+Content-Transfer-Encoding: 8bit
 
-Hi Jingyuan, Dale,
+From: Ridong Chen <chenridong@xiaomi.com>
 
-Thank you both. Since my earlier message, I have moved =
-the SL7 integration onto Jingyuan's v4 series, replacing the standalone =
-downstream HID driver. Normal touchpad operation is working with the local =
-GENI QSPI stack and existing iptsd setup. This is testing of v4 plus my =
-local changes rather than unmodified v4.
+This series started as an effort to add two tracepoints for MGLRU. In the
+discussion, Steven suggested moving include/trace/events/vmscan.h to
+mm/trace_vmscan.h [1], as several other subsystems already do. Once the
+header lives under mm/, struct scan_control can be moved there too, letting
+the trace events access its fields directly instead of having each callsite
+copy the scalars out by hand.
 
-The QSPI transport uses spi-mem =
-operations, with 1-4-4 transfers and eight dummy clocks for the SL7 read =
-path. I also have changes around DMA buffer alignment, report bounds and =
-request handling. I plan to separate the generic fixes from the QSPI =
-transport changes and keep the GENI/GPI controller work in a separate =
-series, retaining the downstream provenance. I can rebase against v5 and =
-drop anything it already addresses.
+The series builds in small steps:
 
-I also encountered a resume issue in =
-this SL7 integration: the HID reset-resume callback could run before the =
-asynchronous reset/descriptor exchange completed. Delaying that callback =
-addressed the ordering problem. The touchpad also lost its =
-userspace-selected heatmap mode after reset; restarting iptsd restored =
-multi-finger input. My current SL7 workaround recreates the HID device =
-after reset so userspace reconnects and initializes it again. Resume with =
-this workaround has been tested successfully here, but I would like to =
-discuss a cleaner recovery policy before proposing that part upstream.
+  1) drop the now-unused vmscan trace include from memcontrol.c;
+  2) move include/trace/events/vmscan.h to mm/trace_vmscan.h, using a
+     relative TRACE_INCLUDE_PATH so no Makefile change is needed;
+  3) move struct scan_control into a dedicated mm/vmscan.h, which
+     trace_vmscan.h pulls in, guarded against the multi-read that
+     define_trace.h performs;
+  4-7) pass scan_control to the vmscan tracepoints and pick the fields
+     out in TP_fast_assign, one group at a time: the reclaim-begin
+     events, the LRU isolate/shrink events, mm_vmscan_reclaim_pages and
+     mm_vmscan_balance_pgdat_end.
 
-Jingyuan, do you have a preferred transport interface for adding spi-mem =
-support to the generic driver? I can prepare a focused diff for discussion =
-alongside your v5 work.
+Besides the cleanup, this moves the code that computes the tracepoint
+parameters into TP_fast_assign(), which is in a separate text section. It
+removes code from the work flow, improving instruction cache.
 
-Dale, thanks for the nix1e link. I have reviewed =
-the patches and module build definitions at b274dd7. The build definitions =
-apply v4 plus fullduplex.patch to SPI-HID and include separately built =
-GENI/GPI modules with the downstream QSPI patches. The HID read path =
-combines the command and receive buffers in one SPI transfer; my local =
-implementation instead expresses the command, address, dummy clocks and =
-data through spi-mem.
+There is no functional change and no ABI change: TP_STRUCT__entry and
+TP_printk are untouched, so the exported event format is identical. This
+was confirmed by diffing the tracefs format files before and after, and
+by capturing the direct/memcg/node reclaim-begin events under load in a
+QEMU guest (order, gfp_flags and memcg_id all match).
 
-The DT configuration in that revision targets =
-Romulus13/15, so I assume the additional Denali DT changes you mentioned =
-are local to your setup; please correct me if I have missed a published =
-branch. If those changes are available, a link or diff would help us =
-compare the wiring. I also noticed that nix1e's README reports a suspend =
-fix. On your SP11 setup, do touch and pen both remain fully functional =
-after resume without restarting iptsd (if you use it)? That would be useful=
- context for the SL7 recovery issue above.
+Where a value passed to a tracepoint is a local of the caller rather than
+a scan_control field (highest_zoneidx for balance_pgdat_end, nr_reclaimed
+for reclaim_pages), it stays a separate argument.
 
-Please keep me CCed, as I am =
-not subscribed to the lists.
+[1]: https://lore.kernel.org/linux-mm/20260916095122.50cbb620@robin/
 
-Best regards,
-Jizhou Tong
+---
+Changes since v1:
+  - Convert the remaining vmscan tracepoints too, not just reclaim-begin
+    (4 -> 7 patches).
+  - Put struct scan_control in its own mm/vmscan.h instead of directly in
+    trace_vmscan.h suggested by Baoquan.
+
+Ridong Chen (7):
+  mm/memcontrol: drop unused vmscan tracepoint include
+  mm/vmscan: move vmscan tracepoints to a local header
+  mm/vmscan: move struct scan_control to a dedicated header
+  mm/vmscan: pass scan_control to the reclaim-begin tracepoints
+  mm/vmscan: pass scan_control to the LRU isolate/shrink tracepoints
+  mm/vmscan: pass scan_control to mm_vmscan_reclaim_pages
+  mm/vmscan: pass scan_control to mm_vmscan_balance_pgdat_end
+
+ MAINTAINERS                                   |   4 +
+ mm/memcontrol.c                               |   2 -
+ mm/shrinker.c                                 |   2 +-
+ .../events/vmscan.h => mm/trace_vmscan.h      |  80 ++++++-----
+ mm/vmscan.c                                   | 136 ++----------------
+ mm/vmscan.h                                   | 118 +++++++++++++++
+ 6 files changed, 178 insertions(+), 164 deletions(-)
+ rename include/trace/events/vmscan.h => mm/trace_vmscan.h (90%)
+ create mode 100644 mm/vmscan.h
+
+-- 
+2.34.1
+
