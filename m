@@ -1,125 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439E837B02D;
-	Mon, 28 Sep 2026 14:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AF54D09F5;
+	Mon, 28 Sep 2026 15:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790606798; cv=none; b=HzvuWXv/x8HDn/YbYuf3AqQeuR5S368BGHDIQDu1aUcfusqaIaMKp793JepmwNza+jUiCSnCgf/bwokJma9CNFvecjc+GOqY1M9lYwrH8xosglL8LyIWNQvtbn4X1UOkWAnVYssf5CHqNm2euJ9IYbe9E8eJ/BFe6sWs0cEdHbM=
+	t=1790608653; cv=none; b=gOJv3B4FoUSAoQhYgDjlFi2Bhk0KfZklXKJblNPaYs3mf8s/WXZ1zpqE0TUPt/ZXyHPah4ft35APNqdgMyXNIc0VKjsRRIkZ03X5T37DlALQQbLmrWUyJPhrr5DQ0F54oNcwEcVgjAkxMfyiFAZ3/HyebuGQpTDvde94LvnMmhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790606798; c=relaxed/simple;
-	bh=eThcIUpBTWLYG3dJBm7jdVqG55rhMpk0EZmx7FEW6mk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YuQfTJvD5jPqNifrF7bymWu01S/YYYxuPYPDP2LObAyHtR+Z6qc4GXfJv66s6UdQlvdsGuxSZbmojVjrdRKSWw2y/up7CkztH6riAxRfXUDez++OjntR2v6a6UcVPPtcAa2itZCmc1GKe3wa2Gt2WeSWHIkiHP4aWhVekUUccAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1c5/8i1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790608653; c=relaxed/simple;
+	bh=S1D34cwHw1BqFkF7bcWEE/S56n4pkNJ75qlEE9Upi+8=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=qaK35gNFwtV7/JKsUdXzdBPrEQMbvNr14yoGYs8kqXCyIerFZgjeMwlxW0l+46ovcySi0xC2oc75QCpLPGoJNMlknwM7jJotqodnlsTxKDsi2pMNUiIiIyfEXzHxB3+q1/hXpd0M+zOqBZf8k25dlw0Gm1NwwDCZCMYgvsMQqgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmAmvovt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1c5/8i1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2531F00893;
-	Mon, 28 Sep 2026 14:46:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmAmvovt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E457E1F000FF;
+	Mon, 28 Sep 2026 15:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790606796;
-	bh=WzWGHrbNn89goxNYZlLyoKltxYQs9+9bqeHSre8uukQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M1c5/8i1KoAQsLD4TS9XT2/FoOBi64tBKEqcxrTbVqROS7Kyb7TiDthoFS2ScLIKS
-	 xr4s2e21ltaUFWdEVb6iZLrfmLKorVt/Sf9ErnNU4fGQ3Qp2egtDBoOPxQiHEzMURH
-	 W1sYDbqaPV8Thvrh7Z/Tw6yqLSmJrrtH+TutWC1soiD1zJjV3gmYMy4u22rXfMIV3X
-	 kP/N4fFgNqIK05DWsnx9Tof6zP7pO9YzfTz0PnR6mCklHG8IHtqEtWMmIsZy+CDvvY
-	 HPzRQDlMgb5YMjF/LjuY3yr1PIr5QZYPuV7HNRbPXJGxAW5PijLROyz4yH/eetkTK3
-	 7VARFWF4YaFmQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 3/3] fprobe: Switch fprobe and BPF kprobe-multi to
- Tasks-Rude RCU
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179060579456.372125.8753302103085829884.stgit@devnote2>
-References: <179060575297.372125.10581329083761385407.stgit@devnote2>
- <179060579456.372125.8753302103085829884.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 14:46:36 +0000
-Message-Id: <20260928144636.9D2531F00893@smtp.kernel.org>
+	s=k20260515; t=1790608651;
+	bh=bazDgST6Pt6E2LsRD74JROMaFIS21Sj5P+1074D68A8=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=JmAmvovtrpFq0t+2g8XEldaaplldzoQDGQLwcK/lEkLEYagPT15fXVcKBuFCMCRO0
+	 1yOyHU4L5rN6uJ0GSl7MHy4o7JE9yMEj27BgFuIndJJQZBU6bFViWuJPUqrUPTG8iV
+	 PuaGLM7KUMC92psVXQ30d9DnSisi3L2St25Elj90czRRY4XeQwQDwPCY8tQu4wUwL7
+	 /NYowiG9rj5Sq2BxTFFWOAHGnve7YHzZwswkicLmB1mGHT9c8TcdtA4dJDrvbuYnt8
+	 ZbMrd6Nd+TZZw+wwSYZoESNTHK+cvGEs3KnNTj3SFLtZVOO2Qj9+FK87jNPuECp7SZ
+	 JDMLYmonCC3jQ==
+Content-Type: multipart/mixed; boundary="===============9154150229869040598=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-Id: <ac5eda3b03141b04642ec2196f06800c2b840d0dd9919df6a232a9c6e1575c89@mail.kernel.org>
+In-Reply-To: <179060576723.372125.8212099501235098804.stgit@devnote2>
+References: <179060576723.372125.8212099501235098804.stgit@devnote2>
+Subject: Re: [RFC PATCH 1/3] rcu/tasks: Export call_rcu_tasks_rude()
+From: bot+bpf-ci@kernel.org
+To: mhiramat@kernel.org,paulmck@kernel.org,frederic@kernel.org,neeraj.upadhyay@kernel.org,joelagnelf@nvidia.com,josh@joshtriplett.org,boqun@kernel.org,urezki@gmail.com,tgraf@suug.ch,herbert@gondor.apana.org.au,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,rostedt@goodmis.org,mhiramat@kernel.org,akpm@linux-foundation.org
+Cc: mathieu.desnoyers@efficios.com,jiangshanlai@gmail.com,qiang.zhang@linux.dev,john.fastabend@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,rcu@vger.kernel.org,linux-kernel@vger.kernel.org,linux-crypto@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Mon, 28 Sep 2026 15:17:29 +0000 (UTC)
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] trace: Use-After-Free in fprobe_module_callback during rhashtable =
-walk
-- [Low] trace: sparse context imbalance due to missing RCU_SCHED annotation
---
+--===============9154150229869040598==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-commit b3e36a52547a2b577250e858535265a49a8ab8b5
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-fprobe: Switch fprobe and BPF kprobe-multi to Tasks-Rude RCU
-
-This commit switches fprobe entry/exit callbacks and BPF kprobe-multi=20
-asynchronous unregistration from standard RCU to Tasks-Rude RCU. This=20
-prevents potential use-after-free races during RCU grace periods by=20
-waiting for preempt-disabled execution contexts to complete.
-
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 9f2d98181779a..b7850df17575a 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 44c07a66edff..dca61b52dc8c 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -198,7 +198,11 @@ void rcu_tasks_torture_stats_print(char *tt, char *tf);
+>
+>  # ifdef CONFIG_TASKS_RUDE_RCU
+>  void synchronize_rcu_tasks_rude(void);
+> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
+>  void rcu_tasks_rude_torture_stats_print(char *tt, char *tf);
+> +# else
+> +# define call_rcu_tasks_rude call_rcu
+> +# define synchronize_rcu_tasks_rude synchronize_rcu
+>  # endif
+>
+>  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t, false)
 
 [ ... ]
 
-> @@ -76,8 +76,14 @@ static const struct rhashtable_params fprobe_rht_param=
-s =3D {
->  	.obj_hashfn		=3D fprobe_node_obj_hashfn,
->  	.obj_cmpfn		=3D fprobe_node_cmp,
->  	.automatic_shrinking	=3D true,
-> +	.use_tasks_rude		=3D true,
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index 627295396cd9..f0b524d5f3f5 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
 
-[Severity: High]
-Does setting .use_tasks_rude =3D true introduce a use-after-free race during
-module unload?
+[ ... ]
 
-Since deferred bucket table reclamation now uses call_rcu_tasks_rude(), the
-table walk in fprobe_module_callback() might not have adequate reader
-protection:
+> @@ -1376,14 +1376,12 @@ DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude,
+>   *
+>   * See the description of call_rcu() for more detailed information on
+>   * memory ordering guarantees.
+> - *
+> - * This is no longer exported, and is instead reserved for use by
+> - * synchronize_rcu_tasks_rude().
+>   */
+> -static void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
+> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
+>  {
+>  	call_rcu_tasks_generic(rhp, func, &rcu_tasks_rude);
+>  }
+> +EXPORT_SYMBOL_GPL(call_rcu_tasks_rude);
 
-kernel/trace/fprobe.c:fprobe_module_callback() {
-    ...
-		rhashtable_walk_start(&iter);
+Do call_rcu_tasks_rude() and synchronize_rcu_tasks_rude() actually provide
+the same grace period guarantee?
 
-		while ((node =3D rhashtable_walk_next(&iter)) && !IS_ERR(node))
-			if (fprobe_remove_node_in_module(mod, node, &alist) < 0) {
-    ...
+On architectures that select ARCH_WANTS_NO_INSTR (x86, arm64, riscv, s390,
+loongarch), synchronize_rcu_tasks_rude() returns without waiting at all
+unless CONFIG_FORCE_TASKS_RUDE_RCU is set:
+
+kernel/rcu/tasks.h:synchronize_rcu_tasks_rude() {
+	if (!IS_ENABLED(CONFIG_ARCH_WANTS_NO_INSTR) ||
+	    IS_ENABLED(CONFIG_FORCE_TASKS_RUDE_RCU))
+		synchronize_rcu_tasks_generic(&rcu_tasks_rude);
 }
 
-rhashtable_walk_start() solely relies on rcu_read_lock(). Under
-CONFIG_PREEMPT_RCU, rcu_read_lock() does not disable preemption, meaning
-a preemption during the walk satisfies the Tasks-Rude RCU quiescent state.
+That option depends on RCU_EXPERT and defaults to n.
 
-If the walker is preempted, could a concurrent background resize complete i=
-ts
-grace period and free the bucket table, causing rhashtable_walk_next() to
-dereference freed memory when the walker is scheduled back?
+But call_rcu_tasks_rude() never takes that shortcut. Every callback goes
+through this path:
 
->  };
-> =20
-> +DEFINE_LOCK_GUARD_0(rcu_sched_notrace, rcu_read_lock_sched_notrace(),
-> +		    rcu_read_unlock_sched_notrace())
-> +DECLARE_LOCK_GUARD_0_ATTRS(rcu_sched_notrace, __acquires_shared(RCU),
-> +			   __releases_shared(RCU))
+call_rcu_tasks_rude()
+  -> call_rcu_tasks_generic()
+    -> rcu_tasks_one_gp()
+      -> rcu_tasks_rude_wait_gp()
+        -> schedule_on_each_cpu()
 
-[Severity: Low]
-Does the rcu_sched_notrace lock guard declaration omit the RCU_SCHED contex=
-t?
+which always waits.
 
-rcu_read_lock_sched_notrace() acquires both RCU and RCU_SCHED, but this
-DECLARE_LOCK_GUARD_0_ATTRS macro only declares __acquires_shared(RCU) and
-__releases_shared(RCU).
+The rest of the series relies on these two functions being equivalent.
+Commit f0b3c7fc5f82 ("fprobe: Switch fprobe and BPF kprobe-multi to
+Tasks-Rude RCU") replaces synchronize_rcu() with
+synchronize_rcu_tasks_rude() in unregister_fprobe() and in the error path
+of register_fprobe_ips().
 
-Could this cause sparse context imbalance warnings due to the missing
-__acquires_shared(RCU_SCHED) and __releases_shared(RCU_SCHED) annotations?
+On a default x86 or arm64 build (FPROBE selects FUNCTION_GRAPH_TRACER,
+which depends on FUNCTION_TRACER, which selects TASKS_RUDE_RCU),
+unregister_fprobe() then returns without waiting for handlers that are
+still running. Example path:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179060575297.372125=
-.10581329083761385407.stgit@devnote2?part=3D3
+trace_fprobe_release()
+  -> unregister_trace_fprobe()
+    -> __unregister_trace_fprobe()
+      -> unregister_fprobe(&tf->fp)
+        -> unregister_fprobe_async() + synchronize_rcu_tasks_rude() [no-op]
+          -> free_trace_fprobe(tf)
+            -> kfree(tf)
+
+Meanwhile another CPU can be inside fprobe_ftrace_entry() or
+fprobe_return(), holding fp from READ_ONCE(node->fp) or from the shadow
+stack, and calling fp->entry_handler / fp->exit_handler, which uses
+container_of() to reach the freed trace_fprobe. The same thing happens when
+the samples/fprobe module unloads after unregister_fprobe().
+
+Before the series, synchronize_rcu() waited for these preempt-disabled
+sections, because consolidated RCU waits for preempt-disabled regions where
+RCU is watching.
+
+Other points:
+
+(1) The commit message says callers "cannot safely wait on
+    synchronize_rcu_tasks_rude()" and need an async variant. On these
+    architectures that wait is a no-op, so the premise is wrong, and the
+    synchronize_rcu_tasks_rude() kerneldoc ("Control will return to the
+    caller some time after a rude rcu-tasks grace period has elapsed") does
+    not match its implementation.
+
+(2) Every grace period needed by a call_rcu_tasks_rude() callback now
+    queues work on and context-switches every online CPU, including idle
+    and nohz_full CPUs. For the synchronous API that cost was deliberately
+    removed on these architectures. Once the series moves fprobe/kprobe-multi
+    teardown and rhashtable resizing onto this API, the cost is paid on
+    every teardown and resize.
+
+(3) The removed comment ("This is no longer exported, and is instead
+    reserved for use by synchronize_rcu_tasks_rude()") recorded a
+    deliberate decision to retire the async Rude API. The changelog does
+    not explain why that decision is being reversed.
+
+Options include making call_rcu_tasks_rude() match
+synchronize_rcu_tasks_rude(), for example falling back to call_rcu() under
+the same ARCH_WANTS_NO_INSTR condition. Alternatively the series could keep
+using call_rcu()/synchronize_rcu(): these already cover preempt-disabled
+readers on noinstr architectures, and rcu_read_lock_sched_notrace() can
+replace rcu_read_lock() in the handlers.
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/36438713281
+--===============9154150229869040598==--
