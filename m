@@ -1,180 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AF54D09F5;
-	Mon, 28 Sep 2026 15:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7BA4E4C34;
+	Mon, 28 Sep 2026 15:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790608653; cv=none; b=gOJv3B4FoUSAoQhYgDjlFi2Bhk0KfZklXKJblNPaYs3mf8s/WXZ1zpqE0TUPt/ZXyHPah4ft35APNqdgMyXNIc0VKjsRRIkZ03X5T37DlALQQbLmrWUyJPhrr5DQ0F54oNcwEcVgjAkxMfyiFAZ3/HyebuGQpTDvde94LvnMmhE=
+	t=1790608882; cv=none; b=hQmlmwkVkOJRmkINdQWanpDDn18fH3bVilM8/7Jqmmrw+vXpZf00VNIaRWUHhavxKc04uaOxN1Pa4MEdJ9F25jPvmR//bAh7oaJ1aDRB857jl5ivHCEuugh4L/7aS2m1XoX4nctpdAVMmaTxeSI4Tu6IsCzPlDR8oBXeV9gMXzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790608653; c=relaxed/simple;
-	bh=S1D34cwHw1BqFkF7bcWEE/S56n4pkNJ75qlEE9Upi+8=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=qaK35gNFwtV7/JKsUdXzdBPrEQMbvNr14yoGYs8kqXCyIerFZgjeMwlxW0l+46ovcySi0xC2oc75QCpLPGoJNMlknwM7jJotqodnlsTxKDsi2pMNUiIiIyfEXzHxB3+q1/hXpd0M+zOqBZf8k25dlw0Gm1NwwDCZCMYgvsMQqgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmAmvovt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790608882; c=relaxed/simple;
+	bh=EUkPwheZZici6XP1YMdyTWtiJGhFGK9h8Ta1OYo0r3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q3S9E19B/JlYJ/Q0hsuI2QfxvKw37YsjxgVn2db92rBAe24jqOrbsGsfjGNz7q+YNg+VuOvyXhB6MYPDx2Q9yNq1SC02e5XjIhuLJ2KDCoZk4LEbQsmFDRb8EgzXaxO0m5uKBcO8sSkcZx9VxMIYfVknXgfW4wTTAd0S0chd+7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TosNDjJe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmAmvovt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E457E1F000FF;
-	Mon, 28 Sep 2026 15:17:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TosNDjJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74531F000FF;
+	Mon, 28 Sep 2026 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790608651;
-	bh=bazDgST6Pt6E2LsRD74JROMaFIS21Sj5P+1074D68A8=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=JmAmvovtrpFq0t+2g8XEldaaplldzoQDGQLwcK/lEkLEYagPT15fXVcKBuFCMCRO0
-	 1yOyHU4L5rN6uJ0GSl7MHy4o7JE9yMEj27BgFuIndJJQZBU6bFViWuJPUqrUPTG8iV
-	 PuaGLM7KUMC92psVXQ30d9DnSisi3L2St25Elj90czRRY4XeQwQDwPCY8tQu4wUwL7
-	 /NYowiG9rj5Sq2BxTFFWOAHGnve7YHzZwswkicLmB1mGHT9c8TcdtA4dJDrvbuYnt8
-	 ZbMrd6Nd+TZZw+wwSYZoESNTHK+cvGEs3KnNTj3SFLtZVOO2Qj9+FK87jNPuECp7SZ
-	 JDMLYmonCC3jQ==
-Content-Type: multipart/mixed; boundary="===============9154150229869040598=="
+	s=k20260515; t=1790608880;
+	bh=xX1y9CU8XcO6UQluKHgfAB+hJ4GpTOdTxbxNXrbBc/E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=TosNDjJe7Mh5QIx9zzwh4S/NJ+XQA2334s13t3CMbGWuyDracwfJmSMXFDzA/WzkS
+	 iyz6dsH3o3sReCw/Amzsa15P0JSKoiysj8IpvqRygg1R6yiiMZm0fepWkjTFN3JCsC
+	 AVR3Ft/FMpJh7Z19zGf+S9EAuwmBo2z5Z2TEK0Bu3wKyMx1Dnnm+yY4Bnow9jk1Ql/
+	 95mAqQ5LD/mTUiEARnDmzm9wEubLri/RZskp5qHTqrslNNYCHHQALllofuCvFgVKCU
+	 sXeOz1CyOOzJ2KEKd4SMbHwX2smDm0sc68SOMZxxBxoiV0MElHMAuXUfkzZJQv0wow
+	 Eps4iwNrTt0aA==
+Message-ID: <19e7671f-b233-4f7f-8ce8-83cfea294381@kernel.org>
+Date: Mon, 28 Sep 2026 17:21:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ac5eda3b03141b04642ec2196f06800c2b840d0dd9919df6a232a9c6e1575c89@mail.kernel.org>
-In-Reply-To: <179060576723.372125.8212099501235098804.stgit@devnote2>
-References: <179060576723.372125.8212099501235098804.stgit@devnote2>
-Subject: Re: [RFC PATCH 1/3] rcu/tasks: Export call_rcu_tasks_rude()
-From: bot+bpf-ci@kernel.org
-To: mhiramat@kernel.org,paulmck@kernel.org,frederic@kernel.org,neeraj.upadhyay@kernel.org,joelagnelf@nvidia.com,josh@joshtriplett.org,boqun@kernel.org,urezki@gmail.com,tgraf@suug.ch,herbert@gondor.apana.org.au,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,rostedt@goodmis.org,mhiramat@kernel.org,akpm@linux-foundation.org
-Cc: mathieu.desnoyers@efficios.com,jiangshanlai@gmail.com,qiang.zhang@linux.dev,john.fastabend@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,rcu@vger.kernel.org,linux-kernel@vger.kernel.org,linux-crypto@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Mon, 28 Sep 2026 15:17:29 +0000 (UTC)
-
---===============9154150229869040598==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v6 3/4] net: dropreason: use new __print_sym() in tracing
+Content-Language: fr
+To: Ilya Maximets <i.maximets@ovn.org>,
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Aaron Conole <aconole@redhat.com>, Eelco Chaudron <echaudro@redhat.com>,
+ dev@openvswitch.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ Adrian Moreno <amorenoz@redhat.com>, Antoine Tenart <atenart@kernel.org>
+References: <20260921101538.97286-6-johannes@sipsolutions.net>
+ <20260921101538.97286-9-johannes@sipsolutions.net>
+ <98b93c98-21ae-4248-a60a-9625a20508ad@kernel.org>
+ <7f557f5a-b21e-45cc-9d3a-cd4f8b5f799b@ovn.org>
+ <99e5f7c0d7debc8a59bac96e93f09600bf488ca8.camel@sipsolutions.net>
+ <4a0240a7b9ff87302620a95c73f4f265cd428618.camel@sipsolutions.net>
+ <dca799b4-23f5-4b6f-be73-bad5a3d88007@ovn.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <dca799b4-23f5-4b6f-be73-bad5a3d88007@ovn.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 44c07a66edff..dca61b52dc8c 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -198,7 +198,11 @@ void rcu_tasks_torture_stats_print(char *tt, char *tf);
->
->  # ifdef CONFIG_TASKS_RUDE_RCU
->  void synchronize_rcu_tasks_rude(void);
-> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
->  void rcu_tasks_rude_torture_stats_print(char *tt, char *tf);
-> +# else
-> +# define call_rcu_tasks_rude call_rcu
-> +# define synchronize_rcu_tasks_rude synchronize_rcu
->  # endif
->
->  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t, false)
+Hi Ilya,
 
-[ ... ]
+Sorry for the delay, I was travelling last week.
 
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> index 627295396cd9..f0b524d5f3f5 100644
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
+On 22/09/2026 11:01, Ilya Maximets wrote:
 
-[ ... ]
+(...)
 
-> @@ -1376,14 +1376,12 @@ DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude,
->   *
->   * See the description of call_rcu() for more detailed information on
->   * memory ordering guarantees.
-> - *
-> - * This is no longer exported, and is instead reserved for use by
-> - * synchronize_rcu_tasks_rude().
->   */
-> -static void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
-> +void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
->  {
->  	call_rcu_tasks_generic(rhp, func, &rcu_tasks_rude);
->  }
-> +EXPORT_SYMBOL_GPL(call_rcu_tasks_rude);
+> Matthieu mentioned we'll need CONFIG_TRACEPOINTS in the selftest config
+> shard: tools/testing/selftests/net/openvswitch/config
+> 
+> Is that a new dependency or was it always there we just missed adding it
+> to the config before?
 
-Do call_rcu_tasks_rude() and synchronize_rcu_tasks_rude() actually provide
-the same grace period guarantee?
+It is a new one, but it is enabled by default at least on x86_64.
 
-On architectures that select ARCH_WANTS_NO_INSTR (x86, arm64, riscv, s390,
-loongarch), synchronize_rcu_tasks_rude() returns without waiting at all
-unless CONFIG_FORCE_TASKS_RUDE_RCU is set:
+> (it's included in the common net config, so that
+> is probably the reason why CI doesn't fail)
+Yes, but the Netdev CI is using the net (parent) config "by accident"
+here: it is just an optimisation not to set-up a new runner -- including
+a dedicated worktree, building a dedicated kernel, executing another VM,
+etc. -- just for openvswitch tests taking 2 minutes.
 
-kernel/rcu/tasks.h:synchronize_rcu_tasks_rude() {
-	if (!IS_ENABLED(CONFIG_ARCH_WANTS_NO_INSTR) ||
-	    IS_ENABLED(CONFIG_FORCE_TASKS_RUDE_RCU))
-		synchronize_rcu_tasks_generic(&rcu_tasks_rude);
-}
+If TRACEPOINTS is enabled by default, no need to add it to the config
+file I suppose. But I didn't check if it was enabled on all
+architectures supporting it.
 
-That option depends on RCU_EXPERT and defaults to n.
+Cheers,
+Matt
 
-But call_rcu_tasks_rude() never takes that shortcut. Every callback goes
-through this path:
-
-call_rcu_tasks_rude()
-  -> call_rcu_tasks_generic()
-    -> rcu_tasks_one_gp()
-      -> rcu_tasks_rude_wait_gp()
-        -> schedule_on_each_cpu()
-
-which always waits.
-
-The rest of the series relies on these two functions being equivalent.
-Commit f0b3c7fc5f82 ("fprobe: Switch fprobe and BPF kprobe-multi to
-Tasks-Rude RCU") replaces synchronize_rcu() with
-synchronize_rcu_tasks_rude() in unregister_fprobe() and in the error path
-of register_fprobe_ips().
-
-On a default x86 or arm64 build (FPROBE selects FUNCTION_GRAPH_TRACER,
-which depends on FUNCTION_TRACER, which selects TASKS_RUDE_RCU),
-unregister_fprobe() then returns without waiting for handlers that are
-still running. Example path:
-
-trace_fprobe_release()
-  -> unregister_trace_fprobe()
-    -> __unregister_trace_fprobe()
-      -> unregister_fprobe(&tf->fp)
-        -> unregister_fprobe_async() + synchronize_rcu_tasks_rude() [no-op]
-          -> free_trace_fprobe(tf)
-            -> kfree(tf)
-
-Meanwhile another CPU can be inside fprobe_ftrace_entry() or
-fprobe_return(), holding fp from READ_ONCE(node->fp) or from the shadow
-stack, and calling fp->entry_handler / fp->exit_handler, which uses
-container_of() to reach the freed trace_fprobe. The same thing happens when
-the samples/fprobe module unloads after unregister_fprobe().
-
-Before the series, synchronize_rcu() waited for these preempt-disabled
-sections, because consolidated RCU waits for preempt-disabled regions where
-RCU is watching.
-
-Other points:
-
-(1) The commit message says callers "cannot safely wait on
-    synchronize_rcu_tasks_rude()" and need an async variant. On these
-    architectures that wait is a no-op, so the premise is wrong, and the
-    synchronize_rcu_tasks_rude() kerneldoc ("Control will return to the
-    caller some time after a rude rcu-tasks grace period has elapsed") does
-    not match its implementation.
-
-(2) Every grace period needed by a call_rcu_tasks_rude() callback now
-    queues work on and context-switches every online CPU, including idle
-    and nohz_full CPUs. For the synchronous API that cost was deliberately
-    removed on these architectures. Once the series moves fprobe/kprobe-multi
-    teardown and rhashtable resizing onto this API, the cost is paid on
-    every teardown and resize.
-
-(3) The removed comment ("This is no longer exported, and is instead
-    reserved for use by synchronize_rcu_tasks_rude()") recorded a
-    deliberate decision to retire the async Rude API. The changelog does
-    not explain why that decision is being reversed.
-
-Options include making call_rcu_tasks_rude() match
-synchronize_rcu_tasks_rude(), for example falling back to call_rcu() under
-the same ARCH_WANTS_NO_INSTR condition. Alternatively the series could keep
-using call_rcu()/synchronize_rcu(): these already cover preempt-disabled
-readers on noinstr architectures, and rcu_read_lock_sched_notrace() can
-replace rcu_read_lock() in the handlers.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/36438713281
---===============9154150229869040598==--
