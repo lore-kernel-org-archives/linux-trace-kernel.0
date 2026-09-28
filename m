@@ -1,481 +1,341 @@
-Received: from mta1.migadu.com (out-65.mta1.migadu.com [95.215.58.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA4B2AD0C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 02:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC90359A91;
+	Mon, 28 Sep 2026 07:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790561426; cv=none; b=JB40SUGTkyrfpAALprNGp/hS6rhdoQ6sSkI9XCwKvtHifiB8kaft/lKGzRqqJoO9B+JZzHU7dm5RIFEytG5AJlsNCU9psZL6MQ+BiYOefFtr4rdGtx2dwG0x9IU4N5UiBS29vPBoyWeUuhxJ8cYSUl4xg2wIW5HfLHrKpRO6Y9Q=
+	t=1790579415; cv=none; b=pi6O/5t2TpjOGEBZeWlxACoTpHpSpYWpKW0qnFyRlZ6fNYQfu/Q4Luoz/LjhnmzQwt2P0wJxCjW++tqPEJ1SSR0j3ND+SqOfXBS0OZeGHv2NEqF5Ezy9fYv5puBBo8YPlkWbJJIvamXpg8h5LimnhJErbbfijHIX75zJIlqYp4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790561426; c=relaxed/simple;
-	bh=4qfzjfYArCFqrIDaqjA7/J3B4eUqELJL3++oCkS730M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dYa9cc1muntKht7+jkbQ3+kExLwrEFhZrwVBYtaIOMDOnHERDWv169aA6VMfzUh8oueKWhdWVBuTNaEVUx22KuMtMtbtyHkEQeSKnH0dnmIkbZoNSyBsaoJGgF7RjSUUjZeoqciA5DvOlm78FweC16Lxc8duMKisoSCYVWr/f6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B28ROPlA; arc=none smtp.client-ip=95.215.58.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790579415; c=relaxed/simple;
+	bh=S8m7waj7GQq7vgANU2A02JA1/sDnhqqyj+WsYzKQ15U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Opt445CJ+9BxTwPxb/OTNHWmfQxFmO3eej/RcQdQRIj6y5W3CvVD8QLuOrlfihdjWnvsYUopGzN8eiAE0NTOIB6FcgZN29nkBg8mLOcXI8U0TMROjSAUQfMdiqtJiLDoohO7weUy7sOLFgIgacgrhC16XOp+FqUZ1ZUryFi1YW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JYy+c8Ji; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B28ROPlA"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=4qfzjfYArCFqrIDaqjA7/J3B4eUqELJL3++oCkS730M=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790561421; v=1; x=1791166221;
- b=B28ROPlA5ona41T2uwZ98Yjzs/Y1hUGdaafORWvxvHCoX2ev/2HjiIqnVzc9UdpDF+2aewo9
- p9nWQlOMiAcfq28jHdSzN3L1OgXOHY8PybREGMdmy5AB9rAv/NChob6+T+yf+a59bWWqgXN7oEs
- IawL5iI+RDmkFfytCFCpsDTc=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5bd72edd5c8eb864;
-	Mon, 28 Sep 2026 02:10:21 +0000
-X-Mizu-Trace-ID: 5bd72edd5c8eb864
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <cf6ff2bf-1b3c-4575-b981-fc3c65625d5d@linux.dev>
-Date: Mon, 28 Sep 2026 10:11:19 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JYy+c8Ji"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68R9anIw371552;
+	Mon, 28 Sep 2026 07:09:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=U0Sqv66/lUO5fAJlL+QxeO6e18NIiL
+	tdJqIDVEF6pVo=; b=JYy+c8JiVYKn8nouxfqxB62qRnE0w0KFaFzXksbh7vvAEL
+	eXgYsBXTK2Q0/JC4VwMEh9Wwlyt0fkmlrYPk1hebyUUZnJr+feU7zZpKKCD/32/6
+	GK32iuw74mDOqGX9iyfseMbRfLesf50WlGakV+9f53EZhKFMhbtEbO51ZWCt+ock
+	/PE0Naan+UboeuNsatwP0qFylAPQ++Gg00G3nbQ/ri9MiOMUdZAZg7Or0NU9fxZX
+	ewY6U6oBpIPo40E24MB0d6khSx9MkPg5zQ/6dsPbXRMVmqVFlHA8hhWnrPeRjvWF
+	fheZ3R2ZDqUdhLBF01FckKKwv6/BTpjfJaIy8tMw==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gx5qqyugb-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 28 Sep 2026 07:09:36 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68S2DNPO2055623;
+	Mon, 28 Sep 2026 07:09:35 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gxrcpmaf5-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Sep 2026 07:09:35 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68S79W8M49217996
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Sep 2026 07:09:32 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 602C620043;
+	Mon, 28 Sep 2026 07:09:32 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DAF6620040;
+	Mon, 28 Sep 2026 07:09:30 +0000 (GMT)
+Received: from tuxmaker (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 28 Sep 2026 07:09:30 +0000 (GMT)
+Date: Mon, 28 Sep 2026 09:09:29 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Jann Horn <jannh@google.com>, Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>, Pedro Falcato <pfalcato@suse.de>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+        Lance Yang <lance.yang@linux.dev>, Chris Li <chrisl@kernel.org>,
+        Kairui Song <kasong@tencent.com>,
+        Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
+        Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
+        Youngjun Park <youngjun.park@lge.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+        Emil Tsalapatis <emil@etsalapatis.com>,
+        Ihor Solodrai <ihor.solodrai@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
+        Kiryl Shutsemau <kas@kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+        Ying Huang <ying.huang@linux.alibaba.com>,
+        Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+        kasan-dev@googlegroups.com, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 0/9] mm: distinguish HW PTE pointers from SW PTE value
+ pointers
+Message-ID: <20260928070929.80522Ae0-agordeev@linux.ibm.com>
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] alloc_tag: Add trace events for tracing allocations
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Abhishek Bapat <abhishekbapat@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>
-References: <cover.1790025465.git.abhishekbapat@google.com>
- <06c3a9b52785e6968ea15709a55365b2342c7a15.1790025465.git.abhishekbapat@google.com>
- <cb229e38-3e52-4309-9594-0d3947c1a81c@linux.dev>
- <CAJuCfpGZf+HDj8B2vV2WB68P2JMyqctF5CPvV0R6x=WU7+nwvQ@mail.gmail.com>
-Content-Language: en-US
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <CAJuCfpGZf+HDj8B2vV2WB68P2JMyqctF5CPvV0R6x=WU7+nwvQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI4MDAyOCBTYWx0ZWRfX1pNoJaF/6NGg
+ RzCzEVkloQ8W8G9Mfqxa0HS4wxj4F16KoDkDBS2dSFD87AGlB8fAZ5HRatX+2wTRelFy0SakY1h
+ egIU9IaRjEc5iG2YlsUx0niBoZ+ODc3IrDwlpj2sQjhlsLXHTrd+qFnF3VG6du2x8khckao6ph2
+ atPiU8Bg+BUSTPHs0ZaAiWTtqPgIcgw1J/zTT9ypdxsSKELJ2V/SZShJa+6icCLTewI4Ua3C4in
+ kRH925yDQf0TwuALYn9JOVxlJg9GFQA8H7rd/AWjQSWzeO4KnjJldGVe8O6q0dQwbLjnHqb67yV
+ kQCihC/eqkUdKjZb9B04fM4h3PeGZZ9U5PrYd77rO5XeLtrpndiXWd9UC7Kz/QDkx6I810b7lBL
+ UUjG/EFop9zPSO7uVx3xr52sSy3HItoA1LAdosRDqEku61TDVHKyGnttYQJE2xIBCzlH/T5Qbjp
+ rkSOVaMpWaw5iTTVXqA==
+X-Authority-Analysis: v=2.4 cv=SPbXx+vH c=1 sm=1 tr=0 ts=6aba12b0 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=B2JZ75edH0TnST5CdBoA:9 a=CjuIK1q_8ugA:10
+ a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-ORIG-GUID: PXCQtZdXSg0cuRLIZWyjDDo_C9n9y6sW
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI4MDAyOCBTYWx0ZWRfX2//Hh8riVMNP
+ 1wV4C8msuSw0uoDVUiQbJPMpuXHL+T9TmtiZ8EIuMk20HeRVXU+DWNrh28iJ859A2ROV6UZN+vb
+ jTDaorfXlivhY+gjSY6oV8TolRxUfmE=
+X-Proofpoint-GUID: PXCQtZdXSg0cuRLIZWyjDDo_C9n9y6sW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-26_05,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609280028
 
-Hi Suren
-
-On 2026/9/25 14:14, Suren Baghdasaryan wrote:
-> On Thu, Sep 24, 2026 at 12:21 AM Hao Ge <hao.ge@linux.dev> wrote:
->>
->> Hi Abhishek
->>
->> Sorry, I merged and tested your patches today and found a few details,
->> so I've started a separate mail thread for this review.
->>
->> On 2026/9/22 05:26, Abhishek Bapat wrote:
->>> The memory allocation profiling framework intercepts allocations across
->>> the core subsystems, but currently lacks runtime tracing hooks for
->>> standard observability tools to dynamically track the context (stack
->>> traces and lifecycles of the individual memory chunks) of the
->>> allocations made.
->>>
->>> Introduce three standard trace events to allow this tracking:
->>>
->>> 1. `alloc_tag_hit`: Fired at the exact call site. This allows userspace
->>>    tools to trigger and capture a call stack.
->>> 2. `alloc_tag_mem_alloced`: Fired in alloc_tag_add upon successful
->>>    allocation. It records the allocated size, the tag, and the uniquely
->>>    generated codetag_ref metadata pointer.
->>> 3. `alloc_tag_mem_freed`: Fired in alloc_tag_sub right before memory is
->>>    freed, yielding the same codetag_ref to allow tracing tools to find
->>>    the corresponding allocation.
->>>
->>> Because the introduced trace events occur at different stages in the
->>> call stack, userspace tracing tools must stitch them together to form a
->>> complete picture of a buffer's lifetime. Here's an example of how
->>> userspace correlates these three events:
->>>
->>> 1. On `alloc_tag_hit`: The tool captures the stack trace and caches it,
->>>    keyed by the combination of the current thread's PID and the `tag`.
->>> 2. On `alloc_tag_mem_alloced`: The tool extracts the PID and `tag` from
->>>    the event and looks up the stack trace cached in step 1. It creates a
->>>    new active allocation record, mapping the new provided `codetag_ref`
->>>    to this cached stack trace and the newly returned allocation size.
->>> 3. On `alloc_tag_mem_freed`: When the memory is freed, the event yields
->>>    the same `codetag_ref`. The tool uses this reference to look up the
->>>    original allocation record, correlates the free, and safely retires
->>>    the tracking entry.
->>>
->>> Also, introduce `alloc_tag_trace_key` static key to minimize the
->>> overhead when no tags are being traced (the usual case). Once tracing
->>> for any tag is requested, the key is set, opening the path to check
->>> whether tracing is enabled for the current tag.
->>> Nore that the mechanism to enabl tag tracing is implemented in the next
->>> patch, therefore for now, `alloc_tag_trace_key` stays always unset.
->>>
->>> Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
->>> ---
->>>  MAINTAINERS                      |   1 +
->>>  include/linux/alloc_tag.h        |  57 ++++++++++++---
->>>  include/trace/events/alloc_tag.h | 122 +++++++++++++++++++++++++++++++
->>>  mm/alloc_tag.c                   |  28 +++++++
->>>  4 files changed, 196 insertions(+), 12 deletions(-)
->>>  create mode 100644 include/trace/events/alloc_tag.h
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 24420a8c06d0..29e1f7915cb9 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -17096,6 +17096,7 @@ S:    Maintained
->>>  F:   Documentation/mm/allocation-profiling.rst
->>>  F:   include/linux/alloc_tag.h
->>>  F:   include/linux/pgalloc_tag.h
->>> +F:   include/trace/events/alloc_tag.h
->>>  F:   include/uapi/linux/alloc_tag.h
->>>  F:   mm/alloc_tag.c
->>>  F:   tools/testing/selftests/alloc_tag/
->>> diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
->>> index 7f2d80a59792..2994934cf44a 100644
->>> --- a/include/linux/alloc_tag.h
->>> +++ b/include/linux/alloc_tag.h
->>> @@ -128,12 +128,33 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
->>>  DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
->>>                       mem_alloc_profiling_key);
->>>
->>> +DECLARE_STATIC_KEY_FALSE(alloc_tag_trace_key);
->>> +
->>>  static inline bool mem_alloc_profiling_enabled(void)
->>>  {
->>>       return static_branch_maybe(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
->>>                                  &mem_alloc_profiling_key);
->>>  }
->>>
->>> +static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
->>> +{
->>> +     return static_branch_unlikely(&alloc_tag_trace_key);
->>> +}
->>> +
->>> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_tag *tag,
->>> +                           size_t bytes);
->>> +
->>> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag *tag,
->>> +                          size_t bytes);
->>> +
->>> +void __alloc_tag_trace_hit(struct alloc_tag *tag);
->>> +
->>> +static inline void alloc_tag_trace_hit(struct alloc_tag *tag)
->>> +{
->>> +     if (alloc_tag_trace_enabled(tag))
->>> +             __alloc_tag_trace_hit(tag);
->>> +}
->>> +
->>>  bool mem_alloc_profiling_permanently_disabled(void);
->>>
->>>  static inline struct alloc_tag_counters alloc_tag_read(struct alloc_tag *tag)
->>> @@ -200,8 +221,13 @@ static inline bool alloc_tag_ref_set(union codetag_ref *ref, struct alloc_tag *t
->>>
->>>  static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes)
->>>  {
->>> -     if (likely(alloc_tag_ref_set(ref, tag)))
->>> +     if (likely(alloc_tag_ref_set(ref, tag))) {
->>>               this_cpu_add(tag->counters->bytes, bytes);
->>> +
->>> +             if (alloc_tag_trace_enabled(tag))
->>> +                     /* Trace successful allocs with their unique ref */
->>> +                     alloc_tag_trace_mem_alloc(ref, tag, bytes);
->>> +     }
->>>  }
->>>
->>>  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
->>> @@ -222,6 +248,10 @@ static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes)
->>>       this_cpu_sub(tag->counters->bytes, bytes);
->>>       this_cpu_dec(tag->counters->calls);
->>>
->>> +     if (alloc_tag_trace_enabled(tag))
->>> +             /* Trace frees with their unique ref */
->>> +             alloc_tag_trace_mem_free(ref, tag, bytes);
->>> +
->>>       ref->ct = NULL;
->>>  }
->>>
->>> @@ -247,21 +277,24 @@ static inline void alloc_tag_add(union codetag_ref *ref, struct alloc_tag *tag,
->>>  static inline void alloc_tag_sub(union codetag_ref *ref, size_t bytes) {}
->>>  static inline void alloc_tag_set_inaccurate(struct alloc_tag *tag) {}
->>>  static inline bool alloc_tag_is_inaccurate(struct alloc_tag *tag) { return false; }
->>> +#define alloc_tag_trace_hit(_tag)    /* NOOP */
->>
->> I'd prefer we use `do {} while (0)` here, following the same pattern
->> as alloc_tag_record.
->>
->>>  #define alloc_tag_record(p)  do {} while (0)
->>>
->>>  #endif /* CONFIG_MEM_ALLOC_PROFILING */
->>>
->>> -#define alloc_hooks_tag(_tag, _do_alloc)                             \
->>> -({                                                                   \
->>> -     typeof(_do_alloc) _res;                                         \
->>> -     if (mem_alloc_profiling_enabled()) {                            \
->>> -             struct alloc_tag * __maybe_unused _old;                 \
->>> -             _old = alloc_tag_save(_tag);                            \
->>> -             _res = _do_alloc;                                       \
->>> -             alloc_tag_restore(_tag, _old);                          \
->>> -     } else                                                          \
->>> -             _res = _do_alloc;                                       \
->>> -     _res;                                                           \
->>> +#define alloc_hooks_tag(_tag, _do_alloc)                                     \
->>> +({                                                                           \
->>> +     typeof(_do_alloc) _res;                                                 \
->>> +     if (mem_alloc_profiling_enabled()) {                                    \
->>> +             struct alloc_tag * __maybe_unused _old;                         \
->>> +             /* Fired here to cleanly capture the caller's stack trace */    \
->>> +             alloc_tag_trace_hit(_tag);                                      \
->>> +             _old = alloc_tag_save(_tag);                                    \
->>> +             _res = _do_alloc;                                               \
->>> +             alloc_tag_restore(_tag, _old);                                  \
->>> +     } else                                                                  \
->>> +             _res = _do_alloc;                                               \
->>> +     _res;                                                                   \
->>>  })
->>>
->>>  #define alloc_hooks(_do_alloc)                                               \
->>> diff --git a/include/trace/events/alloc_tag.h b/include/trace/events/alloc_tag.h
->>> new file mode 100644
->>> index 000000000000..af2182501864
->>> --- /dev/null
->>> +++ b/include/trace/events/alloc_tag.h
->>> @@ -0,0 +1,122 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +#undef TRACE_SYSTEM
->>> +#define TRACE_SYSTEM alloc_tag
->>> +
->>> +#if !defined(_TRACE_ALLOC_TAG_H) || defined(TRACE_HEADER_MULTI_READ)
->>> +#define _TRACE_ALLOC_TAG_H
->>> +
->>> +#include <linux/tracepoint.h>
->>> +
->>> +/*
->>> + * alloc_tag_hit is generated at the exact allocation call site and can be
->>> + * used to capture a clean stack trace.
->>> + *
->>> + * To link this stack trace to the actual allocated memory chunk, tools must
->>> + * correlate this event with the resulting alloc_tag_mem_alloced event. Since
->>> + * multiple threads can hit the same tag simultaneously, tools must match BOTH
->>> + * the `tag` field and the implicitly recorded PID provided by the core
->>> + * tracing subsystem.
->>> + */
->>> +TRACE_EVENT(alloc_tag_hit,
->>> +
->>> +     TP_PROTO(struct alloc_tag *tag),
->>> +
->>> +     TP_ARGS(tag),
->>> +
->>> +     TP_STRUCT__entry(
->>> +             __field(struct alloc_tag *, tag)
->>> +             __string(modname, tag->ct.modname ? tag->ct.modname : "NONE")
->>> +             __string(filename, tag->ct.filename)
->>> +             __string(function, tag->ct.function)
->>> +             __field(unsigned int, lineno)
->>> +     ),
->>> +
->>> +     TP_fast_assign(
->>> +             __entry->tag = tag;
->>> +             __assign_str(modname);
->>> +             __assign_str(filename);
->>> +             __assign_str(function);
->>> +             __entry->lineno = tag->ct.lineno;
->>> +     ),
->>> +
->>> +     TP_printk("tag %p, module: %s, filename: %s, function %s, lineno %u",
->>> +             __entry->tag,
->>> +             __get_str(modname),
->>> +             __get_str(filename),
->>> +             __get_str(function),
->>> +             __entry->lineno
->>> +     )
->>> +);
->>>
->>
->> When I trace an interface provided by a kernel build-in such as shmem,
->> this is what I see in the trace:
->>
->> trig-6838    [004] .....  1309.321906: alloc_tag_hit: tag 000000007874a2c9, module: NONE, filename: mm/shmem.c, function shmem_alloc_folio, lineno 2138
->>
->> The module field shows NONE, which looks a bit odd.
->>
->>> +/*
->>> + * alloc_tag_mem_alloced is generated after memory is successfully allocated.
->>> + * It captures the exact byte size.
->>> + *
->>> + * The `ref` pointer identifies the memory chunk for tracking its lifecycle
->>> + * (e.g., matching it with alloc_tag_mem_freed).
->>> + *
->>> + * Because the kernel isolates active allocations within the task struct
->>> + * (current->alloc_tag), this even will always share the same implicit PID as
->>> + * its corresponding alloc_tag_hit event. Tools should use the combination
->>> + * PID + `tag` to correlate them.
->>> + */
->>> +TRACE_EVENT(alloc_tag_mem_alloced,
->>> +
->>> +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes),
->>> +
->>> +     TP_ARGS(ref, tag, bytes),
->>> +
->>> +     TP_STRUCT__entry(
->>> +             __field(union codetag_ref *, ref)
->>> +             __field(struct alloc_tag *, tag)
->>> +             __field(size_t, bytes)
->>> +     ),
->>> +
->>> +     TP_fast_assign(
->>> +             __entry->ref = ref;
->>> +             __entry->tag = tag;
->>> +             __entry->bytes = bytes;
->>> +     ),
->>> +
->>> +     TP_printk("reference %p, tag %p, bytes %zu",
->>> +             __entry->ref,
->>> +             __entry->tag,
->>> +             __entry->bytes
->>> +     )
->>> +);
->>> +
->>> +/*
->>> + * alloc_tag_mem_freed event is generated immediately before memory is
->>> + * freed. The `ref` pointer matches the one emitted during allocation,
->>> + * allowing tools to match it to it's corresponding allocation and
->>> + * call stack.
->>> + */
->>
->> But the thread for allocation and free may not be the same.
->> For example, memory allocated in thread A could be freed by kswapd.
->> In this case, would the ref fail to match and falsely report a memory leak?
+On Tue, Sep 22, 2026 at 06:12:28PM +0100, Muhammad Usama Anjum wrote:
+> Hi,
 > 
-> No, ref is unique within the system, so even if alloc and free happen
-> in different threads it still can be used to match them. The
-> thread+tag is used only when matching alloc_tag_hit with
-> alloc_tag_mem_alloced because at the time of alloc_tag_hit we don't
-> yet have the ref.
->
+> pte_t currently describes both a software PTE value and an element stored
+> in a PTE table. Consequently, pte_t * can point either to a software PTE
+> value, often a stack copy, or to a PTE-table slot. The compiler cannot
+> distinguish these cases. A value pointer can therefore be passed to an
+> interface that expects table storage, while table storage can be read by
+> direct dereference instead of the architecture accessor.
+> 
+> This series begins a staged conversion at the PTE level. It introduces
+> hw_pte_t as the element type for PTE-table storage and converts generic
+> MM to use hw_pte_t *. Software PTE values remain pte_t. Interfaces that
+> intentionally return a value through pte_t *, such as install_pte,
+> remain value interfaces; the relevant parameters are named ptentp to
+> make that distinction explicit.
+> 
+> The generic definition aliases hw_pte_t to pte_t unless an architecture
+> selects ARCH_HAS_HW_PTE_T, which enables a distinct generic wrapper named
+> __hw_pte_t. Some architectures define pgtable_t in headers parsed before
+> the generic hw_pte_t typedef is visible. The structure tag allows those
+> headers to define pgtable_t as struct __hw_pte_t * without creating an
+> include-order dependency. This is required when converting s390, m68k,
+> powerpc and sparc.
+> 
+> No architecture selects ARCH_HAS_HW_PTE_T in this series, so the
+> representation and behavior of every architecture are preserved. ptep_get()
+> keeps its existing READ_ONCE() semantics and converts the stored element
+> through __pte_from_hw(). An architecture can later select the option and
+> convert its PTE interfaces to make the distinction compiler-enforced.
+> Architecture PTE implementations and most architecture code are
+> deliberately left for those later opt-in conversions.
+> 
+> Here, hw_pte_t identifies PTE-table storage rather than table lifetime:
+> complete PTE tables use hw_pte_t whether or not they are currently
+> linked into a page-table hierarchy, while software PTE values use
+> pte_t. The distinction between complete but unlinked tables and
+> hardware-reachable tables was raised during discussion and remains an
+> important point for review.
+> 
+> PMD, PUD, P4D and PGD storage are deliberately out of scope. They can be
+> converted in later series after the PTE boundary is agreed, avoiding the
+> PMD-specific cases that made an all-level conversion difficult to
+> review.
+> 
+> Most mechanical pointer conversions were generated with the Coccinelle
+> script included below, then audited and fixed by hand.
+> 
+> This series does not add a second ptep_get_once() accessor and does not
+> remove or replace STRICT_MM_TYPECHECKS.
+> 
+> The design discussion is available at [1]; while the original idea came
+> from [2].
+> 
+> I've the patches here [3] for arm64 conversion which I used to find
+> usages in generic code which I missed during development.
+> 
+> [1] https://lore.kernel.org/all/6110202c-057b-4701-8c04-1a76ee7bb9ab@arm.com/
+> [2] https://lore.kernel.org/all/a063f6c5-2785-4a9f-8079-25edb3e54cef@arm.com
+> [3] https://lore.kernel.org/all/20260914-pte0_arm-v1-0-bb53b663e396@arm.com 
+> 
+> Testing:
+> Testing was performed with and without the series on both x86_64 and
+> arm64. KUnit and the MM kselftests produced matching before-and-after
+> results problems or regressions. Fastpath performance testing was also
+> completed on arm64. No regression was found.
+> 
+> Thanks,
+> Usama
+...
+> Muhammad Usama Anjum (9):
+>       mm: introduce hw_pte_t for PTE table storage
+>       mm: rename pointers to software PTE values as ptentp
+>       mm: use hw_pte_t for generic PTE table storage
+>       mm: convert PTE table entries in ptep_get()
+>       mm: convert PTE table entry to pte
+>       mm: add hw_pte_val for HW PTE storage
+>       mm/kasan: use hw_pte_t for the early shadow PTE table
+>       drm/i915: use hw_pte_t for PTE range callbacks
+>       xen: use hw_pte_t for PTE range callbacks
+> 
+>  MAINTAINERS                                        |  1 +
+>  drivers/gpu/drm/i915/gem/selftests/i915_gem_mman.c |  4 +--
+>  drivers/gpu/drm/i915/i915_mm.c                     |  4 +--
+>  drivers/xen/gntdev.c                               |  2 +-
+>  drivers/xen/privcmd.c                              |  2 +-
+>  drivers/xen/xenbus/xenbus_client.c                 |  2 +-
+>  drivers/xen/xlate_mmu.c                            |  4 +--
+>  fs/hugetlbfs/inode.c                               |  3 +-
+>  fs/proc/task_mmu.c                                 | 33 ++++++++++----------
+>  include/asm-generic/hugetlb.h                      | 15 ++++-----
+>  include/asm-generic/pgalloc.h                      |  6 ++--
+>  include/asm-generic/tlb.h                          |  5 +--
+>  include/linux/hugetlb.h                            | 53 +++++++++++++++++--------------
+>  include/linux/kasan.h                              |  2 +-
+>  include/linux/mm.h                                 | 26 ++++++++--------
+>  include/linux/page_table_check.h                   | 10 ++++--
+>  include/linux/pagewalk.h                           | 10 +++---
+>  include/linux/pgtable.h                            | 81 +++++++++++++++++++++++++-----------------------
+>  include/linux/pgtable_types.h                      | 23 ++++++++++++++
+>  include/linux/rmap.h                               |  2 +-
+>  include/linux/swapops.h                            |  6 ++--
+>  include/linux/vmalloc.h                            |  4 +--
+>  include/trace/events/xen.h                         | 10 +++---
+>  kernel/bpf/arena.c                                 |  9 +++---
+>  kernel/events/core.c                               |  3 +-
+>  mm/Kconfig                                         |  3 ++
+>  mm/damon/ops-common.c                              |  2 +-
+>  mm/damon/ops-common.h                              |  2 +-
+>  mm/damon/vaddr.c                                   | 20 ++++++------
+>  mm/debug_vm_pgtable.c                              |  2 +-
+>  mm/filemap.c                                       |  4 +--
+>  mm/gup.c                                           |  9 +++---
+>  mm/highmem.c                                       | 15 ++++-----
+>  mm/hmm.c                                           |  6 ++--
+>  mm/huge_memory.c                                   |  4 +--
+>  mm/hugetlb.c                                       | 60 ++++++++++++++++++-----------------
+>  mm/hugetlb_vmemmap.c                               | 13 ++++----
+>  mm/internal.h                                      | 16 +++++-----
+>  mm/kasan/init.c                                    | 14 ++++-----
+>  mm/kasan/shadow.c                                  |  6 ++--
+>  mm/khugepaged.c                                    | 50 ++++++++++++++++++------------
+>  mm/ksm.c                                           | 11 ++++---
+>  mm/madvise.c                                       | 18 ++++++-----
+>  mm/mapping_dirty_helpers.c                         |  4 +--
+>  mm/memory-failure.c                                |  6 ++--
+>  mm/memory.c                                        | 78 +++++++++++++++++++++++-----------------------
+>  mm/mempolicy.c                                     |  4 +--
+>  mm/migrate.c                                       |  4 +--
+>  mm/migrate_device.c                                |  4 +--
+>  mm/mincore.c                                       |  4 +--
+>  mm/mlock.c                                         |  4 +--
+>  mm/mprotect.c                                      | 19 ++++++------
+>  mm/mremap.c                                        |  4 +--
+>  mm/page_table_check.c                              |  4 +--
+>  mm/pagewalk.c                                      |  9 +++---
+>  mm/percpu.c                                        |  2 +-
+>  mm/pgtable-generic.c                               | 20 ++++++------
+>  mm/ptdump.c                                        |  4 +--
+>  mm/rmap.c                                          |  6 ++--
+>  mm/sparse-vmemmap.c                                | 22 ++++++-------
+>  mm/swap_state.c                                    |  3 +-
+>  mm/swapfile.c                                      |  5 +--
+>  mm/userfaultfd.c                                   | 32 ++++++++++---------
+>  mm/util.c                                          |  2 +-
+>  mm/vmalloc.c                                       | 11 ++++---
+>  mm/vmscan.c                                        |  6 ++--
+>  66 files changed, 457 insertions(+), 375 deletions(-)
+> ---
+> base-commit: ead700ca770c82167af32622cf8b68c9f87c3c7c
+> change-id: 20260914-pte0-6c88f5592d79
 
-"The ref is unique within the system" is true of the obj_ext/page_ext slot,
-but for page allocations the event does not carry the slot's address,
-it carries the address of a stack temporary.
+I backported this series to the Linus master and tested on s390
+with the lazy mmu series applied on top. In case it still counts:
 
-/* Should be called only if mem_alloc_profiling_enabled() */
-static noinline
-void __pgalloc_tag_add(struct page *page, struct task_struct *task,
-		       unsigned int nr, unsigned int alloc_flags)
-{
-	union pgtag_ref_handle handle;
-	union codetag_ref ref;	<- stack temporary
+Tested-by: Alexander Gordeev <agordeev@linux.ibm.com>
 
-	if (likely(get_page_tag_ref(page, &ref, &handle))) {
-		alloc_tag_add(&ref, task->alloc_tag, PAGE_SIZE * nr);
-		update_page_tag_ref(handle, &ref);
-		put_page_tag_ref(handle);
-	} else {
-		......
-	}
-}
+> Best regards,
+> --  
+> Usama
 
-/* Should be called only if mem_alloc_profiling_enabled() */
-static noinline
-void __pgalloc_tag_sub(struct page *page, unsigned int nr)
-{
-	union pgtag_ref_handle handle;
-	union codetag_ref ref; <- stack temporary
-
-	if (get_page_tag_ref(page, &ref, &handle)) {
-		alloc_tag_sub(&ref, PAGE_SIZE * nr);
-		update_page_tag_ref(handle, &ref);
-		put_page_tag_ref(handle);
-	}
-}
-
-Or am I missing / confusing something here?
-
-Thanks
-Best Regards
-Hao
-
->>
->> Thanks
->> Best Regards
->> Hao
->>
->>> +TRACE_EVENT(alloc_tag_mem_freed,
->>> +
->>> +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t bytes),
->>> +
->>> +     TP_ARGS(ref, tag, bytes),
->>> +
->>> +     TP_STRUCT__entry(
->>> +             __field(union codetag_ref *, ref)
->>> +             __field(struct alloc_tag *, tag)
->>> +             __field(size_t, bytes)
->>> +     ),
->>> +
->>> +     TP_fast_assign(
->>> +             __entry->ref = ref;
->>> +             __entry->tag = tag;
->>> +             __entry->bytes = bytes;
->>> +     ),
->>> +
->>> +     TP_printk("reference %p, tag %p, bytes %zu",
->>> +             __entry->ref,
->>> +             __entry->tag,
->>> +             __entry->bytes
->>> +     )
->>> +);
->>> +
->>> +#endif /* _TRACE_ALLOC_TAG_H */
->>> +
->>> +/* This part must be outside protection */
->>> +#include <trace/define_trace.h>
->>> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
->>> index f30ef8dd24c7..a5339767efd5 100644
->>> --- a/mm/alloc_tag.c
->>> +++ b/mm/alloc_tag.c
->>> @@ -19,6 +19,9 @@
->>>  #include <linux/kmemleak.h>
->>>  #include <uapi/linux/alloc_tag.h>
->>>
->>> +#define CREATE_TRACE_POINTS
->>> +#include <trace/events/alloc_tag.h>
->>> +
->>>  #include "internal.h"
->>>  #include "page_alloc.h"
->>>
->>> @@ -55,6 +58,9 @@ EXPORT_SYMBOL(mem_alloc_profiling_key);
->>>
->>>  DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
->>>
->>> +DEFINE_STATIC_KEY_FALSE(alloc_tag_trace_key);
->>> +EXPORT_SYMBOL(alloc_tag_trace_key);
->>> +
->>>  struct alloc_tag_kernel_section kernel_tags = { NULL, 0 };
->>>  unsigned long alloc_tag_ref_mask;
->>>  int alloc_tag_ref_offs;
->>> @@ -485,6 +491,28 @@ static const struct proc_ops allocinfo_proc_ops = {
->>>  #endif
->>>  };
->>>
->>> +void __alloc_tag_trace_hit(struct alloc_tag *tag)
->>> +{
->>> +     if (unlikely(!tag))
->>> +             return;
->>> +     trace_alloc_tag_hit(tag);
->>> +}
->>> +EXPORT_SYMBOL(__alloc_tag_trace_hit);
->>> +
->>> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_tag *tag,
->>> +                           size_t bytes)
->>> +{
->>> +     trace_alloc_tag_mem_alloced(ref, tag, bytes);
->>> +}
->>> +EXPORT_SYMBOL(alloc_tag_trace_mem_alloc);
->>> +
->>> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_tag *tag,
->>> +                          size_t bytes)
->>> +{
->>> +     trace_alloc_tag_mem_freed(ref, tag, bytes);
->>> +}
->>> +EXPORT_SYMBOL(alloc_tag_trace_mem_free);
->>> +
->>>  size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sleep)
->>>  {
->>>       struct codetag_iterator iter;
+Thanks!
