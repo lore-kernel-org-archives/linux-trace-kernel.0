@@ -1,195 +1,182 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4DC48C3E3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 08:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E54364EB8
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 08:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790585458; cv=none; b=EKecz/woy/nC0mGGX0hZlep37JJQn4N/uIO1NpIMqYIRWFvy15k9uUGyo74GgHdTdQ+r8VHLYe84VRS3mJU2/a9qhj88QKqNAt/98y5UtuBZd3dTGnNspvLEi5CIrf9yjgMABg/he8ONIUgAwDjFrtMN+zXXIXV+0jqH6uh4Ka4=
+	t=1790585677; cv=none; b=ojGrrW4LCjyENHLkEWIS+uHpmyBMktAq4W1CfGWQ5lFUyNTLvS8xGk+ChM6oOcQCA2geDSdwlaL8MFvzlWZT0FyajsL8AnfUmbaq5N2IUOU0V07wlgVRmNO5mUoCU1ja72k2/qJa1OEuBs1pZXzCdCEJutb0PRgSeXdddvSD2YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790585458; c=relaxed/simple;
-	bh=ksMx5jUd01eto0BA4SnkhzEOtLlkbUgiTZg+BUNu+Fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FiBWB9yimjFsXHqItGdT7JIdXi1vWHoWqemXzxK7FSOUhKyK7eFUKAU9n4Y05jRGkhu2qxyBQAm7cV2yDfFtJkDh6gqbh6/2g/2zKEVKJJk8/hUIdLWa6U9lTFkIXcAhE4fN9kSgaiYsLpbE8Fi2g/t4R5u5rfXY/JvZUyD7Cwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=FGv9l0YP; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1790585677; c=relaxed/simple;
+	bh=RyZMVZujsetzqhB4TYSDXBOumsr10OqKdJTtYNdwhyU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=L576Fx3ULzkyClZpIs3AD31Q5cCcHCzult7uVCNUrDf4uWJFUevroJdiTa0x3Ljq1uU7ZtYvEdmcKrzq98yX5126X25EmKn/WBhoHmzKflgBh2YnBxaEFHQEfgdpWWGEMdlZUXYthO9Oh/Eics+ra2m36BNVYwtAYFzIwn7/7EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLyK3AH2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="FGv9l0YP"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e6598dd44so16526355e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 01:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1790585452; x=1791190252; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pNftRw2tWysHYpxWpyBTAFrax0w98I7jfRta/SXIr50=;
-        b=FGv9l0YPV6swPbT+QAEDl7I3K1FQK6/wYasCUr4UQkISPjzdDIKjMNXxsPVsuQVhuj
-         djZr8xBzAkrbCd+23MruqKpz2ecP3j1SoYXoryYQd4NpAVYfI7jox5wii8XUSo+S4tvn
-         IP5sjOjr3nMRtrobRP0X0l4pQCXrFcmy88/T2gBwioVVrcAyOQsR2xOxIerwf/quV/bJ
-         1SUA96wgg6wf7ReYcfQcwQ9F8RywgZmOscylHoLC7jsxLuTEg8YV5H9MVHffKlwqbtpL
-         cyoELp81v+v1putb/EB1cStM464D69WnxcW3fvaDgMfnrHiAoL5BakMGjXNc17do6M92
-         Uwew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790585452; x=1791190252;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pNftRw2tWysHYpxWpyBTAFrax0w98I7jfRta/SXIr50=;
-        b=ui+u8+HsTvOD11zS2r1FqxSrp9zvPQuasCZYS9u8fdkE6Mbf3oJkFPQTvLI6TN27nB
-         Umo4G1EcFIwhXtuRCB1DLgIP37iqYdpb4yifJ3+nZMdGyxAa/gx0D9UNHifTWEyNUnG0
-         Gsc32n/QkjIWnaa0uve4VDyuthZ9TYwsKPCmUeFCnILI7mqmjy9u9Vq0TGXjfQFVWyiA
-         KawnLnQqpdCRnjYQLqjUeD2uLIYotnvY+lgZhreFh1uMLopk8VEJnUkyJaYICEIHh08T
-         NhrG3UjIHdL1emdipFORoDRuREXyMU+eL4MS5DPU5bhlL+hPnZJ9+4+U+vUBe0XR+LRJ
-         LYdQ==
-X-Forwarded-Encrypted: i=1; AKwUvBx4T7COc/PLg/oRLdX0LD/0zLpwOFbZnqyU0wmBR3XCeKQEHS8Vw09Wk9NhTXNu/O362x25yLX0RJ2GbyWb0Vr5OGw=@vger.kernel.org
-X-Gm-Message-State: AFuF++kiu7qlpoC4v0ZPbFj99zeBF594T43qrUX2IhXbuIkU9oGX+/22
-	N+BCf8cpKFdeaUOUwG3JSMbuKTI+MMQbycZ352qvfZRPBo/7OEhSePnVNcrWlpONRE0=
-X-Gm-Gg: AYBFou236vL76XsOZr7DwdqXoQl7R10RS0GeHmW8NEoX/Dcp5FtjZxU7KmcZuVSNKge
-	M0pi6PxHOFk0M3mHKZf0c9BaIVHJFznOLpGdMPmyQbuQr6bWb37ochOyvZMZb5hnA9TrmPhjDl+
-	yNqK5z/BT4QYa8ljLdCiLGXpCimH1y76+Xav4M+nMbLpumMfrEniS5r4NP3so46g4lO2MMB+DQy
-	2bJRUA50TXB1Jawt5ZpN+dKg/u33jTF0qTrajfzxrut7cmb9b2/DXEK3lk3WVyUmkGax3i1rBdP
-	qd4n49mvXkE2iJ22fBgIfCw3mox1I/SnNkrPpFmg4U4/P8kPfh4uwq4zX8Rf7LMd5C2ZSRKVpZ2
-	A8kPq28BvO9q3Es0HtAoy4gGkHOBc6qZErGOX3ZcHKVOVX2R7t3F3powDpw4bnwTAuRxG5sIFtu
-	7q3PwyOA9X//uJcoACMCUxK3bYW1c9SwatWIfiGNTWTAash8c//V3ESc1ZS7ykGP2B8nMHNzkG4
-	s/yPVbA5CkOCXNrwWi0EuhJ/ag/y/5+1SPfkhKPGXuFCuf+terjejW8X9O7Z28=
-X-Received: by 2002:a05:600c:6085:b0:49c:eb04:1c49 with SMTP id 5b1f17b1804b1-49fe66cccd4mr219278595e9.13.1790585452000;
-        Mon, 28 Sep 2026 01:50:52 -0700 (PDT)
-Received: from localhost (p200300f65f19a904b8075b4cf431dac8.dip0.t-ipconnect.de. [2003:f6:5f19:a904:b807:5b4c:f431:dac8])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4a001778312sm295599625e9.8.2026.09.28.01.50.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 01:50:51 -0700 (PDT)
-Date: Mon, 28 Sep 2026 10:50:50 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Johan Hovold <johan@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>, 
-	Bradley Morgan <brads@mainlining.org>, Thierry Reding <thierry.reding@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-Message-ID: <aromsiCXLfGRRTFC@monoceros>
-References: <cover.1790495516.git.u.kleine-koenig@baylibre.com>
- <01d7a085e56b860e83b65c96ff3dd86c4498804b.1790495516.git.u.kleine-koenig@baylibre.com>
- <DLQ0BIYP96RN.Z0L5I17RQMRQ@kernel.org>
- <DLQ0HUM8AV99.3DNY5MRA2AZSO@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLyK3AH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D9E61F00893;
+	Mon, 28 Sep 2026 08:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790585675;
+	bh=1xJa9IUJMARvIln8uTwLgKp0prN+s04kxafbLxgRdtg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=QLyK3AH2ts2x+Qvl3ASX4radwVfZ5hKVbwt+nTEvSkkHejBKffaEMVCXTjarTqpkc
+	 z/lc8NhwGAhH1YWUPsygmYY/ScWHljgqizyb7Isi448wYBQh5YuV3AqCyX2AbmbYzt
+	 vpF2v+z7wMK4/+uEZIRtUVVbtmbTQtmStAoh9wXWSuzuDu6vaUjpeDj9sjdxXHEDGs
+	 3XDmQwH9bhevnJxUgjqhataMXBR595NNvyt2UagwRF5sAyGeb8wVRQPZniADI97Erl
+	 AgZCtYxb1/G308xWJRnmrUu5cZzu4J7wz/B7O3eortU3cFUEahT5zbRb3mF7d8Udr4
+	 PxzQ8Xsw03F7w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] lib/tests: add KUnit test for nested objpool pushes
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Shashank Mohan Jain" <jain.sm@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260928084125.67104-3-jain.sm@gmail.com>
+References: <20260928084125.67104-1-jain.sm@gmail.com>
+ <20260928084125.67104-3-jain.sm@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 08:54:35 +0000
+Message-Id: <20260928085435.6D9E61F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="akr7ood6yiztdqxp"
-Content-Disposition: inline
-In-Reply-To: <DLQ0HUM8AV99.3DNY5MRA2AZSO@kernel.org>
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] lib/tests: UAF and memory leaks on KUnit assertion failure or time=
+out
+- [High] lib/tests: module unload UAF due to unsafe kthread completion
+- [Medium] lib/tests: missing memory barrier causes stale reads of test sta=
+tistics
+--
 
---akr7ood6yiztdqxp
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/2] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-MIME-Version: 1.0
+commit 6bf48aebedba8949a86524af4e186a561332ca36
+Author: Shashank Mohan Jain <jain.sm@gmail.com>
 
-On Sun, Sep 27, 2026 at 12:03:54PM +0200, Danilo Krummrich wrote:
-> On Sun Sep 27, 2026 at 11:55 AM CEST, Danilo Krummrich wrote:
-> > On Sun Sep 27, 2026 at 10:03 AM CEST, Uwe Kleine-K=F6nig wrote:
-> >> Commit fcbfaffee51a ("driver core: add TAINT_FORCED_BIND for when
-> >> userspace manually messes with devices and drivers") introduced a taint
-> >> for usage of bind/unbind sysfs files that manually trigger driver probe
-> >> and remove respectively.
-> >>
-> >> For drivers that do their resource management correctly (which is also
-> >> needed for module unloading) bind and unbind for matching devices are
-> >> not critical operations. The thing that makes bind and unbind unsafe is
-> >> that drivers can be forced on devices that originally don't match using
-> >> driver_override. The result is that e.g. of_device_get_match_data()
-> >> returns NULL despite all .of_match_table entries having a non-NULL
-> >> .driver_data member which yields a NULL pointer exception for several
-> >> drivers. And given that after setting a driver_override a manual bind =
-is
-> >> only one way a driver can be bound to an unexpected device, a separate
-> >> taint for such an override is justified.
-> >>
-> >> Reviewed-by: Bradley Morgan <brads@mainlining.org>
-> >> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> >> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-> >
-> > Suggested-by: Danilo Krummrich <dakr@kernel.org>
-> > Link: https://lore.kernel.org/driver-core/DLIL9H50MALI.3JROXYEEUM3KU@ke=
-rnel.org/
+    lib/tests: add KUnit test for nested objpool pushes
+   =20
+    objpool_push() only pushes to the slot of the local CPU, but a push from
+    NMI context (a kretprobe'd function returning in NMI) can interrupt it
+    and push to the same slot.
 
-I came up with the idea on my own, but ok, will add that reference.
+diff --git a/lib/tests/objpool_kunit.c b/lib/tests/objpool_kunit.c
+new file mode 100644
+index 0000000000000..d86ef00dd0887
+--- /dev/null
++++ b/lib/tests/objpool_kunit.c
+@@ -0,0 +1,329 @@
+[ ... ]
+> +static int op_task_fn(void *data)
+> +{
+[ ... ]
+> +	while (ctx->remote_pop && !READ_ONCE(ctx->popper_done)) {
 
-> >> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-> >> index c51ad96d4de4..7d5dc016a457 100644
-> >> --- a/drivers/base/bus.c
-> >> +++ b/drivers/base/bus.c
-> >> @@ -513,6 +513,7 @@ static ssize_t driver_override_store(struct device=
- *dev,
-> >>  {
-> >>  	int ret;
-> >> =20
-> >> +	add_taint_module(NULL, TAINT_DRIVER_OVERRIDE, LOCKDEP_STILL_OK);
-> >>  	ret =3D __device_set_driver_override(dev, buf, count);
-> >
-> > There are buses (such as SPI) which unfortunately have to call
-> > __device_set_driver_override() directly.
-> >
-> > I think it would be better to move the taint into __device_set_driver_o=
-verride()
-> > and properly document the purpose of __device_set_driver_override().
->=20
-> Of course I meant to say to create a new forwarding function for this pur=
-pose,
-> such that we do not taint for device_set_driver_override().
+[Severity: Medium]
+Will this polling cause stale reads of test statistics?
 
-What is the rationale to exclude device_set_driver_override()?
+The flag is polled using READ_ONCE without an acquire barrier.
 
-For the dynamic spi device creation I like it to trigger the taint. For
-sound/soc/samsung/i2s.c it looks as if device_set_driver_override() is
-just the lazy way to make the created device bind and there is no reason
-to stick to normal binding. And why does it call device_attach()?
-Shouldn't that trigger automatically after platform_device_add()?
-Also in drivers/slimbus/qcom-ngd-ctrl.c the call to
-device_set_driver_override() seems redundant.
+> +		/* keep one reserve object for the teardown */
+> +		if (ctx->nreserve > 1) {
+> +			obj =3D ctx->reserve[--ctx->nreserve];
+> +			atomic_set(&obj->held, 0);
+> +			local_irq_save(flags);
+> +			__objpool_try_add_slot(obj, &ctx->pool, ctx->cpu);
+> +			local_irq_restore(flags);
+> +		}
+> +		schedule_timeout_uninterruptible(1);
+> +	}
+> +
+> +	complete(&ctx->done);
+> +	return 0;
+> +}
 
-> Maybe device_store_driver_override() or device_set_driver_override_store(=
-)?
->=20
-> > It only exists as SPI and AP are a bit special; both print "\n" when
-> > driver_override is not set, whereas all other buses (and thus the drive=
-r-core)
-> > produce "(null)\n" in this case. I.e. it should never get any new users.
+[Severity: High]
+Can this create a module unload race condition?
 
-I guess it's API and thus hardly changable, but I like "\n" better, and
-if it's only because "(null)" might be a driver name and there is no way
-to distinguish the situation after
+The kthread signals completion before fully exiting. The thread can be pree=
+mpted
+before returning, and because the main test thread returns immediately after
+wait_for_completion(), module unload could proceed before this kthread has
+fully exited module text. If the module is removed, the kthread will resume
+execution in unmapped memory.
 
-	echo '(null)' > driver_override
+[ ... ]
+> +static int op_popper_fn(void *data)
+> +{
+[ ... ]
+> +	while (!READ_ONCE(ctx->stop)) {
+> +		obj =3D objpool_pop(&ctx->pool);
+> +		if (obj)
+> +			op_popped(ctx, obj);
+> +		cond_resched();
+> +	}
+> +	WRITE_ONCE(ctx->popper_done, true);
 
-=66rom the normal state.
+[Severity: Medium]
+Does this need a release barrier?
 
-Best regards
-Uwe
+The completion flag is published using WRITE_ONCE without a release barrier,
+allowing prior statistic updates to be reordered. On weakly ordered
+architectures, op_task_fn might observe the completion state before the
+statistic updates (like ctx->pops and ctx->doubles) are globally visible.
 
---akr7ood6yiztdqxp
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	return 0;
+> +}
 
------BEGIN PGP SIGNATURE-----
+[ ... ]
+> +static void op_run(struct kunit *test, bool remote_pop)
+> +{
+[ ... ]
+> +	/* take every object out of the pool; hand them to the stocks */
+> +	while (n < OP_NR_OBJS && (obj =3D objpool_pop(&ctx->pool)))
+> +		ctx->objs[n++] =3D obj;
+> +	KUNIT_ASSERT_EQ(test, n, OP_NR_OBJS);
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmq6KmcACgkQj4D7WH0S
-/k4tNggAkYtGcQAPyu8XTaClLG0gxNYnKAAmDN9QKId+ihiRZzuPUBAUg2aq5JFd
-atIgGOszQ7cAqkGYZwudUgNJSpcRAPViCFkD55CdU+Sos6yQPplGBBnfj8fBcvF5
-MH+9+rtZwxxQOxpldtK2QdvIO7Wp4Zb2Hflf19aH/97OjqqUC+7psxDrf8q0Iulx
-M6pa+FHu60G4Pecn2C1pTAsoMCB2T+5H/8TFVDgi0IHqT3RgGd5Zde3YdKiQ6eQ/
-g4qTol5GLxjr07cyPhaKsCAVaH+QYVNN4aEfskOs2cDSKFyt9eiNgP3Ftc2OgaUs
-fEqVVNKz567R3lt3Dj2QXxwWi+aLhQ==
-=LCur
------END PGP SIGNATURE-----
+[Severity: High]
+Does an assertion failure here leak memory?
 
---akr7ood6yiztdqxp--
+If this assertion fails, the test aborts and skips objpool_fini(), leaking
+the pool internals.
+
+[ ... ]
+> +	task =3D kthread_create(op_task_fn, ctx, "objpool_kunit_push");
+> +	KUNIT_ASSERT_FALSE(test, IS_ERR(task));
+> +	kthread_bind(task, cpu);
+> +	if (remote_pop) {
+> +		popper =3D kthread_create(op_popper_fn, ctx, "objpool_kunit_pop");
+> +		KUNIT_ASSERT_FALSE(test, IS_ERR(popper));
+
+[Severity: High]
+Would an assertion failure here leak the kthread and the objpool?
+
+If the KUNIT_ASSERT_FALSE macro triggers a test abort, the already-created
+'task' thread is never stopped or freed, and the objpool is leaked.
+
+> +		kthread_bind(popper, pcpu);
+> +		wake_up_process(popper);
+> +	}
+> +	wake_up_process(task);
+> +	wait_for_completion(&ctx->done);
+
+[Severity: High]
+Is there a use-after-free risk if the test times out here?
+
+If the test times out while waiting for completion, KUnit will free ctx wit=
+hout
+stopping the kthreads. The background kthreads will continue running, access
+the freed ctx memory, and trigger a use-after-free.
+
+Additionally, because the main thread returns immediately after this comple=
+tion,
+it does not wait for the kthreads to fully exit. As mentioned above, this
+exposes the test to a module unload crash where the kthreads resume executi=
+on
+in unmapped memory.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928084125.6710=
+4-1-jain.sm@gmail.com?part=3D2
