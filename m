@@ -1,111 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F624B8280
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 11:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51034BA9F2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 12:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790596708; cv=none; b=ru2CummMdBBgITLs+RVnVbwm86Mkmu7Wzq3f1fxm2KJMTwkSorJnI6Om6urYPTrCBglkGEgEWUrQ2EpSUUAXXB5caNvidAayHAi9RZpRjtaDvE3vIQKfgY/xXFntXSWdxjhM1u5EoJlpbBz8PAZqt4xkSQcKPMIgagw1TwLL7w8=
+	t=1790597322; cv=none; b=Eb4tLZLuiLCIkYAxYjiOE+nEKnI5TlLiT87qJokHZ98LK0DgHAs2Mb+7vC+gU1fGr0L1KWs1Rxwr/0nd2TgStRPwqZQY3XWU/E+rBMpov7tokEYiZTcb4uScruI415Gw5vSSrf9ZV7yNKkWxYrkMFhz2fKveGSbtJuFOgRo7wYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790596708; c=relaxed/simple;
-	bh=E7W6OJqrArXZwdvGEx7J3Iy0KtBFzD++01Q5349IKX8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=vFv+n7yNW5cwRmQWrwsw6BNoE/OStxDLfdiQpPXg7wEf6jqPovyNd7ACA9Y6UXr9v54aMFGsirAkfyRpvnLpXkY6FyeYZMoci2DVsLOt4ekz8OYW5duNSDhniHLA4Xl3u3fQAq8yTA8Xo0BbU8TpzwebWcq7pUTBPknCAu90fpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNdaacVP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790597322; c=relaxed/simple;
+	bh=ngTtFusTfZr+Of7JLZyU1CxmNJum730Dky6yyjZX8hM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=lyXriN0PVXrsJ9Nr+E+iPuB/Gup/tpreDq7etjHOG4yoo60koCuNuB70JONA9JTcgcqQsvFaVQQiuBdmC/qyCvdrKGMQjZlHmgeMie3cQ6o86fVgB43i4lHrQO9sXT9VgucTUi4u9bzwmcIYRo6oSN17zLfFBUIL46nEODbLVAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=exO8AcIo; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNdaacVP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B291F00893;
-	Mon, 28 Sep 2026 11:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790596707;
-	bh=AJsffS0MEBK8gh7T/d5kNFzV3w+EQT2pZ0V14SA6fVo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BNdaacVPQ2qgmwtpHr8Ed2Ir7WiueycKo0KQlnZolBP+D2DfVXF9PXHlPUa6dCANT
-	 B7evcr8CAg8QQJyNtAXTK5rSJEN7pi1rUNDdpCwz0fjfNCC17cI3O7LjsU4/5sFEh/
-	 sf6GGELmdwQNXjH0JbAdHoIYVItjSo6MRtCp1E8hm3u++eA4SDW7IXchfRz5qwYoES
-	 6xaoHCoHypa2eiaNHwn6fGjqcMJia5JRZOb7e4nDKbz38xUCcEtYvbOZa9mDp1uGWZ
-	 WPwK+RVggORhmkKRoqRp4Tpr9tfk1VTnI6hioVbIsDZ5rxuCosKaEN/Z5hbvtTf3YN
-	 GyS+PJLhAhgDw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 7/7] mm/vmscan: pass scan_control to
- mm_vmscan_balance_pgdat_end
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ridong Chen" <ridong.chen@linux.dev>
-Cc: hannes@cmpxchg.org, linux-trace-kernel@vger.kernel.org, tj@kernel.org, mkoutny@suse.com
-In-Reply-To: <20260928114625.3609130-8-ridong.chen@linux.dev>
-References: <20260928114625.3609130-1-ridong.chen@linux.dev>
- <20260928114625.3609130-8-ridong.chen@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 11:58:26 +0000
-Message-Id: <20260928115827.18B291F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="exO8AcIo"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=ngTtFusTfZr+Of7JLZyU1CxmNJum730Dky6yyjZX8hM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790597317; v=1; x=1791202117;
+ b=exO8AcIopGtVEY45vqBpq1JN4Temm8AG2wOgr+XOdedY/hhBYnHRN9wRIFREBNxwQt/MQzyP
+ +Dn6cSne7XZbaXI8ORzFEqIBZU2bNnvn0jdWYJMU9QsSydJD9ipLPi8jeY3NxG2JzlN4pLlvbGv
+ QUm9aXmEP7ljh7C0pXZCjNMo=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by mta11.migadu.com with ESMTPS id 17011efc67c7e6a9;
+	Mon, 28 Sep 2026 12:08:37 +0000
+X-Mizu-Trace-ID: 17011efc67c7e6a9
+X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.11\))
+Subject: Re: [PATCH RFC v2 1/7] mm/memcontrol: drop unused vmscan tracepoint
+ include
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20260928114625.3609130-2-ridong.chen@linux.dev>
+Date: Mon, 28 Sep 2026 20:08:16 +0800
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Qi Zheng <qi.zheng@linux.dev>,
+ Kairui Song <kasong@tencent.com>,
+ Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>,
+ "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <linux-mm@kvack.org>,
+ Ridong Chen <chenridong@xiaomi.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <FFCBD11C-B723-441A-B6ED-6AD6E59648E7@linux.dev>
+References: <20260928114625.3609130-1-ridong.chen@linux.dev>
+ <20260928114625.3609130-2-ridong.chen@linux.dev>
+To: Ridong Chen <ridong.chen@linux.dev>
+X-Mailer: Apple Mail (2.3901.100.1.1.11)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mm: BPF raw tracepoint ABI breakage and commit message mismatch =
-in mm_vmscan_balance_pgdat_end
---
 
-commit eb8bc6091aab714af4b68f316fecfc08d43c39dc
-Author: Ridong Chen <chenridong@xiaomi.com>
 
-mm/vmscan: pass scan_control to mm_vmscan_balance_pgdat_end
+> On Sep 28, 2026, at 19:46, Ridong Chen <ridong.chen@linux.dev> wrote:
+> 
+> From: Ridong Chen <chenridong@xiaomi.com>
+> 
+> memcontrol.c includes <trace/events/vmscan.h> but does not use any of
+> the tracepoints or macros it defines: all tracepoints invoked here come
+> from memcg.h and writeback.h.  Removing the include still compiles
+> cleanly.
+> 
+> Assisted-by: Claude:claude-opus-4-8
 
-This commit updates the mm_vmscan_balance_pgdat_end tracepoint to receive
-a struct scan_control pointer rather than passing individual struct fields.
-It updates the TP_PROTO and TP_ARGS while leaving the exported event format
-unchanged.
+Since commit 816d9992d9ed, the label we recommend is Assisted-by: LLM.
 
->     balance_pgdat() passes sc.order and sc.nr_reclaimed to
->     mm_vmscan_balance_pgdat_end as bare arguments. Pass the enclosing
->     struct scan_control instead and read the fields out in TP_fast_assign,
->     mirroring mm_vmscan_balance_pgdat_begin. highest_zoneidx stays a
+> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
+> ---
+> mm/memcontrol.c | 2 --
+> 1 file changed, 2 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index aad0498a7bd6..95c2322d4a6f 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -77,8 +77,6 @@
+> #include <trace/events/memcg.h>
+> #undef CREATE_TRACE_POINTS
+> 
+> -#include <trace/events/vmscan.h>
+> -
+> struct cgroup_subsys memory_cgrp_subsys __read_mostly;
+> EXPORT_SYMBOL(memory_cgrp_subsys);
 
-[Severity: Medium]
-The commit message states this change is "mirroring
-mm_vmscan_balance_pgdat_begin." Is this description accurate?
+Acked-by: Muchun Song <muchun.song@linux.dev>
 
-Looking at mm_vmscan_balance_pgdat_begin in mm/trace_vmscan.h, it still tak=
-es
-individual arguments and was not updated to take struct scan_control *sc:
+Thanks.
 
-TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
-        TP_PROTO(int nid, int order, int highest_zoneidx),
 
-Could the commit message be more precise about the rationale?
-
-> diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
-> index 04f285e776596..c27bc7cc60630 100644
-> --- a/mm/trace_vmscan.h
-> +++ b/mm/trace_vmscan.h
-[ ... ]
-> @@ -124,10 +124,9 @@ TRACE_EVENT(mm_vmscan_balance_pgdat_begin,
-> =20
->  TRACE_EVENT(mm_vmscan_balance_pgdat_end,
-> =20
-> -	TP_PROTO(int nid, int order, int highest_zoneidx,
-> -		 unsigned long nr_reclaimed),
-> +	TP_PROTO(int nid, struct scan_control *sc, int highest_zoneidx),
-> =20
-> -	TP_ARGS(nid, order, highest_zoneidx, nr_reclaimed),
-> +	TP_ARGS(nid, sc, highest_zoneidx),
-
-[Severity: Medium]
-The commit message mentions there is "No functional change", but could this
-modification break existing BPF programs hooked to this tracepoint?
-
-While standard trace events parse the formatted output, BPF raw tracepoints
-consume the TP_PROTO arguments directly via ctx->args. Changing the number
-and type of arguments alters the BPF raw tracepoint ABI for this event.
-
-Does this inadvertently break user space tools that attach to this raw
-tracepoint and expect the 4 original arguments?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928114625.3609=
-130-1-ridong.chen@linux.dev?part=3D7
