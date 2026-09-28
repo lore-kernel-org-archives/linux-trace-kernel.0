@@ -1,72 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506D678C9C;
-	Mon, 28 Sep 2026 00:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF261A3029;
+	Mon, 28 Sep 2026 00:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790554059; cv=none; b=N3J4Zwf41n2B1PQNnXzoiIaTXjWFB8IJMYsucOHR75kj6Na+Xj/yZ0lvD1Ui52M53eDS4pKMAEI6sGrqTRY8GA6SQto11Y3KbHSuRw5LS8aJ/DD/KSZ7Yx6DOgsoN48dNLHWMdLChkW2cJGUMsQQEHcnf+AQ0Bg82EYC/35UY2Y=
+	t=1790555755; cv=none; b=j8ZYDrL9dTXYAcMCJ8bT1gl0CPkASQG9GKT2fQQJGkmn6dp6KNPoDPnFkimLLWX2cvNHgtLP1oeOhkLcJ3XjqKhKIFIZ1Upj8YHLYM//39dF7llBm7Yk+oZcLCVtA1O9FRhAvnDCdrLMyfiPn2pKfdtA5KKE+JfVEuFNfPGpde4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790554059; c=relaxed/simple;
-	bh=Okr4uqYktWeZOfWRjDeSrS3WvovN+fTCf5PWu32cQPg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WDGnOxomm1qRtrvdsscihmHpO6fORggGcBXmdUCSGQDHyf58pPx29yR9mhNJSzXEgp6sS+nc7qLnTVDTkA893mt2DFXJ6cp8lf7lQxSLDvtLmxknJuaSmFv90xDfUGTZQzeuC+IobZUgpap0I2Wb86OMg2Ec+8El5zLQZo1C1tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqWFtm10; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790555755; c=relaxed/simple;
+	bh=FzL9+EMsQmtiY7FPXdXgVsdpZYILyXqEVANO57jY5HI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jIBoO6Qvi/qwPuqtSBkjZ13v6U8IXSNPxJB2oV4L29397aUPOfNMlffp+snnoorXmqlN79qC3wUmxqdsEsc0nkzcxI5b+C2bOTrnwv8U8EccEaFyYLq4wIAzVeEmZa9nGNEPLO5k33wXRuOes3PlJj1g1WUDSgmcZk47kgJpdyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6R2/L3O; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqWFtm10"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D90A1F000FF;
-	Mon, 28 Sep 2026 00:07:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6R2/L3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DC71F000FF;
+	Mon, 28 Sep 2026 00:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790554055;
-	bh=Okr4uqYktWeZOfWRjDeSrS3WvovN+fTCf5PWu32cQPg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GqWFtm10DazuaUrLnfpG35BiyeQSUGz2InycyxIzOHOdKkOMs6bh36uS9aaaAcJPE
-	 EtDWZhzuIQEhe/b3p3ypS9V3BP5ZC5ufoezqYv0CGCjMZFPG2TRsscfX07DfeGUOK+
-	 b6Fl8UQRK8/VZPZqE+SmVHcDACv/POvSRrIrFUizHjvdwKGZU1e0WgmG112bK2/841
-	 jV0G/8fpfMtcYtqBYQXiFUr/q+jKrK313cfs2lfP5Xwg1XX/YKl2Izzh+PRumgHdu2
-	 fVrn4QJS4ya9PLszHhcFVV+7DJ2396ehcsw+mpKrozJqDYHuO1rc2eXq4Ursih1b/0
-	 CdBe46YR3viIA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/1] tracing: Require tracepoint permission for perf
- function filters
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zhengchuan Liang" <zcliangcn@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <95d3721fa8d4c7a4577ec14e9d7caec4fd0cefcc.1790553331.git.zcliangcn@gmail.com>
-References: <cover.1790553331.git.zcliangcn@gmail.com>
- <95d3721fa8d4c7a4577ec14e9d7caec4fd0cefcc.1790553331.git.zcliangcn@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 00:07:35 +0000
-Message-Id: <20260928000735.8D90A1F000FF@smtp.kernel.org>
+	s=k20260515; t=1790555754;
+	bh=sEuUCYZwmFhW/BxFoKDyvH66RCQWGwiTPtKnmvbsaa4=;
+	h=From:To:Cc:Subject:Date;
+	b=B6R2/L3OyXoW59cXJKLTXaMBHv8jnMTx3yZi/JOnJe6Mly0fnvqGbnhTFrSaUROme
+	 I3Vp2c7H/ZV1hRJ5cTQNzee5quFjlUvR9ocFRf7r1ulL+Tb0hp/kqDuLCEKr0dPq2B
+	 bQL8XnOdBgeVud5pgk43VdcxAL9vz5oQ03y/MShnZkiFr6bro3ceMWcVnzFYF/Fzb0
+	 gZQ0qd+NN3Nga/e/DzNfp62jDTx4YiotNMCqzyvwTZ/nQpTw9D6d5J1WEXJMk6Jr76
+	 Pw6VmTpLH8yTs6FMaRzsyBj/6VcY89T08c8ReTGWfqYF9EhcGe5gF+IB9AIXB93aMF
+	 XSSlexeJ3hOZQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Subject: [PATCH] fprobe: Protect fprobe_return() with guard(rcu)()
+Date: Mon, 28 Sep 2026 09:35:50 +0900
+Message-ID: <179055575009.241711.6358052647499787191.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> Count-only perf tracepoint events can be opened without tracepoint
-> permission because they do not sample raw event data. Their SET_FILTER
-> ioctl still parses .function predicates. Numeric operands call
-> kallsyms_lookup_size_offset(), making ioctl success an oracle for
-> recovering the randomized kernel text base. Symbolic operands resolve
-> hidden symbol addresses and can also match user-controlled event fields
-> against those addresses.
->=20
-> Pass the perf origin through filter parsing and require
-> perf_allow_tracepoint() before resolving either form of .function
-> operand. Ordinary perf count filters and tracefs event filters retain
-> their existing behavior.
->=20
-> Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to =
-function names")
-> Cc: stable@vger.kernel.org
-> Assisted-by: LLM
-> Signed-off-by: Zhengchuan Liang <zcliangcn@gmail.com>
+Hi,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Here is a bugfix (possible UAF) for fprobe found by Sashiko[1].
+[1] https://sashiko.dev/#/bug/linux-e46bcd68-4a56-4f19-a255-e3772980e5e3
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1790553331.gi=
-t.zcliangcn@gmail.com?part=3D1
+I think this fix is a short-term fix to make it safer. Eventually
+I would like to replace all guard(rcu)() from fprobe with
+preempt_disable_notrace(), because currently it introduces unneeded
+overhead to fprobe.
 
+- Introduce new call_rcu_tasks_rude() for async call.
+- Add special non-preempt mode flag to rhashtable, which
+  uses call_rcu_tasks_rude() instead of call_rcu() 
+- Switching to use synchronize_rcu_tasks_rude() for unregistering.
+- Replace call_rcu() with call_rcu_tasks_rude() in BPF.
+
+But this is heavy depends on Tasks RCU, so I would like to check
+with the RCU maintainers whether this idea aligns with the concept
+behind Tasks RCU updates.
+
+Thanks,
+
+---
+
+Masami Hiramatsu (Google) (1):
+      fprobe: Protect fprobe_return() with guard(rcu)()
+
+
+ kernel/trace/fprobe.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
