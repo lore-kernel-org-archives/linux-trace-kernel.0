@@ -1,196 +1,183 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f34.google.com (mail-wr2-f34.google.com [74.125.225.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7624E01E7;
-	Mon, 28 Sep 2026 17:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819C13A6F09
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 19:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790616380; cv=none; b=XsIFG5HuqDeI2IZRIOkw7xCJqOf/v+VIutECa1at0Q4e86/yxirODMqgkVHGwH/4wNfjZYFczNVf8UEBrYZe1Kr4EVZRQI1jwD3rTeu0aursE6NzwQ5nv6UIucWWdZGmUrIh2t9fO+MwB1QIrYJFGtV+EZmDKfpZRyTGldCB0QI=
+	t=1790624623; cv=none; b=qXPY5KU21XWyPM3Q1+JZQqtGbRZOAd2lWOslVxjNP1bk7KEG3TiT54DQgmy3PBrc23WoV15ot+FXRT6m28g8EStxMMpBTjXa/1UIf+lhaOFd9IUjblOjie6tZP1f4MZgwmBp0y+KhCjxE9e8XvvsHtvssTS0aM1S6gKkBfKm0es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790616380; c=relaxed/simple;
-	bh=T7OC4nRKMqVmwsULaxUEz3joufpd8djcs976zl8/Xqs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=eaMIZTbVdiaIVUJVpxwmGLeizNarCCH+UkhDGs9ldivfmBhZWnh6lD/75977FvTSTObsW6uaoOMFfGpj27/p1ByI2SHPoXwnaLxIN5+SWVZohHW6D+UDS1mmhPcLXCeAvWe/pxwYXbxxTQEOl3kGhRtiQmKecdubexikZMaVXJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=kEDemRW4; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=LZiEExpp; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1790624623; c=relaxed/simple;
+	bh=hHbJUj9MjIHZzV/WT6UjK867+TXBSMDLnyF5p+XNjqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIaG4sSIkd3mBa/h5+Fm3kg+KSfINVwycUEKsGEsCgS/bReaXqVk3dass3T1dYJIJ5NtOzOlk74LRnMwfB8hASmdMjqHTJcdFuWtFD5EeiO8tgP9lDLiFVmjJfURfqUnrNSFGouVIcKCw/NmbqrMdTj6/RZk6n4Uj4b43qtl2gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=SEoArUte; arc=none smtp.client-ip=74.125.225.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="kEDemRW4";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="LZiEExpp"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1790616362; bh=Rq2Uefl/uDCN7yy0qsArfdj
-	su0GCBTJ02syOpjDKKZk=; b=kEDemRW4+UXB9cS1f9DM3xfwhqwsotLmJb1c13CLs/dKj4hFUh
-	YSmnhZwF4d4o6YcwFGtyLrf31AkqrbKsRnniTXgHngHhwnHFPQ7cAYCDIZ9kqnHI4LBLOhhDGA7
-	/IzNjxkBfeeka7I7MzrvQkWUBVROUkR/0SIqtThKFcvKFeROwfhXYIxmP5K/SRRq5FF02qknkcm
-	wtuQA9PgO2jZeKKRGLvXIdKvZ2Q5F79WJjgYbJub11udAmD/0B0nNcwFUHaYSqZFhN4KXkCGJHf
-	BDgfD3KJtrClVWqiJR4OP6gM4A3Ngz+9ad2J4ZC/CJ8S7wtyEN5kUvzVpwPuQsxgNUw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1790616362; bh=Rq2Uefl/uDCN7yy0qsArfdj
-	su0GCBTJ02syOpjDKKZk=; b=LZiEExpp7DcwHYhootugj93yJytnQtp+LJx/MmLanZOOVipSDt
-	en8Mn2d2YcS4yvm54Sc/INR5wOmKiN8TpmDg==;
-Date: Mon, 28 Sep 2026 18:26:03 +0100
-From: Bradley Morgan <brads@mainlining.org>
-To: =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Johan Hovold <johan@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Thierry Reding <thierry.reding@kernel.org>,
- David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>,
- linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] driver core: Disable driver overriding by default
-In-Reply-To: <0f7446324f6a0c8f0153d6532d92a6eeecd6a308.1790612298.git.u.kleine-koenig@baylibre.com>
-References: <cover.1790612298.git.u.kleine-koenig@baylibre.com> <0f7446324f6a0c8f0153d6532d92a6eeecd6a308.1790612298.git.u.kleine-koenig@baylibre.com>
-Message-ID: <F984EAAA-9F4F-4BB9-AD6A-E19888014738@mainlining.org>
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="SEoArUte"
+Received: by mail-wr2-f34.google.com with SMTP id ffacd0b85a97d-48884b0219bso1562663f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 12:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1790624618; x=1791229418; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=fxZSOX2/DMzIaUKEB17ch3Vac56Jr8Y6RNEiYe6dpbE=;
+        b=SEoArUtePCOixmxmNwaYzf5smPiPMTU6mM4XiPO0DEeSbVYszH7rZ1TZCaegqeXjNV
+         9AM8uVq5uJ7HjK8givCU+Xrs+DcozXlzIP0cjCnIFro11XoBAajlen/sLLfVgLaaEWFb
+         wImm+TSRr6tzdJlJEtgymzGV/6Atjv29WMntLr15Q+3UoSOAlRCB8BXbwlF5xVwD6ouG
+         SrGLACUac5QAjdyiEDT9f3ok0lqYMvlamoVu+HTcbOkCHPCO20EFjilaOiCV8Ta1aLWr
+         Ml+DmBM1ncZJovnzZZ/mKKepmOUsdY3QrW3yIRL1zXa6/unYnMLApLC/57a+7OzDSSnj
+         YaNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790624618; x=1791229418;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fxZSOX2/DMzIaUKEB17ch3Vac56Jr8Y6RNEiYe6dpbE=;
+        b=ddsT8gBCQx7kuGRAwYTdsE89tJnaFRPIJuEFOvkWh8cgCNXeC1pIgSlqyALwLMD0mH
+         aQUjPqmb67cSrLlSqrQ79UQaaB7P0uQjeoflHdYiFmVjAfutn5vUfX5UwGhsLgPQuZio
+         4a22mfjDkKBzAarMxuRZYpb2QYEQAKf3DJhRWpOb0DBtKj12v8A6hJYbZZgAo+G9iEVb
+         7yUvr/7yU0K9zzV3nP3waH2eriU3G5rQSNJGVDFy2U6rrwthY3kDDnS3Vx27pQhZn1A0
+         rU9Sq4ssYr+NtAveaC/d4O6NRRNJaukUuJ6t+f9CbNMjbsPXpuIHd46V0B8sfL6BtoYb
+         0fHw==
+X-Gm-Message-State: AFuF++nggo//xJeqT54cnFddrwWxjD9wsTqYO3tB86xIoEYieOPfpm5e
+	XmTc0aHLZzgaO/K6u7EsiecpvcrXSOXR43GD0aFdt7rfoaspDfA129NAxrL2ExrsWKRDSffcmvC
+	csLSh
+X-Gm-Gg: AYBFou2Y/toQAplQ8Oj22Ox/+9yLuzVGmuv3FA/b86tkdtWg4i4nH0HpWcsDvgYdCEc
+	yIarjJ+uPZlOPy1XIdCKG3ovp0SeAhGDhV7IEg5Syw4aaMb2QGoGIFoz4QcJsXT6D1VYsY4OlYM
+	UMn1aP7PrSwW44yt+b7Fzwp4LxAqM49lrke1+yWHUItyGg+8fILkpsMOUtsoOZn/eh2GsrLoBJe
+	brij32ObD4kSlLY8ln+KiNzI4TuHIg3UPSGbo5/5DdZqeTKYdpwnS/KB4G1WFofUqXh6bwvCWny
+	ICXbvYW9n8MfjBpDQeBRD12R1UR6I1qGpyjsBPhi1A7/v+L3qSnICdcNP9j1wR+HEX7tXrk4tDs
+	04XOz/gJt9FYDobwAzxGnaSn+OTjPJ/gvGO9PkabZpJt4BJUg/0ed6n3ahvLU80HjD5Ovy8cziI
+	JwQA7zyAAaHVnpRCxj5Ss0Drx+bettD4H+oQ3Ob22OZPQ2tJLRw6/QzSxaeg910I9Q354LX2Q9V
+	L2p
+X-Received: by 2002:a05:600c:4e49:b0:49f:cc2a:f73a with SMTP id 5b1f17b1804b1-49ff06ed754mr173176835e9.25.1790624617351;
+        Mon, 28 Sep 2026 12:43:37 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4a00cfecb39sm16755135e9.7.2026.09.28.12.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 12:43:36 -0700 (PDT)
+Date: Mon, 28 Sep 2026 21:43:34 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] Add TAINT_DRIVER_OVERRIDE for usage of
+ driver_override
+Message-ID: <arrCUYnwhK68Q46T@monoceros>
+References: <cover.1790612298.git.u.kleine-koenig@baylibre.com>
+ <a92a69151266129e20abc4a8ec543d4f4438324e.1790612298.git.u.kleine-koenig@baylibre.com>
+ <20260928165818.69F321F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e2btm2zbxiwiyxbf"
+Content-Disposition: inline
+In-Reply-To: <20260928165818.69F321F000FF@smtp.kernel.org>
 
-On 28 September 2026 17:46:04 BST, "Uwe Kleine-König"
-<u.kleine-koenig@baylibre.com> wrote:
->Driver overriding is useful only in a very limited set of situations
->and then only with very few drivers that are designed to support that.
->
->Disallow matching via driver_override unless the driver explicitly
->allows it or the safe guard is disabled using the
->"allow_driver_override" kernel parameter.
->
->Implementation detail: device_match_driver_override() isn't a static
->inline any more. It grew a certain complexity (e.g. a pr_info()) and so
->was made a regular exported function.
->
->Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
->---
-> drivers/base/bus.c            | 43 +++++++++++++++++++++++++++++++++++
-> include/linux/device.h        | 26 ++-------------------
-> include/linux/device/driver.h |  2 ++
-> 3 files changed, 47 insertions(+), 24 deletions(-)
->
->diff --git a/drivers/base/bus.c b/drivers/base/bus.c
->index c51ad96d4de4..d294c198ab0c 100644
->--- a/drivers/base/bus.c
->+++ b/drivers/base/bus.c
->@@ -606,6 +606,49 @@ int bus_add_device(struct device *dev)
-> 	return error;
-> }
-> 
->+static int __read_mostly allow_driver_override;
->+
->+static int __init allow_driver_override_setup(char *str)
->+{
->+	allow_driver_override = 1;
->+
->+	return 1;
->+}
->+__setup("allow_driver_override", allow_driver_override_setup);
->+
->+/**
->+ * device_match_driver_override() - Match a driver against the device's driver_override.
->+ * @dev: device to check
->+ * @drv: driver to match against
->+ *
->+ * Returns > 0 if a driver override is set and matches the given driver, 0 if a
->+ * driver override is set but does not match, or < 0 if a driver override is not
->+ * set at all.
->+ */
 
-Nice!
+--e2btm2zbxiwiyxbf
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 2/3] Add TAINT_DRIVER_OVERRIDE for usage of
+ driver_override
+MIME-Version: 1.0
 
-Reviewed-by: Bradley Morgan <brads@mainlining.org>
+On Mon, Sep 28, 2026 at 04:58:18PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Medium] device: false kernel taint from internal driver_override usage
+> --
+>=20
+> commit 224a6c2cd832599abb4180f63153f96e5c11d2a8
+> Author: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+>=20
+> Add TAINT_DRIVER_OVERRIDE for usage of driver_override
+>=20
+> This commit introduces a new kernel taint, TAINT_DRIVER_OVERRIDE, which is
+> applied when a driver is matched to a device via the driver_override
+> mechanism. It aims to distinguish overrides from manual sysfs bindings, as
+> overrides can lead to driver crashes if the driver expects specific match=
+ data.
+>=20
+> Link: https://lore.kernel.org/driver-core/DLIL9H50MALI.3JROXYEEUM3KU@kern=
+el.org/
+>=20
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index 879eb758b5eec..4dac5e09b74c1 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -905,8 +905,15 @@ static inline int device_match_driver_override(str=
+uct device *dev,
+> >  					       const struct device_driver *drv)
+> >  {
+> >  	guard(spinlock)(&dev->driver_override.lock);
+> > -	if (dev->driver_override.name)
+> > -		return !strcmp(dev->driver_override.name, drv->name);
+> > +	if (dev->driver_override.name) {
+> > +		int ret =3D !strcmp(dev->driver_override.name, drv->name);
+> > +
+> > +		if (ret > 0)
+> > +			add_taint_module(drv->owner,
+> > +					 TAINT_DRIVER_OVERRIDE, LOCKDEP_STILL_OK);
+>=20
+> [Severity: Medium]
+> Will this unconditionally taint the kernel even for valid internal usages=
+ of
+> driver_override?
 
-I mean, others may provide nits, but I'm rarely a nit guy
+Well, if you assume there are valid internal usages of driver_override,
+yes. I think it is possible to not need these all.
+=20
+> Many kernel subsystems and drivers use device_set_driver_override()
+> programmatically to force driver matching for dynamically instantiated de=
+vices
+> during normal operation or probing.
+>=20
+> For example, in drivers/clk/imx/clk-scu.c:imx_clk_scu_alloc_dev() sets the
+> override internally:
+>=20
+> 	ret =3D device_set_driver_override(&pdev->dev, "imx-scu-clk");
 
->+int device_match_driver_override(struct device *dev,
->+				 const struct device_driver *drv)
->+{
->+	guard(spinlock)(&dev->driver_override.lock);
->+	if (dev->driver_override.name) {
->+		int ret = !strcmp(dev->driver_override.name, drv->name);
->+
->+		if (ret > 0) {
->+			if (!allow_driver_override && !drv->support_driver_override) {
->+				pr_info("Suppress driver override binding. Allow %ps to do overriding or boot with allow_driver_override on cmdline\n",
->+					drv);
->+				return -1;
->+			}
->+
->+			add_taint_module(drv->owner,
->+					 TAINT_DRIVER_OVERRIDE, LOCKDEP_STILL_OK);
->+		}
->+
->+		return ret;
->+	}
->+	return -1;
->+}
->+EXPORT_SYMBOL_GPL(device_match_driver_override);
->+
-> /**
->  * bus_probe_device - probe drivers for a new device
->  * @dev: device to probe
->diff --git a/include/linux/device.h b/include/linux/device.h
->index 4dac5e09b74c..a142bf384f1e 100644
->--- a/include/linux/device.h
->+++ b/include/linux/device.h
->@@ -892,30 +892,8 @@ static inline bool device_has_driver_override(struct device *dev)
-> 	return !!dev->driver_override.name;
-> }
-> 
->-/**
->- * device_match_driver_override() - Match a driver against the device's driver_override.
->- * @dev: device to check
->- * @drv: driver to match against
->- *
->- * Returns > 0 if a driver override is set and matches the given driver, 0 if a
->- * driver override is set but does not match, or < 0 if a driver override is not
->- * set at all.
->- */
->-static inline int device_match_driver_override(struct device *dev,
->-					       const struct device_driver *drv)
->-{
->-	guard(spinlock)(&dev->driver_override.lock);
->-	if (dev->driver_override.name) {
->-		int ret = !strcmp(dev->driver_override.name, drv->name);
->-
->-		if (ret > 0)
->-			add_taint_module(drv->owner,
->-					 TAINT_DRIVER_OVERRIDE, LOCKDEP_STILL_OK);
->-
->-		return ret;
->-	}
->-	return -1;
->-}
->+int device_match_driver_override(struct device *dev,
->+				 const struct device_driver *drv);
-> 
-> /**
->  * device_iommu_mapped - Returns true when the device DMA is translated
->diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
->index 29fbc01ef06f..0153cfcbe1b9 100644
->--- a/include/linux/device/driver.h
->+++ b/include/linux/device/driver.h
->@@ -56,6 +56,7 @@ enum probe_type {
->  * @bus:	The bus which the device of this driver belongs to.
->  * @owner:	The module owner.
->  * @mod_name:	Used for built-in modules.
->+ * @support_driver_override: driver_override only works if this is true.
->  * @suppress_bind_attrs: Disables bind/unbind via sysfs.
->  * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
->  * @of_match_table: The open firmware table.
->@@ -104,6 +105,7 @@ struct device_driver {
-> 	struct module		*owner;
-> 	const char		*mod_name;	/* used for built-in modules */
-> 
->+	bool support_driver_override;
-> 	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-> 	enum probe_type probe_type;
-> 
->
+Here I think you need to change `platform_device_alloc(name,
+PLATFORM_DEVID_NONE)` to `platform_device_alloc("imx-scu-clk",
+PLATFORM_DEVID_NONE)` plus maybe create uniq device ids (using a static
+int that is increased for each call).
 
---- Thanks!
-"I'm not a very positive person" - Linus torvalds
+> Since device_match_driver_override() cannot distinguish between a userspa=
+ce
+> sysfs override and a legitimate internal programmatic override, won't this
+> cause production systems using these platforms to falsely report as taint=
+ed on
+> boot?
+>=20
+> Falsely tainting the kernel breaks the reliability of the taint mechanism=
+ and
+> could lead to valid bug reports being ignored by maintainers.
+
+Best regards
+Uwe
+
+--e2btm2zbxiwiyxbf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmq6w2QACgkQj4D7WH0S
+/k713QgAuYGFOD8zr18eUyBJO0UxhmdDG/wvrKbHotQLYnJ05hM07+9ENNV9iLQw
+o8IjBj0j0INhu9NrJsK1YxH8yyIbSt3Gi8eZjJVfO+blKFQKucdwAG3/532WaN2P
+4VJuA3GVG6z656qY4omCJgleHpjkOF1xx17TkdzjnXj3p8ne1h4vt6JTyy9xNW24
+frVtuk/Llje62jDIq6ZtnEoeyddBiqcx94t5OITmnr+LXXKhmmFKwypHO08sNjck
+/y51XSz0Hv5lBE+mgLF8JoMAwB+D1Xg/liZs3XTZ14H6ruLjuNMK7m0LtXgTpOru
+42UhIyXsoV3uE4dIkAvsa3WZCf1Y3A==
+=rjkE
+-----END PGP SIGNATURE-----
+
+--e2btm2zbxiwiyxbf--
