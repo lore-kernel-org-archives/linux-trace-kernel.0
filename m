@@ -1,225 +1,622 @@
-Received: from mail-qk2-f40.google.com (mail-qk2-f40.google.com [74.125.230.232])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC77A51DDFC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 17:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790702262; cv=none; b=eSSewQBzMAi6cy0RF59hddILVXtfyIJvDIpxhdDZ4RSSLFQdce/+5qWl6e6rvUcZ/PipP22g6muSsnY3TqT9iNsCAipl2CnQtwy6OuZj7d49SBFnG/tkj7kho83DgxwTuaVTv58zSpeqnn56BL7i2idbGAsERDjsihi1Bhgfi/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790702262; c=relaxed/simple;
-	bh=FBu4wPNvp6XKLCksA/EO6fe2fqobXZ0aLWTgQ92ND/M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N2g0cY+ixrDWa+JBNlXonrCq0cOACqP3g+GD8D5Q4GGPVDh/pjRvguUo4/ZwL4O1GYCkCfHJq3ULuebz2rlMRt2p5PQU4MsOjmKe4C/0gxL610Gy/MRdllgIRWVVmZKumB0dreojuFD66yaayFaBmMJKxxIZSUJ4XFmOecc6gCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=pass smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b=QkaQ8dsy; arc=none smtp.client-ip=74.125.230.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toxicpanda.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A5B5437FC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 17:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790703135; cv=pass; b=XG2B9j7CsXqFer08GPnc351BTj171OakR95Oar3izCSaJBUEL/uKeAf7lsv+KY1W7hpX/8qi0WAPDyFVWpoH6eWXsA6k555NA70yu5EJskM1uUe/I2bqIOBTjzlV9PiW6Xs1kbIYb1Pwye6fC5u383DkfFxo8cgHBAb7rvf+sUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790703135; c=relaxed/simple;
+	bh=CdyOt6CTh4TFum55ZQJ83hgDxHWy+ewtHlGh3qkmRxM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MIC903SC5evg4w3+8AxQ8pO96Z5y/CUrIhLYWWrt6mene51rxPLAOjR3j9ufXNkcdDzUezdVTGxk2PffR0i1w6nyZYWNj5QqF7rVt3Cyfie4W5Erl5Zm/2nn7Ssix1U33GR4skCm9zjFjX+oJk6IogudTxlbCEQjW+BUOD3JEHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qquQunlh; arc=pass smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda.com header.i=@toxicpanda.com header.b="QkaQ8dsy"
-Received: by mail-qk2-f40.google.com with SMTP id af79cd13be357-93c5bda9b8aso146521585a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 10:17:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qquQunlh"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2d8fd7a3f38so3925ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 10:32:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790703133; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jd4NdywANA1hjqT2kmyzeNQkZzzm8pr7kHrX7e7GcTsj+KQ8w/kd2duTb5WWafXIuU
+         +Y9mprsBsRR9YXyCcVbeKodzi64GraPkTDS9IeODG0o1/dA3uYaQUrOimbGALJIER1CH
+         bc2KhzJZNMdc56/tRWVmVpRr3yW6WeCeu76DYI1SXRrfWwyFFsUx3RZLXE1xPjMv/DPY
+         aJ6hvD0vYYPCD7a0wsnGQzE4M+wQ3Ca+Naee7JfoPnA8UPC+H3cn6OLNSLGpb8ahrWXX
+         Dt1mIKXSGktUonv8XrU0Qo34fxP4wtYXR0aZokejNm2XSQWGn6vUyWSNXqFlB3hrb+6m
+         a9kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gop9G4Z2JBpfOEWZ1J6wcLApHLej9ebsfoqPAQlg414=;
+        fh=kK31K5dJVKhSRaaj5iQclkETukyYz4qMXG59DsJTYfM=;
+        b=ckdxvYIDAKso06Smum5NhZZbC50Q+BgXZX3sMT8dT8P87u4a1biGX60IePTA1srmbC
+         FZl63iL5yqfrwjtngaJ+jXYMh4HrqvT6w4rhLffXZUA3Upw+4CKK1SLRc5qZjJ10Cmnx
+         M6IeqhvGZu66vLxE+H/AEgl+/jypEMcBjL5y1pRdWy+kZ3j55Pi+fayGqAfz0eSm1BAS
+         FqCyrSoSbZp/npfec9r6qxgATkgW6/zLrnG1rMXebTYPKR7qhJMzp4G2OV8Tsdk8BLid
+         VFiVRpyXoa443aISNmArLNfio2TnMWYAKN2rQhMT3Q4BvA6alXYQ5SL7szyR5F+cZQiG
+         1bUA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda.com; s=google; t=1790702260; x=1791307060; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Fe4PBb/Hf6DUzcCJY1sqn5uC1SzSruVIKDxh26oxA4E=;
-        b=QkaQ8dsyTXQVnIPhmhgLcJHSnjAiLwSdZa24Rg6kfD5SKAUvSCWi92I9hBP1DzcuXz
-         wrb80zT/eGo8arA4YZg83v4Fa58UkDB0tPvi/Cg5WhgBwmK6d03io4lyvzPVEa5DtnIh
-         vdLtlrkorAQfh9rjV5LFceHdX6e9QSB6ZLxTPuBYhzJOlBRSjr78mJQpMSpGc/bN+IgD
-         Wajv8oYEg658x0eaX483yZJJPzdgp7vW2SuwIj5ydgK3kij6VU4ORoZiYS6qymmIk0dd
-         L6fVdGPJytT38Pb3n47Y5FbxM+ljDwJSH2TdhEtPqP9ihiXbGBLvnTYXgzMLchL4ozGI
-         xEaw==
+        d=google.com; s=20251104; t=1790703133; x=1791307933; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=gop9G4Z2JBpfOEWZ1J6wcLApHLej9ebsfoqPAQlg414=;
+        b=qquQunlhSNi0sR1JRvaUjxhbgSuxpcmHr2BoTxb/YemzJc74NYZ9zWMtZdyVOCCfUq
+         UQNsUf91g2Zh80HfTWmnVtxfD1G98iBCqj+ibAkJemqhR5rLOC9jgXcg0QnGH8qrNYJA
+         zdvzO2e/UPNA3uBiefX0EOTT4Lbv/3B5hxeTBTmcBtUbelF9pNyiJzv0uevcDUk+TpRF
+         hFzerKkg4xmAngjA43McpWaDh8t6TrKEJMZJcsz1Q4urj21Lcmy4tK0dyRdOTwhZW5mL
+         6gf8xNSdwlFGPaaIedDNoWiFO2+psGFW8SfS9hNOOyId/TJYWtJ2KH8SimS92cbO9TiC
+         gD7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790702260; x=1791307060;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1790703133; x=1791307933;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Fe4PBb/Hf6DUzcCJY1sqn5uC1SzSruVIKDxh26oxA4E=;
-        b=zr6CUFL5iwOHvCq9ffmNGNvw/awcaGVfSVP0tCxM7puCk9ga1x8JooQ2KZCATyhQ0P
-         TqOFJOLcSRmR33g6aE++Y7EaZoIOcJoZJivOa7oPffr6cDas41hNHhZNazS9Xj+FSXiP
-         vwc4h1kNx+DHO+5bCCLniCYU54eCsgYFwCLYlCxww9f7xPD79eFyVGCjRtnjyXi5yCSn
-         rl2nWXMiasmU2q2ttvWukBU1gZfbJ8qDGyioVGKEacyc2735bGFVBmill7TCfAtyGmzJ
-         U/yTtsJ3jhClc8FxIWkMsDYM0ic/YNWEi/UehExcPHZNAjBwF0Qf84SfjcqfTTNLL8kK
-         Oy+Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwZhWV+DNp1D4L+4e6dUMp//hdGym+g0UF35CFbVygfIt83n+HQ+lpYbCooAh+FfxoKyYmW8fqkVgJIM0Hvpx/BCl8=@vger.kernel.org
-X-Gm-Message-State: AFuF++m4nhFAiIx1Gd4K+FRZmS744yVJukaayP2dcOEU30smnwebohe8
-	I3sYVeCM6Lh5oOdwN717RNlaC2uakmtbR7RWZ4Xy0HgGeLSK6iISoDSN2eTsCEG5+d8=
-X-Gm-Gg: AYBFou0fdJb1sTUVaVPddCHkolHt54yNycj/zHfxIgCarbZ0FWtb8dy9YAYR2T0h5sW
-	R1J7qHSn42noo93oJeFOcPCb8R8MOqClICjQb0gqjsnlYaP6B21QVlp/RGMJNSf55afk4x3g3VS
-	v0A+f8sTbeBVCKlXUlFSo6EzBpQGQuq4cFH80iwfl7DSh+eupGRZSGKVHKLcRV1hMfCcU5EzdS2
-	DXecUFBJaADRsOiWfl0/godQnbJykXm58UIhiflnGktr8Vd3i5l4kevRKEuCEPeQNHLp4gbTvRz
-	/NXFlh1LyX5WV09oguKzB+W2mdNMCjtmcUkXTlRI/Ue6t+iBIkze9IIsrnETdx9uFLOhDiM4xrY
-	YO5t71kq+0zWxcs5DadmQ5aJKkv70mnSehyfLmla55fjtXvUTJtZHCSmrBBbTPSFz8ZmALICV6W
-	0q2hsbj97NjnHJx9ju82GKrLS9nfNs0R3+Pp28hv0yHlPm360X2Jxd9/s79GyoFT2Y8QPzLYapI
-	TAKDfHimcIFOzE=
-X-Received: by 2002:a05:620a:1451:b0:93c:2670:2c28 with SMTP id af79cd13be357-93c9f9846a4mr28084685a.10.1790702259614;
-        Tue, 29 Sep 2026 10:17:39 -0700 (PDT)
-Received: from toxicpanda.com ([153.61.196.251])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c9f503457sm17417585a.27.2026.09.29.10.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 10:17:39 -0700 (PDT)
-From: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 29 Sep 2026 17:07:31 +0000
-Subject: [PATCH v6 14/14] x86, arm64: Build Tasks RCU on Tasks Trace
- readers in trampolines
+        bh=gop9G4Z2JBpfOEWZ1J6wcLApHLej9ebsfoqPAQlg414=;
+        b=epgbgYMhzaBa6DzB/UJn6EJAPj4LXlTUL4/Rm3RaJVUCIvx38FpuHl81CtAhPJ7G+b
+         mdcbvWfVln0gxWLhTDRkDJ5Hdo07Fa60SIz9lZVIijezP7KDRhy4Frvc+zZq5N6yHuH6
+         az/4H48/C2BPuBh4F0PvJkSrzzFpyry5+I/DvjJbs0dhWK1OYKS34Kgqu3/VOv1ecFwP
+         TZM0LBZz0iT358WalleVB/BUk2/Qs2KTESt35KHotnjlrYV6ey2Z4bpO8sSIP1bSm/GH
+         CKlAgbal8rV1q9vG9yl8RBvo2U08R13Bmsd4ol1yvFqKb+ZnFUgAUrTHm8VY+svqEeV7
+         jRLg==
+X-Forwarded-Encrypted: i=1; AKwUvBycgHZRcOeMQZ765unGTaeMvkyX8CT48xgyxY0n1H492w3UwyHQLFGXK6qWhH0E1DxxBJHkO4dM9fohLeqDkqbFyxs=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKTtWusImZG2kc/qe6fmXf53f7SArYiSUIQbPjKi4N8Rk4SgBbw
+	rjCF6NlcLaXjRZ/YsyxheU8ufYtDfiLPKLN8mVyvSP1pxaxnG3gISXEx1NtKn9An+1dJ1sij39k
+	1iUOZJ6IVo1RIdmLuMiHag724HCTirWca3EfvV+MW
+X-Gm-Gg: AYBFou1Vj3TAPp2VWtrAMSSM7HspuLvF8eH3lINyS6Mzp+MixmRVICaO00hOaMkWjgw
+	garncymUqquOXTvJ1KxPL3r1FtQ5d46cYII4IfA2yeQ6Ls75rW4bx4fpigU9QNTivo/eK4HYRKP
+	7xMIJetjUuijxaWLYO2PXQ5KvA5DrlJ3Ko2lPQ2i8LNzUaQS34KnO/nvi7FETTwtkoGyJ7rltBo
+	BhcsQjjjhz8HFMwsrJaAnOhpFNlyxfVjKcPyc70RY+f17eU/DVzR97klEuO05//VUZyMlqo878v
+	oqfY5enx/DONXpO66cAbZLZTsugEIaqjEDmGQtWwDYY/14QR4Kuxu0icwVhb0bdZfybPo5WzgUY
+	E3n5rfwe0Sw==
+X-Received: by 2002:a17:902:fc4c:b0:2d5:db38:8010 with SMTP id
+ d9443c01a7336-2e2c7ab691amr5373235ad.15.1790703130325; Tue, 29 Sep 2026
+ 10:32:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260929-b4-rcu-tasks-preempt-qs-v6-14-c111ee02caca@toxicpanda.com>
-References: <20260929-b4-rcu-tasks-preempt-qs-v6-0-c111ee02caca@toxicpanda.com>
-In-Reply-To: <20260929-b4-rcu-tasks-preempt-qs-v6-0-c111ee02caca@toxicpanda.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Boqun Feng <boqun@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
- Thomas Gleixner <tglx@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
- rcu@vger.kernel.org, bpf@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openssh-sha256; t=1790701682; l=6284;
- i=josef@toxicpanda.com; h=from:subject:message-id;
- bh=FBu4wPNvp6XKLCksA/EO6fe2fqobXZ0aLWTgQ92ND/M=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgUBr36M/n0nWN0DNbnxwzIiCZez6MG
- JiruuNaSCI/zXsAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QM5aKK+gCbm3N+QZV9FJaROou1WOBBTQcvS6L+bOjkJ3lKBVKqJiXBvlyBo1oNNPHF0Pr3LTzCa
- TSaSfpKWd7AA=
-X-Developer-Key: i=josef@toxicpanda.com; a=openssh;
- fpr=SHA256:C8kOX2QUJCMqnCX+KEeoqRAjLo9L+ELOSH2NSAJHqGA
+References: <cover.1790025465.git.abhishekbapat@google.com>
+ <06c3a9b52785e6968ea15709a55365b2342c7a15.1790025465.git.abhishekbapat@google.com>
+ <cb229e38-3e52-4309-9594-0d3947c1a81c@linux.dev> <CAJuCfpGZf+HDj8B2vV2WB68P2JMyqctF5CPvV0R6x=WU7+nwvQ@mail.gmail.com>
+ <cf6ff2bf-1b3c-4575-b981-fc3c65625d5d@linux.dev>
+In-Reply-To: <cf6ff2bf-1b3c-4575-b981-fc3c65625d5d@linux.dev>
+From: Abhishek Bapat <abhishekbapat@google.com>
+Date: Tue, 29 Sep 2026 10:31:59 -0700
+X-Gm-Features: AclHuK9odsV9vmHK3YA0RDia2gPNWzUBPdXr8LDkNYU_mIx1XAEJCAOGyCfvoVA
+Message-ID: <CAL41Mv4nqEWkFZajL-Z3ny_gx-9zyBY041AXvYL4K+FUUQ5gzA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] alloc_tag: Add trace events for tracing allocations
+To: Hao Ge <hao.ge@linux.dev>
+Cc: Suren Baghdasaryan <surenb@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With the preceding patches every trampoline whose lifetime Tasks RCU
-guards on x86-64 and arm64 -- ftrace_caller and its copies, the optprobe
-template, BPF trampolines, and the sample direct-call
-trampolines -- is a Tasks Trace RCU reader around its call-out, and the
-text outside that reader is known to rcu_tasks_trampoline_text().
-Select HAVE_RCU_TRAMPOLINE_READERS on both (x86-64 with SMP for Tree
-SRCU and DYNAMIC_FTRACE, which is where its ftrace_caller changes and
-arch_rcu_tasks_trampoline_text() live; arm64 with
-DYNAMIC_FTRACE_WITH_ARGS likewise), which switches CONFIG_TASKS_RCU to the
-implementation added earlier in the series: a Tasks RCU grace period
-becomes a per-CPU pass over context switches and irq-exit reschedules
-outside trampoline text plus a Tasks Trace grace period, bounded by a
-few jiffies and preempt-off latency instead of by the longest stretch
-any task runs without sleeping.
+On Sun, Sep 27, 2026 at 7:10=E2=80=AFPM Hao Ge <hao.ge@linux.dev> wrote:
+>
+> Hi Suren
+>
+> On 2026/9/25 14:14, Suren Baghdasaryan wrote:
+> > On Thu, Sep 24, 2026 at 12:21=E2=80=AFAM Hao Ge <hao.ge@linux.dev> wrot=
+e:
+> >>
+> >> Hi Abhishek
+> >>
+> >> Sorry, I merged and tested your patches today and found a few details,
+> >> so I've started a separate mail thread for this review.
+> >>
+> >> On 2026/9/22 05:26, Abhishek Bapat wrote:
+> >>> The memory allocation profiling framework intercepts allocations acro=
+ss
+> >>> the core subsystems, but currently lacks runtime tracing hooks for
+> >>> standard observability tools to dynamically track the context (stack
+> >>> traces and lifecycles of the individual memory chunks) of the
+> >>> allocations made.
+> >>>
+> >>> Introduce three standard trace events to allow this tracking:
+> >>>
+> >>> 1. `alloc_tag_hit`: Fired at the exact call site. This allows userspa=
+ce
+> >>>    tools to trigger and capture a call stack.
+> >>> 2. `alloc_tag_mem_alloced`: Fired in alloc_tag_add upon successful
+> >>>    allocation. It records the allocated size, the tag, and the unique=
+ly
+> >>>    generated codetag_ref metadata pointer.
+> >>> 3. `alloc_tag_mem_freed`: Fired in alloc_tag_sub right before memory =
+is
+> >>>    freed, yielding the same codetag_ref to allow tracing tools to fin=
+d
+> >>>    the corresponding allocation.
+> >>>
+> >>> Because the introduced trace events occur at different stages in the
+> >>> call stack, userspace tracing tools must stitch them together to form=
+ a
+> >>> complete picture of a buffer's lifetime. Here's an example of how
+> >>> userspace correlates these three events:
+> >>>
+> >>> 1. On `alloc_tag_hit`: The tool captures the stack trace and caches i=
+t,
+> >>>    keyed by the combination of the current thread's PID and the `tag`=
+.
+> >>> 2. On `alloc_tag_mem_alloced`: The tool extracts the PID and `tag` fr=
+om
+> >>>    the event and looks up the stack trace cached in step 1. It create=
+s a
+> >>>    new active allocation record, mapping the new provided `codetag_re=
+f`
+> >>>    to this cached stack trace and the newly returned allocation size.
+> >>> 3. On `alloc_tag_mem_freed`: When the memory is freed, the event yiel=
+ds
+> >>>    the same `codetag_ref`. The tool uses this reference to look up th=
+e
+> >>>    original allocation record, correlates the free, and safely retire=
+s
+> >>>    the tracking entry.
+> >>>
+> >>> Also, introduce `alloc_tag_trace_key` static key to minimize the
+> >>> overhead when no tags are being traced (the usual case). Once tracing
+> >>> for any tag is requested, the key is set, opening the path to check
+> >>> whether tracing is enabled for the current tag.
+> >>> Nore that the mechanism to enabl tag tracing is implemented in the ne=
+xt
+> >>> patch, therefore for now, `alloc_tag_trace_key` stays always unset.
+> >>>
+> >>> Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
+> >>> ---
+> >>>  MAINTAINERS                      |   1 +
+> >>>  include/linux/alloc_tag.h        |  57 ++++++++++++---
+> >>>  include/trace/events/alloc_tag.h | 122 +++++++++++++++++++++++++++++=
+++
+> >>>  mm/alloc_tag.c                   |  28 +++++++
+> >>>  4 files changed, 196 insertions(+), 12 deletions(-)
+> >>>  create mode 100644 include/trace/events/alloc_tag.h
+> >>>
+> >>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>> index 24420a8c06d0..29e1f7915cb9 100644
+> >>> --- a/MAINTAINERS
+> >>> +++ b/MAINTAINERS
+> >>> @@ -17096,6 +17096,7 @@ S:    Maintained
+> >>>  F:   Documentation/mm/allocation-profiling.rst
+> >>>  F:   include/linux/alloc_tag.h
+> >>>  F:   include/linux/pgalloc_tag.h
+> >>> +F:   include/trace/events/alloc_tag.h
+> >>>  F:   include/uapi/linux/alloc_tag.h
+> >>>  F:   mm/alloc_tag.c
+> >>>  F:   tools/testing/selftests/alloc_tag/
+> >>> diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+> >>> index 7f2d80a59792..2994934cf44a 100644
+> >>> --- a/include/linux/alloc_tag.h
+> >>> +++ b/include/linux/alloc_tag.h
+> >>> @@ -128,12 +128,33 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _sha=
+red_alloc_tag);
+> >>>  DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAU=
+LT,
+> >>>                       mem_alloc_profiling_key);
+> >>>
+> >>> +DECLARE_STATIC_KEY_FALSE(alloc_tag_trace_key);
+> >>> +
+> >>>  static inline bool mem_alloc_profiling_enabled(void)
+> >>>  {
+> >>>       return static_branch_maybe(CONFIG_MEM_ALLOC_PROFILING_ENABLED_B=
+Y_DEFAULT,
+> >>>                                  &mem_alloc_profiling_key);
+> >>>  }
+> >>>
+> >>> +static inline bool alloc_tag_trace_enabled(const struct alloc_tag *t=
+ag)
+> >>> +{
+> >>> +     return static_branch_unlikely(&alloc_tag_trace_key);
+> >>> +}
+> >>> +
+> >>> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_=
+tag *tag,
+> >>> +                           size_t bytes);
+> >>> +
+> >>> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_t=
+ag *tag,
+> >>> +                          size_t bytes);
+> >>> +
+> >>> +void __alloc_tag_trace_hit(struct alloc_tag *tag);
+> >>> +
+> >>> +static inline void alloc_tag_trace_hit(struct alloc_tag *tag)
+> >>> +{
+> >>> +     if (alloc_tag_trace_enabled(tag))
+> >>> +             __alloc_tag_trace_hit(tag);
+> >>> +}
+> >>> +
+> >>>  bool mem_alloc_profiling_permanently_disabled(void);
+> >>>
+> >>>  static inline struct alloc_tag_counters alloc_tag_read(struct alloc_=
+tag *tag)
+> >>> @@ -200,8 +221,13 @@ static inline bool alloc_tag_ref_set(union codet=
+ag_ref *ref, struct alloc_tag *t
+> >>>
+> >>>  static inline void alloc_tag_add(union codetag_ref *ref, struct allo=
+c_tag *tag, size_t bytes)
+> >>>  {
+> >>> -     if (likely(alloc_tag_ref_set(ref, tag)))
+> >>> +     if (likely(alloc_tag_ref_set(ref, tag))) {
+> >>>               this_cpu_add(tag->counters->bytes, bytes);
+> >>> +
+> >>> +             if (alloc_tag_trace_enabled(tag))
+> >>> +                     /* Trace successful allocs with their unique re=
+f */
+> >>> +                     alloc_tag_trace_mem_alloc(ref, tag, bytes);
+> >>> +     }
+> >>>  }
+> >>>
+> >>>  static inline void alloc_tag_sub(union codetag_ref *ref, size_t byte=
+s)
+> >>> @@ -222,6 +248,10 @@ static inline void alloc_tag_sub(union codetag_r=
+ef *ref, size_t bytes)
+> >>>       this_cpu_sub(tag->counters->bytes, bytes);
+> >>>       this_cpu_dec(tag->counters->calls);
+> >>>
+> >>> +     if (alloc_tag_trace_enabled(tag))
+> >>> +             /* Trace frees with their unique ref */
+> >>> +             alloc_tag_trace_mem_free(ref, tag, bytes);
+> >>> +
+> >>>       ref->ct =3D NULL;
+> >>>  }
+> >>>
+> >>> @@ -247,21 +277,24 @@ static inline void alloc_tag_add(union codetag_=
+ref *ref, struct alloc_tag *tag,
+> >>>  static inline void alloc_tag_sub(union codetag_ref *ref, size_t byte=
+s) {}
+> >>>  static inline void alloc_tag_set_inaccurate(struct alloc_tag *tag) {=
+}
+> >>>  static inline bool alloc_tag_is_inaccurate(struct alloc_tag *tag) { =
+return false; }
+> >>> +#define alloc_tag_trace_hit(_tag)    /* NOOP */
+> >>
+> >> I'd prefer we use `do {} while (0)` here, following the same pattern
+> >> as alloc_tag_record.
+> >>
+> >>>  #define alloc_tag_record(p)  do {} while (0)
+> >>>
+> >>>  #endif /* CONFIG_MEM_ALLOC_PROFILING */
+> >>>
+> >>> -#define alloc_hooks_tag(_tag, _do_alloc)                            =
+ \
+> >>> -({                                                                  =
+ \
+> >>> -     typeof(_do_alloc) _res;                                        =
+ \
+> >>> -     if (mem_alloc_profiling_enabled()) {                           =
+ \
+> >>> -             struct alloc_tag * __maybe_unused _old;                =
+ \
+> >>> -             _old =3D alloc_tag_save(_tag);                         =
+   \
+> >>> -             _res =3D _do_alloc;                                    =
+   \
+> >>> -             alloc_tag_restore(_tag, _old);                         =
+ \
+> >>> -     } else                                                         =
+ \
+> >>> -             _res =3D _do_alloc;                                    =
+   \
+> >>> -     _res;                                                          =
+ \
+> >>> +#define alloc_hooks_tag(_tag, _do_alloc)                            =
+         \
+> >>> +({                                                                  =
+         \
+> >>> +     typeof(_do_alloc) _res;                                        =
+         \
+> >>> +     if (mem_alloc_profiling_enabled()) {                           =
+         \
+> >>> +             struct alloc_tag * __maybe_unused _old;                =
+         \
+> >>> +             /* Fired here to cleanly capture the caller's stack tra=
+ce */    \
+> >>> +             alloc_tag_trace_hit(_tag);                             =
+         \
+> >>> +             _old =3D alloc_tag_save(_tag);                         =
+           \
+> >>> +             _res =3D _do_alloc;                                    =
+           \
+> >>> +             alloc_tag_restore(_tag, _old);                         =
+         \
+> >>> +     } else                                                         =
+         \
+> >>> +             _res =3D _do_alloc;                                    =
+           \
+> >>> +     _res;                                                          =
+         \
+> >>>  })
+> >>>
+> >>>  #define alloc_hooks(_do_alloc)                                      =
+         \
+> >>> diff --git a/include/trace/events/alloc_tag.h b/include/trace/events/=
+alloc_tag.h
+> >>> new file mode 100644
+> >>> index 000000000000..af2182501864
+> >>> --- /dev/null
+> >>> +++ b/include/trace/events/alloc_tag.h
+> >>> @@ -0,0 +1,122 @@
+> >>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>> +#undef TRACE_SYSTEM
+> >>> +#define TRACE_SYSTEM alloc_tag
+> >>> +
+> >>> +#if !defined(_TRACE_ALLOC_TAG_H) || defined(TRACE_HEADER_MULTI_READ)
+> >>> +#define _TRACE_ALLOC_TAG_H
+> >>> +
+> >>> +#include <linux/tracepoint.h>
+> >>> +
+> >>> +/*
+> >>> + * alloc_tag_hit is generated at the exact allocation call site and =
+can be
+> >>> + * used to capture a clean stack trace.
+> >>> + *
+> >>> + * To link this stack trace to the actual allocated memory chunk, to=
+ols must
+> >>> + * correlate this event with the resulting alloc_tag_mem_alloced eve=
+nt. Since
+> >>> + * multiple threads can hit the same tag simultaneously, tools must =
+match BOTH
+> >>> + * the `tag` field and the implicitly recorded PID provided by the c=
+ore
+> >>> + * tracing subsystem.
+> >>> + */
+> >>> +TRACE_EVENT(alloc_tag_hit,
+> >>> +
+> >>> +     TP_PROTO(struct alloc_tag *tag),
+> >>> +
+> >>> +     TP_ARGS(tag),
+> >>> +
+> >>> +     TP_STRUCT__entry(
+> >>> +             __field(struct alloc_tag *, tag)
+> >>> +             __string(modname, tag->ct.modname ? tag->ct.modname : "=
+NONE")
+> >>> +             __string(filename, tag->ct.filename)
+> >>> +             __string(function, tag->ct.function)
+> >>> +             __field(unsigned int, lineno)
+> >>> +     ),
+> >>> +
+> >>> +     TP_fast_assign(
+> >>> +             __entry->tag =3D tag;
+> >>> +             __assign_str(modname);
+> >>> +             __assign_str(filename);
+> >>> +             __assign_str(function);
+> >>> +             __entry->lineno =3D tag->ct.lineno;
+> >>> +     ),
+> >>> +
+> >>> +     TP_printk("tag %p, module: %s, filename: %s, function %s, linen=
+o %u",
+> >>> +             __entry->tag,
+> >>> +             __get_str(modname),
+> >>> +             __get_str(filename),
+> >>> +             __get_str(function),
+> >>> +             __entry->lineno
+> >>> +     )
+> >>> +);
+> >>>
+> >>
+> >> When I trace an interface provided by a kernel build-in such as shmem,
+> >> this is what I see in the trace:
+> >>
+> >> trig-6838    [004] .....  1309.321906: alloc_tag_hit: tag 000000007874=
+a2c9, module: NONE, filename: mm/shmem.c, function shmem_alloc_folio, linen=
+o 2138
+> >>
+> >> The module field shows NONE, which looks a bit odd.
+> >>
+> >>> +/*
+> >>> + * alloc_tag_mem_alloced is generated after memory is successfully a=
+llocated.
+> >>> + * It captures the exact byte size.
+> >>> + *
+> >>> + * The `ref` pointer identifies the memory chunk for tracking its li=
+fecycle
+> >>> + * (e.g., matching it with alloc_tag_mem_freed).
+> >>> + *
+> >>> + * Because the kernel isolates active allocations within the task st=
+ruct
+> >>> + * (current->alloc_tag), this even will always share the same implic=
+it PID as
+> >>> + * its corresponding alloc_tag_hit event. Tools should use the combi=
+nation
+> >>> + * PID + `tag` to correlate them.
+> >>> + */
+> >>> +TRACE_EVENT(alloc_tag_mem_alloced,
+> >>> +
+> >>> +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t =
+bytes),
+> >>> +
+> >>> +     TP_ARGS(ref, tag, bytes),
+> >>> +
+> >>> +     TP_STRUCT__entry(
+> >>> +             __field(union codetag_ref *, ref)
+> >>> +             __field(struct alloc_tag *, tag)
+> >>> +             __field(size_t, bytes)
+> >>> +     ),
+> >>> +
+> >>> +     TP_fast_assign(
+> >>> +             __entry->ref =3D ref;
+> >>> +             __entry->tag =3D tag;
+> >>> +             __entry->bytes =3D bytes;
+> >>> +     ),
+> >>> +
+> >>> +     TP_printk("reference %p, tag %p, bytes %zu",
+> >>> +             __entry->ref,
+> >>> +             __entry->tag,
+> >>> +             __entry->bytes
+> >>> +     )
+> >>> +);
+> >>> +
+> >>> +/*
+> >>> + * alloc_tag_mem_freed event is generated immediately before memory =
+is
+> >>> + * freed. The `ref` pointer matches the one emitted during allocatio=
+n,
+> >>> + * allowing tools to match it to it's corresponding allocation and
+> >>> + * call stack.
+> >>> + */
+> >>
+> >> But the thread for allocation and free may not be the same.
+> >> For example, memory allocated in thread A could be freed by kswapd.
+> >> In this case, would the ref fail to match and falsely report a memory =
+leak?
+> >
+> > No, ref is unique within the system, so even if alloc and free happen
+> > in different threads it still can be used to match them. The
+> > thread+tag is used only when matching alloc_tag_hit with
+> > alloc_tag_mem_alloced because at the time of alloc_tag_hit we don't
+> > yet have the ref.
+> >
+>
+> "The ref is unique within the system" is true of the obj_ext/page_ext slo=
+t,
+> but for page allocations the event does not carry the slot's address,
+> it carries the address of a stack temporary.
+>
+> /* Should be called only if mem_alloc_profiling_enabled() */
+> static noinline
+> void __pgalloc_tag_add(struct page *page, struct task_struct *task,
+>                        unsigned int nr, unsigned int alloc_flags)
+> {
+>         union pgtag_ref_handle handle;
+>         union codetag_ref ref;  <- stack temporary
+>
+>         if (likely(get_page_tag_ref(page, &ref, &handle))) {
+>                 alloc_tag_add(&ref, task->alloc_tag, PAGE_SIZE * nr);
+>                 update_page_tag_ref(handle, &ref);
+>                 put_page_tag_ref(handle);
+>         } else {
+>                 ......
+>         }
+> }
+>
+> /* Should be called only if mem_alloc_profiling_enabled() */
+> static noinline
+> void __pgalloc_tag_sub(struct page *page, unsigned int nr)
+> {
+>         union pgtag_ref_handle handle;
+>         union codetag_ref ref; <- stack temporary
+>
+>         if (get_page_tag_ref(page, &ref, &handle)) {
+>                 alloc_tag_sub(&ref, PAGE_SIZE * nr);
+>                 update_page_tag_ref(handle, &ref);
+>                 put_page_tag_ref(handle);
+>         }
+> }
+>
+> Or am I missing / confusing something here?
+>
 
-Other architectures keep the classic implementation.  Update
-Documentation/RCU and the FORCE_TASKS_RCU help text to describe the
-variant and the obligation it places on trampolines.
+This is a legitimate concern, I went through the code again, the
+codetag_ref pointer approach works for percpu and slab allocators but
+don't work for the page allocator.
 
-Assisted-by: LLM
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- .../RCU/Design/Requirements/Requirements.rst       | 24 ++++++++++++++++++++++
- Documentation/RCU/checklist.rst                    |  7 ++++++-
- arch/arm64/Kconfig                                 |  1 +
- arch/x86/Kconfig                                   |  1 +
- kernel/rcu/Kconfig                                 |  6 ++++--
- 5 files changed, 36 insertions(+), 3 deletions(-)
+Suren, Hao, I could potentially pass in the struct page * to
+__alloc_tag_add and __alloc_tag_sub from the page allocator and keep
+the codepath for the percpu and slab allocators the same. What do you
+think? I think that should solve this concern.
 
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
-index 8101fe6229d5..c059c463e083 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.rst
-+++ b/Documentation/RCU/Design/Requirements/Requirements.rst
-@@ -2756,6 +2756,30 @@ synchronize_rcu(), and rcu_barrier(), respectively. In
- three APIs are therefore implemented by separate functions that check
- for voluntary context switches.
- 
-+Architectures that select ``CONFIG_HAVE_RCU_TRAMPOLINE_READERS`` keep the
-+same three APIs but implement the grace period differently
-+(``CONFIG_TASKS_RCU_TRAMPOLINE_READERS``).  There, every trampoline whose
-+lifetime Tasks RCU guards enters a Tasks Trace RCU read-side critical
-+section (rcu_read_lock_trace() or its assembly equivalent) before calling
-+out and leaves it before returning, so a task anywhere inside such a
-+call-out is an ordinary Tasks Trace reader whether or not it is
-+preempted.  The few trampoline instructions outside that reader can only
-+be occupied by a task that was interrupted there, so the grace period
-+additionally waits for each CPU to pass through a context switch, and the
-+irq-exit preemption path, the only switch that can catch a task inside
-+such text (rcu_tasks_trampoline_text()), briefly makes such a task a
-+holdout until it is next seen elsewhere.  On such kernels an involuntary
-+context switch outside trampoline text *is* a Tasks-RCU quiescent state,
-+a Tasks RCU grace period no longer depends on how long any task runs
-+without sleeping, cond_resched_tasks_rcu_qs() is unnecessary, and the
-+obligation moves to the trampolines: anything that relies on
-+synchronize_rcu_tasks() to protect code a task may be preempted in must
-+take the Tasks Trace reader (see register_ftrace_direct()), or, where
-+that is impossible because the code is ordinary text with no trampoline
-+of its own, make it known to rcu_tasks_trampoline_text() and wait out
-+tasks already parked there with rcu_tasks_wait_irq_preempted(), as the
-+kprobe jump optimizer does.
-+
- Tasks Rude RCU
- ~~~~~~~~~~~~~~
- 
-diff --git a/Documentation/RCU/checklist.rst b/Documentation/RCU/checklist.rst
-index 4b30f701225f..87dd506bffef 100644
---- a/Documentation/RCU/checklist.rst
-+++ b/Documentation/RCU/checklist.rst
-@@ -252,7 +252,12 @@ over a rather long period of time, but improvements are always welcome!
- 	a.	If the updater uses synchronize_rcu_tasks() or
- 		call_rcu_tasks(), then the readers must refrain from
- 		executing voluntary context switches, that is, from
--		blocking.
-+		blocking.  On architectures that select
-+		CONFIG_HAVE_RCU_TRAMPOLINE_READERS a reader must in
-+		addition be a Tasks Trace RCU reader (that is what the
-+		trampolines there do around their call-outs) or be text
-+		that rcu_tasks_trampoline_text() recognises; an arbitrary
-+		stretch of preemptible kernel code is not protected.
- 
- 	b.	If the updater uses call_rcu_tasks_trace()
- 		or synchronize_rcu_tasks_trace(), then the
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b5a51b0ef944..bf0e56006863 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -218,6 +218,7 @@ config ARM64
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_PREEMPT_DYNAMIC_KEY
-+	select HAVE_RCU_TRAMPOLINE_READERS if DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RELIABLE_STACKTRACE
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 15fd9ec5ecac..64c3814eb745 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -288,6 +288,7 @@ config X86
- 	select MMU_GATHER_RCU_TABLE_FREE
- 	select MMU_GATHER_MERGE_VMAS
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-+	select HAVE_RCU_TRAMPOLINE_READERS	if X86_64 && SMP && DYNAMIC_FTRACE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RELIABLE_STACKTRACE		if UNWINDER_ORC || STACK_VALIDATION
- 	select HAVE_FUNCTION_ARG_ACCESS_API
-diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-index e3dc348bff29..abff3a924e1e 100644
---- a/kernel/rcu/Kconfig
-+++ b/kernel/rcu/Kconfig
-@@ -95,8 +95,10 @@ config FORCE_TASKS_RCU
- 	help
- 	  This option force-enables a task-based RCU implementation
- 	  that uses only voluntary context switch (not preemption!),
--	  idle, and user-mode execution as quiescent states.  Not for
--	  manual selection in most cases.
-+	  idle, and user-mode execution as quiescent states, or, on
-+	  HAVE_RCU_TRAMPOLINE_READERS architectures, the variant built on
-+	  Tasks Trace RCU readers in trampolines.  Not for manual
-+	  selection in most cases.
- 
- config NEED_TASKS_RCU
- 	bool
-
--- 
-2.55.0
-
+> Thanks
+> Best Regards
+> Hao
+>
+> >>
+> >> Thanks
+> >> Best Regards
+> >> Hao
+> >>
+> >>> +TRACE_EVENT(alloc_tag_mem_freed,
+> >>> +
+> >>> +     TP_PROTO(union codetag_ref *ref, struct alloc_tag *tag, size_t =
+bytes),
+> >>> +
+> >>> +     TP_ARGS(ref, tag, bytes),
+> >>> +
+> >>> +     TP_STRUCT__entry(
+> >>> +             __field(union codetag_ref *, ref)
+> >>> +             __field(struct alloc_tag *, tag)
+> >>> +             __field(size_t, bytes)
+> >>> +     ),
+> >>> +
+> >>> +     TP_fast_assign(
+> >>> +             __entry->ref =3D ref;
+> >>> +             __entry->tag =3D tag;
+> >>> +             __entry->bytes =3D bytes;
+> >>> +     ),
+> >>> +
+> >>> +     TP_printk("reference %p, tag %p, bytes %zu",
+> >>> +             __entry->ref,
+> >>> +             __entry->tag,
+> >>> +             __entry->bytes
+> >>> +     )
+> >>> +);
+> >>> +
+> >>> +#endif /* _TRACE_ALLOC_TAG_H */
+> >>> +
+> >>> +/* This part must be outside protection */
+> >>> +#include <trace/define_trace.h>
+> >>> diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
+> >>> index f30ef8dd24c7..a5339767efd5 100644
+> >>> --- a/mm/alloc_tag.c
+> >>> +++ b/mm/alloc_tag.c
+> >>> @@ -19,6 +19,9 @@
+> >>>  #include <linux/kmemleak.h>
+> >>>  #include <uapi/linux/alloc_tag.h>
+> >>>
+> >>> +#define CREATE_TRACE_POINTS
+> >>> +#include <trace/events/alloc_tag.h>
+> >>> +
+> >>>  #include "internal.h"
+> >>>  #include "page_alloc.h"
+> >>>
+> >>> @@ -55,6 +58,9 @@ EXPORT_SYMBOL(mem_alloc_profiling_key);
+> >>>
+> >>>  DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
+> >>>
+> >>> +DEFINE_STATIC_KEY_FALSE(alloc_tag_trace_key);
+> >>> +EXPORT_SYMBOL(alloc_tag_trace_key);
+> >>> +
+> >>>  struct alloc_tag_kernel_section kernel_tags =3D { NULL, 0 };
+> >>>  unsigned long alloc_tag_ref_mask;
+> >>>  int alloc_tag_ref_offs;
+> >>> @@ -485,6 +491,28 @@ static const struct proc_ops allocinfo_proc_ops =
+=3D {
+> >>>  #endif
+> >>>  };
+> >>>
+> >>> +void __alloc_tag_trace_hit(struct alloc_tag *tag)
+> >>> +{
+> >>> +     if (unlikely(!tag))
+> >>> +             return;
+> >>> +     trace_alloc_tag_hit(tag);
+> >>> +}
+> >>> +EXPORT_SYMBOL(__alloc_tag_trace_hit);
+> >>> +
+> >>> +void alloc_tag_trace_mem_alloc(union codetag_ref *ref, struct alloc_=
+tag *tag,
+> >>> +                           size_t bytes)
+> >>> +{
+> >>> +     trace_alloc_tag_mem_alloced(ref, tag, bytes);
+> >>> +}
+> >>> +EXPORT_SYMBOL(alloc_tag_trace_mem_alloc);
+> >>> +
+> >>> +void alloc_tag_trace_mem_free(union codetag_ref *ref, struct alloc_t=
+ag *tag,
+> >>> +                          size_t bytes)
+> >>> +{
+> >>> +     trace_alloc_tag_mem_freed(ref, tag, bytes);
+> >>> +}
+> >>> +EXPORT_SYMBOL(alloc_tag_trace_mem_free);
+> >>> +
+> >>>  size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count,=
+ bool can_sleep)
+> >>>  {
+> >>>       struct codetag_iterator iter;
