@@ -1,161 +1,128 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5312D3E832B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 05:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4A23A0E85;
+	Tue, 29 Sep 2026 08:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790661211; cv=none; b=ogrwh/VUnRMos/ys4HEA38yX2/A7rGFQKSwUwJmOJ2SCmXDz8NQCQwxQiNYajBBY+MKoL0t4ScCGMgRx85aFyNv6V9oQsvBoLvJMtmnZYghz2LOWe3P6sEV2mHKaK+NpkjblnOUQiMFGpVwqYGUdvGrycPxxb6yuLVTfJvMObp4=
+	t=1790669038; cv=none; b=nyXljlhn3iUaH3+nMnQQx5m5GoBdViFcNcxNemozYThK6aARNDG/BLYqKODMjhB/6vOVAPx6aHVc9XHVCW2KuB/Rkn6yIbfuAkrCMVW1VWIZQvTYxQGhGNjeQf7Rd8jpnsoEZRV7/c3u1Ly12H4mPR+S8GardOMsWbXlk/9IxPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790661211; c=relaxed/simple;
-	bh=ngp0Z71bP8R1r8qPJz7GJYV+9s7Y/H9eYdP6lvbeJRY=;
+	s=arc-20240116; t=1790669038; c=relaxed/simple;
+	bh=GotuyaK1bvWLOXD8dQRDPmlm+Jby8QWTJuG1VIpksBw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJgRUxfIL8n7z0zJHArGiViKrqYm04bDvTg4KvRodlFAefdjI1cV84EPFXvg7YUETQkt4vFd0JhyjLce474DXKpfu7B2kdcSYLyMEiaDzpLG3LDz0x5c/9GbCzBdaVCYyx9mKkjxmvGhvLXIPKPaEMLXMyNiIpQ4S2TLlwK0b7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ZUajjbh6; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5jq+zik/M3oCTVmkJSO2m+h/UOS2YHuh6Jkrjd1YEq25HrsyVoH7hcKwEfESPcqwWQ5LQooF2xnQfsKKu8XkHBrlyYcfSikkbwfEoPmL8fLHAoa9qQ3VYQBXDtiyx2hwNK0MOB2HLFI9JGaaT5NLzXCW06kpqNRo/2HsBe/saQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=adkiet3j; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="ZUajjbh6"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ff9642c57so2670605e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Sep 2026 22:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1790661207; x=1791266007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ngp0Z71bP8R1r8qPJz7GJYV+9s7Y/H9eYdP6lvbeJRY=;
-        b=ZUajjbh632qGIBCg+UECNM34ZmJ2mr2syd1KV+02z6k11M/jYDxyphOw39SHKfRtNr
-         IVZAFsRLLSb4WrZ+5z44CnJqU7Id5xeJXiAFp/ojHq+1MqjThtENCkPHKNJQ4oCgs7EN
-         byF+pQGGfQt1EZhFOLNwNvjysHhGUBh1rGpENGXrtbdOqJMuACFYex+BYXXjb3JVuP/Y
-         ggEfwoTzxtiX2Llamk3a/VqNWTFMhmP3wXtVXlbkroQEbaLtBvwjqX63BKCX0Po3kmXV
-         kKrAxqQjw43w57Xq9TUeylGTWP5ZCYoGUiMb7VezhdMXo40v9FkimBqmB2f9HxZvkh2j
-         LYrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790661207; x=1791266007;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ngp0Z71bP8R1r8qPJz7GJYV+9s7Y/H9eYdP6lvbeJRY=;
-        b=CrBEaPAMkmlsa8PGkyYq/lSxTskvC082SAPJ65Aw330E8ug4GYfjw8nHuI1dvzLqo5
-         yb6GFMbSB7PSZIMzL7ouZ/xkYYmU9qW78Sa48r6/fnjxctSQZ9IpkhgnDGdppLyhtpz0
-         gFRi/tqoYOnjcjZto3GIQqsgqqw1yMYqMGp5gm2OjyB0KNlO53nFUafnZiZbmcNDTWL9
-         IT/Ko1wYL2eHF8NCD3avLlRyh/n2WxsREIyJy4dBx8P2jqEmmhTAd1p5eu1jMfhJ0Afj
-         Hr9PrD61R4clAU78G8wT1HuMgbMArocf0RrecjyplXBnZEq2xaBuyySJ7vmpLAVVzuWs
-         tY1A==
-X-Forwarded-Encrypted: i=1; AKwUvByp2K3J20NhfhQ0p8XKtIqj8s7E7X5qATzVUBoQEF3RbrAf56oLGC9j6Cta8vkZ4NDaoilGZGCOwXEZOc6jftv8gEs=@vger.kernel.org
-X-Gm-Message-State: AFuF++m/GlmpyFXBe6l6NvUhd81mjXWtr/3U+d7aLdOvChg5kCGM1481
-	W6GkUi7gMb8CdVLudkvvGZmyP/+Q3hvtfXoNNi+6Aij15encfCCFO34Rd43TihPXsjw=
-X-Gm-Gg: AYBFou2iHhbPsgGDQrssaD0p4bNyFIYH3djDt7NZx0ak4m4Kk4M0V0cJIogjGORjjCT
-	m9EeZyZ9X6H4IEGwC2lLVpsAUYTIfRHptGSHH5npCXYqtY5rTNo00yS6/P41gIsAIxjVBkcFjgA
-	JU8Ekrf6qyO8bb5k7BKYzoQ9rasG/CbikpwNplhPaziNv4J2khEv3gbDzmLfiY0XqFnX1BR81IV
-	kNgxIGdSMK0XuR2rgmbIxJvw5zEoRBJjkVszBihFoL0OpBJ5lOwFnF8irQuQ4xFblWEL1NZuXW8
-	EgLlQqoPrFX/R7S2HVjQJpZatpbDihvgcQhUpM9IgNl47RVZYvSWYyavzMP+SRQzhU3SIbNcvl3
-	O9jw5mN3tYUbKqRb8HJolE7qj8gtJvwFT+DTVXGkmUk02hd/9r1MHK70+r/ozKkG4/WhMbf3LQp
-	Gj1+5JkoL2jeM/SU3XfiHhjAZTaGODTYOgoLZGJ+G1q3KcEfpDpVmyyyZX1bXHKgDbgNovHSV2H
-	dE=
-X-Received: by 2002:a05:600c:1daa:b0:4a0:ec5:46d9 with SMTP id 5b1f17b1804b1-4a00ec54708mr13164425e9.0.1790661207369;
-        Mon, 28 Sep 2026 22:53:27 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4a00d10bb26sm36434675e9.0.2026.09.28.22.53.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 22:53:25 -0700 (PDT)
-Date: Tue, 29 Sep 2026 07:53:23 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Johan Hovold <johan@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>, 
-	Bradley Morgan <brads@mainlining.org>, Thierry Reding <thierry.reding@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-Message-ID: <artRKXU0jygdcxx3@monoceros>
-References: <cover.1790612298.git.u.kleine-koenig@baylibre.com>
- <DLR4AMFM8QZ2.36R6G0LD9D53Q@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="adkiet3j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=65p2mc0TKga7tV1e3c08D2MWEBKF2gxIG69YfJyQynU=; b=adkiet3jQtCnsZvN3RjM/yBP1v
+	KOruza7UwVcd3DnOmWXKEnvZXGUq+qgi9AwE+nsh6rq7611dH4HKy0Fy2ZVwbezrsbTGWFld0YKcj
+	GdSSYTDbwZEW0d9cstNzO7+sQoXdCtgHBgeRt+feSGN9LpJzy3lDm9lX+bXkppcKgO+jLGNf/p0fJ
+	Cf7DZfq+PtniTPwUnRoqh3eb3SYiGFHDljRNED7bHUFB0xunkP1+dIGW0CQdxvWuzPp2qAJe2MX4k
+	5U/vlgQFL4wC8gRGuqE5ubTnS0P0OsZ92UkNhM2hRgxWQPukhVW5CKWQvcyCFDp7hxqFdnbWBVkwB
+	Wzu7hc8A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1xBSoV-00000002KMR-2EeD;
+	Tue, 29 Sep 2026 08:03:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C6F6D300446; Tue, 29 Sep 2026 10:03:46 +0200 (CEST)
+Date: Tue, 29 Sep 2026 10:03:46 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Vineet Gupta <vineet.gupta@linux.dev>, sashiko-reviews@lists.linux.dev,
+	rostedt@goodmis.org, Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, kernel-team@meta.com
+Subject: Re: [PATCH v2 1/1] tracing: fgraph: allocate shadow stacks inline
+ with GFP_NOWAIT
+Message-ID: <20260929080346.GR4120091@noisy.programming.kicks-ass.net>
+References: <20260929005411.4105448-1-vineet.gupta@linux.dev>
+ <20260929005411.4105448-2-vineet.gupta@linux.dev>
+ <20260929010327.024281F000FF@smtp.kernel.org>
+ <0499fb85-d323-4141-b76e-bc9812b1d142@linux.dev>
+ <CAEf4BzZJL3jkyXo7XwTYwH2St-eiQB_FNCM6ZP=_TzC_McW2zQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nmkyuzojfuhp3rl4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DLR4AMFM8QZ2.36R6G0LD9D53Q@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZJL3jkyXo7XwTYwH2St-eiQB_FNCM6ZP=_TzC_McW2zQ@mail.gmail.com>
 
+On Mon, Sep 28, 2026 at 07:25:00PM -0700, Andrii Nakryiko wrote:
+> On Mon, Sep 28, 2026 at 6:22 PM Vineet Gupta <vineet.gupta@linux.dev> wrote:
+> >
+> > On 9/28/26 6:03 PM, sashiko-bot@kernel.org wrote:
+> > > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > > - [Low] cleanup: mixing goto-based error handling and scope-based cleanup
+> > > --
+> > >
+> > > commit a6de528fef00ef67da15965a7a8b3944fa92b053
+> > > Author: Vineet Gupta <vineet.gupta@linux.dev>
+> > > Subject: tracing: fgraph: allocate shadow stacks inline with GFP_NOWAIT
+> > >
+> > > This commit aims to resolve performance regressions with ftrace graph tracing
+> > > when there are a large number of tasks. It replaces the pre-allocated batch
+> > > approach with inline allocation using GFP_NOWAIT, avoiding repeated sweeps of
+> > > the task list. Additionally, it transitions the RCU read-side section to use
+> > > scoped_guard(rcu) instead of manual rcu_read_lock and rcu_read_unlock calls.
+> > >
+> > >> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> > >> index 40d373d65f9b9..1c5ccc3f80d53 100644
+> > >> --- a/kernel/trace/fgraph.c
+> > >> +++ b/kernel/trace/fgraph.c
+> > > [ ... ]
+> > >> @@ -1057,26 +1056,37 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+> > >>              }
+> > >>      }
+> > >>
+> > >> -    rcu_read_lock();
+> > >> -    for_each_process_thread(g, t) {
+> > >> -            if (start == end) {
+> > >> -                    ret = -EAGAIN;
+> > >> -                    goto unlock;
+> > >> -            }
+> > >> +    scoped_guard (rcu) {
+> > > [Severity: Low]
+> > > Does this mix goto-based error handling and scope-based cleanup within the same
+> > > function?
+> > >
+> > > Looking at alloc_retstack_tasklist(), the function retains the legacy goto free
+> > > path in the initial pre-allocation loop (just before this block), while
+> > > introducing scoped_guard(rcu) here.
+> > >
+> > > The cleanup subsystem guidelines recommend that for a given routine, we should
+> > > convert all resources that need a goto cleanup to scope-based cleanup, or
+> > > convert none of them. Mixing these paradigms creates confusing ownership
+> > > semantics and is highly prone to double-free or resource leak regressions upon
+> > > future modifications.
+> > >
+> > > Could we either convert the ret_stack_list array cleanup to use scope-based
+> > > helpers, or stick to the manual rcu_read_lock() and rcu_read_unlock() here to
+> > > keep the error handling style consistent?
+> >
+> > And a third option is to drop the fallback allocation completely and
+> > return -EAGAIN and come back. Granted I don't have much experience of
+> > typical handling of GFP_NOWAIT fails and retrying immediately: would
+> > that recover at all or does that take us back to where we started ? Peter
+> >
+> 
+> Not Peter, but I don't see a problem with scoped rcu and goto-based
+> free/cleanup. Unless Peter objects, let's keep it as is?
 
---nmkyuzojfuhp3rl4
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 0/3] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-MIME-Version: 1.0
+Yeah, the silly robot is being silly. Code is fine as is.
 
-On Mon, Sep 28, 2026 at 07:15:12PM +0200, Danilo Krummrich wrote:
-> On Mon Sep 28, 2026 at 6:46 PM CEST, Uwe Kleine-K=F6nig wrote:
-> > Note that different to Danilo's suggestion I don't differentiate between
-> > driver_overrides setup in userspace and those setup in kernel space.
-> > IMHO all are bad and there are alternatives for the legitimate cases.
->=20
-> I agree that the implementation - i.e. (ab)using driver override - the af=
-fected
-> subsystems have chosen is wrong.
->=20
-> But, there is a difference between picking the wrong implementation and b=
-eing
-> semantically wrong to a point that we need to taint the kernel.
->=20
-> So, yes this should be cleaned up, but we should not taint the kernel for
-> otherwise correct code. Otherwise we could as well taint the kernel for e=
-very
-> other abuse of an API.
+The guideline is just that, a guide. Its not a hard requirement. It is
+possible to create a terrible mess of things when doing a partial
+conversion of a large multi-stage goto unwind fest. But in general, goto
+over the scope (as here) is fine. Also goto out of a scope is also fine.
 
-My position on that is: Do the global change now and help the subsystems
-to clean up the mess. In my experice waiting with changes until all
-affected parties are smooth with it is a recipe for failure.
-
-> > I think applying this complete patch set and keeping fcbfaffee51a ("dri=
-ver
-> > core: add TAINT_FORCED_BIND for when userspace manually messes with dev=
-ices and
-> > drivers") is too much, so this series serves mainly as discussion groun=
-d for
-> > choosing a sane way to prevent fuzzing results of only mild interest an=
-d stop
-> > patch sets harding drivers for driver_override handling.
-> > My preference would be to revert (or drop) fcbfaffee51a and then only
-> > apply patch #3. Maybe also keep patch #2 to taint if
-> > "allow_driver_override" is provided.
->=20
-> Agreed, but as mentioned in [1], I think it is also reasonable to only ke=
-ep
-> TAINT_FORCED_BIND for buses that do not support hotplug in the first plac=
-e.
->=20
-> [1] https://lore.kernel.org/driver-core/DLIL9H50MALI.3JROXYEEUM3KU@kernel=
-=2Eorg/
-
-Fine for me, that would mean to apply the whole series and restrict
-TAINT_FORCED_BIND to "static" busses.
-
-Best regards
-Uwe
-
---nmkyuzojfuhp3rl4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmq7UlEACgkQj4D7WH0S
-/k5Ltgf/VeTTEIetbw5CxkvMrdNO+abbUIbuqST/lOMuzUIceHqJNYOIMDMmyjkw
-xj1U7U4uEbm/xPTPwPmeqmAaW5N0yLxTw8aM+N+/c8aZF9BAGIVB5oZxmKMYC9Ui
-vcvs4rDvokk3GKxvKaRagr8oxD4JjNWAJY+6aO4DpcWQGcYdLDoSThTsQkZeiU3h
-tF6qBM90NoLUwVRpYsAWplhY6UYcspHYpQqZGlHnTXZRXPQ3aw13N/I75qi4YYzk
-0zKiyYJt+1rsujTnSL5iMOjcCdYWjhq42qsmSdalfBhWdn4USszYLkdP+SiftCN4
-WKQQxD58vg8NQh3dgBjs7fQRXgFy3Q==
-=Igh3
------END PGP SIGNATURE-----
-
---nmkyuzojfuhp3rl4--
