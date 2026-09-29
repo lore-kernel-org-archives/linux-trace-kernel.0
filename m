@@ -1,118 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59515509EF7;
-	Tue, 29 Sep 2026 10:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029C519910;
+	Tue, 29 Sep 2026 10:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790677697; cv=none; b=a5gBkyV39SdrXTZL7woO2kkQYayIBJ0Z0t7B5pe8A2DQpjjfHEy/o/81zaX01cv9wjQe440QtknRXpTjCjaC9j3xzA+QFZgDnwylPbF+6tXG/ZSHl/R6kXjW0qKMCx6Xcpk8wXYt9n9OBkAq30PL4e7ug+SRXK4J7SpZBRq75w4=
+	t=1790678445; cv=none; b=g1cTpq8Nq5f67smr5sqfdWHEJdQZMEx54VNdCrMeMjwFqRWIQrA8b2pPnJRbQhFevrngMZj58EKTXQe3b0EuayWL9joGC8o73Krf1OLFkyhJOkC76PbGbJFkOvmQP0/9wP+wT8XgGWSJ+3GvcTJz+Sbq0lwOu4wn5R1qdq6kK2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790677697; c=relaxed/simple;
-	bh=Pt41P2HkVTv+6/n7KRKAcTRCUaZVj0J09lRCJkOVm44=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=nkgwiURarHf1cvKLTuvxBDbyG/nJaHxltk6e7A6i1CghKLdidYEoXrhke7LpDHrYzd4dhTk4Yr7tQy830HenYJ4a5fTo1U0LhZKrdZ5ycpzhe6iXWvsxgVAjOvBbkzYeuVd5MdVO1ZPqoSeogrLqEDPh27aWKb1v2n3r+QqoG5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUHoJEBA; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUHoJEBA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093F71F000FF;
-	Tue, 29 Sep 2026 10:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790677691;
-	bh=Pt41P2HkVTv+6/n7KRKAcTRCUaZVj0J09lRCJkOVm44=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To;
-	b=kUHoJEBATUUTerwTqkCcMB9GDs9SaFTHuyIfkL2Z/HPutRHJoBV71p3REv01T1myC
-	 rOwZ328EqBt6UW0EcBQqjX4YD2Kt3DaMh/hs6NZMURQIUykxpdQmotTC1qXP1OD3rS
-	 WjICtSjcQh1RjrvEGcpCpPEUuLSGYsmCnNYtltw29//b6f6gPNj2F1cvTDhkjwbdSc
-	 StTCXJCXD4YmQAo2Q77WSONLTIu/Gvt1qlZXtA6KDOUADnkAFP6CtNdfGCCrcc7hKR
-	 HbjbhgMcHhKHiZN/+TLeyRIxtAeVOUh9bSOih62q74gL90fLbw39ijnL1GAeIhuCg5
-	 FQgGBk3AeJTOA==
+	s=arc-20240116; t=1790678445; c=relaxed/simple;
+	bh=TJ5pZKKCwVcM9PGDihDRGowhaumFtB3EqI9dlXaepLg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dQN9AAP6heNFa5ajujowQm3IH+qvwWEMDHlXzVWWxr92Hhc/2kJC7CyvfzzM4FxMYWhJTeZh88keNPEFA1eeiQarnY82AG8XjwZ7yddFsUZduDIHTxaViKew8y+llXaAkEnigyV8aJtsRT5Sk2aIBNAcIWmA7gnMFSKTmKJBHXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hvF711rQgzYQv35;
+	Tue, 29 Sep 2026 18:39:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 543F340573;
+	Tue, 29 Sep 2026 18:40:24 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBnmxKQlbtqSv5eCA--.24675S2;
+	Tue, 29 Sep 2026 18:40:24 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Tom Zanussi <zanussi@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH] tracing: Fix hist trigger timestamps for buffered events
+Date: Tue, 29 Sep 2026 10:40:15 +0000
+Message-Id: <20260929104015.1689921-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 29 Sep 2026 12:28:07 +0200
-Message-Id: <DLRQ9H3ROCH0.3KR62BLPWK0VW@kernel.org>
-Subject: Re: [PATCH v3 0/3] Add TAINT_DRIVER_OVERRIDE for usage of
- driver_override
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Johan Hovold"
- <johan@kernel.org>, "Aaron Tomlin" <atomlin@atomlin.com>, "Bradley Morgan"
- <brads@mainlining.org>, "Thierry Reding" <thierry.reding@kernel.org>,
- "David Lechner" <dlechner@baylibre.com>, "Armin Wolf" <W_Armin@gmx.de>,
- <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
- <linux-trace-kernel@vger.kernel.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <cover.1790612298.git.u.kleine-koenig@baylibre.com>
- <DLR4AMFM8QZ2.36R6G0LD9D53Q@kernel.org> <artRKXU0jygdcxx3@monoceros>
-In-Reply-To: <artRKXU0jygdcxx3@monoceros>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgBnmxKQlbtqSv5eCA--.24675S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr4xCFWUGFWDXF1rXF43Wrg_yoW5tw48pr
+	yYkr43Kr1Dtr429anxu3Z5XryrK3ykJrZruF4UAryay3s5Wr1xXa17Kw43Aw15tFWxt3s0
+	y3Wj9347G3yUXFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUU
+	UU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Tue Sep 29, 2026 at 7:53 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> On Mon, Sep 28, 2026 at 07:15:12PM +0200, Danilo Krummrich wrote:
->> On Mon Sep 28, 2026 at 6:46 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
->> > Note that different to Danilo's suggestion I don't differentiate betwe=
-en
->> > driver_overrides setup in userspace and those setup in kernel space.
->> > IMHO all are bad and there are alternatives for the legitimate cases.
->>=20
->> I agree that the implementation - i.e. (ab)using driver override - the a=
-ffected
->> subsystems have chosen is wrong.
->>=20
->> But, there is a difference between picking the wrong implementation and =
-being
->> semantically wrong to a point that we need to taint the kernel.
->>=20
->> So, yes this should be cleaned up, but we should not taint the kernel fo=
-r
->> otherwise correct code. Otherwise we could as well taint the kernel for =
-every
->> other abuse of an API.
->
-> My position on that is: Do the global change now and help the subsystems
-> to clean up the mess. In my experice waiting with changes until all
-> affected parties are smooth with it is a recipe for failure.
+Syzkaller triggered a WARN_ON_ONCE(!nest) warning:
 
-I do see an advantage in having the taint in match() rather than store(), s=
-o I
-prefer that too.
+  WARNING: kernel/trace/ring_buffer.c:821 at ring_buffer_event_time_stamp
+  Call trace:
+    ring_buffer_event_time_stamp
+    hist_field_timestamp
+    hist_fn_call
+    event_hist_trigger
+    event_triggers_call
+    __event_trigger_test_discard
+    trace_event_buffer_commit
+    do_trace_event_raw_event_sched_switch
+    trace_event_raw_event_sched_switch
 
-But again, I do not feel comfortable to taint the kernel for something that=
- does
-use the wrong API but otherwise behaves correctly and shouldn't taint the k=
-ernel
-at all.
+The warning is probabilistically reproducible and is related to syzkaller
+executing the following commands:
 
-We have six users of device_set_driver_override() outside of a userspace
-reachable scope. Did you have a look at how hard they are to fix? Do you pl=
-an to
-provide patches?
+  echo 'prev_pid == 999999' > events/sched/sched_switch/filter
+  echo 'hist:keys=common_timestamp' > events/sched/sched_switch/trigger
 
->> > I think applying this complete patch set and keeping fcbfaffee51a ("dr=
-iver
->> > core: add TAINT_FORCED_BIND for when userspace manually messes with de=
-vices and
->> > drivers") is too much, so this series serves mainly as discussion grou=
-nd for
->> > choosing a sane way to prevent fuzzing results of only mild interest a=
-nd stop
->> > patch sets harding drivers for driver_override handling.
->> > My preference would be to revert (or drop) fcbfaffee51a and then only
->> > apply patch #3. Maybe also keep patch #2 to taint if
->> > "allow_driver_override" is provided.
->>=20
->> Agreed, but as mentioned in [1], I think it is also reasonable to only k=
-eep
->> TAINT_FORCED_BIND for buses that do not support hotplug in the first pla=
-ce.
->>=20
->> [1] https://lore.kernel.org/driver-core/DLIL9H50MALI.3JROXYEEUM3KU@kerne=
-l.org/
->
-> Fine for me, that would mean to apply the whole series and restrict
-> TAINT_FORCED_BIND to "static" busses.
+The specific triggering process is as follows:
 
-That sounds fine to me.
+CPU 0                                           CPU 1
+(context switching)                             (echo 'hist:keys=common_timestamp' > \
+                                                        events/sched/sched_switch/trigger)
+do_trace_event_raw_event_##call
+  trace_event_buffer_lock_reserve
+    if (!tr->no_filter_buffering_ref &&
+        trace_file->flags & EVENT_FILE_FL_FILTERED)
+        return entry;  // return directly
+                                                event_hist_trigger_parse
+                                                  hist_register_trigger
+                                                    tracing_set_filter_buffering(file->tr, true);
+                                                      tr->no_filter_buffering_ref++;
+    __trace_buffer_lock_reserve
+      rb_start_commit
+        local_inc(&cpu_buffer->committing);  // skipped and not executed
+  trace_event_buffer_commit
+    __event_trigger_test_discard
+      event_triggers_call
+        event_hist_trigger
+          hist_fn_call
+            hist_field_timestamp
+              ring_buffer_event_time_stamp
+                nest = local_read(&cpu_buffer->committing);
+                WARN_ON_ONCE(!nest)  // trigger warning
+
+The root cause is that when an event file has a filter attached and the
+hist trigger has not yet been attached, trace_event_buffer_lock_reserve()
+writes the event into the per-CPU trace_buffered_event temp buffer instead
+of reserving it in the ring buffer, so cpu_buffer->committing is not
+incremented. When the event is later processed at commit time by a hist
+trigger, hist_field_timestamp() -> ring_buffer_event_time_stamp() sees a
+zero committing count, triggering WARN_ON_ONCE(!nest).
+
+tracing_event_time_stamp() was added by commit d8279bfc5e959 ("tracing:
+Add tracing_event_time_stamp() API") for exactly this case: if the event
+is the per-CPU trace_buffered_event, it returns the current ring buffer
+timestamp. But it never gained a caller. Use it in hist_field_timestamp(),
+so that a hist trigger that races onto a buffered event records the
+current time, which is only marginally later than when the event was
+recorded, instead of warning and recording a bogus timestamp.
+
+Fixes: b94bc80df648 ("tracing: Use a no_filter_buffering_ref to stop using the filter buffer")
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+---
+ kernel/trace/trace_events_hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 8af97fd4ee2d..89be3139f8e9 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -873,7 +873,7 @@ static u64 hist_field_timestamp(struct hist_field *hist_field,
+ 	struct hist_trigger_data *hist_data = hist_field->hist_data;
+ 	struct trace_array *tr = hist_data->event_file->tr;
+ 
+-	u64 ts = ring_buffer_event_time_stamp(buffer, rbe);
++	u64 ts = tracing_event_time_stamp(buffer, rbe);
+ 
+ 	if (hist_data->attrs->ts_in_usecs && trace_clock_in_ns(tr))
+ 		ts = ns2usecs(ts);
+-- 
+2.34.1
+
