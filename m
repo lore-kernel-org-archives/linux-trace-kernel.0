@@ -1,58 +1,62 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6693250E5B0
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 12:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA225524B1E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 12:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790686180; cv=none; b=aVtod4qjx/xDNPmx4qh05o1onIB0vwqfGMguzHlRoIexgcE27xq8PIs9o8mMHATYqPLSWkhzEmkUP4z9HrG7xNkA2Pot4feESvD+vcOwKrpg1/7qZ5o3W3/Oz+Q/gIKKAZnIW4TYT8MSQCfgRAPIx9NKnmyoS5tijB+otsxAeMo=
+	t=1790686188; cv=none; b=fAZtphUUn6/0laKtLB45drlfgNTUKcvrVAfo8ldmwtVVhjPRau1RiaYMizfzRUWxaU5fZeHHwTQgPVZSOIMEfPiH6JElmZUjWZhXMYetWQ36hscwSe+AYWE3o2o1R1JO6R5k636Nh/u41u4NjkZ7FjuciM4a3ZmvFwbKhZ665ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790686180; c=relaxed/simple;
-	bh=pnek/z8jxQn/VD8dAPg5/TP3YGb++H6KlWA3Mwbt7JI=;
+	s=arc-20240116; t=1790686188; c=relaxed/simple;
+	bh=w3XceD/hAcLgiXgTj1mVa+MSKBhZVDdZ42T/2vjcOGc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=gi/SQAyCE4HRPT5RRRZfRmVMGXhZeictYeiH8qItl+DeHsNatH7yESVSWJATamNAHgdNBGDOjSl9TmnH+76QRVIgJla7xE06UIjI6ZxBIXCRQzKBmGBa6lc7dv0Tfq35jfxTDUXRS9DgPf823y820w85Vhw+rrWnUa6jrinMy1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PYEzpkYL; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=eTNm288h2h/eLvpFAkWM0U5Z2+IjM03hQgzZbBEDiJzbKp5ZLjIDIL+Cmbw2bpRrqT1EIEr8crn3zEfS+2CdElas/Hlii+Fi+6KTbKPPNd4Ati2FBR1TTuIbvFH2N6cjIZ8IH6JaWuJPVQMz+WM6DU0nvEeFfKjuupFVk75Cl/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zol5dxSv; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYEzpkYL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zol5dxSv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790686177;
+	s=mimecast20190719; t=1790686185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oBebhacO09D0g9Rsrj+rBtPy7Gg8a/+4S+y1fDgrNuE=;
-	b=PYEzpkYLrdR84ZFtR3lAR7IaUXs+Jryw4/MUnVBBaJZ3SNCTBEco0qIQMR2h6jIMnIbBpb
-	hGedAC0YE7wXnHMKDpEDtAFwCKEJJVycrRbUif/7GmkAKmDUObqiO7z1qtfAs67uc9j4bx
-	is640ZsHfUFjE0AytLjoZHmMVen7UGA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=TppiMmhxAm2ZWR6QRy07GUwj7a6vC6qIkpW1XCsvm7M=;
+	b=Zol5dxSvTZmJ3rxvmWQExl8Uccpg4O+rOCEzyLPAfr6hC2cI45U0U+WbfAoaLndtD03DAk
+	sbojgLgb7Qzj63ywXIkhpcAz+kjgB7KyH1kAFo9qwmLL9xbvR4TN6NpoKfPhGOMdet2ZGG
+	AeQOX4+mFaGM+C7X+eBa/bGmQUw2kHw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-118-n6ngbFj8NaKtcSL4CBtJhw-1; Tue,
- 29 Sep 2026 08:49:35 -0400
-X-MC-Unique: n6ngbFj8NaKtcSL4CBtJhw-1
-X-Mimecast-MFC-AGG-ID: n6ngbFj8NaKtcSL4CBtJhw_1790686174
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-90-VLZ4V4LZMm6aE4zsZ67IGw-1; Tue,
+ 29 Sep 2026 08:49:40 -0400
+X-MC-Unique: VLZ4V4LZMm6aE4zsZ67IGw-1
+X-Mimecast-MFC-AGG-ID: VLZ4V4LZMm6aE4zsZ67IGw_1790686179
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8778F1805A2E;
-	Tue, 29 Sep 2026 12:49:34 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F19AA1800771;
+	Tue, 29 Sep 2026 12:49:38 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 794B11956095;
-	Tue, 29 Sep 2026 12:49:31 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B799619560AB;
+	Tue, 29 Sep 2026 12:49:35 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
 Cc: Nam Cao <namcao@linutronix.de>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	Wen Yang <wen.yang@linux.dev>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 04/10] tools/rvgen: Default to HA_TIMER_WHEEL for jiffy clocks
-Date: Tue, 29 Sep 2026 14:49:02 +0200
-Message-ID: <20260929124908.177676-5-gmonaco@redhat.com>
+Subject: [PATCH 05/10] sched: Add task enqueue/dequeue trace points
+Date: Tue, 29 Sep 2026 14:49:03 +0200
+Message-ID: <20260929124908.177676-6-gmonaco@redhat.com>
 In-Reply-To: <20260929124908.177676-1-gmonaco@redhat.com>
 References: <20260929124908.177676-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -62,40 +66,102 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: jZuG3pwc5EqykZ6_bj31GpO761eV0Z7oaLXRw8nHlOs_1790686174
+X-Mimecast-MFC-PROC-ID: PYIrwTRVzoWAA9YnM9YGxIE-fSD7b6RTSWn03ThJxjQ_1790686179
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-HA_TIMER_HRTIMER now requires a ns base also if the clock is in jiffy,
-defaulting to using it in that case adds no precision while increasing
-complexity.
+From: Nam Cao <namcao@linutronix.de>
 
-Use HA_TIMER_HRTIMER as default in the generated code only for ns based
-clocks and use HA_TIMER_WHEEL otherwise.
+Add trace points into enqueue_task() and dequeue_task().
 
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Co-developed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/rvgen/dot2k.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/trace/events/sched.h |  8 ++++++++
+ kernel/sched/core.c          | 12 +++++++++++-
+ kernel/sched/sched.h         |  2 ++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
-index c8109f3602a6..5d60b1b9fa28 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -495,8 +495,10 @@ f"""static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 535860581f15..d6e41edc25d2 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -896,6 +896,14 @@ DECLARE_TRACE(sched_set_need_resched,
+ 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
+ 	TP_ARGS(tsk, cpu, tif));
  
-     def _fill_timer_type(self) -> list:
-         if self.has_invariant:
--            return [
-+            if {"ns", "us", "ms", "s"}.intersection(self.env_types.values()):
-+                return [
-                     "/* XXX: If the monitor has several instances, consider HA_TIMER_WHEEL */",
-                     "#define HA_TIMER_TYPE HA_TIMER_HRTIMER"
--                    ]
-+                ]
-+            return ["#define HA_TIMER_TYPE HA_TIMER_WHEEL"]
-         return []
++DECLARE_TRACE(sched_enqueue,
++	TP_PROTO(struct task_struct *tsk, int cpu),
++	TP_ARGS(tsk, cpu));
++
++DECLARE_TRACE(sched_dequeue,
++	TP_PROTO(struct task_struct *tsk, int cpu),
++	TP_ARGS(tsk, cpu));
++
+ #define DL_OTHER 0
+ #define DL_TASK 1
+ #define DL_SERVER_FAIR 2
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7885ff76e69f..debe5290b72f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -121,6 +121,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_enqueue_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dequeue_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_update_tp);
+@@ -2181,6 +2183,9 @@ unsigned long get_wchan(struct task_struct *p)
+ 
+ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+ {
++	if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_DELAYED))
++		trace_call__sched_enqueue_tp(p, cpu_of(rq));
++
+ 	if (!(flags & ENQUEUE_NOCLOCK))
+ 		update_rq_clock(rq);
+ 
+@@ -2207,6 +2212,8 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+  */
+ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ {
++	bool ret;
++
+ 	if (sched_core_enabled(rq))
+ 		sched_core_dequeue(rq, p, flags);
+ 
+@@ -2223,7 +2230,10 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ 	 * and mark the task ->sched_delayed.
+ 	 */
+ 	uclamp_rq_dec(rq, p);
+-	return p->sched_class->dequeue_task(rq, p, flags);
++	ret = p->sched_class->dequeue_task(rq, p, flags);
++	if (trace_sched_dequeue_tp_enabled() && !(flags & DEQUEUE_SLEEP))
++		trace_call__sched_dequeue_tp(p, cpu_of(rq));
++	return ret;
+ }
+ 
+ void activate_task(struct rq *rq, struct task_struct *p, int flags)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e656c7059bf8..a2cb06beafe6 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3070,6 +3070,8 @@ static inline void sub_nr_running(struct rq *rq, unsigned count)
+ 
+ static inline void __block_task(struct rq *rq, struct task_struct *p)
+ {
++	trace_sched_dequeue_tp(p, cpu_of(rq));
++
+ 	if (p->sched_contributes_to_load)
+ 		rq->nr_uninterruptible++;
+ 
 -- 
 2.55.0
 
