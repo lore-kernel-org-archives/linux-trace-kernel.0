@@ -1,56 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3418C497382
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 12:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC6F5218B5
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Sep 2026 12:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790686166; cv=none; b=ZIgSWjOw+NwoS+sAOLoSqgf36bk6S7IuJdTjIMj2nGH5rStpV+zuQNNISro4D97twz/rrg+zSxdHmm4zvqKtquubYKQ2HBnbWqXPeI6tucS+c+JNAdAuUzHrMBoW2UuoNLTcY/2IL/Xki65ZG6FGfYcX/uzyx6btqScTN/w7XtQ=
+	t=1790686171; cv=none; b=V6Chu8+hBkF03CWFTrS8nUgFnZWsMynKy7YnQNSTtsjP6GNGXlrEyS2C87CAexK3Zk2Odw38NGLDHPEgqSwOsmEvCgSHmvBcUUfBRJs17AuDi3qWNPDvh2pf+OJimFCRmTPmCNk0Er+8tYk80pbi0BiNa4xcy2bnOGkiPlqCuy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790686166; c=relaxed/simple;
-	bh=i/q49x4F/dPhzzkyNCesn7XVzXUo1VjAbq5DNZIo5a4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=RSL/psFq5BIkkXEkcDlqSVxXzBNWAnXk4aMYPfQk+GggVmFrZNv/exAqX3eqwDzZLBXsAh4ENmoh4tWDhWeQUuc+cKj1iJt2Jg4rrXzgTwO7e+HxaKCFJiGuqtURXYB8KCrn35/FcBfZTtFy+JC8qSrZL4Oyf+SlL8PZvdj1HlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H4VGMAsV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1790686171; c=relaxed/simple;
+	bh=r/ZfoBgyD1vF3LJTDWvszBll3ysJFWimztxHWCJKJhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=KJ93y2fb7yMyUr6G6YlbaRfbySo+pgWnGBQnAcHby2wnG7PetaTLVeoLE0hHmxE7shuOqbxzrEwhbDrKsQj1QfHlqoU6M/STTP7z87kf44rb3L/6PjSmg5YRBtWk6rgQqmnsiDSKPIoqzGnxa+cLHLQHJVb9Lbl+L+dhKlM6iZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nd477YFU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4VGMAsV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nd477YFU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790686162;
+	s=mimecast20190719; t=1790686168;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rqo8Qfv+Yic2liv5cliRHnbM2cSeEarVnkvLudFMrNA=;
-	b=H4VGMAsVjb6dFSt96pZWj9z+UnD/MSMtqdgb72HFcUMP98IK8oWbLVeQmjR47igWgQIiCu
-	AUXzrFTeCr9nra3FtbaUrYvjYo0ihsQXFqZPQYacD+TVRZrY0MPSkXzHrOVisTrO4LAaDp
-	+YGTOhHvP/K2clL5YG32WBvQtHXwS2E=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0FB2c+czFRObJnbuclViunwJsY8tUzCrXNtZGJ1dA4w=;
+	b=Nd477YFUxPC4TupBl/88wVp83FfqpgnBXDfUSafV3d5lt3683Ep8iJTGOBuQmieF5dxh6I
+	qoSmWxjNYOe9ptO7gmPejSSkUiKarqqMgd3Os7S1btQGo+QzNP5M6P4o1qgb1GmyGV6Rk+
+	ho2GLtIjQXknR5XZ89UD0I0kr8fiFMA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-456-JydbV8kmOtyxZAn932xLSQ-1; Tue,
- 29 Sep 2026 08:49:19 -0400
-X-MC-Unique: JydbV8kmOtyxZAn932xLSQ-1
-X-Mimecast-MFC-AGG-ID: JydbV8kmOtyxZAn932xLSQ_1790686158
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-AHPC_yQkM3awmVcwWbF0FQ-1; Tue,
+ 29 Sep 2026 08:49:23 -0400
+X-MC-Unique: AHPC_yQkM3awmVcwWbF0FQ-1
+X-Mimecast-MFC-AGG-ID: AHPC_yQkM3awmVcwWbF0FQ_1790686162
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2521E1800764;
-	Tue, 29 Sep 2026 12:49:18 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09C411954B04;
+	Tue, 29 Sep 2026 12:49:22 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 72CF01956095;
-	Tue, 29 Sep 2026 12:49:15 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5CB851956095;
+	Tue, 29 Sep 2026 12:49:19 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Nam Cao <namcao@linutronix.de>,
 	Wen Yang <wen.yang@linux.dev>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 00/10] rv: Add remaining deadline monitors
-Date: Tue, 29 Sep 2026 14:48:58 +0200
-Message-ID: <20260929124908.177676-1-gmonaco@redhat.com>
+Subject: [PATCH 01/10] rv: Force environment reset action on HA monitor start
+Date: Tue, 29 Sep 2026 14:48:59 +0200
+Message-ID: <20260929124908.177676-2-gmonaco@redhat.com>
+In-Reply-To: <20260929124908.177676-1-gmonaco@redhat.com>
+References: <20260929124908.177676-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,116 +63,89 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: n3aCh8Gn40zxYKUaNyQV_TTvXyb1o42yrbMpdLMF2NM_1790686158
+X-Mimecast-MFC-PROC-ID: aC9stlYwZKgxErKfRXExVaqLSYfvIP_TGJsbrDZmwn8_1790686162
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Add the following deadline monitors as already sent in [1]:
-* throttle:
-    validate dl entities are throttled when they use up their runtime
-* boost
-    fair tasks run either independently or boosted
-* laxity
-    deferrable servers wait for zero-laxity and run
+Currently the monitor variables with a storage (e.g. clocks) are
+initialised as invalid, then the first explicit reset() sets them as
+valid for constraint. This only adds extra complexity to handle the
+invalid case in constraints check.
 
-Monitors are adapted to the new upstream but mostly unmodified.
-Except:
-* Remove enqueue/resume from laxity model
-* Special idle -> throttled in boost and add period invariant in
-  throttled states too
+Apply a reset() by default when starting monitors instead of resetting
+to an invalid state. If monitors have no stored variable (hence no reset
+function) add a macro HA_NO_RESET to stub it, this is all transparently
+handled by rvgen.
 
-Additionally apply some fixes and simplifications to the hybrid
-automata infrastructure and other changes:
-* Reset on monitor start and drop checks for invalid variable
-* Store timer wheel budget to allow checking for invariants without
-  needing to know how the timer was set
-* Add enqueue/dequeue tracepoints and check them in snroc
-* Add KUnit tests for throttle
+The reset() action on ns-granularity clocks needs the (possibly cached)
+current time, read it directly there. This might cause a double call to
+ktime_get_ns() within the same da_handle_start_run_event() but will
+occur only the first time and is harmless.
 
-[1] - https://lore.kernel.org/lkml/20260310105627.332044-1-gmonaco@redhat.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/rv/ha_monitor.h                 | 8 +++++++-
+ kernel/trace/rv/monitors/opid/opid.h    | 1 +
+ tools/verification/rvgen/rvgen/dot2c.py | 2 ++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>
-Cc: Wen Yang <wen.yang@linux.dev>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-
-Gabriele Monaco (9):
-  rv: Force environment reset action on HA monitor start
-  rv: Remove unused ha_monitor_env_invalid()
-  rv: Cache timer budget when starting HA timers
-  tools/rvgen: Default to HA_TIMER_WHEEL for jiffy clocks
-  rv: Add enqueue/dequeue to snroc monitor
-  rv: Add throttle deadline monitor
-  rv: Add dl_server specific monitors
-  rv: Add KUnit test for throttle monitor
-  selftests/verification: Lower stressor priority in rv_deadline
-
-Nam Cao (1):
-  sched: Add task enqueue/dequeue trace points
-
- Documentation/trace/rv/monitor_deadline.rst   | 201 ++++++++++++
- Documentation/trace/rv/monitor_sched.rst      |  39 ++-
- include/linux/rv.h                            |   5 +-
- include/rv/ha_monitor.h                       |  73 ++---
- include/trace/events/sched.h                  |   8 +
- kernel/sched/core.c                           |  12 +-
- kernel/sched/sched.h                          |   2 +
- kernel/trace/rv/Kconfig                       |   3 +
- kernel/trace/rv/Makefile                      |   3 +
- kernel/trace/rv/monitors/boost/Kconfig        |  15 +
- kernel/trace/rv/monitors/boost/boost.c        | 276 ++++++++++++++++
- kernel/trace/rv/monitors/boost/boost.h        | 146 +++++++++
- kernel/trace/rv/monitors/boost/boost_trace.h  |  19 ++
- kernel/trace/rv/monitors/laxity/Kconfig       |  14 +
- kernel/trace/rv/monitors/laxity/laxity.c      | 253 +++++++++++++++
- kernel/trace/rv/monitors/laxity/laxity.h      | 133 ++++++++
- .../trace/rv/monitors/laxity/laxity_trace.h   |  19 ++
- kernel/trace/rv/monitors/nomiss/nomiss.c      |   4 +-
- kernel/trace/rv/monitors/opid/opid.h          |   1 +
- kernel/trace/rv/monitors/snroc/snroc.c        |  18 +-
- kernel/trace/rv/monitors/snroc/snroc.h        |  46 ++-
- kernel/trace/rv/monitors/stall/stall.c        |   2 +-
- kernel/trace/rv/monitors/throttle/Kconfig     |  15 +
- kernel/trace/rv/monitors/throttle/throttle.c  | 302 ++++++++++++++++++
- kernel/trace/rv/monitors/throttle/throttle.h  | 116 +++++++
- .../rv/monitors/throttle/throttle_kunit.c     |  44 +++
- .../rv/monitors/throttle/throttle_kunit.h     |  34 ++
- .../rv/monitors/throttle/throttle_trace.h     |  19 ++
- kernel/trace/rv/rv_monitors_test.c            |   2 +
- kernel/trace/rv/rv_trace.h                    |   3 +
- .../verification/test.d/rv_deadline.tc        |   4 +-
- tools/verification/models/deadline/boost.dot  |  48 +++
- tools/verification/models/deadline/laxity.dot |  36 +++
- .../verification/models/deadline/throttle.dot |  44 +++
- tools/verification/models/sched/snroc.dot     |  30 +-
- tools/verification/rvgen/rvgen/dot2c.py       |   2 +
- tools/verification/rvgen/rvgen/dot2k.py       |  18 +-
- .../rvgen/tests/golden/ha_percpu/ha_percpu.c  |  17 +-
- .../rvgen/tests/golden/test_ha/test_ha.c      |  17 +-
- .../golden/test_ha_kunit/test_ha_kunit.c      |  17 +-
- 40 files changed, 1939 insertions(+), 121 deletions(-)
- create mode 100644 kernel/trace/rv/monitors/boost/Kconfig
- create mode 100644 kernel/trace/rv/monitors/boost/boost.c
- create mode 100644 kernel/trace/rv/monitors/boost/boost.h
- create mode 100644 kernel/trace/rv/monitors/boost/boost_trace.h
- create mode 100644 kernel/trace/rv/monitors/laxity/Kconfig
- create mode 100644 kernel/trace/rv/monitors/laxity/laxity.c
- create mode 100644 kernel/trace/rv/monitors/laxity/laxity.h
- create mode 100644 kernel/trace/rv/monitors/laxity/laxity_trace.h
- create mode 100644 kernel/trace/rv/monitors/throttle/Kconfig
- create mode 100644 kernel/trace/rv/monitors/throttle/throttle.c
- create mode 100644 kernel/trace/rv/monitors/throttle/throttle.h
- create mode 100644 kernel/trace/rv/monitors/throttle/throttle_kunit.c
- create mode 100644 kernel/trace/rv/monitors/throttle/throttle_kunit.h
- create mode 100644 kernel/trace/rv/monitors/throttle/throttle_trace.h
- create mode 100644 tools/verification/models/deadline/boost.dot
- create mode 100644 tools/verification/models/deadline/laxity.dot
- create mode 100644 tools/verification/models/deadline/throttle.dot
-
-
-base-commit: 238650ef6c7c7cca08e032527329424c9fbd70e5
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index 6e1c7fe5449a..93ac99ff7f1d 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -159,19 +159,25 @@ static void ha_monitor_destroy(void)
+ 
+ /* Should be supplied by the monitor */
+ static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
++static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
+ static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+ 				 enum states curr_state,
+ 				 enum events event,
+ 				 enum states next_state,
+ 				 u64 time_ns);
++#ifdef HA_NO_RESET
++static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns) { }
++#endif
+ 
+ /*
+  * ha_monitor_reset_all_stored - reset all environment variables in the monitor
+  */
+ static inline void ha_monitor_reset_all_stored(struct ha_monitor *ha_mon)
+ {
++	u64 time_ns = ha_get_ns();
++
+ 	for (int i = 0; i < ENV_MAX_STORED; i++)
+-		WRITE_ONCE(ha_mon->env_store[i], ENV_INVALID_VALUE);
++		ha_reset_env(ha_mon, i, time_ns);
+ }
+ 
+ /*
+diff --git a/kernel/trace/rv/monitors/opid/opid.h b/kernel/trace/rv/monitors/opid/opid.h
+index fb0aa4c28aa6..f85b1959c2fb 100644
+--- a/kernel/trace/rv/monitors/opid/opid.h
++++ b/kernel/trace/rv/monitors/opid/opid.h
+@@ -28,6 +28,7 @@ enum envs_opid {
+ };
+ 
+ _Static_assert(env_max_stored_opid <= MAX_HA_ENV_LEN, "Not enough slots");
++#define HA_NO_RESET
+ 
+ struct automaton_opid {
+ 	char *state_names[state_max_opid];
+diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
+index 22938ce1bf6c..1532e6b6e199 100644
+--- a/tools/verification/rvgen/rvgen/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -90,6 +90,8 @@ class Dot2c(Automata):
+                         ' "Not enough slots");')
+             if {"ns", "us", "ms", "s"}.intersection(self.env_types.values()):
+                 buff.append("#define HA_CLK_NS")
++            if len(self.env_stored) == 0:
++                buff.append("#define HA_NO_RESET")
+             buff.append("")
+         return buff
+ 
 -- 
 2.55.0
 
