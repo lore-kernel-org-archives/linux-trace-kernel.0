@@ -1,144 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA3E233946;
-	Wed, 30 Sep 2026 00:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A110578F3A;
+	Wed, 30 Sep 2026 01:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790729226; cv=none; b=vBGwJ7QMMshIcOhcPaB9unvvZGsOPVfaHwSd1g0OZdkeFVgNWz2ptKlee9BpBUYQl67OwVYKXRIzKALUyWTPHwtuT2lhhhthKic6KxIbWy+/CJG7bsdbOiLunfpbZXp1MfYOSt5n+fo9FYaC8tUWlVh2MjgJcprTGUyrbSj1Cvw=
+	t=1790732010; cv=none; b=kg+LpSw5Q1HMq5O5f370cQFwwi0VOUXcArWJNWpLVi6Nt9mEBBx7vlnkmiqh9hVzEB9grMVh2WR+1zDKPtEI8acBEDgCFapFHKlQPLWxO2ntb+0U2/quZb4rmcxenN/Pco6oRkkFMqFilBZnfrPbiTW4kUOzQFZhjB+B8czOXM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790729226; c=relaxed/simple;
-	bh=+MxMzL3RpnsFtR5WILMbL9TwTQ4Uohp4sirwWv16cU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W0OwfrMVGcPPSNttW/PmEwO+hX7TEAWs1jj/bXC/tpa6YSGGk4sDa3AkZfqZIvQ57H9eanSBkpTaN/krWhc6fycUATsabwybrXqEmcn2nJhLBalVvPvk/oHY/Hm+Hdr1QmUzc7c82w+BCMhgT3zCwEKkNPRF8DZi37Z7oyr52no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGk++RPO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790732010; c=relaxed/simple;
+	bh=YSVmkmi1ikpMMqEeXfU+2dZ+SR2KUO762Kq7vjBBdwc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FUdi8YAbbr8SKMQ2p4YV2J6yhn7U3N2IrCFBYM/yBNGjjsWeL5xn5bI5JeNTOtnS0tlUyxicNIddWyAxGcM0mTZoEkZrzX0nIxEgyC/uoJz2l2fJf6czeJSkQDLmE5SX0T6q9thfAyFocbaY2YB7Zd7wFdv8I56EL2fMZv78GFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVOqrf4O; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGk++RPO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9600C1F000FF;
-	Wed, 30 Sep 2026 00:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVOqrf4O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171E71F000FF;
+	Wed, 30 Sep 2026 01:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790729224;
-	bh=Am8OxNONJgTLo3G8DeEXLxC1m5XuRbF8FELmFw472+U=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=eGk++RPOmangxt8Q8E0OedqVhJI5xjrVDP1X5LlknCp1cJ+DIhpKVvGxYapUPSTlb
-	 18Xu27Oflp1HjV6Z3O+TPeV4MRHlHpxhmPg1T899jC06BKlOz9MbU5xbBjC58u8Keg
-	 gbiQA3P2wPnysJRSZWdRoP0O0qB3hbRiEjctqj8D+M5Xl7aIZq/oQWw5F8ZahVtNX/
-	 bvQL9t5LeMuhvNiN7xN5jRRBHcBZG5TCHBWuoUmjEs6+4nTwjj1KCsgpji6jMvhrvn
-	 2oTcdrIDaVbaA8G07jem8Ydoxq4AisIvKbpOejr8AyMkKzp+wfwtqCVc8zEdaf9Qti
-	 DcdFrtV7kEdzw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4621DCE3A55; Tue, 29 Sep 2026 17:47:04 -0700 (PDT)
-Date: Tue, 29 Sep 2026 17:47:04 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Chris Mason <clm@meta.com>
-Subject: Re: [RFC PATCH 0/3] fprobe, rcu/tasks, rhashtable: Switch fprobe and
- BPF kprobe-multi to Tasks-Rude RCU
-Message-ID: <d8b48afa-6d56-4450-b575-62363e170d39@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <179060575297.372125.10581329083761385407.stgit@devnote2>
- <f593867e-dcef-4f68-b609-a253f489f7b8@paulmck-laptop>
- <20260929082828.cd9844b5e632a23fd8308dbf@kernel.org>
- <b39d3368-fc5c-49a6-b47e-c58224a23e07@paulmck-laptop>
- <CAEf4BzZGdpbX5TdtgbDvDZEsj4wDQiLX94dz-wKfM9aCQJHzzg@mail.gmail.com>
- <41b37fed-af5c-4559-9e4e-696ef8ccfdd0@paulmck-laptop>
- <20260930093526.53be607c55184faf05e8d1f8@kernel.org>
+	s=k20260515; t=1790732009;
+	bh=1KjwthvQCbBo4aisL7sqZxIkYiI+s62XYB1p6NJwq20=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=nVOqrf4OKdZfXyOB+vwp0Tv2jghDegwxSZcUM0flltH5rfizzW+kc9HcAOVHQL1z+
+	 nzBTwigLgzljpUEMCRxzHKfM06IlgK4vgtBfU88mBRcaXWfDp9xev4xrWUGWnq6qBc
+	 fJW4shOz3iCoD2KjL0C4Mf7sYVfwtnzOlFNSxvocA+f8KgO0uatMvhqoJM3+Sfc39V
+	 Ju3YMdeYEAwLjATZ1E8shmu1xDDsYgPk2wwhFp/ilTAOcJbSCFS0zXxC9+d5hRxItI
+	 iiMMVFgDDz2tYcjilpT4pMOCKvAc3XDF5dQi0RHokBvoe59LLuLNGO1bg5psTA6zCJ
+	 p3VJ/4PniEFsg==
+Date: Wed, 30 Sep 2026 10:33:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2] kprobes: Make optprobe optimizer
+ multi-generational and asynchronous
+Message-Id: <20260930103326.161812f00774be79848248ab@kernel.org>
+In-Reply-To: <20260930001024.4F2371F00893@smtp.kernel.org>
+References: <179072636063.409480.10967951178575355535.stgit@devnote2>
+	<20260930001024.4F2371F00893@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260930093526.53be607c55184faf05e8d1f8@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 30, 2026 at 09:35:26AM +0900, Masami Hiramatsu wrote:
-> On Mon, 28 Sep 2026 17:41:57 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > > > > Thanks for the clarification!
-> > > > > So I think we can replace rcu_read_lock() with rcu_read_lock_sched_notrace()?
-> > > > > (also, maybe we need to add rcu_is_watching() check)
-> > > >
-> > > > That would work, and yes, you are quite right that if !rcu_is_watching(),
-> > > > RCU is studiously ignoring you completely, no matter what your preemption
-> > > > state is.
-> > > >
-> > > > > Current code may involves lockdep in fprobe, that is not good.
-> > > >
-> > > > Agreed, that could be problematic in any number of contexts.  ;-)
-> > > >
-> > > > > BTW, if we want to trace some code in extended quiescent state, do we
-> > > > > still need this Tasks-Rude RCU?
-> > > >
-> > > > Well, you need something other than vanilla RCU, anyway.  And Tasks Rude
-> > > > RCU is one candidate, though it is also a candidate that might annoy
-> > > > people wishing to minimize IPIs.
-> > > 
-> > > Would RCU Tasks Trace be a better candidate given uprobes and
-> > > sleepable BPF depends on it? Would it work here?
-> 
-> Hmm, those can be sleepable, but this is not. fprobe is based on ftrace
-> so the callbacks are non preemptive.
-> 
-> > 
-> > Quite possibly!  Of course, there might be corner-case ftrace/BPF issues
-> > that you and Masami would know better than would I.
-> > 
-> > David Woodhouse suggests the new Atomic SRCU for a vaguely similar
-> > purpose:
-> > 
-> > https://lore.kernel.org/all/20260920211920.928306-1-dwmw2@infradead.org/
-> > 
-> > Now that Tasks Trace RCU is implemented in terms of SRCU-fast, there
-> > might not be all that much air between David's suggestion and yours.
-> 
-> OK, let me check it. But at a glance, this atomic SRCU is still a bit
-> heavier than rcu_sched_notrace, for fprobe. It involves smp_mb and lockdep. 
+On Wed, 30 Sep 2026 00:10:23 +0000
+sashiko-bot@kernel.org wrote:
 
-True, it is heavier weight.
-
-> So if all of these rcu_read_lock() in fprobe are replaced with
-> rcu_read_lock_sched_notrace(), isn't it enough to switch the
-> synchronize_rcu() to synchronize_rcu_tasks_rude() for avoiding
-> `if (!rcu_is_watching()) return;` ?
-
-Yes, for all fprobes where rcu_is_watching(), agreed.
-
-							Thanx, Paul
-
-> (Note, most of replacement will be done by [1])
-> [1] https://lore.kernel.org/all/179064115227.394389.16910234241400391996.stgit@devnote2/
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] kprobes: 100% CPU busy-loop livelock when flushing optimizer
+> - [High] kprobes: memory leak of optinsn slots during async unoptimization
+> --
 > 
-> Thank you,
+> commit 9f64df8dc4c148639fefa4dcd4859438e335848a
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> kprobes: Make optprobe optimizer multi-generational and asynchronous
+> 
+> This patch decouples kprobe jump optimization from synchronous waiting by
+> moving to an asynchronous, multi-generational model using call_rcu_tasks().
+> 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 4edd8ca5c6578..377fa9bfa0291 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> [ ... ]
+> > @@ -588,17 +653,25 @@ static void do_unoptimize_kprobes(void)
+> [ ... ]
+> > -/* Reclaim all kprobes on the 'freeing_list' */
+> > -static void do_free_cleaned_kprobes(void)
+> > +/* Reclaim all kprobes on the 'free_list' */
+> > +static void do_free_cleaned_kprobes(struct list_head *free_list)
+> >  {
+> >  	struct optimized_kprobe *op, *tmp;
+> >  
+> > -	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+> > +	list_for_each_entry_safe(op, tmp, free_list, list) {
+> > +		struct kprobe *_p;
+> > +
+> >  		list_del_init(&op->list);
+> [ ... ]
+> > -		struct kprobe *_p = get_optimized_kprobe(op->kp.addr);
+> > +		_p = get_optimized_kprobe(op->kp.addr);
+> >  		if (unlikely(_p))
+> >  			optimize_kprobe(_p);
+> >  
+> > -		free_aggr_kprobe(&op->kp);
+> > +		free_aggr_kprobe(&op->kp);
+> >  	}
+> >  }
+> 
+> [Severity: High]
+> Does this leak the dynamically allocated optinsn memory slots?
+> 
+> Later in the patch, kill_optimized_kprobe() is modified to intentionally
+> defer calling arch_remove_optimized_kprobe(op) if the probe is queued,
+> leaving the optimizer to reclaim it after the quiescence period.
+> 
+> However, when do_free_cleaned_kprobes() runs to reclaim the probe after the
+> grace period, free_aggr_kprobe() only frees the kprobe struct. Without a
+> call to arch_remove_optimized_kprobe(op) here, the executable memory slots
+> allocated for the optimized kprobes appear to be permanently leaked.
+
+This is false positive. There are 2 implementations of free_aggr_kprobe(),
+with CONFIG_OPTPROBES=y, it frees optinsn correctly.
+
+(Hmm, this is interesting failure pattern. Maybe I should not make
+ configure-selectable implementation except for empty alternatives.)
+
+> 
+> [ ... ]
+> > @@ -624,67 +696,138 @@ static void do_free_cleaned_kprobes(void)
+> [ ... ]
+> > +/* Kprobe jump optimizer */
+> > +static void kprobe_optimizer(void)
+> > +{
+> [ ... ]
+> > +	/* Step 3: Wake up flushers and kick optimizer again if needed */
+> >  	optimizer_passes++;
+> >  	wake_up_var_locked(&optimizer_passes, &kprobe_mutex);
+> 
+> [Severity: High]
+> Does unconditionally incrementing optimizer_passes here cause a 100% CPU
+> busy-loop livelock?
+> 
+> When wait_for_kprobe_optimizer_locked() is called while a Tasks RCU grace
+> period is in flight, it sees optprobe_optimizer_busy() is true and wakes the
+> optimizer thread.
+> 
+> The optimizer thread wakes up, clears its flushing state, and calls
+> kprobe_optimizer(). Since the RCU callback hasn't fired yet, it makes no
+> progress but unconditionally increments optimizer_passes here.
+> 
+> This wakes wait_for_kprobe_optimizer_locked(), which loops, wakes the
+> optimizer again, and waits for another optimizer_passes change. Both threads
+> could spin in this tight loop until the Tasks RCU grace period completes.
+
+Ah, good catch!
+OK, to avoid that, wakeup flushers only if any progress has been made.
+
+Thank you!
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
