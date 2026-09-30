@@ -1,166 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4826374A17
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 03:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1CE538DC4C;
+	Wed, 30 Sep 2026 04:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790738346; cv=none; b=Cdf9m7Zhu/xTHHYK7Y3BWGHyoO4oDyu+UcS8CucRmZuM5MrnRy+bJTLYY2ES/4caO3YQRvi7MPrRoF8/4Ll7U7UU+d/JdSNZPzEhxyG2v6cBSiEJWL6zALsCTVUvbfBE/9zofNKNZ9sFOdh7O/5GiWOcrv+h9HjfWwlV4J3R9uE=
+	t=1790741625; cv=none; b=MkcyeIwFl0AxzmUzrqULSx6lvyIcKP4+AlC2MLWkIKo1BWkjWuYlc4mEvk3UnliJEoq+pcpvRHXDEF3H82Us4IY0h8QE6X4g1qEA8W6GVDK4LFFdNIpu9miEPmM1bJ3VS/qxB/fvlq8RehrkoEKySDDj2oWnHc2GIkmuQUbs1Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790738346; c=relaxed/simple;
-	bh=Hzz840MBWLAOhyLB0MlDTbRjWbyjxvpPG5mj84RVku0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BMv3sg8gV70xFOj1mZe+IDeYHIBck5LF9B7ZWBZAIEYxL9glRLW4zlRXhibQgdJL7TsEj+acz5syUENDhqWExW137WLRKkJ+wS1zyhnGqWxmUwuJGk48H82VpIYH7+7Kg03q3QrQGstYfm+T2pQV7FB5sl3WfXX8pHzXBcoIBTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWSTyxnH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790741625; c=relaxed/simple;
+	bh=Eo9CdH+0TtRSX/QNTJHDXco4iCbdFaKjgbzXmhi+d+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pihFSTq4nsi3b9ll6LFUX8Yv5Mwg8V2S6NckTyObtxGK32ucOrC6g/m9PpO6GKZJkNNv+0lFV+8p8/RXvyqzSTkAuaMaTw7clnOgyT6vTg9sVAbIV+GSb5ZZiJkEnOVwj3TZr4TmsELvvHwFnzXCWiq2zGy7NHPakENhgbXk+h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=uUMCfJku; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWSTyxnH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B226E1F000FF;
-	Wed, 30 Sep 2026 03:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790738342;
-	bh=AneH/X39YZ3FZmXVDbqCx3aLibNtf4EyWbnyAhU1ixQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KWSTyxnHik9ZuMb6FS/OZcBzDfG5cZTOIDWapE/t9sasOdDGqMNtvaZ/lRdl/kLmq
-	 SZHmNpBoSY7NRFvFpNb4vh8eDzyY7xNl+W8BmZZqvRgyYr9l4IVeuNBgyCKI6CtLLn
-	 fyJ4cdvYQcAS+/5bqu+wIC/ku2XAJfQpueIc8DU5xn6r6oDLzLy1bz3Jr/6Zes07ej
-	 joOua+GCTew9tWB2GRqL/QsPIQ5bbdD/9R9yc5X8mjfrukwMTLLJRXzkjZE5zUczqe
-	 dzOi6ZayqpaXvQJGPTZcsX2t0Gh6JL57jpaeG+KdiJVbWzWvw8q9KHl9RkruIEOpmr
-	 zbHiic112QKYg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: Make branch profiler counters atomic
-Reply-To: sashiko-reviews@lists.linux.dev
-To: nanshuaibo <nanshuaibo811@163.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260930030728.1144418-1-nanshuaibo811@163.com>
-References: <20260930030728.1144418-1-nanshuaibo811@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 03:19:01 +0000
-Message-Id: <20260930031902.B226E1F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="uUMCfJku"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15D7016F3;
+	Tue, 29 Sep 2026 21:13:38 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068A63F85F;
+	Tue, 29 Sep 2026 21:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790741621; bh=Eo9CdH+0TtRSX/QNTJHDXco4iCbdFaKjgbzXmhi+d+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uUMCfJkuCo0kl9BpIml6ya6QFhzuY6ScFyN2rrI9OZskXRGAAufEdzszI/qQTPqg9
+	 Iguh/DHAQ4gijcI8is1MZGmQg8kO5mj99Gmt6zNO4sTw9mweCAqyNbvOWOTaW5gjPd
+	 8DmLSRkJE2jM29CtfSFlUOWDSiSDxl4euASIJUXk=
+Date: Wed, 30 Sep 2026 09:43:37 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Barry Song <baohua@kernel.org>, Youngjun Park <youngjun.park@lge.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>, 
+	Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@gentwo.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, damon@lists.linux.dev, kasan-dev@googlegroups.com, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 1/9] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <snzkwnnubrx27tkroyql77iziuws3ku34dkclevfen5edef33b@wc3df3hbeuly>
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+ <20260922-pte0-v3-1-5670b8cb9059@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260922-pte0-v3-1-5670b8cb9059@arm.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] tracing: severe performance regression from locked atomic instru=
-ctions on branches
-- [Low] tracing: build failure on non-atomic archs due to compiler built-in=
- atomics
---
+On Tue, Sep 22, 2026 at 06:12:29PM +0100, Muhammad Usama Anjum wrote:
+> pte_t is used both for software PTE values and for entries stored in a PTE
+> table, so pte_t * does not distinguish a pointer to a software PTE
+> value from a pointer to table storage.
+> 
+> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> as a macro alias of pte_t by default. When an architecture selects
+> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
+> This preserves the representation while allowing converted architectures
+> to enforce the distinction at compile time.
+> 
+> Name the generic wrapper structure __hw_pte_t so architectures can
+> forward-declare it when pgtable_t must be defined before the generic
+> hw_pte_t typedef is visible. This avoids header-order dependencies.
+> 
+> Keep the C type definitions behind an __ASSEMBLY__ check because
+> architecture assembly sources can include this header indirectly. Include
+> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
+> they previously obtained from that header.
+> 
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 
-commit 9ef68553e3432c59dcd576b4a0f6c62d77db0cf7
-Author: nanshuaibo <nanshuaibo811@163.com>
+LGTM
 
-tracing: Make branch profiler counters atomic
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-The branch profiler updates its static counters from arbitrary contexts.
-Concurrent updates can race and lose counts, resulting in KCSAN data race
-reports. This patch uses relaxed compiler atomic operations for the counters
-and atomic loads for reading the tracefs output.
-
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-[ ... ]
-> @@ -14,6 +14,16 @@
->   */
->  void ftrace_likely_update(struct ftrace_likely_data *f, int val,
->  			  int expect, int is_constant);
+> ---
+> Changes since v1:
+> - Name the generic wrapper structure __hw_pte_t so architectures can
+>   forward-declare it, and explain why this is required.
+> - Use software PTE value terminology.
+> 
+> Changes since RFC v1:
+> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
+> - Exclude the C type definitions from assembly sources.
+> - Update the description for the new opt-in model.
+> ---
+>  MAINTAINERS                   |  1 +
+>  include/linux/pgtable_types.h | 17 +++++++++++++++++
+>  mm/Kconfig                    |  3 +++
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2133aec4a2004..da60a8bdcddb5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17140,6 +17140,7 @@ F:	include/linux/mmu_notifier.h
+>  F:	include/linux/pagewalk.h
+>  F:	include/linux/pgalloc.h
+>  F:	include/linux/pgtable.h
+> +F:	include/linux/pgtable_types.h
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> new file mode 100644
+> index 0000000000000..07da05d375c2c
+> --- /dev/null
+> +++ b/include/linux/pgtable_types.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PGTABLE_TYPES_H
+> +#define _LINUX_PGTABLE_TYPES_H
 > +
-> +/*
-> + * Branch profiler data is defined in compiler_types.h, before the atomi=
-c API
-> + * is available. These counters are independent statistics and do not or=
-der
-> + * accesses to other data.
-> + */
-> +#define ftrace_branch_counter_inc(counter) \
-> +	__atomic_fetch_add(&(counter), 1, __ATOMIC_RELAXED)
-
-[Severity: Low]
-Does directly invoking the GCC built-in here cause linking failures on
-certain architectures? On architectures without native lock-free atomic
-hardware instructions for unsigned long (like SPARC32), GCC lowers this
-built-in to a library call such as __atomic_fetch_add_4. Since the kernel
-does not link against libatomic, will this unconditionally fail to build
-at link time on those architectures when branch profiling is enabled?
-
-[Severity: Medium]
-Could turning this into an atomic instruction cause a severe performance
-regression? When CONFIG_PROFILE_ALL_BRANCHES or
-CONFIG_PROFILE_ANNOTATED_BRANCHES is enabled, using __atomic_fetch_add
-compels the compiler to emit locked instructions (e.g., LOCK XADD on x86)
-for every evaluated branch condition kernel-wide. Can this result in CPU
-pipeline stalls and cache-line bouncing?
-
-> +#define ftrace_branch_counter_read(counter) \
-> +	__atomic_load_n(&(counter), __ATOMIC_RELAXED)
->  #if defined(CONFIG_TRACE_BRANCH_PROFILING) \
->      && !defined(DISABLE_BRANCH_PROFILING) && !defined(__CHECKER__)
->  #define likely_notrace(x)	__builtin_expect(!!(x), 1)
-[ ... ]
-> diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-> --- a/kernel/trace/trace_branch.c
-> +++ b/kernel/trace/trace_branch.c
-[ ... ]
-> @@ -239,13 +238,15 @@ static int annotated_branch_stat_headers(struct seq=
-_file *m)
-> =20
->  static inline long get_incorrect_percent(const struct ftrace_branch_data=
- *p)
->  {
-> +	unsigned long correct =3D ftrace_branch_counter_read(p->correct);
-> +	unsigned long incorrect =3D ftrace_branch_counter_read(p->incorrect);
->  	long percent;
-> =20
-> -	if (p->correct) {
-> -		percent =3D p->incorrect * 100;
-> -		percent /=3D p->correct + p->incorrect;
-> +	if (correct) {
-> +		percent =3D incorrect * 100;
-> +		percent /=3D correct + incorrect;
->  	} else
-> -		percent =3D p->incorrect ? 100 : -1;
-> +		percent =3D incorrect ? 100 : -1;
-> =20
->  	return percent;
->  }
-[ ... ]
-> @@ -329,6 +334,10 @@ static int annotated_branch_stat_cmp(const void *p1,=
- const void *p2)
->  {
->  	const struct ftrace_branch_data *a =3D p1;
->  	const struct ftrace_branch_data *b =3D p2;
-> +	unsigned long a_incorrect =3D ftrace_branch_counter_read(a->incorrect);
-> +	unsigned long b_incorrect =3D ftrace_branch_counter_read(b->incorrect);
-> +	unsigned long a_correct =3D ftrace_branch_counter_read(a->correct);
-> +	unsigned long b_correct =3D ftrace_branch_counter_read(b->correct);
-> =20
->  	long percent_a, percent_b;
-> =20
-> @@ -340,9 +349,9 @@ static int annotated_branch_stat_cmp(const void *p1, =
-const void *p2)
->  	if (percent_a > percent_b)
->  		return 1;
-
-[Severity: Low]
-This is a pre-existing issue, but does this pattern create a race condition
-when computing these percentages?
-
-annotated_branch_stat_cmp() takes an initial snapshot of the lockless
-counters into local variables, but then calls get_incorrect_percent() which
-takes a second snapshot of the exact same counters. If the live counters
-change between these snapshots while user-space actively reads the debugfs
-trace stat file, the computed percentage may not match the fallback raw cou=
-nts
-used for tie-breaking.
-
-Could this yield internally inconsistent sorting keys and violate the strict
-weak ordering required by the rbtree implementation?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930030728.1144=
-418-1-nanshuaibo811@163.com?part=3D1
+> +#include <asm/page.h>
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#ifdef CONFIG_ARCH_HAS_HW_PTE_T
+> +typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
+> +#else
+> +#define hw_pte_t pte_t
+> +#endif
+> +
+> +#endif /* !__ASSEMBLY__ */
+> +
+> +#endif /* _LINUX_PGTABLE_TYPES_H */
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index c1ddf59c0d71a..5f462ec6fa5e5 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1312,6 +1312,9 @@ comment "GUP_TEST needs to have DEBUG_FS enabled"
+>  config GUP_GET_PXX_LOW_HIGH
+>  	bool
+>  
+> +config ARCH_HAS_HW_PTE_T
+> +	bool
+> +
+>  config DMAPOOL_TEST
+>  	tristate "Enable a module to run time tests on dma_pool"
+>  	depends on HAS_DMA
+> 
+> -- 
+> 2.47.3
+> 
