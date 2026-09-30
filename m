@@ -1,149 +1,194 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4050EBE8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 21:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007FB4C224A;
+	Wed, 30 Sep 2026 23:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790803189; cv=none; b=QP3VZRCHVRdzzI3588YIAqDOJBoXnlktjmMxlKxmQ0iUW/yGfZMsYMHWyREwZludWDUZDNM8zTutU3xk3VEkxyDXaw5a22232+5pKm2Sc4N9qowiNbd57gsA51yhZJqCNF7QDOVsw63qIcaJk4/RLir7iZB3xqlmJ4aLGyvCmvA=
+	t=1790812373; cv=none; b=Y10Akh7rM2LVSdn3ejC7zx5MYhPOiQ0MeVfSuejY2ZwXxVNsD5t+zEkIS04rXeb8ZvkwxmtVlQ/fKPzYsGlDzNH4SPTpKp7WgxKB6kZYsHs4UoRhSSo7PQ8IYsJ1DOIbvJU/TqNs7knXKlcye1Pr2fQY2c0eJuZBO+A4FxaQ/9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790803189; c=relaxed/simple;
-	bh=BBhO0G7OoXNQM+zVscTVjnR1G6JPiQRL3Q3Anj3rXW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WpKFHM7SuuTeMCDGxQSyhtPJjsi/39OcRXDCxI4CNhOATL5c6rLJRd8K3rQyDXfNsV97oXl4D0GaNRBDbtgHGmDH1t7fD83vLYdwsIYhrzp+4qUfyr1B/yrmfsMzPMwxD5nUsBm7X9XnI2M8qpxitUjK76/r6w//+E8cc4tcPM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sJz1CNaN; arc=none smtp.client-ip=74.125.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790812373; c=relaxed/simple;
+	bh=+wzf3MCK0k5b4spAzsf+dCLhLnezuYJM2T60DnOvev4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qySHXPzu/SACDKof35yt31xcvEJZzefQk/5Fl/qqmwLqyUjdhAq+/Q6/0VA146gUlTnXrF6AEU0lKR/vHH9UT8dhgmBf5KXyn7wuy9MzpZLkLZJO1aS5jhoO6N3CU5B0CzZ2//PgSIj8HqCOiyRX5znT7N5xAoz+YVU7HqZU+Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jpe3JYM3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJz1CNaN"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-33e630052ebso6562870eec.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 14:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790803187; x=1791407987; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5MAbEBhhA+02vAwebLwEVLzW2I8Vxs7DEzXGvm+ATwY=;
-        b=sJz1CNaNibzFaSSCV2MjrbPe3PzKfDZ5Yqv+MKKNZqFcJLRcNIcvwkOiOexdA6WFFV
-         VIq03vWxo+R/ulpacGVbJDhQsbvNu3sezIz8tTLL2R2dP4woJTgK9TTd1LbGC3s0HwcP
-         9J4AoaU23NFLEe3bnnl0Zbwk1tc/33q55s5RCwBmeCaH4005n2a7w90M3k8U0L8BEMvs
-         Po8Dc7RaG1Y3kI7KHqx25G8vQc7nIy/ATZOS+drtW+7b8s+p0U3z52SsBFrH9KR04BlD
-         dap0uPoXJPmwmo6ykpEM+Ak4nUQbdRyX7zkLFLCgkHmvyVlaYzaOTLtdRPp6G7xEcrll
-         FiAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790803187; x=1791407987;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=5MAbEBhhA+02vAwebLwEVLzW2I8Vxs7DEzXGvm+ATwY=;
-        b=hKqsumEhNkBPPXAs3glE/O17YfE4TvAlKakzxxpksPDk7d82gFqgU8FYppsGSEwoGw
-         IgHxWsMQrPEImWDhDGQu0z4SVxCtl+9zhrFJfUsSq5ClDkvDRalKv1Yj7QB/LzchWNrb
-         oyG0ppMXc3U3yY7oYPpaHL4Rsu5ArGQz6b5+/Oj6PytSz+WAjDr6yo2lzZlYy1GMz4cV
-         ceroUv91i5w6x1qWhIrEV9M66QC7TTQnxEbiqoODJd/zCJVQPzYIGCa4PyhDDJDXGLLd
-         XSFQJRS07N7qXcx80MieAVOnumRxcOr0bmjn1ObuQz8l+8XM7VO6OJhekABAp23D32H2
-         xlcA==
-X-Forwarded-Encrypted: i=1; AKwUvBxCe8nxshmdUTZxHzc4BojBV5MHRjt8qSMo1TN4Jq6zDNSGHTLZkZQ3fe5z06LWK7Fw06HqHMaJgYT6b745UVu14v8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJEzFu7Prhw34MtKKP/0jlblvoQzQtxc2fI6OTtq5DfrFWcVuwr
-	kp9HgUT6hb4m8dpDlDtwC8BXTKx47rsqw0FZA/jpAmNQhT5qOOZafmYl
-X-Gm-Gg: AYBFou25n1NtxoHZeo8yzW1cWj4DLGnbtfUQSYPNATxMnBXkfAquFINr/r/C1oX2er6
-	mR1JkamJW1PCBqFYk6k8AgZ0wjpzdYFJ6AfbXYyMDFEsW++Zm35ZI52+csOZY6kmDIQaZxzVsgL
-	NzT9Xrfh7c88xosthI9HHYt9WH9wKgXc9m8HAkFLV7kNrrQmqLzMX2jru99nPaTTQtnTK00Bf/e
-	FnHmfI3GIxnQ5EB6JgwUfRGCdw3k06h+oAvketp54WKvncGPBgIrD34lHXD7phIgMZs3feLq4e+
-	XREvemWhZviZeMOxPBaeJr0LnDURBznX43jf6dywQlbywc3E3MrmGo++KAZFZ0e3iGuLH5dryq6
-	3sdEe8RseRQYAA1Gim05Pw4o04jrQXWGBKztohM/GYQ/Z5RGkuIbZ1AykZsal5KLfB+8e+A72bb
-	MmE3oiuLry5nhReUBu3JtXBCVFXcFrQh0JFKnKwZivtg5c4aBRjN9CpjmY831Tx6xpvLyt4dk3X
-	VYs34mpy5ha0ZLtmxRzPx+34x4wyxIrWSNmxA==
-X-Received: by 2002:a05:7300:2143:b0:340:e422:fd3d with SMTP id 5a478bee46e88-34cdbad6906mr4380425eec.17.1790803186822;
-        Wed, 30 Sep 2026 14:19:46 -0700 (PDT)
-Received: from ?IPV6:2401:4900:1c44:2e39:63b8:ea3c:fa28:7091? ([2401:4900:1c44:2e39:63b8:ea3c:fa28:7091])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34db31623b6sm1443764eec.7.2026.09.30.14.19.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Sep 2026 14:19:46 -0700 (PDT)
-Message-ID: <512dd1d8-67cc-44b7-9442-0fbbab111680@gmail.com>
-Date: Thu, 1 Oct 2026 02:48:52 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jpe3JYM3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDDB1F00898;
+	Wed, 30 Sep 2026 23:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790812370;
+	bh=C+agq54WE0HX8gYLICSvvyTPH8K0IpFdMx44lcFnFWM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Jpe3JYM3iK4XOBgBE/6euYMenyV1EqgqSWaNVkb7zAMMvTg+HVDuXTJ5GBtouluit
+	 RuzKdhrpDSY2hvLrKFRypOiQWsERM+np5FRqpLVr+Uxe4OM3EMC1IksuciS8VdA7WX
+	 te2rnoKHfPLGcls2kFFY2duQZ2Nbb7/wwDTrQF2k5HSskL9bl//llkIS754qRwqWQh
+	 NVUDGk/Vr2yw1B2ionMn9z349dKIEqC6I5usg61WyF95RQa29eWiuehyi9qiCubG2a
+	 WPDahdPGtymMNvK8zQE7iOY9pwxjsN3xxeYI6PXngXwHYCAbe8Iou6d8pzhoAU+30U
+	 qubIYy4FZfViw==
+From: Kees Cook <kees@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Gow <david@davidgow.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	nikitash.mariiaw@gmail.com,
+	Greg KH <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 02/11] seq_buf: Do not pop from an overflowed seq_buf
+Date: Wed, 30 Sep 2026 16:52:30 -0700
+Message-Id: <20260930235247.157921-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260930235231.out.387-kees@kernel.org>
+References: <20260930235231.out.387-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] openrisc: Add support for KProbes
-To: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
- naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org
-Cc: tytso@mit.edu, wangruikang@iscas.ac.cn, namcao@linutronix.de,
- pjw@kernel.org, kees@kernel.org, linux-openrisc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20260407185650.79816-2-sahilcdq0@gmail.com>
- <20260930203129.51048-1-sahilcdq0@gmail.com>
-Content-Language: en-US
-From: Sahil <sahilcdq0@gmail.com>
-In-Reply-To: <20260930203129.51048-1-sahilcdq0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4958; i=kees@kernel.org; h=from:subject; bh=+wzf3MCK0k5b4spAzsf+dCLhLnezuYJM2T60DnOvev4=; b=owGbwMvMwCVmps19z/KJym7G02pJDFl7FxzZMrkzf8//rptcV56fUtzK98NR97LQObPMdJbuX X23v9zn6ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjI3teMDLvYMy/u/Wh6tu5M 0yLBKbPyw//sKOrfU3HUeMbLRy3uuw0ZGf4+2G5t/WTzye2b8365KnUb7di0YlHOvadPD6/PzJz +8To3AA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 10/1/26 2:01 AM, Sahil Siddiq wrote:
-> Hi,
-> 
-> Apologies for the delay. This is v2 of the patch series to add KProbe
-> support for OpenRISC.
-> 
-> The series also adds support for Kretprobes (which depends on the rethook
-> framework [1]). Kretprobes are fired on function return.
-> 
-> [...]
-> 
-> I have also made changes based on the review comments I received for
-> v1 [5] including several of Sachiko's comments [6]. I chose not to make
-> changes in a few places. I'll send emails as a reply to this thread
-> explaining my reasoning inline.
->
-> [...]
-> 
-> Sahil Siddiq (4):
->    openrisc: Add utilities and clean up simulation of instructions
->    openrisc: Add KProbes
->    openrisc: Add unit tests for KProbes on branch instructions
->    openrisc: Add Kretprobes
-> 
-> [...]> 
+When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
+decrements len to size and reads buffer[size], one byte past the end of
+the buffer. It also leaves len equal to size, which no longer counts as
+overflowed, so a truncated seq_buf then looks like a complete, full one.
 
+An overflowed seq_buf logically has no last character to pop: the
+length of what was written has been lost, and the last byte of the
+buffer may be the NUL written by vsnprintf() or bytes that were never
+committed. Return -1 for an overflowed seq_buf, as for an empty one,
+and leave it overflowed, as the rest of the seq_buf API does until
+seq_buf_clear() or seq_buf_init().
 
-Sorry, I forgot to post a summary of the differences between v2 and v1:
+The current callers do not reach this, e.g. trace_syscalls only calls
+trace_seq_pop() when the trace_seq it pops from has not overflowed, and
+kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
 
-Commit #1:
-- arch/openrisc/include/asm/cpuinfo.h: Introduce "delay_slot" static key
-- arch/openrisc/include/asm/insn-def.h:
-   - Use macros instead of union
-   - Use better names for macros
-   - Use genmask() for masks
-- arch/openrisc/kernel/insn.c:
-   - Use macros instead of magic values
-   - (simulate_pc): Update PC
-   - (simulate_branch): Handle rb=r9 in l.jalr simulation
-- arch/openrisc/kernel/setup.c: Use "delay slot" static key
-- arch/openrisc/kernel/traps.c: Use macros instead of magic values
+Add tests for the pop corner cases.
 
-Commit #2:
-- arch/openrisc/include/asm/kprobes.h:
-   - (struct prev_kprobe): Add restore_pc
-   - (struct kprobe_ctlblk): Move restore_pc from global "struct arch_specific_insn"
-- arch/openrisc/kernel/kprobes.c:
-   - Use macros instead of magic values
-   - Use "get_kernel_nofault" instead of directly dereferencing address
-   - (insns_need_simulation): Use "daley slot" static key
-   - (arch_prepare_kprobe): Prevent KProbe insertion if instruction in delay slot also requires simulation
-   - (save_previous_kprobe): Use "restore_pc"
-   - (restore_previous_kprobe): Likewise
-   - (post_kprobe_handler): Don't re-enable preemption if KProbe is nested
-   - (setup_singlestep): Use "restore_pc"
-   - (reenter_kprobe): Return false in case of unrecoverable KProbe
-   - (kprobe_singlestep_handler): Enable interrupt in pt_regs->sr
-   - (kprobe_fault_handler): Likewise
+Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
-Commit #3/#4: Introduced in v2 of the series
+Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
+Assisted-by: LLM
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ include/linux/seq_buf.h   |  4 ++--
+ include/linux/trace_seq.h |  5 ++++-
+ lib/tests/seq_buf_kunit.c | 42 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 3 deletions(-)
 
-Thanks,
-Sahil
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 9f2839e73f8a..f5a350347bc5 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -155,11 +155,11 @@ static inline void seq_buf_commit(struct seq_buf *s, int num)
+  *
+  * Removes the last written character to the seq_buf @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if @s is empty or has overflowed.
+  */
+ static inline int seq_buf_pop(struct seq_buf *s)
+ {
+-	if (!s->len)
++	if (!s->len || seq_buf_has_overflowed(s))
+ 		return -1;
+ 
+ 	s->len--;
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 697d619aafdc..7174ebf3f015 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -86,7 +86,10 @@ static inline bool trace_seq_has_overflowed(struct trace_seq *s)
+  *
+  * Removes the last written character to the trace_seq @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if the underlying seq_buf is empty or
++ * has overflowed. Note that only that buffer is consulted: a @s marked
++ * full by a write that did not fit, which trace_seq_has_overflowed()
++ * reports as overflowed, still pops the last character written.
+  */
+ static inline int trace_seq_pop(struct trace_seq *s)
+ {
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 9ceccdc3029f..d5a0c618b880 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -115,6 +115,47 @@ static void seq_buf_putc_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
+ }
+ 
++static void seq_buf_pop_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 8);
++	struct seq_buf t;
++	char *buf;
++
++	/* Nothing to pop. */
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
++	KUNIT_EXPECT_EQ(test, s.len, 0);
++
++	seq_buf_puts(&s, "hello");
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'o');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
++
++	/* A 0xff byte must not be mistaken for an empty buffer. */
++	seq_buf_putc(&s, 0xff);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 0xff);
++
++	/* A full buffer pops its last byte. */
++	seq_buf_puts(&s, "abc");
++	seq_buf_putc(&s, 'd');
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 8);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'd');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 7);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hellabc");
++
++	/*
++	 * An overflowed buffer has nothing to pop, and stays overflowed. Use
++	 * a buffer allocated at its exact size, so that KASAN reports any
++	 * read past its end.
++	 */
++	buf = kunit_kmalloc(test, 16, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++	seq_buf_init(&t, buf, 16);
++	KUNIT_EXPECT_EQ(test, seq_buf_printf(&t, "%s", "longer than sixteen"), -1);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&t), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
++}
++
+ static void seq_buf_printf_test(struct kunit *test)
+ {
+ 	DECLARE_SEQ_BUF(s, 32);
+@@ -355,6 +396,7 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_puts_test),
+ 	KUNIT_CASE(seq_buf_puts_overflow_test),
+ 	KUNIT_CASE(seq_buf_putc_test),
++	KUNIT_CASE(seq_buf_pop_test),
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
+-- 
+2.34.1
+
