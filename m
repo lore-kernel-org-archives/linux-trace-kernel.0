@@ -1,64 +1,64 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
+Received: from mail-dy2-f41.google.com (mail-dy2-f41.google.com [74.125.229.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F5C509EF3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 20:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449BC50E594
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 20:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790800321; cv=none; b=YR5/YoKzpN9YW5GK9rWSfNtAdVfk25TY+hECdllcE6sPBikC+ppJaaG3jb/cndS32vOd0x1dOOeZA5t4Ja1FsWX3977rAupaIprBXu+7gwsYVdclejF1suBfjcwDRJgdfl8vrqr6L9FgkaUpMwqyNMWOymMp72t2nrKsuLT5kcY=
+	t=1790800329; cv=none; b=QIWF7TJCMfTV34Py1R1ZDieibI367BXQi/MnD0dU8Caqkw3D2NbQKdeh4Ek9x++g03IwTsxY8R/HQfOITCC5RU1c31AqXeWNOAeePN0Iy9aF3pfZLoU2FSZ9EpWJnn+wceDwEUDL9Sy/JCScuaXP6ehPA5hzjzmTmnVZfk1ebAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790800321; c=relaxed/simple;
-	bh=JsUyX/iJjMo1Mi4MUpeDu8VJE810XoBK9W5Gdt15IMY=;
+	s=arc-20240116; t=1790800329; c=relaxed/simple;
+	bh=IU67YLAuaCjJu5YpuQOVB88G9rpIjCwtpSIkiqXDfq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GKK0TSodm9rAa0hF93JPlggGoxuJwSqMS/6etrbjbUDxEKkedJqpoQK1DBtXq0btf7GOMJTKhpGt9hO8e5XL/HMehJM0OfU6Ebap6Hp1niUFad79bv1vN1AP5BvhH18g+m5sRVz98b527NHLbpDm+8nnEMPFVQemC0VeIJHnb08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rvSSYmfv; arc=none smtp.client-ip=74.125.229.42
+	 MIME-Version; b=phO4VedtkIWLz/+9W5EAQBD8TCvcIOU/lBr48JCUvzMH5djw4+48Xc6+raYr5aCcJMzqgBcyACCBiCb2wO0/BroWQLfNxvRl7so5VwfTSHsDE0mTbB4m3znd+DXh2PXLqVgqSE5q4PWIbjrWBQ7AYHzfYwtVAdlKmv2C3ZSXtKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvGMiTZg; arc=none smtp.client-ip=74.125.229.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvSSYmfv"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3411e0ace58so7233629eec.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 13:31:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvGMiTZg"
+Received: by mail-dy2-f41.google.com with SMTP id 5a478bee46e88-34d2d25127aso542693eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 13:32:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790800319; x=1791405119; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790800326; x=1791405126; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=72nYRrTYSL7ww//DHgv9cQLgr49cv6bRekJhb1O1FHo=;
-        b=rvSSYmfvU8O1u8AvjYnnJ8Xg6TICncsuF5FO5FwxXKxWA6m7SwRcv1G+GeOhaP5j0M
-         gbER2XjTL26INm4ZcCakyq2ye+60Cwalda+AqfuMRurSne7fd/NLwgG3w5hoJtsuE8uh
-         3Nxl9YzA486ppEWF7VthuGK9jE6kc2X+QGbrZ/PKKhIfzpYva3/Mc4oRgyRswfwUjCUW
-         XnHVyb0k6fEu8mTmi5sM0O6pcKQTGNif1YyvQl8TuGEAJZaJc0muW2vxskX6AMZGp2Ql
-         oKFTF2zJqxjlhmlR2baa9Uh2g/S6P6yLlwI717snHhpKAkOaf8plGvhYLrLvMhm3YP/H
-         AEhw==
+        bh=Mh6g+TBRFwtJy8uHgWDr9TCO26q8JAwE1d0FUQuYehA=;
+        b=fvGMiTZg68lM84Ctl2jFF/+6fw9FkNGybOTzI91IQRslb2hJ+KgKZhuocRw+p4CpZE
+         UT4m9BwmWHp79TN5yu/MZcsCF9AaFu6K7FIZ/cAkHbzQdLkH71SfxtML59kIHs58XJj6
+         BS6I56eyeyI1icAYiF50oDhAv/np5eoyeGhYy/f68bV6veHFVbV8unv/ETj9PueWE2qP
+         t0Qa60yZ2MirOUIVMJNptte4ypD8h8IQfU8BhiHLdPwBhJm6HYURKRUwvPTGLXPeVJCJ
+         +lxsQLk5WXvxNoxB2xX3oW0FZMMpDiJsGTLnTRQbNQnln3u9ynuAbH9SPdWjrK2HLv2a
+         oLsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790800319; x=1791405119;
+        d=1e100.net; s=20260707; t=1790800326; x=1791405126;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=72nYRrTYSL7ww//DHgv9cQLgr49cv6bRekJhb1O1FHo=;
-        b=HPhaOVH4LodLzk3GBpP5DV7E28Bzmoc8Tj0pPq9rkbSRzR6rseyZScTMaVkiEFPG2j
-         hMRU5k2ijWMnS0qmz5tj7yXeQf+1FWHo5WVII8bgMkemVTV16gziD9GlDDFs0MaOR86q
-         FmWGC8ueLT820moqK+/X7V/1W6FTI15rrWhPRP5StFb1dp2jvbr6a45CfnK1g2Os22Xe
-         o3HajR62FSDXVHnjMBQRSe/wko9ptblx0v/Q/NZRVIAFTDzwDVbAcWLPNAzknV9vfoo0
-         V5qXZaP9guBbvrpIpi4a2E8QSeocaGP9eyzrkmBOGSeRVC9JnwgoopO1aWE6csLQHXJg
-         Z0sg==
-X-Forwarded-Encrypted: i=1; AKwUvBzlxTkqb7ZoOK0QQl/oWUjXYHf3M6gjvjamBFaNJ+Q1F1w7pF2XLygRjXMMQrfchceUHNlOXa8Ednpil/mW03xLVqU=@vger.kernel.org
-X-Gm-Message-State: AFuF++nUEY4GFrfKBeqZ7Eli65HO/508TZ0l8xue6p1tNO78HtHhU79m
-	TAe2HH6upJ39R40aTkO9TPsHubWyhqWcKOz4dK24p+NST7MShf97HXnZ
-X-Gm-Gg: AYBFou0aXoNfwVbmexd/E8ozsv73bQITrSKu8ww/ASb0DhzQ+oOaC8iNGYYEXXWmzwo
-	uy9bLp0/yhH3C6Ebuv7SgZB0XRpoaqqrM5i5GEtyosHDPyCKSdWhMPboQ9gt98MiIzJlWJConHW
-	ZiC6phA1W7xcqqHW2VqIDscnZcoeTPn8Figw9JX1xInakJjkj9n1r2uu/7rgSN136fZ8KFySUSV
-	YlrLfebE7jIMIRMd1mrC/uDue4t6Xs6CBvrBN/YYVkSL+dWPXDcrj++P2Uxkao7iq9GPURKuRD/
-	e5E2AhE+zCrCO5EZXhb0tc27W8gj9cq3ZaauXpiYMx+rTNWj7Aqn5QHfINbYU45HTSotSA7YxVd
-	u+0qdoBOB6R9NbGCTWRqx/EEz38al7bgNxitqvaitwZ+c8wEbONBy2nJH2GAzhAjQnLefXAbn86
-	B9Cy6syaa6Puou+PvyEax7kuYoZQZhkL4VMga9LfxaPCLA0fiehAZYnftJ+k2Jd5M+0YpXKhFqH
-	3JuBg==
-X-Received: by 2002:a05:7301:a0a:b0:328:643d:4f80 with SMTP id 5a478bee46e88-34cdc4cdf88mr2447838eec.20.1790800318264;
-        Wed, 30 Sep 2026 13:31:58 -0700 (PDT)
+        bh=Mh6g+TBRFwtJy8uHgWDr9TCO26q8JAwE1d0FUQuYehA=;
+        b=LOC9W6UC+aXJtf6fFGBChOcFIaXXXkEZtP0JOm4emd3aBVjk4Q7H7n4R+5UUgoy4kZ
+         DwcznBMMrWn1YJ27nugb1Fk1YfoVAeNiU8V3B+iUd2lvHnnl5lZbMibyyPDiKYnFLdBn
+         g2/MycDwiAXk22Y/XSKHTbfKwzQLRwQ7eGfKlVW6PBTCh5QLvpSFkiHdAWEBpxzVAp9C
+         ZJ3aPODjrrRokyFJBywMpI7OgIR1ZKi+Cbl8aQzi8SeyNGZ32XyXflmHJPaiAeSON2hb
+         rqBLUFq6ECMTq8AgAWSwmt9nOYNtJUavR5OGgOGWwfP4XsAnv6UvNNPuPK+vjEhCxhuP
+         QTsg==
+X-Forwarded-Encrypted: i=1; AKwUvBzgmleOxA3qr2EQmtG3ZQI3cXQDZlp41Vo1bC8wyLTB4jXSxWJhR2sU03pVj0ZQuE+bSC1aMXb0MIcyImEnHphLDeI=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKQwTdg6ereGyVwFN/QmnHYN9aRo1PcMOoY2rLQ30myND8Mf07f
+	++ihUkfb5y1mD9rTS4/OrXNtxsAHwC7YDT1BxISgJ5RN3CjxgG4mvxGe
+X-Gm-Gg: AYBFou2E+fjUOIF1A8ApgA8GrfyHPQ/zEimLHDjLF18s0Fh9KNqVC+4mtEUjurMnybc
+	vb/MXGl6GwrPIUOX9rXjnEQ9OP6F3mBCRw4Zbk4U4mVY1BRvZ7Rwl9S3P0Jss40GBEhcArXTRm5
+	fogLVnIunquqLgI5Eds0epS/EM/OxkGcvoKVri+1kdviq/R5cuPhVYxnADufWHrZ5GpexCvmay+
+	hT5zeqnaj3Glrlia3hOgux/oanZoyrEkP5SCV79QPwDSyflSHYjwSmY5FVg2pjKM954V0Mq/vbl
+	DXnfNpWkZqQ7TKPA8hcaXI9pfloTi5zmx9oCc2AmB5il92MuI468IOdtaWa3Dzb+vTZ+XHyoVT7
+	SbeLTHMCcPhl6+lOUpJHnm26S8JLUufaNOMJWIWDH5Ov5xqcxeHdjtud3CIsCTsfOOCA1VDebRt
+	FiWCcZjesVDGsQs6XC6MN5Yzbg5Z6Gb7aQX3JQ5vCb+1NsWvIFlj4ddIJqZxh9dUaetzevOVQgB
+	xyPUxnW+0u0eKJe
+X-Received: by 2002:a05:7301:1928:b0:33b:bea7:84dd with SMTP id 5a478bee46e88-34cdda8b4d4mr2596612eec.34.1790800326267;
+        Wed, 30 Sep 2026 13:32:06 -0700 (PDT)
 Received: from valdaarhun.localdomain ([2401:4900:1c44:2e39:63b8:ea3c:fa28:7091])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34db4d1d560sm1162411eec.29.2026.09.30.13.31.53
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34db4d1d560sm1162411eec.29.2026.09.30.13.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 13:31:57 -0700 (PDT)
+        Wed, 30 Sep 2026 13:32:05 -0700 (PDT)
 From: Sahil Siddiq <sahilcdq0@gmail.com>
 To: jonas@southpole.se,
 	stefan.kristiansson@saunalahti.fi,
@@ -75,9 +75,9 @@ Cc: tytso@mit.edu,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Sahil Siddiq <sahilcdq0@gmail.com>
-Subject: [PATCH v2 0/4] openrisc: Add support for KProbes
-Date: Thu,  1 Oct 2026 02:01:25 +0530
-Message-ID: <20260930203129.51048-1-sahilcdq0@gmail.com>
+Subject: [PATCH v2 1/4] openrisc: Add utilities and clean up simulation of instructions
+Date: Thu,  1 Oct 2026 02:01:26 +0530
+Message-ID: <20260930203129.51048-2-sahilcdq0@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260407185650.79816-2-sahilcdq0@gmail.com>
 References: <20260407185650.79816-2-sahilcdq0@gmail.com>
@@ -89,145 +89,385 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Introduce new instruction-related utilities and macros for OpenRISC.
+This is in preparation for patches that add tracing support such as
+KProbes and Kretprobes.
 
-Apologies for the delay. This is v2 of the patch series to add KProbe
-support for OpenRISC.
+Currently, PC is first updated and then saved in the link register
+(r9) when simulating l.jal and l.jalr. This can result in a corrupted
+page table (bad page map in process). Fix this by saving PC in r9
+before updating it.
 
-The series also adds support for Kretprobes (which depends on the rethook
-framework [1]). Kretprobes are fired on function return.
+Move branch simulation to its own function, simulate_branch(), so it
+can be reused. It's already being used by do_illegal_instruction().
+It'll also be used by KProbes in the following commit.
 
-In order to build the kernel with Kprobes and Kretprobes enabled, the
-following config options are required:
-1. CONFIG_HAVE_KPROBES=y
-2. CONFIG_KPROBES=y
-3. CONFIG_RETHOOK=y
-4. CONFIG_KRETPROBES=y
+Introduce simulate_pc() to simulate l.adrp. KProbes will require this
+instruction to be simulated as well. simulate_branch() and simulate_pc()
+need to be handled differently since branch instructions change the
+value of PC while l.adrp depends on PC but doesn't change its value.
 
-I tested the generic functionality of Kprobes and Kretprobes using the
-tests located at "lib/tests" [2], samples located at "samples/kprobes" [3],
-as well as a few test modules that I have published here [4]. The following
-options are required to build the samples and tests:
-1. CONFIG_SAMPLES=y
-2. CONFIG_SAMPLE_KPROBES=m
-3. CONFIG_SAMPLE_KRETPROBES=m
-4. CONFIG_KPROBES_SANITY_TEST=m
+Use a static key to check if delay slots are disabled. Delay slots are
+a part of the CPU's configuration and won't change at runtime. Since
+they are often enabled in an OpenRISC CPU, using a static key will
+reduce the overhead of checking this flag in the default case while
+processing KProbes inserted at branch instructions and simulating them.
 
-I have also added unit tests at "arch/openrisc/kernel/tests" to verify
-that Kprobes work properly when inserted at branch instructions, and
-that delay slots are handled correctly. The tests are based on the Kprobe
-testsuite added for RISC-V. The following options need to be enabled to
-build the tests:
-1. CONFIG_KUNIT=y
-2. CONFIG_RUNTIME_KERNEL_TESTING_MENU=y
-3. CONFIG_OR_KPROBES_KUNIT=m
-
-Below are the results of the tests and sample modules when run in my
-environment.
-
-- kretprobe_example:
-
-/home # insmod kretprobe_example.ko 
-Planted return probe at kernel_clone: (ptrval)
-/home # ls >/dev/null
-kernel_clone returned 35 and took 1302450 ns to execute
-/home # rmmod kretprobe_example.ko 
-kernel_clone returned 36 and took 1121200 ns to execute
-kretprobe at (ptrval) unregistered
-Missed probing 0 instances of kernel_clone
-
-- test_kprobes:
-
-/home # insmod test_kprobes.ko 
-KTAP version 1
-1..1
-    KTAP version 1
-    # Subtest: kprobes_test
-    # module: test_kprobes
-    1..5
-    ok 1 test_kprobe
-    ok 2 test_kprobes
-    ok 3 test_kprobe_missed
-    ok 4 test_kretprobe
-    ok 5 test_kretprobes
-# kprobes_test: pass:5 fail:0 skip:0 total:5
-# Totals: pass:5 fail:0 skip:0 total:5
-ok 1 kprobes_test
-
-- openrisc_test_kprobes:
-
-/home # insmod openrisc_test_kprobes.ko 
-KTAP version 1
-1..1
-    KTAP version 1
-    # Subtest: kprobes_openrisc
-    # module: openrisc_test_kprobes
-    1..1
-    ok 1 test_kprobe_openrisc
-ok 1 kprobes_openrisc
-
-I have also made changes based on the review comments I received for
-v1 [5] including several of Sachiko's comments [6]. I chose not to make
-changes in a few places. I'll send emails as a reply to this thread
-explaining my reasoning inline.
-
-Thanks,
-Sahil
-
-[1] https://lkml.rescloud.iu.edu/2203.0/05974.html
-[2] https://github.com/torvalds/linux/tree/master/lib/tests
-[3] https://github.com/torvalds/linux/tree/master/samples/kprobes
-[4] https://github.com/valdaarhun/or-dev
-[5] https://lwn.net/ml/all/20260407185650.79816-1-sahilcdq0@gmail.com/
-[6] https://sashiko.dev/#/patchset/20260407185650.79816-1-sahilcdq0%40gmail.com
-
-Sahil Siddiq (4):
-  openrisc: Add utilities and clean up simulation of instructions
-  openrisc: Add KProbes
-  openrisc: Add unit tests for KProbes on branch instructions
-  openrisc: Add Kretprobes
-
- arch/openrisc/Kconfig                         |   3 +
- arch/openrisc/Kconfig.debug                   |  30 +-
- arch/openrisc/configs/or1ksim_defconfig       |   2 +
- arch/openrisc/configs/virt_defconfig          |   2 +
- arch/openrisc/include/asm/asm.h               |  22 +
- arch/openrisc/include/asm/break.h             |  19 +
- arch/openrisc/include/asm/cpuinfo.h           |   3 +
- arch/openrisc/include/asm/insn-def.h          |  64 ++-
- arch/openrisc/include/asm/kprobes.h           |  77 ++++
- arch/openrisc/include/asm/spr_defs.h          |   1 +
- arch/openrisc/kernel/Makefile                 |   5 +-
- arch/openrisc/kernel/entry.S                  |  16 +
- arch/openrisc/kernel/insn.c                   |  84 ++++
- arch/openrisc/kernel/kprobes.c                | 400 ++++++++++++++++++
- arch/openrisc/kernel/rethook.c                |  32 ++
- arch/openrisc/kernel/rethook.h                |   8 +
- arch/openrisc/kernel/rethook_trampoline.S     |  97 +++++
- arch/openrisc/kernel/setup.c                  |   4 +
- arch/openrisc/kernel/tests/Makefile           |   3 +
- arch/openrisc/kernel/tests/test_kprobes.c     |  59 +++
- arch/openrisc/kernel/tests/test_kprobes.h     |  24 ++
- arch/openrisc/kernel/tests/test_kprobes_asm.S | 147 +++++++
- arch/openrisc/kernel/traps.c                  |  82 ++--
- arch/openrisc/lib/memcpy.c                    |   2 +
- arch/openrisc/lib/memset.S                    |   4 +
- arch/openrisc/mm/fault.c                      |   5 +
- samples/kprobes/kprobe_example.c              |   8 +
- 27 files changed, 1152 insertions(+), 51 deletions(-)
- create mode 100644 arch/openrisc/include/asm/asm.h
- create mode 100644 arch/openrisc/include/asm/break.h
- create mode 100644 arch/openrisc/include/asm/kprobes.h
+Link: https://raw.githubusercontent.com/openrisc/doc/master/openrisc-arch-1.4-rev0.pdf
+Signed-off-by: Sahil Siddiq <sahilcdq0@gmail.com>
+---
+ arch/openrisc/include/asm/cpuinfo.h  |  3 +
+ arch/openrisc/include/asm/insn-def.h | 64 +++++++++++++++++++--
+ arch/openrisc/include/asm/spr_defs.h |  1 +
+ arch/openrisc/kernel/Makefile        |  2 +-
+ arch/openrisc/kernel/insn.c          | 84 ++++++++++++++++++++++++++++
+ arch/openrisc/kernel/setup.c         |  4 ++
+ arch/openrisc/kernel/traps.c         | 79 +++++++++++---------------
+ 7 files changed, 187 insertions(+), 50 deletions(-)
  create mode 100644 arch/openrisc/kernel/insn.c
- create mode 100644 arch/openrisc/kernel/kprobes.c
- create mode 100644 arch/openrisc/kernel/rethook.c
- create mode 100644 arch/openrisc/kernel/rethook.h
- create mode 100644 arch/openrisc/kernel/rethook_trampoline.S
- create mode 100644 arch/openrisc/kernel/tests/Makefile
- create mode 100644 arch/openrisc/kernel/tests/test_kprobes.c
- create mode 100644 arch/openrisc/kernel/tests/test_kprobes.h
- create mode 100644 arch/openrisc/kernel/tests/test_kprobes_asm.S
 
+diff --git a/arch/openrisc/include/asm/cpuinfo.h b/arch/openrisc/include/asm/cpuinfo.h
+index 3cfc4cf0b019..d6bb8744eba0 100644
+--- a/arch/openrisc/include/asm/cpuinfo.h
++++ b/arch/openrisc/include/asm/cpuinfo.h
+@@ -15,6 +15,7 @@
+ #ifndef __ASM_OPENRISC_CPUINFO_H
+ #define __ASM_OPENRISC_CPUINFO_H
+ 
++#include <linux/jump_label.h>
+ #include <asm/spr.h>
+ #include <asm/spr_defs.h>
+ 
+@@ -34,6 +35,8 @@ struct cpuinfo_or1k {
+ 	u16 coreid;
+ };
+ 
++DECLARE_STATIC_KEY_TRUE(delay_slot);
++
+ extern struct cpuinfo_or1k cpuinfo_or1k[NR_CPUS];
+ extern void setup_cpuinfo(void);
+ 
+diff --git a/arch/openrisc/include/asm/insn-def.h b/arch/openrisc/include/asm/insn-def.h
+index 1e0c028a5b95..3680c0a94faf 100644
+--- a/arch/openrisc/include/asm/insn-def.h
++++ b/arch/openrisc/include/asm/insn-def.h
+@@ -3,13 +3,69 @@
+  * Copyright (C) 2025 Chen Miao
+  */
+ 
++#include <asm/spr.h>
++#include <asm/spr_defs.h>
++#include <linux/bits.h>
++
+ #ifndef __ASM_OPENRISC_INSN_DEF_H
+ #define __ASM_OPENRISC_INSN_DEF_H
+ 
+-/* or1k instructions are always 32 bits. */
+-#define	OPENRISC_INSN_SIZE		4
+-
+ /* or1k nop instruction code */
+-#define OPENRISC_INSN_NOP     0x15000000U
++#define OPENRISC_INSN_CSYNC	0x23000000U
++#define OPENRISC_INSN_MACRC	0x18010000U
++#define OPENRISC_MASK_MACRC	0xfc01ffffU
++#define OPENRISC_INSN_MSYNC	0x22000000U
++#define OPENRISC_INSN_NOP	0x15000000U
++#define OPENRISC_INSN_PSYNC	0x22800000U
++#define OPENRISC_INSN_SYS	0x20000000U
++#define OPENRISC_INSN_TRAP	0x21000000U
++
++#define OPENRISC_OPCODE_ADRP	0x02
++#define OPENRISC_OPCODE_BF		0x04
++#define OPENRISC_OPCODE_BNF		0x03
++#define OPENRISC_OPCODE_J		0x00
++#define OPENRISC_OPCODE_JAL		0x01
++#define OPENRISC_OPCODE_JALR	0x12
++#define OPENRISC_OPCODE_JR		0x11
++#define OPENRISC_OPCODE_LWA		0x1b
++#define OPENRISC_OPCODE_MFSPR	0x2d
++#define OPENRISC_OPCODE_MTSPR	0x30
++#define OPENRISC_OPCODE_RFE		0x09
++#define OPENRISC_OPCODE_SWA		0x33
++
++#define OPENRISC_ADRP_IMM_MASK		GENMASK(18, 0)
++#define OPENRISC_ADRP_OFFSET_MASK	GENMASK(31, 13)
++#define OPENRISC_ADRP_IMM_SHIFT		13
++#define OPENRISC_ADRP_REG_MASK		GENMASK(25, 0)
++#define OPENRISC_ADRP_REG_SHIFT		21
++#define OPENRISC_JUMP_IMM_MASK		GENMASK(25, 0)
++#define OPENRISC_JUMP_IMM_SHIFT		2
++#define OPENRISC_JUMP_REG_MASK		GENMASK(15, 11)
++#define OPENRISC_JUMP_REG_SHIFT		11
++
++#define OPENRISC_MASK_SYS	GENMASK(31, 16)
++#define OPENRISC_MASK_TRAP	GENMASK(31, 16)
++#define OPENRISC_MASK_BCODE	GENMASK(15, 0)
++
++#define OPENRISC_OPCODE_MASK	0x3f
++#define OPENRISC_OPCODE_SHIFT	0x1a
++
++struct pt_regs;
++
++#define OPENRISC_INSN_SIZE	4
++
++/* Helpers for working with l.trap */
++static inline unsigned long __emit_trap(unsigned long code)
++{
++	return (code & OPENRISC_MASK_BCODE) | OPENRISC_INSN_TRAP;
++}
++
++static __always_inline unsigned char get_6_bit_opcode(unsigned long insn)
++{
++	return (insn >> OPENRISC_OPCODE_SHIFT) & OPENRISC_OPCODE_MASK;
++}
++
++void simulate_pc(struct pt_regs *regs, unsigned long jmp);
++void simulate_branch(struct pt_regs *regs, unsigned long jmp);
+ 
+ #endif /* __ASM_OPENRISC_INSN_DEF_H */
+diff --git a/arch/openrisc/include/asm/spr_defs.h b/arch/openrisc/include/asm/spr_defs.h
+index f0b6b492e9f4..5d13a9b96263 100644
+--- a/arch/openrisc/include/asm/spr_defs.h
++++ b/arch/openrisc/include/asm/spr_defs.h
+@@ -179,6 +179,7 @@
+ #define SPR_CPUCFGR_OF32S  0x00000080  /* ORFPX32 supported */
+ #define SPR_CPUCFGR_OF64S  0x00000100  /* ORFPX64 supported */
+ #define SPR_CPUCFGR_OV64S  0x00000200  /* ORVDX64 supported */
++#define SPR_CPUCFGR_ND     0x00000400  /* No delay slot */
+ #define SPR_CPUCFGR_RES	   0xfffffc00  /* Reserved */
+ 
+ /*
+diff --git a/arch/openrisc/kernel/Makefile b/arch/openrisc/kernel/Makefile
+index 19e0eb94f2eb..150779fbf010 100644
+--- a/arch/openrisc/kernel/Makefile
++++ b/arch/openrisc/kernel/Makefile
+@@ -5,7 +5,7 @@
+ 
+ always-$(KBUILD_BUILTIN)	:= vmlinux.lds
+ 
+-obj-y	:= head.o setup.o or32_ksyms.o process.o dma.o \
++obj-y	:= head.o insn.o setup.o or32_ksyms.o process.o dma.o \
+ 	   traps.o time.o irq.o entry.o ptrace.o signal.o \
+ 	   sys_call_table.o unwinder.o cacheinfo.o
+ 
+diff --git a/arch/openrisc/kernel/insn.c b/arch/openrisc/kernel/insn.c
+new file mode 100644
+index 000000000000..285658512b43
+--- /dev/null
++++ b/arch/openrisc/kernel/insn.c
+@@ -0,0 +1,84 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * OpenRISC instruction utils
++ *
++ * Linux architectural port borrowing liberally from similar works of
++ * others.  All original copyrights apply as per the original source
++ * declaration.
++ *
++ * OpenRISC implementation:
++ * Copyright (C) 2026 Sahil Siddiq <sahilcdq0@gmail.com>
++ */
++
++#include <linux/ptrace.h>
++#include <asm/insn-def.h>
++#include <asm/cpuinfo.h>
++
++DEFINE_STATIC_KEY_TRUE(delay_slot);
++
++void simulate_pc(struct pt_regs *regs, unsigned long pc_insn)
++{
++	int page_offset;
++	unsigned int rd, op;
++
++	page_offset = sign_extend32(
++		(pc_insn & OPENRISC_ADRP_IMM_MASK) << OPENRISC_ADRP_IMM_SHIFT, 31);
++	rd = (pc_insn & OPENRISC_ADRP_REG_MASK) >> OPENRISC_ADRP_REG_SHIFT;
++	op = get_6_bit_opcode(pc_insn);
++
++	switch (op) {
++	case OPENRISC_OPCODE_ADRP:
++		regs->gpr[rd] = page_offset + (regs->pc & OPENRISC_ADRP_OFFSET_MASK);
++		regs->pc += OPENRISC_INSN_SIZE;
++		return;
++	default:
++		break;
++	}
++}
++
++void simulate_branch(struct pt_regs *regs, unsigned long jmp_insn)
++{
++	int displacement;
++	unsigned int rb, op, link_offset, temp;
++
++	displacement = sign_extend32(
++		((jmp_insn) & OPENRISC_JUMP_IMM_MASK) << OPENRISC_JUMP_IMM_SHIFT, 27);
++	rb = (jmp_insn & OPENRISC_JUMP_REG_MASK) >> OPENRISC_JUMP_REG_SHIFT;
++	op = get_6_bit_opcode(jmp_insn);
++	link_offset = OPENRISC_INSN_SIZE;
++
++	if (static_branch_likely(&delay_slot))
++		link_offset <<= 1;
++
++	switch (op) {
++	case OPENRISC_OPCODE_J: /* l.j */
++		regs->pc += displacement;
++		return;
++	case OPENRISC_OPCODE_JAL: /* l.jal */
++		regs->gpr[9] = regs->pc + link_offset;
++		regs->pc += displacement;
++		return;
++	case OPENRISC_OPCODE_BNF: /* l.bnf */
++		if (regs->sr & SPR_SR_F)
++			regs->pc += link_offset;
++		else
++			regs->pc += displacement;
++		return;
++	case OPENRISC_OPCODE_BF: /* l.bf */
++		if (regs->sr & SPR_SR_F)
++			regs->pc += displacement;
++		else
++			regs->pc += link_offset;
++		return;
++	case OPENRISC_OPCODE_JR: /* l.jr */
++		regs->pc = regs->gpr[rb];
++		return;
++	case OPENRISC_OPCODE_JALR: /* l.jalr */
++		temp = regs->pc + link_offset;
++		regs->pc = regs->gpr[rb];
++		regs->gpr[9] = temp;
++		return;
++	default:
++		break;
++	}
++}
+diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+index 000a9cc10e6f..0f69c36472d5 100644
+--- a/arch/openrisc/kernel/setup.c
++++ b/arch/openrisc/kernel/setup.c
+@@ -255,6 +255,10 @@ void __init setup_arch(char **cmdline_p)
+ 	/* paging_init() sets up the MMU and marks all pages as reserved */
+ 	paging_init();
+ 
++	/* determine if the processor supports delay slots */
++	if (mfspr(SPR_CPUCFGR) & SPR_CPUCFGR_ND)
++		static_branch_disable(&delay_slot);
++
+ 	*cmdline_p = boot_command_line;
+ 
+ 	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.io\n");
+diff --git a/arch/openrisc/kernel/traps.c b/arch/openrisc/kernel/traps.c
+index c195be9cc9fc..c9ab630ec895 100644
+--- a/arch/openrisc/kernel/traps.c
++++ b/arch/openrisc/kernel/traps.c
+@@ -32,6 +32,7 @@
+ 
+ #include <asm/bug.h>
+ #include <asm/fpu.h>
++#include <asm/insn-def.h>
+ #include <asm/io.h>
+ #include <asm/processor.h>
+ #include <asm/unwinder.h>
+@@ -215,6 +216,32 @@ asmlinkage void do_trap(struct pt_regs *regs, unsigned long address)
+ 	if (user_mode(regs)) {
+ 		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->pc);
+ 	} else {
++		unsigned long trap, bcode;
++
++		if (get_kernel_nofault(trap, (unsigned long *)regs->pc) < 0)
++			return;
++
++		/*
++		 * Trap instruction was probably removed and no further processing
++		 * is required.
++		 */
++		if ((trap & OPENRISC_MASK_TRAP) != OPENRISC_INSN_TRAP)
++			return;
++
++		bcode = (trap & OPENRISC_MASK_BCODE);
++		switch (bcode) {
++		case BRK_KPROBE_BP:
++			if (kprobe_breakpoint_handler(regs))
++				return;
++			break;
++		case BRK_KPROBE_SSTEPBP:
++			if (kprobe_singlestep_handler(regs))
++				return;
++			break;
++		default:
++			break;
++		}
++
+ 		pr_emerg("KERNEL: Illegal trap exception 0x%.8lx\n", regs->pc);
+ 		die("Die:", regs, SIGILL);
+ 	}
+@@ -252,12 +279,12 @@ static inline int in_delay_slot(struct pt_regs *regs)
+ 	insn = *((unsigned int *)regs->pc);
+ 	op = insn >> 26;
+ 	switch (op) {
+-	case 0x00: /* l.j */
+-	case 0x01: /* l.jal */
+-	case 0x03: /* l.bnf */
+-	case 0x04: /* l.bf */
+-	case 0x11: /* l.jr */
+-	case 0x12: /* l.jalr */
++	case OPENRISC_OPCODE_J: /* l.j */
++	case OPENRISC_OPCODE_JAL: /* l.jal */
++	case OPENRISC_OPCODE_BNF: /* l.bnf */
++	case OPENRISC_OPCODE_BF: /* l.bf */
++	case OPENRISC_OPCODE_JR: /* l.jr */
++	case OPENRISC_OPCODE_JALR: /* l.jalr */
+ 		return 1;
+ 	default:
+ 		return 0;
+@@ -269,47 +296,9 @@ static inline int in_delay_slot(struct pt_regs *regs)
+ 
+ static inline void adjust_pc(struct pt_regs *regs, unsigned long address)
+ {
+-	int displacement;
+-	unsigned int rb, op, jmp;
+-
+ 	if (unlikely(in_delay_slot(regs))) {
+ 		/* In delay slot, instruction at pc is a branch, simulate it */
+-		jmp = *((unsigned int *)regs->pc);
+-
+-		displacement = sign_extend32(((jmp) & 0x3ffffff) << 2, 27);
+-		rb = (jmp & 0x0000ffff) >> 11;
+-		op = jmp >> 26;
+-
+-		switch (op) {
+-		case 0x00: /* l.j */
+-			regs->pc += displacement;
+-			return;
+-		case 0x01: /* l.jal */
+-			regs->pc += displacement;
+-			regs->gpr[9] = regs->pc + 8;
+-			return;
+-		case 0x03: /* l.bnf */
+-			if (regs->sr & SPR_SR_F)
+-				regs->pc += 8;
+-			else
+-				regs->pc += displacement;
+-			return;
+-		case 0x04: /* l.bf */
+-			if (regs->sr & SPR_SR_F)
+-				regs->pc += displacement;
+-			else
+-				regs->pc += 8;
+-			return;
+-		case 0x11: /* l.jr */
+-			regs->pc = regs->gpr[rb];
+-			return;
+-		case 0x12: /* l.jalr */
+-			regs->pc = regs->gpr[rb];
+-			regs->gpr[9] = regs->pc + 8;
+-			return;
+-		default:
+-			break;
+-		}
++		simulate_branch(regs, *((unsigned int *)regs->pc));
+ 	} else {
+ 		regs->pc += 4;
+ 	}
 -- 
 2.55.0
 
