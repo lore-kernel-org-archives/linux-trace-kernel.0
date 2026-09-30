@@ -1,225 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE484E2F20
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 20:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4050EBE8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 21:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790801192; cv=none; b=ZeISkcjYw2z/IAf3i97gsSpLY450+SDDx9WAhHxJPJbQqA2VYJR8PyNv6trovSJPj63asuksnmvRGsERr8fuGJLEpFrMd9CU4O2E0YFrU9pXKn/KDXf2+wszYz0bZPqIfrJaDT6to1Wp2hRKsDTRcoKgp974vhHyPTvy0vppCbw=
+	t=1790803189; cv=none; b=QP3VZRCHVRdzzI3588YIAqDOJBoXnlktjmMxlKxmQ0iUW/yGfZMsYMHWyREwZludWDUZDNM8zTutU3xk3VEkxyDXaw5a22232+5pKm2Sc4N9qowiNbd57gsA51yhZJqCNF7QDOVsw63qIcaJk4/RLir7iZB3xqlmJ4aLGyvCmvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790801192; c=relaxed/simple;
-	bh=Rdzjp3sw1dlqpcPMGe9dhLiVAtW6Zw0neKxa/ZZEf3s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gVD0bcU2CYANCDVgxVyLQKoqUR7CD6DhwkRr1V7K7prvcCXLg0dxur0mh2vWlsx1aUOQehg8Be4K7CDYhZdJQMYadSgURU4KLN5QFcSy37DwEXQLJhSXwPWTFs8XQLmnHcuyg/XtfzsAOmZMj9mg9HthLr3d5P8VnPlZXzwpuW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJHVCmqU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790803189; c=relaxed/simple;
+	bh=BBhO0G7OoXNQM+zVscTVjnR1G6JPiQRL3Q3Anj3rXW4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WpKFHM7SuuTeMCDGxQSyhtPJjsi/39OcRXDCxI4CNhOATL5c6rLJRd8K3rQyDXfNsV97oXl4D0GaNRBDbtgHGmDH1t7fD83vLYdwsIYhrzp+4qUfyr1B/yrmfsMzPMwxD5nUsBm7X9XnI2M8qpxitUjK76/r6w//+E8cc4tcPM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sJz1CNaN; arc=none smtp.client-ip=74.125.229.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJHVCmqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E971F000FF;
-	Wed, 30 Sep 2026 20:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790801191;
-	bh=BNqhjjSrnu5p/4yAp2EfgK+mWjc9SqEI0NzOZ8/JVi4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YJHVCmqUYRBtZ1D36IyvY3xAQ6XQF3dyc65kRwQNxqgufPCXpIKDrpd8knD3tB2Qj
-	 SGRjnvvh2N7NTAV5Rxja0HI6vBORW3+e4cWicaPOGyH21meCFogl0u2Mv1nXD24SLB
-	 7dWRas42dxN3H8fISvkLNM64jg7oN47eFhFC92L4paxjborycQtUl3nTT39g1criCA
-	 bdqe9A89W2O0dx1iGJLqtAksVsnn4LNUCh8VrOOGVUl0AX7bSqReDFoJA3cTFMBhh3
-	 lwqZ3EmhI3IIQ4FbUjeZar/NO2/u0G7gMUxnmZsXbtGkBGIlP+IBOHh46hUEaMsfz1
-	 s+pq/CQQGgRdA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/4] openrisc: Add utilities and clean up simulation
- of instructions
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sahil Siddiq" <sahilcdq0@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260930203129.51048-2-sahilcdq0@gmail.com>
-References: <20260407185650.79816-2-sahilcdq0@gmail.com>
- <20260930203129.51048-2-sahilcdq0@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 20:46:30 +0000
-Message-Id: <20260930204630.E2E971F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJz1CNaN"
+Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-33e630052ebso6562870eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 14:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790803187; x=1791407987; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5MAbEBhhA+02vAwebLwEVLzW2I8Vxs7DEzXGvm+ATwY=;
+        b=sJz1CNaNibzFaSSCV2MjrbPe3PzKfDZ5Yqv+MKKNZqFcJLRcNIcvwkOiOexdA6WFFV
+         VIq03vWxo+R/ulpacGVbJDhQsbvNu3sezIz8tTLL2R2dP4woJTgK9TTd1LbGC3s0HwcP
+         9J4AoaU23NFLEe3bnnl0Zbwk1tc/33q55s5RCwBmeCaH4005n2a7w90M3k8U0L8BEMvs
+         Po8Dc7RaG1Y3kI7KHqx25G8vQc7nIy/ATZOS+drtW+7b8s+p0U3z52SsBFrH9KR04BlD
+         dap0uPoXJPmwmo6ykpEM+Ak4nUQbdRyX7zkLFLCgkHmvyVlaYzaOTLtdRPp6G7xEcrll
+         FiAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790803187; x=1791407987;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5MAbEBhhA+02vAwebLwEVLzW2I8Vxs7DEzXGvm+ATwY=;
+        b=hKqsumEhNkBPPXAs3glE/O17YfE4TvAlKakzxxpksPDk7d82gFqgU8FYppsGSEwoGw
+         IgHxWsMQrPEImWDhDGQu0z4SVxCtl+9zhrFJfUsSq5ClDkvDRalKv1Yj7QB/LzchWNrb
+         oyG0ppMXc3U3yY7oYPpaHL4Rsu5ArGQz6b5+/Oj6PytSz+WAjDr6yo2lzZlYy1GMz4cV
+         ceroUv91i5w6x1qWhIrEV9M66QC7TTQnxEbiqoODJd/zCJVQPzYIGCa4PyhDDJDXGLLd
+         XSFQJRS07N7qXcx80MieAVOnumRxcOr0bmjn1ObuQz8l+8XM7VO6OJhekABAp23D32H2
+         xlcA==
+X-Forwarded-Encrypted: i=1; AKwUvBxCe8nxshmdUTZxHzc4BojBV5MHRjt8qSMo1TN4Jq6zDNSGHTLZkZQ3fe5z06LWK7Fw06HqHMaJgYT6b745UVu14v8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJEzFu7Prhw34MtKKP/0jlblvoQzQtxc2fI6OTtq5DfrFWcVuwr
+	kp9HgUT6hb4m8dpDlDtwC8BXTKx47rsqw0FZA/jpAmNQhT5qOOZafmYl
+X-Gm-Gg: AYBFou25n1NtxoHZeo8yzW1cWj4DLGnbtfUQSYPNATxMnBXkfAquFINr/r/C1oX2er6
+	mR1JkamJW1PCBqFYk6k8AgZ0wjpzdYFJ6AfbXYyMDFEsW++Zm35ZI52+csOZY6kmDIQaZxzVsgL
+	NzT9Xrfh7c88xosthI9HHYt9WH9wKgXc9m8HAkFLV7kNrrQmqLzMX2jru99nPaTTQtnTK00Bf/e
+	FnHmfI3GIxnQ5EB6JgwUfRGCdw3k06h+oAvketp54WKvncGPBgIrD34lHXD7phIgMZs3feLq4e+
+	XREvemWhZviZeMOxPBaeJr0LnDURBznX43jf6dywQlbywc3E3MrmGo++KAZFZ0e3iGuLH5dryq6
+	3sdEe8RseRQYAA1Gim05Pw4o04jrQXWGBKztohM/GYQ/Z5RGkuIbZ1AykZsal5KLfB+8e+A72bb
+	MmE3oiuLry5nhReUBu3JtXBCVFXcFrQh0JFKnKwZivtg5c4aBRjN9CpjmY831Tx6xpvLyt4dk3X
+	VYs34mpy5ha0ZLtmxRzPx+34x4wyxIrWSNmxA==
+X-Received: by 2002:a05:7300:2143:b0:340:e422:fd3d with SMTP id 5a478bee46e88-34cdbad6906mr4380425eec.17.1790803186822;
+        Wed, 30 Sep 2026 14:19:46 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c44:2e39:63b8:ea3c:fa28:7091? ([2401:4900:1c44:2e39:63b8:ea3c:fa28:7091])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34db31623b6sm1443764eec.7.2026.09.30.14.19.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Sep 2026 14:19:46 -0700 (PDT)
+Message-ID: <512dd1d8-67cc-44b7-9442-0fbbab111680@gmail.com>
+Date: Thu, 1 Oct 2026 02:48:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] openrisc: Add support for KProbes
+To: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+ naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org
+Cc: tytso@mit.edu, wangruikang@iscas.ac.cn, namcao@linutronix.de,
+ pjw@kernel.org, kees@kernel.org, linux-openrisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20260407185650.79816-2-sahilcdq0@gmail.com>
+ <20260930203129.51048-1-sahilcdq0@gmail.com>
+Content-Language: en-US
+From: Sahil <sahilcdq0@gmail.com>
+In-Reply-To: <20260930203129.51048-1-sahilcdq0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] openrisc: instruction simulator corrupts sr via gpr[0] aliasing
-- [High] openrisc: silent text patching failure on RO memory
-- [Low] build: undefined Kprobe constants and handlers in traps.c
---
+On 10/1/26 2:01 AM, Sahil Siddiq wrote:
+> Hi,
+> 
+> Apologies for the delay. This is v2 of the patch series to add KProbe
+> support for OpenRISC.
+> 
+> The series also adds support for Kretprobes (which depends on the rethook
+> framework [1]). Kretprobes are fired on function return.
+> 
+> [...]
+> 
+> I have also made changes based on the review comments I received for
+> v1 [5] including several of Sachiko's comments [6]. I chose not to make
+> changes in a few places. I'll send emails as a reply to this thread
+> explaining my reasoning inline.
+>
+> [...]
+> 
+> Sahil Siddiq (4):
+>    openrisc: Add utilities and clean up simulation of instructions
+>    openrisc: Add KProbes
+>    openrisc: Add unit tests for KProbes on branch instructions
+>    openrisc: Add Kretprobes
+> 
+> [...]> 
 
-commit 55276d42aa86ee1b0ca046c1e956df26c99385de
-Author: Sahil Siddiq <sahilcdq0@gmail.com>
 
-openrisc: Add utilities and clean up simulation of instructions
+Sorry, I forgot to post a summary of the differences between v2 and v1:
 
-Introduce new instruction-related utilities and macros for OpenRISC.
-This is in preparation for patches that add tracing support such as
-KProbes and Kretprobes.
+Commit #1:
+- arch/openrisc/include/asm/cpuinfo.h: Introduce "delay_slot" static key
+- arch/openrisc/include/asm/insn-def.h:
+   - Use macros instead of union
+   - Use better names for macros
+   - Use genmask() for masks
+- arch/openrisc/kernel/insn.c:
+   - Use macros instead of magic values
+   - (simulate_pc): Update PC
+   - (simulate_branch): Handle rb=r9 in l.jalr simulation
+- arch/openrisc/kernel/setup.c: Use "delay slot" static key
+- arch/openrisc/kernel/traps.c: Use macros instead of magic values
 
-Link: https://raw.githubusercontent.com/openrisc/doc/master/openrisc-arch-1=
-.4-rev0.pdf
+Commit #2:
+- arch/openrisc/include/asm/kprobes.h:
+   - (struct prev_kprobe): Add restore_pc
+   - (struct kprobe_ctlblk): Move restore_pc from global "struct arch_specific_insn"
+- arch/openrisc/kernel/kprobes.c:
+   - Use macros instead of magic values
+   - Use "get_kernel_nofault" instead of directly dereferencing address
+   - (insns_need_simulation): Use "daley slot" static key
+   - (arch_prepare_kprobe): Prevent KProbe insertion if instruction in delay slot also requires simulation
+   - (save_previous_kprobe): Use "restore_pc"
+   - (restore_previous_kprobe): Likewise
+   - (post_kprobe_handler): Don't re-enable preemption if KProbe is nested
+   - (setup_singlestep): Use "restore_pc"
+   - (reenter_kprobe): Return false in case of unrecoverable KProbe
+   - (kprobe_singlestep_handler): Enable interrupt in pt_regs->sr
+   - (kprobe_fault_handler): Likewise
 
-> diff --git a/arch/openrisc/kernel/insn.c b/arch/openrisc/kernel/insn.c
-> new file mode 100644
-> index 0000000000000..285658512b433
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/insn.c
+Commit #3/#4: Introduced in v2 of the series
 
-[ ... ]
-
-> +void simulate_pc(struct pt_regs *regs, unsigned long pc_insn)
-> +{
-> +	int page_offset;
-> +	unsigned int rd, op;
-> +
-> +	page_offset =3D sign_extend32(
-> +		(pc_insn & OPENRISC_ADRP_IMM_MASK) << OPENRISC_ADRP_IMM_SHIFT, 31);
-> +	rd =3D (pc_insn & OPENRISC_ADRP_REG_MASK) >> OPENRISC_ADRP_REG_SHIFT;
-> +	op =3D get_6_bit_opcode(pc_insn);
-> +
-> +	switch (op) {
-> +	case OPENRISC_OPCODE_ADRP:
-> +		regs->gpr[rd] =3D page_offset + (regs->pc & OPENRISC_ADRP_OFFSET_MASK);
-
-[Severity: High]
-Does this code corrupt the Status Register (sr) if rd is 0?
-
-In OpenRISC's pt_regs, gpr[0] aliases to the Status Register (sr). If a pro=
-be
-is placed on an instruction like l.adrp r0, ..., writing to regs->gpr[rd]
-without checking if rd =3D=3D 0 could inadvertently overwrite the kernel's =
-sr.
-
-> +		regs->pc +=3D OPENRISC_INSN_SIZE;
-> +		return;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +void simulate_branch(struct pt_regs *regs, unsigned long jmp_insn)
-> +{
-> +	int displacement;
-> +	unsigned int rb, op, link_offset, temp;
-> +
-> +	displacement =3D sign_extend32(
-> +		((jmp_insn) & OPENRISC_JUMP_IMM_MASK) << OPENRISC_JUMP_IMM_SHIFT, 27);
-> +	rb =3D (jmp_insn & OPENRISC_JUMP_REG_MASK) >> OPENRISC_JUMP_REG_SHIFT;
-> +	op =3D get_6_bit_opcode(jmp_insn);
-> +	link_offset =3D OPENRISC_INSN_SIZE;
-
-[ ... ]
-
-> +	switch (op) {
-> +	case OPENRISC_OPCODE_J: /* l.j */
-> +		regs->pc +=3D displacement;
-> +		return;
-
-[ ... ]
-
-> +	case OPENRISC_OPCODE_JR: /* l.jr */
-> +		regs->pc =3D regs->gpr[rb];
-
-[Severity: High]
-Similarly, does this code read the Status Register instead of 0 if rb is 0?
-
-Since gpr[0] aliases to sr in pt_regs, an instruction like l.jr r0 would end
-up reading the sr rather than 0 in simulate_branch().
-
-> +		return;
-> +	case OPENRISC_OPCODE_JALR: /* l.jalr */
-> +		temp =3D regs->pc + link_offset;
-> +		regs->pc =3D regs->gpr[rb];
-> +		regs->gpr[9] =3D temp;
-> +		return;
-> +	default:
-> +		break;
-> +	}
-> +}
-
-> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-> index 000a9cc10e6f6..0f69c36472d55 100644
-> --- a/arch/openrisc/kernel/setup.c
-> +++ b/arch/openrisc/kernel/setup.c
-> @@ -255,6 +255,10 @@ void __init setup_arch(char **cmdline_p)
->  	/* paging_init() sets up the MMU and marks all pages as reserved */
->  	paging_init();
-> =20
-> +	/* determine if the processor supports delay slots */
-> +	if (mfspr(SPR_CPUCFGR) & SPR_CPUCFGR_ND)
-> +		static_branch_disable(&delay_slot);
-> +
-
-[Severity: High]
-Does this static branch update silently fail to patch read-only memory?
-
-Since this is called immediately after paging_init() marks the kernel text
-as read-only, and interrupts are disabled, jump label text patching will
-fall back to copy_to_kernel_nofault(). This might silently fail to write
-to the read-only memory, leaving the delay_slot key incorrectly enabled
-on CPUs without delay slots and leading to corrupted return addresses.
-
->  	*cmdline_p =3D boot_command_line;
-> =20
->  	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.io\n");
-
-> diff --git a/arch/openrisc/kernel/traps.c b/arch/openrisc/kernel/traps.c
-> index c195be9cc9fcc..c9ab630ec8950 100644
-> --- a/arch/openrisc/kernel/traps.c
-> +++ b/arch/openrisc/kernel/traps.c
-
-[ ... ]
-
-> @@ -215,6 +216,32 @@ asmlinkage void do_trap(struct pt_regs *regs, unsign=
-ed long address)
->  	if (user_mode(regs)) {
->  		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->pc);
->  	} else {
-> +		unsigned long trap, bcode;
-> +
-> +		if (get_kernel_nofault(trap, (unsigned long *)regs->pc) < 0)
-> +			return;
-> +
-> +		/*
-> +		 * Trap instruction was probably removed and no further processing
-> +		 * is required.
-> +		 */
-> +		if ((trap & OPENRISC_MASK_TRAP) !=3D OPENRISC_INSN_TRAP)
-> +			return;
-> +
-> +		bcode =3D (trap & OPENRISC_MASK_BCODE);
-> +		switch (bcode) {
-> +		case BRK_KPROBE_BP:
-> +			if (kprobe_breakpoint_handler(regs))
-
-[Severity: Low]
-Will this unconditionally break the build during a git bisect?
-
-BRK_KPROBE_BP and kprobe_breakpoint_handler() do not appear to be defined
-until a follow-up commit ("openrisc: Add KProbes"). Introducing their usage
-here in do_trap() will result in undefined constants and undeclared functio=
-ns
-when compiling this commit.
-
-> +				return;
-> +			break;
-> +		case BRK_KPROBE_SSTEPBP:
-> +			if (kprobe_singlestep_handler(regs))
-> +				return;
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +
->  		pr_emerg("KERNEL: Illegal trap exception 0x%.8lx\n", regs->pc);
->  		die("Die:", regs, SIGILL);
->  	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930203129.5104=
-8-1-sahilcdq0@gmail.com?part=3D1
+Thanks,
+Sahil
