@@ -1,100 +1,171 @@
-Received: from mta1.migadu.com (out-56.mta1.migadu.com [95.215.58.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156203A7F6B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 05:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C06C30C147;
+	Wed, 30 Sep 2026 09:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790746597; cv=none; b=GtwrWms11exmbfd5xKKBO42wTpZ3H8HOOYJdJxocXfnggx9iSokK+0vQv4AIPmZAnQ5M5dTCiRKQjA7WK9oM1m13ye/JLFvwWL7EO3lQc/t/v6xkn6jnXrao3O1qUHQEXMuq7o5bC92qAjnDCwBgTcxvcOi/U5/fI4a6NGqKCyg=
+	t=1790760761; cv=none; b=Kf9Zr2uNjv45FwLGm/pDi1s5K2fOqWiFNkJULWX0rtrHJR2A2ylYuyTTb6Y6CNrBQsxkHIzSVOLDvh1Wl1jHIMaDPkjhtJGP530xZog4U5RaDZ5MftPSguEzABYKK+nl4CKzV3ZyZm2VikY0kM9frmh5EZYnmgWPqK9zzcQien8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790746597; c=relaxed/simple;
-	bh=weGHAUr2l8CJamIsh5doUiVjsBwz2X9koep9k05v1c4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u6IJGQ8KfCxTwchADTn127appvlrxmRqZNzFtz5gTo7BeSp/vT1W7i1eyUHWJFnJdEchvIhL8CXdkahbbljfCM4q+v5tA/pby+YQpyZ4kTtwV6E2RW8voLoSeF2tYkKvWHG1sfnBOhvBnenVbIBb0b/xK1g9oHCbMK+R4C5ubbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cjM5qCkv; arc=none smtp.client-ip=95.215.58.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790760761; c=relaxed/simple;
+	bh=TlzHEJQt+34xYjujqXxuq3JcjM0wYp8ZviYUagsVkog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=garWEN3pTPZ7+NgDU1WHoJtjfajbeOywY3CMAhthbp1Wn6S/ZR7JDL1COPGG16xzzNMad5wxSVwPmmJwNRV0wutckgUP6s9N+LHPXG14nlYHw3+dWd5gAqMX8XpHnmCS89rzNhvWXYrh3iR4CfWqOLZv34HFKanSM5TiA59WRWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/WFPBAH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cjM5qCkv"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=weGHAUr2l8CJamIsh5doUiVjsBwz2X9koep9k05v1c4=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790746593; v=1; x=1791351393;
- b=cjM5qCkvvDjcjTgWHdYcRQsQ4ZDdoNBwIX/uGfn60CRTRqg4INCPX7b28mBuaBR4MrC0GEyq
- kKIoiaVkv7Ij7mXF46PPz2sogDsWxj0AFZUr8rLJLRQlayqiH8PLAVqN0w2X6ABu9G+vQOTHjXK
- 4LiXIa0z1bCkrWnUpz6eOa+0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 67e0a92a6b2b4068;
-	Wed, 30 Sep 2026 05:36:32 +0000
-X-Mizu-Trace-ID: 67e0a92a6b2b4068
-X-Migadu-Flow: FLOW_OUT
-From: Leon Hwang <leon.hwang@linux.dev>
-To: Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@elte.hu>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Leon Hwang <leon.hwang@linux.dev>,
-	stable@vger.kernel.org
-Subject: [PATCH] kprobes: Skip disarmed probes when checking optkprobe overlap
-Date: Wed, 30 Sep 2026 13:36:18 +0800
-Message-ID: <20260930053618.104498-1-leon.hwang@linux.dev>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/WFPBAH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD21A1F000FF;
+	Wed, 30 Sep 2026 09:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790760760;
+	bh=GUhUebTYwdNTDsFDAgKX2XUga1p/xniYtUmuBOcAkD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=A/WFPBAH7Qma+9hcX287RuSKWlORpntiWFjFLaPigU8Y75ISxg3KEjLTfteawEyBe
+	 2g/cYh4OEqr71nkWwJpVQnorMprUQRkz1eix+QLOCr/CPst8lLD0ChCfFd8YGM4jfy
+	 Fksx04sLagSxxR88vp09QnJZCikrL8s15UEcYtyj8cHuNrsfav7blbRqRE5dyxX7SB
+	 IKNdTpYGGoAU9JjY6jjqMsEYQfRaLoK1HI3j102H2WUj2d2AjX7kJd1tm0yEuZtXim
+	 rxv3PmM3a58m4CHKDbt2tmNwqyH0M2+G0zuIAT/AqLpxmsAoL5566Xt1IaKFXihiLq
+	 k8Bhh/EDc3Mrg==
+Date: Wed, 30 Sep 2026 10:32:09 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Doug Gilbert <dgilbert@interlog.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, 
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
+Subject: Re: [PATCH v3 34/40] mm: eliminate VMA_SPECIAL_FLAGS usage when
+ hugetlb explicitly tested
+Message-ID: <arzXDWOaouPMGtxL@gremlin>
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-34-4583d8a23bca@kernel.org>
+ <DLSAZ4ZQY8Q3.3OKOCCOQAFVCC@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DLSAZ4ZQY8Q3.3OKOCCOQAFVCC@nvidia.com>
 
-On x86, an optkprobe at A replaces five bytes with a jump. If a disabled
-probe B is at A+2, get_optimized_kprobe() stops at B when arming a new
-probe C at A+4. It leaves A optimized:
+On Tue, Sep 29, 2026 at 10:42:00PM -0400, Zi Yan wrote:
+> On Thu Sep 17, 2026 at 12:22 PM EDT, Lorenzo Stoakes (ARM) wrote:
+> > It is now an invariant that VMA_IO_BIT is not set except by kernel-owned
+> > mappings, so each existing VMA_SPECIAL_FLAGS test need only test for
+> > VMA_DONTEXPAND_BIT, VMA_PFNMAP_BIT and VMA_MIXEDMAP_BIT.
+> >
+> > This is precisely a test for a kernel-owned or fixed mapping.
+> >
+> > Update a number of callsites which already explicitly handle hugetlb
+> > mappings.
+> >
+> > vma_supports_mlock() and ksm_compatible() also explicitly bail on droppable
+> > mappings - detecting kernel-owned, fixed or droppable mappings is handled
+> > by vma_is_persistent(), so in these cases use this predicate.
+> >
+> > should_skip_vma() tests for locked, kernel-owned or fixed memory (having
+> > already excluded hugetlb mappings) so simply test for those there.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> > ---
+> >  mm/internal.h | 4 +---
+> >  mm/ksm.c      | 4 +---
+> >  mm/vmscan.c   | 3 ++-
+> >  3 files changed, 4 insertions(+), 7 deletions(-)
+> >
+>
+> <snip>
+>
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index 12ed3388ee41..09ff20c3df5b 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -3477,7 +3477,8 @@ static int should_skip_vma(unsigned long start, unsigned long end, struct mm_wal
+> >  	if (!vma_has_recency(vma))
+> >  		return true;
+> >
+> > -	if (vma->vm_flags & (VM_LOCKED | VM_SPECIAL))
+> > +	if (vma_test(vma, VMA_LOCKED_BIT) || vma_is_kernel_owned(vma) ||
+>
+> At this point, mmap_lock is held, there is no mlock WIP, so
+> VMA_LOCKED_BIT is enough.
 
-              A    A+1  A+2  A+3  A+4
-  A's jump  | e9 | d0 | d1 | d2 | d3 |
-  after C   | e9 | d0 | d1 | d2 | cc |
+Yes indeed :)
 
-The INT3 for C overwrites the last byte of A's jump displacement, so
-execution can jump to the wrong address. B can have prepared optinsns
-while disarmed, but has no jump to unoptimize.
+>
+> > +	    vma_is_fixed_mapping(vma))
+> >  		return true;
+> >
+> >  	if (vma == get_gate_vma(vma->vm_mm))
+>
+> LGTM.
+>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-Continue past disarmed and unprepared probes to find the active optimized
-probe before arming a probe in its jump.
+Thanks!
 
-Fixes: afd66255b9a4 ("kprobes: Introduce kprobes jump optimization")
-Cc: stable@vger.kernel.org
-Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
----
- kernel/kprobes.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+>
+>
+> --
+> Best Regards,
+> Yan, Zi
+>
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 6337da5cab9e..e6f6e18fa1b5 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -495,14 +495,16 @@ static bool kprobe_queued(struct kprobe *p)
- static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
- {
- 	int i;
--	struct kprobe *p = NULL;
-+	struct kprobe *p;
- 	struct optimized_kprobe *op;
- 
- 	/* Don't check i == 0, since that is a breakpoint case. */
--	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
-+	for (i = 1; i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++) {
- 		p = get_kprobe(addr - i);
-+		/* A disabled probe can have prepared, but inactive, optinsns. */
-+		if (!p || !kprobe_optready(p) || kprobe_disarmed(p))
-+			continue;
- 
--	if (p && kprobe_optready(p)) {
- 		op = container_of(p, struct optimized_kprobe, kp);
- 		if (arch_within_optimized_kprobe(op, addr))
- 			return p;
--- 
-2.55.0
-
+--
+Cheers, Lorenzo
