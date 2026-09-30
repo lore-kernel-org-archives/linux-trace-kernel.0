@@ -1,228 +1,166 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D5F36B904;
-	Wed, 30 Sep 2026 03:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4826374A17
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 03:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790737696; cv=none; b=VTkt6qKUwQpF3e6b18Y5w4FRZCWvKQeoffvRDYiOYxNm+mh9FV63USM4aBcMTNN4Fg7LNMj/w+kDOueTwdcc7ukOSG+cNelv/0RjodphkfjilM0rw5ZnB+Rtjlgr2WGmlp5xm04MPvIrzT60s0LJcs8sw0uFv1P4sdhWbvN/pdI=
+	t=1790738346; cv=none; b=Cdf9m7Zhu/xTHHYK7Y3BWGHyoO4oDyu+UcS8CucRmZuM5MrnRy+bJTLYY2ES/4caO3YQRvi7MPrRoF8/4Ll7U7UU+d/JdSNZPzEhxyG2v6cBSiEJWL6zALsCTVUvbfBE/9zofNKNZ9sFOdh7O/5GiWOcrv+h9HjfWwlV4J3R9uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790737696; c=relaxed/simple;
-	bh=Iv4wtlsTIdnAYiTSWW0vCXQOaUSDpeQO5E3NEpFBtvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pi5TGe87+QtbmcUzySqwkJ26D2JDfreY7S7d5SN/AIwQpIwrjUmN1JF6N9I+EjjBPJC4+AbXHeNkNSyqkQX5k82meZId0A6ZDPuMdU21Lt0y1dDpclsYTTtJ7lN4WDaPFZkVdy0CFO4obyTXRPo4O9o+hW+QCPFNqG6SXxKbE9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FfB5ZYAT; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1790738346; c=relaxed/simple;
+	bh=Hzz840MBWLAOhyLB0MlDTbRjWbyjxvpPG5mj84RVku0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=BMv3sg8gV70xFOj1mZe+IDeYHIBck5LF9B7ZWBZAIEYxL9glRLW4zlRXhibQgdJL7TsEj+acz5syUENDhqWExW137WLRKkJ+wS1zyhnGqWxmUwuJGk48H82VpIYH7+7Kg03q3QrQGstYfm+T2pQV7FB5sl3WfXX8pHzXBcoIBTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWSTyxnH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FfB5ZYAT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=tJ
-	Vc+ek+/OL7mjlHCz2B1uUEAtE+OkNeX1hqUj5Ew8E=; b=FfB5ZYAT7yn+oTn2nA
-	QhXGqPJvEIoeBzQbxVxTakVvh2UqunacViK8ahrZG2T+U2fJkiGUnC+oUj5DtOzH
-	75qWlhVExPyJ0+bDeVBVCXfZT8FpCbof0tPWWrb56H7MeZ9KR2QwqIhp4w1VBazw
-	Q6FdxIcvuVRSBQ18mozvZZhSI=
-Received: from nans.company.local (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDXf9b1fLxqY4WeCA--.38142S2;
-	Wed, 30 Sep 2026 11:07:34 +0800 (CST)
-From: nanshuaibo <nanshuaibo811@163.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chris Li <sparse@chrisli.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sparse@vger.kernel.org,
-	nanshuaibo <nanshuaibo811@163.com>
-Subject: [PATCH] tracing: Make branch profiler counters atomic
-Date: Wed, 30 Sep 2026 11:07:28 +0800
-Message-ID: <20260930030728.1144418-1-nanshuaibo811@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWSTyxnH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B226E1F000FF;
+	Wed, 30 Sep 2026 03:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790738342;
+	bh=AneH/X39YZ3FZmXVDbqCx3aLibNtf4EyWbnyAhU1ixQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KWSTyxnHik9ZuMb6FS/OZcBzDfG5cZTOIDWapE/t9sasOdDGqMNtvaZ/lRdl/kLmq
+	 SZHmNpBoSY7NRFvFpNb4vh8eDzyY7xNl+W8BmZZqvRgyYr9l4IVeuNBgyCKI6CtLLn
+	 fyJ4cdvYQcAS+/5bqu+wIC/ku2XAJfQpueIc8DU5xn6r6oDLzLy1bz3Jr/6Zes07ej
+	 joOua+GCTew9tWB2GRqL/QsPIQ5bbdD/9R9yc5X8mjfrukwMTLLJRXzkjZE5zUczqe
+	 dzOi6ZayqpaXvQJGPTZcsX2t0Gh6JL57jpaeG+KdiJVbWzWvw8q9KHl9RkruIEOpmr
+	 zbHiic112QKYg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Make branch profiler counters atomic
+Reply-To: sashiko-reviews@lists.linux.dev
+To: nanshuaibo <nanshuaibo811@163.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260930030728.1144418-1-nanshuaibo811@163.com>
+References: <20260930030728.1144418-1-nanshuaibo811@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 30 Sep 2026 03:19:01 +0000
+Message-Id: <20260930031902.B226E1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDXf9b1fLxqY4WeCA--.38142S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Xw1DJr1DKr15JFy3XFyxZrb_yoWxGw15pF
-	W8JF97tF4rZFsIgrnF9w4rJw13G3yDta4SgrZrXwnxJF1qyr13KryIkFs0vrnYyryFkrya
-	vryj93yUuwnFq3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pK-eYgUUUUU=
-X-CM-SenderInfo: pqdq2xxxdlu0qyrrqiywtou0bp/xtbCwBcmYWq8fPeUKAAA3x
 
-The branch profiler updates its static counters from arbitrary contexts. Concurrent updates can race and lose counts. KCSAN reports a data race between ftrace_likely_update() invocations.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] tracing: severe performance regression from locked atomic instru=
+ctions on branches
+- [Low] tracing: build failure on non-atomic archs due to compiler built-in=
+ atomics
+--
 
-Use relaxed compiler atomic operations for the counters. The profiler metadata is defined in compiler_types.h, before the kernel atomic API is available. The counters do not order accesses to other data.
+commit 9ef68553e3432c59dcd576b4a0f6c62d77db0cf7
+Author: nanshuaibo <nanshuaibo811@163.com>
 
-Also use atomic loads when reading the counters for tracefs output and sorting, so readers do not race with atomic writers.
+tracing: Make branch profiler counters atomic
 
-Tested on x86_64 QEMU/KVM with KCSAN and CONFIG_PROFILE_ANNOTATED_BRANCHES=y. The baseline reports the race in ftrace_likely_update(); it is not reported after this change.
+The branch profiler updates its static counters from arbitrary contexts.
+Concurrent updates can race and lose counts, resulting in KCSAN data race
+reports. This patch uses relaxed compiler atomic operations for the counters
+and atomic loads for reading the tracefs output.
 
-Signed-off-by: nanshuaibo <nanshuaibo811@163.com>
----
- include/linux/compiler.h    | 14 ++++++++++--
- kernel/trace/trace_branch.c | 43 ++++++++++++++++++++++---------------
- 2 files changed, 38 insertions(+), 19 deletions(-)
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+[ ... ]
+> @@ -14,6 +14,16 @@
+>   */
+>  void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>  			  int expect, int is_constant);
+> +
+> +/*
+> + * Branch profiler data is defined in compiler_types.h, before the atomi=
+c API
+> + * is available. These counters are independent statistics and do not or=
+der
+> + * accesses to other data.
+> + */
+> +#define ftrace_branch_counter_inc(counter) \
+> +	__atomic_fetch_add(&(counter), 1, __ATOMIC_RELAXED)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index cb2f6050b..7efbcd6aa 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -14,6 +14,16 @@
-  */
- void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 			  int expect, int is_constant);
-+
-+/*
-+ * Branch profiler data is defined in compiler_types.h, before the atomic API
-+ * is available. These counters are independent statistics and do not order
-+ * accesses to other data.
-+ */
-+#define ftrace_branch_counter_inc(counter) \
-+	__atomic_fetch_add(&(counter), 1, __ATOMIC_RELAXED)
-+#define ftrace_branch_counter_read(counter) \
-+	__atomic_load_n(&(counter), __ATOMIC_RELAXED)
- #if defined(CONFIG_TRACE_BRANCH_PROFILING) \
-     && !defined(DISABLE_BRANCH_PROFILING) && !defined(__CHECKER__)
- #define likely_notrace(x)	__builtin_expect(!!(x), 1)
-@@ -66,8 +76,8 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 			.line = __LINE__,		\
- 		};					\
- 	(cond) ?					\
--		(__if_trace.miss_hit[1]++,1) :		\
--		(__if_trace.miss_hit[0]++,0);		\
-+		(ftrace_branch_counter_inc(__if_trace.miss_hit[1]), 1) :\
-+		(ftrace_branch_counter_inc(__if_trace.miss_hit[0]), 0);\
- })
- 
- #endif /* CONFIG_PROFILE_ALL_BRANCHES */
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index d8e97ad79..36b61b5ed 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -73,7 +73,7 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- 
- 	strscpy(entry->func, f->data.func);
- 	strscpy(entry->file, p);
--	entry->constant = f->constant;
-+	entry->constant = ftrace_branch_counter_read(f->constant);
- 	entry->line = f->data.line;
- 	entry->correct = val == expect;
- 
-@@ -202,7 +202,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 
- 	/* A constant is always correct */
- 	if (is_constant) {
--		f->constant++;
-+		ftrace_branch_counter_inc(f->constant);
- 		val = expect;
- 	}
- 	/*
-@@ -213,11 +213,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 	 */
- 	trace_likely_condition(f, val, expect);
- 
--	/* FIXME: Make this atomic! */
- 	if (val == expect)
--		f->data.correct++;
-+		ftrace_branch_counter_inc(f->data.correct);
- 	else
--		f->data.incorrect++;
-+		ftrace_branch_counter_inc(f->data.incorrect);
- 
- 	user_access_restore(flags);
- }
-@@ -239,13 +238,15 @@ static int annotated_branch_stat_headers(struct seq_file *m)
- 
- static inline long get_incorrect_percent(const struct ftrace_branch_data *p)
- {
-+	unsigned long correct = ftrace_branch_counter_read(p->correct);
-+	unsigned long incorrect = ftrace_branch_counter_read(p->incorrect);
- 	long percent;
- 
--	if (p->correct) {
--		percent = p->incorrect * 100;
--		percent /= p->correct + p->incorrect;
-+	if (correct) {
-+		percent = incorrect * 100;
-+		percent /= correct + incorrect;
- 	} else
--		percent = p->incorrect ? 100 : -1;
-+		percent = incorrect ? 100 : -1;
- 
- 	return percent;
- }
-@@ -282,7 +283,8 @@ static void branch_stat_show(struct seq_file *m,
- static int branch_stat_show_normal(struct seq_file *m,
- 				   struct ftrace_branch_data *p, const char *f)
- {
--	seq_printf(m, "%8lu %8lu ",  p->correct, p->incorrect);
-+	seq_printf(m, "%8lu %8lu ", ftrace_branch_counter_read(p->correct),
-+		   ftrace_branch_counter_read(p->incorrect));
- 	branch_stat_show(m, p, f);
- 	return 0;
- }
-@@ -291,18 +293,21 @@ static int annotate_branch_stat_show(struct seq_file *m, void *v)
- {
- 	struct ftrace_likely_data *p = v;
- 	const char *f;
-+	unsigned long constant;
- 	int l;
- 
- 	f = branch_stat_process_file(&p->data);
-+	constant = ftrace_branch_counter_read(p->constant);
- 
--	if (!p->constant)
-+	if (!constant)
- 		return branch_stat_show_normal(m, &p->data, f);
- 
--	l = snprintf(NULL, 0, "/%lu", p->constant);
-+	l = snprintf(NULL, 0, "/%lu", constant);
- 	l = l > 8 ? 0 : 8 - l;
- 
- 	seq_printf(m, "%8lu/%lu %*lu ",
--		   p->data.correct, p->constant, l, p->data.incorrect);
-+		   ftrace_branch_counter_read(p->data.correct), constant, l,
-+		   ftrace_branch_counter_read(p->data.incorrect));
- 	branch_stat_show(m, &p->data, f);
- 	return 0;
- }
-@@ -329,6 +334,10 @@ static int annotated_branch_stat_cmp(const void *p1, const void *p2)
- {
- 	const struct ftrace_branch_data *a = p1;
- 	const struct ftrace_branch_data *b = p2;
-+	unsigned long a_incorrect = ftrace_branch_counter_read(a->incorrect);
-+	unsigned long b_incorrect = ftrace_branch_counter_read(b->incorrect);
-+	unsigned long a_correct = ftrace_branch_counter_read(a->correct);
-+	unsigned long b_correct = ftrace_branch_counter_read(b->correct);
- 
- 	long percent_a, percent_b;
- 
-@@ -340,9 +349,9 @@ static int annotated_branch_stat_cmp(const void *p1, const void *p2)
- 	if (percent_a > percent_b)
- 		return 1;
- 
--	if (a->incorrect < b->incorrect)
-+	if (a_incorrect < b_incorrect)
- 		return -1;
--	if (a->incorrect > b->incorrect)
-+	if (a_incorrect > b_incorrect)
- 		return 1;
- 
- 	/*
-@@ -350,9 +359,9 @@ static int annotated_branch_stat_cmp(const void *p1, const void *p2)
- 	 * first, we continue that by showing best (correct)
- 	 * cases last.
- 	 */
--	if (a->correct > b->correct)
-+	if (a_correct > b_correct)
- 		return -1;
--	if (a->correct < b->correct)
-+	if (a_correct < b_correct)
- 		return 1;
- 
- 	return 0;
--- 
-2.43.0
+[Severity: Low]
+Does directly invoking the GCC built-in here cause linking failures on
+certain architectures? On architectures without native lock-free atomic
+hardware instructions for unsigned long (like SPARC32), GCC lowers this
+built-in to a library call such as __atomic_fetch_add_4. Since the kernel
+does not link against libatomic, will this unconditionally fail to build
+at link time on those architectures when branch profiling is enabled?
 
+[Severity: Medium]
+Could turning this into an atomic instruction cause a severe performance
+regression? When CONFIG_PROFILE_ALL_BRANCHES or
+CONFIG_PROFILE_ANNOTATED_BRANCHES is enabled, using __atomic_fetch_add
+compels the compiler to emit locked instructions (e.g., LOCK XADD on x86)
+for every evaluated branch condition kernel-wide. Can this result in CPU
+pipeline stalls and cache-line bouncing?
+
+> +#define ftrace_branch_counter_read(counter) \
+> +	__atomic_load_n(&(counter), __ATOMIC_RELAXED)
+>  #if defined(CONFIG_TRACE_BRANCH_PROFILING) \
+>      && !defined(DISABLE_BRANCH_PROFILING) && !defined(__CHECKER__)
+>  #define likely_notrace(x)	__builtin_expect(!!(x), 1)
+[ ... ]
+> diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+> --- a/kernel/trace/trace_branch.c
+> +++ b/kernel/trace/trace_branch.c
+[ ... ]
+> @@ -239,13 +238,15 @@ static int annotated_branch_stat_headers(struct seq=
+_file *m)
+> =20
+>  static inline long get_incorrect_percent(const struct ftrace_branch_data=
+ *p)
+>  {
+> +	unsigned long correct =3D ftrace_branch_counter_read(p->correct);
+> +	unsigned long incorrect =3D ftrace_branch_counter_read(p->incorrect);
+>  	long percent;
+> =20
+> -	if (p->correct) {
+> -		percent =3D p->incorrect * 100;
+> -		percent /=3D p->correct + p->incorrect;
+> +	if (correct) {
+> +		percent =3D incorrect * 100;
+> +		percent /=3D correct + incorrect;
+>  	} else
+> -		percent =3D p->incorrect ? 100 : -1;
+> +		percent =3D incorrect ? 100 : -1;
+> =20
+>  	return percent;
+>  }
+[ ... ]
+> @@ -329,6 +334,10 @@ static int annotated_branch_stat_cmp(const void *p1,=
+ const void *p2)
+>  {
+>  	const struct ftrace_branch_data *a =3D p1;
+>  	const struct ftrace_branch_data *b =3D p2;
+> +	unsigned long a_incorrect =3D ftrace_branch_counter_read(a->incorrect);
+> +	unsigned long b_incorrect =3D ftrace_branch_counter_read(b->incorrect);
+> +	unsigned long a_correct =3D ftrace_branch_counter_read(a->correct);
+> +	unsigned long b_correct =3D ftrace_branch_counter_read(b->correct);
+> =20
+>  	long percent_a, percent_b;
+> =20
+> @@ -340,9 +349,9 @@ static int annotated_branch_stat_cmp(const void *p1, =
+const void *p2)
+>  	if (percent_a > percent_b)
+>  		return 1;
+
+[Severity: Low]
+This is a pre-existing issue, but does this pattern create a race condition
+when computing these percentages?
+
+annotated_branch_stat_cmp() takes an initial snapshot of the lockless
+counters into local variables, but then calls get_incorrect_percent() which
+takes a second snapshot of the exact same counters. If the live counters
+change between these snapshots while user-space actively reads the debugfs
+trace stat file, the computed percentage may not match the fallback raw cou=
+nts
+used for tie-breaking.
+
+Could this yield internally inconsistent sorting keys and violate the strict
+weak ordering required by the rbtree implementation?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930030728.1144=
+418-1-nanshuaibo811@163.com?part=3D1
