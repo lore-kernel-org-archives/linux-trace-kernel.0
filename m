@@ -1,182 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011014.outbound.protection.outlook.com [52.101.57.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C24E0B70;
-	Wed, 30 Sep 2026 15:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790780921; cv=none; b=tXqwjDrGgG6JYIxbLkxL6AINofCqVOHsRm0uXMKtRWu+mq2OYBXuzWVVIRflWLVhKg5kLbwuadM/AdRmGDMLoAOoYDaOLnpR8V34qwCwuJsCdbV1lNKWMYlgCEC1q2fMC5xLFncjwVgpxHBkiuLewuLAqMHzrBSzMEry6E4ESbY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790780921; c=relaxed/simple;
-	bh=5mOG2J4Ub494gp8FewOph2+u22JzvRzIn8IysCJ5HoQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ds8JisyLolvJqMcoa994O1dtQ8iRqiuz6notEWvspQQU4/KfCjjNF4M2ELctTwmTqg3rXITpxr4Vbshgic3B1fNDyaa98lkluNpFvv/22ZnObA/aKDTToMs4YLNxAaOsltrNwqPCytBPadRseRfGXMewLhX2LDpy4XBS5Y/O0no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7mDBw7t; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47804F85AB;
+	Wed, 30 Sep 2026 15:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790782119; cv=fail; b=A73yTFuOXp33nZ47reN6uaiSVeCPX9QPgQu4klTRM9P+7l7zuBu8+bYdydo7KPGDycFJesdmhGXq+7b+P4sVs6eoSl+MKqgPUn88HnOhieNK8gEPUFWcXOStEY2bTJgglrHXNA0OcYgeH/X7oG8kueggWcE75J1Jhg7zpf0YMM4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790782119; c=relaxed/simple;
+	bh=mrR2p5hMKgCRApuAlcdwULmrCPEieDj5CYrcRy2szig=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qIFHqLGXjZSfBGf1cAV4IV3GmjawTkChxkoQPGJKHFSrYg749GtD1EIrOaFbcWrqXLrK7TjRb5DPa6TlQB3sHM04Vzh9nUAguVCbgA3jDmG5tL3gpZFQrsp7zWwWMxztxxP9rN7CswiqLLpCNQ2U1U2AEt9CUyt9LiamD51vrGc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=D1N0qPH6; arc=fail smtp.client-ip=52.101.57.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7mDBw7t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE281F000FF;
-	Wed, 30 Sep 2026 15:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790780910;
-	bh=frduz8rZcAKxNdH1bWgnIfr23mW/Ot9kPtUmM5okev4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F7mDBw7tY80KHgLM/K6kLyF9tw33iLx9xm2CIzXKhTnty3iHT75J7Wt0FvJbPSY/A
-	 65CpIlWd/d/nLicONYaDJnTwEvUabhBxMbVTyPta1kLyTnjUrFISXXheFm31PPjisf
-	 OreB12LQviKa84wnVhjAyn2+cq+xj3xurTQqqfT74H5iwoA/Upa0eiPpHBBXNHEIrg
-	 BonzV9kw2qLFV1QsBaF0uu2AKctnqcEWaUr88W7WIKr/Hj3pr5vXsJ8TCD2oMdnsrN
-	 1GCTT69CWX04/towQ67VFj+dsLIVgL9LsxlAniH16CLMsXMVbpxXnm15YDhkHuCfRq
-	 2XOTqzufk69/Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/6] zram: Add QPaCE zcomp backend
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Georgi Djakov" <georgi.djakov@oss.qualcomm.com>
-Cc: linux-trace-kernel@vger.kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, robh@kernel.org
-In-Reply-To: <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
-References: <20260930145215.3380977-1-georgi.djakov@oss.qualcomm.com>
- <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 15:08:30 +0000
-Message-Id: <20260930150830.9CE281F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="D1N0qPH6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s8uTyHY6ca0S0gFpYdWeYhmt2qrfVim81f/ez5gEyTG7rnWCcA8/efKeY19pYTwnxwABRHXRKolDwQi2UhO6Qz7e2tw2LtkJhsBVye4eWtkujwDZZ27NbV2cskWBD4nzj1Dd3LmiOn4W3u3obhqoFQUlgEbfAT/rGvrdzux+FUcMcTWhIntHiV95U798sZ0k9HBVZ5bIWiu68czDL62rHBAnmeLn4IK07kBZs/ig5ErqAxPLXbvEKipxMPC6OIyzO6xtuBjjFcSmzsvMHjYPfjA5yanrW4EaKx+lblQaKX1kfhoTPznH15l3TzT35GNhWLmss4FkNHGG6SvIvUG8mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j8w1jBnA80+jx0tcZGoqUFaJ5onaLQirx/OFTHfw1Is=;
+ b=JtWj3321OWFasox9ZMgOhmSAZPBdcjqPps/So50HJ7tSj2RIaFzWfVwmg056K6Itl7SlkJcHCMMvQbbJTMO79OGYAlUlJuGtRtdVkL6sMFAexi7rnPCZHLYdW5ylCqSCWp9Tbtmwyu09O7a/B+uMNCtRv6iEaMwjKiTLORhoRLOqV/0Taa1tt9sChnpupDPn3t2atSyDikEKWBFyLPz6ExmCk3P8/RraolNwzkaYCWDAWdQNlhDsDztRxk7p+U8gIFWQke2ge3GUrf5TMVmjVdk8i+weC5bxjqn4edtnPcOmAcvjaRYdEw7K/USJ6WkTMuC5RDb/DfHvcDWyW50Ymw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j8w1jBnA80+jx0tcZGoqUFaJ5onaLQirx/OFTHfw1Is=;
+ b=D1N0qPH6GDpjju4aIZpuxd1dhaa2+ullhx2NmCdQEzl3PVKYtQiHUacX80CpSDdjg0S1R5ugLiFraR2ypmUMTxGd3LzzhmR/rTewwQlyA92Mi3NJk3EQlxFcyrFGanZDy1OGzsQAUD7urm32U1uSNCKFWM7dEF8VvyJRYcckG81trDtDoXM+IP/gyS2UIZcfmNG4Lwk6NQHtbSLnUzilm8CMps9VuTI1+77XdaqWXsdqZUz2hwiQ3NL+9v2iT0+9kWqOl5A7DD0o3HbuAv6X5Y5zR2uE1C2tjPAIc1EOJrtUqptRVP22RCCLNS8C4ohXmhwm7eqoEgGQhlD+OCe9zQ==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DM4PR12MB5724.namprd12.prod.outlook.com (2603:10b6:8:5f::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.451.26; Wed, 30 Sep 2026 15:27:57 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0472.015; Wed, 30 Sep 2026
+ 15:27:57 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
+ Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
+ Youngjun Park <youngjun.park@lge.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+ kasan-dev@googlegroups.com, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 1/9] mm: introduce hw_pte_t for PTE table storage
+Date: Wed, 30 Sep 2026 11:27:53 -0400
+X-Mailer: MailMate (3.0r7032)
+Message-ID: <51D02557-E9CC-4806-917E-279C6E66AF1A@nvidia.com>
+In-Reply-To: <20260922-pte0-v3-1-5670b8cb9059@arm.com>
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+ <20260922-pte0-v3-1-5670b8cb9059@arm.com>
+Content-Type: text/plain
+X-MS-Reactions: disallow
+X-ClientProxiedBy: BL1PR13CA0112.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::27) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM4PR12MB5724:EE_
+X-MS-Office365-Filtering-Correlation-Id: d214dff4-b381-4957-d09d-08df1f07674d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|10067099003|4143699003|11063799006|56012099006|10063799003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	NTMS7w3pkwbdyX8kXLQQPd6bmp7vgxhsw8wWUgoxv0BrTrWoioXQwXj9y2sXwxqK/qp94qzNdh/w34dJBNSvbrkk9mQbv2eUPT1dCR5tZ1ctxQM8bgU8kBHD7llfqbs2uDuPa0FCmoZMt4aJnvieWCKHKxci7qcqJAuMjkWfrFU8R5RZ0Pp+gWd6vaVst+KGOu7iQzlS6ZiiLCyEHCFhE5UTWJFFq6SPOOfeik7Z0B1OXZ2zH9V2SuK02wJNgjSYLbszkIqi50F10i5CEUJ3ZGuCkyo3DM/MwDsQAmHM8Bp6vKunIh4HqtMQOnv7zekcp+FzN5RAzsi0FWBm5ZLmamnACbJ3ID8Uhc2HbeBvXNONVsFjYpykdaOuaDLwRN1/WB3MpYmtTWpOhyqq8LIb7VFs6nvId/Ccql4GAZZPIAqWvI0kj6zudAav0tOCf5ocPxPGvqv0srNHGzljQMohQkc5knSeLiz0T7I3twibdB+LZUKnkqS4g6gZxOLx8jHHOrM7CcIMBFvSVOy124A+psloR+Sir++O4fteJpkRLIH2eo2XV3ANbGLdqlMLl7bvZevXSVQuXGwtEFUG0PQnGs49YCqwB44rR9hCbCcjSPAnPCpAXVR+pJ987rdeYw2WIN+jnl6TeeNBBReTpntyPBD6DV97FUla1GcpMqCM9h8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(10067099003)(4143699003)(11063799006)(56012099006)(10063799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MXu4eQniVxMuLf/9bfDbC7QY5S/GZmk+BEhdZPsCpb2Fwvz+snepEPRv42qo?=
+ =?us-ascii?Q?J+fGc6zIpN2r69MH3j1NbAw+66SPKNJSbZWhUSOYSaWDRf4WysG/w2mdz+cN?=
+ =?us-ascii?Q?vp3KKbYKM8MhsCZWkFB42OashkTTgzj6OZ6vq7YylqGondij1VlWCYNmcP8S?=
+ =?us-ascii?Q?6CXUVF1CZY8gLz31yQcOyjXSX5r+5W5adH8GV43S5daPLgy1FP1pch3Vqrlf?=
+ =?us-ascii?Q?LydlKNFlFcd6CQvLAmRZRg5f+x5EGG7YhPBj+3BMbN4LI/lNWXYIpqiHqL7j?=
+ =?us-ascii?Q?oXhMMivi1j3CAIyHtKjnBqsGsncsD9Df+DEDyitdDfZE5i1G5UrNPgcatcz/?=
+ =?us-ascii?Q?mOfTjD8IZ8ZR2rMuwlWGM7cKyWdpZ5SlTiRxY5CJuWwlCSWlWhK7Mn9edgn9?=
+ =?us-ascii?Q?Abtswnt7rCImfHaCNvjLM8bxzr2VL0lWfaOQoi0ZkND6Uxjx80xWYDeDdcLy?=
+ =?us-ascii?Q?E2M4AQSakyvohHmvNmzUGfYvmOf5UofkU4avmkfn0FAKO3HBNZ84eu6/qB0/?=
+ =?us-ascii?Q?BZkh42wfg4Tpp5AzexqE0YlzTTYdsEhTlxyMDpY0dY/493VkD3G3VmmenLvc?=
+ =?us-ascii?Q?rOsNrznL3Ai/WSC9dPAJ2ZVp4YFIfEewJtaYthUYeM1mHNwkHM57C3jhqJZE?=
+ =?us-ascii?Q?oE/mixWkz2wHs5AScj9awqrTKdoG+D2+UP55curGBCATRmTl/m7GNbhLI8DD?=
+ =?us-ascii?Q?/LpUx+iBAnEP2/sP4eK6DpVctibX9lPiiKkUQDwfqPwHb4HWHRBFrm7hyvbb?=
+ =?us-ascii?Q?1q0FRxmMe40oskj/VcMiMnLOYQolAHPLNrau928odO+HIqfP4yZRqOG4dD0h?=
+ =?us-ascii?Q?PwtkEzoBxPv+ezIzGXMVj6vnzZHj9k+INQcrtqClIA1ORalRBd8jzvtlji5b?=
+ =?us-ascii?Q?/2qlXjfsInReKmjefmVeIOG1K/qzZ5l/6e/Lwvopa6VTFuL+SrhYv9N/Yoc5?=
+ =?us-ascii?Q?j8+pg/TPURR8FqRiO5nzmXCWudtk9pQowrK1N1/noRFW++Oxh5J6KEGxWoBg?=
+ =?us-ascii?Q?bPvscNfCLhlUpVRhJ/HlU6qHXIHRVZT2ops9BEj/kj5gQGfI4gKjYUo8q2wm?=
+ =?us-ascii?Q?EnQA7IeJ2rTYpUTpOztbqVoqKIAugvcp5LpMgIaQJgYyR90PdeQk8rB206pU?=
+ =?us-ascii?Q?OEevidn/mt07l+4qXT8oBb9a22pTAX5Oz0iY9j1ManvQYZpzc2pC2r3XI/7w?=
+ =?us-ascii?Q?yFS4ZzYI7p519xaiDGAOAL210+5azfqWPKAg6FPBqpqqUj4RH+MzvfU0VjFl?=
+ =?us-ascii?Q?OmpY5RRcLDE94Cy1REYNVkR0ntXfbZovloDW2XYuRh1PRBAplbFbVz1CF6j5?=
+ =?us-ascii?Q?HNbo0gHXo8t5IB4239rfrJjNIMAv2hWLBuATBn9RDSclotP3/WVbOlTrrAcA?=
+ =?us-ascii?Q?alpY8++184I9GbRwPtp9oFf7AqX1so53T0aej11fWXSkDCa1pQAAGqrwk30V?=
+ =?us-ascii?Q?IMeN5jH8ijdgbAThHaaerWzyh9CUxr0uM5fjHYLb6lohDLNnl+7gCzQlXXVU?=
+ =?us-ascii?Q?kknZDCREfrCBcTH4jTRN6YVj+UUrdNs44QUakpZEqj9lZJvG3tCBCjQ5tiLa?=
+ =?us-ascii?Q?YWv8bBtBYiNnp4zT2e28zycu04Xl/sgRPaac3E0Vo5JfjdtnbDUBYehX0WWg?=
+ =?us-ascii?Q?lEcYH+QxwZlpE3cj0tzisjeSTXu2N+jw3p9Iel/2Fl9/zZx2i9uYQxMkEDjn?=
+ =?us-ascii?Q?GS3vsX2AB2EzWefPjnuPPbP5XqaqtZOHwLXLZGiQl5NHkVEOqH+nMbTsJp/E?=
+ =?us-ascii?Q?7DP2WO6Skg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d214dff4-b381-4957-d09d-08df1f07674d
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 15:27:56.9730
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YLttr6nZbAZEgLwiA1BQTWtmyJC4gk3s+HBEIV2F7pIcz4C++d3nVT6aZtPTmkRN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5724
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] block: zram: signed/unsigned promotion masks hardware errors in qp=
-ace_compress
-- [High] block: zram: missing qpace availability check causes NULL pointer =
-dereference
-- [High] block: zram: unbinding qpace driver causes Use-After-Free in backe=
-nd
-- [Medium] block: zram: qpace backend uses bounce buffers instead of claime=
-d zero-copy DMA mapping
---
+On 22 Sep 2026, at 13:12, Muhammad Usama Anjum wrote:
 
-commit e4fba83b2c0230490d177ce709e7ea22807d84d4
-Author: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
+> pte_t is used both for software PTE values and for entries stored in a PTE
+> table, so pte_t * does not distinguish a pointer to a software PTE
+> value from a pointer to table storage.
+>
+> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> as a macro alias of pte_t by default. When an architecture selects
+> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
+> This preserves the representation while allowing converted architectures
+> to enforce the distinction at compile time.
+>
+> Name the generic wrapper structure __hw_pte_t so architectures can
+> forward-declare it when pgtable_t must be defined before the generic
+> hw_pte_t typedef is visible. This avoids header-order dependencies.
+>
+> Keep the C type definitions behind an __ASSEMBLY__ check because
+> architecture assembly sources can include this header indirectly. Include
+> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
+> they previously obtained from that header.
+>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+> Changes since v1:
+> - Name the generic wrapper structure __hw_pte_t so architectures can
+>   forward-declare it, and explain why this is required.
+> - Use software PTE value terminology.
+>
+> Changes since RFC v1:
+> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
+> - Exclude the C type definitions from assembly sources.
+> - Update the description for the new opt-in model.
+> ---
+>  MAINTAINERS                   |  1 +
+>  include/linux/pgtable_types.h | 17 +++++++++++++++++
+>  mm/Kconfig                    |  3 +++
+>  3 files changed, 21 insertions(+)
+>
+LGTM.
 
-zram: Add QPaCE zcomp backend
+Acked-by: Zi Yan <ziy@nvidia.com>
 
-Add a zcomp backend for the Qualcomm Page Compression Engine (QPaCE) so
-zram can expose qpace-lz4 as a selectable compression algorithm when the
-QPaCE driver is available.
-
-> Compress and decompress operations are handled via the QPaCE urgent
-> synchronous path: each request DMA-maps the source and destination
-> buffers, issues a blocking hardware command, and returns the result size.
-
-[Severity: Medium]
-Does the implementation contradict the commit message's claim about DMA
-mapping the request buffers? The code allocates static bounce buffers and
-performs synchronous memory copies instead of mapping the actual request
-memory directly.
-
-> diff --git a/drivers/block/zram/backend_qpace.c b/drivers/block/zram/back=
-end_qpace.c
-> new file mode 100644
-> index 0000000000000..3af13727adefc
-> --- /dev/null
-> +++ b/drivers/block/zram/backend_qpace.c
-[ ... ]
-> +static int qpace_create_ctx(struct zcomp_params *params, struct zcomp_ct=
-x *ctx)
-> +{
-> +	struct device *dev =3D qpace_get_dma_dev();
-
-[Severity: High]
-Is it safe to unconditionally call qpace_get_dma_dev() here without
-verifying if the hardware actually probed via qpace_is_dev_available()?
-
-If the QPaCE driver hasn't probed successfully or is missing, the global
-qpace_priv pointer remains NULL, and qpace_get_dma_dev() dereferences it:
-
-drivers/soc/qcom/qpace.c:qpace_get_dma_dev() {
-    return qpace_priv->dev;
-}
-
-Could this cause a kernel panic if a user writes 'qpace-lz4' to
-/sys/block/zram0/comp_algorithm on an unsupported system?
-
-[Severity: High]
-Additionally, does this cache the device pointer without acquiring a robust
-reference via get_device() or taking a module reference?
-
-If the QPaCE driver is unbound via sysfs, qpace_priv is destroyed.
-Subsequent compress operations or teardown might access the freed device
-pointer or qpace_priv structure, leading to a use-after-free.
-
-> +	struct qpace_ctx *cc;
-> +
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	cc =3D kzalloc_obj(*cc, GFP_KERNEL);
-> +	if (!cc)
-> +		return -ENOMEM;
-> +
-> +	cc->dev =3D dev;
-> +	cc->in_buf =3D dma_alloc_coherent(dev, PAGE_SIZE, &cc->in_dma, GFP_KERN=
-EL);
-
-[Severity: Medium]
-This statically allocates a bounce buffer rather than preparing to map the
-dynamic request buffers. Does this introduce CPU overhead by breaking the
-zero-copy DMA design claimed in the commit message?
-
-[ ... ]
-> +static void qpace_destroy_ctx(struct zcomp_ctx *ctx)
-> +{
-> +	struct qpace_ctx *cc =3D ctx->context;
-> +
-> +	if (!cc)
-> +		return;
-> +
-> +	dma_free_coherent(cc->dev, PAGE_SIZE, cc->out_buf, cc->out_dma);
-
-[Severity: High]
-If the device was unbound and qpace_priv was freed, could accessing cc->dev
-here trigger a use-after-free during cleanup?
-
-[ ... ]
-> +static int qpace_compress(struct zcomp_params *params, struct zcomp_ctx =
-*ctx,
-> +			  struct zcomp_req *req)
-> +{
-> +	struct qpace_algorithm *algo =3D params->drv_data;
-> +	struct qpace_ctx *cc =3D ctx->context;
-> +	int ret;
-> +
-> +	memcpy(cc->in_buf, req->src, req->src_len);
-
-[Severity: Medium]
-Does copying data to the bounce buffer here confirm the data path is not
-zero-copy?
-
-> +
-> +	ret =3D qpace_urgent_compress(cc->in_dma, cc->out_dma, algo);
-> +
-> +	if (ret =3D=3D -E2BIG || ret >=3D PAGE_SIZE) {
-
-[Severity: High]
-Are hardware errors from the QPaCE compressor masked here?
-
-If qpace_urgent_compress() returns a negative error code (e.g., -EINVAL),
-comparing the signed integer 'ret' to PAGE_SIZE (typically unsigned long)
-promotes 'ret' to a large unsigned value.
-
-Would this cause the check to incorrectly pass, silently treating broken or
-failed compressions as incompressible data instead of propagating the failu=
-re?
-
-> +		req->dst_len =3D PAGE_SIZE;
-> +		return 0;
-> +	}
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930145215.3380=
-977-1-georgi.djakov@oss.qualcomm.com?part=3D4
+Best Regards,
+Yan, Zi
