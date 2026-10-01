@@ -1,97 +1,159 @@
-Received: from mail-pj2-f38.google.com (mail-pj2-f38.google.com [74.125.227.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17D043D510
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 05:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A1D366553
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 06:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790833421; cv=none; b=gJ3h+Q3g0eh4c3FbF0Dag4y1khsmb/XhhR0/rYiqd3thgbIZ3cD4gzJE8/kC4rygdW6KQFR+AP1A5N8G5iiGMgy+6I1aAFaUS3ru7Ns8LXRdDA/5NsBam1ank+gTpnde7kkXLyqfqqulnZAsIJO+P3eedJCWvk5RLv0NJCXJmqw=
+	t=1790836305; cv=none; b=ERbuwn+2nOEUzsquBHW4ghx2KUqB+wgwYZsqid9VU5pbx8HNERGFEvaQxV4Mi5J3kUhm8bJoqJyIkGtozuHL4wyZ/fr9e0ngMSDYKPbpe2Li6SZsLzd0FjtJIH19J2n2w7qD11Yd/oRYaXX3FkMg0EWvMPBJxLSFFu4uTBIko60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790833421; c=relaxed/simple;
-	bh=rcxUxarvckFEbzwc+77lGqnMQwy+i+2zfogoe1pGPuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bg+gJXkUON82lW2xOdimeg1AUUreMGzPt23W/T24kVJ1MmQCPUPlJFxYCFCyAwpHP2pcIaEVX+sZv387/QJwVxHrrXU0lzD8xiYDGbwMKDKe42yimA4ibmM4HnTBw6ssNc/DiMKA54+ctN97MBHUCuLurU2RSNKXkC7chdjdiyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ih0YrXAC; arc=none smtp.client-ip=74.125.227.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1790836305; c=relaxed/simple;
+	bh=e55rHesjVHHVhmCsC2irpNpvPhA++zKRmYZwYf+RJOk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DyYXGxft+CQVNdjcwvyRhPsfcjnXBUakmzm0mUdkLk3K9EXEGVEwcBfGigtEs+uk9gtGWsQAZf+xe5EnhPjr6vREuETACtXZnsx0JVa95a7Z6BmukzG4KqLTf9koZPOYPHdyvOeXEHSFPefR+WorgTHGK7H2kNA7s7IWZdPJheU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZgW+DOC2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ih0YrXAC"
-Received: by mail-pj2-f38.google.com with SMTP id d9443c01a7336-2e2d9fdf798so9201135ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 22:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1790833418; x=1791438218; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zgvrIEOpw88VrEORT9HbHbyuQrZfBbC4ttbFKpwgFuw=;
-        b=ih0YrXAClCgFBCn9SASE45n0KaQdTZ8sJoUMQOnUf8WH3BD1LIfrruRykCRU1vYoeO
-         +JIpWL81LBuL/fJHeNPsCvUMiL+CyjIGo2FipCNL00ln5x9BKDkDNI67yglabz31gfAG
-         13ut3ETxcZHXx2pJII9NFqw7+srZD48spPcXg=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgW+DOC2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790836302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=e55rHesjVHHVhmCsC2irpNpvPhA++zKRmYZwYf+RJOk=;
+	b=ZgW+DOC2jxega5rnGATZgQTBRdT/AZwnMPxN2OlUS82ncvpzKdwcnldgWA+yZyLnDD/i9/
+	MRfUlWjPXZeDM8F6GmMtl2gfOPQIFLHsuVT2zbJsQZKimpOO7/r8Jiq1q0QCEI+4QIHOsj
+	7OdHexxn4P2oY9Ym9AibEiH+GmOPDm4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-407-lIUwFLVPPTC8H5OLKbh-3g-1; Thu, 01 Oct 2026 02:31:41 -0400
+X-MC-Unique: lIUwFLVPPTC8H5OLKbh-3g-1
+X-Mimecast-MFC-AGG-ID: lIUwFLVPPTC8H5OLKbh-3g_1790836300
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a01c621dc2so6780515e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Sep 2026 23:31:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790833418; x=1791438218;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zgvrIEOpw88VrEORT9HbHbyuQrZfBbC4ttbFKpwgFuw=;
-        b=Ff1iYXVdgx4GhedlQ0Q9I0tLGu8brMil+zDFRnDrmlc1BR78ZldkiMxpYneylG5DEK
-         ciepFDTqCusmI+nImirxajHT5wsbxWKYjJVJIvu6EsjuY69FBFB54qBKjhD6+45BFTpj
-         yPAcwDwHQXJijuauFC1w9YSx57oZGjDalLpZE1OaMrFW0DfTUuHmLb/smBoX5MgM16cV
-         JE/8El89CPa5jR8aG2KEWAh6ebbkWVOPdzNm3WznxqWQttjZBe7L0rgpov2tcVAdP+5q
-         SZ64rJcC6AztD5S0b7Ypr7R8ZT3tu3EhgLk/qdOeV2QcrSWQkMQu4nkg/Pj7VGjSvd0S
-         1kdQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxEB73SyApLFxB8Tj7+i3WgohdJCo5QVBdnfxGVLwPsVF5PZev/iSkTiEIwqMX9eX0/iW4RaUH7esQ2KJzLA6JhmN4=@vger.kernel.org
-X-Gm-Message-State: AFuF++nZokWJWDZqNgTqE8rxyocnrio9YHvAZatLMjEtNRhDjc4miV+i
-	c2FSx0ogMXcepYZid4i+CyUNiTSI7mQYIey3XgkmAtQliS8VOhubK0yGxmal3V9Xag==
-X-Gm-Gg: AYBFou16hzhJUjmI0JOjJOPy4/NnBys66iVrb4phLrkw4LkPiES40LAfulv6l3njRPJ
-	o8K0q9wkkkJcLkQYJYEeqYrwZ24iLTIxfim3KO9QJzNb+4L3M9HX0bYfE7PcPzMgoJ882UF2e8W
-	K/W2CAOUCpovcrVQHTcvcROLb4jxOf6rRFwyLUOWaySbxYFfzeA0TaqyCcnP4SBu2p4N954vZ9v
-	1H3NxkDT/UPiKbT5sSQK7FOhQ1UijE/M7HgjetmodUBKk5WaPSAxeiYxy0q9QeI4afGD6YeuI4T
-	QD9J5vT62nbc3jdXgbwowsUsrAnfvKW+6w3sIVx75ydeMe8qFkUBxp/43Lbdq0wFLY3yadlq8pQ
-	IA/CEt1Ny8fmyoq6NXwyTrOxHnbgRC/drtEvsz3Iw5iVNyuE8ubDck1OHDQ5tWl+Fz/ADIsVE9t
-	aNHMKrHfnkdZ6+XOk7t+pu7a9mjrLAYt44LPOVpd60RtdHh51Y2VzaVvHHb0WNz9PGO/NYUxIES
-	VzWtlSd/uhtrqOSoMrvt97DgdGZNb8cRmHnNCEvRVfMTOlm0Q==
-X-Received: by 2002:a17:903:3503:b0:2e1:24ec:df50 with SMTP id d9443c01a7336-2e2e499e1c7mr26745355ad.21.1790833418058;
-        Wed, 30 Sep 2026 22:43:38 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2031:6:d042:b5fa:ebeb:ace6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e30cc14cbbsm1942765ad.37.2026.09.30.22.43.34
+        d=1e100.net; s=20260707; t=1790836300; x=1791441100;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=KmUsUjxSpFiungKCvsESmFXzpjQ9eHiLCJCMaDAibjo=;
+        b=jtdAu+x4VsLV1inIxBV8MnxEEZn1GMB8vZ0F1eVAo4tlmfwGFnkg0Si2Se1kqetGoe
+         A5+zAoCUbN/DPAO6C7DywMESzT6+8HD4u0Iezu66V/eeNVqUbIg8o74GjA+JnYfxNnml
+         xeGOmGem9wfa0VCXz6F0khq4B5x+bX0U+S1O2mxajLE2fCBSAPfd7OtoCwTAMKQNyvnn
+         Gu1MJvHkPcAwalJC1uH25NUyxVvPMjJiCQpiPhN46b7hOHFZY1Z2KDdNj6eMONmxx+FN
+         VxQSpAnb+dAuhH/PdIq1MzzmMFywvFYl7pI3sS058qnFrD2zqsY8t4q+UPQpEI02oZ/3
+         mV4g==
+X-Forwarded-Encrypted: i=1; AKwUvBzdp3p43anSiVGEU0pwQpWPG+ORvd2sl6o9+88nRfwSQrrfdv6+l0b2aZZuJzVIo7vwo6utA7VTGHFB5jgFYR8+c/I=@vger.kernel.org
+X-Gm-Message-State: AFuF++mXr5A2jN+SEYogWXso4rj5fEuGQ/Llnv9k69BmRv0N7Q8ytpNr
+	WwOzHTVE5ACnBSFl2FcUWRabYkqFS0zrVdX81Vde3BIhZgNnxPIr8r1KtxS7Cfp1vLOuJgyofhb
+	TA+bUwOLRDjlWVoVX/oCr27QViNcRRG57ChimgDjQ7H67SPuwSDnjej+MlYdwPzAggCuJbuIHQQ
+	==
+X-Gm-Gg: AYBFou0IkpKMQLWCsVncPFFcqwihPLVbYFjW2LNIlSMkVHLLXiagw7Vxysn9i2lqBhi
+	KYrpEwGQlqf6hIYlMszboc4uePoNuSqJxvtQcH8gytzEprQt+HvSB+I4Gzv6WOVAlLGeCQb2Mwi
+	68O9NXJUQe2q2DD99R55yGEHI1o8hZWN96yi6hAIOlYBlHQ+umfErq6lHM6iS8R1VcTAGLnqKWC
+	DOgTggSlgo6gihTg+ASD0df4vZ+u1QRt6o5LpUAQafcCyoyJSogb9egWkO84uAJl2xDJaffWzce
+	emykyBTgSDzICt05rGPlHXJ0UE77DQR2rbCWXvwgdWjzSdKhdEt3iNdHbL94q+NqFVBz/+ZHqPy
+	AVj/Bza0Z5CEZtx6sQjg2Yg9m3BA=
+X-Received: by 2002:a05:600c:3ba2:b0:4a0:1b14:e846 with SMTP id 5b1f17b1804b1-4a01b14e893mr67031175e9.4.1790836300191;
+        Wed, 30 Sep 2026 23:31:40 -0700 (PDT)
+X-Received: by 2002:a05:600c:3ba2:b0:4a0:1b14:e846 with SMTP id 5b1f17b1804b1-4a01b14e893mr67030875e9.4.1790836299812;
+        Wed, 30 Sep 2026 23:31:39 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a01fa15e51sm43325415e9.2.2026.09.30.23.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 22:43:37 -0700 (PDT)
-Date: Thu, 1 Oct 2026 14:43:32 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, minchan@kernel.org, 
-	senozhatsky@chromium.org, axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	djakov@kernel.org
-Subject: Re: [PATCH 4/6] zram: Add QPaCE zcomp backend
-Message-ID: <ar3yt8Kl3WUV93lP@google.com>
-References: <20260930145215.3380977-1-georgi.djakov@oss.qualcomm.com>
- <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
+        Wed, 30 Sep 2026 23:31:39 -0700 (PDT)
+Message-ID: <e6f78faca93f92981130621d712ac05374d83b05.camel@redhat.com>
+Subject: Re: [PATCH] rv/rtapp/wakeup: Use "rv_this" the rv_monitor variable
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
+ Ogness	 <john.ogness@linutronix.de>
+Date: Thu, 01 Oct 2026 08:31:38 +0200
+In-Reply-To: <20261001044218.3508990-1-namcao@linutronix.de>
+References: <20261001044218.3508990-1-namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: AYYg5gvSBsqjlOeD21JRIwpx3bbD8B8AbEUaFAC2pRo_1790836300
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On (26/09/30 07:52), Georgi Djakov wrote:
-[..]
-> @@ -80,10 +87,10 @@ static const struct zcomp_ops *lookup_backend_ops(const char *comp)
->  
->  	while (backends[i]) {
->  		if (sysfs_streq(comp, backends[i]->name))
-> -			break;
-> +			return backends[i];
->  		i++;
->  	}
-> -	return backends[i];
-> +	return NULL;
->  }
+On Thu, 2026-10-01 at 06:42 +0200, Nam Cao wrote:
+> Commit d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor
+> variable in LTL") renamed the rv_monitor variable to rv_this. But
+> rtapp/wakeup monitor was late to the party and missed that.
+>=20
+> So for this monitor, rv_this is an empty struct. The reactor fails to
+> work, because rv_react() checks monitor->react and sees NULL.
+>=20
+> Correct to "rv_this" and make the reactor work again.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-This hunk looks unrelated to the patch in question.
+Damn.. Thanks for noticing!
+
+That's a weird one, I cannot think of a way to only declare the rv_this, so=
+ the
+compiler is perfectly happy to give you the empty one..
+
+I'm taking this, but I believe it deserves the Fixes tag. What do you think=
+?
+
+Thanks,
+Gabriele
+
+> ---
+> =C2=A0kernel/trace/rv/monitors/wakeup/wakeup.c | 6 +++---
+> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/kernel/trace/rv/monitors/wakeup/wakeup.c
+> b/kernel/trace/rv/monitors/wakeup/wakeup.c
+> index 01b47416f24e..2e803e79181e 100644
+> --- a/kernel/trace/rv/monitors/wakeup/wakeup.c
+> +++ b/kernel/trace/rv/monitors/wakeup/wakeup.c
+> @@ -128,7 +128,7 @@ static void disable_wakeup(void)
+> =C2=A0=09ltl_monitor_destroy();
+> =C2=A0}
+> =C2=A0
+> -static struct rv_monitor rv_wakeup =3D {
+> +static struct rv_monitor rv_this =3D {
+> =C2=A0=09.name =3D "wakeup",
+> =C2=A0=09.description =3D "Monitor that real-time tasks are not woken by =
+lower-
+> priority tasks",
+> =C2=A0=09.enable =3D enable_wakeup,
+> @@ -137,12 +137,12 @@ static struct rv_monitor rv_wakeup =3D {
+> =C2=A0
+> =C2=A0static int __init register_wakeup(void)
+> =C2=A0{
+> -=09return rv_register_monitor(&rv_wakeup, &rv_rtapp);
+> +=09return rv_register_monitor(&rv_this, &rv_rtapp);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void __exit unregister_wakeup(void)
+> =C2=A0{
+> -=09rv_unregister_monitor(&rv_wakeup);
+> +=09rv_unregister_monitor(&rv_this);
+> =C2=A0}
+> =C2=A0
+> =C2=A0module_init(register_wakeup);
+
