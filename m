@@ -1,104 +1,175 @@
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C5E4F4036
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 11:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BAA3F20EC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 11:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790852757; cv=none; b=ZkXkfRJvMEMtCRSWsCs6CONHvG2N8ulziJ/ehk1k6aznu7uEJ+dy3d16TLBdEqQxfgzLbH+nqHYHPrkc2x6eT0EPeKXNPWbYbq7s08LkpAl84tqdK0zMkDkFw65ET0e/EJwhJnAJDJ2By3ZSDK0rFTDASgv+FAfC2cjQnV3V6lo=
+	t=1790853476; cv=none; b=C5ic1/8S8iG1qoh+wMUk6a/qytOlQc/vSvgTR6E1n5uUdVgy81wQ6TmVWyFFPQD3br/RGIrE6BfRd1U19JyR/rkK4YU0yCVeWi+MQ59hY8f3F20D9sWok+SAL9hGknlX2X9X6kMsBG6/YyAHJYU+qfNjAhn9hhidXh/B8/JHHRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790852757; c=relaxed/simple;
-	bh=x5ys3ou1s2SNqxZHNXG0kEAmte9nf0fwcDyiMeg6kbc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N/04V6nhRAhdq6WHfOD1giqziWJnqtzqngxHCTQPRRTmS+dOY3jpl3JNlg11F5tu4nXmt7UDe4fz9Snf69JePKTY4i1ttBbhm0cktOYDWkSNyILTa+N9E7Zc+KdN58lRZNXvxSr6Rdx2yoc4q9avJv7vAYSFvMBZvoXix0B4l1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9QHu3Wf; arc=none smtp.client-ip=209.85.128.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1790853476; c=relaxed/simple;
+	bh=ae5igY5oYt0+CCSz1LVYew22CfKjMoUlVayPcy6R8fM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OT03JIafq3iOEVHvjgH1Z5AK6Z08fr3zAiktgUnI8FLrKrkXuhvGeQtew6vVMbn6pMN7RyBRdxcNgM8sVTxpxs2WO/fFGPf8uy8y9JK3OKzXaxda2fM2fVB8SpkwscBCuKoZaiVAXn+mqEmw3nAwet+O1LoLw+DMMaZFDUv97vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KFuGLlds; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9QHu3Wf"
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49e65bee41aso26246155e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 01 Oct 2026 04:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790852754; x=1791457554; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lq0jjzxKFZwxoQFxNcWNw0/FRt3Y9c+8HIkgfK5xmkU=;
-        b=Y9QHu3WfS2HaFjqufTh1a4KYYRiKZta3xG0wOwsh8jWcj5ldHbx4/2rR8hecNk/Uzv
-         BUEFZO/A5LRfBbyMl0QMsXNcbSFhmd0cacCio3wR/u65xkwkY6Tsf5rDmafCM1Wnv7G2
-         0P+L2lg5RdL1D12rsT9Q60uhv6qvgGjNSySWe0NhSMtZvFZqBGJRa2CXlHyuX8b2YflP
-         LDv29KEC5q8MAIALpGYjuiJw0rrqekikfLPV+rd0Az6+MvS/LHCkOslMnEuB+5wrBFAU
-         G8FCPsS6khTQRnVDonKwiXGqVNX0XiOuW9xTaq4oM154IjjZXDgglAciuO3pvpD+zv2j
-         ksWw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFuGLlds"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790853474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ae5igY5oYt0+CCSz1LVYew22CfKjMoUlVayPcy6R8fM=;
+	b=KFuGLldsGG8dPMwtMvD/08Gfz6QtK6XxT8cMkO9eBTBAGcJaLTEKfqZzIRMQgoF32a/gpc
+	onIsq6Km7f5RAHjipuGndh1wCJweSZbsEFmShZKBl6/1pHi9mQLmqfiZkFCeRHG2XbqLSV
+	Ed+PlRxE8svzJrVDLHoXyLWvZAbgwTE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-126-njz8BXhgOHi3NWhFYa2zAw-1; Thu, 01 Oct 2026 07:17:52 -0400
+X-MC-Unique: njz8BXhgOHi3NWhFYa2zAw-1
+X-Mimecast-MFC-AGG-ID: njz8BXhgOHi3NWhFYa2zAw_1790853472
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-48af4046a3bso3003843f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 01 Oct 2026 04:17:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790852754; x=1791457554;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lq0jjzxKFZwxoQFxNcWNw0/FRt3Y9c+8HIkgfK5xmkU=;
-        b=XsDBdVWbuhRO3PWFTT72ogDWXQhJ/Z+hfXwOhxRyUDJAKUHaRbZxDZ9wRfQTm5bXyl
-         FZMFlpSd+pW7ajXlt9uvsxleNy1YuRn5NpQ8ZdlNJZmd45MpeMB6Kd4rGml1NEFxXsER
-         v/umk2cFnXIOFu/2C+51uNw3UUt3mLX4KqJd9uc85TjWs4CQrPWJo1gL3OXmW2nKXQbj
-         ioVkUl0gydjzcQzSqyorfpNNY5Khe1cQw5bC/h9VJtr3j4beC3KUR2OEujab3ZX9fR7P
-         hxbVUaLZS2D9PLBnELBwy55w+SkQLjFum4GpSTee9bRucQAITt0dC5xHp8934e0CJFIf
-         5jsg==
-X-Forwarded-Encrypted: i=1; AKwUvBy2tV5ldhBmt9XBiKKE0GT7G/DPNvZKSVlLMF8/RNjaJfKQ/koNNOTUGOOFQqsWdJB5Fn3rwqabQOhGyO8FRy5aqlo=@vger.kernel.org
-X-Gm-Message-State: AFuF++nCby4f66IIU/SFxRrmWMncI8J8kHz8YPRzRhjigW3+8+iW7dFs
-	6RHq0okXQga9f/7vHUKmOvWSCq286FLC+nPH+oRX3gPW6jPbeSH1CCeryOuFB3txKI3kfcok7Ds
-	dIGA/Xx1Qr+tgfv2LyA==
-X-Received: from wmpc37.prod.google.com ([2002:a05:600c:4a25:b0:49e:65c1:6109])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:83ca:b0:49e:6581:7baf with SMTP id 5b1f17b1804b1-4a01eaf59c6mr43333055e9.2.1790852753706;
- Thu, 01 Oct 2026 04:05:53 -0700 (PDT)
-Date: Thu, 1 Oct 2026 11:05:52 +0000
-In-Reply-To: <20260930.185028.532667902450882259.tomo@flapping.org>
+        d=1e100.net; s=20260707; t=1790853471; x=1791458271;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=6XQ0LxDigeeaZqBMssbCnY6iBpDsmsz0VQ1JYSkHCwo=;
+        b=hINDzL9+YNsNva6UdQ48MxjGsW4o1FW8ixpuKfweKGdIvbHSvN3y0oL9X+UCCdRvGW
+         wLGOCUijKKnaJNsWsh8pcBzm+U2T5w/zf7Vl1ulUjF1RAXitbE/SJGeZyGA4PB7VLBcx
+         230NfQd3EPuYYkWnHqR+//v4LZbhnJgku5mG5OHw1pquSRdMjujH/mapkZnwCywQdbfE
+         zdRLm+TXhEuEzcJKihARmCaQEiPe7QQ2zHVyeVvNAlqCzDSF98vOFlixpagZkA0GlJFa
+         RpoN1m1WbUy36AjwfWShsughLH23luH+Em8bJphPd4fvHfRwg8wcP9Q2CKHR6T0LmDsA
+         OLwg==
+X-Forwarded-Encrypted: i=1; AKwUvBzY88B51PfUxCYRz9of3zkE9UrqX6s53duhL7T8JbJ0RU9eW8rdEKw5+4cYrY9st5IAIeCV4mqkv6ieGoBXAXKAUgM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLaGM1v7g/QbrFqYWy38h0XA9SiVIcItRy7cZv/kZfgmwaieQIe
+	S0cJyij00/PkpKJNtgZ8wvfchtzjf+jL9di2vPfBtLJHZcFdaVW5ENTvg3yaMAlZicdSnOsjYwE
+	g5NL/YIC69K7Bs0IdZHNgj/MTsEhg5ETDmv8dn1XMLknAdlQtg9u4t9Dy+i/14kbu7pqSQiCq6V
+	d3qBAlu0du
+X-Gm-Gg: AYBFou0W78rAMsE17zA51HLZNabSOsds/UgY2ryTRXKddi3QLEYXEmtRSJQJwIVDllt
+	HJ2Wd5RH9fJHURZ8iSqGHhmXcM2wGNigm3lO6HKcd3x1rEqvi35paBr5zNpqPHItwM7MDHSrMmp
+	ytwhryxifYRxJa7xuCrOBuTSvAGYI42LnbhdkLfTNOh1KUeB+p0j8lJOs32OqA3bfa/Dkj5DBi+
+	P4XUS/rO1RLo4k9Egi1EF1Qg9Zvw82XrbK+h8ytzFUqsa5c7mDfCLa1yjZy7o+f7CyPmPgbngG7
+	SWU1iMBPx2gWBm+AZ/Jn5ynC2Am1/vWBEw2kZSBapiB4YOzLUFWvBUEOQTv5eK+pesm0V4tRPYX
+	R7nag9QUiBid5415YZdksjJOn7bk=
+X-Received: by 2002:a05:6000:4024:b0:48a:f8dc:ae14 with SMTP id ffacd0b85a97d-48b0245a3b1mr9283428f8f.2.1790853471601;
+        Thu, 01 Oct 2026 04:17:51 -0700 (PDT)
+X-Received: by 2002:a05:6000:4024:b0:48a:f8dc:ae14 with SMTP id ffacd0b85a97d-48b0245a3b1mr9283388f8f.2.1790853471205;
+        Thu, 01 Oct 2026 04:17:51 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48b068bd8c9sm5587597f8f.2.2026.10.01.04.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2026 04:17:50 -0700 (PDT)
+Message-ID: <e91ee6fcd36a6ae4616fbd61121b2354594099f9.camel@redhat.com>
+Subject: Re: [PATCH] rv/rtapp/wakeup: Use "rv_this" the rv_monitor variable
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
+ Ogness	 <john.ogness@linutronix.de>
+Cc: stable@vger.kernel.org
+Date: Thu, 01 Oct 2026 13:17:49 +0200
+In-Reply-To: <e6f78faca93f92981130621d712ac05374d83b05.camel@redhat.com>
+References: <20261001044218.3508990-1-namcao@linutronix.de>
+	 <e6f78faca93f92981130621d712ac05374d83b05.camel@redhat.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260909120210.2488674-1-tomo@flapping.org> <20260930.185028.532667902450882259.tomo@flapping.org>
-Message-ID: <ar4-kOdIs7z6zG6k@google.com>
-Subject: Re: [PATCH v2] rust: add mark_used macro
-From: Alice Ryhl <aliceryhl@google.com>
-To: FUJITA Tomonori <tomo@flapping.org>
-Cc: rostedt@goodmis.org, gary@garyguo.net, ojeda@kernel.org, 
-	a.hindborg@kernel.org, acourbot@nvidia.com, bjorn3_gh@protonmail.com, 
-	boqun@kernel.org, dakr@kernel.org, daniel.almeida@collabora.com, 
-	lossin@kernel.org, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	tamird@kernel.org, tmgross@umich.edu, work@onurozkan.dev, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	fujita.tomonori@gmail.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: jY265btJOi6XNGM7bJOrgPKGy1RjYPceT8B5VhXr9ZI_1790853472
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 30, 2026 at 06:50:28PM +0900, FUJITA Tomonori wrote:
-> > diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> > index c6e80aa99e8e..29d2d2d0aca8 100644
-> > --- a/rust/kernel/tracepoint.rs
-> > +++ b/rust/kernel/tracepoint.rs
-> > @@ -38,9 +38,7 @@ macro_rules! declare_trace {
-> >  
-> >              #[cfg(not(CONFIG_TRACEPOINTS))]
-> >              {
-> > -                // If tracepoints are disabled, insert a trivial use of each argument
-> > -                // to avoid unused argument warnings.
-> > -                $( let _unused = $argname; )*
-> > +                $crate::mark_used!($($argname),*);
-> >              }
-> >          }
-> >      )*}
-> > 
-> 
-> Gentle ping. Could you take a look at the tracepoint.rs part? If it
-> looks fine, I think it is easiest to take the patch through the Rust
-> tree.
+On Thu, 2026-10-01 at 08:31 +0200, Gabriele Monaco wrote:
+> On Thu, 2026-10-01 at 06:42 +0200, Nam Cao wrote:
+> > Commit d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor
+> > variable in LTL") renamed the rv_monitor variable to rv_this. But
+> > rtapp/wakeup monitor was late to the party and missed that.
+> >=20
+> > So for this monitor, rv_this is an empty struct. The reactor fails to
+> > work, because rv_react() checks monitor->react and sees NULL.
+> >=20
+> > Correct to "rv_this" and make the reactor work again.
+> >=20
+> > Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-Why are we adding this macro?
+d9e4c61a12dd was introduced in the same pull request but after introducing =
+the
+wakeup monitor.
+So for me that's the commit that is "broken" (should have accounted for wak=
+eup):
 
-I think it's better to prefer avoiding macros if we can. The current
-code is familiar to people who know Rust idioms, and now you are
-replacing it with a kernel-specific macro that such people will not be
-familiar with.
+Fixes: d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor variable i=
+n
+LTL")
 
-Alice
+>=20
+> Damn.. Thanks for noticing!
+>=20
+> That's a weird one, I cannot think of a way to only declare the rv_this, =
+so
+> the
+> compiler is perfectly happy to give you the empty one..
+>=20
+> I'm taking this, but I believe it deserves the Fixes tag. What do you thi=
+nk?
+>=20
+> Thanks,
+> Gabriele
+>=20
+> > ---
+> > =C2=A0kernel/trace/rv/monitors/wakeup/wakeup.c | 6 +++---
+> > =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/kernel/trace/rv/monitors/wakeup/wakeup.c
+> > b/kernel/trace/rv/monitors/wakeup/wakeup.c
+> > index 01b47416f24e..2e803e79181e 100644
+> > --- a/kernel/trace/rv/monitors/wakeup/wakeup.c
+> > +++ b/kernel/trace/rv/monitors/wakeup/wakeup.c
+> > @@ -128,7 +128,7 @@ static void disable_wakeup(void)
+> > =C2=A0=09ltl_monitor_destroy();
+> > =C2=A0}
+> > =C2=A0
+> > -static struct rv_monitor rv_wakeup =3D {
+> > +static struct rv_monitor rv_this =3D {
+> > =C2=A0=09.name =3D "wakeup",
+> > =C2=A0=09.description =3D "Monitor that real-time tasks are not woken b=
+y
+> > lower-
+> > priority tasks",
+> > =C2=A0=09.enable =3D enable_wakeup,
+> > @@ -137,12 +137,12 @@ static struct rv_monitor rv_wakeup =3D {
+> > =C2=A0
+> > =C2=A0static int __init register_wakeup(void)
+> > =C2=A0{
+> > -=09return rv_register_monitor(&rv_wakeup, &rv_rtapp);
+> > +=09return rv_register_monitor(&rv_this, &rv_rtapp);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static void __exit unregister_wakeup(void)
+> > =C2=A0{
+> > -=09rv_unregister_monitor(&rv_wakeup);
+> > +=09rv_unregister_monitor(&rv_this);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0module_init(register_wakeup);
+
