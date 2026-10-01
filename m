@@ -1,175 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BAA3F20EC
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 11:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E644534A9;
+	Thu,  1 Oct 2026 11:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790853476; cv=none; b=C5ic1/8S8iG1qoh+wMUk6a/qytOlQc/vSvgTR6E1n5uUdVgy81wQ6TmVWyFFPQD3br/RGIrE6BfRd1U19JyR/rkK4YU0yCVeWi+MQ59hY8f3F20D9sWok+SAL9hGknlX2X9X6kMsBG6/YyAHJYU+qfNjAhn9hhidXh/B8/JHHRo=
+	t=1790853588; cv=none; b=ghoV/XNSmMIOUo/FSNNFZm+VxF6w5XRvEVbgH9LqQ5GGTrmSxzSGfnUHtPR9MLZt44lQ99E3Ww3JM8s1GXlUcc9akwACr0p/g2Ai+n0EWF89sbq/RtJgu6zavuBUXnXONMWx4S9R6wPkGxzNi2H2fWBDYER0cQjs3eoZipyiqxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790853476; c=relaxed/simple;
-	bh=ae5igY5oYt0+CCSz1LVYew22CfKjMoUlVayPcy6R8fM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OT03JIafq3iOEVHvjgH1Z5AK6Z08fr3zAiktgUnI8FLrKrkXuhvGeQtew6vVMbn6pMN7RyBRdxcNgM8sVTxpxs2WO/fFGPf8uy8y9JK3OKzXaxda2fM2fVB8SpkwscBCuKoZaiVAXn+mqEmw3nAwet+O1LoLw+DMMaZFDUv97vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KFuGLlds; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1790853588; c=relaxed/simple;
+	bh=fSbYKr93qa7jzlMGeaLdw5Bn3RmMMNsLFooEHa/fpOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ky9P0y0AalwRUcyOEvY8yu4rx/VhQNUlUmGTcCOV0KbnRjE2kUfU/zRDwzsI/xEF2TkGr1bUxEZLF7dk+zHOzdGJqUxfBmF8Ot5XJm2AYHS7X5ExM+hcPrwkYbnofNihvosO8Y0F3vFp8UoauB0Ur6GH4I0Atik0WvQD5s68IWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMbvvVKz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFuGLlds"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790853474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ae5igY5oYt0+CCSz1LVYew22CfKjMoUlVayPcy6R8fM=;
-	b=KFuGLldsGG8dPMwtMvD/08Gfz6QtK6XxT8cMkO9eBTBAGcJaLTEKfqZzIRMQgoF32a/gpc
-	onIsq6Km7f5RAHjipuGndh1wCJweSZbsEFmShZKBl6/1pHi9mQLmqfiZkFCeRHG2XbqLSV
-	Ed+PlRxE8svzJrVDLHoXyLWvZAbgwTE=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-126-njz8BXhgOHi3NWhFYa2zAw-1; Thu, 01 Oct 2026 07:17:52 -0400
-X-MC-Unique: njz8BXhgOHi3NWhFYa2zAw-1
-X-Mimecast-MFC-AGG-ID: njz8BXhgOHi3NWhFYa2zAw_1790853472
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-48af4046a3bso3003843f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 01 Oct 2026 04:17:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790853471; x=1791458271;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=6XQ0LxDigeeaZqBMssbCnY6iBpDsmsz0VQ1JYSkHCwo=;
-        b=hINDzL9+YNsNva6UdQ48MxjGsW4o1FW8ixpuKfweKGdIvbHSvN3y0oL9X+UCCdRvGW
-         wLGOCUijKKnaJNsWsh8pcBzm+U2T5w/zf7Vl1ulUjF1RAXitbE/SJGeZyGA4PB7VLBcx
-         230NfQd3EPuYYkWnHqR+//v4LZbhnJgku5mG5OHw1pquSRdMjujH/mapkZnwCywQdbfE
-         zdRLm+TXhEuEzcJKihARmCaQEiPe7QQ2zHVyeVvNAlqCzDSF98vOFlixpagZkA0GlJFa
-         RpoN1m1WbUy36AjwfWShsughLH23luH+Em8bJphPd4fvHfRwg8wcP9Q2CKHR6T0LmDsA
-         OLwg==
-X-Forwarded-Encrypted: i=1; AKwUvBzY88B51PfUxCYRz9of3zkE9UrqX6s53duhL7T8JbJ0RU9eW8rdEKw5+4cYrY9st5IAIeCV4mqkv6ieGoBXAXKAUgM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLaGM1v7g/QbrFqYWy38h0XA9SiVIcItRy7cZv/kZfgmwaieQIe
-	S0cJyij00/PkpKJNtgZ8wvfchtzjf+jL9di2vPfBtLJHZcFdaVW5ENTvg3yaMAlZicdSnOsjYwE
-	g5NL/YIC69K7Bs0IdZHNgj/MTsEhg5ETDmv8dn1XMLknAdlQtg9u4t9Dy+i/14kbu7pqSQiCq6V
-	d3qBAlu0du
-X-Gm-Gg: AYBFou0W78rAMsE17zA51HLZNabSOsds/UgY2ryTRXKddi3QLEYXEmtRSJQJwIVDllt
-	HJ2Wd5RH9fJHURZ8iSqGHhmXcM2wGNigm3lO6HKcd3x1rEqvi35paBr5zNpqPHItwM7MDHSrMmp
-	ytwhryxifYRxJa7xuCrOBuTSvAGYI42LnbhdkLfTNOh1KUeB+p0j8lJOs32OqA3bfa/Dkj5DBi+
-	P4XUS/rO1RLo4k9Egi1EF1Qg9Zvw82XrbK+h8ytzFUqsa5c7mDfCLa1yjZy7o+f7CyPmPgbngG7
-	SWU1iMBPx2gWBm+AZ/Jn5ynC2Am1/vWBEw2kZSBapiB4YOzLUFWvBUEOQTv5eK+pesm0V4tRPYX
-	R7nag9QUiBid5415YZdksjJOn7bk=
-X-Received: by 2002:a05:6000:4024:b0:48a:f8dc:ae14 with SMTP id ffacd0b85a97d-48b0245a3b1mr9283428f8f.2.1790853471601;
-        Thu, 01 Oct 2026 04:17:51 -0700 (PDT)
-X-Received: by 2002:a05:6000:4024:b0:48a:f8dc:ae14 with SMTP id ffacd0b85a97d-48b0245a3b1mr9283388f8f.2.1790853471205;
-        Thu, 01 Oct 2026 04:17:51 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48b068bd8c9sm5587597f8f.2.2026.10.01.04.17.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2026 04:17:50 -0700 (PDT)
-Message-ID: <e91ee6fcd36a6ae4616fbd61121b2354594099f9.camel@redhat.com>
-Subject: Re: [PATCH] rv/rtapp/wakeup: Use "rv_this" the rv_monitor variable
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
- Ogness	 <john.ogness@linutronix.de>
-Cc: stable@vger.kernel.org
-Date: Thu, 01 Oct 2026 13:17:49 +0200
-In-Reply-To: <e6f78faca93f92981130621d712ac05374d83b05.camel@redhat.com>
-References: <20261001044218.3508990-1-namcao@linutronix.de>
-	 <e6f78faca93f92981130621d712ac05374d83b05.camel@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMbvvVKz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3D31F000FF;
+	Thu,  1 Oct 2026 11:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790853586;
+	bh=QFQFkWDnC7jLqttKnpyOh/RzATFY2MNc7SamlM3r9CY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nMbvvVKzbLfiBDmwx5000bOF+s2wwI5IUpFYTI/iQmTRFaqEIRPkxAnIgPgtRkbJ0
+	 aqsar7aBQQWF17j7qm7re98QK2MXp/SjTXPj6Jaave3l2lYP+m0Pz8NwLOPWtJii3d
+	 +/JslHjvapBJl1QgKIGa/tDOAtKuTUTa7pAFOFLGVfS4bA6CsFZeBwjmyDK95aJdS1
+	 9ukUJ793Yc9KrIfWLnhz27LyPhzI15LRk/k7ivImSysTbIiVyAS0KMu7lJbra/Pesz
+	 pWFxc9zKJFzMFMEYqdxKzyhJGBS5wy0U/BzhIpkvR+1jEWvnD3SfLtCnn4oQTcUb0z
+	 8MuItJ69xgTaw==
+Message-ID: <e94dd0fc-3381-4545-9ede-513fcb2b8243@kernel.org>
+Date: Thu, 1 Oct 2026 13:17:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jY265btJOi6XNGM7bJOrgPKGy1RjYPceT8B5VhXr9ZI_1790853472
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] mm: convert PTE table entry to pte
+To: Muhammad Usama Anjum <usama.anjum@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
+ Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
+ Youngjun Park <youngjun.park@lge.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+ kasan-dev@googlegroups.com, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+ <20260922-pte0-v3-5-5670b8cb9059@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260922-pte0-v3-5-5670b8cb9059@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2026-10-01 at 08:31 +0200, Gabriele Monaco wrote:
-> On Thu, 2026-10-01 at 06:42 +0200, Nam Cao wrote:
-> > Commit d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor
-> > variable in LTL") renamed the rv_monitor variable to rv_this. But
-> > rtapp/wakeup monitor was late to the party and missed that.
-> >=20
-> > So for this monitor, rv_this is an empty struct. The reactor fails to
-> > work, because rv_react() checks monitor->react and sees NULL.
-> >=20
-> > Correct to "rv_this" and make the reactor work again.
-> >=20
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
+On 9/22/26 19:12, Muhammad Usama Anjum wrote:
+> The non-MMU stub receives hw_pte_t but returns a software PTE value. It
+> has no attached PTE that requires ptep_get(), so convert only the stored
+> entry through __pte_from_hw().
+> 
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+> Changes since v1:
+> - Explain why the NOMMU stub does not use ptep_get().
+> - Use software PTE value terminology.
+> ---
+>  include/linux/hugetlb.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> index 0d2101facaa50..637fc863d3687 100644
+> --- a/include/linux/hugetlb.h
+> +++ b/include/linux/hugetlb.h
+> @@ -1278,7 +1278,8 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+>  #ifdef CONFIG_MMU
+>  	return ptep_get(ptep);
+>  #else
+> -	return *ptep;
+> +	/* No attached PTE that requires ptep_get(). */
+> +	return __pte_from_hw(*ptep);
+>  #endif
+>  }
+>  
+> 
 
-d9e4c61a12dd was introduced in the same pull request but after introducing =
-the
-wakeup monitor.
-So for me that's the commit that is "broken" (should have accounted for wak=
-eup):
+Okay, that looks quite odd. No NOMMU code should ever be calling this helper. I
+can understand that some NOMMU code might, for some odd reason, end up including
+hguetlb.h where we have !CONFIG_HUGETLB_PAGE.
 
-Fixes: d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor variable i=
-n
-LTL")
+But let's see who actually calls huge_ptep_clear_flush():
 
->=20
-> Damn.. Thanks for noticing!
->=20
-> That's a weird one, I cannot think of a way to only declare the rv_this, =
-so
-> the
-> compiler is perfectly happy to give you the empty one..
->=20
-> I'm taking this, but I believe it deserves the Fixes tag. What do you thi=
-nk?
->=20
-> Thanks,
-> Gabriele
->=20
-> > ---
-> > =C2=A0kernel/trace/rv/monitors/wakeup/wakeup.c | 6 +++---
-> > =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/kernel/trace/rv/monitors/wakeup/wakeup.c
-> > b/kernel/trace/rv/monitors/wakeup/wakeup.c
-> > index 01b47416f24e..2e803e79181e 100644
-> > --- a/kernel/trace/rv/monitors/wakeup/wakeup.c
-> > +++ b/kernel/trace/rv/monitors/wakeup/wakeup.c
-> > @@ -128,7 +128,7 @@ static void disable_wakeup(void)
-> > =C2=A0=09ltl_monitor_destroy();
-> > =C2=A0}
-> > =C2=A0
-> > -static struct rv_monitor rv_wakeup =3D {
-> > +static struct rv_monitor rv_this =3D {
-> > =C2=A0=09.name =3D "wakeup",
-> > =C2=A0=09.description =3D "Monitor that real-time tasks are not woken b=
-y
-> > lower-
-> > priority tasks",
-> > =C2=A0=09.enable =3D enable_wakeup,
-> > @@ -137,12 +137,12 @@ static struct rv_monitor rv_wakeup =3D {
-> > =C2=A0
-> > =C2=A0static int __init register_wakeup(void)
-> > =C2=A0{
-> > -=09return rv_register_monitor(&rv_wakeup, &rv_rtapp);
-> > +=09return rv_register_monitor(&rv_this, &rv_rtapp);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static void __exit unregister_wakeup(void)
-> > =C2=A0{
-> > -=09rv_unregister_monitor(&rv_wakeup);
-> > +=09rv_unregister_monitor(&rv_this);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0module_init(register_wakeup);
+arch/arm64/mm/hugetlbpage.c: only with CONFIG_HUGETLB_PAGE
+mm/hugetlb.c: only with CONFIG_HUGETLB_PAGE
+mm/rmap.c: only after checking folio_test_hugetlb().
 
+I suspect we can simply do:
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 80a5a03e9cee..8642c863c1b7 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -1268,15 +1268,8 @@ static inline void hugetlb_count_sub(long l, struct
+mm_struct *mm)
+ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
+ unsigned long huge_pte_dirty(pte_t pte);
+
+-static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+-                                         unsigned long addr, pte_t *ptep)
+-{
+-#ifdef CONFIG_MMU
+-       return ptep_get(ptep);
+-#else
+-       return *ptep;
+-#endif
+-}
++pte_t huge_ptep_clear_flush(struct vm_area_struct *vma, unsigned long addr,
++               pte_t *ptep);
+
+ static inline void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+                                   pte_t *ptep, pte_t pte, unsigned long sz)
+
+
+-- 
+Cheers,
+
+David
