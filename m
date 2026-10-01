@@ -1,127 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5A23BCD0E;
-	Thu,  1 Oct 2026 10:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C5E4F4036
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Oct 2026 11:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790851079; cv=none; b=kd4l7fAxtnStb/86ubPRRc9kcDMwu4qgR966dt5bi8AZmvQmBAudwT6qE/OF6Eq0uKo+dCLzaSqsLCCrVr/78me/VloaNn3IyD3A/uqBObiLUqYtCharv6O0o09FtmE/F8wFlU4v1KSQSt88WRUGo7EayRm7W0Mfshb4Vp35qk8=
+	t=1790852757; cv=none; b=ZkXkfRJvMEMtCRSWsCs6CONHvG2N8ulziJ/ehk1k6aznu7uEJ+dy3d16TLBdEqQxfgzLbH+nqHYHPrkc2x6eT0EPeKXNPWbYbq7s08LkpAl84tqdK0zMkDkFw65ET0e/EJwhJnAJDJ2By3ZSDK0rFTDASgv+FAfC2cjQnV3V6lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790851079; c=relaxed/simple;
-	bh=hDaozcCR4RN1nJEoUk7pYsmyoc606N1f2ytFwIN6pU4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=B7CU18rU6q0IcyPvCNWowahn5uU9aB6LMG+7PCaZmfpb1XoeqvzKtuvprsiZjbNnhh0tyvfqZ3ZIJCwiQpa8oNnBAZkn2pgESqL9xcaVN2oZCM10ISpUiSGMzaecKT5nqjcZf+j+VIqJXqlTxJKwOdEkOcZfjWRY65KfU+piOxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DlJPqMAg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790852757; c=relaxed/simple;
+	bh=x5ys3ou1s2SNqxZHNXG0kEAmte9nf0fwcDyiMeg6kbc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N/04V6nhRAhdq6WHfOD1giqziWJnqtzqngxHCTQPRRTmS+dOY3jpl3JNlg11F5tu4nXmt7UDe4fz9Snf69JePKTY4i1ttBbhm0cktOYDWkSNyILTa+N9E7Zc+KdN58lRZNXvxSr6Rdx2yoc4q9avJv7vAYSFvMBZvoXix0B4l1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9QHu3Wf; arc=none smtp.client-ip=209.85.128.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DlJPqMAg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653961F000FF;
-	Thu,  1 Oct 2026 10:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790851072;
-	bh=As3SLFsTTd3BkmHYiCD2iWsyZrxMnUXWbkatlHucL9s=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DlJPqMAgPjswboeJf2ZIyMb3gQ6nXatEo55osqdNvVcFDqljtXE77eRNkSofmCbPj
-	 XY72PX/+SX+8Fo7J73MaKaH6Zh6+cSbR8vwy0YqASElxUrRfGuz+nCFye/tdTvf1nQ
-	 le/N6yXhpL9jf4h5uikRXqm7fy3o2BFPASx5uixhD9yWq8o/5NUMrTsGFw7xZm7HQX
-	 EncNejZrT3GOjd0gkbk6rVQVmgxel6UmaSg8PIXWYlMyyJZD4jzTuhQCtH7woNU2G/
-	 DeT82FckWr5JICgiAOQYsIVFenK7UzOfo4oLU1DPMkiZ9NaXo4R/od+rLQhSIzOKyV
-	 V+1i2pkN0RQwg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/1] tracing: fgraph: allocate shadow stacks inline
- with GFP_NOWAIT
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vineet Gupta" <vineet.gupta@linux.dev>
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261001102909.1152572-2-vineet.gupta@linux.dev>
-References: <20261001102909.1152572-1-vineet.gupta@linux.dev>
- <20261001102909.1152572-2-vineet.gupta@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Oct 2026 10:37:51 +0000
-Message-Id: <20261001103752.653961F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9QHu3Wf"
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49e65bee41aso26246155e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 01 Oct 2026 04:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790852754; x=1791457554; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lq0jjzxKFZwxoQFxNcWNw0/FRt3Y9c+8HIkgfK5xmkU=;
+        b=Y9QHu3WfS2HaFjqufTh1a4KYYRiKZta3xG0wOwsh8jWcj5ldHbx4/2rR8hecNk/Uzv
+         BUEFZO/A5LRfBbyMl0QMsXNcbSFhmd0cacCio3wR/u65xkwkY6Tsf5rDmafCM1Wnv7G2
+         0P+L2lg5RdL1D12rsT9Q60uhv6qvgGjNSySWe0NhSMtZvFZqBGJRa2CXlHyuX8b2YflP
+         LDv29KEC5q8MAIALpGYjuiJw0rrqekikfLPV+rd0Az6+MvS/LHCkOslMnEuB+5wrBFAU
+         G8FCPsS6khTQRnVDonKwiXGqVNX0XiOuW9xTaq4oM154IjjZXDgglAciuO3pvpD+zv2j
+         ksWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790852754; x=1791457554;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lq0jjzxKFZwxoQFxNcWNw0/FRt3Y9c+8HIkgfK5xmkU=;
+        b=XsDBdVWbuhRO3PWFTT72ogDWXQhJ/Z+hfXwOhxRyUDJAKUHaRbZxDZ9wRfQTm5bXyl
+         FZMFlpSd+pW7ajXlt9uvsxleNy1YuRn5NpQ8ZdlNJZmd45MpeMB6Kd4rGml1NEFxXsER
+         v/umk2cFnXIOFu/2C+51uNw3UUt3mLX4KqJd9uc85TjWs4CQrPWJo1gL3OXmW2nKXQbj
+         ioVkUl0gydjzcQzSqyorfpNNY5Khe1cQw5bC/h9VJtr3j4beC3KUR2OEujab3ZX9fR7P
+         hxbVUaLZS2D9PLBnELBwy55w+SkQLjFum4GpSTee9bRucQAITt0dC5xHp8934e0CJFIf
+         5jsg==
+X-Forwarded-Encrypted: i=1; AKwUvBy2tV5ldhBmt9XBiKKE0GT7G/DPNvZKSVlLMF8/RNjaJfKQ/koNNOTUGOOFQqsWdJB5Fn3rwqabQOhGyO8FRy5aqlo=@vger.kernel.org
+X-Gm-Message-State: AFuF++nCby4f66IIU/SFxRrmWMncI8J8kHz8YPRzRhjigW3+8+iW7dFs
+	6RHq0okXQga9f/7vHUKmOvWSCq286FLC+nPH+oRX3gPW6jPbeSH1CCeryOuFB3txKI3kfcok7Ds
+	dIGA/Xx1Qr+tgfv2LyA==
+X-Received: from wmpc37.prod.google.com ([2002:a05:600c:4a25:b0:49e:65c1:6109])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:83ca:b0:49e:6581:7baf with SMTP id 5b1f17b1804b1-4a01eaf59c6mr43333055e9.2.1790852753706;
+ Thu, 01 Oct 2026 04:05:53 -0700 (PDT)
+Date: Thu, 1 Oct 2026 11:05:52 +0000
+In-Reply-To: <20260930.185028.532667902450882259.tomo@flapping.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260909120210.2488674-1-tomo@flapping.org> <20260930.185028.532667902450882259.tomo@flapping.org>
+Message-ID: <ar4-kOdIs7z6zG6k@google.com>
+Subject: Re: [PATCH v2] rust: add mark_used macro
+From: Alice Ryhl <aliceryhl@google.com>
+To: FUJITA Tomonori <tomo@flapping.org>
+Cc: rostedt@goodmis.org, gary@garyguo.net, ojeda@kernel.org, 
+	a.hindborg@kernel.org, acourbot@nvidia.com, bjorn3_gh@protonmail.com, 
+	boqun@kernel.org, dakr@kernel.org, daniel.almeida@collabora.com, 
+	lossin@kernel.org, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+	tamird@kernel.org, tmgross@umich.edu, work@onurozkan.dev, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	fujita.tomonori@gmail.com
+Content-Type: text/plain; charset="utf-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] tracing: mixing goto and scoped_guard in alloc_retstack_tasklist()
---
+On Wed, Sep 30, 2026 at 06:50:28PM +0900, FUJITA Tomonori wrote:
+> > diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
+> > index c6e80aa99e8e..29d2d2d0aca8 100644
+> > --- a/rust/kernel/tracepoint.rs
+> > +++ b/rust/kernel/tracepoint.rs
+> > @@ -38,9 +38,7 @@ macro_rules! declare_trace {
+> >  
+> >              #[cfg(not(CONFIG_TRACEPOINTS))]
+> >              {
+> > -                // If tracepoints are disabled, insert a trivial use of each argument
+> > -                // to avoid unused argument warnings.
+> > -                $( let _unused = $argname; )*
+> > +                $crate::mark_used!($($argname),*);
+> >              }
+> >          }
+> >      )*}
+> > 
+> 
+> Gentle ping. Could you take a look at the tracepoint.rs part? If it
+> looks fine, I think it is easiest to take the patch through the Rust
+> tree.
 
-commit eacae2b1226bb2d8684604b5c37e3ec9f073cb80
-Author: Vineet Gupta <vineet.gupta@linux.dev>
+Why are we adding this macro?
 
-tracing: fgraph: allocate shadow stacks inline with GFP_NOWAIT
+I think it's better to prefer avoiding macros if we can. The current
+code is familiar to people who know Rust idioms, and now you are
+replacing it with a kernel-specific macro that such people will not be
+familiar with.
 
-This commit updates alloc_retstack_tasklist() to allocate return stacks
-inline using GFP_NOWAIT within an RCU read-side critical section,
-replacing the fixed-batch preallocation loop. It also replaces the
-open-coded rcu_read_lock() and rcu_read_unlock() with scoped_guard(rcu)
-to handle RCU protection implicitly.
-
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 40d373d65f9b9..efb5d260334e0 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-
-[ ... ]
-
-> @@ -1057,26 +1060,37 @@ static int alloc_retstack_tasklist(unsigned long =
-**ret_stack_list)
->  		}
->  	}
-> =20
-> -	rcu_read_lock();
-> -	for_each_process_thread(g, t) {
-> -		if (start =3D=3D end) {
-> -			ret =3D -EAGAIN;
-> -			goto unlock;
-> -		}
-> +	scoped_guard (rcu) {
-
-[Severity: Low]
-Does this code mix goto-based error handling and scope-based cleanup in the
-same function?
-
-The alloc_retstack_tasklist() function still contains a goto free error
-handling path earlier in its body, and a free: cleanup label at the end.
-Adding scoped_guard() here violates the kernel cleanup subsystem guidelines,
-which state that for a given routine, usage of goto and cleanup helpers
-should never be mixed.
-
-Since returning directly from within the scoped_guard() skips the free: loop
-at the end of the function, it forces manual reasoning about whether that is
-safe. This is noted in the new comment about keeping the start =3D=3D end c=
-heck
-in step with the exhaustion logic.
-
-Is it possible to convert the initial return stack array allocation to use
-scope-based cleanup as well, or revert to open-coded RCU read locks, to
-avoid mixing the two patterns?
-
-> +		for_each_process_thread(g, t) {
-> +			unsigned long *rs;
-> +
-> +			if (t->ret_stack)
-> +				continue;
-> +
-> +			rs =3D kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT);
-> +			if (!rs) {
-> +				/*
-> +				 * Returning from inside scoped_guard() drops
-> +				 * the RCU read lock, but skips the free loop
-> +				 * below. That is only safe because start =3D=3D
-> +				 * end here, which leaves that loop nothing to
-> +				 * free. Keep the two in step if this
-> +				 * exhaustion check ever changes.
-> +				 */
-> +				if (start =3D=3D end)
-> +					return -EAGAIN;
-> +				rs =3D ret_stack_list[start++];
-> +			}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001102909.1152=
-572-2-vineet.gupta@linux.dev?part=3D1
+Alice
