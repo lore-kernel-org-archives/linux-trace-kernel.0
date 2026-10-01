@@ -1,147 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A88352B1D2;
-	Thu,  1 Oct 2026 15:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C27B51CF79;
+	Thu,  1 Oct 2026 15:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790869231; cv=none; b=E+W30t8Nj/oy1TQf5wRL1Es1s/Sn5cawVbspUXkbUe+0zNMj4L6HFgxwmY0sq2txqzHEVyv+Bt2YESEH8M4w/i8F3uZdPqm+qakVgbXam2sFZ4nU8Lx5qv4PCYHqnNIZoux5rSKn/lKWKNUjfBRC5dddupV+PV0HAe/vc5ly8Tg=
+	t=1790869307; cv=none; b=Gy+29LTPmGEGUsW/413QRAe+eT/uPoTlA4/Oh8FG8erBpT2mTpGUpCL4p0PVexrzXJiuUxI9PaIDXpQcQPkJX34nvzKSoxi/zeN+OoIuedZnaHMhAzPXwN1Tr0Bbl8q3AZ9JMvZ3JsGda7oOKa1LpV1hV6JcE/GFE+ool+tnx8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790869231; c=relaxed/simple;
-	bh=wrdEMkqOKVODN+lCD8iZuLd9HUREZaVL67sHGn77WyU=;
+	s=arc-20240116; t=1790869307; c=relaxed/simple;
+	bh=V1TIXyX0gzz9LdAsF/awpveJjFjs3rzEQOYhYov7eoY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MNuyq/dm4k8UtZ87qWBeng4cD/Z9lvp0OvOR30N5XDK0Qlt+TIkN583v4Xwp0f1VsocWhP41uqIA45oPKH3LfxnXTm4qJpzGVJrZQkAmrtgpbJ0dZ3sGLWZZD21EJle+9oc/wPdjvyalBNMUEnTAdkZ1hCTFfVVS9R3Hkqsk59Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gl51gdLx; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ssBKEx49TvOYcm5Q8yDwoDlQ0XY6uZRmCcFdBys1KjFC2kZmetAjbgl8HFaeatBTIherkdLeHq11JnsP1titDqjGGqmtxnnDQ/22mT89j0PsUh0z+L/u1EhCaeBlyxbFis/zwX5PMn0N9kvmYm4yz5oCPJllITl0xMIPJsY02cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWDMCcJ/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gl51gdLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E1401F000FF;
-	Thu,  1 Oct 2026 15:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWDMCcJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924D61F000FF;
+	Thu,  1 Oct 2026 15:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790869229;
-	bh=ZjukmqZBr/Q8r3D4WjCPnBjlNxnvVv1+ak3oNNvpPfo=;
+	s=k20260515; t=1790869305;
+	bh=JfPCT2TH51B8lMicqh6+V1MUS72nayYr7X4d65aAFDk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gl51gdLxX+CJCy0nd3WTSOiCWHJQotoOWJaT2WDvfsLFW2LIClV09nxd80Eow5+k7
-	 EZTA1DmpfaEfjWtiYe0G5oU7ziYVAwaUoL9vl6rmVgGj463MfpA4OxY92+JUzFUgH8
-	 ylryT9roO9z2vc9QQDj/W2tuN/Y5+zUWw5Xops46hw5dj+CvSV95x1TfVSj/DzlvST
-	 ojGYW5WLVxqtK1OiPjm7Qnol6mLnKyTv9/jDO/wj2dZH4zpj/NheCR4LoVMJAVRlUj
-	 um2Fb38D7+NcXWE713JT/zudBXWIOn8JQvxKa7yi53Z8p6bWZYsFTnYJmHB3/FeC2q
-	 taxKTh2Rtke4g==
+	b=iWDMCcJ/2sEGvKA+E7rZLx5GsGIEiI9hi3XkPWXgZSArXw9jWyqC+0ykJS2Byh9LE
+	 azkwk4ehiV5y7mY0UQt8MA36QDEsnDliBMd6w87KX3MjqtdIXUP2+blY1A8an2XAgm
+	 yUCUaaN60QUxTo1XKQTweC2726VSS45zLT/TOxVsPbp7FlLh0TFqsN7kKqC8LclKdk
+	 EatcyfzUU8Md+42fKGcsWCIe2T5kPKT3fQWP+D/TslJtNq8T7A9NpOp2PXQF/uvQAR
+	 yBwUimo3eau4cv9C7fe/JPbcCgR5X+tIQi5q3LwcOVDVMGB3RmiTn4cJeD30TO7hFn
+	 qVHk9ZMbbtkaA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 07/15] tools/rv: Implement BPF monitor discovery and
- listing
+Subject: Re: [PATCH v2 08/15] tools/rv: Implement BPF monitor loading and
+ tracing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Gabriele Monaco" <gmonaco@redhat.com>
 Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261001152042.124445-8-gmonaco@redhat.com>
+In-Reply-To: <20261001152042.124445-9-gmonaco@redhat.com>
 References: <20261001152042.124445-1-gmonaco@redhat.com>
- <20261001152042.124445-8-gmonaco@redhat.com>
+ <20261001152042.124445-9-gmonaco@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Oct 2026 15:40:28 +0000
-Message-Id: <20261001154029.5E1401F000FF@smtp.kernel.org>
+Date: Thu, 01 Oct 2026 15:41:45 +0000
+Message-Id: <20261001154145.924D61F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Medium] bpf: stack OOB access via unterminated strncpy()
-- [Low] bpf: off-by-one snprintf check and file leak
+- [High] bpf: path traversal allows loading arbitrary BPF objects
+- [Medium] bpf: missing validation of required BTF fields leads to out-of-b=
+ounds read
+- [Medium] bpf: missing data_sz bounds checks in handle_event leads to out-=
+of-bounds read
+- [Medium] bpf: type punning in read_field violates strict aliasing
 --
 
-commit 87f9013a78d7a34904987bd2e9122ad081e635b2
+commit 91a3dbdeaaa49f37b21710db6d56a6658ad6fe6b
 Author: Gabriele Monaco <gmonaco@redhat.com>
 
-tools/rv: Implement BPF monitor discovery and listing
+tools/rv: Implement BPF monitor loading and tracing
 
-Implement the BPF monitor listing functionality that scans for compiled
-BPF monitor object files and displays them in the monitor list.
+This commit implements BPF monitor loading, execution, and optional tracing
+functionality in the rv tool. It parses event and state names from BTF and
+hooks into the ring buffer for output formatting.
 
 > diff --git a/tools/verification/rv/src/bpf_monitor.c b/tools/verification=
 /rv/src/bpf_monitor.c
-> new file mode 100644
-> index 0000000000000..a1de0c1577128
-> --- /dev/null
+> --- a/tools/verification/rv/src/bpf_monitor.c
 > +++ b/tools/verification/rv/src/bpf_monitor.c
+
 [ ... ]
-> +static void bpf_object_iterate_path(const char *base_path, const char *s=
-ubdir,
-> +				    void (*action)(const char *name, struct bpf_object *obj))
-> +{
-> +	char path[MAX_PATH];
-> +	struct dirent *entry;
-> +	DIR *dir;
-> +	char *ext;
-> +
-> +	snprintf(path, sizeof(path), "%s/%s", base_path, subdir);
-> +	dir =3D opendir(path);
-> +	if (!dir) {
-> +		debug_msg("bpf: error opening directory: %s\n", path);
-> +		return;
-> +	}
-> +
-> +	while ((entry =3D readdir(dir)) !=3D NULL) {
-> +		size_t size;
-> +		struct bpf_object *obj;
-> +		char name[MAX_DA_NAME_LEN], obj_path[MAX_PATH];
-> +
-> +		if (entry->d_name[0] =3D=3D '.')
-> +			continue;
-> +
-> +		ext =3D strrchr(entry->d_name, '.');
-> +		if (!ext || strcmp(ext, ".o") !=3D 0)
-> +			continue;
-> +
-> +		size =3D snprintf(obj_path, sizeof(obj_path), "%s/%s", path,
-> +				entry->d_name);
-> +		obj =3D bpf_object__open_file(obj_path, NULL);
-> +		if (!obj || size > MAX_PATH) {
 
-[Severity: Low]
-Does this logic correctly handle path truncation?
-
-The check size > MAX_PATH has an off-by-one error since snprintf() returns =
-the
-number of characters that would have been written excluding the null byte,
-meaning truncation occurs if size >=3D MAX_PATH (or sizeof(obj_path)).
-
-Also, bpf_object__open_file() is called before this check, potentially
-operating on truncated paths. If open_file succeeds on a truncated string,
-would the obj resource be leaked on the error path via the continue stateme=
-nt?
-
-> +			err_msg("bpf: error opening object file %s: %s\n",
-> +				obj_path, strerror(errno));
-> +			continue;
-> +		}
-> +
-> +		strncpy(name, entry->d_name, sizeof(name));
-> +		ext =3D strrchr(name, '.');
-> +		if (ext)
-> +			*ext =3D '\0';
+> 		for (int j =3D 0; j < FIELD_MAX; j++) {
+> 			if (strcmp(name, field_names[j]) =3D=3D 0) {
+> 				ctx->field_metadata[j].offset =3D offset;
+> 				ctx->field_metadata[j].size =3D size;
+> 				if (j =3D=3D FIELD_ID)
+> 					config.has_id =3D true;
+> 				break;
+> 			}
+> 		}
+> 	}
+>=20
+> 	return 0;
+> }
 
 [Severity: Medium]
-Could this sequence result in a stack out-of-bounds read and write?
+Is there a need to verify that all required fields were found after this
+loop?
 
-If entry->d_name is exactly MAX_DA_NAME_LEN characters or longer, strncpy()
-will leave the name array without a null terminator.
+If the BTF data does not contain a required field (like comm), its offset
+in ctx->field_metadata remains 0. Later, handle_event() relies on this
+offset unconditionally, which would point to the start of the payload
+and result in an out-of-bounds read.
 
-This causes strrchr() to scan adjacent stack memory (such as obj_path) to
-find a '.', and potentially write a '\0' out of bounds if one is found. Can
-this be triggered by a local user placing a file with a long name in the
-bpf_monitors directory?
+[ ... ]
 
-> +
-> +		action(name, obj);
-> +
-> +		bpf_object__close(obj);
-> +	}
-> +
-> +	closedir(dir);
-> +}
+> static inline uint64_t read_field(uint64_t *entry, enum field_id id,
+> 				  const uint8_t *raw,
+> 				  const struct bpf_monitor_ctx *ctx)
+> {
+> 	const struct field *field =3D &ctx->field_metadata[id];
+>=20
+> 	switch (field->size) {
+> 	case 1:
+> 		return entry[id] =3D *(const uint8_t *)(raw + field->offset);
+> 	case 2:
+> 		return entry[id] =3D *(const uint16_t *)(raw + field->offset);
+> 	case 4:
+> 		return entry[id] =3D *(const uint32_t *)(raw + field->offset);
+
+[Severity: Medium]
+Does casting a const uint8_t * byte pointer to larger scalar types like
+uint32_t * violate strict aliasing rules?
+
+The tools directory is compiled with -fstrict-aliasing enabled, so this type
+punning can result in undefined behavior and miscompilation.
+
+Also, is it possible for the offset + size to exceed the data_sz provided
+by the ring buffer? read_field() dereferences memory based purely on
+BTF offsets without validating that the access fits within the actual
+payload size.
+
+[ ... ]
+
+> static int handle_event(void *ctx, void *data, size_t data_sz)
+> {
+> 	struct bpf_monitor_ctx *mon_ctx =3D ctx;
+> 	const uint8_t *raw =3D data;
+
+[Severity: Medium]
+Is the data_sz parameter ignored in this function?
+
+If a BPF program submits a truncated event to the ring buffer, the missing
+bounds checks in this function and read_field() could lead to out-of-bounds
+memory reads.
+
+[ ... ]
+
+> 	comm =3D (const char *)(raw + mon_ctx->field_metadata[FIELD_COMM].offset=
+);
+> 	read_field(entry, FIELD_CURR_STATE, raw, mon_ctx);
+> 	read_field(entry, FIELD_EVENT, raw, mon_ctx);
+>=20
+> 	printf("%16s-%-8"PRIu64" [%.3"PRIu64"] ", comm, entry[FIELD_PID], entry[=
+FIELD_CPU]);
+
+[Severity: Medium]
+Could this printf() format specifier lead to unbounded memory reads?
+
+Using %16s instead of %.16s allows printf to read indefinitely until it
+encounters a null byte. If the string is not null-terminated or was absent,
+this might read beyond data_sz.
+
+[ ... ]
+
+> static int find_bpf_file(const char *subdir, const char *name, char *path=
+_out, size_t path_len)
+> {
+> 	char path[MAX_PATH];
+>=20
+> 	for (int i =3D 0; bpf_base_paths[i][0]; i++) {
+> 		size_t size =3D snprintf(path, sizeof(path), "%s/%s/%s.o",
+> 				       bpf_base_paths[i], subdir, name);
+>=20
+> 		if (size < MAX_PATH && access(path, R_OK) =3D=3D 0) {
+
+[Severity: High]
+Can a malicious user supply a name containing path traversal characters like
+../../../ to load arbitrary object files?
+
+The user-controlled monitor_name is passed to find_bpf_file() and blindly
+appended to the path string. If an administrator configures sudo to allow
+running rv mon, an attacker could exploit this traversal to load their
+own BPF program and gain arbitrary kernel code execution.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001152042.1244=
-45-1-gmonaco@redhat.com?part=3D7
+45-1-gmonaco@redhat.com?part=3D8
