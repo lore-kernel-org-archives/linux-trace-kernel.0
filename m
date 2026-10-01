@@ -1,147 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61883367288;
-	Thu,  1 Oct 2026 00:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C871F3911DC;
+	Thu,  1 Oct 2026 04:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790815166; cv=none; b=GAGoGIlXacMHcg6vC31LgX3/IZd91IjTAYDkvtkc/h51GcpBd+fwcZjl5QclC0Dk0S4BI2EZ27mhBA36oVaoFfdRXPw+o5V6JCeMpNq66N82vDzIXgcxGm4+oj/QdJuFr+8+4cDs7uMtegi1rGGl1PuwLlRzf2VmOaayCxJhidE=
+	t=1790829756; cv=none; b=ffWudsqb72QwxXDZKBPU7H7hnYxvZW7jTGbgshIlfKzVo2rVFhkimaM9zum+8yKD11e0QqcBJsUB5DFZaxIG1RgHtH/6MSsrT8hbBTPbP4LeHY0z9wjAISFoPrQlL3+zf33vsPqnqfPnI2ydjkhoUgys2RcordPHJGMWZoTwXkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790815166; c=relaxed/simple;
-	bh=gLcNXKvN5l1gLQ5/IPXxb1P7dwV1VTfDrTMXVvhDgvI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A1SST+7LsSND32uIjygwwe5NujA5Gkhsdzm32pwFLa5dsFolPV09PUxb5pYRW0PVIwJjHODfNoP5m+dyvBB9EXHSMM4rpBYftMqEcKuhOY58p04N99MxUY/qC3uarQavFGpR2X+2xEzDAFiKeb8+JnVPcrzo8j3Mdv6V865qzSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jahA/JvT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790829756; c=relaxed/simple;
+	bh=soniGsb9mp6R/Kr3BulVBJf1MUfaSP6Z1J9D6gZy3f4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fp60pfRZGQE28fj4uiuQFqHNHFezYbVbRMxesI3if3HFw1lbSWSgQPVwFaeVlol4zgPXoscgeU7Vz9G897H/5I2ckbIJ8AAVhBloAtIJ5dHnmpvK/j5hS+zThJA1wG2Ah93Xw57tLj9niOvO0407or0BPB8ckE39iJHwcIWABX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dw+gelSc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f3wMTIUB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jahA/JvT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6EDD1F000FF;
-	Thu,  1 Oct 2026 00:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790815164;
-	bh=XgQTEzHx5pkCbzsSm+Q+21RjS2mD6HVxL2V8EVoHcIY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jahA/JvTUyG43sRsQd/wapWzeIuJvqG7Iy0z/FEeW5QbzWaeyRjLdFUPMeI8h2jIR
-	 lugTB4Dvr0GTUtXxrJNSLTnbgg4ttIeGvWzO97oOGVhNLeOTuZe4VvR5F1IsUtBDfC
-	 0LBhbGMaBOzfpabjLRwPEETHSxUb6mcULg0t9nIeL1omqk0cW8gXm/PBOsq/GlWdmP
-	 YpudE3QIYXnxhiBdO88qF77dNPUmliLknF5zmC4HB5/gAvh8S4XLSv1RjsbkSueczn
-	 VIoW7OqJ3WqhAW31A9J7nUxc0LkbE57nPzhbXZNJ69trEgQIiJWX8SKiO0gzAZxiWD
-	 hvS9TeTtwMTWw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/1] kprobes: Make optprobe optimizer
- multi-generational and asynchronous
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179081404279.474106.13678745887307618561.stgit@devnote2>
-References: <179081403098.474106.12959530220684805449.stgit@devnote2>
- <179081404279.474106.13678745887307618561.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Oct 2026 00:39:24 +0000
-Message-Id: <20261001003924.A6EDD1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dw+gelSc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f3wMTIUB"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1790829744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AnqG8ToT92aYugLvayMx46xXmF6dmHVYs7M05iuaJhc=;
+	b=Dw+gelScNAyu+FZo2pGhos2hjw6WjmWw+h/hPJu86TASvVKKCA8pHZLqpP2FogV+6ewKQR
+	yipqeVVdRTYNymKp1AXpLwdt2y2ZzYah4gOrXOTT4RJiWvKO/W9eEPTH20UJsqupGFbhN9
+	OXtaSgJPMLfA46v1+z96Ea0nw5n/xYoHWdsZ6L7pZgniFJ1MVABsNYE4tkB35DMTSXni17
+	93yNoZP4OKbNM8OymYFhwuw7do1izQPynxZJlwe0YtIOQ8Oh3Q1uQJz1Lrn2x/dYXQbxER
+	89H4waW9oKCdDgmOYQGwfOQUTDoxoV1EQl/HNSnu0i419b/4q2ArKgr+BLYVng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1790829744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AnqG8ToT92aYugLvayMx46xXmF6dmHVYs7M05iuaJhc=;
+	b=f3wMTIUB4NmdOD0K+p6u1AL4TRlNhBKxW5ebVh+YvxWRDBRyvf4yjPJ1ehE6DCFG5Ib+er
+	OnE1Eks0yfQ7QSAA==
+To: Gabriele Monaco <gmonaco@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Ogness <john.ogness@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH] rv/rtapp/wakeup: Use "rv_this" the rv_monitor variable
+Date: Thu,  1 Oct 2026 06:42:18 +0200
+Message-ID: <20261001044218.3508990-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] kprobes: orphaned INT3 breakpoint and UAF on unregistered cool=
-ing probes
---
+Commit d9e4c61a12dd ("rv: Use generic rv_this for the rv_monitor
+variable in LTL") renamed the rv_monitor variable to rv_this. But
+rtapp/wakeup monitor was late to the party and missed that.
 
-commit 03a24f729b70417a26e91442518daed709d91828
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+So for this monitor, rv_this is an empty struct. The reactor fails to
+work, because rv_react() checks monitor->react and sees NULL.
 
-kprobes: Make optprobe optimizer multi-generational and asynchronous
+Correct to "rv_this" and make the reactor work again.
 
-This commit replaces synchronize_rcu_tasks() with call_rcu_tasks() and
-introduces a multi-generational ring to queue probe optimizations and
-unoptimizations without blocking or dynamic allocations. Locks are now held
-only briefly to patch instructions rather than across the entire Tasks RCU
-grace period.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/monitors/wakeup/wakeup.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 4edd8ca5c6578..f92039e2561cf 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-[ ... ]
-> @@ -624,67 +696,144 @@ static void do_free_cleaned_kprobes(void)
-[ ... ]
-> +static void optprobe_finalize_generation(struct optprobe_generation *gen)
-> +{
-> +	struct optimized_kprobe *op, *tmp;
-> +
-> +	lockdep_assert_held(&kprobe_mutex);
-[ ... ]
-> +	/* Finalize unoptimized kprobes whose quiescence period completed */
-> +	list_for_each_entry_safe(op, tmp, &gen->cooling_list, list) {
-> +		if (kprobe_unused(&op->kp)) {
-> +			/*
-> +			 * Unregistered while quiescence period was in flight.
-> +			 * Move to cur_gen's freeing list for release afterwards.
-> +			 */
-> +			list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
-> +			kick_kprobe_optimizer();
-
-[Severity: Critical]
-Does moving this unregistered probe to the freeing_list skip necessary clea=
-nup
-steps, leading to an orphaned INT3 breakpoint and a use-after-free?
-
-When optprobe_finalize_generation() sees that the probe is unused and moves=
- it
-to freeing_list here, it doesn't call arch_disarm_kprobe() or
-hlist_del_init_rcu().
-
-Later, when do_free_cleaned_kprobes() frees the struct via free_aggr_kprobe=
-(),
-the probe remains hashed and the breakpoint remains armed in the kernel tex=
-t.
-When the CPU executes the orphaned breakpoint, it will dereference the freed
-kprobe struct, leading to a crash.
-
-> +		} else {
-> +			/* Still in use; now safely disarmed */
-> +			list_del_init(&op->list);
-> +			if (!kprobe_disabled(&op->kp))
-> +				optimize_kprobe(&op->kp);
-> +		}
-> +	}
-[ ... ]
-> @@ -819,7 +1010,17 @@ static void unoptimize_kprobe(struct kprobe *p, boo=
-l force)
->  				 * in the freeing list for release afterwards.
->  				 */
->  				force_unoptimize_kprobe(op);
-> -				list_move(&op->list, &freeing_list);
-> +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
-> +				kick_kprobe_optimizer();
-> +			}
-> +		} else if (optprobe_queued_cooling(op)) {
-> +			if (force) {
-> +				/*
-> +				 * Already unoptimized, move to freeing list for
-> +				 * release afterwards.
-> +				 */
-> +				list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
-> +				kick_kprobe_optimizer();
->  			}
->  		} else {
-
-[Severity: Critical]
-Does this logic correctly handle the case when force is false?
-
-When force is false (which is the default when __disarm_kprobe() calls it),
-this block does nothing, leaving the probe on the cooling_list.
-
-Because the probe is left on the cooling_list, kprobe_queued() evaluates to
-true during __disarm_kprobe(). This causes arch_disarm_kprobe() to be
-skipped, deferring the removal of the INT3 breakpoint. Similarly,
-__unregister_kprobe_top() skips hlist_del_rcu(), leaving the probe in the
-global hash table.
-
+diff --git a/kernel/trace/rv/monitors/wakeup/wakeup.c b/kernel/trace/rv/mon=
+itors/wakeup/wakeup.c
+index 01b47416f24e..2e803e79181e 100644
+--- a/kernel/trace/rv/monitors/wakeup/wakeup.c
++++ b/kernel/trace/rv/monitors/wakeup/wakeup.c
+@@ -128,7 +128,7 @@ static void disable_wakeup(void)
+ 	ltl_monitor_destroy();
+ }
+=20
+-static struct rv_monitor rv_wakeup =3D {
++static struct rv_monitor rv_this =3D {
+ 	.name =3D "wakeup",
+ 	.description =3D "Monitor that real-time tasks are not woken by lower-pri=
+ority tasks",
+ 	.enable =3D enable_wakeup,
+@@ -137,12 +137,12 @@ static struct rv_monitor rv_wakeup =3D {
+=20
+ static int __init register_wakeup(void)
+ {
+-	return rv_register_monitor(&rv_wakeup, &rv_rtapp);
++	return rv_register_monitor(&rv_this, &rv_rtapp);
+ }
+=20
+ static void __exit unregister_wakeup(void)
+ {
+-	rv_unregister_monitor(&rv_wakeup);
++	rv_unregister_monitor(&rv_this);
+ }
+=20
+ module_init(register_wakeup);
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179081403098.474106=
-.12959530220684805449.stgit@devnote2?part=3D1
+2.47.3
+
