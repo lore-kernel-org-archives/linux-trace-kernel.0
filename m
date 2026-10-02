@@ -1,112 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl2-f33.google.com (mail-dl2-f33.google.com [74.125.229.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D7B2F9D82;
-	Fri,  2 Oct 2026 16:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34AB4F4CF8
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Oct 2026 16:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790957509; cv=none; b=O/hWpWkp2uelyDL39JcFFn5OnvgZBY3sUWAHbHjz+6TdvSy4zRArUvBs5NLfzWZQpNYzovJ3w4bzMnsoWCOzSF8sByD0n2xQCuBDclXleIsqnmSkPV3kagt7Xcty7ZuWIIS32Oy4Y+AIZrxa/RHtcOOyxhJI+sQgz8gGSOqR8iY=
+	t=1790957887; cv=none; b=PAeS0sHEnqeapRJa28H0u0g5hQht45HsD8um1fz4s5GkIZILEe3o4zGY+/KbGul/k44/+Cr4dg+zf5l9XfhUuw/ZEGS4xtKbHgYuS8qgfadRe/lshXMkDOX70t60jxWMo2594X1GkWD9jAWJORldi8WcMxe56sUTHJitqpBkJ6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790957509; c=relaxed/simple;
-	bh=d/BWqh3I+o1TpqkOrGVewyRNzXZFs+ZGIdSCNuZrwAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qm1wylZNTeriuWHvsqSax35Sg4/rAczcIkWofNAwmsK808FEkYeeRy1ygMRe5Sfo++2i2I+LgcRSBBSp7irr0UCC6b4/xBdPRX/FNbAGoH+Nnrcrc+y0RTYQ4NQhtlSqG8yMgOkWOWY38hf2lKbyDN0rI3pna+8GO4D4vwUK6O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlPBNFEO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790957887; c=relaxed/simple;
+	bh=RARzgOAd1+9fsFLy4Hz4iobRMUtC/im8jh9JoDGxPC0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AkAC9uMxeRfB5ClIYjiClwGhZ6HvOim+R/TOV7wmXFDMLCtXuGsHcFjIkE5j6d/XWB6fZwJkiWygRamTQXtLyeBdxtK3aARZuLZ1+qIPbyLHJbXGbHyMWyDKyeGUNoE4bJhY4V2DOIrd0sh/m0H5++z29XZoZf4SCzylNZq8NU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pkvYoF8n; arc=none smtp.client-ip=74.125.229.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlPBNFEO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8488D1F000FF;
-	Fri,  2 Oct 2026 16:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790957508;
-	bh=d/BWqh3I+o1TpqkOrGVewyRNzXZFs+ZGIdSCNuZrwAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KlPBNFEOE0gGia6RZAPeBTgVB7HNktDmiscBZ7dS/dxuvyJV5qZ4EBnMmKRqBWf+p
-	 NlxsjCUCHTgzOy14NdmetFcItytYbmQN/W1Cz9uNprrziSxnI2AwI/H7kvg7pcE0Th
-	 apHw1PmIMxp0r8Tb82ZsCAY6CdcYuqB/iILLMgb+Hd9L8Z04owEifByqirNGM+qtq7
-	 tnLVDa9jv/B19Ic1romkl3FQeHLFBdffX1K2/Z3MGzjcMTPK1VcbUS2u0EawxZYH+y
-	 GpQjr2jGxvYJz4PqGTUmJEW1o60Sr6vup0HAlwN8d+g/2nFyPIqzdSzcGp8to062lR
-	 qxk5wHC7LEjbQ==
-Date: Fri, 2 Oct 2026 17:11:18 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
-	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 40/40] mm/vma: introduce and use vma[_flags]_can_gup()
-Message-ID: <ar_WousLPxpyMozt@gremlin>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-40-4583d8a23bca@kernel.org>
- <202033a0-ea65-44de-8119-689e0df0b78e@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkvYoF8n"
+Received: by mail-dl2-f33.google.com with SMTP id a92af1059eb24-1438e88300cso8360403c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Oct 2026 09:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790957885; x=1791562685; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oJzj3UJHIC23fa9yBSqokKxP7nnZfefuPAvJHZmQ5n0=;
+        b=pkvYoF8n0TU6/AKITGLJkaOJpmhmD0PaD4xA/cgdM9XhsjCsoY5u/IfLjBF6KY4Gtl
+         uL3OKvdE4GC24onKajdvBffQEHG1T+RCBcl7YRNDGMreRWd62TLP7W69J8dMGK+kswLe
+         3YR3VF7Q885j9oZ0fcpNJf++UWr8C1DBUNBpuHeXdon9iA7zlNKo2tTgBSV2DE8Otkj1
+         lKB3Vbr6GrbyvMGbVASyiZw9JV1hlehNMCDpZO6Ex7PMsQBycy+gPKzx5tCzNo9vyvTc
+         3oWxT6Xz+P+Xvs+SKwQpfYTB4JGxoMG9T97TV3QMRtiKuKa/pCtajjake/JaRZ5j2vTW
+         c4bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790957885; x=1791562685;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oJzj3UJHIC23fa9yBSqokKxP7nnZfefuPAvJHZmQ5n0=;
+        b=tj7E2EbhuKI14qyk4rwQ+3jHf6WwmKJSqbUQXpM6S9bungO/ALts5zFq4eRtGXOOyF
+         0+IyXv9q2EyTfoobYo1lzXmhDV6b79f3aPaAMfpeI/bHT1p0ZHeQ/ZdwhAJuzXkMKLqi
+         04TYF2LXagAZ8LEYm6A7KRAODReKhGF4DIqaUDcPkM8iwM9cAT/AhGDWIYpRxNXE+rcK
+         8BzBu5zUjw/lJy0ynf3wHChCJhGOYup++7/v0/gOj8krAS8zoNKW2172d/2DV31uwyaO
+         kwA+mFVCoifbN/IItq1VYQ8zSLMICdb7LNXI6KSM/hM3ck9JTnoBMDu23YeUkH2IbcoC
+         aiiQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwGlztzAJ4SOlV8viKYOYLrQkOckKAa+qSXHczPLw47t9iaMEWgEV+2nwJSjtYUpKdyap1KMfm9HU+c41XGfWju7uA=@vger.kernel.org
+X-Gm-Message-State: AFuF++lstBuDrkeGzhFA+Brt2gF2uek7Lh/Vp1U7QXDbH/TmgBWOVft+
+	Ge07X2u5/D/28L0roUhTGu/yNrl22nGYGd3aBSy/0EDttaEDRVTVRFFc
+X-Gm-Gg: AYBFou3CujyMIFKPU+kxOzogj8+B0YXkjE0ZTvCuY4OT92YxcKa4Mz2G7opSX5w9XJE
+	0jiNJJUSxNYhx9jdfJDhpqql8MsFYkgeXQlvMRzNMO/oFbdGIU8OFcDep5vyw7B/BRG7DT2t4P1
+	3BJrn368sZYC1qOPKlvAWFx+0yjjMjZcesr2lJ+0NjHm9MsAK5E9V3BfXR4rdX22Tj6IPB/qSOz
+	1nTaBySzLUa6dnThv3vT02+s8/ww+nVVYdVtODxCtrNRfRp7oc+4V1xBmXpcZ3I3XeK9qsFPyKR
+	b9t20PlZ1ObH1vg1yFJCW/FX+Zu5wNJSUe0j4a5VVShzhezch/xqHBpgPfH0y0tkWGNONWeJ32P
+	Tgs9X0c2Rjmp5Sf4Ex+V4MiBI2CziF0xBp297fPTrxfCNndD5LLduK/94IjajRtpKwgDL0Ye7a7
+	n/tD52MmtVFfYzHfHbRG5yXw6ibxAkm0tMwwpdBIiYglwVI6HKAOY4W7JJo36uTA==
+X-Received: by 2002:a05:701b:42c3:20b0:147:5149:d12d with SMTP id a92af1059eb24-14f5b70fdcamr3720638c88.18.1790957883694;
+        Fri, 02 Oct 2026 09:18:03 -0700 (PDT)
+Received: from ubuntu.. ([23.254.208.9])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14f468c08absm6985681c88.8.2026.10.02.09.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Oct 2026 09:18:03 -0700 (PDT)
+From: Qiliang Yuan <odys.yuan@gmail.com>
+To: ljs@kernel.org
+Cc: akpm@linux-foundation.org,
+	axelrasmussen@google.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	baoquan.he@linux.dev,
+	brendan.jackman@linux.dev,
+	david@kernel.org,
+	hannes@cmpxchg.org,
+	kasong@tencent.com,
+	liam@infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	mhocko@suse.com,
+	odys.yuan@gmail.com,
+	qi.zheng@linux.dev,
+	rostedt@goodmis.org,
+	rppt@kernel.org,
+	shakeel.butt@linux.dev,
+	surenb@google.com,
+	vbabka@kernel.org,
+	weixugc@google.com,
+	yuanchu@google.com,
+	ziy@nvidia.com,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
+Date: Sat,  3 Oct 2026 00:17:44 +0800
+Message-ID: <20261002161744.859093-1-odys.yuan@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ar-8Vkchzn4QobA6@gremlin>
+References: <ar-8Vkchzn4QobA6@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202033a0-ea65-44de-8119-689e0df0b78e@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 02, 2026 at 09:48:14AM +0200, David Hildenbrand (Arm) wrote:
-> Long story short: I wonder whether vma[_flags]_can_gup() is the right
-> abstraction, especially for users that don't actually *use* gup but just want
-> slightly similar semantics (no VM_IO|VM_PFNMAP).
+Hi Lorenzo,
 
-OK confirmed off-list that you would prefer this be dropped for now.
+Thanks for your review. I would like to respond to your points,
+quoting your mail below.
 
---
-Cheers, Lorenzo
+> NAK.
+
+I understand your right to NAK as a maintainer. I am not asking
+you to withdraw it automatically. I am clarifying the facts.
+
+> This series is buggy, and has triggered my AI detection script.
+
+If there are real bugs, I will fix them. But an AI-detection
+script finding bugs is not proof that the code was generated by
+an LLM. Automated review tools commonly find bugs in complex
+kernel code. The dhm series has been in development for a long
+time and has gone through several versions; the dynamic core
+isolation design touches many kernel subsystems, so bugs found
+by automated review are not surprising.
+
+> It is kernel policy that you must disclose this with an
+> Assisted-by tag like:
+>
+> Assisted-by: LLM
+
+I agree with this policy. I did not use an LLM to generate the
+patch code, but I used GLM to help run test data. I will disclose
+the GLM use; if an Assisted-by tag is required, I will add it.
+If I ever use an LLM to generate code, I will disclose that as
+well.
+
+> It is also kernel policy that you must fully understand and take
+> responsibility for every patch that you send.
+
+I understand and take full responsibility for every patch I send.
+
+> The script noted:
+>
+> - Output rate: since 09-28 he has sent KVM SMM CR3/Hyper-V,
+>   ext4+jbd2+quota "shrinker scan budget accounting" (the same fix
+>   applied to three shrinkers; jbd2 went v1->v5 in 3 days and v1->v3
+>   in 3 hours), blk-mq SRCU tag sets, a blk-mq sync-run, ublk x2,
+>   a 4-patch bpf-next verifier rework, mm/migrate move_pages (v2
+>   sent 10h after v1) and this series. That is ~9 unrelated deep
+>   areas in 4 days from someone with 4 commits.
+
+I respect this guidance. I do not often have time to send
+patches to the community; work keeps me busy. I am not spamming.
+I only recently had time to send work that has been in progress
+for months:
+
+- The dhm series has been developed for a long time and has gone
+  through several versions. The dynamic core isolation design
+  touches many kernel subsystems, so bugs found by automated
+  review are common.
+- The bpf series is something I started while optimizing bpf
+  earlier but did not have time to finish. Similar work was
+  attempted in 2019, it is complex and not easy to write, and
+  this has been pending for more than 9 months.
+- The KVM SMM CR3/Hyper-V fix comes from a real problem I hit
+  using Win11 WSL2 + virt-manager. I fixed it internally a long
+  time ago but did not push it upstream. I only sent it after
+  finding Win11 still had not fixed it.
+- I have been working on storage for the past few months. The
+  ext4+jbd2+quota changes are the same logic in three places;
+  once one was found, fixing the others followed naturally, as
+  documented in kernel docs. The v1 of those three small patches
+  already received Reviewed-by tags; I only made small changes
+  and added test data after a reviewer raised a different
+  opinion.
+- blk-mq, ublk, mm/migrate, and mm/compaction are performance
+  issues I found while working on heterogeneous KV-cache AI
+  optimization over the past months, using perf, ftrace, bpf,
+  etc.
+
+> Given you sent your first mail on 21st September and have since
+> been spamming complicated series across multiple different
+> domains, I'm absolutely not confident that you have any
+> understanding of this.
+
+I am not spamming. I only recently had time to send work that
+has been in progress for months. The areas are not unrelated
+from my side: they come from storage, virtualization, BPF, and
+heterogeneous KV-cache AI optimization work.
+
+> It also noted that you had a previous email, realwujing@gmail.com,
+> which you have silent switched from, which also bore the
+> hallmarks of AI slop.
+
+realwujing@gmail.com was an old personal email address. I no
+longer want to use it, so I switched to odys.yuan@gmail.com.
+There was no intent to hide anything; it is simply an email
+change.
+
+> It also found several glaring flaws with your series, so it's
+> clearly not upstreamable.
+
+If there are concrete flaws, please point them out, or I will go
+through the Sashiko findings one by one and fix them.
+
+Thanks,
+Qiliang
