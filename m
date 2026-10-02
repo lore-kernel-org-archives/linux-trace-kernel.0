@@ -1,111 +1,200 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C2A47DD6E;
-	Fri,  2 Oct 2026 10:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F74A346E74;
+	Fri,  2 Oct 2026 10:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790936997; cv=none; b=hNmnAklqWXO9+rB32hny45ZchjXuxGKIeDxhe1CGvlYZkYX9MbsqQV0hTt4oA5ojLcStFSbYwEl7cfoBpxbNYB9KWxlT6lKKtO2Bu0afD2AlgCzrHaJI5vSJXHlsO4NMOrlmKiHY0D5hyIe4qOtnJsDaPnaxyAQDAWqWceiTmtY=
+	t=1790937987; cv=none; b=g7PVU/yg1MAhgVS0HDRti5g9fV0pYoCaZD7GtfCZAXWFhMmoESg8p69XXEqkPSLP5iNrJ/1GiHO75Ifsxds74Z32bRUDiWT4fUXi7z7UGmsCcbMnov0xMmijZpcKPNBWV9+rHCqCjQPCNfvfI2nDbNEL06KTdMQSVgjd6OHkfR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790936997; c=relaxed/simple;
-	bh=4Yz9VttyjtIobBYr4zHBO6hC8p4PyUMtgFsW/tKWCxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RItKo/cp7WIS8X0eYZ2aPSLzgVAoeww2J5zqZBEsbdEk8L0Z9mVyH9N2SdTU8fgBLoTuWsb1WOMRmknsaXAYybPaXA/eMsqeHGl/70jkL6t1qtbkMn2ytscCZ5mftxh+CFw98VHM7YEh7EQYTXd9w5Xjr6yf/PjQ5Nzj4y9Gc8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uiiqz/dG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1790937987; c=relaxed/simple;
+	bh=ZQJ07gpmYbbEG6GvhdN1M+UrkoAN/Od4laf2T+Hwmic=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kmlpdi6f94cI47w9eieWVNhsy3WkBHV15VBp4klrwzl+LY0ag/EEhSg727YSigz+XuZo088rTZTyyOCRm9fCvT4ZkrQRmCDGczQCiPO6Gk+irRSRCQnjUv27FmS3yAkXcFv31xlzR/RD5cBl9tt6LhCcHEIXVsl1iBpjyFqCXlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWC64QWp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uiiqz/dG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O9DRmnwiqHKYpTYCpYE+50FxaPR56rtvVjls/+jpVIE=; b=uiiqz/dGVA1i/oX5Bd6lqAAAWb
-	rf+a+NGebxFGnYuXlYKtI/e2FA9XMP2iVTZSFl79WRDhgGKM4eVedJ/5S3+uu5BAaZcmx/liU68WR
-	/jSeUpxJJ4vRLw9hGpLd/jsQLXnhPQZ1JNVS9/Cbs54FkKZtVJuTZ0nCLbs42fsXI/+rItbhyvdTh
-	vIU04khZRf1EYtUPqVvdnPfMZjQbvPLvo4beiscVCmQZRJeDbE5RudK7UYvRU8WfKhStZ1d0KDEGH
-	JBsPE2xaEYJ+BAImKhyFS5Ov21rGY5Vxve1/WTEbeGtogO1XUQ4Z75iS7qUH/xhOqNmyIDIvyNeM3
-	FKeJ+3Rg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCaWJ-0000000H6ZJ-3dH9;
-	Fri, 02 Oct 2026 10:29:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 19287300673; Fri, 02 Oct 2026 12:29:39 +0200 (CEST)
-Date: Fri, 2 Oct 2026 12:29:39 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Nam Cao <namcao@linutronix.de>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Wen Yang <wen.yang@linux.dev>,
-	Tobias Schaffner <tobias.schaffner@siemens.com>,
-	Viktor Malik <vmalik@redhat.com>
-Subject: Re: [PATCH v2 01/15] sched: Add task enqueue/dequeue trace points
-Message-ID: <20261002102939.GB2823843@noisy.programming.kicks-ass.net>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
- <20261001152042.124445-2-gmonaco@redhat.com>
- <20261001154934.GT88198@noisy.programming.kicks-ass.net>
- <d75888885e2c94c1bc717faa864f609c43db874f.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWC64QWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9A61F000FF;
+	Fri,  2 Oct 2026 10:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790937985;
+	bh=oAv2rOsqA15/L6vfWCnfyySEcVkci68T9Wxx66gwCVQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=fWC64QWp2yL8iB3v679sA2BQDWJ77FPzg5FYeIAkbJ78G1KohB3jDilAOXbhWeBn+
+	 djcA/RMuM6MxGl2yam5Ts25gfkCZbsWDlg6hgNYjGfALN6E+ghzGcLki+MYgHJr75D
+	 BM2q2sCkwEr0pLw5m2YV2gKN0jQ6wEBisdNhPPzg7PwgyJc8ZjvIwEjztxNUf4jHVw
+	 own/sWqtt4ILlI+FDI3z8xggpkCQ9kaWJznOgJsBP7AuSlgdkCLw3mCkEcEWgxOmIs
+	 RJOvk/B0L/ZPd6JWhGUfnWBrTECXo1ZpUFJaV+mkS+cwfqkjbyio9CDFpF6YOBwwil
+	 wIvYNTSNgfBlQ==
+Date: Fri, 2 Oct 2026 10:46:03 +0000
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: Override the same name trace_instance=
+ by latter one
+Message-ID: <20261002104603.3cebd743@mhiramat99.roam.internal>
+In-Reply-To: <20261002091431.DD73F1F000FF@smtp.kernel.org>
+References: <179091984881.537422.15308457677039592540.stgit@devnote2>
+	<179091985884.537422.15845141877166136300.stgit@devnote2>
+	<20261002091431.DD73F1F000FF@smtp.kernel.org>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d75888885e2c94c1bc717faa864f609c43db874f.camel@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 02, 2026 at 09:09:01AM +0200, Gabriele Monaco wrote:
-> On Thu, 2026-10-01 at 17:49 +0200, Peter Zijlstra wrote:
-> > On Thu, Oct 01, 2026 at 05:20:28PM +0200, Gabriele Monaco wrote:
-> > > From: Nam Cao <namcao@linutronix.de>
-> > > 
-> > > Add trace points into enqueue_task() and dequeue_task().
-> > > 
-> > > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > Obviously I don't remember anything at all. But also, you 'forgot' to
-> > send me the rest of the patches which might hold a clue. As is I'm
-> > clueless as to why we want this, since the Changelog also offers none.
-> 
-> Right..
-> 
-> This commit is part of [1], but borrowed from [2], which is actually more
-> interesting to understand why I need those tracepoints.
-> 
-> [2] contains 3 other RV deadline monitors, I should have at least CC'd you in
-> [3] and [4].. Essentially the enqueue and dequeue tracepoints are used to:
-> 
->  * model the event from dl_server idle to ready (a new fair task is available)
->  * understand when a task is moved to and from another scheduler runqueue
-> 
-> Thanks,
-> Gabriele
-> 
-> [1] - https://lore.kernel.org/lkml/20261001152042.124445-1-gmonaco@redhat.com
-> [2] - https://lore.kernel.org/lkml/20260929124908.177676-1-gmonaco@redhat.com
-> [3] - https://lore.kernel.org/lkml/20260929124908.177676-8-gmonaco@redhat.com
-> [4] - https://lore.kernel.org/lkml/20260929124908.177676-9-gmonaco@redhat.com
+On Fri, 02 Oct 2026 09:14:31 +0000
+sashiko-bot@kernel.org wrote:
 
-So mostly I flat out out ignore partial series. It means I have to go
-dig around to figure out the whole picture, and anything that requires
-extra effort goes on the 'later' pile, and you know where that lives.
+> Thank you for your contribution! Sashiko AI review found 2 potential
+> issue(s) to consider:
+> - [High] tracing: heap out-of-bounds write in
+> parse_boot_instance_info due to unescaped tabs
+> - [Medium] tracing: duplicate trace array creation via implicit
+> backup lookup causes tracefs init failure --
+> 
+> commit e7d9ac9646a2e104af11665c8c61543d20737c13
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+>     tracing: Override the same name trace_instance= by latter one
+>     
+>     Override the same name boot instance by the latter parameter.
+>     This allows user to override the trace instance in bootconfig by
+> the cmdline from bootloader.
+> 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index e4a490d3d08c8..4590d38969450 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -308,6 +309,7 @@ static int __init boot_instance(char *str)
+> >  
+> >  	ret = snprintf(slot, left, "%s\t", str);
+> >  	boot_instance_index += ret;
+> > +	nr_boot_instances++;
+> >  
+> >  	return 1;
+> >  }  
+> 
+> [ ... ]
+> 
+> > +__init static void parse_boot_instance_info(struct boot_instance
+> > *boot_instances) {  
+> 
+> [ ... ]
+> 
+> > +	while ((events = strsep(&str, "\t"))) {
+> > +		if (!*events)
+> > +			continue;  
+> 
+> [ ... ]
+> 
+> > +		for (i = 0; i < idx; i++) {
+> > +			/* Override by the last defined instance */
+> > +			if (!strcmp(name, boot_instances[i].name))
+> > +				break;
+> >  		}
+> >  
+> > +		boot_instances[i].name = name;
+> > +		boot_instances[i].flag_delim = flag_delim;
+> > +		boot_instances[i].addr_delim = addr_delim;
+> > +		boot_instances[i].backup = backup;
+> > +		boot_instances[i].events = events;  
+> 
+> [Severity: High]
+> If a user provides a quoted parameter containing a literal tab (for
+> example, trace_instance="foo\tbar"), won't strsep(&str, "\t") split
+> it into more tokens than what was originally counted in
+> nr_boot_instances?
+> 
+> This loop appears to write beyond the bounds of the boot_instances
+> array when there are embedded tabs, which could lead to memory
+> corruption and a kernel panic during early boot.
 
-Now, as to 3,4; I'm confused. If I search 'enqueue' I see there is a
-tracepoint attach thingy in the .c file, but I don't see the
-corresponding bits in the .dot file. And per my understanding the .c
-thing is an artifact of the .dot file.
+Ah, OK. Such usage is not recommended but it can happen and
+causes array index overrun.
 
-So what gives?
+> 
+> > +		if (i == idx)
+> > +			idx++;
+> > +	}
+> > +
+> > +	nr_boot_instances = idx;
+> > +}
+> > +
+> > +__init static void enable_instances(void)
+> > +{
+> > +	struct boot_instance *boot_instances __free(kfree) = NULL;
+> > +	struct boot_instance *bi;
+> > +	struct trace_array *tr;
+> > +	bool memmap_area = false;
+> > +	char *tok;
+> > +
+> > +	if (!boot_instance_index)
+> > +		return;
+> > +
+> > +	/* Parse the instance name to check the overlap */
+> > +	boot_instances = kmalloc_array(nr_boot_instances,
+> > +				       sizeof(*boot_instances),
+> > GFP_KERNEL);
+> > +	if (!boot_instances)
+> > +		return;
+> > +
+> > +	parse_boot_instance_info(boot_instances);
+> > +
+> > +	for (int i = 0; i < nr_boot_instances; i++) {
+> > +		char *rname __free(kfree) = NULL;  
+> 
+> [ ... ]
+> 
+> > -		if (trace_array_find(name)) {
+> > -			pr_warn("Tracing: Instance %s already
+> > exists\n", name);
+> > -			continue;
+> > -		}
+> > -
+> > -		if (backup) {
+> > -			if (backup_instance_area(backup, &addr,
+> > &size) < 0)
+> > +		if (bi->backup) {
+> > +			if (backup_instance_area(bi->backup,
+> > &addr, &size) < 0) continue;
+> >  		}  
+> 
+> [ ... ]
+> 
+> > -		tr = trace_array_create_systems(name, NULL, addr,
+> > size);
+> > +		tr = trace_array_create_systems(bi->name, NULL,
+> > addr, size);  
+> 
+> [Severity: Medium]
+> With the trace_array_find() check removed, does this unconditionally
+> create a new trace array, even if one implicitly exists?
 
-Also, IMO it would be *much* preferred if the .rst file would not exist.
-Just have the graph-easy and the description as a comment in the .dot
-file. Then you have the whole thing in one *readable* place.
+parse_boot_instance_info() already checks the overlaps.
 
-...insert rant on what a piece of shit rst is here...
+> 
+> If a user specifies a trace_instance with a backup pointing to
+> another instance defined later (e.g., trace_instance=foo=bar
+> trace_instance=bar), backup_instance_area() will implicitly create
+> "bar" via trace_array_get_by_name().
+
+Ah, that's a good point! we should check it in
+parse_boot_instance_info().
+
+> 
+> When the loop processes "bar" explicitly later on, it seems this code
+> will call trace_array_create_systems("bar", ...) a second time,
+> duplicating the trace array in ftrace_trace_arrays. This duplicate
+> could cause tracefs_create_dir() to fail and abort initialization of
+> subsequent trace instances.
+> 
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
