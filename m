@@ -1,209 +1,276 @@
-Received: from mta1.migadu.com (out-221.mta1.migadu.com [95.215.58.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304D6361DCB
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Oct 2026 04:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9521364EAF;
+	Fri,  2 Oct 2026 04:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790915803; cv=none; b=EnEhQ+8nL8GHrMbPPMNFoNP076YOJhoKM87ncOlyINz/n6mKShaUGnef0/2pT7OgLs6wcE3LxIIEgaoXRVwdbtOsiVh/J/+1zjZt6Oiux1UXPPOof9N186WhI8uAuTzKbHen3hHkK4C5AOfSK/O2fVMm7AKopcTbGOu63PxfRD0=
+	t=1790916526; cv=none; b=Iq3fjjoNcf14Irq743YiVfFWX1ksSPQwgTTHzsYBkRZYk4qUq4Wc96fHW2bFsEU80rkoVaZqXU+48i4cfT8itlLOzDeD93G5o6emBjtPmlItEQ3cBO7AQW2K3d0zxfQw6EntyIb/deCF/dycvEZuB9kQi6NnDmirjULMSdQ+Yqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790915803; c=relaxed/simple;
-	bh=y/0CXx9eIXXSUi0htzgjyz98uoanzac/KLtq3JYsrjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tttTR5FyR0svX8ZXGyjTyMM9XDMiHSGpKM4ogrF5/j3ItVipqVTyRu6QJTJ2sZOtNp35rNpQmsArYqWXYgOfw+LzJGGWGWT8mZ+QyrZ/AdJ8M2m2UZIebo8JuviBH+ucqVZI0xiNR8BJkDJiyC+7j1Bexv5FNhLYUyU8m7wge7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ltl2ywS1; arc=none smtp.client-ip=95.215.58.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790916526; c=relaxed/simple;
+	bh=9BokZxA+KUEVU6EbIXOKQdvXERT3s2BxlDbgsQY2trM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hIeiMcmaAzmUbhU72dns08SxMGz9zTJnyKmWZvHKcZM+AyavL/Eu/t/U50lvqcAVVnU7tdsfOlbQXewpIlWKTjam0lUqcQbRX/guRgyVJ1AmLymHMTh/HZ5DgZj65JV/L6X6PqlMc8AZfelDqHpKQBS1IaXRTJitavABfJkVHD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYyNYkhS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ltl2ywS1"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=y/0CXx9eIXXSUi0htzgjyz98uoanzac/KLtq3JYsrjo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790915797; v=1; x=1791520597;
- b=Ltl2ywS1MGwd3ErvxpJpjqDeDorA9ZsVpvVrPs1UdC5701RhwHQAIdSscaJaKysJf3H86Vo3
- jGz/uRt9NjN0Sv3zmg9bQ3LdObRXsNmFdFwVbd+ZMuuwQkuBmaVYKzwrL3m+MRU6KG1JghCWO0F
- hdoUs5FXFLpKVdVSxFsu+V54=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id d68e9918b237ea7b;
-	Fri, 02 Oct 2026 04:36:36 +0000
-X-Mizu-Trace-ID: d68e9918b237ea7b
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <596bfb65-db2d-413b-8039-c921031b50fd@linux.dev>
-Date: Thu, 1 Oct 2026 21:36:24 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYyNYkhS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A210E1F000FF;
+	Fri,  2 Oct 2026 04:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790916524;
+	bh=8JQfx3UqxXtPcM7mzUe1J4JBA7Yl9XeKiBpSr0NipXc=;
+	h=From:To:Cc:Subject:Date;
+	b=OYyNYkhSTvQeWZ0ZvPAVxTotg8hF58akQv5+5Vkl34XEDG8h89WEMFmlfDYc4I5aS
+	 S+93g1eNMs+nxF6qUqoaA+d2jqOvEPFLOwdtyaF7B2xhheihu4vTxOtv0iNe8fKIfR
+	 HmBMdNEdZEQ8lBwjFaY+Ts9eHait5hKz/AgruDLNO7LnBPAiwvngPRD7j81k7S9MNA
+	 WOgVE2OdK1iOFzN0CaOSQywKuOU5t9GGSeurVIibKvfxCO59FIS9Ggrvbip2TginD3
+	 C5OMHp66MgKj/cnA+QLmBmma8uFRHnts/NqaVziSVQML3NcCmd/150Ma+o1bc7IXpV
+	 ibuz1y1ivP7XA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Josef Bacik <josef@toxicpanda.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Boqun Feng <boqun@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	rcu@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v5 0/1] kprobes: Make optprobe optimizer multi-generational and asynchronous
+Date: Fri,  2 Oct 2026 13:48:37 +0900
+Message-ID: <179091651785.526694.220518880874223221.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand
- loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
-To: Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Christian Heusel <christian@heusel.eu>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- linux-perf-users@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org,
- Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
- Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
- sched-ext@lists.linux.dev, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- rust-for-linux@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
- Bjoern Doebel <doebel@amazon.de>, Martin Pohlack <mpohlack@amazon.de>,
- jay.wang.upstream@gmail.com
-References: <20261001225214.12351-1-wanjay@amazon.com>
-Content-Language: en-US
-From: Ihor Solodrai <ihor.solodrai@linux.dev>
-In-Reply-To: <20261001225214.12351-1-wanjay@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2026-10-01 3:52 p.m., Jay Wang wrote:
-> Based on and tested against bpf-next commit b5a4aa31abd6 ("bpf, cgroup:
-> Fix cgroup struct_ops query for a second attach type").
-> 
-> This series makes CONFIG_DEBUG_INFO_BTF a tristate, so that it can be
-> set to =m.  With =m the vmlinux BTF is carried by a module, btf_vmlinux,
-> that the kernel loads the first time user space asks for something that
-> needs the BTF.  On a system where nothing does, that saves ~5.4 MB of
-> RAM with a distribution config; on a system that uses BTF, it behaves as
-> with =y.  =y itself is untouched.
-> 
-> Problem
-> -------
-> 
-> The vmlinux BTF that CONFIG_DEBUG_INFO_BTF=y builds into the kernel
-> image takes ~5.4 MB of memory, resident from boot whether anything uses
-> it or not.  On small instances that is not negligible.
-> 
-> A distribution cannot simply turn it off for the users who do not need
-> it: it ships one kernel build for all its users, and BTF is not debug
-> info anymore.  CO-RE, fentry/fexit, kfuncs, struct_ops, sched_ext and
-> bpf-lsm all depend on it, so =n takes those away from everyone who does
-> use them.
-> 
-> Hence this series adds CONFIG_DEBUG_INFO_BTF=m: the BTF becomes an
-> on-demand module.  Users who never use BTF get the memory back; for
-> users who do, the first request that needs it loads it, and everything
-> works as with =y.
-> 
-> [...]
-> 
->   Documentation/bpf/btf.rst                  |   68 ++
->   Makefile                                   |    8 +-
->   include/asm-generic/vmlinux.lds.h          |   32 +-
->   include/linux/bpf.h                        |   15 +
->   include/linux/btf.h                        |   11 +
->   include/linux/btf_ids.h                    |    2 +-
->   include/linux/compiler_types.h             |    2 +-
->   include/linux/module.h                     |    2 +-
->   include/trace/trace_events.h               |    2 +-
->   init/Kconfig                               |    2 +-
->   kernel/bpf/Makefile                        |    6 +-
->   kernel/bpf/bpf_struct_ops.c                |    3 +-
->   kernel/bpf/btf.c                           | 1085 ++++++++++++++++++--
->   kernel/bpf/btf_vmlinux.c                   |   23 +
->   kernel/bpf/inode.c                         |   44 +-
->   kernel/bpf/preload/Kconfig                 |    4 +
->   kernel/bpf/syscall.c                       |   51 +-
->   kernel/bpf/sysfs_btf.c                     |   97 +-
->   kernel/bpf/verifier.c                      |  172 +++-
->   kernel/module/Kconfig                      |    2 +-
->   kernel/module/main.c                       |    4 +-
->   kernel/trace/bpf_trace.c                   |    3 +-
->   kernel/trace/trace_events.c                |   10 +
->   kernel/trace/trace_output.c                |    7 +
->   kernel/trace/trace_probe.c                 |   16 +
->   kernel/trace/trace_syscalls.c              |    6 +-
->   lib/Kconfig.debug                          |   30 +-
->   net/netfilter/Makefile                     |    6 +-
->   net/xfrm/Makefile                          |    4 +-
->   samples/bpf/Makefile                       |    6 +-
->   samples/hid/Makefile                       |    6 +-
->   scripts/Makefile.modfinal                  |   28 +-
->   scripts/Makefile.vmlinux                   |    5 +
->   scripts/gen-btf.sh                         |   53 +-
->   scripts/link-vmlinux.sh                    |   25 +-
->   scripts/package/PKGBUILD                   |    7 +
->   scripts/package/kernel.spec                |    4 +
->   scripts/package/mkspec                     |    7 +
->   tools/bpf/bpftool/Makefile                 |    6 +-
->   tools/bpf/resolve_btfids/main.c            |  217 +++-
->   tools/perf/bpf_skel.mak                    |    8 +-
->   tools/sched_ext/Makefile                   |    6 +-
->   tools/testing/selftests/bpf/Makefile       |    6 +-
->   tools/testing/selftests/hid/Makefile       |    6 +-
->   tools/testing/selftests/sched_ext/Makefile |    6 +-
->   45 files changed, 1936 insertions(+), 177 deletions(-)
+Hi,
 
-This series caught my attention because of the sheer amount of the code
-and the iteration speed. I've tried to read the cover (it was
-tiresome, please ask your "agent" to be concise), and fed the series
-to my bot.
+Here is the 5th version of the patch for making the optprobe optimizer
+multi-generational and asynchronous.
 
-A question I had: is it really worth 2k of complicated kernel code to
-*maybe sometimes* save <10Mb of memory?
+The previous version is here:
 
-And then the bot found this:
+  https://lore.kernel.org/all/179081403098.474106.12959530220684805449.stgit@devnote2/
 
-     What systemd does at every boot
+Changes in v5:
+ - Fix comments for each list in optprobe_generation.
+ - Rename kprobe_queued() to kprobe_queued_unopt() and make it check
+   optprobe_queued_unopt() instead of !list_empty(&op->list).
+ - In unoptimize_kprobe(), check !list_empty(&op->list) before
+   !kprobe_optimized(p) so that cooling probes (whose OPTIMIZED flag is
+   already cleared) are correctly handled rather than returning early.
+ - Make sure the probes in freeing_list are removed from hash table
+   and disarmed.
 
-     PID1 loads and attaches a BTF-dependent LSM program at every boot
 
-       src/core/manager.c:1026-1059, in manager_new():
+=== How the Asynchronous Multi-Generational Optimizer Works ===
 
-       if (FLAGS_SET(test_run_flags, MANAGER_TEST_RUN_MINIMAL)) {
-               ...
-       } else {
-               ...
-               (void) bpf_restrict_fs_setup(m);
-       }
+1. Background & Motivation
+--------------------------
+Previously, kprobe_optimizer() executed synchronously:
+- It acquired kprobe_mutex, text_mutex, and cpus_read_lock().
+- It then called synchronize_rcu_tasks() while holding all three locks.
+- Under PREEMPT_LAZY / PREEMPT kernels and CPU-heavy server workloads,
+  synchronize_rcu_tasks() can stall for seconds to minutes waiting for
+  voluntary context switches on all online CPUs.
+- Holding text_mutex and cpus_read_lock() throughout this wait blocked
+  CPU hotplug, module loading/unloading, static keys, and all subsequent
+  kprobe registrations, frequently triggering hung-task watchdogs.
 
-https://github.com/systemd/systemd/blob/main/src/core/manager.c#L1026-L1059
-https://github.com/systemd/systemd/blob/main/src/core/bpf-restrict-fs.c#L27-L85
+The actual instruction modification (text-patching) takes only
+microseconds. The new optimizer completely decouples instruction patching
+from the Tasks RCU grace period wait using call_rcu_tasks(), dropping all
+locks during the wait.
 
-Do those tiny VMs that you target run systemd with BPF LSM?
-I assume you target concrete VMs, not "small instances" in a vacuum.
+2. Architecture: Fixed Generational Ring
+----------------------------------------
+To ensure jump optimization never fails with -ENOMEM during tracing,
+a fixed ring of generation slots is used:
 
-You can check this by booting them with =m and then:
-   $ lsmod | grep btf_vmlinux
-   $ systemctl --version  # look for +BPF_FRAMEWORK
-   $ cat /sys/kernel/security/lsm
+  static struct optprobe_generation optprobe_gens[OPTPROBE_GEN_MAX];
+  (OPTPROBE_GEN_MAX = 2)
 
-If the answer is "yes" for the majority of them, the whole project is
-moot, because the module will be loaded immediately on boot.
+Each generation struct contains 4 probe lists and tracking state:
+- optimizing_list:
+    Probes waiting for the Tasks RCU grace period to drain all tasks from
+    the original instruction bytes before installing the relative jump.
+- unoptimizing_list:
+    Staging queue for batching unoptimization requests (replacing jumps
+    with breakpoints). This is not a wait queue for a grace period; text
+    unoptimization happens immediately upon generation dispatch.
+- cooling_list:
+    In-use probes whose jumps were unoptimized, waiting for the Tasks RCU
+    grace period to drain all tasks from the optinsn detour slot.
+    Holding them on this list keeps list_empty(&op->list) false, preventing
+    concurrent unregister_kprobes() from prematurely freeing the
+    aggregator or detour buffer before preempted tasks exit.
+- freeing_list:
+    Unused aggregator probes that are already unhashed from kprobe_table[]
+    and waiting for batch release (freeing detour slots and memory) after
+    the grace period completes.
+- rcu:
+    The rcu_head passed to call_rcu_tasks().
+- in_flight / ready:
+    State flags indicating if the generation is currently waiting on
+    Tasks RCU, or if the callback has fired and finalization is pending.
 
-My bot found more stuff implementation-wise...
+3. The "Waiting Room" Invariant
+-------------------------------
+optprobe_cur_gen points to the current active ingress generation.
+All new optimization, unoptimization, and forced-cleanup requests from
+register_kprobe(), unregister_kprobe(), and kill_optimized_kprobe() are
+queued into optprobe_gens[optprobe_cur_gen].
 
-I suggest to slow down, stop burning tokens for a bit, and first try
-to figure out the important details:
-   - who will actually benefit from these memory savings and do they care?
-   - is it worth it in terms of implementation complexity?
+To ensure an idle generation slot is always available to absorb incoming
+requests without dynamic allocation, the last available generation slot
+is never dispatched while an earlier generation is still in flight
+(optprobe_can_fire() checks active_gens < OPTPROBE_GEN_MAX - 1).
+It acts as a non-blocking "waiting room".
 
-Even for LLM it's easier to deal with a 100 lines of code than with 2k.
+4. Execution Flow of the Optimizer Thread
+-----------------------------------------
+The dedicated optimizer kthread sleeps on kprobe_optimizer_wait and wakes
+when kicked, when a flush is requested, or when an RCU callback completes.
 
-pw-bot: cr
+                [ Probes Queued in cur_gen ]
+                            |
+               kprobe_optimizer_thread()
+                            |
+            (batching delay: OPTIMIZE_DELAY)
+                            |
+             kprobe_optimizer() [holds kprobe_mutex]
+             +------------------------------+
+             |                              |
+             v                              v
+   [ Step 1: Finalize ]           [ Step 2: Dispatch ]
+   (for ready generations)        (for cur_gen if can_fire)
+             |                              |
+   - Hold text_mutex & cpus_lock  - Hold text_mutex & cpus_lock
+   - arch_optimize_kprobes()      - arch_unoptimize_kprobes()
+   - do_free_cleaned_kprobes()    - Move in-use to cooling_list
+   - Drain cooling_list           - Advance cur_gen
+   - Drop text_mutex & cpus_lock  - Drop text_mutex & cpus_lock
+   - gen->in_flight = false       - call_rcu_tasks(&gen->rcu)
+             +------------------------------+
+                            |
+                            v
+                  [ Step 3: Notify ]
+                  - If progress:
+                      optimizer_passes++
+                      wake_up_var_locked(optimizer_passes)
+                  - Self-kick if more probes queued
 
->   create mode 100644 kernel/bpf/btf_vmlinux.c
-> 
-> 
-> base-commit: b5a4aa31abd6fe90009b63e35dc18c67d041ec0c
+Step 1: Finalize Ready Generations (optprobe_finalize_generation)
+  Runs for any generation where the Tasks RCU callback marked ready = true:
+  1. Briefly acquires text_mutex and cpus_read_lock().
+  2. Calls arch_optimize_kprobes(&gen->optimizing_list) to patch the
+     relative jump into target instructions.
+  3. Releases text_mutex and cpus_read_lock().
+  4. Calls do_free_cleaned_kprobes(&gen->freeing_list) to release detour
+     buffers and free unused aggregator probes.
+  5. Drains gen->cooling_list:
+     - Probes unregistered while in flight (kprobe_unused()) are
+       unhashed with hlist_del_init_rcu() and moved to cur_gen's
+       freeing_list for the next pass.
+     - Probes still in use have their disarming finalized via
+       list_del_init(&op->list), and are queued for re-optimization if
+       still enabled.
+  6. Clears in_flight = false and ready = false, returning the slot to
+     the idle pool.
 
+Step 2: Dispatch the Waiting Room (optprobe_dispatch_generation)
+  If the waiting room has queued probes and active_gens < OPTPROBE_GEN_MAX - 1:
+  1. Briefly acquires text_mutex and cpus_read_lock().
+  2. Calls do_unoptimize_kprobes(): executes arch_unoptimize_kprobes() to
+     replace relative jumps with breakpoints.
+  3. Probes that are unused are moved to gen->freeing_list and removed
+     from the kprobe hash table (hlist_del_init_rcu).
+  4. Probes still in use are moved to gen->cooling_list.
+  5. Releases text_mutex and cpus_read_lock().
+  6. Advances optprobe_cur_gen to the next generation slot.
+  7. Marks gen->in_flight = true, gen->ready = false.
+  8. Calls call_rcu_tasks(&gen->rcu, optprobe_generation_rcu_cb) and
+     immediately returns. kprobe_mutex is completely released while
+     Tasks RCU runs asynchronously in the background.
+
+Step 3: Pass Completion & Flusher Notification
+  1. If any generation was finalized or dispatched (progress was made),
+     increments optimizer_passes and wakes waiters sleeping on
+     wait_for_kprobe_optimizer().
+  2. If the waiting room still has queued probes and another generation
+     can fire immediately (e.g. sibling probes retrying optimization),
+     it kicks itself for another pass.
+
+5. Concurrency & Preemption Safety (The cooling_list)
+-----------------------------------------------------
+Under CONFIG_PREEMPTION=y, a task can be preempted inside an optprobe detour
+buffer (or the detour template). When a probe is disabled, its jump is
+reverted to an int3 breakpoint, but the detour buffer cannot be freed until
+all preempted tasks have executed a voluntary context switch (Tasks RCU).
+
+Because kprobe_mutex is dropped during the grace period, concurrent
+unregister_kprobes() could run. Previously, unregister_kprobes() checked
+kprobe_disarmed(ap), which evaluates:
+  kprobe_disabled(p) && list_empty(&op->list)
+
+If unoptimized in-use probes were simply detached (list_del_init),
+kprobe_disarmed() would become true prematurely, allowing
+free_aggr_kprobe() to free the detour buffer and kfree(op) while a
+preempted task was still inside the detour buffer.
+
+By placing unoptimized in-use probes onto gen->cooling_list:
+- They are kept off unoptimizing_list so arch_unoptimize_kprobes() will
+  never be called twice on them.
+- list_empty(&op->list) remains false throughout the Tasks RCU grace period.
+- unregister_kprobes() sees !kprobe_disarmed() and defers deleting the
+  aggregator.
+- When optprobe_finalize_generation() runs after the grace period, it
+  safely reclaims or disarms them without any use-after-free window.
+
+6. Flush Synchronization (Andrea Parri's Wait Queue Fix)
+--------------------------------------------------------
+When wait_for_kprobe_optimizer() flushes the optimizer:
+- It checks optprobe_optimizer_busy():
+    optprobe_has_queued_probes() || (optprobe_active_gens_count() > 0)
+- Instead of using a completion (which suffered from concurrent-waiter
+  init_completion() clobber races), it monitors the monotonic counter
+  optimizer_passes.
+- If work can be dispatched or a generation is ready, it wakes the
+  optimizer thread. Otherwise, if a generation is merely in flight, it
+  avoids redundant wakeups.
+- It sleeps via wait_var_event_mutex(&optimizer_passes, ..., &kprobe_mutex).
+  This cleanly releases kprobe_mutex while sleeping and wakes only when
+  actual progress is made, preventing CPU-bound spinloops until all
+  in-flight and queued generations drain.
+
+
+Thank you,
+
+---
+base-commit: 72d3fcf802c45d00b300f25b848a93c3a2bd7c7e
+
+Masami Hiramatsu (Google) (1):
+      kprobes: Make optprobe optimizer multi-generational and asynchronous
+
+
+ kernel/kprobes.c |  471 ++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 353 insertions(+), 118 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
