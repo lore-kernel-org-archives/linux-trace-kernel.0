@@ -1,200 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F74A346E74;
-	Fri,  2 Oct 2026 10:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D732352C28
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Oct 2026 11:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790937987; cv=none; b=g7PVU/yg1MAhgVS0HDRti5g9fV0pYoCaZD7GtfCZAXWFhMmoESg8p69XXEqkPSLP5iNrJ/1GiHO75Ifsxds74Z32bRUDiWT4fUXi7z7UGmsCcbMnov0xMmijZpcKPNBWV9+rHCqCjQPCNfvfI2nDbNEL06KTdMQSVgjd6OHkfR8=
+	t=1790940736; cv=none; b=VvBjD3V3YnUM0A3rZZKOEnJ3xK2VK7SU4057RLfYuKa4oIwJ9SWeC8Gv4oIv/crhzK3F7J2r7w1vw7X5imaxQQw/6AjeT0istnMh6jFVLsD0AB62EQquG7W5sk7w746fxc+p2PXN4QoAto6ZgDqYxyjPNenB5/2A57nsvnJcoyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790937987; c=relaxed/simple;
-	bh=ZQJ07gpmYbbEG6GvhdN1M+UrkoAN/Od4laf2T+Hwmic=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kmlpdi6f94cI47w9eieWVNhsy3WkBHV15VBp4klrwzl+LY0ag/EEhSg727YSigz+XuZo088rTZTyyOCRm9fCvT4ZkrQRmCDGczQCiPO6Gk+irRSRCQnjUv27FmS3yAkXcFv31xlzR/RD5cBl9tt6LhCcHEIXVsl1iBpjyFqCXlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWC64QWp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790940736; c=relaxed/simple;
+	bh=va3g36bFaY/pzZUpVhZvC3P48VfUDEtaenvTCUQbz9s=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:MIME-Version; b=IKm3NoYjDI5ug0ZGItM3bEbeJ7SLJNrrF8zsdouYJsFcWBhQvG+p80MRwvbLvae3OsK4EBPfMlGc4YEe6ULwrayvLiW86xEd0GRQNkXVa6mKEjd7lre2VEL1NWw/jBWHitTNuIUJDWjsL7exdYWoVZ9oM7u1nKVDM6Yq8ZtrfAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+9a3QJZ; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWC64QWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9A61F000FF;
-	Fri,  2 Oct 2026 10:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790937985;
-	bh=oAv2rOsqA15/L6vfWCnfyySEcVkci68T9Wxx66gwCVQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=fWC64QWp2yL8iB3v679sA2BQDWJ77FPzg5FYeIAkbJ78G1KohB3jDilAOXbhWeBn+
-	 djcA/RMuM6MxGl2yam5Ts25gfkCZbsWDlg6hgNYjGfALN6E+ghzGcLki+MYgHJr75D
-	 BM2q2sCkwEr0pLw5m2YV2gKN0jQ6wEBisdNhPPzg7PwgyJc8ZjvIwEjztxNUf4jHVw
-	 own/sWqtt4ILlI+FDI3z8xggpkCQ9kaWJznOgJsBP7AuSlgdkCLw3mCkEcEWgxOmIs
-	 RJOvk/B0L/ZPd6JWhGUfnWBrTECXo1ZpUFJaV+mkS+cwfqkjbyio9CDFpF6YOBwwil
-	 wIvYNTSNgfBlQ==
-Date: Fri, 2 Oct 2026 10:46:03 +0000
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: Override the same name trace_instance=
- by latter one
-Message-ID: <20261002104603.3cebd743@mhiramat99.roam.internal>
-In-Reply-To: <20261002091431.DD73F1F000FF@smtp.kernel.org>
-References: <179091984881.537422.15308457677039592540.stgit@devnote2>
-	<179091985884.537422.15845141877166136300.stgit@devnote2>
-	<20261002091431.DD73F1F000FF@smtp.kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+9a3QJZ"
+Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39dacf053eeso3911854a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Oct 2026 04:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790940734; x=1791545534; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HvBpVNuycHAAZEO2rCOJ/byw3aw5hAHgX9ZZeb5bA0I=;
+        b=Y+9a3QJZ29MjSxC9Na9pfI3/TgY8o86MZQmoOe91g4RX5hbostjGCVxuFppttVV9u4
+         nZiMh7KfXn4pBnJURQPsrAYGMeR0i6+3zfVTWS8noXVfTidmNodzYCcHxHITsZSBlAFb
+         lCYOmGOgrp7e3aam3gEhbyY4SnHfuPWB1EcWknNJmT5BaJY4ZmLnfpP0HOePQhg2XZYO
+         OVJMx+aWjuyEXRLDSmu/h28d1Ip0xcy7GBYwGSQaU53CwIWaKfSH/HVz9jT6DuR44PcD
+         3ALBrH+sBTiiIl9u5nPu7dBxlphMTJM0rtp8QqA8TUeS55lzAVZC81Mi7wRamyMHWnYy
+         waeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790940734; x=1791545534;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HvBpVNuycHAAZEO2rCOJ/byw3aw5hAHgX9ZZeb5bA0I=;
+        b=euJ1C2pN+9zjiWFEG6zRStXb5mzzdLnyZI/XuTNHbtL9ygeN/3FD9VtA/wr/TLGKh4
+         3wqJ6Z9axajpt/v5ywqaNNxDs1rqnShwKbKVDBwnxKm4Nsu4z/fvldND14USd7s344xJ
+         EdMB69RBXNnFTWVWWDrWoNxLNQNFxy7OUc5DHErpUTUicA68qzWU6Sbo7PqpgCmHR+xG
+         9PTdc+ZG3rEGWa0AVrGYfVtsxVkbPz0Bt0dNRgEzjdZ5qXxiMl3kFnK8jKXCM/L99zcm
+         Dlvj3EjiZmdEY6RHTwSiOf1ciwPV60V12qbyc96kea8SbhvoYVs+zQ7v6VtAK2FldZl0
+         Zojg==
+X-Forwarded-Encrypted: i=1; AKwUvBxlPnvGVRzqcqkWTeBmdAkDTyIILYMD+r1qyVeIYmBgSsZ5kcBhqKoRXKq9cHVshTPfm2CB7L2b6tAenL90tRdyOYA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKG7fHfAX/Y8411NlsEx71JjJPuVKQBybk7SSsPHfiKcvzf5Msa
+	2v1aqwieWYr3+MrqlXe0H2ToDRHdZIpMZt5EgOXEU5w2OyUUCygIYDua
+X-Gm-Gg: AYBFou0PQ9mBJWTseKxFrx85iDDIL86Hqbm6KrXufhTvxw8HnvrFtbG//lTn8s2O5Jb
+	zC4OillF+nvaLwuVJ/9XLjzsTRRIY0xramFkeQGAaHNS1ywSRlk4iTedLHnFJCmP9K3fu7N9JqP
+	ZEp5b+UuQrvqDvCL+4n80rG40vOAln6Mx8/OM4VACLjUQk0JLzUiTRW4TD/pvPSix95wg13LpMB
+	cirURERCPSxZRgKI2qRVx7yy4MDUL2Yf/nDWB1hifebdiYdOZ9dSGP50i5G+tcPhaVTDfy6vfUl
+	H5OR5lZDFN08bl8mnKBKiJPKoZP5Ff2RHTm1/fbPXKsLfKMZi9+RWGVp/NisGUO83WLDtoaaFKQ
+	laG7acRKBxGCqnFYHyZTnXmq0excUEuJ+umMZmCod02j/O0F5WhAQfxrmQcj7UbuRm8Dy07rEQG
+	XfLwC0XYTyNkAS9CTyyLOgtHyBUV+/Q0oXdzuZXWRguSndR9GaAB4uY5R/KG3lMoH6AHPT6jTgJ
+	vybWl6TJFRFFsUHzQwdEWeeGkMJ5M3MTj1Vtnd/aJhgpDea2ammXkgDm0lc7IFD1curEJvV6aTs
+	4a9i
+X-Received: by 2002:a17:90b:4a10:b0:3a0:9640:802c with SMTP id 98e67ed59e1d1-3a6f910f530mr659274a91.3.1790940734296;
+        Fri, 02 Oct 2026 04:32:14 -0700 (PDT)
+Received: from localhost ([153.61.198.255])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a6dd456214sm1143301a91.4.2026.10.02.04.32.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Oct 2026 04:32:13 -0700 (PDT)
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 02 Oct 2026 11:32:13 +0000
+Message-Id: <DLUBI6OS1J07.Z498VKY5084C@gmail.com>
+Cc: <yonghong.song@linux.dev>, <andrii@kernel.org>, <eddyz87@gmail.com>,
+ <memxor@gmail.com>, <martin.lau@linux.dev>, <song@kernel.org>,
+ <jolsa@kernel.org>, <ihor.solodrai@linux.dev>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>, "Yuan
+ Chen" <chenyuan@kylinos.cn>
+Subject: Re: [PATCH] bpf: Claim the per-CPU send_signal irq_work before
+ filling it
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: <chenyuan_fl@163.com>, <daniel@iogearbox.net>, <bpf@vger.kernel.org>
+In-Reply-To: <20260928081144.207908-1-chenyuan_fl@163.com>
+References: <20260928081144.207908-1-chenyuan_fl@163.com>
+X-Mailer: mkdraft (claude review draft; edit before sending)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 02 Oct 2026 09:14:31 +0000
-sashiko-bot@kernel.org wrote:
+On Mon, Sep 28, 2026 at 04:11 PM chenyuan_fl@163.com <chenyuan_fl@163.com> wrote:
+> irq_work_is_busy() cannot see the per-CPU send_signal_work while
+> it is being filled: the check only matches after irq_work_queue()
+> has claimed the work. An NMI interrupting the fill therefore passes
+> it, both callers race for the same irq_work, and the loser's signal
+> is silently lost along with its task reference while the queued
+> work runs with a mix of both callers' fields.
 
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issue(s) to consider:
-> - [High] tracing: heap out-of-bounds write in
-> parse_boot_instance_info due to unescaped tabs
-> - [Medium] tracing: duplicate trace array creation via implicit
-> backup lookup causes tracefs init failure --
-> 
-> commit e7d9ac9646a2e104af11665c8c61543d20737c13
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
->     tracing: Override the same name trace_instance= by latter one
->     
->     Override the same name boot instance by the latter parameter.
->     This allows user to override the trace instance in bootconfig by
-> the cmdline from bootloader.
-> 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index e4a490d3d08c8..4590d38969450 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -308,6 +309,7 @@ static int __init boot_instance(char *str)
-> >  
-> >  	ret = snprintf(slot, left, "%s\t", str);
-> >  	boot_instance_index += ret;
-> > +	nr_boot_instances++;
-> >  
-> >  	return 1;
-> >  }  
-> 
-> [ ... ]
-> 
-> > +__init static void parse_boot_instance_info(struct boot_instance
-> > *boot_instances) {  
-> 
-> [ ... ]
-> 
-> > +	while ((events = strsep(&str, "\t"))) {
-> > +		if (!*events)
-> > +			continue;  
-> 
-> [ ... ]
-> 
-> > +		for (i = 0; i < idx; i++) {
-> > +			/* Override by the last defined instance */
-> > +			if (!strcmp(name, boot_instances[i].name))
-> > +				break;
-> >  		}
-> >  
-> > +		boot_instances[i].name = name;
-> > +		boot_instances[i].flag_delim = flag_delim;
-> > +		boot_instances[i].addr_delim = addr_delim;
-> > +		boot_instances[i].backup = backup;
-> > +		boot_instances[i].events = events;  
-> 
-> [Severity: High]
-> If a user provides a quoted parameter containing a literal tab (for
-> example, trace_instance="foo\tbar"), won't strsep(&str, "\t") split
-> it into more tokens than what was originally counted in
-> nr_boot_instances?
-> 
-> This loop appears to write beyond the bounds of the boot_instances
-> array when there are embedded tabs, which could lead to memory
-> corruption and a kernel panic during early boot.
+kprobe, tracepoint and perf_event progs exclude each other on a cpu
+via bpf_prog_active, so one of the two progs has to be raw_tp or fentry.
+And since commit 87c544108b61 ("bpf: Send signals asynchronously if
+!preemptible") this path runs with irqs enabled too, so hard irq
+can do the same. Not only NMI.
+Pls describe it in the commit log.
+Did you reproduce it or was it found by code inspection?
 
-Ah, OK. Such usage is not recommended but it can happen and
-causes array index overrun.
+>  struct send_signal_irq_work {
+>  	struct irq_work irq_work;
+> +	/* Covers the fill-to-run span which irq_work_is_busy() cannot see. */
+> +	atomic_t claimed;
+>  	struct task_struct *task;
 
-> 
-> > +		if (i == idx)
-> > +			idx++;
-> > +	}
-> > +
-> > +	nr_boot_instances = idx;
-> > +}
-> > +
-> > +__init static void enable_instances(void)
-> > +{
-> > +	struct boot_instance *boot_instances __free(kfree) = NULL;
-> > +	struct boot_instance *bi;
-> > +	struct trace_array *tr;
-> > +	bool memmap_area = false;
-> > +	char *tok;
-> > +
-> > +	if (!boot_instance_index)
-> > +		return;
-> > +
-> > +	/* Parse the instance name to check the overlap */
-> > +	boot_instances = kmalloc_array(nr_boot_instances,
-> > +				       sizeof(*boot_instances),
-> > GFP_KERNEL);
-> > +	if (!boot_instances)
-> > +		return;
-> > +
-> > +	parse_boot_instance_info(boot_instances);
-> > +
-> > +	for (int i = 0; i < nr_boot_instances; i++) {
-> > +		char *rname __free(kfree) = NULL;  
-> 
-> [ ... ]
-> 
-> > -		if (trace_array_find(name)) {
-> > -			pr_warn("Tracing: Instance %s already
-> > exists\n", name);
-> > -			continue;
-> > -		}
-> > -
-> > -		if (backup) {
-> > -			if (backup_instance_area(backup, &addr,
-> > &size) < 0)
-> > +		if (bi->backup) {
-> > +			if (backup_instance_area(bi->backup,
-> > &addr, &size) < 0) continue;
-> >  		}  
-> 
-> [ ... ]
-> 
-> > -		tr = trace_array_create_systems(name, NULL, addr,
-> > size);
-> > +		tr = trace_array_create_systems(bi->name, NULL,
-> > addr, size);  
-> 
-> [Severity: Medium]
-> With the trace_array_find() check removed, does this unconditionally
-> create a new trace array, even if one implicitly exists?
+can work->task be the claim ?
+cmpxchg(&work->task, NULL, task) instead of irq_work_is_busy() and
+set it back to NULL at the end of do_bpf_send_signal().
+Then no need for extra field.
 
-parse_boot_instance_info() already checks the overlaps.
+> -		irq_work_queue(&work->irq_work);
+> +		if (unlikely(!irq_work_queue(&work->irq_work))) {
+> +			/* Unreachable while the claim is held. */
+> +			put_task_struct(task);
+> +			atomic_set_release(&work->claimed, 0);
+> +			return -EBUSY;
+> +		}
 
-> 
-> If a user specifies a trace_instance with a backup pointing to
-> another instance defined later (e.g., trace_instance=foo=bar
-> trace_instance=bar), backup_instance_area() will implicitly create
-> "bar" via trace_array_get_by_name().
+Drop this hunk. It's dead code.
+irq_work_queue() fails only when IRQ_WORK_PENDING is set.
+irq_work_single() clears it before calling do_bpf_send_signal()
+and the claim is released at the end of it.
+bpf_mmap_unlock_mm() doesn't check it either after
+commit fa9dcacdcdf4 ("bpf: Fix mmap_lock leak in irq_work path").
 
-Ah, that's a good point! we should check it in
-parse_boot_instance_info().
+Pls tag the respin as [PATCH v2 bpf-next].
 
-> 
-> When the loop processes "bar" explicitly later on, it seems this code
-> will call trace_array_create_systems("bar", ...) a second time,
-> duplicating the trace array in ftrace_trace_arrays. This duplicate
-> could cause tracefs_create_dir() to fail and abort initialization of
-> subsequent trace instances.
-> 
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+pw-bot: cr
