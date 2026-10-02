@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2931E4BE42C;
-	Fri,  2 Oct 2026 15:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2FAA4D0CF9;
+	Fri,  2 Oct 2026 15:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790955598; cv=none; b=sBHIQW060oBJMSrG/KMUDMR4xgjew/AwGI4kQUZaLp9JF3BkUo63sIyILXECfRi7H/BoyCNpISks6GjiJnDnwzquDDU8hLNqGljLxt71p9vc1RwJtl1Wj4N7JNXZvwv2VaYAGxCuZkWyZjDcAzdE4rvl70cQQR6F2QpT2fBm9vQ=
+	t=1790955601; cv=none; b=WRnOnX8bp6ETPb5Skmf7cd9NZquJEWAes1LiRMvUu+MUkOcz4Cglz7Q5706gIY2lRljTg1j1vyx4VJCxIwxDrahA6ZW97XXtb+ptVOZG0ZLQRqThsla9kFKFHahkkrLIj5xPOkqgxNuEh7gRIwK05uoagDyx9mxnPOp5fAm7NPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790955598; c=relaxed/simple;
-	bh=LXxR5lEhd3Ypj2NH9WSGDlBgfb6V0WihMH/YOSv9/+Y=;
+	s=arc-20240116; t=1790955601; c=relaxed/simple;
+	bh=1eklDsYY5mU4Ym9StcrWCE6nsYQ9YUVIyLQ3bC9FdfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OCECEM181g4EXUTA1ipxnaTo/DR5gqN2PMYXniVzX0LyPjKTzryCrH2J+5Ozk/nmJN25BWOGylVpCj8v6tpav/mtLjG7IA/5JsZMjGeOw+VW/4bB9hN+A174d1CMdWZZuEdGJhBeyXepa7aYEuvLwovQFI9T/2npqDK+x36L27w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OBaMCi95; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=AFsu9yGLmmRGiwpjxvzxEPu1gdE/yHz1Ij3oXYR769U8j5uLWYRYUAGsvnqG2AAstsPjYch+TQXUBvX4bFBPKcbXwZesHxzE2N2MZiZkFC/pZJznB7GeLGH+Xqgu4vVYs40mg3jkRhflAArA5eA6NaisUaBTGR1JdtK6mJEIZuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LHDqv+V5; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OBaMCi95"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LHDqv+V5"
 Received: from jeffbarnes-ThinkPad-P14s-Gen-2i.corp.microsoft.com (unknown [52.167.115.14])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CC47B20B7167;
-	Fri,  2 Oct 2026 08:38:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC47B20B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7454420B7168;
+	Fri,  2 Oct 2026 08:38:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7454420B7168
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1790955533;
-	bh=homZGedyWR+FgJ1PHI2TOZg6Xz21eU6Mjjisyec6pCw=;
+	s=default; t=1790955535;
+	bh=M0WSn0xBeBW4ksGIw1sL9kz1pQo0Yg414Vx1Vwoj7G8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OBaMCi95qsgRSry1V5pFHM7bxrkO+3AGRdcTdPSmWQLYJMDv86mB0auJgEwl0pXQC
-	 wFxxtRjYT7ArGH1MVu+Kr6A0ulU0qaM8W3NrzjtcxSCS4heYNCQun3gRj1siF0JJRR
-	 KZ600mWPB2omsWNSOFB0S16/chk74nbgX4cxXwg8=
+	b=LHDqv+V5jd3WWTGZOde00L+YoS+7vbaBGb6VSqwsVN/3i6v+g2IbIZnITG4y5koLd
+	 YSP3A3IzPTUnepcJ/R/QuyiYlnt9vsY4ebIx5914Y8W9bOdd2w7Oo3rO3ju3danIBq
+	 TQtruieTOWJ9SUJSAdRdzUcEuxmEH0q232ByleFk=
 From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -33,9 +33,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] selftests/user_events: Test registration from existing threads
-Date: Fri,  2 Oct 2026 11:39:33 -0400
-Message-ID: <20261002153934.798176-2-jeffbarnes@linux.microsoft.com>
+Subject: [PATCH 2/2] tracing/user_events: Share tracing state between existing threads
+Date: Fri,  2 Oct 2026 11:39:34 -0400
+Message-ID: <20261002153934.798176-3-jeffbarnes@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
 References: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
@@ -47,172 +47,157 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Create two threads before either registers a user event. Have the first
-thread register an event using a shared enable address and bit while it
-remains alive, then have the second thread register a different event
-using the same address and bit.
+Threads created before the first user-events registration can share an
+mm_struct while each has a NULL user_event_mm pointer.
 
-The second registration should fail with EADDRINUSE because both threads
-share the same address space.
+When one thread registers an event, current_user_event_mm() creates a
+user_event_mm and attaches it only to that task. A pre-existing sibling
+thread sharing the same mm_struct can later create another user_event_mm.
+The two wrappers have independent enabler lists, allowing both threads to
+register different events using the same enable address and bit despite
+the EADDRINUSE check.
 
-This test fails without the accompanying kernel fix because each thread
-can create a separate user_event_mm with an independent enabler list.
+Look for an active user_event_mm associated with the current mm_struct
+before allocating a new one. Attach the current task to that wrapper and
+increment its task count.
+
+Serialize lookup and attachment with the final task-count decrement and
+list removal so that a task cannot attach to a wrapper after its
+last-task transition has begun.
+
+Without this change, the new selftest reports that the second
+registration succeeds. With the change, it is rejected with
+EADDRINUSE, and all user_events ABI tests pass.
 
 Signed-off-by: Jeff Barnes <jeffbarnes@linux.microsoft.com>
 ---
- .../testing/selftests/user_events/abi_test.c  | 132 ++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ kernel/trace/trace_events_user.c | 78 ++++++++++++++++++++++++++------
+ 1 file changed, 64 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index b71813eaf5c0..bb1a17ce00da 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -11,6 +11,7 @@
- #include <errno.h>
- #include <linux/user_events.h>
- #include <stdio.h>
-+#include <pthread.h>
- #include <stdlib.h>
- #include <fcntl.h>
- #include <sys/ioctl.h>
-@@ -258,6 +259,137 @@ FIXTURE_TEARDOWN(user) {
- 	USER_EVENT_FIXTURE_TEARDOWN(self->umount);
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index f658c3a77aa7..950d8a3cd0e3 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -210,6 +210,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 
+ static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm);
+ static struct user_event_mm *user_event_mm_get_all(struct user_event *user);
++static void user_event_mm_destroy(struct user_event_mm *mm);
+ static void user_event_mm_put(struct user_event_mm *mm);
+ static int destroy_user_event(struct user_event *user);
+ static bool user_fields_match(struct user_event *user, int argc,
+@@ -754,33 +755,78 @@ static struct user_event_mm *user_event_mm_alloc(struct task_struct *t)
+ 	return user_mm;
  }
  
-+struct thread_registration {
-+	pthread_mutex_t lock;
-+	pthread_cond_t cond;
-+	__u32 enable __attribute__((aligned(sizeof(__u32))));
-+	bool start;
-+	bool first_done;
-+	bool second_done;
-+	int first_ret;
-+	int first_errno;
-+	int first_unreg_ret;
-+	int second_ret;
-+	int second_errno;
-+	int second_unreg_ret;
-+};
-+
-+static int reg_enable_name(void *enable, const char *name, int *saved_errno)
++static struct user_event_mm *
++user_event_mm_find_locked(struct mm_struct *mm)
 +{
-+	struct user_reg reg = {0};
-+	int fd = open(data_file, O_RDWR);
-+	int ret;
++	struct user_event_mm *user_mm;
 +
-+	if (fd < 0) {
-+		*saved_errno = errno;
-+		return -1;
++	lockdep_assert_held(&user_event_mms_lock);
++
++	list_for_each_entry(user_mm, &user_event_mms, mms_link)
++		if (user_mm->mm == mm)
++			return user_mm;
++
++	return NULL;
++}
++
+ static void user_event_mm_attach(struct user_event_mm *user_mm, struct task_struct *t)
+ {
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&user_event_mms_lock, flags);
+ 	list_add_rcu(&user_mm->mms_link, &user_event_mms);
+-	spin_unlock_irqrestore(&user_event_mms_lock, flags);
+-
+ 	t->user_event_mm = user_mm;
++	spin_unlock_irqrestore(&user_event_mms_lock, flags);
+ }
+ 
+ static struct user_event_mm *current_user_event_mm(void)
+ {
++	struct user_event_mm *new_mm;
+ 	struct user_event_mm *user_mm = current->user_event_mm;
++	unsigned long flags;
+ 
+ 	if (user_mm)
+-		goto inc;
++		return user_event_mm_get(user_mm);
+ 
+-	user_mm = user_event_mm_alloc(current);
++	spin_lock_irqsave(&user_event_mms_lock, flags);
+ 
+-	if (!user_mm)
+-		goto error;
++	user_mm = user_event_mm_find_locked(current->mm);
++
++	if (user_mm) {
++		refcount_inc(&user_mm->tasks);
++		current->user_event_mm = user_mm;
++		user_event_mm_get(user_mm);
 +	}
 +
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)name;
-+	reg.enable_bit = 0;
-+	reg.enable_addr = (__u64)enable;
-+	reg.enable_size = sizeof(__u32);
++	spin_unlock_irqrestore(&user_event_mms_lock, flags);
 +
-+	errno = 0;
-+	ret = ioctl(fd, DIAG_IOCSREG, &reg);
-+	*saved_errno = errno;
++	if (user_mm)
++		return user_mm;
 +
-+	close(fd);
++	new_mm = user_event_mm_alloc(current);
 +
-+	return ret;
-+}
++	spin_lock_irqsave(&user_event_mms_lock, flags);
 +
-+static void *register_first(void *arg)
-+{
-+	struct thread_registration *registration = arg;
++	user_mm = user_event_mm_find_locked(current->mm);
 +
-+	pthread_mutex_lock(&registration->lock);
-+	while (!registration->start)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
++	if (user_mm) {
++		refcount_inc(&user_mm->tasks);
++	} else if (new_mm) {
++		user_mm = new_mm;
++		list_add_rcu(&user_mm->mms_link, &user_event_mms);
++	} else {
++		spin_unlock_irqrestore(&user_event_mms_lock, flags);
++		return NULL;
++	}
 +
-+	registration->first_ret = reg_enable_name(&registration->enable,
-+						 "__abi_event_thread_a",
-+						 &registration->first_errno);
++	current->user_event_mm = user_mm;
++	user_event_mm_get(user_mm);
 +
-+	pthread_mutex_lock(&registration->lock);
-+	registration->first_done = true;
-+	pthread_cond_broadcast(&registration->cond);
++	spin_unlock_irqrestore(&user_event_mms_lock, flags);
 +
-+	while (!registration->second_done)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
++	if (new_mm && new_mm != user_mm)
++		user_event_mm_destroy(new_mm);
+ 
+-	user_event_mm_attach(user_mm, current);
+-inc:
+-	refcount_inc(&user_mm->refcnt);
+-error:
+ 	return user_mm;
+ }
+ 
+@@ -817,14 +863,18 @@ void user_event_mm_remove(struct task_struct *t)
+ 	might_sleep();
+ 
+ 	mm = t->user_event_mm;
 +
-+	if (!registration->first_ret)
-+		registration->first_unreg_ret =
-+			reg_disable(&registration->enable, 0);
++	spin_lock_irqsave(&user_event_mms_lock, flags);
 +
-+	return NULL;
-+}
-+
-+static void *register_second(void *arg)
-+{
-+	struct thread_registration *registration = arg;
-+
-+	pthread_mutex_lock(&registration->lock);
-+	while (!registration->start)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	while (!registration->first_done)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	registration->second_ret = reg_enable_name(&registration->enable,
-+						  "__abi_event_thread_b",
-+						  &registration->second_errno);
-+
-+	pthread_mutex_lock(&registration->lock);
-+	registration->second_done = true;
-+	pthread_cond_broadcast(&registration->cond);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	if (!registration->second_ret)
-+		registration->second_unreg_ret =
-+			reg_disable(&registration->enable, 0);
-+
-+	return NULL;
-+}
-+
-+TEST_F(user, preexisting_threads_same_address) {
-+	struct thread_registration registration = {
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
-+		.cond = PTHREAD_COND_INITIALIZER,
-+	};
-+	pthread_t first;
-+	pthread_t second;
-+
-+	ASSERT_EQ(0, pthread_create(&first, NULL, register_first, &registration));
-+	ASSERT_EQ(0, pthread_create(&second, NULL, register_second, &registration));
-+
-+	pthread_mutex_lock(&registration.lock);
-+	registration.start = true;
-+	pthread_cond_broadcast(&registration.cond);
-+	pthread_mutex_unlock(&registration.lock);
-+
-+	ASSERT_EQ(0, pthread_join(first, NULL));
-+	ASSERT_EQ(0, pthread_join(second, NULL));
-+
-+	pthread_cond_destroy(&registration.cond);
-+	pthread_mutex_destroy(&registration.lock);
-+
-+	ASSERT_EQ(0, registration.first_ret);
-+	ASSERT_EQ(0, registration.first_errno);
-+
-+	if (!registration.first_ret)
-+		ASSERT_EQ(0, registration.first_unreg_ret);
-+
-+	ASSERT_EQ(-1, registration.second_ret);
-+	ASSERT_EQ(EADDRINUSE, registration.second_errno);
-+
-+	if (!registration.second_ret)
-+		ASSERT_EQ(0, registration.second_unreg_ret);
-+}
-+
- TEST_F(user, enablement) {
- 	/* Changes should be reflected immediately */
- 	ASSERT_EQ(0, self->check);
+ 	t->user_event_mm = NULL;
+ 
+-	/* Clone will increment the tasks, only remove if last clone */
+-	if (!refcount_dec_and_test(&mm->tasks))
++	/* Clones and attached tasks increment this count. */
++	if (!refcount_dec_and_test(&mm->tasks)) {
++		spin_unlock_irqrestore(&user_event_mms_lock, flags);
+ 		return;
++	}
+ 
+-	/* Remove the mm from the list, so it can no longer be enabled */
+-	spin_lock_irqsave(&user_event_mms_lock, flags);
++	/* Prevent new tasks from attaching after the last-task transition. */
+ 	list_del_rcu(&mm->mms_link);
+ 	spin_unlock_irqrestore(&user_event_mms_lock, flags);
+ 
 -- 
 2.43.0
 
