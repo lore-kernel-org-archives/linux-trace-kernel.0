@@ -1,205 +1,156 @@
-Received: from mail-dl2-f33.google.com (mail-dl2-f33.google.com [74.125.229.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34AB4F4CF8
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Oct 2026 16:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E443E49D2
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Oct 2026 16:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790957887; cv=none; b=PAeS0sHEnqeapRJa28H0u0g5hQht45HsD8um1fz4s5GkIZILEe3o4zGY+/KbGul/k44/+Cr4dg+zf5l9XfhUuw/ZEGS4xtKbHgYuS8qgfadRe/lshXMkDOX70t60jxWMo2594X1GkWD9jAWJORldi8WcMxe56sUTHJitqpBkJ6w=
+	t=1790959132; cv=none; b=t9ReoYQLUQlOmqdUhd3v74qmaZUkTepso20h+UXNTtppAy3YyGAC8yUX4HKah85TiyCnYBcI0d8DJkMYSFqTegBq+m82d5gykIyPv88/fhn+IoCI59/Uj0YRhK0S7cwcdQaLN9z0jNnJiehZD35Cx8XI6L0ek/8EwTHkVqbcFd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790957887; c=relaxed/simple;
-	bh=RARzgOAd1+9fsFLy4Hz4iobRMUtC/im8jh9JoDGxPC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AkAC9uMxeRfB5ClIYjiClwGhZ6HvOim+R/TOV7wmXFDMLCtXuGsHcFjIkE5j6d/XWB6fZwJkiWygRamTQXtLyeBdxtK3aARZuLZ1+qIPbyLHJbXGbHyMWyDKyeGUNoE4bJhY4V2DOIrd0sh/m0H5++z29XZoZf4SCzylNZq8NU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pkvYoF8n; arc=none smtp.client-ip=74.125.229.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790959132; c=relaxed/simple;
+	bh=9No86Q/EoD6DqTlvKzNVCMnr5bckUCGKftXvO+mgS3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=JfjUbvKbx7j0+vXXym2TKx3DzDQA8ce1oG+8jhJmjJuUqYOYnuOMm1yEqZ6dWj+mDoSz3wAKRQdT0L1+A0iBV6vEpRblhHKkKAq0Z4j8y2MIO0y6tWosq32RaUm7vAt3sHqv8lz5vwsaHdczIb+TT6fM0MYyzxUyiiuUA9jWGK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VK4JjoDX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkvYoF8n"
-Received: by mail-dl2-f33.google.com with SMTP id a92af1059eb24-1438e88300cso8360403c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Oct 2026 09:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790957885; x=1791562685; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=oJzj3UJHIC23fa9yBSqokKxP7nnZfefuPAvJHZmQ5n0=;
-        b=pkvYoF8n0TU6/AKITGLJkaOJpmhmD0PaD4xA/cgdM9XhsjCsoY5u/IfLjBF6KY4Gtl
-         uL3OKvdE4GC24onKajdvBffQEHG1T+RCBcl7YRNDGMreRWd62TLP7W69J8dMGK+kswLe
-         3YR3VF7Q885j9oZ0fcpNJf++UWr8C1DBUNBpuHeXdon9iA7zlNKo2tTgBSV2DE8Otkj1
-         lKB3Vbr6GrbyvMGbVASyiZw9JV1hlehNMCDpZO6Ex7PMsQBycy+gPKzx5tCzNo9vyvTc
-         3oWxT6Xz+P+Xvs+SKwQpfYTB4JGxoMG9T97TV3QMRtiKuKa/pCtajjake/JaRZ5j2vTW
-         c4bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790957885; x=1791562685;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oJzj3UJHIC23fa9yBSqokKxP7nnZfefuPAvJHZmQ5n0=;
-        b=tj7E2EbhuKI14qyk4rwQ+3jHf6WwmKJSqbUQXpM6S9bungO/ALts5zFq4eRtGXOOyF
-         0+IyXv9q2EyTfoobYo1lzXmhDV6b79f3aPaAMfpeI/bHT1p0ZHeQ/ZdwhAJuzXkMKLqi
-         04TYF2LXagAZ8LEYm6A7KRAODReKhGF4DIqaUDcPkM8iwM9cAT/AhGDWIYpRxNXE+rcK
-         8BzBu5zUjw/lJy0ynf3wHChCJhGOYup++7/v0/gOj8krAS8zoNKW2172d/2DV31uwyaO
-         kwA+mFVCoifbN/IItq1VYQ8zSLMICdb7LNXI6KSM/hM3ck9JTnoBMDu23YeUkH2IbcoC
-         aiiQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwGlztzAJ4SOlV8viKYOYLrQkOckKAa+qSXHczPLw47t9iaMEWgEV+2nwJSjtYUpKdyap1KMfm9HU+c41XGfWju7uA=@vger.kernel.org
-X-Gm-Message-State: AFuF++lstBuDrkeGzhFA+Brt2gF2uek7Lh/Vp1U7QXDbH/TmgBWOVft+
-	Ge07X2u5/D/28L0roUhTGu/yNrl22nGYGd3aBSy/0EDttaEDRVTVRFFc
-X-Gm-Gg: AYBFou3CujyMIFKPU+kxOzogj8+B0YXkjE0ZTvCuY4OT92YxcKa4Mz2G7opSX5w9XJE
-	0jiNJJUSxNYhx9jdfJDhpqql8MsFYkgeXQlvMRzNMO/oFbdGIU8OFcDep5vyw7B/BRG7DT2t4P1
-	3BJrn368sZYC1qOPKlvAWFx+0yjjMjZcesr2lJ+0NjHm9MsAK5E9V3BfXR4rdX22Tj6IPB/qSOz
-	1nTaBySzLUa6dnThv3vT02+s8/ww+nVVYdVtODxCtrNRfRp7oc+4V1xBmXpcZ3I3XeK9qsFPyKR
-	b9t20PlZ1ObH1vg1yFJCW/FX+Zu5wNJSUe0j4a5VVShzhezch/xqHBpgPfH0y0tkWGNONWeJ32P
-	Tgs9X0c2Rjmp5Sf4Ex+V4MiBI2CziF0xBp297fPTrxfCNndD5LLduK/94IjajRtpKwgDL0Ye7a7
-	n/tD52MmtVFfYzHfHbRG5yXw6ibxAkm0tMwwpdBIiYglwVI6HKAOY4W7JJo36uTA==
-X-Received: by 2002:a05:701b:42c3:20b0:147:5149:d12d with SMTP id a92af1059eb24-14f5b70fdcamr3720638c88.18.1790957883694;
-        Fri, 02 Oct 2026 09:18:03 -0700 (PDT)
-Received: from ubuntu.. ([23.254.208.9])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14f468c08absm6985681c88.8.2026.10.02.09.17.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 09:18:03 -0700 (PDT)
-From: Qiliang Yuan <odys.yuan@gmail.com>
-To: ljs@kernel.org
-Cc: akpm@linux-foundation.org,
-	axelrasmussen@google.com,
-	baohua@kernel.org,
-	baolin.wang@linux.alibaba.com,
-	baoquan.he@linux.dev,
-	brendan.jackman@linux.dev,
-	david@kernel.org,
-	hannes@cmpxchg.org,
-	kasong@tencent.com,
-	liam@infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	mhocko@suse.com,
-	odys.yuan@gmail.com,
-	qi.zheng@linux.dev,
-	rostedt@goodmis.org,
-	rppt@kernel.org,
-	shakeel.butt@linux.dev,
-	surenb@google.com,
-	vbabka@kernel.org,
-	weixugc@google.com,
-	yuanchu@google.com,
-	ziy@nvidia.com,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
-Date: Sat,  3 Oct 2026 00:17:44 +0800
-Message-ID: <20261002161744.859093-1-odys.yuan@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ar-8Vkchzn4QobA6@gremlin>
-References: <ar-8Vkchzn4QobA6@gremlin>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VK4JjoDX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790959129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VoBn/EcwwjiTLNGiwDYqt+D4uMPJqPchOJxh3hBQgk0=;
+	b=VK4JjoDXxO0WY6wf1GIWKm9Ejq5N9kEAoxx9WOIp2weiC3U9Jikg7sauIPMukf+oS1JKt7
+	ER15fNe5KPRJ9dohBLKG/CeO3eGoadjrbT0cti3osLak1O1nRiH1jkima6sdt3ziQEEIxD
+	aAma0w884Eq378jyfj7sbW+yVU1rZdM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-574-8E69i-PfO3KSfTx5CYfZkg-1; Fri,
+ 02 Oct 2026 12:38:48 -0400
+X-MC-Unique: 8E69i-PfO3KSfTx5CYfZkg-1
+X-Mimecast-MFC-AGG-ID: 8E69i-PfO3KSfTx5CYfZkg_1790959127
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EFFF91800BE2;
+	Fri,  2 Oct 2026 16:38:46 +0000 (UTC)
+Received: from tglozar-thinkpadt14gen5.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2035C433;
+	Fri,  2 Oct 2026 16:38:44 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Crystal Wood <crwood@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [GIT PULL] RTLA changes for 7.4
+Date: Fri,  2 Oct 2026 18:37:57 +0200
+Message-ID: <20261002163757.3078413-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: gXYAASe02_4Li_GdsquK8afTx0RguFmk6sOEYpGWRgM_1790959127
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Lorenzo,
+Steven,
 
-Thanks for your review. I would like to respond to your points,
-quoting your mail below.
+The following changes since commit 93f51579e7df248780214094418f205253383cc5:
 
-> NAK.
+  Linux 7.3-rc4 (2026-09-20 13:48:15 -0700)
 
-I understand your right to NAK as a maintainer. I am not asking
-you to withdraw it automatically. I am clarifying the facts.
+are available in the Git repository at:
 
-> This series is buggy, and has triggered my AI detection script.
+  https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git tags/rtla-v7.4
 
-If there are real bugs, I will fix them. But an AI-detection
-script finding bugs is not proof that the code was generated by
-an LLM. Automated review tools commonly find bugs in complex
-kernel code. The dhm series has been in development for a long
-time and has gone through several versions; the dynamic core
-isolation design touches many kernel subsystems, so bugs found
-by automated review are not surprising.
+for you to fetch changes up to 5ddc4497508a628b6c18653a0d5208edc6228aaf:
 
-> It is kernel policy that you must disclose this with an
-> Assisted-by tag like:
->
-> Assisted-by: LLM
+  rtla: Simplify osnoise tracer option setting code (2026-09-30 13:26:57 +0200)
 
-I agree with this policy. I did not use an LLM to generate the
-patch code, but I used GLM to help run test data. I will disclose
-the GLM use; if an Assisted-by tag is required, I will add it.
-If I ever use an LLM to generate code, I will disclose that as
-well.
+----------------------------------------------------------------
+RTLA patches for 7.4
 
-> It is also kernel policy that you must fully understand and take
-> responsibility for every patch that you send.
+- Test actions in absence of threshold
 
-I understand and take full responsibility for every patch I send.
+Cover the case which regressed in the past in tests.
 
-> The script noted:
->
-> - Output rate: since 09-28 he has sent KVM SMM CR3/Hyper-V,
->   ext4+jbd2+quota "shrinker scan budget accounting" (the same fix
->   applied to three shrinkers; jbd2 went v1->v5 in 3 days and v1->v3
->   in 3 hours), blk-mq SRCU tag sets, a blk-mq sync-run, ublk x2,
->   a 4-patch bpf-next verifier rework, mm/migrate move_pages (v2
->   sent 10h after v1) and this series. That is ~9 unrelated deep
->   areas in 4 days from someone with 4 commits.
+- More robust CPU count detection
 
-I respect this guidance. I do not often have time to send
-patches to the community; work keeps me busy. I am not spamming.
-I only recently had time to send work that has been in progress
-for months:
+Parse /sys/devices/system/cpu/possible directly instead of going through
+libc for CPU count and sanity check against any mismatch with the number
+reported by tracefs / osnoise.
 
-- The dhm series has been developed for a long time and has gone
-  through several versions. The dynamic core isolation design
-  touches many kernel subsystems, so bugs found by automated
-  review are common.
-- The bpf series is something I started while optimizing bpf
-  earlier but did not have time to finish. Similar work was
-  attempted in 2019, it is complex and not easy to write, and
-  this has been pending for more than 9 months.
-- The KVM SMM CR3/Hyper-V fix comes from a real problem I hit
-  using Win11 WSL2 + virt-manager. I fixed it internally a long
-  time ago but did not push it upstream. I only sent it after
-  finding Win11 still had not fixed it.
-- I have been working on storage for the past few months. The
-  ext4+jbd2+quota changes are the same logic in three places;
-  once one was found, fixing the others followed naturally, as
-  documented in kernel docs. The v1 of those three small patches
-  already received Reviewed-by tags; I only made small changes
-  and added test data after a reviewer raised a different
-  opinion.
-- blk-mq, ublk, mm/migrate, and mm/compaction are performance
-  issues I found while working on heterogeneous KV-cache AI
-  optimization over the past months, using perf, ftrace, bpf,
-  etc.
+- Add option to record IPI count in osnoise top
 
-> Given you sent your first mail on 21st September and have since
-> been spamming complicated series across multiple different
-> domains, I'm absolutely not confident that you have any
-> understanding of this.
+In addition to counting IRQs, add an option to enable counting IPIs
+targetting the measurement CPU to the rtla-osnoise-top tool.
 
-I am not spamming. I only recently had time to send work that
-has been in progress for months. The areas are not unrelated
-from my side: they come from storage, virtualization, BPF, and
-heterogeneous KV-cache AI optimization work.
+- Improve runtime test usability
 
-> It also noted that you had a previous email, realwujing@gmail.com,
-> which you have silent switched from, which also bore the
-> hallmarks of AI slop.
+Catch up with increased complexity of runtime tests with better defaults
+and more options available to the developer running the tests.
 
-realwujing@gmail.com was an old personal email address. I no
-longer want to use it, so I switched to odys.yuan@gmail.com.
-There was no intent to hide anything; it is simply an email
-change.
+- Simplify osnoise tracer option setting code
 
-> It also found several glaring flaws with your series, so it's
-> clearly not upstreamable.
+Deduplicate osnoise tracer option setting code with macros to make it
+less error-prone and to make it easier to add new tracer options in
+the future.
 
-If there are concrete flaws, please point them out, or I will go
-through the Sashiko findings one by one and fix them.
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 
-Thanks,
-Qiliang
+----------------------------------------------------------------
+Crystal Wood (3):
+      rtla/tests: Use absolute path for $RTLA
+      rtla/tests: Show the command line for failing tests
+      rtla/tests: Add $SUBTESTS and $STOPONFAIL
+
+Tomas Glozar (7):
+      rtla/tests: Test actions in absence of threshold
+      rtla: Replace get_nprocs_conf() with sysfs possible cpus
+      rtla: Discard trace entries with cpu >= nr_cpus
+      rtla: Abort on nr_cpus mismatch with tracer
+      rtla/tests: Add unit test for cpu_list_iterate()
+      rtla/tests: Add unit test for get_max_cpu_from_list()
+      rtla: Simplify osnoise tracer option setting code
+
+Valentin Schneider (8):
+      rtla/osnoise: Add IPI tracking cmdline option
+      rtla/osnoise: Record IPI count in osnoise top
+      rtla/osnoise: Leverage IPI event filters when tracing a subset of CPUs
+      rtla/osnoise: Allow IPI filters to gracefully fail
+      rtla: Make struct trace_events double linked
+      rtla: Enable and disable events in the user-defined order
+      rtla: Unconditionally clean any pre-existing filters for user-provided events
+      rtla/osnoise: Trace IPI events when recording a trace file
+
+ Documentation/tools/rtla/common_options.txt   |    9 +-
+ Documentation/tools/rtla/rtla-osnoise-top.rst |    4 +
+ tools/tracing/rtla/src/cli.c                  |    1 +
+ tools/tracing/rtla/src/cli_p.h                |    7 +-
+ tools/tracing/rtla/src/common.c               |   31 +-
+ tools/tracing/rtla/src/common.h               |  102 +-
+ tools/tracing/rtla/src/osnoise.c              | 1291 ++++++++++---------------
+ tools/tracing/rtla/src/osnoise.h              |   38 +-
+ tools/tracing/rtla/src/osnoise_hist.c         |    1 +
+ tools/tracing/rtla/src/osnoise_top.c          |  156 ++-
+ tools/tracing/rtla/src/timerlat_hist.c        |    1 +
+ tools/tracing/rtla/src/timerlat_top.c         |    1 +
+ tools/tracing/rtla/src/trace.c                |   35 +-
+ tools/tracing/rtla/src/trace.h                |    2 +
+ tools/tracing/rtla/src/utils.c                |  181 +++-
+ tools/tracing/rtla/src/utils.h                |    6 +
+ tools/tracing/rtla/tests/engine.sh            |   23 +-
+ tools/tracing/rtla/tests/osnoise.t            |    2 +
+ tools/tracing/rtla/tests/timerlat.t           |    2 +
+ tools/tracing/rtla/tests/unit/utils.c         |   71 ++
+ 20 files changed, 1049 insertions(+), 915 deletions(-)
+
