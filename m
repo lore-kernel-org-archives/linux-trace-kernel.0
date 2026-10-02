@@ -1,50 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8288142E40C;
-	Fri,  2 Oct 2026 14:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4566D4C8FFF;
+	Fri,  2 Oct 2026 14:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790950904; cv=none; b=p8L83NlFokB9YFN1axKTZQCTaFwvCcHSCd0NXEG7J8SqgyxwvnAccFaPZl8aoErmN4U/lpjzEWzqlp5pKQx4s3fpUQPNXkJjDtsKc/b5GB9RCfzK/EExTHnnokWVBewqaDnxBoQ4T5mcIBHdprpAhgpsYjjdaOaeWI5tOGiZpF8=
+	t=1790952046; cv=none; b=q6MgogrJEL6IgnXikg4dnMei1OJoEpS2HqnudEqMiooTbneA36pZ9Tb5wXf8fnQ9hc7Pm5KOVd8m25msrFjvyl9FxAXZya95nOCF6YWYv+Y0BleN3hH3DjJ9E+fxawtISSEjIVZpwGs5FXttiFJH6fSlSVgI7GMpRv7dCM/jTQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790950904; c=relaxed/simple;
-	bh=n6+QQymcOivf0+4zdsobFJgsrQHGOpoNwZ+nFpDoq6c=;
+	s=arc-20240116; t=1790952046; c=relaxed/simple;
+	bh=uRVzb4q9OnjD7ysKCgL73yda96KR80dS+yOvFv+JzNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9aISf8On2SZD5Fdqj5NqY4UIL+VM5Ttc0qt2SL0j4wCAWczFjiTAhKuYo0BaXSWekXA4Yy+htoc4hBpu9S5GtPII308DpUDP/h8X+v9Pgu3+ZReul/MCfCD2w3J+pRqUjv2hMBuaJRVKl/2X6w0SBw8i51GXSpb6GCKX5M4WR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSj9PA/L; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUJh9f/eohYKWbDMHvx8u8GXhXASpbHTqF/i5EQRYb1wXTHn31C3hMpSFQUQXjDPPqRIzAhAYrtPUOuRkCELlIy8FBj+wanlx8kR+rIxfwVT6aN7Qado0hQ4G9ikHkhqecd91Dpol9igM0l6qvWDo5MKG4w2Bdi6hatynMi83rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+Y7btEI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSj9PA/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF661F000FF;
-	Fri,  2 Oct 2026 14:21:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+Y7btEI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BCA1F000FF;
+	Fri,  2 Oct 2026 14:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790950903;
-	bh=+f7gBbOphql33Q3z9qijzYQyChgApQkTFAi8r/69YSE=;
+	s=k20260515; t=1790952041;
+	bh=dcnYXBA3CEuai0qXprr2+qcXQPtBfgGrYCuvMwsvpIU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dSj9PA/L2u6jo9z1u1+xXGOd0b46RN4+ABOIYgfMTbCTH5TUJxFeD+he758vhlLJ6
-	 7eA8pJKsjgArpERYc1uj+EZ/l8FefKlH395TpTTvHFhm4qCoMF5KId3X//R9z1p/7j
-	 70wZAfczigNeHRxm6TlJupLHi5VI9V3X+NvJ8ZLZFOBOnfySKta/PRQcYQerx5OeWT
-	 uSRm+TJCaVwDL7g6Hu1zfM0afLXPL+ggJrbwWzqeM0gwze/v9npXMbBVva6stebNfw
-	 HAK3t6gLfwT9Qfm6E/2EwwMAGDbnVjqjpyaWs1rrcRcpaKSw7J/enU1qHozKIG5k1t
-	 UhXhJ/fCBg77w==
-Date: Fri, 2 Oct 2026 15:21:34 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Qiliang Yuan <odys.yuan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm/compaction: stop repeating failed async
- compaction on every THP fault
-Message-ID: <ar-8Vkchzn4QobA6@gremlin>
-References: <20261001-bug-mm-thp-async-compact-defer-v1-0-0174c7923430@gmail.com>
+	b=J+Y7btEI6wVH8SHpWF1hvukTyWhiFXJzzVeJkL7+bJGU19zujfqJ/unjYCWogXMTo
+	 aR9J8tb2IzpQO9Nb4ks1OtNadABO6C9qhhlrQHafo/jjjY5Iwc87tuv9QkTZJSBcfh
+	 vuzJ7tVkEN1RnisC829oVeGHm8bywCGfw2N2JGNHhprrqcLBllUy4wG7Z0h/JvbHjx
+	 ldxLi67QqiIzfBNBc1SYRN9+r4lN4aHwLdRxtRRrqG/rPjwJl5nkxsnIVg+7uAFZQR
+	 06TR50wzBjO9S3VxX83nEhVID8nzGTuPE7ytLOnDW6Ow0OPXOTC1dJ+u9+A8Wnrs3+
+	 s2mpJcE2gB+rw==
+Received: from johan by xi.lan with local (Exim 4.99.5)
+	(envelope-from <johan@kernel.org>)
+	id 1xCeRC-00000009jua-3wyb;
+	Fri, 02 Oct 2026 16:40:38 +0200
+Date: Fri, 2 Oct 2026 16:40:38 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <ar_CZkY_keyTrWqX@hovoldconsulting.com>
+References: <20260826-bind_taint-v1-0-52b05f4a965c@linuxfoundation.org>
+ <20260826-bind_taint-v1-2-52b05f4a965c@linuxfoundation.org>
+ <apA8n524yIn-g6ep@hovoldconsulting.com>
+ <arbkvK54vT7SIyjV@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,69 +65,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261001-bug-mm-thp-async-compact-defer-v1-0-0174c7923430@gmail.com>
+In-Reply-To: <arbkvK54vT7SIyjV@google.com>
 
-Hi,
+On Fri, Sep 25, 2026 at 02:19:25PM -0700, Dmitry Torokhov wrote:
+> On Thu, Aug 27, 2026 at 03:33:19PM +0200, Johan Hovold wrote:
+> > On Wed, Aug 26, 2026 at 11:19:33AM +0200, Greg Kroah-Hartman wrote:
+> > > The ability to add and remove devices from a driver through the sysfs
+> > > "bind" and "unbind" files was created all those decades ago as a way
+> > > that kernel developers can iterate faster, and provide a debugging way
+> > > for users to attempt to add a new device to a driver without having to
+> > > rebuild their kernel.
+> > > 
+> > > This api over the years has been abused and recently come under a major
+> > > fuzzing "attack" through tools like syzbot which decided that it would
+> > > attempt to just randomly bind any driver to any type of device, causing
+> > > loads of unneeded errors and pointless kernel patches to be generated by
+> > > unsuspecting new developers.
+> > > 
+> > > Handle all of this by adding a new taint flag, TAINT_FORCED_BIND, which
+> > > will be set on the driver if the bind/unbind sysfs files are ever
+> > > successfully written to.  This lets kernel developers "know" that a user
+> > > is attempting to do something that is not normal, and as such, if the
+> > > kernel breaks they get to keep the shiny pieces laying around on the
+> > > floor.
+> > > 
+> > > Note, the taint flag gets set _BEFORE_ the bind/unbind callback happens,
+> > > as many times crashes/oops/warnings/failures happen within the callback,
+> > > and the taint flag needs to be there to show what was being attempted.
+> > > If it were to be set after the callback happens, the oops report would
+> > > not properly reflect what foolishness was being attempted.
+> > > 
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > This makes it clear that this is a development tool, and it is a good
+> > compromise preferable to adding unnecessary complexity or suppressing
+> > the attributes completely just to prevent root from shooting themselves
+> > in the foot:
+> > 
+> > Reviewed-by: Johan Hovold <johan@kernel.org>
+> > Tested-by: Johan Hovold <johan@kernel.org>
+> 
+> bind/unbind without overrides should not necessarily be treated as a
+> development tool. For example with I2C devices you may want to unbind
+> the functional driver, perform firmware update from userspace, and bind
+> the device again. This will ensure that driver is not confused and at
+> the same time you do not need to put into the kernel code that is
+> dormant 99.9999 percent of the time.
 
-NAK.
+Yeah, there are some other uses of these attributes that essentially
+involves switching to a user space driver (vfio, i2c-dev, libusb, ...).
 
-This series is buggy, and has triggered my AI detection script.
+This is still a bit of a foot gun as many subsystems do not expect their
+devices to live on hotpluggable buses and will break in various ways
+unless you know what you are doing or happen to be lucky. So I think
+tainting the kernel is still warranted.
 
-It is kernel policy that you must disclose this with an
-Assisted-by tag like:
+This should probably have been highlighted in the commit message,
+though.
 
-Assisted-by: LLM
+Note that unloading the driver module in question is generally safer as
+the chardev implementation provides some safeguards against unloading
+drivers for devices that are currently in use (even if some subsystems
+also manages to get that wrong).
 
-See https://docs.kernel.org/process/coding-assistants.html
-
-It is also kernel policy that you must fully understand and take
-responsibility for every patch that you send.
-
-See https://docs.kernel.org/process/generated-content.html most
-notably:
-
-        If tools permit you to generate a contribution automatically, expect
-        additional scrutiny in proportion to how much of it was generated.
-
-        As with the output of any tooling, the result may be incorrect or
-        inappropriate. You are expected to understand and to be able to
-        defend everything you submit. If you are unable to do so, then do
-        not submit the resulting changes.
-
-        If you do so anyway, maintainers are entitled to reject your series
-        without detailed review.
-
-In general, if you are a newcomer to mm, we expect you to do smaller work
-before moving on to larger changes, so you build understanding of both the
-technical aspects of mm and how we do things.
-
-Given you sent your first mail on 21st September and have since been
-spamming complicated series across multiple different domains, I'm
-absolutely not confident that you have any understanding of this.
-
-https://lore.kernel.org/all/?q=f%3Aodys.yuan%40gmail.com
-
-It also noted that you had a previous email, realwujing@gmail.com, which
-you have silent switched from, which also bore the hallmarks of AI slop.
-
-The script noted:
-
-- Output rate: since 09-28 he has sent KVM SMM CR3/Hyper-V, ext4+jbd2+quota
-  "shrinker scan budget accounting" (the same fix applied to three shrinkers;
-  jbd2 went v1->v5 in 3 days and v1->v3 in 3 hours), blk-mq SRCU tag sets, a
-  blk-mq sync-run, ublk x2, a 4-patch bpf-next verifier rework, mm/migrate
-  move_pages (v2 sent 10h after v1) and this series. That is ~9 unrelated deep
-  areas in 4 days from someone with 4 commits.
-
-Among many other indicators.
-
-It also found several glaring flaws with your series, so it's clearly not
-upstreamable.
-
-I am going to have to ask you to focus on smaller changes as a newcomer,
-and to acknowledge any LLM tools you have used, please.
-
-Thanks.
-
---
-Cheers, Lorenzo
+Johan
