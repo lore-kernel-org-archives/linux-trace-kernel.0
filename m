@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8D538AC75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE42B38B143
 	for <linux-trace-kernel@vger.kernel.org>; Sat,  3 Oct 2026 03:59:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790999967; cv=none; b=ch2CU5VhmtR1vltZDQNiw3fXFA4rcsaqtvqyNObGXYlSAWmDBedBU/qEP/BFW0RnLwaN2VvdOb63iK4y77g61zK2IYHEaApD/+WsLSI1sTC3hIaQ6IDJECqSD+3S3mWQMr3W3NhWBKDjAMJ02s03V9gvg9nxqM4l+LpkSpZ9+DQ=
+	t=1790999967; cv=none; b=uxzNALErJYHaXWutPr/u6apHtaKTA485QRdvvgvqQenUEaInAnNc679XL+21xV+lRqXUhLw38eJwblkWiJulI9A//D8sq+Fc+CsqTsMc8vkVmJLt90llaYDgnzjHDW/LpUA1IR3J/h38+acHyF/6Y2v/5h8J7lPw3F037R4y4PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790999967; c=relaxed/simple;
-	bh=83ejdE21ZGKoH4IcbNOtIYCWNlvKIrQjgUzARamzwfE=;
+	bh=QMqRTQphegL+YGqZELWHP3PitTraEh7YCZhUt0ueL+o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nBwCQi3eOJEl8w81rZAz0goMvRSm0stAQysxgXJjUw18RiBDjV511gjL/HBibxfUW/RLi2N8ihfe8Krj4Qvm76+LsttP10QQMyK3Drb/peHoxbYpQYYkAHupym5oYOrqw9S44LK7cEjV6drUcQZf6P4AuqSRC8kJQ8aDmQzIl6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esNzDwkF; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=TrOUlyqfZA2jfQprdDEjIFk6oxkR18YsgwQwmR1rP//Su5yibyKfd6Y3i4stnrOotZpQq74YkRQUhvMghGdI4k7rBvqZUJ4Q3iKVXxQQWVcq3R0S9pHjK4jpdwD0iEx+vf27dlBkKsTbygeSz/86esvoupYa6cvRR20hqEl6nko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LytJtbRz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esNzDwkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D7A51F00A22
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LytJtbRz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 083FE1F008A4
 	for <linux-trace-kernel@vger.kernel.org>; Sat,  3 Oct 2026 03:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1790999962;
-	bh=3OTiHc1/0syaVTh9plxPSwZX9JA+w6f18TNYUs4mWiI=;
+	bh=sf8U9e/P/Ck4Sty1kLYW5Wh5J9iqRhQrRMwhuEB4BRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=esNzDwkF/ZPzuVHUwOX/wWg1G8q95GJofpLCNZ8CqjZQ3tSrgZVSe0wl0i/6tgYuB
-	 b+Og8ah3xsZ8t9cxtea4sG661YTsOMgK8WVA8wpEoh1BTI8kBHx36q6v+G2wPY7mPx
-	 z4I5y1NwZKx3SFzjqzalrK3VNGzGzXi+Mz5t8hh+znJCYY/w/7zYGnJf7LEk0Ev38H
-	 z5LVKQGZpj2BeyE843ig3p7wNG9C7eq7HmfrKRy6iuRy1T6I4c49+fSOADaKVkxXWO
-	 kl9SSeOeX8e292rsoebDYCW364bXxFepgepHcQXFCiqAipN3wEtdDK2FQylf72d8Ko
-	 +8U5XvTRO77ng==
+	b=LytJtbRzVGJ2gB5rSYpjnUmcJ+xxGWASCXwMhF3wA5XiUuOMEkosCvymJLQhlFNfs
+	 1TTMLD2EK/4S/cHbZyE5se6S1k+tYmdqOTdG2KAtOgWR+pXYqlexmSa8twP9rvVvrt
+	 VYu+wXvwJJuwtvWiyTtwZ3qW/eev//6u22fX9HGF16AjZKB1faH96j/7wcoiaWx8x0
+	 kD75F0NM30qpfaoxE96GTf6M9S157++2HP8TF/dajR0TXvzEXzjAeytHg4X4Ti/dI0
+	 eV7823ZdWPtTDiZlWPOrzqEaJlwWMudWokHz5vbMcturB6i3ZZySAhMtrnVWhfdGCi
+	 uGewx4IfggbDg==
 From: Kees Cook <kees@kernel.org>
 To: Bill Wendling <morbo@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	nvdimm@lists.linux.dev,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guangshuo Li <lgs201920130244@gmail.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Vishal Verma <vishal.l.verma@intel.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	Thorsten Blum <blum@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -62,25 +62,25 @@ Cc: Kees Cook <kees@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Emil Tsalapatis <emil@etsalapatis.com>,
 	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-	Thorsten Blum <blum@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guangshuo Li <lgs201920130244@gmail.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Vishal Verma <vishal.l.verma@intel.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 10/11] nvdimm: ndtest: Return the string length from flags_show()
-Date: Fri,  2 Oct 2026 20:59:15 -0700
-Message-ID: <20261003035921.1918874-10-kees@kernel.org>
+Subject: [PATCH v4 09/11] powerpc/papr_scm: Return the string length from the sysfs show functions
+Date: Fri,  2 Oct 2026 20:59:14 -0700
+Message-ID: <20261003035921.1918874-9-kees@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261003035906.too.263-kees@kernel.org>
 References: <20261003035906.too.263-kees@kernel.org>
@@ -91,42 +91,52 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1205; i=kees@kernel.org; h=from:subject; bh=83ejdE21ZGKoH4IcbNOtIYCWNlvKIrQjgUzARamzwfE=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkHaieLvLjkuOz2nWpmDfsU5q917HcOHpCrm/clZhVX5 dEteh/WdJSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzEo5Thf0HjJa6f2wWCLz5Z ndCTresx5Vpd30Jz8x/NP1assHW/ZMzwT78//eJ0f787O6pSOef+ZToVzRjHcTRt/ZT+eYtmCc4 o4QUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1508; i=kees@kernel.org; h=from:subject; bh=QMqRTQphegL+YGqZELWHP3PitTraEh7YCZhUt0ueL+o=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkHaieba/YzTix0net+z9FNczWD3xSL6Bmfjz+/LZl7o m+b04tNHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPpfsLI8G+xe2b7uYcnTsoy RjS9/G+lccnp4Baxyqrb+yyP7PS+MZvhr6zjr/+rN3Fs+Hxk+RzO+Ca90weOZTT+Dj607E7Dcs5 4M1YA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-flags_show() build their output with a seq_buf and return seq_buf_used(),
-which may include the trailing NUL byte when the seq_buf has
-overflowed. Use seq_buf_strlen() instead.
+perf_stats_show() and flags_show() build their output with a seq_buf
+and return seq_buf_used(), which may include the trailing NUL byte
+when the seq_buf has overflowed. Use seq_buf_strlen() instead. As
+suggested in review, use it as well for flags_show()'s check whether
+any flag was printed.
 
-The flag names are far shorter than the PAGE_SIZE buffer sysfs
-provides, so this cannot overflow today.
-
-Build tested ARCH=x86_64 with GCC 16.2.0, built out of tree with
-make M=tools/testing/nvdimm:
-tools/testing/nvdimm/test/ndtest.o
+Build tested ARCH=powerpc ppc64_defconfig with GCC powerpc64-linux-gnu
+16.2.0:
+arch/powerpc/platforms/pseries/papr_scm.o
 
 Assisted-by: LLM
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- tools/testing/nvdimm/test/ndtest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/papr_scm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/nvdimm/test/ndtest.c b/tools/testing/nvdimm/test/ndtest.c
-index 2051ad5d4882..f097f2992966 100644
---- a/tools/testing/nvdimm/test/ndtest.c
-+++ b/tools/testing/nvdimm/test/ndtest.c
-@@ -693,7 +693,7 @@ static ssize_t flags_show(struct device *dev,
- 	if (seq_buf_used(&s))
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index 75da96c08cdd..5c3bf06bb59b 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -1108,7 +1108,7 @@ static ssize_t perf_stats_show(struct device *dev,
+ 
+ free_stats:
+ 	kfree(stats);
+-	return rc ? rc : (ssize_t)seq_buf_used(&s);
++	return rc ?: (ssize_t)seq_buf_strlen(&s);
+ }
+ static DEVICE_ATTR_ADMIN_RO(perf_stats);
+ 
+@@ -1147,10 +1147,10 @@ static ssize_t flags_show(struct device *dev,
+ 	if (health & PAPR_PMEM_SCRUBBED_AND_LOCKED)
+ 		seq_buf_printf(&s, "scrubbed locked ");
+ 
+-	if (seq_buf_used(&s))
++	if (seq_buf_strlen(&s))
  		seq_buf_printf(&s, "\n");
  
 -	return seq_buf_used(&s);
 +	return seq_buf_strlen(&s);
  }
- static DEVICE_ATTR_RO(flags);
+ DEVICE_ATTR_RO(flags);
  
 -- 
 2.55.0
