@@ -1,175 +1,316 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6043382CB;
-	Sat,  3 Oct 2026 15:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D53F34D4F9;
+	Sat,  3 Oct 2026 16:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791041824; cv=none; b=isuWTrJ1o1wsPSCnOB6zytupWc39lz7KZlc1RxHKrkZmFEQ2Ag3unAZKeVQTsEp+PAASlr9xNtR0YwgbJnsTusNKzIJi67aZUlVPeveVi0tlGjyXfiT2oyPnd1gXDl/96+1RhsP7JabA1gu2JilhmQ6m9+CtqwAFK1shq3HE2PE=
+	t=1791044830; cv=none; b=o822u2RocdRLc3ro+PHA4N/BlmzjqcoHs8IZv9ATfh8L5wXYZRLCh22Qn0rB68ysVlniooIp8kN1SvOrqXrCxZ4R0gltIK90FhxxpffOdx9uyyIUCKuYnmyjuKWQoeDS0VzzcnXU+VOesunGqc5oFShRrSp7XTEsDEkUcYdxNsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791041824; c=relaxed/simple;
-	bh=P+t00OnuGzY0L5xQoewWtaL++U09V2T+k7ZFg5Yjqtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYawimNwemrA+12vCe5vyDK20k589bhE/cJLjd0shihvbwqd4kcVo3vAek/h2aK7F+uoEl68iEtfA0c/P3V4/CccUQTnQ7eDgcYijV42X95OkgE0sMysCRzj6K/E6krIPSHm/aZYYRx7xkd8HlwWDR1045ig0rntYqkbAPeL8wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExrrNucL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791044830; c=relaxed/simple;
+	bh=VfCrO1pLydDrhtifp9zRhPI/jnHiuDO3xGPLCASpqC0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MzZsbhtDdhUzQaot8vIN3qdoud1CiI3AI9H0zanXrJudcbFVfzFyYdK4zJIBgYu8ga37765sXHW0cmeCJ7KPXDv91nSjmrBYr2kg6vzhg9spypK9TcGlgLT0dccy6vtafLsOhoJYmF5HHM2hYjsm3nJbJd34ivh41WkMAW3uUM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBWwnuSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExrrNucL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791041822; x=1822577822;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P+t00OnuGzY0L5xQoewWtaL++U09V2T+k7ZFg5Yjqtw=;
-  b=ExrrNucLni4m92ol4u70gyaDESoMNQnLJU/jVg9EbVQPQX6WEpCOArlr
-   NMGKkfMHr0nfveNHgnf39/R0S5Wx5iLHY+U1nCyjuk1GlL6G7jfBFbM0I
-   Kr3hWAqlTC4o99GfnMculhZe4HmiJF+oyKX3kvnJq0PW3mEmavU+p5+Uq
-   u+po83QT3eiULr6Eox6S728SGHVCpiamLLiQCjQdYSfcW9klKnjM6I6Nl
-   cSlCz+mQpSAGne1LL4BewCHwuiosmP72lo1sZgw9TQI/0zGz+aJGajfau
-   64H51VPYf0IhtnnqO59Ko6Lkd8MVnpYgvBFxtNSM5lbII2+0URlvhd7K1
-   Q==;
-X-CSE-ConnectionGUID: SRg+GF7ETY2DtksNRrNEsw==
-X-CSE-MsgGUID: kxMVpemcQxGSgALBi43yRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11924"; a="79338284"
-X-IronPort-AV: E=Sophos;i="6.27,138,1787036400"; 
-   d="scan'208";a="79338284"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2026 08:37:01 -0700
-X-CSE-ConnectionGUID: RYv1bP9xS7udNAN9jt62PQ==
-X-CSE-MsgGUID: 2T49n9CQQDWkG0afqOemkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,138,1787036400"; 
-   d="scan'208";a="280207548"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.78])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2026 08:36:51 -0700
-Date: Sat, 3 Oct 2026 18:36:49 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-	Thorsten Blum <blum@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guangshuo Li <lgs201920130244@gmail.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
-Message-ID: <asEhEe0Urb5Wx7yi@ashevche-desk.local>
-References: <20261003035906.too.263-kees@kernel.org>
- <20261003035921.1918874-5-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBWwnuSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F276C2BCB9;
+	Sat,  3 Oct 2026 16:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1791044830;
+	bh=VfCrO1pLydDrhtifp9zRhPI/jnHiuDO3xGPLCASpqC0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=tBWwnuSI/kfns0DrSQSM0LIENSeqxOwk0YV3wkK64b3zoZcPIugWRzYl+TShXaGr7
+	 i83eycop6yvbw52huogawtIBQmiAWbYmlp4fs18sZv/SEuENZe66cKOc423emcbmXB
+	 s7zplZJ5Vd/EVw63vtsKyqDiR7fjKy9UWGA4mHGhQV9SAjxuZ403klVbgDHOTv3B1P
+	 D+M4ePJbVWFysDEKbHHkfusaRintdm93jFNqaQOdxJA9ENPXJDNPXxj4r/foAyA1fN
+	 g+PGz4WAjc1EHZtcIRN1Xc4cnEkWqeU2Z1Y9mzzpl+qVBM5bsqSZNDVHrmzcp8hxkN
+	 zJyyvuVGRHVGw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C19CCA5FED;
+	Sat,  3 Oct 2026 16:27:10 +0000 (UTC)
+From: Lawrence Lin via B4 Relay <devnull+deduce.gmail.com@kernel.org>
+Date: Sat, 03 Oct 2026 11:27:10 -0500
+Subject: [PATCH] ftrace: Avoid quadratic symbol lookups in
+ ftrace_module_enable()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261003035921.1918874-5-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261003-ftrace-mod-bsearch-v1-1-92e2fd2d80ff@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ6CMBBG4auQWTtJKRaMVzEuSvmBIRHMDBoTw
+ t2tsvwW721kUIHRtdhI8RaTZc4oTwWlMc4DWLps8s7XpXMV96vGBH4sHbeGqGnkUJ3jpQ6+AQL
+ l8Kno5fOf3u6H7dVOSOvvRPv+BYB4eHF2AAAA
+X-Change-ID: 20261003-ftrace-mod-bsearch-534a86527ee5
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, linux-modules@vger.kernel.org, 
+ Stanislaw Gruszka <stf_xl@wp.pl>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Lawrence Lin <deduce@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1791044829; l=8694;
+ i=deduce@gmail.com; s=default; h=from:subject:message-id;
+ bh=VNnLgJUKJ7lFwhFtPA6FsMT52qOV2kVtmjhNwuYT/s8=;
+ b=wvDOC5G4qKnZQ0Cra34A94gJ0jvk3ihF7MC1BfYbIznaE9dXPzf0gFoS0528q80WOovPMwTJu
+ 4sgLAqR3dh2A3n1S20dmM+/pWZbIYozoQGsjY87Dm7/Aw7966u1lUhQ
+X-Developer-Key: i=deduce@gmail.com; a=ed25519;
+ pk=Ws6hmG/zoco3lMoykbeaYjo9S7a6sDddQY8EALjp9cM=
+X-Endpoint-Received: by B4 Relay for deduce@gmail.com/default with
+ auth_id=1106
+X-Original-From: Lawrence Lin <deduce@gmail.com>
+Reply-To: deduce@gmail.com
 
-On Fri, Oct 02, 2026 at 08:59:10PM -0700, Kees Cook wrote:
-> Several strlcat() call sites being converted to seq_buf need behavior
-> seq_buf doesn't currently provide. The return from seq_buf_used() is
-> not the length of the string in a seq_buf. Once the buffer is full or
-> has overflowed it returns the buffer size, which counts the byte that
-> seq_buf_str() replaces with the NUL, so a caller that needs the string
-> and its length has to call seq_buf_str() and then walk the string with
-> strlen().
-> 
-> Move the termination out of seq_buf_str() into a helper that returns
-> where it put the NUL, and add seq_buf_strlen(), which terminates the
-> buffer in the same way and returns that offset.
-> 
-> As discussed in review, don't add WARN_ON() for seq_buf_strlen() and
-> drop it from seq_buf_str().
-> 
-> Add tests comparing seq_buf_strlen() against strlen() of seq_buf_str()
-> for empty, appended, truncated, exactly full, and overflowed buffers,
-> checking that seq_buf_strlen() alone terminates a full buffer, and
-> checking that a zero-sized seq_buf reports an empty string from both
-> accessors without touching the buffer.
-> 
-> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0.
+From: Lawrence Lin <deduce@gmail.com>
 
-...
+Since commit b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid
+adding weak function"), ftrace_module_enable() calls test_for_valid_rec()
+for every ftrace record of a module being loaded. test_for_valid_rec()
+resolves the record address with kallsyms_lookup(), and for a module
+address find_kallsyms_symbol() scans the whole symbol table of the module.
+Loading a module therefore costs O(records * symbols), all of it under
+ftrace_lock.
 
->  static inline const char *seq_buf_str(struct seq_buf *s)
->  {
-> -	if (WARN_ON(s->size == 0))
-> +	if (s->size == 0)
->  		return "";
->  
-> -	if (seq_buf_buffer_left(s))
-> -		s->buffer[s->len] = 0;
-> -	else
-> -		s->buffer[s->size - 1] = 0;
-> +	__seq_buf_terminate(s);
->  
->  	return s->buffer;
->  }
+For large drivers this dominates module load time. amdgpu.ko has 16821
+ftrace records and about 67000 defined symbols. On a Ryzen 3 3200U
+(x86_64, v7.2.5, amdgpu loaded from the initramfs), amdgpu finishes
+initializing 6.2 s into boot without this patch and 1.8 s with it, and
+the kernel part of boot reported by systemd-analyze drops from 6.87 s to
+2.47 s (four boots each). Loading radeon and nouveau, which have no
+hardware on that machine, goes from 170 ms to 87 ms and from 520 ms to
+145 ms. Commit 4099b98203d6 ("ftrace: Fix softlockup in
+ftrace_module_enable") already had to add a cond_resched() to this loop
+because of amdgpu.
 
-Looking at this again, can't it be rewritten now using _strlen()?
+Instead of one lookup per record, collect the addresses of the module's
+symbols once, using the same filters as find_kallsyms_symbol(), sort them
+into a temporary array, and binary search it for each record. A record is
+valid when the closest symbol at or below its address lies in the same
+module memory region and no more than FTRACE_MCOUNT_MAX_OFFSET below it,
+which is exactly what test_for_valid_rec() checks. If the array cannot be
+allocated, the per-record lookup is used as before.
 
-	if (seq_buf_strlen(s))
-		return s->buffer;
+An earlier attempt [1] sorted the module symbol table itself to speed up
+every lookup. Its review pointed out that livepatch relocations index into
+that table, that the sort is not stable for aliases, and that data
+symbols and weak functions need care. This change leaves the symbol table
+untouched and only compares addresses, applying the same filters as
+find_kallsyms_symbol(), so none of these apply.
 
-	return "";
+[1] https://lore.kernel.org/all/20260327110005.16499-2-stf_xl@wp.pl/
 
-?
+Fixes: b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Lawrence Lin <deduce@gmail.com>
+---
+Tested on x86_64 (Ryzen 3 3200U, amdgpu):
 
-...
+- v7.2.5, with and without the patch, same config: the boot numbers
+  above, and an identical available_filter_functions (85769 entries,
+  16821 of them in amdgpu).
+- v7.3-rc5 with a debug build that runs test_for_valid_rec() and the new
+  check side by side for every record: 141 modules loaded at boot plus
+  the selftest modules, and no record on which the two disagree.
+- v7.3-rc5, with and without the patch: the ftrace selftests (159
+  passed, 0 failed, the same unresolved and xfail cases on both), all
+  eight livepatch selftests, samples/livepatch loaded, disabled and
+  unloaded, and FTRACE_STARTUP_TEST.
+- ftrace.o builds without warnings at W=1 for x86_64 (KALLSYMS_ALL=y
+  and =n, MODULES=n, LIVEPATCH=y), ppc64le, and arm64, which does not
+  define FTRACE_MCOUNT_MAX_OFFSET and keeps the existing path.
 
-> +static inline size_t seq_buf_strlen(struct seq_buf *s)
-> +{
-> +	if (s->size == 0)
-> +		return 0;
-> +
-> +	return __seq_buf_terminate(s);
-> +}
+Not tested: running on powerpc, the other architecture that defines
+FTRACE_MCOUNT_MAX_OFFSET, and building 32-bit powerpc (the cross
+toolchain used here could not enable the function tracer).
 
-(Left for the context to the above.)
+This follows Petr's suggestion of a separate sorted array from the
+review of [1], kept local to ftrace. Stanislaw, Cc'd as the author of
+that series.
+---
+ kernel/trace/ftrace.c | 127 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 126 insertions(+), 1 deletion(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 673a54fdf392..36c97c605fb5 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -18,6 +18,7 @@
+ #include <linux/clocksource.h>
+ #include <linux/sched/task.h>
+ #include <linux/kallsyms.h>
++#include <linux/module_symbol.h>
+ #include <linux/security.h>
+ #include <linux/seq_file.h>
+ #include <linux/tracefs.h>
+@@ -4385,6 +4386,109 @@ static int test_for_valid_rec(struct dyn_ftrace *rec)
+ 	return 1;
+ }
+ 
++#if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
++#define FTRACE_MOD_SYMS
++/*
++ * test_for_valid_rec() resolves an address with kallsyms_lookup(), which
++ * scans the whole symbol table of a module. Calling it for every record of
++ * a module being loaded costs O(records * symbols): several seconds for a
++ * driver as large as amdgpu, all of it under ftrace_lock. Sort the symbol
++ * addresses of the module once instead and binary search them. The module
++ * symbol table itself is left untouched, as livepatch relies on its order.
++ */
++struct ftrace_mod_syms {
++	unsigned long *addrs;
++	unsigned int nr;
++};
++
++static int ftrace_cmp_addr(const void *a, const void *b)
++{
++	unsigned long x = *(const unsigned long *)a;
++	unsigned long y = *(const unsigned long *)b;
++
++	return x < y ? -1 : x > y;
++}
++
++/* Collect the symbols find_kallsyms_symbol() would consider. */
++static void ftrace_mod_syms_init(struct ftrace_mod_syms *syms,
++				 struct module *mod)
++{
++	/* A coming module cannot have its kallsyms replaced under us. */
++	struct mod_kallsyms *kallsyms = rcu_dereference_raw(mod->kallsyms);
++	unsigned int i;
++
++	syms->nr = 0;
++	syms->addrs = kvmalloc_array(kallsyms->num_symtab,
++				     sizeof(*syms->addrs), GFP_KERNEL);
++	if (!syms->addrs)
++		return;
++
++	for (i = 1; i < kallsyms->num_symtab; i++) {
++		const Elf_Sym *sym = &kallsyms->symtab[i];
++		const char *name = kallsyms->strtab + sym->st_name;
++
++		if (sym->st_shndx == SHN_UNDEF || *name == '\0' ||
++		    is_mapping_symbol(name))
++			continue;
++		syms->addrs[syms->nr++] = kallsyms_symbol_value(sym);
++	}
++
++	sort(syms->addrs, syms->nr, sizeof(*syms->addrs), ftrace_cmp_addr, NULL);
++}
++
++/* Same answer as test_for_valid_rec(), using the sorted addresses. */
++static int test_for_valid_mod_rec(struct ftrace_mod_syms *syms,
++				  struct module *mod, struct dyn_ftrace *rec)
++{
++	unsigned long ip = rec->ip, base, best;
++	unsigned int lo = 0, hi = syms->nr, mid;
++	struct module_memory *mod_mem = NULL;
++
++	if (!syms->addrs)
++		return test_for_valid_rec(rec);
++
++	for_each_mod_mem_type(type) {
++#ifndef CONFIG_KALLSYMS_ALL
++		if (!mod_mem_type_is_text(type))
++			continue;
++#endif
++		if (within_module_mem_type(ip, mod, type)) {
++			mod_mem = &mod->mem[type];
++			break;
++		}
++	}
++	if (!mod_mem)
++		goto invalid;
++	base = (unsigned long)mod_mem->base;
++
++	/* Find the last symbol at or below ip. */
++	while (lo < hi) {
++		mid = lo + (hi - lo) / 2;
++		if (syms->addrs[mid] <= ip)
++			lo = mid + 1;
++		else
++			hi = mid;
++	}
++	if (!lo)
++		goto invalid;
++	best = syms->addrs[lo - 1];
++
++	/* Weak functions can cause invalid addresses */
++	if (best < base || ip - best > FTRACE_MCOUNT_MAX_OFFSET)
++		goto invalid;
++	return 1;
++
++invalid:
++	rec->flags |= FTRACE_FL_DISABLED;
++	return 0;
++}
++
++static void ftrace_mod_syms_free(struct ftrace_mod_syms *syms)
++{
++	kvfree(syms->addrs);
++}
++#endif
++
+ static struct workqueue_struct *ftrace_check_wq __initdata;
+ static struct work_struct ftrace_check_work __initdata;
+ 
+@@ -8010,11 +8114,30 @@ void ftrace_release_mod(struct module *mod)
+ 	}
+ }
+ 
++#ifndef FTRACE_MOD_SYMS
++struct ftrace_mod_syms { };
++
++static inline void ftrace_mod_syms_init(struct ftrace_mod_syms *syms,
++					struct module *mod) { }
++
++static inline int test_for_valid_mod_rec(struct ftrace_mod_syms *syms,
++					 struct module *mod,
++					 struct dyn_ftrace *rec)
++{
++	return test_for_valid_rec(rec);
++}
++
++static inline void ftrace_mod_syms_free(struct ftrace_mod_syms *syms) { }
++#endif
++
+ void ftrace_module_enable(struct module *mod)
+ {
++	struct ftrace_mod_syms syms;
+ 	struct dyn_ftrace *rec;
+ 	struct ftrace_page *pg;
+ 
++	ftrace_mod_syms_init(&syms, mod);
++
+ 	mutex_lock(&ftrace_lock);
+ 
+ 	if (ftrace_disabled)
+@@ -8050,7 +8173,7 @@ void ftrace_module_enable(struct module *mod)
+ 		cond_resched();
+ 
+ 		/* Weak functions should still be ignored */
+-		if (!test_for_valid_rec(rec)) {
++		if (!test_for_valid_mod_rec(&syms, mod, rec)) {
+ 			/* Clear all other flags. Should not be enabled anyway */
+ 			rec->flags = FTRACE_FL_DISABLED;
+ 			continue;
+@@ -8087,6 +8210,8 @@ void ftrace_module_enable(struct module *mod)
+  out_unlock:
+ 	mutex_unlock(&ftrace_lock);
+ 
++	ftrace_mod_syms_free(&syms);
++
+ 	process_cached_mods(mod->name);
+ }
+ 
+
+---
+base-commit: e767a4ea70a3992c37ed604157d32f0dfbf9b1e3
+change-id: 20261003-ftrace-mod-bsearch-534a86527ee5
+
+Best regards,
+--  
+Lawrence Lin <deduce@gmail.com>
 
 
