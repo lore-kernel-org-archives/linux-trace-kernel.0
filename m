@@ -1,163 +1,153 @@
-Received: from mail-oi2-f42.google.com (mail-oi2-f42.google.com [74.125.231.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC54244687
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  4 Oct 2026 03:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934CC1D6DA9;
+	Sun,  4 Oct 2026 07:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791083222; cv=none; b=givPf5/0VFcnEiMcMyxpHe1iVM4M5/SxCo0UHS+0uITZkZvOmCswYYW9Cvny0ph4dTx5W5C/WLQPRTu6h+cZkkn6NiUaKEgxC9HckNiU4JRKf4eb/s3xmyVZB1V0rCitwweSBZQQfmqe19Di8aDTNV3266Qcd6OYKaAeHgU0RD4=
+	t=1791098803; cv=none; b=QARK3jehm3+F+AZM2AMwmpJpp5JzocVl7wtcyfugqaruTZK8XO69Jg6nvW8d9Ym7D3YfSQgeFogbuSoAEARkT0AXTMLXJY5g50ofdpuY6b6V5dke9Dt1pr5bFCYA5ScKBeeBCBOOIkjwc3SppPD7/iAqQ4TA6dTRgF+oQdFQPRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791083222; c=relaxed/simple;
-	bh=97w+wyZ4hAu1HtKz96oDWN8wbNGmXiBGOXZd1CtEwPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqv/y98h/0FJRyhRqZUjedyR/GW5evCbFT0k4mNi0X6A91S/XJr6MrVBg88LZX8fc22WSD2Bz8c+jY1fHnfFu5HzHUOXotda2HXputXWVmQD0JnGBr8OKGgPHWqGGgDOdvuS19lV8yVzO8zPUSLiZYpdkWLGuGgHd9KUImKvqow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esNvopqe; arc=none smtp.client-ip=74.125.231.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791098803; c=relaxed/simple;
+	bh=VHq+Xt/JtwMsfGBSvjM3m1W1JPpNGES8AGlkxECeziU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJRqkrkty2KwxMmC/wyRJsWwdEJ6DXEKELavP/3ame5UiNWdvhKb0QSlxLn42yFg7CIIxw+FsnC32PyOHiTsSw+oKocRY5h9ApULC03UODwkR6P80L8JPfDCsgnOvm1Yd2uSbMKskI4Kjst5bwCDf20tH+AhTciquf5HTLnyBbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU5ReT3j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esNvopqe"
-Received: by mail-oi2-f42.google.com with SMTP id 5614622812f47-4e47db1adb8so221523b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 03 Oct 2026 20:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791083219; x=1791688019; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=xGDw689I2nieuspdwl4thgn6puX+R1JqxzAeq5vzaqg=;
-        b=esNvopqei4cqufxFq8JI2el58SZvD8t6JtDv3CgX9XCIdPziR/jTqzVNGsJBgpK8zq
-         zdflu6iP/vs8UlIDCR4ITTBrT/bVmkN5X2l8BHATrnAhdvvD7Q/iiVIn+vy7BPDubaeI
-         GMj6R6tjlOOCZTRhnwJengbA1Zf/a5QpaWD8qRnFwWswurAZiabhlmOa+Je49muMSf7f
-         kVBvQxWjNdTNbrd6957UzSOyGApM+nK7443xC+D7dmYPp1xbjlLlmmtoBZD2IWUJnyTA
-         IAc93ssF/R3+mH+YOIPsFAqgnBQH2P2cG/i+udAlIcwJfjxhi4BJyM6UCaOaMa+3O3jn
-         KFaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791083219; x=1791688019;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xGDw689I2nieuspdwl4thgn6puX+R1JqxzAeq5vzaqg=;
-        b=YcG8Rq/1kvedZ3Ulrk6DKNjTPmfUhSJPU2ShXbBOh8oK+ahmFEff4TpKoOFnGRFhWC
-         jy4Tw55VmZQIU7qJkJglbNg3emnQng5LjnYh9dcgLmuir1cOaUyejlgI9ifzb8Trr2+e
-         PCJqfoyK/PjKtaqAcj5NAw4GLP1I6+cgQ1PizRSePVR1yXh3Hs1HFO7WZBTp0ER1w5fk
-         DGt1NwfadTY0JpgED1nqYbq6tQKn0B663S/ZApl4eokh+r6IIWOzFcLLBOniKneS2Ojq
-         aOaWbApOqjNSZsZkYNGDFJSg+WLBLLXYs1Zw0zwD5jxH7ZfOGZmCT6TExhBZ5uFH6WiX
-         rx1A==
-X-Forwarded-Encrypted: i=1; AKwUvBx2Y7BpZI87jes9+iC3v1gEbPDmJGDtpKxG4kdMqoRfyEoO4wyYdCgZ5JfWk8xym4auVEILWLb50qonzHM7nyzDBUs=@vger.kernel.org
-X-Gm-Message-State: AFuF++lI2oFwrhJcoRJy1YIPIlEiegqKWbKq3nKw9kEW7LctSFCfYVRW
-	XCv7I8bF9VHCLMkxI/hJVzsejXya+ygLIe0GFWscgw/n11r42NmmuQlq
-X-Gm-Gg: AYBFou2LNS9YIEpyIrkaT8M9vviVLO6ajhIHCjsQXowlH38EtBb4eUWLaba0Bxok1Mi
-	fmqBEnOnmVvpCg9LACXrEL0lAwrwnaVhZbPfQTUeksyZmMxE0Dgz5cGpJmTntF7RI/Bhvd1Q1I6
-	xFyJCiqDXRYa05xXYnUmtc1joFiw5DSNKMdic+hKHDOoJ3QekPpLXZjiYvwI/bJVhwrKsSrF13v
-	vmlNzC/QbtkSTiPueOEPAS7qSFN0Zb/9HtIaRE8OWZfG0Rg3cLoZ/fRqyWDTX3V+hLVvdPkKvGS
-	jL7oj2t3jxETgOo803++O+6CXx9/oWHGlJpjdKFVxLv17KBxGiVEsfgSkul+9ikZluiayGCOuhF
-	XXUC7lM/Skl5T3IOrITABEzS57L52a5I5NqPXdgHXK1Pmiei6PuH1fiwjeAnO3iU1xhY/I+/EWH
-	l9ZxrCHJ9304a7YzB8d4A/n9L5H/QjGtUB6CWLwpUIXtk0AOVqB31Pvn3uM2WlQgEsMwjq1qFbU
-	66qfRePEvzvtTiTktLzmyJ2R7cNJO6aRjsW8Ik5MEg38ZIv+E/nzJN+U4WdF/418GyTmK6Qqaxw
-	G/zoK8bkSg==
-X-Received: by 2002:a05:6808:f88:b0:4ab:318c:6b38 with SMTP id 5614622812f47-4f526442119mr5877208b6e.1.1791083219254;
-        Sat, 03 Oct 2026 20:06:59 -0700 (PDT)
-Received: from starship.unifi.local (107-216-42-6.lightspeed.austtx.sbcglobal.net. [107.216.42.6])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4f5249dc2e3sm6503800b6e.11.2026.10.03.20.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 20:06:57 -0700 (PDT)
-From: Lawrence Lin <deduce@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU5ReT3j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761B31F000FF;
+	Sun,  4 Oct 2026 07:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791098799;
+	bh=cgIqnoufaHq6AdaBd0wZxGfVHkwrfWk/BsoFED6yW28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nU5ReT3jHCTKrC3vFlt6lFhBY2qzd5TcweumZDdG4PoYUxRdUjykUFoBgFNWA1PjY
+	 T9Yu+RIKP64tp84D9IUIBtDjfeFi3o967G8MkqSZgLs5zg6QgwCaZo2Pxoykxskztl
+	 biV5O05MJfDy50y8GDgflF67Yd7yP+x3fcZ/CTySFwAWfFHWKch8vNf6E6pnkc8Req
+	 OzpDMqE/uOHVQp8wJMzmgk75NkJ+Q6sBYYfXWMn9gwMNio09Jz0A1FkvjaPxByIoTx
+	 USuuhCbzR7WCiikqNFCVjzo7VO44aK7kcE+i2spiWR4WgjRoXKk74e4z7OK8rvjehn
+	 Jk/eIKWbHt2nQ==
+Date: Sun, 4 Oct 2026 00:26:39 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bill Wendling <morbo@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Avoid quadratic symbol lookups in ftrace_module_enable()
-Date: Sat,  3 Oct 2026 22:03:58 -0500
-Message-ID: <20261004030438.434327-1-deduce@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261003-ftrace-mod-bsearch-v1-1-92e2fd2d80ff@gmail.com>
-References: <20261003-ftrace-mod-bsearch-v1-1-92e2fd2d80ff@gmail.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	Thorsten Blum <blum@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guangshuo Li <lgs201920130244@gmail.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
+Message-ID: <202610040023.A3865A6@keescook>
+References: <20261003035906.too.263-kees@kernel.org>
+ <20261003035921.1918874-5-kees@kernel.org>
+ <asEhEe0Urb5Wx7yi@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <asEhEe0Urb5Wx7yi@ashevche-desk.local>
 
-Krzysztof Wilczyński reviewed this off-list while looking at carrying it
-in a distribution kernel, and raised two points. I'd like to bring them
-here, with numbers, before sending a v2. Cc'ing him.
+On Sat, Oct 03, 2026 at 06:36:49PM +0300, Andy Shevchenko wrote:
+> On Fri, Oct 02, 2026 at 08:59:10PM -0700, Kees Cook wrote:
+> > Several strlcat() call sites being converted to seq_buf need behavior
+> > seq_buf doesn't currently provide. The return from seq_buf_used() is
+> > not the length of the string in a seq_buf. Once the buffer is full or
+> > has overflowed it returns the buffer size, which counts the byte that
+> > seq_buf_str() replaces with the NUL, so a caller that needs the string
+> > and its length has to call seq_buf_str() and then walk the string with
+> > strlen().
+> > 
+> > Move the termination out of seq_buf_str() into a helper that returns
+> > where it put the NUL, and add seq_buf_strlen(), which terminates the
+> > buffer in the same way and returns that offset.
+> > 
+> > As discussed in review, don't add WARN_ON() for seq_buf_strlen() and
+> > drop it from seq_buf_str().
+> > 
+> > Add tests comparing seq_buf_strlen() against strlen() of seq_buf_str()
+> > for empty, appended, truncated, exactly full, and overflowed buffers,
+> > checking that seq_buf_strlen() alone terminates a full buffer, and
+> > checking that a zero-sized seq_buf reports an empty string from both
+> > accessors without touching the buffer.
+> > 
+> > Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+> > and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0.
+> 
+> ...
+> 
+> >  static inline const char *seq_buf_str(struct seq_buf *s)
+> >  {
+> > -	if (WARN_ON(s->size == 0))
+> > +	if (s->size == 0)
+> >  		return "";
+> >  
+> > -	if (seq_buf_buffer_left(s))
+> > -		s->buffer[s->len] = 0;
+> > -	else
+> > -		s->buffer[s->size - 1] = 0;
+> > +	__seq_buf_terminate(s);
+> >  
+> >  	return s->buffer;
+> >  }
+> 
+> Looking at this again, can't it be rewritten now using _strlen()?
+> 
+> 	if (seq_buf_strlen(s))
+> 		return s->buffer;
+> 
+> 	return "";
+> 
+> ?
 
-1. ftrace_cmp_addr() duplicates ftrace_cmp_ips().
+It could, but I'm vaguely nervous about the difference between
+	s->buffer[0] == '\0'
+and
+	.data ""
 
-Agreed. For v2 I have dropped ftrace_cmp_addr() and moved
-ftrace_cmp_ips() up, above the FTRACE_MCOUNT_MAX_OFFSET block, so that
-ftrace_process_locs() still sees it on architectures that don't define
-FTRACE_MCOUNT_MAX_OFFSET. That builds on x86_64 and arm64, and on x86_64
-with CONFIG_MODULES=n.
+i.e. we only force the return of seq_buf_str() to be _not_ just
+s->buffer when s->buffer is weirdly impossible (due to size == 0).
+I'd rather not make all 0-len strings return the .data segment's const
+"" string...
 
-2. Should the sort use sort_nonatomic()?
-
-I timed the collection and the sort with ktime_get_ns() on a Ryzen 3
-3200U (v7.3-rc5 plus this patch, debug printk only):
-
-  module     addresses   collect     sort()
-  amdgpu        64983    0.41 ms    36.4 ms
-  mac80211       8199    0.11 ms    12.0 ms
-  nouveau       19354    0.06 ms     9.6 ms
-  kvm            7993    0.07 ms     7.9 ms
-  radeon         9882    0.03 ms     4.6 ms
-  all 141 modules loaded at boot:
-                         1.09 ms    94.3 ms
-
-So the sort dominates the new code, and amdgpu spends 36 ms in it.
-It runs in ftrace_module_enable() before ftrace_lock is taken, so it is
-sleepable and is preempted normally under full or lazy preemption.
-What it does not have is a resched point, which only matters for
-PREEMPT_NONE and PREEMPT_VOLUNTARY. sort_nonatomic() would add one, but
-commit 340e3c5165d4 ("iommu/arm-smmu-v3: Replace sort_nonatomic() with
-sort()") removed its last caller with the intent of dropping it, so I'd
-rather not add a user. For comparison, the lookups this replaces took
-about 4 s for amdgpu on this machine under ftrace_lock, and needed the
-cond_resched() from commit 4099b98203d6 ("ftrace: Fix softlockup in
-ftrace_module_enable").
-
-Is 36 ms without a resched point acceptable here, or would you prefer
-something else?
-
-For reference, the cold-boot A/B with v1 and the v2 change, on the same
-machine with a distribution kernel (linux-omarchy 7.2.5, amdgpu from the
-initramfs, three boots each):
-
-                     stock     v1        v2
-  amdgpu probed      6.17 s    2.03 s    2.03 s
-  kernel (systemd)   6.64 s    2.48 s    2.50 s
-  modprobe radeon    155 ms     83 ms     83 ms
-  modprobe nouveau   468 ms    141 ms    138 ms
-
-(medians; radeon and nouveau have no device on this machine). The list
-of functions in available_filter_functions is identical across the three
-(84301 entries), and none of the boots logged a warning or soft lockup.
-
-The same three kernels on a faster machine, a Ryzen AI MAX+ 395
-(Strix Halo), three boots each:
-
-                     stock     v1        v2
-  amdgpu probed      4.84 s    3.80 s    3.81 s
-  modprobe radeon     47 ms     32 ms     32 ms
-  modprobe nouveau   130 ms     60 ms     59 ms
-
-The saving is smaller there, about 1 s for amdgpu rather than 4 s, as
-expected with a cheaper per-symbol lookup. available_filter_functions is
-again identical across the three (84676 entries), and no boot logged a
-warning or soft lockup. The systemd kernel time is left out because on
-this machine it includes a LUKS passphrase prompt.
-
-Unless there are other comments, I'll send v2 with the change in (1)
-and these numbers in the changelog in a few days.
-
-Thanks,
-Lawrence
+-- 
+Kees Cook
