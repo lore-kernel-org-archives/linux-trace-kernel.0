@@ -1,233 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.155.198.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14D948097E;
-	Sun,  4 Oct 2026 19:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B944040BCDB;
+	Sun,  4 Oct 2026 22:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.155.198.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791143461; cv=none; b=eD6DfC6fRQtwDTWHZ/cAtc1BCyad+lCcK6j+Luht40Bqvkd3DZymiptWqJD5krVVoZi+OjGxi9Yaj7WVcBdRzk65Hw0FqCFALVRkcjp5umC7WtYlaS7AIlSlab5Q/sT9J1DzECNWfLv5MkkaX7fczGeCwtpcNdLfhtMb49bdXyU=
+	t=1791152503; cv=none; b=hP5NcYUQLz0SEAJoHtZvA/+7a3j3G/qmQopPJYb39DFEgyPypN20ETVfDg1uIp/diGfrAe7hPCIR1NLLN+wcOb68sjQn/gDsB1HA/GmrVbKT4HGbZ9V0y9nbsH4tXVONd3KkCZ4Y8fMnUmewpU9l91961IX0f729rgW2ZwPkD5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791143461; c=relaxed/simple;
-	bh=ER19OUCB7aVdxlSfW6hTiDY/t0kFUw0QV3PpNGlC5Jk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mGxdQqw3H91cz5o2UD3rcNLFPjXryIlcUYYP0RmH1pLx627GPUdLI++YUOu4lEDh8Z5XV+cNsD9+o5a1QaTT7ZIdg8HqCIrjLpXXp7FAayUSTLAAewZl4Fy+Q85XsPdFlEtuAJRH+JLmLwg5u0uDLOk1AmvqzaeKrRUllH4QF90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tr9Bnzdi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1791152503; c=relaxed/simple;
+	bh=8MfZas74TP4bH2JkIBPs6F1Wj3cq6DvSuL/z6D0z5ro=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XMkpqibyn48tYhDvpD2uwRxOE32m5JsEQEzT5g3o3BwcH5c+hiC2XvWc9sP8vUr1qhDP1vGwhWhG1PR4/uHxitA0S/UmlWzxXkNwIIH903s0X2ePc5gZGzaJ6G3wzp0vNaKzDUDBF3AsBSyQ60Zm9au3e1s0xQowgkT5gDOZS0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Af33HbjK; arc=none smtp.client-ip=35.155.198.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tr9Bnzdi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 51206C4AF62;
-	Sun,  4 Oct 2026 19:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1791143461;
-	bh=ER19OUCB7aVdxlSfW6hTiDY/t0kFUw0QV3PpNGlC5Jk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tr9Bnzdiz0NbWB2s1eCxQnq5C7YvbTzV5q2zV1+eqQ++AGPwkY1Jo81lXs+t3i1kR
-	 aex1rhgDGP0peNQT/5HnvN3S2MPgm4MN43qSIgvmWFqrnV7kf0Yz2Bqkm/LI9WAee2
-	 Y6KizwyW06BiBcy035ZhNns76v1nBtVxe8FzjY0N46+XgidEvi6sSiqwE5e46nL/tC
-	 /XzS5MLOfaAofAQvdz9Dz8gjrYHAHH7js3CyFxyaM0luT1B/Q1WKIZ3HvcKDddPmdk
-	 AFA7c+cAMo+GWthd4xid3Gn1Dg6QYW9VScORIbHER/Ul4eOLO2A5HApEtr4xaNxkgR
-	 8JAHc8NMkTr8g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32040CA5FFA;
-	Sun,  4 Oct 2026 19:51:01 +0000 (UTC)
-From: Lawrence Lin via B4 Relay <devnull+deduce.gmail.com@kernel.org>
-Date: Sun, 04 Oct 2026 14:51:01 -0500
-Subject: [PATCH v2 2/2] ftrace: Drop weak function locations of modules
- when loading them
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Af33HbjK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1791152497; x=1822688497;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gGkA92gKn6Umlg7Do4va51y7OdkAYyeZaeaCQws/E94=;
+  b=Af33HbjKYOCoaBHpbzVoHqqWybQPyWBlTj0a00UAD2IeqbAc3dpdQkBL
+   mh4WA9KlMwvATVJKClsCma4kaZvyhOSZmnydGJyi+AiB5AhirTES9AkYQ
+   Bl72vIFxnHNfYbAsPgH1GOuHcyRUSMDYBjuq29vnP4tVB5c9OyDTOzTox
+   dT/QMY1RX1/1ZdkuQGmEEWrRhyvs10S/rU8Ta/PeEVA/gaw1ffZkPsuR7
+   zZ+P9C+lTnTro5hq1CDTahhEnDh1GbFv9TRyjUihioWWtkcv/5u6Edvo3
+   0bXjSK8UAustB45O2nSHSJrLvOEWZLs3GVQMCXFtI0EX6dtSIEQkq8g4n
+   g==;
+X-CSE-ConnectionGUID: bhwPuL6iQoibWn7EKQVtmQ==
+X-CSE-MsgGUID: iF4tuhgNQbWGyCqDCfgFXA==
+X-IronPort-AV: E=Sophos;i="6.27,141,1787011200"; 
+   d="scan'208";a="30278872"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2026 22:21:32 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:21386]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.164:2525] with esmtp (Farcaster)
+ id 0691faea-dd80-4741-bdc2-6e25b9dd697c; Sun, 4 Oct 2026 22:21:32 +0000 (UTC)
+X-Farcaster-Flow-ID: 0691faea-dd80-4741-bdc2-6e25b9dd697c
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Sun, 4 Oct 2026 22:21:31 +0000
+Received: from dev-dsk-wanjay-2c-d25651b4.us-west-2.amazon.com (172.19.198.4)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Sun, 4 Oct 2026 22:21:31 +0000
+From: Jay Wang <wanjay@amazon.com>
+To: <ihor.solodrai@linux.dev>, <bpf@vger.kernel.org>, <ast@kernel.org>,
+	<daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>,
+	<memxor@gmail.com>
+CC: <alan.maguire@oracle.com>, <martin.lau@linux.dev>,
+	<yonghong.song@linux.dev>, <jolsa@kernel.org>, <qmo@kernel.org>,
+	<nathan@kernel.org>, <nsc@kernel.org>, <linux-kbuild@vger.kernel.org>,
+	<linux@weissschuh.net>, <christian@heusel.eu>, <mcgrof@kernel.org>,
+	<petr.pavlu@suse.com>, <samitolvanen@google.com>,
+	<linux-modules@vger.kernel.org>, <rostedt@goodmis.org>,
+	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<linux-trace-kernel@vger.kernel.org>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>,
+	<linux-perf-users@vger.kernel.org>, <jikos@kernel.org>, <bentiss@kernel.org>,
+	<linux-input@vger.kernel.org>, <tj@kernel.org>, <void@manifault.com>,
+	<arighi@nvidia.com>, <changwoo@igalia.com>, <sched-ext@lists.linux.dev>,
+	<shuah@kernel.org>, <linux-kselftest@vger.kernel.org>, <ojeda@kernel.org>,
+	<rust-for-linux@vger.kernel.org>, <arnd@arndb.de>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<abuehaze@amazon.com>, <doebel@amazon.de>, <mpohlack@amazon.de>,
+	<jay.wang.upstream@gmail.com>
+Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
+Date: Sun, 4 Oct 2026 22:21:27 +0000
+Message-ID: <20261004222127.31128-1-wanjay@amazon.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <44315425-c505-46fe-8379-f19d78ff3abb@linux.dev>
+References: <44315425-c505-46fe-8379-f19d78ff3abb@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261004-ftrace-mod-bsearch-v2-2-c1de73e72e73@gmail.com>
-References: <20261004-ftrace-mod-bsearch-v2-0-c1de73e72e73@gmail.com>
-In-Reply-To: <20261004-ftrace-mod-bsearch-v2-0-c1de73e72e73@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
-Cc: Aaron Tomlin <atomlin@atomlin.com>, Stanislaw Gruszka <stf_xl@wp.pl>, 
- David Laight <david.laight.linux@gmail.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Lawrence Lin <deduce@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1791143460; l=5635;
- i=deduce@gmail.com; s=default; h=from:subject:message-id;
- bh=TJECsMrXSgfNhKlqcwZYwjcb8q/Qy00rtV662XesPT4=;
- b=WlldLGiv9RMmqhQBaBPmYQCx9RepjgSTLsPKpBTVAtFrwUxvcsMLtajqy6nhLW5V8OvzY1haW
- 6OVzumjVAmfB08c/MHmtHQbj5ES57Mkw7mxBHZy6ctvEJ40hdiplR7W
-X-Developer-Key: i=deduce@gmail.com; a=ed25519;
- pk=Ws6hmG/zoco3lMoykbeaYjo9S7a6sDddQY8EALjp9cM=
-X-Endpoint-Received: by B4 Relay for deduce@gmail.com/default with
- auth_id=1106
-X-Original-From: Lawrence Lin <deduce@gmail.com>
-Reply-To: deduce@gmail.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-From: Lawrence Lin <deduce@gmail.com>
+>    - If I know I don't need BPF on the workload, and these 5.4 MB
+>      bite me, I can just turn off BPF
 
-Since commit b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid
-adding weak function"), ftrace_module_enable() calls test_for_valid_rec()
-for every ftrace record of a module being loaded. For a module address,
-kallsyms_lookup() scans the whole symbol table of the module, so loading a
-module costs O(records * symbols), all of it under ftrace_lock. amdgpu.ko
-has 16821 records and about 67000 symbols, and commit 4099b98203d6
-("ftrace: Fix softlockup in ftrace_module_enable") already had to add a
-cond_resched() to this loop because of it.
+They cannot, even when they know they do not need it.  As the cover
+letter says, the cloud provider usually ships one kernel build to all of
+its customers.  Customers install their own packages and workloads around
+that kernel, but they do not build or customize the kernel.  Turning
+BPF off is not a switch they have.
 
-Commit ef378c3b8233 ("scripts/sorttable: Zero out weak functions in
-mcount_loc table") fixed vmlinux at build time, noting that the real
-solution is to not add a weak function into the ftrace table in the first
-place. Modules are not covered by it, and still have such locations: a
-weak function in virt/kvm that arch/x86 overrides inside the same kvm.ko
-keeps its mcount location but has no symbol. In an x86_64 distribution
-build of v7.2.5, kvm.ko has 18 of them; none of the other 6483 modules has
-any.
+> What I find strange is for a user of this scale *to not know* whether
+> BPF will be used in the workload or not, which is what lazy load may
+> solve.
 
-Do the same for modules when they are loaded. In ftrace_process_locs(),
-after the locations are sorted, find for each symbol of the module, by
-binary search, the locations at most FTRACE_MCOUNT_MAX_OFFSET after it,
-and zero the locations no symbol marked. ftrace_process_locs() already
-skips zeroed locations, so no record is created for them, and
-ftrace_module_enable() no longer has to test every record. This costs one
-bit per location, about 2 KB for amdgpu, and O(symbols * log(records))
-time.
+They do know.  They run predictable workloads on a large number of
+small instances, and BPF is not part of them.  They spread the load by
+resource usage, so at that scale every byte matters: more free memory
+on each instance means fewer instances in total.
 
-On a Ryzen 3 3200U (x86_64, v7.2.5, amdgpu loaded from the initramfs,
-three boots each), amdgpu finishes initializing 6.19 s into boot without
-this patch and 2.00 s with it, and the kernel part of boot reported by
-systemd-analyze drops from 6.65 s to 2.46 s. Loading radeon and nouveau,
-which have no hardware on that machine, goes from 137 ms to 64 ms and from
-457 ms to 118 ms. available_filter_functions loses the 18
-__ftrace_invalid_address___ entries of kvm; its module entries are
-otherwise unchanged.
+>    * Compress it.
+[...]
+>      Keep zstd-compressed blob in the kernel image and decompress and
+>      parse it synchronously on first use.
 
-Fixes: b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
-Assisted-by: Claude:claude-opus-5-5
-Signed-off-by: Lawrence Lin <deduce@gmail.com>
----
- kernel/trace/ftrace.c | 82 +++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 70 insertions(+), 12 deletions(-)
+Thanks for putting this forward.  This compression approach is simpler 
+than loading a module.  I expect the overall code complexity to stay similar
+to v3, since both need to find the first user and defer the module BTF parsing
+until then, but it should be easier to merge into mainline because it avoids
+the request_module() deadlocks.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 673a54fdf392..2e1a237ce901 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4445,11 +4445,6 @@ static int print_rec(struct seq_file *m, unsigned long ip)
- 	return ret == NULL ? -1 : 0;
- }
- #else
--static inline int test_for_valid_rec(struct dyn_ftrace *rec)
--{
--	return 1;
--}
--
- static inline int print_rec(struct seq_file *m, unsigned long ip)
- {
- 	seq_printf(m, "%ps", (void *)ip);
-@@ -7611,6 +7606,73 @@ static void test_is_sorted(unsigned long *start, unsigned long count)
- }
- #endif
- 
-+#ifdef FTRACE_MCOUNT_MAX_OFFSET
-+struct ftrace_mod_locs {
-+	unsigned long *start;
-+	unsigned long count;
-+	unsigned long *valid;
-+};
-+
-+/* Mark the locations that lie at most FTRACE_MCOUNT_MAX_OFFSET after @addr. */
-+static void ftrace_mark_valid_locs(void *data, unsigned long addr)
-+{
-+	struct ftrace_mod_locs *locs = data;
-+	unsigned long lo = 0, hi = locs->count, mid, ip;
-+
-+	/*
-+	 * ftrace_call_adjust() moves a location forward by at most
-+	 * FTRACE_MCOUNT_MAX_OFFSET, so start looking that far before @addr.
-+	 */
-+	while (lo < hi) {
-+		mid = lo + (hi - lo) / 2;
-+		if (locs->start[mid] + FTRACE_MCOUNT_MAX_OFFSET < addr)
-+			lo = mid + 1;
-+		else
-+			hi = mid;
-+	}
-+
-+	for (; lo < locs->count; lo++) {
-+		if (locs->start[lo] > addr + FTRACE_MCOUNT_MAX_OFFSET)
-+			break;
-+		ip = ftrace_call_adjust(locs->start[lo]);
-+		if (ip >= addr && ip - addr <= FTRACE_MCOUNT_MAX_OFFSET)
-+			__set_bit(lo, locs->valid);
-+	}
-+}
-+
-+/*
-+ * A weak function overridden within its module keeps its mcount location but
-+ * has no symbol. Zero such locations before they become records, as sorttable
-+ * does for vmlinux: keep only those with a symbol at most
-+ * FTRACE_MCOUNT_MAX_OFFSET before them.
-+ */
-+static int ftrace_zero_weak_locs(struct module *mod, unsigned long *start,
-+				 unsigned long count)
-+{
-+	struct ftrace_mod_locs locs = { .start = start, .count = count };
-+	unsigned long i;
-+
-+	locs.valid = bitmap_zalloc(count, GFP_KERNEL);
-+	if (!locs.valid)
-+		return -ENOMEM;
-+
-+	module_kallsyms_on_each_addr(mod, ftrace_mark_valid_locs, &locs);
-+
-+	for_each_clear_bit(i, locs.valid, count)
-+		start[i] = 0;
-+
-+	bitmap_free(locs.valid);
-+	return 0;
-+}
-+#else
-+static inline int ftrace_zero_weak_locs(struct module *mod,
-+					unsigned long *start,
-+					unsigned long count)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int ftrace_process_locs(struct module *mod,
- 			       unsigned long *start,
- 			       unsigned long *end)
-@@ -7644,6 +7706,9 @@ static int ftrace_process_locs(struct module *mod,
- 		test_is_sorted(start, count);
- 	}
- 
-+	if (mod && ftrace_zero_weak_locs(mod, start, count))
-+		return -ENOMEM;
-+
- 	start_pg = ftrace_allocate_pages(count, &pages);
- 	if (!start_pg)
- 		return -ENOMEM;
-@@ -8049,13 +8114,6 @@ void ftrace_module_enable(struct module *mod)
- 
- 		cond_resched();
- 
--		/* Weak functions should still be ignored */
--		if (!test_for_valid_rec(rec)) {
--			/* Clear all other flags. Should not be enabled anyway */
--			rec->flags = FTRACE_FL_DISABLED;
--			continue;
--		}
--
- 		cnt = 0;
- 
- 		/*
+Would you like to prepare it for a formal submission, or would you
+like me to do so?  Either works for me.  Ideally it lands in time for
+the next LTS kernel, so that we can adopt it there.
 
--- 
-2.55.0
-
-
+From what I can see, most of the work left is in that deferral.
+Whoever needs the BTF first also parses the waiting module BTFs and
+replays the queued registrations, struct_ops ->init() included, under
+whatever locks it holds at that point, e.g. event_mutex or
+bpf_verifier_lock, or inside the module notifier.  So the
+cand_cache_mutex ABBA you found may not be the only deadlock.  Besides
+that, only x86_64 was touched so far, so it needs extending to the
+other architectures as well.
