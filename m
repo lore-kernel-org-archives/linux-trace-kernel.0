@@ -1,98 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D715377A81;
-	Sun,  4 Oct 2026 08:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37D3C9885;
+	Sun,  4 Oct 2026 08:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791100878; cv=none; b=cfMdt2nPfZq6p+c77kcPBuxIbKPSRs3FLxJecftwRC64CgJ/U8QuQUtO5BT9CXUJwqMk/m36/jiphgvSyhL8hpxw5FpTilPxzaXJZJLO4jCNt2XiZ0ZFoNZk5oKAp9Fsx7LeXnS7KaBv13Ul/kjQ//QP/Hgrxv0l+4Mvos3ppjo=
+	t=1791102886; cv=none; b=TWt45NKCumVhSgisxcf5AgH8+kBsIrKAdbk1mWnxcxbbeDldeXwiWpZ28U1IFTGjMw0nygtUPbD/v96pADtBhRMBIGUYUgbyC9L2rSJ1Bmc1T5dTZvxMamqG8yWkvvViJNMh5Vc1MbQ8c4DcgiTqNlTjoDRDrTmQLaqK6cE1YPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791100878; c=relaxed/simple;
-	bh=iTOH66FzZXboDlHhAvgDRCZs+Jh0LxFBQvkk2OT22XE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AHoQHagvM5u6EdxxcA8bV+mJZROAFrnrzZ6IolvoWJpe0fj1kjBjihgaDJcK+ZabB/qvYBthqY3lOt5nFw/mReFWIkygyRTqIwxUHkdRTOXwGysU3WEpn9/Xpcrmb++Fv2wYW4NLkKekyVYXI+o891AOkUjJvGFbl2CNopWWHxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV2Oz3wP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791102886; c=relaxed/simple;
+	bh=Mhi7+Hi041UrB2MzTnYXKOXt0lQgzO82otWdLKr7WgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d9F19MeZiPcaLQ4bjsFRt4HGg0G97eo4gmSmzr71euC72QAZlGC1RmlOTmpqNYMFpu44Nsbg4m1RxsfZHle4tB4mMP6ZQ+SCRS4IWutN+naZvusxNl41k2wBCMWVAMI6vxaulKHqhQZtKUp+9lSPBwnwvjGSL75rDbd9gTleVEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMAXZKsr; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV2Oz3wP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D391F000FF;
-	Sun,  4 Oct 2026 08:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791100877;
-	bh=p0bhkDeR0q/RIGHHdpd7D589iSN3oIrJp74cDlV3Lkg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bV2Oz3wPh9CI2vgAGfVd43hYzt6c1uvlk7ix0Dq2MmknOdhfzHxfi/W7w31THvoWE
-	 ebDtjhVfvO+acPp+9yL7RsNOL5Rnl8eTDIO+Fe1PPIQN6rHL5hOhIDu6621+gzqlv8
-	 H83jxW1Eh7YMuhBvyHR7p5n+lW2MQhJ5AQ04Ynrvyg6TVqawhuYYm2op2HCUbhR+H2
-	 ADXlY4fPPr0KuKg2w4ISnUM2WB9WJk9Mi3a4P8GEh0YgdiHnq8lPBivxcQSSUJYM1z
-	 iVyyKP1HFEX+iRR952RqoePaLSF7/UVXRTOuVV/FT7PJh4eTrM7eD2LUyNM9bh8SmF
-	 xfMmHCv1XGaSg==
-From: SJ Park <sj@kernel.org>
-To: Ravi Jonnalagadda <ravis.opensrc@gmail.com>
-Cc: SJ Park <sj@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMAXZKsr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791102884; x=1822638884;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Mhi7+Hi041UrB2MzTnYXKOXt0lQgzO82otWdLKr7WgI=;
+  b=SMAXZKsr7NM6Go6b3A1Mcr+c8U0Z5KCCsY3qjoUO4/0tuLcU1jVaEF0W
+   2kk0+U+FKPkRsS2AfiLkCLbQs0stivwfiMQV3bAf8+gw9YnQetdqcDlgH
+   e5i9eJAwSDJA6b8BGFH0K4gkjcZo2+vqIh88rkHX/pQnXLLD50M31+wA/
+   IOfr+cfD/4FMNh+/DbSO3+AHa8cg5ErXoQlQMlD7oGKIU9LQaXvySu9+b
+   tHV+egzUP1OqYT9mr1ZJ2KZakkb/qOknX+YsSpZAMofyqoZtXts8L80ES
+   oGHDZUI0OcULIrQRtq3qr0wLWd1iR4I/SDU7WFrnSnzRgqcSK66l0daOt
+   A==;
+X-CSE-ConnectionGUID: 6sGo83eISZ+fSdtmuN2k9Q==
+X-CSE-MsgGUID: l53SL/NJQL6xb+RhFEThOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11924"; a="90834725"
+X-IronPort-AV: E=Sophos;i="6.27,139,1787036400"; 
+   d="scan'208";a="90834725"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2026 01:34:43 -0700
+X-CSE-ConnectionGUID: nrUIyO1XSTCYN10HdI6xtw==
+X-CSE-MsgGUID: HOGC8YPlQBeD01aSwPqHdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,139,1787036400"; 
+   d="scan'208";a="275678711"
+Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.100])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2026 01:34:33 -0700
+Date: Sun, 4 Oct 2026 11:34:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Bill Wendling <morbo@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
-	Bijan Tabatabai <bijan311@gmail.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Honggyu Kim <honggyu.kim@sk.com>,
-	Yunjeong Mun <yunjeong.mun@sk.com>,
-	Akinobu Mita <akinobu.mita@gmail.com>,
-	Lian Wang <lianux.mm@gmail.com>,
-	Kunwu Chan <kunwu.chan@linux.dev>
-Subject: Re: [PATCH] mm/damon: add damos_node_eligible_mem_bp tracepoint
-Date: Sun,  4 Oct 2026 01:01:10 -0700
-Message-ID: <20261004080110.37328-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261003202727.3673-1-ravis.opensrc@gmail.com>
-References: 
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	Thorsten Blum <blum@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guangshuo Li <lgs201920130244@gmail.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
+Message-ID: <asIPlnb0noMd33rr@ashevche-desk.local>
+References: <20261003035906.too.263-kees@kernel.org>
+ <20261003035921.1918874-5-kees@kernel.org>
+ <asEhEe0Urb5Wx7yi@ashevche-desk.local>
+ <202610040023.A3865A6@keescook>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202610040023.A3865A6@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Ravi,
+On Sun, Oct 04, 2026 at 12:26:39AM -0700, Kees Cook wrote:
+> On Sat, Oct 03, 2026 at 06:36:49PM +0300, Andy Shevchenko wrote:
+> > On Fri, Oct 02, 2026 at 08:59:10PM -0700, Kees Cook wrote:
 
-On Sat,  3 Oct 2026 13:27:27 -0700 Ravi Jonnalagadda <ravis.opensrc@gmail.com> wrote:
+...
 
-> Add a tracepoint for DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP quota goal
-> evaluation.  The tracepoint fires once per quota-score computation when
-> the goal metric is DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP, exposing
-> context_idx, scheme_idx, nid, target_value, and current_value.
-> current_value is reported as the quota tuning sees it, after the goal's
-> complement setting is applied.
+> > >  static inline const char *seq_buf_str(struct seq_buf *s)
+> > >  {
+> > > -	if (WARN_ON(s->size == 0))
+> > > +	if (s->size == 0)
+> > >  		return "";
+> > >  
+> > > -	if (seq_buf_buffer_left(s))
+> > > -		s->buffer[s->len] = 0;
+> > > -	else
+> > > -		s->buffer[s->size - 1] = 0;
+> > > +	__seq_buf_terminate(s);
+> > >  
+> > >  	return s->buffer;
+> > >  }
+> > 
+> > Looking at this again, can't it be rewritten now using _strlen()?
+> > 
+> > 	if (seq_buf_strlen(s))
+> > 		return s->buffer;
+> > 
+> > 	return "";
+> > 
+> > ?
 > 
-> The DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP metric expresses node memory
-> occupancy as basis points of eligible bytes.  This information is not
-> exposed through any existing external interface (perf stat, /proc, or
-> sysfs), so the tracepoint is the only way for userspace to observe the
-> target and current eligible-memory basis point values at quota-scoring
-> time.
+> It could, but I'm vaguely nervous about the difference between
+> 	s->buffer[0] == '\0'
+> and
+> 	.data ""
+> 
+> i.e. we only force the return of seq_buf_str() to be _not_ just
+> s->buffer when s->buffer is weirdly impossible (due to size == 0).
+> I'd rather not make all 0-len strings return the .data segment's const
+> "" string...
 
-Thank you for this patch!
+Good point. Perhaps then to add a short note to the kernel doc,
+so we won't see patches based on the suggestion like I gave?
 
-We have damos_esz tracepoint.  Have you considered using it?  It doesn't expose
-the current value, though.  I thought it wouldn't be real problem in most
-cases, but I can show it could be problematic for node_eligible_mem_bp case, as
-the metric value is not straightforward to see without using DAMON.
-
-If you really need to know the current_value, I'm open to add a new tracepoint.
-But I think it has no reason to make it only eligible_mem_bp specific.  How
-about adding more general purpose tracepoint, and/or update the current_value
-file [1] under the goal sysfs directory to show the current current_value for
-all goal types?
-
-[1] https://origin.kernel.org/doc/html/latest/admin-guide/mm/damon/usage.html#sysfs-schemes-quota-goals
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Thanks,
-SJ
-
-[...]
