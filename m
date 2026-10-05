@@ -1,203 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-241.mta1.migadu.com [95.215.58.241])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632DF490BF8;
-	Mon,  5 Oct 2026 16:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE642BE043
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Oct 2026 19:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791218626; cv=none; b=Nfz+paCrihJEb7GcIp+NYqQizXRav6FHWQfATeq4fb9NrJ8TnwQgZ4YvjmFZczgVuYF2tEqmOuTVKZzslj7YnevFd5n75KlZ6aInJpag/VVZzTF/5w+jHHPdmel3jOfjjmCkC4qoBm4EtU8HmcrWXTiJtETVhTeeFAUhqfbSzj8=
+	t=1791226895; cv=none; b=tOUmanSS95qyWRsPbzwrOKgBM+kQv/YG5fNVEhxBXidGxHpX+4oC3eTcsuClnqA2Bf5WWqOrE+oYJKWmsiad2eGUmm/KmGRwpaXReopwM4PHYvlO9yeK0D2zjZ0hlOzn2Qcgk0Q9MmayTgd5rn9dbCRtPRAE5M67dbRq4sajBNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791218626; c=relaxed/simple;
-	bh=QsLXyk1HZimlxMVEUGRz2zKlgMRWwGDVBqX28wTcnLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9N5JBzGwHUqP8Z/s78LxSoXBOuGOFN8R+nFu+SeFuNVNhl08mWU5+wZcIrEp/kd2EXeBLnfpKsGkB65/h3YDD3soUM5uYT8eBQgKkJEB1AbGwIvD5sP8423aLBVABX8qCgo2aBNzbUTAt7cqsRxsA+xDQcca+yDj3dJ1JVSaCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8wsvnK1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791226895; c=relaxed/simple;
+	bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T++hxqVn/V8H76KlBdRyIxV0VGTzLhNgZRbvHyDElImvve90Wpl2vQD1/LpMHIRlRsZh/4n1ARWt/rXwEWrZp2EOQfhkP3lpwK5FDGvXiZ2dXQyJ57m0cbBWbkib9sLdz4B+/hZjxB81xq1CL9kBoPB6CmZjYhokc62ucKeXtxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rpgOxRCu; arc=none smtp.client-ip=95.215.58.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8wsvnK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D49C1F000FF;
-	Mon,  5 Oct 2026 16:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791218625;
-	bh=X0AfyKVoCvIdgwkopveGc4Ekelt3ZdLYde10lxY31zU=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To;
-	b=S8wsvnK1+a/xOmsDZn0LZvJlD3Bnq9DMJ3UsDAxcD9q3HXZkvhSb++WuKxwOAqzAu
-	 hrbaDWQ2TKQeK5qAuU/GCEggF3bRaVsp4sqaGr+++rvPx/+wZ0Z2Q7GaXwDA/NY9v8
-	 VKEEIXVnHH73b5warExc4DQfE3COvzbPuwvkwFys7kUtJwKL0pdKUAMEkKYt/ggiMA
-	 h8T9M/F4zTywTKPBe9aTCkC/zOvbNC9Rmiv2B7nN0szPOFCqp8uBXlMMfr5Mzw8t4H
-	 T3Dr+dtv+eAXxa9TkgXFVj7JR6K5twCoezU1EbX/6Y/45ZD9v8GfwTf7iOdVr9eYpV
-	 ZRjdfRd3HaIYA==
-Date: Mon, 5 Oct 2026 18:43:23 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Shivaprasad G Bhat <sbhat@linux.ibm.com>, 
-	Thorsten Blum <blum@kernel.org>, Alison Schofield <alison.schofield@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guangshuo Li <lgs201920130244@gmail.com>, Ira Weiny <iweiny@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
-Message-ID: <asPSYn7sLqiH39Fu@debian>
-References: <20261003035906.too.263-kees@kernel.org>
- <20261003035921.1918874-5-kees@kernel.org>
- <asEhEe0Urb5Wx7yi@ashevche-desk.local>
- <202610040023.A3865A6@keescook>
- <asIPlnb0noMd33rr@ashevche-desk.local>
- <20261005112209.1e47fa-kees@kernel.org>
- <asOKvhT01aNb5-Dg@debian>
- <20261005155839.d5d200-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rpgOxRCu"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791226891; v=1; x=1791831691;
+ b=rpgOxRCuBdRBG9Cruva0qem46KyAXqHLWajd0ZjIRz0kgD8tNqxyOJ2IoAc2uiVFYp0AWqwU
+ fYK9s+nOEwPq6TEVKyQTb7ZG9spRm+B0UmWQ9BG569oC3jH+5BUQFc768yIcjo1AEuCsOtbT9Nt
+ bjqyL+C+m3j1OwXepyyLRNU0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 3eee9485e3972e9f;
+	Mon, 05 Oct 2026 19:01:30 +0000
+X-Mizu-Trace-ID: 3eee9485e3972e9f
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <7844ef03-d9b2-4a10-8f14-1b498ada9043@linux.dev>
+Date: Mon, 5 Oct 2026 12:01:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mag73kyr3lvmhsn3"
-Content-Disposition: inline
-In-Reply-To: <20261005155839.d5d200-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand
+ loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
+To: Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com
+Cc: alan.maguire@oracle.com, martin.lau@linux.dev, yonghong.song@linux.dev,
+ jolsa@kernel.org, qmo@kernel.org, nathan@kernel.org, nsc@kernel.org,
+ linux-kbuild@vger.kernel.org, linux@weissschuh.net, christian@heusel.eu,
+ mcgrof@kernel.org, petr.pavlu@suse.com, samitolvanen@google.com,
+ linux-modules@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ linux-perf-users@vger.kernel.org, jikos@kernel.org, bentiss@kernel.org,
+ linux-input@vger.kernel.org, tj@kernel.org, void@manifault.com,
+ arighi@nvidia.com, changwoo@igalia.com, sched-ext@lists.linux.dev,
+ shuah@kernel.org, linux-kselftest@vger.kernel.org, ojeda@kernel.org,
+ rust-for-linux@vger.kernel.org, arnd@arndb.de, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, abuehaze@amazon.com, doebel@amazon.de,
+ mpohlack@amazon.de, jay.wang.upstream@gmail.com
+References: <44315425-c505-46fe-8379-f19d78ff3abb@linux.dev>
+ <20261004222127.31128-1-wanjay@amazon.com>
+Content-Language: en-US
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20261004222127.31128-1-wanjay@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/4/26 3:21 PM, Jay Wang wrote:
+>>    - If I know I don't need BPF on the workload, and these 5.4 MB
+>>      bite me, I can just turn off BPF
+> 
+> They cannot, even when they know they do not need it.  As the cover
+> letter says, the cloud provider usually ships one kernel build to all of
+> its customers. [...]
 
---mag73kyr3lvmhsn3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-List-Id: <linux-hardening.lore.kernel.org>
-Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Shivaprasad G Bhat <sbhat@linux.ibm.com>, 
-	Thorsten Blum <blum@kernel.org>, Alison Schofield <alison.schofield@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guangshuo Li <lgs201920130244@gmail.com>, Ira Weiny <iweiny@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
-Message-ID: <asPSYn7sLqiH39Fu@debian>
-References: <20261003035906.too.263-kees@kernel.org>
- <20261003035921.1918874-5-kees@kernel.org>
- <asEhEe0Urb5Wx7yi@ashevche-desk.local>
- <202610040023.A3865A6@keescook>
- <asIPlnb0noMd33rr@ashevche-desk.local>
- <20261005112209.1e47fa-kees@kernel.org>
- <asOKvhT01aNb5-Dg@debian>
- <20261005155839.d5d200-kees@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20261005155839.d5d200-kees@kernel.org>
+Ah, I get it now. Thanks.
 
-Hi Kees,
+So the constraint is that the cloud provider ships a single kernel
+revision to all users, and there is currently no mechanism to on/off
+BPF other than a kernel build flag.
 
-> Date: 2026-10-05 08:58:45-0700
-> From: Kees Cook <kees@kernel.org>
->
-> On Mon, Oct 05, 2026 at 01:34:10PM +0200, Alejandro Colomar wrote:
-> > > Yeah, reasonable. :) For v5 I've added this to seq_buf_str()'s kernel=
--doc:
-> > >
-> > >  * A zero-sized seq_buf has nowhere to put a NUL, so the empty string
-> > >  * is returned instead of writing to @s->buffer. Any other seq_buf
-> > >  * returns @s->buffer, even when it holds an empty string, so callers
-> > >  * always get their own buffer back.
-> >
-> > Are such buffers actually used on purpose anywhere?  Why not keep the
-> > WARN_ON?
->=20
-> Yes, though not often: the sched_ext debug dump builds a nested per-CPU
-> seq_buf from seq_buf_get_buf(), which returns a size of 0 once the dump
-> buffer has overflowed, and it handles that case on purpose (see the
-> "$s may already have overflowed" comment in kernel/sched/ext/ext.c).
+I'd be tempted to say "just ship two kernels", it's simpler than the
+upstream change. But I understand the downsides of that as well.
 
-Hmmmm, so IIUC, it is a sentinel value, and not really a buffer size?
+And obviously a good upstream feature may benefit many more users.
 
-Did you consider not holding the size of the buffer, but rather an end
-pointer?  It also allows you to find how much you can write to the
-buffer, but has slightly better semantics: the end doesn't change if you
-advance the position.  'end' can only change through reallocations
-(which I don't know if you do in the kernel).
+> [...]
+>>      Keep zstd-compressed blob in the kernel image and decompress and
+>>      parse it synchronously on first use.
+> 
+> Thanks for putting this forward.  This compression approach is simpler 
+> than loading a module.  I expect the overall code complexity to stay similar
+> to v3, since both need to find the first user and defer the module BTF parsing
+> until then, but it should be easier to merge into mainline because it avoids
+> the request_module() deadlocks.
+> 
+> Would you like to prepare it for a formal submission, or would you
+> like me to do so?  Either works for me.  Ideally it lands in time for
+> the next LTS kernel, so that we can adopt it there.
 
-It's fundamentally the same issue as was discussed with ARRAY_END() vs
-ARRAY_SIZE(), where ARRAY_END() is more robust.  Also, using NULL as a
-sentinel value is more readable; otherwise, you wonder why a buffer can
-have 0 bytes.
+Please go ahead and submit the compression approach. Looks like we are
+converging on that. Feel free to use the prototype code if it's
+useful, it uses parts of your series anyway.
 
-I think it'd simplify the implementation of the buffer.
+> 
+> From what I can see, most of the work left is in that deferral.
+> Whoever needs the BTF first also parses the waiting module BTFs and
+> replays the queued registrations, struct_ops ->init() included, under
+> whatever locks it holds at that point, e.g. event_mutex or
+> bpf_verifier_lock, or inside the module notifier.  So the
+> cand_cache_mutex ABBA you found may not be the only deadlock.  Besides
+> that, only x86_64 was touched so far, so it needs extending to the
+> other architectures as well.
 
-> Greg asked about the WARN_ON() in v2[1]: a size that comes from a device
-> or from userspace would have to be checked before every seq_buf_init(),
-> or it becomes a crash under panic_on_warn, and an empty buffer can just
-> hold the empty string. So the accessors do that instead.
+Yes, I think you are right that the hard part here is the deferral,
+because everything expects vmlinux BTF to just be there.  I don't
+think this is avoidable whatever memory saving approach we choose.
 
-Makes sense.  Thanks for clarifying!
-
-
-Have a lovely night!
-Alex
-
->=20
-> [1] https://lore.kernel.org/all/2026091953-cherub-empty-ef35@gregkh/
->=20
-> -Kees
->=20
-> --=20
-> Kees Cook
-
---=20
-<https://www.alejandro-colomar.es>
-
---mag73kyr3lvmhsn3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrD06QACgkQ64mZXMKQ
-wqnpdQ//euFjtt+8eCfTbdx8D9yFA98qRQtBNJRMJkzbjRc1WHzJSyAenzDDHRW7
-1nfO+8fVD+sABW5saDwArxt4Tve6VP/xyI4ifVoNW5aAqsHaw9ShgZYIIp8xpUUU
-ACpzeCs1nelWY7X5eQegvND9U2tpW9XQ9BJ5bL/rMCPzqICH4Yk4cUkkqsUcPho4
-DYITM73/V/Rh/KZNKJm0FJwegjDCLP0G3WkI9pp/FYX0yYFt9zutVQfQdoLLCJv+
-bbA0W9u9U/bTr9yARxP6+KjjwpRXH7b4m/98g6tXng6OJ4exZXNo1XP4e2eQHqXz
-1qqjE+X4g1mDXgmD78QMUGUM9vKVzbIjFevvAXtum+qr6Nj01OExY1gOUW27QbDX
-Umt1EH/Dl5g8qwCMLuARH1jqVzUOORtqc1h408A2HIKjHqHBql4fGelGi/h5pJhO
-CbSDEaxxr6F1s4KmSWiDAZkSFTn0lLrAW4+5g8scddimgKmo2H2gvyYqAW7nX9Fu
-g6mO0PzwjtfvQf7mKhBvsjLdkkDH/V33KN23BoM89Sj/u6nONtESiARI7XMlcg8e
-jnRRASeSXKkver8374YJ0LKv/YW0zKJUJF+W42h9PmmmYumgRWDjzPZmuwCJjn+t
-0cN5QFNWVSt8LYxmBbHzPJ7q2J/bW11IibMUg7d9+0eo2N5tw8E=
-=gQBr
------END PGP SIGNATURE-----
-
---mag73kyr3lvmhsn3--
