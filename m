@@ -1,109 +1,110 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DD547986D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Oct 2026 10:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8422AE65;
+	Mon,  5 Oct 2026 11:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791196935; cv=none; b=QN8cQTplJKqqdSTFru/hekvw70N0spopHkHAg9AVfs0rh8YC8lHurv3a0sjG5+0uGaR1Qt6gR2XRKft67meIp67yfZoyhg3LrdWBXUwiFXpY8UJaNwvBi2NP/jkEWKbjcXPRA0Oypa/XO4N3C8Xb3YLj7gs7KATfYXtGoaxUQog=
+	t=1791199337; cv=none; b=tlFEqoppe93eQ2gdDhAVGXT3hSKAHDEvESP6c77y0nvjtftuhN6Gr1QNFPfaACjm2q6In2d3QrwiZXInMNgEwMc6qARZeS2qGCWgkrmM5EaVyCNx0MUPUPtpVhnUnSaIJi94ztQqMC6IGEpmuk+1NoX0EqYVffIwu8eChuZbxdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791196935; c=relaxed/simple;
-	bh=+c5COAnNFvbEoUdyXXW3nbaU/kfXy7h+IIzi6jvXZyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MGONNo5+DtP788VnPKnMzFaq9RcLPqzRSh2OsuuDCxviBn6V4CKHROWeTItOUDh/+Op3ZoOkn8Xb4mVEKvqrGop6JTkSg185XT7CA06atnc6/NcHjvm2Kj523vV78Xw+a9I/DGXYfmW9rOLGsrDUDOjZoXM3uZjr0APQz5Dx0os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QajWOpzN; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791199337; c=relaxed/simple;
+	bh=PJsoRRt69vasCHp1KnmhjyOMsfFhuS565W12waJqkX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ViM3uk4s9GPCF7TMBElldKaYcXhajX/rU1R4tEqcz8dtCcgJTs+KzRwUkGH5+XWJAv0MhlEMX2kRS1juYBzdnz259SJ/Ilr8Fpq8GF1l2mxqJxWgTe3vdbh1j5qJTGcyAbsLCJoRG5hRJKhlDzAwc7ONvQKJfdZmevR3Et1rjRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuZWN5Us; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QajWOpzN"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4e4a4d77e5bso945876b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Oct 2026 03:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791196931; x=1791801731; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8W0+fYbRDHfh9L0kglCj5tuLWYsPG45RuqeUrhtLXE0=;
-        b=QajWOpzNeAsU4LXlltRo5ehIyMkgRGzpBfGhR32f5gIXaQs31SJF2POdexuVJPdpWe
-         RT8SJMh8ybj0Lrd1oOpeBA7hP+df3kFFqIkHcSS5/KiUkCqfo1pEXG9BEsVcvHBj7Htf
-         vDcKTn5sgaLe2Z5QBIJIMa8w3PK/rwp3bVsaTdFpsg5lLbzvRqc/gcfzjI9VEO2RNGT1
-         NwzF0JkEMPXIOTixFfswKs3+z2Ypsdn9prXNFsITzcokV3ofFf1pGCMzji3/RFVC/Bxq
-         LeXzRpHw5xwtB9z7+7/560aSi6BV0O5ZV82sOLHtRvpGG+lalocfmbhdM9KGdq5K16Qh
-         XJNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791196931; x=1791801731;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8W0+fYbRDHfh9L0kglCj5tuLWYsPG45RuqeUrhtLXE0=;
-        b=eb/z5hHl7AiBBVyecWKWZ7+E4sA/2e3YLN34X768dJrrE0IkhhiG0MxpdJflZHQJzO
-         FVDhMG3TZPOWJoOujcVPMhs9uaUx4jLnaOV31XNVndBXbKUxXeRJcxX42aDAb1x6ZOtn
-         nzEiI0h2Nde0Hc4Yu2IGoC4aT9IBSMXx/+EZNB8Hu+36aGqCaGl3rh2p9107cGxQu1Q8
-         HQoF4Lq4QiD05xuqMIb1Q4htzuQnqzZSSrVOrOtzSFqzqruC1MapmHRI0PuLxEH5VWhC
-         QbFMu5+Wpk/BM1V4GyxeoN9cMppPDtgOfibsbkWhRtt0jmfBIxWwHtLAN3tdOIuvddCr
-         bkKQ==
-X-Gm-Message-State: AFuF++nqVefyFeriuRe9e2v6awMlarXkmIFXta8/mrfg2pl0zteNrNIn
-	CfbsF4dcUybsau7tvspD9KG/WbAKMBOzIIw5EmucJt58CLPhtmBMmX7j
-X-Gm-Gg: AYBFou1/jpmLlYVFVPsazuzbzz3VJg0GiXIXl0Q6vrhRsOdWnjMQK7S2O6uXFjQUT0b
-	V1Sl+ehmP+lQxYgIsXEim2zyvy/j957VtlnsQ1+1hsGsm5VLNk+gg15FRfX0O/KdWhkFXcdiN7a
-	NcyVEz6npiHfu84GstyL+t4cEeGoMIbuuYH9+NoSI9gxucCqbiHogZzFvJixzzjLE/OUaAi/W+p
-	mpztAgKfR4OWRobTWFC1PeJMKsgKnyt6A7y+t5KNBYsh/8/bIBAC6/I+T08GoJxQpWm9ELPzWGs
-	c0PS7pl9kZw9toIcwYinO8bCq2J6VGtfLWdSNREdhZxqBr4KT/2wHSJsTRyDRte3wsnplfl0hgQ
-	Q8yHXV2z7/VafwxXpQu5Z+M7jiQiJXJQcYws84oX+2zMMZ3AhlQt11ewkrkek4+WC9dfNhfGJVD
-	F/x7ftNnTZtTvkJe/GL9TQ0Ob3Ip29tXMCnqqjV+PY7CCUp8lGj5UNmWRipjqbDkLcr4dTluAMO
-	nDtLuShDi8R
-X-Received: by 2002:a05:6808:2203:b0:4ca:9850:4dd8 with SMTP id 5614622812f47-4f3080f790dmr10412563b6e.10.1791196931437;
-        Mon, 05 Oct 2026 03:42:11 -0700 (PDT)
-Received: from sheng2080.cmix.louisiana.edu ([130.70.15.5])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4f5249d7c75sm9588989b6e.12.2026.10.05.03.42.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 03:42:10 -0700 (PDT)
-From: lzhan011 <lzsx618@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tracepoint-update: check the section end before reading a string
-Date: Mon,  5 Oct 2026 05:42:00 -0500
-Message-Id: <20261005104200.1787946-2-lzsx618@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261005104200.1787946-1-lzsx618@gmail.com>
-References: <20261005104200.1787946-1-lzsx618@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuZWN5Us"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8451F000FF;
+	Mon,  5 Oct 2026 11:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791199335;
+	bh=+Ur16o5EMFLYs3ii15Ilcb6PLqZ5R/+UrvQP8v8yGf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HuZWN5Us1odcgFzPDx1TIFTAMYvOaGXTqYoEoTbeWe2Om0hHL+qOzldtkgSBWUYZh
+	 QCUUJkrhwU+0MTe4I7ItSH1rv/dlyns16z4yuAikMzmF68O3Z9KaxB/LMd5tOBcu4u
+	 gL00QF+vSno8AlPdZNroFRYsvR7cqfamI3Yv5UdenzxyytF2m6YmcTY4A6049w3BH3
+	 NRQNtQI4WVy+e7ywsjNosabc+4bm9TynYJW0RG579Sf/+2uH2UmUVqWC0Lz3gre1A4
+	 KOFyx3X6NZxA7USIyXaeyKqNwwFJO6dhpM1FgdABIWZ0w+42yWAAM7DXAKkAr/h03P
+	 WlA/xczcpYn6Q==
+Date: Mon, 5 Oct 2026 04:22:15 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bill Wendling <morbo@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	Thorsten Blum <blum@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guangshuo Li <lgs201920130244@gmail.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	nvdimm@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
+Message-ID: <20261005112209.1e47fa-kees@kernel.org>
+References: <20261003035906.too.263-kees@kernel.org>
+ <20261003035921.1918874-5-kees@kernel.org>
+ <asEhEe0Urb5Wx7yi@ashevche-desk.local>
+ <202610040023.A3865A6@keescook>
+ <asIPlnb0noMd33rr@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <asIPlnb0noMd33rr@ashevche-desk.local>
 
-From: lzhan011 <zhangleizhen645@gmail.com>
+On Sun, Oct 04, 2026 at 11:34:30AM +0300, Andy Shevchenko wrote:
+> On Sun, Oct 04, 2026 at 12:26:39AM -0700, Kees Cook wrote:
+> > I'd rather not make all 0-len strings return the .data segment's const
+> > "" string...
+>
+> Good point. Perhaps then to add a short note to the kernel doc,
+> so we won't see patches based on the suggestion like I gave?
 
-for_each_shdr_str() evaluates strlen(str) before checking str < end, so
-after the last string of the section it calls strlen() on the bytes just
-past the section. Check the bound first.
+Yeah, reasonable. :) For v5 I've added this to seq_buf_str()'s kernel-doc:
 
-Fixes: e30f8e61e251 ("tracing: Add a tracepoint verification check at build time")
-Assisted-by: Claude:claude-opus-5-5 ASan
-Signed-off-by: lzhan011 <zhangleizhen645@gmail.com>
----
- scripts/tracepoint-update.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ * A zero-sized seq_buf has nowhere to put a NUL, so the empty string
+ * is returned instead of writing to @s->buffer. Any other seq_buf
+ * returns @s->buffer, even when it holds an empty string, so callers
+ * always get their own buffer back.
 
-diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
-index 4c4b66901..ad5f691c1 100644
---- a/scripts/tracepoint-update.c
-+++ b/scripts/tracepoint-update.c
-@@ -74,7 +74,7 @@ static int add_string(const char *str, const char ***vals, int *count)
- #define for_each_shdr_str(len, ehdr, sec)				\
- 	for (const char *str = (void *)(ehdr) + shdr_offset(sec),	\
- 			*end = str + shdr_size(sec);			\
--	     len = strlen(str), str < end;				\
-+	     str < end && (len = strlen(str), true);			\
- 	     str += (len) + 1)
- 
- 
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
