@@ -1,194 +1,192 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010013.outbound.protection.outlook.com [52.101.61.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8837D49A3C7;
-	Mon,  5 Oct 2026 14:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791212034; cv=fail; b=kmy5kR7ti5CICUL/8OvC4fRb8G0GDCAcvDsRebFC3zpyPFc5zSTyta7/kauLvmkpQ1qR1snmig9Tjl8trejBE0igvxPfbZRcOzohuBmUzjNbr2nk9ldvS2usz4sKsmKPHPvDx6YFVVxp7SX6YHDdl14o8BOkRQmFApqyjEsaszE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791212034; c=relaxed/simple;
-	bh=hGdULoe/W2dbSVyhiNd/guNApPkDuDmLF1WFcRKixlw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MEZN5ucXqkSnpTSHls2irCyPEQGq5gyIoTji7Gut7yYbB9XJAR23mB9sDrsbWTfaf/H6iRs6GcEz1Qg12fYK38oCPxo5HVWHl5IA+z8a3Q5z1w1rBYoEtWka6OlpFmANM1IhaB+EvU2RV4E9G2eTs2jX7YurGW3TDVc68YOxRB8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wIGvIAAW; arc=fail smtp.client-ip=52.101.61.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69AD4CDA3A;
+	Mon,  5 Oct 2026 15:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791215840; cv=none; b=t3gVFxQq5pqLDFZFDHhoZjLJwp8TOYJ3iCVtjne7/xkLBZtEBgTIq+/eL+sO5RGvaaAqyThjy0wYWzLDJd1RGXPpZRb0InDtyV89UrixvaKqnDr3q8avhRS3kTcLosOFWp8BHWc0/7vg/FgdFXzL2vmfDtp7T23Y6gFo7s2RuUM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791215840; c=relaxed/simple;
+	bh=Y6zIobaHfAH25spVVd3tRtK22OpsmMUzA9m4akP1URw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p6TPzK2WyeO3/MGmi1+tr21UX0Jmg1Z/BGYl4u+N5FN2p7+l7m58h6s7IEf1rysJ5iZnLe2/iQPIKqcjyeCcqrOxaXKYEPxaRoJ+K5P8cKTevTgMRGfSEAzHzic9PsEulr1jtOqwGvlWr/6r5+RR8uZdV7szzyIHz+0a2AviaEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BntoAAVe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wIGvIAAW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Pw3lf1bFTBSStJfEdjrCIrBSNkTC6D00dtZfizWfRjPoZMA0eRKpzx2msy2tRNMK+xukBQxSlG7JzIBafsMqmMV3IVurp+FSPKTLbamM/bkPgJr8grYFsHtVJDEiGRly4a7EX2wWcXw812kxm9yNzqtPheFwa3LV+0e3pFdVwvVSf+DnpO/6/E8/HS77jfjBI7WtRyzUD8u0xw/KrcvmUeSWzSHuCskK4Y0oX7KwqMW1b3eZWQJiwcgicvXBbaWWGChJHixNSK57919HYjamRfZpOLIc4ApGaSQbpA9fm6p31E0rsiSKfIfd/IQaEXyC2ECUoGXIhLdgHltWHbOghA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xhYYD7fuqcEAqP8b+0LuUdhivoZIMdrxyhMC5z2p9gw=;
- b=ORZq6mJpMNo8JqZweAKESr2IUbYSuWZQJX6/oC1KXTgmHsuQmF3JzhlPN1kLNI7LBmiRPybhtslCSYJlzb4jc0xVoNfmrfUvJJj/nExXl1/ON+cvwCtciD8AcsEhWg/u47z7I7aEPNB2VVKjuUZyMSnBAAW33+Fmyz/+T+ZS4Fuy5WyISTKxIGnTf2DcDmBJ1yKyoOlpabk9zH0SFJOigEtvl/ljILckBLj6RuIT8jIL0HIaqQfKwWJZcnmT2qyaFz5fX6970HgrNI6Qvs2HToD9s9ERxajS4CVBWhTYBmSKEWdplWK8JsT6/M46URq8zDd0TZ1Mx/l6xl2bJgx8yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xhYYD7fuqcEAqP8b+0LuUdhivoZIMdrxyhMC5z2p9gw=;
- b=wIGvIAAWRpVTelaHn5Xf4TclnHJYErRu37kJxH+pnH/xAOt0jRFJFktlzFAUi2Fq0pLTUcBifmyk5OtHjOF+OZRqxas9t1uckJhfAgzdOapw3RaaKL3OBoqPUbOYu3dbM0NIvr2S9lmN4PR6M1a5ucw4jNdIOYlXouKDwLGOTEo=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by BL1PR12MB5729.namprd12.prod.outlook.com (2603:10b6:208:384::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.26; Mon, 5 Oct
- 2026 14:53:47 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::ce69:cfae:774d:a65c]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::ce69:cfae:774d:a65c%3]) with mapi id 15.21.0472.016; Mon, 5 Oct 2026
- 14:53:46 +0000
-Message-ID: <f0077cec-10fe-400a-b229-f7434e297364@amd.com>
-Date: Mon, 5 Oct 2026 16:53:34 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/6] dma-buf: Add get_phys() to describe a physical
- run
-To: Fred Griffoul <griffoul@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oupton@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-Cc: David Woodhouse <dwmw2@infradead.org>,
- Ackerley Tng <ackerleytng@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Steffen Eiden <seiden@linux.ibm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
- Robin Murphy <robin.murphy@arm.com>, Alex Williamson <alex@shazbot.org>,
- Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org
-References: <a04f17cc-f59a-4240-81c8-29776eee3a2e@amd.com>
- <20261005132046.30025-1-griffoul@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20261005132046.30025-1-griffoul@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YT2PR01CA0021.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:38::26) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BntoAAVe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E36D1F000FF;
+	Mon,  5 Oct 2026 15:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791215838;
+	bh=0Fe4ObO/b/TE5s1PNVsS4XfT/c4N/SLhXa9vwlS3HrM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BntoAAVepFtL24WpSXFkvVOvlZQ2XNzqoMzX/oGT2IrDJ08YRNDEdVfxkOJrau6da
+	 EQDDbIKtKwkgSkG57w/z7F5/g2o2i4SHk1K5gjczqaNq7Mj7q4wnhe91LwMPnsKr0J
+	 jTylrtsI6n2YPsJoBIyMReDNFivmxb4gwbu8L97lKYCuslZr/uhtXdOYEGQh6dLWZp
+	 HGITYqSM3RSACTnQEunn2RMMxlNFeG1FPypB6Rd2Pjvy5se5L0Af5KhGl/VCVpk5CO
+	 y0EYziJr49LVrwPSh87wYHcxj8kJfwCmqzzloelO55weXDu1STfeHKJMDR9OT7qJ9R
+	 MdKxWZ8a0KSqQ==
+From: Kees Cook <kees@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Gow <david@davidgow.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v5 02/12] seq_buf: Do not pop from an overflowed seq_buf
+Date: Mon,  5 Oct 2026 08:56:52 -0700
+Message-ID: <20261005155708.1471260-2-kees@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261005155653.late.426-kees@kernel.org>
+References: <20261005155653.late.426-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|BL1PR12MB5729:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5180c871-a821-4b99-440d-08df22f07562
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|10067099003|11063799006|56012099006|6133799003|4143699003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	UMx0b+52OJCYLOf3oRoulDZIGT5QrLnzOPNMCapQVSyRURB5fCSysSsCDls0m/nsgU+Rewv0hwM6sGISOslSxlDf+V1525NPxJ3b6a3KpwPI2G614zfLeZpctlIy7hrtl4VH53G2goXj7KlcD2XMdgVHRRxZ+QF7cH9zYnN5PbCbBXDOLzm6a7KZuOScVS41NpxCR7fijpnvixJNIipadhiZDk4yTqIbuj+Oimh3R/UrIelVMAXFSvaLP34R+oCB7yihEiuv8FBHn1PMGc4AFBe6iGt69gntVEx7Z/f1JN53fQ+8yytRU4X91Ox3DBfYowNwGYcAtLF/40KTzNC7HH9OvoDlF33Cfc1WpX6zYDE8oW5hZ9LJK5qnBG+G1GWbbqqeKBZJmYt8Gujq7MJc1ehEJ3bscl9n8/JRFjEJmWRUaHr4mfgUzX7tBNUVkY/uj6w2DoVeeldjKURa5CE0pox0qOcLBcJRdczt6Nz+yOJsMU8QQXHjqzMwdla9J4G5BYx2QTklmlfQSiCK+hQ/6QudiHQMd+5G+J3jORC5BCXzmyU9jOdJcCYzLcFKA4X+VZCRb5UGKckeTYm6JKBj7sV0kJ5o6wm19Yv+0O1SAqpzwOkZ7Fjx3vuZGdHl8P53
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(10067099003)(11063799006)(56012099006)(6133799003)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UUZnZzlQU0J0SkJkUTdIYzlWSEhvRHJ3VlVBbE80Z1A1L0lTU1ZLTll4bmVi?=
- =?utf-8?B?a211M0o0QkVyMWxhM0JKZGNCQnJmTEFzRk9ON0k3eTRadU1zQVZYUTB5bW8z?=
- =?utf-8?B?eDhaQ0FnVDlsRUM2VUJWRTJZa2pBSlJMQWhrbmNWZ1Z6ZTJuNUkxdFNMeU4y?=
- =?utf-8?B?M2hOUHY1bEtUWHNlOSt6cm5XcXNmSjByNHcwd1VvNlEvSVZsamdVdmFxS3Ax?=
- =?utf-8?B?c05sUkQvWjhOVWV0M1ExQkoxT2ZrTzF6RmhPNVVBNWtzMFkwaDhQejllZnc3?=
- =?utf-8?B?OXNSbG41L2hvdSs3OVlUTlo3ZmR6T29XbVNUOEwvU1BxVmNjK1V5dmhpSUEz?=
- =?utf-8?B?OWRwNk1ubWcra3VrVitDRTNwVUtpaVhDY284RFFKc3pjdUtmcWlHQjJUVFRM?=
- =?utf-8?B?Y2xhLzNyT0VRUDlZd3V4ai9ld0pISFl4Mi9Jc0lFcFZ0bk1QZ0d6ZVdOZjRt?=
- =?utf-8?B?a3NBUHUxbTQyRTliZk84TktrMG1WaUFyNEdZNzcrS0trNTZLdUNJQ3hXQnh0?=
- =?utf-8?B?Z2hHQTZNL1BwVUZaTWhXTEc3dm1hbXZ1UFZLWUNSUGRsTjcxV2FWNm9CMnBB?=
- =?utf-8?B?WjBuUEI0VUo2YXVyUVM1UjgyZFNRMGlmUnQ2aVZNNDZsMWFvOHVDU2dYYXlp?=
- =?utf-8?B?VzV0Sm1QRGRNQzBwNHI1aFVyaW1HQjhNRmlPcUpiZHpoWWp0cHpJUWNBYWJ4?=
- =?utf-8?B?RjJXdW9yUmQ5ZWFKazlMSTlHZVpnMTZaV3l3VEs5czNYQitiWGJOZi9admRy?=
- =?utf-8?B?SmpVSkphclViTldydnc3Y0VjNU5tU2l3akVSUG9TQW9qY2h4dG9uOWhBdWh0?=
- =?utf-8?B?WEk0UjhqWHEybUpqNEl5Ly93dGVsYXJwVHU5QVAzU2puVWRxZGUvV3g3b2dp?=
- =?utf-8?B?WkZ4a1kvc3VsSldKWUNEYXFFYkZqaDlqV1l2aDRkc3VxMmg1N2t1dEdMalhV?=
- =?utf-8?B?a3MrRWEzL3JtdmFQYVcvY05PSmtML1VkVnk0OUt2UUJRekJybDdZSDVnS1V5?=
- =?utf-8?B?YXJPWStxbWRyTVhyQWYwbDlkcTA5bXhEbkR2ZWRobXFuV29UVFY1c1FRbDlB?=
- =?utf-8?B?eTg1dThBMzVwNHdldTdCM0ZsR1lQajBleEtPcUtHcW1NZnJXeFRielMwa1c5?=
- =?utf-8?B?MkxMZFJLZ2UxeHJzRHNFL1hSY2RSSEpzMEgwRDFTakR6VGVQOFVaQS94OEhN?=
- =?utf-8?B?WDVLMjhoNG51Uk93YWQwVGVDT1V5cGd2UlEzd0dBRkU0VmRESjRQTERrUXB6?=
- =?utf-8?B?RVBVMDhvMER5M003RzRPVWJWNGU2ejlqZzNDR3lSWUVsVmh1dGRXdlJlWUpz?=
- =?utf-8?B?djJRQ3QwZzNwditmVmRCZ0cvZHVQMHdqd3RvMnZDSzVPT2lMZWVJMEhTSWFz?=
- =?utf-8?B?LzRmcFp4bGFiaXBZTENuV2VnWVJBTWpNcyttR1BCeDUzRElrc0NyL3F3eVFK?=
- =?utf-8?B?N0ttaVJYdFNqbHRoSTVVZnA2OFBibEUwRTduR3BtU0h0NHlMaHVLZ0F3dUQ2?=
- =?utf-8?B?bUlFM3dBakdDbEpxSWh2T1gxeFFnekFyVEZYYUxQSm5DNFhVNmxYcUpXdWxK?=
- =?utf-8?B?dDNpV1Yray8ycXdVaVBqeFk2Qzlpd1NBclVsLzRleVJWV25nQVpkN1cwTVBJ?=
- =?utf-8?B?OEQ4RFFqSGc2bWhuZXVCeVM1eDZWUjVPV0pkcVlmMkNOSHh5T2ZoYjd4c2Y1?=
- =?utf-8?B?U2hxc0xBNWRhTFlrYnVpZW85ZzRGMFFNaTk0Y0V4VjdQQXd4MWNUYWtMdkNK?=
- =?utf-8?B?UFNZMXNIS3RIN25BQWVmWVA3dGZTV3AxQnRjQTRNY3NXM2w1YmJaL1duZTBE?=
- =?utf-8?B?VmN0LzlUVVlHWThyZm5pSFVCMG9GMDFqMWVnRWN0YkZZcmFLOUNLK2MreWtq?=
- =?utf-8?B?RUtQaUt6TTJ5aHllWE84T3J4ZzV0T2dpaEs3a1Y1SnY3MlNxUmdxZjNNc1dP?=
- =?utf-8?B?R0pwc1NFNnRFVzQ0VW1YVDNwVlF2eXBwelpIT3NZK3M0a2pEWUsxL3dLZU9X?=
- =?utf-8?B?YjNpN1lVTGNIQzZMLzVCT1FqTGt1Tm5NVFhoZU1wOUtMYitMaUkzSm9LbWFz?=
- =?utf-8?B?M2lkSzBOTkpiSHViNlR5dHBGVitrMmRBVDIySHl5LzhzQVZzUEt0R1NWbUVM?=
- =?utf-8?B?TDVpeFQwdnZCK3dwS1N6T3RnclF0K2JJcnZUWmhoZDJ0WlVTbWJJMFdhNENZ?=
- =?utf-8?B?L2Q1a082VHk1bGswVXdwYzdsY1VESkFOeUw2ZzlyM0pBTTluT25EcmVKN2hC?=
- =?utf-8?B?RlVMRE9udVFBbDJLUVBkSGVURTNob1RlekNkTmFKRjR0SmRlVzhMdTNhYmF3?=
- =?utf-8?Q?Hc0M7qWAY2qZQ8+ci9?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5180c871-a821-4b99-440d-08df22f07562
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2026 14:53:46.8740
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AmtdD0x3b82LYedWJRCPE8uRkJn8eUSChFoy8OXHpB8cABCoDWbN6dYWy0C+wQk+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5729
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4958; i=kees@kernel.org; h=from:subject; bh=Y6zIobaHfAH25spVVd3tRtK22OpsmMUzA9m4akP1URw=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmHT5z6Ls15Odk1t6hwzUSLFA2OdOapKQZW95YscC1re //DN3xCRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES8bjMyPLsV+bRr567z4tdu tz5pW/h09Y44DW0WJe56+XerVJ6ZqTP8ZjX/+q18Sr546MXit49nvXvVdpblqkYJn/zO32r7zBI 6GQE=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 10/5/26 15:20, Fred Griffoul wrote:
-> On 10/5/26 Christian König wrote:
->> Well filling page tables by the importer is an absolutely clear NO-GO
->> for the DMA-buf design, we have gotten down that path already and it
->> took us years to remove this functionality again.
-> 
-> Understood, thanks for the quick and clear answers on this patch and on
-> patch 3.
-> 
->> The problem you are facing here is that dma_buf_mmap() doesn't work
->> because you don't have a VMA.
-> 
-> Right: the memory has no struct page and is deliberately not mapped in
-> the host, so there is no VMA to hand to KVM.
-> 
-> I'll post a new version of this series. It drops get_phys(), the ranged
-> invalidation and the guest_memfd dma-buf import (patches 2-5), and it
-> does not touch drivers/dma-buf, as you suggested in the PAL discussion:
-> 
->   https://lore.kernel.org/all/c413710b-4c28-4ed8-88ec-aeb8c4482011@amd.com/
-> 
-> KVM gets its frames through the KVM-private guest_memfd provider
-> interface from David's series. iommufd gets them through a private
-> interface with the exporter, as it already does for vfio-pci. The new
-> version adds a small registry in iommufd for that, which replaces the
-> symbol_get() of the sample in David's series. The dma-buf is then only
-> the handle and the existing revoke.
+When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
+decrements len to size and reads buffer[size], one byte past the end of
+the buffer. It also leaves len equal to size, which no longer counts as
+overflowed, so a truncated seq_buf then looks like a complete, full one.
 
-Yeah that approach sounds totally sane to me.
+An overflowed seq_buf logically has no last character to pop: the
+length of what was written has been lost, and the last byte of the
+buffer may be the NUL written by vsnprintf() or bytes that were never
+committed. Return -1 for an overflowed seq_buf, as for an empty one,
+and leave it overflowed, as the rest of the seq_buf API does until
+seq_buf_clear() or seq_buf_init().
 
-We have drivers which stuff all kind of resources, not just memory, into a DMA-buf. That ranges from MMIO BARs to trigger FW operations (doorbells) over full HW blocks (ordered appends, global wave sync etc...) where two or more applications need to share which one is used.
+The current callers do not reach this, e.g. trace_syscalls only calls
+trace_seq_pop() when the trace_seq it pops from has not overflowed, and
+kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
 
-That you then have a exporter private interface is for accessing this is perfectly ok.
+Add tests for the pop corner cases.
 
-The problem you are facing here is more that this is not limited to one driver/module but multiple ones and you don't want module inter dependencies because of the symbols.
+Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
-So symbol_get() is probably the right thing to do as long as we don't have something like weak symbols or similar.
+Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
+Assisted-by: LLM
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ include/linux/seq_buf.h   |  4 ++--
+ include/linux/trace_seq.h |  5 ++++-
+ lib/tests/seq_buf_kunit.c | 42 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 3 deletions(-)
 
-Regards,
-Christian.
-
-> 
-> Thanks,
-> Fred
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 9f2839e73f8a..f5a350347bc5 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -155,11 +155,11 @@ static inline void seq_buf_commit(struct seq_buf *s, int num)
+  *
+  * Removes the last written character to the seq_buf @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if @s is empty or has overflowed.
+  */
+ static inline int seq_buf_pop(struct seq_buf *s)
+ {
+-	if (!s->len)
++	if (!s->len || seq_buf_has_overflowed(s))
+ 		return -1;
+ 
+ 	s->len--;
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 697d619aafdc..7174ebf3f015 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -86,7 +86,10 @@ static inline bool trace_seq_has_overflowed(struct trace_seq *s)
+  *
+  * Removes the last written character to the trace_seq @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if the underlying seq_buf is empty or
++ * has overflowed. Note that only that buffer is consulted: a @s marked
++ * full by a write that did not fit, which trace_seq_has_overflowed()
++ * reports as overflowed, still pops the last character written.
+  */
+ static inline int trace_seq_pop(struct trace_seq *s)
+ {
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 0934dfb602ff..de491f96c1ac 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -115,6 +115,47 @@ static void seq_buf_putc_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
+ }
+ 
++static void seq_buf_pop_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 8);
++	struct seq_buf t;
++	char *buf;
++
++	/* Nothing to pop. */
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
++	KUNIT_EXPECT_EQ(test, s.len, 0);
++
++	seq_buf_puts(&s, "hello");
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'o');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
++
++	/* A 0xff byte must not be mistaken for an empty buffer. */
++	seq_buf_putc(&s, 0xff);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 0xff);
++
++	/* A full buffer pops its last byte. */
++	seq_buf_puts(&s, "abc");
++	seq_buf_putc(&s, 'd');
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 8);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'd');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 7);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hellabc");
++
++	/*
++	 * An overflowed buffer has nothing to pop, and stays overflowed. Use
++	 * a buffer allocated at its exact size, so that KASAN reports any
++	 * read past its end.
++	 */
++	buf = kunit_kmalloc(test, 16, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++	seq_buf_init(&t, buf, 16);
++	KUNIT_EXPECT_EQ(test, seq_buf_printf(&t, "%s", "longer than sixteen"), -1);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&t), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
++}
++
+ static void seq_buf_printf_test(struct kunit *test)
+ {
+ 	DECLARE_SEQ_BUF(s, 32);
+@@ -354,6 +395,7 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_puts_test),
+ 	KUNIT_CASE(seq_buf_puts_overflow_test),
+ 	KUNIT_CASE(seq_buf_putc_test),
++	KUNIT_CASE(seq_buf_pop_test),
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
+-- 
+2.55.0
 
