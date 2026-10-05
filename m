@@ -1,65 +1,65 @@
-Received: from mail-ej2-f41.google.com (mail-ej2-f41.google.com [74.125.228.169])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832ED47143C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Oct 2026 09:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE959472523
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Oct 2026 09:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791194164; cv=none; b=IzjNvHn1qq4hgUZsYmnxS2xISy3M/fqz0qZwMIq+QRBkA7yyoN98MuXzRlG8j4bgDCICpSnrvfW8W4c+iEeJx/u6Tqv1+um5r8Lv66gR8hGaS4PoPH7QRv2ozP3wd0C/qfRnBlCi0W4vVOOLQ48/DkZs5mcfn7Te990U4yLnXR8=
+	t=1791194166; cv=none; b=SD9Gl5wYFFOmhLSUBZR152vbjTVqJeJwd7YDpxT5sSv2IwH5lBY/YsNSytC5aE0+7do+ZwwspTK0WS0FwNi1toanLx9L+1W0JYtOegsOn8FdV69lW4PRe7hxS56QHSAPJydhRzM5Qyluv7ejUVSFhztNIuRx+A+AVpwZ/wT33AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791194164; c=relaxed/simple;
-	bh=p24hefQPXKLoBJuYF5Z14UnQBi4wThoAzcE04iKrpy8=;
+	s=arc-20240116; t=1791194166; c=relaxed/simple;
+	bh=W+faagf9X6giuP7Jvxi6Qt0uOgcW4oIP8+vZrnvBrKc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ewEpEfUX9cazIDexO193Nn9KyR27O0I+wFysLxoR/2UkbenhZW5m7zk2bjGZdn4tYQdK4vh576pbyjrKG4fpM5rzK0BDGl9gWeCG0msvy3xLGJgP7Ifp9qaNz/31TlvtNuiMnWT42uZjKzFly7bQtAPkiwQcrAHBcEgkuzZZ0K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOw7JFw0; arc=none smtp.client-ip=74.125.228.169
+	 MIME-Version; b=LlJR4RkyebNEZj4cmc24qQuKoRlKQEc0EclMsWd0OngQMru+OPQQjxJmM+HivIyadlxbWZ9k0wCT+IBWvwRV0126gKBSny7B9Q7pyztw4dk6m+pzfB37j0Sn/ZATiM7Psr6Efccfg7GJVnF1jACpkS9UpJd934qybho3JAu1AcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pjRKQpXG; arc=none smtp.client-ip=74.125.228.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOw7JFw0"
-Received: by mail-ej2-f41.google.com with SMTP id a640c23a62f3a-c2e028ed54dso254862366b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Oct 2026 02:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjRKQpXG"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c29703cb470so266546766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Oct 2026 02:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791194157; x=1791798957; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791194158; x=1791798958; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eUFnmfD1HFrO7M7fDEPhPzh1SVWIHE0Jg9iipMSxbpU=;
-        b=eOw7JFw092pKomvxWc+AAiF1JSjof9t208H9F4Q5+7mgYasEkyiky5qy8gM2ntc9ZJ
-         cHr8bTajh7HJ0xeeuPJFpLhp8v2TJSvS6VNtU+WoRmyDKyvSAp3JpSwSfGcGy28HNkSx
-         YuQ+3Dyh6R2V92KHm8DCNJDaroi1YRBL3YTKPKU/Kvywu3/XoQa/y2WB1doXbzlTiSjf
-         fjk51ph+Lk2kpbxihiGR3HzEpJxn1gFoLmhoTEyYvFPtM2Gy7Eg78zhgiGSWUNYzyVNf
-         QF9gmvtv7bMONgPoPOHbYS6v8yGgFBwpByLqQHSgettznNZITASUPYXH5OKPPI08J7Q5
-         dA7A==
+        bh=lD6pTqRDMSfKXNqb4UUFNdsEKglv/1NbFFOX0KLFSbY=;
+        b=pjRKQpXGy5pKioKH0vNhIv+OzeJ169eVsG2YNcgiBqiC3xEo+FE96ZcRqUQGXLFD0A
+         Gpq2B7up3uzdwtfNNAQ7AxB2S25+Y7qqHbJyjIWzfU8YHzEFLid16rM1u3aTS1EZiL01
+         JWvnjTMENNsYPBHXJiJ/ArMykcwISnnAEScTUE8Zo6a0U4k1fl2AzYk9CQVWhL0BEg//
+         PY9Thc3Ythz2pNIV+iMx/6IA1rAYkTgkkMJyoKvaqfzHFFo12DtI/xhxPuU1RZi7wMBU
+         demZjUTzkteY6DVzQCyEEioCZFfjfmeuWlYueRqq7i5Grg4C93NfCE6anodu2kIGEN1H
+         qefQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791194157; x=1791798957;
+        d=1e100.net; s=20260707; t=1791194158; x=1791798958;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=eUFnmfD1HFrO7M7fDEPhPzh1SVWIHE0Jg9iipMSxbpU=;
-        b=nllWcvuivQI07O9RZ1Vd0QgbPik5aPjIZXmeR8f4/DmFFSN8FjlTHie/yJNARiN3pU
-         aFtThj8e0gR+q0novXAOUEFm7qU0oqukUQPSCjGM/w/Uh3GbjHjB9sTvc967j19ubR5v
-         Y7Sel370TBA9zwRfuMM/dVKQWlP/PQUrlymW37omOMswwy99Qxtz+KZUgDznlHTlGQe3
-         0yqf6TbZxttVJuVEJAcMHc7olqHMDq6o/JxBVzOhbT1pwBHnK+L3Rw7rjtmLe5FmprfB
-         4PqBYJ7rJbiHYBhlbr9HLLpM96oF//iAhVpTf2MeRuDUVnT6LSTfxOHPdy0dWrZVbf1D
-         Gr+A==
-X-Forwarded-Encrypted: i=1; AKwUvByEDJ3waJ0Amzxu/wPIBhkvo8RuIIk6dWSfzuzFEORk4LZnBb5ne8EzwWSmljKOx/SpARqPIuu9bAnVqlwmNkGk3XM=@vger.kernel.org
-X-Gm-Message-State: AFuF++mna9wQ9bGG1ItV1+u+wfrmPWpdH2uMF9Q6n7ioABJbo0jsBcpN
-	ghdH45mtUCj/SnOQuD2rLaeIGrqeE+CFxt4mhJcMAJNo/MF5QjCqSHH0
-X-Gm-Gg: AYBFou1CKg1qlX7xM75mYxqYc2Yowy4VeuT2kaXYhJ3NgyxsL9Nh3ymwEIA0LkvGBMO
-	wKFc4wyFoQnZwb1jvdtGmE1BjBa5PENASJtxzvSYnprS8O2DnDNhFq1EjL0yLiDvE7n3+PWKAy7
-	9qiMRblcLtxAz8kOXyFF75rMKezBNPIdWh8zF+SJ7r9+a0iNPjfD13Zy2+hx87pSkkKVvm0PzyD
-	nRjh1x+nEIaFW+QZnsopVJecWvQEx+Pd4xuUiFyoTNdKnZsu+IN1I2PGO38GWgs2MaL96MRT5hq
-	HjYrvH/UhsqOrK3x57PseUA5NLKLQFcgeycVrpos52blVl4egCuNhv0V60kUkaytV3UwjfHHe80
-	OVNq0B4C7B4izBJ6S7P0n4e6vbU4zjD853tlARqmC61+P9Al683aTQDX2h8mhekY0Sd7tNSgufE
-	i7J7WD1FrbebrgTTjo7BVDx3VInlR30ottp94Btmas2/QJu01xoccU72pez4JNqstsWx/TSUL67
-	IHNTP2oZ0L/2yEW2913uR5KvIvF+am3xozP+FOHd37ZffQVpUsYE/ys6tJwZBkel6dZFcp+KEnK
-	/epOzBmBi3UAIK5uyCkvz6KRovNNvqDf0nU=
-X-Received: by 2002:a17:907:9612:b0:c2b:7672:8e29 with SMTP id a640c23a62f3a-c2e4ad13e61mr823688566b.16.1791194156824;
-        Mon, 05 Oct 2026 02:55:56 -0700 (PDT)
+        bh=lD6pTqRDMSfKXNqb4UUFNdsEKglv/1NbFFOX0KLFSbY=;
+        b=CtukUci098DNnL6kzeoQxwoeXYZG6vBqiMPCfFKUlfk+IOj/CLCArjA/EE5B0UnM+V
+         +5FMOgv8AuBUf3OwBnlMfaXA5tGA1Xl/cCu974dsFLYYoUCPhHORntZwkq1qBGvvJ/Pm
+         UpSElGtAb+6qh7+qJ4bsuhQCHadszGAmtQ/ZuBhrJP+LrlzBFKi01pymPyHT5FfRgjXT
+         zh0On9oHq2yWlLjkMZqJvZ8jHbcVrQIbAprunHqVrCeYc18wCZnbjwcO8PUDJa6+ye3I
+         3Zu7RDQ7CXmhvbZ2Cv1Ec02TFq8KdE3FlIslOzeJq9camyC/ok5JC3ZbDAmWiyfHOLgw
+         z7+A==
+X-Forwarded-Encrypted: i=1; AKwUvBwLXpTJjprzwNm8VOD7eGy1xUKw8nkuDwvRbRtO39h1P7dpOhszS4Ldm0vJkQoxdbgdJcR00eUpVVABhwhZGZEqlZA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJccYmT3q7CGbxvLJ2EpZFezXqMv1r48fEzGG0bjLtrP4RkkKxH
+	jy3D3XhFEWks/GnAL9EclmBL+rSpB/rgvYWZj5YH/50Hgv5A9XCMrvbl
+X-Gm-Gg: AYBFou2i8md5qhRKaHcGhNBtONGL+03GGPKqUi7RkeyYLJCtA8gmxg1lrKG4COW+vkT
+	KRZBVEXahKtlweJTRw7pB8ULckuKfb64F36AkBIHNKvbpqkbYuRV0pn2yzY/0kLElcSc6YD3a20
+	Yol2gBUP0bBdoJQPtLk3xx0oPN2EVMcVv4GZSZQ03I2Ptl9FJWDcIwKWMXZqtz2ulvwnCS09ppB
+	cZEfAzbR01WzJj2JwRLoTuMXik5Y4/iQxE5rrxyqqkWqwrGmSQFO0SDOAUKQ7921K4ol2pDaCYs
+	KRk0pWMFp++TynBq9cDtapCNvb73CtuxjnvCtqA7BNJs3XyMJwqaaf5npV9YO6LjRYwtd0oyBc4
+	OFLXAbCj+9DRVrtd8z+2IPhKDtYJvLQIATE5H3f8R62TPQDn+x/SFRa79QY/T/gRXBu2GorC/Hh
+	lQ6PuHJ4iVf94+UHRMAkTx6iimioXs3DtK8Cd9fQI9LT6WsY8o4XCdg1qAFcJR3I2uvRkrR8PT6
+	gkudfaL5lwkmJimTwNcLGkCX2FrOEuMcjVFsNtX9F2mQcLw421tS2l74OpnAPhBdI2m2n+EzO30
+	I2BhrN8iOK/PObCiDUaBHv7ireTVkoInf7M=
+X-Received: by 2002:a17:907:3da3:b0:c2e:7fe7:288e with SMTP id a640c23a62f3a-c2e7fe736eamr411177566b.32.1791194158114;
+        Mon, 05 Oct 2026 02:55:58 -0700 (PDT)
 Received: from dev-dsk-fgriffo-1c-93421965.eu-west-1.amazon.com (54-240-197-234.amazon.com. [54.240.197.234])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c31562aba16sm50753266b.23.2026.10.05.02.55.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c31562aba16sm50753266b.23.2026.10.05.02.55.56
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Oct 2026 02:55:56 -0700 (PDT)
+        Mon, 05 Oct 2026 02:55:57 -0700 (PDT)
 From: Fred Griffoul <griffoul@gmail.com>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Sean Christopherson <seanjc@google.com>,
@@ -100,9 +100,9 @@ Cc: David Woodhouse <dwmw2@infradead.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [RFC PATCH 2/6] dma-buf: Add get_phys() to describe a physical run
-Date: Mon,  5 Oct 2026 09:55:48 +0000
-Message-ID: <20261005095552.52748-3-griffoul@gmail.com>
+Subject: [RFC PATCH 3/6] dma-buf: Add ranged mapping invalidation
+Date: Mon,  5 Oct 2026 09:55:49 +0000
+Message-ID: <20261005095552.52748-4-griffoul@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20261005095552.52748-1-griffoul@gmail.com>
 References: <20260720111259.122911-1-dwmw2@infradead.org>
@@ -117,636 +117,99 @@ Content-Transfer-Encoding: 8bit
 
 From: Fred Griffoul <fgriffo@amazon.co.uk>
 
-iommufd and KVM write physical addresses into their own page tables.
-To do so, they must ask the exporter which frames back an offset of a
-dma-buf, whether that memory is RAM or MMIO, and whether it may be
-written.
+dma_buf_invalidate_mappings() tells every importer that the whole
+buffer changed. An exporter that changes one part of its memory cannot
+say which bytes changed, so importers throw away mappings that are
+still valid.
 
-Add a get_phys() operation. The importer passes an offset and a maximum
-length. The exporter reports one run: the frames that start at the
-offset, are backed and physically contiguous, and share one attribute
-word. The run never exceeds the length. The exporter may end it early,
-so importers must not assume that it is the longest possible run.
-
-get_phys() returns -ENOENT when the byte at the offset is not backed,
-and -ENODEV when the buffer is revoked. The caller holds the
-reservation, and either pins the attachment or handles revocation. A
-reported frame stays valid until an invalidation that covers it
-returns.
-
-The attribute word holds the memory type and a READONLY flag. Zero
-means writable RAM. Importers refuse unknown types, reserved bits and
-unknown flags, so attributes added later fail safely. Two flag bits are
-reserved: one for holes and one for confidential memory.
-
-Convert vfio-pci, the iommufd selftest exporter and the KVM sample.
-iommufd behaves as before: it maps a buffer only when one writable run
-covers all of it.
+Add an exporter helper that invalidates a byte range, and an importer
+callback that receives it. The callback means that the address, the
+attributes or the backing of the range changed. If part of the range is
+no longer backed, get_phys() returns -ENOENT for it. Importers must stop
+using their old answer before the callback returns. Importers that do
+not implement the callback still receive a whole-buffer invalidation.
 
 Signed-off-by: Fred Griffoul <fgriffo@amazon.co.uk>
 ---
- drivers/dma-buf/dma-buf.c               |  47 +++++++++++
- drivers/iommu/iommufd/iommufd_private.h |   8 --
- drivers/iommu/iommufd/iommufd_test.h    |  16 ++++
- drivers/iommu/iommufd/pages.c           |  74 ++++-------------
- drivers/iommu/iommufd/selftest.c        | 106 ++++++++++++++++++++----
- drivers/vfio/pci/vfio_pci_dmabuf.c      |  58 ++++++-------
- include/linux/dma-buf.h                 |  54 ++++++++++++
- include/linux/vfio_pci_core.h           |   3 -
- samples/kvm/gmem_provider.c             |  39 ++++-----
- 9 files changed, 267 insertions(+), 138 deletions(-)
+ drivers/dma-buf/dma-buf.c | 30 ++++++++++++++++++++++++++++++
+ include/linux/dma-buf.h   | 16 ++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
 diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index d504c636dc29..66b85d53ed22 100644
+index 66b85d53ed22..e7010163eb2f 100644
 --- a/drivers/dma-buf/dma-buf.c
 +++ b/drivers/dma-buf/dma-buf.c
-@@ -1389,6 +1389,53 @@ void dma_buf_invalidate_mappings(struct dma_buf *dmabuf)
+@@ -1389,6 +1389,36 @@ void dma_buf_invalidate_mappings(struct dma_buf *dmabuf)
  }
  EXPORT_SYMBOL_NS_GPL(dma_buf_invalidate_mappings, "DMA_BUF");
  
 +/**
-+ * dma_buf_get_phys - describe the run that starts at an offset
-+ * @attach: attachment to query
-+ * @offset: first buffer byte to describe
-+ * @len: maximum number of bytes to describe
-+ * @phys: physical address and length of the run
-+ * @attr: DMA_BUF_PHYS_ATTR_* word of the run
++ * dma_buf_invalidate_mappings_range - notify attachments that a range changed
++ * @dmabuf: buffer whose layout changed
++ * @offset: first changed byte
++ * @length: number of changed bytes
 + *
-+ * A run is the longest stretch of backed bytes starting at @offset whose
-+ * frames are physically contiguous and share one attribute word. On success
-+ * *@phys starts at the byte at @offset and covers at most @len bytes; it may
-+ * be shorter than the run.
-+ *
-+ * The dma-buf reservation must be held. The attachment must be pinned or have
-+ * revocable importer operations. A frame remains valid until a covering
-+ * invalidation callback returns; the exporter must invalidate a changed range
-+ * before reusing its old frames.
-+ *
-+ * Returns:
-+ *
-+ * 0 on success, -ENOENT if the byte at @offset is not backed, -ENODEV if the
-+ * buffer is revoked, -EOPNOTSUPP if the exporter cannot describe itself this
-+ * way, or another negative error code.
++ * Importers with a ranged callback stop using their old mappings of the range
++ * before returning. Other importers receive the existing whole-buffer
++ * callback, which is correct but coarser. The reservation lock must be held.
 + */
-+int dma_buf_get_phys(struct dma_buf_attachment *attach, u64 offset, u64 len,
-+		     struct phys_vec *phys, u32 *attr)
++void dma_buf_invalidate_mappings_range(struct dma_buf *dmabuf,
++				       unsigned long offset,
++				       unsigned long length)
 +{
-+	u64 end;
-+	int ret;
++	struct dma_buf_attachment *attach;
 +
-+	if (WARN_ON_ONCE(!attach || !attach->dmabuf || !phys || !attr))
-+		return -EINVAL;
-+	if (!len || check_add_overflow(offset, len, &end) ||
-+	    end > attach->dmabuf->size)
-+		return -EINVAL;
++	dma_resv_assert_held(dmabuf->resv);
++	list_for_each_entry(attach, &dmabuf->attachments, node) {
++		const struct dma_buf_attach_ops *ops = attach->importer_ops;
 +
-+	dma_resv_assert_held(attach->dmabuf->resv);
-+	if (!attach->dmabuf->ops->get_phys)
-+		return -EOPNOTSUPP;
-+
-+	ret = attach->dmabuf->ops->get_phys(attach, offset, len, phys, attr);
-+	if (!ret && WARN_ON_ONCE(!phys->len || phys->len > len))
-+		return -EIO;
-+	return ret;
++		if (!ops)
++			continue;
++		if (ops->invalidate_mappings_range)
++			ops->invalidate_mappings_range(attach, offset, length);
++		else if (ops->invalidate_mappings)
++			ops->invalidate_mappings(attach);
++	}
 +}
-+EXPORT_SYMBOL_NS_GPL(dma_buf_get_phys, "DMA_BUF");
++EXPORT_SYMBOL_NS_GPL(dma_buf_invalidate_mappings_range, "DMA_BUF");
 +
  /**
-  * DOC: cpu access
-  *
-diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-index 43fbc5bed8de..5cded585c227 100644
---- a/drivers/iommu/iommufd/iommufd_private.h
-+++ b/drivers/iommu/iommufd/iommufd_private.h
-@@ -716,8 +716,6 @@ bool iommufd_should_fail(void);
- int __init iommufd_test_init(void);
- void iommufd_test_exit(void);
- bool iommufd_selftest_is_mock_dev(struct device *dev);
--int iommufd_test_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				     struct phys_vec *phys);
- #else
- static inline void iommufd_test_syz_conv_iova_id(struct iommufd_ucmd *ucmd,
- 						 unsigned int ioas_id,
-@@ -739,11 +737,5 @@ static inline bool iommufd_selftest_is_mock_dev(struct device *dev)
- {
- 	return false;
- }
--static inline int
--iommufd_test_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				 struct phys_vec *phys)
--{
--	return -EOPNOTSUPP;
--}
- #endif
- #endif
-diff --git a/drivers/iommu/iommufd/iommufd_test.h b/drivers/iommu/iommufd/iommufd_test.h
-index 52b78cbcc920..28fd9c43edc4 100644
---- a/drivers/iommu/iommufd/iommufd_test.h
-+++ b/drivers/iommu/iommufd/iommufd_test.h
-@@ -31,6 +31,8 @@ enum {
- 	IOMMU_TEST_OP_PASID_CHECK_HWPT,
- 	IOMMU_TEST_OP_DMABUF_GET,
- 	IOMMU_TEST_OP_DMABUF_REVOKE,
-+	IOMMU_TEST_OP_MD_CHECK_MAPPED,
-+	IOMMU_TEST_OP_MD_IOVA_TO_PHYS,
- };
- 
- enum {
-@@ -193,6 +195,20 @@ struct iommu_test_cmd {
- 			__s32 dmabuf_fd;
- 			__u32 revoked;
- 		} dmabuf_revoke;
-+		struct {
-+			/*
-+			 * 1: every page in [iova, iova+length) must be mapped;
-+			 * 0: none of them may be. Mixed is an error.
-+			 */
-+			__u32 mapped;
-+			__u32 __reserved;
-+			__aligned_u64 iova;
-+			__aligned_u64 length;
-+		} check_mapped;
-+		struct {
-+			__aligned_u64 iova;
-+			__aligned_u64 out_phys;	/* 0 if unmapped */
-+		} iova_to_phys;
- 	};
- 	__u32 last;
- };
-diff --git a/drivers/iommu/iommufd/pages.c b/drivers/iommu/iommufd/pages.c
-index f9b2ae6d7e96..196d1bb330c2 100644
---- a/drivers/iommu/iommufd/pages.c
-+++ b/drivers/iommu/iommufd/pages.c
-@@ -1463,68 +1463,12 @@ static const struct dma_buf_attach_ops iopt_dmabuf_attach_revoke_ops = {
- 	.invalidate_mappings = iopt_revoke_notify,
- };
- 
--/*
-- * iommufd and vfio have a circular dependency. Future work for a phys
-- * based private interconnect will remove this.
-- */
--/*
-- * Look up the exporter's phys accessor for iommufd's private-interconnect
-- * path.  Also fills *is_cpu_ram: true if the exporter's memory is normal
-- * cache-coherent RAM (needs BATCH_CPU_MEMORY / IOMMU_CACHE), false for MMIO
-- * (needs BATCH_MMIO / IOMMU_MMIO).  This will be replaced by a formal
-- * exporter op that returns phys + memory type together.
-- */
--static int
--sym_vfio_pci_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				 struct phys_vec *phys, bool *is_cpu_ram)
--{
--	typeof(&vfio_pci_dma_buf_iommufd_map) fn;
--	int rc;
--
--	rc = iommufd_test_dma_buf_iommufd_map(attachment, phys);
--	if (rc != -EOPNOTSUPP) {
--		*is_cpu_ram = false;	/* test hook mimics VFIO MMIO */
--		return rc;
--	}
--
--	/*
--	 * Prototype: try the sample gmem provider's dma-buf exporter.  This
--	 * mirrors the vfio-pci private-interconnect hook, and (like it) is
--	 * meant to be replaced by a formal negotiated exporter op returning
--	 * phys + memory type.  The provider serves RAM, so mark it CPU_RAM.
--	 */
--	{
--		extern int gmem_provider_dma_buf_iommufd_map(
--			struct dma_buf_attachment *, struct phys_vec *);
--		typeof(&gmem_provider_dma_buf_iommufd_map) gfn;
--
--		gfn = symbol_get(gmem_provider_dma_buf_iommufd_map);
--		if (gfn) {
--			rc = gfn(attachment, phys);
--			symbol_put(gmem_provider_dma_buf_iommufd_map);
--			if (rc != -EOPNOTSUPP) {
--				*is_cpu_ram = true;
--				return rc;
--			}
--		}
--	}
--
--	if (!IS_ENABLED(CONFIG_VFIO_PCI_DMABUF))
--		return -EOPNOTSUPP;
--
--	fn = symbol_get(vfio_pci_dma_buf_iommufd_map);
--	if (!fn)
--		return -EOPNOTSUPP;
--	rc = fn(attachment, phys);
--	symbol_put(vfio_pci_dma_buf_iommufd_map);
--	*is_cpu_ram = false;	/* VFIO PCI dma-buf carries BAR (MMIO) memory */
--	return rc;
--}
--
- static int iopt_map_dmabuf(struct iommufd_ctx *ictx, struct iopt_pages *pages,
- 			   struct dma_buf *dmabuf)
- {
- 	struct dma_buf_attachment *attach;
-+	struct phys_vec pv;
-+	u32 attr;
- 	int rc;
- 
- 	attach = dma_buf_dynamic_attach(dmabuf, iommufd_global_device(),
-@@ -1546,10 +1490,20 @@ static int iopt_map_dmabuf(struct iommufd_ctx *ictx, struct iopt_pages *pages,
- 	if (rc)
- 		goto err_detach;
- 
--	rc = sym_vfio_pci_dma_buf_iommufd_map(attach, &pages->dmabuf.phys,
--					      &pages->dmabuf.is_cpu_ram);
-+	/* One backed, writable run covering the buffer: refuse the rest. */
-+	rc = dma_buf_get_phys(attach, 0, dmabuf->size, &pv, &attr);
-+	if (rc == -ENOENT)
-+		rc = -EOPNOTSUPP;
- 	if (rc)
- 		goto err_unpin;
-+	if (pv.len != dmabuf->size || !dma_buf_phys_attr_known(attr) ||
-+	    (attr & DMA_BUF_PHYS_ATTR_FLAGS_MASK)) {
-+		rc = -EOPNOTSUPP;
-+		goto err_unpin;
-+	}
-+	pages->dmabuf.phys = pv;
-+	pages->dmabuf.is_cpu_ram =
-+		dma_buf_phys_attr_type(attr) == DMA_BUF_PHYS_ATTR_RAM;
- 
- 	dma_resv_unlock(dmabuf->resv);
- 
-diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
-index af07c642a526..0899272d1e66 100644
---- a/drivers/iommu/iommufd/selftest.c
-+++ b/drivers/iommu/iommufd/selftest.c
-@@ -1962,32 +1962,31 @@ static void iommufd_test_dma_buf_release(struct dma_buf *dmabuf)
- 	kfree(priv);
- }
- 
--static const struct dma_buf_ops iommufd_test_dmabuf_ops = {
--	.attach = iommufd_test_dma_buf_attach,
--	.detach = iommufd_test_dma_buf_detach,
--	.map_dma_buf = iommufd_test_dma_buf_map,
--	.release = iommufd_test_dma_buf_release,
--	.unmap_dma_buf = iommufd_test_dma_buf_unmap,
--};
--
--int iommufd_test_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				     struct phys_vec *phys)
-+static int iommufd_test_dma_buf_get_phys(struct dma_buf_attachment *attachment,
-+					 u64 offset, u64 len,
-+					 struct phys_vec *phys, u32 *attr)
- {
- 	struct iommufd_test_dma_buf *priv = attachment->dmabuf->priv;
- 
- 	dma_resv_assert_held(attachment->dmabuf->resv);
--
--	if (attachment->dmabuf->ops != &iommufd_test_dmabuf_ops)
--		return -EOPNOTSUPP;
--
- 	if (priv->revoked)
- 		return -ENODEV;
- 
--	phys->paddr = virt_to_phys(priv->memory);
--	phys->len = priv->length;
-+	phys->paddr = virt_to_phys(priv->memory) + offset;
-+	phys->len = len;
-+	*attr = DMA_BUF_PHYS_ATTR_MMIO;
- 	return 0;
- }
- 
-+static const struct dma_buf_ops iommufd_test_dmabuf_ops = {
-+	.attach = iommufd_test_dma_buf_attach,
-+	.detach = iommufd_test_dma_buf_detach,
-+	.map_dma_buf = iommufd_test_dma_buf_map,
-+	.release = iommufd_test_dma_buf_release,
-+	.unmap_dma_buf = iommufd_test_dma_buf_unmap,
-+	.get_phys = iommufd_test_dma_buf_get_phys,
-+};
-+
- static int iommufd_test_dmabuf_get(struct iommufd_ucmd *ucmd,
- 				   unsigned int open_flags,
- 				   size_t len)
-@@ -2031,6 +2030,73 @@ static int iommufd_test_dmabuf_get(struct iommufd_ucmd *ucmd,
- 	return rc;
- }
- 
-+/*
-+ * Report the physical address the mock domain resolves @iova to, or 0 if
-+ * it is unmapped.  Lets a test check that two IOVAs share one frame (a
-+ * scratch substitution) without knowing the frame in advance.
-+ */
-+static int iommufd_test_md_iova_to_phys(struct iommufd_ucmd *ucmd,
-+					unsigned int mockpt_id,
-+					unsigned long iova)
-+{
-+	struct iommu_test_cmd *cmd = ucmd->cmd;
-+	struct iommufd_hw_pagetable *hwpt;
-+	struct mock_iommu_domain *mock;
-+	unsigned int page_size;
-+	int rc;
-+
-+	hwpt = get_md_pagetable(ucmd, mockpt_id, &mock);
-+	if (IS_ERR(hwpt))
-+		return PTR_ERR(hwpt);
-+
-+	page_size = 1 << __ffs(mock->domain.pgsize_bitmap);
-+	if (iova % page_size) {
-+		rc = -EINVAL;
-+		goto out_put;
-+	}
-+	cmd->iova_to_phys.out_phys =
-+		mock->domain.ops->iova_to_phys(&mock->domain, iova);
-+	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
-+out_put:
-+	iommufd_put_object(ucmd->ictx, &hwpt->obj);
-+	return rc;
-+}
-+
-+static int iommufd_test_md_check_mapped(struct iommufd_ucmd *ucmd,
-+					unsigned int mockpt_id,
-+					unsigned long iova, size_t length,
-+					bool mapped)
-+{
-+	struct iommufd_hw_pagetable *hwpt;
-+	struct mock_iommu_domain *mock;
-+	unsigned int page_size;
-+	int rc = 0;
-+
-+	hwpt = get_md_pagetable(ucmd, mockpt_id, &mock);
-+	if (IS_ERR(hwpt))
-+		return PTR_ERR(hwpt);
-+
-+	page_size = 1 << __ffs(mock->domain.pgsize_bitmap);
-+	if (iova % page_size || length % page_size || !length) {
-+		rc = -EINVAL;
-+		goto out_put;
-+	}
-+
-+	for (; length; length -= page_size, iova += page_size) {
-+		bool is_mapped =
-+			mock->domain.ops->iova_to_phys(&mock->domain, iova) != 0;
-+
-+		if (is_mapped != mapped) {
-+			rc = -ENOENT;
-+			goto out_put;
-+		}
-+	}
-+
-+out_put:
-+	iommufd_put_object(ucmd->ictx, &hwpt->obj);
-+	return rc;
-+}
-+
- static int iommufd_test_dmabuf_revoke(struct iommufd_ucmd *ucmd, int fd,
- 				      bool revoked)
- {
-@@ -2143,6 +2209,14 @@ int iommufd_test(struct iommufd_ucmd *ucmd)
- 		return iommufd_test_dmabuf_revoke(ucmd,
- 						  cmd->dmabuf_revoke.dmabuf_fd,
- 						  cmd->dmabuf_revoke.revoked);
-+	case IOMMU_TEST_OP_MD_CHECK_MAPPED:
-+		return iommufd_test_md_check_mapped(ucmd, cmd->id,
-+						    cmd->check_mapped.iova,
-+						    cmd->check_mapped.length,
-+						    cmd->check_mapped.mapped);
-+	case IOMMU_TEST_OP_MD_IOVA_TO_PHYS:
-+		return iommufd_test_md_iova_to_phys(ucmd, cmd->id,
-+						    cmd->iova_to_phys.iova);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/vfio_pci_dmabuf.c
-index c16f460c01d6..381c3d338e8c 100644
---- a/drivers/vfio/pci/vfio_pci_dmabuf.c
-+++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
-@@ -99,46 +99,46 @@ static void vfio_pci_dma_buf_release(struct dma_buf *dmabuf)
- 	kfree(priv);
- }
- 
--static const struct dma_buf_ops vfio_pci_dmabuf_ops = {
--	.attach = vfio_pci_dma_buf_attach,
--	.map_dma_buf = vfio_pci_dma_buf_map,
--	.unmap_dma_buf = vfio_pci_dma_buf_unmap,
--	.release = vfio_pci_dma_buf_release,
--};
--
- /*
-- * This is a temporary "private interconnect" between VFIO DMABUF and iommufd.
-- * It allows the two co-operating drivers to exchange the physical address of
-- * the BAR. This is to be replaced with a formal DMABUF system for negotiated
-- * interconnect types.
-+ * Report the BAR's physical range for importers which program it into their own
-+ * translation tables, such as iommufd. A BAR is MMIO, never cache-coherent RAM.
-  *
-- * If this function succeeds the following are true:
-- *  - There is one physical range and it is pointing to MMIO
-- *  - When move_notify is called it means revoke, not move, vfio_dma_buf_map
-- *    will fail if it is currently revoked
-+ * When move_notify is called it means revoke, not move, so this fails while
-+ * revoked and vfio_dma_buf_map() does the same.
-  */
--int vfio_pci_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				 struct phys_vec *phys)
-+static int vfio_pci_dma_buf_get_phys(struct dma_buf_attachment *attachment,
-+				     u64 offset, u64 len,
-+				     struct phys_vec *phys, u32 *attr)
- {
--	struct vfio_pci_dma_buf *priv;
-+	struct vfio_pci_dma_buf *priv = attachment->dmabuf->priv;
-+	u32 i;
- 
- 	dma_resv_assert_held(attachment->dmabuf->resv);
--
--	if (attachment->dmabuf->ops != &vfio_pci_dmabuf_ops)
--		return -EOPNOTSUPP;
--
--	priv = attachment->dmabuf->priv;
- 	if (priv->revoked)
- 		return -ENODEV;
- 
--	/* More than one range to iommufd will require proper DMABUF support */
--	if (priv->nr_ranges != 1)
--		return -EOPNOTSUPP;
--
--	*phys = priv->phys_vec[0];
-+	/* Report from @offset to the end of the BAR range containing it. */
-+	for (i = 0; i < priv->nr_ranges; i++) {
-+		if (offset < priv->phys_vec[i].len)
-+			break;
-+		offset -= priv->phys_vec[i].len;
-+	}
-+	if (i == priv->nr_ranges)
-+		return -EINVAL;
-+	phys->paddr = priv->phys_vec[i].paddr + offset;
-+	phys->len = min_t(u64, priv->phys_vec[i].len - offset, len);
-+	*attr = DMA_BUF_PHYS_ATTR_MMIO;
- 	return 0;
- }
--EXPORT_SYMBOL_FOR_MODULES(vfio_pci_dma_buf_iommufd_map, "iommufd");
-+
-+static const struct dma_buf_ops vfio_pci_dmabuf_ops = {
-+	.attach = vfio_pci_dma_buf_attach,
-+	.map_dma_buf = vfio_pci_dma_buf_map,
-+	.unmap_dma_buf = vfio_pci_dma_buf_unmap,
-+	.release = vfio_pci_dma_buf_release,
-+	.get_phys = vfio_pci_dma_buf_get_phys,
-+};
-+
- 
- int vfio_pci_core_fill_phys_vec(struct phys_vec *phys_vec,
- 				struct vfio_region_dma_range *dma_ranges,
+  * dma_buf_get_phys - describe the run that starts at an offset
+  * @attach: attachment to query
 diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index d1203da56fc5..b223962e20c2 100644
+index b223962e20c2..55c3fe60a0ba 100644
 --- a/include/linux/dma-buf.h
 +++ b/include/linux/dma-buf.h
-@@ -13,6 +13,7 @@
- #ifndef __DMA_BUF_H__
- #define __DMA_BUF_H__
- 
-+#include <linux/bitfield.h>
- #include <linux/iosys-map.h>
- #include <linux/file.h>
- #include <linux/err.h>
-@@ -23,6 +24,7 @@
- #include <linux/dma-fence.h>
- #include <linux/wait.h>
- #include <linux/pci-p2pdma.h>
-+#include <linux/types.h>
- 
- struct device;
- struct dma_buf;
-@@ -182,6 +184,29 @@ struct dma_buf_ops {
- 			      struct sg_table *,
- 			      enum dma_data_direction);
- 
-+	/**
-+	 * @get_phys:
-+	 *
-+	 * Describe the run that starts at @offset, for an importer that
-+	 * programs its own translation tables. A run is the longest stretch
-+	 * of backed bytes whose frames are physically contiguous and share
-+	 * one attribute word. Report it in *@phys, starting at the byte at
-+	 * @offset and clipped at @offset + @len, with its DMA_BUF_PHYS_ATTR_*
-+	 * word in *@attr. The exporter may stop before the end of the run;
-+	 * importers must not assume the reported run is maximal.
-+	 *
-+	 * Return 0 on success, -ENOENT if the byte at @offset is not backed,
-+	 * -ENODEV if the buffer is revoked, or another negative error. Do not
-+	 * wait for memory to become available.
-+	 *
-+	 * The dma-buf reservation is held. The attachment must be pinned or
-+	 * have revocable importer operations. A reported frame remains valid
-+	 * until a covering invalidation callback returns; an exporter must
-+	 * invalidate every change before reusing an old frame.
-+	 */
-+	int (*get_phys)(struct dma_buf_attachment *attach, u64 offset, u64 len,
-+			struct phys_vec *phys, u32 *attr);
-+
- 	/* TODO: Add try_map_dma_buf version, to return immed with -EBUSY
- 	 * if the call would block.
+@@ -485,6 +485,19 @@ struct dma_buf_attach_ops {
+ 	 * required behavior.
  	 */
-@@ -576,6 +601,35 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *, struct sg_table *,
+ 	void (*invalidate_mappings)(struct dma_buf_attachment *attach);
++
++	/**
++	 * @invalidate_mappings_range: [optional] a byte range changed
++	 *
++	 * The exporter changed the address, attributes or backing of
++	 * [@offset, @offset + @length). The importer must stop using its old
++	 * answer for that range before returning.
++	 * Importers without this callback receive @invalidate_mappings for
++	 * the whole buffer instead.
++	 */
++	void (*invalidate_mappings_range)(struct dma_buf_attachment *attach,
++					  unsigned long offset,
++					  unsigned long length);
+ };
+ 
+ /**
+@@ -600,6 +613,9 @@ struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *,
+ void dma_buf_unmap_attachment(struct dma_buf_attachment *, struct sg_table *,
  				enum dma_data_direction);
  void dma_buf_invalidate_mappings(struct dma_buf *dma_buf);
++void dma_buf_invalidate_mappings_range(struct dma_buf *dma_buf,
++				       unsigned long offset,
++				       unsigned long length);
  bool dma_buf_attach_revocable(struct dma_buf_attachment *attach);
-+/* bits 0-7: memory type (a value, not flags) */
-+#define DMA_BUF_PHYS_ATTR_TYPE_MASK	GENMASK(7, 0)
-+#define DMA_BUF_PHYS_ATTR_RAM		0x00	/* cache-coherent system RAM */
-+#define DMA_BUF_PHYS_ATTR_MMIO		0x01	/* device MMIO, uncached */
-+/* bits 8-15: reserved for a second value field; must be zero */
-+#define DMA_BUF_PHYS_ATTR_RSVD_MASK	GENMASK(15, 8)
-+/* bits 16-31: flags; undefined bits must be zero */
-+#define DMA_BUF_PHYS_ATTR_READONLY	BIT(16)
-+/* BIT(17): reserved (hole, for importers that walk across gaps) */
-+/* BIT(18): reserved (private, for confidential computing) */
-+#define DMA_BUF_PHYS_ATTR_FLAGS_MASK	(DMA_BUF_PHYS_ATTR_READONLY)
-+
-+static inline u32 dma_buf_phys_attr_type(u32 attrs)
-+{
-+	return FIELD_GET(DMA_BUF_PHYS_ATTR_TYPE_MASK, attrs);
-+}
-+
-+static inline bool dma_buf_phys_attr_known(u32 attrs)
-+{
-+	return dma_buf_phys_attr_type(attrs) <= DMA_BUF_PHYS_ATTR_MMIO &&
-+	       !(attrs & DMA_BUF_PHYS_ATTR_RSVD_MASK) &&
-+	       !(attrs & ~(DMA_BUF_PHYS_ATTR_TYPE_MASK |
-+			  DMA_BUF_PHYS_ATTR_RSVD_MASK |
-+			  DMA_BUF_PHYS_ATTR_FLAGS_MASK));
-+}
-+
-+int dma_buf_get_phys(struct dma_buf_attachment *attach, u64 offset, u64 len,
-+		     struct phys_vec *phys, u32 *attr);
-+
- int dma_buf_begin_cpu_access(struct dma_buf *dma_buf,
- 			     enum dma_data_direction dir);
- int dma_buf_end_cpu_access(struct dma_buf *dma_buf,
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index 9a1674c152aa..2a1d13abdb0c 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -257,7 +257,4 @@ vfio_pci_core_get_iomap(struct vfio_pci_core_device *vdev, unsigned int bar)
- 	return vdev->barmap[bar];
- }
- 
--int vfio_pci_dma_buf_iommufd_map(struct dma_buf_attachment *attachment,
--				 struct phys_vec *phys);
--
- #endif /* VFIO_PCI_CORE_H */
-diff --git a/samples/kvm/gmem_provider.c b/samples/kvm/gmem_provider.c
-index 75197c088762..b6824fe5d228 100644
---- a/samples/kvm/gmem_provider.c
-+++ b/samples/kvm/gmem_provider.c
-@@ -487,35 +487,30 @@ static void gmem_dma_buf_release(struct dma_buf *dmabuf)
- 	kfree(priv);
- }
- 
--static const struct dma_buf_ops gmem_dma_buf_ops = {
--	.attach		= gmem_dma_buf_attach,
--	.map_dma_buf	= gmem_dma_buf_map,
--	.unmap_dma_buf	= gmem_dma_buf_unmap,
--	.release	= gmem_dma_buf_release,
--};
--
--/*
-- * Private interconnect for iommufd (mirrors vfio_pci_dma_buf_iommufd_map).
-- * Returns the single contiguous phys range for the exported region so iommufd
-- * can program the IOMMU directly, bypassing the DMA API.
-- */
--int gmem_provider_dma_buf_iommufd_map(struct dma_buf_attachment *attach,
--				      struct phys_vec *phys);
--int gmem_provider_dma_buf_iommufd_map(struct dma_buf_attachment *attach,
--				      struct phys_vec *phys)
-+/* Report this flat sample region through the generic dma-buf operation. */
-+static int gmem_dma_buf_get_phys(struct dma_buf_attachment *attach,
-+				 u64 offset, u64 len,
-+				 struct phys_vec *phys, u32 *attr)
- {
--	struct gmem_dmabuf *priv;
-+	struct gmem_dmabuf *priv = attach->dmabuf->priv;
- 
- 	dma_resv_assert_held(attach->dmabuf->resv);
--	if (attach->dmabuf->ops != &gmem_dma_buf_ops)
--		return -EOPNOTSUPP;
--	priv = attach->dmabuf->priv;
- 	if (priv->revoked)
- 		return -ENODEV;
--	*phys = priv->phys;
-+
-+	phys->paddr = priv->phys.paddr + offset;
-+	phys->len = len;
-+	*attr = DMA_BUF_PHYS_ATTR_RAM;
- 	return 0;
- }
--EXPORT_SYMBOL_FOR_MODULES(gmem_provider_dma_buf_iommufd_map, "iommufd");
-+
-+static const struct dma_buf_ops gmem_dma_buf_ops = {
-+	.attach		= gmem_dma_buf_attach,
-+	.map_dma_buf	= gmem_dma_buf_map,
-+	.unmap_dma_buf	= gmem_dma_buf_unmap,
-+	.release	= gmem_dma_buf_release,
-+	.get_phys	= gmem_dma_buf_get_phys,
-+};
- 
- /* Called with info->dmabufs_lock held on the revoke path. */
- static void gmem_dma_buf_revoke_all(struct gmem_info *info)
+ /* bits 0-7: memory type (a value, not flags) */
+ #define DMA_BUF_PHYS_ATTR_TYPE_MASK	GENMASK(7, 0)
 -- 
 2.47.3
 
