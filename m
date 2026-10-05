@@ -1,117 +1,237 @@
-Received: from mta1.migadu.com (out-241.mta1.migadu.com [95.215.58.241])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE642BE043
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Oct 2026 19:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.241
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8408041441C;
+	Mon,  5 Oct 2026 21:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791226895; cv=none; b=tOUmanSS95qyWRsPbzwrOKgBM+kQv/YG5fNVEhxBXidGxHpX+4oC3eTcsuClnqA2Bf5WWqOrE+oYJKWmsiad2eGUmm/KmGRwpaXReopwM4PHYvlO9yeK0D2zjZ0hlOzn2Qcgk0Q9MmayTgd5rn9dbCRtPRAE5M67dbRq4sajBNg=
+	t=1791237387; cv=none; b=Fw9qrFB4GFys5SfF3iZIH2tkXG4356q05awGqq9M6m4giLT1mATMgHhkGMyV/lrMXHxQqx+OuEK2ESA0ApqPtsyXksqZGcYzTxO4AjRRN6+X3T4ZSUKkirCMpcDVVddjOuNITcwN2H1AMZ5qvjV7RsY6eAmxe9HDmJYJQouKYKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791226895; c=relaxed/simple;
-	bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T++hxqVn/V8H76KlBdRyIxV0VGTzLhNgZRbvHyDElImvve90Wpl2vQD1/LpMHIRlRsZh/4n1ARWt/rXwEWrZp2EOQfhkP3lpwK5FDGvXiZ2dXQyJ57m0cbBWbkib9sLdz4B+/hZjxB81xq1CL9kBoPB6CmZjYhokc62ucKeXtxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rpgOxRCu; arc=none smtp.client-ip=95.215.58.241
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791237387; c=relaxed/simple;
+	bh=FbP2ch66dC3cc/NTJjxa33z3u7/rOe3RIRoTjCDidsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YYVtq7YugEa4CoTh0yhIJY8a9SXAZPuW4Zj76MIcERNjAwQDSuDyPjggbfORu/8ltJ5oFQKtHml0ZGYJcJSgIu7kPsUCNJv1U4KIG2n6dCKlGHXQQwRqNNr52VMBgYIXjTgszISSz8XFDh/AmYKk6/apexaAYYCUfQiWTJOF8zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=l62QHvzQ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rpgOxRCu"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791226891; v=1; x=1791831691;
- b=rpgOxRCuBdRBG9Cruva0qem46KyAXqHLWajd0ZjIRz0kgD8tNqxyOJ2IoAc2uiVFYp0AWqwU
- fYK9s+nOEwPq6TEVKyQTb7ZG9spRm+B0UmWQ9BG569oC3jH+5BUQFc768yIcjo1AEuCsOtbT9Nt
- bjqyL+C+m3j1OwXepyyLRNU0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 3eee9485e3972e9f;
-	Mon, 05 Oct 2026 19:01:30 +0000
-X-Mizu-Trace-ID: 3eee9485e3972e9f
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <7844ef03-d9b2-4a10-8f14-1b498ada9043@linux.dev>
-Date: Mon, 5 Oct 2026 12:01:17 -0700
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="l62QHvzQ"
+Received: from CPC-beaub-VBQ1L.localdomain (unknown [70.37.26.65])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A1A9920B7168;
+	Mon,  5 Oct 2026 14:55:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A1A9920B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1791237329;
+	bh=YaYPfGrT8pb6peFO0ifPaeJLF06E4n0OBiG5vN39X4M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l62QHvzQTxiZgRdtj6s5Xbd9XFCN0txFVXOUqjaApY9smgGF2JwSrlhfl0wfSJcEe
+	 79gFbePlFTstVTi7msqfL/PFyI/nCR3Oe3yGz/IwkKNoIKi8bcLjSNvj77+2RWElZj
+	 kefidcH4OEJTYDIbSHk/PQOaeqYwpy4+T+cqSjEM=
+Date: Mon, 5 Oct 2026 21:56:19 +0000
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jeff Barnes <jeffbarnes@linux.microsoft.com>,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, kees@kernel.org
+Subject: Re: [PATCH] tracing/user_events: Fail fork when event state
+ duplication fails
+Message-ID: <20261005215619.GA404-beaub@linux.microsoft.com>
+References: <20261002222639.1964370-1-jeffbarnes@linux.microsoft.com>
+ <20261004040016.73e9d705@fedora>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand
- loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
-To: Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com
-Cc: alan.maguire@oracle.com, martin.lau@linux.dev, yonghong.song@linux.dev,
- jolsa@kernel.org, qmo@kernel.org, nathan@kernel.org, nsc@kernel.org,
- linux-kbuild@vger.kernel.org, linux@weissschuh.net, christian@heusel.eu,
- mcgrof@kernel.org, petr.pavlu@suse.com, samitolvanen@google.com,
- linux-modules@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com,
- linux-perf-users@vger.kernel.org, jikos@kernel.org, bentiss@kernel.org,
- linux-input@vger.kernel.org, tj@kernel.org, void@manifault.com,
- arighi@nvidia.com, changwoo@igalia.com, sched-ext@lists.linux.dev,
- shuah@kernel.org, linux-kselftest@vger.kernel.org, ojeda@kernel.org,
- rust-for-linux@vger.kernel.org, arnd@arndb.de, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, abuehaze@amazon.com, doebel@amazon.de,
- mpohlack@amazon.de, jay.wang.upstream@gmail.com
-References: <44315425-c505-46fe-8379-f19d78ff3abb@linux.dev>
- <20261004222127.31128-1-wanjay@amazon.com>
-Content-Language: en-US
-From: Ihor Solodrai <ihor.solodrai@linux.dev>
-In-Reply-To: <20261004222127.31128-1-wanjay@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261004040016.73e9d705@fedora>
 
-On 10/4/26 3:21 PM, Jay Wang wrote:
->>    - If I know I don't need BPF on the workload, and these 5.4 MB
->>      bite me, I can just turn off BPF
+On Sun, Oct 04, 2026 at 04:00:16AM -0400, Steven Rostedt wrote:
+> Beau,
 > 
-> They cannot, even when they know they do not need it.  As the cover
-> letter says, the cloud provider usually ships one kernel build to all of
-> its customers. [...]
-
-Ah, I get it now. Thanks.
-
-So the constraint is that the cloud provider ships a single kernel
-revision to all users, and there is currently no mechanism to on/off
-BPF other than a kernel build flag.
-
-I'd be tempted to say "just ship two kernels", it's simpler than the
-upstream change. But I understand the downsides of that as well.
-
-And obviously a good upstream feature may benefit many more users.
-
-> [...]
->>      Keep zstd-compressed blob in the kernel image and decompress and
->>      parse it synchronously on first use.
+> Can you review this?
 > 
-> Thanks for putting this forward.  This compression approach is simpler 
-> than loading a module.  I expect the overall code complexity to stay similar
-> to v3, since both need to find the first user and defer the module BTF parsing
-> until then, but it should be easier to merge into mainline because it avoids
-> the request_module() deadlocks.
+
+Sure thing.
+
+> Thanks,
 > 
-> Would you like to prepare it for a formal submission, or would you
-> like me to do so?  Either works for me.  Ideally it lands in time for
-> the next LTS kernel, so that we can adopt it there.
-
-Please go ahead and submit the compression approach. Looks like we are
-converging on that. Feel free to use the prototype code if it's
-useful, it uses parts of your series anyway.
-
+> -- Steve
 > 
-> From what I can see, most of the work left is in that deferral.
-> Whoever needs the BTF first also parses the waiting module BTFs and
-> replays the queued registrations, struct_ops ->init() included, under
-> whatever locks it holds at that point, e.g. event_mutex or
-> bpf_verifier_lock, or inside the module notifier.  So the
-> cand_cache_mutex ABBA you found may not be the only deadlock.  Besides
-> that, only x86_64 was touched so far, so it needs extending to the
-> other architectures as well.
+> 
+> On Fri,  2 Oct 2026 18:26:39 -0400
+> Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+> 
+> > Registered user events are retained across fork, but duplicating their
+> > state for a child with a separate mm can fail. Both user_event_mm_dup() and
+> > user_events_fork() currently return void, so allocation failure silently
+> > creates a child without the inherited registration state.
+> > 
+> > The child can consequently retain a stale copy-on-write enable word and
+> > miss later event enable and disable updates.
+> > 
 
-Yes, I think you are right that the hard part here is the deferral,
-because everything expects vmlinux BTF to just be there.  I don't
-think this is avoidable whatever memory saving approach we choose.
+This code makes fork fail if we cannot duplicate the user_event
+enablements, uprobes just warns in these cases. The changes introduced
+look correct if that's what we want (to fail fork() when enablements
+would have been left behind).
 
+If we do not want the fork to actually fail, a simple call to
+user_event_mm_remove() within user_event_mm_dup() would address the
+inconsistency. However, it would be silent. Some questions follow.
+
+Steve, is it fine to have fork() fail when we cannot copy state? Uprobe
+seems to just warn here.
+
+Jeff, I assume we have cases in mind where we really prefer fork() to
+fail when user_events cannot be propogated? (For sure we want the
+inconsistency fixed, just not sure about if silent is OK or not).
+
+Thanks,
+-Beau
+
+> > Return an error from user_event_mm_dup() and user_events_fork(), and
+> > perform the duplication in copy_process() while failure can still be
+> > unwound. Return -ENOMEM when the child user_event_mm or any of its enablers
+> > cannot be duplicated.
+> > 
+> > Add a cleanup path so successfully acquired user-events state is removed if
+> > a later fork operation fails. Preserve the existing CLONE_VM behavior and
+> > its task reference accounting.
+> > 
+> > A deterministic allocation-failure test on upstream master previously
+> > allowed fork() to succeed while the child missed an enablement update. With
+> > this change, the same fork fails with ENOMEM. The complete user_events ABI
+> > suite passes.
+> > 
+> > Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+> > ---
+> >  include/linux/user_events.h      | 16 +++++++---------
+> >  kernel/fork.c                    |  8 ++++++--
+> >  kernel/trace/trace_events_user.c |  8 +++++---
+> >  3 files changed, 18 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/include/linux/user_events.h b/include/linux/user_events.h
+> > index 57d1ff006090..75f184126727 100644
+> > --- a/include/linux/user_events.h
+> > +++ b/include/linux/user_events.h
+> > @@ -27,28 +27,26 @@ struct user_event_mm {
+> >  	struct rcu_work		put_rwork;
+> >  };
+> >  
+> > -extern void user_event_mm_dup(struct task_struct *t,
+> > -			      struct user_event_mm *old_mm);
+> > +int user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm);
+> >  
+> >  extern void user_event_mm_remove(struct task_struct *t);
+> >  
+> > -static inline void user_events_fork(struct task_struct *t,
+> > -				    u64 clone_flags)
+> > +static inline int user_events_fork(struct task_struct *t, u64 clone_flags)
+> >  {
+> >  	struct user_event_mm *old_mm;
+> >  
+> >  	if (!t || !current->user_event_mm)
+> > -		return;
+> > +		return 0;
+> >  
+> >  	old_mm = current->user_event_mm;
+> >  
+> >  	if (clone_flags & CLONE_VM) {
+> >  		t->user_event_mm = old_mm;
+> >  		refcount_inc(&old_mm->tasks);
+> > -		return;
+> > +		return 0;
+> >  	}
+> >  
+> > -	user_event_mm_dup(t, old_mm);
+> > +	return user_event_mm_dup(t, old_mm);
+> >  }
+> >  
+> >  static inline void user_events_execve(struct task_struct *t)
+> > @@ -67,9 +65,9 @@ static inline void user_events_exit(struct task_struct *t)
+> >  	user_event_mm_remove(t);
+> >  }
+> >  #else
+> > -static inline void user_events_fork(struct task_struct *t,
+> > -				    u64 clone_flags)
+> > +static inline int user_events_fork(struct task_struct *t, u64 clone_flags)
+> >  {
+> > +	return 0;
+> >  }
+> >  
+> >  static inline void user_events_execve(struct task_struct *t)
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 10f2d05d816a..9e3da2e6059f 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -2311,9 +2311,12 @@ __latent_entropy struct task_struct *copy_process(
+> >  	retval = copy_mm(clone_flags, p);
+> >  	if (retval)
+> >  		goto bad_fork_cleanup_signal;
+> > -	retval = copy_namespaces(clone_flags, p);
+> > +	retval = user_events_fork(p, clone_flags);
+> >  	if (retval)
+> >  		goto bad_fork_cleanup_mm;
+> > +	retval = copy_namespaces(clone_flags, p);
+> > +	if (retval)
+> > +		goto bad_fork_cleanup_user_events;
+> >  	retval = copy_io(clone_flags, p);
+> >  	if (retval)
+> >  		goto bad_fork_cleanup_namespaces;
+> > @@ -2575,7 +2578,6 @@ __latent_entropy struct task_struct *copy_process(
+> >  
+> >  	trace_task_newtask(p, clone_flags);
+> >  	uprobe_copy_process(p, clone_flags);
+> > -	user_events_fork(p, clone_flags);
+> >  
+> >  	copy_oom_score_adj(clone_flags, p);
+> >  
+> > @@ -2602,6 +2604,8 @@ __latent_entropy struct task_struct *copy_process(
+> >  		exit_io_context(p);
+> >  bad_fork_cleanup_namespaces:
+> >  	exit_nsproxy_namespaces(p);
+> > +bad_fork_cleanup_user_events:
+> > +	user_events_exit(p);
+> >  bad_fork_cleanup_mm:
+> >  	sched_cache_fork_cleanup(p);
+> >  	if (p->mm) {
+> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > index f658c3a77aa7..8941c8d7c193 100644
+> > --- a/kernel/trace/trace_events_user.c
+> > +++ b/kernel/trace/trace_events_user.c
+> > @@ -863,7 +863,7 @@ void user_event_mm_remove(struct task_struct *t)
+> >  	queue_rcu_work(system_percpu_wq, &mm->put_rwork);
+> >  }
+> >  
+> > -void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
+> > +int user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
+> >  {
+> >  	struct user_event_mm *mm = user_event_mm_alloc(t);
+> >  	struct user_event_enabler *enabler;
+> > @@ -872,7 +872,7 @@ void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
+> >  	t->user_event_mm = NULL;
+> >  
+> >  	if (!mm)
+> > -		return;
+> > +		return -ENOMEM;
+> >  
+> >  	rcu_read_lock();
+> >  
+> > @@ -884,10 +884,12 @@ void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
+> >  	rcu_read_unlock();
+> >  
+> >  	user_event_mm_attach(mm, t);
+> > -	return;
+> > +	return 0;
+> >  error:
+> >  	rcu_read_unlock();
+> >  	user_event_mm_destroy(mm);
+> > +
+> > +	return -ENOMEM;
+> >  }
+> >  
+> >  static bool current_user_event_enabler_exists(unsigned long uaddr,
