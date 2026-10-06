@@ -1,182 +1,126 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763804A92D7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 22:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B813DB97A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 23:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791327410; cv=none; b=Yiz5lSkpJ6TwSYR38APfHjbKosv+h1CdvrA2rNG3oSB+fogyZdA4oHHjQTxHDvb2M73c185/XXgsVrKJzwts0Bz3w3PKiHg1OL1XQ4JsMsVeJ/h9zwz9P1wIJ3wNGAN0m9DzOTNMU8kB2ce5r31RQVohU2YEVRTayE65ImN2Ayc=
+	t=1791327984; cv=none; b=VTszU30aD/4QRhR810gkknUsPbrwAzvfqGfKphgZoNVAOp2rAVgsFRJxtyRt3Kk2j5TOyWTK93OEEsM2BdpjoUPzPXMYEhNK5OGnMv5hZUiPkDdGaxFiyp1zuCrx7rodgmlVdB+SSFWPDRxauxbP0MiBpOD+qVbNlOLoI1umRV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791327410; c=relaxed/simple;
-	bh=MzJid57T7kvVDqpjL+7+fiHFXPk+H9FgHow2luDCwDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ISIzrpMVDzGNP7S1hRGUkILMCJoyuqz77bNttJ8O+f8PXhTXGu9zzOE1ElFQRmovbsuf5b6gCL7qeYgp091D2JVfcLHzm4Vvrrtw1GtxYfsnINC3YXq4FLoQSUVm0Ie9CaH/p+zcMKdvf7pb1yhdIIgLbwOq+QJXgJnRiXSGBY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=Ncjx6BPp; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	s=arc-20240116; t=1791327984; c=relaxed/simple;
+	bh=2SAJuzcYI9ojgD6/DgJ7aNVu2ZGXwVmYYeTuzHPq2XI=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=XlOMukw3a23FZFCvl+kIjx4hOo2y0Fb8jObJLTRqr9/EC2SiNha5a4Aud08bRQHo7c5wXeQQ5sSl8ZQDUT6B64sBbH/mFeAukHNr/+sYKrTP0C/bbI7gcU4qMwAd90YF/JSbKHrytj0Dfp1QT1MOrytdhIFQllCxnDNn10uf2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZCDy6Oj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="Ncjx6BPp"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-82478760557so2803051a34.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 15:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1791327409; x=1791932209; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9OqI0lB2VAAehqC+cvR7VBFVsvBHKaFqIk6BYnoJbq0=;
-        b=Ncjx6BPpcFCsCiN4HUaHVN9lrDTLmA9v7Fdv466s+ugJ6hVKNU8pOEFYCaE5CD2JDZ
-         fZLujPXZIVRWemw9LaAw00iKSb3MyqTqcMacLNV+PkpCqWiugd3pCsRfVw2o0DX7sf7a
-         92OY8mW9fFo3gKuL3gw5e9o//4e4hyyPclOtA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791327409; x=1791932209;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9OqI0lB2VAAehqC+cvR7VBFVsvBHKaFqIk6BYnoJbq0=;
-        b=IyZHPwkTyUQ3Z193PA0fHJCsQwSMhBw7q7D+PxtmL7mELeycOQsk6dOtFgQr7WFT5R
-         pWx95j4NUNv5Yp/PnuEri6E+EutO3l0KT2/UMSQOqhye+8oSKy+IaUMhh1wgvIVIOR1m
-         19Nw6rjc32N+E9Hslgwmve5gwaQswOAWmsNLl7GQyhBVzGgzVH6ddS2dUsK13CcQGybD
-         t7Ht2Ucia4xTvAdblMa/k1BZYGaqKmqFghVB6NaWH+oep6+Ikku5KS3hJzC05G+Nai31
-         STWUTRpAzl1x1wBRbtvUEmaFDXJ4TWjurJ2RAPXCZJSsuDfoGKd0X0/4SINSlOhGFBz0
-         Kt6w==
-X-Gm-Message-State: AFuF++mlDW9Q3Ii13o5ywoa3v5hEbrtTY6A4DaKkPMbebwkOpX1svI+8
-	vdiZmO2H3z5d6uhrkkR6Jjxa6R771ok+CV9nctEKHRVvlcptth0Qa/2eJ9tK2Hile6nz54X1Ldn
-	IZ35MMtY=
-X-Gm-Gg: AYBFou0CAr+Vcf3l3doZt/gR6PNlNbfoGfgQAFNleUFFHFVEK9CpaAIduKQFBpgshJO
-	JMu+xpUYUY7VpMHQITTUS0qPKNM+TaFH+a7YqmgH8joLPVIyoxo58hqWQJO35UQxzL/nDNIgpcj
-	XH80uJafUue4TJynsIf07V2yFTyZCiuo8go4F7f1+7WE+j/GzqOW3osnv5DHEyUi8NRNeeUMSIF
-	KaKrFmDnXaeeU0VuRdQGsGc9ul561AmzBCh018PXDl8yDeVgYT3Ehl4Z9ZAfIN7qlk8LTz5inJk
-	nJZWhoDADmFxOVsulQ0QfrYXWcT786mkHFTxs2nJjIyXn5UgnVI9SKqPpVq8k49+Im0DRLRRHlk
-	oYk78Khm5yPK9qlCAwD266rEiU6X2FnTKED7MfvQGgErOTr35M7egXT6C6RwJpWYjb7M9T+kLLN
-	s6ANsBwFfWwG6WHZQ6G0MQvMVfNDNWXa/s2B/FNm8DSgdLgJBmje3L2oizLg0n7jFb/Be6XpW4l
-	6+YaCmnX7k9rSv7VaVLJ8m761KRmMd/cWG3KTK86H0A/0O3ZCv38Qlh4wFw4E+Xf5/AsrnXfqU=
-X-Received: by 2002:a05:6808:5094:b0:4fb:90ae:2b02 with SMTP id 5614622812f47-4fc4626c663mr837917b6e.52.1791327409290;
-        Tue, 06 Oct 2026 15:56:49 -0700 (PDT)
-Received: from com-75606.corp.openai.org ([199.47.143.7])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4fc48b0cb3csm671474b6e.7.2026.10.06.15.56.48
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 06 Oct 2026 15:56:48 -0700 (PDT)
-From: Kyle Zeng <kylebot@openai.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	outbounddisclosures@openai.com,
-	Kyle Zeng <kylebot@openai.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing/filters: Treat zero-length dynamic strings as empty
-Date: Tue,  6 Oct 2026 15:56:42 -0700
-Message-ID: <20261006225642.58778-1-kylebot@openai.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZCDy6Oj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A771F0089B;
+	Tue,  6 Oct 2026 23:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791327984;
+	bh=KnXLh+wo1IMc2WZ2UXT7QeRUvp1pfGjJecjhKqI0/Ro=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EZCDy6OjfmrjudAlq3hDOhLYDdJB4Ql+ZD+ncpjeLCx6oUX4qA0b4r0lYYcamxFGc
+	 xgC9VqZaBq/xiHwl5+Xrvn28KV0dn4nUxcExDJOSrKTauSjgkeqhI5MZ09Gv5LJMN+
+	 MXoMccaaZaLnAOKD6gBXbewj4ipJR7KDjn1whoy7Vr4DBVel0oSVas0uGrZD039tD5
+	 rJUu9+gCKP9uOo85wfkFGfdrcFt+SWgIDl9rJ/hYe8O1nZdQ9wLY8fY+/AghaRvULx
+	 JBxdrsIm4DUc3UrZSlPnD61fvNrgUEGBhNvhKGn5evGmlLfGFq5OFdx2+vsB/IAKjO
+	 1Nr0d7jXGZz/A==
+Message-ID: <sashiko-outbox-162502@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing/filters: Check perf permissions before
+ resolving .function
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Kyle Zeng" <kylebot@openai.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261006225112.53503-1-kylebot@openai.com>
+References: <20261006225112.53503-1-kylebot@openai.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 06 Oct 2026 23:06:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The regex callbacks use a length of zero for NUL-terminated strings of
-unknown size, such as the trailing buffer in a trace_marker record.
-However, filter_pred_strloc() and filter_pred_strrelloc() pass the length
-from a data locator directly to those callbacks. A zero-length locator
-has no data and need not point at a NUL byte.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] tracing: perf string filters on pointer fields disclose kernel mem=
+ory
+--
 
-In particular, syscall entry events can contain an empty captured array
-or a failed user-string copy. Matching such a field with an equality,
-prefix, or substring filter can read beyond the record. The per-CPU perf
-trace buffer is reused, so an unprivileged counting syscall event can
-disclose bytes left by a previous kernel tracepoint even when raw
-sampling is denied and exclude_kernel prevents counting that tracepoint.
+commit 169e523d3d15d13ccfdf41ba6a65f6c9fb12fff8
+Author: Kyle Zeng <kylebot@openai.com>
+tracing/filters: Check perf permissions before resolving .function
 
-Handle both locator formats through a common helper. For a zero-length
-field, pass an empty string and its actual size to the regex callback.
-This gives all matching modes the empty-string semantics without reading
-the locator's target. Keep nonzero fields and the legacy trace_marker
-unknown-length convention unchanged.
+This commit adds a permission check to the .function filter suffix in
+perf counting filters to prevent exposing kernel symbol ranges. It closes
+an oracle that could allow KASLR bypass via unprivileged tracing.
 
-Fixes: 10f20e9f9da9 ("tracing: Have zero size length in filter logic be full string")
-Cc: stable@vger.kernel.org
-Assisted-by: Codex:gpt-6-astra
-Signed-off-by: Kyle Zeng <kylebot@openai.com>
----
- kernel/trace/trace_events_filter.c | 38 +++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_even=
+ts_filter.c
+> index 2b46ca5360458..0f8c2054f4a72 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+[ ... ]
+> @@ -1683,6 +1689,14 @@ static int parse_pred(const char *str, void *data,
+> =20
+>  	/* See if the field is a kernel function name */
+>  	if ((len =3D str_has_prefix(str + i, ".function"))) {
+> +		/* Even counting filters can disclose kernel addresses. */
+> +		if (pdata->is_perf) {
+> +			ret =3D perf_allow_tracepoint();
+> +			if (ret) {
+> +				parse_error(pe, ret, pos + i);
+> +				return ret;
+> +			}
+> +		}
+>  		function =3D true;
+>  		i +=3D len;
+>  	}
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 2b46ca536045..02aaa92e0361 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -884,6 +884,25 @@ static int filter_pred_pchar_user(struct filter_pred *pred, void *event)
- 	return filter_pchar(pred, str);
- }
- 
-+static __always_inline int filter_dyn_string(struct filter_pred *pred,
-+					     char *str, int len)
-+{
-+	int cmp;
-+
-+	/*
-+	 * The regex callbacks use zero for an unknown-length, NUL-terminated
-+	 * string. A zero-length data_loc or rel_loc field has no bytes at all.
-+	 * Match an empty string instead of reading past the end of the field.
-+	 */
-+	if (!len) {
-+		str = "";
-+		len = 1;
-+	}
-+
-+	cmp = pred->regex->match(str, pred->regex, len);
-+	return cmp ^ pred->not;
-+}
-+
- /*
-  * Filter predicate for dynamic sized arrays of characters.
-  * These are implemented through a list of strings at the end
-@@ -900,13 +919,8 @@ static int filter_pred_strloc(struct filter_pred *pred, void *event)
- 	int str_loc = str_item & 0xffff;
- 	int str_len = str_item >> 16;
- 	char *addr = (char *)(event + str_loc);
--	int cmp, match;
--
--	cmp = pred->regex->match(addr, pred->regex, str_len);
- 
--	match = cmp ^ pred->not;
--
--	return match;
-+	return filter_dyn_string(pred, addr, str_len);
- }
- 
- /*
-@@ -923,13 +937,8 @@ static int filter_pred_strrelloc(struct filter_pred *pred, void *event)
- 	int str_loc = str_item & 0xffff;
- 	int str_len = str_item >> 16;
- 	char *addr = (char *)(&item[1]) + str_loc;
--	int cmp, match;
--
--	cmp = pred->regex->match(addr, pred->regex, str_len);
- 
--	match = cmp ^ pred->not;
--
--	return match;
-+	return filter_dyn_string(pred, addr, str_len);
- }
- 
- /* Filter predicate for CPUs. */
-@@ -1014,7 +1023,8 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
-  *
-  * @str: the string to be searched
-  * @r:   the regex structure containing the pattern string
-- * @len: the length of the string to be searched (including '\0')
-+ * @len: the length of the string to be searched (including '\0'), or zero
-+ *       for a NUL-terminated string of unknown length
-  *
-  * Note:
-  * - @str might not be NULL-terminated if it's of type DYN_STRING
-@@ -1023,7 +1033,7 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
- 
- static int regex_match_full(char *str, struct regex *r, int len)
- {
--	/* len of zero means str is dynamic and ends with '\0' */
-+	/* Zero is reserved for a NUL-terminated string of unknown length. */
- 	if (!len)
- 		return strcmp(str, r->pattern) == 0;
- 
+[Severity: High]
+This successfully prevents KASLR bypass via the .function suffix, but does
+it leave a similar memory disclosure oracle open for standard string matches
+on pointer fields?
+
+Later in parse_pred(), if the field is a pointer and the user omits the
+.ustring suffix, the predicate is assigned FILTER_PRED_FN_PCHAR without
+checking perf_allow_tracepoint():
+
+kernel/trace/trace_events_filter.c:parse_pred() {
+    ...
+		if (ustring)
+			pred->fn_num =3D FILTER_PRED_FN_PCHAR_USER;
+		else
+			pred->fn_num =3D FILTER_PRED_FN_PCHAR;
+    ...
+}
+
+Could an unprivileged user create a counting perf event without
+PERF_SAMPLE_RAW on a syscall tracepoint like sys_enter_openat (which is
+allowed because syscall tracepoints have the TRACE_EVENT_FL_CAP_ANY flag)?
+
+If they set a string wildcard filter (e.g., ~ "secret*") on a pointer field
+like filename, wouldn't the filter engine read from the user-controlled
+kernel_addr when evaluating FILTER_PRED_FN_PCHAR?
+
+kernel/trace/trace_events_filter.c:test_string() {
+    ...
+	/* For safety, do not trust the string pointer */
+	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
+		return NULL;
+    ...
+}
+
+If the kernel memory successfully matches the wildcard, the perf counter
+increments, which could allow an attacker to extract arbitrary kernel memory
+byte-by-byte.
+
+Should perf_allow_tracepoint() also be checked before assigning
+FILTER_PRED_FN_PCHAR to prevent this disclosure?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006225112.5350=
+3-1-kylebot@openai.com?part=3D1
