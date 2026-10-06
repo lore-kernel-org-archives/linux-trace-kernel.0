@@ -1,59 +1,59 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054E23BFAE0
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 22:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763804A92D7
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 22:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791327147; cv=none; b=LZr4h8X26nb86WAWraihSFn8drdXUKqFcQN/3IPGL+pMOXbEuyyr2INT1dbpRCYvmi1nsZDemlGkEfLUu6M7uI6R9vwQigRrDteo2VT9FOe9ie/VhI9oqlEUwWihRVO9dBQUwQgaPgpdWybJStaLDZMt7XfwhFOMp8pnMl8d+rg=
+	t=1791327410; cv=none; b=Yiz5lSkpJ6TwSYR38APfHjbKosv+h1CdvrA2rNG3oSB+fogyZdA4oHHjQTxHDvb2M73c185/XXgsVrKJzwts0Bz3w3PKiHg1OL1XQ4JsMsVeJ/h9zwz9P1wIJ3wNGAN0m9DzOTNMU8kB2ce5r31RQVohU2YEVRTayE65ImN2Ayc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791327147; c=relaxed/simple;
-	bh=pFTkUMk/rZ+bcDA0dNreWXqO/ymmW56hA2wPC8A0SUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PF9mKqeDn3f/iop9xPCagdw2uZmeESRd6wgSo/5xE8NfriuP34W/Qvmtt26tr+dVeSdYnVlNut61Eo1HX0HNzi2LC5ahsInTQGnp1prgA1643lpWXYzO/mQE657x5xB8IUUpDRdnaEIO9sGGmZdg701GBCP59av1AXf7y7HNRsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=YL6mqHpm; arc=none smtp.client-ip=209.85.167.181
+	s=arc-20240116; t=1791327410; c=relaxed/simple;
+	bh=MzJid57T7kvVDqpjL+7+fiHFXPk+H9FgHow2luDCwDU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ISIzrpMVDzGNP7S1hRGUkILMCJoyuqz77bNttJ8O+f8PXhTXGu9zzOE1ElFQRmovbsuf5b6gCL7qeYgp091D2JVfcLHzm4Vvrrtw1GtxYfsnINC3YXq4FLoQSUVm0Ie9CaH/p+zcMKdvf7pb1yhdIIgLbwOq+QJXgJnRiXSGBY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=Ncjx6BPp; arc=none smtp.client-ip=209.85.210.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="YL6mqHpm"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4b1ba286f6bso777536b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 15:52:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="Ncjx6BPp"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-82478760557so2803051a34.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 15:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1791327146; x=1791931946; darn=vger.kernel.org;
+        d=openai.com; s=google; t=1791327409; x=1791932209; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VPdIVaXesRNcKlAXCOjj3AwAY0KkqhBFBWxij3ZELec=;
-        b=YL6mqHpmX4aG5+DNtHousP20Pjlc6wbtx1gI7gJPTK86sQP2MU9IYWvbR5TzILUcxR
-         xstCH/8TKMLQJooOYRMaUIvvZ+VFkEajsIBlguMw6lDRfzezQaWz4D8sDtOG/idVu9bk
-         JpbK09nO9q7NL27sKorCCbdphnvARRa5dcJoQ=
+        bh=9OqI0lB2VAAehqC+cvR7VBFVsvBHKaFqIk6BYnoJbq0=;
+        b=Ncjx6BPpcFCsCiN4HUaHVN9lrDTLmA9v7Fdv466s+ugJ6hVKNU8pOEFYCaE5CD2JDZ
+         fZLujPXZIVRWemw9LaAw00iKSb3MyqTqcMacLNV+PkpCqWiugd3pCsRfVw2o0DX7sf7a
+         92OY8mW9fFo3gKuL3gw5e9o//4e4hyyPclOtA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791327146; x=1791931946;
+        d=1e100.net; s=20260707; t=1791327409; x=1791932209;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VPdIVaXesRNcKlAXCOjj3AwAY0KkqhBFBWxij3ZELec=;
-        b=FeEWgL8o8VDSBnLG1aGMOiua60enBSS1zcLn4tuW/4Pz7b/ve6bLiWmuqOBpe+lyBO
-         VIgmpSFnUTSRosUhIX4011x9ZOMWguotkWwOYpPJnV9/4SBDh7gRopKmCPa060K5rv+z
-         sWB/faujKMbGzMx9xQIU5TZzSRDwNC1iECyepGCCspjE9s1CXYxKzUVQmBm3wS868m0J
-         InnKI2glfblrqOKRpDwdXPfa5+EtM3p0gsLAQIqeOCvSaugA7aKBekIrM5qQHuZ0wkjM
-         fm46YbYGB24i/DV6hrtRy7wvb2G4duH5BavSDdEjUsxTh+UPN4fayfJRMmXMfOq6BOx7
-         M2Ng==
-X-Gm-Message-State: AFuF++lo8M4wfQIoPboeAqNHmRZHusdi6c8VP5aRCSf/IS3O1HJF9jBw
-	qtlOj6eMwsl/N4FJQkA19MRXyPgtQMj0Gpg8nkFnOAWH4iTkJQ7Pp4YLoH00aVksMobvqK8L7do
-	GSzKKoqA=
-X-Gm-Gg: AYBFou2eaxbJkiz4y0X+OXKXM9zsl7RA9336v5Xna4MW+HE6kslhJdUofwyU/rGjWTf
-	keNbd7cwdtj1vWY2lHPvG6QmmKzmNIP0MEAGfEDAOo7NQPR7pl4DbiuDMlfL/FvuX0ZMpMbOC8t
-	w/2IRfBIcYQ2dE1NCJSjOc3+gYqhySM3W+X6vw0t7qB2RGBeEQDSr3jRyhaPxzNStb/r21HuRPO
-	hpB4OblUSVADTzofzqGzP9lZy7Dy8QR5bkxOz25tCf89OEdIRYIoTIfE8Qiqap3aJ9ZAzHrZlQ7
-	psIihO28CgtGL0okz681UlTIVZtAOAHA3CEDHE8Kre/Q8dr7XyHuRJ7H3J3HGJ37MOUILEBiUHR
-	Qt1Kg51LlvwdZZb+UGZtoaNZMBeDa+uLyyU8/KLPtVe634oI3e0sVCkgOOPDE8fHJKqk0WIZcYT
-	yO4YJokZT/KXVXBErzIiB1WO/3q9SSrUO94eKehll+KfXgGSCrJT9EcAbI5kFrWk4fV8LuBTppZ
-	rFxsTAjf73ddXYC6oP2uDSzcuUu7sQuOPVQf22BRO9IHr1zMdxCusdHpoU7qLdwmckfy/LpYks=
-X-Received: by 2002:a05:6808:3c47:b0:495:ce6d:7d48 with SMTP id 5614622812f47-4fc44b3f7cbmr587506b6e.9.1791327145807;
-        Tue, 06 Oct 2026 15:52:25 -0700 (PDT)
+        bh=9OqI0lB2VAAehqC+cvR7VBFVsvBHKaFqIk6BYnoJbq0=;
+        b=IyZHPwkTyUQ3Z193PA0fHJCsQwSMhBw7q7D+PxtmL7mELeycOQsk6dOtFgQr7WFT5R
+         pWx95j4NUNv5Yp/PnuEri6E+EutO3l0KT2/UMSQOqhye+8oSKy+IaUMhh1wgvIVIOR1m
+         19Nw6rjc32N+E9Hslgwmve5gwaQswOAWmsNLl7GQyhBVzGgzVH6ddS2dUsK13CcQGybD
+         t7Ht2Ucia4xTvAdblMa/k1BZYGaqKmqFghVB6NaWH+oep6+Ikku5KS3hJzC05G+Nai31
+         STWUTRpAzl1x1wBRbtvUEmaFDXJ4TWjurJ2RAPXCZJSsuDfoGKd0X0/4SINSlOhGFBz0
+         Kt6w==
+X-Gm-Message-State: AFuF++mlDW9Q3Ii13o5ywoa3v5hEbrtTY6A4DaKkPMbebwkOpX1svI+8
+	vdiZmO2H3z5d6uhrkkR6Jjxa6R771ok+CV9nctEKHRVvlcptth0Qa/2eJ9tK2Hile6nz54X1Ldn
+	IZ35MMtY=
+X-Gm-Gg: AYBFou0CAr+Vcf3l3doZt/gR6PNlNbfoGfgQAFNleUFFHFVEK9CpaAIduKQFBpgshJO
+	JMu+xpUYUY7VpMHQITTUS0qPKNM+TaFH+a7YqmgH8joLPVIyoxo58hqWQJO35UQxzL/nDNIgpcj
+	XH80uJafUue4TJynsIf07V2yFTyZCiuo8go4F7f1+7WE+j/GzqOW3osnv5DHEyUi8NRNeeUMSIF
+	KaKrFmDnXaeeU0VuRdQGsGc9ul561AmzBCh018PXDl8yDeVgYT3Ehl4Z9ZAfIN7qlk8LTz5inJk
+	nJZWhoDADmFxOVsulQ0QfrYXWcT786mkHFTxs2nJjIyXn5UgnVI9SKqPpVq8k49+Im0DRLRRHlk
+	oYk78Khm5yPK9qlCAwD266rEiU6X2FnTKED7MfvQGgErOTr35M7egXT6C6RwJpWYjb7M9T+kLLN
+	s6ANsBwFfWwG6WHZQ6G0MQvMVfNDNWXa/s2B/FNm8DSgdLgJBmje3L2oizLg0n7jFb/Be6XpW4l
+	6+YaCmnX7k9rSv7VaVLJ8m761KRmMd/cWG3KTK86H0A/0O3ZCv38Qlh4wFw4E+Xf5/AsrnXfqU=
+X-Received: by 2002:a05:6808:5094:b0:4fb:90ae:2b02 with SMTP id 5614622812f47-4fc4626c663mr837917b6e.52.1791327409290;
+        Tue, 06 Oct 2026 15:56:49 -0700 (PDT)
 Received: from com-75606.corp.openai.org ([199.47.143.7])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4fc49a71636sm583940b6e.16.2026.10.06.15.52.24
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4fc48b0cb3csm671474b6e.7.2026.10.06.15.56.48
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 06 Oct 2026 15:52:25 -0700 (PDT)
+        Tue, 06 Oct 2026 15:56:48 -0700 (PDT)
 From: Kyle Zeng <kylebot@openai.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc: linux-kernel@vger.kernel.org,
 	outbounddisclosures@openai.com,
 	Kyle Zeng <kylebot@openai.com>,
 	stable@vger.kernel.org
-Subject: [PATCH] tracing: Validate user addresses in faultable buffer copies
-Date: Tue,  6 Oct 2026 15:52:21 -0700
-Message-ID: <20261006225221.54513-1-kylebot@openai.com>
+Subject: [PATCH] tracing/filters: Treat zero-length dynamic strings as empty
+Date: Tue,  6 Oct 2026 15:56:42 -0700
+Message-ID: <20261006225642.58778-1-kylebot@openai.com>
 X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -74,57 +74,109 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Syscall entry tracing runs before the syscall implementation validates
-its arguments. For a size-bearing user argument,
-syscall_copy_user_array() passes the register-supplied pointer directly
-to __copy_from_user(), which assumes the user address has already been
-checked. On x86-64 this can copy mapped kernel memory into the raw event.
-An unprivileged task can open a task-bound sys_enter_write perf event at
-perf_event_paranoid=2 and disclose that memory with a write() that even
-fails with EBADF.
+The regex callbacks use a length of zero for NUL-terminated strings of
+unknown size, such as the trailing buffer in a trace_marker record.
+However, filter_pred_strloc() and filter_pred_strrelloc() pass the length
+from a data locator directly to those callbacks. A zero-length locator
+has no data and need not point at a NUL byte.
 
-Use copy_from_user() for each actual array pointer. Use it in the default
-trace_user_fault_read() path as well: the original syscall-array tracing
-implementation used that path, and the helper is documented to use
-copy_from_user(). Keep the existing length limits and per-argument fault
-handling, so valid user data is recorded as before and failed copies do
-not contribute bytes to the event.
+In particular, syscall entry events can contain an empty captured array
+or a failed user-string copy. Matching such a field with an equality,
+prefix, or substring filter can read beyond the record. The per-CPU perf
+trace buffer is reused, so an unprivileged counting syscall event can
+disclose bytes left by a previous kernel tracepoint even when raw
+sampling is denied and exclude_kernel prevents counting that tracepoint.
 
-Fixes: b4f7624cfc94 ("tracing: Have system call events record user array data")
+Handle both locator formats through a common helper. For a zero-length
+field, pass an empty string and its actual size to the regex callback.
+This gives all matching modes the empty-string semantics without reading
+the locator's target. Keep nonzero fields and the legacy trace_marker
+unknown-length convention unchanged.
+
+Fixes: 10f20e9f9da9 ("tracing: Have zero size length in filter logic be full string")
 Cc: stable@vger.kernel.org
 Assisted-by: Codex:gpt-6-astra
 Signed-off-by: Kyle Zeng <kylebot@openai.com>
 ---
- kernel/trace/trace.c          | 2 +-
- kernel/trace/trace_syscalls.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_filter.c | 38 +++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e4a490d3d08c..07acbc44d99c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6263,7 +6263,7 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
- 		if (copy_func) {
- 			ret = copy_func(buffer, ptr, size, data);
- 		} else {
--			ret = __copy_from_user(buffer, ptr, size);
-+			ret = copy_from_user(buffer, ptr, size);
- 		}
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 2b46ca536045..02aaa92e0361 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -884,6 +884,25 @@ static int filter_pred_pchar_user(struct filter_pred *pred, void *event)
+ 	return filter_pchar(pred, str);
+ }
  
- 		preempt_disable_notrace();
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index e35744049e3f..d9190fdc030d 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -683,7 +683,7 @@ static int syscall_copy_user_array(char *buf, const char __user *ptr,
++static __always_inline int filter_dyn_string(struct filter_pred *pred,
++					     char *str, int len)
++{
++	int cmp;
++
++	/*
++	 * The regex callbacks use zero for an unknown-length, NUL-terminated
++	 * string. A zero-length data_loc or rel_loc field has no bytes at all.
++	 * Match an empty string instead of reading past the end of the field.
++	 */
++	if (!len) {
++		str = "";
++		len = 1;
++	}
++
++	cmp = pred->regex->match(str, pred->regex, len);
++	return cmp ^ pred->not;
++}
++
+ /*
+  * Filter predicate for dynamic sized arrays of characters.
+  * These are implemented through a list of strings at the end
+@@ -900,13 +919,8 @@ static int filter_pred_strloc(struct filter_pred *pred, void *event)
+ 	int str_loc = str_item & 0xffff;
+ 	int str_len = str_item >> 16;
+ 	char *addr = (char *)(event + str_loc);
+-	int cmp, match;
+-
+-	cmp = pred->regex->match(addr, pred->regex, str_len);
  
- 	for (int i = 0; i < args->uargs; i++, buf += SYSCALL_FAULT_ARG_SZ) {
- 		ptr = (char __user *)args->ptr_array[i];
--		ret = __copy_from_user(buf, ptr, size);
-+		ret = copy_from_user(buf, ptr, size);
- 		args->read[i] = ret ? -1 : size;
- 	}
- 	return 0;
--- 
-2.53.0
-
+-	match = cmp ^ pred->not;
+-
+-	return match;
++	return filter_dyn_string(pred, addr, str_len);
+ }
+ 
+ /*
+@@ -923,13 +937,8 @@ static int filter_pred_strrelloc(struct filter_pred *pred, void *event)
+ 	int str_loc = str_item & 0xffff;
+ 	int str_len = str_item >> 16;
+ 	char *addr = (char *)(&item[1]) + str_loc;
+-	int cmp, match;
+-
+-	cmp = pred->regex->match(addr, pred->regex, str_len);
+ 
+-	match = cmp ^ pred->not;
+-
+-	return match;
++	return filter_dyn_string(pred, addr, str_len);
+ }
+ 
+ /* Filter predicate for CPUs. */
+@@ -1014,7 +1023,8 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
+  *
+  * @str: the string to be searched
+  * @r:   the regex structure containing the pattern string
+- * @len: the length of the string to be searched (including '\0')
++ * @len: the length of the string to be searched (including '\0'), or zero
++ *       for a NUL-terminated string of unknown length
+  *
+  * Note:
+  * - @str might not be NULL-terminated if it's of type DYN_STRING
+@@ -1023,7 +1033,7 @@ static int filter_pred_function(struct filter_pred *pred, void *event)
+ 
+ static int regex_match_full(char *str, struct regex *r, int len)
+ {
+-	/* len of zero means str is dynamic and ends with '\0' */
++	/* Zero is reserved for a NUL-terminated string of unknown length. */
+ 	if (!len)
+ 		return strcmp(str, r->pattern) == 0;
+ 
