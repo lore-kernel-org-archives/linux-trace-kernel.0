@@ -1,119 +1,68 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A124C466B03;
-	Tue,  6 Oct 2026 13:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C01A45563B;
+	Tue,  6 Oct 2026 14:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791294164; cv=none; b=NO5ndyg2ZIjrDnyhkMFSBGnKkSUCUDtJXE+ystsj89/SExMKOnjyFCEDwXJwXgwcdfowewCct5DXknSBSb3X741zgejJMAyOCZrbtorq5vbQVH4caRaDl/J+7tMNkK4vobI+ntIuBKebLxiNpAsV0GHfIoqI1RtGtNxXopkJiQg=
+	t=1791296085; cv=none; b=dQegfYFX1Pv3TDPxOOTLGxP+v3NDJfUC0D9A4ACC4KKctqlWbngm6eYTLNsvWn3qlcu91F5gN4RXiP40kMinsszAYckic2rty8LtEdFPDcJLnyDTMRe69lw7IuUwgKlbLArau1zwF4vjx/MZHm0ijSKzRzdXc6DkTIfNhky+HbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791294164; c=relaxed/simple;
-	bh=NhrerJh+FIvyRhVhYK2RZ3+zs0tCPgHwWAK9TnlDqNQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type:Content-Disposition; b=HKhOTovgd6B18u8YxyBugqePBwuf1Npl497oW42P91kiZR8jfOroW989ovDo77bVOMqhmqw6TlnYa/Dk7wKCpF8DhMVVTUZNX8OoxfjkVmng36n+unT8VBG8yGI6qT7tuVJNxjG1Dm2CXMahxebezZg3U0V/9SC4nHKjZVm4278=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RuMjPgCm; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1791296085; c=relaxed/simple;
+	bh=Wnkvw/PmiSIEwtzxymhqfsRqVQBcv77PR0tcXIczR4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YwPdQLGR8O/D5TqfznZBmfxrzuTYxHLizqME48sts5FR1+C2CNQt5Lpnwv6Ngp8AtHD7FnC/Kdn5XdmdRwA6DZlncudGnLf2UDdT/fYnl7JQo8xTakBeXSU3DCH6z3WGwz7dt6insii8u1V2bTTuEHXTA5/535rKV0iaj39FvRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=i+5yQQjq; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RuMjPgCm"
-Received: from [100.96.208.29] (unknown [52.167.115.14])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 32D2F20B7166;
-	Tue,  6 Oct 2026 06:41:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 32D2F20B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1791294106;
-	bh=ymMYpd6/ibtw57JvGJoXuuopAlt6a2U5TBrWdbZiyQA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=RuMjPgCmBvwWFqM+/GDz624NyLfl8MGbycwDBi/dO36j4yzCvNGbd42i29eU67ko9
-	 bZ/gwTZVNgJfYGSAzXf+jqQVR1ctGwg35Gh+faD+Fu865MgYWyzGt4suetKMUJ5lPM
-	 I1Gfd1BZYCNE436+NhDi1pXE0y/Xdz8lWpKcmo14=
-Date: Tue, 6 Oct 2026 09:42:39 -0400
-From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>, 
- "=?utf-8?Q?linux-trace-kernel=40vger.kernel.org?="
- <linux-trace-kernel@vger.kernel.org>, 
- "=?utf-8?Q?mhiramat=40kernel.org?=" <mhiramat@kernel.org>, 
- "=?utf-8?Q?mathieu.desnoyers=40efficios.com?="
- <mathieu.desnoyers@efficios.com>, 
- "=?utf-8?Q?linux-kernel=40vger.kernel.org?="
- <linux-kernel@vger.kernel.org>, 
- "=?utf-8?Q?akpm=40linux-foundation.org?=" <akpm@linux-foundation.org>, 
- "=?utf-8?Q?kees=40kernel.org?=" <kees@kernel.org>
-Message-ID: <0499A842-AA79-49A7-AAB5-47003DD799BE@getmailspring.com>
-In-Reply-To: <20261006083825.2bbeaef2@fedora>
-References: <20261006083825.2bbeaef2@fedora>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="i+5yQQjq"
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 34F2940127;
+	Tue,  6 Oct 2026 14:14:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 39A786000C;
+	Tue,  6 Oct 2026 14:14:32 +0000 (UTC)
+Date: Tue, 6 Oct 2026 10:14:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+Cc: Beau Belgrave <beaub@linux.microsoft.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kees@kernel.org"
+ <kees@kernel.org>
 Subject: Re: [PATCH] tracing/user_events: Fail fork when event state
  duplication fails
-X-Mailer: Mailspring
+Message-ID: <20261006101427.25e0f8f7@fedora>
+In-Reply-To: <0499A842-AA79-49A7-AAB5-47003DD799BE@getmailspring.com>
+References: <20261006083825.2bbeaef2@fedora>
+	<0499A842-AA79-49A7-AAB5-47003DD799BE@getmailspring.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: zxy5jkdnrzk4iyeo8by5p6yxpmcjamm5
+X-Rspamd-Queue-Id: 39A786000C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19RhyJBrzcgp3fOfNPHDS4vRtVcqaJAIqk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Wnkvw/PmiSIEwtzxymhqfsRqVQBcv77PR0tcXIczR4w=; b=i+5yQQjq4bxzYZwILnKSz/M1zCsjL5q3ec51XWWVQdS4I7SacvWtPjIdEVvwjAfUjYgC3DUktamU5j/vPSGm3if+SRKUTcOuJsuhOtfbE687aY0oTHPN/KCtEK9t2uIQR7r9q0CybkOu8crsMm3IkOJWXs0tQhrLgc8L2aPu6/I=
+X-HE-Tag: 1791296072-18580
+X-HE-Meta: U2FsdGVkX19qUYQ6JN7VyyT+ZigEhsnsqklDh2EP7CuUa1xaZiM0VdTBb24qabXRQ68hAsfk7gdv8NE3mSj/cUkX1ToGfehlVfjVXvOj0wnv786x07Sp8bcKHRkcYkU0kwb/7BE7sWaM6nCDz3nVZqffhuhyTYPm1idjxA+zImUYC3QxesSEy22yEh2qHE6v40OR4aD3++IIO8KlAROMFoNSlNVbU0aGwLzoA4SzKkIPBYPKzgqcjQWAeyiRapv5DkjWXb95L2287zlLEJ7PjA6f/Bp00JNqQjMxO62OjHtjH86SaFlnxxD5hTB1zX4dFkbpxmfDRYYzuxHFTtqxVnXSbkz5IzN3
 
+On Tue, 6 Oct 2026 09:42:39 -0400
+Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
 
+> So in this case the state being duplicated during fork() is state that
+> the application itself established. That's why I think propagating the
+> allocation failure back through fork() is preferable to silently
+> allowing the child to lose that state.
 
-On Oct 6 2026, at 8:38 am, Steven Rostedt <rostedt@goodmis.org> wrote:
+I agree.
 
-> On Tue, 6 Oct 2026 08:01:14 -0400
-> Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
-> 
->> Yes, that was intentional. My concern with allowing fork() to succeed
->> after removing the child's user_events state is that the allocation
->> failure then becomes a silent loss of inherited tracing state.
->> 
->> The enable word is the userspace-visible indication that an event is
->> enabled. If the child loses its inherited enablers, later enable and
->> disable changes will no longer be reflected in that child. Removing the
->> state fixes the stale-value inconsistency, but userspace has no
->> indication from fork() that the child is no longer following the
->> inherited tracing state.
->> 
->> I also think there is a potential security implication here. If
->> user_events are being used for tracing or auditing, an allocation
->> failure could result in a successfully created child silently no longer
->> following subsequent enablement changes. I don't want to characterize
->> that as a security vulnerability without a demonstrated security
->> boundary, but silently losing that state seems undesirable for auditing
->> in particular.
->> 
->> That is why I favored returning -ENOMEM: either the child is created
->> with the inherited user_events state intact, or the failure is visible
->> to userspace and the fork is unwound.
->> 
->> I agree that uprobes provides a useful comparison. If you think
->> user_events should likewise be best-effort across fork, then removing
->> the state on duplication failure would address the inconsistency without
->> introducing the new fork() failure path.
-> 
-> Question, to use user events the application needs to be involved,
-> correct? That is, there's code in the application specific for
-> user_events, as supposed to uprobes that can attach to any application.
-> 
-> Thus, it makes sense for uprobes to only warn on failure. Why should a
-> task fail to fork if something attaches a uprobe on it and it causes
-> issues.
-> 
-> Now if user_events is driven by the application that has them, then
-> yes, it makes sense for fork() to fail if the user_event it created
-> fails processing inside the fork(). If the user application is
-> expecting something, then if it fails it should know about it.
-> 
-> But this is only if user_events is driven by the application doing the
-> fork().
-> 
-> -- Steve
-> 
-Yes, that's correct. user_events registration is initiated by the
-application through the user_events interface, rather than being
-attached externally to an arbitrary application like an uprobe.
-
-So in this case the state being duplicated during fork() is state that
-the application itself established. That's why I think propagating the
-allocation failure back through fork() is preferable to silently
-allowing the child to lose that state.
-
-Thanks, Jeff
+-- Steve
