@@ -1,208 +1,104 @@
-Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2231A2C0B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 16:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 350A93563F6;
+	Tue,  6 Oct 2026 16:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791304064; cv=none; b=C8xRGcyoz2KK3ucRxyqHKgkbO8XFq3PjPbs8N3GrOrtSbHyRzrYIXFluT6IKtXgJF2F76MtxBvT7eVraUyaCJb0CwxZsFHX3EpMeTtOS6Aa8+aTENeXIF2ClxMgoVOtRZpcifak3FKPBFjVOs1x5q76wJlQHJLRKocUHx0+nWP0=
+	t=1791305252; cv=none; b=UI5zo1Y+Fr2WxgyvdEy/lazPCZyZiBi5pUgcecA+U2y4iC58dMFk0c3c/PMq2RPQRS7KiriqSbBgZtGVqXWmELwdwNP7VTZQdXWhorNeMf0jJDaizsJyIP7oWDot+NA8cNIDIScQxMra9yhDcRAscm0P/gAUo4/x6OnoIMcgWco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791304064; c=relaxed/simple;
-	bh=JaOT2qccNi/eJCcGFKpQPyFgrQUtWBfNjazKR4huGJc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TFDFgrWHi2c1+vGTk3IgHqC1tiuAXKvT/3KVp8MYS98E7h/FzskaREJ19erD+2zLdun3qheoM2bw7AFZXBVILKyVZjLJ9yJt0YnaU4FDirMVABa3Z7Y2p8vTyeCNXPf7+8QE6wsomt7+21XJoDee2bzdu9MwwkUnaoQxJkaD8AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wolber.net; spf=pass smtp.mailfrom=wolber.net; dkim=pass (2048-bit key) header.d=wolber.net header.i=@wolber.net header.b=aDJ0OTHC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fBLlzhf/; arc=none smtp.client-ip=202.12.124.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wolber.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolber.net
+	s=arc-20240116; t=1791305252; c=relaxed/simple;
+	bh=/h+op23MI0eLCsmes62NpIrbxEsijSRh4s9d4q4O7zg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iS2wEnr4G+f9JkW7JhTxSIqbI8kVzMsYl4nqVYEyki6+vcDTmTUfVPmo5/ujq7alsXOqlINkklJRnhg4y/OehY+lh9S0BIiz+acKC1vE0+lkdakbtZ9X5NwoH+kCJRyFbT9A1FIbUskMd61y2uWiVcvRy10lblX/K6O5SDXRxZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gpdrUp8d; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wolber.net header.i=@wolber.net header.b="aDJ0OTHC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fBLlzhf/"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.stl.internal (Postfix) with ESMTP id CC71D1300964
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 12:27:41 -0400 (EDT)
-Received: from phl-imap-03 ([10.202.2.93])
-  by phl-compute-03.internal (MEProxy); Tue, 06 Oct 2026 12:27:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolber.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1791304054;
-	 x=1791311254; bh=JaOT2qccNi/eJCcGFKpQPyFgrQUtWBfNjazKR4huGJc=; b=
-	aDJ0OTHCchnO4w6/CsJuj3/fyrPyNJFY4ttnZJ32SPYQ1baaTFGfKMO9PA/8DtHV
-	AsNd8Xsu84MUJmBFv5/ll9m+VcCPPgxqsSJT2n+TmbcmG6fD4QNVtpqhPT7Q4TOz
-	WTiDe6Lq4M1G6UjTKlQhaXAb09dBds0JAgfMd2zBhDs0nAwWOhjrNyhvGleNZe7y
-	gv2D+1qn6q4ZhtNXKj2Gf9bd1/cucl15+nnvNYNbFIeG1Ityus3JxcU9s/6Yq09B
-	rvUaskoGk8zZ/9UluAUKyH887JgkJ3AgCu3mmn5Pz+2uAheFZUt1bGNnsWBTrI8s
-	esQMOdnFBRIRZ0x2NygQJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1791304054; x=
-	1791311254; bh=JaOT2qccNi/eJCcGFKpQPyFgrQUtWBfNjazKR4huGJc=; b=f
-	BLlzhf/ACw2DnbRA/f0NFj/mSJdBV3nRoBDnYx0ZhOUCdVHCeVj6hFriIZUcll4y
-	HYVAhQJ/gnOC0Ye0ISQTWcG5vtU1Gkw0/1cJzG3YGxWj7mVmOmZpFzfFtgmSSU4p
-	2zIlVn2Awy7dvBu4dEzk7gpDC2IH/Ui8fad90Cn/5T8/cQz0sRwoyQhl/c3WT6vM
-	QeSUVmdTUYmyh1pgv5fkCka+NPaQY8yY1pDNukujWG1DBBmMXRhQ3cmPJx7egwpQ
-	5SSKHDSGFhca+orYJ6al39eGSm4jB6wPvueYsX8/+8FVKGO1vL/ruK2ntGDv4w4k
-	SihsKkwdF/NX3cIJy9R1A==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=sign d=wolber.net a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1791304054; d=wolber.net;
-	mf=PGNodWNrQHdvbGJlci5uZXQ+;
-	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm3:rsa-sha256:b3FJzKq4pLOtEWqmhdixGeprCz6d2zNDhrVsluKD9JSK9ry
-	sw8nbWsV0dFOJoUQIJyiTEkcHit5JN/LhxIrTF5SncwwsvIrasgKf/7QjH+JfE1h
-	c9zXBp6Sfbd6a83tYa49/4e+pDhAeMEysrNus2/Fu+ExU/RkDznbKQcSfK8gnQeD
-	VTqaqYrV0PzkvZyqsPZz562YMj7uvu0ZH6kAMmbe92J7yRkUmh50UUfJNI7RBkFu
-	D7wyMJiHfnMQt2Oyn35p4P/mQao5Aj6dUfNa4pqke7b28aSM9OFaCJK8iipgjAEe
-	vSs60onHp4Tz5OJMzmO1Zs01BVHvYiThZrlJhXw==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:9OT84S2nU/0nZ1U64BlOetYjb+/mK3i5jm+AZt7+BvI=:JaOT2qccNi/eJCcGFKpQPyFgrQUtWBfNjazKR4huGJc=;
-X-ME-Sender: <xms:cyHFav2-FXDCSQuCl4UvdwZDw3DXvUGCTqrIBXFwQjqh8CIUBrV_ag>
-    <xme:cyHFao5zpJVZ_b_VN1729xUOenCfieF6CzFcNFgMSngnQ20-3uZ_0r7V7QV9GBhep
-    oO-9X6fCh-9B98DlBKwcYnQwcjIoa_CrHgVs_8OaTQKpi1fe8iciKA>
-X-ME-Proxy-Cause: dmFkZTFmiYJcPEGs0A/qYvq8C4MVW3CyXeGEtkOmNDhmCvIFflxFleW7ny57bnBIuQlD59
-    cWped2LiQiXafwA6rH6Ez7xNTRfmFYqjWZDEOCaTaZ+Z4syI7a6O9pxCiwEuqUzZdAJDx0
-    9cWIwLNy/t9fQal6PAMxVsKLkQvvtnsbOBBlUQGL+vOqAn4RFaEl2GHR2b4L1cq9s/UcOt
-    fSVio0w3i/g32nR140kVw61B5rztlTHebHqHKh60OEO7PQ5ZJXf+jeu/CrVryWbHaULU5f
-    OwU38sNMeIhs7opS8zYCEwfGqY1WbgnZ0lsOM1x7qOw1aVGpBTx6LXlr7kO60t15lxjcJQ
-    Xoz6jr0j4pjIR+O+PZ9nKQoFOT41zfg/kPlJYxlgE0wkci+XoTiX+ZZ4/HdymIYC0wObkn
-    HaaEWy6CzVlyLPwlfBUMXcf7/ewqCKLgGcnZKpY7u8A8P13E+O9DUKSqLvkXaNFv3Ep0lA
-    8lCIbxA7dKgreq3nvVhgNUZmHcJ62jED4uvNreTSgAxMWJyV4LIJjvEg+Tau6puOkMEW+Q
-    yF3ikUrkFhHlmZykAc1jvQujIO8vFRGIPKWU9ZIhTUDXcVDmBiqvVDBuwrsYHt6OcsEW9k
-    jBh0wc2IwF7idYt+Gc1PXZUsdyXHFZGint2G86631DLv8ttt/eLnmgSc73pQ
-X-ME-Proxy: <xmx:cyHFalRulfrI0gOe5n2wt8jZZ03L3H4VPYS_luBEHa_EpwUN4qkbtA>
-    <xmx:dCHFaoRUoLvWxDt5tWh7AqecATopVRbeseTkPnbfbMcmvQLU5qEIMw>
-    <xmx:dCHFavHAlYNEcqam7lbTPA14JbY0ZXtQKXHVkmiSR5gfzrc-urkg9Q>
-    <xmx:dCHFakn3xNzhke-YnOSwSFwDAIfvsCGSwfRjOky3Yk59ZEtY7qv9iw>
-    <xmx:diHFapqJCieSCu-f8Lh0CzmaIrjuMtsndrKAb-WlzuewQeP1weUcPRy1>
-Feedback-ID: i5cf64821:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D087518E0071; Tue,  6 Oct 2026 12:27:31 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gpdrUp8d"
+Received: from jeffbarnes-ThinkPad-P14s-Gen-2i.corp.microsoft.com (unknown [52.177.6.198])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7000C20B7166;
+	Tue,  6 Oct 2026 09:46:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7000C20B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1791305194;
+	bh=O7Zo8jVe43pQTgN6U7gRviNoDS/kOV/3u2QWjpeM4po=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gpdrUp8dAJVjv9+CoHByFzj/OYp6rDPOaPh2KJDrAiR98HSQk+/UH8Cl5jPUQGV3z
+	 4oYb5bmpaNq6fiFXVIwE7sCpKh289Gf0TDCk0JLR+txkmBv6DQo4saqg3QDM90ei24
+	 /KXvS0eBJo240qWD1djYV17fo8312UESlJ7+yi88=
+From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	shuah@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	reddybalavignesh9979@gmail.com,
+	richard.weiyang@gmail.com,
+	michael.bommarito@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 0/3] tracing/user_events: Share state with existing threads
+Date: Tue,  6 Oct 2026 12:47:17 -0400
+Message-ID: <20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
+References: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A8p1gvDKPv03
-Date: Tue, 06 Oct 2026 16:27:11 +0000
-From: "Chuck Wolber" <chuck@wolber.net>
-To: "Marco Elver" <elver@google.com>
-Cc: kasan-dev@googlegroups.com, nathan@kernel.org, akpm@linux-foundation.org,
- anton.ivanov@cambridgegreys.com, oberpar@linux.ibm.com, ardb@kernel.org,
- arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- dave.hansen@linux.intel.com, dvyukov@google.com, hpa@zytor.com,
- jinghao7@illinois.edu, johannes@sipsolutions.net, jpoimboe@kernel.org,
- justinstitt@google.com, kees@kernel.org, kent.overstreet@linux.dev,
- linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- llvm@lists.linux.dev, luto@kernel.org, marinov@illinois.edu,
- masahiroy@kernel.org, maskray@google.com, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, mingo@redhat.com, morbo@google.com,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, richard@nod.at,
- "Steven Rostedt" <rostedt@goodmis.org>, samitolvanen@google.com,
- tglx@linutronix.de, tingxur@illinois.edu, tyxu@illinois.edu,
- wentaoz5@illinois.edu, x86@kernel.org, peterz@infradead.org,
- "Sasha Levin" <sashal@kernel.org>,
- "Aleksandr Nogikh" <nogikh@google.com>,
- "Taras Madan" <tarasmadan@google.com>,
- "Alexander Potapenko" <glider@google.com>
-Message-Id: <41913a77-5c57-4967-8166-765dd5dde1bf@app.fastmail.com>
-In-Reply-To: 
- <CANpmjNOaykC4McAj=gZghqPSQc9aGBP_CjgKmp3n2yjeJTxDSA@mail.gmail.com>
-References: <00ed0b57-ad05-4c5d-b152-7c81df94b23a@app.fastmail.com>
- <CANpmjNOaykC4McAj=gZghqPSQc9aGBP_CjgKmp3n2yjeJTxDSA@mail.gmail.com>
-Subject: Re: [PROPOSAL] Replace gcov and kcov with llvm-cov
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 6, 2026, at 4:10 PM, Marco Elver wrote:
-> On Tue, 6 Oct 2026 at 17:14, Chuck Wolber <chuck@wolber.net> wrote:
->>
->> Stemming from some hallway track conversations with maintainers at LPC
->> 2026, I propose replacing gcov and kcov in the kernel with llvm-cov.
->
-> I know the origin of the discussion, and wanted to chat, but I guess
-> that didn't happen and instead we get this proposal. It would have
-> been good to understand the requirements of users of gcov and kcov
-> (more below).
+A thread created before the first user_events registration can share an
+mm with another thread while retaining a NULL user_event_mm. If it later
+registers an event, it can create independent registration state instead
+of observing the state already associated with the shared mm. This allows
+pre-existing threads in one address space to register different events
+using the same enable address and bit.
 
-No problem, I still plan to seek you out to discuss this further. I just
-wanted to get the discussion going in case there was a broader set of
-opinions on this matter.
+Patch 1 fixes a locking issue found while reviewing this path. Duplicate
+enabler lookup performs a plain traversal of the enabler list, while
+asynchronous fault cleanup can remove entries under event_mutex. Serialize
+the traversal with that cleanup.
 
+Patch 2 finds the already-published user_event_mm for the current mm and
+attaches the pre-existing thread to it. The global list lock serializes
+lookup and attachment with the final task-count decrement and list removal.
 
->> We have a set of patches [1] that implements kernel based llvm-cov.
->> They need to be updated and some additional patches are required to
->> address some stubs that are missing noinstr annotation. But otherwise
->> I should be able to send a full set of patches (including taking on
->> the maintainer role) to remove gcov and kcov and replace it with
->> llvm-cov in fairly short order.
->
-> The hallway chat was supposed to figure out if there's a way to bridge
-> some of the gaps, but jumping the gun like this without having
-> addressed the requirements of kcov users does not make any sense at
-> all.
+Patch 3 adds a regression test covering two pre-existing threads that
+attempt to register different events at the same enable address and bit.
 
-I totally agree, and I am still up for that discussion.
+Tested on 7.3.0-rc6 with virtme-ng:
+
+- user_events ftrace_test: 6/6 passed
+- user_events dyn_test: 4/4 passed
+- user_events perf_test: 2/2 passed
+- user_events abi_test: 7/7 passed
+
+The user.preexisting_threads_same_address test passed.
+
+Changes since v1:
+
+- Split the duplicate-enabler locking correction into a preparatory patch.
+- Protect duplicate-enabler traversal with event_mutex.
+- Document and assert the group reg_mutex contract.
+- Simplify existing-thread attachment around user_event_mms_lock.
+- Serialize the final tasks decrement and list removal with lookup and
+  attachment.
+- Keep the regression selftest as the final patch.
+
+Jeff Barnes (3):
+  tracing/user_events: Serialize duplicate enabler lookup with event
+    removal
+  tracing/user_events: Share event state with existing threads
+  selftests/user_events: Test registration from existing threads
+
+ kernel/trace/trace_events_user.c              |  56 ++++++--
+ .../testing/selftests/user_events/abi_test.c  | 125 ++++++++++++++++++
+ 2 files changed, 171 insertions(+), 10 deletions(-)
 
 
->> If there is a desire to take this in pieces or implement other
->> intermediate steps, let me know. Otherwise I can generate a
->> monolithic set all at once.
->>
->> [1] https://lore.kernel.org/lkml/20240905043245.1389509-1-wentaoz5@illinois.edu/
->
-> llvm-cov is generally useful to have; llvm-cov is closest to gcov, so
-> that might make sense to replace.
-
-Swapping llvm-cov for gcov to start with is pretty straightforward, so I
-can aim my initial patch set there.
-
-
-> KCOV, however, cannot be replaced by llvm-cov. KCOV isn't a coverage
-> reporting tool for users, it's a low-overhead interface for fuzzers
-> (syzkaller/syzbot and many others). llvm-cov has no equivalent of:
->
-> - per-task and remote (kthread/softirq/USB/vhost) coverage collection
-> (to avoid polluting coverage with concurrent tasks);
-> llvm-cov counters are global and polluted by everything else running;
-
-Correct, and I have pondered some ideas for doing exactly that, but they
-would be quite experimental at this time. The patches come with the
-ability to clear the counters so that specific tests can be run, but
-that is still monolithic. I would love to discuss the potential for
-other methods of masking coverage so we can get granular results.
-
-
-> - ordered PC traces (edge signal) and comparison operands (TRACE_CMP);
->
-> - performance: a per-task mmap'd buffer reset with one store, vs.
-> reading/resetting
-> megabytes of global counters after every program;
->
-> - GCC support (we may want to keep at least one GCC-supported coverage tool).
->
-> It's also UAPI (include/uapi/linux/kcov.h), with existing users.
-> syzkaller heavily relies on KCOV's features above to achieve good
-> performance and coverage; there's no reasonable way today to migrate
-> to anything else.
->
-> As-is, NAK on removing KCOV. Consider replacing gcov with it.
-
-Understood. I will focus on replacing gcov for now, and I am interested
-in exploring what else is possible.
-
-Thank you,
-
-..Ch:W..
+base-commit: a90ee4305c4a5df72c11b31dacfdc76e00fcf78a
+-- 
+2.43.0
