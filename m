@@ -1,215 +1,105 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB0F4A1E0B;
-	Tue,  6 Oct 2026 16:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3327E4A0F01;
+	Tue,  6 Oct 2026 18:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791305259; cv=none; b=GP3HGiuwfbc6vCg4XQ96hjEKd8FhoRFcx8Y09TdV4WbABnSy/Sxyus9N6OP9COLght70tG7gm1r2eaO2H1oBst26Dx5Tdc0CtNX45esne+BkQ+NcSITS3WdD0o+rZk8c1h4Wef21qyero7EXyyl0BvxvE23BK6cHwXTV8ewC10o=
+	t=1791311675; cv=none; b=ERGF2gsDeJ5mSF1P32enA8zhRI6XzXUjAX2NGD7l1Y8DZf04p/R3yZiVBIXCF1UA/2/w3zAgta0m2RgRCZFDZFu9ZH9vPeZeFhYVQdrFTYlJMxoOSI0LFXjf6k2zZBi3lYWX8pqx0ZHiVa8oerT9eJz/h4YNsp881hZr8mYOZJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791305259; c=relaxed/simple;
-	bh=S7/Ci4iNCC/4LxPbXH5ym+tI8d8LLyVWUE3rJubNJxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ULtm3DWQ9oHC37e4W6x8wZieV6owyygxSl8S3rTCnILER/Ah2r6MtLZThge3deFwJJfLhybA/HtiLhWjf5cbwlFyEG9hHyBXmkpCMZ3cDySmWm8cjs4Ao+B90hIhzXX/rfsCp0mDMBorn4yhptE5fsU+izsL+1zFfp9uUuj4PmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JPeq1msS; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1791311675; c=relaxed/simple;
+	bh=Lo6XuEJWK83L8MNFBRGuFvOBrKkQaaNkgybvpzga4PI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7zVuSKAEnPeVmLi/hnBOz9U67h/G+sGhGeHhhRVHh/fSEjubKNde/ceTfVFfKtBRwiJn9Vz8kyUJjBkvdxT0mFtfCgwr37M0RnMexzAuNZCqZjV+bF+/v0pZCAMrsmjAsMkqvt9pVrPqyD4gPdEn0W0IK07z/HMnitbRcjkocw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVGehG62; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JPeq1msS"
-Received: from jeffbarnes-ThinkPad-P14s-Gen-2i.corp.microsoft.com (unknown [52.177.6.198])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7764F20B7168;
-	Tue,  6 Oct 2026 09:46:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7764F20B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1791305201;
-	bh=xWIFQRjVQEI4kSv2gPPutiiP0ePhm42qw7G/0EfM3EQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JPeq1msSWRcMfpomRTd3r7RU2vf37MWdC34AFkEtr2Jkre2Q0ba0AX716zqreiwx1
-	 APhmLkRIVy9Mb3XEGDO25Gd0V84IWyy51fxA6uuGR5cJhpHTJqWhSrUuoOOkreR8Gd
-	 rVWsfpcBhiS2BzabbM5RYY5MZQnZEkHd+s14Clek=
-From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	shuah@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	reddybalavignesh9979@gmail.com,
-	richard.weiyang@gmail.com,
-	michael.bommarito@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 3/3] selftests/user_events: Test registration from existing threads
-Date: Tue,  6 Oct 2026 12:47:20 -0400
-Message-ID: <20261006164720.3940272-4-jeffbarnes@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
-References: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
- <20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVGehG62"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE851F00902;
+	Tue,  6 Oct 2026 18:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791311672;
+	bh=xu3chdljYk93N4v9mi52eqGaMBxperNhAYuHdfcwsKI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=NVGehG62SsigyLbp4m2/jaaY12WpGLFt0Dc+Q7tnJfHCbWmK8yVbXpFeyUUDFvQya
+	 H8KtuDzsxI+ahBaroOSZQ4uYND6dV+6eTpe2iyoftQQwLgsxHXUSXX0qwe0bWehazl
+	 aiUY4oOYQ0q28vsLfELJWUtdFGeMdmN/CBOnErqwtUY+a2EvLFklCReZrNYKx96u24
+	 0ZNVRvZEPD4dNkKx3pEstyBZP1SBoyonoYwVmRxMe/zKZr5RbPBFAVx1w4SxxJ80a6
+	 QCaNOOGZvCAhZSN+nrsEJbCJk+ye3ueJvQ5/blv7frkxXqhrHa1KsOO/BC7VJLr4Aq
+	 6l+8OSE1SD0JQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 59561CE3A08; Tue,  6 Oct 2026 11:34:32 -0700 (PDT)
+Date: Tue, 6 Oct 2026 11:34:32 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Boqun Feng <boqun@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 01/14] rcu-tasks-trace: Let TASKS_TRACE_RCU_NO_MB
+ default on without RCU_EXPERT
+Message-ID: <c8b467cc-a916-48c7-b969-9b35dd04724c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20260929-b4-rcu-tasks-preempt-qs-v6-0-c111ee02caca@toxicpanda.com>
+ <20260929-b4-rcu-tasks-preempt-qs-v6-1-c111ee02caca@toxicpanda.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260929-b4-rcu-tasks-preempt-qs-v6-1-c111ee02caca@toxicpanda.com>
 
-Create two threads before either registers a user event. Have the first
-thread register an event using a shared enable address and bit while it
-remains alive, then have the second thread register a different event
-using the same address and bit.
+On Tue, Sep 29, 2026 at 05:07:18PM +0000, Josef Bacik wrote:
+> TASKS_TRACE_RCU_NO_MB defaults to ARCH_WANTS_NO_INSTR, on the grounds
+> (see 1a72f4bb6f3e) that architectures with noinstr entry code only ever
+> run tracing where RCU is watching and so can dispense with the read-side
+> smp_mb() in rcu_read_lock_trace() and friends.  But the option also
+> depends on RCU_EXPERT, and a Kconfig default is not applied to a symbol
+> whose dependencies are unmet, so on an ordinary RCU_EXPERT=n build of
+> such an architecture the option is simply absent and every Tasks Trace
+> reader pays for two full barriers that the architecture does not need.
+> 
+> Keep the prompt behind RCU_EXPERT, so that overriding the default in
+> either direction remains an expert decision, but let the default itself
+> apply unconditionally.  On x86-64 and arm64 defconfig this turns the
+> barriers off, as intended; architectures without ARCH_WANTS_NO_INSTR
+> are unchanged.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 
-The second registration should fail with EADDRINUSE because both threads
-share the same address space.
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-This test fails without the accompanying kernel fix because each thread
-can create a separate user_event_mm with an independent enabler list.
-
-Signed-off-by: Jeff Barnes <jeffbarnes@linux.microsoft.com>
----
- .../testing/selftests/user_events/abi_test.c  | 125 ++++++++++++++++++
- 1 file changed, 125 insertions(+)
-
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index b71813eaf5c0..7aef3078556e 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -11,6 +11,7 @@
- #include <errno.h>
- #include <linux/user_events.h>
- #include <stdio.h>
-+#include <pthread.h>
- #include <stdlib.h>
- #include <fcntl.h>
- #include <sys/ioctl.h>
-@@ -258,6 +259,130 @@ FIXTURE_TEARDOWN(user) {
- 	USER_EVENT_FIXTURE_TEARDOWN(self->umount);
- }
- 
-+struct thread_registration {
-+	pthread_mutex_t lock;
-+	pthread_cond_t cond;
-+	__u32 enable;
-+	bool start;
-+	bool first_done;
-+	bool second_done;
-+	int first_ret;
-+	int first_errno;
-+	int first_unreg_ret;
-+	int second_ret;
-+	int second_errno;
-+};
-+
-+static int reg_enable_name(void *enable, const char *name, int *saved_errno)
-+{
-+	struct user_reg reg = {0};
-+	int fd = open(data_file, O_RDWR);
-+	int ret;
-+
-+	if (fd < 0) {
-+		*saved_errno = errno;
-+		return -1;
-+	}
-+
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)name;
-+	reg.enable_bit = 0;
-+	reg.enable_addr = (__u64)enable;
-+	reg.enable_size = sizeof(__u32);
-+
-+	errno = 0;
-+	ret = ioctl(fd, DIAG_IOCSREG, &reg);
-+	*saved_errno = errno;
-+
-+	close(fd);
-+
-+	return ret;
-+}
-+
-+static void *register_first(void *arg)
-+{
-+	struct thread_registration *registration = arg;
-+
-+	pthread_mutex_lock(&registration->lock);
-+	while (!registration->start)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	registration->first_ret = reg_enable_name(&registration->enable,
-+						  "__abi_event_thread_a",
-+						  &registration->first_errno);
-+
-+	pthread_mutex_lock(&registration->lock);
-+	registration->first_done = true;
-+	pthread_cond_broadcast(&registration->cond);
-+
-+	while (!registration->second_done)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	if (!registration->first_ret)
-+		registration->first_unreg_ret =
-+			reg_disable(&registration->enable, 0);
-+
-+	return NULL;
-+}
-+
-+static void *register_second(void *arg)
-+{
-+	struct thread_registration *registration = arg;
-+
-+	pthread_mutex_lock(&registration->lock);
-+	while (!registration->start)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	while (!registration->first_done)
-+		pthread_cond_wait(&registration->cond, &registration->lock);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	registration->second_ret = reg_enable_name(&registration->enable,
-+						   "__abi_event_thread_b",
-+						   &registration->second_errno);
-+
-+	pthread_mutex_lock(&registration->lock);
-+	registration->second_done = true;
-+	pthread_cond_broadcast(&registration->cond);
-+	pthread_mutex_unlock(&registration->lock);
-+
-+	if (!registration->second_ret)
-+		reg_disable(&registration->enable, 0);
-+
-+	return NULL;
-+}
-+
-+TEST_F(user, preexisting_threads_same_address) {
-+	struct thread_registration registration = {
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
-+		.cond = PTHREAD_COND_INITIALIZER,
-+	};
-+	pthread_t first;
-+	pthread_t second;
-+
-+	ASSERT_EQ(0, pthread_create(&first, NULL, register_first, &registration));
-+	ASSERT_EQ(0, pthread_create(&second, NULL, register_second, &registration));
-+
-+	pthread_mutex_lock(&registration.lock);
-+	registration.start = true;
-+	pthread_cond_broadcast(&registration.cond);
-+	pthread_mutex_unlock(&registration.lock);
-+
-+	ASSERT_EQ(0, pthread_join(first, NULL));
-+	ASSERT_EQ(0, pthread_join(second, NULL));
-+
-+	pthread_cond_destroy(&registration.cond);
-+	pthread_mutex_destroy(&registration.lock);
-+
-+	ASSERT_EQ(0, registration.first_ret);
-+	ASSERT_EQ(0, registration.first_errno);
-+	ASSERT_EQ(0, registration.first_unreg_ret);
-+
-+	ASSERT_EQ(-1, registration.second_ret);
-+	ASSERT_EQ(EADDRINUSE, registration.second_errno);
-+}
-+
- TEST_F(user, enablement) {
- 	/* Changes should be reflected immediately */
- 	ASSERT_EQ(0, self->check);
--- 
-2.43.0
-
+> ---
+>  kernel/rcu/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+> index 332df7a7a634..e3cfe1fe5592 100644
+> --- a/kernel/rcu/Kconfig
+> +++ b/kernel/rcu/Kconfig
+> @@ -142,8 +142,8 @@ config TASKS_TRACE_RCU
+>  	default n
+>  
+>  config TASKS_TRACE_RCU_NO_MB
+> -	bool "Override RCU Tasks Trace inclusion of read-side memory barriers"
+> -	depends on RCU_EXPERT && TASKS_TRACE_RCU
+> +	bool "Override RCU Tasks Trace inclusion of read-side memory barriers" if RCU_EXPERT
+> +	depends on TASKS_TRACE_RCU
+>  	default ARCH_WANTS_NO_INSTR
+>  	help
+>  	  This option prevents the use of read-side memory barriers in
+> 
+> -- 
+> 2.55.0
+> 
