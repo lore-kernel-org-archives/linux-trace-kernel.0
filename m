@@ -1,106 +1,120 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE53E3BB695;
-	Tue,  6 Oct 2026 12:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6506A3E8C77
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Oct 2026 13:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791290336; cv=none; b=fV2SqU8X/w1wvNz1GIFq4Rcn8W1mFwajX/zAxRjzqX19AB/V3UyDKyEVoDUsnbShByGwH4i9pPHZwCgzXhpdS882KlZpqMdN4ecUXRRCb25vaFj5eU332Wz/kw8aOXCaZV4F4lgq/Xe8xekVBi3OJlsldzUr7AR75gZ6VlyHkkI=
+	t=1791293370; cv=none; b=mDY5BSzaPfRKRDUUrmbUGXj0UufR7YbYe3I+pG/GZxSCmZxbh/STcuGcZMA6sILAtTxI7d0NtQBP/f4s+2Azp2kDZNzbEi71cLec/MlAItbSv6FSjg69M61N1HyTJ9q7GdT0A0H0Kzc+jQi6I5OItKlPKvOMbBNFIWrQCoNK7n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791290336; c=relaxed/simple;
-	bh=Bt2DYz05yvJhE0QXotlcSuBia636kVJ9T2VUtRltyYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WlPV6R1tFUNOvpRcyBwMaIrZzcwlb8y3rgp8Vnsqr0hbKJRy8Rpn7hf7+PSgQ4N8b0C5MPYBJYoIMPe9ln4rlz1ZgrHIIBfo/wY11rLoivj7oatPcv+SQfb1j46xOMSuXKT8FiiyfMTAc7cqESfTE4TcklFc8p/PGmRJ8VKRnck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=HfjvW7ol; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1791293370; c=relaxed/simple;
+	bh=Jd9JtVPsfeTOoO3gMKQ1tUTrmD8+wav6j6ck+BCGZGY=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:In-Reply-To:
+	 References:MIME-Version; b=Hlj1RMbJ75W12yfnBqReuxsUwRWQdXhdHCYU7mYYuxEsg76CgoD61UrjJg6+pEEXcooaw8wMojfMW2zAZzG6at1IPxwaCLC/WklOtWCTZmy64pIuEhp6WIy5x4kC92YmXZoQyAzEjl471lyModOdsMENfUMo29dMx4CgmwmXJV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hc3znzuP; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="HfjvW7ol"
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 2BE1F12017E;
-	Tue,  6 Oct 2026 12:38:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 1422920025;
-	Tue,  6 Oct 2026 12:38:28 +0000 (UTC)
-Date: Tue, 6 Oct 2026 08:38:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kees@kernel.org"
- <kees@kernel.org>
-Subject: Re: [PATCH] tracing/user_events: Fail fork when event state
- duplication fails
-Message-ID: <20261006083825.2bbeaef2@fedora>
-In-Reply-To: <B502490D-E683-4401-A06F-067B47CBC2E6@getmailspring.com>
-References: <20261005215619.GA404-beaub@linux.microsoft.com>
-	<B502490D-E683-4401-A06F-067B47CBC2E6@getmailspring.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hc3znzuP"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2e2e064b932so15045435ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 06:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791293369; x=1791898169; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZIuf2SgMEBmvnAUyRYToawlWCUpnefJ0N51oaV1vfS8=;
+        b=Hc3znzuPKQ/mwixmIQP2ycX4J/cOUH7DraEc+sktZOe9jRKPPs6YMTouF9E4VMRVqm
+         7LWng5g/bGwCwTSv3VFvrQctNypjYu9UO8RIf0Pd5pIqTBJwtFyLWRiYGhMN0fi9MHIn
+         1urvLWWsYJdD55WEwFP6ORXTWawEBByNUzEQPdvXrMqHEzDqM7bYVtT2V1uxnHKJvl+I
+         F6uDcAK4vu/HmRaaKkaBqS89WZjsetiwDibFmQOxKNAzpQSoXyK4c3ASxLeK3AfVe2fk
+         MK0swa8XlJr6WYakGexByrteLw3c2r55Sv3+QfevEBla1ErvxC8OVjkb8//7z7T4JB9H
+         ZmMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791293369; x=1791898169;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZIuf2SgMEBmvnAUyRYToawlWCUpnefJ0N51oaV1vfS8=;
+        b=rgG+oJIA7Ttk2NP271hsXzkdK3oOBCRKQatJ7Atd65WfgfoQObyzgm+1YVMy3foUSS
+         uRNpMkjRiKT1HZ5uB66Ny4d5qCDVoruAwdrq9a4QJ/3JqrcaEHYZy8Dv0x6jSryp9JwO
+         yZ+letNVKK3OyUubj9nGTz1/oNZ4ChbNXx6s+AFdP9KsvA8Hju5/NN3HHyVbjAXdxhKK
+         uNx4w26wOcazxRE40QGM7o4vzpdbyu92xlQlPpXPsaOgT1B8zfJCqN9+RM100I9F6G4o
+         WvddbIm2FqDE2P1PNc+KO5n66ZbmbrhiqTPXya+hy730eWc1+pBPGz7E9mtTVjZevDuF
+         B9dg==
+X-Forwarded-Encrypted: i=1; AKwUvBz8+CdWWqPuDm7RS/mcHbY1qtNh/aBgZkroVFWv/VOceRSpW5B4WWg3dj/aAxs3gxuekCBJo9kv4NCBPIlU0ZxoX3I=@vger.kernel.org
+X-Gm-Message-State: AFuF++mUm+dx2AF9lsabJ1n6Q52WKwxMiT6PiqCF+dPxK2l9P1iP1SsP
+	6OlCpmEzQmRPviYlnVxjGSWXz6DCIJ8P4haQjIDbp7G8m0L8NYmG5hq5EQQf1YNM
+X-Gm-Gg: AYBFou0zqJJelJ3ZqPwKLlcG67j6KEOmAvk9bE+odq9aCWRCWGZ8fx8y/SKSJEieE5d
+	6xmqQTFgqAKWCKwvflfBYkmX+l3ubONJc9/tS4orPpFg2Us3RTt1K0f0W3QadbXdSKwcadGCl3c
+	/6ZuNuPwmu/c6zeoUHE0IHlwAEkU26vE3th2sB1vsFMOwIcra5dpwg0EwCfOUwvxd0mpnGGT2Jr
+	Wi+00BVwek8HXpRNRUdCLNyE01DGi0/zE8KYXU6YAVcKmNJ4+OjJf8b9LMCIvxoZ0zgxO4UZ3gZ
+	fq1Edc4udMzQ92j3uVIawILfwfQdanH1NZBYJUoG9V8R4TiR5JGyiJCi/VyKcarrbyO0P4zgfWQ
+	yleTmBaBZ2KnG6l17ZiVowyw1HsTnTMvRV8+SEg3T1DuGhP6R5rXtI2l6/rj3K61ji/kTVlY+1l
+	M9RDV4DJpM6DcN0fiLR/If3Z6sx8Qe3QCiM3qj+veABrUwVe17dg5VrH3dwvtDt+BewWycPf9ce
+	h2WtAeLt8Dwr+9kfT2/4y26rChgs66S/md+Ih0oQxHs67+/1zO3SdIIWov+JObvnyeWGG1IXkzj
+	BaVy
+X-Received: by 2002:a17:902:d988:b0:2df:a64a:756d with SMTP id d9443c01a7336-2e51049827bmr86635015ad.33.1791293368596;
+        Tue, 06 Oct 2026 06:29:28 -0700 (PDT)
+Received: from localhost ([153.61.198.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e5a55b6e01sm22625735ad.9.2026.10.06.06.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Oct 2026 06:29:27 -0700 (PDT)
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 06 Oct 2026 13:29:26 +0000
+Message-Id: <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Gabriele Monaco" <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, "Steven
+ Rostedt" <rostedt@goodmis.org>
+Cc: "Nam Cao" <namcao@linutronix.de>, "Wen Yang" <wen.yang@linux.dev>,
+ "Tobias Schaffner" <tobias.schaffner@siemens.com>, "Viktor Malik"
+ <vmalik@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+In-Reply-To: <20261001152042.124445-11-gmonaco@redhat.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com>
+X-Mailer: mkdraft (claude review draft; edit before sending)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 1422920025
-X-Stat-Signature: as9woai9kbsycpfuc45brr764s9xqc6o
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/yFsuBiot7rLeDHNRTCz/3ah2cXs/7YHw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Vh48PBtAVbf/WywjYrSe3RJhNz6QVz1orVCag/swWzU=; b=HfjvW7olN1GK87342kwDBgS5Kyff5hOHPkp6zbTBKnpEhSvLsjPUVatEjaDVUV+xzgxZWlQFZJ+sTNegZW+DyOY/mDM8kN2lZeDX+aSYlqZwt5gEuPT7Zh3GLuuZr5+0mITwBifzh6atlI5OuIwYWuOeOJT15Qn+Xu7ORS777eE=
-X-HE-Tag: 1791290308-74166
-X-HE-Meta: U2FsdGVkX18mPGQ22UHHyoLh5CDCmJWsJqFFBqoDjdgrmAMHuHHzd/oeeqhcizOxeZmDajsWUpj1433PtzreUm3HJUbTmqx3wO3olJXNsUTjCneceOoboZhPX9jVan6siteRKbCSIZClC4MurDLqxxCeLGUn95tcVRceKk5quG+3cpW5820T+O69scfTbXRlWyl6g3OIVEqPMmnK9oSkdX5KbcVRaPxNDfBs9FQisjMGhH/z0LRQk9sZ0Gi5HwmlSgWxOv+zzTPYWZvH50wT9Cn7XYomeHMXKU/21L0DhcYI4yApDr9ql/y+0RUGhuX8L7DHZSuLslnguvGNQh82DLaiN7GsCvhZ
 
-On Tue, 6 Oct 2026 08:01:14 -0400
-Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+On Thu, Oct 01, 2026 at 05:20 PM Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-> Yes, that was intentional. My concern with allowing fork() to succeed
-> after removing the child's user_events state is that the allocation
-> failure then becomes a silent loss of inherited tracing state.
-> 
-> The enable word is the userspace-visible indication that an event is
-> enabled. If the child loses its inherited enablers, later enable and
-> disable changes will no longer be reflected in that child. Removing the
-> state fixes the stale-value inconsistency, but userspace has no
-> indication from fork() that the child is no longer following the
-> inherited tracing state.
-> 
-> I also think there is a potential security implication here. If
-> user_events are being used for tracing or auditing, an allocation
-> failure could result in a successfully created child silently no longer
-> following subsequent enablement changes. I don't want to characterize
-> that as a security vulnerability without a demonstrated security
-> boundary, but silently losing that state seems undesirable for auditing
-> in particular.
-> 
-> That is why I favored returning -ENOMEM: either the child is created
-> with the inherited user_events state intact, or the failure is visible
-> to userspace and the fork is unwound.
-> 
-> I agree that uprobes provides a useful comparison. If you think
-> user_events should likewise be best-effort across fork, then removing
-> the state on duplication failure would address the inconsistency without
-> introducing the new fork() failure path.
+Overall looks much better.
+Some of the code reimplements bpftool, but it's user space.
+It can be cleaned up later.
 
-Question, to use user events the application needs to be involved,
-correct? That is, there's code in the application specific for
-user_events, as supposed to uprobes that can attach to any application.
+> +$(BPF_DIR)/%.o: $(BPF_DIR)/%.c $(VMLINUX_H)
+> +	$(QUIET_CLANG)$(CLANG) $(BPF_CFLAGS) -c $< -o $@
+> +	$(Q)$(LLVM_STRIP) -g $@
+> +	$(Q)$(LLVM_OBJCOPY) --remove-section=.rel.rodata $@
 
-Thus, it makes sense for uprobes to only warn on failure. Why should a
-task fail to fork if something attaches a uprobe on it and it causes
-issues.
+What is this for?
+Released libbpf ignores it with "skipping relo section" message.
+Removing the section only hides that some pointer in .rodata is left
+without relocation. What is it?
+libbpf in bpf-next needs .rel.rodata to resolve pointers to functions.
+See commit b223044a68d5 ("libbpf: Resolve pointers to functions in
+read-only data").
 
-Now if user_events is driven by the application that has them, then
-yes, it makes sense for fork() to fail if the user_event it created
-fails processing inside the fork(). If the user application is
-expecting something, then if it fails it should know about it.
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_HASH);
+> +	__uint(max_entries, 10240);
+> +	__type(key, da_id_type);
+> +	__type(value, struct da_monitor_storage_bpf);
+> +} rv_mon_map SEC(".maps");
 
-But this is only if user_events is driven by the application doing the
-fork().
+Why hash by pid?
+Use BPF_MAP_TYPE_TASK_STORAGE for per-task monitors.
+Once there are 10240 tasks bpf_map_update_elem() in da_create_storage()
+fails, the error is ignored, and the rest of the tasks are silently
+not monitored.
+Task storage is freed with the task. No need for handle_obj_cleanup,
+id, target and PF_EXITING.
 
--- Steve
-
+pw-bot: cr
