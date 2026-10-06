@@ -1,149 +1,66 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00617f01.pphosted.com (mx0b-00617f01.pphosted.com [205.220.177.167])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7C422157B
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 05:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70AB2AD35
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 07:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791352578; cv=none; b=mMWGaTSK0sj6+abZtXk54v/KphYUA0u9mPCOjuxK9k3xoEU1Kdupk90FyHVA+u87PYimGkLSAwqtUYkm9uu7ExtUqBrpXGADnL1ky6cbWd4SnNidjsALwh2B8SeJ8U1ZIxd76r46mVJfm+gMCEZvy9X3xCx/pCcO7J8Tveit1Tk=
+	t=1791357558; cv=none; b=mfieX927XUS5ncccD0M1ugESUJr1s/dDhIq2aPoAUaoSceTd5ZSHgIjsVmTkkX/jY3vyjRElmosCj7e9P8HXjSsQl9qlItvWU6xLq6NtmlFUX0k89m2L17pgxr/qso7uEvOE3vAbha7NfeVMv8zwBOoTLMHAabUWqSmP7/yQyRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791352578; c=relaxed/simple;
-	bh=tN36ci4IovZxa177e6ZIcYcj/xxHlJyHAOWZAih5w4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzZ9OSFckLEer1oCRdM1DUELbkOoEmpkPhz43GhnMUTmBT+Edq8YK21NN8JB4TWnb9exBQSskX5jv90WG8JQLGPlkPRixRxY1PRnBYvMG8IacHWfhRWyP/nwE/RVuhEmlNc9lGAkDwS+smr+C/Roo7ch+Qs8JoZlaj70pVy5X74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=G8aed7PZ; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="G8aed7PZ"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-48e94879f02so568840fac.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 22:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1791352576; x=1791957376; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VXBQtCNU8FUq8Qg2PYU28JD3k9JJVaiWZX17kjJP17A=;
-        b=G8aed7PZMlLTTD0ALVIFpoG5Hu8TLlFiy/czIU7jxg33jGDICKywZy5FVmAt5ON1hc
-         TUC2cp+XnlRLR5WKuOkfjVQzscMLdGf5k3lvtYpT/Oedj3DbcWEg1T5vxcgeJvlNJS6B
-         EgFoJBKeFOjETA4s//E2t/rqsOV+mdOn0b/7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791352576; x=1791957376;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VXBQtCNU8FUq8Qg2PYU28JD3k9JJVaiWZX17kjJP17A=;
-        b=Mx5azcj7Au7kegfKdEe9ZtCcjxfYSHy7WI1yCo6Dr5EKslUqNKcfJpcut80KDifeWj
-         a4HaxK5KEFBELLkAzxzLpJUunnGY3uR6420tpMPenntE2aGtoBVCadgUeQUsIXUueTUo
-         P3SkTUk6UqUXcUHSgJEQrEmoSpDhEXbncuprWSpQ0KFdl7CCJpE5DQ1vNnmRT2pqHBVX
-         HeJUHefT3A6f4KUdFN2cdAWil3G7QBt1m33TPqyqdA7FI0mT/olYtkgZIryJlt/DMDi6
-         gRZEFMHskfrNfirhAnW60COhcoeDGQ/Ms99QIhT3wCEYlcU995XXlkSp6tsaeKm+cTXx
-         24Vg==
-X-Gm-Message-State: AFuF++nZmPhD4XQlLBawjVFYmoJf851IRP//xhUy3bK7G0MAVTVoVlBz
-	gb0Z7BBg8qEGWaAdeuugXJLrofaVvEWHi1xP2i+fmg/LttjF0FmMzHuLltPd7XcN2MY=
-X-Gm-Gg: AYBFou3mNemuSRcwDfppT92DMwHbzLLDmUE1SzXYl373dWAwi960acmONNoiJkPIGBg
-	tHQc+dDqwMFugR3oYtVW2AVQaMTrQEHjXIS66YQJRmYyiwPxUmZPD92hgGXd6X0slaaQiHRmpG5
-	hYB8yvk1A0jjnYPQ9vxSBgduAgOQpIHQUoNB5srelCFCxnmWrRMHAR0QulceFnIeYvkFas2uTBh
-	2ftd0Wg7pwpay8/rNNOk+9X7ZqWniHjx2TpIiGJKRcrTSdPwLf0oYZ6vuw45oQZatYWv7r+loZR
-	E3wdpjwlNthHJ+HC2OVBbIFr7AW46h+AGJ0VtBrwm+qC3b/h9dORGj176MpGRkeky7JvG4vxY2N
-	9mfMGGMQHjcY0j4ZlaIDjeUyfjeqGiUqCkyvwrmeFcgVzl8cwVH6bVDMdzsQUMsNkfHAw3V3gYK
-	kvfqBh03mwUcvG98uDH9cTp0GEw7D0TbD9h4XxR96gcsxnRCtlNQEKkYNTEbQHJPn+mixq1qybD
-	trzBRb5wPPAag7QfuYthkglt8OU/V8Wg5rksSfurmIgPc5ECd0EwxWxs27kUE1e
-X-Received: by 2002:a05:6871:2b16:b0:49e:3edb:987f with SMTP id 586e51a60fabf-4a2594c418dmr1203497fac.11.1791352575733;
-        Tue, 06 Oct 2026 22:56:15 -0700 (PDT)
-Received: from com-75606 ([199.47.143.7])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a2571cab91sm1335158fac.11.2026.10.06.22.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2026 22:56:15 -0700 (PDT)
-Date: Tue, 6 Oct 2026 22:56:12 -0700
-From: Kyle Zeng <kylebot@openai.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rostedt@goodmis.org, outbounddisclosures@openai.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] tracing/filters: Check perf permissions before resolving
- .function
-Message-ID: <asXe_NWiBtGDXZVN@com-75606>
-References: <asXAxf0edslJI-Ge@com-75606>
- <20261007055225.32DDA1F0089B@smtp.kernel.org>
+	s=arc-20240116; t=1791357558; c=relaxed/simple;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BN3fq9mCcrEXutgsOPuKTDkGv/tW795szWohZAH1QBfYSoOK51vcPrhXtYIEJfeoxo4adkzyqlBPwpVU9yiiZCrH4hCXUaWTjCJzjABv63P2h8IMfIzxT/kUxLKOYbfe8nTpN/wv6avwYFFjTsP+UxgN/YlKDonIykSqT1HrHRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=psmicorp.com; spf=pass smtp.mailfrom=psmicorp.com; arc=none smtp.client-ip=205.220.177.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=psmicorp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=psmicorp.com
+Received: from pps.filterd (m0247528.ppops.net [127.0.0.1])
+	by mx0a-00617f01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69702doS3358284
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 6 Oct 2026 20:08:04 -0400
+Received: from egc-exch2.psmicorp.com (webmail.psmicorp.com [38.142.134.66] (may be forged))
+	by mx0a-00617f01.pphosted.com (PPS) with ESMTPS id 4h5b6q80dv-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 20:08:02 -0400 (EDT)
+Received: from EGC-EXCH2.psmicorp.com (10.1.1.111) by EGC-EXCH2.psmicorp.com
+ (10.1.1.111) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Tue, 6 Oct
+ 2026 17:55:53 -0400
+Received: from psmicorp.com (10.1.1.107) by EGC-EXCH2.psmicorp.com
+ (10.1.1.111) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.2507.61 via Frontend
+ Transport; Tue, 6 Oct 2026 17:55:51 -0400
+Reply-To: <greg@gospelmusicuniversity.com>
+From: Evans Thomas <_us@psmicorp.com>
+To: <linux-trace-kernel@vger.kernel.org>
+Subject: fund transfer opportunity,Reply..
+Date: Tue, 6 Oct 2026 23:55:49 +0200
+Message-ID: <20261006235549.2501D1E3C369FFBD@psmicorp.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261007055225.32DDA1F0089B@smtp.kernel.org>
+Content-Type: text/plain
+X-Proofpoint-GUID: iIyydwu1_ufF8ghnJuZ1fejfuS6IoQbY
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA2MDA5NSBTYWx0ZWRfX+cx0o8/j8LWh
+ hpuY1Gv486K/wepRFmUyqzlAA63a5C31F677+PvIeD8/4veFG8D9fHoGTf2/U/pByjJzgV47Oq/
+ lKzRbRFJOdVUgOlveW85+HpdbszEb4+Tha9Kk7ET/JlUvoPVhqlw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA2MDA5NSBTYWx0ZWRfX8CgLnBRlJqpJ
+ zuj+5k5aqHiUwU4ExYWLeLhArLpfthBGzDH7eOJPBM1MYk4vYW6haKqhc+ytpBeSHcwAkGdF2B3
+ /yBAjyb5xj9ygP0ZecRe3r4IxBw1rubllG1WMouNRG11H78Ol3dxLME0D8HfXH9snAse2ZUYd9m
+ tGPE+atDU2Uvy1esP65ty7548cfhTzBoSgObbk2of6OV38rNpSziDusmY2yHZ0ZJ2+SHNR0dPMm
+ 5qV87xe/buXOw+3zIUqQGOGj8dQhyEWjC+MWxOedCbiXzAE+hUSx0wyBW4Pxy/EGO+JsC3xotON
+ nPWzy5pBeHGThdNwYD514tMG+OHt4176jBPexbCzgWP6jz91LwbONH2xCYuNxe93YeGcEoiZXYc
+ rOXuszCQXhzO3T5NTqZOnqINlZgdwzmvZ06woEYu25W92t5zah7IEvUmxMT+lyk8umeCIwnipEw
+ 5+On2ndxyFIe8nbcMkA==
+X-Authority-Analysis: v=2.4 cv=E7BYNqdl c=1 sm=1 tr=0 ts=6ac58d62 cx=c_pps
+ a=sNj4pI0fii9qGHoVqNzRVg==:117 a=sNj4pI0fii9qGHoVqNzRVg==:17
+ a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=ZHGAjPH774soz-f4Le74:22
+ a=FHnH0SYMNjvGwZk24hmG:22 a=tclcd6dtLQvEqt9_mmAA:9
+X-Proofpoint-ORIG-GUID: iIyydwu1_ufF8ghnJuZ1fejfuS6IoQbY
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 adultscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610020000 definitions=main-2610060095
 
-On Wed, Oct 07, 2026 at 05:52:22AM +0000, Masami Hiramatsu wrote:
-> On Tue, 06 Oct 2026 20:47:17 -0700, Kyle Zeng <kylebot@openai.com> wrote:
-> > On Wed, Oct 07, 2026 at 03:44:20AM +0000, Masami Hiramatsu wrote:
-> > > On Tue, 06 Oct 2026 15:51:12 -0700, Kyle Zeng <kylebot@openai.com> wrote:
-> > > > perf_trace_event_perm() allows tracepoint counters that do not request
-> > > > PERF_SAMPLE_RAW without raw tracepoint permissions. A self-targeted,
-> > > > disabled event with exclude_kernel=1 can therefore reach the filter
-> > > > compiler even at perf_event_paranoid=2.
-> > > >
-> > > > The .function suffix accepts any field of sizeof(long) and resolves its
-> > > > operand through kallsyms_lookup_name() and kallsyms_lookup_size_offset().
-> > > > The success or failure of a numeric filter discloses whether an address
-> > > > belongs to a known kernel symbol range. On x86-64 this can be used to
-> > > > recover the randomized kernel image base. A named filter also exposes
-> > > > the resolved symbol range through the counter when the tracepoint field
-> > > > is controlled by the caller, as with a syscall argument.
-> > > >
-> > > > Pass the filter's perf origin to the predicate parser and require
-> > > > perf_allow_tracepoint() before resolving a .function operand. This uses
-> > > > the same sysctl, initial-namespace capability and LSM policy as raw
-> > > > tracepoint access, and closes both the numeric and named-symbol oracles.
-> > > > Do not change ordinary perf counting filters or filters created through
-> > > > the separately controlled tracefs interfaces.
-> > > 
-> > > Good catch!
-> > > 
-> > > >
-> > > > Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
-> > > > Cc: stable@vger.kernel.org
-> > > > Assisted-by: Codex:gpt-6-astra
-> > > 
-> > > nit: This should be 
-> > > 
-> > > Assisted-by: LLM
-> >
-> > Didn't know there was a change of convention. Should I send in a v2 or
-> > it will be picked up automatically?
-> 
-> We can change the tag when picking up, so you don't need to resend it only
-> for tag update. But for this patch, please update according to Sashiko's
-> comment.
-
-Thanks for the explanation.
-I just sent a v2: https://sashiko.dev/#/message/20261007050315.65139-1-kylebot%40openai.com
-
-Best,
-Kyle
-
-> 
->  https://lore.kernel.org/all/sashiko-outbox-162502@kernel.org/
-> 
-> Thanks,
-> 
-> >
-> > Thanks,
-> > Kyle
-> >
-> > > 
-> > > > Signed-off-by: Kyle Zeng <kylebot@openai.com>
-> > > 
-> > > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Thanks!
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
