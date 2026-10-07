@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA47C3793BF
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 22:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6E935E1AA
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 22:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791413244; cv=none; b=JY4qZegzo5P0HhC7swFda6VdQTlgk3BgvWa3oB3rcT0znO61iR3eOIUPtUVy+vF0Q3Nz3Fe8yvdGpCujLUYdqhOd0UnnpXN8TYaGznimlljJ5bX9+nG0RdS1SK6SzYKEch/KiTZkTqFPgHT9Ma8bKJpD6gt78nb6R0GNjVuXUdA=
+	t=1791413497; cv=none; b=ALNjz+1sposD8qcDcFZt513vbt+EDxNL7o6wbkkL8aXmeuRsTQ45px4NVxrgh+59eUO+xfwkYutt3r9EH1tc4r7lqbZc09P/+l6aFa7iXGgBO1UnH5RtHJ6Xqqg7XVyBGw5IL4z2C8rZx0qrT6dy2XZfR8zmHd4nvSBR4EAxn7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791413244; c=relaxed/simple;
-	bh=1kTuoMjqwhV083iMxzIYheRV9mR3sRoaNzTQaU7dpDY=;
+	s=arc-20240116; t=1791413497; c=relaxed/simple;
+	bh=ousAeBFCpOZtzCQeMDR8GA45dLQ+aJvDrlx/7i6mUXQ=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=CqKJ1xdcPp3bYIx6U7UFoDId98vNaeNnuPJijbX8JUW8eazdtq9fHN/+Kd6kK4LNugpWzS1cvmE6qxTS7n8egwqoTW6JZtFqobhIL2UCISeX9hXGAt0PRHeQ6/qHDw8Q3dw6IbsdDhrdlrtypRviyt2nRXQWwsXQhMeNtP4sbuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6tliXww; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=dYDnos4aQDe0TK8JHXG5hTGLhJo/VFlvZE33O07nG1aLpXGk7vrX+wnIZTNTZtjBnEPIYTGEiUF/3Ra9npjOH/dRVL8Rmg6rwkkXQp69k6ctG+/5oweSXza6b7PIBRxO42GTehrXH++K/Twpx8qbLQPamB7Pexrj+ruXCiWqFY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuLonAZ+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6tliXww"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A3871F000FF;
-	Wed,  7 Oct 2026 22:47:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuLonAZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 894591F000FF;
+	Wed,  7 Oct 2026 22:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791413243;
-	bh=eZHuGrSqmh/C/1VcENUy6pdX921dJUkKR9TWl8N+Uo8=;
+	s=k20260515; t=1791413495;
+	bh=yF2U3L/BAsM05ljO0gWo3v1ULNj99CxEV0YZFub4ZHk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O6tliXwwDSFblOcjqU1XSYrsQtSGjfYhXo/Ri0CjRnRoOGjXRtDWOt61oeTI+kogL
-	 ELW7wfUCAxAZX87ZAOKjftAJAM9OEn5Ki+bgk5N+MNNgHytNdD9cJb8QXVniZcPVmj
-	 ypI0jgTIHY1YSsfOKqdQN5oT9tiGEdeHG0LGNBEP5rfyHLrfdrGhjC0OVRpufwsCaz
-	 0qsz8pl9Y9LJY5en7pqLYCGkEyb1VB/rHI7QtrfIRRH9ETejzFWcrAep6JZH2IUNQn
-	 UAOUHwyH5p47cdxXuQC/P3oYdSFG/X/eMqm58tGmqfuaglcNOTzmzgNo1IewGddiTF
-	 BiCt1ABhkPsFw==
-Message-ID: <sashiko-outbox-163422@kernel.org>
+	b=EuLonAZ+FE4O4Kw7KjKraLJPbsGAtj6RHFl6JxQF9Vl6gg+ufHKrZqe5ahShlqcZU
+	 lqAmBrEglUI8udlaKjcbweOiLew4uFBTlerqmNakgJZ4pr5Z6MWPONG6++HcItNqn7
+	 /pEDbPxl/TtLhQmu9VVqbnhTWI6jbD3zdq1l+XPRLIHx6HNE1iXi3IAekLtnpW1g/V
+	 4IQ1+NRNVjBsf0gD2IPY4/u8JjUBDSQJyl+XOXvl6HSQ6iQLGnmUYrQ/Y4p6YaoXKV
+	 9nSF5cPxLzyG2e+VC3GA/aKIWmpCkhg0nKKo9op+d5VZxVALnGeTa7o862iChunCiI
+	 7zGWj0D2po3gQ==
+Message-ID: <sashiko-outbox-163425@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/4] alloc_tag: Extend allocinfo_filter to support
- tracing queries
+Subject: Re: [PATCH v2 2/4] alloc_tag: Introduce IOCTLs to toggle allocation
+ tracepoints
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Abhishek Bapat" <abhishekbapat@google.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <aae089a81ea891e1bc7e3ad171064d37d800ad1a.1791410886.git.abhishekbapat@google.com>
+In-Reply-To: <1f77364a04d0ae20cf07efaca779756f92ec39f6.1791410886.git.abhishekbapat@google.com>
 References: <cover.1791410885.git.abhishekbapat@google.com>
- <aae089a81ea891e1bc7e3ad171064d37d800ad1a.1791410886.git.abhishekbapat@google.com>
+ <1f77364a04d0ae20cf07efaca779756f92ec39f6.1791410886.git.abhishekbapat@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Oct 2026 22:47:23 +0000
+Date: Wed, 07 Oct 2026 22:51:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,56 +47,79 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] uapi: alloc_tag: ABI break in ioctl numbers due to struct size=
- change
+- [Medium] abi: UAPI struct layout mismatch for 32-bit compat userspace bre=
+aks IOCTLs
 --
 
-commit 0e3a8bd841b68b1a5bbc064967d29e2e813bc3ba
+commit 8d88f08e2268b0340428c21059f2534d77368ca5
 Author: Abhishek Bapat <abhishekbapat@google.com>
 
-alloc_tag: Extend allocinfo_filter to support tracing queries
+alloc_tag: Introduce IOCTLs to toggle allocation tracepoints
 
-This commit extends the allocinfo filtering mechanism. It allows userspace =
-to
-filter memory allocation tags based on their trace state.
+Introduce a new IOCTL (ALLOCINFO_IOC_TOGGLE_TRACE) to selectively
+toggle tracing on allocation call sites. Userspace tools can use the
+existing filtering mechanism to specify the set of tags to toggle
+tracing for.
 
 > diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_ta=
 g.h
-> index dafcba2f7e2c1..a96054ac22376 100644
+> index 7d4618bea0434..dafcba2f7e2c1 100644
 > --- a/include/uapi/linux/alloc_tag.h
 > +++ b/include/uapi/linux/alloc_tag.h
-
-[ ... ]
-
-> @@ -75,6 +78,7 @@ struct allocinfo_filter {
->  	__u64 max_size;
->  	/* filter criteria only; see allocinfo_counter.accurate for actual accu=
-racy */
->  	__u64 inaccurate;
-> +	__u64 tracing;
+> @@ -85,9 +85,20 @@ struct allocinfo_get_at {
+>  	struct allocinfo_tag_data data;
 >  };
+> =20
+> +struct allocinfo_toggle_traces {
+> +	/* inputs */
+> +	/*
+> +	 * Tags matching the filter are toggled; an empty mask selects all tags.
+> +	 * Size criteria are checked once, against the tag's size at call time.
+> +	 */
+> +	struct allocinfo_filter filter;
 
-[Severity: Critical]
-Does adding this 8-byte field to struct allocinfo_filter cause a UAPI
-regression for existing userspace applications?
+[Severity: Medium]
+The new struct allocinfo_toggle_traces embeds struct allocinfo_filter.
+Does this struct layout introduce a UAPI mismatch regression for 32-bit com=
+pat
+userspace?
 
-Because struct allocinfo_filter is embedded within struct allocinfo_get_at=
-=20
-and struct allocinfo_toggle_traces, their total sizes increase by 8 bytes.
-The IOCTL command numbers, such as ALLOCINFO_IOC_GET_AT, are generated usin=
-g=20
-the _IOWR and _IOW macros, which encode the size of the argument structure=
-=20
-directly into the command value.=20
+The struct allocinfo_filter contains struct allocinfo_tag (196 bytes)
+directly followed by __u64 min_size:
 
-When the structure sizes change, the numerical values of the ioctls change =
-as=20
-well. Since the kernel's allocinfo_ioctl does not include handlers for the=
-=20
-legacy ioctl numbers, older userspace applications issuing the ioctls using=
-=20
-their original command numbers will fail with -ENOTTY.
+include/uapi/linux/alloc_tag.h:
+struct allocinfo_filter {
+	__u64 mask;
+	struct allocinfo_tag fields;
+	__u64 min_size;
+	...
+};
+
+On 32-bit architectures like i386, __u64 has a 4-byte alignment requirement,
+placing min_size at offset 204. On 64-bit architectures, __u64 has an
+8-byte alignment requirement, inserting 4 bytes of padding and placing
+min_size at offset 208.
+
+Because of this size disparity (236 bytes vs 240 bytes for
+struct allocinfo_toggle_traces), the IOCTL command number generated by
+_IOW() in userspace will differ between 32-bit and 64-bit builds.
+
+Since the pre-existing allocinfo_compat_ioctl() directly passes the 32-bit
+IOCTL command number to the native allocinfo_ioctl() switch statement
+without translation:
+
+mm/alloc_tag.c:allocinfo_compat_ioctl() {
+	return allocinfo_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
+}
+
+Won't the new ALLOCINFO_IOC_TOGGLE_TRACE command fall through to default
+in allocinfo_ioctl() and return -ENOIOCTLCMD, breaking the feature for
+32-bit userspace tools on 64-bit kernels?
+
+> +	__u64 enable;
+> +};
+> +
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791410885.gi=
-t.abhishekbapat@google.com?part=3D3
+t.abhishekbapat@google.com?part=3D2
