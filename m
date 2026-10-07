@@ -1,56 +1,56 @@
-Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6409C484881
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 22:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CFB495AF1
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 22:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791412813; cv=none; b=rjyQELjs5KXKUaJ55fBv3dLKlYFIiC4I0IYFMz1h+i8Zj+jdPENlMuPrqGfAPgWAOkCg79dPtiBIXr1RDYKpyuZcTkq7aSSuakjc+oGIsUTzKHe1R8+Kb7yJbsiTU6rdyIQfvWjQDoruDjaOqemSfAac+/JS9e2bjDSaAarSVXA=
+	t=1791412819; cv=none; b=Gs/18uJRUfB8rKZXquInER2iEfI/VH5Kc7wYiGMTAflcHjk6mq7LqrwMRf28C8X2lAijhvmB8LVPXt9oLaG1pa0BGgRrlyOR2AsRnDqJK9WKHO7zuCaV7Nw9rhp+JUjeDW5gn2shQJpI8YodJGr4M79FMkgCM/NgeVVEdAeljeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791412813; c=relaxed/simple;
-	bh=/pc0hZL9R1yVk6AaFZtgoK1+ZS2TQMamOVf7NMsOrdw=;
+	s=arc-20240116; t=1791412819; c=relaxed/simple;
+	bh=01Q1uV6Ad7dxVOPH5ByGcAK8Y5Nv70pd1N0ASxQltEs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RIqRtbc9PXP/Ci/AcfOJpwBiSzgP/a2Ijv4l/u2mxCzlMxvsS2iEMiatk3x1TU5aVltsfyz1dE7GzLcU10eOTJGUUNTLqc+Y6OpvKrN1PI87zsrL9siQW6vz6cn6xh2ixC2QbMP+BZF2MIcPWdKymwhrBm69/trXhtkw3X6GbXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--abhishekbapat.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YqvAYq/f; arc=none smtp.client-ip=74.125.82.71
+	 To:Cc:Content-Type; b=Y/TiBkKK0vc79kufBr4eQQvoHP1s3SsqUVuFulsIqobgHI8u4j7aoXo3WC4orc7ZZrenNUDK5uwPpzr1M3rW5WOpcFEVTMCEj7txtD1wW6Zn7wPHjyM9GOfEpL5D4d6yfzbb1E1RuG9C1HylhNb1eXaiUUSZFmpDsDANCdgvRIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--abhishekbapat.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ISy8uSlg; arc=none smtp.client-ip=74.125.82.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--abhishekbapat.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YqvAYq/f"
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1438fef603cso5603204c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Oct 2026 15:40:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ISy8uSlg"
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-3515d2fc5ebso4721645eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Oct 2026 15:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791412811; x=1792017611; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791412814; x=1792017614; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9D5gsWzyCIxnio62hRxNUwEKaT5VZFEdzDbs5uZhd24=;
-        b=YqvAYq/frcdNxL75oKv9WDk/WkrhsQdRO9yOqW2rmMwK7gVyMPuF5PUNWQdyFLl9aA
-         aeLZ6FGFIBygmnamQbMMjO5PGUAMMlJ+pzg94DT3voAisguThjVsxW/6vaMb79ZMxRiy
-         P2fPtD0W83H0So4f4zPTXA2xaU9cUI4/ZjUwgzdUpMLcSAyJn6kv7Ny48F7c3Fpgg1kK
-         XdYUx7fIKf5oOu0RmS+2Cg0ND8Sa0n2gEw9oYDDjOIbitedIzPzoDcw3UrUYMi631+7T
-         FcgzsMoSWA1CkRAHq2Dj4hoamlIlf4gkPLE7CcDnwBb2ft8ue8rAiYWBb1HkqqCWvKuq
-         GnEw==
+        bh=jel1GtKvrryvSIBAQ3atkvcxRH+gBV+jXFIXOBoXOeg=;
+        b=ISy8uSlg7AVgwS3A9p3bxIRV8OKoirrIkW/dcqM8ckuacU0AgWB4E30kHc2kIJ12j0
+         dvOwqXlnbr5UocCcl5fooyZagDyG+yV3zph6Z7xygEZNfZ7GqTDTQVYCS1mV67OHuKFn
+         if7m81khJa7pR9J32VDA6RfuiCDRfpUEx2uYA83G7qNV1Dw0dVvWnoe2t8U8W4q+PrRM
+         we21C7wXhR0at/KRaS5AcYW0gPr14zfFKuIMFJDSXr7imIDlaw87pd0qC9J9T5OI6o1l
+         1A71QVWFrKO1/v/jQ/sxf4g2QiMQexMJP3XPC1SeYIRm47wJEFL6u9MDfMtSwzgT2pg2
+         27Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791412811; x=1792017611;
+        d=1e100.net; s=20260707; t=1791412814; x=1792017614;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9D5gsWzyCIxnio62hRxNUwEKaT5VZFEdzDbs5uZhd24=;
-        b=ZVvsDBSj/lyfie1rMVNM7moMypInynA6m2ilK2m+hS7h1fVdrSNUDE311+t/yrUbKi
-         fF6d71ZWgVSk4+7jE5roq7Pt4ynOL5TFhxXhiRUxti94rZH4Q1DfMg+D6Y86mmE3Qs+B
-         xc+gDJYlG1B2KcVZsFh1aYrOI4JrvcXr726GKS4nVRzqqanYdbXEl1FtvEsVWOcJiHhe
-         wgDo0sCTH0/nV/W5OMZqly4OG0KLp5wbYu14CPlzVnzQhHR1lyh5YDx17f1+BmAK5xtf
-         8KesESpPF033j0HtTcHCZCorJslLu1fDUhNMGJeYCO7XrdGxOdnEC3FAyid33Xr/pXFg
-         odRQ==
-X-Forwarded-Encrypted: i=1; AKwUvBymoXkfY1XF7ZZkrBxqVb/3pCn9PScXdxkDQiXCoAszU17+OtNU7dUxER7+P7EaZAn6Fl9Y+7GXPiNq8Nu+RaZ++Pg=@vger.kernel.org
-X-Gm-Message-State: AFuF++mOR1TbqDtVycOfndxVytkzwjW+CRoE1lJvzNFyy4hQZk05q8bc
-	2Xkw2ILf5swvIatFp4p/Qve7dbNVBXHsXkWyMCSW/yWk19AB24LKm3MumfEaZKm7xqT+vOjg+F1
-	DkNU9a7Zgec6bWoTFBr6akqVJpOywB219Vg==
-X-Received: from dldyr16-n2.prod.google.com ([2002:a05:701b:4510:20b0:143:7311:4b88])
+        bh=jel1GtKvrryvSIBAQ3atkvcxRH+gBV+jXFIXOBoXOeg=;
+        b=ZqiBqr5xmPfXdrRSqadC6Csv73L7v0B4BERfsYuFPI8FcoZmpyY/dfB9PWfdcstIch
+         PXGlbLntanISCef2tNlT7ElbtWMrIvR4AF0+8Vm2urmj40MCEtKTIdNVkjWGjcJervaP
+         rbgkXY8cWfhuM6VxoSDWk6xRmndv662eZnRdmvjsp6fJ7v8qR1mGwD8zWTk/DoRviFu8
+         YeNdyWhxqnI1RNx5LfZzxk05hBWeQFRG6lyI23Oq4693g8xaUke9CKDfvVRcWP8T/bkS
+         uw6hnEp6wMjSCQpP3lcExAKDbG19E/+x40LIIrtSE8SNkRMoxyyjbgQWvtTKpIBgtyA2
+         rBpw==
+X-Forwarded-Encrypted: i=1; AKwUvBzSIaJMK3A5cB7n0EY5FIVJbtXx6aZhAJzROU/q2/tKp0t/JjK1j92EYP3DVMaD4WZyfwTD/wx9dtYP55iSUiFtoMw=@vger.kernel.org
+X-Gm-Message-State: AFuF++mMeVf6VvhAINgLLXM6RFbuJdvAd4cBG9LjgNjwlcWN61B8jHHt
+	vUa4QyUYNcFgjcG61uv2YOmazmQ1KPRQ2WpTxnpGqHx3L2pwW6ADeh4Ry5Gok5NzAsRvhAwNBHJ
+	oEU2QtMLZZIlmuPfY9R8/1lz3E1GKHaKJVg==
+X-Received: from dygf10.prod.google.com ([2002:a05:7300:134a:b0:351:21f1:20ca])
  (user=abhishekbapat job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7022:f68e:b0:144:c112:5f23 with SMTP id a92af1059eb24-162071f8e9dmr5633509c88.24.1791412810906;
- Wed, 07 Oct 2026 15:40:10 -0700 (PDT)
-Date: Wed,  7 Oct 2026 22:40:01 +0000
+ 2002:a05:7301:1e84:b0:34b:c18d:c28e with SMTP id 5a478bee46e88-3515dd837bemr5875331eec.7.1791412811980;
+ Wed, 07 Oct 2026 15:40:11 -0700 (PDT)
+Date: Wed,  7 Oct 2026 22:40:02 +0000
 In-Reply-To: <cover.1791410885.git.abhishekbapat@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1791410885.git.abhishekbapat@google.com>
 X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
-Message-ID: <aae089a81ea891e1bc7e3ad171064d37d800ad1a.1791410886.git.abhishekbapat@google.com>
-Subject: [PATCH v2 3/4] alloc_tag: Extend allocinfo_filter to support tracing queries
+Message-ID: <ed2e9cb670af7d013aaf6585aea551587647f070.1791410886.git.abhishekbapat@google.com>
+Subject: [PATCH v2 4/4] alloc_tag: Add a test for trace state toggle and filtering
 From: Abhishek Bapat <abhishekbapat@google.com>
 To: Suren Baghdasaryan <surenb@google.com>, Hao Ge <hao.ge@linux.dev>, 
 	Andrew Morton <akpm@linux-foundation.org>
@@ -69,81 +69,186 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org, Abhishek Bapat <abhishekbapat@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Extend the allocinfo filtering mechanism to allow users to filter tags
-based on their trace state.
+Following the introduction of the ALLOCINFO_IOC_TOGGLE_TRACE IOCTL and
+ALLOCINFO_FILTER_MASK_TRACE_ON filters for selective memory allocation
+tracing, update the kselftests to validate this behaviour.
+
+Introduce `test_tracing_toggle_and_filter`, which validates the
+architecture by:
+1. Dynamically flipping trace execution state for a designated allocation.
+2. Query the same tag again, and check that the returned tag reports the
+   new state in its `trace_on` field.
+3. Restore the tag's original trace state, also on failure, so the test
+   does not leave tracing changed on the system.
+
+The test uses `dup_mm()` function name with the function filter in the
+IOCTL to run the above steps. If the `dup_mm()` tag is not found, the
+test is skipped.
 
 Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
 ---
- include/uapi/linux/alloc_tag.h | 8 ++++++--
- mm/alloc_tag.c                 | 8 ++++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ .../alloc_tag/allocinfo_ioctl_test.c          | 113 +++++++++++++++++-
+ 1 file changed, 110 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_tag.h
-index dafcba2f7e2c..a96054ac2237 100644
---- a/include/uapi/linux/alloc_tag.h
-+++ b/include/uapi/linux/alloc_tag.h
-@@ -38,7 +38,8 @@ struct allocinfo_counter {
- 	__u64 bytes;
- 	__u64 calls;
- 	__u8 accurate;
--	__u8 pad[7];
-+	__u8 trace_on;
-+	__u8 pad[6];
- } __attribute__((aligned(8)));
- 
- struct allocinfo_tag_data {
-@@ -54,7 +55,8 @@ enum {
- 	ALLOCINFO_FILTER_INACCURATE,
- 	ALLOCINFO_FILTER_MIN_SIZE,
- 	ALLOCINFO_FILTER_MAX_SIZE,
--	__ALLOCINFO_FILTER_LAST = ALLOCINFO_FILTER_MAX_SIZE
-+	ALLOCINFO_FILTER_TRACE_ON,
-+	__ALLOCINFO_FILTER_LAST = ALLOCINFO_FILTER_TRACE_ON
- };
- 
- #define ALLOCINFO_FILTER_MASK_MODNAME		(1 << ALLOCINFO_FILTER_MODNAME)
-@@ -64,6 +66,7 @@ enum {
- #define ALLOCINFO_FILTER_MASK_INACCURATE	(1 << ALLOCINFO_FILTER_INACCURATE)
- #define ALLOCINFO_FILTER_MASK_MIN_SIZE		(1 << ALLOCINFO_FILTER_MIN_SIZE)
- #define ALLOCINFO_FILTER_MASK_MAX_SIZE		(1 << ALLOCINFO_FILTER_MAX_SIZE)
-+#define ALLOCINFO_FILTER_MASK_TRACE_ON		(1 << ALLOCINFO_FILTER_TRACE_ON)
- 
- #define ALLOCINFO_FILTER_MASKS \
- 	((1 << (__ALLOCINFO_FILTER_LAST + 1)) - 1)
-@@ -75,6 +78,7 @@ struct allocinfo_filter {
- 	__u64 max_size;
- 	/* filter criteria only; see allocinfo_counter.accurate for actual accuracy */
- 	__u64 inaccurate;
-+	__u64 tracing;
- };
- 
- struct allocinfo_get_at {
-diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-index 262f00f2bba9..8e63f347657b 100644
---- a/mm/alloc_tag.c
-+++ b/mm/alloc_tag.c
-@@ -250,6 +250,7 @@ static void allocinfo_to_params(struct codetag *ct,
- 	data->counter.bytes = counters->bytes;
- 	data->counter.calls = counters->calls;
- 	data->counter.accurate = !alloc_tag_is_inaccurate(ct_to_alloc_tag(ct));
-+	data->counter.trace_on = alloc_tag_is_traced(ct_to_alloc_tag(ct));
+diff --git a/tools/testing/selftests/alloc_tag/allocinfo_ioctl_test.c b/tools/testing/selftests/alloc_tag/allocinfo_ioctl_test.c
+index 74fd64b2370c..eb52ca1a1dc4 100644
+--- a/tools/testing/selftests/alloc_tag/allocinfo_ioctl_test.c
++++ b/tools/testing/selftests/alloc_tag/allocinfo_ioctl_test.c
+@@ -48,6 +48,11 @@ static inline int __allocinfo_get_next(int dev_fd, struct allocinfo_tag_data *pa
+ 	return ioctl(dev_fd, ALLOCINFO_IOC_GET_NEXT, params);
  }
  
- /*
-@@ -323,6 +324,13 @@ static bool matches_filter(struct codetag *ct, struct allocinfo_filter *filter,
- 			return false;
- 	}
- 
-+	if (filter->mask & ALLOCINFO_FILTER_MASK_TRACE_ON) {
-+		bool tracing = alloc_tag_is_traced(ct_to_alloc_tag(ct));
++static inline int __allocinfo_toggle_trace(int dev_fd, struct allocinfo_toggle_traces *params)
++{
++	return ioctl(dev_fd, ALLOCINFO_IOC_TOGGLE_TRACE, params);
++}
 +
-+		if (tracing != !!(filter->tracing))
-+			return false;
+ static bool match_entry(const struct allocinfo_tag_data *procfs_entry,
+ 			const struct allocinfo_tag_data *tag_data,
+ 			bool match_bytes, bool match_calls, bool match_lineno,
+@@ -289,6 +294,8 @@ static int run_filter_test(const struct allocinfo_filter *filter)
+ 	return ret;
+ }
+ 
++static const char *target_test_function = "dup_mm";
++
+ static int test_filename_filter(void)
+ {
+ 	struct allocinfo_filter filter;
+@@ -304,11 +311,10 @@ static int test_filename_filter(void)
+ static int test_function_filter(void)
+ {
+ 	struct allocinfo_filter filter;
+-	const char *target_function = "dup_mm";
+ 
+ 	memset(&filter, 0, sizeof(filter));
+ 	filter.mask |= ALLOCINFO_FILTER_MASK_FUNCTION;
+-	strncpy(filter.fields.function, target_function, ALLOCINFO_STR_SIZE);
++	strncpy(filter.fields.function, target_test_function, ALLOCINFO_STR_SIZE);
+ 
+ 	return run_filter_test(&filter);
+ }
+@@ -514,11 +520,106 @@ static int test_lineno_filter(void)
+ 	return ret;
+ }
+ 
++static enum ioctl_ret toggle_trace(struct allocinfo_tag *target_tag,
++				   bool enable)
++{
++	int fd;
++	struct allocinfo_toggle_traces toggle_params;
++
++	fd = open(ALLOCINFO_PROC, O_RDONLY);
++	if (fd < 0) {
++		ksft_print_msg("Failed to open " ALLOCINFO_PROC ": %s\n", strerror(errno));
++		return IOCTL_FAILURE;
 +	}
 +
- 	return true;
- }
++	memset(&toggle_params, 0, sizeof(toggle_params));
++	toggle_params.filter.mask = ALLOCINFO_FILTER_MASK_MODNAME | ALLOCINFO_FILTER_MASK_FUNCTION |
++				    ALLOCINFO_FILTER_MASK_FILENAME | ALLOCINFO_FILTER_MASK_LINENO;
++	toggle_params.filter.fields = *target_tag;
++	toggle_params.enable = enable;
++
++	if (__allocinfo_toggle_trace(fd, &toggle_params)) {
++		close(fd);
++		return IOCTL_FAILURE;
++	}
++
++	close(fd);
++	return IOCTL_SUCCESS;
++}
++
++static int test_tracing_toggle_and_filter(void)
++{
++	struct allocinfo_filter filter = { 0 };
++	enum ioctl_ret ioctl_status;
++	int ret = KSFT_PASS;
++	bool initial_state, target_state;
++	struct allocinfo_tag target_tag;
++	struct allocinfo_tag_data_vec *tags = calloc(1, sizeof(*tags));
++
++	if (!tags) {
++		ksft_print_msg("Memory allocation failed.\n");
++		return KSFT_FAIL;
++	}
++
++	filter.mask |= ALLOCINFO_FILTER_MASK_FUNCTION;
++	strncpy(filter.fields.function, target_test_function, ALLOCINFO_STR_SIZE);
++
++	ioctl_status = get_filtered_ioctl_entries(tags, &filter, 0);
++	if (ioctl_status != IOCTL_SUCCESS || tags->count == 0) {
++		ksft_print_msg("Could not retrieve IOCTL entries for %s\n", target_test_function);
++		ret = KSFT_SKIP;
++		goto exit;
++	}
++
++	target_tag = tags->tag[0].tag;
++	initial_state = tags->tag[0].counter.trace_on;
++	target_state = !initial_state;
++
++	ioctl_status = toggle_trace(&target_tag, target_state);
++	if (ioctl_status != IOCTL_SUCCESS) {
++		ksft_print_msg("Failed to toggle tracing\n");
++		ret = KSFT_FAIL;
++		goto exit;
++	}
++
++	filter.mask |= ALLOCINFO_FILTER_MASK_TRACE_ON;
++	filter.tracing = target_state;
++
++	ioctl_status = get_filtered_ioctl_entries(tags, &filter, 0);
++	if (ioctl_status != IOCTL_SUCCESS) {
++		ksft_print_msg("Error retrieving IOCTL entries with trace filter.\n");
++		ret = KSFT_FAIL;
++		goto exit_revert;
++	}
++
++	if (tags->count != 1) {
++		ksft_print_msg("Expected exactly 1 entry, but got %llu\n", tags->count);
++		ret = KSFT_FAIL;
++		goto exit_revert;
++	}
++
++	if (tags->tag[0].counter.trace_on != target_state) {
++		ksft_print_msg("Entry returned by trace filter does not match target state\n");
++		ret = KSFT_FAIL;
++	}
++
++exit_revert:
++	ioctl_status = toggle_trace(&target_tag, initial_state);
++	if (ioctl_status != IOCTL_SUCCESS) {
++		ksft_print_msg("Failed to revert tracing to initial state\n");
++		ret = KSFT_FAIL;
++	}
++
++exit:
++	free(tags);
++	return ret;
++}
++
+ int main(int argc, char *argv[])
+ {
+ 	int ret;
  
+-	ksft_set_plan(4);
++	ksft_set_plan(5);
+ 
+ 	ret = test_filename_filter();
+ 	if (ret == KSFT_SKIP)
+@@ -526,6 +627,12 @@ int main(int argc, char *argv[])
+ 	else
+ 		ksft_test_result(ret == KSFT_PASS, "test_filename_filter\n");
+ 
++	ret = test_tracing_toggle_and_filter();
++	if (ret == KSFT_SKIP)
++		ksft_test_result_skip("Skipping test_tracing_toggle_and_filter\n");
++	else
++		ksft_test_result(ret == KSFT_PASS, "test_tracing_toggle_and_filter\n");
++
+ 	ret = test_function_filter();
+ 	if (ret == KSFT_SKIP)
+ 		ksft_test_result_skip("Skipping test_function_filter\n");
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
