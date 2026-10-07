@@ -1,149 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0547404E;
-	Wed,  7 Oct 2026 04:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F392A3C5DD4
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Oct 2026 05:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791348665; cv=none; b=JcbQCC79l17AZgA+vvTIikUAGncJmf8m2M97AtWm98BgvBas3aG7mpOhH/Y760ZCI3rUYckra3dn9zfM9zsACAOF03kCY3G4o9QAa0eVAxHLlw4dbrBFkOlNsN3Z7sT75sQWX5XO0b6umm9MUQzp+xfsz129uaASSPs6fXLrQ+w=
+	t=1791349405; cv=none; b=K6oelWxdkDvUiRgzjEtcfA9WgcD5KQ6NLwLAPNFwm5FBSvQjX3/JnDGcAQOlcey8225h5BA3uptQn+zIMusD1PQCLOLUOYShpQ0MLBN/XAHbWfsfzqaPwiwLrUbo6FWdG0g3BH+19oBf24UTeV64kzqudumWmKHWyvEw0wXmBhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791348665; c=relaxed/simple;
-	bh=SRXAnyoTwVbaKw5DdyoF0nZjfpXM9Peq19YZng+OWAo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-Id; b=svzFNZC34s8IVz3UJgv0pNTsXSeRvJ96wA/wB2c8AOymXacm9pbLoUHBetf1TslpScXjYdpjXFCRkxDUq3js0KV/ulADg5abB33pHxbhQmHutiNmpqxXVYpXZxOSID/A+8v6V54+3tR0dtj5LHXSf4tuRHmGGW2Hqc97kA2qW+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lRq/cv3J; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791349405; c=relaxed/simple;
+	bh=2xFrY7BGe4dGVsrgnRpdoh/SZXPw4g2jRk6yGOXKQrI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dobf9AHKU1vVD9pY6n0vWTgevMVItDh0Dgml0y0FWZzAojSPAq0NIiHU8i+OnT2Hufj5u2yz6XCphAe5D4+8RYGL6mAK5ytKDTk+xU51qlGzr9O8BJctXNNj5FOiqseT4iYQMHly1lPENagcnG/BlwIylje+Y2XLMvyB6kEhm1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com; spf=pass smtp.mailfrom=openai.com; dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b=X0ogNrCD; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRq/cv3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 601511F0089B;
-	Wed,  7 Oct 2026 04:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791348663;
-	bh=YfZUOyUfb3wd5BZD5cwO1pIKgms+v7U6RGWL1mBY3dE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lRq/cv3JeDXOU7UAotnpyWzkc5IyRNKfUTmp/K9D+Lvv0ReiYLI3VHi2G6fPb9Fe6
-	 7hMSRWZiJzioAzkgYeQ4OZlo46uV7DUJzNK2T/BSEGGy8WuhUDq7EGYxcz6mf1AzO1
-	 edgEZI5EJtHT2BuB0W6X9LHDsshHEijdDUpm+qzeHYEQ4f4TLLsoDqqregETx9niGK
-	 6VutLbFMjj+zfDEKx43onqPWM3GpcsQStQG0HYQ6GlJQkLLe7R88X2ck4BZu+ONvqc
-	 7eCfuniZGMkIRBclQDfx2EL8TK1Cidt28FtIWDSMXLSMYWKmrELbdvaeU+ORXcvP6L
-	 uzWlvJbA5sDeA==
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: chuck@wolber.net
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Marco Elver <elver@google.com>,
- kasan-dev@googlegroups.com, nathan@kernel.org, akpm@linux-foundation.org,
- anton.ivanov@cambridgegreys.com, oberpar@linux.ibm.com, ardb@kernel.org,
- arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, dave.hansen@linux.intel.com,
- dvyukov@google.com, hpa@zytor.com, jinghao7@illinois.edu,
- johannes@sipsolutions.net, jpoimboe@kernel.org, justinstitt@google.com,
- kees@kernel.org, kent.overstreet@linux.dev, linux-arch@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-um@lists.infradead.org, llvm@lists.linux.dev, luto@kernel.org,
- marinov@illinois.edu, masahiroy@kernel.org, maskray@google.com,
- mathieu.desnoyers@efficios.com, mingo@redhat.com, morbo@google.com,
- Nick Desaulniers <ndesaulniers@google.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, richard@nod.at,
- Steven Rostedt <rostedt@goodmis.org>, samitolvanen@google.com,
- tglx@linutronix.de, tingxur@illinois.edu, tyxu@illinois.edu,
- wentaoz5@illinois.edu, x86@kernel.org, peterz@infradead.org,
- Sasha Levin <sashal@kernel.org>, Aleksandr Nogikh <nogikh@google.com>,
- Taras Madan <tarasmadan@google.com>, Alexander Potapenko <glider@google.com>
-Subject: Re: [PROPOSAL] Replace gcov and kcov with llvm-cov
-Date: Wed, 07 Oct 2026 04:50:47 +0000
-In-Reply-To: <c84149c4-26c3-476e-93d5-4fe72f7c708b@app.fastmail.com>
-References:
- 00ed0b57-ad05-4c5d-b152-7c81df94b23a@app.fastmail.comCANpmjNOaykC4McAj=gZghqPSQc9aGBP_CjgKmp3n2yjeJTxDSA>@mail.gmail.com<41913a77-5c57-4967-8166-765dd5dde1bf@app.fastmail.com
- 20261007023045.04BD71F0089B@smtp.kernel.org
- <c84149c4-26c3-476e-93d5-4fe72f7c708b@app.fastmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.b="X0ogNrCD"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-82380b0f55dso725696a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Oct 2026 22:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openai.com; s=google; t=1791349403; x=1791954203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=amWm7rhDqpybZwDdXjCeI1rmEdf0wmiwfyrZDawQrxU=;
+        b=X0ogNrCDYQLG4uIXJBNpr+fdxSxz5YVic6Fs99W+roRjZwjMVfYEfGAoZwxnyk4T3v
+         k8uS93zm5izlitbvdrfLnpZo3NAzowLdjbEZAesgHg1KuO62Nu/w2ca9dSj5r2LFNiXY
+         7GBgECUhY5jPpuQAGTgmWaYy634SmtrOSXNp0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791349403; x=1791954203;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=amWm7rhDqpybZwDdXjCeI1rmEdf0wmiwfyrZDawQrxU=;
+        b=Ns9CGCXNPHDlrWm9O2IFkn/hNhXQEAfmsHbXo6BZ61/O5iJZSFEwIMg1lxDfOM62ab
+         Tl+djPI8zYHImE694YoYsgFyT2K28GWaZNRBzvsxVSWqqTNwWbOjB5YJzmZHQzK/+yAQ
+         46zc5tK52o+8PjQLCppNgj7oIPwhrSYXrTaiD0ALQLL1Pd9DngTlol+d+hG3yNL98hD+
+         ZN0qO05J6Toga3clB4lec+uNzYP/jYUZabGj1QzPgCD9RVVA/OvR4moLKMPvPlKxx0dH
+         M5UB6dn8nTvMVato4b58JOfGn7dme3WOS3Fyzk5PaSnYywIWu4AIwom8DryWw6vSFZxc
+         B1tg==
+X-Gm-Message-State: AFuF++n/JRhejLy9kWnxwqph3x4mUH8Kux0sLT0nh+9UYAjcUAD9SjST
+	aVef01PgS31w9Kb+aWYtZUkjJC2K9C4pIOUhX+aXZ0oQooLvv+PRxZphVWF+zKN6TzZ8e7FcZAM
+	86QsXBtrcvQ==
+X-Gm-Gg: AYBFou3RU/Cw63jLnYRnbmadrxRwcMMrqBaq38Anu8netOJdCyN1RxBtw26dUj0PqmV
+	R3d/0U/MHxdQAj9G31PxBDeBDioBZeob/LVsxbDTCGR06pMc/WHQ99HPi9yDzg2Lc/ytPig4FaK
+	WOZidLPjDJ+PJXK9yZcZYCKR86d3zWKQIOPCW5ePAweX9IFo7teM9636UhDTxUm+R9TQoZ/fXF6
+	c4ixHDpNnVTYyRfS7wCd+x+0NiKqm6fWdscEsj1NsWTxxaKBnXTdAompXe+GCVl+JE35SgOjQrz
+	QaeAESzNIAfS1TiPzuP5LCcxQB4tVoq1bs7RQGLsKH5tU9s8vnqjyOd7D6waUbGFwcFYwvDHMxD
+	cHZqT4obBpZS+PUo/O/rkAEVj9Ch3DcndGcK56OAK3FS9A9xPKfwXNlykHOh3F7/1qKk2cM3GXz
+	5e7X89guBvT3jCcnj8GZ9XrC1qkK3xpPgW0e5PTDx50BMcsPu3B17CXKW0D5R5vuL5SyOpbX/kA
+	NbfI5qOQXe/1PgGKlR5N7//orF8bohxbBZf5w4iCBFQikOtdNZA2YgPCIF39uWSzWOjUi1KE3I=
+X-Received: by 2002:a05:6830:4906:b0:823:e626:2765 with SMTP id 46e09a7af769-82ad0acd461mr2158934a34.31.1791349402837;
+        Tue, 06 Oct 2026 22:03:22 -0700 (PDT)
+Received: from com-75606.corp.openai.org ([199.47.143.7])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-82adc3f12f0sm1578270a34.13.2026.10.06.22.03.20
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 06 Oct 2026 22:03:21 -0700 (PDT)
+From: Kyle Zeng <kylebot@openai.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	outbounddisclosures@openai.com,
+	Kyle Zeng <kylebot@openai.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] tracing/filters: Check perf permissions before accessing kernel data
+Date: Tue,  6 Oct 2026 22:03:15 -0700
+Message-ID: <20261007050315.65139-1-kylebot@openai.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20261007045050.601511F0089B@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, 07 Oct 2026 04:17:42 +0000, Chuck Wolber <chuck@wolber.net> wrote:
-> On Wed, Oct 7, 2026, at 2:30 AM, Masami Hiramatsu wrote:
-> > On Tue, 06 Oct 2026 16:27:11 +0000, Chuck Wolber <chuck@wolber.net> wrote:
-> >> On Tue, Oct 6, 2026, at 4:10 PM, Marco Elver wrote:
-> >> > On Tue, 6 Oct 2026 at 17:14, Chuck Wolber <chuck@wolber.net> wrote:
-> >
-> >> >> If there is a desire to take this in pieces or implement other
-> >> >> intermediate steps, let me know. Otherwise I can generate a
-> >> >> monolithic set all at once.
-> >> >>
-> >> >> [1] https://lore.kernel.org/lkml/20240905043245.1389509-1-wentaoz5@illinois.edu/
-> >> >>
-> >> > >> > llvm-cov is generally useful to have; llvm-cov is closest to
-> >> > >> > gcov, so that might make sense to replace.
-> >>
-> >> Swapping llvm-cov for gcov to start with is pretty straightforward,
-> >> so I can aim my initial patch set there.
-> >
-> > Hmm, is it necessary to remove gcov? Would it be difficult to simply
-> > add support for llvm-cov and enable (make kconfig selectable) one or
-> > the other depending on the compiler?
->
-> Not strictly necessary, no. And what you are describing is what our
-> original patches do.
+perf_trace_event_perm() allows tracepoint counters that do not request
+PERF_SAMPLE_RAW without raw tracepoint permissions. A self-targeted
+event with exclude_kernel=1 can therefore reach the filter compiler even
+at perf_event_paranoid=2.
 
-OK, let me check it.
+The .function suffix resolves its operand through kallsyms. The result
+of a numeric filter discloses whether an address belongs to a known
+kernel symbol range, allowing the randomized kernel image base to be
+recovered. A named filter also exposes the resolved range through the
+counter when the tracepoint field is controlled by the caller.
 
->
-> The concern was why we would want to have three separate code coverage
-> tools in the kernel. Each has their own way of doing things, and they
-> can all live together in the kernel harmoniously.
->
-> But the concern was raised so I am trying to find a way forward.
->
-> The llvm-cov approach gives results that are reliably tied to actual
-> lines of source, so that is the one I reflexively reach for any time I
-> need code coverage. I am at a loss (but definitely willing to be
-> educated) as to what value gcov style coverage provides in comparison.
->
+Pointer-string filters expose kernel memory in the same way. A caller
+can supply a kernel address as the filename argument to openat() and
+install a string filter on sys_enter_openat. Without .ustring, the
+filter uses strncpy_from_kernel_nofault() on that address. Whether the
+counter increments reveals whether the kernel bytes match the pattern.
+The nofault copy prevents faults but does not authorize disclosure.
 
-I agree with llvm-cov is better than GCOV. But since gcc users can
-NOT use this feature, for checking code coverage in the kernel,
-we still need to keep it for gcc users.
+Pass the filter's perf origin to the predicate parser and require
+perf_allow_tracepoint() before resolving a .function operand or creating
+a kernel-pointer string predicate. This uses the existing sysctl,
+initial-namespace capability and LSM policy for raw tracepoint access.
+Keep ordinary counting filters, explicit user-string predicates and
+filters created through the separately controlled tracefs interfaces
+unchanged.
 
-> I also found some interesting possibilities using intrinsics to enable
-> boot time tracing with llvm-cov. That is, of course, experimental and
-> not something I am considering for the intial patch-set. But it got me
-> thinking about broader configurability that supports more granular forms
-> of coverage that _may_ address kcov needs in the long term.
+Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
+Fixes: 5967bd5c4239 ("tracing: Let filter_assign_type() detect FILTER_PTR_STRING")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Kyle Zeng <kylebot@openai.com>
+---
+Changes in v2:
+- Require raw-tracepoint permission for kernel-pointer string filters
+  as well as .function predicates, preserving explicit .ustring filters.
+- Add the pointer-string Fixes tag and describe the confirmed
+  sys_enter_openat counter oracle.
 
-Ah, that's an interesting idea :)
+ kernel/trace/trace_events_filter.c | 41 ++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 10 deletions(-)
 
->
-> I have been working on this off-and on for a few years and still really
-> want to see this idea succeed. Any guidance on a workable path forward
-> would be greatly appreciated.
->
-> Another option, proposed by Sasha Levin[1], was to use a single
-> /sys/kernel/debug/coverage interface, quoting him here:
->
-> "To clarify, are you suggesting that we'll have something like a single
->  /sys/kernel/debug/coverage interface that is producing the same structured
->  output whether we use gcov or llvm?"
->
-> I am not sure it is feasible to use the same structured ouput, but it
-> would isolate things down to a single interface with KConfig knobs being
-> used to select which coverage data one can expect to find there.
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 2b46ca536045..84d4a4fe56ad 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1625,12 +1625,18 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
+ 	}
+ }
+ 
++struct filter_parse_data {
++	struct trace_event_call *call;
++	bool is_perf;
++};
++
+ /* Called when a predicate is encountered by predicate_parse() */
+ static int parse_pred(const char *str, void *data,
+ 		      int pos, struct filter_parse_error *pe,
+ 		      struct filter_pred **pred_ptr)
+ {
+-	struct trace_event_call *call = data;
++	struct filter_parse_data *pdata = data;
++	struct trace_event_call *call = pdata->call;
+ 	struct ftrace_event_field *field;
+ 	struct filter_pred *pred = NULL;
+ 	unsigned long offset;
+@@ -1687,6 +1693,16 @@ static int parse_pred(const char *str, void *data,
+ 		i += len;
+ 	}
+ 
++	/* Even counting filters can disclose kernel addresses and data. */
++	if (pdata->is_perf &&
++	    (function || (!ustring && field->filter_type == FILTER_PTR_STRING))) {
++		ret = perf_allow_tracepoint();
++		if (ret) {
++			parse_error(pe, ret, pos + i);
++			return ret;
++		}
++	}
++
+ 	while (isspace(str[i]))
+ 		i++;
+ 
+@@ -2205,8 +2221,12 @@ static int calc_stack(const char *str, int *parens, int *preds, int *err)
+ static int process_preds(struct trace_event_call *call,
+ 			 const char *filter_string,
+ 			 struct event_filter *filter,
+-			 struct filter_parse_error *pe)
++			 struct filter_parse_error *pe, bool is_perf)
+ {
++	struct filter_parse_data data = {
++		.call = call,
++		.is_perf = is_perf,
++	};
+ 	struct prog_entry *prog;
+ 	int nr_parens;
+ 	int nr_preds;
+@@ -2232,7 +2252,7 @@ static int process_preds(struct trace_event_call *call,
+ 		return -EINVAL;
+ 
+ 	prog = predicate_parse(filter_string, nr_parens, nr_preds,
+-			       parse_pred, call, pe);
++			       parse_pred, &data, pe);
+ 	if (IS_ERR(prog))
+ 		return PTR_ERR(prog);
+ 
+@@ -2281,7 +2301,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 		if (!filter->filter_string)
+ 			goto fail_mem;
+ 
+-		err = process_preds(file->event_call, filter_string, filter, pe);
++		err = process_preds(file->event_call, filter_string, filter, pe, false);
+ 		if (err) {
+ 			filter_disable(file);
+ 			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+@@ -2377,6 +2397,7 @@ static void create_filter_finish(struct filter_parse_error *pe)
+  * @call: trace_event_call to create a filter for
+  * @filter_string: filter string
+  * @set_str: remember @filter_str and enable detailed error in filter
++ * @is_perf: filter is being created for a perf event
+  * @filterp: out param for created filter (always updated on return)
+  *           Must be a pointer that references a NULL pointer.
+  *
+@@ -2391,7 +2412,7 @@ static void create_filter_finish(struct filter_parse_error *pe)
+  */
+ static int create_filter(struct trace_array *tr,
+ 			 struct trace_event_call *call,
+-			 char *filter_string, bool set_str,
++			 char *filter_string, bool set_str, bool is_perf,
+ 			 struct event_filter **filterp)
+ {
+ 	struct filter_parse_error *pe = NULL;
+@@ -2405,7 +2426,7 @@ static int create_filter(struct trace_array *tr,
+ 	if (err)
+ 		return err;
+ 
+-	err = process_preds(call, filter_string, *filterp, pe);
++	err = process_preds(call, filter_string, *filterp, pe, is_perf);
+ 	if (err && set_str)
+ 		append_filter_err(tr, pe, *filterp);
+ 	create_filter_finish(pe);
+@@ -2418,7 +2439,7 @@ int create_event_filter(struct trace_array *tr,
+ 			char *filter_str, bool set_str,
+ 			struct event_filter **filterp)
+ {
+-	return create_filter(tr, call, filter_str, set_str, filterp);
++	return create_filter(tr, call, filter_str, set_str, false, filterp);
+ }
+ 
+ /**
+@@ -2476,7 +2497,7 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+ 		return 0;
+ 	}
+ 
+-	err = create_filter(file->tr, call, filter_string, true, &filter);
++	err = create_filter(file->tr, call, filter_string, true, false, &filter);
+ 
+ 	/*
+ 	 * Always swap the call filter with the new filter
+@@ -2721,7 +2742,7 @@ int ftrace_profile_set_filter(struct perf_event *event, int event_id,
+ 	if (event->filter)
+ 		return -EEXIST;
+ 
+-	err = create_filter(NULL, call, filter_str, false, &filter);
++	err = create_filter(NULL, call, filter_str, false, true, &filter);
+ 	if (err)
+ 		goto free_filter;
+ 
+@@ -2868,7 +2889,7 @@ static __init int ftrace_test_event_filter(void)
+ 		int err;
+ 
+ 		err = create_filter(NULL, &event_ftrace_test_filter,
+-				    d->filter, false, &filter);
++				    d->filter, false, false, &filter);
+ 		if (err) {
+ 			printk(KERN_INFO
+ 			       "Failed to get filter for '%s', err %d\n",
 
-Yeah, that soulds reasonable for me.
-
-Thank you,
-
->
->
-> [1] https://lore.kernel.org/lkml/aba_HgSbzLGm6VBQ@laps/
->
->
-> Thank you,
->
-> ..Ch:W..
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+base-commit: 602042bf29f6efde39cfb5fdd9289bf4854bc0c5
