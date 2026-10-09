@@ -1,132 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF3F30BB80
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 10:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6537C4503EF
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 13:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791540589; cv=none; b=iv7rAeGDAeYKJvErx62vb9GV5lOz1JmS285pdgvrLzc8SXoVaa5AgQI3plqU7Bfl/hxKT3F/WvwTNXg7gwR5YomBaYT4ovmcRdmAZdqF2/bmgnSbGTnN27R1vNGVMPlG6bMpdGjxAtypHXpT4OjFYEPGNte536qELYiERi2yvQs=
+	t=1791552544; cv=none; b=kmkbHxg3elTkArkergLC9vaVxXcdYcuglIqz9GF1Ahc7l/bTwMuClFRO/P93jDfvRxcji/nROzZ39UvBAJni5goe84m+ZmcEt5h2F4KBwds9atWFKJMLmNG+Cnds8gTHFkp1ajyZ9VrIzKQQJ2FsoDDGwKS9C4QY/S/Dqe8j47I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791540589; c=relaxed/simple;
-	bh=DIYzQ1EPfmvk0HXDvk5SB0xtF59iHApk08ybYe83kU0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VR8v31Zlo64+DSPuorvt0AHmrNZ3U8JDVe8QaO5UuqOvB/dH8Y/cWIT38OZY4iugc8l/9J4UNw/ive3u5i/lbWz/N5fDlOX/aJxbSKfOFkRPKrrX4/q8ujpXiz5RPvJbwc+/6vZgNpHpdzI0HfE5bjEY+YmsBAWwP82Htre3bPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DVzwNGdi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1791552544; c=relaxed/simple;
+	bh=zd77oAJSN5ZuLQMCEq5iNjH0bvfFx6ptqLP1yQUV+fM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gfsXoEXNXmvL1VvOh5VE7Fi5470IJmv82gh752aYk2m5YYN2njb2DSFmwzLPn8MQpKcEVKu046SP6TATkZZpx5agzYm75a8Az/FMEDxQscmcecRNyplzzRqUinYd6kL0lSlKb3PEgkSmGNP4HYVtS+taQIeIK14nDZo+A7XnsRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QfJmd4e0; arc=none smtp.client-ip=209.85.221.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DVzwNGdi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1791540586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DIYzQ1EPfmvk0HXDvk5SB0xtF59iHApk08ybYe83kU0=;
-	b=DVzwNGdi8HW1hz5CfOBYEeP2H/jU8cEsFuoTpvcqxNM93il69fs+guER8MG5GoIchKhBYo
-	q4aod5p2QZe4VjRxHdmo5HGB+CNGEuYAEuQgJVgPQtgXIeDOXoDDfaluK8vst20EkIGzxC
-	CXU7jxYr9UOlTUVR5mNbw4rIPb/NnGU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-66-m16SIhyFOKGW5FoUpzhSSw-1; Fri, 9 Oct 2026 10:09:45 +0000
-X-MC-Unique: m16SIhyFOKGW5FoUpzhSSw-1
-X-Mimecast-MFC-AGG-ID: m16SIhyFOKGW5FoUpzhSSw_1791540584
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-48b008137d8so1050209f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 03:09:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QfJmd4e0"
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48afe67dfc2so1099393f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 06:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791552541; x=1792157341; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=/rPvKIus9N9aL5wDPskeHMQIXHdNdQtdKHL3wD9tCZs=;
+        b=QfJmd4e051tDagjk6oKHymahLVMXpwRmhT6VNTgzUYC42MSiIgkOdF6s11OGtXPN+p
+         xpndnLj8xYrgtp6vBbU67j6S9mTF11xj+536AlJFiC8HwQWpsi5mxyS6ncFb8wYEneqk
+         jMA7nU8FBAf10Niq4O8uMRz31fUTLbTljDSR66Wk65z2a94iVfHohH5oqx0KL4a3vD8r
+         J1bYOGlt0qKwmjsoY98x89qvPkajjakyEB3gVy4EbpwmUKSouWYzjQX5Kf5XASaYeN1J
+         jG4TngT5RtW7OIHtQYCKqbYCZE4KZecU6Uz9LUI4H5nFDIZUzv7fDIG03PAng+HrYcfU
+         0etg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791540584; x=1792145384;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=DIYzQ1EPfmvk0HXDvk5SB0xtF59iHApk08ybYe83kU0=;
-        b=KB6UuNQR2vA/76WGSTV3N+Bn6KRiB+NqFC6Yugay+B90pZkv3bpFSUr/tiebBIDjDY
-         G9PDsuuLg9Tp8BL3aycMVpbPmSusPDQ3ePAliA6DqGMsuZqfxRsu6kLvGuPr/fapbhvi
-         QOGUV61L4wcegFGNWEQHipvJFm29FemdSq2uy+MpNf/CilvmLF3U37Cgg/N10ErabdF2
-         t1781FzXenRhYkbsDZnisEuVqCECLRRqBwSWkOp904f46mg2JT1nde6YVx28CmaDC7MY
-         OWzoH1ZlXruWrGGrFAFHeKbqwmR8hCEaa6JBRTNuBVfBJ6+F4icHQFZhSM1qzRBO/ifK
-         WaEQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxwamX8nnLSEkiN9fRlCO3FHfpPHV0U2M+f6QG8RBip9FjaYJj5F3qFvDTbzQPf1vfWxMciutHBiEmHP5kFS/5MnO8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKyn0AceBb2/fv3f2+P0dnH+07t/UqtZ1PeYizkXE7cwl7BoGf/
-	dMfuS9QGxch7eHeYwila0DOcbG1kCqQJLLSHjKhoIkFty0tgrQvlXHUoE9J99Nv9O4/raXTfOfV
-	0QgYs7YckWNcNEXI8KDL3x8fFLEaiYCV67XI/05VRAnKfjNj4oYYQbnBm/CYKcZvXBJkX0OWFKg
-	==
-X-Gm-Gg: AYBFou3EpcmCltm3wcRDBn8klvetVOgv4Ak5uZHIj+v+3iec+1egNxrms1i1pGDUsnR
-	G1EuTavMU/Idmf+A2ZO3DMHctfubXv7/gOdB9s6rhVlwB1FOQSUrLInzJwdMG3dhM2BI23e+jf8
-	4X/7dfeYJQu9qH9bx703K1umNskK2NJ/PJ9dSPStDN/7Y8JpG8+CuWuoyAiNNWWdbIUx9llxW7E
-	vWjNiadJMuIgMkslBOqd3QW1aDQZEOUOBufJTshvWzoKdOgvq52B7K7RtSmb80b37ZLfvkggDfa
-	Dx45J1vcwcuPSGFQHnCdUHxGRx5Mw6XSLytacorrlz+/VcIPsHXezjfYCPqM/TxMqrninTAkV7V
-	DrKJCruBHwbw2f0tEbbI/pVWM5eA=
-X-Received: by 2002:a05:6000:4683:b0:487:146f:7c88 with SMTP id ffacd0b85a97d-48dba9e6381mr1934015f8f.4.1791540584332;
-        Fri, 09 Oct 2026 03:09:44 -0700 (PDT)
-X-Received: by 2002:a05:6000:4683:b0:487:146f:7c88 with SMTP id ffacd0b85a97d-48dba9e6381mr1933990f8f.4.1791540584008;
-        Fri, 09 Oct 2026 03:09:44 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db9ada3edsm3163180f8f.53.2026.10.09.03.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2026 03:09:43 -0700 (PDT)
-Message-ID: <76753c2dd66792ec6eb94d00741e61366df426cb.camel@redhat.com>
-Subject: Re: [PATCH v2 09/15] tools/rv: Copy stripped bpf_atomic.h from
- libarena
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
-	 <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Wen Yang
-	 <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
- Viktor Malik <vmalik@redhat.com>
-Date: Fri, 09 Oct 2026 12:09:42 +0200
-In-Reply-To: <87fqygl9we.fsf@yellow.woof>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
-	 <20261001152042.124445-10-gmonaco@redhat.com> <87ld89wtrx.fsf@yellow.woof>
-	 <4F009BB7-58C2-4AB1-8FEF-61FA4B5281A2@redhat.com>
-	 <87fqygl9we.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+        d=1e100.net; s=20260707; t=1791552541; x=1792157341;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/rPvKIus9N9aL5wDPskeHMQIXHdNdQtdKHL3wD9tCZs=;
+        b=VJ8kAzo3dWiuF9SokBYxBFMoSYDzJ7kRCIMWtmpAvc6jPUoTc2kfbdzECdEsOpEdMp
+         OXInNc1eLCEdxmyYHKtXmc5ljks1MPWst+11WJk9JAJ4wu5duhPAxz6+ISxfCfqv5r1d
+         bvv8emCh7OAwu4kdXwR5NInSONnM+8WX2gvVMhCR5tFLwWMlAZa3wEOBRV90eD7Yh+Nj
+         kmr2ZBFPBDjRuMEL5QBPzX9JZ09eY0r3kqXe1JANSb17E+Y/1rEog3Elp9+vxaQ27NDq
+         tNQasr5D79v9YlNyfblTaWOEAgD1pxdJxLaelRaIsoF7evPmrtx/nKREmS/HAypo4GjV
+         sLlA==
+X-Forwarded-Encrypted: i=1; AKwUvBwqlapw5nIgNFrFysMMqWq1meZjvtuQI5IC7wJPIXqlBQazpfblBFSqhk2DOULjA5l+1HsP6kix96/j/0Z8nT3+Rjc=@vger.kernel.org
+X-Gm-Message-State: AFuF++lTHyV5zsEOUN1SKNWIlhKsWfFDcJPWmc5tuXEhohwP8sMWdZ7y
+	VQ7b7rPtCBi+NA6o37o1ZbEMqpHt8DpbxhR2YygePVqKdHlqjfuJU7RvM5JY6bueFxO4fwJqqCo
+	QTRvrEkc8zu5phmoN7h+MPA==
+X-Received: from wmol15.prod.google.com ([2002:a05:600c:47cf:b0:4a0:cf4:71d8])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:a011:b0:49e:6581:7baf with SMTP id 5b1f17b1804b1-4a18e447d8bmr35219285e9.2.1791552541416;
+ Fri, 09 Oct 2026 06:29:01 -0700 (PDT)
+Date: Fri,  9 Oct 2026 14:28:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ya3158xJ8_Wybl6ARxB8ufcBNXYWoTaymEnE1BV_8y8_1791540584
-X-Mimecast-Originator: redhat.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261009132848.709379-1-vdonnefort@google.com>
+Subject: [PATCH v1] tracing/remotes: Align field offset in remote_event_format_show()
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
+	Fuad Tabba <fuad.tabba@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2026-10-08 at 13:16 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > Mmh, I'm not too familiar with them, but they wouldn't be drop-in
-> > replacements as far as I understand. I'd need to use C11 atomic types
-> > and that would diverge further from the kernel implementation.
->=20
-> I am thinking we should migrate to BPF entirely. Keeping both in-kernel
-> and BPF will be a bit painful.
+remote_event_format_show() doesn't take into account each field's
+alignment leading to an incorrect reporting of the actual field offset.
+Use the existing field->align.
 
-Yeah that's a valid point, though I'm considering it more like a longer ter=
-m
-goal. I'd rather avoid rushing the migration until we're sure BPF is perfec=
-tly
-capable to handle absolutely everything and we can cover every usecase.
+Fixes: 072529158e60 ("tracing: Add events to trace remotes")
+Reported-by: Fuad Tabba <fuad.tabba@linux.dev>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ kernel/trace/trace_remote.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-There's a common belief considering BPF a prototyping playground, where "re=
-al"
-things should eventually end up in the kernel.
-Now, I don't agree with it (look at the many sched_ext policies used in
-production), but I'd want to assess if dropping kernel support could drive =
-users
-away (e.g. industry/automotive which keeps popping out) and understand the
-various not purely technical reasons.
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index 2d5bc423efca..7e35f48ae467 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -1098,6 +1098,7 @@ static int remote_event_format_show(struct seq_file *s, void *unused)
+ 
+ 	field = &evt->fields[0];
+ 	while (field->name) {
++		offset = ALIGN(offset, field->align);
+ 		seq_printf(s, "\tfield:%s %s;\toffset:%zu;\tsize:%u;\tsigned:%d;\n",
+ 			   field->type, field->name, offset, field->size,
+ 			   field->is_signed);
 
-Gabriele
+base-commit: a90ee4305c4a5df72c11b31dacfdc76e00fcf78a
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
