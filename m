@@ -1,96 +1,78 @@
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+Received: from mta0.migadu.com (out-40.mta0.migadu.com [91.218.175.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6537C4503EF
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 13:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9C54E0216
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 14:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791552544; cv=none; b=kmkbHxg3elTkArkergLC9vaVxXcdYcuglIqz9GF1Ahc7l/bTwMuClFRO/P93jDfvRxcji/nROzZ39UvBAJni5goe84m+ZmcEt5h2F4KBwds9atWFKJMLmNG+Cnds8gTHFkp1ajyZ9VrIzKQQJ2FsoDDGwKS9C4QY/S/Dqe8j47I=
+	t=1791556827; cv=none; b=ZhM7sJTwmcgG4nGiVdkXzzDBfVa6NTsEWh2IFTOchRRNlRZ55QpwKJF6t5k9lMUBdxuJBPN1QvBZ8uVW9jUWOokqO4lnEzVGp9Qfm8ivJIv5kaE2we8M8iIK8nLeYwyBblb2fgCWb+oOjKPDqbhdJWVFnXLbfS9mQfF2NOsJyAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791552544; c=relaxed/simple;
-	bh=zd77oAJSN5ZuLQMCEq5iNjH0bvfFx6ptqLP1yQUV+fM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gfsXoEXNXmvL1VvOh5VE7Fi5470IJmv82gh752aYk2m5YYN2njb2DSFmwzLPn8MQpKcEVKu046SP6TATkZZpx5agzYm75a8Az/FMEDxQscmcecRNyplzzRqUinYd6kL0lSlKb3PEgkSmGNP4HYVtS+taQIeIK14nDZo+A7XnsRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QfJmd4e0; arc=none smtp.client-ip=209.85.221.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1791556827; c=relaxed/simple;
+	bh=kRkhnKHKooIPtvjGsD6RS420FhxGLmWSJJncnjDWyh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lQ8M7gq391gBku0N08lQmo8JDqpPtW6SroW4AT00pyELBfJJanBbzhFWE1Ule3omQVhxkk0Ztg7Kqf4xLubgMAm0VliDwi/95fkiVMIai3blLxEXeAQsz00+rOLV90n6F32YjpqeeZSDvL3e6yy4xnDVDbuAtY6cWc17OhuGJMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K/PkFUFO; arc=none smtp.client-ip=91.218.175.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QfJmd4e0"
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48afe67dfc2so1099393f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 06:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791552541; x=1792157341; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/rPvKIus9N9aL5wDPskeHMQIXHdNdQtdKHL3wD9tCZs=;
-        b=QfJmd4e051tDagjk6oKHymahLVMXpwRmhT6VNTgzUYC42MSiIgkOdF6s11OGtXPN+p
-         xpndnLj8xYrgtp6vBbU67j6S9mTF11xj+536AlJFiC8HwQWpsi5mxyS6ncFb8wYEneqk
-         jMA7nU8FBAf10Niq4O8uMRz31fUTLbTljDSR66Wk65z2a94iVfHohH5oqx0KL4a3vD8r
-         J1bYOGlt0qKwmjsoY98x89qvPkajjakyEB3gVy4EbpwmUKSouWYzjQX5Kf5XASaYeN1J
-         jG4TngT5RtW7OIHtQYCKqbYCZE4KZecU6Uz9LUI4H5nFDIZUzv7fDIG03PAng+HrYcfU
-         0etg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791552541; x=1792157341;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/rPvKIus9N9aL5wDPskeHMQIXHdNdQtdKHL3wD9tCZs=;
-        b=VJ8kAzo3dWiuF9SokBYxBFMoSYDzJ7kRCIMWtmpAvc6jPUoTc2kfbdzECdEsOpEdMp
-         OXInNc1eLCEdxmyYHKtXmc5ljks1MPWst+11WJk9JAJ4wu5duhPAxz6+ISxfCfqv5r1d
-         bvv8emCh7OAwu4kdXwR5NInSONnM+8WX2gvVMhCR5tFLwWMlAZa3wEOBRV90eD7Yh+Nj
-         kmr2ZBFPBDjRuMEL5QBPzX9JZ09eY0r3kqXe1JANSb17E+Y/1rEog3Elp9+vxaQ27NDq
-         tNQasr5D79v9YlNyfblTaWOEAgD1pxdJxLaelRaIsoF7evPmrtx/nKREmS/HAypo4GjV
-         sLlA==
-X-Forwarded-Encrypted: i=1; AKwUvBwqlapw5nIgNFrFysMMqWq1meZjvtuQI5IC7wJPIXqlBQazpfblBFSqhk2DOULjA5l+1HsP6kix96/j/0Z8nT3+Rjc=@vger.kernel.org
-X-Gm-Message-State: AFuF++lTHyV5zsEOUN1SKNWIlhKsWfFDcJPWmc5tuXEhohwP8sMWdZ7y
-	VQ7b7rPtCBi+NA6o37o1ZbEMqpHt8DpbxhR2YygePVqKdHlqjfuJU7RvM5JY6bueFxO4fwJqqCo
-	QTRvrEkc8zu5phmoN7h+MPA==
-X-Received: from wmol15.prod.google.com ([2002:a05:600c:47cf:b0:4a0:cf4:71d8])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a011:b0:49e:6581:7baf with SMTP id 5b1f17b1804b1-4a18e447d8bmr35219285e9.2.1791552541416;
- Fri, 09 Oct 2026 06:29:01 -0700 (PDT)
-Date: Fri,  9 Oct 2026 14:28:48 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K/PkFUFO"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=kRkhnKHKooIPtvjGsD6RS420FhxGLmWSJJncnjDWyh0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791556823; v=1; x=1792161623;
+ b=K/PkFUFOUukOIWdwo4hyW9yeT4SuLoRiC90M1/EDJjoPDz4Ofd3gMZDSqntCnwXvZR99BbRk
+ XV5kMDGO2fRdykAw2wrPRIJYoHLmZ12YBSpghNuwpwbTNdaWSwVIk8vcfr+VxiufssjlK5rZ73N
+ JIz+/5WS7oimPpAJNUtQ5j3w=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 0c4c9b73b46a9964;
+	Fri, 09 Oct 2026 14:40:23 +0000
+X-Mizu-Trace-ID: 0c4c9b73b46a9964
+X-Migadu-Flow: FLOW_OUT
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5bcc04c71f5so8301e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 07:40:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzOVjiZLRtXsXrFIomb0DGsbfC+AlygRj/sOC4HwSPQt8P4QeNraJ4N5hNkq6uH9Goi7suRkE+II3pL034X+lgdJcQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJQfaDh+pTda1qjhvMFms4ZPJyPiNcCwJriD9MNT8s3uMJU8KBJ
+	t2S9U6cXk+ck8MzUFzo3ooflCheWzdLLUpQvZbd1bPDsmuFWp5vUoFy+t27ArqwB1Tjd8l0mNmS
+	6TByFVpdcSn97jHcHTD0Ehxeqw+tzwfwwfepfdCBl
+X-Received: by 2002:a05:6512:ad3:b0:5ba:3602:4343 with SMTP id
+ 2adb3069b0e04-5bcdf94d4a0mr81856e87.16.1791556818070; Fri, 09 Oct 2026
+ 07:40:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
-Message-ID: <20261009132848.709379-1-vdonnefort@google.com>
-Subject: [PATCH v1] tracing/remotes: Align field offset in remote_event_format_show()
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Fuad Tabba <fuad.tabba@linux.dev>
+MIME-Version: 1.0
+References: <20261009132848.709379-1-vdonnefort@google.com>
+In-Reply-To: <20261009132848.709379-1-vdonnefort@google.com>
+From: Fuad Tabba <fuad.tabba@linux.dev>
+Date: Fri, 9 Oct 2026 15:39:41 +0100
+X-Gmail-Original-Message-ID: <CA+EHjTzaDY=tcekBeR-QQwep-WGFjpT5pGczddFFBqCeupe9Gg@mail.gmail.com>
+X-Gm-Features: AclHuK8GIOxUHp6icwuslMOwolFoLyUhJLGzQM0c0cvOf4PeuIievjOYVDcfRLQ
+Message-ID: <CA+EHjTzaDY=tcekBeR-QQwep-WGFjpT5pGczddFFBqCeupe9Gg@mail.gmail.com>
+Subject: Re: [PATCH v1] tracing/remotes: Align field offset in remote_event_format_show()
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-remote_event_format_show() doesn't take into account each field's
-alignment leading to an incorrect reporting of the actual field offset.
-Use the existing field->align.
+Hi Vincent,
 
-Fixes: 072529158e60 ("tracing: Add events to trace remotes")
-Reported-by: Fuad Tabba <fuad.tabba@linux.dev>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- kernel/trace/trace_remote.c | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, 09 Oct 2026 14:28:48 +0100, Vincent Donnefort
+<vdonnefort@google.com> wrote:
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 2d5bc423efca..7e35f48ae467 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -1098,6 +1098,7 @@ static int remote_event_format_show(struct seq_file *s, void *unused)
- 
- 	field = &evt->fields[0];
- 	while (field->name) {
-+		offset = ALIGN(offset, field->align);
- 		seq_printf(s, "\tfield:%s %s;\toffset:%zu;\tsize:%u;\tsigned:%d;\n",
- 			   field->type, field->name, offset, field->size,
- 			   field->is_signed);
+> remote_event_format_show() doesn't take into account each field's
+> alignment leading to an incorrect reporting of the actual field offset.
+> Use the existing field->align.
 
-base-commit: a90ee4305c4a5df72c11b31dacfdc76e00fcf78a
--- 
-2.56.0.385.gd3acb90ef8-goog
+Tested in pKVM: the format files under remotes/hypervisor now report
+hyp_enter's vcpu at offset 4 and selftest's id at 8, matching the
+structs, and the hypervisor ftracetest still passes.
 
+Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
+Tested-by: Fuad Tabba <fuad.tabba@linux.dev>
+
+Cheers,
+/fuad
