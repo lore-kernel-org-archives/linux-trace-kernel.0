@@ -1,166 +1,201 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from business190-3.web-hosting.com (business190-3.web-hosting.com [66.29.153.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550D63B38B5
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 18:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24190395ACD;
+	Fri,  9 Oct 2026 20:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.29.153.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791572358; cv=none; b=F69x09tIvI4APGZhm1p8fFs7etp0SOqg3srhujppG9YMECk9ZLBvdO3AHlfWwM61BoIqjmt77/TjN/hRgW2b4FUsikjkoapvYPPuwP0jyJxUQ+wRGNO+G7Ac9dI/hpRy1P62oMliCQAs7vyVr9Ib4Jc/RrQWCgwD16KRPgwVYFM=
+	t=1791579567; cv=none; b=kr8S+IU6mQYVp6KCWsAw/6z1yJtHiEGtMHoUaVv8qE8UKIZFLUJj33WbdRUWX1wwH3Dc6XAsalBvQACeHdBcfACMIHInB1d49LMynQVZBqHOPJ7woP17RiaQSFnZyL7oHXuPzxVVOG6YvxM7MyghQ5e0/iS5Fqw7+iJCBkGWma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791572358; c=relaxed/simple;
-	bh=MUwT80gOWfAvuW29q252L7dGK6/yoX9ij9iHwsuwjqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ikIlIOsQM/tBbKNnP2dEXjGKw1P8oerZr0+3/njC+07HTHhnfNm4IDK4MCSyl2sx7jieLxyrLn0hTuksc15tRqeD86PAS4PTg2gst/D1OzfIUGOe+I6wP8s86kxbeoWXLyAazGSiXzx2ZiSq/GABXTCZVKDxIiOnD0W4s0lD2z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gs3oe+qs; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791579567; c=relaxed/simple;
+	bh=+LG8rZIo3xGy9o8SVpOSVM2j81iy7dGS9lrvR5gcBpA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type; b=STGEWkko2ziJHKJb7rBUYZ9DEHFiScssnQyHoeiSupcSeGayMWwcI+nNG1qZUIBMg+1J3rI+jff6oGNPQaxUaJk5vAEL6LM2rjITKqmQwy4zY4E5ey8Bd4wXRLGcTqyxVQ8ypI0DWyBBUhqlHf76iciHWbQMPoKB6xL0kIyFNcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mathgraph.org; spf=pass smtp.mailfrom=mathgraph.org; dkim=pass (2048-bit key) header.d=mathgraph.org header.i=@mathgraph.org header.b=EMF8grqx; arc=none smtp.client-ip=66.29.153.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mathgraph.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mathgraph.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gs3oe+qs"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a0286c981dso1437165e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 11:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791572355; x=1792177155; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pJrTXNnvNyxoPy6a05idwZooJz9oMMxcUiIT8xGCw0Y=;
-        b=Gs3oe+qsaAo6Qyb+uYz8NIy2rJdxahxKqbuXgczFYkOCY/Ta/j7CweECUa6PHIr4UH
-         CDzGNqMOibkOXYfbhSDtAL6hIXjDj4yBbm/tIKvFRjyRNSC6iK0Un2Z8NwNoF0IkNPJe
-         s+Q6qwLB6smocAz9Lpq7CvG+OrSmMSN/IigspZv5Cl5/82BNpLv+mkQU4tOhIoN4cxhP
-         LgJhYWNQyTD3vLPlOr+EAt2Yp8liPhI1VH6ZVEnFQK4c4JUf+dwpfYYU1yia5A34O7Cf
-         9DCmbiYJyWF9Em9gtkOkpEFW/G+ib+tIt+kiA3zbFEz4mCK0yMH+thWieK+osjleSYPS
-         E7yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791572355; x=1792177155;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pJrTXNnvNyxoPy6a05idwZooJz9oMMxcUiIT8xGCw0Y=;
-        b=Uo2DKy+tWIjSsxc0LEwbC3zhaBsuciCL/OO7lXBj8CMfbdyh5G9nJH7cL3askSYyoy
-         SPx9ChD9KcwzQrTHxTsv9hwdfhXZLMznL3UYCwY/PYzMnwlYpXIEH4reYTU0fIkeZ0lP
-         +rmaHc4fZs+hOmPLgKAnuhlYO1GWWC5wVw0Kxo8YxpbUuQOm0wYtxM07oxMqynz/Ekaz
-         djBVvVkjCAnd2sf3/pQ1jZ5NK0+2JE73XC3bIbR9m6fs9jFaNyRoZnjy4Dy9ON1WgxqL
-         o8CN0E6JsDlAUOk6AwSDz9L0e3xoLCKzcZxCqugf2VIbGZ/lQktzKO8zwhs3Q57wymmn
-         socA==
-X-Forwarded-Encrypted: i=1; AKwUvBzwH5VGfSIZmmLOwf7xnfcgVZ9m/ULR012Ucos0/XrvdTaV4XP0yZ8OGsBCfq9JeVEH7YEaXmuKTWs53yVytuGLI4Q=@vger.kernel.org
-X-Gm-Message-State: AFuF++mDWP5dVMVTmjGb3XkVbvEVpvjYd4OzFXtZfmWnzqbTkzq/0N6r
-	RFaY/oj0w1o2oydc9VychgCB2qv3MxZFkebhVadw7sHVurrRY4EHWH9u
-X-Gm-Gg: AYBFou0JXnT9UsS+vJTrXfOXhl1G+1icirvNyT3ZobfOboJBbYo+13n4L3OliIcCi4V
-	KjbyDr7h9Q9lGbHF5/C92fjG8Pt+3hRoYpVef6iuh4NCNO/n8TgfIIUdMUNsHtJWOb365tpYqZ4
-	M4sGahLajv68nWT50uf+IbWLSbyU2gmm2MJ+lv9b56hdQSiamgwzddxBMDcXoR4sJ3mT0wpVfux
-	Mx/0AaH8Wo6dmAyG4N3XKwhMKrYf0XuPJiTX3T0H8ALOHuZF8aEGHCaWVjvZOFKSvi9f/FiwRYi
-	2Q748iDEZ3v0+vcBaWRsvrwkAi89gOw3S8FntWlqyntfNCNwS7IAKy0cd8Yc23Fsp5BeyHHYEx2
-	wbcNQvxeX57L4d0hOJXBgCt9z2VmXwYNSx4Nz4EShgWE+GAQ7WnPK8XueYjS+bluAyFp20j8P46
-	PVgAYKyhMQhTVo53wBt/MSeHzi6YZuFjE+fdO5vl6MgjHnj/2obVe4IX2lz8d5+khsA6aB6Qkcq
-	L6JiV8nM1NhoIgHmao980svYPY6wyDN6ArJkE9cFFKQsgOb55tb0VjbGwPQehHhqg26X9P/zUUJ
-	PWteP6yIhKFQk/S2PTSKxdXxZD7a/NbDgGSsoCkxeNyNQmxJadjYe5pehxQUxUhz8uOVCVuLvI8
-	E0A==
-X-Received: by 2002:a05:600c:8708:b0:4a1:7b05:3a6d with SMTP id 5b1f17b1804b1-4a18e49881amr52257515e9.8.1791572355206;
-        Fri, 09 Oct 2026 11:59:15 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-a128-aa01-297a-7094-853e-a20c.310.pool.telefonica.de. [2a02:3100:a128:aa01:297a:7094:853e:a20c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bf21276sm122222075e9.8.2026.10.09.11.59.13
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 09 Oct 2026 11:59:14 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	palmer@dabbelt.com,
-	pjw@kernel.org,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	linux-riscv@lists.infradead.org,
-	oleg@redhat.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	jpoimboe@kernel.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com,
-	shuah@kernel.org,
-	mpdesouza@suse.com,
-	oliver.yang@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	martin@kaiser.cx,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] riscv: stacktrace: switch to frame-pointer based unwinder
-Date: Fri,  9 Oct 2026 20:59:04 +0200
-Message-Id: <20261009185904.82385-1-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260914092648.51254-6-xueshuai@linux.alibaba.com>
-References: <20260914092648.51254-1-xueshuai@linux.alibaba.com> <20260914092648.51254-6-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=mathgraph.org header.i=@mathgraph.org header.b="EMF8grqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=mathgraph.org; s=default; h=Content-Transfer-Encoding:Content-Type:
+	Message-ID:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/bdnImn1q/VD1TGOfYGxQOnSm3Di+D93FFe3xs9lFhk=; b=EMF8grqxBl8LxmkzUVe4L8pUtd
+	D6Q7Wj+Qeyi/Xl5JqxoFrqdkkG0jMGFnr42XfQBNAM+2EynCJIShM5YVrvfY9TqDdLFHbTd2O3qgu
+	+uUXdOqxsMmT2lRyiU6GxE6oJZrKoBBaybHKcu28a4ZgDX6FqOXfiIydQLBpkJvGOa377g2v6iPCg
+	NzOrP3IHNysA5uAIyNahXY5rjYy13o5LZ9uDWHJtKp8bf5RL4xOHkQ0IWyYnsqEOvIW9012a/fPWG
+	WvbTN/9Coh/LRX3KAQgzmbPEJD2Qz+16R9rUhqIyH17LyL9Vp81UVSB9SXGGc7DesvZn24c9DWAiM
+	LFL95K7w==;
+Received: from [::1] (port=59632 helo=business190.web-hosting.com)
+	by business190.web-hosting.com with esmtpa (Exim 4.100.1)
+	(envelope-from <heath@mathgraph.org>)
+	id 1xFH1h-0000000D2jo-0c0O;
+	Fri, 09 Oct 2026 16:17:08 -0400
+Received: from cgn-ote149-19-21-226.as55850.net ([149.19.21.226])
+ via cgn-ote149-19-21-226.as55850.net ([149.19.21.226])
+ by mathgraph.org
+ with HTTP (HTTP/1.1 POST); Fri, 09 Oct 2026 16:17:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+Date: Fri, 09 Oct 2026 16:17:08 -0400
+From: heath@mathgraph.org
+To: rostedt@goodmis.org, gmonaco@redhat.com
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] verification/rvgen: reject ambiguous state/event transitions
+User-Agent: Roundcube Webmail/1.6.19
+Message-ID: <0201537cbcba3268512d2c3f6a0b51c9@mathgraph.org>
+X-Sender: heath@mathgraph.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - business190.web-hosting.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mathgraph.org
+X-Get-Message-Sender-Via: business190.web-hosting.com: authenticated_id: heath@mathgraph.org
+X-Authenticated-Sender: business190.web-hosting.com: heath@mathgraph.org
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
 
-On Mon, Sep 14, 2026 at 05:26:46PM +0800, Shuai Xue wrote:
-> +noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
-> +				      void *cookie, struct task_struct *task,
-> +				      struct pt_regs *regs)
-> +{
-> +	struct kunwind_consume_entry_data data = {
-> +		.consume_entry = consume_entry,
-> +		.cookie = cookie,
-> +	};
-> +
-> +	kunwind_stack_walk(arch_kunwind_consume_entry, &data, task, regs);
-> +}
+The rvgen generator builds a transition function indexed by source state
+and event. If a DOT specification contains different destinations for
+one key, the generator silently chooses one. Parsed transitions are
+set-derived, so the choice can vary across Python hash seeds for an
+unchanged specification.
 
-Hi Shuai Xue,
+Reject duplicate (state, event) keys after sorting the parsed 
+transitions,
+before synthesizing a monitor. This uses constant auxiliary memory and
+does not depend on the INVALID_STATE sentinel. Both deterministic and
+hybrid monitors require a unique destination for each state/event pair.
 
-With this patch and FRAME_POINTER enabled, return_address() returns the
-caller one level further up than asked for.
+Add deterministic and hybrid negative fixtures. On the pinned Linux 
+tree,
+the original rvgen suite passes 30/30 tests and the patched suite passes
+32/32; both malformed specifications are rejected across 64 seeded
+processes. Fifteen existing models retain identical transition matrices.
 
-return_address() in arch/riscv/kernel/return_address.c skips level + 3
-entries from arch_stack_walk(). The arm64 original skips level + 2. The
-third entry exists on mainline because the walk starts inside
-walk_stackframe() and first reports the return into arch_stack_walk().
-With 5/7 the walk starts at the caller of arch_stack_walk(), so
-level + 3 now skips a real caller. CALLER_ADDR1 and up are built on
-return_address(). The irqsoff tracer and the preemptirq tracepoints use
-them.
+Evidence: 
+https://github.com/metalogiclabs/mathgraph/actions/runs/37983741146
 
-A KUnit test that calls ftrace_return_address() from
-leaf() <- middle() <- outer() <- check() returns:
+OpenAI GPT-6 assisted in identifying the issue, producing and refining
+the code and tests, and drafting this submission. I reviewed the patch
+and accept responsibility for the contribution.
 
-             af32da41b032   with series   with series, level + 2
-  level 0    middle         outer         middle
-  level 1    outer          check         outer
+Fixes: cad252db78a9 ("verification/rvgen: Switch __create_matrix() to 
+Lark")
+Assisted-by: LLM
+Signed-off-by: Heath Sanchez <heath@mathgraph.org>
+---
+diff --git a/tools/verification/rvgen/rvgen/automata.py 
+b/tools/verification/rvgen/rvgen/automata.py
+index fd37ce3..1f9a56a 100644
+--- a/tools/verification/rvgen/rvgen/automata.py
++++ b/tools/verification/rvgen/rvgen/automata.py
+@@ -418,6 +418,13 @@ class Automata:
+                  transitions.append(Transition(src, dst, event, reset, 
+rule))
 
-The change to level + 2 has to depend on FRAME_POINTER. Without it the
-series keeps walk_stackframe() and the result is the same as on
-mainline. There, level + 2 makes return_address(0) return an address
-inside return_address().
+          transitions.sort(key=lambda t : (t.src, t.event))
++        previous_key = None
++        for transition in transitions:
++            key = (transition.src, transition.event)
++            if key == previous_key:
++                raise AutomataError(
++                    f"Duplicate transition for event {transition.event} 
+in state {transition.src}")
++            previous_key = key
+          return transitions
 
-The same extra entry makes stack_trace_save() start one frame too early
-on mainline. 5/7 fixes that. I have a small fix for it on mainline,
-meant for stable kernels, which conflicts with 5/7. I would post it with
-you in Cc. Tell me if you would rather take the return_address.c change
-into 5/7 first.
+      def __parse_states(self):
+diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t 
+b/tools/verification/rvgen/tests/rvgen_monitor.t
+index 5f25626..6209c00 100644
+--- a/tools/verification/rvgen/tests/rvgen_monitor.t
++++ b/tools/verification/rvgen/tests/rvgen_monitor.t
+@@ -84,4 +84,14 @@ check "invalid ltl file syntax" \
+  	"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl -t per_task" 1 
+\
+  	"No terminal matches 'i'" "Traceback (most recent call last)"
 
-Tested with clang 22 and the series applied on 52318cf0fa6e. The
-"with series" column is the same on QEMU's virt machine and on a
-BeagleV Ahead (TH1520). Everything else ran on QEMU only.
-
-Karl
++# Only one transition per source state/event is representable in 
+rvgen's
++# generated table, even if one of the transitions has a hybrid guard.
++check "reject conflicting deterministic automaton transitions" \
++	"$RVGEN monitor -c da -s tests/specs/test_nondeterministic_da.dot -t 
+per_cpu" 1 \
++	"Duplicate transition for event event_2 in state state_a" "Traceback"
++
++check "reject conflicting guarded hybrid transitions" \
++	"$RVGEN monitor -c ha -s tests/specs/test_nondeterministic_ha.dot -t 
+per_task" 1 \
++	"Duplicate transition for event event2 in state S2" "Traceback"
++
+  test_end
+diff --git 
+a/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot 
+b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
+new file mode 100644
+index 0000000..1b63b5d
+--- /dev/null
++++ b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
+@@ -0,0 +1,16 @@
++digraph state_automaton {
++	{node [shape = circle] "state_b"};
++	{node [shape = plaintext, style=invis, label=""] "__init_state_a"};
++	{node [shape = doublecircle] "state_a"};
++	{node [shape = circle] "state_a"};
++	"__init_state_a" -> "state_a";
++	"state_a" [label = "state_a"];
++	"state_a" -> "state_a" [ label = "event_2" ];
++	"state_a" -> "state_b" [ label = "event_2" ];
++	"state_b" [label = "state_b"];
++	"state_b" -> "state_a" [ label = "event_2" ];
++	{ rank = min ;
++		"__init_state_a";
++		"state_a";
++	}
++}
+diff --git 
+a/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot 
+b/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot
+new file mode 100644
+index 0000000..d21b91b
+--- /dev/null
++++ b/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot
+@@ -0,0 +1,27 @@
++digraph state_automaton {
++	center = true;
++	size = "7,11";
++	{node [shape = circle] "S1"};
++	{node [shape = plaintext, style=invis, label=""] "__init_S0"};
++	{node [shape = doublecircle] "S0"};
++	{node [shape = circle] "S0"};
++	{node [shape = circle] "S2"};
++	{node [shape = circle] "S3"};
++	"__init_S0" -> "S0";
++	"S0" [label = "S0\nclk < bar_ns()", color = green3];
++	"S1" [label = "S1"];
++	"S2" [label = "S2\nclk < BAR_NS()"];
++	"S3" [label = "S3"];
++	"S1" -> "S0" [ label = "event0;reset(clk)" ];
++	"S0" -> "S1" [ label = "event1;reset(clk)" ];
++	"S0" -> "S0" [ label = "event0;reset(clk)" ];
++	"S1" -> "S2" [ label = "event2;env1 == 0;reset(clk)" ];
++	"S2" -> "S3" [ label = "event2" ];
++	"S2" -> "S2" [ label = "event2;clk < foo_ns" ];
++	"S3" -> "S0" [ label = "event0;clk < FOO_NS && env2 == 0" ];
++	"S3" -> "S1" [ label = "event1;clk < 5us && env1 == 1;reset(clk)" ];
++	{ rank = min ;
++		"__init_S0";
++		"S0";
++	}
++}
