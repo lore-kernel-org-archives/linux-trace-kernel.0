@@ -1,147 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321B03DAABD;
-	Fri,  9 Oct 2026 22:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231A73E5A32
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 22:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791583680; cv=none; b=XZVBGJYgNVHLIBkzRWueTfu4wqGIprNXLZgybGDGPb/0/yyrvAEzUzNNJoD83V2qB05LWfmRzTS3jWKMQgcq8+OFg3zd7UTxL/2pJnviIJ+HNFtYDRudMlqePB/8xSmM+79N1flgKXPZ7J0yssoRFGOz9IT2UQhzP/g8jG3WHzo=
+	t=1791584800; cv=none; b=rQR7EMvTvljx/mi1+SjIoMxBXtdIpuxqT//kxC50BaEBBS24UUmEVt4rn0OiNTFPAiQei7/oDr30mWt6uGwvY5tOxROaqDDRNtTlK0b/Unhe35q72W/SQqHB8qm3utyYmGLtD729/igf7+ZLoVADZiQ62lLB/zzvJ4D1YiXUUng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791583680; c=relaxed/simple;
-	bh=qLK4GYvyPJ0l5vosqxsqax1iw0hgZ1TvHVOJrEP+VQI=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=h5LtPbresVE9D3CIpGBjW6FwndOBX5ekdpcbR3IDVOg2OJIJqINb6h9ie1zSpbMo/7HRxChekIIUtFL/RH39mZJLwy/O25coF/vrCpfw6RYY2pmKS8/4M0Z7QRQLdeZyF2I2LZKR3lAWZD61kazWnRYUR6In4SHeXSKgMl6oDgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZYOajdw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791584800; c=relaxed/simple;
+	bh=Nj1qlIpON3VaMJM8UbfjiD8khDpWPWvFN1Ci3Mk1V50=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QjYqX628d7Mdz/QneRZ/abRwEpQZjWLw/fNNR9F0xCt1emaS2d0OoKnFAkU0FAq1tUF0Rz5RQJVJ22+WMluQzcP6z2SS1L68qagyGZ55/MEPIc5rgFXPVBLTEsSEbRdhHeeVmhkbXWtFfxd/wf4nR8s27LJ4IMoUI/9r2IDcFBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LAyaa34E; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZYOajdw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C181F000FF;
-	Fri,  9 Oct 2026 22:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791583679;
-	bh=EoTWyRJneR/OlpCaoajgmTS9kXXIhHP1c0GV1Dft92Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PZYOajdwb7RmfKsVTWz96c1ctT/fIpDHFVHDvL16q/3kFrckN8W5ZCC+8QE0+bS2D
-	 FzKrKEHrEETbr3TmHn4lj68i3CeKIso+2oKEbNz75eLzANHl0evIQHTKO9xQgkUCem
-	 kg4FK5uxFWDDYhkUN7r0ht7vW8uoY0jqUK6Jwt+bhEVq0MZq0fubwawLck2J2zjEXZ
-	 hfq4OAOCf29xh1jTI+Zx7hXGrW9vKD0BA+yMLy2axt4+RWwrG2cUrR6ZGyQsruYtsK
-	 LMbnQETOXEFxbVF6f0IAfrWDqXhhf9PKwd7vJDp8muk5hX7uZmMMhBDS5dJjilYz/x
-	 Y33toWpmUk+DQ==
-Message-ID: <sashiko-outbox-166125@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/8] afs: free the super info after a grace period
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261009-work-fixes-rcu-v1-2-7446d2d335e6@kernel.org>
-References: <20261009-work-fixes-rcu-v1-0-7446d2d335e6@kernel.org>
- <20261009-work-fixes-rcu-v1-2-7446d2d335e6@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Oct 2026 22:07:58 +0000
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LAyaa34E"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2e61ac64ec3so1681765ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 15:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1791584798; x=1792189598; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=FUz1DD2WLXF8FMCF65KzWxeNZSEe/yJbWO0PR68AnX4=;
+        b=LAyaa34EJdvWYlMTFjxZMKlgEtHOeBEsJfmGT7npnHodGoSWTmK/XYZVa7CXL+qIs3
+         DlogidZogBIdrAR9Q8ofeigrh0zJLaT3IBGSouQcLLrm+stEKfNb6cQTWD8naTe5O9LD
+         mF/unoJvj/AU1mRHJZnvhpMc03BQWOSeX4iX0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791584798; x=1792189598;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=FUz1DD2WLXF8FMCF65KzWxeNZSEe/yJbWO0PR68AnX4=;
+        b=p4BcOHC8F/MC05nfPJazqIN+TJvrH3UN07CBZhVPeDUeNwldTg7lOaCA8sS+Io/I3M
+         VXu/MAT7q/J9PUjGBDHYyGZ5EMpNUthBW1xrjMsEPeoaCH5RM5kPV/z3WpQJn3eS65Ab
+         SF9OO/muAMUkQuQx8mQLvtoxAyjB0MOCRLV13SD2yAgVoPcD2B2Fm9ZVib2k2R+CLAR3
+         5zH33HNMnEpy2+t7wuPyaFRodccdHfEFWK+/k7fT9nKsEDb6uyAYS10CnqPTaHzYYduZ
+         s4NSbg8oN5FHpU5W4L9Midyecy6nMyMqtdv+rc63Lc5MeOBzt2Q6jnHl2C3QV/U5bIxw
+         91NA==
+X-Forwarded-Encrypted: i=1; AKwUvBzeEyhkbGYnXVlgztGvNIGF2frz/bRXsJSaHK/ccNh4C7dY6mc1Mju75Mm7z3I2+SBKXuXtNdflVoJ0G0I3Ru2MhtY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIfXKBv72Y1PF1OytdXtlMCGMZJpp7+n8KyJtO3OS/K6OLagrQ7
+	fOdMPSdUDMS01DrnRsbKWojUxt5rRfLgrOvWnpvtrKbimtau0Be/SmbFj231qn3nPg==
+X-Gm-Gg: AYBFou2gAzrxmRQ3Q3x7oqWmc6AwM6KX/uybQJlrvkeAqKf4lr2j5SPYiAIwQ70Y43u
+	+7zAUVyBYQx9pkfoLbQUBCeupLCKWzTjlV9jJBnEi6TU7Rykq5pespLAlYZXOXQbT656JqeIJRj
+	NUMdQLZbinY9IAiH4Vg8OGkNBrWbz7hnotQ9jzSNz22OEwE92rWmEewQgsH0v0nZ9b2esCF5oJa
+	mxJI8Rv0ct+Ln/F0qxQaPHYHzVIPp6wy7ljXFXCwh3Ueo1xSRFybESDmj8ANhaIFvnncDyhYK3p
+	Ps1Jg1XQk8Xa/bB+nvy29WWW1B5dJNX9eXiMkpvtl9yzEz3a9YdhdpQqgXt4K4YwTumZCh/3qzZ
+	5PF+RX+bqBuBrEME1lZwjtPQOp2uHWOuL7hXdSvjc01RnHQSaI1P5IMJK5pWrygEh8wvwHGSh6/
+	fwvew2er8QcQO48hVqtK+UQcUgo4Hcd0XGv9JxSxD5W0nGBETBe/AVlnSdluJa/xD4nit5wO2DF
+	41zbP05cot79/RkMtIPAFNA0TLt99wHcnbTs6UDidwOBpNwn1Cw91GKJ0YnpxaqhHC6eQjklhY0
+X-Received: by 2002:a17:903:22d2:b0:2e2:c283:354f with SMTP id d9443c01a7336-2e842abfe53mr30774615ad.28.1791584798347;
+        Fri, 09 Oct 2026 15:26:38 -0700 (PDT)
+Received: from jingyliang-input-linux.c.googlers.com (35.152.82.34.bc.googleusercontent.com. [34.82.152.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e84219e503sm16660725ad.17.2026.10.09.15.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Oct 2026 15:26:37 -0700 (PDT)
+From: Jingyuan Liang <jingyliang@chromium.org>
+Subject: [PATCH v5 00/11] Add spi-hid transport driver
+Date: Fri, 09 Oct 2026 22:25:25 +0000
+Message-Id: <20261009-send-upstream-v5-0-384af01da3ee@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANZpyWoC/23PSw7CIBCA4asY1mJgeEhdeQ/josJgWfQRUKIxv
+ buoixrS5T+Z+ZJ5kYQxYCKHzYtEzCGFcSihthtiu3a4Ig2uNAEGmgEHmnBw9D6lW8S2p3vltXc
+ NugaQlJspog+Pr3c6l+5Cuo3x+eUz/0x/kmCikjKnjHLF1aUFbrxwR9vFsQ/3fjfGK/lgGf4Ak
+ DUABVDALZrWe2/0CiAWQLL6lywKoFnDrVTGCbVfAeQClM0akAW4GCmcQm3RiQqY5/kNc2Ls0nA
+ BAAA=
+X-Change-ID: 20260212-send-upstream-75f6fd9ed92e
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ hbarnor@chromium.org, tfiga@chromium.org, fqwqf@fqwqf.xyz, daleyo@gmail.com, 
+ Jingyuan Liang <jingyliang@chromium.org>, 
+ Jarrett Schultz <jaschultz@microsoft.com>, 
+ Dmitry Antipov <dmanti@microsoft.com>, Angela Czubak <acz@semihalf.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1791584797; l=5428;
+ i=jingyliang@chromium.org; s=20260213; h=from:subject:message-id;
+ bh=Nj1qlIpON3VaMJM8UbfjiD8khDpWPWvFN1Ci3Mk1V50=;
+ b=etJd3b3UVqagUxqvjiTG6zOPQhMZq5oZ2SbYUYzjkoeHHWcPQb1WlCN+9PEKh/Wi8HCO2T+1x
+ O6h+agGpXM0BUSCGRCXk1lARzHY3remF5IYc9vlS0ExrdTDgSttfctW
+X-Developer-Key: i=jingyliang@chromium.org; a=ed25519;
+ pk=VTYSdqslTtYOjWWoIGgYoWupGWqNSidrggReKMgfPo4=
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] afs: TOCTOU race in afs_atcell_get_link() causes NULL dereference
---
+This series picks up the spi-hid driver work originally started by
+Microsoft. The patch breakdown has been modified and the implementation
+has been refactored to address upstream feedback and testing issues. We
+are submitting this as a new series while keeping the original sign-off
+chain to reflect the history.
 
-commit 7e87d75fc751930aad8ea9a45c609797c83f1e6b
-Author: Christian Brauner <brauner@kernel.org>
+Same as the original series, there is a change to HID documentation, some
+HID core changes to support a SPI device, the SPI HID transport driver,
+and HID over SPI Device Tree binding. We have added the HID over SPI ACPI
+support, power management, panel follower, and quirks for Ilitek touch
+controllers.
 
-afs: free the super info after a grace period
+Original authors: Jarrett Schultz <jaschultz@microsoft.com>,
+		  Dmitry Antipov <dmanti@microsoft.com>
+Link: https://lore.kernel.org/r/86b63b7b-afda-d7f4-7bfa-175085d5a8ef@gmail.com
 
-afs_atcell_get_link() resolves the @cell and .@cell symlinks of a
-dynamic root in rcu pathwalk mode. Before it looks at the dentry it gets
-the afs_net through afs_i2net(), which reads ->net_ns from the
-afs_super_info in sb->s_fs_info. The @cell dentries are kept around when
-unused and the dynamic root has no ->d_revalidate(), so a lookup that
-finds @cell in the dcache gets to ->get_link() in rcu mode.
+Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+---
+Changes in v5:
+- Fix request/response races; match GET_FEATURE responses by report ID
+- Reset the device on response timeout; wait uninterruptibly
+- Validate device descriptor and report lengths; fix buffer sizing
+- Honor rtype in raw_request(); fix GET_REPORT off-by-one
+- Use hid_safe_input_report(); forward input reports only while open
+- Disable IRQ around hid_device teardown; fix a sparse warning
+- Use disable_work_sync() for reset_work in remove()
+- Cap trace copies at 64 bytes; cacheline-align read approval buffers
+- ACPI: select RESET_CONTROLLER, use device_reset_optional()
+- OF & DT: read opcodes as u8, use dev_err_probe(), require reg
+- PM: cancel reset_work on suspend, wait for reset before
+  reset_resume(), fix IRQ imbalance on resume failure
+- Panel follower: fix regulator/IRQ imbalance; depend on DRM || !DRM
+- Link to v4: https://lore.kernel.org/r/20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org
 
-afs_kill_super() frees the afs_super_info with a plain kfree() in
-afs_destroy_sbi(). Right now a pathwalk can't still be in
-afs_atcell_get_link() at that point, but only by accident. umount(2)
-waits for a grace period in namespace_unlock() before it drops the
-mount. And a mount whose last reference goes away elsewhere, like the
-chdir out of a lazily unmounted directory, still gets a grace period
-from bdi_unregister(). afs_fill_super() sets up a private bdi, so
-generic_shutdown_super() unregisters it from kill_anon_super() and
-bdi_remove_from_list() waits in synchronize_rcu_expedited() before
-afs_destroy_sbi() runs. That grace period protects the rcu readers of
-bdi_list in the writeback code. It has nothing to do with pathwalk.
+Changes in v4:
+- Extended io_lock scope to protect the shid->hid pointer lifecycle
+  against races with the IRQ handler
+- Cacheline-aligned DMA buffers, enforced 4-byte alignment
+- Added error rollback for failed suspend/resume transitions
+- Moved IRQ request to probe with IRQF_NO_AUTOEN (disabled by default)
+- DT Bindings & OF Driver:
+  - Required a device-specific compatible string in the schema.
+  - Added description to explain why opcodes and addresses properties
+    need to be defined in the schema
+  - Added `spi-peripheral-props.yaml` reference and switched to
+    `unevaluatedProperties: false`.
+  - Added fallback to default timing parameters in OF driver if match
+    data is missing.
+- Link to v3: https://lore.kernel.org/r/20260402-send-upstream-v3-0-6091c458d357@chromium.org
 
-Don't rely on it and free the afs_super_info after a grace period.
+Changes in v3:
+- Add io_lock init
+- Relocate tracepoints to drivers/hid/spi-hid/ and fix tracepoint macros
+- Add tracepoints for sync, error handling, reset, and report processing
+- Clean up internal includes and fix Makefile CFLAGS
+- Add more details in v2 changelog
+- Link to v2: https://lore.kernel.org/r/20260324-send-upstream-v2-0-521ce8afff86@chromium.org
 
-Fixes: 30bca65bbbae ("afs: Make /afs/@cell and /afs/.@cell symlinks")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Changes in v2:
+- Clean up DT bindings: fix formatting and remove timing and flags properties
+- Update DT binding example: use a device-specific compatible and drop
+  reset_assert
+- Simplify ACPI/OF match tables by removing ACPI_PTR/of_match_ptr
+- Refactor OF driver to use match data for timing parameters instead
+  of DT properties
+- Switch to fsleep() for delays in ACPI and OF drivers
+- Drop patch 12 as it is vendor specific
+- Add a lock to fix input/output concurrency race
+- Link to v1: https://lore.kernel.org/r/20260303-send-upstream-v1-0-1515ba218f3d@chromium.org
 
-[ ... ]
+---
+Angela Czubak (2):
+      HID: spi-hid: add transport driver skeleton for HID over SPI bus
+      HID: spi-hid: add ACPI support for HID over SPI
 
-> diff --git a/fs/afs/super.c b/fs/afs/super.c
-> index 82bb713825a0d..33b195821e36a 100644
-> --- a/fs/afs/super.c
-> +++ b/fs/afs/super.c
-> @@ -523,7 +523,7 @@ static void afs_destroy_sbi(struct afs_super_info *as)
->  		afs_put_volume(as->volume, afs_volume_trace_put_destroy_sbi);
->  		afs_unuse_cell(as->cell, afs_cell_trace_unuse_sbi);
->  		put_net(as->net_ns);
-> -		kfree(as);
-> +		kfree_rcu(as, rcu);
+Jarrett Schultz (3):
+      Documentation: Correction in HID output_report callback description.
+      HID: Add BUS_SPI support and define HID_SPI_DEVICE macro
+      HID: spi-hid: add device tree support for HID over SPI
 
-[Severity: High]
-Does this regression introduce a TOCTOU race in afs_atcell_get_link() that
-can cause a NULL dereference?
+Jingyuan Liang (6):
+      HID: spi-hid: add spi-hid driver HID layer
+      HID: spi-hid: add HID SPI protocol implementation
+      HID: spi-hid: add spi_hid traces
+      dt-bindings: input: Document hid-over-spi DT schema
+      HID: spi-hid: add power management implementation
+      HID: spi-hid: add panel follower support
 
-By leaving put_net() executing before the RCU grace period, afs_net_exit() =
-can
-tear down the namespace while pathwalks are still active. If cleanup_net()
-calls afs_cell_purge(), it replaces net->ws_cell with NULL.
+ .../devicetree/bindings/input/hid-over-spi.yaml    |  130 ++
+ Documentation/hid/hid-transport.rst                |    4 +-
+ drivers/hid/Kconfig                                |    2 +
+ drivers/hid/Makefile                               |    2 +
+ drivers/hid/hid-core.c                             |    3 +
+ drivers/hid/spi-hid/Kconfig                        |   50 +
+ drivers/hid/spi-hid/Makefile                       |   12 +
+ drivers/hid/spi-hid/spi-hid-acpi.c                 |  262 +++
+ drivers/hid/spi-hid/spi-hid-core.c                 | 1754 ++++++++++++++++++++
+ drivers/hid/spi-hid/spi-hid-core.h                 |  118 ++
+ drivers/hid/spi-hid/spi-hid-of.c                   |  243 +++
+ drivers/hid/spi-hid/spi-hid-trace.h                |  184 ++
+ drivers/hid/spi-hid/spi-hid.h                      |   46 +
+ include/linux/hid.h                                |    2 +
+ 14 files changed, 2810 insertions(+), 2 deletions(-)
+---
+base-commit: ee9c669f9bf5fd2c24206746ded9382fe810df89
+change-id: 20260212-send-upstream-75f6fd9ed92e
 
-Concurrently, a pathwalk in afs_atcell_get_link() can verify net->ws_cell is
-non-NULL via rcu_access_pointer(), but the subsequent rcu_dereference() may
-return NULL:
+Best regards,
+-- 
+Jingyuan Liang <jingyliang@chromium.org>
 
-fs/afs/dynroot.c:afs_atcell_get_link() {
-    ...
-	if (!rcu_access_pointer(net->ws_cell))
-		return ERR_PTR(-ENOENT);
-
-	if (!dentry) {
-		/* We're in RCU-pathwalk. */
-		cell =3D rcu_dereference(net->ws_cell);
-		if (dotted)
-			name =3D cell->name - 1;
-    ...
-}
-
-If the thread is preempted and afs_cell_purge() runs, could cell be NULL he=
-re?
-
-The same appears to happen in the non-RCU pathwalk:
-
-fs/afs/dynroot.c:afs_atcell_get_link() {
-    ...
-	down_read(&net->cells_lock);
-
-	cell =3D rcu_dereference_protected(net->ws_cell,
-					 lockdep_is_held(&net->cells_lock));
-	if (dotted)
-		name =3D cell->name - 1;
-	else
-		name =3D cell->name;
-    ...
-}
-
-Can net->ws_cell be cleared to NULL before the lock is acquired, causing a
-NULL dereference here as well?
-
->  	}
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261009-work-fixes=
--rcu-v1-0-7446d2d335e6@kernel.org?part=3D2
