@@ -1,169 +1,170 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl2-f7.google.com (mail-dl2-f7.google.com [74.125.229.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7503655EE
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Oct 2026 23:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791590172; cv=none; b=l9ojs53mWNieolz9qbaV2NJd7fhu/BneGxAEjLxMwNQXsAjsppWpSvx8u5UEbCYPfbKK8FwKpDvAR0IPy1HGVhtJm3nlQbEDH3uhzalMt6DqP9UlykViI4hYzjyqgc5xaFStYN7YuE4nrCF+o5y9pm5m3LFo+ZoVgny6ko1vshg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791590172; c=relaxed/simple;
-	bh=9z7hYxQOC56YcYk/la0dPkEnEgUTeM+W0hts9a9DAQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=caf2DjR7VfvXwjD6MMoS8676nQRGrwBP9TmleeuF+THFjsfKs8/Cf/HJffBrzEywBWUvxJwXOx1wLFhzrbVQGvdJn5yT9ZayxPFNsAWEuig2KOU72CgeQnH1OSjMr+Jj7e0bTnNDg2o+4PJtUdmEG2OwQvizSMDvR/cm8ejJ8Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QJj/w0u2; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Oqzywpsc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4B910F1
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 00:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791591030; cv=pass; b=F6MpKpv1HC0SC6bJxn94F5YofH2aCZ+X54hFFj2OMCA08i39zfZKFqExWUMaoNw6hEtsTjd4H6n2c9ufiAxnbsALiz98xdtx75c4GyJHpYassaIMFJ3lNFClF2QXyqE0UdVoTyYuzWoiBUgEMCDaL+TKh+CwvK1oLn/Y7j9Wz4U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791591030; c=relaxed/simple;
+	bh=VDF3hQxEsXwOOEKMR7uFIu2BM583vjfhY7iLbnx2e6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D4BSci3I1wZCpbg+WGU06CVqPeauiAgoLodRanu3ynWbyRrafLS8H+oSPkp9mehmx2u5/jQqxuLWaYHmLE0vwO3EDmqi5vLEhjFLuL5zaBApUT9qqkandQ1nEFz7is6tzhMYL3i8z1ilanmm6iWoxZpciWu8jlNSUlw23fip2TE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tAb0lZ2t; arc=pass smtp.client-ip=74.125.229.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QJj/w0u2";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Oqzywpsc"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 699NKdmB3602111
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 9 Oct 2026 23:56:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sm8UHt0kUeP9v337omYSKLBHjxWM+fIM1E1WXPZ4J0k=; b=QJj/w0u2RDGgekrd
-	cAP3WliD2fOKkfKMSWKRMxj9RMXdqP92SDKtMDO0fMw/aG2qMd6m+5hW3PchhkHD
-	2nvWkBY9O/wR4TKcuwgXPKXepmDA+we3drKc592+/1OenSWZ/kYzW1U0TUtUIjIf
-	y3DEqFwcKSaGhjHRudqXtidWUV+em31rSJWV+mBPYq9a+kgs4DSuifEgW/gbTIDZ
-	oEMrqn94bujPXuOktGUlicG3clXjCQz6UQhhbTKuO1P12m6+aR2/SGPCmfunOLNk
-	wYlmjcIjta628pgRGhCrjVtGCflClm1D2bG7MZk9nppSwU7E631i0Hju6Kw9kuPO
-	UWaTWw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h74t7h63r-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 23:56:10 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93a082c014aso44005985a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 16:56:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tAb0lZ2t"
+Received: by mail-dl2-f7.google.com with SMTP id a92af1059eb24-14345ae29c5so180498c88.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Oct 2026 17:10:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791591028; cv=none;
+        d=google.com; s=arc-20260327;
+        b=bDEkxyQHcgHleVvmlTpBasmeSF9x/EihVJxWXX323ho8cb6MD/FG6ICPfBMWhOJZJV
+         9Rp9iTaLcIXl6OXmcvnXbcHE5Kvl4stY/+Okd30CUWz698psK6LR1pQiMF6JhLh7sUXh
+         sXmhM/pB3chaHwQcl9TRfl2WYAliNhTsoGJrP4QIUJCeKTEJM0IHEBw09ZuAU1yJ/6FG
+         8YlUrRgTxShXdACo2BJFvGhOfgOfCMyhrpXlGrM/wFrY3WUrM56KI0diVvKKGti3u4Rj
+         uae1NdZG2IFevSMraBkDODfISXu1+FSzHAicoS5ywTln+EvXJ043lWqPclSOOJdhVQcD
+         wrSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=cR/CPJKG3NoiCnDGVGJZMEP7USNRf/dhi11bwg0wPvE=;
+        fh=Llrw7vpOBY8c/q4TZPRBY33oEnWxDCSQv/NNOhCq/Ao=;
+        b=aDEEb1Nrv3b7/EZgUKOUgu7tOkE5ARO+gAAKB0slT1OYoTTrEsEbgTjJSFix49SGoq
+         bA0tw8oFz15aHW732utiiiD87ZyheXzMbs6txBBPE6txh/QcOOrzduYocs+Q4IEHE/gU
+         a2fSwAtRmHGjoWN5YfkpNdPwQZwvbAKaYTx/fG9O3BFuiypwn8Ou2xpVfZLcpi/WTwDX
+         7bYF3nA5rZxupu0YYd9Szzp9NMPfTeCUSbiH01LMI8AsWgjl+NSbU12AaRHoRX7JQiyR
+         k67R+EJCkUZA0lNTNoZb1W41Wj5ENGFLSb3BhENN9plnQZDALwv9sttbMrO/O0RGEJHM
+         XBFg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1791590170; x=1792194970; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sm8UHt0kUeP9v337omYSKLBHjxWM+fIM1E1WXPZ4J0k=;
-        b=Oqzywpsc0p3pGSXaYuY1qf6oV3ajs8N3qhcqhrs/Jhf0SRI+FKpbWfIXsr6rdhY/G8
-         bFGQpEVrNPbFVHYOIxNBcPKVvza9NouD3nMM89YPjOy6VTu5BQDtpPUJYNcFkQcrPvR3
-         j1SJjsszukTpPQ7WoUPwYngzAyXW+aYCG41WNx2T0HMGubKnbp+x2aGNOZPtAo4bGKgm
-         267v1OvRrrVWy52ncCspa7x0P34cHmgqQe/3Fv2HR7awNgIK5p0E2HVIQZOx6hUqVLP8
-         W/9nMbD9tQEG0gzkEK6UStQmimaNs1fSxF6slWBje6DG57lUvd3D1txbZIMRAntG/Urr
-         l/yg==
+        d=gmail.com; s=20251104; t=1791591028; x=1792195828; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=cR/CPJKG3NoiCnDGVGJZMEP7USNRf/dhi11bwg0wPvE=;
+        b=tAb0lZ2tx6u8SLh3zO/dNMo5WZ7CTdCJkpLGr4TlttMSyGyZ8mX+2vsxUGGPNVcq5M
+         h9EvltQw0Qese8SCZ68BmiTcmNqsFmdiPlz53EkZiiEKqFqip9fkOrVx4a8tU5ydUaEf
+         yye54pRrLyF3p48MJMWFaR0H9cTxeYRAiyF0NuHdXSDGxMq5NNcH1hlAgM49CPfseeoH
+         LAK7ClrhayZlhhTf3NfaraX3p4O/Q7dYWuhsxlPQoLL5VuVTqmslwWbMMO4boP8wESWR
+         Nsn1oPzFukTg0GgELloX0HWTh8QxxvgmQKKexFVXAAJwLZQNPn6NZtdmTttH72Se3fGx
+         1/6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791590170; x=1792194970;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sm8UHt0kUeP9v337omYSKLBHjxWM+fIM1E1WXPZ4J0k=;
-        b=rWWsWNd8RypOok5ThUqmlkac7XdWtw2xWEEYa8GRkMREbq0LZJ0YzwdhYm2uUocwvv
-         3XfxYrKGd6khgVTy1O3Z7Hd6RlmZspwVVRH/548hK+hZE3uv9o2S6QsZIREC1iXQlHrc
-         MNcxRr72F8w6ZvyyjNMpBYbJhX+0YbDMIykN8w1QYMmUdOZqkX4JNdkKG3rlM+l8APzH
-         dSMeN+K0iv7u9OygMY6Iwux2AXaEM1VkXFgLNP/x31zII9VbHa10xoIvjJAAQKvoHGX2
-         S0+RCbIGxfsGgwRCvxuTQp9UYkEXKB3EyErlXHkAzBb0zRwms0UR2mXCWWA6hQQoBEOw
-         cdVA==
-X-Forwarded-Encrypted: i=1; AKwUvBydqGN6uLVMkk28SAhBHcltGCiJW1STZwDJgjE/vTMlvEj9fNzJXw1t0IHRzL4IuP8i4QtY4007m/ugI47c4O6INWA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLUTHOrmv2DKjSC49trQf1Jpmd3GDOzOyqf3COxHM/lOfp6Q/Sz
-	6Ci90ojAd4Mhhd1K6sFIsp4fVZ3OPK/X0DY9i56JkK89M0XmPTpMd4fE3y1RTql3GSxzsYhn7bk
-	3w4cQu1i+39chrEc+Gid31pAWEx1QLoP+85z3h2oimdJgi7aFIvXVxh8E+CBqhXBSC1tn5JeBs7
-	E=
-X-Gm-Gg: AYBFou1Ds5ToLacsF51A1pLY7J7lmB37WOAS2VDSRAUn1Dl32LAUcZdcSbBZ7IQp8gH
-	UUbI5eM2Br+CC13gejwue9Uz3y81FNjmmTfMOPbzEtEEq0skHAoGLjVpypjPwPh0sVIU9rMHdPX
-	PHpIm1xj1ls5csUelvwlf3kjA3VE5IUfcbpmry3+39ids++DKLF6D6O7G7fnwBfNpfWPNX0kpF0
-	Q9vbueBOa73i6lV5wj0JvmQPOW5ACR+4Ga21sHX5KpGpz0EBEr1bHM02g9207PZpJ19J1GVGVHE
-	YVzLBvmWCwEjbNqC+3pVQyBGSbXBj5gMn8Mvu71iQ+24MUph4ztmoXR1RA0I+wwlhB8jn/jAh/F
-	8jblphzTkxokDeSyPslQ+WP1YwVY7eg==
-X-Received: by 2002:a05:620a:17a0:b0:93e:c12d:4ec7 with SMTP id af79cd13be357-93ec12d54f1mr427905385a.39.1791590169760;
-        Fri, 09 Oct 2026 16:56:09 -0700 (PDT)
-X-Received: by 2002:a05:620a:17a0:b0:93e:c12d:4ec7 with SMTP id af79cd13be357-93ec12d54f1mr427902885a.39.1791590169279;
-        Fri, 09 Oct 2026 16:56:09 -0700 (PDT)
-Received: from [192.168.0.31] ([212.5.153.243])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db94e30a7sm6357514f8f.12.2026.10.09.16.56.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Oct 2026 16:56:07 -0700 (PDT)
-Message-ID: <6713512a-d879-4fdb-9138-12e125c21ed6@oss.qualcomm.com>
-Date: Sat, 10 Oct 2026 02:54:36 +0300
+        d=1e100.net; s=20260707; t=1791591028; x=1792195828;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cR/CPJKG3NoiCnDGVGJZMEP7USNRf/dhi11bwg0wPvE=;
+        b=o6men5DzkWZG2mUimPNthZYXDr+fzqeMjt9xB/TV2rur3lyFr66kClXecqAZVg5dwo
+         ShBQzfWBeM3t3MN2FFx2uusC9tARFM0Tucv/wVv1Ad6X+VtKhAn6sQff+6U10w5jfMms
+         KNVOh6QGTb1yS1ZWqxr44JKzBCxwaZiVpC3NxwN4Uebk52A9KQmJBQhHoZwyeQzCoamp
+         UCRt+CpH0vzw5Nw0tlhJtiZMhWQm3RQo1X7ytqLzM4suEUXGRaN7tK8fZ4oMsO2Ia0SB
+         TFU4jZKMiWeJFrBPKEkNsNPHK9viYV+viAZLDnQjivvkjUtpEUskEysBVPXEo/+oyTHU
+         rkdA==
+X-Forwarded-Encrypted: i=1; AKwUvBxKgJp1VZ19fJ7iQGGKo/l7upUmg31UlGuX/EpF9a76avraXb7sn603nbvPJfPAaBsnHbS80kMdHN2tfK6iRTGVpyo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJdfIcRiKzEl756RSA80yxuVk8mT3z1VAztSirov+hUVGviz62A
+	CgUJ8TS57INEE7qRD1X4Yr2btKIHnx8NjcOLvSyj+ebm0uQVabB9YLNaTfMS+un/R4E0tI5BJ/l
+	7f8rRcPM3MCvXBSkGdAVSoDzq/ZSzow==
+X-Gm-Gg: AYBFou1WqBq8dOiA+bEHUNR+c9uOKwB1dalIyD4IhHQgKRxj/6dP1Mk2j7hzGdoq1pX
+	92RurqPr0H2O6vtEcR3vf/wS+PuUWBboCYRBycW9K6gH2ZWIzk6p2jpR7uYVojjDR67Im5rH6B+
+	fwXeJkRrVWWqjGaUoZYWWFKPbsRQK+91EKJ+/jENpQ6ZBhXAtV7Mrpuzh6yvA3cqIgKzlWXPDgN
+	kEA7dEN7SR8xsinbLR/XGGSo4chyaM+nkxnfa+BxaUiQmwrQ3a+KB5V7To/TW6Pc6zE1c1OsXim
+	HIMQaS7l+1JPJp7c37mEWWxGgbxvRlIYMeDjZEHxS4BupfrC6xVgOgjM
+X-Received: by 2002:a05:701b:2607:b0:144:f096:4dd1 with SMTP id
+ a92af1059eb24-16a611c76a1mr3960393c88.41.1791591028199; Fri, 09 Oct 2026
+ 17:10:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] zram: Add QPaCE zcomp backend
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc: andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        minchan@kernel.org, axboe@kernel.dk, rostedt@goodmis.org,
-        mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, djakov@kernel.org
-References: <20260930145215.3380977-1-georgi.djakov@oss.qualcomm.com>
- <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
- <20261001-dramatic-hasty-pug-68ebfd@quoll> <ar4070oH8lRCJMRw@google.com>
-Content-Language: en-US
-From: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
-In-Reply-To: <ar4070oH8lRCJMRw@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=W8atxhWk c=1 sm=1 tr=0 ts=6ac97f1a cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=douLNevBrtimd63D7eljNA==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=EUspDBNiAAAA:8 a=nv9Pdalr7dmODPptRzIA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: lu7oECHJzROpM7i431qCdwMQDfiPdq9K
-X-Proofpoint-ORIG-GUID: lu7oECHJzROpM7i431qCdwMQDfiPdq9K
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA5MDA5NSBTYWx0ZWRfX+6pDQhBouL/F
- oDpbtKPysLg4IERb2GZp1GxFCU3CxnXxIZD4BqR4COsZ+QFVH1IISNkY9maWavyQqcNOyyqUstI
- IY6IJr6CtVWqWeAyzx11bzf7Nx2yoH4=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA5MDA5NSBTYWx0ZWRfX3D/C2THZ2CIt
- 8VJJ75vpuUjS1Vx8v03gefpq7Lb37rIMUZCGVkI+pjhQp8vgZZVoLPTkJ7exwM0Ig4+DXN+63Fs
- IBEfKo7OlXyUNeNjGbWfJjk8lJQlhacuxEfmgfQU3astO1PV12eKmtsKLdsnFgiPKobUzh5ppCJ
- jdFNuivxdRA2gXDuKHVVyRSRSoIkw64pa0S+BcpDAEuWBNH20sahDa+CbuPKZ4XnqYSi5WrODgY
- FY87LmTIcOsZae4G6++W8bIhkVOZE6TVCdZWReo4DZ1oKl+R5PjU2DNV1LVDKNp+2X6VnyeuMG9
- y8Ajnm7cC+9rxzUMzmAhGfDjJLWTEdll4ePBBw+zD95OZ4dk7B/Gsdsr4dHH4c80hpz2LNEUk16
- xJCWpPNT9dNEcblbSwaJonDibzsoyP0zGvC9WSq36TJQWOmQuM+rhlO34Lvw2r1OpHuwvclR9Nw
- SeDLxcILnTDDU9e7yFA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-09_07,2026-10-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610090095
+References: <20261003202727.3673-1-ravis.opensrc@gmail.com> <20261004080110.37328-1-sj@kernel.org>
+In-Reply-To: <20261004080110.37328-1-sj@kernel.org>
+From: Ravi Jonnalagadda <ravis.opensrc@gmail.com>
+Date: Fri, 9 Oct 2026 17:10:16 -0700
+X-Gm-Features: AclHuK9iErDpI0ky8YsjjXHUJ1Bhqg2BvHDmttXO2gzSECAslgV1ytghZLxTEaM
+Message-ID: <CALa+Y17H55dp07Td7oqhDPq0TmuWHFB9DNcXNZ91Su_di2vhnA@mail.gmail.com>
+Subject: Re: [PATCH] mm/damon: add damos_node_eligible_mem_bp tracepoint
+To: SJ Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, damon@lists.linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Bijan Tabatabai <bijan311@gmail.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Honggyu Kim <honggyu.kim@sk.com>, Yunjeong Mun <yunjeong.mun@sk.com>, 
+	Akinobu Mita <akinobu.mita@gmail.com>, Lian Wang <lianux.mm@gmail.com>, 
+	Kunwu Chan <kunwu.chan@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/1/2026 1:27 PM, Sergey Senozhatsky wrote:
-> On (26/10/01 10:51), Krzysztof Kozlowski wrote:
->> On Wed, Sep 30, 2026 at 07:52:13AM -0700, Georgi Djakov wrote:
->>> Add a zcomp backend for the Qualcomm Page Compression Engine (QPaCE) so
->>> zram can expose qpace-lz4 as a selectable compression algorithm when the
->>> QPaCE driver is available.
->>>
->>> Compress and decompress operations are handled via the QPaCE urgent
->>> synchronous path: each request DMA-maps the source and destination
->>> buffers, issues a blocking hardware command, and returns the result size.
->>>
->>> Signed-off-by: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
->>> ---
->>>  drivers/block/zram/Kconfig         |  11 +++
->>>  drivers/block/zram/Makefile        |   1 +
->>>  drivers/block/zram/backend_qpace.c | 134 +++++++++++++++++++++++++++++
->>
->> So entire qpace should go here, no? Why did you create this entire layer
->> of indirection, singleton management under drivers/soc?
-> 
-> qpace seems to be standalone/independent arch/soc specific, and can gain
-> users outside of zram (fs compression, zswap, etc.).  zram's backends
-> potentially can disappear all together, if we switch to acomp crypto API.
+On Sun, Oct 4, 2026 at 1:01=E2=80=AFAM SJ Park <sj@kernel.org> wrote:
+>
+> Hi Ravi,
+>
+> On Sat,  3 Oct 2026 13:27:27 -0700 Ravi Jonnalagadda <ravis.opensrc@gmail=
+.com> wrote:
+>
+> > Add a tracepoint for DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP quota goal
+> > evaluation.  The tracepoint fires once per quota-score computation when
+> > the goal metric is DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP, exposing
+> > context_idx, scheme_idx, nid, target_value, and current_value.
+> > current_value is reported as the quota tuning sees it, after the goal's
+> > complement setting is applied.
+> >
+> > The DAMOS_QUOTA_NODE_ELIGIBLE_MEM_BP metric expresses node memory
+> > occupancy as basis points of eligible bytes.  This information is not
+> > exposed through any existing external interface (perf stat, /proc, or
+> > sysfs), so the tracepoint is the only way for userspace to observe the
+> > target and current eligible-memory basis point values at quota-scoring
+> > time.
+>
+> Thank you for this patch!
+>
+> We have damos_esz tracepoint.  Have you considered using it?  It doesn't =
+expose
+> the current value, though.  I thought it wouldn't be real problem in most
+> cases, but I can show it could be problematic for node_eligible_mem_bp ca=
+se, as
+> the metric value is not straightforward to see without using DAMON.
 
-Are there any plans for switching back to the acomp crypto API? We moved away
-from it some time ago and dropped all the crypto dependency in favor of the
-custom comp backends, right?
+Hi SJ,
+
+Yes, with the temporal goal tuner, damos_esz only
+tells whether the goal is met, not how close current_value is to
+target_value, and damo needs that to know when a step has settled.
+
+>
+> If you really need to know the current_value, I'm open to add a new trace=
+point.
+> But I think it has no reason to make it only eligible_mem_bp specific.  H=
+ow
+> about adding more general purpose tracepoint, and/or update the current_v=
+alue
+> file [1] under the goal sysfs directory to show the current current_value=
+ for
+> all goal types?
+>
+
+Agreed, nothing in it needs to be specific to node_eligible_mem_bp.  I
+will rework it as a general quota goal tracepoint, emitted for each goal
+evaluation with the goal's metric, target_value and current_value, the
+node id for the node metrics, and the memcg id for the memcg metrics.
+
+I would leave the current_value file as it is for now.  It would need a
+stats update command or refresh_ms to stay current, and damo wants every
+evaluation as it happens, which the tracepoint gives it.
 
 Thanks,
-Georgi
+Ravi.
 
+> [1] https://origin.kernel.org/doc/html/latest/admin-guide/mm/damon/usage.=
+html#sysfs-schemes-quota-goals
+>
+>
+> Thanks,
+> SJ
+>
+> [...]
