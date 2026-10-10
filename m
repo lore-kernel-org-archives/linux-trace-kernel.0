@@ -1,138 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83C33806A6
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 02:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B9F382387;
+	Sat, 10 Oct 2026 03:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791599819; cv=none; b=ikQSCPe6qOGJGdPbZjx/UKvZKDZX8SxraU1JHRmlnEA5kPPDpoEdmbwL2ojsUBzgZGlG5g8j/rXWRQ00Z6qd1HZzqUZA/GjrX4/FNFRnzPoENCA96Ag7n+VgpjzcP33QF1hbKxEcpktOE48WkkGfXMxVAOYLaBbPuDPf90nT/P4=
+	t=1791603545; cv=none; b=MNYBfbInpfBxPO9PDVQ22ae7pngN/5deQAWaodkgjuXhp50KJkFb0+W8Xw1pgF9sH3JTDRqXECAtKaOmUlhM2wXleQ0wPcAa3YMuNhBZhQul9iISbw2NRQJp568lmqp2XU1OTupEMr8zDXvSPAhb5VK+GiZk3ovcsQVI3+i04lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791599819; c=relaxed/simple;
-	bh=iG4ZWdkhT/Q1GBL38XDN5XlFTU3bTWivpP7TQaYWZPU=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=hWZRjsd3KVxGdcNl1VMbDYzh3yUcR8KJUggAtr0bt8gi4eEMT9rQE+XaAHAGKuxXLl+UGfzSS0RGUhZjpbD45Wm90jweT3YgWFKpDorxQC9GJUoXwh0h1EZAejb7LVPe/n1yEGsz1991fOR1aeKhs7qj2sWDv7+0pU5Uk3s7NVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbheGafB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791603545; c=relaxed/simple;
+	bh=ypmEU6kQKeao3mRXaldZjjVkM83muqmZMU5NsPKJLR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G4lj2eSq8wvwOW2P2zyvwTcT2Xm9dGBcuu1RmhPv6NQ2MWcLzqgOxrZDfy1lcft6tOneM+udU1vU7gwaUa5mA6ZS+8zFA99rIgo/AVHhEPuO/N+oEglN3edvyoYmtwHLKhyj4o9atACUBVTBkp41t/dTPF8UzoU1nEsV0HjQGvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A7q/o2Av; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbheGafB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363661F000FF;
-	Sat, 10 Oct 2026 02:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791599817;
-	bh=Fc9shreG1ozq+T/m3J2bsvnwTl54D06HoGKSErSG9Eg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MbheGafBW/pR5oSM9Pc8nBzgjB7ttjOpTbvqbx+AG5wqQMgS1klagN6QqxTFHogSF
-	 c2QYDcFyR4oqfLgkVxClAAPhGSZQ3BzhBqSoJTKK7Yw9xXgvRzSA0P/MEVkVMNv+VR
-	 GXDt1TeCYLgchoXIlH7jB25u8m6dW8YJ6gVsMTRjEg0uNGIbmG/LYTOr9RbkO0Chqe
-	 K59v4LWIIZOpf77xtCQ7CjNPfXMTRlIr/YyIny4SGzewYa0JYYo2opuRsZmdv1/uoN
-	 qVemXc4c+HW/blFccwoR5XnqvmhZ1aLhktdixdkbhzxbQS/RMpHtO8nVhpwBWJddZM
-	 cJ9qOp0rjetqg==
-Message-ID: <sashiko-outbox-166223@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 7/9] tracing/osnoise: Split out per-cpu variable
- resets
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Crystal Wood" <crwood@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261010022338.2507589-8-crwood@redhat.com>
-References: <20261010022338.2507589-1-crwood@redhat.com>
- <20261010022338.2507589-8-crwood@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 10 Oct 2026 02:36:56 +0000
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A7q/o2Av"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1791603530; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=SBB6AWvERMNQNcnv8IpcOyFkUIlmwIKsnK5k1h4Id5s=;
+	b=A7q/o2AvOzEhw+XVOO+FKT/EhKev/5wGvR/VpaRI9XdOIHZBcd1UW+dbdK0h45sB7wCUdNjd3SXx/jaB6FwkBHmtKKkp6k1TZG4AnvnuTJJwNPdAnAUOyeJ09kfc++FAYP5CM51jh3dlCAMgIHK6CpzBoaulHpYCWiupwm3Y4Yc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=35;SR=0;TI=SMTPD_---0XCUukT6_1791603526;
+Received: from 30.246.161.155(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XCUukT6_1791603526 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 10 Oct 2026 11:38:47 +0800
+Message-ID: <2650577a-a359-495c-a6bf-47a825e9282a@linux.alibaba.com>
+Date: Sat, 10 Oct 2026 11:38:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/7] riscv: stacktrace: switch to frame-pointer based
+ unwinder
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: palmer@dabbelt.com, pjw@kernel.org, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ linux-riscv@lists.infradead.org, oleg@redhat.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, jpoimboe@kernel.org,
+ jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+ shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com, martin@kaiser.cx,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20260914092648.51254-6-xueshuai@linux.alibaba.com>
+ <20261009185904.82385-1-kmehltretter@gmail.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20261009185904.82385-1-kmehltretter@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] tracing/osnoise: missing state reset when OSN_WORKLOAD is disabled
---
 
-commit 9927bbade704e7302f3a77ce1eeb45ccd749854e
-Author: Crystal Wood <crwood@redhat.com>
 
-tracing/osnoise: Split out per-cpu variable resets
+On 10/10/26 2:59 AM, Karl Mehltretter wrote:
+> On Mon, Sep 14, 2026 at 05:26:46PM +0800, Shuai Xue wrote:
+>> +noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
+>> +				      void *cookie, struct task_struct *task,
+>> +				      struct pt_regs *regs)
+>> +{
+>> +	struct kunwind_consume_entry_data data = {
+>> +		.consume_entry = consume_entry,
+>> +		.cookie = cookie,
+>> +	};
+>> +
+>> +	kunwind_stack_walk(arch_kunwind_consume_entry, &data, task, regs);
+>> +}
+> 
+> Hi Shuai Xue,
+> 
+> With this patch and FRAME_POINTER enabled, return_address() returns the
+> caller one level further up than asked for.
+> 
+> return_address() in arch/riscv/kernel/return_address.c skips level + 3
+> entries from arch_stack_walk(). The arm64 original skips level + 2. The
+> third entry exists on mainline because the walk starts inside
+> walk_stackframe() and first reports the return into arch_stack_walk().
+> With 5/7 the walk starts at the caller of arch_stack_walk(), so
+> level + 3 now skips a real caller. CALLER_ADDR1 and up are built on
+> return_address(). The irqsoff tracer and the preemptirq tracepoints use
+> them.
+> 
+> A KUnit test that calls ftrace_return_address() from
+> leaf() <- middle() <- outer() <- check() returns:
+> 
+>               af32da41b032   with series   with series, level + 2
+>    level 0    middle         outer         middle
+>    level 1    outer          check         outer
+> 
+> The change to level + 2 has to depend on FRAME_POINTER. Without it the
+> series keeps walk_stackframe() and the result is the same as on
+> mainline. There, level + 2 makes return_address(0) return an address
+> inside return_address().
 
-This commit resets per-cpu state when stopping a kthread or detaching a file
-descriptor, instead of assuming cleanup happens implicitly. It also adds de=
-bug
-checks to detect unclean states and no longer initializes the thread lazily.
+Hi, Karl,
 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index eaecd56492e39..ccd717db9a518 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
+Nice point. Thank you for the thorough review and the KUnit test.
+The analysis is spot on, and your table matches my reading of the code
+exactly.
 
-[ ... ]
+> 
+> The same extra entry makes stack_trace_save() start one frame too early
+> on mainline. 5/7 fixes that. I have a small fix for it on mainline,
+> meant for stable kernels, which conflicts with 5/7. I would post it with
+> you in Cc. Tell me if you would rather take the return_address.c change
+> into 5/7 first.
 
-> @@ -409,6 +379,36 @@ static struct osnoise_data {
->  #endif
->  };
-> =20
-> +static inline void osn_reset_cpu(int cpu)
-> +{
-> +	struct osnoise_variables *osn =3D cpu_osn_var(cpu);
-> +
-> +	WARN_ON(osn->kthread);
-> +	WARN_ON(osn->fdd);
-> +	memset(&osn->zero, 0, sizeof(osn->zero));
-> +	tlat_reset_cpu(cpu);
-> +}
-> +
-> +/*
-> + * osn_var_reset - Reset non-per-cpu state, and check for stale data
-> + */
-> +static inline void osn_var_reset(void)
-> +{
-> +	struct osnoise_variables *osn;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		osn =3D cpu_osn_var(cpu);
-> +
-> +		WARN_ON(osn->kthread);
-> +		WARN_ON(osn->fdd);
-> +		WARN_ON(osn->sampling);
-> +	}
+Please go ahead with your mainline/stable fix for the
+stack_trace_save() off-by-one as an independent patch. You are right
+that this is a separate mainline bug: stack_trace_save() hardcodes
+.skip = skipnr + 1, i.e. it expects the first entry reported by
+arch_stack_walk() to be the return into stack_trace_save() itself, and
+mainline's walk_stackframe() breaks that contract by reporting the
+return into arch_stack_walk() first. A 7-patch series is not a vehicle
+for stable, so the minimal fix is the right approach there.
 
-[Severity: High]
-Since the explicit memset was removed from this function, could stale
-timestamps and counts remain if cleanup is somehow skipped during teardown?
+Please keep me in Cc when you post it, I will review and test it.
 
-If osn->sampling is left true from a previous session, this code warns but
-does not clear the stale state. Does this mean delta_start timestamps for
-NMIs, IRQs, softirqs, and threads are retained, causing the next interrupt
-to compute a massive bogus duration and corrupt trace metrics?
+> 
+> Tested with clang 22 and the series applied on 52318cf0fa6e. The
+> "with series" column is the same on QEMU's virt machine and on a
+> BeagleV Ahead (TH1520). Everything else ran on QEMU only.
 
-> +
-> +	tlat_var_reset();
-> +	osnoise_data.tainted =3D false;
-> +}
+Thanks again for testing on real hardware (BeagleV Ahead) in addition
+to QEMU, that is much appreciated.
 
-[ ... ]
+Best regards,
+Shuai Xue
 
-> @@ -2036,6 +2036,7 @@ static void stop_kthread(unsigned int cpu)
->  		kthread_stop(osn_var->kthread);
->  		put_task_struct(osn_var->kthread);
->  		osn_var->kthread =3D NULL;
-> +		osn_reset_cpu(cpu);
->  	}
-> =20
->  	mutex_unlock(&osn_var->lock);
 
-[Severity: High]
-When the osnoise tracer is used with the OSN_WORKLOAD option disabled,
-start_kthread() sets osn->sampling =3D true but does not spawn a kthread.
-
-When tracing stops, does this block bypass osn_reset_cpu() entirely because
-both osn_var->kthread and osn_var->fdd are NULL?
-
-If so, this leaves osn->sampling set to true and prevents the per-CPU state
-from being cleaned up, causing the stale timestamp issue in osn_var_reset()
-when the tracer is restarted.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261010022338.2507=
-589-1-crwood@redhat.com?part=3D7
