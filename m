@@ -1,295 +1,269 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C000B498910
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 13:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD91A683D;
+	Sat, 10 Oct 2026 22:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791638846; cv=none; b=YCYXwcfPaTA3JwaMG2D+6OamMZc0ty6NISR5DSkhN9+BtzC/xrHaAgi4UYNivUdLU81pug6FGb5SN6JIVI2tqzj74iyljirvgGT55raefux60qRCN4gxhS4s3dPzySas2Twi8ndD1lW4pRAObCY3J9e7lPk8Q25iCsdo99/x3Lc=
+	t=1791669627; cv=none; b=pvoSx4+58RJt/pZ3LW/aDh8aVfcXnvuIsCVf4SMHeUqU03UIF60qOlHr2fBnANy53S5xaYPwrwCaK9vVXDrbYfWO5AZ3riFu3LwKYe/ymIgpa8AJsQtPAcajJPMkUj30jqmLPhKLkSP4AthoXZGWHZoifKuhq5mOzXwjoAht/Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791638846; c=relaxed/simple;
-	bh=n/pCxSDOn2qS/NpKHP6UGNhMIq87C3dUtShRfICorgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YHF0N3wsiAoLBO1bZw3j48kIVcwQJQtGnAOs/8OI1cd7fYpX5reXgMtkJ9KqKjYEJp4Xs2XpWwkjNEkq1scbjPjogfRTCNxMgxMxbhBtx1+0CfZ3hB9DXGZpt3rOtBSzdOYAzmVEE4FYK8yU4ZG8xPSwWZu5zPOKPjbr266fxpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmNL/gxW; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791669627; c=relaxed/simple;
+	bh=uTIIgXvNGRKidYtT9y9d/j9O/uWBWM1pGuwQpiO4cmw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LxMbN4FMd8LTIFjiPea+nzZKCbl9pWue4MSjHuNEHXw8edbBTn5aa++6NGrRpEtSCEfwX13SoWeZ2wNQ3RrWp5xUIhhJ+2XPHi7ITvpMZa1z5TZgNagyttUk0wpBrTgKFuexBZfsUQWi2ziBmDZ6ZWxse3V+cxAJqVpfdWWVHLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ffP+TPLt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmNL/gxW"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a171b677d2so4085755e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 06:27:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ffP+TPLt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AADC1F000FF;
+	Sat, 10 Oct 2026 22:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791638843; x=1792243643; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Go18brKNkouX7jNlWtPlkQMMHplwnR2FFa56h0dzp9I=;
-        b=UmNL/gxWPYv2yOqUKL4BZI2gLV19OPzXz/vmc4hEpvJQS9lAKifL6gv5xDJYx2o1Eu
-         9j3QZj7Lmiw1a9j+DLTfhRwiBPnsK32STiSoUaWWiVfkHvc8B71vTFcICsAeNIaCA0el
-         qoL5cOx6a/uEDvQ8vZkjzvtJ1GiIh1w9lgOQNASo22mWHp6/iqxOGzDpjAcp1ttXUHSw
-         9XYOfEwkiuHii790m/6M+YUFR57ZrH5WdWE3/yjXj2ZPXZj+7s5Ut1J6WF3ddBA9/xZM
-         QDk4EG7HOx7emaDqIaquyXap/DQQs2xK9KwnSoXN2Xp7FclMS9vl7GcWKAuKl3Ks1p4s
-         rPxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791638843; x=1792243643;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Go18brKNkouX7jNlWtPlkQMMHplwnR2FFa56h0dzp9I=;
-        b=gy5XqbZRbq3aOLC9Ex7WCSEFroy6Bic6L5NpJ2dgVHOHrfpRsQZoctBMvYwdODEVCw
-         iphbWL4PfRQkkGSJcL632NJ5ZLAs0k7kA06ueLZ6t1Dhuv7ayAnRuu1yeeLceWCuHiqN
-         s2b4G6TtTt9jooPZjsjclEKRu0KCd5T+NlWHq7Y3a/0dNPjc9f8OFnJYS2rnSVxHWUt4
-         qUflitxbGYEdpnP9Fft1rvL8MoSYnXrxIZWsGgGgI78D7gh+Vyt/Hz3TdSvrVADdnhce
-         faDArJVG6/vq3bA9x/BhZFRFL5xsvDEcBnTLFoscukig0y+p8P09VjUpqQa53k06PHcc
-         YHHA==
-X-Forwarded-Encrypted: i=1; AKwUvBwfM4m0flkDXV4NsOa4lFi0OeP4aI0p/0n39t1yuoA18y0CMw4Hi0miZ9QdaQyaaVGXcXatWlVLeaa8lDQlXMUgsMk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI/6O8OF7diOV2Qgap8S61uSVT3cSaDjRUwuq/cyV9KhIQoYu8O
-	Q8T6vWc7Yz5BaBPelRIci6hcAHxHESiqM+1kZGC+jRaCk0YesYq6gQs5
-X-Gm-Gg: AYBFou1qBH+h/nr2Xp3Y7OZxWa+adrYrvlcGZkh1OBhYwTK6IfKPyxIYaxxN6AoJ7rw
-	cRdy4HtC1S/oaF58gHuZPz8muz+L9fg811FLz49m6w2tk7EdeLDFbT8dAUhImhwiIL5/wKeBXtr
-	5eXIMivA0QhRVLg4NelZliu6DA/0Ie6I6oPu5Lw1DwpRPfGvWJ0IPPq9qJgatjm34p1VdTZA5kL
-	OPkPS0vqEXQzOEVH9YzxWS4jfjPsOD7WiV5RqYHAhFgoqM5s+lHwW4s8jEJAFpTy3WTu7nz01yL
-	F1Aez1Ee+NACfMf9MLIKxOgExRAe31/QmYInCdaD+KHwN02R8f7DHakWcX+wDde3W3es7al4eDI
-	HQpx+tiW4Oftj4nDnfsfE1TrrBjtcOxuwSFa3FQgl4puGQHYD4fQ9Qmp6K8D3wghqdw3qsWRdzS
-	Z1mLBxzZcGOcYBbc2yQuhpDtBBbLw784jGIgoSM3Ns3T+U1Yfb7praN8m3azPAUC9F93tHSCq07
-	Y2mDxQDQZAPM7ljSozlwB0OvPEtVWlIrQgbh1OaJhI3THcBiyQkp8+9nGDOXVxgK7QRl29CI3Ah
-	+W7bTETi8tji4OLNOdi0bqP8Vpq1qnqv+Ku0E/kBvG35wFIkZhAd9UaLOtJVtmng+vfrePMNRVQ
-	=
-X-Received: by 2002:a05:600c:46c5:b0:4a1:78c5:79f5 with SMTP id 5b1f17b1804b1-4a18e4d6b28mr90315085e9.33.1791638842905;
-        Sat, 10 Oct 2026 06:27:22 -0700 (PDT)
-Received: from imx93-evk.localdomain (dynamic-2a02-3100-9d3f-0d01-48c7-5d76-0ec6-9dac.310.pool.telefonica.de. [2a02:3100:9d3f:d01:48c7:5d76:ec6:9dac])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bf21276sm215410405e9.8.2026.10.10.06.27.21
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 10 Oct 2026 06:27:22 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Changbin Du <changbin.du@intel.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <david@davidgow.net>,
-	Rae Moar <raemoar63@gmail.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com
-Subject: [PATCH 2/2] riscv: Add KUnit test for stack trace start frames
-Date: Sat, 10 Oct 2026 15:27:12 +0200
-Message-Id: <20261010132712.46931-2-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20261010132712.46931-1-kmehltretter@gmail.com>
-References: <20261010132712.46931-1-kmehltretter@gmail.com>
+	d=linux-foundation.org; s=korg; t=1791669625;
+	bh=N2jYfqmPt2es1xuCkTol8NOahRHgRnTcTOUiwhGzkTU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ffP+TPLt1hBG2zdntJGpA4a6eo1Kktyl63gUdmTPWoDV5PB8j6QZDH7O5pu6DND18
+	 83jrFOWryJ2h63yrCPBw+Uh9wavAQ633twrY1q8Eu4fcsINr1B1dFygd9ev9/B+B/N
+	 PiED0VbjIV4o5yPrrgsINTWJg6/2ZfXlko4ls4sM=
+Date: Sat, 10 Oct 2026 15:00:20 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka
+ <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato
+ <pfalcato@suse.de>, David Hildenbrand <david@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Dennis Dalessandro
+ <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya
+ Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
+ <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert
+ <dgilbert@interlog.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <mkp@kernel.org>, Simona Vetter <simona@ffwll.ch>, Helge Deller
+ <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard
+ <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
+ <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
+ <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
+ <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, Joshua Hahn
+ <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park
+ <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, Chris
+ Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, Kemeng Shi
+ <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He
+ <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, Johannes
+ Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Chengming
+ Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, Miklos
+ Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org,
+ selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ fuse-devel@lists.linux.dev, Ihor Solodrai <ihor.solodrai@linux.dev>, Bert
+ Karwatzki <spasswolf@web.de>, Takashi Iwai <tiwai@suse.de>, Emil Tsalapatis
+ <emil@etsalapatis.com>
+Subject: Re: [PATCH v5 00/38] mm: make VMA flag semantics explicit,
+ eliminate VM_SPECIAL
+Message-Id: <20261010150020.cbd6ce3038e3b6d72e2c92c9@linux-foundation.org>
+In-Reply-To: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
+References: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-stack_trace_save() and return_address() depend on the first frame reported
-by arch_stack_walk(), but no test checks their frame numbering.
+On Fri, 09 Oct 2026 19:03:54 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
 
-Add a test that calls both through a chain of three noinline functions
-and compares the symbol of the result with the function expected for
-each skip count or level.
+> The VM_SPECIAL / VMA_SPECIAL_FLAGS mask conflates several unrelated
+> properties:
+> 
+> * Is this managed by core mm, or by a driver mapping MMIO, kernel-allocated
+>   pages, or even ordinary pages itself?
+> * Can it be expanded or merged?
+> * Is this a 'weird' case like mlock where migration might race and we
+>   'have' to set invalid flags to notify?
+> * Is it another 'weird' case where we just want to stop GUP from touching
+>   it?
+> 
+> Driver writers have often been confused about this, and who can blame them?
+> 
+> It also interacts badly with the eternal edgecase known as hugetlb - which
+> sets VMA_DONTEXPAND_BIT but doesn't also want to be treated like a
+> 'special' flag.
+> 
+> Another issue is that we cannot make sensible assumptions about flag
+> use. It's not possible to assume VMA_IO_BIT means iommu because drivers
+> abuse it and mlock abuses it.
+> 
+> Special is also an overloaded term in mm. VDSO and VVAR mappings are also
+> called 'special' but they're special in a... special way.
+> 
+> Sometimes things are called special that are a subset of
+> VMA_SPECIAL_FLAGS (VMA_PFNMAP_BIT and VMA_MIXEDMAP_BIT for instance when it
+> comes to zapping or vm_normal_folio()).
+> 
+> There's a specific kind of special for THP too, which considers
+> PFN map, mixed map 'special' but DAX not.
+> 
+> It's all rather a mess.
+> 
+> This series brings some order to things by both limiting what drivers can
+> do with VMA flags and switching to using predicates that describe
+> behaviour, not arbitrary flags.
 
-Require FRAME_POINTER because the stack-scanning walker cannot provide an
-exact start frame.
+Thanks, I've updated mm-unstable to this version.
 
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
----
- arch/riscv/kernel/tests/Kconfig.debug     |  12 ++
- arch/riscv/kernel/tests/Makefile          |   1 +
- arch/riscv/kernel/tests/stacktrace_test.c | 142 ++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
+For some reason, new versions of this series aren't applying when I
+drop the new series in place of the old.  I made the same old bunch of
+reject-fixups, so the below interdiff will show if I messed any of them up.
 
-diff --git a/arch/riscv/kernel/tests/Kconfig.debug b/arch/riscv/kernel/tests/Kconfig.debug
-index 40f8dafffa0a..eb79df5b2c5a 100644
---- a/arch/riscv/kernel/tests/Kconfig.debug
-+++ b/arch/riscv/kernel/tests/Kconfig.debug
-@@ -42,6 +42,18 @@ config RISCV_KPROBES_KUNIT
+> v5:
+> * Applied tags (thanks everybody!)
+> * Updated 3/38 to fix a bug in __mmap_new_file_vma() by zapping + closing
+>   the VMA before setting vma->vm_file NULL to avoid an i_mmap_writable
+>   imbalance. A repro was tested before/after and confirmed fixed.
+> * Updated 7/38 to make __map_kernel_pages_prepare() use
+>   mmap_assert_write_locked() rather than the weird
+>   assert-on-mmap_read_trylock() pattern, as per Suren.
+> * Also update vm_insert_page(), vm_insert_pages() to fix the same pattern
+>   and to use the new VMA API, and converted a BUG_ON to a
+>   VM_WARN_ON_ONCE().
+
+Here's how v5 altered mm.git:
+
+ mm/memory.c                       |   20 +++++++++++---------
+ mm/vma.c                          |   16 ++++++++--------
+ tools/testing/vma/include/stubs.h |    4 ++++
+ 3 files changed, 23 insertions(+), 17 deletions(-)
+
+--- a/mm/memory.c~b
++++ a/mm/memory.c
+@@ -2611,10 +2611,11 @@ int vm_insert_pages(struct vm_area_struc
  
-          If unsure, say N.
+ 	if (!range_in_vma(vma, addr, end))
+ 		return -EFAULT;
+-	if (!(vma->vm_flags & VM_MIXEDMAP)) {
+-		VM_WARN_ON_ONCE(mmap_read_trylock(vma->vm_mm));
+-		VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
+-		vm_flags_set(vma, VM_MIXEDMAP);
++	if (!vma_test(vma, VMA_MIXEDMAP_BIT)) {
++		mmap_assert_write_locked(vma->vm_mm);
++		VM_WARN_ON_ONCE(vma_test(vma, VMA_PFNMAP_BIT));
++		vma_start_write(vma);
++		vma_set_flags(vma, VMA_MIXEDMAP_BIT);
+ 	}
+ 	/* Defer page refcount checking till we're about to map that page. */
+ 	return insert_pages(vma, addr, pages, num, vma->vm_page_prot);
+@@ -2626,7 +2627,7 @@ static void __map_kernel_pages_prepare(s
+ 	if (vma_desc_test(desc, VMA_MIXEDMAP_BIT))
+ 		return;
  
-+config RISCV_STACKTRACE_KUNIT_TEST
-+	bool "KUnit tests for RISC-V stack trace start frames"
-+	depends on KUNIT && STACKTRACE && FRAME_POINTER && KALLSYMS
-+	help
-+	  Check that stack_trace_save() starts at its caller and skips exactly
-+	  the requested number of frames through a known call chain, and that
-+	  ftrace_return_address(), which CALLER_ADDR1 and up are built on,
-+	  returns the caller it was asked for. This catches a stack walker
-+	  that exposes its own implementation frames to its users.
-+
-+	  If unsure, say N.
-+
- endif # RUNTIME_TESTING_MENU
+-	VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
++	mmap_assert_write_locked(desc->mm);
+ 	VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
+ 	vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
+ }
+@@ -2785,10 +2786,11 @@ int vm_insert_page(struct vm_area_struct
+ {
+ 	if (addr < vma->vm_start || addr >= vma->vm_end)
+ 		return -EFAULT;
+-	if (!(vma->vm_flags & VM_MIXEDMAP)) {
+-		BUG_ON(mmap_read_trylock(vma->vm_mm));
+-		BUG_ON(vma->vm_flags & VM_PFNMAP);
+-		vm_flags_set(vma, VM_MIXEDMAP);
++	if (!vma_test(vma, VMA_MIXEDMAP_BIT)) {
++		mmap_assert_write_locked(vma->vm_mm);
++		VM_WARN_ON_ONCE(vma_test(vma, VMA_PFNMAP_BIT));
++		vma_start_write(vma);
++		vma_set_flags(vma, VMA_MIXEDMAP_BIT);
+ 	}
+ 	return insert_page(vma, addr, page, vma->vm_page_prot, false);
+ }
+--- a/mm/vma.c~b
++++ a/mm/vma.c
+@@ -2631,21 +2631,21 @@ static int __mmap_new_file_vma(struct mm
+ 	map->vm_file = vma->vm_file;
  
- endmenu # "arch/riscv/kernel runtime Testing"
-diff --git a/arch/riscv/kernel/tests/Makefile b/arch/riscv/kernel/tests/Makefile
-index 407e7e6c28dc..9ca4135bffb5 100644
---- a/arch/riscv/kernel/tests/Makefile
-+++ b/arch/riscv/kernel/tests/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_RISCV_MODULE_LINKING_KUNIT)	+= module_test/
- obj-$(CONFIG_RISCV_KPROBES_KUNIT)		+= kprobes/
-+obj-$(CONFIG_RISCV_STACKTRACE_KUNIT_TEST)	+= stacktrace_test.o
-diff --git a/arch/riscv/kernel/tests/stacktrace_test.c b/arch/riscv/kernel/tests/stacktrace_test.c
-new file mode 100644
-index 000000000000..bb299a106773
---- /dev/null
-+++ b/arch/riscv/kernel/tests/stacktrace_test.c
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Check where stack_trace_save() and ftrace_return_address() start. */
-+#include <kunit/test.h>
-+#include <linux/ftrace.h>
-+#include <linux/kallsyms.h>
-+#include <linux/module.h>
-+#include <linux/stacktrace.h>
+ 	if (error) {
+-		struct file *file = vma->vm_file;
+ 		UNMAP_STATE(unmap, vmi, vma, vma->vm_start, vma->vm_end,
+ 			    map->prev, map->next);
+ 
++		if (vma->vm_ops->close) {
++			zap_vma(vma);
++			/* Safe, because VMA zapped. */
++			vma_close(vma);
++		}
++		if (map_same_file(map))
++			fput(map->vm_file);
 +
-+#define RISCV_STACKTRACE_DEPTH 16
-+
-+static noinline unsigned int
-+riscv_stacktrace_leaf(unsigned long *entries, unsigned int skip)
+ 		vma->vm_file = NULL;
+ 		vma_iter_set(vmi, vma->vm_end);
+ 		/* Undo any partial mapping done by a device driver. */
+ 		unmap_region(&unmap);
+-		vma->vm_file = file;
+-		/* Only safe once unmapped. */
+-		vma_close(vma);
+-
+-		if (map_same_file(map))
+-			fput(map->vm_file);
+-		vma->vm_file = NULL;
+ 		return error;
+ 	}
+ 
+--- a/tools/testing/vma/include/stubs.h~b
++++ a/tools/testing/vma/include/stubs.h
+@@ -329,6 +329,10 @@ static inline void vma_close(struct vm_a
+ {
+ }
+ 
++static inline void zap_vma(struct vm_area_struct *vma)
 +{
-+	unsigned int count = stack_trace_save(entries, RISCV_STACKTRACE_DEPTH, skip);
-+
-+	barrier();
-+	return count;
 +}
 +
-+static noinline unsigned int
-+riscv_stacktrace_middle(unsigned long *entries, unsigned int skip)
-+{
-+	unsigned int count = riscv_stacktrace_leaf(entries, skip);
-+
-+	barrier();
-+	return count;
-+}
-+
-+static noinline unsigned int
-+riscv_stacktrace_outer(unsigned long *entries, unsigned int skip)
-+{
-+	unsigned int count = riscv_stacktrace_middle(entries, skip);
-+
-+	barrier();
-+	return count;
-+}
-+
-+static void riscv_stacktrace_check_skip(struct kunit *test, unsigned int skip)
-+{
-+	static const char * const expected[] = {
-+		"riscv_stacktrace_leaf",
-+		"riscv_stacktrace_middle",
-+		"riscv_stacktrace_outer",
-+	};
-+	unsigned long entries[RISCV_STACKTRACE_DEPTH];
-+	char symbol[KSYM_SYMBOL_LEN];
-+	unsigned int count;
-+
-+	count = riscv_stacktrace_outer(entries, skip);
-+	KUNIT_ASSERT_GT(test, count, 0U);
-+	sprint_symbol_no_offset(symbol, entries[0]);
-+	kunit_info(test, "skip=%u first=%s count=%u\n", skip, symbol, count);
-+	KUNIT_EXPECT_STREQ(test, symbol, expected[skip]);
-+}
-+
-+static void riscv_stacktrace_skip_zero(struct kunit *test)
-+{
-+	riscv_stacktrace_check_skip(test, 0);
-+}
-+
-+static void riscv_stacktrace_skip_one(struct kunit *test)
-+{
-+	riscv_stacktrace_check_skip(test, 1);
-+}
-+
-+static void riscv_stacktrace_skip_two(struct kunit *test)
-+{
-+	riscv_stacktrace_check_skip(test, 2);
-+}
-+
-+static noinline void *riscv_return_address_leaf(unsigned int level)
-+{
-+	void *addr = (void *)ftrace_return_address(level);
-+
-+	barrier();
-+	return addr;
-+}
-+
-+static noinline void *riscv_return_address_middle(unsigned int level)
-+{
-+	void *addr = riscv_return_address_leaf(level);
-+
-+	barrier();
-+	return addr;
-+}
-+
-+static noinline void *riscv_return_address_outer(unsigned int level)
-+{
-+	void *addr = riscv_return_address_middle(level);
-+
-+	barrier();
-+	return addr;
-+}
-+
-+/*
-+ * ftrace_return_address(n) is what CALLER_ADDRn expands to. Like
-+ * __builtin_return_address(n), level 0 is the caller of the function that
-+ * uses it.
-+ */
-+static void riscv_return_address_check(struct kunit *test, unsigned int level)
-+{
-+	static const char * const expected[] = {
-+		"riscv_return_address_middle",
-+		"riscv_return_address_outer",
-+	};
-+	char symbol[KSYM_SYMBOL_LEN];
-+	void *addr;
-+
-+	addr = riscv_return_address_outer(level);
-+	KUNIT_ASSERT_NOT_NULL(test, addr);
-+	sprint_symbol_no_offset(symbol, (unsigned long)addr);
-+	kunit_info(test, "level=%u caller=%s\n", level, symbol);
-+	KUNIT_EXPECT_STREQ(test, symbol, expected[level]);
-+}
-+
-+static void riscv_return_address_level_zero(struct kunit *test)
-+{
-+	riscv_return_address_check(test, 0);
-+}
-+
-+static void riscv_return_address_level_one(struct kunit *test)
-+{
-+	riscv_return_address_check(test, 1);
-+}
-+
-+static struct kunit_case riscv_stacktrace_cases[] = {
-+	KUNIT_CASE(riscv_stacktrace_skip_zero),
-+	KUNIT_CASE(riscv_stacktrace_skip_one),
-+	KUNIT_CASE(riscv_stacktrace_skip_two),
-+	KUNIT_CASE(riscv_return_address_level_zero),
-+	KUNIT_CASE(riscv_return_address_level_one),
-+	{}
-+};
-+
-+static struct kunit_suite riscv_stacktrace_suite = {
-+	.name = "riscv-stacktrace-skip",
-+	.test_cases = riscv_stacktrace_cases,
-+};
-+
-+kunit_test_suite(riscv_stacktrace_suite);
-+
-+MODULE_LICENSE("GPL");
+ static inline int mmap_file(struct file *file, struct vm_area_struct *vma)
+ {
+ 	return 0;
+_
+
