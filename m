@@ -1,64 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A435E495AC4
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 13:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C000B498910
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 13:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791638845; cv=none; b=Kwj6T/rljV7+nEC/W1dt6sWKERhwWjX4k6/KXwua/TVARjRjruQLRrD2JHsxH9qFGjhovh4TPTUcTdEEuJM4OAit1sbBfes+W66s+nLy3X1FRsWuEM4z4PtIpxSlRbEcu1VvsA/3WhSLVnPlnKpUPDYIiGJSOd8uZ7XfiRO1PZQ=
+	t=1791638846; cv=none; b=YCYXwcfPaTA3JwaMG2D+6OamMZc0ty6NISR5DSkhN9+BtzC/xrHaAgi4UYNivUdLU81pug6FGb5SN6JIVI2tqzj74iyljirvgGT55raefux60qRCN4gxhS4s3dPzySas2Twi8ndD1lW4pRAObCY3J9e7lPk8Q25iCsdo99/x3Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791638845; c=relaxed/simple;
-	bh=AZByuRCwVxuo1OqUk43wDcKkWuQ/H405dhd+SVqeJmM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h1MXvfzLyniZ/bDIA4My3HPJR/KSYasGCEB2kzWE0BwiCE7qnugelmX9nGPXflh5cMswTNoZy02oGBicEpuGjRzkuuZa4PsqeE1+KEScCCgLRmRDScJt7DfYualh7j1vBoNP3/FykW+EBgmD4PXVQKY27Fe3BlYFPkEcCpAiJaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0tOp7WS; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1791638846; c=relaxed/simple;
+	bh=n/pCxSDOn2qS/NpKHP6UGNhMIq87C3dUtShRfICorgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YHF0N3wsiAoLBO1bZw3j48kIVcwQJQtGnAOs/8OI1cd7fYpX5reXgMtkJ9KqKjYEJp4Xs2XpWwkjNEkq1scbjPjogfRTCNxMgxMxbhBtx1+0CfZ3hB9DXGZpt3rOtBSzdOYAzmVEE4FYK8yU4ZG8xPSwWZu5zPOKPjbr266fxpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmNL/gxW; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0tOp7WS"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a02718da81so4525885e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 06:27:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmNL/gxW"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a171b677d2so4085755e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Oct 2026 06:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791638842; x=1792243642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=howgOP9h5nUKpogRLZsugGiXSDW33UsJon93r8D0E18=;
-        b=F0tOp7WSnGMLBFnTZes+NU/Xpzj6lXzy4G206ui5cGoDA0+7lk1/LgC0fKyd+F+amA
-         PN3ZvzFv6W1DIpACQ6uOAeV9Hz2uDvJsw9shF9DV43HHMpRPFrO8LcuwVPoA1NOW+iQ+
-         TYvgAKQRSuPx2W9GflPd75ARs/Ys4ftMpQ0u6wd+2+B5XrNx+Q1jR3EAC0y3szkEgovt
-         jYz306d69AFkocf33ynbUmlCBHTU4iycCpDoOhx/jwPiV0f/MQJO86sl6BT0wsQY3tIq
-         I8U/IsZ9F+oHXX1bOBX0q8cpFpU019GA9OvPMEpClV5UhQClM9umxu+4LJC6JaNPfGVO
-         88hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791638842; x=1792243642;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1791638843; x=1792243643; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=howgOP9h5nUKpogRLZsugGiXSDW33UsJon93r8D0E18=;
-        b=iu/Zx7nTn6Tnb4BOxsV0tNMiQVfjaY4PImpAk1Mdvyc1HTjxGXT/U9mx+mgFVJynYV
-         qHn47Zx5ppv9SlG864rxxnkPTtwoZq2TjC8ugkvoNO3kvm3JZPoBJvmeWz2YphUqBGez
-         KmrcAehXOk+5uih6jgrod+VQcpok7+nKuXon+3/z8DAvLIUb7bOvZ5mbw05DZVfWZ59m
-         ar/8UdNZ4jtztPA3lnQOMjmZCtPXkgTI4tBPlUkkWyRLFJUQOipLDBcEt8piN4kc27Dz
-         Ns9HTx0jv/QXn2QPdel1JaW0qqnWjX3aEe68/CzHf4HatT9AAppamkyAtOb+ERoWR83T
-         ArSw==
-X-Forwarded-Encrypted: i=1; AKwUvBw+l1cVpO33duR7XpSSkWW0FL90kvHe6pt6LUjZ1SbFpffvQm/+K+4BYuLybPnKeEp0t+Ib3MLi0iuW3vk6zIZumuo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLCwRXBXrdMm6S40HP6U2eXO8ZmIWqq3hFydekBXNxFVw34hjzT
-	6cCjYOwScqhfM67vDu6IVJqEj2TKEJweieJ8pka6EtZ77dRGCPmFJvUx
-X-Gm-Gg: AYBFou2CeBDWjuZeM54lgWmzik2pvavrBP6Zr6B0oQYYE+Hj4RApZm4JtXNCKRJ7CLI
-	Saxh+eV5q0KEOzltthsqFtJ7l+86sZywvkJTjPb4CeK21GOp/gjvOjyZRndFP/is2QDsm8Me6Eb
-	uMrcL4zF4OmWKDok+TUwwcul/rgQffOHBypA2DAioT1mqok9Q2n+/yP67tiiUutjvPxkv0Tyyim
-	lnVHdw3M2V5R/aMlsQnbmBnwQM/YxmnhdYC1jP3nrnfYmjq3+QPa9S5oiUc6w1ottBVv4miz3c5
-	CAuDdiKpDlQnJej0aiH8kF19FdO1rrb6+SZViOnZobg0heneilA626UhJSrwWwwyqe8cuNhugMX
-	Md290x7kXNPE0xS6o6aiVkMODM5JFCVW6IAmDQSnKIWGfSSQwiVnYCe3E8RHSwee2rcbYMhYweQ
-	0NER1BGJ9rjLr7oI74nDAiHRn+NTdY2wxqyuNy6+HUM5GU4IDfgguzp3yzmO7uyeYlA/N2f7OAD
-	VsQviKWWmGmRYb4aOCf2qAecCmDWWedwCHeV2CeHunlJ7t4gNwo8Raso4VsEk9LWqiZ9KFvvTiw
-	rQiupkowe0t/gTTIinrnHm3vTJTiFs0RSEj5nYOGEKpElOebA6aB+4IbIm+KAiwZRUO0d0luTEk
+        bh=Go18brKNkouX7jNlWtPlkQMMHplwnR2FFa56h0dzp9I=;
+        b=UmNL/gxWPYv2yOqUKL4BZI2gLV19OPzXz/vmc4hEpvJQS9lAKifL6gv5xDJYx2o1Eu
+         9j3QZj7Lmiw1a9j+DLTfhRwiBPnsK32STiSoUaWWiVfkHvc8B71vTFcICsAeNIaCA0el
+         qoL5cOx6a/uEDvQ8vZkjzvtJ1GiIh1w9lgOQNASo22mWHp6/iqxOGzDpjAcp1ttXUHSw
+         9XYOfEwkiuHii790m/6M+YUFR57ZrH5WdWE3/yjXj2ZPXZj+7s5Ut1J6WF3ddBA9/xZM
+         QDk4EG7HOx7emaDqIaquyXap/DQQs2xK9KwnSoXN2Xp7FclMS9vl7GcWKAuKl3Ks1p4s
+         rPxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791638843; x=1792243643;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Go18brKNkouX7jNlWtPlkQMMHplwnR2FFa56h0dzp9I=;
+        b=gy5XqbZRbq3aOLC9Ex7WCSEFroy6Bic6L5NpJ2dgVHOHrfpRsQZoctBMvYwdODEVCw
+         iphbWL4PfRQkkGSJcL632NJ5ZLAs0k7kA06ueLZ6t1Dhuv7ayAnRuu1yeeLceWCuHiqN
+         s2b4G6TtTt9jooPZjsjclEKRu0KCd5T+NlWHq7Y3a/0dNPjc9f8OFnJYS2rnSVxHWUt4
+         qUflitxbGYEdpnP9Fft1rvL8MoSYnXrxIZWsGgGgI78D7gh+Vyt/Hz3TdSvrVADdnhce
+         faDArJVG6/vq3bA9x/BhZFRFL5xsvDEcBnTLFoscukig0y+p8P09VjUpqQa53k06PHcc
+         YHHA==
+X-Forwarded-Encrypted: i=1; AKwUvBwfM4m0flkDXV4NsOa4lFi0OeP4aI0p/0n39t1yuoA18y0CMw4Hi0miZ9QdaQyaaVGXcXatWlVLeaa8lDQlXMUgsMk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI/6O8OF7diOV2Qgap8S61uSVT3cSaDjRUwuq/cyV9KhIQoYu8O
+	Q8T6vWc7Yz5BaBPelRIci6hcAHxHESiqM+1kZGC+jRaCk0YesYq6gQs5
+X-Gm-Gg: AYBFou1qBH+h/nr2Xp3Y7OZxWa+adrYrvlcGZkh1OBhYwTK6IfKPyxIYaxxN6AoJ7rw
+	cRdy4HtC1S/oaF58gHuZPz8muz+L9fg811FLz49m6w2tk7EdeLDFbT8dAUhImhwiIL5/wKeBXtr
+	5eXIMivA0QhRVLg4NelZliu6DA/0Ie6I6oPu5Lw1DwpRPfGvWJ0IPPq9qJgatjm34p1VdTZA5kL
+	OPkPS0vqEXQzOEVH9YzxWS4jfjPsOD7WiV5RqYHAhFgoqM5s+lHwW4s8jEJAFpTy3WTu7nz01yL
+	F1Aez1Ee+NACfMf9MLIKxOgExRAe31/QmYInCdaD+KHwN02R8f7DHakWcX+wDde3W3es7al4eDI
+	HQpx+tiW4Oftj4nDnfsfE1TrrBjtcOxuwSFa3FQgl4puGQHYD4fQ9Qmp6K8D3wghqdw3qsWRdzS
+	Z1mLBxzZcGOcYBbc2yQuhpDtBBbLw784jGIgoSM3Ns3T+U1Yfb7praN8m3azPAUC9F93tHSCq07
+	Y2mDxQDQZAPM7ljSozlwB0OvPEtVWlIrQgbh1OaJhI3THcBiyQkp8+9nGDOXVxgK7QRl29CI3Ah
+	+W7bTETi8tji4OLNOdi0bqP8Vpq1qnqv+Ku0E/kBvG35wFIkZhAd9UaLOtJVtmng+vfrePMNRVQ
 	=
-X-Received: by 2002:a05:600c:c172:b0:4a0:1c0e:b2a8 with SMTP id 5b1f17b1804b1-4a18e4cc2a2mr86751495e9.28.1791638841556;
-        Sat, 10 Oct 2026 06:27:21 -0700 (PDT)
+X-Received: by 2002:a05:600c:46c5:b0:4a1:78c5:79f5 with SMTP id 5b1f17b1804b1-4a18e4d6b28mr90315085e9.33.1791638842905;
+        Sat, 10 Oct 2026 06:27:22 -0700 (PDT)
 Received: from imx93-evk.localdomain (dynamic-2a02-3100-9d3f-0d01-48c7-5d76-0ec6-9dac.310.pool.telefonica.de. [2a02:3100:9d3f:d01:48c7:5d76:ec6:9dac])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bf21276sm215410405e9.8.2026.10.10.06.27.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18bf21276sm215410405e9.8.2026.10.10.06.27.21
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 10 Oct 2026 06:27:21 -0700 (PDT)
+        Sat, 10 Oct 2026 06:27:22 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Paul Walmsley <pjw@kernel.org>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -80,10 +82,12 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	kunit-dev@googlegroups.com
-Subject: [PATCH 1/2] riscv: stacktrace: do not report the walker's own frame from arch_stack_walk()
-Date: Sat, 10 Oct 2026 15:27:11 +0200
-Message-Id: <20261010132712.46931-1-kmehltretter@gmail.com>
+Subject: [PATCH 2/2] riscv: Add KUnit test for stack trace start frames
+Date: Sat, 10 Oct 2026 15:27:12 +0200
+Message-Id: <20261010132712.46931-2-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20261010132712.46931-1-kmehltretter@gmail.com>
+References: <20261010132712.46931-1-kmehltretter@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -92,147 +96,200 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-stack_trace_save() uses skipnr + 1 because arch_stack_walk() is expected
-to first report the return into stack_trace_save(). With FRAME_POINTER,
-the RISC-V arch_stack_walk() calls walk_stackframe(), which starts from
-its own frame and first reports the return into arch_stack_walk().
-stack_trace_save() therefore starts one frame too early. For example,
-page_owner records begin at __set_page_owner() instead of the allocation
-site.
+stack_trace_save() and return_address() depend on the first frame reported
+by arch_stack_walk(), but no test checks their frame numbering.
 
-Move the walker into an always-inlined helper and call it directly from
-arch_stack_walk(). Keep walk_stackframe() as a wrapper for its existing
-callers.
+Add a test that calls both through a chain of three noinline functions
+and compares the symbol of the result with the function expected for
+each skip count or level.
 
-return_address() skips level + 3 entries, while the arm64 implementation
-skips level + 2. After removing the extra frame, use level + 2 so
-ftrace_return_address() and CALLER_ADDR results do not shift by one caller.
+Require FRAME_POINTER because the stack-scanning walker cannot provide an
+exact start frame.
 
-Fixes: 6a00ef449370 ("riscv: eliminate unreliable __builtin_frame_address(1)")
 Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
-Tested with the KUnit suite from patch 2 on QEMU's virt machine, clang 22
-(LLVM=1), on af32da41b032:
+ arch/riscv/kernel/tests/Kconfig.debug     |  12 ++
+ arch/riscv/kernel/tests/Makefile          |   1 +
+ arch/riscv/kernel/tests/stacktrace_test.c | 142 ++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
 
-  mainline                        stack_trace_save 0/3, return_address 2/2
-  stacktrace.c change alone       stack_trace_save 3/3, return_address 0/2
-  this patch                      stack_trace_save 3/3, return_address 2/2
-
-A BeagleV Ahead (TH1520) booted with this patch passes all five cases.
-The stack_trace_save() result on mainline (0/3) was also reproduced with
-GCC 15.2 and QEMU 10.2.1.
-
-Without CONFIG_FRAME_POINTER the walker scans the stack for anything that
-looks like a text address and its start frame is not exact before or
-after this patch. What return_address() returns there is unchanged: the
-walk loses one leading entry and the skip count goes down by one.
-
-The reliable unwinder series [1] rewrites this walker and has the correct
-start frame for stack_trace_save() as a side effect, but leaves
-return_address() at level + 3. This patch conflicts with 5/7 of that
-series; if that goes in first, only the return_address.c hunk is needed.
-
-[1] https://lore.kernel.org/r/20260914092648.51254-1-xueshuai@linux.alibaba.com
-
- arch/riscv/kernel/return_address.c |  2 +-
- arch/riscv/kernel/stacktrace.c     | 40 +++++++++++++++++++++++++++++-----
- 2 files changed, 36 insertions(+), 6 deletions(-)
-
-diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
-index c8115ec8fb30..4da1cfd249d3 100644
---- a/arch/riscv/kernel/return_address.c
-+++ b/arch/riscv/kernel/return_address.c
-@@ -33,7 +33,7 @@ noinline void *return_address(unsigned int level)
- {
- 	struct return_address_data data;
+diff --git a/arch/riscv/kernel/tests/Kconfig.debug b/arch/riscv/kernel/tests/Kconfig.debug
+index 40f8dafffa0a..eb79df5b2c5a 100644
+--- a/arch/riscv/kernel/tests/Kconfig.debug
++++ b/arch/riscv/kernel/tests/Kconfig.debug
+@@ -42,6 +42,18 @@ config RISCV_KPROBES_KUNIT
  
--	data.level = level + 3;
-+	data.level = level + 2;
- 	data.addr = NULL;
+          If unsure, say N.
  
- 	arch_stack_walk(save_return_addr, &data, current, NULL);
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index c7555447149b..28c5744889ba 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -45,8 +45,16 @@ static inline int fp_is_valid(unsigned long fp, unsigned long sp)
- 	return !(fp < low || fp > high || fp & 0x07);
- }
++config RISCV_STACKTRACE_KUNIT_TEST
++	bool "KUnit tests for RISC-V stack trace start frames"
++	depends on KUNIT && STACKTRACE && FRAME_POINTER && KALLSYMS
++	help
++	  Check that stack_trace_save() starts at its caller and skips exactly
++	  the requested number of frames through a known call chain, and that
++	  ftrace_return_address(), which CALLER_ADDR1 and up are built on,
++	  returns the caller it was asked for. This catches a stack walker
++	  that exposes its own implementation frames to its users.
++
++	  If unsure, say N.
++
+ endif # RUNTIME_TESTING_MENU
  
--void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--			     bool (*fn)(void *, unsigned long), void *arg)
-+/*
-+ * Always inlined so that the frame the walk starts from is the caller's own,
-+ * and the first entry reported for the current task is the caller's return
-+ * address.  arch_stack_walk() relies on that to report the same frames as
-+ * the other architectures, see the comment there.
-+ */
-+static __always_inline void __walk_stackframe(struct task_struct *task,
-+					      struct pt_regs *regs,
-+					      bool (*fn)(void *, unsigned long),
-+					      void *arg)
- {
- 	unsigned long fp, sp, pc;
- 	int graph_idx = 0;
-@@ -59,6 +67,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 	} else if (task == NULL || task == current) {
- 		fp = (unsigned long)__builtin_frame_address(0);
- 		sp = current_stack_pointer;
-+		/* Placeholder for the frame the walk starts from, never reported. */
- 		pc = (unsigned long)walk_stackframe;
- 		level = -1;
- 	} else {
-@@ -102,10 +111,18 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 	}
- }
- 
-+void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-+			     bool (*fn)(void *, unsigned long), void *arg)
+ endmenu # "arch/riscv/kernel runtime Testing"
+diff --git a/arch/riscv/kernel/tests/Makefile b/arch/riscv/kernel/tests/Makefile
+index 407e7e6c28dc..9ca4135bffb5 100644
+--- a/arch/riscv/kernel/tests/Makefile
++++ b/arch/riscv/kernel/tests/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_RISCV_MODULE_LINKING_KUNIT)	+= module_test/
+ obj-$(CONFIG_RISCV_KPROBES_KUNIT)		+= kprobes/
++obj-$(CONFIG_RISCV_STACKTRACE_KUNIT_TEST)	+= stacktrace_test.o
+diff --git a/arch/riscv/kernel/tests/stacktrace_test.c b/arch/riscv/kernel/tests/stacktrace_test.c
+new file mode 100644
+index 000000000000..bb299a106773
+--- /dev/null
++++ b/arch/riscv/kernel/tests/stacktrace_test.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Check where stack_trace_save() and ftrace_return_address() start. */
++#include <kunit/test.h>
++#include <linux/ftrace.h>
++#include <linux/kallsyms.h>
++#include <linux/module.h>
++#include <linux/stacktrace.h>
++
++#define RISCV_STACKTRACE_DEPTH 16
++
++static noinline unsigned int
++riscv_stacktrace_leaf(unsigned long *entries, unsigned int skip)
 +{
-+	__walk_stackframe(task, regs, fn, arg);
++	unsigned int count = stack_trace_save(entries, RISCV_STACKTRACE_DEPTH, skip);
++
++	barrier();
++	return count;
 +}
 +
- #else /* !CONFIG_FRAME_POINTER */
- 
--void notrace walk_stackframe(struct task_struct *task,
--	struct pt_regs *regs, bool (*fn)(void *, unsigned long), void *arg)
-+static __always_inline void __walk_stackframe(struct task_struct *task,
-+					      struct pt_regs *regs,
-+					      bool (*fn)(void *, unsigned long),
-+					      void *arg)
- {
- 	unsigned long sp, pc;
- 	unsigned long *ksp;
-@@ -133,6 +150,12 @@ void notrace walk_stackframe(struct task_struct *task,
- 	}
- }
- 
-+void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-+			     bool (*fn)(void *, unsigned long), void *arg)
++static noinline unsigned int
++riscv_stacktrace_middle(unsigned long *entries, unsigned int skip)
 +{
-+	__walk_stackframe(task, regs, fn, arg);
++	unsigned int count = riscv_stacktrace_leaf(entries, skip);
++
++	barrier();
++	return count;
 +}
 +
- #endif /* CONFIG_FRAME_POINTER */
- 
- static bool print_trace_address(void *arg, unsigned long pc)
-@@ -176,10 +199,17 @@ unsigned long __get_wchan(struct task_struct *task)
- 	return pc;
- }
- 
++static noinline unsigned int
++riscv_stacktrace_outer(unsigned long *entries, unsigned int skip)
++{
++	unsigned int count = riscv_stacktrace_middle(entries, skip);
++
++	barrier();
++	return count;
++}
++
++static void riscv_stacktrace_check_skip(struct kunit *test, unsigned int skip)
++{
++	static const char * const expected[] = {
++		"riscv_stacktrace_leaf",
++		"riscv_stacktrace_middle",
++		"riscv_stacktrace_outer",
++	};
++	unsigned long entries[RISCV_STACKTRACE_DEPTH];
++	char symbol[KSYM_SYMBOL_LEN];
++	unsigned int count;
++
++	count = riscv_stacktrace_outer(entries, skip);
++	KUNIT_ASSERT_GT(test, count, 0U);
++	sprint_symbol_no_offset(symbol, entries[0]);
++	kunit_info(test, "skip=%u first=%s count=%u\n", skip, symbol, count);
++	KUNIT_EXPECT_STREQ(test, symbol, expected[skip]);
++}
++
++static void riscv_stacktrace_skip_zero(struct kunit *test)
++{
++	riscv_stacktrace_check_skip(test, 0);
++}
++
++static void riscv_stacktrace_skip_one(struct kunit *test)
++{
++	riscv_stacktrace_check_skip(test, 1);
++}
++
++static void riscv_stacktrace_skip_two(struct kunit *test)
++{
++	riscv_stacktrace_check_skip(test, 2);
++}
++
++static noinline void *riscv_return_address_leaf(unsigned int level)
++{
++	void *addr = (void *)ftrace_return_address(level);
++
++	barrier();
++	return addr;
++}
++
++static noinline void *riscv_return_address_middle(unsigned int level)
++{
++	void *addr = riscv_return_address_leaf(level);
++
++	barrier();
++	return addr;
++}
++
++static noinline void *riscv_return_address_outer(unsigned int level)
++{
++	void *addr = riscv_return_address_middle(level);
++
++	barrier();
++	return addr;
++}
++
 +/*
-+ * The generic code expects the first entry for the current task to be the
-+ * return address of arch_stack_walk() itself, the way x86 and arm64 report
-+ * it, and stack_trace_save() sizes its skip count accordingly.  Walking from
-+ * inside a called walk_stackframe() adds that function's own frame on top,
-+ * so inline the walker here and start from this frame instead.
++ * ftrace_return_address(n) is what CALLER_ADDRn expands to. Like
++ * __builtin_return_address(n), level 0 is the caller of the function that
++ * uses it.
 + */
- noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
- 		     struct task_struct *task, struct pt_regs *regs)
- {
--	walk_stackframe(task, regs, consume_entry, cookie);
-+	__walk_stackframe(task, regs, consume_entry, cookie);
- }
- 
- /*
++static void riscv_return_address_check(struct kunit *test, unsigned int level)
++{
++	static const char * const expected[] = {
++		"riscv_return_address_middle",
++		"riscv_return_address_outer",
++	};
++	char symbol[KSYM_SYMBOL_LEN];
++	void *addr;
++
++	addr = riscv_return_address_outer(level);
++	KUNIT_ASSERT_NOT_NULL(test, addr);
++	sprint_symbol_no_offset(symbol, (unsigned long)addr);
++	kunit_info(test, "level=%u caller=%s\n", level, symbol);
++	KUNIT_EXPECT_STREQ(test, symbol, expected[level]);
++}
++
++static void riscv_return_address_level_zero(struct kunit *test)
++{
++	riscv_return_address_check(test, 0);
++}
++
++static void riscv_return_address_level_one(struct kunit *test)
++{
++	riscv_return_address_check(test, 1);
++}
++
++static struct kunit_case riscv_stacktrace_cases[] = {
++	KUNIT_CASE(riscv_stacktrace_skip_zero),
++	KUNIT_CASE(riscv_stacktrace_skip_one),
++	KUNIT_CASE(riscv_stacktrace_skip_two),
++	KUNIT_CASE(riscv_return_address_level_zero),
++	KUNIT_CASE(riscv_return_address_level_one),
++	{}
++};
++
++static struct kunit_suite riscv_stacktrace_suite = {
++	.name = "riscv-stacktrace-skip",
++	.test_cases = riscv_stacktrace_cases,
++};
++
++kunit_test_suite(riscv_stacktrace_suite);
++
++MODULE_LICENSE("GPL");
