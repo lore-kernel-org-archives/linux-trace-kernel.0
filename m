@@ -1,33 +1,33 @@
-Received: from mta1.migadu.com (out-85.mta1.migadu.com [95.215.58.85])
+Received: from mta1.migadu.com (out-87.mta1.migadu.com [95.215.58.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B523CD8D3
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E8943F8C8
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791747599; cv=none; b=hUFJ3m62vi3LxJ71whKPwNH2iCsEVbOeqbxur2D91mWb4a+AxAkJNnMbrAR4B5+dD7GptGbEyPUadyvcP+e6jB5AEtj47I8qTQeVzG9YRhF1/h5E46wG6n2vq5pS+UcUOrQXGRRUKGG2iwCIHToBeURvNf4lPC+pOM8u3l3Hlgs=
+	t=1791747603; cv=none; b=G/aXgRwRhvvB2ZkJCkJufpZ0YB4MhjHwpj3nm5ykf8u8UkoAI3+v4SYd/lygizvFIuvCK4F8FylYH9RDaJZvIT7mCPldGnqu3nD2xK1Wpaz9kdf6Yj234zAnsapxavNoncWv8PFbG9SyrLiCfEdE4vA+Csk4lvJDhAlPqd1h55g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791747599; c=relaxed/simple;
-	bh=6eg0UDUM2pFKpqXL3ww0DT1cCVW2CMwQ1Kb1jumm1bE=;
+	s=arc-20240116; t=1791747603; c=relaxed/simple;
+	bh=xJa1S78kgLd5iI418n5+Jw8qHQXhEiD9EZOWTmqXZtQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lrYtduMOVUhyJ3GRQePA6q6rLwNOnz2maog9JwFuKcAcqf761ilPRQvKB2YaSwQ0cA3S58Hws5wKj6sPkSNlJF89vitITbnzuY0tGeE4HyAEQ2bWDHc+DAy16IM6fdiKuF3X5fy22q6lA1BOPsU663mB+Qf5OKmVfeOl/8XpgKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=STtWoN6Z; arc=none smtp.client-ip=95.215.58.85
+	 MIME-Version; b=lYDdX/jEPTrzSMiDkUK+VOXht5U8s/c+7/c51Sns2CYP3lGRtIfqL2jXaeDhTPEcDjRPetsEUDqyVu5JPoBDhLGvYdVlx7Cu15IpGhL23EPvoFuzdk5M1GFeRQu0GeaK/PXHZn/XN/5kp+EA78N3Gd8Y9Rq9UAN4BvLjQ771jpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ewDIwFpb; arc=none smtp.client-ip=95.215.58.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="STtWoN6Z"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ewDIwFpb"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=6eg0UDUM2pFKpqXL3ww0DT1cCVW2CMwQ1Kb1jumm1bE=;
+DKIM-Signature: a=rsa-sha256; bh=xJa1S78kgLd5iI418n5+Jw8qHQXhEiD9EZOWTmqXZtQ=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791747596; v=1; x=1792352396;
- b=STtWoN6Z1jia9ORstWcP1QCMxoQO9ahIb6gyPX/1bdyyStzufXP2j9UcZzEn1OVy9PUyQGJP
- mb3JvuHmsPAv1e0ErfxHeKxqXYBnm5yX8vfeL0gZeRqkEWwW9eBjvzHkg4cweNbTFOx9UOfwH4z
- W1HrBSH1xITdlr4UMDXz2HsA=
+ t=1791747599; v=1; x=1792352399;
+ b=ewDIwFpbfwNHx5MNxfm/EQ6kAM1myArOa5c/jaDE1X8rUs9fwVvRKQksQBkGMOQ5TopcYUmk
+ SQ30UQbquee6BldFNxf5/1gpuU0bnD/eT/flYmDybGUQWoswmug2fFR5wt8xH5zcP402WDrxlKL
+ h4e+gpeO5g5aPp+0G7cuP3lA=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id e05ea2146313d171;
-	Sun, 11 Oct 2026 19:39:56 +0000
-X-Mizu-Trace-ID: e05ea2146313d171
+Received: by mta11.migadu.com with ESMTPS id 9812df779db0045a;
+	Sun, 11 Oct 2026 19:39:59 +0000
+X-Mizu-Trace-ID: 9812df779db0045a
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -35,9 +35,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
-Date: Mon, 12 Oct 2026 03:39:09 +0800
-Message-Id: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
+Subject: [PATCH v7 04/14] rv: Disarm HA timers on the storage free path
+Date: Mon, 12 Oct 2026 03:39:10 +0800
+Message-Id: <3d5a8a567f1c1921f725c31a780845ff23e5abb9.1791745088.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1791745088.git.wen.yang@linux.dev>
 References: <cover.1791745088.git.wen.yang@linux.dev>
@@ -51,163 +51,160 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wen.yang@linux.dev>
 
-Add rvtest, a minimal per-object HA monitor, and a test for both
-underflows fixed by the previous patch: an invariant checked while the
-uptime is below the budget holds, and a timer armed after the budget
-elapsed expires now.
+da_destroy_storage() cancels the HA timer through da_monitor_reset_hook()
+and only then unlinks the storage with hash_del_rcu().  A handler on
+another CPU that looked the storage up before the unlink can still call
+ha_start_timer_*() after the cancel.  The timer then stays queued on a
+storage that kfree_rcu() frees a grace period later, and fires on freed
+memory, reporting a violation for an object that no longer exists.
 
+A monitor cannot close this from its own handlers: any cancel it issues
+precedes the unlink.  The first point no reader can race with is the
+RCU callback that frees the storage.
+
+Add da_monitor_free_hook(), called right before a per-object storage is
+freed, from the RCU callback and from da_monitor_destroy().  HA monitors
+implement it with ha_cancel_timer_sync().  Replace kfree_rcu() with
+call_rcu() so there is a callback to hook.
+
+A storage whose monitor never started has a zeroed timer, and
+hrtimer_cancel() dereferences timer->base.  nomiss pre-creates one such
+storage per possible CPU.  Skip them with the new ha_timer_ready().
+
+Fixes: 4a24127bd6cb ("rv: Add support for per-object monitors in DA/HA")
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- kernel/trace/rv/rv_monitors_test.c | 122 +++++++++++++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ include/rv/da_monitor.h | 23 ++++++++++++++++++++++-
+ include/rv/ha_monitor.h | 26 ++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_monitors_test.c
-index 3ad11195e664..889a209f6435 100644
---- a/kernel/trace/rv/rv_monitors_test.c
-+++ b/kernel/trace/rv/rv_monitors_test.c
-@@ -13,6 +13,87 @@
- #include <linux/rv.h>
- #include "rv.h"
- 
-+#include <rv_trace.h>
-+
-+/* rvtest: a minimal per-object HA monitor driven directly by the tests. */
-+#define MONITOR_NAME rvtest
-+#define RV_MON_TYPE RV_MON_PER_OBJ
-+#define HA_TIMER_TYPE HA_TIMER_HRTIMER
-+typedef void *monitor_target;
-+
-+/* The framework calls these for every monitor; this one reports nothing. */
-+#define trace_event_rvtest(...)		do { } while (0)
-+#define trace_error_rvtest(...)		do { } while (0)
-+#define trace_error_env_rvtest(...)	do { } while (0)
-+
-+enum states_rvtest {
-+	idle_rvtest,
-+	armed_rvtest,
-+	state_max_rvtest,
-+};
-+
-+#define INVALID_STATE state_max_rvtest
-+
-+enum events_rvtest {
-+	start_rvtest,
-+	event_max_rvtest,
-+};
-+
-+enum envs_rvtest {
-+	clk_rvtest,
-+	env_max_rvtest,
-+	env_max_stored_rvtest = env_max_rvtest,
-+};
-+
-+#define HA_CLK_NS
-+
-+struct automaton_rvtest {
-+	char *state_names[state_max_rvtest];
-+	char *event_names[event_max_rvtest];
-+	char *env_names[env_max_rvtest];
-+	unsigned char function[state_max_rvtest][event_max_rvtest];
-+	unsigned char initial_state;
-+	bool final_states[state_max_rvtest];
-+};
-+
-+static const struct automaton_rvtest automaton_rvtest = {
-+	.state_names = { "idle", "armed" },
-+	.event_names = { "start" },
-+	.env_names = { "clk" },
-+	.function = {
-+		{ armed_rvtest },
-+		{ INVALID_STATE },
-+	},
-+	.initial_state = idle_rvtest,
-+	.final_states = { 1, 0 },
-+};
-+
-+#include <rv/ha_monitor.h>
-+
-+#define RVTEST_BUDGET_NS (300ULL * NSEC_PER_MSEC)
-+
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_rvtest env,
-+		      u64 time_ns)
-+{
-+	return ha_get_clk_ns(ha_mon, env, time_ns);
-+}
-+
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_rvtest env,
-+			 u64 time_ns)
-+{
-+	ha_reset_clk_ns(ha_mon, env, time_ns);
-+}
-+
-+/* The tests arm the timer themselves. */
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state, enum events event,
-+				 enum states next_state, u64 time_ns)
-+{
-+	return true;
-+}
-+
-+static const struct rv_kunit_mon rvtest_mon = RV_MON_OPS_INIT();
-+
- /*
-  * An easy way to pass the context is to use kunit_get_current_test()->priv,
-  * but this doesn't always work (e.g. a reactor running from another context
-@@ -146,6 +227,46 @@ static void rv_test_dummy(struct kunit *test)
- 	active_ctx = NULL;
- }
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index e3cf85c9ce55..2cd260208bc1 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -67,6 +67,17 @@ static struct rv_monitor rv_this;
+ #define da_monitor_sync_hook()
+ #endif
  
 +/*
-+ * rv_test_rvtest_underflow - the HA clock math must not underflow as u64
-+ *
-+ * An invariant checked while the uptime is below the budget holds, and a
-+ * timer armed after the budget elapsed expires now.
++ * Called on the last reference to a storage, right before it is freed.
++ * Monitors embedding a timer disarm it here: an earlier point races with a
++ * reader that resolved the storage before hash_del_rcu(), and
++ * tracepoint_synchronize_unregister() only covers tracepoint probes.
++ * Default: no-op.
 + */
-+static void rv_test_rvtest_underflow(struct kunit *test)
++#ifndef da_monitor_free_hook
++#define da_monitor_free_hook(da_mon)
++#endif
++
+ /*
+  * Type for the target id, default to int but can be overridden.
+  * A long type can work as hash table key (PER_OBJ) but will be downgraded to
+@@ -543,6 +554,15 @@ static inline monitor_target da_get_target_by_id(da_id_type id)
+ 	return mon_storage->target;
+ }
+ 
++static void da_kfree_cb(struct rcu_head *head)
 +{
-+	struct ha_monitor *ha_mon;
-+	struct da_monitor *da_mon;
-+	const int id = 4242;
++	struct da_monitor_storage *ms =
++		container_of(head, struct da_monitor_storage, rcu);
 +
-+	prepare_test(test, &rvtest_mon);
-+	da_handle_start_run_event(id, NULL, start_rvtest);
-+
-+	scoped_guard(rcu)
-+		da_mon = da_get_monitor(id, NULL);
-+	KUNIT_ASSERT_NOT_NULL(test, da_mon);
-+	ha_mon = to_ha_monitor(da_mon);
-+
-+	/* Uptime below the budget: time_ns - expire_ns would underflow. */
-+	ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
-+	KUNIT_EXPECT_TRUE(test, ha_check_invariant_ns(ha_mon, clk_rvtest, 0,
-+						      RVTEST_BUDGET_NS));
-+
-+	/*
-+	 * Budget already elapsed: expire - passed would underflow and queue
-+	 * the timer at KTIME_SEC_MAX.
-+	 */
-+	da_monitor_reset(&ha_mon->da_mon);
-+	ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
-+	ha_start_timer_ns(ha_mon, clk_rvtest, RVTEST_BUDGET_NS,
-+			  RVTEST_BUDGET_NS + NSEC_PER_SEC);
-+	KUNIT_EXPECT_TRUE(test,
-+			  ktime_before(hrtimer_get_expires(&ha_mon->hrtimer),
-+				       ktime_get() + NSEC_PER_SEC));
-+
-+	ha_cancel_timer_sync(ha_mon);
++	da_monitor_free_hook(&ms->rv.da_mon);
++	kfree(ms);
 +}
 +
- #include "monitors/sco/sco_kunit.c"
- #include "monitors/sssw/sssw_kunit.c"
- #include "monitors/sts/sts_kunit.c"
-@@ -163,6 +284,7 @@ static struct kunit_case rv_mon_test_cases[] = {
- 	KUNIT_CASE(rv_test_nomiss),
- 	KUNIT_CASE(rv_test_pagefault),
- 	KUNIT_CASE(rv_test_sleep),
-+	KUNIT_CASE(rv_test_rvtest_underflow),
- 	{}
- };
+ /*
+  * da_destroy_storage - destroy the per-object storage
+  *
+@@ -564,7 +584,7 @@ static inline void da_destroy_storage(da_id_type id)
+ 		return;
+ 	da_monitor_reset_hook(&mon_storage->rv.da_mon);
+ 	hash_del_rcu(&mon_storage->node);
+-	kfree_rcu(mon_storage, rcu);
++	call_rcu(&mon_storage->rcu, da_kfree_cb);
+ }
  
+ static void __da_monitor_reset_all(void (*reset)(struct da_monitor *))
+@@ -607,6 +627,7 @@ static inline void da_monitor_destroy(void)
+ 	 * pending, we can safely assume no concurrent user.
+ 	 */
+ 	hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
++		da_monitor_free_hook(&mon_storage->rv.da_mon);
+ 		hash_del_rcu(&mon_storage->node);
+ 		kfree(mon_storage);
+ 	}
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index 499ce60779f9..99b60d0d26b6 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -29,6 +29,8 @@ static inline void ha_monitor_reset_env(struct da_monitor *da_mon);
+ static inline void ha_setup_timer(struct ha_monitor *ha_mon);
+ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon);
+ static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon);
++static inline bool ha_timer_ready(struct ha_monitor *ha_mon);
++static inline void ha_monitor_free_env(struct da_monitor *da_mon);
+ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
+ 					 enum states curr_state,
+ 					 enum events event,
+@@ -38,6 +40,7 @@ static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
+ #define da_monitor_init_hook ha_monitor_init_env
+ #define da_monitor_reset_hook ha_monitor_reset_env
+ #define da_monitor_sync_hook() synchronize_rcu()
++#define da_monitor_free_hook ha_monitor_free_env
+ 
+ #if !defined(HA_SKIP_AUTO_CLEANUP) && RV_MON_TYPE == RV_MON_PER_TASK
+ /*
+@@ -467,8 +470,15 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
+ {
+ 	return timer_delete(&ha_mon->timer);
+ }
++/* timer_setup() sets it; the cancel paths here never clear it. */
++static inline bool ha_timer_ready(struct ha_monitor *ha_mon)
++{
++	return READ_ONCE(ha_mon->timer.function);
++}
+ static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon)
+ {
++	if (!ha_timer_ready(ha_mon))
++		return;
+ 	timer_delete_sync(&ha_mon->timer);
+ }
+ #elif HA_TIMER_TYPE == HA_TIMER_HRTIMER
+@@ -524,8 +534,18 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
+ {
+ 	return hrtimer_try_to_cancel(&ha_mon->hrtimer) == 1;
+ }
++/*
++ * hrtimer_cancel() reads timer->base before anything else; a zeroed timer
++ * has it NULL and would fault.
++ */
++static inline bool ha_timer_ready(struct ha_monitor *ha_mon)
++{
++	return READ_ONCE(ha_mon->hrtimer.base);
++}
+ static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon)
+ {
++	if (!ha_timer_ready(ha_mon))
++		return;
+ 	hrtimer_cancel(&ha_mon->hrtimer);
+ }
+ #else /* HA_TIMER_NONE */
+@@ -538,9 +558,15 @@ static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
+ {
+ 	return false;
+ }
++static inline bool ha_timer_ready(struct ha_monitor *ha_mon) { return false; }
+ static inline void ha_cancel_timer_sync(struct ha_monitor *ha_mon) { }
+ #endif
+ 
++static inline void ha_monitor_free_env(struct da_monitor *da_mon)
++{
++	ha_cancel_timer_sync(to_ha_monitor(da_mon));
++}
++
+ #if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
+ #ifdef RV_MON_OPS_INIT
+ #undef RV_MON_OPS_INIT
 -- 
 2.25.1
 
