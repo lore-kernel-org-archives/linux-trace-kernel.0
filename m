@@ -1,68 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-120.mta1.migadu.com [95.215.58.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3807154705F;
-	Sun, 11 Oct 2026 01:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3040D35E1BA
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 04:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791681856; cv=none; b=Uxg9XdR04rPngbknZsSllsmavgG55kFdP45vSOXobvqzD/w0M4latQl2fP9ytjGHCtTRS8dHsogCv5iqoJUvGGT6A9G7xQ9yA0kptpvxeLqN6yc/bU49xvjrrNW2g+Q77biPUyNC1NZNEw7e21m5WBdaX+18beYwWCo0ISWPWIU=
+	t=1791692927; cv=none; b=trFwV4QNWoztopEl0teG3PX6MPuSCXTBZ0noqZnyPdOQAdXRnYw9wlaF47Sit+BoH4o/PFQSZcheOMnnLyOU+/KOaaXAe+s788IeAdQo5hMnr1pKrQExh3fR6M25ADEvdfKhwrs4KaEeZA+dNRk+0NLXYxE7I+7qiddwbFrYv6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791681856; c=relaxed/simple;
-	bh=vUsYNcB8ae0YhaozGtIMgaefuQwTpAbUax+4L9rJbSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hOQiYjOlFZTB0QDwUXCQZV0Z+ECnA8Y3asV80KjW4B7RCe+FNX4zhInBQuU38kST3I68/NEkicKYuGnmp9uzn3WPcRLcawnzPyT7DF56ivvH7MJqSnoDNLbx0SZ/fB7mfTaPSRYv+GKfJ773Wyzehc46fM2GoRlDJH93voHkJ7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=MCUK7dVI; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1791692927; c=relaxed/simple;
+	bh=oWfUT88ZOBjq8dRh0lwJrPuh9l3/thyYC3pPZq9Dy68=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d23777h+U5U4jVBosr32jAK9gEDLLSgOR4+RvAB8GMldyy8HPHZF6VM04AAmo1MyXQzlJeufZSxC6Fcvx32CFtydIIqg75Y9Ptc2E9qNsV0hlXbgWubsGsHB+qqmUKvOa53vjE5yYCyuhxP8/kOqCxLgpIfi2K2BueuKSOVyrRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vbr4HsVW; arc=none smtp.client-ip=95.215.58.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="MCUK7dVI"
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 665111A0544;
-	Sun, 11 Oct 2026 01:24:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id A0D106000C;
-	Sun, 11 Oct 2026 01:24:10 +0000 (UTC)
-Date: Sat, 10 Oct 2026 21:24:09 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- akpm@linux-foundation.org, kees@kernel.org
-Subject: Re: [PATCH] tracing/user_events: Fail fork when event state
- duplication fails
-Message-ID: <20261010212409.1db6bfd0@226.227.38.69.naturalwireless.com>
-In-Reply-To: <20261008142054.89783-1-jeffbarnes@linux.microsoft.com>
-References: <20261002222639.1964370-1-jeffbarnes@linux.microsoft.com>
-	<20261008142054.89783-1-jeffbarnes@linux.microsoft.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vbr4HsVW"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=oWfUT88ZOBjq8dRh0lwJrPuh9l3/thyYC3pPZq9Dy68=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791692921; v=1; x=1792297721;
+ b=vbr4HsVWous5T1D9Su726NF51peKQoYOYH4q7eCXLHx5nrV5Ysl+Jw4dFNP/RFRs+MQJuYk6
+ TDkmVGrq1DzjnJouJ2TP1Lhnc+vpGxTaiP+D+UD04jz9SzGN4VNXZ9xSwUkvCjbC1M9VRji6HwS
+ 4wX8b1ezsMVvyaBOHBaFBnEA=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id de44eda3b754d562;
+	Sun, 11 Oct 2026 04:28:41 +0000
+X-Mizu-Trace-ID: de44eda3b754d562
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <44b54799-6cab-4bcd-bce9-d8d55517a7a2@linux.dev>
+Date: Sun, 11 Oct 2026 09:58:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] tracing: fgraph: fix the quadratic shadow stack walk
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: mark.rutland@arm.com, mathieu.desnoyers@efficios.com, andrii@kernel.org,
+ peterz@infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+References: <20261001102909.1152572-1-vineet.gupta@linux.dev>
+From: Vineet Gupta <vineet.gupta@linux.dev>
+Content-Language: en-US
+In-Reply-To: <20261001102909.1152572-1-vineet.gupta@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: c96h9u331j36y5bukep4zca79n97oqbz
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: A0D106000C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+wqFs2MQDJdL3ylJlkZHGC2MAOb/NfeZM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=FdBG3gkHDcFBk9gV69/rmpvTGRIaSVfg5pxb1RCrOOU=; b=MCUK7dVIK/Jxm52V/tVark2wHdCF1g2VeE3xOJqc5CCdukjdrAwfR1VPOG0iBa7/hZPlUxm4ow7/6ya6erQC2WJ0wAbZ7aLG8c2i2eg3Oq2w3vXrufC2iM4iGv+YK1RPW5kakVS+Hd56t0MQTWjOTjuIy/5Xp89Mfl56bhVC0Ng=
-X-HE-Tag: 1791681850-67614
-X-HE-Meta: U2FsdGVkX194fcGMF6/nOhM2kZomAnpTU1b6DZXTUwxb98M0g6dUBOXN6GRga3u5p1Xxx/FLmSIqrNo6rWURYiyx/0FO9iUR76N+CF0ikpT2fHBajGXzOgkkGRygqAAGuq491zMkA5Dkw3MsZZcEuHWLxDmUyBz/ANUPKJJ8lGMYtghIYO5UL0fFfn3nfCYkFZj3VuvfQ4hrW0igk24QKfzjZnQkx+YFge8U/Cjieqe93Wx8UYJcJr3Z1B7yjbbwfoiOZdDzznahS2D5FXa0Aw+CHRglCH5PJkRiR3U9YAzV3UHv3HHKMfJjpUjdFD9njmjJnVmyzzsr4G28bU9lnMVQJTIPb3CkxY9Qu6Tobzwb9e5S3kC6+w==
 
-On Thu,  8 Oct 2026 10:20:54 -0400
-Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+On 10/1/26 15:59, Vineet Gupta wrote:
+> alloc_retstack_tasklist() assigns a shadow stack to every thread when
+> fgraph is enabled. It did so FTRACE_RETSTACK_ALLOC_SIZE (32) tasks at a
+> time, and since for_each_process_thread() has no cursor, every sweep
+> restarted from init_task and re-walked the tasks already served, making
+> the ftrace_graph_active 0 -> 1 transition quadratic in the thread count.
+> On a 60-core Sapphire Rapids machine with 400000 idle threads it took
+> 227 s, inside a single bpf() syscall for the kprobe_multi case.
+>
+> Allocating inline with GFP_NOWAIT removes the batching: a single sweep
+> serves every task, 227 s -> 0.092 s.
+>
+> v1: https://lore.kernel.org/all/20260922225526.1554758-1-vineet.gupta@linux.dev/
+> v2: https://lore.kernel.org/all/20260929005411.4105448-1-vineet.gupta@linux.dev/
+>
+> Changes since v2:
+>   - update the stale alloc_retstack_tasklist() comment, which still
+>     described the old batch-of-32 behaviour (bot+bpf-ci)
+>
+> Sashiko flagged the mix of goto-based cleanup and scoped_guard() in
+> this function. Peter and Andrii both considered it fine as is, so it
+> is unchanged:
+> https://lore.kernel.org/all/20260929080346.GR4120091@noisy.programming.kicks-ass.net/
+>
+> Changes since v1:
+>   - replace both v1 patches with Peter's inline GFP_NOWAIT approach,
+>     which removes the quadratic behaviour rather than dividing it by a
+>     constant. With a single sweep there is no retry loop left, so the
+>     v1 cond_resched() patch has nothing to attach to and is dropped.
+>   - comment why returning from inside scoped_guard() skips the free
+>     loop safely
+>
+> Vineet Gupta (1):
+>    tracing: fgraph: allocate shadow stacks inline with GFP_NOWAIT
+>
+>   kernel/trace/fgraph.c | 44 ++++++++++++++++++++++++++++---------------
+>   1 file changed, 29 insertions(+), 15 deletions(-)
 
-> Hi,
-> 
-> Gentle ping on this fix for the user_events fork error path. Please let
-> me know if there are concerns with failing fork when user_event_mm
-> duplication fails, or if additional testing would be helpful.
+Gentle ping !
 
-Sorry, due to my traveling (from Sept 15th) I have not been doing *any*
-kernel patches. I'll be spending the next week catching up on all my
-patches (including this one) for inclusion.
+I appreciate folks might still be on the way home and the mayhem of 
+merge window.
 
--- Steve
-
+Thx,
+-Vineet
