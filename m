@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-84.mta0.migadu.com [91.218.175.84])
+Received: from mta1.migadu.com (out-82.mta1.migadu.com [95.215.58.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE46340416
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10012DCBEC
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791747590; cv=none; b=igUXtKIgABalLvl4RdfUJ3TpJCgWBOsLQrYih+NTT7bAKNum+/llP2mKKmfu/sDJDisyb7IbyNgrT8vOppkEHpHqKsW9co+uoPUz3+U//Ec93i4xJsg88VzKpugwSvWRPu38hB+gJ7IqYRGtebp1Txu3AqE0y2Ot2SW/39w04H0=
+	t=1791747596; cv=none; b=KEeMu4Xcpch8xBpn28UxxRM8Wh6Z8TzAbsZ3GSVOUgIkvSmITdGU2eqtL28DvL+hEElIEMh4O1YHh9OQF5xcDiOX0wo48/BPEWRQ3if0bdSGjIEjgHv1djGlWipwqyANrj6Ywfcvct0UHZ8JHHmcvc8QYG8V/xRLqmWWIaQUxMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791747590; c=relaxed/simple;
-	bh=4mrAIQI+m0F1K1NEKjyN89vPwAwdMuNeKG+UaA+E+X0=;
+	s=arc-20240116; t=1791747596; c=relaxed/simple;
+	bh=re4zxLJzck5XoBJwDsvFcZnnCV9vSiEHxm9sTlVIdWs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bYTsfIjGqvcwcRtPTvX8A/doCBd+u3LeUfNmou/ignK6jrwM75dB3o67tDd4fKarimn9nBzkVDCEhgEugY0/fnUE+Zje65krQEq8TbPA/sD5Fhu4HNrgFYV9eZLju31HgRhzvipewn1LLEqiGWImwoOSjphQeVQnOw2kcxu93CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=skAObB7H; arc=none smtp.client-ip=91.218.175.84
+	 MIME-Version; b=Fsv4QPvDzcJ8jit0T6w0vd714lfk5b6BktD24baU+vUwjhWMxAqRsQLyG035iIs4dRGRzNNdcucTW7BIdndq2wQLD7Nk/QhUUJQIw0pOcIlXl4GpsOpSWsGXwWrFxk6HzKXAL2OmbuyN1W7mqXFCswY0AZuvHU0XysDrkNaTpY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kV5rn1qg; arc=none smtp.client-ip=95.215.58.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="skAObB7H"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kV5rn1qg"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=4mrAIQI+m0F1K1NEKjyN89vPwAwdMuNeKG+UaA+E+X0=;
+DKIM-Signature: a=rsa-sha256; bh=re4zxLJzck5XoBJwDsvFcZnnCV9vSiEHxm9sTlVIdWs=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791747585; v=1; x=1792352385;
- b=skAObB7HCCYZPqtcbC1cp7goDDeXukdxM5KdUPkaEGsqsWV1sXZyjy5+7z7wSu+GadQhC52C
- VS5s3Z9QH7BTeDLHM9qpxkU4tQeS3PA/S+nxm2k68k25adbp47kA5qK3JoD2ndTdz/FXdMAfFl7
- yd5x7clS0VVZzdP9UiooVqAE=
+ t=1791747592; v=1; x=1792352392;
+ b=kV5rn1qg1T1qLW2zM5/BDKH9jOnuu47c+q/ZYSuHoCmoQLGnUMqUxVeFnSvz3suRkciCHeCJ
+ ZIPtHclEh05EIoYgsIybS5aKjgvDqzLwFCfCccVs1KfAa+J2MTLyuJf0kyH2xwoTxWHocDFVPnh
+ K61n+UB2nKwBDwJMKycX56RI=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id ae1cf5677c39f91f;
-	Sun, 11 Oct 2026 19:39:45 +0000
-X-Mizu-Trace-ID: ae1cf5677c39f91f
+Received: by mta11.migadu.com with ESMTPS id 42a38e666fdccb58;
+	Sun, 11 Oct 2026 19:39:52 +0000
+X-Mizu-Trace-ID: 42a38e666fdccb58
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -35,9 +35,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v7 01/14] rv: Force environment reset action on HA monitor start
-Date: Mon, 12 Oct 2026 03:39:07 +0800
-Message-Id: <3680decb855286ac73c903bc3101272c0419e783.1791745088.git.wen.yang@linux.dev>
+Subject: [PATCH v7 02/14] rv: Fix ha_monitor timer and invariant underflow
+Date: Mon, 12 Oct 2026 03:39:08 +0800
+Message-Id: <2ab5a814ce453e282c5d90b7285ee6fea8a674b6.1791745088.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1791745088.git.wen.yang@linux.dev>
 References: <cover.1791745088.git.wen.yang@linux.dev>
@@ -49,87 +49,95 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Gabriele Monaco <gmonaco@redhat.com>
+From: Wen Yang <wen.yang@linux.dev>
 
-Currently the monitor variables with a storage (e.g. clocks) are
-initialised as invalid, then the first explicit reset() sets them as
-valid for constraint. This only adds extra complexity to handle the
-invalid case in constraints check.
+ha_start_timer_ns() and ha_start_timer_jiffy() compute the remaining
+budget as expire - passed.  Once the elapsed time passed exceeds the
+budget expire (e.g. a state transition after the invariant should have
+fired, before the timer callback ran), the unsigned subtraction
+underflows to a huge value and the timer is scheduled far into the
+future instead of expiring immediately.
 
-Apply a reset() by default when starting monitors instead of resetting
-to an invalid state. If monitors have no stored variable (hence no reset
-function) add a macro HA_NO_RESET to stub it, this is all transparently
-handled by rvgen.
+ha_check_invariant_ns() computes store >= time_ns - expire_ns, which
+underflows when the system uptime is still below expire_ns (a monitor
+armed early in boot with a large budget), reporting a false violation.
 
-The reset() action on ns-granularity clocks needs the (possibly cached)
-current time, read it directly there. This might cause a double call to
-ktime_get_ns() within the same da_handle_start_run_event() but will
-occur only the first time and is harmless.
+Clamp the timer remainder to 0 (fire immediately) when passed >= expire,
+and replace the invariant check as store + expire_ns >= time_ns so
+neither side can underflow.
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-Tested-by: Wen Yang <wen.yang@linux.dev>
+Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
+Fixes: ab2900ae252b ("rv: Simplify hybrid automata monitors's clock variables")
+Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- include/rv/ha_monitor.h                 | 8 +++++++-
- kernel/trace/rv/monitors/opid/opid.h    | 1 +
- tools/verification/rvgen/rvgen/dot2c.py | 2 ++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ include/rv/ha_monitor.h | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-index 6e1c7fe5449a..93ac99ff7f1d 100644
+index 93ac99ff7f1d..499ce60779f9 100644
 --- a/include/rv/ha_monitor.h
 +++ b/include/rv/ha_monitor.h
-@@ -159,19 +159,25 @@ static void ha_monitor_destroy(void)
- 
- /* Should be supplied by the monitor */
- static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
- static bool ha_verify_constraint(struct ha_monitor *ha_mon,
- 				 enum states curr_state,
- 				 enum events event,
- 				 enum states next_state,
- 				 u64 time_ns);
-+#ifdef HA_NO_RESET
-+static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns) { }
-+#endif
- 
- /*
-  * ha_monitor_reset_all_stored - reset all environment variables in the monitor
-  */
- static inline void ha_monitor_reset_all_stored(struct ha_monitor *ha_mon)
+@@ -351,7 +351,7 @@ static inline void ha_reset_clk_ns(struct ha_monitor *ha_mon, enum envs env, u64
+ static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon, enum envs env,
+ 					 u64 time_ns, u64 expire_ns)
  {
-+	u64 time_ns = ha_get_ns();
-+
- 	for (int i = 0; i < ENV_MAX_STORED; i++)
--		WRITE_ONCE(ha_mon->env_store[i], ENV_INVALID_VALUE);
-+		ha_reset_env(ha_mon, i, time_ns);
+-	return READ_ONCE(ha_mon->env_store[env]) >= time_ns - expire_ns;
++	return READ_ONCE(ha_mon->env_store[env]) + expire_ns >= time_ns;
+ }
+ /*
+  * ha_invariant_passed_ns - prepare the invariant and return the time since reset
+@@ -410,6 +410,11 @@ static inline void ha_inv_to_guard(struct ha_monitor *ha_mon, enum envs env,
+ 	WRITE_ONCE(ha_mon->env_store[env], READ_ONCE(ha_mon->env_store[env]) - value);
  }
  
++static inline u64 ha_time_left(u64 passed, u64 expire)
++{
++	return passed < expire ? expire - passed : 0;
++}
++
+ #if HA_TIMER_TYPE == HA_TIMER_WHEEL
  /*
-diff --git a/kernel/trace/rv/monitors/opid/opid.h b/kernel/trace/rv/monitors/opid/opid.h
-index fb0aa4c28aa6..f85b1959c2fb 100644
---- a/kernel/trace/rv/monitors/opid/opid.h
-+++ b/kernel/trace/rv/monitors/opid/opid.h
-@@ -28,6 +28,7 @@ enum envs_opid {
- };
+  * Helper functions to handle the monitor timer.
+@@ -439,15 +444,17 @@ static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum envs env
+ {
+ 	u64 passed = ha_invariant_passed_jiffy(ha_mon, env, time_ns);
  
- _Static_assert(env_max_stored_opid <= MAX_HA_ENV_LEN, "Not enough slots");
-+#define HA_NO_RESET
+-	mod_timer(&ha_mon->timer, get_jiffies_64() + expire - passed);
++	mod_timer(&ha_mon->timer,
++		  get_jiffies_64() + ha_time_left(passed, expire));
+ }
+ static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum envs env,
+ 				     u64 expire, u64 time_ns)
+ {
+ 	u64 passed = ha_invariant_passed_ns(ha_mon, env, time_ns);
++	u64 delay = ha_time_left(passed, expire);
  
- struct automaton_opid {
- 	char *state_names[state_max_opid];
-diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index 22938ce1bf6c..1532e6b6e199 100644
---- a/tools/verification/rvgen/rvgen/dot2c.py
-+++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -90,6 +90,8 @@ class Dot2c(Automata):
-                         ' "Not enough slots");')
-             if {"ns", "us", "ms", "s"}.intersection(self.env_types.values()):
-                 buff.append("#define HA_CLK_NS")
-+            if len(self.env_stored) == 0:
-+                buff.append("#define HA_NO_RESET")
-             buff.append("")
-         return buff
+ 	ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
+-			     nsecs_to_jiffies(expire - passed + TICK_NSEC - 1), time_ns);
++			     nsecs_to_jiffies(delay + TICK_NSEC - 1), time_ns);
+ }
+ /*
+  * ha_cancel_timer - Cancel the timer
+@@ -494,7 +501,8 @@ static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum envs env,
  
+ 	if (RV_MON_TYPE == RV_MON_PER_CPU)
+ 		mode |= HRTIMER_MODE_PINNED;
+-	hrtimer_start(&ha_mon->hrtimer, ns_to_ktime(expire - passed), mode);
++	hrtimer_start(&ha_mon->hrtimer,
++		      ns_to_ktime(ha_time_left(passed, expire)), mode);
+ }
+ static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum envs env,
+ 					u64 expire, u64 time_ns)
+@@ -502,7 +510,8 @@ static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum envs env
+ 	u64 passed = ha_invariant_passed_jiffy(ha_mon, env, time_ns);
+ 
+ 	ha_start_timer_ns(ha_mon, ENV_MAX_STORED,
+-			  jiffies_to_nsecs(expire - passed), time_ns);
++			  jiffies_to_nsecs(ha_time_left(passed, expire)),
++			  time_ns);
+ }
+ /*
+  * ha_cancel_timer - Cancel the timer
 -- 
 2.25.1
 
