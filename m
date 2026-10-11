@@ -1,104 +1,161 @@
-Received: from mta0.migadu.com (out-107.mta0.migadu.com [91.218.175.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA2245C6ED
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2692DCBEC
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791747664; cv=none; b=V8w3CLgEUrK7hQx3xLQgsR8vLmYWEx/XwwBxFNENvJKyWRmef3toEVCZgJrTIva1OTlVVv4RW9kXgLXGg/2h8Q61p017sc6EIX4scTqimSIulwu8Y131iL1wlsS3HxsFVIpumSC3EJlqw53YMxfS9UVhCNZnPbomQ+M492q8PYI=
+	t=1791748152; cv=none; b=f5R9nTyrwq3GWlCetxurgXa9Nm2pnAklkk2zUSESNW0pxdj8lVXtRNt3Wy/vpoIl7tskWqgQXlj9oNfMTre49kidhWfedbX9nMHgxXst1hbPcPT9lNRbIi1tMtImDMqfpqG/Z9RjWCKLH5GRXVfHsCGkY8on2QDAwzF5LeXzsi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791747664; c=relaxed/simple;
-	bh=RBBjF1dVk/Xf0gpPRhtzgJM9UIRcoO6DnxxofY0h9rM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SkFzSmJLIj4UucNja83piVseiuAxBmNDamhd4S9lAgmtPClKwQi6w10LXLmePICN1hq2j7GOZ3Gh2LSMklpUVF0AeAJT1Ce1lL4qNnhi2QcSbYlUs0tOpTlpmQ9rDxDg4tX6lyZBKsoTVIXZq6I0UcxWSd8HEjPqnd4jAx44ex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cJjb8MnZ; arc=none smtp.client-ip=91.218.175.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791748152; c=relaxed/simple;
+	bh=iHgEkFRs9geEIuYm+oRsuiM0g6zQ4Bm5Qq0rT7tV1qQ=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=bpXah8CVph4CoNi98LCNWlKDqFZca9zHze4CoAerAQo+pP0UHdXoE6g9XM7a6yx1Nouwc/2N0Lt5KVqoDwsjW794hDicn5QYj3rpaG49dWGjHY2XAsERu3OVRT8yFAlQ6QOHfIMw3Hlp/YWhI9abrbdK938BpWgc5hEP7r35/tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJt1ZAHK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cJjb8MnZ"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=RBBjF1dVk/Xf0gpPRhtzgJM9UIRcoO6DnxxofY0h9rM=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791747659; v=1; x=1792352459;
- b=cJjb8MnZuPonHnINXiKKQI2SEaIrP0BUDmMmc1+woEYPPf9txR/i6nPnmgWmwWm/GYv/efC4
- F4hh5SvTyX5ib3mSoShoIByT4Lmnyeqeo0vyR68xvrR6qKE5JZITRiS1FAL0vFfKWkaF2upRntr
- znB19iC2uIzR+oVa99+DKC58=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id c6767f3ebfa360b0;
-	Sun, 11 Oct 2026 19:40:59 +0000
-X-Mizu-Trace-ID: c6767f3ebfa360b0
-X-Migadu-Flow: FLOW_OUT
-From: wen.yang@linux.dev
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v7 14/14] selftests/ftrace: Walk up parent dirs to find test.d/functions
-Date: Mon, 12 Oct 2026 03:39:20 +0800
-Message-Id: <9a83652ef9a1ba59193e2cd5c6a230d1e77fa037.1791745088.git.wen.yang@linux.dev>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1791745088.git.wen.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJt1ZAHK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902B51F0089B;
+	Sun, 11 Oct 2026 19:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791748150;
+	bh=tjYP8e/ZqM8enfgkRHsu9dzgYHyqDvlhQCsjVpHLYNk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nJt1ZAHKrxkKT6+BeKBdcBQAke8nGZj98nAG5fPe5e51fIrMKwREAB6ObCniH8RXG
+	 o3RabTxlvl7Xa5Mlm8L64r5gROxiKZkdx9ZMUwDX/rtkF6iqVMdJLvNe4GNsbOTOJB
+	 trkonxmdzL/XNGTV+8iHQdn/BTJKR++8KbPobG444xU2xSw8bidj2XBVSoPtl2t5lg
+	 6zkmOicfip16yY+2eq3LTvqn0K7p8D1mkLApTRO+BzEtnJ3cp7ulJB9TqbFvOoolBR
+	 RJSZfS2ars5hxCVRWyyvXCDFwlH4qWVZlPMTvLDRs6I/peuYFFTiAAJZFW3Ib0P3OY
+	 U0OkwCC05Gt4A==
+Message-ID: <sashiko-outbox-167418@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 09/14] rv: Add generic uprobe infrastructure for RV
+ monitors
+Reply-To: sashiko-reviews@lists.linux.dev
+To: wen.yang@linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <1f311bb81a9270391bb9d3aa03b8b881de928c1a.1791745088.git.wen.yang@linux.dev>
 References: <cover.1791745088.git.wen.yang@linux.dev>
+ <1f311bb81a9270391bb9d3aa03b8b881de928c1a.1791745088.git.wen.yang@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 11 Oct 2026 19:49:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Wen Yang <wen.yang@linux.dev>
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] uprobes: missing vfsmount reference leads to VFS BUG on unmount
+- [Medium] uprobes: double registration leaks inode reference and corrupts =
+consumer list
+- [Low] uprobes: missing <linux/export.h> inclusion
+--
 
-When a subdirectory is passed (e.g. an RV monitor's test directory),
-ftracetest fell back to its own functions file, losing the RV-specific
-check_requires handling for ':monitor' and ':reactor' requirements.
+commit 27eb3c739b9acf445ce512a1c9be0a7dca8bace0
+Author: Wen Yang <wen.yang@linux.dev>
 
-Walk up from OPT_TEST_DIR until a directory containing test.d/functions
-is found, stopping after five levels so a stray argument cannot reach an
-unrelated functions file further up the tree.  When no such directory is
-found the previous default is kept.
+rv: Add generic uprobe infrastructure for RV monitors
 
-Note that TOP_DIR also feeds LOG_TOP_DIR, so logs now follow the
-directory the tests were found in: an RV run writes to
-verification/logs rather than ftrace/logs.
+Monitors that instrument user-space function boundaries need to register
+uprobes and deregister them safely. Provide a thin wrapper so monitors
+share a single implementation of this boilerplate.
 
-Signed-off-by: Wen Yang <wen.yang@linux.dev>
----
- tools/testing/selftests/ftrace/ftracetest | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+> diff --git a/include/rv/rv_uprobe.h b/include/rv/rv_uprobe.h
+> new file mode 100644
+> index 0000000000000..b93c2a81bc228
+> --- /dev/null
+> +++ b/include/rv/rv_uprobe.h
+[ ... ]
+> +/*
+> + * Free the containing struct only after rv_uprobe_unregister_nosync() +
+> + * rv_uprobe_unregister_sync() + iput(p->inode).
+> + *
+> + * The inode reference does not pin the dentry, so callers that re-resol=
+ve the
+> + * probed path must hold a struct path: 9p cache=3Dnone remints an inode=
+ per
+> + * lookup.
+> + */
+> +struct rv_uprobe {
+> +	struct uprobe_consumer	uc;
+> +	struct uprobe		*uprobe;
+> +	struct inode		*inode;
+> +};
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 0a56bf209f6c..3d3c3a4dfa34 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -159,9 +159,22 @@ parse_opts() { # opts
-   if [ -n "$OPT_TEST_CASES" ]; then
-     TEST_CASES=$OPT_TEST_CASES
-   fi
--  if [ -n "$OPT_TEST_DIR" -a -f "$OPT_TEST_DIR"/test.d/functions ]; then
--    TOP_DIR=$OPT_TEST_DIR
--    TEST_DIR=$TOP_DIR/test.d
-+  if [ -n "$OPT_TEST_DIR" ]; then
-+    # A subdirectory of test.d can be given; walk up to the directory
-+    # holding test.d/functions.  The bound keeps a stray directory from
-+    # reaching an unrelated functions file further up the tree.
-+    local dir=$OPT_TEST_DIR
-+    local depth=0
-+    while [ "$depth" -lt 5 ]; do
-+      if [ -f "$dir/test.d/functions" ]; then
-+        TOP_DIR=$dir
-+        TEST_DIR=$TOP_DIR/test.d
-+        break
-+      fi
-+      case "$dir" in /|//|.) break;; esac
-+      dir=$(dirname "$dir")
-+      depth=$((depth + 1))
-+    done
-   fi
- }
- 
--- 
-2.25.1
+[Severity: High]
+Does this struct need to hold a reference to the vfsmount as well?
 
+The core uprobes API documents that the caller of uprobe_register() is
+required to keep the inode and the containing mount referenced.=20
+
+If the infrastructure only pins the inode via igrab(), and the caller does
+not independently hold a mount reference, user-space could unmount the
+filesystem while the monitor is active.
+
+During unmount, the elevated inode i_count from igrab prevents eviction,
+which causes the VFS superblock shutdown sequence in generic_shutdown_super=
+()
+to trigger a bug for busy inodes after unmount.
+
+[ ... ]
+> diff --git a/kernel/trace/rv/rv_uprobe.c b/kernel/trace/rv/rv_uprobe.c
+> new file mode 100644
+> index 0000000000000..1c7f8466aeedd
+> --- /dev/null
+> +++ b/kernel/trace/rv/rv_uprobe.c
+[ ... ]
+> +/*
+> + * uprobe_register() takes no inode reference of its own, so grab one he=
+re and
+> + * drop it only after rv_uprobe_unregister_sync().
+> + */
+> +int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_upr=
+obe *p)
+> +{
+> +	int ret;
+> +
+> +	p->inode =3D igrab(inode);
+
+[Severity: Medium]
+What happens if rv_uprobe_register() is called on an already registered
+struct rv_uprobe?
+
+Since p->inode is unconditionally overwritten with igrab(inode), the previo=
+us
+inode reference seems to be leaked without calling iput().
+
+Additionally, passing an actively linked uprobe_consumer to uprobe_register=
+()
+again could corrupt the uprobe subsystem's internal consumer lists.
+
+Would it be safer to check if p->inode is already set before proceeding?
+
+> +	if (!p->inode)
+> +		return -ESTALE;
+> +
+> +	p->uprobe =3D uprobe_register(inode, offset, 0, &p->uc);
+> +	if (IS_ERR(p->uprobe)) {
+> +		ret =3D PTR_ERR(p->uprobe);
+> +		p->uprobe =3D NULL;
+> +		iput(p->inode);
+> +		p->inode =3D NULL;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rv_uprobe_register);
+
+[Severity: Low]
+Could this EXPORT_SYMBOL_GPL usage cause build failures on some architectur=
+es?
+
+The source file uses EXPORT_SYMBOL_GPL but does not explicitly include
+<linux/export.h>. Relying on implicit transitive inclusion of this header
+can lead to build breakages on alternative configurations.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791745088.gi=
+t.wen.yang@linux.dev?part=3D9
