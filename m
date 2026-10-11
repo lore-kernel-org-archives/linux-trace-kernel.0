@@ -1,161 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2692DCBEC
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3D8317173
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Oct 2026 19:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791748152; cv=none; b=f5R9nTyrwq3GWlCetxurgXa9Nm2pnAklkk2zUSESNW0pxdj8lVXtRNt3Wy/vpoIl7tskWqgQXlj9oNfMTre49kidhWfedbX9nMHgxXst1hbPcPT9lNRbIi1tMtImDMqfpqG/Z9RjWCKLH5GRXVfHsCGkY8on2QDAwzF5LeXzsi8=
+	t=1791748217; cv=none; b=XwD8T9hQQUs0DFCTO3kD746mejKV2gUnK2rIrdOfOLMipr+Jadn73w7RuR5cvUd79XZiaHaKhezFkHxz83gHK0vL3HvWoQW+ZMHLxc01N7NqrFWLYJPmlVafclosduezqe/1Nl1tQ2i6BSqQhJLepstzIXJQOqFAt8+JJDsmrXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791748152; c=relaxed/simple;
-	bh=iHgEkFRs9geEIuYm+oRsuiM0g6zQ4Bm5Qq0rT7tV1qQ=;
+	s=arc-20240116; t=1791748217; c=relaxed/simple;
+	bh=MxcvgYCYBHYbDZwu3ivlvcpFTryF3j6qAm4hNKhnaLc=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=bpXah8CVph4CoNi98LCNWlKDqFZca9zHze4CoAerAQo+pP0UHdXoE6g9XM7a6yx1Nouwc/2N0Lt5KVqoDwsjW794hDicn5QYj3rpaG49dWGjHY2XAsERu3OVRT8yFAlQ6QOHfIMw3Hlp/YWhI9abrbdK938BpWgc5hEP7r35/tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJt1ZAHK; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=OgKyuckMIqJtbpO7hczsZwzLPFhXsYtA5VRSA7YjQ9MDZkM0gzdSOGQIfY/KpBR1cysCUPUPH3NFDCVXhUbO6/vUe2qHPYCFNQ7e9AbWBS+RV6e/1ZL+EKzmCuOpI/s/BfJy9KrFM/0JWigy7fau03s4duAvWO3+57jvDwXqpvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7i6RSox; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJt1ZAHK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902B51F0089B;
-	Sun, 11 Oct 2026 19:49:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7i6RSox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D421F0089C;
+	Sun, 11 Oct 2026 19:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791748150;
-	bh=tjYP8e/ZqM8enfgkRHsu9dzgYHyqDvlhQCsjVpHLYNk=;
+	s=k20260515; t=1791748216;
+	bh=oeAFSLmFKfg+mBG2e4bvvADAc1fQ+mDN8/tglogUSXw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nJt1ZAHKrxkKT6+BeKBdcBQAke8nGZj98nAG5fPe5e51fIrMKwREAB6ObCniH8RXG
-	 o3RabTxlvl7Xa5Mlm8L64r5gROxiKZkdx9ZMUwDX/rtkF6iqVMdJLvNe4GNsbOTOJB
-	 trkonxmdzL/XNGTV+8iHQdn/BTJKR++8KbPobG444xU2xSw8bidj2XBVSoPtl2t5lg
-	 6zkmOicfip16yY+2eq3LTvqn0K7p8D1mkLApTRO+BzEtnJ3cp7ulJB9TqbFvOoolBR
-	 RJSZfS2ars5hxCVRWyyvXCDFwlH4qWVZlPMTvLDRs6I/peuYFFTiAAJZFW3Ib0P3OY
-	 U0OkwCC05Gt4A==
-Message-ID: <sashiko-outbox-167418@kernel.org>
+	b=E7i6RSoxvVfbwsykb/1rmYUYAT2D/ImcIy/VVwODax+Ty6ojjoQtKmqbm8dsX+WIk
+	 0lZOU3qwJ0k6TdVeOG7gNaLNHlMl5kzNfOJmEoKn/D2RycXlJYtoH+/h87DUN29Tbd
+	 JJFk7rYw9ugpNEMh5WPUOFE5hiFq4+trbEoO2ye7LCLspW96f3eXilHQRSWKduNlGj
+	 FDpV6LYs9TfaiHhyiF0+Ua2LWxQo3nNj/3BxEnlN8/hWRA56R2Zo8dzp6ObVtep6XC
+	 rCRXMd6FBBiSHOvmv3xMSnt9W1CkZedngv9Q41hAlY9GGAOM1L4Ia0WYF69uL5No/6
+	 WyVz6muZ0khZQ==
+Message-ID: <sashiko-outbox-167420@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 09/14] rv: Add generic uprobe infrastructure for RV
- monitors
+Subject: Re: [PATCH v7 05/14] rv: Add a KUnit test for the storage free path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: wen.yang@linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <1f311bb81a9270391bb9d3aa03b8b881de928c1a.1791745088.git.wen.yang@linux.dev>
+In-Reply-To: <448c421a47452ebddc6502ba3435eb91c1749601.1791745088.git.wen.yang@linux.dev>
 References: <cover.1791745088.git.wen.yang@linux.dev>
- <1f311bb81a9270391bb9d3aa03b8b881de928c1a.1791745088.git.wen.yang@linux.dev>
+ <448c421a47452ebddc6502ba3435eb91c1749601.1791745088.git.wen.yang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 11 Oct 2026 19:49:10 +0000
+Date: Sun, 11 Oct 2026 19:50:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] uprobes: missing vfsmount reference leads to VFS BUG on unmount
-- [Medium] uprobes: double registration leaks inode reference and corrupts =
-consumer list
-- [Low] uprobes: missing <linux/export.h> inclusion
+- [Medium] rv: Use-After-Free in rv_test_rvtest_arm_after_destroy due to dr=
+opped RCU lock
 --
 
-commit 27eb3c739b9acf445ce512a1c9be0a7dca8bace0
+commit 62c45f491a4a036b9788ee3cd149fc4c81f32003
 Author: Wen Yang <wen.yang@linux.dev>
 
-rv: Add generic uprobe infrastructure for RV monitors
+rv: Add a KUnit test for the storage free path
 
-Monitors that instrument user-space function boundaries need to register
-uprobes and deregister them safely. Provide a thin wrapper so monitors
-share a single implementation of this boilerplate.
+The test resolves a storage, desstroys it with da_destroy_storage(), and
+then arms the HA timer through the stale pointer. The free hook must
+disarm that timer too, so it never fires and no reaction is reported.
 
-> diff --git a/include/rv/rv_uprobe.h b/include/rv/rv_uprobe.h
-> new file mode 100644
-> index 0000000000000..b93c2a81bc228
-> --- /dev/null
-> +++ b/include/rv/rv_uprobe.h
-[ ... ]
+> diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_moni=
+tors_test.c
+> index 3ad11195e664a..b30e49419e34b 100644
+> --- a/kernel/trace/rv/rv_monitors_test.c
+> +++ b/kernel/trace/rv/rv_monitors_test.c
+> @@ -146,6 +227,83 @@ static void rv_test_dummy(struct kunit *test)
+>  	active_ctx =3D NULL;
+>  }
+> =20
 > +/*
-> + * Free the containing struct only after rv_uprobe_unregister_nosync() +
-> + * rv_uprobe_unregister_sync() + iput(p->inode).
+> + * rv_test_rvtest_underflow - the HA clock math must not underflow as u64
 > + *
-> + * The inode reference does not pin the dentry, so callers that re-resol=
-ve the
-> + * probed path must hold a struct path: 9p cache=3Dnone remints an inode=
- per
-> + * lookup.
+> + * An invariant checked while the uptime is below the budget holds, and a
+> + * timer armed after the budget elapsed expires now.
 > + */
-> +struct rv_uprobe {
-> +	struct uprobe_consumer	uc;
-> +	struct uprobe		*uprobe;
-> +	struct inode		*inode;
-> +};
-
-[Severity: High]
-Does this struct need to hold a reference to the vfsmount as well?
-
-The core uprobes API documents that the caller of uprobe_register() is
-required to keep the inode and the containing mount referenced.=20
-
-If the infrastructure only pins the inode via igrab(), and the caller does
-not independently hold a mount reference, user-space could unmount the
-filesystem while the monitor is active.
-
-During unmount, the elevated inode i_count from igrab prevents eviction,
-which causes the VFS superblock shutdown sequence in generic_shutdown_super=
-()
-to trigger a bug for busy inodes after unmount.
-
-[ ... ]
-> diff --git a/kernel/trace/rv/rv_uprobe.c b/kernel/trace/rv/rv_uprobe.c
-> new file mode 100644
-> index 0000000000000..1c7f8466aeedd
-> --- /dev/null
-> +++ b/kernel/trace/rv/rv_uprobe.c
-[ ... ]
-> +/*
-> + * uprobe_register() takes no inode reference of its own, so grab one he=
-re and
-> + * drop it only after rv_uprobe_unregister_sync().
-> + */
-> +int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_upr=
-obe *p)
+> +static void rv_test_rvtest_underflow(struct kunit *test)
 > +{
-> +	int ret;
+> +	struct ha_monitor *ha_mon;
+> +	struct da_monitor *da_mon;
+> +	const int id =3D 4242;
 > +
-> +	p->inode =3D igrab(inode);
+> +	prepare_test(test, &rvtest_mon);
+> +	da_handle_start_run_event(id, NULL, start_rvtest);
+> +
+> +	scoped_guard(rcu)
+> +		da_mon =3D da_get_monitor(id, NULL);
+> +	KUNIT_ASSERT_NOT_NULL(test, da_mon);
+> +	ha_mon =3D to_ha_monitor(da_mon);
+> +
+> +	/* Uptime below the budget: time_ns - expire_ns would underflow. */
+> +	ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
 
 [Severity: Medium]
-What happens if rv_uprobe_register() is called on an already registered
-struct rv_uprobe?
+Are we dereferencing an RCU-protected pointer outside of its RCU read-side
+critical section here?
 
-Since p->inode is unconditionally overwritten with igrab(inode), the previo=
-us
-inode reference seems to be leaked without calling iput().
+The scoped_guard(rcu) is used without braces, meaning the RCU read-side
+critical section ends immediately after da_get_monitor(). The da_mon variab=
+le
+is then used by to_ha_monitor() and passed to ha_reset_clk_ns().
 
-Additionally, passing an actively linked uprobe_consumer to uprobe_register=
-()
-again could corrupt the uprobe subsystem's internal consumer lists.
+Even if there is no concurrent deletion in this specific test environment,
+isn't this an RCU read-side violation that dereferences an RCU-protected
+pointer after the lock is released?
 
-Would it be safer to check if p->inode is already set before proceeding?
-
-> +	if (!p->inode)
-> +		return -ESTALE;
+> +	KUNIT_EXPECT_TRUE(test, ha_check_invariant_ns(ha_mon, clk_rvtest, 0,
+> +						      RVTEST_BUDGET_NS));
 > +
-> +	p->uprobe =3D uprobe_register(inode, offset, 0, &p->uc);
-> +	if (IS_ERR(p->uprobe)) {
-> +		ret =3D PTR_ERR(p->uprobe);
-> +		p->uprobe =3D NULL;
-> +		iput(p->inode);
-> +		p->inode =3D NULL;
-> +		return ret;
-> +	}
+> +	/*
+> +	 * Budget already elapsed: expire - passed would underflow and queue
+> +	 * the timer at KTIME_SEC_MAX.
+> +	 */
+> +	da_monitor_reset(&ha_mon->da_mon);
+> +	ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
+> +	ha_start_timer_ns(ha_mon, clk_rvtest, RVTEST_BUDGET_NS,
+> +			  RVTEST_BUDGET_NS + NSEC_PER_SEC);
+> +	KUNIT_EXPECT_TRUE(test,
+> +			  ktime_before(hrtimer_get_expires(&ha_mon->hrtimer),
+> +				       ktime_get() + NSEC_PER_SEC));
 > +
-> +	return 0;
+> +	ha_cancel_timer_sync(ha_mon);
 > +}
-> +EXPORT_SYMBOL_GPL(rv_uprobe_register);
+> +
+> +/*
+> + * rv_test_rvtest_arm_after_destroy - a storage outlived by its own timer
+> + *
+> + * da_destroy_storage() cancels the timer, then unlinks:
+> + *
+> + *	da_monitor_reset_hook()		cancels
+> + *	hash_del_rcu()
+> + *	call_rcu()
+> + *
+> + * A reader that resolved the storage before the unlink can arm past that
+> + * cancel.  Handlers resolve and use under one guard(rcu)(), so the two =
+steps
+> + * are issued separately here.
+> + */
+> +static void rv_test_rvtest_arm_after_destroy(struct kunit *test)
+> +{
+> +	struct rv_kunit_ctx *ctx =3D test->priv;
+> +	const int id =3D 4242;
+> +	struct da_monitor *stale;
+> +
+> +	prepare_test(test, &rvtest_mon);
+> +
+> +	da_handle_start_run_event(id, NULL, start_rvtest);
+> +
+> +	scoped_guard(rcu)			/* resolve before the unlink */
+> +		stale =3D da_get_monitor(id, NULL);
+> +	KUNIT_ASSERT_NOT_NULL(test, stale);
+> +
+> +	da_destroy_storage(id);			/* cancel, unlink, call_rcu */
+> +	ha_start_timer_ns(to_ha_monitor(stale), clk_rvtest,
+> +			  RVTEST_BUDGET_NS, ha_get_ns());
 
-[Severity: Low]
-Could this EXPORT_SYMBOL_GPL usage cause build failures on some architectur=
-es?
+[Severity: Medium]
+Does this sequence result in an actual use-after-free rather than just
+simulating one?
 
-The source file uses EXPORT_SYMBOL_GPL but does not explicitly include
-<linux/export.h>. Relying on implicit transitive inclusion of this header
-can lead to build breakages on alternative configurations.
+Similar to the above, stale is resolved within a scoped_guard(rcu) that
+ends immediately. da_destroy_storage() then unlinks the object and defers
+its destruction via call_rcu().=20
+
+Since the test thread no longer holds the RCU read lock, it can be preempte=
+d,
+allowing the RCU grace period to complete and free the stale object. When
+the test thread resumes, doesn't calling ha_start_timer_ns() write to the
+freed memory?
+
+To safely simulate the race mentioned in the comment, shouldn't the test ho=
+ld
+the RCU lock continuously across both the lookup and the timer arming steps?
+
+> +
+> +	rcu_barrier();
+> +
+> +	msleep(600);
+> +	RV_KUNIT_EXPECT_NO_REACTION(test, ctx);
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791745088.gi=
-t.wen.yang@linux.dev?part=3D9
+t.wen.yang@linux.dev?part=3D5
