@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-43.mta0.migadu.com [91.218.175.43])
+Received: from mta0.migadu.com (out-53.mta0.migadu.com [91.218.175.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06784A6CF6
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 15:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8844A9D5D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 15:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791819769; cv=none; b=EMRZbsyQYrnuh7Khqbq+WYjBpS5/gMtLUBw+frMozQIql1tDF9rFNbPspnLUXOmqlQ70Gr/ZmiRUBnL4FeEkIpq2l/6D3AoFW/4H9194IGC23KpsFWMAnJoCPqZFGurWvyWFPmHOLMKediqKrtKpGToBUA7nu9Cy2B7keiNT7S0=
+	t=1791819787; cv=none; b=Xvj28A4aKym4kpMCpVHaycsxRFJx3X2I+E5vpcy1SNiNO/L+Zie3flsB0ql8QwtGMX0HVdFtVOrEFsNCH9UyOzPV57RMOssAA0W+1/qXV+kSzo0m4g4lf8iaH4dnPI6YldmpMx3IsjfQOEOmfWHs3Q78oVuR1A1EbEu1u1fUMus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791819769; c=relaxed/simple;
-	bh=TBFr013muSrjqmBXfU5VS9nJWYXKQcqCrP4RWXqPIVA=;
+	s=arc-20240116; t=1791819787; c=relaxed/simple;
+	bh=MMwLQgaIH8iOkYCAKi6D4zbeDsMl05kzZIAsPledUBw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rve0aJ4bgmU43F9vsPkOFT8jOQMNr0GA4eadyFPpCM/q5I7QvQY8yTFw0yyBHp54WN+nQYaO2tcGIYXx5veTrnV5gjL9946yg4QDUJAtjAeyjRDadn1N45X8nllvJyQZpoYuKze1TxVVJow9WUQBmrnp+HAFtnJY6fk2WyfJw8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P7v/SAbm; arc=none smtp.client-ip=91.218.175.43
+	 MIME-Version; b=Ahjc0Wb7t6XIA5ER5ZBhZR+QOMpmRKj3VGmCsYDUScqTMHJe8Nz1nhBNCe0BVjmC0vbueDKYUpI2Tam9uvKNr9JHMjS5I4x59FoWTSG4qju3vR+Saf/YFoAaCbY2dOtMYAPOHkxNSvQEgFe2RXN3EF4AEPP5nxsCgpHXZ1D0NZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=edTSzvY5; arc=none smtp.client-ip=91.218.175.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P7v/SAbm"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="edTSzvY5"
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=TBFr013muSrjqmBXfU5VS9nJWYXKQcqCrP4RWXqPIVA=;
+DKIM-Signature: a=rsa-sha256; bh=MMwLQgaIH8iOkYCAKi6D4zbeDsMl05kzZIAsPledUBw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791819765; v=1; x=1792424565;
- b=P7v/SAbmi55gY7Odc6FAfweFYRmsjYVBB4aDYvVXh9/idvunfyHxfWrEFuPYK2OcCDneR3Ph
- A78kvwNeNwjnyFEClAxQWsdMzqH+5tB3/xDLFoVunz11tM6wQDKvX+pCRXbhywjQB6EPPEZ91Dt
- 7O0SF8QzindCurB2Fzs96iEM=
+ t=1791819784; v=1; x=1792424584;
+ b=edTSzvY5LCw7biOr/JlikiJ5SK9WiVccEeoFwdHTeoQjzwBYG20ca1xpA73Gh9XT2P58+vmI
+ jakvzl1loWDSYXyfFMZrSfLNoRGKWhlo/q/StwhHF/wA+phmuenIJ2Di5lSibOoRVKJPEC3VIFQ
+ tAQSSXatdYI//i/4F4GHqcPQ=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 6ac1c4d5fb4ef64e;
-	Mon, 12 Oct 2026 15:42:45 +0000
-X-Mizu-Trace-ID: 6ac1c4d5fb4ef64e
+Received: by smtp.migadu.com with ESMTPS id d8f0d885529dae07;
+	Mon, 12 Oct 2026 15:43:03 +0000
+X-Mizu-Trace-ID: d8f0d885529dae07
 X-Migadu-Flow: FLOW_OUT
 From: Leon Hwang <leon.hwang@linux.dev>
 To: bpf@vger.kernel.org
@@ -59,9 +59,9 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v2 06/21] bpf: Add bpf_text_poke_batch() helper in trampoline
-Date: Mon, 12 Oct 2026 23:40:08 +0800
-Message-ID: <20261012154024.29423-7-leon.hwang@linux.dev>
+Subject: [PATCH bpf-next v2 07/21] bpf: Check tgt_prog before is_tracing_multi_id() in verifier
+Date: Mon, 12 Oct 2026 23:40:09 +0800
+Message-ID: <20261012154024.29423-8-leon.hwang@linux.dev>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261012154024.29423-1-leon.hwang@linux.dev>
 References: <20261012154024.29423-1-leon.hwang@linux.dev>
@@ -73,89 +73,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Before calling bpf_arch_text_poke_batch(), check the duplicated target
-pokes by sorting the pokes.
-
-Sorting pokes is needed for smp_text_poke_batch_add() on x86_64 for better
-performance, see arch/x86/kernel/alternative.c::smp_text_poke_batch_add().
-
-If the arch does not implement bpf_arch_text_poke_batch(), fallback to
-text-poke each target via bpf_arch_text_poke().
+When adding tracing_multi link support for bpf progs, it must handle
+tgt_prog first in bpf_check_attach_target() to avoid the case: the btf_id
+is a valid BTF ID of tgt_prog, and also is "bpf_multi_func_btf_id[0]".
 
 Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
 ---
- kernel/bpf/trampoline.c | 51 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ kernel/bpf/verifier.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 21d460866dfe..a2fd0bd8c685 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -13,6 +13,7 @@
- #include <linux/bpf_verifier.h>
- #include <linux/bpf_lsm.h>
- #include <linux/delay.h>
-+#include <linux/sort.h>
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 2f190abe3448..f2af2bbdd6fb 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -22284,22 +22284,24 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 			return -EOPNOTSUPP;
+ 		}
  
- /* dummy _ops. The verifier will operate on target program's ops. */
- const struct bpf_verifier_ops bpf_extension_verifier_ops = {
-@@ -1863,6 +1864,56 @@ void bpf_trampoline_multi_detach(struct bpf_prog *prog,
- 	  CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS &&
- 	  CONFIG_BPF_SYSCALL */
- 
-+static int bpf_text_poke_cmp(const void *a, const void *b)
-+{
-+	const struct bpf_text_poke *pa = *(struct bpf_text_poke * const *)a;
-+	const struct bpf_text_poke *pb = *(struct bpf_text_poke * const *)b;
-+	unsigned long ipa = (unsigned long) pa->ip;
-+	unsigned long ipb = (unsigned long) pb->ip;
-+
-+	return (ipa > ipb) - (ipa < ipb);
-+}
-+
-+static int bpf_text_poke_batch(struct bpf_text_poke **pokes, u32 cnt)
-+{
-+	int i, err;
-+
-+	/*
-+	 * Sort pokes for two purposes:
-+	 * 1. Check duplicated poke target IPs.
-+	 * 2. Sorted poke target IPs would be friendly for poking them on x86,
-+	 *    see arch/x86/kernel/alternative.c::smp_text_poke_batch_add().
-+	 */
-+	sort_nonatomic(pokes, cnt, sizeof(*pokes), bpf_text_poke_cmp, NULL);
-+
-+	for (i = 1; i < cnt; i++)
-+		if (pokes[i - 1]->ip == pokes[i]->ip)
-+			return -EINVAL;
-+
-+	err = bpf_arch_text_poke_batch(pokes, cnt);
-+	if (err != -EOPNOTSUPP)
-+		return err;
-+
-+	for (i = 0; i < cnt; i++) {
-+		struct bpf_text_poke *p = pokes[i];
-+
-+		err = bpf_arch_text_poke(p->ip, p->old_t, p->new_t, p->old_addr, p->new_addr);
-+		if (err)
-+			goto rollback;
-+	}
-+
-+	return 0;
-+
-+rollback:
-+	for (i--; i >= 0; i--) {
-+		struct bpf_text_poke *p = pokes[i];
-+
-+		WARN_ON_ONCE(bpf_arch_text_poke(p->ip, p->new_t, p->old_t, p->new_addr,
-+						p->old_addr));
-+	}
-+	return err;
-+}
-+
- static int __init init_trampolines(void)
- {
- 	int i;
+-		/*
+-		 * *.multi programs don't need an address during program
+-		 * verification, we just take the module ref if needed.
+-		 */
+-		if (is_tracing_multi_id(prog, btf_id)) {
++		if (tgt_prog) {
++			if (subprog == 0)
++				addr = (long)tgt_prog->bpf_func;
++			else
++				addr = (long)tgt_prog->aux->func[subprog]->bpf_func;
++		} else if (is_tracing_multi_id(prog, btf_id)) {
++			/*
++			 * *.multi programs don't need an address during program
++			 * verification, we just take the module ref if needed.
++			 * *.multi programs don't have tgt_prog during program
++			 * verification.
++			 */
+ 			if (btf_is_module(btf)) {
+ 				mod = btf_try_get_module(btf);
+ 				if (!mod)
+ 					return -ENOENT;
+ 			}
+ 			addr = 0;
+-		} else if (tgt_prog) {
+-			if (subprog == 0)
+-				addr = (long) tgt_prog->bpf_func;
+-			else
+-				addr = (long) tgt_prog->aux->func[subprog]->bpf_func;
+ 		} else {
+ 			if (btf_is_module(btf)) {
+ 				mod = btf_try_get_module(btf);
 -- 
 2.55.0
 
