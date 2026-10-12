@@ -1,85 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EBD4AB1C2;
-	Mon, 12 Oct 2026 16:11:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B314AB1CF
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 16:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791821521; cv=none; b=j1TC5R7P1hP3mcL8UymDdC98hAicp2w1Q9LnzQPWvf0YzJvxIeF+avXpiuunvHndS0RtP1MvMzynKEEt/LIr7fTvtSf9jOmX63gtV7qQq21Ew5bxXTPeWQ1bmEiVX6Hn5lggWEtJhyVOOd7wC7fBncuUOVn3xGyOToKM1/3whEU=
+	t=1791821636; cv=none; b=KsdJwl4EgZymezPj02nhI395j3kqT1067oL47XYDL28E6IUDnAcLZAw8O2F57uOP1i/vdgEFqEsJg+2pg8GlZQqikRvHEgldvMEEBDO6Ej4syCdS0/4mXTUYB8+IWUOOQNf0CP9cIED+gvDD+AVFcrS9eyuo0499YU6LKHQGQcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791821521; c=relaxed/simple;
-	bh=w8q9iJyPWbtVtE2tleQnnZpd26qb3UTvq3ck14FcaoM=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=r6IyU2ZEFPt1i+QhYQj46EC4Y6ZGfhFc3wnselY4KqY/zEc/WG0MPO75YkaGTS+s6ytEb8WRxBCg9eq/yZwgyBGO3P+imNaZjleOXSyBA8YPOCsGTMkhryfNNYsWGIT5sCiO+YV4dIs57jLOhp13CFET12BpiWORLQ7InODKhi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwnkiSKn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791821636; c=relaxed/simple;
+	bh=2DVCguiOk+NFFi948SLdrInDWdH6lU0WKxW4EvZcpjc=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=mfhZmvClbhB1J9Uz8zbN38hDQaJZ8rOvMNAMOLisIEwYfeTp+USHWnqLNem0TBr8rhEpCwgV9E5k/wBr1IJMjnVzwwNWvBe9B/JKY5ncaz5P2ot4Z1cnLpmkEefIV3GvGv5RwPQNDXZPl2d7qE1HmCTQcabWkrRFhv8Xu3xV2j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwOrkmLF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwnkiSKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F611F0089B;
-	Mon, 12 Oct 2026 16:11:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwOrkmLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB4B1F0089B;
+	Mon, 12 Oct 2026 16:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791821518;
-	bh=iHAQh7YtJAMZUxMTAyAXDIESpkS3iC6FqJPJReS+Cak=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=mwnkiSKn19r2V0c+PKSNMx5nb9JW8M5LZt0fZEfhgyuFf84wLzb8NPxX6f3DVfkKN
-	 B//aLWUT/FrOg0XAApxYpyv/0RSh9BE8HxgLI/kTTXq6t7/1/rzYs1SpOpph7Tcajj
-	 jagW8h7+sasdAUn/dYWSvyw6ryGCwYgzi9iIO6zGAKvOv2gtmBJRaX6Z1Ow2CVNv7q
-	 9eX52uorYmdaKVb7TY1Tp1pIjpradtNV7ksoARp04nfvGg2wDfg/ZKDwG9zYm0q8Bx
-	 xHofgPwpraA9JD14VfWwceYQz7r/0jneqheDmf/e7ZCXVFmUkEoKcFzH1zkHQErLCV
-	 M46muitrh3LEg==
-Content-Type: multipart/mixed; boundary="===============2774668723812264744=="
+	s=k20260515; t=1791821635;
+	bh=Qxpg6wfZNxFnFMuf2Dcv5BmA4QtXpySUuf34yzQCT3U=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lwOrkmLF5+4s2itB2VTgXjBYozMscSlskMR+T7RA7YsWlxRSUz1TxjCq4r3bKIB31
+	 PHshwDeG+zh7/2pXIlpREmWqAQsJmvF09rCTOJ/zjuAmDwSqM4l83N1c0dJURxqRgp
+	 C7lUsHNTRLhNHZWd1s3EWxpyiZ2xkl2jXWsnCUrUrv/q62oZ63GoZQyLx2vZTXaU3y
+	 YpQPEZsgem+mmiv1+G/sRAsX2RiBw+v3LHXxLVBILeT9BXn34v9rFn3pPuvzerQ/nX
+	 gdaeuOQmI+WwzjLCOuk6xtFgNswCD4n+QaRx+dHiNub641Oc20Tnbk57OueLK4DGqd
+	 rYxjkzitL5jhg==
+Message-ID: <sashiko-outbox-168379@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing/histograms: Reject non-stacktrace fields for
+ synthetic stacktrace fields
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Lee Jones" <lee@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261012155805.1103972-1-lee@kernel.org>
+References: <20261012155805.1103972-1-lee@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Oct 2026 16:13:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <6ce8106423344022020501feecc7c257ecd3cb1cfe7004e72e202e97c3f6970d@mail.kernel.org>
-In-Reply-To: <20261012154024.29423-20-leon.hwang@linux.dev>
-References: <20261012154024.29423-20-leon.hwang@linux.dev>
-Subject: Re: [PATCH bpf-next v2 19/21] selftests/bpf: Add tracing_multi bpf prog link info test
-From: bot+bpf-ci@kernel.org
-To: leon.hwang@linux.dev,bpf@vger.kernel.org
-Cc: ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,qmo@kernel.org,shuah@kernel.org,leon.hwang@linux.dev,yatsenko@meta.com,avinash.duduskar@gmail.com,a.s.protopopov@gmail.com,ameryhung@gmail.com,jordan@jrife.io,rongtao@cestc.cn,eyal.birger@gmail.com,pulehui@huawei.com,tanjingguo@huawei.com,malin89@huawei.com,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-kselftest@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Mon, 12 Oct 2026 16:11:55 +0000 (UTC)
 
---===============2774668723812264744==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] tracing: check_synth_field regression for __bitmask and stacktraces
+- [High] tracing: arbitrary memory read via scalar to string synthetic fiel=
+d mapping
+--
 
-> selftests/bpf: Add tracing_multi bpf prog link info test
+commit 4813d717e995df13871068dd6fd996711ca8965d
+Author: Lee Jones <lee@kernel.org>
 
-TL;DR: Nit only: the new <linux/kallsyms.h> include in fill_link_info.c may be
-unnecessary, since trace_helpers.h already seems to provide the ksym helpers
-the test uses.
+tracing/histograms: Reject non-stacktrace fields for synthetic stacktrace f=
+ields
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> index 0918321c8e63..422e94f13409 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> @@ -3,11 +3,13 @@
->
->  #include <string.h>
->  #include <linux/bpf.h>
-> +#include <linux/kallsyms.h>
->  #include <linux/limits.h>
->  #include <bpf/btf.h>
->  #include <test_progs.h>
->  #include "trace_helpers.h"
->  #include "test_fill_link_info.skel.h"
-> +#include "tracing_multi_bpf.skel.h"
->  #include "bpf/libbpf_internal.h"
+In check_synth_field(), when a synthetic event field is a stacktrace
+and the histogram field is not a "long[" stacktrace array, validation falls
+through to the generic size and signedness comparison.  This allows any
+8-byte signed scalar histogram field to pass the fallback check and be
+dereferenced as a kernel stacktrace pointer.  This commit attempts to reject
+these mismatches by enforcing that field->is_stack matches the "long[" type.
 
-this isn't a bug, but is <linux/kallsyms.h> needed for anything here?  The
-ksym helpers used by this test (ksym_search(), ksym_get_addr(), struct ksym)
-seem to come from trace_helpers.h, which is already included, and nothing in
-fill_link_info.c appears to use KSYM_NAME_LEN, kallsyms_lookup() or
-print_ip_sym() from the tools/include/linux/kallsyms.h shim.
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index 8af97fd4ee2d5..b09f5043e1543 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -3946,7 +3946,10 @@ static int check_synth_field(struct synth_event *e=
+vent,
+>  	    && field->is_dynamic)
+>  		return 0;
+> =20
+> -	if (strstr(hist_field->type, "long[") && field->is_stack)
+> +	if (!!strstr(hist_field->type, "long[") !=3D field->is_stack)
+> +		return -EINVAL;
 
+[Severity: High]
+Does this heuristic falsely match the long[ substring in __data_loc unsigned
+long[] from __bitmask and __cpumask fields?
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+If is_stack =3D=3D false, this logic seems to falsely reject valid mappings.
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/38273555988
---===============2774668723812264744==--
+If is_stack =3D=3D true, this appears to bypass validation and allow a 32-b=
+it
+__data_loc integer to be passed as the field value. Could this 32-bit integ=
+er
+then be cast to a pointer and dereferenced in
+trace_events_synth.c:get_field_size() and trace_stack(), potentially causing
+a kernel panic?
+
+> +
+> +	if (field->is_stack)
+>  		return 0;
+> =20
+>  	if (strcmp(field->type, hist_field->type) !=3D 0) {
+>  		if (field->size !=3D hist_field->size ||
+>  		    (!field->is_string && field->is_signed !=3D hist_field->is_signed))
+>  			return -EINVAL;
+>  	}
+
+[Severity: High]
+It looks like this fallback logic fails to reject a scalar-to-string mappin=
+g.
+
+When creating a dynamic string synthetic field, its size is set to sizeof(u=
+64)
+and is_string is true.  Because field->size equals hist_field->size (8 byte=
+s)
+and !field->is_string short-circuits the type/signedness check, will an 8-b=
+yte
+scalar successfully map to a dynamic string?
+
+If an attacker-controlled scalar is passed, can it be cast to a kernel poin=
+ter
+in trace_events_synth.c:trace_string() and used with fetch_store_strlen() to
+arbitrarily read kernel memory?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012155805.1103=
+972-1-lee@kernel.org?part=3D1
