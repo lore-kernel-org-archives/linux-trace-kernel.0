@@ -1,200 +1,99 @@
-Received: from mta1.migadu.com (out-48.mta1.migadu.com [95.215.58.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B694745C6ED
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 08:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D846EF9B;
+	Mon, 12 Oct 2026 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791793373; cv=none; b=Be7Y3EsMpd39JvqkgRSH52DB90fgbgTreHh+tgiLCvL9mJ7acGy+hooDPSO5ojyi3k72MBkH0ddxWQ0IEy5KxiT1sHpn7OuRKmya6r4XOVSKfS3p1z6XNw2ahBw4HSeMv02UMIO+sRoMcKAtNRwBjIkItI1lsDVD0I7R3sL+Vhs=
+	t=1791795969; cv=none; b=rCUnugnJlu1C78iv0J7uMFBbayWhgpUsPTCOdkfmL32DbHp44fL/+IfjQmY8H/5vYIHQugHWR3O/akrbxFzkOBZ3uUDUFsEvg6ib1t+i0LwK3DzxyptNN1oBiHD+xnotnRSpuRfypS0dM3sqURKp48yt39H+Ff8X2N3Qi4n/XWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791793373; c=relaxed/simple;
-	bh=2PZG4oBTWctUcn47EeBywXvnSBFOGvbeX9RPvQyatEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ThlF3NSP19pN7IMiWwGmZbyMFxuBA6EgCazlH7nhNQCAEDAveMBJ0RS/V6nQvyx0AArcW/9Ur4BDPO9DxCSEpkipiTxKU0cZYlyyNnlf5L6oqYdz0th6ml0CzrnClMXQ309fkHeLX5mxrwwrEf9vvwGOttgzMVxpdNHqzJ+F1+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QSToD6HK; arc=none smtp.client-ip=95.215.58.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QSToD6HK"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=2PZG4oBTWctUcn47EeBywXvnSBFOGvbeX9RPvQyatEY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791793369; v=1; x=1792398169;
- b=QSToD6HKA3NCTTwZ9qSyY1JuKFbS0Xrl1KSPgDfdybTEtL7svlFfizgNRi9bMYJJLdz5uwFv
- zKTE2Dvew1+JQFHrwTsHUx0F3rjJWiYORX0GtB/xFsO2qn2bkdk5bC35+4p29ZKjSLxjdZ5944z
- h0H1HJxt7RGDEKK2SUs+X/oY=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 85626153b49a7cd1;
-	Mon, 12 Oct 2026 08:22:49 +0000
-X-Mizu-Trace-ID: 85626153b49a7cd1
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <7842535e-ae71-4de3-b16d-14d55b514df5@linux.dev>
-Date: Mon, 12 Oct 2026 16:22:25 +0800
+	s=arc-20240116; t=1791795969; c=relaxed/simple;
+	bh=YtH4w+hmlWfzXcIEUofEsOogUN5x6fIlGU/dD0EI/5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YlFESnV2A1Vt3c06frMo9SDWta7g6Jp8ykXeVD2xR967B5RKV2QVTWvjXXoJS69AH3fb2yCFo4drNiy9Gd2i0rM7QwfkES9NwSpFa15U8uCYMPYRD0cLyb6kgSm50KTWNh36jQ6HLVvYT9IRdEG5jFQ9J/LvNLGZFHBws9E9R6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1xGBeS-00000001fgc-3r88;
+	Mon, 12 Oct 2026 10:44:56 +0200
+Date: Mon, 12 Oct 2026 10:44:56 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+	aou@eecs.berkeley.edu, alex@ghiti.fr,
+	linux-riscv@lists.infradead.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, jpoimboe@kernel.org, jikos@kernel.org,
+	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+	shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] riscv: Add reliable stack unwinding for livepatch
+Message-ID: <asyeCD1xaIuKv3nl@akranes.kaiser.cx>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <artojcJftbMIgPrj@akranes.kaiser.cx>
+ <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/15] sched: introduce for_each_process_rculock and
- for_each_thread_rculock
-To: Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
- Ye Liu <liuye@kylinos.cn>
-Cc: David Hildenbrand <david@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?=
- <gnoack3000@gmail.com>, Lorenzo Stoakes <ljs@kernel.org>,
- SJ Park <sj@kernel.org>, Gregory Price <gourry@gourry.net>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
- rientjes@google.com, shakeel.butt@linux.dev, xu.xin16@zte.com.cn,
- chengming.zhou@linux.dev, will@kernel.org, boqun@kernel.org,
- frederic@kernel.org, neeraj.upadhyay@kernel.org, joelagnelf@nvidia.com,
- josh@joshtriplett.org, urezki@gmail.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, tony.luck@intel.com, reinette.chatre@intel.com,
- x86@kernel.org, paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
- pavel@kernel.org, lance.yang@linux.dev, mhiramat@kernel.org,
- pmladek@suse.com, longman@redhat.com, mathieu.desnoyers@efficios.com,
- jiangshanlai@gmail.com, qiang.zhang@linux.dev, dietmar.eggemann@arm.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- kprateek.nayak@amd.com, mark.rutland@arm.com, Dave.Martin@arm.com,
- james.morse@arm.com, babu.moger@amd.com
-References: <20260921092101.89285-1-ye.liu@linux.dev>
-Content-Language: en-US
-From: Ye Liu <ye.liu@linux.dev>
-In-Reply-To: <20260921092101.89285-1-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-Hi, Peter
+Hi Shuai,
 
-Friendly ping on this series, posted three weeks ago. You previously
-requested splitting the combined kernel/ conversion into per-subsystem
-patches, which has been done in v4.
-No rush — just want to make sure this is on your radar.
+Thus wrote Shuai Xue (xueshuai@linux.alibaba.com):
+
+> It is great to hear that livepatch works both on a standard rv64 QEMU
+> and on the rv64 CHERI system. Could you share what the minor tweaks
+> for CHERI were? If any of them are generic -- for example frame-record
+> size/alignment or pointer-width assumptions in the unwinder -- it may
+> be worth folding them into this series, so the cheri-linux tree has
+> less to carry downstream. If they are purely CHERI-specific, a pointer
+> to your tree would still be a useful reference.
+
+the cheri changes are simple fixups of data types and assembly instructions.
+This isn't something that can be upstreamed at this point.
+
+Eventually, it'll end up in the cheri linux tree at
+https://github.com/CHERI-Alliance/linux
+but there's more cleanup to do first.
+
+I just wanted to show my interest in getting your patches merged.
 
 Thanks,
-Ye Liu
+Martin
 
-在 2026/9/21 17:20, Ye Liu 写道:
-> From: Ye Liu <liuye@kylinos.cn>
->
-> Introduce for_each_process_rculock(), for_each_thread_rculock() and
-> for_each_process_thread_rculock() macros that combine the existing
-> iteration macros with scoped_guard(rcu), so that the RCU read lock
-> is automatically acquired before iteration and released when the
-> loop exits — including via break, goto, or return.
->
-> The rest of the series converts manual rcu_read_lock()/
-> rcu_read_unlock() and guard(rcu)() pairs across mm/, kernel/, fs/,
-> lib/ and security/ to use the new macros.
->
-> Suggested by Michal Hocko for the oom_kill path [2].
->
-> Signed-off-by: Ye Liu <liuye@kylinos.cn>
->
-> ---
-> Changes since v3 [4]:
->   - Fix patch 5 (cpu/hotplug): title and commit message incorrectly
->     said "thread iterator" and "for_each_thread_rculock" while the
->     code converts for_each_process() to for_each_process_rculock().
->
-> Note: Patches 4, 11, and 13 received automated reviews from sashiko-bot
-> in the v3 thread [4] that were verified as false positives:
->
->   - Patch 4: claimed the folio lock is dropped before collect_procs(),
->     leading to a NULL deref on folio->mapping; the lock is held in all
->     call paths.
->   - Patch 11: claimed mixing goto/scope-based cleanup in
->     alloc_retstack_tasklist(); the goto free label handles memory
->     cleanup, not lock management.
->   - Patch 13: claimed mixing goto/scope-based cleanup in
->     __set_oom_adj(); goto err_unlock manages oom_adj_mutex while
->     scoped_guard(rcu) manages the RCU read lock — different resources.
->
-> Changes since v2 [3]:
->   - Split the kernel/ patch into per-subsystem patches, as the
->     combined patch could not be applied (Peter Zijlstra, Steven
->     Rostedt).
->   - Move changelog below the --- separator so it is excluded from
->     the commit message (Lorenzo Stoakes).
->   - Indent loop body in macro definitions to show scoped_guard
->     scope (Lorenzo Stoakes).
->
-> Changes since v1 [1]:
->   - Rename macros from *_rcu to *_rculock, as suggested by Steven
->     Rostedt and acked by Thomas Gleixner, to avoid confusion with
->     existing *_rcu() list iterators that expect the caller to hold
->     the RCU read lock.
->   - Improve the comment on for_each_process_thread_rculock() to
->     document that 'break' only exits the inner loop and 'goto' is
->     needed to exit both loops (Thomas Gleixner).
->   - Rename the stale 'unlock:' label to 'out:' in hung_task.c, as
->     noted by Günther Noack.
->   - Clarify in patch 4 that page_pgoff() is safe outside the RCU
->     read-side critical section (SJ Park).
->   - CC all relevant maintainers on every patch (Lorenzo Stoakes).
->   - Drop the mm: prefix from patch 1, as the macros are in
->     include/linux/sched/signal.h (Michal Hocko).
->
-> [1] https://lore.kernel.org/all/20260904083001.553587-1-ye.liu@linux.dev/
-> [2] https://lore.kernel.org/all/20260813092933.562028-1-ye.liu@linux.dev/
-> [3] https://lore.kernel.org/all/20260907081334.1152889-1-ye.liu@linux.dev/
-> [4] https://lore.kernel.org/all/20260911075800.491472-1-ye.liu@linux.dev/
->
-> Ye Liu (15):
->   sched: introduce for_each_process_rculock and for_each_thread_rculock
->   mm/oom_kill: convert process/thread iterators to for_each_*_rculock
->   mm/ksm: convert process iterator to for_each_process_rculock
->   mm/memory-failure: convert process iterator to
->     for_each_process_rculock
->   cpu/hotplug: convert process iterator to for_each_process_rculock
->   freezer: convert thread iterator to for_each_thread_rculock
->   hung_task: convert process/thread iterators to for_each_*_rculock
->   locking/lockdep: convert process/thread iterators to
->     for_each_*_rculock
->   rcu: convert process/thread iterator to
->     for_each_process_thread_rculock
->   sched: convert process/thread iterators to for_each_*_rculock
->   tracing/fgraph: convert process/thread iterator to
->     for_each_process_thread_rculock
->   unwind: convert process/thread iterator to
->     for_each_process_thread_rculock
->   fs: convert process/thread iterators to for_each_*_rculock
->   lib: convert process iterator to for_each_process_rculock
->   security/landlock: convert thread iterator to for_each_thread_rculock
->
->  fs/proc/base.c               |  4 +---
->  fs/resctrl/rdtgroup.c        |  8 ++------
->  include/linux/sched/signal.h | 26 ++++++++++++++++++++++++++
->  kernel/cpu.c                 |  4 +---
->  kernel/freezer.c             |  4 +---
->  kernel/hung_task.c           | 11 ++++-------
->  kernel/locking/lockdep.c     |  4 +---
->  kernel/rcu/update.c          |  4 +---
->  kernel/sched/core.c          |  3 +--
->  kernel/sched/debug.c         |  4 +---
->  kernel/trace/fgraph.c        |  8 ++------
->  kernel/unwind/deferred.c     |  3 +--
->  lib/is_single_threaded.c     |  5 +----
->  mm/ksm.c                     |  4 +---
->  mm/memory-failure.c          | 16 ++++------------
->  mm/oom_kill.c                | 20 +++++---------------
->  security/landlock/tsync.c    |  8 ++------
->  17 files changed, 55 insertions(+), 81 deletions(-)
->
-> --
-> 2.25.1
+> +Palmer, Paul, gentle ping on this series.
 
--- 
-Thanks,
-Ye Liu
+> It has been under review since late May (v1 on May 27, now in its sixth
+> revision) and the tags collected so far are:
+
+>   * Acked-by: Miroslav Benes <mbenes@suse.cz>             (7/7, livepatch)
+>   * Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com> (7/7)
+>   * Reviewed-by: Martin Kaiser <martin@kaiser.cx>         (whole series)
+>   * Tested-by: Martin Kaiser <martin@kaiser.cx>           (whole series,
+>     rv64 QEMU and rv64 CHERI, livepatch working on both)
+>   * Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>   (2/7, 3/7, 4/7, 6/7)
+
+> v6 still applies cleanly onto the current riscv/for-next
+> (52318cf0fa6e). If it helps, I can send a v7 that folds in Martin's
+> Reviewed-by/Tested-by tags.
+
+> Could the series be considered for the upcoming 7.4 merge window?
+
+> Thanks,
+> Shuai Xue
+
 
