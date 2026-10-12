@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01A4442FCD;
-	Mon, 12 Oct 2026 16:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EAC30F819;
+	Mon, 12 Oct 2026 16:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791823408; cv=none; b=L8SB2vuz+2SPuKCHDcrHeiaIDMv/+EmbZiEkD+ubs+49kik+ij7DKnaLvZKZ1x9cKK/TsygWBGAuPFGmOlwjwsf32eRzsT1g4bIQzto6K5RgDrPrfKHrrdtvUH0nTxlFWN4BRGVNWS02rcwlg3ocGmuxDx5JFqcCLs6y3fwO6C4=
+	t=1791823601; cv=none; b=E7BekS/p3JXFql4+kSNQ+n1N4CKHxzClGUgLYR0MoKGWjUJ+EROUYktwtEyRsRD0CVPiIAGenLl+XuFau1jun1UqSK1x/UNnz2IqFs5V4inGiva/yCXJVT7D5P+ANKRCPkl0yBynFbUF1wqwsCI09IIB9/k0VfjsdQxp5wgyfeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791823408; c=relaxed/simple;
-	bh=x4sgOIc7rsq6TY9/BXHnwHpv0tg3DsplDRpI5hH1IeQ=;
+	s=arc-20240116; t=1791823601; c=relaxed/simple;
+	bh=5zENGPe8/0XslURT4jDzB8tq67voIgRyEYOUi5kfJeY=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=oqWgxXi2hWyIMVwoh+L2E1NrBgtm/hTO+HRV58gMzYRQZfRoTXcYdOIHoUt1Wmf0Dq885jIRo8CqtUQdZAOjSRSjRFWafmO1srSicLekWwcdQ/5nQFmFFTzMWnqS3RrYT7wIPz+a/kBiGWxZTL7q21Zs17FKjnuQq9b/ULbQB8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mamqmG7v; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=qabsGQ5wbHARAike2c4cW7hpBjULWik1iG8IedNUrLACof9LBQcfXSceUlyNoRWUrmsfvQhlmam2XI0hydyOhpdXT9+owv9AnOGorwLJPLLFAI/OeVqrpH9i+G8e3BtxhdSNFlo/FfEuMGLtXG5y2ceP4C0BTrPx73BY7ly1IEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0yVan18; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mamqmG7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110931F0089C;
-	Mon, 12 Oct 2026 16:43:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0yVan18"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FE51F0089B;
+	Mon, 12 Oct 2026 16:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791823407;
-	bh=MMdI40SIqVIFk5X8A7qUoQwYy+szKjYqzLkyBtBazB8=;
+	s=k20260515; t=1791823600;
+	bh=Ywua7kqyZdUR5WkW0XphExSAu4IEMeLbhmJLsB28M10=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mamqmG7v0zC1CTaLFfJqvS8pu+rK1mEljCnxLERoFDc1r6MogAnEoeD1nPo3i54Jn
-	 7e3kKOO5an/552QCbBFDROicsYhLjjA+bCuP33Bc+iXYkbQP49hMfN91tOPgW6PpI/
-	 BfAJUcs8p9tecm7FUYTtVNPyQWKL+5JICEY6d40t6rOW5VEA05n0fzSjiz3zt4K8I8
-	 HYNFVCTPfy5fLTmv9/aMSpcD8MpZ6vgcmDYBlSA2yloLq+3/5E/lHc04fYi7t79k3t
-	 tjfVyqlptg82psF3o4TLz6a0anALKVP+qj3yttgmlFf/Gav+DTSSNZHZeq53ZhMMIN
-	 QAgM4HyyDVugw==
-Message-ID: <sashiko-outbox-168419@kernel.org>
+	b=C0yVan18E8xG4NUR6RwngJoHcCm1lX9s2ElPwyF/xAx9rYMIJ8epGwpSy7+9cQaT/
+	 BkxSnLmlJ0BgH9C0njkUPxKGRRPFPOrnqo2ThUv6qTAZ2E7e+7+kyfSnqvW3WJSZG0
+	 ucIqcBwNS/aVtJyRpKPhyIeMdq6omwh8RsnRdygdhNs+mnrYMo3E6Li6rNQ1XQ/GQI
+	 qtFSGGzCI0DICU7y5b07l71b7CNx0QMNbSfkVwfOtTBOovE80gIhzvGl84/COYGoOd
+	 gSYqVruOWvEltCBB+CcCO705go0EpEWqXdOfhjVGJlHyiDcKPXOc5oIyKUqzG4yK8Q
+	 u3qn2cCAlnLrQ==
+Message-ID: <sashiko-outbox-168428@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH bpf-next v2 19/21] selftests/bpf: Add tracing_multi bpf
- prog link info test
+Subject: Re: [PATCH bpf-next v2 18/21] selftests/bpf: Add tracing_multi bpf
+ prog rollback test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leon Hwang" <leon.hwang@linux.dev>
 Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261012154024.29423-20-leon.hwang@linux.dev>
+In-Reply-To: <20261012154024.29423-19-leon.hwang@linux.dev>
 References: <20261012154024.29423-1-leon.hwang@linux.dev>
- <20261012154024.29423-20-leon.hwang@linux.dev>
+ <20261012154024.29423-19-leon.hwang@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 16:43:26 +0000
+Date: Mon, 12 Oct 2026 16:46:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,72 +47,92 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] selftests/bpf: Ineffective error check for libbpf_find_prog_btf_=
-id due to __u32 cast
+- [Medium] bpf: selftest tracing_multi rollback logic relies on unreliable =
+FD ordering
 --
 
-commit 208e2b6f875995feff87983db367727d95ea373b
+commit 00cadf9aa091042698069799ffcf7faa2dd5e6a5
 Author: Leon Hwang <leon.hwang@linux.dev>
 
-selftests/bpf: Add tracing_multi bpf prog link info test
-   =20
-Verify the link info works well for bpf prog targets of tracing_multi link.
+selftests/bpf: Add tracing_multi bpf prog rollback test
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c b/to=
-ols/testing/selftests/bpf/prog_tests/fill_link_info.c
-> index 0918321c8e63d..422e94f134094 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> @@ -467,13 +489,49 @@ static int setup_tmulti_targets(const struct bpf_pr=
-ogram *prog,
->  	return -1;
->  }
-> =20
-> +static int setup_tmulti_bpf_prog_targets(const struct bpf_program *prog,=
- int token_fd,
-> +					 const __u64 *cookies,
-> +					 const struct bpf_program * const *target_progs,
-> +					 struct tmulti_target *targets,
-> +					 __u32 *btf_obj_id)
-> +{
-> +	struct bpf_prog_info prog_info =3D {};
-> +	__u32 len =3D sizeof(prog_info), func_btf_id;
+This commit adds a rollback test for multi-attach fentry BPF programs. It
+sets up two targets, pre-attaches to one, and then verifies that a subseque=
+nt
+multi-attach to both correctly handles the busy state and rolls back.
+
+> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/too=
+ls/testing/selftests/bpf/prog_tests/tracing_multi.c
+> --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> @@ -1308,6 +1308,67 @@ static void test_attach_api_bpf_prog_fails(void)
+
+[ ... ]
+
+> +	first =3D target_fds[0] < target_fds[1] ? 0 : 1;
+> +	second =3D 1 - first;
+> +	fds[0] =3D target_fds[first];
+> +	fds[1] =3D target_fds[second];
+> +	ids[0] =3D target_ids[first];
+> +	ids[1] =3D target_ids[second];
 
 [Severity: Medium]
-libbpf_find_prog_btf_id() returns an int which can be negative to indicate
-an error. Since func_btf_id is declared as an unsigned 32-bit integer,
-does assigning the return value here cast any negative error code to a large
-positive value?
+Does this code incorrectly rely on file descriptor order to predict the
+kernel's internal sort order?
 
-> +	int err, i, prog_fd;
+The kernel sorts the targets based on a computed key derived from the
+program ID and BTF ID: ((u64)prog->aux->id << 32) | btf_id. While program
+IDs monotonically increase, FD allocation uses the lowest available FD.
+
+If a lower FD becomes available (for example, closed by another thread or
+process) between loading the first and second targets, the second target
+receives a smaller FD but a larger ID. This reversed order means the test
+will incorrectly predict how the kernel sorts the targets.
+
 > +
-> +	for (i =3D 0; i < TRACING_MULTI_BPF_CNT; i++) {
-> +		memset(&prog_info, 0, sizeof(prog_info));
-> +		len =3D sizeof(prog_info);
-> +		prog_info.jited_ksyms =3D ptr_to_u64(&targets[i].addr);
-> +		prog_info.nr_jited_ksyms =3D 1;
-> +		prog_fd =3D bpf_program__fd(target_progs[i]);
-> +		err =3D bpf_prog_get_info_by_fd(prog_fd, &prog_info, &len);
-> +		if (!ASSERT_OK(err, "bpf_prog_get_info_by_fd"))
-> +			return -1;
+> +	prog_fd =3D bpf_program__fd(skel->progs.test_fentry);
+> +	lopts.tracing_multi.ids =3D &ids[1];
+> +	lopts.tracing_multi.fds =3D &fds[1];
+> +	lopts.tracing_multi.cnt =3D 1;
+> +	pre_fd =3D bpf_link_create(prog_fd, 0, BPF_TRACE_FENTRY_MULTI, &lopts);
+> +	if (!ASSERT_GE(pre_fd, 0, "pre_attach"))
+> +		goto cleanup;
 > +
-> +		func_btf_id =3D libbpf_find_prog_btf_id(tmulti_bpf_funcs[i], prog_fd, =
-token_fd);
-> +		if (!ASSERT_GT(func_btf_id, 0, "libbpf_find_prog_btf_id"))
+> +	lopts.tracing_multi.ids =3D ids;
+> +	lopts.tracing_multi.fds =3D fds;
+> +	lopts.tracing_multi.cnt =3D ARRAY_SIZE(ids);
+> +
+> +	fd =3D bpf_link_create(prog_fd, 0, BPF_TRACE_FENTRY_MULTI, &lopts);
+> +	if (!ASSERT_EQ(fd, -EBUSY, "bpf_link_create"))
+> +		goto cleanup;
+> +
+> +	prog =3D first =3D=3D 0 ? skel->progs.target_1 : skel->progs.target_2;
+> +	if (run_bpf_target(prog, first + 1, "rollback_target"))
+> +		goto cleanup;
+> +	ASSERT_EQ(skel->bss->test_result_fentry, 0, "test_result_fentry");
 
 [Severity: Medium]
-If a negative error code is cast to a large positive value in the
-unsigned func_btf_id, will this greater-than-zero check incorrectly pass,
-masking test failures during BTF ID lookup and allowing the test to
-proceed with an invalid BTF ID?
+Can this assertion pass without the rollback path ever being tested?
 
-> +			return -1;
+If the FD order doesn't match the ID order as mentioned above, the test will
+pre-attach the element that the kernel sorts first. The kernel will then
+fail immediately on the first element of the multi-attach request. Because
+it failed on the first element, it never proceeds to attach (or need to roll
+back) the other elements.
+
+The test_result_fentry variable remains 0 in this case, meaning this
+assertion will pass and silently mask that the rollback path wasn't
+actually exercised.
+
 > +
-> +		targets[i].cookie =3D cookies[i];
-> +		targets[i].id =3D prog_info.id;
-> +		targets[i].func_btf_id =3D func_btf_id;
-> +	}
+> +cleanup:
+> +	if (fd >=3D 0)
+> +		close(fd);
+> +	if (pre_fd >=3D 0)
+> +		close(pre_fd);
+> +	tracing_multi_bpf__destroy(skel);
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012154024.2942=
-3-1-leon.hwang@linux.dev?part=3D19
+3-1-leon.hwang@linux.dev?part=3D18
