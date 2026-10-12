@@ -1,32 +1,36 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-48.mta1.migadu.com [95.215.58.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9748181334;
-	Mon, 12 Oct 2026 08:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B694745C6ED
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 08:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791792504; cv=none; b=fPt3Vep8UsVz7eR+KAzjYXrF8BvIE4grYLItL0qYHpSYDvFZro6cPBj5QS7QO1wFNdK6jVnoA+wAj5QtNPT9kmNJM+3sO05j8XhcW5WHbGKJY1NwVY55vOSmyJLlvRuhPovBrTz7XmaTKh2+x3N/G4idoBiHFjJztU27lLAOojg=
+	t=1791793373; cv=none; b=Be7Y3EsMpd39JvqkgRSH52DB90fgbgTreHh+tgiLCvL9mJ7acGy+hooDPSO5ojyi3k72MBkH0ddxWQ0IEy5KxiT1sHpn7OuRKmya6r4XOVSKfS3p1z6XNw2ahBw4HSeMv02UMIO+sRoMcKAtNRwBjIkItI1lsDVD0I7R3sL+Vhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791792504; c=relaxed/simple;
-	bh=VbuUVwRa3q6ixYB746kpqiYxA2CyHawQzNHWHac3nxM=;
+	s=arc-20240116; t=1791793373; c=relaxed/simple;
+	bh=2PZG4oBTWctUcn47EeBywXvnSBFOGvbeX9RPvQyatEY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T88cYGKA9t+NvSUE6giqsGFY4qO0yvMugr8YCDdZojYo+yg/54rCRT6E/YwKaX1U2mnG1J1Li3LJw3RJ962rpfhI5N3YLmV4tiJFUH0tmBN+I7Tn93Ly4AYsEA4vIrziZiENZi2D7A5Ia+ame+0ythtEHsaXYKs6UseCv3Rp3yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GyxBNE8K; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=ThlF3NSP19pN7IMiWwGmZbyMFxuBA6EgCazlH7nhNQCAEDAveMBJ0RS/V6nQvyx0AArcW/9Ur4BDPO9DxCSEpkipiTxKU0cZYlyyNnlf5L6oqYdz0th6ml0CzrnClMXQ309fkHeLX5mxrwwrEf9vvwGOttgzMVxpdNHqzJ+F1+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QSToD6HK; arc=none smtp.client-ip=95.215.58.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GyxBNE8K"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1791792499; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=D6ifv6a4KKoIiKYJezBRkAhE1P/vLkjB6GL3KBtF0js=;
-	b=GyxBNE8KhdanRPo3VkDWe7EFz/VNszpZhjCzradaIH8Q6Vddf1lROiuLQV+DAMSt2/SRXfe+jQ2zhTfA5RLb6SoNifykA1QEqie2YpfpnBoMyfCab0BCMgifVmH9DRVOTFBnl0riFqlwizkTMMLzHdyyDUUojf/m0/gQGU83zLo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0XCd0ksa_1791792496;
-Received: from 30.246.160.148(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XCd0ksa_1791792496 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 12 Oct 2026 16:08:17 +0800
-Message-ID: <882701c0-9016-4fe3-93d0-40853f34f19d@linux.alibaba.com>
-Date: Mon, 12 Oct 2026 16:08:16 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QSToD6HK"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=2PZG4oBTWctUcn47EeBywXvnSBFOGvbeX9RPvQyatEY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791793369; v=1; x=1792398169;
+ b=QSToD6HKA3NCTTwZ9qSyY1JuKFbS0Xrl1KSPgDfdybTEtL7svlFfizgNRi9bMYJJLdz5uwFv
+ zKTE2Dvew1+JQFHrwTsHUx0F3rjJWiYORX0GtB/xFsO2qn2bkdk5bC35+4p29ZKjSLxjdZ5944z
+ h0H1HJxt7RGDEKK2SUs+X/oY=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 85626153b49a7cd1;
+	Mon, 12 Oct 2026 08:22:49 +0000
+X-Mizu-Trace-ID: 85626153b49a7cd1
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <7842535e-ae71-4de3-b16d-14d55b514df5@linux.dev>
+Date: Mon, 12 Oct 2026 16:22:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -34,119 +38,163 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] riscv: stacktrace: do not report the walker's own
- frame from arch_stack_walk()
-To: Karl Mehltretter <kmehltretter@gmail.com>, Paul Walmsley
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Changbin Du <changbin.du@intel.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>,
- Rae Moar <raemoar63@gmail.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-References: <20261010132712.46931-1-kmehltretter@gmail.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20261010132712.46931-1-kmehltretter@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 00/15] sched: introduce for_each_process_rculock and
+ for_each_thread_rculock
+To: Peter Zijlstra <peterz@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ye Liu <liuye@kylinos.cn>
+Cc: David Hildenbrand <david@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?G=C3=BCnther_Noack?=
+ <gnoack3000@gmail.com>, Lorenzo Stoakes <ljs@kernel.org>,
+ SJ Park <sj@kernel.org>, Gregory Price <gourry@gourry.net>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ rientjes@google.com, shakeel.butt@linux.dev, xu.xin16@zte.com.cn,
+ chengming.zhou@linux.dev, will@kernel.org, boqun@kernel.org,
+ frederic@kernel.org, neeraj.upadhyay@kernel.org, joelagnelf@nvidia.com,
+ josh@joshtriplett.org, urezki@gmail.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, tony.luck@intel.com, reinette.chatre@intel.com,
+ x86@kernel.org, paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+ pavel@kernel.org, lance.yang@linux.dev, mhiramat@kernel.org,
+ pmladek@suse.com, longman@redhat.com, mathieu.desnoyers@efficios.com,
+ jiangshanlai@gmail.com, qiang.zhang@linux.dev, dietmar.eggemann@arm.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ kprateek.nayak@amd.com, mark.rutland@arm.com, Dave.Martin@arm.com,
+ james.morse@arm.com, babu.moger@amd.com
+References: <20260921092101.89285-1-ye.liu@linux.dev>
+Content-Language: en-US
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <20260921092101.89285-1-ye.liu@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi, Peter
 
+Friendly ping on this series, posted three weeks ago. You previously
+requested splitting the combined kernel/ conversion into per-subsystem
+patches, which has been done in v4.
+No rush — just want to make sure this is on your radar.
 
-On 10/10/26 9:27 PM, Karl Mehltretter wrote:
-> stack_trace_save() uses skipnr + 1 because arch_stack_walk() is expected
-> to first report the return into stack_trace_save(). With FRAME_POINTER,
-> the RISC-V arch_stack_walk() calls walk_stackframe(), which starts from
-> its own frame and first reports the return into arch_stack_walk().
-> stack_trace_save() therefore starts one frame too early. For example,
-> page_owner records begin at __set_page_owner() instead of the allocation
-> site.
-> 
-> Move the walker into an always-inlined helper and call it directly from
-> arch_stack_walk(). Keep walk_stackframe() as a wrapper for its existing
-> callers.
-> 
-> return_address() skips level + 3 entries, while the arm64 implementation
-> skips level + 2. After removing the extra frame, use level + 2 so
-> ftrace_return_address() and CALLER_ADDR results do not shift by one caller.
-> 
-> Fixes: 6a00ef449370 ("riscv: eliminate unreliable __builtin_frame_address(1)")
-> Assisted-by: LLM
-> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Thanks,
+Ye Liu
+
+在 2026/9/21 17:20, Ye Liu 写道:
+> From: Ye Liu <liuye@kylinos.cn>
+>
+> Introduce for_each_process_rculock(), for_each_thread_rculock() and
+> for_each_process_thread_rculock() macros that combine the existing
+> iteration macros with scoped_guard(rcu), so that the RCU read lock
+> is automatically acquired before iteration and released when the
+> loop exits — including via break, goto, or return.
+>
+> The rest of the series converts manual rcu_read_lock()/
+> rcu_read_unlock() and guard(rcu)() pairs across mm/, kernel/, fs/,
+> lib/ and security/ to use the new macros.
+>
+> Suggested by Michal Hocko for the oom_kill path [2].
+>
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+>
 > ---
+> Changes since v3 [4]:
+>   - Fix patch 5 (cpu/hotplug): title and commit message incorrectly
+>     said "thread iterator" and "for_each_thread_rculock" while the
+>     code converts for_each_process() to for_each_process_rculock().
+>
+> Note: Patches 4, 11, and 13 received automated reviews from sashiko-bot
+> in the v3 thread [4] that were verified as false positives:
+>
+>   - Patch 4: claimed the folio lock is dropped before collect_procs(),
+>     leading to a NULL deref on folio->mapping; the lock is held in all
+>     call paths.
+>   - Patch 11: claimed mixing goto/scope-based cleanup in
+>     alloc_retstack_tasklist(); the goto free label handles memory
+>     cleanup, not lock management.
+>   - Patch 13: claimed mixing goto/scope-based cleanup in
+>     __set_oom_adj(); goto err_unlock manages oom_adj_mutex while
+>     scoped_guard(rcu) manages the RCU read lock — different resources.
+>
+> Changes since v2 [3]:
+>   - Split the kernel/ patch into per-subsystem patches, as the
+>     combined patch could not be applied (Peter Zijlstra, Steven
+>     Rostedt).
+>   - Move changelog below the --- separator so it is excluded from
+>     the commit message (Lorenzo Stoakes).
+>   - Indent loop body in macro definitions to show scoped_guard
+>     scope (Lorenzo Stoakes).
+>
+> Changes since v1 [1]:
+>   - Rename macros from *_rcu to *_rculock, as suggested by Steven
+>     Rostedt and acked by Thomas Gleixner, to avoid confusion with
+>     existing *_rcu() list iterators that expect the caller to hold
+>     the RCU read lock.
+>   - Improve the comment on for_each_process_thread_rculock() to
+>     document that 'break' only exits the inner loop and 'goto' is
+>     needed to exit both loops (Thomas Gleixner).
+>   - Rename the stale 'unlock:' label to 'out:' in hung_task.c, as
+>     noted by Günther Noack.
+>   - Clarify in patch 4 that page_pgoff() is safe outside the RCU
+>     read-side critical section (SJ Park).
+>   - CC all relevant maintainers on every patch (Lorenzo Stoakes).
+>   - Drop the mm: prefix from patch 1, as the macros are in
+>     include/linux/sched/signal.h (Michal Hocko).
+>
+> [1] https://lore.kernel.org/all/20260904083001.553587-1-ye.liu@linux.dev/
+> [2] https://lore.kernel.org/all/20260813092933.562028-1-ye.liu@linux.dev/
+> [3] https://lore.kernel.org/all/20260907081334.1152889-1-ye.liu@linux.dev/
+> [4] https://lore.kernel.org/all/20260911075800.491472-1-ye.liu@linux.dev/
+>
+> Ye Liu (15):
+>   sched: introduce for_each_process_rculock and for_each_thread_rculock
+>   mm/oom_kill: convert process/thread iterators to for_each_*_rculock
+>   mm/ksm: convert process iterator to for_each_process_rculock
+>   mm/memory-failure: convert process iterator to
+>     for_each_process_rculock
+>   cpu/hotplug: convert process iterator to for_each_process_rculock
+>   freezer: convert thread iterator to for_each_thread_rculock
+>   hung_task: convert process/thread iterators to for_each_*_rculock
+>   locking/lockdep: convert process/thread iterators to
+>     for_each_*_rculock
+>   rcu: convert process/thread iterator to
+>     for_each_process_thread_rculock
+>   sched: convert process/thread iterators to for_each_*_rculock
+>   tracing/fgraph: convert process/thread iterator to
+>     for_each_process_thread_rculock
+>   unwind: convert process/thread iterator to
+>     for_each_process_thread_rculock
+>   fs: convert process/thread iterators to for_each_*_rculock
+>   lib: convert process iterator to for_each_process_rculock
+>   security/landlock: convert thread iterator to for_each_thread_rculock
+>
+>  fs/proc/base.c               |  4 +---
+>  fs/resctrl/rdtgroup.c        |  8 ++------
+>  include/linux/sched/signal.h | 26 ++++++++++++++++++++++++++
+>  kernel/cpu.c                 |  4 +---
+>  kernel/freezer.c             |  4 +---
+>  kernel/hung_task.c           | 11 ++++-------
+>  kernel/locking/lockdep.c     |  4 +---
+>  kernel/rcu/update.c          |  4 +---
+>  kernel/sched/core.c          |  3 +--
+>  kernel/sched/debug.c         |  4 +---
+>  kernel/trace/fgraph.c        |  8 ++------
+>  kernel/unwind/deferred.c     |  3 +--
+>  lib/is_single_threaded.c     |  5 +----
+>  mm/ksm.c                     |  4 +---
+>  mm/memory-failure.c          | 16 ++++------------
+>  mm/oom_kill.c                | 20 +++++---------------
+>  security/landlock/tsync.c    |  8 ++------
+>  17 files changed, 55 insertions(+), 81 deletions(-)
+>
+> --
+> 2.25.1
 
-Hi, Karl,
+-- 
+Thanks,
+Ye Liu
 
-> Tested with the KUnit suite from patch 2 on QEMU's virt machine, clang 22
-> (LLVM=1), on af32da41b032:
-> 
->    mainline                        stack_trace_save 0/3, return_address 2/2
->    stacktrace.c change alone       stack_trace_save 3/3, return_address 0/2
->    this patch                      stack_trace_save 3/3, return_address 2/2
-> 
-> A BeagleV Ahead (TH1520) booted with this patch passes all five cases.
-> The stack_trace_save() result on mainline (0/3) was also reproduced with
-> GCC 15.2 and QEMU 10.2.1.
-> 
-> Without CONFIG_FRAME_POINTER the walker scans the stack for anything that
-> looks like a text address and its start frame is not exact before or
-> after this patch. What return_address() returns there is unchanged: the
-> walk loses one leading entry and the skip count goes down by one.
-
-
-Hi Karl,
-
-As promised in the other thread, here are test results for this series.
-
-Short version: the fix is correct, the KUnit suite reproduces the bug
-precisely, and the whole series passes here.
-
-Testing
--------
-
-Your numbers were collected with clang 22, plus the mainline
-reproduction with GCC 15.2 you noted in the commit message, so I
-re-ran the full matrix with gcc: riscv64 cross-gcc 16.2.0 for the
-first three configurations below and a native gcc 14.3 for the last
-one, all under QEMU (qemu-system-riscv64 11.1.1, -machine virt,
--cpu rv64) on top of your base af32da41b032.
-
-A. base + 2/2 only (tests, no fix): pass:2 fail:3, i.e. exactly the
-    "stack_trace_save 0/3, return_address 2/2" you reported for
-    mainline.  The failures show the off-by-one shift nicely; with
-    skip = 0 the first recorded symbol is the walker itself:
-
-        # riscv_stacktrace_skip_zero: skip=0 first=stack_trace_save count=11
-        #     symbol == "stack_trace_save"
-        #     expected[skip] == "riscv_stacktrace_leaf"
-
-    The two return_address() cases still pass on unpatched mainline,
-    which is consistent with the analysis: the current "level + 3" is
-    calibrated for the buggy frame layout, so ftrace_return_address()
-    keeps working while stack_trace_save() - and everything built on
-    top of it - records one bogus leading entry.
-
-B. base + 1/2 + 2/2: pass:5 fail:0.
-
-C. My v6 reliable stack unwinding series [1] + your 2/2, with the
-    level constant in return_address.c adjusted to the same
-    unconditional "level + 2" as in your 1/2: pass:5 fail:0, with
-    per-case results identical to B (skip=0/1/2 first =
-    leaf/middle/outer, count = 10/9/8).
-
-D. Cross-toolchain check: I rebuilt the C tree with a native riscv64
-    gcc 14.3 inside an Anolis OS 23.4 riscv64 guest - no cross
-    toolchain involved at any step - using the same Kconfig options,
-    and booted the resulting Image under the same QEMU: pass:5 fail:0
-    again, identical output.  The result does not depend on one
-    particular compiler's frame layout.
-
-Please feel free to add
-
-     Tested-by: Shuai Xue <xueshuai@linux.alibaba.com>
-     Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Thanks.
-Shuai
