@@ -1,337 +1,432 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A1446EF7C;
-	Mon, 12 Oct 2026 09:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC8735AC1C;
+	Mon, 12 Oct 2026 09:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791796561; cv=none; b=B4HGvU4pw5LEJ9FbEyOcCzmOxYN0grfRq8/ID31pwTReCSS8nZx12LL0vt4nsqTLcsFLgbWsi3tLUPwTBKJTA+CVLB8VL6ltzJ7IXY/aePyJtCST8MXqdRAvUCWIUKQNfgeVezH8dI0rDK0DlSxmc/VkomQdiraEFUBukagM90o=
+	t=1791797298; cv=none; b=gkLeQYbNy1ecVEMABf9px7jiLsEDfDiqltRAy7kyHqLi+4RZS8w8/E+WPTsvt8oulTAcGixS3P2S6/he0++J8jLH67XVa6nS2Uj6RqpXGDhsi3OuMg9YCkIBgpfV72VGpwh3FATN6q6Qm1XhWK5FsqdmOtQJUu04Pr31ASRQZIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791796561; c=relaxed/simple;
-	bh=KLBlgaeDuHabe1zhJimoUA0bpK31OVHOkP7Odbueqqw=;
+	s=arc-20240116; t=1791797298; c=relaxed/simple;
+	bh=6vknGO57G4Pl+QxkWddTfx/B0Cm1I5BM82EUp4W/exo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oe60CEOSN7ATLgs5h+gNQ+a49kfdPJFrJomKhmKhH7CC8RpTdi7RPZHZ3HvXxOPOR1QbJOn3IASChyUJ/drwsdqbSU1VArosS0E6ZbOmVKUr7LYa9RTcmq0hYaRKXpOm0XRCdxm21OATjTihzv0Eyg0V4nhnVvIjuzbHYaYAUK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMB9HcnR; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+yPsudud8F5YFmTyLreyUvb8dI+dG78829SQonXLbWRr7zFwkUtOZnlh/d0wVibVpFNRVXHUSSZHocZxtrH+5TfsWxxgUrBJVvHqeP1fkngLM2okMjuJAwMuQ2KvoEKoFQ6d3/c/8V2/PzTBbP0+11MTWDUs3z6woCrtYOSKNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N0zGhQKg; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMB9HcnR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075251F0089B;
-	Mon, 12 Oct 2026 09:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791796560;
-	bh=I0HNRCS/h711M+WA/GHMYCEaRzzHTm0vVBiP9fZikGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EMB9HcnR2Vy1CAnUk7OHOf5GsCaVPZ7a6Bro4eKk5SUaBIH94yOCIIzkHLk/dn29g
-	 kV8aB+iGe4QM9ZmQqytyp1noivDVB6UtVQb5bb2D2X08dewTXGvGNOyFzYt7aWPou9
-	 sUgXqAh09Pcup1sCOdYqDR+BacTYknTjLFf6XdQkB+ifvAqaXyOnlrtogEEhpZ8brj
-	 r7mW4WAB9D1fJ+rHQJcJhySpnlLAb1oYZJOVxiPuABLWHmaPPa61rJvRfygQG9hGJe
-	 iDkCjJKuTlNSHA3hlUKE9BPI/4vLJ63BW6D8A+VpIZfP9YwnHLUUu8rgBLrGz7Ioz5
-	 COyMaej6bm63A==
-Date: Mon, 12 Oct 2026 11:15:39 +0200
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Shivaprasad G Bhat <sbhat@linux.ibm.com>, 
-	Thorsten Blum <blum@kernel.org>, Alison Schofield <alison.schofield@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guangshuo Li <lgs201920130244@gmail.com>, Ira Weiny <iweiny@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
-Message-ID: <asyalCF06dhpVxPc@debian>
-References: <20261003035906.too.263-kees@kernel.org>
- <20261003035921.1918874-5-kees@kernel.org>
- <asEhEe0Urb5Wx7yi@ashevche-desk.local>
- <202610040023.A3865A6@keescook>
- <asIPlnb0noMd33rr@ashevche-desk.local>
- <20261005112209.1e47fa-kees@kernel.org>
- <asOKvhT01aNb5-Dg@debian>
- <20261005155839.d5d200-kees@kernel.org>
- <asPSYn7sLqiH39Fu@debian>
- <20261012005620.466497-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N0zGhQKg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791797296; x=1823333296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6vknGO57G4Pl+QxkWddTfx/B0Cm1I5BM82EUp4W/exo=;
+  b=N0zGhQKgs4xlmuAN+qbiAzuS3DC1XB/aux029JKtxkVhBgJ4yADy6Frp
+   //zkRdnR2SRtgI+nzmQxLTqmUnUOgjr5VUYs5KAegfaQi3L51XHjsP2bC
+   zkrJrPjFJskrhD3t0LMWSTisdEDRteV4LH3fA3WJvm76Z9gNxluO/C7oy
+   u+qfurgtWIw4n9i/Evxp+3Hldajfg+WlzEuvnaVsPTQzLyODN6/+K7vS/
+   AzV/0TrioyOmqBzmDukwGVMdOfPSeVDKZagERW2vLQtk0LLlS3Yo9rZ7F
+   ekCY34Q9tQCMlIaCKXC+fSt9XsqvJM+5swtXhnAUgOpTxTMgQUyyudytE
+   g==;
+X-CSE-ConnectionGUID: W8KfnMMURc2NAOTHqzw/ow==
+X-CSE-MsgGUID: KlfKnmImRDuzf288hpQT7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11932"; a="598863"
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="598863"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 02:28:16 -0700
+X-CSE-ConnectionGUID: KmD+OFlUQuyUtJk0GbYafg==
+X-CSE-MsgGUID: /1yE7JrWQqSXkS6dS/oIdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="804553"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 12 Oct 2026 02:28:13 -0700
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xGCKI-00000000BHx-38Nr;
+	Mon, 12 Oct 2026 09:28:10 +0000
+Date: Mon, 12 Oct 2026 17:27:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: wen.yang@linux.dev, Gabriele Monaco <gmonaco@redhat.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
+Subject: Re: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
+Message-ID: <202610121745.TCxIxDec-lkp@intel.com>
+References: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="j57xlliim47wxj7u"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261012005620.466497-kees@kernel.org>
+In-Reply-To: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
+
+Hi,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on shuah-kselftest/next shuah-kselftest/fixes linus/master v7.3-rc6 next-20261009]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/wen-yang-linux-dev/rv-Force-environment-reset-action-on-HA-monitor-start/20261012-033907
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang%40linux.dev
+patch subject: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
+config: x86_64-randconfig-1005-20261012 (https://download.01.org/0day-ci/archive/20261012/202610121745.TCxIxDec-lkp@intel.com/config)
+compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261012/202610121745.TCxIxDec-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610121745.TCxIxDec-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+>> include/rv/ha_monitor.h:66:16: error: no member named 'da_mon' in 'ha_monitor'
+      66 | _Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
+         |                ^                           ~~~~~~
+   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^                        ~~~~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+>> include/rv/ha_monitor.h:122:5: warning: 'HA_TIMER_HRTIMER' is not defined, evaluates to 0 [-Wundef]
+     122 | #if HA_TIMER_TYPE == HA_TIMER_WHEEL
+         |     ^
+   kernel/trace/rv/rv_monitors_test.c:21:23: note: expanded from macro 'HA_TIMER_TYPE'
+      21 | #define HA_TIMER_TYPE HA_TIMER_HRTIMER
+         |                       ^
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:122:22: warning: 'HA_TIMER_WHEEL' is not defined, evaluates to 0 [-Wundef]
+     122 | #if HA_TIMER_TYPE == HA_TIMER_WHEEL
+         |                      ^
+>> include/rv/ha_monitor.h:192:30: error: no member named 'da_mon' in 'struct ha_monitor'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:63: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+   include/linux/container_of.h:20:56: note: expanded from macro 'container_of'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+      21 |                       __same_type(*(ptr), void),                        \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      22 |                       "pointer type mismatch in container_of()");       \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:8:45: note: expanded from macro 'typeof_member'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                                 ^
+   include/linux/compiler_types.h:610:74: note: expanded from macro '__same_type'
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                                                                          ^
+   include/linux/build_bug.h:79:50: note: expanded from macro 'static_assert'
+      79 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: expanded from macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:192:30: error: no member named 'da_mon' in 'ha_monitor'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^                                   ~~~~~~
+   include/linux/container_of.h:23:27: note: expanded from macro 'container_of'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^              ~~~~~~
+   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^                        ~~~~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+>> include/rv/ha_monitor.h:192:21: error: initializing 'struct ha_monitor *' with an expression of incompatible type 'void'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                            ^        ~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:208:30: error: no member named 'da_mon' in 'struct ha_monitor'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:63: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+   include/linux/container_of.h:20:56: note: expanded from macro 'container_of'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+      21 |                       __same_type(*(ptr), void),                        \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      22 |                       "pointer type mismatch in container_of()");       \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:8:45: note: expanded from macro 'typeof_member'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                                 ^
+   include/linux/compiler_types.h:610:74: note: expanded from macro '__same_type'
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                                                                          ^
+   include/linux/build_bug.h:79:50: note: expanded from macro 'static_assert'
+      79 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: expanded from macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:208:30: error: no member named 'da_mon' in 'ha_monitor'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^                                   ~~~~~~
+   include/linux/container_of.h:23:27: note: expanded from macro 'container_of'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^              ~~~~~~
+   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^                        ~~~~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:208:21: error: initializing 'struct ha_monitor *' with an expression of incompatible type 'void'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                            ^        ~~~~~~~~~~~~~~~~~~~~~
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+>> include/rv/ha_monitor.h:219:27: error: no member named 'env_store' in 'struct ha_monitor'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                          ~~~~~~  ^
+   include/rv/ha_monitor.h:286:30: error: no member named 'da_mon' in 'struct ha_monitor'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:63: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+   include/linux/container_of.h:20:56: note: expanded from macro 'container_of'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+      21 |                       __same_type(*(ptr), void),                        \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      22 |                       "pointer type mismatch in container_of()");       \
+         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:8:45: note: expanded from macro 'typeof_member'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                                 ^
+   include/linux/compiler_types.h:610:74: note: expanded from macro '__same_type'
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                                                                          ^
+   include/linux/build_bug.h:79:50: note: expanded from macro 'static_assert'
+      79 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: expanded from macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:286:30: error: no member named 'da_mon' in 'ha_monitor'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: expanded from macro 'to_ha_monitor'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^                                   ~~~~~~
+   include/linux/container_of.h:23:27: note: expanded from macro 'container_of'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^              ~~~~~~
+   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^                        ~~~~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+   include/rv/ha_monitor.h:286:21: error: initializing 'struct ha_monitor *' with an expression of incompatible type 'void'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                            ^        ~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:321:41: error: no member named 'da_mon' in 'struct ha_monitor'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                        ~~~~~~  ^
+   include/rv/ha_monitor.h:321:41: error: no member named 'da_mon' in 'struct ha_monitor'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                        ~~~~~~  ^
+   fatal error: too many errors emitted, stopping now [-ferror-limit=]
+   2 warnings and 20 errors generated.
 
 
---j57xlliim47wxj7u
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Shivaprasad G Bhat <sbhat@linux.ibm.com>, 
-	Thorsten Blum <blum@kernel.org>, Alison Schofield <alison.schofield@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guangshuo Li <lgs201920130244@gmail.com>, Ira Weiny <iweiny@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] seq_buf: Add seq_buf_strlen()
-Message-ID: <asyalCF06dhpVxPc@debian>
-References: <20261003035906.too.263-kees@kernel.org>
- <20261003035921.1918874-5-kees@kernel.org>
- <asEhEe0Urb5Wx7yi@ashevche-desk.local>
- <202610040023.A3865A6@keescook>
- <asIPlnb0noMd33rr@ashevche-desk.local>
- <20261005112209.1e47fa-kees@kernel.org>
- <asOKvhT01aNb5-Dg@debian>
- <20261005155839.d5d200-kees@kernel.org>
- <asPSYn7sLqiH39Fu@debian>
- <20261012005620.466497-kees@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20261012005620.466497-kees@kernel.org>
+vim +66 include/rv/ha_monitor.h
 
-Hi Kees,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   64  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   65  /* This simplifies things since da_mon and ha_mon coexist in the same union */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  @66  _Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   67  	       "da_mon must be the first element in an ha_mon!");
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   68  #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   69  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   70  #define ENV_MAX CONCATENATE(env_max_, MONITOR_NAME)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   71  #define ENV_MAX_STORED CONCATENATE(env_max_stored_, MONITOR_NAME)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   72  #define envs CONCATENATE(envs_, MONITOR_NAME)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   73  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   74  /* Environment storage before being reset */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   75  #define ENV_INVALID_VALUE U64_MAX
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   76  /* Error with no event occurs only on timeouts */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   77  #define EVENT_NONE EVENT_MAX
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   78  #define EVENT_NONE_LBL "none"
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   79  #define ENV_BUFFER_SIZE 64
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   80  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   81  #ifdef CONFIG_RV_REACTORS
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   82  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   83  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   84   * ha_react - trigger the reaction after a failed environment constraint
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   85   *
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   86   * The transition from curr_state with event is otherwise valid, but the
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   87   * environment constraint is false. This function can be called also with no
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   88   * event from a timer (state constraints only).
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   89   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   90  static void ha_react(enum states curr_state, enum events event, char *env)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   91  {
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   92  	rv_react(&rv_this,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   93  		 "rv: monitor %s does not allow event %s on state %s with env %s\n",
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   94  		 __stringify(MONITOR_NAME),
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   95  		 event == EVENT_NONE ? EVENT_NONE_LBL : model_get_event_name(event),
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   96  		 model_get_state_name(curr_state), env);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   97  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   98  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30   99  #else /* CONFIG_RV_REACTOR */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  100  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  101  static void ha_react(enum states curr_state, enum events event, char *env) { }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  102  #endif
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  103  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  104  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  105   * model_get_state_name - return the (string) name of the given state
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  106   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  107  static char *model_get_env_name(enum envs env)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  108  {
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  109  	if ((env < 0) || (env >= ENV_MAX))
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  110  		return "INVALID";
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  111  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  112  	return RV_AUTOMATON_NAME.env_names[env];
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  113  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  114  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  115  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  116   * Monitors requiring a timer implementation need to request it explicitly.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  117   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  118  #ifndef HA_TIMER_TYPE
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  119  #define HA_TIMER_TYPE HA_TIMER_NONE
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  120  #endif
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  121  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30 @122  #if HA_TIMER_TYPE == HA_TIMER_WHEEL
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  123  static void ha_monitor_timer_callback(struct timer_list *timer);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  124  #elif HA_TIMER_TYPE == HA_TIMER_HRTIMER
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  125  static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  126  #endif
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  127  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  128  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  129   * ktime_get_ns is expensive, since we usually don't require precise accounting
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  130   * of changes within the same event, cache the current time at the beginning of
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  131   * the constraint handler and use the cache for subsequent calls.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  132   * Monitors without ns clocks automatically skip this.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  133   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  134  #ifdef HA_CLK_NS
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  135  #define ha_get_ns() ktime_get_ns()
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  136  #else
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  137  #define ha_get_ns() 0
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  138  #endif /* HA_CLK_NS */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  139  
+74e17bd6fc8ed7 Gabriele Monaco 2026-06-01  140  static bool ha_mon_destroying;
+74e17bd6fc8ed7 Gabriele Monaco 2026-06-01  141  
+700782ec8f6589 Gabriele Monaco 2026-06-01  142  static int ha_monitor_init(void)
+700782ec8f6589 Gabriele Monaco 2026-06-01  143  {
+700782ec8f6589 Gabriele Monaco 2026-06-01  144  	int ret;
+700782ec8f6589 Gabriele Monaco 2026-06-01  145  
+74e17bd6fc8ed7 Gabriele Monaco 2026-06-01  146  	WRITE_ONCE(ha_mon_destroying, false);
+700782ec8f6589 Gabriele Monaco 2026-06-01  147  	ret = da_monitor_init();
+700782ec8f6589 Gabriele Monaco 2026-06-01  148  	if (ret == 0)
+700782ec8f6589 Gabriele Monaco 2026-06-01  149  		ha_monitor_enable_hook();
+700782ec8f6589 Gabriele Monaco 2026-06-01  150  	return ret;
+700782ec8f6589 Gabriele Monaco 2026-06-01  151  }
+700782ec8f6589 Gabriele Monaco 2026-06-01  152  
+700782ec8f6589 Gabriele Monaco 2026-06-01  153  static void ha_monitor_destroy(void)
+700782ec8f6589 Gabriele Monaco 2026-06-01  154  {
+74e17bd6fc8ed7 Gabriele Monaco 2026-06-01  155  	WRITE_ONCE(ha_mon_destroying, true);
+700782ec8f6589 Gabriele Monaco 2026-06-01  156  	ha_monitor_disable_hook();
+700782ec8f6589 Gabriele Monaco 2026-06-01  157  	da_monitor_destroy();
+700782ec8f6589 Gabriele Monaco 2026-06-01  158  }
+700782ec8f6589 Gabriele Monaco 2026-06-01  159  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  160  /* Should be supplied by the monitor */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  161  static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  162  static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  163  static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  164  				 enum states curr_state,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  165  				 enum events event,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  166  				 enum states next_state,
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  167  				 u64 time_ns);
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  168  #ifdef HA_NO_RESET
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  169  static void ha_reset_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns) { }
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  170  #endif
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  171  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  172  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  173   * ha_monitor_reset_all_stored - reset all environment variables in the monitor
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  174   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  175  static inline void ha_monitor_reset_all_stored(struct ha_monitor *ha_mon)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  176  {
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  177  	u64 time_ns = ha_get_ns();
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  178  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  179  	for (int i = 0; i < ENV_MAX_STORED; i++)
+a8db17cc2158f8 Gabriele Monaco 2026-10-12  180  		ha_reset_env(ha_mon, i, time_ns);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  181  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  182  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  183  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  184   * ha_monitor_init_env - setup timer and reset all environment
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  185   *
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  186   * Called from a hook in the DA start functions, it supplies the da_mon
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  187   * corresponding to the current ha_mon.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  188   * Not all hybrid automata require the timer, still set it for simplicity.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  189   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  190  static inline void ha_monitor_init_env(struct da_monitor *da_mon)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  191  {
+f5587d1b6ec938 Gabriele Monaco 2026-03-30 @192  	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  193  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  194  	ha_monitor_reset_all_stored(ha_mon);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  195  	ha_setup_timer(ha_mon);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  196  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  197  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  198  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  199   * ha_monitor_reset_env - stop timer and reset all environment
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  200   *
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  201   * Called from a hook in the DA reset functions, it supplies the da_mon
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  202   * corresponding to the current ha_mon.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  203   * Not all hybrid automata require the timer, still clear it for simplicity.
+713c9e1ea76238 Gabriele Monaco 2026-06-01  204   * Monitors that never started have their timer uninitialized, do not stop those.
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  205   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  206  static inline void ha_monitor_reset_env(struct da_monitor *da_mon)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  207  {
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  208  	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  209  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  210  	if (likely(da_monitoring(da_mon)))
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  211  		ha_cancel_timer(ha_mon);
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  212  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  213  
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  214  /*
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  215   * ha_monitor_env_invalid - return true if env has not been initialised
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  216   */
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  217  static inline bool ha_monitor_env_invalid(struct ha_monitor *ha_mon, enum envs env)
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  218  {
+f5587d1b6ec938 Gabriele Monaco 2026-03-30 @219  	return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  220  }
+f5587d1b6ec938 Gabriele Monaco 2026-03-30  221  
 
-> Date: 2026-10-11 17:56:27-0700
-> From: Kees Cook <kees@kernel.org>
->
-> On Mon, Oct 05, 2026 at 06:43:23PM +0200, Alejandro Colomar wrote:
-> > > Yes, though not often: the sched_ext debug dump builds a nested per-C=
-PU
-> > > seq_buf from seq_buf_get_buf(), which returns a size of 0 once the du=
-mp
-> > > buffer has overflowed, and it handles that case on purpose (see the
-> > > "$s may already have overflowed" comment in kernel/sched/ext/ext.c).
-> >
-> > Hmmmm, so IIUC, it is a sentinel value, and not really a buffer size?
->=20
-> It's the real size of what's left. seq_buf_get_buf() hands out the
-> unused tail of the seq_buf. Once that has overflowed there is no tail,
-> so it returns NULL for the buffer and 0 for the size, and sched_ext
-> initializes the nested seq_buf with both. So that case does get the NULL;
-> the 0 is how much room it has.
->=20
-> > Did you consider not holding the size of the buffer, but rather an end
-> > pointer?  It also allows you to find how much you can write to the
-> > buffer, but has slightly better semantics: the end doesn't change if you
-> > advance the position.  'end' can only change through reallocations
-> > (which I don't know if you do in the kernel).
->=20
-> The size doesn't change either: it is set by seq_buf_init(), and writers
-> advance "len", an offset from the start of the buffer. seq_buf never
-> reallocates.
-
-The size changes here:
-
-	$ grepc -h -B8 seq_buf_get_buf include/
-	/**
-	 * seq_buf_get_buf - get buffer to write arbitrary data to
-	 * @s: the seq_buf handle
-	 * @bufp: the beginning of the buffer is stored here
-	 *
-	 * Returns: the number of bytes available in the buffer, or zero if
-	 * there's no space.
-	 */
-	static inline size_t seq_buf_get_buf(struct seq_buf *s, char **bufp)
-	{
-		WARN_ON(s->len > s->size + 1);
-
-		if (s->len < s->size) {
-			*bufp =3D s->buffer + s->len;
-			return s->size - s->len;
-		}
-
-		*bufp =3D NULL;
-		return 0;
-	}
-
-With an end pointer, that would be simplified to:
-
-	static inline size_t my_seq_buf_get_buf(struct seq_buf *s, char **bufp)
-	{
-		WARN_ON(s->p >=3D s->end);
-
-		*bufp =3D s->p;
-		if (s->p !=3D NULL)
-			return s->end - s->p;
-		return 0;
-	}
-
-Moreover, if we change the API of that function, we could entirely get
-rid of this function.  Here's an example where I see seq_buf_get_buf()
-used, where I've modified it to use pointers:
-
-diff --git i/kernel/sched/ext/ext.c w/kernel/sched/ext/ext.c
-index 3219f0da0fe4..82904e4456e3 100644
---- i/kernel/sched/ext/ext.c
-+++ w/kernel/sched/ext/ext.c
-@@ -6893,8 +6893,7 @@ static void scx_dump_cpu(struct scx_sched *sch, struc=
-t seq_buf *s,
-         * Use a nested seq_buf to generate the standard dump so that we
-         * can decide whether to commit later.
-         */
--       avail =3D seq_buf_get_buf(s, &buf);
--       seq_buf_init(&ns, buf, avail);
-+       seq_buf_init(&ns, s->p, s->end);
-=20
-        dump_newline(&ns);
-        scx_dump_line(&ns, "CPU %-4d: nr_run=3D%u flags=3D0x%x cpu_rel=3D%d=
- ops_qseq=3D%lu ksync=3D%lu",
-
-Considering the .p would replace the current .len, and would encode
-overflow as a NULL pointer, and .end would replace the current .size,
-and wouldn't ever change (not even on overflow, sice that info would be
-stored in .p).  Now you wouldn't need to test whether the remaining
-size can be 0, but would instead test whether ->p is NULL (you could do
-that internally if you want to avoid accessing internals).
-
-> An end pointer wouldn't remove the empty case: buffer =3D=3D end is the s=
-ame
-
-The thing is that you'd never reach buffer=3D=3Dend.  If that would have to
-happen, you'd instead store a NULL in buffer.  This has the nice
-property that if you try to read it as a string, it will crash (instead
-of giving you a pointer that is not a string, which could result in a
-buffer overrun).
-
-> condition as size =3D=3D 0, so the accessors would still need the check. =
-It
-> also makes overflow harder to record. seq_buf marks it with len =3D=3D si=
-ze +
-> 1, and the matching position pointer, end + 1, would be weird.
-
-Not really.  I'll show an example without the structure; just using
-plain string-copying functions, which shows it more obviously.  The
-structures are, after all, just an encapsulation of this logic.
-
-With sizes and lengths:
-
-	char    buf[42];
-	size_t  len, size;
-
-	len =3D 0;
-	for (int i =3D 0; i < 10; i++) {
-		x =3D strscpy(buf + len, "foo", size - len);
-		if (x < 0)
-			goto fail;
-		len +=3D x;
-	}
-vs
-	char  buf[42];
-	char  *p, *end;
-
-	p =3D buf;
-	e =3D ARRAY_END(buf);
-	for (int i =3D 0; i < 10; i++)
-		p =3D stpecpy(p, end, "foo");
-	if (p =3D=3D NULL)
-		goto fail;
-
-Let's say that each iteration of the loop is a step where we'd inherit
-an old buffer into a new one with the functions showed above.  With a
-length and a size, you need to update the size.  With a position pointer
-and an end pointer, you only need to update the position pointer, and it
-encodes the information about the overflow/truncation too.  Because
-truncation is encoded as an invalid position (NULL), we can never
-recover from that, and thus we don't need to have so many checks in each
-iteration.
-
-An important detail is that the functions that use such a position
-pointer should check whether the position is NULL, and do nothing.
-In this example, stpecpy() has such an early check:
-
-	char *
-	stpecpy(char *dst, const char *end, const char *restrict src)
-	{
-		ssize_t  dlen;
-
-		if (dst =3D=3D NULL)
-			return NULL;
-
-		dlen =3D strscpy(dst, src, end - dst);
-		if (dlen < 0)
-			return NULL;
-
-		return dst + dlen;
-	}
-
-As you can see, we can never reach a point where p=3D=3Dend, because once
-truncation happens, p becomes NULL and never recovers from that.  This
-simplifies greatly the handling of truncation.
-
-> Changing the representation would also means changes outside
-> lib/seq_buf.c, since tracing reads seq.len and seq.size directly
-> (trace_seq treats a zero size as "not yet initialized", for one). I'm
-> not saying that's a good thing to bypass the API, but rather that such
-> a change should be its own series.
-
-Agree.  I was just mentioning as an idea to keep for the long term.
-
-
-Have a lovely day!
-Alex
-
->=20
-> -Kees
->=20
-> --=20
-> Kees Cook
-
---=20
-<https://www.alejandro-colomar.es>
-
---j57xlliim47wxj7u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrMpTUACgkQ64mZXMKQ
-wqmKKQ/+IUju4v7dG+hkUEBJrKJ5n4nq9IotpO+uHWDqtRhvFizqNIkQyTz4OEtR
-YgKwo2cKL6kofiJKTMGBBldjXFFiCg7b+7kUg6wAV9E+86Ot801bmAh/OV4B2rEN
-px81p+fJHLcVo3zqLs4M1PHaMP360L55Qv6YKJT7ZOpcheH/J0Z5AdDV0lxSamn+
-NIXLfOTeDyo/Xs3BKslEKlSj3mzn9/mWAeKhr77fwDeRMD5w63mw3GZp/ai6QQMY
-dwwo2ZOuFrfGZfnkqhbKxt0IyHPx2Vh5o6bxDWBFT9XYR0V/ENLJOxG9PvvtinZ5
-EOt+S2erq7A9ShZchVCDsrHrx+CskREubVno6D3cLh3sGfQp6dP+f8j7VG1pInsK
-D12+Fjibzz8JSNVNKlvkXTj9WufaoQX5Jqy5HU/ly1C64yFa0Cijq0jm2JlVyTB1
-/jyYXfCDECCcyzTMygd9rEFwoAm9f2wO4cN4KZNWflAOfJudJ+Qbkt7Q77YYaxfo
-d9+FUb5tqbWCzeuGTfTgL/ALDBbXJpremH0jWr3F18SEsYUWCbZYEgzl/KWG0NSD
-gcJhuZHt4/9ZrXBmSqmI5ud/iPJ/JQ8l3vqeLNt+XZgG3E5H3AN9N1aE4ATAZ5kI
-5bpoml/6Uim7ljbxOPFn7JLwYh+UPaCQ3zlZvA1wE/uBnkNr8Q0=
-=dcL8
------END PGP SIGNATURE-----
-
---j57xlliim47wxj7u--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
