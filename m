@@ -1,176 +1,535 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971EE43CE73
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 07:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476933019CD;
+	Mon, 12 Oct 2026 07:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791791027; cv=none; b=Y7hBd5WQ4gdUoKMvGDsvDmYdbAyI/gfqO4BH/EY0sGmVHW+r1U+qeeD5RKQrmVNL19i7H2jUscnyCsf4fHLEahqJ3XYU6Ouikt4ldkZHgBeW0EH2otGrMYp2Y/8YWeeSugNtj/oiLyUjawYxgJUPO2C0c+aqu0OKjk6ObLowIug=
+	t=1791791283; cv=none; b=SAnG5o1KoEY0dgbaLEO70f6ar8Tx3I3+NqF6lSIPsMySPOsinB2NBz5YPPtoVamWM8V/GXPy9rwlQG5TRPnzFsvrwgjhoqJ7kFhyLcFFf5Zmy6znmZBpHACLn82TVw0t49D94PU2HtGqsXnHhXMn5mIN9Mhl2jOPHvhPceiQKW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791791027; c=relaxed/simple;
-	bh=s4EuUlD807bnxeScR9jHr47Ctn6TStTookbXVJY346s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=orUnd8E4XDzS1t0jkz4fNzvVmzJz/U3H9NOxzXOjO8MLl/V9G7yVmapW+KqvjYAVSKrtDwXidd/emqwMlSXr+3wJY57CWukq3uzWzfxkxq0d5hNOWHb8TwZo99jrphLaOKf9J/w5wg5fjo+qOMUFIsXegomDV3vB4ljXpFkZo6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hLJxyGDU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1791791283; c=relaxed/simple;
+	bh=Vx6oyQ4rtYbDq0/+2r8TznJfMPRzCpVdShhhC+KMg2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekPCCXGRAPsuVsiQ9hEeduYDf9TVCYSY+Djae5jwqHJuxgYBhcXUV0QsB/yDdI7MJPO2nzpPVtQvm45/pkmOXKCnYW+E22y0H8MVU3mKdrPDotoUEzdhxmrjW1y0yb5ip8kMPOT8ZYFxZzZNr7guRAEhOxbkJP5k+LNK7OLDq4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gv+KyELq; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hLJxyGDU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1791791024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s4EuUlD807bnxeScR9jHr47Ctn6TStTookbXVJY346s=;
-	b=hLJxyGDUtoYVYN8ja+zg2GsQN9V7/at03gi5snQop+ZT+DvlUh4mLXNJyYdYO3UBwTMh8w
-	fZI+b64aBYXkvNQhXWS6RoloXurdalFx1r5FYgXLtCB/56g45SCdGrcDJbsjWuFkKWaNjf
-	+MNFUT7EuofjkSwkLR4LzFsybMxxay0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-h_y7zdNhPG6wLK_1rHXHsA-1; Mon, 12 Oct 2026 07:43:43 +0000
-X-MC-Unique: h_y7zdNhPG6wLK_1rHXHsA-1
-X-Mimecast-MFC-AGG-ID: h_y7zdNhPG6wLK_1rHXHsA_1791791022
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-48c46582442so959675f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 00:43:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791791022; x=1792395822;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=s4EuUlD807bnxeScR9jHr47Ctn6TStTookbXVJY346s=;
-        b=cZRbzMayAKB81wFzxZFso/+QZkkoRVR77Tf1bvVp6KpOmox5cPjh2Ohk9YWEtzxEAZ
-         DOAeIqMyyb1iTgtsZcnOiM4q3cMiseqvoViReBBdv7nKl4EgFwyOspc2z+6SxnetHBXe
-         MnDNS0WFG4HKzpLoM/wNIxMOEu1E6iWKSF+UBP9MFI3WqSe0P0AHZbZLMtrI0tAwmbLT
-         SXIXaHTH63Bj7bZGdE2tnwAdamvWfQtegWTz5Ts+JrAWTPmksMtzE27oWbf+b7+mFQMp
-         hjFdNyXNn4oseERF1jT/N0ka/ue0u+ANwyC8+gVZOn0GSZgQCtS5Ebb9ntgBKSQgR9Qr
-         c++g==
-X-Forwarded-Encrypted: i=1; AKwUvBzBH3v0VK6CD3XonoTFfNm8SuBFSKqN/trtcMzzZnLufWKSg3CYipEmCA3u/zRdYcUturV5oOFoPux86VJMcpu/oUI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJUjXxw36Z6SXVip9fcIoDW5rEOPaitWOHvq+PEwKfEyh3wzPne
-	kw5AqQ4UrUqcl2uP0NmEvAmr1goPiCWF5URuTkqnYdiYwQxCjKUqR2HJ0Q0K5Cgg/vZoTVPnpwq
-	t6HGDUo/Ff9T/1F/BWA8x6SvefiTyPbG6ylErIUykteFPdjBwFDL2tsSbjUSwxOPZWD+LQqkywG
-	Rpiix/PAunk/c=
-X-Gm-Gg: AYBFou31Zcbc0a9OetN34ZdLkATAyX6AH1C0J5bJJWX3P1lvZWhUaHU/ZfYW4m5oM/W
-	fUJEt485nl19Z6n/oueDadTs4vpb46BmnVERB47D9tFbldtmDDKPCcalH0RNmC1m9qZd9eEx/JV
-	Qq8I+VUYlYeNAoIKZ1RwXnuAWkegHavO1H+X0TporRhYw/Vq0seD9PcOjMhHZuPOWMjSkihG3pg
-	NN+nsuedudEyZEo0GVYjbhRzNQFn64LlEBpCbv4mqBdbzWuaqIYyfxGcJbnRShrOTs2hsdtE85S
-	hXltk4dN2KA9np81SIcEjiacMeuiXNVMdxC1EZeHwBsMl/j9zUdXyjpY+r3NFjSW4zHji06k5FF
-	VtREufSWhQ38A0ynxNJRdUIGVL006
-X-Received: by 2002:a05:600c:871b:b0:4a1:a2f3:e6f7 with SMTP id 5b1f17b1804b1-4a1a2f3e8a9mr14219145e9.29.1791791021726;
-        Mon, 12 Oct 2026 00:43:41 -0700 (PDT)
-X-Received: by 2002:a05:600c:871b:b0:4a1:a2f3:e6f7 with SMTP id 5b1f17b1804b1-4a1a2f3e8a9mr14218605e9.29.1791791021306;
-        Mon, 12 Oct 2026 00:43:41 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a199e5db12sm147510625e9.2.2026.10.12.00.43.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 00:43:40 -0700 (PDT)
-Message-ID: <daeb0025bab5302505fe64379c0882f3b20b4c74.camel@redhat.com>
-Subject: Re: [PATCH v2 09/15] tools/rv: Copy stripped bpf_atomic.h from
- libarena
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Alexei Starovoitov
-	 <alexei.starovoitov@gmail.com>, Wen Yang <wen.yang@linux.dev>, Tobias
- Schaffner	 <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
-Date: Mon, 12 Oct 2026 09:43:38 +0200
-In-Reply-To: <20261010204327.0656cde7@226.227.38.69.naturalwireless.com>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
-		<20261001152042.124445-10-gmonaco@redhat.com>	<87ld89wtrx.fsf@yellow.woof>
-		<4F009BB7-58C2-4AB1-8FEF-61FA4B5281A2@redhat.com>
-		<87fqygl9we.fsf@yellow.woof>
-		<76753c2dd66792ec6eb94d00741e61366df426cb.camel@redhat.com>
-	 <20261010204327.0656cde7@226.227.38.69.naturalwireless.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gv+KyELq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791791280; x=1823327280;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Vx6oyQ4rtYbDq0/+2r8TznJfMPRzCpVdShhhC+KMg2w=;
+  b=Gv+KyELqif2xY7J/GAMAw8FYyRFP6Y7EirBixvX7uxyL6WglnELd8/vZ
+   cnmDHNngxJc9i3fc6UnDy8saLw9pu3ZiN8VVi9b8b2nsHwnSakfEA1y6D
+   M+TH+dSM1EeHppn74eKEwno2qR6+9ySSJtJh3EgEd7bcx80OJ99iH5BG8
+   7HmjYdo1A6iQpOVw4MUX7hYFhrzkCqkWl7oLZ0WmvAQ1oOsBBbD/17IS+
+   dpP6TkiX9mtJqQXmXjSJxqWPtnjz6XFwtVwCbvdXseeKVkq3rOONlg/r2
+   SL5egT315sjsgLIlkxXoQGx590SbMXB7g7uQtu10R0YnQ915as+S8Rouw
+   Q==;
+X-CSE-ConnectionGUID: l3amYoQmST+AYyGnyRCgkg==
+X-CSE-MsgGUID: dhClxPyUSd+/PkBfUhDeAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11932"; a="507800"
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="507800"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2026 00:48:00 -0700
+X-CSE-ConnectionGUID: G/HfIbBjRECQ5D1PUzXlxA==
+X-CSE-MsgGUID: MC/ehUvyQDqTvZxSATnq3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,153,1787036400"; 
+   d="scan'208";a="937205"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 12 Oct 2026 00:47:57 -0700
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xGAlH-00000000BA9-0PSb;
+	Mon, 12 Oct 2026 07:47:55 +0000
+Date: Mon, 12 Oct 2026 15:47:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: wen.yang@linux.dev, Gabriele Monaco <gmonaco@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Nam Cao <namcao@linutronix.de>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Wen Yang <wen.yang@linux.dev>
+Subject: Re: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
+Message-ID: <202610121540.5HFVLTni-lkp@intel.com>
+References: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: FCwUlMi32XlouRbP4F9utunnMTjrISjvrRyiUYpYuHc_1791791022
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
 
-Hi Steve,
+Hi,
 
-On Sat, 2026-10-10 at 20:43 -0400, Steven Rostedt wrote:
->=20
-> Please keep both until you know the BPF side can do everything you need.
+kernel test robot noticed the following build errors:
 
-I agree. Also, complex monitors like timed automata won't be as easy to mig=
-rate.
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on shuah-kselftest/next shuah-kselftest/fixes linus/master v7.3-rc6 next-20261009]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->=20
-> On Fri, 09 Oct 2026 12:09:42 +0200
-> Gabriele Monaco <gmonaco@redhat.com> wrote:
->=20
-> > There's a common belief considering BPF a prototyping playground, where
-> > "real"
-> > things should eventually end up in the kernel.
-> > Now, I don't agree with it (look at the many sched_ext policies used in
-> > production), but I'd want to assess if dropping kernel support could dr=
-ive
-> > users away (e.g. industry/automotive which keeps popping out) and under=
-stand
-> > the various not purely technical reasons.
->=20
-> Where do you plan on storing the repository of BPF programs?
+url:    https://github.com/intel-lab-lkp/linux/commits/wen-yang-linux-dev/rv-Force-environment-reset-action-on-HA-monitor-start/20261012-033907
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang%40linux.dev
+patch subject: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
+config: sh-randconfig-1001-20261012 (https://download.01.org/0day-ci/archive/20261012/202610121540.5HFVLTni-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 16.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261012/202610121540.5HFVLTni-lkp@intel.com/reproduce)
 
-That's something I would like to refine better. But I'm planning to keep
-"official" monitors in-tree (tools/rv) and encourage to upstream monitors
-nonetheless.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202610121540.5HFVLTni-lkp@intel.com/
 
-We could come up with a separate repository for "community" monitors, with
-perhaps a lower bar compared to the ones in-tree. That'd hopefully encourag=
-e
-collaboration where possible.
+All error/warnings (new ones prefixed by >>):
 
-> One issue I have with sched_ext is that it did exactly what many people
-> were worried about. There's a lot of schedulers out there without much
-> collaboration. It's the "copy one close to what I want and tweak it".
-> When I left Google, I heard there was 20 or so sched_ext schedulers
-> doing various things for various projects.
->=20
-> One of my main motivations for scheduler governors.
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:5,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from ./arch/sh/include/generated/asm/rwonce.h:1,
+                    from include/linux/compiler.h:369,
+                    from include/linux/err.h:5,
+                    from include/kunit/assert.h:12,
+                    from include/kunit/test.h:12,
+                    from include/rv/kunit.h:16,
+                    from kernel/trace/rv/rv_monitors_test.c:10:
+>> include/linux/stddef.h:16:33: error: 'struct ha_monitor' has no member named 'da_mon'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:66:16: note: in expansion of macro 'offsetof'
+      66 | _Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
+         |                ^~~~~~~~
+>> include/linux/stddef.h:16:33: error: expression in static assertion is not an integer
+   include/rv/ha_monitor.h:66:16: note: in expansion of macro 'offsetof'
+      66 | _Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
+         |                ^~~~~~~~
+>> kernel/trace/rv/rv_monitors_test.c:21:23: warning: 'HA_TIMER_HRTIMER' is not defined, evaluates to '0' [-Wundef]
+      21 | #define HA_TIMER_TYPE HA_TIMER_HRTIMER
+         |                       ^~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:122:5: note: in expansion of macro 'HA_TIMER_TYPE'
+     122 | #if HA_TIMER_TYPE == HA_TIMER_WHEEL
+         |     ^~~~~~~~~~~~~
+   In file included from kernel/trace/rv/rv_monitors_test.c:71:
+>> include/rv/ha_monitor.h:122:22: warning: 'HA_TIMER_WHEEL' is not defined, evaluates to '0' [-Wundef]
+     122 | #if HA_TIMER_TYPE == HA_TIMER_WHEEL
+         |                      ^~~~~~~~~~~~~~
+   In file included from include/linux/init.h:5,
+                    from include/linux/printk.h:6,
+                    from include/kunit/assert.h:13:
+   include/rv/ha_monitor.h: In function 'ha_monitor_init_env':
+>> include/linux/container_of.h:8:47: error: 'struct ha_monitor' has no member named 'da_mon'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                               ^~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/linux/container_of.h:20:43: note: in expansion of macro 'typeof_member'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                                           ^~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:192:37: note: in expansion of macro 'to_ha_monitor'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   include/linux/compiler_types.h:610:27: error: expression in static assertion is not an integer
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:192:37: note: in expansion of macro 'to_ha_monitor'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+>> include/linux/stddef.h:16:33: error: 'struct ha_monitor' has no member named 'da_mon'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:23:34: note: in expansion of macro 'offsetof'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:192:37: note: in expansion of macro 'to_ha_monitor'
+     192 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   include/rv/ha_monitor.h: In function 'ha_monitor_reset_env':
+>> include/linux/container_of.h:8:47: error: 'struct ha_monitor' has no member named 'da_mon'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                               ^~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/linux/container_of.h:20:43: note: in expansion of macro 'typeof_member'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                                           ^~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:208:37: note: in expansion of macro 'to_ha_monitor'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   include/linux/compiler_types.h:610:27: error: expression in static assertion is not an integer
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:208:37: note: in expansion of macro 'to_ha_monitor'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+>> include/linux/stddef.h:16:33: error: 'struct ha_monitor' has no member named 'da_mon'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:23:34: note: in expansion of macro 'offsetof'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:208:37: note: in expansion of macro 'to_ha_monitor'
+     208 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   In file included from <command-line>:
+   include/rv/ha_monitor.h: In function 'ha_monitor_env_invalid':
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/linux/compiler_types.h:635:53: note: in definition of macro '__unqual_scalar_typeof'
+     635 | #define __unqual_scalar_typeof(x) __typeof_unqual__(x)
+         |                                                     ^
+   include/asm-generic/rwonce.h:50:9: note: in expansion of macro '__READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |         ^~~~~~~~~~~
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:219:32: error: 'struct ha_monitor' has no member named 'env_store'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                                ^~
+   include/asm-generic/rwonce.h:44:73: note: in definition of macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                         ^
+   include/rv/ha_monitor.h:219:16: note: in expansion of macro 'READ_ONCE'
+     219 |         return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
+         |                ^~~~~~~~~
+>> include/rv/ha_monitor.h:217:80: warning: parameter 'env' set but not used [-Wunused-but-set-parameter=]
+     217 | static inline bool ha_monitor_env_invalid(struct ha_monitor *ha_mon, enum envs env)
+         |                                                                      ~~~~~~~~~~^~~
+   include/rv/ha_monitor.h: In function 'ha_monitor_handle_constraint':
+>> include/linux/container_of.h:8:47: error: 'struct ha_monitor' has no member named 'da_mon'
+       8 | #define typeof_member(T, m)     typeof(((T*)0)->m)
+         |                                               ^~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/linux/container_of.h:20:43: note: in expansion of macro 'typeof_member'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                                           ^~~~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:286:37: note: in expansion of macro 'to_ha_monitor'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   include/linux/compiler_types.h:610:27: error: expression in static assertion is not an integer
+     610 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+      80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                                        ^~~~
+   include/linux/container_of.h:20:9: note: in expansion of macro 'static_assert'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |         ^~~~~~~~~~~~~
+   include/linux/container_of.h:20:23: note: in expansion of macro '__same_type'
+      20 |         static_assert(__same_type(*(ptr), typeof_member(type, member)) || \
+         |                       ^~~~~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:286:37: note: in expansion of macro 'to_ha_monitor'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+>> include/linux/stddef.h:16:33: error: 'struct ha_monitor' has no member named 'da_mon'
+      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
+         |                                 ^~~~~~~~~~~~~~~~~~
+   include/linux/container_of.h:23:34: note: in expansion of macro 'offsetof'
+      23 |         (type *)((void *)(ptr) - offsetof(type, member)); })
+         |                                  ^~~~~~~~
+   include/rv/ha_monitor.h:68:27: note: in expansion of macro 'container_of'
+      68 | #define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
+         |                           ^~~~~~~~~~~~
+   include/rv/ha_monitor.h:286:37: note: in expansion of macro 'to_ha_monitor'
+     286 |         struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
+         |                                     ^~~~~~~~~~~~~
+   include/rv/ha_monitor.h: In function '__ha_monitor_timer_callback':
+>> include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:635:53: note: in definition of macro '__unqual_scalar_typeof'
+     635 | #define __unqual_scalar_typeof(x) __typeof_unqual__(x)
+         |                                                     ^
+   include/rv/ha_monitor.h:321:22: note: in expansion of macro 'smp_load_acquire'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                      ^~~~~~~~~~~~~~~~
+>> include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/barrier.h:204:44: note: in expansion of macro 'READ_ONCE'
+     204 |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+         |                                            ^~~~~~~~~
+   include/rv/ha_monitor.h:321:22: note: in expansion of macro 'smp_load_acquire'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                      ^~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/barrier.h:204:44: note: in expansion of macro 'READ_ONCE'
+     204 |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+         |                                            ^~~~~~~~~
+   include/rv/ha_monitor.h:321:22: note: in expansion of macro 'smp_load_acquire'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                      ^~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/barrier.h:204:44: note: in expansion of macro 'READ_ONCE'
+     204 |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+         |                                            ^~~~~~~~~
+   include/rv/ha_monitor.h:321:22: note: in expansion of macro 'smp_load_acquire'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                      ^~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   include/linux/compiler_types.h:702:9: note: in expansion of macro '_compiletime_assert'
+     702 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                            ^~~~~~~~~~~~~
+   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/barrier.h:204:44: note: in expansion of macro 'READ_ONCE'
+     204 |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+         |                                            ^~~~~~~~~
+   include/rv/ha_monitor.h:321:22: note: in expansion of macro 'smp_load_acquire'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                      ^~~~~~~~~~~~~~~~
+   include/rv/ha_monitor.h:321:46: error: 'struct ha_monitor' has no member named 'da_mon'
+     321 |         curr_state = smp_load_acquire(&ha_mon->da_mon.curr_state);
+         |                                              ^~
+   include/linux/compiler_types.h:682:23: note: in definition of macro '__compiletime_assert'
+     682 |                 if (!(condition))                                       \
 
-Yeah that's a good point, though I'm not quite sure how to prevent that.
-People could do mostly the same using kernel modules as well, however.
 
-At the moment I still didn't figure out how to build monitors out-of-tree, =
-that
-might encourage a bit more working in-tree.
+vim +16 include/linux/stddef.h
 
-The difference with sched_ext here is that this BPF implementation requires
-little to none kernel support. For all we know, people out there might alre=
-ady
-be running something like RV monitors implemented in BPF or whatever else.
+6e2182874324727 Richard Knutsson 2006-09-30  14  
+^1da177e4c3f415 Linus Torvalds   2005-04-16  15  #undef offsetof
+14e83077d55ff4b Rasmus Villemoes 2022-03-23 @16  #define offsetof(TYPE, MEMBER)	__builtin_offsetof(TYPE, MEMBER)
+3876488444e7123 Denys Vlasenko   2015-03-09  17  
 
-Currently most of the logic is supposed to go to the shared headers, but
-monitors can implement some custom logic too (you already need to touch the=
- C
-file anyway). I'd like to reduce reliance on custom logic as much as possib=
-le,
-that was already brought up by a couple of people. This way, hopefully, peo=
-ple
-would rely more on the "library" and share/request any improvement.
-
-But again, I don't have real answers to that, and I'm open to discuss more
-sensible solutions.
-
-Thanks,
-Gabriele
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
