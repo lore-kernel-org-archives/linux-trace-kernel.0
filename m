@@ -1,153 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E244A4983;
-	Mon, 12 Oct 2026 16:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0AB4AAC74
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 16:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791823008; cv=none; b=DDw40zbsmALrxA/yeHS6H6IpGVMXyf8M70M2unF3lTzpEBSa72LPFIJq0OxTzHNZN0Udur04SuTSG6/wlwkQqH3AvYmUAZ7zdL5zp5VzIxOUlDvmRxpW3pK9yzzvZ5udakdgW4L66qHBLIJzzLSdE8PomfDjN/5ynfHCEMjqpZw=
+	t=1791823021; cv=none; b=Pjl3G6xjImOKkREgdR3RORDdeALCFPa2bvZAf42N/kNgcYb88SCG+AIZKQNsSa7p6WJ0lYasOOrQE0cVx2Zn+H2aE3f+j0E2fD/WzfoyxFZN4Mhakv3ckIp5Tzb1Gh5wv6Oy1lXMiUvNxFOyIzGOzoG0Br3YSA3fLogMkArrmsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791823008; c=relaxed/simple;
-	bh=lS65VTYOy71Tt0C/gecqcnSLKjaDdjm5KAh124Itp1U=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=a5DSK0QosXzMD4Y1ZmpI9UxcwWGWwagwrMe8S7+xvUfvW9XRF12OnEXG+ODrnRg2Aq+xgoM18Dg8mV3GjtRK+ROW6Lju7ZXXSSA18b/9kOl+xvgCDN0HzDg6xD24Vb54LmqqbgN8YEXXdZ77bJQbJg4zmXSJi0QG/jDrONWaqG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCJa24Ij; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791823021; c=relaxed/simple;
+	bh=eLqIJFpZARpTKqSv51MdJJjuy28e6zXE9Kld4KRhU+I=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Q/vccVhfy/pcpmVmjehYY5y4ooonqQqV2EDE9mw2sfr9JnfTQXBgitnfwciFlZswRsWZtU+2vt9MwVsugWiYasqcGobZXnwfKpX/WP6rezI+AgKuK0Fx1BhS9CfOKV64utOTeNkUSu77oRNo70MejzmMzDsfxD+nDZL25O19JdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q8So8cdv; arc=none smtp.client-ip=209.85.128.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCJa24Ij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6971F1F0089B;
-	Mon, 12 Oct 2026 16:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791823006;
-	bh=rs9xq6F89m82dVlmpRzPL7OWq5H23Mx4nxInBIHtSbs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PCJa24Ij2crw6NrWb5Dk6TeKhX40tgkOjuQoC5zbMe0GDEnwXTcuw18qfGFYiU+K7
-	 75px+iFe7ryMM2meOjuzCP4CBodEmiN/8JKdu006TU106tyMXtw2j/WONSzfk9ikr9
-	 oZZ5mG+8d44vZYpPtqr5uWhJF2melbXloS76ZH86IyT5vsnB7of6YXnBinV4FiHvih
-	 PIps6Eil4yzOe8SW+UlmelMeFJ0K6haUW4ocj7Gdn6KC5u4CgFPCNzzgMbVlwpu5Tu
-	 W6rZboQRklqMyRzVY+qX+FRCgp1E++7K0wXJfsOiE/bl/wH9RNdGpfCOqPECkjDCN6
-	 Q1p0eKijzDBDA==
-Message-ID: <sashiko-outbox-168400@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH bpf-next v2 14/21] bpf: Add tracing_multi link info
- support for bpf progs
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leon Hwang" <leon.hwang@linux.dev>
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261012154024.29423-15-leon.hwang@linux.dev>
-References: <20261012154024.29423-1-leon.hwang@linux.dev>
- <20261012154024.29423-15-leon.hwang@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 16:36:45 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8So8cdv"
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a022fee32fso16013905e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 09:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791823018; x=1792427818; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LS4qpOUX8U+nhwzlLQ4pxh6uIS+fahSDIf6nSelya9k=;
+        b=Q8So8cdvA7CRTgtxhdp+obpoHNh+KADwuHapkvDKgcL1BZfzoGQ/JT/ZTEsBWFXGAY
+         xtwYfD2hw48LF+jFEJMW3U9CNIIlgqRg8z+Qd3CBihxTlNzWK1UPe48ECf8lU0xhqVMw
+         P6jdLyoPs0jzDDP2OwCfqhgLSOFBVWFwpPvFzpPxaDUFIesktgwqyG8O3Y18O3xOzfGu
+         n8/sYW/Iv3x+pc6Env76YSU3SDjn8R7uikSqCj1jUwx1pxFS+nBnL+IajoooqOcUtuCe
+         SDp7i0JiqkNobYbz7pYCo5LkVPSHHHmuNm+J5uytVRjHtL0Vqxrts/Za1MoUUG+X57E7
+         F/tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791823018; x=1792427818;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LS4qpOUX8U+nhwzlLQ4pxh6uIS+fahSDIf6nSelya9k=;
+        b=HkfHsG58lEDKCJSHK7Nsr9eKlHNhkpLxXc29ZWhRCdefJ/OuGhbfxptNDVuEjMIR6i
+         QKVsRCo9/xvLPShin9mF5VU/ca3NHYVuSkFP4fCYGQLLrHjbWggldVWSv2PawpXZFpRq
+         l7JHw7W2SV6KQp4iJHBB7glGtxXj3fM/o2L7711AMzO+cJ/Gv23pgwl628ag9aE7iH/b
+         k1WxuFehhCBxQwn3e80P6zILhd6ndiM569sSjKZKRqmkheyaqOschMOK/v40u/rkiLVq
+         +0mLhz7CX/XdmZkc1lHNl5gIsHmPcdw860CR8/k3PWn+E3Lv42hvWn5NrXrssRBiOT+i
+         Q7ow==
+X-Forwarded-Encrypted: i=1; AKwUvBx5xPG25TRBlvRQDeLIZDnaBc4S5WSt1+i30EOfuH8HNxnFlnC2n785MF03ey5XllohPGIZPYQEAe/csYSsg1oo100=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKqPkwKZ8uTwmKzbhYf2VVxalWDUk7aRhCJF+cx+T7PC8d0Z9RC
+	kMCMwoWdcANAUk+7Nw5qpPGCVdAhpBg1Ug8HVe0gFKnRrgCbjNgUARdqrhapUg4dkptvXotYbnO
+	2Ujmf7g34Q38X7zCBnZ2nMw==
+X-Received: from wmpl34.prod.google.com ([2002:a05:600c:8a2:b0:4a1:811f:6de2])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:810a:b0:4a0:2391:6533 with SMTP id 5b1f17b1804b1-4a18e4a954bmr170650545e9.21.1791823017685;
+ Mon, 12 Oct 2026 09:36:57 -0700 (PDT)
+Date: Mon, 12 Oct 2026 17:35:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261012163502.687061-1-vdonnefort@google.com>
+Subject: [PATCH v1] ring-buffer: Skip si_mem_available() for persistent and
+ remote buffers
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] bpftool: buffer over-read of uninitialized heap memory in sym_na=
-me_trim_prefix()
-- [Medium] bpf: strict fids check in bpf_tracing_multi_link_fill_link_info(=
-) breaks UAPI
---
+Persistent and remote buffer memory is pre-allocated by the time
+__rb_allocate_pages() is called. Skip si_mem_available() to avoid
+wrongly failing the allocation under memory pressure.
 
-commit 69edd76aa1ef54260b1403707834fa758ec91952
-Author: Leon Hwang <leon.hwang@linux.dev>
-bpf: Add tracing_multi link info support for bpf progs
+For the same reason, unset user_thread.
 
-This commit adds support for showing BPF program information in tracing_mul=
-ti=20
-links via bpftool.
+Fixes: be68d63a139b ("ring-buffer: Add ring_buffer_alloc_range()")
+Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ kernel/trace/ring_buffer.c | 41 +++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 8b1a52350cfda..39c911917ae24 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-[ ... ]
-> @@ -3725,9 +3726,13 @@ static int bpf_tracing_multi_link_fill_link_info(c=
-onst struct bpf_link *link,
->  	info->tracing_multi.attach_type =3D tr_link->link.attach_type;
->  	info->tracing_multi.count =3D tr_link->nodes_cnt;
->  	info->tracing_multi.btf_obj_id =3D btf_obj_id(tr_link->link.prog->aux->=
-attach_btf);
-> +	has_progs =3D !!tr_link->tgt_progs;
-> +	info->tracing_multi.flags =3D has_progs ? BPF_F_TRACING_MULTI_TGT_PROGS=
- : 0;
-> =20
-> -	if (!uids && !ucookies && !uaddrs)
-> +	if (!uids && !ucookies && !uaddrs && !fids)
->  		return 0;
-> +	if (has_progs !=3D !!fids)
-> +		return -EINVAL;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 04bb94c29f58..b3a30a0413a5 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2442,20 +2442,30 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct trace_buffer *buffer = cpu_buffer->buffer;
+ 	struct ring_buffer_cpu_meta *meta = NULL;
+ 	struct buffer_page *bpage, *tmp;
+-	bool user_thread = current->mm != NULL;
+ 	struct ring_buffer_desc *desc = NULL;
++	bool user_thread = false;
+ 	long i;
+ 
+-	/*
+-	 * Check if the available memory is there first.
+-	 * Note, si_mem_available() only gives us a rough estimate of available
+-	 * memory. It may not be accurate. But we don't care, we just want
+-	 * to prevent doing any allocation when it is obvious that it is
+-	 * not going to succeed.
+-	 */
+-	i = si_mem_available();
+-	if (i < nr_pages)
+-		return -ENOMEM;
++	if (buffer->range_addr_start) {
++		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
++	} else if (buffer->remote) {
++		desc = ring_buffer_desc(buffer->remote->desc, cpu_buffer->cpu);
++		if (!desc || WARN_ON(desc->nr_page_va != (nr_pages + 1)))
++			return -EINVAL;
++	} else {
++		/*
++		 * Check if the available memory is there first.
++		 * Note, si_mem_available() only gives us a rough estimate of available
++		 * memory. It may not be accurate. But we don't care, we just want
++		 * to prevent doing any allocation when it is obvious that it is
++		 * not going to succeed.
++		 */
++		i = si_mem_available();
++		if (i < nr_pages)
++			return -ENOMEM;
++
++		user_thread = current->mm != NULL;
++	}
+ 
+ 	/*
+ 	 * If a user thread allocates too much, and si_mem_available()
+@@ -2469,15 +2479,6 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (user_thread)
+ 		set_current_oom_origin();
+ 
+-	if (buffer->range_addr_start)
+-		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
+-
+-	if (buffer->remote) {
+-		desc = ring_buffer_desc(buffer->remote->desc, cpu_buffer->cpu);
+-		if (!desc || WARN_ON(desc->nr_page_va != (nr_pages + 1)))
+-			return -EINVAL;
+-	}
+-
+ 	for (i = 0; i < nr_pages; i++) {
+ 
+ 		bpage = alloc_cpu_page(cpu_buffer->cpu);
 
-[Severity: Medium]
-Does this strict equality check break forward compatibility for generic=20
-userspace tools?
+base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
-If a tool unconditionally pre-allocates and provides a func_btf_ids array=20
-while querying an older, non-BPF-targeted tracing_multi link (where has_pro=
-gs=20
-is false), bpf_obj_get_info_by_fd() will fail with -EINVAL.
-
-Would it be safer to gracefully ignore or zero-fill the fids buffer if the=
-=20
-target does not have programs, rather than rejecting the query entirely?
-
-> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> index 5cffa2d283b47..da7e430b14c8a 100644
-> --- a/tools/bpf/bpftool/link.c
-> +++ b/tools/bpf/bpftool/link.c
-[ ... ]
-> @@ -422,12 +422,31 @@ show_uprobe_multi_json(struct bpf_link_info *info, =
-json_writer_t *wtr)
->  	jsonw_end_array(json_wtr);
->  }
-> =20
-> +#define BPF_PROG_PREFIX		"bpf_prog_"
-> +#define BPF_PROG_PREFIX_LEN	(sizeof(BPF_PROG_PREFIX) - 1)
-> +
-> +static const char *
-> +sym_name_trim_prefix(struct kernel_sym *sym, bool is_prog)
-> +{
-> +	int prefix_len;
-> +
-> +	if (!is_prog)
-> +		return sym->name;
-> +
-> +	/* Ref kernel/bpf/core.c::bpf_prog_ksym_set_name() */
-> +	prefix_len  =3D BPF_PROG_PREFIX_LEN;
-> +	prefix_len +=3D BPF_TAG_SIZE * 2;
-> +	if (sym->name[prefix_len] !=3D '\0')
-
-[Severity: Medium]
-Can this result in an out-of-bounds read if the kernel symbol name is short=
-er=20
-than the prefix length?
-
-In bpftool, sym->name is allocated using libbpf_reallocarray() and populate=
-d=20
-via sscanf(), which null-terminates the string but leaves the remainder of=
-=20
-the buffer uninitialized.
-
-If a target address resolves to a short kernel symbol (for example, due to =
-a=20
-TOCTOU race where a BPF program is unloaded and its vmalloc address is=20
-reused), sym->name[prefix_len] evaluates uninitialized heap memory. If that=
-=20
-byte happens to be non-zero, it skips it and returns a pointer into the=20
-uninitialized region, potentially corrupting CLI or JSON output.
-
-Should we verify that strlen(sym->name) is sufficiently large before checki=
-ng=20
-the character at prefix_len?
-
-> +		prefix_len +=3D 1;		/* skip the '_' */
-> +	return sym->name + prefix_len;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012154024.2942=
-3-1-leon.hwang@linux.dev?part=3D14
