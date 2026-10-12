@@ -1,88 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699BE49BD89;
-	Mon, 12 Oct 2026 15:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80DB49E5FE;
+	Mon, 12 Oct 2026 16:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791820724; cv=none; b=qleqmtH5lVWq1bZJS6jKZHOxVRI6zrA9a03JezPZGxxcCva8g12JQWtr5Opkux5ULbE1l4eLSzN0OO08k2xKFtjmpdWJbikC6Ndr9L+SMdFVa6dn1pTsAiLcGeYmOnP7n1m1bhBKwg8mD7uSmRpFwJi7cNsr8dbGSVVX7PU5d8s=
+	t=1791821511; cv=none; b=J7YyCshfQBRCQfUcE90oMAvWXek+68r9h2YEp9INL4StK5y5RciyyLh6rUCwNl0HPI9dCS/s0cKgkBQ+Ka4d3nufYVqDMCWCPlXkP+bhVezaEsj/s1s/0+lE0BlpQdXH+Sj3ppNTfHYI+Nztl6ZP75k8xeKyyA1JvesY25tMNxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791820724; c=relaxed/simple;
-	bh=Ghw2Too6nsTSB0gyFqwTAFmBrb8gX4+m1BBjTTGdCdI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p8ifX4pc2CYLnfGpWBy+vpkonXoaRThA7HpECJnPH6gPMuuF3mo2Gp2Odudj1nw0uA+Pws6OEBo+kutqWHajX5/Dc9VQGxZv6IHC4OMg/DRcbS6BfU2cItoYXzEVjZK7qhry0caTH47gPeRVxs7FJhYz0cWhUdRLJrPdR8Evo8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DM5Mkfyo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791821511; c=relaxed/simple;
+	bh=6FSgLmlRieYCPz+3j2mwBhdGAKy2QiwnJyeM5ucEzcM=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=aDZvDuOo5vbAo8SgKQqte3ShNP9U47krzz2fq0ZlUf7LOz+p4vRIrRaVX6GCZHvjLOBLmMoARGMTfleIEmyhE0jsI5URrgw9kcvoorJCUdV+SWXM9hEuARC3qphXXXYAY2NeNExM9dG6fT61RtDTQLAQAyyQM1Up+Zl9d8lFpJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctUAn24i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DM5Mkfyo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CB71F0089B;
-	Mon, 12 Oct 2026 15:58:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctUAn24i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789541F0089B;
+	Mon, 12 Oct 2026 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791820723;
-	bh=OqVGB5nmZcsRJQmL7nMbGCi0tgj5U0FC8/4mrmlHcSU=;
-	h=From:To:Cc:Subject:Date;
-	b=DM5Mkfyo2jyGDn4ofWtPcyhTlNJ+wtZHsBhM/2PZWoKU4fTGZ1pVTsAlvb1DlQT+A
-	 KCARoAycdrpFMyzCsKZ7InjuQPMCy4lNB4iBCb7shiYOKxHnWLTv4DvD6xYDxj7Vxc
-	 I3PuN7YAmlIcGR7LnxuZpK0X5kUMg0Tivh9VAWASUAKQ9XbROFAWbetu6I32IdVGmG
-	 YVxGWxlvPN+Ov49x2P5H7MfvRDfvMCeYfu/VaM21lsGaXm23Q9oS98Gjv6V8xbk+Wd
-	 IJRsbP/oY9Dv+hJGOBdhH0zEtuMkP9pW2dsAdWPuUiXe4+VtpXjUd+ZW8WajlXjcfm
-	 1hPp0ku4Ebg/Q==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH] tracing/histograms: Reject non-stacktrace fields for synthetic stacktrace fields
-Date: Mon, 12 Oct 2026 15:58:05 +0000
-Message-ID: <20261012155805.1103972-1-lee@kernel.org>
-X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+	s=k20260515; t=1791821508;
+	bh=sjrJKhT2IROUQqK2omAaK4ws05KJ8UAbS6zJzFtHQUI=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=ctUAn24iI2rL/oR620R6zxqpq3Z8NEhkftAF+WHGMFv7Xkweg9/ZNUyUqdhR+pgG9
+	 2plUxunF6z8pqWkcboL/4rTWQ+KigPyVGV0azmutdBnt3zbiXx7LFKy+uwHSRnHIN5
+	 lv21xUxRp5lmsvFaHfI6lnCHaIEAbS5vvQb7u2FXHDWcmzvGDA8HW0Ei880BNPz9yc
+	 jmiIjyJip3DkGAVRLkay0gwEAFNwyxwnTmrc8sn4SEsEBN/KTUdJFoOHwJVt1cyrpC
+	 7le9wXmxgwzlNwkR17WdwGHuNBisSc+NsRscGnNEC+uzturoBHF725GrD7cjAZyl+D
+	 uNSsrgeFKKdFw==
+Content-Type: multipart/mixed; boundary="===============5565528010280399983=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <99aeee9b4fb782792f6f20be06470233aad1b47aaaa00b4073cc431552f48cac@mail.kernel.org>
+In-Reply-To: <20261012154024.29423-7-leon.hwang@linux.dev>
+References: <20261012154024.29423-7-leon.hwang@linux.dev>
+Subject: Re: [PATCH bpf-next v2 06/21] bpf: Add bpf_text_poke_batch() helper in trampoline
+From: bot+bpf-ci@kernel.org
+To: leon.hwang@linux.dev,bpf@vger.kernel.org
+Cc: ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,qmo@kernel.org,shuah@kernel.org,leon.hwang@linux.dev,yatsenko@meta.com,avinash.duduskar@gmail.com,a.s.protopopov@gmail.com,ameryhung@gmail.com,jordan@jrife.io,rongtao@cestc.cn,eyal.birger@gmail.com,pulehui@huawei.com,tanjingguo@huawei.com,malin89@huawei.com,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-kselftest@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Mon, 12 Oct 2026 16:11:45 +0000 (UTC)
 
-In check_synth_field(), when a synthetic event field is a stacktrace
-(field->is_stack) and the histogram field is not a "long[" stacktrace
-array, validation falls through to the generic size and signedness
-comparison.
+--===============5565528010280399983==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Because parse_synth_field() sets a stacktrace field's type to
-"__data_loc unsigned long[]", its size is sizeof(u64) and
-synth_field_signed() marks it as signed.  Consequently, any 8-byte
-signed scalar histogram field passes the fallback check, and its scalar
-value is subsequently dereferenced as a kernel stacktrace pointer in
-get_field_size() and trace_stack().
+> bpf: Add bpf_text_poke_batch() helper in trampoline
 
-Reject any mismatch between field->is_stack and a "long[" histogram
-field type in check_synth_field().
+TL;DR: The new static bpf_text_poke_batch() has no caller in this patch, so it
+may trigger -Wunused-function and, with CONFIG_WERROR=y, break the build and
+bisection; consider squashing it or marking __maybe_unused.
 
-Fixes: 00cf3d672a9d ("tracing: Allow synthetic events to pass around stacktraces")
-Cc: stable@vger.kernel.org
-Signed-off-by: Lee Jones <lee@kernel.org>
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 21d460866dfe..a2fd0bd8c685 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+
+[ ... ]
+
+> @@ -1863,6 +1864,56 @@ void bpf_trampoline_multi_detach(struct bpf_prog *prog,
+>  	  CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS &&
+>  	  CONFIG_BPF_SYSCALL */
+>
+> +static int bpf_text_poke_cmp(const void *a, const void *b)
+> +{
+
+[ ... ]
+
+> +static int bpf_text_poke_batch(struct bpf_text_poke **pokes, u32 cnt)
+> +{
+
+bpf_text_poke_batch() is static and nothing calls it in this commit.  Will
+this trigger a -Wunused-function warning for any config that builds
+trampoline.o?
+
+  kernel/bpf/trampoline.c: warning: 'bpf_text_poke_batch' defined but not
+  used [-Wunused-function]
+
+With CONFIG_WERROR=y that becomes a build failure, which would break
+bisection at this point in the series.
+
+The first callers, bpf_trampoline_multi_prog_attach() and
+bpf_trampoline_multi_prog_detach(), only arrive later in the series in
+59e80b53cc6b ("bpf: Add bpf_trampoline_multi_prog_attach/detach()").  That
+commit also wraps these helpers in #ifdef CONFIG_BPF_SYSCALL so they are not
+unused in !CONFIG_BPF_SYSCALL builds.
+
+Could this helper be squashed into the commit that adds its first user?  If
+it stays separate, could it be marked __maybe_unused until that user arrives?
+
+> +	int i, err;
+> +
+> +	/*
+> +	 * Sort pokes for two purposes:
+
+[ ... ]
+
+
 ---
- kernel/trace/trace_events_hist.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 8af97fd4ee2d..b09f5043e154 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -3946,7 +3946,10 @@ static int check_synth_field(struct synth_event *event,
- 	    && field->is_dynamic)
- 		return 0;
- 
--	if (strstr(hist_field->type, "long[") && field->is_stack)
-+	if (!!strstr(hist_field->type, "long[") != field->is_stack)
-+		return -EINVAL;
-+
-+	if (field->is_stack)
- 		return 0;
- 
- 	if (strcmp(field->type, hist_field->type) != 0) {
--- 
-2.56.0.385.gd3acb90ef8-goog
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/38273555988
+--===============5565528010280399983==--
