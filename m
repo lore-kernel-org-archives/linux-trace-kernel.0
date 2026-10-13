@@ -1,127 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D22B3BCD16;
-	Tue, 13 Oct 2026 09:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98723AB87;
+	Tue, 13 Oct 2026 09:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791882033; cv=none; b=polg0g3tQE7QwJpJQIkfAt5nop1WCNepFR7MEe2ZJnOy6Pm+Ly1jsOVWBYehAeimrEiY9EqP2biBWQmyGT8xUsaeVe8i7AVeXynM8GFymz8NFJalODKw7sXyjy4hePFOVnm6/ljwNCo03+aKzzboJnB5CXlfao1KuRIeVRsV0Nc=
+	t=1791883031; cv=none; b=aNxEP/Q/IGErlk/ugxQlOAdtiVeTZE9cIlJdpC6rN5eVPrftMP3dw7b/8UDgsVmdpIcT+s/k+T0h/g37MvydvYIP9oLh04WoN0cX0so5PGjKIKBa1tWXjDhKe8ihYiAO4UCVBEGQMSb7sKFz/ZySudpjDK9suivIRzz8kexJv3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791882033; c=relaxed/simple;
-	bh=GRE6ERaWL+Ad+SdPNiy47nxXkJAumlHKORcVMihtbi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rMGgUyRktOKLHMVlUiCKdYkuCx08jPZEbikKTbH4A8ATSr/Z3Fl2SIYuh16m0nXRqxUPjh/AEzJKYETvfmDcU7kVh+TMZqihWq/R0WjvTh32zovPtf2RABVFK4NmJrqJeePIaZu+gLr54lkSYXootf5VsEoX22VA/kHAP46Pveo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STblXv/1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791883031; c=relaxed/simple;
+	bh=o3hVqz2iMt7hW2IxywccrCJbpHk03oL077zjQq0SWS4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-Id; b=lvkkqTIACdAFJGfMiM9CnzCMA8PIl/rthWu77eLN4ezPu0IR19hVZQ6IK3KEmp3PfBJHmhH1zLAfmGVXra5NC0BPNIDo5FMGGs9nRMfUrTOnOy/lc6ZhlHWktyP4kex+CAG8mqLP52zDm9hKbCsUAvHauK7TxxCybASEDtKapOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTTQict2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STblXv/1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B9AF1F000FF;
-	Tue, 13 Oct 2026 09:00:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTTQict2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8CD1F000FF;
+	Tue, 13 Oct 2026 09:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791882031;
-	bh=eKmb89Y/N1R79MXrWMtUJkPTpf2JG7q7c2wsunA5liM=;
-	h=From:To:Cc:Subject:Date;
-	b=STblXv/1mp8oATNgOhdan4MxbVF3StuxgixVxfdU4MUrqnaOW5nnbOPeGfW3N/Uee
-	 ybUmMDzwURNusmAlaEGZY9ovk68JAvJ0MeyfCea+OPbiQ7E75kIb3jGP+mAdCsSVoH
-	 oygx8Drk9ZFnvXCFs6y7dAk/zpTLe9g2wv/DY1DEGD7raRThmPtusOBwS1zZtNw9xZ
-	 CB3ARoUuF4fjyJQV2+bSdh50wVjHj70wJRFDLD5TKQ6Prr2RVmPaQJ/iQqjiOa4AwS
-	 0auo2JOFmM9nLCc/jC2tENF78Cf3zYu2GbwQoXc5UrbCM/2X8x0ZQlYnSEYB3AJSrQ
-	 7lsF6yUFK4kfg==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH] tracing/synthetic: Handle dynamic string read faults
-Date: Tue, 13 Oct 2026 08:44:38 +0000
-Message-ID: <20261013084439.487647-1-lee@kernel.org>
-X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+	s=k20260515; t=1791883029;
+	bh=xHXAoQop8Qj+PqOPWoDrnSuYWTqR2PoXrWGbU3k0ivU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cTTQict27WBqS/1txTwjla2yFEn03enH/v+zFpy12Io25skJQb3vByl0X7mllLXs9
+	 Xf7Szq2PAxq0ngaB258nJS09IFu7/Zuhs/vUWCJ5nCYv73xexDXUecbGnKHKJqNmNk
+	 +zMNl9y9ntpl1Ashc2OwoHfrXHfEEV7uBSr479l8dpa2jUkOQWksVQvmKjRXpMQK6D
+	 jGHJ1N4Rvae5ERJ83Fnn4ui1Nn1kIeMutUYgO8A6MYCNRQFMpk2sP/QaJmmbFNf3Ep
+	 L554P2Vscd/59xOsaMwQ7yq3ZAu7wCm6PnET37NPCIRDA/KPLY9IYL7uxVzI0IpC6W
+	 vHJ6Jkap+qDSw==
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: martin@kaiser.cx
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Markus Schneider-Pargmann <msp@baylibre.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Martin Kaiser <martin@kaiser.cx>
+Subject: Re: [PATCH] tracing: probes: remove unused variable
+Date: Tue, 13 Oct 2026 09:17:07 +0000
+X-Mailer: UndineD 0.1
+In-Reply-To: <20260502135826.146257-1-martin@kaiser.cx>
+References: <20260502135826.146257-1-martin@kaiser.cx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <20261013091708.CE8CD1F000FF@smtp.kernel.org>
 
-Commit 0934ae9977c2 ("tracing: Fix reading strings from synthetic
-events") switched synthetic event dynamic strings to use
-fetch_store_strlen() and fetch_store_string(), relying on commit
-2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
-to reserve and store FAULT_STRING when a string address faults.
+Hi,
 
-When commit 4ed8f337dee3 ("Revert "tracing: Add "(fault)" name injection
-to kernel probes"") and commit 797311bce5c2 ("tracing/probes: Fix to
-record 0-length data_loc in fetch_store_string*() if fails") later
-reverted FAULT_STRING injection in favour of recording a 0-length
-data_loc on fault, synthetic events were left unchanged.
+On Sat, 02 May 2026 15:57:42 +0200, Martin Kaiser <martin@kaiser.cx> wrote:
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1747,7 +1746,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  		if (args_idx != -1) {
+>  			/* $arg* requires BTF info */
+>  			trace_probe_log_err(0, NOSUP_BTFARG);
+> +			return NULL;
 
-Consequently, a faulting kernel string address causes get_field_size()
-to add a negative error code (-EFAULT) to fields_size, under-reserving
-the trace buffer entry, while trace_string() casts the negative return
-value to an unsigned length and passes it to fetch_store_string() and
-write_synth_entry(), corrupting the ring buffer.
+Returning NULL here causes traceprobe_expand_meta_args() to treat this as
+success (no expansion needed), leaving *new_argc uninitialized and passing
+the unexpanded "$arg*" to subsequent argument parsing (which later fails
+with a confusing error).
 
-Skip non-positive lengths in get_field_size(), record a 0-length
-dynamic field in trace_string() when fetching a dynamic string fails,
-and print FAULT_STRING in print_synth_event() when a dynamic string has
-zero length, matching trace_probe.
+We should return an error here rather than NULL.
 
-Fixes: 4ed8f337dee3 ("Revert "tracing: Add "(fault)" name injection to kernel probes"")
-Cc: stable@vger.kernel.org
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- kernel/trace/trace_events_synth.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Specifically, returning ERR_PTR(-EOPNOTSUPP) is the right fix, which also
+eliminates the need for the params variable.
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index dc15658a887c..7506e2e1f64a 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -376,7 +376,9 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 				union trace_synth_field *data = &entry->fields[n_u64];
- 
- 				trace_seq_printf(s, print_fmt, se->fields[i]->name,
--						 (char *)entry + data->as_dynamic.offset,
-+						 data->as_dynamic.len ?
-+						 (char *)entry + data->as_dynamic.offset :
-+						 FAULT_STRING,
- 						 i == se->n_fields - 1 ? "" : " ");
- 				n_u64++;
- 			} else {
-@@ -438,11 +440,20 @@ static unsigned int trace_string(struct synth_trace_event *entry,
- 	if (is_dynamic) {
- 		union trace_synth_field *data = &entry->fields[*n_u64];
- 
--		len = fetch_store_strlen((unsigned long)str_val);
- 		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
--		data->as_dynamic.len = len;
-+
-+		ret = fetch_store_strlen((unsigned long)str_val);
-+		if (ret <= 0) {
-+			data->as_dynamic.len = 0;
-+			(*n_u64)++;
-+			return 0;
-+		}
-+
-+		data->as_dynamic.len = ret;
- 
- 		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
-+		if (ret > 0)
-+			len = ret;
- 
- 		(*n_u64)++;
- 	} else {
-@@ -522,6 +533,8 @@ static __always_inline int get_field_size(struct synth_event *event,
- 			len *= sizeof(unsigned long);
- 		} else {
- 			len = fetch_store_strlen((unsigned long)str_val);
-+			if (len <= 0)
-+				continue;
- 		}
- 
- 		fields_size += len;
+This is a bug, introduced by commit d157d7694460 ("tracing/probes: Support
+BTF field access from $retval").
+
+Can you update to fix this bug?
+
+Thank you,
+
 -- 
-2.56.0.385.gd3acb90ef8-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
