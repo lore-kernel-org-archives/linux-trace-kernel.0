@@ -1,131 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743CB4E36C9;
-	Tue, 13 Oct 2026 11:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88D3DB33C;
+	Tue, 13 Oct 2026 11:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791890990; cv=none; b=erqx2cpp9La55wYKGLF9SsJixAQa5DSBJUtUAr7zYdcQSbDmNA3XyXIDALPjiGSZKEeME2b17uTyLaqd2AkEfmjFi7kGQVPuQ/Hg9LyUaHjUWAlyF3mgo1rBHu9jGhjBYa26YzAOQH0SRRlD7FXxZs4xXEr0o2JDcfEV5uB4in4=
+	t=1791891541; cv=none; b=DiA2AzjhDgqQ3BIonqC3MRY+ED5IbINJhaGjgRdXIIWhL1yhNesDr5XuyTaa6Ad3rPq4xwmVfP/+0d1vTAWTMLz09lRnAyby8OxEIjY83rSKiz9VAIhCWJzshfk/VEleqjD6egYD9c4GAO2mjMlLnEv27KfOVU7ZVCS/olu0QyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791890990; c=relaxed/simple;
-	bh=hcGq33lvY9rVtSOYs+BB1JK/Pze/KCvmsRz+ajmuwnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgwhhjKkRZloQzMyGCP5hfJuFovuK7Fc2EdZhSGgyn+PfYT7pKbXcRnCO68jZAEa60PHV7ebqlTg04BAKpjoFr+5aoe/71xJaY5UHFlhxNxOpONlVZVXwaXUrFJbxZqQguQcreTnLX85MwG9o/37rbmoYWLrIpzx/AgevloQm+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5XSCDOi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791891541; c=relaxed/simple;
+	bh=F3jbrUon50I/esfgt38aY5mZa678/5mAa/00VYW7/nc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BALNjAeggFBuFFeVxi5Tv+DcOHG0dOIAt7+3knOe6eiElfJc67UsURc5z5zZ56UllV7LDXgro1ga5xXp6mN3a5oPmbNeb61fUVmVTxho14SFiimaHpESsp2fAiCDnj9jWSs5oyGHGO9I0FDNoxO9kmxuCQs/JsSPU0kXkixasxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLyRBUQx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5XSCDOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908C11F000FF;
-	Tue, 13 Oct 2026 11:29:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLyRBUQx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5421F000FF;
+	Tue, 13 Oct 2026 11:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791890989;
-	bh=6XqjA/BTi0UimOJRXPoyDY9jgW+xNcOyj9nBVG0M9QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Q5XSCDOiMCkxmNBt3Wahjw3f3gX93ZDCSa9CdYxuU9X0hN6bEVTNB4IELta63m0QB
-	 dEMhDlXbRQUfz3Ev8UIUCG0TeY/DE8JmQVCgJ1HlzvrcE0UJhAAPV4W0EvcgheF2lB
-	 j6DYhxROXPlPjm+pidXFCm8wvv8jdGcSC7oNJZLDlhqrlBEsbRerhPIg47miiV6xt6
-	 1smY9LeY4AAu8C5wf0CqHWMfUWbyMAjGj9pGtHRbexb2hn9pCr3gWJ0CI7ByXeA/VU
-	 b2CZVSAsoNG/Lq++tK5RDQ5VuXnlI4jkuiBgwHsD8MmEsVf5mMFDl6K+DSaVvOmynM
-	 jiz20RE12a6sw==
-Date: Tue, 13 Oct 2026 12:29:16 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Bert Karwatzki <spasswolf@web.de>
-Subject: Re: [PATCH v5 31/38] mm/uffd: use predicates for userfaultfd checks
-Message-ID: <as4PHg2OaE_UULTg@gremlin>
-References: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
- <20261009-b4-mmap-prepare-vma-flag-sanify-v5-31-923b70125b1e@kernel.org>
- <b8a6a344-ad2c-4355-adbe-be7325e7371d@kernel.org>
+	s=k20260515; t=1791891539;
+	bh=iM7Kn1upRKCYgX3my+5a9iEmzXraOMK8a7ELFfehbz4=;
+	h=From:To:Cc:Subject:Date;
+	b=BLyRBUQxmYZGUAeaHFZEzWN0WXTwLON5T6iRtekbZ28LOLeR9AvTb8QnRRsdR8UrL
+	 796ejjZfccuD7wK8vjH6e0Boe62b7KWRJAiNsO2+/iFFqlivG90MLbN+zX+XtyeNxw
+	 BSOsSoNeyqlzfthkBIEKIsy42+fN+u5Y542Fwl+ZhuPt370uFubIHQvZTVro25+q3G
+	 tRsN7O6rWjrxm6G1c9oVjlNalmF8GBsO+FEPP10IVtM0IHNoAr6fGG4YbFEdoI54UX
+	 5ecw6Ce9ekUpN7fcRiYXc8kTPpNqGYgksodQGALu3/elqjmoNWNVpMzBLY+7FwgNJq
+	 Y3OIPV+5Y3Cfw==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v2] tracing/histograms: Reject non-stacktrace fields for synthetic stacktrace fields
+Date: Tue, 13 Oct 2026 11:24:48 +0000
+Message-ID: <20261013112449.1006088-1-lee@kernel.org>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8a6a344-ad2c-4355-adbe-be7325e7371d@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 12, 2026 at 08:48:04PM +0200, David Hildenbrand (Arm) wrote:
-> On 10/9/26 20:04, Lorenzo Stoakes (ARM) wrote:
+In check_synth_field(), when a synthetic event field is a stacktrace
+(field->is_stack) and the histogram field is not a "long[" stacktrace
+array, validation falls through to the generic size and signedness
+comparison.
 
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index 949017e60608..f33b04700838 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
+Because parse_synth_field() sets a stacktrace field's type to
+"__data_loc unsigned long[]", its size is sizeof(u64) and
+synth_field_signed() marks it as signed.  Consequently, any 8-byte
+signed scalar histogram field passes the fallback check, and its scalar
+value is subsequently dereferenced as a kernel stacktrace pointer in
+get_field_size() and trace_stack().
 
-> > @@ -2146,10 +2152,11 @@ static bool vma_can_userfault(struct vm_area_struct *vma, vm_flags_t vm_flags,
-> >  {
-> >  	const struct vm_uffd_ops *ops = vma_uffd_ops(vma);
-> >
-> > -	if (vma->vm_flags & (VM_DROPPABLE | VM_SHADOW_STACK))
-> > +	/* Only mm-backed memory can have its faults handled by userspace. */
-> > +	if (!vma_is_mm_backed(vma))
-> >  		return false;
->
-> Again, for both I would prefer keeping the droppable check separate.
+Furthermore, checking strstr(hist_field->type, "long[") is insufficient
+because tracepoint fields defined with __bitmask() or __rel_bitmask()
+also have type "__data_loc unsigned long[]" or "__rel_loc unsigned
+long[]", whilst create_hist_field() treats them as 4-byte scalar values
+without HIST_FIELD_FL_STACKTRACE.
 
-Ack as per discussion on other thread, will separate out for v6!
+Propagate HIST_FIELD_FL_STACKTRACE to variable references and field
+variables (whilst excluding variable aliases from per-element
+stacktrace capture), and reject any mismatch between
+HIST_FIELD_FL_STACKTRACE and field->is_stack in check_synth_field().
 
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Fixes: 00cf3d672a9d ("tracing: Allow synthetic events to pass around stacktraces")
+Cc: stable@vger.kernel.org
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+v1 -> v2:
+  - Check HIST_FIELD_FL_STACKTRACE instead of strstr(hist_field->type, "long[")
+    so __bitmask() and __rel_bitmask() fields are also rejected.
+  - Propagate HIST_FIELD_FL_STACKTRACE to variable references and field
+    variables, whilst excluding variable aliases from per-element stacktrace
+    capture.
 
-Thanks!
+ kernel/trace/trace_events_hist.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---
-Cheers, Lorenzo
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 8af97fd4ee2d..d8864b3165d2 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2121,7 +2121,8 @@ static int init_var_ref(struct hist_field *ref_field,
+ 	ref_field->size = var_field->size;
+ 	ref_field->is_signed = var_field->is_signed;
+ 	ref_field->flags |= var_field->flags &
+-		(HIST_FIELD_FL_TIMESTAMP | HIST_FIELD_FL_TIMESTAMP_USECS);
++		(HIST_FIELD_FL_TIMESTAMP | HIST_FIELD_FL_TIMESTAMP_USECS |
++		 HIST_FIELD_FL_STACKTRACE);
+ 
+ 	if (system) {
+ 		ref_field->system = kstrdup(system, GFP_KERNEL);
+@@ -3318,6 +3319,7 @@ static struct field_var *create_field_var(struct hist_trigger_data *hist_data,
+ 		ret = PTR_ERR(var);
+ 		goto err;
+ 	}
++	var->flags |= val->flags & HIST_FIELD_FL_STACKTRACE;
+ 
+ 	field_var = kzalloc_obj(struct field_var);
+ 	if (!field_var) {
+@@ -3946,7 +3948,10 @@ static int check_synth_field(struct synth_event *event,
+ 	    && field->is_dynamic)
+ 		return 0;
+ 
+-	if (strstr(hist_field->type, "long[") && field->is_stack)
++	if (!!(hist_field->flags & HIST_FIELD_FL_STACKTRACE) != field->is_stack)
++		return -EINVAL;
++
++	if (field->is_stack)
+ 		return 0;
+ 
+ 	if (strcmp(field->type, hist_field->type) != 0) {
+@@ -4487,7 +4492,8 @@ static int create_var_field(struct hist_trigger_data *hist_data,
+ 	if (!ret && hist_data->fields[val_idx]->flags & HIST_FIELD_FL_EXECNAME)
+ 		update_var_execname(hist_data->fields[val_idx]);
+ 
+-	if (!ret && hist_data->fields[val_idx]->flags &
++	if (!ret && !(hist_data->fields[val_idx]->flags & HIST_FIELD_FL_ALIAS) &&
++	    hist_data->fields[val_idx]->flags &
+ 	    (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE))
+ 		hist_data->fields[val_idx]->var_str_idx = hist_data->n_var_str++;
+ 
+@@ -5228,7 +5234,8 @@ static void hist_trigger_elt_update(struct hist_trigger_data *hist_data,
+ 		if (hist_field->flags & HIST_FIELD_FL_VAR) {
+ 			var_idx = hist_field->var.idx;
+ 
+-			if (hist_field->flags &
++			if (!(hist_field->flags & HIST_FIELD_FL_ALIAS) &&
++			    hist_field->flags &
+ 			    (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE)) {
+ 				unsigned int str_start, var_str_idx, idx;
+ 				char *str, *val_str;
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
