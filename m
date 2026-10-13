@@ -1,121 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420AE45516A;
-	Tue, 13 Oct 2026 09:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406BA46D0A8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 10:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791883155; cv=none; b=sse+8ZaBtMuCiyvYzP4K5VTrwLsG9JtIdSSM3lxnn2ZAtKo/KKyqX+hWs2XQ+HlMdSKpI3JRjt8fNO1bmMb2gDDEHijiATd5m+T1dUPTEUXzy85nOdBJ1V/Kwr3j6Ju1cG49vz317YIVjw8cHTbFlwih6jecwNAOtUAS2TOAFtw=
+	t=1791886943; cv=none; b=BDRKRnXYli+cbL76jOUWtXjD8GfuEBCBcPaJfNi3wEG0p/ZCmP8MgdhFcpTpd3eHqjnLVteEgRzM7Ax31GTuILVEquLpGWZ2JyiJTOyFUfmn24xDre7ivEs+Lh+V0FxXcs5Hb0S4de9yljLpFKjqiQ6sDHHoZ2EPg+5LfQvdFow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791883155; c=relaxed/simple;
-	bh=gEDqM2iaB/iy0jV6OeA63adVFBP0Bz/0BRTlXlf/JD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lqn5aVPT/LCDah4Adiqj2mi6ogNW29FR4eB9n31GOK4ZfECVUAQS2QcMtvx8kBOkAs7Rxm3UHZv5CX1bvEkSgKOQW1cli82j1Hxx7S00bMc+FY+NGD/XrfdvDy/NIAWKgOk6K2GlnH/hsERvDmQCFDBTyUmiahPzCsUIJ0ZELbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2UwO3YD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791886943; c=relaxed/simple;
+	bh=C8BfjpViw85E/iyEcqJ1wPVATcMLsyFFC6bR2LOaM/c=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LEHWoMt4geL1uP4ELS6ChZ2jBt3iQE9oMJHf7XZQRGJO2EgtVOsazXoiLmoThsU1ntTN7wkP9EWd1yj9cB5pN2E/yMmLmY0h2AtvIfMbHtLLu3XefrYxmk0oBep2RZrKiZFK51bMm8vUyOUCXVsloS0JOG6d5ifrLPkk6EzNf5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AMVYmQba; arc=none smtp.client-ip=209.85.128.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2UwO3YD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6991F000FF;
-	Tue, 13 Oct 2026 09:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791883153;
-	bh=o34QbmfjAAT4ADTs3ougGRHwgWEvqXtag3mgOn6QjeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=m2UwO3YDjCMptXLJ91xmtq0Uz3H2e0P2q7o07vCdR8ZQWwbh5UMqcSegN3OaElwbj
-	 sJDc2sQVy8Vf7g3L3Juqj7X0GJnJX/mnv9Fqb1RVNST5uE3wJsQAwUIe3ESGi1RCBX
-	 ZrZWQ7Jvb3OfezBGNkjAkTQIUKyQFnvfek+6a5mxyr2dv+za67/AebtkRs7513HzxC
-	 rL+fv7Hy+JZSj3yL3lwxfKOgo1G840tavCOAt7rUmPzEsymeaZMQeGwxuN2Fa92bot
-	 8WK6Vb48cDJgLTUzatktZBC1dJZe8N7wrrXnJ5E3ctRJrCFSSXXp8lbrJQZqbc9ELQ
-	 WD1zyhe2PgWCA==
-Date: Tue, 13 Oct 2026 10:19:10 +0100
-From: Lee Jones <lee@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/histograms: Reject non-stacktrace fields for
- synthetic stacktrace fields
-Message-ID: <20261013091910.GD199624@google.com>
-References: <20261012155805.1103972-1-lee@kernel.org>
- <sashiko-outbox-168379@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMVYmQba"
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a1813fea7dso43897185e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 03:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791886940; x=1792491740; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=yK2XQkQu+EOosMMTSCb3P5XMSqXLDbl63bi1IwkGyn0=;
+        b=AMVYmQbaAnqY5Gs54pwiDdAA4QdBCVTan+YaQjSoLcXAdgHKRfOI7jGPLRVAd+wDn9
+         es7/4+kWIYmQRrRLAtagRYlQCeT6SzPkh8gwMrhY77vKjL1OyC3mNYt8RSQFUlQDzh62
+         wnpZncQzIttYnxjvniZlIPKyd1JtBhWQ5oEdYZgJpG7xhnb4tbXJwdY2g5V/M6IMe3L6
+         /l4scyhymUcNTXI3Yq4N/4sGKxJai5YbVlARUtlvpGyN76wqC3DyNTDTyy4s1YvAzLwb
+         iFCajR6vIeHbWwF9d5l/8uUImWYj9oyFite5A9omBH1OZmYY07IsJ+GgrS2napU6XbKs
+         Ti6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791886940; x=1792491740;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yK2XQkQu+EOosMMTSCb3P5XMSqXLDbl63bi1IwkGyn0=;
+        b=pxkdSkYRkzgnLS80RcVDXIDjtclXhFNPnFMaoKk8RsTK08L0b+YV1xTCrqpuws6dZc
+         tzSaNdpMKKnhk1tyRv1ifcUzVtTZtr3DAQDi5/gYOhvh8iBAfY/wvxLFWl4L1OfW6IcF
+         n5+TBoEIruF2IJibuSp4HvNZFe6/X5v4gvGJe4hNsMM6u3dGRbuwTdYsq4ckTgO0S/TE
+         z9BWOXwzPzC3ZQT4WbvnXXsKZnzAJpDHM6kKJz4CoaynasFjUIppSXUNvI5mnH52vBeH
+         QiDZufS5hlT42bjoYhpxqDLcHcMYoorKuU/NK79AGXgrNTQI9LlE/cFZBhv0ovepWFdo
+         F8Yw==
+X-Forwarded-Encrypted: i=1; AKwUvBx+/TftP4vcXiy5dA6At6Nz3K8e4EzVJTPXuCvIaPF6AAFOTfXA2+TiwiftyBa5b2/jlhvGLAwFHKZdWlbAcaeeVck=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLUiRAaqykJV+WRLAUi3JyUIa8hwGyopYtbqxwCeW5PuVRVsbqU
+	hYenH0OkWzmI4mxOekio2G5GJ9pddS6qjnWbXTysEc2ltmb2/QlPE9sKxEwSkE4+hZE8HfWCBeq
+	2jeXbe8STsAwbxVFiMbZ5YA==
+X-Received: from wmdd18.prod.google.com ([2002:a05:600c:a212:b0:4a1:96ca:74b0])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:8105:b0:4a1:775b:5eb2 with SMTP id 5b1f17b1804b1-4a18e48362emr230520975e9.13.1791886940372;
+ Tue, 13 Oct 2026 03:22:20 -0700 (PDT)
+Date: Tue, 13 Oct 2026 11:20:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-168379@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013102047.1488347-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/2] ring-buffer: Fixes for available memory estimation
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 12 Oct 2026, sashiko-bot@kernel.org wrote:
+__rb_allocate_pages() uses si_mem_available() to fail early when there
+is not enough memory for a ring buffer allocation. However it wasn't
+updated with the introduction of persistent and remote buffers and
+subbuf_order.
 
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] tracing: check_synth_field regression for __bitmask and stacktraces
-> - [High] tracing: arbitrary memory read via scalar to string synthetic field mapping
+v2:
+  - Add "ring-buffer: Use subbuf_order in available memory estimation"
 
-Fixing now - v2 to follow shortly.  Bear with.
+v1: https://lore.kernel.org/all/20261012163502.687061-1-vdonnefort@google.com/
 
-> --
-> 
-> commit 4813d717e995df13871068dd6fd996711ca8965d
-> Author: Lee Jones <lee@kernel.org>
-> 
-> tracing/histograms: Reject non-stacktrace fields for synthetic stacktrace fields
-> 
-> In check_synth_field(), when a synthetic event field is a stacktrace
-> and the histogram field is not a "long[" stacktrace array, validation falls
-> through to the generic size and signedness comparison.  This allows any
-> 8-byte signed scalar histogram field to pass the fallback check and be
-> dereferenced as a kernel stacktrace pointer.  This commit attempts to reject
-> these mismatches by enforcing that field->is_stack matches the "long[" type.
-> 
-> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> > index 8af97fd4ee2d5..b09f5043e1543 100644
-> > --- a/kernel/trace/trace_events_hist.c
-> > +++ b/kernel/trace/trace_events_hist.c
-> > @@ -3946,7 +3946,10 @@ static int check_synth_field(struct synth_event *event,
-> >  	    && field->is_dynamic)
-> >  		return 0;
-> >  
-> > -	if (strstr(hist_field->type, "long[") && field->is_stack)
-> > +	if (!!strstr(hist_field->type, "long[") != field->is_stack)
-> > +		return -EINVAL;
-> 
-> [Severity: High]
-> Does this heuristic falsely match the long[ substring in __data_loc unsigned
-> long[] from __bitmask and __cpumask fields?
-> 
-> If is_stack == false, this logic seems to falsely reject valid mappings.
-> 
-> If is_stack == true, this appears to bypass validation and allow a 32-bit
-> __data_loc integer to be passed as the field value. Could this 32-bit integer
-> then be cast to a pointer and dereferenced in
-> trace_events_synth.c:get_field_size() and trace_stack(), potentially causing
-> a kernel panic?
-> 
-> > +
-> > +	if (field->is_stack)
-> >  		return 0;
-> >  
-> >  	if (strcmp(field->type, hist_field->type) != 0) {
-> >  		if (field->size != hist_field->size ||
-> >  		    (!field->is_string && field->is_signed != hist_field->is_signed))
-> >  			return -EINVAL;
-> >  	}
-> 
-> [Severity: High]
-> It looks like this fallback logic fails to reject a scalar-to-string mapping.
-> 
-> When creating a dynamic string synthetic field, its size is set to sizeof(u64)
-> and is_string is true.  Because field->size equals hist_field->size (8 bytes)
-> and !field->is_string short-circuits the type/signedness check, will an 8-byte
-> scalar successfully map to a dynamic string?
-> 
-> If an attacker-controlled scalar is passed, can it be cast to a kernel pointer
-> in trace_events_synth.c:trace_string() and used with fetch_store_strlen() to
-> arbitrarily read kernel memory?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261012155805.1103972-1-lee@kernel.org?part=1
+Vincent Donnefort (2):
+  ring-buffer: Skip si_mem_available() for persistent and remote buffers
+  ring-buffer: Use subbuf_order in available memory estimation
 
+ kernel/trace/ring_buffer.c | 47 +++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 23 deletions(-)
+
+
+base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
 -- 
-Lee Jones
+2.56.0.385.gd3acb90ef8-goog
+
