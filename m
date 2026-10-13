@@ -1,100 +1,207 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554D026AC5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 04:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F33374E5A;
+	Tue, 13 Oct 2026 04:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791865350; cv=none; b=lRuJlRvVcKUFeVeGn4YGgAGdCbJGPs8zTpJAN5zpmQqHprc8GvXd9O2S6FF4ZhcUB7x8e/Tn4wSp7MH3lIDSWr0ex7wr8we+GVH9FT2egzJdgjO5wBELEVv3XB8vCLkuyFHO/v+UHJsk5sdLvBE2OmyHKfI/9S0eWUycQav2pOg=
+	t=1791865379; cv=none; b=fs9cAuEC0atfXjqTb9hYhNbPRCi4ET1lxwv5eM0PRI5ZyVQpSUvGpotFFYVtjSS2qsdjwOJ19iZGySd7tNJFPVSYZcwJQR9Et8WVxSFV229+WLGuyBxvLo4p9gIxZzsQucnWsfpg7maMN/oX0KlwZ94U+pO1l/+fSbxhlYJUrqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791865350; c=relaxed/simple;
-	bh=+K4HZZsUyx+BZ/jVUFt5QSnww12hfGtHUXInz1C3T8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2oLDMq94VlEJKBt52m5uSu5PbUMsWeKWO6hizRQvcBJWitine4M3lUHwKNZS0m9SA7tyn82ZdZPAPD06yAHb1JB8dJyktKX0OxSZz0u8XCYNvJ0YLH1pn0jSW79l0RatHGnecruON5VlHyUnKvVvnrz0PPUoK2lsj6xB8m4vUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AeKdo/IK; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1791865379; c=relaxed/simple;
+	bh=X2sZIgOPoxJAshfgtlGi+6FNBf3UR5OoE4stvkbrqtw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-Id; b=m8qj95tkhr7NnhiqyVEJ+ViRCFwrWluPXOAkpzG3H5HnDLtBBDQ66BEM0slUnClDa9uFdbqxUvqBKN2sf3w2RBxB0icEjxf6R860psdI1IVakamruOpKEdH+ZnlYzk5Mp3d1PCeszM9EpdcFtrVA0WQHtOuzJqvLYDn+BAON2jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCd3v7LC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AeKdo/IK"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3a0aaa0fd13so1724894a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Oct 2026 21:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1791865349; x=1792470149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=moe1szgBS8qfOMQ+dx39iq+IYSEcWmwG3cQfQWaqcvA=;
-        b=AeKdo/IKd/Md+Sf/OL2oNjaEijynaXekhX+r/J0FGKDhOIss/7IUw9XynWO2CyD1HT
-         LOfyggL9vIlq7KMg7afdFFs5moLsw6ukA/ts2aiY6j769/VGYVSS135VnVpA+MxGLYwL
-         x9UxDKfwpyV4nCUTTaJzsNQeFeR+fgi130aiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791865349; x=1792470149;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=moe1szgBS8qfOMQ+dx39iq+IYSEcWmwG3cQfQWaqcvA=;
-        b=geVNzjri8ebtHLA3rVUDLkvAfT385GJlZSetAdYt8/qMiaWjVE6zT76cmZr0xWlf+V
-         NO12q9KiXlPKRTafM4XHCvndBA9RB0gf39b03aMWAW7NazxE4KLK8k8P3sZzmUK2Owg4
-         nidRzE3BROEwalty6Q1VUqRtHI0jVhNHk5+Sfr8pgx3/LkArBwo/w+RiMASngIer7iiY
-         j23o2cNk+R/1sposSDCNXFo6gGHepUUs4d64U6m12Fi3bipT03YIQ9u/JiDygzDXKC8V
-         nm8xPPbsW5d1VCLqfcnLI7H4ElEEkFGrhcn4zHK4mWN0nWZydrjeSZQVq23IqJYlR5J1
-         cctw==
-X-Forwarded-Encrypted: i=1; AKwUvBytvjx6vc2nXO0YjaN3sca/XFXqEXazZ1RW+UAE++/a6Wi8U9KQa/NR2CJMT9zd56pAzZuYzZj1vTMJjbf6FqZa3zs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJODXKE22d2Lr+af5tRqUpOTB7yQs8fvBqvxCg3YQiiHz/2CQB0
-	/ZMmFxNmdk1nX0wWAtCQPuUwJvzYNJhtxWGH4Eawfh5/XIa6Gn45yvcMpOJ2JzZPaA==
-X-Gm-Gg: AYBFou01/lYs5fXpS7OgfBI9Celeisj0E/uq2cr9YgZqhbYiwCR9h1SS3ezvjg/n8Zi
-	t+vw5lvPqsjluTFQJHR5LatqkN+bMRu7wt5eKo1sUZEQbV6hvT47kBp+RDNdPPhwffSRsNkNVXb
-	cyR9zsSwK47oFqUb1SBrtzl8JY+JIobQID3rBDF0owo6eG+d2WD65GaDMHJQHFzthSa54u1nTiO
-	cbBjL2J8YSuYiq4VRXKK3luVwLW5NaM4Eb5UGjVU7vea+RKTC6svTw5feaQ3MFOX0/RemXwC67e
-	sQmZBqrn2FSRJyffGn+xjoSx0XYPLV9ACHVyFiOtpLJbPLtPMKInhwXMdVDS8yn4JGobPKU4VYp
-	nPywoJ8DOsfuSPygJiUuY+AORFuCpNQ1JA5wZO1Otuu4nDK6wQ4U3sPHNl6r59/KpALYTkUHcRA
-	vM4dXJMv76EZ5LsFKaOlWSBgvt4r3fYRqmYkNPcXVhjxBuSMo+aQLTMY+F32YW3GtfrZFqfLo/S
-	QNht0vFPs6zgK86IKk+qUquoXuwfXf8bHWghA==
-X-Received: by 2002:a17:90a:b90:b0:3ab:be66:ddb7 with SMTP id 98e67ed59e1d1-3abbe66df61mr3465361a91.47.1791865348806;
-        Mon, 12 Oct 2026 21:22:28 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2031:6:476:d384:7c2e:1579])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab39533ee7sm11566916a91.4.2026.10.12.21.22.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2026 21:22:28 -0700 (PDT)
-Date: Tue, 13 Oct 2026 13:22:22 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, andersson@kernel.org, konradybcio@kernel.org, 
-	abelvesa@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	minchan@kernel.org, axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	djakov@kernel.org
-Subject: Re: [PATCH 4/6] zram: Add QPaCE zcomp backend
-Message-ID: <as2xrbm55Sjq3T1M@google.com>
-References: <20260930145215.3380977-1-georgi.djakov@oss.qualcomm.com>
- <20260930145215.3380977-5-georgi.djakov@oss.qualcomm.com>
- <20261001-dramatic-hasty-pug-68ebfd@quoll>
- <ar4070oH8lRCJMRw@google.com>
- <6713512a-d879-4fdb-9138-12e125c21ed6@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCd3v7LC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF701F000FF;
+	Tue, 13 Oct 2026 04:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791865378;
+	bh=xVIPYhPZae7SQs6ev46TrORj9udq4yV2dLyzfICNJ+o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JCd3v7LCSnjksIzhtvR44b+IKlOvuuFDKN7TBeIdt40T200QjJ9d7kK9iHJiiAD/8
+	 WIo5irqcHALxdHeLWPBkKhDIuJlAXUDs+qRFudEaKR6jq0UtW15fZMPYkaEY8JqXz6
+	 wXxrgCsmXmgGTCKljTqWEOed4QZL50cyCRAz6GCUh2zB69XhPNAmK4OXY96aVKAqID
+	 TLgYse4g2mGG5MP5hEQgjGY+Jb0GqzzNliguQJnAVejv4HE02riGU2Sxcyha7krVyu
+	 LqcK8N0uBwtMtJGjb0OL85LpACS7A8lmJVC7vdo6SqieFYADYqyqLUGdDbFfwqnWHa
+	 8oNFyXaJh67Vw==
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sahilcdq0@gmail.com
+Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+ naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org, tytso@mit.edu,
+ wangruikang@iscas.ac.cn, namcao@linutronix.de, pjw@kernel.org,
+ kees@kernel.org, linux-openrisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Sahil Siddiq <sahilcdq0@gmail.com>
+Subject: Re: [PATCH v2 0/4] openrisc: Add support for KProbes
+Date: Tue, 13 Oct 2026 04:22:53 +0000
+X-Mailer: UndineD 0.1
+In-Reply-To: <20260930203129.51048-1-sahilcdq0@gmail.com>
+References: 20260407185650.79816-2-sahilcdq0@gmail.com
+ 20260930203129.51048-1-sahilcdq0@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6713512a-d879-4fdb-9138-12e125c21ed6@oss.qualcomm.com>
+Message-Id: <20261013042255.7DF701F000FF@smtp.kernel.org>
 
-On (26/10/10 02:54), Georgi Djakov wrote:
-> >> So entire qpace should go here, no? Why did you create this entire layer
-> >> of indirection, singleton management under drivers/soc?
-> > 
-> > qpace seems to be standalone/independent arch/soc specific, and can gain
-> > users outside of zram (fs compression, zswap, etc.).  zram's backends
-> > potentially can disappear all together, if we switch to acomp crypto API.
-> 
-> Are there any plans for switching back to the acomp crypto API? We moved away
-> from it some time ago and dropped all the crypto dependency in favor of the
-> custom comp backends, right?
+Hi Sahil,
 
-We moved from deprecated scomp API and switched to our own comp API.
-There is a possibility of switching to acomp API in the future.
+Thanks for updating! Could you check Sashiko's comments on the series?
+
+https://sashiko.dev/#/patchset/20260930203129.51048-1-sahilcdq0%40gmail.com
+
+I need OpenRISC maintainer's review for this series too.
+
+Thank you,
+
+On Thu, 01 Oct 2026 02:01:25 +0530, Sahil Siddiq <sahilcdq0@gmail.com> wrote:
+> Hi,
+>
+> Apologies for the delay. This is v2 of the patch series to add KProbe
+> support for OpenRISC.
+>
+> The series also adds support for Kretprobes (which depends on the rethook
+> framework [1]). Kretprobes are fired on function return.
+>
+> In order to build the kernel with Kprobes and Kretprobes enabled, the
+> following config options are required:
+> 1. CONFIG_HAVE_KPROBES=y
+> 2. CONFIG_KPROBES=y
+> 3. CONFIG_RETHOOK=y
+> 4. CONFIG_KRETPROBES=y
+>
+> I tested the generic functionality of Kprobes and Kretprobes using the
+> tests located at "lib/tests" [2], samples located at "samples/kprobes" [3],
+> as well as a few test modules that I have published here [4]. The following
+> options are required to build the samples and tests:
+> 1. CONFIG_SAMPLES=y
+> 2. CONFIG_SAMPLE_KPROBES=m
+> 3. CONFIG_SAMPLE_KRETPROBES=m
+> 4. CONFIG_KPROBES_SANITY_TEST=m
+>
+> I have also added unit tests at "arch/openrisc/kernel/tests" to verify
+> that Kprobes work properly when inserted at branch instructions, and
+> that delay slots are handled correctly. The tests are based on the Kprobe
+> testsuite added for RISC-V. The following options need to be enabled to
+> build the tests:
+> 1. CONFIG_KUNIT=y
+> 2. CONFIG_RUNTIME_KERNEL_TESTING_MENU=y
+> 3. CONFIG_OR_KPROBES_KUNIT=m
+>
+> Below are the results of the tests and sample modules when run in my
+> environment.
+>
+> - kretprobe_example:
+>
+> /home # insmod kretprobe_example.ko 
+> Planted return probe at kernel_clone: (ptrval)
+> /home # ls >/dev/null
+> kernel_clone returned 35 and took 1302450 ns to execute
+> /home # rmmod kretprobe_example.ko 
+> kernel_clone returned 36 and took 1121200 ns to execute
+> kretprobe at (ptrval) unregistered
+> Missed probing 0 instances of kernel_clone
+>
+> - test_kprobes:
+>
+> /home # insmod test_kprobes.ko 
+> KTAP version 1
+> 1..1
+>     KTAP version 1
+>     # Subtest: kprobes_test
+>     # module: test_kprobes
+>     1..5
+>     ok 1 test_kprobe
+>     ok 2 test_kprobes
+>     ok 3 test_kprobe_missed
+>     ok 4 test_kretprobe
+>     ok 5 test_kretprobes
+> # kprobes_test: pass:5 fail:0 skip:0 total:5
+> # Totals: pass:5 fail:0 skip:0 total:5
+> ok 1 kprobes_test
+>
+> - openrisc_test_kprobes:
+>
+> /home # insmod openrisc_test_kprobes.ko 
+> KTAP version 1
+> 1..1
+>     KTAP version 1
+>     # Subtest: kprobes_openrisc
+>     # module: openrisc_test_kprobes
+>     1..1
+>     ok 1 test_kprobe_openrisc
+> ok 1 kprobes_openrisc
+>
+> I have also made changes based on the review comments I received for
+> v1 [5] including several of Sachiko's comments [6]. I chose not to make
+> changes in a few places. I'll send emails as a reply to this thread
+> explaining my reasoning inline.
+>
+> Thanks,
+> Sahil
+>
+> [1] https://lkml.rescloud.iu.edu/2203.0/05974.html
+> [2] https://github.com/torvalds/linux/tree/master/lib/tests
+> [3] https://github.com/torvalds/linux/tree/master/samples/kprobes
+> [4] https://github.com/valdaarhun/or-dev
+> [5] https://lwn.net/ml/all/20260407185650.79816-1-sahilcdq0@gmail.com/
+> [6] https://sashiko.dev/#/patchset/20260407185650.79816-1-sahilcdq0%40gmail.com
+>
+> Sahil Siddiq (4):
+>   openrisc: Add utilities and clean up simulation of instructions
+>   openrisc: Add KProbes
+>   openrisc: Add unit tests for KProbes on branch instructions
+>   openrisc: Add Kretprobes
+>
+>  arch/openrisc/Kconfig                         |   3 +
+>  arch/openrisc/Kconfig.debug                   |  30 +-
+>  arch/openrisc/configs/or1ksim_defconfig       |   2 +
+>  arch/openrisc/configs/virt_defconfig          |   2 +
+>  arch/openrisc/include/asm/asm.h               |  22 +
+>  arch/openrisc/include/asm/break.h             |  19 +
+>  arch/openrisc/include/asm/cpuinfo.h           |   3 +
+>  arch/openrisc/include/asm/insn-def.h          |  64 ++-
+>  arch/openrisc/include/asm/kprobes.h           |  77 ++++
+>  arch/openrisc/include/asm/spr_defs.h          |   1 +
+>  arch/openrisc/kernel/Makefile                 |   5 +-
+>  arch/openrisc/kernel/entry.S                  |  16 +
+>  arch/openrisc/kernel/insn.c                   |  84 ++++
+>  arch/openrisc/kernel/kprobes.c                | 400 ++++++++++++++++++
+>  arch/openrisc/kernel/rethook.c                |  32 ++
+>  arch/openrisc/kernel/rethook.h                |   8 +
+>  arch/openrisc/kernel/rethook_trampoline.S     |  97 +++++
+>  arch/openrisc/kernel/setup.c                  |   4 +
+>  arch/openrisc/kernel/tests/Makefile           |   3 +
+>  arch/openrisc/kernel/tests/test_kprobes.c     |  59 +++
+>  arch/openrisc/kernel/tests/test_kprobes.h     |  24 ++
+>  arch/openrisc/kernel/tests/test_kprobes_asm.S | 147 +++++++
+>  arch/openrisc/kernel/traps.c                  |  82 ++--
+>  arch/openrisc/lib/memcpy.c                    |   2 +
+>  arch/openrisc/lib/memset.S                    |   4 +
+>  arch/openrisc/mm/fault.c                      |   5 +
+>  samples/kprobes/kprobe_example.c              |   8 +
+>  27 files changed, 1152 insertions(+), 51 deletions(-)
+>  create mode 100644 arch/openrisc/include/asm/asm.h
+>  create mode 100644 arch/openrisc/include/asm/break.h
+>  create mode 100644 arch/openrisc/include/asm/kprobes.h
+>  create mode 100644 arch/openrisc/kernel/insn.c
+>  create mode 100644 arch/openrisc/kernel/kprobes.c
+>  create mode 100644 arch/openrisc/kernel/rethook.c
+>  create mode 100644 arch/openrisc/kernel/rethook.h
+>  create mode 100644 arch/openrisc/kernel/rethook_trampoline.S
+>  create mode 100644 arch/openrisc/kernel/tests/Makefile
+>  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.c
+>  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.h
+>  create mode 100644 arch/openrisc/kernel/tests/test_kprobes_asm.S
+>
+> -- 
+> 2.55.0
+>
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
