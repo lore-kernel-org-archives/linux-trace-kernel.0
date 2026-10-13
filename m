@@ -1,105 +1,112 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4652D2AF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 15:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3EB502795;
+	Tue, 13 Oct 2026 16:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791906403; cv=none; b=Z5mfDmH54frFI3J7+liEcgC8FO9QVf/9thstl2AUj1tutvOKpHIPYArqNM4ZPVw+gbAsl0oMB747Wct/E+wmmQkfhg99Jwb+ob/Z45dQrNev3a1Xa408hFz/ZXy/mTP0KOyiDpmVRw795eCAONjXpbcMRNrV3NPUJPMaOUCzJ3Q=
+	t=1791908964; cv=none; b=SYRhPt1U73TT4NfWmVaNppknIpQkAroEmTPC9fiE0Mf7wYtB1vcrzBR5pTsOadCp1tcLKUah+wCP7ogZ40TrrmA2cdNDT/Dfn1mblwJo1NSGT60mH7STZmhzqPQlwlF9kTDPJODj9qL1ZGMowNZJrv977eltrkXAG4R3OANG6O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791906403; c=relaxed/simple;
-	bh=qxAhtH0Qz1tc4sXD3RSk0GitMJeJ1buUR5W2lDaw1ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WZGUZwGDiKqK0uv+dM75NKMdxUB68elbHgoF5Q1NVEZGSLQwHgnuW6h3SjHDbtgn5Gap1n8MD6qnEYPZ9bOLRr0q56lyI/SajCvO/ViuEEg9GmkqxXd9GxX4NNkMPofcuVErOLrvweKbGA9bDLk1WhBe174a4UFlTbhvUSJ5cow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TQIoCC//; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1791908964; c=relaxed/simple;
+	bh=vM85zR2fOVurYBxjn8fT5iW4OxrI/h14uZrugbUdlkY=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=YaBD6puDEn9YMwQFSxgXyJxRF0GcRlydr7ODi2/Pn4eHVHUQUUoNXcTmWmpwB2d0FF0ePhUhuFh/3rO2XF3GoO3up2sAahRYbZqxGCC34a/UWDeWNm0NBkP/31C0SgxQX3B7JMyHNbX4y6UnFKGI+g7IIoLulbwC/5E1AY4xIP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh5lZUsI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TQIoCC//"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-822ddb835fbso2310373a34.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 08:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1791906400; x=1792511200; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ockmvioh5kYqi16yQi6YbVdMgoCKQuguDfyJFS26lwc=;
-        b=TQIoCC//k98OgE1kA0UESU5QWF0tYtO1x3YlqjBVwEgVRPe/0mMjxc5Em9ZIWj2B24
-         ZKcsS5js6wM1HI2qV1Jx8WDGVrrN5gneeScRDVwRPJlwVFYcRbZLympoFayXs9HDEKez
-         sZ5fL0xte9t7LI+Tc7q2isLhrsO0EVqODHlXI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791906400; x=1792511200;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ockmvioh5kYqi16yQi6YbVdMgoCKQuguDfyJFS26lwc=;
-        b=AwyauFbq/2d8ODPgLG5KburRwI+a8ShkwMKTBDBGAtCC3sdyl6sObKTtR1Hd+jcBaW
-         2iU4D2LKydpn6yUOU/sDpNJUuy7zCsRq+yE+Ldc9CPzVL5YIBs1/Kd6t9mM12IK+3INp
-         NQL6ah1E+6aHPTN+ygcb3JrWTHBuYpP8aUl9lxT5a5ClKKHHu0Q9pN8PTQ16AjCG7fAo
-         ljsUs+lAr5fetQHksWUv6aMmCkiIsEkVWIL+3WANF18Pz+EAqQbCZJnXnWHFUrMq/G7A
-         PEg6qQlKK3sUUXd9xw5vuFVpymzfn8okc6ITEPh/KfMBTeQlZtHPJQmo8oSwbA/bOGKN
-         8bAQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzpXdzDrYv5lyAVzixJcFUVso61nAnFUgcXKQwvQXNoDYAn9vMuJM/jbY/b2TFihJ7tIHks13i24/5ssxpKsUJSCVs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKq57DL0hJ1055+8L1FCP4RrYVMFfwkAD3HiYIYvfyMCw2OIbCd
-	wWYf17INzkXO2VqziOw9awA9sjN1c1wBWsikfyz6IVPAlFIMFXxg8ndjrDWSwZz+jH4=
-X-Gm-Gg: AYBFou2D7x8jvLuoGeI0PoyTY8o78h79hmecNJ1y4ddab5oL0Yd3o5hbH+xz+6sRPbd
-	QzrF2C8FY6Y9/XFkwuVvlLvJ/nJOa3G2RaBktbHvuJt0f5+7k1GXu1Bedsih6jaz/e6cF5uFnwX
-	OkrUq+GZPeurQJYsGIu2Pt/HN20tqfp9XEQ1f4vTvzIw4oLN49WgnRlRWwjIIH4QrTWZA04Fp0g
-	VXe6svwHhCm5XPG/gmEa3STzo8ObpQRJP+tKmmDnJpSenJR4JouGKK+TNlrMg21bo+RMbzQu8o1
-	tvy4eFvVGk+XuvHSsT4yzQK+fqh0ZyVvfhek6NqOstzr4U2g+QpFA8zJOoYl0QfjLpVzZHmbIZk
-	bRJAYVbpjhLBE8XLUPgW8fk2cruyL5fkqaH/J8Q9u/BPm3jIau/mNiECvmaI3xsk42effPToD7c
-	840fm3tTtPXsurb8vFAtM687SEqRThfTFPm0ofOwG3wpnF07fS8gnsBg/+SC0dLO7HctINPiyQo
-	orFR+hE
-X-Received: by 2002:a05:6830:6411:b0:812:3a52:16f with SMTP id 46e09a7af769-83090b2e4aamr13920151a34.3.1791906399829;
-        Tue, 13 Oct 2026 08:46:39 -0700 (PDT)
-Received: from [192.168.1.128] ([38.15.57.99])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-8367ada5b6fsm6362797a34.21.2026.10.13.08.46.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Oct 2026 08:46:38 -0700 (PDT)
-Message-ID: <d1eba191-d4c3-4727-95c7-bd5736ebf8f9@linuxfoundation.org>
-Date: Tue, 13 Oct 2026 09:46:35 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh5lZUsI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEF01F000FF;
+	Tue, 13 Oct 2026 16:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791908962;
+	bh=2MSKGWi5sSTXPxshy0khHGQFOGEaARrsUzF69RTi9us=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Nh5lZUsI00aE3cPEz2OT/FZEYPg4h6SI/G9fLd8I8GbBxvGn7Uy+G0t/Y5HnPvih5
+	 SD5sDhB85Itm65IyDanL2L6ix/6sThqZYZim+pOR7Tf8IZbsbKOQazjDnDHzZiZUu0
+	 Pb0JRbMPuunzrsBVAtuztHOBCcafuATGlv8iUze9mWAfF82adDnhQElQDj5FWrf59v
+	 Quwnc1vGch6JEZ3OSp2xEg7STFPr5ZsdAvcTM8aZ3OofM5bseGmWVBrqSgDxNbt1cD
+	 AjK4u117W1bn2hBBK9uXbKgxDektLa785Jnaywiz/gekeuhP4MAtvxX9YBQkbjoh30
+	 z1XaVUdGNVjSg==
+Message-ID: <sashiko-outbox-170114@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 08/39] mm: add mmap action for discontiguous kernel
+ page mapping
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-8-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-8-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 16:29:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/selftests: Fix incorrect invocation of exit_fail
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, woradorn.laon@gmail.com
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, inux-trace-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev, shuah@kernel.org,
- me@brighamcampbell.com, jkoolstra@xs4all.nl,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20260918061913.28069-1-woradorn.laon@gmail.com>
- <20261012153601.6DDF11F0089B@smtp.kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20261012153601.6DDF11F0089B@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 10/12/26 09:35, Masami Hiramatsu (Google) wrote:
-> On Fri, 18 Sep 2026 13:19:13 +0700, Woradorn Laodhanadhaworn <woradorn.laon@gmail.com> wrote:
->> Replace all `exit fail` and `exit_fail;` with exit_fail to keep the
->> usage of exit_fail consistent across the ftrace selftests. This also
->> reduces warning messsege such as 'exit: Illegal number: fail'
->> in test logs.
->>
->> Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
-> 
-> Looks good to me.
-> 
-> Fixes: 2f84b39f4847 ("tracing: Update subbuffer with kilobytes not page order")
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Shuah, can you pick this fix via your branch?
-> 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] mm: mmap_action_finish bypasses error_override for compat tasks
+--
 
-Thank you. Will apply this patch for 7.4-rc1
+commit 21d3d0c977ac349611c733fc3c288ae67e5f71a1
+Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-thanks,
--- Shuah
+mm: add mmap action for discontiguous kernel page mapping
+
+This commit introduces discontig_kernel_page_ops and a new mmap action type
+to allow drivers to map discontiguous arrays of kernel pages into a VMA.
+It updates the compatibility layer via compat_mmap_action_abort() to proper=
+ly
+handle VMA teardown on mmap action failures.
+
+> diff --git a/mm/util.c b/mm/util.c
+> --- a/mm/util.c
+> +++ b/mm/util.c
+
+[ ... ]
+
+> @@ -1412,12 +1421,13 @@ static int mmap_action_finish(struct vm_area_stru=
+ct *vma,
+> =20
+>  	/* do_munmap() might take rmap lock, so release if held. */
+>  	maybe_rmap_unlock_action(vma, action);
+> -	/*
+> -	 * If this is invoked from the compatibility layer, post-mmap() hook
+> -	 * logic will handle cleanup for us.
+> -	 */
+> -	if (!err || is_compat)
+> +	if (!err)
+> +		return 0;
+> +
+> +	if (is_compat) {
+> +		compat_mmap_action_abort(vma);
+>  		return err;
+
+[Severity: Medium]
+Does this bypass the error_override logic for compat tasks?
+
+When an mmap action fails, the mmap_action struct provides an error_override
+field to allow drivers to replace the internal error code with a user-facing
+one. Later in this function, non-compat tasks return=20
+action->error_override ?: err.
+
+By returning err directly here when is_compat is true, it seems 32-bit comp=
+at
+tasks might receive different error codes than 64-bit tasks, potentially
+breaking ABI consistency.
+
+> +	}
+> =20
+>  	/*
+>  	 * If an error occurs, unmap the VMA altogether and return an error. We
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D8
