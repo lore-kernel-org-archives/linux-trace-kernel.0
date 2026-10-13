@@ -1,79 +1,79 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5CF54DAC7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 20:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7932551997
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 20:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791924559; cv=pass; b=kSSvyW6n9Y4dvlCxlfPxxu9QxzXEkWJqeLG8c3fXr+Q3rIo2CLFLuobo8/MlFTyX27hPyJ86DkDvD6UrInMSNG+kWr0QGDpJS508mZ7ynvJnycNAogrONSgtEQJWRVqBlxeOID6g6+6QPq47H9e3gFihX355K801pdX1vN+bnls=
+	t=1791924564; cv=pass; b=AUmaOIhj77OYPm7Nm1E+HlbRH0Yu0iFO63hpgmf/h41Pd4iy5biE+jUZCMq5RH9mxsFiGOcFT9Ht7i77ejaZ7lvxrZoVKj0cgLd/b6HVo/Wb/982I7fZb2TW9f5HTNvpq1BFd5gvKFPSZEWXUW6ex3qmbDvpRhQKzsLA4lOaV8g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791924559; c=relaxed/simple;
-	bh=N4S4WhX9y1egfYubZD+cGlmH0A5CORT1pqeSQxAxxVY=;
+	s=arc-20240116; t=1791924564; c=relaxed/simple;
+	bh=VCb03VA6LjpMHOfUp8pvf/EGXGe3r0X2vnJKPUWICB0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MbjUeuHN717XgMyzxwn/mUIjKJ9WGWxZbUkzI7E9a8IX4mz7arFnisaaUFnFFFhpuuWYIoFVTPvj8bU/TN+4BsV7dh7nhgtVi2K7DtsXST/9PwTXNqsAe+HvBtbPOf2l6bP/Mwwz9AqZQFrXzlj5uFyvzGbMjuWTQiZvcnCtTnE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I1p9abS0; arc=pass smtp.client-ip=209.85.128.181
+	 To:Cc:Content-Type; b=eVOPgPlKofGes9MCFnfsAl9PcfLRZ1M9BVocBcZkY5B5iCukkCVh3dFmRZIojEgFFZnVCKzsHuIRMemq9TvkjFSJwDOk7lJf2hALuofxQo2pAeYIbNklFKIhGnYLmilPNi9d+33E5MZXDCRWoY/r1/Qq5AeuMfPFSKWzoY9BLgI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hq0WLQJE; arc=pass smtp.client-ip=74.125.224.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I1p9abS0"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-8b0a36f1c95so3848557b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 13:49:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791924556; cv=none;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hq0WLQJE"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-67921b515a6so2707995d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 13:49:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791924562; cv=none;
         d=google.com; s=arc-20260327;
-        b=YGuyc1dfd/ZgS6KAjWMq6uPxlrDZA3FqbgEfkhTHF9jshrUC8vbE7UC72hg3pxra6Z
-         acfXgsGPvItV7xxJXY77b9rvMmX6mF/4zwmcRjLwkTObEhUnz2rIMuTuz6/lNmxTMJdi
-         kxN9hNOAl/kFssq6P4NTrbwDtw6toD4sJCQVjaxTz993ySTuhOTsXDL0EFCd9UtqKoDO
-         vZQmQGhPkKiaypyTD9IzxGNl8rv0oCOx38tjghSY9G6Z4JGaQkn+gyvDeMgCTE+4eH47
-         wALSOi9zUkS1b1X5U1U7yHHHUfazh6kpcmJ3WgOjBXPtbfYzMgm3A2cNCfF4Ir06jziD
-         MjgQ==
+        b=svvhPVKNCxTIEoyXwJ1cI6A5HPUy5Bu/5JtP1C/rMJTKSDFCUFeFZ5N5kL4O21Q2jb
+         gloZNZbIcnf1o5Cyi6iNj0FPgaj/q2f7/5fHviVqhW+ElGm5n7ZPtHJodnEQ38GxIz3A
+         iDAMdtLKZnUYCzETIPvvmIyCEx6Lc3C9DGa80DwQkOyQIy+o7uHD3RWh3wvqkkA6mWDx
+         e/Pbvmt3UTt2J2kZAfoY62SUUDruJI6qvS+c92LPSRE5zWmTsBE+2xYluEq5x0Toephw
+         Cagnlhv5UW9bZXAEMUyQATC3bfFK9IoUhDtex6WZwbVpJ1mPjBKjO1WVGP5rl4iZhkQQ
+         kwAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=dRtKBgWA0Jhd431B/P66jOflMrkNQBh/GJ9zmcjureo=;
-        fh=69Gl9JwbIp+Qxj/ESBYsNLfJnZx5XJFC20LNL4TfwmA=;
-        b=oYTJPIU9lf82y35s/53cLNMhBWCWR3DwlmspmryFYAxZNq0Z2JAWRBbhZsh9JG6YOL
-         szYOsHgduS+rysfToeo5fw+5PwOMgjE2n/wLu1aBC7J7wlcKmK7vKBOZLIiV83vEiqKc
-         QSIeCuTpPXejQ9DrNcmR9IX5t4jq6mmpA77Yle/a4lrj2rOt/MmGzjLSU1NTFSwVDrJV
-         RHMUfwM1INp8sguV3XgmwB8dyB7+jG5AZE2qkuidJaHoWVh1DTXvfHQJKdjlfLN7EOoA
-         lubgz+t/rnmYsiIX+wnrQupaCgEEjnvDcNm6VY7JIK74oyOEQj0fGmy/tmysqiKrAJ+M
-         jKyA==;
+        bh=VCb03VA6LjpMHOfUp8pvf/EGXGe3r0X2vnJKPUWICB0=;
+        fh=EhbtRT96G8ExdmJ1bIhxz/gGTAb4KwjNLITflCr/O/I=;
+        b=EAQGNXUvnRcEH6DUz/JBmkXuK1B0X+Bkz5x6B8f0ccDEze99xPHIAAtAn3VPdZ2un0
+         yRrxm5w+nv+yOkMh0qA6+ICkQjCdemHpEIwmChH753iSZk9AzZA1J1GQtna8totclP2x
+         q9tEZU5340ydAuzIH4OhLa2cZ6YFGXm9AEwqCvV68aXJryTasecllPfbshqSkCQ1Uh5Q
+         exBSuRzk25WY4kkZyfDfx5Wv1tLGzZZuVWajSowsend86fmfcYEw8LzMU2FdIO8VUez0
+         4JjNS41PQTBq1ux+013qqSoqyy2UMCggm6HrCFt5/djTOX5oK35WOUD8i8C5/ZQoa15V
+         Av7A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1791924556; x=1792529356; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1791924562; x=1792529362; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=dRtKBgWA0Jhd431B/P66jOflMrkNQBh/GJ9zmcjureo=;
-        b=I1p9abS0I03ydil5tw+1+oHm1ZRrXzApJ/AyHzRfe1fNjgAPynndgF9MlwKwcXtX2L
-         mv22K4aWNMCfrPIvMq4w60WpmeecYq5YZpIubkwPRtTSUv/nBo0YaqkqQPdCbwChnmNh
-         C6H0fVgHya/BqUURY0utSk+jRiTHujEtwkfBc=
+        bh=VCb03VA6LjpMHOfUp8pvf/EGXGe3r0X2vnJKPUWICB0=;
+        b=hq0WLQJEF6QP73pmJ6c8FJeMVwrlj6kQptWIXaj1nw7k4uKBOCtdqhFa4ZEx1U9iI5
+         2noQBoKQenrv5zmZJK06HyjM7oJBoTx6T6GOFZDkIBKYzCTH4eq2ThweRjcfkv9OdK9g
+         gmGNRBbxuOwIzL99EqhlmFKi50HlDL2A7kFw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791924556; x=1792529356;
+        d=1e100.net; s=20260707; t=1791924562; x=1792529362;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dRtKBgWA0Jhd431B/P66jOflMrkNQBh/GJ9zmcjureo=;
-        b=bt8ytwN73xBehOaJXT/SuCmzFTY7525x8+NVFP1OujwevQNXAwvbARs0m3LLiOaDpx
-         Um9RaUhdv9Qcuevfmx9EAYfVt8OQNvtH/WaQ1ap1WW20DHasglwTJI3TidcgvYM/BVEx
-         +6hRvE2v9odZq1etf1zmzs5pPNMmPifwZm15zkHNBUW0lZtphg20XwvMX1wFRzBjPRQt
-         4bjirWsJVXocZp4RJVJ08PtUUZX5EGIKEY4YXd29gebZtjnC2w7uqQ/K9OxXdh2AoIF8
-         SBjKuzxdKJWvlG7cpkh6uuvYoTE4DRHflmr1jh9g0sa9QmJPgbb6otuMnVKEijsqLFBa
-         4rew==
-X-Forwarded-Encrypted: i=1; AKwUvByXgytxzeZs4mDUoVLDoWi8XPVxpRdYNfAzF5NDyO2E3V8IIViYrz1fuNzxuZ3llbwhtwlG+KvWih7Y5lIWEZp0WaM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ3HBQ+lErn+wg6ohe7SftMktMRc2sULlwJhFcY/iydPokwigKY
-	Rw9iSe+5M6oxlbSaUkbJFVZI5HwFT8rJR/okzz09Sji2OgSjuUpHFpjcp02f0pURO/CEujP/PCa
-	GkxPYMb5mffEUWEDBV1tKAHnKhmfsttqIFqcPGPK6
-X-Gm-Gg: AYBFou2hkZnRlTg8qSSlMpjDGvaNbLV/AHW7wz/TWVnZfG1r+gzsmdiZ60hY6HT2KEl
-	wi+smWrfDA6CDQ3uQVV7hj1AllfMUYq3BnET1CL33qTwEZ3pU/kYCHhrRI+67XLMEUS3BRAhfP0
-	voKhG1UG2rd6ScER0KZtIQXgg00CmIOzCU5Hk9CXyClYoE1wum+9j7ZOyjZGcYvvkEv/GFAAJ2d
-	xiSX5b2YG9fZ9sB/rHmwGWHVNJR2l9Kz/MhbE1y6i6+52IEbzsg0HlUaEq9awRDtg5hnYOR4kUN
-	/xaRuO67YbgeIC1DT/SO4393NtF2dk80elwiVU50j0XDnHKiEkrGkFBMJMWtQHCp9QhjssBs2xp
-	sU4WZTCJsjg==
-X-Received: by 2002:a05:690c:c513:b0:8b0:a8cf:f424 with SMTP id
- 00721157ae682-8b0a8cff8d1mr29927657b3.41.1791924556355; Tue, 13 Oct 2026
- 13:49:16 -0700 (PDT)
+        bh=VCb03VA6LjpMHOfUp8pvf/EGXGe3r0X2vnJKPUWICB0=;
+        b=wtvytL+WRHwLvDoEZBLkZozTOaGWJESw9+9RfmeG0QfR+IFcr451kBjucqCBMhiuWW
+         p9LGxlyD0bLCpuoWMLDjoj0wqkrCG+5kKwE0B7zQhoX9Urbbrtla/1T/PSUnDpJ416zW
+         SbVKKXx/OCo91z8bcjJ2gHlEwyzO3SpBrwl3l2knFN87eX5iuPYuthZc0ik8+ZHuPNKd
+         tkqF37CnhsXlijFX5m6W44VGsznPmryy3wduLnglNfeGpJiqDRPJqrZRDUuJqXOLtsRP
+         +Zhbbp69OINywAji/sBlKsfsDRlX8l7G1GVCgbwAq2vs4VjpgbUQlHPXVEW5sB3/Wfhj
+         zWIw==
+X-Forwarded-Encrypted: i=1; AKwUvBypyVBn/x/WS8PHFjV0fNUqRLEwF+B2S55cOR3UmLkWaYaEtUA6MNbtl7OYTiriGdGvpcPgtK0y3kXSXfzhi22eQ7c=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJN2ctguDk0FlRNxC+EBWuwdxWibm/M88kyE5s6mx3FD969AQYB
+	m/9LijiaybQXP5E6MFxuo7C4CGm8uXI2Okr7kfICoXeB+FOsdpViZnzc6++pcGS1hUX1m/HoE8j
+	xfIT5hUnWEkl/A5U4F82DY1/JrpEPrJzf24n4I/RLLFhdSrqW0FU=
+X-Gm-Gg: AYBFou1XzdlGx5wqXE8cUbMp+Heo1eSROsQgOdHWxRwVXq9es8Pd/WuDxNEuGpA8/RX
+	5SosOWkySH1LqNFZGRYjWsnioEx1VygNRhSVgh6DHcGMOdzyB5RiCWoIY328MvY8t0AHyluPRzT
+	pMZT5MTOqdyxIv1HxDQ0dvxe1RHiKa9pI9czmb33/XeHmrWy5HzBsLmn1dV2kfaX/2TD+0n63ZA
+	mLMNiTAsP82859zjtb/enHc2Gqv84YgghrBdZsXR96TVgET3rS31hvOK8LG5olK4h0faDQtvGkm
+	RS9r3JHZnEdFQbbcQU9WAOgm20kwnqKW50nr2+sMV0aLBLNdEJZQdxZV086btTDche0AGjGm9tv
+	dmrlxyPNVWg==
+X-Received: by 2002:a05:690c:3346:b0:89a:63da:fab2 with SMTP id
+ 00721157ae682-8b07ee2c80emr43041947b3.109.1791924561531; Tue, 13 Oct 2026
+ 13:49:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,78 +81,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20261009-send-upstream-v5-0-384af01da3ee@chromium.org>
- <20261009-send-upstream-v5-1-384af01da3ee@chromium.org> <sashiko-outbox-166133@kernel.org>
-In-Reply-To: <sashiko-outbox-166133@kernel.org>
+ <20261009-send-upstream-v5-1-384af01da3ee@chromium.org> <be3f853e-8b37-4b41-a998-94de1cb552f3@kernel.org>
+In-Reply-To: <be3f853e-8b37-4b41-a998-94de1cb552f3@kernel.org>
 From: Jingyuan Liang <jingyliang@chromium.org>
-Date: Tue, 13 Oct 2026 13:49:05 -0700
-X-Gm-Features: AclHuK9FMbu9JZUnRnsoojppgwhlqyo5kwjgao5eIiFBqF9-3uTME2iK-puHtSM
-Message-ID: <CAEe3GZGi02TbXmPzFKKdf_nU0qejx+xeRW_2xKQ0B7RTk-VqEQ@mail.gmail.com>
+Date: Tue, 13 Oct 2026 13:49:10 -0700
+X-Gm-Features: AclHuK9ox7K2COGXrl-FRR9cM2pKj2PME_s-ad7oALLfV1KkNB6t3-cZk6Vgeos
+Message-ID: <CAEe3GZE-3rCTw-2L-dzXqim5qHxLs1BKjpbmo9aT85ZBLWm5_A@mail.gmail.com>
 Subject: Re: [PATCH v5 01/11] Documentation: Correction in HID output_report
  callback description.
-To: sashiko-reviews@lists.linux.dev
-Cc: conor+dt@kernel.org, linux-input@vger.kernel.org, robh@kernel.org, 
-	devicetree@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	dmitry.torokhov@gmail.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, hbarnor@chromium.org, tfiga@chromium.org, 
+	fqwqf@fqwqf.xyz, daleyo@gmail.com, Jarrett Schultz <jaschultz@microsoft.com>, 
+	Dmitry Antipov <dmanti@microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 9, 2026 at 3:29=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+On Sun, Oct 11, 2026 at 11:04=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
 >
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] hid: documentation incorrectly relaxes asynchronous requiremen=
-t for output_report
-> --
->
-> commit 6d8fa62fc058c7f5630a13cc92c85b7867bc9869
-> Author: Jarrett Schultz <jaschultz@microsoft.com>
->
-> Documentation: Correction in HID output_report callback description.
->
-> This commit updates the documentation for the HID output_report callback.
-> It changes the description to state that the callback might be asynchrono=
-us
-> rather than strictly requiring it, citing i2c-hid as an example.
->
-> > diff --git a/Documentation/hid/hid-transport.rst b/Documentation/hid/hi=
-d-transport.rst
-> > index 6f1692da296cf..2008cf432af12 100644
-> > --- a/Documentation/hid/hid-transport.rst
-> > +++ b/Documentation/hid/hid-transport.rst
-> > @@ -327,8 +327,8 @@ The available HID callbacks are:
+> On 10/10/2026 00:25, Jingyuan Liang wrote:
+> > From: Jarrett Schultz <jaschultz@microsoft.com>
 > >
-> >     Send raw output report via intr channel. Used by some HID device dr=
-ivers
-> >     which require high throughput for outgoing requests on the intr cha=
-nnel. This
-> > -   must not cause SET_REPORT calls! This must be implemented as asynch=
-ronous
-> > -   output report on the intr channel!
-> > +   must not cause SET_REPORT calls! This call might be asynchronous, s=
-o the
-> > +   caller should not expect an immediate response!
+> > Originally output_report callback was described as must-be asynchronous=
+,
+> > but that is not the case in some implementations, namely i2c-hid.
+> > Correct the documentation to say that it may be asynchronous.
+> >
+> > Signed-off-by: Dmitry Antipov <dmanti@microsoft.com>
+> > Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Tested-by: Dale Whinham <daleyo@gmail.com>
 >
-> [Severity: Medium]
-> Does this documentation change contradict the strict architectural guaran=
-tees
-> of the HID subsystem?
+> No, you cannot test documentation. Do not add fake tags when they simply
+> do not apply.
 >
-> The HID subsystem design rules mandate that the output_report callback mu=
-st
-> be asynchronous to prevent latency spikes, performance degradation, or
-> deadlocks on the high-throughput interrupt channel.
 >
-> By stating that the call "might be asynchronous", could this inadvertentl=
-y
-> mislead future transport driver authors into implementing blocking,
-> synchronous callbacks where they are not permitted?
 >
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261009-send-ups=
-tream-v5-0-384af01da3ee@chromium.org?part=3D1
+> Best regards,
+> Krzysztof
 
-The "must be asynchronous" rule doesn't match the in-tree transports.
-usbhid and i2c-hid both block in `output_report()`, and hid-input calls it
-from a workqueue as a "synchronous output report". This patch only
-brings the documentation in line with existing behavior; the actual
-requirements don't change.
+Thank you. I will drop the tested-by tag in v6.
