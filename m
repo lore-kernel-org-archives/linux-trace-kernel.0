@@ -1,350 +1,284 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7C647604A;
-	Tue, 13 Oct 2026 12:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81C04F5E0B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 12:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791893823; cv=none; b=mXrXKgyGHTI6QtC0EKavM3d2bxR/3NSFXPZAtEf+M8A88zezyF2qpo6hI4bGBfFYMMVng0hP9W/i+R8mI2vofwlaVFYb0BWbjvVk+Cpr5rUVVKCQbU8puZ6Fhkf3HXtydom/5CE6zKJAzb6tiAAWvrqXcLOqxRVmyuL7+q0riW8=
+	t=1791894539; cv=none; b=DZlimBZ/GEjrHTIkTQpX6oUfozh2Swwb9YPjQvPrvuK0C5jaUooT8dztqamL6PmxBOUVHOvzt4eIKrHCKiu1goE4+yefHD8NjHFs6zT2oeCtMNtcBRYlX1qqxOi91j6jZllr8ScGxfdDOhFVO2Ofr2kdo4CHLt/6EacOluj9p4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791893823; c=relaxed/simple;
-	bh=G8PGqIrQ5k77evT2wG7WUTBFPlNbw5frBEVT5qJlGVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N8OwECyJNDThwT0pXxPNsX+xsr6ZXhqwfhhFBpvt2gORpxk4J+yeYb4cyeM+kNq+vcDR+BD252SvbT5Kv/TspYaW27xoBQwMVVjNA3MEW6dDG1iT4lrfHxNdTLZeggtfCoLqqcwhZRTJlx0Ql3VaTircKyJsBz95Li6xBwgWWY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0sKq94An; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6p47P9iC; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0sKq94An; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6p47P9iC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1791894539; c=relaxed/simple;
+	bh=eATuFUSIwV+3V0ZrsqfWU6U5J8CxIuWKDFXccmtQJz4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JAHC5zr/kLOlqi2jm2TagK7dhnmHMC3938VxhbQpfXWsqHSEgHXdLzQPzVxD5on7pbIcESLdOPbwuB5fEJwZPv7wYzkXK9pfsACci9ulAiNu8hxmBfdie38Pgo4MMA+YEGD7e0BsRWQeNgTeo6mk+SU6D9UCQAKkIgeRh3KXLTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=coNKTV5a; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0sKq94An";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6p47P9iC";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0sKq94An";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6p47P9iC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 38DB51F452;
-	Tue, 13 Oct 2026 12:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1791893819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIWtiPrsYf/toAj2P9j+sTaCeU3Ul60tHOhLtN5agvw=;
-	b=0sKq94AnOavcl7gDRZOyLluSHmY5g71LY5JROosKZsO1N1IdLZlZBrRfVzCXSFJQOBTuN3
-	w9hKyDiEaoNm/F8NtqM9TT018p4WsZRQe8/4iA7QLDAqvxDqi+o3U0+3gwS4TgI26JZhLv
-	fFN6wG9dXmft+KkzK2+FPGchHHt8dPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1791893819;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIWtiPrsYf/toAj2P9j+sTaCeU3Ul60tHOhLtN5agvw=;
-	b=6p47P9iCrndYpS5aCQ79HN/DuH3C4+9dKrkHYxNlLiQk0K6p8z9D4Jwwo1wlBB5G/l1AOE
-	lglU1CzvRYmwp6Bw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1791893819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIWtiPrsYf/toAj2P9j+sTaCeU3Ul60tHOhLtN5agvw=;
-	b=0sKq94AnOavcl7gDRZOyLluSHmY5g71LY5JROosKZsO1N1IdLZlZBrRfVzCXSFJQOBTuN3
-	w9hKyDiEaoNm/F8NtqM9TT018p4WsZRQe8/4iA7QLDAqvxDqi+o3U0+3gwS4TgI26JZhLv
-	fFN6wG9dXmft+KkzK2+FPGchHHt8dPM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1791893819;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIWtiPrsYf/toAj2P9j+sTaCeU3Ul60tHOhLtN5agvw=;
-	b=6p47P9iCrndYpS5aCQ79HN/DuH3C4+9dKrkHYxNlLiQk0K6p8z9D4Jwwo1wlBB5G/l1AOE
-	lglU1CzvRYmwp6Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 10B7813341;
-	Tue, 13 Oct 2026 12:16:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6fCqNzohzmoPIwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 13 Oct 2026 12:16:59 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 940F0A1407; Tue, 13 Oct 2026 14:16:54 +0200 (CEST)
-Date: Tue, 13 Oct 2026 14:16:54 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
-	linux-afs@lists.infradead.org, v9fs@lists.linux.dev, linux-trace-kernel@vger.kernel.org, 
-	ntfs3@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH 6/8] unicode: free the map after a grace period
-Message-ID: <ytvtvt4ejwcfm63jcmrqz7hdktsmp4tg55ddliwnrgvotuwngm@wljc272orwac>
-References: <20261009-work-fixes-rcu-v1-0-7446d2d335e6@kernel.org>
- <20261009-work-fixes-rcu-v1-6-7446d2d335e6@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="coNKTV5a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1791894536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eATuFUSIwV+3V0ZrsqfWU6U5J8CxIuWKDFXccmtQJz4=;
+	b=coNKTV5aTH4grL2IUg0fdI2n393eEAq71ScGkI6UVi++DeVa4O4CGegZk2ZegZu//ieL9b
+	ZNgFStc/zhMkOgjI5RgyG5hO1HOkcuObNs44Lh/3JuCdJzrFyVpK0OXjOrLuwvDnh4iXmP
+	IA/3uSBdaJO/UzJgX3mx/jwKzI8Qjt0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-302-W-JjFjJQMPS1UW-0ZhOBqg-1; Tue, 13 Oct 2026 12:28:55 +0000
+X-MC-Unique: W-JjFjJQMPS1UW-0ZhOBqg-1
+X-Mimecast-MFC-AGG-ID: W-JjFjJQMPS1UW-0ZhOBqg_1791894534
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a01d1fb07bso34226085e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 05:28:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791894534; x=1792499334;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=cw0AdI14fFbB4gyvTD22R11FTQDGMXNOHMIi+cFmxmY=;
+        b=Ku3T6E57f325+s35aEg/J9eKaxcLa8aspEpW5ld3tEIE3oEUWRX+YG4k61g6wbL9pJ
+         kQRe6XFUJ19Jn8TGPukDtFEav4FKwoVq/bD8IT83ypl/0Xa2e9jgcvaDVHND9BNyhR0K
+         CbC0wZKfnp0jVA1HTBV4GFxpcC29gh1fYM+ZTUAV4bzVVdVLycQXhlOXqHvHbysck0/V
+         Sa57qOZ8dichzKL1RFx+A6ilMtYRkzK+tCzgE9SsPRZMZVrt/E+H0BkQo21n7br1rEtn
+         gJiiQH/92MprlL2EBAFhcYY8jn/IwuKY/zcLTNtos9ln24MtKJDTEb8a2aCZE9ARPm+B
+         88wQ==
+X-Gm-Message-State: AFq9FYKPm6lHYs0Y9CIs7tWj9J1qfM5zOzt52EZL8xKkaXAkChnbN5NJ
+	RxBWKHUFBOI4PgcLY64johY44gnctpt6kCCopZGEzcgmK996CkcVq0l3zR1HocPy/OHG3WcDqAv
+	2COR4zjRjaMVwLrucorMFF49ZPTYWjqsejiml7+0YZZwfF/LAkSmVKqci4ANIxMsU0fWwRMrb8w
+	==
+X-Gm-Gg: AYBFou20NGmVTJEemWbLrlo7VcNmtEt3A7LNao9/bgAifVXO8bsgs6eyYOlGLgyKxpT
+	z8e8RgIInT4dMOTH2A0klTF3jAp0rNDBaheZQp74kgrJ/wCgiSd+Wza5/Ny/IhfufF5pI1fGTqz
+	HaksfJI5tRSzDHTr8oMWHoMSi0bwd/Van4ZolNWPbD7yMOBrBaFB/2p8G4VZm3i0Q82EHvSx2IZ
+	QYmAjwdNgqpB83usYOBWKIIxsUJV8/eVyKIiKbdmoiFFqfTUaHu1EK7kHQMD6qcAv6iHtfzFKD5
+	BVIEjgd3XmiaPE1q7qFqwNnDH8cbX8lWL2tTaB5bPPM2jb2rXjdk8X3draGPWmjrznf7ouHu2WI
+	D7WwlIRdWaaFrDzkZcTFQgfD12kbb
+X-Received: by 2002:a05:600c:348f:b0:49c:fc6e:8caf with SMTP id 5b1f17b1804b1-4a18e4c05e5mr250446635e9.19.1791894534019;
+        Tue, 13 Oct 2026 05:28:54 -0700 (PDT)
+X-Received: by 2002:a05:600c:348f:b0:49c:fc6e:8caf with SMTP id 5b1f17b1804b1-4a18e4c05e5mr250446075e9.19.1791894533515;
+        Tue, 13 Oct 2026 05:28:53 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a195b300f5sm136781275e9.1.2026.10.13.05.28.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 05:28:49 -0700 (PDT)
+Message-ID: <78291e0f91f64bbb43da80ccd9201a237ca2d468.camel@redhat.com>
+Subject: Re: [PATCH] verification/rvgen: reject ambiguous state/event
+ transitions
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: heath@mathgraph.org, rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 13 Oct 2026 14:28:44 +0200
+In-Reply-To: <0201537cbcba3268512d2c3f6a0b51c9@mathgraph.org>
+References: <0201537cbcba3268512d2c3f6a0b51c9@mathgraph.org>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261009-work-fixes-rcu-v1-6-7446d2d335e6@kernel.org>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_THREE(0.00)[3];
-	URIBL_BLOCKED(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spam-Flag: NO
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: iRsRPzjhGh6eavgpSM6xqbd73-mY5BZK2sJEIOemmTc_1791894534
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 09-10-26 23:51:56, Christian Brauner wrote:
-> generic_ci_d_hash() and generic_ci_d_compare() read sb->s_encoding and
-> dereference the unicode map while a pathwalk in rcu mode holds nothing
-> but rcu_read_lock(). The filesystems that use them, ext4, f2fs and
-> tmpfs, drop the map with utf8_unload() from ->put_super(), which runs
-> when the last reference to the mount goes away. A lookup that is still
-> inside such a filesystem at that point reads a freed map.
-> 
-> With a pathwalk held up in utf8_casefold_hash() while the last reference
-> to a casefolded tmpfs goes away:
-> 
->   BUG: KASAN: slab-use-after-free in utf8nlookup+0x74c/0x950
->   Read of size 8 at addr ff110001030fe658 by task walker/98
->   Call Trace:
->    <TASK>
->    utf8nlookup+0x74c/0x950
->    utf8byte+0x160/0x1560
->    utf8_casefold_hash+0x167/0x230
->    generic_ci_d_hash+0xdd/0x1c0
->    link_path_walk+0x11ad/0x1d30
->    path_lookupat+0x63/0xb00
->    filename_lookup+0x1f1/0x5b0
->    vfs_statx+0xd7/0x3b0
->   [...]
->   Allocated by task 94:
->    __kmalloc_cache_noprof+0x249/0x560
->    utf8_load+0x4e/0x570
->    shmem_parse_opt_casefold.isra.0+0x92/0x270
->   [...]
->   Freed by task 97:
->    kfree+0x1db/0x5b0
->    shmem_put_super+0x72/0x170
->    generic_shutdown_super+0x14c/0x530
->    kill_anon_super+0x3a/0x60
->    deactivate_locked_super+0x9c/0xf0
->    cleanup_mnt+0x9f/0x130
-> 
-> So far that has been hard to hit. umount(2) waits for a grace period
-> in namespace_unlock() before it drops the mount, so only a mount whose
-> last reference goes away elsewhere, like the close of a file or a chdir
-> out of a lazily unmounted directory, can race a walker. So it is
-> reachable.
-> 
-> Delay the free until a grace period has passed. The map and the data
-> table it holds a reference to then outlive any pathwalk that found the
-> superblock before the mount went away. The reference on the data table
-> module is dropped from the rcu callback as well. utf8-core is built in
-> whenever CONFIG_UNICODE is set, so there is no module exit that would
-> have to wait for the callbacks.
-> 
-> Overlayfs points the s_encoding of an overlay at the map of its first
-> layer without taking a reference of its own. That stays correct. The
-> layer is held by the overlay, so its map is dropped only after the
-> overlay is gone.
-> 
-> Fixes: b886ee3e778e ("ext4: Support case-insensitive file name lookups")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Hi Heath,
 
-Looks good. Feel free to add:
+thanks for your contribution! Looks good to me.
+I have a couple of minor nits.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+On Fri, 2026-10-09 at 16:17 -0400, heath@mathgraph.org wrote:
+> The rvgen generator builds a transition function indexed by source state
+> and event. If a DOT specification contains different destinations for
+> one key, the generator silently chooses one. Parsed transitions are
+> set-derived, so the choice can vary across Python hash seeds for an
+> unchanged specification.
+>=20
+> Reject duplicate (state, event) keys after sorting the parsed=20
+> transitions,
+> before synthesizing a monitor. This uses constant auxiliary memory and
+> does not depend on the INVALID_STATE sentinel. Both deterministic and
+> hybrid monitors require a unique destination for each state/event pair.
+>=20
 
-								Honza
 
+
+> Add deterministic and hybrid negative fixtures. On the pinned Linux=20
+> tree, the original rvgen suite passes 30/30 tests and the patched suite p=
+asses
+> 32/32; both malformed specifications are rejected across 64 seeded
+> processes. Fifteen existing models retain identical transition matrices.
+>=20
+> Evidence:=20
+> https://github.com/metalogiclabs/mathgraph/actions/runs/37983741146
+
+I'm not sure this statement above adds much value and the evidence is good =
+but I
+wouldn't include it in the commit message. If you want to add more details =
+to a
+single patch (without a cover letter), you can append them right after the =
+---
+so they don't get included in the git history.
+
+>=20
+> OpenAI GPT-6 assisted in identifying the issue, producing and refining
+> the code and tests, and drafting this submission. I reviewed the patch
+> and accept responsibility for the contribution.
+>=20
+> Fixes: cad252db78a9 ("verification/rvgen: Switch __create_matrix() to=20
+> Lark")
+> Assisted-by: LLM
+> Signed-off-by: Heath Sanchez <heath@mathgraph.org>
 > ---
-> Reproducer: delay.c holds a task named walker in utf8_casefold_hash() in
-> rcu pathwalk mode for two seconds and repro.c drops the last reference
-> to a lazily unmounted casefolded tmpfs meanwhile.
-> 
->     mount -t tmpfs -o casefold tmpfs /mnt
->     chattr +F /mnt
->     echo hello > /mnt/Foo
->     insmod delay.ko
->     ./repro
-> 
-> Without this patch that gives the splat above, with it it runs clean.
-> 
-> delay.c:
-> 
->     #include <linux/delay.h>
->     #include <linux/kprobes.h>
->     #include <linux/module.h>
-> 
->     /* keep a task named "walker" in utf8_casefold_hash() in rcu pathwalk */
->     static int pre(struct kprobe *p, struct pt_regs *regs)
->     {
->     	if (!strcmp(current->comm, "walker"))
->     		mdelay(2000);
->     	return 0;
->     }
-> 
->     static struct kprobe kp = {
->     	.symbol_name	= "utf8_casefold_hash",
->     	.pre_handler	= pre,
->     };
-> 
->     static int __init delay_init(void)
->     {
->     	return register_kprobe(&kp);
->     }
-> 
->     static void __exit delay_exit(void)
->     {
->     	unregister_kprobe(&kp);
->     }
-> 
->     module_init(delay_init);
->     module_exit(delay_exit);
->     MODULE_LICENSE("GPL");
-> 
-> repro.c:
-> 
->     #define _GNU_SOURCE
->     #include <pthread.h>
->     #include <sched.h>
->     #include <string.h>
->     #include <sys/mman.h>
->     #include <sys/mount.h>
->     #include <sys/prctl.h>
->     #include <sys/stat.h>
->     #include <unistd.h>
-> 
->     static void pin(int cpu)
->     {
->     	cpu_set_t set;
-> 
->     	CPU_ZERO(&set);
->     	CPU_SET(cpu, &set);
->     	sched_setaffinity(0, sizeof(set), &set);
->     }
-> 
->     static void *walker(void *arg)
->     {
->     	struct stat st;
->     	char *p;
-> 
->     	/*
->     	 * The delay spins. Empty this cpu's lru batches so that an
->     	 * lru_add_drain_all() on the other side has no work to wait for here.
->     	 */
->     	pin(1);
->     	p = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->     	memset(p, 1, 4096);
->     	madvise(p, 4096, MADV_COLD);
-> 
->     	prctl(PR_SET_NAME, "walker");
->     	stat("FOO", &st);
->     	return NULL;
->     }
-> 
->     int main(void)
->     {
->     	struct stat st;
->     	pthread_t t;
-> 
->     	pin(0);
->     	chdir("/mnt");
->     	stat("FOO", &st);
->     	/* the cwd now holds the last reference to the mount */
->     	umount2("/mnt", MNT_DETACH);
->     	pthread_create(&t, NULL, walker, NULL);
->     	sleep(1);
->     	/* drop it, ->kill_sb() runs before chdir() returns */
->     	chdir("/");
->     	pthread_join(t, NULL);
->     	return 0;
->     }
-> ---
->  fs/unicode/utf8-core.c  | 21 +++++++++++++++++----
->  include/linux/unicode.h |  1 +
->  2 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/unicode/utf8-core.c b/fs/unicode/utf8-core.c
-> index f313532f5e80..74a74a48dd8b 100644
-> --- a/fs/unicode/utf8-core.c
-> +++ b/fs/unicode/utf8-core.c
-> @@ -3,6 +3,7 @@
->  #include <linux/kernel.h>
->  #include <linux/string.h>
->  #include <linux/slab.h>
-> +#include <linux/rcupdate.h>
->  #include <linux/parser.h>
->  #include <linux/errno.h>
->  #include <linux/stringhash.h>
-> @@ -183,12 +184,24 @@ struct unicode_map *utf8_load(unsigned int version)
->  }
->  EXPORT_SYMBOL(utf8_load);
->  
-> +static void utf8_unload_rcu(struct rcu_head *head)
-> +{
-> +	struct unicode_map *um = container_of(head, struct unicode_map, rcu);
+> diff --git a/tools/verification/rvgen/rvgen/automata.py=20
+> b/tools/verification/rvgen/rvgen/automata.py
+> index fd37ce3..1f9a56a 100644
+> --- a/tools/verification/rvgen/rvgen/automata.py
+> +++ b/tools/verification/rvgen/rvgen/automata.py
+> @@ -418,6 +418,13 @@ class Automata:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 transitions.append(Transition(src, dst, even=
+t, reset,=20
+> rule))
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 transitions.sort(k=
+ey=3Dlambda t : (t.src, t.event))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 previous_key =3D None
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for transition in transitions=
+:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 key =
+=3D (transition.src, transition.event)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ke=
+y =3D=3D previous_key:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 raise AutomataError(
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f"Duplicate transition for event=
+ {transition.event}=20
+> in state {transition.src}")
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 previ=
+ous_key =3D key
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return transitions
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def __parse_states(self):
+> diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t=20
+> b/tools/verification/rvgen/tests/rvgen_monitor.t
+> index 5f25626..6209c00 100644
+> --- a/tools/verification/rvgen/tests/rvgen_monitor.t
+> +++ b/tools/verification/rvgen/tests/rvgen_monitor.t
+> @@ -84,4 +84,14 @@ check "invalid ltl file syntax" \
+> =C2=A0=C2=A0=09"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl -t =
+per_task" 1
+> \
+> =C2=A0=C2=A0=09"No terminal matches 'i'" "Traceback (most recent call las=
+t)"
+>=20
+> +# Only one transition per source state/event is representable in=20
+> rvgen's
+> +# generated table, even if one of the transitions has a hybrid guard.
+> +check "reject conflicting deterministic automaton transitions" \
+> +=09"$RVGEN monitor -c da -s tests/specs/test_nondeterministic_da.dot -t=
+=20
+> per_cpu" 1 \
+> +=09"Duplicate transition for event event_2 in state state_a" "Traceback"
 > +
-> +	symbol_put(utf8_data_table);
-> +	kfree(um);
+
+Here you may want to use "Traceback (most recent call last)" for the negati=
+ve
+match: more consistent and robust.
+
+> +check "reject conflicting guarded hybrid transitions" \
+> +=09"$RVGEN monitor -c ha -s tests/specs/test_nondeterministic_ha.dot -t=
+=20
+> per_task" 1 \
+> +=09"Duplicate transition for event event2 in state S2" "Traceback"
+> +
+
+The code for DA and HA is shared, I'm not sure we really need both test cas=
+es.
+I'd keep only the DA, we're already not testing every single error conditio=
+n and
+the test is starting to take longer and longer.
+What do you think?
+
+Thanks,
+Gabriele
+
+
+> =C2=A0 test_end
+> diff --git=20
+> a/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot=20
+> b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
+> new file mode 100644
+> index 0000000..1b63b5d
+> --- /dev/null
+> +++ b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
+> @@ -0,0 +1,16 @@
+> +digraph state_automaton {
+> +=09{node [shape =3D circle] "state_b"};
+> +=09{node [shape =3D plaintext, style=3Dinvis, label=3D""] "__init_state_=
+a"};
+> +=09{node [shape =3D doublecircle] "state_a"};
+> +=09{node [shape =3D circle] "state_a"};
+> +=09"__init_state_a" -> "state_a";
+> +=09"state_a" [label =3D "state_a"];
+> +=09"state_a" -> "state_a" [ label =3D "event_2" ];
+> +=09"state_a" -> "state_b" [ label =3D "event_2" ];
+> +=09"state_b" [label =3D "state_b"];
+> +=09"state_b" -> "state_a" [ label =3D "event_2" ];
+> +=09{ rank =3D min ;
+> +=09=09"__init_state_a";
+> +=09=09"state_a";
+> +=09}
 > +}
-> +
-> +/*
-> + * A pathwalk in rcu mode may still be in ->d_hash() or ->d_compare() of a
-> + * filesystem that is being torn down and read the map through its
-> + * superblock, so the map and the tables it points to have to outlive the
-> + * grace period.
-> + */
->  void utf8_unload(struct unicode_map *um)
->  {
-> -	if (um) {
-> -		symbol_put(utf8_data_table);
-> -		kfree(um);
-> -	}
-> +	if (um)
-> +		call_rcu(&um->rcu, utf8_unload_rcu);
->  }
->  EXPORT_SYMBOL(utf8_unload);
->  
-> diff --git a/include/linux/unicode.h b/include/linux/unicode.h
-> index 64fa44fe180c..3a8cb603eb93 100644
-> --- a/include/linux/unicode.h
-> +++ b/include/linux/unicode.h
-> @@ -53,6 +53,7 @@ struct unicode_map {
->  	unsigned int version;
->  	const struct utf8data *ntab[UTF8_NMAX];
->  	const struct utf8data_table *tables;
-> +	struct rcu_head rcu;
->  };
->  
->  int utf8_validate(const struct unicode_map *um, const struct qstr *str);
-> 
-> -- 
-> 2.53.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> diff --git=20
+> a/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot=20
+> b/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot
+> new file mode 100644
+> index 0000000..d21b91b
+> --- /dev/null
+> +++ b/tools/verification/rvgen/tests/specs/test_nondeterministic_ha.dot
+> @@ -0,0 +1,27 @@
+> +digraph state_automaton {
+> +=09center =3D true;
+> +=09size =3D "7,11";
+> +=09{node [shape =3D circle] "S1"};
+> +=09{node [shape =3D plaintext, style=3Dinvis, label=3D""] "__init_S0"};
+> +=09{node [shape =3D doublecircle] "S0"};
+> +=09{node [shape =3D circle] "S0"};
+> +=09{node [shape =3D circle] "S2"};
+> +=09{node [shape =3D circle] "S3"};
+> +=09"__init_S0" -> "S0";
+> +=09"S0" [label =3D "S0\nclk < bar_ns()", color =3D green3];
+> +=09"S1" [label =3D "S1"];
+> +=09"S2" [label =3D "S2\nclk < BAR_NS()"];
+> +=09"S3" [label =3D "S3"];
+> +=09"S1" -> "S0" [ label =3D "event0;reset(clk)" ];
+> +=09"S0" -> "S1" [ label =3D "event1;reset(clk)" ];
+> +=09"S0" -> "S0" [ label =3D "event0;reset(clk)" ];
+> +=09"S1" -> "S2" [ label =3D "event2;env1 =3D=3D 0;reset(clk)" ];
+> +=09"S2" -> "S3" [ label =3D "event2" ];
+> +=09"S2" -> "S2" [ label =3D "event2;clk < foo_ns" ];
+> +=09"S3" -> "S0" [ label =3D "event0;clk < FOO_NS && env2 =3D=3D 0" ];
+> +=09"S3" -> "S1" [ label =3D "event1;clk < 5us && env1 =3D=3D 1;reset(clk=
+)" ];
+> +=09{ rank =3D min ;
+> +=09=09"__init_S0";
+> +=09=09"S0";
+> +=09}
+> +}
+
