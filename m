@@ -1,105 +1,68 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42404B1468
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 11:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD934DF4D5;
+	Wed, 14 Oct 2026 12:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791978543; cv=none; b=hEmUSE8xhuYm4YJMxAVJacrkI7TRTilTStbzxur80PmXj52++87CacWef718pFOy+pZtsiapYVn3N1oGuXMOFEqoECZkfDWAdoMGEODUO6EQ14IgB90s4SVmqBFT6oDFnNm9U6Gv/Y2BooEaOTq6xwBO2JA/rsQ5m51cStR8wd8=
+	t=1791982370; cv=none; b=cRPDOyTfIZtgzXiP9blaEz7RQ75J1pfrWFrCt8Po6DvWISo+clNctlN8TtI//bWVpIR9Yzy1K96cT08KuobPdwzwszefsZXGA0XW6J2bGVEbk7WEimQc/8GpV+tmEPomI9hsWb8eNYjW/aelFxswKCgyHxn/0OpKgChEXDskJ70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791978543; c=relaxed/simple;
-	bh=B1BhwiUQ+2SbiJJEjS1Q2I5bIuXz3H0WSmOK6XPLouA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kpM/1zZFb5L7otizCliNjzdp/uHbGeo8/2Ya6LscGuvXCC9wg/Tsd9p9bIvxmRPa8aQpJsnIKrHZh2sNY+ySQiASwiyhaX7I6nJFS1+bWmH9KFoekeP3NIA2e0YYlc5VsaAk+ntmcMrjdJKdE90t3EKasgRzsA/+XM386eBRVow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkO6vnHL; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791982370; c=relaxed/simple;
+	bh=3sTwOvgriNAkxKO8TqnSXTOyDdaMDvi2zp31gVBDo10=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g03Vl3ZYE2GswltXmwCBFcCGZC3VW8DgXs6u8TuqIwnI9l/vFx3aMdpTt4gOy5xu4G/dhazrNpK/Dy/yQHJ0xTxydUh67P+RiarYE12xXeq5YXfBGbDx+85AtET/1yDdb2rp1QAXwHaH8X3apsX3v7EUvkxnobI3UQ7ZpqHt+wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=TXOGabp1; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkO6vnHL"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2e831e86ebfso4750075ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 04:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791978526; x=1792583326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dGZ7lXpMwGCCG5sKGnDsUSjI7naLKPxMxGZfTR/Ppl0=;
-        b=WkO6vnHLG8rh8axtsSiZ6Zpi8d4xPyZwiRb+wvEFD1+Z7+GkDLnDkjHb00XlwnK53K
-         00GYkM93cCWcp3BUmU+OaEu3F5ZNeszi36X8r0A2KXYxM6YXYyjgI1CPqX+5/nHtB87A
-         e9ejM1IGkSZD1rBPRGEuVi82VsiEBu3qowdMr4Nr+lO6eVwm4MzYn9v0tWpS3lzBl5gD
-         o8ihNLi0JdgRwmr63tV99BEM77TF5VwOZF6lx40pYDfanmwkkV6O9yfXGqNN1eAJBZTB
-         nMexuEI5zThzMkFm7hsX3h7AOSwJHlvaH76UGgKYw0LKtTD9/qAVRBEYPsE3w4BbLzBx
-         cEZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791978526; x=1792583326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dGZ7lXpMwGCCG5sKGnDsUSjI7naLKPxMxGZfTR/Ppl0=;
-        b=u60nbRQ2oA9V4XCv11KpXdrnAKK8NsiWevSe3F6IwTg7jlnTWt7pgD6F5jQeGzrEJ+
-         EjNdv/njnuK1K5PaySvnN6e8JkEYT/Clo6gCQq3pV3ohdVAAe6pWOeL96sGFkpKKxBsp
-         XP8Twz2/+trYLaAFUcalBG9zytKiM93p2qiySFO2SmjtgpZv2FMvgcXNnOKfhm7OwyEL
-         ZD/xF/b1avYGtVwfo95Eiep6/Cy+kdwkgX0a5olyBViLRuAGA5ksK7cTTSH66BQeDklL
-         4We2B9u4Q0OXzwVnP4rTEuFVgUeaGqCblAZCffr7+XWcORawfm0YpOn0NlBsIr9yXreG
-         7CFg==
-X-Forwarded-Encrypted: i=1; AKwUvBx2qu594r4NnVOhbe10EzYYDvQgxEj8+MCtYXQtui+DydLCwGXa2xGm/jenn66nHsGt+l145nn4zZt/lNJnkzZY6Qo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKY8gGj/UynzgUFIZJyhUatzw4/RvhBFYVZmeNdwAFV8WenGZKP
-	CqPrIetgX221TYvhR92+u7Am1LTr8nbBrCdVvtr72eYCYr6sjimA9SCo
-X-Gm-Gg: AYBFou2geL4yRF77xAUJrh6+pNaimMpvrkSLJK2EljstyBXkCtkrQf1wqrXV2FIpYIQ
-	vQP4BjTaVEqCP+oigmdTk3AHk7SSlJf0pjDScGMZwjer+8daEYCzhc6LnOgWV0yfVMbmJm8/MDv
-	ZVo3umNQrttvqUsX7hZAerSW33WADP2A0dpZQms/DeuBu8nhfy+fwOCPaUJQbjZpJ+83HhfIKzY
-	ojCOuOU0Yb8QNjktQuxfOJ9Hn+XVtsaAwEW1YSDW9qbo6akcrK9pm2Ij7cfpvSQi3jj7qnhiope
-	2zpo3RWsMqBDRXrh5Rclzg35H3YthNCivuFHS9ruCqm+VFDCybqrPH+Lrz/sjmcD13thb7+tNwH
-	5era+qWAmYU3lJXSRH79O53RjubrKUtr2ZDcIE1mM5SHpdNTRFUB5sy6l4//JSgjIUf787P2Oe5
-	h2M4lcBHyYv5AqgPRmSqq5uP8QWDn6zo6K3MhqOYOr+TyjF/Jwc1E5xOHBz523uDkgftRjEg3T1
-	C7pNAYi
-X-Received: by 2002:a17:903:46c8:b0:2e5:6158:b9c1 with SMTP id d9443c01a7336-2e842cfcf11mr131739435ad.47.1791978525818;
-        Wed, 14 Oct 2026 04:48:45 -0700 (PDT)
-Received: from localhost ([182.216.53.174])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e8422da9b1sm68643175ad.66.2026.10.14.04.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 04:48:45 -0700 (PDT)
-From: Jaewon Jung <jaewon8868@gmail.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Avoid unlink error on first run
-Date: Wed, 14 Oct 2026 20:48:25 +0900
-Message-ID: <20261014114839.6258-1-jaewon8868@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="TXOGabp1"
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1B5AAC053E;
+	Wed, 14 Oct 2026 12:51:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id E917420024;
+	Wed, 14 Oct 2026 12:51:55 +0000 (UTC)
+Date: Wed, 14 Oct 2026 08:51:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Sang-Heon Jeon <ekffu200098@gmail.com>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>, Mark Brown
+ <broonie@kernel.org>, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2 2/4] tools/bootconfig: Consolidate xbc_init() to
+ error message wrapper
+Message-ID: <20261014085156.2d888407@gandalf.local.home>
+In-Reply-To: <20261013212351.ce16d411abeb7e710eed5157@linux-foundation.org>
+References: <178913597653.248794.1237187523153227751.stgit@devnote2>
+	<178913599508.248794.10388592925402087434.stgit@devnote2>
+	<1dcf2ee8-02f7-41af-b1f4-bff3a16a2c90@leemhuis.info>
+	<20261013212351.ce16d411abeb7e710eed5157@linux-foundation.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 1uiir9pnbqo35mdh6tdeds9keo1uq7wn
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: E917420024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+b3wfe0omgBjnqULDGpD59Hgpzyj3TBEg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=3sTwOvgriNAkxKO8TqnSXTOyDdaMDvi2zp31gVBDo10=; b=TXOGabp1/Dmh/OCeExlO+kQQquKiOUcZ2WCZEt1lZhyEnW9xorL/NVw3nb+htd5lzdipwsVAdYXcVywUpJr105XRwQWA8+OtBgdWcE1wJwIPaQQ1KJX/cHRv7Z+hN/G7n7ekEACgfwLzsGZLQpRtwgzZBmOUamfwUWKt7E3vJQo=
+X-HE-Tag: 1791982315-44159
+X-HE-Meta: U2FsdGVkX18K9udf/Xf+1EeQJR4TjeojlXlKYgOyGn85AOTsBbVHSimyk4/czDotc757zOhJxy71wEK+AjPVmeGWiA2WvFpZLqLIyCBDVcMt0RiP2OVYsqc315ZXtbQj+0fo7VNDPlw+UMobNqbf5PiZnI62H/cMCxB1d6NpHhooPXShctirds1ZcIh3kNag0CD9hiOAUfVG5YNtBJjH26YZog22lmRvMtvaZIEU8ASDyM1oZu+mCd5nXRM3JPddjDXXIdXLFVz0iXgLQewaHOXhrANetzksFpoAA5qfKdFaQu4+DKwwEjN5JolUAwzdtYxls+dp7nCcYF91KosPpl0IxhZ/9WsvErF/hEnE32mPEBLPlvnaorYL3d7PD1cB
 
-On the first run, ftracetest tries to unlink a symlink that does not
-exist.
-Use rm -f to avoid the "No such file or directory" error.
+On Tue, 13 Oct 2026 21:23:51 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Fixes: 7dc1e125f07a ("ftrace/selftests: Add softlink to latest log directory")
-Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
----
- tools/testing/selftests/ftrace/ftracetest | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I was surprised to see bootconfig patches in the linux-trace tree, but
+> it seems that's where they're hosted.
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 246d7e1d015c..95804610e079 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -243,7 +243,7 @@ else
-   mkdir -p $LOG_DIR || errexit "Failed to make a log directory: $LOG_DIR"
-   date > $LOG_FILE
-   if [ "x-$LINK_PTR" != "x-" ]; then
--    unlink $LINK_PTR
-+    rm -f $LINK_PTR
-     ln -fs $LOG_DATE $LINK_PTR
-   fi
- fi
--- 
-2.43.0
+That's because the bootconfig patches were originally created to add more
+complex tracing command line options.
 
+-- Steve
