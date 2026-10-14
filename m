@@ -1,81 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9C24AF9FA;
-	Wed, 14 Oct 2026 10:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409D54A5EDD;
+	Wed, 14 Oct 2026 10:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791972173; cv=none; b=re141h25LTadLpBWot7uwrM4MUniXCDPdfwjqk6vdq4BQC0pkSFMoTexoJLRbyoJ6poNPVcpzBFOPLUx7bUZS2vUuVl+rBcohkkX0sHMvsnLLbBxVwPxZFOp0zuNEUFdy174znhPYCEeaL5zQqB9yhzVOqgrWEohGxaWChEZmRc=
+	t=1791973819; cv=none; b=dxxUXCQNrq/A1Ve7f8bke9shmT3OPmXJZVMpmRlqp08D7fBagaIMxkeZ+tR/s0A44/Q5dQBkcuHDPr1gy8xq76ZNRcCWg2/mFRt/a83gmQB9mImgoSAJQdH9r1bXaWytZRs31QlejCruhdj2s0vi2M3Q0phPRdoPmjSVbsnen3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791972173; c=relaxed/simple;
-	bh=vzaXcNhw8+Gx1k+e3i/Jgdix5iSurEh0Fb9pToA7tIc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=P9aU5rSb/W9Iuoe/tLoJHkOw/is+GM4bu5Y/89wRDX1rsK+Pa8ZrBm4mzrrjwSJVd8jBQYkszkDYnBJpE1tbEbNv87fNxmxOG7nOtkbyPQDjzIslNc5QaWMseoGe6UoSs6SY9LGN+kA4NDXf2qkvA4Q8sshO0JeRH7+QdsWVu9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uYHzKS2N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=92GZLb/c; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1791973819; c=relaxed/simple;
+	bh=iWRy+RySwK9hGoK6m2irTykTpFLJKeumaG357x5XVlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kw2rz0f0ttYxMZNmmstZbr4wtSYCJRioL05gr7OINmJINtBfFLwS0hp45H4sNIsdjVFIkecZYDzArIpkkTQNLVnK4QQZIR9iTI9mWD5qcW5zscpT9p+ILo0/b3FkbQ6rAlEo4Ly2MPghZggXMfdohSG8Qe4eqEQJRleuupxmVF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZ1AyUdi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uYHzKS2N";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="92GZLb/c"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1791972170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ii6X4Q86Nezai669ve/W9qj04iqzWpDX+DkbLve2zYE=;
-	b=uYHzKS2Ns7yeF9qAVxylQCsS9CNblN8ONrY/KxP58nF86TRJZPIFwuffj5lsWJc6gzmt8g
-	ilRUP6DD0tbg1V7WS07GhuIMIdOlqbelcwjnAxHJLlbksZB2MUtFik+lmSggJPYTrmprOm
-	kTJuQSHnh62BDU/Kc6kTUfM1v/vsrVZ2j02kgZCy2BXj5qYQC4g/ceIE9AiBaC7HGHnXF4
-	LpOLSp2jdlkX3nDq6SI9JutsH9mTAeNuSGOhKrTqNcer86ljHDfGm1kxtsRa45iILDPH8O
-	rPDkUaBlPTcuV5bq7E5MkDeGsvDZvTlLUAR/ztWOgnLCq4LTa+ljyRRtvLUZ8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1791972170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ii6X4Q86Nezai669ve/W9qj04iqzWpDX+DkbLve2zYE=;
-	b=92GZLb/c8P4+tKdxuzUFMrC4q/pYHAkPhM6w40TguwK0D49LAU73K96Y40IEe+t3/KNtBS
-	pn+uAxXJD/EJfqCg==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>
-Cc: Wen Yang <wen.yang@linux.dev>, Tobias Schaffner
- <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
-Subject: Re: [PATCH v2 04/15] rv: Cast result of model_get_*_name()
-In-Reply-To: <1ff1999324ecbbfe9a36f8c088d7d4122ae59177.camel@redhat.com>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
- <20261001152042.124445-5-gmonaco@redhat.com> <87jynmgm94.fsf@yellow.woof>
- <1ff1999324ecbbfe9a36f8c088d7d4122ae59177.camel@redhat.com>
-Date: Wed, 14 Oct 2026 12:02:48 +0200
-Message-ID: <87v77461mf.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZ1AyUdi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4811F000FF;
+	Wed, 14 Oct 2026 10:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791973817;
+	bh=hKEEJuYS6FrXq5BrnjlC2tV9RaL6MFYIN3GFi5M0KyE=;
+	h=From:To:Cc:Subject:Date;
+	b=SZ1AyUdi46NP8OrpYBa5RIN64JM7lCIsyq32OYO68rshiG9tV7eJd+hVPVs3m4MWz
+	 0wBjIrgRkw0XvXKtYGMm+WnInEIAU7nOBrskN/KedBQqkiNLi7LLxczDVe4XEa18k1
+	 jWHp+mGQLhvJXBm+Eclet1GCoJT/h4cwcTIAMcPif00av/sGr+vDeErT5ylJpBrWPs
+	 inUjaQPMRnUQ2eTIxFmgGnbjjiWvTOV/25oPvsXHLG75l5rWTk5ZnJ+M3TXuoBgwr2
+	 5gmPGguOgGQC2GYHv/VqBUyAg9nXxF2TiOoy2Ez1hOqlNXvi2yphJf1Xkcj3Xn8222
+	 4Po13vTvwJVdA==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Fengguang Wu <fengguang.wu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH] tracing/histograms: Verify event_call identity when updating synth_event refcount
+Date: Wed, 14 Oct 2026 10:30:12 +0000
+Message-ID: <20261014103012.744589-1-lee@kernel.org>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> The reason I initially didn't do this was that some lines get beyond 100
-> characters adding the const, so I'd need to break them and make rvgen even more
-> complicated to generate things (TL;DR still laziness).
+In event_hist_trigger_parse() and hist_unreg_all(), the histogram
+registration and unregistration paths look up find_synth_event() using
+trace_event_name(file->event_call) and adjust se->ref if a match is
+found.
 
-There is also coccinelle which can automate this and can handle the 100
-column limit. Just FYI.
+Because find_synth_event() only compares the event basename, registering
+or removing a histogram on a non-synthetic trace event whose basename
+matches a synthetic event erroneously modifies the synthetic event's
+reference count.  If a histogram is registered on the non-synthetic
+event before the synthetic event is created and removed afterwards,
+se->ref is decremented without a matching increment, allowing the
+synthetic event to be freed while an active histogram action still holds
+a pointer to it.
 
-> I'm actually taking a different approach and storing everything in macros like:
->
-> #define DEFINE_DA_EVENT(name)						\
-> 	DEFINE_EVENT(event_da_monitor, name,				\
-> 		TP_PROTO(char *state, char *event,			\
-> 			 char *next_state, bool final_state),		\
-> 		TP_ARGS(state, event, next_state, final_state))
->
-> So both per-monitor trace headers and rvgen get simpler and if we ever need to
-> change something again, it comes for free.
+Verify that &se->call matches file->event_call before adjusting se->ref.
 
-Sounds good.
+Fixes: 4b147936fa50 ("tracing: Add support for 'synthetic' events")
+Cc: stable@vger.kernel.org
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ kernel/trace/trace_events_hist.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Nam
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 00a1d8522036..71b240b609ea 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6807,7 +6807,7 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 
+ 			se_name = trace_event_name(file->event_call);
+ 			se = find_synth_event(se_name);
+-			if (se)
++			if (se && &se->call == file->event_call)
+ 				se->ref--;
+ 
+ 			update_cond_flag(file);
+@@ -6926,7 +6926,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+ 		se_name = trace_event_name(file->event_call);
+ 		se = find_synth_event(se_name);
+-		if (se)
++		if (se && &se->call == file->event_call)
+ 			se->ref--;
+ 		ret = 0;
+ 		goto out_free;
+@@ -6962,7 +6962,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 
+ 	se_name = trace_event_name(file->event_call);
+ 	se = find_synth_event(se_name);
+-	if (se)
++	if (se && &se->call == file->event_call)
+ 		se->ref++;
+  out:
+ 	if (ret == 0 && glob[0])
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
