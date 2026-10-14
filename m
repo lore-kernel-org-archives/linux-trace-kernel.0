@@ -1,270 +1,140 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63C024E0B9D;
-	Wed, 14 Oct 2026 09:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5A73C2774
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 09:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791971077; cv=none; b=ijm5PeMUmEDfolZqw7v+JghHYHpZkdiCI3mXy0LCQ8TP0cuqu1NNV7ClFiJGtUwzfz41B9OT92r7FhYypALl/6Q+azRxivz+uXxLiRlBupNOAfeaqxlsCA/rlTKXrt+H6VLPGA4MYUJp3WR2NJLoRnC5IHK2hoYi/1vj7900yOI=
+	t=1791971535; cv=none; b=obDnzbig19I+MjAzu/2poAKzcNoRvfvcIC58kpaybcBmNsO0wV7Pate/G82FUpt/jxmALEbpWtHo9aN3IZsE98Jz2H6L9rOyGs227gNxl3X69zjlCh5BnmGHUJID11MWMU2yDVN6QpR0MYXe4CzrGeUIvjeqSQ7XkOdrpG+CAnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791971077; c=relaxed/simple;
-	bh=Wec2LdFBCDRlFYqPwmYrASwapZ2kO7Te7wk01Q1reTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZGW+MPm3OrnzwaE5F/SmTeArxDLPx21qqeQLaFPwSiEzKGcno8euEn4XP6orAApTNP8y6q4LEmI437u51WJy6ijz/lDQiqDLGnq6Ia/3PvjUXh9KsaPLJfp7+DCc9ukMSFjGiL8zzjZM9MgQWwPNUMmcgNoSbHLRJSgInotItqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0002472LT.eswin.cn (unknown [10.12.96.78])
-	by app1 (Coremail) with SMTP id TAJkCgCXKW7vTs9q6aSGAA--.43637S3;
-	Wed, 14 Oct 2026 17:44:17 +0800 (CST)
-From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	Nam Cao <namcao@linutronix.de>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-Subject: [PATCH v5 1/2] riscv: kprobes: reject probes inside LR/SC sequences
-Date: Wed, 14 Oct 2026 17:44:14 +0800
-Message-Id: <20261014094415.374-2-yuanxiaofeng@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20260828091202.1124-1-yuanxiaofeng@eswincomputing.com>
-References: <20260828091202.1124-1-yuanxiaofeng@eswincomputing.com>
+	s=arc-20240116; t=1791971535; c=relaxed/simple;
+	bh=kLTudfeiXplbh5MagTQ6gzarl091SScIP9jzkWyxtAM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nytEz6aKGc3uFD5pi887rwwoQ+3bjuS9QEWjb/78ILiPc8fgKOiASH0jn8TAotQUPyH7j7d7iOMRQDROYNzJOEFgWCqECL7e/hBF1RsBkIcPMG/zX1oWJYaX84QPmtJNRRaTdIkg5SYll7qjKhIwAFsFFBBqeyVWtYuqoV4fuw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEm+/mrI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEm+/mrI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1791971532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kLTudfeiXplbh5MagTQ6gzarl091SScIP9jzkWyxtAM=;
+	b=TEm+/mrIxg2/pb65mSD1wT9ZQPttBcE+rP/TrvfHzU1q2VBAx2tka8JkQkJDh3U+Vy9kIw
+	r3Batpq92KC733/5ZMn7+8f+ZkuBVkY229B/rMFmkyHCrsZoeFPdQyjgsAgWp3J6M+iOtx
+	I0CzMcZN5qXAKmkmBLWMSzKGRR/FtB0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-696-wzr9MNNIPEOiBRcfrtH1rQ-1; Wed, 14 Oct 2026 09:52:11 +0000
+X-MC-Unique: wzr9MNNIPEOiBRcfrtH1rQ-1
+X-Mimecast-MFC-AGG-ID: wzr9MNNIPEOiBRcfrtH1rQ_1791971530
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-48c415561aaso2534001f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 02:52:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791971530; x=1792576330;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ew/yEA9efwsEsgTzBND1D0weZnW/cI9Jw/YyC/suOs8=;
+        b=RpGm7FZO4gG5umhfjYyCY6v1YzGNuEmlkCySXusPzPXORXrxuy616zRb8jjpM+Le4v
+         OhWZZXhaI8/DkW40b3/8UxwIPBPJ9LCD1KvB8PooQq3+BDowpbSxr3XwRT5Oj65Un/+y
+         A9NNz2Yp6MUW2kqS08vdycfmr7sHLYo/XDqEBmZrgCYj9I8LYOeoI7Qf+Mswixg/fpJw
+         F4B1UzML3Bs8mog1H3OL4cN11a8/CXTJ/B9L2EHhYDkPrIYoTywxLd8N85lGrQDSZI6w
+         WUyP0iSzcxLEE2Tj5lRNdA+2YBDOSnorfzKXB23iE1PmuFw4Et1A2L8il1a/j1PaeW+K
+         xHlQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy3HhK84Izt0WGKrVVnJ68VaiSTamg5TpAK71F4dbbJmvRY3HqSce2lp3GbKYe+f+BD6TJJtoLzZtEG8niN6SpByic=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJQUbg941OHfihvukWNz2WB8R7fwLJBWHrSDh/Nwh8mszpYflqw
+	+aMZFiA9u7r+bg1QymU6+dAN4IaQGVVd0Ac7Snp8Md/+XIQQl1jRjBMwTf2hYhH6CVX/zrVU6uF
+	QHA17Ypl1z171QHLeqXMa3wvdZTZluP3wyVx0rcSn3dQmIVnTwlKNMXleWz+5N2x7bsGBW8nVRw
+	==
+X-Gm-Gg: AYBFou3f7rcNOQg6lrPcOAHC7uxv1APM29mM+jsxOh2tU9d/+bfJrdA+L3Xuqi9OuAp
+	/5QLe26YrbOnyN9nB8xd6Ze9yoBtBkHTNMVmQh+pP/Yt0FfvDax7PnU+KLCpxRK1Hj1d/f14qul
+	e8okgnpLKAIf0NFMioc5Y+1ruxXZRrD6KhnUXhNdYHMBhgkDr//cPejKXKZYe1/HVBWJogbR7Rc
+	G7/S6yfE9nFtAM2Gs2meST+rBOLl2mfYC4bCIAPlZHrlN9IWOxEQvkAvddWhRhOi/CN29htcceK
+	Beg8A1R14v2UsF164U5Hv8E2vYklj6o9rUIoZkK00wfLSlivjz+iC+WFnj2VW5uw6QyNdbfbDRE
+	GZQtaWVS1r2pZuXL2LrBroBlrzlWD
+X-Received: by 2002:a05:600c:8b70:b0:49f:e701:51c8 with SMTP id 5b1f17b1804b1-4a18e4a01acmr312576255e9.9.1791971530374;
+        Wed, 14 Oct 2026 02:52:10 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b70:b0:49f:e701:51c8 with SMTP id 5b1f17b1804b1-4a18e4a01acmr312575565e9.9.1791971529966;
+        Wed, 14 Oct 2026 02:52:09 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a18be97d1esm679092125e9.8.2026.10.14.02.52.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 02:52:09 -0700 (PDT)
+Message-ID: <1ff1999324ecbbfe9a36f8c088d7d4122ae59177.camel@redhat.com>
+Subject: Re: [PATCH v2 04/15] rv: Cast result of model_get_*_name()
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: Wen Yang <wen.yang@linux.dev>, Tobias Schaffner
+	 <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Date: Wed, 14 Oct 2026 11:52:08 +0200
+In-Reply-To: <87jynmgm94.fsf@yellow.woof>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+	 <20261001152042.124445-5-gmonaco@redhat.com> <87jynmgm94.fsf@yellow.woof>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgCXKW7vTs9q6aSGAA--.43637S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3XF47GrW7WFy7AFW8CF4fGrg_yoW3Jr48pF
-	s5Cw15JrWDXFs7CrySyr4kZr4Svan5G3y7KryDZa43KayUKryrtFZ29w42k3Z8CrZY9w1f
-	WrWavrZ8u347AaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUml14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-	JbIYCTnIWIevJa73UjIFyTuYvjfUnZXrUUUUU
-X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAgEAE2rOXakY1wAAsP
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3ty5fB27L6_jlE9QLJoAGo6tHC5tIoISqNeU8EJ5Fnw_1791971530
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A trap taken in the middle of an LR/SC sequence clears the load
-reservation, so an SC following the probed instruction always fails and
-the enclosing retry loop re-enters the breakpoint, livelocking the CPU.
-Reject probes of the LR/SC instructions themselves and of any address
-between them.
+On Tue, 2026-10-13 at 08:14 +0200, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+>=20
+> > Functions like model_get_event_name() and model_get_state_name() are
+> > shared with BPF monitors, however those programs don't play nice with
+> > string pointers without fixed length and the event_name and state_name
+> > arrays need to be defined differently. This gets the compiler to notice
+> > those are const char and the above function discard the const qualifier=
+.
+> >=20
+> > Drop the warning by casting the result to (char *). Note, a cleaner
+> > solution would require to modify all callers, but that would require
+> > changing every single monitor's tracepoint and the advantage is minimal=
+.
+>=20
+> I prefer the cleaner solution. Just mass replace "char *" with
+> "const char *", and manually fix up a few errors and we are done.
 
-arm64's kprobes rejects its equivalent exclusive load/store instructions
-and, in arm_kprobe_decode_insn(), walks backward from the probe address
-(bounded by the enclosing symbol) to reject any address inside an
-exclusive sequence.  RISC-V cannot walk backward because
-variable-length instructions make instruction boundaries ambiguous, so
-walk forward from the enclosing symbol, a known instruction boundary, up
-to the probe address and track whether an LR is still outstanding.
+The reason I initially didn't do this was that some lines get beyond 100
+characters adding the const, so I'd need to break them and make rvgen even =
+more
+complicated to generate things (TL;DR still laziness).
 
-A Zalrsc-constrained LR/SC retry loop holds at most 16 instructions, so
-an LR more than MAX_LRSC_GAP instructions ahead of the probe cannot
-start a sequence containing it.  Count instructions, not bytes:
-compressed instructions would make a byte window ambiguous.
+I'm actually taking a different approach and storing everything in macros l=
+ike:
 
-The LR/SC instructions themselves are rejected in
-riscv_probe_decode_insn(), and an address inside a sequence is rejected
-in arch_check_kprobe().
+#define DEFINE_DA_EVENT(name)=09=09=09=09=09=09\
+=09DEFINE_EVENT(event_da_monitor, name,=09=09=09=09\
+=09=09TP_PROTO(char *state, char *event,=09=09=09\
+=09=09=09 char *next_state, bool final_state),=09=09\
+=09=09TP_ARGS(state, event, next_state, final_state))
 
-Signed-off-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
----
- arch/riscv/include/asm/insn.h          | 33 ++++++++++++++
- arch/riscv/kernel/probes/decode-insn.c |  2 +
- arch/riscv/kernel/probes/kprobes.c     | 63 +++++++++++++++++++++-----
- 3 files changed, 86 insertions(+), 12 deletions(-)
+So both per-monitor trace headers and rvgen get simpler and if we ever need=
+ to
+change something again, it comes for free.
 
-diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-index ad348d8b8..46a1666d2 100644
---- a/arch/riscv/include/asm/insn.h
-+++ b/arch/riscv/include/asm/insn.h
-@@ -141,6 +141,7 @@
- #define RVG_OPCODE_JALR		0x67
- #define RVG_OPCODE_JAL		0x6f
- #define RVG_OPCODE_SYSTEM	0x73
-+#define RVG_OPCODE_AMO		0x2f
- #define RVG_SYSTEM_CSR_OFF	20
- #define RVG_SYSTEM_CSR_MASK	GENMASK(11, 0)
- 
-@@ -175,6 +176,8 @@
- #define RVG_FUNCT3_BGE		0x5
- #define RVG_FUNCT3_BLTU		0x6
- #define RVG_FUNCT3_BGEU		0x7
-+#define RVG_FUNCT3_AMO_W	0x2
-+#define RVG_FUNCT3_AMO_D	0x3
- 
- /* parts of funct3 code for C extension*/
- #define RVC_FUNCT3_C_BEQZ	0x6
-@@ -263,6 +266,36 @@ __RISCV_INSN_FUNCS(ebreak, RVG_MASK_EBREAK, RVG_MATCH_EBREAK)
- __RISCV_INSN_FUNCS(sret, RVG_MASK_SRET, RVG_MATCH_SRET)
- __RISCV_INSN_FUNCS(fence, RVG_MASK_FENCE, RVG_MATCH_FENCE);
- 
-+/*
-+ * LR/SC are identified by the AMO opcode plus the funct3 width field
-+ * (.w/.d) and the funct5 field (funct7[6:2]) distinguishing LR from SC.
-+ * The aq/rl bits (funct7[1:0]) are ignored.  For LR the rs2 field must
-+ * encode x0.
-+ */
-+#define RVG_AMO_FUNCT5_LR	0x02
-+#define RVG_AMO_FUNCT5_SC	0x03
-+
-+static __always_inline bool riscv_insn_is_lr(u32 code)
-+{
-+	u32 funct5 = (code >> 27) & 0x1f;
-+	u32 funct3 = (code >> 12) & 0x7;
-+
-+	return (code & RV_INSN_OPCODE_MASK) == RVG_OPCODE_AMO &&
-+	       funct5 == RVG_AMO_FUNCT5_LR &&
-+	       (funct3 == RVG_FUNCT3_AMO_W || funct3 == RVG_FUNCT3_AMO_D) &&
-+	       !(code & GENMASK(24, 20));
-+}
-+
-+static __always_inline bool riscv_insn_is_sc(u32 code)
-+{
-+	u32 funct5 = (code >> 27) & 0x1f;
-+	u32 funct3 = (code >> 12) & 0x7;
-+
-+	return (code & RV_INSN_OPCODE_MASK) == RVG_OPCODE_AMO &&
-+	       funct5 == RVG_AMO_FUNCT5_SC &&
-+	       (funct3 == RVG_FUNCT3_AMO_W || funct3 == RVG_FUNCT3_AMO_D);
-+}
-+
- /* special case to catch _any_ system instruction */
- static __always_inline bool riscv_insn_is_system(u32 code)
- {
-diff --git a/arch/riscv/kernel/probes/decode-insn.c b/arch/riscv/kernel/probes/decode-insn.c
-index 433d9035b..e6a889467 100644
---- a/arch/riscv/kernel/probes/decode-insn.c
-+++ b/arch/riscv/kernel/probes/decode-insn.c
-@@ -23,6 +23,8 @@ riscv_probe_decode_insn(probe_opcode_t *addr, struct arch_probe_insn *api)
- 	 */
- 	RISCV_INSN_REJECTED(system,		insn);
- 	RISCV_INSN_REJECTED(fence,		insn);
-+	RISCV_INSN_REJECTED(lr,			insn);
-+	RISCV_INSN_REJECTED(sc,			insn);
- 
- 	/*
- 	 * Simulate instructions list:
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-index a76eab297..8f20f1535 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -7,11 +7,13 @@
- #include <linux/slab.h>
- #include <linux/stop_machine.h>
- #include <linux/vmalloc.h>
-+#include <linux/unaligned.h>
- #include <asm/ptrace.h>
- #include <linux/uaccess.h>
- #include <asm/sections.h>
- #include <asm/cacheflush.h>
- #include <asm/bug.h>
-+#include <asm/insn.h>
- #include <asm/text-patching.h>
- 
- #include "decode-insn.h"
-@@ -49,35 +51,72 @@ static void __kprobes arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
- 	post_kprobe_handler(p, kcb, regs);
- }
- 
--static bool __kprobes arch_check_kprobe(unsigned long addr)
-+/*
-+ * A trap taken in the middle of an LR/SC sequence clears the load
-+ * reservation, so an SC following the probed instruction would always
-+ * fail and the enclosing retry loop would re-enter the breakpoint.
-+ * Reject probes inside such a sequence.
-+ *
-+ * RISC-V instruction boundaries cannot be recovered by walking
-+ * backwards - a 32-bit instruction whose upper halfword looks like a
-+ * compressed instruction is ambiguous - so walk forward from the
-+ * enclosing symbol, a known instruction boundary, up to the probe address
-+ * and track whether an LR is still outstanding.  A Zalrsc-constrained
-+ * LR/SC retry loop holds at most 16 instructions, so an LR more than
-+ * that many instructions ahead of the probe cannot start a sequence
-+ * containing it.  Count instructions, not bytes: compressed
-+ * instructions would make a byte window ambiguous.
-+ */
-+#define MAX_LRSC_GAP	16
-+
-+/*
-+ * Verify that @addr points at the start of an instruction and is not
-+ * inside an LR/SC sequence.  Returns 0 on success, -EILSEQ if @addr is
-+ * not an instruction boundary, or -EINVAL if the probe would land
-+ * inside an LR/SC sequence.
-+ */
-+static int __kprobes arch_check_kprobe(unsigned long addr)
- {
--	unsigned long tmp, offset;
-+	unsigned long pc, offset;
-+	int outstanding_lr = -1;
- 
--	/* start iterating at the closest preceding symbol */
- 	if (!kallsyms_lookup_size_offset(addr, NULL, &offset))
--		return false;
-+		return -EILSEQ;
- 
--	tmp = addr - offset;
-+	/* pc starts at the closest preceding symbol, a known instruction boundary */
-+	pc = addr - offset;
- 
--	while (tmp <= addr) {
--		if (tmp == addr)
--			return true;
-+	while (pc < addr) {
-+		u32 insn = get_unaligned((u32 *)pc);
-+		unsigned int len = GET_INSN_LENGTH(insn);
- 
--		tmp += GET_INSN_LENGTH(*(u16 *)tmp);
-+		if (riscv_insn_is_lr(insn))
-+			outstanding_lr = 0;
-+		else if (riscv_insn_is_sc(insn))
-+			outstanding_lr = -1;
-+		else if (outstanding_lr >= 0 && ++outstanding_lr > MAX_LRSC_GAP)
-+			outstanding_lr = -1;
-+
-+		pc += len;
- 	}
- 
--	return false;
-+	if (pc != addr)
-+		return -EILSEQ;
-+
-+	return outstanding_lr >= 0 ? -EINVAL : 0;
- }
- 
- int __kprobes arch_prepare_kprobe(struct kprobe *p)
- {
- 	u16 *insn = (u16 *)p->addr;
-+	int ret;
- 
- 	if ((unsigned long)insn & 0x1)
- 		return -EILSEQ;
- 
--	if (!arch_check_kprobe((unsigned long)p->addr))
--		return -EILSEQ;
-+	ret = arch_check_kprobe((unsigned long)p->addr);
-+	if (ret)
-+		return ret;
- 
- 	/* copy instruction */
- 	p->opcode = (kprobe_opcode_t)(*insn++);
--- 
-2.34.1
+Gabriele
 
