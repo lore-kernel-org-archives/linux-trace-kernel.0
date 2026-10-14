@@ -1,84 +1,117 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1F34E9C20;
-	Tue, 13 Oct 2026 23:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DBF37267E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 02:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791935155; cv=none; b=JF/IyrvmwgyAf5vP7nSv8wQ30aj9TyoZv7ihiYhc7BCFzwVQ/E7Q0qm04yCBfOu4cTT/6yC7PoRx9Vz/Ic7GZkYJyJiKmLRNWUphsOgk+cVlHgsi6LD/mxSDof439FfJoDHZ3yWeNSoJiM7094UGqJo+g+Qq27VZIG8YERo97oM=
+	t=1791944821; cv=none; b=m3oKS4zCQRbYjz0/Y6aHct1tW3QrVpltY4G5euXb7WJOZbgeiwDi+Hw71SWAVqmmENTaU13HsPHouPP5WSI8PGUyW7w0xu1QPqONwszCjlxSqgfj5DvM5nRhzH/l7xYQuDSX9R1q/7wF7BIuMZtdX4nxb4HfF3mNgWht89GfJE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791935155; c=relaxed/simple;
-	bh=rAfCW47pfRLJ9FoVEdHAC1LOYNyZQKKqvkkxd+o83j4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=laZDgGWwC6Q/zCSj43jTLGYGJocvOGO2M/Cmr12ux5TgPxuWYT0AuFZiQs4QAJqzpyLvBOIdzZuEvsfuAs5CDMKAiKw8HOmewjwaUzef5REHIlgx/RCm6RMlJSo22419UWgQ/8EfT6VX5+MdWDHgSizl9IjKRKWrglYi93P7NWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=W55OzyOF; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1791944821; c=relaxed/simple;
+	bh=bTfyfoSGYmlLpFoJH2XCBxtEhs+Opxo6THk3In2lhAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=fOEkgjPFSMgC2otPR9jxnMmCUUbax3B/mWYzBea5F81P/Pz54C1yeqNkkvq4hmcQZIVGSnujWYE8zkLcPSeyCnUjsQYc4I1tJf9xAKwSjwXCh4k1OJVR8nIb6CLx4On6QK+5GHc1zold6uyk87BXnQc6ckL5hJF7DKzvhvaAz1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NEumHHNp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="W55OzyOF"
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6AB6F1201DD;
-	Tue, 13 Oct 2026 23:45:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 748A02000E;
-	Tue, 13 Oct 2026 23:45:44 +0000 (UTC)
-Date: Tue, 13 Oct 2026 19:45:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org, "Vineet Gupta"
- <vineet.gupta@linux.dev>, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] tracing: fgraph: allocate shadow stacks inline
- with GFP_NOWAIT
-Message-ID: <20261013194542.7e036b03@226.227.38.69.naturalwireless.com>
-In-Reply-To: <20261001203145.abaab4f85291cdec5e423184@kernel.org>
-References: <20261001102909.1152572-1-vineet.gupta@linux.dev>
-	<20261001102909.1152572-2-vineet.gupta@linux.dev>
-	<20261001103752.653961F000FF@smtp.kernel.org>
-	<20261001203145.abaab4f85291cdec5e423184@kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEumHHNp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1791944818;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZKHAhokxOK/hGBo7OX92Mvp/keyvbbEP4Qb41lKRXJo=;
+	b=NEumHHNp/QoLvrDKqTBO4KJS0cuevRUDLxYFFpUE/aIRnmGFomuoOrgzXLG2Kq7NJqCitg
+	IYEGhYj8QMyMnYXv3V2mGsLILTt4TO3l569mo7EZ5rL/7FcPw3/IbIKScgRTTBw1M8hoDL
+	1HpkCvi4gx2vP4ghxGQCiO98HdTNe20=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-tiftSLZ6M_ebIlK6xSIK0Q-1; Wed, 14 Oct 2026 02:26:57 +0000
+X-MC-Unique: tiftSLZ6M_ebIlK6xSIK0Q-1
+X-Mimecast-MFC-AGG-ID: tiftSLZ6M_ebIlK6xSIK0Q_1791944817
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-91b92acedd9so54329396d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Oct 2026 19:26:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791944817; x=1792549617;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZKHAhokxOK/hGBo7OX92Mvp/keyvbbEP4Qb41lKRXJo=;
+        b=uF9GHhiSoqF35hmkDuG/XTvI9sR71M/AewAfZaLS+q/Mu7QLe442VxZB+RRWv0iHcx
+         uadOIojezl3YWq6Mu/XrbcVDayRBO9XzY6ZskcJiPQvyQ3KjzNQWRWKn7a7U7deU8fMA
+         BILwW8KCsBFTWpXMtnuLZH/YHmitXsz0lzhfcAPnEAaOCqeWZ00IA+rekp4OxSvfKVAZ
+         Nznn7QqUUuVsn1jyrDDUphk3jZsfaLU5l/n+ebvHclQE2wMbynk2F8/ejP1dJSK/0puH
+         N6oc0nEWkAGR/oobQ6mpYjzdxFKW4Sv46rXwoI//sf3W2uf7wNrNUAE+I62cBmzm7n5L
+         o/mw==
+X-Forwarded-Encrypted: i=1; AKwUvBzKZbmRdg9KL4xS+JzKN7rlxo3/KGD4Qh2TsJSnZLU1yVo+GvQOtXBnFVodWh0oHmBQ6a3BPHojbW5PLvPCwJD/fFw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKmsz7E4tjGgnsd/r/oIMGRicNFEVAAg7l+Kuuh6vsacp18+qP8
+	+iSdGJkiu1sA+kTHhxV5PUds1WFwXNDsnDW56mznnM3ENj3azYS4qwUiLS4Nb6hogjQVE/+ABlF
+	siLlFhEQ+nCRty+QVKPlF/ZQR4CJSlJ+APtpdk28hwgsiYHUawTHn8mKB3ADDypyaMr3pQm9sBA
+	==
+X-Gm-Gg: AYBFou3z5U7z/G4bEyJ+daZyETsR6efUDJTh88eBq/f5zk7xtJ10AYbUF0tIHHRIXzh
+	tS3M45KOLEyJb83VEPq+mTHEhXjyNx2MOGL3XBJEDuwUICu8BiQOKG/qaBDE2Pic/lhGeWrjcNv
+	E/GgZ679tslmjQm0NTEKKGF8R0Jg1ZLHQs/sKJAWcNPNQmox1BKIqGuPErZCCYW3HqKn1l5sa+K
+	eA1rS6PhW2TwhG8+1ogmB/d0xEPgBh+tZufpqlvkedjrVftuOeG8LO8NZ7WOr+OyPBfogYDEmwV
+	8kV9EzHyCsPgRNqsGYsbIxBy5ZBwddgOvOvJUXuI0STSESjRShVHhNEbbF3xyAWxncVHxYHSpje
+	T1gNd4K63C6XENd0LUoVephSwn6CI8dCJPr/RmF3eNIrlFN3dJyYDo88=
+X-Received: by 2002:a05:6214:da6:b0:91b:8b10:ce14 with SMTP id 6a1803df08f44-91b8b10d2abmr98923416d6.45.1791944816628;
+        Tue, 13 Oct 2026 19:26:56 -0700 (PDT)
+X-Received: by 2002:a05:6214:da6:b0:91b:8b10:ce14 with SMTP id 6a1803df08f44-91b8b10d2abmr98923186d6.45.1791944816204;
+        Tue, 13 Oct 2026 19:26:56 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.redhat.corp (71-34-25-140.mpls.qwest.net. [71.34.25.140])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97b387e0sm41051566d6.12.2026.10.13.19.26.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 19:26:55 -0700 (PDT)
+From: Crystal Wood <crwood@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Crystal Wood <crwood@redhat.com>
+Subject: [PATCH v3 0/9] tracing/osnoise: Synchronization fixes
+Date: Tue, 13 Oct 2026 21:26:31 -0500
+Message-ID: <20261014022640.695786-1-crwood@redhat.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 68qeuiecqng5119awtkpqey4dx6gf466
-X-Rspamd-Queue-Id: 748A02000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1890ClREjmUcD88SPjl8Xj4QHVZp8+XqKc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Jsa6IXuHcx3iN4ax3YwraOZR+Z1q1uImgnBPR9hpoxI=; b=W55OzyOFLiYC4jrQpdNVvXcbRbUET74J0tUyUu3DzwhEgohBAKWwj2h5M7hBW8Yvxo+RlKJX+KyEM46jbjwsvjpuBwThF76Gq4qJTfpS2xJv6aM7LeQWemTza94nJDMKXdI2/UDC0sd9AsWbJElWlPjWBQoa6Dj9zYl2SHg7MjI=
-X-HE-Tag: 1791935144-558392
-X-HE-Meta: U2FsdGVkX1+XC+jv00YjW02ZJ6ofmTqQ9/ocShgvC2K3u+wWvWYtXyHRTxOhvBvj3SB9m+rMS57+7BvqSRUT6S5uaqIKJPttn7gTwyU33abScF/zbd9/4Ws6WEzsEdculSSf2uEGM7MOVJDM1HBbzwJkQ6qXZdtmpbZhOC+OFQmSc/ez3myTOlUzGqtHUEgI8xsk2CCBSi1A/STQoGpPKSuHG4mPwC/sdmiNptDk0NVAFZ/6jjY6WxKighq+A02SzQMJ3V+RBw/YUsBG8bboxis4XUESHk/RzWWl9E95f49HbCSxnEusX+ijqALG25unOZrtnB7ZhG1B0ov+QKpi9oP9jhi/26Ok
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: VaslbTIs1nAV3RHSLqZ1U_SPRi4oG4lKSLuA7bfQ_WQ_1791944817
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Thu, 1 Oct 2026 20:31:45 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Various improvements to synchronization in osnoise/timerlat.
 
-> > [Severity: Low]
-> > Does this code mix goto-based error handling and scope-based cleanup in the
-> > same function?
-> > 
-> > The alloc_retstack_tasklist() function still contains a goto free error
-> > handling path earlier in its body, and a free: cleanup label at the end.
-> > Adding scoped_guard() here violates the kernel cleanup subsystem guidelines,
-> > which state that for a given routine, usage of goto and cleanup helpers
-> > should never be mixed.
-> > 
-> > Since returning directly from within the scoped_guard() skips the free: loop
-> > at the end of the function, it forces manual reasoning about whether that is
-> > safe. This is noted in the new comment about keeping the start == end check
-> > in step with the exhaustion logic.
-> > 
-> > Is it possible to convert the initial return stack array allocation to use
-> > scope-based cleanup as well, or revert to open-coded RCU read locks, to
-> > avoid mixing the two patterns?  
-> 
-> If this sends to stable kernel, I think it is better to keep using
-> goto in this patch, and send another cleanup later. It is allow us
-> to backport the patch easier.
+v3: make sure osn->sampling gets cleared on stop, even for non-workload
+osnoise (reported by Sashiko)
 
-Agreed. Care to send a v4?
+v2: addresses issues raised by Sashiko, as well as a few more problems
+discovered in additional testing.
 
--- Steve
+https://lore.kernel.org/all/20261010022338.2507589-1-crwood@redhat.com/
+
+v1: https://lore.kernel.org/all/20260824211544.3984835-1-crwood@redhat.com/
+
+Crystal Wood (9):
+  tracing/osnoise: Variable cleanup
+  tracing/osnoise: Hold a ref on osn->kthread
+  tracing/osnoise: Per-cpu mutexes and fd detachment
+  tracing/osnoise: kthreads: Verify CPU after migrate_disable()
+  tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
+  tracing/osnoise: Take trace_types_lock in timerlat_fd_open
+  tracing/osnoise: Split out per-cpu variable resets
+  tracing/osnoise: Print taint message for timerlat
+  tracing/osnoise: Refuse timerlat fd open if tracer inactive
+
+ Documentation/trace/timerlat-tracer.rst |   5 +-
+ kernel/trace/trace_osnoise.c            | 464 ++++++++++++++----------
+ 2 files changed, 280 insertions(+), 189 deletions(-)
+
+-- 
+2.54.0
+
