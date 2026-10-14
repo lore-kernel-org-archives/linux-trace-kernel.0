@@ -1,35 +1,39 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598F33B83F9;
-	Wed, 14 Oct 2026 08:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33D53AD51C;
+	Wed, 14 Oct 2026 09:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791967169; cv=none; b=bh0CjGHQbwBgRouteLDoRyoA6Hy6HFCZgjKDD1HA/gTOzQPoW0i3s7Q0iaX8uJmJVdwViwswD/u963fvMecBJvGUQW/TsyLqOxzsC/MyLTfayFRga6IPDJyaqu5gxyHNvDR3cZVlMYeF+ngeg9OuqhFrtmSeRGbeztB7cPB5E9s=
+	t=1791971072; cv=none; b=NdqbjgX5gIRmYJNHsgoJ7jReQoocjEMwAxvo8sxpxunwC2GZrl451CalXaMefW19NsCOI7HRL7dJJt2t7qlDThe0KEQz0sCHKNxX5ciVZVc/TWlXuI2UxEsW5rP+jmHfgpVEIYe4p/lbonVBbYqk8UEaP+vH1iEEU44fq0MThxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791967169; c=relaxed/simple;
-	bh=+vafbOQDOcGBeKsxs6qqZFvka0Sj9IAPNwvvivwotG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EVxTbCLiyGfLHhrWk0wejaJuinhOd1k+RvjL2CdHOnnfVqbUYwKtZ+dHHVIeQYDSBFtHx7n6V3qbCaCWVQa/Y/q4Srt8N/juLIyZ0xybCsv7nfYD9gZni6jf1vNZTgjhIgNSrkNwQ1F6OVvuQH89wDTuc6GfZK5LGMh11i+Wbbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-185-035.092.209.pools.vodafone-ip.de ([92.209.185.35] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1xGuW8-00000001y0q-1b2R;
-	Wed, 14 Oct 2026 10:39:20 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	s=arc-20240116; t=1791971072; c=relaxed/simple;
+	bh=jGQQd8DQS8UuyQfDaYk7tK9oDrfxKggilWhZKe7ggbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=goP18zp3585oMIPgjQQ6T3XIIWz+GbemojwL0qMwUrt6c+4qWnoWQm6Vy5XPF/AyL9bjOEa4Noq7UUvyrcKDt67eJCXlwEF9fvU005kitIgMLETsB/3kO+OBOuHDG72qX6AgHIHLuUxSkH8UFx9AA2VXXeLxIqQ0w2Rk7MbC8eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=162.243.161.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0002472LT.eswin.cn (unknown [10.12.96.78])
+	by app1 (Coremail) with SMTP id TAJkCgCXKW7vTs9q6aSGAA--.43637S2;
+	Wed, 14 Oct 2026 17:44:17 +0800 (CST)
+From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Nam Cao <namcao@linutronix.de>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Martin Kaiser <martin@kaiser.cx>,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: probes: error if BTF is required but unavailable
-Date: Wed, 14 Oct 2026 10:37:40 +0200
-Message-ID: <20261014083838.31020-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
+	linux-trace-kernel@vger.kernel.org,
+	Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+Subject: [PATCH v5 0/2] riscv: kprobes: reject probes inside LR/SC sequences
+Date: Wed, 14 Oct 2026 17:44:13 +0800
+Message-Id: <20261014094415.374-1-yuanxiaofeng@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20260828091202.1124-1-yuanxiaofeng@eswincomputing.com>
+References: <20260828091202.1124-1-yuanxiaofeng@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,41 +41,63 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgCXKW7vTs9q6aSGAA--.43637S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr4ktF4fCF48JF1rWFyDKFg_yoW8ZF13pF
+	Z5Cwn8tr4kWw1fCry3Gw48Z34Sya1rGr43Jr1kJw1jy3y5tr1rtFnxKw4Uur98GrZYgw13
+	Zw10grZ8Wa47ZFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU13ku3UUUUU==
+X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAQEAE2rOXTMYPwAAs+
 
-traceprobe_expand_meta_args expands probe arguments based on BTF info.
+A breakpoint trap taken in the middle of an LR/SC sequence clears the
+load reservation, so an SC following the probed instruction always fails
+and the enclosing retry loop re-enters the breakpoint, livelocking the
+CPU.  This series makes the RISC-V kprobes implementation reject probes
+placed on an LR/SC instruction or between them, following arm64's
+approach for its equivalent exclusive load/store instructions.
 
-Return an error if we have arguments that need expanding but BTF is not
-supported.
+Changes since v4:
+- Reject the LR and SC instructions themselves in the decode stage
+  (riscv_probe_decode_insn()), so a probe placed directly on them is
+  caught independently of the kallsyms offset (fixes the case where the
+  probe address is exactly the enclosing symbol's start).
+- Bound the sequence scan by instruction count (MAX_LRSC_GAP = 16)
+  instead of bytes, matching the Zalrsc "at most 16 instructions"
+  constraint and avoiding ambiguity with compressed instructions.
+- Fold the LR/SC scan into arch_check_kprobe() so the function is walked
+  only once; arch_check_kprobe() now returns an error code.
+- Use the existing GET_INSN_LENGTH() macro and a single unaligned 32-bit
+  load instead of two separate loads.
+- Extend the KUnit test to check a probe right before, on the LR, inside,
+  on the SC, and right after the sequence, storing absolute probe
+  addresses instead of offsets.
 
-The params variable is now unused, it can be removed.
+Verified by cross-compiling for RISC-V and running the kprobes KUnit
+test in QEMU (ok 2 kprobes_riscv).
 
-Fixes: d157d7694460 ("tracing/probes: Support BTF field access from $retval")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- kernel/trace/trace_probe.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Xiaofeng Yuan (2):
+  riscv: kprobes: reject probes inside LR/SC sequences
+  riscv: kprobes: add KUnit test for LR/SC sequence rejection
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index cfb710095f65..516c439932a0 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2287,7 +2287,6 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 					 int *new_argc, char *buf, int bufsize,
- 					 struct traceprobe_parse_context *ctx)
- {
--	const struct btf_param *params = NULL;
- 	int i, j, n, used, ret, args_idx = -1;
- 	const char **new_argv __free(kfree) = NULL;
- 
-@@ -2305,7 +2304,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 		if (args_idx != -1) {
- 			/* $arg* requires BTF info */
- 			trace_probe_log_err(0, NOSUP_BTFARG);
--			return (const char **)params;
-+			return ERR_PTR(-EOPNOTSUPP);
- 		}
- 		*new_argc = argc;
- 		return NULL;
+ arch/riscv/include/asm/insn.h                 | 33 ++++++++++
+ arch/riscv/kernel/probes/decode-insn.c        |  2 +
+ arch/riscv/kernel/probes/kprobes.c            | 63 +++++++++++++++----
+ .../kernel/tests/kprobes/test-kprobes-asm.S   | 24 +++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.c | 26 ++++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.h |  3 +
+ 6 files changed, 139 insertions(+), 12 deletions(-)
+
 -- 
-2.43.7
+2.34.1
 
