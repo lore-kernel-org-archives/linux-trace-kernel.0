@@ -1,141 +1,132 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AC9363C46;
-	Wed, 14 Oct 2026 21:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFDE41DDF2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 21:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792014693; cv=none; b=g3u0cM0oc2zT+5uX9YS4vu/gydt3mxHaAlOCBaDRzKFGOv0meLA9WHBL4TtbW25PLnJpOXeyUJL7fR9FS0C/FeZ+HS6YHEEICuV7HE7P0LnmPRwX6H9Crvw6lPOvGZfodOfUCtmsU/6SzCMBisuWBHcj1XFXwk+ljwVYUUY3e+g=
+	t=1792015148; cv=none; b=gaPZi9wRaoK0zXWQRW8/woIbYZ6SDakkxbt243Gz2LTMEjTPhIJXzKMjsapyn4zqOJmSGFLuPE1tPyXANu8XxzamQG/OaaCTDl4aetD/g49yx74Lu6xFBo/5rVtBHMA7wlOd4s7WuMtyAjvse/legkz8RAcJyqxSm2YjoIUyxVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792014693; c=relaxed/simple;
-	bh=o8NO7mxoatvBR5rtMtGSMZjkCVLWvk/YEvlmRnRtLwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZQuSrDerTOYRjue5zLFCjv5ukmMuAKb3mztDXqRL+PNfvA95tMELpSZX7QdhVnmBHeL5mgO59Ks58yV1P/puFLaRC3hlbV3cDMtMhi5VaX9iTciaU3MQFhPmCDRqsKshC6Oe+mr3qmIbPrWweFbyG1GfO5ON0kFBPBavK0XBth8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=lVKCfQiV; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1792015148; c=relaxed/simple;
+	bh=lVVVSYdqUQHEhiWkMmwbDnl8vMUmQFMlde93Alzh5Uk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5M9fhn9+X4TkBM3WFjJXAy8DmD2WL00xpbei/V4nVU8pBsU8tRMwbzmwkd4O6q4iqrCIgSc2G+Jk5GoZZllFJu5YXagWtVOip3e8Kf21X35kMb10p2OuRmPg1F9Igkq6GE8Un0Bb0P7UU56bMR9DVJsILUrsMKrepX6bXOyDWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEFzft3C; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="lVKCfQiV"
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 51C151207BA;
-	Wed, 14 Oct 2026 21:51:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 8A3492F;
-	Wed, 14 Oct 2026 21:51:27 +0000 (UTC)
-Date: Wed, 14 Oct 2026 17:51:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ring-buffer: Skip si_mem_available() for
- persistent and remote buffers
-Message-ID: <20261014175126.49c26f93@gandalf.local.home>
-In-Reply-To: <20261013102047.1488347-2-vdonnefort@google.com>
-References: <20261013102047.1488347-1-vdonnefort@google.com>
-	<20261013102047.1488347-2-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEFzft3C"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-49d05d51553so9604725e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 14:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792015145; x=1792619945; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ti2mUXDOBJkgxGD4GenKqWSBX8JAxIFlYVCE3uNCcx0=;
+        b=CEFzft3CbjBh1vQH2RxGCr8zN/+KtCzpchOJJf+SXJ6NSo8/r0unKNsed4OVKigw0Y
+         TOlke2jVS/hjiybj7PPkrnQdWPJ3gb0ijJOBmfLDvBzWN00E04z58bm940ATZfxE/ZZ4
+         HpQt0+ZYocHQA4TWH2JGD+thzPmROvTshNI5yq1UrDUpvZG0UNNgDrP71Uf7jfuGRktG
+         Gkm5bHyrPW8OQdpoeNPL1E58nJOA7A9GiYXdtKlkMfiQKhUbMiFn/V+V/BC+a9Ss5jMD
+         wmTwTd0EHfTQ0Xpfnbzr0V5WFWKGiTe1ihNSRbCTfmZa2w1fwteUAeRe36tZ2sgKrAWJ
+         uOwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792015145; x=1792619945;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ti2mUXDOBJkgxGD4GenKqWSBX8JAxIFlYVCE3uNCcx0=;
+        b=yZheDFxeTqlt2oIZMc3sVucjgSgHrSUboCx5Hs6Rgl9vMFO7EOMmiwLfEnlAV+D+hk
+         IxrPnPu4W8VvNUn10wtFVHP6V0rN0r+TUGsGT6sTM21I7gIS3lIQeWpiezDWqjdh8pWH
+         TwLjVIAsJkmv+d3X6pmS61XAfw4LDYpPYvndzwUImZ1kVGue19qbjrLR3VggzRNJcund
+         XQC0NPaUIJR0qVdYLJks19ioPoERsZn1bKKcPGRWAz3h17kt7494VHQArmBhvSk/jVUt
+         Jh1OdVpMPUdq5Bbu6ibgHNN6YICXgLvJhyttSpcG5Y/bAkR7HDTt0YbtnIWHDX57VFDZ
+         CFlw==
+X-Forwarded-Encrypted: i=1; AKwUvBzSzAKzFDcUZo7OS56IDXiNdDHVi0MJCSailQOeSEOALqBV1tdflkg2kqrQ/8jylwWCPwmrb4o5Wf76pJ5M8tULwVo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKZZnF2Z7VoVqjtBxQUaI+Dhe/A1lk2QFtVeoaLXEJUgTN4IlxP
+	gtXGPSremNDtzWzBmGSx9/bkFtf8uoNtITlWWIsDKww7S9jSbj2n7sIS
+X-Gm-Gg: AYBFou34JN4Hsv71SOe9uuU/GhGagyoD95H3yYyGpuRTHFVxAdNLjQlJyGyBxp7HAsG
+	YiaEzgZjbIXD6ztMtEG/UmAbDVEfFKBro3fac81//xlS6Y400ga3qyjX+LBdkstPU+4jvr1492k
+	Udaxz+yMwskJNPTnajGAwyjv+A4omWp4uR8sK/MkF+gw+3UYAJMbZduqKj4irR3BB06AGiaioSk
+	ZbrcbGvta+SX+KJ7wz2zqQexd/WsTMywv0XaLirBUmZAacMpqDI5jt6iBaWCLws1EeGmex8Dlqi
+	MKBrUrI5wLM/AFqXtUPlCHfjTEG5+7WCdlGdh6YTmm6QtwGockOGjoJ0KAM8KTEiQsy3bAxivnQ
+	avRim5G+lfjsZDHgrOW3sl0bUpCIK8sAFI0ISBWHCxJnwoQOUCEd90QLbIDl5gydK6zulwPmIju
+	wthm5K2PpI2HjDjv3/TFget3gX4AtYDnKKzjQxs2ogk00Uh684urA0TlSLzg==
+X-Received: by 2002:a05:600c:4e89:b0:4a0:12d7:4c88 with SMTP id 5b1f17b1804b1-4a18e4ac77amr380628185e9.30.1792015144752;
+        Wed, 14 Oct 2026 14:59:04 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd993f34sm22742055e9.11.2026.10.14.14.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 14:59:04 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 14 Oct 2026 23:59:02 +0200
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Quentin Monnet <qmo@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Mykyta Yatsenko <yatsenko@meta.com>,
+	Avinash Duduskar <avinash.duduskar@gmail.com>,
+	Anton Protopopov <a.s.protopopov@gmail.com>,
+	Amery Hung <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
+	Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
+	Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
+	Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 00/21] bpf: Add tracing_multi link support
+ for bpf progs
+Message-ID: <as_7Jgy_sdTE9M5O@krava>
+References: <20261012154024.29423-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 8A3492F
-X-Stat-Signature: bho5aeq755j6rkweomygdjhehjwhjjpk
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX190lrxSvdP+7rh265i5vNR+5kWga58Ytq8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=b0vYk7+QCd61Adybm2++cusSeNcBe/uzKUbX4BnPDmk=; b=lVKCfQiVm4Ymk4jax4aKxoUlEwPNb9dKddsd6j6uuCtbj4Q/MNTLNscxvejhmIB0Monz9McBW29i8P7vAW1KkuxdNSSO6yu0VVzVMYs2ddepOFLUw57mVwhxbNZwqrDT4oVidSFVMkRZdGw6L3s3UG4Y0WHe6NXsA0Wn2+4ZVIg=
-X-HE-Tag: 1792014687-200780
-X-HE-Meta: U2FsdGVkX18EJnHcKWKxl/20Tz0ToP6kXcq4I8DQ6+dmFHEoAXWe8eDCvRDnQZqLntK5iRWq6YdKgV0XJQUP0CVjhxDYOrG17+V4qC2MBFbTB6w0UznFEdmcWeEaduF49BduWVphECHYIZeDp+m4WgL2Ys/5cLjC5xYSfi8bN1ubkTlA54BfbVZ4UCJ6Mm+iL5VZpn7TB9+IiwuTIlceaKTG5BLsOBLSUM/3uaApwi2RtXUeIcCzcD73Yvr2LiNZexTCVKdv7UH3EfpXivCRhHmbCyPAaXD3BhvG7azrNrLO0ICV8f+ZHQ2HToVU6RARER6Tn3UcZXuRy0SotHFqC39/1xfqNKEbJYtprmgWS38RBXxycW/XhG1p3PFeiEZs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261012154024.29423-1-leon.hwang@linux.dev>
 
-On Tue, 13 Oct 2026 11:20:46 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> Persistent and remote buffer memory is pre-allocated by the time
-> __rb_allocate_pages() is called. Skip si_mem_available() to avoid
-> wrongly failing the allocation under memory pressure.
+On Mon, Oct 12, 2026 at 11:40:02PM +0800, Leon Hwang wrote:
+> Similar to the tracing_multi link support for kernel functions [1], add
+> support for bpf progs.
 > 
-> For the same reason, unset user_thread.
+> With this support, I'll be able to enhance the function-graph feature of
+> bpfsnoop [2]. It will trace all bpf progs, including their subprogs, to
+> draw a full function call graph including bpf prog call sites.
 > 
-> Fixes: be68d63a139b ("ring-buffer: Add ring_buffer_alloc_range()")
-> Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> ---
->  kernel/trace/ring_buffer.c | 41 +++++++++++++++++++-------------------
->  1 file changed, 21 insertions(+), 20 deletions(-)
+> The attachment could speed-up when there are hundreds of targets. For
+> example, on high CPU core count servers, it probably runs 200 tc-bpf
+> progs as Kubernetes CNI, and each tc-bpf prog might have 4 subprogs.
+> Hence, there will be 1000 targets to trace for bpfsnoop's function-graph
+> feature.
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 04bb94c29f58..b3a30a0413a5 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2442,20 +2442,30 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
->  	struct trace_buffer *buffer = cpu_buffer->buffer;
->  	struct ring_buffer_cpu_meta *meta = NULL;
->  	struct buffer_page *bpage, *tmp;
-> -	bool user_thread = current->mm != NULL;
->  	struct ring_buffer_desc *desc = NULL;
-> +	bool user_thread = false;
->  	long i;
->  
-> -	/*
-> -	 * Check if the available memory is there first.
-> -	 * Note, si_mem_available() only gives us a rough estimate of available
-> -	 * memory. It may not be accurate. But we don't care, we just want
-> -	 * to prevent doing any allocation when it is obvious that it is
-> -	 * not going to succeed.
-> -	 */
-> -	i = si_mem_available();
-> -	if (i < nr_pages)
-> -		return -ENOMEM;
-> +	if (buffer->range_addr_start) {
-> +		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
-> +	} else if (buffer->remote) {
-> +		desc = ring_buffer_desc(buffer->remote->desc, cpu_buffer->cpu);
-> +		if (!desc || WARN_ON(desc->nr_page_va != (nr_pages + 1)))
-> +			return -EINVAL;
-> +	} else {
-> +		/*
-> +		 * Check if the available memory is there first.
-> +		 * Note, si_mem_available() only gives us a rough estimate of available
-> +		 * memory. It may not be accurate. But we don't care, we just want
-> +		 * to prevent doing any allocation when it is obvious that it is
-> +		 * not going to succeed.
-> +		 */
-> +		i = si_mem_available();
-> +		if (i < nr_pages)
-> +			return -ENOMEM;
-> +
-> +		user_thread = current->mm != NULL;
+> With tracing_multi link support for bpf progs, bpfsnoop will be able to
+> attach to all targets quickly.
+> 
+> When attaching to 1000 targets, fentry.multi is much faster than fentry
+> on a 16c16g QEMU VM on an AMD EPYC 9745 server.
+> 
+> ./bench tracing-multi-attach-progs
+> Setting up benchmark 'tracing-multi-attach-progs'...
+> tracing-multi-attach-progs: prepared 1000 identical BPF program targets
+> tracing-multi-attach-progs: fentry created and attached 1000 programs/links in 338.171ms
+> tracing-multi-attach-progs: fentry.multi created one program and attached one 1000-target link in 47.345ms
+> tracing-multi-attach-progs: fentry.multi creation/attachment speedup is 7.14x
 
-Not caused by this patch but we need to update this to:
+it's faster, but the original attachment is under 1s,
+so not really a problem imo
 
-		user_thread = is_user_task(current);
+I guess the api is better for your use case, like having
+less file descriptors open ?
 
-I may add that.
-
--- Steve
-
-> +	}
->  
->  	/*
->  	 * If a user thread allocates too much, and si_mem_available()
-> @@ -2469,15 +2479,6 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
->  	if (user_thread)
->  		set_current_oom_origin();
->  
-> -	if (buffer->range_addr_start)
-> -		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
-> -
-> -	if (buffer->remote) {
-> -		desc = ring_buffer_desc(buffer->remote->desc, cpu_buffer->cpu);
-> -		if (!desc || WARN_ON(desc->nr_page_va != (nr_pages + 1)))
-> -			return -EINVAL;
-> -	}
-> -
->  	for (i = 0; i < nr_pages; i++) {
->  
->  		bpage = alloc_cpu_page(cpu_buffer->cpu);
-
+jirka
