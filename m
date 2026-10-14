@@ -1,79 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16B44457C6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 22:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8B53A7F6B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 22:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792015704; cv=none; b=BuVJN5xWhM81Uy2DZlHX2U0ekmgUQ6gMKc8Z84UpTZhWT4b2jsXbqueIcRzQvruuYBNeRZyrJYzPEjWJcwEdBBrsYW2vip7oaKQ4FJYCRel8FdYZthAhOl7QfuKavqTgiUKynjb3RGlWXmLA9WlkjBHi0+BwGFe2aiGibk/BfB4=
+	t=1792015705; cv=none; b=mHNPNDAioP4Mj4GLyKWEG/tWH06Smx1x66HuacThOKcUSHhT8/M9cB28q1VaLdQuIG0TaJuSk120jp8VHasvSWyiWWqxWXK+J/9HpmwDKzz1lZj3uHlBPMGNzELxeWv3IjfhK7Ts4/T5GKo1fsNqSaog+dncozGB3df9ceFcsgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792015704; c=relaxed/simple;
-	bh=sHpbWqaRLL2zNw5lN1OUaWMEph34v3Ha7YhDMyFJz6Y=;
+	s=arc-20240116; t=1792015705; c=relaxed/simple;
+	bh=YWhUpRjQqYozT3ad5UwGXtD/jYUTwOtwxXZYs9s1XmQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=F6Iflbgk9EILw9rG0oXyUnhK9VUGwL3xKDvqZtOJ+r7PAyJvKhxDPMqz+dlxec9bE/d83jj3bROf+5mAirz59ujHt7GKPWbRXxpCfauYF1huCz4bO1Tzm+dqG4nvrU5IaS157c1kDfQX3W1+jUe33v9MHRVMUlJikQ5VtTMGBeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fl60uTyl; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=Y0tAt/nq9a/IWemIQa0Ul7oqEka4W6cPGSxOfFNu6i/Rw49kxpSP0xN/DX4IatSIT50BAo1sVDu2leAqMCqgvsTGKdV6B+5zPuZGXIBjP24EHosTzxEiwe7pcifjVdWfbIHWHyXc5mtjEoFa8o89vhXkPqRrrBaWlRIOUlMN0c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGosnOAa; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fl60uTyl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGosnOAa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792015701;
+	s=mimecast20190719; t=1792015702;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uMARktDLNbK9lrC+azYNeDahco2ubvm2SHicW270pzk=;
-	b=fl60uTylVZgdPXk+BwNqYQ5buRx343rly5FK4MMKA8Y1WcgZ2EflWMKTju2Ig88DXACF7x
-	0xUCouglkB3WwWz+OTX4+nBqoCCPspZEua0WXfMtD1g2ze4G7mv+uFC5yirM30Vo6Ntz2C
-	gerDzTDCgnQRKcFPqRflGNl+wk4q69Y=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8WmV0mbtNvqqbMh54hz6E3dz7S5bF7YT3jtJdJJsbWk=;
+	b=PGosnOAaOWd7GY60A4yP07aeqsw1JxYtUxINt3lMfQHZckcyqKf52E3K5USpEAu4366WdF
+	Sfrz1lUU9YZG4k6jhXasrzKwEn916G5cD4CitpIGo7Sn/KVr69XOeFrS+Adx3SNeI/0KjA
+	kTKnTMroCTwxOjnojyveosldkZ7Q5uY=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-287-wgZyyD0MNBmxjHniiJG6yA-1; Wed, 14 Oct 2026 22:08:20 +0000
-X-MC-Unique: wgZyyD0MNBmxjHniiJG6yA-1
-X-Mimecast-MFC-AGG-ID: wgZyyD0MNBmxjHniiJG6yA_1792015700
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-5358515b4easo85844671cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 15:08:20 -0700 (PDT)
+ us-mta-132-SSM7elInMXKe7gUSOzw-Wg-1; Wed, 14 Oct 2026 22:08:21 +0000
+X-MC-Unique: SSM7elInMXKe7gUSOzw-Wg-1
+X-Mimecast-MFC-AGG-ID: SSM7elInMXKe7gUSOzw-Wg_1792015701
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-53397b6e05aso99503961cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 15:08:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792015700; x=1792620500;
+        d=1e100.net; s=20260707; t=1792015701; x=1792620501;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=uMARktDLNbK9lrC+azYNeDahco2ubvm2SHicW270pzk=;
-        b=M/R/Lp0ucigHwaE4u/6vZLGGJ2gSXRxM08t++GFW3CEfxI8rjpGFk4xlkkGEXya5H5
-         jXxembA//Zbn/xzc3YUqHDS0uwLVS6jh07qLtVntCXDRm7aemgSvrLte21M/ajj5cZBA
-         SBE8ABXiJ9s10pa8yagnFWnSpyuWhUbGyf/4qMbihry4vgyYRNtJAipmDgix/jR3iqUb
-         d5URw21KZGki2Pov+nX0y0MlBwtYwhwgRvc02dO/Xhc/jovVgU/nvAoXT9PiCEDYorkH
-         5qi5TEc05/MKRg7mt+JQEXR/EiJZ6NbavZd44iBEns1bmiciC0gjp5xdKPoMumxDGSw0
-         /IhA==
-X-Forwarded-Encrypted: i=1; AKwUvBylGlG8CTN5sjkCsLANsLgx0dloxylB3R7icsAhRUMMdw2mzWglrjjIW58gLyVVIGNB4rq3Rxp2p0/wQg27Ts4OPu8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIvOOK7juoI746q0PjkwDGONCcNArQhu07WkJYFYqirtbkLD6Bi
-	ic3eLd1Cw/tVbX6/7m7gynn1GH0Mpm4jWnodl3zO4EWDbnUtnzDuCRhJGmYoViWJTaBWRhSwCFN
-	M4szGdmoSUjbwdSBuZrBu9nVJd+68Ib7JUaQHRd/1JReqPvyYoYaei4jiTzJp3KGuNJsVwwpEOZ
-	ErXsBVuw==
-X-Gm-Gg: AYBFou02klZB6aAjrUDcjAl5QFmZD5Sn6JaE7DpLcfH856i93fWjem8M1nZFr7VjEIG
-	ntD7H0r1W3l0rJ38ffY9JquBVjweJ4KUsqcXjyOn/faaDZtOYIuo8L9rPobogTzfHYFHpVawmPp
-	+Ndnu20o+NYgRwnCE1W8HjWTvLW4dq4rvtm+7mO2dPUPuxp6XkugNuiKCIMZFwwsGFv6x75nsoy
-	y83OsFA38wPRV7W4EYW4CKO43VN687piv48kQgdLvS7NCUsVagGRwWQVqPLOdy0258XTyas22VT
-	kGjZ0HKdzuo/YXhlmY5flJgMzmXJxQp7sR54pfsL0Qm/seGsvKTQ1iExpP1nn86ohVWTQNuDjRv
-	1zpXuOKj19ESacfcVWxPj5bxoVAha4RBTWkvZzW+B2aRBPX7kBjVz2Bg=
-X-Received: by 2002:a05:622a:4c7:b0:535:2e94:ba13 with SMTP id d75a77b69052e-5359faddec8mr291719921cf.23.1792015699782;
-        Wed, 14 Oct 2026 15:08:19 -0700 (PDT)
-X-Received: by 2002:a05:622a:4c7:b0:535:2e94:ba13 with SMTP id d75a77b69052e-5359faddec8mr291719571cf.23.1792015699332;
-        Wed, 14 Oct 2026 15:08:19 -0700 (PDT)
+        bh=8WmV0mbtNvqqbMh54hz6E3dz7S5bF7YT3jtJdJJsbWk=;
+        b=n7R3NMTpVuTD7MHxxP/BxlW2xgPSlANXRQu9ftXq7kb9XOjivlDxEzB7pFKI31rlqk
+         +6cM0o8b3CTa8WLSEHVARmTBcxwzeidvl1aU9hPSCpV3N6rwki6rMlBiWGiuBdE1f2yl
+         waByLQt74hJ6WxS+kI1DUeDOyhl5QXOwTazvMqIeLmuryC9zsQrgKXTYoGje638+MtHx
+         5nL6Gl7mo5YTxJD4v6YSiWg9zC9IPUCx3XpQXJoPmRlnbozBJyMNaKr/YqlnNXFXl2W+
+         vjVw0mFfM1FnqaQpEny4ljHNOYwV4oRgAFsSohF6CvdU6rOA5V/GNdXf0l5WCwqyZFwM
+         854w==
+X-Forwarded-Encrypted: i=1; AKwUvBxZG2ZW1Ggu2mUFp9XwarP/+vyKcoRbtb/ESgc8OEEEqFNnonEAr7XgMA+2mUJ1IoV1rxB1hbxNDW2UFe0U8nHGKgY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIiWt+GVKdWb/IQt6moi55TmwIhP5HdmfoR1CnXhteUNhRPZTqM
+	V+gOCG5L624xARvMRp/OpA/edui7HTK+URiYUkLpMKfnhYxdLykL5INi/SOz2RSEGNfNaOBPLlt
+	m8sd3zzZ53sxJXQOKWj/VkhvH9vHGBqEQGdHip293FSPu+Of72+ip/FwGAISZFyWGzlnPOY84bg
+	==
+X-Gm-Gg: AYBFou3McpX6lhIYjRvf1KvvcilJrFcowKWt68FZfzIzVvIFVM8Ibrdr4shUIdxj5Vi
+	oV0OPeGuRwWOVTi4CDsaiwusgoiNT3IqpJbxe/yoh44IlEeQf4R0R9/NwQ6laYSAdjStZ1Nmyth
+	1agJU7Ih9Ciwu/aLlwu5buq49IkaPMeKghwAvH9yuubc+mlKR9FeIsqaEfVWz6Oj4nvcfrFUqfG
+	mTmaueVj0kGzh3DEKRFRabXIX09cO5PbG3Ra6XarbHlSJYr/HafNkEG3xmJG7NpNcY/PPWI9DK7
+	Lf7HkvkikkmzBVa/2xSqGDufVMeRJ+n56duWnkfMxS6stNLEvV0yDZwIJxZsNE4Aq+Nizt+B+SA
+	9j4qjAjsA3rarE7IbH5aWEWXhrSEIywbmlP7ejK7JwSDokmicxYvK7H8=
+X-Received: by 2002:a05:622a:130d:b0:535:1241:965f with SMTP id d75a77b69052e-5359fb9bd48mr260246061cf.40.1792015700679;
+        Wed, 14 Oct 2026 15:08:20 -0700 (PDT)
+X-Received: by 2002:a05:622a:130d:b0:535:1241:965f with SMTP id d75a77b69052e-5359fb9bd48mr260245741cf.40.1792015700290;
+        Wed, 14 Oct 2026 15:08:20 -0700 (PDT)
 Received: from crwood-thinkpadp16vgen1.redhat.corp (71-34-25-140.mpls.qwest.net. [71.34.25.140])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-536127b5567sm8224761cf.12.2026.10.14.15.08.16
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-536127b5567sm8224761cf.12.2026.10.14.15.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 15:08:16 -0700 (PDT)
+        Wed, 14 Oct 2026 15:08:19 -0700 (PDT)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH v4 4/9] tracing/osnoise: kthreads: Verify CPU after migrate_disable()
-Date: Wed, 14 Oct 2026 17:07:54 -0500
-Message-ID: <20261014220759.908839-5-crwood@redhat.com>
+Subject: [PATCH v4 5/9] tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
+Date: Wed, 14 Oct 2026 17:07:55 -0500
+Message-ID: <20261014220759.908839-6-crwood@redhat.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261014220759.908839-1-crwood@redhat.com>
 References: <20261014220759.908839-1-crwood@redhat.com>
@@ -84,104 +84,53 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: lO6OvlobcegwDjciu8aL0ftIj4hToG7OpEvo29QOWtc_1792015700
+X-Mimecast-MFC-PROC-ID: O458Ia27uMs9Q2R-tohGLYyJrlU31-VYfRxAiDU0Ek0_1792015701
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Pass osn vars as the kthread arg, and make sure it matches where ve're
-running in case of (e.g.) hotplug issues.
+We can get here on timerlat with OSN_WORKLOAD cleared via
+osnoise_hotplug_workfn().
+
+While we're moving this code, remove the pointless compiler barrier
+immediately before returning from a function.  Even if it's inlined,
+it's not doing anything useful.
 
 Signed-off-by: Crystal Wood <crwood@redhat.com>
 ---
-v2:
- - Do it for osnoise too, not just timerlat
- - I haven't been able to reproduce this in a while, and I'm not seeing the
-   hole in the hotplug sync that would allow it, but I also don't see what
-   would have allowed it in v1 (maybe it was in some pre-v1 iteration? or
-   maybe just a tiny race window).
-
-   So we can maybe drop this patch, though it still feels better to explicitly
-   splat if problems happen rather than rely on this_cpu_osn_var() blowing up
-   due to the affinity being set to multiple cpus.
+v2: no change
 ---
- kernel/trace/trace_osnoise.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ kernel/trace/trace_osnoise.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 20b0264e5adc..202d7b4254bd 100644
+index 202d7b4254bd..3da4f1f095df 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -236,6 +236,7 @@ struct osnoise_variables {
- 	struct mutex		lock; /* covers kthread and fdd changes */
- 	struct task_struct	*kthread;
- 	struct fd_data		*fdd;
-+	int			cpu;
+@@ -2078,16 +2078,17 @@ static int start_kthread(unsigned int cpu)
+ 	if (osn->kthread)
+ 		goto out;
  
- 	struct_group(zero,
- 		bool			sampling;
-@@ -1724,6 +1725,7 @@ static inline int osnoise_migration_pending(void)
-  */
- static int osnoise_main(void *data)
- {
-+	struct osnoise_variables *osn = data;
- 	unsigned long flags;
- 
- 	/*
-@@ -1734,6 +1736,11 @@ static int osnoise_main(void *data)
- 	 * flag.
- 	 */
- 	migrate_disable();
-+	if (WARN_ON_ONCE(osn->cpu != smp_processor_id())) {
-+		migrate_enable();
-+		return 1;
++	/* Can still happen with timerlat via cpu hotplug */
++	if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
++		if (!timerlat_enabled())
++			osn->sampling = true;
++		goto out;
 +	}
 +
- 	raw_spin_lock_irqsave(&current->pi_lock, flags);
- 	current->flags &= ~(PF_NO_SETAFFINITY);
- 	raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-@@ -1924,8 +1931,8 @@ static int wait_next_period(struct timerlat_variables *tlat)
-  */
- static int timerlat_main(void *data)
- {
--	struct osnoise_variables *osn_var = this_cpu_osn_var();
--	struct timerlat_variables *tlat = this_cpu_tmr_var();
-+	struct osnoise_variables *osn_var = data;
-+	struct timerlat_variables *tlat;
- 	struct timerlat_sample s;
- 	struct sched_param sp;
- 	unsigned long flags;
-@@ -1945,6 +1952,13 @@ static int timerlat_main(void *data)
- 	 * flag.
- 	 */
- 	migrate_disable();
-+	if (WARN_ON_ONCE(osn_var->cpu != smp_processor_id())) {
-+		migrate_enable();
-+		return 1;
-+	}
-+
-+	tlat = this_cpu_tmr_var();
-+
- 	raw_spin_lock_irqsave(&current->pi_lock, flags);
- 	current->flags &= ~(PF_NO_SETAFFINITY);
- 	raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-@@ -2077,7 +2091,7 @@ static int start_kthread(unsigned int cpu)
+ 	if (timerlat_enabled()) {
+ 		snprintf(comm, 24, "timerlat/%d", cpu);
+ 		main = timerlat_main;
+ 	} else {
+-		/* if no workload, just return */
+-		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
+-			cpu_osn_var(cpu)->sampling = true;
+-			barrier();
+-			goto out;
+-		}
  		snprintf(comm, 24, "osnoise/%d", cpu);
  	}
  
--	kthread = kthread_create_on_cpu(main, NULL, cpu, comm);
-+	kthread = kthread_create_on_cpu(main, cpu_osn_var(cpu), cpu, comm);
- 
- 	if (IS_ERR(kthread)) {
- 		pr_err(BANNER "could not start sampling thread\n");
-@@ -3254,6 +3268,7 @@ __init static int init_osnoise_tracer(void)
- 		struct osnoise_variables *osn = cpu_osn_var(cpu);
- 
- 		mutex_init(&osn->lock);
-+		osn->cpu = cpu;
- 	}
- 
- 	cpumask_copy(&osnoise_cpumask, cpu_all_mask);
 -- 
 2.54.0
 
