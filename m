@@ -1,167 +1,130 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2901F481AB3;
-	Wed, 14 Oct 2026 21:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F241344999F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 21:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792013314; cv=none; b=FApNQVRh2qkKGC6aAtapESWP4is5PPd63UlB+GdABe2A09aPe+8iCRLXgP9qc/hlcA07vD5wMLtyPqVveRUH/4dMTnAxegdTBFkWbcCpMomC4pFaGeRrGix8NIzjiWB8VoVhLqjXLJ1EfBht5Emq5SGN1JJEAfWMTsJh4sWkC/M=
+	t=1792014201; cv=none; b=OCInMtSTX+6U6p3ZidjBQ0WvI+OUb1ITeO2hR7yqBz8c7X9X0/DTlFeXMvV1LEPqGEz+cdoRJmMBqWvtj7wQ6x6UQubQeG4GykLuayGY3CwSNAoTaGHjTBde62Qd53rfMRXZAk/px1e+9eEvQfkPozXTwGbp1YxekjePyc1G/y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792013314; c=relaxed/simple;
-	bh=LpA+uJyhB8EEGLA/EzeAiOtgtEBsNeUt70KXBYbelLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kjS2IXkBqGyDQePceEdiKYhChWjZEZ7aHPaAoTTImIIBnB8hG2kGURmuE7vGjTffGVzlHfDNqmsChHaYd5+NQ+HdBzIJBVLp6Y/VLfeXi3G5ZmXCWzR5oJ2TJBRQ3TiVjmII9cwKnHtpJBLGsjUZKAwyjF/1K8gB2HJsnXksKbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=2n5lE5gT; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1792014201; c=relaxed/simple;
+	bh=vN3QRsmAUS70n+XecR/F37adlA8EFACezZg+XFXg/RE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STDD1mLSynr4OpCAvazNx8zIizvYcCBb2SUzy82vuNr5tv5Lqzrl95kJrrhprIzQhugOPmPKuq6SA6WJfYwcdhQVQ2stn1KsSxXP4+WaHLaRi2/koDuwNaNyQ14MP7OwHxI+hDd3j/VvN97cjQIw4dT8jA9vM3ApXhEW57NVuZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7Uaswds; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="2n5lE5gT"
-Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 85626A04FC;
-	Wed, 14 Oct 2026 21:28:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id C985020027;
-	Wed, 14 Oct 2026 21:28:22 +0000 (UTC)
-Date: Wed, 14 Oct 2026 17:28:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] ftrace: Fix lost recursion records in
- ftrace_record_recursion()
-Message-ID: <20261014172821.2b1fde91@gandalf.local.home>
-In-Reply-To: <20260917090217.6738-1-parri.andrea@gmail.com>
-References: <20260917090217.6738-1-parri.andrea@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7Uaswds"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a1698ea378so37936915e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 14:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792014197; x=1792618997; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=PCWceIALROvD7GFJFqjW3lbx85nNdj6qe6chpWvRNQE=;
+        b=W7Uaswds3m0JB0L74uwop7c3EG1uelvJOCEqveE37A9EJm2a3Ss2CWnuMO0qWI1YFr
+         OM1nl9P+x0+cJWg2+z005ZKCwxw7vTM94epqG3s8xNYZvQofywE/IPm+hGhdx5Izq2oo
+         9GFBZr+fZqxT7+rGP+6EnZtheMXnoL2xCN200uIMHxSMIrXeSacH76F3qImi460Rbt6G
+         n5ofyjI5lawF+xj5tvNQwX3jqgFJI7qIQK2h3Pg2hbjN4dz9BxJIf02D2+V+U0/GISew
+         A6P7Kw0h310n3HzWYtGwE0l6FoK5pCWgJvFTXhwmGP3fdqGybm6bSzXCMqOx6A7u54cb
+         7E5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792014197; x=1792618997;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=PCWceIALROvD7GFJFqjW3lbx85nNdj6qe6chpWvRNQE=;
+        b=Ya8wqqJvau3ysNDzDt7hddL3b4svG9QQEuTnVifh3XCdfwhHgbfCCwzn4RfRhQRwH0
+         DVQ4iBADRTdnV9ZANUYyibUCUhD2I7kLRN2wFGQnis9s/LZaMXVdNMoj9z1oLaZyHznu
+         BkFORNHU/2lXKhJ2wt10Vtks8+uuWnca6Z+uL83P/OxlILysY4kC5Dq6RPQ88ziRb2PI
+         Jr+7AlUsRqIkhzehC4MQkuOJOtF8bxr+sKI5FWT8oanx70Hj/bONh4Px8fHWPxL7ipo0
+         XSv5ru6ZAdeof8+BumeHHps5jvpr/Dy0lWGSV+OOePg6LemLlAEi7bTWNoKaiBeKuOt7
+         Bsvw==
+X-Forwarded-Encrypted: i=1; AKwUvByHaGHRRI+qC4/8R2hOf7z0jlwxneCWJwgGkGxlxhor8bTxdDEtE+cLWcOpa6phoizuE9TFiYNzxs3oehgfTyEm2wU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIEVicco6y2WwBsyCmEAQyouVD/lN8DVh7lH2aSo0tVQPDAB4VD
+	ZIZfMxH5DYhN9gLE6o7qPB3BV6FZGMXBXjpAXFXZGWrnqX9HXCICGbrM
+X-Gm-Gg: AYBFou0fK5VvBOrBdo3MUno+jAOuZ+bDm3rXh3p/KH+e3KRJhVfIlm4OXQSIiodEBzu
+	GL5g+aGTCY1QNNIhDBmunJW4p0vChq0hfOpQ4zY/R3QLqRbZ2w4i6Eyo+3ctcywxE+QYUneUIre
+	ibjhOt1TTA6iGJBQkohi/4US+vFJ+KybrTUhbexpE8XKIvCLplF2/QTXmEI8gzs8r7/F0UOajIT
+	dOceboKD99cc/P+C3WyOe4ROFKgLIQClsgpVDR2bHWY6RyinDNtuIIiWvzcv3Y3tNi7oC4c5ryx
+	A9kpsjVh3pjGFd1980f1Chnn7/GkB9htlbdrEHGU2zavBsifhKFqTexG0Qv8XzIwZ39tznfms+I
+	qNEgBT9K5iivtN6FwDrZMZXuHBNnPexiUOiUP9WgYwpFWc/wdJjfm30nls+Ctg25nK/7yB1xucZ
+	YAYoTGEm0Q5wTLzdV/GgMgpig6dBl/nyWWrfqz8GxLUB6IpzIhSNndR5k6pa0=
+X-Received: by 2002:a05:600c:19ca:b0:4a0:2484:2800 with SMTP id 5b1f17b1804b1-4a18e4464famr330783705e9.3.1792014196956;
+        Wed, 14 Oct 2026 14:43:16 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd7319c6sm24456265e9.0.2026.10.14.14.43.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 14:43:16 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 14 Oct 2026 23:43:08 +0200
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Quentin Monnet <qmo@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Mykyta Yatsenko <yatsenko@meta.com>,
+	Avinash Duduskar <avinash.duduskar@gmail.com>,
+	Anton Protopopov <a.s.protopopov@gmail.com>,
+	Amery Hung <ameryhung@gmail.com>, Jordan Rife <jordan@jrife.io>,
+	Rong Tao <rongtao@cestc.cn>, Eyal Birger <eyal.birger@gmail.com>,
+	Pu Lehui <pulehui@huawei.com>, Jingguo Tan <tanjingguo@huawei.com>,
+	Lin Ma <malin89@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 09/21] bpf: Add
+ bpf_trampoline_multi_prog_attach/detach()
+Message-ID: <as_3bEChFtcxbcYj@krava>
+References: <20261012154024.29423-1-leon.hwang@linux.dev>
+ <20261012154024.29423-10-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: C985020027
-X-Stat-Signature: drctf8sc869jumqk859ukfc9mpq7zkrz
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+eLNP5VhHoeWSdhwdUGvCEUjjZxRn7iwo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=NbU69m8BL/3/ePbzU92HaN4diDbYa6HHrjwHCIZGzuw=; b=2n5lE5gTAHJLkU2QP6er9B1ou6S2Sg6YdJFMtaeKFARIjmoNFBR3hQh2uRld8CEqgwINUZE7P80r6UylCFShFFUHdc5NXubZznZnxIgeUXTeZZFR/8hxltsJsbPNqneg0s8ay+CQiCNdwIjR4O2fZyFUhos68Ddtagu/Hnh19bM=
-X-HE-Tag: 1792013302-700209
-X-HE-Meta: U2FsdGVkX1/VvuSB3H8ol/0Mycl3ICwPaj6Ch4qbMbD4JhBVitsMMDPeY5HGzhnuMM3hFhqzDa5u1ma7p5bFmHCNMhXKMCyhzKkP9uPyxtQkBxB73Yv8pePaQbnaucRYzfpThoxP3wTJa1t7JpDLoGKakcZods8V3q+QsCK4vvW7yXqpVENFqmGH6GPalcqeBPtr9ELnOfGFMW4w1HBNkXdQayzyAUXh+hDYT6yvnhqvMLgotuaJxir2gUyXydf/PcYQ/mvLu9/9IbCg8SDGgzuIeRk/sMiArUJ0pQk/h+aVYpusnwckPtFZRWTXls7nzFgS6+aHLJRY5mwWxeEBQVxpwTVA745V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261012154024.29423-10-leon.hwang@linux.dev>
 
-On Thu, 17 Sep 2026 11:02:17 +0200
-Andrea Parri <parri.andrea@gmail.com> wrote:
+On Mon, Oct 12, 2026 at 11:40:11PM +0800, Leon Hwang wrote:
 
-> cached_function is set to the current ip before the cmpxchg() that
-> claims a slot in recursed_functions[]. When that cmpxchg() loses a
-> race for the same slot, the code bumps index and retries via "goto
-> again", but the retry immediately matches its own cached_function
-> write and returns without ever reaching the bumped-index cmpxchg().
-> 
-> Concretely, for two writers racing on the same index:
-> 
->   CPU 0 (ip = A)                    CPU 1 (ip = B)
->   --------------                    --------------
->                                      cmpxchg(&recursed_functions[index].ip,
->                                              0, B);      // succeeds
->   cached_function = A;
->   cmpxchg(&recursed_functions[index].ip,
->           0, A);
->     // fails, old == B
->   index++;
->   goto again;
->   if (A == cached_function)         // true: matches A's own store
->           return;                   // A is dropped, not retried
-> 
-> Once dropped this way, cached_function stays set to A, so every later
-> recursion of A also hits the fast path and returns before reaching the
-> retry, until some unrelated ip overwrites the cache.
-> 
-> Only set cached_function once the record is confirmed present, either
-> because a concurrent writer already added it or because this writer
-> just claimed the slot. The retry path leaves it untouched, so it no
-> longer matches against a value it just wrote for itself.
-> 
+SNIP
 
-Good catch!
-
-> Fixes: 773c16705058e ("ftrace: Add recording of functions that caused recursion")
-> Assisted-by: LLM
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
-> Can't claim to fully understand the logic behind ftrace_record_recursion().
-> Notably, its smp_mb__after_atomic() calls and the lack of barrier comments
-> both look suspicious to my LKMM-trained eyes.  ;)  Hence the RFC.
-
-Well, the nr_records is updated via a cmpxchg() which itself is a full
-memory barrier. The smp_mb__after_atomic() calls are to make sure the value
-read is in sync with other CPUs before doing the compares. It also syncs
-with the clearing function that is disabling and the writes, clears it, and
-enables it (the -1 updates).
-
-Otherwise, IIUC, the atomic_read() itself doesn't guarantee that what you
-read is what is in memory without explicitly using the smp_mb__after_atomic().
-
-
-> ---
->  kernel/trace/trace_recursion_record.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_recursion_record.c b/kernel/trace/trace_recursion_record.c
-> index bac4bc844ccd8..f42089c30f53c 100644
-> --- a/kernel/trace/trace_recursion_record.c
-> +++ b/kernel/trace/trace_recursion_record.c
-> @@ -17,8 +17,8 @@ static struct recursed_functions recursed_functions[CONFIG_FTRACE_RECORD_RECURSI
->  static atomic_t nr_records;
+> @@ -2089,10 +2101,25 @@ struct bpf_tracing_link {
+>  	struct bpf_prog *tgt_prog;
+>  };
 >  
->  /*
-> - * Cache the last found function. Yes, updates to this is racey, but
-> - * so is memory cache ;-)
-> + * Cache the last function confirmed present in recursed_functions[].
-> + * Updates to this are racy, but this is only a best-effort cache.
->   */
->  static unsigned long cached_function;
->  
-> @@ -67,24 +67,27 @@ void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
->  		}
->  	}
->  
-> -	cached_function = ip;
-> -
->  	/*
->  	 * We only want to add a function if it hasn't been added before.
-> -	 * Add to the current location before incrementing the count.
-> -	 * If it fails to add, then increment the index (save in i)
-> -	 * and try again.
-> +	 * Claim the current slot before incrementing the count. If the slot
-> +	 * is occupied by another function, advance to the next slot and retry.
-> +	 *
-> +	 * Do not update cached_function until ip is known to be present;
-> +	 * otherwise the retry would match its own cache update.
->  	 */
->  	old = cmpxchg(&recursed_functions[index].ip, 0, ip);
->  	if (old != 0) {
->  		/* Did something else already added this for us? */
-> -		if (old == ip)
-> +		if (old == ip) {
-> +			cached_function = ip;
->  			return;
-> +		}
+> +enum bpf_text_poke_type {
+> +	BPF_MOD_NOP,
+> +	BPF_MOD_CALL,
+> +	BPF_MOD_JUMP,
+> +};
+> +
+> +struct bpf_text_poke {
+> +	void *ip;
+> +	void *old_addr;
+> +	void *new_addr;
+> +	enum bpf_text_poke_type old_t;
+> +	enum bpf_text_poke_type new_t;
+> +};
+> +
+>  struct bpf_tracing_multi_node {
+>  	struct bpf_tramp_node node;
+>  	struct bpf_trampoline *trampoline;
+>  	struct ftrace_func_entry entry;
+> +	struct bpf_text_poke poke;
 
-I think we do not need the above. If old == ip, then whatever set it before
-should have updated the cached_function.
+could we have union of entry and poke ?
 
--- Steve
-
-
->  		/* Try the next location (use i for the next index) */
->  		index++;
->  		goto again;
->  	}
->  
-> +	cached_function = ip;
->  	recursed_functions[index].parent_ip = parent_ip;
->  
->  	/*
-
+jirka
