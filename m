@@ -1,158 +1,169 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B2B3E1D02
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 19:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448C452BE3E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792091013; cv=none; b=kKXCjYHzcRP0CM1/0R9WqktyDXkqWh6bKQajMJtQoEEZcY9W0Ztu6DCkLjI8mynFXBNjOKEwV2+sdDQkP2+WpiO3Ew8UDj8yOgEHW3XjarB22kxW6aeBISIjTSs/jSq5+7kp+Llsa120vEJWBm8kS/cXvl8jT1LZvcsKJZUJL5M=
+	t=1792094418; cv=none; b=aF5RgmM67xDEQieURAnowOBgXz7+lWKXOrOUghQ9a+wDXCE3APETxynf/jgGGRW+nI0XDn8K+df06HAHp0V/z0VocD/LrcmRVQ4/klPvIjfHJyJM/uPZlAEM7X1EPTvzb26u0ePHkAxuBcq2kiHu+6eAlyQj5QYuLdhPHcUGKdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792091013; c=relaxed/simple;
-	bh=7b1Nk/ZJMD8drhAUN0wfc2gumfVbFyem4H6YFgUVL0I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Gu7OjppUxTSciX9EyPkKmrqz9fAS5RZwe80vWVzBOeKzNq2Zabsb7C/lfDVKuf0/b9QTXZ9igidcfcqgA698VgcU0Q71IBO8SmiXaCssgp7/Mlc6TrxDFR/I8i1F+yXaHPBsJmnRecWag1XxK2Lq3j2+3PMVZgQvvKPICv+auLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cabQjDQA; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792094418; c=relaxed/simple;
+	bh=ZdV5BaJIv/kE8+aeDqKQTezDSi8KwwtxS2Acj5Oy3oY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FDhg6KjuV0GPnboLc738YgaxrdwxTGcrGmVOXg649AIcvbqU5wN8QZuHRR6R8NT1z9NPUzlCH6As4k8H3bWemkb7NJOTnLzEfu0z8jF7wnUmQLxOXbrevin0sx50HxLlJ68kG1tBwaj4nNYPp55vvS5KNdS4EtLLPFon1wBWXos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eskUSyVx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cabQjDQA"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2db710396ffso1842195ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 12:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792091011; x=1792695811; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=7b1Nk/ZJMD8drhAUN0wfc2gumfVbFyem4H6YFgUVL0I=;
-        b=cabQjDQA/k9ATVD4gnaKh4L7m2sori+UVd3ZH8wkFq9YfJR07+qoCNn8PbsY9jFXjD
-         opQb5ZbNd7L/PdeaBc1knI0NK2tG5sRWAxs1++tNNLZ/CdDHfEMnP5RyublAYLkz2IDM
-         bhqRcVtHNQEbSDghMBZJH+j0/jWlO6l0FUxF0hOMWaPSuGJ2lByZ4zWrBI+L6+Tckzi9
-         tEFYrK3kDLUptKZ7snEhsyjpN7I29XjuQJqEySWe1cthQwJ3/mZ/RzeG/3Q55yWn+2bH
-         Q2qA3mNKPEDvIv42hLV6cz09T5EN1AAEriNlOZXYe5RT3dmogzTNUryiQKDxL55QlniU
-         ZkQQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eskUSyVx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792094413;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJGzDfyie7g0wS80PP/jhU5GIsqjteLyTWE7rXt+IdM=;
+	b=eskUSyVx/r9BN4n6VBOV5j0Y13uEQjcPALTL5FLtgsm6ojcqLAfpErvaAREIYdMhUBwstI
+	3mexhucMYHU/mwzIBGSsT91lg3UwPJsp/jolOD1m5H81StFc2Lr3kIfZen/BcgysgNzGTL
+	eQjiW/GpjMXlVidWpTSi0faQLvrU+c8=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-627-_x05be_KMK6S_fFSCETYxw-1; Thu, 15 Oct 2026 20:00:09 +0000
+X-MC-Unique: _x05be_KMK6S_fFSCETYxw-1
+X-Mimecast-MFC-AGG-ID: _x05be_KMK6S_fFSCETYxw_1792094409
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-91b529a8610so38701836d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 13:00:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792091011; x=1792695811;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1792094409; x=1792699209;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7b1Nk/ZJMD8drhAUN0wfc2gumfVbFyem4H6YFgUVL0I=;
-        b=zKwE13IJT7/6u961SbL+tzUVSD0Bfo202gAtNsoPhSY6VKcc8ehghNYN3n83nQ7tn+
-         75GGLjwAfW+3KVq18LWmMBarRxDyuwa5Voysbe27Gd2CSWvual5V4tbPeeGvUL+175mE
-         ZLBYGb9The5eQTnkYrbWRKPPL2VodjfBBbVLMvhOlUScoEu8afinGL4XDjhFEA8ffB1W
-         iH3/0J2LFYZCuPI7z4M8EZY/Q47iHVgc/PtqvgbryhTogDYaXlo5WViT4VQBqCfSNXye
-         T5ZLQ/REq7WnLKDfwgkXRdGtcMQhXJNFeNcq+ik/RXV+zMA62mzqmKvI/Pc9NbjjQaqp
-         KYcA==
-X-Forwarded-Encrypted: i=1; AKwUvBwu9LQvUFXVPiF5iRy+FmdTsjagExpTRMIq/t5fEGohYyFmTSxnfs217na0uhMVWRjuytR2GU7NZ82HXWcohvVmmQY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK0BSc2DjvM2OfWWH2EgxWYNi0JNwjmJyI+npKM8WdoNhtWr3C8
-	DLJWl25SvGQY7kuhaZ+9ez6knSxV5e9XhQt1njw8YJOf9dJ8uFOTG6ys
-X-Gm-Gg: AYBFou3UjFjOJiyKCPzneBX48y6kEs5g6BwNpWKr5pV4kQGuY9o5QdqDytPyHZN43vf
-	RZNi5njbA3zJ5ShhxJVh4vC//lPEoEZ3DzzDr4ScDTcmKe1H4DIaI1/CpTM09ccyHdUJKbL3JiZ
-	CdAcIuTGn6AIOiMWKJ81ZofLvI2KSzYYu64GC+kpGfwW1ElFcXulHWJhyo1O/6DhQrloO1cSASw
-	qOIHLQSjD7t727nmS+axroOqmiktiMczxWcIjnMU3cbmm6SIgJi092TBDqfic4a9mVVCZ4WfULl
-	jkEwUE/OyXlt7M9DaRoVAYB96J5uvqJE8vG/jl223gP2Jxz9ZV3rnQOup7ZQvmxfJmWBQtDM8HK
-	W2IlhrI67orUQKEQrLqccR09vHmNigPQXz1XCl5SGY5lvVOifgoJOAeeJ5xAuO1rDynyqYOR8Kp
-	tyZbovnXKFoIhy+HKV/WqCjh7Snz2zpV7MGXx9e3zackV1NcEUPN0Mnjoflj6EZczNgvqO0LLXW
-	stp5+BMKxNNgcGJkYw2sOrnu2XrDiHiK0T7vxiisdOfM0C6DqHJhmWdNQl3wOX6O3m9rUiYi7T4
-	x8w=
-X-Received: by 2002:a17:903:144b:b0:2e9:64b9:a338 with SMTP id d9443c01a7336-2e977140eccmr6102915ad.7.1792091010968;
-        Thu, 15 Oct 2026 12:03:30 -0700 (PDT)
-Received: from localhost ([153.61.198.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e97e8aad3dsm464765ad.64.2026.10.15.12.03.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Oct 2026 12:03:30 -0700 (PDT)
+        bh=ARFS9DZSP4dQZPdHoed8w0xeryUKGtwmSApYre2IIFw=;
+        b=LkgDQWULpI49ElG0VkOM0viXAbRhK2prVgO3cp7EWk/CJvAYSvSQLyvNVnbk07mvbB
+         oTtTFTLXMxCx5GWipTXT4X9Y+AhLgEB8DnsujtPs2pQdlxwEbWJiHFyQESwYtrlVfK03
+         fSutq3vWSofTll3JkSjSa/kHpeZEk5c+0GcxA8lD/3cJ+Qy9NFjmox+/tpZm2+w2rnDn
+         RUwvayaRjHXUiLY51swUXASDGGpYEaJXIcpvzUUVBlXm1gkLUQl5Q9p1oZfIFPJ2NbXl
+         lMXVujQlXE8SkV6sehgN/E6XeL/FF2aMk/FO5PTeUZbPzT9hLPB7/1pIzcIff36VLQSi
+         bnjA==
+X-Gm-Message-State: AFq9FYLzaRIvNkSQeTanWhBDVC61SjP28RiXRN+bWYXJRz+Rgrz00CpN
+	2m2trg5wWV/ptJrvsyatO3cO6USdIIVIULaX1KpEmG6d9lxTeOQDTIdtvIxRSSiEpEtJPj2xd4s
+	mVibnQ1zQc/WXYsvgcXTG7f8Gx4saLOTU5X5xvhaI9wlPqOJn44cxegI9eUMFrZw2s3M28Z/1jg
+	==
+X-Gm-Gg: AYBFou1WiA3ZRUkvFpZxulvgb+bDJnrebPznY4Nj25jZZgSca6zjwqFyIUtRP6DvvDP
+	NNdguxSl+C1DoizacSYskOAr6qs5x9kVJwFOIbiarK2l96wzSSOFuLfEAgAK6gC9R6DlKLszvVm
+	4FTzYZjAdkLKaJxwWbz4gPYlVg2jwbDavf2J4ia/ev78A9qWLDS95iGqDJ4ue6CrDo86BQEadN7
+	B1L6KF6rSS8aI8xIFiAazirprTnROuDndDhRwX3p1UiPAs9ym7W8s6rV7XPVzetSscReZjGk1bR
+	1zWN86AZAaDvIJiHCAIR09rykgFEyIbh+LfUnUvZgfC1yHfzKLEcCY4x6IzyG4yWHYoSYBnPHEc
+	zQx4pcUADE3Rf31R5CptcGaicSObq0AP3bPXyyBx9noCnZ/nI6G8xMtY=
+X-Received: by 2002:a05:6214:518a:b0:911:9373:a171 with SMTP id 6a1803df08f44-91b5556ad41mr329656106d6.30.1792094408514;
+        Thu, 15 Oct 2026 13:00:08 -0700 (PDT)
+X-Received: by 2002:a05:6214:518a:b0:911:9373:a171 with SMTP id 6a1803df08f44-91b5556ad41mr329654976d6.30.1792094407643;
+        Thu, 15 Oct 2026 13:00:07 -0700 (PDT)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb (71-34-25-140.mpls.qwest.net. [71.34.25.140])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91bcb8c4adasm4342446d6.1.2026.10.15.13.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 13:00:07 -0700 (PDT)
+Message-ID: <8ae7b1fc1ca394e1342688073359f97fc275f4b6.camel@redhat.com>
+Subject: Re: [PATCH v4 7/9] tracing/osnoise: Split out per-cpu variable
+ resets
+From: Crystal Wood <crwood@redhat.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+Date: Thu, 15 Oct 2026 15:00:06 -0500
+In-Reply-To: <sashiko-outbox-171968@kernel.org>
+References: <20261014220759.908839-1-crwood@redhat.com>
+	 <20261014220759.908839-8-crwood@redhat.com>
+	 <sashiko-outbox-171968@kernel.org>
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: __UlScuSPFgyM8Uq93C60Fm3tayCCCnADDqJY0B1hv4_1792094409
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 15 Oct 2026 19:03:29 +0000
-Message-Id: <DM5N8SCBZDQE.2SC93YN5ILEYG@gmail.com>
-Subject: Re: [PATCH bpf-next v2 00/21] bpf: Add tracing_multi link support
- for bpf progs
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Leon Hwang" <leon.hwang@linux.dev>, "Jiri Olsa" <olsajiri@gmail.com>
-Cc: <bpf@vger.kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, "John Fastabend"
- <john.fastabend@gmail.com>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"
- <memxor@gmail.com>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "Emil
- Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, "Quentin Monnet" <qmo@kernel.org>, "Shuah Khan"
- <shuah@kernel.org>, "Mykyta Yatsenko" <yatsenko@meta.com>, "Avinash
- Duduskar" <avinash.duduskar@gmail.com>, "Anton Protopopov"
- <a.s.protopopov@gmail.com>, "Amery Hung" <ameryhung@gmail.com>, "Jordan
- Rife" <jordan@jrife.io>, "Rong Tao" <rongtao@cestc.cn>, "Eyal Birger"
- <eyal.birger@gmail.com>, "Pu Lehui" <pulehui@huawei.com>, "Jingguo Tan"
- <tanjingguo@huawei.com>, "Lin Ma" <malin89@huawei.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>
-X-Mailer: aerc 0.20.1-349-gb940a4174a3e-dirty
-References: <20261012154024.29423-1-leon.hwang@linux.dev>
- <as_7Jgy_sdTE9M5O@krava> <09db7d70-b7d4-4cf5-9447-6d16bac10794@linux.dev>
-In-Reply-To: <09db7d70-b7d4-4cf5-9447-6d16bac10794@linux.dev>
 
-On Thu Oct 15, 2026 at 1:48 AM UTC, Leon Hwang wrote:
-> On 15/10/26 05:59, Jiri Olsa wrote:
->> On Mon, Oct 12, 2026 at 11:40:02PM +0800, Leon Hwang wrote:
->>> Similar to the tracing_multi link support for kernel functions [1], add
->>> support for bpf progs.
->>>
->>> With this support, I'll be able to enhance the function-graph feature o=
-f
->>> bpfsnoop [2]. It will trace all bpf progs, including their subprogs, to
->>> draw a full function call graph including bpf prog call sites.
->>>
->>> The attachment could speed-up when there are hundreds of targets. For
->>> example, on high CPU core count servers, it probably runs 200 tc-bpf
->>> progs as Kubernetes CNI, and each tc-bpf prog might have 4 subprogs.
->>> Hence, there will be 1000 targets to trace for bpfsnoop's function-grap=
-h
->>> feature.
->>>
->>> With tracing_multi link support for bpf progs, bpfsnoop will be able to
->>> attach to all targets quickly.
->>>
->>> When attaching to 1000 targets, fentry.multi is much faster than fentry
->>> on a 16c16g QEMU VM on an AMD EPYC 9745 server.
->>>
->>> ./bench tracing-multi-attach-progs
->>> Setting up benchmark 'tracing-multi-attach-progs'...
->>> tracing-multi-attach-progs: prepared 1000 identical BPF program targets
->>> tracing-multi-attach-progs: fentry created and attached 1000 programs/l=
-inks in 338.171ms
->>> tracing-multi-attach-progs: fentry.multi created one program and attach=
-ed one 1000-target link in 47.345ms
->>> tracing-multi-attach-progs: fentry.multi creation/attachment speedup is=
- 7.14x
->>=20
->> it's faster, but the original attachment is under 1s,
->> so not really a problem imo
->>=20
->> I guess the api is better for your use case, like having
->> less file descriptors open ?
->
-> Correct.
->
-> The original attachment is fast enough. So there is no need to improve
-> attachment performance with a large patch series.
->
-> Even though the series brings two benefits:
->
-> * One bpf link for multiple bpf prog targets.
-> * Support for all archs that have trampoline support.
->
-> But, I also doubt the value of this series.
+On Wed, 2026-10-14 at 22:21 +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [High] tracing: Data race between osn_reset_cpu memset and NMI handler
+> --
+>=20
+> commit 01cd6ef0e171fa1526bc0f401fc2072fe284c438
+> Author: Crystal Wood <crwood@redhat.com>
+>=20
+> tracing/osnoise: Split out per-cpu variable resets
+>=20
+> This commit splits out per-cpu variable resets by resetting the per-cpu
+> state every time a kthread is stopped or an fd is detached. It uses a bul=
+k
+> memset to clear the zero struct_group in osn_reset_cpu() to avoid zeroing
+> individual fields explicitly.
+>=20
+> > diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.=
+c
+> > --- a/kernel/trace/trace_osnoise.c
+> > +++ b/kernel/trace/trace_osnoise.c
+>=20
+> [ ... ]
+>=20
+> > @@ -409,6 +379,36 @@ static struct osnoise_data {
+> >  #endif
+> >  };
+> > =20
+> > +static inline void osn_reset_cpu(int cpu)
+> > +{
+> > +=09struct osnoise_variables *osn =3D cpu_osn_var(cpu);
+> > +
+> > +=09WARN_ON(osn->kthread);
+> > +=09WARN_ON(osn->fdd);
+> > +=09memset(&osn->zero, 0, sizeof(osn->zero));
+>=20
+> [Severity: High]
+> Does this non-atomic memset race with the NMI handler
+> trace_osnoise_callback()?
+>=20
+> If osn_reset_cpu() is invoked from a remote CPU while the osnoise tracer =
+is
+> still globally active (for example, via timerlat_fd_release() or
+> stop_kthread()), it will concurrently overwrite osn->zero on the target C=
+PU.
+>=20
+> The target CPU's NMI handler could be running concurrently and might bypa=
+ss
+> the sampling check if it reads it before or during the zeroing. This woul=
+d
+> lead to it executing operations like:
+>=20
+> kernel/trace/trace_osnoise.c:trace_osnoise_callback() {
+>     ...
+>             local_inc(&osn_var->int_counter);
+>     ...
+> }
+>=20
+> A concurrent memset from another CPU destroys the target CPU's local_t
+> guarantees and atomic operations, corrupting per-CPU state via torn reads
+> and writes. This replaces what was previously a safe single-byte
+> osn_var->sampling =3D false assignment with a bulk memset over the entire
+> state.
 
-I'm not sure about the value as well.
-You also need to benchmark detach time.
-Overall the perf improvement is too minor vs added complexity,
-but the first couple patches in the set look like a nice cleanup.
-Pls resend them.
+Ugh... so on one hand I wouldn't call this "high priority" given the way
+the data is generally read as deltas.  Most of it doesn't really need to
+be reset.  It's not limited to NMIs though, as we don't disable
+interrupts or even preemption here.
 
-pw-bot: cr
+On the other hand, now that sampling is unconditionally cleared in
+stop_kthread() as of patch 3, we might be able to just drop this
+patch... but not without a respin unfortunately.  There was apparently a
+patch shuffling accident in patch 3 where tlat->timer is used after
+memset() clears it, which this patch undoes.  I'm surprised Sashiko
+didn't mention that... v5 coming.
+
+-Crystal
 
