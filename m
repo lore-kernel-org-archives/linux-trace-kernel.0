@@ -1,40 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2641035E1BD;
-	Thu, 15 Oct 2026 22:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EF33D47A5;
+	Thu, 15 Oct 2026 22:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792102323; cv=none; b=H2pqDJ3vCTAQdDjyvrELlDDv3cou7/Q+us0kC2JaaobBiFbzsIJg6SJTQSG0ll8VCrOHNho/d64C93m0tYJvm4pHzE8s/nbEtPpxt2WbmyCNgN9E71r8mwBz6J9d+eEb4jv4b1FsVnuHpd07mvJ8wPrPb6602BS/QZbuPxWjLSQ=
+	t=1792103934; cv=none; b=AbKlZt/6ZCgx5SMrYDTba9SeecezqOLicgVFAr47lc0wcLQaoihSyNKAzFeap7l7yz9JrBeFxgsMpWoVPuJrogLaDXSyYu+zOvbp1bw+OX8Dgc5rp0NYhwxdfDUBnQRKNj1yglKboMrCEQezxkFCECTh8GzaTHQpkr8w0jTXh4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792102323; c=relaxed/simple;
-	bh=dq/p4u7linPgVLY1Brp7JZ8eab86tJng+Xjb5bkWI1M=;
+	s=arc-20240116; t=1792103934; c=relaxed/simple;
+	bh=oUiamnPVBgTpH4+GroToOl4VifqgWz5swMC8+NgF8kc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YPojjzdQ+YoJyPlm7hnCcjKHZ895xrzAarhvclo9NWLDzyaTW8/+V7+CqLYJTXfli1W3XxjtMwyfTSl7sAMGfrPzGoId0O6/soUh7s9HVsnTs0c8mvmAYcESDF9pOA1LO+UaLu4Qj4TVe9vasMuhYXXgesMWHqelwEwq0g8Xkqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=PWICgcKI; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=qTxjfHKiVNRxtcUes1cBQOvGf0LZ0qwBhqgNO1YYOnxwPi6SLWGTm+sheUbMEdY4x2x7GFW5B4OplT04dRLiv9GQHjQw/FlyNvB+nz8rhziWYO3U8GGqlAHS3oCMLpuYEppJsBf0IiqTgeLCSOaDLrq6ysW6IbsphEPmPMEllWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=BxcemC9v; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="PWICgcKI"
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6F0F512017C;
-	Thu, 15 Oct 2026 22:11:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id A056E20027;
-	Thu, 15 Oct 2026 22:11:57 +0000 (UTC)
-Date: Thu, 15 Oct 2026 18:11:56 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="BxcemC9v"
+Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 2140AC01F9;
+	Thu, 15 Oct 2026 22:38:45 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 13F261A;
+	Thu, 15 Oct 2026 22:38:43 +0000 (UTC)
+Date: Thu, 15 Oct 2026 18:38:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Wang Haoran <haoranwangsec@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, security@kernel.org
-Subject: Re: [BUG] tracing: __copy_from_user without access_ok leaks kernel
- memory in syscall fault tracing
-Message-ID: <20261015181156.5da3446c@gandalf.local.home>
-In-Reply-To: <20261015094209.7177cf03@gandalf.local.home>
-References: <6ad07a3c.6e2bf4e6.f29cc.dd67@mx.google.com>
-	<2026101539-rinse-refocus-8203@gregkh>
-	<b2dd26de-efd0-4b8d-8086-ee5878a5703f@gmail.com>
-	<20261015094209.7177cf03@gandalf.local.home>
+To: Donggeun Yoo <donggeunyoo.kernel@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Don't log an error for the speculative field
+ variable lookup
+Message-ID: <20261015183841.4cbc5af2@gandalf.local.home>
+In-Reply-To: <20260913203156.941433-1-donggeunyoo.kernel@gmail.com>
+References: <20260913203156.941433-1-donggeunyoo.kernel@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,52 +39,54 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: A056E20027
-X-Stat-Signature: 69aqsdjr6nc531gxyn8jqaanre4q8ghm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: ndxx4g5jy79m4indhjp5amai6z97z9te
+X-Rspamd-Queue-Id: 13F261A
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/K9s1xqpTyPJ6Pd+vXeE5IrQXp9CBxXJU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=PF//Fb1xpNwGDqKk2nkQ5NahuE3IUiO6W5R3UAHjP2Q=; b=PWICgcKI7WRypv4OKYiorxmKpSr2Gz3axazC0d3sAgyLFFxRyrWY0Zg8l3PDllBd3+D36hoTuQ8muDHDGTqqj0h7Y/dnCucNIqy/xN17Gt68Hu/7DfAGAD6NIZGOYHMF2ylmdu1HE+sR4K9ratT3F4sM8OFi43RG7T/sFfvzv9w=
-X-HE-Tag: 1792102317-932078
-X-HE-Meta: U2FsdGVkX1+9O7VU/j9erXqyODSDviBKd3JiStZqlEesqxXeju2ZkuCa3VF1DHRAEjJDNnkVpoMzizkitUs4es6+ibXxuRRyuPBSmH1JQ+hWnq+n4LS9wWHIEQCaH0juK3xRfvVubJSeX0wIM7zMJklJF0k+g9NUiNDd5cH6aPwIEUb6JJWxbHJ7NdKQyYTdonSTw78WALAjyYLhzQ37ygMEboUULEbJ3MJgFqLS99V3dwc8sH2j9HEfY7FxmuwIqGysCoL3SmGOQojzrlbsD8M5xtZqHUTdOAN6K0obg+y81AuGUhYKhUzCgLktIfgYfVP+6BHhCASktCqSNofE3qJu/9C5CqJlHHJmsofOTAMna8vp9F7RWNF0rqMuBzMftxN68+3WvtkFBwdkc46WKqlmtjMxll5KryZbf0hSz7w=
+X-Session-ID: U2FsdGVkX18kZPowU5+iMalZAk31pbTiqi/5ImtZYu0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=XyKzzc14QmZPtfKeM1dz5ieN4n4yq+aaG1CgOHIsZ/A=; b=BxcemC9vLfDix0ZZ5GhTiHn5l8iyX0DpacJcuPj/BfviTa4/CriA13o9UA6XVvO6TJvqEmBAQX3Z08gwKkRrAhF3zt25BUfjt16G5LywapJ+Dionm+V5mNQi2HQ9JRCQKWXH68ssrbAioSLB/Ut/rm46W8mATO1Qq3fw7dzYJUY=
+X-HE-Tag: 1792103923-529475
+X-HE-Meta: U2FsdGVkX1//o9HgiTvFd2XPd/1Dh0iBkGpTa9ZCib5NfWgd6G5ykkZsvPiGSXMtPZVe3xjqvXkM5G8OgZpf/40HlKge88f3YvJMp30RR40I7ZAxwUvIx/mm2EcCA+5864uJvIcZrzIg0w+WBsQSj+xRbMUF0gAB/pwihSFe3U7ag/5Aeucejg14hJypz1bycbKaCn2H03rlRyBAB49fWAjh1d/RyMF+nIvFrnJ9upis08wBey5uXgp1zN/mHnxieOk9i10jsdTxA8XQQdUaaTO+RaR4qxZkQKAs/tqQjJbS3z5/os8XV5wQW+OjkxJkLspdZclhExrFEmva169bm4GxKCtsbhwq
 
-On Thu, 15 Oct 2026 09:42:09 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 14 Sep 2026 05:31:56 +0900
+Donggeun Yoo <donggeunyoo.kernel@gmail.com> wrote:
 
-> On Thu, 15 Oct 2026 20:05:57 +0800
-> Wang Haoran <haoranwangsec@gmail.com> wrote:
->=20
-> Please send this to linux-trace-kernel@vger.kernel.org.
->=20
-> >  From ca4e2a6928bbd9010ebec967440517b08909b992 Mon Sep 17 00:00:00 2001
-> > From: Haoran Wang <haoranwangsec@gmail.com>
-> > Date: Thu, 15 Oct 2026 19:12:21 +0800
-> > Subject: [PATCH] tracing/syscalls: use copy_from_user for the faultable
-> >  =C2=A0syscall buffer
-> >=20
-> > Here is a working fix for the report. The leak is not strictly root
-> > only, so there is a security concern on systems that relax
-> > perf_event_paranoid. =20
->=20
-> Leave out any security details.
->=20
-> Simply state that the current check is missing the access_ok.
->=20
-> That is, this is a very trivial bug with a simple fix and a simple change
-> log. It could be a security concern for machines that trust perf a bit too
-> much.
->=20
-> But to go upstream, it still needs to follow the process.
->=20
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 963e0d6b61fd..4676dc6d9146 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -806,9 +806,12 @@ static void last_cmd_set(struct trace_event_file *file, char *str)
+>  		snprintf(last_cmd_loc, MAX_FILTER_STR_VAL, HIST_PREFIX "%s:%s", system, name);
+>  }
+>  
+> +/* Set while a field lookup may fail silently; the parse path is serialized. */
+> +static bool hist_err_silent;
+> +
+>  static void hist_err(struct trace_array *tr, u8 err_type, u16 err_pos)
+>  {
+> -	if (!last_cmd)
+> +	if (!last_cmd || hist_err_silent)
+>  		return;
+>  
+>  	tracing_log_err(tr, last_cmd_loc, last_cmd, err_text,
+> @@ -4003,7 +4006,9 @@ trace_action_create_field_var(struct hist_trigger_data *hist_data,
+>  	 * unqualified fields on the target event, or if qualified,
+>  	 * target fields that have qualified names matching the target.
+>  	 */
+> +	hist_err_silent = true;
+>  	field_var = create_target_field_var(hist_data, system, event, var);
+> +	hist_err_silent = false;
+>  
+>  	if (field_var && !IS_ERR(field_var)) {
+>  		save_field_var(hist_data, field_var);
 
-Heh, I just noticed that you *did* Cc upstream (in this email!). But
-because you didn't have "[PATCH]" in the topic, it still didn't make it to
-patchwork.
+I applied this patch then I unapplied it after looking at it.
 
-Can you please send a proper patch.
-
-Thanks,
+This looks racy as hist_err_silent is global. The parse path is serialized
+but we should add a lockdep assert in hist_err() to make sure the event
+mutex is held, as well as by the setting of the hist_err_silent to prove
+that the code is serialized.
 
 -- Steve
