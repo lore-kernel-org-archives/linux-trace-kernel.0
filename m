@@ -1,149 +1,123 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA06141D4FE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 17:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792084111; cv=pass; b=URYeroxiVFjMfomVVg9PQN2IEV841zuuFnmyrRBVW7ReBf9QJtnDlNd23zGbugXSnSt7QqVnXELU8IkLUXw+2UZ/niN21oJ5QfDWfMuBVx0ItCcvzgq/tyfSgwxgMmx2MmKIDr1Cr1IwNc/C0mX3S010oxMaQweB2Y3jE8agaEM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792084111; c=relaxed/simple;
-	bh=EOjLYNLitfJIInUWIMI+uegThTaF0Q0MItF25km4ERw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZdiVXmlp2cB339wFQhUb3wHkCaAKdkxkiCS1Ors1JiqtDAojl7FYxGXUYpKRd4XSQXDKM328rq4+yz1vC1JiU5qRiWUEyF232naGOJULM3rmGIj+XqA5KlUHtzGSrpxx/W8Mjpqa4ODJPuSE76Lft+RA/rwjRw+124GJmDztvUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KluOiBYR; arc=pass smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7928E547053
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 17:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792084773; cv=none; b=I3OB4WMCjJ5UOMOJAFlFWU02gt4rW3YRYVC+7TSwTbcb/lq8DTupnei9U9j8G4pAunyObwR4huZoK5elCnliosdOolTB3id//8xz0epjey9oM2dV6kkIHWaXh8pphBEDw9OEw+oZgmAIdKBuiIK9VrD37a80HtlCEOCXkv9tVtw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792084773; c=relaxed/simple;
+	bh=+53W1BjteP9N2kT0WM7yRIHxwIk1ni40/JtDOj4EmZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V2lciXm0j96/dZVb3EVmALAlHXDUhKPYGvbs6AKM203U4smW+3Irtr4YwlR7OIoPfH6xaOI0SBte90J5F2N8LGK9DCXDBAf1Qy9PraaFZgf/15TYvjMKliJ3pz7qkJbeUf89U0CHWH63jDIljeN8aCZD8DN9hQDeCghBjIii3W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=theori.io; spf=pass smtp.mailfrom=theori.io; dkim=pass (2048-bit key) header.d=theori.io header.i=@theori.io header.b=Gq+UYM8p; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=theori.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theori.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KluOiBYR"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-885cf67963eso46886887b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 10:08:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792084099; cv=none;
-        d=google.com; s=arc-20260327;
-        b=fP7K6iMN5yl1+9rBl/g27mcdq9j+DT2eIpyYBCB+w+ogZOde2WBOuIu0vS7Qs+KwWU
-         HzDHmdzhbaQmxCgqSLCqGIvyJS/ASShDRu5p7q3xdfjGW35aef9jI1jTCV3I1sV1AlL8
-         ePkhJnXRWR5WPQGPTAIzR7Om717pfllhuOlhqNa180gdDP3L7MwZs+nAZNoXXv2aiUF4
-         vYLax6ntiJXE0AmyYFENqydqKV4UMFlxb7gmO9Ruhbm5KjvPfq/I2FZZ6DgdPOxNZn7S
-         7IRAoWTk/zeG6qtERS3xOgNqvwN93ujzGE2dV+Jb1VaLce0Ju007EFfDekq+bCen41x0
-         I2Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=EOjLYNLitfJIInUWIMI+uegThTaF0Q0MItF25km4ERw=;
-        fh=dsqqzPxbsvBtEstr/DhOp8vQW7Xp5v1ehC4kB1zLcTQ=;
-        b=QBcis7/MNld1/QwIVt+50FrRZslRu77z21UGvHQyjpyb+HCSZE2pShPykrfJ8LgZOY
-         1qgqYvOuvsSBvED00nwsqJ7tc3iIunYzEXCnZKGaZpA5lmgrF/25hGlv3sLigzUi2NZG
-         pOx1rurX33QXIETMVjEIFTxbitHr1996wAi0JlI3UJ2f1qmmY//W1BPge9sZU2mLehpP
-         vF1JCOY78KzTeyoMDUFN4z2PNEUtfZ99zk61pW+Jgn9ma8immzZOwijI0FXhc9dTGvpi
-         7Evi/hd3NhbNLPy3mgyOlrY7D3cJAynRCG/KUvAo14NChRxGceRlCGIT6XIBvn4JIgRn
-         Aj2w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=theori.io header.i=@theori.io header.b="Gq+UYM8p"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-89ee6f66566so319704b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 10:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792084099; x=1792688899; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=EOjLYNLitfJIInUWIMI+uegThTaF0Q0MItF25km4ERw=;
-        b=KluOiBYR+Gc9ncxw0pNcpcD/PdE3PjObqMvaHbPT1JihX3nk8yDwvZziqUatYEm4cE
-         KKKla/62ENBwAB6amjByEuAbJIW9c+Vpz6IdLIxbggtD2NC/vMcotHX9KXZxYZR3c+M/
-         AkfC9hSE+rTTG7IPAXPyiqoz1fpW6MnDjGQAROjCLiQRFpleX4d7bTdOS06flb9pST6Y
-         CGcPgRupacOdbBmGmJwiR0l3RkQhaau0sjd9Lr51L9zunPDcoHYlU/rYryFOcBOoIQqn
-         hwzOc8gaa3S/dlLCVn4mJiSXyyRXjY8dQ5SOrICW//eeRPPB9RY7d4cFKZaZd9M5BAcC
-         yDRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792084099; x=1792688899;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=theori.io; s=google2026; t=1792084760; x=1792689560; darn=vger.kernel.org;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=EOjLYNLitfJIInUWIMI+uegThTaF0Q0MItF25km4ERw=;
-        b=cP8sg9WM98Zj86ocQq7ENZjjO43HyGrLivpg9hGByJJs84A9lwzAyoW+d7My0fwhOI
-         c0k+O7P2/EOH+1qSqbnMgZsQWxJCOmZtGBbqdHSWqZMJkjvVmTIdHybkc2z8k836P0p3
-         I93RU5c3MxScdEktYdEoZkXV6AHQRGPqK/3qFLrUzYO2vPqMF5spbaum3OsuwtQenhLb
-         IDNHLCYF6WE8Nl2cVUO+cOCsfox1x3x9Q5wG3wO4Ocgn/iozXT44B3uYFG2eQ/CrGnb9
-         Oac7kI0zj6Z/j4lvKrYx8BsOLnVnKk5XKsfFSCfPpZvHdaDMYDuIEA+O1urx2sM0oOEJ
-         xUYw==
-X-Forwarded-Encrypted: i=1; AKwUvBwVLgIeGsYYI3FzOBFy7d2foqep4OEcND1vcgtloPeryCkdl05Is1BnWY2roOLf/aYSB88Mx6iTAHSFyis2Pn2zgIE=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJGEhGiaXRQJTc3EFWISkeoBQt31cJOkHgCJBpIZiON7DTFckpR
-	l615r9sDLYv+dzn/iminYI6uCnMfVxyd3jams3u/a2zjR3IPpRNQNI3g4tG2ZnbDXeafhku6PIe
-	he9wKgWuxtcWlTe6aBiHyPGAMVMzGzxA=
-X-Gm-Gg: AYBFou20TYcbrpMTtnJ4xGehbAtRNo6+Jlus3M2NZbU7253WJ4luixTz9wFSOnTn0mf
-	eLaMooPqACtXe0FEtqAd6wVgSMvr8Ng2/jC+pUXwaibec/PS2K4q08bYf+yf+d8VG3qebgdheZX
-	c6/k2m9kzOhyDa99267t+yZfWOhfVQhXzst7DYTJG5PbTEQq2px1Djdllo6O+ypFY5anlsAxALe
-	lsjAuz4NlM9GpAZbzP/7c6gmtQpbmOh0SOQ4fO1k+2EtBj8ZCFsPqrS1hvq8fazPoR5wkZc5kxv
-	6KVDM2gOQAty1LAxFUBGn9gW7auTTyV07aHo7MkXbHlEMu5X5vpn0ghG
-X-Received: by 2002:a05:690c:e681:10b0:88f:73b0:fa87 with SMTP id
- 00721157ae682-8b07edb0e20mr57149977b3.11.1792084099608; Thu, 15 Oct 2026
- 10:08:19 -0700 (PDT)
+        bh=pO2SAyErFzIof4dDqItrb/7b5H0BZm3KDfJwYmvr2wE=;
+        b=Gq+UYM8pqGxf8L3IUkkMd23gm8znzJICY5nWXQ2JwEbv+ZRTTLUAAwTqIgnB0/+izx
+         /4OTfOdMRtTLNybrrTQ5VV5ZinUOdcTFhF5EFd/K0EhwjSjKtmh7MfCsLBQEyRrQdR2H
+         TZA+qENu7JWA8iS5xSHtvzPyY6Q3GD9IE4KnCrB6KU3P22+xsI6yluK1Q+oH+d6kDlSm
+         ierqht+7nihuYYTtbOisF3+PK8TiM/LAAhzXu7xz8GfOy2Ydad4cK8cQX51fsa6U4rYy
+         sVnMcLVLnAJbg231D215u+wqoyWoibkKBizZjNpHKYIRZs/MpklephKErFVD7KUnDW3O
+         XqqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792084760; x=1792689560;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=pO2SAyErFzIof4dDqItrb/7b5H0BZm3KDfJwYmvr2wE=;
+        b=YYtMywpubfptsuKi3nqtvQMYrAXYSbNOXbxKFdKQpnEsRhk4YpsG4wbE8tvB+MFF4Z
+         y6vUSCfIxh6ahHQH6u2QWku9MpWQzLMOliPEy8lLOQKOyrtewPdahOcsPQg3SHqQTfOn
+         oJvhTfU3Sksw1aWpODDIQH/6mGsYx+83R/AQDDmJdQqiMEFIF4opD2AoTLYnJvrjdwHu
+         aKxh7ejoiVyeKBJ3qtAAtGtRH1rl+6Ff4dUfCLy+RKtx3MsmKBOjbwVECNOrHMLhtY4b
+         5IhB/BiC/yK9g3qiv4VrE+vdMUZgFs9TRTC57CIEyrCHZhjC6RQAgGM9wMGowLby3Dbu
+         7J9g==
+X-Gm-Message-State: AFq9FYLBlfbua7fXhf5pYz+KVpHobqVlQMba8MIfQg5YmrHq/Nt2wWax
+	sPCypWXWNxZq8PP8GjZWER5+VnfAeFYIEcafs7E2YHb15KRsssXZhRs5YRsRmcytHXTa5KOvkyp
+	edeo1
+X-Gm-Gg: AYBFou2h4Y9m6XXsBN4YJYYB8G4SZv4/qwN1AnZYeTNzNJODuj+v8yQ9VEXYqickKpG
+	YJp3fnma47iv6PuzFowOQhK8VMhXu9tp+jQBnd4zNYuAfDMUww8Wlay55JPquLnEaGubCnfxP6x
+	3YjXUP7DDHgrfTUtRno2rpwdR9JobKvGcYzI5+efmaFm7vHm4Wpl2E3yfRGQ2PaKoAOCl24gmkw
+	6MkMK/N2OV8w1kAtVGSkJnmntWX11d8gNAnag2PdvKfD9jZksLWw5n4ZiKufpigDoJhh/zSQYFd
+	/Iwwn9MLghy0uLSRYkKkDkPBLDPPGsB84oGLdsTJledEDW4w0+zrpmj5XoQuUSdJTexqXCNdpEF
+	q10aq6+U0Mceu5zLmyB2TBqvZG1cwelzFmgIqLEkpi01YVv290YB8HM8EOo3l0fd+oJsF+c/fyj
+	PNGYO8SmIljxee4CSsFJhrVVUlCo0+/xi3jWi2Hfv+vDli1zwY9tVxPjWfj13dZadcdWTrJngvm
+	6FG6pRhsCxktIhC8C5OmFrDDkQA/wXCfNJh+FEITQXgbmR5wiwGtNN6DwbDVRFB
+X-Received: by 2002:a05:6300:2287:b0:3dd:a195:dd56 with SMTP id adf61e73a8af0-3e16bfc2d17mr17967548637.56.1792084760474;
+        Thu, 15 Oct 2026 10:19:20 -0700 (PDT)
+Received: from Taeyangs-MacBook-Pro.local ([59.6.107.15])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd635c58d91sm1651529a12.14.2026.10.15.10.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 10:19:11 -0700 (PDT)
+Date: Fri, 16 Oct 2026 02:19:05 +0900
+From: Taeyang Lee <0wn@theori.io>
+To: linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org, mhiramat@kernel.org
+Subject: [PATCH 1/2] tracing: Keep the predicate limit separate from program
+ capacity
+Message-ID: <atELCd1XjKVhrkFL@Taeyangs-MacBook-Pro.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260830-tlb_tracepoint-v2-1-e3c88c24df5b@gmail.com>
- <ar_Rathmoj2aP-H7@xhacker> <CALsPMBOYQbro2gZTQR=DSUowmVDs9kujH4ua2UzCoHAQrncuiw@mail.gmail.com>
- <asm95GdbmMpc81p3@xhacker> <CALsPMBPMHc7q-YZvqLLYDSr5RfLmDRwBSq-TFeB8Fc8bPBjQGg@mail.gmail.com>
- <as8NpaT0g9Tsl6PS@xhacker> <CALsPMBOdy4ZDWfnkYokUFuB3UYPV27wTUpBCZaxLWEV10ZuS=A@mail.gmail.com>
- <atAROTefufggiFPO@xhacker> <atBWGQ2iWpm2VKcY@xhacker>
-In-Reply-To: <atBWGQ2iWpm2VKcY@xhacker>
-From: Roman Storozhenko <romeusmeister@gmail.com>
-Date: Thu, 15 Oct 2026 19:08:08 +0200
-X-Gm-Features: AclHuK_WwwJkKlFZfudhhQDlIMbwbspdMnarcp4gCr6CQeC65hQ3jIZC2-gsXTE
-Message-ID: <CALsPMBPNKsnSAczyVm3LFFQjwRg8eiGgpB2hJN19iipRZ0mASA@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: mm: Trace TLB flush path selection
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	=?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Oct 15, 2026 at 6:47=E2=80=AFAM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
->
-> On Thu, Oct 15, 2026 at 07:33:13AM +0800, Jisheng Zhang wrote:
-> > On Wed, Oct 14, 2026 at 05:58:42PM +0200, Roman Storozhenko wrote:
-> > I think you misunderstood something. A riscv platform uses either
-> > SBI RFENCE or IPI for tlb shootdown, and won't change. So you can
-> > know whether the system is SBI RFENCE powered or IPI powered by
-> > cat /proc/interrupts. It's much simpler.
->
-> Aha, I missed aclint sswi case, if sswi, no explict /proc/interrupts
-> difference between sswi and traditonal plic. However, whether TLB is
-> powered by SBI RFENCE or IPI can still be known by checking
-> "providing IPIs using SBI IPI extension" in dmesg.
+predicate_parse() adds two to nr_preds to reserve the terminal TRUE
+and FALSE entries. It also uses that increased value as the limit for
+parsed predicates. If the initial count is smaller than the number
+actually parsed, the program can fill the allocation and subsequent
+accesses can go past its end.
 
-Thanks, I see your point now.
+Keep nr_preds as the predicate limit and use a separate value for the
+allocation size. This leaves space for both terminal entries and a
+zeroed entry when parsing stops at the limit.
 
-I was treating SBI RFENCE vs the Linux cross-CPU path as part of the
-per-request selection, but with the current implementation
-riscv_sbi_for_rfence is effectively a system-wide choice established
-during initialization.
+Fixes: 39f7c41c908b ("tracing/filters: Enable filtering a cpumask field by another cpumask")
+Cc: stable@vger.kernel.org
+Signed-off-by: Taeyang Lee <0wn@theori.io>
+---
+ kernel/trace/trace_events_filter.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-I reworked the patch in v3 based on your feedback. The tracepoint no
-longer reports the local/SBI RFENCE/cross-CPU implementation path.
-Instead, it describes the semantic TLB invalidation request itself,
-including the range, stride, ASID, target CPU mask and request scope.
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 2b46ca536..781416ba6 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -482,18 +482,17 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+ 	int len;
+ 	int N = 0;
+ 	int i;
+-
+-	nr_preds += 2; /* For TRUE and FALSE */
++	int nr_preds_alloc = nr_preds + 2; /* For TRUE and FALSE */
+ 
+ 	op_stack = kmalloc_objs(*op_stack, nr_parens);
+ 	if (!op_stack)
+ 		return ERR_PTR(-ENOMEM);
+-	prog_stack = kzalloc_objs(*prog_stack, nr_preds);
++	prog_stack = kzalloc_objs(*prog_stack, nr_preds_alloc);
+ 	if (!prog_stack) {
+ 		parse_error(pe, -ENOMEM, 0);
+ 		goto out_free;
+ 	}
+-	inverts = kmalloc_array(nr_preds, sizeof(*inverts), GFP_KERNEL);
++	inverts = kmalloc_array(nr_preds_alloc, sizeof(*inverts), GFP_KERNEL);
+ 	if (!inverts) {
+ 		parse_error(pe, -ENOMEM, 0);
+ 		goto out_free;
+-- 
+2.51.0
 
-I still think there is value in exposing this information as one
-semantic event. The individual pieces can be reconstructed with dynamic
-tracing, but having them together makes it straightforward to analyze
-the distribution and characteristics of TLB invalidations across a
-workload without depending on the current implementation details.
-
-The v3 patch is here:
-
-https://lore.kernel.org/all/20261015-tlb_tracepoint-v3-1-eef305a3bb63@gmail=
-.com/
-
-Thanks for pointing out the distinction. It helped simplify the event
-and make its abstraction clearer.
-
---=20
-Kind regards,
-Roman 'Hedin' Storozhenko
