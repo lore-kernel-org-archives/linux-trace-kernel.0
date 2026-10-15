@@ -1,74 +1,160 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-55.mta0.migadu.com [91.218.175.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD0241C71;
-	Thu, 15 Oct 2026 12:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD65B2F9984
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 13:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792068732; cv=none; b=WZw7lME876imM7kyvOr+1ytXyN4MtcOCDbZAPUrdUu6opt3biyzJ/VDPb/2DZPKuDdgdDTI1PkUMLGw2a/JXrWYPPlrB0bQ6IYMh1xEtiPTUCAaIuICX2eLNjxMa8YdInelykK/ZSNIquh3Jyl7UTaRsM/ZpaU8/rZ0qcUWiDpI=
+	t=1792069555; cv=none; b=eqWROAzA4a8tJmov0mdv9Yg34hD9PbAFldXz3wW2ryPYNryT4Dj+KjzLwKtkkBDCMiHIQ2Tk3eb4jte2xgrYcXpC3jG8khHLWyXJH7x53udNqQIyoj3B+8kFA8aa+mYIF5D6X/Vrey1qt56EId894VU4GUOosvyjDmIohTTFD2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792068732; c=relaxed/simple;
-	bh=iWZRrwl/vTkouEmuKYQns0pbF6s/xoUawdrp9gB3ndw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=evPFlXzJOfiORqwWqcJVgT9zUBRRJU+21eoD6pw9jimnNl6CvXI59W+2igl9IYtpTIMHSxW8qq0uFgOmIMTTlDuGmVxZ4B99GnP5ZERXpcUNzEuBUouAtrcxSdie44ZI8LoF/qTsiDwo6fYhDfQW/wOrQHVBoAJnaMsKlu1YxcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=AP2SWa5D; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1792069555; c=relaxed/simple;
+	bh=zfOs8r5Hw3TRC8MJRsJxpQX435syY1SfJsZA5AygjLA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JdBLfZvNUVdL4zVJVGX6MyqCDN+Fls9U/qv4LTPR2Sy//7OpuSX0kvwmGmUHfjAOvsPlwRjW73/Fs6mYoiRghol5I4KDxdmxQvJ0GRFWv68DR6q+eeIKHNBd2ubGsxQClW1fAxybKO+5Dm+jXGoiTXSp42KuzWoXOcdKjfIYqnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZIvwVtt3; arc=none smtp.client-ip=91.218.175.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="AP2SWa5D"
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 814F412070F;
-	Thu, 15 Oct 2026 12:52:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 9B9126000B;
-	Thu, 15 Oct 2026 12:52:01 +0000 (UTC)
-Date: Thu, 15 Oct 2026 08:52:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ring-buffer: Skip si_mem_available() for
- persistent and remote buffers
-Message-ID: <20261015085200.1abe5550@gandalf.local.home>
-In-Reply-To: <atCRQ3HRmWgKEJGl@google.com>
-References: <20261013102047.1488347-1-vdonnefort@google.com>
-	<20261013102047.1488347-2-vdonnefort@google.com>
-	<20261014175126.49c26f93@gandalf.local.home>
-	<atCRQ3HRmWgKEJGl@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZIvwVtt3"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=zfOs8r5Hw3TRC8MJRsJxpQX435syY1SfJsZA5AygjLA=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792069551; v=1; x=1792674351;
+ b=ZIvwVtt3U7bY1K4/l2wr8y6bwyFQLtzFMf2em1b/+fbjE0b9DmANvNSmo1eiFHHJheGhOxjG
+ 41viKTPpAg0sudR+Q0tSlIHKNpd3f27oES44kihhLKpVZSVY1bu8fYpTccn8ZtyDWIBtRuAAxya
+ XDG+XfCiNH4gTzDb5Np9na2Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 68f3da1f42c82f42;
+	Thu, 15 Oct 2026 13:05:51 +0000
+X-Mizu-Trace-ID: 68f3da1f42c82f42
+X-Migadu-Flow: FLOW_OUT
+From: Hao Ge <hao.ge@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Hao Ge <hao.ge@linux.dev>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] tracing: Fix crash in print_graph_function_event()
+Date: Thu, 15 Oct 2026 21:06:58 +0800
+Message-Id: <20261015130658.221198-1-hao.ge@linux.dev>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 9B9126000B
-X-Stat-Signature: qdddxgm3qoks6q1yygdhu3s3xuzxygar
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19mmf2ku17l9uFNMZ5/9WyN1nYQgxiaMq0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=3zUkmXmZ+XpjifwGV5vNAZcbhV+oMqVEA6Nq6qlxsFI=; b=AP2SWa5D4EB/fDmeBs1mSdyhav6cJbm2sHIn3WVXtNVTuMukiBvoy/irvcCRdadbFtlWly+LEpje4L4jBeJKulioM9/mNwRfzmcYXrQLYWO64QNqN8mfDQPeK2bAYxiVP1cGUdo2F3ALzrUYLt1/gLxnNS0iCj8PG4bR6l4Qqa4=
-X-HE-Tag: 1792068721-603792
-X-HE-Meta: U2FsdGVkX1+Z9FU8vNKmVtdF2S8DSPzfIdUxiwuAzGpDnhNfZZeMw+Tm9JXn+GYYFJV7bn1Y9m09j86lbsvuFc4vhGm0qLmNPa2vaQ7oaLrlyYOY03JnuQ2QgUujbGpiiB47PX7y4n5fYjg7tvM21GIhmZ1MsIC3HsLnR5VqFLjv/Pxo8XTTB0lBQJ9rll0imqAW2tdOo6VnodEA0Diud4MsWamzpyheUTaAVBNuusqkXVqKJG/gwNwGyYMHQutBZr2TRTRxaz+IyZ/Bn4fwB7A8PQv8fdRt7Yes2AkXvEORPh2k8eoTslAvZbcPnbHA+2oK5i2TIXSWppxekbvqpQP0v+aDm2Cu
+Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Oct 2026 09:39:31 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+tracing_set_tracer() assigns the flags of the newly selected tracer
+with:
 
+	tr->current_trace_flags = t->flags ? : t->tracer->flags;
 
-> > Not caused by this patch but we need to update this to:
-> > 
-> > 		user_thread = is_user_task(current);
-> > 
-> > I may add that.  
-> 
-> I can send a v3 if that helps.
-> 
+If the new tracer defines neither static flags nor default flags, like
+hwlat, irqsoff or wakeup, add_tracer() has no per instance flags copy
+for it, and both operands are NULL, so tr->current_trace_flags ends up
+being NULL as well.
 
-I already pulled in the other two patches and tested them.
+The ring buffer is not cleared when switching tracers: it is reset
+inside tracer_init(), after current_trace_flags was already assigned.
+If the buffer still holds function_graph entries of the previous
+tracer, printing one of them dereferences the NULL pointer. This was
+hit by cat trace during an ftrace stress test:
 
-This can be a clean up for the merge window.
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  #PF: supervisor read access in kernel mode
+  RIP: 0010:print_graph_function_event+0xe/0x20
+  Call Trace:
+   s_show+0x4d/0x110
+   seq_read_iter+0x2d4/0x490
+   seq_read+0x130/0x170
+   vfs_read+0xb5/0x370
+   ksys_read+0x6d/0xe0
+   do_syscall_64+0xbc/0x450
 
--- Steve
+The snapshot buffer is not reset at all, so this can be reproduced
+without a race:
+
+  echo function_graph > /sys/kernel/tracing/current_tracer
+  echo 1 > /sys/kernel/tracing/snapshot
+  echo hwlat > /sys/kernel/tracing/current_tracer
+  cat /sys/kernel/tracing/snapshot
+
+Rather than teaching every user of tr->current_trace_flags about this
+corner case, make sure it is never NULL: when the newly selected
+tracer has no flags at all, tracing_set_tracer() falls back to a
+static empty no_tracer_flags. run_tracer_selftest() can hit the same
+case, so the same fallback is added there too. The existing users
+already handle opts == NULL, so these tracers keep behaving as before.
+
+Fixes: e29aa918a928 ("tracing: Have function graph tracer define options per instance")
+Cc: stable@vger.kernel.org
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Hao Ge <hao.ge@linux.dev>
+---
+Changes in v3:
+- Sasha pointed out the original two-step assignment had a
+  transient NULL window. Switched both sites to a single
+  if/else if/else.
+
+Changes in v2:
+- Rework per Steve's suggestion. v1 could trip the WARN_ON_ONCE() in
+  add_tracer() at boot, when an instance was created before the tracer
+  registers.
+
+v1 Link: https://lore.kernel.org/all/20260920042139.70736-1-hao.ge@linux.dev/
+---
+ kernel/trace/trace.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e4a490d3d08c..cbc259557b09 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -99,6 +99,12 @@ struct tracers {
+ 	struct tracer_flags	*flags;
+ };
+ 
++/*
++ * Tracers that do not define their own flags use these empty flags,
++ * as tr->current_trace_flags must never be NULL.
++ */
++static struct tracer_flags no_tracer_flags;
++
+ /*
+  * To prevent the comm cache from being overwritten when no
+  * tracing is active, only save the comm when a trace event
+@@ -1318,7 +1324,12 @@ static int run_tracer_selftest(struct tracer *type)
+ 	tracing_reset_online_cpus(&tr->array_buffer);
+ 
+ 	tr->current_trace = type;
+-	tr->current_trace_flags = type->flags ? : type->default_flags;
++	if (type->flags)
++		tr->current_trace_flags = type->flags;
++	else if (type->default_flags)
++		tr->current_trace_flags = type->default_flags;
++	else
++		tr->current_trace_flags = &no_tracer_flags;
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	if (tracer_uses_snapshot(type)) {
+@@ -5089,7 +5100,12 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 			return ret;
+ 	}
+ 
+-	tr->current_trace_flags = t->flags ? : t->tracer->flags;
++	if (t->flags)
++		tr->current_trace_flags = t->flags;
++	else if (t->tracer->flags)
++		tr->current_trace_flags = t->tracer->flags;
++	else
++		tr->current_trace_flags = &no_tracer_flags;
+ 
+ 	if (trace->init) {
+ 		ret = tracer_init(trace, tr);
+-- 
+2.25.1
 
