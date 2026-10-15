@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E224F4753;
-	Thu, 15 Oct 2026 13:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBDC4DEC0C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 13:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792070399; cv=none; b=nfURmz8yCzsuv0/dXtCQ/i1ux7bF3SCegox49muh1sMq7foJ7gx6jxWiVgP1sUPBFubyy2aJqI4WfC10CUsaLOlid/tfKlyxsl4WSJ2x9XlGySKFWphtOpQ1lFb/pSyOBxfcufxw5A6qqu8TEEHEv8QHsRQ4nFdPve+O+oH01n8=
+	t=1792070526; cv=none; b=Oxym17MdP368ePtbFLyu3h34PFMLynwk4Io3yuL859F2sC8r2GEYOu+MvsVvABO1TgBsfhCb9btwGnMoE+es3PpNW75Fyn8z5/WOL1NQMTOYaWOdCEyrpJE0+hEClpPr7KCIP1bMay4ALvdJ6zMI99GQ9VsRs/GUt9TAs7bw4eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792070399; c=relaxed/simple;
-	bh=thlshmYiShdhzTv87rwDm5joF28hsjtCtYse7dFqCn0=;
+	s=arc-20240116; t=1792070526; c=relaxed/simple;
+	bh=SMysF/7OMJJxnTfLDS0irbeZgQ8ACkMLBuKtsAuLKVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-Id; b=D1gitOCZFLnMwnwzUWv+HrvACMCBlTSG4md2KX6yHVA7e/jnuesTgZ26N/AuueXQJcW4G5IkM6TAk3fgAS2DHs9t4TcPfAFa+9zb6FC/aQ843VRD3pG4uC6wAakR5zDEUVOv9E1urouviIXcjPpU6bxdvN5lvHtxzGs5mkShWbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2+OvKqt; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Message-Id; b=SiiaSnpLxrnulQ4S6Z4ZxdjHGRS5w7SR+AOWlqnH26I/DkUq8Iox7pNULwMmGU7o7eQWBBurC2zNx6qugXhIn6Xgob5kuptwwbUABdZtNVM7P/28VSc5a+Tzxcps+RU24GXFDGh3pKyB/ksSolRY5spGLQl2ZeGhVgx/MZiTksg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMls2BhG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2+OvKqt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183661F000C4;
-	Thu, 15 Oct 2026 13:19:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMls2BhG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87721F000C4;
+	Thu, 15 Oct 2026 13:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792070398;
-	bh=XmTFPFQKWNQCbwKOGMyIvwptcs1NVuc7umRcO5tIaEk=;
+	s=k20260515; t=1792070524;
+	bh=s+HzBkBf8qEZmqiziCnNgMlI6ehw3MKXSePN0nW37Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g2+OvKqtQbt4MeL45W1VNDsC8TbMWIM6miExxgO6+CoHN2bvfRNW455gOXdFAgA5u
-	 jBaaj8CITkLsB6ZmIGx26zvKIjThAV+sL8Vpuzb/+lupc0/ktQBAOTchax63Ku7U6J
-	 QXQY3rcDX0oBW9ib/tTHERY7WSHWa3RLNpIq/YtBEmEvqqiIOkKp8GqwZOOzSh/fHd
-	 WhP5PQJm6+B3at7BH07/upxc/fPk6A+n5UpzDy19iEo8WgB4pwRbnjeVLr581GSN9I
-	 x/RzGYMpedzPMAGzrm1Xy6FwPdKBUEbLDKseX9HkuRA3stx/YU62HYrZXrV4XvgJ4W
-	 wais4Bak8XRVw==
+	b=LMls2BhGr1o0GWhbXw8+5YC7YtdiibL4s0SmVNGWcOX6HuSBG3w1i5M9Xx4ja96DA
+	 V2hWt1dv5hqipGKStGiu9KoUAmExNO1PSN3ch3KiPyWwCtLca3oNZl/Nu1S6DZlhQA
+	 9p5M44/EiQsddbjgkn77hq+S/ZFl/dngCdoWAGIaO3YwmC3BCYjw/SxJ8T2wO4zYlK
+	 EQQ1mAS38CICYAhSjH1p9wfifm0cuqth3GYUsO70vZV5OhZIP0VLgU1eRYq7PbUvob
+	 NQAvDHJCDiTVAGouxuIsmK81HNKOZqFA8XAJ4LOL7orKEUhiMlce/rozQ0FzaA1Ptl
+	 dCS2+dX0ctN8g==
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Nam Cao <namcao@linutronix.de>, Naveen N Rao <naveen@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v5 1/2] riscv: kprobes: reject probes inside LR/SC sequences
-Date: Thu, 15 Oct 2026 22:19:54 +0900
+To: sashiko-bot@kernel.org
+Cc: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] riscv: kprobes: add KUnit test for LR/SC sequence
+ rejection
+Date: Thu, 15 Oct 2026 22:22:02 +0900
 X-Mailer: UndineD 0.1
-In-Reply-To: <20261014094415.374-2-yuanxiaofeng@eswincomputing.com>
+In-Reply-To: <sashiko-outbox-171103@kernel.org>
 References: 20260828091202.1124-1-yuanxiaofeng@eswincomputing.com
- <20261014094415.374-2-yuanxiaofeng@eswincomputing.com>
+ 20261014094415.374-3-yuanxiaofeng@eswincomputing.com
+ <sashiko-outbox-171103@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -48,46 +46,83 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20261015131956.183661F000C4@smtp.kernel.org>
+Message-Id: <20261015132203.D87721F000C4@smtp.kernel.org>
 
-On Wed, 14 Oct 2026 17:44:14 +0800, Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com> wrote:
-> A trap taken in the middle of an LR/SC sequence clears the load
-> reservation, so an SC following the probed instruction always fails and
-> the enclosing retry loop re-enters the breakpoint, livelocking the CPU.
-> Reject probes of the LR/SC instructions themselves and of any address
-> between them.
+On Wed, 14 Oct 2026 09:54:54 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] kprobes: stack-allocated kprobe leak and UAF on unexpected test failure
+> --
 >
-> arm64's kprobes rejects its equivalent exclusive load/store instructions
-> and, in arm_kprobe_decode_insn(), walks backward from the probe address
-> (bounded by the enclosing symbol) to reject any address inside an
-> exclusive sequence.  RISC-V cannot walk backward because
-> variable-length instructions make instruction boundaries ambiguous, so
-> walk forward from the enclosing symbol, a known instruction boundary, up
-> to the probe address and track whether an LR is still outstanding.
+> commit 10b8cab517db949a43dcca583dbcd1f20f6d68e8
+> Author: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
 >
-> A Zalrsc-constrained LR/SC retry loop holds at most 16 instructions, so
-> an LR more than MAX_LRSC_GAP instructions ahead of the probe cannot
-> start a sequence containing it.  Count instructions, not bytes:
-> compressed instructions would make a byte window ambiguous.
+> riscv: kprobes: add KUnit test for LR/SC sequence rejection
 >
-> The LR/SC instructions themselves are rejected in
-> riscv_probe_decode_insn(), and an address inside a sequence is rejected
-> in arch_check_kprobe().
+> This commit extends the kprobes KUnit test to verify that register_kprobe()
+> correctly handles an LR/SC sequence. It asserts that probes are accepted
+> around the sequence but rejected if placed directly on the LR, SC, or any
+> instruction inside the sequence.
 >
+> > diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes.c b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
+> > index 027424a3ff7b1..2727537569739 100644
+> > --- a/arch/riscv/kernel/tests/kprobes/test-kprobes.c
+> > +++ b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
+>
+> [ ... ]
+>
+> > +static void test_kprobe_lrsc(struct kunit *test)
+> > +{
+> > +	/*
+> > +	 * test_kprobes_lrsc_offsets[] points, in order, at an instruction
+> > +	 * right before an LR/SC sequence, the LR itself, an instruction
+> > +	 * inside the sequence, the SC, and an instruction right after it.
+> > +	 */
+> > +	bool reject[] = { false, true, true, true, false };
+> > +	int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(reject); i++) {
+> > +		struct kprobe kp = {};
+> > +
+> > +		kp.pre_handler = kprobe_dummy_handler;
+> > +		kp.addr = (kprobe_opcode_t *)test_kprobes_lrsc_offsets[i];
+> > +
+> > +		if (reject[i]) {
+> > +			KUNIT_EXPECT_LT(test, register_kprobe(&kp), 0);
+> > +		} else {
+> > +			KUNIT_EXPECT_EQ(test, register_kprobe(&kp), 0);
+> > +			unregister_kprobe(&kp);
+> > +		}
+>
+> [Severity: High]
+> Does this leave the stack-allocated kprobe registered if register_kprobe() 
+> unexpectedly succeeds? 
 
-Looks good to me from kprobes maintainer's viewpoint.
+Good catch!
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Xiaofeng, can you fix it?
 
-Thanks!
+Thanks,
 
-> Signed-off-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-> ---
->  arch/riscv/include/asm/insn.h          | 33 ++++++++++++++
->  arch/riscv/kernel/probes/decode-insn.c |  2 +
->  arch/riscv/kernel/probes/kprobes.c     | 63 +++++++++++++++++++++-----
->  3 files changed, 86 insertions(+), 12 deletions(-)
 >
+> In the rejection path where reject[i] is true, KUNIT_EXPECT_LT() will log 
+> a test failure if register_kprobe(&kp) returns 0, but execution will
+> continue. Because unregister_kprobe(&kp) is only called in the else block, 
+> the kprobe remains in the global kprobe list.
+>
+> Since struct kprobe kp is allocated on the stack within the loop, advancing
+> to the next iteration zeroes out the reused stack memory. When the function 
+> eventually returns, the stack frame is popped. This would leave a dangling
+> pointer in the kprobes subsystem, causing a use-after-free or kernel panic 
+> on subsequent kprobe operations or interrupts.
+>
+> Should there be a check to unregister the kprobe if the registration 
+> unexpectedly succeeds in the reject path?
+>
+> > +	}
+> > +}
+>
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261014094415.374-1-yuanxiaofeng@eswincomputing.com?part=2
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
