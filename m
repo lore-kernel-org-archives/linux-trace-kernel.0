@@ -1,193 +1,147 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743EF526AA2;
-	Thu, 15 Oct 2026 12:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6E7154425;
+	Thu, 15 Oct 2026 12:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792068229; cv=none; b=bZGy47VpnMgCxRtE91OqpBLBUMyUrYHRw4C0giHQu5ZuUDcpI/olPwn8VBb+m3NxxCeVgbpK772yBiNe75nVuNbnaxai6lYLKBjAazSAwq5bQXwPDOGGuh4IwKAiMLn49b4XyyrMg8xuXUws/ZQYmsXa6mDQXmXaBWOPuFNXxtE=
+	t=1792068394; cv=none; b=UzVAwSkfTnlEjhOuE5tCg7O3aO8jZPrYKKBbLFIMM3SUlou5PlDqxA+/WmTuMe4Rr3VIeYc16BWZKiAhRWv5G3qKi3MKVE+s/grP30P/zDIp3/cGrOmTPsEGhmm8CDHJUsenUf7M0ODqCtdr66NfQWezsLCPFaONGNn+TOgAso4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792068229; c=relaxed/simple;
-	bh=dCkYiG28FMjtYsP3hQci4uxgaCcTKqUYsnUCHyC3Aro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NtfG1QrI+ViwQqT0enrhW+lJfWx2uMfl6z2KYOYJU1BLXiTmlbD/+wwLD6/37dD0DsEMFnxRc66xt8uh1N5QtQqCNvPRWqmOD94a1JscucdHIK7yvRovrsEjjNUlsCILzDMlZagsmhRMF9prFAbSy26zrRHiv0iHwmXYx17+GZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Pz9s8UQ1; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1792068394; c=relaxed/simple;
+	bh=UOPthWoU6vTrRhoY6+yql2QUYF59fWMykBfO1SrtK8c=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=CRbufFLoUeH0agEKDKjzrn/v1tsdOjahmhyUsZGQ+yb3u+eIPRPTCftaQnOkQBREjanbRzlNzsXaHrNn9x9dlDiEa4wp/agxyR7Kz3c2AtWU5VzhQS/4PfxTrz//Rzjh4qXCBJw2cpYxcbgSScFiVcP82GVC77+4OSZb2z/GZPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bY0frMGD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Pz9s8UQ1"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1792068216; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=aQ9wvhtdSDD+mKc+7iAgPfLlhjTT/B1SZKpq9mlbJAM=;
-	b=Pz9s8UQ1lm7jgsA99lExfwJO66GD2+sbBJp2Vmrq37il+zJZlTroFjuIe8s0l1IuTIJqfU36kaFcYm15lh412TDQ1NQLsKsc/iUdh1ENjurTlr+NezNBXpv3+0hqYzjldyKU17K4Ux0I1XOnxM9avPp8/YJIfipQ5JII1HOEy1Y=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=peng_wang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0XCrqjaP_1792068215;
-Received: from localhost(mailfrom:peng_wang@linux.alibaba.com fp:SMTPD_---0XCrqjaP_1792068215 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 Oct 2026 20:43:35 +0800
-From: Peng Wang <peng_wang@linux.alibaba.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>
-Cc: Peng Wang <peng_wang@linux.alibaba.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	He Rongguang <herongguang@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: [RFC PATCH 2/2] cpu: Add sysfs control of full dynticks policy
-Date: Thu, 15 Oct 2026 20:43:09 +0800
-Message-ID: <e93ef15796946485eaaecd774141378351307940.1792067271.git.peng_wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1792067271.git.peng_wang@linux.alibaba.com>
-References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bY0frMGD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294B21F000C4;
+	Thu, 15 Oct 2026 12:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792068392;
+	bh=VWcJq9INiAuVzwdCjQBu5vBURcRDe4u4t6rDjXko4oU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bY0frMGDK+tWU4/S7veUx2bL+tOHPgiju0MwdufELxaI4MVrW9Sef5thaSVpLIEOm
+	 pL6hi8EpX3q/IBa3WHVD6rDY5sSfJPLOjmHFEzfJW5Fm8qX5sSMSITTyJqZ8qLNVp1
+	 G/ixe7uidq38KxQrL9zKLLr3FWvzG7emXofsV15885j6trY8ndxbWinCpMu65brF9J
+	 OiEWlfYxgfIIOIwbMUDsklLpuhOZ6zRb690+CTURR9e34rsEcjqS0ZcEMyjgKRgm1R
+	 iD+lXJShyiiHFEuqfJmUPnWoBpoGaPEgqDzzjdlfkuD7xohI5oQe59cmWNsUmY/Jub
+	 iDwN6vb1CX92A==
+Message-ID: <sashiko-outbox-172860@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 -next 16/18] selftests/landlock: Add tests for
+ metadata access rights
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Cai Xinchen" <caixinchen1@huawei.com>
+Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, "Chuck
+ Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
+ Schumaker" <anna@kernel.org>
+In-Reply-To: <20261015125425.3246251-17-caixinchen1@huawei.com>
+References: <20261015125425.3246251-1-caixinchen1@huawei.com>
+ <20261015125425.3246251-17-caixinchen1@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 15 Oct 2026 12:46:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Expose nohz_full_allowed under /sys/devices/system/cpu/ as the subset of
-nohz_full CPUs permitted to suppress their non-idle scheduler tick.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] selftests/landlock: test logic and commit message contradiction =
+in fileattr_write_only
+- [Medium] selftests: hardcoded syscall fallbacks 468/469 are incorrect on =
+Alpha
+--
 
-Writes replace the entire list; reads report policy, not current tick
-state. Reject invalid input before updating policy. Document asynchronous
-revocation, offline CPU configuration and persistence across hotplug.
-The existing nohz_full attribute continues to report membership.
+commit 14e6c962c9835f4d2f9d99bb2bfea0e277c3117a
+Author: Cai Xinchen <caixinchen1@huawei.com>
 
-Co-developed-by: He Rongguang <herongguang@linux.alibaba.com>
-Signed-off-by: He Rongguang <herongguang@linux.alibaba.com>
-Signed-off-by: Peng Wang <peng_wang@linux.alibaba.com>
----
- .../ABI/testing/sysfs-devices-system-cpu      | 40 ++++++++++++++++
- drivers/base/cpu.c                            | 46 +++++++++++++++++++
- 2 files changed, 86 insertions(+)
+selftests/landlock: Add tests for metadata access rights
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 82d10d556cc89..edf3408fd84c8 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -767,6 +767,46 @@ Description:	Preferred MTE tag checking mode
- 
- 		See also: Documentation/arch/arm64/memory-tagging-extension.rst
- 
-+What:		/sys/devices/system/cpu/nohz_full_allowed
-+Date:		October 2026
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+Description:
-+		(RW) CPUs permitted to stop the scheduler tick while non-idle.
-+		Available with CONFIG_NO_HZ_FULL. The default is the complete
-+		nohz_full CPU list. Readback reports permission, not the current
-+		tick state: all the usual tick dependencies still apply.
-+
-+		A write replaces the entire list, using CPU-list syntax (for
-+		example, "1-3,5"). An empty line revokes permission from all
-+		nohz_full CPUs. Invalid input is rejected without changing
-+		policy. A parsed list containing CPUs outside nohz_full fails
-+		with EINVAL. CPU numbers beyond the mask range and numeric
-+		overflows are rejected by the CPU-list parser with ERANGE and
-+		EOVERFLOW, respectively. Input must be shorter than PAGE_SIZE
-+		bytes, otherwise E2BIG is returned. Embedded NULs and newlines
-+		other than a trailing newline are rejected with EINVAL. Valid
-+		writes without an active nohz_full configuration fail with
-+		EOPNOTSUPP.
-+
-+		Reads fail with EOVERFLOW if the formatted output reaches
-+		PAGE_SIZE - 1 bytes, rather than returning a potentially
-+		truncated CPU list.
-+
-+		Revoking permission adds a per-CPU tick dependency. Online CPUs
-+		are notified through the existing asynchronous kick mechanism
-+		to restart a stopped non-idle tick. A successful write means
-+		the policy is updated and any needed notification is queued;
-+		it does not wait for tick restart. Changes to multiple CPUs
-+		are not simultaneous. Granting permission only removes this
-+		dependency and does not force the tick to stop.
-+
-+		Offline CPUs may be configured without sending notifications.
-+		Policy persists across CPU offline/online. Idle tick suppression
-+		is unchanged; the policy applies when a CPU leaves idle.
-+
-+		This interface does not change nohz_full membership, context
-+		tracking, RCU offloading, or housekeeping configuration.
-+
- What:		/sys/devices/system/cpu/nohz_full
- Date:		Apr 2015
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index 69e52fed42415..299ce61cef895 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -324,6 +324,51 @@ static ssize_t nohz_full_show(struct device *dev,
- 	return sysfs_emit(buf, "\n");
- }
- static DEVICE_ATTR_RO(nohz_full);
-+
-+static ssize_t nohz_full_allowed_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	cpumask_var_t mask;
-+	ssize_t ret;
-+
-+	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	tick_nohz_full_get_allowed(mask);
-+	ret = sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
-+
-+	free_cpumask_var(mask);
-+
-+	/* Never present a truncated CPU list as the complete policy. */
-+	return ret == PAGE_SIZE - 1 ? -EOVERFLOW : ret;
-+}
-+
-+static ssize_t nohz_full_allowed_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	cpumask_var_t mask;
-+	int ret;
-+
-+	/* kernfs may truncate an oversized write to PAGE_SIZE. */
-+	if (count >= PAGE_SIZE)
-+		return -E2BIG;
-+	if (memchr(buf, '\0', count) ||
-+	    (count > 1 && memchr(buf, '\n', count - 1)))
-+		return -EINVAL;
-+
-+	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	ret = cpulist_parse(buf, mask);
-+	if (!ret)
-+		ret = tick_nohz_full_set_allowed(mask);
-+
-+	free_cpumask_var(mask);
-+
-+	return ret ? ret : count;
-+}
-+static DEVICE_ATTR_RW(nohz_full_allowed);
- #endif
- 
- #ifdef CONFIG_CRASH_HOTPLUG
-@@ -525,6 +570,7 @@ static struct attribute *cpu_root_attrs[] = {
- 	&dev_attr_housekeeping.attr,
- #ifdef CONFIG_NO_HZ_FULL
- 	&dev_attr_nohz_full.attr,
-+	&dev_attr_nohz_full_allowed.attr,
- #endif
- #ifdef CONFIG_CRASH_HOTPLUG
- 	&dev_attr_crash_hotplug.attr,
+This commit adds layout1 and layout2 tests for the newly introduced
+LANDLOCK_ACCESS_FS_READ_METADATA and LANDLOCK_ACCESS_FS_WRITE_METADATA
+access rights. It verifies metadata restriction behaviors for various
+system calls and fileattr interfaces, including overlayfs scenarios.
+
+> --- a/tools/testing/selftests/landlock/fs_test.c
+> +++ b/tools/testing/selftests/landlock/fs_test.c
+
+[ ... ]
+
+> +#ifndef __NR_file_getattr
+> +#define __NR_file_getattr 468
+> +#endif
+> +#ifndef __NR_file_setattr
+> +#define __NR_file_setattr 469
+> +#endif
+
+[Severity: Medium]
+Are these hardcoded syscall fallbacks correct for all architectures?
+
+The assumption that syscalls post-424 are unified across all
+architectures is incorrect for Alpha, which uses 578 and 579 for
+these syscalls.=20
+
+If the selftests are built on an Alpha platform with older host headers,
+it will invoke incorrect system calls (such as splice and sync_file_range),
+leading to failures or undefined behavior.
+
+[ ... ]
+
+> +TEST_F_FORK(layout1, fileattr_write_only)
+> +{
+> +	const struct rule rules[] =3D {
+> +		{
+> +			.path =3D file1_s1d1,
+> +			.access =3D LANDLOCK_ACCESS_FS_WRITE_METADATA,
+> +		},
+> +		{},
+> +	};
+> +	unsigned int flags;
+> +	int fd, ruleset_fd;
+> +
+> +	ruleset_fd =3D create_ruleset(_metadata,
+> +				    LANDLOCK_ACCESS_FS_WRITE_METADATA, rules);
+> +	ASSERT_LE(0, ruleset_fd);
+> +
+> +	fd =3D open(file1_s1d1, O_RDONLY | O_CLOEXEC);
+> +	ASSERT_LE(0, fd);
+> +
+> +	enforce_ruleset(_metadata, ruleset_fd);
+> +	ASSERT_EQ(0, close(ruleset_fd));
+> +
+> +	/*
+> +	 * WRITE_METADATA alone must be enough to set flags: the kernel-side
+> +	 * read of the old flags must not require READ_METADATA.
+> +	 */
+> +	EXPECT_EQ(0, test_setflags(fd, FS_NODUMP_FL));
+> +	flags =3D 0;
+> +	/* READ_METADATA is not handled: reading is allowed. */
+> +	EXPECT_EQ(0, test_getflags(fd, &flags));
+
+[Severity: Medium]
+Does this test logic contradict the commit message?
+
+The commit message states that for fileattr_write_only: "metadata
+reads (ioctl(FS_IOC_GETFLAGS)) are still denied".=20
+
+However, the test explicitly creates a ruleset that only handles
+LANDLOCK_ACCESS_FS_WRITE_METADATA. Because
+LANDLOCK_ACCESS_FS_READ_METADATA is unhandled, reading metadata is globally
+permitted, and the test expects test_getflags() to succeed.
+
+Additionally, by leaving READ_METADATA unhandled, does this test fail to
+effectively verify that FS_IOC_SETFLAGS (which internally reads metadata)
+works when READ_METADATA is actively restricted?
+
+> +	EXPECT_EQ(FS_NODUMP_FL, flags & FS_NODUMP_FL);
+> +	EXPECT_EQ(0, test_setflags(fd, 0));
+> +
+> +	ASSERT_EQ(0, close(fd));
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015125425.3246=
+251-1-caixinchen1@huawei.com?part=3D16
