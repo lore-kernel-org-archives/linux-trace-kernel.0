@@ -1,233 +1,263 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mta0.migadu.com (out-246.mta0.migadu.com [91.218.175.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB52486420
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 07:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B443BDBE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 07:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792047688; cv=none; b=H4A278O+a19BFKl9YF1sxZ5xDE2NsRp8UI+ASXK+U/nMaVU+nCKxqCi/7Z0Dw2h5ME+bvXXBJ9n9hDg2bGAsxXo0FF5QacKB9GE1F2VNhcTIqUhSasgaz7BE1JOs6pdMnfQCf1+e9DO76y22wLYksqoWfjvvnBcNde+vjIqu6VM=
+	t=1792048655; cv=none; b=rMDREmyPO+B009+1kCW5+oB6DmGpHglpd0L57dSA9Ysp5ECtQNgHoYaVhyvUphTXxyGzcsNnfn3pXo7DHeWtJBPrEwWqeW1D+ttnC82rZ0135JjEW6WexmtmIpyQgFYpheY6Vs3UBcz5xwdv2Q8KDiElWBsu52q1I0DTXHh5uAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792047688; c=relaxed/simple;
-	bh=Hq6KJLr4R/Nqag6PG8WCVWWjTklXxXlVNn5qbL1pzNM=;
-	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Date:Subject; b=ozV6TtL0A7fCXwEk56TM5LThkwojZsW3tRz9qqi2Xs9VRxecXA9LFIiIc8ImprufU14MFHh8I6Ro9vq8Cecy5JdJQOgAnI3EuAURjyqhVtq2AiIa5s00rHr//K0LMR0Kwzvn3i9uGD4igVauJKMSQnw60euwVrRqy33ABpjL9bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaOqkqfU; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792048655; c=relaxed/simple;
+	bh=60JfGjqc3DHPJ7EdbVJFZDzO0JqUrAEZj+gbv4nkQvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bIFvIhHbNJC5hmAJ7sz26MYG9FZ2JFFxMQO1sfCnLvhIyQAGFFu9FJpUext+R+kj9kDpcr6tAjwiBVkw9Y4B1AfrOMruMkfmG6sVlhtJUcptnxP2g2i/p4DEk8Kh7Xs9e4v8jTnKDRfKCS5aSXAPSjQbLLv//WO/Hu64/3rkcM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l+9uRC7Y; arc=none smtp.client-ip=91.218.175.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaOqkqfU"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-cd5cd8d89a7so1952230a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 00:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792047679; x=1792652479; darn=vger.kernel.org;
-        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
-         :content-type:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Hq6KJLr4R/Nqag6PG8WCVWWjTklXxXlVNn5qbL1pzNM=;
-        b=aaOqkqfU0q+BspisD2VYBkGv9vNvliE1AtG37PBWDiMzt/6qYmCMQguFwJ8mX7qTfr
-         S843tylBY0/oy/3vVEtyJ6yhrH13muAk3wgFjvizPrscsv1PSr6RhjD6PkJO2CoeXotW
-         rQjVG55tH9JsWbqim3mr5/kx62dvgbtZYHF3M3aA4VfvOc3DEnER3k3L/ATT00xH+nbZ
-         sNrl9oQGnAorrOfAGA/rrWkph3kC0ylyji7LIccDP6R3vZziEmM1/aDdkO1N1Nb6Zss6
-         lwbhOAOehU5OJqY250AD+7W6hUVSnzXcjXEAv1LgLl380MtXBr2cmyvCxrWz+XnC1KVr
-         /u1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792047679; x=1792652479;
-        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
-         :content-type:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Hq6KJLr4R/Nqag6PG8WCVWWjTklXxXlVNn5qbL1pzNM=;
-        b=BB4h++Tg8K44FUCuqn47dIjw7Hytpa47IefLQSVhbgXHPuocusiHtDVPY5YOpsMHmM
-         S+l1K7OZWjEdZJpIScRmQxtrLXhcI0KDh+coNSrHyOUxaeZUDyZ75XX3M4Ef6gSTyTD3
-         jbBp9epn3xdcJWUyi1T5OE+h0DLesE7C20E/3NrLTXmAl3ibHLdCbY9uSMucMhsjA7LB
-         oKRLEgFrlUb4h6sAN/f5CYLGvxtxhumoyOozeOeYT7HkGnKVn57yaHLkXfwZYgVer0tb
-         CEnhflrOc5aFxyo1D8/aG69dQWYO4ss1R2SdMG0AE5ERU7XhmYNf5n3yQKqMT7abNoSY
-         jziQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz57QkojayqjuBqM9oVQWeoFzXhT8Q6ERtjPYEukJQRbIDQ7sCkVDCABFicJIe/SiaW/2OHvkRrVj1DSnnZJLaMygk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJuHhf63saBX6F6+E6aThiGmVMfJnHxcET9tyOH07ennsu1d6Eo
-	+b+U8FBzPvfFyhxs6HpsIP4D58UyoFI+nSznt3qVeKp8/u7quUXtyU36
-X-Gm-Gg: AYBFou0PcJaDleM6YfQ+giss0bVFG3+Fl6OZiRfsf14/XXCrTO6ZSkaevTCGskHOjUE
-	qjo1sHKvOAU0HUbDyc4O423YN8XmZbRVkNT/PSxt2YXrXutw+oaDhtyyUG/CmV/+pxsE4jMHsAm
-	l/252bDfiE0sSdx+zNB1NciVtQRf6+Jys90tDyfI8hkvQfADLVtTixEJE4nHY9ojsA1Jh7ItvSk
-	FYyMY4KLIaCQy2osSJ8Y4/maU/X7JmhU1xkthxhLXIk3FJIPes5u2ICClDd63oBPnDWo+y0cH1B
-	flxFfr38sHkbSQMbi0DbMPCkEH+rET9gAbRIY56nw5zqz8ExLWviFwtXah9HWtDxS1j65SQFXcD
-	xs0/zfT1WVu+XKTizKWFDIoogmQYEsvYNt9OIzyWfgl+WzX09pYzA0hvXIAtdP+TUJE3va6G9xM
-	57zAEsVNf7N8QY8i6wZqiU8ndaY4qlJvmu8YYEg08aGhgYvbAxfh/RLAGNA0kX6evwo3U7U9uFt
-	s3UkpA=
-X-Received: by 2002:a17:90b:1d4f:b0:3a8:c0cd:57f3 with SMTP id 98e67ed59e1d1-3ab3a94ff23mr14037541a91.18.1792047676952;
-        Thu, 15 Oct 2026 00:01:16 -0700 (PDT)
-Received: from [58.206.202.11] ([104.28.215.68])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac9449ae48sm3037548a91.13.2026.10.15.00.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 00:01:16 -0700 (PDT)
-Message-ID: <6ad07a3c.6e2bf4e6.f29cc.dd67@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l+9uRC7Y"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=60JfGjqc3DHPJ7EdbVJFZDzO0JqUrAEZj+gbv4nkQvk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792048642; v=1; x=1792653442;
+ b=l+9uRC7YLshnpAwj/A3Hs54pHc94nJ82MM4/ehOq5zWzq0x5fBXSm0rwHkepSoBkdDKZzIW1
+ LaDYCNvZs06dgnhx0FLkD3/KF3Xm4ppoSFYaGhv0S0gO0OiSde1szmnTiK63Sw/CHVF8d8KE24z
+ n4cBbHcR29d0DSdJD5tlML9Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id bfd8d4e994055eab;
+	Thu, 15 Oct 2026 07:17:22 +0000
+X-Mizu-Trace-ID: bfd8d4e994055eab
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <5d36dc8a-b26b-4522-826b-65a9274db94f@linux.dev>
+Date: Thu, 15 Oct 2026 15:18:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-From: Haoran Wang <haoranwangsec@gmail.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, security@kernel.org, haoranwangsec@gmail.com
-Date: Thu, 15 Oct 2026 15:01:08 +0800
-Subject: [BUG] tracing: __copy_from_user without access_ok leaks kernel memory in syscall fault tracing
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Fix crash in print_graph_function_event()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260920042139.70736-1-hao.ge@linux.dev>
+ <20261014190556.6e113c4f@gandalf.local.home>
+Content-Language: en-US
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <20261014190556.6e113c4f@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SSdkIGxpa2UgdG8gcmVwb3J0IGFuIGlzc3VlIGluIGtlcm5lbC90cmFjZS90cmFjZV9zeXNjYWxs
-cy5jOjY4NiAoZnVuY3Rpb24Kc3lzY2FsbF9jb3B5X3VzZXJfYXJyYXkpLCBmb3VuZCB2aWEgc3Rh
-dGljIGFuYWx5c2lzIG9mIExpbnV4IDcuMC4xMSBhbmQKdmVyaWZpZWQgYWdhaW5zdCB0aGUgNy4y
-LjEwIHNvdXJjZSB0cmVlLiBJIGhhdmUgcmVwcm9kdWNlZCB0aGUgbGVhayBvbiBhbgo3LjIuMTAg
-a2VybmVsLgoKMS4gU3VtbWFyeQpUaGUgInN5c2NhbGwgZmF1bHQgdHJhY2luZyIgZmVhdHVyZSAo
-YWRkZWQgaW4gNy4wLCBDT05GSUdfRlRSQUNFX1NZU0NBTExTKQp0cmVhdHMgdGhlIHJhdyBzeXNj
-YWxsIGFyZ3VtZW50IGFyZ3NbMV0gKHRoZSBidWZmZXIgcG9pbnRlcikgb2YgZmF1bHRhYmxlCnN5
-c2NhbGxzICh3cml0ZS9wd3JpdGU2NC8gbXFfdGltZWRzZW5kKSBhcyBhIHVzZXIgYWRkcmVzcyBh
-bmQgY29waWVzIGl0CndpdGggX19jb3B5X2Zyb21fdXNlcihidWYsIGFyZ3NbMV0sIHNpemUpIHdp
-dGhvdXQgYW4gYWNjZXNzX29rKCkgY2hlY2suCldoZW4gYSB0cmFjZWQgcHJvY2VzcyBjYWxscyB3
-cml0ZShmZCwgPGtlcm5lbCBhZGRyZXNzPiwgY291bnQpLCB0aGUKc3lzX2VudGVyIHRyYWNlcG9p
-bnQgZmlyZXMgYmVmb3JlIHZmc193cml0ZSdzIGFjY2Vzc19vayBhbmQKX19jb3B5X2Zyb21fdXNl
-ciBjb3BpZXMgdXAgdG8gMTY1IGJ5dGVzIGZyb20gdGhhdCBrZXJuZWwgYWRkcmVzcyBpbnRvIHRo
-ZQpwZXItQ1BVIHRyYWNlIGJ1ZmZlciwgd2hpY2ggaXMgYXBwZW5kZWQgdG8gdGhlIHN5c19lbnRl
-cl93cml0ZSBldmVudCBhbmQKcmVhZGFibGUgZnJvbSAvc3lzL2tlcm5lbC90cmFjaW5nL3RyYWNl
-LiBUaGUgd3JpdGUoKSBpdHNlbGYgdGhlbiByZXR1cm5zCkVGQVVMVCwgYnV0IHRoZSBsZWFrIGlz
-IGFscmVhZHkgY29tcGxldGUuIGNvcHlfZnJvbV91c2VyKCkgd291bGQgaGF2ZQpyZWplY3RlZCBh
-IGtlcm5lbCBhZGRyZXNzIHZpYSBhY2Nlc3Nfb2soKTsgX19jb3B5X2Zyb21fdXNlcigpIGRvZXMg
-bm90LgoKMi4gVnVsbmVyYWJsZSBjb2RlCi0gRmlsZToga2VybmVsL3RyYWNlL3RyYWNlX3N5c2Nh
-bGxzLmM6Njg2IChMaW51eCA3LjAuMTE7IDo2ODUgaW4gNy4yLjEwKQotIEZ1bmN0aW9uOiBzeXNj
-YWxsX2NvcHlfdXNlcl9hcnJheQotIE1pc3VzZWQgQVBJOiBfX2NvcHlfZnJvbV91c2VyCgpgYGBj
-Ci8qIHN5c2NhbGxfY29weV91c2VyX2FycmF5KCkgLSBzeXNjYWxsIGZhdWx0IHRyYWNpbmcgKi8K
-X19jb3B5X2Zyb21fdXNlcihidWYsIHB0ciwgc2l6ZSk7ICAgLyogcHRyID0gYXJnc1sxXSAocmF3
-IHN5c2NhbGwgYnVmZmVyIGFyZyksIG5vIGFjY2Vzc19vaygpICovCmBgYAoKMy4gUm9vdCBjYXVz
-ZQpfX2NvcHlfZnJvbV91c2VyKCkgaXMgdGhlIGFjY2Vzc19vaygpLXNraXBwaW5nIHZhcmlhbnQg
-b2YKY29weV9mcm9tX3VzZXIoKS4gVGhlIHN5c2NhbGwgZmF1bHQgdHJhY2luZyBmZWF0dXJlIG1h
-cmtzCndyaXRlL3B3cml0ZTY0L21xX3RpbWVkc2VuZCBhcyBmYXVsdGFibGU6IGNoZWNrX2ZhdWx0
-YWJsZV9zeXNjYWxsKCkgc2V0cwp1c2VyX21hc2sgPSBCSVQoMSkgKHRoZSBidWZmZXIgYXJndW1l
-bnQpIGFuZCB1c2VyX2FyZ19zaXplID0gMiAodGhlIGNvdW50CmFyZ3VtZW50KS4gV2hlbiBzdWNo
-IGEgc3lzY2FsbCBpcyBmdHJhY2UtdHJhY2VkLCBzeXNfZmF1bHRfdXNlcigpIHRha2VzCnRoZSBz
-eXNjYWxsJ3MgKnJhdyogYXJndW1lbnQgYXJnc1sxXSAodGhlIGJ1ZmZlci1wb2ludGVyIHJlZ2lz
-dGVyIHZhbHVlKQphcyBhIHVzZXIgYWRkcmVzcyBhbmQsIHZpYSBzeXNjYWxsX2NvcHlfdXNlcl9h
-cnJheSgpLCBjYWxscwpfX2NvcHlfZnJvbV91c2VyKGJ1ZiwgYXJnc1sxXSwgc2l6ZSkgd2l0aCBu
-byBhY2Nlc3Nfb2soKS4gQmVjYXVzZSBhcmdzWzFdCmlzIHRoZSByYXcgcmVnaXN0ZXIgdmFsdWUg
-Y2FwdHVyZWQgYXQgdGhlIHN5c19lbnRlciB0cmFjZXBvaW50IChiZWZvcmUKdmZzX3dyaXRlIHBl
-cmZvcm1zIGl0cyBvd24gYWNjZXNzX29rIG9uIHRoZSBidWZmZXIpLCBhIHRyYWNlZCBwcm9jZXNz
-IGNhbgpzdXBwbHkgYSBrZXJuZWwgYWRkcmVzcyB0aGVyZTsgX19jb3B5X2Zyb21fdXNlciBkZXJl
-ZmVyZW5jZXMgaXQgZGlyZWN0bHkKYW5kIGNvcGllcyB1cCB0byBTWVNDQUxMX0ZBVUxUX1VTRVJf
-TUFYICgxNjUpIGJ5dGVzIG9mIGtlcm5lbCBtZW1vcnkgaW50bwp0aGUgcGVyLUNQVSB0cmFjZSBi
-dWZmZXIuIFRoZSBjb250ZW50IGFwcGVhcnMgaW4gdGhlIHN5c19lbnRlcl93cml0ZSB0cmFjZQpl
-dmVudCBhbmQgaXMgcmVhZGFibGUgZnJvbSAvc3lzL2tlcm5lbC90cmFjaW5nL3RyYWNlLiBUaGUg
-YWN0dWFsIHdyaXRlKCkKdGhlbiBmYWlscyB3aXRoIEVGQVVMVCAodmZzX3dyaXRlJ3MgYWNjZXNz
-X29rIHJlamVjdHMgdGhlIGtlcm5lbCBhZGRyZXNzKSwKYnV0IHRoZSBsZWFrIGhhcyBhbHJlYWR5
-IGhhcHBlbmVkIGluIHRoZSB0cmFjZXBvaW50LgoKVGhpcyBkaWZmZXJzIGZyb20gdGhlIHRyYWNl
-LmM6NjgzNiBzaXRlICh0cmFjaW5nX21hcmtfd3JpdGUpLCB3aGVyZSB0aGUKVkZTIGxheWVyJ3Mg
-YWNjZXNzX29rICh2ZnNfd3JpdGUgYXQgZnMvcmVhZF93cml0ZS5jOjY3NikgZ3VhcmRzIHRoZSBi
-dWZmZXIKYmVmb3JlIHRoZSBmdHJhY2UgLndyaXRlIGhhbmRsZXIgcnVucy4gSGVyZSB0aGUgbGVh
-ayBoYXBwZW5zIGF0IHRoZQpzeXNfZW50ZXIgdHJhY2Vwb2ludCwgd2hpY2ggZmlyZXMgKmJlZm9y
-ZSogdmZzX3dyaXRlJ3MgYWNjZXNzX29rLCBzbyB0aGVyZQppcyBubyB1cHN0cmVhbSBndWFyZCBv
-biBhcmdzWzFdLgoKNC4gQWZmZWN0ZWQgdmVyc2lvbnMKUHJlc2VudCBpbjogTGludXggNy4wLjEx
-LiA3LjIuMTA6IHN0aWxsIHByZXNlbnQsIHVuZml4ZWQgLS0gcmVwcm9kdWNlZCBvbgphbiA3LjIu
-MTAga2VybmVsLgoKNS4gVHJpZ2dlciAvIFByZWNvbmRpdGlvbnMKcm9vdCAvIENBUF9TWVNfQURN
-SU4gLyBDQVBfUEVSRk1PTiAobmVlZGVkIHRvIGVuYWJsZSBzeXNjYWxsIHRyYWNpbmcgdmlhCnRy
-YWNlZnM7IG9uIHRoZSB0ZXN0IG1hY2hpbmUgL3Byb2Mvc3lzL2tlcm5lbC9wZXJmX2V2ZW50X3Bh
-cmFub2lkID0gMiBhbmQKdHJhY2VmcyBpcyByb290LXdyaXRhYmxlKSwgcGx1cyBDT05GSUdfRlRS
-QUNFX1NZU0NBTExTLiBUaGUgdHJhY2VkIHByb2Nlc3MKY2FsbHMgd3JpdGUoZmQsIDxrZXJuZWwg
-YWRkcmVzcz4sIGNvdW50KSB3aGlsZSBzeXNfZW50ZXJfd3JpdGUgdHJhY2luZyBpcwplbmFibGVk
-LgoKNi4gUHJvb2Ygb2YgQ29uY2VwdApSZXByb2R1Y2VkIG9uIGEgcHJpc3RpbmUgTGludXggNy4y
-LjEwIGtlcm5lbAooQ09ORklHX0ZUUkFDRV9TWVNDQUxMUz15LCBjb25maWctb25seSkuIFRoZSB0
-cmFjZWQgcHJvY2VzcyBjYWxscwp3cml0ZShkZXZudWxsLCBsaW51eF9iYW5uZXJfYWRkciwgMjAw
-KTsgdGhlIHN5c19lbnRlcl93cml0ZSB0cmFjZSBldmVudAp0aGVuIGNvbnRhaW5zIHRoZSBsZWFr
-ZWQgbGludXhfYmFubmVyIHN0cmluZy4KCkNvbmNyZXRlIHJlcHJvZHVjZWQgZXZpZGVuY2UgKHZl
-cnNpb24gNy4yLjEwKToKLSBUaGUgc3lzX2VudGVyX3dyaXRlIHRyYWNlIGV2ZW50IGNvbnRhaW5z
-IHRoZSBsZWFrZWQgbGludXhfYmFubmVyIGhleAogIGJsb2IgYW5kIEFTQ0lJIHN0cmluZzsgZGVj
-b2RpbmcgbWF0Y2hlcyAvcHJvYy92ZXJzaW9uLgotIERlY29kZWQgbGVha2VkIGNvbnRlbnQgYmVn
-aW5zOiAiTGludXggdmVyc2lvbiA3LjIuMTAgKHJvb3RAeHh4KSAoZ2NjCiAgKFVidW50dSAxNS4y
-LjAtMTZ1YnVudHUxKSAuLi4iLCB3aGljaCBleGFjdGx5IG1hdGNoZXMgL3Byb2MvdmVyc2lvbiBv
-bgogIHRoZSB0ZXN0IGtlcm5lbC4KLSB3cml0ZSgpIGl0c2VsZiByZXR1cm5zIEVGQVVMVCAodmZz
-X3dyaXRlIGFjY2Vzc19vayByZWplY3RzIHRoZSBrZXJuZWwKICBhZGRyZXNzKSwgYnV0IHRoZSBr
-ZXJuZWwtbWVtb3J5IGNvcHkgaW50byB0aGUgdHJhY2UgYnVmZmVyIGhhcyBhbHJlYWR5CiAgY29t
-cGxldGVkIGluIHRoZSBzeXNfZW50ZXIgdHJhY2Vwb2ludC4KLSBLQVNBTiBkb2VzIG5vdCBjYXRj
-aCBpdCAoX19jb3B5X2Zyb21fdXNlciBwZXJmb3JtcyBubyBfX2FzYW5fbG9hZE4gb24KICB0aGUg
-c291cmNlKS4KCmBgYGMKLyoKICoKICogQnVpbGQ6IGdjYyAtTzIgLW8gcG9jX3N5c2NhbGxfZmF1
-bHRfbGVhayBwb2Nfc3lzY2FsbF9mYXVsdF9sZWFrLmMKICogUnVuOiAgIHN1ZG8gLi9wb2Nfc3lz
-Y2FsbF9mYXVsdF9sZWFrCiAqLwoKI2RlZmluZSBfR05VX1NPVVJDRQojaW5jbHVkZSA8c3RkaW8u
-aD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlIDx1bmlz
-dGQuaD4KI2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxlcnJuby5oPgojaW5jbHVkZSA8c3lz
-L3N5c2NhbGwuaD4KI2luY2x1ZGUgPHN5cy93YWl0Lmg+CiNpbmNsdWRlIDxzdGRpbnQuaD4KCiNk
-ZWZpbmUgVFJBQ0VGUyAiL3N5cy9rZXJuZWwvdHJhY2luZyIKI2RlZmluZSBFVlQgICAgIFRSQUNF
-RlMgIi9ldmVudHMvc3lzY2FsbHMvc3lzX2VudGVyX3dyaXRlIgoKc3RhdGljIGludCB3cml0ZV9m
-aWxlKGNvbnN0IGNoYXIgKnBhdGgsIGNvbnN0IGNoYXIgKnZhbCkKewoJaW50IGZkID0gb3Blbihw
-YXRoLCBPX1dST05MWSk7CglpZiAoZmQgPCAwKQoJCXJldHVybiAtMTsKCWlmICh3cml0ZShmZCwg
-dmFsLCBzdHJsZW4odmFsKSkgPCAwKSB7CgkJY2xvc2UoZmQpOwoJCXJldHVybiAtMTsKCX0KCWNs
-b3NlKGZkKTsKCXJldHVybiAwOwp9CgpzdGF0aWMgdW5zaWduZWQgbG9uZyBsb29rdXBfc3ltKGNv
-bnN0IGNoYXIgKnN5bSkKewoJRklMRSAqZiA9IGZvcGVuKCIvcHJvYy9rYWxsc3ltcyIsICJyIik7
-CglpZiAoIWYpCgkJcmV0dXJuIDA7CgljaGFyIGxpbmVbMjU2XSwgbmFtZVsxMjhdOwoJdW5zaWdu
-ZWQgbG9uZyBhOwoJY2hhciB0OwoJd2hpbGUgKGZnZXRzKGxpbmUsIHNpemVvZihsaW5lKSwgZikp
-CgkJaWYgKHNzY2FuZihsaW5lLCAiJWx4ICVjICUxMjdzIiwgJmEsICZ0LCBuYW1lKSA9PSAzICYm
-IGEgJiYgIXN0cmNtcChuYW1lLCBzeW0pKSB7CgkJCWZjbG9zZShmKTsKCQkJcmV0dXJuIGE7CgkJ
-fQoJZmNsb3NlKGYpOwoJcmV0dXJuIDA7Cn0KCnN0YXRpYyBjaGFyICpyZWFkX2ZpbGUoY29uc3Qg
-Y2hhciAqcGF0aCwgY2hhciAqYnVmLCBzaXplX3QgY2FwKQp7CglpbnQgZmQgPSBvcGVuKHBhdGgs
-IE9fUkRPTkxZKTsKCWlmIChmZCA8IDApCgkJcmV0dXJuIE5VTEw7CglzaXplX3QgdG90YWwgPSAw
-OwoJc3NpemVfdCBuOwoJd2hpbGUgKHRvdGFsIDwgY2FwIC0gMSAmJiAobiA9IHJlYWQoZmQsIGJ1
-ZiArIHRvdGFsLCBjYXAgLSAxIC0gdG90YWwpKSA+IDApCgkJdG90YWwgKz0gbjsKCWJ1Zlt0b3Rh
-bF0gPSAwOwoJY2xvc2UoZmQpOwoJcmV0dXJuIGJ1ZjsKfQoKaW50IG1haW4odm9pZCkKewoJaWYg
-KGdldHVpZCgpICE9IDApIHsKCQlmcHJpbnRmKHN0ZGVyciwgIlstXSBtdXN0IHJ1biBhcyByb290
-ICh0cmFjZWZzIGlzIHJvb3Qtb25seSwgcGVyZl9ldmVudF9wYXJhbm9pZD0yKVxuIik7CgkJcmV0
-dXJuIDE7Cgl9CgoJdW5zaWduZWQgbG9uZyBrYWRkciA9IGxvb2t1cF9zeW0oImxpbnV4X2Jhbm5l
-ciIpOwoJaWYgKCFrYWRkcikgewoJCWZwcmludGYoc3RkZXJyLCAiWy1dIGNhbm5vdCByZXNvbHZl
-IGxpbnV4X2Jhbm5lciBmcm9tIC9wcm9jL2thbGxzeW1zXG4iKTsKCQlyZXR1cm4gMTsKCX0KCXBy
-aW50ZigiWytdIHRhcmdldDogbGludXhfYmFubmVyIEAgMHglbHhcbiIsIGthZGRyKTsKCXByaW50
-ZigiWytdICAgKGtlcm5lbCBzdHJpbmc6IFwiTGludXggdmVyc2lvbiA3LnggKHJvb3RALi4uKSAu
-Li5cIilcbiIpOwoJcHJpbnRmKCJbK10gdnVsbiBzaXRlOiB0cmFjZV9zeXNjYWxscy5jOjY4NiBz
-eXNjYWxsX2NvcHlfdXNlcl9hcnJheSAtPiBfX2NvcHlfZnJvbV91c2VyIChubyBhY2Nlc3Nfb2sp
-XG5cbiIpOwoKCWludCBkZXZudWxsID0gb3BlbigiL2Rldi9udWxsIiwgT19XUk9OTFkpOwoJaWYg
-KGRldm51bGwgPCAwKSB7CgkJcGVycm9yKCJvcGVuIC9kZXYvbnVsbCIpOwoJCXJldHVybiAxOwoJ
-fQoKCWlmIChhY2Nlc3MoRVZUICIvZW5hYmxlIiwgV19PSykgIT0gMCkgewoJCWZwcmludGYoc3Rk
-ZXJyLCAiWy1dICVzL2VuYWJsZSBub3Qgd3JpdGFibGUgKCVzKVxuIiwgRVZULCBzdHJlcnJvcihl
-cnJubykpOwoJCWZwcmludGYoc3RkZXJyLCAiICAgIC0+IENPTkZJR19GVFJBQ0VfU1lTQ0FMTFMg
-b2ZmLCBvciB0cmFjZWZzIG5vdCBtb3VudGVkXG4iKTsKCQlyZXR1cm4gMTsKCX0KCgl3cml0ZV9m
-aWxlKFRSQUNFRlMgIi90cmFjZSIsICJcbiIpOwoKCWludCBwaXBlZmRbMl07CglpZiAocGlwZShw
-aXBlZmQpIDwgMCkgewoJCXBlcnJvcigicGlwZSIpOwoJCXJldHVybiAxOwoJfQoKCXBpZF90IGNo
-aWxkID0gZm9yaygpOwoJaWYgKGNoaWxkIDwgMCkgewoJCXBlcnJvcigiZm9yayIpOwoJCXJldHVy
-biAxOwoJfQoJaWYgKGNoaWxkID09IDApIHsKCQljbG9zZShwaXBlZmRbMV0pOwoJCWNoYXIgYzsK
-CQlyZWFkKHBpcGVmZFswXSwgJmMsIDEpOwkvKiB3YWl0IHVudGlsIHBhcmVudCBmaW5pc2hlZCBl
-bmFibGluZyAqLwoJCWNsb3NlKHBpcGVmZFswXSk7CgkJLyoKCQkgKiBUSEUgVFJJR0dFUjogd3Jp
-dGUoZmQsIEtFUk5FTF9BRERSLCAyMDApLgoJCSAqIFRoZSBidWYgYXJndW1lbnQgaXMgYSBrZXJu
-ZWwgYWRkcmVzcy4gVGhlIHN5c19lbnRlciB0cmFjZXBvaW50CgkJICogZmlyZXMgYmVmb3JlIHZm
-c193cml0ZSdzIGFjY2Vzc19vaywgYW5kIF9fY29weV9mcm9tX3VzZXIgY29waWVzCgkJICogZGly
-ZWN0bHkgZnJvbSB0aGF0IGtlcm5lbCBhZGRyZXNzIC0+IGtlcm5lbCBtZW1vcnkgZW50ZXJzIHRo
-ZSB0cmFjZS4KCQkgKiB3cml0ZSgpIHRoZW4gcmV0dXJucyBFRkFVTFQsIGJ1dCB0aGUgbGVhayBp
-cyBhbHJlYWR5IGNvbXBsZXRlLgoJCSAqLwoJCXN5c2NhbGwoX19OUl93cml0ZSwgZGV2bnVsbCwg
-KHZvaWQgKilrYWRkciwgMjAwKTsKCQlfZXhpdCgwKTsKCX0KCWNsb3NlKHBpcGVmZFswXSk7CgoJ
-Y2hhciBmaWx0ZXJbNjRdOwoJc25wcmludGYoZmlsdGVyLCBzaXplb2YoZmlsdGVyKSwgImNvbW1v
-bl9waWQgPT0gJWQiLCBjaGlsZCk7CglpZiAod3JpdGVfZmlsZShFVlQgIi9maWx0ZXIiLCBmaWx0
-ZXIpIDwgMCkKCQlmcHJpbnRmKHN0ZGVyciwgIlshXSBzZXQgZmlsdGVyIGZhaWxlZDogJXNcbiIs
-IHN0cmVycm9yKGVycm5vKSk7CgoJaWYgKHdyaXRlX2ZpbGUoRVZUICIvZW5hYmxlIiwgIjEiKSA8
-IDApCgkJZnByaW50ZihzdGRlcnIsICJbIV0gZW5hYmxlIGV2ZW50IGZhaWxlZDogJXNcbiIsIHN0
-cmVycm9yKGVycm5vKSk7CgoJd3JpdGUocGlwZWZkWzFdLCAieCIsIDEpOwoJY2xvc2UocGlwZWZk
-WzFdKTsKCXdhaXRwaWQoY2hpbGQsIE5VTEwsIDApOwoKCXdyaXRlX2ZpbGUoRVZUICIvZW5hYmxl
-IiwgIjAiKTsKCXdyaXRlX2ZpbGUoRVZUICIvZmlsdGVyIiwgIjAiKTsKCgljaGFyIGJ1Zls2NTUz
-Nl07CglpZiAoIXJlYWRfZmlsZShUUkFDRUZTICIvdHJhY2UiLCBidWYsIHNpemVvZihidWYpKSkg
-ewoJCWZwcmludGYoc3RkZXJyLCAiWy1dIGNhbm5vdCByZWFkIHRyYWNlXG4iKTsKCQlyZXR1cm4g
-MTsKCX0KCgljaGFyICpsaW5lID0gc3Ryc3RyKGJ1ZiwgIndyaXRlKGZkOiIpOwoJaWYgKCFsaW5l
-KSB7CgkJcHJpbnRmKCJbLV0gbm8gc3lzX2VudGVyX3dyaXRlIGV2ZW50IGNhcHR1cmVkLlxuIik7
-CgkJcHJpbnRmKCItLS0gdHJhY2UgZHVtcCAtLS1cbiVzXG4iLCBidWYpOwoJCXJldHVybiAxOwoJ
-fQoJY2hhciAqZW9sID0gc3RyY2hyKGxpbmUsICdcbicpOwoJaWYgKGVvbCkKCQkqZW9sID0gMDsK
-CglwcmludGYoIlsrXSBjYXB0dXJlZCBzeXNfZW50ZXJfd3JpdGUgZXZlbnQ6XG4gICAgJXNcblxu
-IiwgbGluZSk7CgoJaWYgKHN0cnN0cihsaW5lLCAiTGludXggdmVyc2lvbiIpKSB7CgkJcHJpbnRm
-KCJbIV0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09XG4iKTsKCQlwcmludGYoIlshXSBLRVJORUwgTUVNT1JZIExFQUsgQ09ORklSTUVE
-IGF0IHRyYWNlX3N5c2NhbGxzLmM6Njg2XG4iKTsKCQlwcmludGYoIlshXSB0cmFjZSBldmVudCBj
-b250YWlucyB0aGUga2VybmVsIGJhbm5lciBzdHJpbmcsXG4iKTsKCQlwcmludGYoIlshXSByZWFk
-IGZyb20gMHglbHggdmlhIF9fY29weV9mcm9tX3VzZXIoKSBXSVRIT1VUIGFjY2Vzc19vaygpXG4i
-LCBrYWRkcik7CgkJcHJpbnRmKCJbIV0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4iKTsKCQlyZXR1cm4gMDsKCX0KCgljaGFyICpx
-MSA9IHN0cmNocihsaW5lLCAnIicpOwoJaWYgKHExKSB7CgkJY2hhciAqcTIgPSBzdHJyY2hyKGxp
-bmUsICciJyk7CgkJaWYgKHEyID4gcTEpIHsKCQkJcHJpbnRmKCJbIV0gbGVha2VkIEFTQ0lJIHNl
-Z21lbnQ6IFwiJS4qc1wiXG4iLCAoaW50KShxMiAtIHExIC0gMSksIHExICsgMSk7CgkJCWlmIChz
-dHJzdHIocTEsICJMaW51eCIpIHx8IHN0cnN0cihxMSwgInZlcnNpb24iKSkgewoJCQkJcHJpbnRm
-KCJbIV0gS0VSTkVMIE1FTU9SWSBMRUFLIENPTkZJUk1FRFxuIik7CgkJCQlyZXR1cm4gMDsKCQkJ
-fQoJCX0KCX0KCXByaW50ZigiWz9dIG5vIHJlY29nbml6YWJsZSBrZXJuZWwgc3RyaW5nIC0gaW5z
-cGVjdCB0aGUgaGV4IGJsb2IgaW4gdGhlIGV2ZW50IGxpbmUgYWJvdmUuXG4iKTsKCXJldHVybiAy
-Owp9CmBgYAoKNy4gSW1wYWN0Cktlcm5lbCBtZW1vcnkgaW5mb3JtYXRpb24gbGVhazogdXAgdG8g
-MTY1IGJ5dGVzIHBlciBmYXVsdGFibGUtc3lzY2FsbAppbnZvY2F0aW9uIHZpYSBfX2NvcHlfZnJv
-bV91c2VyKCkgd2l0aCBubyBhY2Nlc3Nfb2soKSwgcmVhZGFibGUgZnJvbQovc3lzL2tlcm5lbC90
-cmFjaW5nL3RyYWNlLiAKClBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3UgbmVlZCBtb3JlIGRldGFp
-bC4KCkJlc3QgcmVnYXJkcywKSGFvcmFuIFdhbmcgPGhhb3JhbndhbmdzZWNAZ21haWwuY29tPgo=
+Hi Steven
+
+On 2026/10/15 07:05, Steven Rostedt wrote:
+> On Sun, 20 Sep 2026 12:21:39 +0800
+> Hao Ge <hao.ge@linux.dev> wrote:
+> 
+>> tracing_set_tracer() assigns the flags of the newly selected tracer
+>> with:
+>>
+>> 	tr->current_trace_flags = t->flags ? : t->tracer->flags;
+>>
+>> If the new tracer defines neither static flags nor default flags, like
+>> hwlat, irqsoff or wakeup, add_tracer() has no per instance flags copy
+>> for it, and both operands are NULL, so tr->current_trace_flags ends up
+>> being NULL as well.
+>>
+>> The ring buffer is not cleared when switching tracers: it is reset
+>> inside tracer_init(), after current_trace_flags was already assigned.
+>> If the buffer still holds function_graph entries of the previous
+>> tracer, printing one of them dereferences the NULL pointer. This was
+>> hit by cat trace during an ftrace stress test:
+>>
+>>   BUG: kernel NULL pointer dereference, address: 0000000000000000
+>>   #PF: supervisor read access in kernel mode
+>>   RIP: 0010:print_graph_function_event+0xe/0x20
+>>   Call Trace:
+>>    s_show+0x4d/0x110
+>>    seq_read_iter+0x2d4/0x490
+>>    seq_read+0x130/0x170
+>>    vfs_read+0xb5/0x370
+>>    ksys_read+0x6d/0xe0
+>>    do_syscall_64+0xbc/0x450
+>>
+>> The snapshot buffer is not reset at all, so this can be reproduced
+>> without a race:
+>>
+>>   echo function_graph > /sys/kernel/tracing/current_tracer
+>>   echo 1 > /sys/kernel/tracing/snapshot
+>>   echo hwlat > /sys/kernel/tracing/current_tracer
+>>   cat /sys/kernel/tracing/snapshot
+>>
+>> Rather than teaching every user of tr->current_trace_flags about this
+>> corner case, make sure every tracer has a set of flags:
+>> register_tracer() assigns the empty no_tracer_flags to tracers that
+>> define none. The existing users already handle opts == NULL, so these
+>> tracers keep behaving as before.
+> 
+> Nice catch, but unfortunately this patch causes this:
+> 
+> [   13.937660] WARNING: kernel/trace/trace.c:8123 at add_tracer.part.0+0x495/0x930, CPU#3: swapper/0/1
+> [   13.947844] Modules linked in:
+> [   13.949520] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7.3.0-rc7-test-00017-g26bd9362561c #543 PREEMPT(lazy) 
+> [   13.953831] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+> [   13.957723] RIP: 0010:add_tracer.part.0+0x495/0x930
+> [   13.959852] Code: 85 73 03 00 00 49 3b 6d 10 74 26 4c 89 e8 48 c1 e8 03 42 80 3c 38 00 0f 85 3c 03 00 00 4d 8b 6d 00 49 81 fd 28 5b d8 85 75 c5 <0f> 0b e9 73 ff ff ff 48 b8 00 00 00 00 00 fc ff df 49 8d 7d 18 48
+> [   13.967362] RSP: 0000:ffff888100e67bf0 EFLAGS: 00010246
+> [   13.969686] RAX: 1ffff11020012790 RBX: ffff888109fc62c0 RCX: ffff888109fc62d0
+> [   13.972635] RDX: ffff888109fc63c0 RSI: 1ffff1102013c3f2 RDI: ffff888100093c90
+> [   13.975626] RBP: ffffffff865c0640 R08: 1ffffffff1006101 R09: 1ffffffff0cb7da4
+> [   13.980293] R10: 0000000000000003 R11: fffffbfff0cb7da5 R12: ffff8881009e0000
+> [   13.983285] R13: ffffffff85d85b28 R14: fffffbfff0cb80db R15: dffffc0000000000
+> [   13.986297] FS:  0000000000000000(0000) GS:ffff8882b4cbf000(0000) knlGS:0000000000000000
+> [   13.989781] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   13.992213] CR2: 0000000000000000 CR3: 0000000005aec001 CR4: 0000000000172ef0
+> [   13.995221] Call Trace:
+> [   13.996469]  <TASK>
+> [   13.997680]  ? __pfx_init_hwlat_tracer+0x10/0x10
+> [   13.999725]  register_tracer+0x30f/0x470
+> [   14.001594]  ? __pfx_init_hwlat_tracer+0x10/0x10
+> [   14.003632]  init_hwlat_tracer+0x2c/0x120
+> [   14.005539]  ? __pfx_init_hwlat_tracer+0x10/0x10
+> [   14.007604]  do_one_initcall+0x11e/0x540
+> [   14.011129]  ? __pfx_do_one_initcall+0x10/0x10
+> [   14.013124]  ? __pfx_parse_args+0x10/0x10
+> [   14.015006]  ? kernel_init_freeable+0x4cb/0x710
+> [   14.017032]  ? rcu_is_watching+0x16/0xb0
+> [   14.018887]  kernel_init_freeable+0x65c/0x710
+> [   14.020853]  ? __pfx_kernel_init_freeable+0x10/0x10
+> [   14.023036]  ? _raw_spin_unlock_irq+0x38/0x60
+> [   14.024995]  ? __pfx_do_raw_spin_lock+0x10/0x10
+> [   14.027045]  ? __pfx_kernel_init+0x10/0x10
+> [   14.028894]  ? rcu_is_watching+0x16/0xb0
+> [   14.030718]  ? __pfx_kernel_init+0x10/0x10
+> [   14.032555]  kernel_init+0x21/0x150
+> [   14.034249]  ? __pfx_kernel_init+0x10/0x10
+> [   14.036086]  ret_from_fork+0x65c/0x9e0
+> [   14.037893]  ? __pfx_ret_from_fork+0x10/0x10
+> [   14.041417]  ? __switch_to+0x3ad/0xda0
+> [   14.043154]  ? __switch_to_asm+0x39/0x70
+> [   14.044953]  ? __switch_to_asm+0x33/0x70
+> [   14.046792]  ? __pfx_kernel_init+0x10/0x10
+> [   14.048646]  ret_from_fork_asm+0x1a/0x30
+>
+
+Thanks for catching this.
+
+I was confused at first why I didn't hit this in my testing.
+Then after reading the code, I found it needs an instance to
+exist before hwlat registers. So it's reliably reproducible with
+trace_instance=xxx on the cmdline.
+
+>>
+>> Fixes: e29aa918a928 ("tracing: Have function graph tracer define options per instance")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hao Ge <hao.ge@linux.dev>
+>> ---
+>>  kernel/trace/trace.c | 13 +++++++++----
+>>  1 file changed, 9 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>> index e4a490d3d08c..1bd757b65be4 100644
+>> --- a/kernel/trace/trace.c
+>> +++ b/kernel/trace/trace.c
+>> @@ -99,6 +99,12 @@ struct tracers {
+>>  	struct tracer_flags	*flags;
+>>  };
+>>  
+>> +/*
+>> + * Tracers that do not define their own flags use these empty flags,
+>> + * as tr->current_trace_flags must never be NULL.
+>> + */
+>> +static struct tracer_flags no_tracer_flags;
+>> +
+>>  /*
+>>   * To prevent the comm cache from being overwritten when no
+>>   * tracing is active, only save the comm when a trace event
+>> @@ -1485,9 +1491,11 @@ int __init register_tracer(struct tracer *type)
+>>  		}
+>>  	}
+>>  
+>> -	/* store the tracer for __set_tracer_option */
+>> +	/* All tracers must have flags, use the empty flags if none are defined */
+>>  	if (type->flags)
+>>  		type->flags->trace = type;
+>> +	else if (!type->default_flags)
+>> +		type->default_flags = &no_tracer_flags;
+>>  
+>>  	ret = do_run_tracer_selftest(type);
+>>  	if (ret < 0)
+>> @@ -8096,9 +8104,6 @@ static int add_tracer(struct trace_array *tr, struct tracer *tracer)
+>>  
+>>  	flags = tracer->flags;
+>>  	if (!flags) {
+>> -		if (!tracer->default_flags)
+>> -			return 0;
+>> -
+>>  		/*
+>>  		 * If the tracer defines default flags, it means the flags are
+>>  		 * per trace instance.
+> 
+> Instead of assigning to the tracer, how about just updating
+> tr->current_trace_flags?
+> 
+> Like this:
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 3b22e70c6016..b6b7d86866ef 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5001,6 +5001,12 @@ static void tracing_set_nop(struct trace_array *tr)
+>  
+>  static bool tracer_options_updated;
+>  
+> +/*
+> + * Tracers that do not define their own flags use these empty flags,
+> + * as tr->current_trace_flags must never be NULL.
+> + */
+> +static struct tracer_flags no_tracer_flags;
+> +
+>  int tracing_set_tracer(struct trace_array *tr, const char *buf)
+>  {
+>  	struct tracer *trace = NULL;
+> @@ -5090,6 +5096,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+>  	}
+>  
+>  	tr->current_trace_flags = t->flags ? : t->tracer->flags;
+> +	if (!tr->current_trace_flags)
+> +		tr->current_trace_flags = &no_tracer_flags;
+>  
+>  	if (trace->init) {
+>  		ret = tracer_init(trace, tr);
+> 
+> 
+> It appears to fix the issue you found without any other side effects.
+
+Right, I verified this patch; both the crash and WARN are gone.
+But I think we also need to add this logic inside run_tracer_selftest.
+
+@@ -1319,6 +1325,8 @@ static int run_tracer_selftest(struct tracer *type)
+ 
+        tr->current_trace = type;
+        tr->current_trace_flags = type->flags ? : type->default_flags;
++       if (!tr->current_trace_flags)
++               tr->current_trace_flags = &no_tracer_flags;
+
+
+> 
+> Care to send a v2?
+
+With the above changes, I'll send out a v2 shortly.
+
+Thanks
+Best Regard
+Hao
+
+> 
+> Thanks,
+> 
+> -- Steve
