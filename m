@@ -1,102 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9828930BBB1;
-	Thu, 15 Oct 2026 12:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50490522696;
+	Thu, 15 Oct 2026 12:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792067992; cv=none; b=oI2HSFGnoKIhkMiXZEB3lc9gOTSUYfHWdj2Z8r5U3/+w2h66vxCbAA/oYoutiqCMAaqauSE2FD6zbGRQh+tmEb62yJJNeiW+scYOySYXDSS+YwfuSV2Pm6ZpkGhC2KZZtvkzY/B4WzLLB2p3yblZMZKJAkeubh6HkHm07BMISvw=
+	t=1792068222; cv=none; b=FNZvssBtDQ73OIi0ThkWs2LKrIBQ2yBTvJjAj2sPRq7iZB9gQvMnMYkc3vRj44kK8xG+DXIP4zisf27PRDY3F/E4MmO9Y0IuwNw2NI+Kz1/YWqK74DtRRFjmOjIHJRr32xc6gEuFeuOZMUGexAax9ERY91F9u2eUQ6lujkO6kxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792067992; c=relaxed/simple;
-	bh=AE2/yoYhkqAS0x6CFKBByGroSum+FzNB8vNnE+mBSWs=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=kX4zo53+7HGzteNH2GpyBqz4vS/zujEnyM+w3Q60GOokF2r6HCZh1Ji2b3zmrlUAcHJxS3u9Bg9qvoh4PVCcKz85cCVDvluH6m7cwAuYEUZsd1GJnV4nP9nXtO0W+Jw46odnl6Wigj0k2oPWZMHCC3Qwf+2jLhoq5Y0cAED3yPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=af8zDVjF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792068222; c=relaxed/simple;
+	bh=UsMU3icn0QTwqlxftcsv20B9+dw26KCfY6bdqomu2P8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GIwJZW4OdDq1obRIG89c1QHV7T417VnB8Bk9AiAeM8EG7J+bD7qApLQ6lyFD3okLMjPJs5LzsRdJ8lZ4ou9jb9nx2/aAaKm8MrW/8dVXc/irNwJmz2yrRYJXQfbst5Y1UyasHz3R7Igtdkn03xuXY7Ob/SxD74A4pgL6pWhjrZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jqDnjaak; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="af8zDVjF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8C41F000C5;
-	Thu, 15 Oct 2026 12:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792067991;
-	bh=1K+l7oHTsRSVGW0EAoQEFweeHkw3d0xMxZTaZVWvwg8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=af8zDVjFxNfKvcrNKZi3C/r7JKJiaFd3kN5wqvORZm5ALMXJ/dXaigQBF8nP+o6ql
-	 WrHxTj7uKuChdio3zOwqxloU5x/C5rto31RwKIk43oHdc3o1BTVgxrIOnmOSMZ4/mN
-	 9MiNZHBtPZxzUyATfnnmd7FsOKCxI8s5QNey4DvG4E7pqGf5q9FonJa39cL8bEn7f5
-	 dFUBDGnFkt1gq20O2uM9i2y9ntyhj6qBBRh6H2HtPkbwRf/D9MdSH0NaHW+x0EQYGZ
-	 BcutS7Ncy/J8ulB3kUqJyM+0Oa5nNkoC+3SJZhQFWoimQtBcGHLd0zZkilVcFN9FLQ
-	 xE2rtFMlkRlJw==
-Message-ID: <sashiko-outbox-172823@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 -next 13/18] LSM: rename the inode posix acl hooks to
- path_*_acl hooks
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Cai Xinchen" <caixinchen1@huawei.com>
-Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
- Schumaker" <anna@kernel.org>
-In-Reply-To: <20261015125425.3246251-14-caixinchen1@huawei.com>
-References: <20261015125425.3246251-1-caixinchen1@huawei.com>
- <20261015125425.3246251-14-caixinchen1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 12:39:50 +0000
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jqDnjaak"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1792068214; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=WjpzvHXfTqZTVgcM3J2LTgAAvToedHvsUz3PQS7B0BU=;
+	b=jqDnjaakfeeDrFWAqWlyLxwKmFwAz5m/tw8e7wtB6qqXKmUdIUIBHpTbx6pCNpuevDBJ7QTXHSkaBWAe/zwnDIoddaB4JdkiAUdzSn5UyvpOf0q0JNv1fLI4bvZOYNl3xDltxb5GC4zljx2mra99JUEXQihCS5SAHdluL2WfYOc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=peng_wang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0XCrq.Qw_1792068212;
+Received: from localhost(mailfrom:peng_wang@linux.alibaba.com fp:SMTPD_---0XCrq.Qw_1792068212 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 15 Oct 2026 20:43:33 +0800
+From: Peng Wang <peng_wang@linux.alibaba.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>
+Cc: Peng Wang <peng_wang@linux.alibaba.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	He Rongguang <herongguang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: [RFC PATCH 0/2] tick/nohz: Add runtime control of non-idle tick suppression
+Date: Thu, 15 Oct 2026 20:43:07 +0800
+Message-ID: <cover.1792067271.git.peng_wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] smack: stale kernel-doc parameters in smack_path_set_acl
---
+Workloads and their need for periodic ticks can change after boot.
+This series lets userspace choose at runtime which CPUs in the boot-time
+nohz_full set retain the non-idle scheduler tick and which are permitted
+to stop it, while preserving the existing isolation configuration.
 
-commit 86b58223ea4147721a6935310d93abd33d140861
-Author: Cai Xinchen <caixinchen1@huawei.com>
+The first patch adds a per-CPU tick dependency; the second exposes a
+sysfs CPU list. Permission defaults to all nohz_full CPUs. Revocation
+uses the existing asynchronous kick. Idle tick suppression is unchanged,
+and policy persists across hotplug.
 
-LSM: rename the inode posix acl hooks to path_*_acl hooks
+Existing cpuset partition modes do not express this independent tick
+policy. Feedback on the proposed interface is welcome.
 
-This commit renames the inode_set_acl, inode_get_acl, and inode_remove_acl
-hooks to follow the path_* naming convention used for other hooks that take
-a struct path. It also updates the inline wrappers and the LSM
-implementations accordingly.
+Thanks,
+Peng
 
-> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> index 95799afbb5c9f..1a1e9f11939eb 100644
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
+Peng Wang (2):
+  tick/nohz: Add a policy dependency for full dynticks
+  cpu: Add sysfs control of full dynticks policy
 
-[ ... ]
+ .../ABI/testing/sysfs-devices-system-cpu      | 40 ++++++++++++
+ drivers/base/cpu.c                            | 46 ++++++++++++++
+ include/linux/tick.h                          |  8 ++-
+ include/trace/events/timer.h                  |  3 +-
+ kernel/time/tick-sched.c                      | 62 +++++++++++++++++++
+ 5 files changed, 156 insertions(+), 3 deletions(-)
 
-> @@ -1540,7 +1540,7 @@ static int smack_path_removexattr(const struct path=
- *path,
->  }
-> =20
->  /**
-> - * smack_inode_set_acl - Smack check for setting posix acls
-> + * smack_path_set_acl - Smack check for setting posix acls
->   * @idmap: idmap of the mnt this request came from
->   * @dentry: the object
->   * @acl_name: name of the posix acl
-> @@ -1548,7 +1548,7 @@ static int smack_path_removexattr(const struct path=
- *path,
->   *
->   * Returns 0 if access is permitted, an error code otherwise
->   */
-> -static int smack_inode_set_acl(const struct path *path,
-> +static int smack_path_set_acl(const struct path *path,
->  			       const char *acl_name, struct posix_acl *kacl)
->  {
 
-[Severity: Low]
-This isn't a bug, but the kernel-doc parameters for smack_path_set_acl do
-not match the function signature. The function takes a const struct path
-pointer, but the documentation still lists idmap and dentry.
-
-Should these stale parameters be updated to document the path parameter and
-prevent kernel-doc build warnings?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015125425.3246=
-251-1-caixinchen1@huawei.com?part=3D13
+base-commit: 0fcb05b72344f40806cbe810de8872f1698bf053
