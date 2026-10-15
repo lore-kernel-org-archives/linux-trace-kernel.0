@@ -1,137 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEAC4AA402;
-	Thu, 15 Oct 2026 10:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494C051B178
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 11:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792059584; cv=none; b=rUoaoMuo4k7FaHPHvVud2ft8hZ01kc71dPAaJ/jz1zT0FqkKvaojcMKWQdw7Sev37BRi2lhyXeGYmMVzJu/yx9q5wJk8VMUJ4Yu610eK2wu/daqUNLB3CCF9HrwI+xJsS5a2fgBf5i/us7Nrmtuqio/khFMvf9eaXvb+cEuvm9w=
+	t=1792064010; cv=none; b=b5Gc4/ja4YfOYO5PKbpF+p56hljINRj94jjjiilQAeCWMpLGs4oG77lKLNLaQPojkMd6fjDHM/y0+/YSHtkBxmMOmQPJxhSR3JPOPg5jagGHxR9hqt6fiWhRsfSEcZ+mKVEC8WMIyaifHsyB/tIKBhpPuJKFv090rX6Sx/Bl4Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792059584; c=relaxed/simple;
-	bh=X1ZF0LLFhol9KjZa8UOMA49zTXjSj4IBB1MItfhLxY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmaEG6uiz080RI0NBLwWvvOANXV74JwmPV7eZ9SXUk0miRK9QmFXoGrbh/3YNSXPtgwPBDHEzk9EbCe0Nkix6WX2U5RgWSK/2a5X8ODuS9s7TOk3FuSv4gGiPWm7CFSgTXRolGson3tDS8UgBUquK6wmwZEiK/TldoxP7s06Tog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnddUJuq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792064010; c=relaxed/simple;
+	bh=fgA/DOzOgyFrie7kteFJYTL3C5kdV1edAhl0ExNfxMo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eb/OnpVNnBj1WdTRpahOPsEFhaq9yqjAIsP2oxOkHxTv7PBHDxWEGaV/ZPQjApcpipeVziLhmmM2w0LcYz5gSdmQr2t0oIG1027pGIajA9kVIS7dd6/BOXBSh+ShYd99GMaYLsv21czeqjmMZ65M8mq9+K7d6WcRfFpaPygOQec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jvcRnbac; arc=none smtp.client-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnddUJuq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14E71F000C4;
-	Thu, 15 Oct 2026 10:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792059583;
-	bh=qbAnPY0k2WYMu3kZPxGLJ3wr9dUW8E/gwCbxpaea4sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SnddUJuqX5+NBkZhnXsn7mc4ngH6wAlCu9wJUk57h0U/UWcuFIjimHtQ/q4kRKRNR
-	 InvOJWrqeZUlSt3DmbV6HZAsbRWoITw2ZX8iR4uOv52jdzP6sJhNaiPhR8GO00UHjQ
-	 37AckAchSny9X0Dte5svmuh5TMJiF02buCPU2wQui06n8/mrYGyQnVwYnWlBVLWepR
-	 FrtUZM/kyaL3wYQJMqa4iHtYuiE800GbsZOP3+Mog4FaIgzXOcvBulYmrnEJYTKZ0x
-	 Noc+Atdme6XfPWktBhl9KbRNxzhfvJbzNYUPPjdSHDC8YOAG7hCIsvJQSFJIG4Xyqy
-	 yPCjdCQZ4ELPA==
-Date: Thu, 15 Oct 2026 11:19:39 +0100
-From: Lee Jones <lee@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Fengguang Wu <fengguang.wu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/histograms: Verify event_call identity when
- updating synth_event refcount
-Message-ID: <20261015101939.GF1182143@google.com>
-References: <20261014103012.744589-1-lee@kernel.org>
- <20261014141000.6091c0c5@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvcRnbac"
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a1ad49096fso28230885e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 04:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792063998; x=1792668798; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=34I5YMYZwWqkMn99f1ZPfTg1ZL3IhEhk5unHI1E/+wY=;
+        b=jvcRnbaca4mijtXgy2sa3Gp94txy/d0EKnvZ4QQZ68Cm58qXjGk9WCFz3GAPL/X3Hm
+         Y0pNagVqhAgwpvWDqWqwjn2IN/Q3Dj3NqcgqQIqnYSjgXgRC4oynQb7hkCN4bwVDpkcC
+         qntS+5bc15EI+EhM35SJncFhKG2QyobE+muOqcrqn1pg7TNUGUaWsLGqvzva1r/Jchww
+         mRjbF1vr0IbkgUDVViFNoJV0JI3gMbp7DgbKPVbcD7q2gARMj9UzyZA3i74YhE9+lL88
+         A552+3PvxSwNVH03gFhqccV1lpOZxuI2LCvsJ+BGioCqc0Oox6jZYcAtZS5A5qCbC+J2
+         RY8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792063998; x=1792668798;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=34I5YMYZwWqkMn99f1ZPfTg1ZL3IhEhk5unHI1E/+wY=;
+        b=Ql9DcqPliBE+6ZnNJNIPT6VyWypgbNXBPVFHI0dvLsrNxTjZdSDLrmf7MBNh5ZSGC/
+         cmVGKWpkF26ZadLDQXVl7/OQmygyhxgqoGjyHapb70DafyMQoN0FcRy2zYvDHwqUiFmV
+         keS9pt7nXc4r0bXwlXTrNmZMUzdn/cgx+jOvTGBnsVFi5nWrODp7rgYEXWNYe6VrvKZs
+         UIQd7iqBPwNgOAwQiWLs8Q2C0YmKrQU2jezwQaWv4iXuTC5L21TnjN/mJDTG6aSFeZA6
+         SBfUtixRJsuMcr4mCM/R+wQdIqZZVAHo6z7R9CcRwF1n+KMmdDItMxARRBnP2701ZrZo
+         GcOA==
+X-Forwarded-Encrypted: i=1; AKwUvBxRIFP3tNC9uTjvd2YMTsbOWh1MYS0ey2B1Zdnc3uFjTKHQv94haDvXnhKfb69OpBHh9bFGyrxLk7BV+fwUiodxKbo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJt9IEYcDftp7fggDDfPmm9ad3yRRG2BMKPw0F6SmgWO2HZzEzP
+	71TGCNafdfApzDgR8jlR1gcLpgoQ7joCvrQ+x+2fJKIvsfEK0YItaFoGEzE1GPlTO7J1dI0e/UZ
+	6kG/e41mmblDRsZGFxps5ag==
+X-Received: from wmbjq7.prod.google.com ([2002:a05:600c:55c7:b0:4a1:939b:a0c5])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:83cf:b0:4a1:ac66:604b with SMTP id 5b1f17b1804b1-4a1ac666a65mr165997135e9.1.1792063998106;
+ Thu, 15 Oct 2026 04:33:18 -0700 (PDT)
+Date: Thu, 15 Oct 2026 12:28:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261014141000.6091c0c5@gandalf.local.home>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261015112814.332084-1-vdonnefort@google.com>
+Subject: [PATCH v1] tracing/remotes: Fix TRACE_REMOTE build when TRACING=n
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, maz@kernel.org, oupton@kernel.org, 
+	kvmarm@lists.linux.dev, Vincent Donnefort <vdonnefort@google.com>, stable@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 14 Oct 2026, Steven Rostedt wrote:
+TRACE_REMOTE relies on tracefs, eventfs and ring-buffer which are only
+built and declared when TRACING is enabled. It is however possible for a
+config to have FTRACE=y TRACING=n and TRACE_REMOTE=y.
 
-> On Wed, 14 Oct 2026 10:30:12 +0000
-> Lee Jones <lee@kernel.org> wrote:
-> 
-> > In event_hist_trigger_parse() and hist_unreg_all(), the histogram
-> > registration and unregistration paths look up find_synth_event() using
-> > trace_event_name(file->event_call) and adjust se->ref if a match is
-> > found.
-> > 
-> > Because find_synth_event() only compares the event basename, registering
-> > or removing a histogram on a non-synthetic trace event whose basename
-> > matches a synthetic event erroneously modifies the synthetic event's
-> > reference count.  If a histogram is registered on the non-synthetic
-> > event before the synthetic event is created and removed afterwards,
-> > se->ref is decremented without a matching increment, allowing the
-> > synthetic event to be freed while an active histogram action still holds
-> > a pointer to it.
-> > 
-> > Verify that &se->call matches file->event_call before adjusting se->ref.
-> > 
-> > Fixes: 4b147936fa50 ("tracing: Add support for 'synthetic' events")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee@kernel.org>
-> 
-> Hi,
-> 
-> Thanks for the patch...
-> 
-> > ---
-> >  kernel/trace/trace_events_hist.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> > index 00a1d8522036..71b240b609ea 100644
-> > --- a/kernel/trace/trace_events_hist.c
-> > +++ b/kernel/trace/trace_events_hist.c
-> > @@ -6807,7 +6807,7 @@ static void hist_unreg_all(struct trace_event_file *file)
-> >  
-> >  			se_name = trace_event_name(file->event_call);
-> >  			se = find_synth_event(se_name);
-> > -			if (se)
-> > +			if (se && &se->call == file->event_call)
-> >  				se->ref--;
-> >  
-> >  			update_cond_flag(file);
-> > @@ -6926,7 +6926,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
-> >  		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
-> >  		se_name = trace_event_name(file->event_call);
-> >  		se = find_synth_event(se_name);
-> > -		if (se)
-> > +		if (se && &se->call == file->event_call)
-> >  			se->ref--;
-> >  		ret = 0;
-> >  		goto out_free;
-> > @@ -6962,7 +6962,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
-> >  
-> >  	se_name = trace_event_name(file->event_call);
-> >  	se = find_synth_event(se_name);
-> > -	if (se)
-> > +	if (se && &se->call == file->event_call)
-> >  		se->ref++;
-> >   out:
-> >  	if (ret == 0 && glob[0])
-> 
-> Instead of open coding each of these, can we add a new helper function:
-> 
-> struct synth_event *find_synth_event_call(struct trace_event_call *call)
-> {
-> 	struct synth_event *se;
-> 	const char *name;
-> 
-> 	name = trace_event_name(call);
-> 	se = find_synth_event(name);
-> 	return se && se->call == call ? se : NULL;
-> }
-> 
-> The above can be defined in trace_events_synth.c and exported like
-> find_synth_event() is.
-> 
-> Then we can remove the se_name from each of these functions.
+To fix this configuration, have TRACE_REMOTE select TRACING directly,
+just like other FTRACE options do and drop the TRACING dependency from
+NVHE_EL2_TRACING to avoid a circular Kconfig dependency.
 
-Thanks for the pointer.  I'll look into it.
+Cc: stable@vger.kernel.org
+Fixes: ea908a2b79c8 ("tracing: Add a trace remote module for testing")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202610142301.GBepPVmS-lkp@intel.com/
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ arch/arm64/kvm/Kconfig | 2 +-
+ kernel/trace/Kconfig   | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index 449154f9a485..e179b8ad79e8 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -74,7 +74,7 @@ if NVHE_EL2_DEBUG
+ 
+ config NVHE_EL2_TRACING
+ 	bool
+-	depends on TRACING && FTRACE
++	depends on FTRACE
+ 	select TRACE_REMOTE
+ 	default y
+ 
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 0ab5916575a9..6587450cfcd1 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1329,6 +1329,7 @@ source "kernel/trace/rv/Kconfig"
+ 
+ config TRACE_REMOTE
+ 	bool
++	select TRACING
+ 
+ config SIMPLE_RING_BUFFER
+ 	bool
+
+base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
 -- 
-Lee Jones
+2.56.0.385.gd3acb90ef8-goog
+
