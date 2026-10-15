@@ -1,110 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340FB486430
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 09:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEAC4AA402;
+	Thu, 15 Oct 2026 10:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792055702; cv=none; b=caQoDfcV++l7D+t76vBxNVdNJvyniZHsQiHAuiF4hNbIJygVzP0rkkz/h/y2UTS65CYmrYftKDG+zSnxUNhMtmFyk9AsMWNOybzCelhKOh+N3Amc81Ub8vH/DxNZY/OT5Ff2xgeZcGM9uLJ/fhZfUoxsgwwGDR740nh4kRqZjac=
+	t=1792059584; cv=none; b=rUoaoMuo4k7FaHPHvVud2ft8hZ01kc71dPAaJ/jz1zT0FqkKvaojcMKWQdw7Sev37BRi2lhyXeGYmMVzJu/yx9q5wJk8VMUJ4Yu610eK2wu/daqUNLB3CCF9HrwI+xJsS5a2fgBf5i/us7Nrmtuqio/khFMvf9eaXvb+cEuvm9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792055702; c=relaxed/simple;
-	bh=0132B7LGb3HiwNIjr35wD9w8AZxIM39Gsm6fo3MsvfM=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=PM/LM/qnk26RuKO7Nx70AgLi40rBXFoWIRpfoSraT1UNxb/1YA4XrknOHj1k0q71vzKg6jTxJiOCzFyC5kdL3nQ11VO3oZ6rVr53miN5/Vr+HDv5f0g/6/odE9Z7hSA+E1BKAG+XVA+4AYIb/qKiCQjc+kT/rpubbz8B9PIBjnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFzSt0eT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792059584; c=relaxed/simple;
+	bh=X1ZF0LLFhol9KjZa8UOMA49zTXjSj4IBB1MItfhLxY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmaEG6uiz080RI0NBLwWvvOANXV74JwmPV7eZ9SXUk0miRK9QmFXoGrbh/3YNSXPtgwPBDHEzk9EbCe0Nkix6WX2U5RgWSK/2a5X8ODuS9s7TOk3FuSv4gGiPWm7CFSgTXRolGson3tDS8UgBUquK6wmwZEiK/TldoxP7s06Tog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnddUJuq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFzSt0eT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B63A41F000C4;
-	Thu, 15 Oct 2026 09:14:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnddUJuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14E71F000C4;
+	Thu, 15 Oct 2026 10:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792055696;
-	bh=NI5yxjtswHkbQKevvBc0y/gM8BnyDpOI0nYqIugVNY8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NFzSt0eToa2papXdNz93SGlRno0hJWhBPvHyPXVNv5JzcmqVGVeqBIlK/z6uzxX9N
-	 kJGS8LpZSQFmdV9ze+N092mnOOEVTDhDOR25pybIwACc+UXMMN22CdH642/uQCT/3m
-	 dysqaLZW7bPlNOi4fJ+Y0oArhlxxnN5eiaDZyJRFIrK+r89AHBHwu5TFivD0Mr4XWD
-	 CE8GIEZVCKu/IV+O/uyzso8diQVjUGnKS5jrRMoSpST8MDr8u/qS0JFkmGPrzzpSwk
-	 uPb+4jK1+QF3c5eXI6Kt/tdW2q7dqXSh7e/+b32zInrUmJM72T8RHtq959mgzPjozG
-	 3YfxG4rBwaaMg==
-Message-ID: <sashiko-outbox-172552@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: guard trace_event_get_offsets() against an
- empty fields list
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haoran Wang" <haoranwangsec@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <6ad09433.a938ce27.3282d8.5f98@mx.google.com>
-References: <6ad09433.a938ce27.3282d8.5f98@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 09:14:55 +0000
+	s=k20260515; t=1792059583;
+	bh=qbAnPY0k2WYMu3kZPxGLJ3wr9dUW8E/gwCbxpaea4sE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SnddUJuqX5+NBkZhnXsn7mc4ngH6wAlCu9wJUk57h0U/UWcuFIjimHtQ/q4kRKRNR
+	 InvOJWrqeZUlSt3DmbV6HZAsbRWoITw2ZX8iR4uOv52jdzP6sJhNaiPhR8GO00UHjQ
+	 37AckAchSny9X0Dte5svmuh5TMJiF02buCPU2wQui06n8/mrYGyQnVwYnWlBVLWepR
+	 FrtUZM/kyaL3wYQJMqa4iHtYuiE800GbsZOP3+Mog4FaIgzXOcvBulYmrnEJYTKZ0x
+	 Noc+Atdme6XfPWktBhl9KbRNxzhfvJbzNYUPPjdSHDC8YOAG7hCIsvJQSFJIG4Xyqy
+	 yPCjdCQZ4ELPA==
+Date: Thu, 15 Oct 2026 11:19:39 +0100
+From: Lee Jones <lee@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Fengguang Wu <fengguang.wu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/histograms: Verify event_call identity when
+ updating synth_event refcount
+Message-ID: <20261015101939.GF1182143@google.com>
+References: <20261014103012.744589-1-lee@kernel.org>
+ <20261014141000.6091c0c5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261014141000.6091c0c5@gandalf.local.home>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] tracing: 0 bound rejects valid 32-bit BPF access to common_pid
---
+On Wed, 14 Oct 2026, Steven Rostedt wrote:
 
-commit 5b3e91afc57d96231d6f6b70552ed4d6b24e6d5c
-Author: Haoran Wang <haoranwangsec@gmail.com>
-Subject: tracing: guard trace_event_get_offsets() against an empty fields l=
-ist
+> On Wed, 14 Oct 2026 10:30:12 +0000
+> Lee Jones <lee@kernel.org> wrote:
+> 
+> > In event_hist_trigger_parse() and hist_unreg_all(), the histogram
+> > registration and unregistration paths look up find_synth_event() using
+> > trace_event_name(file->event_call) and adjust se->ref if a match is
+> > found.
+> > 
+> > Because find_synth_event() only compares the event basename, registering
+> > or removing a histogram on a non-synthetic trace event whose basename
+> > matches a synthetic event erroneously modifies the synthetic event's
+> > reference count.  If a histogram is registered on the non-synthetic
+> > event before the synthetic event is created and removed afterwards,
+> > se->ref is decremented without a matching increment, allowing the
+> > synthetic event to be freed while an active histogram action still holds
+> > a pointer to it.
+> > 
+> > Verify that &se->call matches file->event_call before adjusting se->ref.
+> > 
+> > Fixes: 4b147936fa50 ("tracing: Add support for 'synthetic' events")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee@kernel.org>
+> 
+> Hi,
+> 
+> Thanks for the patch...
+> 
+> > ---
+> >  kernel/trace/trace_events_hist.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> > index 00a1d8522036..71b240b609ea 100644
+> > --- a/kernel/trace/trace_events_hist.c
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -6807,7 +6807,7 @@ static void hist_unreg_all(struct trace_event_file *file)
+> >  
+> >  			se_name = trace_event_name(file->event_call);
+> >  			se = find_synth_event(se_name);
+> > -			if (se)
+> > +			if (se && &se->call == file->event_call)
+> >  				se->ref--;
+> >  
+> >  			update_cond_flag(file);
+> > @@ -6926,7 +6926,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+> >  		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+> >  		se_name = trace_event_name(file->event_call);
+> >  		se = find_synth_event(se_name);
+> > -		if (se)
+> > +		if (se && &se->call == file->event_call)
+> >  			se->ref--;
+> >  		ret = 0;
+> >  		goto out_free;
+> > @@ -6962,7 +6962,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+> >  
+> >  	se_name = trace_event_name(file->event_call);
+> >  	se = find_synth_event(se_name);
+> > -	if (se)
+> > +	if (se && &se->call == file->event_call)
+> >  		se->ref++;
+> >   out:
+> >  	if (ret == 0 && glob[0])
+> 
+> Instead of open coding each of these, can we add a new helper function:
+> 
+> struct synth_event *find_synth_event_call(struct trace_event_call *call)
+> {
+> 	struct synth_event *se;
+> 	const char *name;
+> 
+> 	name = trace_event_name(call);
+> 	se = find_synth_event(name);
+> 	return se && se->call == call ? se : NULL;
+> }
+> 
+> The above can be defined in trace_events_synth.c and exported like
+> find_synth_event() is.
+> 
+> Then we can remove the se_name from each of these functions.
 
-This commit adds a list_empty() check to trace_event_get_offsets() to preve=
-nt
-a wild pointer dereference when a tracepoint has no event-specific fields. =
-It
-returns 0 when the list is empty to prevent out-of-bounds reads.
+Thanks for the pointer.  I'll look into it.
 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 30c0ddf90887f..bf5377fbc7b71 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -241,6 +241,8 @@ int trace_event_get_offsets(struct trace_event_call *=
-call)
->  	struct list_head *head;
-> =20
->  	head =3D trace_get_fields(call);
-> +	if (list_empty(head))
-> +		return 0;
-
-[Severity: Medium]
-Will returning 0 here artificially shrink the context bound below the inher=
-ent
-8 bytes of struct trace_entry, potentially breaking 32-bit BPF accesses to
-common_pid?
-
-On 32-bit architectures where sizeof(void *) is 4, the verifier in
-tp_prog_is_valid_access() allows reads to offsets >=3D 4, making the pid fi=
-eld
-(offset 4, size 4) structurally valid to read:
-
-kernel/trace/bpf_trace.c:tp_prog_is_valid_access() {
-	if (off < sizeof(void *) || off >=3D PERF_MAX_TRACE_SIZE)
-		return false;
-    ...
-}
-
-If such a program is attached to a zero-field tracepoint,
-trace_event_get_offsets() will return 0. Then in __perf_event_set_bpf_prog(=
-):
-
-kernel/events/core.c:__perf_event_set_bpf_prog() {
-    ...
-		int off =3D trace_event_get_offsets(event->tp_event);
-
-		if (prog->aux->max_ctx_offset > off)
-			return -EACCES;
-    ...
-}
-
-Since max_ctx_offset for this read is 8, the condition evaluates to 8 > 0,
-falsely rejecting valid BPF tracepoint programs with -EACCES.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/6ad09433.a938ce27.3=
-282d8.5f98@mx.google.com?part=3D1
+-- 
+Lee Jones
