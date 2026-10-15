@@ -1,117 +1,119 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DE52AE76
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 02:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C291DEFE8;
+	Thu, 15 Oct 2026 04:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792031067; cv=none; b=nlqAz4WKZi4SVc9fD/ZP87cGONFiDHceBKIHpZFXyEC3Kp1fo826WzDDrPilh8gqUhX5MLJ0uTC4YoKTenqivYxQGnnzCSeysW8eIxjaIgK0livV7NSH/SC+gU9LdZGTXTAIoPsBwfMwuLXnUmINKLMhPpxmKKEhouCF1KIgAe0=
+	t=1792039629; cv=none; b=Ffhnmd+XK98xs9QajJUQm57irCNEKXpqFqlZ8U1J83/nmim9TJqES66SvgMLL9Hh0ZCE+ewu6spmw8g2Hb711Kqa5ikvHrT4gQ0l/2HpXTEKvRTUuk2N5Vvwsk3Na9NZE1ZoTMiusDHEjhLzs6JbKFlae11wLAc26FfBXJkrxWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792031067; c=relaxed/simple;
-	bh=KFkTlUboSzZbF/mPRaunuRcT5moLJ30RQFGCjhzRoJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j6KLsN96veNEKi2eL8dkNGiitvh5qbWVm59vjKiat6sZ3qR27AykakisPYoEuxaCAy42AxufVqBEPvwe8elNQLd54gQirJVlHwbMPqhyxniSoUVYTnz8sbjDnZUVPZxOfAHQ/FrUSGb/2TwSRaRs9/13k73locLTf/gnnur2/P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTY+Tn0I; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792039629; c=relaxed/simple;
+	bh=SOLAHGv8YI5B1XPV2y9FoUywMT1crTijEPj56jqv/Ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=auX+DWepg/4Z3B3RQdssuNlTurIuVnjzattKZoB0hCix4SAJ60WLxMPY5pnzxgw18j07ktvDToff/+1Dwqc47jlbKTdcAyRaQn3m2xeaURL6lm2Pdof9Gu01kuYrjLpxgPly2m8OwSWi160mCiVr6aJNlKR+2MhylXOUXAQoEJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9zOiDWm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTY+Tn0I"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ab4178ee33so2697082a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Oct 2026 19:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792031065; x=1792635865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=RiRTtTPlWRafdFL0/1n5rOtzrGPreou1ymHMTLM9OmY=;
-        b=cTY+Tn0Iz8z7D1fixzWeQW1MCKI3cAHOXvrvzFiKiIEmEj2GDpED2qeOHVkMe68Cp7
-         6qoG+g3DHpqiWcg6y9j2Jp5bChz5bmdo3NALvTqvCfUanDaHVhlv3Gk1RKNZ7lB+uJxj
-         qaIanFC43DGuhqvuz9ilFm7VucZd/DS3L1cHAmzXWsr+vVouulVfYRvmZ5MUbnx34WYK
-         pHa9kLm+kF6OBd0/w8JDJNumez9F8R4k7eZjJZM+xjl42pgeui7HKJGJMcY27KvLH+cM
-         FZLEqPY1InI+w3gw/jFWcX0Fka5qGHt7BqnICCZXKQEC5MW6teQerBgqEWPSMMhIAikf
-         zPvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792031065; x=1792635865;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=RiRTtTPlWRafdFL0/1n5rOtzrGPreou1ymHMTLM9OmY=;
-        b=ZlmQ1uXMZ5qWoH1nhm3ajtQvIf5+f/Cwv9dyg3bv9Tc7mSyP5UpQ5IxrN58vhY4HwB
-         bYxzo+EnwmWyndILZz2hro/O4nIx/daThs07/Y1SgpUCRrtGF2dvx90nRoQLCAhdr4/W
-         UK76AtzgrEZzjb5810k5RUTa5bt0uGgLSRPNxpAYMoTAsRXE6+lsS9Q2k9HXK7uJHjvz
-         vLjnQeuWUmZzlcd3+jqsLGMZNT+Jtp6tNo8nVcFyZvYG7CaOKG5fTSUaq+xnvMsYUo2u
-         B9GOzUmy0js+gDBit25PhuIEXxd9vRH9wN/vp6PN24aw9gjjPRdGNLQqrEucB2gehaex
-         Suhg==
-X-Forwarded-Encrypted: i=1; AKwUvBx5hOnHoApxjYfo7Xisvi4KotUJiexNng35y3lvN8xephvTvad68Jc8uRxSUA7ChoE49nmLTvX7WhOPVU29dLsCU0s=@vger.kernel.org
-X-Gm-Message-State: AFq9FYL0uqeT5OffDq7miIvSfsANGn03jvK1uZ2MmK0ehlk5ETZgE1bp
-	6YCIqycVMW8zSUMamuysX9vnWkE/oQHf5jLwQfP/Eeb07GIHgpk/dbGt
-X-Gm-Gg: AYBFou1G3UgSm/Dnl+GtiggNcY225s7WZtgXX6N9U4mFVxKZki7a4Ek0lO0hNaTT3XN
-	QhPFcOPTC/5rmB5gMSY1vMXEvVZp/MhASrys8bZF+rZ8m1UIQJDXi1MRUeHdQwFZEDsE3NM+lcW
-	wac0c4kEKEfqtMQES8ntfc3r+1z2VHeCzwh4nicMDtHucfljxuZsgWoUHLWjQebcAZEMKJ6q9nc
-	TXAWkJzXOv46baq9xK86hoCDMZrUshdW3u7gqD53L95R3zOqcT7uxFyvFjCFD7s70pb1AIMm5Kz
-	Jmqst6zyHwWXO651uruZvQWNP9mCN1/Thems9FwHA60IlK0p+JJhC9tsfrWES7xe98xtuV4dVRN
-	ulbOoz2FYBQttkZ7qPSH0SO8/wTiztEdaqZQPheop1ZIm9llCIpXqJzgYdgXFGwLHQrfgDmeTIH
-	XkrEl2e6s0dWb9KgQ7NdXqf8EyMFkqertrepegiCpFXNR6Q3Fy3dpVa1csjTw8zxU6dH0G
-X-Received: by 2002:a17:90a:4ca2:b0:3ab:7031:d962 with SMTP id 98e67ed59e1d1-3ab70412990mr9429218a91.41.1792031065580;
-        Wed, 14 Oct 2026 19:24:25 -0700 (PDT)
-Received: from localhost ([211.249.71.105])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ac945e7311sm1944388a91.4.2026.10.14.19.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 19:24:25 -0700 (PDT)
-From: Jaewon Jung <jaewon8868@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9zOiDWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5487F1F000C4;
+	Thu, 15 Oct 2026 04:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792039628;
+	bh=2qUN2dn+UdIt7G2FXNfytZpTzNCQoVGJzHQ0Niz3D8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=W9zOiDWmt3r7a1pEH9LVNDElXl1rsDMfFZmoMQ179ppBA6xpFs0FhcfehBnK0vhtW
+	 M8XqC38BAcsmq6BHhrusfLWlVDgi4QTb1A+/oA9QkfQu9sjTXZLipaNPnDahkokiK1
+	 9XsZthxRtScJlS/hE1jLbVS/Jd1pS72rx7MNkdanKZpYQvBl4UpyhPYagN4YxnF/iO
+	 imyOWQbHg/mqsai1tDMNG5GRG8/B88MMMThA9aB5qhMsJD1f5WsIS2Q5+fW13dpeZL
+	 HjLWZs/smlTWXc8XU/0v8b4JvQSz1bNruSOhzCiDsQbAVMDH/dp6+oidCOuyV3bYNd
+	 Cy5s3B43OZ93w==
+Date: Thu, 15 Oct 2026 12:27:05 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Roman Storozhenko <romeusmeister@gmail.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Add nice dependency
-Date: Thu, 15 Oct 2026 11:23:39 +0900
-Message-ID: <20261015022416.43534-1-jaewon8868@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH v2] riscv: mm: Trace TLB flush path selection
+Message-ID: <atBWGQ2iWpm2VKcY@xhacker>
+References: <20260830-tlb_tracepoint-v2-1-e3c88c24df5b@gmail.com>
+ <ar_Rathmoj2aP-H7@xhacker>
+ <CALsPMBOYQbro2gZTQR=DSUowmVDs9kujH4ua2UzCoHAQrncuiw@mail.gmail.com>
+ <asm95GdbmMpc81p3@xhacker>
+ <CALsPMBPMHc7q-YZvqLLYDSr5RfLmDRwBSq-TFeB8Fc8bPBjQGg@mail.gmail.com>
+ <as8NpaT0g9Tsl6PS@xhacker>
+ <CALsPMBOdy4ZDWfnkYokUFuB3UYPV27wTUpBCZaxLWEV10ZuS=A@mail.gmail.com>
+ <atAROTefufggiFPO@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <atAROTefufggiFPO@xhacker>
 
-The tests use nice but do not list it as a requirement.
-Add nice to the requirements so the tests are unresolved, not failed,
-when it is not available.
+On Thu, Oct 15, 2026 at 07:33:13AM +0800, Jisheng Zhang wrote:
+> On Wed, Oct 14, 2026 at 05:58:42PM +0200, Roman Storozhenko wrote:
+> > Hi Jisheng,
+> > 
+> > Thanks for the clarification.
+> > 
+> > Since Radim's tracepoint code-generation results are now part of this
+> > discussion, I've added him to Cc in case I misinterpret any aspect of
+> > that issue.
+> > 
+> > I agree with you on one point regarding the compiler overhead. Since
+> > the kernel supports older GCC versions, we have to take the code
+> > generated by those supported compilers into account today. So
+> > describing the issue simply as temporary was too strong.
+> > 
+> > However, I think there are two separate questions here: whether the
+> > event exposes useful information, and whether the disabled-path cost
+> > of its current implementation is acceptable.
+> > 
+> > Regarding kprobes, most of the raw fields in this event are indeed
+> > already arguments of `__flush_tlb_range()`. My point is not that these
+> > values are impossible to obtain dynamically.
+> > 
+> > Kprobes can be used to observe a very large part of the kernel. If the
+> > ability to reconstruct an event with kprobes were by itself sufficient
+> > reason not to add a tracepoint, the same reasoning would apply to many
+> > existing tracepoints.
+> > 
+> > The distinction I see here is between observing implementation details
+> > and exposing the semantic event directly.
+> > 
+> > For this case, the interesting information is not only `start`,
+> > `size`, `stride`, `cmask`, etc., but their correlation with the path
+> > Linux selected for that particular request:
+> > 
+> >         local
+> >         SBI RFENCE
+> >         cross-CPU call
+> > 
+> > Calculating the local case from `cmask` may be simple with the current
+> > implementation, but the tracing program still has to reproduce
+> > knowledge of the selection logic. Likewise, observing downstream
+> > functions ties the tracing program to the current call graph.
+> > 
+> > I also don't think `/proc/interrupts` provides equivalent information here.
+> > 
+> > The RISC-V IPI statistics are aggregate counters. In particular, Linux
+> > accounts `IPI_CALL_FUNC` as "Function call interrupts", while SBI
+> > RFENCE is handled below Linux by firmware; for example, OpenSBI
+> > implements the remote TLB operation using its own `IPI_TLB` event.
+> 
+> I think you misunderstood something. A riscv platform uses either
+> SBI RFENCE or IPI for tlb shootdown, and won't change. So you can
+> know whether the system is SBI RFENCE powered or IPI powered by
+> cat /proc/interrupts. It's much simpler.
 
-Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
----
- .../test.d/trigger/inter-event/trigger-onchange-action-hist.tc  | 2 +-
- .../test.d/trigger/inter-event/trigger-snapshot-action-hist.tc  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 55ab0270e5f7..04e6db2a734d 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger onchange action
--# requires: set_event "onchange(var)":README ping:program
-+# requires: set_event "onchange(var)":README ping:program nice:program
- # flags: instance
- 
- fail() { #msg
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 9eb37c2fa417..64bb0dca7e3b 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger snapshot action
--# requires: set_event snapshot events/sched/sched_process_fork/hist "onchange(var)":README "snapshot()":README ping:program
-+# requires: set_event snapshot events/sched/sched_process_fork/hist "onchange(var)":README "snapshot()":README ping:program nice:program
- # flags: instance
- 
- fail() { #msg
--- 
-2.43.0
-
+Aha, I missed aclint sswi case, if sswi, no explict /proc/interrupts
+difference between sswi and traditonal plic. However, whether TLB is
+powered by SBI RFENCE or IPI can still be known by checking
+"providing IPIs using SBI IPI extension" in dmesg.
