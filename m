@@ -1,123 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E775480974
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2641035E1BD;
+	Thu, 15 Oct 2026 22:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792095245; cv=none; b=nAdjJV/uIGZMCEexzeMxbncbVGP15WqNPUxIsFbb+K4vY8duUv+gVcrhExL3T+5wGnYnTy5ikJVF9olG4IOMnDe9UX/jQOeZdD72MX0ma5axkMYMwS7XQt/2QGyJo/72/EiBNTVWXzapXCQkAkUho3mlls9xJs9gxERmZIZTGbg=
+	t=1792102323; cv=none; b=H2pqDJ3vCTAQdDjyvrELlDDv3cou7/Q+us0kC2JaaobBiFbzsIJg6SJTQSG0ll8VCrOHNho/d64C93m0tYJvm4pHzE8s/nbEtPpxt2WbmyCNgN9E71r8mwBz6J9d+eEb4jv4b1FsVnuHpd07mvJ8wPrPb6602BS/QZbuPxWjLSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792095245; c=relaxed/simple;
-	bh=SnbfDLY4tTJqB1v8LhA/WdScgHkhh06wd2LjFSIubrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=trhbp82/Km7mFeMfFQPC1lTnmwO5nr/8BGRdFiqCzUWtNA5SdyZoLoSsQ3BZ/40a+WhDd8VvzdhvKNAGWrRwiYTjmhSjVyD8jtNa+HYXufx2S5JmsaENCq39k/lprec9abSW3HzvOCc6wqJxER9ockzFkVi1cN5JeAHH2xw8SoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NGd0BrrN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1792102323; c=relaxed/simple;
+	bh=dq/p4u7linPgVLY1Brp7JZ8eab86tJng+Xjb5bkWI1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YPojjzdQ+YoJyPlm7hnCcjKHZ895xrzAarhvclo9NWLDzyaTW8/+V7+CqLYJTXfli1W3XxjtMwyfTSl7sAMGfrPzGoId0O6/soUh7s9HVsnTs0c8mvmAYcESDF9pOA1LO+UaLu4Qj4TVe9vasMuhYXXgesMWHqelwEwq0g8Xkqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=PWICgcKI; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGd0BrrN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792095242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UYRSFyiULvh6szKRePAOtHKD+7/o0oF90IjOubYIGB4=;
-	b=NGd0BrrNNpUaHMu1wF9oB7YWTthf+jJTtMx5f6hyc54RnkIwCH/rSMl9ngcTLKjrWhqaDb
-	zH6LP1SPTj3Y2M+SaoKB0A3Fj3Y8BEqkC46kUu1RetC2nDRsCO6wCc2jIEtGTokfJsqCs3
-	ffUwcqng3WmNf7Vu9Pq24zjtipuWND0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-600-IdpI9AU0N62UZVqT0kj7fQ-1; Thu,
- 15 Oct 2026 20:13:56 +0000
-X-MC-Unique: IdpI9AU0N62UZVqT0kj7fQ-1
-X-Mimecast-MFC-AGG-ID: IdpI9AU0N62UZVqT0kj7fQ_1792095234
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A9BBB1955F1A;
-	Thu, 15 Oct 2026 20:13:53 +0000 (UTC)
-Received: from [100.91.18.181] (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D8397C6;
-	Thu, 15 Oct 2026 20:13:50 +0000 (UTC)
-Message-ID: <f12ad8ee-4cad-4c7e-a0c9-c22fe894f14c@redhat.com>
-Date: Thu, 15 Oct 2026 16:13:49 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="PWICgcKI"
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6F0F512017C;
+	Thu, 15 Oct 2026 22:11:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id A056E20027;
+	Thu, 15 Oct 2026 22:11:57 +0000 (UTC)
+Date: Thu, 15 Oct 2026 18:11:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wang Haoran <haoranwangsec@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, security@kernel.org
+Subject: Re: [BUG] tracing: __copy_from_user without access_ok leaks kernel
+ memory in syscall fault tracing
+Message-ID: <20261015181156.5da3446c@gandalf.local.home>
+In-Reply-To: <20261015094209.7177cf03@gandalf.local.home>
+References: <6ad07a3c.6e2bf4e6.f29cc.dd67@mx.google.com>
+	<2026101539-rinse-refocus-8203@gregkh>
+	<b2dd26de-efd0-4b8d-8086-ee5878a5703f@gmail.com>
+	<20261015094209.7177cf03@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] tick/nohz: Add runtime control of non-idle tick
- suppression
-To: Peng Wang <peng_wang@linux.alibaba.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
- He Rongguang <herongguang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- linux-api@vger.kernel.org, driver-core@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, cgroups@vger.kernel.org
-References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
- <8d10bb84-d312-4be0-8c43-ddd602850a1d@redhat.com>
- <atER8P0ws6Gg4GWE@MacBook-Pro.local>
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <atER8P0ws6Gg4GWE@MacBook-Pro.local>
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: R3_j0vS-EntWVeuR-fyQ0c8FyhFR4c4vatX88Nl2mPc_1792095234
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: A056E20027
+X-Stat-Signature: 69aqsdjr6nc531gxyn8jqaanre4q8ghm
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/K9s1xqpTyPJ6Pd+vXeE5IrQXp9CBxXJU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=PF//Fb1xpNwGDqKk2nkQ5NahuE3IUiO6W5R3UAHjP2Q=; b=PWICgcKI7WRypv4OKYiorxmKpSr2Gz3axazC0d3sAgyLFFxRyrWY0Zg8l3PDllBd3+D36hoTuQ8muDHDGTqqj0h7Y/dnCucNIqy/xN17Gt68Hu/7DfAGAD6NIZGOYHMF2ylmdu1HE+sR4K9ratT3F4sM8OFi43RG7T/sFfvzv9w=
+X-HE-Tag: 1792102317-932078
+X-HE-Meta: U2FsdGVkX1+9O7VU/j9erXqyODSDviBKd3JiStZqlEesqxXeju2ZkuCa3VF1DHRAEjJDNnkVpoMzizkitUs4es6+ibXxuRRyuPBSmH1JQ+hWnq+n4LS9wWHIEQCaH0juK3xRfvVubJSeX0wIM7zMJklJF0k+g9NUiNDd5cH6aPwIEUb6JJWxbHJ7NdKQyYTdonSTw78WALAjyYLhzQ37ygMEboUULEbJ3MJgFqLS99V3dwc8sH2j9HEfY7FxmuwIqGysCoL3SmGOQojzrlbsD8M5xtZqHUTdOAN6K0obg+y81AuGUhYKhUzCgLktIfgYfVP+6BHhCASktCqSNofE3qJu/9C5CqJlHHJmsofOTAMna8vp9F7RWNF0rqMuBzMftxN68+3WvtkFBwdkc46WKqlmtjMxll5KryZbf0hSz7w=
 
-On 10/15/26 1:48 PM, Peng Wang wrote:
-> On Thu, Oct 15, 2026 at 12:00:25PM -0400, Waiman Long wrote:
->> On 10/15/26 8:43 AM, Peng Wang wrote:
->>> Workloads and their need for periodic ticks can change after boot.
->>> This series lets userspace choose at runtime which CPUs in the boot-time
->>> nohz_full set retain the non-idle scheduler tick and which are permitted
->>> to stop it, while preserving the existing isolation configuration.
->>>
->>> The first patch adds a per-CPU tick dependency; the second exposes a
->>> sysfs CPU list. Permission defaults to all nohz_full CPUs. Revocation
->>> uses the existing asynchronous kick. Idle tick suppression is unchanged,
->>> and policy persists across hotplug.
->> So you are basically setting up more nohz_full CPUs than the system actually
->> needs to use at the moment and so want to disable nohz/tick part of
->> nohz_full CPUs that don't need it. Can you elaborate more about the problems
->> solve by introducing this new behavior?
-> Hi Waiman,
->
-> Yes. We have CPU-pinned workloads that benefit from reduced periodic
-> tick interference. The desired tick policy changes with CPU allocation.
->
-> With spare capacity, we allow selected nohz_full CPUs to stop their
-> tick. When capacity is fully allocated, we prefer to retain the
-> non-idle periodic tick across CPUs, avoiding an additional difference
-> in tick interference between housekeeping and nohz_full CPUs.
-What problem does that cause?
-> A CPU may still have only one runnable task in either case, so the
-> existing tick dependencies do not express this policy.
->
-> This series keeps the boot-time nohz_full CPU set, context tracking,
-> RCU offloading and housekeeping configuration unchanged. It only
-> controls whether those CPUs may stop their non-idle tick. The policy
-> can be changed without taking CPUs offline.
+On Thu, 15 Oct 2026 09:42:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-So the policy is to make the tick keeps running when there is only one 
-running task. Right? I am just not clear about the advantage of doing 
-that. Is there a use case that will require this particular feature? I 
-doubt this will get accepted unless there is a compelling reason to show 
-why we will want to have this feature.
+> On Thu, 15 Oct 2026 20:05:57 +0800
+> Wang Haoran <haoranwangsec@gmail.com> wrote:
+>=20
+> Please send this to linux-trace-kernel@vger.kernel.org.
+>=20
+> >  From ca4e2a6928bbd9010ebec967440517b08909b992 Mon Sep 17 00:00:00 2001
+> > From: Haoran Wang <haoranwangsec@gmail.com>
+> > Date: Thu, 15 Oct 2026 19:12:21 +0800
+> > Subject: [PATCH] tracing/syscalls: use copy_from_user for the faultable
+> >  =C2=A0syscall buffer
+> >=20
+> > Here is a working fix for the report. The leak is not strictly root
+> > only, so there is a security concern on systems that relax
+> > perf_event_paranoid. =20
+>=20
+> Leave out any security details.
+>=20
+> Simply state that the current check is missing the access_ok.
+>=20
+> That is, this is a very trivial bug with a simple fix and a simple change
+> log. It could be a security concern for machines that trust perf a bit too
+> much.
+>=20
+> But to go upstream, it still needs to follow the process.
+>=20
 
-Cheers,
-Longman
+Heh, I just noticed that you *did* Cc upstream (in this email!). But
+because you didn't have "[PATCH]" in the topic, it still didn't make it to
+patchwork.
 
+Can you please send a proper patch.
+
+Thanks,
+
+-- Steve
