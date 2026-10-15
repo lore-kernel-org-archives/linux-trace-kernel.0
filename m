@@ -1,169 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448C452BE3E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E775480974
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792094418; cv=none; b=aF5RgmM67xDEQieURAnowOBgXz7+lWKXOrOUghQ9a+wDXCE3APETxynf/jgGGRW+nI0XDn8K+df06HAHp0V/z0VocD/LrcmRVQ4/klPvIjfHJyJM/uPZlAEM7X1EPTvzb26u0ePHkAxuBcq2kiHu+6eAlyQj5QYuLdhPHcUGKdQ=
+	t=1792095245; cv=none; b=nAdjJV/uIGZMCEexzeMxbncbVGP15WqNPUxIsFbb+K4vY8duUv+gVcrhExL3T+5wGnYnTy5ikJVF9olG4IOMnDe9UX/jQOeZdD72MX0ma5axkMYMwS7XQt/2QGyJo/72/EiBNTVWXzapXCQkAkUho3mlls9xJs9gxERmZIZTGbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792094418; c=relaxed/simple;
-	bh=ZdV5BaJIv/kE8+aeDqKQTezDSi8KwwtxS2Acj5Oy3oY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FDhg6KjuV0GPnboLc738YgaxrdwxTGcrGmVOXg649AIcvbqU5wN8QZuHRR6R8NT1z9NPUzlCH6As4k8H3bWemkb7NJOTnLzEfu0z8jF7wnUmQLxOXbrevin0sx50HxLlJ68kG1tBwaj4nNYPp55vvS5KNdS4EtLLPFon1wBWXos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eskUSyVx; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1792095245; c=relaxed/simple;
+	bh=SnbfDLY4tTJqB1v8LhA/WdScgHkhh06wd2LjFSIubrE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trhbp82/Km7mFeMfFQPC1lTnmwO5nr/8BGRdFiqCzUWtNA5SdyZoLoSsQ3BZ/40a+WhDd8VvzdhvKNAGWrRwiYTjmhSjVyD8jtNa+HYXufx2S5JmsaENCq39k/lprec9abSW3HzvOCc6wqJxER9ockzFkVi1cN5JeAHH2xw8SoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NGd0BrrN; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eskUSyVx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGd0BrrN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792094413;
+	s=mimecast20190719; t=1792095242;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mJGzDfyie7g0wS80PP/jhU5GIsqjteLyTWE7rXt+IdM=;
-	b=eskUSyVx/r9BN4n6VBOV5j0Y13uEQjcPALTL5FLtgsm6ojcqLAfpErvaAREIYdMhUBwstI
-	3mexhucMYHU/mwzIBGSsT91lg3UwPJsp/jolOD1m5H81StFc2Lr3kIfZen/BcgysgNzGTL
-	eQjiW/GpjMXlVidWpTSi0faQLvrU+c8=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-627-_x05be_KMK6S_fFSCETYxw-1; Thu, 15 Oct 2026 20:00:09 +0000
-X-MC-Unique: _x05be_KMK6S_fFSCETYxw-1
-X-Mimecast-MFC-AGG-ID: _x05be_KMK6S_fFSCETYxw_1792094409
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-91b529a8610so38701836d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 13:00:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792094409; x=1792699209;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ARFS9DZSP4dQZPdHoed8w0xeryUKGtwmSApYre2IIFw=;
-        b=LkgDQWULpI49ElG0VkOM0viXAbRhK2prVgO3cp7EWk/CJvAYSvSQLyvNVnbk07mvbB
-         oTtTFTLXMxCx5GWipTXT4X9Y+AhLgEB8DnsujtPs2pQdlxwEbWJiHFyQESwYtrlVfK03
-         fSutq3vWSofTll3JkSjSa/kHpeZEk5c+0GcxA8lD/3cJ+Qy9NFjmox+/tpZm2+w2rnDn
-         RUwvayaRjHXUiLY51swUXASDGGpYEaJXIcpvzUUVBlXm1gkLUQl5Q9p1oZfIFPJ2NbXl
-         lMXVujQlXE8SkV6sehgN/E6XeL/FF2aMk/FO5PTeUZbPzT9hLPB7/1pIzcIff36VLQSi
-         bnjA==
-X-Gm-Message-State: AFq9FYLzaRIvNkSQeTanWhBDVC61SjP28RiXRN+bWYXJRz+Rgrz00CpN
-	2m2trg5wWV/ptJrvsyatO3cO6USdIIVIULaX1KpEmG6d9lxTeOQDTIdtvIxRSSiEpEtJPj2xd4s
-	mVibnQ1zQc/WXYsvgcXTG7f8Gx4saLOTU5X5xvhaI9wlPqOJn44cxegI9eUMFrZw2s3M28Z/1jg
-	==
-X-Gm-Gg: AYBFou1WiA3ZRUkvFpZxulvgb+bDJnrebPznY4Nj25jZZgSca6zjwqFyIUtRP6DvvDP
-	NNdguxSl+C1DoizacSYskOAr6qs5x9kVJwFOIbiarK2l96wzSSOFuLfEAgAK6gC9R6DlKLszvVm
-	4FTzYZjAdkLKaJxwWbz4gPYlVg2jwbDavf2J4ia/ev78A9qWLDS95iGqDJ4ue6CrDo86BQEadN7
-	B1L6KF6rSS8aI8xIFiAazirprTnROuDndDhRwX3p1UiPAs9ym7W8s6rV7XPVzetSscReZjGk1bR
-	1zWN86AZAaDvIJiHCAIR09rykgFEyIbh+LfUnUvZgfC1yHfzKLEcCY4x6IzyG4yWHYoSYBnPHEc
-	zQx4pcUADE3Rf31R5CptcGaicSObq0AP3bPXyyBx9noCnZ/nI6G8xMtY=
-X-Received: by 2002:a05:6214:518a:b0:911:9373:a171 with SMTP id 6a1803df08f44-91b5556ad41mr329656106d6.30.1792094408514;
-        Thu, 15 Oct 2026 13:00:08 -0700 (PDT)
-X-Received: by 2002:a05:6214:518a:b0:911:9373:a171 with SMTP id 6a1803df08f44-91b5556ad41mr329654976d6.30.1792094407643;
-        Thu, 15 Oct 2026 13:00:07 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb (71-34-25-140.mpls.qwest.net. [71.34.25.140])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91bcb8c4adasm4342446d6.1.2026.10.15.13.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 13:00:07 -0700 (PDT)
-Message-ID: <8ae7b1fc1ca394e1342688073359f97fc275f4b6.camel@redhat.com>
-Subject: Re: [PATCH v4 7/9] tracing/osnoise: Split out per-cpu variable
- resets
-From: Crystal Wood <crwood@redhat.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-Date: Thu, 15 Oct 2026 15:00:06 -0500
-In-Reply-To: <sashiko-outbox-171968@kernel.org>
-References: <20261014220759.908839-1-crwood@redhat.com>
-	 <20261014220759.908839-8-crwood@redhat.com>
-	 <sashiko-outbox-171968@kernel.org>
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44)
+	bh=UYRSFyiULvh6szKRePAOtHKD+7/o0oF90IjOubYIGB4=;
+	b=NGd0BrrNNpUaHMu1wF9oB7YWTthf+jJTtMx5f6hyc54RnkIwCH/rSMl9ngcTLKjrWhqaDb
+	zH6LP1SPTj3Y2M+SaoKB0A3Fj3Y8BEqkC46kUu1RetC2nDRsCO6wCc2jIEtGTokfJsqCs3
+	ffUwcqng3WmNf7Vu9Pq24zjtipuWND0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-600-IdpI9AU0N62UZVqT0kj7fQ-1; Thu,
+ 15 Oct 2026 20:13:56 +0000
+X-MC-Unique: IdpI9AU0N62UZVqT0kj7fQ-1
+X-Mimecast-MFC-AGG-ID: IdpI9AU0N62UZVqT0kj7fQ_1792095234
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A9BBB1955F1A;
+	Thu, 15 Oct 2026 20:13:53 +0000 (UTC)
+Received: from [100.91.18.181] (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D8397C6;
+	Thu, 15 Oct 2026 20:13:50 +0000 (UTC)
+Message-ID: <f12ad8ee-4cad-4c7e-a0c9-c22fe894f14c@redhat.com>
+Date: Thu, 15 Oct 2026 16:13:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: __UlScuSPFgyM8Uq93C60Fm3tayCCCnADDqJY0B1hv4_1792094409
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] tick/nohz: Add runtime control of non-idle tick
+ suppression
+To: Peng Wang <peng_wang@linux.alibaba.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+ He Rongguang <herongguang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, cgroups@vger.kernel.org
+References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
+ <8d10bb84-d312-4be0-8c43-ddd602850a1d@redhat.com>
+ <atER8P0ws6Gg4GWE@MacBook-Pro.local>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <atER8P0ws6Gg4GWE@MacBook-Pro.local>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: R3_j0vS-EntWVeuR-fyQ0c8FyhFR4c4vatX88Nl2mPc_1792095234
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2026-10-14 at 22:21 +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [High] tracing: Data race between osn_reset_cpu memset and NMI handler
-> --
->=20
-> commit 01cd6ef0e171fa1526bc0f401fc2072fe284c438
-> Author: Crystal Wood <crwood@redhat.com>
->=20
-> tracing/osnoise: Split out per-cpu variable resets
->=20
-> This commit splits out per-cpu variable resets by resetting the per-cpu
-> state every time a kthread is stopped or an fd is detached. It uses a bul=
-k
-> memset to clear the zero struct_group in osn_reset_cpu() to avoid zeroing
-> individual fields explicitly.
->=20
-> > diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.=
-c
-> > --- a/kernel/trace/trace_osnoise.c
-> > +++ b/kernel/trace/trace_osnoise.c
->=20
-> [ ... ]
->=20
-> > @@ -409,6 +379,36 @@ static struct osnoise_data {
-> >  #endif
-> >  };
-> > =20
-> > +static inline void osn_reset_cpu(int cpu)
-> > +{
-> > +=09struct osnoise_variables *osn =3D cpu_osn_var(cpu);
-> > +
-> > +=09WARN_ON(osn->kthread);
-> > +=09WARN_ON(osn->fdd);
-> > +=09memset(&osn->zero, 0, sizeof(osn->zero));
->=20
-> [Severity: High]
-> Does this non-atomic memset race with the NMI handler
-> trace_osnoise_callback()?
->=20
-> If osn_reset_cpu() is invoked from a remote CPU while the osnoise tracer =
-is
-> still globally active (for example, via timerlat_fd_release() or
-> stop_kthread()), it will concurrently overwrite osn->zero on the target C=
-PU.
->=20
-> The target CPU's NMI handler could be running concurrently and might bypa=
-ss
-> the sampling check if it reads it before or during the zeroing. This woul=
-d
-> lead to it executing operations like:
->=20
-> kernel/trace/trace_osnoise.c:trace_osnoise_callback() {
->     ...
->             local_inc(&osn_var->int_counter);
->     ...
-> }
->=20
-> A concurrent memset from another CPU destroys the target CPU's local_t
-> guarantees and atomic operations, corrupting per-CPU state via torn reads
-> and writes. This replaces what was previously a safe single-byte
-> osn_var->sampling =3D false assignment with a bulk memset over the entire
-> state.
+On 10/15/26 1:48 PM, Peng Wang wrote:
+> On Thu, Oct 15, 2026 at 12:00:25PM -0400, Waiman Long wrote:
+>> On 10/15/26 8:43 AM, Peng Wang wrote:
+>>> Workloads and their need for periodic ticks can change after boot.
+>>> This series lets userspace choose at runtime which CPUs in the boot-time
+>>> nohz_full set retain the non-idle scheduler tick and which are permitted
+>>> to stop it, while preserving the existing isolation configuration.
+>>>
+>>> The first patch adds a per-CPU tick dependency; the second exposes a
+>>> sysfs CPU list. Permission defaults to all nohz_full CPUs. Revocation
+>>> uses the existing asynchronous kick. Idle tick suppression is unchanged,
+>>> and policy persists across hotplug.
+>> So you are basically setting up more nohz_full CPUs than the system actually
+>> needs to use at the moment and so want to disable nohz/tick part of
+>> nohz_full CPUs that don't need it. Can you elaborate more about the problems
+>> solve by introducing this new behavior?
+> Hi Waiman,
+>
+> Yes. We have CPU-pinned workloads that benefit from reduced periodic
+> tick interference. The desired tick policy changes with CPU allocation.
+>
+> With spare capacity, we allow selected nohz_full CPUs to stop their
+> tick. When capacity is fully allocated, we prefer to retain the
+> non-idle periodic tick across CPUs, avoiding an additional difference
+> in tick interference between housekeeping and nohz_full CPUs.
+What problem does that cause?
+> A CPU may still have only one runnable task in either case, so the
+> existing tick dependencies do not express this policy.
+>
+> This series keeps the boot-time nohz_full CPU set, context tracking,
+> RCU offloading and housekeeping configuration unchanged. It only
+> controls whether those CPUs may stop their non-idle tick. The policy
+> can be changed without taking CPUs offline.
 
-Ugh... so on one hand I wouldn't call this "high priority" given the way
-the data is generally read as deltas.  Most of it doesn't really need to
-be reset.  It's not limited to NMIs though, as we don't disable
-interrupts or even preemption here.
+So the policy is to make the tick keeps running when there is only one 
+running task. Right? I am just not clear about the advantage of doing 
+that. Is there a use case that will require this particular feature? I 
+doubt this will get accepted unless there is a compelling reason to show 
+why we will want to have this feature.
 
-On the other hand, now that sampling is unconditionally cleared in
-stop_kthread() as of patch 3, we might be able to just drop this
-patch... but not without a respin unfortunately.  There was apparently a
-patch shuffling accident in patch 3 where tlat->timer is used after
-memset() clears it, which this patch undoes.  I'm surprised Sashiko
-didn't mention that... v5 coming.
-
--Crystal
+Cheers,
+Longman
 
