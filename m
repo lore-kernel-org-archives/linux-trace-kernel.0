@@ -1,37 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD419349B1C;
-	Fri, 16 Oct 2026 14:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6F1C5D59;
+	Fri, 16 Oct 2026 14:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792160590; cv=none; b=X7XSIo3p3dJEv46Y5tKBN5HUo2xDar0f1qKLuWPf6ESTT1IPBO4BMbWqmTfwKTt5zVjjvUtgmPEBYUFrQlc81Mfdpr0EkmeOz3x+h4TLe9AymYCF41kQO9tjpChikyxss0eKjPPfm2cXcc/DMuTjHObdILrEAB2Fd9EvMn6NEx0=
+	t=1792161404; cv=none; b=DFDx+xfLY4jLLdZs05mkf75slW+YRpKYRx2JK1dgPJAxKaruy4xrMD7whbkbuKcdZ0vpoQ9jLtIYW1vxgdM4S5meiQQcSJmKqTj4FlvBIWdbva+WOwjUD4UCBwx6L8zORijN/M4nUY3QrQSxMP8tV9m4SJbcBVw1+FHWnHTCw4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792160590; c=relaxed/simple;
-	bh=BCADDz5G5s4Yo+AnMmRVg2wZjXt7LMOXmKfT1IZuQz0=;
+	s=arc-20240116; t=1792161404; c=relaxed/simple;
+	bh=iI4pZCXn3hv206mPzbOl0RjtlQ0hW/SDzm4rbmdcuIQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O5DOmQlATmUuvexDPtABRDJWsKQWk5FzZpZAo4cOvtbmOGCNTVKUzmAQf8xiuDjpGRmoSfvbCVU98Crqa3VTIheLCENtYEgBYjNK1eGlBZeccbF8Bk54UbnKr5w3C193zhCp1gj5xr7w8q2NwBcB7wkohzZrw9RcCyXSe7mrZeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=fIaoVocz; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=BUrYLeH+SDv9NFbqjcy9Yu3R+Ufe+eKpw5QDk4UZyQAV7GlUH5at8Smbu0EQ2ecSPwFH7snKxCWiEyB7U8sT4fpB4Gqk679mDZQG/fOg5o3aWLXebEPmCH5xnaS2ETOUJ2HARaE88quBRC48LlD2RCNI57jsHa9GOBvq+yE+oP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=CP9AL7U7; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="fIaoVocz"
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 47E67A0455;
-	Fri, 16 Oct 2026 14:22:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 82D0630;
-	Fri, 16 Oct 2026 14:22:57 +0000 (UTC)
-Date: Fri, 16 Oct 2026 10:22:56 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="CP9AL7U7"
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 07FE3A804F;
+	Fri, 16 Oct 2026 14:36:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 81ACC20025;
+	Fri, 16 Oct 2026 14:36:31 +0000 (UTC)
+Date: Fri, 16 Oct 2026 10:36:30 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Haoran Wang <haoranwangsec@gmail.com>, Beau Belgrave
- <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH] tracing: guard trace_event_get_offsets() against an
- empty fields list
-Message-ID: <20261016102249.090d33af@gandalf.local.home>
-In-Reply-To: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
-References: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
+To: Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: mm: Trace TLB flush path selection
+Message-ID: <20261016103630.6e8fbaa5@gandalf.local.home>
+In-Reply-To: <20260830-tlb_tracepoint-v2-1-e3c88c24df5b@gmail.com>
+References: <20260830-tlb_tracepoint-v2-1-e3c88c24df5b@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,74 +42,148 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: wqs95jcojisnrga6piyeatb6zm9pumio
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 82D0630
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 81ACC20025
+X-Stat-Signature: 5kd7xpmj94wom6f13a3nzhpwer9ppc4n
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19y9wrorSJylcTl9JtRKwKEELZr+rZ/x5s=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Rwuo9Qyliadw2BRQpfpTJ8iXT6aJ60v+R+Sud5jveq0=; b=fIaoVoczu03OxeqHqX1GYR3MZblaIOy90B1g3UldP5gD3/X16tHhcFjzcyIOd6pgYNKLhTP1joMB+Dh06MY/ekgDxux/q6xu64TBTjE71liy/ZugWMD80zvPPx74dVL63e0b4w8aa8bldrhxCejyvvwrZ2cFgOKWGt+GUdDWUAg=
-X-HE-Tag: 1792160577-126157
-X-HE-Meta: U2FsdGVkX1+9yXGTHr+9htw8aAuopzhJTXRxp42ysSj9OdBsjJ/LZ54C0tXZ2arD+4ctPUqi2XlptSLf47EiAtmrnHh1eTU80WSvpmdpwapOavOuYhe+oUEa7lQy4GtMq3xi8MlUOMGE3ev4f5e0wfKTVejYthubShg8QDMTEJhZs2Ue/gbSk0yTzyTOP9XQlqtSfzMOC10Xck/KMVsepVYSNKol0KVSGmkYPaqi/auzMmvqP0NPn2vBAYMHdY+Sor4TixqvM8o7eCqKiuJLgMHr8uGIosCCXaaZAMjovlItraPuox4ycOwGLeq8NNE8Hm7GlB42MvqjAzEPlhylBU1lYM786FABAf635yfYrocb4w7XYP5LRQfEYLVVB2Lt
+X-Session-ID: U2FsdGVkX18DQ2Sg28rgCm3NMcM3cSj9JxZ4shAURIU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=XayFsB0UYYNiwlWPoYy9LvsYKkpCk01XOKeKnrFSCsM=; b=CP9AL7U7qQNiWCIKUFoEI2HdBsLLItr3LxKsiyw+u6pPPsmUZjL0T2QK0yHC46relvDFFOVAjxnRJxu9B1qZHCKUhSkTyyR1aHWDtEvWjeczBgPZDxAYaK0FczWnEbIZlDPsnuupqs6IqvYK+WdvlPVGPhMZ0ee3cALRSbWS2Oo=
+X-HE-Tag: 1792161391-659312
+X-HE-Meta: U2FsdGVkX19RkqBnA8Qs0BgcO6/2vYluHNQ46qK5m5KbevaiMSVLZ2UOeBHO/zjU6+pF8Bm7OVYUXAcwW7jQ9lv1TKaNRWV82rWAIFKevurwPGTNbz+75GjslXU4d/MY3zm5bVHnrLe/m7q0Kr8oVdlxSgSoJGzvH7/Aq7/wrpjz/40UX/t385X6QsgPrJK5/OVyACPqLqdCl/ejDMyIDsV8hjAkRh7a2GhbKshAIUMUsZ9ZiL9+iD6DOM+FaWVAb9etsFd7lnP77gS9Hu5IVPn5Ggvjm0kd6WRYvnU9QX41H0dOzo62ArdL6P3Bk0LGnx2E0dS2RkKVek+CLqaJ9D9+NcMTu7EN
 
-On Fri, 16 Oct 2026 17:47:51 +0800
-Haoran Wang <haoranwangsec@gmail.com> wrote:
+On Sun, 30 Aug 2026 16:36:37 +0200
+Roman 'Hedin' Storozhenko <romeusmeister@gmail.com> wrote:
 
-> From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-> From: Haoran Wang <haoranwangsec@gmail.com>
-> Date: Fri, 16 Oct 2026 16:30:00 +0800
-> Subject: [PATCH] tracing: guard trace_event_get_offsets() against an empty fields list
-> 
-> trace_event_get_offsets() dereferences the first entry of the fields list
-> returned by trace_get_fields() via list_first_entry().  list_first_entry()
-> then returns the list head itself, and tail->offset + tail->size reads past
-> it.  The corrupted result is used as the BPF context-size bound in
-> __perf_event_set_bpf_prog():
-> 
->     int off = trace_event_get_offsets(event->tp_event);
->     if (prog->aux->max_ctx_offset > off)
->             return -EACCES;
-> 
-> so a context-reading BPF program that ought to be rejected can instead be
-> attached to a zero-field tracepoint (which still carries
-> TRACE_EVENT_FL_TRACEPOINT) and read adjacent kernel memory when the
-> tracepoint fires, bypassing the verifier's context-size confinement.
-> 
-> This is reachable through user_events: a user can register an event with no
-> fields (e.g. `echo u:my_event > dynamic_events`), which leaves user->fields
-> empty while the event remains a BPF-attachable tracepoint,
-> trace_get_fields() then routes through user_event_get_fields() to that
-> empty list. The corrupted
-> result after list_first_entry is then used as the BPF context-size bound in
-> __perf_event_set_bpf_prog(), which lets context-reading BPF programs attach
-> to a zero-field tracepoint when they should be rejected with -EACCES.
-> 
+> diff --git a/include/trace/events/riscv_tlb.h b/include/trace/events/riscv_tlb.h
 
-Hmm, so user events can have empty events. :-/
+Please do not put architecture specific events in include/trace.
 
-Beau, Is that a thing?
+They belong in the architecture.
+
+See the example code in samples/trace_events/trace-events-sample.[ch]
+as well as the Makefile there on how to put trace events in directories
+outside of include/trace/
+
+Thanks,
 
 -- Steve
 
-
-> Add list empty check to fix this bug.
-> 
-> Signed-off-by: Haoran Wang <haoranwangsec@gmail.com>
-> ---
->  kernel/trace/trace_events.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -239,6 +239,10 @@ int trace_event_get_offsets(struct trace_event_call *call)
->  	struct list_head *head;
->  
->  	head = trace_get_fields(call);
+> new file mode 100644
+> index 000000000000..3eff171ec54f
+> --- /dev/null
+> +++ b/include/trace/events/riscv_tlb.h
+> @@ -0,0 +1,113 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM riscv_tlb
 > +
-> +	if (list_empty(head))
-> +		return sizeof(struct trace_entry);
+> +#if !defined(_TRACE_RISCV_TLB_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_RISCV_TLB_H
 > +
->  	/*
->  	 * head->next points to the last field with the largest offset,
->  	 * since it was added last by trace_define_field()
+> +#include <linux/cpumask.h>
+> +#include <linux/tracepoint.h>
+> +
+> +#ifndef _TRACE_RISCV_TLB_ENUMS
+> +#define _TRACE_RISCV_TLB_ENUMS
+> +
+> +enum riscv_tlb_flush_scope {
+> +	RISCV_TLB_FLUSH_SCOPE_SINGLE,
+> +	RISCV_TLB_FLUSH_SCOPE_RANGE,
+> +	RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE,
+> +	RISCV_TLB_FLUSH_SCOPE_ALL,
+> +};
+> +
+> +enum riscv_tlb_flush_path {
+> +	RISCV_TLB_FLUSH_PATH_LOCAL,
+> +	RISCV_TLB_FLUSH_PATH_SBI_RFENCE,
+> +	RISCV_TLB_FLUSH_PATH_CROSS_CPU_CALL,
+> +};
+> +
+> +#endif /* _TRACE_RISCV_TLB_ENUMS */
+> +
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_SINGLE);
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_RANGE);
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE);
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_ALL);
+> +
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_PATH_LOCAL);
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_PATH_SBI_RFENCE);
+> +TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_PATH_CROSS_CPU_CALL);
+> +
+> +#define show_riscv_tlb_flush_scope(scope) \
+> +	__print_symbolic(scope, \
+> +		{ RISCV_TLB_FLUSH_SCOPE_SINGLE,        "single" }, \
+> +		{ RISCV_TLB_FLUSH_SCOPE_RANGE,         "range" }, \
+> +		{ RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE, "address-space" }, \
+> +		{ RISCV_TLB_FLUSH_SCOPE_ALL,           "all" })
+> +
+> +#define show_riscv_tlb_flush_path(path) \
+> +	__print_symbolic(path, \
+> +		{ RISCV_TLB_FLUSH_PATH_LOCAL,          "local" }, \
+> +		{ RISCV_TLB_FLUSH_PATH_SBI_RFENCE,     "sbi-rfence" }, \
+> +		{ RISCV_TLB_FLUSH_PATH_CROSS_CPU_CALL, "cross-cpu-call" })
+> +
+> +/*
+> + * Record the invalidation request received by the RISC-V architecture code
+> + * and the path selected by Linux.
+> + *
+> + * The target CPU mask represents the CPUs Linux intends to cover for the
+> + * request. It can be correlated with per-CPU activity, but does not describe
+> + * which harts ultimately performed an invalidation.
+> + *
+> + * The ASID is hardware-visible and may be reused. It must not be treated as a
+> + * persistent identifier for an mm.
+> + *
+> + * The stride describes the invalidation granularity supplied to the RISC-V
+> + * implementation. SBI RFENCE receives start, size and ASID, but not stride.
+> + *
+> + * The event is emitted at path selection time. For SBI RFENCE, it records
+> + * delegation of the request to firmware; firmware processing after that
+> + * point is outside the event's scope.
+> + */
+> +TRACE_EVENT(riscv_tlb_flush_path,
+> +	TP_PROTO(unsigned long start, unsigned long size,
+> +		 unsigned long stride, unsigned long asid, bool has_mm,
+> +		 const struct cpumask *cmask,
+> +		 enum riscv_tlb_flush_scope scope,
+> +		 enum riscv_tlb_flush_path path),
+> +
+> +	TP_ARGS(start, size, stride, asid, has_mm, cmask, scope, path),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, start)
+> +		__field(unsigned long, size)
+> +		__field(unsigned long, stride)
+> +		__field(unsigned long, asid)
+> +		__field(bool, has_mm)
+> +		__field(unsigned int, target_mask_weight)
+> +		__cpumask(target_cpus)
+> +		__field(u8, scope)
+> +		__field(u8, path)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->start = start;
+> +		__entry->size = size;
+> +		__entry->stride = stride;
+> +		__entry->asid = asid;
+> +		__entry->has_mm = has_mm;
+> +		__entry->target_mask_weight = cpumask_weight(cmask);
+> +		__assign_cpumask(target_cpus, cpumask_bits(cmask));
+> +		__entry->scope = scope;
+> +		__entry->path = path;
+> +	),
+> +
+> +	TP_printk("start=%#lx size=%#lx stride=%#lx asid=%#lx has_mm=%d target_mask_weight=%u target_cpus=%s scope=%s path=%s",
+> +		  __entry->start, __entry->size, __entry->stride,
+> +		  __entry->asid, __entry->has_mm,
+> +		  __entry->target_mask_weight, __get_cpumask(target_cpus),
+> +		  show_riscv_tlb_flush_scope(__entry->scope),
+> +		  show_riscv_tlb_flush_path(__entry->path))
+> +);
+> +
+> +#endif /* _TRACE_RISCV_TLB_H */
+> +
+> +/* This part must be outside protection. */
+> +#include <trace/define_trace.h>
 
