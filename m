@@ -1,104 +1,96 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A042E190462
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 03:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B6F2D0614
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 03:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792121230; cv=none; b=TPUEdgBLxtSU0MDYpntDh9ExL/7TAJHkeb5bPaMuWn7RtblYdwRn9LTWiPODSw2tCu+wlzAVmBcHlLpS7aywSmyT66aGKN3QM1muWZnm9k7of43FfawDKdudlkvQ12nugsa5yk8lHyk8AW8A3ujQrZca5/lhWfskzZv1P4BBv2U=
+	t=1792121600; cv=none; b=eg4X4mSEKRuF828d5PuJcNfeZhkvgHvZh5FWJgrsppI1fQuMLvk4aiksq37fAitaVgf2iUl7vqPA0jyB5m+tjFKweVejSktSTjGrW5i5Yjn6QDcTPLLSrYDSm9zxLn4T9tI7dBEpjCxnSoz57cpZeL4vYnj8XTMr+RB3sAgm3dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792121230; c=relaxed/simple;
-	bh=/VlbzGT1I3JhT4kb0vmmrNMzk6JfXiX50KYaXup3DEE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=svo5/pncW36DXRAGwiCLzza0sTpOvd0+CDbxU2EMW5U/DJN2MOO4EbZOVLkp95j3U6dKC40GAORf6QipueqR2Rf43p49P0cKZT6V7oHd6+IBRY+4vP/RwChStDqiC4UlGxrd7prCuJPyjfoysoS8A86CV3YGDQ6ebwXVKuQcS4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aOEZI/6u; arc=none smtp.client-ip=209.85.215.170
+	s=arc-20240116; t=1792121600; c=relaxed/simple;
+	bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
+	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Date:Subject; b=C1prJCR3e/K/NXsFn0764pNg/adPJoji/ZlgjUhLzQER+CTMc8jNAjgfF9yWSQNuA6YebQI0NjWjQiQjttz6rjUznhey0tC4g73bZ8c44t6t8/qqhvwvNMcGrlBhC+TXTVoJhaUhqfLf/RZFTNqO2nN/yVdWUN+jpR3c4gQX7ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GADB8XMY; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOEZI/6u"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-cd5cd8d89a7so2394089a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:27:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GADB8XMY"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-cc4b1f7e8f4so3790260a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792121228; x=1792726028; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Y837x6zsLDY7Lr6OWbl3JVY9ardcrHQBqEd20U8eVmY=;
-        b=aOEZI/6uYuEBzCmL/qo3vZLbAd2DvnZRQ6K1uPz77J4R6gxeHkqNC45Z2nhAamMAul
-         CTKwc0IdckT4floa+zCesYjin2tKEFeiQZIIkyMuRGCCY/pZQYfhMyUxKBGRU2jal3/K
-         A1V1S6NjwHP/kfkADahCdnzCYdnQHyB39frqhbLeE7j0exzONjoy/wiyiA+jf1Y8fJvo
-         0f4eSbEttlV3wzTjYNrfhZTM58nzFmFIm9Q5KIHpxyTtKn8uQkCh7VBuaZ3jeIreTGWI
-         rNc9T8IpOZAX8Uj84qRr0TEuDmEdY8dqAuhOPsFOkHNAZZYOFFL5BaiH2mV4JLqBh+Up
-         mXEw==
+        d=gmail.com; s=20251104; t=1792121598; x=1792726398; darn=vger.kernel.org;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
+        b=GADB8XMYA5/1SyF+O0r6Lk7t5UNsnS9UNnfvtbODPgLIWQ6Caf0HBV9v7RhCYsg+Wu
+         UxB5jOSj3F8nSouUe7fZZ4gIFSsGhG+qfEUE07TveKwJwkIZk6RN1/W3E7cWRY9LarLi
+         /37fXvBSr220wX/8sxA7ISTH8fPiqqHUG9tNO/fCMF5JeLKNzYBixOIS7tZiA1e+XG1e
+         9UTyFZdAlWlfVvSpBCUCH1Hwr/DaGhn4zPkjNrQzX7CD5bHBnpPKbbpr/saGmEHSQBPQ
+         MRDB2Tt+LMgGDAJ408bZchDTHWRapp4A9zB4ApGiXTYYer/wCJB8slA4N/3lkT/iUO/F
+         pQuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792121228; x=1792726028;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Y837x6zsLDY7Lr6OWbl3JVY9ardcrHQBqEd20U8eVmY=;
-        b=YoA0Y6aP7qE06e34j0sRWVgKYKgOkb2V4OAI/4a2TJlAgk/RTDDflIBlkKj2U5ozmI
-         Q8KA9WvvrEXKqOtR7bAonIn6jZ3wGngG05JGRR/RDTt2mA6zRyq2Ns1xG+fibeDozJv3
-         yaztVL5/0hmZT5fiv6Iyh4fiBgQ/cs5mmqpXKtUOp0o8x99gmidXfFDKPQo9LVRcQ0AH
-         qPbsx/3VCpShnJsbODiC+zfqmGM1bqUME+oA0CgGtpP9YDSv3S/KWyisbq/ESp6jEydk
-         s1h6S+5qrShBwBqWwB/J2lflD500VNuRjm3u4xCMclAJ7qJ+vaI53B4+sdgpmmOCIc97
-         K4RQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwYdNjz6kCVFIYhRvoqnYsprfKMoixx2E0dPJs3x4ZQX04ubvkuJVXs2CRv6cS8yhK7kvK6MUDtLd/71stl2TXiO34=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK6yC+QCqmU7fkqGNOOt1nE+yfDeY1YEu93EnX7FR3ESi+SHAFY
-	7n1CguCqNzwnBMM287Qj8tK7XjpeY1Gy/aLO1ni2kl12RkOLJdHP/TB+
-X-Gm-Gg: AYBFou1wGkjJdg9a/ucLEyprORxQIOCeIJH4De6Lxw00cPS1Xz2YO2hvxY7QXk9GHaC
-	5zc2M4Hj89ir4GcCZp5a2RbQ8l+Q500lijPJBeLeUbnzV6jcGmV99a0ySihTe8ZEYAju63+/H0Q
-	i1JFcXwZqQjRBlkNrtRqx9HfYmk3aEmhIQgtyS6phYnXXA1xwMPTqjdUT//AwpJKSVhCVZrgkHe
-	TZEnzg5tammXSlsH7ZQ2gk2jNerf0BL7gdUAOrVhvIxZ15oJc6eIpvPoKJsv9hRyLBoijcutU7K
-	VbYiTageSiPrKtsgJwFCbd93B4G7HsMdk3Z/XlC/x0WXl7DHUE23mFcdrDAbhv2QMwkFd+SjI9A
-	H5xYUWRG14/c7wQVCMFdaWZ8+JzhUbtM8O+MTbrbSPwazhbuKSJF1zLpZrEQE9x6A7LfjuwQPC+
-	W9eyPR9X/o9jSHC6Y4koS0DpbTh6ZSmMOVOL/Cjf1I1wJozPUo31hq7CM5J36srOP6gIXQX8/No
-	MwDiCWJ
-X-Received: by 2002:a17:90a:d2ce:b0:3ac:9925:72ae with SMTP id 98e67ed59e1d1-3ac99259edbmr4024010a91.31.1792121227907;
-        Thu, 15 Oct 2026 20:27:07 -0700 (PDT)
-Received: from localhost ([182.216.53.174])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acd3f3ce5asm305110a91.3.2026.10.15.20.27.07
+        d=1e100.net; s=20260707; t=1792121598; x=1792726398;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
+        b=Xz6TGZMVt142mVdTuKaq10+/MK/7sEBccWXxoaaeBul5txDlIxXUMtECO8QXDKI3pJ
+         7sfRBd21VjSKIhr0awZ4y4INIFICt5VwLGgsMecyr/IW0J0lUcXvQe6xQaGuELH0SnM2
+         11/9o8dKN8lCOCHJMSKiNfOpoRORglNPfPObiuIqOwQztDb8DdLh3xBc6etXbyWl2ddd
+         0gbv91OkrMHuRTJgcTS1OvLMHRd8lXXQBprZlS+nNkshXMzezBIMXHlwPKYeQiczEja7
+         BZ7EISAvdITU3TokKydZVmTHxSgyDFW2wdSW55VUKet7a9mif84271qnlf6CEwoRWPEE
+         X7Fw==
+X-Forwarded-Encrypted: i=1; AKwUvBwnkDjL8TahAR21k4ZKXP36FONE83YqcWOK8xLNz1JY3gtjsDzkpd0pj0qx8LtvKNqe7Tw/pe5P5Xj7zcfJXkSrOCs=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJW8cIR1SmAHOKSFvtZxcUxqfhIqSHzTg1zewPq13pg8ZHHgUHO
+	PKR7Dcakhngjj7f2CIi0jBK1FFH9AWWjNC0AUEf+BcEmMgowcT31EuQMmzgj3+awl9M=
+X-Gm-Gg: AYBFou2QZ6j5ETinbEKYt9a5d+tkKDOCTV+VymY62FBZK7BnJnBrCUbi3NuxXuPmn7b
+	B2jNn18AaoCGHweB383MWyjwdJSfYKElgQthbcpGPZbai5zd27Z/cA46ilmbgXsoOsk+K1jH/eE
+	pyolFSyrzVAuOGrTc8a2kak5IZ1YzH58WpkG2o9ELILSfSV1ZEB3PKtsKwii9y4/pYAmReVSm/b
+	bjavSj4tp0B/mk9BEbxS1xFyjrCSIzD1/flLtM1DakC3Ep79TXPW5DXxLhfifn0z8vZp+836BaT
+	jGJkWRnAtsx34ZMdL3MHOlhJcpOpWE4WNUfUBWFMydEzqEm3UUhOT17aB6yo9quwELjNjvLoXsn
+	6GsbeB37dZCcFPSBqG52Pq4Ls3AFODruNLsjg8Vm/Ds4LL0LxZVPtdcnLKxF5VmM4KfHtelzBUk
+	nKJh2lilW90FgvS052lBjBNn1kqvQEi4ISJzwVs8JUMEu/cSSyFsvqhBS5npkBsl/pAcBl1eUDf
+	ORBbQ==
+X-Received: by 2002:a17:90b:2ecc:b0:3ac:b3e5:426a with SMTP id 98e67ed59e1d1-3acb3e54485mr2244561a91.4.1792121597779;
+        Thu, 15 Oct 2026 20:33:17 -0700 (PDT)
+Received: from [58.206.202.11] ([104.28.215.69])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc487cccdsm1950630a91.8.2026.10.15.20.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 20:27:07 -0700 (PDT)
-From: Jaewon Jung <jaewon8868@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Check for dynamic_events before clearing
-Date: Fri, 16 Oct 2026 12:26:32 +0900
-Message-ID: <20261016032655.82009-1-jaewon8868@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 15 Oct 2026 20:33:17 -0700 (PDT)
+Message-ID: <6ad19afd.a938ce27.16851e.3440@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
+From: Haoran Wang <haoranwangsec@gmail.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, haoranwangsec@gmail.com
+Date: Fri, 16 Oct 2026 11:33:13 +0800
+Subject: [PATCH] tracing/syscalls: use copy_from_user for the faultable syscall buffer
 
-Trace instances do not have a dynamic_events file, but
-clear_dynamic_events() is called during initialization. Check for the
-file to avoid a "No such file or directory" error.
-
-Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
----
- tools/testing/selftests/ftrace/test.d/functions | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 826141e299e5..4f2abb05e365 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -84,6 +84,8 @@ clear_synthetic_events() { # reset all current synthetic events
- }
- 
- clear_dynamic_events() { # reset all current dynamic events
-+    [ -f dynamic_events ] || return 0
-+
-     again=1
-     stop=1
-     # loop mulitple times as some events require other to be removed first
--- 
-2.43.0
-
+RnJvbSAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW9yYW4gV2FuZyA8aGFvcmFud2FuZ3NlY0BnbWFpbC5jb20+
+CkRhdGU6IFRodSwgMTYgT2N0IDIwMjYgMTA6MDA6MDAgKzA4MDAKU3ViamVjdDogW1BBVENIXSB0
+cmFjaW5nL3N5c2NhbGxzOiB1c2UgY29weV9mcm9tX3VzZXIgZm9yIHRoZSBmYXVsdGFibGUgc3lz
+Y2FsbCBidWZmZXIKCnN5c2NhbGxfY29weV91c2VyX2FycmF5KCkgY29waWVzIHRoZSBidWZmZXIg
+YXJndW1lbnQgb2YgZmF1bHRhYmxlCnN5c2NhbGxzICh3cml0ZSwgcHdyaXRlNjQsIC4uLikgd2l0
+aCBfX2NvcHlfZnJvbV91c2VyKCksIHdoaWNoIHNraXBzCmFjY2Vzc19vaygpLiBVc2UgY29weV9m
+cm9tX3VzZXIoKSBpbnN0ZWFkIHNvIGEgbm9uLXVzZXIgYWRkcmVzcyBpcwpyZWplY3RlZCBhbmQg
+dGhlIGVudHJ5IGlzIHJlY29yZGVkIGFzIGZhdWx0ZWQuCgpJdCBjb3VsZCBiZSBhIHNlY3VyaXR5
+IGNvbmNlcm4gZm9yIG1hY2hpbmVzIHRoYXQgdHJ1c3QgcGVyZiBhIGJpdCB0b28KbXVjaC4KClNp
+Z25lZC1vZmYtYnk6IEhhb3JhbiBXYW5nIDxoYW9yYW53YW5nc2VjQGdtYWlsLmNvbT4KLS0tCiBr
+ZXJuZWwvdHJhY2UvdHJhY2Vfc3lzY2FsbHMuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFj
+ZV9zeXNjYWxscy5jIGIva2VybmVsL3RyYWNlL3RyYWNlX3N5c2NhbGxzLmMKLS0tIGEva2VybmVs
+L3RyYWNlL3RyYWNlX3N5c2NhbGxzLmMKKysrIGIva2VybmVsL3RyYWNlL3RyYWNlX3N5c2NhbGxz
+LmMKQEAgLTY4Miw3ICs2ODIsNyBAQAogCiAJZm9yIChpbnQgaSA9IDA7IGkgPCBhcmdzLT51YXJn
+czsgaSsrLCBidWYgKz0gU1lTQ0FMTF9GQVVMVF9BUkdfU1opIHsKIAkJcHRyID0gKGNoYXIgX191
+c2VyICopYXJncy0+cHRyX2FycmF5W2ldOwotCQlyZXQgPSBfX2NvcHlfZnJvbV91c2VyKGJ1Ziwg
+cHRyLCBzaXplKTsKKwkJcmV0ID0gY29weV9mcm9tX3VzZXIoYnVmLCBwdHIsIHNpemUpOwogCQlh
+cmdzLT5yZWFkW2ldID0gcmV0ID8gLTEgOiBzaXplOwogCX0KIAlyZXR1cm4gMDsKLS0gCjIuNDMu
+MAo=
