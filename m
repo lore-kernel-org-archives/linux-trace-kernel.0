@@ -1,36 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04B94E323C;
-	Fri, 16 Oct 2026 14:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD419349B1C;
+	Fri, 16 Oct 2026 14:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792160045; cv=none; b=ICaOhJZ7xrwhRfXS7NVMZi19n6VNa4jsekZUKC/+jFM0UzHHiB+aY287+ljHTfLkkp8wBGkZdAr2rgld+aCfaB3zMGBZTNJfcN2Hr+Qf2wCymnDgBbiUh8jDJ1qVReKx7o70b4kCcXRkwB3V1yG7fMW2Nl/ONeaehoWDeroQ5kY=
+	t=1792160590; cv=none; b=X7XSIo3p3dJEv46Y5tKBN5HUo2xDar0f1qKLuWPf6ESTT1IPBO4BMbWqmTfwKTt5zVjjvUtgmPEBYUFrQlc81Mfdpr0EkmeOz3x+h4TLe9AymYCF41kQO9tjpChikyxss0eKjPPfm2cXcc/DMuTjHObdILrEAB2Fd9EvMn6NEx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792160045; c=relaxed/simple;
-	bh=b1kiO+OT+f67PGuMMnO46zAAzj5T0SNAahxE8VuMRgE=;
+	s=arc-20240116; t=1792160590; c=relaxed/simple;
+	bh=BCADDz5G5s4Yo+AnMmRVg2wZjXt7LMOXmKfT1IZuQz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B9R7A9cfO33uU/Po5MqHWcpVpf77CSJLHQKuUtXnGjYhx381/v98YBMO7xtO2swWw0T6gazVEFZHVbFd/LpfKcdFIl5frNLMfJEJ2rI2w1WU9qKKyj7eYolXiWvhqkMs7uzaZSDzndTIsaJzgyosz5sLjPgiNXbToESiImsZLl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=wgANTwKl; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=O5DOmQlATmUuvexDPtABRDJWsKQWk5FzZpZAo4cOvtbmOGCNTVKUzmAQf8xiuDjpGRmoSfvbCVU98Crqa3VTIheLCENtYEgBYjNK1eGlBZeccbF8Bk54UbnKr5w3C193zhCp1gj5xr7w8q2NwBcB7wkohzZrw9RcCyXSe7mrZeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=fIaoVocz; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="wgANTwKl"
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 07EAC12046C;
-	Fri, 16 Oct 2026 14:13:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 3D1DB2000E;
-	Fri, 16 Oct 2026 14:13:57 +0000 (UTC)
-Date: Fri, 16 Oct 2026 10:13:56 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="fIaoVocz"
+Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 47E67A0455;
+	Fri, 16 Oct 2026 14:22:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 82D0630;
+	Fri, 16 Oct 2026 14:22:57 +0000 (UTC)
+Date: Fri, 16 Oct 2026 10:22:56 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Haoran Wang <haoranwangsec@gmail.com>
+To: Haoran Wang <haoranwangsec@gmail.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH] tracing: reject trace events with an empty
- TP_STRUCT__entry
-Message-ID: <20261016101356.6b9f2a82@gandalf.local.home>
-In-Reply-To: <6ad1cad5.856c1b21.18f9b7.a2c3@mx.google.com>
-References: <6ad1cad5.856c1b21.18f9b7.a2c3@mx.google.com>
+Subject: Re: [PATCH] tracing: guard trace_event_get_offsets() against an
+ empty fields list
+Message-ID: <20261016102249.090d33af@gandalf.local.home>
+In-Reply-To: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
+References: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,42 +41,74 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: oukdzmp7p3puep55eih4y1ka1dnnx9gm
+X-Stat-Signature: wqs95jcojisnrga6piyeatb6zm9pumio
 X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 3D1DB2000E
+X-Rspamd-Queue-Id: 82D0630
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+TBVl4n+IEBA3U5ER0P/p0SW0ap0Wn0SU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=lI5DjuexGRZN1Av8GqHxjbE1/reoZ/RPViBWT9P2oDs=; b=wgANTwKlk1Nhx7myUF/B/0A4ZFy0O6LBy0hqWYBOInP7WYxPNqfNC1tOKLmsoSkNEbzKYTnkQYatQ9Ab5pPQt2Lu/Qp6J6tq2HZrMJvY1+vjexoTaF0NLWXVuV3tU9VUJHKnndgLqGXGsS+m8k1siVndzwVkrq/v0fHDpECrzFE=
-X-HE-Tag: 1792160037-230736
-X-HE-Meta: U2FsdGVkX18EBA7KiuKVGMa9HxEionb+URtUGmeJg28dERRXoFTEhchAR1h/IxG4SKSWo2ZTdP1CAaWWOuUJPoqj/UBtGjZ+x8tTRl1bIYOiV3LqyA3XvAMjnIy/PNEh3QVpdlL9885IXpeIckT9ENUzjvzI+lGpz3+0cWRtqqU4sleM97f+mV1JvnC1l9VrrF9jhdvTXmm4Dcz0UlyqaKrY10cEof2SCd2vW7Ca7SChwe/Vqd2qyM5i83JGaXaxJouvVD3FOCdhCBXzSjKR/XzLki+cglDXI3SWBk1NvczI0ZdOgk6k2E+w0qkMSETe3azQN+L9sO+3/1FZArqTt8x0GpmSt/de
+X-Session-ID: U2FsdGVkX19y9wrorSJylcTl9JtRKwKEELZr+rZ/x5s=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Rwuo9Qyliadw2BRQpfpTJ8iXT6aJ60v+R+Sud5jveq0=; b=fIaoVoczu03OxeqHqX1GYR3MZblaIOy90B1g3UldP5gD3/X16tHhcFjzcyIOd6pgYNKLhTP1joMB+Dh06MY/ekgDxux/q6xu64TBTjE71liy/ZugWMD80zvPPx74dVL63e0b4w8aa8bldrhxCejyvvwrZ2cFgOKWGt+GUdDWUAg=
+X-HE-Tag: 1792160577-126157
+X-HE-Meta: U2FsdGVkX1+9yXGTHr+9htw8aAuopzhJTXRxp42ysSj9OdBsjJ/LZ54C0tXZ2arD+4ctPUqi2XlptSLf47EiAtmrnHh1eTU80WSvpmdpwapOavOuYhe+oUEa7lQy4GtMq3xi8MlUOMGE3ev4f5e0wfKTVejYthubShg8QDMTEJhZs2Ue/gbSk0yTzyTOP9XQlqtSfzMOC10Xck/KMVsepVYSNKol0KVSGmkYPaqi/auzMmvqP0NPn2vBAYMHdY+Sor4TixqvM8o7eCqKiuJLgMHr8uGIosCCXaaZAMjovlItraPuox4ycOwGLeq8NNE8Hm7GlB42MvqjAzEPlhylBU1lYM786FABAf635yfYrocb4w7XYP5LRQfEYLVVB2Lt
 
-On Fri, 16 Oct 2026 14:57:22 +0800
+On Fri, 16 Oct 2026 17:47:51 +0800
 Haoran Wang <haoranwangsec@gmail.com> wrote:
 
 > From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 > From: Haoran Wang <haoranwangsec@gmail.com>
-> Date: Fri, 16 Oct 2026 15:10:00 +0800
-> Subject: [PATCH] tracing: reject trace events with an empty TP_STRUCT__entry
+> Date: Fri, 16 Oct 2026 16:30:00 +0800
+> Subject: [PATCH] tracing: guard trace_event_get_offsets() against an empty fields list
 > 
-> trace_event_get_offsets() unconditionally dereferences the first entry of
-> an event class's fields list through list_first_entry().  A tracepoint
-> that declares an empty TP_STRUCT__entry never populates that list. Its
-> fields_array holds only the terminating sentinel, so list_first_entry()
-> returns the list head itself and the following tail->offset + tail->size
-> reads memory past struct trace_event_class.  The corrupted result is
-> then used as the BPF context-size bound in __perf_event_set_bpf_prog(),
-> which lets context-reading BPF programs attach to a zero-field tracepoint
-> when they should be rejected with -EACCES.
+> trace_event_get_offsets() dereferences the first entry of the fields list
+> returned by trace_get_fields() via list_first_entry().  list_first_entry()
+> then returns the list head itself, and tail->offset + tail->size reads past
+> it.  The corrupted result is used as the BPF context-size bound in
+> __perf_event_set_bpf_prog():
 > 
-> Reject such events at registration to fix this bug. event_init() is the
-> universal chokepoint invoked for both early-boot and module events, and
-> its return is enforced by __register_event(), which refuses to add the call
-> to ftrace_events.  An event whose fields_array[0].type is NULL (the
-> empty-TP_STRUCT__entry sentinel) is rejected with -EINVAL before
-> trace_event_get_offsets() can be reached.
+>     int off = trace_event_get_offsets(event->tp_event);
+>     if (prog->aux->max_ctx_offset > off)
+>             return -EACCES;
+> 
+> so a context-reading BPF program that ought to be rejected can instead be
+> attached to a zero-field tracepoint (which still carries
+> TRACE_EVENT_FL_TRACEPOINT) and read adjacent kernel memory when the
+> tracepoint fires, bypassing the verifier's context-size confinement.
+> 
+> This is reachable through user_events: a user can register an event with no
+> fields (e.g. `echo u:my_event > dynamic_events`), which leaves user->fields
+> empty while the event remains a BPF-attachable tracepoint,
+> trace_get_fields() then routes through user_event_get_fields() to that
+> empty list. The corrupted
+> result after list_first_entry is then used as the BPF context-size bound in
+> __perf_event_set_bpf_prog(), which lets context-reading BPF programs attach
+> to a zero-field tracepoint when they should be rejected with -EACCES.
 > 
 
-BTW, what bug are you trying to solve? Just some theoretical bug you found
-from a static analyzer or AI?
+Hmm, so user events can have empty events. :-/
+
+Beau, Is that a thing?
 
 -- Steve
+
+
+> Add list empty check to fix this bug.
+> 
+> Signed-off-by: Haoran Wang <haoranwangsec@gmail.com>
+> ---
+>  kernel/trace/trace_events.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -239,6 +239,10 @@ int trace_event_get_offsets(struct trace_event_call *call)
+>  	struct list_head *head;
+>  
+>  	head = trace_get_fields(call);
+> +
+> +	if (list_empty(head))
+> +		return sizeof(struct trace_entry);
+> +
+>  	/*
+>  	 * head->next points to the last field with the largest offset,
+>  	 * since it was added last by trace_define_field()
+
