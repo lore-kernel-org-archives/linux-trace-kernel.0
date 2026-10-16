@@ -1,115 +1,93 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AA0494271
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 18:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740763191D6;
+	Fri, 16 Oct 2026 19:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792175567; cv=none; b=Fn5S7joSFFmGX/pDoVFV5JlZFymjAoKVEcMwqsg7pcCwUN8bfc2cFPqdiFhOaj2SlDMUpA1LmrSkSbiVZZlkdmN2ykFOjeGWTPK5XqPTqC8QbRwWC2lXIrI16WYdv4PvzHnBhflc13h4RV2eI/hWgakiulxyCsG2RkX713hXDV4=
+	t=1792178437; cv=none; b=AmX6fihN1yYa6/L4niL/E+ktXNpUmZ4RbHrE5h26QU97q8gu48FxB6K4HMG4IHwCKm/feTjkcbXaXSDi8OoUlZVL+SK6hOrxPp3MYX7U4+3aDV/Yw/N5wT5AarNNCM7w+A7pMERCoqOzGhR40fY/ekPUtgob9qlLbW2+zfCZRKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792175567; c=relaxed/simple;
-	bh=V2E/yhEZzQeNxMqnt0P5cG6VMozPSfQrlO7FbeSChk8=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:MIME-Version; b=M42tSFbWgF1B1UDbeINjCnglQPc5JJ9jnrMVITf69chadkSMzOAy9mz7GWVUEdskFYkDSkxwedx1yVw1mn+9b9Lu5MvMCM/DDGFWQcsfrxPybuwB7qqjIaqWNEEY1LDeoYwwmIAiutyObi9g81fsnZ+olsOoWhg4Z9Alp4n+hqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZD5gn8D8; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792178437; c=relaxed/simple;
+	bh=SJrqD/VCmw6z+WTKG34qauJ0EmMEGv2IOVkDd92QLZo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tr0q+ptN2bhLfF1K0RPOI5HCzsmzzoNO4OHvthcVZrQqd5ZM6mMDVmlUyJm78TFrPsRDgsMrFckISC9bWH7fq4kxtaFJWQnpfJWQ/VgZUMmvnj193DN3bhla+oMR5k58HDb5iC68Cmph/XmBthUgN046CK7sjTR3+KWBKF9sk5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UlGuLb4x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+awnHoyF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZD5gn8D8"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cc4dbcf2b85so154145a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 11:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792175566; x=1792780366; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=V2E/yhEZzQeNxMqnt0P5cG6VMozPSfQrlO7FbeSChk8=;
-        b=ZD5gn8D8TJoOUMTW9QeaCxTaO83fhuMtup2923FKFzNIsm8QG+T654FjVOQf8Nn6lC
-         LDJjeV43GZIkuQbkTpLTYKDWZhjODxBdiZA+yeQQ1md30jn8xXEeBGujxGo+voZnoZxy
-         brJncbnO2Mik9TP3bHzCz5bBTGHpPVlNF9nf3tDYO7G30l9DOj9BqQEBjjIFWX8KZL0m
-         JaMITv5348J10meCNu4e/jaOlQZh7CCGd1qnJ7uBvzM1rxvjodU4iFIS9z4/extC9W1/
-         Y+uG9TDTYo3Fx0nAMJr+D3prkldZsdBbjIRw1hDj25HEJeGQmhyOT5p8JMgi37RhgCDL
-         d5aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792175566; x=1792780366;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=V2E/yhEZzQeNxMqnt0P5cG6VMozPSfQrlO7FbeSChk8=;
-        b=MSGBRffHehkCNs5YSSOsMj0hfzT7ZmvrWc7USUB1jIgtCLIEalkYmijwv3O1E/wdL8
-         CcEBKIFpwwfpK/Pr1Goz6WZBtATphNYGRC8byJcA+UFzEaTtNHcuA28/xjSWufkn8+/s
-         avN3nOPCot+IQE+5sn07tNREL0YpK9tbLfvILZFXibFYzYCzeaU+9+jWsv9RmjaxPoIw
-         9G34vvEh5+OF1jTNWRH0igeYJonsstvAERUOTBNlaSPYWDDYZXGMtv2tQuHA63A4fvHr
-         MUZ6tnADu36VFu3TwaPYNjfrTPH69szo79cSjMrbjGzQnNQ1emxmlbkT4yUK9q2CVBEc
-         sMZg==
-X-Forwarded-Encrypted: i=1; AKwUvBxZiEDAUZ/Sqi4RF+K+J2LMdCTimQBL8ofV2LUdzzb6ImA68Gx1lSga2EA6+vfyODFq3cmjqes6Wb0EqDRiugvn9uY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI6OU3IjM0bYYVuzCHsIbNkPO5+J28y2bQpMN0msNY+4svQcCfn
-	KXUpbjCwEMTiIdfSs7sElUVYvZTblXnLTgfFTMW465VnpqjsIWhIVxpu
-X-Gm-Gg: AYBFou1BPHh99XDwvAmARJxgqdNN8QXJQnbWKMEwHKz52TP6P2znKyGr0RKLGoxT55C
-	caW/2wMjkKrejJWrcQdelcjokXreJXkl86nSBkSWQkWYFaK1rsjzpW8hI4X9H3kYaZ1mbvXr+Zc
-	jVOJrQdeXLvJmRxkZfjaujtnkKSNoMTov1xKuE7xNJhqy2FLLWWwNBdtxM259TusP8hwAcl75GA
-	Y8JNWinxDqEb5vj+UFZ7vsWxUwTMsqEH9lN7IiLi+F+8ooerXQWEQb/CCYwsXGzOVPgNa9gQs7Z
-	P6xGG4e17sPs4qJWuZRJD7PqJQkJ4UiWbQ2XWBlWUytFiZG4HsROB2k5qHSuPg4MCAC2kZRfqIg
-	cth3l5FcU/JWn4uRxKf7+q8nFl4mbtBnWLNVflQ8ugoWBLJN/ci0fESqbdqXTDXs+F7ZScz4vMz
-	oXlxp0qHX9/7GBNkSU9CnR9uws1oxXuZJg2z/uAmsaI0kp+4KxwN/VsUZLLYwaZNLDUe5btelvF
-	9nCOw1n2p6/Tau+EYuPXMEd4WA2EV/cylXtUUPfaFXLM9pyFsLeOHklOBqRMhIffNLGyT96Q6/m
-	PFo0affLo4vjtA==
-X-Received: by 2002:a17:90b:2ccb:b0:3ab:be66:ddc7 with SMTP id 98e67ed59e1d1-3acef134be1mr574089a91.10.1792175565793;
-        Fri, 16 Oct 2026 11:32:45 -0700 (PDT)
-Received: from localhost ([153.61.198.246])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc98139ccsm2768789a91.0.2026.10.16.11.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Oct 2026 11:32:45 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 Oct 2026 18:32:44 +0000
-Message-Id: <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
-Cc: "Nam Cao" <namcao@linutronix.de>, "Wen Yang" <wen.yang@linux.dev>,
- "Tobias Schaffner" <tobias.schaffner@siemens.com>, "Viktor Malik"
- <vmalik@redhat.com>, "John Ogness" <john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UlGuLb4x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+awnHoyF"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792178433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJrqD/VCmw6z+WTKG34qauJ0EmMEGv2IOVkDd92QLZo=;
+	b=UlGuLb4xXnDzgNvwkurAsRS0GasMl2MYti5HJHxo9d0HMPW7fusyW1MlYS28Fl1tOGwZBB
+	3sLzj5Siq5pk/sFaU7GaXGoa0jQJxoJG4Ok7KoOiBfs2wSBoSKVkjN2kpkWCyfi6dR0vdh
+	WiaU5kWZ3ClzOdJOeSrm6zSB/NKZPllGwqb2QvmqHMauYldysAe16fiI1b1lG59EcKvcAl
+	lS7RI2TjjTiz9wCTmfyYKVTqGpdD9d9Rtpyuqlin9MNOts5yaXkc8CR5PorqIMIQg1p0Z6
+	xOilK8WrVU5etwCRUWut0H94Pwmz88eWX57/9tnbEpP8RcSVS1Q58MWe4a3B6g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792178433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJrqD/VCmw6z+WTKG34qauJ0EmMEGv2IOVkDd92QLZo=;
+	b=+awnHoyFJo4veYV0jm/k7YHAwZbcwpRLYYoG8fMS3dU4Pu7Kgu6udc3QoB+EGx//pOjPLb
+	XoaaQeisPav5PrAg==
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Gabriele Monaco
+ <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
+ Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
 Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Gabriele Monaco" <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, "Steven
- Rostedt" <rostedt@goodmis.org>
-In-Reply-To: <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
-References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com> <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+ <20261001152042.124445-11-gmonaco@redhat.com>
+ <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+ <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+Date: Fri, 16 Oct 2026 21:26:33 +0206
+Message-ID: <878q3xtptq.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Thu, Oct 08, 2026 at 11:54 AM Gabriele Monaco <gmonaco@redhat.com> wrote:
-> Reactors in this patch use bpf_printk(), which is in fact a trace_printk()
-> instead of a real printk, is there a technical limitation forbidding us to
-> create a kfunc using some flavour of printk_deferred()? Or am I missing an
-> existing one? (this need was brought up by John, Cc'd here)
+On 2026-10-16, "Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
+> On Thu, Oct 08, 2026 at 11:54 AM Gabriele Monaco <gmonaco@redhat.com> wrote:
+>> Reactors in this patch use bpf_printk(), which is in fact a trace_printk()
+>> instead of a real printk, is there a technical limitation forbidding us to
+>> create a kfunc using some flavour of printk_deferred()? Or am I missing an
+>> existing one? (this need was brought up by John, Cc'd here)
+>
+> No technical limitation, and there is no such kfunc today.
+> printk_deferred() is a lockless store into the ring buffer plus irq_work.
+> It's ok in any context where tracing progs run.
+> The closest we have is bpf_stream_vprintk(). That's stdout/stderr of
+> the prog. User space has to read it.
+> rv tool is around for as long as the monitor is loaded, so it can read
+> the stream and log it anywhere like /dev/kmsg.
+> If the message has to reach the console when user space cannot run
+> then the kfunc makes sense, but using bpf_stream is imo much cleaner.
 
-No technical limitation, and there is no such kfunc today.
-printk_deferred() is a lockless store into the ring buffer plus irq_work.
-It's ok in any context where tracing progs run.
-The closest we have is bpf_stream_vprintk(). That's stdout/stderr of
-the prog. User space has to read it.
-rv tool is around for as long as the monitor is loaded, so it can read
-the stream and log it anywhere like /dev/kmsg.
-If the message has to reach the console when user space cannot run
-then the kfunc makes sense, but using bpf_stream is imo much cleaner.
+I am still not clear how the rv tool will replace the existing in-kernel
+implementation. Right now violations call printk(), which conveniently
+show up in kernel logs and consoles. More importantly, there are the
+rtapp violation events, which makes it very easy to use ftrace and perf
+features to record traces, take actions, generate statistics, and dump
+backtraces on violations.
 
-> Not needed in this patch but potentially required for more complex monitors. In
-> kernel, when timers are required, we allow monitors to use hrtimers (precise but
-> heavy), or the timer_wheel (lightweight but less precise).
-> I'm not aware of any wrapper of the wheel in BPF, but I think a few kfuncs for
-> these could be useful, in general, also for other programs needing a lot of
-> timer instances or simply light timeouts.
-> What do you think?
+Is it planned to pull all this out of the kernel but then somehow the rv
+tool allows ftrace, perf, and console to continue to work with
+violations? (For example, by somehow defining kprobes for violations and
+writing violation information to /dev/kmsg?) Or is the rv tool supposed
+to provide its own DIY variant of these features?
 
-I don't think it's needed.
-bpf_timer is hrtimer only, but hrtimer vs wheel is not where the cost is.
-bpf_timer_start() cannot call hrtimer_start() directly.
-bpf_async_schedule_op() does kmalloc_nolock()
-and irq_work_queue() instead.
-I don't think timer wheel will help.
+John Ogness
