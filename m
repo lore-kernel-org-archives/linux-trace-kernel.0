@@ -1,97 +1,101 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553973546E9;
-	Fri, 16 Oct 2026 14:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499883769E7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 15:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792162267; cv=none; b=X+1+j5G33zQi6T1kPxc0+yH1LnHz83AUCBRUoTKy2QIMecB9xxTTYVn9IE9LIg6nTSMsdPxTv3Ig2dKH/24w3KklKnP+5aK0Jcinwf8fVTqqwC1nQ05UINQZJKnT7JNbNJwTAX5xUNEie/JXrA4DGOrYSBOM4Yaj7bVPUcfj9K4=
+	t=1792165637; cv=none; b=YQQq6uBCJ1C1QJVfWGz3htes8vMwRmJz4egZeYQuttgmDO+Mz4sptTPaQuc70xU44eYFCKcf6zACN4nuXLg/edyQrbP/Xhp+u6Vzeva2ioZrUMTwDNHJknVMzjHNR+DV249/girGy5e33xriKw5xNN1V9DwHeIm1FPrCMndcQUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792162267; c=relaxed/simple;
-	bh=2LeLKrAB0SM89vaOubLuuMmKaZxzT9UXR2eofWzyb4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A9hb1PCaA0ODB+UcnvzoRd7esHaJ6dD3dStlfm6iTObPKaxp70E31KrsDIcYR/7Rv/RcFYXUUDh91QUSD3LyBw+2PnmIv9EaZjxpXNf1rFhvW1AUwsNMkviALgj6dmKx2KvmdCe4Z6Pws27d/sYZi7eXz11uS74ZTWZxR9fyWfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=optfVY8E; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1792165637; c=relaxed/simple;
+	bh=m/WWeFMJCrVGffwdMiKasd9xCWFIQH8QaNE4CBT7ZC0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Rlbl8if9iom1R8U2+6HKceaYNSO4h/Wbf758QEBTh8AMXDAyqAuqQcl4nAdTAfhTspwXFqIEMoO47sg0VvXQVmVd1pgbTg0+JydI6it7kK7FKAnF0++v9QwQ5XJTGltjhvf7iz3Xx6owc/9mScWUUtMc9ix0sBR3SEzh0c2+JvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekhd9zlw; arc=none smtp.client-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="optfVY8E"
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id AD2C5A7C00;
-	Fri, 16 Oct 2026 14:51:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id DA5F18000F;
-	Fri, 16 Oct 2026 14:51:01 +0000 (UTC)
-Date: Fri, 16 Oct 2026 10:51:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Haoran Wang <haoranwangsec@gmail.com>, Beau Belgrave
- <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH] tracing: guard trace_event_get_offsets() against an
- empty fields list
-Message-ID: <20261016105100.7a64aa51@gandalf.local.home>
-In-Reply-To: <20261016102249.090d33af@gandalf.local.home>
-References: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
-	<20261016102249.090d33af@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekhd9zlw"
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a1721559b4so941125e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 08:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792165632; x=1792770432; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tELJHcWYoIhgNUw8lDudD6kd7E8RuUtrVQulu2IZ7CY=;
+        b=ekhd9zlwWXDP/sKPZ9kOhG5L93ZNzR27Elucsp90KDH7YIWX2pm9VdJUBLkrKigHTy
+         kibM/RZHo5MdPAqnMZDinZAd24+i/5cWRjyZPSuyTvCLVUUEHgLo73EzUMHvSWdEEiBY
+         BnKQVMCskjjJFvZ49uLVTVzzBjGD78KgTD49EzHOcE0tPORwruwg5eZRvZaYkUIj/vXL
+         S4mR6lFoGssh+d/dz/eJapK0NEbJcnmHORlSlq3EuLR1UuXFsNxOOfZLBClVLmmmbviO
+         fQNJhk7tpBSgCKFQ3/o2h9png0Aafm6S4oUa5EEKsHkHPNPBZjNPWyEOaChKRqCr4xAy
+         4GfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792165632; x=1792770432;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tELJHcWYoIhgNUw8lDudD6kd7E8RuUtrVQulu2IZ7CY=;
+        b=2UEy0hqOajXCxPv8Y7K4IGwXA2kU+mdXTziYynsE9pDcNIkSBPDK1ZUQrE2TkuSdSk
+         z18x79SULMZDa2c+xpZqOEK0yluweKO4M7AL1LEkgm8gCvzhJHChskYuu4sNmiG4DGZ1
+         aj4cVkqJwyQD1h+95chBUOtItEZmtncfXG9jweCHN+qfX/0mkbqijZMS1CN8L3FzmKuS
+         +6XjkH1S4auFHvnA8DNMSWVA2i2Kf1x23FL/gEtPNHQRVrYWdky58l3+8IJbYV1uWI97
+         9iC+HaoOv0FMri6UWyCb6mvRECnHTRU70DGXmPRgcQ1K03JLoNls2oXYxUc2WoOsQgiG
+         6yiA==
+X-Forwarded-Encrypted: i=1; AKwUvByRfRIAhmQ7k1Y08O9V4IFzY1GbOT+UBOFgqLQPpK+u7nlJixDAeJoj6JBZYuR0RTOuoST51dqyaz12389/LWBT0VY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJTNTutbX7Mus8bfSHqyLMb1K/1ffkjaZz+4ThTyID/sU3qLJBR
+	eTBVXBuS8P233UWT7NdR4lAROrNJMtUJoLY745Uc3vy2GPk+WlcBYSOZjU/2DqWxo/39LDztazf
+	r4rSl8/PO3/Iyxh3naxTp7A==
+X-Received: from wmee11.prod.google.com ([2002:a05:600c:218b:b0:4a1:950e:148b])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1d10:b0:4a1:6992:f861 with SMTP id 5b1f17b1804b1-4a1d75ce2e7mr5304445e9.1.1792165632352;
+ Fri, 16 Oct 2026 08:47:12 -0700 (PDT)
+Date: Fri, 16 Oct 2026 16:47:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: DA5F18000F
-X-Stat-Signature: aunfz9xp14ibqmok9qu1sz6tegonztqb
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19DTezdcAWQfVWYMcQCBrLBPB2C2f9gLqw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=2NztRXb9DoBF3/gKBHv3YiWVSXvknwy3KzRir8wbGpM=; b=optfVY8Eu9yVH8Zx9fKfl0s/qTyfcXVZnPLCKG0jWmoUohppyXVtKsxvyLKbOe/dYL3nK8sdE17BNj+mHaIC4SbjffKVQcq03NCzuYCSLhG2KUoRiXNR96UqA564oAL51ZpMxFjgXGNjqyfm1mVh9PIHInMXoDzctQLlWgd/NMM=
-X-HE-Tag: 1792162261-449970
-X-HE-Meta: U2FsdGVkX18zScwSp8Y17154QIG6IVLrMCXKwwRbuddZf7SlNKEyPYG9reNe147qktWCe6bWmwuX9Eo74+soJgCp7bqfhLocRhbbNjGhMe52iPM95OW59B7gcUlcs8EUNQ6f6OJTONuxIFctjVAILqmPaFTPGXz8TLMBMTHHQcQGbX32wPIhxa0n9shFYz44fkv1XRW014dEK73DUhHPjZjHOgrf+yeb+JpmOycbjQsSD0aDvQeNUGbS25meEPjcw4Fw9iApsI5bD8qxzmocvFV/lLfCFH7Ig/l9aPlQIqFxK3GZE/ZtjR8RrbTtW2VCwDBi0VbZeahptngsWsMWG8MpkbNtffyZ3N+qaRwuqfRJNrGeAo78+FKdlKmhSWCuGxlC+aihvxTNMA7tUSRZrA==
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.176.g3575e65682-goog
+Message-ID: <20261016154707.2125747-1-vdonnefort@google.com>
+Subject: [PATCH v1] ring-buffer: Use is_user_task() in __rb_allocate_pages()
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 16 Oct 2026 10:22:56 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Before allocating ring buffer pages, __rb_allocate_pages() checks the
+available memory with si_mem_available(). This is however only a rough
+estimate and may report memory that can't be used for this allocation.
+In the event of an OOM, we don't want to penalise another task with the
+OOM killer, so the allocating thread is marked as the OOM origin when it
+is a user task.
 
-> On Fri, 16 Oct 2026 17:47:51 +0800
-> Haoran Wang <haoranwangsec@gmail.com> wrote:
-> 
-> > From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-> > From: Haoran Wang <haoranwangsec@gmail.com>
-> > Date: Fri, 16 Oct 2026 16:30:00 +0800
-> > Subject: [PATCH] tracing: guard trace_event_get_offsets() against an empty fields list
-> > 
-> > trace_event_get_offsets() dereferences the first entry of the fields list
-> > returned by trace_get_fields() via list_first_entry().  list_first_entry()
-> > then returns the list head itself, and tail->offset + tail->size reads past
-> > it.  The corrupted result is used as the BPF context-size bound in
-> > __perf_event_set_bpf_prog():
-> > 
-> >     int off = trace_event_get_offsets(event->tp_event);
-> >     if (prog->aux->max_ctx_offset > off)
-> >             return -EACCES;
-> > 
-> > so a context-reading BPF program that ought to be rejected can instead be
-> > attached to a zero-field tracepoint (which still carries
-> > TRACE_EVENT_FL_TRACEPOINT) and read adjacent kernel memory when the
-> > tracepoint fires, bypassing the verifier's context-size confinement.
-> > 
-> > This is reachable through user_events: a user can register an event with no
-> > fields (e.g. `echo u:my_event > dynamic_events`), which leaves user->fields
-> > empty while the event remains a BPF-attachable tracepoint,
-> > trace_get_fields() then routes through user_event_get_fields() to that
-> > empty list. The corrupted
-> > result after list_first_entry is then used as the BPF context-size bound in
-> > __perf_event_set_bpf_prog(), which lets context-reading BPF programs attach
-> > to a zero-field tracepoint when they should be rejected with -EACCES.
-> >   
-> 
-> Hmm, so user events can have empty events. :-/
+Checking current->mm is however not sufficient to distinguish user from
+kernel tasks. Instead, use is_user_task().
 
-I meant "empty fields".
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Beau, Is that a thing?
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9c4e40847e43..bcc28d50c634 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2468,7 +2468,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (i < (nr_pages << subbuf_order))
+ 			return -ENOMEM;
+ 
+-		user_thread = current->mm != NULL;
++		user_thread = is_user_task(current);
+ 	}
+ 
+ 	/*
 
--- Steve
+base-commit: c47a7b11bcb3d45e29723afcf6336866476b1d08
+-- 
+2.56.0.176.g3575e65682-goog
+
