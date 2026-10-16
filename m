@@ -1,161 +1,108 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B903B27F4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 06:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603AE3BED11
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 06:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792131408; cv=none; b=keOGj8cCV8PrLELPFrktXyUK7EwevO4DsFAhKyb3Y9GNBS3GvQVlja3HVTMl4utpIbj6n6ptHpbnFlo2rlvTFtBODoJp2hxHaIXyOK/usq9Om0O6iAPjMOQt8FyZCGZ5rz5pVdPBRF+WauVXhV/8757FpW4Ud2xzyDsM1bGTLiE=
+	t=1792133849; cv=none; b=BfOv5jRE8jlaaySbCEmvzwFLvT4rPnIY6TrJ4rV29MDuMBWl9UrydepCdtpwQZXfiH9zjiYn55jZb40+8dl6SJp+IliS3JkZw28E8lDzrND3ijgXJXr92hGyyc/CVyw564u7w2kVDhGQxU7s4Jz/TISdl1sXgDpA42vk/kfQe6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792131408; c=relaxed/simple;
-	bh=vyDeX8k8/sPjBY1Pb3s9Gz8zKDNgwOVVETru05itzdc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CHHPp/UwAnE7q8JBTJ+07QH9sZC670QmTeWcmOpF7oBAVvEGP5OQMs+2L28qmecFu3qOO0L9GY2cYl1oXMwoyxp5ki1gGdpLTYF6wp7MGcKvqEPg/1XP9WeqfVI03qUisWsjbFAPJrRiXgzvhPOTCQfmlZsUCdBuAnabGsPR7Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rR+IHqfF; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1792133849; c=relaxed/simple;
+	bh=kQd5P4S1KIO7wdKGlrQgW7S7g/qEN4cgrzSOX0pj/yU=;
+	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Date:Subject; b=BPtjVpDfyE5ooMDOm3f/daealwFgSBZyBLynFqRwwPV/CqapWk4yYsuiECpZXKxQTqeq3fdwmRDZPRT9+z9JCm7Bmpe3XfF0zHN++xDV75xBCPVuDhztM3SL1qH1mkSWJuw1jFg6IxRmiJNEFHgYHlxyCjpuWdU4MAKAbythF78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bM64pemc; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR+IHqfF"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a0e1b0681bso43435865e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 23:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bM64pemc"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ac677668a9so1948571a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 23:57:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792131403; x=1792736203; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=E8EDIcpHqc3pxDbfYRG6SRGOamgW/C6wGExJNy1Xs+Q=;
-        b=rR+IHqfF5oKozGZoT8adWuepaIQQqOP3n25pt/d5z1elIFbL9W15aedCElGG6bW7Ij
-         An312Zi2cl1R9AxihcBHaSFkVmqBvUoJfOv/E5H95avW+/4+3HVvuu/Tde3sevxJGYhJ
-         i3QammZV/5N1KkgbbUUdNevwdL7urK0SBiHPLHYpUkoZwOGYTWc92tlQY0mmth618enh
-         LlR9kOtqr5DHjGGVh8cxGLumxk3SfDhVbZqLKLRx7xHAuHhxdnIXxMM6+dbL+4NmfvRZ
-         eIsGHQslqcRpo5f2Kq6wcETXkDHDzjkDBfVyczBTAouGDVVatc5byuG/XyF6akUQOweZ
-         eXNg==
+        d=gmail.com; s=20251104; t=1792133847; x=1792738647; darn=vger.kernel.org;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kQd5P4S1KIO7wdKGlrQgW7S7g/qEN4cgrzSOX0pj/yU=;
+        b=bM64pemcKr167oviw9n8GYfUUYAKXD/CNdrWfxRQl26gVv7NviKo22S2N1P4wOVeAw
+         W1uhb4qVU56Rpo1CRHn8flmV79PT6T8Hta+zMCCbg6V3zt/+8ScC0Ym1m7fJzxBRu+D4
+         hhvgvVDDS39lD0XX2iP4rfW+BwtVcA91rNB5EUzcS0f1gR+s5ELxzUHgpXTt6ugkNAK0
+         L1gJIIZDW4otvwgpaESk1odx4bNpbadiFc8I6zDdvkDchxdjhwpmPILxz6wvMzzbnPEu
+         p/DqJR5WA4shBQjv5i2QKAJKQnm/MtoQhQxz584Kot4YO+rXZTplLXoBRjUXPZsMbo8N
+         FvDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792131403; x=1792736203;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=E8EDIcpHqc3pxDbfYRG6SRGOamgW/C6wGExJNy1Xs+Q=;
-        b=Xc3WqmrYaSq7iqnVn82/WecBCFhZIevcut4cm7YI0ht33lI/+26q6qoj0TO++8FHOL
-         YgGUv6oVwRBqzprtnPgSpiZ1V88ryCnUsKcdbnidlfu3tMi4fc4u0ZSo4AnHSKIUmwBR
-         nP+Y0RO6swoAE6nfxbGMNOw4rCrZeT6/K5PUIqS+esJvqbMFL/VsC+mmZWR+xV0dPtlv
-         er6u9Y1RsAyeL3ZnRXqyykKoZV9xhlj3Et7elw1o/WBmFUpB30OxgGbe0y/AtNifMF9x
-         BB5heFZGgwCU2Tc/xUX0eWsOvQwRJiEq6SXgaiJtJFBiYsaRC05OGYStOdxSfLRVTk+e
-         GgNA==
-X-Forwarded-Encrypted: i=1; AKwUvBx+9b8Cb18LSrs4zValT+OYMv6QzR3D89MOk1phppl7wEJVNYYWBs646xUcbQs4mimeUoBQN+uFl2XWYj8QnxZVVEo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLyLcLoCjNRa7Gb6XewQs9p0hdf6v2cDeBB3AUmi0jW4UOdJVv0
-	93j+KEHy6rze23/Dn1UsKK9o5iZIqflxL+cGHL9OzMJyN96+Xw8qtZjL
-X-Gm-Gg: AYBFou1k/Z1543kPdluxIM3lF/xN7Y++YarHMkvtJfStKQ++sKz+Ekb5+RUQltNzfEM
-	NWERSJiMigE1dJYYeWZXqB2csXHMOWkyjpHTbXRK9aQHbKW1h7lejbNS+mSAzJuLQhtEII40vz+
-	eiJfUaBdWjwqBooOrXyWC2+grENi+wkuf4ypIE9KhNrYJ7R1Sql3mLweefbq638DvtusNvXmXuS
-	MQUmjlcAx97Gl4n9wEMwyHF6O/MjzxHCIFxNud2Ac16gRYh48ORr7vvSlXMzqhm3BS47QXx7MPF
-	RaZrh+niPlOg1H/JNLgsrLWetJd22oQ3uiPfQ79PCdLQCI4C8yqfVpad5LmpHC5/ogCjWRVk6/K
-	LRsX9ONN9rpfXrZMLOyoXUS4Vcdt4IgyxPQQTO3hLKE2RIL9glRiWKlok2b9KZkLjayH+3VCM+j
-	T0bdG3RjPmuphKEcl9HInTDR2Lq23XYlqbFPYqBtvR8Hrh6Vi3KNv3fzpaGvf9CE7tn2qSZ8iO2
-	t/GkwLoLGqolzDAn44kCESt8JlTezh2gEysLoCIMBd97BxWWEQgPr8sJEA=
-X-Received: by 2002:a05:600c:608d:b0:49c:cee0:e7c1 with SMTP id 5b1f17b1804b1-4a18e48d45cmr464623495e9.16.1792131402801;
-        Thu, 15 Oct 2026 23:16:42 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c8abfae7sm14985945e9.0.2026.10.15.23.16.41
+        d=1e100.net; s=20260707; t=1792133847; x=1792738647;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=kQd5P4S1KIO7wdKGlrQgW7S7g/qEN4cgrzSOX0pj/yU=;
+        b=afKZ+yNK617uxOrn/vKGZlnzU0cc7R7Agamefwwc4LIYJIAj4y2XVcU32is0x7jlqj
+         wMwibuRCnf/pWvzHPgkU3XoBNR6EBAz8zy/I2mm6Rv6H22xmVzysuiyfXghhn+eznrIc
+         x4Q1DvOwNXAHlIqcIGHt+xwxCr1jbM3DQFgHZGiHpfa3dIYP88jZ1WxP5avRGni98vhr
+         jLdIYOOz7q6vICAxtik6n5gRKZtoH610rtMh5nhC3IYlM0KdqMUphmeO6kpTdoqMi4kn
+         jJ0y2aBqOI1U37ZXW9mN7hjOm9hFqcBdEVRpW4RP7T+2UPkPW8gJgswKWjc+drb1F0BW
+         0U9g==
+X-Forwarded-Encrypted: i=1; AKwUvBwIizVnnH9WboOJ/cPLSY8aohJp9qgPkOWJqyA9zKeTXljanMSe32Rlke/bQhuFSkNdfYipXsLeKHJhvsLRpmJ/FXM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKDMYK+nC2Xo/57LtuXtQYndLVB4KXM/RCJ8AeG37VVfeyZfETf
+	yCpmaS8BnXJZ0ZhZWrzSKBxd1kmprwBxsuBsLIKKxUt/DJue2wpyJvHJ
+X-Gm-Gg: AYBFou2nCbg84sWIsc0k7w4iECmTfJMYhdCDnc33ZVgsw3xM571b/WSL8Q1Johj02Fv
+	f8Y3xh2lbaMCdJC3q/TXQPc1HW4rtEMuKG052lqzA3yNcCF9Y5rOtgUGlm6UDaIxMa/b0Bg5D6q
+	+kBG7ZFwyapWpf6D8MwnySXcY3t5903LSvxqivwsioo8n0SqtTibB+DwOElRly3dLKYywTzVrOp
+	FrJtRfRGC97ZRP9zZdgtXDx/B3ZPrwV3Wsp4/MqtTEbHbTm1rLLWZhW7eIYkY3Kkr61xBWt6SOB
+	0uP33pjPdqi3gRDOxjvjpLNgypbKooAKR2/x+nD43gKnP43NdmvKRCGb6OZ5P+yFzO611UZ4Vv9
+	4y4zGq52nwugqD4ZM1Y+k29t+D+XrKQK4Vdagd1OtOzBts2amyiKuDukOEJjwIMwBZhP4/fCQTX
+	O0zpDDjLFlpHWIF74nr8O6CtAL4oHsMskzgf+aKgtCMgxunhsxTf1tuwUtHYjJvI8A8eCYpw+AG
+	xNjatc=
+X-Received: by 2002:a17:90b:5444:b0:3aa:f2c4:12df with SMTP id 98e67ed59e1d1-3ab3a236ca5mr18057089a91.9.1792133846192;
+        Thu, 15 Oct 2026 23:57:26 -0700 (PDT)
+Received: from [58.206.202.11] ([104.28.215.70])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc98139ccsm1242020a91.0.2026.10.15.23.57.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 23:16:42 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] tracing: Hold trace_types_lock when resetting last boot data from readers
-Date: Fri, 16 Oct 2026 07:16:35 +0100
-Message-ID: <20261016061638.214847-2-devnexen@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261016061638.214847-1-devnexen@gmail.com>
-References: <20261016061638.214847-1-devnexen@gmail.com>
+        Thu, 15 Oct 2026 23:57:25 -0700 (PDT)
+Message-ID: <6ad1cad5.856c1b21.18f9b7.a2c3@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
+From: Haoran Wang <haoranwangsec@gmail.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, haoranwangsec@gmail.com
+Date: Fri, 16 Oct 2026 14:57:22 +0800
+Subject: [PATCH] tracing: reject trace events with an empty TP_STRUCT__entry
 
-update_last_data_if_empty() is called from tracing_open() with O_TRUNC,
-tracing_read_pipe() and tracing_buffers_read() without trace_types_lock.
-Two readers can both pass the LAST_BOOT test and free module_delta
-twice, and a module notifier can update module_delta while it is being
-freed.
-
-Take trace_types_lock in those paths and keep the callers that already
-hold it on an unlocked variant.
-
-Fixes: 32dc0042528d ("tracing: Reset last-boot buffers when reading out all cpu buffers")
-Cc: stable@vger.kernel.org
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
- kernel/trace/trace.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d3ffbed9c44b..cf8663c27ae6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3603,6 +3603,7 @@ static int tracing_single_release_tr(struct inode *inode, struct file *file)
- 	return single_release(inode, file);
- }
- 
-+static bool __update_last_data_if_empty(struct trace_array *tr);
- static bool update_last_data_if_empty(struct trace_array *tr);
- 
- static int tracing_open(struct inode *inode, struct file *file)
-@@ -4697,7 +4698,7 @@ tracing_set_trace_read(struct file *filp, char __user *ubuf,
- int tracer_init(struct tracer *t, struct trace_array *tr)
- {
- 	tracing_reset_online_cpus(&tr->array_buffer);
--	update_last_data_if_empty(tr);
-+	__update_last_data_if_empty(tr);
- 	return t->init(tr);
- }
- 
-@@ -5371,8 +5372,10 @@ static int tracing_wait_pipe(struct file *filp)
- 	return 1;
- }
- 
--static bool update_last_data_if_empty(struct trace_array *tr)
-+static bool __update_last_data_if_empty(struct trace_array *tr)
- {
-+	lockdep_assert_held(&trace_types_lock);
-+
- 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
- 		return false;
- 
-@@ -5387,6 +5390,16 @@ static bool update_last_data_if_empty(struct trace_array *tr)
- 	return true;
- }
- 
-+static bool update_last_data_if_empty(struct trace_array *tr)
-+{
-+	/* Avoid the lock on the read path unless this is a last boot buffer */
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return false;
-+
-+	guard(mutex)(&trace_types_lock);
-+	return __update_last_data_if_empty(tr);
-+}
-+
- /*
-  * Consumer reader.
-  */
-@@ -6479,7 +6492,7 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
- 		ring_buffer_set_clock(tr->snapshot_buffer.buffer, trace_clocks[i].func);
- 	tracing_reset_online_cpus(&tr->snapshot_buffer);
- #endif
--	update_last_data_if_empty(tr);
-+	__update_last_data_if_empty(tr);
- 
- 	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
- 		struct trace_scratch *tscratch = tr->scratch;
--- 
-2.55.0
-
+RnJvbSAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW9yYW4gV2FuZyA8aGFvcmFud2FuZ3NlY0BnbWFpbC5jb20+
+CkRhdGU6IEZyaSwgMTYgT2N0IDIwMjYgMTU6MTA6MDAgKzA4MDAKU3ViamVjdDogW1BBVENIXSB0
+cmFjaW5nOiByZWplY3QgdHJhY2UgZXZlbnRzIHdpdGggYW4gZW1wdHkgVFBfU1RSVUNUX19lbnRy
+eQoKdHJhY2VfZXZlbnRfZ2V0X29mZnNldHMoKSB1bmNvbmRpdGlvbmFsbHkgZGVyZWZlcmVuY2Vz
+IHRoZSBmaXJzdCBlbnRyeSBvZgphbiBldmVudCBjbGFzcydzIGZpZWxkcyBsaXN0IHRocm91Z2gg
+bGlzdF9maXJzdF9lbnRyeSgpLiAgQSB0cmFjZXBvaW50CnRoYXQgZGVjbGFyZXMgYW4gZW1wdHkg
+VFBfU1RSVUNUX19lbnRyeSBuZXZlciBwb3B1bGF0ZXMgdGhhdCBsaXN0LiBJdHMKZmllbGRzX2Fy
+cmF5IGhvbGRzIG9ubHkgdGhlIHRlcm1pbmF0aW5nIHNlbnRpbmVsLCBzbyBsaXN0X2ZpcnN0X2Vu
+dHJ5KCkKcmV0dXJucyB0aGUgbGlzdCBoZWFkIGl0c2VsZiBhbmQgdGhlIGZvbGxvd2luZyB0YWls
+LT5vZmZzZXQgKyB0YWlsLT5zaXplCnJlYWRzIG1lbW9yeSBwYXN0IHN0cnVjdCB0cmFjZV9ldmVu
+dF9jbGFzcy4gIFRoZSBjb3JydXB0ZWQgcmVzdWx0IGlzCnRoZW4gdXNlZCBhcyB0aGUgQlBGIGNv
+bnRleHQtc2l6ZSBib3VuZCBpbiBfX3BlcmZfZXZlbnRfc2V0X2JwZl9wcm9nKCksCndoaWNoIGxl
+dHMgY29udGV4dC1yZWFkaW5nIEJQRiBwcm9ncmFtcyBhdHRhY2ggdG8gYSB6ZXJvLWZpZWxkIHRy
+YWNlcG9pbnQKd2hlbiB0aGV5IHNob3VsZCBiZSByZWplY3RlZCB3aXRoIC1FQUNDRVMuCgpSZWpl
+Y3Qgc3VjaCBldmVudHMgYXQgcmVnaXN0cmF0aW9uIHRvIGZpeCB0aGlzIGJ1Zy4gZXZlbnRfaW5p
+dCgpIGlzIHRoZQp1bml2ZXJzYWwgY2hva2Vwb2ludCBpbnZva2VkIGZvciBib3RoIGVhcmx5LWJv
+b3QgYW5kIG1vZHVsZSBldmVudHMsIGFuZAppdHMgcmV0dXJuIGlzIGVuZm9yY2VkIGJ5IF9fcmVn
+aXN0ZXJfZXZlbnQoKSwgd2hpY2ggcmVmdXNlcyB0byBhZGQgdGhlIGNhbGwKdG8gZnRyYWNlX2V2
+ZW50cy4gIEFuIGV2ZW50IHdob3NlIGZpZWxkc19hcnJheVswXS50eXBlIGlzIE5VTEwgKHRoZQpl
+bXB0eS1UUF9TVFJVQ1RfX2VudHJ5IHNlbnRpbmVsKSBpcyByZWplY3RlZCB3aXRoIC1FSU5WQUwg
+YmVmb3JlCnRyYWNlX2V2ZW50X2dldF9vZmZzZXRzKCkgY2FuIGJlIHJlYWNoZWQuCgpTaWduZWQt
+b2ZmLWJ5OiBIYW9yYW4gV2FuZyA8aGFvcmFud2FuZ3NlY0BnbWFpbC5jb20+Ci0tLQoga2VybmVs
+L3RyYWNlL3RyYWNlX2V2ZW50cy5jIHwgNCArKysrCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRp
+b25zKCspCgpkaWZmIC0tZ2l0IGEva2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50cy5jIGIva2VybmVs
+L3RyYWNlL3RyYWNlX2V2ZW50cy5jCi0tLSBhL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHMuYwor
+KysgYi9rZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzLmMKQEAgLTMyNzksNiArMzI3OSwxMCBAQCBz
+dGF0aWMgaW50IGV2ZW50X2luaXQoc3RydWN0IHRyYWNlX2V2ZW50X2NhbGwgKmNhbGwpCiAJaWYg
+KFdBUk5fT04oIW5hbWUpKQogCQlyZXR1cm4gLUVJTlZBTDsKIAorCWlmIChjYWxsLT5jbGFzcy0+
+ZmllbGRzX2FycmF5ICYmCisJICAgICFjYWxsLT5jbGFzcy0+ZmllbGRzX2FycmF5WzBdLnR5cGUp
+CisJCXJldHVybiAtRUlOVkFMOworCiAJaWYgKGNhbGwtPmNsYXNzLT5yYXdfaW5pdCkgewogCQly
+ZXQgPSBjYWxsLT5jbGFzcy0+cmF3X2luaXQoY2FsbCk7CiAJCWlmIChyZXQgPCAwICYmIHJldCAh
+PSAtRU5PU1lTKQotLSAKMi40My4wCg==
