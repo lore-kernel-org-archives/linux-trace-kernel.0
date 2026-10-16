@@ -1,131 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.83.148.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B99270552;
-	Fri, 16 Oct 2026 19:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCF0447237;
+	Fri, 16 Oct 2026 23:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.83.148.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792179961; cv=none; b=p6gBmPv4wgHK0mS+V8Z753tDxag+FRdLGWeY2n93UV8qt6xogC6NJuv8DZzudRKValfoLGKou2kS2ovSkLpVl570bP2ru6mvuvjs1ENn/pZYCUm/1fO8nDNBn9kQGj1DLBiSSJrW7tmfXbUVQC8ZqbRcn9c6RKLr/tbkYGwMMRE=
+	t=1792191848; cv=none; b=It5Dh/PxY6y0U4D6vlrzeCEIQC4jFkHMKZFuK62dxA+FEg/37/jTAB8o5UeK303vwVRI2gIBXyjajiY/fdvVor/Df3a2s2NKLtN3ChZ6Hv5e7aXhhoQ52gGUvtqDziAQ4m14YCdDKSExb/JTGKv6RlnHQoKcDU0lQmpx/h0pTcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792179961; c=relaxed/simple;
-	bh=DxKtbX+UudkFnUJj810JNJP/mKeLsk8jdvzDIz0fu2E=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=oTYs2VU6TQ6vO4dODJMEVGUAqWJNlcCz1nYs8g9gGljs3y6qaAWz29j+JBRH9eE2mxOF6qy2x8250t616NBl8iWPNjwuPbQUz6dvCDLzx6XwWH4zUnJXceGHPKMFAdIXSk1hTRNTQYsWVovQZrZWqmmt0xLL78+fAv/rd9fbWKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl21KMTD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792191848; c=relaxed/simple;
+	bh=4hzHIB0Y5JPlhprW+J1idLrj1nO22R2E8VcKkQJMrDE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OiX26FuKaTqMQYEuYDf6LigNWh1B3uWzT0vAXa2bTiwxxxZwxH1QyY6luNScrgQwUOfnnLcsit/yiglLr8f5Q0RysZI1K7BpFP6+ixIQ59Gn0Xk1uCwihZ06DMjqRlS336umXHwQ/rBWeCKGzqjWnmq60h1vAhuZ6evsjbbBE7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=UJJyq1RO; arc=none smtp.client-ip=35.83.148.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl21KMTD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2C91F000C5;
-	Fri, 16 Oct 2026 19:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792179959;
-	bh=MjeGM9oEcnDgRdbsAdjLLEiqfKFfsdmxL0qkdGbRoJ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=hl21KMTDL4RNfQXKr6L2iIpCeZcVsHaaklp7H95NhewZNPs3Hwgj/hKJlwP+8cwMI
-	 zegu9GRM3nMAZTDWDRAmWpPbC+HVbk+NCtrNl7nFEEYTs7tVxo3P/xuOqTWChmdpuV
-	 4kfEqv7RAY9hWPq+6QsIJPUOsgUYSCd5XGx+DQy/ovibdzdE36j147ZeH7OMRk7GBD
-	 uUyw1h47W/33031mUYqleGzJwo9zbFg0aDek/2df19ZZJqbem5ZLv9pnM4BOLlbZ89
-	 jr41wiLLyem3FEuLuy7veKzOs6rwzX3iExEf0iWwrqxFN4pEWyLjaTXAuLpQ5sGcl8
-	 fgOpLY5awGYwQ==
-Date: Fri, 16 Oct 2026 09:45:58 -1000
-Message-ID: <f000e148e875d6f1d2b587215117cedc@kernel.org>
-From: Tejun Heo <tj@kernel.org>
-To: Kunhai Dai <daikunhai@didiglobal.com>
-Cc: axboe@kernel.dk, josef@toxicpanda.com, yukuai@fygo.io,
-	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
-	Tao Cui <cui.tao@linux.dev>
-Subject: Re: [PATCH] blk-iocost: publish hweights as one atomic value
-In-Reply-To: <20261015135919.210740-1-daikunhai@didiglobal.com>
-References: <20261015135919.210740-1-daikunhai@didiglobal.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="UJJyq1RO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1792191846; x=1823727846;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N+HMwtYomXTCU6APfdeFwp0AAr9WthCoGnVUMU/qw5o=;
+  b=UJJyq1ROJz09KPFHrW0RQQauGEK+FvBzv35nWYS9VCwagv/rvvR5C+rG
+   i/Fj26g20Qw2lxaavHItzh4LTDw2QMTPouV/Xd7cW3/kFw0Xc4h3KMaJK
+   CudiE7w0QoGrqo3Pp38xjNtWihduySQGPQGD8kUWI8Sf6IEm23kJQsKkH
+   jgWJ6xT87RaITQJ5l1e6vzZj3mTsZZTDRhHDOZ9qMSk0M7xMm2SBVraTB
+   7gqCBmDx6r5xHCzmu2gTmeCAPzbVSLGvWDdibPh2ixvLHuNK2fxyIplkl
+   dJrLx/wDqmYGmYK5Gr4SnuCy0mkZM3KWt0+EcTxEK2Prus4/HVDrt9Sri
+   A==;
+X-CSE-ConnectionGUID: F+PGbVPKT32QkFZLKUD5yA==
+X-CSE-MsgGUID: KLTRFuNBQQW9sgbw8K6hGA==
+X-IronPort-AV: E=Sophos;i="6.27,162,1787011200"; 
+   d="scan'208";a="31289766"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 23:04:05 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.104:26478]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.190:2525] with esmtp (Farcaster)
+ id 7051b923-aa5f-4e2a-8f20-94827baa4d21; Fri, 16 Oct 2026 23:04:05 +0000 (UTC)
+X-Farcaster-Flow-ID: 7051b923-aa5f-4e2a-8f20-94827baa4d21
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Fri, 16 Oct 2026 23:04:04 +0000
+Received: from dev-dsk-aarnahmd-2a-95203392.us-west-2.amazon.com
+ (172.19.38.251) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.53; Fri, 16 Oct 2026
+ 23:04:04 +0000
+From: Aaron Ahmed <aarnahmd@amazon.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Gavin Inglis
+	<giinglis@amazon.com>
+Subject: [PATCH] ftrace: Initialize modname and offset in print_rec()
+Date: Fri, 16 Oct 2026 23:04:03 +0000
+Message-ID: <20261016230403.4916-1-aarnahmd@amazon.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Hello, Kunhai.
+print_rec() leaves 'modname' and 'offset' uninitialized and
+kallsyms_lookup() only sets them on success. When the lookup fails like
+when a module is being loaded or unloaded, 'modname' holds a garbage
+value, passes the 'if (modname)' check, and is dereferenced by
+seq_printf().
 
-The following is a Claude-generated review.
+  Oops: general protection fault
+  RIP: 0010:string+0x48/0xe0
+  Call Trace:
+   vsnprintf+0x1f5/0x650
+   seq_printf+0x8e/0xb0
+   print_rec+0x6c/0xc0
+   t_show+0x4c/0x440
+   seq_read_iter+0x119/0x480
 
-On Thu, Oct 15, 2026 at 09:59:19AM -0400, Kunhai Dai wrote:
-> current_hweight() uses separate plain stores for the cache generation and
-> both weights. The compiler can publish the generation before the weights,
-> letting an interrupt accept stale weights as current. Multiple refreshers
-> can also interleave their stores. Invalid donation budgets may then lead
-> to a divide error in transfer_surpluses().
+This can be triggered by reading available_filter_functions while a
+module is being loaded or unloaded.
 
-The second one is the main problem and doesn't need the compiler's help.
-The issue path refreshes the cache without ioc->lock, so CPUs issuing
-for the same iocg refresh it concurrently after each commit_weights().
-When one of them computed for the previous generation, its plain stores
-can interleave with the other's in program order and leave the current
-generation with a stale weight, which then stays until the next commit.
-The rereads at out: can also return another refresher's stores, even to
-the timer under ioc->lock. So the race isn't specific to a toolchain.
-Maybe lead the description with it and its effect: stale hweights used
-for the issue cost and the donation decisions, and the divide error?
+Initialize both variables so a failed lookup skips the module name.
 
-The packed word fixes both, given that every weight change commits the
-generation before ioc->lock is released, which holds for all
-__propagate_weights() callers.
+Fixes: b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
+Cc: stable@vger.kernel.org
+Tested-by: Gavin Inglis <giinglis@amazon.com>
+Signed-off-by: Aaron Ahmed <aarnahmd@amazon.com>
+---
+Reproducer: https://gist.github.com/ginglis13/dd3f64426767cd48df55dfe5d26c2299
 
-> Validated against commit 24a19b953e2a ("Linux 7.3-rc7"):
+ kernel/trace/ftrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The description could be a lot shorter: the bug, its effect and the fix.
-The validation details and the revision notes fit better below the ---
-line.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 673a54fdf3929..164fbc07bce05 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4426,9 +4426,9 @@ subsys_initcall(ftrace_check_for_weak_functions);
+ 
+ static int print_rec(struct seq_file *m, unsigned long ip)
+ {
+-	unsigned long offset;
++	unsigned long offset = 0;
+ 	char str[KSYM_SYMBOL_LEN];
+-	char *modname;
++	char *modname = NULL;
+ 	const char *ret;
+ 
+ 	ret = kallsyms_lookup(ip, NULL, &offset, &modname, str);
 
-> +	cache = ((u64)ioc_gen << 32) | ((u64)(hwa - 1) << 16) | (hwi - 1);
-> +	atomic64_set(&iocg->hweight_cache, (s64)cache);
-
-The encoding is open-coded in the store, the load, ioc_pd_init(),
-iocg_activate(), the tracepoint and the monitor. Maybe pack and unpack
-helpers with GENMASK_U64() and FIELD_PREP()/FIELD_GET() above the trace
-include? The tracepoint header already calls ioc_name() from
-blk-iocost.c, so it can use them too. Using WEIGHT_ONE - 1 as the field
-mask also ties the weight scale to the field width.
-
-> +	atomic64_set(&iocg->hweight_cache,
-> +		     ((u64)(u32)(atomic_read(&ioc->hweight_gen) - 1) << 32) |
-> +		     (u32)atomic64_read(&iocg->hweight_cache));
-
-What are the old weight bits kept for? If it's the iocg_activate
-tracepoint, a comment would help. Otherwise, writing just the stale
-generation would do.
-
-> -		current_hweight(iocg, &hwa, NULL);
-> +		current_hweight(iocg, &hwa, &iocg->hweight_inuse);
-
-This only feeds the inuse_transfer tracepoint further down. Maybe get
-the value with current_hweight() there instead of writing the scratch
-field from here?
-
-> +		if (iocg->hweight_donating > 1)
-> +			iocg->hweight_after_donation =
-> +				min(iocg->hweight_after_donation,
-> +				    iocg->hweight_donating - 1);
-
-Every case this changes still trips the WARN's donating <= 1 test below
-and takes the goto, so it only changes the after= value printed. Is it
-needed?
-
-> +			goto out;
-
-As Tao suggested, this would be better as a separate first patch with
-Fixes: e08d02aa5fc9 ("blk-iocost: implement Andy's method for donation
-weight updates") and Cc: stable, followed by the packed cache with
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost").
-
-On Tao's second point, with two or more over-donors the over_hwa rescale
-can floor a small donor's after to zero without any race, and an inner
-node with hwa equal to donating then gets a zero hweight_inuse and the
-same divide. This comes from arithmetic on a constructed hierarchy and
-hasn't been reproduced. If it's reachable, the WARN fires from a
-legitimate state. Would it be better to keep the rescaled after at 1 or
-more, with the goto as the safety net? The goto alone gives up donation
-for the whole period.
-
-Thanks.
-
+base-commit: 70dd4ee72eb2d5793c62e71c14e3aba78e5a4e56
 -- 
-tejun
+2.47.3
+
