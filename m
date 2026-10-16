@@ -1,126 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C313019A9;
-	Fri, 16 Oct 2026 13:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04B94E323C;
+	Fri, 16 Oct 2026 14:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792158746; cv=none; b=ZuFBoL28VhPC5QODqLJ4Hg2NimtgwhUyB7/rYbt+lAB21OEU5VRo72MsIQvsYemj4/a176JaLABf61BhngWl3LVBIZdO1p0S3j1igJ/dgEihLDit4D7ncyIIDzXo3H4vGHWL5eDjUqGxHalV4zajUElHjet2SYKGDOWxO9sS6zU=
+	t=1792160045; cv=none; b=ICaOhJZ7xrwhRfXS7NVMZi19n6VNa4jsekZUKC/+jFM0UzHHiB+aY287+ljHTfLkkp8wBGkZdAr2rgld+aCfaB3zMGBZTNJfcN2Hr+Qf2wCymnDgBbiUh8jDJ1qVReKx7o70b4kCcXRkwB3V1yG7fMW2Nl/ONeaehoWDeroQ5kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792158746; c=relaxed/simple;
-	bh=x8ixfYCeBxcWJG8wmxGyuCi0Er2FjsK4suizocaFIwQ=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=FJe5fQVRHdNTgmrXBdMympyzPVkEIEd21Oqk2l3Ew5LXroAHwKO/k3KuL970T86o0BctAzPL6Qp0AjcqIQX0YCupDK6CA2F/bvYNZ0tP3tjN1b6dG2BqlADWyI7jmt2bt8YpwWKtc7nMzRJqWd7/n+D4KrP5JqN4fbuVd+J9Fsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ko+TqwJN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792160045; c=relaxed/simple;
+	bh=b1kiO+OT+f67PGuMMnO46zAAzj5T0SNAahxE8VuMRgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B9R7A9cfO33uU/Po5MqHWcpVpf77CSJLHQKuUtXnGjYhx381/v98YBMO7xtO2swWw0T6gazVEFZHVbFd/LpfKcdFIl5frNLMfJEJ2rI2w1WU9qKKyj7eYolXiWvhqkMs7uzaZSDzndTIsaJzgyosz5sLjPgiNXbToESiImsZLl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=wgANTwKl; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ko+TqwJN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EA71F000C4;
-	Fri, 16 Oct 2026 13:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792158745;
-	bh=g7bfjPOfLeDj0DiLcofzTar8DP7jmKGvhjriI0QbT28=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ko+TqwJNlzXU7bQPMwHAdHbwdiZnsatYDjbnYz7A4Qq/9axutcVCwshFWsO6Ekqwq
-	 5epomeW/jjSknb0OGVAoj/2T3Z+PlmZavqBAKDBOzYaq5SrUIpa4CQe66O2WPq8wvk
-	 FKuNNRX2fdUEFVj4pptbPhOSzdnT7BHDZkCGND9gEetl5DQzGwLAXKEtqjmgUBWNVG
-	 DMNQH2NkrKZHkIkTPOYdS25zLz3QBsf3ol1Ix4swDa9vd99CDqOLGws9xmkh+Vs/an
-	 xf/PQ0NRNXjLTHGXe/DEGgVXiOUqH40RH8Yid3NJ0yrssdH/dqqGf1FkkZAqvN7bkc
-	 e5qrEe2PAjznQ==
-Message-ID: <sashiko-outbox-174412@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] ring-buffer: Do not check si_mem_available() before
- deferred init completes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Amit Machhiwal" <amachhiw@linux.ibm.com>, linux-trace-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org
-In-Reply-To: <20261016134247.70722-1-amachhiw@linux.ibm.com>
-References: <20261009163557.88467-3-amachhiw@linux.ibm.com>
- <20261016134247.70722-1-amachhiw@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 13:52:24 +0000
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="wgANTwKl"
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 07EAC12046C;
+	Fri, 16 Oct 2026 14:13:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 3D1DB2000E;
+	Fri, 16 Oct 2026 14:13:57 +0000 (UTC)
+Date: Fri, 16 Oct 2026 10:13:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Haoran Wang <haoranwangsec@gmail.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH] tracing: reject trace events with an empty
+ TP_STRUCT__entry
+Message-ID: <20261016101356.6b9f2a82@gandalf.local.home>
+In-Reply-To: <6ad1cad5.856c1b21.18f9b7.a2c3@mx.google.com>
+References: <6ad1cad5.856c1b21.18f9b7.a2c3@mx.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: oukdzmp7p3puep55eih4y1ka1dnnx9gm
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 3D1DB2000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+TBVl4n+IEBA3U5ER0P/p0SW0ap0Wn0SU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=lI5DjuexGRZN1Av8GqHxjbE1/reoZ/RPViBWT9P2oDs=; b=wgANTwKlk1Nhx7myUF/B/0A4ZFy0O6LBy0hqWYBOInP7WYxPNqfNC1tOKLmsoSkNEbzKYTnkQYatQ9Ab5pPQt2Lu/Qp6J6tq2HZrMJvY1+vjexoTaF0NLWXVuV3tU9VUJHKnndgLqGXGsS+m8k1siVndzwVkrq/v0fHDpECrzFE=
+X-HE-Tag: 1792160037-230736
+X-HE-Meta: U2FsdGVkX18EBA7KiuKVGMa9HxEionb+URtUGmeJg28dERRXoFTEhchAR1h/IxG4SKSWo2ZTdP1CAaWWOuUJPoqj/UBtGjZ+x8tTRl1bIYOiV3LqyA3XvAMjnIy/PNEh3QVpdlL9885IXpeIckT9ENUzjvzI+lGpz3+0cWRtqqU4sleM97f+mV1JvnC1l9VrrF9jhdvTXmm4Dcz0UlyqaKrY10cEof2SCd2vW7Ca7SChwe/Vqd2qyM5i83JGaXaxJouvVD3FOCdhCBXzSjKR/XzLki+cglDXI3SWBk1NvczI0ZdOgk6k2E+w0qkMSETe3azQN+L9sO+3/1FZArqTt8x0GpmSt/de
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] mm/trace: OOM panic via GFP_KERNEL metadata allocations
---
+On Fri, 16 Oct 2026 14:57:22 +0800
+Haoran Wang <haoranwangsec@gmail.com> wrote:
 
-commit 5164ff519a3f7b78b5e2f07fc662c8cbbef0267e
-Author: Amit Machhiwal <amachhiw@linux.ibm.com>
+> From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+> From: Haoran Wang <haoranwangsec@gmail.com>
+> Date: Fri, 16 Oct 2026 15:10:00 +0800
+> Subject: [PATCH] tracing: reject trace events with an empty TP_STRUCT__entry
+> 
+> trace_event_get_offsets() unconditionally dereferences the first entry of
+> an event class's fields list through list_first_entry().  A tracepoint
+> that declares an empty TP_STRUCT__entry never populates that list. Its
+> fields_array holds only the terminating sentinel, so list_first_entry()
+> returns the list head itself and the following tail->offset + tail->size
+> reads memory past struct trace_event_class.  The corrupted result is
+> then used as the BPF context-size bound in __perf_event_set_bpf_prog(),
+> which lets context-reading BPF programs attach to a zero-field tracepoint
+> when they should be rejected with -EACCES.
+> 
+> Reject such events at registration to fix this bug. event_init() is the
+> universal chokepoint invoked for both early-boot and module events, and
+> its return is enforced by __register_event(), which refuses to add the call
+> to ftrace_events.  An event whose fields_array[0].type is NULL (the
+> empty-TP_STRUCT__entry sentinel) is rejected with -EINVAL before
+> trace_event_get_offsets() can be reached.
+> 
 
-ring-buffer: Do not check si_mem_available() before deferred init completes
+BTW, what bug are you trying to solve? Just some theoretical bug you found
+from a static analyzer or AI?
 
-During early boot, si_mem_available() can return a false negative on kernels
-built with CONFIG_DEFERRED_STRUCT_PAGE_INIT. Skip the si_mem_available()
-check until SYSTEM_FREEING_INITMEM, when deferred pages are fully
-initialized.
-
-Link: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
-
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 04bb94c29f587..aa877a272c894 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2452,10 +2452,24 @@ static int __rb_allocate_pages(struct ring_buffer=
-_per_cpu *cpu_buffer,
->  	 * memory. It may not be accurate. But we don't care, we just want
->  	 * to prevent doing any allocation when it is obvious that it is
->  	 * not going to succeed.
-> +	 *
-> +	 * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, NR_FREE_PAGES only reflects
-> +	 * the initial non-deferred pool during early boot and throughout SMP
-> +	 * bring-up (smp_init() runs before page_alloc_init_late() completes
-> +	 * deferred initialization). si_mem_available() returns a false negative
-> +	 * across this entire window while actual allocations succeed by growing
-> +	 * the zone on demand via deferred_grow_zone(). Only re-enable the check
-> +	 * from SYSTEM_FREEING_INITMEM onward, after page_alloc_init_late() has
-> +	 * finished and si_mem_available() is accurate.
->  	 */
->  	i =3D si_mem_available();
-> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> +	if (system_state >=3D SYSTEM_FREEING_INITMEM && i < nr_pages)
-> +		return -ENOMEM;
-
-[Severity: High]
-Does bypassing the si_mem_available() check during early boot expose the
-kernel to an out of memory panic?
-
-By skipping this check, __rb_allocate_pages() will proceed to the allocation
-loop even if the requested nr_pages exceeds available memory. The loop
-contains metadata allocations via alloc_cpu_page():
-
-kernel/trace/ring_buffer.c:__rb_allocate_pages() {
-    ...
-    for (i =3D 0; i < nr_pages; i++) {
-        bpage =3D alloc_cpu_page(cpu_buffer->cpu);
-        if (!bpage)
-            goto free_pages;
-    ...
-}
-
-alloc_cpu_page() uses GFP_KERNEL without __GFP_RETRY_MAYFAIL:
-
-#define alloc_cpu_page(cpu) (struct buffer_page *)          \
-    kzalloc_node(ALIGN(sizeof(struct buffer_page),          \
-               cache_line_size()), GFP_KERNEL, cpu_to_node(cpu))
-
-If the loop exhausts the buddy allocator, won't the slab allocator's
-subsequent attempt to allocate a new page for the metadata struct using
-GFP_KERNEL trigger a kernel panic during early boot?
-
-> +#else
->  	if (i < nr_pages)
->  		return -ENOMEM;
-> +#endif
-> =20
->  	/*
->  	 * If a user thread allocates too much, and si_mem_available()
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016134247.7072=
-2-1-amachhiw@linux.ibm.com?part=3D1
+-- Steve
