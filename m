@@ -1,287 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0EF19B3CB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 09:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173213FFAD7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 09:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792143488; cv=none; b=TD6JLmiVlIr+E4oOo6KgS55NG8RLdVc7gmCqle//BHP7S3FE/sV2xTL8YNnRgAFSQbQq4HGXxhubiZpB1K+J2o8U5QafBqb5h5rLSSHOKSepl63fbV/rUwR/MSlTOzdGSakldajzkBUZuoihkjXbMiJbVpF7DoZZ5SRPzt9gETs=
+	t=1792144077; cv=none; b=g56d+1WLg8e/w1glEQL+aZzpL4FY00U9RyKK+61KtRREdEkIYvgIH8QrcLHUhHjyt3uNZvj/BMCc6cDYQ7VV2r2uC5WckC5nCII0/auQBtAYJSUyLdpsGEWaivtuAAWQyNzGTFFzlAtOsuAUoxFxQwtZzrZO1WHIwP+mRggH/Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792143488; c=relaxed/simple;
-	bh=uX8jMJ4IoX66fZyyrakJYdlwFn+wmx+5e4zWhyM+tJA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iJiSCpOenu3YW+4BW0ogtqFpW33sFmrySss2Y4zosxafzfakaOo3Fh++LEEbU42ZDkfjeDkUuT7IvH7Ai7AwV8f/Q5kaQPNaAHdtvfFrckRC2QU7WjVkE8IfakjJvEaADBFkPnsA+DPMaMCeSVnrXfa8nDqRm6Zl00EI3sD5fU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fh1e+JDE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1792144077; c=relaxed/simple;
+	bh=K851o75YbtR6vIMbLWAnHs9eoIWtRPb2jgeinaNj5V8=;
+	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Date:Subject; b=Bsss8CZ4gtfVChozQIabnFcVR2QtOG38sRpqwp00NMZ8KGBhZvg90LO7xRinsp7qI/tYJ4G7Z+DZvSE2YL6M1YCVvRuuY+GGASOjx569MSZFHpY3oH1/LcVdU8Obc0DbpOsgtAbgNxdhTZ9T+ZEoImo+hFoS5nIvVYBlZsrFR6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gi0Cg/ID; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fh1e+JDE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792143485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uX8jMJ4IoX66fZyyrakJYdlwFn+wmx+5e4zWhyM+tJA=;
-	b=fh1e+JDExlMxw8cZA5gY4EA9PWWzQvh56JmTU4ZUpczYQfCn6VkFA6c2wNwHJZRVdACtFG
-	5hqSXoRXICYfJuohS6FcDdCHAYyWpNt44zX9UN8ADc24kY2tsQfIyi/wKRESkabXF/ljD0
-	QPpUmd4qUepzx+RU4Tayfo10h/tgw+g=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-372-qh1cA08MMWWBfi_7AgqgkA-1; Fri, 16 Oct 2026 09:38:03 +0000
-X-MC-Unique: qh1cA08MMWWBfi_7AgqgkA-1
-X-Mimecast-MFC-AGG-ID: qh1cA08MMWWBfi_7AgqgkA_1792143482
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48df02e6b40so1535030f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 02:38:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gi0Cg/ID"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3ab60ff4273so5141973a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 02:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792144075; x=1792748875; darn=vger.kernel.org;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=K851o75YbtR6vIMbLWAnHs9eoIWtRPb2jgeinaNj5V8=;
+        b=gi0Cg/IDa3bwUGDnBX91MAVFv1HsYbkDMWNyipX3JZqiF6JisLpDyHM46Sfv/hVrte
+         w+oXr6wJNuHmhtcbbnehUMXxByHQB99WhJQIIZFTK1JJr/1fjLIa3RaFGGQG9Q3xAYb6
+         v60DEDPzqQJ4f7h7mDtbvgv3SKBT5eLjc5yhwycHQ92vNBjfd6nJGuAnMxQahsjjbiOd
+         RS4p7Gw4H4ko/pZ1wpIzWuNO1TjRvBEI/L2bhXbt0HBBg2fi0EXL2vgUs+P6kVfev/ne
+         oUoMzJeUrC1tRNH3G9nZbJfScfbmJBEnIF3eyrjsT38c49e8OEnin0XYKmRlyI+mIQ7G
+         BmgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792143482; x=1792748282;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=odpzRyL/+qkTBXSWqxc0VNkikl0xH5c4tts12k5e6cU=;
-        b=2CPWDR9qa1t3zMyk+kPwBGeTMDiOTqT+Sn2gqk9B/Cvft4+xNBFEsIhy5LxSUADv/U
-         VOwvz+Nbtlac7FtaOcSjvMrbvqBC6o0Fc9xxPmD2Uv+FB7VvJEr8iygiT2rHmrKgtjQe
-         42ss/DwSpbJZ57VXra+TS9wKyXRGCNENRibUyL3QMNZ1QeWPCRk/pXPFfyzx10C0SEJ+
-         vQv/GbAXq3Ub7gd2GBmq9jU9834Dg2Peoiy5TRsxcjc5kp+wJppseoU/VmzsPSj++hGv
-         oaOMbBmeX0VqpUW2koeo3M6JFNkm55lz55gene2hcHEReUoEnP+YSCuE3XYOos1ec0Vz
-         iy4Q==
-X-Forwarded-Encrypted: i=1; AKwUvByHBu/q7AhA8yScv+Lmf+61FoK6yk5lBOj4C5DdVdIrsIQ0mwjD9yxk9FZQ7nq8HrssnbXXxef+BWUWiEdTBeEClR4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKlbgGRGM4tEKPqxgaAP1/dacXdKtfFlxdFLoI4lHHIVDsqZ200
-	VEMcO38WYCbg2t+abM9qrkSaaGTS3zl9PKxl0SnYkv1UNefYSBvps5RGPA95QDKE2M54HWlNZiS
-	WLqog3xsXPjFYmZYUwS6jOfDQBGiTN8naxxNbd7OkrsllBuTQtgD7p6T6LnwZZno4MO+GnoaNAQ
-	==
-X-Gm-Gg: AYBFou1t3KbC5fncg8sa56uUssczGgOFQzf11NRKAbZCfIDEgblkR19QA+YnatY7Ub1
-	i1f5azhPNBzyB1KPfeolj6tuJqXRF0GUJgfKOu6pv7N/hmgY5wNWG8eiu6opyMvXGWvqrx4sJ7h
-	2+Z8S7+mnW8OSF9Oj9z6vXks+qDiwOQQJhAz+BdW+f9EFwIp7eeQS8cyPDydBvM4Zm4md3N38Ca
-	k1ASV0A40wVIGEFmwG/uhRUCJiqsE7xwjaQMqiAQ8SNjKml9dXDRL2KXbEYfKdBWJOFfmxNfzoH
-	CborAfBQv/Hw2czzVeI9UusfV3SKItN9UwNO8hAiQwgvlsSpvJgGH2rklfFjggXPhy0Xt8wcat/
-	PZELqXL0U2zqmQ67Y7P/L7vNO9l1R
-X-Received: by 2002:a05:600d:1b:b0:4a1:9661:14b7 with SMTP id 5b1f17b1804b1-4a196611b9amr321481055e9.32.1792143482407;
-        Fri, 16 Oct 2026 02:38:02 -0700 (PDT)
-X-Received: by 2002:a05:600d:1b:b0:4a1:9661:14b7 with SMTP id 5b1f17b1804b1-4a196611b9amr321480385e9.32.1792143481221;
-        Fri, 16 Oct 2026 02:38:01 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1cca31234sm25645125e9.4.2026.10.16.02.38.00
+        d=1e100.net; s=20260707; t=1792144075; x=1792748875;
+        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
+         :content-type:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=K851o75YbtR6vIMbLWAnHs9eoIWtRPb2jgeinaNj5V8=;
+        b=iszJotI2jwTAUta0dNiZUnLFYs509UX0uUcFaBYe2pSVHjhJA0whChTDQihVaK0IS/
+         h/pCkcc8ovmpaia1EubAqK1BskmjBMefPFJuGiKo6eRauwOVR33nylbhl193L14a4OAr
+         ADrJyoEw4ySdoKD0TtQhbWN/eSmYoSLS28nX53V2tKa6YTtYtnnFwIYkJYRvlLx1x1bt
+         tkYQ4ryK3TIDNeBZvE0BqeR8l20bV7fyTB6fZ872OWji12F40snPrtLkzoFs7yb5/Z51
+         UsmoUm4r4s+6igLyPqM9Fybg4VtQFvZeTrq1VSVz8kklWYIVZcEvxTL9ZUgXHEC90lnx
+         EI1w==
+X-Forwarded-Encrypted: i=1; AKwUvBw/H5hfLUBzqR4AfF2wp+2kxyPJYGb8XAlCdrSHUgDXKRrirqdcUFPtc7v5A+qUm4NZM60x5BpE7yrIh1x72tMjCuM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK2385j9rN8qOL7nwGFNmdqJtlt3XcllihUGeoEvwdfeNxRf2cF
+	ImsZ0XheAMqm+6+544e/mah0ocvGya1ZGeatyDo0bJxEtUVnqv4EzibP
+X-Gm-Gg: AYBFou1NnoI/WeZITQPRLWBBRT4uxY+rBpruj4Bj7QJHqzJqEd2REEosmysVOYQgQym
+	Z5M2Ki+bMlrxhasSOSAF2B056F/XUctUPfBIzOyxrxP64zB6qPIIDCDvp0W/CfxE7AXk7Wcysel
+	hSvst3RWvI1mjNUmBuhV9s/yPvKEQjlCl0HIfPyXQxQW5qqPFcx7HxdzwgYjpnGUsJvhuKNvbqZ
+	IRT2pmHb2jxQbxIhRoW2bR3Y80bvPncfB29qP5pWwGcWrx6kIJKwiXPDoxvDL9QbJK5FOXqTAFy
+	ISn8K/ZtIB1CdhpzFeSclF/MILTTmhRGTLlerARsYzfFJaV7pSiH5pCUzUhTneYihr2oBvzeDF1
+	zVrkgITHrqk0zkIKOPC7t6jRnfTXjTUdhXkl1Z0wzbJu2nHets/BcquWcAsUoFT5NRPfY7tl8t8
+	VeYqFfoKtw9l9Yx9BIugWJdVLAgBwBVAvCSSdep2Tv10nkgTX14bJYKRGQEDu0Yu+DV8N2yupw+
+	fzW2w==
+X-Received: by 2002:a17:90b:3c4b:b0:3ac:ba49:2fed with SMTP id 98e67ed59e1d1-3acba4932b4mr2675488a91.58.1792144075313;
+        Fri, 16 Oct 2026 02:47:55 -0700 (PDT)
+Received: from [58.206.202.11] ([104.28.215.70])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc4872861sm3773059a91.7.2026.10.16.02.47.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2026 02:38:00 -0700 (PDT)
-Message-ID: <f759977bab11b886198ec5f9678404ff3fc80724.camel@redhat.com>
-Subject: Re: [PATCH v2] verification/rvgen: reject ambiguous state/event
- transitions
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: heath@mathgraph.org
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 16 Oct 2026 11:37:59 +0200
-In-Reply-To: <f8a773ce204c7dfe5b15bdefe21131b1@mathgraph.org>
-References: <11d37dced04f512153c023b8b7361309@mathgraph.org>
-	 <9fc2d6a03fabc2c756bfa696bc907ef23dcc175a.camel@redhat.com>
-	 <f8a773ce204c7dfe5b15bdefe21131b1@mathgraph.org>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+        Fri, 16 Oct 2026 02:47:54 -0700 (PDT)
+Message-ID: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4w17WULRrLz11zKjQcZ_SwBtdJmNwcXq0nioIjMekSQ_1792143482
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+From: Haoran Wang <haoranwangsec@gmail.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, haoranwangsec@gmail.com
+Date: Fri, 16 Oct 2026 17:47:51 +0800
+Subject: [PATCH] tracing: guard trace_event_get_offsets() against an empty fields list
 
-On Fri, 2026-10-16 at 04:28 -0400, heath@mathgraph.org wrote:
-> Thanks, Gabriele! Really appreciate you taking the patch and the=20
-> clarification on LLM disclosures.
->=20
-> One small question- this work is part of MathGraph, developed at=20
-> Metalogic Labs. Is there a conventional way to acknowledge that=20
-> affiliation in the commit? No worries at all if not =E2=80=94 I wouldn=E2=
-=80=99t want to=20
-> complicate or delay the patch.
-
-Hi Heath,
-
-you may find more information in [1], as far as I know, the affiliation is =
-clear
-from your email in the signoff.
-Often people using personal emails or kernel.org accounts specify their
-affiliation in parenthesis.
-
-In short, you either do the following in the signoff:
-
-1. John Doe <jdoe@acme.com>
-
-or
-
-2. John Doe (ACME) <john@doe.org>
-
-your case falls in 1. (@mathgraph.org) I don't think you need extra steps.
-
-
-Gabriele
-
-
-[1] - https://www.kernel.org/doc/html/latest/process/submitting-patches.htm=
-l
-
->=20
-> Thanks again!
->=20
-> Heath Sanchez
-> Metalogic Labs | MathGraph
-> https://mathgraph.org
->=20
-> On 2026-10-16 03:55, Gabriele Monaco wrote:
-> > On Tue, 2026-10-13 at 15:51 -0400, heath@mathgraph.org=C2=A0wrote:
-> > > The rvgen generator builds a transition table indexed by source state
-> > > and event. A DOT specification with different destinations for the=20
-> > > same
-> > > key is currently accepted, and the selected destination depends on th=
-e
-> > > iteration order of parsed transitions.
-> > >=20
-> > > Reject duplicate state/event keys after sorting the transitions,=20
-> > > before
-> > > generating the monitor. This prevents silently selecting an arbitrary
-> > > destination without changing valid automata.
-> > >=20
-> > > OpenAI GPT-6 assisted in finding the issue, developing the fix and
-> > > tests,
-> > > and drafting the changelog. I reviewed the changes and take
-> > > responsibility
-> > > for this contribution.
-> > >=20
-> > > Fixes: cad252db78a9 ("verification/rvgen: Switch __create_matrix() to
-> > > Lark")
-> > > Assisted-by: LLM
-> > > Signed-off-by: Heath Sanchez <heath@mathgraph.org>
-> >=20
-> > Thanks for the quick V2. I'm going to take this.
-> >=20
-> > As a side note, I just read ([1], subscription required) that the=20
-> > Maintainers
-> > decided at the 2026 Summit that models used and other LLM details are=
-=20
-> > no longer
-> > to be included in the changelog.
-> >=20
-> > You don't need to send a V3, I'm trimming that paragraph. Anyway this=
-=20
-> > kind of
-> > transparency is largely appreciated, so feel free to include it after=
-=20
-> > the --- on
-> > your next contributions.
-> >=20
-> > Thanks,
-> > Gabriele
-> >=20
-> > [1] - https://lwn.net/Articles/1099594
-> >=20
-> > > ---
-> > > Changes in v2:
-> > > - Drop the redundant hybrid-automaton regression fixture and test.
-> > > - Match the full traceback prefix in the negative assertion.
-> > > - Move detailed qualification results outside the permanent changelog=
-.
-> > >=20
-> > > Verification: original rvgen suite 30/30; revised suite 31/31;
-> > > 64 deterministic/hybrid hash-seed replays rejected malformed models.
-> > > https://github.com/metalogiclabs/mathgraph/actions/runs/38452477359
-> > >=20
-> > > diff --git a/tools/verification/rvgen/rvgen/automata.py
-> > > b/tools/verification/rvgen/rvgen/automata.py
-> > > index fd37ce3..1f9a56a 100644
-> > > --- a/tools/verification/rvgen/rvgen/automata.py
-> > > +++ b/tools/verification/rvgen/rvgen/automata.py
-> > > @@ -418,6 +418,13 @@ class Automata:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 transitions.append(Transition(src, dst, e=
-vent,=20
-> > > reset,
-> > > rule))
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 transitions.so=
-rt(key=3Dlambda t : (t.src, t.event))
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 previous_key =3D None
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for transition in transit=
-ions:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 k=
-ey =3D (transition.src, transition.event)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f key =3D=3D previous_key:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 raise AutomataError(
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f"Duplicate transition for=
- event=20
-> > > {transition.event}
-> > > in state {transition.src}")
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 p=
-revious_key =3D key
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return transit=
-ions
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def __parse_states(self):
-> > > diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t
-> > > b/tools/verification/rvgen/tests/rvgen_monitor.t
-> > > index 5f25626..8d635fc 100644
-> > > --- a/tools/verification/rvgen/tests/rvgen_monitor.t
-> > > +++ b/tools/verification/rvgen/tests/rvgen_monitor.t
-> > > @@ -84,4 +84,9 @@ check "invalid ltl file syntax" \
-> > > =C2=A0=C2=A0=09"$RVGEN monitor -c ltl -s tests/specs/test_invalid.ltl=
- -t
-> > > per_task"=20
-> > > 1
-> > > \
-> > > =C2=A0=C2=A0=09"No terminal matches 'i'" "Traceback (most recent call=
- last)"
-> > >=20
-> > > +# Reject ambiguous source state/event pairs.
-> > > +check "reject conflicting deterministic automaton transitions" \
-> > > +=09"$RVGEN monitor -c da -s tests/specs/test_nondeterministic_da.dot
-> > > -t
-> > > per_cpu" 1 \
-> > > +=09"Duplicate transition for event event_2 in state state_a"
-> > > "Traceback
-> > > (most recent call last)"
-> > > +
-> > > =C2=A0 test_end
-> > > diff --git
-> > > a/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
-> > > b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
-> > > new file mode 100644
-> > > index 0000000..1b63b5d
-> > > --- /dev/null
-> > > +++=20
-> > > b/tools/verification/rvgen/tests/specs/test_nondeterministic_da.dot
-> > > @@ -0,0 +1,16 @@
-> > > +digraph state_automaton {
-> > > +=09{node [shape =3D circle] "state_b"};
-> > > +=09{node [shape =3D plaintext, style=3Dinvis, label=3D""]
-> > > "__init_state_a"};
-> > > +=09{node [shape =3D doublecircle] "state_a"};
-> > > +=09{node [shape =3D circle] "state_a"};
-> > > +=09"__init_state_a" -> "state_a";
-> > > +=09"state_a" [label =3D "state_a"];
-> > > +=09"state_a" -> "state_a" [ label =3D "event_2" ];
-> > > +=09"state_a" -> "state_b" [ label =3D "event_2" ];
-> > > +=09"state_b" [label =3D "state_b"];
-> > > +=09"state_b" -> "state_a" [ label =3D "event_2" ];
-> > > +=09{ rank =3D min ;
-> > > +=09=09"__init_state_a";
-> > > +=09=09"state_a";
-> > > +=09}
-> > > +}
-
+RnJvbSAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW9yYW4gV2FuZyA8aGFvcmFud2FuZ3NlY0BnbWFpbC5jb20+
+CkRhdGU6IEZyaSwgMTYgT2N0IDIwMjYgMTY6MzA6MDAgKzA4MDAKU3ViamVjdDogW1BBVENIXSB0
+cmFjaW5nOiBndWFyZCB0cmFjZV9ldmVudF9nZXRfb2Zmc2V0cygpIGFnYWluc3QgYW4gZW1wdHkg
+ZmllbGRzIGxpc3QKCnRyYWNlX2V2ZW50X2dldF9vZmZzZXRzKCkgZGVyZWZlcmVuY2VzIHRoZSBm
+aXJzdCBlbnRyeSBvZiB0aGUgZmllbGRzIGxpc3QKcmV0dXJuZWQgYnkgdHJhY2VfZ2V0X2ZpZWxk
+cygpIHZpYSBsaXN0X2ZpcnN0X2VudHJ5KCkuICBsaXN0X2ZpcnN0X2VudHJ5KCkKdGhlbiByZXR1
+cm5zIHRoZSBsaXN0IGhlYWQgaXRzZWxmLCBhbmQgdGFpbC0+b2Zmc2V0ICsgdGFpbC0+c2l6ZSBy
+ZWFkcyBwYXN0Cml0LiAgVGhlIGNvcnJ1cHRlZCByZXN1bHQgaXMgdXNlZCBhcyB0aGUgQlBGIGNv
+bnRleHQtc2l6ZSBib3VuZCBpbgpfX3BlcmZfZXZlbnRfc2V0X2JwZl9wcm9nKCk6CgogICAgaW50
+IG9mZiA9IHRyYWNlX2V2ZW50X2dldF9vZmZzZXRzKGV2ZW50LT50cF9ldmVudCk7CiAgICBpZiAo
+cHJvZy0+YXV4LT5tYXhfY3R4X29mZnNldCA+IG9mZikKICAgICAgICAgICAgcmV0dXJuIC1FQUND
+RVM7CgpzbyBhIGNvbnRleHQtcmVhZGluZyBCUEYgcHJvZ3JhbSB0aGF0IG91Z2h0IHRvIGJlIHJl
+amVjdGVkIGNhbiBpbnN0ZWFkIGJlCmF0dGFjaGVkIHRvIGEgemVyby1maWVsZCB0cmFjZXBvaW50
+ICh3aGljaCBzdGlsbCBjYXJyaWVzClRSQUNFX0VWRU5UX0ZMX1RSQUNFUE9JTlQpIGFuZCByZWFk
+IGFkamFjZW50IGtlcm5lbCBtZW1vcnkgd2hlbiB0aGUKdHJhY2Vwb2ludCBmaXJlcywgYnlwYXNz
+aW5nIHRoZSB2ZXJpZmllcidzIGNvbnRleHQtc2l6ZSBjb25maW5lbWVudC4KClRoaXMgaXMgcmVh
+Y2hhYmxlIHRocm91Z2ggdXNlcl9ldmVudHM6IGEgdXNlciBjYW4gcmVnaXN0ZXIgYW4gZXZlbnQg
+d2l0aCBubwpmaWVsZHMgKGUuZy4gYGVjaG8gdTpteV9ldmVudCA+IGR5bmFtaWNfZXZlbnRzYCks
+IHdoaWNoIGxlYXZlcyB1c2VyLT5maWVsZHMKZW1wdHkgd2hpbGUgdGhlIGV2ZW50IHJlbWFpbnMg
+YSBCUEYtYXR0YWNoYWJsZSB0cmFjZXBvaW50LAp0cmFjZV9nZXRfZmllbGRzKCkgdGhlbiByb3V0
+ZXMgdGhyb3VnaCB1c2VyX2V2ZW50X2dldF9maWVsZHMoKSB0byB0aGF0CmVtcHR5IGxpc3QuIFRo
+ZSBjb3JydXB0ZWQKcmVzdWx0IGFmdGVyIGxpc3RfZmlyc3RfZW50cnkgaXMgdGhlbiB1c2VkIGFz
+IHRoZSBCUEYgY29udGV4dC1zaXplIGJvdW5kIGluCl9fcGVyZl9ldmVudF9zZXRfYnBmX3Byb2co
+KSwgd2hpY2ggbGV0cyBjb250ZXh0LXJlYWRpbmcgQlBGIHByb2dyYW1zIGF0dGFjaAp0byBhIHpl
+cm8tZmllbGQgdHJhY2Vwb2ludCB3aGVuIHRoZXkgc2hvdWxkIGJlIHJlamVjdGVkIHdpdGggLUVB
+Q0NFUy4KCkFkZCBsaXN0IGVtcHR5IGNoZWNrIHRvIGZpeCB0aGlzIGJ1Zy4KClNpZ25lZC1vZmYt
+Ynk6IEhhb3JhbiBXYW5nIDxoYW9yYW53YW5nc2VjQGdtYWlsLmNvbT4KLS0tCiBrZXJuZWwvdHJh
+Y2UvdHJhY2VfZXZlbnRzLmMgfCA0ICsrKysKIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykKCmRpZmYgLS1naXQgYS9rZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzLmMgYi9rZXJuZWwvdHJh
+Y2UvdHJhY2VfZXZlbnRzLmMKLS0tIGEva2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50cy5jCisrKyBi
+L2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHMuYwpAQCAtMjM5LDYgKzIzOSwxMCBAQCBpbnQgdHJh
+Y2VfZXZlbnRfZ2V0X29mZnNldHMoc3RydWN0IHRyYWNlX2V2ZW50X2NhbGwgKmNhbGwpCiAJc3Ry
+dWN0IGxpc3RfaGVhZCAqaGVhZDsKIAogCWhlYWQgPSB0cmFjZV9nZXRfZmllbGRzKGNhbGwpOwor
+CisJaWYgKGxpc3RfZW1wdHkoaGVhZCkpCisJCXJldHVybiBzaXplb2Yoc3RydWN0IHRyYWNlX2Vu
+dHJ5KTsKKwogCS8qCiAJICogaGVhZC0+bmV4dCBwb2ludHMgdG8gdGhlIGxhc3QgZmllbGQgd2l0
+aCB0aGUgbGFyZ2VzdCBvZmZzZXQsCiAJICogc2luY2UgaXQgd2FzIGFkZGVkIGxhc3QgYnkgdHJh
+Y2VfZGVmaW5lX2ZpZWxkKCkKLS0gCjIuNDMuMAo=
