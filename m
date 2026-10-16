@@ -1,62 +1,64 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15F33921ED
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 06:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B903B27F4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 06:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792131405; cv=none; b=gCausBhf1JlglzIYovdChewcHLEQtY1vSJmfvijrOVqwV+j/A9JjCjD5cc2daDnKUxZ3VX2TjscDpOPmQPT3YQKCGFLXbYJEUoYsYLc8xlI+xMlxFrpKBBRcfEclF3LSQfNKTQv9NmsorRM2E0WFMthqo0Vls0ggq2zoVGx4coQ=
+	t=1792131408; cv=none; b=keOGj8cCV8PrLELPFrktXyUK7EwevO4DsFAhKyb3Y9GNBS3GvQVlja3HVTMl4utpIbj6n6ptHpbnFlo2rlvTFtBODoJp2hxHaIXyOK/usq9Om0O6iAPjMOQt8FyZCGZ5rz5pVdPBRF+WauVXhV/8757FpW4Ud2xzyDsM1bGTLiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792131405; c=relaxed/simple;
-	bh=sRH0ha2EZ153ajq54eM0Yi85dNlM+hFCBKuV5K/D0/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l5Cae5aEopfMs/kBXrWBH+thGwP1GJJYDJYsy8e5gFzMToIfABxcNzHo8xBlPyAc46XOafBAl7jSP2J1FI8hiNgnephBhq1jNG7g+vyTEkOqXCAmJPtemoADBg18qx8LQ2jKcMWDHROp1Jn/FjkgSITCAKBsi4aqJSyBtixQ8mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cj/TK+CH; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1792131408; c=relaxed/simple;
+	bh=vyDeX8k8/sPjBY1Pb3s9Gz8zKDNgwOVVETru05itzdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CHHPp/UwAnE7q8JBTJ+07QH9sZC670QmTeWcmOpF7oBAVvEGP5OQMs+2L28qmecFu3qOO0L9GY2cYl1oXMwoyxp5ki1gGdpLTYF6wp7MGcKvqEPg/1XP9WeqfVI03qUisWsjbFAPJrRiXgzvhPOTCQfmlZsUCdBuAnabGsPR7Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rR+IHqfF; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj/TK+CH"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a018dc1f98so48062845e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 23:16:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR+IHqfF"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a0e1b0681bso43435865e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 23:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792131402; x=1792736202; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=haJU0ShvAO1LQDIvBwK5BiMB17AU7LxjM0Mr3FtXsAw=;
-        b=cj/TK+CHWG6KFcmymsS6BeXkwJ2UsIkY1V/npmXtcHN+DQVISft2xO2Gwwu0m9kikL
-         NptuJtZIkc7eLt3FaylMwDc0DxFgc1QQqsiaU8H9mO918fKDSLkx8JGhi6QqfDeVDQR2
-         gHSJRW3EWz0hIYsI4wT+D8RCPQG2aq0W2FwJHhhZeNPB+gwM0307TdsOpYQHeE1/byDh
-         k9yWu8X3wD3aw9oQL1sVSeS7lTPohobIu2sRVY6ZVjf/8KXAhRUAeR7YTmYf4QKb12AK
-         qMTcP8sghXXmNEjv6AIXxVSbSr5Ap3ocxdG+QHwPRmpuMowzqqa5ibGCAP2iespk8/Dn
-         Y1Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792131402; x=1792736202;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1792131403; x=1792736203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=haJU0ShvAO1LQDIvBwK5BiMB17AU7LxjM0Mr3FtXsAw=;
-        b=g5th+/mkSgO+OWGHkEjAhJEkFmXl2sLsHjkwClj8BxkSzNyumtus97k9a1NAXesFeZ
-         NR/r+1BkF0fZ2+8Jl2kyeImuXYm8Gv24HzOwAwsny7BQAqCFg1u8wpEOPmVsS8CUEK6l
-         uH7jYz4qryUf6E76+1QI4FoQRnIlbW4eM+U7TC0S5RDjUfALz7v3Qve9d6BlYCNweSlB
-         1RmwmP7I+DMgGe7RL95P9iIVRqDpBaEo0gMnM1opS55Vebh+f8dU3pKn3OgunzxdbAdS
-         5CAkBKZGXGQqLQDLk5LvoRJVUPFmIV6aA6WMNmwWO08hNQMc7IaVfSXFSn73om4Wh2St
-         sQWw==
-X-Forwarded-Encrypted: i=1; AKwUvBxD1ZnjetkImFOVtLALWs9CBVuVRofPkRGEjw3KWGAUb+MY6pE2D5BlF2ws0+FblKndG0EhqrajVNOop3V7lMSLdN0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKWCJ7h5uLQh2HvS20YNinZ+Gt24cURnoDYcgYDoCNF/iD7M+20
-	1Kg7p/cgXi+kly7hzQGQx6y4GKSltznhVmmeeAW5eO23aqHKNYvbxWOq
-X-Gm-Gg: AYBFou2iH8VgNyUzaesbEM1J7rm3yN5WgMf4iyneg972L4alSTrOxa5VEoDDIEQNDn+
-	8l/ygkzOpe+bG9Qm8BDBexcUvzn7iiaKNVFRgnSZimL7x9XhoqLl+20i8kN4bT8Er1rOBQieB/J
-	Ri0Ukjcm368U8hUJ3Yi8kXINxfOCujzHlWHahVWl5OFKiIn3W7D8UgQOBYgEJ92kYmbtZw0DxRn
-	jPS/GSswPeSt5P5wgYQfPvAZOhURFWb7KorKqHVb9tpWY15JGlpPtYzOlmHJ+igdZEClZvtuj30
-	bKyHYpd2MQC8d39D2iZxfHDh7tu8/oyu8WU7dhKczHq8IL08/74osg7wplVgEjWVwNP1uOz/9Hx
-	CET28pyr87yiY0LqTiS1Ul5PSOdHIo75nIZZLC7GtRfqjeS2Yi3Ny5mS+/fEAwVsWU/yk3D/0mO
-	65jaZWgOE10/s73/flxQpkQHx4jHe871anworih6q8AUBSEJAwgsF5jNs1rb5zfPQZoJ3aV9+52
-	CO/f3qeShqRI6fJLBesN4VW9Q5pKsmyANudl5s470I3qjntyX4g/tldpnM=
-X-Received: by 2002:a05:600c:4f14:b0:4a0:89:6727 with SMTP id 5b1f17b1804b1-4a18e4adc5cmr454717125e9.16.1792131401674;
-        Thu, 15 Oct 2026 23:16:41 -0700 (PDT)
+        bh=E8EDIcpHqc3pxDbfYRG6SRGOamgW/C6wGExJNy1Xs+Q=;
+        b=rR+IHqfF5oKozGZoT8adWuepaIQQqOP3n25pt/d5z1elIFbL9W15aedCElGG6bW7Ij
+         An312Zi2cl1R9AxihcBHaSFkVmqBvUoJfOv/E5H95avW+/4+3HVvuu/Tde3sevxJGYhJ
+         i3QammZV/5N1KkgbbUUdNevwdL7urK0SBiHPLHYpUkoZwOGYTWc92tlQY0mmth618enh
+         LlR9kOtqr5DHjGGVh8cxGLumxk3SfDhVbZqLKLRx7xHAuHhxdnIXxMM6+dbL+4NmfvRZ
+         eIsGHQslqcRpo5f2Kq6wcETXkDHDzjkDBfVyczBTAouGDVVatc5byuG/XyF6akUQOweZ
+         eXNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792131403; x=1792736203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=E8EDIcpHqc3pxDbfYRG6SRGOamgW/C6wGExJNy1Xs+Q=;
+        b=Xc3WqmrYaSq7iqnVn82/WecBCFhZIevcut4cm7YI0ht33lI/+26q6qoj0TO++8FHOL
+         YgGUv6oVwRBqzprtnPgSpiZ1V88ryCnUsKcdbnidlfu3tMi4fc4u0ZSo4AnHSKIUmwBR
+         nP+Y0RO6swoAE6nfxbGMNOw4rCrZeT6/K5PUIqS+esJvqbMFL/VsC+mmZWR+xV0dPtlv
+         er6u9Y1RsAyeL3ZnRXqyykKoZV9xhlj3Et7elw1o/WBmFUpB30OxgGbe0y/AtNifMF9x
+         BB5heFZGgwCU2Tc/xUX0eWsOvQwRJiEq6SXgaiJtJFBiYsaRC05OGYStOdxSfLRVTk+e
+         GgNA==
+X-Forwarded-Encrypted: i=1; AKwUvBx+9b8Cb18LSrs4zValT+OYMv6QzR3D89MOk1phppl7wEJVNYYWBs646xUcbQs4mimeUoBQN+uFl2XWYj8QnxZVVEo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLyLcLoCjNRa7Gb6XewQs9p0hdf6v2cDeBB3AUmi0jW4UOdJVv0
+	93j+KEHy6rze23/Dn1UsKK9o5iZIqflxL+cGHL9OzMJyN96+Xw8qtZjL
+X-Gm-Gg: AYBFou1k/Z1543kPdluxIM3lF/xN7Y++YarHMkvtJfStKQ++sKz+Ekb5+RUQltNzfEM
+	NWERSJiMigE1dJYYeWZXqB2csXHMOWkyjpHTbXRK9aQHbKW1h7lejbNS+mSAzJuLQhtEII40vz+
+	eiJfUaBdWjwqBooOrXyWC2+grENi+wkuf4ypIE9KhNrYJ7R1Sql3mLweefbq638DvtusNvXmXuS
+	MQUmjlcAx97Gl4n9wEMwyHF6O/MjzxHCIFxNud2Ac16gRYh48ORr7vvSlXMzqhm3BS47QXx7MPF
+	RaZrh+niPlOg1H/JNLgsrLWetJd22oQ3uiPfQ79PCdLQCI4C8yqfVpad5LmpHC5/ogCjWRVk6/K
+	LRsX9ONN9rpfXrZMLOyoXUS4Vcdt4IgyxPQQTO3hLKE2RIL9glRiWKlok2b9KZkLjayH+3VCM+j
+	T0bdG3RjPmuphKEcl9HInTDR2Lq23XYlqbFPYqBtvR8Hrh6Vi3KNv3fzpaGvf9CE7tn2qSZ8iO2
+	t/GkwLoLGqolzDAn44kCESt8JlTezh2gEysLoCIMBd97BxWWEQgPr8sJEA=
+X-Received: by 2002:a05:600c:608d:b0:49c:cee0:e7c1 with SMTP id 5b1f17b1804b1-4a18e48d45cmr464623495e9.16.1792131402801;
+        Thu, 15 Oct 2026 23:16:42 -0700 (PDT)
 Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c8abfae7sm14985945e9.0.2026.10.15.23.16.40
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c8abfae7sm14985945e9.0.2026.10.15.23.16.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 23:16:41 -0700 (PDT)
+        Thu, 15 Oct 2026 23:16:42 -0700 (PDT)
 From: David Carlier <devnexen@gmail.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
@@ -65,10 +67,12 @@ Cc: mathieu.desnoyers@efficios.com,
 	linux-kernel@vger.kernel.org,
 	David Carlier <devnexen@gmail.com>,
 	stable@vger.kernel.org
-Subject: [PATCH v2 1/2] tracing: Hold trace_types_lock when updating modules in persistent instances
-Date: Fri, 16 Oct 2026 07:16:34 +0100
-Message-ID: <20261016061638.214847-1-devnexen@gmail.com>
+Subject: [PATCH v2 2/2] tracing: Hold trace_types_lock when resetting last boot data from readers
+Date: Fri, 16 Oct 2026 07:16:35 +0100
+Message-ID: <20261016061638.214847-2-devnexen@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261016061638.214847-1-devnexen@gmail.com>
+References: <20261016061638.214847-1-devnexen@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,31 +81,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-trace_module_record() walks ftrace_trace_arrays from the module notifier
-without trace_types_lock. A concurrent rmdir of an instance removes it
-from the list and frees it under that lock, so a module load or unload
-can walk into a freed trace_array.
+update_last_data_if_empty() is called from tracing_open() with O_TRUNC,
+tracing_read_pipe() and tracing_buffers_read() without trace_types_lock.
+Two readers can both pass the LAST_BOOT test and free module_delta
+twice, and a module notifier can update module_delta while it is being
+freed.
 
-Fixes: 5f3719f697c3 ("tracing: Update modules to persistent instances when loaded")
+Take trace_types_lock in those paths and keep the callers that already
+hold it on an unlocked variant.
+
+Fixes: 32dc0042528d ("tracing: Reset last-boot buffers when reading out all cpu buffers")
 Cc: stable@vger.kernel.org
 Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- kernel/trace/trace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e4a490d3d08c..d3ffbed9c44b 100644
+index d3ffbed9c44b..cf8663c27ae6 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -9247,6 +9247,8 @@ static void trace_module_record(struct module *mod, bool add)
- 	struct trace_array *tr;
- 	unsigned long flags;
+@@ -3603,6 +3603,7 @@ static int tracing_single_release_tr(struct inode *inode, struct file *file)
+ 	return single_release(inode, file);
+ }
  
-+	guard(mutex)(&trace_types_lock);
++static bool __update_last_data_if_empty(struct trace_array *tr);
+ static bool update_last_data_if_empty(struct trace_array *tr);
+ 
+ static int tracing_open(struct inode *inode, struct file *file)
+@@ -4697,7 +4698,7 @@ tracing_set_trace_read(struct file *filp, char __user *ubuf,
+ int tracer_init(struct tracer *t, struct trace_array *tr)
+ {
+ 	tracing_reset_online_cpus(&tr->array_buffer);
+-	update_last_data_if_empty(tr);
++	__update_last_data_if_empty(tr);
+ 	return t->init(tr);
+ }
+ 
+@@ -5371,8 +5372,10 @@ static int tracing_wait_pipe(struct file *filp)
+ 	return 1;
+ }
+ 
+-static bool update_last_data_if_empty(struct trace_array *tr)
++static bool __update_last_data_if_empty(struct trace_array *tr)
+ {
++	lockdep_assert_held(&trace_types_lock);
 +
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
- 		/* Update any persistent trace array that has already been started */
+ 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+ 		return false;
+ 
+@@ -5387,6 +5390,16 @@ static bool update_last_data_if_empty(struct trace_array *tr)
+ 	return true;
+ }
+ 
++static bool update_last_data_if_empty(struct trace_array *tr)
++{
++	/* Avoid the lock on the read path unless this is a last boot buffer */
++	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
++		return false;
++
++	guard(mutex)(&trace_types_lock);
++	return __update_last_data_if_empty(tr);
++}
++
+ /*
+  * Consumer reader.
+  */
+@@ -6479,7 +6492,7 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
+ 		ring_buffer_set_clock(tr->snapshot_buffer.buffer, trace_clocks[i].func);
+ 	tracing_reset_online_cpus(&tr->snapshot_buffer);
+ #endif
+-	update_last_data_if_empty(tr);
++	__update_last_data_if_empty(tr);
+ 
+ 	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
+ 		struct trace_scratch *tscratch = tr->scratch;
 -- 
 2.55.0
 
