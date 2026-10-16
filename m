@@ -1,101 +1,177 @@
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499883769E7
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 15:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5E9519DE3;
+	Fri, 16 Oct 2026 16:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792165637; cv=none; b=YQQq6uBCJ1C1QJVfWGz3htes8vMwRmJz4egZeYQuttgmDO+Mz4sptTPaQuc70xU44eYFCKcf6zACN4nuXLg/edyQrbP/Xhp+u6Vzeva2ioZrUMTwDNHJknVMzjHNR+DV249/girGy5e33xriKw5xNN1V9DwHeIm1FPrCMndcQUw=
+	t=1792167925; cv=none; b=Ko7dG0cWm+OeFUDc3Z3IEOmxhn/PZFNJrRb9PJH+hypXmJfpjN3KUnCD0R0FWvInABPuMoHOxF57Xe4UBo/uIj7dBKsTYKcqtQ1+KSFEgpTaZbPYgv5c/iJKH2q0qjCwTRmj2lAToV/L9lixMst8QP1v/nc2jK2Dn95a5LbTWiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792165637; c=relaxed/simple;
-	bh=m/WWeFMJCrVGffwdMiKasd9xCWFIQH8QaNE4CBT7ZC0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Rlbl8if9iom1R8U2+6HKceaYNSO4h/Wbf758QEBTh8AMXDAyqAuqQcl4nAdTAfhTspwXFqIEMoO47sg0VvXQVmVd1pgbTg0+JydI6it7kK7FKAnF0++v9QwQ5XJTGltjhvf7iz3Xx6owc/9mScWUUtMc9ix0sBR3SEzh0c2+JvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekhd9zlw; arc=none smtp.client-ip=209.85.128.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1792167925; c=relaxed/simple;
+	bh=kviyD256rRK49BqVnAS7bdkwL+XgsFYGmHgBq0Pbx8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6SGczvMcnufvVOEK6S4MyrpTE45uVAWvyAMYpMCYKrSrE3OMa+diyybRW6MVP7xvE0NTkp1bpBE/GzNC7vxxpn9PBZXVwQkEmy4SP8fScnkr0U71M77WEVqXGsHCxtqwDPEoMpT2sLYipON64hdD8rEKE6/BuK/9SCSmdL/PkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DDnQLX4u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekhd9zlw"
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a1721559b4so941125e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 08:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792165632; x=1792770432; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=tELJHcWYoIhgNUw8lDudD6kd7E8RuUtrVQulu2IZ7CY=;
-        b=ekhd9zlwWXDP/sKPZ9kOhG5L93ZNzR27Elucsp90KDH7YIWX2pm9VdJUBLkrKigHTy
-         kibM/RZHo5MdPAqnMZDinZAd24+i/5cWRjyZPSuyTvCLVUUEHgLo73EzUMHvSWdEEiBY
-         BnKQVMCskjjJFvZ49uLVTVzzBjGD78KgTD49EzHOcE0tPORwruwg5eZRvZaYkUIj/vXL
-         S4mR6lFoGssh+d/dz/eJapK0NEbJcnmHORlSlq3EuLR1UuXFsNxOOfZLBClVLmmmbviO
-         fQNJhk7tpBSgCKFQ3/o2h9png0Aafm6S4oUa5EEKsHkHPNPBZjNPWyEOaChKRqCr4xAy
-         4GfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792165632; x=1792770432;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tELJHcWYoIhgNUw8lDudD6kd7E8RuUtrVQulu2IZ7CY=;
-        b=2UEy0hqOajXCxPv8Y7K4IGwXA2kU+mdXTziYynsE9pDcNIkSBPDK1ZUQrE2TkuSdSk
-         z18x79SULMZDa2c+xpZqOEK0yluweKO4M7AL1LEkgm8gCvzhJHChskYuu4sNmiG4DGZ1
-         aj4cVkqJwyQD1h+95chBUOtItEZmtncfXG9jweCHN+qfX/0mkbqijZMS1CN8L3FzmKuS
-         +6XjkH1S4auFHvnA8DNMSWVA2i2Kf1x23FL/gEtPNHQRVrYWdky58l3+8IJbYV1uWI97
-         9iC+HaoOv0FMri6UWyCb6mvRECnHTRU70DGXmPRgcQ1K03JLoNls2oXYxUc2WoOsQgiG
-         6yiA==
-X-Forwarded-Encrypted: i=1; AKwUvByRfRIAhmQ7k1Y08O9V4IFzY1GbOT+UBOFgqLQPpK+u7nlJixDAeJoj6JBZYuR0RTOuoST51dqyaz12389/LWBT0VY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJTNTutbX7Mus8bfSHqyLMb1K/1ffkjaZz+4ThTyID/sU3qLJBR
-	eTBVXBuS8P233UWT7NdR4lAROrNJMtUJoLY745Uc3vy2GPk+WlcBYSOZjU/2DqWxo/39LDztazf
-	r4rSl8/PO3/Iyxh3naxTp7A==
-X-Received: from wmee11.prod.google.com ([2002:a05:600c:218b:b0:4a1:950e:148b])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1d10:b0:4a1:6992:f861 with SMTP id 5b1f17b1804b1-4a1d75ce2e7mr5304445e9.1.1792165632352;
- Fri, 16 Oct 2026 08:47:12 -0700 (PDT)
-Date: Fri, 16 Oct 2026 16:47:07 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DDnQLX4u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258D21F000C4;
+	Fri, 16 Oct 2026 16:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1792167922;
+	bh=TWT4roPjmISJxTKvGQzQWU1LR7xLXo2Q7pvoSudceyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=DDnQLX4uJmcDHyArI08r+DiFRSvDYIcfJTA5a0dqMtZcD+xdbLb/9FxW1MXvjWPp9
+	 BF80p/3Y2fiKJlnsTIEMDNGn0BLGHrm9SaoNMZ9H2oVJPvq5OulDE0YynulNAxE57o
+	 qemrVo0M+buj3OKz389eclN6eGLG6kepRL1D14fM=
+Date: Fri, 16 Oct 2026 18:25:26 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Peng Wang <peng_wang@linux.alibaba.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	He Rongguang <herongguang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] cpu: Add sysfs control of full dynticks policy
+Message-ID: <2026101646-speller-gutter-c184@gregkh>
+References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
+ <e93ef15796946485eaaecd774141378351307940.1792067271.git.peng_wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.0.176.g3575e65682-goog
-Message-ID: <20261016154707.2125747-1-vdonnefort@google.com>
-Subject: [PATCH v1] ring-buffer: Use is_user_task() in __rb_allocate_pages()
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e93ef15796946485eaaecd774141378351307940.1792067271.git.peng_wang@linux.alibaba.com>
 
-Before allocating ring buffer pages, __rb_allocate_pages() checks the
-available memory with si_mem_available(). This is however only a rough
-estimate and may report memory that can't be used for this allocation.
-In the event of an OOM, we don't want to penalise another task with the
-OOM killer, so the allocating thread is marked as the OOM origin when it
-is a user task.
+On Thu, Oct 15, 2026 at 08:43:09PM +0800, Peng Wang wrote:
+> Expose nohz_full_allowed under /sys/devices/system/cpu/ as the subset of
+> nohz_full CPUs permitted to suppress their non-idle scheduler tick.
+> 
+> Writes replace the entire list; reads report policy, not current tick
+> state. Reject invalid input before updating policy. Document asynchronous
+> revocation, offline CPU configuration and persistence across hotplug.
+> The existing nohz_full attribute continues to report membership.
+> 
+> Co-developed-by: He Rongguang <herongguang@linux.alibaba.com>
+> Signed-off-by: He Rongguang <herongguang@linux.alibaba.com>
+> Signed-off-by: Peng Wang <peng_wang@linux.alibaba.com>
+> ---
+>  .../ABI/testing/sysfs-devices-system-cpu      | 40 ++++++++++++++++
+>  drivers/base/cpu.c                            | 46 +++++++++++++++++++
+>  2 files changed, 86 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index 82d10d556cc89..edf3408fd84c8 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -767,6 +767,46 @@ Description:	Preferred MTE tag checking mode
+>  
+>  		See also: Documentation/arch/arm64/memory-tagging-extension.rst
+>  
+> +What:		/sys/devices/system/cpu/nohz_full_allowed
+> +Date:		October 2026
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> +Description:
+> +		(RW) CPUs permitted to stop the scheduler tick while non-idle.
+> +		Available with CONFIG_NO_HZ_FULL. The default is the complete
+> +		nohz_full CPU list. Readback reports permission, not the current
+> +		tick state: all the usual tick dependencies still apply.
+> +
+> +		A write replaces the entire list, using CPU-list syntax (for
+> +		example, "1-3,5"). An empty line revokes permission from all
+> +		nohz_full CPUs. Invalid input is rejected without changing
+> +		policy. A parsed list containing CPUs outside nohz_full fails
+> +		with EINVAL. CPU numbers beyond the mask range and numeric
+> +		overflows are rejected by the CPU-list parser with ERANGE and
+> +		EOVERFLOW, respectively. Input must be shorter than PAGE_SIZE
+> +		bytes, otherwise E2BIG is returned. Embedded NULs and newlines
+> +		other than a trailing newline are rejected with EINVAL. Valid
+> +		writes without an active nohz_full configuration fail with
+> +		EOPNOTSUPP.
+> +
+> +		Reads fail with EOVERFLOW if the formatted output reaches
+> +		PAGE_SIZE - 1 bytes, rather than returning a potentially
+> +		truncated CPU list.
+> +
+> +		Revoking permission adds a per-CPU tick dependency. Online CPUs
+> +		are notified through the existing asynchronous kick mechanism
+> +		to restart a stopped non-idle tick. A successful write means
+> +		the policy is updated and any needed notification is queued;
+> +		it does not wait for tick restart. Changes to multiple CPUs
+> +		are not simultaneous. Granting permission only removes this
+> +		dependency and does not force the tick to stop.
+> +
+> +		Offline CPUs may be configured without sending notifications.
+> +		Policy persists across CPU offline/online. Idle tick suppression
+> +		is unchanged; the policy applies when a CPU leaves idle.
+> +
+> +		This interface does not change nohz_full membership, context
+> +		tracking, RCU offloading, or housekeeping configuration.
+> +
+>  What:		/sys/devices/system/cpu/nohz_full
+>  Date:		Apr 2015
+>  Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index 69e52fed42415..299ce61cef895 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -324,6 +324,51 @@ static ssize_t nohz_full_show(struct device *dev,
+>  	return sysfs_emit(buf, "\n");
+>  }
+>  static DEVICE_ATTR_RO(nohz_full);
+> +
+> +static ssize_t nohz_full_allowed_show(struct device *dev,
+> +				      struct device_attribute *attr, char *buf)
+> +{
+> +	cpumask_var_t mask;
+> +	ssize_t ret;
+> +
+> +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	tick_nohz_full_get_allowed(mask);
+> +	ret = sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
+> +
+> +	free_cpumask_var(mask);
+> +
+> +	/* Never present a truncated CPU list as the complete policy. */
+> +	return ret == PAGE_SIZE - 1 ? -EOVERFLOW : ret;
 
-Checking current->mm is however not sufficient to distinguish user from
-kernel tasks. Instead, use is_user_task().
+Why not?  What will userspace do then if it gets -EOVERFLOW as it can
+not get the full list?
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +}
+> +
+> +static ssize_t nohz_full_allowed_store(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       const char *buf, size_t count)
+> +{
+> +	cpumask_var_t mask;
+> +	int ret;
+> +
+> +	/* kernfs may truncate an oversized write to PAGE_SIZE. */
+> +	if (count >= PAGE_SIZE)
+> +		return -E2BIG;
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9c4e40847e43..bcc28d50c634 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2468,7 +2468,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		if (i < (nr_pages << subbuf_order))
- 			return -ENOMEM;
- 
--		user_thread = current->mm != NULL;
-+		user_thread = is_user_task(current);
- 	}
- 
- 	/*
+How are you getting a larger than PAGE_SIZE value here?
 
-base-commit: c47a7b11bcb3d45e29723afcf6336866476b1d08
--- 
-2.56.0.176.g3575e65682-goog
+> +	if (memchr(buf, '\0', count) ||
+> +	    (count > 1 && memchr(buf, '\n', count - 1)))
+> +		return -EINVAL;
 
+What are you testing for here, sorry, I can't easily figure it out.
+
+thanks,
+
+greg k-h
