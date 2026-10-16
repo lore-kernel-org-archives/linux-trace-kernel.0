@@ -1,96 +1,108 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B6F2D0614
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 03:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E0E38F62F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 05:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792121600; cv=none; b=eg4X4mSEKRuF828d5PuJcNfeZhkvgHvZh5FWJgrsppI1fQuMLvk4aiksq37fAitaVgf2iUl7vqPA0jyB5m+tjFKweVejSktSTjGrW5i5Yjn6QDcTPLLSrYDSm9zxLn4T9tI7dBEpjCxnSoz57cpZeL4vYnj8XTMr+RB3sAgm3dw=
+	t=1792129124; cv=none; b=TDnGYTsgp8/kxo74VLcKZTTInN0zyWX5q0PxXTrO0/fnycqzyPdMqbiTQdArK4DDP++fCuMMlXG8KR++qBhtY0lWtLWdDjlWkKtE+qNsX8xdluHl2YfCQEWfwrS4WQz0Si79f+kb552b5Usip3sPBegU2jfyjz+hK+G0BoaUdLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792121600; c=relaxed/simple;
-	bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
-	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Date:Subject; b=C1prJCR3e/K/NXsFn0764pNg/adPJoji/ZlgjUhLzQER+CTMc8jNAjgfF9yWSQNuA6YebQI0NjWjQiQjttz6rjUznhey0tC4g73bZ8c44t6t8/qqhvwvNMcGrlBhC+TXTVoJhaUhqfLf/RZFTNqO2nN/yVdWUN+jpR3c4gQX7ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GADB8XMY; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1792129124; c=relaxed/simple;
+	bh=XA1td5RtXyr53ECVqINeTSELxJLO5VlbkDz1qkltoms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PW+G3OYS4a0UyhyN770n0tLnEJjUj5d94UHCH60qQH2KmxPcQfA0+18M01i4kiRecCtrj+F0kxCOjyZr6ldTX5J1VFH/1Q9yVHcjDRSnF8mPo4GkS5CrAeduXszhSCS6cvo2iAs0rz6JPd/wYZ9mP+KK8rqJjAjbq8PebQw4Fxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m9wC3PV7; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GADB8XMY"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-cc4b1f7e8f4so3790260a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 20:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9wC3PV7"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a1698ea378so48734995e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Oct 2026 22:38:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792121598; x=1792726398; darn=vger.kernel.org;
-        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
-         :content-type:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
-        b=GADB8XMYA5/1SyF+O0r6Lk7t5UNsnS9UNnfvtbODPgLIWQ6Caf0HBV9v7RhCYsg+Wu
-         UxB5jOSj3F8nSouUe7fZZ4gIFSsGhG+qfEUE07TveKwJwkIZk6RN1/W3E7cWRY9LarLi
-         /37fXvBSr220wX/8sxA7ISTH8fPiqqHUG9tNO/fCMF5JeLKNzYBixOIS7tZiA1e+XG1e
-         9UTyFZdAlWlfVvSpBCUCH1Hwr/DaGhn4zPkjNrQzX7CD5bHBnpPKbbpr/saGmEHSQBPQ
-         MRDB2Tt+LMgGDAJ408bZchDTHWRapp4A9zB4ApGiXTYYer/wCJB8slA4N/3lkT/iUO/F
-         pQuQ==
+        d=gmail.com; s=20251104; t=1792129121; x=1792733921; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=TOIiQ6a4LuFeFNpA463QSfXeTShKxZ66XyKQsJ4fw4s=;
+        b=m9wC3PV7XGX8JoHcO6Fb/rSPE/nxKaxOTssgwI0+SvUYKD7tLiN9shqpxg6gSlmA/u
+         AQCprENSA10LROwWRnJJQDqrCfO4Yx1LWfzPdFuzTeWN5pnVpVQ+fZ/d7S83RdXDZHXt
+         ckdzmxBV9Cfk31+QGQw0TvDSQ34/w8R5Fpr5Y71VrOHJX68L5iNkwcf8n0e07AyWvLoA
+         d6Di+htDoFkSUednTuT6w5AM/U/w4EcHpgLhIJ3FdXviHtV82l9TTuXqxjgJQLx6r3TC
+         2UDfFin2tMYb2QUKAkGgsv8B9zcex5HfMz5P+QahZIvKNJSvC2O5dz6FzeBp6OuKaH6v
+         zkGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792121598; x=1792726398;
-        h=subject:date:cc:to:from:content-transfer-encoding:mime-version
-         :content-type:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=DHdWukh4h7IvkZHXqIQiUR/IkL+1dqHZgnn7QdLDFkI=;
-        b=Xz6TGZMVt142mVdTuKaq10+/MK/7sEBccWXxoaaeBul5txDlIxXUMtECO8QXDKI3pJ
-         7sfRBd21VjSKIhr0awZ4y4INIFICt5VwLGgsMecyr/IW0J0lUcXvQe6xQaGuELH0SnM2
-         11/9o8dKN8lCOCHJMSKiNfOpoRORglNPfPObiuIqOwQztDb8DdLh3xBc6etXbyWl2ddd
-         0gbv91OkrMHuRTJgcTS1OvLMHRd8lXXQBprZlS+nNkshXMzezBIMXHlwPKYeQiczEja7
-         BZ7EISAvdITU3TokKydZVmTHxSgyDFW2wdSW55VUKet7a9mif84271qnlf6CEwoRWPEE
-         X7Fw==
-X-Forwarded-Encrypted: i=1; AKwUvBwnkDjL8TahAR21k4ZKXP36FONE83YqcWOK8xLNz1JY3gtjsDzkpd0pj0qx8LtvKNqe7Tw/pe5P5Xj7zcfJXkSrOCs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJW8cIR1SmAHOKSFvtZxcUxqfhIqSHzTg1zewPq13pg8ZHHgUHO
-	PKR7Dcakhngjj7f2CIi0jBK1FFH9AWWjNC0AUEf+BcEmMgowcT31EuQMmzgj3+awl9M=
-X-Gm-Gg: AYBFou2QZ6j5ETinbEKYt9a5d+tkKDOCTV+VymY62FBZK7BnJnBrCUbi3NuxXuPmn7b
-	B2jNn18AaoCGHweB383MWyjwdJSfYKElgQthbcpGPZbai5zd27Z/cA46ilmbgXsoOsk+K1jH/eE
-	pyolFSyrzVAuOGrTc8a2kak5IZ1YzH58WpkG2o9ELILSfSV1ZEB3PKtsKwii9y4/pYAmReVSm/b
-	bjavSj4tp0B/mk9BEbxS1xFyjrCSIzD1/flLtM1DakC3Ep79TXPW5DXxLhfifn0z8vZp+836BaT
-	jGJkWRnAtsx34ZMdL3MHOlhJcpOpWE4WNUfUBWFMydEzqEm3UUhOT17aB6yo9quwELjNjvLoXsn
-	6GsbeB37dZCcFPSBqG52Pq4Ls3AFODruNLsjg8Vm/Ds4LL0LxZVPtdcnLKxF5VmM4KfHtelzBUk
-	nKJh2lilW90FgvS052lBjBNn1kqvQEi4ISJzwVs8JUMEu/cSSyFsvqhBS5npkBsl/pAcBl1eUDf
-	ORBbQ==
-X-Received: by 2002:a17:90b:2ecc:b0:3ac:b3e5:426a with SMTP id 98e67ed59e1d1-3acb3e54485mr2244561a91.4.1792121597779;
-        Thu, 15 Oct 2026 20:33:17 -0700 (PDT)
-Received: from [58.206.202.11] ([104.28.215.69])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc487cccdsm1950630a91.8.2026.10.15.20.33.15
+        d=1e100.net; s=20260707; t=1792129121; x=1792733921;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TOIiQ6a4LuFeFNpA463QSfXeTShKxZ66XyKQsJ4fw4s=;
+        b=iZZhm9xZyGwqIf+HKHLEWBlFPag6816qYDnBj9xHqlERiGOZEL00j/XSp3NT6zeWly
+         C2qoXfksa4Mipm9voXGXP+AlzbEzgotgIvk0uYPfs6dwFxpK3VqI1juwvYB7CbqYwazs
+         5a2NjKLFLqld9pv24y7rP/L2GYsgU3KmxLXn4o5XVn8DmaBvvD7YJbdjY2bADCHK5BAM
+         W8xA4f8teznhSpl/935TlVs/FGohe3qloUKhsJ1fSQPu7nNkE+9lgKVvBL2W4ffN7y75
+         D6yllgu1EjrCNirEO4mwmpde/jcIUX6qrvHjB+YpQTHucARkTVcmsUg4JhFpKhXweYos
+         RGfg==
+X-Forwarded-Encrypted: i=1; AKwUvBxZzdpwkd/m3exSwi9PkP7SV05QOtQyK96qKEOZo53Kto0R2CT0EQhrn6GZn0yDHYOdlFGwzg6fVvxrvMY7IPotOIg=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI/1gAErKSWgtmPVvCGzb+IbZ3XEEr32OwTDrVk+M/byEKPFhQW
+	tZhAOevay8XlU2Jo/L6etkrnIWgL4GY/bj1ySBB0eXN2qNrYyXRQVsUw
+X-Gm-Gg: AYBFou0p1Pei/0NQsh4Kpmxqow1DIsl02rYDejNF47NKcGOVDh/2I/DAryHohxmapVM
+	43tGslAZq7eIB4KCzFqi8/Fxw1APVzHadog2cI9OwtuIbJQGmFhYe3MA8rwN9DZmpIwo66PpyuM
+	N65VZHxWouSOkIlbjmgx1DZP8aZZHNFtbaZ6zIkxWeG3tTsQizhBha9KuXR5fxLZHZNjquDVopl
+	zylJdVBvT5my9RTyTci9UCyOV4foomTozQ2geiG/Lw/035Oi4ionq9yzOcpNbmUhbTkwVol44jG
+	dMVxcBXJLKKJXCqgpZRHHdgz4i6n0QECwQJyoUpY878wPDd8YqkLsJnFF2dwWDd34L1fjZGUeER
+	4QuG5eIWervZEh1ZKj5D1SuTYCEHW0Ewgmzx53p/SU/QBDaZtMqjxlrd8PThVBcWJE26rLQ2SYb
+	YkZ6qxpyf6P/WGG3b1YDtYAYrEMNgqbfpE3UrzZoP/pJMXqx/+IXo60W1ndgfFXGvFQFwoIkL3J
+	pPeSAyiBViGqsB8okMhbNggLV7w0qxgIe2MrseDX8j4dOHxDmydJckKUos=
+X-Received: by 2002:a05:600c:8b70:b0:49f:e701:51c8 with SMTP id 5b1f17b1804b1-4a18e4a01acmr452496145e9.9.1792129120743;
+        Thu, 15 Oct 2026 22:38:40 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c10fe9d3sm98463075e9.13.2026.10.15.22.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2026 20:33:17 -0700 (PDT)
-Message-ID: <6ad19afd.a938ce27.16851e.3440@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 15 Oct 2026 22:38:38 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing: Hold trace_types_lock when updating modules in persistent instances
+Date: Fri, 16 Oct 2026 06:38:35 +0100
+Message-ID: <20261016053835.204353-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-From: Haoran Wang <haoranwangsec@gmail.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, haoranwangsec@gmail.com
-Date: Fri, 16 Oct 2026 11:33:13 +0800
-Subject: [PATCH] tracing/syscalls: use copy_from_user for the faultable syscall buffer
+Content-Transfer-Encoding: 8bit
 
-RnJvbSAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW9yYW4gV2FuZyA8aGFvcmFud2FuZ3NlY0BnbWFpbC5jb20+
-CkRhdGU6IFRodSwgMTYgT2N0IDIwMjYgMTA6MDA6MDAgKzA4MDAKU3ViamVjdDogW1BBVENIXSB0
-cmFjaW5nL3N5c2NhbGxzOiB1c2UgY29weV9mcm9tX3VzZXIgZm9yIHRoZSBmYXVsdGFibGUgc3lz
-Y2FsbCBidWZmZXIKCnN5c2NhbGxfY29weV91c2VyX2FycmF5KCkgY29waWVzIHRoZSBidWZmZXIg
-YXJndW1lbnQgb2YgZmF1bHRhYmxlCnN5c2NhbGxzICh3cml0ZSwgcHdyaXRlNjQsIC4uLikgd2l0
-aCBfX2NvcHlfZnJvbV91c2VyKCksIHdoaWNoIHNraXBzCmFjY2Vzc19vaygpLiBVc2UgY29weV9m
-cm9tX3VzZXIoKSBpbnN0ZWFkIHNvIGEgbm9uLXVzZXIgYWRkcmVzcyBpcwpyZWplY3RlZCBhbmQg
-dGhlIGVudHJ5IGlzIHJlY29yZGVkIGFzIGZhdWx0ZWQuCgpJdCBjb3VsZCBiZSBhIHNlY3VyaXR5
-IGNvbmNlcm4gZm9yIG1hY2hpbmVzIHRoYXQgdHJ1c3QgcGVyZiBhIGJpdCB0b28KbXVjaC4KClNp
-Z25lZC1vZmYtYnk6IEhhb3JhbiBXYW5nIDxoYW9yYW53YW5nc2VjQGdtYWlsLmNvbT4KLS0tCiBr
-ZXJuZWwvdHJhY2UvdHJhY2Vfc3lzY2FsbHMuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFj
-ZV9zeXNjYWxscy5jIGIva2VybmVsL3RyYWNlL3RyYWNlX3N5c2NhbGxzLmMKLS0tIGEva2VybmVs
-L3RyYWNlL3RyYWNlX3N5c2NhbGxzLmMKKysrIGIva2VybmVsL3RyYWNlL3RyYWNlX3N5c2NhbGxz
-LmMKQEAgLTY4Miw3ICs2ODIsNyBAQAogCiAJZm9yIChpbnQgaSA9IDA7IGkgPCBhcmdzLT51YXJn
-czsgaSsrLCBidWYgKz0gU1lTQ0FMTF9GQVVMVF9BUkdfU1opIHsKIAkJcHRyID0gKGNoYXIgX191
-c2VyICopYXJncy0+cHRyX2FycmF5W2ldOwotCQlyZXQgPSBfX2NvcHlfZnJvbV91c2VyKGJ1Ziwg
-cHRyLCBzaXplKTsKKwkJcmV0ID0gY29weV9mcm9tX3VzZXIoYnVmLCBwdHIsIHNpemUpOwogCQlh
-cmdzLT5yZWFkW2ldID0gcmV0ID8gLTEgOiBzaXplOwogCX0KIAlyZXR1cm4gMDsKLS0gCjIuNDMu
-MAo=
+trace_module_record() walks ftrace_trace_arrays from the module notifier
+without trace_types_lock. A concurrent rmdir of an instance removes it
+from the list and frees it under that lock, so a module load or unload
+can walk into a freed trace_array. The notifier also reads and updates
+tr->scratch and tr->module_delta while update_last_data() may be
+resetting them.
+
+Fixes: 5f3719f697c3 ("tracing: Update modules to persistent instances when loaded")
+Cc: stable@vger.kernel.org
+---
+ kernel/trace/trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e4a490d3d08c..d3ffbed9c44b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9247,6 +9247,8 @@ static void trace_module_record(struct module *mod, bool add)
+ 	struct trace_array *tr;
+ 	unsigned long flags;
+ 
++	guard(mutex)(&trace_types_lock);
++
+ 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+ 		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
+ 		/* Update any persistent trace array that has already been started */
+-- 
+2.55.0
+
