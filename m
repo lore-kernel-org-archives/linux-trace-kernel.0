@@ -1,124 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D3143BDDD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Oct 2026 07:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.78.106])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D659C3BBA0B;
+	Fri, 16 Oct 2026 08:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.78.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792137372; cv=none; b=gds2AQSk/TZVnhWsPk9DA92wjIw4tX5mHq5B9mwmcmnIXSCKtMPZ8D5K7a0LoMhswrENi8M6lVUXJzuAQpqnv1MK8YvE5njhiUUATOMCF/LYDX3J0LvsH8ACuvschAgsciccyZDZ1RMsQflZV14U+XbK3ZUqsI3EA0RmQEBwXnY=
+	t=1792138647; cv=none; b=MB8Qa32c2C0M6OEmEfU9PRaLsxKo7/QEmE0HYRkXCciCIa0LfDS2PPWMiibPy17arDvxQ+IRh59/TDTQ9jV/QHUUhhJqQfsdMFLv/+Dpo6Tt8Ef7gzqP03390VlCvMskU6NamYgwkB6KHhb1QZlBuyGzcDQmKiCveY2yuERXBnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792137372; c=relaxed/simple;
-	bh=ziqq6YYMfce74jf9FZPUM7krJ+OUHhVgDE3s4m+tBAM=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=pb06jMVQ4xrPloT8hgQwXHeQ12l15QEQuwZIQUd0RGFAWna04XVgpi0e4O2a0m102Dh+qkpJEOuCzAz7m0tGvlww4HaRcx106bAAkuWVsmxVzQqXde/lDo4zenE3QuQklt6aPIOKYj2L/Ej1JRbge0dZ+33mkqlEk7ZEnQQSIHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6KxMA4V; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6KxMA4V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296E51F000C4;
-	Fri, 16 Oct 2026 07:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792137370;
-	bh=JTlCFsbHCLIqbpFJjDz5wpYCfwpmUzSDry+R5TzIZyM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l6KxMA4V5yOfyvLWViEZBwcBrynuvI+XfRQno3S965Oq3XnFeTMYXMuJCaiiCZYrp
-	 S7YYRX0MkVKNB3f5nxQrdJO+tpfSFsaC2fdCkYpcxZ6aiD4V5PByhrdtasnYAVh+6I
-	 9GwuYNGofYHDBPauBSv9rzdsP6fdQC20OfjkWVUxQGJXdTm/LVvqvTurGJb4id9sPY
-	 Fqy+Wb/WWhM25Ry6TIL6fRStlpQRTZ8GubAaT+HPMa+GMWOLE0BiboxImwNfd1xAfX
-	 nHqRqPVZM6BIQqvW+EbAhrY7yEd1doSarY5HXW4n1Kb+gZMaryv9njUCGQcFSEx7MS
-	 uasE/z9Fsd9Aw==
-Message-ID: <sashiko-outbox-173982@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing: reject trace events with an empty
- TP_STRUCT__entry
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haoran Wang" <haoranwangsec@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <6ad1d48d.a461c41f.282b8.7a97@mx.google.com>
-References: <6ad1d48d.a461c41f.282b8.7a97@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 07:56:09 +0000
+	s=arc-20240116; t=1792138647; c=relaxed/simple;
+	bh=PXbdo6UoHANfswwl8HlHaF9jjaFQs6Fu+VHLrg/jY+k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OgOkHxORfRn01jYYPK5/3BEjt8x0oB2inRqdR5Z8ic/pUcEuHu7wXg9oJq1QLYgrYE8E2JWuBykKQADnQoIWFi6BAInQ5Itw4/u3Ujfn6yNBljpNE77MyVyabKIU2ISuv/CqQkQof4HDg4nLzm02jTQGolit9PTlUa1V9WMNCAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.78.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0002472LT.eswin.cn (unknown [10.12.96.78])
+	by app2 (Coremail) with SMTP id TQJkCgAXLqGD3dFqtNKGAA--.25396S2;
+	Fri, 16 Oct 2026 16:17:08 +0800 (CST)
+From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Nam Cao <namcao@linutronix.de>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+Subject: [PATCH v6 0/2] riscv: kprobes: reject probes inside LR/SC sequences
+Date: Fri, 16 Oct 2026 16:17:04 +0800
+Message-Id: <20261016081706.1085-1-yuanxiaofeng@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgAXLqGD3dFqtNKGAA--.25396S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr4ktF4fCF48JF1rWFyDKFg_yoW8Xr43pF
+	s5Gwn8KrWkXw4fGry3uw4kZryft3yrJw43JFnrCw1jy3yUAr13tFnag3yUG34kCrZ0q34a
+	vr18XrZ8WFy7ZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAgECE2rRAKkT-wAAss
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] tracing: incomplete fix leaves BPF OOB read exploitable for zero-f=
-ield user_events
---
+A breakpoint trap taken in the middle of an LR/SC sequence clears the
+load reservation, so an SC following the probed instruction always fails
+and the enclosing retry loop re-enters the breakpoint, livelocking the
+CPU.  This series makes the RISC-V kprobes implementation reject probes
+placed on an LR/SC instruction or between them, following arm64's
+approach for its equivalent exclusive load/store instructions.
 
-commit 4bc63c3e7a59307c8dcbd3d4bfc283a9c62599d9
-Author: Haoran Wang <haoranwangsec@gmail.com>
+Changes since v5:
+- Fix a dangling stack pointer in the KUnit test: a probe that was
+  expected to be rejected but was unexpectedly registered stayed on
+  a stack-allocated kprobe.
+- Add Acked-by: Masami Hiramatsu to the implementation patch.
+- Annotate that test_kprobes_lrsc() is never executed and that
+  reject[] must match the length of test_kprobes_lrsc_offsets[].
 
-tracing: reject trace events with an empty TP_STRUCT__entry
+Verified by cross-compiling for RISC-V and running the kprobes KUnit
+test in QEMU (ok 2 kprobes_riscv).
 
-This patch modifies event_init() to reject trace events with an empty
-TP_STRUCT__entry by checking if the fields_array is empty. The fix attempts
-to prevent an out-of-bounds read in trace_event_get_offsets() when BPF
-programs attach to zero-field tracepoints, but it specifically exempts
-events that implement a get_fields callback.
+Xiaofeng Yuan (2):
+  riscv: kprobes: reject probes inside LR/SC sequences
+  riscv: kprobes: add KUnit test for LR/SC sequence rejection
 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 30c0ddf90887f..4bdd31dd24234 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -3406,6 +3406,11 @@ static int event_init(struct trace_event_call *cal=
-l)
->  	if (WARN_ON(!name))
->  		return -EINVAL;
-> =20
-> +	if (call->class->fields_array &&
-> +	    !call->class->fields_array[0].type &&
-> +	    !call->class->get_fields)
-> +		return -EINVAL;
-[Severity: High]
-Does this leave the out-of-bounds read exploitable for zero-field user_even=
-ts?
+ arch/riscv/include/asm/insn.h                 | 33 ++++++++++
+ arch/riscv/kernel/probes/decode-insn.c        |  2 +
+ arch/riscv/kernel/probes/kprobes.c            | 63 +++++++++++++++----
+ .../kernel/tests/kprobes/test-kprobes-asm.S   | 30 +++++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.c | 31 +++++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.h |  3 +
+ 6 files changed, 150 insertions(+), 12 deletions(-)
 
-The added check explicitly exempts events that define a get_fields callback.
-The user_events subsystem defines user_event_get_fields and therefore bypas=
-ses
-this new validation.
+-- 
+2.34.1
 
-Since unprivileged users can dynamically create user_events with zero fields
-(for example, via echo 'my_event' > user_events_data), user_event_parse_fie=
-lds()
-returns early:
-
-kernel/trace/trace_events_user.c:user_event_parse_fields() {
-    ...
-    if (args =3D=3D NULL)
-        return 0;
-    ...
-}
-
-This results in an empty user->fields list. Because user_events have the
-TRACE_EVENT_FL_TRACEPOINT flag, BPF programs can attach to them.
-__perf_event_set_bpf_prog() then calls the unpatched
-trace_event_get_offsets(), which dereferences the empty list via
-list_first_entry():
-
-kernel/trace/trace_events.c:trace_event_get_offsets() {
-    ...
-    tail =3D list_first_entry(head, struct ftrace_event_field, link);
-    return tail->offset + tail->size;
-}
-
-This reads out-of-bounds memory, bypassing BPF context size validation and
-potentially allowing an unprivileged attacker to load a BPF program that
-reads adjacent kernel memory during tracepoint execution.
-
-Should there be an additional check in trace_event_get_offsets() or should
-zero-field user_events be rejected entirely?
-
-> +
->  	if (call->class->raw_init) {
->  		ret =3D call->class->raw_init(call);
->  		if (ret < 0 && ret !=3D -ENOSYS)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/6ad1d48d.a461c41f.2=
-82b8.7a97@mx.google.com?part=3D1
