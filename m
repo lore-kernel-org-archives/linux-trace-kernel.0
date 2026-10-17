@@ -1,200 +1,404 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E793AD516;
-	Sat, 17 Oct 2026 13:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19B822F767
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 13:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792242845; cv=none; b=BWwyujJC3pBkCyQvhxDSuculVEzgfBAxkITmnGM/e1UeAYnyM8mBPRNM0Dx0P44zdn+GedCIZQHX/oPzBxPI7uw+flW/8N3FMpnPbK6jSG1n20zagu5CZ1dNKfX8+sNjRNI6F4m1nIP6alNyD6Tq70BO5oW026LaBQSHGNO3Ih0=
+	t=1792245007; cv=none; b=mQ+26MQIcNjeLkUOja8T84n96QK+GCc3VJjNOM7HUMy9aadvlFz1dDsdW/D/P+MysIyKx8Wyr/jJQTAWj00xePwCl6k6V3lPjVXo3CJdV+F/wfpRqfrCuo77buiKL+SZhu8av+d5p/BP6YaQQ14N2TBV+7SMs4AkO0Nxh2Px1Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792242845; c=relaxed/simple;
-	bh=JhqV9qgcM/uvUapF+jThpqVr1FyMbJ+kztGNoub7Y/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tjxw4IUzdOwKpTdPlssciyESlNCujxi9EFCYTSqakVVnBglHV1pby1mFq/f1RayRV6AgVSQzndtoVN+rYQgY4cYH4kt0vVs6rCArcRM7DM6A8ZPjvTHxoxLB5VzKG1O/o3n01cDlo+aI0FaWZcp2KCXYTn//t8r65rgAAZE86kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gkWe4Iw/; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1792245007; c=relaxed/simple;
+	bh=ppqkr0bsf0K0V04GxiQDG4ok2jrlvyIwjZ48w69zt0w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X73SiUGSMr0juw2BO2Oe/s0xRcTgtkD2fNCh8seQTmLp889nQGiHsE36j05/2/NdX3YmgLgRnbpT8x+JYUuCKaGvvf3XTppl+BEcpGVEKKZgz0iGCzdhlwz3+8eWtoDMhKu4X2RLLY2YXkrejF/nJ/yaXm+5PrsRtfxkWMUf5Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tHFn/Mfr; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gkWe4Iw/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1792242834; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=h1wv041oPlWAQwmsLMvk9LUOMcsyK9a97+mNPFPm+oI=;
-	b=gkWe4Iw/iTp7Jvy/0EBSRIgB72ZFMXmeG3Z9FcuqFd0ZBtE7iCBZym9oxC6ZQHAT83ICwkMPjqFzB15QyS6eJqgTIMAgQNr3S88HpEPpSdeLcIY0xnLMPvrlG4Z+pB/JUpR7PXjH9GVOOfmdEjQwL1IT7yG7SAEO2dIwFNBX6Ss=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=peng_wang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0XCxEdhX_1792242832;
-Received: from localhost(mailfrom:peng_wang@linux.alibaba.com fp:SMTPD_---0XCxEdhX_1792242832 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 17 Oct 2026 21:13:53 +0800
-From: Peng Wang <peng_wang@linux.alibaba.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>
-Cc: Peng Wang <peng_wang@linux.alibaba.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	He Rongguang <herongguang@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: [RFC PATCH v2 2/2] cpu: Add per-CPU control of non-idle tick suppression
-Date: Sat, 17 Oct 2026 21:13:42 +0800
-Message-ID: <224314ef5ad5c3c7634f73efad433616eb1d68ca.1792242566.git.peng_wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1792242566.git.peng_wang@linux.alibaba.com>
-References: <cover.1792242566.git.peng_wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHFn/Mfr"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-487049569b6so394250f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 06:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792245004; x=1792849804; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=x/7sTjM+j/xtn89k/aOm3H9ejU9nyAE+tKqITVTZM6c=;
+        b=tHFn/Mfr8BwuOSfFmtY8rw1SmsVvBkcLon/qJPN5QS268rx/RUOrN9BeAeYzJE6QR+
+         dIjf8oWyMZwPsmiG828x03pEd12r2rayfZf+4Vby1COldkl7Oy1BvA/MQ5BEzPzm3SrS
+         yE10SUuvRtDWJO6TjV2JDLQi+RugeuICSgOHf9cuXHYoD07213J5vpibVCQ6SN3YrNZ6
+         ffCskmXK+GXO3j8L2WXNGRNPv0Eshh9N5XCQhCOmBjnQmr9x/+1TH8poWMyND4X31Lz1
+         iEDbpIg+1/j88qQ5FLvJ5XFbiPCVGtRGtfDe2GD9DrtrQh0fTgLgIUUyW/FxgVklmRxK
+         A6bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792245004; x=1792849804;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=x/7sTjM+j/xtn89k/aOm3H9ejU9nyAE+tKqITVTZM6c=;
+        b=whcKDuo9yJ2TfRxjYVwOSz5lK4n9BhuRsyi/j2SpZECw8mbP0YPGuodFonWdmAjVWx
+         CZKZMNkqHedlAm5YFD93XUxOcfYZrcd/XJ3qFyqKze9VsBxXXDi4+hHY45bpcv70w68Y
+         PhnHMLjo07oIMCdzPFXXR7kfBLY0cYJ8OXrB6ibHPMvqCu7l/fXjMFnGxwHrcmbQT+vH
+         8KhEV9etdwPMvf9CnLVHDTReYE1KaF13+d0sRjLY8U1FK1tMZzWvC+dh+kR/0Sct7wJy
+         n1CKfWrv2Jr/B5/L5cfH5W1ZuIA1nXTdyNJGeguVsZ13BpDYJYhTID8OHnDCNEdazJiP
+         RxrQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxP7VF4xW+TCMU3lVno/HCPKZopV6nycubfpa0tlEA1JC0gNSdJEirpWQDhXpZinu73pd6hXeVWcTrRk4jU24jOs5A=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLpsw/IFMseK7W7Wu8NTFgCLxQuMxF7joKRIFCJ1g2qimm06zH1
+	UTsykAVv6KQaAw+u4SKHWfUSOkke4WBBwozGope4T9mtPC0GQWyPsEd8
+X-Gm-Gg: AYBFou11uTqo6eIVlN1X0tv27rZ1B32gzEAf3vEdoMqY7UviLC1bIJxflJz9vkqEmYo
+	3tkU03MX4DCLz5z+ta9/pl96mTg3D1NQIz9JHP0oKdLs/xifmgi4FbZhueTvtOVRJ1KTzLnHQw1
+	4bEW4EWbfR4VvFzaZ5YMU/Al5hP3TI1HRgeqVvyUKcie//v8ZOhOZSe4EYOeMklc0IVhJBLV4hc
+	XmYIv+Za6CaS6Vu+cIxZhi7B+Q6RIVPyx3LkOx0j1M8WeMPhXTcF3o6uwx5UR98uV4sJjMoCEUv
+	hZ+5IZngFxQKjWyJlCV79NLRMA5UWdacjAScJMKS11bpbemFKI9+oQ9KBDwplfRPM6g4Imz5rHw
+	jTf2SiH2AibfOOp7a6YspgjVXaWIKYHWS1Yj941zw+C3yY3ZKPuZ6ZdV5w/uoqGoP+OtgQLTeXb
+	5DxJ6bqz6NhmX1V7n+O47bbIFaRSMil6XTtgj515HJVRkDKW92mROz2R8wkEK5MqFmT9CCGJToP
+	GEH+7qcQ8hVXPlPU5gcXZbpgmws08RtXe9/70T6mwY=
+X-Received: by 2002:a05:6000:60b:b0:487:1662:cf4c with SMTP id ffacd0b85a97d-48e0797ffddmr5174562f8f.7.1792245003468;
+        Sat, 17 Oct 2026 06:50:03 -0700 (PDT)
+Received: from [127.0.1.1] (89-65-152-218.dynamic.play.pl. [89.65.152.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd4c0894sm10294478f8f.12.2026.10.17.06.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Oct 2026 06:50:02 -0700 (PDT)
+From: Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
+Date: Sat, 17 Oct 2026 15:49:45 +0200
+Subject: [PATCH v5] riscv: mm: Trace TLB flush requests
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261017-tlb_tracepoint-v5-1-256fb5393a7f@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/33PTQrCMBCG4atI1kaSSWKjK+8hIvmZtAFtS1qKU
+ np3UxdSLLr8Bp4XZiQdpogdOW5GknCIXWzqPNR2Q1xl6hJp9HkTYLBnGg60v9lrn4zDtol1T7W
+ UnCljFTsAyahNGOLjHTxf8q5i1zfp+e4PfL7+TA2ccuqDN+ixwELyU3k38bZzzZ3MqQEWXLAVh
+ 8xROK0dSB+U/ebiwznjasXFzDGI/I2wdi++ufzPZeYBhDZgvQ4FLvk0TS/8CM1aaQEAAA==
+X-Change-ID: 20260829-tlb_tracepoint-844105ab5092
+To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>, 
+ =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
+X-Mailer: b4 0.14.3
 
-Expose cpuN/nohz_tick_allowed on CPUs in the boot-time nohz_full set.
-The boolean defaults to 1: allow non-idle tick suppression, subject to
-existing dependencies. Writing 0 prevents suppression through POLICY.
-Readback reports permission, not the current tick state.
+Make RISC-V TLB flush requests observable together with the
+architecture-specific context available when the request reaches
+the RISC-V implementation.
 
-Each write affects only that CPU. Registered offline CPUs remain
-configurable, and policy persists across offline/online transitions.
-Retry writes when CPU hotplug is in progress so CPU device removal
-can drain active sysfs callbacks without a lock dependency cycle.
+The generic tlb:tlb_flush event provides reason and page-count
+information. At the RISC-V implementation level, additional
+context is available, including the invalidation range and stride,
+ASID, target CPU mask, and invalidation scope.
 
-Co-developed-by: He Rongguang <herongguang@linux.alibaba.com>
-Signed-off-by: He Rongguang <herongguang@linux.alibaba.com>
-Signed-off-by: Peng Wang <peng_wang@linux.alibaba.com>
+This context is useful for debugging and workload analysis. The
+target CPU mask shows the address-space CPU footprint involved in
+an invalidation, while range and stride distinguish requests at
+different mapping granularities. The ASID and scope help correlate
+requests with MM, scheduler, IPI, and firmware activity.
+
+Add riscv_tlb:riscv_tlb_flush_request in flush_tlb_all() and
+__flush_tlb_range(). Record start, size, stride, ASID (or the
+no-ASID sentinel), whether an mm is associated with the request,
+the target CPU mask and its weight, and the derived scope.
+
+Record the complete target mask because CPU identity cannot be
+reconstructed from a count. Calculate its weight from the recorded
+bitmap so both fields agree even if mm_cpumask() changes during
+recording.
+
+The event describes an invalidation request before dispatch. It
+does not report whether a remote flush uses SBI RFENCE or Linux
+cross-CPU coordination, since that choice is effectively established
+during initialization rather than made for each request.
+
+The address field (start) may contain kernel virtual addresses
+for flushes involving kernel mappings. Require perf tracepoint
+permissions even for counting-only events, since perf filters
+could otherwise reveal address information through event counts.
+
+Tested on QEMU virt with OpenSBI using local and shared-mm
+mprotect()/munmap() workloads, exercising single, range, and
+address-space invalidations. A MADV_PAGEOUT reclaim workload
+exercised global flushes. All four scope values were observed.
+
+Confirmed that trace-cmd records the event and that perf can count
+it with sufficient privileges. With perf_event_paranoid=0,
+unprivileged attempts to count the event using perf were denied,
+as intended.
+
+Built with and without CONFIG_PERF_EVENTS.
+
+Signed-off-by: Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
 ---
- .../ABI/testing/sysfs-devices-system-cpu      | 27 ++++++++++
- drivers/base/cpu.c                            | 53 +++++++++++++++++++
- 2 files changed, 80 insertions(+)
+Add a RISC-V tracepoint for observing TLB invalidation requests
+before they are dispatched by the architecture-specific
+implementation.
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 82d10d556cc89..4f6ac6b41e2b6 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -767,6 +767,33 @@ Description:	Preferred MTE tag checking mode
+The generic tlb:tlb_flush event describes TLB flush activity using
+reason and page-count information. The RISC-V event records
+additional context, including the invalidation range and stride,
+ASID, target CPU mask and its weight, and derived request scope.
+
+This context helps correlate TLB invalidation activity with MM,
+scheduler, IPI, and firmware activity. The event describes the
+request rather than the execution backend. SBI RFENCE versus Linux
+cross-CPU coordination is effectively determined at initialization
+rather than selected independently for each request.
+
+The target CPU mask weight is derived from the recorded bitmap to
+keep both fields consistent under concurrent mm_cpumask() updates.
+Since the address field (start) may contain kernel virtual
+addresses, the event requires perf tracepoint permissions even
+for counting-only access.
+
+Tested on QEMU virt with OpenSBI using local and shared-mm
+mprotect()/munmap() workloads. A MADV_PAGEOUT reclaim workload
+on QEMU virt with APLIC+IMSIC exercised global flushes. All four
+scope values -- single, range, address-space, and all -- were
+observed.
+
+Confirmed trace-cmd recording and privileged perf counting.
+With perf_event_paranoid=0, unprivileged attempts to count the
+event using perf were denied, as intended. The kernel was built
+with and without CONFIG_PERF_EVENTS.
+---
+Changes in v5:
+- Move the architecture-specific trace event definition under
+  arch/riscv/, as requested by Steven Rostedt.
+- Calculate target_mask_weight from the recorded CPU mask to
+  keep both fields consistent under concurrent updates.
+- Require perf tracepoint permissions for counting-only access,
+  since the event may expose kernel virtual addresses.
+- Link to v4: https://lore.kernel.org/r/20261015-tlb_tracepoint-v4-1-f238a2bd8f7e@gmail.com
+
+Changes in v4:
+- Drop unrelated whitespace-only changes in arch/riscv/mm/tlbflush.c.
+- Link to v3: https://lore.kernel.org/all/20261015-tlb_tracepoint-v3-1-eef305a3bb63@gmail.com/
+
+Changes in v3:
+- Rebase on current RISC-V for-next.
+- Thanks to Jisheng Zhang for pointing out that SBI RFENCE versus Linux
+  cross-CPU coordination is effectively a system-wide choice established
+  during initialization rather than a per-request decision.
+- Drop the local/SBI RFENCE/cross-CPU path field.
+- Rename the event from riscv_tlb_flush_path to
+  riscv_tlb_flush_request and refocus it on the semantic TLB
+  invalidation request.
+- Emit one request event independently of the mechanism subsequently
+  used to perform the invalidation.
+- Address checkpatch.pl --strict alignment issues.
+- Link to v2: https://lore.kernel.org/r/20260830-tlb_tracepoint-v2-1-e3c88c24df5b@gmail.com
+
+Changes in v2:
+- Use trace_call__riscv_tlb_flush_path() after the explicit
+  trace_riscv_tlb_flush_path_enabled() check to avoid a second
+  tracepoint static-key test, as suggested by Steven Rostedt.
+- Link to v1: https://lore.kernel.org/r/20260829-tlb_tracepoint-v1-1-dfdaede7e741@gmail.com
+---
+ arch/riscv/include/asm/riscv_tlb.h | 103 +++++++++++++++++++++++++++++++++++++
+ arch/riscv/mm/tlbflush.c           |  45 ++++++++++++++--
+ 2 files changed, 144 insertions(+), 4 deletions(-)
+
+diff --git a/arch/riscv/include/asm/riscv_tlb.h b/arch/riscv/include/asm/riscv_tlb.h
+new file mode 100644
+index 000000000000..2c438f6bc0d4
+--- /dev/null
++++ b/arch/riscv/include/asm/riscv_tlb.h
+@@ -0,0 +1,103 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM riscv_tlb
++
++#if !defined(_TRACE_RISCV_TLB_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_RISCV_TLB_H
++
++#include <linux/cpumask.h>
++#include <linux/tracepoint.h>
++#include <linux/perf_event.h>
++
++#ifndef _TRACE_RISCV_TLB_ENUMS
++#define _TRACE_RISCV_TLB_ENUMS
++
++enum riscv_tlb_flush_scope {
++	RISCV_TLB_FLUSH_SCOPE_SINGLE,
++	RISCV_TLB_FLUSH_SCOPE_RANGE,
++	RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE,
++	RISCV_TLB_FLUSH_SCOPE_ALL,
++};
++
++#endif /* _TRACE_RISCV_TLB_ENUMS */
++
++TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_SINGLE);
++TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_RANGE);
++TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE);
++TRACE_DEFINE_ENUM(RISCV_TLB_FLUSH_SCOPE_ALL);
++
++#define show_riscv_tlb_flush_scope(scope) \
++	__print_symbolic(scope, \
++		{ RISCV_TLB_FLUSH_SCOPE_SINGLE,        "single" }, \
++		{ RISCV_TLB_FLUSH_SCOPE_RANGE,         "range" }, \
++		{ RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE, "address-space" }, \
++		{ RISCV_TLB_FLUSH_SCOPE_ALL,           "all" })
++
++/*
++ * Record the invalidation request received by the RISC-V architecture code
++ *
++ * The target CPU mask represents the CPUs Linux intends to cover for the
++ * request. It can be correlated with per-CPU activity, but does not describe
++ * which harts ultimately performed an invalidation.
++ *
++ * The ASID is hardware-visible and may be reused. It must not be treated as a
++ * persistent identifier for an mm.
++ *
++ * The stride describes the invalidation granularity supplied to the RISC-V
++ * implementation.
++ *
++ * The event records the invalidation request before it is dispatched. It does
++ * not describe the mechanism used to execute the request.
++ *
++ */
++TRACE_EVENT(riscv_tlb_flush_request,
++	    TP_PROTO(unsigned long start, unsigned long size,
++		     unsigned long stride, unsigned long asid, bool has_mm,
++		     const struct cpumask *cmask,
++		     enum riscv_tlb_flush_scope scope),
++
++	TP_ARGS(start, size, stride, asid, has_mm, cmask, scope),
++
++	TP_STRUCT__entry(__field(unsigned long, start)
++		__field(unsigned long, size)
++		__field(unsigned long, stride)
++		__field(unsigned long, asid)
++		__field(bool, has_mm)
++		__field(unsigned int, target_mask_weight)
++		__cpumask(target_cpus)
++		__field(u8, scope)
++	),
++
++	TP_fast_assign(__entry->start = start;
++		__entry->size = size;
++		__entry->stride = stride;
++		__entry->asid = asid;
++		__entry->has_mm = has_mm;
++		__assign_cpumask(target_cpus, cpumask_bits(cmask));
++		__entry->target_mask_weight = cpumask_weight((const struct cpumask *)
++						     __get_cpumask(target_cpus));
++		__entry->scope = scope;
++	),
++
++	TP_printk("start=%#lx size=%#lx stride=%#lx asid=%#lx has_mm=%d target_mask_weight=%u target_cpus=%s scope=%s",
++		  __entry->start, __entry->size, __entry->stride,
++		  __entry->asid, __entry->has_mm,
++		  __entry->target_mask_weight, __get_cpumask(target_cpus),
++		  show_riscv_tlb_flush_scope(__entry->scope))
++);
++
++#ifdef CONFIG_PERF_EVENTS
++TRACE_EVENT_PERF_PERM(riscv_tlb_flush_request,
++		      perf_allow_tracepoint());
++#endif
++
++#endif /* _TRACE_RISCV_TLB_H */
++
++#undef TRACE_INCLUDE_PATH
++#undef TRACE_INCLUDE_FILE
++
++#define TRACE_INCLUDE_PATH asm
++#define TRACE_INCLUDE_FILE riscv_tlb
++
++/* This part must be outside protection. */
++#include <trace/define_trace.h>
+diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+index 962db300a166..f66348a9b999 100644
+--- a/arch/riscv/mm/tlbflush.c
++++ b/arch/riscv/mm/tlbflush.c
+@@ -9,6 +9,9 @@
+ #include <asm/mmu_context.h>
+ #include <asm/cpufeature.h>
  
- 		See also: Documentation/arch/arm64/memory-tagging-extension.rst
++#define CREATE_TRACE_POINTS
++#include <asm/riscv_tlb.h>
++
+ #define has_svinval()	riscv_has_extension_unlikely(RISCV_ISA_EXT_SVINVAL)
  
-+What:		/sys/devices/system/cpu/cpuX/nohz_tick_allowed
-+Date:		October 2026
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+Description:
-+		(RW) Boolean allowing this CPU to stop its non-idle scheduler
-+		tick. Present only for registered CPUs in the boot-time
-+		nohz_full set, with CONFIG_NO_HZ_FULL.
-+
-+		The default is 1 (allowed), subject to existing tick
-+		dependencies. Writing 0 prevents non-idle tick suppression;
-+		writing 1 allows it without forcing the tick to stop. Each
-+		write affects one CPU. Readback reports permission, not the
-+		current tick state.
-+
-+		Revoking permission requests an asynchronous restart of a
-+		stopped non-idle tick on an online CPU. The write does not wait
-+		for restart. Idle tick suppression is unchanged; the policy
-+		applies when the CPU leaves idle.
-+
-+		Registered offline CPUs may be configured. Policy is retained
-+		per logical CPU across offline/online and CPU device removal
-+		and re-addition. CPUs without a registered cpuN device cannot
-+		be configured through this interface.
-+
-+		This does not change nohz_full membership, context tracking,
-+		RCU offloading or housekeeping configuration.
-+
- What:		/sys/devices/system/cpu/nohz_full
- Date:		Apr 2015
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index 69e52fed42415..6fad1b0227dac 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/sched.h>
-+#include <linux/sched/signal.h>
- #include <linux/cpu.h>
- #include <linux/topology.h>
- #include <linux/device.h>
-@@ -189,7 +190,56 @@ static const struct attribute_group crash_note_cpu_attr_group = {
- };
- #endif
+ /*
+@@ -63,6 +66,32 @@ void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ 	local_flush_tlb_range_asid(start, end - start, PAGE_SIZE, FLUSH_TLB_NO_ASID);
+ }
  
-+#ifdef CONFIG_NO_HZ_FULL
-+static ssize_t nohz_tick_allowed_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
++static enum riscv_tlb_flush_scope
++riscv_tlb_get_flush_scope(unsigned long size, unsigned long stride, bool has_mm)
 +{
-+	return sysfs_emit(buf, "%u\n", tick_nohz_full_get_allowed(dev->id));
++	if (size == FLUSH_TLB_MAX_SIZE)
++		return has_mm ? RISCV_TLB_FLUSH_SCOPE_ADDRESS_SPACE :
++			RISCV_TLB_FLUSH_SCOPE_ALL;
++
++	return size <= stride ? RISCV_TLB_FLUSH_SCOPE_SINGLE :
++		RISCV_TLB_FLUSH_SCOPE_RANGE;
 +}
 +
-+static ssize_t nohz_tick_allowed_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
++static __always_inline void
++riscv_tlb_trace_flush_request(const struct cpumask *cmask, unsigned long start,
++			      unsigned long size, unsigned long stride,
++			      unsigned long asid, bool has_mm)
 +{
-+	bool allowed;
-+	int ret;
++	enum riscv_tlb_flush_scope scope;
 +
-+	ret = kstrtobool(buf, &allowed);
-+	if (ret)
-+		return ret;
++	if (!trace_riscv_tlb_flush_request_enabled())
++		return;
 +
-+	ret = tick_nohz_full_set_allowed(dev->id, allowed);
-+	if (ret == -EBUSY) {
-+		/* Retry after releasing the sysfs active reference. */
-+		fsleep(5000);
-+		return restart_syscall();
++	scope = riscv_tlb_get_flush_scope(size, stride, has_mm);
++	trace_call__riscv_tlb_flush_request(start, size, stride, asid, has_mm,
++					    cmask, scope);
++}
++
+ static void __ipi_flush_tlb_all(void *info)
+ {
+ 	local_flush_tlb_all();
+@@ -70,12 +99,18 @@ static void __ipi_flush_tlb_all(void *info)
+ 
+ void flush_tlb_all(void)
+ {
+-	if (num_online_cpus() < 2)
++	riscv_tlb_trace_flush_request(cpu_online_mask, 0,
++				      FLUSH_TLB_MAX_SIZE, 0,
++				      FLUSH_TLB_NO_ASID, false);
++
++	if (num_online_cpus() < 2) {
+ 		local_flush_tlb_all();
+-	else if (riscv_use_sbi_for_rfence())
+-		sbi_remote_sfence_vma_asid(NULL, 0, FLUSH_TLB_MAX_SIZE, FLUSH_TLB_NO_ASID);
+-	else
++	} else if (riscv_use_sbi_for_rfence()) {
++		sbi_remote_sfence_vma_asid(NULL, 0, FLUSH_TLB_MAX_SIZE,
++					   FLUSH_TLB_NO_ASID);
++	} else {
+ 		on_each_cpu(__ipi_flush_tlb_all, NULL, 1);
 +	}
-+
-+	return ret ? ret : count;
-+}
-+static DEVICE_ATTR_RW(nohz_tick_allowed);
-+
-+static umode_t nohz_tick_is_visible(struct kobject *kobj,
-+				   struct attribute *attr, int unused)
-+{
-+	return tick_nohz_full_cpu(kobj_to_dev(kobj)->id) ? attr->mode : 0;
-+}
-+
-+static struct attribute *nohz_tick_cpu_attrs[] = {
-+	&dev_attr_nohz_tick_allowed.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group nohz_tick_cpu_attr_group = {
-+	.attrs = nohz_tick_cpu_attrs,
-+	.is_visible = nohz_tick_is_visible,
-+};
-+#endif
-+
- static const struct attribute_group *common_cpu_attr_groups[] = {
-+#ifdef CONFIG_NO_HZ_FULL
-+	&nohz_tick_cpu_attr_group,
-+#endif
- #ifdef CONFIG_CRASH_DUMP
- 	&crash_note_cpu_attr_group,
- #endif
-@@ -197,6 +247,9 @@ static const struct attribute_group *common_cpu_attr_groups[] = {
- };
+ }
  
- static const struct attribute_group *hotplugable_cpu_attr_groups[] = {
-+#ifdef CONFIG_NO_HZ_FULL
-+	&nohz_tick_cpu_attr_group,
-+#endif
- #ifdef CONFIG_CRASH_DUMP
- 	&crash_note_cpu_attr_group,
- #endif
+ struct flush_tlb_range_data {
+@@ -105,6 +140,8 @@ static void __flush_tlb_range(struct mm_struct *mm,
+ 
+ 	cpu = get_cpu();
+ 
++	riscv_tlb_trace_flush_request(cmask, start, size, stride, asid, !!mm);
++
+ 	/* Check if the TLB flush needs to be sent to other CPUs. */
+ 	if (cpumask_any_but(cmask, cpu) >= nr_cpu_ids) {
+ 		local_flush_tlb_range_asid(start, size, stride, asid);
+
+---
+base-commit: a5ae1bf65cee84bcc121d659e7e22a767853f5f5
+change-id: 20260829-tlb_tracepoint-844105ab5092
+
+Best regards,
 -- 
-2.47.0
+Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
 
