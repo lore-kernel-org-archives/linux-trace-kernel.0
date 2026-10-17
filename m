@@ -1,108 +1,98 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821223876BA
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 16:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E00E34B437;
+	Sat, 17 Oct 2026 16:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792253390; cv=none; b=HKb8F+KrSc6/7eHdvofiOqurYhVu49BSk8SncWX9KivHt+0Cy9EU23PcpJKRXSb9NRUlkzHoeB+zSM6V2BO75J+RKMxr6l1P/Zbb70DRyQPshnmWLMQ56tPXwiqkQoQj3qt1PpKHhUrb0BLbkTE2UI1EHYAigZy/m8o8ME4FjCI=
+	t=1792256192; cv=none; b=gYtWVrPv2LR5KovneFfzql52EBI77OHgolpGj680G9j2mO2bm7IzXiCLV5GD+VXRTD7x4hDUPTPf9TKK7QtSsVe5HoDDtfwCV4B5hQ0zp3tG/srnD1WFp9tevqMhTpxDFjvvRILpldHrKnYrC9kE9+qiTmGv27+5nRGedfOOAmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792253390; c=relaxed/simple;
-	bh=tTcHuoJMWoopIonlj/PQ5Xr+4usFlCPYEylDr8x6qXE=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:MIME-Version; b=QHCujk44+59BGNjmafr8IBZogtnVJUFJ0Md1Dt2Hqef4GLMPnp0eNT6joToR8rDCuSq1IAfqID+RttMw/xBumULrT2AsHKSMtA3rnHwS8DMaAxAIE7NtgNnhU6tw8hPCSPqbtUdCEfeFeEb5f8ACJSP4BXxwRK3IrL9L47qwhhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MshgmktA; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792256192; c=relaxed/simple;
+	bh=IYQ1suEjolEOaNpO6FsMbWf1oA4VxVpvSTQtFRMoT2k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QHUzJ60+cD+TT2q9qJQxEsJrUTReF6V/4wQbTCQ8jPFaIBNm0ny1XXxsAnr0C5rI3qwdZUvRAeLdhXJzofYhmRs14dvWDsJ0vLqaJoaZjui5qAXCz6Ir+OuY41acRS3oLJ5SVg/JrvncmPkZU0ydsTQP1YL75F8lLf2PwTjOWAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DdDLGiPW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PurO5z4w; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MshgmktA"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3ab2cb8d577so783872a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 09:09:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792253389; x=1792858189; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=tTcHuoJMWoopIonlj/PQ5Xr+4usFlCPYEylDr8x6qXE=;
-        b=MshgmktAoLfM462RRv1ND19tzkgxx12vdbc9tF24wLiw0XOsUVOqg+LKIus9fj28f0
-         wbO1Dlo0NH/s8jcUGgnuOotjZBWTmeC4KIKMRsprGZmmy25xHgd31dLAVCRVsOAyyuZs
-         SPN7NYPOYHLT3ALJkoOFCYdjMLPPkdZ5z3WofbCAX0geANyqpO5/R2wi2GJJXA3MX0NN
-         Bkk4VwORnubi4FTUjT78QolyxERk+ZSSx1KQPYUQS9SdiU1MVj+G5Yb1wta6unNnM+Ba
-         SHYmW5psFFJ0ooaeHDc086nyNmIstIQ5gB3aMVVlN2T7v25YBIKSGPdxykC3NivVa51I
-         j3Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792253389; x=1792858189;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tTcHuoJMWoopIonlj/PQ5Xr+4usFlCPYEylDr8x6qXE=;
-        b=bz0VpoO4nSPRPfS4APntOpu9xzDMKMI3rMo84asuiyjI3XA8mtwrEovPbiv/KkYxXB
-         k8pYBx5caZ0osEfHeIh2RQvIlJEeAHezmzwE/enhMsoOMKT09YW6SRc43r8WIkY3sp63
-         MErAk6IhVB+67QuR9dif2bzgeLFQDxToyrtqCi8DQnuKUGuyz0VarLtnYpB/46/EnBQT
-         VFSyHpZyfL/weFUpAVcCKeyx1GV8YUtxG026GUPp0Oczs/Av88Yvh/ftzbo3tvhJLO8Q
-         SGycFcQ+8PpeuF5U8ZyW3yLXNezWQcSq6KwI6eCGaxMJb8cZtVbpJxHbsIrShX74aM6G
-         C8ew==
-X-Forwarded-Encrypted: i=1; AKwUvBxSMxKhUzyOTTolD3S2EKsx0rkLGtlaBjnbR8O0VBZdl9YFTpQTeR2KovLJ0nNxGYjmlBTHaJwwlWqMJlLz95OxrhI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJZNS9x9mwHBMHpH8Vp2cloOb6D0mPOXgT/5t4jV5brAO45nFmh
-	bZQ9jSxdVqopVkzumCsuB9fILYd2BAusvA88xgTqtF1pvdcTJYywjIUk
-X-Gm-Gg: AYBFou2kEm8m1xaEgzGwwzUq8UdqJmxEWlN3n/gj/pGgoXZsMvh6Tsq6K+OUThfHDLU
-	Jse0qub9tapd4B05jHO36RcvS4TMZt96iESlbVTnRuNR6y63ulhKW9YHCsGz80NqOJZDLkuMm59
-	H+TtrcNt4g78QTufjaYoe7GncA+qPHlttz80oFy03168ZxNT3h2kowcD5wRM15zbVvNg7kYElB+
-	v+18Eq698g9Hgkfg8KSu+jPk6QzQdzkZXiUnnJp/ywvpsjnRBiUY1QR+T9YTTv5ktUXwolqGCI9
-	NYmeCTR27a/cWvgr6REcDEeRZu37BFcVHREmYpTpnKkyXq8rKeTKy0ig8a0hn7s53li2Dkg+Sf+
-	c6Vt9tkqFBXAsHxooNj8ladvuUw+KmyC9DokI/bMEsAYIJuExNwNrBU2pqoahCXqCGs7IDL8WSz
-	CGgcM/Z/Y8bJPmvsLYIu8rNc8XAJG6XSNLGi1GRJ+k3WdrnZHBTIPFoqz6JfIxFXNE4ZCe7t6Mf
-	+mFKprruy7OS/a/IQ+Y5oZXNmz20ZgJAaq829CmkHzCxAY85k5RFi07ym2H9wcCTUXHcm8qVwiB
-	ktc=
-X-Received: by 2002:a17:90b:2e90:b0:3a8:2c7e:8986 with SMTP id 98e67ed59e1d1-3aceec73203mr2871670a91.17.1792253388700;
-        Sat, 17 Oct 2026 09:09:48 -0700 (PDT)
-Received: from localhost ([153.61.198.254])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc48f19d9sm8625486a91.11.2026.10.17.09.09.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Oct 2026 09:09:47 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 17 Oct 2026 16:09:47 +0000
-Message-Id: <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
-Cc: "Nam Cao" <namcao@linutronix.de>, "Wen Yang" <wen.yang@linux.dev>,
- "Tobias Schaffner" <tobias.schaffner@siemens.com>, "Viktor Malik"
- <vmalik@redhat.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DdDLGiPW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PurO5z4w"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792256188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IYQ1suEjolEOaNpO6FsMbWf1oA4VxVpvSTQtFRMoT2k=;
+	b=DdDLGiPWN/twWwHyGBbl1ohDMS0GeeaSzq7vgptCoPDPW7EAQlXDACXt6CeUQxrxP3MV/K
+	GYqiIDm8iETO5VPgaFqQHAeqv13X2YOKqkHCokvUItbH+8URENh6cwni/T1jdhb7elkWNK
+	MXU86DO3UzCDFYgujbEIJv6AdxPe3k8E+NHzT7qgIdFRKNjx+lHR+BKxEFfvBh8TqRVE0R
+	3XiZFqFVCMiXfG4YUnxsFOoDKgX6SBUXEjiXXaWqsCKo30SljkHBy7wD7Beb4PzdzFIoFc
+	RoqCxKKUGfdLTck/CmVHKgzfhX7CeyhCZb3hW3+kUE7UvODzmmqqKPSwtjtoEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792256188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IYQ1suEjolEOaNpO6FsMbWf1oA4VxVpvSTQtFRMoT2k=;
+	b=PurO5z4w6cXSK80q9C2+GbGdIluadgOAe7HEMbuo7CGqzUjAYXs2XWgSfO43X0NouZeQ9U
+	5DjcHkdZxRMgUEAg==
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Gabriele Monaco
+ <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
+ Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
 Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "John Ogness" <john.ogness@linutronix.de>, "Gabriele Monaco"
- <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, "Steven
- Rostedt" <rostedt@goodmis.org>
-In-Reply-To: <87bj8s8ih9.fsf@jogness.linutronix.de>
-References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com> <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com> <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com> <878q3xtptq.fsf@jogness.linutronix.de> <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com> <87bj8s8ih9.fsf@jogness.linutronix.de>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+ <20261001152042.124445-11-gmonaco@redhat.com>
+ <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+ <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+ <878q3xtptq.fsf@jogness.linutronix.de>
+ <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+ <87bj8s8ih9.fsf@jogness.linutronix.de>
+ <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
+Date: Sat, 17 Oct 2026 19:02:28 +0206
+Message-ID: <87v770uuyr.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Sat, Oct 17, 2026 at 05:23 PM John Ogness <john.ogness@linutronix.de> wrote:
-> That sounds like it could work. As long as there are kprobes in the call
-> stack of violations, I am happy.
-
-No need for a kfunc to get that.
-bpf_printk() in the reactor is a regular bpf_trace:bpf_trace_printk
-event, fired from the prog where the violation is detected.
-ftrace triggers and perf can attach to it.
-
-> A delayed kernel record is better than none. Although I really do not
-> see why it cannot simply call printk_deferred() directly. It is safe and
-> lockless. And it has the advantage of appropriate timestamping when
-> compared to any other printk's that may be happening at that time.
+On 2026-10-17, "Alexei Starovoitov" <alexei.starovoitov@gmail.com> wrote:
+>> That sounds like it could work. As long as there are kprobes in the call
+>> stack of violations, I am happy.
 >
-> If we are already adding kfuncs for panics and violations, why the
-> resistance to printks?
+> No need for a kfunc to get that.
+> bpf_printk() in the reactor is a regular bpf_trace:bpf_trace_printk
+> event, fired from the prog where the violation is detected.
+> ftrace triggers and perf can attach to it.
 
-printk kfunc wouldn't be limited to rv. Any tracing prog would
-be able to write to dmesg with no rate limit and then you, Petr
-and others will start yelling that bpf is abusing printk
-and dos-ing the rest of the kernel.
-Hence let's avoid this can of worms.
+It would be nice if it could be filtered so that only RV violation
+bpf_printk's would trigger. I do not think it is possible for a filter
+to do primitive pattern matching on @bpf_string. Or am I wrong?
+
+>> A delayed kernel record is better than none. Although I really do not
+>> see why it cannot simply call printk_deferred() directly. It is safe and
+>> lockless. And it has the advantage of appropriate timestamping when
+>> compared to any other printk's that may be happening at that time.
+>>
+>> If we are already adding kfuncs for panics and violations, why the
+>> resistance to printks?
+>
+> printk kfunc wouldn't be limited to rv. Any tracing prog would
+> be able to write to dmesg with no rate limit and then you, Petr
+> and others will start yelling that bpf is abusing printk
+> and dos-ing the rest of the kernel.
+
+With the "new" ringbuffer and nbcon implementations, it no longer dos-es
+the kernel, so I have no problem with bpf programs calling
+printk_deferred(). And besides, userspace can already blast the
+ringbuffer and consoles via /dev/kmsg.
+
+John
