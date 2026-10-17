@@ -1,224 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350412E719B;
-	Sat, 17 Oct 2026 08:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1453C1984
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 10:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792224262; cv=none; b=kvn/l8CWzCHvXLee4ysuRi4lHudqhOF65EQ7Pd0fNqDBCe7ze0vHmW8pW6rmXH9WcOA8DUu9RAGqCRSpBm6o4UIKr0sE2FgM0ouIY9cPSb1iXbJ3Y2WVb6wTVjFVlsPbfc7yxZzwBCEK4V61MKv2pDGo3oElR8/A7L5ULiUjQ8Y=
+	t=1792233758; cv=none; b=JQ/M+WVB6FxTq7UqwtjKZ78wY2NT9E9Gl82Wd0W8sAmNSRgSByKdSn0OdQHw41p9JAZVxutPSPAg1wkIvlWCBL0tcTpVbCTpfpb0aq1Kx9G8Q2MQ3f95Ywg3umWg6hpZtYcNP9UJB1oxwpLKEUwFj7lXRI6fEv/z3POmYYIXiQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792224262; c=relaxed/simple;
-	bh=7qDI74gjHZJGEwkABMcZSoA0MbCGw9LlI8XM9CtMxr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pyv2xzpAZLZNJ9hKG4DifCrfk+m45I9JfPcWDoCmpTSSv2uUD86LLYCVQwWiS0G21IjAcbQeh6Rzog1U37VM7kOsKZGmgrbqV2GkthJv3M0RNG783ADRpdbBh/fJiYLH9/RYx8I43Mx8jAJMV4QTsHFKlJT99W4n5M4e423j7yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Msrv+BWb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792233758; c=relaxed/simple;
+	bh=pJJPWj17cDMLFqShuMdTL0J3HXVL7tLLFruxUwZ7smY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=BmIPdH6CJvlNxLjTpWslcLjIBdAaBfJqcX+4Tob1s0y0L79iD3tJ0ZicMY1gbR3YXsHt5lvSQz/NkospH0x37g35UJAOkV/cNL0vMW/Fchx6Dvt20eUto+w1USesXWD2I5dgmYzGqWhz2GM01znrbxJuQN3nTMIkygu1Z4d4Mt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J75weAM+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Msrv+BWb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32EB1F000C4;
-	Sat, 17 Oct 2026 08:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1792224260;
-	bh=rbdJEzm5e/9pK3FIuLFI29o7B4dQ9T6z556KPHhg9Xc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Msrv+BWbTWkRxy7NwxshktzSRodYDmSL0oB1UrHevfw8y1D3qVmOCiGtsqoLrvrqd
-	 EgypIPZk3djOJSyw6qwSBif0cY/rRKubPS36GWOfYdZ0wjIodZWxBZfAdwwnmb23XC
-	 5LK1W2fC2ZNSzebGK1mcW83rV7rZI6HWPpZveRng=
-Date: Sat, 17 Oct 2026 10:04:17 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Peng Wang <peng_wang@linux.alibaba.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-	He Rongguang <herongguang@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] cpu: Add sysfs control of full dynticks policy
-Message-ID: <2026101743-monotype-demeaning-f97b@gregkh>
-References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
- <e93ef15796946485eaaecd774141378351307940.1792067271.git.peng_wang@linux.alibaba.com>
- <2026101646-speller-gutter-c184@gregkh>
- <atJea4b6VvYlAvbD@MacBook-Pro.local>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J75weAM+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792233755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pJJPWj17cDMLFqShuMdTL0J3HXVL7tLLFruxUwZ7smY=;
+	b=J75weAM+D199EZkgLXbqwUNEhf0Ljvz3yABuQFERbZeZk046vLSWWlOxgbNrWj/79074oL
+	Yx/y5SKI5lu7v4afOpp17DXojRcWh9LMgFOkMEkc2655LYQPicXlwyGJZ2/TGBdx27fleT
+	4wUJZd4TGu5U7J7GHfFkVriNqssnEyE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-365-xT27m2ETMHqqvwrONMUtLg-1; Sat, 17 Oct 2026 10:42:33 +0000
+X-MC-Unique: xT27m2ETMHqqvwrONMUtLg-1
+X-Mimecast-MFC-AGG-ID: xT27m2ETMHqqvwrONMUtLg_1792233753
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-48dfdc0fa95so354289f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 03:42:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792233753; x=1792838553;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=luoXeTg/DwvulkFlzn/Qv4L0LOqhemmdtqaKBtyvDd8=;
+        b=gDPDRqmjigImCpVOFc+STydMxag30JfoU2PIKYSbbQrmuzEo2fMooPhIuElsw4fLHw
+         1H3NO40uXiiwlBZHmRvyYg0QzQUGalMwSdgOkXVXgAt8HrhCPqUc5kOO93S4mAH8G40v
+         GPDo5oQ8Pti0fP2a3GVlCdH4BMubnTY2C26O9VoTmdeFXq1aK6DUDPB6EAbREBopiqOc
+         WIuq0GKflw3g3fdTQNlnXH2BtH7SNeWCypb5Yf5T5hbtWNSOhRxC7/tymQq3aVgNkJBT
+         WRl24OMjiFeW3f5FkGKiOSxMKEncSFQUXJv0+cM+urT8K2pTXzpcSwLNaINSjQKPWpBt
+         49Fw==
+X-Forwarded-Encrypted: i=1; AKwUvByHpzLmdCmZ7SMinM0HSeS6kvEo36VAYStEe/q4h6zBteL6PNRRkyPuWS/r0CSo0NschZlrTlSGWi9Z5J/Y7mfc/XQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLVF5sFc3jDgoONEJNsR4IB7EkUWCGdw0FguClnH9Ciw6+XjMmt
+	fZdUzxRbLWg9uZLJ5n+WvLHCPxKhhtlQLrVJgO98wnOPJbWOLk4r2nFuKh7CUDnaQKYNqRSdTcN
+	w2+PHMaYzxTLeMct0YWwMPaJmVjdmSBD4oC55YeAOKGCjaUfQuyAVkRlqjrsuFmqtIESAvMZwkQ
+	==
+X-Gm-Gg: AYBFou3mMm5E+kHBeoNmBrZwEhU7TYKv09MEUHGT6e2rv1Lv2HEYM71dwOeXEGeP+M1
+	yh6pHXIgcogF5ukrxORhXx4u/x68OF5Bfp1gbgoMUJy08B/kycWvYdkuZJvrBbCvDSP+/JswkYF
+	D/gNlxCJG0TrAD1h49ZaTP8vBgBtfn78vLpmd0yN+yMmKOkPYhV4MTjCQR+GZ/ubHhhqmRHbmbO
+	K2a0/hinrrOIy77G7+lgKR0Uaz5HbadozwbNAtHziEwV/n5Tz+vn/4/512Blur4XmFrFqrOkfhn
+	OSJBGs0RohVKpRwl7oEP2vU+P3QP9LWqS+1yu5m/7XtrE5PGE2D6htItXdxIBxJVg//RpSthN0C
+	WjtAb7MoT
+X-Received: by 2002:a05:600c:4e11:b0:4a1:acaa:c355 with SMTP id 5b1f17b1804b1-4a1d75f252fmr47251885e9.10.1792233752724;
+        Sat, 17 Oct 2026 03:42:32 -0700 (PDT)
+X-Received: by 2002:a05:600c:4e11:b0:4a1:acaa:c355 with SMTP id 5b1f17b1804b1-4a1d75f252fmr47251675e9.10.1792233752336;
+        Sat, 17 Oct 2026 03:42:32 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([195.174.135.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd503862sm10597809f8f.46.2026.10.17.03.42.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Oct 2026 03:42:31 -0700 (PDT)
+Date: Sat, 17 Oct 2026 10:42:30 +0000
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+CC: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>,
+ Tobias Schaffner <tobias.schaffner@siemens.com>,
+ Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+In-Reply-To: <878q3xtptq.fsf@jogness.linutronix.de>
+References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com> <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com> <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com> <878q3xtptq.fsf@jogness.linutronix.de>
+Message-ID: <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atJea4b6VvYlAvbD@MacBook-Pro.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: R-QkAzxy2JvtqnShTWiPm3ElYpcnuCHgvskf_AoJif4_1792233753
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 17, 2026 at 01:27:07AM +0800, Peng Wang wrote:
-> On Fri, Oct 16, 2026 at 06:25:26PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Oct 15, 2026 at 08:43:09PM +0800, Peng Wang wrote:
-> > > Expose nohz_full_allowed under /sys/devices/system/cpu/ as the subset of
-> > > nohz_full CPUs permitted to suppress their non-idle scheduler tick.
-> > > 
-> > > Writes replace the entire list; reads report policy, not current tick
-> > > state. Reject invalid input before updating policy. Document asynchronous
-> > > revocation, offline CPU configuration and persistence across hotplug.
-> > > The existing nohz_full attribute continues to report membership.
-> > > 
-> > > Co-developed-by: He Rongguang <herongguang@linux.alibaba.com>
-> > > Signed-off-by: He Rongguang <herongguang@linux.alibaba.com>
-> > > Signed-off-by: Peng Wang <peng_wang@linux.alibaba.com>
-> > > ---
-> > >  .../ABI/testing/sysfs-devices-system-cpu      | 40 ++++++++++++++++
-> > >  drivers/base/cpu.c                            | 46 +++++++++++++++++++
-> > >  2 files changed, 86 insertions(+)
-> > > 
-> > > diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> > > index 82d10d556cc89..edf3408fd84c8 100644
-> > > --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> > > +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> > > @@ -767,6 +767,46 @@ Description:	Preferred MTE tag checking mode
-> > >  
-> > >  		See also: Documentation/arch/arm64/memory-tagging-extension.rst
-> > >  
-> > > +What:		/sys/devices/system/cpu/nohz_full_allowed
-> > > +Date:		October 2026
-> > > +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> > > +Description:
-> > > +		(RW) CPUs permitted to stop the scheduler tick while non-idle.
-> > > +		Available with CONFIG_NO_HZ_FULL. The default is the complete
-> > > +		nohz_full CPU list. Readback reports permission, not the current
-> > > +		tick state: all the usual tick dependencies still apply.
-> > > +
-> > > +		A write replaces the entire list, using CPU-list syntax (for
-> > > +		example, "1-3,5"). An empty line revokes permission from all
-> > > +		nohz_full CPUs. Invalid input is rejected without changing
-> > > +		policy. A parsed list containing CPUs outside nohz_full fails
-> > > +		with EINVAL. CPU numbers beyond the mask range and numeric
-> > > +		overflows are rejected by the CPU-list parser with ERANGE and
-> > > +		EOVERFLOW, respectively. Input must be shorter than PAGE_SIZE
-> > > +		bytes, otherwise E2BIG is returned. Embedded NULs and newlines
-> > > +		other than a trailing newline are rejected with EINVAL. Valid
-> > > +		writes without an active nohz_full configuration fail with
-> > > +		EOPNOTSUPP.
-> > > +
-> > > +		Reads fail with EOVERFLOW if the formatted output reaches
-> > > +		PAGE_SIZE - 1 bytes, rather than returning a potentially
-> > > +		truncated CPU list.
-> > > +
-> > > +		Revoking permission adds a per-CPU tick dependency. Online CPUs
-> > > +		are notified through the existing asynchronous kick mechanism
-> > > +		to restart a stopped non-idle tick. A successful write means
-> > > +		the policy is updated and any needed notification is queued;
-> > > +		it does not wait for tick restart. Changes to multiple CPUs
-> > > +		are not simultaneous. Granting permission only removes this
-> > > +		dependency and does not force the tick to stop.
-> > > +
-> > > +		Offline CPUs may be configured without sending notifications.
-> > > +		Policy persists across CPU offline/online. Idle tick suppression
-> > > +		is unchanged; the policy applies when a CPU leaves idle.
-> > > +
-> > > +		This interface does not change nohz_full membership, context
-> > > +		tracking, RCU offloading, or housekeeping configuration.
-> > > +
-> > >  What:		/sys/devices/system/cpu/nohz_full
-> > >  Date:		Apr 2015
-> > >  Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> > > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> > > index 69e52fed42415..299ce61cef895 100644
-> > > --- a/drivers/base/cpu.c
-> > > +++ b/drivers/base/cpu.c
-> > > @@ -324,6 +324,51 @@ static ssize_t nohz_full_show(struct device *dev,
-> > >  	return sysfs_emit(buf, "\n");
-> > >  }
-> > >  static DEVICE_ATTR_RO(nohz_full);
-> > > +
-> > > +static ssize_t nohz_full_allowed_show(struct device *dev,
-> > > +				      struct device_attribute *attr, char *buf)
-> > > +{
-> > > +	cpumask_var_t mask;
-> > > +	ssize_t ret;
-> > > +
-> > > +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-> > > +		return -ENOMEM;
-> > > +
-> > > +	tick_nohz_full_get_allowed(mask);
-> > > +	ret = sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
-> > > +
-> > > +	free_cpumask_var(mask);
-> > > +
-> > > +	/* Never present a truncated CPU list as the complete policy. */
-> > > +	return ret == PAGE_SIZE - 1 ? -EOVERFLOW : ret;
-> > 
-> > Why not?  What will userspace do then if it gets -EOVERFLOW as it can
-> > not get the full list?
-> 
-> Hi Greg,
-> 
-> There is no way to retrieve the full list through this attribute.
-> The intent was to avoid returning a truncated list that userspace
-> could write back, unintentionally revoking permission for the omitted
-> CPUs. Returning an error does not solve that interface limitation.
 
-If you _MUST_ have such a size of a sysfs file, then use a binary
-attribute which can accept any size.  I think we have had to do that for
-other sysfs files that show this information in the past, right?  Please
-check them.
 
-> > > +}
-> > > +
-> > > +static ssize_t nohz_full_allowed_store(struct device *dev,
-> > > +				       struct device_attribute *attr,
-> > > +				       const char *buf, size_t count)
-> > > +{
-> > > +	cpumask_var_t mask;
-> > > +	int ret;
-> > > +
-> > > +	/* kernfs may truncate an oversized write to PAGE_SIZE. */
-> > > +	if (count >= PAGE_SIZE)
-> > > +		return -E2BIG;
-> > 
-> > How are you getting a larger than PAGE_SIZE value here?
-> 
-> I cannot; kernfs caps count at PAGE_SIZE. The check is intended for
-> count == PAGE_SIZE, to avoid applying a potentially truncated prefix
-> as a complete list. It also rejects an exactly page-sized input.
+Il 16 ottobre 2026 19:20:33 UTC, John Ogness <john.ogness@linutronix.de> ha=
+ scritto:
+>
+>I am still not clear how the rv tool will replace the existing in-kernel
+>implementation. Right now violations call printk(), which conveniently
+>show up in kernel logs and consoles. More importantly, there are the
+>rtapp violation events, which makes it very easy to use ftrace and perf
+>features to record traces, take actions, generate statistics, and dump
+>backtraces on violations.
 
-If the check is for == PAGE_SIZE then check for that, not for something
-that can never happen :)
+The plan is to keep everything you'd now do with perf/ftrace as plain stdou=
+t of the RV tool. Right now you can see the same ftrace output using rv mon=
+ <monitor> -t for in-kernel monitors (only deterministic automata).
 
-But again, don't do this at all by using a binary attribute if you are
-going to be needing to accept larger amounts of data.  Don't create a
-known-broken api from the start please.
+We are missing stack traces (which I'd optionally add only on errors) and p=
+erhaps other events (e.g. the -e in either tool if you aren't only interest=
+ed in errors/events of the monitor).
 
-> > 
-> > > +	if (memchr(buf, '\0', count) ||
-> > > +	    (count > 1 && memchr(buf, '\n', count - 1)))
-> > > +		return -EINVAL;
-> > 
-> > What are you testing for here, sorry, I can't easily figure it out.
-> 
-> The checks reject user-supplied NULs and non-final newlines.
-> For example, cpulist_parse() accepts "1\n2\n" as CPU 1 only, while
-> store() would report the full input as consumed. The NUL appended
-> by kernfs is at buf[count], outside the checked range.
+Anything else you may want to do passes through reactors (e.g. printk/panic=
+ or others). See more later.
 
-Please document that in a comment here.
+>Is it planned to pull all this out of the kernel but then somehow the rv
+>tool allows ftrace, perf, and console to continue to work with
+>violations? (For example, by somehow defining kprobes for violations and
+>writing violation information to /dev/kmsg?) Or is the rv tool supposed
+>to provide its own DIY variant of these features?
 
-> I propose replacing the global attribute with
-> /sys/devices/system/cpu/cpuN/nohz_tick_allowed, available only on
-> nohz_full CPUs. Writing 0 would prevent non-idle tick suppression,
-> using the existing asynchronous kick when needed. Writing 1 would
-> allow suppression, subject to the existing tick dependencies.
-> Readback would report policy, not the current tick state.
-> 
-> Each write would affect only that CPU, without changing nohz_full
-> membership or other isolation settings. This would give up the
-> single-write whole-list replacement. Would that be a better fit?
+My plan isn't particularly strict right now. I'm aiming to allow BPF monito=
+rs in the user space tool as an exploratory effort.
+I don't think you would easily interact with ftrace/perf from those though.
 
-That's much simpler, so I'm all for that from a sysfs point of view,
-thanks.
+If that's a requirement, you could probably call a kfunc from BPF and attac=
+h a kprobe there. I would implement that from a reactor (violations only).
 
-greg k-h
+For a pure printk reactor, I drafted an implementation that calls directly =
+printk_deferred(), Alexei is suggesting to write to /dev/kmsg from user spa=
+ce what BPF passes.
+Since you were the one suggesting having a real printk, would your use-case=
+ favour either solution? I'd expect some different latency if the log passe=
+s from BPF to /dev/kmsg , but I'm not sure that's an issue for you.
+
+Gabriele
+
