@@ -1,122 +1,224 @@
-Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.83.148.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCF0447237;
-	Fri, 16 Oct 2026 23:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.83.148.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350412E719B;
+	Sat, 17 Oct 2026 08:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792191848; cv=none; b=It5Dh/PxY6y0U4D6vlrzeCEIQC4jFkHMKZFuK62dxA+FEg/37/jTAB8o5UeK303vwVRI2gIBXyjajiY/fdvVor/Df3a2s2NKLtN3ChZ6Hv5e7aXhhoQ52gGUvtqDziAQ4m14YCdDKSExb/JTGKv6RlnHQoKcDU0lQmpx/h0pTcQ=
+	t=1792224262; cv=none; b=kvn/l8CWzCHvXLee4ysuRi4lHudqhOF65EQ7Pd0fNqDBCe7ze0vHmW8pW6rmXH9WcOA8DUu9RAGqCRSpBm6o4UIKr0sE2FgM0ouIY9cPSb1iXbJ3Y2WVb6wTVjFVlsPbfc7yxZzwBCEK4V61MKv2pDGo3oElR8/A7L5ULiUjQ8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792191848; c=relaxed/simple;
-	bh=4hzHIB0Y5JPlhprW+J1idLrj1nO22R2E8VcKkQJMrDE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OiX26FuKaTqMQYEuYDf6LigNWh1B3uWzT0vAXa2bTiwxxxZwxH1QyY6luNScrgQwUOfnnLcsit/yiglLr8f5Q0RysZI1K7BpFP6+ixIQ59Gn0Xk1uCwihZ06DMjqRlS336umXHwQ/rBWeCKGzqjWnmq60h1vAhuZ6evsjbbBE7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=UJJyq1RO; arc=none smtp.client-ip=35.83.148.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1792224262; c=relaxed/simple;
+	bh=7qDI74gjHZJGEwkABMcZSoA0MbCGw9LlI8XM9CtMxr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pyv2xzpAZLZNJ9hKG4DifCrfk+m45I9JfPcWDoCmpTSSv2uUD86LLYCVQwWiS0G21IjAcbQeh6Rzog1U37VM7kOsKZGmgrbqV2GkthJv3M0RNG783ADRpdbBh/fJiYLH9/RYx8I43Mx8jAJMV4QTsHFKlJT99W4n5M4e423j7yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Msrv+BWb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="UJJyq1RO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1792191846; x=1823727846;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=N+HMwtYomXTCU6APfdeFwp0AAr9WthCoGnVUMU/qw5o=;
-  b=UJJyq1ROJz09KPFHrW0RQQauGEK+FvBzv35nWYS9VCwagv/rvvR5C+rG
-   i/Fj26g20Qw2lxaavHItzh4LTDw2QMTPouV/Xd7cW3/kFw0Xc4h3KMaJK
-   CudiE7w0QoGrqo3Pp38xjNtWihduySQGPQGD8kUWI8Sf6IEm23kJQsKkH
-   jgWJ6xT87RaITQJ5l1e6vzZj3mTsZZTDRhHDOZ9qMSk0M7xMm2SBVraTB
-   7gqCBmDx6r5xHCzmu2gTmeCAPzbVSLGvWDdibPh2ixvLHuNK2fxyIplkl
-   dJrLx/wDqmYGmYK5Gr4SnuCy0mkZM3KWt0+EcTxEK2Prus4/HVDrt9Sri
-   A==;
-X-CSE-ConnectionGUID: F+PGbVPKT32QkFZLKUD5yA==
-X-CSE-MsgGUID: KLTRFuNBQQW9sgbw8K6hGA==
-X-IronPort-AV: E=Sophos;i="6.27,162,1787011200"; 
-   d="scan'208";a="31289766"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2026 23:04:05 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.104:26478]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.40.190:2525] with esmtp (Farcaster)
- id 7051b923-aa5f-4e2a-8f20-94827baa4d21; Fri, 16 Oct 2026 23:04:05 +0000 (UTC)
-X-Farcaster-Flow-ID: 7051b923-aa5f-4e2a-8f20-94827baa4d21
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
- Fri, 16 Oct 2026 23:04:04 +0000
-Received: from dev-dsk-aarnahmd-2a-95203392.us-west-2.amazon.com
- (172.19.38.251) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.53; Fri, 16 Oct 2026
- 23:04:04 +0000
-From: Aaron Ahmed <aarnahmd@amazon.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Gavin Inglis
-	<giinglis@amazon.com>
-Subject: [PATCH] ftrace: Initialize modname and offset in print_rec()
-Date: Fri, 16 Oct 2026 23:04:03 +0000
-Message-ID: <20261016230403.4916-1-aarnahmd@amazon.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Msrv+BWb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32EB1F000C4;
+	Sat, 17 Oct 2026 08:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1792224260;
+	bh=rbdJEzm5e/9pK3FIuLFI29o7B4dQ9T6z556KPHhg9Xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Msrv+BWbTWkRxy7NwxshktzSRodYDmSL0oB1UrHevfw8y1D3qVmOCiGtsqoLrvrqd
+	 EgypIPZk3djOJSyw6qwSBif0cY/rRKubPS36GWOfYdZ0wjIodZWxBZfAdwwnmb23XC
+	 5LK1W2fC2ZNSzebGK1mcW83rV7rZI6HWPpZveRng=
+Date: Sat, 17 Oct 2026 10:04:17 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Peng Wang <peng_wang@linux.alibaba.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	He Rongguang <herongguang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] cpu: Add sysfs control of full dynticks policy
+Message-ID: <2026101743-monotype-demeaning-f97b@gregkh>
+References: <cover.1792067271.git.peng_wang@linux.alibaba.com>
+ <e93ef15796946485eaaecd774141378351307940.1792067271.git.peng_wang@linux.alibaba.com>
+ <2026101646-speller-gutter-c184@gregkh>
+ <atJea4b6VvYlAvbD@MacBook-Pro.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWA002.ant.amazon.com (10.13.139.96) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atJea4b6VvYlAvbD@MacBook-Pro.local>
 
-print_rec() leaves 'modname' and 'offset' uninitialized and
-kallsyms_lookup() only sets them on success. When the lookup fails like
-when a module is being loaded or unloaded, 'modname' holds a garbage
-value, passes the 'if (modname)' check, and is dereferenced by
-seq_printf().
+On Sat, Oct 17, 2026 at 01:27:07AM +0800, Peng Wang wrote:
+> On Fri, Oct 16, 2026 at 06:25:26PM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Oct 15, 2026 at 08:43:09PM +0800, Peng Wang wrote:
+> > > Expose nohz_full_allowed under /sys/devices/system/cpu/ as the subset of
+> > > nohz_full CPUs permitted to suppress their non-idle scheduler tick.
+> > > 
+> > > Writes replace the entire list; reads report policy, not current tick
+> > > state. Reject invalid input before updating policy. Document asynchronous
+> > > revocation, offline CPU configuration and persistence across hotplug.
+> > > The existing nohz_full attribute continues to report membership.
+> > > 
+> > > Co-developed-by: He Rongguang <herongguang@linux.alibaba.com>
+> > > Signed-off-by: He Rongguang <herongguang@linux.alibaba.com>
+> > > Signed-off-by: Peng Wang <peng_wang@linux.alibaba.com>
+> > > ---
+> > >  .../ABI/testing/sysfs-devices-system-cpu      | 40 ++++++++++++++++
+> > >  drivers/base/cpu.c                            | 46 +++++++++++++++++++
+> > >  2 files changed, 86 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> > > index 82d10d556cc89..edf3408fd84c8 100644
+> > > --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> > > +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> > > @@ -767,6 +767,46 @@ Description:	Preferred MTE tag checking mode
+> > >  
+> > >  		See also: Documentation/arch/arm64/memory-tagging-extension.rst
+> > >  
+> > > +What:		/sys/devices/system/cpu/nohz_full_allowed
+> > > +Date:		October 2026
+> > > +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> > > +Description:
+> > > +		(RW) CPUs permitted to stop the scheduler tick while non-idle.
+> > > +		Available with CONFIG_NO_HZ_FULL. The default is the complete
+> > > +		nohz_full CPU list. Readback reports permission, not the current
+> > > +		tick state: all the usual tick dependencies still apply.
+> > > +
+> > > +		A write replaces the entire list, using CPU-list syntax (for
+> > > +		example, "1-3,5"). An empty line revokes permission from all
+> > > +		nohz_full CPUs. Invalid input is rejected without changing
+> > > +		policy. A parsed list containing CPUs outside nohz_full fails
+> > > +		with EINVAL. CPU numbers beyond the mask range and numeric
+> > > +		overflows are rejected by the CPU-list parser with ERANGE and
+> > > +		EOVERFLOW, respectively. Input must be shorter than PAGE_SIZE
+> > > +		bytes, otherwise E2BIG is returned. Embedded NULs and newlines
+> > > +		other than a trailing newline are rejected with EINVAL. Valid
+> > > +		writes without an active nohz_full configuration fail with
+> > > +		EOPNOTSUPP.
+> > > +
+> > > +		Reads fail with EOVERFLOW if the formatted output reaches
+> > > +		PAGE_SIZE - 1 bytes, rather than returning a potentially
+> > > +		truncated CPU list.
+> > > +
+> > > +		Revoking permission adds a per-CPU tick dependency. Online CPUs
+> > > +		are notified through the existing asynchronous kick mechanism
+> > > +		to restart a stopped non-idle tick. A successful write means
+> > > +		the policy is updated and any needed notification is queued;
+> > > +		it does not wait for tick restart. Changes to multiple CPUs
+> > > +		are not simultaneous. Granting permission only removes this
+> > > +		dependency and does not force the tick to stop.
+> > > +
+> > > +		Offline CPUs may be configured without sending notifications.
+> > > +		Policy persists across CPU offline/online. Idle tick suppression
+> > > +		is unchanged; the policy applies when a CPU leaves idle.
+> > > +
+> > > +		This interface does not change nohz_full membership, context
+> > > +		tracking, RCU offloading, or housekeeping configuration.
+> > > +
+> > >  What:		/sys/devices/system/cpu/nohz_full
+> > >  Date:		Apr 2015
+> > >  Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> > > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> > > index 69e52fed42415..299ce61cef895 100644
+> > > --- a/drivers/base/cpu.c
+> > > +++ b/drivers/base/cpu.c
+> > > @@ -324,6 +324,51 @@ static ssize_t nohz_full_show(struct device *dev,
+> > >  	return sysfs_emit(buf, "\n");
+> > >  }
+> > >  static DEVICE_ATTR_RO(nohz_full);
+> > > +
+> > > +static ssize_t nohz_full_allowed_show(struct device *dev,
+> > > +				      struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	cpumask_var_t mask;
+> > > +	ssize_t ret;
+> > > +
+> > > +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
+> > > +		return -ENOMEM;
+> > > +
+> > > +	tick_nohz_full_get_allowed(mask);
+> > > +	ret = sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
+> > > +
+> > > +	free_cpumask_var(mask);
+> > > +
+> > > +	/* Never present a truncated CPU list as the complete policy. */
+> > > +	return ret == PAGE_SIZE - 1 ? -EOVERFLOW : ret;
+> > 
+> > Why not?  What will userspace do then if it gets -EOVERFLOW as it can
+> > not get the full list?
+> 
+> Hi Greg,
+> 
+> There is no way to retrieve the full list through this attribute.
+> The intent was to avoid returning a truncated list that userspace
+> could write back, unintentionally revoking permission for the omitted
+> CPUs. Returning an error does not solve that interface limitation.
 
-  Oops: general protection fault
-  RIP: 0010:string+0x48/0xe0
-  Call Trace:
-   vsnprintf+0x1f5/0x650
-   seq_printf+0x8e/0xb0
-   print_rec+0x6c/0xc0
-   t_show+0x4c/0x440
-   seq_read_iter+0x119/0x480
+If you _MUST_ have such a size of a sysfs file, then use a binary
+attribute which can accept any size.  I think we have had to do that for
+other sysfs files that show this information in the past, right?  Please
+check them.
 
-This can be triggered by reading available_filter_functions while a
-module is being loaded or unloaded.
+> > > +}
+> > > +
+> > > +static ssize_t nohz_full_allowed_store(struct device *dev,
+> > > +				       struct device_attribute *attr,
+> > > +				       const char *buf, size_t count)
+> > > +{
+> > > +	cpumask_var_t mask;
+> > > +	int ret;
+> > > +
+> > > +	/* kernfs may truncate an oversized write to PAGE_SIZE. */
+> > > +	if (count >= PAGE_SIZE)
+> > > +		return -E2BIG;
+> > 
+> > How are you getting a larger than PAGE_SIZE value here?
+> 
+> I cannot; kernfs caps count at PAGE_SIZE. The check is intended for
+> count == PAGE_SIZE, to avoid applying a potentially truncated prefix
+> as a complete list. It also rejects an exactly page-sized input.
 
-Initialize both variables so a failed lookup skips the module name.
+If the check is for == PAGE_SIZE then check for that, not for something
+that can never happen :)
 
-Fixes: b39181f7c690 ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
-Cc: stable@vger.kernel.org
-Tested-by: Gavin Inglis <giinglis@amazon.com>
-Signed-off-by: Aaron Ahmed <aarnahmd@amazon.com>
----
-Reproducer: https://gist.github.com/ginglis13/dd3f64426767cd48df55dfe5d26c2299
+But again, don't do this at all by using a binary attribute if you are
+going to be needing to accept larger amounts of data.  Don't create a
+known-broken api from the start please.
 
- kernel/trace/ftrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > > +	if (memchr(buf, '\0', count) ||
+> > > +	    (count > 1 && memchr(buf, '\n', count - 1)))
+> > > +		return -EINVAL;
+> > 
+> > What are you testing for here, sorry, I can't easily figure it out.
+> 
+> The checks reject user-supplied NULs and non-final newlines.
+> For example, cpulist_parse() accepts "1\n2\n" as CPU 1 only, while
+> store() would report the full input as consumed. The NUL appended
+> by kernfs is at buf[count], outside the checked range.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 673a54fdf3929..164fbc07bce05 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4426,9 +4426,9 @@ subsys_initcall(ftrace_check_for_weak_functions);
- 
- static int print_rec(struct seq_file *m, unsigned long ip)
- {
--	unsigned long offset;
-+	unsigned long offset = 0;
- 	char str[KSYM_SYMBOL_LEN];
--	char *modname;
-+	char *modname = NULL;
- 	const char *ret;
- 
- 	ret = kallsyms_lookup(ip, NULL, &offset, &modname, str);
+Please document that in a comment here.
 
-base-commit: 70dd4ee72eb2d5793c62e71c14e3aba78e5a4e56
--- 
-2.47.3
+> I propose replacing the global attribute with
+> /sys/devices/system/cpu/cpuN/nohz_tick_allowed, available only on
+> nohz_full CPUs. Writing 0 would prevent non-idle tick suppression,
+> using the existing asynchronous kick when needed. Writing 1 would
+> allow suppression, subject to the existing tick dependencies.
+> Readback would report policy, not the current tick state.
+> 
+> Each write would affect only that CPU, without changing nohz_full
+> membership or other isolation settings. This would give up the
+> single-write whole-list replacement. Would that be a better fit?
 
+That's much simpler, so I'm all for that from a sysfs point of view,
+thanks.
+
+greg k-h
