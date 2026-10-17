@@ -1,155 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80912393DEF
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 14:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792245835; cv=none; b=HYt102OadQx3dPsA1CcjFkn3v+auastfOjZT3kPDYsZeW8rCAJncJPvcZjgOqR4PwK9dWKLxPzmdsM7SVdHCRnrvE2uHRm8KSNr1i/pPkqc4oor1wa3uNF7cywXgOql0k5zpujfmKFzLoryL4z4MUZylAr8ztcIrlRCvE7BZRck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792245835; c=relaxed/simple;
-	bh=1LMyCXm0SPQV0RaDE03dQA20Onw3vgmmTpVglQ1gawM=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=BIZ98sI/w5zdsOf4XrLf9+hSnpqzDS2YjxXF1i3xzN0Ta3uWPCD9Ai5Ghj5TQEjljwEyaBDt4HPPWvzUy/y3HjzxcbNyIeFM13HwzA3JLiJ2i3XIvf4GlIkBFbDj9ikM4iu/j1RGeb/rvRvH1JfEekcokIyaYb/PSDRaPRbdpLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=og9DPxx9; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F6432B13E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 14:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792245836; cv=pass; b=TRRtnvuw9ue+NJQKdXSUe7p4odwY1Ynug9LTTu4YFeF+3LidAFwfoWeQsFuQXON5S458Mbm792aetwZeXjTubeE/NrrSUPDnaMGahSbO7yugb6XF1uSw9FjhFMbulgI6geFEL6wnLRUWA7jNCxNowxfc9s4XFraVkvSk07rJon8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792245836; c=relaxed/simple;
+	bh=Q/dWGxF+K2INO9x1LZXl2OEUxrgdNRguf9DssJID3vQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jf7CYN2Oyr1M14omTY5iSRczYU/LS+LJ/UszbfYNrZNB8VWh2a753Oo1VWuKj5Ygm/01KcIatnvfe4e2jJcJf8h42wHp9n1gSpF6SQXPdplsfUDMJr1qjWE3BP4K7KRLdYfIXaQ0nTrdSC9za8aNECJNjNDweGGNg0gGaB1VUO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXsvu48A; arc=pass smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="og9DPxx9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA721F000C4;
-	Sat, 17 Oct 2026 14:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792245834;
-	bh=OECF/QxcClH1E7VxqH2g0amOV3Me7/iMIA48PKP6etM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=og9DPxx9Ox/rnsQ66pavgjxEOzWR6L9VbMn4efhZfhENvV4hRv5fCdIA8cwooVmE+
-	 b5XbxsOcbUqpUxXon8SbPTX3NE1DEAU8XbvOm7thDFLutuB7uA1+TjXFuzwyq5HLe0
-	 kOuU7O65oFdXbS+jo7OQxtOz0bAQO+Ft2gxz5FZlKSmTRpcbT6gBJjfMN2hBGOSib4
-	 bHTgJ8JxmvwxMq7YTe0D5s88rv/i6Djmtf74ZL8/o7SSDWd1xe81px6sOO6uBJv9Mz
-	 zBE0uIKglFuqeWaA2JCcBnpYtDGB46zct5AlhHrEJKRsK91Qw4fWsK5fuMJvGPqvTV
-	 oE6ENcvxyXq4g==
-Message-ID: <sashiko-outbox-175536@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5] riscv: mm: Trace TLB flush requests
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?Um9tYW4gJ0hlZGluJyBTdG9yb3poZW5rbw==?= <romeusmeister@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261017-tlb_tracepoint-v5-1-256fb5393a7f@gmail.com>
-References: <20261017-tlb_tracepoint-v5-1-256fb5393a7f@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Oct 2026 14:03:53 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXsvu48A"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5ba3ac592faso877606e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 07:03:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792245833; cv=none;
+        d=google.com; s=arc-20260327;
+        b=H13DcdYtP6COUwQkjFY+B5rJHpOwbiOgdtwTUriPNbYcLF1wtB7qOixmhaz/TYRv7b
+         4Rh8w9EPPQVgLRSJa84HwvwO+FY++HhXApjHyBcXh3iRYWAjgn/fGO5DPuJE1Bhga8gI
+         E7bODZhZHgwWdWRgVRHmG8fWEVXm6E++7HTDECjMdO63MA1NWLlItqXiQ90UO8gP18Nv
+         sf+5vqIdTlwYXhOZnYH44z1smycv+McF2/Uh8oUokFpqU2CphDCDF55hru10hbQtiRec
+         Lkdr7O4swhKf9ewFzYrybBjlskk4PSNXbb4sm4pP8ZroW+pcIbt1Mi12urWNSKvp6YIF
+         wdWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+OsE2x5Pqitm8v/Z0qp1dkwtBd3ch11zvLF7iHqatxI=;
+        fh=HPG5X85OzBsycd3DUzHXMEINQX4ml0Ijl5LLMlFBjwI=;
+        b=Fm+S2T4BncWqNoglqVLND5X0W56iRkDTRaayRfKMMRrp8VNAEmnBppQFj7DwzBy5PA
+         mpBndJgBJ5WCEQsxPxGQ1z+4A116Pcvi4anYpW8Tt7utyWX2kjehpqXHRb91SkbD+pFA
+         xrlI0mao2Zs/cxZg11ZnQOGWpxsBa2SbINwUR6GGyl8vrAKld8nuXJDrs+SplAYrpC2J
+         LYNFIqpWzE6zxw6ki08UjaVMRnY4uLhKI14ZK1td6KlJYSrl2+HoVPRaTh4CGd1kn0bu
+         o6ql4hFrZSFK4Mp+X19yO6Uk+VC3qr0lOamjzzmjgjMxTivfiaQ4w62WSXXd5fda/1bX
+         y1zQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792245833; x=1792850633; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+OsE2x5Pqitm8v/Z0qp1dkwtBd3ch11zvLF7iHqatxI=;
+        b=hXsvu48AJy+/+LX0sQ4R11DVxj1D0bH2chCf+T4srbd5lwAx8bbc5TEIqEFj3jo4Oi
+         UCciJ9g51VUIzdYf1fm0YGFS9AdMCuRwmOGRN45R+ZaAc7Ca+P/E8F/iSsD76jgAEgWr
+         DfZaWi1PJ+zX/Ginb1JZN9or7savwh1lJ2Dfd5gHfMr+EkfCSmQNom7fDdLSay+jCJV5
+         XxXzucUunCG2LC6qWN6ANX+KaSkx9SHL9y19ggjlZ8G7xEeejsIW8HZ/ygbyxmcRK0y4
+         JGLT+vqU1/y9R/sVyZGnompKUq+ECLYwcUXVyjUWiVaPK3DMxpMwzmZmhSv75CxZQAEN
+         EkFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792245833; x=1792850633;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+OsE2x5Pqitm8v/Z0qp1dkwtBd3ch11zvLF7iHqatxI=;
+        b=vqk0bAg5dHqRC9BESx4OkI6V/bfh1nrIZdzs3YG8lzJ6sAYtMLY5Y2OxmQhoKa6b1R
+         hufRMvbvdTlVkdvEhqGs3HMlHCIEnG442gOwaqz1qpSIqbeeRht/6rIiC3LzgAQNUcQW
+         6H44tqhRXCT4bhrF9OzvddE9fmSuTIKeGGAVbMRF6NliAZuSZ4FDdeTghE0K51TeFGim
+         tbbTjYFVe/qtlX5Gcj+UQn55Uyh9KFrmyco/uF97AD0NSAPeW7PyGXCizzstlbGgTZTJ
+         3OdUFK9/kWknVslrP/yJL5Dh48otjKr+zP/b1EfrJ324mpdKvkw421BaAXLVVRsRsMZF
+         bg9g==
+X-Forwarded-Encrypted: i=1; AKwUvBz4y0dJjPp0dTpPyIBqoDrGrAubBIf41Bl4QBgOKqt++4H0Lm0WCW8mlt3sV7BsyuyRGdCnHC0WiPSnCxU1JyVfHMc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIN74Vepx58OWskc/nNjxQLGqSMXbv9jdXf4aElGJNC62ATM7r3
+	jk6uoTgflMIZxAaAH53HosSugnFQPjWvMAo0lgKZTR4I/U5Pa/8OlOxBW3sSdYmPIoWX3e0KwDR
+	KFrd0L4/pGU95EhlmdwltbekH6CSlu58=
+X-Gm-Gg: AYBFou2Ra7mMzlyDrHFOo1IbW0mcre9PiQ/bzaUXRHuUlPAnwsmKRMHQ5dn3Snl8psK
+	nEa5PcHGEcunJHD7yS6xDKjOG1WxYeSdQb/ZDEwXtNjXgB0KIyoLo/iYVTISZTf5xw+84CZ21VP
+	9nVg1X8I+Vgcpph8GQcU1ZBVfpcpKAdJA3twkVBGm9zzP2fZ9U7aWALPyF2u9As5rBrfiy8owKq
+	AwH/vHxkwoBLTbinssFOPpBlPKgF2s6xQa2qA1AhAKGnJliBjgVGBJ3k5WAznXafE0HHEU7qoik
+	Isbw4li45dYUw8cn57Pl3Y+uJzo6LlSytwb7uOHvX+s7xrmRemcjvmtjpeRSmL66GA==
+X-Received: by 2002:a05:6512:3c89:b0:5bb:42a2:31fa with SMTP id
+ 2adb3069b0e04-5be50a7efcdmr899502e87.60.1792245832854; Sat, 17 Oct 2026
+ 07:03:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20261015-tlb_tracepoint-v4-1-f238a2bd8f7e@gmail.com> <20261016103846.73ff2980@gandalf.local.home>
+In-Reply-To: <20261016103846.73ff2980@gandalf.local.home>
+From: Roman Storozhenko <romeusmeister@gmail.com>
+Date: Sat, 17 Oct 2026 16:03:39 +0200
+X-Gm-Features: AclHuK-r_eYg3gupJbYI7DWak9c5eTY2IipHa3Ysz4nKK_X5lXKKwE8MhWngSzk
+Message-ID: <CALsPMBMeXHd1TN89bHCtS3G0M8MFiimf8w=qKayxuYCad8v_Gw@mail.gmail.com>
+Subject: Re: [PATCH v4] riscv: mm: Trace TLB flush requests
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] riscv: mm: unaligned cpumask_weight() access in riscv_tlb_flush_re=
-quest
---
+On Fri, Oct 16, 2026 at 4:38=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+>
+> [
+>   I realized I replied to v2 and not v4 as the thread of v2 pushed that t=
+o
+>   the top. I'll repeat my statement here too.
+> ]
+>
+> On Thu, 15 Oct 2026 19:32:34 +0200
+> Roman 'Hedin' Storozhenko <romeusmeister@gmail.com> wrote:
+>
+> > diff --git a/include/trace/events/riscv_tlb.h b/include/trace/events/ri=
+scv_tlb.h
+>
+> Please do not put architecture specific events in include/trace.
+>
+> They belong in the architecture.
+>
+> See the example code in samples/trace_events/trace-events-sample.[ch]
+> as well as the Makefile there on how to put trace events in directories
+> outside of include/trace/
+>
+> Thanks,
+>
+> -- Steve
+>
 
-commit d6aa8f46821c6cdff87980399804155c8220831a
-Author: Roman 'Hedin' Storozhenko <romeusmeister@gmail.com>
+Hi Steve,
 
-riscv: mm: Trace TLB flush requests
+Thanks for the review.
 
-This commit adds the riscv_tlb:riscv_tlb_flush_request tracepoint in
-flush_tlb_all() and __flush_tlb_range() to record TLB invalidation
-requests along with range, stride, ASID, target CPU mask, and derived
-invalidation scope.
+I've moved the trace event definition to
+arch/riscv/include/asm/riscv_tlb.h in v5, following the existing
+RISC-V tracepoint convention.
 
-> diff --git a/arch/riscv/include/asm/riscv_tlb.h b/arch/riscv/include/asm/=
-riscv_tlb.h
-> new file mode 100644
-> index 0000000000000..2c438f6bc0d42
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/riscv_tlb.h
-> @@ -0,0 +1,103 @@
+The updated patch is available here:
+https://lore.kernel.org/linux-riscv/20261017-tlb_tracepoint-v5-1-256fb5393a=
+7f@gmail.com/
 
-[ ... ]
-
-> +TRACE_EVENT(riscv_tlb_flush_request,
-> +	    TP_PROTO(unsigned long start, unsigned long size,
-> +		     unsigned long stride, unsigned long asid, bool has_mm,
-> +		     const struct cpumask *cmask,
-> +		     enum riscv_tlb_flush_scope scope),
-> +
-> +	TP_ARGS(start, size, stride, asid, has_mm, cmask, scope),
-> +
-> +	TP_STRUCT__entry(__field(unsigned long, start)
-> +		__field(unsigned long, size)
-> +		__field(unsigned long, stride)
-> +		__field(unsigned long, asid)
-> +		__field(bool, has_mm)
-> +		__field(unsigned int, target_mask_weight)
-> +		__cpumask(target_cpus)
-> +		__field(u8, scope)
-> +	),
-> +
-> +	TP_fast_assign(__entry->start =3D start;
-> +		__entry->size =3D size;
-> +		__entry->stride =3D stride;
-> +		__entry->asid =3D asid;
-> +		__entry->has_mm =3D has_mm;
-> +		__assign_cpumask(target_cpus, cpumask_bits(cmask));
-> +		__entry->target_mask_weight =3D cpumask_weight((const struct cpumask *)
-> +						     __get_cpumask(target_cpus));
-> +		__entry->scope =3D scope;
-> +	),
-
-[Severity: High]
-Does casting __get_cpumask(target_cpus) to const struct cpumask * and
-passing it to cpumask_weight() perform unaligned unsigned long loads?
-
-In DECLARE_EVENT_CLASS() in include/trace/trace_events.h, char __data[]
-immediately follows the fields declared in TP_STRUCT__entry():
-
-    struct trace_event_raw_##name {
-        struct trace_entry  ent;
-        tstruct
-        char                __data[];
-    };
-
-Because __field(u8, scope) is placed at the end of TP_STRUCT__entry(),
-offsetof(struct trace_event_raw_riscv_tlb_flush_request, __data) is 53 on
-RV64 (and 37 on RV32). In include/trace/stages/stage5_get_offsets.h,
-__dynamic_array() places target_cpus at __data_size +
-offsetof(typeof(*entry), __data) without aligning the offset to
-sizeof(unsigned long). (Even without the trailing u8 field, the offset on
-RV64 would be 52, and ring_buffer_event_data() only guarantees 4-byte
-alignment rather than 8-byte alignment.)
-
-When riscv_tlb_flush_request is enabled and triggered via flush_tlb_all()
-or __flush_tlb_range(), TP_fast_assign() copies cmask into that unaligned
-offset with memcpy() and then calls:
-
-    cpumask_weight((const struct cpumask *)__get_cpumask(target_cpus))
-      -> bitmap_weight(cpumask_bits(srcp), small_cpumask_bits)
-
-which dereferences const unsigned long * from an odd byte address. In
-addition to triggering UBSAN alignment warnings under
-CONFIG_UBSAN_ALIGNMENT, on RISC-V systems without hardware unaligned
-access support this raises a misaligned load trap on every tracepoint hit
-(and during TP_printk() formatting via trace_print_bitmask_seq()), causing
-a kernel oops in do_trap_misaligned() if handle_scalar_misaligned_load()
-is disabled (CONFIG_RISCV_SCALAR_MISALIGNED=3Dn or unaligned_enabled=3D0).
-
-[ ... ]
-
-> +	TP_printk("start=3D%#lx size=3D%#lx stride=3D%#lx asid=3D%#lx has_mm=3D=
-%d target_mask_weight=3D%u target_cpus=3D%s scope=3D%s",
-> +		  __entry->start, __entry->size, __entry->stride,
-> +		  __entry->asid, __entry->has_mm,
-> +		  __entry->target_mask_weight, __get_cpumask(target_cpus),
-> +		  show_riscv_tlb_flush_scope(__entry->scope))
-> +);
-
-[ ... ]
-
-> --=20
-> 2.47.3
-
+Thanks for pointing this out.
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261017-tlb_tracep=
-oint-v5-1-256fb5393a7f@gmail.com?part=3D1
+Kind regards,
+Roman 'Hedin' Storozhenko
