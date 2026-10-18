@@ -1,82 +1,75 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591DA187346
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 23:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA2C36CDF2
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Oct 2026 03:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792279551; cv=none; b=GcnKAlqz1QlE4CRCuZAotna+kg0aBKEMaSTN5sKIlQqZfTyslQBmSg05xyz4VEbnnZQCR3sHus0/bkdRAoQ1IV1KzBYtLpoBNfgmY5cN5rUZ34dTnYmA9VigYizS+0EeKmkz47QMPHjNTSitMONOyLC/ubOHMUv9hsPEFSoy9RU=
+	t=1792295427; cv=none; b=BERsMxkMzRKkiOg6D4/+/UmpbV2sWZeHLzUlEPx7Us7WbNs0C6FuAXSy7kG0su07KI+9FmIqnLju5S1lzeZ2Igs7Do2jfftGXAIkzCinSCsRxlk17oe2vmtwhTh+80JseCb0D/023G+cOLtvrK9EGPXexyQGvlTCUp1TFsTxwjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792279551; c=relaxed/simple;
-	bh=76+A5Jj0Hlrf12TczBu4HUo2tmyicY+Onp4kmxXjTS4=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:MIME-Version; b=uSoTLa5JYJyyBJswvQcUilkQ45krSZlY0qhvGDxfdPGmUeqF4dPTlIdfBqXhdvQCWPconEIPz0awZVxxIDMRwlVS3u+A7A0uDp6gEggkXGRr/0HH0HJbOcvzRKGMUiiPPnQMhI/xA41HdEue/HUdpVfsypqCie3wTLtM7I0cjsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PvnA718d; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1792295427; c=relaxed/simple;
+	bh=ij8L3BD2pEttCYLuoGimsHWdqjy9b52xZ9+cpHTq7sY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=YDQCfGMHVq9EirSKcWZCrhfYH/qd+PM09qmBFsB/Ifxr9Proabg4kDs2UzGzZ1p8NKAUeN8RmifCb7t+i5EwFP5G9QhjAsp63yDlfCM0z4e7D2FnZik8ZapEKmBE/zOZ9/Lweuo40L+n2tRWqP2kQ9BXBc3eqaUCKkrhehSdmN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdcSV6ay; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvnA718d"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2e977109392so3879385ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 16:25:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdcSV6ay"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3ab9268d90eso659489a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Oct 2026 20:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792279550; x=1792884350; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=76+A5Jj0Hlrf12TczBu4HUo2tmyicY+Onp4kmxXjTS4=;
-        b=PvnA718dzQSvfwkiDZjhzgwLANqqLbdoUPGy9N21Kzk6M2oSbtE//CVIdcbO2jsFfC
-         nXKu9lqnL4KqfRB4mxYVN5O2RssqWQgy6x4CdSf3+qPlRKPIRaTMciUnph/hmkob3b20
-         LGFYZ3mgIBOXmRkKkUhfWxq9+hU2VLpbwMMHGbUzNxCDerur8U8ChNW5eF8v4fjDcuTG
-         dolkhC12W/5n3g+ZXW9zajfq28vtCvJJ6359jSfU4EHR0NcJCXwIqJ4Ld9KHjppwMFnN
-         OPP+55gJBH6j7ipnjoLqJ1SvuxytuavAV9dvcFy+OGMF1rc2KdGO6t9qDxlZRsuPgr4l
-         emGg==
+        d=gmail.com; s=20251104; t=1792295426; x=1792900226; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ij8L3BD2pEttCYLuoGimsHWdqjy9b52xZ9+cpHTq7sY=;
+        b=bdcSV6ay399XPcoRCwePT+ocLanf1EiK9ladARqJsxZX3gqyOwUUHb96ijoXrAx1Iu
+         6C7UhTDxP7coR00AsdSjEJcYwNflCgc/Q7kDZAHjdeG8pOkk/9ypJVpgz5g9JQR6IUAk
+         eaRbiI0HlRnAMSDnZNILupVSFqbt7Yrr1+RTe/Lq6aB+ucrkT9+COI0nfgmsQfxp6M5K
+         UVD3/8ExR6ZHco8bX67EFrZBvLMz+6ZJYwkcZsmsspmGBbXNLLkTWIeNgmBuIK0ZKSLW
+         9NoIXVH3BR9WQTyWAFvPYOWTBphzCANzGXi4SPqPHV/2SvsyKHAxFVbWSiXDvtELO8CV
+         wb0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792279550; x=1792884350;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
+        d=1e100.net; s=20260707; t=1792295426; x=1792900226;
+        h=mime-version:content-transfer-encoding:content-type:message-id:date
+         :references:in-reply-to:subject:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=76+A5Jj0Hlrf12TczBu4HUo2tmyicY+Onp4kmxXjTS4=;
-        b=Qs0phE0BkNJBoTm4wZujdONgYZ4OMLpdsIQs2Cf+2nKdkJ1EXCu5RGwZoT9RAoN0QV
-         7t8Cnh9HItiqtkbiYOIxkIVqamFpGfjEDphOfyQOiVV3Q1ZWy6GXXH3VMPXNEdeMwW8g
-         yokjI4tLrjcVBm8BkGZ8FIrUazFmo/Q1JdYdkQ5mALvnEwHZLKdiTQyc2/UJWPVI50EW
-         kpenRqM+Oh8wxQm5VvTeZJ4vOG4B3wyqgsH0eUe2aKVW9hX86CtLSjlmlSya+dbb5uMn
-         fnMefxn7wQFmLJKfv6uDxceRrIPpA1IX5xgMsXSUOukR5ULPkmpMNvJ9i61gROIH2iEM
-         ikjQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxN+FQFIERR7IOBSMefudeE+iz037FnusYnGROE6esG/FgVHWPkasicu7cXj7/Cu/+Ad779/jpT7epj+OfHXJpbt8U=@vger.kernel.org
-X-Gm-Message-State: AFq9FYL563Ybpoi7Y13CmfueAW+ZIKj0/UJlQr/stGa9Sz6HwMSSBbKc
-	IM56MIz1OB0rHJMPXpzEMGhaPeDEXkh6VBSHDdyrxOTPwsXbbAaPkSEP
-X-Gm-Gg: AYBFou2+RSiHW8Z+J0Tda28aSyBw/1kWKhPaBa/CXlDpblGe0tfrsGyukEmLTnoJ6zw
-	1Db/aKMcZa5A53TO3rZgHrq18csixBWulBKUQ0p5jpmKKPmTQYwNcU9w+KaJu6g2KBujC9BwngG
-	Rip33y8EuwlYaEqfH5YBBlczg9cHr+3+0C6QfJ54k2v+Zl+4PVm5uGA5clIajIHduk/baC27AAn
-	uiWPkPsc7OpeA99j0C/QdMV+nfLzPXI+TAQwUY88Bx9gojIUS0pHGMG/TOYrcca7y2hx6LqKvbd
-	QaJYZUi4AnP000B80dQGquGEp/569UIffucypOrJmF6a78d/I112yYjtpeIxQ2UOhQQGYFWu9WY
-	ilzORC0EyKwqd1UbSpkXoAdqz0Wb5y8cXOvdwEncOxt7iZDgM6x/eG1jn24Y6zYxjVjhvmfE3BR
-	L3UbSlynaUbXvP4ZWrkRy3g0PzuOvcAmLBQYPUKmOaxtzx3VM5QoBK5bWFA4KkW6F0MX0JRkIWm
-	X5ZHH+g9kpZguwGWzENniJQpJoSPC8/UBwELu+cy0eNqekXaADTP7KxuuUbEKd6u//ZltwGnoyr
-	1bY=
-X-Received: by 2002:a17:903:24b:b0:2e5:41dc:9ac7 with SMTP id d9443c01a7336-2e9a6d252a3mr32793975ad.24.1792279549582;
-        Sat, 17 Oct 2026 16:25:49 -0700 (PDT)
-Received: from localhost ([153.61.198.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2e97e87994bsm24216375ad.60.2026.10.17.16.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Oct 2026 16:25:48 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 17 Oct 2026 23:25:48 +0000
-Message-Id: <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
-Cc: "Nam Cao" <namcao@linutronix.de>, "Wen Yang" <wen.yang@linux.dev>,
- "Tobias Schaffner" <tobias.schaffner@siemens.com>, "Viktor Malik"
- <vmalik@redhat.com>
-Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "John Ogness" <john.ogness@linutronix.de>, "Gabriele Monaco"
- <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, "Steven
- Rostedt" <rostedt@goodmis.org>
-In-Reply-To: <87v770uuyr.fsf@jogness.linutronix.de>
-References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com> <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com> <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com> <878q3xtptq.fsf@jogness.linutronix.de> <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com> <87bj8s8ih9.fsf@jogness.linutronix.de> <DM78SVMBI2XW.2XHVC67VON48A@gmail.com> <87v770uuyr.fsf@jogness.linutronix.de>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+        bh=ij8L3BD2pEttCYLuoGimsHWdqjy9b52xZ9+cpHTq7sY=;
+        b=BK9MMf/9Ud3CLtDDhAUJS9mnJblSRFJ8nYqDLtNWO6VraL+rRaX/jNoCA9JZUDJYPY
+         ny0hDW5IczU9TGKByDSTJBUzd6gsfJ0uGxvnUoTwGNAB/OzI2MHuAWjG1/boXGw5bt0p
+         y34pLdD80p9KJBqpzqVz3nKH9+DoqiRZ4igG0F/l+whgOub19KnB5oVlWkI78uKNFnff
+         ms4IZPm4YqOjsYEJaX/LZjs9dM6MWm0Qs79AmecUjm6nJB50JFIkn0zQqHvUs0mkxZGS
+         Mfh11gugM4lphnzn/4dVEY93rHXC/asbOX86rq0kLz2QU9+YW0KKiNLwVxF4fU4LKWA7
+         LsXA==
+X-Gm-Message-State: AFq9FYK+xqjV+cQiPlZa7vEvKtz58gEd+BEe24pQsscdNeq6EM4mOrFw
+	EYxlYvlBGXY3WTvD1EdSQWjTcySAODi4JkV/xIwn9QjcXzjWcksLVRxFBalf92Zw
+X-Gm-Gg: AYBFou1keAdp/nGobfJ5rUoKwPa0SLaWdEZpZ56RAdcf5PHjbiHdzK7vOp05mYd6AE7
+	WDKbSG8iQq1LH2lbZ633i5lLQOBfNyBjH+GGYevT/rVwrvVlFJhDjsQZxV4idr+XOX6Sj2n4vK9
+	Dc1TrTZn7bz9WSbWDFcfaLsyhFGEzTXvBiX18qLHoSSfbsFQLLVIEfYo+K1mOf36oZLbGy9VrL/
+	aUVqw5tkQ5o1x/ji7CPfzGmw/jX9YFK7sFXEdyN0Ir4Tx1bf7HWuMd7ste/UJ20gjR8pZKOA7b9
+	Hy7Nz9/wrV+dKIjlANh6asGcZFEq1weLtFEqiuiwVbuBRq8EnL4ecHTRQzKWQCMIlVIjjQ4Ny2T
+	HetahmS6DRImI7lkz1WE40lGU/cjkY7nGM0ZND2dSrXxS5F5cufUdPXP1cCpydpqgk4F1bVIhXJ
+	rMjdP1m/IlJIRA2Va7KH9d5eE/yco1J4G5ttrcRX5WlNFAI2s2YGcnB+0my5r3X9THZw==
+X-Received: by 2002:a17:90b:57c3:b0:3ac:8ee5:e007 with SMTP id 98e67ed59e1d1-3aceec24801mr3186137a91.20.1792295425562;
+        Sat, 17 Oct 2026 20:50:25 -0700 (PDT)
+Received: from localhost ([183.242.161.82])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acc4991b8asm10357333a91.16.2026.10.17.20.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Oct 2026 20:50:24 -0700 (PDT)
+From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtla: add tests for tracefs instance cleanup
+In-Reply-To: <sashiko-outbox-175505@kernel.org>
+References: <20261017122359.402696-1-chaosheng.qu.linux@gmail.com>
+ <sashiko-outbox-175505@kernel.org>
+Date: Sun, 18 Oct 2026 11:50:20 +0800
+Message-ID: <179229542008.41291.4713973899027586435@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -84,20 +77,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, Oct 17, 2026 at 07:02 PM John Ogness <john.ogness@linutronix.de> wrote:
-> It would be nice if it could be filtered so that only RV violation
-> bpf_printk's would trigger. I do not think it is possible for a filter
-> to do primitive pattern matching on @bpf_string. Or am I wrong?
+Thanks, the four points split into test-harness bugs and one test premise
+that I over-claimed. The series is fixed locally; details below.
 
-not an ftrace expert, but it should be possible. bpf_string is
-a dynamic string field and filters take globs on those.
+1. SKIP was swallowed
 
-> With the "new" ringbuffer and nbcon implementations, it no longer dos-es
-> the kernel, so I have no problem with bpf programs calling
-> printk_deferred(). And besides, userspace can already blast the
-> ringbuffer and consoles via /dev/kmsg.
+cleanup.t now emits a TAP "# SKIP" line when the helper logs SKIP, instead
+of reporting a plain "ok". The helper also treats a missing tracefs, a
+non-writable tracefs, or a missing CONFIG_OSNOISE_TRACER as SKIP rather
+than a failure.
 
-well, /dev/kmsg is ratelimited unless printk.devkmsg=on,
-but the kfunc wouldn't be.
-I still feel that bpf_stream + user space that writes into
-/dev/kmsg is a better design.
+2. SIGINT race and leaked process
+
+The repeated-interrupt case now waits for the tracefs instance to appear
+before sending SIGINT, and verifies that it disappears after each run. The
+SIGINT case also reaps the background rtla when the instance never
+appeared. The helper is run under the suite timeout, so a stuck wait cannot
+hang forever.
+
+I also added SIGTERM to set_signals()/unset_signals() in common.c. Before
+this, rtla only handled SIGINT and SIGALRM, so SIGTERM left the instance
+behind. The test now checks that path instead of recording it as a known
+issue.
+
+3. Missing exit-code checks / action case
+
+The self-timeout case now requires exit 0, and the action case requires exit
+2 (the mismatched-action result). The action case uses -S, the stop-total
+threshold, and skips if that threshold was not crossed. An idle machine may
+not generate a sample above 1 us; that is a property of the workload, not a
+cleanup result.
+
+4. Unused TIMEOUT / reset_osnoise / dead code
+
+run_cleanup_cases() now calls reset_osnoise and uses $TIMEOUT. The unused
+check_instances_absent() helper is gone.
+
+The series is based on 2f2f7eeef8b0a1a9b9ca998231419873ccae8d4e and is
+commit 455d304ece2a938d0148a908c83f1774d4dbf298. I ran bash -n and
+checkpatch.pl locally. The host has no writable tracefs, so the suite
+reports SKIP here rather than a real pass.
+
+The patch is attached.
+
+Thanks,
+Chaosheng
