@@ -1,164 +1,107 @@
-Received: from mta0.migadu.com (out-212.mta0.migadu.com [91.218.175.212])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B4B47DD44
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 06:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DBD48AE1B;
+	Mon, 19 Oct 2026 08:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792390915; cv=none; b=WZL1rSNjxk84EQsivV+fLENkn220nD92QfmQk5a4hL00I8ra1yXTrXeP7y9xXlcb09Fet2w2iN66zC980dZBhdiJoJKQsQe3CTDDCo9hMHQj9k8rKnnuY/kgBGEWaZ7IACyGvlTXffJwFIbyHNy6JQdDkI1Vwo+Wy+E4pTtp4ns=
+	t=1792397302; cv=none; b=Eq/+z/rvtKA7fO6qPCq6wHMHSEB5eA8J6sIubnOjikQBUiriD5S3D248691TeKj2FmXG34AhHWU+Z+EyP+N/m5cLKxNJaqYOUcalBTvcNzVPlZc9qAiFvMUs2aSqC5LRhWF7RfGDTJGCTsF25gpFiE65qfDnmYtghEvn7dZ3+rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792390915; c=relaxed/simple;
-	bh=I4MPMNFIXchxrDocrBAZUC2FdxNIMi1x4SFGsuGksro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PwInCka5EeLGQ/UrFkfL3OOTNQ4WE7lXSca6p7Jmhv3n/iHmmDDqKqR2uEOb0/Gs6ehPdwsmTGOeNvaP+J7rSCwLCW088tZ3cYYmm/fLG5wVgLJK3fuKbYEuyFJkmwdvB3B/DY6rmAjIj2PLiphvJqWSlP7xzp3gsZkxqq11X64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PZeCpItu; arc=none smtp.client-ip=91.218.175.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1792397302; c=relaxed/simple;
+	bh=wcOXy9B3DbVtBa+EzryE8J4ZW+jO109RlIiPLk2w2xI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D78nmUmM5FNRgGyT93WwC2zeovanAB9UzD/ot9iIaxHA0cU2FnTqWiAm7Pl7wvTmMUajAAb10nMKLSdgy/yjsD15XTxeQZGjeqe9xu8EieKVRdhaQUQWQt7hQL225L4FwO10FzGJiDdfDVakxzfv2Lv9BGHYtH3kB3DgDzoDsoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FBB1cfWf; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PZeCpItu"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=I4MPMNFIXchxrDocrBAZUC2FdxNIMi1x4SFGsuGksro=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792390910; v=1; x=1792995710;
- b=PZeCpItuM79ocVG/ZTKd6RwQdP6Tps/2lRzSJ7JAm/RXajDfEmBbX5mBR0tlLaddhCmUpcII
- OaeqLlQjikHo8sJ5ktuQokskT7UgL5xw6Bf3VsI72r63+AKezog8THBAEXn1lyAJCziDW3pdtwC
- JFs3wFclqUiEoZAFKlmzI0mc=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id ab907ebe85d37efd;
-	Mon, 19 Oct 2026 06:21:50 +0000
-X-Mizu-Trace-ID: ab907ebe85d37efd
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <8ed89bac-d9f0-4dba-b733-7d678a4b47ac@linux.dev>
-Date: Mon, 19 Oct 2026 14:21:39 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FBB1cfWf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Yc
+	HHiKIDYNnPxeBXOqhJlZrJp4ZEWl/YWNx7btzPgfI=; b=FBB1cfWfkuCdx/EBmg
+	Q1hGBPi2JjuAvaCDAgJPRw6OmUTtcVNAsqmQpAEzJJgvY7HwvbnFkzIzXu7f59la
+	Fo1vT03ZONGaa0Gx3rbVtlSJO6F7zOwcRJMYpDtcJyzIqszTgx3izrL40hg6FJHy
+	Qh0mmlughRA/obo6AwHnHfhO4=
+Received: from colol4bi5.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD33yquz9Vqd9a9Aw--.57344S2;
+	Mon, 19 Oct 2026 16:07:11 +0800 (CST)
+From: Binbin Deng <18983559317@163.com>
+To: mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	andrii@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Binbin Deng <18983559317@163.com>
+Subject: [PATCH v1] uprobe: Assign session ID before publishing consumer
+Date: Mon, 19 Oct 2026 16:07:09 +0800
+Message-ID: <20261019080709.477548-1-18983559317@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] mm/mglru: add tracepoints for scan and aging paths
-To: Steven Rostedt <rostedt@goodmis.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Baoquan He <baoquan.he@linux.dev>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, David Hildenbrand <david@kernel.org>,
- Michal Hocko <mhocko@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- "open list:MEMORY MANAGEMENT - MGLRU (MULTI-GEN LRU)" <linux-mm@kvack.org>,
- Ridong Chen <chenridong@xiaomi.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-References: <20260911102939.2485750-1-ridong.chen@linux.dev>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <20260911102939.2485750-1-ridong.chen@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD33yquz9Vqd9a9Aw--.57344S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ur1xCF47Jw1fKw47ZF1fJFb_yoW8ur13pa
+	n3Jr9Iy34kJw1YvrWktrZ7X34Syw4rJF47tF90ga45ZwnxJr45Ka17Ka15ta4Dtrs5KF1U
+	tr42g3yqqFZ7ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U7b18UUUUU=
+X-CM-SenderInfo: jprymmytvvmjmrxbiqqrwthudrp/xtbC4A8vE2rVz69IhAAA3A
 
+consumer_add() publishes a consumer on uprobe->consumers
+before assigning its session ID.  handler_chain() traverses the consumer
+list under the trace RCU read-side critical section and can therefore
+observe the new consumer while uc->id still contains its initial value.
 
+The race is reachable when an uprobe at the same inode:offset is already
+active and a task hits its entry breakpoint while another CPU registers a
+second session consumer.  handler_chain() may store the stale ID in the
+return_instance consumer array.  By the time the function returns,
+uc->id has been assigned a nonzero value, so return_consumer_find() fails
+to match the saved ID and the session ret_handler is incorrectly skipped.
 
-On 9/11/2026 6:29 PM, Ridong Chen wrote:
-> From: Ridong Chen <chenridong@xiaomi.com>
-> 
-> Background
-> ==========
-> 
-> MGLRU currently has no tracepoints of its own. The scan and evict paths
-> reuse the classic-LRU tracepoints (trace_mm_vmscan_lru_isolate() and
-> trace_mm_vmscan_lru_shrink_inactive()), which predate MGLRU and carry no
-> generation, sequence, memcg or swappiness context. A trace of a running
-> system therefore cannot tell which memcg a given scan belongs to, how far
-> reclaim has progressed through the generations, or when a new generation
-> is created - so how MGLRU actually operates is effectively invisible.
-> 
-> Implementation
-> ==============
-> 
-> Patch 1 is a cleanup that factors the per-generation page-count
-> summation into a helper, lru_gen_seq_nr_pages(), reused by patch 3.
-> 
-> Patch 2 adds mm_mglru_scan_folios on the scan path, and patch 3 adds
-> mm_mglru_inc_max_seq on the aging path. Both carry the memcg id and the
-> generation window (min_seq/max_seq), live at MGLRU-specific layers with
-> no classic-LRU counterpart, and are guarded so the hot paths stay
-> zero-cost when disabled.
-> 
-> Effect
-> ======
-> 
-> Paired, the two tracepoints make the full aging-to-eviction window
-> observable per memcg: aging advances max_seq (the leading edge), scanning
-> consumes the oldest generations, and the min_seq/max_seq pair on each
-> event shows how the generation window moves over time.
-> 
-> A sample trace, with the classic-LRU tracepoints left enabled to show
-> how they interleave:
-> 
->    mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=36 nr_scanned=31 nr_skipped=0 nr_taken=29 lru=inactive_file
->    mm_mglru_scan_folios: memcg_id=73 classzone=4 order=0 nr_requested=36 nr_scanned=31 nr_sorted=2 nr_skipped=0 nr_taken=29 lru=inactive_file max_seq=3 tier=3 min_seq=0
->    mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=31 nr_reclaimed=29 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=5 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
->    mm_mglru_inc_max_seq: memcg_id=73 max_seq=4 anon_min_seq=1 file_min_seq=1 nr_anon={0x0,0x0,0x1,0x0} nr_file={0x0,0x427,0x6,0x4a}
->    mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=5 nr_scanned=5 nr_skipped=0 nr_taken=1 lru=inactive_file
->    mm_mglru_scan_folios: memcg_id=73 classzone=4 order=0 nr_requested=5 nr_scanned=5 nr_sorted=4 nr_skipped=0 nr_taken=1 lru=inactive_file max_seq=4 tier=3 min_seq=1
->    mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=5 nr_reclaimed=1 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=5 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
-> 
-> The mm_mglru_scan_folios lines carry the memcg id and the generation
-> window (max_seq/min_seq) that the bare mm_vmscan_lru_isolate lines above
-> them cannot - those cannot even say which memcg they came from. The
-> mm_mglru_inc_max_seq line then shows a new generation being created
-> (max_seq 3 -> 4) with the per-generation page counts for both types.
-> 
-> ---
-> v2: address Sashiko AI review [1] - pass struct lruvec * into the tracepoints
->      and do the memcg lookup inside TP_fast_assign.
-> 
-> [1] https://sashiko.dev/#/patchset/20260911072848.2346073-1-ridong.chen@linux.dev?part=2
-> 
-> Ridong Chen (3):
->    mm/mglru: factor out lru_gen_seq_nr_pages()
->    mm/mglru: add tracepoint for scan_folios()
->    mm/mglru: add tracepoint for inc_max_seq()
-> 
->   include/trace/events/vmscan.h | 101 ++++++++++++++++++++++++++++++++++
->   mm/vmscan.c                   |  53 +++++++++++++++---
->   2 files changed, 146 insertions(+), 8 deletions(-)
-> 
+consumer_rwsem does not close this window because handler_chain() is an RCU
+reader and does not take that rwsem.  Assign the ID before list_add_rcu()
+publishes the consumer; the release publish of the list node then orders
+the initialized ID before readers that traverse the list.
 
-Hi Steven, Baolin and Baoquan,
+Found during a static-analysis-assisted audit: candidate sites were
+surfaced by a Coccinelle rule, and the reader/writer paths were
+confirmed by LLM-assisted (GLM-5.3) code inspection.  The issue was
+not observed at runtime; it is identified by code inspection only.
 
-Thanks again for reviewing v2.
+Fixes: 4d756095d399 ("uprobe: Add support for session consumer")
+Signed-off-by: Binbin Deng <18983559317@163.com>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Following Steven's suggestion in this thread, I first moved the vmscan
-trace header under mm/ and exposed struct scan_control to it in a
-separate RFC series. Patches [2/3] and [3/3] of v2 have now been
-reworked on top of that and posted together with it as one series:
-
-   [PATCH v4 0/9] mm/vmscan: move tracepoints to mm/ and add MGLRU
-   tracepoints
-   https://lore.kernel.org/all/20261019034426.2354049-1-ridong.chen@linux.dev/
-
-The two MGLRU tracepoints are [8/9] and [9/9] there. Compared with v2:
-
-- Both events now take only lruvec/sc plus the local counters, and
-   derive everything else (memcg id, order, reclaim_idx, lru, max_seq,
-   min_seq and the per-generation page counts) in TP_fast_assign()
-   (Steven).
-- Add nid, derived from lruvec_pgdat(lruvec) (Baoquan).
-- Group the int fields at the end of the entry to avoid padding on
-   64-bit (Steven).
-- Drop v2 [1/3] "mm/mglru: factor out lru_gen_seq_nr_pages()": the
-   per-generation page count is now summed inside TP_fast_assign(), so
-   the helper has no user left.
-
-Since [8/9] and [9/9] changed substantially, I did not carry over your
-Reviewed-by tags. I would really appreciate it if you could take
-another look at v4.
-
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 7709ea882477..83e6aef61181 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1032,8 +1032,8 @@ static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
+ 	static atomic64_t id;
+ 
+ 	down_write(&uprobe->consumer_rwsem);
+-	list_add_rcu(&uc->cons_node, &uprobe->consumers);
+ 	uc->id = (__u64) atomic64_inc_return(&id);
++	list_add_rcu(&uc->cons_node, &uprobe->consumers);
+ 	up_write(&uprobe->consumer_rwsem);
+ }
+ 
 -- 
-Best regards
-Ridong
+2.43.0
 
