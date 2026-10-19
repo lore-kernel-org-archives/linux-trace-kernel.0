@@ -1,99 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF2D347C6;
-	Mon, 19 Oct 2026 09:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750134B26F6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 09:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792402080; cv=none; b=tP+ILQmM+0zWPJP1cKZvy76kAfrl78o+mdGgQ29E/AIVUtB/1ZDIqQtur3P1uxWydqZGmJV3rfRJ35Et2365hWXQ3aH3P6aZusshVZAqOcGJGK1fVyZouxNr4d3XCMYbHZktOTKmp3G1gAgsl9MQg0skCZ8T0dQvA6moMi68ArM=
+	t=1792403188; cv=none; b=b/CcYgvair9jXvTtjUYUeYH3Uz0dY8Jf+j1mdnR6pkrWsQpJqlwPMnIRPBDOjDfmWD3FHe/T5H60xxbwJNeqSZU/d9ZDqWi6GY7Tx2bf70rRppaL0xzsmOoiqoTyg/8zBT6HtmDnqvAibLVol0uO5n3Zy1G508scIKka7xwSFbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792402080; c=relaxed/simple;
-	bh=M21EIc0kbcj5wAAP+pIIhFJ9G8tMFU/JTtcTqKOOb9g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rIBnRHH5eq1Or+zdAYkssfLDDxdYj2jAsW3156Tqoz5aO4FGfa6a3TM/pyhmR6hUCY798mkKWG6p7EytWGgVsivm0Y3vuVX0KmxZsCTusjB9iHYUCqx2CXt9fdFgx/plKjNkT96DBDF4NJs/MQ5KGAu+b1xCNJaKqcM+BQ7u7H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N9D/4EIC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9/RoMIEV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1792403188; c=relaxed/simple;
+	bh=SmLex32CfN0i1QL4gh5elS6PvTSOZDSeNkGgujocXKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S1T0/pRAHfOLbK3sJMwRI0/kgoIsyBCp1Olb4o8IDI+76cmeVg8EujR/bbpf5IoJim/Lq2IZeKRMS0F8OjMzPQLrRC7SlIVnLZBIIBGfxjE6gFDuKG2PRoHhnnmMFJDIvaA+UUhsKtcDjbSfdqz1KvN+YkIEvzaXvW6RPOrHveo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AcTWPhus; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N9D/4EIC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9/RoMIEV"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1792402077;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AcTWPhus"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792403186;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mGlMXZ27OkoZTr158Yx0TitBlTz67qkGcCV0HwG3INg=;
-	b=N9D/4EICjWmvQzFcuVl8GnkMbktgYESDfCyJUA5YlXSUVVsyLac3WCJIVU11zsPWV79UEC
-	2zgnnGjRiqoWKq994F9pJKl0ZYEKxH0LjjthfnRrTMz4ieYLCeZC0JfJITn0qaw+ArHE/y
-	8C1x32fFv5Wb5nH6ETPELMs+/lfekP8lN/B66rGI/T+I0OvwkkoEDGEblPWY9KBI6K6FC+
-	HlLRnSJKVj3WBvEPbpcwkcFDKHjNWMEdb3n3G4hu3HA6yXWH6+WA8qiL4uSv6O153R0r7t
-	Jbf0LVcujl78vpbNpA9M1nE3twYEe7EXUJJYue80PP06eEyrHw651cIJts3MYA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1792402077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mGlMXZ27OkoZTr158Yx0TitBlTz67qkGcCV0HwG3INg=;
-	b=9/RoMIEVVTxrveGpvZ3mdCZp3RpcBsqPaxd/yhd0aOOYcjUKhZKikn1cNwxMl3Es5xVub1
-	D9t6jjixpbWe95CA==
-To: Gabriele Monaco <gmonaco@redhat.com>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
- Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
-Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-In-Reply-To: <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
- <20261001152042.124445-11-gmonaco@redhat.com>
- <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
- <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
- <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
- <878q3xtptq.fsf@jogness.linutronix.de>
- <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
- <87bj8s8ih9.fsf@jogness.linutronix.de>
- <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
- <87v770uuyr.fsf@jogness.linutronix.de>
- <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
- <87ik2zryzo.fsf@jogness.linutronix.de>
- <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
-Date: Mon, 19 Oct 2026 11:33:56 +0206
-Message-ID: <87y0buox9f.fsf@jogness.linutronix.de>
+	bh=SmLex32CfN0i1QL4gh5elS6PvTSOZDSeNkGgujocXKw=;
+	b=AcTWPhus6Bmr2mdwl7BLw4Xd3s4ZUI4nOf+W74LcsBEEZrwFnucJePgIvJFqTqvxQhg8b+
+	uTSZ7JCEqI34Cj26mwY831wNMmO/Oa4s1F7M1PitxlNUOzTB5HBS12rDL+Aui1gvV5b00U
+	/nUny8pWFDGZ0ZSipWt4rXWCTQyWhw4=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-390-bOt5g2HlMpmei2KX-NDEkA-1; Mon, 19 Oct 2026 09:46:25 +0000
+X-MC-Unique: bOt5g2HlMpmei2KX-NDEkA-1
+X-Mimecast-MFC-AGG-ID: bOt5g2HlMpmei2KX-NDEkA_1792403184
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c3f8e149ccfso172568866b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 02:46:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792403184; x=1793007984;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SmLex32CfN0i1QL4gh5elS6PvTSOZDSeNkGgujocXKw=;
+        b=eGuidoU24lzAFcqlSRqhpB/FCGgal+14DVlcEd59kk0DpGdnFPyQwicUWAtoZGBHPf
+         uKNUsnwpcJiAyY4YvQ/JC47h1WUSkNXM4A2HpRwZCPabd6RvMpIajGIlAvAs4gUjXozR
+         Z0iGJmzDRx0NDEV7JcV+pLR8NEwTjbT50ygloSwZNlfY08rvreQk+HwksoZAl4QtALLA
+         GzZae+zEGgs3LYn66GiM6y6BDVT/DjwzQSotMZgpdTNxUavpGnz78wZ20RTA+1sMksXj
+         WnuoTaZgMOzbUua7dA7tuDcvMkUnYk3qHQ6MPSWMeOC5GYXWzcPzG42ECt2J8X5lp2gW
+         r+ww==
+X-Forwarded-Encrypted: i=1; AKwUvBzSH76Bsfxpin0XEx0jBTtqiYwLfn7jAy3jyDfFJvg4aMZDASnjFIL3gn6pJIVRm1U5dm97iC0QLqSF9dv/FvxP5XQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIlK1NbYbySOk2aDwx/pgqopMf9hcarQNPpDfha4yZwp6NgUKZU
+	eSiVc8UDL+zcO3qwZVdiHFl2qWOx5GYe+6JYm40zNLxlyJSQ0TIugILWoPSfXKAi0FndGhUmYby
+	RkPqqEHq3HigmhvQidrChJidC9qGoYMO0KerQ5i3/6LUgxyjrJmP9b5YYPe+w7NiBuk9lQaAuZQ
+	82Sb/J3vC1/uDe8RZB+r6raRGN+0pimQLvWJQ4Tbovz+WGvVK1
+X-Gm-Gg: AYBFou1uzzethp3zlC8JO6eqIl0nhk0UDp4XQO2yj74ZOw8gsNtYwDOrt4pBF4VznRv
+	IOTAhtFXr+DS3PDxWerXoFpmnewX5dZb9oAfILjLIbhfvZB5dbvVcUUOZRvIIk9r/Ar7m498Hr+
+	jvMBN74vMSnk7ck82PDHzJsQf28opJYAA123dpk79MO/Ari56IJqoo/+FIUtnBfblpiDlYKCFgg
+	46LlGO09LrcFUE=
+X-Received: by 2002:a17:907:9725:b0:c41:8e21:4d58 with SMTP id a640c23a62f3a-c419a256eb9mr501680766b.5.1792403183924;
+        Mon, 19 Oct 2026 02:46:23 -0700 (PDT)
+X-Received: by 2002:a17:907:9725:b0:c41:8e21:4d58 with SMTP id
+ a640c23a62f3a-c419a256eb9mr501677766b.5.1792403183439; Mon, 19 Oct 2026
+ 02:46:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com>
+ <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com> <878q3xtptq.fsf@jogness.linutronix.de>
+ <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com> <87bj8s8ih9.fsf@jogness.linutronix.de>
+ <DM78SVMBI2XW.2XHVC67VON48A@gmail.com> <87v770uuyr.fsf@jogness.linutronix.de>
+ <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com> <87ik2zryzo.fsf@jogness.linutronix.de>
+ <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com> <87y0buox9f.fsf@jogness.linutronix.de>
+In-Reply-To: <87y0buox9f.fsf@jogness.linutronix.de>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 19 Oct 2026 11:46:12 +0200
+X-Gm-Features: AclHuK_NXeaiajImg7lC8SzWuELhdtiOXhAgcdN_7Skq7dYerLf6JAXl0TbAm20
+Message-ID: <CAP4=nvRXYieOtqLuE6SypkKHf1gtEjUbegb=wYiLtmAM9SHuYg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
+	Wen Yang <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
+	Viktor Malik <vmalik@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: qUFyJRANVfHdJpBHKcBUM6JBW1wIVk9YWYVGChntyPo_1792403184
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-10-19, Gabriele Monaco <gmonaco@redhat.com> wrote:
->> @gmonaco: There should be clean glob-friendly RV bpf_trace_printk
->> strings so that filters can be easily and reliably set up.
+On Mon, Oct 19, 2026 at 11:34=E2=80=AFAM John Ogness <john.ogness@linutroni=
+x.de> wrote:
 >
-> If I leave the LTL header unmodified, you'd get something like:
+> For production environments, I expect that trace_printk's are only
+> occurring for violations, in which case the cost of a string compare
+> will probably be irrelevant.
 >
->   rv: sleep: <comm>[<pid>] violation detected
+> Are these trace_printk's available without getting the scary kernel
+> warning when kernel code uses trace_printk()? We do want RV support to
+> be enabled in production kernels.
 >
-> It should be glob-friendly enough, but I'll try it out.
+> John
+>
 
-If transition-events will also be included (should be optional for
-performance reasons), a better format may be:
+Since commit ac5a72ea5c89 ("bpf: Use dedicated bpf_trace_printk event
+instead of trace_printk()"), bpf_trace_printk() does not use
+trace_printk(). Rather, it is recorded as a separate ftrace event that
+has to be enabled, in
+/sys/kernel/tracing/events/bpf_trace/bpf_trace_printk, for each
+instance that wants to trace it, and using it does not print any
+warnings into dmesg.
 
-  rv: violation: sleep: <comm>[<pid>] <violation text>
+The BPF documentation says otherwise [1]:
 
-  rv: event: sleep: <comm>[<pid>] <event text>
+"bpf_trace_printk() is slow, and should only be used for debugging
+purposes. For this reason, a notice block (spanning several lines) is
+printed to kernel logs and states that the helper should not be used
+"for production use" the first time this helper is used (or more
+precisely, when trace_printk() buffers are allocated). For passing
+values to user space, perf events should be preferred."
 
-> I wonder if string matching brings additional overhead (trace_printk
-> itself does, if I recall correctly), but that's probably rather minor.
+[1] https://docs.ebpf.io/linux/helper-function/bpf_trace_printk/
 
-For production environments, I expect that trace_printk's are only
-occurring for violations, in which case the cost of a string compare
-will probably be irrelevant.
+but that is clearly outdated.
 
-Are these trace_printk's available without getting the scary kernel
-warning when kernel code uses trace_printk()? We do want RV support to
-be enabled in production kernels.
+Tomas
 
-John
