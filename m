@@ -1,154 +1,110 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B4AEECB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 00:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0E918FC97;
+	Mon, 19 Oct 2026 01:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792368274; cv=none; b=ax9mWmgjkHZaVl4MzHCbIgmFtaZslY9HAa8xJSe5nhc/9UeZlBEChRDwBvGEYT27276MpHl4qw1EKk2RL2gYfIldvGm+AkyRsIuwik85Y9nW691o8ON+i64YlNn5sWP/n9kM4XVaSeQIdqRJqOSYMSKs1dH37s5PkxBpNGIaVXA=
+	t=1792371994; cv=none; b=CDsJrgy7LnBhs/sKkbEWP6m4fEXezTjgFbsnVfpxO++LDhRTp57Fj7A4x2jwkeEQuh9XDFlQgqcrkXf7lHH/qD5RJZMLa1CYxymh2SsAMGC6dQ7T+at7SFdhQ8nN+Wzw3tI4nRTLM0H4vaIZZGyYTyAGCxBnnH+JkyRnyCkiTf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792368274; c=relaxed/simple;
-	bh=PytpAivb1fwxvfwewsqyJs+b7ShzSeJ8NAvBdrPtn/c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pK2KDFwAyfsVp0IYn66PdeeXtHTE2pm9SdEzH+PNl4VzHStt1d1pp/w9f7N9wqNX+6pMwe8Ow7of0TjaMIYJu5MdKlO/ZgD0E5EhiJiptxrorbl9uaTut5ocsmajFNRoeGUdxsJ8cQYjzQX7j2KEElV0sB8p2+TtGqkMkHodkEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zirc/ri9; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zirc/ri9"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7fccba9c675so3714481a34.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Oct 2026 17:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792368272; x=1792973072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wAzJZZYXVc0Jc7U3TE8nNL1ig5ACrPJZxsjIWB1n0Xw=;
-        b=Zirc/ri9Zrfn5dPtL9q903JSIUp+Zq5JaEL9hTXxKUbgTc1kjPDyjsQsYOqx7x1AlW
-         bFrEZhJDCPeqebZP/0Pgpo6PsNlDWUSou6Y0VPpsPw+zoFWPkgwrZ/kdLarP2R0w07FW
-         b1TA2bDJbn6Sw+0/LfyfOs0Fh9FbaXCJrRLicodmFElbKeRICLw9wURitjDPpvjLd+8N
-         sWhybucv+HFe67k3dCzdyT3k1pKeeeiIRoZFlcZnk5rBg7aAjosmtPs3ug1s5Z8vA3Rn
-         E5bW1zT+S7THtjch3ma5hzSpr1V7Y6etqvUbTiK55hbPGx4CErvYgIGgAGyZQAJeF9Sc
-         hq/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792368272; x=1792973072;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wAzJZZYXVc0Jc7U3TE8nNL1ig5ACrPJZxsjIWB1n0Xw=;
-        b=jPV5nd0eg088tOtoLGGH+jYCkKgh1Bp36vLEU/0bVNyA1mkLlcuyRqf/Y4AsaP+03E
-         EC2xbTFb7yIYMCfzIsnSkI9HtNEC8sGdXqj2inxDCAKZ7PTkcmf7+rCAkd27VCb215oI
-         ZWBZrcKEWe0uuabWflUU3EQ32R/BaTrnOmyfrAau0G+ELsi8isFJ/Y21nFCcTDhQ+Llj
-         4zbTgado/rUeOtq93xBuokhvMy7SPDe8Y03/t8P08+dviKFKDc1WVlhkvNcruWeXHXL+
-         +cej/VAYbztyUOCfKOOucN0t5YOueymnG8Hr6hqXn25X5eDnaSrNmICIuQgghJx73Gq5
-         lOBg==
-X-Forwarded-Encrypted: i=1; AKwUvBw8+PYBSFpq14LysHnmQQWkbjZxWcp7HPq32QCJ0oXTxEYw94i8v8u636n28Q2+MAJwJ8wdBKK8paTqnr/A5yc9drc=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ/m3I5QXLrDKWCrKdqwGMD0NYZ1EUUtrRMBRDT5baKohhbLMsa
-	FKOqTLGG6ThKKDB17dZ+OS12Okxav2QUDwqMmcsVu9hJ/CXIZSwMyYby
-X-Gm-Gg: AYBFou3lZjU7Zvgri+wDdkuk034v9spdPHcu7jL6a028WAjMI4VlY8Hp1vbq48mzaMx
-	qunUmSeQ32Ix+qBoHoDkkC5SxeK3X4/UbEwT1jLD2CVrUodJ1yCbw2S5/RHjRU/3Q4Kbbhsdd+o
-	+tEXvbTL6fqhl5URcXwgAa8ecRZO0HQQaW3A7TYHDvG+qr6u50ZJ7qbBEpnBlk04WJ/2yMbBdmy
-	1lK2Xo6zGYXOw/mvOAu3xSQQZMC/JlYoUIeB9U3Jl27znC8y0j/03bIWOC9s3RtsC04dp3Bw/D1
-	kEG07V+CRRNNfXtz5b4mUNEGvnmCRxh58o/C0UUhO6cuxnP+kAgbBzvAI0MHQlvbPn/Xe8SYWXt
-	8p9XWgwkuUU/kpEOxH0xic9mxKI4c471wuTkqD95YYIlTpeB/7pSA+Vc5W6JotqF79rNCVxROkR
-	AGIokaVhMh9EsYpSXBBFJHdGv7GmHs/IEp/99vUefI69f0yYmkyvXJPH6iF4ZatitH+40waP5WB
-	H2w6dJALzv+
-X-Received: by 2002:a9d:7f8c:0:b0:816:f1c2:d6b8 with SMTP id 46e09a7af769-841ff60e1b5mr4883351a34.9.1792368272518;
-        Sun, 18 Oct 2026 17:04:32 -0700 (PDT)
-Received: from sheng2080.cmix.louisiana.edu ([130.70.15.5])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-842a4a00f15sm7674561a34.8.2026.10.18.17.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 17:04:30 -0700 (PDT)
-From: Leizhen Zhang <lzsx618@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Leizhen Zhang <lzsx618@gmail.com>
-Subject: [PATCH] tracepoint-update: bound section names by the section name table
-Date: Sun, 18 Oct 2026 19:04:19 -0500
-Message-Id: <20261019000419.3977860-1-lzsx618@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1792371994; c=relaxed/simple;
+	bh=UU6aloxqeOHtF+nhBqz9yTTb6H1s5ivUFGXPz+J1fLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s77ulPQtkVhXD39x7BxsKOrIq6uc05N1YFsgLCbNLHgvsxB+6YXq41jwTHIajxIlkgXGKfkiGXn6Vxda8aEkKfQSQLhQSFqmfERRmBD4ltDiNrzLGyUOHiXwXkKATGAH0VLNaXmbqP6ZgdCSzU1mWyqTB21tdnY99UZ2cAu7jKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4aeec5fccb5911f19a56ed5b684f684d-20261019
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:41113f68-e5d4-4e63-949b-ba23bace2cd0,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:7db8b62,CLOUDID:5675c162610e92e99f3843e3d46b28a2,BulkI
+	D:nil,BulkQuantity:0,SF:80|81|82|83|102|865|898,TC:nil,Content:0|15|50|99,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 4aeec5fccb5911f19a56ed5b684f684d-20261019
+X-User: tianyaxiong@kylinos.cn
+Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 296505823; Mon, 19 Oct 2026 09:06:19 +0800
+Message-ID: <5deadb6b-8422-4adb-997b-96c2ddddcb9e@kylinos.cn>
+Date: Mon, 19 Oct 2026 09:06:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] ftrace: speed up module enable by binary searching
+ module symbols
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260916082715.320853-1-tianyaxiong@kylinos.cn>
+ <20261016140701.0756b893@gandalf.local.home>
+Content-Language: en-US
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+In-Reply-To: <20261016140701.0756b893@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-process_tracepoints() finds its two sections by name:
 
-	secstrings = (const char *)ehdr + shdr_offset(string_sec);
-	...
-		idx = shdr_name(shdr);
-		if (!strcmp(secstrings + idx, "__tracepoint_check")) {
+On 2026/10/17 02:07, Steven Rostedt wrote:
+> On Wed, 16 Sep 2026 16:27:15 +0800
+> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
+>
+> Hi Yaxiong,
+>
+> I've been traveling since September 14th to October 10th and my backlog is
+> very long. Unfortunately, I will not be able to look at this patch until
+> after the merge window. But it is not forgotten, just postponed.
+>
+> -- Steve
+>
+Thanks for letting me know — completely understandable. No rush; I'll
+wait until after the merge window. Looking forward to your feedback when
+you get to it.
 
-sh_name is a 32-bit offset read from the file and nothing bounds it, so one
-section header can point the name anywhere and strcmp() reads from there.
 
-Found by fuzzing the host ELF tools with mutated object files under
-ASan/UBSan. Reproducer, setting only sh_name of section 1 in an otherwise
-valid .o:
-
-  $ python3 -c 'import struct
-  d = bytearray(open("tiny.o","rb").read())
-  shoff, = struct.unpack_from("<Q", d, 0x28)
-  entsize, = struct.unpack_from("<H", d, 0x3a)
-  struct.pack_into("<I", d, shoff + entsize, 0x7ffffff0)
-  open("t.o","wb").write(bytes(d))'
-
-  $ ./tracepoint-update t.o
-  ERROR: AddressSanitizer: SEGV on unknown address 0x7f8d689ae848
-    #0 in strcmp
-    #1 in process_tracepoints scripts/tracepoint-update.c
-
-Skip a section whose name offset is outside the name table. Such a section
-is neither __tracepoint_check nor __tracepoints_strings, so skipping it
-changes nothing for a valid object: the reproducer and an unmodified object
-now both print the same "no __tracepoint_check in file" line and exit 1.
-
-This bounds the index into the table, not the table itself: a name table
-whose own sh_offset or sh_size is bogus is a separate gap, and in the
-elf_map() path used here there is no mapped size to check it against.
-
-Fixes: e30f8e61e251 ("tracing: Add a tracepoint verification check at build time")
-Assisted-by: LLM ASan UBSan
-Signed-off-by: Leizhen Zhang <lzsx618@gmail.com>
----
- scripts/tracepoint-update.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
-index 5cf43c0aac89..2736e91e6f06 100644
---- a/scripts/tracepoint-update.c
-+++ b/scripts/tracepoint-update.c
-@@ -157,6 +157,7 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
- 	Elf_Shdr *shdr_start;
- 	Elf_Shdr *string_sec;
- 	const char *secstrings;
-+	uint64_t secstrings_size;
- 	unsigned int shnum;
- 	unsigned int shstrndx;
- 	int shentsize;
-@@ -171,6 +172,7 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
- 		shstrndx = shdr_link(shdr_start);
- 	string_sec = get_index(shdr_start, shentsize, shstrndx);
- 	secstrings = (const char *)ehdr + shdr_offset(string_sec);
-+	secstrings_size = shdr_size(string_sec);
- 
- 	shnum = ehdr_shnum(ehdr);
- 	if (shnum == SHN_UNDEF)
-@@ -179,7 +181,10 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
- 	for (int i = 0; done && i < shnum; i++) {
- 		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
- 
-+		/* sh_name is a file-supplied offset into the name table. */
- 		idx = shdr_name(shdr);
-+		if ((uint32_t)idx >= secstrings_size)
-+			continue;
- 
- 		/* locate the __tracepoint_check in vmlinux */
- 		if (!strcmp(secstrings + idx, "__tracepoint_check")) {
--- 
-2.34.1
-
+>
+>> Loading a module with many functions takes seconds, almost all of it in
+>> ftrace_module_enable().  amdgpu modules stall for about ten seconds, and
+>> disabling CONFIG_DYNAMIC_FTRACE makes the stall disappear.
+>>
+>> Every record is validated by test_for_valid_rec(), which resolves its ip
+>> through kallsyms_lookup(); for a module address that ends up in
+>> find_kallsyms_symbol(), which walks the whole module symbol table from
+>> index 1.  The core kernel instead binary searches its sorted kallsyms
+>> table in get_symbol_pos().  So only modules pay, and the cost is
+>> quadratic: both the record count and the symbol count grow with the
+>> module.  An amdgpu.ko from this tree has 17282 records and 55332 symbol
+>> table entries.
+>>
+>> Fix this by collecting the addresses of a module's symbols once, sorting
+>> them, and binary searching that array instead of walking the table once
+>> per record; a loaded module's symbol table cannot change, so the array
+>> stays valid for the whole pass.  What comes back is what the linear scan
+>> returned: the same entries are skipped - SHN_UNDEF, unnamed and mapping
+>> symbols - and the closest address not below the base of the record's
+>> memory region is taken.  Whenever the array cannot answer, because it
+>> could not be built or because no such symbol exists, the record is handed
+>> to test_for_valid_rec(), so the rest of kallsyms_lookup() still has its
+>> say and no verdict can change.
+>>
+>> On the machine that reported the stall, modprobe of that amdgpu.ko takes
+>> 12.242 s before and 2.870 s after, and the time spent inside ftrace_lock
+>> drops from 9.368 s to 1.585 ms - 15.195 ms if the price of building the
+>> array is included, that build being 13.6 ms, 0.15% of the 9.37 s saved.
+>> The array costs O(symbols * log symbols), it does not grow with the
+>> record count.  Across the 74 modules loaded at boot, total lock time
+>> drops from 491 ms to 2.33 ms.
+>>
+>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
