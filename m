@@ -1,159 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB25248E0CB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 08:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5FB49EC48
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 08:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792398840; cv=none; b=Jd+KK7yqdj2ul6CWPehywF/IQpmoq0X15h8yg6/NNYHWLQKuMJofPLJjik1fNzq5aqBMSQb3VLQk3rBwbZgMTb0ITUiFw+EprzD5/E/+yZtDHDhgDRNgpFS0btgxor2fwPE/eilnfbR5DJahqHftdEpjFczd04j2P3iTudepw30=
+	t=1792400016; cv=none; b=BYEucuJew2wLSUqxe8LR8Ts8l+4YFFxq0nlWAzUud891qPFsm227g1vIJdSXqwzBclc8f7+RvOcX49sknPhDHD7xPaRc/JH6sdP4h7apvp67NvUyGzmnRJhDGoPQ2wyAzDaW5l2lbW3aYlWat/LajmAOEHN6WBJqriGQw7aL+RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792398840; c=relaxed/simple;
-	bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hBYiFmZ/YzM+AwyYIcZEEYdvvdlAPHrO8r31MHLX0WJ8kU1wkxo9QmW6HOgKpmgs860AI3AyH1HafFA1ncJ5d1oRI4LVUx2GmeZ5PE3PERlDOishCdbJ3KUbBo65ObAod19lc7a+TUpm/O4df9fyipHbeZRauuNZKQZ6dAO5OZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6ROcTMh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1792400016; c=relaxed/simple;
+	bh=PuECBq7rHCOnPJmiez2NwEpZpJw99GayZp2VbNnwfpE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tmzqNUcGCXjczGHd021XDkWI0L9G2d2T+8dIGg9OUvoQ7j01O5Yn3N6iSRKbCHJAMhR8jXbgC5TYLOu/fyliEPLOCpBB6mI+ri7tJdtgKEx1rc72N1wj/qx8ilLnl8VppkzwlZIyeVBxkyzswZAoZz23V2AAsZdCKRkH5iP/fpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i51MbVfF; arc=none smtp.client-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6ROcTMh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792398837;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
-	b=A6ROcTMh+jRQI2GEs4KZg3sciemHiLs7vBWu3f4YZNoGolpyTdx+q99AXJ4LG4tQSQ+fNK
-	Cjw2DXrorjjO4Z7mmuYqACg98B70dRT8InnkEDZRtOgbUtYuzS29h4YBxVep2dzsBLJogV
-	+u6A1I7JxY5HiZRvotQUZK4ODuuL/KM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-116-A_BfKjl_MnOLChCqc6eB2Q-1; Mon, 19 Oct 2026 08:33:56 +0000
-X-MC-Unique: A_BfKjl_MnOLChCqc6eB2Q-1
-X-Mimecast-MFC-AGG-ID: A_BfKjl_MnOLChCqc6eB2Q_1792398835
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a16dc2323cso16281945e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 01:33:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i51MbVfF"
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-3550c917fd3so2170193eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 01:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792400013; x=1793004813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IUQKxK3gJveo0GbdIu8MHrrQ2HSW0SFpxRsXuUxNszA=;
+        b=i51MbVfFNI/71gqMlggaWVcQXM31/I6EJ3bk32U0rNW6xvGgl8w7k+tVvvsE6ZyyRc
+         KJ3uT8k4Q7utXfUiWm5jd90zD25Mks74HqfFjgMcimz3IYz5k4g8WN8PGownbJFN+CIA
+         0Grdb+6olOOAEHqaB8/icDmUWxBJnW50KtJEwC4cJPGLZgsjKbr5wTLVbfLFaAuHTIts
+         F9Q7AujbnYZ8tGq4JHlh7GVF24+6KZp7U5WCuyS/OST5/4mUA97DucLepQ/GVarj9Wtb
+         aZo7IvlKzepPHgQ2N9D4Yf70XJwLUKOOm/iVJty6TUZdSfMN8Z0kYGrgUDmsCHkxVKVo
+         VZYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792398835; x=1793003635;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
-        b=XXUIFkIcai2O9nWv2P+9oUwHy0vJvpmREFiyj3KTnEyyng3+oCzIBN92A7/mmF5bWe
-         F6NqmzLN11NSeJLotBaA23P838qJKFWEO9EvC7SRpcrWFFTiBGB7s2cYOirWP/qC3cLs
-         M5KSdmo51X9PDmi2qTlNWg0aCC+jAQ6HBlF8tPzpjjKBAoUFvrLMuPH2Z6/ENJWgOXf0
-         M6B4PhmclwqKeJCrRQXzM7bdiBuCokXq1w3uaBbB+OgZch11579+qsAknX4DGEln6W8v
-         BnFR5TYpRliXUpQ+hCNrK6Sw+bKC/ODMhgyhdba8qre/tV2me+qQi9S4yjRa6wE7SONP
-         1XRA==
-X-Forwarded-Encrypted: i=1; AKwUvBzguCd/t8f3W8CZqrHAcChXjXlKDVHEmOVYoc7bCVcERfJbwLHArZmxbKgqy7QvE9HjZONXI/RzYed4p5421xJ1sgw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJcINOak3gh05YIwEq7gQqZ6LAt51+xepdnmLquIr1VBkkPkm6u
-	sq3m3tCCQOyMWnB47FOCcUcU3n3qMGD5ssO4rQvKrySaosph/IX3om9/9IB9B4RZ6bQUpK+yyev
-	+wNyKdYSGPPonYxJtSt/ub6aIuex28nVmdUibaSCCVedLFljQdS++EZ7xN+1xDNLnX2TfFUGP4j
-	pT5fB2Ww==
-X-Gm-Gg: AYBFou3Pog8lHuBmYXlFmyJxXIXtzJliusdgAB/fn090WnfTOptvIhFI9LntVQLBsyP
-	y9QrqQpNw2yUlkAonrzxnegot1CwoFJXa5ZI4Byy6ZMJNQHQ4vtMSby4pfJbW/RcT0jYhKowv2Q
-	vWcyB5zTi/FrTe8af7LPLwTAhGH/FcOXnnX6oVRjLcT3gTIQCqkvtMBQsMa6FUhX0zPG/N4OFtn
-	0mrtPW1GgSufcdbj4ZKu/qE3Yg4yQWmnz2uvH2t/TJzso3rNGt0IbdtuhjF5x7As1cxylSx7gOB
-	Bgeli67kg1XywTntLK4v3QZIj/rDlo4iyLEnyDMNTDmmBsw+EfKxRJulMrAFpkUCxFneNxS+OF6
-	s5nhaQtfHLt6QXkAraSw6vD3K9g==
-X-Received: by 2002:a05:600c:8219:b0:4a1:85d9:13be with SMTP id 5b1f17b1804b1-4a1d76031bfmr153032125e9.20.1792398835106;
-        Mon, 19 Oct 2026 01:33:55 -0700 (PDT)
-X-Received: by 2002:a05:600c:8219:b0:4a1:85d9:13be with SMTP id 5b1f17b1804b1-4a1d76031bfmr153031635e9.20.1792398834683;
-        Mon, 19 Oct 2026 01:33:54 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd50ae5esm23907875f8f.51.2026.10.19.01.33.52
+        d=1e100.net; s=20260707; t=1792400013; x=1793004813;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IUQKxK3gJveo0GbdIu8MHrrQ2HSW0SFpxRsXuUxNszA=;
+        b=ZQsf+ktMi8QC2elkc1wu1Le6glI74ghhWQdg+7p9YX28gPLZlJV+0mUJ8oAvVvtAJ2
+         t9jhbEiqSQKDDXCGG45YqIz6YfBQiZStOEE8c/Bi1IK//E4bqjZ9Lmy5sGjtXEV2KMLJ
+         efH75IZuNPH72vDiy8NraatzGpBopmPNpCKvDcHYUOgR+fxOg2F1sSKzHJQmd6yDsEWB
+         /CcFfVAC7fLEBnj8IUCSNLDFAqz94WaBJC5LIa972cbGGKGCOq/mKEl8OiL5myTthvuQ
+         vlRbvQsPAsWUJQZjYf6hK9zqRcUnxkOI4Y8AGvDnEDr8gibMHTYZJa6Ubr0dVFNgnMs7
+         gpKA==
+X-Forwarded-Encrypted: i=1; AKwUvBywuROzN4yZNHUPaPYpbjTwmGphLCmfXTbiW29dKXgL9ZIp6HRI1u6iz84G85KPIdBNIxwgVF3z0uHMuXdiUBX4EDY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJO0wUBR3dNv3vP8WEYB8rYqeQM19xJ+ULFC5YCXseJrfWxTOIV
+	4GoagPwv60qf5ZNyvo2U5iN5FomfEDyaJ+FiiJFlMftXrOhqsqYoG/Zl
+X-Gm-Gg: AYBFou3NOQeyOxTqgn/8gFooDb1Sr4z3M0abJJH0G5zSZeuT3oREJy2TEsU67bP6L+s
+	2oRRSVgw4Ueq9R/zhxFQGWTyemRG5hTYSCfhjSb/EX9crZ322ADGq4TdK8+M9gxMXXnH1fT14hT
+	qRSqQ9vc0l5C+AWg3V6Ubo0HmarvAeUeCJEzXufjTSMMAnkndLMmCkYOpp2l8pTD+J/eL6Fw/sn
+	o/UaKg5pqOCEUS6uZGbfwE48YkYy/7ZHDvMkHLqrp2+B6YEahhBH44zbrn92cXdh6FgIxhb68/O
+	mVE9+LM8EBRsK9DXvHobQZQDGhFytlV7gjpHlFmB1Iw9Xn6x1DB4oao+cgLsrEuWIXHc3WyZLX9
+	0X59WvptSfX3GT/2wWzpazLwbin/XtWKeTg1g3Yw9jNYbmdvpxNsk+LuTxSIoLsTpJWP/dVCW84
+	NvewLZtG5UXazKGJkYL6ZtX0mgDXsa+JRkQMwiXYX4nwAP/n035PpHAbEOyYmM2SOCDKDFasa7
+X-Received: by 2002:a05:7301:717:b0:351:1bdb:e3b7 with SMTP id 5a478bee46e88-361a186348fmr9105771eec.15.1792400013280;
+        Mon, 19 Oct 2026 01:53:33 -0700 (PDT)
+Received: from ubuntu.. ([23.254.208.9])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36081bafa7asm30069333eec.14.2026.10.19.01.53.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 01:33:53 -0700 (PDT)
-Message-ID: <b76dfd3e5a118e30ab25910f243db1cbcedc1c00.camel@redhat.com>
-Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: John Ogness <john.ogness@linutronix.de>, Alexei Starovoitov
-	 <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
-	 <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
- Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
-Date: Mon, 19 Oct 2026 10:33:51 +0200
-In-Reply-To: <87bj8s8ih9.fsf@jogness.linutronix.de>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
-	 <20261001152042.124445-11-gmonaco@redhat.com>
-	 <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
-	 <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
-	 <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
-	 <878q3xtptq.fsf@jogness.linutronix.de>
-	 <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
-	 <87bj8s8ih9.fsf@jogness.linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+        Mon, 19 Oct 2026 01:53:32 -0700 (PDT)
+From: Qiliang Yuan <odys.yuan@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
+Date: Mon, 19 Oct 2026 16:53:24 +0800
+Message-ID: <20261019085324.2562579-1-odys.yuan@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261001-bug-mm-thp-async-compact-defer-v1-0-0174c7923430@gmail.com>
+References: <20261001-bug-mm-thp-async-compact-defer-v1-0-0174c7923430@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ws2H9oN7u_uOcZ3Kezi4CPCGmwztoz8LGmXXFbTS1kQ_1792398835
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2026-10-17 at 17:23 +0206, John Ogness wrote:
-> On 2026-10-17, Gabriele Monaco <gmonaco@redhat.com> wrote:
-> > > I am still not clear how the rv tool will replace the existing
-> > > in-kernel implementation. Right now violations call printk(), which
-> > > conveniently show up in kernel logs and consoles. More importantly,
-> > > there are the rtapp violation events, which makes it very easy to use
-> > > ftrace and perf features to record traces, take actions, generate
-> > > statistics, and dump backtraces on violations.
-> >=20
-> > The plan is to keep everything you'd now do with perf/ftrace as plain
-> > stdout of the RV tool. Right now you can see the same ftrace output
-> > using rv mon <monitor> -t for in-kernel monitors (only deterministic
-> > automata).
->=20
-> IMHO it would be a pity to lose support for ftrace/perf. I use these
-> tools extensively for my daily work evaluating real-time systems. Having
-> the rtapp RVmon integrated allows me to easily and naturally extend my
-> workflow to include rtapp violations. Plain stdout is hardly a
-> replacement for trace recordings that can be imported into existing
-> visualization and analysis tools.
+Hi,
 
-Yeah that's a good point. And the trace-printk can only improve this to som=
-e
-extent. Thought that alone can get you stack traces for free.
+A real workload has since run into the stall this series is about.
 
-I think no matter what we choose now, having extensible reactors allows to
-easily add new violation actions down the road, if we see it necessary.
+Mooncake, the KV cache store used with vLLM and SGLang, backs each
+rank's host segment with MADV_HUGEPAGE memory and registers it with
+the EFA NIC, which pins it long-term. Its commit message [1] says:
 
-> > We are missing stack traces (which I'd optionally add only on errors)
-> > and perhaps other events (e.g. the -e in either tool if you aren't
-> > only interested in errors/events of the monitor).
->=20
-> I don't see the point of reinventing tools that already do the job
-> well. I do not mind if developers want to create their own tools that
-> provide some small subset of existing features. But I am concerned about
-> removing the in-kernel RV support for ftrace and perf.
+  "under the default local NUMA policy every THP fault on a full node
+   runs direct compaction before falling back. With 8 ranks x 190GB
+   this made registration take ~38 minutes."
 
-That's valid too. We'd need at least the rv tool to start/stop monitors in
-addition to ftrace/perf. Kind of what you already do now with sysfs.
+They worked around it by binding the segment MPOL_INTERLEAVE across
+all allowed nodes, so no node fills before the others. That gives up
+node-local placement, and a task that sets its own policy still gets
+the stall.
 
-I'm trying to keep this use-case in mind though.
-
-I assume you aren't interested in the "event" events (transitions in the mo=
-del),
-those are useful when developing models, at least in DA. And those do not
-trigger a reaction (stdout only for now).
+[1] https://github.com/kvcache-ai/Mooncake/commit/c3fa13ecaf1038df933dcb784ff8ffe026381100
 
 Thanks,
-Gabriele
-
+Qiliang
