@@ -1,160 +1,238 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61FC4E06C0
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 11:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AFE4EBAD4
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 11:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792407921; cv=none; b=LGhN6DmjgNlvLhSWUnHtM4Tf69p7f9CK5Sr9XeWXnIXpPcGA/AevuTo5poG3yr8z8JHNUFpC4B8Xh0JcxOYxhRALdxd1yz7jEk7MA07+cGbFDKtAkJpHNnkivuCwS6usknSEM6SrnvxTN9ymO+2ETjvmFd4PRT62qu1B0uUBveI=
+	t=1792410203; cv=none; b=r09Vpj5UR03bKNSkhXYJ8+5FxC3x91KGRJrRmOOFcxF4Rve08oTg4UifDPsLB1GzM0WosTi7NWlYq6vaWRTw50d6B8O3yEUcFS5I/5Ode6r46rqvymxaS6h99TqnCb5Ond105C5hyH6ED0YtW6ZsnTfXS4DLbnT45cdUsGcm5gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792407921; c=relaxed/simple;
-	bh=jUY85gSFYv44ajD0M92QfBXDWEtyEd1ElmdqhoNdS8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fnSNM9x36sOhjtjeup6Vj0ecYy3acmie1+YtZv1kBNuDJRM0MeA/K/xOaeAlgA5M+1aZlH/scFX+7ngKoZK2DJ+BhAQVSv0IobpQoUX/UgYhdJItrj+Zz0Ou8sEPIj9iE8doOzw7+RZ1qSSpdEzBW333BpMnJVHpOVXghh5pYJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SdL6lqQi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1792410203; c=relaxed/simple;
+	bh=0h+fMlcy0nHUgqx0ZgNb3jSrGz0nmItuE/FyNlwIrZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZ0Ui6wH0vRWpvfqI1onVL1/RrYPB1U/rvrv5PbTnv1O2/JBPKE15ZgWPVyDZL1e4OET1ewsEgx3CfQEVxT4AUGZu2odExOj/aFJgB40WDZwDQBnzP/JSo+PF24oUXUQR+Y1S1TWzr+SYx2Y/rKwzs7oDOEeA+PLn4y8rS5lj1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oCnoYDeR; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SdL6lqQi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792407918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jUY85gSFYv44ajD0M92QfBXDWEtyEd1ElmdqhoNdS8c=;
-	b=SdL6lqQiYPOExcnMY5rJeU7xX03FGpj7lkDf5lqY9DxfmcTDMXpZjsHMQdFkh4S+F16Olg
-	xo3/dNrRRyBic8V8nzpPdwMta9AUjUtFHCRck9DkQ2wNUszb/riwscse2jMOxPU638+GJh
-	OxPgJkZtlSlz+g3T8DiXhQP/S6YlazA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-mUS6Eht8OFiGsUjAVEOz1A-1; Mon, 19 Oct 2026 11:05:16 +0000
-X-MC-Unique: mUS6Eht8OFiGsUjAVEOz1A-1
-X-Mimecast-MFC-AGG-ID: mUS6Eht8OFiGsUjAVEOz1A_1792407915
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c2942fa0995so201659666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 04:05:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oCnoYDeR"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a1cef0439aso21470205e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 04:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792410195; x=1793014995; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=uPs8kNwzq2ixzAyx8BoNzSjliUbshG+1sbYaMKzI60Q=;
+        b=oCnoYDeRKqohdjoF8yr1PWKPgjlJR2mynK3Kjw0YrYFdWEIOUbtfjYoSGPcg1BAe2H
+         1DY4sGaClDUz5ITMycr6otyeVliHy73RZe1F2S0imQfR//X654PXu+KRRG+qJn+5Imqd
+         AI33Mk3uXVl96Den2MWa9znDNxqIwXe+AS+Vy+TIJmqWia89kcDUkJ+2E7cAHexwmvfU
+         dipwrGtY7YZIj2CluWUoxjLZlVxTJH2o++eXf28eNuPS7eV3ygGea33WzNOs2I2NTARY
+         JPQiuAp0NTayS9tg69d+UFM9ZMAiJawDf3LxW0Jw0iS9e8G4fsWaO6r3/l/MWZdn3ryM
+         Q4ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792407915; x=1793012715;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jUY85gSFYv44ajD0M92QfBXDWEtyEd1ElmdqhoNdS8c=;
-        b=xGDcvqecFI8Gzgiu25D7nF4/1Xjb4yXFWRdl9L1WIlkHPxO/kgpwmhsEI+BWueVf/N
-         AwZCQpTv99jU7FNn3wtcSbNFX+t66H8lJ5A1tE3j+RNVPih8aWejNFBiPNu8hZYiFvjC
-         G5Eba/HI6nHxjESnB1eGfAHWO8iPow/wg8FEa2lZu5II3Q7/wvGyeTJF9zy1zf/+rPyq
-         Vf/43e7/xHeDJQHG4qWKv8rsbAL9U1qfy4zIwV1/MFoH4K/pGGiaRO6i0u3xdA6JZ3nE
-         68jwqKHtOLBxAKY4EcmFN9pk/a/5/1g2owbuzby38GK3D0YDvQM6/QveHdjVnNF55Vcl
-         zMWw==
-X-Forwarded-Encrypted: i=1; AKwUvBwb47N2rvoUITS+iB6oBldIue6Hxu7wLbWYv/1c4xzNcByrvQZWeN8ck3HMDHXHZ1Zt9JbcFq6htg7sqdSeXosikYQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK6m6evaU3EQP+hoL/dqvF5wu3T9KsASe6TdPN70F3ruO/ST3St
-	U9E67D/opgv5MxsONPV36BqAhi0BWVG1LnNp6zyrQjeIjwVT/sK0zErc8ezZ2v1s/suUzjspTj0
-	zoAQIc0YlT5B8s+gRasanYbOTYjsoDpZ9u7O+pt3P3C0XX5wGacsi3Kuzd7qUUYQpVWaXT+i2BJ
-	uje1dWSF6WGu5erqU70lmnvEQ53LpvdoZS0XofeiXJxR02a5Nr
-X-Gm-Gg: AYBFou2oo4rv6B0SR7S2OPX9WzbeISlE55hnq1WQIwJnvUKlbwutViWAhrugqqg2UMI
-	VN/NciZlhNcLOhcrqaguXdG3sVodho5/OOiLJWcsFMQt4hE/4Yi8gTlWBHN8GQdD7uySMwflws6
-	RB9mdxhkUFjKm56cswlOYULpEeg67/c5BIeEIw3/SFsbtHMfsFKxU5CeyowPps+ZNUoFKOUZDYN
-	UaETOPkvZdCRPA=
-X-Received: by 2002:a17:906:9f86:b0:c19:45e3:2f57 with SMTP id a640c23a62f3a-c419d83af46mr514042566b.9.1792407915454;
-        Mon, 19 Oct 2026 04:05:15 -0700 (PDT)
-X-Received: by 2002:a17:906:9f86:b0:c19:45e3:2f57 with SMTP id
- a640c23a62f3a-c419d83af46mr514028266b.9.1792407913081; Mon, 19 Oct 2026
- 04:05:13 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792410195; x=1793014995;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=uPs8kNwzq2ixzAyx8BoNzSjliUbshG+1sbYaMKzI60Q=;
+        b=lOLb962WHB8LuJ1uxjx3Bhokkqiq40ZNI3oDGIRgXBSi67gqAzM5leFPnDEqrbMKay
+         c+O6sCpf9uwq4vtZeG2EIsjsuMWcZ1+YylFObAdq2H6TYFTkGjVCYMEtz3zxFRWNIajx
+         JdzDu2jyQh2hObVuY1+hQWrB9tbGV5ma7wmpgf/Kk5w/hGa68E9VLomqtziI0OQ5vpn6
+         X3bQ+upMl9dST/9MQ1K4PWPEeG4naqv/9ZIUG2P3gsBKNTi2tJ2/rk0nYX/M1tOIKfSY
+         miOwWgAxtzBCzRFCH2zd+N2DxMThISD/5fMJWuFoXsqp9Rxl3QQpI4xqxOOWjbmVAMPO
+         Z5jg==
+X-Forwarded-Encrypted: i=1; AKwUvBy9bl2gGs0uB3L8F3ceDenYj0JRX40ALp56nxve/K8Gt2w8uPwsMxfP3wY/WY5kdzRUq8X0+VEutdzjhjpPtoOdzzQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKTyW9egrq9N0qHjN6WAPNl8q7elgSpe2ny1ad9D3hVxDrImRXn
+	dkn11m76jc7delmk2vCJtLqOdjYXMdLSafL0/rlc1g1Mjn8L29IiqrOV6ZCJZH0Zew==
+X-Gm-Gg: AYBFou3hTN6hdiPi6ceV/y4ntxm4wQorBULBt0ZP9zn/JG/qfULAg5BRDrHlXwi80TB
+	wbaj1/IfFsUyPL6E2hOHO0M6qwu4MB1qID4FuZFGUOyI9ytxSV1yDyaegwde1O4M2RUVs+xZsrU
+	hhtV3K5VpisVZH0KdFXeM99ysgz9Wjg5uRF+DFz3JP0EhgNttNu5UKOWCydua4dkJ9NTV6GVwto
+	9DmsxWqMOJ30RtjzGQin2jQ3irSCgBV0E6QyuqXSxZn9n9zVIIXu/zuYItKDbhIzRtx5TgjQfe8
+	CQuDrZePg+i1loVJ8vlm5KjfIr5mW63RjimuDsqInF1ZJVhCDgPkOtAk/PSvXmrR4ap0U57UvV6
+	cuW/DSNhu/fMQH34lobixwsWlZcxeEvnp1UVvdeqR9wsLvSZotTRmKL7EdXE7eXWMVayelP69un
+	6pNIrpzYTXGBB+VldmaG11RYlftvY+xgHdf8bVqbePeogSGLZ7X3wU06hIFvwND2JYwuZsY/klh
+	kGzPJTLEGvg5IqzzdRy85ey4yIuQ3s=
+X-Received: by 2002:a05:600c:3508:b0:49f:e772:6ddf with SMTP id 5b1f17b1804b1-4a1d762251bmr165269695e9.32.1792410194117;
+        Mon, 19 Oct 2026 04:43:14 -0700 (PDT)
+Received: from google.com ([2a00:79e0:288a:8:d186:2d44:63ff:537f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1e9423f20sm58112105e9.7.2026.10.19.04.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 04:43:13 -0700 (PDT)
+Date: Mon, 19 Oct 2026 13:43:04 +0200
+From: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+To: Justin Suess <utilityemal77@gmail.com>
+Cc: Cai Xinchen <caixinchen1@huawei.com>, mic@digikod.net,
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+	corbet@lwn.net, skhan@linuxfoundation.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+	memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
+	ihor.solodrai@linux.dev, rdunlap@infradead.org,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	johan@kernel.org, dlemoal@kernel.org, hch@lst.de, axboe@kernel.dk,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	dhowells@redhat.com, code@tyhicks.com, linkinjeon@kernel.org,
+	sj1557.seo@samsung.com, yuezhang.mo@sony.com,
+	hirofumi@mail.parknet.co.jp, cel@kernel.org, jlayton@kernel.org,
+	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
+	tom@talpey.com, hyc.lee@gmail.com, miklos@szeredi.hu,
+	amir73il@gmail.com, senozhatsky@chromium.org,
+	chenxiaosong@chenxiaosong.com, kpsingh@kernel.org,
+	matt@bobrowski.net, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, john.johansen@canonical.com,
+	georgia.garcia@canonical.com, zohar@linux.ibm.com,
+	roberto.sassu@huawei.com, dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com, stephen.smalley.work@gmail.com,
+	omosnacek@gmail.com, casey@schaufler-ca.com, takedakn@nttdata.co.jp,
+	penguin-kernel@i-love.sakura.ne.jp, xiujianfeng@huawei.com,
+	nanx95726@gmail.com, djwong@kernel.org, lujialin4@huawei.com,
+	bpf@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+	ecryptfs@vger.kernel.org, exfat@lists.linux.dev,
+	linux-nfs@vger.kernel.org, ntfs@lists.linux.dev,
+	linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 -next 09/18] landlock: Add READ_METADATA and
+ WRITE_METADATA access rights
+Message-ID: <atYBVCIYE1zDb7do@google.com>
+References: <20261015125425.3246251-1-caixinchen1@huawei.com>
+ <20261015125425.3246251-10-caixinchen1@huawei.com>
+ <atI20Vs7Du9-g1Hz@zenbox>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261001152042.124445-1-gmonaco@redhat.com> <20261001152042.124445-11-gmonaco@redhat.com>
- <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com> <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
- <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com> <878q3xtptq.fsf@jogness.linutronix.de>
- <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com> <87bj8s8ih9.fsf@jogness.linutronix.de>
- <DM78SVMBI2XW.2XHVC67VON48A@gmail.com> <87v770uuyr.fsf@jogness.linutronix.de>
- <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com> <87ik2zryzo.fsf@jogness.linutronix.de>
- <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
- <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com> <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
-In-Reply-To: <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 19 Oct 2026 13:05:01 +0200
-X-Gm-Features: AclHuK-0PstQ9qMVKUz4cfYOyqNQzLRuAx_unL8aytY_f_PVK-zyS2FFzXAzARk
-Message-ID: <CAP4=nvTc297yQHz8aumZFAQ3+JK=5Z_=416WdosT0S6nHEeNfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: John Ogness <john.ogness@linutronix.de>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
-	Wen Yang <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
-	Viktor Malik <vmalik@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: q7JFan4X8PkXdyYg-VEDf0QTiwf67NELptNiEuCI3AI_1792407915
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <atI20Vs7Du9-g1Hz@zenbox>
 
-On Mon, Oct 19, 2026 at 12:43=E2=80=AFPM Gabriele Monaco <gmonaco@redhat.co=
-m> wrote:
->
-> > One disadvantage of using bpf_trace_printk() for RV violation
-> > reporting is that the event will be caught by every instance that
-> > enables bpf_trace_printk() and does not explicitly filter rv out.
->
-> Yes, that should somewhat be mitigated by the glob filter, though events =
-are
-> still generated.
->
+Hello!
 
-Do I understand it correctly that the idea is to modify existing
-tracefs instances when enabling an RV monitor to filter our RV-related
-bpf_trace_printk events?
+On Fri, Oct 16, 2026 at 10:44:16AM -0400, Justin Suess wrote:
+> On Thu, Oct 15, 2026 at 08:54:15PM +0800, Cai Xinchen wrote:
+> > Add two new filesystem access rights to control file metadata access:
+> > 
+> > - LANDLOCK_ACCESS_FS_READ_METADATA: Read file or directory metadata
+> >   (e.g. inode attributes, extended attributes and POSIX ACLs) through
+> >   stat(2), fstat(2), lstat(2), newfstatat(2), getxattr(2) and
+> >   friends, listxattr(2) and friends, and the POSIX ACL read
+> >   operations.
+> > - LANDLOCK_ACCESS_FS_WRITE_METADATA: Change file or directory
+> >   metadata through chmod(2) and friends, chown(2) and friends,
+> >   utimensat(2) and friends, setxattr(2) and friends, removexattr(2)
+> >   and friends, and the POSIX ACL set and remove operations.
+> > 
+> > This follows the coarse-grained grouping approach discussed in the
+> > mailing list [1], where file metadata operations are grouped by
+> > security relevance rather than by individual syscall.
+> > 
+> > Implement the two rights by hooking the inode_getattr,
+> > inode_file_getattr, inode_setattr, inode_file_setattr,
+> > inode_setxattr, inode_getxattr, inode_listxattr, inode_removexattr,
+> > inode_set_acl, inode_get_acl and inode_remove_acl LSM hooks, which
+> > now receive a struct path thanks to the preceding VFS and LSM
+> > refactoring.  The following system calls are now controlled:
+> > 
+> > - stat(2), fstat(2), lstat(2), newfstatat(2), getxattr(2) and
+> >   friends, listxattr(2) and friends, POSIX ACL reads, and the
+> >   chattr(1)/xfs_io style reads: ioctl(FS_IOC_GETFLAGS),
+> >   ioctl(FS_IOC_FSGETXATTR) and file_getattr(2) via inode_getattr,
+> >   inode_getxattr, inode_listxattr, inode_get_acl and
+> >   inode_file_getattr (READ_METADATA)
+> > - chmod(2), fchmod(2), fchmodat(2), fchmodat2(2), chown(2), fchown(2),
+> >   lchown(2), fchownat(2), chgrp(2), utimensat(2), futimens(2),
+> >   utime(2), setxattr(2) and friends, removexattr(2) and friends,
+> >   POSIX ACL set and remove, and the chattr(1)/xfs_io style writes:
+> >   ioctl(FS_IOC_SETFLAGS), ioctl(FS_IOC_FSSETXATTR) and
+> >   file_setattr(2) via inode_setattr, inode_file_setattr,
+> >   inode_setxattr, inode_removexattr, inode_set_acl and
+> >   inode_remove_acl (WRITE_METADATA)
+> > 
+> > Both new rights are added to ACCESS_FILE as they apply to both files
+> > and directories.
+> > 
+> > hook_inode_setattr only restricts explicit metadata changes, i.e. it
+> > checks WRITE_METADATA only when the ia_valid mask contains
+> > ATTR_MODE, ATTR_UID, ATTR_GID, ATTR_TIMES_SET or ATTR_TOUCH.
+> > Metadata changes that the kernel performs implicitly, such as
+> > timestamp updates on write(2) or size changes on truncate(2), are
+> > therefore not restricted, and neither are chmod(2)/chown(2) calls
+> > that do not change any attribute (e.g. chown(2) with -1/-1, which is
+> > a no-op that never reaches the hook), matching the behavior of the
+> > SELinux inode_setattr hook.
+> > 
+> > Stacking filesystems forward fileattr operations to underlying inodes
+> > without calling the LSM hooks again (see the preceding patch), so a
+> > fileattr operation on an overlayfs file is checked once on the
+> > user-facing merged path and is not spuriously denied because of the
+> > kernel-side creator credentials used for the forward.
+> > 
+> > Kernel-internal accesses performed with override_creds() (e.g.
+> > overlayfs and cachefiles) are not affected because Landlock domains
+> > are attached to credentials, and kernel threads without a Landlock
+> > domain (e.g. nfsd and ksmbd) are not restricted either.
+> > 
+> > Remove stat(2), chmod(2), chown(2), setxattr(2) and utime(2) from the
+> > list of file-related actions that cannot be restricted yet, and add
+> > the names of the new rights to _LANDLOCK_ACCESS_FS_NAMES in
+> > include/linux/landlock.h, which is shared by audit records and trace
+> > events, so that denied accesses can be reported with a human-readable
+> > name and the static assertion on fs_access_strings in
+> > security/landlock/audit.c stays valid.
+> > 
+> > Increment the Landlock ABI version from 12 to 13, and update the ABI
+> > version check in tools/testing/selftests/landlock/base_test.c
+> > accordingly.
+> >
+> LANDLOCK_ACCESS_FS_*_METADATA should be checked at open time and follow
+> the mechanic for the truncate right. Otherwise the access for already
+> opened file descriptors would be changed. See hook_file_open in
+> security/landlock/fs.c and this discussion here [1]
+> 
+> It should have clear documentation for this as well.
+> 
+> Justin
+> [1] https://lore.kernel.org/all/20260929.Ahgoo4yeetai@digikod.net/
 
-> > I can imagine an RV-specific trace event for that, however, it would
-> > require a separate kfunc to generate it, and ideally also distinct
-> > labeling of a BPF program eligible to call that kfunc. The "rv"
-> > userspace tool could then iterate over these labels so the user knows
-> > which violation events can be expected to occur on the system.
->
-> That'd work too. It's what I initially envisioned but I'm not sure a kfun=
-c
-> producing a tracepoint is something BPF folks would really like (and tech=
-nically
-> any other unrelated BPF program could call that, unless there's some acce=
-ss
-> control mechanism I'm not aware of).
->
-> Not sure how much it matters in practice against the glob filter, it prob=
-ably
-> really depends on the other bpf_printk users (and a mildly better usabili=
-ty).
->
 
-bpf_trace_printk is already a BPF helper producing a tracepoint, this
-would be equivalent. Of course, that does not mean we want it, but it
-is something we already have in at least one instance. I know of at
-least one quirk: you can have a BPF program attached to a tracepoint
-that will call bpf_trace_printk(), and a tracefs instance tracing both
-bpf_trace_printk() and the original tracepoint. That leads to a new
-tracepoint triggering while another tracepoint is already in progress.
-I don't know how it is currently handled; from what I recall when
-testing RTLA's BPF actions, the bpf_trace_printk() event might get
-dropped by the tracefs instance, so I had to use a different way to
-signal to userspace in BPF actions test.
+I agree with Justin here.
 
-As I said, to prevent unrelated BPF programs from calling the new
-tracepoint, you'd need to recognize and track RV BPF programs as a
-special type of program, similarly to what your original RFC did. I'm
-not sure if that's what we want, but I see some advantages. In
-addition to better filtering of reactor events, you could separate
-reactors from the monitors entirely: you could trigger the tracepoint
-unconditionally, and attach reactors as tracepoint triggers to the new
-tracepoint.
+Apart from what I said in [1], Justin and Mickaël pointed out this
+other aspect in which it is similar to *_TRUNCATE, in [2] and [3]:
+System calls like fstat(2) operate on an already-opened file
+descriptor, and the semantic that Landlock has so far been following
+for these is that the effective access rights for that file descriptor
+would be determined at the time of open(2) and stored in the opened
+struct file, just as it has been done for the *_TRUNCATE and
+*_IOCTL_DEV access rights in the hook_file_open() call which Justin
+points to above.
 
-All of that adds complexity, though, and requires separate discussion,
-so it's probably not something relevant for the initial
-implementation. I just wanted to mention it so that it doesn't get
-lost.
+That way, an already opened file acts as a handle for a "capability"
+(in the more general sense of the word), and the things you can do
+with that opened file don't change as the process enforces nested
+Landlock domains.
 
-Tomas
+Landlock's documentation describes this in
+https://docs.kernel.org/userspace-api/landlock.html#rights-associated-with-file-descriptors
+
+It feels that this would be in order for the *_METADATA rights as
+well?  Does this seem reasonable to you?
+
+(If you have arguments against that, I'm also more than happy to
+discuss, but we should make a conscious decision. :-))
+
+—Günther
+
+[1] https://lore.kernel.org/all/arurOphe6QIx2Zr8@google.com/
+[2] https://lore.kernel.org/all/arvjb0HJYh1KyEBB@suesslenovo/
+[3] https://lore.kernel.org/all/20260929.Ahgoo4yeetai@digikod.net/
 
