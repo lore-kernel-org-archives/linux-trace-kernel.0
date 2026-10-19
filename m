@@ -1,146 +1,154 @@
-Received: from mta1.migadu.com (out-216.mta1.migadu.com [95.215.58.216])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EB133F8BC
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Oct 2026 16:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B4AEECB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 00:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792341243; cv=none; b=kgnkK65RfYG8UNW6gnYrTArqzh8vxWU/louKbPAvvzbwSX7l4YG14ev9v/guvPYhLCBOns8FZyaiEEECGU6xLR31zt0gn197djtjiHGG3kx7jIF38GshKJoppJeCAu1/CznDVBNTvAIDVs/bccugiAPXZOEnr+jZzU2RkaJ/EyU=
+	t=1792368274; cv=none; b=ax9mWmgjkHZaVl4MzHCbIgmFtaZslY9HAa8xJSe5nhc/9UeZlBEChRDwBvGEYT27276MpHl4qw1EKk2RL2gYfIldvGm+AkyRsIuwik85Y9nW691o8ON+i64YlNn5sWP/n9kM4XVaSeQIdqRJqOSYMSKs1dH37s5PkxBpNGIaVXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792341243; c=relaxed/simple;
-	bh=m7n7YIoURJCxjqzRmIhNGAzD2y+XE5DbMarExGyeOOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GFkezFiefnEHxPTRj0Q6pxhvKL1yRz0KFbGPFMF2SXDQEDWdHhPvKvdaWu+lZVCnY2q4CPBJq+8GXS0+fxBPdfq+ILrWBgNiL458HBaWXWHN1OjTldCDqvFTsqrgEK4aDixpgoeKC8lNGTEF0PsjvoNnNaoCyCtecGq7CJSwkFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pCEFc+sL; arc=none smtp.client-ip=95.215.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1792368274; c=relaxed/simple;
+	bh=PytpAivb1fwxvfwewsqyJs+b7ShzSeJ8NAvBdrPtn/c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pK2KDFwAyfsVp0IYn66PdeeXtHTE2pm9SdEzH+PNl4VzHStt1d1pp/w9f7N9wqNX+6pMwe8Ow7of0TjaMIYJu5MdKlO/ZgD0E5EhiJiptxrorbl9uaTut5ocsmajFNRoeGUdxsJ8cQYjzQX7j2KEElV0sB8p2+TtGqkMkHodkEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zirc/ri9; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pCEFc+sL"
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=m7n7YIoURJCxjqzRmIhNGAzD2y+XE5DbMarExGyeOOU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792341234; v=1; x=1792946034;
- b=pCEFc+sLbBGdU6kH3TV5/lQBsNQFjEri08L5wncs61Flwclrvtmv8WzkWVxYw6SuHLdMTHBC
- WAfnJgm0yFQPHsbh1QPPv2IVXJ0Vj1G1iMACukuDizMswW/QW8NugYVMr9ccqiAEqcTWieH+DP6
- y4jmjfe5NNobM/Q/XqtunYgw=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5af85ac1fdd41fb6;
-	Sun, 18 Oct 2026 16:33:53 +0000
-X-Mizu-Trace-ID: 5af85ac1fdd41fb6
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <b97fa998-b77d-4600-8453-9bb16200409e@linux.dev>
-Date: Mon, 19 Oct 2026 00:33:43 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zirc/ri9"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7fccba9c675so3714481a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Oct 2026 17:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792368272; x=1792973072; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wAzJZZYXVc0Jc7U3TE8nNL1ig5ACrPJZxsjIWB1n0Xw=;
+        b=Zirc/ri9Zrfn5dPtL9q903JSIUp+Zq5JaEL9hTXxKUbgTc1kjPDyjsQsYOqx7x1AlW
+         bFrEZhJDCPeqebZP/0Pgpo6PsNlDWUSou6Y0VPpsPw+zoFWPkgwrZ/kdLarP2R0w07FW
+         b1TA2bDJbn6Sw+0/LfyfOs0Fh9FbaXCJrRLicodmFElbKeRICLw9wURitjDPpvjLd+8N
+         sWhybucv+HFe67k3dCzdyT3k1pKeeeiIRoZFlcZnk5rBg7aAjosmtPs3ug1s5Z8vA3Rn
+         E5bW1zT+S7THtjch3ma5hzSpr1V7Y6etqvUbTiK55hbPGx4CErvYgIGgAGyZQAJeF9Sc
+         hq/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792368272; x=1792973072;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wAzJZZYXVc0Jc7U3TE8nNL1ig5ACrPJZxsjIWB1n0Xw=;
+        b=jPV5nd0eg088tOtoLGGH+jYCkKgh1Bp36vLEU/0bVNyA1mkLlcuyRqf/Y4AsaP+03E
+         EC2xbTFb7yIYMCfzIsnSkI9HtNEC8sGdXqj2inxDCAKZ7PTkcmf7+rCAkd27VCb215oI
+         ZWBZrcKEWe0uuabWflUU3EQ32R/BaTrnOmyfrAau0G+ELsi8isFJ/Y21nFCcTDhQ+Llj
+         4zbTgado/rUeOtq93xBuokhvMy7SPDe8Y03/t8P08+dviKFKDc1WVlhkvNcruWeXHXL+
+         +cej/VAYbztyUOCfKOOucN0t5YOueymnG8Hr6hqXn25X5eDnaSrNmICIuQgghJx73Gq5
+         lOBg==
+X-Forwarded-Encrypted: i=1; AKwUvBw8+PYBSFpq14LysHnmQQWkbjZxWcp7HPq32QCJ0oXTxEYw94i8v8u636n28Q2+MAJwJ8wdBKK8paTqnr/A5yc9drc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ/m3I5QXLrDKWCrKdqwGMD0NYZ1EUUtrRMBRDT5baKohhbLMsa
+	FKOqTLGG6ThKKDB17dZ+OS12Okxav2QUDwqMmcsVu9hJ/CXIZSwMyYby
+X-Gm-Gg: AYBFou3lZjU7Zvgri+wDdkuk034v9spdPHcu7jL6a028WAjMI4VlY8Hp1vbq48mzaMx
+	qunUmSeQ32Ix+qBoHoDkkC5SxeK3X4/UbEwT1jLD2CVrUodJ1yCbw2S5/RHjRU/3Q4Kbbhsdd+o
+	+tEXvbTL6fqhl5URcXwgAa8ecRZO0HQQaW3A7TYHDvG+qr6u50ZJ7qbBEpnBlk04WJ/2yMbBdmy
+	1lK2Xo6zGYXOw/mvOAu3xSQQZMC/JlYoUIeB9U3Jl27znC8y0j/03bIWOC9s3RtsC04dp3Bw/D1
+	kEG07V+CRRNNfXtz5b4mUNEGvnmCRxh58o/C0UUhO6cuxnP+kAgbBzvAI0MHQlvbPn/Xe8SYWXt
+	8p9XWgwkuUU/kpEOxH0xic9mxKI4c471wuTkqD95YYIlTpeB/7pSA+Vc5W6JotqF79rNCVxROkR
+	AGIokaVhMh9EsYpSXBBFJHdGv7GmHs/IEp/99vUefI69f0yYmkyvXJPH6iF4ZatitH+40waP5WB
+	H2w6dJALzv+
+X-Received: by 2002:a9d:7f8c:0:b0:816:f1c2:d6b8 with SMTP id 46e09a7af769-841ff60e1b5mr4883351a34.9.1792368272518;
+        Sun, 18 Oct 2026 17:04:32 -0700 (PDT)
+Received: from sheng2080.cmix.louisiana.edu ([130.70.15.5])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-842a4a00f15sm7674561a34.8.2026.10.18.17.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Oct 2026 17:04:30 -0700 (PDT)
+From: Leizhen Zhang <lzsx618@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Leizhen Zhang <lzsx618@gmail.com>
+Subject: [PATCH] tracepoint-update: bound section names by the section name table
+Date: Sun, 18 Oct 2026 19:04:19 -0500
+Message-Id: <20261019000419.3977860-1-lzsx618@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next 6/6] selftests/bpf: Add tests to verify
- link_create logs
-To: bot+bpf-ci@kernel.org, bpf@vger.kernel.org
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@kernel.org,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
- memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
- ihor.solodrai@linux.dev, hawk@kernel.org, john.fastabend@gmail.com,
- sdf@fomichev.me, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, shuah@kernel.org, kuniyu@google.com,
- liuhangbin@gmail.com, mkarsten@uwaterloo.ca, masashi.honma@gmail.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- martin.lau@kernel.org, mason@kernel.org
-References: <20261017142649.51047-7-leon.hwang@linux.dev>
- <343fe8b9f06af37dde193869b694dbf908b0a0f6592a1e4cc5f5a0ac295b1b88@mail.kernel.org>
-Content-Language: en-US
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <343fe8b9f06af37dde193869b694dbf908b0a0f6592a1e4cc5f5a0ac295b1b88@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026/10/17 23:02, bot+bpf-ci@kernel.org wrote:
->> selftests/bpf: Add tests to verify link_create logs
-> 
-> TL;DR: Nits only, in the new link_create log selftests in xdp_link.c: the four
-> subtests repeat the same setup and assertions and could share a helper, and
-> one has a redundant true_size = 0.
-> 
->> diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_link.c b/tools/testing/selftests/bpf/prog_tests/xdp_link.c
->> --- a/tools/testing/selftests/bpf/prog_tests/xdp_link.c
->> +++ b/tools/testing/selftests/bpf/prog_tests/xdp_link.c
-> 
-> [ ... ]
-> 
->> @@ -150,3 +150,135 @@ void serial_test_xdp_link(void)
->>  	test_xdp_link__destroy(skel1);
->>  	test_xdp_link__destroy(skel2);
->>  }
->> +
->> +static void test_link_create_invalid_prog_fd(void)
->> +{
->> +	const char *msg = "Invalid prog_fd.\n";
->> +	char log_buf[128] = {};
->> +	int fd;
->> +	LIBBPF_OPTS(bpf_log_opts, log_opts,
->> +		    .buf = log_buf,
->> +		    .size = sizeof(log_buf),
->> +		    .level = 1,
->> +	);
->> +
->> +	fd = bpf_link_create_log(-1, IFINDEX_LO, BPF_XDP, NULL, &log_opts);
->> +	if (!ASSERT_LT(fd, 0, "bpf_link_create_log")) {
->> +		close(fd);
->> +		return;
->> +	}
->> +
->> +	ASSERT_EQ(fd, -EBADF, "fd");
->> +	ASSERT_STREQ(log_buf, msg, "log_buf");
->> +	ASSERT_EQ(log_opts.true_size, strlen(msg) + 1, "log_size");
->> +}
-> 
-> This isn't a bug, but the four new test_link_create_*() functions repeat the
-> same log_buf and LIBBPF_OPTS(bpf_log_opts, ...) setup, and the same trailing
-> ASSERT_EQ(fd, ...) / ASSERT_STREQ(log_buf, msg) /
-> ASSERT_EQ(log_opts.true_size, strlen(msg) + 1) sequence.  They differ only in
-> prog fd, target, attach type, expected errno and message.
+process_tracepoints() finds its two sections by name:
 
-Will factor out helpers to simplify the tests code.
+	secstrings = (const char *)ehdr + shdr_offset(string_sec);
+	...
+		idx = shdr_name(shdr);
+		if (!strcmp(secstrings + idx, "__tracepoint_check")) {
 
-> 
-> This looks close to test_map_create() in map_init.c.  Could the four
-> link_create log tests share a small helper that takes the prog fd, target,
-> attach type, opts, expected errno and message?
-> 
->> +
->> +static void test_link_create_invalid_attach_type(void)
->> +{
->> +	const char *msg = "Invalid attach_type.\n";
->> +	struct test_xdp_link *skel;
->> +	char log_buf[128] = {};
->> +	int fd;
->> +	LIBBPF_OPTS(bpf_log_opts, log_opts,
->> +		    .buf = log_buf,
->> +		    .size = sizeof(log_buf),
->> +		    .level = 1,
->> +	);
->> +
->> +	skel = test_xdp_link__open_and_load();
->> +	if (!ASSERT_OK_PTR(skel, "test_xdp_link__open_and_load"))
->> +		return;
->> +
->> +	log_opts.true_size = 0;
-> 
-> This isn't a bug, but is the log_opts.true_size = 0; line needed here?
-> LIBBPF_OPTS() already zero-initializes log_opts, true_size is only written by
-> libbpf after the syscall, and the other three tests omit this line.
+sh_name is a 32-bit offset read from the file and nothing bounds it, so one
+section header can point the name anywhere and strcmp() reads from there.
 
-Good catch.
+Found by fuzzing the host ELF tools with mutated object files under
+ASan/UBSan. Reproducer, setting only sh_name of section 1 in an otherwise
+valid .o:
 
-This line is unnecessary. Will drop it in the next revision.
+  $ python3 -c 'import struct
+  d = bytearray(open("tiny.o","rb").read())
+  shoff, = struct.unpack_from("<Q", d, 0x28)
+  entsize, = struct.unpack_from("<H", d, 0x3a)
+  struct.pack_into("<I", d, shoff + entsize, 0x7ffffff0)
+  open("t.o","wb").write(bytes(d))'
 
-Thanks,
-Leon
+  $ ./tracepoint-update t.o
+  ERROR: AddressSanitizer: SEGV on unknown address 0x7f8d689ae848
+    #0 in strcmp
+    #1 in process_tracepoints scripts/tracepoint-update.c
+
+Skip a section whose name offset is outside the name table. Such a section
+is neither __tracepoint_check nor __tracepoints_strings, so skipping it
+changes nothing for a valid object: the reproducer and an unmodified object
+now both print the same "no __tracepoint_check in file" line and exit 1.
+
+This bounds the index into the table, not the table itself: a name table
+whose own sh_offset or sh_size is bogus is a separate gap, and in the
+elf_map() path used here there is no mapped size to check it against.
+
+Fixes: e30f8e61e251 ("tracing: Add a tracepoint verification check at build time")
+Assisted-by: LLM ASan UBSan
+Signed-off-by: Leizhen Zhang <lzsx618@gmail.com>
+---
+ scripts/tracepoint-update.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
+index 5cf43c0aac89..2736e91e6f06 100644
+--- a/scripts/tracepoint-update.c
++++ b/scripts/tracepoint-update.c
+@@ -157,6 +157,7 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
+ 	Elf_Shdr *shdr_start;
+ 	Elf_Shdr *string_sec;
+ 	const char *secstrings;
++	uint64_t secstrings_size;
+ 	unsigned int shnum;
+ 	unsigned int shstrndx;
+ 	int shentsize;
+@@ -171,6 +172,7 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
+ 		shstrndx = shdr_link(shdr_start);
+ 	string_sec = get_index(shdr_start, shentsize, shstrndx);
+ 	secstrings = (const char *)ehdr + shdr_offset(string_sec);
++	secstrings_size = shdr_size(string_sec);
+ 
+ 	shnum = ehdr_shnum(ehdr);
+ 	if (shnum == SHN_UNDEF)
+@@ -179,7 +181,10 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
+ 	for (int i = 0; done && i < shnum; i++) {
+ 		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
+ 
++		/* sh_name is a file-supplied offset into the name table. */
+ 		idx = shdr_name(shdr);
++		if ((uint32_t)idx >= secstrings_size)
++			continue;
+ 
+ 		/* locate the __tracepoint_check in vmlinux */
+ 		if (!strcmp(secstrings + idx, "__tracepoint_check")) {
+-- 
+2.34.1
 
