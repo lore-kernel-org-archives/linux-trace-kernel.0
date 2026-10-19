@@ -1,114 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792437954;
-	b=XoYJiPmSXNk2bbI9rqh5gNyd+GIU7Z3HtWW0CNErWy7z7lFsAQv2InNlza81QkA10VWz
-	 DAZ8DuB3tyTh5M3nudjVxI/Jxk8vxYlxM42Sln4/qnBLSKX5WEgl3s8ql6OWAzeY+H52p
-	 cCttESkd5lgLmYOethbMIbUco7ztI+Cjeqic48p09sBkYD9++rjXHf3iehJ9qiZPVX6GM
-	 M68HFxSKterH/vnlE4mw3isxJS6lnLu3I7bOGwSQPKCgLreZDbOWqRlqMa6Pk64Waj9o8
-	 k7DQhTpYhePBaY0SCbncFHVyeFhSyS1mE/pKarAOfFUZSeHyNBssUgahkI0+nZerzPA==
+	t=1792438019;
+	b=tEkngr4Hp3VrHEXXMs86dEOpr4Oy2IXKHLOdTKxnAQv4P1tBJHYMtF3SneHMWFJo++Vb
+	 w8SKCscdPcvBlfDzIRqdtaELE2acUtX1VRCNUVNZRFkQh7cJNulSdhUK7dn0iju3IVK1R
+	 aNl2Zq6HertIVjPDBJu1RfAcnBcBPN3mTQdR4YwE+KGDNlbCd3YnNcM5U4jz1+fmLFEg5
+	 8c5foTeOf/vTyRWurTZ36GKzZ9FEF7nVN7xsHSWl0AA8Edbqf+vkgNimskQf7KWveRjtx
+	 uIIo1hM7G3sj564uFpdij+msYAi8Yjb1kiW6+cUK6XUyFw6jz9sKot7KG2vIE7OwPkA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792437954;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:X-Mailer:Content-Transfer-Encoding:MIME-Version;
-	bh=Gl+QuejblNFV3uEkIxOgOsS4jX0GlJs/ROUNx5zrPn4=;
-	b=n/zH9E5vXH+ALm9JNFQd6Mj0aEFtLr1GpEQwrKWI18guyPhvrc+asFydN9LSTgjYUuO8
-	 jzvE3SsGSPMI0RMwjXsW0nKyELzf6/qdDjkDegtB92dS0LkXNQTtQNh7bX+F3gn2dbXry
-	 br0rDpdt0p1z/QY3mCiChPd+MJeuEdNWN67j6HLTxV1yfbzpmXGehHWxVKCe4FQNmX7UY
-	 JkOTteSmTwzkGsO477mg0M2SeeexvJ5T3x98Cq88h6bWHKkDZHe8O2oNz3oysZ8soRyho
-	 GVd5r7fb50TU2M8G0P/0hqimvA4mQE74KZrLubISlJ1A5F3JkP7LBczvQPXtEvGZObQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792438019;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=XJxIc7IZPOWvgbXWTDNvi1oJM4oQX4nC6DFxnxfPJAM=;
+	b=TmFj/jS/fwbZzq+Vu609zhXqVMNT+oydqrgHOX83rjuneFNlTUVvXDNp0wMqwGX9G0/D
+	 LNSoUNVwjkzlu9G2P8afFrimlfsQdFPaFBot/ruoIlk3H6DvTre6MxeAaKOFwjm5UrBWx
+	 Xg9Mf1Qx5rJH3LoCi2SuPc+Vb0pMMK39OxmdkB0/xtbxCYFUcsF/4QSrhI2dZQx68N/bq
+	 CHcfumoBKHnKS310db29amRdLQL9LXf/AknZeSa+32fWXv4JWBIFHZynb3PdWHyhOmZW1
+	 TSy63/Vq4x52/luRTDGdac3YmArSy7yEOooymZkQx5pi//S14tdAQRu2zF07iPqjLhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gYnQr9al;
-	arc=none smtp.remote-ip=209.85.216.45
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HA1u57TD;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A609606A322
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 19:25:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A609606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA43C606A320;
+	Mon, 19 Oct 2026 19:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gYnQr9al
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ac451e128cso1552286a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 12:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792437954; x=1793042754; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Gl+QuejblNFV3uEkIxOgOsS4jX0GlJs/ROUNx5zrPn4=;
-        b=gYnQr9alcw+J9ojP/SdeDo47GsqS10jIYNdvilfzW9uVyvOFI724RKT1A9EsWtQ3bQ
-         OgXWmiBiwDCiu/gWReT46D/Rk9VHkHgUrKHIxf0YStCBAljm0BIHRVvWPUYzKX908eUt
-         iCuSA6FUQ3dcvqmycwRt4gjLfOklT6OAGxuKl5xqbY72BqpfGdxLXGUQIuf+OJ5g7fu5
-         g/W82eNWWUviKy78jCy3BJRjKeND6NWnWoTU9lAqh7g7bOgPK8d9buk+6bjXfb3EBJwv
-         ck0cedd6WPJoOke0xDGXsTBf/906L8PkyCNeMlUttfM6CF3DCo/JPd8cengfq/sPfTmR
-         TcnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792437954; x=1793042754;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Gl+QuejblNFV3uEkIxOgOsS4jX0GlJs/ROUNx5zrPn4=;
-        b=KqB/hKM4mSPiJIAyHNgjTB4rU0HiBphS1c44Qtpisw4MXmIAFs86I5BMca3tWcaeza
-         i5+EjHRVzYmnAPitDg+G12ejkDucK4ocgKzUnj3HZ6UC1cZJy3httzhS/fdnWCfmYDaR
-         XPW9WVncPqKg4WDM7AqxtTsbhr3HOqeFVOeiZtCO1sYveiqs2eI8Xxv9VYh2axfo3PHF
-         F3NT5mJIj8USb290rzzLG7lkmv9sTM/42h6XXrrC9cbwVm63bTdbdEz4/FQQyGLT8kPc
-         d8SgYJeAFdSUxG4MPxaohST25KPUmRC45IGsWrh3JH0Wqv/y/mF/BFdvfQaAv4U8ETl/
-         YPDQ==
-X-Forwarded-Encrypted: i=1; AKwUvByIqBjZrVWaPbosybuyHSppQwTmsDGjBBhQgQlRKsQ5Fnyo/GnC3Ixc7rsQni4A6a4qwj1Q2H44l2hty0yvNh4fKnc=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIbHK6XC8JqN18qPQVcjR/8WdcSs09N1L6n3t0xFIw0mdUYnTAB
-	SWTVp0u2W70qEsfk/Ihrzu1Xma6n25PE+9vjt/itpiHwjT9iHFMvrbpQ
-X-Gm-Gg: AYBFou1Cx1ENnFygZFtu7BLV1M8KQK/JkF2BfMmDW9IwCmVu0KcUtFDSY5oG+Cs7L3H
-	9VNoBGAgaa1KA6qj3i3DeL7M60Tvokmh4PB1nysBPXkOMOu4T7cGF+8C0++MwdA/cWrYKCZDUOj
-	QsmZ7x2T44es9lpnhM37D+UmINRfLcCJML6lyOg15p2sZyksF5cx4nKlhTGlW4UZoJACQKTtL5S
-	POFgGloCvy8XQnvnhKWYTmfKI2UArzBvr8vm71PaMNcMyPe94KLL30wG9nlmihEryBet1NaGocN
-	GiHHAHfBeSnuDGJm4EgAVgq2BPTrs5of8dXSAgs0aDc0L0J2Sh0wlN6e7Wk8uTPJy93FE8iIgwH
-	2+svSO21YSYNgRaa22mI5CObxze+yI7Mv3jtMfBBIWhUcAgOEwZVhK9QkvVBS7jLAi/j0+3eNDc
-	RqXyacYCM/5zE1TS3qBZmKUx4GW20sjSE72yBKZ+hBu5fkOxLB01sUZ6hf/rP+lZ8BmWM9PRyqv
-	7E+pw9pr4oVH0wgt/dtVbbY2R+SpvrFeKlTp8ICq8rCXz9kB4j0mVPmw9FCRCI+S/zw+d+li7+a
-	IrY=
-X-Received: by 2002:a17:90b:280e:b0:3ab:be66:ddbf with SMTP id 98e67ed59e1d1-3acef58d853mr6802869a91.54.1792437953584;
-        Mon, 19 Oct 2026 12:25:53 -0700 (PDT)
-Received: from localhost ([153.61.198.245])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3acd05c9255sm8977238a91.2.2026.10.19.12.25.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Oct 2026 12:25:52 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 Oct 2026 19:25:50 +0000
-Message-Id: <DM9282PWYQD9.21LDVIJ8824AL@gmail.com>
-Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@kernel.org>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Eduard Zingerman"
- <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Martin
- KaFai Lau" <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "Jiri Olsa" <jolsa@kernel.org>, "Emil
- Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "John Fastabend" <john.fastabend@gmail.com>, "Stanislav Fomichev"
- <sdf@fomichev.me>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Shuah Khan" <shuah@kernel.org>,
- "Kuniyuki Iwashima" <kuniyu@google.com>, "Hangbin Liu"
- <liuhangbin@gmail.com>, "Martin Karsten" <mkarsten@uwaterloo.ca>, "Masashi
- Honma" <masashi.honma@gmail.com>, <linux-kernel@vger.kernel.org>,
- <netdev@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 1/6] bpf: Add syscall common attrs support
- for link_create
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Leon Hwang" <leon.hwang@linux.dev>, <bpf@vger.kernel.org>
-In-Reply-To: <20261019153628.15912-2-leon.hwang@linux.dev>
-References: <20261019153628.15912-1-leon.hwang@linux.dev> <20261019153628.15912-2-leon.hwang@linux.dev>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HA1u57TD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 166701F000C5;
+	Mon, 19 Oct 2026 19:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792438018;
+	bh=XJxIc7IZPOWvgbXWTDNvi1oJM4oQX4nC6DFxnxfPJAM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HA1u57TDRPq6UjOED+DV69EWPkOi8yCEx96AEr5kGy2qe3RJi7Ab6Ly8iaOxkiSKH
+	 lm0zv+l+S6wwyOeA7P7+mEOR2a+g6OCYU8OpxHXYYENrilGYEj8tfaaUvFNOO5OhH4
+	 FtC4qYMVfsodyItizF+JbQ8RnMpqmMTFPaRCqT5fdejkpv5QAYs6//+K0jNARJotnK
+	 XHDDn3ZzcEdn7jsWrr8FJgBz0G7Stm9RRjT0+ylhFahPIOhIgEXmDRCB4dR75+i07r
+	 IwNQbJv0HhJtBWqGHpOE+q12tOR7icBRZSoB3WDy+RirGai4VQGHUdVtZwucKyQjBL
+	 QsY/yu1f42BzA==
+Message-ID: <sashiko-outbox-178143@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 04/11] HID: spi-hid: add spi-hid driver HID layer
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jingyuan Liang" <jingyliang@chromium.org>
+Cc: linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, dmitry.torokhov@gmail.com
+In-Reply-To: <20261019-send-upstream-v6-4-cb9ba4b3d6fa@chromium.org>
+References: <20261019-send-upstream-v6-0-cb9ba4b3d6fa@chromium.org>
+ <20261019-send-upstream-v6-4-cb9ba4b3d6fa@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Oct 2026 19:26:57 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -117,97 +59,154 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
 
-On Mon, Oct 19, 2026 at 08:36 AM Leon Hwang <leon.hwang@linux.dev> wrote:
-> +	ret = bpf_log_attr_report_size(&attr_log, 0);
-> +	if (ret)
-> +		goto put_prog;
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] HID: spi-hid: zero-length report descriptor accepted in spi_hid_=
+ll_parse()
+--
 
-can we drop bpf_log_attr_report_size() ?
-Nothing is logged when the attach succeeds, so there is no size to
-report, and libbpf zeroes attr_common, so log_true_size reads 0 anyway.
-Finalizing only when ret < 0 already keeps -EFAULT away from a live link.
-Then no need for the 2nd write, the log.c refactoring and the put_prog
-label.
+commit 9328ec8c48a0b55cf1019d845ec2c37e89f4cdbb
+Author: Jingyuan Liang <jingyliang@chromium.org>
 
-Something like this (compile tested only):
+HID: spi-hid: add spi-hid driver HID layer
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 849bc91..61d100e 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -5856,8 +5856,11 @@ err_put:
- }
+This commit adds the HID low-level driver callbacks and device creation log=
+ic
+for spi-hid, handling report descriptor fetching, buffer allocation, and
+output/feature report requests.
 
- #define BPF_LINK_CREATE_LAST_FIELD link_create.uprobe_multi.path_fd
--static int link_create(union bpf_attr *attr, bpfptr_t uattr)
-+static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_common_attr *attr_common,
-+		       bpfptr_t uattr_common, u32 size_common)
- {
-+	struct bpf_verifier_log *log;
-+	struct bpf_log_attr attr_log;
- 	struct bpf_prog *prog;
- 	int ret;
+> diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/spi=
+-hid-core.c
+> index 02a7608c4b882..fca7a44eeb9f9 100644
+> --- a/drivers/hid/spi-hid/spi-hid-core.c
+> +++ b/drivers/hid/spi-hid/spi-hid-core.c
+[ ... ]
+> @@ -84,11 +185,484 @@ static const char *spi_hid_power_mode_string(enum h=
+idspi_power_state power_state
+[ ... ]
+> +/*
+> + * This function returns the length of the report descriptor, or a negat=
+ive
+> + * error code if something went wrong.
+> + */
+> +static int spi_hid_report_descriptor_request(struct spi_hid *shid)
+> +{
+> +	struct device *dev =3D &shid->spi->dev;
+> +	struct spi_hid_output_report report =3D {
+> +		.report_type =3D REPORT_DESCRIPTOR,
+> +		.content_length =3D 0,
+> +		.content_id =3D SPI_HID_OUTPUT_REPORT_CONTENT_ID_DESC_REQUEST,
+> +		.content =3D NULL,
+> +	};
+> +	int ret;
+> +
+> +	ret =3D  spi_hid_sync_request(shid, &report);
+> +	if (ret) {
+> +		dev_err(dev,
+> +			"Expected report descriptor not received: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D shid->response_length;
+> +	if (ret !=3D shid->desc.report_descriptor_length) {
+> +		ret =3D min_t(unsigned int, ret, shid->desc.report_descriptor_length);
+> +		dev_err(dev, "Received report descriptor length doesn't match device d=
+escriptor field, using min of the two: %d\n",
+> +			ret);
+> +	}
+> +
+> +	return ret;
+> +}
+[ ... ]
+> +static int spi_hid_ll_parse(struct hid_device *hid)
+> +{
+> +	struct spi_device *spi =3D hid->driver_data;
+> +	struct spi_hid *shid =3D spi_get_drvdata(spi);
+> +	struct device *dev =3D &spi->dev;
+> +	unsigned int rsize =3D shid->desc.report_descriptor_length;
+> +	int error, len;
+> +
+> +	if (rsize > HID_MAX_DESCRIPTOR_SIZE) {
+> +		dev_err(dev,
+> +			"Report descriptor size %d is greater than HID_MAX_DESCRIPTOR_SIZE %d=
+\n",
+> +			rsize, HID_MAX_DESCRIPTOR_SIZE);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (rsize > shid->bufsize) {
+> +		error =3D spi_hid_alloc_buffers(shid, rsize);
+> +		if (error)
+> +			return error;
+> +	}
+> +
+> +	len =3D spi_hid_report_descriptor_request(shid);
+> +	if (len < 0) {
+> +		dev_err(dev, "Report descriptor request failed, %d\n", len);
+> +		return len;
+> +	}
+> +
+> +	/*
+> +	 * FIXME: below call returning 0 doesn't mean that the report descriptor
+> +	 * is good. We might be caching a crc32 of a corrupted r. d. or who
+> +	 * knows what the FW sent. Need to have a feedback loop about r. d.
+> +	 * being ok and only then cache it.
+> +	 */
+> +	error =3D hid_parse_report(hid, (u8 *)shid->response->content, len);
+> +	if (error) {
+> +		dev_err(dev, "failed parsing report: %d\n", error);
+> +		return error;
+> +	}
+> +	shid->report_descriptor_crc32 =3D crc32_le(0,
+> +						 (unsigned char const *)shid->response->content,
+> +						 len);
+> +
+> +	set_bit(SPI_HID_READY, &shid->flags);
+> +
+> +	return 0;
+> +}
 
-@@ -5867,14 +5870,24 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
- 	if (attr->link_create.attach_type == BPF_STRUCT_OPS)
- 		return bpf_struct_ops_link_create(attr);
+[Severity: Medium]
+What happens in spi_hid_ll_parse() if the report descriptor length is 0?
 
-+	log = bpf_log_attr_create_vlog(&attr_log, attr_common, uattr_common, size_common);
-+	if (IS_ERR(log))
-+		return PTR_ERR(log);
-+
- 	prog = bpf_prog_get(attr->link_create.prog_fd);
--	if (IS_ERR(prog))
--		return PTR_ERR(prog);
-+	if (IS_ERR(prog)) {
-+		bpf_log(log, "Invalid prog_fd.\n");
-+		ret = PTR_ERR(prog);
-+		prog = NULL;
-+		goto out;
-+	}
+In spi_hid_ll_parse(), rsize (shid->desc.report_descriptor_length) is check=
+ed
+against HID_MAX_DESCRIPTOR_SIZE, but not for zero. Later in the series, the
+commit "HID: spi-hid: add HID SPI protocol implementation" validates
+raw->rep_desc_len !=3D 0 in spi_hid_dev_desc_response(), but if a device re=
+turns
+a REPORT_DESCRIPTOR_RESPONSE with content_length =3D=3D 0 (shid->response_l=
+ength =3D=3D
+0), spi_hid_report_descriptor_request() computes min_t(unsigned int, 0,
+shid->desc.report_descriptor_length) and returns 0.
 
- 	ret = bpf_prog_attach_check_attach_type(prog,
- 						attr->link_create.attach_type);
--	if (ret)
-+	if (ret) {
-+		bpf_log(log, "Invalid attach_type.\n");
- 		goto out;
-+	}
+Both spi_hid_ll_parse() here and spi_hid_refresh_device() in the protocol p=
+atch
+only check if (len < 0), treating len =3D=3D 0 as success.
 
- 	switch (prog->type) {
- 	case BPF_PROG_TYPE_CGROUP_SKB:
-@@ -5953,12 +5966,19 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
- 			ret = bpf_uprobe_multi_link_attach(attr, prog);
- 		break;
- 	default:
-+		bpf_log(log, "Invalid prog type.\n");
- 		ret = -EINVAL;
- 	}
+When len =3D=3D 0 is passed to hid_parse_report():
 
- out:
--	if (ret < 0)
--		bpf_prog_put(prog);
-+	if (ret < 0) {
-+		int err = bpf_log_attr_finalize(&attr_log, log);
-+
-+		ret = err ? err : ret;
-+		if (prog)
-+			bpf_prog_put(prog);
-+	}
-+	kfree(log);
- 	return ret;
- }
+drivers/hid/hid-core.c:hid_parse_report() {
+	hid->dev_rdesc =3D kmemdup(start, size, GFP_KERNEL);
+	if (!hid->dev_rdesc)
+		return -ENOMEM;
+	hid->dev_rsize =3D size;
+	return 0;
+}
 
-@@ -6530,7 +6550,7 @@ static int __sys_bpf(enum bpf_cmd cmd, bpfptr_t uattr, unsigned int size,
- 		err = bpf_map_do_batch(&attr, uattr.user, BPF_MAP_DELETE_BATCH);
- 		break;
- 	case BPF_LINK_CREATE:
--		err = link_create(&attr, uattr);
-+		err = link_create(&attr, uattr, &attr_common, uattr_common, size_common);
- 		break;
- 	case BPF_LINK_UPDATE:
- 		err = link_update(&attr);
+kmemdup() returns ZERO_SIZE_PTR (non-NULL), so hid_parse_report() returns 0.
+spi_hid_ll_parse() then caches a CRC32 of 0 and sets SPI_HID_READY, and
+hid_add_device() sees a non-NULL hdev->dev_rdesc and calls device_add(),
+registering an unusable hid_device while bypassing SPI_HID_ERROR reset
+recovery.
 
-pw-bot: cr
+Should spi_hid_report_descriptor_request() or its callers reject a 0-length
+report descriptor (for example, checking !rsize in spi_hid_ll_parse() and
+returning -EINVAL when shid->response_length =3D=3D 0 or len <=3D 0)?
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019-send-upstr=
+eam-v6-0-cb9ba4b3d6fa@chromium.org?part=3D4
