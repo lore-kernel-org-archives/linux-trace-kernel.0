@@ -1,131 +1,228 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C53A448BAF;
-	Mon, 19 Oct 2026 03:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from mta0.migadu.com (out-217.mta0.migadu.com [91.218.175.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FE3347C6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 03:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792380781; cv=none; b=f66lftGISfsq26iOmGYyznNgdIpzRw/jothFPBwbzlOcEv6wozX8NyziHm8gfnEoTphWvzAJftYHrno5H20XbZiA6ms/ZDA4YRfXYjPOzD56Z9Efkcx0CRXYn5qTvdjkny4u09xFejnTaRahriGLK8M0f6Qp3SdnG4Fu4pdFC1Y=
+	t=1792381548; cv=none; b=YVwreHv4bWQA0WvXO3eJOW+0Xb+WHauIKz+o9QAfMM1jNg3IMkcg9CnGrPTuRlJdM/BmD81lMN4xhQnWaV+msaHoqfUdeCL+wb2c80oZd0hx5HkJvFnoV6Hv9ofgwgrBU3eW40aRl+fSsvVyh8D83I/WP3IP0QOGQXby0G9Jnyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792380781; c=relaxed/simple;
-	bh=myeZcrIK9N2UvgTiV88GF34NvItmy5XTQ1Uz3iGbQE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=K4Kwxp7pzWgs64RhYllKN4UFeFuVv295FjhCwvFh4jOvM3snvQOS21Wp6V4Yelrid5fM7WC/Bpx3HV+2xBm0u0Ksby0bpGt5E4OitguYU+zbzOA0nODeHcXwZiOpQoT9H79IAD1D/NUnHtTAD710dJRvKEDzC5Ke/8GFsTaE03I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from yuanxiaofeng$eswincomputing.com ( [10.12.96.78] ) by
- ajax-webmail-app2 (Coremail) ; Mon, 19 Oct 2026 11:32:33 +0800 (GMT+08:00)
-Date: Mon, 19 Oct 2026 11:32:33 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?6KKB5pmT5bOw?= <yuanxiaofeng@eswincomputing.com>
-To: "Masami Hiramatsu" <mhiramat@kernel.org>,
-	sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, "Paul Walmsley" <pjw@kernel.org>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>,
-	"Albert Ou" <aou@eecs.berkeley.edu>,
-	"Nam Cao" <namcao@linutronix.de>, "Alexandre Ghiti" <alex@ghiti.fr>,
-	"Naveen N Rao" <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v6 1/2] riscv: kprobes: reject probes inside LR/SC
- sequences
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <sashiko-outbox-174019@kernel.org>
-References: <20261016081706.1085-1-yuanxiaofeng@eswincomputing.com>
- <20261016081706.1085-2-yuanxiaofeng@eswincomputing.com>
- <sashiko-outbox-174019@kernel.org>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1792381548; c=relaxed/simple;
+	bh=GVmvFdM+XNAIwjgACYtP3IWMZfKPh9cvSBz2M6fBa94=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c8HzJ2kXgAW4ea/xTa9jVHw+SSJdffzhRpT9uyEO/veW6X+K5sD/i3hfrxBJzIcuYxiqxVXAlWGWY0CLqIAF9O6K8eszsl6BeH6MOaGYW1ZkK/532JG7iBP2t6rTP/JlOJ0GGgE9BUowrRD7KJzznjFU5Y1kkEHE3JcVQFeie1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZpR3aEjO; arc=none smtp.client-ip=91.218.175.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZpR3aEjO"
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=GVmvFdM+XNAIwjgACYtP3IWMZfKPh9cvSBz2M6fBa94=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792381544; v=1; x=1792986344;
+ b=ZpR3aEjOfsVXgDki7RQvm55pc+bhVSFtt9iPrfFyfF/idDY8TvsLYU2gAV8vAdX8HGJWRyFm
+ PbmAg/h7i5S7VQR8M4MWs81LU1kceXOXv2O17BKxQD5UlubU8PjLrk1AnPeg4MOt7j3wziJFtAo
+ nQZBKG6OA+SAS8Q8HW4Cg3dU=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id d6fb5d35c48fecbe;
+	Mon, 19 Oct 2026 03:45:38 +0000
+X-Mizu-Trace-ID: d6fb5d35c48fecbe
+X-Migadu-Flow: FLOW_OUT
+From: Ridong Chen <ridong.chen@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Dave Chinner <david@fromorbit.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Kairui Song <kasong@tencent.com>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org (open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)),
+	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_)),
+	Ridong Chen <ridong.chen@linux.dev>,
+	Ridong Chen <chenridong@xiaomi.com>
+Subject: [PATCH v4 0/9] mm/vmscan: move tracepoints to mm/ and add MGLRU tracepoints
+Date: Mon, 19 Oct 2026 11:44:17 +0800
+Message-Id: <20261019034426.2354049-1-ridong.chen@linux.dev>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4cd4d42d.afc2.1a15237d7d2.Coremail.yuanxiaofeng@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgAnPqFRj9VqACOHAA--.14297W
-X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAgEFE2rU9S
-	oWrAABsP
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWDJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
 
-SGkgTWFzYW1pLAoKCkkgbG9va2VkIGludG8gdGhlIGlzc3VlIFNhc2hpa28gcmVwb3J0ZWQgZm9y
-IHJpc2N2X3Byb2JlX2RlY29kZV9pbnNuKCkuClNoYXJpbmcgdGhlIGFuYWx5c2lzIGJlbG93OyB0
-aGUgc2hvcnQgdmVyc2lvbiBpcyB0aGF0IHRoaXMgcmVhZApwcmVkYXRlcyB0aGlzIHNlcmllcywg
-YW5kIEknbSBoYXBweSB0byBzZW5kIGEgc2VwYXJhdGUgcGF0Y2ggaWYgdGhlCm1haW50YWluZXJz
-IHRoaW5rIGl0IGlzIHdvcnRoIGZpeGluZy4KCgpGaXJzdCwgdGhlIGNvbnRleHQ6ICJwcm9iZV9v
-cGNvZGVfdCBpbnNuID0gKmFkZHI7IiBpcyBwcmUtZXhpc3RpbmcKY29kZS7CoCBUaGlzIHNlcmll
-cyBvbmx5IGFkZHMgdHdvIFJJU0NWX0lOU05fUkVKRUNURUQoKSBlbnRyaWVzLCB3aGljaApjb25z
-dW1lIHRoZSBhbHJlYWR5LWxvYWRlZCB2YWx1ZSBhbmQgZG8gbm90IGNoYW5nZSBob3cgbWVtb3J5
-IGlzCmFjY2Vzc2VkLgoKCk9uIHRoZSB1bmFsaWduZWQgcGFydDogd2l0aCBkZWZhdWx0IGNvbmZp
-Z3VyYXRpb25zLCBtaXNhbGlnbmVkCmFjY2Vzc2VzIGFyZSBlbXVsYXRlZCwgZWl0aGVyIGJ5IHRo
-ZSBmaXJtd2FyZSBvciBieSB0aGUga2VybmVsIGl0c2VsZgooUklTQ1ZfU0NBTEFSX01JU0FMSUdO
-RUQpLCBzbyBhbiBvb3BzIHdvdWxkIHJlcXVpcmUgYSBOT05QT1JUQUJMRQprZXJuZWwgYnVpbHQg
-d2l0aCBSSVNDVl9TTE9XL0VGRklDSUVOVF9VTkFMSUdORURfQUNDRVNTIHJ1bm5pbmcgb24KaGFy
-ZHdhcmUgdGhhdCBkb2VzIG5vdCBhY3R1YWxseSBzdXBwb3J0IHVuYWxpZ25lZCBhY2Nlc3Nlcy4K
-CgpPbiB0aGUgcGFnZS1jcm9zc2luZyBwYXJ0OiB0aGlzIG9uZSBpcyByZWFsIGluIHRoZW9yeSwg
-dGhvdWdoIHRoZQp3aW5kb3cgaXMgbmFycm93LsKgIEl0IGNhbm5vdCBoYXBwZW4gZm9yIGJ1aWx0
-LWluIGtlcm5lbCB0ZXh0ICh0aGUKbGluZWFyIG1hcHBpbmcgaXMgY29udGlndW91cykuwqAgRm9y
-IG1vZHVsZXMsIGl0IG5lZWRzIGEgY29tcHJlc3NlZAppbnN0cnVjdGlvbiBhdCB0aGUgbGFzdCB0
-d28gYnl0ZXMgb2YgYSBtb2R1bGUgdGV4dCBwYWdlIGZvbGxvd2VkIGJ5CnRoZSB2bWFsbG9jIGd1
-YXJkIHBhZ2UsIHBsdXMgYSBrcHJvYmUgcmVnaXN0ZXJlZCBleGFjdGx5IHRoZXJlLsKgIEEKMzIt
-Yml0IGluc3RydWN0aW9uIGNhbm5vdCBzaXQgYXQgdGhhdCBsb2NhdGlvbiBvbiBhIHdvcmtpbmcg
-bW9kdWxlCihpdHMgZW5jb2Rpbmcgd291bGQgY3Jvc3MgaW50byB0aGUgdW5tYXBwZWQgZ3VhcmQg
-cGFnZSwgc28gaXQgY291bGQKbmV2ZXIgYmUgZmV0Y2hlZCksIHdoaWNoIGlzIGFsc28gd2h5IHRo
-ZSB0d28tdTE2LXN0ZXAgY29weSBpbgphcmNoX3ByZXBhcmVfa3Byb2JlKCkgaXMgc2FmZS4KCgpJ
-ZiBpdCBpcyB3b3J0aCBmaXhpbmcsIHRoZSBjbGVhbmVzdCBhcHByb2FjaCBzZWVtcyB0byBiZSBw
-YXNzaW5nIHRoZQpvcGNvZGUgYnkgdmFsdWUgaW5zdGVhZCBvZiBhIHBvaW50ZXI6IGFyY2hfcHJl
-cGFyZV9rcHJvYmUoKSBhbHJlYWR5CmhvbGRzIGEgc2FmZWx5IGNvcGllZCBwLT5vcGNvZGUsIGFu
-ZCB0aGUgdXByb2JlcyBjYWxsZXIgcGFzc2VzIGEgc3RhY2sKdmFyaWFibGUsIHNvIGJvdGggY2Fs
-bCBzaXRlcyB3b3VsZCBiZSBjb3ZlcmVkLsKgIFRoZXJlIGlzIGEgdGhpcmQKc2ltaWxhciByYXcg
-cmVhZCBpbiB1cHJvYmVzLmMgKHRoZSBhdXByb2JlLT5pbnNuW10gZGVyZWZlcmVuY2UpIHRoYXQK
-Y291bGQgYmUgZm9sZGVkIGluIGFzIHdlbGwuCgoKRWl0aGVyIHdheSwgdGhpcyBkb2Vzbid0IG5l
-ZWQgdG8gYmUgaGFuZGxlZCBpbiB0aGUgc2VyaWVzOiB0aGUKdXBjb21pbmcgdjcgd2lsbCBvbmx5
-IGFkZHJlc3MgTmFtJ3MgcmV2aWV3IGNvbW1lbnRzLgoKClRoYW5rcywKWGlhb2ZlbmcKCgo+IC0t
-LS0t5Y6f5aeL6YKu5Lu2LS0tLS0KPiDlj5Hku7bkuro6IHNhc2hpa28tYm90QGtlcm5lbC5vcmcK
-PiDlj5HpgIHml7bpl7Q6MjAyNi0xMC0xNiAxNjoyOTo0MiAo5pif5pyf5LqUKQo+IOaUtuS7tuS6
-ujogIlhpYW9mZW5nIFl1YW4iIDx5dWFueGlhb2ZlbmdAZXN3aW5jb21wdXRpbmcuY29tPgo+IOaK
-hOmAgTogbGludXgtdHJhY2Uta2VybmVsQHZnZXIua2VybmVsLm9yZwo+IOS4u+mimDogUmU6IFtQ
-QVRDSCB2NiAxLzJdIHJpc2N2OiBrcHJvYmVzOiByZWplY3QgcHJvYmVzIGluc2lkZSBMUi9TQyBz
-ZXF1ZW5jZXMKPiAKPiBUaGFuayB5b3UgZm9yIHlvdXIgY29udHJpYnV0aW9uISBTYXNoaWtvIEFJ
-IHJldmlldyBmb3VuZCAxIHBvdGVudGlhbCBpc3N1ZShzKSB0byBjb25zaWRlcjoKPiAtIFtIaWdo
-XSByaXNjdjoga3Byb2JlczogdW5zYWZlIDMyLWJpdCByZWFkIGluIHJpc2N2X3Byb2JlX2RlY29k
-ZV9pbnNuIGNhbiBwYWdlIGZhdWx0Cj4gLS0KPiAKPiBjb21taXQgNmY5NDA1NzhkMmYwOTY5NzBl
-OWFiZDZjYzI4OTRkZTAwOGUyOWY2Zgo+IEF1dGhvcjogWGlhb2ZlbmcgWXVhbiA8eXVhbnhpYW9m
-ZW5nQGVzd2luY29tcHV0aW5nLmNvbT4KPiAKPiAgICAgcmlzY3Y6IGtwcm9iZXM6IHJlamVjdCBw
-cm9iZXMgaW5zaWRlIExSL1NDIHNlcXVlbmNlcwo+IAo+IFRoaXMgcGF0Y2ggcmVqZWN0cyBrcHJv
-YmVzIHBsYWNlZCBpbnNpZGUgTFIvU0Mgc2VxdWVuY2VzIG9yIG9uIHRoZSBMUi9TQwo+IGluc3Ry
-dWN0aW9ucyB0aGVtc2VsdmVzIHRvIGF2b2lkIGxpdmVsb2NrLiBJdCB1cGRhdGVzIHJpc2N2X3By
-b2JlX2RlY29kZV9pbnNuKCkKPiB0byByZWplY3QgdGhlIGluc3RydWN0aW9ucyBhbmQgYWRkcyBp
-bnN0cnVjdGlvbiB3YWxraW5nIGxvZ2ljIGluCj4gYXJjaF9jaGVja19rcHJvYmUoKSB0byByZWpl
-Y3QgYWRkcmVzc2VzIHdpdGhpbiBhIHNlcXVlbmNlLgo+IAo+IFsgLi4uIF0KPiAKPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL3Jpc2N2L2tlcm5lbC9wcm9iZXMvZGVjb2RlLWluc24uYyBiL2FyY2gvcmlz
-Y3Yva2VybmVsL3Byb2Jlcy9kZWNvZGUtaW5zbi5jCj4gPiBpbmRleCA0MzNkOTAzNWI4ODgyLi5l
-NmE4ODk0Njc3YjEwIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9yaXNjdi9rZXJuZWwvcHJvYmVzL2Rl
-Y29kZS1pbnNuLmMKPiA+ICsrKyBiL2FyY2gvcmlzY3Yva2VybmVsL3Byb2Jlcy9kZWNvZGUtaW5z
-bi5jCj4gPiBAQCAtMjMsNiArMjMsOCBAQCByaXNjdl9wcm9iZV9kZWNvZGVfaW5zbihwcm9iZV9v
-cGNvZGVfdCAqYWRkciwgc3RydWN0IGFyY2hfcHJvYmVfaW5zbiAqYXBpKQo+ID4gIAkgKi8KPiA+
-ICAJUklTQ1ZfSU5TTl9SRUpFQ1RFRChzeXN0ZW0sCQlpbnNuKTsKPiA+ICAJUklTQ1ZfSU5TTl9S
-RUpFQ1RFRChmZW5jZSwJCWluc24pOwo+ID4gKwlSSVNDVl9JTlNOX1JFSkVDVEVEKGxyLAkJCWlu
-c24pOwo+ID4gKwlSSVNDVl9JTlNOX1JFSkVDVEVEKHNjLAkJCWluc24pOwo+IAo+IFtTZXZlcml0
-eTogSGlnaF0KPiBEb2VzIGV2YWx1YXRpbmcgdGhlc2UgbWFjcm9zIHJlbHkgb24gdGhlIGluc24g
-dmFyaWFibGUsIHdoaWNoIGlzIHJlYWQKPiB1bmNvbmRpdGlvbmFsbHkgYXMgYSBuYXRpdmUgMzIt
-Yml0IGludGVnZXIgZWFybGllciBpbiB0aGUgZnVuY3Rpb24/Cj4gCj4gYXJjaC9yaXNjdi9rZXJu
-ZWwvcHJvYmVzL2RlY29kZS1pbnNuLmM6cmlzY3ZfcHJvYmVfZGVjb2RlX2luc24oKSB7Cj4gCXBy
-b2JlX29wY29kZV90IGluc24gPSAqYWRkcjsKPiAJLi4uCj4gCj4gSWYgYWRkciBpcyAyLWJ5dGUg
-YWxpZ25lZCwgd2lsbCB0aGlzIG5hdGl2ZSAzMi1iaXQgZGVyZWZlcmVuY2UgcGVyZm9ybQo+IGFu
-IHVuYWxpZ25lZCBtZW1vcnkgYWNjZXNzLCBwb3RlbnRpYWxseSBvb3BzaW5nIG9uIFJJU0MtViBo
-YXJkd2FyZSB0aGF0Cj4gbGFja3Mga2VybmVsLW1vZGUgdW5hbGlnbmVkIGFjY2VzcyBzdXBwb3J0
-Pwo+IAo+IEZ1cnRoZXJtb3JlLCBpZiBhZGRyIHBvaW50cyB0byBhIDE2LWJpdCBjb21wcmVzc2Vk
-IGluc3RydWN0aW9uIGF0IHRoZQo+IGVuZCBvZiBhIG1hcHBlZCBwYWdlIGFuZCB0aGUgbmV4dCBw
-YWdlIGlzIGFuIHVubWFwcGVkIHZtYWxsb2MgZ3VhcmQKPiBwYWdlLCBjb3VsZCB0aGlzIDMyLWJp
-dCByZWFkIGNyb3NzIHRoZSBwYWdlIGJvdW5kYXJ5IGludG8gdW5tYXBwZWQKPiBtZW1vcnk/Cj4g
-Cj4gV291bGQgdGhpcyB0cmlnZ2VyIGEga2VybmVsIHBhZ2UgZmF1bHQgYW5kIHBhbmljIHdoZW4g
-dHJhY2luZyB0b29scwo+IHJlZ2lzdGVyIGEga3Byb2JlIGF0IHN1Y2ggYW4gYWRkcmVzcz8KPiAK
-PiAtLSAKPiBTYXNoaWtvIEFJIHJldmlldyDCtyBodHRwczovL3Nhc2hpa28uZGV2LyMvcGF0Y2hz
-ZXQvMjAyNjEwMTYwODE3MDYuMTA4NS0xLXl1YW54aWFvZmVuZ0Blc3dpbmNvbXB1dGluZy5jb20/
-cGFydD0xCg==
+From: Ridong Chen <chenridong@xiaomi.com>
+
+Background
+==========
+
+MGLRU currently has no tracepoints of its own. The scan and evict paths
+reuse the classic-LRU tracepoints (trace_mm_vmscan_lru_isolate() and
+trace_mm_vmscan_lru_shrink_inactive()), which predate MGLRU and carry no
+generation, sequence or memcg context. A trace of a running system
+therefore cannot tell which memcg a given scan belongs to, how far
+reclaim has progressed through the generations, or when a new generation
+is created.
+
+While reviewing an earlier version that added two MGLRU tracepoints,
+Steven suggested moving include/trace/events/vmscan.h to
+mm/trace_vmscan.h [1], as several other subsystems already do. Once the
+header lives under mm/, struct scan_control can be moved there too,
+letting the trace events access its fields directly instead of having
+each callsite copy the scalars out by hand. This version merges the two
+efforts into one series: the restructuring first, then the two new
+tracepoints built on top of it.
+
+Implementation
+==============
+
+Part 1, restructuring (patches 1-7):
+
+  1) drop the unused vmscan trace include from memcontrol.c;
+  2) move include/trace/events/vmscan.h to mm/trace_vmscan.h, setting
+     TRACE_INCLUDE_PATH to "." and adding -I$(src) for vmscan.o;
+  3) move struct scan_control into a dedicated mm/vmscan.h with an
+     ordinary include guard, which trace_vmscan.h pulls in;
+  4-7) pass scan_control to the vmscan tracepoints and pick the fields
+     out in TP_fast_assign, one group at a time: the reclaim-begin
+     events, the LRU isolate/shrink events, mm_vmscan_reclaim_pages and
+     mm_vmscan_balance_pgdat_end.
+
+Part 2, MGLRU tracepoints (patches 8-9):
+
+  8) add mm_mglru_scan_folios on the scan path, next to the classic
+     mm_vmscan_lru_isolate, reporting the same counters plus nr_sorted
+     and the nid, memcg id, max_seq, tier and min_seq of the lruvec;
+  9) add mm_mglru_inc_max_seq on the aging path, reporting the nid,
+     memcg id, the new max_seq, the anon/file min_seq and the
+     per-generation page counts of both types.
+
+Both new events only take pointers (lruvec, sc) plus the local counters,
+and derive everything else in TP_fast_assign(), so the reclaim paths do
+no extra work when they are disabled.
+
+Effect
+======
+
+Part 1 moves the loads of the tracepoint arguments out of the reclaim
+paths and into the trace event callbacks, which only run when the event
+is enabled. On x86_64 with gcc 11.4, the callers in mm/vmscan.o shrink
+accordingly (bytes), e.g.:
+
+  isolate_lru_folios    4060 -> 3896 (-164)
+  __node_reclaim        2407 -> 2225 (-182)
+  isolate_folios        8706 -> 8577 (-129)
+  shrink_active_list    3674 -> 3549 (-125)
+  evict_folios          4858 -> 4769  (-89)
+
+There is no functional change in part 1. TP_STRUCT__entry and TP_printk
+of the existing events are untouched, so their tracefs format is
+identical. This was confirmed by diffing the tracefs format files before
+and after, and by capturing the direct/memcg/node reclaim-begin events
+under load in a QEMU guest (order, gfp_flags and memcg_id all match).
+BPF programs attached via raw_tp/tp_btf do see the new TP_PROTO and need
+to be adjusted; tracepoints are not a stable ABI (see
+Documentation/bpf/bpf_design_QA.rst).
+
+highest_zoneidx and nr_reclaimed stay separate arguments: the former is
+a balance_pgdat() parameter (sc.reclaim_idx may differ from it by the
+time the end event fires), and the latter is the return value of
+shrink_folio_list(), which does not update sc->nr_reclaimed.
+
+Part 2 makes the full aging-to-eviction window observable per memcg:
+aging advances max_seq (the leading edge), scanning consumes the oldest
+generations, and the min_seq/max_seq pair on each event shows how the
+generation window moves over time. A sample trace, with the classic-LRU
+tracepoints left enabled to show how they interleave:
+
+  mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=4 nr_scanned=1 nr_skipped=0 nr_taken=1 lru=inactive_file
+  mm_mglru_scan_folios: nid=0 memcg_id=1833 classzone=4 order=0 nr_requested=4 nr_scanned=1 nr_sorted=0 nr_skipped=0 nr_taken=1 lru=inactive_file max_seq=3 tier=3 min_seq=0
+  mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=1 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+  mm_mglru_inc_max_seq: nid=0 memcg_id=1833 max_seq=4 anon_min_seq=1 file_min_seq=1 nr_anon={0x0,0x0,0x0,0x0} nr_file={0x0,0x12,0x0,0x0}
+  mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=3 nr_scanned=3 nr_skipped=0 nr_taken=3 lru=inactive_file
+  mm_mglru_scan_folios: nid=0 memcg_id=1833 classzone=4 order=0 nr_requested=3 nr_scanned=3 nr_sorted=0 nr_skipped=0 nr_taken=3 lru=inactive_file max_seq=4 tier=3 min_seq=1
+  mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=3 nr_reclaimed=3 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+
+The mm_mglru_scan_folios lines carry the node, memcg id and the
+generation window (max_seq/min_seq) that the bare mm_vmscan_lru_isolate
+lines above them cannot - those cannot even say which memcg they came
+from. The mm_mglru_inc_max_seq line then shows a new generation being
+created (max_seq 3 -> 4) with the per-generation page counts for both
+types, and the following scan already reports the moved window
+(max_seq=4 min_seq=1).
+
+[1]: https://lore.kernel.org/linux-mm/20260916095122.50cbb620@robin/
+
+---
+Changes in v4:
+  - Merge the MGLRU tracepoint series [2] into this one, on top of the
+    restructuring, and drop the RFC tag.
+  - Patch 2: use TRACE_INCLUDE_PATH "." with CFLAGS_vmscan.o += -I$(src)
+    instead of a relative path (Steven).
+  - Patches 8-9: pass lruvec/sc and compute the fields in
+    TP_fast_assign() instead of at the call site (Steven).
+  - Patches 8-9: add nid, derived from the lruvec (Baoquan).
+  - Patch 8: group the int fields at the end of the entry to avoid
+    padding on 64-bit (Steven).
+  - Drop "mm/mglru: factor out lru_gen_seq_nr_pages()" from [2]: the
+    per-generation page count is now summed inside TP_fast_assign(), so
+    the helper has no user. The Reviewed-by tags given to [2] are not
+    carried over, as patches 8-9 changed substantially.
+  - Link to RFC v3: https://lore.kernel.org/all/20261013131309.2790253-1-ridong.chen@linux.dev/
+
+Changes in RFC v3:
+  - Use "Assisted-by: LLM" (Muchun).
+  - Note the BPF raw_tp/tp_btf impact in the changelogs (Sashiko).
+  - Changelog wording fixes and minor indentation fixes.
+  - Link to RFC v2: https://lore.kernel.org/all/20260928114625.3609130-1-ridong.chen@linux.dev/
+
+Changes in RFC v2:
+  - Convert the remaining vmscan tracepoints too.
+  - Move struct scan_control to mm/vmscan.h (Baoquan).
+
+[2]: https://lore.kernel.org/all/20260911102939.2485750-1-ridong.chen@linux.dev/
+
+Ridong Chen (9):
+  mm/memcontrol: drop unused vmscan tracepoint include
+  mm/vmscan: move vmscan tracepoints to a local header
+  mm/vmscan: move struct scan_control to a dedicated header
+  mm/vmscan: pass scan_control to the reclaim-begin tracepoints
+  mm/vmscan: pass scan_control to the LRU isolate/shrink tracepoints
+  mm/vmscan: pass scan_control to mm_vmscan_reclaim_pages
+  mm/vmscan: pass scan_control to mm_vmscan_balance_pgdat_end
+  mm/mglru: add tracepoint for scan_folios()
+  mm/mglru: add tracepoint for inc_max_seq()
+
+ MAINTAINERS                                   |   4 +
+ mm/Makefile                                   |   1 +
+ mm/memcontrol.c                               |   2 -
+ mm/shrinker.c                                 |   2 +-
+ .../events/vmscan.h => mm/trace_vmscan.h      | 193 ++++++++++++++----
+ mm/vmscan.c                                   | 140 ++-----------
+ mm/vmscan.h                                   | 118 +++++++++++
+ 7 files changed, 296 insertions(+), 164 deletions(-)
+ rename include/trace/events/vmscan.h => mm/trace_vmscan.h (76%)
+ create mode 100644 mm/vmscan.h
+
+
+base-commit: 48fe11c8d0f1e4e59426a3606f20ac1130b6d8dc
+--
+2.34.1
+
