@@ -1,73 +1,44 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873FB4E0B6C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 12:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A594ED1A5;
+	Mon, 19 Oct 2026 12:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792411437; cv=none; b=uMqWDYYcA5O8zZiTI7EdX3UiGxzWtD5pyM0IA7AAWNN6Bbt1wrxg0sVQpPxC5bwWhDhZrR6yXktGu6IU0sJLoKs4Db0ob3PUv21sen16ychs+I3UWaWRx04guiRP9MQMilMuOrVH+37mw39f5cct6Jb/FO+A034FK6+AZBXXxhE=
+	t=1792411657; cv=none; b=sQzUtcJug97FzK08S5DhVPRlFn6wmZWxpx24nutfzcrXvwblcC+IX7GLnuDQFzmfzgLaJQesuTTAyCpW0cuJZY3sfuZkdq5B0KBjgyGFaaUIKriugB1/6YTkVcipFM1TmV8R1oxFRJUugtWnKCObo3+nSN1s2BHqmujWhbYctjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792411437; c=relaxed/simple;
-	bh=MX+Iz+ShiaE8nHEd/iGh1hntzDuqO+M+7JVZ/MbnG2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tF0b/JHhMio3hCptucVcKmqHznLfnMYBZcW2Io7SAiLQ2JqBBnYipUax+MVO1YoxYgeISOYuq8eVMGRv9T4jbd2fRnQF8/tjRx6QGLFPYR73q4PHa2B6OKmNkMB+V1vZQR1xPnLb0EgJ4v4FqfVZwE28Wem3LG8dxYSG3nIr+w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxvpULg5; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792411657; c=relaxed/simple;
+	bh=0VD279vbdOS0EiyvVxP/U5jXF1MFq44rMijcaDVhVNc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FhM/jOCSh/ueGvW/xwl4hM/7xkDUPwwBiqBMPju3fKaZV2vV4KNSuTwWsD43SbEjgdSdWuipaNcehY+e4dzbs8OWACr6TCYd6DvGfhQr5oDUjy9/woiquz9opD5CH+GYvd96PGBTaEWSVteGlii97uJOWm/myiGUUJkv4Fl3Lso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jW0uv/+P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxvpULg5"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a1dede3c2cso21717025e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 05:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792411434; x=1793016234; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PWBhm50kJKv5rgN7AYPJlHAnuK3+SCL8hQ69bW0a2u8=;
-        b=mxvpULg5Iral8pImNVhKjAhNRUReYYlYOXjQCXXnCM/0A9uWqOAhNajREey1AzDWZN
-         tLmngT8F40hk2FmiamQtw/T7HARvfya95kTy+XIYbajIc6nO6bDwAcPhwb2txcNASxYA
-         xbkXmL3DYxGN3gAMjHAh2LWdlmd3ZR24S0MjDclU2iTDpvLok274czKXm+7Y3fA8PkrA
-         mwE8hSwhjlBiFqWP45kkBLvJXNX1SKZIbnHy5FPza46Hdiau4XKr93TdhSJeZCvXt9l2
-         JJfKVg2bYZceGG366EUUDaftwSiXsUgkW95rWG3GF9Qy7d1Sh7B3RCukO+PYN5BfWsga
-         ETug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792411434; x=1793016234;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PWBhm50kJKv5rgN7AYPJlHAnuK3+SCL8hQ69bW0a2u8=;
-        b=WT7d7tWQRNFMZoOV7GrTRwiQ8PXvFwTsC41OjXNqEX8U1jQuKedlWI6XPLH9+yBo5e
-         v8RSr6oYW9RhMxqKLeQqRTSJYUigGC8KpR/39R/ffcfg+uyHDo5vnEXuZqN1TRd02if7
-         WGH1Hk6+t+jDwFSxeQFTw2KqBCW9iQ95kfXuEIZ24Onjk9ynXacdTXETyFRsYuYM/HHS
-         WafPK/SoU4ryaZXySH+4y9kNNgANBaMury1/+Ul0xoEQWnTEUHj5JZ6vn6L08IWU67Tg
-         LmynuHZqNf7baQv9GSGyursZu4FjR78fs5agVW0Txr1PvhGLKmkFWCGUt1WJxIgVTlgi
-         BSbA==
-X-Forwarded-Encrypted: i=1; AKwUvBzvx2biAQCcFhqD8dJCIX5F1HEW7oVZ20N3zrAjd1r1wwlush7Z9DN+TK7/LBr5ZiF7aLN9nYtGTLGtWbOZQ1UxAQQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIMZ9FXUxNItiXzJPK55+OqpHMRZr+88RMVBttNnRQNbc6+NHKQ
-	smzu9LiiVZ6qQLc17IPH9DYbPmMrBNAlz4fB2/+TlEImwWYjFE42uUw5VVPnwNWVLmA=
-X-Gm-Gg: AYBFou2aZXwQJ9ilnIWoRC45dLFtRRqe2jW/3U8tiqAlH6mMTXKp3osySLhiqCgn4N3
-	ajotZvaFE0IBcexR9O/JIJTgu51JyW4EBZLusTRC5C53FINtyPEEO9Ch7voaY564BGUAmPLisI3
-	H2gvJdT+3xDX2p7YEjx1ye53nThq/esF0StHEzbeM9d0zUarZvqLp+8A3+GC2uNUeYxwpU7SFte
-	3/z7Y/dvWHLQmFjAgO5vH0s85PKFecbnOGol3bzAmdg8vNwpxyu005LVrc2WD399rclF8Lvwjue
-	up1JbQyob9TvnWffTBHJ0ihP7edbl0zkiJSw+X6N0iKnklm5LsSHNY/ACRqs6rMNgWxRECKEHeJ
-	32Ls0iIyYbnYe5HZ/25qbsBXZFlToWPO9sDAwi5VSlVEo+aCpsEwb+buzmisIJZNfyQU7UmIWYq
-	MhZLeQjAH6t1Ehl9BJ593ema3+lkmGpNodgwR9x0dAV9Runfwd2nxWY2s3bmloECKk6oX3KyePc
-	NcQ4YqdyprH0gehV8BFz8Q7JWx4SdUt/+WvZEJ9bZzWohEQloPSdlJ0MSXAVAMEVP8kFQ+rFHHO
-	i/0fJdEJrZ7hzPEtB9tzv0e5IivRtxwYyIJ5LOE6p9r7Od2CktfHxMANkRcbLqsto7N2ZeC4JM4
-	OHi5aZ6079HSdzwPjQlWUH8FvQUY=
-X-Received: by 2002:a05:600c:820e:b0:4a0:174:579e with SMTP id 5b1f17b1804b1-4a1d761637amr143638045e9.28.1792411433506;
-        Mon, 19 Oct 2026 05:03:53 -0700 (PDT)
-Received: from longitude (2a02-8434-fda5-4201-884a-68e2-6a4e-545c.rev.sfr.net. [2a02:8434:fda5:4201:884a:68e2:6a4e:545c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd471a35sm19555486f8f.7.2026.10.19.05.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 05:03:52 -0700 (PDT)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/bootconfig: Quote CPU masks containing comma-separated words
-Date: Mon, 19 Oct 2026 14:03:32 +0200
-Message-ID: <20261019120332.553567-1-edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jW0uv/+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2871F000C6;
+	Mon, 19 Oct 2026 12:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792411654;
+	bh=RF1BCrenhcVKcdUJCeYXXIn58WVKEsWB0QjtqkJFbPY=;
+	h=From:To:Cc:Subject:Date;
+	b=jW0uv/+P1WZ7NmnDqoeL1W5d6JLqGiqZ9qff4O2AtRpYHx86WoKa8B6/b/cW4ypPi
+	 CskWQJImUMnuy9XwYK/np6IlxHWjr3AVQINzxHILh/v3XaP0HXoVuGY7hN+QwBg4A/
+	 wUOFcDBwZgtLA/Gfu/8zVftH1F8lllmzvYrWjBh+QfN7rXiiKOWf581PGAB4XvCHY9
+	 Wp8oOnRDUHRKAWa/OM64a2YH9L0jjiDVAACfa+RYySnwDCUB47bIGJxv9UOQ+xhW7H
+	 aT1E5nkvYgMuuwkJtxkawSrs4YhtlPPvHI4p4XEIJfFELJfgS4G4u6GMjMZveuauk8
+	 Ur6wLkTQay09w==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Fengguang Wu <fengguang.wu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v2] tracing/histograms: Verify event_call identity when updating synth_event refcount
+Date: Mon, 19 Oct 2026 12:07:29 +0000
+Message-ID: <20261019120730.2342739-1-lee@kernel.org>
+X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,45 +47,118 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ftrace2bconf.sh writes the CPU mask without quotes. For a mask selecting
-CPUs 0 and 32, the output is:
+In event_hist_trigger_parse() and hist_unreg_all(), the histogram
+registration and unregistration paths look up find_synth_event() using
+trace_event_name(file->event_call) and adjust se->ref if a match is
+found.
 
-  ftrace.cpumask = 00000001,00000001
+Because find_synth_event() only compares the event basename, registering
+or removing a histogram on a non-synthetic trace event whose basename
+matches a synthetic event erroneously modifies the synthetic event's
+reference count.  If a histogram is registered on the non-synthetic
+event before the synthetic event is created and removed afterwards,
+se->ref is decremented without a matching increment, allowing the
+synthetic event to be freed while an active histogram action still holds
+a pointer to it.
 
-Bootconfig reads the two comma-separated words as separate array values.
-When bconf2ftrace.sh applies the saved settings, it writes those values
-on separate lines instead of restoring the original CPU mask.
+Introduce find_synth_event_call() to verify that &se->call matches
+file->event_call before adjusting se->ref.
 
-Quote the mask so the commas remain part of a single value.
-
-Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+Fixes: 4b147936fa50 ("tracing: Add support for 'synthetic' events")
+Cc: stable@vger.kernel.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 ---
-This is my first kernel contribution, so I'd appreciate any feedback.
+v1 -> v2:
+  - Introduce find_synth_event_call() helper instead of open-coding the
+    &se->call == file->event_call check at each call site (Steven).
 
-Tested with the exporter, bootconfig parser and generated replay commands
-using tracefs fixtures for 00000001,00000001, 0f,ffffffff and 1.
-The masks containing commas fail before the fix and pass afterwards;
-the single-word mask passes in both cases.
+ kernel/trace/trace_events_hist.c  | 11 +++--------
+ kernel/trace/trace_events_synth.c | 10 ++++++++++
+ kernel/trace/trace_synth.h        |  1 +
+ 3 files changed, 14 insertions(+), 8 deletions(-)
 
- tools/bootconfig/scripts/ftrace2bconf.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-index 8eed445c2..f8f288f90 100755
---- a/tools/bootconfig/scripts/ftrace2bconf.sh
-+++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-@@ -238,7 +238,7 @@ instance_options() { # [instance-name]
- 	fi
- 	val=`cat $INSTANCE/tracing_cpumask`
- 	if [ `echo $val | sed -e s/f//g`x != x ]; then
--		emit_kv $PREFIX.cpumask = $val
-+		emit_kv $PREFIX.cpumask = "\"$val\""
- 	fi
- 	val=`cat $INSTANCE/tracing_on`
- 	if [ "$val" = "0" ]; then
-
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 00a1d8522036..9a789f57ed95 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6792,7 +6792,6 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 	struct event_trigger_data *test, *n;
+ 	struct hist_trigger_data *hist_data;
+ 	struct synth_event *se;
+-	const char *se_name;
+ 
+ 	lockdep_assert_held(&event_mutex);
+ 
+@@ -6805,8 +6804,7 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 			list_del_rcu(&test->list);
+ 			trace_event_trigger_enable_disable(file, 0);
+ 
+-			se_name = trace_event_name(file->event_call);
+-			se = find_synth_event(se_name);
++			se = find_synth_event_call(file->event_call);
+ 			if (se)
+ 				se->ref--;
+ 
+@@ -6830,7 +6828,6 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	struct hist_trigger_data *hist_data;
+ 	char *param, *filter, *p, *start;
+ 	struct synth_event *se;
+-	const char *se_name;
+ 	bool remove;
+ 	int ret = 0;
+ 
+@@ -6924,8 +6921,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 		}
+ 
+ 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+-		se_name = trace_event_name(file->event_call);
+-		se = find_synth_event(se_name);
++		se = find_synth_event_call(file->event_call);
+ 		if (se)
+ 			se->ref--;
+ 		ret = 0;
+@@ -6960,8 +6956,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (ret)
+ 		goto out_unreg;
+ 
+-	se_name = trace_event_name(file->event_call);
+-	se = find_synth_event(se_name);
++	se = find_synth_event_call(file->event_call);
+ 	if (se)
+ 		se->ref++;
+  out:
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index dc15658a887c..e2870212e58d 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -914,6 +914,16 @@ struct synth_event *find_synth_event(const char *name)
+ 	return NULL;
+ }
+ 
++struct synth_event *find_synth_event_call(struct trace_event_call *call)
++{
++	struct synth_event *se;
++	const char *name;
++
++	name = trace_event_name(call);
++	se = find_synth_event(name);
++	return se && &se->call == call ? se : NULL;
++}
++
+ static struct trace_event_fields synth_event_fields_array[] = {
+ 	{ .type = TRACE_FUNCTION_TYPE,
+ 	  .define_fields = synth_event_define_fields },
+diff --git a/kernel/trace/trace_synth.h b/kernel/trace/trace_synth.h
+index 43f6fb6078db..d4ebf01b7049 100644
+--- a/kernel/trace/trace_synth.h
++++ b/kernel/trace/trace_synth.h
+@@ -37,5 +37,6 @@ struct synth_event {
+ };
+ 
+ extern struct synth_event *find_synth_event(const char *name);
++extern struct synth_event *find_synth_event_call(struct trace_event_call *call);
+ 
+ #endif /* __TRACE_SYNTH_H */
 -- 
-2.53.0
+2.56.0.212.g129ede20d9-goog
 
