@@ -1,57 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.123
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792437107;
-	b=kI2lrKJJOSqzm3dogtlPf9FKB5GakLBSsjLJ8ixBi7pp/ZImiG0pIVhg9wAF0pqwx3g6
-	 DOXWJdg0ZIo+BREvv18IIhgE0n8s6E6ORPaTPEkEtD6MTziQMm6qiSWcScqEFyi48RKbF
-	 mzqXP/1clbvb6EbwgH1rntXnUsG84Y2GYOTVMHDFGj7i5+r9Qna4bED+XPsQ4equXXGe3
-	 jJWVFfusY3sJcdeqa6Lr1ENwoN+7M7rA0P08V25OOfZLBY7pR8H/+oP7wM/vTSxbqz88X
-	 XiXASTU+GI1okBxwNaJUFlPHjUiYC+Uu/16K3khHSPZBu48E3klZEqrvLRYGMT88ILA==
+	t=1792437542;
+	b=41fK6Z2MztXlCfU//kGFaDUe0r5YUo8OlTyqJjUw/p4GFQ8pAH4RpgEAfrYO1DZFzAvu
+	 ptrCTTQQ8j8Eg7EAVYqDs6lVUNzXaeBEupnu6aBjqK71avbKsiTdwjfGRvV7XyU3FgEI9
+	 OAW+CcSR6z9zLQwBjVqya429nsLnyDKa/W8vmTMiW7B2rY+odaKEkBVnsMBI9xRKLDH5V
+	 55yxpfnLRPc5z+zkUNcjm3XRyxbO6HAjo4oVYg1sQjxjPLoV/0MgCyLnfnHvNdwGb+2hl
+	 wbLaF9DIIfvWEHYZ8usloBbSj8BJM2A/iH2Ip0cVbkyeIA1WkaJl6xL9vZnzENeYyhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792437107;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=RhTmWr+XXWZguh709xU8O4FXAyfq8Va3O1ZbeWOrgrc=;
-	b=JmEsZUK0FsMLKU6a0qUUU/w0xiDQRql2qb0RBNSGMB30N5S5xz7MpSzzP6Iv1TpDxn6d
-	 G10TtDOdw0nE10kKRhZuKldfUCWNxsTcJhzQG8udNNgOCTxaJVScOLNEZquikhWGQzKij
-	 vkt72wI/tLvkLitq/8VFVJ+S54yjKifE44csnN+7HWckgqsS6vSGzcwM9WudVcGc6sBkC
-	 hc6URe6NaVBe2ruSYFMjA1nQF7g027HzXG8rpnSn/kLojHrdobxzn1HVibO49LHu6duMd
-	 D4BpT9wVXu7rfOP8GAijJxgvm8YKHN0A7xFHoCMeFINGo5ykUWO+LRSeaEtu1eSOEDw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792437542;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=6N83DX9WwUZiCR3ZtEtO7doNLGg+fhf8sCF/HzTeO3s=;
+	b=rdxPtcP9JE6WgNO+tdvNzzFLSzCMAjLxQ7RP1VlnUWH0nVLlwMlge/C2hjeoMuZf0Yso
+	 yxqllPwsoIAGxP5bc/kgYV4hcqbYlfIC4OlvJfME3DXEE0SqptbzvJtNPillQESZYLqta
+	 bhlxf9UWryqgbdSgFMD4oOvygFN3NfOeK35mWStTYifDA4DzMzxJJV0S41/oZjJMaYCtN
+	 qkTi94+7CG/wEXvCahJjabTz9mTekwwsPOI4cFJ04AQreZQqqZEtvGtNe0DgK0NsS7oao
+	 5QcoywRYjExc4HLIkh5DwrG5q9D/ZQsxJG/qEW8rNZjooS3eLixa8TYXHT/oAKo/gcw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=o3H981Yh;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VvinA00w;
+	arc=none smtp.remote-ip=91.218.175.123
+Received: from mta0.migadu.com (out-123.mta0.migadu.com [91.218.175.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9922606A32F;
-	Mon, 19 Oct 2026 19:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A6606A331
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 19:19:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D57A6606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=o3H981Yh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1620B1F000C4;
-	Mon, 19 Oct 2026 19:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792437106;
-	bh=RhTmWr+XXWZguh709xU8O4FXAyfq8Va3O1ZbeWOrgrc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=o3H981YhCO5AbrpJtvC6R+k0LTpQrpsW/2KkU0zKPHz0v3d7Jjjp+j6I8K7RtG2+P
-	 iA0hESBOEuX2L2urq0uKmENNWsQOmeTnTdY3unCuDQBHnMr/7NLF/wc0EdKrwSC1/k
-	 J6hIu472K1tU78qy+/bsxgOuYt83BtQsLHDPzV0HYYi7vg0LYBjkdMHvcdwHp7y/vT
-	 LxFk1DtzpFFi++AFXq5MHciBqX7pgf8QreMaOrYdFmLTCaBCc7j68nqVN3Sqr+81NG
-	 7CuI4elnn+2L1yaBt2mbnOifSF/405VN8o2sAUjrMwyFs/oOPBjQoNV0FgUDrezY3g
-	 y08xsozmDVL/A==
-Message-ID: <sashiko-outbox-178136@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 03/11] HID: spi-hid: add transport driver skeleton
- for HID over SPI bus
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jingyuan Liang" <jingyliang@chromium.org>
-Cc: linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, dmitry.torokhov@gmail.com
-In-Reply-To: <20261019-send-upstream-v6-3-cb9ba4b3d6fa@chromium.org>
-References: <20261019-send-upstream-v6-0-cb9ba4b3d6fa@chromium.org>
- <20261019-send-upstream-v6-3-cb9ba4b3d6fa@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Oct 2026 19:11:45 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VvinA00w
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=vPWQYegsPo9BFyvK2QoSWgjiaxWxLi0QeZC8zrU5K7s=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792437538; v=1; x=1793042338;
+ b=VvinA00wvwCpJyad3+Di9pmqAAF40v74nqUI07URlq4q01lTGkgpP5OI5KoKI1LBs9/QIoDC
+ zuo8WrTDvDGcDp6BPThd577nPasRyv2Q2erTkkq1DoCExq36xtyDFAgqqwlmqiYQ1sWEQaCvOp8
+ EGX9p053av4f1VeEAA7G8Yd0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id e4a0f783e38dc997;
+	Mon, 19 Oct 2026 19:18:58 +0000
+X-Mizu-Trace-ID: e4a0f783e38dc997
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <6a8b5d26-37cc-4a8f-ab1d-0df2c2e6c2d3@linux.dev>
+Date: Tue, 20 Oct 2026 03:18:48 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,100 +57,197 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/14] rv: Add task latency over budget RV monitor
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1791745088.git.wen.yang@linux.dev>
+ <3eb0948c9ca67f64b3b311f823cd0f7628033c68.camel@redhat.com>
+Content-Language: en-US
+From: Wen Yang <wen.yang@linux.dev>
+In-Reply-To: <3eb0948c9ca67f64b3b311f823cd0f7628033c68.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] HID: spi-hid: multi-value sysfs attributes and missing ABI document=
-ation
---
 
-commit 4c66f3d16c395b79d0997b29357fb80b5a6f2708
-Author: Angela Czubak <acz@semihalf.com>
 
-HID: spi-hid: add transport driver skeleton for HID over SPI bus
+On 10/12/26 19:58, Gabriele Monaco wrote:
+> On Mon, 2026-10-12 at 03:39 +0800, wen.yang@linux.dev wrote:
+>> From: Wen Yang <wen.yang@linux.dev>
+>>
+>> This series introduces tlob (task latency over budget), a per-task
+>> hybrid automaton RV monitor that measures elapsed wall-clock time across
+>> a user-delimited code section and emits an error when the elapsed time
+>> exceeds a configurable budget.
+> 
+> Hi Wen,
+> 
+Hi Gabriele,
 
-This commit creates the spi-hid directory with its Kconfig and Makefile, and
-adds the initial core driver skeleton including basic device structures,
-sysfs attributes, and probe/remove functions.
+Thanks for the context.
 
-> diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/spi=
--hid-core.c
-> new file mode 100644
-> index 0000000000000..02a7608c4b882
-> --- /dev/null
-> +++ b/drivers/hid/spi-hid/spi-hid-core.c
-> @@ -0,0 +1,213 @@
+> there's been a conversation at the LPC conference about completely migrating RV
+> to BPF.
+> While we aren't sure of its feasibility yet, and it will take time, it's
+> something to keep in mind for new contributions.
+> 
 
-[ ... ]
+Understood, and I have been following that direction.  I spent the last
+few days reading the v2 "rv: Add support for BPF monitors" series in
+detail, so the comparison below is against that code rather than the
+general idea.
 
-> +static ssize_t bus_error_count_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct spi_hid *shid =3D dev_get_drvdata(dev);
-> +
-> +	return sysfs_emit(buf, "%u (%d)\n",
-> +			  shid->bus_error_count, shid->bus_last_error);
-> +}
-> +static DEVICE_ATTR_RO(bus_error_count);
-> +
-> +static ssize_t regulator_error_count_show(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	struct spi_hid *shid =3D dev_get_drvdata(dev);
-> +
-> +	return sysfs_emit(buf, "%u (%d)\n",
-> +			  shid->regulator_error_count,
-> +			  shid->regulator_last_error);
-> +}
-> +static DEVICE_ATTR_RO(regulator_error_count);
-> +
-> +static ssize_t device_initiated_reset_count_show(struct device *dev,
-> +						 struct device_attribute *attr,
-> +						 char *buf)
-> +{
-> +	struct spi_hid *shid =3D dev_get_drvdata(dev);
-> +
-> +	return sysfs_emit(buf, "%u\n", shid->dir_count);
-> +}
-> +static DEVICE_ATTR_RO(device_initiated_reset_count);
-> +
-> +static struct attribute *spi_hid_attrs[] =3D {
-> +	&dev_attr_bus_error_count.attr,
-> +	&dev_attr_regulator_error_count.attr,
-> +	&dev_attr_device_initiated_reset_count.attr,
-> +	NULL	/* Terminator */
-> +};
-> +
-> +static const struct attribute_group spi_hid_group =3D {
-> +	.attrs =3D spi_hid_attrs,
-> +};
-> +
-> +const struct attribute_group *spi_hid_groups[] =3D {
-> +	&spi_hid_group,
-> +	NULL
-> +};
-> +EXPORT_SYMBOL_GPL(spi_hid_groups);
 
-[Severity: Low]
-In drivers/hid/spi-hid/spi-hid-core.c, bus_error_count_show() and
-regulator_error_count_show() format both an unsigned error count and a sign=
-ed
-last error code in parentheses ("%u (%d)\n") into a single sysfs file when
-userspace reads bus_error_count or regulator_error_count via spi_hid_groups
-(which is attached to .dev_groups in the later ACPI and Device Tree support
-commits in this series).
+> First of all, would dropping RV in-kernel support negatively affect your current
+> workflow?
+>
+Yes, it would.  Some concrete points, all from the current tree.
+(a) Event ABI.  event_da_monitor / error_env_* in
+     kernel/trace/rv/rv_trace.h are plain tracepoints, so trace-cmd,
+     perf and anything else reading tracefs consume them today with no
+     extra userspace.  The BPF series delivers events through a ring
+     buffer read by the rv tool, so the two backends are not
+     interchangeable for existing consumers.
 
-Per Documentation/filesystems/sysfs.rst, sysfs attributes should export one
-value per file without custom formatting or mixing types, and new sysfs
-attributes should be documented in Documentation/ABI/.
+(b) Build and deployment.  On the images we target, BPF is often not
+     compiled in or not permitted:
+       CONFIG_BPF_SYSCALL            default n
+       CONFIG_BPF_EVENTS             needs BPF_SYSCALL
+       CONFIG_DEBUG_INFO_BTF         needed for CO-RE; depends on
+                                     !DEBUG_INFO_REDUCED and pahole
+       LOCKDOWN_BPF_READ_KERNEL      disables the probe_read helpers
+     Those are product constraints, not local build issues.  tracefs/RV
+     works in all of these configurations.
 
-Should bus_last_error and regulator_last_error be split into separate sysfs
-attributes (or moved to debugfs), and should Documentation/ABI/ entries be
-added for the attributes in spi_hid_attrs?
+     There is also a size cost: BPF implies CONFIG_DEBUG_INFO_BTF, and
+     .BTF is resident in RO_DATA and kept in the boot image - about
+     5 MB uncompressed on a full kernel, 1.2-1.6 MB compressed, plus
+     roughly 25% per module with DEBUG_INFO_BTF_MODULES.  On a
+     16-32 MB kernel partition that matters.
 
-[ ... ]
+(c) Timing semantics.  tlob arms a per-task hrtimer with
+     HRTIMER_MODE_REL_HARD.  bpf_timer is fixed to
+     HRTIMER_MODE_REL_SOFT and the verifier states "bpf_timer callbacks
+     are never sleepable" .  On PREEMPT_RT the callback runs in a 
+threaded
+     softirq, so the expiry time carries scheduler latency.
+     For a budget monitor the expiry time is the output, so this is a
+     semantic change, not just overhead.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019-send-upstr=
-eam-v6-0-cb9ba4b3d6fa@chromium.org?part=3D3
+     What a BPF tlob would look like once those exist:
+       - model: still tlob.dot, with rvgen -b extended to the hybrid
+         backend;
+       - state: one record per task in BPF_MAP_TYPE_TASK_STORAGE (or
+         the per-object hash map the series has today), holding the
+         state, the binding id and the budget;
+       - window: two uprobe programs attached to PATH:START and
+         PATH:STOP, with the binding id and budget passed through the
+         attach cookie or a small config map populated before load;
+       - expiry: a bpf_timer in the same record, armed on state
+         transitions and cancelled on STOP, submitting an error entry
+         to the monitor's ringbuf;
+       - output: the rv tool reads the ringbuf and prints it, and the
+         reactor is linked in with bpf_linker as v2 already does.
+
+     The DA engine and the ringbuf/reactor plumbing would carry over
+     unchanged.  The three missing pieces are the uprobe
+     attach/configuration path, the timer and env handling in
+     da_monitor_bpf.h, and the hybrid backend in rvgen.
+
+     None of this argues against migrating.  It argues that the BPF
+     backend has to reach parity on (a)-(c) before the in-kernel path
+     can be removed.
+
+> About this series, completely converting it to BPF isn't trivial, I can keep on
+> reviewing it and we could upstream it in-kernel, then convert it later (together
+> with the work with other HA).
+
+That is the order I would like to take.  The series is already split so
+that a later conversion only replaces the tlob-specific part:
+
+   1-5   framework fixes, independent of tlob and needed regardless:
+         - HA environment reset on monitor start (Patch 1)
+         - HA timer remainder / invariant underflow (Patch 2)
+         - HA timer still queued on storage freed via RCU (Patch 4)
+         3 and 5 are their KUnit coverage.
+   6-8   small extension points tlob needs, but generic: overridable
+         reset hook / EVENT_NONE_LBL, the per-object allocation
+         strategy, and da_extra_cleanup.
+   9-13  uprobe wrapper and tlob itself (DOT model, monitor, KUnit,
+         verification selftests).
+   14    ftracetest: find test.d/functions from a nested test
+         directory.  Generic, not tlob-specific.
+
+Could we merge the whole series now rather than staging it:
+   - 1-5 fix live bugs and should not wait for an unrelated design
+     decision;
+   - the BPF work needs the model in tlob.dot and the tracepoint fields
+     in rv_trace.h as a concrete reference now, rather than being
+     designed twice;
+   - 9-13 are self-contained - one monitor and its tests, plus no shared
+     framework beyond the small hooks in 6-8 - so accepting them does
+     not commit the framework to anything that would make the later
+     conversion harder.
+
+When the BPF backend reaches parity on (a)-(c), 9-13 are replaced
+without touching 1-8 or 14.
+
+
+> But I'd prioritise not affecting the in-kernel implementation much to keep it on
+> par with the BPF one.
+> 
+
+Agreed, and that is why 6-8 are deliberately small and generic, and why
+the monitor keeps the same model/event contract as the BPF path instead
+of growing in-kernel-only semantics.
+
+> I'd first like to focus on what should the rv userspace tool support for a
+> monitor like yours to be useful. You'd have all reporting as stdout (or any BPF
+> reactor you'd want to write), then we should probably support some way to set
+> the uprobe location and threshold before loading.
+
+Reporting already works: `rv mon -t tlob` creates a trace instance and
+prints event_tlob / error_env_tlob through ikm_event_handler() and
+ikm_error_handler(), so a BPF backend could feed the same output.
+
+The missing piece is pre-enable configuration.  Proposal:
+   rv mon tlob --uprobe PATH:START:STOP[:threshold=NS]   (repeatable)
+   rv mon tlob --list-uprobes
+   rv mon tlob --budget NS            default for bindings without one
+   rv mon tlob --summary              per-pid counts instead of transitions
+The tool would write the monitor file before enabling.  tracefs stays
+the low-level path for scripts and tests, as uprobe_events coexists
+with perf.
+
+
+> Would you really need dynamic uprobe addition?
+> 
+Minimum: bindings configured before enable.  That covers the normal
+case, including restarting the target, because a binding is per
+path+offset, not per pid.
+
+Live add/remove is what makes the code large: quiesce/reap of in-flight
+windows, the TLOB_RETIRED claim, concurrent add/remove versus handlers,
+and shadowed-binding reporting when two ranges match one task.  If you
+want the smaller interface, I will require configuration while the
+monitor is disabled and keep only the teardown needed for disable and
+unload with live tasks; uprobe_unbind_live, uprobe_disable_live and
+uprobe_multi_instance then move to the tool's restart flow.
+
+
+> What do you think?
+> 
+
+If you're OK with it, I'd suggest merging the series in-kernel now, with 
+1-8 and 14 kept as the shared infrastructure and 9-13 acting as the 
+reference implementation the BPF backend is measured against. I'd be 
+glad to help with the uprobe and timed-HA pieces on the BPF side once 
+they're on the table.
+
+
+Thanks,
+Wen
+
+
