@@ -1,107 +1,159 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DBD48AE1B;
-	Mon, 19 Oct 2026 08:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB25248E0CB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 08:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792397302; cv=none; b=Eq/+z/rvtKA7fO6qPCq6wHMHSEB5eA8J6sIubnOjikQBUiriD5S3D248691TeKj2FmXG34AhHWU+Z+EyP+N/m5cLKxNJaqYOUcalBTvcNzVPlZc9qAiFvMUs2aSqC5LRhWF7RfGDTJGCTsF25gpFiE65qfDnmYtghEvn7dZ3+rg=
+	t=1792398840; cv=none; b=Jd+KK7yqdj2ul6CWPehywF/IQpmoq0X15h8yg6/NNYHWLQKuMJofPLJjik1fNzq5aqBMSQb3VLQk3rBwbZgMTb0ITUiFw+EprzD5/E/+yZtDHDhgDRNgpFS0btgxor2fwPE/eilnfbR5DJahqHftdEpjFczd04j2P3iTudepw30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792397302; c=relaxed/simple;
-	bh=wcOXy9B3DbVtBa+EzryE8J4ZW+jO109RlIiPLk2w2xI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D78nmUmM5FNRgGyT93WwC2zeovanAB9UzD/ot9iIaxHA0cU2FnTqWiAm7Pl7wvTmMUajAAb10nMKLSdgy/yjsD15XTxeQZGjeqe9xu8EieKVRdhaQUQWQt7hQL225L4FwO10FzGJiDdfDVakxzfv2Lv9BGHYtH3kB3DgDzoDsoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FBB1cfWf; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1792398840; c=relaxed/simple;
+	bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hBYiFmZ/YzM+AwyYIcZEEYdvvdlAPHrO8r31MHLX0WJ8kU1wkxo9QmW6HOgKpmgs860AI3AyH1HafFA1ncJ5d1oRI4LVUx2GmeZ5PE3PERlDOishCdbJ3KUbBo65ObAod19lc7a+TUpm/O4df9fyipHbeZRauuNZKQZ6dAO5OZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6ROcTMh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FBB1cfWf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Yc
-	HHiKIDYNnPxeBXOqhJlZrJp4ZEWl/YWNx7btzPgfI=; b=FBB1cfWfkuCdx/EBmg
-	Q1hGBPi2JjuAvaCDAgJPRw6OmUTtcVNAsqmQpAEzJJgvY7HwvbnFkzIzXu7f59la
-	Fo1vT03ZONGaa0Gx3rbVtlSJO6F7zOwcRJMYpDtcJyzIqszTgx3izrL40hg6FJHy
-	Qh0mmlughRA/obo6AwHnHfhO4=
-Received: from colol4bi5.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD33yquz9Vqd9a9Aw--.57344S2;
-	Mon, 19 Oct 2026 16:07:11 +0800 (CST)
-From: Binbin Deng <18983559317@163.com>
-To: mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	andrii@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Binbin Deng <18983559317@163.com>
-Subject: [PATCH v1] uprobe: Assign session ID before publishing consumer
-Date: Mon, 19 Oct 2026 16:07:09 +0800
-Message-ID: <20261019080709.477548-1-18983559317@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6ROcTMh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792398837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
+	b=A6ROcTMh+jRQI2GEs4KZg3sciemHiLs7vBWu3f4YZNoGolpyTdx+q99AXJ4LG4tQSQ+fNK
+	Cjw2DXrorjjO4Z7mmuYqACg98B70dRT8InnkEDZRtOgbUtYuzS29h4YBxVep2dzsBLJogV
+	+u6A1I7JxY5HiZRvotQUZK4ODuuL/KM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-116-A_BfKjl_MnOLChCqc6eB2Q-1; Mon, 19 Oct 2026 08:33:56 +0000
+X-MC-Unique: A_BfKjl_MnOLChCqc6eB2Q-1
+X-Mimecast-MFC-AGG-ID: A_BfKjl_MnOLChCqc6eB2Q_1792398835
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a16dc2323cso16281945e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 01:33:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792398835; x=1793003635;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=TEBffiA60KpOsKvv6gRiH6uLBY9Oyjb5oBpoP4L/vm4=;
+        b=XXUIFkIcai2O9nWv2P+9oUwHy0vJvpmREFiyj3KTnEyyng3+oCzIBN92A7/mmF5bWe
+         F6NqmzLN11NSeJLotBaA23P838qJKFWEO9EvC7SRpcrWFFTiBGB7s2cYOirWP/qC3cLs
+         M5KSdmo51X9PDmi2qTlNWg0aCC+jAQ6HBlF8tPzpjjKBAoUFvrLMuPH2Z6/ENJWgOXf0
+         M6B4PhmclwqKeJCrRQXzM7bdiBuCokXq1w3uaBbB+OgZch11579+qsAknX4DGEln6W8v
+         BnFR5TYpRliXUpQ+hCNrK6Sw+bKC/ODMhgyhdba8qre/tV2me+qQi9S4yjRa6wE7SONP
+         1XRA==
+X-Forwarded-Encrypted: i=1; AKwUvBzguCd/t8f3W8CZqrHAcChXjXlKDVHEmOVYoc7bCVcERfJbwLHArZmxbKgqy7QvE9HjZONXI/RzYed4p5421xJ1sgw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJcINOak3gh05YIwEq7gQqZ6LAt51+xepdnmLquIr1VBkkPkm6u
+	sq3m3tCCQOyMWnB47FOCcUcU3n3qMGD5ssO4rQvKrySaosph/IX3om9/9IB9B4RZ6bQUpK+yyev
+	+wNyKdYSGPPonYxJtSt/ub6aIuex28nVmdUibaSCCVedLFljQdS++EZ7xN+1xDNLnX2TfFUGP4j
+	pT5fB2Ww==
+X-Gm-Gg: AYBFou3Pog8lHuBmYXlFmyJxXIXtzJliusdgAB/fn090WnfTOptvIhFI9LntVQLBsyP
+	y9QrqQpNw2yUlkAonrzxnegot1CwoFJXa5ZI4Byy6ZMJNQHQ4vtMSby4pfJbW/RcT0jYhKowv2Q
+	vWcyB5zTi/FrTe8af7LPLwTAhGH/FcOXnnX6oVRjLcT3gTIQCqkvtMBQsMa6FUhX0zPG/N4OFtn
+	0mrtPW1GgSufcdbj4ZKu/qE3Yg4yQWmnz2uvH2t/TJzso3rNGt0IbdtuhjF5x7As1cxylSx7gOB
+	Bgeli67kg1XywTntLK4v3QZIj/rDlo4iyLEnyDMNTDmmBsw+EfKxRJulMrAFpkUCxFneNxS+OF6
+	s5nhaQtfHLt6QXkAraSw6vD3K9g==
+X-Received: by 2002:a05:600c:8219:b0:4a1:85d9:13be with SMTP id 5b1f17b1804b1-4a1d76031bfmr153032125e9.20.1792398835106;
+        Mon, 19 Oct 2026 01:33:55 -0700 (PDT)
+X-Received: by 2002:a05:600c:8219:b0:4a1:85d9:13be with SMTP id 5b1f17b1804b1-4a1d76031bfmr153031635e9.20.1792398834683;
+        Mon, 19 Oct 2026 01:33:54 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd50ae5esm23907875f8f.51.2026.10.19.01.33.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 01:33:53 -0700 (PDT)
+Message-ID: <b76dfd3e5a118e30ab25910f243db1cbcedc1c00.camel@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>, Alexei Starovoitov
+	 <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
+ Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Date: Mon, 19 Oct 2026 10:33:51 +0200
+In-Reply-To: <87bj8s8ih9.fsf@jogness.linutronix.de>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+	 <20261001152042.124445-11-gmonaco@redhat.com>
+	 <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+	 <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+	 <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+	 <878q3xtptq.fsf@jogness.linutronix.de>
+	 <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+	 <87bj8s8ih9.fsf@jogness.linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD33yquz9Vqd9a9Aw--.57344S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur1xCF47Jw1fKw47ZF1fJFb_yoW8ur13pa
-	n3Jr9Iy34kJw1YvrWktrZ7X34Syw4rJF47tF90ga45ZwnxJr45Ka17Ka15ta4Dtrs5KF1U
-	tr42g3yqqFZ7ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U7b18UUUUU=
-X-CM-SenderInfo: jprymmytvvmjmrxbiqqrwthudrp/xtbC4A8vE2rVz69IhAAA3A
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Ws2H9oN7u_uOcZ3Kezi4CPCGmwztoz8LGmXXFbTS1kQ_1792398835
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-consumer_add() publishes a consumer on uprobe->consumers
-before assigning its session ID.  handler_chain() traverses the consumer
-list under the trace RCU read-side critical section and can therefore
-observe the new consumer while uc->id still contains its initial value.
+On Sat, 2026-10-17 at 17:23 +0206, John Ogness wrote:
+> On 2026-10-17, Gabriele Monaco <gmonaco@redhat.com> wrote:
+> > > I am still not clear how the rv tool will replace the existing
+> > > in-kernel implementation. Right now violations call printk(), which
+> > > conveniently show up in kernel logs and consoles. More importantly,
+> > > there are the rtapp violation events, which makes it very easy to use
+> > > ftrace and perf features to record traces, take actions, generate
+> > > statistics, and dump backtraces on violations.
+> >=20
+> > The plan is to keep everything you'd now do with perf/ftrace as plain
+> > stdout of the RV tool. Right now you can see the same ftrace output
+> > using rv mon <monitor> -t for in-kernel monitors (only deterministic
+> > automata).
+>=20
+> IMHO it would be a pity to lose support for ftrace/perf. I use these
+> tools extensively for my daily work evaluating real-time systems. Having
+> the rtapp RVmon integrated allows me to easily and naturally extend my
+> workflow to include rtapp violations. Plain stdout is hardly a
+> replacement for trace recordings that can be imported into existing
+> visualization and analysis tools.
 
-The race is reachable when an uprobe at the same inode:offset is already
-active and a task hits its entry breakpoint while another CPU registers a
-second session consumer.  handler_chain() may store the stale ID in the
-return_instance consumer array.  By the time the function returns,
-uc->id has been assigned a nonzero value, so return_consumer_find() fails
-to match the saved ID and the session ret_handler is incorrectly skipped.
+Yeah that's a good point. And the trace-printk can only improve this to som=
+e
+extent. Thought that alone can get you stack traces for free.
 
-consumer_rwsem does not close this window because handler_chain() is an RCU
-reader and does not take that rwsem.  Assign the ID before list_add_rcu()
-publishes the consumer; the release publish of the list node then orders
-the initialized ID before readers that traverse the list.
+I think no matter what we choose now, having extensible reactors allows to
+easily add new violation actions down the road, if we see it necessary.
 
-Found during a static-analysis-assisted audit: candidate sites were
-surfaced by a Coccinelle rule, and the reader/writer paths were
-confirmed by LLM-assisted (GLM-5.3) code inspection.  The issue was
-not observed at runtime; it is identified by code inspection only.
+> > We are missing stack traces (which I'd optionally add only on errors)
+> > and perhaps other events (e.g. the -e in either tool if you aren't
+> > only interested in errors/events of the monitor).
+>=20
+> I don't see the point of reinventing tools that already do the job
+> well. I do not mind if developers want to create their own tools that
+> provide some small subset of existing features. But I am concerned about
+> removing the in-kernel RV support for ftrace and perf.
 
-Fixes: 4d756095d399 ("uprobe: Add support for session consumer")
-Signed-off-by: Binbin Deng <18983559317@163.com>
----
- kernel/events/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's valid too. We'd need at least the rv tool to start/stop monitors in
+addition to ftrace/perf. Kind of what you already do now with sysfs.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 7709ea882477..83e6aef61181 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1032,8 +1032,8 @@ static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
- 	static atomic64_t id;
- 
- 	down_write(&uprobe->consumer_rwsem);
--	list_add_rcu(&uc->cons_node, &uprobe->consumers);
- 	uc->id = (__u64) atomic64_inc_return(&id);
-+	list_add_rcu(&uc->cons_node, &uprobe->consumers);
- 	up_write(&uprobe->consumer_rwsem);
- }
- 
--- 
-2.43.0
+I'm trying to keep this use-case in mind though.
+
+I assume you aren't interested in the "event" events (transitions in the mo=
+del),
+those are useful when developing models, at least in DA. And those do not
+trigger a reaction (stdout only for now).
+
+Thanks,
+Gabriele
 
