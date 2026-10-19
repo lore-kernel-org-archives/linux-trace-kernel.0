@@ -1,79 +1,101 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792423517;
+	b=i08JnTzjaj1r8S/z6Kn13TCREOAJ86yToLtYSnkIZ6V1RX0fsehW3GAaoJU/3WSDEzSe
+	 U1Ud3nHMZTS0R0xXds0yhs3izv+TF6K8LfvPpk2Bi48LUIFtpNr2V8RvT5tEWyAqLXSeq
+	 T46Bwi8E902FG+v1Bv8xAx/xWQQyizB7xddyeaLuK7zHGw21SGwC/X8J0VVu8KQ5YLNC2
+	 j9NAlOFw8Xlh4ZREBD5ii4Ze9E7ZS21acP9LZYqvsKSvsqugSUOC8kVHEITWLTTFkheoo
+	 9/VvKbWkbl9tV83pgDI1Lqb4t0W02aX/VbF8S1B0ZrarUbs5armjZdbRF7ILL58d73w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792423517;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=/plKL1aEUrkGga0cecEwRSsj4gDe/zZfGm2fHE0kYJU=;
+	b=I1ngNHpFxBo2cnnan+l+ES7AXyhkOkCGf1kfqj+4MFTXICwI0Apw604tENHdn6PZKtOz
+	 OCwwie9KuF7rdbNVU5QiVeMLi5tARZjZeuOWbk/mPvdaRHvwfM/XNZFY7sKuMAbBFpzie
+	 olfyAr7Ly0gZIIwLWe/yPQJRRTxGnqjdmIY6iV3sH1S4JKy4LFfTl8tLU8IanLnLpiwh7
+	 wT5FXul8EYORnJaT/YG048QlK+onJ90aiuzmXEfgyT8WDJ4KpABnu87+M6LYVXbmGwMjZ
+	 ivdOr8EIcKlJrWJCRSjO0KzI0y96QJt6GAWpAY6a6naIIuuVin/v6nzSopSP6S1D7RA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j0jAQLyP;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C33597F5D;
-	Mon, 19 Oct 2026 14:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792420808; cv=none; b=PmKYNkyybf4BgunQYWUbUTrdOxSD762yGT+DrcUPvsRbWVwqND8A3Z0/2ZdDKJ3vxOxWBmKUnSNckMmMK5OISXfUBMH8ZwM7dMy2bWtZcYpr8xhaw/NR0sI7xBzcz7z+P1m2YrY8hMW1YavqHULixQ07pnwfijPVxy+Xj4bAt7o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792420808; c=relaxed/simple;
-	bh=nIb72tWQZM/gVIvuxEnHHOxnOfLXr/hkpBhRlLRlsqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iuiW2FgSm/fBKavaE6UwjFDz4NHrwDH3BGk3FiGPYKw1JC8o81btabrriAQbezPMZDoa+x77n9hi+mXaTWm94UgkS2XQjIdJu4XKrPudhk/98mThI+Atow7MPXzvSu7T6ulYQamUunBzTSEIwl6iaxF9rngUva6uL6auHiKv34g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=yKS71ieX; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id B0E5D60B0982;
+	Mon, 19 Oct 2026 15:25:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="yKS71ieX"
-Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 06E88A071B;
-	Mon, 19 Oct 2026 14:40:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id E89D92000E;
-	Mon, 19 Oct 2026 14:40:01 +0000 (UTC)
-Date: Mon, 19 Oct 2026 10:39:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-Cc: mhiramat@kernel.org, shuah@kernel.org, beaub@linux.microsoft.com,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] tracing/user_events: Share state with existing
- threads
-Message-ID: <20261019103957.69759ee3@gandalf.local.home>
-In-Reply-To: <20261019142301.2084882-1-jeffbarnes@linux.microsoft.com>
-References: <20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
- <20261019142301.2084882-1-jeffbarnes@linux.microsoft.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Precedence: bulk
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j0jAQLyP
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 0A2041F000C4;
+	Mon, 19 Oct 2026 15:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792423516;
+	bh=/plKL1aEUrkGga0cecEwRSsj4gDe/zZfGm2fHE0kYJU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=j0jAQLyPBq5gkoJeVI7kZT+b03ukPiScuLVIx2xJN7it++Z07ivdy2dPsIz6gqO/E
+	 MYWvFg1Dvmoc+a4y2Usjakp7EYVDJFRaa+dBqCAvUiIZ32XapLhTR8dFCaObGtJEqd
+	 fAai08D15Udi7we9hFQ7A3B5J64htxN808WUWeVeeIjQklJoR/+IZLamakvLQP10fw
+	 F0lHJByWf0dXpwN363TOvB0dGluUJpntC/gwhY7jlSo6Lbz5KELIsiATQqdhpQUgUE
+	 3L7D++MLCgj4TeEL0V7J28RS5Nq1R+8WcydcRMdio19QFz83mZey+sd4OUzp2sHaMW
+	 QQccyiKZ+eXQw==
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Yaxiong Tian <tianyaxiong@kylinos.cn>
+Cc: rostedt@goodmis.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] ftrace: speed up module enable by binary searching module symbols
+Date: Tue, 20 Oct 2026 00:25:13 +0900
+Message-ID: <undine-1792423513137811483-832e0e20f49f84bd@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <20260916082715.320853-1-tianyaxiong@kylinos.cn>
+References: <20260916082715.320853-1-tianyaxiong@kylinos.cn>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
+List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
+List-Help: <mailto:linux-trace-kernel+help@vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
+Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: E89D92000E
-X-Stat-Signature: 8tjo8czkkxtce98zqpygfg65hak6hnha
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18l97dNhDQNr/m/gbgR4Aa1qmemmMHzTcs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TgvEG1bdMe8lKkcr4Dz3rJBRTT/4j1TEWGKmyyDzNQU=; b=yKS71ieXeJYDjSUUSyVRtUr6bZTnRYt5oirI94eZCb9PaR4EQXpRum9Nj00UPZYDXkLvvp4oL8/nCXDtaY9WWBTz1W1y3jS4io7hXw6cANo1bhev6Ec5W7KNibHWuWbiJCmBhXxdntfuUZoAfPd5eVIemk3OMNmcxSYVegklPT8=
-X-HE-Tag: 1792420801-279918
-X-HE-Meta: U2FsdGVkX1+Zl43l3YKIvN4ejUDl4dQDf8EA41H1S605DoC5Oa3QVXOnRhq6kuAxSO23FdWbkFpPVLkfsXQzRTIZ/Z7nOISU20NRLquuczR8Dg4HvP8vm9YW2y4CFIcSsYnAEUvaf0IACRsOh4n1azXsMGoOHmfcHLzkcXe7v8OlZAVfnow4zlcXuyAjqBUHMgltp2As6e//CsZRkt2kwolItLB+5Dsshccd77UwOUpT56gbfg1wOU9H71ezrfHlwUu/h9dzsPr5E31Gp1ZETJxN7aXNsU4CQSCYseku9/gaAzBPuxfw7YU72gzg+j8TQJMnfhL2qYLtLN2S9FSWEjI/7J96EaIm
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 19 Oct 2026 10:23:01 -0400
-Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+Hi,
 
-> Gentle ping on this series.
-> 
-> Please let me know if there are any further comments or changes you'd like me to make.
+On Wed, 16 Sep 2026 16:27:15 +0800, Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
 
-Hi Jeff,
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8010,11 +8011,137 @@ void ftrace_release_mod(struct module *mod)
+> +
+> +	/* mod->kallsyms is not replaced until do_init_module() returns. */
+> +	rcu_read_lock();
+> +	kallsyms = rcu_dereference(mod->kallsyms);
 
-FYI, always start a new thread when sending out a new series. Don't make it
-a reply to an old one. That makes it confusing to know which series to look
-at.
+Consider using rcu_access_pointer(mod->kallsyms) or
+rcu_dereference_raw(mod->kallsyms) rather than a transient
+rcu_read_lock()/rcu_read_unlock() pair.
 
-Also, I've was traveling between September 14th and October 10th and my
-backlog built up quite a bit.
+> +	rcu_read_unlock();
+> +
+> +	if (!kallsyms || kallsyms->num_symtab < 2)
+> [...]
+> +	 * ftrace never came up, where the loop below would not run anyway; that
+> +	 * also makes reading ftrace_disabled without the lock safe.
+> +	 */
+> +	syms = ftrace_disabled ? NULL : ftrace_mod_syms_alloc(mod);
 
-If Beau can review this series, that would be great. I'm currently putting
-together several branches for the merge window. Unfortunately, due to my
-backlog, there's patches that have been sent this month that will need to
-be postponed to the next window.
+Because ftrace_disabled is one-way flag, if you find ftrace_disabled here,
+you can return from this function soon.
 
-As user_events are agnostic to other changes, there's still a chance your
-changes can get added this window.
+Thanks,
 
--- Steve
+> +
+>  	mutex_lock(&ftrace_lock);
+>  
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
