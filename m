@@ -1,83 +1,82 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B314D98EB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 10:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541953D9529
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 10:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792406594; cv=none; b=O7raXZNSBowIMWADdYkEiWxyDi/YeN18JCDycmDJGdb/P7ZVosobCvcVTzKXymavlC2LnLTnDqQll6LQdJ5mJ2NauPx8cNvp/ONZt/U/pYe9kuMgi8YN4u/izJnz5IwpGenKgZFcbGiH+Md2u9KlzUwic/fT61hehfgu6rSaFu8=
+	t=1792406891; cv=none; b=HPL1bkkFS/ZXc2fseLT4736r9rZO+kFU3FNB/heP5HldNxpg5OCApjg/685yea99XJDzkFK9JN7gkwZ3EMES0ZxSyaKN0IGze1LSM5pMhsGnqqtb2ztAu3QDva9V6iIBTWdqm1fiJqKhnTOJfNk5PjGh6Bd+rrNGdAYzwLIV/w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792406594; c=relaxed/simple;
-	bh=uYkeqd5tBLFGk1jwj1eJ0IFGnUKsublCpH2CcRrIi/E=;
+	s=arc-20240116; t=1792406891; c=relaxed/simple;
+	bh=aZBen/HPpNzUGM60bhACqHAzMZBSSHSkr37vTjV9TWY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=raKoWJaRAKPeM/d0D2o+5cdktF54EmRCT/q7jmQMjhInTiVOLrEq4MoiYc3bZP8YhcxJC3uqQC5EjG/W2d6CMCTcBYsl5UVvFNC0+bDtwSFjfZsga6yGSX1LjpKXzfWMcmWAG7mF002bBSb7TVWS7rTGH0afN6NK3Yc3SxiacvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jSqSaF7I; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=sd0BddnW1zSdxqa5tg80HVJzCt/GMAGsCT06Q3wuy39YGuYv8oD5c4s7ZHkZtzBI8BZz9FTX2Hvo1rftKjhnIR0qzdQ4Qhgu7qBB7T1rR5txjhKNRVkF7HTYWHkXN71h9SlwvdgLsfygRoWNaFbIc2AdhkKzBoyG6WmHz1xsvnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=freVI5Ew; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jSqSaF7I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="freVI5Ew"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792406592;
+	s=mimecast20190719; t=1792406886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uYkeqd5tBLFGk1jwj1eJ0IFGnUKsublCpH2CcRrIi/E=;
-	b=jSqSaF7I6xtud/SCvsD9zC8kVyxmsDoLrlwBUSjcuF0wPEjLzGtRpPeyUkEaPruZwW5kKI
-	LyOkgziFn0sihGN5MGgvlZ6GQ8+q6INpnZe9XdHfQfKQhdP5RikaSXSt59Z2ZB5PbA8mcp
-	4eQIQZ6qI/rRDmniUzyYo5aWIMOw+H4=
+	bh=aZBen/HPpNzUGM60bhACqHAzMZBSSHSkr37vTjV9TWY=;
+	b=freVI5Ew8vIitAjHTNlKjpzdW6eSTKzQIe8MYwckEBow/mm/Gd1nbALbMWkP7x9lzCc9Ry
+	6GT1ocZ7UzHtHdE+wMUUzEfJW8dsDDWxO4Riz9iNrfYDgcGBtHpPURHOkWw9T9+y5j311P
+	rMhURe/IuyD/Bx48MHGbfY9x3TpaNEk=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-adjZrLosPsuPcdIoW18U7g-1; Mon, 19 Oct 2026 10:43:11 +0000
-X-MC-Unique: adjZrLosPsuPcdIoW18U7g-1
-X-Mimecast-MFC-AGG-ID: adjZrLosPsuPcdIoW18U7g_1792406590
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a1dec05668so11512245e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 03:43:10 -0700 (PDT)
+ us-mta-575-F33XHq6HOwWxpuXLFmqHEw-1; Mon, 19 Oct 2026 10:48:05 +0000
+X-MC-Unique: F33XHq6HOwWxpuXLFmqHEw-1
+X-Mimecast-MFC-AGG-ID: F33XHq6HOwWxpuXLFmqHEw_1792406884
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a1d1f26a63so12645485e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 03:48:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792406590; x=1793011390;
+        d=1e100.net; s=20260707; t=1792406884; x=1793011684;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=uYkeqd5tBLFGk1jwj1eJ0IFGnUKsublCpH2CcRrIi/E=;
-        b=E+I0e39KefgJNCniA65KbKTs9zRjrO3ns0n00PTpUgpqamAfDBRzCZOI+eWBtgi8+B
-         XfaPu1GqlSeD9ObWlrCxd6POpCeq95ThcyLRJYJzrd1/Z1ryXKbhwsBzIcO8y4VaH32a
-         LCOeDTRZjKpbwwQmUmA3RKK36zQKRezTW4/VH7TJDL4BF7omnX7g8lzD/PghHIZQ0QVk
-         NAccrDjhKngF/3SDHMjOZH1LAX1NNa2Vi7RDM4z5H+/0pmiccZqepXjPro/yJDlpIVyI
-         mWC9hvL0S0cl0MQ25DllmryLSlS5Y/HvgAWy3RMCwwRiKaOZzZnFGdp9Etn7oIP5F0kz
-         GYdQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxCJssoTD8O6sGrcCCRLj6ZdMxbDK6wUXpk1d9GUiIs3Uv1NBuniQpzCrnc2L41z+kGHFmPmhxh3u2Ftoq2FU1fNn0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJd0rwzsrnRYBnAuwtXozV+051ayir1eH+i1JEE45MpcBdjN1sC
-	udHTQ5X8+zBwW68a/+Q7sd0UQMlI+NoiWThcXoUn/mlfjcSJaxSyxrHPERbbOdmgvcjEKXy4VId
-	1CiCSy/nFvKFgrNxDA9YzANsW2uGyIzxjyu3+DYMUc4Y/98s0wTBLrIeudQZ645wS7XENwDcfPw
+        bh=aZBen/HPpNzUGM60bhACqHAzMZBSSHSkr37vTjV9TWY=;
+        b=FJKqvOtK2sBmWe/KVvPVUao4WNEDWtKZnCFa2eSXrvGKTWLuJP4zW4uV8ecDsKUTQs
+         MBqM6ytCVq3+kvoMaA/DZbPpPV7QavLbIhDaGW1C4WH3rfTImysB9iJCgdaDqda/3Gxs
+         FEWSpeU1l6MHVPfXJuOQ7vnJMwIahu/4enN6pW29ix/WkXwt+TjMDLBD0KhMkxrAdM1B
+         oWQ+Bsok8zG1WAA8psLd7yAVhmE4jGm62v1h8uDF40uUL8y8rvinG4yFUUv2kuxOMAq7
+         2238+62FceP/Se+oFijxSkWPofEbhdQz0DzdsaICQ/4gzkQ/tQTsen1MTm+sufOX7y4S
+         rSww==
+X-Forwarded-Encrypted: i=1; AKwUvBznQnTNaXtyanp00tjxvU1HvmjazE8YyLwUBYo4AUXNP0eL5O2Czt+euprqY+y2v2ieAYJdfLBYw05c9lsM6GaFXbE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK/l+0q0uXGhheIJLvNr38MvX8bpozwkUgobFYUc7M8Ofwjxj/o
+	J0ov7SUFrUsnkjp473fKRDcUPETQJpJ9Y9Hy5EuXTBxjhRBdD8YPmU6B4NZcYig9URVk2ggBiHy
+	EkfXwgiEHtPXJmJ55EJZhNWOcfsYeEnj8Z0bUfwM/FQXI0Wu3qY6vysh3IkRgBDlHW4FRwMME7A
 	==
-X-Gm-Gg: AYBFou2qK0DYxp6g+IvrQn5AJus/AAHN0IysqZtH9JO+e8wNGRSWspZZ3nqWmegD+sG
-	7LVhZTons3pX0jmXqfLawqccaYB3XJDHuHYYIO1w90HMIqHXHtCsPmcAV724lj/HVpB3iyOHT/h
-	Ob4Bg2KZsKfOvbIcKJL7TA9+WUwalOBB6WrxFi8OhYW/UHbrjSE7iMyYu/J8HZvN2pF+b8R1GpI
-	mikS3ETvD2VFl4cyEGAQ9kECUGV23+MdPszi7uSJAIgarHiZcnev+xvsnwDBFs4wStE9WnvcnlQ
-	Ag4QqIcPPZwELUTD7I5BOyUNCEnLiHjjIEZi5hqnSfY9axaHOqPQ05JGFAmpz/Ws0oLghVXlGbi
-	f7VBZEYnu/J+xFT3hxij261gSMA==
-X-Received: by 2002:a05:600c:8b25:b0:49f:fe39:5bc8 with SMTP id 5b1f17b1804b1-4a1d75f987dmr194763855e9.12.1792406587578;
-        Mon, 19 Oct 2026 03:43:07 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b25:b0:49f:fe39:5bc8 with SMTP id 5b1f17b1804b1-4a1d75f987dmr194763415e9.12.1792406587234;
-        Mon, 19 Oct 2026 03:43:07 -0700 (PDT)
+X-Gm-Gg: AYBFou04ycgjqxWFioFAA/ip/V62hvDf/CHaOQ/tyBymjhBMMK4eVZ/XMIbU2Ynr56R
+	UrlNtudVDeAGKUfkP97NeTqaU1Zh9fxsiaC8rcDkvuyTSf54NJ7f3Rl3NiIW/piF2y1tj45tFci
+	flhMqPNT+y/+MSuGD6CoIkiGtxJaFBFdpqEUz/y3DIrF48gUrplMvBnvK6wGcfA7GzBEVb+YgsQ
+	cCgbI6RY51hLB+2BXnL0XQEtx7HxseMhSXAEWUeCsmskmiLIfIJ3taIFSv17x9DEtynYNeAhHfk
+	M2ed94dYIYoO8plmKIFZZbKD82w9PD1ESFECrh2WBiO84QRG2Ph7IOeE8vVwXk+1x9ARXWMTL4C
+	M2OdIzhG8Jny7CMGz1ArJxE0jjQ==
+X-Received: by 2002:a05:600c:1f86:b0:4a1:93fd:8f8 with SMTP id 5b1f17b1804b1-4a1d75ab363mr162834405e9.4.1792406884483;
+        Mon, 19 Oct 2026 03:48:04 -0700 (PDT)
+X-Received: by 2002:a05:600c:1f86:b0:4a1:93fd:8f8 with SMTP id 5b1f17b1804b1-4a1d75ab363mr162834105e9.4.1792406884163;
+        Mon, 19 Oct 2026 03:48:04 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd91c55bsm314719595e9.0.2026.10.19.03.43.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd9b8b5fsm397495935e9.9.2026.10.19.03.48.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 03:43:06 -0700 (PDT)
-Message-ID: <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
+        Mon, 19 Oct 2026 03:48:03 -0700 (PDT)
+Message-ID: <d13e57e312e24b389cb366ede5b3c535ef8f7071.camel@redhat.com>
 Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: John Ogness <john.ogness@linutronix.de>, Alexei Starovoitov
+To: John Ogness <john.ogness@linutronix.de>, Alexei Starovoitov
 	 <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
-	 <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, Wen Yang
-	 <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
- Viktor Malik <vmalik@redhat.com>
-Date: Mon, 19 Oct 2026 12:43:05 +0200
-In-Reply-To: <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
+	 <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>, Tobias
+ Schaffner <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Date: Mon, 19 Oct 2026 12:48:02 +0200
+In-Reply-To: <871p9mqcn2.fsf@jogness.linutronix.de>
 References: <20261001152042.124445-1-gmonaco@redhat.com>
 	 <20261001152042.124445-11-gmonaco@redhat.com>
 	 <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
@@ -86,12 +85,8 @@ References: <20261001152042.124445-1-gmonaco@redhat.com>
 	 <878q3xtptq.fsf@jogness.linutronix.de>
 	 <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
 	 <87bj8s8ih9.fsf@jogness.linutronix.de>
-	 <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
-	 <87v770uuyr.fsf@jogness.linutronix.de>
-	 <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
-	 <87ik2zryzo.fsf@jogness.linutronix.de>
-	 <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
-	 <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
+	 <b76dfd3e5a118e30ab25910f243db1cbcedc1c00.camel@redhat.com>
+	 <871p9mqcn2.fsf@jogness.linutronix.de>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -109,51 +104,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ZegSvgPOst5Xjak1ap4_3oHDDlLkWCK4WGSWZ-qLZIM_1792406590
+X-Mimecast-MFC-PROC-ID: akqdZenJ1CMSZQipthdgVugeScASmM1aY6k1Ts-JwdU_1792406884
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> Since commit ac5a72ea5c89 ("bpf: Use dedicated bpf_trace_printk event
-> instead of trace_printk()"), bpf_trace_printk() does not use
-> trace_printk(). Rather, it is recorded as a separate ftrace event that
-> has to be enabled, in
-> /sys/kernel/tracing/events/bpf_trace/bpf_trace_printk, for each
-> instance that wants to trace it, and using it does not print any
-> warnings into dmesg.
+On Mon, 2026-10-19 at 11:16 +0206, John Ogness wrote:
+> On 2026-10-19, Gabriele Monaco <gmonaco@redhat.com> wrote:
+> > > > We are missing stack traces (which I'd optionally add only on error=
+s)
+> > > > and perhaps other events (e.g. the -e in either tool if you aren't
+> > > > only interested in errors/events of the monitor).
+> > >=20
+> > > I don't see the point of reinventing tools that already do the job
+> > > well. I do not mind if developers want to create their own tools that
+> > > provide some small subset of existing features. But I am concerned
+> > > about removing the in-kernel RV support for ftrace and perf.
+> >=20
+> > That's valid too. We'd need at least the rv tool to start/stop
+> > monitors in addition to ftrace/perf. Kind of what you already do now
+> > with sysfs.
 >=20
-> The BPF documentation says otherwise [1]:
+> I do not expect the rv tool to start/stop ftrace/perf. Nor would I
+> consider that useful. When I am using ftrace/perf, I am interested in
+> additionally related events. The rv tool can not know what what else I
+> need and I do not want the rv tool to become a wrapper for ftrace/perf.
 
-Thanks Tomas! I noticed the banner was not displayed and I was puzzled. You
-saved me an LLM iteration that would have probably be puzzled by the commen=
-t
-too..
+Yeah of course, I meant more that you need to call both tools (start the mo=
+nitor
+/and/ the tracing).
 
-> One disadvantage of using bpf_trace_printk() for RV violation
-> reporting is that the event will be caught by every instance that
-> enables bpf_trace_printk() and does not explicitly filter rv out.
+At most I'd have a -e flag in rv (just like rtla has, mirroring trace-cmd
+functionality).
+But you're right, it's best if the other tools can do that first.
 
-Yes, that should somewhat be mitigated by the glob filter, though events ar=
-e
-still generated.
+>=20
+> I would use the rv tool only to start the monitor. It would be enough if
+> the tool would report the bpf_trace:bpf_trace_printk globs that are
+> needed for the various possible violations. Then, with the monitor
+> started, I would start ftrace/perf for my own investigations (also
+> capturing any violation events).
+>=20
 
-> I can imagine an RV-specific trace event for that, however, it would
-> require a separate kfunc to generate it, and ideally also distinct
-> labeling of a BPF program eligible to call that kfunc. The "rv"
-> userspace tool could then iterate over these labels so the user knows
-> which violation events can be expected to occur on the system.
+That's an interesting idea actually.
 
-That'd work too. It's what I initially envisioned but=C2=A0I'm not sure a k=
-func
-producing a tracepoint is something BPF folks would really like (and techni=
-cally
-any other unrelated BPF program could call that, unless there's some access
-control mechanism I'm not aware of).
-
-Not sure how much it matters in practice against the glob filter, it probab=
-ly
-really depends on the other bpf_printk users (and a mildly better usability=
-).
-
+Thanks,
 Gabriele
 
