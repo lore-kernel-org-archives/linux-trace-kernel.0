@@ -1,240 +1,223 @@
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A61305E1F;
-	Mon, 19 Oct 2026 13:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+Received: from fraori-sdnproxy-3.icoremail.net (fraori-sdnproxy-3.icoremail.net [132.226.202.154])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B42374FC333;
+	Mon, 19 Oct 2026 13:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=132.226.202.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792415913; cv=none; b=XKpGr6cTWSlm9myuwrL+gKYJ8rJ0rkt4YaPISt1QFbmLH9IkJqocFAjflYXjHB+wt/r/MNrI7xlYbixEiPQFNgnFQMlbqdnzcyIPkvex+Xj1o4qLojCx2D8cBZKyjpAQyatyeORvDFxEgl418FZR7BAbkbhnyijFfemdZIf+ITE=
+	t=1792417307; cv=none; b=ie4ik1AyVPMdJU/uOilXYWjiPb3TfTTeEiKro0edFv9v0e2ANlTOsgtB/fC+1EaweUuFTtVXqVsUuCByHZqf5FHPaPl1lKtw4FZURlFAKI/gglxgwTRgJZGc83HblQ8HUQ4CgpbwmHVY+Kf83FMgG64UBVvI9qq7Nr+SF0N1ulc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792415913; c=relaxed/simple;
-	bh=tw/NIA6n/WlEM9gbRkoL6G9qlG0bYIFMcFGFohHaOpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SZL35z+CpLiuo6vCm6aly2QyiPs4uF4CT4zRUSarulMebxS9/EzQOL9u8UYaOyNWunhpfWIUelZ0Z0FgErUEZCtkcwyigPlh3fnpEAOl9Yw3Z/+NRjV/Pf2Nj50eiWQ9wqphUdXNPyviNUVaMr7gyuObr1PuSxuaFnPOxCECuLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=4TBSCuQs; arc=none smtp.client-ip=113.46.200.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="4TBSCuQs"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nsTgvIZAvLZ3AkHd7te1YwAT5vQcze+ZS3sOvyFtcIg=;
-	b=4TBSCuQs0ZdnPFMgTM9bX9OvAvFEfbIZ0LIjSwYBzm0TCIeE0rVraJFOIej4k1X7EItvC1NmR
-	DX3BwVJS/9MaAexRTXkUg/68Kdod6DsiNW4k5ZZ6iNTl5sWy1P0de+g7jr1skB7fCwujvSD5mIa
-	tukVtvADo4Ri0z5qNKiN+rE=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4j7bhR2MFBz1K96D;
-	Mon, 19 Oct 2026 21:18:15 +0800 (CST)
-Received: from whupemk100010.china.huawei.com (unknown [7.152.184.41])
-	by mail.maildlp.com (Postfix) with ESMTPS id 23C6D4057A;
-	Mon, 19 Oct 2026 21:18:18 +0800 (CST)
-Received: from [10.67.110.140] (10.67.110.140) by
- whupemk100010.china.huawei.com (7.152.184.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 19 Oct 2026 21:18:11 +0800
-Message-ID: <bfc74a80-92e9-4dcf-926e-0a2e2c33e4d5@huawei.com>
-Date: Mon, 19 Oct 2026 21:18:10 +0800
+	s=arc-20240116; t=1792417307; c=relaxed/simple;
+	bh=WnQ/KPW8Ob8xv4zIo9Auk00LbR6NK85GG9F8PPbhOIQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QgIQQrCIyl9Y+S1Trnnnk7Te9mrd0jRu25uSFsLSAA49nUtFGnTzQ60JGP/kvkaDCd5s3/4HG/k17An52OLWa5j3UbCmPCgH/iVmqLDMQgTp/SbRoehIEbF2ZPl4PKCF9Qe0mU0q/4Az6gumztt7oxn6fza03shOK7q19MkSIvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=132.226.202.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0002472LT.eswin.cn (unknown [10.100.71.120])
+	by app2 (Coremail) with SMTP id TQJkCgAHDpwBHtZqOjWHAA--.44594S4;
+	Mon, 19 Oct 2026 21:41:24 +0800 (CST)
+From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Nam Cao <namcao@linutronix.de>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+Subject: [PATCH v7 2/2] riscv: kprobes: add KUnit test for LR/SC sequence rejection
+Date: Mon, 19 Oct 2026 21:41:21 +0800
+Message-Id: <20261019134121.1763-3-yuanxiaofeng@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20261019134121.1763-1-yuanxiaofeng@eswincomputing.com>
+References: <20261019134121.1763-1-yuanxiaofeng@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 -next 09/18] landlock: Add READ_METADATA and
- WRITE_METADATA access rights
-To: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, Justin Suess
-	<utilityemal77@gmail.com>
-CC: <mic@digikod.net>, <paul@paul-moore.com>, <jmorris@namei.org>,
-	<serge@hallyn.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<eddyz87@gmail.com>, <memxor@gmail.com>, <martin.lau@linux.dev>,
-	<song@kernel.org>, <yonghong.song@linux.dev>, <jolsa@kernel.org>,
-	<emil@etsalapatis.com>, <ihor.solodrai@linux.dev>, <rdunlap@infradead.org>,
-	<gregkh@linuxfoundation.org>, <rafael@kernel.org>, <dakr@kernel.org>,
-	<johan@kernel.org>, <dlemoal@kernel.org>, <hch@lst.de>, <axboe@kernel.dk>,
-	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <jack@suse.cz>,
-	<dhowells@redhat.com>, <code@tyhicks.com>, <linkinjeon@kernel.org>,
-	<sj1557.seo@samsung.com>, <yuezhang.mo@sony.com>,
-	<hirofumi@mail.parknet.co.jp>, <cel@kernel.org>, <jlayton@kernel.org>,
-	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>, <hyc.lee@gmail.com>, <miklos@szeredi.hu>,
-	<amir73il@gmail.com>, <senozhatsky@chromium.org>,
-	<chenxiaosong@chenxiaosong.com>, <kpsingh@kernel.org>, <matt@bobrowski.net>,
-	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <john.johansen@canonical.com>,
-	<georgia.garcia@canonical.com>, <zohar@linux.ibm.com>,
-	<roberto.sassu@huawei.com>, <dmitry.kasatkin@gmail.com>,
-	<eric.snowberg@oracle.com>, <stephen.smalley.work@gmail.com>,
-	<omosnacek@gmail.com>, <casey@schaufler-ca.com>, <takedakn@nttdata.co.jp>,
-	<penguin-kernel@i-love.sakura.ne.jp>, <xiujianfeng@huawei.com>,
-	<nanx95726@gmail.com>, <djwong@kernel.org>, <lujialin4@huawei.com>,
-	<bpf@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
-	<driver-core@lists.linux.dev>, <linux-block@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <netfs@lists.linux.dev>,
-	<ecryptfs@vger.kernel.org>, <exfat@lists.linux.dev>,
-	<linux-nfs@vger.kernel.org>, <ntfs@lists.linux.dev>,
-	<linux-unionfs@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <apparmor@lists.ubuntu.com>,
-	<linux-integrity@vger.kernel.org>, <selinux@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-References: <20261015125425.3246251-1-caixinchen1@huawei.com>
- <20261015125425.3246251-10-caixinchen1@huawei.com> <atI20Vs7Du9-g1Hz@zenbox>
- <atYBVCIYE1zDb7do@google.com>
-Content-Language: en-US
-From: Cai Xinchen <caixinchen1@huawei.com>
-In-Reply-To: <atYBVCIYE1zDb7do@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- whupemk100010.china.huawei.com (7.152.184.41)
+X-CM-TRANSID:TQJkCgAHDpwBHtZqOjWHAA--.44594S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxtFyUGr4UtF1kGFyrAF1xuFg_yoW7ArW5pF
+	srGw1YyFWkJ3ZxXry3Xw1kZFySkan5Aw43WrykXr1xCr47Jr12yFnagrWUtr1DWrZYq34f
+	Zr1jq395Kr9rZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	YxBIdaVFxhVjvjDU0xZFpf9x0JUQXo7UUUUU=
+X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAQEFE2rU9LQoOwACs5
 
-Hello Günther,
+Extend the kprobes KUnit test with a function containing an LR/SC
+sequence and assert that register_kprobe() accepts a probe placed right
+before or right after the sequence, and rejects a probe placed on the
+LR, on an instruction inside the sequence, or on the SC.
 
-Yes, this seems reasonable to me, and I agree it should be a conscious
-decision: the next revision will make the *_METADATA rights follow the
-same "file descriptor as capability" semantic as *_TRUNCATE and
-*_IOCTL_DEV.
+Add a second, never-executed function that pins the 16-instruction
+tracking window: the 15th instruction after the LR (the last that can
+still be inside the loop) must be rejected, and the 16th must be
+accepted because it is either the SC (rejected during decoding) or a
+plain instruction outside the loop.
 
-Concretely:
+Signed-off-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+---
+ .../kernel/tests/kprobes/test-kprobes-asm.S   | 60 +++++++++++++++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.c | 34 +++++++++++
+ .../riscv/kernel/tests/kprobes/test-kprobes.h |  6 ++
+ 3 files changed, 100 insertions(+)
 
-- hook_file_open() will record READ_METADATA and WRITE_METADATA
-   availability at open() time, together with TRUNCATE and IOCTL_DEV;
-   both rights will join the _LANDLOCK_ACCESS_FS_OPTIONAL set, which
-   also keeps the deny-mask and quiet-audit logic consistent.
-- Metadata operations that go through a file descriptor (fstat() and
-   statx() on a descriptor, fchmod(), fchown(), futimensat() with
-   AT_EMPTY_PATH, fgetxattr(), fsetxattr(), flistxattr(),
-   fremovexattr(), POSIX ACLs set through a descriptor, the FS_IOC_*
-   flag ioctls, and file_getattr() / file_setattr() with AT_EMPTY_PATH)
-   will be authorized with the rights recorded at open() time,
-   regardless of the domain of the calling thread -- like ftruncate()
-   today.
-- Operations on paths keep being checked against the current domain.
-- The "Rights associated with file descriptors" documentation section
-   will be updated accordingly, together with a note that
-   READ_METADATA should usually be requested in lockstep with
-   READ_FILE and READ_DIR, as for WRITE_FILE and TRUNCATE.
+diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S b/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
+index 15e50934b..7924dd55a 100644
+--- a/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
++++ b/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
+@@ -100,6 +100,49 @@ test_kprobes_branch_addr8:
+ 	.option pop
+ SYM_FUNC_END(test_kprobes_branch)
+ 
++/*
++ * This function is never executed; it only provides the probe addresses
++ * in test_kprobes_lrsc_allowed_addresses[] and
++ * test_kprobes_lrsc_rejected_addresses[] for test_kprobe_lrsc().  The
++ * lr.w/sc.w use the invalid address 0(x0) and would fault if executed,
++ * so do not add this function to test_kprobes_functions[].
++ */
++SYM_FUNC_START(test_kprobes_lrsc)
++.Llrsc_before:
++	nop
++1:
++.Llrsc_lr:
++	lr.w t0, 0(x0)
++.Llrsc_inside:
++	addi t0, t0, 1
++.Llrsc_sc:
++	sc.w t0, t0, 0(x0)
++	bnez t0, 1b
++.Llrsc_after:
++	ret
++SYM_FUNC_END(test_kprobes_lrsc)
++
++/*
++ * Also never executed; it pins the 16-instruction LR/SC tracking window.
++ * The LR is followed by 13 nops.  The 15th instruction (counting the LR
++ * as the 1st) is the last one that can still be inside the loop and must
++ * be rejected.  The 16th is accepted: it is either the SC, rejected later
++ * during decoding, or a plain instruction, which cannot lie inside a
++ * 16-instruction loop because that loop's 16th instruction must be the SC.
++ */
++SYM_FUNC_START(test_kprobes_lrsc_gap)
++.Llrsc_gap_lr:
++	lr.w t0, 0(x0)
++	.rept 13
++	nop
++	.endr
++.Llrsc_gap_pos15:
++	nop
++.Llrsc_gap_pos16:
++	nop
++	ret
++SYM_FUNC_END(test_kprobes_lrsc_gap)
++
+ #ifdef CONFIG_RISCV_ISA_C
+ 
+ SYM_FUNC_START(test_kprobes_c_j)
+@@ -253,3 +296,20 @@ SYM_DATA_START(test_kprobes_functions)
+ #endif /* CONFIG_RISCV_ISA_C */
+ 	RISCV_PTR 0
+ SYM_DATA_END(test_kprobes_functions)
++
++.section .rodata
++SYM_DATA_START(test_kprobes_lrsc_allowed_addresses)
++	RISCV_PTR .Llrsc_before
++	RISCV_PTR .Llrsc_after
++	RISCV_PTR .Llrsc_gap_pos16
++	RISCV_PTR 0
++SYM_DATA_END(test_kprobes_lrsc_allowed_addresses)
++
++.section .rodata
++SYM_DATA_START(test_kprobes_lrsc_rejected_addresses)
++	RISCV_PTR .Llrsc_lr
++	RISCV_PTR .Llrsc_inside
++	RISCV_PTR .Llrsc_sc
++	RISCV_PTR .Llrsc_gap_pos15
++	RISCV_PTR 0
++SYM_DATA_END(test_kprobes_lrsc_rejected_addresses)
+diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes.c b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
+index 027424a3f..dd2fb0749 100644
+--- a/arch/riscv/kernel/tests/kprobes/test-kprobes.c
++++ b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
+@@ -43,8 +43,42 @@ static void test_kprobe_riscv(struct kunit *test)
+ 	kfree(kp);
+ }
+ 
++static void test_kprobe_lrsc(struct kunit *test)
++{
++	int i;
++
++	/* probes outside the LR/SC sequence must be accepted */
++	for (i = 0; test_kprobes_lrsc_allowed_addresses[i]; i++) {
++		struct kprobe kp = {};
++		int ret;
++
++		kp.pre_handler = kprobe_dummy_handler;
++		kp.addr = test_kprobes_lrsc_allowed_addresses[i];
++
++		ret = register_kprobe(&kp);
++		KUNIT_EXPECT_EQ(test, ret, 0);
++		if (!ret)
++			unregister_kprobe(&kp);
++	}
++
++	/* probes on or inside the LR/SC sequence must be rejected */
++	for (i = 0; test_kprobes_lrsc_rejected_addresses[i]; i++) {
++		struct kprobe kp = {};
++		int ret;
++
++		kp.pre_handler = kprobe_dummy_handler;
++		kp.addr = test_kprobes_lrsc_rejected_addresses[i];
++
++		ret = register_kprobe(&kp);
++		KUNIT_EXPECT_LT(test, ret, 0);
++		if (!ret)
++			unregister_kprobe(&kp);
++	}
++}
++
+ static struct kunit_case kprobes_testcases[] = {
+ 	KUNIT_CASE(test_kprobe_riscv),
++	KUNIT_CASE(test_kprobe_lrsc),
+ 	{}
+ };
+ 
+diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes.h b/arch/riscv/kernel/tests/kprobes/test-kprobes.h
+index 537f44aa9..93393e77a 100644
+--- a/arch/riscv/kernel/tests/kprobes/test-kprobes.h
++++ b/arch/riscv/kernel/tests/kprobes/test-kprobes.h
+@@ -19,6 +19,12 @@ extern void *test_kprobes_addresses[];
+ /* array of functions that return KPROBE_TEST_MAGIC */
+ extern long (*test_kprobes_functions[])(void);
+ 
++/* probe points that must be accepted, terminated by NULL */
++extern void *test_kprobes_lrsc_allowed_addresses[];
++
++/* probe points that must be rejected, terminated by NULL */
++extern void *test_kprobes_lrsc_rejected_addresses[];
++
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif /* TEST_KPROBES_H */
+-- 
+2.34.1
 
-On 10/19/2026 7:43 PM, Günther Noack wrote:
-> Hello!
->
-> On Fri, Oct 16, 2026 at 10:44:16AM -0400, Justin Suess wrote:
->> On Thu, Oct 15, 2026 at 08:54:15PM +0800, Cai Xinchen wrote:
->>> Add two new filesystem access rights to control file metadata access:
->>>
->>> - LANDLOCK_ACCESS_FS_READ_METADATA: Read file or directory metadata
->>>    (e.g. inode attributes, extended attributes and POSIX ACLs) through
->>>    stat(2), fstat(2), lstat(2), newfstatat(2), getxattr(2) and
->>>    friends, listxattr(2) and friends, and the POSIX ACL read
->>>    operations.
->>> - LANDLOCK_ACCESS_FS_WRITE_METADATA: Change file or directory
->>>    metadata through chmod(2) and friends, chown(2) and friends,
->>>    utimensat(2) and friends, setxattr(2) and friends, removexattr(2)
->>>    and friends, and the POSIX ACL set and remove operations.
->>>
->>> This follows the coarse-grained grouping approach discussed in the
->>> mailing list [1], where file metadata operations are grouped by
->>> security relevance rather than by individual syscall.
->>>
->>> Implement the two rights by hooking the inode_getattr,
->>> inode_file_getattr, inode_setattr, inode_file_setattr,
->>> inode_setxattr, inode_getxattr, inode_listxattr, inode_removexattr,
->>> inode_set_acl, inode_get_acl and inode_remove_acl LSM hooks, which
->>> now receive a struct path thanks to the preceding VFS and LSM
->>> refactoring.  The following system calls are now controlled:
->>>
->>> - stat(2), fstat(2), lstat(2), newfstatat(2), getxattr(2) and
->>>    friends, listxattr(2) and friends, POSIX ACL reads, and the
->>>    chattr(1)/xfs_io style reads: ioctl(FS_IOC_GETFLAGS),
->>>    ioctl(FS_IOC_FSGETXATTR) and file_getattr(2) via inode_getattr,
->>>    inode_getxattr, inode_listxattr, inode_get_acl and
->>>    inode_file_getattr (READ_METADATA)
->>> - chmod(2), fchmod(2), fchmodat(2), fchmodat2(2), chown(2), fchown(2),
->>>    lchown(2), fchownat(2), chgrp(2), utimensat(2), futimens(2),
->>>    utime(2), setxattr(2) and friends, removexattr(2) and friends,
->>>    POSIX ACL set and remove, and the chattr(1)/xfs_io style writes:
->>>    ioctl(FS_IOC_SETFLAGS), ioctl(FS_IOC_FSSETXATTR) and
->>>    file_setattr(2) via inode_setattr, inode_file_setattr,
->>>    inode_setxattr, inode_removexattr, inode_set_acl and
->>>    inode_remove_acl (WRITE_METADATA)
->>>
->>> Both new rights are added to ACCESS_FILE as they apply to both files
->>> and directories.
->>>
->>> hook_inode_setattr only restricts explicit metadata changes, i.e. it
->>> checks WRITE_METADATA only when the ia_valid mask contains
->>> ATTR_MODE, ATTR_UID, ATTR_GID, ATTR_TIMES_SET or ATTR_TOUCH.
->>> Metadata changes that the kernel performs implicitly, such as
->>> timestamp updates on write(2) or size changes on truncate(2), are
->>> therefore not restricted, and neither are chmod(2)/chown(2) calls
->>> that do not change any attribute (e.g. chown(2) with -1/-1, which is
->>> a no-op that never reaches the hook), matching the behavior of the
->>> SELinux inode_setattr hook.
->>>
->>> Stacking filesystems forward fileattr operations to underlying inodes
->>> without calling the LSM hooks again (see the preceding patch), so a
->>> fileattr operation on an overlayfs file is checked once on the
->>> user-facing merged path and is not spuriously denied because of the
->>> kernel-side creator credentials used for the forward.
->>>
->>> Kernel-internal accesses performed with override_creds() (e.g.
->>> overlayfs and cachefiles) are not affected because Landlock domains
->>> are attached to credentials, and kernel threads without a Landlock
->>> domain (e.g. nfsd and ksmbd) are not restricted either.
->>>
->>> Remove stat(2), chmod(2), chown(2), setxattr(2) and utime(2) from the
->>> list of file-related actions that cannot be restricted yet, and add
->>> the names of the new rights to _LANDLOCK_ACCESS_FS_NAMES in
->>> include/linux/landlock.h, which is shared by audit records and trace
->>> events, so that denied accesses can be reported with a human-readable
->>> name and the static assertion on fs_access_strings in
->>> security/landlock/audit.c stays valid.
->>>
->>> Increment the Landlock ABI version from 12 to 13, and update the ABI
->>> version check in tools/testing/selftests/landlock/base_test.c
->>> accordingly.
->>>
->> LANDLOCK_ACCESS_FS_*_METADATA should be checked at open time and follow
->> the mechanic for the truncate right. Otherwise the access for already
->> opened file descriptors would be changed. See hook_file_open in
->> security/landlock/fs.c and this discussion here [1]
->>
->> It should have clear documentation for this as well.
->>
->> Justin
->> [1] https://lore.kernel.org/all/20260929.Ahgoo4yeetai@digikod.net/
->
-> I agree with Justin here.
->
-> Apart from what I said in [1], Justin and Mickaël pointed out this
-> other aspect in which it is similar to *_TRUNCATE, in [2] and [3]:
-> System calls like fstat(2) operate on an already-opened file
-> descriptor, and the semantic that Landlock has so far been following
-> for these is that the effective access rights for that file descriptor
-> would be determined at the time of open(2) and stored in the opened
-> struct file, just as it has been done for the *_TRUNCATE and
-> *_IOCTL_DEV access rights in the hook_file_open() call which Justin
-> points to above.
->
-> That way, an already opened file acts as a handle for a "capability"
-> (in the more general sense of the word), and the things you can do
-> with that opened file don't change as the process enforces nested
-> Landlock domains.
->
-> Landlock's documentation describes this in
-> https://docs.kernel.org/userspace-api/landlock.html#rights-associated-with-file-descriptors
->
-> It feels that this would be in order for the *_METADATA rights as
-> well?  Does this seem reasonable to you?
->
-> (If you have arguments against that, I'm also more than happy to
-> discuss, but we should make a conscious decision. :-))
->
-> —Günther
->
-> [1] https://lore.kernel.org/all/arurOphe6QIx2Zr8@google.com/
-> [2] https://lore.kernel.org/all/arvjb0HJYh1KyEBB@suesslenovo/
-> [3] https://lore.kernel.org/all/20260929.Ahgoo4yeetai@digikod.net/
