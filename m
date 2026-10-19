@@ -1,100 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.169
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792436172;
-	b=NatoMqfB6J38nTCRe8Hjj2fihgAmLn/Sfb7JVmZ7vCb657ly7Avu7lPMohVkjJPqAD7D
-	 J5PF3MS9NhUC76Iz5v6QmajByxGCdY9JX4XLwVca3DA8f0Vi7MV4Ex3XJMd976fj+Mz1b
-	 cPTTgS5P/72JX9ID6bNK1s/+ddt4ZGyAezAQgLqMQPOUxGSiEvPVBKowzJqii4XTq/Sik
-	 vz/wRfPpGTyoK2nws/WEE+aC7RnkAh4YjBkM/SVMITi2xkaKl5cXkO7q/SuB9fjP+eHvi
-	 ibVy/uEkYhbWtCZA5E24my1PhBMz+RpnsMjDDZGL9XN2mri5KFrZk2AUaAQkCA35LpA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792436172;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.175
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792436491;
+	b=qW+eO3dE6+NYxPsTTQ+CFj+Xkbp3MxtFRVZ561URmsTu2jABR9Gp7+XBaNh5ZHgpZGlF
+	 Ne2Y62kNOilPB1wBXJJzh/uJDhdhRos2F9a1ARzvgmDG6ivBFLAIz8Z+RQI65M8Bq+yGg
+	 cybJ9gcfG2mXvUaBZHc8W3l8DjHDxwLFFEKkCXsXq3BJMWwW3rmXyR2nUDM0TTusrZRTZ
+	 OSW0mhOqYieScV64+gKjglKqMx1qstowJhG1ZlEn4fvTOATjxE4UxA6MlN9T4BlS1mJae
+	 mhlWzyPpchLGQJ0otHwhuZjd89fDdHU7m+MWy31GH+kL+hfaUa+fuTV51eYtqWMuqAw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792436491;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=YweAkpYKyGj3scLTRzUA6IGAh/m/fJWQQXcdDA+kHZI=;
-	b=stabG/rkTuYNwa3tGYa3fJVVlZxOmx1FwCImU0Bo84PCxo4etEtIE41FVgf5IXmCRD0r
-	 Dsaf52uPxUHcHY+W4qg5sJvcrGC6AIfbXxGc7ywVLxoLPb9gkNfmFCKFddX784dx+0TvA
-	 4xzeOo2nWOloZyM5IBIsIOtvPryy7+B06NpW4+TwT+HotwUl6bYpzXhT3d3XY9PlYqZ8Y
-	 hSRTN12si+EWP83oClh+qIbrPW3cC7a2kKPfVbA6V0u/+mfhmbR1ZvkvbEmTCaKsPMbpJ
-	 DX+Ra84BHN+ykHJ44ER94FFkHyr86fINVibSoDUn0l59feCikXvePn6hKw3adpURIDQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=oDMD6X2E;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.169
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key;
+	bh=NlRWSTOFbePBOR+ZW461CZ2nj2CGvQoMjpOv8gpMfng=;
+	b=O9YRTrAL073/7UeoldLkg4E6MVNq5GAtzRlvcEw6dWpmr+yfjOYsBa48P4OaaTqg+l6v
+	 Nw9wYPuJ7fgp5W8YnLozMnVRIlKQyBNyQsCHVG85OtNr/uNs6HW8xDS61zprKNlJTroO6
+	 AYodQw/eIi4ACtg4pU20BdDc6nX++AYwVf0/TASaa/VRs4I9bVNKR2sTdx97NOOy14kth
+	 rXYkfhFHI/0tMDIGomcpR1X2ByKUxa9FIAkQ3inl/PWMCFWdPKom28MGCN4M0MnKqC4HV
+	 6AAPzVdvXX+COFZYgpU4xWgrhm/C9mHd5glzHt5a2T25UhcK5pXe5EGW24eWUkH/yhQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=chromium.org;
+	spf=pass smtp.mailfrom=chromium.org;
+	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=ZEvpwaca;
+	arc=none smtp.remote-ip=209.85.214.175
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB6D606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 18:56:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EB6D606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA4A606A326
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 19:01:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FA4A606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=oDMD6X2E
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2e9f6a16afcso9835ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 11:56:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792436171; cv=none;
-        d=google.com; s=arc-20260327;
-        b=JwbJzmnbsul0VtPbLWzBqLHGg2HNptP3S6kuYWqHttlxTBbFSW26/udiGmoEmzjeSd
-         6tkoF5wsRnat87i71Z9U7V28nMN002KTQ+rb33rHeSypURh1kY5uRg2kO3swuKNoDrAN
-         FSU7AUxQayHOkUxntfCKFQALiZO1NzOD+DD6+vAupFuqNTenmbKH0YzPeAvVCRZFM7YE
-         +JzKLiElVdyvzEhdtTv/UPu0pGJE8Fx+Gp9RzELS06DhezILf2NMgxxC/lSyWYw5fINP
-         aD3ynMVemIASWH3Gq+zMfvSagTcrqJNYkk4Qihjxi0FA9yK8ICGF1UQUR4072gO6Ct+V
-         qMVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=YweAkpYKyGj3scLTRzUA6IGAh/m/fJWQQXcdDA+kHZI=;
-        fh=xLzgsYYURTCU0+MvPJUFotjf/ms1QZ7C0YT+R2zZ/CE=;
-        b=XMt6EzIQgnAAYgUgqOijDazhSC2hmFSf5S7Oatgg1YVOpfAXhEb6jdbhwqjuS8h3KW
-         QUdC3US8CPDrjiDVjYuafrjPBYK8YtIs13efj7M54yoBEKhJvNeJlZai6uZdyrQ0Fqgc
-         i1B7AKkg1D29buUwgFRg38E5seo+MHYGkkHoDI9M+NutHG6ZrA/rTQv/tEUTmBlTxH62
-         9WJlv8ipyEHTLxKX1NceJ3zjSL7EuXvBlQG6M9UGFyQXVjsWl+gYRN2eRvcPH8CYkHsW
-         2bpiyio7xArtTNE3D/MyDGs9JjD2+oyF0txKykKuH4UnhqRSo5QnW1NRUfFmwgAnLEM9
-         ZaNA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key, unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=ZEvpwaca
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2e8f2c3ad6bso13313085ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 12:01:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792436171; x=1793040971; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=YweAkpYKyGj3scLTRzUA6IGAh/m/fJWQQXcdDA+kHZI=;
-        b=oDMD6X2Eh4w3FF8FEe47ZcJa+Qt0V3MyeqweKl16cI1EEoBLMhYXZPP21MLDprf/hd
-         LZ6sDd5RawtsMHDi0yrbLzK6zKod14lmEU8fEs9x/0Mltbw6nR9EkOlq05zMCsuUxD39
-         c1Y5fKSxu/5LJKvM5LFLvGe0n531IHMtbOu2qGpfAq715K0cIwNio9FsN4N4h059Ql43
-         7OL2hfH1L5TQK/lNP0YqSkqODA8N9z/7mGCHE4IWhDqrZ5NwlJultZSYyTNeGdLRi+uu
-         jpmbk2sscX2AjFItDLw2Lhyxq3lcDWWxTvEAcqnQhrDY38rCVku38OcJOWp8CRWh0Xj8
-         fyYQ==
+        d=chromium.org; s=google; t=1792436490; x=1793041290; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=NlRWSTOFbePBOR+ZW461CZ2nj2CGvQoMjpOv8gpMfng=;
+        b=ZEvpwacarzzImH6V6uOJTzbL8stPTETvmYc17X7c96whAtVQTM+Ndsw4UT0JGwmD+I
+         BKmRrsuT6++2dsgO3bXm5ZuurZ21ZFUlWCPMc3B7m+FXydpVtnxL6hsXeexpZE1Av4L+
+         0CoKGxEzPf1ZzmmWfMOYbNLnW7pyHFfz0mkPE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792436171; x=1793040971;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=YweAkpYKyGj3scLTRzUA6IGAh/m/fJWQQXcdDA+kHZI=;
-        b=QxKBf9IotUXkYZ9sVz6FGKn+E9M+YwXkpO5LTfLK6jGfJpH/Iod3iSpCw48OjE2owO
-         AEW6nxdsk8wJtkyC30H3YOahiBLSC+x1JFQbaia0fg2ce1gQnyNjNsyOoMH1xQE7IY4y
-         4ieHRXLasFLhMZYsnxHrsSLddIVI6T0/ABJTmhAXRc8gHyCVApnZHZ/XmCvuNacH5Dby
-         P7RA02lcAW3VcCYEgkjYcEjkMi52lPE8rj/kG+diK+uwJb9MskE/cA31MKvdB7yxZ6K9
-         Q31olkjmXGzkEPqZWjmRYuFVfLrAYAQujS9nzest2VTcW7tIX6gR8o6axiuJXXXI5Xsb
-         6thg==
-X-Forwarded-Encrypted: i=1; AKwUvBy0vDedjb95LDZpNs/7FGWAJk6cmsARvQ+avNGVOZaEA3+B/tYsp75ghGHIJBUkcvMeeP4MzcT2vHe/KRSgj3sL37I=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIZIa5uvrkfC+tt840rQci43JU/6t/aDCTCDbl4yjDq/u+oDkDw
-	9uI4uzYt5X1M6XCgF740iKqB7kbWDQk8LDNidRvkTdYuNqtcr4abKmNF9DTZRNqOIRb3h9bPmcv
-	FyryN4/vKIKnhTY/1JHlACJ+8PFzaZUSWHsCSnbQW
-X-Gm-Gg: AYBFou1h1ZX4gOg0DhGGSHsWEh274kuHfkbg/21DGlibthqQ7V4kxXIxeTzgle3uHkX
-	jITqd8Io8wyLBlfB5jm0K8f2zkWHgK2uZsQut+OWjFh12xttoWkKYuW+rnCSuKTEBQnEvHRugzE
-	u0tQCYbQfLlB9CfrfYRM9z7HihY5cHhTMMSp1xzGjLduvHMLG5hU1nCFDRIFtqOKiCTndUOOPP4
-	+hzSyvsZQAapuP6rLzJT8lZNvi4qLCrbq6/PwCY/P5yeOfeZ37+DIU9Po2AyA/rQ/40AXo90WoV
-	//pDnYyv7XcuAtpep6LjW7urX9q6QCTFSW37YCIytWDVOTJx8AOmuK2RQyS+UiQK+bPfCpafHvl
-	lHSPDVmFMlQ==
-X-Received: by 2002:a17:903:f8c:b0:2e6:23e5:4934 with SMTP id
- d9443c01a7336-2e9b3302552mr10210825ad.14.1792436170142; Mon, 19 Oct 2026
- 11:56:10 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792436490; x=1793041290;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=NlRWSTOFbePBOR+ZW461CZ2nj2CGvQoMjpOv8gpMfng=;
+        b=aeyP5LmSTMhCwOq14i2xOS3b8tI9P4wCvhOk0ndXT01j4znRT2K1ITbJ56iBl28NaO
+         Hq4pVakHWa+7Mi9pBrSFG7csJSZguvcDo0Cf9tUszysvyrDCRqiwg+mSl3cbx94VJtM3
+         SrLgLt0UyZQuztuXoeE+kvr6JKVCJIRGvybX/LT94x94m5I2yb/Ntx5oiVfzv6cX5Pfj
+         7n64Uk+57+24dcGd99joSx7MJdW7UoIfBx9LdME4MngyucyVRPMVcEjwHv+2Drovu1M3
+         5EybITOgI/Q8Ek9/KM4ECkbUYo1pcrHhLD/dEG/3kwsD63mThxrfUK+SWMcq8zT1QJlH
+         gbrw==
+X-Forwarded-Encrypted: i=1; AKwUvBybPabo0OyDGbbO4PuG59mRs1xV9tEOj2mZ/TsCO9rlUu3DjHkqB2M2cJOv8wfnf+QdGqQSsnl2DauvX/hebisOue8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLp3fP32GiZZIAcdjP29mcFGfBIjt5hfHWl9rWVoebRun/wB+lN
+	dfnyJTfOoey3uCYBtgh55D+5gqcxynlOBiDzdDNRGX0UdrlFPddS2XbMCjgdkEKn8w==
+X-Gm-Gg: AYBFou15JGcLfxXs04RM87Qi3SMlioT5Xpuj5iSbJTOBIXvlXwcZSCWw6XjUPth7mGb
+	7qcLV+/TCm5OV/2j5Yeby8iOHZc3RFH31zJcI6ZKt80ojXO0k+bFwgaaNzf0bibhdy8JcPpPppr
+	hKjuRAfOkW89YYfXZsmrtWOgquddzpw0IyYdTQ29m6sKD8Ii/XNQSeu9Et+26SgN7LEHQdQhJBL
+	nkFUAL8rFbNFVCciKx8UQtXJxcwvolLfJXcVTnO3C7exp03Mf2hUCH7jtgG8ZWCuqIELmzp5lCv
+	6gMMv3N+Kg2zOYckOPsec/iyKEgae8c5Jw8X9ArkQSSA/ivKioz4MQcLOLDY5Fy8iMeza+dl48z
+	v5SXCirp85C6lxZkjSVwa8BwNfh6uK8unmeg8BOxwxLOPt0NoKhqqW2j5xxXTd2T2ksMfjVQHNF
+	pqMb3Qy/0LVJu0Uh77XMBCk6U7hynH7d5jgFlOZ9/24z42wpxUkt3uUH9lCjfSvqXConuVGsK53
+	wvWLYy4Ynjt5kPPIfRUJjn7jgEkMROPsWjp7Q+jMSk+cniOHbuPSfDI7YNviyo2m9oygkqOlHaj
+	yo+Xyw==
+X-Received: by 2002:a17:902:e84c:b0:2e9:6b5b:3db6 with SMTP id d9443c01a7336-2e9a69e93d4mr78949655ad.30.1792436488354;
+        Mon, 19 Oct 2026 12:01:28 -0700 (PDT)
+Received: from jingyliang-input-linux.c.googlers.com (218.117.230.35.bc.googleusercontent.com. [35.230.117.218])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea151e1b7esm4473105ad.75.2026.10.19.12.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2026 12:01:27 -0700 (PDT)
+From: Jingyuan Liang <jingyliang@chromium.org>
+Subject: [PATCH v6 00/11] Add spi-hid transport driver
+Date: Mon, 19 Oct 2026 19:01:12 +0000
+Message-Id: <20261019-send-upstream-v6-0-cb9ba4b3d6fa@chromium.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,130 +89,154 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1791410885.git.abhishekbapat@google.com>
- <aae089a81ea891e1bc7e3ad171064d37d800ad1a.1791410886.git.abhishekbapat@google.com>
- <CAJuCfpF+kVSa0Rb0pW2gSwkBF57u-JC0J6gwFk62iGUpXVNwSw@mail.gmail.com>
-In-Reply-To: <CAJuCfpF+kVSa0Rb0pW2gSwkBF57u-JC0J6gwFk62iGUpXVNwSw@mail.gmail.com>
-From: Abhishek Bapat <abhishekbapat@google.com>
-Date: Mon, 19 Oct 2026 11:55:58 -0700
-X-Gm-Features: AclHuK-9zWJgFdAaiaHRH5quyks5irCzrBiNc0VLEM6EY4t9qn-35fHPfFLOiaY
-Message-ID: <CAL41Mv7cFudV97MEr2gq_NDno8z=BtqiKegDdM-haxUq3WRCAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] alloc_tag: Extend allocinfo_filter to support
- tracing queries
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Hao Ge <hao.ge@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPho1moC/23PzW7DIAzA8VepOI8Jm4+SnvYe0w4UTMMhSQUt2
+ lTl3Uc7aZ1Yjn/L/km+sUI5UWGH3Y1lqqmkZW5hXnbMj24+EU+hNUOBRiAgLzQHfj2XSyY38b2
+ OJoaBwoDE2s05U0yfD+/9o/WYymXJXw++wn36I0khO6kCFxw06KNDsFGGNz/mZUrX6XXJJ3bHK
+ v4BUPUANkAjeLIuxmjNBiCfgBL9L1U2wIgBvNI2SL3fANQTaJs9oBpwtEoGTcZTkBuA/gVA/Ad
+ 0A6RVLgoIThJ1wLqu3/ZCO9axAQAA
+X-Change-ID: 20260212-send-upstream-75f6fd9ed92e
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ hbarnor@chromium.org, tfiga@chromium.org, fqwqf@fqwqf.xyz, daleyo@gmail.com, 
+ Jingyuan Liang <jingyliang@chromium.org>, 
+ Jarrett Schultz <jaschultz@microsoft.com>, 
+ Dmitry Antipov <dmanti@microsoft.com>, Angela Czubak <acz@semihalf.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792436487; l=5852;
+ i=jingyliang@chromium.org; s=20260213; h=from:subject:message-id;
+ bh=ga6CwkzARUkSvEvRDG0PQmoQD7fSmYRrychrK6mPJmA=;
+ b=vBA5OO3tSh7vW0DnhWVDJWpbII+xJtYD5/j1+yxiiJ5vl/UDtQJ3Uk4FZ+YGJnUP3gkXxZnv6
+ fjs+9TLMNgCBwXACf0yfOCEkSy7lN5urMp6GOiINJI/amWw+dLgEKq1
+X-Developer-Key: i=jingyliang@chromium.org; a=ed25519;
+ pk=VTYSdqslTtYOjWWoIGgYoWupGWqNSidrggReKMgfPo4=
 
-On Sat, Oct 17, 2026 at 9:52=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Thu, Oct 8, 2026 at 2:40=E2=80=AFAM Abhishek Bapat <abhishekbapat@goog=
-le.com> wrote:
-> >
-> > Extend the allocinfo filtering mechanism to allow users to filter tags
-> > based on their trace state.
-> >
-> > Signed-off-by: Abhishek Bapat <abhishekbapat@google.com>
->
-> Acked-by: Suren Baghdasaryan <surenb@google.com>
->
-> > ---
-> >  include/uapi/linux/alloc_tag.h | 8 ++++++--
-> >  mm/alloc_tag.c                 | 8 ++++++++
-> >  2 files changed, 14 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_=
-tag.h
-> > index dafcba2f7e2c..a96054ac2237 100644
-> > --- a/include/uapi/linux/alloc_tag.h
-> > +++ b/include/uapi/linux/alloc_tag.h
-> > @@ -38,7 +38,8 @@ struct allocinfo_counter {
-> >         __u64 bytes;
-> >         __u64 calls;
-> >         __u8 accurate;
-> > -       __u8 pad[7];
-> > +       __u8 trace_on;
-> > +       __u8 pad[6];
-> >  } __attribute__((aligned(8)));
-> >
-> >  struct allocinfo_tag_data {
-> > @@ -54,7 +55,8 @@ enum {
-> >         ALLOCINFO_FILTER_INACCURATE,
-> >         ALLOCINFO_FILTER_MIN_SIZE,
-> >         ALLOCINFO_FILTER_MAX_SIZE,
-> > -       __ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_MAX_SIZE
-> > +       ALLOCINFO_FILTER_TRACE_ON,
-> > +       __ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_TRACE_ON
-> >  };
-> >
-> >  #define ALLOCINFO_FILTER_MASK_MODNAME          (1 << ALLOCINFO_FILTER_=
-MODNAME)
-> > @@ -64,6 +66,7 @@ enum {
-> >  #define ALLOCINFO_FILTER_MASK_INACCURATE       (1 << ALLOCINFO_FILTER_=
-INACCURATE)
-> >  #define ALLOCINFO_FILTER_MASK_MIN_SIZE         (1 << ALLOCINFO_FILTER_=
-MIN_SIZE)
-> >  #define ALLOCINFO_FILTER_MASK_MAX_SIZE         (1 << ALLOCINFO_FILTER_=
-MAX_SIZE)
-> > +#define ALLOCINFO_FILTER_MASK_TRACE_ON         (1 << ALLOCINFO_FILTER_=
-TRACE_ON)
-> >
-> >  #define ALLOCINFO_FILTER_MASKS \
-> >         ((1 << (__ALLOCINFO_FILTER_LAST + 1)) - 1)
-> > @@ -75,6 +78,7 @@ struct allocinfo_filter {
-> >         __u64 max_size;
-> >         /* filter criteria only; see allocinfo_counter.accurate for act=
-ual accuracy */
-> >         __u64 inaccurate;
-> > +       __u64 tracing;
-> >  };
-> >
-> >  struct allocinfo_get_at {
-> > diff --git a/mm/alloc_tag.c b/mm/alloc_tag.c
-> > index 262f00f2bba9..8e63f347657b 100644
-> > --- a/mm/alloc_tag.c
-> > +++ b/mm/alloc_tag.c
-> > @@ -250,6 +250,7 @@ static void allocinfo_to_params(struct codetag *ct,
-> >         data->counter.bytes =3D counters->bytes;
-> >         data->counter.calls =3D counters->calls;
-> >         data->counter.accurate =3D !alloc_tag_is_inaccurate(ct_to_alloc=
-_tag(ct));
-> > +       data->counter.trace_on =3D alloc_tag_is_traced(ct_to_alloc_tag(=
-ct));
-> >  }
-> >
-> >  /*
-> > @@ -323,6 +324,13 @@ static bool matches_filter(struct codetag *ct, str=
-uct allocinfo_filter *filter,
-> >                         return false;
-> >         }
-> >
-> > +       if (filter->mask & ALLOCINFO_FILTER_MASK_TRACE_ON) {
-> > +               bool tracing =3D alloc_tag_is_traced(ct_to_alloc_tag(ct=
-));
-> > +
-> > +               if (tracing !=3D !!(filter->tracing))
->
-> nit: Compilers are smart enough nowadays to convert u8 to bool without !!
->
+This series picks up the spi-hid driver work originally started by
+Microsoft. The patch breakdown has been modified and the implementation
+has been refactored to address upstream feedback and testing issues. We
+are submitting this as a new series while keeping the original sign-off
+chain to reflect the history.
 
-There's a similar check right above it that checks "inaccurate !=3D
-!!(filter->inaccurate)".
+Same as the original series, there is a change to HID documentation, some
+HID core changes to support a SPI device, the SPI HID transport driver,
+and HID over SPI Device Tree binding. We have added the HID over SPI ACPI
+support, power management, panel follower, and quirks for Ilitek touch
+controllers.
 
-I just want to be consistent and less ambiguous. Also strictly
-speaking, compilers convert a bool to an int implicitly, so if
-filter->tracing is > 1, the if condition without the !! will result in
-false.
+Original authors: Jarrett Schultz <jaschultz@microsoft.com>,
+		  Dmitry Antipov <dmanti@microsoft.com>
+Link: https://lore.kernel.org/r/86b63b7b-afda-d7f4-7bfa-175085d5a8ef@gmail.com
 
-> > +                       return false;
-> > +       }
-> > +
-> >         return true;
-> >  }
-> >
-> > --
-> > 2.56.0.385.gd3acb90ef8-goog
-> >
+Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+---
+Changes in v6:
+- Take output_lock while reallocating buffers in ll_start()
+- Don't drop input reports while a refreshed device probes
+- OF: drop mod_devicetable.h, use named initializers, fix alignment
+- Move the dt-bindings patch before the OF driver patch
+- Drop Tested-by from the documentation and DT binding patches
+- Link to v5: https://lore.kernel.org/r/20261009-send-upstream-v5-0-384af01da3ee@chromium.org
+
+Changes in v5:
+- Fix request/response races; match GET_FEATURE responses by report ID
+- Reset the device on response timeout; wait uninterruptibly
+- Validate device descriptor and report lengths; fix buffer sizing
+- Honor rtype in raw_request(); fix GET_REPORT off-by-one
+- Use hid_safe_input_report(); forward input reports only while open
+- Disable IRQ around hid_device teardown; fix a sparse warning
+- Use disable_work_sync() for reset_work in remove()
+- Cap trace copies at 64 bytes; cacheline-align read approval buffers
+- ACPI: select RESET_CONTROLLER, use device_reset_optional()
+- OF & DT: read opcodes as u8, use dev_err_probe(), require reg
+- PM: cancel reset_work on suspend, wait for reset before
+  reset_resume(), fix IRQ imbalance on resume failure
+- Panel follower: fix regulator/IRQ imbalance; depend on DRM || !DRM
+- Link to v4: https://lore.kernel.org/r/20260609-send-upstream-v4-0-b843d5e6ced3@chromium.org
+
+Changes in v4:
+- Extended io_lock scope to protect the shid->hid pointer lifecycle
+  against races with the IRQ handler
+- Cacheline-aligned DMA buffers, enforced 4-byte alignment
+- Added error rollback for failed suspend/resume transitions
+- Moved IRQ request to probe with IRQF_NO_AUTOEN (disabled by default)
+- DT Bindings & OF Driver:
+  - Required a device-specific compatible string in the schema.
+  - Added description to explain why opcodes and addresses properties
+    need to be defined in the schema
+  - Added `spi-peripheral-props.yaml` reference and switched to
+    `unevaluatedProperties: false`.
+  - Added fallback to default timing parameters in OF driver if match
+    data is missing.
+- Link to v3: https://lore.kernel.org/r/20260402-send-upstream-v3-0-6091c458d357@chromium.org
+
+Changes in v3:
+- Add io_lock init
+- Relocate tracepoints to drivers/hid/spi-hid/ and fix tracepoint macros
+- Add tracepoints for sync, error handling, reset, and report processing
+- Clean up internal includes and fix Makefile CFLAGS
+- Add more details in v2 changelog
+- Link to v2: https://lore.kernel.org/r/20260324-send-upstream-v2-0-521ce8afff86@chromium.org
+
+Changes in v2:
+- Clean up DT bindings: fix formatting and remove timing and flags properties
+- Update DT binding example: use a device-specific compatible and drop
+  reset_assert
+- Simplify ACPI/OF match tables by removing ACPI_PTR/of_match_ptr
+- Refactor OF driver to use match data for timing parameters instead
+  of DT properties
+- Switch to fsleep() for delays in ACPI and OF drivers
+- Drop patch 12 as it is vendor specific
+- Add a lock to fix input/output concurrency race
+- Link to v1: https://lore.kernel.org/r/20260303-send-upstream-v1-0-1515ba218f3d@chromium.org
+
+---
+Angela Czubak (2):
+      HID: spi-hid: add transport driver skeleton for HID over SPI bus
+      HID: spi-hid: add ACPI support for HID over SPI
+
+Jarrett Schultz (3):
+      Documentation: Correction in HID output_report callback description.
+      HID: Add BUS_SPI support and define HID_SPI_DEVICE macro
+      HID: spi-hid: add device tree support for HID over SPI
+
+Jingyuan Liang (6):
+      HID: spi-hid: add spi-hid driver HID layer
+      HID: spi-hid: add HID SPI protocol implementation
+      HID: spi-hid: add spi_hid traces
+      dt-bindings: input: Document hid-over-spi DT schema
+      HID: spi-hid: add power management implementation
+      HID: spi-hid: add panel follower support
+
+ .../devicetree/bindings/input/hid-over-spi.yaml    |  130 ++
+ Documentation/hid/hid-transport.rst                |    4 +-
+ drivers/hid/Kconfig                                |    2 +
+ drivers/hid/Makefile                               |    2 +
+ drivers/hid/hid-core.c                             |    3 +
+ drivers/hid/spi-hid/Kconfig                        |   50 +
+ drivers/hid/spi-hid/Makefile                       |   12 +
+ drivers/hid/spi-hid/spi-hid-acpi.c                 |  262 +++
+ drivers/hid/spi-hid/spi-hid-core.c                 | 1757 ++++++++++++++++++++
+ drivers/hid/spi-hid/spi-hid-core.h                 |  118 ++
+ drivers/hid/spi-hid/spi-hid-of.c                   |  242 +++
+ drivers/hid/spi-hid/spi-hid-trace.h                |  184 ++
+ drivers/hid/spi-hid/spi-hid.h                      |   46 +
+ include/linux/hid.h                                |    2 +
+ 14 files changed, 2812 insertions(+), 2 deletions(-)
+---
+base-commit: ee9c669f9bf5fd2c24206746ded9382fe810df89
+change-id: 20260212-send-upstream-75f6fd9ed92e
+
+Best regards,
+-- 
+Jingyuan Liang <jingyliang@chromium.org>
+
