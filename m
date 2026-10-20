@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792490508;
-	b=aYiCusWWcRAELXy6Za+i8yNkJJXCMqErZq2sMt71cHuHOFMeMs5O7Y5/sO1aJLr9WzSx
-	 b5VW0p7UK/LfZkEGvddpW3IhTIdASbdzlbIOGPJhOS83Lc6+W7od+XDYRkAoG1n9f2r3a
-	 iuS+hKl/zc4nZwDWj2WyXlcX2WBAJnSRgpUOuO8vydWg5A+Sko52wti1erS6bESlhsZ4L
-	 vGeFON/3aaN9bgtm9pr46gt/26FRtXeeLS05lc5o0WrD2JP9PQacKkzZbTGaW6/gfcktZ
-	 /V+XN8OJt8c8fnQxBvrQTDAaNWSby+KPAOlIaybVOeYmxfzX9byQAHSzmFoI5c7g2qw==
+	t=1792490516;
+	b=VUMslsOhsmb4a7xRpK7SARZ5ORHtAnKOgwDV9YM98q3YUxMCVLiP+Wsyx1RJGJzudZBZ
+	 J1i1ZJ4hpGTKWmQ82kba3TB37M5pBd6PVQS2LpU3KZ3smLZD8QoulHL86i46cmibp88VY
+	 530ivRg2cVBOXH9oI3fR0MwSz83gyjd1B7qfWuSELQ6DsDZfDPD/Y+TW0FVxNK+9RZ8ac
+	 REAIMJuttkc6AzWrFlqjrzpy0DEzsv6IL6i8Lby0xlDJCVWsEg+h5Fh9CPsfvCkJlyHeW
+	 YtmdwdXnD0b8f0DXcsaftv4euGdjk9vakb0372XyNQEnYJ0FpHpDTsP3i0jE0vQvELg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792490508;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792490516;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=JGDgmrNrY/Zf3/bNe/po5mMDHbPIY3J54PXDSn4VlJM=;
-	b=UUoNCfs99Abf2ymnmJ9hSmupAMcNxfViyoWetEUfC0C9+ivCm0thoXIy6Jcs69Np0OZB
-	 EuFYk9d7POYuR/Lda6iznNQ6WRCEAzWUu2S/53caJ/s8lZEHSb8IRARfOCp17XWnUNjXQ
-	 jqBQIG+exvmrkRoZu2z8ItJeEo/qHrivmTMvo0ZcWrRwIdEORF8EFlWlrV9+eGtmXvbqD
-	 ssSpMGboaqFBGSjfrE/fHCB93Gmf6OC+Umad98m9lf9kGhC1XA0SvDk0xXhH6nusbrvkH
-	 MaH38DFqUE/lNlPoLlPG2GpSKzD+JDLsI7aMIHp/PgDC9xLCUCvns7vmFi/5jJPR37Q==
+	bh=6q8wiBkHoiL/KGYdZsxjGwRTuXA7qaumt7yvL4z0Drc=;
+	b=Wr8GU4hy/sWaAWDCei1IKHufjFDdJ3JhppRlbpk6ju6bmtAYR4pNvH7vem1+Ap4ozU7G
+	 vLmqjViCjV9tU7j8QyVEwOaVPYC45kAhYBVoMmeV0VZszmGBPX6WYYZNaGwFTZF+30lou
+	 N/3qN19+2bTVlCx2SWI4jM4c5kLuw0druZU8/3VfGl62gloOIk0OMEw/Q/WeEfuA0uEPK
+	 xJT15Dy/tQvC0LAGJgy2nC/wFSWuaBMCdfeWgdJJ3MwKarJDimMFPUK12QggYvJDuSRtl
+	 yX9cGolHkE3zycub4BRDZCRdMR5Is4hBG7muUWw9T3EdjrahG6q4g6yxncrfpKChqlQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e4yAhkeh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c03e0rOO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A083606A32D;
-	Tue, 20 Oct 2026 10:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E8D606A327;
+	Tue, 20 Oct 2026 10:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e4yAhkeh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D262D1F000C7;
-	Tue, 20 Oct 2026 10:01:40 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c03e0rOO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F3B1F000C8;
+	Tue, 20 Oct 2026 10:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792490507;
-	bh=JGDgmrNrY/Zf3/bNe/po5mMDHbPIY3J54PXDSn4VlJM=;
+	s=k20260515; t=1792490515;
+	bh=6q8wiBkHoiL/KGYdZsxjGwRTuXA7qaumt7yvL4z0Drc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=e4yAhkehkx9HsNQho0qWUb9H/5LCMTo9aUxdM7CTQcLXsv2QY7OtwovpuxYSzWX+1
-	 SZUKL7mzlWUa3FaObHkgkAD9Uul20Tvcx4ccOZ0kALkkQEuzZK4+OLCKDd9bBxT1x6
-	 NhkHwq0poOdVOavBHYKALA+VdghhTbPtXmchpdq4aG2DYyngzKGmsWWwQV67aL79QQ
-	 AOwM7EqoxYjqSHegGg2G0HyXSue807pIRRFokuYv3J3xv0TYn6H8u9vHjWglbQNq20
-	 cM60+0zphZ6sQVrjufVwsZcmHC+ON97X2nVnSLJRT00MUwDiGOCkdQrelhiQtUPp3I
-	 gbnP7arDCjE9g==
+	b=c03e0rOONVKauuCZcof5oyBlChrq0q5SZ8Oppn1MU/MTb6Ti6tOaODLOGLscNVWCv
+	 TZz5ZTMLiff8MSa50ikjR+OvnJ7RiXIcO0QMVxaAKwqQVZzPyJ+qY7nCJQX8izE8aC
+	 gooND2yxrdV1ZovcyrH6ilskuJP0w+yDeaKI1JAlJ2mcvOmkasOqzP0tkxkz3l9ujB
+	 RZOkq0DnDWJpniJD9Ajnl7x1YWQ+Y4q8wFcJ66b3zN3HXbjWURqF7pc9R3KoLW+Lfv
+	 ejqveuO4n58X5coYMsjzBlNE8G7OIQBUdn9+BARpIC1zk56A/hR/1SGxxJDONadQAA
+	 uAYj1pgTKR3og==
 From: Philipp Stanner <phasta@kernel.org>
 To: Sumit Semwal <sumit.semwal@linaro.org>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -73,9 +73,9 @@ Cc: linux-media@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Philipp Stanner <phasta@kernel.org>
-Subject: [RFC PATCH v2 2/3] dma-fence: use lock to protect against module-unload
-Date: Tue, 20 Oct 2026 12:00:33 +0200
-Message-ID: <20261020100034.759183-4-phasta@kernel.org>
+Subject: [RFC PATCH v2 3/3] dma-fence: Support unload for ops->get_XXX_name()
+Date: Tue, 20 Oct 2026 12:00:34 +0200
+Message-ID: <20261020100034.759183-5-phasta@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261020100034.759183-2-phasta@kernel.org>
 References: <20261020100034.759183-2-phasta@kernel.org>
@@ -90,140 +90,414 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dma_fence's lock already guards the signaled-state, and most fence
-backend_ops callbacks are already called with the lock taken.
+dma_fence's backend_ops get_driver_name() and get_timeline_name() have
+an unnecessary and complicated RCU requirement.
 
-The contract already relies on the fact that a producer must signal all
-fences before unloading. The callbacks then must never run on a fence
-that is already signaled.
+Usage in sync_file, however, already shows how it can be done
+significantly simpler: Copy the name strings to the user.
 
-Currently, driver unload is supported by RCU-checking the fence->ops
-pointer. However, the design ended up with two partially redundant
-mechanisms, the other being the signaled-state:
+All that needs to be ensured for that is that the signaled-state is
+checked and that it cannot change while the callback runs, i.e., the
+lock must be held.
 
-	/*
-	 * Make load ordering irrelevant by checking both signaled state and ops
-	 * pointer and ops pointer is only set to NULL on newer implementations.
-	 */
-	if (!dma_fence_test_signaled_flag(fence) && ops)
-
-We have seen multiple bugs, such as ordering issues, because of that,
-for instance in:
-
-035219a760ed ("dma-buf: dma-fence: Fix potential NULL pointer dereference")
-3ed11c671ff7 ("dma-buf/dma-fence: fix checking signaling bit for timeline and driver name v3")
-
-Additionally, our RCU requirements can by definition not be controled by
-dma_fence, resulting in a burden on users and an unnecessary grace
-period delay. Most recently, this came to light in CRTC:
-
-https://lore.kernel.org/dri-devel/d54ba24b0a4748b5c00052d4542460ea014aa50d.camel@mailbox.org/
-
-It appears to be the natural solution to guard the fence's signaled
-state *and* accesses to the driver and its data through the lock.
-However, in the past it has been argued that one cannot hold the
-fence-lock while running a callback, because this might lead to
-deadlocks, since drivers might want to access data protected by a driver
-lock.
-
-De-facto, it is already the case that ops callbacks are called with the
-lock taken, and don't run into the driver if the fence is signaled
-already. Thus, we merely need to make that rule official.
-
-This commit proposes making it standard to guard against UAF and module
-unload by holding the lock while running fence->ops.
-
-The current situation of the ops is like this:
-
-- release() and wait() are deprecated and can never work with module
-  unload in any case, thus neither RCU nor lock help them anyways.
-
-- enable_signaling() and is_signaled() are already being invoked with the
-  lock, thus continue doing so is fine.
-
-- get_driver_name() and get_timeline_name() can elegantly be solved by
-  copying the name-strings. See subsequent patch.
-
-- set_deadline() is the only callback for which a locked call would be
-  new. It has very few implementors, so correctness is easy to verify.
-
-For dma_fence_is_signaled(), dma_fence_is_signaled_locked()'s existence
-proofs that we can lock the former's ops->signaled() call, too.
-
-The fact that most callbacks are already invoked with the lock taken
-proofs that the drivers support it, and doing it consistently will make
-the entire API far more robust and consistent than RCU-guarding.
-
-Current users keep working, and future users can be well-informed about
-the locking considerations.
-
-Let's go for full, consistent locking. Add lock guards around the two
-missing paths running into non-deprecated backend_ops.
+Adjust the two callbacks so that they deep-copy name parameters under
+lock-protection.
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- drivers/dma-buf/dma-fence.c |  7 ++++++-
- include/linux/dma-fence.h   | 21 +++++++++++++++++----
- 2 files changed, 23 insertions(+), 5 deletions(-)
+ drivers/dma-buf/dma-fence.c                 | 73 ++++++++++-----------
+ drivers/dma-buf/sync_file.c                 | 29 ++++----
+ drivers/gpu/drm/i915/gt/intel_gt_requests.c | 16 ++---
+ drivers/gpu/drm/i915/i915_request.c         |  9 ++-
+ drivers/gpu/drm/i915/i915_sw_fence.c        | 15 ++---
+ include/linux/dma-fence.h                   | 22 ++-----
+ include/trace/events/dma_fence.h            | 12 ++--
+ 7 files changed, 77 insertions(+), 99 deletions(-)
 
 diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 5dab647e3f3f..e4350bce9cf9 100644
+index e4350bce9cf9..d473d4ea601a 100644
 --- a/drivers/dma-buf/dma-fence.c
 +++ b/drivers/dma-buf/dma-fence.c
-@@ -997,9 +997,14 @@ EXPORT_SYMBOL(dma_fence_wait_any_timeout);
- void dma_fence_set_deadline(struct dma_fence *fence, ktime_t deadline)
- {
+@@ -555,23 +555,22 @@ void dma_fence_release(struct kref *kref)
+ 	struct dma_fence *fence =
+ 		container_of(kref, struct dma_fence, refcount);
  	const struct dma_fence_ops *ops = fence->ops;
-+	unsigned long flags;
++	const unsigned short len = 64;
++	char timeline[len];
++	char driver[len];
  
--	if (ops->set_deadline && !dma_fence_is_signaled(fence))
-+	dma_fence_lock_irqsave(fence, flags);
-+
-+	if (ops->set_deadline && !dma_fence_is_signaled_locked(fence))
- 		ops->set_deadline(fence, deadline);
-+
-+	dma_fence_unlock_irqrestore(fence, flags);
+-	rcu_read_lock();
+ 	trace_dma_fence_destroy(fence);
+ 
+ 	if (!list_empty(&fence->cb_list) &&
+ 	    !dma_fence_test_signaled_flag(fence)) {
+-		const char __rcu *timeline;
+-		const char __rcu *driver;
+ 		unsigned long flags;
+ 
+-		driver = dma_fence_driver_name(fence);
+-		timeline = dma_fence_timeline_name(fence);
++		dma_fence_driver_name(fence, driver, len);
++		dma_fence_timeline_name(fence, timeline, len);
+ 
+ 		WARN(1,
+ 		     "Fence %s:%s:%llx:%llx released with pending signals!\n",
+-		     rcu_dereference(driver), rcu_dereference(timeline),
+-		     fence->context, fence->seqno);
++		     driver, timeline, fence->context, fence->seqno);
+ 
+ 		/*
+ 		 * Failed to signal before release, likely a refcounting issue.
+@@ -590,7 +589,6 @@ void dma_fence_release(struct kref *kref)
+ 		ops->release(fence);
+ 	else
+ 		dma_fence_free(fence);
+-	rcu_read_unlock();
  }
- EXPORT_SYMBOL(dma_fence_set_deadline);
+ EXPORT_SYMBOL(dma_fence_release);
  
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index 874848a4aec4..2223d75c5a49 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -549,16 +549,29 @@ static inline bool
- dma_fence_is_signaled(struct dma_fence *fence)
+@@ -1017,23 +1015,20 @@ EXPORT_SYMBOL(dma_fence_set_deadline);
+  */
+ void dma_fence_describe(struct dma_fence *fence, struct seq_file *seq)
  {
- 	const struct dma_fence_ops *ops = fence->ops;
-+	unsigned long flags;
-+	bool ret = false;
+-	const char __rcu *timeline = (const char __rcu *)"";
+-	const char __rcu *driver = (const char __rcu *)"";
+-	const char *signaled = "";
+-
+-	rcu_read_lock();
++	const unsigned short len = 64;
++	char timeline[len];
++	char driver[len];
++	char *signaled;
  
-+	/* Fast-path optimization. */
- 	if (dma_fence_test_signaled_flag(fence))
- 		return true;
- 
--	if (ops && ops->signaled && ops->signaled(fence)) {
--		dma_fence_signal(fence);
--		return true;
-+	dma_fence_lock_irqsave(fence, flags);
-+
-+	if (dma_fence_test_signaled_flag(fence)) {
-+		ret = true;
-+		goto out;
+ 	if (!dma_fence_is_signaled(fence)) {
+-		timeline = dma_fence_timeline_name(fence);
+-		driver = dma_fence_driver_name(fence);
++		dma_fence_timeline_name(fence, timeline, len);
++		dma_fence_driver_name(fence, driver, len);
+ 		signaled = "un";
  	}
  
--	return false;
-+	if (ops->signaled && ops->signaled(fence)) {
-+		ret = true;
-+		dma_fence_signal_locked(fence);
-+	}
+ 	seq_printf(seq, "%llu:%llu %s %s %ssignalled\n",
+ 		   fence->context, fence->seqno, timeline, driver,
+ 		   signaled);
+-
+-	rcu_read_unlock();
+ }
+ EXPORT_SYMBOL(dma_fence_describe);
+ 
+@@ -1129,20 +1124,22 @@ EXPORT_SYMBOL(dma_fence_init64);
+  * memory potentially accessed by the &dma_fence.ops functions, is forbidden
+  * after the fence has been signalled. Drivers are allowed to free that data,
+  * and some do.
+- *
+- * To allow safe access drivers are mandated to guarantee a RCU grace period
+- * between signalling the fence and freeing said data.
+- *
+- * As such access to the driver name is only valid inside a RCU locked section.
+- * The pointer MUST be both queried and USED ONLY WITHIN a SINGLE block guarded
+- * by the &rcu_read_lock and &rcu_read_unlock pair.
+  */
+-const char __rcu *dma_fence_driver_name(struct dma_fence *fence)
++void dma_fence_driver_name(struct dma_fence *fence, char *s, unsigned short len)
+ {
++	unsigned long flags;
++	const char *tmp;
 +
-+out:
++	dma_fence_lock_irqsave(fence, flags);
++
+ 	if (!dma_fence_test_signaled_flag(fence))
+-		return (const char __rcu *)fence->ops->get_driver_name(fence);
++		tmp = fence->ops->get_driver_name(fence);
+ 	else
+-		return (const char __rcu *)"detached-driver";
++		tmp = "detached-driver";
++
++	strscpy(s, tmp, len);
++
 +	dma_fence_unlock_irqrestore(fence, flags);
+ }
+ EXPORT_SYMBOL(dma_fence_driver_name);
+ 
+@@ -1158,19 +1155,21 @@ EXPORT_SYMBOL(dma_fence_driver_name);
+  * memory potentially accessed by the &dma_fence.ops functions, is forbidden
+  * after the fence has been signalled. Drivers are allowed to free that data,
+  * and some do.
+- *
+- * To allow safe access drivers are mandated to guarantee a RCU grace period
+- * between signalling the fence and freeing said data.
+- *
+- * As such access to the driver name is only valid inside a RCU locked section.
+- * The pointer MUST be both queried and USED ONLY WITHIN a SINGLE block guarded
+- * by the &rcu_read_lock and &rcu_read_unlock pair.
+  */
+-const char __rcu *dma_fence_timeline_name(struct dma_fence *fence)
++void dma_fence_timeline_name(struct dma_fence *fence, char *s, unsigned short len)
+ {
++	unsigned long flags;
++	const char *tmp;
 +
-+	return ret;
++	dma_fence_lock_irqsave(fence, flags);
++
+ 	if (!dma_fence_test_signaled_flag(fence))
+-		return (const char __rcu *)fence->ops->get_timeline_name(fence);
++		tmp = fence->ops->get_timeline_name(fence);
+ 	else
+-		return (const char __rcu *)"signaled-timeline";
++		tmp = "signaled-timeline";
++
++	strscpy(s, tmp, len);
++
++	dma_fence_unlock_irqrestore(fence, flags);
+ }
+ EXPORT_SYMBOL(dma_fence_timeline_name);
+diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
+index 2166bbdf7e4a..0f08713b3b5e 100644
+--- a/drivers/dma-buf/sync_file.c
++++ b/drivers/dma-buf/sync_file.c
+@@ -18,6 +18,8 @@
+ #include <linux/sync_file.h>
+ #include <uapi/linux/sync_file.h>
+ 
++#define FENCE_NAME_LEN 64
++
+ static const struct file_operations sync_file_fops;
+ 
+ static struct sync_file *sync_file_alloc(void)
+@@ -131,22 +133,21 @@ EXPORT_SYMBOL(sync_file_get_fence);
+  */
+ char *sync_file_get_name(struct sync_file *sync_file, char *buf, int len)
+ {
++	char timeline[FENCE_NAME_LEN];
++	char driver[FENCE_NAME_LEN];
++
+ 	if (sync_file->user_name[0]) {
+ 		strscpy(buf, sync_file->user_name, len);
+ 	} else {
+ 		struct dma_fence *fence = sync_file->fence;
+-		const char __rcu *timeline;
+-		const char __rcu *driver;
+ 
+-		rcu_read_lock();
+-		driver = dma_fence_driver_name(fence);
+-		timeline = dma_fence_timeline_name(fence);
++		dma_fence_driver_name(fence, driver, FENCE_NAME_LEN);
++		dma_fence_timeline_name(fence, timeline, FENCE_NAME_LEN);
+ 		snprintf(buf, len, "%s-%s%llu-%lld",
+-			 rcu_dereference(driver),
+-			 rcu_dereference(timeline),
++			 driver,
++			 timeline,
+ 			 fence->context,
+ 			 fence->seqno);
+-		rcu_read_unlock();
+ 	}
+ 
+ 	return buf;
+@@ -268,19 +269,11 @@ static long sync_file_ioctl_merge(struct sync_file *sync_file,
+ static int sync_fill_fence_info(struct dma_fence *fence,
+ 				 struct sync_fence_info *info)
+ {
+-	const char __rcu *timeline;
+-	const char __rcu *driver;
++	dma_fence_timeline_name(fence, info->obj_name, sizeof(info->obj_name));
++	dma_fence_driver_name(fence, info->driver_name, sizeof(info->driver_name));
+ 
+ 	rcu_read_lock();
+ 
+-	driver = dma_fence_driver_name(fence);
+-	timeline = dma_fence_timeline_name(fence);
+-
+-	strscpy(info->obj_name, rcu_dereference(timeline),
+-		sizeof(info->obj_name));
+-	strscpy(info->driver_name, rcu_dereference(driver),
+-		sizeof(info->driver_name));
+-
+ 	info->status = dma_fence_get_status(fence);
+ 	info->timestamp_ns =
+ 		dma_fence_is_signaled(fence) ?
+diff --git a/drivers/gpu/drm/i915/gt/intel_gt_requests.c b/drivers/gpu/drm/i915/gt/intel_gt_requests.c
+index 93298820bee2..a37069ca6d2a 100644
+--- a/drivers/gpu/drm/i915/gt/intel_gt_requests.c
++++ b/drivers/gpu/drm/i915/gt/intel_gt_requests.c
+@@ -240,8 +240,12 @@ void intel_gt_watchdog_work(struct work_struct *work)
+ {
+ 	struct intel_gt *gt =
+ 		container_of(work, typeof(*gt), watchdog.work);
++	const unsigned short len = 64;
+ 	struct i915_request *rq, *rn;
+ 	struct llist_node *first;
++	char timeline[len];
++	char driver[len];
++
+ 
+ 	first = llist_del_all(&gt->watchdog.list);
+ 	if (!first)
+@@ -250,17 +254,13 @@ void intel_gt_watchdog_work(struct work_struct *work)
+ 	llist_for_each_entry_safe(rq, rn, first, watchdog.link) {
+ 		if (!i915_request_completed(rq)) {
+ 			struct dma_fence *f = &rq->fence;
+-			const char __rcu *timeline;
+-			const char __rcu *driver;
+ 
+-			rcu_read_lock();
+-			driver = dma_fence_driver_name(f);
+-			timeline = dma_fence_timeline_name(f);
++			dma_fence_driver_name(f, driver, len);
++			dma_fence_timeline_name(f, timeline, len);
+ 			pr_notice("Fence expiration time out i915-%s:%s:%llx!\n",
+-				  rcu_dereference(driver),
+-				  rcu_dereference(timeline),
++				  driver,
++				  timeline,
+ 				  f->seqno);
+-			rcu_read_unlock();
+ 			i915_request_cancel(rq, -EINTR);
+ 		}
+ 		i915_request_put(rq);
+diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i915_request.c
+index d2c7b1090df0..c81902d8a89a 100644
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -2185,7 +2185,8 @@ void i915_request_show(struct drm_printer *m,
+ 		       const char *prefix,
+ 		       int indent)
+ {
+-	const char __rcu *timeline;
++	const unsigned short len = 64;
++	char timeline[len];
+ 	char buf[80] = "";
+ 	int x = 0;
+ 
+@@ -2221,8 +2222,7 @@ void i915_request_show(struct drm_printer *m,
+ 
+ 	x = print_sched_attr(&rq->sched.attr, buf, x, sizeof(buf));
+ 
+-	rcu_read_lock();
+-	timeline = dma_fence_timeline_name((struct dma_fence *)&rq->fence);
++	dma_fence_timeline_name((struct dma_fence *)&rq->fence, timeline, len);
+ 	drm_printf(m, "%s%.*s%c %llx:%lld%s%s %s @ %dms: %s\n",
+ 		   prefix, indent, "                ",
+ 		   queue_status(rq),
+@@ -2231,8 +2231,7 @@ void i915_request_show(struct drm_printer *m,
+ 		   fence_status(rq),
+ 		   buf,
+ 		   jiffies_to_msecs(jiffies - rq->emitted_jiffies),
+-		   rcu_dereference(timeline));
+-	rcu_read_unlock();
++		   timeline);
  }
  
+ static bool engine_match_ring(struct intel_engine_cs *engine, struct i915_request *rq)
+diff --git a/drivers/gpu/drm/i915/i915_sw_fence.c b/drivers/gpu/drm/i915/i915_sw_fence.c
+index f24f616e23ee..08b5f96ae2a5 100644
+--- a/drivers/gpu/drm/i915/i915_sw_fence.c
++++ b/drivers/gpu/drm/i915/i915_sw_fence.c
+@@ -429,23 +429,22 @@ static void timer_i915_sw_fence_wake(struct timer_list *t)
+ {
+ 	struct i915_sw_dma_fence_cb_timer *cb = timer_container_of(cb, t,
+ 								   timer);
++	const unsigned short len = 64;
+ 	struct i915_sw_fence *fence;
+-	const char __rcu *timeline;
+-	const char __rcu *driver;
++	char timeline[len];
++	char driver[len];
+ 
+ 	fence = xchg(&cb->base.fence, NULL);
+ 	if (!fence)
+ 		return;
+ 
+-	rcu_read_lock();
+-	driver = dma_fence_driver_name(cb->dma);
+-	timeline = dma_fence_timeline_name(cb->dma);
++	dma_fence_driver_name(cb->dma, driver, len);
++	dma_fence_timeline_name(cb->dma, timeline, len);
+ 	pr_notice("Asynchronous wait on fence %s:%s:%llx timed out (hint:%ps)\n",
+-		  rcu_dereference(driver),
+-		  rcu_dereference(timeline),
++		  driver,
++		  timeline,
+ 		  cb->dma->seqno,
+ 		  i915_sw_fence_debug_hint(fence));
+-	rcu_read_unlock();
+ 
+ 	i915_sw_fence_set_error_once(fence, -ETIMEDOUT);
+ 	i915_sw_fence_complete(fence);
+diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+index 2223d75c5a49..08ecbc101f4c 100644
+--- a/include/linux/dma-fence.h
++++ b/include/linux/dma-fence.h
+@@ -459,25 +459,11 @@ void dma_fence_enable_signaling(struct dma_fence *fence);
  /**
+  * DOC: Safe external access to driver provided object members
+  *
+- * All data not stored directly in the dma-fence object, such as the
+- * &dma_fence.lock and memory potentially accessed by functions in the
+- * &dma_fence.ops table, MUST NOT be accessed after the fence has been signalled
+- * because after that point drivers are allowed to free it.
+- *
+- * All code accessing that data via the dma-fence API (or directly, which is
+- * discouraged), MUST make sure to contain the complete access within a
+- * &rcu_read_lock and &rcu_read_unlock pair.
+- *
+- * Some dma-fence API handles this automatically, while other, as for example
+- * &dma_fence_driver_name and &dma_fence_timeline_name, leave that
+- * responsibility to the caller.
+- *
+- * To enable this scheme to work drivers MUST ensure a RCU grace period elapses
+- * between signalling the fence and freeing the said data.
+- *
++ * Provides naming information strings about the fence if it is not yet signaled.
++ * Otherwise, provides default strings.
+  */
+-const char __rcu *dma_fence_driver_name(struct dma_fence *fence);
+-const char __rcu *dma_fence_timeline_name(struct dma_fence *fence);
++void dma_fence_driver_name(struct dma_fence *fence, char *s, unsigned short len);
++void dma_fence_timeline_name(struct dma_fence *fence, char *s, unsigned short len);
+ 
+ /*
+  * dma_fence_test_signaled_flag - Only check whether a fence is signaled yet.
+diff --git a/include/trace/events/dma_fence.h b/include/trace/events/dma_fence.h
+index 5b10a9e06fb4..f3b929b98cf4 100644
+--- a/include/trace/events/dma_fence.h
++++ b/include/trace/events/dma_fence.h
+@@ -9,6 +9,8 @@
+ 
+ struct dma_fence;
+ 
++#define FENCE_NAME_LEN 64
++
+ DECLARE_EVENT_CLASS(dma_fence,
+ 
+ 	TP_PROTO(struct dma_fence *fence),
+@@ -16,21 +18,21 @@ DECLARE_EVENT_CLASS(dma_fence,
+ 	TP_ARGS(fence),
+ 
+ 	TP_STRUCT__entry(
+-		__string(driver, dma_fence_driver_name(fence))
+-		__string(timeline, dma_fence_timeline_name(fence))
++		__array(char, driver, FENCE_NAME_LEN)
++		__array(char, timeline, FENCE_NAME_LEN)
+ 		__field(unsigned int, context)
+ 		__field(unsigned int, seqno)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__assign_str(driver);
+-		__assign_str(timeline);
++		dma_fence_driver_name(fence, __entry->driver, FENCE_NAME_LEN);
++		dma_fence_timeline_name(fence, __entry->timeline, FENCE_NAME_LEN);
+ 		__entry->context = fence->context;
+ 		__entry->seqno = fence->seqno;
+ 	),
+ 
+ 	TP_printk("driver=%s timeline=%s context=%u seqno=%u",
+-		  __get_str(driver), __get_str(timeline), __entry->context,
++		  __entry->driver, __entry->timeline, __entry->context,
+ 		  __entry->seqno)
+ );
+ 
 -- 
 2.56.0
 
