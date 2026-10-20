@@ -1,58 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792526459;
-	b=xzCsK3qaAGmZqMYKCBGa6YzsrVKXIB89sX52+f9L9TFPpq+12WDPVmoQAaUT3c4T8w1X
-	 Qc67l1JhK3f2B7F35/Qp7sjz5bY/3/iMLDESdzvcSKu0AqWHnJ7/dwJsYAxr0UyipHhoz
-	 YGikRbo92zdmJIYptaXQPXR33ziWz83uxRcLoEIbNFPg8xFp6E6zzjdLdfQvl1sR4qA3V
-	 OFOEsJeTbL9VqseSuPzG32BDADDsZiRPPUp2e7T3BSG2Uyj9RsmJ9/BCyhuTbmyfpicJv
-	 yTuDuMuggn62aZd5MoeQZtqXbUjk7Z7KgBsfwK7z6hg7pBuzhrr6BCaW1wK7e28YZxw==
+	t=1792530021;
+	b=dNjiy1stwckrovkr4bcHZQ6CMMZCrw7k3ZGCUPrSXXs5ndzgIuKI579enT3SBa5pmVii
+	 OiTdH8zEfeCrJyuBsoFCm+2fLh2H89vkFKammGb82SZ2soUIaDKgY1oOL/PE2PIna3Lmg
+	 3MrhYiEx3sKUB+LEI/vQyEOioo3sGPXYqLfBTSzc/ruwUuf0okhc+udZdfyaZ9F0Fhsvp
+	 x4VzH6CpX8vmDowr3z3xEvrPuizOBSQG7J+n7Yb7E3syCJ/2059sqTmvKUsdEicLzXD+C
+	 FA72fcKTavhr1mj6Gs83nNCxNRIo71iMJqHwoX1AliJxY8R+kkMhpN4eZdINGws4xdg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792526459;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=zfyehBfZ/NZDmVggboetswaZ5EHjIBQH3RA15D3wRlg=;
-	b=HX9g7URX5WWh1uI5T57bGsnFRuHzTmnliQaudedMarw/nb3x65dR+siKB6pN+Zsl89YH
-	 /LMKSja6U5IGZrww4WPFsysm18w0ixAbIoQBxBv55RRsQ+k1TWC4QqafP14bX0MZyqJim
-	 CkkjmD3XNd323PkDUA21KOJ4mmklIDiT3QwwlnhDvILcKt92Y+m0RWX6fLweNNvAxL6qP
-	 pN64z7pQdw2CXv5J4Hj4gnp2uGgteTN3tO4s/iYOqV9sjq1to0sPWJNPXCNrdvpKlh+Y4
-	 Wa7C4eU08b/BiopOegWCnC0AY2+Eg/+wWhZCh+tl9tM7jySXol7YW4gkaJWRRRz+pew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792530021;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc;
+	bh=rXhJ4L/NzZHRNleuPwZVcwoS29a45TpivMkwEHBOWew=;
+	b=Pr16G6nUUtsaU2aphu+Iam/nTkAt2f9Bzi9OWmrEZ6Gl40DX+4q9x43cgLmR2f/7ATmw
+	 h7ggd5kyHEMm0jdnMgAF51yoFzOPb7ndpTgYb/zsk8VODb2BE1RbsRvnujG5u0qGZFlUD
+	 T0g4zXykBfPhj4xVQ4zrRn3snZQJyBmS6mTtnHP3TMsLcyTKfVlvGpd5qcGMf7ILgRAYq
+	 hEMq6JpElkRuRA4RuCTM94QG4Q5pb/LcJO4+9wpsRS3MZWYxrGLIkSVb1TVNXQRxg/49T
+	 rHeuMTXNgTjuweRYvXYFjyqy/T+KK+Hx1PCzZzMAiYkMzOMMPfwbwkocjIV7ikLFCPA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KEH9pa0d;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MTmDRsy3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624EC606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 20:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B79606A326;
+	Tue, 20 Oct 2026 21:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KEH9pa0d
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26DF1F000C9;
-	Tue, 20 Oct 2026 20:00:58 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MTmDRsy3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C791F000C9;
+	Tue, 20 Oct 2026 21:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792526459;
-	bh=zfyehBfZ/NZDmVggboetswaZ5EHjIBQH3RA15D3wRlg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KEH9pa0dOrTQBDrixpNqKDsr6RzRoUWWTdOEZMK4QHhiFKXks1om6u7kv4+pOXGHZ
-	 UTvq8ophVkkUkPpojCXThVz0k9IJ2cdif6USzJ4+SoTnh2XpFJMqAzRFmgzFV22EAr
-	 xLlUPk30MQ/6Kls48HSu7aTt//sVtx2xxRPnMKOlviTcLyHX9YWW1hIgw+2FmtL1el
-	 YmbJY2IMALTIYdBelp/6D6ncT9cCQG8X38OWNPTAuEJFcDZw4G/g6zLOJhvJy9AXKK
-	 V78LOF8Gkwad+/kvAhXlUjqqCvVWe7DFeuAInRrkPQTZY1k5SX9hhl6IiEFmB675k0
-	 JdMuqu36pE7DA==
-Message-ID: <sashiko-outbox-179524@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/4] alloc_tag: Extend allocinfo_filter to support
- tracing queries
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Abhishek Bapat" <abhishekbapat@google.com>, "Suren Baghdasaryan" <surenb@google.com>, "Hao
- Ge" <hao.ge@linux.dev>, "Andrew Morton" <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <9e49a8f68e4e7d25c5a9a73c1926f68e468ef320.1792439751.git.abhishekbapat@google.com>
-References: <cover.1792439751.git.abhishekbapat@google.com>
- <9e49a8f68e4e7d25c5a9a73c1926f68e468ef320.1792439751.git.abhishekbapat@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 20:00:58 +0000
+	s=k20260515; t=1792530020;
+	bh=rXhJ4L/NzZHRNleuPwZVcwoS29a45TpivMkwEHBOWew=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=MTmDRsy3nLBQ0PhKm6Gb0dU33W8UFBz7XMBQN21MCWcbcn62H6RMM4ALcD7PujBR2
+	 2hZODVAK2ICJeo8rw54l1P80smzfFiYoy0JAkwuyvKBsrRE6ZPPz/Je5ct62o1fw2x
+	 sGkpw9CUbCSqQJ51JxYRMywQv2e13LQ6dNAIWGq0OYdnR+jvx3mB8p4IjWu7lcycif
+	 2SmlkwP4RMnQ73tzKepKaAPBmRZSDuu0Hb2JGAPXVUcy9crBnwzZPaRsEvK+buBcDd
+	 nf5RgO2xJhpd1VhgLGjzkV+pKWT1i+pu60aAEs4vcgiMNpG9K0a0CAZLy7UqRvN/+R
+	 FoRNQQ7Oal5zg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A44E3809A09;
+	Tue, 20 Oct 2026 21:00:20 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,142 +52,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v3 0/6] bpf: Add syscall common attrs support for
+ xdp
+ link_create
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179253001886.208021.6536312952037292688.git-patchwork-notify@kernel.org>
+Date: Tue, 20 Oct 2026 21:00:18 +0000
+References: <20261020152804.39863-1-leon.hwang@linux.dev>
+In-Reply-To: <20261020152804.39863-1-leon.hwang@linux.dev>
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: bpf@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+ memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
+ ihor.solodrai@linux.dev, hawk@kernel.org, john.fastabend@gmail.com,
+ sdf@fomichev.me, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, shuah@kernel.org, kuniyu@google.com,
+ liuhangbin@gmail.com, mkarsten@uwaterloo.ca, masashi.honma@gmail.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] alloc_tag: UAPI ABI break in allocinfo_ioctl() from growing alloci=
-nfo_filter
---
+Hello:
 
-commit 93a7b2baed26770ea553f10bf7e51ee61056c1ff
-Author: Abhishek Bapat <abhishekbapat@google.com>
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-alloc_tag: Extend allocinfo_filter to support tracing queries
+On Tue, 20 Oct 2026 23:27:58 +0800 you wrote:
+> I'm planning to add syscall common attrs support for LINK_CREATE cmd.
+> 
+> This is the first series for the plan, that adds syscall common attrs
+> support for xdp LINK_CREATE.
+> 
+> Thereafter, retire the tracepoint bpf_xdp_link_attach_failed, because
+> the underlying driver's error can be back-propagated to user space via
+> the syscall common attrs.
+> 
+> [...]
 
-This commit extends the /proc/allocinfo ioctl interface to report whether a
-codetag has tracing enabled and to filter tags based on their trace state.
+Here is the summary with links:
+  - [bpf-next,v3,1/6] bpf: Add syscall common attrs support for link_create
+    https://git.kernel.org/bpf/bpf-next/c/c8e3a753a9ee
+  - [bpf-next,v3,2/6] bpf: Add syscall common attrs support for xdp link_create
+    https://git.kernel.org/bpf/bpf-next/c/d80d00835520
+  - [bpf-next,v3,3/6] bpf: Retire tracepoint bpf_xdp_link_attach_failed
+    https://git.kernel.org/bpf/bpf-next/c/278568acb588
+  - [bpf-next,v3,4/6] libbpf: Factor out __sys_bpf_fd helper
+    https://git.kernel.org/bpf/bpf-next/c/deb9732f53da
+  - [bpf-next,v3,5/6] libbpf: Add bpf_link_create_log API
+    https://git.kernel.org/bpf/bpf-next/c/1480f290d1f7
+  - [bpf-next,v3,6/6] selftests/bpf: Add tests to verify link_create logs
+    https://git.kernel.org/bpf/bpf-next/c/f23fa8f01ce3
 
-> diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_ta=
-g.h
-> index dafcba2f7e2c1..a96054ac22376 100644
-> --- a/include/uapi/linux/alloc_tag.h
-> +++ b/include/uapi/linux/alloc_tag.h
-> @@ -38,7 +38,8 @@ struct allocinfo_counter {
->  	__u64 bytes;
->  	__u64 calls;
->  	__u8 accurate;
-> -	__u8 pad[7];
-> +	__u8 trace_on;
-> +	__u8 pad[6];
->  } __attribute__((aligned(8)));
-> =20
->  struct allocinfo_tag_data {
-> @@ -54,7 +55,8 @@ enum {
->  	ALLOCINFO_FILTER_INACCURATE,
->  	ALLOCINFO_FILTER_MIN_SIZE,
->  	ALLOCINFO_FILTER_MAX_SIZE,
-> -	__ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_MAX_SIZE
-> +	ALLOCINFO_FILTER_TRACE_ON,
-> +	__ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_TRACE_ON
->  };
-> =20
->  #define ALLOCINFO_FILTER_MASK_MODNAME		(1 << ALLOCINFO_FILTER_MODNAME)
-> @@ -64,6 +66,7 @@ enum {
->  #define ALLOCINFO_FILTER_MASK_INACCURATE	(1 << ALLOCINFO_FILTER_INACCURA=
-TE)
->  #define ALLOCINFO_FILTER_MASK_MIN_SIZE		(1 << ALLOCINFO_FILTER_MIN_SIZE)
->  #define ALLOCINFO_FILTER_MASK_MAX_SIZE		(1 << ALLOCINFO_FILTER_MAX_SIZE)
-> +#define ALLOCINFO_FILTER_MASK_TRACE_ON		(1 << ALLOCINFO_FILTER_TRACE_ON)
-> =20
->  #define ALLOCINFO_FILTER_MASKS \
->  	((1 << (__ALLOCINFO_FILTER_LAST + 1)) - 1)
-> @@ -75,6 +78,7 @@ struct allocinfo_filter {
->  	__u64 max_size;
->  	/* filter criteria only; see allocinfo_counter.accurate for actual accu=
-racy */
->  	__u64 inaccurate;
-> +	__u64 tracing;
->  };
-> =20
->  struct allocinfo_get_at {
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[Severity: High]
-Does appending tracing to struct allocinfo_filter break the UAPI ABI for
-ALLOCINFO_IOC_GET_AT?
 
-struct allocinfo_filter and struct allocinfo_get_at were introduced in comm=
-it
-1d581ab2348c ("alloc_tag: add ioctl to /proc/allocinfo"), commit 5732a4e4c1=
-8a
-("alloc_tag: add ioctl filters to /proc/allocinfo"), commit 6f6769ea88f8
-("alloc_tag: add size based filtering to ioctl"), and commit 33588e0b81df
-("alloc_tag: add accuracy based filtering to ioctl").
-
-Unlike struct allocinfo_counter, where trace_on consumes a byte of pad[] to
-keep the structure size unchanged, struct allocinfo_filter has no reserved
-padding. Appending __u64 tracing increases sizeof(struct allocinfo_filter)
-from 232 to 240 bytes.
-
-Because struct allocinfo_get_at embeds struct allocinfo_filter by value bef=
-ore
-the output field data:
-
-include/uapi/linux/alloc_tag.h:
-    struct allocinfo_get_at {
-            /* inputs */
-            __u64 pos;
-            struct allocinfo_filter filter;
-            /* output */
-            struct allocinfo_tag_data data;
-    };
-    ...
-    #define ALLOCINFO_IOC_GET_AT _IOWR(ALLOCINFO_IOC_BASE, _ALLOCINFO_IOC_G=
-ET_AT, \
-                                       struct allocinfo_get_at)
-
-growing struct allocinfo_filter shifts the offset of data by 8 bytes,
-increases sizeof(struct allocinfo_get_at) from 464 to 472 bytes, and changes
-the size encoded into ALLOCINFO_IOC_GET_AT (as well as struct
-allocinfo_toggle_traces and ALLOCINFO_IOC_TOGGLE_TRACE).
-
-In mm/alloc_tag.c, allocinfo_ioctl() -> allocinfo_ioctl_get_at() only match=
-es
-the new ALLOCINFO_IOC_GET_AT command value and copies sizeof(params):
-
-mm/alloc_tag.c:allocinfo_ioctl() {
-    ...
-    switch (cmd) {
-    ...
-    case ALLOCINFO_IOC_GET_AT:
-            ret =3D allocinfo_ioctl_get_at(file->private_data, arg);
-            break;
-    ...
-    default:
-            ret =3D -ENOIOCTLCMD;
-            break;
-    }
-}
-
-mm/alloc_tag.c:allocinfo_ioctl_get_at() {
-    ...
-    if (copy_from_user(&params, arg, sizeof(params)))
-            return -EFAULT;
-    ...
-}
-
-When existing userspace binaries built against the previous UAPI header inv=
-oke
-ioctl(fd, ALLOCINFO_IOC_GET_AT, &arg) on /proc/allocinfo, won't
-allocinfo_ioctl() fail to match cmd and return -ENOIOCTLCMD (-ENOTTY)?
-
-Since matches_filter() only evaluates filter->inaccurate as a boolean via
-!!(filter->inaccurate), could the boolean filter criteria be encoded without
-growing struct allocinfo_filter, or could allocinfo_ioctl() handle the lega=
-cy
-command size so existing binaries continue to work?
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792439751.gi=
-t.abhishekbapat@google.com?part=3D3
