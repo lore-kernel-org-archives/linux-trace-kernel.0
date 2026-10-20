@@ -1,13 +1,13 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792510266;
-	b=OmJar44TQAriVIZeLn5bSZ6njOHmeo6uE65bEQ4xUxfK+j8bhqML2An5jn4uGR8cgevc
-	 5G8NfLzHJsmq2tgaf/B/nII2e26Cb8i3j624uwRpkDjCZXXkcpi5vSJDabPILp3R1405J
-	 IzYk8BOgxf54SUQI6tW66qdxKvmiciMKkLhbHf3MgEJUnKA2KAtHtMdS0FwhSWRALImFY
-	 ZRkZTuPT/zLKbjXi3+0C0vQP7M+E/IfSdPbvlEi3KylpaYXzyGIn/1DsvaBJq3eY5aHdo
-	 GNssZAZu7ZxD3Qe0vlamJcDCsMZBj0sFYNf7xmDO6nF7CCfoalAcReyeqfgZr835I8Q==
+	t=1792510446;
+	b=oe1K6r6Z7gHzOT8iQitFHk1YHL0Dv8e3Brl2LfLmBYZdejYBrZS18kGplzAku6T75r3F
+	 My9OlUFOHpCcm0rE1VxtbqDdOGOJH9aEI7WSoGdvvbvhjBhmpVeAMESQ6kr3T6HuQoLaE
+	 ViIVFYxDrTluMPhTd0ktDBfTR2tB7kMdR1wlKVi29Zm66sapFpEZ+y9rmbsJyzQIYY2Gn
+	 uauTo9SgF8Sxs8YbUZfVhDHRgCCSXyFh3/DwBhZMfL3iGEOvmpN2IEnwrGAyoRn4/LbPh
+	 coBEOOyRF5+Tm8TbdQ/kHLoXp7ZtSAeV8oTYkGXyKJFT/TNc0NWKFar0e2TljUPDHbA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792510266;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792510446;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
@@ -15,89 +15,90 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=F/xZ2QSRGTW4CINPeKVQ6TPwAJsUcgs4ci8OmxiBPkU=;
-	b=oYDm3Qf/EtAwqBdA4uPHqOhSFmfXtOR5+e8mvLvD7g4+e31jS3HR47WUv8G+kSEVp5xF
-	 +RWpG2MDAHy5FHjiBkLjmfcb5YYZXyCM+3UwZu7s8eFqgfWpIF1s9Rlj1MUFW0TcBp4Ao
-	 SX0Y4HlFOfaeJqgLoGVA4NQccRaOAeDkFAWJN9XRZPDja+VLA424aps3mw/YtQVtKt0iF
-	 k5xwECqmfblo6/QVkIzR51RP5r3XAFExnZwAGgtVseik0DgC3Xmw6Z8pLsAKDAAYT929N
-	 kq+kr6GQbF0AbocdlkZJT5uXsdOPEGzzakBzYQcngUqHdNHH46ntfRL2HJ8Xu62VoeQ==
+	bh=wDuJI+C89RvKUBm23U+xf8xPXu6IlFeSARqHPsE5CvM=;
+	b=jL01KeRyTTcRQMd7PGV5/KH72rpEaqUh2RfWqGTDayZ/i4SKEHlQt5ERby3ig2MKm6A+
+	 VSYN+Brypjq4WYrwlI39WD9bYR+NiRGloYzudkuMziY5Pn/cWmCXJrroxyHPc1B9blMAn
+	 b8dxclZNHK/XEcefPgajXXJo/AFGLqfMkHevNNX3ugeYoXEiDqxixwwRKVwAcb/2U5+tq
+	 9CkqV9XS4ivadYGqHEONbaA0ggJLJhq68YTLa7xxLympQbQjU5w9bNPkfHo1UACiP2F/X
+	 rb3IXm/H4eDsdpGhV9ZTBzc7pZLyM5vrbhQnW4mdU1XZTOZwg7qdcuC2YScpUk4awJw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=GOr17mkG;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Vn3Ksod8;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B66460A2612
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 15:31:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B66460A2612
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06433606A323
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 15:34:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06433606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=GOr17mkG
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Vn3Ksod8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792510264;
+	s=mimecast20190719; t=1792510445;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=F/xZ2QSRGTW4CINPeKVQ6TPwAJsUcgs4ci8OmxiBPkU=;
-	b=GOr17mkG+hwEZRrIDfN4gfFMcL0e1IUhhIddbyGHcnGcMBYGq86DRpdMzp60gUl8NfYklQ
-	wgWfqLdf4NNFDwH+1V0Qn2hnXhqjiVkOV73aCRxvv1tFoAy9lXulZX7sLNSM90YCmYBonS
-	/7X+S+qDm+l0+/ZcX6Z7Ku3iZ6X9P64=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wDuJI+C89RvKUBm23U+xf8xPXu6IlFeSARqHPsE5CvM=;
+	b=Vn3Ksod8ZNgt31rk8YIWXuCkNtbz2RSPwtp8myYIF3lg8+hty2mpcLo2MBjf6uHTPLi5cx
+	L7+oOKK3n7xfD5+Swkuxxr3Rk8Dn3lzQlaLVjcldND/+Xw0bEI3919QaToy2WH0p+PUwzs
+	5YQB8rP+x6eEZh1793eKr2kwRNpmGI8=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-VsceajMFOFW9-6NfSBEeHA-1; Tue, 20 Oct 2026 15:30:58 +0000
-X-MC-Unique: VsceajMFOFW9-6NfSBEeHA-1
-X-Mimecast-MFC-AGG-ID: VsceajMFOFW9-6NfSBEeHA_1792510257
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a1d6db1d9eso26701625e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 08:30:58 -0700 (PDT)
+ us-mta-453-S74zXV81PeSvdQKuXLVRzA-1; Tue, 20 Oct 2026 15:33:57 +0000
+X-MC-Unique: S74zXV81PeSvdQKuXLVRzA-1
+X-Mimecast-MFC-AGG-ID: S74zXV81PeSvdQKuXLVRzA_1792510436
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5be3d12d10fso2738924e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 08:33:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792510257; x=1793115057;
+        d=1e100.net; s=20260707; t=1792510436; x=1793115236;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=F/xZ2QSRGTW4CINPeKVQ6TPwAJsUcgs4ci8OmxiBPkU=;
-        b=Z0FzcNYEv0dDd1PF3Sx0sIYjh6rzrPI6HNozOWQydgqx+hQagCybo573eA9VC986YH
-         xmy4ioSyzD+RQltcat7p1Qhn6i/2ZVeLSxTWZDCPGD7qcZS6Sh8sbbgH9razL0LFuQuX
-         k6fvFcQwvJn95l0TW1wWT5rfwy3gBVKH4bgmqcyXkvkqBBTUA243bX9Z2Vmsd5iMFolI
-         C1GCUN1B1yyx/Ohv+yCBGVyUdVUG/wVbVJ6qKiA5Cm884goL6Ns8GiOyDRh94tnk/x4k
-         r2LFnwKNEGX82LeI4AFPVp9UaIITnfjpWlmifYdB3J+J+QnAa7urAGWHPjvHIoARV261
-         F9+Q==
-X-Forwarded-Encrypted: i=1; AKwUvBz8ecBkKHDqmIs2x0Axi75XpjmmaFxW9XoZFacegODv6BxmCrZIyl4E21oOsIX5ngTryuTJo9ijHMxhSrX2I/wJ/D8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIVQ0e3uqNF3gsjN9MZRQ5cWSG4hBBQ4vizCbE2Nk/L5J4VpJX3
-	13M4Uivin6UUsSGpMVSfAl2YwDGNwo9ycMKKaiDUaDMG8KLA+9erbY97+NF+KQI5AYcEpmR8Zdd
-	YTznYM16XP7Wb2EsszZuY2AnOs2hMdRuC5UCIFOfyVtmR8kQCuOn+ZX9CQVhuXO42tuWzaVhB8w
-	==
-X-Gm-Gg: AYBFou3CbwaNjSEL+ABg/D3oCNJt64FT4Nt3y56yWxF/HW5GD8wOC1RYrEXPDaX7A5e
-	zbf/E9pm4DNzNKvsL1cX/OqzuQtgdIYVGYu0H5BawQCLWoXEuqKmvuz2nkZgMTbeP14GY7AsHaI
-	jpKEZbTpI9lOFCrtkTXgQidO2o0Xt7FOL/UcJGHyFHjQ84AS7lUw56F2P6w39kFfpRIdsN+sH3q
-	uUK6qTcckMbpdn4yLh7UsTkjWkyyDKfEEidWmiRTXs9fgh71rYiFOoy6EX1wKwnwrkqbLeGvWxu
-	QDkfh/m/RAGpaSzRmgMHael56dz9PBuADPSwY9iAwR4S+vLF9W6QufdlWqXBA0ax8XOtJa7t0fl
-	29pGgs97O4LmKl4dy/IboKXjI5w==
-X-Received: by 2002:a05:600c:4f47:b0:4a1:e0db:8cf8 with SMTP id 5b1f17b1804b1-4a1e0db8f0amr236160355e9.3.1792510257057;
-        Tue, 20 Oct 2026 08:30:57 -0700 (PDT)
-X-Received: by 2002:a05:600c:4f47:b0:4a1:e0db:8cf8 with SMTP id 5b1f17b1804b1-4a1e0db8f0amr236158215e9.3.1792510255803;
-        Tue, 20 Oct 2026 08:30:55 -0700 (PDT)
+        bh=sO1PhZjq6o6BXb2HXe/PM4VjDQ9u/0YYvxXPAXHF2z0=;
+        b=jiLWvfUlNH8YfFTJaBqNmr34Z3DJRY/vr8JP4BF1XHcxX7dKD8U+92FFzhN0Xg10Dx
+         5dwLQMb+cogN+IkGuI9ndD2qiRXB+zDWVsxQg0OjpBD8x4BZzr3IOKNdmDBIcRinNbj/
+         lMFVAJdn3gEGnxwKPgcVv7fJTXq8qMeP1Y0RgdVIM7/bSS49uHbpkftsvfOZ65wUB98g
+         mq7YGApX5m+/aTF5wmLz3nFB0fieRwyezX0F40GPw8d7X0BQKNybsILLKvKKv7U9dXfS
+         qqNyWaiW1qI8xYFgdADSEMC5/7nsC3beXSaeneXXyjWTVhS2ch9CVbgMHDMNbhg0Palk
+         qWaQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzsfy4p2TmJkcUUo89lHTQ0BKYf0IiRpCuvpnzu4hxuDjoAm0zjJPnVpL7z5ie08h/py4J6Br7+sz+EjgJXcs7AY80=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIbDyFX0qIE/k8p/+HA90cwmvhnhyLJHzkkiFzkPKMt8Z/Y0r0R
+	Twav10h/L1hTiR0WvrZgeMRxXakLYnUujt/AF+LDai127kE1l59Mq6iU4sq3SpZKY8dujdvE7Ss
+	IxXb91MHRSZ6W2hVmyElX5ZNwdIfJCPgwKwA0pAy7b0DOsEh5z2MTiYN0Y9uEGyvmhTa/sGtjy+
+	AjBrXx9w==
+X-Gm-Gg: AYBFou0taQmBssQTzA01J5WX28XyrQPLfmKv5nZNwhZyLqzbqFBztbJhDBFdIl8k1eT
+	4dzPcLWrESknBXaNBFAxsgjL367mYTk1d4jWdzTyAFM0Yaatnqyp83TlnDihKLP42vx5vNNzsxK
+	0BExPfdH2QYsDjpGdBFyXoC8jPX8gm5Q6vcJqF0CvxjE7l3ZQtbsQudFnHX2CuHu4Z/lzkEJxDz
+	0xxh9M+I4FEcF+N7IhK/vI5z1yKoNS2uFvgXCRGxmGLQxLQ3PEbqchnw5+uJ2wcs6IFo73n/eMi
+	CHeRrYzht6c68lent/p8RVR5kQZaY+FweiT+pRwv4vSipmH5x+gHT2uxrkQzpX3DEXXS7yPQgBl
+	d0PjNWieQ9JLBPYUJaKhCfL5ipg==
+X-Received: by 2002:a05:6512:39d2:b0:5bf:6c4c:62ce with SMTP id 2adb3069b0e04-5bf6c4c6355mr361205e87.55.1792510436261;
+        Tue, 20 Oct 2026 08:33:56 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b6f:b0:4a1:d307:d578 with SMTP id 5b1f17b1804b1-4a1d75e6d1amr214085365e9.11.1792510424903;
+        Tue, 20 Oct 2026 08:33:44 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1f2d85a9bsm90078985e9.15.2026.10.20.08.30.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1f2d85a9bsm90373845e9.15.2026.10.20.08.33.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 08:30:54 -0700 (PDT)
-Message-ID: <8e13471b64e11218cab612e7662e8068c34e1219.camel@redhat.com>
+        Tue, 20 Oct 2026 08:33:44 -0700 (PDT)
+Message-ID: <363cbfd91b059df208a5ddbbe45f8ad2d4cda21a.camel@redhat.com>
 Subject: Re: [PATCH v7 00/14] rv: Add task latency over budget RV monitor
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wen Yang <wen.yang@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>, Wen Yang <wen.yang@linux.dev>
 Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Tue, 20 Oct 2026 17:30:50 +0200
-In-Reply-To: <6a8b5d26-37cc-4a8f-ab1d-0df2c2e6c2d3@linux.dev>
+Date: Tue, 20 Oct 2026 17:33:43 +0200
+In-Reply-To: <20261019154853.2fe2a47c@gandalf.local.home>
 References: <cover.1791745088.git.wen.yang@linux.dev>
-		 <3eb0948c9ca67f64b3b311f823cd0f7628033c68.camel@redhat.com>
-		 <6a8b5d26-37cc-4a8f-ab1d-0df2c2e6c2d3@linux.dev>
+		<3eb0948c9ca67f64b3b311f823cd0f7628033c68.camel@redhat.com>
+		<6a8b5d26-37cc-4a8f-ab1d-0df2c2e6c2d3@linux.dev>
+	 <20261019154853.2fe2a47c@gandalf.local.home>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -118,172 +119,33 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: x9wz4WxQ2xsa3YgCQxcgysJc4bokOuenAnA4pOa0g_c_1792510257
+X-Mimecast-MFC-PROC-ID: bUdTj8xHa88kNA5GhPZDZVEAZTHIPhI6h4ON8YygQ_Q_1792510436
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-10-20 at 03:18 +0800, Wen Yang wrote:
+On Mon, 2026-10-19 at 15:48 -0400, Steven Rostedt wrote:
+> On Tue, 20 Oct 2026 03:18:48 +0800
+> Wen Yang <wen.yang@linux.dev> wrote:
 >=20
-
-> > there's been a conversation at the LPC conference about completely migr=
-ating
-> > RV
-> > to BPF.
-> > While we aren't sure of its feasibility yet, and it will take time, it'=
-s
-> > something to keep in mind for new contributions.
-> >=20
+> > If you're OK with it, I'd suggest merging the series in-kernel now, wit=
+h=20
+> > 1-8 and 14 kept as the shared infrastructure and 9-13 acting as the=20
+> > reference implementation the BPF backend is measured against. I'd be=20
+> > glad to help with the uprobe and timed-HA pieces on the BPF side once=
+=20
+> > they're on the table.
 >=20
-> Understood, and I have been following that direction.=C2=A0 I spent the l=
-ast
-> few days reading the v2 "rv: Add support for BPF monitors" series in
-> detail, so the comparison below is against that code rather than the
-> general idea.
+> Well not "now" as the merge window has already opened, but perhaps for th=
+e
+> next window.
 
-Great, I'm going to review your series when I get some time.
+That and I'm going to need to review this series between a few planned holi=
+days.
+I'll try my best to squeeze it on time for the next merge window.
 
-> > First of all, would dropping RV in-kernel support negatively affect you=
-r
-> > current
-> > workflow?
-> >=20
-> Yes, it would.=C2=A0 Some concrete points, all from the current tree.
-> (a) Event ABI.=C2=A0 event_da_monitor / error_env_* in
-> =C2=A0=C2=A0=C2=A0=C2=A0 kernel/trace/rv/rv_trace.h are plain tracepoints=
-, so trace-cmd,
-> =C2=A0=C2=A0=C2=A0=C2=A0 perf and anything else reading tracefs consume t=
-hem today with no
-> =C2=A0=C2=A0=C2=A0=C2=A0 extra userspace.=C2=A0 The BPF series delivers e=
-vents through a ring
-> =C2=A0=C2=A0=C2=A0=C2=A0 buffer read by the rv tool, so the two backends =
-are not
-> =C2=A0=C2=A0=C2=A0=C2=A0 interchangeable for existing consumers.
-
-Good point, you might have noticed a similar discussion is happening also o=
-n the
-RV-BPF thread. We cannot have the absolute same ABI in BPF, but we probably=
- need
-tracepoints or anything that can easily interact with other tracing tools.
-
-> (b) Build and deployment.=C2=A0 On the images we target, BPF is often not
-> =C2=A0=C2=A0=C2=A0=C2=A0 compiled in or not permitted:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CONFIG_BPF_SYSCALL=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default n
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CONFIG_BPF_EVENTS=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 needs BPF_SYSCALL
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CONFIG_DEBUG_INFO_BTF=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 needed for CO-RE; depends on
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !DEBU=
-G_INFO_REDUCED and pahole
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LOCKDOWN_BPF_READ_KERNEL=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 disables the probe_read helpers
-> =C2=A0=C2=A0=C2=A0=C2=A0 Those are product constraints, not local build i=
-ssues.=C2=A0 tracefs/RV
-> =C2=A0=C2=A0=C2=A0=C2=A0 works in all of these configurations.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 There is also a size cost: BPF implies CONFIG_DE=
-BUG_INFO_BTF, and
-> =C2=A0=C2=A0=C2=A0=C2=A0 .BTF is resident in RO_DATA and kept in the boot=
- image - about
-> =C2=A0=C2=A0=C2=A0=C2=A0 5 MB uncompressed on a full kernel, 1.2-1.6 MB c=
-ompressed, plus
-> =C2=A0=C2=A0=C2=A0=C2=A0 roughly 25% per module with DEBUG_INFO_BTF_MODUL=
-ES.=C2=A0 On a
-> =C2=A0=C2=A0=C2=A0=C2=A0 16-32 MB kernel partition that matters.
->=20
-
-I've vaguely heard automotive folks saying they don't want to build BPF sup=
-port
-several times. Finally I get a proper technical reason!
-
-Now I think this isn't easy to sort out, if that's a hard requirement, we a=
-re
-probably going to need to keep in-kernel monitors around.
-
-> (c) Timing semantics.=C2=A0 tlob arms a per-task hrtimer with
-> =C2=A0=C2=A0=C2=A0=C2=A0 HRTIMER_MODE_REL_HARD.=C2=A0 bpf_timer is fixed =
-to
-> =C2=A0=C2=A0=C2=A0=C2=A0 HRTIMER_MODE_REL_SOFT and the verifier states "b=
-pf_timer callbacks
-> =C2=A0=C2=A0=C2=A0=C2=A0 are never sleepable" .=C2=A0 On PREEMPT_RT the c=
-allback runs in a=20
-> threaded
-> =C2=A0=C2=A0=C2=A0=C2=A0 softirq, so the expiry time carries scheduler la=
-tency.
-
-I haven't looked into this yet, but from what you say, the bpf_timers code
-doesn't really support PREEMPT_RT.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0 For a budget monitor the expiry time is the outp=
-ut, so this is a
-> =C2=A0=C2=A0=C2=A0=C2=A0 semantic change, not just overhead.
-
-Well, the expiry time you get from an hrtimer is what you configured + some
-system jitter. The jitter here is just going to be less predictable but is =
-it
-really the output you need in your monitor?
-Or am I missing your point?
-
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 What a BPF tlob would look like once those exist=
-:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - model: still tlob.dot, with rvgen =
--b extended to the hybrid
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 backend;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - state: one record per task in BPF_=
-MAP_TYPE_TASK_STORAGE (or
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the per-object hash map =
-the series has today), holding the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state, the binding id an=
-d the budget;
-
-Yeah I wasn't aware of BPF_MAP_TYPE_TASK_STORAGE before, I have a draft V3
-(coming some time after the merge window) using that.
-But I'd assume this type of storage would simplify the design of your monit=
-or,
-which is currently using a PER_OBJ just to add more things to a PER_TASK.
-I'm going to keep in mind your use-case where you essentially extend the st=
-orage
-(which is perfectly fine in BPF since we don't use the task_struct slot).
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - window: two uprobe programs attach=
-ed to PATH:START and
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PATH:STOP, with the bind=
-ing id and budget passed through the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 attach cookie or a small=
- config map populated before load;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - expiry: a bpf_timer in the same re=
-cord, armed on state
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 transitions and cancelle=
-d on STOP, submitting an error entry
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to the monitor's ringbuf=
-;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - output: the rv tool reads the ring=
-buf and prints it, and the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reactor is linked in wit=
-h bpf_linker as v2 already does.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 The DA engine and the ringbuf/reactor plumbing w=
-ould carry over
-> =C2=A0=C2=A0=C2=A0=C2=A0 unchanged.=C2=A0 The three missing pieces are th=
-e uprobe
-> =C2=A0=C2=A0=C2=A0=C2=A0 attach/configuration path, the timer and env han=
-dling in
-> =C2=A0=C2=A0=C2=A0=C2=A0 da_monitor_bpf.h, and the hybrid backend in rvge=
-n.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 None of this argues against migrating.=C2=A0 It =
-argues that the BPF
-> =C2=A0=C2=A0=C2=A0=C2=A0 backend has to reach parity on (a)-(c) before th=
-e in-kernel path
-> =C2=A0=C2=A0=C2=A0=C2=A0 can be removed.
->=20
-
-
-Thanks for taking time to assess this, it looks like the right direction.
+If things are not ready, I believe we can just upstream the infrastructural
+changes first.
 
 Gabriele
 
