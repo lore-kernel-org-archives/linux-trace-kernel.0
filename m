@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792490771;
-	b=zZtLmDzqp90M93iAWAB8GvZMoUrUfAn5b+QHdgFtB4oC7EVZfsq3dJFj0+DgtwawEB1v
-	 fkdbLAnpbM5fkdj3yEsnX6nHGs8BK2UQ5ONOhafJmp0E7kdKKWcaK5P5rV9on5FPp5n+k
-	 Da3g7X+0R09x1bYaWCS+bASPuTdHFcuS8FfsI+QH5HlExrfQRQlCzSZJcXoiH9jDY81iP
-	 ImcTWpGjwukVKqH4ORNQeu8e5gg9vhHZEMjnPCgTyAMatcQ8rNegVm2h5pXpavEFUGw8z
-	 ScY5fC4B0aVg+d8eYagxXie/xbVjadM+KYOV171FFKwTxE5yfPeKF3R/3S9eanYmfhg==
+	t=1792491593;
+	b=dsxO+bHT8YaxPIMFmxoOE8ud5i43JplI+qUKAhvRtJWuBgFsBQIXw4tSFN8iRBYvAset
+	 6XmmVtPKe6+++0zqlBlD0nUsV5D/ImTk1sBe1AadM6C6qZdJIxtJdeaMy/4TXnV6j+p9Z
+	 JgZtZcoN8uLCX+UqrVYgo5ryPAOOfyJfddsYrFfNCBFmmmgnqKte0gBFupJWJE7LUeAmi
+	 MUdyvdjgHQI/TMRzzML3azCrHDU26FZ1ga6MVMBodKHiORmMw7vGwuSU74Lb22fFU0oa/
+	 tRJ9RIOTWQjmElFdUlWOBPQZGKS9u2sn5nrb5OKQDTmr5EYrMOnM7vi5K3RupzmcYmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792490771;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792491593;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=aUQcLhBLPcEiiqfeRhPzr+uw5kKPMbksUmOJ0feLy/I=;
-	b=wW1uRAePdQuC1M1vARWxE8JmPlfXgSQFSgvNGbJimRzfSVfvXE3rLxQSX0t96xMNYyFm
-	 xMHwlARfluXyArgtpAs5s8rN0VOYGMyv20QuEWZka/sxFZ9G5UDCrlb+5lqq2blJZ2xIe
-	 onODYT8dGrp+/aQ+X7o5WQEmYhiE44Vv1A9oQ+N3yAsfAdhdRAtrgZFaZWoVt8kFBRtKe
-	 PIl83geW64DPExuxkP7S9X/mJs79IZ2q2gL+y005mDYIL9D4IXPyRl9WYFlktyCOQYEhN
-	 K7c7yEcPg4uLDbx5lXvWo+xXlRZoQkVZBfRebP1rAmRWcJ5pneGX8qrz+WtJt3DSx0w==
+	bh=l/luWFoyZUXB/cvJs8KH7wPvpHX/GrRNRixWnXnO8wQ=;
+	b=i2gblt2L4JZ8QTW52q2yIpqzJiCgAM9oWaym4txdHQf+S8eyrPW2qZ7Z39IGiCFvIgOF
+	 J5+Itzd7JZ4h8VoWRyCeyiPmX4H/lXZkn2uRuqZ5yzct68Yd8Nrm/X7PnRZN46s1E4C1y
+	 tzecZAM2tc6v5i8TC1fjGhRbbwAxs22vd82fW/N3NFe9cgv8HpZNFHV8RsL2J/G94IZgh
+	 oe5vp/NBYBsem1qL4fWwy83GKJ0GLi1/jKsjPxBUbHujEitdy4M0p95wP8TozuY5KVz98
+	 WFnGbtD5L+YoMHSX6+xfSTNanR8IerO7VR1NC8uQZFwCnR7qDSkGaiy9Wws3k9ZIBrA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZYmPReCR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6id6PlG;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22539606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 10:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8C3606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 10:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZYmPReCR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC201F000C4;
-	Tue, 20 Oct 2026 10:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6id6PlG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C551F000C4;
+	Tue, 20 Oct 2026 10:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792490771;
-	bh=aUQcLhBLPcEiiqfeRhPzr+uw5kKPMbksUmOJ0feLy/I=;
+	s=k20260515; t=1792491592;
+	bh=l/luWFoyZUXB/cvJs8KH7wPvpHX/GrRNRixWnXnO8wQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZYmPReCRHlJfXt33YA2jQyjfeSUdTcA4d7muVz/xsu/cz/QpYZhwuWpi3a3dIy9nv
-	 hZgK/axLskVZa26J6mH8YUAg+ZbmLp2ved/8v3Rffh5xR6RD94N8HgocW6kaUneDxi
-	 IfabUdHBMw7QTZs4dMBlK/iDGT84g/9OYfLLDArTNNG1J3w3Q5q3W0lfD257n/HYoC
-	 OfeHVqrQd/yMSkR7eOhaKgPMN+CSQs8hIl/kumudWjI/4CgnG4JH6XpZJqFnjPOSU4
-	 l3qgGZ7sEnh7zedKbUsvyu8NdS4L9+B0Fnh1vantcCxwowbqTCGnNpFGHmeiJk0YG4
-	 ctwuPfNeom+7w==
-Message-ID: <sashiko-outbox-178792@kernel.org>
+	b=m6id6PlGoHX5Lj/BKg37uq03t5T33lzJkqzqECL5f8YtK6SodazeJgZa4hIM1Gfpw
+	 2xWoSmIw4GiQeGCbFiqixE1AQcIS7QKQc7imM1i62EEDEMYSrR1bdYVtv760WnNlMn
+	 G+ljRPcnibdVZo8Lm/ik+Yc/SW6pwFqdqnhc5KLzeXF+4/cTkghfVKO/BFG7tPrTZ4
+	 sXNZijcflUknSS8/n2uiSXVqh7Tjw29roNymtkN6totfYTwOxytrpHY49FcIvREjtV
+	 Uhbtv5Hd1jwomgcL/Dwgt0NxVQfwgG1NDj+25P4aau/kWA/EGeN+AjmTgvNCHr3Tq7
+	 9ZHs7xq3yDMyA==
+Message-ID: <sashiko-outbox-178823@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/4] rv: collect per-edge dwell time for per-cpu
- DA/HA monitors
+Subject: Re: [RFC PATCH v2 2/3] dma-fence: use lock to protect against
+ module-unload
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tobias Schaffner" <tobias.schaffner@siemens.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261020095512.863754-4-tobias.schaffner@siemens.com>
-References: <20261020095512.863754-1-tobias.schaffner@siemens.com>
- <20261020095512.863754-4-tobias.schaffner@siemens.com>
+To: "Philipp Stanner" <phasta@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, media-ci@linuxtv.org, ojeda@kernel.org, gary@garyguo.net
+In-Reply-To: <20261020100034.759183-4-phasta@kernel.org>
+References: <20261020100034.759183-2-phasta@kernel.org>
+ <20261020100034.759183-4-phasta@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 10:06:10 +0000
+Date: Tue, 20 Oct 2026 10:19:52 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,103 +61,235 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] rv: bogus initial dwell time in __da_handle_start_run_event()
+- [High] dma-fence: deadlock in dma_fence_set_deadline() holding fence lock
+- [High] dma-fence: recursive lock deadlock in dma_fence_is_signaled()
+- [High] dma-fence: module .rodata UAF on ops in dma_fence_set_deadline()
 --
 
-commit 296c211b8b28be395fee98f1ad59896cd58a9336
-Author: Tobias Schaffner <tobias.schaffner@siemens.com>
+commit be24351242cf77e69e189b5c2659a451b6892af0
+Author: Philipp Stanner <phasta@kernel.org>
 
-rv: collect per-edge dwell time for per-cpu DA/HA monitors
+dma-fence: use lock to protect against module-unload
 
-This commit hooks the edge-stat facility into the DA and HA monitor layers
-to record per-edge state dwell times for per-CPU automaton monitors and
-documents the resulting stats file in runtime-verification.rst.
+This commit acquires the dma_fence spinlock in dma_fence_set_deadline()
+and dma_fence_is_signaled() to serialize fence->ops callback invocations
+against signaling and module unload.
 
-> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-> index 6fc5ef8142aca..c8f7497800d07 100644
-> --- a/include/rv/da_monitor.h
-> +++ b/include/rv/da_monitor.h
-
-[ ... ]
-
-> @@ -113,7 +114,7 @@ static inline void da_monitor_reset(struct da_monitor=
- *da_mon)
->   */
->  static inline void da_monitor_start(struct da_monitor *da_mon)
+> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+> index 5dab647e3f3f9..e4350bce9cf9b 100644
+> --- a/drivers/dma-buf/dma-fence.c
+> +++ b/drivers/dma-buf/dma-fence.c
+> @@ -997,9 +997,14 @@ EXPORT_SYMBOL(dma_fence_wait_any_timeout);
+>  void dma_fence_set_deadline(struct dma_fence *fence, ktime_t deadline)
 >  {
-> -	da_mon->curr_state =3D model_get_initial_state();
-> +	da_mon->curr_state =3D da_state_entered(model_get_initial_state());
->  	da_monitor_init_hook(da_mon);
->  	/* Pairs with smp_load_acquire in da_monitoring(). */
->  	smp_store_release(&da_mon->monitoring, 1);
-
-[ ... ]
-
-> @@ -689,9 +696,11 @@ static inline void da_trace_error(struct da_monitor =
-*da_mon,
->  static inline bool da_event(struct da_monitor *da_mon, enum events event=
-, da_id_type id)
->  {
->  	enum states curr_state, next_state;
-> +	da_state_t old;
+>  	const struct dma_fence_ops *ops =3D fence->ops;
+> +	unsigned long flags;
+> +
+> +	dma_fence_lock_irqsave(fence, flags);
 > =20
-> -	curr_state =3D READ_ONCE(da_mon->curr_state);
-> +	old =3D READ_ONCE(da_mon->curr_state);
->  	for (int i =3D 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
-> +		curr_state =3D da_state_of(old);
->  		next_state =3D model_get_next_state(curr_state, event);
->  		if (next_state =3D=3D INVALID_STATE) {
->  			react(curr_state, event);
-> @@ -699,7 +708,8 @@ static inline bool da_event(struct da_monitor *da_mon=
-, enum events event, da_id_
->  				       model_get_event_name(event), id);
->  			return false;
->  		}
-> -		if (likely(da_state_try_commit(&da_mon->curr_state, &old,
-> -					       next_state, event))) {
-> +		if (likely(da_state_try_commit(&da_mon->curr_state, &old,
-> +					       next_state, event))) {
->  			if (!da_monitor_event_hook(da_mon, curr_state, event, next_state, id))
->  				return false;
->  			da_trace_event(da_mon, model_get_state_name(curr_state),
+> -	if (ops->set_deadline && !dma_fence_is_signaled(fence))
+> +	if (ops->set_deadline && !dma_fence_is_signaled_locked(fence))
+>  		ops->set_deadline(fence, deadline);
+> +
+> +	dma_fence_unlock_irqrestore(fence, flags);
+>  }
+>  EXPORT_SYMBOL(dma_fence_set_deadline);
 
-[Severity: Medium]
-Does stamping da_mon->curr_state with da_state_entered() in
-da_monitor_start() record a bogus dwell time when starting a monitor via
-__da_handle_start_run_event()?
+[Severity: High]
+Will holding the fence spinlock across ops->set_deadline() here cause
+deadlocks in the existing set_deadline implementations?
 
-Unlike __da_handle_start_event(), which calls da_monitor_start() and
-returns immediately when entering the initial state,
-__da_handle_start_run_event() is used when the system is already in the
-initial state for an unknown duration and an outgoing transition occurs:
+The comment on struct dma_fence_ops in include/linux/dma-fence.h states:
 
-include/rv/da_monitor.h:__da_handle_start_run_event() {
-	if (!da_monitor_enabled())
+	 * This is called without &dma_fence.lock held, it can be called
+	 * multiple times and from any context.  Locking is up to the callee
+	 * if it has some state to manage.
+
+All three non-container implementations of set_deadline acquire the
+fence's own spinlock inside the callback, which will self-deadlock on the
+same CPU when called on an unsignaled fence (for example via the
+SYNC_IOC_SET_DEADLINE ioctl or DRM atomic commit paths):
+
+1. drivers/gpu/drm/scheduler/sched_fence.c:
+   drm_sched_fence_set_deadline_finished() calls
+   dma_fence_lock_irqsave(f, flags) on the same fence:
+
+	dma_fence_lock_irqsave(f, flags);
+
+	/* If we already have an earlier deadline, keep it: */
+	if (test_bit(DRM_SCHED_FENCE_FLAG_HAS_DEADLINE_BIT, &f->flags) &&
+	    ktime_before(fence->deadline, deadline)) {
+		dma_fence_unlock_irqrestore(f, flags);
+		return;
+	}
+
+   In addition, drm_sched_fence_set_deadline_finished() then propagates
+   the deadline to the hardware parent fence:
+
+	parent =3D smp_load_acquire(&fence->parent);
+	if (parent)
+		dma_fence_set_deadline(parent, deadline);
+
+   If the outer dma_fence_set_deadline() holds s_fence->finished's lock
+   across ops->set_deadline(), calling dma_fence_set_deadline(parent, ...)
+   acquires parent's lock under s_fence->finished's lock. However, job
+   completion in drivers/gpu/drm/scheduler/sched_main.c runs
+   dma_fence_signal(parent) -> drm_sched_job_done_cb() ->
+   drm_sched_job_done() -> drm_sched_fence_finished() ->
+   dma_fence_signal(&s_fence->finished), which acquires
+   s_fence->finished's lock while holding parent's lock, creating an
+   AB-BA lock-order inversion.
+
+2. drivers/gpu/drm/msm/msm_fence.c:
+   msm_fence_set_deadline() acquires &fctx->spinlock:
+
+	spin_lock_irqsave(&fctx->spinlock, flags);
+
+   which is the fence's extern_lock passed to dma_fence_init() in
+   msm_fence_init().
+
+3. drivers/dma-buf/sw_sync.c:
+   timeline_fence_set_deadline() acquires the fence lock directly:
+
+	dma_fence_lock_irqsave(fence, flags);
+
+[Severity: High]
+Also in dma_fence_set_deadline() above, can this still access freed
+driver memory or unmapped module .rodata when called on an already
+signaled fence after module unload?
+
+First, because there is no unlocked dma_fence_test_signaled_flag(fence)
+check before dma_fence_lock_irqsave(fence, flags), calling
+dma_fence_set_deadline() on a signaled fence unconditionally touches
+dma_fence_spinlock(fence), which may be an extern_lock freed by the
+driver after signaling.
+
+Second, inside the lock:
+
+	if (ops->set_deadline && !dma_fence_is_signaled_locked(fence))
+
+evaluates ops->set_deadline before checking
+!dma_fence_is_signaled_locked(fence). Since fence->ops is no longer set to
+NULL on signaling (after parent commit 4607587506fc ("dma-fence: Remove
+RCU protection for fence->ops")), calling dma_fence_set_deadline() on a
+signaled fence after the producer module has unloaded will dereference
+ops->set_deadline in the unmapped module's .rodata section.
+
+Similarly, the commit message notes that release() and wait() are
+deprecated, but even when a modular driver leaves .release and .wait as
+NULL in its struct dma_fence_ops table, dma_fence_release():
+
+	if (ops->release)
+		ops->release(fence);
+	else
+		dma_fence_free(fence);
+
+and dma_fence_wait_timeout():
+
+	if (ops->wait) {
+		ret =3D ops->wait(fence, intr, timeout);
+	} else {
+		ret =3D dma_fence_default_wait(fence, intr, timeout);
+	}
+
+still dereference the ops table in the module's .rodata to check whether
+those pointers are NULL when a consumer waits on or drops the last
+reference to a signaled fence after the module has unloaded.
+
+> diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+> index 874848a4aec46..2223d75c5a496 100644
+> --- a/include/linux/dma-fence.h
+> +++ b/include/linux/dma-fence.h
+> @@ -549,16 +549,29 @@ static inline bool
+>  dma_fence_is_signaled(struct dma_fence *fence)
+>  {
+>  	const struct dma_fence_ops *ops =3D fence->ops;
+> +	unsigned long flags;
+> +	bool ret =3D false;
+> =20
+> +	/* Fast-path optimization. */
+>  	if (dma_fence_test_signaled_flag(fence))
+>  		return true;
+> =20
+> -	if (ops && ops->signaled && ops->signaled(fence)) {
+> -		dma_fence_signal(fence);
+> -		return true;
+> +	dma_fence_lock_irqsave(fence, flags);
+> +
+> +	if (dma_fence_test_signaled_flag(fence)) {
+> +		ret =3D true;
+> +		goto out;
+>  	}
+> =20
+> -	return false;
+> +	if (ops->signaled && ops->signaled(fence)) {
+> +		ret =3D true;
+> +		dma_fence_signal_locked(fence);
+> +	}
+> +
+> +out:
+> +	dma_fence_unlock_irqrestore(fence, flags);
+> +
+> +	return ret;
+>  }
+
+[Severity: High]
+Can acquiring dma_fence_lock_irqsave() unconditionally in
+dma_fence_is_signaled() cause a recursive spinlock deadlock in
+amdkfd_fence_enable_signaling()?
+
+In drivers/dma-buf/dma-fence.c, __dma_fence_enable_signaling() holds the
+fence spinlock and calls ops->enable_signaling(fence) when the fence is
+not yet signaled:
+
+	dma_fence_assert_held(fence);
+
+	was_set =3D test_and_set_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
+				   &fence->flags);
+
+	if (dma_fence_test_signaled_flag(fence))
+		return false;
+
+	if (!was_set && ops->enable_signaling) {
+		trace_dma_fence_enable_signal(fence);
+
+		if (!ops->enable_signaling(fence)) {
+
+In drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_fence.c,
+amdkfd_fence_enable_signaling() (where amdkfd_fence_ops.signaled is NULL)
+calls dma_fence_is_signaled(f) and
+kgd2kfd_schedule_evict_and_restore_process():
+
+static bool amdkfd_fence_enable_signaling(struct dma_fence *f)
+{
+	struct amdgpu_amdkfd_fence *fence =3D to_amdgpu_amdkfd_fence(f);
+
+	if (!fence)
+		return false;
+
+	if (dma_fence_is_signaled(f))
+		return true;
+
+	if (!kgd2kfd_schedule_evict_and_restore_process(fence->mm, fence->context_=
+id, f))
+		return true;
+
+and kgd2kfd_schedule_evict_and_restore_process() in
+drivers/gpu/drm/amd/amdkfd/kfd_device.c also checks:
+
+	if (dma_fence_is_signaled(fence))
 		return 0;
-	if (unlikely(!da_monitoring(da_mon)))
-		da_monitor_start(da_mon);
 
-	__da_handle_event_common(da_mon, event, id);
+Previously, dma_fence_is_signaled(f) saw that ops->signaled was NULL and
+returned false without taking the lock. With this change, when
+DMA_FENCE_FLAG_SIGNALED_BIT is not set, dma_fence_is_signaled(f) attempts
+to acquire f's spinlock while __dma_fence_enable_signaling(f) already
+holds it on the same CPU.
 
-	return 1;
-}
-
-When !da_monitoring(da_mon) is true (such as in the opid monitor on the
-first handle_sched_need_resched() or handle_sched_waking() event after
-enabling or resetting), da_monitor_start() stamps curr_state with a
-non-zero local_clock() timestamp via da_state_entered().
-
-Immediately afterwards, __da_handle_event_common() calls da_event(), where
-da_state_try_commit() takes a second local_clock() timestamp and calls
-rv_edge_account(). Because the timestamp in old is non-zero, won't
-rv_edge_account() record the few nanoseconds spent between
-da_monitor_start() and da_state_try_commit() as the dwell time for the
-initial state's outgoing edge?
-
-[ ... ]
+!]
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020095512.8637=
-54-1-tobias.schaffner@siemens.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020100034.7591=
+83-2-phasta@kernel.org?part=3D2
