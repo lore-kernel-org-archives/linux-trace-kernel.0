@@ -1,54 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792519040;
-	b=FogTSuEcfYkMl3fZd+xwUyXg+ngzDxGVvWLh9RZpVmAoCWQrQQvoR6G7hPXkcrc5f3hJ
-	 JqZJzAko6+mwZWmpvzoROLHdA3vKpxFFfEO9xK/p+XD65+0rKDa2B4vUp9/FiI3dcWHGM
-	 UIhS7ZcvUCXACMLSrug8OpvXioW/UMYpAtLxba1IBa2lXekpfodJ9BGeOXDZ5/ItyBqbz
-	 JHB5350kka7s/zDoDo4EuK1z/JdtjDn1CjIAURyFMvDGLPLwfEnjXYkmbrh0dS0rybp0U
-	 R5YSnWJvs/ABUEo7VxbHkwf/++KbbNN8WrIIpTQVo5t+hLVYSxMj2rUooECFOV+/2yg==
+	t=1792526459;
+	b=xzCsK3qaAGmZqMYKCBGa6YzsrVKXIB89sX52+f9L9TFPpq+12WDPVmoQAaUT3c4T8w1X
+	 Qc67l1JhK3f2B7F35/Qp7sjz5bY/3/iMLDESdzvcSKu0AqWHnJ7/dwJsYAxr0UyipHhoz
+	 YGikRbo92zdmJIYptaXQPXR33ziWz83uxRcLoEIbNFPg8xFp6E6zzjdLdfQvl1sR4qA3V
+	 OFOEsJeTbL9VqseSuPzG32BDADDsZiRPPUp2e7T3BSG2Uyj9RsmJ9/BCyhuTbmyfpicJv
+	 yTuDuMuggn62aZd5MoeQZtqXbUjk7Z7KgBsfwK7z6hg7pBuzhrr6BCaW1wK7e28YZxw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792519040;
-	h=Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=qqjC+9vmR2qBmvg53MTaGTLKHl+DN6yRypiyKqm8GmQ=;
-	b=ngqiqLjZbEd0hucJ2plArf1xMozRN3GO7n8Ri5hVaXBmESUwbJvLK/a/YpYwmrCC/DbL
-	 h5KMkgpkaCPOyeGHdtty0BaeQ+1eawYzAjscYnhTcIYaWBIuzAOcTYAMflUhGvXQShIea
-	 aOo4/HN8Iz/x6rRl6wpG8qqtbgLLM5G5pvAzNsDjXNjI+A+0ZdkdDZ/wflNixfz4uH3GR
-	 LGDN9B8Y0DMC7d/1BKRxU8X2JRK/XIpT7BCCWqMqPyGuNgnOgYgseErci06M+tg4yTTu0
-	 AfnWdBZw1BMbYSMzSMbKXjGuqVkhpKxt7iWOm5LB/DtucthfuG3omtXg5m6jnq1Vxug==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792526459;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=zfyehBfZ/NZDmVggboetswaZ5EHjIBQH3RA15D3wRlg=;
+	b=HX9g7URX5WWh1uI5T57bGsnFRuHzTmnliQaudedMarw/nb3x65dR+siKB6pN+Zsl89YH
+	 /LMKSja6U5IGZrww4WPFsysm18w0ixAbIoQBxBv55RRsQ+k1TWC4QqafP14bX0MZyqJim
+	 CkkjmD3XNd323PkDUA21KOJ4mmklIDiT3QwwlnhDvILcKt92Y+m0RWX6fLweNNvAxL6qP
+	 pN64z7pQdw2CXv5J4Hj4gnp2uGgteTN3tO4s/iYOqV9sjq1to0sPWJNPXCNrdvpKlh+Y4
+	 Wa7C4eU08b/BiopOegWCnC0AY2+Eg/+wWhZCh+tl9tM7jySXol7YW4gkaJWRRRz+pew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KEH9pa0d;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9103606A319;
-	Tue, 20 Oct 2026 17:57:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC1A81F000CA;
-	Tue, 20 Oct 2026 17:57:14 +0000 (UTC)
-Date: Tue, 20 Oct 2026 18:57:12 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jingyuan Liang <jingyliang@chromium.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, hbarnor@chromium.org,
-	tfiga@chromium.org, fqwqf@fqwqf.xyz, daleyo@gmail.com,
-	Dmitry Antipov <dmanti@microsoft.com>,
-	Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH v6 08/11] dt-bindings: input: Document hid-over-spi DT
- schema
-Message-ID: <20261020-breach-aim-4a497c0089e6@spud>
-References: <20261019-send-upstream-v6-0-cb9ba4b3d6fa@chromium.org>
- <20261019-send-upstream-v6-8-cb9ba4b3d6fa@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624EC606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 20:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KEH9pa0d
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26DF1F000C9;
+	Tue, 20 Oct 2026 20:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792526459;
+	bh=zfyehBfZ/NZDmVggboetswaZ5EHjIBQH3RA15D3wRlg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KEH9pa0dOrTQBDrixpNqKDsr6RzRoUWWTdOEZMK4QHhiFKXks1om6u7kv4+pOXGHZ
+	 UTvq8ophVkkUkPpojCXThVz0k9IJ2cdif6USzJ4+SoTnh2XpFJMqAzRFmgzFV22EAr
+	 xLlUPk30MQ/6Kls48HSu7aTt//sVtx2xxRPnMKOlviTcLyHX9YWW1hIgw+2FmtL1el
+	 YmbJY2IMALTIYdBelp/6D6ncT9cCQG8X38OWNPTAuEJFcDZw4G/g6zLOJhvJy9AXKK
+	 V78LOF8Gkwad+/kvAhXlUjqqCvVWe7DFeuAInRrkPQTZY1k5SX9hhl6IiEFmB675k0
+	 JdMuqu36pE7DA==
+Message-ID: <sashiko-outbox-179524@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 3/4] alloc_tag: Extend allocinfo_filter to support
+ tracing queries
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Abhishek Bapat" <abhishekbapat@google.com>, "Suren Baghdasaryan" <surenb@google.com>, "Hao
+ Ge" <hao.ge@linux.dev>, "Andrew Morton" <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <9e49a8f68e4e7d25c5a9a73c1926f68e468ef320.1792439751.git.abhishekbapat@google.com>
+References: <cover.1792439751.git.abhishekbapat@google.com>
+ <9e49a8f68e4e7d25c5a9a73c1926f68e468ef320.1792439751.git.abhishekbapat@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 20 Oct 2026 20:00:58 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,213 +61,142 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jkzaY7ASZ64whAJj"
-Content-Disposition: inline
-In-Reply-To: <20261019-send-upstream-v6-8-cb9ba4b3d6fa@chromium.org>
 
---jkzaY7ASZ64whAJj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] alloc_tag: UAPI ABI break in allocinfo_ioctl() from growing alloci=
+nfo_filter
+--
 
-On Mon, Oct 19, 2026 at 07:01:20PM +0000, Jingyuan Liang wrote:
-> Documentation describes the required and optional properties for
-> implementing Device Tree for a Microsoft G6 Touch Digitizer that
-> supports HID over SPI Protocol 1.0 specification.
->=20
-> The properties are common to HID over SPI.
->=20
-> Signed-off-by: Dmitry Antipov <dmanti@microsoft.com>
-> Signed-off-by: Jarrett Schultz <jaschultz@microsoft.com>
-> Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+commit 93a7b2baed26770ea553f10bf7e51ee61056c1ff
+Author: Abhishek Bapat <abhishekbapat@google.com>
 
-Signoff chain is not right, since the nominal patch author is the last
-signoff.
+alloc_tag: Extend allocinfo_filter to support tracing queries
 
-> ---
->  .../devicetree/bindings/input/hid-over-spi.yaml    | 130 +++++++++++++++=
-++++++
->  1 file changed, 130 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/hid-over-spi.yaml b/=
-Documentation/devicetree/bindings/input/hid-over-spi.yaml
-> new file mode 100644
-> index 000000000000..2a5fa0868a09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/hid-over-spi.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/hid-over-spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HID over SPI Devices
-> +
-> +maintainers:
-> +  - Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> +  - Jiri Kosina <jkosina@suse.cz>
-> +  - Jingyuan Liang <jingyliang@chromium.org>
-> +
-> +description: |+
-> +  HID over SPI provides support for various Human Interface Devices over=
- the
-> +  SPI bus. These devices can be for example touchpads, keyboards, touch =
-screens
-> +  or sensors.
-> +
-> +  The specification has been written by Microsoft and is currently avail=
-able
-> +  here: https://www.microsoft.com/en-us/download/details.aspx?id=3D103325
-> +
-> +  The HID over SPI specification does not define fixed values for the
-> +  read/write opcodes and the input/output report addresses. The host
-> +  retrieves them from platform firmware (ACPI _DSM), and they differ
-> +  between devices. These properties provide the same values on Device
-> +  Tree systems, so devices that fully comply with the specification work
-> +  with the "hid-over-spi" fallback compatible.
-> +
-> +allOf:
-> +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - microsoft,g6-touch-digitizer
-> +      - const: hid-over-spi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO specifier for the device's reset line. The HID over SPI
-> +      specification requires a dedicated, host-driven, active-low reset
-> +      line. The line must be flagged with GPIO_ACTIVE_LOW.
-> +
-> +  vdd-supply:
-> +    description:
-> +      Regulator for the VDD supply voltage.
-> +
-> +  input-report-header-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 0xffffff
-> +    description:
-> +      A value to be included in the Read Approval packet, listing an add=
-ress of
-> +      the input report header to be put on the SPI bus. This address has=
- 24
-> +      bits.
-> +
-> +  input-report-body-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 0xffffff
-> +    description:
-> +      A value to be included in the Read Approval packet, listing an add=
-ress of
-> +      the input report body to be put on the SPI bus. This address has 2=
-4 bits.
-> +
-> +  output-report-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 0xffffff
-> +    description:
-> +      A value to be included in the Output Report sent by the host, list=
-ing an
-> +      address where the output report on the SPI bus is to be written to=
-=2E This
-> +      address has 24 bits.
-> +
-> +  read-opcode:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Value to be used in Read Approval packets. 1 byte.
-> +
-> +  write-opcode:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Value to be used in Output Report packets. 1 byte.
+This commit extends the /proc/allocinfo ioctl interface to report whether a
+codetag has tracing enabled and to filter tags based on their trace state.
 
-I still dunno why any of these properties exist, especially when there's
-a patch in my queue for another microsoft touch device on top of
-this series that does not use any of them.
+> diff --git a/include/uapi/linux/alloc_tag.h b/include/uapi/linux/alloc_ta=
+g.h
+> index dafcba2f7e2c1..a96054ac22376 100644
+> --- a/include/uapi/linux/alloc_tag.h
+> +++ b/include/uapi/linux/alloc_tag.h
+> @@ -38,7 +38,8 @@ struct allocinfo_counter {
+>  	__u64 bytes;
+>  	__u64 calls;
+>  	__u8 accurate;
+> -	__u8 pad[7];
+> +	__u8 trace_on;
+> +	__u8 pad[6];
+>  } __attribute__((aligned(8)));
+> =20
+>  struct allocinfo_tag_data {
+> @@ -54,7 +55,8 @@ enum {
+>  	ALLOCINFO_FILTER_INACCURATE,
+>  	ALLOCINFO_FILTER_MIN_SIZE,
+>  	ALLOCINFO_FILTER_MAX_SIZE,
+> -	__ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_MAX_SIZE
+> +	ALLOCINFO_FILTER_TRACE_ON,
+> +	__ALLOCINFO_FILTER_LAST =3D ALLOCINFO_FILTER_TRACE_ON
+>  };
+> =20
+>  #define ALLOCINFO_FILTER_MASK_MODNAME		(1 << ALLOCINFO_FILTER_MODNAME)
+> @@ -64,6 +66,7 @@ enum {
+>  #define ALLOCINFO_FILTER_MASK_INACCURATE	(1 << ALLOCINFO_FILTER_INACCURA=
+TE)
+>  #define ALLOCINFO_FILTER_MASK_MIN_SIZE		(1 << ALLOCINFO_FILTER_MIN_SIZE)
+>  #define ALLOCINFO_FILTER_MASK_MAX_SIZE		(1 << ALLOCINFO_FILTER_MAX_SIZE)
+> +#define ALLOCINFO_FILTER_MASK_TRACE_ON		(1 << ALLOCINFO_FILTER_TRACE_ON)
+> =20
+>  #define ALLOCINFO_FILTER_MASKS \
+>  	((1 << (__ALLOCINFO_FILTER_LAST + 1)) - 1)
+> @@ -75,6 +78,7 @@ struct allocinfo_filter {
+>  	__u64 max_size;
+>  	/* filter criteria only; see allocinfo_counter.accurate for actual accu=
+racy */
+>  	__u64 inaccurate;
+> +	__u64 tracing;
+>  };
+> =20
+>  struct allocinfo_get_at {
 
-The commit message really needs to explain why these exist and why
-compatibles cannot be used to determine these things - as is done for
-the microsoft,romulus13-touchpad. If the very next device that appears
-seems to require a specific compatible and cannot use these properties
-to get across what's needed to the kernel it calls into question why
-the binding is designed like this.
+[Severity: High]
+Does appending tracing to struct allocinfo_filter break the UAPI ABI for
+ALLOCINFO_IOC_GET_AT?
 
-pw-bot: changes-requested
+struct allocinfo_filter and struct allocinfo_get_at were introduced in comm=
+it
+1d581ab2348c ("alloc_tag: add ioctl to /proc/allocinfo"), commit 5732a4e4c1=
+8a
+("alloc_tag: add ioctl filters to /proc/allocinfo"), commit 6f6769ea88f8
+("alloc_tag: add size based filtering to ioctl"), and commit 33588e0b81df
+("alloc_tag: add accuracy based filtering to ioctl").
 
-Thanks,
-Conor.
+Unlike struct allocinfo_counter, where trace_on consumes a byte of pad[] to
+keep the structure size unchanged, struct allocinfo_filter has no reserved
+padding. Appending __u64 tracing increases sizeof(struct allocinfo_filter)
+from 232 to 240 bytes.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - reset-gpios
-> +  - vdd-supply
-> +  - input-report-header-address
-> +  - input-report-body-address
-> +  - output-report-address
-> +  - read-opcode
-> +  - write-opcode
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      hid@0 {
-> +        compatible =3D "microsoft,g6-touch-digitizer", "hid-over-spi";
-> +        reg =3D <0x0>;
-> +        interrupts-extended =3D <&gpio 42 IRQ_TYPE_EDGE_FALLING>;
-> +        reset-gpios =3D <&gpio 27 GPIO_ACTIVE_LOW>;
-> +        vdd-supply =3D <&pm8350c_l3>;
-> +        pinctrl-names =3D "default";
-> +        pinctrl-0 =3D <&ts_d6_int_bias>;
-> +        input-report-header-address =3D <0x1000>;
-> +        input-report-body-address =3D <0x1004>;
-> +        output-report-address =3D <0x2000>;
-> +        read-opcode =3D /bits/ 8 <0x0b>;
-> +        write-opcode =3D /bits/ 8 <0x02>;
-> +      };
-> +    };
->=20
-> --=20
-> 2.56.0.212.g129ede20d9-goog
->=20
+Because struct allocinfo_get_at embeds struct allocinfo_filter by value bef=
+ore
+the output field data:
 
---jkzaY7ASZ64whAJj
-Content-Type: application/pgp-signature; name=signature.asc
+include/uapi/linux/alloc_tag.h:
+    struct allocinfo_get_at {
+            /* inputs */
+            __u64 pos;
+            struct allocinfo_filter filter;
+            /* output */
+            struct allocinfo_tag_data data;
+    };
+    ...
+    #define ALLOCINFO_IOC_GET_AT _IOWR(ALLOCINFO_IOC_BASE, _ALLOCINFO_IOC_G=
+ET_AT, \
+                                       struct allocinfo_get_at)
 
------BEGIN PGP SIGNATURE-----
+growing struct allocinfo_filter shifts the offset of data by 8 bytes,
+increases sizeof(struct allocinfo_get_at) from 464 to 472 bytes, and changes
+the size encoded into ALLOCINFO_IOC_GET_AT (as well as struct
+allocinfo_toggle_traces and ALLOCINFO_IOC_TOGGLE_TRACE).
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCatereAAKCRB4tDGHoIJi
-0kWEAP9dgTuujf71BJq09846TgyNaj2epPE0o1kSGsd+fzTndAEA9nnH5FZ9TH7F
-cn2fMuPCManlEJTNSGD9qNKV2OnJMQs=
-=RKkd
------END PGP SIGNATURE-----
+In mm/alloc_tag.c, allocinfo_ioctl() -> allocinfo_ioctl_get_at() only match=
+es
+the new ALLOCINFO_IOC_GET_AT command value and copies sizeof(params):
 
---jkzaY7ASZ64whAJj--
+mm/alloc_tag.c:allocinfo_ioctl() {
+    ...
+    switch (cmd) {
+    ...
+    case ALLOCINFO_IOC_GET_AT:
+            ret =3D allocinfo_ioctl_get_at(file->private_data, arg);
+            break;
+    ...
+    default:
+            ret =3D -ENOIOCTLCMD;
+            break;
+    }
+}
+
+mm/alloc_tag.c:allocinfo_ioctl_get_at() {
+    ...
+    if (copy_from_user(&params, arg, sizeof(params)))
+            return -EFAULT;
+    ...
+}
+
+When existing userspace binaries built against the previous UAPI header inv=
+oke
+ioctl(fd, ALLOCINFO_IOC_GET_AT, &arg) on /proc/allocinfo, won't
+allocinfo_ioctl() fail to match cmd and return -ENOIOCTLCMD (-ENOTTY)?
+
+Since matches_filter() only evaluates filter->inaccurate as a boolean via
+!!(filter->inaccurate), could the boolean filter criteria be encoded without
+growing struct allocinfo_filter, or could allocinfo_ioctl() handle the lega=
+cy
+command size so existing binaries continue to work?
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792439751.gi=
+t.abhishekbapat@google.com?part=3D3
