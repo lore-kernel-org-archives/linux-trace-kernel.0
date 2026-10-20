@@ -1,90 +1,44 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792510608;
-	b=bEKMbkKa31dWjaHP6Klwa9I9PokNh2x+WSnmvnNILzxuXMBCQ8vUxltuYrJok4glEODk
-	 LGCWmBMb5M98lYC/tsmO6K8rs+rycptrj5O8mNZ0yis/XTSZAAK5Y22OULlrdrFOQMsuE
-	 7Z02kV7C2lLUoWNja/aqFBkg+RrH02cxYw7G56/RfUd26FR7dWKo0mBTHatFAUT5/vGLb
-	 sYjK17m7jqtgg5mClCz4JW1yEV0IkDvwuIJyNBnFh2Hgc/DekuMPhz6qgIxf8MDYW03Bk
-	 mLhC4EfoahvuMOi48NpiB3E4A2EG+B8lNyiv5Pz4nSUX/kNiYAfBN2IpMzdeDuIqXKQ==
+	t=1792510705;
+	b=tGPC77+ZijVUfFruA+zus1/Ut3F0GHUsFpyfKimLfufr3Rj2X4jMJGPRLyzyIrqiKzvn
+	 b4r3hdO7Nx399rATqaXJDihJn2u2PEcQCPP6IJA+y2dvYfelfdzAa6A7169WXlzhE5EKD
+	 b5qJ4yedSCV8xw3He/tEuHcIrpiD6mSdJTqSjczVUCT8x39OQOpQ6sNVWcbyqCBv5en2U
+	 7AMIBNaUlzW4u44vRNrN7rZbOfN286Z/kElYVHcC+LnWLVttXSHnOXjnntig/aclvBUCH
+	 vsTd/if5hY8fFvNv1pz/7A8mQ2wjoU3v9CVY6TD7B5g1sjbKueRsQ3McfSOjAoB3cSA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792510608;
-	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Subject:From:
-	 Reply-To:To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-MBO-RS-ID:
-	 X-MBO-RS-META;
-	bh=Yh+jXE2+lBWIpXl4CuFT/FWpTnGLk8SkwfDgjsSI1pI=;
-	b=Ksh1Y3L0at170wUOOsh98NAapsJfVouSR73VsEpyglX1AmTQWjTfd/igE+6fBTotBHi9
-	 LSqaCbk2DCiNJKuSmwsUjhEcM7iAytBMw/ypy48UavvVExrNmPXWrIcgMLLvUSpWeNI53
-	 Z4GqKp0qMvn/Cox+LxzZhFn5dRn1FlxmvQgFfcilbKiGM1sUJ5VfsARsoNlkgaq4W69dy
-	 atNwQEgyJMR/GSU/A2LgqavW8cWjqBiP/2cWwI1dA/r5b3Z7515TDw/Ws9zOnUCYBX/0P
-	 0VrQMAO4qe6PqEupe6oWPbjawuqaxBtnAQtZjgPv8dgtdx15FHvFgu1hDY1i7Np2dpw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792510705;
+	h=Received:Message-ID:From:Subject:Reply-To:To:Cc:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=8OwD2EpZJ6TLZtluTLkbmn4wyYgYcYS5zVnYe4qqLac=;
+	b=ivI8+6o0k6PUfB08FwbI+7kmFNzwIva+Zpu1to38WcvIMysWtYfjOVemKrtjxEHeSF48
+	 HLV6Wo0gATEcGlREPJXFOa8D8BZJBSbzQA4gWdfj19s3hnDxd5IHb8Q6KBTyrX+mLU+7X
+	 hA4GzkWYdMPKJaK5zOizeWqFLydQZXwLORIQgk19DSa3Zw5Iu1ADO7XyCqTMDe2bdclD3
+	 KrxppH3bQvA+4FUSm08+xBvAzz2UnOvJFC4IwYTX/kSzsbiR9VJYU3hkR0o4C1G2mNyLZ
+	 UUDBEyorWe+e0Xo5I6NUXgAdEdVLRFECqAt6wKDalNiF3ADeX9S4QBy9I+6ujGYHTaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mailbox.org;
-	spf=pass smtp.mailfrom=mailbox.org;
-	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=EtpsssLR;
-	arc=none smtp.remote-ip=80.241.56.172
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787AA606A323;
-	Tue, 20 Oct 2026 15:36:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 787AA606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=EtpsssLR
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4j8Gjl1SPmzMltS;
-	Tue, 20 Oct 2026 17:36:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1792510603; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yh+jXE2+lBWIpXl4CuFT/FWpTnGLk8SkwfDgjsSI1pI=;
-	b=EtpsssLREdhha6u+FTlxRw9InWvYReNP+6y8AWy+2wedIiJhHJBP3Kf58xuSuToHOL/d4h
-	xrZ0euzCKdgFIUegwG0suaq7SHWoEgr6y3mnW9jD8rspOFLigJC3bxraqbro1v7qQ0wl3D
-	/9yzuP0QI3YhM2nKYOHGy2O+eMcEDnq4PxnskVL/nBPsdj+MknrRWdStHSdfaCd+SjHPyu
-	HfUwcES9fwJ6WdAZx5x939e2COHqlPOeuWll/oyrzhHcj8lYq0CZBR5upiJDJ6RGt1ZHFs
-	SZZmKPre3vN9fAdloUqb1/we+jSbFTc1QA4GuwAmd5OuS5l3D+x9ra/WKJ3fCA==
-Message-ID: <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
-Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
-	phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>, Jani Nikula	
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun
- Feng <boqun@kernel.org>,  Gary Guo <gary@garyguo.net>,
- =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
- Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
- Krummrich <dakr@kernel.org>, Daniel Almeida	
- <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, Onur =?ISO-8859-1?Q?=D6zkan?=
- <work@onurozkan.dev>, Boris Brezillon	 <boris.brezillon@collabora.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Date: Tue, 20 Oct 2026 17:36:35 +0200
-In-Reply-To: <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
-References: <20261020100034.759183-2-phasta@kernel.org>
-	 <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
-	 <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
-	 <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B365606A319;
+	Tue, 20 Oct 2026 15:38:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F17D1F000CC;
+	Tue, 20 Oct 2026 15:38:24 +0000 (UTC)
+Message-ID: <sashiko-outbox-179266@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf-next v3 2/6] bpf: Add syscall common attrs support
+ for xdp link_create
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leon Hwang" <leon.hwang@linux.dev>, bpf@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261020152804.39863-3-leon.hwang@linux.dev>
+References: <20261020152804.39863-1-leon.hwang@linux.dev>
+ <20261020152804.39863-3-leon.hwang@linux.dev>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+Date: Tue, 20 Oct 2026 15:37:54 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -93,169 +47,107 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-X-MBO-RS-ID: 9b1f1927d5e8646b2c1
-X-MBO-RS-META: fuxnfzpkekdedxcod5h8gys5pduiy8tm
 
-On Tue, 2026-10-20 at 17:07 +0200, Christian K=C3=B6nig wrote:
-> On 10/20/26 16:41, Philipp Stanner wrote:
-> > On Tue, 2026-10-20 at 14:02 +0200, Christian K=C3=B6nig wrote:
-> > > On 10/20/26 12:00, Philipp Stanner wrote:
-> > > > In our Rust code bases, I'm currently experiencing what we also
-> > > > experience in C at many places: that the dma_fence contract's RCU
-> > > > requirements make the API more fragile and put an unnecessary burde=
-n on
-> > > > the API user. Most notably, in C the API behaving correctly now dep=
-ends
-> > > > on the API *user* waiting before free()s, waiting before unloads =
-=E2=80=93 all
-> > > > because dma_fence is not properly synchronized.
-> > > >=20
-> > > > The patches commit messages give more details about where I want to=
- go
-> > > > with this particular RFC.
-> > > >=20
-> > > > My rough "vision" for dma_fence, where I think it should develop to=
-, can
-> > > > be described like this:
-> > > >=20
-> > > > 1. All users should use inline-lock.
-> > > > 2. The fence-signaled state should be our decoupling point.
-> > > > 3. The fence state must be consistently locked.
-> > >=20
-> > >=20
-> > > > 4. This means all callbacks are only invoked for unsignaled fences,=
- and
-> > > > =C2=A0=C2=A0 the fence cannot signal while a callback runs.
-> > >=20
-> > > First of all that prevents concurrent execution of the callbacks
-> > > which for a lot of use cases is a must have.
-> >=20
-> > Currently only set_deadline() can execute in parallel.
->=20
-> Especially the is_signaling() callback is executed in parallel by tons of=
- use cases.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] net: missing struct bpf_verifier_log forward declaration in netdevi=
+ce.h
+--
 
-ops->signaled() you mean.
+commit 6d93234cac5f9d8bd1858f0479e625aeca6428c5
+Author: Leon Hwang <leon.hwang@linux.dev>
 
-Anyways, only one will succeed at having the fence marked as signaled
-anyways, and then all other callers of dma_fence_is_signaled() will be
-guarded by the fastpath bit-check (which btw is also broken; but we
-want to address that in a different patch. For now my series proposes
-keeping the fastpath).
+bpf: Add syscall common attrs support for xdp link_create
 
->=20
-> >=20
-> > IIUC in our past discussions, your wish has been that the driver can
-> > take its own locks with free locking-order in the callbacks.
-> >=20
-> > Thus, the callback is invoked under lock in any case, just a few
-> > instructions earlier or later. Thus, no callback ever truly executes
-> > concurrently.
->=20
-> And that is fine. Taking the look when you actually need it to
-> protect data structures is perfectly correct.
->=20
-> But what you propose here is to abuse the look as a barrier, e.g. to
-> find out if something has finished or not and that is a completely
-> different story.
+This commit adds syscall common attributes support to bpf_xdp_link_attach()=
+ so
+that invalid target_ifindex errors and underlying driver extack error messa=
+ges
+can be reported through bpf_log(). It also defines a no-op stub for bpf_log=
+()
+when CONFIG_BPF_SYSCALL is disabled.
 
-Nope, I want to protect shared data, which is the signaled-state. Which
-is currently a race-condition worked around with RCU (and sometimes
-with manually doing the right thing (locking!)) [1], stemming from the
-fact that the fence's spinlock is not used consistently.
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 3cff2174dc03a..4548b0fd824db 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -4417,7 +4417,8 @@ struct sk_buff *validate_xmit_skb_list(struct sk_bu=
+ff *skb, struct net_device *d
+>  struct sk_buff *dev_hard_start_xmit(struct sk_buff *skb, struct net_devi=
+ce *dev,
+>  				    struct netdev_queue *txq, int *ret);
+> =20
+> -int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pro=
+g);
+> +int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pro=
+g,
+> +			struct bpf_verifier_log *log);
 
->=20
-> > >=20
-> > > Then as I pointed out before the second problem is that this again
-> > > makes the existing lock inversion between the signaling by polling
-> > > and signaling by interrupts even worse than it already is.
-> >=20
-> > We asked for examples in our last discussions, and the only one ever
-> > presented was the list-access requiring the fctx-lock in
-> > nouveau_fence_no_signaling(). Nouveau is often not a good example.
-> >=20
-> > Can you provide examples in the kernel where deadlock would occur?
->=20
-> Just exercise the simple example of a driver supporting both pull and int=
-errupt:
->=20
-> Interrupt: Handler takes lock protecting a linked list, finds fence
-> and signals it.
->=20
-> Polling: is_signaled is called with fence lock held, can't take list
-> lock and so needs to work around that somehow.
+[Severity: Low]
+Does include/linux/netdevice.h need a forward declaration for
+struct bpf_verifier_log alongside struct bpf_prog?
 
-signaled() neither needs a list lock nor any other lock.
+Without a file-scope forward declaration in include/linux/netdevice.h, any
+translation unit that includes <linux/netdevice.h> before <linux/bpf.h>,
+<linux/btf.h>, or <linux/bpf_verifier.h> declares struct bpf_verifier_log f=
+or
+the first time inside the parameter list of bpf_xdp_link_attach(), triggeri=
+ng
+-Wvisibility warnings.
 
-It needs to read a sequence number from somewhere, so a u64. And then
-it returns true or false to the fence_backend.
+In net/core/dev.c, <linux/netdevice.h> is included before <linux/bpf.h> and
+<linux/bpf_verifier.h>:
 
-The u64 can easily be an atomic. Also ioremaped reads should work
-locklessly.
+    #include <linux/netdevice.h>
+    ...
+    #include <linux/bpf.h>
+    #include <linux/bpf_trace.h>
+    #include <linux/bpf_verifier.h>
 
-No need for any lock.
+This causes the prototype in include/linux/netdevice.h to use a
+parameter-scoped struct bpf_verifier_log while the definition of
+bpf_xdp_link_attach() in net/core/dev.c uses the file-scoped
+struct bpf_verifier_log from <linux/bpf_verifier.h>, resulting in a
+conflicting types compilation error.
 
->=20
-> This pattern repeats multiple times all over the different dma_fence
-> implementation. Nouveu is just the tip of the iceberg, we have cases
-> of this in amdgpu as well as i915 as well as XE.
+[ ... ]
 
-I guess my question then becomes what complicated locked tasks someone
-has to do within its callback that locks are required, locks that
-cannot be partitioned in a smart way to avoid that.
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 18dc88990510a..96be63b9331e8 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -97,6 +97,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/bpf.h>
+>  #include <linux/bpf_trace.h>
+> +#include <linux/bpf_verifier.h>
+>  #include <net/net_namespace.h>
+>  #include <net/sock.h>
+>  #include <net/busy_poll.h>
+> @@ -10771,7 +10772,8 @@ static const struct bpf_link_ops bpf_xdp_link_lop=
+s =3D {
+>  	.update_prog =3D bpf_xdp_link_update,
+>  };
+> =20
+> -int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pro=
+g)
+> +int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pro=
+g,
+> +			struct bpf_verifier_log *log)
+>  {
 
-We have 3 callbacks that are relevant and not deprecated (the name-
-functions are trivially solved by copying the data):
+[ ... ]
 
-- is_signaled() =E2=87=92 solved, see above
-- enable_signaling()
-- set_deadline()
+>  	return fd;
 
-The latter two might want to talk to their hardware, either enabling an
-interrupt or telling it to clock the frequency up (see MSM). They might
-need a driver-lock for that, fair enough.
+[ ... ]
 
-Where does such a driver-lock need to be held while operating on a
-fence, opening the deadlock-path?
+>  }
 
+[ ... ]
 
-Note that, as I pointed out many times, all callbacks are already
-called under lock-protection. Especially enable_signaling(), and
-is_signaled() must be lock-resistant, proven by
-dma_fence_is_signaled_locked() existing.
+>
 
-Regardless, what I propose would only make a potential difference for
-*new* users, with inline-lock, who can then cleanly design to avoid
-locking problems.
-
-
->=20
-> > Note that I pointed out that all callbacks are already invoked with the
-> > lock taken, which proofs that it's doable.
->=20
-> Again, no it isn't. The shared lock was invented exactly because
-> drivers ran into this problem.
->=20
-> The common pattern is the same, implementations just dance around the
-> fact that the callbacks are called with the fence lock held by
-> delegating cleanup work and/or using lockless containers etc...
-
-I suspect more that drivers attempt to do unnecessarily many things in
-their callbacks which are not supposed to be done there.
-
-> A common component like dma_fence should never enforce users to do
-> such workarounds just to solve it's own lifetime issues.
-
-Our common component forces all users to take our locks manually and
-plaster everything with RCU. If they forget an RCU delay, outside our
-API, things explode :(
-
-
-P.
-
-
-[1] https://elixir.bootlin.com/linux/v7.3/source/drivers/gpu/drm/amd/amdgpu=
-/amdgpu_vm.c#L2787
-
->=20
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020152804.3986=
+3-1-leon.hwang@linux.dev?part=3D2
