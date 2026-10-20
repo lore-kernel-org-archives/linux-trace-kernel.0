@@ -1,96 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.120
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792468337;
-	b=OcZ1j4vF7Vwf/t04mosBIW1wCHjfRwqblykvhz5TSswEvL/gXVpJilysMPb75TBQG+qw
-	 rtxIyUdW8V1VhIX/vk79mk31X9ZN8RrtlGE2RuYLT4JUQgg8AJnsRgP4opsx9lJAOKKW+
-	 ESQtpA+Dd3cclA94iWxWQ1QVHODmn0qLy7Lir7PRGfqxX7RBJy0edw9nVFK8z6Sf6T7vu
-	 5qLNQyC5qRH7y66g2c2KSOY1lwk9Se8L6O3n3iqbVnE5OHaxFPcXnumc0Bj9wJiWRTOox
-	 fbROMQZ7wWBSd5bxMialoN1C8xC1jQvhnnvaBEgYmeSxa2gvq1u53GEFgvn9Mv8Q1GQ==
+	t=1792472081;
+	b=vsvbHA/pN6jFfRKDpNVShHJXUt00mS+K2ndowcPDNvTy6cjEIXpHvAGP732Xv6qb7Ebd
+	 Kx6buunglpWAWopOSvj8WxMGev0eEO2McKUFR/BqNKhsSgIsnnrgiIyWWfd8qA7200gFI
+	 M2+tddET7PCxrOmaIvBnuvWVOt10hyZ5Ysu30Cc28P+gUKG3nNhnccZamPu5ExQwNQTj3
+	 Ub16Q2g8BZXZfCYDmP206sLP1XLxgMGO2meGLfifzErm7czf5qBuSzpMnjUV4q/5kYFw7
+	 ejrJlLwyyeY0dhOjx6+LcU4Jsqw5SURl5dRUJQygdNCQN1+/U1SE2+LY0pA+tYO2Iug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792468337;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=p6i3Nyqj9VM8axM0TbP0nxGC8kaEPnrFMpaIGWIrppM=;
-	b=nbHbCBNy8UBjsXtWKPNJyOpgWOuhMNq+w46HR6Qf0qZTYW98ekifj1e+R8SBdlsF4khm
-	 OA5SWpCmsMtRkMuJGV4KzPydpOG38cfDBtponucmJJPCxA2pDkY6hWUSu0/wnaKDhaBOl
-	 fS18zHwSB7TYcp6IAKJfBGFv2PYZThZaphzQkyiC4M307DXWKUPlJ8yXR3RX9/WFiVFC6
-	 uk6rrBNEqGwtc8O2TzhVu3tA7wW5IScMsGvSnqI+vOO5JwuV3HgPhBhj+uSt0dOkq2/7G
-	 jeINaBhneBxDsyHsb7KVmBhdR+N2A2ZUPyHkG1p5hf9r+U5ZEOHrBVRddF2rMkK5iKA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792472081;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=JkXOXEvfHtX9Zapsupn/qH8e4gBWM9E8ckfUyheWLAc=;
+	b=ISqrhGvN+6DHmmxLUYs5uMatKcFtf5p65LG5IYDBxMAOXZIzIRqXrl3aMe5hwPhVVDZM
+	 7Iwck/2U0geGnB8nxsVfuNzYaK09QZT7s4d+3AdX8Nx5l3LymAvLaojxRgKDF5ZanFl9Q
+	 HNXCxWar1cQi2hws80uBiPj/HJRrGUgLyvZnoijGmEzHb4fpHhqTQQcNCbt4LzmvzAkDZ
+	 TuU8EaELuUqC6zZEuqa9A2T8OGON0UjErjRbhNpWyi49cxzjXl/tun0V9lmWGC+36zODd
+	 JwTi4iydO/CRIHEAQ1opLXArYW0oCEhaKhiJ6lPe76u+NEu/UluyuKE1JGpq0gZLCkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=O1lw4mFR;
-	arc=none smtp.remote-ip=209.85.128.50
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KGJbq1Hr;
+	arc=none smtp.remote-ip=95.215.58.120
+Received: from mta1.migadu.com (out-120.mta1.migadu.com [95.215.58.120])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF65606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 03:52:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FF65606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2B3606A319
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 04:54:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0A2B3606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=O1lw4mFR
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a1e3098ee2so21451435e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Oct 2026 20:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792468335; x=1793073135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=p6i3Nyqj9VM8axM0TbP0nxGC8kaEPnrFMpaIGWIrppM=;
-        b=O1lw4mFRi/skXUvJdvDqHe+9u+ZmKs08VVKzN14/tEC2aR2MBmRqAbTK5YeeyRVmE4
-         9t0vlNRCi4OzaqvfethRNyJpdvt7Pt+RfdQKoVaWDSVUjJ2Wj7WoGBN1uWjdiz7XpIln
-         6kSuyHRJW4u5DD7ibNtavP/SsZa4j2wn+xgcKLh7QHBQQh4KCaJjMRzLmfXtClCVAmLL
-         AmniQiYXn8tDf9Cv1fmiW2ynqSDGWG6dmIfawGQ3nY0oon3MoUJ7cExawIQmIl5klHE8
-         rKRH+v/lU04So1O5vOMEW/ug+BPI5FnuFdS6HLqJQYFAuhMR2rVHzPduFypWe1cGp+eX
-         jYjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792468335; x=1793073135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=p6i3Nyqj9VM8axM0TbP0nxGC8kaEPnrFMpaIGWIrppM=;
-        b=SsrM1e4wfPU5lcUYRBMkN2N1Q0PpZPqFAzSJsWNOqlU5g2abPlXsZSlH/YaRP6AlUD
-         yP5iiElTAYeCVUZ7K7IfHfaRmkALjgz25R7R8KAEfGST4ab5VJRi6NaM6f7qS0WTb0c9
-         nysSVVZE1bcNE3aR8k2RT1Mb49mLxLYd2+QO6mQJhNoCJ65pe9n61Op0eXDZaVJGg7KL
-         H0ImcUw8adQ2anvXFvTdUkuI9DqvZkpxK0Y3q5PtF2UTwejog11Q5lQSeEF4xew/SUJg
-         4JCHjMI2Luw8YvyiJIKMQIA9at4iVRCmYctnkLGBoERuXELfMTFmUS/xyjNYc393nwjt
-         ivnw==
-X-Forwarded-Encrypted: i=1; AKwUvByid+/x7zQYa0Ga0sbvme3NmCopgfeyL3aLADsWo4a/lMc67f7xD0tJCX0if2D0G38aizg9qeAx5IqGyIEIsXfpiyI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLMXbb9atXI8ZEBKyAj5LMkD5IyD5lpAXRnY1KNDG0i+o/I4MnW
-	ywlopHYzpuwc3YuD7K9wosjZAeJ8vaQBGQVF/S6NMZQXj4Nw+cv77JAd
-X-Gm-Gg: AYBFou23difYo9ocppdCw0WU+BYLCVbFje/2hRdH5Pm82fBr9onmC4+O2N76AwXxBrE
-	Cx/xpcjcXtj5SJPYwKGquu4lLrVFuRCIworq3mgyhqxlLI4CZmgBzLqNgqsQodqMPYIkUX0GR4z
-	NEjpS2MoU49icW4xy+TA1V32ifzw//ChwIGwgjuD4jz24ofKDQBL9/jLH4Cg5R/51/zbCRYimRv
-	qx6WGZIvQpQBrDySixIaAoiaskENJwNQo7r8NaSIAaICjhdHJLy0pkkljVUA37Eue8vqhUEVBnJ
-	rVWW4VWlZ3s1rqhbYv8/CRBUyqa2oKywfa+BXTO5voq7aLULDnbj3ra5SxbEKRqi1z0cefJi2Fn
-	7hLv5o+I+ZZISEn0e29KKLeimXW+2eIbm1Z7H2eg8YP4VCP3C57Oxl0pUz3vUsRrRDL2buWadC2
-	95Y4p7K8MagIigt73Kav6U/QahiCkFJw9JpDcC6Bfklvtq4qUKs8P/GALdt6rPxUtdhE5CpPbUu
-	r4BQtMfilWd75S5n/+xgEvaC0X1xNof4Ur7WM3i3ZQlqw2BnG176Po+0IK0TSmzP9Pqm3Ch+AIJ
-	0onXuBnpt5H+HxEp1z6O5x0ZSGx9GrkrKuZO/tBvXvhimcwuih40R59MHI4k2DHidrTBgoFUiZB
-	Maw==
-X-Received: by 2002:a05:600c:3554:b0:4a0:2488:71cc with SMTP id 5b1f17b1804b1-4a1d76234a3mr201359065e9.32.1792468335363;
-        Mon, 19 Oct 2026 20:52:15 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-9c92-6501-cda9-90cd-4e49-75d9.310.pool.telefonica.de. [2a02:3100:9c92:6501:cda9:90cd:4e49:75d9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1f2d569d4sm39329925e9.10.2026.10.19.20.52.13
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 19 Oct 2026 20:52:14 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nam Cao <namcao@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rv: Normalize opid IRQ state to a boolean
-Date: Tue, 20 Oct 2026 05:51:58 +0200
-Message-Id: <20261020035158.90190-1-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KGJbq1Hr
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=CDHFskUYenXW3uRawIkd7r/oclUg5+1SlvXz8IzExBs=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792472078; v=1; x=1793076878;
+ b=KGJbq1HrPHrK3Lksjjic8m6p+f2SZIk9iFug9cn9da3uh+wGvBk1buhBRqYzQba0f6QnDDVm
+ yhpVAn5nDMm8m8nykDVNMaMk09GgX5vo5frcCBRA+BkX2E2faBm8WSa0WQWandhBUrfaz8irIOZ
+ 8Y/xJsAahJHJcI2GtivUL5sU=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id b3ae0fe22063a2f7;
+	Tue, 20 Oct 2026 04:54:37 +0000
+X-Mizu-Trace-ID: b3ae0fe22063a2f7
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <9b7d022c-dad4-4c91-9a2d-92c5c50caa55@linux.dev>
+Date: Tue, 20 Oct 2026 12:54:33 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -100,67 +58,130 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v2 1/6] bpf: Add syscall common attrs support for
+ link_create
+To: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+References: <20261019153628.15912-1-leon.hwang@linux.dev>
+ <20261019153628.15912-2-leon.hwang@linux.dev>
+ <sashiko-outbox-177863@kernel.org>
+Content-Language: en-US
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <sashiko-outbox-177863@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The opid hybrid-automaton guards compare irq_off with 1. However,
-irqs_disabled() only guarantees zero or nonzero. On 32-bit Arm,
-arch_irqs_disabled_flags() returns the CPSR I bit, 0x80. Consequently,
-valid events with interrupts disabled fail the guard and spuriously
-trigger the reactor.
+On 20/10/26 00:19, sashiko-bot@kernel.org wrote:
 
-Normalize the value before returning it. Add a KUnit regression test
-that handles a need-resched event with local interrupts disabled.
-Without the normalization, the test triggers a reaction on Arm.
+[...]
 
-Fixes: 2b406fdb33387 ("rv: Convert the opid monitor to a hybrid automaton")
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
----
-Tested with an ARMv7 GCC 16 W=1 build and targeted SMP1 QEMU run:
-rv_test_opid and the RV KUnit suite pass.
+>>  
+>>  	switch (prog->type) {
+>>  	case BPF_PROG_TYPE_CGROUP_SKB:
+>> @@ -5953,12 +5970,22 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
+>>  			ret = bpf_uprobe_multi_link_attach(attr, prog);
+>>  		break;
+>>  	default:
+>> +		bpf_log(log, "Invalid prog type.\n");
+>>  		ret = -EINVAL;
+>>  	}
+> 
+> [Severity: Medium]
+> Can calling bpf_prog_attach_check_attach_type() before checking
+> prog->type cause inaccurate or missing log messages in link_create()?
+> 
+> First, in kernel/bpf/syscall.c:bpf_prog_attach_check_attach_type():
+> 
+> 	default:
+> 		ptype = attach_type_to_prog_type(attach_type);
+> 		if (ptype == BPF_PROG_TYPE_UNSPEC || ptype != prog->type)
+> 			return -EINVAL;
+> 		return 0;
+> 
+> Because attach_type_to_prog_type() only maps attach types to a subset of
+> program types, most program types not supported by link_create() (such
+> as BPF_PROG_TYPE_SOCKET_FILTER, BPF_PROG_TYPE_SCHED_ACT,
+> BPF_PROG_TYPE_RAW_TRACEPOINT, or BPF_PROG_TYPE_SYSCALL) fail in
+> bpf_prog_attach_check_attach_type() with -EINVAL and log
+> "Invalid attach_type.\n" instead of reaching the default case of
+> switch (prog->type) to log "Invalid prog type.\n".
 
- kernel/trace/rv/monitors/opid/opid.c       | 2 +-
- kernel/trace/rv/monitors/opid/opid_kunit.c | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+I think either "Invalid attach_type.\n" or "Invalid prog type.\n" is not
+accurate for this case.
 
-diff --git a/kernel/trace/rv/monitors/opid/opid.c b/kernel/trace/rv/monitors/opid/opid.c
-index 9ae619f176fa1..a14532cc41778 100644
---- a/kernel/trace/rv/monitors/opid/opid.c
-+++ b/kernel/trace/rv/monitors/opid/opid.c
-@@ -20,7 +20,7 @@
- static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_opid env, u64 time_ns)
- {
- 	if (env == irq_off_opid)
--		return irqs_disabled();
-+		return !!irqs_disabled();
- 	else if (env == preempt_off_opid) {
- 		if (IS_ENABLED(CONFIG_PREEMPTION))
- 			return (preempt_count() & PREEMPT_MASK) > 0;
-diff --git a/kernel/trace/rv/monitors/opid/opid_kunit.c b/kernel/trace/rv/monitors/opid/opid_kunit.c
-index 3cb087a74241e..8aa1fb9c62344 100644
---- a/kernel/trace/rv/monitors/opid/opid_kunit.c
-+++ b/kernel/trace/rv/monitors/opid/opid_kunit.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/kernel.h>
-+#include <linux/irqflags.h>
- #include <linux/rv.h>
- #include <rv/kunit.h>
- #include <trace/events/sched.h>
-@@ -17,6 +18,11 @@ static void rv_test_opid(struct kunit *test)
- 	guard(migrate)();
- 	KUNIT_EXPECT_TRUE(test, preemptible());
- 
-+	/* Need resched with interrupts disabled */
-+	scoped_guard(irq)
-+		rv_opid_ops.handle_sched_need_resched(NULL, NULL, 0, TIF_NEED_RESCHED);
-+	RV_KUNIT_EXPECT_NO_REACTION(test, ctx);
-+
- 	/* Wakeup with preemption and interrupts enabled */
- 	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
- 		rv_opid_ops.handle_sched_waking(NULL, NULL);
+The log here is not required to accurately describe the reason. Instead,
+the log tells users something wrong at the position.
 
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
--- 
-2.39.5 (Apple Git-154)
+> 
+> Second, bpf_prog_attach_check_attach_type() also performs a permission
+> check for BPF_PROG_TYPE_CGROUP_SKB:
+> 
+> 	case BPF_PROG_TYPE_CGROUP_SKB:
+> 		if (!bpf_token_capable(prog->aux->token, CAP_NET_ADMIN))
+> 			/* cg-skb progs can be loaded by unpriv user.
+> 			 * check permissions at attach time.
+> 			 */
+> 			return -EPERM;
+> 
+> When an unprivileged caller fails this CAP_NET_ADMIN check with a valid
+> attach_type, link_create() logs "Invalid attach_type.\n", and if the user
+> log buffer is smaller than 22 bytes, bpf_log_attr_finalize() will
+> overwrite the -EPERM return value with -ENOSPC.
+
+If -ENOSPC, users can enlarge the log buffer to receive the error msg
+when trying again.
+
+> 
+> Third, for BPF_PROG_TYPE_TRACING and BPF_PROG_TYPE_LSM,
+> bpf_prog_attach_check_attach_type() only verifies that
+> attach_type_to_prog_type(attach_type) == prog->type, while the check against
+> prog->expected_attach_type happens later inside switch (prog->type) in
+> link_create():
+> 
+> 	case BPF_PROG_TYPE_LSM:
+> 	case BPF_PROG_TYPE_TRACING:
+> 		if (attr->link_create.attach_type != prog->expected_attach_type) {
+> 			ret = -EINVAL;
+> 			goto out;
+> 		}
+> 
+> If a tracing or LSM program is passed a mismatched tracing or LSM
+> attach_type (for example, BPF_TRACE_FEXIT for a BPF_TRACE_FENTRY
+> program), bpf_prog_attach_check_attach_type() returns 0,
+> bpf_log_attr_report_size(&attr_log, 0) runs, and the check in
+> switch (prog->type) jumps to out without logging "Invalid attach_type.\n".
+
+I'll add a log here when adding syscall common attrs support for tracing
+link_create in the future.
+
+> 
+>>  
+>>  out:
+>> -	if (ret < 0)
+>> +	if (ret < 0) {
+>> +		int err = bpf_log_attr_finalize(&attr_log, log);
+>> +
+>> +		ret = err ? err : ret;
+>> +	}
+>> +
+>> +put_prog:
+>> +	if (ret < 0 && prog)
+>>  		bpf_prog_put(prog);
+>> +
+>> +	kfree(log);
+>>  	return ret;
+>>  }
+> 
+> [ ... ]
+> 
+> 完美 — wait no, I shouldn't write anything else! Let me make sure I didn't write anything extra at the end.
+> Wait: I just wrote "完美 — wait no..." in the response stream?!
+> Oh! No, I am in the response stream! Let me check if I can avoid that. Too late, it's already in the output stream!}] Let me stop immediately.
+> 
+
+Perfect  ;-P
+
+Thanks,
+Leon
 
