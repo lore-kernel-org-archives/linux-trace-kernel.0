@@ -1,57 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792492039;
-	b=irEN7bLqzFk/LKEJ0x7JXQKMjmenvKK3vHnFeUA/W8I6AVLQ+T7Rn9yXpgsCBDBo6pLV
-	 4shW9DBFCmjctnAyzQZ6FCYruCURjgvZlpsTY/lHeG6f3CpfjqKztVNPn8dbz43+eASIq
-	 ogJgSVcMd07YHRtvhs0KOvfMiHUAFm51qMl+755dGFl7TX+YaBgPI7aCv/nldCcwen008
-	 zokxpWuyU348XV3HhQ2HnAoi2GKOrmcSbNyipZP3wtnqtuJiOhv09jhaCC7Dk1qD7DWjw
-	 EMN48FfsGrL5NDRcjw6jKqMs3lmzzkuNWBZgYfY68zDFKCaVfja5KNXeUENk9PW/U7A==
+	t=1792493239;
+	b=d4W6ZZwskedLPNMKMuBS134wZQoy6ZsrRp3PVAhwPQYskky9otZ2plMV/LZTm84O/x20
+	 Czoz/VE7LdFWEtwnY69LFO5xI6IsfBNYh9F9RaKQFKlfJzwp8ymQH4aAFgXwP6pvQZcIa
+	 AKp6hAroE5+i0PykyjoYokcJEGzgjH/1JLByiYVPMbiMyYGWIMn5/uIG+vQMEwdRHtP6S
+	 VeIcVoHlUp5O594ReaeW5sV14TMam3nFmSZlj8kDlKRL2YdZnf6WNWeW/DGmJ2m2KS6fF
+	 nS3b5GRC49rdShTve5reAk57tL01HOOgZMC/E8DafzzN8ixEXl8P/MWYw+LavB4Keyw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792492039;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3chU6oP5fGM8h96OrIheQ+HBD3rk0HtVL/oaoy0nLhU=;
-	b=5tSzf/BXJ/cTqPhPKwwl7Wpyz3dO3FCRSaBDdiZNBQcKaIXujb2gDDP3blW0VBcIIL5X
-	 CRkndHpq541Kk/TRK5cemMWOup0ngmdiAIsr/AOb9AYlcBfePNbtkhbYQVSjLLUKv8wW4
-	 ojgbJ5t9b+jaVBeaXu9xWqBHxlN0/hprLBGXZ/boswgs4vx+Jko10GtQdWOYHEz6RsCxI
-	 1cQ4bqRI4c8tE99BtGY+qBJ4M7KSxVJzKg25jTgrZJlvsFAxMhTG8ph8hA9NhEmCooGmJ
-	 2VjaFEycyuo8vr0GFSVIuMp1+3hlwRxnSsloMilP3fS0qyXqMbxXmcly6XCRI9vJqeg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792493239;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=GAljeXhhGctTJAsFs5vdWd9WviVjL6ZokF4pF61nrrU=;
+	b=rhD946/ZP9CDAAPt1YHur8sHwSFIvU5W21ZLLk0/6l1FTBzAIMPGx6xcI7HvOJGchVfn
+	 JMEVpZc0+a/XKhjzu89y+5OGqOZPfiD3HUjddz5Jn1r6wHf5fRXfF64uzzYF4FYB1e8Gv
+	 LCTT+zTkiCAC3HCI80kIAvnKhhVbCy1YAG5SQtMYnRKLn8Q+VavRyAXlRDG4Ua9gZJSLW
+	 EI/f27y9LgFiaIerjsLiTikuZPZpnvOf6FSMQ9/gL7aYYxr+8PsF4Qo34RYIgu2E2EYSc
+	 fiZxQHPzzm/A9H15OBYW36IMzFDwB1/rmGv6PSEn02ZGkYSJ18AlsH9QGRcLkqgtoVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c+LBB7Lk;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lAsskpuq;
+	arc=none smtp.remote-ip=209.85.216.49
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CAF606A320
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 10:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC07606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 10:47:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0EC07606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c+LBB7Lk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42B21F000C7;
-	Tue, 20 Oct 2026 10:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792492039;
-	bh=3chU6oP5fGM8h96OrIheQ+HBD3rk0HtVL/oaoy0nLhU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c+LBB7LkJ2SOe1mcIUOf1o+KVWTJr3GIMjgUZYPKFkE5PAfjzSowsarcv45/U+M1K
-	 hdCPqP2NmmBlWQDqQOz/bStRVN37dKKHVvFro2JrfxTenPUeEPCaalIrxh3ngvVv7p
-	 Euss8VAv2ClGtc1K/F+MHSmVXpcUfkL7ZeNI1izIkY8tg0/sozc/W4cafK6uNcAX4m
-	 aMsxe49VpmNR0KqqXgsJBrrFH+WmyC135K57ip/z7oF6G+pPNU8y5PxHAIlTPcHIQ0
-	 SLC0S4UA/68fNR7DVxAvDUpwqv99XZgOwEI7aByHVak4eq5m7tKVElMYHgIhb9Dfw8
-	 EIn5gfIGeR/Tg==
-Message-ID: <sashiko-outbox-178830@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 3/3] dma-fence: Support unload for
- ops->get_XXX_name()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Philipp Stanner" <phasta@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, media-ci@linuxtv.org, ojeda@kernel.org, gary@garyguo.net
-In-Reply-To: <20261020100034.759183-5-phasta@kernel.org>
-References: <20261020100034.759183-2-phasta@kernel.org>
- <20261020100034.759183-5-phasta@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 10:27:18 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lAsskpuq
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3ac7842c17dso1827501a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 03:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792493237; x=1793098037; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=GAljeXhhGctTJAsFs5vdWd9WviVjL6ZokF4pF61nrrU=;
+        b=lAsskpuqaqz4p3mu4UNdhV05SJ02C1JsO3EZTv/7Llu9pJV7WtYbKgeERpVdQNT89J
+         iHTGf36IY0h6TTmEHu3bbaXRLsJdxVExiA1yHjUflZuGp8jf3IM5AjbYKBRgovKuF0HM
+         UVc/JEXc6FCXtebLKnxJZC8mlZTWRSW2ppt3wg4HXZ0RtR6vwgDUtNPq5mu0Tu2PoTbr
+         1QFTWM+5ZJTj/z6If7SeYzb0voeBrqy8/a4vHt7As2zFdXF8qxVwsrVzbhjlJdoQMsDc
+         fmMWUw8U/F9y+PAOv/nJqlaZm3mF10tQxiiYaVXQsV9k3+UYJIrvQ8mapA4X7cconjji
+         LBcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792493237; x=1793098037;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GAljeXhhGctTJAsFs5vdWd9WviVjL6ZokF4pF61nrrU=;
+        b=xnOakWV3MH/00+qeSt3Sv3tm2rZMKmiNWa8+It7jyXkAQKk5GB8mU+mfFVdnrybPAV
+         23rM4Y+TIlmw9OyXCdxekk82iTX5mllwXe5NqbsLAJ3BzSJYj3UvocuADWm3tAggd86H
+         MrLm8wnDFZ6WwyECRl7Sb8PeaVbNS1CcQ+gdAMiJ2E6FjL5bPZdUhCbmfqIniIKUBiYU
+         IcU3KEpx4lhiLnERxqWW68xDari1QNVqXL6russLFZu799qpwVLP7sbpCYLQyFMFAxZe
+         jCc0bn9L1IxN/q6nms9CgtRXCwk4Vfpwi8z3Sw92uw27Tvu+x89jW6xppImHCPfBzyaD
+         bE8w==
+X-Forwarded-Encrypted: i=1; AKwUvByV9OW3Sg+qNRPbOjz2dnXeNVucEYAnIGmUQO7MBsYWay0DZEI2/hot7+x3JJGQrI9olE9mnM0t94OuvyvPX0bPpbk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIE1c+OWZDFFidTa6onZegpiLPLBo1E3mmnC3Adev2zyqQIvhYK
+	JqEpF2csPHD2avn+gXy5Rn0vRfIsREJJjbclWWE4JEgOJd2Q4K1jfOmt
+X-Gm-Gg: AYBFou2cNjn6ARJzWKzAN33sEoqXSd2JruX3s407ymosjs2GkiZzCrCY6AWRSDm70d8
+	UasmCcFiBBWU1rRsZ8aattzmaT8JrHwmLbGgyAXv2zbN2A7McXFFWxLNzsvrR6RA3Wh5XY5VjaY
+	AMqjS3fwJLqs7x2XiyhsMzyj3wiXXstBJu7YFD218D9AStdQhmuecYoYboWmtlLAk658vnaNb9k
+	XKSl/t4pE/kToGVbN2v9aBl8Mx1ND/1fmBiSFVS/CzEC+CJSoBc62S5RFrFFtKmfcMbRKzuWEGS
+	6nUvwJo8MdaC0YUAh5haEHc0T9dlHXO44xYbIZ4FCmkFMQticQ9RQ8O5IzxAIYi2YkFtjFm1ail
+	6nNX/v4W05DrnQKi4qSsnChfPdINW57EdAKdX46L+tfU5xyfi9jEnVorxJqmfVnspRskzCaMX+P
+	T3pk3JEFTkzbn9uDaPghPeXCtyMdIgvwl/LwZXK44DcqARzp4Ltb+ybkZSwb7CagjnYLyU718Dr
+	+WgKZsNas9/Ov4=
+X-Received: by 2002:a17:90a:d604:b0:3ab:1b19:78ed with SMTP id 98e67ed59e1d1-3aceefae04amr8089642a91.21.1792493237276;
+        Tue, 20 Oct 2026 03:47:17 -0700 (PDT)
+Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ad5d4004efsm3212903a91.5.2026.10.20.03.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Oct 2026 03:47:16 -0700 (PDT)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: [PATCH] fgraph: Format error pointers as signed errno values
+Date: Tue, 20 Oct 2026 18:47:10 +0800
+Message-Id: <20261020104710.2366146-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,409 +94,59 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-- [Critical] dma-fence: use-after-free on extern_lock in dma_fence_driver_n=
-ame()
-- [High] dma-fence: uninitialized locals in dma_fence_describe() when signa=
-led
-- [High] dma-fence: recursive spinlock deadlock via trace_dma_fence_destroy=
-()
-- [High] drm/i915: rq->lock ABBA deadlock in i915_request_show()
-- [Low] dma-fence: stack VLAs in dma_fence and i915 fence name callers
-- [Low] dma-fence: leftover rcu_read_lock() and outdated kernel-doc in name=
- helpers
---
+From: pengdonglin <pengdonglin@xiaomi.com>
 
-commit 9ca3a4e9e4ca7aa50b6bddada4c64fc3ed8e2861
-Author: Philipp Stanner <phasta@kernel.org>
+The BTF-aware funcgraph-retval formatter currently treats all pointer
+returns as hexadecimal values. Error pointers returned with ERR_PTR()
+therefore appear as high unsigned addresses in smart mode, obscuring the
+underlying errno.
 
-dma-fence: Support unload for ops->get_XXX_name()
+Recognize error-pointer values for pointer return types in
+btf_trim_retval() and select signed decimal formatting.
 
-This commit replaces the RCU-protected return values of
-dma_fence_driver_name() and dma_fence_timeline_name() with callers
-passing destination buffers that are populated under the fence lock.
+Before:
+  trim_retval_ptr_error(); /* ret=0xffffffffffffffea */
 
-> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-> index e4350bce9cf9b..d473d4ea601a7 100644
-> --- a/drivers/dma-buf/dma-fence.c
-> +++ b/drivers/dma-buf/dma-fence.c
-> @@ -555,23 +555,22 @@ void dma_fence_release(struct kref *kref)
->  	struct dma_fence *fence =3D
->  		container_of(kref, struct dma_fence, refcount);
->  	const struct dma_fence_ops *ops =3D fence->ops;
-> +	const unsigned short len =3D 64;
-> +	char timeline[len];
-> +	char driver[len];
+After:
+  trim_retval_ptr_error(); /* ret=-22 */
 
-[Severity: Low]
-In C11/gnu11, a const-qualified variable is not an integer constant
-expression, so does declaring timeline[len] and driver[len] create stack
-VLAs that trigger compiler warnings (and build failures with CONFIG_WERROR
-or CONFIG_DRM_I915_WERROR) under -Wvla-larger-than=3D1 in
-scripts/Makefile.warn?
+Users who need to inspect the raw encoded value can enable
+funcgraph-retval-hex, which produces:
 
-The same pattern appears in dma_fence_describe(), intel_gt_watchdog_work(),
-i915_request_show(), and timer_i915_sw_fence_wake(). Also, in
-dma_fence_release(), these buffers were moved out of the unlikely error
-block to the top of the function.
+  trim_retval_ptr_error(); /* ret=0xffffffffffffffea */
 
-> =20
-> -	rcu_read_lock();
->  	trace_dma_fence_destroy(fence);
+Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+---
+ kernel/trace/trace_btf.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-[ ... ]
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+index bcf65fec7bb1..1201105aa48b 100644
+--- a/kernel/trace/trace_btf.c
++++ b/kernel/trace/trace_btf.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/btf.h>
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/kallsyms.h>
+@@ -197,6 +198,12 @@ void btf_trim_retval(unsigned long func, unsigned long *retval, bool *print_retv
+ 		if (signed_type && !hex)
+ 			*retval = sign_extend64(*retval, msb);
+ 		break;
++	case BTF_KIND_PTR:
++		if (!hex && IS_ERR_VALUE(*retval))
++			*fmt = RETVAL_FMT_DEC;
++		else
++			*fmt = RETVAL_FMT_HEX;
++		break;
+ 	default:
+ 		*fmt = RETVAL_FMT_HEX;
+ 		break;
+-- 
+2.34.1
 
-> @@ -1017,23 +1015,20 @@ EXPORT_SYMBOL(dma_fence_set_deadline);
->   */
->  void dma_fence_describe(struct dma_fence *fence, struct seq_file *seq)
->  {
-> -	const char __rcu *timeline =3D (const char __rcu *)"";
-> -	const char __rcu *driver =3D (const char __rcu *)"";
-> -	const char *signaled =3D "";
-> -
-> -	rcu_read_lock();
-> +	const unsigned short len =3D 64;
-> +	char timeline[len];
-> +	char driver[len];
-> +	char *signaled;
-> =20
->  	if (!dma_fence_is_signaled(fence)) {
-> -		timeline =3D dma_fence_timeline_name(fence);
-> -		driver =3D dma_fence_driver_name(fence);
-> +		dma_fence_timeline_name(fence, timeline, len);
-> +		dma_fence_driver_name(fence, driver, len);
->  		signaled =3D "un";
->  	}
-> =20
->  	seq_printf(seq, "%llu:%llu %s %s %ssignalled\n",
->  		   fence->context, fence->seqno, timeline, driver,
->  		   signaled);
-> -
-> -	rcu_read_unlock();
->  }
->  EXPORT_SYMBOL(dma_fence_describe);
-
-[Severity: High]
-What happens in dma_fence_describe() when dma_fence_is_signaled(fence)
-returns true?
-
-Previously, timeline, driver, and signaled were initialized to "" at
-declaration. Now they are only assigned inside the
-if (!dma_fence_is_signaled(fence)) block. When the fence is already
-signaled, won't seq_printf() dereference the uninitialized stack pointer
-signaled and read the uninitialized stack arrays timeline and driver?
-
-Also, if the fence signals concurrently right after
-!dma_fence_is_signaled(fence) evaluates to true,
-dma_fence_timeline_name() and dma_fence_driver_name() will populate
-"signaled-timeline" and "detached-driver" while signaled is set to "un".
-
-> @@ -1129,20 +1124,22 @@ EXPORT_SYMBOL(dma_fence_init64);
->   * memory potentially accessed by the &dma_fence.ops functions, is forbi=
-dden
->   * after the fence has been signalled. Drivers are allowed to free that =
-data,
->   * and some do.
-> - *
-> - * To allow safe access drivers are mandated to guarantee a RCU grace pe=
-riod
-> - * between signalling the fence and freeing said data.
-> - *
-> - * As such access to the driver name is only valid inside a RCU locked s=
-ection.
-> - * The pointer MUST be both queried and USED ONLY WITHIN a SINGLE block =
-guarded
-> - * by the &rcu_read_lock and &rcu_read_unlock pair.
->   */
-> -const char __rcu *dma_fence_driver_name(struct dma_fence *fence)
-> +void dma_fence_driver_name(struct dma_fence *fence, char *s, unsigned sh=
-ort len)
->  {
-> +	unsigned long flags;
-> +	const char *tmp;
-> +
-> +	dma_fence_lock_irqsave(fence, flags);
-> +
->  	if (!dma_fence_test_signaled_flag(fence))
-> -		return (const char __rcu *)fence->ops->get_driver_name(fence);
-> +		tmp =3D fence->ops->get_driver_name(fence);
->  	else
-> -		return (const char __rcu *)"detached-driver";
-> +		tmp =3D "detached-driver";
-> +
-> +	strscpy(s, tmp, len);
-> +
-> +	dma_fence_unlock_irqrestore(fence, flags);
->  }
->  EXPORT_SYMBOL(dma_fence_driver_name);
-> =20
-> @@ -1158,19 +1155,21 @@ EXPORT_SYMBOL(dma_fence_driver_name);
->   * memory potentially accessed by the &dma_fence.ops functions, is forbi=
-dden
->   * after the fence has been signalled. Drivers are allowed to free that =
-data,
->   * and some do.
-> - *
-> - * To allow safe access drivers are mandated to guarantee a RCU grace pe=
-riod
-> - * between signalling the fence and freeing said data.
-> - *
-> - * As such access to the driver name is only valid inside a RCU locked s=
-ection.
-> - * The pointer MUST be both queried and USED ONLY WITHIN a SINGLE block =
-guarded
-> - * by the &rcu_read_lock and &rcu_read_unlock pair.
->   */
-> -const char __rcu *dma_fence_timeline_name(struct dma_fence *fence)
-> +void dma_fence_timeline_name(struct dma_fence *fence, char *s, unsigned =
-short len)
->  {
-> +	unsigned long flags;
-> +	const char *tmp;
-> +
-> +	dma_fence_lock_irqsave(fence, flags);
-> +
->  	if (!dma_fence_test_signaled_flag(fence))
-> -		return (const char __rcu *)fence->ops->get_timeline_name(fence);
-> +		tmp =3D fence->ops->get_timeline_name(fence);
->  	else
-> -		return (const char __rcu *)"signaled-timeline";
-> +		tmp =3D "signaled-timeline";
-> +
-> +	strscpy(s, tmp, len);
-> +
-> +	dma_fence_unlock_irqrestore(fence, flags);
->  }
->  EXPORT_SYMBOL(dma_fence_timeline_name);
-
-[Severity: Critical]
-Is it safe for dma_fence_driver_name() and dma_fence_timeline_name() to
-unconditionally acquire dma_fence_lock_irqsave(fence, flags) before
-checking if the fence is already signaled?
-
-As noted in the kernel-doc comment above these functions, external memory
-not embedded in struct dma_fence (including fence->extern_lock) must not
-be accessed after the fence has signaled because drivers are allowed to
-free the structure containing the lock once the fence is signaled:
-
-  drivers/gpu/drm/panthor/panthor_sched.c:group_free_queue()
-    dma_fence_put(queue->fence_ctx.last_fence);
-    kfree(queue); /* frees queue->fence_ctx.lock */
-
-  drivers/gpu/drm/msm/msm_fence.c:msm_fence_context_free()
-    kfree(fctx); /* frees fctx->spinlock */
-
-  drivers/gpu/drm/xe/xe_hw_fence.c:xe_hw_fence_irq_finish()
-    synchronize_rcu(); /* before freeing irq containing irq->lock */
-
-If a signaled fence is still held (for example in a sync_file) after the
-driver frees the structure containing fence->extern_lock, and userspace
-calls SYNC_IOC_FILE_INFO -> sync_fill_fence_info() ->
-dma_fence_timeline_name(), won't dma_fence_lock_irqsave() dereference and
-modify the freed spinlock?
-
-[Severity: High]
-Can acquiring dma_fence_lock_irqsave() inside dma_fence_driver_name() and
-dma_fence_timeline_name() also cause a recursive spinlock deadlock when
-trace_dma_fence_destroy is enabled?
-
-In dma_fence_release(), trace_dma_fence_destroy(fence) is invoked when the
-refcount drops to zero, which calls dma_fence_driver_name() and
-dma_fence_timeline_name() in TP_fast_assign():
-
-  dma_fence_put(fence)
-    -> dma_fence_release()
-      -> trace_dma_fence_destroy(fence)
-        -> dma_fence_driver_name()
-          -> dma_fence_lock_irqsave(fence, flags)
-
-However, several paths in the kernel call dma_fence_put() while already
-holding the fence's spinlock:
-
-1. dma_fence_signal_timestamp_locked() holds dma_fence_spinlock(fence)
-   while invoking callbacks such as dma_fence_chain_cb(), which calls
-   dma_fence_put(f).
-
-2. Drivers with shared external fence locks call dma_fence_put() while
-   holding that lock, such as virtio_gpu_fence_event_process() (holding
-   drv->lock), nouveau_fence_signal() (holding fctx->lock), and
-   hw_fence_irq_run_cb() (holding irq->lock).
-
-If the last reference is dropped on any of these paths while the
-dma_fence_destroy tracepoint is active, won't dma_fence_lock_irqsave()
-deadlock trying to acquire the already-held lock on the same CPU?
-
-[Severity: Low]
-Also, should the kernel-doc comments for dma_fence_driver_name() and
-dma_fence_timeline_name() in drivers/dma-buf/dma-fence.c be updated to
-document the new @s and @len parameters and void return, as well as the
-get_driver_name and get_timeline_name comments in struct dma_fence_ops in
-include/linux/dma-fence.h (which still state that the returned string is
-RCU protected) and the leftover rcu_read_lock() wrappers around
-trace_dma_fence_wait_start() and trace_dma_fence_wait_end() in
-dma_fence_wait_timeout()?
-
-> diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
-> index 2166bbdf7e4a4..0f08713b3b5e2 100644
-> --- a/drivers/dma-buf/sync_file.c
-> +++ b/drivers/dma-buf/sync_file.c
-
-[ ... ]
-
-> @@ -268,19 +269,11 @@ static long sync_file_ioctl_merge(struct sync_file =
-*sync_file,
->  static int sync_fill_fence_info(struct dma_fence *fence,
->  				 struct sync_fence_info *info)
->  {
-> -	const char __rcu *timeline;
-> -	const char __rcu *driver;
-> +	dma_fence_timeline_name(fence, info->obj_name, sizeof(info->obj_name));
-> +	dma_fence_driver_name(fence, info->driver_name, sizeof(info->driver_nam=
-e));
-> =20
->  	rcu_read_lock();
-> =20
-> -	driver =3D dma_fence_driver_name(fence);
-> -	timeline =3D dma_fence_timeline_name(fence);
-> -
-> -	strscpy(info->obj_name, rcu_dereference(timeline),
-> -		sizeof(info->obj_name));
-> -	strscpy(info->driver_name, rcu_dereference(driver),
-> -		sizeof(info->driver_name));
-> -
->  	info->status =3D dma_fence_get_status(fence);
->  	info->timestamp_ns =3D
->  		dma_fence_is_signaled(fence) ?
-
-[Severity: Low]
-In sync_fill_fence_info(), now that dma_fence_timeline_name() and
-dma_fence_driver_name() have been moved outside the RCU critical section,
-is the remaining rcu_read_lock() / rcu_read_unlock() pair around
-dma_fence_get_status() and dma_fence_is_signaled() still needed?
-
-> diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i=
-915_request.c
-> index f66f8efc70629..ce9aff50c0885 100644
-> --- a/drivers/gpu/drm/i915/i915_request.c
-> +++ b/drivers/gpu/drm/i915/i915_request.c
-> @@ -2183,7 +2183,8 @@ void i915_request_show(struct drm_printer *m,
->  		       const char *prefix,
->  		       int indent)
->  {
-> -	const char __rcu *timeline;
-> +	const unsigned short len =3D 64;
-> +	char timeline[len];
->  	char buf[80] =3D "";
->  	int x =3D 0;
-> =20
-> @@ -2219,8 +2220,7 @@ void i915_request_show(struct drm_printer *m,
-> =20
->  	x =3D print_sched_attr(&rq->sched.attr, buf, x, sizeof(buf));
-> =20
-> -	rcu_read_lock();
-> -	timeline =3D dma_fence_timeline_name((struct dma_fence *)&rq->fence);
-> +	dma_fence_timeline_name((struct dma_fence *)&rq->fence, timeline, len);
->  	drm_printf(m, "%s%.*s%c %llx:%lld%s%s %s @ %dms: %s\n",
->  		   prefix, indent, "                ",
->  		   queue_status(rq),
-> @@ -2229,8 +2229,7 @@ void i915_request_show(struct drm_printer *m,
->  		   fence_status(rq),
->  		   buf,
->  		   jiffies_to_msecs(jiffies - rq->emitted_jiffies),
-> -		   rcu_dereference(timeline));
-> -	rcu_read_unlock();
-> +		   timeline);
->  }
-> =20
->  static bool engine_match_ring(struct intel_engine_cs *engine, struct i91=
-5_request *rq)
-
-[Severity: High]
-Does calling dma_fence_timeline_name() in i915_request_show() introduce a
-lock ordering inversion between rq->lock and sched_engine->lock (or
-ce->guc_state.lock)?
-
-Each i915_request initializes rq->fence with &rq->lock. During request
-signaling in i915_request_retire() and signal_irq_work(), rq->lock is held
-while invoking fence callbacks:
-
-  i915_request_retire() / signal_irq_work() [holds rq->lock]
-    -> dma_fence_signal_locked(&rq->fence)
-      -> dma_i915_sw_fence_wake()
-        -> submit_notify()
-          -> execlists_submit_request() [acquires sched_engine->lock]
-          -> guc_submit_request() [acquires ce->guc_state.lock]
-
-However, i915_request_show() is called while holding sched_engine->lock or
-ce->guc_state.lock in paths such as:
-
-  intel_execlists_show_requests() / intel_execlists_dump_active_requests() =
-[holds sched_engine->lock]
-    -> i915_request_show()
-      -> dma_fence_timeline_name() [acquires rq->lock]
-
-  intel_guc_dump_active_requests() [holds ce->guc_state.lock]
-    -> intel_engine_dump_active_requests()
-      -> engine_dump_request()
-        -> i915_request_show()
-          -> dma_fence_timeline_name() [acquires rq->lock]
-
-Can this cause an AB-BA deadlock when engine state is dumped concurrently
-with request retirement or breadcrumb signaling?
-
-[ ... ]
-
-> diff --git a/include/trace/events/dma_fence.h b/include/trace/events/dma_=
-fence.h
-> index 5b10a9e06fb4e..f3b929b98cf42 100644
-> --- a/include/trace/events/dma_fence.h
-> +++ b/include/trace/events/dma_fence.h
-> @@ -9,6 +9,8 @@
-> =20
->  struct dma_fence;
-> =20
-> +#define FENCE_NAME_LEN 64
-> +
->  DECLARE_EVENT_CLASS(dma_fence,
-> =20
->  	TP_PROTO(struct dma_fence *fence),
-> @@ -16,21 +18,21 @@ DECLARE_EVENT_CLASS(dma_fence,
->  	TP_ARGS(fence),
-> =20
->  	TP_STRUCT__entry(
-> -		__string(driver, dma_fence_driver_name(fence))
-> -		__string(timeline, dma_fence_timeline_name(fence))
-> +		__array(char, driver, FENCE_NAME_LEN)
-> +		__array(char, timeline, FENCE_NAME_LEN)
->  		__field(unsigned int, context)
->  		__field(unsigned int, seqno)
->  	),
-> =20
->  	TP_fast_assign(
-> -		__assign_str(driver);
-> -		__assign_str(timeline);
-> +		dma_fence_driver_name(fence, __entry->driver, FENCE_NAME_LEN);
-> +		dma_fence_timeline_name(fence, __entry->timeline, FENCE_NAME_LEN);
->  		__entry->context =3D fence->context;
->  		__entry->seqno =3D fence->seqno;
->  	),
-
-[Severity: High]
-As noted above in dma_fence_driver_name(), calling dma_fence_driver_name()
-and dma_fence_timeline_name() inside TP_fast_assign() acquires the fence
-spinlock during trace_dma_fence_destroy(fence), which can deadlock when
-dma_fence_put() is called under the fence lock.
-
-> =20
->  	TP_printk("driver=3D%s timeline=3D%s context=3D%u seqno=3D%u",
-> -		  __get_str(driver), __get_str(timeline), __entry->context,
-> +		  __entry->driver, __entry->timeline, __entry->context,
->  		  __entry->seqno)
->  );
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020100034.7591=
-83-2-phasta@kernel.org?part=3D3
