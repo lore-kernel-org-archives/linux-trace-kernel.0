@@ -1,120 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792550400;
-	b=VwVIrHSScoraacPWZbBXWvZe3EIr9jg5dcOcMPtR7qNI1E1rhJHtk6Vdcp0MmDTWYJoJ
-	 ACBnYQxHahQ9bK9z5oDh6mOAYl8K7TQLjUOBQrf66iWUCfRjNhvnwVxGNLnCW4jaFi/ZN
-	 6BWoD7kFxpVDjOPPvEf5EhlplTrn8wDUBMxE3X+IESST2PNSqm7fTWwwqCsyVkFdvowK2
-	 43GnBWxGEsqCR2mONR2IJPIKNwI9pEFuExo5XjytSTIEkLJ1OTzi8zvXlnlAtvoO5Cpyn
-	 LrdGVuOChNjl6uyXFEKWjTi0uBK4eb+YNMto6+jVcugqMYQOpvxKZNUpffPkYI/BDag==
+	t=1792551887;
+	b=YeR6/SLNOHd9IUIwxASH1jd+WgLweiNXkrLSLzIj3RAJ0MBBumTsbULBKp/AcG2FsF9U
+	 ekfIBaBEZytB3iSarYpW8ZItDihZF3O/PgDvrvc1M14JwJBkI7tslpIU98xYwAqxP/0+o
+	 arsHfyvieQfzf5Q74vIVaz5D5pD08luJMGHIHXZocgbs5/cp+tRlYhiuPRqvhz6VL/FaP
+	 YLCtRqMqWxjwhXMdkmvOVqJkjjfI7YFTMh3RrkQCFyHxqAGjKyeHrb2pdlHBhtEQ9DLzq
+	 6i33fAFPX1YeIjD243TkAn/5ubOBdAsm5NktCcSqTQ7ypSVQOgMsKyNnOacaQ782gFA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792550400;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792551887;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=abLwrGFXoJBlnSAGPYLFFR7ZpE8C/Ap31b+sTibNse0=;
-	b=5IjWGMskz3BThO6HAC96HibE6C8MuDGSjPh22hkr1mwSaNf/uthNuN2anO0hkb4KeErG
-	 wpa35vdIBFFRkxhq3nGfPkRCHkP3MtsZiEKaKP+X8B8zjZ6CjEoFRED0uoQ8ga3VFMmYy
-	 S++3uZX8sLIdZ9MJg0yTAhQ9NewrAWJ7F2BdJeqKuWGptsw0siV+geUlifAMx5j5AKiHG
-	 tqseK0X+gaqwLAaUupqZ91EykgvIC0E6PiudanjGbJP54fP3pA/OiiTqKWZG61RJLWRzC
-	 mSCwRWRTR07Ht8o8MqgFCaRCkbad1FQASJoscr8SPelo2r3woR8G/CgCRObWed7HxwA==
+	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
+	 Subject:From:To:Cc:X-Mailer:References:In-Reply-To;
+	bh=rc5wrhUHr1AVoBfBDZ+r5qvZgVrRLeIPWk5f/ArMKLg=;
+	b=m5YJEfxFRvXNwNxXr6x6Lg2CMxMcpTzZ4UQPj7CQlR98NZZXczh3UgbUSRXdV5Hu1ayi
+	 qqvoTP6lmEAuAdZrtV7wNITYOZ83QVU0tMDFLedxtIHqo0ozBnipDTpgwTSJWdvK1TlPH
+	 pjPDkA5sR6z9A/AsSdpaXCjWTrE3xOqAX/829p2BRYdRbCz0E1W5XOwp0IwLBbxxbTex+
+	 y6WCYrXG67UnJX1LaoByW2+aLhtQLqhzpAhHagE26IFrKfeF1re+l/PAu9tQ02J9j+pcx
+	 Mm+bB4BwyVDZIspnJXIBhca3BvRREBdQv0Yo9DZxbgu6dDxkKXr8wsrRGhbEes6AxuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gourry.net;
-	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=sdrXFa1x;
-	arc=none smtp.remote-ip=209.85.222.171
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PuGDi+yC;
+	arc=none smtp.remote-ip=209.85.215.175
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A2660A2628
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 02:39:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1A2660A2628
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59154606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 03:04:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59154606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=sdrXFa1x
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-93f22a8515eso23982485a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 19:39:59 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PuGDi+yC
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cc4aa0246b7so62390a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 20:04:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1792550399; x=1793155199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=abLwrGFXoJBlnSAGPYLFFR7ZpE8C/Ap31b+sTibNse0=;
-        b=sdrXFa1xLhvIReq0kw4CbXCZJcV4vwN9Cdl2Lfxt5cMVxYojNvyfava1FDldns2RkZ
-         ezXEEqGOT+9F/nekjNoyU8Wz+hF3DEhVETvlRSsioDWxSsMaOMnjH2dyz1IM59kg3xxz
-         s7KcqE1tEin89Dnr86ypQ1UOW42bzFF856AYOahJZWvg2kG/xiNcmWJF0I8kFZAiLuVK
-         CxfeFSf6jO1LAuZRq1HtTDW1/4ncDhTlsemBl+P63gDuV7YR3Mflg+PCZL+InLftYvIW
-         u/ELWKZnlcmjIfgviPbQyn9TP1UEVrcbRh2AP5F1tMafZJNXA+nMW5UVUBuLIVSVUxC3
-         DmyQ==
+        d=gmail.com; s=20251104; t=1792551887; x=1793156687; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=rc5wrhUHr1AVoBfBDZ+r5qvZgVrRLeIPWk5f/ArMKLg=;
+        b=PuGDi+yC/qP1bGcg/TSJFrSAOJewAE8/w32VXn0pviJ9BU1AXHc+a3rPhPUuvSfVDm
+         JR7tpDlII85BMuy9n3vyR4guPVqaMo0FxWhPE9NcoUQbhXT+7mMAI4QRfLXUIcqo5/Xs
+         q6j4Gd+4w4vZcM5fGQi/8qw9VONKn+ZhsJ6qLm4IGL2EXDxGcJlYXGqZxwREBl5JaE7P
+         l6vYVejnVU+p2Lwy4bfhWLOkJSbW+EYU4kJGgtyAWl+a57JCZRRlZ6MXcsMGDQJtdKfX
+         UIsVQLX4CpWTz8Ys24LC4PJxBQF3aDGHBsiFJYu9VBoyLLX+g3l+ljvbGnceydfkRGMe
+         hbQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792550399; x=1793155199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=abLwrGFXoJBlnSAGPYLFFR7ZpE8C/Ap31b+sTibNse0=;
-        b=lxBSJVf/g8L7jskLzmP66LPNJXd7t1odozwlHFsqNSWm9BoSCH28frBOFn4d2w+wTk
-         /EHw1gBqiz/N9WTRhIF06rylce1Hh0S5uKcbS0eY3bm2+djuLZogIfPX4gwtIZB9OXFI
-         BzwWx95+q4IdtZqvW+SNfsLMfh83vUeMAPHA8VJLapk/8sMDqz8mPNROpZOBOlCns+Wf
-         QphOp+p60fAMIkf77nySr8wcSjckRyE5gEm50NC3uBT5lFS/f4ZfeqlblCMhXf9hJnFO
-         YnbDrcGud1GTT47nVSLGmBW3vwKH9mncV35SWQp0Cw4b5jbfivhv96Wwj9dvwjCGFzsQ
-         RCVg==
-X-Forwarded-Encrypted: i=1; AKwUvByBu4QCxf/ByCx8UBfCSG40tGBYiJkY2ub2cSgOVX7+opVflki5WrVeQOS8OBKMCokdGcGk20LN6QMRgCXWIdOGUKM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYL5RCwEZYWm1v7m2Eehjh00sjDu/EQR/ECH7qu3LDWpIpOMC8dq
-	/EMUXANialx8+wgDl+Nlz16vyP6b3pOQjOdVMxpyoLd+05ryMYvZnmnvCoXvifgalUI=
-X-Gm-Gg: AYBFou0GbXvE3hAoW4DowlJ8V9HpUxu5XdLcEc1TzfL8j2+D0RZ6TUxDm3y5VYVCAgs
-	7jOhmsOlxMWFwlimjrEj9TEo2ma5z0C6O73q97af8ZTiwnz6RIAxqibQjmVcRQ4IEM3p1lLjpiU
-	Wgm0osmBTUrMd9x48Y+ixPewHssKolqOJ4kOP1kbxbWVtKbUM6nK8CL7xchTZFjEBKURS0d3WBx
-	F9kTepSMBdVhLcICpR6A6rzn1hR/2Pzm3y0v3UpuMBe/84SO5tV+1NUG+uisk3ynI55g+YRh9+o
-	DGcIMih/LzQ0Gj/DS7DifmCjP1eiI/z9yAD+Oaqz2hJ8YZmkn5DslmCyjUNnilSJ4ijznTM07TC
-	n/wXIJBl2RawxN3mYRQgDMaovYjdEivBC5lUN0/keQ0ty+9IvK6+aUaGuGGRNVvFlI1Ord/PfSD
-	sVMRIGNeRVhLZcx7uHx1TlRKf8hsF4EukRfOePlMudV6A+SDGf3+RP0yofPqklNZXTdCOFP6sLb
-	hdjLgO3xtftLwiCGM4w1ya0RlBtMT4C97m51U/KiRKFnq6xnW0liyL0X+yUe5+hH5D1G/FKLSr8
-	XPT8dVCCegN/SVCaUSxddM/qJoMsFo5jlJKznHS5fw==
-X-Received: by 2002:a05:620a:3187:b0:93f:1823:308f with SMTP id af79cd13be357-93f57fe8708mr199104685a.81.1792550398715;
-        Tue, 20 Oct 2026 19:39:58 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91c10a45336sm13819426d6.3.2026.10.20.19.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Oct 2026 19:39:58 -0700 (PDT)
-From: "Gregory Price (Meta)" <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	kernel-team@meta.com,
-	akpm@linux-foundation.org,
-	mhocko@suse.com,
-	rientjes@google.com,
-	shakeel.butt@linux.dev,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	david@kernel.org,
-	ljs@kernel.org,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	brendan.jackman@linux.dev,
-	hannes@cmpxchg.org,
-	ziy@nvidia.com,
-	bigeasy@linutronix.de,
-	clrkwllms@kernel.org,
-	mgorman@techsingularity.net,
-	anshuman.khandual@arm.com,
-	Bessel.Wang@huawei.com,
-	jiang.liu@huawei.com,
-	stable@vger.kernel.org
-Subject: [PATCH v3 8/8] mm/page_alloc: keep a zone's pagesets when it goes empty
-Date: Tue, 20 Oct 2026 22:39:40 -0400
-Message-ID: <20261021023940.1940971-9-gourry@gourry.net>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261021023940.1940971-1-gourry@gourry.net>
-References: <20261021023940.1940971-1-gourry@gourry.net>
+        d=1e100.net; s=20260707; t=1792551887; x=1793156687;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rc5wrhUHr1AVoBfBDZ+r5qvZgVrRLeIPWk5f/ArMKLg=;
+        b=iEjmHQ22TJJMLA3N9sfeZmI32KEscAq/yr1zhZNiDNkxDnqblp0bEyMWMx9PG1uqmr
+         EjFlueV4GK6WD62sj2ZZO38NNf9BG2nfp3BqNoJn/q76IjMEUcweKOeeMjmWLiLvU+d/
+         w9ITCIr4r9J3E6mD1FWIbOJp6jf46wR7yjPEj/L0m0P6+lcdIf64TU4tu8Ad2SjXV65u
+         UmJzKnmm/s4TIG2iNxPSbxhhOmmZdwtOZkkCVjH67u9LTk6PgRT9LIFZQP7VfkBgPEKm
+         MyKxy2IgX3F5cx/NlfMyQtvElggnQREIn7vtr5JWlmedpMdkmHQkLc9WrtA94LzkmpYb
+         2kYA==
+X-Forwarded-Encrypted: i=1; AKwUvByMhFlSms623uFJCpCliLvObxN5ywDxF7DWHKLrfQvSmcxUW5YyVrOP5GT59V/lTEImuJOf/Nj4gofOXIU/t09aNww=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLGWhk1HkwuTO2ACRik5ogQhWoL569CFjQ0xroOLsdj7qKlp2Il
+	XD3ncM/kcEKiRW6iiqr0uFVuekdZaheU/xRPc0chcKeBQ+ZpJ9Y2iQQC
+X-Gm-Gg: AYBFou0zmeksRdjjGnuZ4zfJQO/ecKh3UOddF1hUVyxjgRMpUPz0e/AIHOYxVHoHJmz
+	1K5l2sEDxIeHvO6x913rrS5gvr0oO2x8YNT8VSMTzr6Pb2kCNr/vS9vdIXyvQcopGsh1sedvRoo
+	I6UFltDy+FD3667UReBfFpdVT/FjPE8toSj8SnTFC1QVnfCP8Ks5qRaRaFnZm4ie782Ay0596Tp
+	PeVN8zj9k9Eq8FBxnmgekVpJ+A/2bcQby+V+E0X5pKssrbG1+qfbhwMnXINzIrCnWkt/PYI2UON
+	XO0+wduevbSnhqhVBJjTnP7WDd64St89FTnUJ++yMYRxHAQPqBaRVGARmAMsYHBwEfO5TSfX0ZK
+	oYO/ytXpji+OJ168zsWWC/o6G32i8eo4J/PK1gBcqV2BxJzS7wFkVFGVo7abhKfSe0xF/heakgO
+	GGqUuPH4jTf+Wp1KnNrMqiv3eYZcz72tNOHUmv6YHHrOdnyWm9Jk4OUdWnS+mfaQMnyO+2NEbk0
+	3i540+EVpSgrS27Jw3AuGvgtktuket7wIl8s32OBMmeRKjn2BfmYVxYQyrD3xLVyD+BOcM+JGb8
+	LjDL7SkQq8phF8V+x1qIacODFpwBCtTx38mD1HkYRyQhWX9VN+RcpwzNXS3tc2o0c9tUwelOL63
+	tusBmgQ==
+X-Received: by 2002:a17:90b:288e:b0:3ac:2788:cab1 with SMTP id 98e67ed59e1d1-3ad86ed22f9mr629222a91.30.1792551886548;
+        Tue, 20 Oct 2026 20:04:46 -0700 (PDT)
+Received: from localhost ([153.61.198.250])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ad8035883bsm1999788a91.15.2026.10.20.20.04.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2026 20:04:45 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -123,103 +88,90 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 21 Oct 2026 03:04:44 +0000
+Message-Id: <DMA6LZFMAQ3X.2YOXSMADL3LQ5@gmail.com>
+Subject: Re: [PATCH bpf-next v3 2/6] bpf: Add syscall common attrs support
+ for xdp link_create
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Jakub Kicinski" <kuba@kernel.org>, "Leon Hwang" <leon.hwang@linux.dev>
+Cc: <bpf@vger.kernel.org>, "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S .
+ Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>, "Alexei
+ Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Andrii Nakryiko" <andrii@kernel.org>, "Eduard Zingerman"
+ <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Martin
+ KaFai Lau" <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "Jiri Olsa" <jolsa@kernel.org>, "Emil
+ Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
+ <ihor.solodrai@linux.dev>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ "John Fastabend" <john.fastabend@gmail.com>, "Stanislav Fomichev"
+ <sdf@fomichev.me>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "Shuah Khan" <shuah@kernel.org>,
+ "Kuniyuki Iwashima" <kuniyu@google.com>, "Hangbin Liu"
+ <liuhangbin@gmail.com>, "Martin Karsten" <mkarsten@uwaterloo.ca>, "Masashi
+ Honma" <masashi.honma@gmail.com>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>
+X-Mailer: aerc 0.20.1-349-gb940a4174a3e-dirty
+References: <20261020152804.39863-1-leon.hwang@linux.dev>
+ <20261020152804.39863-3-leon.hwang@linux.dev>
+ <20261020182553.534c8d6e@kernel.org>
+In-Reply-To: <20261020182553.534c8d6e@kernel.org>
 
-When offlining empties a zone, zone_pcp_reset() frees its pagesets while
-the vmstat worker can still hold one across cond_resched():
+On Wed Oct 21, 2026 at 1:25 AM UTC, Jakub Kicinski wrote:
+> On Tue, 20 Oct 2026 23:28:00 +0800 Leon Hwang wrote:
+>> --- a/net/core/dev.c
+>> +++ b/net/core/dev.c
+>> @@ -97,6 +97,7 @@
+>>  #include <linux/kthread.h>
+>>  #include <linux/bpf.h>
+>>  #include <linux/bpf_trace.h>
+>> +#include <linux/bpf_verifier.h>
+>>  #include <net/net_namespace.h>
+>>  #include <net/sock.h>
+>>  #include <net/busy_poll.h>
+>> @@ -10771,7 +10772,8 @@ static const struct bpf_link_ops bpf_xdp_link_lo=
+ps =3D {
+>>  	.update_prog =3D bpf_xdp_link_update,
+>>  };
+>> =20
+>> -int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pr=
+og)
+>> +int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *pr=
+og,
+>> +			struct bpf_verifier_log *log)
+>>  {
+>>  	struct net *net =3D current->nsproxy->net_ns;
+>>  	struct bpf_link_primer link_primer;
+>> @@ -10784,6 +10786,7 @@ int bpf_xdp_link_attach(const union bpf_attr *at=
+tr, struct bpf_prog *prog)
+>>  	dev =3D dev_get_by_index(net, attr->link_create.target_ifindex);
+>>  	if (!dev) {
+>>  		rtnl_unlock();
+>> +		bpf_log(log, "Invalid target_ifindex.\n");
+>>  		return -EINVAL;
+>>  	}
+>> =20
+>> @@ -10812,6 +10815,8 @@ int bpf_xdp_link_attach(const union bpf_attr *at=
+tr, struct bpf_prog *prog)
+>>  	if (err) {
+>>  		link->dev =3D NULL;
+>>  		bpf_link_cleanup(&link_primer);
+>> +		if (extack._msg)
+>> +			bpf_log(log, "%s\n", extack._msg);
+>>  		trace_bpf_xdp_link_attach_failed(extack._msg);
+>>  		goto out_put_dev;
+>>  	}
+>
+> No, this is silly. We shouldn't be spreading bpf_verifier.h includes
+> around, and making core networking code use bpf_log().
+>
+> Add an extack to this API and for the extack -> bpf_log() conversion
+> in the caller or some "boundary crossing" helper.
 
-  CPU 0                             CPU 1
-  refresh_cpu_vm_stats()
-    pcp = zone->per_cpu_pageset
-    cond_resched()
-                                    offline_pages()
-                                      zone_pcp_reset()
-                                        free_percpu(zone->per_cpu_pageset)
-    decay_pcp_high(zone, this_cpu_ptr(pcp))
-
-decay_pcp_high() then reads, and can write, memory the percpu allocator
-may already have handed out again. With kprobes holding the worker
-across the offline, it used the freed pageset in 6 of 6 runs, and
-rewrote a new allocation at the freed address in 1 of them.
-
-Keep the pagesets for the life of the zone, as pgdat->per_cpu_nodestats
-already is, and only fold the stats in zone_pcp_reset().
-
-Commit 340175b7d14d ("mm/hotplug: free zone->pageset when a zone becomes
-empty") freed them because onlining the zone again allocated a new set
-and leaked the old one. setup_zone_pageset() now reuses the existing
-set, and zone_pcp_init() keeps it when the node is re-added, so nothing
-is allocated twice. The pageset address stayed the same across repeated
-offline/online cycles and across removing and re-adding the node.
-
-The pagesets take 320 bytes per possible CPU: 30KiB per zone with 96
-CPUs, 160KiB with 512 and 2.5MiB with 8192. A populated zone already
-holds this memory, we just no longer give it back on offline.
-
-Fixes: 340175b7d14d ("mm/hotplug: free zone->pageset when a zone becomes empty")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
----
- mm/page_alloc.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 96ae09c8099be..dfca77764f1fb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6369,6 +6369,12 @@ void __meminit setup_zone_pageset(struct zone *zone)
- {
- 	int cpu;
- 
-+	/* Reuse the pagesets zone_pcp_reset() kept. */
-+	if (zone->per_cpu_pageset != &boot_pageset) {
-+		zone_set_pageset_high_and_batch(zone, 0);
-+		return;
-+	}
-+
- 	/* Size may be 0 on !SMP && !NUMA */
- 	if (sizeof(struct per_cpu_zonestat) > 0)
- 		zone->per_cpu_zonestats = alloc_percpu(struct per_cpu_zonestat);
-@@ -6465,9 +6471,12 @@ __meminit void zone_pcp_init(struct zone *zone)
- 	 * per cpu subsystem is not up at this point. The following code
- 	 * relies on the ability of the linker to provide the
- 	 * offset of a (static) per cpu variable into the per cpu area.
-+	 * A re-added node keeps the pagesets zone_pcp_reset() kept.
- 	 */
--	zone->per_cpu_pageset = &boot_pageset;
--	zone->per_cpu_zonestats = &boot_zonestats;
-+	if (!zone->per_cpu_pageset || zone->per_cpu_pageset == &boot_pageset) {
-+		zone->per_cpu_pageset = &boot_pageset;
-+		zone->per_cpu_zonestats = &boot_zonestats;
-+	}
- 	zone->pageset_high_min = BOOT_PAGESET_HIGH;
- 	zone->pageset_high_max = BOOT_PAGESET_HIGH;
- 	zone->pageset_batch = BOOT_PAGESET_BATCH;
-@@ -7749,6 +7758,10 @@ void zone_pcp_enable(struct zone *zone)
- 	mutex_unlock(&pcp_batch_high_lock);
- }
- 
-+/*
-+ * Keep the pagesets of an emptied zone: refresh_cpu_vm_stats() can hold
-+ * one across cond_resched(), and nothing waits for it to let go.
-+ */
- void zone_pcp_reset(struct zone *zone)
- {
- 	int cpu;
-@@ -7759,12 +7772,6 @@ void zone_pcp_reset(struct zone *zone)
- 			pzstats = per_cpu_ptr(zone->per_cpu_zonestats, cpu);
- 			drain_zonestat(zone, pzstats);
- 		}
--		free_percpu(zone->per_cpu_pageset);
--		zone->per_cpu_pageset = &boot_pageset;
--		if (zone->per_cpu_zonestats != &boot_zonestats) {
--			free_percpu(zone->per_cpu_zonestats);
--			zone->per_cpu_zonestats = &boot_zonestats;
--		}
- 	}
- }
- 
--- 
-2.53.0-Meta
+Tnis will be a trivial refactor in the follow up.
 
