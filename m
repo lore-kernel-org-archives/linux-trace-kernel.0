@@ -1,76 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792578331;
-	b=EjVzvbXI2YAzzrCLsIYrfiWEnd927BfHxKr3trAVqtA0xeUH1X+eY+ZQ1tNmQ3/oZkd/
-	 AG6Rvngehp2HdbB6EBonC6VPmHMZzSOXETGaIjq26xWm/q0yBcFeF1qHDxx1/UIZ3I3D+
-	 c+KoYKbiTwjqnvGMdwegLkRdjWMC2j4bqjZyAv3Y9g6ZxOGMRhl9FtHHvRJ4FXwAleb2E
-	 f/8UKmzHMwmX/BmfSz1Bp2elPrNlryd3/Umz/s+7XVGaUWow0rdSCbYxixeJ5koIbMd5S
-	 1WsRw1qGpd9BSWZ6OJEuUmouul55SxUcpEuCK95De5AM/rqx85QPKe0sLZYtVOdFxVw==
+	t=1792581154;
+	b=OcvoYNrM88cWhYyhpVVnRJCW5bC00Nexbmlc5twWr1qrbfrMbp9y6tI+NbpqJ2LG5eB0
+	 ByyNlB88y3AFe/m05ludDDQyo+yoUzRN0GMcgAiX/tuCVyeY5zECBzDryL7eiMnQjPR4y
+	 duHzM20L75NzMh74rmRtJVXg13+6Q7RVno0icsGBjnPFqd2/wQ4H1e9Svp92DkrhDx8Z5
+	 8D0Aowbn4hoY0v05VkH8AmKVWVybvUDFVLhaGfwUXrAORpo1iYi1xu+RSh6RVTEj0yq0n
+	 XltPLJ4FcHmbYqysX2ZHEkOCjHnvk+rXwhcC2J21E/qv5PfWUYpEjOH3RZeJ7y65cfQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792578331;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=fyUFCbuePzC+XG2QW79bsjnDsYBX6lH465Zgu9TmAmA=;
-	b=T2aptLONDZ2m5Bod8KFCpux1s6M9OaOa1yPs22mnoS5ue0+JTk1mN0AnlVruz1JdNdjn
-	 KD9IO4KYJJyJAXQHgBhVaRFTDfaSCx9MGomCYtaD9fze25gP5h4wPjoICXDw5B0FkjLnG
-	 Vxl+ptGIJe3wpnkY7i6mKdzZcSE8WozuQaWKTGgAiD3ImJYPHrHD35yWs6/Pkr8oC9IlF
-	 rLpYm4t4wUI5AVjaAWUHwbM2zDC5cvQaX3bk6tUsIYdjUobyk7L1UBUXbhA/B5/xwqQsn
-	 rBg3fzJU42xxXsK970nb2+gAtg4Di8dKSVJymu4mO4lJ6I9uNmdO51icOjAzRRKa4hQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792581154;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=jokl2NzuN6rP59MgvZG0IKJjOr16KzDimnhtNpmKlr4=;
+	b=OOy/yleog8YBtAFyJ5PKuM+D6y4o/ZSYw9ltPPZnVhyul8oMOOqvxV3YPe6JpjXcWOo8
+	 TwVR7+90RNIRfT9gUvk3p3zZ08Nwej+K5Q1+aGNhN3f7MZOlzsCPTTiymojxQTI2Sjrk9
+	 /fUM6LuouLuIgLBcfhA0ICcjNN/sz9a8Y2t9DDWCLyRz4P/JqDJ+0+H810o6rUIaAdhSl
+	 FEYqu9YFlC1EWqiSsKKbRntqsm9P0Hm3JmYsH0Ys7+mpMzBCVnzmsApZs3IfUibEx2Og3
+	 yD51gnsT+X/AhxEHqqRDGYMR1fVKIfGm0DNnpdPLG7IBhyYrZRmtt6f5lFhpBRmbUKw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WN+IUwrT;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=tqXM9clm;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=iLK3iLnG;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB99606A319;
-	Wed, 21 Oct 2026 10:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B11606A319;
+	Wed, 21 Oct 2026 11:12:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88B11606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WN+IUwrT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4A41F000C9;
-	Wed, 21 Oct 2026 10:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792578330;
-	bh=fyUFCbuePzC+XG2QW79bsjnDsYBX6lH465Zgu9TmAmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WN+IUwrT7l8rUPNHcaU/+gEKsExM+ioOu7ktOtPja5M+dDNUVwHb0vzRVzDdLmi2l
-	 ZVZx7zVWlmJhAl69UxYI+zhszNbxVxTNXOBiS7d6CtNd6WfNLIPJPJhmVTj0hz17Wh
-	 CBPrxhvYRreyd+T8w2TaPEcsFSkV4dKf9ocMHO00y4EhqsJSxfLpthpPmknHsz6GHD
-	 XVMxmeCP5wmxvrqe1pag4NI9ASSec8djC8iso0wCeNRusCl3OXQPYTQT30aPNOVjPM
-	 aOLdakMoHfKRaCd3xb8lP0LDs+OVib+4+C4N3+fUQQocX68feX4bzSiBxNtciCBsuG
-	 N0l+7t93qoF8A==
-Date: Wed, 21 Oct 2026 12:25:10 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Cai Xinchen <caixinchen1@huawei.com>
-Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com, 
-	jmorris@namei.org, serge@hallyn.com, corbet@lwn.net, skhan@linuxfoundation.org, 
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, 
-	memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	jolsa@kernel.org, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
-	rdunlap@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
-	johan@kernel.org, dlemoal@kernel.org, hch@lst.de, axboe@kernel.dk, 
-	viro@zeniv.linux.org.uk, jack@suse.cz, dhowells@redhat.com, code@tyhicks.com, 
-	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
-	hirofumi@mail.parknet.co.jp, cel@kernel.org, jlayton@kernel.org, neil@brown.name, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, hyc.lee@gmail.com, 
-	miklos@szeredi.hu, amir73il@gmail.com, senozhatsky@chromium.org, 
-	chenxiaosong@chenxiaosong.com, kpsingh@kernel.org, matt@bobrowski.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, john.johansen@canonical.com, 
-	georgia.garcia@canonical.com, zohar@linux.ibm.com, roberto.sassu@huawei.com, 
-	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, stephen.smalley.work@gmail.com, 
-	omosnacek@gmail.com, casey@schaufler-ca.com, takedakn@nttdata.co.jp, 
-	penguin-kernel@i-love.sakura.ne.jp, xiujianfeng@huawei.com, nanx95726@gmail.com, djwong@kernel.org, 
-	lujialin4@huawei.com, bpf@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	netfs@lists.linux.dev, ecryptfs@vger.kernel.org, exfat@lists.linux.dev, 
-	linux-nfs@vger.kernel.org, ntfs@lists.linux.dev, linux-unionfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 -next 00/18] landlock: Add READ_METADATA and
- WRITE_METADATA access rights
-Message-ID: <20261021-neugierig-abgemacht-umbenannt-c77d1addf517@brauner>
-References: <20261015125425.3246251-1-caixinchen1@huawei.com>
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=tqXM9clm;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=iLK3iLnG
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792581150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jokl2NzuN6rP59MgvZG0IKJjOr16KzDimnhtNpmKlr4=;
+	b=tqXM9clmNV/dZ5qDdktJYK7BCvz4rLvGReVVaIPiC58YazSkaG95/PmiD4+ZwpbGC2+nP5
+	MMCpGIBoxAV6RU+5tzZwORFZZwT0egPkk9EnruDzfa2M0zqX2FuKzywRCtrnghhaIljI8z
+	fsDpMzN3cf/z5uoJ4NfNhTn5xaUO0a0ocupRjOPYmYwrotbMsToqLKRXpBvQWUufzG2zAU
+	5L6fcwq7TJ2AHovlcoB88PSYArEV6DQpTaNE7MsFyjSuvQbI5Pq1socyOlUi35uOUSZYi2
+	38Yoal8Bo9/j7JnoZOvDHoomMbAMjVRNXWwuYvV1bixnPn7SVfP6mvNeUNBd8w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792581150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jokl2NzuN6rP59MgvZG0IKJjOr16KzDimnhtNpmKlr4=;
+	b=iLK3iLnGcPJeWBqfClmfe1r1rYI1JofLzpyBfF3pBpyc2J5V6rAHX2bYw4scEmaEtSqnEL
+	hO0nMDKkOYomu2Cw==
+To: Gabriele Monaco <gmonaco@redhat.com>, John Ogness
+ <john.ogness@linutronix.de>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>
+Cc: Wen Yang <wen.yang@linux.dev>, Tobias Schaffner
+ <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+In-Reply-To: <631896ae8e44ed6356c3b79598a2facee8af9770.camel@redhat.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+ <20261001152042.124445-11-gmonaco@redhat.com>
+ <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+ <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+ <878q3xtptq.fsf@jogness.linutronix.de>
+ <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+ <87bj8s8ih9.fsf@jogness.linutronix.de>
+ <b76dfd3e5a118e30ab25910f243db1cbcedc1c00.camel@redhat.com>
+ <871p9mqcn2.fsf@jogness.linutronix.de> <87ld7trgzg.fsf@yellow.woof>
+ <87mrs9q1d3.fsf@jogness.linutronix.de> <87ecdjqxnr.fsf@yellow.woof>
+ <631896ae8e44ed6356c3b79598a2facee8af9770.camel@redhat.com>
+Date: Wed, 21 Oct 2026 13:12:29 +0200
+Message-ID: <878q3rqpcy.fsf@yellow.woof>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -80,28 +86,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261015125425.3246251-1-caixinchen1@huawei.com>
+Content-Type: text/plain
 
-> - The hooks consistently take struct path rather than struct file.  The
->   VFS call sites involved (chmod(2), chown(2), utimensat(2), xattr(2)
->   and ACL syscalls) operate on paths, and several of them (lstat(2),
->   lchown(2), llistxattr(2), ...) have no struct file to begin with.
-> 
-> - struct inode_operations->setattr still receives (idmap, dentry, attr).
->   Only the VFS boundary (notify_change()) and the LSM hook layer see the
->   path, which keeps the refactor contained to fs/attr.c and the LSM
->   infrastructure instead of touching every filesystem.
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> On Wed, 2026-10-21 at 10:13 +0200, Nam Cao wrote:
+>> I wouldn't enable those by default though, it's way too much noises. As
+>> it's for debugging the model, we can have some sort of compile-time
+>> switch to turn it on.
+>
+> That's almost what's happening already, in-kernel use tracepoints, gated by
+> static branches. Those are the closest thing you can get to a dynamic compile-
+> time switch (assuming such a thing can exist), it's patching the code.
 
-I have no problem with that provided:
+I was talking about how people are going to enable transition events,
+not how kernel enables them. Do we expose some user API for people to
+enable at run-time (and kernel can use run-time patching or whatever),
+or people enable them while compiling their BPF programs. I think the
+latter should suffice.
 
-* all hooks take a const struct path argument
-* idmaps are passed separately so that VFS and filesystems are
-  guaranteed to see the same idmap
-* nobody gets any guarantees whatsoever wrt to path->mnt aka vfsmount
+Nam
 
-  layout and implementation details might change tomorrow and mounts are
-  subtle beasts so the security layer gets to keep pieces if it does
-  things that the VFS hasn't explicitly sanctioned as a guaranteed
-  property. Things continue to be in flux.
