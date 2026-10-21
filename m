@@ -1,107 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792551920;
-	b=LddjLPt0g8BwSlQunt3gToWdWeT4yeUSJltq5RtRjN0LSuRGKV/1+ZbR3Rg1U/+BdBZJ
-	 xPAsAVv9ou4iYHDgjiBrmGxvCJm7eJ4iuO4lxqY78YTLMfowWE16PSljn1iNcItK3fPYj
-	 RbrtX6ocLypFbJk5XqsfKCoxO0M4p1Ya1ZPgQOxfU2TkSscfWX8JyvPzraab99XTC6nbO
-	 /odOJgdWdbtE0g9C34Od4JZZGZch8KEeTtMXHWE/ll/M/vi3/d9v4tGPpVi/WwpKzwqNE
-	 61K07eRFLhZ1WX34q8NL6zbPOHNqXpBKITFX794VAQ/eLm2/0/9rSrnO93VpLS5pjPw==
+	t=1792567611;
+	b=rsZICBBp6Qv6YBsd/SH9tq822NyOOwsS7o1j2uXDkdgzYH3x7bMqKAd444GZmuZyUyqN
+	 V1kZKnzz04kCrC6baNvr569buybClQMyJrkW1aEXFYGwuzXJVt8Phxf+v3/mguE39kboQ
+	 Xofd5d/r2wY9Uiu9pRK3HKqnTid6vY0ltRmvzY/I5Et9+xKbwXz84GRlIaYoxedZH6zxe
+	 DaduHbtEUyM9/9jVsjFiI9sew/8N8xAbrDtxdP/tFOcwemqLa1Tn0Z48eiPIB/jLqkzC6
+	 ICIMLM/NI2XFSFTyz2fHyRyWPzyvUmgebQqyUNnLZFtX/ltCiKzpYa82blmKMJpIzgA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792551920;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:X-Mailer:Content-Transfer-Encoding:MIME-Version;
-	bh=aSbx+2JIYEzrqnyu5Jxh+14HH5G/iqzw/BzmiivGbiQ=;
-	b=w2aZ4cb1fdvU8ATC5lT7V43wBSTMiRxNtrwfzIwbl2IdB/RXeuB1WKZyhIPHfS3mCv0y
-	 fW579iDZk3BONCxleyDtyxwCM1GEf7DrvIH5FGdnWqMYwcZ7PNsCLuXq+p/1oHWRQek+f
-	 W4BUMXvshF0P8srzmW/htaIsC+O5MzBVefsPyWLYpBpCy8jR8GLGFH7RqAHFqREXhq/t5
-	 mxGLxmtjZEXOnxzOKiVDJOD5H8V8M/QKn0jUKZJudcQHNtWIFwwPI5HJdnZdfu1Q8HZTq
-	 E0fwSA2NMxm2mAgOzU5v5MSPoaCdCEm0ZO6u9XEuEA3wavK+3+YQDPOi4R1SwpnTEew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792567611;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=MmY/Cqb/51x27vhDGhhClvRe7mwYyr7WYVbHZ3b+GBs=;
+	b=eOOThRAQn3us0gFB/5LW6lVOw3JBe6alA2RvLZValYzRQa3JU2SSL5Dr9ibAMHi0lC9d
+	 LoJ5w/09SZJ+1A70T+PeGAv5wPG6fXWr1ZtL65KlxznjJ/nlm2o4KmBYI/PFDE6u/kYfL
+	 8XtvwTkKNWe1+AthjCVOoPYcVBODsjt2P6fXuNk/LzF78Zg0wWKOa6FqcgjR/ylkpuzXy
+	 JYbaBIGd0YdtuH/Wa+Jzwvd8I9xbLgmKqHu6AYPDSZDZ67Xp1orvR+8MoBIAuxyPp+ARL
+	 312z86JRvjIRRTRnIDbyAU4yKjZeGNe9iQzqs+xWZTl0tSUmyD35cIskc68DzkBqMzA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=jTUhIXqc;
-	arc=none smtp.remote-ip=209.85.215.174
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=pVeemAe0;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b="hHJqxrN/";
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01CC606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 03:05:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A01CC606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D774606A31B;
+	Wed, 21 Oct 2026 07:26:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D774606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=jTUhIXqc
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cd633ef819bso55929a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Oct 2026 20:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792551919; x=1793156719; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=aSbx+2JIYEzrqnyu5Jxh+14HH5G/iqzw/BzmiivGbiQ=;
-        b=jTUhIXqcHD5paioHMBgpX/nNDFeI6GefwrBU5JCZ9L6hQkgDCCR5V9qDyK90TWxB63
-         BUeHPqsNqUAWjxsKRzhiYWN4gg/2tWiSqAFA02QpOTMVZ8HDrd/73VlSzZ/z6Q6Zcjmb
-         y/SpBz7FnPTQZRm1MiEuoSZnfDeQH8kZYfIu4tSt+PzCSc9QM3JzSGKAPbcRqH35wiGt
-         iIVaNSX1r/6k7vkTPWGRrKb3k7KNyal3wwC2/NRW0KdNFdIthL0IVESKxGtAtYSu8Cn8
-         cBxQ9fMunJcJn3KmG5zDQHXwvhba1VSFsi76J/0MovajXPhER5CLkwBZRb//TPZDUhXi
-         dl9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792551919; x=1793156719;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aSbx+2JIYEzrqnyu5Jxh+14HH5G/iqzw/BzmiivGbiQ=;
-        b=IPsujkDP4Y+8cplaLDLgwHaU6yLfjOidcK951+VnZrCqLCdjS6Kariodf8H+tE9c8J
-         HCibsOYthXPQn+HxYirNsJ+oswMItKhK09Qzennx569avbmfgGuqLmYNpRs9fK/4+2IA
-         sMfxCxeLntnvwydUKtajY+qD7Dr7+hGrjAydV1NwVs/wBh3AeNU5M+ZeQG01PdPbT8Mv
-         ktjcHaWI+w8Oa4XRsgbgwH1/f4jQQArN9+hxsPRNcgIV5Fe5QRmWJmz7qZujfZqfVjwi
-         BUEGCZKlSXOy68eeT/45sxz9oqQ9ThSFDkc+q3Hh0hYuQzN8FTySvaoFJjbIBIsGhYVR
-         PD4g==
-X-Forwarded-Encrypted: i=1; AKwUvBy4jj7qul9zlE8jMllIuBufStz57tVRejlvs3oLktmrRBOCS3z/hATYHT4nFgy1U93Ba3FgApt7TTNDWrZcTjIlaCM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYL1dFcsvyoOlzMaqYie1eTNKCeXXmqxFmjUgN9KtiziCPPx3IYZ
-	2Dce77Qr28+kRntEGog58QnQamOMP9rms5+9ergzFiewcW6qYL85IkXe
-X-Gm-Gg: AYBFou0EmaOMjyrCHnU5T8vS/dtLNroKQATzS2WJhK9BqxD8Rj/7G7lOiy/GKh05MBK
-	bM0j8dQNSWcaRJa1yhNqsLLHUQj+WH4mf+fdAjLwV1M0QHMlcIweoTWxrYPkUXdgtaGMFZDesLq
-	J3zV230iM8GU9gSo0a4d8kl5Xlx5AN/frVQyuD2T4cB1Mgu1K6vlif2acRE+tIBqIMsiBgZolLM
-	Y4UOA9Nxtf0NFoLDubKLweg/EX592lk1ZRJO973Ugv4bZ3czk12j4N4rvFpUgYg60DVjqHv6NFG
-	FfZubpxDYyxCRPZe5Cben0eCOoTqX2F1466Ur48hh3b3MTenCQdeoQHY531caPpUfzpNeQShxxd
-	Cct4KDrRUqxZ1wjjUsaVjoK3aF0gBjSv2g1aYyFQ+lEwGnIN2FmF35TAP+XLTUc2dZMImIbzrUE
-	VKtwvP0HeOdf1yg9vcR3TjosIs/JucD/YHqVWHix96WKXSeigG9bhN3lCj9uSdw3lydv4Ukz7dg
-	QZ0vqSvi4al5iGKgvvJ0Int75MnHQB4i31VvzvpxzAY9vIbODxl4z3Ec4C1tnAcA08VPzyizWP6
-	4z2bMF2qSP7dH2gZbqT++TzH1j3q/OMGlWRrCRWa20Wfp9xGexw5P5avsm3I
-X-Received: by 2002:a17:90b:2710:b0:3ac:7556:8ed9 with SMTP id 98e67ed59e1d1-3ad86c79924mr698658a91.10.1792551918978;
-        Tue, 20 Oct 2026 20:05:18 -0700 (PDT)
-Received: from localhost ([153.61.198.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ad812c565esm1924550a91.10.2026.10.20.20.05.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2026 20:05:17 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 Oct 2026 03:05:16 +0000
-Message-Id: <DMA6ME9P5EQG.3EI83DBIFMBDE@gmail.com>
-Cc: "Leon Hwang" <leon.hwang@linux.dev>, <bpf@vger.kernel.org>,
- <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@kernel.org>,
- <pabeni@redhat.com>, <horms@kernel.org>, <daniel@iogearbox.net>,
- <andrii@kernel.org>, <eddyz87@gmail.com>, <memxor@gmail.com>,
- <martin.lau@linux.dev>, <song@kernel.org>, <yonghong.song@linux.dev>,
- <jolsa@kernel.org>, <emil@etsalapatis.com>, <ihor.solodrai@linux.dev>,
- <hawk@kernel.org>, <john.fastabend@gmail.com>, <sdf@fomichev.me>,
- <rostedt@goodmis.org>, <mhiramat@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kuniyu@google.com>,
- <liuhangbin@gmail.com>, <mkarsten@uwaterloo.ca>, <masashi.honma@gmail.com>,
- <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v3 0/6] bpf: Add syscall common attrs support
- for xdp link_create
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Jakub Kicinski" <kuba@kernel.org>
-In-Reply-To: <20261020182700.655edf14@kernel.org>
-References: <20261020152804.39863-1-leon.hwang@linux.dev> <179253001886.208021.6536312952037292688.git-patchwork-notify@kernel.org> <20261020182700.655edf14@kernel.org>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=pVeemAe0;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=hHJqxrN/
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792567607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MmY/Cqb/51x27vhDGhhClvRe7mwYyr7WYVbHZ3b+GBs=;
+	b=pVeemAe0oC7+BXr2Nm5S22/CDr1Fs8NBhSgl4XA8ij0Z21b54dIk//ioyijJPBNvm5gT4D
+	/6vTxMT+dsxaB6br0Dh63C4vkY5QFwm3lTBGnxY6TS1A9c4AI2tMnvxQiQnG4YactPoaXJ
+	5DOfSCvGnhemTzZc2EDs9/9Rc5BWOTtTgaHNP8AlMtrKLnOD2Eb5BZJ2f1dHPByhLtaOi7
+	/BqEKdAA6anfukRbswNsV+hGU74DONvETLyzCKQrgz7ncu6kJ3M1vRi8rbzpCe4JT6fZ+F
+	Mj0xCn2S4VBVySzK6ogYPgWb9tsvnNXcDeAAUjcAs30V2xy+NzpTgUgtZbKaxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792567607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MmY/Cqb/51x27vhDGhhClvRe7mwYyr7WYVbHZ3b+GBs=;
+	b=hHJqxrN/mmcQYiY62HFm6wBzMv2y5I6wLjiF79tC7PsdDuenyjthDa5EioiP6OFshnScTD
+	AhGTvvyxpNgL0/DQ==
+To: Tomas Glozar <tglozar@redhat.com>, Gabriele Monaco <gmonaco@redhat.com>
+Cc: John Ogness <john.ogness@linutronix.de>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>, Wen Yang <wen.yang@linux.dev>, Tobias Schaffner
+ <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+In-Reply-To: <CAP4=nvRhd1d+o8O045LB=dcYa2UudH7ZbG388wcwEX+JNBWY=Q@mail.gmail.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+ <20261001152042.124445-11-gmonaco@redhat.com>
+ <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+ <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+ <878q3xtptq.fsf@jogness.linutronix.de>
+ <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+ <87bj8s8ih9.fsf@jogness.linutronix.de>
+ <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
+ <87v770uuyr.fsf@jogness.linutronix.de>
+ <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
+ <87ik2zryzo.fsf@jogness.linutronix.de>
+ <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
+ <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
+ <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
+ <CAP4=nvTc297yQHz8aumZFAQ3+JK=5Z_=416WdosT0S6nHEeNfQ@mail.gmail.com>
+ <d2622f5c375ab26514d059b5949dee28f3f9998d.camel@redhat.com>
+ <CAP4=nvRhd1d+o8O045LB=dcYa2UudH7ZbG388wcwEX+JNBWY=Q@mail.gmail.com>
+Date: Wed, 21 Oct 2026 09:26:46 +0200
+Message-ID: <87ld7rqzt5.fsf@yellow.woof>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -111,14 +91,22 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, Oct 20, 2026 at 06:27 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> Please don't merge changes touching core networking without an ack from
-> networking maintainers. I haven't even finished mopping up all the ways
-> the XDP link bypasses normal XDP safety checks :/
+Tomas Glozar <tglozar@redhat.com> writes:
+> I was talking about preventing other (non-RV) consumers of
+> bpf_trace_printk from seeing the RV prints. Eg. if I create a tracefs
+> instance and enable bpf_trace_printk, intending to see my own debug
+> prints, I will also see debug prints for RV, unless I explicitly
+> filter them out. I get that on the RV side, these are mostly
+> equivalent.
 
-Fair point. Will wait for an ack next time.
+I haven't used BPF before, but is that not an RV-specific problem? If
+user has two BPF programs running that both do bpf_trace_printk,
+obviously they get mixed prints. They can either filter out other
+prints, or stop running the other one.
 
-Leon,
-pls send a follow up asap.
+Additionally an RV message only appears when something is wrong. So when
+there is an RV print, there is a bigger problem to worry about.
 
+Nam
