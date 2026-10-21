@@ -1,101 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.43
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792604521;
-	b=FJooLVjNvInI97YZaHAeKs7zv4JEa5WENn1w/SW+Pc0o98b3dzsNZLuYNyrVzm44Y/7r
-	 v0m/p78b4AglZp6UVSkFIaVhExrz4tuWxPWkG9i67iwPhVRSPEUBlg5igdHT1M1y03hM+
-	 4M7aC/c1yDAjfE+mYJzEsZHtEY9PZ+15KEe0A8U8H4Vs9BlSQ+FDjyj8x3G9aZgawe0LP
-	 hpdttIJ3pZFpWHeUeYUWMV2QlACr7xq8ziuGvKnl0UaM4yWYnwFaM+tmh0DTL7uYlebiL
-	 uJHHCWOUxIE1DKYBxft8fY1h7RGa6lDHUoim8v7CfzMx1akWxwZ5C4rEqT/PcsD8dnw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792604521;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=WbPfC3xf415pZLIbAAwGQiH8uDkz76+8nE49QrFCe/Q=;
-	b=khDLACJyMY85n8oSEU1ZrykDGBWwTNcAH9JAaPiFfgPtmY0keAIVHhM2ApG1Q5q88RD7
-	 sAS/j4KU3IQRu3txaEMyxVpMTv04DXdVijl4tRhDeHFHlYgYLaESO87lywwNj0GhtA2Mr
-	 huPV9X08OpvClk93rOp9ra7DbegT4YX78FcuHOTvWh2FTbKr4teNGwur4xMpfFSoHcshV
-	 gAYTQQU7lNclgzUbmIULpotzaJ7JrD1vn3ZbvtAaUyN37Gz+mtHLTehfewgJTwS93Fggw
-	 1uERSK+QvKpIkvbc2NgtFxb7w17MKrHKEf6de6mXcZRlHegGZaEJNci8+ZMyr5Q9FsA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=GvAbxW8U;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.43
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.252
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792604665;
+	b=cBhvGzaVF+AlSyy5K3fUZ2iV1MBtQgOl+WzkrC0G5HNzLr5t0BnrIrjWHQla4tswn/bZ
+	 wyi1pqogMo3E3zXTuu/mWbW0USiK0KUWxi1sCu7ZTisFPmYmOI7e1amr6JE/XcGXj027R
+	 ZMl+9pmDJf/3uWhdKZfz2vK+4Wc4OKw/lOUf5ZJ+AGvUFADdHOerNCJuVsYC5XgaxKJ/p
+	 ITh88ieOwFb9Wcz/paRNyM1bRV1prY8iIu1jyLK/ZXsQ0WplC8RJswzshGsnvXqq7PlvA
+	 QbLYXgwI8KsDvkY/O3EDg7/kD0EZNqZCZhDsiNqGuyWU4sMAU4cPgey0GtfNFQgsnAw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792604665;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=7FjkA8QW79XZQoYxEN5gAZUfLr7e80YrX+p4F8rVLXI=;
+	b=xjWRQHivgHpYczgcoA089doygjnRGXOuiOz6IuOeyRPckaDZNmyEwn6XsiIy8ye6Gjdr
+	 eeESqrJIxGxETXu5r8EI0c9nZudl0OrJ/+413vVzKnpcilkAl6e29c/uK872Aryc7btGr
+	 ou6worce2CbWrHMBC/TVq8lX0KEpv2mlDBRlpLWhjEchSL/IWJWg+Inqbw8YnxqOFADdt
+	 BpPtaWrTMlPQ2DXEunQEDnAiWo4+015woR6f8i2ASnIow1Wv8vcJsAlzF7BiEyIWTELkA
+	 zNYeqRvSatTYifXElwb5R/PR3AgqMHEwkTtzGLR8tgj6JRkBRp20LhVNgeblqzYjrgw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=jTLiA+G7;
+	arc=none smtp.remote-ip=91.218.175.252
+Received: from mta0.migadu.com (out-252.mta0.migadu.com [91.218.175.252])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D63606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 17:42:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69D63606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E43606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 17:44:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D6E43606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=GvAbxW8U
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3a4cdc9025bso629345a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 10:42:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792604520; cv=none;
-        d=google.com; s=arc-20260327;
-        b=J/vJKyyV/ic2HHSxB3uytVncMB5DKheEqeLHLC65aAwn+80te/JX8w1TfyNroa1a94
-         JCF15JtXCjarf4I306p+qbgE3F7ICgwkTu7FqeDyq2LQalKLamyWxzH6GcpDgOXLa6AL
-         58R4iAUw8YcBvBTHoDeyJb/9EG/5gSNOdi+LOjUUOk9PGHk9wX8gmOVgD1voHznx+7FG
-         5xdVunav5D2jSDCumI5AHTTehvnriogtqRClEjmI5cA23/GM6cTHcfCd8WX09t1BBRGr
-         QnVa0zsQ9iZwNc8u9cdPAbej22880BOyxTJJvJl6rQ1X8yQotDTrkBaUJcCvqNPbjeNN
-         zsvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WbPfC3xf415pZLIbAAwGQiH8uDkz76+8nE49QrFCe/Q=;
-        fh=a6vXjbnBuKizPkrHu+gk+2kpRf9iC9HryS4tuKJOue8=;
-        b=UlvJDeeOjm2QTgeVHKxrp/WFaATM+n/cYqaDtNLY7EdQy07mpyNe63Fhrai7Rjb//S
-         JIHfnpUFNhEYduJrznxxGVhmodaU1Da0WQvB0yRxSteuNiJ+CRU2N1Qn3x1j8yOVRpB5
-         0x1xHJQ51WXcBr6lfIQxyMjfy0kbyWHMDZXv7BhObTEw8cCeyHu+YGxLMTqRKkjq6vZQ
-         va9jQ0lby8na9F0EEMGz6mwyEYcbHAgVr01QKTqBwFIe4KmKSdNcElWpn/zoU7TjFtwP
-         GiliYaS6PY6hOKIkkOKiT/W9zc+CIXPnDqUP9uI45j6c36Ndni2N2m583Ofxu8D6N60z
-         fr0g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792604520; x=1793209320; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WbPfC3xf415pZLIbAAwGQiH8uDkz76+8nE49QrFCe/Q=;
-        b=GvAbxW8UXtF+sRo9OMu4rbiOvh/ZUVz/YIvz0PscUkArcnkkSoHXjx90jpuxuMfVj+
-         gvaXcIpvK/50UG3alQJ1Dp+2g0gdqjTAy5dm37l86wOcXJrukh709bQOUA+kBnTyfJi8
-         qZtNnpMZsfDYyI6WIxZvhBlQZbClbbWY0qrp2jd4DE/n1oA/K0IeB0+YkDIMXH+Xuj5T
-         HPw+nY/bs4Z0G4Xi/rxh0plLMUug5NI98mr/u7qmV3y0SN6sva4+Duq9Bz9yHmm7Kk1d
-         jtodxu+rnwuW5xb6SJB7Sri91KGj7ab04wNmbK0F7wLB2SDE9nwKdnQabNsQv+yJvzy9
-         J5qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792604520; x=1793209320;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WbPfC3xf415pZLIbAAwGQiH8uDkz76+8nE49QrFCe/Q=;
-        b=UdedA8IOZpzZ37LYmzzHJwEKabQDKqAiMPhw6CquFvC3wYFAVn5BTPDc20DFcigLGB
-         rdfwH0Q2hEnUfhEqG5+K1N6maloDOVkHkUDVH1AwNzA1JsTeibAscS73kySWJ8fRYyjS
-         bGq66wCAXGjnqM9ZC1vBAHpIAmADUo+eLDrybTdAc5keSQLfyWlUzSCWiSJDKU47wQnz
-         KqtSZBU19UnBU56apnCuspBjOhwzu4eL1TvatFmjZoWFi0dhz3OUm2A5Dhg57C2Dlblz
-         AKD8Ucic6J6klVQYlSIvVw6G1WFK1oYoZ/3wO3ofWpnYstY60jpQhPa2p5q2LtbIvVX2
-         82xw==
-X-Forwarded-Encrypted: i=1; AKwUvBwcIObshBcqxIV1WLH9+tX1I3MZ+jf44vUTeoQtuwa3P04KNslgDc6usestJcCdXGo3cyO/QN73Z7qrKdhPbufU8t0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK5Xrzw8AefSteq/uYnjlrTu/Nlhn5cVo0AU67Gg5oUGMX4aB+M
-	AuY0JmDwfCpcWhAWtG2eUzvFjWiCU9SQwcjiFMELdbiqrnCPXypxwM5dxsQ3gNA44EWxdcFcgX/
-	YngE0mRWr/V+CgdXEh37MAIFGRYBXqzA=
-X-Gm-Gg: AYBFou0EXOyfCOUjkrBOJqieNC0jJMKSSY/nmg5SgTbgP5wVH0LNsWCkzYUUjrCiuk/
-	6oZI4pAhh35MRt+H5EbdnG6TLLk3dVEKUSo8YK4YrBGYDbyHYUZm3hDEw+fEInPnIAZzk9l7yb5
-	m+9BbEPl6IlUkRBwz+gn0BVDWvMzo6zF8eONyGhnxauzPwyZPZHo41geQVBDxAlO98vVCBCPVud
-	hr/U/QSRWmVYD+SPkvBhbPnWRNJo2v1/fTFqb5J60u+NC4hBgLesOTk861TSDe8vs4X2n94xqi8
-	5jfYaLs8ROCQpNOuTUV1Rz3LJpOBfbhjlhZPpyApXo0jR+qfbHse3AQbwVA/DOyQgXC8tfh0l3S
-	afs9xwf82537KgMVhSXWkT5tgOSOdF0CdIDKvNhtHGsMW1IFuY4+VxuN7eYyYC19Rzpf8Qb4kZa
-	8M3wNeZieSVzWCs1yVKg==
-X-Received: by 2002:a17:90b:258c:b0:3ab:2ad1:f10a with SMTP id
- 98e67ed59e1d1-3ad86ca45acmr2134722a91.0.1792604519654; Wed, 21 Oct 2026
- 10:41:59 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=jTLiA+G7
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=KRR27gFsWCsdg3Z0l/RhpFUjK4yYAuYEtYHVLY/yD/M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792604662; v=1; x=1793209462;
+ b=jTLiA+G7bk9e5cxPgHWba0Smb9HYD0gOHL4F/McH9z5og55GZujDZkGU6kPDKiEQJhxInZJ2
+ OJ7t3oIcM8/tOY1EArdijrv4kDHvLgVCwaWyUm/R/SRQwJERlXkAePWII5K5JDol3c5w3gNo1eF
+ BRWzB2H+k9sFcs0DawIHJxvI=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id a521ecb7d8937fc5;
+	Wed, 21 Oct 2026 17:44:21 +0000
+X-Mizu-Trace-ID: a521ecb7d8937fc5
+X-Migadu-Flow: FLOW_OUT
+From: Vineet Gupta <vineet.gupta@linux.dev>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	andrii@kernel.org,
+	peterz@infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	kernel-team@meta.com,
+	Vineet Gupta <vineet.gupta@linux.dev>
+Subject: [PATCH v4 0/2] tracing: fgraph: fix the quadratic shadow stack walk
+Date: Wed, 21 Oct 2026 10:44:04 -0700
+Message-ID: <20261021174406.2891598-1-vineet.gupta@linux.dev>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,124 +71,58 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261019153628.15912-1-leon.hwang@linux.dev> <20261019153628.15912-6-leon.hwang@linux.dev>
- <CAEf4Bzbr46UkiE1sbb+Zwcs0S1ejpKmtTGjNCAkWD-J6FRcPGQ@mail.gmail.com> <d4fc4fcd-3691-4122-8b3e-a75447956255@linux.dev>
-In-Reply-To: <d4fc4fcd-3691-4122-8b3e-a75447956255@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 21 Oct 2026 10:41:43 -0700
-X-Gm-Features: AclHuK8euPDDrPLcZ78w73yg4ZplR7FA7dJCpvboj2MZKSFYtjKIdYl4Mw0-_4w
-Message-ID: <CAEf4BzY13x1skc6XSnXGyoLwaFoOtENGokUX7XHiakEyw+eQEw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 5/6] libbpf: Add bpf_link_create_log API
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Shuah Khan <shuah@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, Hangbin Liu <liuhangbin@gmail.com>, 
-	Martin Karsten <mkarsten@uwaterloo.ca>, Masashi Honma <masashi.honma@gmail.com>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 21, 2026 at 8:27=E2=80=AFAM Leon Hwang <leon.hwang@linux.dev> w=
-rote:
->
-> On 2026/10/21 07:25, Andrii Nakryiko wrote:
-> > On Mon, Oct 19, 2026 at 8:37=E2=80=AFAM Leon Hwang <leon.hwang@linux.de=
-v> wrote:
->
-> [...]
->
-> >> --- a/tools/lib/bpf/bpf.h
-> >> +++ b/tools/lib/bpf/bpf.h
-> >> @@ -484,6 +484,11 @@ LIBBPF_API int bpf_link_create(int prog_fd, int t=
-arget_fd,
-> >>                                enum bpf_attach_type attach_type,
-> >>                                const struct bpf_link_create_opts *opts=
-);
-> >>
-> >> +LIBBPF_API int bpf_link_create_log(int prog_fd, int target_fd,
-> >> +                                  enum bpf_attach_type attach_type,
-> >> +                                  const struct bpf_link_create_opts *=
-opts,
-> >> +                                  struct bpf_log_opts *log_opts);
-> >
-> > Leon,
-> >
-> > how about instead of adding this new API, we try to repurpose
-> > bpf_link_create_opts' iter_info to be used as log opts? we have this
-> > right now:
-> >
-> > union bpf_iter_link_info; /* defined in up-to-date linux/bpf.h */
-> > struct bpf_link_create_opts {
-> >         size_t sz; /* size of this struct for forward/backward compatib=
-ility */
-> >         __u32 flags;
-> >         union bpf_iter_link_info *iter_info;
-> >         __u32 iter_info_len;
-> >         __u32 target_btf_id;
-> >         union {
-> >
-> >
-> > that iter_info/iter_info_len is a bit of a legacy before we had
-> > per-attach type union, what if we add iter section into the union,
-> > wrap iter_info with union and put log_opts there, mark iter_info
-> > deprecated or something.
-> >
-> > I'm not sure anyone is actually using iter_info (I didn't find any
-> > uses in Meta code base, for instance), but we can detect its use by
-> > checking iter_info_len: if it's non-zero, then iter_info must be a
-> > real bpf_iter_link_info. so we should be able to detect this just
-> > fine, the only downside is that you can't use log_opts and iter_info
-> > simultaneously, but I think that's fine: you can update your code to
-> > use new iter.info fields instead, if you need log_opts + iter_info.
-> >
-> > WDYT?
-> >
->
-> IIUC, the struct bpf_link_create_opts will be changed to
->
-> struct bpf_link_create_opts {
->         size_t sz; /* size of this struct for forward/backward compatibil=
-ity */
->         __u32 flags;
->         union {
->                 union bpf_iter_link_info *iter_info;
->                 struct bpf_log_opts *log_opts;
->         };
->         __u32 iter_info_len;
->         __u32 target_btf_id;
->         union {
->                 /* ... */
->                 struct {
->                         union bpf_iter_link_info *info;
->                         __u32 len;
->                 } iter;
->         };
-> };
->
-> Thereafter, iter.info is preferred against iter_info. And to keep
-> backward compatibility, iter_info is used only when iter_info_len is
-> set. But iter_info_len and iter.len are not allowed to be set at the
-> same time.
->
-> With this change, the bpf_link_create_log API can be dropped.
->
-> I'd like to drop the bpf_link_create_log API first, then add iter.info
-> in the series of log support for iter link_create in the future.
+alloc_retstack_tasklist() assigns a shadow stack to every thread when
+fgraph is enabled. It did so FTRACE_RETSTACK_ALLOC_SIZE (32) tasks at a
+time, and since for_each_process_thread() has no cursor, every sweep
+restarted from init_task and re-walked the tasks already served, making
+the ftrace_graph_active 0 -> 1 transition quadratic in the thread count.
+On a 60-core Sapphire Rapids machine with 400000 idle threads it took
+227 s, inside a single bpf() syscall for the kprobe_multi case.
 
-up to you, but I don't see the problem of dropping bpf_link_create_log
-API and moving iter.info in the same series
+ - 1/2 allocates inline with GFP_NOWAIT, which removes the batching:
+   a single sweep serves every task, 227 s -> 0.092 s. It keeps the
+   open-coded rcu_read_lock() for ease of backport.
 
->
-> Thanks,
-> Leon
->
+ - 2/2 is the cleanup: convert that same walk to scoped_guard(rcu).
+   No functional change, and not needed by stable.
+
+Both were tested on bare metal and in a VM, including forcing the
+GFP_NOWAIT failure path with failslab injection.
+
+v1: https://lore.kernel.org/all/20260922225526.1554758-1-vineet.gupta@linux.dev/
+v2: https://lore.kernel.org/all/20260929005411.4105448-1-vineet.gupta@linux.dev/
+v3: https://lore.kernel.org/all/20261001102909.1152572-1-vineet.gupta@linux.dev/
+
+Changes since v3:
+ - split into two patches: the fix keeps goto-based unwinding so it
+   backports cleanly, and scoped_guard(rcu) moves to a separate
+   cleanup, per Masami and Steve:
+   https://lore.kernel.org/all/20261013194542.7e036b03@226.227.38.69.naturalwireless.com/
+ - in the cleanup, -EAGAIN now exits via the existing free label
+   rather than returning from inside the guard, so there is no longer
+   a path that skips the free loop
+
+Changes since v2:
+ - update the stale alloc_retstack_tasklist() comment, which still
+   described the old batch-of-32 behaviour (bot+bpf-ci)
+
+Changes since v1:
+ - replace both v1 patches with Peter's inline GFP_NOWAIT approach,
+   which removes the quadratic behaviour rather than dividing it by a
+   constant. With a single sweep there is no retry loop left, so the
+   v1 cond_resched() patch has nothing to attach to and is dropped.
+
+Vineet Gupta (2):
+  tracing: fgraph: allocate shadow stacks inline with GFP_NOWAIT
+  tracing: fgraph: use scoped_guard() for the task list walk
+
+ kernel/trace/fgraph.c | 38 +++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
+
+
+base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+-- 
+2.53.0-Meta
+
