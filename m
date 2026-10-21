@@ -1,100 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.171
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792620073;
-	b=gSWtgeIrEUkPgEOXICEtS2ZL98KO6aI+cKtz4KrD2ZxfU6vWRQW+/zYTaOzEgF6Z6vPR
-	 oPX0CpMHuSoRvKcy9PsB88sjqihH/Zs0On/+qUDYuDFES3e8/iQb9VUcsOAMkxnwfIg3N
-	 v2iKxPy1NuqM9DUaaLADkeCU3tQWkKW56Ifpxv5vQJvNBHqJ8W7ATNZ0yJAuGvsUd9Khk
-	 Q8KYxzlvoneuk5u1NGeB7TnrcjMa/9jNhEgZWPyy9xOCmr665Ktky5nXCH5+3hJSVPCq7
-	 dJhooVUnYw3CYCEEKM8au3kH1tT/DjcGgnYAP/8nxJbslW9ebop3lqBdyF/xERbRFug==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792620073;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.41
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792621009;
+	b=yzu31pyu27PcsAQa/9hbwTLM9g6jweQuS3XF9p5Ud0hctrSYHkErm44HJDuDCiLtSU+r
+	 AQAZvxytuGFZwhDq5LJ77wN4qjK+eayPOfrXpbHHNPKrJEPx4XQ0r+w7wfxQOKZpZgL89
+	 BpLRkNvDV48tyh1giEBf7Yo5QOJDVkwQR5gAqmJPspLVvml7VOiQhgJpjjbyVeAuUHoMd
+	 hC1nb4zChL/3MxyuWyKSxMRWwddJzMQL/zW8J8tj+02HQvdwKD+leQnigYD5zOba1q7/6
+	 lQyG4Mp9wxz84gvovgRuvDFgKpkmuER4OGlBBMGTo8f0oEcSQ/U+DZ4VSeJIKshP+lw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792621009;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Subject:From:To:Cc:In-Reply-To:
-	 References:X-Mailer:Content-Transfer-Encoding:MIME-Version;
-	bh=ekANNG852YX/Rv0SYRliAvOikAthVPOfNHHk1KWJgg4=;
-	b=UcYwTr8BUn/HjELEjKaC3hJ5ag28dQsJCDuf3YW7fCLG4Qi1IhQia1T3dFnZFOnVJhW1
-	 O19ehoXkFkGl0+0T83T2nYAhR40nA0ZzvdyUDEK12VXvg+sSmwvKHW4fhogkm0RfrgNHq
-	 4XElBxwWpoYu7vy9o/BAqMO2dkuNREuUOLa45w0W3CofEGlB64dS2SF6ZfZerTI4ZRsu/
-	 DGJUeifEdD2owGiWT6eVxh4IZ9YvbXVmEQmSW+MvxI6IwXFc36WPeKRmRDu+yisb5/gqo
-	 2WQML0bIO5xHw/wn5ETWf4JEzB3Yl93gTlqsUK0XMtafsm3kU/BWwbEy99mhliyZ+iQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ezRxCH+X;
-	arc=none smtp.remote-ip=209.85.210.171
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=pBxmybFhraH/PZu9TzxWt83yv/Plj5oQ+sfyrvjnp7k=;
+	b=4I9peHmlntDv+PmlXdXqXlurNLqRIXuxKtQTHaIpI+i3cuQzNDSUZnutlM7eokYwO4qr
+	 0x/b9+xdfpInVFU9NPh6VEJ1frfbpn8iHnlo3PMT+ksqe44CSmTyNjk53rcaGF3YD6UX0
+	 7YOZtwS+HDAKf6WOXebSzG5jhPuDvJQoih0VyE/v1zT2Xv0Awmkztzd6Qf9reucbV9mDa
+	 kJew9GUIcGHIEbFic8iGATEti/SK7S0lPEdDsfmp32GcmOIwU881bu+4EHNkfn4H0pIpN
+	 v524GrUkWjzLU5bATIilzcgIk/Fbcc1anKWpx0pC9VwhTwJ30vc5Ki7Gk2hQ2W/yeyA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=chromium.org;
+	spf=pass smtp.mailfrom=chromium.org;
+	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=Pp3zPBI7;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.41
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC594606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 22:01:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC594606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1B9606A326
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 22:16:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2F1B9606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ezRxCH+X
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8a064dcfcfdso380329b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 15:01:12 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=Pp3zPBI7
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-67921b515a7so1176243d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 15:16:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792621007; cv=none;
+        d=google.com; s=arc-20260327;
+        b=rvqxqAYHJHrxQzAiD6+sP8c4a1P73U0JN0OeajwOY4ZW9r+1DpWuSsqDPPuUHpZHRH
+         A9Nbc2GaAZMpV+IJLABnsgqlSWobM+CnhWc+gm+pZhM26Q24gNOaFxUS6xFntgEjo48D
+         2LW9MxcBIA4OEqsHTPMDRtkD+WznwNugNFVhw0/bvwvqQacjoBsDrx1oAXsCSpnxPJBt
+         Qo7NQq9WZ4XAgmqo9lw8xUn+531/ntOVetOsZemfvytmswadqE4cWXPiV1z3a7nqNyCd
+         YmXGs2hc+UXb6tgIkmP+yQ9qkSa7w8+Vns3hEbz6on0kjfKH3AghXoQH0wNfzxMy1qsr
+         KlaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pBxmybFhraH/PZu9TzxWt83yv/Plj5oQ+sfyrvjnp7k=;
+        fh=VV8AU9BAL5eV+8jHxXV4GUpePNSyPH5HxPY7S6i2qbo=;
+        b=VbOR2neaniS4LRCY031jbL/oYPI0xrJYxFFL2pJPVVzbp9FDt2840Ur+ra7IFQu07r
+         +KZe71fQ6h5bxX1ei8Lz62Vas5IhhUPwxaLsOt3H1tR+yxuNal+CPfZJtEIor2IcSO1R
+         kE8fB2yGgAr4763hoDAOdPvTF+8WMNLHnvpZTRNStgZsrbii/5yolBQCFf0pH0+E0bz3
+         1Q8OGTIeN66wDSDnge6/3SqVNcfA6QbOyHHY3m91eB8g5Tc6YMFE6iwSJYzhjKZT+cwM
+         y/YD3uhSrp/dLa8eAafw5VWUrZE7bQe8/p0Plda7QNdhG7+MBxRs1K2XZRdzhd2wquXy
+         3Vbg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792620072; x=1793224872; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ekANNG852YX/Rv0SYRliAvOikAthVPOfNHHk1KWJgg4=;
-        b=ezRxCH+XFN6kqXAzUkHG2tuyt8LY9Se12NNEu6NCx7Zv8JzLColYWlPyghLRXld6hm
-         xZDWfFEMmj6UzTmaikg6Y8318LeQ5mTF0RtV9FAJAfzSh5gQS/qFqIyjFEUI5x3l9lNr
-         R/yIsuaAtmNPhm/1e6maqY5TwrtWTXBVM9Gn8GuxITZD0CQ3PsV7i6dVAcCSByahXTGR
-         5fvL3Kj4C8GY9JjpuLmhrLTQKJ0PcLhfeSPhwwIB0tnkzDXjQKPFH+gAQwG7KxXESkdu
-         musrbh9L5xzU8OLHo+AoJ0AWoSAI5mdC8PO1sWksCBobfztW6ACBhalN0Z6F0mCiXkdd
-         wpGA==
+        d=chromium.org; s=google; t=1792621007; x=1793225807; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=pBxmybFhraH/PZu9TzxWt83yv/Plj5oQ+sfyrvjnp7k=;
+        b=Pp3zPBI7GONExxATnfQd52OQh2njdUvt29F7MQp/AEVn70HzNcoaPB4/yDg8KSOeLq
+         7wfrAe7ITktoLrUPAlRn2bXTEEP+lCh5VC3UG57EE8x/1HrBVgZUuwFgvxtiwwCITWnx
+         k3x6DEkwQMjRO/7/TY5b4wQnKs0Yrbk+/XvFM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792620072; x=1793224872;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:x-gm-gg
+        d=1e100.net; s=20260707; t=1792621007; x=1793225807;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ekANNG852YX/Rv0SYRliAvOikAthVPOfNHHk1KWJgg4=;
-        b=N7GGjg2nO9EFqyVllRx0BAaBpbqeTON62FxslhG1RsMf98M5wJSJuOHtTTvN9dfusq
-         V+trC6oOkBwp30PKI87tw+k6nai+HxMxq8spBko9kWrFmshDLzdvs4QTGn3bQaSMYABR
-         tdGathb/v/KwlDMVRmJx3W86+F92AqkliACBqHCDdZz9V7eXRqWV+yHCqVx5FlIElhaL
-         11mw8fONWQNL3wMC8lGAuRAeQKXE79FxR+xIrsRVT8T/8kqCIdMVPmM84YtG4mUkAxTL
-         xA1EcLtEy4B7fSnpoeD++Csje8CDsL7j66J6L2SR3oOKjz2sTYWv+/qOmMQ8mJvDWm1C
-         E/qg==
-X-Forwarded-Encrypted: i=1; AKwUvBwai0RHsZc1G4bjCWOMvbOlIWkQ/S14oVcPVjHkJDWzRSDem7BivRvcwYrpjSl6dNcNQphkH99Wa9wkvjPLoVUKyYQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKu0JB1ipMZJ4fugcxBU/VG08bii1UNxhF1PzGNHR114Oh6JmrR
-	Symird0fX2F4eHLFZGi7Ly3KxVHOQkyEik1SgfqBWvUTC2+dxXLiKSLT
-X-Gm-Gg: AYBFou0SIcqHoqjnZvwZ6QVhKZPeOkIt/Gt4V/k+6wfv90BonWWu5/Nle8L42hQwacH
-	a4bzmOO/10KmyqcmnKRacZ55ly7V6WBaZqKGqjQpwCeUlAWg2j0wQDzJddh5pPOBqnfwUgCbePL
-	gB08nNWP0cfV4EHif3TnobH/NmeB0FhSDwVr7AePEL4tWicxY9hYZpipBFAiMwe4AdYgttogexR
-	RQPX5+dpz7aryG9LYZDj08eSnyifOyIhEdHhtHd3JL8Y8N3XeOIFB1rrrNzykamEPkrGcnZ/fH1
-	TKhKNZAs+6zOpt9XseZ9uRTQLsfY9OmwzcFh/uPgpjIJ9AHgjGBR1MY+Kn9O0WYa0zCyayb9V0x
-	S072GmVmOp5/A55zrr/WtazX7rKOgANdQ49cJYxmXEab9cfrhlqXxHqAYzuFCzNgLxAuL3dm6jT
-	4H9PLWZpByao9pjxhyulbKVLgj58FJr9LF+/7RpFv4Yq+Jd1B3CCb9taoli7wrPSy5N6tC934/s
-	vj+2tuNn1Q9LjgtoMY6fcLGBBmulOX6k3Ynm5igdJ18wXbxkfUIAbWg9mppCJUajSCLWv8m7kZS
-	S6pfefHEEFcj6CIfHQSSyb8tOeYFdE182imcgyTtGn3Jbq7ngme5Lgsbtn1A
-X-Received: by 2002:a05:6a00:e86:b0:87c:e6aa:30e4 with SMTP id d2e1a72fcca58-8a089d79060mr2663523b3a.48.1792620071973;
-        Wed, 21 Oct 2026 15:01:11 -0700 (PDT)
-Received: from localhost ([153.61.198.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0895c05f4sm1334306b3a.28.2026.10.21.15.01.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Oct 2026 15:01:11 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 Oct 2026 22:01:10 +0000
-Message-Id: <DMAUS3F32198.M27YWDF2F3UV@gmail.com>
-Subject: Re: [PATCH v4 0/2] tracing: fgraph: fix the quadratic shadow stack
- walk
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Vineet Gupta" <vineet.gupta@linux.dev>, <rostedt@goodmis.org>,
- <mhiramat@kernel.org>
-Cc: <mark.rutland@arm.com>, <mathieu.desnoyers@efficios.com>,
- <andrii@kernel.org>, <peterz@infradead.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <bpf@vger.kernel.org>, <kernel-team@meta.com>
-In-Reply-To: <20261021174406.2891598-1-vineet.gupta@linux.dev>
-References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+        bh=pBxmybFhraH/PZu9TzxWt83yv/Plj5oQ+sfyrvjnp7k=;
+        b=2iSEpKTux38cyegbygbb8tqVfTC/O/g9E0CJdKEF3goxKXTynRXuAcIkUY3mpP1yAY
+         XvulxHUTvHICz5bgfQ+QEdlKoGzIyLIsYvMk7qTP7t4UBUsjrPDQt2eJPyML/urxUZVt
+         sCXJ2+46PW6sYXs/1NT5KY58JDLxQorenVgO6+5IzKhsikcniGBoBMHyYJTgLdVgyTuC
+         L02qk/A0CUPk39wJN5GZmWnEdEfg0GFB7wNyPixyibZXQroWtND3QX8npmTlNTUiWnBm
+         wNvLiNF+vd1FWrJ6qRmf8lg3V+yJzg2FFaMcBdL8FdQxijlw/084cD1XXcPxr8jYVkmC
+         vLkA==
+X-Forwarded-Encrypted: i=1; AKwUvBz6em1QF4DCZzIYrATpactqAibslm9+RhEMJXwMpLsiFx+sNYNZTUYhnMtpEh3fp5IbNeCn5U2D5gC+Wjv6eNheJeM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLFCp4Tt3Ktrj5vu69mZdbV8A3My0RX4jj09OCitFELCnFKX+bx
+	s6PcVqivlvKUZdIjXng21mcwSjl5yas3vLcwvZIcNOyzzeR/sqwFdiWhdfJBaBJAtXUlQcj4bS0
+	o88HAOYPcAtYkiL/H17ZnfzN6in/LSaX+kKi2IKNf
+X-Gm-Gg: AYBFou0xPdfRLzTFnBwWDELB4xJ+IFdEGBQm7Dq+5Ve4mpSHamEDYfzSqfWXFHWEmYN
+	JIgt4dpaMIvwlKMs/cOyNlF3LXdlUm4t/7roxhdxgwBv8kcoc9dh/AR3MZyBqPs4q2GxpzaCGQ4
+	L5H1XPxbG2Pa0R7pm95rzCIPcShB76fdBl1xsoRzJMEEeVI5/ERqGYRT5UrlLQ+BRvc7msxtLav
+	RR6avSjZf80mJWo4sWMpFUAHz0U2CX28szyuRTjOZ2QVUUWTf4c1X7oJqoZdVozyI1unzmTZuzt
+	rSbLr9NUr206F4dEacfrzLlyqrDTJ6FOGEOMlWOVm7lHYhUAGVGYSWPbcP3bVuU91VgTCvAFey9
+	/zQryvnQcYKnJ8pxTlzF7LqL4pQVuj3jij0sxHfJks8WozS8WXaTAkcfv4SVkDfnbUg==
+X-Received: by 2002:a05:690e:14ca:b0:679:938d:a5e1 with SMTP id
+ 956f58d0204a3-67a0e5d5717mr1652923d50.106.1792621007076; Wed, 21 Oct 2026
+ 15:16:47 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,9 +101,130 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+References: <20261019-send-upstream-v6-0-cb9ba4b3d6fa@chromium.org>
+ <20261019-send-upstream-v6-3-cb9ba4b3d6fa@chromium.org> <sashiko-outbox-178136@kernel.org>
+In-Reply-To: <sashiko-outbox-178136@kernel.org>
+From: Jingyuan Liang <jingyliang@chromium.org>
+Date: Wed, 21 Oct 2026 15:16:36 -0700
+X-Gm-Features: AclHuK97y_1C_fXZ7yRJHnp3ya3ECqu5ReTQG8sTLOF0eRq_fLLRwG53TU5NjZo
+Message-ID: <CAEe3GZGsfB+zi3Qf6buPWP_3hkw9bsd4mB=PtBrp4irtM5Z0zA@mail.gmail.com>
+Subject: Re: [PATCH v6 03/11] HID: spi-hid: add transport driver skeleton for
+ HID over SPI bus
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, 
+	dmitry.torokhov@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 21, 2026 at 10:44 AM Vineet Gupta <vineet.gupta@linux.dev> wrote:
-> On a 60-core Sapphire Rapids machine with 400000 idle threads it took
-> 227 s, inside a single bpf() syscall for the kprobe_multi case.
+On Mon, Oct 19, 2026 at 12:11=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+>
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Low] HID: spi-hid: multi-value sysfs attributes and missing ABI docume=
+ntation
+> --
+>
+> commit 4c66f3d16c395b79d0997b29357fb80b5a6f2708
+> Author: Angela Czubak <acz@semihalf.com>
+>
+> HID: spi-hid: add transport driver skeleton for HID over SPI bus
+>
+> This commit creates the spi-hid directory with its Kconfig and Makefile, =
+and
+> adds the initial core driver skeleton including basic device structures,
+> sysfs attributes, and probe/remove functions.
+>
+> > diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/s=
+pi-hid-core.c
+> > new file mode 100644
+> > index 0000000000000..02a7608c4b882
+> > --- /dev/null
+> > +++ b/drivers/hid/spi-hid/spi-hid-core.c
+> > @@ -0,0 +1,213 @@
+>
+> [ ... ]
+>
+> > +static ssize_t bus_error_count_show(struct device *dev,
+> > +                                 struct device_attribute *attr, char *=
+buf)
+> > +{
+> > +     struct spi_hid *shid =3D dev_get_drvdata(dev);
+> > +
+> > +     return sysfs_emit(buf, "%u (%d)\n",
+> > +                       shid->bus_error_count, shid->bus_last_error);
+> > +}
+> > +static DEVICE_ATTR_RO(bus_error_count);
+> > +
+> > +static ssize_t regulator_error_count_show(struct device *dev,
+> > +                                       struct device_attribute *attr,
+> > +                                       char *buf)
+> > +{
+> > +     struct spi_hid *shid =3D dev_get_drvdata(dev);
+> > +
+> > +     return sysfs_emit(buf, "%u (%d)\n",
+> > +                       shid->regulator_error_count,
+> > +                       shid->regulator_last_error);
+> > +}
+> > +static DEVICE_ATTR_RO(regulator_error_count);
+> > +
+> > +static ssize_t device_initiated_reset_count_show(struct device *dev,
+> > +                                              struct device_attribute =
+*attr,
+> > +                                              char *buf)
+> > +{
+> > +     struct spi_hid *shid =3D dev_get_drvdata(dev);
+> > +
+> > +     return sysfs_emit(buf, "%u\n", shid->dir_count);
+> > +}
+> > +static DEVICE_ATTR_RO(device_initiated_reset_count);
+> > +
+> > +static struct attribute *spi_hid_attrs[] =3D {
+> > +     &dev_attr_bus_error_count.attr,
+> > +     &dev_attr_regulator_error_count.attr,
+> > +     &dev_attr_device_initiated_reset_count.attr,
+> > +     NULL    /* Terminator */
+> > +};
+> > +
+> > +static const struct attribute_group spi_hid_group =3D {
+> > +     .attrs =3D spi_hid_attrs,
+> > +};
+> > +
+> > +const struct attribute_group *spi_hid_groups[] =3D {
+> > +     &spi_hid_group,
+> > +     NULL
+> > +};
+> > +EXPORT_SYMBOL_GPL(spi_hid_groups);
+>
+> [Severity: Low]
+> In drivers/hid/spi-hid/spi-hid-core.c, bus_error_count_show() and
+> regulator_error_count_show() format both an unsigned error count and a si=
+gned
+> last error code in parentheses ("%u (%d)\n") into a single sysfs file whe=
+n
+> userspace reads bus_error_count or regulator_error_count via spi_hid_grou=
+ps
+> (which is attached to .dev_groups in the later ACPI and Device Tree suppo=
+rt
+> commits in this series).
+>
+> Per Documentation/filesystems/sysfs.rst, sysfs attributes should export o=
+ne
+> value per file without custom formatting or mixing types, and new sysfs
+> attributes should be documented in Documentation/ABI/.
+>
+> Should bus_last_error and regulator_last_error be split into separate sys=
+fs
+> attributes (or moved to debugfs), and should Documentation/ABI/ entries b=
+e
+> added for the attributes in spi_hid_attrs?
 
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+Will drop these attributes in v7. Already reported via dev_err() and
+tracepoints.
+
+>
+> [ ... ]
+>
+> --
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019-send-ups=
+tream-v6-0-cb9ba4b3d6fa@chromium.org?part=3D3
