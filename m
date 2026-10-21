@@ -1,102 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.221.170
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1792605094;
-	b=M8rV0ITShqQjywTb3uN1m2QCDtwkkOWf2dr9zcAA+wQKLzfPtbB3V3vKvDpbdiOJZa7R
-	 ttU+AGfRCZdWT+SqejTYIVA27FKepwjLJH4Go3Bqtb+R1D55z/k16X4ySdEOSBJR/1F4h
-	 8eRlX8TuSdIk+LS75SeGu5oseoxnaIgPHoqcj+u5cVaSSzp2NWJB4+plW5wdYxoZvKhhP
-	 XYhQ5BbIlJDV6I3gWGDKGS7aVmGQToIdwfd6XiSZIsVMJQbIkzBxKZRhoVfM51qKTRceS
-	 Mhf7NME1sWWmWwhYAP/Qu104Q84lIr/1lGeOBhgLQxEn+696/V1yLMP94WwB7c0uyeA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792605094;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=D89ifvopPkh6UIf11JinhlKyeZs6JGLXLYQheO+1SnU=;
-	b=0wmdsslaINOCrcheAPwVEr1Q4u3dBmzcFjcKyo+6gAYAi/3Ix+a7AzPNA8sCRFxYCJT8
-	 iEaIo4yusFJ2/NZL9btCb+odmwks7oRcNlBTns4UBIhZH0Ya0qc7gC6dHGX2+L9uBjTtm
-	 wwD1O0x1816fC/q6MU9FN6E0RLy83xDMATl3ZnNTvr5PXAob5qq0QNDs9PqmVQoxx9p6q
-	 LEp00t8g/vQMZ0PzkjzuPrNMiqqG9mYyyipDjcS1SqvPAP6snxWEj/zWGPH8DKq6oqtXB
-	 rH8uh5/AcHPdRvoWv52p0aIRfY64lRZpT1McjuG6Uppzv/vFu59XWNJS6fN2DRZMwVg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dtuZsezP;
-	arc=fail smtp.remote-ip=209.85.221.170
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792605240;
+	b=WCvhT/DxuX9hblx1b21NsZWbevEwbr5EYUfoEKjfTkFYCtOWWQrZpb/tVxy0prJLs2cR
+	 Ivres4yg5zhk2NL9ZTbIGUa/4hmq5Futm1QqS4IpS/ZjS9kGpEcGpp51HEe+2wSwrJRW8
+	 feP2ylggxfHTdtQX47WsGDg06qV55uoOg8QMPAURKT2DX0KnJECYBih4ywIToaaZaZpyY
+	 rhxStCRTmOkKJdM4zcATvL4sWcXbP5nehnXQOweB3YTZHPElnKtO7K0aO96HOFNP6ss3K
+	 uLsiVDKcR6Yl1Xw+lESUcSN9QR3bi7mDEVgNn4j6gVZuer6lqg+DUaoUK05isUToSDw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792605240;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=XQ6RTIQDzZVl3ISRq3nQ4do5sKJqre9jYeaeo9C515I=;
+	b=ZL6VZyu+7D7lxRKS2VZTf63V2x2Bl2j6T1d7h4F0DwHke7Q/vh4Bv9ii1tVptOiP0GNA
+	 7YyUT2HH1rNb5Nn66hSsmwsyKvXcFtdQ5Tbu7G7ZRTJyuhLcYHDszwks+Jj4KtKPv1XnU
+	 hJbxWcVg/82n6oSFQK2rR179yaVhFjQjxuxFbEhHAS9fDAL6n4Md/unbTYVEPmo5qjUC8
+	 HrRcKJya5A+bmDGDwf8sR2/JEjqLtUloOQl7er1E5/MVCmFSs7Xox7NM75disoqCiiiep
+	 y2a3MvOD5wg6K3lJlV82S98jj+TWWI3V0eK0eWADbcam0wzWvz3fXQEdJjSviJQAMNg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KM44vbBe;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D48606A319
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 17:51:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04D48606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB0606A31A;
+	Wed, 21 Oct 2026 17:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dtuZsezP
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5ead4026fe6so396549e0c.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 10:51:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792605093; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Fy17EtEXdTMfFkVAqtbV1cS2w+M7aiMbGNgxsjYabI/Gn6spXHGYyA0yLGADqknSz2
-         3eW+sa1BqAPLC2wPcczJjZZIW6n9+TBX+K24eDxo1ae91K5g6IN5Hx6k4C8zRoUi5uy4
-         VZljwlWBs/X71g+qA8JdRrHjNWGHNmx2R2cRRoNswyqbQUW5wcXsPuw9owDWM9ysfSzk
-         kuE+day6QsL8QfT1ZvBRzZMLQQCGRdb/QsHijxInAajvBSV9MC1naLJLfI/tmMhUxNsr
-         1VFh+wOJtKRhMa8bAnlRiXseWW3LGqy89ZQRRsBYi2n6nABDlvHY6X6qiQlOZ6AlqQKn
-         tJ7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=D89ifvopPkh6UIf11JinhlKyeZs6JGLXLYQheO+1SnU=;
-        fh=WLqikZ3xR9vD3X1kZr2mrJoXSrvw7t4CNASsSXaU7wU=;
-        b=nwnBPDIxRqiv+8bdOTrmG+cHx6NYmCfpuz60rePfy2cACWAeYKB30BZKV9B26XzZIg
-         zFJDe0T2TtGn3CFjznwJegYoQE2HzYm8s05aV+SR8SlvAo4nbux3TjFvuwDZQ8MI9w87
-         ow8o0s5B2x+ZUx16UkV6Idp+9rRFqhxf87ZnsgtbzoihVXpJNz+MYQP2I0MmcanRRqBv
-         f6uuAVEOAQ9Y0iL3tqZOvyvDfJFys4iBqds/wYwO1FGmcKTU06JXjT6A1msuGO0I8zAs
-         XAmgDN5TI59RY9qfYsM2q4uHVfv1RcWXKRgoTKpj4o82xSi7XYiQIVcXdnfRulAj3sAy
-         hYEQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792605093; x=1793209893; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=D89ifvopPkh6UIf11JinhlKyeZs6JGLXLYQheO+1SnU=;
-        b=dtuZsezP1THNiKON+Z+Lg0Kal6rVkc4EKw3GGI3IDivGz7UlmjuQuUEo53rDGwkJpI
-         08zUoNY/rsg1fUaCVa/ilQ/tgbncGgTi3ydeLPT3Kh7jXOmm/vYhtyq4Uy1faR3dcaUb
-         RMDbgkQVMIgvNKf2sAwME/RNI6G8M7ELa2IN61tVcYe7GxyFGATrG3n8i7CIpOCEwFel
-         LCJ1cdZvQ+TTwbpVmG4REU8N/AD/w8Ql4Go2sZEjaBHO8Kmom0KfSE81WSrEMFUMWdsM
-         ZNs5UANGWZ/GJXvqDzO8Hx3am8Buf4/K4on2OPn7kA2XDAARwKXpCgWjDCzpLByaHxNb
-         YhbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792605093; x=1793209893;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D89ifvopPkh6UIf11JinhlKyeZs6JGLXLYQheO+1SnU=;
-        b=dODDimedR2e3ReDIH040jH6d+6uOb66rJp/dHb83/iJsJH8eR7odKE+yOuovxPin2H
-         s44dMqZh/YEJ5SgSR/dZSIGjIbH79OXXdqrQ75hhxsdUYGa8pzIRjCyaMdOvPF3nTFNR
-         eZe7rr2xAi9aNN3IGzosePplKlGGSt+j2nKfYsx/xErjqwf5mAkX+F4HPL7IEmlsVQv7
-         T4ZS9P0GRmpvRVxzEKQOFa6Qyw/gL0ZcTE+yPgUBMNdHcJoYr7qBpF5bsjVsk16W0o1P
-         QfnRFnutBaMvZEOJtWdnTvowOp3+wX78aqHqrzNTD+xO/326mgn4Vk8tCWC2Y6X/WhCU
-         ZMvg==
-X-Forwarded-Encrypted: i=1; AKwUvBypfF05kVyb9ChExknuQob7mFiEQelqKUjtRbx88o5OmxY6EQsGqO1rTu56LgTdlsn/qI5XY9juD2jftDqmWXaesI0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLHrOILDAO8UEMDAb5rYH0Z8S75BPMmBCvEc53bVvzKGFuaH2sP
-	EmaeAhqG/xXwWBCwCpQnRoUcYGsbX52jlUYvBRfnGV6rpcgGK/gz3DcVKg42fO8QOEg8jQN2wf7
-	eJ9JpBfXCceIVUMefoImy86AcGVx64RQ=
-X-Gm-Gg: AYBFou1YbkJGJktTJ9XTHAG9hvMllhCUNM7N6ijEVAlVZATepddUrI8ugnEKMNr7a9G
-	NhqtwMNCaMHT/R97ld22NidTOo4IgQldq3ZZXzZhZc5iDhJVh0lHhmiewvCL+1wViNpaDLjQuhR
-	cZPKGi0WoEGo4xG3Cyu7VNwOm/SAp7U+wKxergeeSsoVom6ggWympqUA2dK8Ao3CQ3ooh35Vk9e
-	a0ssL7L4bnTX3/Dcomt6cMyImOrtUnGPJeZ+G1Yu4oat4PAPaLOBrL72Ev42GWoy/00iHF0soQt
-	w4WgJngWGuZDbhGLhtknAcleKAoH5ICGYvfJN9J5i40ZoSPW6ZCCet3puX54RhjwbP2V9zMf7hp
-	mmakbp9vB7pUR25tAmP/2D4QlU5W+INHeT2SvkjC6BvDhidFFPG9U29I94+D5N3mZKu/2HDkRQp
-	q85Oe728VPUWAfCqH0gJJKvoQtsjUw2qGCSbprIqXRitwbIYRdlQxI3DL0tv/AWzcDtEgZ2rhzV
-	D090mOKaVvyu7vTbLkCgaExH/jHJT5SLT1ETuDOOZrOVaphOiA8B4r+9Xft
-X-Received: by 2002:a05:6122:1b8f:b0:5ea:91d2:32f8 with SMTP id
- 71dfb90a1353d-5eaebdd09f9mr1192005e0c.8.1792605092656; Wed, 21 Oct 2026
- 10:51:32 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KM44vbBe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4620A1F000C5;
+	Wed, 21 Oct 2026 17:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792605239;
+	bh=XQ6RTIQDzZVl3ISRq3nQ4do5sKJqre9jYeaeo9C515I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KM44vbBeZj1qdiQGY9fISPl6Z8/PVrDdvQkhBtux6T4fgzNJIk+j2Ssp0HcuOgJtn
+	 v4dXtm3ZwiWTPrDrpKA377XoT8t9aOz4pRk3PfP+szYeHvHp2Myz8/TOxf3m3YM48r
+	 447UMh1UgD86APyzEqMATZVMzLf/R45bJnaWoysr/5hu7P/p9YZgxvxd7MXCV7GUEf
+	 bb1cWBGizT212quBLAkCppDLHPy9W+etc4CHLzrhCBG4/aD19m+g7UtLEDdnrTaX03
+	 VP+UkfXvdE/YPYNdyK5ppMTiCBe612+EPTcxWiMDIb+30Rcj+VF7F/ASJ79kUqk4YL
+	 rbebhcCM0NHsA==
+Message-ID: <sashiko-outbox-180533@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 2/2] tracing: fgraph: use scoped_guard() for the task
+ list walk
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vineet Gupta" <vineet.gupta@linux.dev>
+Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20261021174406.2891598-3-vineet.gupta@linux.dev>
+References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
+ <20261021174406.2891598-3-vineet.gupta@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Oct 2026 17:53:58 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,85 +60,119 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261019120332.553567-1-edumucelli@gmail.com> <undine-1792592451008617538-5620f2dc569b3038@undined.local>
-In-Reply-To: <undine-1792592451008617538-5620f2dc569b3038@undined.local>
-From: Eduardo Mucelli <edumucelli@gmail.com>
-Date: Wed, 21 Oct 2026 19:50:56 +0200
-X-Gm-Features: AclHuK_wu1PEBoMZwDUUmdaaxIzeIU5q0yaGhzPbnfzamDq0zX132z4TWUZdnWw
-Message-ID: <CAK0NWSMQasDdxYiWSexJk1sdxLfnLeDW_Us76go2fPdx_c8Gdg@mail.gmail.com>
-Subject: Re: [PATCH] tools/bootconfig: Quote CPU masks containing
- comma-separated words
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Thanks Masami!
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] tracing: fgraph: mix of scoped_guard() and goto in alloc_retstack_t=
+asklist()
+--
 
+commit 7d59298fba17927bc12b63b0da1c66b0d138332a
+Author: Vineet Gupta <vineet.gupta@linux.dev>
 
-On Wed, Oct 21, 2026 at 4:20=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Mon, 19 Oct 2026 14:03:32 +0200, Eduardo Mucelli Rezende Oliveira <edu=
-mucelli@gmail.com> wrote:
-> > ftrace2bconf.sh writes the CPU mask without quotes. For a mask selectin=
-g
-> > CPUs 0 and 32, the output is:
-> >
-> >   ftrace.cpumask =3D 00000001,00000001
-> >
-> > Bootconfig reads the two comma-separated words as separate array values=
-.
-> > When bconf2ftrace.sh applies the saved settings, it writes those values
-> > on separate lines instead of restoring the original CPU mask.
-> >
-> > Quote the mask so the commas remain part of a single value.
-> >
->
-> Ah good catch! OK, let me pick it.
->
-> Thank you!
->
-> > Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootc=
-onfig from ftrace")
-> > Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-> > ---
-> > This is my first kernel contribution, so I'd appreciate any feedback.
-> >
-> > Tested with the exporter, bootconfig parser and generated replay comman=
-ds
-> > using tracefs fixtures for 00000001,00000001, 0f,ffffffff and 1.
-> > The masks containing commas fail before the fix and pass afterwards;
-> > the single-word mask passes in both cases.
-> >
-> >  tools/bootconfig/scripts/ftrace2bconf.sh | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >
-> > base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-> >
-> > diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfi=
-g/scripts/ftrace2bconf.sh
-> > index 8eed445c2..f8f288f90 100755
-> > --- a/tools/bootconfig/scripts/ftrace2bconf.sh
-> > +++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-> > @@ -238,7 +238,7 @@ instance_options() { # [instance-name]
-> >       fi
-> >       val=3D`cat $INSTANCE/tracing_cpumask`
-> >       if [ `echo $val | sed -e s/f//g`x !=3D x ]; then
-> > -             emit_kv $PREFIX.cpumask =3D $val
-> > +             emit_kv $PREFIX.cpumask =3D "\"$val\""
-> >       fi
-> >       val=3D`cat $INSTANCE/tracing_on`
-> >       if [ "$val" =3D "0" ]; then
-> >
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+tracing: fgraph: use scoped_guard() for the task list walk
 
+This commit replaces the explicit rcu_read_lock() and rcu_read_unlock() pair
+in alloc_retstack_tasklist() with scoped_guard(rcu) and removes the unlock
+label by jumping to the free label on the -EAGAIN path.
 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 4c74f1a15ad48..bbf6e4e2da2d4 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1057,32 +1057,31 @@ static int alloc_retstack_tasklist(unsigned long =
+**ret_stack_list)
+>  		}
+>  	}
+> =20
+> -	rcu_read_lock();
+> -	for_each_process_thread(g, t) {
+> -		unsigned long *rs;
+> +	scoped_guard (rcu) {
+> +		for_each_process_thread(g, t) {
+> +			unsigned long *rs;
+> =20
+> -		if (t->ret_stack)
+> -			continue;
+> +			if (t->ret_stack)
+> +				continue;
+> =20
+> -		rs =3D kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT);
+> -		if (!rs) {
+> -			if (start =3D=3D end) {
+> -				ret =3D -EAGAIN;
+> -				goto unlock;
+> +			rs =3D kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT);
+> +			if (!rs) {
+> +				if (start =3D=3D end) {
+> +					ret =3D -EAGAIN;
+> +					goto free;
+> +				}
+> +				rs =3D ret_stack_list[start++];
+>  			}
+> -			rs =3D ret_stack_list[start++];
+> -		}
+> =20
+> -		atomic_set(&t->trace_overrun, 0);
+> -		ret_stack_init_task_vars(rs);
+> -		t->curr_ret_stack =3D 0;
+> -		t->curr_ret_depth =3D -1;
+> -		/* Make sure the tasks see the 0 first: */
+> -		smp_store_release(&t->ret_stack, rs);
+> +			atomic_set(&t->trace_overrun, 0);
+> +			ret_stack_init_task_vars(rs);
+> +			t->curr_ret_stack =3D 0;
+> +			t->curr_ret_depth =3D -1;
+> +			/* Make sure the tasks see the 0 first: */
+> +			smp_store_release(&t->ret_stack, rs);
+> +		}
+>  	}
+> =20
+> -unlock:
+> -	rcu_read_unlock();
+>  free:
+>  	for (i =3D start; i < end; i++)
+>  		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
+
+[Severity: Low]
+In kernel/trace/fgraph.c, alloc_retstack_tasklist() now uses
+scoped_guard(rcu) while still jumping out of the guarded scope via goto free
+when kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT) fails and start =3D=
+=3D end,
+as well as jumping to free from the earlier pre-allocation loop:
+
+kernel/trace/fgraph.c:alloc_retstack_tasklist() {
+	for (i =3D 0; i < FTRACE_RETSTACK_ALLOC_SIZE; i++) {
+		ret_stack_list[i] =3D kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+		if (!ret_stack_list[i]) {
+			start =3D 0;
+			end =3D i;
+			ret =3D -ENOMEM;
+			goto free;
+		}
+	}
+}
+
+The documentation in include/linux/cleanup.h notes that goto-based cleanup
+and scope-based cleanup helpers should not be mixed within the same functio=
+n:
+
+ * Lastly, given that the benefit of cleanup helpers is removal of
+ * "goto", and that the "goto" statement can jump between scopes, the
+ * expectation is that usage of "goto" and cleanup helpers is never
+ * mixed in the same function. I.e. for a given routine, convert all
+ * resources that need a "goto" cleanup to scope-based cleanup, or
+ * convert none of them.
+
+Also, on the -EAGAIN path inside scoped_guard(rcu), start =3D=3D end is alr=
+eady
+true because all pre-allocated entries in ret_stack_list[] have been consum=
+ed,
+so the cleanup loop at the free label runs zero iterations on that path.
+
+Should alloc_retstack_tasklist() avoid mixing scoped_guard(rcu) with goto
+free?
 
 --=20
-Eduardo Mucelli R. Oliveira -- http://eduar.do
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021174406.2891=
+598-1-vineet.gupta@linux.dev?part=3D2
