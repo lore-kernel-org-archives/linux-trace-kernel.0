@@ -1,133 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792583650;
-	b=XIGBXaZK9n8EwG5LvC41+FHZih1SumDOXy0P+0ZhGDmDrOrrbor706Oj1AfNkkDfPAvF
-	 aft/Ha1ZytNG9D9QsWQFjPdf7nJXr1m9RRo9Mh/fZPZ+dRzvBi7PQS2brv0ZUDZ61J7yA
-	 gsUEsXaAXC+xU0KqG+q2AOD5ZhRIRpVq2iU7NsY5XbB+RyXEAdLZb51lGDYYkI/kyXL+n
-	 prE1Ji8PY3MOsZ+iNyzD6j+ur9LvixCfyBQdHbTRuJrSuflTfHOTf8z58h7q05DMeKN0X
-	 WuDgwW5CprHcCswn4jZDeHEYxXB1a1FcDvj4b/lG5OgKnIYaEDLKcM8EeMG3gNWHsRA==
+	t=1792586991;
+	b=V+ZbeJcjWm5nsWK/tCnQJqaMFCtUX8SPGnR7xfJW7Eq5howFL+ll1KeZxy/hHUBaqYKX
+	 HPU4exOUqmw4m9Qj7cVsSyCrgHpErcCzjNziAWIVgsKc6k+FCxHDZB+m0UZYz/XkSCAL7
+	 E2dL8x3ThKxNWGnD8ne2I9JACDf2agVBE3TZxUMb3spxihbB/6EVzBi+jY04I1X0uzCIU
+	 0LiPFVcs75KMN0avg7rq5NNkwKdXiSmcw0rMusP9YLmTAw+TcRje6tY8YbL/qm2uelmY9
+	 T3nre95wj3e/TcZmSNO7p48SPPaxPTEdMedFAT4tq/dVc1tkSNGY0WPxWV0xlOKKOjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792583650;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=RNBBbQrJNB3Xgg+fxj4Yup1S+J/gAN5RSYgtr57b0eI=;
-	b=Jimzb/ExfZQV1BOhJJGmOyVGMeL+MF7aZxhp7DWfrRoxLYy5DnVcAsSh9fEZ7wBs+6O+
-	 KDq7aKKRL5OsA8R3ANGUxhUzgl7FdMzVOGq8BTpt/vFgVuEeOz7UXT7rwkMPNnBLniuWp
-	 8SchuLm0RVb+1I03/OzEn+D9ZyjASSB23zXVK216S3/iDHaN6dkQ8vd9nHfNbc3XnNs/j
-	 UPAVQmu/OOMZNxEFu7I7D+ijSgHmCVOjQQC+Jk1QJanxjxAvEiXuyLSVfV1CKBGQeccaH
-	 UhiidXgu84zW057bjmy8Wa7k3EYynxtZfgRdY7FYLD4QvtK5a9yAhnSvIaJOvRU3zvA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792586991;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Subject:From:
+	 Reply-To:To:Cc:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-MBO-RS-META:
+	 X-MBO-RS-ID;
+	bh=lfnYZLKIiZVXPHMfsSfYR3WNLa/4FyJKqBCOhOsvSoQ=;
+	b=pXx0E8Hfqpk+H3+BqzFvsf+B0ydC0g2Uyfm/8taiPVz4cjyeEjUL9kttbM67Jk6hZqF6
+	 3VugygtcIoIzy16ljadZHAjzizmEMYRP3JU+O46Kwby/xIfB4VcLq5X6hJVtg7WBo+LW/
+	 VOlwrR1+NishIAQmb/POC6YqTFCYZ7Ppms5EW7qedhxGmUFFSLG1XfwSfCREq/HRdecN8
+	 QxL2Rj2wnME9Slkj2BPMYN6/o+uqzVF/wZn+KFHOqbG61Rppi3KqGgPVZ+kKvhKqwjMYr
+	 MZkZNEMnX4VHaF4BS9cJqm2zgh51uIEW+ERPEesc/1PADQ0U+QQ6hNjYIWuJOfsJ4ow==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SWDc0shx;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dmarc=pass header.from=mailbox.org;
+	spf=pass smtp.mailfrom=mailbox.org;
+	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b="c/2LEONi";
+	arc=none smtp.remote-ip=80.241.56.152
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFAA606A327
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 11:54:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FFAA606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7C3606A319;
+	Wed, 21 Oct 2026 12:49:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C7C3606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SWDc0shx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792583649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key, unprotected) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=c/2LEONi
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4j8pyX5smMzKnB7;
+	Wed, 21 Oct 2026 14:49:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1792586980; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RNBBbQrJNB3Xgg+fxj4Yup1S+J/gAN5RSYgtr57b0eI=;
-	b=SWDc0shx2BcVDMM182dbys77upicGBT3kuMSQQz8JncCpzbCrx6Qqp9BnTR6OWBIJMfN5z
-	uFbRoHO4pxjU4d3kWf7P0j3/3L6yCBXGwKTI6+vvQOTZ89efU0B4ApISDz3XNHlA0JZjfw
-	jBDjFSolFgLFrpknVCNPjokUbNb1ErI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-294-iKHLY8aAPwCZR414Q1fulA-1; Wed, 21 Oct 2026 11:54:07 +0000
-X-MC-Unique: iKHLY8aAPwCZR414Q1fulA-1
-X-Mimecast-MFC-AGG-ID: iKHLY8aAPwCZR414Q1fulA_1792583647
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-48af4a0bd0fso330800f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 04:54:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792583647; x=1793188447;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=RNBBbQrJNB3Xgg+fxj4Yup1S+J/gAN5RSYgtr57b0eI=;
-        b=cfWCtNWInmsToEbIV2jG5f+OKQder1YPW/BbFn3B4vFdNPIfDE7KSdpdxDu2gdMH44
-         YgGJ9k8hvKNNNG2P8vTeYssvaT6LR0ebEIDuxN98W5BcFc8IxAT+CeDyZ2oLrZpsYckQ
-         KJFu5DOKXZOW0mDBk5vwxtxYU3d4r19iF9Uf0l0zNNIMMEyF+Uuklr8s9DQcWbWtTSua
-         MKnSu6ndQWvGEmqdVK6IX2B+sZhNRbQvGhqB6Qo40Gnc6vBRLdmxYb5HBt6UGclPkQ0E
-         fLmqiehaxExxdIW0PMO+7xxdNcHxVmjB6ry40bmVWsa+tFaPvxjwJTEaXMEaoSEGIVFr
-         1LbQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxcNM7X0okggnT90aJTybwIBDw1YbEnZcZ3qbzyBcmvngg8PUsOmsVvcglkqVriCnG+Dxe3U3va4+IeKMhzcoI0ApU=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI9/ms6HrExE5syLUsEuZ4r09EWqdFTXzZg08aSqMIrnAJ1qZ/E
-	0rCpUdtpVvQ3B9nwOXBqiw0pKmiLvteV27d+hD0d/1e26trsprBRK5p7ec/9KVZse/rC3DQ2bxa
-	SiAhGTSYy7Mkph100vbVcHf8r4YB9nVnZ+n3bTC5jjM07zani2PbMxc+WJn1qHxz0yQue17dgPm
-	kkqzBsbw==
-X-Gm-Gg: AYBFou1ayxhrlJdlgm+jt9ep6hDvQ4aSq5HQ7+H5emb+Sr7HZjRy+F90S3aAaZyF7bf
-	5qlZmSo0R2WOFgwHlQft/uERw/uEfevp7GDO3UwGOcSNxVVyVyBaOgfCaxHeG/zI7CEGXNrlomy
-	2rOspLhYovHSLpyy6FAnG/tZeIByyK++7dll76YVlWRRBRRxXbi8q84gycHdMMqNla26FXXDOJf
-	JgZ5dB2Xi9JnMxmkb0/U0ji2t+ByIY+Op8S6C9ZSMqSDQtGhZaOjJZK87DT77MyP/QRNVQ/mDNx
-	EtC+8lCj1uc65pV8z+wACwfT8RUxkvNvCCd/JC4nmzf6J2wOK4B9RGZkb5g8inQLcw1mluxhooK
-	aBGmUNJVhDzr+dGK8c67bHlEd4TU=
-X-Received: by 2002:a05:6000:1869:b0:48e:25d7:d276 with SMTP id ffacd0b85a97d-48e264239e4mr3808035f8f.2.1792583646614;
-        Wed, 21 Oct 2026 04:54:06 -0700 (PDT)
-X-Received: by 2002:a05:6000:1869:b0:48e:25d7:d276 with SMTP id ffacd0b85a97d-48e264239e4mr3807986f8f.2.1792583646205;
-        Wed, 21 Oct 2026 04:54:06 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.34.203])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e2581f0d4sm4999776f8f.13.2026.10.21.04.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 04:54:05 -0700 (PDT)
-Message-ID: <a8d8b080f403eed617242a3276717706b4081ed1.camel@redhat.com>
-Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, John Ogness <john.ogness@linutronix.de>,
-  Tomas Glozar <tglozar@redhat.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Wen Yang
-	 <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>, 
- Viktor Malik <vmalik@redhat.com>
-Date: Wed, 21 Oct 2026 13:54:04 +0200
-In-Reply-To: <87h5ifqy6w.fsf@yellow.woof>
-References: <20261001152042.124445-1-gmonaco@redhat.com>
-	 <20261001152042.124445-11-gmonaco@redhat.com>
-	 <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
-	 <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
-	 <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
-	 <878q3xtptq.fsf@jogness.linutronix.de>
-	 <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
-	 <87bj8s8ih9.fsf@jogness.linutronix.de>
-	 <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
-	 <87v770uuyr.fsf@jogness.linutronix.de>
-	 <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
-	 <87ik2zryzo.fsf@jogness.linutronix.de>
-	 <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
-	 <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
-	 <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
-	 <CAP4=nvTc297yQHz8aumZFAQ3+JK=5Z_=416WdosT0S6nHEeNfQ@mail.gmail.com>
-	 <87pkx5q1w4.fsf@jogness.linutronix.de>
-	 <0d4f11b1999588ddba9d855db43fc492eda32de1.camel@redhat.com>
-	 <87h5ifqy6w.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
+	 in-reply-to:in-reply-to:references:references;
+	bh=lfnYZLKIiZVXPHMfsSfYR3WNLa/4FyJKqBCOhOsvSoQ=;
+	b=c/2LEONi60z6Kz54vZJJL3DkDd/VneNflB8WzwpZzMxF+lm6XWQWwFGN7Y9x7XCdU62lFq
+	iieAL/UWCA9ebw+oXGyYtmBpdvyA4Gw3vMDGCC/nQY9qnEr3dGExjjp2LZ8mhSh1xGaZqu
+	y1wCAH/47Ojer+whhr1G2oEQpBaiYTgE7pSreffhKRRTikTLs1j1ohn+nN06XZWJLPbQhr
+	kZYCPz2D/pUTCXipUsz2RpX6QZAgJo5tfixMCt8Ta7/7HFsH1hlibyOLYt730jj4/eCqWl
+	1GHHpOfDqk7QgH6BMY4+HBMIrDBvkGGBc6Si5etuCYbWXMONtw4p+1VsRkVtFw==
+Message-ID: <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
+Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>, Jani Nikula	
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun
+ Feng <boqun@kernel.org>,  Gary Guo <gary@garyguo.net>,
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, Daniel Almeida	
+ <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, Onur =?ISO-8859-1?Q?=D6zkan?=
+ <work@onurozkan.dev>, Boris Brezillon	 <boris.brezillon@collabora.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Date: Wed, 21 Oct 2026 14:49:34 +0200
+In-Reply-To: <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
+References: <20261020100034.759183-2-phasta@kernel.org>
+	 <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
+	 <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
+	 <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
+	 <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
+	 <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -137,133 +96,250 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jyZdHghi5VNtZ9OTcWHvZ2LcV9T3E46aDtdMLD_xHVo_1792583647
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MBO-RS-META: 3bmg6dk9gyqm43c5y7c8ggghkg156yj5
+X-MBO-RS-ID: 29c0397ed4351857f79
 
-On Wed, 2026-10-21 at 10:01 +0200, Nam Cao wrote:
-> Gabriele Monaco <gmonaco@redhat.com> writes:
-> > Fair enough, I feel to be cautious at redefining what reactors are righ=
-t
-> > now,
-> > though. Currently they are nothing but a function call to the set-up ac=
-tion.
-> > It's trivial to verify where the code goes without adding the tracing
-> > subsystem
-> > as a dependency in the path (typically important in some safety critica=
-l
-> > cases).
-> > Sure, handlers are called by the same tracing subsystem nonetheless, so=
- it
-> > may
-> > not add much value.
+On Wed, 2026-10-21 at 13:53 +0200, Christian K=C3=B6nig wrote:
+> On 10/20/26 17:36, Philipp Stanner wrote:
+> ...
+> > > > > First of all that prevents concurrent execution of the callbacks
+> > > > > which for a lot of use cases is a must have.
+> > > >=20
+> > > > Currently only set_deadline() can execute in parallel.
+> > >=20
+> > > Especially the is_signaling() callback is executed in parallel by ton=
+s of use cases.
+> >=20
+> > ops->signaled() you mean.
+> >=20
+> > Anyways, only one will succeed at having the fence marked as signaled
+> > anyways, and then all other callers of dma_fence_is_signaled() will be
+> > guarded by the fastpath bit-check (which btw is also broken; but we
+> > want to address that in a different patch. For now my series proposes
+> > keeping the fastpath).
 >=20
-> I am thinking about dropping reactors entirely and only use
-> bpf_printk. I have never been a fan of the panic reactor, crashing the
-> system because of an RV violation is a bit much. And the printk reactor
-> would be replaced by bpf_printk, just that the messages would be in
-> tracing ring buffer instead of kernel log.
+> What should be broken here? As far as I know the signaling path works per=
+fectly fine.
+>=20
+> What we have problems with is the lifetime of things.
 
-The panic reactor comes from the functional safety use case, imagine a syst=
-em
-with redundancy where the linux system is compromised by a violation, the o=
-nly
-safe state is to shut it down (with all vmcores and stack traces panic give=
-s
-you) and continue in emergency mode.
+The signaled bit is set under lock-protection, fully ordered. Reading
+is just racing. See my other patch series, I linked two bugs that could
+have been avoided if it were ordered.
 
-Right now that's still a potential use-case, no one that I know is using RV=
- in
-that context for a few other reasons.
+Anyways, I was just answering your point. These functions' parallelism
+is unchanged.
 
-I wouldn't completely drop reactors. That is, we can avoid implementing the=
-m in
-BPF, but I wouldn't take design choices making them impossible in the futur=
-e
-(nothing occurred so far).
+
+> > > >=20
+
+[=E2=80=A6]
+
+> >=20
+> > Nope, I want to protect shared data, which is the signaled-state. Which
+> > is currently a race-condition worked around with RCU (and sometimes
+> > with manually doing the right thing (locking!)) [1], stemming from the
+> > fact that the fence's spinlock is not used consistently.
+>=20
+> The fence spinlock is consistently used for protecting the fence
+> signaling, in other words it always happens with the spinlock held,
+> same for adding callbacks.
+>=20
+> The only thing which happens without the spinlock held is the fast
+> path checking of the signaled and enable_signaling bits and as far as
+> I can see that is ok as well.
+
+No, it isn't. It makes the API fragile.
+
+	commit c8a5d5ea3ba6 ("nouveau: fix client work fence deletion race")
+	commit 7c703a7d3f2b ("drm/amdgpu: Fix one use-after-free of VM")
+
+There are certainly more related bugs around.
+
+Also think of the various ordering issues between signaled-bit and ops
+pointer that you and I observed.
+
+> The problem here is not about the state of the fence, but if the
+> callbacks are still executed or not. And that is not a good task for
+> a lock, instead what is usually used for that is a barrier and that
+> is exactly what RCU provides.
+
+Locks are for mutual exclusion. Which is what you want here: you want
+to exclude someone from signaling the fence while you are working on
+it.
+
+Tell me one thing:
+If locking is the wrong approach, then how come it was added to
+literally all callbacks except for set_deadline()? Seems to me that it
+must have solved some issues.
+
 
 >=20
-> Or do you already have potential future reactors in mind?
+> > > > > Then as I pointed out before the second problem is that this agai=
+n
+> > > > > makes the existing lock inversion between the signaling by pollin=
+g
+> > > > > and signaling by interrupts even worse than it already is.
+> > > >=20
+> > > > We asked for examples in our last discussions, and the only one eve=
+r
+> > > > presented was the list-access requiring the fctx-lock in
+> > > > nouveau_fence_no_signaling(). Nouveau is often not a good example.
+> > > >=20
+> > > > Can you provide examples in the kernel where deadlock would occur?
+> > >=20
+> > > Just exercise the simple example of a driver supporting both pull and=
+ interrupt:
+> > >=20
+> > > Interrupt: Handler takes lock protecting a linked list, finds fence
+> > > and signals it.
+> > >=20
+> > > Polling: is_signaled is called with fence lock held, can't take list
+> > > lock and so needs to work around that somehow.
+> >=20
+> > signaled() neither needs a list lock nor any other lock.
+>=20
+> I don't think we should decide that inside the framework, this is up
+> to the implementation of the dma_fence backend.
+>=20
+> By taking the lock for the callbacks we just move the complexity of
+> handling from the framework into the dma_fence_ops implementations,
+> and that is something I would *really* like to avoid.
+
+Of course the framework needs to specify exactly what the callbacks are
+about and what the driver should do in them. That's btw why many expect
+Rust to result in often better driver design, because by the type
+system you can define how your API can and cannot be used.
+
+> > It needs to read a sequence number from somewhere, so a u64. And then
+> > it returns true or false to the fence_backend.
+> >=20
+> > The u64 can easily be an atomic. Also ioremaped reads should work
+> > locklessly.
+> >=20
+> > No need for any lock.
+>=20
+> It is perfectly possible that you need to take whatever lock you want
+> to cleanup things. E.g. spinlock for list removal, common lock with
+> the interrupt handler etc....
+
+That's like saying it's perfectly possible that someone will want to
+allocate memory in a callback. Yet we say No, you cannot do that.
+
+>=20
+> That's also why I said that the whole approach with the signaling and
+> enable_signaling callback returning a boolean is broken.
+>=20
+> Instead what we should do is to forward the requests to the dma_fence
+> implementation. And that dma_fence implementation calls
+> dma_fence_signaled() as necessary.
+
+dma_fence_signal() you mean?
+
+I don't get your point. What you wish to happen is already the case:
+
+dma_fence_is_signaled(struct dma_fence *fence)
+{
+	const struct dma_fence_ops *ops;
+
+	if (dma_fence_test_signaled_flag(fence))
+		return true;
+
+	rcu_read_lock();
+	ops =3D rcu_dereference(fence->ops);
+	if (ops && ops->signaled && ops->signaled(fence)) {
+		rcu_read_unlock();
+		dma_fence_signal(fence);
+
+
+
+> > >=20
+> >=20
+> > Where does such a driver-lock need to be held while operating on a
+> > fence, opening the deadlock-path?
+>=20
+> In the interrupt handler.
+
+I don't see that either. In the interrupt you will want to do:
+
+driver_lock();
+seqno =3D get_seqno();
+driver_unlock();
+
+signal_fences_up_to(seqno);
+
+>=20
+> > Note that, as I pointed out many times, all callbacks are already
+> > called under lock-protection. Especially enable_signaling(), and
+> > is_signaled() must be lock-resistant, proven by
+> > dma_fence_is_signaled_locked() existing.
+>=20
+> Yes, but we clearly want to get away from that.
+>=20
+> See the calling order in the interrupt signaling path is driver ->
+> framework.
+>=20
+> While in the is_signaled/enable_signaling/set_deadline path it is
+> framework -> driver.
+>=20
+> The dma_fence framework solved this issue by using a shared external
+> driver provided lock, and that lock is then taken before calling into
+> the backend operations. But we want to get away from that and use an
+> inline lock in each dma_fence.
+>=20
+> So the only two possibilities I can see is to either call the backend
+> without holding locks or force the backend operations to use a
+> lockless approach for their internal handling.
+
+Right now, we do both: call callbacks with a lock *and* force all API
+users to do the RCU dance.
+
+So we have the worst of both worlds.
+
+>=20
+> > Regardless, what I propose would only make a potential difference for
+> > *new* users, with inline-lock, who can then cleanly design to avoid
+> > locking problems.
+>=20
+> Yeah, but I'm desperately trying to avoid the complexity of using a
+> lockless approach in the driver implementation.
+>=20
+> Just take a look at amdgpu_fence.c and how complex the RCU handling
+> there becomes because of this issue here.
+
+AFAICS amdgpu only uses ops->enable_signaling(), and there it does
+exactly what I would have expected: register a timer who will see the
+fence gets signaled.
+
+As I said, no reason to do list accesses like nouveau. That's just the
+driver being misdesigned.
+
+Interestingly btw amdgpu's ops->release() does a call_rcu() to free the
+fence.
+
+You do agree with me that our API being usable like this:
+
+dma_fence_signal(f, err);
+dma_fence_put(f);
+
+would be robust and desirable, don't you?
+
 >=20
 
-Well, I have a lot of ideas, not many requests so far ;)
-I think of reactors whenever people want to integrate exotic things to RV.
+[=E2=80=A6]
 
-Actions tied to the error tracepoints (what Tomas suggested, and I think yo=
-u or
-ThomasW also mentioned in the past) would probably work in many use-cases.
-
-This doesn't affect the design, we'd still need something making tracepoint=
-s.
-
-> > Let's leave reactors aside for a moment. What I am coming to terms with=
-,
-> > instead, is that the current ringbuffer to userspace design isn't what =
-we
-> > want.
-> > In kernel monitors communicate their status through tracepoints, perfec=
-tly
-> > integrating to tracing tools, BPF monitors use a custom buffer.
-> >=20
-> > Generating a tracepoint here is probably the way to go. bpf_printk does
-> > generate
-> > one, but as Tomas pointed out, hijacking that for everything (think of
-> > monitor
-> > events) might be a bit much.
-> > Nonetheless, we want RV BPF handlers to generate tracepoints, then atta=
-ching
-> > actions on error tracepoints (whether we call that reactors or not) can=
- be
-> > done
-> > later.
-> >=20
-> > Summarising, we have 2 potential designs.
-> >=20
-> > 1. bpf_printk only:
-> > =C2=A0 bpf_printk("event: monitor: curr_state x event -> next_state")
-> > =C2=A0 bpf_printk("error: monitor: event not expected in curr_state")
-> >=20
-> > 2. new kfunc(s) calling a tracepoint:=20
-> > =C2=A0 trace_event_da_bpf("monitor", "curr_state", "event", "next_state=
-")
-> > =C2=A0 trace_error_da_bpf("monitor", "curr_state", "event")
-> >=20
-> > 1. is simpler and works mostly out of the box, depending on how powerfu=
-l
-> > glob
-> > filters are, it can reach the same functionality as 2. Might risk to
-> > overload
-> > the shared bpf_printk event and perhaps have a higher filtering overhea=
-d.
-> > 2. is closest to the current in-kernel implementation and offers flexib=
-ility
-> > to
-> > easily filter the type of event (useful for DA, e.g. I want a backtrace=
- only
-> > when going from state A to B). But it requires a series of kfuncs (e.g.
-> > error
-> > and event for each monitor class).
-> >=20
-> > In both cases a malicious actor could call the kfunc and make us believ=
-e
-> > there
-> > was a reaction (they cannot mess with the model though). If we own the
-> > kfuncs we
-> > can at least limit the availability (tracing-only and CAP_SYS_BOOT).
-> > This, unless we register BPF monitors in the kernel like in V1.
-> >=20
-> > I'm going to test each design once I get again to work on this.
-> >=20
-> > Thoughts?
 >=20
-> I vote 1, much simpler (but maybe I just haven't quite got the issue). I
-> feel a bit ensure about adding RV kfuncs and would only go that route if
-> there is no other way.
+> And I still think that this is the simpler and especially more defensive =
+approach.
+>=20
+> The dma_fence framework should not leak it's internal lock anywhere exter=
+nally and that includes calls into the backend operations.
+>=20
 
-We can go down that route and see how it behaves.
+Calling a callback while holding a lock is not leaking the lock. It's
+sometimes necessary. All fence callbacks are being called under lock
+protection, for the same reason as I propose here: prevent the fence's
+state from changing while they execute.
 
-Thanks,
-Gabriele
 
+P.
