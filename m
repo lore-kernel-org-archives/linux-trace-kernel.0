@@ -1,54 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.122
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792605368;
-	b=NIG7By4jDVM+7i4v85ExBNggVibogOuZDByd48TthuE5WP6wwgc0qRNKibsXViOfHHh2
-	 rfojnQvFdEdhCUlDrR9LVAaWCGHJUCRmp8IGe86nEhHa7m4mKTc+cJULWbCsca94lptNe
-	 tbDikDN4NWKAgjz3PYszODpGSCTYycwLs9RzvleokpSXblW1WWbqzOpCIV1eB2+vrwpoA
-	 8geJbQgo7cYDzc8ihTqT7gERWuqH6otd9kT1mQCJKbAIgldtZXu8vxpn3vC6DL/ZhVm35
-	 +qJWdoSY1GzGn14e9JxsP/ppvkIdoDhhHWnij2eORnwkoVC968/Wgw3TZIbm0zUZGaw==
+	t=1792606608;
+	b=aoBdxPY1Jr2DeQytMzlBug5rEfdK709yBXPJRBAKOb4zU9mCcCoiaqmezdCv/UQSU/X3
+	 +u6vxI6i2qQGsDcQ8HAueMS2YOnNyAOqoltp2jdqFoU73PDZyl3zNhI9APK7SAcOZy/1x
+	 ViV9oS6sUKSak0vY/mKS2ZMlany92+xWYfAEZjpDWZ5YoqrKHT1TtRbUpaJ3uh0BPdR+E
+	 1DMtklFKYJH2kOCgMNeIfmKONRgmki2MCup/JCazlUkt42H5Zkq8qMP6PNYaO1Qzn6cpz
+	 /84M7eUOtLXcgRQAproJgES+tSLT1GpOtDd7SZ9qoZxulJQkvxFtCHLYN9V+logVpuQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792605368;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=TqhmT3zzwgjEqD3sonXGsJG7hfDHBxIZreM+m1+TOGg=;
-	b=DBQaVGmmQy4MBn99x45bdpPAQk4h4yq1in21h6bQAvcORHVdSS4Nsjl+SC2F3uRlvYW1
-	 CcqEm12yJgW69MVLkqOpmQ6jqKmjFqGZNXTdi67GYiOHK29+wXxfsvZwTnzQLrmQNgXsR
-	 SRU25mh1t5VaMKWwOCbLHnMHua++DZiULC0bhUvmcjj6hDDS8a3UiihUinkYyzVXo5Ubk
-	 l5iLLyMslsESyMTGhL8pSg36mh997ZeskOLnFfvGngmLiGeiJPeL515fDif1mA/kpb26z
-	 JyEQb6psp52pBDQHFpIrMggBoVnMYuwIdLsX+lhZdNlYFa6gaP7OUpXuEvLRN0kIF/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792606608;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=yEhVZPhGMEYsPhUdE3zVy4aLvJE9Xbyd5jbdjX2FImA=;
+	b=AXWOqM80GHhWY/wTDiEYbIvpO26UGFyeJ2DkPAQrsmB2LZ60fTsZwhbUg2FZ4sI35H9y
+	 pt9EdEAwvH89EsOPMMk2YyANLewP0/Dn3d9LLWpSN6FdsddwbnekHz8LTQSyffeEVJ469
+	 U36oYoQ3iWgD5iwRX6NWJON2Xl6qcYVsXVzLTP/uWhXTcIr6of4hNop3hEhBGMyxt4QRS
+	 hR7j32EIgMrbcez1Bk2FjFuWXRqoS4gYzBJzF7ms8ZtQ6oh69fuyGo7H3lXiylJSLJSm2
+	 wr8ogn0Fm7m3MxiIQyoHtcWh1vx1iyEw5VYIj3FFPSLlBYZvUgmexSq9EisU8C1p6Dw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=p2iKCLQx;
-	arc=none smtp.remote-ip=91.218.175.122
-Received: from mta0.migadu.com (out-122.mta0.migadu.com [91.218.175.122])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=nK1eZqMZ;
+	arc=none smtp.remote-ip=209.85.128.47
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594B6606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 17:56:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 594B6606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4348606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 18:16:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4348606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=p2iKCLQx
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=uJr1MDyW1DaFhj9hIHiQ+HWYF6EIfeHGqPHiC+1ZAzk=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792605365; v=1; x=1793210165;
- b=p2iKCLQx+RXrIxj6DpCXojAT80roQ262u8/Yp/doEo8dlXU83BTOIdzZUPtMPOdykhNhcVjF
- yW9WB9/Vz8oMcxHoH0Rm7thh7TxtkDXZ6Fs6gzab285KpzhRfzLQulAAYbY7TPufUZ7GD39M6zy
- 29QIG76t9+YshQOJP+Nuy9fQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 0f8ee1d09eff9576;
-	Wed, 21 Oct 2026 17:56:05 +0000
-X-Mizu-Trace-ID: 0f8ee1d09eff9576
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <131319e8-7f92-4297-a07e-fc97a094e3a6@linux.dev>
-Date: Wed, 21 Oct 2026 10:56:02 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=nK1eZqMZ
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a1fbd52ab6so7535955e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 11:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792606606; x=1793211406; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=yEhVZPhGMEYsPhUdE3zVy4aLvJE9Xbyd5jbdjX2FImA=;
+        b=nK1eZqMZ7+PSQI7iCEqS+Fc64a20N+Lyojhw37axMqXg6vIJ233XhS7EedOKzdtRzu
+         QHc3TsiyKpsQHMurFC91Jvuyx9MY+H/5LM6a6IPnHD+9yIlUO9e2ipkZIgArrfVqDt1e
+         LgQGVpPTZmpsdimBc9AfEMN1Sd2W35rod0fmj2UtrRYv7j4k/f1+23nmMoVZg6mBYznZ
+         U8QXY1I2ZbJ2cHnXcEkRErGJNJzlW6YOY6bgNQ1z6Hk1u4JLYF1kYivzVvvHO1FTdmNn
+         vNEXTZ50/4iNxoLIrEB3YR2vxP8eVf92fOEBjDLeXAtXgkOhORe83A/n41607XEKi9/4
+         ZlDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792606606; x=1793211406;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yEhVZPhGMEYsPhUdE3zVy4aLvJE9Xbyd5jbdjX2FImA=;
+        b=SnpJAZiN/D6gVsNJhwGV29qZSWPfBnD1dv2UyqBWfrWJ4z+C1YmjEUIaV2em8Z6Ly2
+         xlWKmHsx3bm9uJpv7JmzrPH19XTXp/qkFnIqXOIZbwKmTjqPLbXf8s0asO6KJCBE99cW
+         hlkMieHCIAtc1/P+eIWpunA9hVPWz31VAJLR+qkkLAp1kkPJ8PKeMrQE6/WDNt1/SvNL
+         rCBAdCzwW4fiE7vS9IBztYYj1Rijyf4qtMtvxRV15HmuYOgHJYHNfwfoqXQRAfF9DOQV
+         OQqGrlurK8ecJYs3FzHC3cfQW36OLG8mMNUIGRmyjHG3ytLx8iC+2+lBgQ3O9gTlvRfz
+         J7ug==
+X-Forwarded-Encrypted: i=1; AKwUvBz56UFht72j5SCW5B+Gc9d3MfI6RHGYv4QM1A+zT5rMihCr1bDNxxAAaVYdvv3FBhZ7zJ7jeGM4nEblr2l24r6iRW8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLQ1LfrRkkLUUezOOEIzqOI/nDVvvjUXt8V11C+1GmJct+A9w7U
+	1JX5ZTRGwT23NQYENKA6mOl6nHggg2G2Z6+6UHkk9tClgkjga2C2ybAw
+X-Gm-Gg: AYBFou2+a8xLebnI/I4GWxc0D88HYH4mD6AM/pxV6lSCMAqbKp2DDKQ6i+6FOnhQWpc
+	iYUZuERa5AER2cRNk4RblNSiCGipe/mC87O4NDYjOnrOfqOqH3Aq+FX4aulOW5Elgn4KZQJ/JuZ
+	a6f5YtQWXdikaxdQ7m46Cb0g7XKKZzj0dbrK7cNN6QsmBvvVGJdHDEqLSWroiSgYjR/cQBAu7Ry
+	8azLDREkBKQvYX9aolw+GBy/MKTPfLTK+N6phTorzMhwHV7sSgjXoqe2G0AyzJu8SlXsGCpFrvH
+	viyaERfOzj7c0z1qeFb/QdGhK6hK899+X/bm8ZyzNzCRJcqB2ygdycalUz3OgFZwIvIgvyqoS5Z
+	0yWNyQvDjjD6Mm49FCgUV15UmiKKMHkqPps+6TQ1FopyxmeuABKlJPfJ6yjwCWvDkbB9UG29MRU
+	tiNM5RkyweJXrj9mrUk+/JWf2BJ1G2BkocYbvEXxCdAWm1ltrkUMsYh2hfD96sBZQ2kSJUV6E2L
+	lFwrerWYPiWtybARsrd/Ne/Xto4AMwMX0DjR1Ja/xiz5+r4IVc5yA3r6wGwgWtrmnfFn75BYYDQ
+	421R2Bww5QypWQzBYGslnEILQjKRskiBy73XtrgdaYvO2cFStUwKRfY9D3/a5ijE91N2Hm4L71V
+	hoPnZFK5e//u1kQWNB/q/hSRHYnPT4gSx1mhE16jJbYWtq3VzA4b2ZwJqBHqQacWL287H6K2BN8
+	0lUYWaielFsNAaCqjjHMKROEzgJTarqw==
+X-Received: by 2002:a05:600c:3b1d:b0:4a1:d41b:5060 with SMTP id 5b1f17b1804b1-4a1fdb1358bmr65477465e9.22.1792606606135;
+        Wed, 21 Oct 2026 11:16:46 -0700 (PDT)
+Received: from longitude (2a02-8434-fda5-4201-fbd6-1bb0-8c10-7bd8.rev.sfr.net. [2a02:8434:fda5:4201:fbd6:1bb0:8c10:7bd8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a200c1cc03sm28195805e9.0.2026.10.21.11.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2026 11:16:45 -0700 (PDT)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/bootconfig: Fix enabling all events in bconf2ftrace.sh
+Date: Wed, 21 Oct 2026 20:16:26 +0200
+Message-ID: <20261021181626.2004489-1-edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,126 +97,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] tracing: fgraph: use scoped_guard() for the task
- list walk
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
- <20261021174406.2891598-3-vineet.gupta@linux.dev>
- <sashiko-outbox-180533@kernel.org>
-From: Vineet Gupta <vineet.gupta@linux.dev>
-Content-Language: en-US
-In-Reply-To: <sashiko-outbox-180533@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/21/26 10:53 AM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] tracing: fgraph: mix of scoped_guard() and goto in alloc_retstack_tasklist()
-> --
->
-> commit 7d59298fba17927bc12b63b0da1c66b0d138332a
-> Author: Vineet Gupta <vineet.gupta@linux.dev>
->
-> tracing: fgraph: use scoped_guard() for the task list walk
->
-> This commit replaces the explicit rcu_read_lock() and rcu_read_unlock() pair
-> in alloc_retstack_tasklist() with scoped_guard(rcu) and removes the unlock
-> label by jumping to the free label on the -EAGAIN path.
->
->> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
->> index 4c74f1a15ad48..bbf6e4e2da2d4 100644
->> --- a/kernel/trace/fgraph.c
->> +++ b/kernel/trace/fgraph.c
->> @@ -1057,32 +1057,31 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
->>   		}
->>   	}
->>   
->> -	rcu_read_lock();
->> -	for_each_process_thread(g, t) {
->> -		unsigned long *rs;
->> +	scoped_guard (rcu) {
->> +		for_each_process_thread(g, t) {
->> +			unsigned long *rs;
->>   
->> -		if (t->ret_stack)
->> -			continue;
->> +			if (t->ret_stack)
->> +				continue;
->>   
->> -		rs = kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT);
->> -		if (!rs) {
->> -			if (start == end) {
->> -				ret = -EAGAIN;
->> -				goto unlock;
->> +			rs = kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT);
->> +			if (!rs) {
->> +				if (start == end) {
->> +					ret = -EAGAIN;
->> +					goto free;
->> +				}
->> +				rs = ret_stack_list[start++];
->>   			}
->> -			rs = ret_stack_list[start++];
->> -		}
->>   
->> -		atomic_set(&t->trace_overrun, 0);
->> -		ret_stack_init_task_vars(rs);
->> -		t->curr_ret_stack = 0;
->> -		t->curr_ret_depth = -1;
->> -		/* Make sure the tasks see the 0 first: */
->> -		smp_store_release(&t->ret_stack, rs);
->> +			atomic_set(&t->trace_overrun, 0);
->> +			ret_stack_init_task_vars(rs);
->> +			t->curr_ret_stack = 0;
->> +			t->curr_ret_depth = -1;
->> +			/* Make sure the tasks see the 0 first: */
->> +			smp_store_release(&t->ret_stack, rs);
->> +		}
->>   	}
->>   
->> -unlock:
->> -	rcu_read_unlock();
->>   free:
->>   	for (i = start; i < end; i++)
->>   		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
-> [Severity: Low]
-> In kernel/trace/fgraph.c, alloc_retstack_tasklist() now uses
-> scoped_guard(rcu) while still jumping out of the guarded scope via goto free
-> when kmem_cache_alloc(fgraph_stack_cachep, GFP_NOWAIT) fails and start == end,
-> as well as jumping to free from the earlier pre-allocation loop:
->
-> kernel/trace/fgraph.c:alloc_retstack_tasklist() {
-> 	for (i = 0; i < FTRACE_RETSTACK_ALLOC_SIZE; i++) {
-> 		ret_stack_list[i] = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
-> 		if (!ret_stack_list[i]) {
-> 			start = 0;
-> 			end = i;
-> 			ret = -ENOMEM;
-> 			goto free;
-> 		}
-> 	}
-> }
->
-> The documentation in include/linux/cleanup.h notes that goto-based cleanup
-> and scope-based cleanup helpers should not be mixed within the same function:
->
->   * Lastly, given that the benefit of cleanup helpers is removal of
->   * "goto", and that the "goto" statement can jump between scopes, the
->   * expectation is that usage of "goto" and cleanup helpers is never
->   * mixed in the same function. I.e. for a given routine, convert all
->   * resources that need a "goto" cleanup to scope-based cleanup, or
->   * convert none of them.
->
-> Also, on the -EAGAIN path inside scoped_guard(rcu), start == end is already
-> true because all pre-allocated entries in ret_stack_list[] have been consumed,
-> so the cleanup loop at the free label runs zero iterations on that path.
->
-> Should alloc_retstack_tasklist() avoid mixing scoped_guard(rcu) with goto
-> free?
+A bootconfig containing ftrace.event.enable makes bconf2ftrace.sh try to
+write to events/enable/enable. The per-event loop treats the global
+enable key as an event named "enable" in a group with the same name.
 
-This has been discussed before and it was agreed this is fine.
+Since events/enable is a file, this write fails. With --apply, the script
+exits before it reaches the code that enables all events. The same thing
+happens with ftrace.instance.NAME.event.enable.
 
-Thx,
--Vineet
+Skip the global enable key in the per-event loop and let the existing
+global handler write to events/enable.
+
+Fixes: 1d8365a553a7 ("tools/bootconfig: Support per-group/all event enabling option")
+Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+---
+This is my second submission to the Linux kernel. Feedback is welcome.
+
+Tested with --apply in a temporary tracefs instance on my Ubuntu machine,
+running kernel 7.0.0-38-generic, with recording disabled. The original
+script exits with status 2 and leaves events disabled. With the fix, it
+exits successfully and the instance's events/enable reads 1. Per-group
+enabling works with both versions.
+
+ tools/bootconfig/scripts/bconf2ftrace.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/bootconfig/scripts/bconf2ftrace.sh b/tools/bootconfig/scripts/bconf2ftrace.sh
+index 850c207343..7745c97e7a 100755
+--- a/tools/bootconfig/scripts/bconf2ftrace.sh
++++ b/tools/bootconfig/scripts/bconf2ftrace.sh
+@@ -218,6 +218,7 @@ setup_events() { # prefix("ftrace" or "ftrace.instance.INSTANCE") [instance]
+ 	prefix="${1}.event"
+ 	if xbc_has_branch ${1}.event; then
+ 		for grpev in `xbc_subkeys ${1}.event 2`; do
++			[ "$grpev" = "enable" ] && continue
+ 			setup_event $prefix ${grpev%.*} ${grpev#*.} $2
+ 		done
+ 	fi
+
+base-commit: a804c5742bff224d4cb4d25dd383554d598be32b
+-- 
+2.53.0
+
