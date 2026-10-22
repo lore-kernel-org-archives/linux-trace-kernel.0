@@ -1,63 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792657252;
-	b=ngMvEqpncNbm4Gg2Y8pvLYM22BnHL3LLoCSORPR1FNifddEbx7Z0oCkZoDrp22TzcYhf
-	 TGcJ00By9oCcBD49uRzR4h357PD0Hyc4YFvfkzBeqDtGyS9Ys/jQD7ABpVFKAFoMFpfQf
-	 egr+uxbtKB2gRAj2JawAVBIj9pdwqMTWXJC7x64Uzx38rjO3HWrF45OMtIaCBArSpOHHQ
-	 sq0y8UavHECci1rbOHFHQUvDPuoe0uUZO+ONjPPv64vkQvXJwZF/Ms5qJck0NZa/o1mcG
-	 N1vdvmJuaS+tX1IUSWIUVvZjHcEQiKLgWr3XblaO3Pbf4/hLXPj2gK4PWAH7JiW9UnA==
+	t=1792657518;
+	b=DexybkusxP+PFkb38gZE63aTjMYWIiaR+dNcvrYrEvXx6c/kvkso+es8B7Z+2ZwBDGGb
+	 73KwYqRXleDT58Me7KpKX5aqVhuHvx/XRRA6503juhEpuAcmaZM8wlcUvvkqGwLLN4kCP
+	 8QIxrUKCubd6joeUbd+dow3GD7T4wKOL3ECxj29flEwSFS6XDDzopWI2OIwmPDABe9ILu
+	 +NtC51XDUxxfLbJQth7/pLcMfVAmSAXDINkVIBQ6qXHk24p5GlsTp0V8DtmfTAbQsUtXc
+	 dYLWv03+UFVDGySGvf0dlcXM/5cRueqVhU2xKU7dAv9VoA356+G7ouaV8bE3Y6fgQTQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792657252;
-	h=DMARC-Filter:DKIM-Signature:X-QQ-XMRINFO:X-QQ-XMAILINFO:From:To:Cc:
-	 Subject:Mime-Version:Content-Type:Content-Transfer-Encoding:Date:
-	 X-Priority:Message-ID:X-QQ-MIME:X-Mailer:X-QQ-Mailer:X-QQ-mid;
-	bh=KSM6qF7BNHprXBqYVbrdtDSGXeWUKK/qUv+X6IEq6JY=;
-	b=MA9M+P6B6sA7A1Ru7MAr+bvnKL/vhMBqvun2J/Va2eix4UqoEbYd03MRH+jNkKpxAvnr
-	 P27VsrPyab3a1KTnaL8O3Ee8x8Gtwq4RidtbspzL5lxCMWLTnOBM6T0Y5l62QLApj4JmG
-	 8aKBUZU/JElLt0Rflk6uEUCIaCriAYDavzqZTE9GVCDobdaMK1xuBIRdMn9gkUcSEDAfs
-	 6r0tS+SdFXW3riwgDQk85K6ApiKtSmpdyc9lJJyuSq3hHHM1hv/2tL9TO6aAWZ871apCP
-	 AKYzBx+aZD/n/y6y1USAd7PLsUYXReZ1eW/uWOSLRoWoW0F9+hJO5/E818XwGzawTOA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792657518;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=IdtW1rAGsIKxN6Wm0qAXHuMt9ue8GvhTyEgWLvkduZ0=;
+	b=MYGxvI1x8cepj1elnJJPEGSbOqc3fYNs4T2ttio+0H+ZHjLKvxYO3etV5hno5a3SJKv4
+	 1W1Anyw7rzC0XdS/6INVBVQQfvk1LVzX4CE/fbIBQ/KiUM0+KZe0YC9E2O102q1OgG0/6
+	 VcPzxzQ7eMKYDXHm2x7DioOpl+wvsKZUCrlOil10G5/it5ACpfJKvqUVcJEJeo4Egn1oO
+	 3tUgr6NpV5s65fTJVmig3ZohGzJUUxQMKAqhNQh5XjVpwbOE6VlGFuWxvbuzTkSt2vUd6
+	 ute+M94drtQniSGrVkMp5gGViUgbcRuWamUmmAgkl9NEa8egOSOfg8Dk4ff2bYklHIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=qq.com;
-	spf=pass smtp.mailfrom=qq.com;
-	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Y0L2hsXf;
-	arc=none smtp.remote-ip=162.62.57.252
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=KZKBtfkL;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=HHOqeu7g;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C954606A31E;
-	Thu, 22 Oct 2026 08:20:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C954606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D80606A319;
+	Thu, 22 Oct 2026 08:25:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3D80606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Y0L2hsXf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1792657246; bh=KSM6qF7BNHprXBqYVbrdtDSGXeWUKK/qUv+X6IEq6JY=;
-	h=From:To:Cc:Subject:Date;
-	b=Y0L2hsXfGAERxLpxYHOEhSZgEOeFbrpvivLuA52Z4rgQ352t0/ESniR3PX1btzw7z
-	 fBtiVEvbq3LPK101Okmj8iWQgK9mxl1mm/eMhP32kxnYR8NJgK6ctaEMsnnhk9rH70
-	 mn5L38EWsPM9+rPRalzY3XGNWfNJap+OWq1SNosQ=
-X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
-X-QQ-XMAILINFO: NcJlrb5DLByva93p+rjCGWTICyyESN1ZAeV3KfUW4FhO33BwecZNv1mGm+lrLf
-	 LOo2TMkMoxcFKhQD3fJ1kuJ3Qkj1XuMTwZH4j0gSCruUxnuSyiFS9BNSYtjchNLPmOu6eDtY6C4Fx
-	 TJCmJmASzsXaRoixGNK/UxJKQBrvdXpC7BFQaTlohqDfoxqBx7YWO6E9RnoAjXsgA6mDJSOSSGIZR
-	 3C49/GJ/6at9lEYqxyFaqjb58NQ0EhouX+E/jIk32zawZWIXKVms0nu/IsjSw095yQPbIqPdTYrCA
-	 sbUjk5C9nQ9UUivP6MIQLpuDpR9YjULiUSx/Aj+6YGzodOlppr5/i/7iLKRbLLZyzMbR5mlJTKJkj
-	 jTzPzn74Rqa2fK+CrzlxwaIkjvrFwBuewLf8OueCfLJv65THz1PyY7NbhUS7ho7BBBRKn73EwGw9r
-	 cLVWuETQIoyYPJXzCDM01pk9eD5KfETS5Dx41kpJ3H2zU4X6B+ZuaVwq1416HsIN0KbwT3VXNw4jr
-	 kXG+/NukTiZJKZtbB2yHUpw6ca/4cvIt5gSmX62R3tsi6u9RMbAEQfTXcW5CZ1YRLlwUAZJp3be2T
-	 ctNZtpWNF+wh+V4NlqXm8E/gHwOwt2ZXxvvnNzXQkOQSUsquAxAsLr12JmWnznswAvIsk7C62DfsX
-	 RI9S+x8fdUS9jXrUz8FW2l08oXjpSYSY/hu55pVQ0yZIEwmHBnZ7LyodSRsxgFeWxzEpTKxfagWW7
-	 zoPyCYtmeCSCjMoBkDbCkfzmCIMa0d+yTmU9Ks7KDPvv2kdalS/8osFrts6td9WtNh0Gk8DBdLv5Q
-	 S7kq3d/b9dpIUDWd13KYLR6swn3+EgwKOE74qUTY/zkiajh6fNlyoUlbAfsIS5Qris1nEpYkxvklC
-	 7XttoBv5zEEKrmkJ73UNHB0vR23kePEIOY/zy/rmOF2h5OOh/NPZnXL7Y6LehJAg23EY5ZUzp5oVD
-	 tmE+CxK+PdRjaelZUrb1EfN1c1Ufa0UchoSv356U4+jynfQs6Fhg2Lnqctz5AJw6ntvk7kf0hgKCZ
-	 P69oUFLmmyiOktVsfYQbT+gjDTw==
-From: "=?utf-8?B?Mzc5MTk3MTg5MQ==?=" <3791971891@qq.com>
-To: "=?utf-8?B?bGludXgtdHJhY2Uta2VybmVs?=" <linux-trace-kernel@vger.kernel.org>
-Cc: "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>, "=?utf-8?B?Y2F0YWxpbi5tYXJpbmFz?=" <catalin.marinas@arm.com>, "=?utf-8?B?d2lsbA==?=" <will@kernel.org>, "=?utf-8?B?cGF1bC53YWxtc2xleQ==?=" <paul.walmsley@sifive.com>, "=?utf-8?B?cGFsbWVy?=" <palmer@dabbelt.com>, "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>
-Subject: [PATCH v1] rethook: Fix percpu base register corruption across CPU migration in trampoline
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=KZKBtfkL;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=HHOqeu7g
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1792657515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IdtW1rAGsIKxN6Wm0qAXHuMt9ue8GvhTyEgWLvkduZ0=;
+	b=KZKBtfkLOohZWzF4oIYIRhvdb09VOKMPhLw2V8fDhpRHj3h9GnYQMpv0t293qqJqKRwesI
+	poOjDC6dfJ/O5p34g8bc4PnV3htPx95LK0LWkXwXie/8G+gvy4siPKGJfubiFgaq9J6U9w
+	gcpebuoexjQuyTcFnXnb19cVnUFpKQ6ay4CX4kILN1I97fjvvC1Xh0ZeMv+O/MIbELpwdn
+	3enNKb+SEJwwTdgctZJc8VjSa4/UBOANhfkm1mmAPmdN9W6xnZf+LYfqAYLg4PKe1o8RDe
+	nI7G8YmDmgyhVjsfrFFGy75F73uQcEPfcBSpTI/YqJgghv4Yj1IEmqOh2FTsng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1792657515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IdtW1rAGsIKxN6Wm0qAXHuMt9ue8GvhTyEgWLvkduZ0=;
+	b=HHOqeu7gLFukHBH/txj8Tw027E18BDEDbfJ71r0uSGIt2a11SNlupFhE0o+/vx1+iw1evk
+	eac6JX00Eb8FlUAg==
+To: Gabriele Monaco <gmonaco@redhat.com>, John Ogness
+ <john.ogness@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Wen Yang
+ <wen.yang@linux.dev>, Tobias Schaffner <tobias.schaffner@siemens.com>,
+ Viktor Malik <vmalik@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+In-Reply-To: <f147fa9dfc553767ce92802b66723a85cf804e46.camel@redhat.com>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+ <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+ <878q3xtptq.fsf@jogness.linutronix.de>
+ <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+ <87bj8s8ih9.fsf@jogness.linutronix.de>
+ <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
+ <87v770uuyr.fsf@jogness.linutronix.de>
+ <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
+ <87ik2zryzo.fsf@jogness.linutronix.de>
+ <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
+ <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
+ <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
+ <CAP4=nvTc297yQHz8aumZFAQ3+JK=5Z_=416WdosT0S6nHEeNfQ@mail.gmail.com>
+ <87pkx5q1w4.fsf@jogness.linutronix.de>
+ <0d4f11b1999588ddba9d855db43fc492eda32de1.camel@redhat.com>
+ <87h5ifqy6w.fsf@yellow.woof>
+ <a8d8b080f403eed617242a3276717706b4081ed1.camel@redhat.com>
+ <20261021094853.29b9f7be@gandalf.local.home>
+ <fb5c20f226f723cbb4df5092462dfcf5f2686367.camel@redhat.com>
+ <87h5ifvw3p.fsf@jogness.linutronix.de>
+ <f147fa9dfc553767ce92802b66723a85cf804e46.camel@redhat.com>
+Date: Thu, 22 Oct 2026 10:25:13 +0200
+Message-ID: <871p9ita52.fsf@yellow.woof>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,109 +94,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Thu, 22 Oct 2026 16:20:44 +0800
-X-Priority: 3
-Message-ID: <tencent_ECF9EB2561DF6C83A6A037AB5A4EF02B0107@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-QQ-mid: xmsezb58-0t1792657244tps46nq0a
+MIME-Version: 1.0
+Content-Type: text/plain
 
-VGhlIGN1cnJlbnQgcmV0aG9vayB0cmFtcG9saW5lIGltcGxlbWVudGF0aW9uIGFjcm9zcyBM
-b29uZ0FyY2gsIEFSTTY0IGFuZCBSSVNDLVYKbWFudWFsbHkgc2F2ZXMgYW5kIHJlc3RvcmVz
-IGFyY2hpdGVjdHVyZS1zcGVjaWZpYyBwZXJjcHUgYmFzZSByZWdpc3RlcnMgKHIyMSBvbgpM
-b29uZ0FyY2gsIHgxOCBvbiBBUk02NCwgdHAgb24gUklTQy1WKSBhcm91bmQgdGhlIGNhbGwg
-dG8gcmV0aG9va190cmFtcG9saW5lX2hhbmRsZXIoKS4KCgpUaGlzIHBhdHRlcm4gaXMgZnVu
-ZGFtZW50YWxseSB1bnNhZmUuIHJldGhvb2tfdHJhbXBvbGluZV9oYW5kbGVyKCkgcnVucyBp
-biBhCnByZWVtcHRpYmxlIGNvbnRleHQgd2hlcmUgQ1BVIG1pZ3JhdGlvbiBpcyBhbGxvd2Vk
-LiBJZiBhIHRhc2sgbWlncmF0ZXMgZnJvbSBDUFUwCnRvIENQVTEgZHVyaW5nIGhhbmRsZXIg
-ZXhlY3V0aW9uLCB0aGUga2VybmVsIGNvbnRleHQgc3dpdGNoIGFuZCBleGNlcHRpb24gcmV0
-dXJuCmxvZ2ljIHdpbGwgaGF2ZSBhbHJlYWR5IHVwZGF0ZWQgdGhlIHBlcmNwdSBiYXNlIHJl
-Z2lzdGVyIHRvIHBvaW50IHRvIHRoZSBuZXcgQ1BVJ3MKcGVyLWNwdSBkYXRhIGFyZWEuIFJl
-c3RvcmluZyB0aGUgc3RhbGUgdmFsdWUgc2F2ZWQgb24gdGhlIG9sZCBDUFUgbGVhdmVzIHRo
-ZQpyZWdpc3RlciBwb2ludGluZyB0byB0aGUgd3JvbmcgcGVyLWNwdSByZWdpb24sIHRyaWdn
-ZXJpbmc6CjEuIMKgUmVtb3RlIENQVSBydW5xdWV1ZS9SQ1Ugc3RhdGUgY29ycnVwdGlvbgoy
-LiDCoCJTY2hlZHVsaW5nIHdoaWxlIGF0b21pYyIgd2FybmluZ3MKMy4gwqBVbnJlY292ZXJh
-YmxlIFJDVSBzdGFsbHMgYW5kIGhhcmQgQ1BVIGxvY2t1cHMKNC4gwqBTaWxlbnQgcGVyLWNw
-dSBjb3VudGVyL2xvY2sgZGF0YSBjb3JydXB0aW9uCgoKVGhlIHBlcmNwdSBiYXNlIHJlZ2lz
-dGVyIGlzIGV4Y2x1c2l2ZWx5IG1hbmFnZWQgYnkga2VybmVsIGV4Y2VwdGlvbiBlbnRyeS9l
-eGl0IGFuZApjb250ZXh0IHN3aXRjaCBwYXRocy4gSXQgbXVzdCBuZXZlciBiZSBtYW51YWxs
-eSBzYXZlZCBhbmQgcmVzdG9yZWQgYnkgaW5zdHJ1bWVudGVkCnRyYW1wb2xpbmUgY29kZSDi
-gJQgdGhlIGtlcm5lbCBndWFyYW50ZWVzIHRoZSBjb3JyZWN0IHZhbHVlIGlzIHByZXNlbnQg
-b24gcmV0dXJuCmZyb20gYW55IEMgZnVuY3Rpb24gY2FsbCBhY3Jvc3MgcHJlZW1wdGlvbiBl
-dmVudHMuCgoKVGhpcyBwYXRjaCByZW1vdmVzIHRoZSBkYW5nZXJvdXMgYW5kIHVubmVjZXNz
-YXJ5IHNhdmUvcmVzdG9yZSBpbnN0cnVjdGlvbnMgZm9yCnBlcmNwdSBiYXNlIHJlZ2lzdGVy
-cyBpbiBhbGwgdGhyZWUgYXJjaGl0ZWN0dXJlIHJldGhvb2sgdHJhbXBvbGluZSBpbXBsZW1l
-bnRhdGlvbnMsCmVsaW1pbmF0aW5nIHRoZSBjcm9zcy1DUFUgbWlncmF0aW9uIHJhY2UgZW50
-aXJlbHkuCgoKRml4ZXM6IDkwYTI3OWM2YzgzYSAoInJldGhvb2s6IEFkZCBjb3JlIGluZnJh
-c3RydWN0dXJlIGZvciByZXR1cm4gaG9vayIpCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9y
-Zz4gIyA1LjE4KwpTaWduZWQtb2ZmLWJ5OiBZb3VyIE5hbWUgPHlvdXIuZW1haWxAZXhhbXBs
-ZS5jb20+Ci0tLQrCoGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9yZXRob29rX3RyYW1wb2xpbmUu
-UyB8IDYgLS0tLS0tCsKgYXJjaC9hcm02NC9rZXJuZWwvcmV0aG9va190cmFtcG9saW5lLlMg
-wqAgwqAgfCA2IC0tLS0tLQrCoGFyY2gvcmlzY3Yva2VybmVsL3JldGhvb2tfdHJhbXBvbGlu
-ZS5TIMKgIMKgIHwgNCAtLS0tCsKgMyBmaWxlcyBjaGFuZ2VkLCAxNiBkZWxldGlvbnMoLSkK
-CgpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3JldGhvb2tfdHJhbXBvbGlu
-ZS5TIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3JldGhvb2tfdHJhbXBvbGluZS5TCmluZGV4
-IDdhM2IyYzFkOGU5Zi4uMmYxYzNkNGE1YjZlIDEwMDY0NAotLS0gYS9hcmNoL2xvb25nYXJj
-aC9rZXJuZWwvcmV0aG9va190cmFtcG9saW5lLlMKKysrIGIvYXJjaC9sb29uZ2FyY2gva2Vy
-bmVsL3JldGhvb2tfdHJhbXBvbGluZS5TCkBAIC00Miw3ICs0Miw2IEBAIFNZTV9DT0RFX1NU
-QVJUKHJldGhvb2tfdHJhbXBvbGluZSkKwqDigILigILigILigILigIJhZGRpLmTigILigILi
-gILigILigILigIJzcCwgc3AsIC1SRVRIT09LX0ZSQU1FX1NJWkUKwqDigILigILigILigILi
-gIJTQVZFX1JFR1MKwqDigILigILigILigILigIJzdC5k4oCC4oCCcmEsIHNwLCBSRVRIS19P
-UklHX1JBCi3igILigILigILigILigIJzdC5k4oCC4oCCcjIxLCBzcCwgUkVUSEtfUEVSQ1BV
-X0JBU0UKwqDigILigILigILigILigIJtb3Zl4oCC4oCCYTAsIHNwCsKg4oCC4oCC4oCC4oCC
-4oCCamFs4oCC4oCC4oCCcmV0aG9va190cmFtcG9saW5lX2hhbmRsZXIKwqDigILigILigILi
-gILigIJsZC5k4oCC4oCCcmEsIHNwLCBSRVRIS19PUklHX1JBCkBAIC01Miw3ICs1MSw2IEBA
-IFNZTV9DT0RFX1NUQVJUKHJldGhvb2tfdHJhbXBvbGluZSkKwqDigILigILigILigILigIJs
-ZC5k4oCC4oCCdDIsIHNwLCBQVF9SMjIKwqDigILigILigILigILigIJsZC5k4oCC4oCCdDMs
-IHNwLCBQVF9SMjMKwqDigILigILigILigILigIJsZC5k4oCC4oCCdDAsIHNwLCBQVF9SMQot
-4oCC4oCC4oCC4oCC4oCCbGQuZOKAguKAgnIyMSwgc3AsIFJFVEhLX1BFUkNQVV9CQVNFCsKg
-4oCC4oCC4oCC4oCC4oCCbGQuZOKAguKAgnRwLCBzcCwgUFRfUjIKwqDigILigILigILigILi
-gIJhZGRpLmTigILigILigILigILigILigIJzcCwgc3AsIFJFVEhLX0ZSQU1FX1NJWkUKwqDi
-gILigILigILigILigIJqcuKAguKAguKAguKAgnQwCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0
-L2tlcm5lbC9yZXRob29rX3RyYW1wb2xpbmUuUyBiL2FyY2gvYXJtNjQva2VybmVsL3JldGhv
-b2tfdHJhbXBvbGluZS5TCmluZGV4IDNjNGQ1ZTZmN2E4Yi4uOWU4ZDdjNmI1YTQgMTAwNjQ0
-Ci0tLSBhL2FyY2gvYXJtNjQva2VybmVsL3JldGhvb2tfdHJhbXBvbGluZS5TCisrKyBiL2Fy
-Y2gvYXJtNjQva2VybmVsL3JldGhvb2tfdHJhbXBvbGluZS5TCkBAIC0zNSw5ICszNSw2IEBA
-IFNZTV9DT0RFX1NUQVJUKHJldGhvb2tfdHJhbXBvbGluZSkKwqDigILigILigILigILigIJz
-dWLigILigILigIJzcCwgc3AsICNSRVRIT09LX0ZSQU1FX1NJWkUKwqDigILigILigILigILi
-gIJzdHDigILigILigIJ4MjksIHgzMCwgW3NwLCAjUkVUSEtfRlBfTFJdCi3igILigILigILi
-gILigIJzdHDigILigILigIJ4MTgsIHgxOSwgW3NwLCAjUkVUSEtfWDE4X1gxOV0KLeKAguKA
-guKAguKAguKAgnN0cOKAguKAguKAgngyMCwgeDIxLCBbc3AsICNSRVRIS19YMjBfWDIxXQot
-4oCC4oCC4oCC4oCC4oCCc3Rw4oCC4oCC4oCCeDIyLCB4MjMsIFtzcCwgI1JFVEhLX1gyMl9Y
-MjNdCivigILigILigILigILigIJzdHDigILigILigIJ4MTksIHgyMCwgW3NwLCAjUkVUSEtf
-WDE5X1gyMF0KK+KAguKAguKAguKAguKAgnN0cOKAguKAguKAgngyMSwgeDIyLCBbc3AsICNS
-RVRIS19YMjFfWDIyXQor4oCC4oCC4oCC4oCC4oCCc3Rw4oCC4oCC4oCCeDIzLCB4MjQsIFtz
-cCwgI1JFVEhLX1gyM19YMjRdCsKg4oCC4oCC4oCC4oCC4oCCbW924oCC4oCC4oCCeDAsIHNw
-CsKg4oCC4oCC4oCC4oCC4oCCYmzigILigILigILigIJyZXRob29rX3RyYW1wb2xpbmVfaGFu
-ZGxlcgpAQCAtNDgsOSArNDUsNiBAQCBTWU1fQ09ERV9TVEFSVChyZXRob29rX3RyYW1wb2xp
-bmUpCsKg4oCC4oCC4oCC4oCC4oCCbGRw4oCC4oCC4oCCeDI5LCB4MzAsIFtzcCwgI1JFVEhL
-X0ZQX0xSXQot4oCC4oCC4oCC4oCC4oCCbGRw4oCC4oCC4oCCeDE4LCB4MTksIFtzcCwgI1JF
-VEhLX1gxOF9YMTldCi3igILigILigILigILigIJsZHDigILigILigIJ4MjAsIHgyMSwgW3Nw
-LCAjUkVUSEtfWDIwX1gyMV0KLeKAguKAguKAguKAguKAgmxkcOKAguKAguKAgngyMiwgeDIz
-LCBbc3AsICNSRVRIS19YMjJfWDIzXQor4oCC4oCC4oCC4oCC4oCCbGRw4oCC4oCC4oCCeDE5
-LCB4MjAsIFtzcCwgI1JFVEhLX1gxOV9YMjBdCivigILigILigILigILigIJsZHDigILigILi
-gIJ4MjEsIHgyMiwgW3NwLCAjUkVUSEtfWDIxX1gyMl0KK+KAguKAguKAguKAguKAgmxkcOKA
-guKAguKAgngyMywgeDI0LCBbc3AsICNSRVRIS19YMjNfWDI0XQrCoOKAguKAguKAguKAguKA
-gmFkZOKAguKAguKAgnNwLCBzcCwgI1JFVEhPT0tfRlJBTUVfU0laRQrCoOKAguKAguKAguKA
-guKAgmJy4oCC4oCC4oCC4oCCeDMwCmRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2tlcm5lbC9y
-ZXRob29rX3RyYW1wb2xpbmUuUyBiL2FyY2gvcmlzY3Yva2VybmVsL3JldGhvb2tfdHJhbXBv
-bGluZS5TCmluZGV4IDJhMWIzYzRkNWU2Zi4uN2Y4ZTlkMGMxYjJhIDEwMDY0NAotLS0gYS9h
-cmNoL3Jpc2N2L2tlcm5lbC9yZXRob29rX3RyYW1wb2xpbmUuUworKysgYi9hcmNoL3Jpc2N2
-L2tlcm5lbC9yZXRob29rX3RyYW1wb2xpbmUuUwpAQCAtMjgsNyArMjgsNiBAQCBTWU1fQ09E
-RV9TVEFSVChyZXRob29rX3RyYW1wb2xpbmUpCsKg4oCC4oCC4oCC4oCC4oCCYWRkaeKAguKA
-gnNwLCBzcCwgLVJFVEhPT0tfRlJBTUVfU0laRQrCoOKAguKAguKAguKAguKAglNBVkVfUkVH
-Uwot4oCC4oCC4oCC4oCC4oCCc2TigILigILigILigIJ0cCwgUkVUSEtfVFAoc3ApCsKg4oCC
-4oCC4oCC4oCC4oCCc2TigILigILigILigIJyYSwgUkVUSEtfT1JJR19SQShzcCkKwqDigILi
-gILigILigILigIJtduKAguKAguKAguKAgmEwLCBzcArCoOKAguKAguKAguKAguKAgmNhbGzi
-gILigIJyZXRob29rX3RyYW1wb2xpbmVfaGFuZGxlcgpAQCAtMzcsNyArMzYsNiBAQCBTWU1f
-Q09ERV9TVEFSVChyZXRob29rX3RyYW1wb2xpbmUpCsKg4oCC4oCC4oCC4oCC4oCCbGTigILi
-gILigILigIJ0MCwgUkVUSEtfT1JJR19SQShzcCkKLeKAguKAguKAguKAguKAgmxk4oCC4oCC
-4oCC4oCCdHAsIFJFVEhLX1RQKHNwKQrCoOKAguKAguKAguKAguKAglJFU1RPUkVfUkVHUwrC
-oOKAguKAguKAguKAguKAgmFkZGnigILigIJzcCwgc3AsIFJFVEhPT0tfRlJBTUVfU0laRQrC
-oOKAguKAguKAguKAguKAgmpy4oCC4oCC4oCC4oCCdDAKCg==
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> Well, this would be yet another hybrid requiring BPF monitors registration in
+> the kernel like I proposed in the RFC [1], which was the main point of
+> contention (that fully shared reactors and sysfs interface, by the way).
+>
+> For this I would argue, though, that such monitors would be BPF just on paper,
+> we wouldn't be able to use many advantages BPF provides (e.g. BPF maps).
+>
+> The current implementation already shares the header with in-kernel monitors, so
+> the actual logic is shared. What isn't shared is the storage type and some glue
+> around it.
+> I used BPF maps because they offer some nice flexibility especially around per-
+> task and per-obj monitors. On top of using more battle tested code.
+> I would like to keep that.
+>
+> Besides, we'd need to be extra careful on controlling the callers. Right now
+> handlers are static, so it's easier to make sure no rogue caller messes up with
+> monitoring.
+>
+> What else definitely isn't shared, which is the main point of this whole
+> conversation, is trace events.
+> Those could be kfuncs. And no matter what you do, BPF monitors will need to
+> share the trace events (unlike in-kernel that have separate events per monitor).
+>
+> In short, I don't think this would be easy to achieve and wouldn't earn us that
+> much. (Plus I'd lose the hardly earned Alexei's blessing ;) )
+>
+> What do you think?
 
+What about we refactor the in-kernel monitors' trace events into a
+single one. I am picturing two functions for ALL classes and ALL
+monitors:
+
+    void rv_error(const char *monitor_name, const char *message);
+    void rv_event(const char *monitor_name, const char *message);
+
+which trigger the tracepoints. And we make those kfuncs. This allows
+sharing trace events between in-kernel monitors and BPF monitors.
+
+Then everything else (kernel reactors, users, perhaps even eBPF reactors
+in the future) hook into those tracepoints.
+
+Nam
