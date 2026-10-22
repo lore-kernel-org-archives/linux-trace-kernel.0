@@ -1,101 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.180
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792691821;
-	b=mEHERToe1O6JrFdW5tpuafl7V5sI7JFHJKi648y4WRJQ/ZA9i1cIKZNgHsLap8pBAEEx
-	 F2z4tdhZy5VLI0+A4i2AW0QJNkK01Uwbbpgostglq4bYLb0yK+Frvq2tx0gVIfFuPmhIz
-	 O9okTUwcxre7NXSdF0pzff8FwcPTdbTqZ8gFtHDvE0MwQ2680rr045uQL5Xre/aTwSQsu
-	 0h0K/w+Xg+0/TqZp0OYioadq+KSALbJewZP1EQDTa1jfT0hNqqfl+6i4WZwC91Z9BTBRH
-	 Kl1A9dH0zGaMTZO19wSciFpvwhBLValgXIq5j3hi2UfVuA6J2OdE7G97yY9JsBb7RyA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792691821;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792692355;
+	b=AZr/mFWwSdFCmc7wnH+rbZOJv4yhec4ZoxrCHske5Q0NpztJmv/J6G9lDveZx/h2WCvo
+	 CEm+vuDpgRmjKeWU1uyluR8jks3fbgVBF26WpDXqf7RIFXU9nUPCjWkHtS/cIEWpHKZ5O
+	 GvmYl+NzGkgYeU3egggMGMZL+29wrhJ+e8GwpAlRt6AZOmMoIcPrQ834VWuboXtZimK/v
+	 B87TO9GVQsuUFAE6ZQkcQbFFm4yJ7THEDlS/pH66z/gcMg1WnfqmAgV2JFHY5yrc8a1UA
+	 oNO3svsIAOa5Fw7UquMVuGPmUZ6NKggmVpXIBB1Qh9oJPZ/+TxAQCCcX8dK/2uCEHQw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792692355;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=BIrmnsOR+HHqvO287vhtPz0FYh6eka7mZUJWsTNMmN0=;
-	b=hAELkulHcivo4kEKR3MY9yN7MGvL3s68EAU8BWL4u3m3GP1XjGir1k6j5k6inkEEoQjl
-	 KHzfwFkc19sjdd4dY0oMN9PpG3BoEWKi4qkeVKBtli2LcG5oKy+e6v9JgdKd9/fz0dywg
-	 BmrKeBICjJgfIM2kOYMTiGiufA5P6omCaPQAYxW4EnIfokC3VPuKNnY0uKXvoXLLNmlbY
-	 04icJvrRKzx+wx76jDLfr5SEAXoh5LFgpUyZ9Ne/AFwKWyO0jIm+YYPGsLGeHu2qoaLJw
-	 MeDAU9/jQGzPYk/M9j+DexXDt2ednI1MB35Yr6EOY7Cf/QZQ9+u4uAN82YKA5ocvYnA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=YFdp+eNt;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.180
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:MIME-Version:Content-Transfer-Encoding;
+	bh=1zSXtHvPpLsfUt5yAbkPli0w54wQnxBQcvrvtnILKFE=;
+	b=rVTa4JGyR7v2DmnhR7YMfg5AUOgXMafFDf+vHEzT7I06AHznTnnHUWwA6VRXv7tKvw9c
+	 3S6cjb3zTNoRMxqL9j5Nl1e/8AzoWEy2LLDDnPI77vdZ6q3LJ+O8ovQdjsPkfB8LNS9ke
+	 s7G2aNjjRWPUgd1RlDL9ytiDrkeSsiknP+/KxSk34O2kqHR9jSjaNbPQ+cB/ZDHw60guw
+	 m2grEq/sAEyOwoEZMWgeCjCGKsAq1k/hwyLuFXqBLVt8Q0EaUn8dcHkScQU7fGe3zSoiY
+	 L3bkbOU1EaIfClNAyscMJ2mbA9R4NzgnqpR5Sxj25Hk0JZUvJQimRA/kw3/kk7FfIWA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gXMiaecm;
+	arc=none smtp.remote-ip=209.85.215.173
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A1B606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 17:56:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23A1B606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FA3606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 18:05:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5FA3606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=YFdp+eNt
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2e8623790f8so6855ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 10:56:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792691819; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NiDwRElPDMipCMQuDZcTOu4mOcgk5C8uCekwWDqoPvgnH4glKkU1TF2QqX7oIyJvLG
-         txlm0ciuYf116/z9rohdjMHwBRFWqYK9LPRkzDWr/AArf6QMI9P9eDCwqHnhWQ+Q/2Ex
-         CfobatBu6BduMjHJbjuBFURJG89ztkcnoVZXT/QB6jWDz8NbJ3+COk3vBXQQprorpKZO
-         8xdg7SmhVrHmKB/iJ6BSDGcSApuZkHt7lqbxc5EfmZ7uH+TbS16yyLYkFfbiQkEvHx7Z
-         ZnBaOFeky1cWnjLIpKu7ILWR9tiKHJ51B84Mj6rszCm3D1mm4xThvZ0ggjKDdMM22hSh
-         RNAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BIrmnsOR+HHqvO287vhtPz0FYh6eka7mZUJWsTNMmN0=;
-        fh=zXfWz/4Z4XqoUALr1mv0uIqMlBF6buj/nrPDF7ZPnCY=;
-        b=HnJyqwPjP0avo6r+Zlza5VWMW8U8u2+BcL2nLTGAf8e/7+5XV64fmnT2+oEM9NPAdo
-         GWqEMzU6vYZqU3tHZzUOR3QZpBQ3L43rkkRXtIhJ37EYdv4v+D21WYZ9NISkLQUXNahD
-         ocdIeCLCXtQ45jDwmzTp0GTTReHhCtzQ+U+zwZKAjUr2BhvN2iZnZoLUiGjQwOBiNhme
-         rhvKRFNeHy+bju7hm11KpjGHx2qLxlsHsP2noozjZj+V3ZLtYY3sR5TkbYpd2m+gXaYI
-         Acg5W4/AJaytE5OWJQJQbdMoFcPMKSylDMV/WMc98zbjJAFTd+4elgHtUlaLJuSf0BBg
-         ThKg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=gXMiaecm
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cc4ca696de6so71482a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 11:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792691819; x=1793296619; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=BIrmnsOR+HHqvO287vhtPz0FYh6eka7mZUJWsTNMmN0=;
-        b=YFdp+eNtUuEUTvr6WJyWDSWbgr6375Hv/W+rTk2td6itbHuLtatk8TV3FBePVM7v0W
-         +q+UbeyAt0FTXceQoOBjMY/Ttfd7dUv8kQJ8yreK2BjsATGe11z1rwVU5iXiMvJ3Dqg+
-         9CVMbQvVQ+s09u+L4/Qu3i27gNo0YA03TQrfaezeGuyKv2F88/DFShOTND6gd0rdAtjo
-         9OgISODKkk6HDUFhd6tONLgbIZKHIQ/LSOJPxFqDhy86TBHzPOEa0QWqIRCc/4wp5rla
-         DJdBFgmSiM6TL4oYHtefgccGo7BRzxU0mdcGk/pGx1FgArFziiCHYZrSeVpxvNTcWRgI
-         g6DQ==
+        d=gmail.com; s=20251104; t=1792692354; x=1793297154; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=1zSXtHvPpLsfUt5yAbkPli0w54wQnxBQcvrvtnILKFE=;
+        b=gXMiaecmWs+UySZpVS0T/CtxT4fNYCxtTMWgas0Qjjg9B6oP+tRZsDAQc+8V9H+Uq/
+         o5PRknHa3WLZ+JHJiEfKR8urT/+zGbRihNL0cVHJM1LuggK2C8ZFYz1R0VdtR5fWDzAe
+         3RkGbhN+jlMTBK0gzId5Imc86K6tP2gUGHxsw1B6aeJFy2M+asuWmf4q3Yp+8hLWtSCK
+         QBS/qzBi+3VPWOYz0IT48I0tq8RqQYf6/rG6YzTURG3b2ZmE7GDiO+FIhJibxPnmPYmV
+         ZZQhMV+MUqGd3eyg68brQfwjDeh/7I4mB+UY23Cd3uvgxU4GwgVa7NDTKoYgOgAWQZYK
+         A3ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792691819; x=1793296619;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BIrmnsOR+HHqvO287vhtPz0FYh6eka7mZUJWsTNMmN0=;
-        b=Y1Crxk0Ctmm4VwppyjjIcJv0Ot9cuu4qJwfeDUOV0r/Xb/HAez0QvMiAblyIph3+AK
-         ASotOgeVplDg6q73m/nrt4yU9eExEogKOArCopbt/V9w/ScXKg0Gt0PGRJ/QGdZiwAOn
-         M8fAGsDo3cAI7KB4siG+1RdeO55qnUybfeltggk3EEfnr7a5KqmNV2VUFRvwIcxScTEn
-         Tu7Tm7QB6T1JAC+s30czDZmwD6uOlNhwCpPMwKxXjR2v0Tw57RMXsP8XSo1Qnrwq5VId
-         D+5384UAiDp73pXfOJm3jLOzdHgEzN0d7zUDSk4KixSf1bXsMUdICJoznLmzOHnSxfQi
-         mX1g==
-X-Forwarded-Encrypted: i=1; AKwUvBwdsp4uTsXqXBgedkYNfb2Azl1q4s8hrvMQ0yEksg8Q7psAID0QQsVQjn+wogJvLbdOQveW79w00dw5KJ8HzlcuX5g=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLdB5aSLaQqbVpP26D4cRQ4xg89SDQXhpTz4d/oFXvHgbPszT9A
-	ql6o21Bilc0wzbEyNPKZt6GNXpvAt9abHzlcn9jBUM8qzp4doCU/VWI+Qa8oWmg61aW8Qw/IuKp
-	SfQZgLD5k5KWbIS+Ias2qit8dTIGmUP5AlTYdhJPf
-X-Gm-Gg: AYBFou27qc3U/LJDM0EDMzBKGCo8x7WHi/QVPhj/brfOg7OEfkYfBg5QeQlSyb8JQ32
-	lbQtzSOANHtUVSg+YzdbE0tFxXamj9z/Wj0482miERfmjdnEUVRoM3hLFJBx3h6qk5yZWbRuZpg
-	40+ny/f9CPFRB+x00SXEWXLDgjuhhOGJCJIeAHb3lBwFSBLhSyEyxFYIXGyzc8mXuWXEulGkTfy
-	wec9DWEoOWFjA2tRNf7kEBQjk+xvMn0qeTbIOtYx281vPqFyOtoSZ93/J04k47oQPM+kAYNBb88
-	LZmCzbJGOy7BCfaiBYMHxJaLH1SEuLkjhUxz5IhK99cz82o3BUW+1uYcIlEXZ6XGeHvbmfof54M
-	U59YKb+l7i9ZBqWT7ASzPAqjETV5mdtOsr9rGsZEvXAbGSgRQ7sY7GQq3JLQlMYr4YErylJQeRC
-	1aBv3rF+2sngjTXpVWibZM+Q==
-X-Received: by 2002:a17:902:cece:b0:2dd:3a08:d47b with SMTP id
- d9443c01a7336-2ea7c856829mr195125ad.13.1792691818910; Thu, 22 Oct 2026
- 10:56:58 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792692354; x=1793297154;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=1zSXtHvPpLsfUt5yAbkPli0w54wQnxBQcvrvtnILKFE=;
+        b=afakzKvllHo6U6btyE0R5ELF0KYd/fwJg7vDZ/08gsSYpt92+DP88J5DPw0accGOGL
+         1ZV++v9lany7yw6P+o07BK0G74N379O4zss3BiN3bqY7zqqj5Kdotih1cRmSEiRGSNlG
+         aK8seeX5e9sInO2NayilDISRilpCSVvueRBcFyUmbIzSCqI/WSATA87DTYNmC9Wlf2xX
+         as+6Z/C78zEn8bcZI16jOyhthA3iZMBPqN8I1mkTUHFIoif1KeKakD65cP5bqXE6vkM5
+         JCU7qVIwW11WeeRXbheR2LcxXweAhbyTrR7xSOgsn8DXPNLRucRaZQxekoOcJTQ4gTzb
+         0Sag==
+X-Gm-Message-State: AFq9FYIkgs2/Wzlv6WizM3qX/aduZPZU2nNmw+idcombzShz/JUcsVpG
+	nk/vygkZURS6mHvIl7UL28E7T6tYFUXbdmlJqZfTL2fwR3MhkKY8ZtQ=
+X-Gm-Gg: AYBFou09guPmJkVGGx1Me2D37izHdd3AF1kywxH+9jLeItBuUzviNsLCf2d7VOxrRs8
+	zSRTFm3LHTwgWhRRnMA64fEKnnHz1k7wziGN3otNxyD7E74dNovlFskyAzOfZJgPKitzbehQBmY
+	pBdp6wAlOOIt2d9OJCc1hvI3DaMuLB7nbR858IT606/b+AusXKkgq5aq2+z8V0ZPDnRlwa0/K7I
+	bhiiFCuvCO7ulnFMTjtj1Rxdt5rhvpBs4/OUChDXcosiJtT6lfYnwY4RUG8iNdpd8zd75+4ZBqC
+	qs5BZrHCYjgfZvrFFz8NQ27dDgq/Id67I42czqFTl5O0IxXrcX51aDydlC0NVdRrvCKrCUPU+Z9
+	crab/CMCfh8L/9l5S31ywv9WsCsNMuv6dVjWQtvs7rMnFXOqDloboL2Or0NJMJLGm40Dfhd+cZp
+	8ScCDP1nLflkxTvkcGcWdpj13ZNHZLxMC3VejCVGPP9E028aSIuGJF9qS9Vwkm8LJfNSYhsX5mb
+	rF4OYWa0R+5J5Rr5YhVhMGG17ENze6hu9jX7FLOL+qucc7kgj2uM/RZHWJpfT1Uow8C9gXHpU0w
+	qOjLDbJ3du6+Cjj4C6uLOsJuLP1cfJaPhYXYWcs=
+X-Received: by 2002:a17:90b:50cb:b0:3ac:da41:ef7e with SMTP id 98e67ed59e1d1-3ad86f650acmr5217438a91.52.1792692353889;
+        Thu, 22 Oct 2026 11:05:53 -0700 (PDT)
+Received: from MalHyuk.localdomain ([211.201.32.99])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3adc961bb13sm136044a91.3.2026.10.22.11.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 11:05:53 -0700 (PDT)
+From: "JongHyuk Kim(MalHyuk)" <malhyuk97@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Reject a filter expression that ends on a dangling operator
+Date: Fri, 23 Oct 2026 03:05:49 +0900
+Message-ID: <20261022180549.3260375-1-malhyuk97@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,40 +92,97 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com> <20261022015712.1297331-5-alexei.starovoitov@gmail.com>
-In-Reply-To: <20261022015712.1297331-5-alexei.starovoitov@gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 22 Oct 2026 19:56:22 +0200
-X-Gm-Features: AclHuK-YCNtnPegYnn9KvUKugGxObkR7MWrtu-3qSRj9_sjY2T5TwF4c4QpzRSk
-Message-ID: <CAG48ez0cG532aaXZF_asCDk+fsnQmE9L5PA9T+JN6OGdx6yjGQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 4/9] uprobes/x86: Don't WARN if an optimized
- probe can't be written
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com, peterz@infradead.org, 
-	mhiramat@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org, 
-	liam@infradead.org, ljs@kernel.org, surenb@google.com, david@kernel.org, 
-	vbabka@kernel.org, hughd@google.com, kees@kernel.org, mingo@redhat.com, 
-	tglx@kernel.org, x86@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 22, 2026 at 3:57=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> @@ -1197,7 +1194,7 @@ static int __arch_uprobe_optimize(struct arch_uprob=
-e *auprobe, struct mm_struct
->         if (IS_ERR(tramp))
->                 return PTR_ERR(tramp);
->         ret =3D swbp_optimize(auprobe, vma, vaddr, tramp->vm_start);
-> -       if (WARN_ON_ONCE(ret) && new_mapping)
-> +       if (ret && new_mapping)
->                 WARN_ON_ONCE(do_munmap(mm, tramp->vm_start, PAGE_SIZE, NU=
-LL));
+predicate_parse() seeds every program entry with prog[N].target = N-1, so
+prog[0].target starts at -1. That -1 is meant to be replaced before the
+second pass runs, either by update_preds() when a pending PROCESS_AND or
+PROCESS_OR is retired, or by the prog[N-1].target = N assignment that
+fixes up the last entry.
 
-Not an issue with your patch, just FYI regarding this preexisting
-WARN_ON_ONCE():
-A failing small GFP_KERNEL allocation could theoretically cause
-do_munmap() to fail; the VMA tree has the ugly quirk that you can't
-reliably _remove_ elements without memory allocation.
+A filter string that ends on an operator reaches the second pass with
+neither having happened. The pending PROCESS_OR of "a || b &&" is only
+retired after the "*next == '&'" early break, so update_preds() is never
+called for it, and the trailing operator is not itself an error: the
+inner loop breaks, the outer loop sees the NUL and falls through to out.
+With N == 2 the prog[N-1] assignment repairs index 1, and prog[0].target
+is still -1 when the second pass dereferences prog[target].
+
+Reproducing it needs no tracefs mount and no privilege, because the
+filter can be set through PERF_EVENT_IOC_SET_FILTER on a tracepoint
+event, and neither ftrace_profile_set_filter() nor create_filter()
+checks any capability. An ordinary user can open such an event at the
+default perf_event_paranoid of 2 as long as exclude_kernel is set:
+
+	struct perf_event_attr a = {
+		.type = PERF_TYPE_TRACEPOINT, .size = sizeof(a),
+		.config = <id of any syscalls:sys_enter_*>,
+		.disabled = 1, .exclude_kernel = 1, .exclude_hv = 1,
+	};
+	int fd = perf_event_open(&a, 0, -1, -1, 0);
+	ioctl(fd, PERF_EVENT_IOC_SET_FILTER,
+	      "common_pid==1||common_pid==1&&");
+
+On v6.12.112 built with KASAN this gives, within a few seconds of boot,
+from uid 1000:
+
+  BUG: KASAN: slab-out-of-bounds in process_preds+0x151e/0x1b60
+  Read of size 4 at addr ffff888102657c74 by task poc/123
+  CPU: 0 UID: 1000 PID: 123 Comm: poc Not tainted 6.12.112 #1
+  Call Trace:
+   process_preds+0x151e/0x1b60
+   create_filter+0x113/0x1e0
+   ftrace_profile_set_filter+0x10c/0x6b0
+   _perf_ioctl+0x992/0x1830
+   perf_ioctl+0x60/0x90
+   __x64_sys_ioctl+0x134/0x1a0
+
+Four boots, four reports, 2.7 s to 11.4 s after boot.
+
+A dangling operator always leaves its PROCESS_AND or PROCESS_OR bit set
+on the operator stack, so testing for that at out covers every form of
+the expression, including the ones where the unresolved entry is not
+index 0, such as "a && b || c &&".
+
+Note that this changes the result for three shapes that are accepted
+today without reading out of bounds, because the entry they leave
+unresolved happens to be repaired by the prog[N-1] assignment: "a ||",
+"a &&" and "a && b ||" now return -EINVAL with "Meaningless filter
+expression" instead of installing a filter. They have no right-hand side
+to evaluate, so rejecting them uniformly seemed better than resolving
+the pending operator at out and giving a trailing operator a meaning.
+
+I verified this by building the same config with and without the patch
+and running both under KASAN. The trigger above goes from a KASAN report
+to -EINVAL and the whole boot produces no report; "a && b || c &&",
+"a ||" and "a &&" also become -EINVAL; and seven well formed filters
+including parenthesised and negated ones are accepted unchanged on both.
+
+Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+Cc: stable@vger.kernel.org
+Signed-off-by: JongHyuk Kim(MalHyuk) <malhyuk97@gmail.com>
+---
+ kernel/trace/trace_events_filter.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 1111111..2222222 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -602,6 +602,13 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+ 		goto out_free;
+ 	}
+ 
++	if (*top & (PROCESS_AND | PROCESS_OR)) {
++		/* Expression ended on an operator with no right-hand side */
++		ret = -EINVAL;
++		parse_error(pe, FILT_ERR_INVALID_FILTER, ptr - str);
++		goto out_free;
++	}
++
+ 	if (!N) {
+ 		/* No program? */
+ 		ret = -EINVAL;
+-- 
+2.43.0
+
