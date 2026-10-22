@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792647221;
-	b=gt+3IW67oPywS4oMN5RhACWo6/DHlKMVOZO9GNu91ciQczOy/zoDNRiZ3Kih9MFgRQKT
-	 KL81LmmFx3kDZPbZBgkAiW4m2IpAajktBjEN1uQddU8AXQj15GJxBzsypHG3lhruf2Brz
-	 pF3HU0HGMPP0BwdV5uj+3GyV3L9fG6awcQKbm7Z7eRRG2ZzzcL4F47wvNPgpEypNlLs8R
-	 4bIMdGKpG9E//xHidyd8mzQCzDM07Pr5JORQmysNu1ayLfJkFGpJfwcs3ylNriA/biRxA
-	 pgo87cJfxrN+ML0MIHotZLNZJRApIO0pfk9otAplRbfFW19HncrGQvejsQe5jP3BZmA==
+	t=1792647848;
+	b=zGv9IHu0ZUFR1PQRowFxfZM2mi09V+/HWBRN/tR6xL1ScAuD7UIsCXG4lLwP2opXUGUY
+	 WKdhZPuWz1mmTfqW3PFJZ7736v37qHgz8nGAQobwiZveTBD4gPPXYiY2eX2YgOCLgiLrh
+	 pi0MStx2vus8BoVIjx0elftke7DZB5bxklmk0nKD131dj5M3HAeDnGdQFoXC/fF0E8jkH
+	 JAXaxSsGWqhLaUUa8CG3eRPo16QmZVihk16QjzX3cW5XmXUm6TQ+ABwmc3XGKoKjuixB0
+	 bTti1JMEcJBybuqxIhnLBFuvrseR8cENmiiurTQ9aU2HWlVhpXTzNoGzbjVl7hMTR7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792647221;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792647848;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=JQFZ/MiV3ZcZfkYiA/xuZEezD1IBVGLGNq4NiARPB90=;
-	b=fzeZFqzsFmabfwNFClv2KwSb5tbUd+0Jo9iExxu38NNuavnUvc9Nwr6tySpZAqlYox1z
-	 ljBmG2/6FuSJG0b3kYsCOZOJQHLsEoP1kzOwJXAD6RHIgOnImsuq5i1MGgpb2jQ+wM/BN
-	 257vSp9B49ECLREQB63Y4DXCVkej1CzoiJ/cXYthanbyJR7XHJwb1CbMz2sptZcrMm2gy
-	 nlBUMJ8UxH7EOY7NDwaGx8w1sIqSyBNW7KU3pwKlSNNSra3uZOkgWVgdRJT0SYahZNL+I
-	 0/agwx4wN/zcTwVECboBshPPHyiq/OCYrlIRtgEq4Mo9klEHyQjUOf/jcnTppqkZMNQ==
+	bh=NsdmW8PWZUZE173bOjBuVwed0SqHsylhNMAUviaHF6E=;
+	b=TlBxpkXebdXRJCzxnFdrixAZ9jHzs3NXv6akp4ARHklWtdSSHVDRisAtI4wkeD3Z0yBu
+	 PSJ9tdEN2rFMpi4ZSVaTAaJae1e+cLp4+s1KniMK/Crfc8ykYq/qOH7pVlBDdEYk6OXiu
+	 CnIk29XYRujL/WpDi0Tt7TOPhSlAByO4v0bPLiMhB5ovC0ixVzqgXXjWZyMKsZhKjEyWQ
+	 nWtocmEjfMadEx+HQPHYrxo0F09hFTXarIU6mZ00B4yGnW4IrzW2c7cA7td2ZJJfB+35F
+	 ygg1dVjIf51BgqYcb1tj2Ukaz6g4+SVs+0XYAyK6IBgz5gJgaB2hPK26rzw57vpMd4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrJYA2z8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FwK9Pho+;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8572606A319;
-	Thu, 22 Oct 2026 05:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949F9606A319;
+	Thu, 22 Oct 2026 05:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrJYA2z8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4296E1F000C1;
-	Thu, 22 Oct 2026 05:33:40 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FwK9Pho+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0509D1F000C1;
+	Thu, 22 Oct 2026 05:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792647220;
-	bh=JQFZ/MiV3ZcZfkYiA/xuZEezD1IBVGLGNq4NiARPB90=;
+	s=k20260515; t=1792647847;
+	bh=NsdmW8PWZUZE173bOjBuVwed0SqHsylhNMAUviaHF6E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lrJYA2z8lo2Fmz/QPcQYrZB300ogLvBckCiFb1N8k2NEpdHz6IbMi5+jMB8bwxGbK
-	 e6PnzWQmzV1q/wyKe5ElHpr5A7WPKx6ugrDyjC0hvjNOdKCRpbHy0vyWjrFoQS9SQ0
-	 dprwEmbVMbQjAlYlL1LXODxzeqvjoPZv66BuhVnp/0e9iORYaim9uGiwMqUYbhYqX9
-	 mst4OZHV73gh1KfGISdRekKzlIyIEpbwAiFlONYxaposwobD4+Tixtwj50yLqCti3O
-	 5cxIHyDgySf5yhQ5ciq+mN6t330zZZ5k3uIPrVJ9F7BfkyFAL1G8SSt5PnSZYkKiu0
-	 pglfUeUl787uA==
-Message-ID: <sashiko-outbox-181033@kernel.org>
+	b=FwK9Pho+FjN8JsBd3jH7ukVm33CieIpHsAJhRAfuRRs6zmhgnzxSRAO745HHopRun
+	 K2K05bHS5yO3ks7xqu1KGtU5HlBiz25z7wWyeEau6gRK4Rj1/rNAIIGyxemw/WiyTI
+	 KmjKqVMwQRKybOoGYnMpctmrhrVoCAJL/ecl+kPjljbG+j5ofIJxAqkdB8YRxKJg6F
+	 wnwXXCBYtRLWDML7DU6Q28+OpGIX6BUqtvhGUWXA18i9TA3187mhNqH0KrSavyIpdk
+	 2iphvFc/WPBKIFtQqgr3GrylPAOTqK6qqF2ZgSuQcsggLPc+6GPhxSeJuYgaiaKD/V
+	 //3AonXfxYCyA==
+Message-ID: <sashiko-outbox-181037@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 9/9] rv: Test IRQ-exit softirq provenance and
- handoff
+Subject: Re: [RFC PATCH 1/9] tracing/irq: Add generic IRQ context boundary
+ events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Karl Mehltretter" <kmehltretter@gmail.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-In-Reply-To: <20261022050712.75035-10-kmehltretter@gmail.com>
+In-Reply-To: <20261022050712.75035-2-kmehltretter@gmail.com>
 References: <20261022050712.75035-1-kmehltretter@gmail.com>
- <20261022050712.75035-10-kmehltretter@gmail.com>
+ <20261022050712.75035-2-kmehltretter@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 05:33:39 +0000
+Date: Thu, 22 Oct 2026 05:44:06 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,220 +61,126 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] rv: rq->nr_pinned leak on kunit_skip() under guard(migrate)() in i=
-rqstate tests
-- [Medium] rv: broken nested IRQ filter in irqstate_inline_hardirq_entry() =
-and exit
-- [Medium] rv: missing local_bh_blocked() check and early wait in hardirq e=
-xit tests
+- [Medium] softirq: tick_irq_exit() called before trace_hardirq_context_exi=
+t() handoff
 --
 
-commit 7fb79c597a519150ad675f18bceb7d2417080c8b
+commit 2beb0d9dac0a7b76bfe5b73b550fff3be238bbab
 Author: Karl Mehltretter <kmehltretter@gmail.com>
 
-rv: Test IRQ-exit softirq provenance and handoff
+tracing/irq: Add generic IRQ context boundary events
 
-This commit extends the irqstate KUnit test suite to cover inline softirq
-processing during hardirq exit, hardirq provenance tracking, and monitor
-synchronization. It also adds tests verifying late work handoff to ksoftirqd
-and ktimerd at the softirq and hardirq exit boundaries.
+This commit adds tracepoints at the generic hardirq and serving-softirq
+context boundaries. It also updates softirq pending snapshots and wakes
+worker threads when callbacks attached to boundary events raise new work.
 
-> diff --git a/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c b/kernel/=
-trace/rv/monitors/irqstate/irqstate_kunit.c
-> index e3928d10b2825..31e827cdba1c6 100644
-> --- a/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
-> +++ b/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index be49e6469f3ad..2e3b6fd3f6d5d 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+
 [ ... ]
-> @@ -893,6 +984,39 @@ static bool irqstate_empty_worker_matches(struct irq=
-state_empty_worker_ctx *empt
->  	return !empty_ctx->real_worker || softirq_kunit_empty_worker_active();
+
+> @@ -722,6 +770,7 @@ void irq_enter_rcu(void)
+>  		tick_irq_enter();
+> =20
+>  	account_hardirq_enter(current);
+> +	trace_hardirq_context_entry(hardirq_count() >> HARDIRQ_SHIFT);
 >  }
 > =20
-> +static void irqstate_inline_hardirq_entry(void *data, unsigned int depth)
-> +{
-> +	struct irqstate_inline_bh_ctx *inline_ctx =3D data;
+>  /**
+> @@ -796,6 +845,36 @@ static inline void __irq_exit_rcu(void)
+>  		wake_timersd();
+> =20
+>  	tick_irq_exit();
+> +	if (trace_hardirq_context_exit_enabled()) {
+> +		bool ksoftirqd_wake_requested =3D false;
+> +		bool timersd_wake_requested =3D false;
 > +
-> +	/* Inline softirq processing enables IRQs; ignore a nested real IRQ. */
-> +	if (!READ_ONCE(inline_ctx->armed) || current !=3D inline_ctx->owner ||
-> +	    depth !=3D 1)
-> +		return;
-> +	inline_ctx->hardirq_entries++;
-> +	if (inline_ctx->event_index !=3D 0)
-> +		inline_ctx->bad_order =3D true;
-> +	inline_ctx->event_index++;
-> +	if (hardirq_count() !=3D HARDIRQ_OFFSET || in_serving_softirq() ||
-> +	    !irqs_disabled())
-> +		inline_ctx->bad_boundary_context =3D true;
-> +}
+> +		trace_hardirq_context_exit(hardirq_count() >> HARDIRQ_SHIFT);
 > +
-> +static void irqstate_inline_hardirq_exit(void *data, unsigned int depth)
-> +{
-> +	struct irqstate_inline_bh_ctx *inline_ctx =3D data;
+> +		/* Hand work raised by the final boundary event to its worker. */
+> +		if (hardirq_count() =3D=3D HARDIRQ_OFFSET) {
+> +			if (irq_count() =3D=3D HARDIRQ_OFFSET &&
+> +			    unlikely(local_softirq_pending()) &&
+> +			    should_wake_ksoftirqd()) {
+> +				wakeup_softirqd();
+> +				ksoftirqd_wake_requested =3D true;
+> +			}
 > +
-> +	if (!READ_ONCE(inline_ctx->armed) || current !=3D inline_ctx->owner ||
-> +	    depth !=3D 1)
-> +		return;
-> +	inline_ctx->hardirq_exits++;
-> +	if (inline_ctx->event_index !=3D 3)
-> +		inline_ctx->bad_order =3D true;
-> +	inline_ctx->event_index++;
-> +	if (hardirq_count() !=3D HARDIRQ_OFFSET || in_serving_softirq() ||
-> +	    !irqs_disabled())
-> +		inline_ctx->bad_boundary_context =3D true;
-> +}
+> +			if (IS_ENABLED(CONFIG_IRQ_FORCED_THREADING) &&
+> +			    force_irqthreads() && local_timers_pending_force_th()) {
+> +				wake_timersd();
+> +				timersd_wake_requested =3D true;
+> +			}
+> +
+> +			/* The timersd wakeup can itself raise a softirq. */
+> +			if (timersd_wake_requested &&
+> +			    !ksoftirqd_wake_requested &&
+> +			    irq_count() =3D=3D HARDIRQ_OFFSET &&
+> +			    unlikely(local_softirq_pending()) &&
+> +			    should_wake_ksoftirqd())
+> +				wakeup_softirqd();
+> +		}
+> +	}
+>  	preempt_count_sub(HARDIRQ_OFFSET);
+>  }
 
 [Severity: Medium]
-Will checking depth !=3D 1 in irqstate_inline_hardirq_entry() and
-irqstate_inline_hardirq_exit() actually filter out a real hardware interrupt
-that arrives while inline softirq processing runs with interrupts enabled?
+Should tick_irq_exit() be called after the trace_hardirq_context_exit()
+block rather than before it?
 
-In the rv_test_irqstate_irq_exit_inline() -> irq_exit_rcu() ->
-__do_softirq() -> handle_softirqs() path, softirq_handle_begin() replaces
-HARDIRQ_OFFSET with SOFTIRQ_OFFSET before local_irq_enable() enables
-interrupts:
+In irq_enter_rcu(), tick_irq_enter() runs before
+trace_hardirq_context_entry() so that the nohz clock wakeup and idle
+cputime accounting state are established before the entry event fires.
 
-kernel/softirq.c:softirq_handle_begin() {
-	__preempt_count_sub(HARDIRQ_OFFSET - SOFTIRQ_OFFSET);
-	lockdep_softirqs_off(_RET_IP_);
-	WARN_ON_ONCE(irq_count() !=3D SOFTIRQ_OFFSET);
-}
+In __irq_exit_rcu(), however, tick_irq_exit() runs before
+trace_hardirq_context_exit() and the subsequent wakeup_softirqd() and
+wake_timersd() calls:
 
-Because HARDIRQ_OFFSET has been cleared, a real hardware interrupt arriving
-during the IRQ-enabled softirq window enters irq_enter_rcu() with
-hardirq_count() equal to HARDIRQ_OFFSET (so depth is 1, while
-in_serving_softirq() is non-zero), and exits irq_exit_rcu() with depth equal
-to 1 as well.
-
-As a result, depth !=3D 1 is false for that interrupt in both
-irqstate_inline_hardirq_entry() and irqstate_inline_hardirq_exit(), causing
-both probes to increment hardirq_entries, hardirq_exits, and event_index and
-to set bad_order and bad_boundary_context. Should both callbacks also ignore
-events when in_serving_softirq() is true?
-
-[ ... ]
-> +/* Work first raised at the final hardirq boundary must reach ksoftirqd.=
- */
-> +static void rv_test_irqstate_hardirq_exit_handoff(struct kunit *test)
-> +{
-> +	struct irqstate_hardirq_exit_ctx *exit_ctx;
-> +	struct rv_kunit_ctx *ctx =3D test->priv;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	prepare_test(test, &rv_irqstate_ops.mon);
-> +	guard(migrate)();
-> +	exit_ctx =3D kunit_kzalloc(test, sizeof(*exit_ctx), GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_NULL(test, exit_ctx);
-> +	tasklet_setup(&exit_ctx->tasklet, irqstate_hardirq_exit_tasklet);
-> +	exit_ctx->owner =3D current;
-> +	exit_ctx->owner_cpu =3D raw_smp_processor_id();
-> +	exit_ctx->softirqd =3D this_cpu_ksoftirqd();
-> +	KUNIT_ASSERT_NOT_NULL(test, exit_ctx->softirqd);
-> +	if (local_softirq_pending() ||
-> +	    !wait_task_inactive(exit_ctx->softirqd, TASK_INTERRUPTIBLE)) {
-> +		kunit_skip(test, "Requires an idle local ksoftirqd");
-> +		return;
-> +	}
-
-[Severity: High]
-Does calling kunit_skip() or failing a KUNIT_ASSERT_*() while guard(migrate=
-)()
-is active leak the per-CPU rq->nr_pinned counter?
-
-guard(migrate)() calls migrate_disable(), which increments rq->nr_pinned
-(this_rq_pinned()) and relies on the C cleanup attribute to invoke
-migrate_enable() at scope exit. However, kunit_skip() and failing
-KUNIT_ASSERT_*() macros call kunit_try_catch_throw():
-
-lib/kunit/try-catch.c:kunit_try_catch_throw() {
-	try_catch->try_result =3D -EFAULT;
-	kthread_exit(0);
-}
-
-Because kunit_try_catch_throw() is noreturn and exits the KUnit runner
-kthread directly via kthread_exit(0) -> do_exit(0) without unwinding C stack
-frames, the guard(migrate)() cleanup never runs and do_exit() does not call
-migrate_enable(). That leaves rq->nr_pinned permanently elevated on the CPU,
-which makes rq_has_pinned_tasks(rq) stay true and causes subsequent CPU
-hotplug offline operations to hang in balance_hotplug_wait().
-
-The same pattern occurs in rv_test_irqstate_hardirq_exit_timer_handoff()
-below, and when force_irqthreads() is enabled on a !CONFIG_PREEMPT_RT kernel
-to run rv_test_irqstate_hardirq_exit_timer_handoff(), the following test
-rv_test_irqstate_irq_exit_inline() diverts its softirq to ksoftirqd
-(ran_inline is false) and deterministically hits kunit_skip() under
-guard(migrate)().
-
-> +
-> +	ret =3D register_trace_hardirq_context_exit(
-> +		irqstate_hardirq_exit_raise, exit_ctx);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +	exit_ctx->attached =3D true;
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			kunit_add_action_or_reset(test,
-> +						  irqstate_hardirq_exit_cleanup,
-> +						  exit_ctx));
-> +	attach_irqstate_test_probes();
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			kunit_add_action_or_reset(test, detach_irqstate_test_probes,
-> +						  NULL));
-> +
-> +	local_irq_save(flags);
-> +	if (local_softirq_pending() || task_is_running(exit_ctx->softirqd)) {
-> +		local_irq_restore(flags);
-> +		kunit_skip(test, "Local ksoftirqd stopped being idle");
-> +		return;
-> +	}
-
-[Severity: Medium]
-Could rv_test_irqstate_hardirq_exit_handoff() and
-rv_test_irqstate_hardirq_exit_timer_handoff() fail or spuriously skip due to
-missing a local_bh_blocked() check on CONFIG_PREEMPT_RT and waiting for
-worker inactivity before registering tracepoints?
-
-In __irq_exit_rcu(), waking ksoftirqd for softirq work raised during
-trace_hardirq_context_exit() is gated on should_wake_ksoftirqd():
-
-kernel/softirq.c:__irq_exit_rcu() {
-	if (irq_count() =3D=3D HARDIRQ_OFFSET &&
-	    unlikely(local_softirq_pending()) &&
-	    should_wake_ksoftirqd()) {
-		wakeup_softirqd();
-		ksoftirqd_wake_requested =3D true;
+kernel/softirq.c:tick_irq_exit() {
+	if ((sched_core_idle_cpu(cpu) && !need_resched()) || tick_nohz_full_cpu(cp=
+u)) {
+		if (hardirq_count() =3D=3D HARDIRQ_OFFSET)
+			tick_nohz_irq_exit();
 	}
 }
 
-On CONFIG_PREEMPT_RT, should_wake_ksoftirqd() checks
-!this_cpu_read(softirq_ctrl.cnt) (!local_bh_blocked()). Because BH-disabled
-sections on PREEMPT_RT are preemptible and can block on RT locks
-(TASK_RTLOCK_WAIT), another task on the local CPU (or ksoftirqd itself after
-clearing local_softirq_pending() and blocking in TASK_RTLOCK_WAIT, where
-task_is_running() is false) can hold softirq_ctrl.cnt non-zero while
-local_softirq_pending() is 0 and task_is_running(softirqd) is false. In that
-case __irq_exit_rcu() skips wakeup_softirqd() and the assertion on
-softirqd_already_runnable fails.
+kernel/time/tick-sched.c:tick_nohz_irq_exit() {
+	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
 
-Additionally, unlike rv_test_irqstate_irq_exit_inline(), both handoff tests
-call wait_task_inactive() before register_trace_hardirq_context_exit(),
-register_trace_sched_waking(), and attach_irqstate_test_probes(), which can
-sleep on mutexes and queue RCU work that wakes ksoftirqd or ktimerd after t=
-he
-wait has already finished. Would it be better to attach the probes before
-waiting for the workers to go inactive, and also check local_bh_blocked()?
+	if (tick_sched_flag_test(ts, TS_FLAG_INIDLE)) {
+		tick_nohz_clock_sleep(ts);
+		ts->idle_entrytime =3D ktime_get();
+		if (tick_sched_flag_test(ts, TS_FLAG_STOPPED))
+			kcpustat_irq_exit(ts->idle_entrytime);
+	} else {
+		tick_nohz_full_update_tick(ts);
+	}
+}
 
-> +	WRITE_ONCE(exit_ctx->armed, true);
-> +	irq_enter_rcu();
-> +	irq_exit_rcu();
-> +	exit_ctx->tasklet_pending =3D
-> +		!!(local_softirq_pending() & BIT(TASKLET_SOFTIRQ));
-> +	exit_ctx->softirqd_already_runnable =3D
-> +		!wake_up_process(exit_ctx->softirqd);
-> +	WRITE_ONCE(exit_ctx->armed, false);
-> +	local_irq_restore(flags);
-[ ... ]
+On an idle cpu where need_resched() is false before the tracepoint,
+tick_irq_exit() calls tick_nohz_irq_exit(), which places sched_clock and
+kcpustat back into idle sleep via tick_nohz_clock_sleep() and
+kcpustat_irq_exit(). If the hardirq_context_exit callback then raises work
+and wakes ksoftirqd or ktimerd, try_to_wake_up() reads sched_clock_cpu()
+and sets need_resched after the idle clock and cputime state have already
+gone to sleep.
+
+Similarly, on a nohz_full cpu, tick_nohz_irq_exit() calls
+tick_nohz_full_update_tick() to evaluate and potentially stop the tick
+before trace_hardirq_context_exit() runs. Any timer, softirq, rcu, or
+irq_work state raised by the exit callback is missed by that evaluation,
+or forces an extra self-ipi when waking ksoftirqd after the tick was just
+stopped.
+
+Would moving tick_irq_exit() to just after the
+trace_hardirq_context_exit_enabled() block (while hardirq_count() is still
+equal to the outermost offset) avoid this regression and keep entry and
+exit symmetric?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022050712.7503=
-5-1-kmehltretter@gmail.com?part=3D9
+5-1-kmehltretter@gmail.com?part=3D1
