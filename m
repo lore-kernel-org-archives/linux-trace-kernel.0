@@ -1,57 +1,136 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792647848;
-	b=zGv9IHu0ZUFR1PQRowFxfZM2mi09V+/HWBRN/tR6xL1ScAuD7UIsCXG4lLwP2opXUGUY
-	 WKdhZPuWz1mmTfqW3PFJZ7736v37qHgz8nGAQobwiZveTBD4gPPXYiY2eX2YgOCLgiLrh
-	 pi0MStx2vus8BoVIjx0elftke7DZB5bxklmk0nKD131dj5M3HAeDnGdQFoXC/fF0E8jkH
-	 JAXaxSsGWqhLaUUa8CG3eRPo16QmZVihk16QjzX3cW5XmXUm6TQ+ABwmc3XGKoKjuixB0
-	 bTti1JMEcJBybuqxIhnLBFuvrseR8cENmiiurTQ9aU2HWlVhpXTzNoGzbjVl7hMTR7g==
+	t=1792651607;
+	b=RnkbTCKGkbywe9tESwMeg20npxQ+Dw/XEEZPId1NQE/yk3n9VbzB07qF9D+4y0h+g368
+	 RaWdeka005VF05psPeP+BSswIiEqQlKQZ7WQaIbv5PLWc6eKdUua7dhEmW0g0EBfuNf9o
+	 mDZ1SBljiW++ZBM0Yo8uHtRLTAJPvVm7L8MDZavtyuYna0u9Ztn0NFqXBFu96LfVZDNZ9
+	 k1/BpLYoCyx3cgCGbDzLvyET5ZYI9KwW0eLCdrWAA1l9NN0QQ4C6YUf11ELBBhNDU2ruk
+	 3F4AybgnRbxEOpp/j283fKxFj+sM9vMXC0/pHWQwnqZYZJKlTPnbRS+QR4CkdPs/m6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792647848;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=NsdmW8PWZUZE173bOjBuVwed0SqHsylhNMAUviaHF6E=;
-	b=TlBxpkXebdXRJCzxnFdrixAZ9jHzs3NXv6akp4ARHklWtdSSHVDRisAtI4wkeD3Z0yBu
-	 PSJ9tdEN2rFMpi4ZSVaTAaJae1e+cLp4+s1KniMK/Crfc8ykYq/qOH7pVlBDdEYk6OXiu
-	 CnIk29XYRujL/WpDi0Tt7TOPhSlAByO4v0bPLiMhB5ovC0ixVzqgXXjWZyMKsZhKjEyWQ
-	 nWtocmEjfMadEx+HQPHYrxo0F09hFTXarIU6mZ00B4yGnW4IrzW2c7cA7td2ZJJfB+35F
-	 ygg1dVjIf51BgqYcb1tj2Ukaz6g4+SVs+0XYAyK6IBgz5gJgaB2hPK26rzw57vpMd4g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792651607;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=TKtpG0ZG3GV7aCNX13qQJC+OLUZxo8z1O02EgwHPjyE=;
+	b=ciC4YA0J/NvPkoLyutw/L3sRBOzPBUccqL+xirfHNpE/eC044m/dUT78B2fwvW4Zx9Mx
+	 5VRjMgUKdsIL7aN99kVVeONSyGRy7wkkDrv8NYz7oLiMeU2C3fb88jkqb2JWszEJCAMZa
+	 k0WX1Xo4rBVur7glf+wDxjnybkHXbPEh1CArxBiZzIiDrZqnJiqnXX7OoWe3RYtP1sYDs
+	 ABi30krxgtAr4n2wdr7b3jbsNYbuHGJCu5u5tTnwgyC1kRKw/adNaF+/iqS/wa07bLxyy
+	 reH1Qb4zwiEDKXc26RJ/ftx3A0DS7VC1aY7Ros/SwAi30TMSfzQtUonqwVxhdJblwJA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FwK9Pho+;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ERbK86kH;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949F9606A319;
-	Thu, 22 Oct 2026 05:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C8A606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 06:46:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A8C8A606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FwK9Pho+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0509D1F000C1;
-	Thu, 22 Oct 2026 05:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792647847;
-	bh=NsdmW8PWZUZE173bOjBuVwed0SqHsylhNMAUviaHF6E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FwK9Pho+FjN8JsBd3jH7ukVm33CieIpHsAJhRAfuRRs6zmhgnzxSRAO745HHopRun
-	 K2K05bHS5yO3ks7xqu1KGtU5HlBiz25z7wWyeEau6gRK4Rj1/rNAIIGyxemw/WiyTI
-	 KmjKqVMwQRKybOoGYnMpctmrhrVoCAJL/ecl+kPjljbG+j5ofIJxAqkdB8YRxKJg6F
-	 wnwXXCBYtRLWDML7DU6Q28+OpGIX6BUqtvhGUWXA18i9TA3187mhNqH0KrSavyIpdk
-	 2iphvFc/WPBKIFtQqgr3GrylPAOTqK6qqF2ZgSuQcsggLPc+6GPhxSeJuYgaiaKD/V
-	 //3AonXfxYCyA==
-Message-ID: <sashiko-outbox-181037@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 1/9] tracing/irq: Add generic IRQ context boundary
- events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Karl Mehltretter" <kmehltretter@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-In-Reply-To: <20261022050712.75035-2-kmehltretter@gmail.com>
-References: <20261022050712.75035-1-kmehltretter@gmail.com>
- <20261022050712.75035-2-kmehltretter@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 05:44:06 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ERbK86kH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1792651605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TKtpG0ZG3GV7aCNX13qQJC+OLUZxo8z1O02EgwHPjyE=;
+	b=ERbK86kH7vE32/b6M8SED9xNn4Z5R+eil8IZjVzJDZ/Ucs2eaN5WImGWQb6WybJr0V2pqX
+	94sxXX0TQB4E5FN6tJ0Nb5unh3bnZieSMNHs+xqcHCzbZIyoJoiacvs9ZfVhsTr9p6uB6W
+	SmXTrWNHninI/StMlY8u/dx1Qq6YisQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-q3huPz-0Praa9aeR3pRv0w-1; Thu, 22 Oct 2026 06:46:44 +0000
+X-MC-Unique: q3huPz-0Praa9aeR3pRv0w-1
+X-Mimecast-MFC-AGG-ID: q3huPz-0Praa9aeR3pRv0w_1792651603
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48dea677afcso397751f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 23:46:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792651603; x=1793256403;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=TKtpG0ZG3GV7aCNX13qQJC+OLUZxo8z1O02EgwHPjyE=;
+        b=ryIW6U5NB7V9TABUrjHOgGVkEPhWgH7vLVACSPJEgcHF4rjTntOHAqk/b2A/HHK+Of
+         8eaJWiG8JFQKOydtlnRmEvlzYLlzpapIw6bnhZxjfTIruZyP3Fym8cMNYY+aEQ/iC/lm
+         BdVZ77LwJ8zWJIizG9Q7mg4YvZUaM+OzVk8TZ4uwvFFATt0/QikiGJo/hk9dqF4UCp9o
+         Ic1cqeRje0ZrzP60qGhbTj8Xotz9d9eSQPn1vpLmfKFdHCsCWjTr9sT6ufa9/C/5GdU5
+         ANWizk/mNV3bOHTe0SVtd05PLSfJZiQ4NZ3NWP6BgSt0xE2L7119an3ZhZHYepvPBejW
+         8ncQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxJxG3MliyC6YPWMG74ZfSlpkBmY4TWfcG/eunIDZz4fP1nApLpb+wi5ery6KcDeTNdbwVDq+hlTnL4A8Didsgpr0Y=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLWbEvqRTFGDuOOb/WhSLOzW7+U9p6GY0nl8I9Tmb45paNgGxVB
+	t3EOrtsRxOt3iMBAAHbjMk6KW4xjZkyCXEYZ+mdqMblf1Op5RtKuIVi+3xEx8FEAoRJEo+2G6BY
+	SH1IT6fuj26sI0hQSrwfte/WNvuMpbr8vArCehR+x3XoXoUc2oXBtbnakOFEsf3cVeBxxfpdXig
+	==
+X-Gm-Gg: AYBFou3TixgliAuya/afopQTTDkHvWW5xIkdUCkxt84o7VuxfAgPS8o2FF9r4ujBqR8
+	8IGgN0eKGaajYX7onKJFFUU++8FVQW7gxWixS1hNWbt2mvc3vP7uMDrj2GxfRdcPt0Ayv07HoIr
+	pDTmV9ohuKQkBW3tt3k1yKtGkA08EW0LrBeaYrT96uuXzE4Up3cGM1LX2ONtTXcMpdaeBISOR1w
+	2ZXiqbEvaaDKsCFlvfuHWgmOC+GFpM3LX+cbriof2xbB/DypiXxBujWbLs3Acx1EksczGh7d6FM
+	rRjs+jtA5HDM4csnhjdCvYz9beqJwKjkKD6WHhUwlVsPZhBjOv94fWbvVziCVXCZQrpit/YOD3O
+	IXQa9WoaWDGII8R41EyJUerltmO8d
+X-Received: by 2002:a05:6000:4b11:b0:48c:54ec:ea3 with SMTP id ffacd0b85a97d-48e2d24e4acmr3010780f8f.13.1792651603110;
+        Wed, 21 Oct 2026 23:46:43 -0700 (PDT)
+X-Received: by 2002:a05:6000:4b11:b0:48c:54ec:ea3 with SMTP id ffacd0b85a97d-48e2d24e4acmr3010732f8f.13.1792651602647;
+        Wed, 21 Oct 2026 23:46:42 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.133.173])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e25840115sm10061810f8f.48.2026.10.21.23.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2026 23:46:42 -0700 (PDT)
+Message-ID: <f147fa9dfc553767ce92802b66723a85cf804e46.camel@redhat.com>
+Subject: Re: [PATCH v2 10/15] tools/rv: Add BPF monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Tomas Glozar <tglozar@redhat.com>, 
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Wen Yang <wen.yang@linux.dev>, Tobias Schaffner	
+ <tobias.schaffner@siemens.com>, Viktor Malik <vmalik@redhat.com>
+Date: Thu, 22 Oct 2026 08:46:40 +0200
+In-Reply-To: <87h5ifvw3p.fsf@jogness.linutronix.de>
+References: <20261001152042.124445-1-gmonaco@redhat.com>
+	 <DLXSI4BSRE5F.1TLKCBUAGNDFQ@gmail.com>
+	 <b1fb01e1c58893795dd4be346f233d39fe653aaa.camel@redhat.com>
+	 <DM6H7SK4YZ7A.F0MM6C0I77OR@gmail.com>
+	 <878q3xtptq.fsf@jogness.linutronix.de>
+	 <8B3FF026-6159-48CF-8FEA-AF2FACD2E4EB@redhat.com>
+	 <87bj8s8ih9.fsf@jogness.linutronix.de>
+	 <DM78SVMBI2XW.2XHVC67VON48A@gmail.com>
+	 <87v770uuyr.fsf@jogness.linutronix.de>
+	 <DM7I2PYHNKXE.3AYY3N1HATXLW@gmail.com>
+	 <87ik2zryzo.fsf@jogness.linutronix.de>
+	 <0055967d4571e7c8549dfa476fa6b15b93013701.camel@redhat.com>
+	 <CAP4=nvR2i092924zszA8Qh0UUYnwXfAsa+7KjPe-NpwC+bbLXw@mail.gmail.com>
+	 <8580176d216258e9008c344e0529509117dcc18b.camel@redhat.com>
+	 <CAP4=nvTc297yQHz8aumZFAQ3+JK=5Z_=416WdosT0S6nHEeNfQ@mail.gmail.com>
+	 <87pkx5q1w4.fsf@jogness.linutronix.de>
+	 <0d4f11b1999588ddba9d855db43fc492eda32de1.camel@redhat.com>
+	 <87h5ifqy6w.fsf@yellow.woof>
+	 <a8d8b080f403eed617242a3276717706b4081ed1.camel@redhat.com>
+	 <20261021094853.29b9f7be@gandalf.local.home>
+	 <fb5c20f226f723cbb4df5092462dfcf5f2686367.camel@redhat.com>
+	 <87h5ifvw3p.fsf@jogness.linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,127 +139,72 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: vFagi0jfLmdQXdSI_FH_-irZNU4Pztg4XL0IP7aIRPQ_1792651603
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] softirq: tick_irq_exit() called before trace_hardirq_context_exi=
-t() handoff
---
+On Wed, 2026-10-21 at 18:53 +0206, John Ogness wrote:
+> On 2026-10-21, Gabriele Monaco <gmonaco@redhat.com> wrote:
+> > > BTW, I'm curious if it isn't possible to keep both in-kernel and BPF
+> > > monitors? That is, for those cases that do not change often and has a
+> > > well known model, to simply keep those as modules and hard coded.
+> >=20
+> > In my opinion it is possible and I'm designing every change with that
+> > coexistence in mind.
+> >=20
+> > I would say we could only drop in-kernel if BPF does such a great job
+> > to cover every single technical and non-technical requirement or
+> > use-case, AND if it makes maintaining the whole thing easier.
+>=20
+> I am wondering if coexistence should be the goal. For example, the
+> monitor classes (DA, LTL, HTA) are only implemented in the kernel and
+> provide kfuncs for the state transition functions to be available to BPF
+> monitors. I would expect that this would allow BPF monitors to have the
+> full functionality as in-kernel monitors, since the events, errors, and
+> reactors would all trigger from the monitor class code.
 
-commit 2beb0d9dac0a7b76bfe5b73b550fff3be238bbab
-Author: Karl Mehltretter <kmehltretter@gmail.com>
+Well, this would be yet another hybrid requiring BPF monitors registration =
+in
+the kernel like I proposed in the RFC [1], which was the main point of
+contention (that fully shared reactors and sysfs interface, by the way).
 
-tracing/irq: Add generic IRQ context boundary events
+For this I would argue, though, that such monitors would be BPF just on pap=
+er,
+we wouldn't be able to use many advantages BPF provides (e.g. BPF maps).
 
-This commit adds tracepoints at the generic hardirq and serving-softirq
-context boundaries. It also updates softirq pending snapshots and wakes
-worker threads when callbacks attached to boundary events raise new work.
+The current implementation already shares the header with in-kernel monitor=
+s, so
+the actual logic is shared. What isn't shared is the storage type and some =
+glue
+around it.
+I used BPF maps because they offer some nice flexibility especially around =
+per-
+task and per-obj monitors. On top of using more battle tested code.
+I would like to keep that.
 
-> diff --git a/kernel/softirq.c b/kernel/softirq.c
-> index be49e6469f3ad..2e3b6fd3f6d5d 100644
-> --- a/kernel/softirq.c
-> +++ b/kernel/softirq.c
+Besides, we'd need to be extra careful on controlling the callers. Right no=
+w
+handlers are static, so it's easier to make sure no rogue caller messes up =
+with
+monitoring.
 
-[ ... ]
+What else definitely isn't shared, which is the main point of this whole
+conversation, is trace events.
+Those could be kfuncs. And no matter what you do, BPF monitors will need to
+share the trace events (unlike in-kernel that have separate events per moni=
+tor).
 
-> @@ -722,6 +770,7 @@ void irq_enter_rcu(void)
->  		tick_irq_enter();
-> =20
->  	account_hardirq_enter(current);
-> +	trace_hardirq_context_entry(hardirq_count() >> HARDIRQ_SHIFT);
->  }
-> =20
->  /**
-> @@ -796,6 +845,36 @@ static inline void __irq_exit_rcu(void)
->  		wake_timersd();
-> =20
->  	tick_irq_exit();
-> +	if (trace_hardirq_context_exit_enabled()) {
-> +		bool ksoftirqd_wake_requested =3D false;
-> +		bool timersd_wake_requested =3D false;
-> +
-> +		trace_hardirq_context_exit(hardirq_count() >> HARDIRQ_SHIFT);
-> +
-> +		/* Hand work raised by the final boundary event to its worker. */
-> +		if (hardirq_count() =3D=3D HARDIRQ_OFFSET) {
-> +			if (irq_count() =3D=3D HARDIRQ_OFFSET &&
-> +			    unlikely(local_softirq_pending()) &&
-> +			    should_wake_ksoftirqd()) {
-> +				wakeup_softirqd();
-> +				ksoftirqd_wake_requested =3D true;
-> +			}
-> +
-> +			if (IS_ENABLED(CONFIG_IRQ_FORCED_THREADING) &&
-> +			    force_irqthreads() && local_timers_pending_force_th()) {
-> +				wake_timersd();
-> +				timersd_wake_requested =3D true;
-> +			}
-> +
-> +			/* The timersd wakeup can itself raise a softirq. */
-> +			if (timersd_wake_requested &&
-> +			    !ksoftirqd_wake_requested &&
-> +			    irq_count() =3D=3D HARDIRQ_OFFSET &&
-> +			    unlikely(local_softirq_pending()) &&
-> +			    should_wake_ksoftirqd())
-> +				wakeup_softirqd();
-> +		}
-> +	}
->  	preempt_count_sub(HARDIRQ_OFFSET);
->  }
+In short, I don't think this would be easy to achieve and wouldn't earn us =
+that
+much. (Plus I'd lose the hardly earned Alexei's blessing ;) )
 
-[Severity: Medium]
-Should tick_irq_exit() be called after the trace_hardirq_context_exit()
-block rather than before it?
+What do you think?
 
-In irq_enter_rcu(), tick_irq_enter() runs before
-trace_hardirq_context_entry() so that the nohz clock wakeup and idle
-cputime accounting state are established before the entry event fires.
+Gabriele
 
-In __irq_exit_rcu(), however, tick_irq_exit() runs before
-trace_hardirq_context_exit() and the subsequent wakeup_softirqd() and
-wake_timersd() calls:
+[1] - https://lore.kernel.org/lkml/20260831090524.106845-1-gmonaco@redhat.c=
+om
 
-kernel/softirq.c:tick_irq_exit() {
-	if ((sched_core_idle_cpu(cpu) && !need_resched()) || tick_nohz_full_cpu(cp=
-u)) {
-		if (hardirq_count() =3D=3D HARDIRQ_OFFSET)
-			tick_nohz_irq_exit();
-	}
-}
-
-kernel/time/tick-sched.c:tick_nohz_irq_exit() {
-	struct tick_sched *ts =3D this_cpu_ptr(&tick_cpu_sched);
-
-	if (tick_sched_flag_test(ts, TS_FLAG_INIDLE)) {
-		tick_nohz_clock_sleep(ts);
-		ts->idle_entrytime =3D ktime_get();
-		if (tick_sched_flag_test(ts, TS_FLAG_STOPPED))
-			kcpustat_irq_exit(ts->idle_entrytime);
-	} else {
-		tick_nohz_full_update_tick(ts);
-	}
-}
-
-On an idle cpu where need_resched() is false before the tracepoint,
-tick_irq_exit() calls tick_nohz_irq_exit(), which places sched_clock and
-kcpustat back into idle sleep via tick_nohz_clock_sleep() and
-kcpustat_irq_exit(). If the hardirq_context_exit callback then raises work
-and wakes ksoftirqd or ktimerd, try_to_wake_up() reads sched_clock_cpu()
-and sets need_resched after the idle clock and cputime state have already
-gone to sleep.
-
-Similarly, on a nohz_full cpu, tick_nohz_irq_exit() calls
-tick_nohz_full_update_tick() to evaluate and potentially stop the tick
-before trace_hardirq_context_exit() runs. Any timer, softirq, rcu, or
-irq_work state raised by the exit callback is missed by that evaluation,
-or forces an extra self-ipi when waking ksoftirqd after the tick was just
-stopped.
-
-Would moving tick_irq_exit() to just after the
-trace_hardirq_context_exit_enabled() block (while hardirq_count() is still
-equal to the outermost offset) avoid this regression and keep entry and
-exit symmetric?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022050712.7503=
-5-1-kmehltretter@gmail.com?part=3D1
