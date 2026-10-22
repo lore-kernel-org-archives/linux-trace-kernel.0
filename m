@@ -1,83 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792634236;
-	b=G3+VvVa3aXYezc7tIlL26c1hRvJ4YbJGSQ0N1JZIPjyMRBZTaySYGZzFBEV5b8QjKZiW
-	 z/03r8NCGIQQQt5Zlm5oSH4khZP2W1ruNucwRz87jorbPEKUMAp9LEX+r6v2KVf8SX/Zr
-	 ij4B2CnZDoUrrSp4LRb0YAVxe/hMjsoYdGYHPftyAE0iZfbxU7+d+c7LLGfu9A8bv//yQ
-	 7bYXfp/Zl0g7KHKoFT+z9LIIBCyCm1fLo9sRpLyjG6Xuegw1B/NBaYgXLHm+2iCwJhE0u
-	 fWlMT/9o29L/BtvQgm/lJ5WSi+ACre9NPr9cmGRznjRhMozbdqhIrS7sJauE0fH6ysQ==
+	t=1792634242;
+	b=Jx/nidxynE4sy5vPKN1it8bmoHLD6rXFktYpFy6Q8lxdrAjY9vjAWFluVSXrYIr0rblX
+	 dTex/Mm9G2lBxoz84YK3kxRWucPfEODmLo/mDSpZQ4Awjp4BCE/PwumlMrqaaTs7NzXna
+	 g7MlPHwjZdbCqD4L2gLwR+nGIvR7m1lCfA68xCLx+8P68Hgh/jaxwSO3UkzUSLnOiF/vd
+	 Xv+PIzaCi1xr9vAx91ZWE0DG6Yyc+5QNL7qEU1QYRGq1loi4AwHVpXU/JQ2K0LcFOhXnw
+	 a1S5HBYE1ExxDENUx7ritj+AXyMluRpODR4PZ2XW0veG3diaG9Up8/RjN+u0QDD5V4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792634236;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792634242;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=jDvqirGSK7roV0OwhESQvxR+V4XuKQKeS3pYEmaAuqs=;
-	b=owouy2nLdsKxlxsx/b/5p577croCTyXLdUkTWZKkmNVl1qYYXrtjvKX9g90tl8+fxtT6
-	 uUF3d4Dt1+8Nidam2S3gTSZmhc/Yht13SqOamBuyS7p9P8k4Gi91bTAqre+dIyx/9u/EI
-	 1x50vkE3bJ8qP9OMuKRUFUKEDBMoMf+8tvC5b+WkTZjY6B6jLQtm8M8oD0dLUbgzgF5aP
-	 IkSEmjgzN+sCtnxC7oOvyFvMatK4EDlWtzfJm3Vrz5bNanTe+fJngVoVARxHym+7Tib5I
-	 DrTpWocskh1Rue6KncoY+fesArwhMkHRYKmKdpem+GyfUAWnCVEBTnmMdwEq0jZ891w==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=Rrt07MWuBvKNxCUpcIHeF6DdyBR4Zz5NXlnZyJVxMUY=;
+	b=ouYm9OdXRm//G2sKXKcw9/aemfg8vdw5jrHEGQcw23ZtKbluiqdhMVsE/NrIJhKzly0+
+	 exdobAFHssTQciGj7k3+3hS0yHqhC/sAVKTc9XZ6obTGPdpD32fc/AEU5aeR6x2oA9v3D
+	 FkaDj67nnlbfkXCZ0B8PJOXXLHss5zO3+9PBEl1083nsmi2XJs87UrhewW4rEi2CMimB8
+	 toPEViXO3g3b1SRngU0i0qdDzYpG/VjF5X6GXD652rQyHNQKGz/LttbbCwkRZ8VFOqpc5
+	 s+utYxeoOeS3OVva53AKx40/4NsgV6Viw0Di6JmFKdthamyFq+iaSLiRzVgC44nt0Jg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=G+1LWwBp;
-	arc=none smtp.remote-ip=209.85.210.178
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=LVXHlWxb;
+	arc=none smtp.remote-ip=209.85.215.169
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ECE606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 01:57:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1ECE606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118B1606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 01:57:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 118B1606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=G+1LWwBp
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8a06c60065fso871865b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 18:57:15 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=LVXHlWxb
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-cd5c9e52398so482277a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 18:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792634235; x=1793239035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jDvqirGSK7roV0OwhESQvxR+V4XuKQKeS3pYEmaAuqs=;
-        b=G+1LWwBpOgMOZ8HbZpfC7grGyIlYmSp+qoBv3SfE1ODmH3HHtPJL4bo6AgKogLa49b
-         qW724hfjp5QlrGBmXDjLEVsFzhoOa3kpfvAhWfTc2BLc3l9apiERkdackT2/FBLPP7xc
-         FITW0WpnqlsZbRjzjvyVjPJQqnSwiRkWfLqECt4QOwraGHDjXjnQwwcZ4bs1CNF8RdGo
-         hFDRAznOHctS3esTtUtpsCsinXZ59akUq6QKrEBbUZ45W4hFXIn/0jGCyIwRQ6N9cIgo
-         3a3tVL8IypEwcVjCkcaYPLg3NhJz7ayAbLhdeT6bJE+GCRAQCf9MmhqgLzm0hZbK4Y6s
-         Qc2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792634235; x=1793239035;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1792634241; x=1793239041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=jDvqirGSK7roV0OwhESQvxR+V4XuKQKeS3pYEmaAuqs=;
-        b=QVuiTUK+vbsZZ7+dQ8S+hK/tufBvHu3Dn1KzraQXkzyVLd3V41WWfkxgZWW4zXOwyQ
-         1FWz1o8siUaRlC+vri4z6z/4AIQlE6A1wYh6Px54aJtuAl1bvB5Yvcr5IcLJv+uE/21f
-         Zz7vIpAxNCeEdAiTlT7Ys/EV6UTLvpbvVqmwE9hu9jr6j/LDfiYYfhtcEbNiZ05q8BRv
-         ysqOIn5hvRZrWgojAmofuprz4VPUbI4FMOG97Hz/xi1ccs0rtbyqEUmMMixa5ZozND57
-         ziP968My1QFGJh7WPnUmSkjblPb6Lqd6weSwDn7I6ynouVFuJJWjkqk9ELrvfXES2bM+
-         cSsQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz9q1G1Eam+rCueDXhLh1ckK6nVZXtIxQGea9IQzjd4hwCIzLDULY19s/APWmRLvY660n9dTOZ/5o+eKzVQJDwG8fQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKWTKt09FnyjVuBu9zAH4JxGVoCP44SgcOgvJLX34c7U3R4TzPe
-	ptd/KyY67XSwiMz5metR330YRf53WMjGOfJVXePmu17/djO7moTJNzIU
-X-Gm-Gg: AYBFou162teI0svekqPbaj2aH47O5e/fQIj9x3kBFLSqUAVmZq6NJdMwelQEqH1P6TN
-	LufrL9m/BUy5uj1fm79orGQbR9Jv/KaQopQlPg+C2B6EYuwc98OKSP/naAlI3/5BpORNWvEHC5X
-	ak1etu6OR6hvHe1Z69irdFkJqZbDm6Y9RmY1vqknUHLsWn2FA+h2KpCj4VeiCtbkoAuexy/mGnb
-	OX8xOX/Uc9K2qVtgPGMtqY86Mc5BZBDPUy5KgbICbtpgb4ZY4K5W3KiuKOSAKI3vX4g4kHM0RcK
-	YTw0sYrj0yA+rCR0Cv12TowXrIjjD0hY5GquHDgkvqlXL4nZuhn2qOtykeSjy/bN37j0NfS+L3d
-	8e3ZgjGKom/kLX4AfvQq/Cv0PxCHIROsiUaZEOEAqfXN5puWdqn+yQEaxi5grZZRO6+R2QhCalk
-	QpE/UcnsXOUduPj1OxZsKT3zIEAqw0EumEoKtzjzcdnGvP/j+zpXpqgq3mdGSNzv6877rZ0fOxq
-	H0jDmspzQa+pmY0/R+tmAMiD8549dXMfsPfYHrwV1ndgfYUXtk9fMj+X/oNqAy570rXU5ck6CEK
-	5Snq4ulVAP8OrzEy14a9RPnWBBPWfcB2x0+0UMkf0/b5+VbzCgQXuTC77Zx33d5g/Wwb0u/tne/
-	HVz8pv7fms3JJBO/vcfpKIxBL
-X-Received: by 2002:a05:6a00:1493:b0:880:5fe5:a818 with SMTP id d2e1a72fcca58-8a089d7c431mr2804454b3a.59.1792634235101;
-        Wed, 21 Oct 2026 18:57:15 -0700 (PDT)
-Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.249])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a089614ce0sm1426295b3a.55.2026.10.21.18.57.14
+        bh=Rrt07MWuBvKNxCUpcIHeF6DdyBR4Zz5NXlnZyJVxMUY=;
+        b=LVXHlWxbt7zTnrfwpRAAKArh0anXhoxyz4LkMwz+U6FjFY5B2RWTV8bC+BeBzModcy
+         MK+4H4Ae3Ve+k1MNf0Zf014GvM6J9em3f4qVG+we0Q8zEPfVLgdcaB649f2cQS7nA1XH
+         vaosoMUbUzorV4pFiZQNrT1hM//xValQyBYVoQU8m1NDBEK6BIFUexceMPryTDME+2OW
+         hpW6xARLpcKaJAY00VViOSCIHdKgEO2VvSCBhgLVvBFgbN1zVf+TeOIHJoBJHkkUbMXZ
+         vX7h6qcfbyRFwm9W3KL1J3qhzniEtgZJEwAiSK0p0xosjCrYNJJ2ULGUrUSOtulbnxCy
+         3N+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792634241; x=1793239041;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Rrt07MWuBvKNxCUpcIHeF6DdyBR4Zz5NXlnZyJVxMUY=;
+        b=f1N6yfkoU8cs7wYWEUbYVBk2mlkeH9MCIzMA3ME9g9d/B75F1Or8yIyQzRid6wCsxI
+         69GsX6VfXq3rK9AUm9X5NSsWUHUkjSjg2smtsyL8213Bi0P3PQYeRqNuKkELrkXv2vZU
+         S/BQAeIYyaFbM/Yk6ra5sUQ6gtzHRuN6QUqwwPskWi3hhbRfw+TS+XQ2bh80hGehmU6f
+         pq0wWlTIcdHUMWWwi7chnU0aYH/1kSfZsvMdwbhInEJ/vJaxIBw9/f0bDnB0amUJHYR/
+         KbqSwUS8Y7ZwB8MITW2lATwElQe0h4HnlzywpaEV6fh287KSmGqxC8e3+u1De2XkJeZa
+         GYbw==
+X-Forwarded-Encrypted: i=1; AKwUvBz/T5LS3sJRfw03eFqid599YihGKhO+0quTS5FWkoyfNOPMF4nDL7kOcMB+F1aNHDm8KXre6I6w8jB4iKfrLQWsEyo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKhPa4WE3nvCQAyBOxi/xb9IzYw36VMXFTKjTEKRs6u9DsQnOCt
+	2ptxc0z7PjPl7p3xljCwpU5X+K8cOQ5UQVG5htpfu2i2qrYtP7nNxT9M
+X-Gm-Gg: AYBFou27skb5RtQdrrfFPIOyUQiJQuqHu780NPPLdIvIdEVnmToEkCI0lIu/ZkwecJR
+	Zi5kBLvKiTfCXbAPXhBXn3yl+LKMnMNAoq75rj+V16/W1S9hXjkEgZ/fbY6UP3uOxCGkg9Lar4b
+	watiinSLU4+3eJIHKStkrhHIYcq9pjLSg14WWly7yhJ/JcmUVshUAY/2h0FNVp2CujcsDjr74Fc
+	Q21p6keCiB2sTCdVEwtSUA/u5DL86TUSSVnW2yinVJgM/mblU7tN1JQxTUB27LTs34e8FwU6JNF
+	zypHpUiezodWa86pqvq5nOFJRG+wxRCgUnP8mvlPXruW0BImFdI9qpubgEYW2JXIJZpf5XZhZeZ
+	T+4Vght4URmj3DKh4Fr2UlEG4hIssA1mwh5bboPE869XT6XqSkdbnpk4jb5h4FAbVDZ6SlUGQXi
+	sZgy4BJm9zPsS/4k6ZsKSPk0vpHkmGg/ntjxXaZ71kNsOx8NqWHHRydJwgDu9FcNksjvC9g1a8V
+	lBFAy/r/IlwKA0zvTOWL0c0j2pIWI2UmjJk4CK3jQNqGWkWJ1aBZzLpPLuz/I/SqnDfu92gHEvb
+	fnphQicL/UYxp6sTuscLTrXzqJbhXg1/VonoVdfRys6Ij6t1+Ia9gSxasxw3BMD4+f4SjQnRdJ7
+	RLXahmRVymJ3SRlwNg1xMOiH6
+X-Received: by 2002:a17:90b:1801:b0:3a4:b74a:795c with SMTP id 98e67ed59e1d1-3ad86c79098mr3189121a91.16.1792634241278;
+        Wed, 21 Oct 2026 18:57:21 -0700 (PDT)
+Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.255])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ada48ed70dsm1701803a91.4.2026.10.21.18.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 18:57:14 -0700 (PDT)
+        Wed, 21 Oct 2026 18:57:20 -0700 (PDT)
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 To: bpf@vger.kernel.org
 Cc: daniel@iogearbox.net,
@@ -104,10 +105,12 @@ Cc: daniel@iogearbox.net,
 	linux-mm@kvack.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 0/9] uprobes: Don't stall fork() when mmap_lock is busy
-Date: Thu, 22 Oct 2026 01:57:03 +0000
-Message-ID: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
+Subject: [PATCH bpf-next 1/9] mm: Bring back mmap_write_trylock()
+Date: Thu, 22 Oct 2026 01:57:04 +0000
+Message-ID: <20261022015712.1297331-2-alexei.starovoitov@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
+References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -121,79 +124,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Alexei Starovoitov <ast@kernel.org>
 
-uprobe_register() and uprobe_unregister() stall every fork() in the system
-when some process keeps its mmap_lock busy:
-- register_for_each_vma() sleeps on that mmap_lock with dup_mmap_sem held
-  for writing.
-- fork() of that process sleeps on that mmap_lock with dup_mmap_sem held
-  for reading. The next register_for_each_vma() waits for it, and other
-  forks wait for the writer. The process doesn't have to map the file.
-
-We found it the hard way by using uprobes in production. uprobes were
-attached to libraries and binaries that many processes map, on a large
-number of hosts. On some of them every fork() was stuck for minutes while
-uprobe was being registered.
-
-Patch 5 fixes the first one. Patch 6 fixes the second one. Patch 1 is
-a helper for them and patch 9 is the selftest.
-
-The rest fix old bugs that patches 5 and 6 make easier to hit:
-- Patch 2: exit_mmap() runs under dup_mmap_sem.
-- Patches 3, 4: x86. The removal of optimized uprobe that failed half-way
-  is never finished, and SIGKILL triggers WARN_ON_ONCE().
-- Patch 7: the child loses the breakpoint of an inherited perf event.
-- Patch 8: the tracer that is killed leaves its breakpoints behind.
-
-A process loops over mmap(4G, MAP_POPULATE) and munmap(). Another process
-calls fork() in a loop. The longest fork() while uprobes are being attached
-and the time to attach, in msec. 32 cpu VM, HZ=1000, no debug options,
-median of 15-45 runs:
-
-                                       fork()          attach
-                                    before  after   before  after
-the busy process maps the file
-  uprobe_multi, 1 uprobe               201   0.25      217    232
-  uprobe_multi, 4 uprobes              422   0.34     1483   1558
-  perf_event, 4 uprobes                421   0.47     3150   3322
-it forks and doesn't map the file
-  uprobe_multi, 1 uprobe               198   0.07      212    9.6
-  uprobe_multi, 4 uprobes              203   0.08      213   13.4
-  perf_event, 4 uprobes                419   0.08      630   12.3
-nobody keeps mmap_lock busy
-  uprobe_multi, 1000 processes        1.93   1.83     4.24   4.49
-  uprobe_multi, 5000 processes        8.88   8.60     8.33   9.23
-
-I don't care which tree it goes through. It targets bpf-next only because
-BPF CI will run the patches, including the new selftest.
+Commit cf95e337cb63 ("mm: delete mmap_write_trylock() and
+vma_try_start_write()") removed it when khugepaged stopped using it.
+uprobes and dup_mmap() are going to use it.
 
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+---
+ include/linux/mmap_lock.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Alexei Starovoitov (9):
-  mm: Bring back mmap_write_trylock()
-  uprobes: Don't run exit_mmap() under dup_mmap_sem
-  uprobes/x86: Finish an unoptimization which failed half-way
-  uprobes/x86: Don't WARN if an optimized probe can't be written
-  uprobes: Don't sleep on mmap_lock under dup_mmap_sem
-  uprobes: Don't sleep on mmap_lock with dup_mmap_sem held in dup_mmap()
-  fork: Let the new task point to its mm before uprobes can find it
-  uprobes: Don't leak the breakpoints if the unregistering task is
-    killed
-  selftests/bpf: Test uprobes and fork() with busy mmap_lock
-
- arch/x86/kernel/uprobes.c                     |  23 +-
- include/linux/mmap_lock.h                     |  12 +
- include/linux/uprobes.h                       |   5 +
- kernel/events/uprobes.c                       | 260 ++++++++--
- kernel/fork.c                                 |  13 +-
- mm/internal.h                                 |   3 +-
- mm/mmap.c                                     |  33 +-
- mm/nommu.c                                    |   3 +-
- .../selftests/bpf/prog_tests/uprobe_busy_mm.c | 447 ++++++++++++++++++
- .../selftests/bpf/progs/uprobe_busy_mm.c      |  22 +
- 10 files changed, 766 insertions(+), 55 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_busy_mm.c
- create mode 100644 tools/testing/selftests/bpf/progs/uprobe_busy_mm.c
-
+diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+index b8a13b8d36a4..e5420b0ce61b 100644
+--- a/include/linux/mmap_lock.h
++++ b/include/linux/mmap_lock.h
+@@ -566,6 +566,18 @@ static inline int __must_check mmap_write_lock_killable(struct mm_struct *mm)
+ 	return ret;
+ }
+ 
++static inline bool __must_check mmap_write_trylock(struct mm_struct *mm)
++{
++	bool ret;
++
++	__mmap_lock_trace_start_locking(mm, true);
++	ret = down_write_trylock(&mm->mmap_lock) != 0;
++	if (ret)
++		mm_lock_seqcount_begin(mm);
++	__mmap_lock_trace_acquire_returned(mm, true, ret);
++	return ret;
++}
++
+ /*
+  * Drop all currently-held per-VMA locks.
+  * This is called from the mmap_lock implementation directly before releasing
 -- 
 2.55.0
 
