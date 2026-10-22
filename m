@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792645675;
-	b=yA5QozOGjkNMUwJJGOLhHPFNIM7ynHxfy6gJ+FwnoQOB378oSA6p0wvP5Hk09XUCPDQS
-	 bMcYhctHhFPWhh8qO2GF9BZGJ6w3VJ5usoUZgBV1HcsLEU91jJYFeFfceW/WDBgGlzc9M
-	 bPJsyB7gjNy/OjTRULS7lL1o6w8DViKBuMQDDkym+ACQmM45UHxpeeMQiJC2XaY64mcCY
-	 tw5o9PqNvv7kjyPAVl32q1Rs/ZUVm1uU2jfSDa5YBhgCRAxN3n9umlSVLK3kaPEtEr/8H
-	 2tLTTalxm4fjpkqo54ZMfpSOLW4BSfAzN8EakIl7qDMqn92LuS4o2Zd1rr99DkKK9DQ==
+	t=1792645677;
+	b=SHzhC286p0v9fe8ObxuQdBbSd1ceavN+do2rJZ/FnjfG2N/gh/CYfAxtCjGmlOxXIs/z
+	 LrWmoT1s0yRJTED9LTRPr2xaH54TtuXKBktpWthbHHnhjXQsBRM6zfUPscuNbiR4DjZjk
+	 Usz201FWah9ACO3xjrODYF0LVmzpBxPRMslh1ICbRcdvz1y0+0dhAvhZClBWsLnjNNn+I
+	 okrTq3trmcq1jMVM0nA/DL9LBjptHgymMxhobc2GBa+w0D4i+xFwh5Qen8ODM9FwcxVV7
+	 qev++Mq1HJVCiMjvcNhAKu6dAILrVTq7DagwrAvyoH6L74dxHYLGB0yJRhjXs3ul0Ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792645675;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792645677;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=EF/h0rMXJUnxDWL5NWwUz+wdD6IPIXWWrt9mBxieEP8=;
-	b=Lh5rskkLztJaiK7G3q1UbwXydvL5ZjD7aVPOjUWWc74xEVI4S5/0v8qpqE/h7Jt0sURS
-	 woY/+ipIrIjCp57qgXd8rwLPxPGb1B71GiArrLisRqOhDwfaH4N9f4+zX+7I5ulyfDNIb
-	 pJ+QyAVc1vZ1AocetNAsZItxuQjZ1YSuio9A2+pRpdZLsDMEiPosMjiIXn8IT0Ikb6eVa
-	 q1Y0BwCfWOu9I2cZLvpufECdqfTIr/VNgVR8gIm/yI89/035ImesfEvANLWzpPdM0OArS
-	 rjEGjNw/zBmg4OLXcpFFBnwehXWbm656xkaA7mXVpdbH91zUxO2mOg2o2wE1CP2KWFA==
+	bh=N6IAuRPS6MVSmy/0r8xn4KLanWBF8ABpPaslP1xDMFw=;
+	b=xcXe6/olAnMkf1jFLNfUVm8l4HShYhTskymBApVsr8nLtLikV9E3GNxqwAj8Yiv3KlxZ
+	 YoDE0Nu7G6Us501tPuWlWRhkuxo0uJQ+CDRTb9+EFd2FznT6p6h1L3LFtcPUDoXbydAxD
+	 mm4S2cqMqYjTHNqqOLu/2LYDqXA9YEDmiovAu7Aid9CUYWfeieKmjGTis0En3eQCAvB0y
+	 j/pLNGXPDMletMWrjEP3AHeZMtxAjLsuVzxeDuzyvT/zwTSjH11weI4jK6FA/KXayvnAU
+	 q0jbUSZitOM7lPbzjdVrojW7kz2DmNBFDxVxM8X7aEMIsK0d6tlWSekEPC7+SHZxe9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="fUf5/yVB";
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rURPn9Zj;
+	arc=none smtp.remote-ip=209.85.128.49
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A66C606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 05:07:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A66C606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF3A606A32F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Oct 2026 05:07:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBF3A606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=fUf5/yVB
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a1b07c3c5fso12671145e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 22:07:54 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rURPn9Zj
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a1e266fca2so9606615e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Oct 2026 22:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792645673; x=1793250473; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792645675; x=1793250475; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=EF/h0rMXJUnxDWL5NWwUz+wdD6IPIXWWrt9mBxieEP8=;
-        b=fUf5/yVBlRJV//nxi0A7ZHTJS3JTdp72+gsNK6vGmlbHe5grZS2eqSXfB04KFqLc/1
-         WTqWw7IhwB+3RnHY2sFhr8YOrKA/8phHHoCPfv/j5HVCuA/6dhtrLomG3/HaHv05p2qU
-         8ti/vX0ICIc6Cm9lx/vUArRUWL9DyNp/vUEFQxIpmNbzh43w/WhSiiEhDkXeFwvSN1kh
-         ErphMk3pH2ruUzhNh4wC5wdJ4o9SAWUJyIszzOpQYwUfGKsD8+r+OTtnLtDRdE8m9IlA
-         QNSvSvezqUi9O5jWKMUIKM/MQQQyqlhlj/1jZfOYY0k714nnRZNvlf8sb9rIbZ8c5BU3
-         ej6w==
+        bh=N6IAuRPS6MVSmy/0r8xn4KLanWBF8ABpPaslP1xDMFw=;
+        b=rURPn9Zjc8iHoGR2fSt3ScZ8zx3HYCHyoTSvaa0u6wwT/bKzlJm19z7uVAjwwff48C
+         3y5ZD4c9Yel7LZ4hLkNVhKWPI9pNAE6XTjv0PQzt//B/T5spDyxPdxPxFUeik3EJb9Nt
+         NpxGViXUOmm7n7ttKF55hkgOf835MNaeg1q+uljtkZ03u0EIMYemSLpzaANQKHvmBQCP
+         cDURwfBAj2HKlCtQykZUZuDXVoaqvwIFYjTxlNC9EacrSv7yn4SLOBHhCghaoNHHZpu9
+         l5RY97cjAodsR+zjp0lYdq3TJ9dPb/sDtFLufggdasf8Gqv91LprG6TaL6Jd3pr/u4lq
+         fYZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792645673; x=1793250473;
+        d=1e100.net; s=20260707; t=1792645675; x=1793250475;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=EF/h0rMXJUnxDWL5NWwUz+wdD6IPIXWWrt9mBxieEP8=;
-        b=nWQLcrGX7Fzc3DZysQOrMbS5sHK+RHEOcjgMwWIsujzF6xHBSntApYoB3cX4tY2ZjM
-         TDtaYxg4Eu4jDDopdkmuDCkM/XgZkEjU3qZxWpHlO4yd/rXaK/EuCnQ6myEljfEgAne/
-         CBXslHCyMGjk0LhN33iZrdhTk/GMMj37dst58zUr098gzuQuRy0pstG4n5EDRR2Rowv3
-         ALH0s8cSFFG2JQ9ymcpQkbNqQbNgSTVQo0PnW1J9Uk9gbfKS8ztfvsYgTFdC5Bkr2noR
-         0OTsFW1afU7Es7XR0scuyHyLX+tNXYRg2xvP7j9JSmnYq89w5Rs8wMWo5sSnfXb5h7yX
-         R+AA==
-X-Forwarded-Encrypted: i=1; AKwUvByq5jQOaxrCmWPigSYEduLIpsIDiJGHYGSYDzQ3yYrO7CrOUZ096aFGsC5TIG3GmQ2rA3KBp2dBs+5G60lqTCCiWuM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJBQyINZ8sdFgNalQA+IlZR8KS6AoBPmSFsVVwWWW0M5UJdd7Ef
-	1BjTx391f/Plm0O4SQBbvOj500yntHqS5ehe46fNQK3T6vB67YdxG6bo
-X-Gm-Gg: AYBFou1xcgkad+J8m1EDLWGM6iAcAGHBfM4rvv+Piz4dxdlXgVSbDxl5FBdDiq4CEmc
-	4Vth0KZqX3Cdft3cooSinTLobPhPfMWOu603MkjBCqNGBVaNjbrcLH1RWXqWywMpIHIiKzvrf+W
-	WYOy47x8qHPpsfq9pEvN8qUg+9OE99P4oYOYpqHOe1RfzOW0zoR/ERgmv7h/V0e95ZYdphFqCaq
-	ujYuiMpiqZ+W8ELAdTds0SHkfBJDPR+rU4EVbYAmbv7S2QdojSJIi+p5yz4os9jScBsK+069H/I
-	0TLklVrRIXLV2Q9tr9zaTl4Z7H1p7XGAlsojSsRbs4a5Rj0NheireA18a/D0MHb9j3D2nOqGlc4
-	j85MHqVPUw/yelUiHSiSJ3uyeaxtG8JiPfFCdSk/0PWRspXI0gG7nlLjmRzugAouaN1mPfIcZJz
-	hlNUw2bjm5T0QLk54YdZCGE304d489Be0vJIOHXJX7D4sf8anStaCbl9wqQqsJIa9/mBMfZMFgn
-	tZENDvBXNVV6rrJR5g1+TQYG9zsbRFrL7cTd/nzHc4+xq+9k3BaM/oYiVoMlRxZbB1Fx4mVI283
-	r8cCFJGpllKIi9oX2wAeFGL20KUQDRdDty3pQ+mwhMSq5ngnd680UFqZOPyv1n48V6WpJ27tpdP
-	IqhwREkq2ieaFX6ZbVU09gi/K8Ggg1q/uT15ldGfbq8SoaJXHmdG0sIdiCxpA
-X-Received: by 2002:a05:600d:19:b0:4a1:f625:2108 with SMTP id 5b1f17b1804b1-4a1fdd40492mr63435395e9.33.1792645672547;
-        Wed, 21 Oct 2026 22:07:52 -0700 (PDT)
+        bh=N6IAuRPS6MVSmy/0r8xn4KLanWBF8ABpPaslP1xDMFw=;
+        b=ys6PW5S1zM6A7P/UcHU3H86n0QCnuw7HdBUh8oFV97O3VnwFHV83AePTsbwj+hqFhi
+         Nphv9UazxtQzNLznSMEjam6eLdwlmtTuaWgsNgXeLF/lsbfVI79TKW5gErOGwi9DrRFF
+         Lu6tU+ZqwJ9mejFripza8KJVVMofGGphWCtFUSMRzpftjxt8vQZp+eoo+NhkKWxEi6+D
+         K1zd9Q60+3I0EvD/J0thxR75IxMVdAhNFCtPyQw/WIbhBEa/HTXgNM4sQMyZRyF4bAYf
+         qBKytFnZIQOw6bVwN0+J4v+inmsS+we7ytTxCLEvSgF40HJAKIWo/qNh7VRbpTMvftus
+         zDsQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzVb+uykiFxaH6llQTPpTpY/mshpyMYTUW9dmW4oHN0EwcIhCFlFstTiA85a2n74HDsyp7y8SFktveznnTAcJjdCRo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLH23AXMeLxqQJMHAU67LSqxgYI6Ixy8gRA7FeT4S/v+xZSL8oZ
+	Bz/mNXIjRrLEMTfNyWkU5GmwaCNzbc7DL8tyFs1dImTI6j2KTvLyY7Qg
+X-Gm-Gg: AYBFou2e3/AlTQq1f2C56hLq0IIuGh1nL7W/4tJgoAjyxhwS1GygWLkH7lfW5SlbUWb
+	OzMFvYLKG57dUDi5yXejvBEfS38CCpUzHpjcHi9xQR495W+nLZVwgkyekpM1jo5GLdQoFZhDEIB
+	HaO2KPRr5CdB0eoLJgHN21WIIsRoA/Nu9HJ9fnP0k+wclz/1aPdDB+15Q5vdFUC8DPqvJxAIryG
+	NAf5eOlWxuzgMt+itmJkSOlD2zrc1Ci1ZxfdAsQTGxIbjMV3fY6aYk6BbSmgKckILcHtadyQj5G
+	FjThRQEUhoNz0Ub5Bg88/bCJ1w7lvEYnWbNzUgOS6ZO85M+QRmeAkr/VejiEKLv9VTnNNSJmb+T
+	BPtTV2/7BMlS+v0bhYVA5wC/lhQYI/3yL9KnSt+XhoAUmRfgqYqdnLUWQUMj+Rgzj4y/Db7FHgm
+	WCPBBeUWIv3k6hqn05UG7ixb019HgvF+PxGBAHJwFMepsLD84/MJ2iFL9qZxQQnpL243m7iqNJM
+	g4/I23t6b5SKoUXOjlr4J0jdAbM4aPtJ2HMlyasYiY69aGnNuCaEG5msKn44N5OazrNPvfcU0bD
+	w3YVfN8kSys7vLKV0TR9u4zH0XLZyNwPwMJCxhAF+TUT27N8/09rrtH1wPkPvPJ/rRAfA9eD0wf
+	7BuLaQCgjJzAzy6n7r7tw/BEVzC9HZprm2llVeecAUdXrvC24UvQeOhmq9oM=
+X-Received: by 2002:a05:600c:3492:b0:4a1:e4c4:f6a9 with SMTP id 5b1f17b1804b1-4a1fdd3d479mr83134855e9.23.1792645675020;
+        Wed, 21 Oct 2026 22:07:55 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-ad43-d501-2c28-bb72-120d-420e.310.pool.telefonica.de. [2a02:3100:ad43:d501:2c28:bb72:120d:420e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e254eeef6sm9994979f8f.8.2026.10.21.22.07.50
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e254eeef6sm9994979f8f.8.2026.10.21.22.07.52
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 21 Oct 2026 22:07:51 -0700 (PDT)
+        Wed, 21 Oct 2026 22:07:54 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>
@@ -105,9 +105,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-rt-devel@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 7/9] rv: Add KUnit coverage for IRQ-exit scheduling
-Date: Thu, 22 Oct 2026 07:07:10 +0200
-Message-Id: <20261022050712.75035-8-kmehltretter@gmail.com>
+Subject: [RFC PATCH 8/9] rv: Test empty PREEMPT_RT softirq worker intervals
+Date: Thu, 22 Oct 2026 07:07:11 +0200
+Message-Id: <20261022050712.75035-9-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20261022050712.75035-1-kmehltretter@gmail.com>
 References: <20261022050712.75035-1-kmehltretter@gmail.com>
@@ -122,686 +122,622 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add KUnit coverage for the irqexit generated state table, invalid
-transitions, and enable-time synchronization. Test live
-preempt_schedule_irq() invocations without switching, across a task switch,
-and across CPU migration. The migration case runs when another CPU is
-available. The live cases require the built-in suite because they invoke a
-non-exported helper.
+On PREEMPT_RT, a worker enters serving-softirq state before checking for
+pending work and leaves that state afterward. A worker with no pending
+work therefore creates a valid interval that action-based tests miss.
 
-KUnit failure reporting may allocate with GFP_KERNEL. Record reaction
-counts inside synthetic IRQ-disabled and hardirq intervals. Evaluate the
-expectations after restoring normal task context to avoid secondary
-atomic-sleep or lockdep diagnostics.
+Add KUnit-only helpers that exercise the worker boundaries directly and
+force the per-CPU ksoftirqd task through one invocation with no pending
+softirqs. Preserve work that races with the test seam. Verify that each
+path emits one context pair without an intervening softirq action.
 
-The live tests invoke the generic helper directly. They do not exercise
-an architecture-specific physical interrupt-return path.
+Gate the seam's predicate and worker branches with the existing
+kunit_running static key. Outside a KUnit run, both added checks take only
+the disabled static-key path.
+
+Both tests attach to non-exported IRQ boundary tracepoints. Run them only
+when the RV KUnit suite is built in and report them as skipped when it is a
+module.
 
 Assisted-by: LLM
 ---
- Documentation/trace/rv/monitor_irqentry.rst   |  21 +
- kernel/trace/rv/monitors/irqexit/irqexit.c    |  13 +
- .../trace/rv/monitors/irqexit/irqexit_kunit.c | 537 ++++++++++++++++++
- .../trace/rv/monitors/irqexit/irqexit_kunit.h |  21 +
- kernel/trace/rv/rv_monitors_test.c            |  13 +
- 5 files changed, 605 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.c
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.h
+ Documentation/trace/rv/monitor_irqentry.rst   |  23 ++
+ include/linux/interrupt.h                     |   7 +
+ kernel/softirq.c                              | 225 ++++++++++++++++-
+ .../rv/monitors/irqstate/irqstate_kunit.c     | 239 ++++++++++++++++++
+ kernel/trace/rv/rv_monitors_test.c            |   2 +
+ 5 files changed, 495 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/trace/rv/monitor_irqentry.rst b/Documentation/trace/rv/monitor_irqentry.rst
-index ba9e78e7c4a08..f4cd34c1b6bf1 100644
+index f4cd34c1b6bf1..c2b7739a061f0 100644
 --- a/Documentation/trace/rv/monitor_irqentry.rst
 +++ b/Documentation/trace/rv/monitor_irqentry.rst
-@@ -292,6 +292,27 @@ boundary probes require exactly one entry before the callback and one exit
+@@ -292,6 +292,29 @@ boundary probes require exactly one entry before the callback and one exit
  afterward, both with local interrupts disabled and live serving state set;
  the monitor must accept the pair and the original counts must be restored.
  
-+With built-in RV KUnit tests, ``rv_test_irqexit_live`` enters the real
-+``preempt_schedule_irq()`` helper with and without a task switch on one CPU.
-+``rv_test_irqexit_migrate`` instead wakes a same-CPU FIFO worker which moves
-+the switched-out owner to a different allowed online CPU. The test requires
-+accepted entry and suspension on the source CPU and resumption and return
-+on the destination. It also samples the CPU on which the helper actually
-+returned, independently of the RV observer, and checks restoration of the
-+owner's original affinity before the tested task exits.
++``rv_test_irqstate_rt_empty_worker`` uses a KUnit-only seam around the same
++PREEMPT_RT worker entry and exit helpers, without calling
++``handle_softirqs()``. It requires exactly one accepted context pair and no
++``softirq_entry`` or ``softirq_exit`` action from the synthetic owner between
++those boundaries. The seam wakes ksoftirqd while interrupts are disabled so
++pending work which races with the test remains scheduled. This
++deterministically covers the owner's no-handler interval; it does not invoke
++the smpboot predicate or prove that the current task is the real ksoftirqd
++thread.
 +
-+The two live helper cases use single-element parameter fixtures. Monitor
-+slot allocation and destruction, and CPU-hotplug read locking, run in the
-+suite runner, which owns the RV interface mutex. The case body and its
-+cleanup can run in different KUnit threads. The tests retain a task
-+reference until the observer and worker are stopped; the migration case
-+checks restoration of the tested task's affinity before that task exits.
++``rv_test_irqstate_rt_smpboot_empty_worker`` complements that unit seam. A
++KUnit-only flag makes the real ``ksoftirqd_should_run()`` predicate return true
++once when no work is pending. The smpboot loop then invokes
++``run_ksoftirqd()`` in the real per-CPU ksoftirqd task. The test requires the
++same empty boundary pair and accepts samples only while that forced invocation
++is active. This exercises the real predicate-to-worker path and pending-zero
++decision; it does not claim to reproduce the naturally raced pending-bit
++interleaving.
 +
-+The migration case skips when fewer than two allowed CPUs are online, or
-+when the tests are modules: the helper is not exported. These tests exercise
-+the real helper and scheduler, but invoke the helper directly. They are not
-+evidence of an architecture's physical interrupt-return assembly path.
++Both empty-worker tests require a built-in RV KUnit suite. A modular suite
++reports them as skipped because the IRQ boundary tracepoints they attach to
++are not exported.
 +
- Coverage limits
- ---------------
+ With built-in RV KUnit tests, ``rv_test_irqexit_live`` enters the real
+ ``preempt_schedule_irq()`` helper with and without a task switch on one CPU.
+ ``rv_test_irqexit_migrate`` instead wakes a same-CPU FIFO worker which moves
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 3bf969ad8fe07..f268e025921c1 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -595,6 +595,13 @@ struct softirq_action
+ asmlinkage void do_softirq(void);
+ asmlinkage void __do_softirq(void);
  
-diff --git a/kernel/trace/rv/monitors/irqexit/irqexit.c b/kernel/trace/rv/monitors/irqexit/irqexit.c
-index a088b28b62b17..baee718dbe83c 100644
---- a/kernel/trace/rv/monitors/irqexit/irqexit.c
-+++ b/kernel/trace/rv/monitors/irqexit/irqexit.c
-@@ -157,3 +157,16 @@ module_exit(unregister_irqexit);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Karl Mehltretter <kmehltretter@gmail.com>");
- MODULE_DESCRIPTION("irqexit: verify IRQ-exit scheduling ownership");
-+
 +#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
-+#include <kunit/visibility.h>
-+#include "irqexit_kunit.h"
-+
-+const struct rv_irqexit_ops rv_irqexit_ops = {
-+	.mon = RV_MON_OPS_INIT(),
-+	.handle_resched_entry = handle_resched_entry,
-+	.handle_resched_exit = handle_resched_exit,
-+	.handle_sched_switch = handle_sched_switch,
-+};
-+EXPORT_SYMBOL_IF_KUNIT(rv_irqexit_ops);
++void softirq_kunit_run_empty_worker(void);
++bool softirq_kunit_empty_worker_active(void);
++int softirq_kunit_run_empty_ksoftirqd(struct task_struct **owner,
++				      int *owner_cpu, bool *armed);
 +#endif
-diff --git a/kernel/trace/rv/monitors/irqexit/irqexit_kunit.c b/kernel/trace/rv/monitors/irqexit/irqexit_kunit.c
-new file mode 100644
-index 0000000000000..56a9442e2f704
---- /dev/null
-+++ b/kernel/trace/rv/monitors/irqexit/irqexit_kunit.c
-@@ -0,0 +1,537 @@
-+// SPDX-License-Identifier: GPL-2.0
++
+ #ifdef CONFIG_PREEMPT_RT
+ extern void do_softirq_post_smp_call_flush(unsigned int was_pending);
+ #else
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 2e3b6fd3f6d5d..e85bd3b81e779 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -10,6 +10,9 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #define INSTANTIATE_EXPORTED_INTERRUPT_DISABLE
++#include <kunit/test-bug.h>
++#include <kunit/visibility.h>
 +#include <linux/completion.h>
-+#include <linux/cpu.h>
-+#include <linux/hardirq.h>
-+#include <linux/irqflags.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/kthread.h>
-+#include <linux/rv.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task.h>
-+#include <rv/kunit.h>
-+#include <rv_trace.h>
-+#include <trace/events/sched.h>
-+
-+#include "irqexit_kunit.h"
-+
-+#if IS_REACHABLE(CONFIG_RV_MON_IRQEXIT)
-+
-+static void irqexit_test_switch(struct task_struct *prev, struct task_struct *next)
-+{
-+	rv_mock_current(prev);
-+	rv_irqexit_ops.handle_sched_switch(NULL, true, prev, next, TASK_RUNNING);
-+	rv_mock_current(next);
-+}
-+
-+static void rv_test_irqexit(struct kunit *test)
-+{
-+	struct task_struct *owner = rv_kunit_alloc_mock_task(test);
-+	struct task_struct *other = rv_kunit_alloc_mock_task(test);
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	unsigned long flags;
-+	int observed;
-+
-+	owner->pid = 101;
-+	other->pid = 102;
-+	prepare_test(test, &rv_irqexit_ops.mon);
-+	rv_mock_current(owner);
-+
-+	local_irq_save(flags);
-+	/* The scheduling loop may return without an actual task switch. */
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+
-+	/* A different task's IRQ-exit loop cannot complete owner's loop. */
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	irqexit_test_switch(owner, other);
-+	rv_irqexit_ops.handle_resched_entry(NULL, other);
-+	__irq_enter_raw();
-+	__irq_exit_raw();
-+	rv_irqexit_ops.handle_resched_exit(NULL, other);
-+	irqexit_test_switch(other, owner);
-+
-+	/* Both tasks can have suspended invocations at the same time. */
-+	irqexit_test_switch(owner, other);
-+	rv_irqexit_ops.handle_resched_entry(NULL, other);
-+	irqexit_test_switch(other, owner);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	irqexit_test_switch(owner, other);
-+	rv_irqexit_ops.handle_resched_exit(NULL, other);
-+	observed = READ_ONCE(ctx->reactions);
-+	local_irq_restore(flags);
-+	RV_KUNIT_EXPECT_OBSERVED(test, ctx, observed, 0);
-+}
-+
-+static void rv_test_irqexit_invalid(struct kunit *test)
-+{
-+	struct task_struct *owner = rv_kunit_alloc_mock_task(test);
-+	struct task_struct *other = rv_kunit_alloc_mock_task(test);
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	unsigned long flags;
-+	int observed[14];
-+	unsigned int i = 0;
-+
-+	owner->pid = 101;
-+	other->pid = 102;
-+	prepare_test(test, &rv_irqexit_ops.mon);
-+	rv_mock_current(owner);
-+
-+	KUNIT_ASSERT_FALSE(test, irqs_disabled());
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+
-+	local_irq_save(flags);
-+	/* Scheduling must not start before the hardirq count is removed. */
-+	__irq_enter_raw();
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	__irq_exit_raw();
-+
-+	/* A return with hardirq state still active is invalid as well. */
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	__irq_enter_raw();
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	__irq_exit_raw();
-+
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+
-+	/* The first exit synchronizes; the second unmatched exit must fail. */
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+
-+	/* The state permits exit, but its task identity must still agree. */
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	rv_mock_current(other);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+
-+	/* Matching current is insufficient if the invocation is suspended. */
-+	rv_mock_current(owner);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	irqexit_test_switch(owner, other);
-+	rv_mock_current(owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed[i++] = READ_ONCE(ctx->reactions);
-+
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	local_irq_restore(flags);
-+	for (i = 0; i < ARRAY_SIZE(observed); i += 2) {
-+		RV_KUNIT_EXPECT_OBSERVED(test, ctx, observed[i], 0);
-+		RV_KUNIT_EXPECT_OBSERVED(test, ctx, observed[i + 1], 1);
-+	}
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+
-+	/* Even an unsynchronized bad return must not be silently skipped. */
-+	rv_mock_current(other);
-+	RV_KUNIT_EXPECT_REACTION_HERE(test, ctx)
-+		rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+}
-+
-+static void rv_test_irqexit_sync(struct kunit *test)
-+{
-+	struct task_struct *owner = rv_kunit_alloc_mock_task(test);
-+	struct task_struct *other = rv_kunit_alloc_mock_task(test);
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	unsigned long flags;
-+	int observed;
-+
-+	owner->pid = 101;
-+	other->pid = 102;
-+	prepare_test(test, &rv_irqexit_ops.mon);
-+	rv_mock_current(owner);
-+
-+	local_irq_save(flags);
-+	/* Switch events alone do not synchronize an already active loop. */
-+	irqexit_test_switch(owner, other);
-+	irqexit_test_switch(other, owner);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+
-+	/* Model disable/reset/re-enable while that invocation is suspended. */
-+	rv_irqexit_ops.mon.rv_this->enabled = 0;
-+	irqexit_test_switch(owner, other);
-+	rv_irqexit_ops.handle_resched_entry(NULL, other);
-+	rv_irqexit_ops.handle_resched_exit(NULL, other);
-+	rv_irqexit_ops.mon.task_reset(owner);
-+	rv_irqexit_ops.mon.task_reset(other);
-+	rv_irqexit_ops.mon.rv_this->enabled = 1;
-+	irqexit_test_switch(other, owner);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	rv_irqexit_ops.handle_resched_entry(NULL, owner);
-+	rv_irqexit_ops.handle_resched_exit(NULL, owner);
-+	observed = READ_ONCE(ctx->reactions);
-+	local_irq_restore(flags);
-+	RV_KUNIT_EXPECT_OBSERVED(test, ctx, observed, 0);
-+}
-+
-+#ifndef MODULE
-+struct irqexit_live_ctx {
-+	struct task_struct *owner;
-+	struct task_struct *worker;
-+	const char *skip_reason;
-+	struct completion worker_done;
-+	unsigned int entries;
-+	unsigned int exits;
-+	unsigned int switches_out;
-+	unsigned int switches_in;
-+	unsigned int entry_cpu;
-+	unsigned int exit_cpu;
-+	unsigned int switch_out_cpu;
-+	unsigned int switch_in_cpu;
-+	unsigned int target_cpu;
-+	unsigned int raw_entries;
-+	unsigned int raw_exits;
-+	unsigned int bad_raw_context;
-+	int affinity_result;
-+	cpumask_t saved_mask;
-+	cpumask_t test_mask;
-+	bool migrate;
-+	bool affinity_changed;
-+	bool observer_attached;
-+	bool raw_entry_attached;
-+	bool raw_exit_attached;
-+	bool hotplug_disabled;
+ #include <linux/export.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/interrupt.h>
+@@ -609,6 +612,187 @@ asmlinkage __visible void do_softirq(void)
+ 
+ #endif /* !CONFIG_PREEMPT_RT */
+ 
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++enum softirq_kunit_empty_worker_phase {
++	SOFTIRQ_KUNIT_EMPTY_IDLE,
++	SOFTIRQ_KUNIT_EMPTY_PREPARING,
++	SOFTIRQ_KUNIT_EMPTY_ARMED,
++	SOFTIRQ_KUNIT_EMPTY_RUNNING,
++	SOFTIRQ_KUNIT_EMPTY_DONE,
 +};
 +
-+/* Parent fixtures run in the suite runner, which owns rv_interface_lock. */
-+static int irqexit_live_fixture_init(struct kunit *test)
-+{
-+	struct rv_monitor *mon = rv_irqexit_ops.mon.rv_this;
-+	struct irqexit_live_ctx *live;
-+	int ret;
++struct softirq_kunit_empty_worker {
++	atomic_t phase;
++	struct completion done;
++	u32 held_pending;
++};
 +
-+	if (mon->enabled)
++static DEFINE_PER_CPU(struct softirq_kunit_empty_worker,
++			      softirq_kunit_empty_workers);
++
++/*
++ * Exercise the worker boundaries without entering handle_softirqs().
++ *
++ * The caller must be in preemptible task context with interrupts enabled and
++ * no active softirq context. Like run_ksoftirqd(), this returns with local
++ * interrupts enabled.
++ */
++void softirq_kunit_run_empty_worker(void)
++{
++	ksoftirqd_run_begin();
++	/* Preserve any pending work which raced with the test seam. */
++	wakeup_softirqd();
++	ksoftirqd_run_end();
++}
++EXPORT_SYMBOL_IF_KUNIT(softirq_kunit_run_empty_worker);
++
++bool softirq_kunit_empty_worker_active(void)
++{
++	struct softirq_kunit_empty_worker *worker;
++
++	worker = raw_cpu_ptr(&softirq_kunit_empty_workers);
++	return atomic_read(&worker->phase) == SOFTIRQ_KUNIT_EMPTY_RUNNING &&
++	       current == raw_cpu_read(ksoftirqd);
++}
++EXPORT_SYMBOL_IF_KUNIT(softirq_kunit_empty_worker_active);
++
++/*
++ * Force one real ksoftirqd invocation after its smpboot predicate observes
++ * no pending work. The run itself still uses run_ksoftirqd(). The caller must
++ * hold the CPU hotplug read lock across this call so the selected CPU and its
++ * ksoftirqd remain online. The returned task pointer carries no reference.
++ */
++int softirq_kunit_run_empty_ksoftirqd(struct task_struct **owner,
++				      int *owner_cpu, bool *armed)
++{
++	struct softirq_kunit_empty_worker *worker;
++	struct task_struct *tsk;
++	unsigned long completed;
++	int this_cpu, phase, ret;
++
++	if (!owner || !owner_cpu || !armed)
++		return -EINVAL;
++	WRITE_ONCE(*owner, NULL);
++	WRITE_ONCE(*owner_cpu, -1);
++	WRITE_ONCE(*armed, false);
++
++	lockdep_assert_cpus_held();
++	this_cpu = get_cpu();
++	worker = this_cpu_ptr(&softirq_kunit_empty_workers);
++	if (atomic_cmpxchg(&worker->phase, SOFTIRQ_KUNIT_EMPTY_IDLE,
++			   SOFTIRQ_KUNIT_EMPTY_PREPARING) !=
++	    SOFTIRQ_KUNIT_EMPTY_IDLE) {
++		put_cpu();
 +		return -EBUSY;
-+	live = kunit_kzalloc(test, sizeof(*live), GFP_KERNEL);
-+	if (!live)
-+		return -ENOMEM;
-+
-+	/* Keep the online mask stable without nesting tracepoint registration. */
-+	cpu_hotplug_disable();
-+	live->hotplug_disabled = true;
-+	ret = mon->enable();
-+	if (ret) {
-+		cpu_hotplug_enable();
-+		live->hotplug_disabled = false;
-+		kunit_kfree(test, live);
-+		return ret;
 +	}
-+	kunit_register_params_array(test, live, 1, NULL);
-+	return 0;
-+}
 +
-+static void irqexit_live_fixture_exit(struct kunit *test)
-+{
-+	struct irqexit_live_ctx *live = (void *)test->params_array.params;
-+	struct rv_monitor *mon = rv_irqexit_ops.mon.rv_this;
-+
-+	mon->enabled = 0;
-+	mon->disable();
-+	if (live->hotplug_disabled) {
-+		cpu_hotplug_enable();
-+		live->hotplug_disabled = false;
++	tsk = __this_cpu_read(ksoftirqd);
++	if (!tsk) {
++		atomic_set(&worker->phase, SOFTIRQ_KUNIT_EMPTY_IDLE);
++		put_cpu();
++		return -ENODEV;
 +	}
-+	/* Retain the child's explicit skip reason on the parent case. */
-+	if (live->skip_reason)
-+		kunit_mark_skipped(test, "%s", live->skip_reason);
-+}
 +
-+static int irqexit_live_worker(void *data)
-+{
-+	struct irqexit_live_ctx *live = data;
++	init_completion(&worker->done);
++	worker->held_pending = 0;
++	WRITE_ONCE(*owner_cpu, this_cpu);
++	WRITE_ONCE(*owner, tsk);
++	/* Publish the owner before globally registered callbacks can match it. */
++	smp_store_release(armed, true);
++	atomic_set(&worker->phase, SOFTIRQ_KUNIT_EMPTY_ARMED);
++	wake_up_process(tsk);
++	put_cpu();
 +
-+	if (live->migrate)
-+		live->affinity_result =
-+			set_cpus_allowed_ptr(live->owner, cpumask_of(live->target_cpu));
-+	complete(&live->worker_done);
-+	while (!kthread_should_stop()) {
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		if (!kthread_should_stop())
-+			schedule();
++	completed = wait_for_completion_timeout(&worker->done, 5 * HZ);
++	if (!completed) {
++		phase = atomic_cmpxchg(&worker->phase,
++				       SOFTIRQ_KUNIT_EMPTY_ARMED,
++				       SOFTIRQ_KUNIT_EMPTY_IDLE);
++		if (phase == SOFTIRQ_KUNIT_EMPTY_ARMED) {
++			ret = -ETIMEDOUT;
++			goto out_disarm;
++		}
++
++		/*
++		 * Once the predicate has claimed the request, synchronize with
++		 * complete() before making the completion reusable. CPU hotplug
++		 * remains excluded by the caller while this helper runs. RT lock
++		 * contention can delay the worker after it claims the request, so
++		 * wait for it to finish.
++		 */
++		if (phase != SOFTIRQ_KUNIT_EMPTY_RUNNING &&
++		    phase != SOFTIRQ_KUNIT_EMPTY_DONE) {
++			ret = -EIO;
++			goto out_disarm;
++		}
++		wait_for_completion(&worker->done);
++		phase = atomic_cmpxchg(&worker->phase,
++				       SOFTIRQ_KUNIT_EMPTY_DONE,
++				       SOFTIRQ_KUNIT_EMPTY_IDLE);
++		ret = phase == SOFTIRQ_KUNIT_EMPTY_DONE ? -ETIMEDOUT : -EIO;
++		goto out_disarm;
 +	}
-+	__set_current_state(TASK_RUNNING);
-+	return 0;
-+}
 +
-+static void irqexit_observe_event(void *data, int id, char *state,
-+				  char *event, char *next_state, bool final_state)
-+{
-+	struct irqexit_live_ctx *live = data;
++	phase = atomic_cmpxchg(&worker->phase, SOFTIRQ_KUNIT_EMPTY_DONE,
++			       SOFTIRQ_KUNIT_EMPTY_IDLE);
++	ret = phase == SOFTIRQ_KUNIT_EMPTY_DONE ? 0 : -EIO;
 +
-+	if (id != live->owner->pid)
-+		return;
-+	if (!strcmp(event, "resched_entry")) {
-+		live->entry_cpu = raw_smp_processor_id();
-+		live->entries++;
-+	} else if (!strcmp(event, "resched_exit")) {
-+		live->exit_cpu = raw_smp_processor_id();
-+		live->exits++;
-+	} else if (!strcmp(event, "switch_out") && !strcmp(state, "rescheduling")) {
-+		if (!live->switches_out)
-+			live->switch_out_cpu = raw_smp_processor_id();
-+		live->switches_out++;
-+	} else if (!strcmp(event, "switch_in") && !strcmp(state, "suspended")) {
-+		if (!live->switches_in)
-+			live->switch_in_cpu = raw_smp_processor_id();
-+		live->switches_in++;
-+	}
-+}
-+
-+static void irqexit_observe_entry(void *data, struct task_struct *owner,
-+				  unsigned long pc, bool irq_off)
-+{
-+	struct irqexit_live_ctx *live = data;
-+
-+	if (owner != live->owner)
-+		return;
-+	live->raw_entries++;
-+	if (pc || !irq_off)
-+		live->bad_raw_context++;
-+}
-+
-+static void irqexit_observe_exit(void *data, struct task_struct *owner,
-+				 unsigned long pc, bool irq_off)
-+{
-+	struct irqexit_live_ctx *live = data;
-+
-+	if (owner != live->owner)
-+		return;
-+	live->raw_exits++;
-+	if (pc || !irq_off)
-+		live->bad_raw_context++;
-+}
-+
-+static int irqexit_observe_boundaries(struct irqexit_live_ctx *live)
-+{
-+	int ret;
-+
-+	ret = register_trace_sched_irq_preempt_entry(irqexit_observe_entry, live);
-+	if (ret)
-+		return ret;
-+	live->raw_entry_attached = true;
-+	ret = register_trace_sched_irq_preempt_exit(irqexit_observe_exit, live);
-+	if (!ret)
-+		live->raw_exit_attached = true;
++out_disarm:
++	WRITE_ONCE(*armed, false);
 +	return ret;
 +}
++EXPORT_SYMBOL_IF_KUNIT(softirq_kunit_run_empty_ksoftirqd);
 +
-+static void irqexit_live_cleanup(void *data)
++static bool softirq_kunit_force_empty_ksoftirqd(void)
 +{
-+	struct irqexit_live_ctx *live = data;
-+	struct rv_monitor *mon = rv_irqexit_ops.mon.rv_this;
++	struct softirq_kunit_empty_worker *worker;
 +
-+	mon->enabled = 0;
-+	if (live->observer_attached)
-+		unregister_trace_event_irqexit(irqexit_observe_event, live);
-+	if (live->raw_entry_attached)
-+		unregister_trace_sched_irq_preempt_entry(irqexit_observe_entry, live);
-+	if (live->raw_exit_attached)
-+		unregister_trace_sched_irq_preempt_exit(irqexit_observe_exit, live);
-+	tracepoint_synchronize_unregister();
-+	if (live->worker)
-+		kthread_stop(live->worker);
-+	if (live->affinity_changed && !(READ_ONCE(live->owner->flags) & PF_EXITING))
-+		KUNIT_EXPECT_EQ(kunit_get_current_test(),
-+				set_cpus_allowed_ptr(live->owner, &live->saved_mask), 0);
-+	put_task_struct(live->owner);
-+	live->owner = NULL;
-+
-+	RV_KUNIT_EXPECT_NO_REACTION(kunit_get_current_test(), active_ctx);
-+	mon->react = mon->reactor ? mon->reactor->react : NULL;
-+	active_ctx = NULL;
-+	rv_mock_current(NULL);
++	worker = this_cpu_ptr(&softirq_kunit_empty_workers);
++	return current == __this_cpu_read(ksoftirqd) &&
++	       atomic_cmpxchg(&worker->phase, SOFTIRQ_KUNIT_EMPTY_ARMED,
++			      SOFTIRQ_KUNIT_EMPTY_RUNNING) ==
++			      SOFTIRQ_KUNIT_EMPTY_ARMED;
 +}
 +
-+static void rv_test_irqexit_live(struct kunit *test)
++static bool softirq_kunit_begin_empty_ksoftirqd(void)
 +{
-+	struct rv_monitor *mon = rv_irqexit_ops.mon.rv_this;
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	struct irqexit_live_ctx *live = (void *)test->param_value;
-+	struct task_struct *worker;
-+	unsigned int entries, exits, switches_out, switches_in;
-+	unsigned int first_entries, first_switches;
-+	unsigned long flags;
-+	bool worker_done;
++	struct softirq_kunit_empty_worker *worker;
 +
-+	KUNIT_ASSERT_FALSE(test, mon->enabled);
-+	live->owner = current;
-+	get_task_struct(live->owner);
-+	init_completion(&live->worker_done);
++	worker = this_cpu_ptr(&softirq_kunit_empty_workers);
++	if (atomic_read(&worker->phase) != SOFTIRQ_KUNIT_EMPTY_RUNNING)
++		return false;
 +
-+	active_ctx = ctx;
-+	mon->react = rv_kunit_mock_react;
-+	rv_mock_current(NULL);
-+	KUNIT_ASSERT_EQ(test, 0,
-+			kunit_add_action_or_reset(test, irqexit_live_cleanup, live));
-+	/* The worker must run on this CPU inside the explicit scheduling loop. */
-+	guard(migrate)();
-+	worker = kthread_create(irqexit_live_worker, live, "rv-irqexit-test");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, worker);
-+	live->worker = worker;
-+	kthread_bind(worker, smp_processor_id());
-+	sched_set_fifo(worker);
-+	KUNIT_ASSERT_EQ(test, 0,
-+			register_trace_event_irqexit(irqexit_observe_event, live));
-+	live->observer_attached = true;
-+	KUNIT_ASSERT_EQ(test, irqexit_observe_boundaries(live), 0);
-+
-+	mon->enabled = 1;
-+
-+	KUNIT_ASSERT_EQ(test, preempt_count(), 0);
-+	local_irq_save(flags);
-+	preempt_schedule_irq();
-+	first_entries = live->entries;
-+	first_switches = live->switches_out;
-+	wake_up_process(worker);
-+	preempt_schedule_irq();
-+	entries = live->entries;
-+	exits = live->exits;
-+	switches_out = live->switches_out;
-+	switches_in = live->switches_in;
-+	worker_done = completion_done(&live->worker_done);
-+	local_irq_restore(flags);
-+
-+	/* Accepted model events prove that the real boundary probes ran. */
-+	KUNIT_EXPECT_GT(test, entries, 0);
-+	KUNIT_EXPECT_GT(test, first_entries, 0);
-+	KUNIT_EXPECT_GT(test, entries, first_entries);
-+	KUNIT_EXPECT_EQ(test, entries, exits);
-+	KUNIT_EXPECT_EQ(test, switches_out, switches_in);
-+	KUNIT_EXPECT_GT(test, switches_out, first_switches);
-+	KUNIT_EXPECT_TRUE(test, worker_done);
-+	KUNIT_EXPECT_GE(test, live->raw_entries, 2U);
-+	KUNIT_EXPECT_GE(test, live->raw_exits, 2U);
-+	KUNIT_EXPECT_EQ(test, live->bad_raw_context, 0U);
-+	RV_KUNIT_EXPECT_NO_REACTION(test, ctx);
-+	kunit_info(test, "live IRQ-exit entries=%u exits=%u switches=%u\n",
-+		   entries, exits, switches_out);
-+	mon->enabled = 0;
++	worker->held_pending = local_softirq_pending();
++	set_softirq_pending(0);
++	return true;
 +}
 +
-+static void rv_test_irqexit_migrate(struct kunit *test)
++static void softirq_kunit_restore_empty_ksoftirqd(bool active)
 +{
-+	struct rv_monitor *mon = rv_irqexit_ops.mon.rv_this;
-+	struct rv_kunit_ctx *ctx = test->priv;
-+	struct irqexit_live_ctx *live = (void *)test->param_value;
-+	struct task_struct *worker;
-+	unsigned int source_cpu, resumed_cpu;
-+	unsigned long flags;
-+	bool affinity_restored;
-+	int restore_result;
++	struct softirq_kunit_empty_worker *worker;
 +
-+	KUNIT_ASSERT_FALSE(test, mon->enabled);
-+	live->owner = current;
-+	get_task_struct(live->owner);
-+	init_completion(&live->worker_done);
-+	active_ctx = ctx;
-+	mon->react = rv_kunit_mock_react;
-+	rv_mock_current(NULL);
-+	KUNIT_ASSERT_EQ(test, 0,
-+			kunit_add_action_or_reset(test, irqexit_live_cleanup, live));
-+	if (num_online_cpus() < 2) {
-+		live->skip_reason = "Requires two online CPUs";
-+		kunit_skip(test, "%s", live->skip_reason);
++	if (!active)
 +		return;
-+	}
-+	cpumask_copy(&live->saved_mask, current->cpus_ptr);
-+	cpumask_and(&live->test_mask, &live->saved_mask, cpu_online_mask);
-+	if (cpumask_weight(&live->test_mask) < 2) {
-+		live->skip_reason = "Requires two allowed online CPUs";
-+		kunit_skip(test, "%s", live->skip_reason);
++
++	lockdep_assert_irqs_disabled();
++	worker = this_cpu_ptr(&softirq_kunit_empty_workers);
++	or_softirq_pending(worker->held_pending);
++	worker->held_pending = 0;
++}
++
++static void softirq_kunit_finish_empty_ksoftirqd(bool active)
++{
++	struct softirq_kunit_empty_worker *worker;
++
++	if (!active)
 +		return;
-+	}
-+	source_cpu = cpumask_first(&live->test_mask);
-+	live->target_cpu = cpumask_any_but(&live->test_mask, source_cpu);
-+	KUNIT_ASSERT_EQ(test, set_cpus_allowed_ptr(current, cpumask_of(source_cpu)), 0);
-+	live->affinity_changed = true;
-+	live->migrate = true;
-+	worker = kthread_create(irqexit_live_worker, live, "rv-irqexit-mig");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, worker);
-+	live->worker = worker;
-+	kthread_bind(worker, source_cpu);
-+	sched_set_fifo(worker);
-+	KUNIT_ASSERT_EQ(test, 0,
-+			register_trace_event_irqexit(irqexit_observe_event, live));
-+	live->observer_attached = true;
-+	KUNIT_ASSERT_EQ(test, irqexit_observe_boundaries(live), 0);
-+	mon->enabled = 1;
 +
-+	KUNIT_ASSERT_EQ(test, preempt_count(), 0);
-+	local_irq_save(flags);
-+	live->entries = 0;
-+	live->exits = 0;
-+	live->switches_out = 0;
-+	live->switches_in = 0;
-+	/*
-+	 * The FIFO worker runs only after this task switches out inside the
-+	 * real helper. It moves the queued, non-running owner to another CPU.
-+	 * Do not migration-disable the owner: migration is the property tested.
-+	 */
-+	wake_up_process(worker);
-+	preempt_schedule_irq();
-+	resumed_cpu = raw_smp_processor_id();
-+	mon->enabled = 0;
-+	local_irq_restore(flags);
-+	KUNIT_ASSERT_NE(test, wait_for_completion_timeout(&live->worker_done, 5 * HZ), 0UL);
-+	KUNIT_EXPECT_EQ(test, live->affinity_result, 0);
-+	KUNIT_EXPECT_EQ(test, live->entries, 1U);
-+	KUNIT_EXPECT_EQ(test, live->exits, 1U);
-+	KUNIT_EXPECT_GT(test, live->switches_out, 0U);
-+	KUNIT_EXPECT_EQ(test, live->switches_out, live->switches_in);
-+	KUNIT_EXPECT_EQ(test, live->entry_cpu, source_cpu);
-+	KUNIT_EXPECT_EQ(test, live->switch_out_cpu, source_cpu);
-+	KUNIT_EXPECT_EQ(test, live->switch_in_cpu, live->target_cpu);
-+	KUNIT_EXPECT_EQ(test, live->exit_cpu, live->target_cpu);
-+	/* Check actual resumed execution independently of the RV observer. */
-+	KUNIT_EXPECT_EQ(test, resumed_cpu, live->target_cpu);
-+	KUNIT_EXPECT_GT(test, live->raw_entries, 0U);
-+	KUNIT_EXPECT_GT(test, live->raw_exits, 0U);
-+	KUNIT_EXPECT_EQ(test, live->bad_raw_context, 0U);
-+	restore_result = set_cpus_allowed_ptr(current, &live->saved_mask);
-+	KUNIT_EXPECT_EQ(test, restore_result, 0);
-+	affinity_restored = !restore_result &&
-+		cpumask_equal(current->cpus_ptr, &live->saved_mask);
-+	KUNIT_EXPECT_TRUE(test, affinity_restored);
-+	if (affinity_restored)
-+		live->affinity_changed = false;
-+	RV_KUNIT_EXPECT_NO_REACTION(test, ctx);
-+	kunit_info(test, "live IRQ-exit migration cpu=%u->%u actual=%u entries=%u exits=%u switches=%u\n",
-+		   live->entry_cpu, live->exit_cpu, resumed_cpu, live->entries, live->exits,
-+		   live->switches_out);
-+	kunit_info(test, "live IRQ-exit affinity restored=%u\n", affinity_restored);
-+}
-+#else
-+static void rv_test_irqexit_live(struct kunit *test)
-+{
-+	/* preempt_schedule_irq() is deliberately not exported to modules. */
-+	kunit_skip(test, "Requires built-in RV tests");
-+}
-+
-+static void rv_test_irqexit_migrate(struct kunit *test)
-+{
-+	kunit_skip(test, "Requires built-in RV tests");
++	worker = this_cpu_ptr(&softirq_kunit_empty_workers);
++	atomic_set(&worker->phase, SOFTIRQ_KUNIT_EMPTY_DONE);
++	complete(&worker->done);
 +}
 +#endif
 +
-+#else
-+#define rv_test_irqexit rv_test_stub
-+#define rv_test_irqexit_invalid rv_test_stub
-+#define rv_test_irqexit_sync rv_test_stub
-+#define rv_test_irqexit_live rv_test_stub
-+#define rv_test_irqexit_migrate rv_test_stub
-+#endif
-diff --git a/kernel/trace/rv/monitors/irqexit/irqexit_kunit.h b/kernel/trace/rv/monitors/irqexit/irqexit_kunit.h
-new file mode 100644
-index 0000000000000..b475388455c2a
---- /dev/null
-+++ b/kernel/trace/rv/monitors/irqexit/irqexit_kunit.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __IRQEXIT_KUNIT_H
-+#define __IRQEXIT_KUNIT_H
+ /*
+  * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
+  * but break the loop if need_resched() is set or after 2 ms.
+@@ -1198,11 +1382,50 @@ void __init softirq_init(void)
+ 
+ static int ksoftirqd_should_run(unsigned int cpu)
+ {
+-	return local_softirq_pending();
++	unsigned int pending = local_softirq_pending();
 +
 +#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++	if (!pending && static_branch_unlikely(&kunit_running) &&
++	    softirq_kunit_force_empty_ksoftirqd())
++		return 1;
++#endif
++	return pending;
+ }
+ 
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++static void softirq_kunit_run_ksoftirqd(unsigned int cpu)
++{
++	bool kunit_empty;
 +
-+#include <linux/rv.h>
-+#include <rv/kunit.h>
-+
-+extern const struct rv_irqexit_ops {
-+	struct rv_kunit_mon mon;
-+	void (*handle_resched_entry)(void *data, struct task_struct *owner);
-+	void (*handle_resched_exit)(void *data, struct task_struct *owner);
-+	void (*handle_sched_switch)(void *data, bool preempt,
-+				    struct task_struct *prev,
-+				    struct task_struct *next,
-+				    unsigned int prev_state);
-+} rv_irqexit_ops;
++	ksoftirqd_run_begin();
++	kunit_empty = softirq_kunit_begin_empty_ksoftirqd();
++	if (local_softirq_pending()) {
++		/*
++		 * We can safely run softirq on inline stack, as we are not deep
++		 * in the task stack here.
++		 */
++		handle_softirqs(true);
++		softirq_kunit_restore_empty_ksoftirqd(kunit_empty);
++		ksoftirqd_run_end();
++		softirq_kunit_finish_empty_ksoftirqd(kunit_empty);
++		cond_resched();
++	} else {
++		softirq_kunit_restore_empty_ksoftirqd(kunit_empty);
++		ksoftirqd_run_end();
++		softirq_kunit_finish_empty_ksoftirqd(kunit_empty);
++	}
++}
 +#endif
 +
-+#endif /* __IRQEXIT_KUNIT_H */
+ static void run_ksoftirqd(unsigned int cpu)
+ {
++#if IS_ENABLED(CONFIG_RV_MONITORS_KUNIT_TEST)
++	if (static_branch_unlikely(&kunit_running)) {
++		softirq_kunit_run_ksoftirqd(cpu);
++		return;
++	}
++#endif
++
+ 	ksoftirqd_run_begin();
+ 	if (local_softirq_pending()) {
+ 		/*
+diff --git a/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c b/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
+index c5b8834fea3d9..e3928d10b2825 100644
+--- a/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
++++ b/kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
+@@ -862,6 +862,37 @@ struct irqstate_inline_bh_ctx {
+ 	bool exit_attached;
+ };
+ 
++struct irqstate_empty_worker_ctx {
++	struct task_struct *owner;
++	int owner_cpu;
++	unsigned int entries;
++	unsigned int exits;
++	unsigned int action_entries;
++	unsigned int action_exits;
++	unsigned int event_index;
++	bool armed;
++	bool real_worker;
++	bool inside_pair;
++	bool bad_order;
++	bool bad_boundary_context;
++	bool bad_boundary_cpu;
++	bool actions_at_exit;
++	bool entry_attached;
++	bool exit_attached;
++	bool action_entry_attached;
++	bool action_exit_attached;
++};
++
++static bool irqstate_empty_worker_matches(struct irqstate_empty_worker_ctx *empty_ctx)
++{
++	/* Pairs with owner publication in both empty-worker test paths. */
++	if (!smp_load_acquire(&empty_ctx->armed) ||
++	    current != READ_ONCE(empty_ctx->owner))
++		return false;
++
++	return !empty_ctx->real_worker || softirq_kunit_empty_worker_active();
++}
++
+ static void irqstate_inline_bh_entry(void *data, bool serving,
+ 				     bool from_hardirq)
+ {
+@@ -1127,6 +1158,202 @@ static void rv_test_irqstate_rt_inline_bh(struct kunit *test)
+ 		   softirq_count() == saved_softirq);
+ }
+ 
++static void irqstate_empty_worker_entry(void *data, bool serving,
++					bool from_hardirq)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx = data;
++
++	if (!irqstate_empty_worker_matches(empty_ctx))
++		return;
++	empty_ctx->entries++;
++	if (empty_ctx->event_index != 0 || empty_ctx->inside_pair)
++		empty_ctx->bad_order = true;
++	empty_ctx->event_index++;
++	empty_ctx->inside_pair = true;
++	if (!serving || !in_serving_softirq() || !irqs_disabled())
++		empty_ctx->bad_boundary_context = true;
++	if (raw_smp_processor_id() != READ_ONCE(empty_ctx->owner_cpu))
++		empty_ctx->bad_boundary_cpu = true;
++}
++
++static void irqstate_empty_worker_exit(void *data, bool serving,
++				       bool from_hardirq)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx = data;
++
++	if (!irqstate_empty_worker_matches(empty_ctx))
++		return;
++	empty_ctx->exits++;
++	if (empty_ctx->event_index != 1 || !empty_ctx->inside_pair)
++		empty_ctx->bad_order = true;
++	empty_ctx->event_index++;
++	if (!serving || !in_serving_softirq() || !irqs_disabled())
++		empty_ctx->bad_boundary_context = true;
++	if (raw_smp_processor_id() != READ_ONCE(empty_ctx->owner_cpu))
++		empty_ctx->bad_boundary_cpu = true;
++	empty_ctx->actions_at_exit = empty_ctx->action_entries ||
++				     empty_ctx->action_exits;
++	empty_ctx->inside_pair = false;
++}
++
++static void irqstate_empty_worker_action_entry(void *data, unsigned int vec_nr)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx = data;
++
++	if (!irqstate_empty_worker_matches(empty_ctx) ||
++	    !empty_ctx->inside_pair)
++		return;
++	(void)vec_nr;
++	empty_ctx->action_entries++;
++	if (raw_smp_processor_id() != empty_ctx->owner_cpu)
++		empty_ctx->bad_boundary_cpu = true;
++}
++
++static void irqstate_empty_worker_action_exit(void *data, unsigned int vec_nr)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx = data;
++
++	if (!irqstate_empty_worker_matches(empty_ctx) ||
++	    !empty_ctx->inside_pair)
++		return;
++	(void)vec_nr;
++	empty_ctx->action_exits++;
++	if (raw_smp_processor_id() != empty_ctx->owner_cpu)
++		empty_ctx->bad_boundary_cpu = true;
++}
++
++static void irqstate_empty_worker_detach(void *data)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx = data;
++
++	WRITE_ONCE(empty_ctx->armed, false);
++	if (empty_ctx->action_exit_attached)
++		unregister_trace_softirq_exit(irqstate_empty_worker_action_exit,
++					      empty_ctx);
++	if (empty_ctx->action_entry_attached)
++		unregister_trace_softirq_entry(irqstate_empty_worker_action_entry,
++					       empty_ctx);
++	if (empty_ctx->exit_attached)
++		unregister_trace_softirq_context_exit(irqstate_empty_worker_exit,
++						      empty_ctx);
++	if (empty_ctx->entry_attached)
++		unregister_trace_softirq_context_entry(irqstate_empty_worker_entry,
++						       empty_ctx);
++	tracepoint_synchronize_unregister();
++}
++
++static void run_irqstate_rt_empty_worker(struct kunit *test, bool real_worker)
++{
++	struct irqstate_empty_worker_ctx *empty_ctx;
++	struct rv_kunit_ctx *ctx = test->priv;
++	unsigned int saved_count, saved_softirq;
++	bool order_ok, restored;
++	int ret;
++
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
++		kunit_skip(test, "Requires RT worker serving boundaries");
++		return;
++	}
++
++	prepare_test(test, &rv_irqstate_ops.mon);
++	empty_ctx = kunit_kzalloc(test, sizeof(*empty_ctx), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, empty_ctx);
++	empty_ctx->real_worker = real_worker;
++
++	ret = register_trace_softirq_context_entry(irqstate_empty_worker_entry,
++						   empty_ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	empty_ctx->entry_attached = true;
++	KUNIT_ASSERT_EQ(test, 0,
++			kunit_add_action_or_reset(test,
++						  irqstate_empty_worker_detach,
++						  empty_ctx));
++	ret = register_trace_softirq_context_exit(irqstate_empty_worker_exit,
++						  empty_ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	empty_ctx->exit_attached = true;
++	ret = register_trace_softirq_entry(irqstate_empty_worker_action_entry,
++					   empty_ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	empty_ctx->action_entry_attached = true;
++	ret = register_trace_softirq_exit(irqstate_empty_worker_action_exit,
++					  empty_ctx);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	empty_ctx->action_exit_attached = true;
++	attach_irqstate_test_probes();
++	KUNIT_ASSERT_EQ(test, 0,
++			kunit_add_action_or_reset(test, detach_irqstate_test_probes,
++						  NULL));
++
++	KUNIT_ASSERT_TRUE(test, preemptible());
++	KUNIT_ASSERT_FALSE(test, irqs_disabled());
++	KUNIT_ASSERT_EQ(test, softirq_count(), 0U);
++	saved_count = preempt_count();
++	saved_softirq = softirq_count();
++	if (real_worker) {
++		cpus_read_lock();
++		ret = softirq_kunit_run_empty_ksoftirqd(&empty_ctx->owner,
++							&empty_ctx->owner_cpu,
++							&empty_ctx->armed);
++		cpus_read_unlock();
++	} else {
++		migrate_disable();
++		WRITE_ONCE(empty_ctx->owner_cpu, smp_processor_id());
++		WRITE_ONCE(empty_ctx->owner, current);
++		/* Publish the owner before globally registered callbacks match it. */
++		smp_store_release(&empty_ctx->armed, true);
++		softirq_kunit_run_empty_worker();
++		WRITE_ONCE(empty_ctx->armed, false);
++		migrate_enable();
++		ret = 0;
++	}
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	KUNIT_ASSERT_NOT_NULL(test, empty_ctx->owner);
++
++	order_ok = empty_ctx->event_index == 2 && !empty_ctx->inside_pair &&
++		   !empty_ctx->bad_order;
++	restored = preempt_count() == saved_count &&
++		   softirq_count() == saved_softirq && !irqs_disabled();
++	KUNIT_EXPECT_EQ(test, empty_ctx->entries, 1U);
++	KUNIT_EXPECT_EQ(test, empty_ctx->exits, 1U);
++	KUNIT_EXPECT_EQ(test, empty_ctx->action_entries, 0U);
++	KUNIT_EXPECT_EQ(test, empty_ctx->action_exits, 0U);
++	KUNIT_EXPECT_TRUE(test, order_ok);
++	KUNIT_EXPECT_FALSE(test, empty_ctx->bad_boundary_context);
++	KUNIT_EXPECT_FALSE(test, empty_ctx->bad_boundary_cpu);
++	KUNIT_EXPECT_FALSE(test, empty_ctx->actions_at_exit);
++	KUNIT_EXPECT_EQ(test, preempt_count(), saved_count);
++	KUNIT_EXPECT_EQ(test, softirq_count(), saved_softirq);
++	KUNIT_EXPECT_FALSE(test, irqs_disabled());
++	RV_KUNIT_EXPECT_NO_REACTION(test, ctx);
++	if (real_worker)
++		kunit_info(test,
++			   "RT smpboot empty worker events=%u/%u actions=%u/%u order=%u serving=%u same_cpu=%u restored=%u\n",
++			   empty_ctx->entries, empty_ctx->exits,
++			   empty_ctx->action_entries, empty_ctx->action_exits,
++			   order_ok, !empty_ctx->bad_boundary_context,
++			   !empty_ctx->bad_boundary_cpu, restored);
++	else
++		kunit_info(test,
++			   "RT empty worker events=%u/%u actions=%u/%u order=%u serving=%u same_cpu=%u restored=%u\n",
++			   empty_ctx->entries, empty_ctx->exits,
++			   empty_ctx->action_entries, empty_ctx->action_exits,
++			   order_ok, !empty_ctx->bad_boundary_context,
++			   !empty_ctx->bad_boundary_cpu, restored);
++}
++
++/* Exercise an RT worker interval which executes no softirq action. */
++static void rv_test_irqstate_rt_empty_worker(struct kunit *test)
++{
++	run_irqstate_rt_empty_worker(test, false);
++}
++
++/* Exercise the real ksoftirqd task and its smpboot predicate. */
++static void rv_test_irqstate_rt_smpboot_empty_worker(struct kunit *test)
++{
++	run_irqstate_rt_empty_worker(test, true);
++}
++
+ static int irqstate_preempt_worker(void *arg)
+ {
+ 	struct irqstate_preempt_ctx *preempt_ctx = arg;
+@@ -1353,6 +1580,16 @@ static void rv_test_irqstate_rt_inline_bh(struct kunit *test)
+ 	kunit_skip(test, "Requires built-in RV tests");
+ }
+ 
++static void rv_test_irqstate_rt_empty_worker(struct kunit *test)
++{
++	kunit_skip(test, "Requires built-in RV tests");
++}
++
++static void rv_test_irqstate_rt_smpboot_empty_worker(struct kunit *test)
++{
++	kunit_skip(test, "Requires built-in RV tests");
++}
++
+ static void rv_test_irqstate_preempt(struct kunit *test)
+ {
+ 	kunit_skip(test, "Requires built-in RV tests");
+@@ -1378,6 +1615,8 @@ static void rv_test_irqstate_rt_prepare_switch(struct kunit *test)
+ #define rv_test_irqstate_live_toggle rv_test_stub
+ #define rv_test_irqstate_irq_exit_inline rv_test_stub
+ #define rv_test_irqstate_rt_inline_bh rv_test_stub
++#define rv_test_irqstate_rt_empty_worker rv_test_stub
++#define rv_test_irqstate_rt_smpboot_empty_worker rv_test_stub
+ #define rv_test_irqstate_preempt rv_test_stub
+ #define rv_test_irqstate_rt_prepare_irq rv_test_stub
+ #define rv_test_irqstate_rt_prepare_switch rv_test_stub
 diff --git a/kernel/trace/rv/rv_monitors_test.c b/kernel/trace/rv/rv_monitors_test.c
-index 4fb611a9f8b85..9eb37cbd2de22 100644
+index 9eb37cbd2de22..be3aaae2613a8 100644
 --- a/kernel/trace/rv/rv_monitors_test.c
 +++ b/kernel/trace/rv/rv_monitors_test.c
-@@ -150,6 +150,7 @@ static void rv_test_dummy(struct kunit *test)
- #include "monitors/sssw/sssw_kunit.c"
- #include "monitors/sts/sts_kunit.c"
- #include "monitors/irqstate/irqstate_kunit.c"
-+#include "monitors/irqexit/irqexit_kunit.c"
- #include "monitors/opid/opid_kunit.c"
- #include "monitors/nomiss/nomiss_kunit.c"
- #include "monitors/pagefault/pagefault_kunit.c"
-@@ -171,6 +172,18 @@ static struct kunit_case rv_mon_test_cases[] = {
+@@ -169,6 +169,8 @@ static struct kunit_case rv_mon_test_cases[] = {
+ 	KUNIT_CASE(rv_test_irqstate_live_toggle),
+ 	KUNIT_CASE(rv_test_irqstate_irq_exit_inline),
+ 	KUNIT_CASE(rv_test_irqstate_rt_inline_bh),
++	KUNIT_CASE(rv_test_irqstate_rt_empty_worker),
++	KUNIT_CASE(rv_test_irqstate_rt_smpboot_empty_worker),
  	KUNIT_CASE(rv_test_irqstate_preempt),
  	KUNIT_CASE(rv_test_irqstate_rt_prepare_irq),
  	KUNIT_CASE(rv_test_irqstate_rt_prepare_switch),
-+	KUNIT_CASE(rv_test_irqexit),
-+	KUNIT_CASE(rv_test_irqexit_invalid),
-+	KUNIT_CASE(rv_test_irqexit_sync),
-+#if IS_REACHABLE(CONFIG_RV_MON_IRQEXIT) && !defined(MODULE)
-+	KUNIT_CASE_PARAM_WITH_INIT(rv_test_irqexit_live, kunit_array_gen_params,
-+				   irqexit_live_fixture_init, irqexit_live_fixture_exit),
-+	KUNIT_CASE_PARAM_WITH_INIT(rv_test_irqexit_migrate, kunit_array_gen_params,
-+				   irqexit_live_fixture_init, irqexit_live_fixture_exit),
-+#else
-+	KUNIT_CASE(rv_test_irqexit_live),
-+	KUNIT_CASE(rv_test_irqexit_migrate),
-+#endif
- 	KUNIT_CASE(rv_test_opid),
- 	KUNIT_CASE(rv_test_nomiss),
- 	KUNIT_CASE(rv_test_pagefault),
 -- 
 2.39.5 (Apple Git-154)
 
