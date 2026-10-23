@@ -1,59 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.222
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792717940;
-	b=v31L9B2v2GpKJ/uGdRF2jjdSeKFrKybV0E9YfE/Ss3zZMpswtqO1C/cTIQd2vQxgJlTX
-	 ucOlmwwiOT8kThSzoYb7B/yG1BwXhVlRckylMl0VyMebHNPj+SwqtRXh4Nh5g9nUVr3Li
-	 wyYto2N346tPjxAaRSTvOt7AIqQ/P0Dy/EvxgS9j3fVjwxQSvpeRyzfd8SeLflNU3UEod
-	 lKKxX6x74LzK+WRP0O4K7a+nubOuW1fgAATCXLZDvbDoOn3B2+HwaNtTfWAEHSzlBIzrc
-	 cc2x1Yrk3sCrBIi171VllnKrir55dCEy9FjVgt1WOPctZVOvUImAZSYS+z54/wuKXDQ==
+	t=1792737102;
+	b=TS5548k+iAHufYgIiUYXNqKtGMyUZMoZTRO1guZIi/hgpZjcOx86YjNPP5dv6SQZ+GaH
+	 Gsy0D+V7+SJ2kyDKSpTg8/cAYO6TK5/dQuBPBxEPW2tAeZ5Hsn6PzazkKmjWI7kFDM0XO
+	 NV7kRDn0183vM6V+VgIdSmA0XHDyb/8VGRm3vc/LKshW0fJ8fpUsshTjIYmNiIB0nBy9+
+	 ntmL9VJs9sNtB67REuvR7XL7piv1S+1iUDKDs6oOqTvZuuUhVmDJWqn1SZ7gkceeh2ssU
+	 Gtx9WGMPWbQyf/UpgSP4YVsWgInhp7NI4GgX7MOrRwX1bnuDSjvOTKfTDGTL6jw/jzw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792717940;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=MDDy5jQJyoanTUkPzB5s4coGDvxcwLKDeaa23LDEAdk=;
-	b=BHjUkUloKBWregW7pmqNLGQv4QkMsuoHjAaAZYawVwsatA+3ZXMQvvnZc6m3u+C0MQdw
-	 qwC2RvdZfydoDxZxyP+nsDWSkw38JK2i0ftfaIn8LvR7rot3jbUtg+TeN2FpSQGBWY/sg
-	 tLi/MOF7JFlHdd24ICCKVKsBZCFWtMpkydFIIi1VVFzEb+vE5TidsWLVhKhncmFVNJBLn
-	 OEAUuJscoBwKKg895F4VGbbTTPcPVlrU4F8sk4pY2JqKs2YXWErAW/N4dXV5mM9sHOPXU
-	 x9/QQ4yc4+6sxx/HvxQ4opu2QUUTe4OQovpWXVbPzvoNgbi37eD2sRvSw3p4wlLnrXw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792737102;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:CC:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+	bh=33tGxL4pQ37PAm6R2PA7y86/iQoPs+fP5QCASbIaiW4=;
+	b=xn1+RmYFdw7qrRYR9dl4JePRPxfSHmmoUuaMKbgZZPOQAU8LUTVS6MbyGc47mZGqmVMA
+	 9hTK5GHmkortqh/zmUl090slU7WW19KEOc/khfyQt8XE7JZiE8qgBaiDJ/eO1Kti9f0PI
+	 qzcEO95xoZzoJor2hANil8Yo/0sqFeiN0KWxzcn3SFcHtjmeHStqPTepLi10yjPOZ3IWO
+	 evsgaKf9GmrBjAUeMMfcNX8c+IgzgehralFgEcmf/hjRqa7AKO7RQhQKOBzZPP8OdZdl2
+	 ei84XwgD2c79KBKlc4HQnYg9BlEbzOf+pFLcu4BNZQKHr6kX0qNZr0u6HsvLcXsVqiQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hwyQG3co;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=fjsQ8MHy;
+	arc=none smtp.remote-ip=113.46.200.222
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874E9606A319;
-	Fri, 23 Oct 2026 01:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2176606A31B;
+	Fri, 23 Oct 2026 06:31:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2176606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hwyQG3co
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451AE1F01828;
-	Fri, 23 Oct 2026 01:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792717940;
-	bh=MDDy5jQJyoanTUkPzB5s4coGDvxcwLKDeaa23LDEAdk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hwyQG3coNC3/7Xsc1dP0EFscFSXxePXc5x5Roym/NOuhIeo1w3KX+/ExmPqdFeeXf
-	 YDFiXKOniUAOJSUk9fZvSsC9RllES3+ZZzvr9wXpZ2IyBxK2mULn2x1cjEhUQBQKxY
-	 RbB+xE/SkDUhok2B5iaj9/9Bz6/FcGjBV8qcC5op2Pkzx7CN868Q+ZP8OQiGTpAgu4
-	 UBtN7O2cSQ7mOu1/Is9tCQqwrSXBox2IZusUDpdz/ymoM464G/eYBtLRsS8NnXIw87
-	 b4rGvkQ+p8DH7l5oId2/9csrTTIio3oHMfy5rjrgZOW0jnizm7qvUJCIwRm+2UeDWT
-	 bwikXXp8fRnAA==
-From: Song Liu <song@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	kernel-team@meta.com,
-	Song Liu <song@kernel.org>
-Subject: [PATCH v2 16/16] compiler_types: Move notrace from inline to __always_inline
-Date: Thu, 22 Oct 2026 18:10:49 -0700
-Message-ID: <20261023011049.1164625-17-song@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261023011049.1164625-1-song@kernel.org>
-References: <20261023011049.1164625-1-song@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=fjsQ8MHy
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=33tGxL4pQ37PAm6R2PA7y86/iQoPs+fP5QCASbIaiW4=;
+	b=fjsQ8MHyFLg2DKpb+rChWOhrQ6Agx+aJ4B3WloBfzhk5I42lfFR8N28XAuSRbTqFZgHgChm3O
+	4OwNSVOJK87cDrNiMupTVhF9pAM7IdBGhA0OswOr1fHmf/8LmJiA8sNJ5JxoASQ+9LC7G7GDo6P
+	DlcW4ZEJB+N+XLWejTOA2kU=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4j9tTJ5rsczLlWr;
+	Fri, 23 Oct 2026 14:31:32 +0800 (CST)
+Received: from whupemk100010.china.huawei.com (unknown [7.152.184.41])
+	by mail.maildlp.com (Postfix) with ESMTPS id 10C6B40594;
+	Fri, 23 Oct 2026 14:31:36 +0800 (CST)
+Received: from [10.67.110.140] (10.67.110.140) by
+ whupemk100010.china.huawei.com (7.152.184.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Fri, 23 Oct 2026 14:31:29 +0800
+Message-ID: <a2832263-3e3b-4d05-98bd-dc006d5be689@huawei.com>
+Date: Fri, 23 Oct 2026 14:31:28 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,85 +62,66 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 -next 01/18] fs: pass struct path to notify_change()
+To: Christian Brauner <brauner@kernel.org>
+CC: <mic@digikod.net>, <gnoack@google.com>, <paul@paul-moore.com>,
+	<jmorris@namei.org>, <serge@hallyn.com>, <corbet@lwn.net>,
+	<skhan@linuxfoundation.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+	<andrii@kernel.org>, <eddyz87@gmail.com>, <memxor@gmail.com>,
+	<martin.lau@linux.dev>, <song@kernel.org>, <yonghong.song@linux.dev>,
+	<jolsa@kernel.org>, <emil@etsalapatis.com>, <ihor.solodrai@linux.dev>,
+	<rdunlap@infradead.org>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<dakr@kernel.org>, <johan@kernel.org>, <dlemoal@kernel.org>, <hch@lst.de>,
+	<axboe@kernel.dk>, <viro@zeniv.linux.org.uk>, <jack@suse.cz>,
+	<dhowells@redhat.com>, <code@tyhicks.com>, <linkinjeon@kernel.org>,
+	<sj1557.seo@samsung.com>, <yuezhang.mo@sony.com>,
+	<hirofumi@mail.parknet.co.jp>, <cel@kernel.org>, <jlayton@kernel.org>,
+	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
+	<tom@talpey.com>, <hyc.lee@gmail.com>, <miklos@szeredi.hu>,
+	<amir73il@gmail.com>, <senozhatsky@chromium.org>,
+	<chenxiaosong@chenxiaosong.com>, <kpsingh@kernel.org>, <matt@bobrowski.net>,
+	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <john.johansen@canonical.com>,
+	<georgia.garcia@canonical.com>, <zohar@linux.ibm.com>,
+	<roberto.sassu@huawei.com>, <dmitry.kasatkin@gmail.com>,
+	<eric.snowberg@oracle.com>, <stephen.smalley.work@gmail.com>,
+	<omosnacek@gmail.com>, <casey@schaufler-ca.com>, <takedakn@nttdata.co.jp>,
+	<penguin-kernel@i-love.sakura.ne.jp>, <xiujianfeng@huawei.com>,
+	<nanx95726@gmail.com>, <djwong@kernel.org>, <lujialin4@huawei.com>,
+	<bpf@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<driver-core@lists.linux.dev>, <linux-block@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <netfs@lists.linux.dev>,
+	<ecryptfs@vger.kernel.org>, <exfat@lists.linux.dev>,
+	<linux-nfs@vger.kernel.org>, <ntfs@lists.linux.dev>,
+	<linux-unionfs@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <apparmor@lists.ubuntu.com>,
+	<linux-integrity@vger.kernel.org>, <selinux@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>
+References: <20261015125425.3246251-1-caixinchen1@huawei.com>
+ <20261015125425.3246251-2-caixinchen1@huawei.com>
+ <20261021-nanotechnologie-gebadet-gepaukt-52a950759f0a@brauner>
+Content-Language: en-US
+From: Cai Xinchen <caixinchen1@huawei.com>
+In-Reply-To: <20261021-nanotechnologie-gebadet-gepaukt-52a950759f0a@brauner>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ whupemk100010.china.huawei.com (7.152.184.41)
 
-Commit 45959ee7aa64 ("ftrace: Do not function trace inlined functions")
-added notrace to the inline macro. At the time, inline was only a hint
-with CONFIG_OPTIMIZE_INLINING, and whether a given inline function got
-an mcount call depended on the gcc version. Some functions that must
-not be traced, such as the paravirt native_*() helpers, were marked
-inline and relied on being inlined, so a different gcc could silently
-break the function tracer. Making all inline functions notrace removed
-that dependency on the compiler.
+Thanks for the explanation, you are right.  I will restore the idmap as 
+a separate argument
 
-That trade-off no longer makes sense. CONFIG_OPTIMIZE_INLINING was made
-always on by commit ac7c3e4ff401 ("compiler: enable
-CONFIG_OPTIMIZE_INLINING forcibly") and removed by commit 889b3c1245de
-("compiler: remove CONFIG_OPTIMIZE_INLINING entirely"). The compiler
-also inlines static functions that are not marked inline, and creates
-.constprop, .isra and .part clones, so the set of traceable functions
-already depends on the compiler. notrace on inline does not make it
-consistent. It only hides the inline functions that the compiler chose
-not to inline. Hidden functions cannot be traced with ftrace or used
-as BPF fentry/fexit targets. They also cannot be livepatched, because
-livepatch redirects functions through ftrace, so a fix to one of them
-has to be shipped by livepatching its callers instead.
-
-A function that must not be traced should say so. The previous patches
-mark notrace the inline helpers that relied on inline implying notrace:
-the paravirt native helpers, the helpers used by resume and kexec, the
-helpers used by bpf_spin_lock, the BPF trampoline and bpf_mem_alloc,
-and the helpers used by ftrace recursion protection, tracepoints, SRCU,
-the trace clocks, core_kernel_text() and the nofault accessors.
-
-Keep notrace on __always_inline. Such functions are meant to be inlined
-into their callers. An out-of-line copy exists only when the address of
-the function is taken or when it has external linkage, and those copies
-are mostly low-level helpers used by entry, context switch and tracing
-code.
-
-Assisted-by: Claude:claude-opus-5
-Signed-off-by: Song Liu <song@kernel.org>
----
- include/linux/compiler_attributes.h | 6 +++++-
- include/linux/compiler_types.h      | 3 +--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 476c4c560d17..5fdc07b3e380 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -49,10 +49,14 @@
-  * to its docs (and also "warning: always_inline function might not be
-  * inlinable [-Wattributes]" is emitted).
-  *
-+ * The compiler still emits an out-of-line copy of an __always_inline function
-+ * when its address is taken or when it has external linkage. These functions
-+ * are often used by code that must not be traced, so mark them notrace.
-+ *
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-always_005finline-function-attribute
-  * clang: mentioned
-  */
--#define __always_inline                 inline __attribute__((__always_inline__))
-+#define __always_inline                 inline __attribute__((__always_inline__)) notrace
- 
- /*
-  * The second argument is optional (default 0), so we use a variadic macro
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index c5921f139007..ea7f2a928b4d 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -230,9 +230,8 @@ struct ftrace_likely_data {
-  * externally visible function. This makes extern inline behave as per gnu89
-  * semantics rather than c99. This prevents multiple symbol definition errors
-  * of extern inline functions at link time.
-- * A lot of inline functions can cause havoc with function tracing.
-  */
--#define inline inline __gnu_inline __inline_maybe_unused notrace
-+#define inline inline __gnu_inline __inline_maybe_unused
- 
- /*
-  * gcc provides both __inline__ and __inline as alternate spellings of
--- 
-2.53.0-Meta
-
+On 10/21/2026 6:21 PM, Christian Brauner wrote:
+> On Thu, Oct 15, 2026 at 08:54:07PM +0800, Cai Xinchen wrote:
+>> notify_change() takes a struct mnt_idmap and a struct dentry even
+>> though all of its callers either already hold a struct path (or a
+>> struct file) or have to pass &nop_mnt_idmap because no idmapped
+>> mount is involved.  Switch the helper and its declaration to take a
+>> struct path instead and derive the idmap and dentry from it.
+> No, the idmap needs to be passed separately. The whole point is that
+> during path lookup mnt->mnt_idmap can change. So mnt->mnt_idmap is taken
+> of the mount at the time it was checked and passed down to the
+> filesystem so that the VFS and the filesystem are guaranteed to see the
+> same idmap.
