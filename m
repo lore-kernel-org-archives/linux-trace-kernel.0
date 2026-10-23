@@ -1,55 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792792640;
-	b=nfIJKXeNZrU9SJX6j9+/TabloWKbexMha49kOlklzzO/d76Xom1Sef7MndTuu8XX6lNM
-	 vqS4VVcL0a581vFg2f8K9SHFf28H3AUCe/bXORdVxDpMDV6lEMPJ5HFn8rRA1N/CCBN/e
-	 GyXJTkHUm7hoMBdBz6cJaSQSL6ihx8JF8A8KSTl1r7iKjuYcukl0RI5qSgkPxPxP0klAk
-	 D1C3zT6JwiBNcl3HuOkixmGluj4RtZ6EVv/hERUIDaIkkQ1JCTqcLxjT75zcdfXvIOIdV
-	 TiTKfVfRndcKrrMzQ2g9tJmc0Qf1whrKFHdLETTEx/MmYmAqetHH5X9svXNMCVki2vw==
+	t=1792793350;
+	b=Z1M4W/6IuWXukOKfbqg+MT+XDjeMlN/tO3pq2KDubwVQ61QbnEd+8mVSDEbE7pzo4oXd
+	 GtKVuXByiuhZgHQc4l5x1mu6n7MSQ/kFZGa0wlT4tT4gEc2AVzq8sRzAJlfcwBncu8vhA
+	 ibSp1b6LWaLOkHxESij5Bxr3ATvO/D++47hJAV4GtcD+d1Mn4sSuLeaqWBU6YRv4sma5H
+	 GH+ntw776ypDyp0VEZdp8mcGugTEA0GkUeMgXrjYtEL+ENR7+kpTZGRL8O6J96sx9InXA
+	 7L15PGYMTc26aSUdbIsgLm5NLCfA14ap+t+XdkCYRTzeEfJMDj7JUVrh0ZHXivrXyPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792792640;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Tu8cvyWH/oOOkyCYeseFYJUgW609McRuCvju08fCeYQ=;
-	b=nFD3n+P3jLu0A/z2nYpe95uh2wR43NuJ1fputbYGPd+inUbSZi1vCWMJQ8e4lRXzlgnt
-	 VnDzU5JSutBxdfT4voiRJxe3o5aZR8JpXQP6y3qssqgkYvlmkBER6hiAhQtp7g2zhk6sM
-	 5c8H5HyC1mFqutkbAQqL0LyfuU6z24GXDJxp8rXRmt9FBCLHGS/BNRpED+uW9WwusTf05
-	 ZVU2EdMWY/vxInqdg55IayGIKuZHKtEaTqZp1/OkJOy2kLoI9mGvvtGnEsABEIBfxRtJb
-	 pbue3/NuR/fz8/aQ8BFhUSuVLEFx2Y0vs+sl7d1IxRJERnfSLbq6EyAuCD70lVUxkxw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792793350;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=F/szoS2mK5zh+IKcX8gQnqvf+pfueUDCbGAQFHFPWOA=;
+	b=XKzh78/b8N/iSpHw2RATJ76NQCgWOGoM2BCLIKa1PRMT4EQwS4OYhEj0LnWWxxJftHz3
+	 bDk8CEF3nkyXMONWTOBktV7r6ugH6fEPne5uh83XAmwZGkYnXuWc2cQbxeccmhR1qQoYW
+	 ullCLbHpcdptWdPbTLUuE/lQEYOITTeiDfCIMJkTAA8TNusBuxiulNl8SphDMsjnkfqUn
+	 MjFUfrAl4DTNTKe2zGnpb1c6yv+rojwsvWRBTfz0iTGcn5WvTZJnaZm1blvHFkTMXvF4Y
+	 WCt+WmFQ39UsF+TC1w0dDtS4fu4gRN08vcdWoWRkkQ/G2RShC3X9Iy4L/3U0dkPPWUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArBbS8sR;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jsMojqdA;
+	arc=none smtp.remote-ip=216.40.44.14
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58CF606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 21:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1420606A31A;
+	Fri, 23 Oct 2026 22:09:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1420606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArBbS8sR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A531F01829
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 21:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792792639;
-	bh=Tu8cvyWH/oOOkyCYeseFYJUgW609McRuCvju08fCeYQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ArBbS8sRe2vZvBPusOGjqBO4rL5/iJmOJ9CkoNhu2e7k0FBxGNrH52nYh00i7StEL
-	 q0XDBQh44yKY+SeL2AfUQqAt2TSOdFPMVwBZ6gA2lZ6rcXJM85LPT6kalfXQ9baMYs
-	 fsvl13QpfrVCSsMIr5vAzn6XoLzf4egFifAFEloe3/vgA4RvocSeoRiurCA/yUx+lk
-	 z08L3Qb3Um5BospfauxuAe9lP38hTSyZf82Ac5LCA2mxiN62w/7eCCeA0lw3/dEq7u
-	 8UkpKXie61nurXw0oYGj7IONt1Jy2RDtoAyWvqslWyxUniA2I8K6BvppggqcvFFwM6
-	 tbsZfYxGbHfEw==
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-93f2f2edb19so118647685a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 14:57:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwtoi3R80yKYeGBQ8hnI1+Y5DT9+oW611bEoGYTh0D6tAmi+5Nn0d+Xf3pUyrQnwEyDgZwbofKro2166227qpN+IxA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJU0g9+coUj0fFRIKZVF8za2n+y0QHdoHbftVNhNqVzJmxL7RQq
-	Wd/+q7e/QAHy7QQMSs5EvNPDRHPgYMHq6HNvOXpzhQ6ypAR5G5CEZjxXfa4t0RQiKRR3wMY0GqS
-	4O4vx0lcArpU+MIeN8Tyh30vRUFDIxQs=
-X-Received: by 2002:a05:620a:8389:b0:93f:5ab9:fda7 with SMTP id
- af79cd13be357-940ef95664emr52518085a.42.1792792638589; Fri, 23 Oct 2026
- 14:57:18 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jsMojqdA
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id A760D14028B;
+	Fri, 23 Oct 2026 22:09:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 1E1806000C;
+	Fri, 23 Oct 2026 22:09:04 +0000 (UTC)
+Date: Fri, 23 Oct 2026 18:09:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vineet Gupta <vineet.gupta@linux.dev>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, mhiramat@kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, andrii@kernel.org,
+ peterz@infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: fgraph: allocate shadow stacks inline
+ with GFP_NOWAIT
+Message-ID: <20261023180902.2bf7cef4@gandalf.local.home>
+In-Reply-To: <75b66acc-354e-4cd2-b9cb-4c22e8a02635@linux.dev>
+References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
+	<20261021174406.2891598-2-vineet.gupta@linux.dev>
+	<CAEf4BzaTYgNwiBtvYoSw1wzuFZchs-2CCP93gh2OeDt-919-eQ@mail.gmail.com>
+	<20261023143816.48163575@gandalf.local.home>
+	<75b66acc-354e-4cd2-b9cb-4c22e8a02635@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,47 +67,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261019034426.2354049-1-ridong.chen@linux.dev> <20261019035252.2357900-1-ridong.chen@linux.dev>
-In-Reply-To: <20261019035252.2357900-1-ridong.chen@linux.dev>
-From: Barry Song <baohua@kernel.org>
-Date: Sat, 24 Oct 2026 05:57:06 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4z-sbP+qtSk8b2tWGBPTNfKiF3=z69qc9f+FjWGUEgyow@mail.gmail.com>
-X-Gm-Features: AclHuK_VJ_jirLI57h8oBojXk8WvqdC7Lhm8-1ezp_qE6OG-iPQQ44-4rsmpu_4
-Message-ID: <CAGsJ_4z-sbP+qtSk8b2tWGBPTNfKiF3=z69qc9f+FjWGUEgyow@mail.gmail.com>
-Subject: Re: [PATCH v4 1/9] mm/memcontrol: drop unused vmscan tracepoint include
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Muchun Song <muchun.song@linux.dev>, 
-	Qi Zheng <qi.zheng@linux.dev>, David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, bpf@vger.kernel.org, 
-	Ridong Chen <chenridong@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: t8c4c1oeinfubypt9y96ounpn1cq8i6r
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 1E1806000C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18c7xFN/AyP36lmveAraBHyJYFfDlwqjks=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=F/szoS2mK5zh+IKcX8gQnqvf+pfueUDCbGAQFHFPWOA=; b=jsMojqdAIncuOJPK06fYzxnkXNJ9VAWIExLNmei7vHl1OKcMjHbJfZhtVrX5inu4UllXDRHLpxMXwSgbh9dbZx1DnV/Vo/yptzPfWGI3kUD9qfqKIITP/abxiiGkuKZ4c5GorYNuD197JSiUqczf39nCDATrpqXvfiSzoF55z2E=
+X-HE-Tag: 1792793344-780753
+X-HE-Meta: U2FsdGVkX18r58hygf06VDzyjSvq05C8+pMawJrbnCrbRcfIifeJ8azbJMqg7kb4Nls+RwctJyFyFMZm/QQ6RqvMvmiVdNiMkj3oQNli3QZSBEjGkq7yUxk+zu3D/RgH3j3ScIjh0TZ2WyMtjgjaxNHCDgaooLArLg6LKwHIXOyR/pkdgutn7aZ3R+ftIP3WOM/lIuPFrWeF7T1q753SR6/jn9GKLVh6pY9Bi/nabZY9P8IfQAJQOWhtAtPQXDFSh4b3Ge6dWELYLQ4iqJYAXfPS47oh5o7gRwyiOhxRngIxH5TH1rEBxF46tXi0vwD5Db78Hy6TThwXeUG6HngxhRU+8GSyB7YUaqz69NwcXN0QJm/LVf/Mcg==
 
-On Mon, Oct 19, 2026 at 11:53=E2=80=AFAM Ridong Chen <ridong.chen@linux.dev=
-> wrote:
->
-> From: Ridong Chen <chenridong@xiaomi.com>
->
-> memcontrol.c includes <trace/events/vmscan.h> but does not use any of
-> the tracepoints or macros it defines: all tracepoints invoked here come
-> from memcg.h and writeback.h.
->
-> Drop it ahead of moving the vmscan trace header under mm/, after which
-> <trace/events/vmscan.h> will no longer exist.
->
-> No functional change.
->
-> Assisted-by: LLM
-> Acked-by: Muchun Song <muchun.song@linux.dev>
-> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
-> ---
+On Fri, 23 Oct 2026 13:13:41 -0700
+Vineet Gupta <vineet.gupta@linux.dev> wrote:
 
-Reviewed-by: Barry Song <baohua@kernel.org>
+> On 10/23/26 11:38 AM, Steven Rostedt wrote:
+> > On Fri, 23 Oct 2026 11:13:44 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >  
+> >> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> >>
+> >> I presume this will go through Masami and Steven's tree, is that right?  
+> > Yes, but it came in during the merge window, and since it's just a speed up
+> > and not fixing something that's broken, I was going to let this go in the
+> > next merge window. I rather have a change like this sit through a full -rc
+> > release.  
+> 
+> It is a speed up but not for optimization sake but to cure rcu stalls in 
+> production at Meta. IMHO it should go in sooner than wait a full release 
+> cycle.
+> 
+
+Either way, I'd like to give it a bit more testing first. That is, the
+earliest it will go is after -rc1.
+
+-- Steve
