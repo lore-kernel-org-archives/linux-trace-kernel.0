@@ -1,101 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792739606;
-	b=IBqfuD4hSh18CqhTN9+8zR1EvWvDXTZ4u1zBYaViILJqfVs4qSJbHvO7OKGYSaWjvg+L
-	 tUe6Rg2Gvb+YUyGOdm+fNEa4p8CF/X2UOjbzQkWWn6mt85o8JhJG253gzrMAr2U0nZ9rk
-	 ZlfHT+bMLyEciPwVHFcgM49RPu34wpxKxRL7v7Otzoq7ZPfz5K6dbOhVg82s3o83nxNaQ
-	 JZamMMwjDIbC/y7ZMpI80upMr90rrqUSRngz45XTXOsZK5BZdS3mdP5Gety7wYkP8Shpd
-	 552a11NGEo9OajzzEaBth8x1cS3CQtzn7qZNuIq4raSyQ7Cj9shWxkdgrVXL/AQjT7A==
+	t=1792743497;
+	b=EozH/zjcTl7gAk6VK39r5PmbDThmgWxBwMZY3qWqsrSquEiL0/epGym0GPITAQay5kkr
+	 FRSdZOAvho0emCSyn/wRCC73YmYAx6dTrYVEojAnPGd5ejBeJyccyR56TLVsacZn4H3YE
+	 w1XxTGkEeTypJZDDLSFsfak0Wo1vWx0ezdMhhcQsknqIInYtj+FgMf91pZrzyhF5vzKDW
+	 RkSgg9jsgVgL2QNlQ5XUOapC9xRu6jcFUDIW0Voy9Z6kuwPMhEfKYaeEudwykCVzm2rvx
+	 tLdxcLNyQ/ZQYK/B7SFx1+cervMQgwvp0Q76zvynbz6Isnf5+5CMmIRZr2I7jaIlyAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792739606;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792743497;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=wq7uJPFcmgA9r58RX9y8WD41guFgFXDdj9tzjsOmuN4=;
-	b=ZvsbAA/Qt+CJ8FNcPGvE8v2U27b99DfL2TvnSlqthFPZiLCCqzoyH9AX7JQ3xYwQCsPp
-	 2rCnPVTEuoPjqNDskl/+WGoWFCB7m/KHbN0ZJSnZ4MV7Ej5qKfMtno644CFlzx87lwpRv
-	 uKq9tuocVTwU6T1BskgHIHEL1hRJEbXceaMduINwqOh7A4fz4vvMQC/alOXHBmNtiFZMA
-	 MWWjFfr92hVx3tU6bxGk4LrBjfpK8fz0RUgK0gkbSIPTkHLA5/ONgOjSGrkq8sinzAl9G
-	 4m5FV3Z42FgmWcZz/JyiaC2qy45kYnc6p9qnC+hrnHWQhne4Nk2CF7wP2A4qS8DZQww==
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=5oVeJI18w0YWnW1MyEvLa+/8268RVOyYzuorpmt19/c=;
+	b=srqdOOEqumBpDMLU7CAV+Qs85XwwkWMAb3JxvTpZ45kq01Vq1XHRoyrtiSJUvWg9Gp3G
+	 lbXnXVXOfh2HKWHRfRWOAF02QC7ZAmHsuoteYXCW6UPNqC5sX7zLOkQj13scBh/yyNLNf
+	 GPnWScEcMyqBf03McrYfXDQE7QxYet/jn2knprOD7/OEfMMecUTqIsujDy4QD+mqMATVC
+	 9R5lWB93qq7AEGyRRSGstEJcQTEZ/qSkoeM6sTDpXPy7bKcv8WkLFBH/t9gWoFuKOYUIF
+	 Bdc4hiTTjIb4W0x6ZXMovtDeTf5UmtfKycegXROEFieHv6pjs0/hvJgKFqzsLlrCwvw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P+OLg24T;
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=EioUjT0Y;
+	arc=none smtp.remote-ip=209.85.128.41
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C20606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 07:13:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10C20606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350F4606A324
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 08:18:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 350F4606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P+OLg24T
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e00eee27dso302025f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 00:13:25 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=EioUjT0Y
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a20bdaf39cso6463575e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 01:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792739604; x=1793344404; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=wq7uJPFcmgA9r58RX9y8WD41guFgFXDdj9tzjsOmuN4=;
-        b=P+OLg24T2DE6IMHyEqMBpfaLZ19LKpR99sGMlJRmiYlyCBdb0kxRQwF4u/Uew8jBoE
-         Kd967OujE2M3LR224GaT+vNY7a6ZVHhrYJaukdiTOprNNmrWe53mJkSvCILgqLFmUbFR
-         xAKVDBE62GKFuNc4XlUB0vJSlY8sWaBxty6dB2u00s2qirUGX8n35La49WgHBOgYh7wn
-         o5YV8/MG448i6CwxxFKntlyeREqUinFv328e9m465xH8Mu84saZRUnUVglkRJmqlz5bA
-         uPmq6WOxIxjriPMmY9rWdzTIfjkHiONHvkGU/mtHlDPEfQiHG1ckLYBc+S6X/Fbln8qO
-         yQPA==
+        d=google.com; s=20251104; t=1792743496; x=1793348296; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5oVeJI18w0YWnW1MyEvLa+/8268RVOyYzuorpmt19/c=;
+        b=EioUjT0Yqv1EF4pWajYbSIY49dvGUSf8SN5pfXf9T1v4+nNBoQo6FvRdo8HiXaHxsU
+         Xl0iI5NK+jH63hwp4kCo4v4AKB1iGFLoOUTHMtauv26oPjEzkHgDHtS9+xeINe3DBFh9
+         TaDSYlDW5NYasgcRLYjWZ8JmcOBSG1/aaXVLocU8W+aas0RWuRZJWlcMe/XpjxUz5cHU
+         JQVrt1L/3ihp4i2Jk0PI8kMWcb3XvNkNWY0ylNI+UilCqVZSOhUPNWOJTIJHXC/eEVmO
+         Xp9evZa63AseEMg8ILEthoP3PlJJruSkFRClIOpuuEb4W/qkulJz9Vx91jaLqVxP4LU9
+         Rkbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792739604; x=1793344404;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wq7uJPFcmgA9r58RX9y8WD41guFgFXDdj9tzjsOmuN4=;
-        b=bO3FU5Sw692b7D8Ui2OcNajG7Dy8ekHjtHy18ZmTuh7WwLGyYlRdAY0CZeY6x+xvDf
-         ftdw9RDpRkhyou6uzu84P5iasOSTdUnuE45UkIURbA6hFfTe/dSpm7qSDZCwje5pUXVj
-         e6AtuacBvlPcGY7C9yRRFHvJ4hy1VmNpbV1Yrdb7wqVv5xxE7Ao0BNIyXnfvdUkx5eqc
-         Y+5J1o/kGHqmqg5mtsR4b/eFx+wA6qurlPT20eUQSCi8nl1Cg2YXewNXR59cTdTqDKm7
-         F0xqL4D48gRUQVaTgEaPBAAfp8FLIf7ForyglhK71ERc71nxZ92ebIPJhVYXwN3R/U8R
-         g66Q==
-X-Forwarded-Encrypted: i=1; AKwUvBysZMgUx3aWr3tbpbrEvpKVBR08LBWKV2dL5WpGesr7Lb0NAtkFaQBLrWQjptfBO3xfj0tNfUeSq3j43ibLvYtq7H0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJs9u3c3MjSaSIRVRhfguKPJuut+h3TXELtg2FHvjertL8rxGNb
-	vTKxtSZRYa2MfzcN7r7PQPIqA+jFDtR/EocH744P4M5zJP85E2XtGMUw
-X-Gm-Gg: AYBFou3gKlORTdqOX8k7sRM85fZY+4ApYFHbVr3FVO5igvjvZECPaa+Kz85BMJzmj6g
-	EDg3wRd7iVfFxu4Flefa4dq3vR2SjNosIFUfYzKLuBnznOQTTWgVjMsNK0tEDIK3kAOQ7rZlpcE
-	tp+TrSUV4xWDhZd4jZ5G/YIRqHQZJcGtTZLnpyrb1M3Yf3SpbA4ppK9fNA+ZrPJHwuwrRl7q3MY
-	9LMmSt0By2aPZ7lZwzTcVyXUjMIt8wLIlYHSdhTSIh32RojQ2VQpOa3vjr44rjfqi5RJqQYHGSW
-	FWIubHO7McNdAXjERewvemLGQo6mFKdRt7UreLvniO+fycvfIjSI5TGg6Iaxw8M14DtUA5bUcXq
-	ZAncROQIFJHQcL4y9mUL69cr6R7sAw/dHsOyyt+qjI/9bUbK0B5L5LkMR3vXqKfzgPu74x394nK
-	Rc2DwSoXhhCWN1aVWc/suT5hfeFaGUO9kRc0XsuZzVX7dZi+wYR//pcahGXdE0bcQ8mo4oJZvqW
-	N20XQstRtqjchNRzB/L9I+kAAzw
-X-Received: by 2002:a5d:5d03:0:b0:48e:3b48:6f1 with SMTP id ffacd0b85a97d-48e3b480974mr340715f8f.54.1792739604164;
-        Fri, 23 Oct 2026 00:13:24 -0700 (PDT)
-Received: from krava ([2a02:8308:a00c:e200::25dc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e38025d76sm3155877f8f.13.2026.10.23.00.13.22
+        d=1e100.net; s=20260707; t=1792743496; x=1793348296;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=5oVeJI18w0YWnW1MyEvLa+/8268RVOyYzuorpmt19/c=;
+        b=y8E+J3kq+CCUcCKG1lKGiSBieurkVTaLhApOYAzUwwKPKb6r9Xfbxn9QW5r415FtS+
+         9vXW/+yD5cqWCREVi520qAPYZ/7rDlWUw9a4KiwZqahbm9Z30xUaVaZUZ5Us0LlRtQTy
+         tdwDsTcdP2BATVFULn482WCap6FIHGAj7pJoostX9Tt9Zr0jrPDzV2gaT9Iu+ZYRRe04
+         PDfZOcliY3JLbNCjKe+ObdWVZvqpZDpjdLe1RJX9o2ByEFBnrtetJi+8WldIn8JuhiPQ
+         lq3jBFHiuA5StTuyPAKJdrjOXg+LloMMhhyHzWeRblkoFv/h12yRfgVSi8K+Fs2945e7
+         t7OQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx+6h5aRkrF04ikK6XJNnVDGfXwshD65n1Og7UIXmo5G3Wi0eKXpUyOdDhNb4pT+Li7h64Qp+Sy2wgpaWyYPpbsWY0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI4SI8uAI5YrvcELtRQcYPFN/yM1fAghSuAYWzbWQZm/C3SSgwA
+	T0WI0kGHYW1rxRTJF2GLxR+8EmHrCVjn74V6aFydjQG4XYF9WzEGvopYf4LmEJckig==
+X-Gm-Gg: AYBFou2oWSOn4A8ltImypkUUXlbxgpLmZ3KhFBEXadGYY01htnGCfhM96tdFXa6WWZ6
+	3GzCLA0b/SaBvjdjTAUh1QfNhUwZHAtfJQOUbZ0coFXn7QhHCEJnQj9rP7rOqA8PyPc1lAwLPzN
+	TdBkeLbux3Mch2FGsdo85Lxlm1e3/dmSaYLv8xo4T4ZMI71pJP+H1mjeTmi0x4JcK0HhUFD9n8U
+	9wR0wYepBkOB5apGSqQZS2OR+4szsZGZcaMQwXDJsQrvJk56LZqmH6HFfU7Fj6akRShxwnlRO1p
+	CpdldHVcbfQGxGYg0nBy4yaHdMquUvug8i7OnAorOEqBWvv7A+yc0lf+I49oXwJCMa7mbOWcPYj
+	zW7geVfZ0hYvK5HaGT8PurPXiEYdh85PIN2agv9UXTqYas7j4Gew6fvydjBmLKqMuViC0LLKTAy
+	RvhyhxP0pVkxefFWgCVOSdtLy6K6zgwWYLBj/yZDxR56Uc+qTQZtabsxO3BJLx3lu5+gKhdIOkr
+	pENHBokpQK/ErFRH+AmHyF2XUfza0dbwqekE4cF3XCKDC10jMLOxoEuIxVXcKvXwhvHssyfFYgE
+	VDudYfkEwKBWlb1UDrGcz2ZV
+X-Received: by 2002:a05:600c:524b:b0:4a1:f720:74cd with SMTP id 5b1f17b1804b1-4a211ed3f5emr23048395e9.24.1792743494996;
+        Fri, 23 Oct 2026 01:18:14 -0700 (PDT)
+Received: from google.com (197.183.140.34.bc.googleusercontent.com. [34.140.183.197])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a21045df9dsm68556225e9.8.2026.10.23.01.18.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2026 00:13:23 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 23 Oct 2026 09:13:21 +0200
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com,
-	peterz@infradead.org, mhiramat@kernel.org,
-	akpm@linux-foundation.org, liam@infradead.org, ljs@kernel.org,
-	surenb@google.com, david@kernel.org, vbabka@kernel.org,
-	jannh@google.com, hughd@google.com, kees@kernel.org,
-	mingo@redhat.com, tglx@kernel.org, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 4/9] uprobes/x86: Don't WARN if an optimized
- probe can't be written
-Message-ID: <atsJEWXk04C4oz4R@krava>
-References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
- <20261022015712.1297331-5-alexei.starovoitov@gmail.com>
+        Fri, 23 Oct 2026 01:18:14 -0700 (PDT)
+Date: Fri, 23 Oct 2026 09:18:10 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Amit Machhiwal <amachhiw@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Harsh Prateek Bora <harshpb@linux.ibm.com>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-ppc@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] ring-buffer: Do not check si_mem_available() before
+ deferred init completes
+Message-ID: <atsYQtXHRH_cCQ5A@google.com>
+References: <20261016134247.70722-1-amachhiw@linux.ibm.com>
+ <20261022181817.49717-1-amachhiw@linux.ibm.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,83 +107,127 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261022015712.1297331-5-alexei.starovoitov@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261022181817.49717-1-amachhiw@linux.ibm.com>
 
-On Thu, Oct 22, 2026 at 01:57:07AM +0000, Alexei Starovoitov wrote:
-> From: Alexei Starovoitov <ast@kernel.org>
+On Thu, Oct 22, 2026 at 11:48:17PM +0530, Amit Machhiwal wrote:
+> During early boot (early_trace_init() called from start_kernel()),
+> tracing allocates initial ring buffers (temp_buffer, array_buffer, and
+> snapshot_buffer) for CPU 0.  Later, as secondary CPUs come online during
+> smp_init(), each CPU's ring buffer is allocated via trace_rb_cpu_prepare().
 > 
-> __arch_uprobe_optimize() and set_orig_insn() do WARN_ON_ONCE() when
-> uprobe_write() fails, and user space can make it fail:
-> - -EINTR from get_user_pages_remote() when current is being killed.
-> - -ENOMEM when COW can't be broken, since memcg is at its limit.
-> - -EINVAL from __update_ref_ctr() when the process cleared the semaphore
->   of SDT probe.
+> Before attempting page allocation, __rb_allocate_pages() performs a
+> heuristic check using si_mem_available() to return early with -ENOMEM if
+> memory appears insufficient.
 > 
-> Kill the processes that call probed nop10. It warns in 8 of 8 runs:
+> However, on kernels built with CONFIG_DEFERRED_STRUCT_PAGE_INIT=y,
+> NR_FREE_PAGES only reflects the initial non-deferred pool across the entire
+> period from early_trace_init() through smp_init().  defer_init() leaves
+> only a single section per node (e.g.  16 MiB with 64 KB pages) initialized
+> up-front, and on kernels with large static binary footprints (debug
+> configurations enabling PAGE_OWNER, DEBUG_PAGEALLOC, KFENCE, or SLUB_DEBUG),
+> early core initialisations (SLUB caches, vmalloc, static ftrace records)
+> consume virtually all managed pages in this pool.
 > 
->   WARNING: arch/x86/kernel/uprobes.c:1186 at arch_uprobe_optimize+0x291/0x3a0
->    uprobe_notify_resume+0x1c3/0x4c0
->    exit_to_user_mode_loop+0x63/0x4e0
->    exc_int3+0x1f3/0x250
+> si_mem_available() therefore returns a false negative (often 0-1 pages)
+> across both SYSTEM_BOOTING (for the initial CPU 0 buffers) and
+> SYSTEM_SCHEDULING (for secondary CPU buffers via trace_rb_cpu_prepare()),
+> causing __rb_allocate_pages() to prematurely abort with -ENOMEM.
 > 
-> The next patch calls set_orig_insn() from fork(). Kill the processes that
-> fork and keep mmap_lock busy, while a trace event on nop10 is enabled and
-> disabled. The kernel with the next two patches and without this one warns
-> in 3 of 3 runs. The whole series in 0 of 3:
+> This failure is false: the buddy allocator is designed to replenish
+> ZONE_NORMAL on demand via deferred_grow_zone() when an actual allocation
+> is attempted.  Checking si_mem_available() before calling alloc_pages_node()
+> short-circuits this on-demand growth entirely.
 > 
->   WARNING: arch/x86/kernel/uprobes.c:1161 at set_orig_insn+0x161/0x170
->    register_one_mm+0x154/0x180
->    uprobe_dup_mmap+0x61/0xb0
->    dup_mmap+0x149/0x9f0
+> deferred_grow_zone() is only permanently disabled after page_alloc_init_late()
+> completes (it spawns per-node kthreads and blocks until done), which happens
+> inside kernel_init_freeable() — before system_state is set to
+> SYSTEM_FREEING_INITMEM.  Skip the si_mem_available() check until
+> SYSTEM_FREEING_INITMEM, at which point all deferred pages are initialized
+> and si_mem_available() is accurate.
 > 
-> The callers handle the error. arch_uprobe_optimize() marks uprobe as not
-> optimizable and byte 0 stays a breakpoint. set_orig_insn() returns
-> the error. Drop both WARNs.
+> Wrap the guard in #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT so that on kernels
+> without deferred init the original check is preserved unchanged.
 > 
-> This depends on the previous patch. Without it WARN was the only sign of
-> the bytes that set_orig_insn() cannot restore. Hence no Fixes tag.
-> 
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> Fixes: 2a872fa4e9c8 ("ring-buffer: Check if memory is available before allocation")
+> Cc: stable@vger.kernel.org
+> Reported-by: Michal Suchánek <msuchanek@suse.de>
+> Closes: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
+> Link: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
+> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
+It is usually good practice to not use in-reply-to to link the series between
+each other.
 
 > ---
->  arch/x86/kernel/uprobes.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+> Changes since v2:
+>  - Rebase on top of upstream ring_buffer.c changes from Vincent Donnefort;
+>    update threshold to i < (nr_pages << subbuf_order). (Michal Suchánek)
 > 
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 62bbe41c6466..33c35bf07801 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -1170,11 +1170,8 @@ int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  		int ret = is_optimized(vma->vm_mm, vaddr);
->  		if (ret < 0)
->  			return ret;
-> -		if (ret) {
-> -			ret = swbp_unoptimize(auprobe, vma, vaddr);
-> -			WARN_ON_ONCE(ret);
-> -			return ret;
-> -		}
-> +		if (ret)
-> +			return swbp_unoptimize(auprobe, vma, vaddr);
+> Changes since v1:
+>  - Extend the guard to cover SYSTEM_SCHEDULING as well: smp_init() calls
+>    trace_rb_cpu_prepare() -> __rb_allocate_pages() before page_alloc_init_late()
+>    completes, so the false negative window spans both SYSTEM_BOOTING and
+>    SYSTEM_SCHEDULING. Use system_state >= SYSTEM_FREEING_INITMEM as the correct
+>    boundary.  (Sashiko, Vincent Donnefort)
+>  - Wrap in #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT to preserve the original
+>    check unchanged on non-deferred kernels. (Vincent Donnefort)
+>  - Drop Tested-by: guard condition changed, requesting fresh test.
+> 
+>  kernel/trace/ring_buffer.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 9c4e40847e43..8e5a59a7b69b 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -2463,10 +2463,27 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  		 * memory. It may not be accurate. But we don't care, we just want
+>  		 * to prevent doing any allocation when it is obvious that it is
+>  		 * not going to succeed.
+> +		 *
+> +		 * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, NR_FREE_PAGES only
+> +		 * reflects the initial non-deferred pool during early boot and
+> +		 * throughout SMP bring-up (smp_init() runs before
+> +		 * page_alloc_init_late() completes deferred initialization).
+> +		 * si_mem_available() returns a false negative across this
+> +		 * entire window while actual allocations succeed by growing the
+> +		 * zone on demand via deferred_grow_zone(). Only re-enable the
+> +		 * check from SYSTEM_FREEING_INITMEM onward, after
+> +		 * page_alloc_init_late() has finished and si_mem_available() is
+> +		 * accurate.
+
+This is quite a massive comment for something simple: When
+CONFIG_DEFERRED_STRUCT_PAGE_INIT, si_mem_available() will reflect the actual
+available memory only after SYSTEM_FREEING_INITMEM.
+
+>  		 */
+>  		i = si_mem_available();
+> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> +		if (system_state >= SYSTEM_FREEING_INITMEM &&
+> +		    i < (nr_pages << subbuf_order))
+> +			return -ENOMEM;
+> +#else
+>  		if (i < (nr_pages << subbuf_order))
+>  			return -ENOMEM;
+> +#endif
+
+Could we avoid the double i < (nr_pages << subbuf_order) with something like
+
+if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT) &&
+    system_state < SYSTEM_FREEING_INITMEM)
+       i = LONG_MAX;
+
+>  
+>  		user_thread = current->mm != NULL;
 >  	}
->  	return uprobe_write_opcode(auprobe, vma, vaddr, *(uprobe_opcode_t *)&auprobe->insn,
->  				   false /* is_register */);
-> @@ -1197,7 +1194,7 @@ static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct
->  	if (IS_ERR(tramp))
->  		return PTR_ERR(tramp);
->  	ret = swbp_optimize(auprobe, vma, vaddr, tramp->vm_start);
-> -	if (WARN_ON_ONCE(ret) && new_mapping)
-> +	if (ret && new_mapping)
->  		WARN_ON_ONCE(do_munmap(mm, tramp->vm_start, PAGE_SIZE, NULL));
->  	return ret;
->  }
-> -- 
-> 2.55.0
 > 
+> base-commit: 7be4bc52fd9e0e55dc9a2e0232b89427d2c4b614
+> -- 
+> 2.54.0 (Apple Git-157)
+> 
+
+-- 
+Vincent
