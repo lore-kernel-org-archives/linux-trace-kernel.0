@@ -1,90 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792777597;
-	b=0D27v4jouuxEL7/4+UnLDWVx8c0dzjMmdeFxJfWxT0db0unqc7YpHb5lZW3KdJyade5o
-	 PuqneEyuLtdgYiKrkGc1JSAjLV6rgrsUAFunEwGDP31LFxCGeStKDbOwyS6VvjhgwMsY7
-	 eIMLld++tCWL5eA8a3MyGkkG+BHyPWMoOZpF985tUZobPPLkECvL+brSYvS3ne5yAYhKe
-	 yhHcNPws9ugCrCPL6KMqqEpMbrp5hES1DMd3itArR6sY51IuJHFkBSLaBTSxhF3IOkLuk
-	 uKfgPmXfri/qm9MdEZyhReVSz+wZYrUeDcXmdEZB1939g9Zir/vCt/aOm302LSsAZ1g==
+	t=1792778690;
+	b=pfxz4GFLMS7iOC51pwKkf4F63100Av+gMUIGHj2P8pZ+CZupiSW5PCasWpdVCQVVhihK
+	 UTiMeIlpz2zY2jTEmZ5WoMWcYO5XH9lMW2Syjl02rwi86hHR3CcgK+cROS2YvhEllbudH
+	 BIUq7owLy/jDCd1qsHuQKbQeQ9jVT0TCgGe+O5TbTPxNKyblgnsKLJFIMHD7MFn6uOiiI
+	 9B3f020FiJR72w/X7pI0tIKiDSUNux+uT+f9ZPNEtJcbd9UgP/KFr5IHB5eJRH5lFfCTP
+	 WPhjaEmKS92vSEKjmY7d/dOg0YL1XD1vGbWSETNQzqdqZHxu41K/fYCTbmPbLvApv3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792777597;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=xlzj9+7VUiD0rDPjj9xsdhl6VeuEJi64iOeLJzH8Fak=;
-	b=iEUUKRe2jSl8y+Fs6ixJxo31jnVzK+A66PMq2ECW1HlJ/yZNwVecLwVMB3GSLxg70OQc
-	 RA3krwm6bsXEUvzsS47cMMLm6DGvwHPD3RUGlSIqgVxE/bbGudD/F1FQdyfo7V1kIpK1i
-	 2jPwVyxhxiUPzft+RrR7prj1WgZ2p0OLsnjg9quEULzn/PKUWZg547d3hO5DVzBrsHXB4
-	 ROkFY0nQZj1CytClIDrwk4Z7LBRmgffx0qX2249pAARwPFbL0eRWK6nncfeKuVzLvfcWv
-	 q9MEdVpKCPTxVh2Fe8klPePvDQOhd/B9Ve2+zH+rfJuQdcWKFpnQOhqrCfW3gCSBirA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792778690;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=ChdNpfFMmfSeiMhhgq9rOjsI8hm4xzlZkNy7PE+mUqw=;
+	b=awVPBoDc8ximwQOn5GJK7i5D9JWFhhseOdKMyte6FM8JV19pWL494rcPjJUFuduFKrE4
+	 2qcB1L2OTW4m1fLNG4Sht54caFnxRjJyJzebfq3HI4rsCGJESY5G6eFJJRB5vDA62fSHl
+	 ZrLEpKCUEOmbo2+gZwMOGfdzh3mEP5EJvp801nzGnJswIDIWKqrPImSK2yQR3cbvoGqLu
+	 RyUxPxsLzicbuMJ0GOPQYTTUWGuPBe3xBw9PHLol2r6fjC4ePx1xoZ+bNMGF8TRu237DS
+	 z5PCjk9TKi3893tC8OjgNiPhHoT/qTf/qGo1JXfje72d1TLhlG6sD5nZva17HHcaYBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=openai.com;
-	spf=pass smtp.mailfrom=openai.com;
-	dkim=pass header.d=openai.com header.i=@openai.com header.a=rsa-sha256 header.s=google header.b=YxiS9C1Q;
-	arc=none smtp.remote-ip=209.85.161.46
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oOq9mBSo;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB91606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 17:46:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3BB91606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74EA606A31D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 18:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=openai.com header.i=@openai.com header.a=rsa-sha256 header.s=google header.b=YxiS9C1Q
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-706113e92f9so656967eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 10:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1792777595; x=1793382395; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xlzj9+7VUiD0rDPjj9xsdhl6VeuEJi64iOeLJzH8Fak=;
-        b=YxiS9C1QOQiQj62KnEdVaa4HjaEBExW5bp5Ol+/YPk+f2I+3STcUEaRI1aixJFSIVQ
-         foZtdo93KcXjp+UKIWW7nmoC0ZCH4CyhqCW+I/QewtnJZBg1/bONh7uFQO3PyIDaFftP
-         Cul9W/M1VUsKfdYKyQllyYvirVbrAe3fb5DeI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792777595; x=1793382395;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xlzj9+7VUiD0rDPjj9xsdhl6VeuEJi64iOeLJzH8Fak=;
-        b=vyTFRm4C+oXyCr6wjU7iTp6yjLGz51LQ1SpkvWsu3+yuUt5fGh0pTuamntB5WuX7bA
-         g2ZFgHkSfJIY+2Y1v0pc6QCYsojWVzJkeJIBTNIsr56xts6ycP+wwzFiUqlWh1tysOT6
-         QDYUzpMRq7XVNIAtHDKhF3HAGGIgrqdLADvkhUIeg4rW0QLBYqa1y5GDWlMlnxeXoud+
-         QTWT/sHTC1mudRNlOQhM3guVLIBn7zdKwPfECF4oI/N13VTv4h/VbHsS0J3C3ZxYgOC0
-         uXTGShnbcxUFGABR0CCBn1LciqZY6gJ/E0iV7gAlgfXHuchCOeRvD+xV3Q5ISFIpKRui
-         x0XQ==
-X-Gm-Message-State: AFq9FYL6HMa9uNmKVpb1tDjy0J5eY3qAWLNRzLSZHA002RTWaqd+8ubO
-	hYWBoths0XBY4qwon7yTavJY/qGD0iB6n/yBqlpaMGGIMvGc/6rnHoRh022b7m78ndDSeO8Wd0M
-	ZMm+eveI=
-X-Gm-Gg: AYBFou2hmimWE1ggv/MfLr1XmUL7h6PD0JCiK+OQYlPm/9rALUTNDd9gCdlqRi7uy/E
-	ITmmuo/zhc/P3Nf4uOVQK2bC3TEnZ/YZkydZ+yCOv5lwjaeJmT1IvsfTQtL3qAgebjCP3/NHfqh
-	pP6+aIJtaHjBvTsN/K7bwatfD+iJY/skDK2B7ZkZr9iQPUGhWL083JdNrI5VmE24bj/l0nvbTix
-	XskHBErTii0nl0D9aBDCkMaSbAPHgdV1vBAkzZcYzyGDjkUrFc4kX5gZ7UDbLyFcxBqJMotR6x5
-	comOvRl/HRQoAZiHpqD8hSJ1jtgMYK14HZuxFcz43EDJYOkETEapx1+Y8Bgg838HCPSppanZmTB
-	o1q7GNMDN9QOMswq2M8N8mFQiRXD9fD/rWKFpTK5xtRe/m47CQZXZWE3M1nIggfSWUk1e/xPn04
-	W/FwySasRaGvQFnniMDv77AejXS6WV5kHQG6L7jBdJw6dAXy+V0dwuPW0ihQj9MlJhoeVb0jnB9
-	jQBMBGRXfxJxA3EJF3uUA9ju6DEFpRj6RhV1gtKIA2meZolY4+graJD8NFdLUgZWzNVV14gGI5N
-	4DbmZJrWyC8bgIjsk2khoUXoEEdfS7Iah7Jk6jPHz4FFsMw+hdQYyv0rBA==
-X-Received: by 2002:a05:6820:2215:b0:70b:980e:454 with SMTP id 006d021491bc7-70b980e054bmr960802eaf.6.1792777595042;
-        Fri, 23 Oct 2026 10:46:35 -0700 (PDT)
-Received: from com-75606.corp.openai.org ([199.47.143.5])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-70b9aec6172sm565349eaf.11.2026.10.23.10.46.33
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 23 Oct 2026 10:46:34 -0700 (PDT)
-From: Kyle Zeng <kylebot@openai.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Kyle Zeng <kylebot@openai.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing: Reject incomplete event filter expressions
-Date: Fri, 23 Oct 2026 10:46:20 -0700
-Message-ID: <20261023174620.91969-1-kylebot@openai.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oOq9mBSo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5CC1F031E4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 18:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792778689;
+	bh=ChdNpfFMmfSeiMhhgq9rOjsI8hm4xzlZkNy7PE+mUqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=oOq9mBSogEELRUXKdb8J6x2Fr8brsYoQrFkTwYC+3qVOEkdIyhvQAHtMITZGVv7ED
+	 d73ZmMMU7knCNrQUmetRG/hD3VAqZXnslhaEOh9RxbNigf0z85T9nl+uDy0UzJ1Pa8
+	 wAWPKvDVXxqu3cmswLZjhyGIpaYhVah3ouCz1Sp3WJ8hm9NXQ8gb1dGiDDOVC5k0sz
+	 EfEwsNmgjT+MpKCzfLeM1E7toi3SS0qQeRxeSkN7SyoEOLXKphSLJLW6rqKslIxza0
+	 kXaUTZdMX/srHRKT683vhGm2HEaqf9FnbFIBSM/ErxHzm2CMHahNxl/TmSk8rhgWoV
+	 ULhoF2gbX+v8Q==
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-93f20b304c0so103625285a.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Oct 2026 11:04:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzcdmdNdI0eMZckRNhuUloZaHGv92NWWJxn1djAOGoUqwZZqWP69q3sP2RuKwH9efpY3tmZfzroX2ul8vkq3dZG0NM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLuDAkzt+vJNrt8dfwVDBaZDJtqb1KF9jDY8QNfWWW8S5P6es/s
+	UM8MRr/KqSJD8PmZLIbbakBoeOM7C5V0qePwWFNlXNxZOr7XSUddPco1M9BJGZkWjnmVWFP8ubZ
+	C9X3F181VzZGVDXLELDzAy5JrgG/l/08=
+X-Received: by 2002:a05:620a:1793:b0:936:df48:d507 with SMTP id
+ af79cd13be357-93f6f91b90bmr544428885a.18.1792778688699; Fri, 23 Oct 2026
+ 11:04:48 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -94,83 +59,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261023011049.1164625-1-song@kernel.org> <20261023011049.1164625-8-song@kernel.org>
+ <20261023093256.20d3e300@gandalf.local.home>
+In-Reply-To: <20261023093256.20d3e300@gandalf.local.home>
+From: Song Liu <song@kernel.org>
+Date: Fri, 23 Oct 2026 11:04:33 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7wgXmQ7QKf06z1kiR+-5VbbrZx8ByLPCUXZtw2-SAHsQ@mail.gmail.com>
+X-Gm-Features: AclHuK_J5P47a14LkpdtNyyppX1AvylBaLgmpgm_44519CpkozMkFuPGPPAAYzg
+Message-ID: <CAPhsuW7wgXmQ7QKf06z1kiR+-5VbbrZx8ByLPCUXZtw2-SAHsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/16] tracepoint: Mark __do_trace_##name() notrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	live-patching@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A non-empty expression normally finishes in predicate_parse()'s inner
-loop, which resolves the pending logical operators before jumping to
-finalization. If the input ends after an operator, possibly followed by
-unary '!' tokens, the outer loop instead falls through with unresolved
-operator state.
+On Fri, Oct 23, 2026 at 6:33=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 22 Oct 2026 18:10:40 -0700
+> Song Liu <song@kernel.org> wrote:
+>
+> > __do_trace_##name() takes the tracepoint SRCU read lock and calls the
+> > probes. It is called from trace_##name(), trace_call__##name(), and the
+> > notrace rust_do_trace_##name(). It is a plain inline function, so if
+> > the compiler emits it out of line, that copy is untraced only because
+> > inline implies notrace.
+> >
+> > Mark it notrace explicitly. No functional change.
+> >
+> > Assisted-by: Claude:claude-opus-5
+> > Signed-off-by: Song Liu <song@kernel.org>
+>
+> Acked-by: Steven Rostedt <rostedt@goodmis.org>
+>
+> -- Steve
 
-For example, "common_pid == 1 || common_pid == 2 &&" leaves
-prog[0].target equal to -1. The second pass then reads prog[-1] before
-the forward-jump check can reject it. Depending on adjacent slab
-contents, it can also copy an out-of-bounds word into a branch target
-that passes the forward-only check. A self-targeted perf tracepoint
-counting event can reach this path through PERF_EVENT_IOC_SET_FILTER.
+Thanks Steven!
 
-Reject the outer-loop fallthrough when a predicate has already been
-parsed. This ensures that non-empty expressions only reach finalization
-after the inner loop has resolved their operators. Keep the existing
-no-filter error for input that has no predicates. Add a regression test
-for trailing logical operators and unary negations.
+How should we proceed from here? Will you take this via the trace tree?
 
-Fixes: 80765597bc587 ("tracing: Rewrite filter logic to be simpler and faster")
-Cc: stable@vger.kernel.org
-Assisted-by: Codex:gpt-6-astra
-Signed-off-by: Kyle Zeng <kylebot@openai.com>
----
- kernel/trace/trace_events_filter.c            |  6 +++++
- .../test.d/filter/event-filter-incomplete.tc  | 24 +++++++++++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 2b46ca536045..405651be9c93 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -596,6 +596,12 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 			top--;					/* #12 */
- 		}
- 	}
-+	/* Only the inner loop can complete a non-empty expression. */
-+	if (N) {
-+		ret = -EINVAL;
-+		parse_error(pe, FILT_ERR_INVALID_FILTER, ptr - str);
-+		goto out_free;
-+	}
-  out:
- 	if (top != op_stack) {
- 		/* Too many '(' */
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc
-new file mode 100644
-index 000000000000..cc6df762845f
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-incomplete.tc
-@@ -0,0 +1,24 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event filter - reject incomplete logical expressions
-+# requires: events/sched/sched_switch/filter
-+# flags: instance
-+
-+filter=events/sched/sched_switch/filter
-+
-+for base in \
-+    'common_pid == 1' \
-+    'common_pid == 1 || common_pid == 2' \
-+    'common_pid == 1 && common_pid == 2' \
-+    '!(common_pid == 1 || common_pid == 2)'
-+do
-+    printf '%s' "$base" > "$filter"
-+    for tail in '&&' '||' '&& !' '|| !' '&& !! ' '|| !! '; do
-+        if printf '%s' "$base $tail" > "$filter" 2>/dev/null; then
-+            echo "Accepted incomplete filter: $base $tail"
-+            exit_fail
-+        fi
-+    done
-+done
-+
-+echo 0 > "$filter"
-
-base-commit: fd179f8a05be3ccae366b9b96e176b51fbe54aab
+Song
