@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859165;
-	b=G/tLgC1X3M++/f0k+INf/Nm0KQ6NoPsNs+gpbipjGxz2ILNRyECfCdhqqrhARfwS8R5f
-	 Q9Est/ksY/JZeXA6j9balTBqM+tIyPeYOz/PTdWOy5icAYqMhnQMpmkCnU7NiM7u+c64C
-	 ca66G0IrSTft9K2mAoD1XBvxEMTrhYpU5uAMCYqhBe7usXDrzu7CmexJhO6yT0gdhBS0J
-	 ZxCTmSIkQxsbECFXpCqFZqOe9oiVklOWi5lTatMLlr5GkEQ9Vz8wxZrKmsocj8pdaoqkm
-	 4ggP+qM5Prf1czLlASI0dJcw0rW6EZgm/2WwbiPAkxu1dvuFaiVpKjssPUlDzgSE3kw==
+	t=1792859174;
+	b=uNiINsu3PltF4PUK3JYp36+UPOwrpKlo8ko2dRyYAbYS9fosyBBIbUXGdGBqiwVczUAm
+	 CLUj+TP7y7Y+gHNRrgfs7maQZVfb0TzCCTzPOwAnJ5ZXg8ZgVLK8kGqQBorsDe2XiQ9F8
+	 3VGh7eV2A2MV68dOJnHFKDhh2rA5YvgAEN5ivLMuRcOrbS35bVBtJdmoyRgsWXvNYfifd
+	 gPEIbIfM7zQJV45kWkOFp9SSFPfzPMP91d7aE78U09EKsJXteZpo+9pSq+vdhb7+uDCbs
+	 jRsdu6PLdYueQgKW2aWe88oJy7Hx8k3zg1FLgq9qrLJq5sxQV5jMaOGKrtN7zWh5NFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859165;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859174;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=TBimbwroIx2OTPTGvBjQy4VhvmlUpwRqE5PO0gwaMTc=;
-	b=sylUkP5cg33zfmVwbshdkKrbi2h9FonRer5BM2H6mj2tFLgRz0liPaxnQLDjFa0MQfy1
-	 JQtOBwi7xdk+R3EFyfxS5+phdNzBGerR1FuGLO5HtKR7PgBkxX/OvzVZw4Z+5NBsDVcxc
-	 jCUBth1V4lRJcjbHXu0vCEfdISW8muFcP7ZYXNbj2OX8XW+xRfJxK76IeqVzjqekteFzY
-	 rBl470/cXqfAeQR5Y5IprpPoBT03rvML6asBnPcksp9z8tgPC4McuAYXt8AQxE0j0k3LT
-	 gJ35DF2lsmW1pbcaxw9VNsG14i5x/h4HxBMbNsrHlts5ufO8KbuNlP6uAatfUe8b5EA==
+	bh=Lirzxgy2qlCsGDSTcMZz1cbWaINV7NpFI1j9a88VF6w=;
+	b=VPY2QqpgR0iRZk/5+KU10cqkHFHALu6PoyCFXoBwlAMZCwFjNWimhx7TES5/C7XbJHk8
+	 TuFi8TGbodSsV3+pCZ/IIE8CnwRbCuPcCYrNoO0LYI9hdMHsgXjRGbK+ctCN78oSljfx3
+	 uzz00bk5gxrqprgv9Sv+s51FjY5C22aRNDwjK8pzo3W57D0U0hrPzx8AQyHETOoUFrNNY
+	 PaFOZ7uZQzxqiajiGS23XgloX9ZAh6As/V/NwzJEqSveEcplU8oF+6GcRlZaz67hb+//+
+	 kruD2/Y8ZFU18TtzGopXh9UsePlBhns83O87f2JNg63T0SgPZQkZnnerPCWCuwQDPpw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NH8kniEl;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wm8wsSZi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44235606A31A;
-	Sat, 24 Oct 2026 16:26:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C60606A321;
+	Sat, 24 Oct 2026 16:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NH8kniEl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730011F01828;
-	Sat, 24 Oct 2026 16:26:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wm8wsSZi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD221F031EC;
+	Sat, 24 Oct 2026 16:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859165;
-	bh=TBimbwroIx2OTPTGvBjQy4VhvmlUpwRqE5PO0gwaMTc=;
+	s=k20260515; t=1792859174;
+	bh=Lirzxgy2qlCsGDSTcMZz1cbWaINV7NpFI1j9a88VF6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NH8kniElpLfFguNp8fKdKaQG8XAaMIJxQFjn3LyGGNEFjj/fVkT6Dh6470BZWotwK
-	 6RdGY8qEJiX8NzFSFr4AqE0ForYJU9JdaOh8eDFiUJEggMPhpVeYEqIEAjyvkXAamb
-	 dxt2RUunT9Wd901wWRiaNk3GDXLksGZk1FzZ1n8PL9nAJb36u6Lk2/b4vJ0beShtNd
-	 tEJU/PWKVNU5JEUTIQTzCOuZsJn86zD0/wR7L4epAxzWL2fuLN0gc4kh5wH48UAAGQ
-	 4U8SNo7oqfL9qi1F/Tb9jkks4vakdzrQmkIIYCY8FtpYRFIKqbnHok+7F8ShB0cK7Y
-	 PwIbBIi8TfCpg==
+	b=Wm8wsSZii41Ydt1CZc3Flh9Q0h+6tEb2JHcHuSvc32RjjouKKUX8KnOEBjzg04jy7
+	 bQOSSi4pa5yMuaCkJYq+mVPvHBQFASpE3dDrrZsJ5xc6O4m3acbJZvXKZPZYpfpErH
+	 3lbjccGrr9AwDuOgCHEe2m5V/Uk2mkEYRUYSttKZtqR8J07zKfgTpuDHVBCkCL9ApK
+	 PQUYAy8AGSt7RHk/1u3WW2zgSIYkDW4CfMmfIRYELJ7vBmSLpoCJrdyFPMOXOurypg
+	 IEPS+J3m2qfEeegGldGEJn94GjCh18U2ef56oghzbvcVjGv7Y6FNlNM675WDykhQTG
+	 W3Cq5wFEjfpwQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 04/10] tracing/filters: Handle out-of-range CPU for OP_NE in cpumask comparison
-Date: Sun, 25 Oct 2026 01:26:01 +0900
-Message-ID: <179285916115.466249.16061782430177051612.stgit@devnote2>
+Subject: [PATCH 05/10] tracing/filters: Report parse error on all -EINVAL paths in filter parsing
+Date: Sun, 25 Oct 2026 01:26:10 +0900
+Message-ID: <179285917054.466249.6580828464905931113.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,34 +69,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In filter_pred_##size##_cpumask(), if the event's scalar CPU value is
-out of range (cpu >= nr_cpu_ids), it unconditionally returns 0.
+Several error paths in filter parsing return -EINVAL (or -1) without
+calling parse_error() to set pe->lasterr:
 
-However, if the predicate operation is OP_NE (e.g., field != CPUS{0,1}),
-an out-of-range CPU cannot match any valid CPU in the user-provided
-cpumask and the condition is satisfied. Returning 0 produces a false
-negative.
+1. In parse_pred(), when an invalid token is encountered where a field name
+   is expected (e.g., "common_pid == 1 || (common_pid == 2 && )"), len is 0
+   and it returns -1 without calling parse_error().
+2. In process_preds(), when !nr_preds (e.g., empty or whitespace-only
+   filter), it returns -EINVAL before predicate_parse() can set
+   FILT_ERR_NO_FILTER.
+3. In predicate_parse(), when op_stack overflows or the jump target check
+   fails, it returns -EINVAL without calling parse_error().
 
-Return "pred->op == OP_NE" instead of 0 when cpu >= nr_cpu_ids.
+Because pe->lasterr remains 0 on these paths, append_filter_err() falls
+back to printing an uninformative "Error: (0)" instead of reporting the
+diagnostic and error position.
 
-Fixes: 3cbec9d7b93d ("tracing/filters: Enable filtering a scalar field by a cpumask")
+Call parse_error() with the appropriate error code on all of these paths.
+
+Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_filter.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 69da95f42541..d9aeeec4ed91 100644
+index d9aeeec4ed91..7e119c7164f0 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -762,7 +762,7 @@ static int filter_pred_##size##_cpumask(struct filter_pred *pred, void *event)	\
- 	unsigned int cpu = *addr;						\
- 										\
- 	if (cpu >= nr_cpu_ids)							\
--		return 0;							\
-+		return pred->op == OP_NE;					\
- 										\
- 	return do_filter_scalar_cpumask(pred->op, cpu, pred->mask);		\
- }
+@@ -515,6 +515,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+ 		switch (*next) {
+ 		case '(':					/* #2 */
+ 			if (top - op_stack > nr_parens) {
++				parse_error(pe, FILT_ERR_TOO_MANY_OPEN,
++					    next - str);
+ 				ret = -EINVAL;
+ 				goto out_free;
+ 			}
+@@ -638,6 +640,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+ 		prog[i].when_to_branch = invert;
+ 		/* Make sure the program always moves forward */
+ 		if (WARN_ON(prog[i].target <= i)) {
++			parse_error(pe, FILT_ERR_INVALID_FILTER, 0);
+ 			ret = -EINVAL;
+ 			goto out_free;
+ 		}
+@@ -1688,8 +1691,10 @@ static int parse_pred(const char *str, void *data,
+ 
+ 	len = i - s;
+ 
+-	if (!len)
+-		return -1;
++	if (!len) {
++		parse_error(pe, FILT_ERR_INVALID_FILTER, pos + i);
++		return -EINVAL;
++	}
+ 
+ 	field_name = kmemdup_nul(str + s, len, GFP_KERNEL);
+ 	if (!field_name)
+@@ -2277,8 +2282,10 @@ static int process_preds(struct trace_event_call *call,
+ 		return ret;
+ 	}
+ 
+-	if (!nr_preds)
++	if (!nr_preds) {
++		parse_error(pe, FILT_ERR_NO_FILTER, 0);
+ 		return -EINVAL;
++	}
+ 
+ 	prog = predicate_parse(filter_string, nr_parens, nr_preds,
+ 			       parse_pred, call, pe);
 
