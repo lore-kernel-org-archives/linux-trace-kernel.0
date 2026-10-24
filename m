@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859212;
-	b=aOBB9DsEgT4/BlWZUIGtkdPX9d9pCyllcC80kzB7Jh5HZMFOCfN31sT918AY+jgabV1B
-	 j/vi+/meryumLoEcxBd0/DmIXJp/sjj16IFj09PxK5GgOd3rcEs/5Hn6SidgvKV1fIa9o
-	 m7t+p1ZKvcNKtN4Gz65cITE5c1PrDyVmoFd95xSI1ZjuGn0u6nqel8P++XCStS74XOayS
-	 PFhev34G/Mj5ukNvinx+zBkrv/S5l5VgFYS/f3dIYrrE3vHjAZIfzpdfM/+1NehV9viAx
-	 kh8cSEwR8atkQsUxG/lIqRk5sviQcmxXvi0CtivzTUTkKmm+iwV5EGVFxME1mEFItVw==
+	t=1792859220;
+	b=Cnr7FU+nynZARcCAOoJjO3EnbwoIUsQOquWvEnWsYufPTYXXvzqBKuFpt8pHve23lQ61
+	 bMCnYJSqNqZxLcrk1+XsRXDtFF2/b4U4LRURDEcNwU9d8ORjRCgu2HGC8RN0KQ9vmaLr4
+	 yd/ORRI/HVzn2zApWMsRofjdkXNA+0ta0eKTGZEDM4W+SQVo+lV1WoNBxO43j2tSB5i3q
+	 rhhfqEfw4I1GtqDikHrBgQpUtBgjXQ6vZc/qnsPKWWtXDzmkGLoEMWqKbFfc+qfMO25Qm
+	 bREnOghb9pjL5IQbjszQ+rHhxxW8jKI67LG7vasyknvfdz5fEDwKrc6xNzbxIHuOc2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859212;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859220;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=h34A9ML9ik3KJXsE5nE+s5W3b7SYRZ1eoX9MmAZBOyI=;
-	b=gCkS5hGkWSHDtuoPOu9KWTNDB6cqnmPgsr/Gq09GeDrsZRzyNc9xE+isIzEgSLituHtI
-	 2k+UsTxk7Lezb57N4QCx9yqsE4PqkfAwq+yyMsNwmmAi7qzjJWVaibnv8W70E/Q2Fc8zz
-	 JwBeoRqGRt3i0jFpcmGjbgkgfA+O9rQsIBUR7E6kiq1wBZjczltChH2IRZYy1VMf9+WpX
-	 garyElaTQbL8GLZG++PwJVdHc3uXleUVRXA0UwSuM4ol1NHpJGK99dDlqpRShR8/LMj/z
-	 dJIzgOs25xLX2baLabuhIaGXBeHEaVyOhMuAfHA6RNLAntaXhtxbnwGNQd9jRavqltQ==
+	bh=A/Elg2VGIiiKUhU95MSseS/kc7VdURgqQOZScaQReX0=;
+	b=nIOIDpo+a1uFjH1bgr6sBr8DWg4NaQp59MizgcjcTqofRnFErttMo4S76s+4l9JcuZmO
+	 fHnSgh4MgW7GbKueWoLIqgJM2IdQryU7/hUS4EapcIJCbzTj61mdOYetRPqekegALb/ju
+	 F6czafN52GRog93tOyB5UmlJCucxSyB/0Sy77kM3ompc0a/yJxFZskowuQmw2twIH68K3
+	 BPztxbfvggBWupsFSRkpqnntaXIT+4p7nVkf91nuEvP+PLZReIJk5wb+y50agWXPUlDkW
+	 y6yZufodugjeicAumWCa/d2f8bRRvyPqPI0T8o3gLMvDLjKw5GmFmFElthczg69FcFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MA0p4bnS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G3UHEVNS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7632606A31A;
-	Sat, 24 Oct 2026 16:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EAE606A31A;
+	Sat, 24 Oct 2026 16:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MA0p4bnS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A405E1F01828;
-	Sat, 24 Oct 2026 16:26:49 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G3UHEVNS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6D11F01828;
+	Sat, 24 Oct 2026 16:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859211;
-	bh=h34A9ML9ik3KJXsE5nE+s5W3b7SYRZ1eoX9MmAZBOyI=;
+	s=k20260515; t=1792859219;
+	bh=A/Elg2VGIiiKUhU95MSseS/kc7VdURgqQOZScaQReX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MA0p4bnSItdm55b3AdfDpUjMdyCZzSR7Ir46OhVZHX2wyvqJyu0OpN5uGIpz9v2gi
-	 qd9Dv8tOla1ZV9FRYM8UOptIWSC3qQ5bht9V34zcriLa4piwMiI0hCqvUWIjCw9HD9
-	 v+AzNXLpF7Pey5oqnjD4kooztkptrQNS1NCgmdG3nNZ4JDO5fx58qmrVBWcCdWUpo4
-	 jepZ9nFG+UGlgi7gS+qyTmG4wZMFaSVjTEuI6G1w1/zeDlgp6VcDO+hVNKv+Qb/48N
-	 EB+FjnRRbNyaOAGVDt2zTjB3ZyGgcjZcF9LRmiK+PSJeVSskUSgqRCG5yYd1JCHqvm
-	 m4zjsAM4cM1Xg==
+	b=G3UHEVNSaks1iOmIJrWm8Q6ociwN6rNuXS4p4MAPXnc/A4Aa3I4c/sCauVLreSNjd
+	 T7Lix7lZVHzJsgqy9d53yxlsiGra1zeAJLX1N/yua7ZPz5wz8fftLpFDLGQgD027ht
+	 Cm/9r71KvNv+rxfatYahs8rKI4o05QCZoy1SysNvLFpNLcOmIl4bNIpVmLOds7dELT
+	 gqOk/Y95yHk9ZLcHywJEkM3S62J8br+Sln0gOccjOSZGyYNpQAJClBS32YlydUMVS/
+	 no7nll/soCk7RSXrEcINNUWPxTrgSuQSvB3h3tqrCKCwHiwN5ZOdLSpeUSXl9Sqmcx
+	 njIU4uNzh9LDg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 09/10] tracing/filters: Terminate filter string at first newline
-Date: Sun, 25 Oct 2026 01:26:47 +0900
-Message-ID: <179285920744.466249.13202891755334148747.stgit@devnote2>
+Subject: [PATCH 10/10] selftests/ftrace: Add event filter syntax check test case
+Date: Sun, 25 Oct 2026 01:26:56 +0900
+Message-ID: <179285921665.466249.3671034793634001868.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,81 +69,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Each trace event or subsystem only holds a single filter, and
-append_filter_err() / tracing_log_err() caret placement assumes a
-single-line filter string. However, apply_event_filter() and
-apply_subsystem_event_filter() only call strstrip(), which strips
-trailing newlines but leaves embedded newlines intact.
-
-An embedded newline in a filter string (for example inside 'CPUS{0\n"}')
-causes cpulist_parse() / bitmap_parselist() to treat '\n' as the end of
-the cpulist and ignore trailing characters before '}', desynchronizing
-quote tracking between calc_stack() and parse_pred() and misaligning
-error_log caret reporting.
-
-Terminate filter_string at the first '\n' in apply_event_filter(),
-apply_subsystem_event_filter(), and create_filter_start() so only the
-first line is parsed.
+Add a new ftracetest test case (filter-syntax-check.tc) to verify valid
+event filter expressions, error_log caret reporting for malformed filter
+expressions (empty filters, missing fields, unbalanced parentheses and
+quotes, dangling logical operators, invalid fields/values/cpulists),
+newline truncation on multi-line filter input, and error returns on
+invalid subsystem filters.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../ftrace/test.d/filter/filter-syntax-check.tc    |   52 ++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 89f4e119628f..213ed9bdf6f3 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -2425,10 +2425,15 @@ static int create_filter_start(char *filter_string, bool set_str,
- 	struct event_filter *filter;
- 	struct filter_parse_error *pe = NULL;
- 	int err = 0;
-+	char *p;
- 
- 	if (WARN_ON_ONCE(*pse || *filterp))
- 		return -EINVAL;
- 
-+	p = strchr(filter_string, '\n');
-+	if (p)
-+		*p = '\0';
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
+new file mode 100644
+index 000000000000..68c8accc5ffd
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
+@@ -0,0 +1,52 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: event filter - test filter syntax error check
++# requires: set_event events/sched/sched_switch/filter error_log
++# flags: instance
 +
- 	filter = kzalloc_obj(*filter);
- 	if (filter && set_str) {
- 		filter->filter_string = kstrdup(filter_string, GFP_KERNEL);
-@@ -2542,11 +2547,16 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
- {
- 	struct trace_event_call *call = file->event_call;
- 	struct event_filter *filter = NULL;
-+	char *p;
- 	int err;
- 
- 	if (file->flags & EVENT_FILE_FL_FREED)
- 		return -ENODEV;
- 
-+	p = strchr(filter_string, '\n');
-+	if (p)
-+		*p = '\0';
++check_error() { # command-with-error-pos-by-^
++    ftrace_errlog_check 'event filter parse error' "$1" 'events/sched/sched_switch/filter'
++}
 +
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_disable(file);
- 		filter = event_filter(file);
-@@ -2594,6 +2604,7 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 	struct trace_array *tr = dir->tr;
- 	struct event_filter *filter = NULL;
- 	int err = 0;
-+	char *p;
- 
- 	guard(mutex)(&event_mutex);
- 
-@@ -2601,6 +2612,10 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 	if (!dir->nr_events)
- 		return -ENODEV;
- 
-+	p = strchr(filter_string, '\n');
-+	if (p)
-+		*p = '\0';
++# Valid filter expressions
++echo '(common_pid == 0)' > events/sched/sched_switch/filter
++echo '((common_pid == 0) && (prev_pid == 0))' > events/sched/sched_switch/filter
++echo 'prev_comm ~ "*sh"' > events/sched/sched_switch/filter
++echo 'common_pid == CPUS{0}' > events/sched/sched_switch/filter
++echo 'common_pid != CPUS{0}' > events/sched/sched_switch/filter
++echo 0 > events/sched/sched_switch/filter
 +
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_free_subsystem_preds(dir, tr);
- 		remove_filter_string(system->filter);
++# Empty or meaningless filter expressions
++check_error '^()'						# NO_FILTER
++check_error '=^= 1'						# INVALID_FILTER
++
++# Unbalanced parentheses and quotes
++check_error '^(common_pid == 1'					# TOO_MANY_OPEN
++check_error 'common_pid == 1^)'					# TOO_MANY_CLOSE
++check_error 'prev_comm == ^"bash'				# MISSING_QUOTE
++
++# Dangling logical operators
++check_error 'common_pid == 1 &&^'				# TOO_MANY_PREDS
++check_error 'common_pid == 1 ||^'				# TOO_MANY_PREDS
++check_error 'common_pid == 1 || (common_pid == 2 && )^'		# INVALID_FILTER
++
++# Invalid field, operator, or operand value
++check_error 'no_such_field ^== 1'				# FIELD_NOT_FOUND
++check_error 'common_pid == @^'					# INVALID_VALUE
++check_error 'common_pid == CPUS0}^'				# MISSING_BRACE_OPEN
++check_error 'common_pid == CPUS{}^'				# INVALID_CPULIST
++
++# Multi-line input must be truncated at the first newline
++echo > error_log
++! ( printf "common_pid == CPUS{0\n\"} && common_pid == 0 && common_pid == CPUS{0\n\"}" | \
++    dd of=events/sched/sched_switch/filter bs=4096 ) 2> /dev/null
++grep -q "Missing '}'" error_log
++! grep -q "Missing matching quote" error_log
++
++# Subsystem filter must fail on invalid filter expressions
++echo 'common_pid >= 0' > events/sched/filter
++! echo 'no_such_field == 1' > events/sched/filter
++! echo 'common_pid == 1 &&' > events/sched/filter
++echo 0 > events/sched/filter
++
++exit 0
 
