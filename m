@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859147;
-	b=JjfP683jlKNDk0wzU2THw14Bv10W/BiszKRI1MSQe+q5jaMf8QEsz6ndFi3xahGAkyuR
-	 PR7QIzwNkdI/NNTSjd/UdyaXn61RWVemBYFwwU3Y2WEjVbvyMqiEaOai3dy5rEEKnERfr
-	 /FLYj71Ypd8RwtpJ3T8rnxYRNxi+CjSparJWukv8Vj343i11xDffADQFExkBTq3ZX30QV
-	 IVlGGeBCFseJbozSdxLCyw9NpPSFsJGeKWFpNrR3hMSS3z0H4g/+JhEsm6dSU5JSRMXVR
-	 4H1wYIuaXVGaWec8ijjXHSvjIRV0EFL65hlCFhIC/zJHi5OqHJaC53aZ2KLCRnV5rPg==
+	t=1792859156;
+	b=LtOvkIai4xDliQrdJnaHQ0EhluJ5DetP02DdikhiuQHhmnO54x74kJUZ8jad8SM/2pU2
+	 XAq1Q6UXi9DPFHMLxoomAKAio1Wero+LUmS4iMfmVrsAXecaNy/oN+aVTLAOntezgJVVM
+	 zvlCjvSoQ0YnxIH4cdCY2FAcpg7/HeJNfL+CVZOInRbKeTCNwXyD3QOQM4ID0l7UR6Qtt
+	 s0RwuRZklINZ87YpI/ahmJmKQNO7dN337/o4fQoceuO2qg8jUOiKIPHPTfO7J//2/RoNQ
+	 WJ6z+5rs/6pmnFCzKEyXovs36F+CWzNFGtjIFJ0bwyaapm3GabwaVctizsTWXLm8oag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859147;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859156;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=8+7QML/MTirhKCJ2JXKlhX3yt6vot1PNexqDkPxeiVU=;
-	b=ElZMmu6sKQ/WHa2Fnk00tVy2ZQoQtGsCas2hy18wRvv1GfINdzNR10cEH/ZCeUhkG2ji
-	 +rMrZBCXKQ3cYsbIbh9uAuxUS8hFm+Ny7iMiRdHRSRndxMtiNsujnAzZzMheV/eITKPyv
-	 vh4IpT35kkrQB5xshcIvk8vsUjQVN3yFAfqQHx7M+YZhZb2Mw8+aJhAXqPJ4iQMmV7cPe
-	 3+NpR3okUOAqCK2DkUF20/NXRxx6SrRNl+lkl6cIcQ/cnUw5bijnN+/pRNBkNjmq1b5nG
-	 45tWTlPAx4CNm2ahOW5mtqi4bqA8rWnLQM3Z/cdeCUtJMJuVsz8EOynad9WkNlpwL0Q==
+	bh=dX070Ewz6qc5pSc5W0pr0hTHo3VE/xkTK0rhCXuN9c4=;
+	b=1nTN91L5ZYBcCuxIT0Hkj+o0V7+0GJ/SiqADS8y+BvNBTSEkCVTa9q5TWAvNdpi6wvp8
+	 gh+0s4uPXlaM2R36hZNeKqyQMGyK6loys5Fptyn/FV0Fsvt8jUw6lHajMEEw0cYZ4rfa0
+	 Y8o2FRJf1kwfrRRgiP9XKNR9JUOl26SdDu8mPp0wNjdKxXLS4obxKywJbjWH6HmYw//ny
+	 u4l7IKypqLwgNZZbZ/9m7dsLb9qmUl2mf3pd+1Df9ftrS2og7btx8TSrGnOby7fCNR+Ka
+	 8V3ba4wvxTOZg7vnunIr1uUUrV9ls8rEWL/a4d1XbgQfjzxLelQuessvWHQ6AsFcrQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZsGKfJX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aIJvUOFu;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B97606A31E;
-	Sat, 24 Oct 2026 16:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47754606A31D;
+	Sat, 24 Oct 2026 16:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZsGKfJX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE521F01825;
-	Sat, 24 Oct 2026 16:25:44 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aIJvUOFu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C27C1F01829;
+	Sat, 24 Oct 2026 16:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859146;
-	bh=8+7QML/MTirhKCJ2JXKlhX3yt6vot1PNexqDkPxeiVU=;
+	s=k20260515; t=1792859155;
+	bh=dX070Ewz6qc5pSc5W0pr0hTHo3VE/xkTK0rhCXuN9c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XZsGKfJXNKTs91gAm0E9k+Jhggh8S7t7r3Vf+jk7VoPooUsV/xCcAiob7iCEa5rhw
-	 JJoxc0tBHudD0m95/zlBqWbh8cKGX8D4wadCRENkmEeRZ9gAo5b8QflWICaix5kmWV
-	 9hOgWYGMx58tSbQk6pMBUxZX273v8QGPQn79pn42lWrUpubUF6wTZYPJKt78Kxy4xx
-	 AFsIcrMEJTkWdrkHS11Y8r2KkxfGrdzwxR3eYMcbuM53jZizdfcUgQNqa+Z4rQ9JY4
-	 XRGn577uFPGcMoJG1oXCgyxKMOgw4z3AvLIvlxXIw/D9xcI3Kq+eXTLjsUY5UCCws/
-	 kj7Ie5SPYTH6g==
+	b=aIJvUOFu69yVoyLVnTDtLpA6NUyYaSuZCbBYBWypd3if4KXt9g3uJ9Dfvk6421Nmz
+	 pcDLj7GVwctBrZ4Sb0tsP4zAWMvvow3MHqC+gQXwpi4R1E2v1gcio34OIuaJrjDvQg
+	 WZ64xIhcg7ci8j1xhV8p8lnRmr29Oz+Gf1zOYSp2gBekXhrQ4bpyITiyUSNLAnBdZe
+	 LIz7urykTa8m68SnnlIEbQf9TthB8F4Kk6LDbdzBslINg626ugXx8GD0DvI53oR78E
+	 qel+BsqM3YAT4fR0P0Nohv6paAicayymf+SHrXAjZj1jjO7dRniED8Nw85JONH00e4
+	 jol3jz5QcZmcw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 02/10] tracing/filters: Fix false success return in process_system_preds()
-Date: Sun, 25 Oct 2026 01:25:42 +0900
-Message-ID: <179285914279.466249.18363232291728825688.stgit@devnote2>
+Subject: [PATCH 03/10] tracing/filters: Check CPU bounds before cpumask_test_cpu() in do_filter_cpumask_scalar()
+Date: Sun, 25 Oct 2026 01:25:52 +0900
+Message-ID: <179285915196.466249.7067056297377577459.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,76 +69,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In process_system_preds(), "fail" is initialized to true to indicate
-whether any event in the subsystem successfully applied the filter.
-However, "fail = false;" was placed at the end of the event loop outside
-the error check, unconditionally clearing "fail" on every iteration even
-when process_preds() returned an error.
+In parse_pred(), single-CPU cpumask filters are parsed via cpulist_parse(),
+which checks against nr_cpumask_bits (NR_CPUS). When NR_CPUS > nr_cpu_ids,
+a user can provide a CPU number where cpu >= nr_cpu_ids.
 
-As a result, if every event in the subsystem fails to match the filter
-(e.g., an invalid field), process_system_preds() returns 0 (success)
-instead of -EINVAL. Consequently, create_system_filter() considers the
-operation successful and silently resets the subsystem filter display to
-the default global filter message instead of reporting the parse error.
+When evaluating such a predicate in filter_pred_cpumask_cpu(),
+do_filter_cpumask_scalar() calls cpumask_test_cpu(cpu, mask) without
+checking cpu against nr_cpu_ids. This triggers a WARN_ON_ONCE under
+CONFIG_DEBUG_PER_CPU_MAPS and causes an out-of-bounds bit test.
 
-Move "fail = false;" into the else branch of the error check so that
-"fail" is only cleared when at least one event filter succeeds. Because
-file->filter is still replaced even when process_preds() fails, check
-!list_empty(&filter_list->list) on the fail and fail_mem paths so any
-replaced old filters are freed after an RCU grace period via
-delay_free_filter().
+Check "cpu >= nr_cpu_ids" at the start of do_filter_cpumask_scalar(). When
+the CPU index is out of bounds, return "op == OP_NE" since an out-of-range
+CPU is never present in a valid cpumask.
 
-Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+Fixes: 38c6f6808389 ("tracing/filters: Further optimise scalar vs cpumask comparison")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ kernel/trace/trace_events_filter.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 18ce3ec00d34..c2c35b4de85e 100644
+index c2c35b4de85e..69da95f42541 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -2332,8 +2332,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 			filter_disable(file);
- 			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 			append_filter_err(tr, pe, filter);
--		} else
-+		} else {
- 			event_set_filtered_flag(file);
-+			fail = false;
-+		}
- 
- 
- 		filter_item = kzalloc_obj(*filter_item);
-@@ -2348,8 +2350,6 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 		filter_item->filter = event_filter(file);
- 		event_set_filter(file, filter);
- 		filter = NULL;
--
--		fail = false;
- 	}
- 
- 	if (fail)
-@@ -2364,14 +2364,17 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	return 0;
-  fail:
- 	/* No call succeeded */
--	free_filter_list(filter_list);
-+	if (!list_empty(&filter_list->list))
-+		delay_free_filter(filter_list);
-+	else
-+		free_filter_list(filter_list);
- 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 	return -EINVAL;
-  fail_mem:
- 	__free_filter(filter);
- 
--	/* If any call succeeded, we still need to sync */
--	if (!fail)
-+	/* If any filter was replaced, we still need to sync */
-+	if (!list_empty(&filter_list->list))
- 		delay_free_filter(filter_list);
- 	else
- 		free_filter_list(filter_list);
+@@ -695,6 +695,9 @@ do_filter_scalar_cpumask(int op, unsigned int cpu, const struct cpumask *mask)
+ static inline int
+ do_filter_cpumask_scalar(int op, const struct cpumask *mask, unsigned int cpu)
+ {
++	if (cpu >= nr_cpu_ids)
++		return op == OP_NE;
++
+ 	switch (op) {
+ 	case OP_EQ:
+ 		return cpumask_test_cpu(cpu, mask) &&
 
