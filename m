@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859156;
-	b=LtOvkIai4xDliQrdJnaHQ0EhluJ5DetP02DdikhiuQHhmnO54x74kJUZ8jad8SM/2pU2
-	 XAq1Q6UXi9DPFHMLxoomAKAio1Wero+LUmS4iMfmVrsAXecaNy/oN+aVTLAOntezgJVVM
-	 zvlCjvSoQ0YnxIH4cdCY2FAcpg7/HeJNfL+CVZOInRbKeTCNwXyD3QOQM4ID0l7UR6Qtt
-	 s0RwuRZklINZ87YpI/ahmJmKQNO7dN337/o4fQoceuO2qg8jUOiKIPHPTfO7J//2/RoNQ
-	 WJ6z+5rs/6pmnFCzKEyXovs36F+CWzNFGtjIFJ0bwyaapm3GabwaVctizsTWXLm8oag==
+	t=1792859165;
+	b=G/tLgC1X3M++/f0k+INf/Nm0KQ6NoPsNs+gpbipjGxz2ILNRyECfCdhqqrhARfwS8R5f
+	 Q9Est/ksY/JZeXA6j9balTBqM+tIyPeYOz/PTdWOy5icAYqMhnQMpmkCnU7NiM7u+c64C
+	 ca66G0IrSTft9K2mAoD1XBvxEMTrhYpU5uAMCYqhBe7usXDrzu7CmexJhO6yT0gdhBS0J
+	 ZxCTmSIkQxsbECFXpCqFZqOe9oiVklOWi5lTatMLlr5GkEQ9Vz8wxZrKmsocj8pdaoqkm
+	 4ggP+qM5Prf1czLlASI0dJcw0rW6EZgm/2WwbiPAkxu1dvuFaiVpKjssPUlDzgSE3kw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859156;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859165;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=dX070Ewz6qc5pSc5W0pr0hTHo3VE/xkTK0rhCXuN9c4=;
-	b=1nTN91L5ZYBcCuxIT0Hkj+o0V7+0GJ/SiqADS8y+BvNBTSEkCVTa9q5TWAvNdpi6wvp8
-	 gh+0s4uPXlaM2R36hZNeKqyQMGyK6loys5Fptyn/FV0Fsvt8jUw6lHajMEEw0cYZ4rfa0
-	 Y8o2FRJf1kwfrRRgiP9XKNR9JUOl26SdDu8mPp0wNjdKxXLS4obxKywJbjWH6HmYw//ny
-	 u4l7IKypqLwgNZZbZ/9m7dsLb9qmUl2mf3pd+1Df9ftrS2og7btx8TSrGnOby7fCNR+Ka
-	 8V3ba4wvxTOZg7vnunIr1uUUrV9ls8rEWL/a4d1XbgQfjzxLelQuessvWHQ6AsFcrQA==
+	bh=TBimbwroIx2OTPTGvBjQy4VhvmlUpwRqE5PO0gwaMTc=;
+	b=sylUkP5cg33zfmVwbshdkKrbi2h9FonRer5BM2H6mj2tFLgRz0liPaxnQLDjFa0MQfy1
+	 JQtOBwi7xdk+R3EFyfxS5+phdNzBGerR1FuGLO5HtKR7PgBkxX/OvzVZw4Z+5NBsDVcxc
+	 jCUBth1V4lRJcjbHXu0vCEfdISW8muFcP7ZYXNbj2OX8XW+xRfJxK76IeqVzjqekteFzY
+	 rBl470/cXqfAeQR5Y5IprpPoBT03rvML6asBnPcksp9z8tgPC4McuAYXt8AQxE0j0k3LT
+	 gJ35DF2lsmW1pbcaxw9VNsG14i5x/h4HxBMbNsrHlts5ufO8KbuNlP6uAatfUe8b5EA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aIJvUOFu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NH8kniEl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47754606A31D;
-	Sat, 24 Oct 2026 16:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44235606A31A;
+	Sat, 24 Oct 2026 16:26:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aIJvUOFu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C27C1F01829;
-	Sat, 24 Oct 2026 16:25:53 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NH8kniEl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730011F01828;
+	Sat, 24 Oct 2026 16:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859155;
-	bh=dX070Ewz6qc5pSc5W0pr0hTHo3VE/xkTK0rhCXuN9c4=;
+	s=k20260515; t=1792859165;
+	bh=TBimbwroIx2OTPTGvBjQy4VhvmlUpwRqE5PO0gwaMTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aIJvUOFu69yVoyLVnTDtLpA6NUyYaSuZCbBYBWypd3if4KXt9g3uJ9Dfvk6421Nmz
-	 pcDLj7GVwctBrZ4Sb0tsP4zAWMvvow3MHqC+gQXwpi4R1E2v1gcio34OIuaJrjDvQg
-	 WZ64xIhcg7ci8j1xhV8p8lnRmr29Oz+Gf1zOYSp2gBekXhrQ4bpyITiyUSNLAnBdZe
-	 LIz7urykTa8m68SnnlIEbQf9TthB8F4Kk6LDbdzBslINg626ugXx8GD0DvI53oR78E
-	 qel+BsqM3YAT4fR0P0Nohv6paAicayymf+SHrXAjZj1jjO7dRniED8Nw85JONH00e4
-	 jol3jz5QcZmcw==
+	b=NH8kniElpLfFguNp8fKdKaQG8XAaMIJxQFjn3LyGGNEFjj/fVkT6Dh6470BZWotwK
+	 6RdGY8qEJiX8NzFSFr4AqE0ForYJU9JdaOh8eDFiUJEggMPhpVeYEqIEAjyvkXAamb
+	 dxt2RUunT9Wd901wWRiaNk3GDXLksGZk1FzZ1n8PL9nAJb36u6Lk2/b4vJ0beShtNd
+	 tEJU/PWKVNU5JEUTIQTzCOuZsJn86zD0/wR7L4epAxzWL2fuLN0gc4kh5wH48UAAGQ
+	 4U8SNo7oqfL9qi1F/Tb9jkks4vakdzrQmkIIYCY8FtpYRFIKqbnHok+7F8ShB0cK7Y
+	 PwIbBIi8TfCpg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 03/10] tracing/filters: Check CPU bounds before cpumask_test_cpu() in do_filter_cpumask_scalar()
-Date: Sun, 25 Oct 2026 01:25:52 +0900
-Message-ID: <179285915196.466249.7067056297377577459.stgit@devnote2>
+Subject: [PATCH 04/10] tracing/filters: Handle out-of-range CPU for OP_NE in cpumask comparison
+Date: Sun, 25 Oct 2026 01:26:01 +0900
+Message-ID: <179285916115.466249.16061782430177051612.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,38 +69,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In parse_pred(), single-CPU cpumask filters are parsed via cpulist_parse(),
-which checks against nr_cpumask_bits (NR_CPUS). When NR_CPUS > nr_cpu_ids,
-a user can provide a CPU number where cpu >= nr_cpu_ids.
+In filter_pred_##size##_cpumask(), if the event's scalar CPU value is
+out of range (cpu >= nr_cpu_ids), it unconditionally returns 0.
 
-When evaluating such a predicate in filter_pred_cpumask_cpu(),
-do_filter_cpumask_scalar() calls cpumask_test_cpu(cpu, mask) without
-checking cpu against nr_cpu_ids. This triggers a WARN_ON_ONCE under
-CONFIG_DEBUG_PER_CPU_MAPS and causes an out-of-bounds bit test.
+However, if the predicate operation is OP_NE (e.g., field != CPUS{0,1}),
+an out-of-range CPU cannot match any valid CPU in the user-provided
+cpumask and the condition is satisfied. Returning 0 produces a false
+negative.
 
-Check "cpu >= nr_cpu_ids" at the start of do_filter_cpumask_scalar(). When
-the CPU index is out of bounds, return "op == OP_NE" since an out-of-range
-CPU is never present in a valid cpumask.
+Return "pred->op == OP_NE" instead of 0 when cpu >= nr_cpu_ids.
 
-Fixes: 38c6f6808389 ("tracing/filters: Further optimise scalar vs cpumask comparison")
+Fixes: 3cbec9d7b93d ("tracing/filters: Enable filtering a scalar field by a cpumask")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |    3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace_events_filter.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index c2c35b4de85e..69da95f42541 100644
+index 69da95f42541..d9aeeec4ed91 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -695,6 +695,9 @@ do_filter_scalar_cpumask(int op, unsigned int cpu, const struct cpumask *mask)
- static inline int
- do_filter_cpumask_scalar(int op, const struct cpumask *mask, unsigned int cpu)
- {
-+	if (cpu >= nr_cpu_ids)
-+		return op == OP_NE;
-+
- 	switch (op) {
- 	case OP_EQ:
- 		return cpumask_test_cpu(cpu, mask) &&
+@@ -762,7 +762,7 @@ static int filter_pred_##size##_cpumask(struct filter_pred *pred, void *event)	\
+ 	unsigned int cpu = *addr;						\
+ 										\
+ 	if (cpu >= nr_cpu_ids)							\
+-		return 0;							\
++		return pred->op == OP_NE;					\
+ 										\
+ 	return do_filter_scalar_cpumask(pred->op, cpu, pred->mask);		\
+ }
 
