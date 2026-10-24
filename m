@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859138;
-	b=3juwrIOfHuJ0lua3EYi/xRtv5emRKHXiebKTqSz+gT+SBkxtkfChx9o5ht5AubGxXljH
-	 mK9QUhogBJUND7oqy8Z371aOpvzwIdhFgmONzefx1SK0mQaaqtSnjVhr4iZEWQDhJnCTN
-	 vgnp/2m+J7w2rJ1qO9NWEaa0ug6dIzzYozKbjrAScWHLibMcqhmfsGyYvNvHMQzuOt+lq
-	 g3mvScKJl6thRypOrsnnmYbbqKvXz++8d1jpfnOq2ev05xH/tQ6R7lnEIqVQb03x20P3S
-	 +C6LowvE8rf2C8aeiFvEQfCB0eiuh4k499Dt/9m47tiBVSPPqfFJINmULM7kki5kIAw==
+	t=1792859147;
+	b=JjfP683jlKNDk0wzU2THw14Bv10W/BiszKRI1MSQe+q5jaMf8QEsz6ndFi3xahGAkyuR
+	 PR7QIzwNkdI/NNTSjd/UdyaXn61RWVemBYFwwU3Y2WEjVbvyMqiEaOai3dy5rEEKnERfr
+	 /FLYj71Ypd8RwtpJ3T8rnxYRNxi+CjSparJWukv8Vj343i11xDffADQFExkBTq3ZX30QV
+	 IVlGGeBCFseJbozSdxLCyw9NpPSFsJGeKWFpNrR3hMSS3z0H4g/+JhEsm6dSU5JSRMXVR
+	 4H1wYIuaXVGaWec8ijjXHSvjIRV0EFL65hlCFhIC/zJHi5OqHJaC53aZ2KLCRnV5rPg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859138;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859147;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=b1zo6Tke0W4D3cqOhBnOl0B3urwoXtxoWUxyN83ZYO0=;
-	b=VOWDjLIZoSKU/R1SIisVWVpOrMw86mIfdNGqHDDk4eDwQeS3kSjzshMgL2k6zD5tBB+7
-	 O3K69pMiCTAADlKvdo7tvPIC34ZCsssMzaEaaSceIWA3kjPwJ5sDFMpHqUo4GMoZjDahX
-	 7lKwNm8QXAOXPXSlKMG42VaipIeQdeadbc3UGxcD9yCxq0NZfNxv3CAW0z1GTq+UL2W8T
-	 ZUR5DAc0pr62bR1rDIBSsmgGHVAKAqSKz1nDpwkdCuW7oVIm11crlz2KWbPm/O2byv02k
-	 PKAHIj5g6LOeOkyjnAhTOF68NrzY9tLgQOjy5AUwGFuuacGoDrQu+uj4fk9pYzH4uvw==
+	bh=8+7QML/MTirhKCJ2JXKlhX3yt6vot1PNexqDkPxeiVU=;
+	b=ElZMmu6sKQ/WHa2Fnk00tVy2ZQoQtGsCas2hy18wRvv1GfINdzNR10cEH/ZCeUhkG2ji
+	 +rMrZBCXKQ3cYsbIbh9uAuxUS8hFm+Ny7iMiRdHRSRndxMtiNsujnAzZzMheV/eITKPyv
+	 vh4IpT35kkrQB5xshcIvk8vsUjQVN3yFAfqQHx7M+YZhZb2Mw8+aJhAXqPJ4iQMmV7cPe
+	 3+NpR3okUOAqCK2DkUF20/NXRxx6SrRNl+lkl6cIcQ/cnUw5bijnN+/pRNBkNjmq1b5nG
+	 45tWTlPAx4CNm2ahOW5mtqi4bqA8rWnLQM3Z/cdeCUtJMJuVsz8EOynad9WkNlpwL0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NRdtLukb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZsGKfJX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA62C606A323;
-	Sat, 24 Oct 2026 16:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B97606A31E;
+	Sat, 24 Oct 2026 16:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NRdtLukb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972AF1F031E2;
-	Sat, 24 Oct 2026 16:25:35 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZsGKfJX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE521F01825;
+	Sat, 24 Oct 2026 16:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859137;
-	bh=b1zo6Tke0W4D3cqOhBnOl0B3urwoXtxoWUxyN83ZYO0=;
+	s=k20260515; t=1792859146;
+	bh=8+7QML/MTirhKCJ2JXKlhX3yt6vot1PNexqDkPxeiVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NRdtLukbE74jRSaFFbXpgVyZCQJTQ2+mxUmxriDxyKAob9Mrw6AMZMa83iP9/Ny1L
-	 Ch0vcxO/Gm7fmnj0FXkuYyISUuVAe6WKh0E3S4/9Jj+BkWBZA2zP1gDO+A7ZeeV9co
-	 jb8ttEfFuNWkc5tmivekLHvPJsiqeiT52K3EG/n9bFJ3aOj87EkOFGDCNOLZdmUAkE
-	 +5dFD3v5YXvzMqvecTcFSZMVc/zAI+8wy727Zcfg1MQ0Nbnq458i570bjKXFLIF4tx
-	 Kng7xSDLSQggYLXPIVB2bNdGjcDNMjNXSQdI6oeUQd/BIFLbf5WSKT+ZXcFxrK1GNm
-	 86CKLrq5GkITg==
+	b=XZsGKfJXNKTs91gAm0E9k+Jhggh8S7t7r3Vf+jk7VoPooUsV/xCcAiob7iCEa5rhw
+	 JJoxc0tBHudD0m95/zlBqWbh8cKGX8D4wadCRENkmEeRZ9gAo5b8QflWICaix5kmWV
+	 9hOgWYGMx58tSbQk6pMBUxZX273v8QGPQn79pn42lWrUpubUF6wTZYPJKt78Kxy4xx
+	 AFsIcrMEJTkWdrkHS11Y8r2KkxfGrdzwxR3eYMcbuM53jZizdfcUgQNqa+Z4rQ9JY4
+	 XRGn577uFPGcMoJG1oXCgyxKMOgw4z3AvLIvlxXIw/D9xcI3Kq+eXTLjsUY5UCCws/
+	 kj7Ie5SPYTH6g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 01/10] tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
-Date: Sun, 25 Oct 2026 01:25:33 +0900
-Message-ID: <179285913336.466249.16045710288666912574.stgit@devnote2>
+Subject: [PATCH 02/10] tracing/filters: Fix false success return in process_system_preds()
+Date: Sun, 25 Oct 2026 01:25:42 +0900
+Message-ID: <179285914279.466249.18363232291728825688.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,43 +69,76 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-regex_match_end() calculated string length as "len - 1", assuming @len is
-the string length including trailing '\0'. However, for fixed-size string
-fields, filter_pred_string() passes field->size as @len, and for "comm",
-filter_pred_comm() passes TASK_COMM_LEN as @len.
+In process_system_preds(), "fail" is initialized to true to indicate
+whether any event in the subsystem successfully applied the filter.
+However, "fail = false;" was placed at the end of the event loop outside
+the error check, unconditionally clearing "fail" on every iteration even
+when process_preds() returned an error.
 
-Because @len in these cases represents the buffer capacity rather than the
-actual length of the string, regex_match_end() tests against the tail of
-the buffer (typically trailing '\0' padding) rather than the end of the
-string. Furthermore, if @len is 0 (denoting a dynamic string ending with
-'\0'), "len - 1" underflows to -1 and never matches.
+As a result, if every event in the subsystem fails to match the filter
+(e.g., an invalid field), process_system_preds() returns 0 (success)
+instead of -EINVAL. Consequently, create_system_filter() considers the
+operation successful and silently resets the subsystem filter display to
+the default global filter message instead of reporting the parse error.
 
-Compute the actual string length using strnlen(str, len) when @len is
-non-zero, and strlen(str) when @len is zero.
+Move "fail = false;" into the else branch of the error check so that
+"fail" is only cleared when at least one event filter succeeds. Because
+file->filter is still replaced even when process_preds() fails, check
+!list_empty(&filter_list->list) on the fail and fail_mem paths so any
+replaced old filters are freed after an RCU grace period via
+delay_free_filter().
 
-Fixes: a3291c14ecf0 ("tracing/filters: Fix MATCH_END_ONLY filter matching")
+Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events_filter.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 5e74d2dae40a..18ce3ec00d34 100644
+index 18ce3ec00d34..c2c35b4de85e 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1075,10 +1075,10 @@ static int regex_match_middle(char *str, struct regex *r, int len)
+@@ -2332,8 +2332,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 			filter_disable(file);
+ 			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 			append_filter_err(tr, pe, filter);
+-		} else
++		} else {
+ 			event_set_filtered_flag(file);
++			fail = false;
++		}
  
- static int regex_match_end(char *str, struct regex *r, int len)
- {
--	int strlen = len - 1;
-+	int slen = len ? strnlen(str, len) : strlen(str);
  
--	if (strlen >= r->len &&
--	    memcmp(str + strlen - r->len, r->pattern, r->len) == 0)
-+	if (slen >= r->len &&
-+	    memcmp(str + slen - r->len, r->pattern, r->len) == 0)
- 		return 1;
+ 		filter_item = kzalloc_obj(*filter_item);
+@@ -2348,8 +2350,6 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 		filter_item->filter = event_filter(file);
+ 		event_set_filter(file, filter);
+ 		filter = NULL;
+-
+-		fail = false;
+ 	}
+ 
+ 	if (fail)
+@@ -2364,14 +2364,17 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
  	return 0;
- }
+  fail:
+ 	/* No call succeeded */
+-	free_filter_list(filter_list);
++	if (!list_empty(&filter_list->list))
++		delay_free_filter(filter_list);
++	else
++		free_filter_list(filter_list);
+ 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 	return -EINVAL;
+  fail_mem:
+ 	__free_filter(filter);
+ 
+-	/* If any call succeeded, we still need to sync */
+-	if (!fail)
++	/* If any filter was replaced, we still need to sync */
++	if (!list_empty(&filter_list->list))
+ 		delay_free_filter(filter_list);
+ 	else
+ 		free_filter_list(filter_list);
 
