@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859184;
-	b=f5CuGpTp7/mTpgVRAdCj56QPRjA83Z9PuihXjrfuYRXIeYgaaDfN7FpjdpEchsU6kMgr
-	 I5yU/eDpoQUB2yCaJfLZKCiISmOKN58x+zpVAMYwvB6S8oQ85k0X//CPaySMwnx0JLpBa
-	 WeyJYxzo7n9zd/++unpasueoeCCO1DvCSPA68FjCFnuEgTxs1ol14is9nCPaZ3mGR6hYC
-	 Twc7txopPYgyCCyK2IK6xXG3tXySmjOmGKrvCxyP1DooYFgJ+BlX5rQmO+Ipsi/MkJuyv
-	 xFxA0TgZkfYIurkp1LqSIW8YXH3jaGi4bI3tnFBqIn356QDYkVNwEXmIxoEVyT7jxHA==
+	t=1792859193;
+	b=T3pjC8X5SgcbQXVYRLtivsCNZ0G2RIxf19msTUlSg8IpuOFj0+5JulwIQOuhoXD/pgOc
+	 yAwBVyVAt0zchsMRZvsL8Qwn+4zIEEnEveQzyE/T6MvB+Bo5ca8le1xiKp45pZKlfxp7U
+	 h5tWPnePRNxZ3p8hx+9JvQpBesMieIXozHg2MOASE1bzEMeMKtHi9cGhCyTAradFbuxCT
+	 khiKziBnWFM+K8vOBW3CJsu+D7mpA+81fiaPcQFk8yIoLLwzgFoOLaDb1/j1sX48PMDXj
+	 isejLyOAncJM87VBnKoDqKTvfw27IHAp9Xiki+jeMPDqhMITCBEIFvDgD7kfioN84VA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859184;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859193;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=x2K+JcgEXwjAprRXTw7X+lnifU24Dsjycf8GetwMrOQ=;
-	b=lHYZ8GDjUmGZ8ouqo6/lZQm2DP1jiZdWdHsivGs8urUKANIWBZXnVASKUTK6cDU55/2J
-	 a+VpNsaXkCW8YlvGoJRZX5QOFdPMSPTtNDOTQ+9p2ucdO7YAVwSfMYc92zkxnGCJp1f5U
-	 Adq5mnEkDzxqc+Mi+4T2X5oPXm9ztusx+xSrk5M2kqbIky2ghf6KbP1MMz3Okrn++gvPY
-	 7TpmSdObbQ6fRWB3/eaNuOQITL9quvf7l7FQnlWIyJrIbzhKBRcBmuNezxyD5gey+h6zC
-	 pUIxVeAqwh1EyG9LYGW9l2wgLneYD6dFXdsGx13tFouFTuxEZQUf5mg95kucJlh8lVg==
+	bh=6hnJgBFdglAF6dXEFA5rs8hQOCYXKV182Qh4+QI28p8=;
+	b=Hhl5Dm64/IRXd93na+Qkyd8bnUUWQMYuHRjVenfQOI7w6YrtrxRnfazSZJadS9pNHPM+
+	 +JvkQGxLYdqJyAKu7RIswXhKIO19gZy4eXMejUZAg5wWUGTYBrG2CFRn5NIjDNoiqbgqn
+	 kuzP2vAAr7/icIbt4XKuUKlg004rIy0Q9hPC+ciGN+3YE6ne5FmK9inCU13kd4dAPvMAd
+	 PugJgSqlP9LXJSSScS1RdEdT2N0gZgFydL+r3YHFXnPKOuy8L3CTgxxrg+5wqZ6c9ecyQ
+	 XDfZCmS6IY8RRq7V9YfQSzKGnGqCwe5IkP+vdrHSRtMECDRVUvqDBqwIW7Fk3YuMNMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fcFIVXgc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZUoFkCqG;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D37606A31B;
-	Sat, 24 Oct 2026 16:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5530F606A31A;
+	Sat, 24 Oct 2026 16:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fcFIVXgc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C27F1F031E6;
-	Sat, 24 Oct 2026 16:26:21 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZUoFkCqG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C11E1F01828;
+	Sat, 24 Oct 2026 16:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859183;
-	bh=x2K+JcgEXwjAprRXTw7X+lnifU24Dsjycf8GetwMrOQ=;
+	s=k20260515; t=1792859192;
+	bh=6hnJgBFdglAF6dXEFA5rs8hQOCYXKV182Qh4+QI28p8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fcFIVXgchmUWbCb+FUuU6Cqyi5HGlRCYqJISKGkNbqII4DFJ61xML9CiBAMprxI/X
-	 2gx6yQD0FouPMLbwGL45ukx/noJpfCxNGglLWVFVwEs2eISKje0NFPnE5DFXtUIJF/
-	 4Y6pNsksd4RoNDivoqPfatue0IYHmq6cmmz9agYCYAVy6J6Rfu04PuwdGe+A9N3wbh
-	 Ihm/zxb0w5IzjMavgs3MmZO1CKznaz/dQAPKXwSlBPrEzXjvXxV39t/H2U2wvFW5lx
-	 2qSRdJTV2FVGiYCeY6nQCSPtcB3kU1SxD3XQgXusXUbbJcZiwORmyoX2KucaNBxgz4
-	 6GiGGhl8gKcFA==
+	b=ZUoFkCqGj/1W7Gazqyzv1edq82rcqS5GL0yWnb1rZwOXD5zM5dkI0ibUv2hgMe/sL
+	 4C8WUzD9bzkMYmlzENGkHHkMqzgrASOs4TMv5ePchAudr+e+0kwF8fuNlELkSxZYop
+	 HKuFjCpjHAjvBDJYRzarwsH0mP7C7Br/MFlvwJX7fYiqDJ4TjR1IMKokQzVYxeUlLE
+	 uFqoKIX317XIsV7NPX+SitxfzHuK7zJTZ+b4hL4eDX7ELToNOkWgci24LWbmNmsu1D
+	 PsiC4A8Ft+juyYtqGCzSpCvjQ1bss1udxaL8ywWWdKgXRhuJxcY1NVfESGkxsjIS2V
+	 LQbhtZxPDUkmQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 06/10] tracing/filters: Fix function event operand parsing in parse_pred()
-Date: Sun, 25 Oct 2026 01:26:19 +0900
-Message-ID: <179285917977.466249.218328175465077201.stgit@devnote2>
+Subject: [PATCH 07/10] tracing/filters: Skip second character of '&&' and '||' in calc_stack()
+Date: Sun, 25 Oct 2026 01:26:29 +0900
+Message-ID: <179285918908.466249.18270745423264950845.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,92 +69,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In parse_pred(), the ftrace_event_is_function(call) branch has several
-bugs when parsing the string operand:
+In calc_stack(), when encountering '||' or '&&' (where str[i+1] == str[i]),
+the loop sets 'is_pred = false' and continues without advancing 'i' past
+the second character of the operator. On the next iteration, the second '|'
+or '&' sees str[i+1] != str[i], breaks out of the switch statement, and is
+counted as the start of a new predicate (incrementing nr_preds and setting
+is_pred = true).
 
-1. The loop 'for (i++; str[i]; i++)' unconditionally increments 'i' before
-   checking whether str[i] is the NUL terminator. When the operand is empty
-   (e.g. 'ip == '), this advances 'i' past the NUL terminator and reads
-   out-of-bounds memory until another zero byte is encountered.
+Consequently, a trailing logical operator (e.g. 'common_pid == 1 ||') is
+counted as having 2 predicates instead of 1, and any subsequent non-space
+character before a delimiter fails to increment nr_preds.
 
-2. When the operand is quoted (q != 0), the loop breaks with str[i] at the
-   closing quote, but 'i' is never incremented past it (unlike the regular
-   string literal parser which does 'i++'). Furthermore, it does not check
-   for a missing closing quote (!str[i]). Returning 'i' at the closing
-   quote causes predicate_parse() to immediately re-invoke parse_pred() on
-   the closing quote and fail with FILT_ERR_TOO_MANY_PREDS.
-
-3. If the operand length is 0 (e.g. 'ip == )' or 'ip == ""'), it accepts an
-   empty pattern instead of rejecting it with FILT_ERR_INVALID_VALUE.
-
-4. When the operand is unquoted (q == 0), stray quotes or '(' inside the
-   operand are consumed as part of the pattern, desynchronizing
-   parse_pred() from calc_stack().
-
-Fix this by advancing 'i' and 's' past the opening quote before the loop,
-starting the loop at the current 'i' without a blind increment, checking
-for missing closing quotes, advancing 'i' past the closing quote, and
-rejecting empty operands or stray quotes/'(' in unquoted operands.
+Increment 'i' when matching '||' or '&&' so the entire two-character
+operator is skipped.
 
 Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |   37 ++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ kernel/trace/trace_events_filter.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 7e119c7164f0..96eac7ccd488 100644
+index 96eac7ccd488..e734d8664444 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1833,22 +1833,39 @@ static int parse_pred(const char *str, void *data,
- 		 * Quotes are not required, but if they exist then we need
- 		 * to read them till we hit a matching one.
- 		 */
--		if (str[i] == '\'' || str[i] == '"')
--			q = str[i];
--		else
-+		if (str[i] == '\'' || str[i] == '"') {
-+			q = str[i++];
-+			s = i;
-+		} else {
- 			q = 0;
-+		}
- 
--		for (i++; str[i]; i++) {
-+		for (; str[i]; i++) {
- 			if (q && str[i] == q)
+@@ -2207,6 +2207,7 @@ static int calc_stack(const char *str, int *parens, int *preds, int *err)
+ 		case '&':
+ 			if (str[i+1] != str[i])
  				break;
--			if (!q && (str[i] == ')' || str[i] == '&' ||
--				   str[i] == '|'))
--				break;
-+			if (!q) {
-+				if (str[i] == ')' || str[i] == '&' ||
-+				    str[i] == '|')
-+					break;
-+				if (str[i] == '(' || str[i] == '\'' ||
-+				    str[i] == '"') {
-+					parse_error(pe, FILT_ERR_INVALID_VALUE,
-+						    pos + i);
-+					goto err_free;
-+				}
-+			}
-+		}
-+		if (q && !str[i]) {
-+			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
-+			goto err_free;
- 		}
--		/* Skip quotes */
--		if (q)
--			s++;
- 		len = i - s;
-+		if (q)
 +			i++;
-+		if (!len) {
-+			parse_error(pe, FILT_ERR_INVALID_VALUE, pos + i);
-+			goto err_free;
-+		}
- 		if (len >= MAX_FILTER_STR_VAL) {
- 			parse_error(pe, FILT_ERR_OPERAND_TOO_LONG, pos + i);
- 			goto err_free;
+ 			is_pred = false;
+ 			continue;
+ 		case '(':
 
