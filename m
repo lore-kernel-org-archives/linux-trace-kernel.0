@@ -1,57 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.219
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792855083;
-	b=cqvIQcUmiOYNX9Nheg9v4LrQRy+ue8GD5ZZvVEt8ztA2ESEn2p+6q0wH5rlWj/VCtEsC
-	 i1TQCQ1hPGlp0Nz8fXl+vZPLYalRd2yCs6yy0DGLvPdY6q+7JlcAfYf7/Wbj1q7sQDIxJ
-	 d7krPAa57izLgqBOP3Vrpwb1McSXre21bsEQSZV87pw0YKpdkzQ6HziUv8kbr+YldgW0l
-	 lz+i5TDFiyNpqOZT0to5R9FOv3o1l3kOEzcasH+7xCZehUI46e/SMhPG9zwWTHB0EqMGS
-	 Ebc7DOcbiGHD898MLmfIOOZE/16Q6K5uD5RMKf9QnnCbqZGtgh5xPzrLLVvEXwIst3A==
+	t=1792856185;
+	b=AY43xytbAyPfaOUbu0G31KgTzI7EmMi6g1wotRA9CBCRpKEpNLLTDQVMMjsQPCCYYhTL
+	 IyJPYFygeAjKNJ5//Si0gAdHyJN0ENrdKjQxG5ZdxG+LA6XqjvsHuKsl73iM8npoBZf5j
+	 QwLOI7/nQ1zFD5l3oB5ZH7uezzQv7QUyQd/JsEbTGjoudual/K1X1QwAH7bHy/zxk4/7g
+	 hhlfqBecHWN27jqotN8wBwVead+0RTVniJjN/GXtghrRdZyHGG58ohHgWbcKoNy2lJTCt
+	 NpRSFcTMNnr6k8Vu2R3YIX45h/q4mD8gQy1J+IANtY/rigH6kR4kQghj2g9OyGh4l2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792855083;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=FFBc7sAZT89TLlAdtb/PifRoSe8BnNHwA0EhAG89FeQ=;
-	b=QtQPDnFFc7SsdO5MZv242/Uv0xjIfUgndh0EXjT7Mt26gCrfrKbDQ1HOeE64drmaD8td
-	 skKZAmOvytMTsMTtsF9PwBH3emyTalbNzGuNFjH0tC4wmIQx/AmzGGJhooA3L9QNt9jzc
-	 FLEx/yUcKjsVh4a8Obb2j4AXx9P3REL0qnHNWiwxTwu0vgLODZn9Auv8brdRlEhFJtPoM
-	 Nau1kS4oHh85Gkomvlfsrm9ERvY2eNaOHzx45LFkxYEVfpk5Qy55io2H/syEEL7PE4Xkp
-	 RKUS/KUVn1A1uWkwSH2f7wSCL/wuBsa9i6iBHSoNR/DnXjL6hO1g5OIC9n/L2AKsOog==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792856185;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=SU23wimUV2O9Kr887mHEYzQkX67Pl7prB5aGY6kmyZg=;
+	b=ITSrQj2/rkjjt7+drGYvx4MJMO21buUHh/c26xrm0UBOgYaJpcdRygjKx+9rZdxJdwET
+	 qUSoWgIJpT97R4uziIM4ReUfn5ZB7SnrldFTpQFUKvrbWlEpGNF9AGLPCFWNtnQU+ZNxV
+	 64c0HbspGg8c5bGYK6tzyyxQL5YdG+VpWiMndE/b90BI94eV6R/xVPUgigZTAlmNQq3tM
+	 pp5CNvrrlmqMbQ/cj+/zmDHiMf1oYW16JmJkveRpShTJriSa6lzZLNv8/jHyjgLEWWAbt
+	 +7zYJQbPckbPI5vXEiB9wQBeif9zdvfQxuicfJkuPYQoqoHAdjLBXZuIbn2zU3pmNoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="GMcLN/iF";
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="Gbu/jhc1";
+	arc=none smtp.remote-ip=95.215.58.219
+Received: from mta1.migadu.com (out-219.mta1.migadu.com [95.215.58.219])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F5A606A31A;
-	Sat, 24 Oct 2026 15:18:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4F5A606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62121606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Oct 2026 15:36:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62121606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=GMcLN/iF
-Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4C1A8160425;
-	Sat, 24 Oct 2026 15:18:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 72C736000A;
-	Sat, 24 Oct 2026 15:17:59 +0000 (UTC)
-Date: Sat, 24 Oct 2026 11:17:56 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Guikun Yang <yangguikun19@qq.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [BUG] tracing: trigger filter use-after-free in
- set_trigger_filter() ENOMEM path
-Message-ID: <20261024111756.14a393ac@fedora>
-In-Reply-To: <tencent_51CD3420AAC8A722EA2FD5FEFB6524D4A905@qq.com>
-References: <tencent_51CD3420AAC8A722EA2FD5FEFB6524D4A905@qq.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Gbu/jhc1
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=lkiUzgBYqoo5dMOvB4u6X+W6b0S+xloWwMi5V8DIHqk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792856181; v=1; x=1793460981;
+ b=Gbu/jhc1TC10ggZi4ne3nKl/uROgS77uwZLYPt16tHVBfTJZlOQglPcRtLPo6D7pqkd0AHLv
+ cug1G8MI8/QtgFJlDJ5QVHBo3cZm9+uD432DXO4Zx7HoakmjDPyrqCH1b/q/zDAoF/VGaTaaBqC
+ DBDqoOCATx3WKirj2pe9TH+Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 1700512b1c0e2c8e;
+	Sat, 24 Oct 2026 15:36:20 +0000
+X-Mizu-Trace-ID: 1700512b1c0e2c8e
+X-Migadu-Flow: FLOW_OUT
+From: Leon Hwang <leon.hwang@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Masashi Honma <masashi.honma@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Leon Hwang <leon.hwang@linux.dev>
+Subject: [PATCH bpf-next v4 0/6] bpf: Add syscall common attrs support for xdp link_create
+Date: Sat, 24 Oct 2026 23:36:01 +0800
+Message-ID: <20261024153608.58569-1-leon.hwang@linux.dev>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,83 +94,65 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 72C736000A
-X-Stat-Signature: 3rhrjhr117dfn7ztage4iwijjcaun5qa
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+t5tM3VmUu6Ah5SnRaSk/Nd4i7D2EA+lI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=FFBc7sAZT89TLlAdtb/PifRoSe8BnNHwA0EhAG89FeQ=; b=GMcLN/iFd4+lKnEyemdZByvEiMKlyE9vk0QgGvSeEn0OB+6b5a9DGNs3nGqd9ete7GztBttU32SQan3DI002DafwZul6Bnu+Zq5Fe3KO93UL3U3DoxB7ohg8EJMgIgNI8+KKOGRKd34z3JhlabnIewc7bsmoLBVu8Iw0JRElPaQ=
-X-HE-Tag: 1792855079-985549
-X-HE-Meta: U2FsdGVkX18wFkgskoivpNdycLjtFJ410q1WfoZfwxhO2tQ4A2sCOyNvhjqw/D/6qaT7CThd6/eyXIv1STZho0JqRJWejx21Nl3uDetSIBas/sJuM/wGbM5Yt5hgs0pcqMnR9UaZErWSlMfKRSzP59fImmmqbYvZj5thiFoTfVgFVRFvOAsVepACpfBE8koEOLIe6tMCfCzU2+01jaAR1A1FiACMSrkFZpBm34Cv3IbiTsICSydTkddCfUvt3EdKc9FGCmvGwgQ/ah+LkDfFIgGhSz5RBvFKncMk0jhQwenwOPXtTGTYTChOTv8nSAFY/vlNyT1Zb8MqvSfmqG3j3Pg0TrKwMHcH
+Content-Transfer-Encoding: 8bit
 
-On Sat, 24 Oct 2026 22:48:16 +0800
-Guikun Yang <yangguikun19@qq.com> wrote:
+I'm planning to add syscall common attrs support for LINK_CREATE cmd.
 
-> Fix: either free the new filter before publishing (i.e., don't
-> rcu_assign_pointer until the filter_str copy succeeded), or perform
-> tracepoint_synchronize_unregister() before free_event_filter() in the
-> ENOMEM path, mirroring the normal path.  The first variant is
-> cheaper: move the kstrdup above the "assign:" label and release the
-> pointer only after the string copy succeeded.
+This is the first series for the plan, that adds syscall common attrs
+support for xdp LINK_CREATE.
 
-Note, the entire trigger code needs a rewrite. Something I'm looking at
-doing when I get time.
+Thereafter, retire the tracepoint bpf_xdp_link_attach_failed, because
+the underlying driver's error can be back-propagated to user space via
+the syscall common attrs.
 
-This is a bug but one that would be very hard to hit as it would
-require and admin to enable a trigger with a filter during major memory
-pressure.
+Changes:
+v3 -> v4:
+* Pass errmsg pointer to bpf_xdp_link_attach(). (Jakub)
+* Place log_opts at the slot of iter_info in libbpf. (Andrii)
+* v3: https://lore.kernel.org/bpf/20261020152804.39863-1-leon.hwang@linux.dev/
 
-That said, the simplest fix is to simply copy the filter_str at near
-the start and use that.
+v2 -> v3:
+* Drop bpf_log_attr_report_size() helper. (Alexei)
+* Drop 2nd write for log_true_size and the put_prog label. (Alexei)
+* v2: https://lore.kernel.org/bpf/20261019153628.15912-1-leon.hwang@linux.dev/
 
-That is, something like this (not even compiled tested):
+v1 -> v2:
+* Add log for invalid prog type in link_create().
+* Reject log_opts for fallback bpf_raw_tracepoint_open() in libbpf.
+* Report log_true_size as 0 before creating concrete link, and report
+  the actual log_true_size when fail to create the concrete link.
+  (Sashiko)
+* Add stub bpf_log() when CONFIG_BPF_SYSCALL is not set. (bots)
+* Check 'extack._msg' before adding 'extack._msg' to log buffer.
+  (Sashiko, bot+bpf-ci)
+* Change __bpf_sys_fd to __sys_bpf_fd in the subject and body of
+  patch 4. (bot+bpf-ci)
+* Move OPTS_VALID(opts, bpf_link_create_opts) to __sys_bpf_fd(). (Sashiko)
+* Move bpf_link_create_log to the LIBBPF_1.9.0 section. (Sashiko)
+* Update patch msg with a concrete case in patch 5. (bot+bpf-ci)
+* Factor out helpers to simplify the tests code. (bot+bpf-ci)
+* v1: https://lore.kernel.org/bpf/20261017142649.51047-1-leon.hwang@linux.dev/
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 4d2fde996c0f..1a6ea4261066 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1195,6 +1195,7 @@ int set_trigger_filter(char *filter_str,
- {
- 	struct event_trigger_data *data = trigger_data;
- 	struct event_filter *filter = NULL, *tmp;
-+	char *str __free(kfree) = NULL;
- 	int ret = -EINVAL;
- 	char *s;
- 
-@@ -1209,9 +1210,13 @@ int set_trigger_filter(char *filter_str,
- 	if (!filter_str)
- 		return ret;
- 
-+	str = kstrdup(filter_str, GFP_KERNEL);
-+	if (!str)
-+		return -ENOMEM;
-+
- 	/* The filter is for the 'trigger' event, not the triggered event */
- 	ret = create_event_filter(file->tr, file->event_call,
--				  filter_str, true, &filter);
-+				  str, true, &filter);
- 
- 	/* Only enabled set_str for error handling */
- 	if (filter) {
-@@ -1243,14 +1248,9 @@ int set_trigger_filter(char *filter_str,
- 	kfree(data->filter_str);
- 	data->filter_str = NULL;
- 
--	if (filter_str) {
--		data->filter_str = kstrdup(filter_str, GFP_KERNEL);
--		if (!data->filter_str) {
--			free_event_filter(rcu_access_pointer(data->filter));
--			data->filter = NULL;
--			ret = -ENOMEM;
--		}
--	}
-+	if (str)
-+		data->filter_str = no_free_ptr(str);
-+
- 	return ret;
- }
- 
+Leon Hwang (6):
+  bpf: Add syscall common attrs support for link_create
+  bpf: Add syscall common attrs support for xdp link_create
+  bpf: Retire tracepoint bpf_xdp_link_attach_failed
+  libbpf: Factor out __sys_bpf_fd helper
+  libbpf: Add log_opts support for bpf_link_create
+  selftests/bpf: Add tests to verify link_create logs
 
+ include/linux/netdevice.h                     |   3 +-
+ include/trace/events/xdp.h                    |  17 ---
+ kernel/bpf/syscall.c                          |  43 ++++++--
+ net/core/dev.c                                |   7 +-
+ tools/lib/bpf/bpf.c                           |  61 +++++++----
+ tools/lib/bpf/bpf.h                           |   5 +-
+ .../selftests/bpf/prog_tests/xdp_attach.c     |  65 -----------
+ .../selftests/bpf/prog_tests/xdp_link.c       | 102 ++++++++++++++++++
+ .../bpf/progs/test_xdp_attach_fail.c          |  54 ----------
+ 9 files changed, 190 insertions(+), 167 deletions(-)
+ delete mode 100644 tools/testing/selftests/bpf/progs/test_xdp_attach_fail.c
+
+-- 
+2.55.0
 
