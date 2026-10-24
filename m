@@ -1,112 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.64
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792844017;
-	b=DEsCpgXFW3JmsAnpAsHcu8Lm7X5jWqoVKEAmSuRJ6CUy20xqNE8ZEKBVnBvaDVCan36s
-	 x22OmIYEHHYrkfBKz2X0oH+D4qdRrXwwsc1ZRPHdr39I/658JWJC9FoB5YhGyBui2ADi5
-	 vT1bAv3lDRFhrX1nVsQIBE0yTdaA+ifpXFJGAIj4Zqu+NXYYNZ8qOjKx8EzLCQgS4b94P
-	 dFKHKhe2zYMudA0wzxA9fp7d2M/NfhCEBhSKGO5EoS4NfWBqAlu58h0rTd9Jim/55YwU2
-	 wyXUkFLCfl9K+BJ3jmYMz8LeOHG9M70yvvHfDniRFRcjAeI/YxWT5qyAE9Zt2A0Edkg==
+	t=1792853305;
+	b=35V6WGvxQv6fgzZAv/S9rELXq8mlYQGdlfan3FRvBUHrH3uG1+FwsumBTyMgzRG/0oBK
+	 eKrRP6auxg/iQsyIPE5wSG1mfp/NOgg+6/i3S/Mbpjy5T1qjaz7HpnAKfbWBtuQLl0LEN
+	 sZKTVTp+KztczbQ6EpSeqxJy9nw7UjmkgvIvoLVgEc1J1kXeXBiWM1iToerPXnLtr/IcI
+	 2lch3CIengjxRIYW+iYgNw3aU08GnZH+5yQrj6K5kTQ18GjOZJu4SycHECdqBBCJvHUC0
+	 NZasSON8pN7MYCwWFadUveo/Eewpg9lGr3zhdOR+C2Bx4woDPvuKx/xSPrAogHaX8zg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792844017;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Date:From:To:CC:Subject:In-Reply-To:References:
-	 Message-ID:MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
-	bh=UhqDzvylCUClPcAmFlf4zscztq4m0z25fogi1NkYGug=;
-	b=S+OXDCmfQCahOAp87dGouTxjfue0cQBh09qV3ir5DQPTq0cpzGMqHAlmpx7vII1ytWei
-	 nXW8xgR5RDV+BCwche45znX5qTFXZTW/asmPD19A/mdcJ2kOY96SwhmXslERm9VJh+L1V
-	 DDjGu7TfBVI6nvesZ8xx0jKV3cx7wT4jM31ZzJJHYZzS/8kdQGga1RrxM5eCXL+7n07KR
-	 rypHUOi7rExBMrlNbOs+DttXyUOByQdgxDZ2hkcaq7ARvUjqq0QPuo4WIBUZrCxpDp2Rl
-	 ABqjnN0dbRqPUrGxwEmEOK5+b6l7DS55RSLtXVB+Rovi1xu2CfitBlO58c0KRR53jBA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792853305;
+	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
+	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	bh=ABDMRmX2qjUWTye2+cWKlCKH3jB8QfXq511EgObbU6Q=;
+	b=zJw1FrgOaojdgoFkZmkK44zQdvNnIQAZnr8OCK+b1E88Ovn+g1qX+fgJJmuskY97P34N
+	 sipu0Z3uUGP+sQJKe65RLYa194G6Y1t8aM8VjHxAe4JjMp/syfModTtXE7f8adFMD/mvB
+	 MR2Aq6mNVSF93jAQ5nnT6HPgJgIHrXT1wA81cqaEsme1CDblX8RE6IIX8gT6kv1klCb7u
+	 Oi3GtJmM0/QoMn3Zx0m4VYpKQ7KBo7VhJAqJUSiQlhR2w+kd8dhru35mWoQk+QGllQY+j
+	 IUfmt2Tol1kVfJi9rVTFhojeEFCOJQERg1dm+H/QKrTEWBmvetteVbp7WN69fSBe3mA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fUnje73F;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=qq.com;
+	spf=pass smtp.mailfrom=qq.com;
+	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=vQTLFVbz;
+	arc=none smtp.remote-ip=162.62.57.64
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23BF606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Oct 2026 12:13:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A23BF606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CEE606A31A;
+	Sat, 24 Oct 2026 14:48:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51CEE606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fUnje73F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1792844015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UhqDzvylCUClPcAmFlf4zscztq4m0z25fogi1NkYGug=;
-	b=fUnje73FvRLfi7lIAOdjFrQXz9xIZgFwKWMU93lsI3net4ybQAvJcZBMVKvRuUKvGlmUPE
-	UMm6FK3qqhI3N9Ml+Tdk+XxOVoLCPeQc5EnXH+9bE5ptm7Orj4SUgcaF0ZvkJSGmFBTifK
-	H8wq/HBk+01HzF5FvIbKAvxjHqKyaEQ=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-412-otdY659xPzaujfHev_Zyhg-1; Sat, 24 Oct 2026 08:13:32 -0400
-X-MC-Unique: otdY659xPzaujfHev_Zyhg-1
-X-Mimecast-MFC-AGG-ID: otdY659xPzaujfHev_Zyhg_1792844011
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-c41f85ee4a3so158213666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Oct 2026 05:13:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792844011; x=1793448811;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c4C00/XzUMl81Cb9nPtDyYxb7VozrfQ6cNr56bWwPUU=;
-        b=CYYTptON6lo70+hA39jAeUqYq0NNAYn8s+z/xN0XPDJpPkQyIEjv8/meSGqECHiyzJ
-         Zx6A584x/EVUF7ANaW+sM4yhfdCfkKczNDSA6jPKvCn36LrCNamXYM1A2rt3ypEz2+Wn
-         mcs2BNGD+7nv246kDM5hqKGEeA7IqZ+7sjBvbPr+RcY5WjOEDxIiK4WHEM3P3Q6tj1z2
-         f7Rl5JF0lLOiGynN8b4uBjm2mnXegBt6WKZ0sdwlZQ9SbFctv/zKHo53+W4F3ITgm7AO
-         k+Uf4KKSxb56xbn1KFQ/HL3tTgSzVSIRnJG2S/bn3rANN8i+0d8Flc7Bw77A5ymibYX6
-         Hx4A==
-X-Forwarded-Encrypted: i=1; AKwUvBwv77LTtGmr7CG2eAFvXqyOaLs3w42/PcWTDZ/vuAIvmPnKBKNZcu1Jvd92VzYZDFwAMe1hbUgbLCTrDtVoJQ6/OLc=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLlFmRKG+RiGNWkwB+aoSWGm0RPqzM2K6UZvvy0PIbPHGazjUOK
-	L6muv0AzGYWSjtLeaEF6deMnmxMkIrxVo8hQNhjE44vSXagAur1jYOXT3CV7B8mqJc2iK/xJc+n
-	dNraNmlcI532zBkuiApl+GattkCXUAzdabq0JyW6/5nzDZBKVvTxFqm9heGbQTQj0dwGLj3g70A
-	==
-X-Gm-Gg: AYBFou3frQMQ2ftrIZ84WaWMtUsQrA0b77VZL3wzW+OEOsLUEpDTJjpJhmhXL7gJBOB
-	kGSQZC78FM47Rn/B58AzDkvbsXfwkq1++/ZRKvMjEEKmMtAeR4Qgy1cLP4LzSwl2dkiH0S+Q8si
-	LZ2bkIxhooX+SVukULXMHWL5piUv9nH8yJmjwaO3K+lThWgl4ACY78L3UAka0JU3OUFR1yM/wbG
-	w4T1xJbE3ww61K5b4kbAXC3f95alaPOQ43RbRZ1+nS3yDsZdd7yFcfnqXupy3VD6sLg84JoflV1
-	ETvC/44ap089w07vG2hL2Gfana83PZhY4ARUBdIZj8wGNLaNK4Py9LxMBDxOddM=
-X-Received: by 2002:a17:907:803:b0:c45:60ec:32c8 with SMTP id a640c23a62f3a-c46bde93f0amr177897366b.38.1792844010993;
-        Sat, 24 Oct 2026 05:13:30 -0700 (PDT)
-X-Received: by 2002:a17:907:803:b0:c45:60ec:32c8 with SMTP id a640c23a62f3a-c46bde93f0amr177894266b.38.1792844010612;
-        Sat, 24 Oct 2026 05:13:30 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([2a00:7c80:0:3a4::13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c46bd4ea39fsm83877966b.29.2026.10.24.05.13.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Oct 2026 05:13:30 -0700 (PDT)
-Date: Sat, 24 Oct 2026 12:13:26 +0000
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Karl Mehltretter <kmehltretter@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>
-CC: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>,
- linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/9] rv: Verify generic IRQ context transitions
-In-Reply-To: <20261022050712.75035-1-kmehltretter@gmail.com>
-References: <20261022050712.75035-1-kmehltretter@gmail.com>
-Message-ID: <FACA54EC-F846-4051-9ADD-DB46E7665FAD@redhat.com>
+	dkim=pass (1024-bit key, unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=vQTLFVbz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1792853299; bh=ABDMRmX2qjUWTye2+cWKlCKH3jB8QfXq511EgObbU6Q=;
+	h=From:To:Cc:Subject:Date;
+	b=vQTLFVbzAd5lN3pTBd2zjr9yL2XUkqlgxaF5ulPV57hnsLjYZxdNVSDWfNSixpEBX
+	 TQW35VmBi8VxcfoGJLvdX2y5IrCRPe7TAIXcW8axorfDaHAttMaxEKLbagnpOgO805
+	 CL+TH6WEyWunL42S/Jyfgoi5404/CH87dYbwGZKw=
+Received: from [172.18.4.77] ([61.136.26.103])
+	by newxmesmtplogicsvrszc56-0.qq.com (NewEsmtp) with SMTP
+	id C113044A; Sat, 24 Oct 2026 22:48:17 +0800
+X-QQ-mid: xmsmtpt1792853297tyw74ycl9
+Message-ID: <tencent_51CD3420AAC8A722EA2FD5FEFB6524D4A905@qq.com>
+X-QQ-XMAILINFO: NCmjBvJFq6XNAbEtx0Z7xNxzzqc47/GroJE9x+wPdFR8MfzfNmjq7PMNCVFM/C
+	 ePrbLqSWa7gNqYk/HWN/0Izh3JJcVYcWHZIksej7JjTit30IeCzAKVHq87NHLWeib5SWBuQdAR9e
+	 +ALM8h5RZy1FW8dVMTJXU1jOiztsVGi9izvfaiwJPMiGIrGA2fgxrtTkJT10vQ7FbU1xvrPJ9rEf
+	 mPSQEyjI1F2jUAziAyaAm39WaRvsafCBz7FSSKe8HD5GxWMwIfmfQ20ezO1eCVpzcA0kCq8gCpm8
+	 wMvB0qYQ6hEsApf0dGTFVPzTBTX09/LPgw6MGJp4CBqVhYAke+ELq6etktV7+SE/kSoee/+NCGAl
+	 Fv9GT6Btvc8RZEhxiPNhBUWLooISO65uKei4YDj47ht5uz2j/tXUAgUkjXBIg4+hkyHBk9cjKF5m
+	 0YzXvTfPCkR3J6eMtCJzgvPD8KYmTtCFyAsjyMi+UVVi9vcDbe7myUlUVq3wHI0jsX7geE+UBP0k
+	 J86n40WmiZmR+EIAiMNAL0sdhXREvE00LamMdcHXuZh1xnezi446yIquvZJCnSQ+w6aZw4dljXua
+	 4qAwdETStyZfbgRiGKf6hmg2wqDlyUSdMz5yNcmP1ztyJBil8Da7R7Dmk3LWAxxuG7jI7qVNqKwO
+	 cZHrQXhhtq9QXSEDKMAkfbTsQpIUYhv9KNCSgtG/jXRI8TPVZGjBSFVrb4219/AmNF2EI9h5844C
+	 uFIN3sIcdaN/lg1Q01QovMYqrxVf9ptTNjv6bBXbOFUbfoxYlu+cJp3LDxYM+6tsl74X2v2JkLde
+	 Flxpli8ycrhYOcD/q2w56PaUE9rVXDbw9b4GawGDgOsMkhQUUTVY4bIlFeh2KyddZo3Ac2twL82s
+	 e3GXEoeZ7Yq79+8/winzCJ1Kr49jyA2Co9YgzUqkQpkk2SuQxkkEw+C3pENPih1bWjqYOKkVuWt2
+	 pb0gnMlDUjHKZ12epFOqLwY0FjG5Qvfb3UwNOXoQ9LdiYBwMa/9OncRpltE4AzB8JW3x50RHqFgp
+	 H2WFEvJlW7GfFYSvXjUkZADYBPTd4kemTEWFTMVerCmBE3iOYs70ttdp88Ug5i93CL6LxPL0q6uH
+	 LmwbTFBnpoiBX/GSQ=
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+From: Guikun Yang <yangguikun19@qq.com>
+To:
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BUG] tracing: trigger filter use-after-free in set_trigger_filter()
+ ENOMEM path
+Date: Sat, 24 Oct 2026 22:48:16 +0800
+X-OQ-MSGID: <20261024213000.91820-trigger-yangguikun19@qq.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -116,130 +80,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: MzdZ6vR1eSCVkMyMXXB-mWqX4JUQudY7GkLfIOuzzLw_1792844011
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
+Hi Steve, Masami,
 
+set_trigger_filter() (kernel/trace/trace_events_trigger.c) violates RCU
+publishing rules in its ENOMEM path, leading to a possible
+use-after-free of struct event_filter.
 
-Il 22 ottobre 2026 05:07:03 UTC, Karl Mehltretter <kmehltretter@gmail.com> =
-ha scritto:
->I would especially appreciate feedback on:
->
->  1. Should the context boundaries be trace events or private RV
->     instrumentation?
+The normal path is careful:
 
-There aren't any RV-specific instrumentation sites. Now you used trace even=
-ts, for these you usually need a broad acceptance because they are visible =
-to user space. Have a look at tracepoints (the last ones added to events/sc=
-hed.h are good examples).
+	tmp = rcu_access_pointer(data->filter);
+	rcu_assign_pointer(data->filter, filter);
+	if (tmp) {
+		/*
+		 * Make sure the call is done with the filter.
+		 * ...
+		 */
+		if (system_state != SYSTEM_BOOTING)
+			tracepoint_synchronize_unregister();
+		free_event_filter(tmp);
+	}
 
-Otherwise you may have a look at my BPF series and use other BPF-specific p=
-robes (fentry/fexit), these won't need any kernel addition. Just mind that =
-the series in an early stage. [1]
+The old filter is freed only after tracepoint_synchronize_unregister(),
+because trigger handlers read it under rcu_read_lock_sched() via
+rcu_dereference_sched(data->filter) in event_triggers_call().
 
->  2. Are dedicated scheduler events the right way to follow
->     preempt_schedule_irq() across task switches and migration?
->  3. Should irqstate and irqexit remain separate monitors?
+But the tail of the same function is not:
 
-Feel free to merge them unless you see a use case where one would launch th=
-em separately and allow violations from one but not the other.
+	kfree(data->filter_str);
+	data->filter_str = NULL;
 
-Also the irqentry collection with an irqexit monitor is mildly confusing na=
-me-wise.
+	if (filter_str) {
+		data->filter_str = kstrdup(filter_str, GFP_KERNEL);
+		if (!data->filter_str) {
+			free_event_filter(rcu_access_pointer(data->filter));
+			data->filter = NULL;
+			ret = -ENOMEM;
+		}
+	}
 
-Gabriele
+At this point data->filter is the freshly published "filter" (from the
+rcu_assign_pointer above).  When the kstrdup of the filter string fails
+under memory pressure, the just-published filter is freed immediately,
+without any grace period.  A concurrent event_triggers_call() on
+another CPU can have already dereferenced data->filter (this filter)
+under rcu_read_lock_sched() and be walking the preds when the kfree
+lands — a use-after-free.
 
-[1] - https://lore.kernel.org/lkml/20261001152042.124445-1-gmonaco@redhat.c=
-om
+Sequence:
 
+    T1 (tracefs write, holds event_mutex)      T2 (tracepoint fires)
+    -----------------------------------------  -------------------------------
+    create_event_filter(...) -> F_new
+    rcu_assign_pointer(data->filter, F_new)
+                                               data->filter deref -> F_new
+                                               filter_match_preds(F_new)...
+    kstrdup(filter_str) fails
+    free_event_filter(F_new)   /* no sync! */  ... still using F_new
 
+The write side holds event_mutex, but the trigger execution side does
+not take that mutex; the only protection for the filter lifetime is the
+RCU grace period, which this path skips.
 
->  4. Is the KUnit-only hook for an empty ksoftirqd invocation acceptable?
->     Outside a KUnit run, its worker checks take a disabled static-key
->     path.
->
->Patches 1-5 add the events, monitors, and documentation. Patches 6-9 add
->KUnit coverage.
->
->This series is based on v7.3 (c03c1a14507d) and depends on the following
->accepted change, which is not included:
->
->  softirq: Preserve interrupt context on return from interrupt
->  https://lore.kernel.org/r/20261011060742.30584-1-kmehltretter@gmail.com
->
->A pre-existing issue can make rv_test_dummy intermittently report a
->false-positive invalid-wait-context warning under lockdep. Wen Yang has
->posted a fix:
->
->  https://lore.kernel.org/lkml/5586dd00789a0f904cc299cd8889744b8c6f8dc9.17=
-89412799.git.wen.yang@linux.dev/
->
->This series does not include that fix.
->
->Karl Mehltretter (9):
->  tracing/irq: Add generic IRQ context boundary events
->  tracing/sched: Add IRQ preemption lifecycle events
->  rv: Add a monitor for generic IRQ context transitions
->  rv: Add a monitor for IRQ-exit scheduling ownership
->  docs/rv: Document the IRQ-entry monitors
->  rv: Add KUnit coverage for IRQ context transitions
->  rv: Add KUnit coverage for IRQ-exit scheduling
->  rv: Test empty PREEMPT_RT softirq worker intervals
->  rv: Test IRQ-exit softirq provenance and handoff
->
-> Documentation/trace/rv/index.rst              |    1 +
-> Documentation/trace/rv/monitor_irqentry.rst   |  398 ++++
-> include/linux/interrupt.h                     |    7 +
-> include/rv/kunit.h                            |   34 +-
-> include/trace/events/irq.h                    |   70 +
-> include/trace/events/sched.h                  |   51 +
-> kernel/sched/core.c                           |    6 +
-> kernel/softirq.c                              |  308 ++-
-> kernel/trace/rv/Kconfig                       |    5 +
-> kernel/trace/rv/Makefile                      |    3 +
-> kernel/trace/rv/monitors/irqentry/Kconfig     |   13 +
-> kernel/trace/rv/monitors/irqentry/irqentry.c  |   35 +
-> kernel/trace/rv/monitors/irqentry/irqentry.h  |    3 +
-> kernel/trace/rv/monitors/irqexit/Kconfig      |   14 +
-> kernel/trace/rv/monitors/irqexit/irqexit.c    |  172 ++
-> kernel/trace/rv/monitors/irqexit/irqexit.h    |   85 +
-> .../trace/rv/monitors/irqexit/irqexit_kunit.c |  537 +++++
-> .../trace/rv/monitors/irqexit/irqexit_kunit.h |   21 +
-> .../trace/rv/monitors/irqexit/irqexit_trace.h |   19 +
-> kernel/trace/rv/monitors/irqstate/Kconfig     |   14 +
-> kernel/trace/rv/monitors/irqstate/irqstate.c  |  289 +++
-> kernel/trace/rv/monitors/irqstate/irqstate.h  |  139 ++
-> .../rv/monitors/irqstate/irqstate_kunit.c     | 2062 +++++++++++++++++
-> .../rv/monitors/irqstate/irqstate_kunit.h     |   25 +
-> .../rv/monitors/irqstate/irqstate_trace.h     |   15 +
-> kernel/trace/rv/rv_monitors_test.c            |   29 +
-> kernel/trace/rv/rv_trace.h                    |    2 +
-> .../verification/models/irqentry/irqexit.dot  |   21 +
-> .../verification/models/irqentry/irqstate.dot |   32 +
-> 29 files changed, 4397 insertions(+), 13 deletions(-)
-> create mode 100644 Documentation/trace/rv/monitor_irqentry.rst
-> create mode 100644 kernel/trace/rv/monitors/irqentry/Kconfig
-> create mode 100644 kernel/trace/rv/monitors/irqentry/irqentry.c
-> create mode 100644 kernel/trace/rv/monitors/irqentry/irqentry.h
-> create mode 100644 kernel/trace/rv/monitors/irqexit/Kconfig
-> create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit.c
-> create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit.h
-> create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.c
-> create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.h
-> create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_trace.h
-> create mode 100644 kernel/trace/rv/monitors/irqstate/Kconfig
-> create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate.c
-> create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate.h
-> create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
-> create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_kunit.h
-> create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_trace.h
-> create mode 100644 tools/verification/models/irqentry/irqexit.dot
-> create mode 100644 tools/verification/models/irqentry/irqstate.dot
->
->base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
->prerequisite-patch-id: 6ac7167f0aa7c5319dac78bf5b06a989fd7dfac5
+Trigger conditions: an admin writes a trigger with an "if" filter
+while the target event fires at high rate (e.g. sched_switch,
+irq handlers), and the kstrdup fails (GFP_KERNEL allocation under
+memory pressure).  The failing allocation is easy to hit repeatedly
+via a memory-hungry cgroup.  The freed filter's preds array is
+then read by filter_match_preds().
+
+Fix: either free the new filter before publishing (i.e., don't
+rcu_assign_pointer until the filter_str copy succeeded), or perform
+tracepoint_synchronize_unregister() before free_event_filter() in the
+ENOMEM path, mirroring the normal path.  The first variant is
+cheaper: move the kstrdup above the "assign:" label and release the
+pointer only after the string copy succeeded.
+
+I found this by code inspection.  Checked against 7.3.0-rc7 and
+linux-next (2026-10-24): both are unchanged.  syzbot has no matching
+report (its trigger coverage focuses on counting/snapshot triggers,
+not on the ENOMEM path of filter assignment), and I found no prior
+report on lore/marc.
+
+Best,
+Guikun Yang
 
