@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859193;
-	b=T3pjC8X5SgcbQXVYRLtivsCNZ0G2RIxf19msTUlSg8IpuOFj0+5JulwIQOuhoXD/pgOc
-	 yAwBVyVAt0zchsMRZvsL8Qwn+4zIEEnEveQzyE/T6MvB+Bo5ca8le1xiKp45pZKlfxp7U
-	 h5tWPnePRNxZ3p8hx+9JvQpBesMieIXozHg2MOASE1bzEMeMKtHi9cGhCyTAradFbuxCT
-	 khiKziBnWFM+K8vOBW3CJsu+D7mpA+81fiaPcQFk8yIoLLwzgFoOLaDb1/j1sX48PMDXj
-	 isejLyOAncJM87VBnKoDqKTvfw27IHAp9Xiki+jeMPDqhMITCBEIFvDgD7kfioN84VA==
+	t=1792859202;
+	b=XNmxeWoelP4Bc7pPTJWxJVvieURJybbSHJOtwjSeAFMAsk1M3M06tkv/pWz6Fwc+IgZy
+	 WgV/LUwTKbvYocMM2JnuMo1gVSjAYSbvGFXNn2bAOKJKQaJ2YHpqi7u3xqgvvnBRxis7t
+	 tO7SqA3WQUefBxkVrsNbQAh7oA4QfZ3yesl32OJZduUYMrsK0SudQ82f8c/cbNxKVJbs5
+	 SejP+uQIl6yGrWQ7r4jKJ9DpyX/lH7gNh1LE6NeZYY26o9Y0TpIhvYLW3sKjod0+LF9XR
+	 wr5h+htuRp8z6k1X7wvLX7pvEkGHD4YhAwwoU5Cj0uZwFHE3Iz+1tuac92Ebdh5iXDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859193;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859202;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=6hnJgBFdglAF6dXEFA5rs8hQOCYXKV182Qh4+QI28p8=;
-	b=Hhl5Dm64/IRXd93na+Qkyd8bnUUWQMYuHRjVenfQOI7w6YrtrxRnfazSZJadS9pNHPM+
-	 +JvkQGxLYdqJyAKu7RIswXhKIO19gZy4eXMejUZAg5wWUGTYBrG2CFRn5NIjDNoiqbgqn
-	 kuzP2vAAr7/icIbt4XKuUKlg004rIy0Q9hPC+ciGN+3YE6ne5FmK9inCU13kd4dAPvMAd
-	 PugJgSqlP9LXJSSScS1RdEdT2N0gZgFydL+r3YHFXnPKOuy8L3CTgxxrg+5wqZ6c9ecyQ
-	 XDfZCmS6IY8RRq7V9YfQSzKGnGqCwe5IkP+vdrHSRtMECDRVUvqDBqwIW7Fk3YuMNMQ==
+	bh=NzwxAfdW/i7OFOnTa+V9Z3EY89HcCRwjTnYJtteeI/A=;
+	b=1pZjx6bG4+DXTaqNFyel2qlXjizrYix9iqkW3X4QGruKmp2tcm0zwH92Ih0ou41y8uQt
+	 xQbEb2dkGT5nNYC6f3ATrbvlrdpIBh9R/2ZTGHvHK/gSUAtiX2gbJJam6pO8yi5QH+B1A
+	 tzcuWJn/GMViyXxwDAX84Alpc0KQoCsvvUiMr97HR5xYMjIzdg9YQ8PLtLxrhaxWm7w3j
+	 l6Aq6vqVTqj/bFqTvBwyTHjvWVTjugOdKgNTlii8dGVnO4LPcnS2EJQAU/Ux+gcj2Ru9L
+	 o6wKGAK0xizCCghyPU65UGAd2dDW0QwaZWtPbanB3Y1nbWrw3uBbh6sY2IxWlcxgJ5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZUoFkCqG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a17/D36g";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5530F606A31A;
-	Sat, 24 Oct 2026 16:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EB7606A322;
+	Sat, 24 Oct 2026 16:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZUoFkCqG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C11E1F01828;
-	Sat, 24 Oct 2026 16:26:31 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a17/D36g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EFF21F01825;
+	Sat, 24 Oct 2026 16:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859192;
-	bh=6hnJgBFdglAF6dXEFA5rs8hQOCYXKV182Qh4+QI28p8=;
+	s=k20260515; t=1792859202;
+	bh=NzwxAfdW/i7OFOnTa+V9Z3EY89HcCRwjTnYJtteeI/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZUoFkCqGj/1W7Gazqyzv1edq82rcqS5GL0yWnb1rZwOXD5zM5dkI0ibUv2hgMe/sL
-	 4C8WUzD9bzkMYmlzENGkHHkMqzgrASOs4TMv5ePchAudr+e+0kwF8fuNlELkSxZYop
-	 HKuFjCpjHAjvBDJYRzarwsH0mP7C7Br/MFlvwJX7fYiqDJ4TjR1IMKokQzVYxeUlLE
-	 uFqoKIX317XIsV7NPX+SitxfzHuK7zJTZ+b4hL4eDX7ELToNOkWgci24LWbmNmsu1D
-	 PsiC4A8Ft+juyYtqGCzSpCvjQ1bss1udxaL8ywWWdKgXRhuJxcY1NVfESGkxsjIS2V
-	 LQbhtZxPDUkmQ==
+	b=a17/D36gZKHKMUaIAazc6VU5kHeLTJwN+t9aHUi9MWpv42pVfrzRPXGYH6G4CLqoE
+	 /YLAiIFwnZS6GRxvhEeCAgTXzqxmOJDVoIQx+xTCDAAtrpqkjzhnMS5X437lPvdR07
+	 p5gxyK18UsvDIyOvOxD0VUBq1/cu6UkyxYD2AcsU0VNPFKPG2QpUcZLNcRKR1Icf4k
+	 XnNNneYn1R6I6qLVblSsDMEKNr3WL6S8QWXhB9eJxVxIBc1niNcUi37bxwR108V1aD
+	 0YXXgKic9Z2al+Gbr5qA0s3PBl6yG37E8fyxtY6HQ54L+PjFwhopsHXwYovu2RRtD+
+	 1InH2k+3vMFkA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 07/10] tracing/filters: Skip second character of '&&' and '||' in calc_stack()
-Date: Sun, 25 Oct 2026 01:26:29 +0900
-Message-ID: <179285918908.466249.18270745423264950845.stgit@devnote2>
+Subject: [PATCH 08/10] tracing/filters: Reject unsupported field sizes in parse_pred()
+Date: Sun, 25 Oct 2026 01:26:38 +0900
+Message-ID: <179285919830.466249.18083674557666121987.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,37 +69,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In calc_stack(), when encountering '||' or '&&' (where str[i+1] == str[i]),
-the loop sets 'is_pred = false' and continues without advancing 'i' past
-the second character of the operator. On the next iteration, the second '|'
-or '&' sees str[i+1] != str[i], breaks out of the switch statement, and is
-counted as the start of a new predicate (incrementing nr_preds and setting
-is_pred = true).
+Prior to commit 80765597bc58 ("tracing: Rewrite filter logic to be simpler
+and faster"), parse_pred() checked whether select_comparison_fn() returned
+NULL and failed with FILT_ERR_INVALID_OP and -EINVAL. That check was lost
+during the rewrite, and commit 3cbec9d7b93d ("tracing/filters: Enable
+filtering a scalar field by a cpumask") similarly omitted a default error
+case when matching field->size for CPUS{} comparisons.
 
-Consequently, a trailing logical operator (e.g. 'common_pid == 1 ||') is
-counted as having 2 predicates instead of 1, and any subsequent non-space
-character before a delimiter fails to increment nr_preds.
+If a non-string field (FILTER_OTHER) has a size other than 1, 2, 4, or 8
+(such as a fixed-size integer array field), pred->fn_num remains
+FILTER_PRED_FN_NOP (0) and parse_pred() returns success. Subsequently,
+update_preds() rejects FILTER_PRED_FN_NOP via WARN_ON_ONCE() and returns
+-EINVAL without setting a parse_error() message, triggering a kernel
+warning from user-supplied filter input.
 
-Increment 'i' when matching '||' or '&&' so the entire two-character
-operator is skipped.
+Restore the check for FILTER_PRED_FN_NOP in both the numeric scalar and
+CPUS{} branches of parse_pred() and report FILT_ERR_INVALID_OP.
 
 Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+Fixes: 3cbec9d7b93d ("tracing/filters: Enable filtering a scalar field by a cpumask")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace_events_filter.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 96eac7ccd488..e734d8664444 100644
+index e734d8664444..89f4e119628f 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -2207,6 +2207,7 @@ static int calc_stack(const char *str, int *parens, int *preds, int *err)
- 		case '&':
- 			if (str[i+1] != str[i])
+@@ -1995,6 +1995,10 @@ static int parse_pred(const char *str, void *data,
  				break;
-+			i++;
- 			is_pred = false;
- 			continue;
- 		case '(':
+ 			}
+ 		}
++		if (pred->fn_num == FILTER_PRED_FN_NOP) {
++			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
++			goto err_free;
++		}
+ 
+ 	/* This is either a string, or an integer */
+ 	} else if (str[i] == '\'' || str[i] == '"') {
+@@ -2140,6 +2144,10 @@ static int parse_pred(const char *str, void *data,
+ 		else {
+ 			pred->fn_num = select_comparison_fn(pred->op, field->size,
+ 							    field->is_signed);
++			if (pred->fn_num == FILTER_PRED_FN_NOP) {
++				parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
++				goto err_free;
++			}
+ 			if (pred->op == OP_NE)
+ 				pred->not = 1;
+ 		}
 
