@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792859174;
-	b=uNiINsu3PltF4PUK3JYp36+UPOwrpKlo8ko2dRyYAbYS9fosyBBIbUXGdGBqiwVczUAm
-	 CLUj+TP7y7Y+gHNRrgfs7maQZVfb0TzCCTzPOwAnJ5ZXg8ZgVLK8kGqQBorsDe2XiQ9F8
-	 3VGh7eV2A2MV68dOJnHFKDhh2rA5YvgAEN5ivLMuRcOrbS35bVBtJdmoyRgsWXvNYfifd
-	 gPEIbIfM7zQJV45kWkOFp9SSFPfzPMP91d7aE78U09EKsJXteZpo+9pSq+vdhb7+uDCbs
-	 jRsdu6PLdYueQgKW2aWe88oJy7Hx8k3zg1FLgq9qrLJq5sxQV5jMaOGKrtN7zWh5NFg==
+	t=1792859184;
+	b=f5CuGpTp7/mTpgVRAdCj56QPRjA83Z9PuihXjrfuYRXIeYgaaDfN7FpjdpEchsU6kMgr
+	 I5yU/eDpoQUB2yCaJfLZKCiISmOKN58x+zpVAMYwvB6S8oQ85k0X//CPaySMwnx0JLpBa
+	 WeyJYxzo7n9zd/++unpasueoeCCO1DvCSPA68FjCFnuEgTxs1ol14is9nCPaZ3mGR6hYC
+	 Twc7txopPYgyCCyK2IK6xXG3tXySmjOmGKrvCxyP1DooYFgJ+BlX5rQmO+Ipsi/MkJuyv
+	 xFxA0TgZkfYIurkp1LqSIW8YXH3jaGi4bI3tnFBqIn356QDYkVNwEXmIxoEVyT7jxHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792859174;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792859184;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Lirzxgy2qlCsGDSTcMZz1cbWaINV7NpFI1j9a88VF6w=;
-	b=VPY2QqpgR0iRZk/5+KU10cqkHFHALu6PoyCFXoBwlAMZCwFjNWimhx7TES5/C7XbJHk8
-	 TuFi8TGbodSsV3+pCZ/IIE8CnwRbCuPcCYrNoO0LYI9hdMHsgXjRGbK+ctCN78oSljfx3
-	 uzz00bk5gxrqprgv9Sv+s51FjY5C22aRNDwjK8pzo3W57D0U0hrPzx8AQyHETOoUFrNNY
-	 PaFOZ7uZQzxqiajiGS23XgloX9ZAh6As/V/NwzJEqSveEcplU8oF+6GcRlZaz67hb+//+
-	 kruD2/Y8ZFU18TtzGopXh9UsePlBhns83O87f2JNg63T0SgPZQkZnnerPCWCuwQDPpw==
+	bh=x2K+JcgEXwjAprRXTw7X+lnifU24Dsjycf8GetwMrOQ=;
+	b=lHYZ8GDjUmGZ8ouqo6/lZQm2DP1jiZdWdHsivGs8urUKANIWBZXnVASKUTK6cDU55/2J
+	 a+VpNsaXkCW8YlvGoJRZX5QOFdPMSPTtNDOTQ+9p2ucdO7YAVwSfMYc92zkxnGCJp1f5U
+	 Adq5mnEkDzxqc+Mi+4T2X5oPXm9ztusx+xSrk5M2kqbIky2ghf6KbP1MMz3Okrn++gvPY
+	 7TpmSdObbQ6fRWB3/eaNuOQITL9quvf7l7FQnlWIyJrIbzhKBRcBmuNezxyD5gey+h6zC
+	 pUIxVeAqwh1EyG9LYGW9l2wgLneYD6dFXdsGx13tFouFTuxEZQUf5mg95kucJlh8lVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wm8wsSZi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fcFIVXgc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C60606A321;
-	Sat, 24 Oct 2026 16:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D37606A31B;
+	Sat, 24 Oct 2026 16:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wm8wsSZi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD221F031EC;
-	Sat, 24 Oct 2026 16:26:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fcFIVXgc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C27F1F031E6;
+	Sat, 24 Oct 2026 16:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792859174;
-	bh=Lirzxgy2qlCsGDSTcMZz1cbWaINV7NpFI1j9a88VF6w=;
+	s=k20260515; t=1792859183;
+	bh=x2K+JcgEXwjAprRXTw7X+lnifU24Dsjycf8GetwMrOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Wm8wsSZii41Ydt1CZc3Flh9Q0h+6tEb2JHcHuSvc32RjjouKKUX8KnOEBjzg04jy7
-	 bQOSSi4pa5yMuaCkJYq+mVPvHBQFASpE3dDrrZsJ5xc6O4m3acbJZvXKZPZYpfpErH
-	 3lbjccGrr9AwDuOgCHEe2m5V/Uk2mkEYRUYSttKZtqR8J07zKfgTpuDHVBCkCL9ApK
-	 PQUYAy8AGSt7RHk/1u3WW2zgSIYkDW4CfMmfIRYELJ7vBmSLpoCJrdyFPMOXOurypg
-	 IEPS+J3m2qfEeegGldGEJn94GjCh18U2ef56oghzbvcVjGv7Y6FNlNM675WDykhQTG
-	 W3Cq5wFEjfpwQ==
+	b=fcFIVXgchmUWbCb+FUuU6Cqyi5HGlRCYqJISKGkNbqII4DFJ61xML9CiBAMprxI/X
+	 2gx6yQD0FouPMLbwGL45ukx/noJpfCxNGglLWVFVwEs2eISKje0NFPnE5DFXtUIJF/
+	 4Y6pNsksd4RoNDivoqPfatue0IYHmq6cmmz9agYCYAVy6J6Rfu04PuwdGe+A9N3wbh
+	 Ihm/zxb0w5IzjMavgs3MmZO1CKznaz/dQAPKXwSlBPrEzXjvXxV39t/H2U2wvFW5lx
+	 2qSRdJTV2FVGiYCeY6nQCSPtcB3kU1SxD3XQgXusXUbbJcZiwORmyoX2KucaNBxgz4
+	 6GiGGhl8gKcFA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 05/10] tracing/filters: Report parse error on all -EINVAL paths in filter parsing
-Date: Sun, 25 Oct 2026 01:26:10 +0900
-Message-ID: <179285917054.466249.6580828464905931113.stgit@devnote2>
+Subject: [PATCH 06/10] tracing/filters: Fix function event operand parsing in parse_pred()
+Date: Sun, 25 Oct 2026 01:26:19 +0900
+Message-ID: <179285917977.466249.218328175465077201.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179285912318.466249.7425922682086130057.stgit@devnote2>
 References: <179285912318.466249.7425922682086130057.stgit@devnote2>
@@ -69,75 +69,92 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Several error paths in filter parsing return -EINVAL (or -1) without
-calling parse_error() to set pe->lasterr:
+In parse_pred(), the ftrace_event_is_function(call) branch has several
+bugs when parsing the string operand:
 
-1. In parse_pred(), when an invalid token is encountered where a field name
-   is expected (e.g., "common_pid == 1 || (common_pid == 2 && )"), len is 0
-   and it returns -1 without calling parse_error().
-2. In process_preds(), when !nr_preds (e.g., empty or whitespace-only
-   filter), it returns -EINVAL before predicate_parse() can set
-   FILT_ERR_NO_FILTER.
-3. In predicate_parse(), when op_stack overflows or the jump target check
-   fails, it returns -EINVAL without calling parse_error().
+1. The loop 'for (i++; str[i]; i++)' unconditionally increments 'i' before
+   checking whether str[i] is the NUL terminator. When the operand is empty
+   (e.g. 'ip == '), this advances 'i' past the NUL terminator and reads
+   out-of-bounds memory until another zero byte is encountered.
 
-Because pe->lasterr remains 0 on these paths, append_filter_err() falls
-back to printing an uninformative "Error: (0)" instead of reporting the
-diagnostic and error position.
+2. When the operand is quoted (q != 0), the loop breaks with str[i] at the
+   closing quote, but 'i' is never incremented past it (unlike the regular
+   string literal parser which does 'i++'). Furthermore, it does not check
+   for a missing closing quote (!str[i]). Returning 'i' at the closing
+   quote causes predicate_parse() to immediately re-invoke parse_pred() on
+   the closing quote and fail with FILT_ERR_TOO_MANY_PREDS.
 
-Call parse_error() with the appropriate error code on all of these paths.
+3. If the operand length is 0 (e.g. 'ip == )' or 'ip == ""'), it accepts an
+   empty pattern instead of rejecting it with FILT_ERR_INVALID_VALUE.
+
+4. When the operand is unquoted (q == 0), stray quotes or '(' inside the
+   operand are consumed as part of the pattern, desynchronizing
+   parse_pred() from calc_stack().
+
+Fix this by advancing 'i' and 's' past the opening quote before the loop,
+starting the loop at the current 'i' without a blind increment, checking
+for missing closing quotes, advancing 'i' past the closing quote, and
+rejecting empty operands or stray quotes/'(' in unquoted operands.
 
 Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_filter.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events_filter.c |   37 ++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index d9aeeec4ed91..7e119c7164f0 100644
+index 7e119c7164f0..96eac7ccd488 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -515,6 +515,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 		switch (*next) {
- 		case '(':					/* #2 */
- 			if (top - op_stack > nr_parens) {
-+				parse_error(pe, FILT_ERR_TOO_MANY_OPEN,
-+					    next - str);
- 				ret = -EINVAL;
- 				goto out_free;
- 			}
-@@ -638,6 +640,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 		prog[i].when_to_branch = invert;
- 		/* Make sure the program always moves forward */
- 		if (WARN_ON(prog[i].target <= i)) {
-+			parse_error(pe, FILT_ERR_INVALID_FILTER, 0);
- 			ret = -EINVAL;
- 			goto out_free;
+@@ -1833,22 +1833,39 @@ static int parse_pred(const char *str, void *data,
+ 		 * Quotes are not required, but if they exist then we need
+ 		 * to read them till we hit a matching one.
+ 		 */
+-		if (str[i] == '\'' || str[i] == '"')
+-			q = str[i];
+-		else
++		if (str[i] == '\'' || str[i] == '"') {
++			q = str[i++];
++			s = i;
++		} else {
+ 			q = 0;
++		}
+ 
+-		for (i++; str[i]; i++) {
++		for (; str[i]; i++) {
+ 			if (q && str[i] == q)
+ 				break;
+-			if (!q && (str[i] == ')' || str[i] == '&' ||
+-				   str[i] == '|'))
+-				break;
++			if (!q) {
++				if (str[i] == ')' || str[i] == '&' ||
++				    str[i] == '|')
++					break;
++				if (str[i] == '(' || str[i] == '\'' ||
++				    str[i] == '"') {
++					parse_error(pe, FILT_ERR_INVALID_VALUE,
++						    pos + i);
++					goto err_free;
++				}
++			}
++		}
++		if (q && !str[i]) {
++			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
++			goto err_free;
  		}
-@@ -1688,8 +1691,10 @@ static int parse_pred(const char *str, void *data,
- 
- 	len = i - s;
- 
--	if (!len)
--		return -1;
-+	if (!len) {
-+		parse_error(pe, FILT_ERR_INVALID_FILTER, pos + i);
-+		return -EINVAL;
-+	}
- 
- 	field_name = kmemdup_nul(str + s, len, GFP_KERNEL);
- 	if (!field_name)
-@@ -2277,8 +2282,10 @@ static int process_preds(struct trace_event_call *call,
- 		return ret;
- 	}
- 
--	if (!nr_preds)
-+	if (!nr_preds) {
-+		parse_error(pe, FILT_ERR_NO_FILTER, 0);
- 		return -EINVAL;
-+	}
- 
- 	prog = predicate_parse(filter_string, nr_parens, nr_preds,
- 			       parse_pred, call, pe);
+-		/* Skip quotes */
+-		if (q)
+-			s++;
+ 		len = i - s;
++		if (q)
++			i++;
++		if (!len) {
++			parse_error(pe, FILT_ERR_INVALID_VALUE, pos + i);
++			goto err_free;
++		}
+ 		if (len >= MAX_FILTER_STR_VAL) {
+ 			parse_error(pe, FILT_ERR_OPERAND_TOO_LONG, pos + i);
+ 			goto err_free;
 
