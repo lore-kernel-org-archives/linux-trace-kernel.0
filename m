@@ -1,57 +1,80 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792808239;
-	b=vuWXS/23Y1koPgFSPv332CGaH2m5b/euKpuNirtRqXmSCuUxsg98xiYiTI7vEIogsiq8
-	 3mDRzq+9K0qOH4IMNe4IzzDO/U0SzAO7+CeiUVVcDEtV9UdCu3pwhL2bOcJcaebopWXg7
-	 g6MOsSYB+DodLtH7G3D3g4Lo9cnAHxDtl5bYdjXxkIF8GDJCLNBtav/jQV/u+caFpS62q
-	 S6uT+QJz93TSaHPX6ZgRZRl2vIiuECR5qRE2dFv0iwpUuCIiC72bR3BFgzbt2RBXvOM6k
-	 iEUtLV1+b9OpxMP8twxwW1dO6qRjRwZLbHFCdE3Ba51dYOE4Yw6zILINF/VO4YNzfPg==
+	t=1792818113;
+	b=x0ITSq1ydiKZvMrxgt3BGp+QlSrU5oKeQPerUbnHe0uh0zhLP0mj4Hyep3+0m8NHnkak
+	 OwI1Koe6lQBZDxlvMunYDyNwMJaVSTgzvD0Weafe9ezeANRNW9K5HO/xgAdqTlRibcREa
+	 njDo+mmBHMxj8I4xixVr+YJtJxR61ZY/Y0orhDDu0HqTYubW8kOQV4oIq5yBdf8oms6gg
+	 Sg8k3xjG+8mPzmjwNIsnk0BudGMnsWx2M7ilTIR92YEEwYMtQOy8lCofj8uSj93aV61Wx
+	 DTANpiYzezwKMGwQ3NX/rzZS1PW5fzPzJWMas2CVJKVGOZ7oqWxzjQx0RPSYFBVZlQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792808239;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=sKQqsqdhP/+ZzWj7/b6BcIyYnh9cafeLlGF2GvkuE0E=;
-	b=FsLkcrTIMD59ZDVHbqjIJur9s+6BuKyfgR8ZaR4QrbfR7ArUokWyI9TDu5iNVgD47SUp
-	 emFQB13h4oRaYqaVRj41mkdTPQRquxZvSin3msK1E12iW48WTEBEfijT01RYAXtCBiAlw
-	 y12CcN0Fre9b36uwgQifAfqcVXEiKo03zmKwzGQCxjwuUareoPH9SC36/0SHbyhKEz52y
-	 CzSw0MVk8cIZvwRyi5lsP1Hkg5GpP2Qr0AETINvATKaV/V+xCu+aus1Rs+/vI+Lqvfo+Q
-	 y7JZ018nElnGr4yx19Xm+7z61096cXv4/HC6QBwiIZ2h4Upae5oYBDiSuvfOC8p7ToQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792818113;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=YEovTDR9SiuVKkDWnIJaVfx9ijSldXikdYRm1L41uuw=;
+	b=3Q5EAETtZs0p5Y45Cwv4Cf2iwAWoXM2T+rajwi+QHuyLlkCYAxJF7onx2APMfzY/BuEP
+	 HeirUmczL6JEAOcrDOoutYptvx5T1GzeWbpwAYZiVHqB7a786ebQO7Rwi3TpVGo5Eg/VX
+	 +qqe0gBDp3eMPVrR++Y9O0in1tZuyR4Jta9MtyK9CDCAgwnfLgTR0kg+JMUBS7usObiI1
+	 iHb+myXU6bNUI07fxmTibeV/pDD2sE5FhhSpwpTJt8k8cAemo2/3w85mEbdWLWpNqHftG
+	 PSCZJC6Pu3xreH03DrURLhEttPHtSipYaaQsqRmSgqWuOMoL5gsg0lKM+rYqjgxJ1UQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h3o9ccYF;
+	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=K1Vs2Cxv;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105D9606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Oct 2026 02:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA933606A31A;
+	Sat, 24 Oct 2026 05:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h3o9ccYF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 737FF1F01825;
-	Sat, 24 Oct 2026 02:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792808238;
-	bh=sKQqsqdhP/+ZzWj7/b6BcIyYnh9cafeLlGF2GvkuE0E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=h3o9ccYF3S7IyyjvgUBVr1rIrydfZh+zjiJ/KIfgqhD+yWSz9Ii4gqp95jo3WKrww
-	 fyxu5iPT3J5qyM6GFNWvmy8wDw9OqVFxxkfMu/LZJbxMMuHhTb7Gey8jP6tRPoZTub
-	 kSTt0TV3TpzhvkqygTl8lN10v4eDu9FvSz7EVWheXYwpB8vormXh2L0uTgRpppVLfE
-	 J+pG4gD1vN+B8tg5Mru1cwH+Glz3DlwN0d2iVQlnNFky3PbJsVz9nwpJqWldGzdhkj
-	 78QffUwD06jo5liwjV1eAuRqRVIjONX8EMFHhBFn49d1+GAAL7+XI2cp1AJy9PHJ7U
-	 DqSi00Ydzm+oA==
-Message-ID: <sashiko-outbox-183513@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 4/8] tracing/osnoise: Per-cpu mutexes and fd
- detachment
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Crystal Wood" <crwood@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261024015614.3095251-5-crwood@redhat.com>
-References: <20261024015614.3095251-1-crwood@redhat.com>
- <20261024015614.3095251-5-crwood@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 24 Oct 2026 02:17:18 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=K1Vs2Cxv
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9902E1F01828;
+	Sat, 24 Oct 2026 05:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1792818112;
+	bh=YEovTDR9SiuVKkDWnIJaVfx9ijSldXikdYRm1L41uuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=K1Vs2CxvZXtblpQtQXrnnlHWWUZ+yaHbnD/r5lVmW5zyAYTpiY79C877mgDztRmmd
+	 SNRXQ/tUBIjSKdyx0a+QHrqwJXgVxq9HMusPK8zLmyr+Lq0unPm73QqXc8ulTy2Fp9
+	 PZzIf9yYAwn9Jm0p/1RtRTacGdWGlcfJHTaOeWvU=
+Date: Sat, 24 Oct 2026 06:56:34 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alex Williamson <alex@shazbot.org>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <2026102437-vista-unsoiled-b089@gregkh>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+ <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+ <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+ <arOfHEsGGglNse7T@monoceros>
+ <2026092348-victory-erased-0e5a@gregkh>
+ <20261023181326.0dc2f7ed@shazbot.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,207 +83,97 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261023181326.0dc2f7ed@shazbot.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] tracing/osnoise: broken state on signal restart in timerlat_fd_r=
-ead()
-- [Medium] tracing/osnoise: migration check precedes fd validation in timer=
-lat_fd_read()
---
+On Fri, Oct 23, 2026 at 06:13:26PM -0600, Alex Williamson wrote:
+> On Wed, 23 Sep 2026 12:29:56 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Wed, Sep 23, 2026 at 11:54:50AM +0200, Uwe Kleine-König wrote:
+> > > > No, drivers should NOT have to do that in their .probe() function,
+> > > > that's what we moved away from decades ago!  The match function should
+> > > > handle all of that for you, otherwise it's contant duplication
+> > > > everywhere that is unneeded.  
+> > > 
+> > > Well then you have to accept that root can provoke a null pointer
+> > > exception (e.g. by forcing the pwm-tegra driver on a device) because at
+> > > least with today's platform bus match function such a match is ok.  
+> > 
+> > Agreed, yes, root can cause a crash and can do tons of horrible things
+> > much worse than this, that's not the issue.
+> > 
+> > That's why this taint is there, to make it obvious that this is not a
+> > "real" bug at all.
+> > 
+> > > > Please, learn from our history, don't make the same mistakes.
+> > > > 
+> > > > Now I might be convinced that driver_override is the way to go here, but
+> > > > it still feels really odd as again, bind/unbind was created as a driver
+> > > > debugging option only, it should NOT be a normal operation that any user
+> > > > should rely on.  The driver should "just work" properly instead, without
+> > > > requiring manual bind work, as that's not a good model at all.  
+> > > 
+> > > I agree in principle, but (in my case wifi) drivers are buggy sometimes
+> > > (due to missing documentation and/or engineering effort) and being able
+> > > to rebind the driver instead of rebooting to get a working device again
+> > > is very useful.  
+> > 
+> > Fine, use it!  Just don't expect that to be "normal".
+> > 
+> > > So yes, theoretically bind/unbind isn't needed, but theory and practise
+> > > differ in practise.  
+> > 
+> > Agreed, but again, don't rely on this as a "real" solution fo ranything.
+> 
+> Sorry, late to the party, but this isn't a few user scripts that rely
+> on this behavior.  Effectively every use case of vfio relies on this
+> behavior.  We rely on unbinding the default driver from the device
+> before using driver_override and drivers_probe.  That means every
+> hypervisor with device assignment and every userspace driver use case
+> now experiences a tainted kernel. That seems like a significant
+> regression.
 
-commit 8df487d33bcb20519b9ce641f525b512ec06fe1d
-Author: Crystal Wood <crwood@redhat.com>
+Or finally, a real bugfix :)
 
-tracing/osnoise: Per-cpu mutexes and fd detachment
+> There is currently no alternative for this process.  It's not a matter
+> of upgrading to a newer kernel where the drivers claim the device IDs.
+> We can't claim the device ID, vfio drivers represent a secondary use
+> case for the device.
 
-This commit introduces per-CPU mutexes to synchronize kthread and timerlat =
-fd
-lifecycle operations and replaces the SIGKILL mechanism for detaching
-user-space timerlat threads with a mutex-protected fd detachment mechanism.
+How can vfio know that it can properly talk to any device like this?
+Surely you have a list of real device ids that you know will work,
+otherwise all bets are off.
 
-> diff --git a/Documentation/trace/timerlat-tracer.rst b/Documentation/trac=
-e/timerlat-tracer.rst
-> index 68d429d454a54..ea94627e821b5 100644
-> --- a/Documentation/trace/timerlat-tracer.rst
-> +++ b/Documentation/trace/timerlat-tracer.rst
-> @@ -220,8 +220,9 @@ After reporting the total latency, timerlat will rest=
-art the cycle, arm
->  a timer, and go to sleep for the following activation.
-> =20
->  If at any time one of the conditions is broken, e.g., the thread migrates
-> -while in user space, or the timerlat tracer is disabled, the SIG_KILL
-> -signal will be sent to the user-space thread.
-> +while in user space, or the timerlat tracer is disabled, the fd will be
-> +detached from the tracer, and subsequent usage will fail with EINVAL.
-> +Note that older kernels may deliver a SIGKILL instead.
-> =20
->  Here is an basic example of user-space code for timerlat::
-> =20
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index 40cbabb98a1ba..f383bc4df6b7b 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
+> A production use case of panic_on_taint now results in a hard failure
+> for a scenario that has been allowed and documented as best practice
+> for many years.
 
-[ ... ]
+It was never "best practice", you took a debugging option and somehow
+thought it was a valid use case.  Yes, I'm being harsh but I am sure I
+complained about this in the past and obviously never followed up on it,
+so that's on me.
 
-> @@ -2498,12 +2574,13 @@ static ssize_t
->  timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
->  		  loff_t *ppos)
->  {
-> -	long cpu =3D (long) file->private_data;
-> +	struct fd_data *fdd =3D file->private_data;
->  	struct osnoise_variables *osn_var;
->  	struct timerlat_variables *tlat;
->  	struct timerlat_sample s;
->  	s64 diff;
->  	u64 now;
-> +	int ret =3D 0;
-> =20
->  	migrate_disable();
-> =20
-> @@ -2514,13 +2591,13 @@ timerlat_fd_read(struct file *file, char __user *=
-ubuf, size_t count,
->  	 * we can do about it.
->  	 * So, if the thread is running on another CPU, stop the machinery.
->  	 */
-> -	if (cpu =3D=3D smp_processor_id()) {
-> +	if (fdd->cpu =3D=3D smp_processor_id()) {
->  		if (tlat->uthread_migrate) {
->  			migrate_enable();
->  			return -EINVAL;
->  		}
->  	} else {
-> -		cpu_tmr_var(cpu)->uthread_migrate =3D 1;
-> +		cpu_tmr_var(fdd->cpu)->uthread_migrate =3D 1;
->  		osnoise_taint("timerlat user thread migrate\n");
->  		osnoise_stop_tracing();
->  		migrate_enable();
-> @@ -2529,6 +2606,13 @@ timerlat_fd_read(struct file *file, char __user *u=
-buf, size_t count,
-> =20
->  	osn_var =3D this_cpu_osn_var();
-> =20
-> +	/* In normal usage, this should always be uncontended. */
-> +	mutex_lock(&tlat->detach_lock);
-> +	if (fdd !=3D osn_var->fdd || current !=3D fdd->thread) {
-> +		ret =3D -EINVAL;
-> +		goto out;
-> +	}
+> What's the solution we can pursue for the scenario where devices have
+> dual use cases between in-kernel drivers and userspace drivers?  Thanks,
 
-[Severity: Medium]
-In timerlat_fd_read(), the CPU migration check runs before acquiring
-tlat->detach_lock and before verifying that fdd =3D=3D osn_var->fdd and
-current =3D=3D fdd->thread.
+So what is the real use case here, taking any type of any device and
+thinking you can bind a random kernel driver to it and it will work ok?
+You all have specific platform and pci vfio drivers, why not use the
+proper device ids there instead, or better yet, bake-in this type of
+functionality into the bus-specific logic so that you can have generic
+userspace control of a device (like usbfs and uio does today)?
 
-Because stop_kthread() now detaches the fd via timerlat_fd_detach() instead
-of sending SIGKILL, the user-space thread stays alive with an open file
-descriptor after detachment. If that thread later migrates to another CPU
-and calls read() on the detached fd (or if another thread sharing the file
-table calls read() on a CPU other than fdd->cpu), timerlat_fd_read() takes
-the fdd->cpu !=3D smp_processor_id() branch:
+We have real problems with random "bind/unbind" attempts that this taint
+is here to help resolve as it was creating hundreds of false-positive
+bug reports on developers all across the tree now that the fuzzers
+decided to think this was a valid action to take.  Without this taint,
+people were being forced to add hacks to all drivers for this which is
+not an acceptable solution.
 
-	cpu_tmr_var(fdd->cpu)->uthread_migrate =3D 1;
-	osnoise_taint("timerlat user thread migrate\n");
-	osnoise_stop_tracing();
+thanks,
 
-This taints the tracer, stops tracing (or panics if OSN_PANIC_ON_STOP is
-set), and leaves cpu_tmr_var(fdd->cpu)->uthread_migrate set to 1. Because
-fdd is already detached (fdd !=3D osn_var->fdd), a subsequent close() in
-timerlat_fd_release():
-
-	mutex_lock(&osn_var->lock);
-	if (fdd =3D=3D osn_var->fdd)
-		timerlat_fd_detach(fdd);
-	mutex_unlock(&osn_var->lock);
-
-will not call timerlat_fd_detach() to zero tlat->zero, and
-timerlat_fd_open() does not clear tlat->uthread_migrate either, leaving new
-timerlat fd sessions on fdd->cpu broken until the tracer is restarted.
-
-Also, Documentation/trace/timerlat-tracer.rst states that if the thread
-migrates while in user space, the fd will be detached from the tracer, but
-neither trace_sched_migrate_callback() nor timerlat_fd_read() calls
-timerlat_fd_detach().
-
-Should timerlat_fd_read() validate that fdd is still attached and owned by
-current before acting on migration, and should migration detach the fd?
-
->  	/*
->  	 * The timerlat in user-space runs in a different order:
->  	 * the read() starts from the execution of the previous occurrence,
-> @@ -2563,9 +2647,6 @@ timerlat_fd_read(struct file *file, char __user *ub=
-uf, size_t count,
->  			}
->  		}
->  	} else {
-> -		tlat->tracing_thread =3D false;
-> -		tlat->thread =3D current;
-> -
->  		/* Annotate now to drift new period */
->  		tlat->abs_period =3D hrtimer_cb_get_time(&tlat->timer);
-> =20
-> @@ -2573,7 +2654,19 @@ timerlat_fd_read(struct file *file, char __user *u=
-buf, size_t count,
->  	}
-> =20
->  	/* wait for the next period */
-> -	wait_next_period(tlat);
-> +	if (wait_next_period(tlat) < 0) {
-> +		if (signal_pending(current))
-> +			ret =3D -ERESTARTSYS;
-> +		else
-> +			ret =3D -EINVAL;
-> +
-> +		goto out;
-> +	}
-
-[Severity: Medium]
-What happens when wait_next_period() in timerlat_fd_read() is interrupted by
-a signal and returns -ERESTARTSYS?
-
-Before calling wait_next_period(), timerlat_fd_read() has either set
-osn_var->sampling =3D 1 (on the first read) or already recorded the
-THREAD_URET latency sample for the previous wakeup (on subsequent reads).
-Inside wait_next_period(), tlat->abs_period is advanced to next_abs_period,
-and when signal_pending(current) is true, the timer is cancelled via
-hrtimer_cancel(&tlat->timer) and -1 is returned:
-
-	if (tlat->detach || signal_pending(current)) {
-		hrtimer_cancel(&tlat->timer);
-		return -1;
-	}
-
-When the read() syscall is restarted (or retried by user space after EINTR),
-osn_var->sampling is still 1, so timerlat_fd_read() enters the
-if (likely(osn_var->sampling)) branch at the top of the function:
-
-	if (likely(osn_var->sampling)) {
-		now =3D ktime_to_ns(hrtimer_cb_get_time(&tlat->timer));
-		diff =3D now - tlat->abs_period;
-
-		/*
-		 * it was not a timer firing, but some other signal?
-		 */
-		if (diff < 0)
-			goto out;
-
-		s.seqnum =3D tlat->count;
-		s.timer_latency =3D diff;
-		s.context =3D THREAD_URET;
-
-		record_timerlat_sample(&s);
-
-While now is still earlier than the future tlat->abs_period, diff < 0 is
-true and timerlat_fd_read() jumps to out and returns 0 (EOF) without arming
-the timer or sleeping. Once now reaches tlat->abs_period, diff >=3D 0 and
-timerlat_fd_read() records a bogus or duplicate THREAD_URET sample and
-checks stop_tracing_total for a timer activation that was cancelled and
-never fired.
-
-Does timerlat_fd_read() need to avoid treating the next read() after a
-signal interruption as a wakeup from a completed timer cycle?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261024015614.3095=
-251-2-crwood@redhat.com?part=3D4
+greg k-h
