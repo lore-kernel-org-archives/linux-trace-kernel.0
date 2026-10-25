@@ -1,81 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792913402;
-	b=KxqqiDzSqnFrM9v2gJ7Us1a62rlbSOWPht6xeWGPiZBXeL5ErslnnaZpbU7d8Ekx12M7
-	 HQbPrlkQ+nGx+jsjkg20HJZ3pdJIKyobvhxVMQxngAUsBFoA40sEbY7rBtcdTrBZYPVWx
-	 1YZgaeShTu6wUwYSfV2EmhzDmeVxSMp+yT/+pUQaSjtQ8610h5p3WtVYI3Vdzs5w7LOfy
-	 IT3Khz5SnXLs6WCNbedNFO18GQu9M8BYsXffRaADaw87LB+ZdU0F+tHJ+uIhMJ60xIRpz
-	 uMMaCkQkasclacfCFvUqOB3GOA8r7LtqdgE6b54oc1qcv+SAjjJNOD/WJIKuN4oXsRw==
+	t=1792914649;
+	b=fUs34YILmbBkA5XRm7NHVTYpRKthtl6Jf5BXp2aASl0TMDGk+U4QdxQa3LdpAGGuKEKV
+	 FQqUU5U7eK5mA7zXEFCccmD3m1DVWomzeWmwhyGJluwL4aAB/KEpcTXjsqriuA1Oe3pGD
+	 tIVeiitkYUkHPOu9gIrBgSyw+JiyDmEO/9QUvxU1cRFhClomrYC5PTTpx3ltsyr03I+mx
+	 UelSMLv3nraRUJ2dR5ky7s+rVv+u20WJtHanDrVYdHhXG0QEIx+z/MNjBnIKFpmPaiejD
+	 RWnDP+hwQcjktTSVXxEOQJ/GXJDuP/82+3CaeUsyXxN1Q5dpXZZSDvJt1Ws8hNQ+NWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792913402;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792914649;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Ca84V1D9B8Ybj/7LgOQ6VhiC3u886cles4dpmUcGdP0=;
-	b=Vcd/EUEmg52yXM0eI/bao1oU3s4wf/aoHxIjMsLa68W7XlZ9a7VJCm3PRIfMxwJEIm/R
-	 S9ddXyqgjLe0/342s4ytXWf8pdBTPU0gn2xsHfyJmiZAutDOpkBO4RicWuZ8ir1frzmd1
-	 1GEHFFRwTRsVXJlRKodvTfpkEDKQALF19lYbqEaEQvvJlmVb9pETMHOURUFOAt7EB/KYS
-	 7yN/yECDq+EbhWzgZjX5x4Se/YuGgc9ertHWn+vcPTH7Tov6g+LKTbJpYKkGAhIN3goj9
-	 iychstfM4OKYw1WZawwT6LhbgAFXCb72ydvgmqWxIJNHCnoDFVDN4q9SNz7tLWyWruw==
+	bh=qw8iT3vjQ6v6/N4nQ3kAFOKgih6vtaYdBPaT8XNpq84=;
+	b=oYXogaemL8raTZGpTA3XmflL8RhUiVo2M7pQxlkPXK/BrYqhUZU1YqwmAQg0+gSJT8w0
+	 7DoxFWQRhEDDbsZXcJ6rKFc++yVxs7SpzaONNH7+Id57Vb8QWHHxY5LPEgJ+uX1yTzCQG
+	 09Mza/FOdB+72C2ijAJ8g7tE4rRNkPYgsJpKlemBH9zKfvpqc7p8QZSsHQRa+u1FNM60T
+	 KJvEJ4f8bFX8ng+6iMcEhySQ6/0zpu9ZdnRJXXoenTb38z7+HwGkjVlCQGzCQ/1opryER
+	 DWGe4NZjrq0AFAwhBZjBy4gf0Lbmrg3vGjqSwS7YPv4ehWWxIPzjtDWCbtmSNjbAn+Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sbXu8TmW;
-	arc=none smtp.remote-ip=209.85.214.182
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZU9D4xZQ;
+	arc=none smtp.remote-ip=74.125.82.175
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239B4606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 07:30:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 239B4606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E11D606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 07:50:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E11D606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sbXu8TmW
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2e977109392so11506345ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 00:30:02 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZU9D4xZQ
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-35c76e9614aso3365191eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 00:50:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792913401; x=1793518201; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792914648; x=1793519448; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Ca84V1D9B8Ybj/7LgOQ6VhiC3u886cles4dpmUcGdP0=;
-        b=sbXu8TmWoOHQrI8owKBYY+cShhIySq2CbLFlzir2i5fc2R9j8kIlcd1bA32HTv1ljK
-         s1c2pu7rkeKozyEjYZYB2Se7ES828YwyltBHAF4G/PBj12X2ENqFNv/QOHoiHY85ldEr
-         Er99edSVkY9kP97jiC21DjEYoMpySlGGzgtBxikkbnOTpQEXQa+wAMHSOZ2Y3lnJEcjn
-         XcnLmHktz3Z6c3s1dTd4bxl3NmpHIGbdFh63JcXGLlyERo9Jc0iuoGSp+HNZQzv9KW1g
-         njhcF7ceKgvztm6cz8xMA+PAGFaFY/iqmp6RtdZFZXfbcQ7PimdO446S0ZuU/OBO4xt0
-         U6Uw==
+        bh=qw8iT3vjQ6v6/N4nQ3kAFOKgih6vtaYdBPaT8XNpq84=;
+        b=ZU9D4xZQT9lRNzJIr0ql9vXLWN16FNvjZngwe3GrKVd/CkwklZ252VjyPTMyxakg9o
+         iacgLUa6eSniXyNb41gMlUTdOtXLYcpdyEMYWEi9nrr0oOzXXSPaeJWbgAcwGXJCcjkM
+         Vt+d0vAVPMVhR4/Ywl+vs22ZZbKY2KRzAcdbzVkv5iltNWMglPoPuxxZuTZ3dTclNuXK
+         s0yQlT/qzXD3IyFmDukHYBfDX9Id3/D0dWEU8dA5tFBcgE0a7aWc5+a8e4wTLA4mJwIr
+         nFXzrg/C5StE0K24XJoBbv40rP3Zvu71CA/gm4JFmbjQqRSKf9QcgOizACAZkxUZhO6/
+         SQRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792913401; x=1793518201;
+        d=1e100.net; s=20260707; t=1792914648; x=1793519448;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Ca84V1D9B8Ybj/7LgOQ6VhiC3u886cles4dpmUcGdP0=;
-        b=y21+LD6WgMFu78l9ckl2Zulb9T5kWATg8QSLatSRAwJjbiI2VbGtjdO5twYO4KxtAc
-         ukX+KQVWrPKTpfjrFXxpl65kNJq7sLokk7e6QyPIqOHHmgLx4WWzrsqJ7Ye2Dl5/2kyC
-         mAHbFwuQvRO3wtroxOGysWpjj5Pb+dIJDie4PlLqhL6YmSQqVx8ichWt+qYy+DouPb+e
-         d1Bb8PPEt9LPJF/LcdWhD/GDg6ier09EsDCYrGTc87cKZWl3bq/QdPrl/dkmQxasmmHT
-         5ytBCt/N6Dxexfluv8aiR0jS30Xup76D/7juspNVPlzs3h3eh37mGbgFDlF5sS6mmtrw
-         FWcA==
-X-Forwarded-Encrypted: i=1; AKwUvBwUcVTVIwbhWdMYz+8uhjBInOm+SAORYYGIZk0CmvVt1wrTnhIIiuK9v1xDvUS46hAXZZ/2B6Tw2cAFttowiV4MRyo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI/I4vmyRKlpxEvbhfEE95scXiH/tU6u47zFCIxtpVp0Ek8xTlV
-	P17eovbBzRLvcZ4XqqLeZBr/29gO2B+Ok6LbVNXjMFAJgLexJ+eiSBZh
-X-Gm-Gg: AYBFou1RohWxVemJ7qS0QnzIfwDmCbToZhnFypFdG22DWlOy1BxkZypr5nr5DPo/q0b
-	o9PDysEagASzw8Z2ZQz8UY1yX1uxK7gppBrsHo4ipCFHDq7MRafpPU0998fklaK3f6oOocmtBVY
-	xFVeLGl4Z3ljrP/SB7wdkPz69GMZLlDQU466bbESai9e+Y4o5DJJ9VGQD0vJWQiLvRGl8POgf3V
-	+CpdsPLFB/l036365Ruf6Arp3O3e/5dFSNy/qgN8PN7RUJpQ37rE/T7lwULXRXf9GwHEYZI3Q3Z
-	RbFUc41PXbDPsjx0YTuZfsIbkz3U9mznPNbL5+SVYWtq9v5r6/n+ekjYCh4G2Sr/DY+Z2UEU3BY
-	okzAxm6gmKjk8lNr4UozHbG1Kx1wmlZVuh/+qbt75CIWC+mz5/nCHxBGKWejhKw0LJ1Efk+nara
-	M0F5sujzlQCOHlpaxhoYOqhGbsZpdX+MkJ7FOscqkqfCcs1wNC14DSWEgQDZOAzGNrNO0HJk4Qb
-	9uEipHziix8pirltlpXaKyMVCXVouEGaOpY/V/ErUNG6qKsV3qL9aU=
-X-Received: by 2002:a17:902:ce03:b0:2e2:e3aa:7a35 with SMTP id d9443c01a7336-2ea9c7fb4c2mr32015315ad.36.1792913401389;
-        Sun, 25 Oct 2026 00:30:01 -0700 (PDT)
+        bh=qw8iT3vjQ6v6/N4nQ3kAFOKgih6vtaYdBPaT8XNpq84=;
+        b=Hj8MNYnwkbMQlmGzcFQbVW/hKv1IIq3XleCRv9bRBeNx0HxNNUvlSmwuevKwA6XPcu
+         VVIsu8ZBzUM4KyyrBxIhATZVtVTdCz8Lc6S5PPYoszGiwaqgjDI4ecGE4AmF0OdIhXzN
+         9/YSzXBwP/aJF27tvljCqjQ4xt0EQoeNYpR2ydHZapTQBCp2N7MZKc7JyQlT0A+ju2v7
+         ryK5DCXNuGVMkDkKn1/Uqe6c2zyMI7a+Zk61VI7b9seON4VoIpEsQgUNtCBuFRVGuEHJ
+         rgmV8dw2SuA5XrcEtiA1bITZ1nNaEEnvqWEPo4wCU1mgyTjNHg39nFaIvjWwMFKyoy8i
+         c98w==
+X-Forwarded-Encrypted: i=1; AKwUvBw+65tDjIkMTb6LNBJvvwmVlCB46JPipc5+tBe5egeoGrcpE+LXGNga1cIwGO22gVYOyv6vb7iLu5Xg8DzTGN3dfOc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKZ6UTgjavhph/TigxvloN3rTazpwT0kEUOHnzojTTpq4Ifetb4
+	3nSF0loNIzr/YuHysEpV+ePrmBB6mX8hbNjlsfK0dSlh/rIflnGJhUNW
+X-Gm-Gg: AYBFou3xhOkzlE12gz8x/5Un5hQH6zDe+3t9dZdNEDcvKncjT9SNT1/x/9AwiB6MuXv
+	BC1wLXhtomAttHQgTRLuJiMDE8hKSoBW/QWKx2slynm5X68blmcJFe7TIg9iRimJ4xxStA1Auji
+	QAcU9e2STxE+bgqm2rWHN0FcvRyiIpKcyJYb9THor+Gm0b2zIYVJyu6dChUEQ1gkybmEHgPeZCa
+	gPE6UdNa0YQIrR/yi+C82zjdKME8YHvpD5xS4Uf7Fs0OD0EPu8nq9Uj7zyd2cH5HEbfoHyestjb
+	1S9ghCSv4xNRkBgidu8cxCtlf8YXtra0f2tpMKTlnfg8ll7klYqUgeAsG1YqG5NWj1B3nz/jq+P
+	/wr8Fr8FYfKUM71TpB2SF/h99tkCT7oUyLr7N59wKdnQoKkgT/fF2k/38fz+ceUrsVOVtRBEt8S
+	eeDvHdDLZSfazRQgvuCIHp63FN7oG/eAvrQyziFeGGIvGUKIRH+GSsrG6Mlns9SdaHX3S2cukUG
+	7R5TLOPgviQhZW/pyptN8tlDd9KDklXmn5w+mh5NuIkc03ajGKkhv4=
+X-Received: by 2002:a05:693c:880d:10b0:35c:ceb0:8bf8 with SMTP id 5a478bee46e88-369e849280dmr5082964eec.9.1792914647783;
+        Sun, 25 Oct 2026 00:50:47 -0700 (PDT)
 Received: from localhost ([182.216.53.174])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea9b121725sm7788525ad.14.2026.10.25.00.30.00
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8c572bbsm14791299eec.2.2026.10.25.00.50.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 00:30:01 -0700 (PDT)
+        Sun, 25 Oct 2026 00:50:47 -0700 (PDT)
 From: Jaewon Jung <jaewon8868@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -84,9 +84,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Add debugfs requirement suffix
-Date: Sun, 25 Oct 2026 16:29:41 +0900
-Message-ID: <20261025072956.1739981-1-jaewon8868@gmail.com>
+Subject: [PATCH] selftests/ftrace: Add missing spaces after ! in probe syntax tests
+Date: Sun, 25 Oct 2026 16:50:42 +0900
+Message-ID: <20261025075044.1750113-1-jaewon8868@gmail.com>
 X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -99,83 +99,52 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a :debugfs requirement suffix to check interfaces under debugfs.
-Use it in the kprobe optimization test to report unsupported instead
-of failed when debugfs is unavailable.
-
-Tested on x86_64 with QEMU:
-- debugfs not mounted: UNSUPPORTED
-- debugfs mounted: PASS
+Add the missing space between ! and grep. Otherwise, the shell tries
+to run !grep and reports "!grep: not found". This always skips the
+conditional checks without checking for kernel return probe argument
+support.
 
 Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
 ---
- tools/testing/selftests/ftrace/test.d/functions        | 10 ++++++++++
- .../selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc |  4 ++--
- tools/testing/selftests/ftrace/test.d/template         |  1 +
- 3 files changed, 13 insertions(+), 2 deletions(-)
+ .../selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc  | 4 ++--
+ .../selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 826141e299e5..3cf8ac5fb4d4 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -145,6 +145,7 @@ check_requires() { # Check required files and tracers
- 	p=${i%:program}
-         r=${i%:README}
-         t=${i%:tracer}
-+	d=${i%:debugfs}
- 	if [ "$p" != "$i" ]; then
- 	    if ! which "$p" ; then
-                 echo "Required program $p is not found."
-@@ -166,6 +167,15 @@ check_requires() { # Check required files and tracers
-                 echo "Required feature pattern \"$r\" is not in README."
-                 exit_unsupported
-             fi
-+	elif [ "$d" != "$i" ]; then
-+	    DEBUGFS_DIR=$(awk '$3 == "debugfs" { print $2; exit }' /proc/mounts)
-+	    if [ -z "$DEBUGFS_DIR" ]; then
-+		echo "Required filesystem debugfs is not mounted."
-+		exit_unsupported
-+	    elif [ ! -e "$DEBUGFS_DIR/$d" ]; then
-+		echo "Required debugfs interface $d doesn't exist."
-+		exit_unsupported
-+	    fi
-         elif [ ! -e "$i" ]; then
-             echo "Required feature interface $i doesn't exist."
-             exit_unsupported
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-index 9f5d99328086..25f7192f887b 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-@@ -2,7 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # Copyright (C) 2023 Akanksha J N, IBM corporation
- # description: Register/unregister optimized probe
--# requires: kprobe_events
-+# requires: kprobe_events kprobes/list:debugfs
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+index 384209968325..70751573e8de 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+@@ -33,7 +33,7 @@ check_error 'f vfs_read ^$stack10000'	# BAD_STACK_NUM
  
- case `uname -m` in
- x86_64)
-@@ -22,7 +22,7 @@ for i in `seq 0 255`; do
-         echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || continue
-         echo 1 > events/kprobes/enable || continue
-         (echo "forked")
--	PROBE=$(grep $FUNCTION_FORK /sys/kernel/debug/kprobes/list)
-+	PROBE=$(grep $FUNCTION_FORK "$DEBUGFS_DIR/kprobes/list")
-         echo 0 > events/kprobes/enable
-         echo > kprobe_events
- 	if echo $PROBE | grep -q OPTIMIZED; then
-diff --git a/tools/testing/selftests/ftrace/test.d/template b/tools/testing/selftests/ftrace/test.d/template
-index 2cd8947edf72..d4a2500498f6 100644
---- a/tools/testing/selftests/ftrace/test.d/template
-+++ b/tools/testing/selftests/ftrace/test.d/template
-@@ -5,6 +5,7 @@
- # The required tracer needs :tracer suffix, e.g. function:tracer
- # The required README string needs :README suffix, e.g. "x8/16/32/64":README
- # and the README string is treated as a fixed-string instead of regexp pattern.
-+# The required debugfs interface needs :debugfs suffix, e.g. kprobes/list:debugfs
- # you have to add ".tc" extention for your testcase file
- # Note that all tests are run with "errexit" option.
+ check_error 'f vfs_read ^$arg10000'	# BAD_ARG_NUM
  
+-if !grep -q 'kernel return probes support:' README; then
++if ! grep -q 'kernel return probes support:' README; then
+ check_error 'f vfs_read $retval ^$arg1' # BAD_VAR
+ fi
+ check_error 'f vfs_read ^$none_var'	# BAD_VAR
+@@ -100,7 +100,7 @@ if grep -q "<argname>" README; then
+ check_error 'f vfs_read args=^$arg*'		# BAD_VAR_ARGS
+ check_error 'f vfs_read +0(^$arg*)'		# BAD_VAR_ARGS
+ check_error 'f vfs_read $arg* ^$arg*'		# DOUBLE_ARGS
+-if !grep -q 'kernel return probes support:' README; then
++if ! grep -q 'kernel return probes support:' README; then
+ check_error 'f vfs_read%return ^$arg*'		# NOFENTRY_ARGS
+ fi
+ check_error 'f vfs_read ^hoge'			# NO_BTFARG
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index b0e6b80ccb01..06efa67e01ff 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -108,7 +108,7 @@ if grep -q "<argname>" README; then
+ check_error 'p vfs_read args=^$arg*'		# BAD_VAR_ARGS
+ check_error 'p vfs_read +0(^$arg*)'		# BAD_VAR_ARGS
+ check_error 'p vfs_read $arg* ^$arg*'		# DOUBLE_ARGS
+-if !grep -q 'kernel return probes support:' README; then
++if ! grep -q 'kernel return probes support:' README; then
+ check_error 'r vfs_read ^$arg*'			# NOFENTRY_ARGS
+ fi
+ check_error 'p vfs_read+20 ^$arg*'		# NOFENTRY_ARGS
 -- 
 2.43.0
 
