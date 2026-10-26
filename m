@@ -1,54 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793004738;
-	b=o4+fV9K/2DFqSa91Es9mA0lAnvHvHrep5c4vwcRp5To5Seiht2IF3wIBQGofJU0oGpsr
-	 lruxe5lBySVJETNYy32WqaGFuxgd+dPCPqcR8tsMF7FdkBcKD7DUMB79Mhze5qPyUKEtu
-	 50SoTGZ64IdpYVOBFrwD0g37syjSqWlVBoHVVwUlhrpRC8FEs1AlaiQ7Elj/HS/d5VJd7
-	 VHmlr1H/lgoV1sxOuDk4BFh8n19Fdj+HDqfEuMHsWQrbkWpDMiw3ueMXsLbl3iTtBBSW7
-	 eyJ6wTkhyRYAY0BkKgs1K1QF+SAGBRo9kMvNxwY6cJ2nx1Lntpv9yfHr7mswHVsJB3g==
+	t=1793005668;
+	b=LZ5XEUVrxHG8+N4/HQ3o+4FYziajYjgNtjXr6TCLA25WgkCsxz2DEpD7VznYkoGFCjSO
+	 AEdASHxEuUdsaOV1SEec2WwV+apE1dNI0O4dVg8d7DQSmep1GGGEuQWh5KgHK519rYFQW
+	 xe2PsawvqoZ+RPDPGI8Kzcrrjc+cRPciecoPx+GcA3PWHSWngdhQervbkV0kSF/DsOuch
+	 tdpyoz108pIOxMf5A5k40YMt5X4wJXnVSJryMVQA8neBM4Y/pKhJ0xHkJ95Uu24bD9ndB
+	 SWgz3KPO2KOS1fM4UfWeiw0EVGzM9p5UITw5FsK/+ir6h4W9VLnusmwyVZWOW3l75Cg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793004738;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=XGyXNU7tj9zkBAXR1oitkIEGznzhSCqqRaExrbXAeGQ=;
-	b=z8OQL2XnB7VVflK5TJq+Tow9cyMaXm/LkcKg7Q2saxPLIRPDdIxnKik10qZJkXjbtI5r
-	 t6x5VyVQAEmpzZ1kEkzGOPXRxsT+VJpT92bvIj0j9CGzrexID/o8nm/Z9GjVYAGetIqQg
-	 8b51gxympSrIkTOUT9KXpuUZWB8hx2RlnNx88XzllohUVE0ccernclvA2ohIjpVJ1oqyZ
-	 27qyqLISdnc2tqe5Fqxtm9Te4sCqq+Ocovrnm4q95Y9Kt+/6OAZtcPzRens+/xn1iSkJH
-	 cQKPEjs5bYaRZIFXhiPAtnmfOuabWyZA7uaiL8aCmTGihUtrBpcImkwq7iPpDsnHRMw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793005668;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=OaWdtGcgHCZDA7pcotcIA3ZUaeEYGXetKO7q4HM6HBw=;
+	b=MpWBBffXlqB5xGZY37lmr01fJK309EIaxDWQX+HtJQU8v7CePE5/aaRyPI3Od2cpshC2
+	 kYJ4bSJ6HAE7iofednOmWbb/6iVy5IOXKLDjCKZ1J70WgYQwgL3s5WD3X61oaUOSslbQ1
+	 x5KfJbGX1x3pBdnQX5tIDSMc7Jn50Hm7ofq5XRIBlVyvR9VtAEDc/u1dll8Tx0tJfPZnb
+	 sdeNfudICXKF7HPsbsZU1ljcksbdpyvEiDh0rWEIlnKI+6KtVxm2pK9uRSogJQvn+2ae/
+	 4EDL1mXV3rTVOOetHhI+OPqm7GiyIi8+MdvHdkR5mbon6EgtfPGxsL96IiFP9BXzXPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k1WGuEtx;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KKJtAVVT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC14606A325;
-	Mon, 26 Oct 2026 08:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70B606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 09:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k1WGuEtx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572201F031E0;
-	Mon, 26 Oct 2026 08:52:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KKJtAVVT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19F11F01825;
+	Mon, 26 Oct 2026 09:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793004737;
-	bh=XGyXNU7tj9zkBAXR1oitkIEGznzhSCqqRaExrbXAeGQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=k1WGuEtxcAqdEhinHQUJqmNm3W8L9EGRmhj3v+WJ4MuTRihmkjL7oYKiSM4w+1lS4
-	 8GR7DBuEfstB11K00shpXlmyR6T64AlLG437v6FPsXhlXi6iBHdj+qa7+vQVJi22jb
-	 sP/6l4qkr+HEBV0Un8KD2PMoalmE/yARXnh57VMlc4d0KKDEDcsA52uzZRwNm18jpU
-	 DPJyKpVt9sxrJ8NnrN7lv497eBC2wuXeT5xC3lAgM32ypwZSPhQn/KQ4zxmnhcdoJg
-	 aonoejoSrLQuHxW4z+6yCRmxPWMNaEPR2tTFG2COIDNPfOL/GmeIpMTYckbR6Ljp+c
-	 3OJb2Q+6yF8yA==
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jaewon Jung <jaewon8868@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Add debugfs requirement suffix
-Date: Mon, 26 Oct 2026 17:52:14 +0900
-Message-ID: <undine-1793004734173086687-aee9dd63729792f1@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261025072956.1739981-1-jaewon8868@gmail.com>
-References: <20261025072956.1739981-1-jaewon8868@gmail.com>
+	s=k20260515; t=1793005668;
+	bh=OaWdtGcgHCZDA7pcotcIA3ZUaeEYGXetKO7q4HM6HBw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KKJtAVVTOqVzvNNCihcmAkTJGyTUKlZfYobliQUEL0aSXhiR0wEVGReynp6iyRcPL
+	 sTf4y6uSZOe/2Yj0MgoUbOECtt3UWIy1dURwnsIYurxP4aRMOM9KDqjiye694Cfc9n
+	 2KN9IGIguE3ql6eDsY+idf9TzLCo/KvO57qAnUtcNrITrCAhrzAuL8U5aV70iZ5z85
+	 L+VF8r2MtbKLWSyaXF/02x/f+qamRKPcJYcMekZgK18C2nDhfeYFvN/JA9K53lMUjT
+	 LECfIw7RBmO4EPEV/2c9vgHJTomdieAEavetInZpPlO9Tytg3DxysPzccCATK5yHmX
+	 LHHYpyj1TnxfQ==
+Message-ID: <sashiko-outbox-184735@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Reject filter expressions that end on an
+ operator
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?Sm9uZ0h5dWsgS2ltIChNYWxIeXVrKQ==?= <malhyuk97@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261026042540.2478566-1-malhyuk97@gmail.com>
+References: <20261026042540.2478566-1-malhyuk97@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 26 Oct 2026 09:07:47 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,97 +59,92 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-On Sun, 25 Oct 2026 16:29:41 +0900, Jaewon Jung <jaewon8868@gmail.com> wrote:
-> Add a :debugfs requirement suffix to check interfaces under debugfs.
-> Use it in the kprobe optimization test to report unsupported instead
-> of failed when debugfs is unavailable.
-> 
-> Tested on x86_64 with QEMU:
-> - debugfs not mounted: UNSUPPORTED
-> - debugfs mounted: PASS
-> 
-> Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] tracing: unreachable operator check in predicate_parse()
+--
 
-Good improvement! Let me pick it.
+commit 6ada36f117f4b8f90eaf23b50ed6bf590c01cc94
+Author: JongHyuk Kim (MalHyuk) <malhyuk97@gmail.com>
 
-Thanks!
+tracing: Reject filter expressions that end on an operator
 
-> ---
->  tools/testing/selftests/ftrace/test.d/functions        | 10 ++++++++++
->  .../selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc |  4 ++--
->  tools/testing/selftests/ftrace/test.d/template         |  1 +
->  3 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 826141e299e5..3cf8ac5fb4d4 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -145,6 +145,7 @@ check_requires() { # Check required files and tracers
->  	p=${i%:program}
->          r=${i%:README}
->          t=${i%:tracer}
-> +	d=${i%:debugfs}
->  	if [ "$p" != "$i" ]; then
->  	    if ! which "$p" ; then
->                  echo "Required program $p is not found."
-> @@ -166,6 +167,15 @@ check_requires() { # Check required files and tracers
->                  echo "Required feature pattern \"$r\" is not in README."
->                  exit_unsupported
->              fi
-> +	elif [ "$d" != "$i" ]; then
-> +	    DEBUGFS_DIR=$(awk '$3 == "debugfs" { print $2; exit }' /proc/mounts)
-> +	    if [ -z "$DEBUGFS_DIR" ]; then
-> +		echo "Required filesystem debugfs is not mounted."
-> +		exit_unsupported
-> +	    elif [ ! -e "$DEBUGFS_DIR/$d" ]; then
-> +		echo "Required debugfs interface $d doesn't exist."
-> +		exit_unsupported
-> +	    fi
->          elif [ ! -e "$i" ]; then
->              echo "Required feature interface $i doesn't exist."
->              exit_unsupported
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-> index 9f5d99328086..25f7192f887b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-> @@ -2,7 +2,7 @@
->  # SPDX-License-Identifier: GPL-2.0-or-later
->  # Copyright (C) 2023 Akanksha J N, IBM corporation
->  # description: Register/unregister optimized probe
-> -# requires: kprobe_events
-> +# requires: kprobe_events kprobes/list:debugfs
->  
->  case `uname -m` in
->  x86_64)
-> @@ -22,7 +22,7 @@ for i in `seq 0 255`; do
->          echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || continue
->          echo 1 > events/kprobes/enable || continue
->          (echo "forked")
-> -	PROBE=$(grep $FUNCTION_FORK /sys/kernel/debug/kprobes/list)
-> +	PROBE=$(grep $FUNCTION_FORK "$DEBUGFS_DIR/kprobes/list")
->          echo 0 > events/kprobes/enable
->          echo > kprobe_events
->  	if echo $PROBE | grep -q OPTIMIZED; then
-> diff --git a/tools/testing/selftests/ftrace/test.d/template b/tools/testing/selftests/ftrace/test.d/template
-> index 2cd8947edf72..d4a2500498f6 100644
-> --- a/tools/testing/selftests/ftrace/test.d/template
-> +++ b/tools/testing/selftests/ftrace/test.d/template
-> @@ -5,6 +5,7 @@
->  # The required tracer needs :tracer suffix, e.g. function:tracer
->  # The required README string needs :README suffix, e.g. "x8/16/32/64":README
->  # and the README string is treated as a fixed-string instead of regexp pattern.
-> +# The required debugfs interface needs :debugfs suffix, e.g. kprobes/list:debugfs
->  # you have to add ".tc" extention for your testcase file
->  # Note that all tests are run with "errexit" option.
->  
-> -- 
-> 2.43.0
-> 
->
+This commit adds a check in predicate_parse() to reject event filter
+expressions where a pending PROCESS_AND or PROCESS_OR flag remains on the
+operator stack after parsing completes.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_even=
+ts_filter.c
+> index 5e74d2dae40a3..744e70668940f 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -611,6 +611,13 @@ predicate_parse(const char *str, int nr_parens, int =
+nr_preds,
+>  		goto out_free;
+>  	}
+> =20
+> +	if (*top & (PROCESS_AND | PROCESS_OR)) {
+> +		/* Expression ends on an operator */
+> +		ret =3D -EINVAL;
+> +		parse_error(pe, FILT_ERR_INVALID_OP, ptr - str);
+> +		goto out_free;
+> +	}
+
+[Severity: Medium]
+Can this check ever be reached with PROCESS_AND or PROCESS_OR set in *top?
+
+In kernel/trace/trace_events_filter.c:predicate_parse(), PROCESS_AND and
+PROCESS_OR are only set inside the inner loop after at least one predicate
+has been parsed (N >=3D 1), and setting either flag immediately breaks out =
+to
+the outer while (*ptr) loop:
+
+	if (*top & PROCESS_AND) {
+		update_preds(prog, N - 1, invert);
+		*top &=3D ~PROCESS_AND;
+	}
+	if (*next =3D=3D '&') {
+		*top |=3D PROCESS_AND;
+		break;
+	}
+	if (*top & PROCESS_OR) {
+		update_preds(prog, N - 1, !invert);
+		*top &=3D ~PROCESS_OR;
+	}
+	if (*next =3D=3D '|') {
+		*top |=3D PROCESS_OR;
+		break;
+	}
+	if (!*next)
+		goto out;
+
+If an expression ends on "&&" or "||" (such as
+"common_pid=3D=3D1||common_pid=3D=3D1&&"), the outer while (*ptr) loop term=
+inates and
+hits the check added by commit 1fdc4164e488 ("tracing: Reject incomplete ev=
+ent
+filter expressions") right above the out label:
+
+	/* Only the inner loop can complete a non-empty expression. */
+	if (N) {
+		ret =3D -EINVAL;
+		parse_error(pe, FILT_ERR_INVALID_FILTER, ptr - str);
+		goto out_free;
+	}
+ out:
+
+Because N >=3D 1 whenever PROCESS_AND or PROCESS_OR is set, falling out of =
+the
+outer loop always takes that goto out_free path before reaching out.
+
+The only other way to reach out is via if (!*next) goto out inside the inner
+loop, which only runs after both PROCESS_AND and PROCESS_OR have just been
+cleared from *top in the same iteration.
+
+Doesn't that make this new check (and FILT_ERR_INVALID_OP) unreachable dead
+code?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026042540.2478=
+566-1-malhyuk97@gmail.com?part=3D1
