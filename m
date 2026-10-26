@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793056285;
-	b=F2yG/DjeT/kI6gzs5AxMZ6pbBwUSks0J/8JQ4RMODqB/sO7bBSpG1o4HIutf9ezi253+
-	 jDfZZ+UFTL9wcu+0qDexuiJv8f+8XSexiKC3fJTEv8oPjKTA2csWcigzEEffWhCtWMyf5
-	 MGEEIuCutMdSUcw/dTtsFZNFOLhm1IJ4qEQuGA7mKp74aq8n8ZbsIY1A6eDmY0r0PKQkv
-	 zGX0c/hBtCTej5/DYTQvr+mnmGLgla4dYY9dzan9Q040LD+ECzwSyAHt2vXgvXEG1Nrro
-	 df9E2zkyqArlRi2mH3imHByAysNb7SHKNASWVSrFo2jHJQx3snmH6G21PCjEVlQiQ4g==
+	t=1793057831;
+	b=iqS0ySi+LmP/O7gBz85NxsggN6M6mssZ1vI35SWd64NrOrcXjgU3ZnRcGE8ic/mCjjd8
+	 sfjNC4SjfLYg95K2FptnKKxixL/GZlGLZoxzbE5YoxDrxzErC22fDIQJOBcJ7cQ2uDdKR
+	 bty9hgF2ESEiCsfRvghNEmwJCnI6sKf9fbv4T/vYwBteIyFyZbNxoH2bav4gfL/jDL6+R
+	 7tYpWtMMPXV8A8yvyO3XhUt+njgVv2BwrE38DH4wRL4yIRDXf9v9intqCfNwkSDOmVKrx
+	 TkcqKVzYTms91htBMoeC2Ty8ZjVO1WWJBWQhsc6GZaqt9V0B5mBNor7gSRqdqH4LYBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793056285;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793057831;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Sq8U6qRkxAVCxLJVMdW3PdUBR2QnCqOWhnBaz9IJe/k=;
-	b=kVDFXlEKxjK2kTNGdKWbrBqqdV4qhilqMqiK8T+39OrYAyJ+ZDQBDUMH5VsM8syhMR/H
-	 Yku/0yhByWs+O06OVHUpcUhipt+mGO618gI7HN7iZiczYkC3dlTkG0La+znf43jb3zeh3
-	 Umz5kSTgi1EmsnMsgbyj5/uIlPU97JawTWOuqKp4G/oZDiPqZN2kXe/cEXJf+DWNVr728
-	 V3eHp1FcH+Vz43l40SYLTgWmDFZ/3gSZ8fV/FwopaIdE2zI/ggAtfZ2GprjR7m7SB/cQf
-	 1+NvhsiyVtOmDJgNQ9Wm/l84+Lb++qBcGNDjmANR4HAvER5bxWukTpMY/dGuiaMkrLw==
+	bh=pk/mtS+0WhX623GdQEiMbzyi6Wx6/eJTJDB5Jrjhiag=;
+	b=qlOjbmcnFqQ2ey4vDjmvN9rZm9Z8NaFlcB/DuTc0w3zKOfh60dawpDw6JMzBxz+BM1J8
+	 Hv1ZYLW8T64hccrU+e2QMLzEN5st+zrKGOIOQKyyDZksfTXOdVl4cuDLZQYKnt35tpkRv
+	 OrLYqkygIN4ijVOjNiHyRxoBlQi85Y87x6wGnmN28nKVJ04ptXwRioXBD5uygXuPhfxg6
+	 TFK4UqruqZ5VizASnrwOOzVbmDLSBEWhrFDhH6Foa4ZGF6vy2PkEjjgA5dC/LgSo9PWmO
+	 2ciCgCOaqH7eQsaThwIlWyhqiYOc9emShCb79AVWSmfA5xza+ranGBnaOQD30VG+X7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jhCj6au1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PcvIhIwJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914B606A31A;
-	Mon, 26 Oct 2026 23:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFAB606A31A;
+	Mon, 26 Oct 2026 23:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jhCj6au1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D223F1F01825;
-	Mon, 26 Oct 2026 23:11:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PcvIhIwJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD081F01825;
+	Mon, 26 Oct 2026 23:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793056285;
-	bh=Sq8U6qRkxAVCxLJVMdW3PdUBR2QnCqOWhnBaz9IJe/k=;
+	s=k20260515; t=1793057830;
+	bh=pk/mtS+0WhX623GdQEiMbzyi6Wx6/eJTJDB5Jrjhiag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jhCj6au1k5AOhOtgclDmE+QL9AVzh5MUBFxg00YqaxsnCigg+6Kn9VbFM7CG08sHs
-	 Gny7d7kNGKTfG/VZCLtihttNO48vi1iNnTWXrE9HFY9ww1zwAXbYGe9V1Gfs0NvZiG
-	 sejWtQqWvIn8YadQqIHsqE43iS5VBbw4/rm691IxxmQLxvkakhWat/jSG624n1ZjmV
-	 6zbC+BsZB6oQ+jhQE9yKqUrp6xJ+8Vwf0vdZFoa7l1dRu+d4UHf38BiQpWL6tf/Dbp
-	 Mk2U1n8yQM0/6xhRwUiStuZt3bqAy2yBqiERoCNTTmC+cJryvPvjo3DHU9sQ9GMv50
-	 8l8JUan1ZDktA==
+	b=PcvIhIwJJZQzDmtFm8vneQ6eepFRdOh5c5F2xHokGmHaOqAjp629FPLN41cvCxvdQ
+	 OUlKZQr8OP5Tr0PPa9XGxa6T8fNOr3xkE1KrvNAEzR0l/KocvNgMVf9I8XAmHFqO7A
+	 LiXKTqm91rlnyVAf0KQBaHNjQZoOjY6Xa/yVtlqQ/pGVEH+PQpvtTOzaEWlBoSXZb6
+	 SAtjHfceJ0Q/kv9ljRvLemP8JYj9gHkeahepKBm3aChQSYcjL3my/3Xd3usOkC+gWT
+	 vRGYaofYutuxLc8VzY1ACKLGqUaFz7DGKWwBPlOQEE8wNmPA7bfoUobv+87xKs3Iu3
+	 EOe60m4ms7o0g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
-Date: Tue, 27 Oct 2026 08:11:22 +0900
-Message-ID: <undine-1793056282077825155-5234c76709b60359@undined.local>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] tracing/filters: Fix function event operand parsing in parse_pred()
+Date: Tue, 27 Oct 2026 08:37:07 +0900
+Message-ID: <undine-1793057827062030336-5034219911522d56@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <179291743946.492959.9624495647021680807.stgit@devnote2>
-References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291743946.492959.9624495647021680807.stgit@devnote2>
+In-Reply-To: <20261026163257.434af154@gandalf.local.home>
+References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291747675.492959.6739928041718890503.stgit@devnote2> <20261026163257.434af154@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,72 +61,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 25 Oct 2026 17:37:19 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 26 Oct 2026 16:32:57 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Sun, 25 Oct 2026 17:37:56 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> regex_match_end() calculated string length as "len - 1", assuming @len is
-> the string length including trailing '\0'. However, for fixed-size string
-> fields, filter_pred_string() passes field->size as @len, and for "comm",
-> filter_pred_comm() passes TASK_COMM_LEN as @len.
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > In parse_pred(), the ftrace_event_is_function(call) branch has several
+> > bugs when parsing the string operand:
+> > 
+> > 1. The loop 'for (i++; str[i]; i++)' unconditionally increments 'i' before
+> >    checking whether str[i] is the NUL terminator. When the operand is empty
+> >    (e.g. 'ip == '), this advances 'i' past the NUL terminator and reads
+> >    out-of-bounds memory until another zero byte is encountered.
 > 
-> Because @len in these cases represents the buffer capacity rather than the
-> actual length of the string, regex_match_end() tests against the tail of
-> the buffer (typically trailing '\0' padding) rather than the end of the
-> string. Furthermore, if @len is 0 (denoting an empty dynamic array without
-> trailing '\0'), "len - 1" underflows to -1.
-> 
-> First check "len < r->len" and return 0, which safely rejects negative
-> lengths and cases where the buffer capacity is smaller than the pattern.
-> Then compute the actual string length using strnlen(str, len), which
-> bounds the scan by @len (stopping at the first '\0') without dereferencing
-> past the buffer.
-> 
-> Fixes: a3291c14ecf0 ("tracing/filters: Fix MATCH_END_ONLY filter matching")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v2:
->  - Check "len < r->len" to guard against negative lengths and avoid
->    calling strnlen() when the buffer capacity is smaller than the pattern.
->  - Use strnlen(str, len) directly instead of calling strlen(str) when
->    len is 0, avoiding an out-of-bounds read on 0-length dynamic arrays.
-> ---
->  kernel/trace/trace_events_filter.c |   10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> Can't this part simply be fixed with:
 > 
 > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 5e74d2dae40a..fac51a2953dd 100644
+> index 5e74d2dae40a..6a14c964c115 100644
 > --- a/kernel/trace/trace_events_filter.c
 > +++ b/kernel/trace/trace_events_filter.c
-> @@ -1075,10 +1075,14 @@ static int regex_match_middle(char *str, struct regex *r, int len)
+> @@ -1733,6 +1733,11 @@ static int parse_pred(const char *str, void *data,
+>  	while (isspace(str[i]))
+>  		i++;
 >  
->  static int regex_match_end(char *str, struct regex *r, int len)
->  {
-> -	int strlen = len - 1;
-> +	int slen;
->  
-> -	if (strlen >= r->len &&
-> -	    memcmp(str + strlen - r->len, r->pattern, r->len) == 0)
-> +	if (len < r->len)
-> +		return 0;
+> +	if (!str[i]) {
+> +		parse_error(pe, FILT_ERR_INVALID_FILTER, pos + i);
+> +		goto err_free;
+> +	}
 > +
-> +	slen = strnlen(str, len);
+>  	s = i;
+>  
+>  	pred = kzalloc_obj(*pred);
 
-Hmm, this fixes 2 different issues. One is out-of-bound access issue (len == 0 case)
-and MATCH_END_ONLY for COMM/STATIC_STRING issue. For example, FILTER_COMM will pass
-the TASK_COMM_LEN as @len, thus "str + (len - 1)" points the end of comm array.
-Thus in most cases, the filter checks only the zero padding area.
+Yeah, looks good the me. 
 
-OK, let me split this into 2 patches.
-
-Thanks,
-
-> +	if (slen >= r->len &&
-> +	    memcmp(str + slen - r->len, r->pattern, r->len) == 0)
->  		return 1;
->  	return 0;
->  }
 > 
+> > 
+> > 2. When the operand is quoted (q != 0), the loop breaks with str[i] at the
+> >    closing quote, but 'i' is never incremented past it (unlike the regular
+> >    string literal parser which does 'i++'). Furthermore, it does not check
+> >    for a missing closing quote (!str[i]). Returning 'i' at the closing
+> >    quote causes predicate_parse() to immediately re-invoke parse_pred() on
+> >    the closing quote and fail with FILT_ERR_TOO_MANY_PREDS.
+> 
+> This is a separate bug and needs to be a separate patch.
+
+OK. Let's make it a separate patch.
+
+> 
+> > 
+> > 3. If the operand length is 0 (e.g. 'ip == )' or 'ip == ""'), it accepts an
+> >    empty pattern instead of rejecting it with FILT_ERR_INVALID_VALUE.
+> 
+> Well, empty value ("") is actually valid. May be meaningless, but it's not
+> wrong.
+
+OK, I will also add this case in the test.
+
+> 
+> > 
+> > 4. When the operand is unquoted (q == 0), stray quotes or '(' inside the
+> >    operand are consumed as part of the pattern, desynchronizing
+> >    parse_pred() from calc_stack().
+> 
+> This is a separate bug and needs to be a separate patch, although it may be
+> the same as #2 above.
+
+OK.
+
+Thanks for your comments!
+
+> 
+> -- Steve
+> 
+> > 
+> > Fix this by advancing 'i' and 's' past the opening quote before the loop,
+> > starting the loop at the current 'i' without a blind increment, checking
+> > for missing closing quotes, advancing 'i' past the closing quote, and
+> > rejecting empty operands or stray quotes/'(' in unquoted operands.
+> > 
+> > Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
 >
 
 -- 
