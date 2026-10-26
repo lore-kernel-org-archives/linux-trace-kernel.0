@@ -1,111 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.139
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793055811;
-	b=Xv7a9/TB1xfYnEOW5yiqYFB7eL1M/zlsW0VF/0Cs4N5mMV8burTS9fYNMQR4vu/QV4ZL
-	 D8u9XgKe7HlCWC56Zv9EJYlIHemc0007TjhcCgDt46j1s8twfZmt1U2yV8pVcwBRFF49n
-	 7V+ByexlLZu3cr8Msu0f/2nRFOw9x+AVHkU8qQxXCw40rjEMPqy9sHESiEzjQXbseTivY
-	 iURFUakhAK/4hXMXmuxSMn7yHsjF7e6CmIcqgmsrsZ449hEbrApM2/MFCykMGyZHBCVLn
-	 NHa4kJP7I0gZcpvEvzsA5CsjBwqINw5U73pX3wqzQejlggf9XD9CaTtKqssTPV1VGnw==
+	t=1793056285;
+	b=F2yG/DjeT/kI6gzs5AxMZ6pbBwUSks0J/8JQ4RMODqB/sO7bBSpG1o4HIutf9ezi253+
+	 jDfZZ+UFTL9wcu+0qDexuiJv8f+8XSexiKC3fJTEv8oPjKTA2csWcigzEEffWhCtWMyf5
+	 MGEEIuCutMdSUcw/dTtsFZNFOLhm1IJ4qEQuGA7mKp74aq8n8ZbsIY1A6eDmY0r0PKQkv
+	 zGX0c/hBtCTej5/DYTQvr+mnmGLgla4dYY9dzan9Q040LD+ECzwSyAHt2vXgvXEG1Nrro
+	 df9E2zkyqArlRi2mH3imHByAysNb7SHKNASWVSrFo2jHJQx3snmH6G21PCjEVlQiQ4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793055811;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=D7+yWhNEfwBLVAnh4DVgwdCxL54hx3J7AhdglfNEalQ=;
-	b=QUt27d0xHVD1h3SVfo84lEGxaA++SdTVdPag5WlyYOgGjP3zH/9EyD9mqR43vs9zPxkA
-	 rvsNz4aepScxGUe2fiVf9brktM0yciivTA+GVlS7fT66Tg3qSRMda99niKkMa3kBFIz01
-	 Yd+HQGJRa6ne3ed53UNqqFI92K2QI/bKun6ZaRx8xmm6l8c3WRmvEVOH3G6V3riMvwF3n
-	 F0q9MhR6RaO/SMN9N6dEigcgEYRfgIj6RfLRfvcNL1Ocrg23HR6nADxiWhxuWOPBRZ04V
-	 IcHEOPqiop+9H1RTdkH6nyqCwOkyMhAwRwklV83tivZVKzn0PmURX4Q6b4gSaOaZI/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793056285;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=Sq8U6qRkxAVCxLJVMdW3PdUBR2QnCqOWhnBaz9IJe/k=;
+	b=kVDFXlEKxjK2kTNGdKWbrBqqdV4qhilqMqiK8T+39OrYAyJ+ZDQBDUMH5VsM8syhMR/H
+	 Yku/0yhByWs+O06OVHUpcUhipt+mGO618gI7HN7iZiczYkC3dlTkG0La+znf43jb3zeh3
+	 Umz5kSTgi1EmsnMsgbyj5/uIlPU97JawTWOuqKp4G/oZDiPqZN2kXe/cEXJf+DWNVr728
+	 V3eHp1FcH+Vz43l40SYLTgWmDFZ/3gSZ8fV/FwopaIdE2zI/ggAtfZ2GprjR7m7SB/cQf
+	 1+NvhsiyVtOmDJgNQ9Wm/l84+Lb++qBcGNDjmANR4HAvER5bxWukTpMY/dGuiaMkrLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arndb.de;
-	spf=pass smtp.mailfrom=arndb.de;
-	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b="YnCT/mJB";
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Z9BmjjcB;
-	arc=none smtp.remote-ip=103.168.172.139
-Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jhCj6au1;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E611F606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 23:03:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E611F606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914B606A31A;
+	Mon, 26 Oct 2026 23:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=YnCT/mJB;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Z9BmjjcB
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.phl.internal (Postfix) with ESMTP id CDE0113802A0
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 19:03:29 -0400 (EDT)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Mon, 26 Oct 2026 19:03:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1793055790;
-	 x=1793062990; bh=D7+yWhNEfwBLVAnh4DVgwdCxL54hx3J7AhdglfNEalQ=; b=
-	YnCT/mJB73FAGmQIu27ctvo5RESP4K+pTIiK9EhLFaGH8j7kXKQE+tSbzesbfDxs
-	bV+9wV/9mJE87FIh60l/aPw0vUFP1oQOrI5riJBeeRGczFUwDyCLA8/y4BcBY12w
-	wRegLgnRHobHCSF6BA6i0C+reNBRVR2FKTT/gbMwVrLZscUYxkn/44Vw8eG0qSvi
-	tWJdiyjuyg2ickLmpnfR0RB/KUcSZm6NPyieIrb9GtPlZj+tCTyGrh4XFyNGGvj3
-	0mNzbe0+txL9uJr9T4IbJyuT48LYOX1e+ZzKJe7AQTdcUWk+BiA6E+y23Kktm4eF
-	0OdWKJ+MXJqpGpYEJntcLg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793055790; x=
-	1793062990; bh=D7+yWhNEfwBLVAnh4DVgwdCxL54hx3J7AhdglfNEalQ=; b=Z
-	9BmjjcB8Ht97U3XpSdkutzu7KGGU83nJYqys9fKA8A8LFo89cKjsWQGjTr4pUO1L
-	aP9kjNesX0okG+vOVw+RbXwBhTP1dlNpD+KBb13+OcK03C9JQt4JuFOOxyE3GGLG
-	ZspFTpPuZDfO6wPr4qEO2A5TQRvlMMTy9lXbOlVikLCqKHWaoSShkmyr2lAQA0MW
-	I75SaI19xADFJtpVucfW5iXU1oSN1+WUXqV2eC8N5VxDvuOCOwE0yDQK4eXGJuSC
-	Y9wL+SsocvtYeidK4mRb5GFh4Lq5vzciH3Z2KUk3zskK7IRDyEhPwx+HWzKZpC0W
-	mE1pSP6ArkmhYFD6hOYlw==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
-	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
-	action=sign d=arndb.de a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1793055790; d=arndb.de;
-	mf=PGFybmRAYXJuZGIuZGU+;
-	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:CRP2xHuIWaMc3/SjjSJrDWIgA5ocPCDV8WcWisZwv2+gIQS
-	wvhE54Nm0jPYosZRd3Hsl6kZHWZbDxy/60TU0RdmeP/0MtxZuY+v1lVtZub1L4/K
-	xqZqeg2DhPfHuJ3Rn7dg7N4DJTfyHgzRpuaiwr4kyNiJOJIQ1t1WA8u48rsPkhe0
-	U6Et3hVThsn0gfuP5r66m4Jm47HUOBqICcbkCHOuQiBWx92hryZHinHjt28tivWl
-	WGQDyUkUKGhZS62wfPaqTosKk1ISu0EwzDvD2PVngcRoisPus2maioIO7Z5l1NcP
-	OuAABjNGN3qTAIgehOYPfNtnuCWNbx7mWITkd3A==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
-	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:t7TmO85uHz3Bu9BudK5SiRDodgnhLHm1Jzu0xBGeMzU=:nc6weggs1vuexqOORIgzQ+8Q4IQMXclbAa/HauyeO68=;
-X-ME-Sender: <xms:I9zfarVlhcJ2BCr_X0f-Oqe3MJ-tfizxDxcVqqJu0UTFnur8n55_Vw>
-    <xme:I9zfaua_l0AUV_QUaHlFQ6Xk6c6S9hDoF9LDP0z9ZWTiBfyLFB6bGMt2m3Qf-Wf2r
-    Gp1aY7E3hmIDYnxO6ClUpLNdypmMNJMMAjKb_KTlIEA5DbBcFarl32S>
-X-ME-Proxy-Cause: dmFkZTG2ipuQjn7o/dduxIouS3rexG2Fs38Yf1mgntfcBayDO96egVm+yZQ4lqIIentjs/
-    mqWlr4cScm3wkM9Qig2xKeks6qaebjWFYjqSr1PEW0Un0mkdsaFkbg+xdJQiG2O2dvowLj
-    8E21v7JskZMeciXQK6+wWU3W5TpMrftfB6Bs3P2KNxD6AlDYn9LdKl79i+Pap9CUN0lvH5
-    Kmf7XF9ELL/4XciMlrED2crBvL0Cr1f1u2ohCkkGXPJJyr9NhF3TZ6Ev/Xhe+zrfxeWaDU
-    CHzGxCZtrUFf0j+qOyVHd7hT7F2sM8dBpGw742e3r2mvfUUQKFeZdDheW6KomSHxo+nEDw
-    iI6qO2cDvY1NeToTkMsmxh+Idwqe78oXaZf4JBivXyC6kcFQnAnTHzPS/v1istw/y4OU7I
-    Ig5+4LcAMjuaK21mmbb4bb1DmpocpNGdDRw9yq3nlrcPMsuuD3uvsbn3xyT972zofrrKbr
-    ymQ2KeWkMRr8lrdJKsZ996mCPszGebzucdgyrtSsUPulGKB9lpIv0RpYgf85X7CxFkC5mx
-    0ahqqI390L+Dj1eTAd45HDhy64TtvMVlHqpgXnFPGAYR24gTjdAn2Wh1e+VqFY1QE9IKWw
-    dT6VBuP/aA1R/oxwzZkn1goeGaMw0LOVAE7QiXpixIzvdkU0wv6eIJAHAEFA
-X-ME-Proxy: <xmx:KdzfajHGJ6tf5pxLJ3v2PfbGRd6Rt6Io_8hyQBlkYOXCV7Lb2b01Vw>
-    <xmx:Kdzfapg-6ACQ-dUEsnrl6Ji_ntio6Ly_-zbhQjCdP4T2kZZPc2mbjg>
-    <xmx:KdzfapZpLCwDwzVm3OeHceISOSkLUArE0NE7AI0C6AgT-FmN177JAA>
-    <xmx:Kdzfam27dS94lXZ5VmP_WcqDu7eLBRosip4J-91RpWhTlpq7UwmFJg>
-    <xmx:LtzfasvLSVKrc-K83R8kLrDibnrCdXZT8NkkCjHCIPMKCuEvlTPp1urH>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id C999832A0097; Mon, 26 Oct 2026 19:02:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jhCj6au1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D223F1F01825;
+	Mon, 26 Oct 2026 23:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793056285;
+	bh=Sq8U6qRkxAVCxLJVMdW3PdUBR2QnCqOWhnBaz9IJe/k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=jhCj6au1k5AOhOtgclDmE+QL9AVzh5MUBFxg00YqaxsnCigg+6Kn9VbFM7CG08sHs
+	 Gny7d7kNGKTfG/VZCLtihttNO48vi1iNnTWXrE9HFY9ww1zwAXbYGe9V1Gfs0NvZiG
+	 sejWtQqWvIn8YadQqIHsqE43iS5VBbw4/rm691IxxmQLxvkakhWat/jSG624n1ZjmV
+	 6zbC+BsZB6oQ+jhQE9yKqUrp6xJ+8Vwf0vdZFoa7l1dRu+d4UHf38BiQpWL6tf/Dbp
+	 Mk2U1n8yQM0/6xhRwUiStuZt3bqAy2yBqiERoCNTTmC+cJryvPvjo3DHU9sQ9GMv50
+	 8l8JUan1ZDktA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
+Date: Tue, 27 Oct 2026 08:11:22 +0900
+Message-ID: <undine-1793056282077825155-5234c76709b60359@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <179291743946.492959.9624495647021680807.stgit@devnote2>
+References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291743946.492959.9624495647021680807.stgit@devnote2>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,78 +58,76 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AmKN4IVPaSCN
-Date: Tue, 27 Oct 2026 00:02:38 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Houghton" <jthoughton@google.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>
-Cc: "Thomas Gleixner" <tglx@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Kees Cook" <kees@kernel.org>,
- "David Hildenbrand (Red Hat)" <david@kernel.org>,
- "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
- "Michal Hocko" <mhocko@suse.com>, "Sean Christopherson" <seanjc@google.com>,
- "Paolo Bonzini" <pbonzini@redhat.com>, "Jim Mattson" <jmattson@google.com>,
- "Jens Axboe" <axboe@kernel.dk>, "Pavel Begunkov" <asml.silence@gmail.com>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <mkp@kernel.org>, "David Sterba" <dsterba@suse.com>,
- "Chris Mason" <mason@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, io-uring@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-btrfs@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <3b0a8fc4-d140-4a90-b810-cbc1283fc083@app.fastmail.com>
-In-Reply-To: <20261026215226.3713941-11-jthoughton@google.com>
-References: <20261026215226.3713941-1-jthoughton@google.com>
- <20261026215226.3713941-11-jthoughton@google.com>
-Subject: Re: [RFC PATCH 10/10] uaccess: Move the NULL mm warning out of line
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 26, 2026, at 22:52, James Houghton wrote:
-> uaccess_without_mm() is inlined into every user copy, including every
-> copy_{to,from}_user() call site on architectures that define
-> INLINE_COPY_USER, such as arm64. Each inlined WARN_ON_ONCE() adds its
-> own __bug_table entry.
->
-> Keep the NULL current->mm check inline, but move the warning into a
-> single out-of-line, __cold function, uaccess_warn_without_mm().
->
-> The trade-off is that only the first offending access in the system
-> warns, rather than the first one from each call site. The stack trace
-> still identifies the caller, and the access is refused either way.
->
-> Compared to the base of this series, with defconfig + KVM:
->
->                      inline WARN_ON_ONCE()    out-of-line warning
->   x86_64 total       +5,884 B (+0.014%)       +9,714 B (+0.023%)
->   arm64  total      +40,948 B (+0.10%)       +24,609 B (+0.06%)
->
-> On arm64, this removes the ~16 KB of __bug_table growth, while text
-> size is unchanged, as a call is the same size as the inline brk. On
-> x86_64, the call is larger than the inline ud2 and causes more .cold
-> splitting, so this is a slight regression.
->
-> Signed-off-by: James Houghton <jthoughton@google.com>
+On Sun, 25 Oct 2026 17:37:19 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> regex_match_end() calculated string length as "len - 1", assuming @len is
+> the string length including trailing '\0'. However, for fixed-size string
+> fields, filter_pred_string() passes field->size as @len, and for "comm",
+> filter_pred_comm() passes TASK_COMM_LEN as @len.
+> 
+> Because @len in these cases represents the buffer capacity rather than the
+> actual length of the string, regex_match_end() tests against the tail of
+> the buffer (typically trailing '\0' padding) rather than the end of the
+> string. Furthermore, if @len is 0 (denoting an empty dynamic array without
+> trailing '\0'), "len - 1" underflows to -1.
+> 
+> First check "len < r->len" and return 0, which safely rejects negative
+> lengths and cases where the buffer capacity is smaller than the pattern.
+> Then compute the actual string length using strnlen(str, len), which
+> bounds the scan by @len (stopping at the first '\0') without dereferencing
+> past the buffer.
+> 
+> Fixes: a3291c14ecf0 ("tracing/filters: Fix MATCH_END_ONLY filter matching")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
-> NOTE: This patch is included for reference only, to show the cost of the
->       inline warning.
+> Changes in v2:
+>  - Check "len < r->len" to guard against negative lengths and avoid
+>    calling strnlen() when the buffer capacity is smaller than the pattern.
+>  - Use strnlen(str, len) directly instead of calling strlen(str) when
+>    len is 0, avoiding an out-of-bounds read on 0-length dynamic arrays.
+> ---
+>  kernel/trace/trace_events_filter.c |   10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 5e74d2dae40a..fac51a2953dd 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1075,10 +1075,14 @@ static int regex_match_middle(char *str, struct regex *r, int len)
+>  
+>  static int regex_match_end(char *str, struct regex *r, int len)
+>  {
+> -	int strlen = len - 1;
+> +	int slen;
+>  
+> -	if (strlen >= r->len &&
+> -	    memcmp(str + strlen - r->len, r->pattern, r->len) == 0)
+> +	if (len < r->len)
+> +		return 0;
+> +
+> +	slen = strnlen(str, len);
 
-I would suspect that the growth is larger on architectures that
-don't implement __WARN_FLAGS() but rely on the generic WARN_ON().
+Hmm, this fixes 2 different issues. One is out-of-bound access issue (len == 0 case)
+and MATCH_END_ONLY for COMM/STATIC_STRING issue. For example, FILTER_COMM will pass
+the TASK_COMM_LEN as @len, thus "str + (len - 1)" points the end of comm array.
+Thus in most cases, the filter checks only the zero padding area.
 
-This would mainly affect 32-bit arm and mips machines, some of which
-are very memory limited, most of the 64-bit architectures have it.
+OK, let me split this into 2 patches.
 
-      Arnd
+Thanks,
+
+> +	if (slen >= r->len &&
+> +	    memcmp(str + slen - r->len, r->pattern, r->len) == 0)
+>  		return 1;
+>  	return 0;
+>  }
+> 
+>
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
