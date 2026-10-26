@@ -1,57 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793030810;
-	b=s6hzQMRprcAMxtRY9oUv0LdlaWG53rqhCNg0WcK1Fq3JTPUFuJ0nxXdAd7T86ibOuLFu
-	 eyxQQ0Iy52XhYgUEOqWIlTbpUho/o2bO6Wig+TBYl3qNwJ+pSGDzzVL2m9yaCpP4cTZkm
-	 dSgIAwDtRKn1xiH+x3Ftvh07NTTCvH5y2RPPlMIqonHgpd229MaAx0sB5ehbdK03V4zAS
-	 ZgXvgpMpDD3nmx/neP5HHtVl13bpbU+ZFlrUX42k3SMzc7NIzejdSMkS76/ph7zsxT+M2
-	 izwuA2UUf7fITI5JgfhAcgnCJZ3IOoA5hu+BqZzLwEugVLI6hmYeX6MfUSegYEWsV7w==
+	t=1793033518;
+	b=nsmwu/XtQ/lsX9sR6RNc+bzXBn9sCiU2tl3cnaLr4Us31pO/1fyR3GQnL0HwOMqXUQOC
+	 9OsvDcJEROMEx6phEWQXKOnKnk3L2nJPW+9WyOfYfQT6Fw1tw/o7hrjosZcxOpEH7BnDk
+	 3h2gs4oRayYznP7v8hQtbR6k12zCk26Bve/4My8wUDL/b/QCfG4FLszwCxtRTrslXgQ/9
+	 26Jntcdez7ywKgVRRMNy5iJGgc2XBfqfJEcK91y+cSDaRtrg7L1MYJBRLZKwfSRHJjIba
+	 klGpl0ZslF0+Kz41r0mfdNagIeBXYFdocZri+bYlL5pRE3WROQqFn+kF9BHEzM4TYfg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793030810;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=q2504dBjupO3FBfjQT1IaeS/YKt4BaICmOiy1i+7Ec4=;
-	b=VQ9jjnjNez4Hhw2gVoQK8QSLJFdh3bdL+IvQWtqoNUSNW/uQ9N7UODlS5nrvmlyc3e5/
-	 5EcqoLl2vvyFNyqLIABIMMldLa4Iup9X4Iv8GUGW/cwc0FoMhRlofGMMn6M095RGaau44
-	 QL3IKOufOiAqYJB5aP5UT8S64sSIGoxS9gHRXLklpT6Rvya5ibjzVUlxwqB8AoxQkvJhv
-	 RNG83WI2L32G0+Pb6d69zyglYxjCd9bbwDTRoFlSK0nOOmXiwhHuEvwLtapM3onm1tYL8
-	 OIrLBLjGVMZHSydjEcYDRnEXBAlxsyNPNWc06PgnvCXOIiYw6ZuJI7xuJ0NEsWLo1vQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793033518;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=2/2qQgHjg7B4L90wJY7NcYQb/sw77pDt+0YufHxfkwg=;
+	b=sl6RbmWhB/LdLhzL9Gbim9l9V5n4hwd5IgiuufuoXiY73406vS+MuHRZdaP3AyNFqLTj
+	 hhQHOdWkmmf4Fx4gkm1r+yVG9zCuiXzMZyHQip+1MIl/WAqTFtZqjY2VMcQle3x8Dlf4W
+	 IyHhl6FYMuOYn2RedZSXmIcCiPlAt/TAHqfuGOMCdVRxdn6PSU6mUtov9I1+tNLi2Vw6g
+	 M7nRIO2mt6wa3bKmazuHeEE4sAyAlm2xeAFx1UZ0FV7/4MLxOv1YLXBCpO/70LM428eTA
+	 xlXelZSnFK6crdCh7R4ASMmuIf3gBJhvwTgmhc5VtULTuD0gm3g8HeSerXd0tORCqOQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AQ20mfiG;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=uMdD4p6K;
+	arc=none smtp.remote-ip=209.85.128.45
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2816606A31F;
-	Mon, 26 Oct 2026 16:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313AC606A32E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 16:51:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 313AC606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AQ20mfiG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9921F01828;
-	Mon, 26 Oct 2026 16:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793030809;
-	bh=q2504dBjupO3FBfjQT1IaeS/YKt4BaICmOiy1i+7Ec4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AQ20mfiGtZB6uzWs7Kxushh1rsbLNtzWWtNTg+1AM+6Kut72rzNL++4+DmzHLg8WW
-	 AwyeO58kYaYFYkMYNboo+1owtA8IVwWGDOPsilvCrBFA/3TF0Ial9ubyvEGBLVEZC2
-	 F5OBtjwmRwPMXzgSMbnAIqPO4ZlVB7RsLx+pkOcEDOT3nQmI1eLsH0wuijOgkK7XCs
-	 93nkffo/f4cHeiqJUL5c0Y7zxc0LEtqJwIvLNoYhwZnzlmpQyXEc4kSskW5/rt4EmC
-	 KGYhLRDuq1HpOakJieO1oPYnoX31CeFGjkcP/ySCy7VDsmm/QF+jgEWLH5Ed2PpaiD
-	 ME69Sff6PZ0BA==
-Message-ID: <sashiko-outbox-185494@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH bpf-next v5 1/6] bpf: Add syscall common attrs support
- for link_create
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leon Hwang" <leon.hwang@linux.dev>, bpf@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261026154948.99408-2-leon.hwang@linux.dev>
-References: <20261026154948.99408-1-leon.hwang@linux.dev>
- <20261026154948.99408-2-leon.hwang@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 16:06:48 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=uMdD4p6K
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a5087a5348so14085695e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 09:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1793033516; x=1793638316; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2/2qQgHjg7B4L90wJY7NcYQb/sw77pDt+0YufHxfkwg=;
+        b=uMdD4p6KVakawh179kk8FHBLF5CXO9wel4SSzout3Cv109M7RXUmUmrC9sJPIgWsSH
+         9ABB0JV8Z5NUOTGY7GHDP30lVe2PF06Z5Rb3sGZu9AHhb2etfX/cHvQCyiGlPRRn3Cbe
+         CFLeOIxpliD0sRukb/bWQTt0J7k1R+JKXgZVJ1KMgCeuSSmAA57l+zaNLFl6HnQ/Ahaw
+         zQi33bNvGhiw52l+kM3vvg4nLkAUFO3pt8PlK45P8ZDXb1WCt8rTiBonnjcILrrKElFt
+         fjlgVO/cXdwsEDjIa5uw8AyiN4qBUQXEww/1M11No4eGietgwgSL41okjBF4DwT+0EjC
+         VbRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793033516; x=1793638316;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=2/2qQgHjg7B4L90wJY7NcYQb/sw77pDt+0YufHxfkwg=;
+        b=hyPdMO65fFRGZM4xW8euRmsJXxCvDYpOoUAWC8jq/vMqgAh9N7Baw1FRxB1vaCZEQI
+         MaLD6r5ns9P+4dDSQPBwyRyvAUOQrdUs88egvZG9RDtyyix6M99LunL+SxsEnbJL899v
+         itwImmZRQpt44aGiuMvBzJbmrilSupisz79xzT6zPX8ZtstOyOlzGfiEAPSkYZeGnZkR
+         XvtlGeQ05+3+jVXfaNrVWWf6jWZhnZnpw9clga54wQ4PAONoRmCv08Pecw8qkAASsDOl
+         GjnsFP5zjm7kEer25zGedwzUV125JDtDP/nkG8dTFu7gF4WJPZlyMqxlG3ECROzDf8ya
+         /lbw==
+X-Forwarded-Encrypted: i=1; AKwUvBzk0NuxRnMPotAgHUTPcfayxT4mTWXU0IMk1ZmTgMPaqX3rQNJMH44xiQ7j9K63LsOcLqkueeutON1Ki00RWQocdAY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKAwWkz3it22bDUljTTpEBJ6zjOU8qlyN+prv5SGZ+dVvk4UGCM
+	JeXE4vpksrqjEOOt7Gj8CNT241mcsMRIjeO3rmq3Ak4yn/LnYPqLJA+ifNUU/4j/HA==
+X-Gm-Gg: AYBFou1QXOQR2cpllY/DromTukUcL0P+UF19y8zq3b/HM0z3qV+0h3PL9FwwA44AqTW
+	fqZ5mx8tG0jjH+dOIU9F8scCMiewJEi6aH7ZEkTLUGkAtYdtsFoxvsOEgyy9GGRbmPHZ+gB6mvo
+	dSIwJ1YsrkTSUfypelX1KpQ0gowGXcurUaPxSPVY0WojJnIF9r7qlEdyWBtrK9yw3EXBNbjNdq7
+	Pf9WjHxVk3NFluV1EpLtR9KSnxOq/76JvLKyE8jU1jHBpvVHiiUD2BcOm79grWYoCfkSNpT1eR6
+	nclRC/4sJteLJ/TdU9+5HGDaeBcrwQ1KOefiGF8WsibrOz/cUA114TF5H+gXawM7nTaEpUniD18
+	OqRdamgReXEDSYwS/1GTIXdO4WDJKyKcVOu/oRJSXM6q8hag7oKLbCs51zsr5D5hOq2Nav+j0nq
+	rM/0+Qq21E73BUiiHBRmfYvTmgiSCDTzliw3Jf0PXgKFaUDPGYuLBYqhGsZf+Iph7lHVL4xrG/A
+	G/338tZJH7W0EqFYaFRndFifgPR8R9oRgnTN4dJgvwajrEPoSGhuJkIj6aoR5lkDdf3v3j/zXDa
+	Tw03iwXOsxt6tXFXYnFajZv8
+X-Received: by 2002:a05:600c:46c5:b0:4a2:1364:252b with SMTP id 5b1f17b1804b1-4a35acba20dmr143926245e9.35.1793033515974;
+        Mon, 26 Oct 2026 09:51:55 -0700 (PDT)
+Received: from google.com (197.183.140.34.bc.googleusercontent.com. [34.140.183.197])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a58a293sm204540985e9.12.2026.10.26.09.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 09:51:55 -0700 (PDT)
+Date: Mon, 26 Oct 2026 16:51:52 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Amit Machhiwal <amachhiw@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Harsh Prateek Bora <harshpb@linux.ibm.com>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	kvm-ppc@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4] ring-buffer: Do not check si_mem_available() before
+ deferred init completes
+Message-ID: <at-FKOk_-OrKTP8H@google.com>
+References: <20261023145459.47516-1-amachhiw@linux.ibm.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,138 +105,113 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261023145459.47516-1-amachhiw@linux.ibm.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] bpf: inaccurate attach_type and prog_type error logging in link_=
-create()
---
+On Fri, Oct 23, 2026 at 08:24:59PM +0530, Amit Machhiwal wrote:
+> During early boot (early_trace_init() called from start_kernel()),
+> tracing allocates initial ring buffers (temp_buffer, array_buffer, and
+> snapshot_buffer) for CPU 0.  Later, as secondary CPUs come online during
+> smp_init(), each CPU's ring buffer is allocated via trace_rb_cpu_prepare().
+> 
+> Before attempting page allocation, __rb_allocate_pages() performs a
+> heuristic check using si_mem_available() to return early with -ENOMEM if
+> memory appears insufficient.
+> 
+> However, on kernels built with CONFIG_DEFERRED_STRUCT_PAGE_INIT=y,
+> NR_FREE_PAGES only reflects the initial non-deferred pool across the entire
+> period from early_trace_init() through smp_init().  defer_init() leaves
+> only a single section per node (e.g.  16 MiB with 64 KB pages) initialized
+> up-front, and on kernels with large static binary footprints (debug
+> configurations enabling PAGE_OWNER, DEBUG_PAGEALLOC, KFENCE, or SLUB_DEBUG),
+> early core initialisations (SLUB caches, vmalloc, static ftrace records)
+> consume virtually all managed pages in this pool.
+> 
+> si_mem_available() therefore returns a false negative (often 0-1 pages)
+> across both SYSTEM_BOOTING (for the initial CPU 0 buffers) and
+> SYSTEM_SCHEDULING (for secondary CPU buffers via trace_rb_cpu_prepare()),
+> causing __rb_allocate_pages() to prematurely abort with -ENOMEM.
+> 
+> This failure is false: the buddy allocator is designed to replenish
+> ZONE_NORMAL on demand via deferred_grow_zone() when an actual allocation
+> is attempted.  Checking si_mem_available() before calling alloc_pages_node()
+> short-circuits this on-demand growth entirely.
+> 
+> deferred_grow_zone() is only permanently disabled after page_alloc_init_late()
+> completes (it spawns per-node kthreads and blocks until done), which happens
+> inside kernel_init_freeable() — before system_state is set to
+> SYSTEM_FREEING_INITMEM.  Skip the si_mem_available() check until
+> SYSTEM_FREEING_INITMEM, at which point all deferred pages are initialized
+> and si_mem_available() is accurate.
+> 
+> Use IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT) to set i = LONG_MAX during
+> this window, unconditionally bypassing the threshold check.  On kernels
+> without deferred init IS_ENABLED() compiles the branch away and the original
+> check is preserved unchanged.
 
-commit bc490436683f8010bb5c27c3e3a1582ddc24a909
-Author: Leon Hwang <leon.hwang@linux.dev>
+Commit messages are not LLMs' strong suit.
 
-bpf: Add syscall common attrs support for link_create
+Otherwise.
 
-This commit adds syscall common attributes support to link_create() in
-kernel/bpf/syscall.c, initializing and finalizing a bpf_verifier_log
-instance to report errors for invalid prog_fd, attach_type, and prog_type.
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
 
-Link: https://lore.kernel.org/bpf/20260514004634.3DA09C19425@smtp.kernel.or=
-g/
-
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 90bc7230afa8a..db870e795d044 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -5862,8 +5862,11 @@ static int bpf_map_do_batch(const union bpf_attr *=
-attr,
->  }
-> =20
->  #define BPF_LINK_CREATE_LAST_FIELD link_create.uprobe_multi.path_fd
-> -static int link_create(union bpf_attr *attr, bpfptr_t uattr)
-> +static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_=
-common_attr *attr_common,
-> +		       bpfptr_t uattr_common, u32 size_common)
->  {
-> +	struct bpf_verifier_log *log;
-> +	struct bpf_log_attr attr_log;
->  	struct bpf_prog *prog;
->  	int ret;
-> =20
-> @@ -5873,14 +5876,24 @@ static int link_create(union bpf_attr *attr, bpfp=
-tr_t uattr)
->  	if (attr->link_create.attach_type =3D=3D BPF_STRUCT_OPS)
->  		return bpf_struct_ops_link_create(attr);
-> =20
-> +	log =3D bpf_log_attr_create_vlog(&attr_log, attr_common, uattr_common, =
-size_common);
-> +	if (IS_ERR(log))
-> +		return PTR_ERR(log);
+> 
+> Fixes: 2a872fa4e9c8 ("ring-buffer: Check if memory is available before allocation")
+> Cc: stable@vger.kernel.org
+> Reported-by: Michal Suchánek <msuchanek@suse.de>
+> Closes: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
+> Link: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
+> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> ---
+> Changes since v3:
+>  - Replace #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT / #else / #endif with
+>    IS_ENABLED() + i = LONG_MAX to avoid duplicating the threshold check.
+>    (Vincent Donnefort)
+>  - Trim the in-code comment to one sentence. (Vincent Donnefort)
+> 
+> Changes since v2:
+>  - Rebase on top of upstream ring_buffer.c changes from Vincent Donnefort;
+>    update threshold to i < (nr_pages << subbuf_order). (Michal Suchánek)
+> 
+> Changes since v1:
+>  - Extend the guard to cover SYSTEM_SCHEDULING as well: smp_init() calls
+>    trace_rb_cpu_prepare() -> __rb_allocate_pages() before page_alloc_init_late()
+>    completes, so the false negative window spans both SYSTEM_BOOTING and
+>    SYSTEM_SCHEDULING. Use system_state >= SYSTEM_FREEING_INITMEM as the correct
+>    boundary.  (Sashiko, Vincent Donnefort)
+>  - Wrap in #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT to preserve the original
+>    check unchanged on non-deferred kernels. (Vincent Donnefort)
+>  - Drop Tested-by: guard condition changed, requesting fresh test.
+> 
+>  kernel/trace/ring_buffer.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 9c4e40847e43..09c02e838c4d 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -2463,8 +2463,16 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  		 * memory. It may not be accurate. But we don't care, we just want
+>  		 * to prevent doing any allocation when it is obvious that it is
+>  		 * not going to succeed.
+> +		 *
+> +		 * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, si_mem_available()
+> +		 * will reflect the actual available memory only after
+> +		 * SYSTEM_FREEING_INITMEM.
+>  		 */
+>  		i = si_mem_available();
+> +		if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT) &&
+> +		    system_state < SYSTEM_FREEING_INITMEM)
+> +			i = LONG_MAX;
 > +
->  	prog =3D bpf_prog_get(attr->link_create.prog_fd);
-> -	if (IS_ERR(prog))
-> -		return PTR_ERR(prog);
-> +	if (IS_ERR(prog)) {
-> +		bpf_log(log, "Invalid prog_fd.\n");
-> +		ret =3D PTR_ERR(prog);
-> +		prog =3D NULL;
-> +		goto out;
-> +	}
-> =20
->  	ret =3D bpf_prog_attach_check_attach_type(prog,
->  						attr->link_create.attach_type);
-> -	if (ret)
-> +	if (ret) {
-> +		bpf_log(log, "Invalid attach_type.\n");
->  		goto out;
-> +	}
-> =20
->  	switch (prog->type) {
->  	case BPF_PROG_TYPE_CGROUP_SKB:
-> @@ -5959,12 +5972,20 @@ static int link_create(union bpf_attr *attr, bpfp=
-tr_t uattr)
->  			ret =3D bpf_uprobe_multi_link_attach(attr, prog);
->  		break;
->  	default:
-> +		bpf_log(log, "Invalid prog type.\n");
->  		ret =3D -EINVAL;
->  	}
-
-[Severity: Medium]
-Does calling bpf_prog_attach_check_attach_type() before switch (prog->type)
-in kernel/bpf/syscall.c:link_create() cause misleading or missing log
-messages in a few cases?
-
-First, for almost all program types that are unsupported by link_create()
-(such as BPF_PROG_TYPE_SOCKET_FILTER, BPF_PROG_TYPE_SCHED_ACT,
-BPF_PROG_TYPE_RAW_TRACEPOINT, or BPF_PROG_TYPE_SYSCALL),
-link_create() -> bpf_prog_attach_check_attach_type() hits the default
-branch:
-
-kernel/bpf/syscall.c:bpf_prog_attach_check_attach_type() {
-	...
-	default:
-		ptype =3D attach_type_to_prog_type(attach_type);
-		if (ptype =3D=3D BPF_PROG_TYPE_UNSPEC || ptype !=3D prog->type)
-			return -EINVAL;
-		return 0;
-}
-
-Because attach_type_to_prog_type() never returns those program types for any
-attach_type, bpf_prog_attach_check_attach_type() returns -EINVAL and
-link_create() logs "Invalid attach_type.\n" instead of reaching the default
-branch of switch (prog->type) to log "Invalid prog type.\n".
-
-Second, for BPF_PROG_TYPE_CGROUP_SKB, bpf_prog_attach_check_attach_type()
-also performs a capability check:
-
-	case BPF_PROG_TYPE_CGROUP_SKB:
-		if (!bpf_token_capable(prog->aux->token, CAP_NET_ADMIN))
-			return -EPERM;
-
-When this check fails with -EPERM, link_create() still logs
-"Invalid attach_type.\n" even when attach_type is valid.
-
-Third, for BPF_PROG_TYPE_LSM and BPF_PROG_TYPE_TRACING,
-bpf_prog_attach_check_attach_type() only checks that attach_type maps to the
-general program type. The stricter expected_attach_type check happens inside
-switch (prog->type) in link_create():
-
-	case BPF_PROG_TYPE_LSM:
-	case BPF_PROG_TYPE_TRACING:
-		if (attr->link_create.attach_type !=3D prog->expected_attach_type) {
-			ret =3D -EINVAL;
-			goto out;
-		}
-
-If a caller passes an attach_type of the same program type that does not
-match prog->expected_attach_type, link_create() jumps to out without logging
-"Invalid attach_type.\n".
-
-Should the program type validation and attach_type logging be ordered so
-that unsupported program types, -EPERM failures, and expected_attach_type
-mismatches report accurate messages?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026154948.9940=
-8-1-leon.hwang@linux.dev?part=3D1
+>  		if (i < (nr_pages << subbuf_order))
+>  			return -ENOMEM;
+>  
+> 
+> base-commit: 734bef548a96e8774d6eef5dfa2026c6edc4e80b
+> -- 
+> 2.54.0 (Apple Git-157)
+> 
