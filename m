@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793039749;
-	b=PSyvcZYnOew5A90BoObq/m6U+qcEBhpxY0tqmY5ivf+8jnH2BFfs+D1/An/LM8uM104R
-	 USaQB9uSOs40t8sFkIZ+DeHNj5h5uIYPJU0za6Qc6pDKekgFkSeIxGMsKuHoL1RwCvAeT
-	 jcd7kBH4VqxtgFGg4rUoNGGawJ1xCmSlPRn0HUmL2Rv+biffpxxJy5K3AVLYgfrz22mHw
-	 65EvynPwIl4tW3VIbhspcdpHLdZqGpqa1IAidjeTkeEAMLKxw6lvg5t7nRXBn5P22POc/
-	 7zsDyQll43DkVWLeojvHKKiS80L9mtZnpdoghOSSMnIR5a05kgT1GanFPhu2BJSRupQ==
+	b=iD1quKvz+jtiB1aE5QRyRAB+9k3S2JPwWU2YOydr8dUnHLhXUc8PK6RI0y2Yy0zBfsL1
+	 qWPtgAhRaaBIFTwd1VTcSNPFqEkvoLbN9gQKMnjzh2fbJkIoWow9mjLR9SLS48IIRw3cx
+	 pu4l65Se2jB9jz+7Df37cEFj93BP0PZf5SkX4mEJ7WHFMMb023stJf1vn+T7G9Rujbvxm
+	 V5BrpzwxFWAIHXGhO8vq4zPMTkGw8BXC4YmysmUVVGTWokhhfpG2s5Fr7p/OXl1MR23Oc
+	 piHb5GPoHIBh5OxAbu3ao5INHeNXxUwCV+HZKayP69IMnglX0gP4W4vCorEdbULjw8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793039749;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,52 +13,52 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=VY4S6XqzeJd1nV36a3GhSgm+0RUF2ptpUJyLY1aOC4w=;
-	b=20iX72UgzwJLz5dfmU7fIlzxYSjkjr5ci3YCSXa2wx1ygOdQ8jOQgHOopxLJZcns5r4A
-	 8MeUcW9HFjTVehzVVFVVVTtE6PPibrlZisP91e1W3hVaKgCL87jpYoK/0mc8TKR5MDSvI
-	 GkUECOMp+QG02BZpAPp2c3lNLN2Yn1WfY94yuP4P4lZFJCVMoYCaqV9Em2N2s1mLPVWk9
-	 I4Lhk0uZKvblNi+DH4hg1gOl39N1XTH1ikX2SW4/GfNNfcKyXtcmEcGFaOmO4ilVQ7Xo9
-	 U/72FJxiaTt4HlIolcHs7n0eg02IlBBAE9cuoCPNaDOVu5j0NAkh3D2ZFPH2TMVwsww==
+	bh=5KJKdWcW1AGlgJ2QyBBKQPh2tn3XV57QyU4D3euLNSE=;
+	b=Ge5aBjezCAV5TneOaP83gJnrgqAuC1/Emg7b6kaxZDW9jYrzAWhto/EagaYHkriANw/d
+	 SPrFBzLQgWbkIuipRthj7j/km+u2UAGo5g4zmvTNNBAzVBh3E5wevVd+FC078sjCfvH55
+	 ktZ7OfdfPJ3O+tX7WtI1jjGCFEewwksbdz6MStpkNuXLn9NZMGk3QQaLUoaJbVXWAJEB4
+	 IpEBLqook9RX8ZCDu4UIAWW/ng2fH1Ogpeosv945SLWaCnF/taX2N4FEiB+7z2wCj4jWb
+	 QScbeO/gYDn0kMr0wYS7XacgoCRaZSD75Q99kMwJV/F1Twx1vRGN/KbGqiVGCCf9JQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KNLlPvnU;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="FslEB/Ip";
 	arc=none smtp.remote-ip=192.198.163.16
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3113E60A382C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E70C60A382F;
 	Mon, 26 Oct 2026 18:35:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3113E60A382C
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9E70C60A382F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=KNLlPvnU
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FslEB/Ip
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793039748; x=1824575748;
+  t=1793039749; x=1824575749;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=U6d9oWhyjY75grNTBmgvbaiekqnx/QBMCHxHLaYHuqg=;
-  b=KNLlPvnUWljVau3cLUNIMKNIvKtU9knhIl3q3UvKhT1aekEtUs/mZg8v
-   T2IWOYhunUY3NSZ3C6EQ0AfsP8MmXtLoLNQtV7qg84gyhI4QoQGAUvu4b
-   O5JuIgGU92sfv1dGhzfZcEHp4FWH/xFigK4g22uDktDnBrvbumAqwFef9
-   pFi2i5+nDTLiLu9zxHPmIGwNyf4nFltUfJwEF7tkES9MGifz/0mNPmVaB
-   tTMSYTUt6b3QpkwShTKiCjiQIkyDgX3V9OMlgodtg7amhLEPDFmyNb1oT
-   Fhal3vxFfAA+5MAd/kzulliAkEib5vwZ6mnkkNXtdmK/Lzf6B44hVl0mT
-   Q==;
-X-CSE-ConnectionGUID: G/9WRGj2QH6pwwwF1Iv0dQ==
-X-CSE-MsgGUID: ZD3u5EztRXGffyryIR++rA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731548"
+  bh=5TaA3E2JV+LU7vcX4+NZP+hzzAsnCo2ZWn+5bqsgw4s=;
+  b=FslEB/IpJene3EQauePFh4/BE4AOc+HdvBAEGNE19RegX8hZYPZ1qLZE
+   pPsQByJnu5bkSWVXtZ9bxfRYxL3FkT3ZS+ar5e/42N5MWPyP4xqMgsAei
+   Z2rbBM/9kvMrH5dbEMwASlREDbqlwQMacCxYH0ypkKZ4mFFZrAPgu2tMg
+   jE/Vb8NEwsM7lv1mdVUabdNvBQEpYTScUPrWLZt0FK1aqqYw8Mxh8pgVY
+   g2Uv6ZZoBD0u5y60hY+AX85mvdvoesKffPcEsPa/484uZ6RRlRUlV+C6M
+   G4oUSHdtKw4Eb1Ua3B5WjQtqSy/a36Aduaf9jzY9fCuWCsJvIeJsbl+Hr
+   A==;
+X-CSE-ConnectionGUID: dJacUAb0RtiJYxXBnpS+Rg==
+X-CSE-MsgGUID: PUrPZHXASu6sOjsElwdi2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731560"
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1731548"
+   d="scan'208";a="1731560"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:37 -0700
-X-CSE-ConnectionGUID: smNBSkO9TRajyAmm9OuwcA==
-X-CSE-MsgGUID: c9MVEepIQCOE14wKzcKpxw==
+X-CSE-ConnectionGUID: x1GQxndYQDGgz+ZIyc+rsw==
+X-CSE-MsgGUID: 4VuNTklgRlK3pplNAZ2Wbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4293908"
+   d="scan'208";a="4293911"
 Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
   by orviesa003.jf.intel.com with ESMTP; 26 Oct 2026 11:35:38 -0700
 From: Ehab Ababneh <ehab.ababneh@intel.com>
@@ -82,9 +82,9 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH 14/17] platform/x86/intel/ifs: Add Intel Diamond Rapids server support
-Date: Mon, 26 Oct 2026 11:38:17 -0700
-Message-ID: <20261026183820.129459-15-ehab.ababneh@intel.com>
+Subject: [PATCH 15/17] platform/x86/intel/ifs: Remove limit on number of batch files
+Date: Mon, 26 Oct 2026 11:38:18 -0700
+Message-ID: <20261026183820.129459-16-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261026183820.129459-1-ehab.ababneh@intel.com>
 References: <20261026183820.129459-1-ehab.ababneh@intel.com>
@@ -99,34 +99,56 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+From: Tony Luck <tony.luck@intel.com>
 
-Intel Diamond Rapids CPU is a Dual-Core Module (DCM) based system
-where two cores in a module form a group that must simultaneously
-run the In-Field Scan (IFS) testing. The intel_ifs driver already
-supports IFS for this type of DCM-based system. Add the Diamond
-Rapids CPU model ID for IFS support.
+Writing to the current_batch sysfs file rejects batch numbers above
+0xff. That limit was expected to be enough, but Diamond Rapids needs
+more than 256 IFS test image (batch) files.
 
-[ Qiuxu: wrote the commit message. ]
+Remove the limit check on the batch number supplied by the user.
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+[ Qiuxu: Update IFS ABI documentation to reflect the change. ]
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 ---
- drivers/platform/x86/intel/ifs/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/ABI/testing/sysfs-platform-intel-ifs | 9 ++++++---
+ drivers/platform/x86/intel/ifs/sysfs.c             | 2 +-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-index 08a3e519749b..5c9c86e04837 100644
---- a/drivers/platform/x86/intel/ifs/core.c
-+++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -24,6 +24,7 @@ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
- 	X86_MATCH(INTEL_GRANITERAPIDS_D, ARRAY_GEN0),
- 	X86_MATCH(INTEL_ATOM_CRESTMONT_X, ARRAY_GEN1),
- 	X86_MATCH(INTEL_ATOM_DARKMONT_X, ARRAY_GEN1),
-+	X86_MATCH(INTEL_DIAMONDRAPIDS_X, ARRAY_GEN0),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+index 41b4d5b1e21c..76770648e63e 100644
+--- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
++++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+@@ -44,9 +44,12 @@ What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
+ Date:		Nov 16 2022
+ KernelVersion:	6.2
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+-Description:	Write a number less than or equal to 0xff to load an IFS test image.
+-		The number written treated as the 2 digit suffix in the following file name:
+-		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
++Description:	Write a number to load an IFS test image.
++		The number written is used as the <batch> suffix in the following file name:
++		/lib/firmware/intel/ifs_<N>/ff-mm-ss-<batch>.scan
++		where ff, mm and ss are the CPU family, model and stepping, and <batch> is
++		the number written, in lowercase hex, zero-padded to at least 2 digits
++		(e.g. 02, ff, 100).
+ 		Reading the file will provide the suffix of the currently loaded IFS test image.
+ 		This file is present only for device instances where a test image is applicable.
+ Devices:	intel_ifs_0
+diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
+index 3cbab2acca72..7b4c7f21000a 100644
+--- a/drivers/platform/x86/intel/ifs/sysfs.c
++++ b/drivers/platform/x86/intel/ifs/sysfs.c
+@@ -91,7 +91,7 @@ static ssize_t current_batch_store(struct device *dev,
+ 	int rc;
+ 
+ 	rc = kstrtouint(buf, 0, &cur_batch);
+-	if (rc < 0 || cur_batch > 0xff)
++	if (rc < 0)
+ 		return -EINVAL;
+ 
+ 	if (down_interruptible(&ifs_sem))
 -- 
 2.43.0
 
