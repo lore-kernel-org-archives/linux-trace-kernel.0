@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793040560;
-	b=tc7fA4oyd6HHOC0ybxDiSKWZHomsO0m414GdncraeinzGPtHwJMTXnyQ8GvTnMWNvGvT
-	 IH1ScQh4b5wclBrPh/bd1s9tIqXXf9jiBpfYpuxnsuYIsvc4Kt6vam805BD7guBIucnb1
-	 sM852pk/a4KsmVJ2IvHZWa11b7HYOi1Q61p8PGfFmhEAbOuQR1QZVMgMwO2OWoPsR3SQj
-	 GYK1N9lR+5+XZPxMur4nQ68+x0Wqm9co5v1GgPWZE8+dKx0Stvys9deZLjinQq2M7o4Si
-	 /NxXV1NWVjEc9fBO7T7EthZv3TCLricozikh+siMq1Ov4B5bSMK2yrpTA7/Op7ChX2w==
+	t=1793040852;
+	b=IQDsIeXhgn9ArFlPN4FucA0F9ZPrDpIcVtQk6wxTQaA6lxAGqrHOC4ba+xLu3UcB94IW
+	 72XfF9CDE0oJ1sb5mddcGz7D9koedMCcB0zHs1EpzTGCP3aR6YryIHry5sF0n1Rfpm6kn
+	 +8NFRtE0E+D0cK1vrYucu0lnl0CBexIfwzJFbJNuanZlOjp1S/9ipJqJJs0VG3LXadLdS
+	 HLVS4vbz5JlH3OkmXz2rQT2V6gfK8zKLXAxHNHfpX8tS4krH3+oiMbgPKfX6yOPxaLcA9
+	 +AWayg11arj2GrH/jQmLkkyPF6yi1h70JNWfNmXCXaiD9K7R4eKjz9YiM3471bjH9FQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793040560;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793040852;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=uae77pp0DZ4YQzWYF3HWlZq1oF9TpK+qBtMgaSoopDo=;
-	b=Lm4Alp0TgXfmjK6E9oaO0sV2jS3UkKYp/+HXgXw4L4QP8Zj1dxRqI9H17UwS/sEe9j5S
-	 bvX39QT97Arc6yLv7TXL6PznobHnQ6DFPGs1fMQBVLv9rRZsvqxvUjjiBABr4R1C0+ssu
-	 MPMs4WfGyGKLUIL7FWew3KQxBlFWFIZpjyxGec/5J7dUs8XvlKx1NdfZjGHMNJrd1HyFn
-	 WqrPFpg4g+Lzy621ljigLChK2BoFX9xjIAeHSeK+xzz8B67bezaBAlZ4q9PAOMF0yW+6L
-	 BNCh7PoTUKo69PTzCOEFiOso2mBIvc+o1WqfbVbe6dZ4pafAEcJ81K16MnVcnWRnPAQ==
+	bh=izO62U5P1bkUU7GoXRqAY4Hpaamxr1pEwL37zKvuiyo=;
+	b=PU6aXiOVkRjkQ5bmEssgkvyXeeTq3vIJ7mkEI1tKfNe2DZY1/YTgoO+UrvL1hGxQDsJ7
+	 3lz65RCuMGtUPtF1q8UvfJ7HeShTHGzOIvVxS3jiFBWQmEfLjN6zTRzTu1Q2TkhJIkXy6
+	 +LmCSHBoz/Mfi8k/6sXqUOAq7fUZdb8Zfqc1xqnmFtOwptDjDusM35HX6G2svpp8nL9ff
+	 YdeeXIrOkINvs0VaeukQXUdTGFzDMZSbfTIfeyojTSTtYi0EwmPMu+ijoq8tXB2IOE483
+	 UgnczpgN1ivD/wjPoxq3otSVXUcqEUgO0m0FamVq2PBudXyuAEzvGEYR9SoA1b0FcCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVzIWFxo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bqvpiD0n;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82EE606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 18:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAC0606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 18:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVzIWFxo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FBF1F01828;
-	Mon, 26 Oct 2026 18:49:19 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bqvpiD0n
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D5C1F01825;
+	Mon, 26 Oct 2026 18:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793040559;
-	bh=uae77pp0DZ4YQzWYF3HWlZq1oF9TpK+qBtMgaSoopDo=;
+	s=k20260515; t=1793040852;
+	bh=izO62U5P1bkUU7GoXRqAY4Hpaamxr1pEwL37zKvuiyo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CVzIWFxo9Puz7R9/lsv1jsXlSLi3PG4razCU0zO2F+R01p2Fj3ZdgakKHuOAf4c8L
-	 Ww+4qdMdTch8xgEdPxs0mkIBc36ndktwRfwjc14cla7cxgm1wzFaMjkFThfT6e4Duz
-	 FBYeKzFhnyZPaKCuJpyj5GpUcYyqP82yqAd9PWrVsjiT1oeGU7WnaWTUQk4sxxPyXY
-	 XyjI2qGddLMWaNiqwKMVOtdkssjzfC1kXXp00sTIFen77WkNJPEUykDAkrt17EzpkF
-	 00behWll4Y267NSh9nT1QRvWM7sb5ZXjKdc6BHD6VFCMGDPinwz0Sh4bKbEHiq/+Fa
-	 evNCcgCBedjUw==
-Message-ID: <sashiko-outbox-185642@kernel.org>
+	b=bqvpiD0nlQFUmnEPJRC//WZ4zX/NXhd/4rn6CP1fWYVknNNckph1glVUh+Zdcdx5y
+	 P2aUrIC0EQS4cK12Iq5U7zUTyIbLJwWcxM5bDcGKb26hi1bB4pkYTO61Wux203AWzw
+	 GDvib973MqMqrJOr6ngMB8w0J7czLlalwmdEcxhnqzBGkTiFOWkcvg0ILmW1l09kFK
+	 Aw8WtEV9t2irvEbRnxRdek7ffz5VN6dSaQ08lNx4d0EpDwEXwr1dpR4aqUhWRH6A6s
+	 fqoVvGwuQg9MmkuQIRgPOO75fejtponAZYbW7PqvOJRa5vyjO0FVHDHRP+z0E75Sq7
+	 wJ+MK0GKi+KXg==
+Message-ID: <sashiko-outbox-185646@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 12/17] platform/x86/intel/ifs: Add new sysfs interfaces
- {status, details, cpus_ran}_list
+Subject: Re: [PATCH 11/17] platform/x86/intel/ifs: Track and report scan
+ results on a per-CPU basis
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ehab Ababneh" <ehab.ababneh@intel.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261026183820.129459-13-ehab.ababneh@intel.com>
+In-Reply-To: <20261026183820.129459-12-ehab.ababneh@intel.com>
 References: <20261026183820.129459-1-ehab.ababneh@intel.com>
- <20261026183820.129459-13-ehab.ababneh@intel.com>
+ <20261026183820.129459-12-ehab.ababneh@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 18:49:19 +0000
+Date: Mon, 26 Oct 2026 18:54:11 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,177 +61,293 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] platform/x86/intel/ifs: premature grp_cpumask update in do_core_te=
-st()
-- [Medium] platform/x86/intel/ifs: unlocked grp_cpumask reads in status_lis=
-t_show()
+- [Medium] platform/x86/intel/ifs: broken group status handling in ifs_test=
+_core()
+- [Medium] platform/x86/intel/ifs: stale test_details bits in update_group_=
+status()
+- [Low] platform/x86/intel/ifs: ifs_scan_n zeroed after misc_register() in =
+ifs_init()
 --
 
-commit bf9eae2e7ab2791a6f3b06b483c7daa541ce8c99
+commit 21af90f07c96c13c521c905b29cd18ddd39f88e1
 Author: Jithu Joseph <jithu.joseph@intel.com>
 
-platform/x86/intel/ifs: Add new sysfs interfaces {status, details, cpus_ran=
-}_list
+platform/x86/intel/ifs: Track and report scan results on a per-CPU basis
 
-This commit adds the status_list, details_list, and cpus_ran_list sysfs
-attributes to report per-CPU scan statuses, details, and the group of CPUs
-tested together during an In-Field Scan run.
+This commit records In-Field Scan (IFS) results in a per-CPU structure
+(ifs_scan_n) for all CPUs in a test group when tests are run
+simultaneously, and updates error reporting and retry checks to operate on
+the CPU group.
 
-> diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x8=
-6/intel/ifs/sysfs.c
-> index 287f96bb033ea..82a603cd1fd34 100644
-> --- a/drivers/platform/x86/intel/ifs/sysfs.c
-> +++ b/drivers/platform/x86/intel/ifs/sysfs.c
-> @@ -135,6 +135,59 @@ static ssize_t image_version_show(struct device *dev,
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86=
+/intel/ifs/core.c
+> index c830a02fe7b33..08a3e519749be 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+
+[ ... ]
+
+> @@ -175,6 +180,9 @@ static int __init ifs_init(void)
+>  		if (ret)
+>  			goto err_exit;
+>  	}
+> +
+> +	for_each_possible_cpu(cpu)
+> +		memset(per_cpu_ptr(&ifs_scan_n, cpu), 0, sizeof(struct ifs_test_output=
+));
+>  	return 0;
+
+[Severity: Low]
+Can this memset() in drivers/platform/x86/intel/ifs/core.c:ifs_init() race
+with an early test run?
+
+Inside the loop above, misc_register(&ifs_devices[i].misc) registers
+intel_ifs_0 and exposes its sysfs attributes (plat_ifs_groups) to userspace
+before continuing the loop for subsequent test devices.
+
+If userspace loads a batch and writes to run_test as soon as intel_ifs_0
+appears, run_test_store() -> do_core_test() -> ifs_test_core() can invoke
+doscan() and update_group_result() under ifs_sem while ifs_init() is
+zeroing ifs_scan_n without holding ifs_sem.
+
+Since DEFINE_PER_CPU(struct ifs_test_output, ifs_scan_n) is already
+statically zero-initialized, is this loop needed at all, or should any
+initialization happen before misc_register()?
+
+> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/=
+x86/intel/ifs/runtest.c
+> index 09e7a81e92204..6c3d025817e77 100644
+> --- a/drivers/platform/x86/intel/ifs/runtest.c
+> +++ b/drivers/platform/x86/intel/ifs/runtest.c
+
+[ ... ]
+
+> @@ -211,12 +205,76 @@ static int doscan(void *data)
+>  	trace_ifs_status(ifsd->cur_batch, start, stop, status.data);
 > =20
->  static DEVICE_ATTR_RO(image_version);
+>  	/* Pass back the result of the scan */
+> -	if (cpu =3D=3D first)
+> +	if (cpu =3D=3D ifsd->cpu)
+>  		params->status =3D status;
 > =20
-> +static ssize_t status_list_show(struct device *dev, struct device_attrib=
-ute *attr, char *buf)
+> +	pcpu_scan->test_details =3D status.data;
+> +
+>  	return 0;
+>  }
+> =20
+> +#define get_scan_status(stat) ((union ifs_status *)(&((stat)->test_detai=
+ls)))
+> +
+> +static void update_group_status(struct device *dev, int reason)
 > +{
 > +	struct ifs_data *ifsd =3D ifs_get_data(dev);
-> +	struct ifs_test_output *pcpu_state;
-> +	int lcpu, len =3D 0;
-> +
-> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
-> +		return sysfs_emit(buf, "%s\n", "none");
+> +	struct ifs_test_output *pcpu_scan;
+> +	union ifs_status *scan_status;
+> +	int lcpu;
 > +
 > +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-> +		pcpu_state =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
-> +		len +=3D sysfs_emit_at(buf, len, "%s%s", (len > 0) ? " " : "",
-> +				     status_msg[pcpu_state->test_result]);
+> +		pcpu_scan =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
+> +		scan_status =3D get_scan_status(pcpu_scan);
+> +		scan_status->error_code =3D reason;
 > +	}
-> +	len +=3D sysfs_emit_at(buf, len, "\n");
-> +
-> +	return len;
-> +}
-
-[Severity: High]
-Can status_list_show(), details_list_show(), and cpus_ran_list_show() report
-bogus state or dereference invalid per-CPU pointers when a write to run_test
-fails validation in do_core_test()?
-
-In drivers/platform/x86/intel/ifs/runtest.c, run_test_store() only checks
-cpu < nr_cpu_ids before calling do_core_test(), which unconditionally calls
-build_cpugroup_mask() before checking cpu_online(cpu) and ifsd->loaded:
-
-drivers/platform/x86/intel/ifs/runtest.c:do_core_test() {
-	cpus_read_lock();
-	build_cpugroup_mask(dev, cpu);
-
-	if (!cpu_online(cpu)) {
-		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
-		ret =3D -EINVAL;
-		goto out;
-	}
-
-	switch (test->test_num) {
-	case IFS_TYPE_SAF:
-		if (!ifsd->loaded)
-			ret =3D -EPERM;
-		else
-			ifs_test_core(cpu, dev);
-		break;
-}
-
-drivers/platform/x86/intel/ifs/runtest.c:build_cpugroup_mask() {
-	cpumask_clear(&ifsd->grp_cpumask);
-	...
-	if (!ifsd->all_lp_join) {
-		cpumask_set_cpu(cpu, &ifsd->grp_cpumask);
-		return;
-	}
-
-	cpumask_copy(&ifsd->grp_cpumask, topology_cluster_cpumask(cpu));
-}
-
-When do_core_test() fails with -EPERM because !ifsd->loaded,
-build_cpugroup_mask() has already populated ifsd->grp_cpumask. Reading
-cpus_ran_list, status_list, and details_list afterwards reports that group =
-as
-having run (or overwrites the group mask from a prior valid test while lega=
-cy
-status and details keep the old results).
-
-Similarly, when an offline or non-possible CPU < nr_cpu_ids is written to
-run_test:
-- If ifsd->all_lp_join is true and cpu is offline, topology_cluster_cpumask=
-()
-  is empty, wiping out ifsd->grp_cpumask from any previous valid test run.
-- If ifsd->all_lp_join is true and cpu is not in cpu_possible_mask on a
-  system with CONFIG_CPUMASK_OFFSTACK=3Dy, topology_cluster_cpumask(cpu) is
-  NULL, causing a NULL pointer dereference in cpumask_copy().
-- If ifsd->all_lp_join is false, build_cpugroup_mask() sets the offline or
-  non-possible CPU in ifsd->grp_cpumask, causing status_list_show() and
-  details_list_show() to dereference per_cpu_ptr(ifsd->result_ptr, lcpu) for
-  that CPU.
-
-Should do_core_test() validate cpu_online(cpu) and ifsd->loaded before
-updating ifsd->grp_cpumask in build_cpugroup_mask()?
-
-> +
-> +static DEVICE_ATTR_RO(status_list);
-> +
-> +static ssize_t details_list_show(struct device *dev, struct device_attri=
-bute *attr, char *buf)
-> +{
-> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
-> +	struct ifs_test_output *pcpu_state;
-> +	int lcpu, len =3D 0;
-> +
-> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
-> +		return sysfs_emit(buf, "%s\n", "none");
-> +
-> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-> +		pcpu_state =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
-> +		len +=3D sysfs_emit_at(buf, len, "%s%#llx", (len > 0) ? " " : "",
-> +				     pcpu_state->test_details);
-> +	}
-> +	len +=3D sysfs_emit_at(buf, len, "\n");
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RO(details_list);
-> +
-> +static ssize_t cpus_ran_list_show(struct device *dev, struct device_attr=
-ibute *attr, char *buf)
-> +{
-> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
-> +
-> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
-> +		return sysfs_emit(buf, "%s\n", "none");
-> +
-> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&ifsd->grp_cpumask));
 > +}
 
 [Severity: Medium]
-Should status_list_show(), details_list_show(), and cpus_ran_list_show()
-serialize with ifs_sem when reading ifsd->grp_cpumask and the per-CPU resul=
-ts?
+Does update_group_status() in drivers/platform/x86/intel/ifs/runtest.c
+preserve stale bitfields in pcpu_scan->test_details from previous runs and
+clobber hardware error codes from the current run?
 
-In run_test_store(), test execution is serialized under ifs_sem while
-do_core_test() -> build_cpugroup_mask() clears and updates ifsd->grp_cpumask
-and ifs_test_core() updates per-CPU test_details and test_result across chu=
-nk
-retries.
+In run_test_store() -> do_core_test() -> ifs_test_core(), the local status
+variable is zero-initialized (union ifs_status status =3D {};), which commit
+3114f77e9453 ("platform/x86/intel/ifs: Initialize status in
+ifs_test_core()") added so that an early timeout before doscan() would not
+report stale status bits. However, the per-CPU pcpu_scan->test_details
+entries in ifsd->result_ptr are not cleared at the start of ifs_test_core().
 
-Because status_list_show(), details_list_show(), and cpus_ran_list_show() r=
-ead
-ifsd->grp_cpumask twice without holding ifs_sem (first in cpumask_weight() =
-and
-then in for_each_cpu() or cpumask_pr_args()), a concurrent
-build_cpugroup_mask() clearing ifsd->grp_cpumask between the two reads caus=
-es
-these attributes to emit an empty line ("\n") instead of "none\n". In
-addition, reading status_list or details_list while a test is in progress c=
-an
-pair the newly updated ifsd->grp_cpumask with stale test_result values from=
- a
-previous run and intermediate per-chunk test_details.
+If time_after(jiffies, timeout) triggers before doscan() runs on the first
+iteration, update_group_status(dev, IFS_SW_TIMEOUT) only overwrites
+scan_status->error_code, leaving signature_error, control_error, and
+chunk_num in pcpu_scan->test_details set to values from a previous test on
+those CPUs.
+
+When update_group_result() then evaluates the results:
+
+    if (scan_status->signature_error) {
+        pcpu_scan->test_result =3D SCAN_TEST_FAIL;
+        message_fail(dev, lcpu, *scan_status);
+    } else if (scan_status->control_error || scan_status->error_code ||
+               reached_chunk <=3D stop_chunk) {
+        pcpu_scan->test_result =3D SCAN_NOT_TESTED;
+        message_not_tested(dev, lcpu, *scan_status);
+    }
+
+signature_error (and control_error inside message_not_tested()) are checked
+before error_code, so a stale signature_error or control_error from an
+earlier run will cause a software timeout to be misreported as
+SCAN_TEST_FAIL ("test signature incorrect") or a scan controller error.
+
+In addition, if a timeout or IFS_SW_PARTIAL_COMPLETION occurs after one or
+more loop iterations, update_group_status() unconditionally overwrites
+scan_status->error_code across all CPUs in ifsd->grp_cpumask without
+checking whether individual CPUs already recorded a hardware error_code or
+completed all chunks.
+
+Should pcpu_scan->test_details be cleared for all CPUs in ifsd->grp_cpumask
+at the start of ifs_test_core(), and should update_group_status() avoid
+overwriting non-zero hardware error codes?
+
+> +
+> +static bool can_restart_test_group(struct device *dev)
+> +{
+> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
+> +	struct ifs_test_output *pcpu_scan;
+> +	union ifs_status *scan_status;
+> +	int lcpu;
+> +
+> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
+> +		pcpu_scan =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
+> +		scan_status =3D get_scan_status(pcpu_scan);
+> +		if (!can_restart(*scan_status))
+> +			return false;
+> +	}
+> +	return true;
+> +}
+> +
+> +static void update_group_result(struct device *dev, int stop_chunk)
+> +{
+> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
+> +	struct ifs_test_output *pcpu_scan;
+> +	union ifs_status *scan_status;
+> +	u32 reached_chunk;
+> +	int lcpu;
+> +
+> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
+> +		pcpu_scan =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
+> +		scan_status =3D get_scan_status(pcpu_scan);
+> +		reached_chunk =3D ifsd->generation ? scan_status->gen2.chunk_num :
+> +				scan_status->gen0.chunk_num;
+> +
+> +		if (scan_status->signature_error) {
+> +			pcpu_scan->test_result =3D SCAN_TEST_FAIL;
+> +			message_fail(dev, lcpu, *scan_status);
+> +		} else if (scan_status->control_error || scan_status->error_code ||
+> +			   reached_chunk <=3D stop_chunk) {
+> +			pcpu_scan->test_result =3D SCAN_NOT_TESTED;
+> +			message_not_tested(dev, lcpu, *scan_status);
+> +		} else {
+> +			pcpu_scan->test_result =3D SCAN_TEST_PASS;
+> +		}
+> +
+> +		if (lcpu =3D=3D ifsd->cpu)
+> +			ifsd->status =3D pcpu_scan->test_result;
+> +	}
+> +}
+
+[ ... ]
+
+> @@ -272,15 +332,17 @@ static void ifs_test_core(int cpu, struct device *d=
+ev)
+>  		status =3D params.status;
+> =20
+>  		/* Some cases can be retried, give up for others */
+> -		if (!can_restart(status))
+> +		if (!can_restart_test_group(dev))
+>  			break;
+> =20
+>  		status_chunk =3D ifsd->generation ? status.gen2.chunk_num : status.gen=
+0.chunk_num;
+>  		if (status_chunk =3D=3D to_start) {
+>  			/* Check for forward progress */
+>  			if (--retries =3D=3D 0) {
+> -				if (status.error_code =3D=3D IFS_NO_ERROR)
+> +				if (status.error_code =3D=3D IFS_NO_ERROR) {
+>  					status.error_code =3D IFS_SW_PARTIAL_COMPLETION;
+> +					update_group_status(dev, IFS_SW_PARTIAL_COMPLETION);
+> +				}
+>  				break;
+>  			}
+>  		} else {
+> @@ -295,16 +357,7 @@ static void ifs_test_core(int cpu, struct device *de=
+v)
+> =20
+>  	/* Update status for this core */
+>  	ifsd->scan_details =3D status.data;
+> -
+> -	if (status.signature_error) {
+> -		ifsd->status =3D SCAN_TEST_FAIL;
+> -		message_fail(dev, cpu, status);
+> -	} else if (status.control_error || status.error_code) {
+> -		ifsd->status =3D SCAN_NOT_TESTED;
+> -		message_not_tested(dev, cpu, status);
+> -	} else {
+> -		ifsd->status =3D SCAN_TEST_PASS;
+> -	}
+> +	update_group_result(dev, to_stop);
+>  }
+
+[Severity: Medium]
+What happens in drivers/platform/x86/intel/ifs/runtest.c:ifs_test_core() and
+update_group_result() when CPUs in ifsd->grp_cpumask observe different scan
+statuses or stop at different chunks?
+
+In doscan(), every CPU in the group writes its MSR_SCAN_STATUS to
+pcpu_scan->test_details, but params->status is only written when
+cpu =3D=3D ifsd->cpu.
+
+1. In ifs_test_core(), can_restart_test_group(dev) checks can_restart()
+across all CPUs in ifsd->grp_cpumask, but status_chunk and to_start are
+computed solely from params.status (ifsd->cpu):
+
+    status_chunk =3D ifsd->generation ? status.gen2.chunk_num : status.gen0=
+.chunk_num;
+
+If ifsd->cpu advances to status_chunk (or finishes all chunks with
+status_chunk =3D=3D to_stop + 1) while a sibling CPU in ifsd->grp_cpumask h=
+ad a
+restartable abort at an earlier chunk C2 < status_chunk, to_start and
+activate.gen0/gen2.start are updated to ifsd->cpu's status_chunk. Doesn't
+this either exit the while (to_start <=3D to_stop) loop without retrying the
+sibling CPU, or restart the group scan at status_chunk and skip chunks
+C2 .. status_chunk - 1 on the sibling CPU (which update_group_result() will
+then mark SCAN_TEST_PASS if the final pass reaches stop_chunk + 1)?
+
+2. When retries reaches 0 in ifs_test_core(), it only checks
+if (status.error_code =3D=3D IFS_NO_ERROR) on ifsd->cpu before calling
+update_group_status(dev, IFS_SW_PARTIAL_COMPLETION), which overwrites
+error_code on all CPUs in the group even if a sibling CPU had a specific
+hardware error_code, or skips update_group_status() if ifsd->cpu had a
+non-zero error_code while a sibling had IFS_NO_ERROR.
+
+3. In update_group_result():
+
+    } else if (scan_status->control_error || scan_status->error_code ||
+               reached_chunk <=3D stop_chunk) {
+        pcpu_scan->test_result =3D SCAN_NOT_TESTED;
+        message_not_tested(dev, lcpu, *scan_status);
+    }
+
+The reached_chunk <=3D stop_chunk condition is evaluated when both
+scan_status->control_error =3D=3D 0 and scan_status->error_code =3D=3D IFS_=
+NO_ERROR
+(0) (for example, when another CPU in the group aborted the scan via
+!can_restart_test_group(dev)). Calling message_not_tested() with
+status.error_code =3D=3D 0 hits:
+
+    if (status.error_code < ARRAY_SIZE(scan_test_status)) {
+        dev_info(dev, "CPU %d: SCAN operation did not start. %s\n", cpu,
+                 scan_test_status[status.error_code]);
+
+and logs "CPU %d: SCAN operation did not start. SCAN no error".
+
+4. Finally, update_group_result() only updates ifsd->status when
+lcpu =3D=3D ifsd->cpu (and ifs_test_core() only sets ifsd->scan_details from
+ifsd->cpu). If a sibling CPU in ifsd->grp_cpumask encounters a
+signature_error (SCAN_TEST_FAIL) while ifsd->cpu does not, won't
+ifsd->status report SCAN_NOT_TESTED or SCAN_TEST_PASS instead of
+SCAN_TEST_FAIL?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026183820.1294=
-59-1-ehab.ababneh@intel.com?part=3D12
+59-1-ehab.ababneh@intel.com?part=3D11
