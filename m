@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793006514;
-	b=5Sv2zopcyrfB1vJBXb2TOr6XHsd1IH3P2QTAsWm+5uDCprrEyAvafpvCmCP2hO6CbaDJ
-	 ICWYDqegGpd53przhKnLkHkkuUwm7MonCtgrzoVI+mCb8V3RZQW26SphNlMiQzjcbioK7
-	 jxT+dKAAirSKDR20YWrpULs3qkw+d6iDEOfvUKZmdwRy2v/cbE94S4iFaRWlu8uTYbH/K
-	 sPZAVjzcG3Cbaa8FdJm94QQXT88TmqK91YoKSkQpuKWwSvg9c8Yq6ucHsh3Wmx4sP0k55
-	 gNjPTrW1aSHxnzHpEXY41qFyaGhO2yjjJk2gt38MAPkLD/T3QviGFeEWKRoHY30Hg8w==
+	t=1793007811;
+	b=Nh5Q1vFGn88Ys35PZnT4En5543KpXLiEi4p8nK/Ude5ZVfwZ7yuqikIbl8OaDsIiSSpa
+	 X4zFU+ktG8Ld1O8TqRbP81grTzgloLEAnFudHdhpbmvhQTX7Hm/EEZXPmMVelRCaaShGc
+	 Otl+2LBPGGkNnnfsTf7hsBqXXheXF8/kCI74FLfh7BzCa27+I02ayubVY4nyeayg6e+QG
+	 FXW2nGVAO8zKzVBC/jRbmS2R56Y3WIt+HumsbYE2mBsmnQE9KopSVssZ3Z5BZy86ejEmR
+	 Se0cSehNw6llMN9SfdVx18MDcRVCz/s+HUI9Ayh68bvFZEKb0WuXytfm03wP6u6uG6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793006514;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793007811;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
@@ -15,89 +15,88 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=f2hZubVSVToKrvNU0WEn8C5vjBU/5qQNAuGo0HcbDUg=;
-	b=EhnjRog7nG1IniPirDLAMuLk0GlOnvs3INAdALQ9sgDhaEUTp7EoShoI3dTJt1FptP/P
-	 SPC1HS+kfiZ8w8mBR8QzMd1FVnxMKYJHtlDwNFZaSb9JzukSVVxhRZrFjwYz0ZdC+KDCO
-	 5mNFD3A+MGZqIOCofyacgu2PM9oq4aiQpwCMkvjvZb2Nvbhxk9Py5nZbdFus2QSo+EQOq
-	 HaEYxR/tw6ayCJtsvX0RUA9dr/0TCXXdEfGia7ShcDp5FikSF7ocGqRCNj+ys9rhduYzu
-	 02y287k/dJYeW5QnQTRcF4RIJDHr2f+uOoyZ+Hq2lpFiuEV/3cfyVfhwljemmeTci1g==
+	bh=phsYTN16LoRE+ARN9uh51eUjoF5oVqxh+Mds4pkpAH0=;
+	b=Mz9+IGPUK+dVYneyW4TUsX1GLXIB7XygUeWM2jRWEYmHhptg9SHwv58erc0QH7m+/LtR
+	 sa5MKdo38002UfDp/3Iby4xLHES3s4snnCHeZnul0nDXNHpZHkSm1sIuO7bOtGI0Vt9dp
+	 DAj4mAh3R+sQfGqsQj14BvNTY3qvA90sYlgnFwB56+71gNoQPmpuH1w4kyK5lfW39svfM
+	 TsdQWlLPliTnMRLKc4XzP6PO+2O1fo+a81FxeC4EYKWc991IYq1AlgYvhzsAbCaWE5rzd
+	 sNAcDr0tg2nbYpxkEZk9vRXwTVppUepldjlMryhb43cP+V1FYCTsObvU1TF2bOLYhiQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=L1jBoYbF;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="IV/mYZX7";
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50690606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 09:21:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50690606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7288606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 09:43:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7288606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=L1jBoYbF
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IV/mYZX7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793006513;
+	s=mimecast20190719; t=1793007809;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=f2hZubVSVToKrvNU0WEn8C5vjBU/5qQNAuGo0HcbDUg=;
-	b=L1jBoYbFyfi23GrKt4nmwF92Q06Sx9qOqbTZqFxCmTFRGFfzCxQNbmLEu3ir8ocVwAvk9/
-	AXsjCc5+yThloGOerpDQQPcUHOyheWlZTrApMOQ06G2NEGYkpqAlsOuN/74KlVk4dnIlgS
-	ghyu9A7J45yBQebseQjRgQu5TM+xfFg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=phsYTN16LoRE+ARN9uh51eUjoF5oVqxh+Mds4pkpAH0=;
+	b=IV/mYZX704BDn7ea8fZnaebQxMwP1iZEmqH/9aRDhdhS1EPSnTMqqP2WJObK8wc+I0lra6
+	rVnjKsmtcmLRkztI/5DTCuapRwyk+ivvqg0/mqx7ip4rZ4zR5oU0fJt4xQYFzwEgNdkz9j
+	WjE+3UN/vJJXp5dUvt6UcbaI4M0EcSc=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-fot6DA9lMTuVYTc1DO7Xig-1; Mon, 26 Oct 2026 05:21:51 -0400
-X-MC-Unique: fot6DA9lMTuVYTc1DO7Xig-1
-X-Mimecast-MFC-AGG-ID: fot6DA9lMTuVYTc1DO7Xig_1793006511
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a2065a2ef9so27388705e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 02:21:51 -0700 (PDT)
+ us-mta-367-L52Qn0RtM3GQ9nQTKjh0mA-1; Mon, 26 Oct 2026 05:43:27 -0400
+X-MC-Unique: L52Qn0RtM3GQ9nQTKjh0mA-1
+X-Mimecast-MFC-AGG-ID: L52Qn0RtM3GQ9nQTKjh0mA_1793007807
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a35db2d6b3so10262595e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 02:43:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793006510; x=1793611310;
+        d=1e100.net; s=20260707; t=1793007806; x=1793612606;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=g5iKcSbReiRguiVrpq8yN+qtpwVfnJUnZ33li2p+vFY=;
-        b=xjUFIrb/pctu0TDUsPpaunxHHPcgaWntoYyXOsSxfXA2ND4v2e9SknDP9+CKEtuxrp
-         fFgb/2702kfI6Ny5cjHJqS5gU1oSyc5hHB8TDZkF3TqSlQH72KPic/pliakXoMsR7+gr
-         CN9/yeUkfTh6Tbt7/LZPidKI5UBDZ5r1z98pdopCkmFdnMR6pUwRJCBFAqS1ou7i9cAT
-         4alXSjPCDiNvTZ3afU710UCe07w9Mr2zLwSYKLyBP1RFMufyItFdBj/Y67S7rWK/+qUq
-         Io5z0obrfitR9p/LU3QSmhaL02HNMzTBDKeI2k8zgg5xiZu8R+cjCP8Avojz7vJWsdJi
-         v3rw==
-X-Forwarded-Encrypted: i=1; AKwUvBw93mlAwW7EX4SY2Cyoj3H7Usc1mBXcrxyS0IxoNuCKlFXO+oQqQFsyorGaP+d6G1+8dFmzBnqtq0oQmDsac5Uk6uY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJAhOI43XcsF6MPukWneZ387pVjglumP8TSM7LcnR+7thQ2YFys
-	EjTEPeTpSMJNBZu0zHJqHYJugCy1XscEucI1XrUs+xjG7JS2jkbx3Ho/ZuvBMtVUAyvXFi48b0q
-	fyuFHPCYeNENsv2WYMnRqUx3LZz+FGnFR9cIfLcy1p6htlcTISndoxA4JYdx33cbZlEhvZgSVsw
+        bh=YzYyV3/dl4usk2Ucqfq7Nq0hoAaOh/AV9apr9Ut9AII=;
+        b=INyB6+yOm0R+a9LYLvwJCSqTBUppyjVRyAiZ5NvKQiwcocn5QETCRt+UTLcLZSaMOj
+         iS6zQRXKKswOcAGSp3OkQGo4hz6ZpEtqQ+2sAT8bmoEDsWBIH5HB67K+NrCDt99uHDC5
+         jMmk1a1q3FeheEHhHY3H1kqfZySmNRQ/FhyySDAWOTBQ20NveihEq6w2P2a+nb/G0Rvo
+         ak57TNyR+u4XvlaHYki4uceicj8GjpUZYGlftM4MyFjdIiFtb/TsqHeX2cbfU+EJ6aZj
+         Z3YOQJ2epKn3T/+v3KAEO7yxmPQhDDeGX1KBIqpOvNyqGrp5OE0K7JGheVmG4H2Sium0
+         EO5w==
+X-Forwarded-Encrypted: i=1; AKwUvBzCAeU13JPD9ZVQJpG5sVY/TSfCJPs3oGbX404ORw49QQlqjnJWbuVuoguzoOg/zso0OiAcfnT0BBctD6j3FzKIX8k=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIpo3Avyd6iITizMvcepozR2M3zfY17U5m+7tsi5icp3ZjA8RLx
+	QNH5CqEytpUDDSkDW7sAdo1x7413ui6aBwGSlPnL7kAU7n2W7DtQJ4l0F4Id+U1WaC7gZcfGezS
+	FBgtRdOFeQR1HGvpq+zMitLBDBtlsTZu7rdmIH2OvXijhgzP0bFNGmhiUhiPgxeGAFDgwCek5xg
 	==
-X-Gm-Gg: AYBFou0j54pJbA0bQ85NHI3AsXbtBwyTBDBbLTZ1JtOWTjkkPkrhG7akLIQAXqnqDvy
-	hQFLS50P7+HRxXKf1DxqmxkDjInU+T/d68Xfpjo7QmN0Qi9PKMqAXn5O/yyksrJQkpXYd2/LH/3
-	cuSYnzVsWeZbxL/tdbUPTDWIhdbPAyaV+0CayrcQLgcXEdDniUtz4iAfN1RNypOakiFBWpaPXlv
-	6OyRFmyW9Sacq4uZp3Z1NtphpNiOBX40I6HqPY6jSLxLflhnGhKRWrl2V9ZXgQkg6lqHgznw/LF
-	/uBX2wYJfP9/mhZIJM/CxojMADt5L4epfCB4lp9/IJ4vj3y6W2rvbImvWy8vLsKkYff+cnZafC2
-	z/xM/1SYdDR4qLJsrz8PbJ6Tvjap7
-X-Received: by 2002:a05:600c:4704:b0:4a2:1612:637a with SMTP id 5b1f17b1804b1-4a35acbd575mr120747145e9.16.1793006510547;
-        Mon, 26 Oct 2026 02:21:50 -0700 (PDT)
-X-Received: by 2002:a05:600c:4704:b0:4a2:1612:637a with SMTP id 5b1f17b1804b1-4a35acbd575mr120746615e9.16.1793006510118;
-        Mon, 26 Oct 2026 02:21:50 -0700 (PDT)
+X-Gm-Gg: AYBFou0UbF77XZ990yrMZtIfVbPYsqDvpGarZq9xKDM06sArRpgaOkRJMcN173yxvP9
+	xMhsl5Mral7/0y0JdNbuLbqxDqfQ/gcR+M0WL5JxQw0UGKbLnK3r2mbAVPt2KLMLFBigBWNCEgs
+	PF37lesdiRicQDpMNEvZBceJksCSXblH8ceG7+WW2yoDNdsJOPn+aFhTHEKSpa+PJ1By2cITEpU
+	d5MSqZR5uCsglb3Xgc/lW4loIFWkJjgQur1k/J4ByKX9zjXbZq19PegNuvceYSOHpJXv+xyrnt1
+	0xxtROdKVxik2kesIbDrYKNfCEwsI6VnUmpOsYmueOKgdNYW9aII4xj3ruIyRts1OCW1gaXV/Sz
+	17bIyfniRo6UiPtGmpleK942qx5Tv
+X-Received: by 2002:a05:600c:4f86:b0:49f:fd2d:23c7 with SMTP id 5b1f17b1804b1-4a35acbd064mr110624735e9.27.1793007806588;
+        Mon, 26 Oct 2026 02:43:26 -0700 (PDT)
+X-Received: by 2002:a05:600c:4f86:b0:49f:fd2d:23c7 with SMTP id 5b1f17b1804b1-4a35acbd064mr110624495e9.27.1793007806185;
+        Mon, 26 Oct 2026 02:43:26 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.133.173])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a00e1b0sm144534585e9.3.2026.10.26.02.21.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a04ad39sm487617515e9.1.2026.10.26.02.43.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 02:21:49 -0700 (PDT)
-Message-ID: <b7a037a62858e6ad7017cf05c3ccaba06e7a8671.camel@redhat.com>
-Subject: Re: [PATCH v7 02/14] rv: Fix ha_monitor timer and invariant
- underflow
+        Mon, 26 Oct 2026 02:43:23 -0700 (PDT)
+Message-ID: <e39bfec47ecf06453242e3f6bf919e9fd2e04caf.camel@redhat.com>
+Subject: Re: [PATCH v7 03/14] rv: Add a KUnit test for the HA timer underflow
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: wen.yang@linux.dev
 Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Mon, 26 Oct 2026 10:21:48 +0100
-In-Reply-To: <2ab5a814ce453e282c5d90b7285ee6fea8a674b6.1791745088.git.wen.yang@linux.dev>
+Date: Mon, 26 Oct 2026 10:43:22 +0100
+In-Reply-To: <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
 References: <cover.1791745088.git.wen.yang@linux.dev>
-	 <2ab5a814ce453e282c5d90b7285ee6fea8a674b6.1791745088.git.wen.yang@linux.dev>
+	 <cdaf33af866392428f1942cef4e442b1d106989c.1791745088.git.wen.yang@linux.dev>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -118,7 +117,7 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: JI7wPt_i9Rmr-srQxyIEYgUDPL9qznjMSCWx1wRoOu4_1793006511
+X-Mimecast-MFC-PROC-ID: -jsRUokzWh2FQ3dx4rNBaXIusSnAR8QZ8CJeTN3sRaI_1793007807
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -126,120 +125,148 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, 2026-10-12 at 03:39 +0800, wen.yang@linux.dev wrote:
 > From: Wen Yang <wen.yang@linux.dev>
 >=20
-> ha_start_timer_ns() and ha_start_timer_jiffy() compute the remaining
-> budget as expire - passed.=C2=A0 Once the elapsed time passed exceeds the
-> budget expire (e.g. a state transition after the invariant should have
-> fired, before the timer callback ran), the unsigned subtraction
-> underflows to a huge value and the timer is scheduled far into the
-> future instead of expiring immediately.
+> Add rvtest, a minimal per-object HA monitor, and a test for both
+> underflows fixed by the previous patch: an invariant checked while the
+> uptime is below the budget holds, and a timer armed after the budget
+> elapsed expires now.
 >=20
-> ha_check_invariant_ns() computes store >=3D time_ns - expire_ns, which
-> underflows when the system uptime is still below expire_ns (a monitor
-> armed early in boot with a large budget), reporting a false violation.
->=20
-> Clamp the timer remainder to 0 (fire immediately) when passed >=3D expire=
-,
-> and replace the invariant check as store + expire_ns >=3D time_ns so
-> neither side can underflow.
->=20
-> Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
-> Fixes: ab2900ae252b ("rv: Simplify hybrid automata monitors's clock
-> variables")
 > Signed-off-by: Wen Yang <wen.yang@linux.dev>
 > ---
-
-Looks good, thanks
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-> =C2=A0include/rv/ha_monitor.h | 19 ++++++++++++++-----
-> =C2=A01 file changed, 14 insertions(+), 5 deletions(-)
+> =C2=A0kernel/trace/rv/rv_monitors_test.c | 122 ++++++++++++++++++++++++++=
++++
 >=20
-> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-> index 93ac99ff7f1d..499ce60779f9 100644
-> --- a/include/rv/ha_monitor.h
-> +++ b/include/rv/ha_monitor.h
-> @@ -351,7 +351,7 @@ static inline void ha_reset_clk_ns(struct ha_monitor
-> *ha_mon, enum envs env, u64
-> =C2=A0static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon,=
- enum envs
-> env,
-> =C2=A0=09=09=09=09=09 u64 time_ns, u64 expire_ns)
-> =C2=A0{
-> -=09return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns - expire_ns;
-> +=09return READ_ONCE(ha_mon->env_store[env]) + expire_ns >=3D time_ns;
-> =C2=A0}
-> =C2=A0/*
-> =C2=A0 * ha_invariant_passed_ns - prepare the invariant and return the ti=
-me since
-> reset
-> @@ -410,6 +410,11 @@ static inline void ha_inv_to_guard(struct ha_monitor
-> *ha_mon, enum envs env,
-> =C2=A0=09WRITE_ONCE(ha_mon->env_store[env], READ_ONCE(ha_mon->env_store[e=
-nv])
-> - value);
-> =C2=A0}
+> =C2=A0#include <linux/rv.h>
+> =C2=A0#include "rv.h"
 > =C2=A0
-> +static inline u64 ha_time_left(u64 passed, u64 expire)
+> +#include <rv_trace.h>
+> +
+> +/* rvtest: a minimal per-object HA monitor driven directly by the tests.=
+ */
+> +#define MONITOR_NAME rvtest
+> +#define RV_MON_TYPE RV_MON_PER_OBJ
+> +#define HA_TIMER_TYPE HA_TIMER_HRTIMER
+> +typedef void *monitor_target;
+> +
+
+...
+> +#include <rv/ha_monitor.h>
+
+Uhm, this isn't meant to be imported in things that aren't monitors, if we =
+just
+decided to create another test monitor here it would be a problem.
+
+I'd suggest you put this all in a new C file and build it as a separate obj=
+ect.
+Then you may export rv_test_rvtest_underflow()  (extern function, not expor=
+t
+symbol) for rv_monitors_test to use or whatever works best.
+Feel free to add a new rv/kunit folder if it looks cleaner, it isn't necess=
+ary
+for now though.
+
+Be mindful that it should still build as a module (trace_rv_retries_error()=
+ and
+rv_monitoring_on() aren't exported, you can shortcircuit them to nothing li=
+ke
+you did for the other tracepoints).
+
+I think you should be able to keep it as part of rv_monitors_test.ko but I
+haven't tried.
+
+It's very good to have unit tests for these things, but in case you cannot =
+get
+this ready for the next merge window I'd still get the other fix first.
+
+Thanks,
+Gabriele
+
+> +
+> +#define RVTEST_BUDGET_NS (300ULL * NSEC_PER_MSEC)
+> +
+> +static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs_rvtest env,
+> +=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 time_ns)
 > +{
-> +=09return passed < expire ? expire - passed : 0;
+> +=09return ha_get_clk_ns(ha_mon, env, time_ns);
 > +}
 > +
-> =C2=A0#if HA_TIMER_TYPE =3D=3D HA_TIMER_WHEEL
+> +static void ha_reset_env(struct ha_monitor *ha_mon, enum envs_rvtest env=
+,
+> +=09=09=09 u64 time_ns)
+> +{
+> +=09ha_reset_clk_ns(ha_mon, env, time_ns);
+> +}
+> +
+> +/* The tests arm the timer themselves. */
+> +static bool ha_verify_constraint(struct ha_monitor *ha_mon,
+> +=09=09=09=09 enum states curr_state, enum events event,
+> +=09=09=09=09 enum states next_state, u64 time_ns)
+> +{
+> +=09return true;
+> +}
+> +
+> +static const struct rv_kunit_mon rvtest_mon =3D RV_MON_OPS_INIT();
+> +
 > =C2=A0/*
-> =C2=A0 * Helper functions to handle the monitor timer.
-> @@ -439,15 +444,17 @@ static inline void ha_start_timer_jiffy(struct
-> ha_monitor *ha_mon, enum envs env
-> =C2=A0{
-> =C2=A0=09u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
-> =C2=A0
-> -=09mod_timer(&ha_mon->timer, get_jiffies_64() + expire - passed);
-> +=09mod_timer(&ha_mon->timer,
-> +=09=09=C2=A0 get_jiffies_64() + ha_time_left(passed, expire));
+> =C2=A0 * An easy way to pass the context is to use kunit_get_current_test=
+()->priv,
+> =C2=A0 * but this doesn't always work (e.g. a reactor running from anothe=
+r context
+> @@ -146,6 +227,46 @@ static void rv_test_dummy(struct kunit *test)
+> =C2=A0=09active_ctx =3D NULL;
 > =C2=A0}
-> =C2=A0static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enu=
-m envs
-> env,
-> =C2=A0=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 u64 expire, u64 time_ns)
-> =C2=A0{
-> =C2=A0=09u64 passed =3D ha_invariant_passed_ns(ha_mon, env, time_ns);
-> +=09u64 delay =3D ha_time_left(passed, expire);
 > =C2=A0
-> =C2=A0=09ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
-> -=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(expire - passed + TIC=
-K_NSEC -
-> 1), time_ns);
-> +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(delay + TICK_NSEC - 1=
-),
-> time_ns);
-> =C2=A0}
-> =C2=A0/*
-> =C2=A0 * ha_cancel_timer - Cancel the timer
-> @@ -494,7 +501,8 @@ static inline void ha_start_timer_ns(struct ha_monito=
-r
-> *ha_mon, enum envs env,
+> +/*
+> + * rv_test_rvtest_underflow - the HA clock math must not underflow as u6=
+4
+> + *
+> + * An invariant checked while the uptime is below the budget holds, and =
+a
+> + * timer armed after the budget elapsed expires now.
+> + */
+> +static void rv_test_rvtest_underflow(struct kunit *test)
+> +{
+> +=09struct ha_monitor *ha_mon;
+> +=09struct da_monitor *da_mon;
+> +=09const int id =3D 4242;
+> +
+> +=09prepare_test(test, &rvtest_mon);
+> +=09da_handle_start_run_event(id, NULL, start_rvtest);
+> +
+> +=09scoped_guard(rcu)
+> +=09=09da_mon =3D da_get_monitor(id, NULL);
+> +=09KUNIT_ASSERT_NOT_NULL(test, da_mon);
+> +=09ha_mon =3D to_ha_monitor(da_mon);
+> +
+> +=09/* Uptime below the budget: time_ns - expire_ns would underflow. */
+> +=09ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
+> +=09KUNIT_EXPECT_TRUE(test, ha_check_invariant_ns(ha_mon, clk_rvtest, 0,
+> +=09=09=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 RVTEST_BUDGET_NS));
+> +
+> +=09/*
+> +=09 * Budget already elapsed: expire - passed would underflow and queue
+> +=09 * the timer at KTIME_SEC_MAX.
+> +=09 */
+> +=09da_monitor_reset(&ha_mon->da_mon);
+> +=09ha_reset_clk_ns(ha_mon, clk_rvtest, 0);
+> +=09ha_start_timer_ns(ha_mon, clk_rvtest, RVTEST_BUDGET_NS,
+> +=09=09=09=C2=A0 RVTEST_BUDGET_NS + NSEC_PER_SEC);
+> +=09KUNIT_EXPECT_TRUE(test,
+> +=09=09=09=C2=A0 ktime_before(hrtimer_get_expires(&ha_mon->hrtimer),
+> +=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ktime_get() + NSEC_PER_=
+SEC));
+> +
+> +=09ha_cancel_timer_sync(ha_mon);
+> +}
+> +
+> =C2=A0#include "monitors/sco/sco_kunit.c"
+> =C2=A0#include "monitors/sssw/sssw_kunit.c"
+> =C2=A0#include "monitors/sts/sts_kunit.c"
+> @@ -163,6 +284,7 @@ static struct kunit_case rv_mon_test_cases[] =3D {
+> =C2=A0=09KUNIT_CASE(rv_test_nomiss),
+> =C2=A0=09KUNIT_CASE(rv_test_pagefault),
+> =C2=A0=09KUNIT_CASE(rv_test_sleep),
+> +=09KUNIT_CASE(rv_test_rvtest_underflow),
+> =C2=A0=09{}
+> =C2=A0};
 > =C2=A0
-> =C2=A0=09if (RV_MON_TYPE =3D=3D RV_MON_PER_CPU)
-> =C2=A0=09=09mode |=3D HRTIMER_MODE_PINNED;
-> -=09hrtimer_start(&ha_mon->hrtimer, ns_to_ktime(expire - passed), mode);
-> +=09hrtimer_start(&ha_mon->hrtimer,
-> +=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns_to_ktime(ha_time_left(passed, ex=
-pire)), mode);
-> =C2=A0}
-> =C2=A0static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, =
-enum envs
-> env,
-> =C2=A0=09=09=09=09=09u64 expire, u64 time_ns)
-> @@ -502,7 +510,8 @@ static inline void ha_start_timer_jiffy(struct ha_mon=
-itor
-> *ha_mon, enum envs env
-> =C2=A0=09u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
-> =C2=A0
-> =C2=A0=09ha_start_timer_ns(ha_mon, ENV_MAX_STORED,
-> -=09=09=09=C2=A0 jiffies_to_nsecs(expire - passed), time_ns);
-> +=09=09=09=C2=A0 jiffies_to_nsecs(ha_time_left(passed, expire)),
-> +=09=09=09=C2=A0 time_ns);
-> =C2=A0}
-> =C2=A0/*
-> =C2=A0 * ha_cancel_timer - Cancel the timer
 
