@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793040559;
-	b=x733EC+4wLeci6mkdM6Q/TUdgQmn9UJjaWUbkp3LsBOKBP8Egfd7AatVS2wJacC9EObR
-	 dP3SiJlgg9Z8VhlrP5aH7jsdWNZ4lzmxI/TBkHciKviH7hBTmkzH3ZyKeizkt/KxVrCSX
-	 ZHVgoAlifbZodYlZLIYwv0NEqgNAZ7sr+82OTQeFNZmiWbxnlt0t0c14pGd7doNHkrGca
-	 HfTIz+IAQquYwHHPCcVYPuG6ycWXw47yAT34Syyi9fVQNeZjvAO6a6T7ndikg0sqE1otg
-	 VnO1DXSuxkFcZC3DzAzvjPHrV5Crt6z+6l+Ph0QE9HGJhK83IYwN2lOEad0196zKA6Q==
+	t=1793040560;
+	b=tc7fA4oyd6HHOC0ybxDiSKWZHomsO0m414GdncraeinzGPtHwJMTXnyQ8GvTnMWNvGvT
+	 IH1ScQh4b5wclBrPh/bd1s9tIqXXf9jiBpfYpuxnsuYIsvc4Kt6vam805BD7guBIucnb1
+	 sM852pk/a4KsmVJ2IvHZWa11b7HYOi1Q61p8PGfFmhEAbOuQR1QZVMgMwO2OWoPsR3SQj
+	 GYK1N9lR+5+XZPxMur4nQ68+x0Wqm9co5v1GgPWZE8+dKx0Stvys9deZLjinQq2M7o4Si
+	 /NxXV1NWVjEc9fBO7T7EthZv3TCLricozikh+siMq1Ov4B5bSMK2yrpTA7/Op7ChX2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793040559;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793040560;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Vtfda19zMsySYSqTq74kwt018ht5LkGB3Tp0jWWb8rA=;
-	b=xAXNQKKBu/qd+PuJKY9ZevMiF7wfov0MMqhEy0LdpR8StCe2UM1EZFR1Hv5KiCHSq5Hk
-	 6JY0tzMKQiWhKPTxyzTXO0eB11zadnpBHt4Hg4ZcDS6FO7SUh+cCvalrlISq/To/8tD20
-	 UgpYDxhqdOVG5jFgL0Q49gmW8tV+5yAKlHURv9oEZ7kVw3rHa8lBJfdLJniyo9C0MDESj
-	 H5lmlFV32yY3fgmjdZvrfuOUbAMWjHNrkjN9ptNZCxXMUVneOqyAWQYRQXIsGa3MU/YgC
-	 OXS+7Y8XlYmEeEv3dzI4NjW+YfdsT3236hrxNc0SS7S73L09AM3ABw4y53Pu4nCwzfA==
+	bh=uae77pp0DZ4YQzWYF3HWlZq1oF9TpK+qBtMgaSoopDo=;
+	b=Lm4Alp0TgXfmjK6E9oaO0sV2jS3UkKYp/+HXgXw4L4QP8Zj1dxRqI9H17UwS/sEe9j5S
+	 bvX39QT97Arc6yLv7TXL6PznobHnQ6DFPGs1fMQBVLv9rRZsvqxvUjjiBABr4R1C0+ssu
+	 MPMs4WfGyGKLUIL7FWew3KQxBlFWFIZpjyxGec/5J7dUs8XvlKx1NdfZjGHMNJrd1HyFn
+	 WqrPFpg4g+Lzy621ljigLChK2BoFX9xjIAeHSeK+xzz8B67bezaBAlZ4q9PAOMF0yW+6L
+	 BNCh7PoTUKo69PTzCOEFiOso2mBIvc+o1WqfbVbe6dZ4pafAEcJ81K16MnVcnWRnPAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ggByWu2N;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVzIWFxo;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3F5606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82EE606A31D
 	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 18:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ggByWu2N
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EAE1F01825;
-	Mon, 26 Oct 2026 18:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CVzIWFxo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FBF1F01828;
+	Mon, 26 Oct 2026 18:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793040559;
-	bh=Vtfda19zMsySYSqTq74kwt018ht5LkGB3Tp0jWWb8rA=;
+	bh=uae77pp0DZ4YQzWYF3HWlZq1oF9TpK+qBtMgaSoopDo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ggByWu2NkbO6gdfmud6GrvgrYJe2TySkAcSMRPDCXzmhW0fgK+EeejT3fZOI0tTSo
-	 gFUx79RMKxu7+36Ev7Ey+m71sNhL9AEv8EGJsJT5pZmhCapPXSoJADNc0DcwSooAwA
-	 Xi3yxySTrT+ZMnrXaRjGMCIohvICv+bxn8YAGtG5kmMylgB5/Ve5znMOvZl3HwYFXp
-	 IGAjTmKqnDUJycY8n45794fLGg3mb8AK/Q3tS18FXOfy3oH2CTzbjuFR15MR6+9htC
-	 Z3fYNPAKBruXd2IcuK4/PG2/Ta2RoUgh+U5WhOd1UEuQtu2tSlB8BUcunI7/FNJCt5
-	 og5S+NJF09tFA==
-Message-ID: <sashiko-outbox-185641@kernel.org>
+	b=CVzIWFxo9Puz7R9/lsv1jsXlSLi3PG4razCU0zO2F+R01p2Fj3ZdgakKHuOAf4c8L
+	 Ww+4qdMdTch8xgEdPxs0mkIBc36ndktwRfwjc14cla7cxgm1wzFaMjkFThfT6e4Duz
+	 FBYeKzFhnyZPaKCuJpyj5GpUcYyqP82yqAd9PWrVsjiT1oeGU7WnaWTUQk4sxxPyXY
+	 XyjI2qGddLMWaNiqwKMVOtdkssjzfC1kXXp00sTIFen77WkNJPEUykDAkrt17EzpkF
+	 00behWll4Y267NSh9nT1QRvWM7sb5ZXjKdc6BHD6VFCMGDPinwz0Sh4bKbEHiq/+Fa
+	 evNCcgCBedjUw==
+Message-ID: <sashiko-outbox-185642@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/17] platform/x86/intel/ifs: Validate TID_BIT_SHIFT
- matches topology_cluster_cpumask()
+Subject: Re: [PATCH 12/17] platform/x86/intel/ifs: Add new sysfs interfaces
+ {status, details, cpus_ran}_list
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ehab Ababneh" <ehab.ababneh@intel.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261026183820.129459-11-ehab.ababneh@intel.com>
+In-Reply-To: <20261026183820.129459-13-ehab.ababneh@intel.com>
 References: <20261026183820.129459-1-ehab.ababneh@intel.com>
- <20261026183820.129459-11-ehab.ababneh@intel.com>
+ <20261026183820.129459-13-ehab.ababneh@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 18:49:18 +0000
+Date: Mon, 26 Oct 2026 18:49:19 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,150 +63,175 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] platform/x86/intel/ifs: ifs_init() fails on SAF_GEN=3D0 CPUs
-- [Medium] platform/x86/intel/ifs: broken cluster validation in topology_cl=
-uster_matched()
+- [High] platform/x86/intel/ifs: premature grp_cpumask update in do_core_te=
+st()
+- [Medium] platform/x86/intel/ifs: unlocked grp_cpumask reads in status_lis=
+t_show()
 --
 
-commit d52108059abf4fca7e3a463651949851cf65de59
-Author: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+commit bf9eae2e7ab2791a6f3b06b483c7daa541ce8c99
+Author: Jithu Joseph <jithu.joseph@intel.com>
 
-platform/x86/intel/ifs: Validate TID_BIT_SHIFT matches topology_cluster_cpu=
-mask()
+platform/x86/intel/ifs: Add new sysfs interfaces {status, details, cpus_ran=
+}_list
 
-This commit validates during driver initialization that the logical
-processors indicated by TID_BIT_SHIFT in MSR_INTEGRITY_CAPS match
-topology_cluster_cpumask(), failing driver load if they do not match.
+This commit adds the status_list, details_list, and cpus_ran_list sysfs
+attributes to report per-CPU scan statuses, details, and the group of CPUs
+tested together during an In-Field Scan run.
 
-> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86=
-/intel/ifs/core.c
-> index f2d2caab04797..c830a02fe7b33 100644
-> --- a/drivers/platform/x86/intel/ifs/core.c
-> +++ b/drivers/platform/x86/intel/ifs/core.c
-[ ... ]
-> @@ -69,6 +71,45 @@ static struct ifs_device ifs_devices[] =3D {
->  	},
->  };
+> diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x8=
+6/intel/ifs/sysfs.c
+> index 287f96bb033ea..82a603cd1fd34 100644
+> --- a/drivers/platform/x86/intel/ifs/sysfs.c
+> +++ b/drivers/platform/x86/intel/ifs/sysfs.c
+> @@ -135,6 +135,59 @@ static ssize_t image_version_show(struct device *dev,
 > =20
-> +/*
-> + * Test whether logical processors indicated by TID_BIT_SHIFT that share=
- the
-> + * same SCAN test engine match the cpumask from topology_cluster_cpumask=
-().
-> + */
-> +static bool topology_cluster_matched(u32 msrval)
+>  static DEVICE_ATTR_RO(image_version);
+> =20
+> +static ssize_t status_list_show(struct device *dev, struct device_attrib=
+ute *attr, char *buf)
 > +{
-> +	u32 dist, shift =3D FIELD_GET(MSR_INTEGRITY_CAPS_TID_BIT_SHIFT_MASK, ms=
-rval);
-> +	const cpumask_t *cpumask =3D topology_cluster_cpumask(0);
-> +	u32 delta, step =3D 0, first =3D cpu_data(0).topo.apicid;
-> +	unsigned int cpu, cpus;
+> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
+> +	struct ifs_test_output *pcpu_state;
+> +	int lcpu, len =3D 0;
 > +
-> +	/* Get the minimal APIC ID step among the CPUs in the same cluster. */
-> +	for_each_cpu_andnot(cpu, cpumask, cpumask_of(0)) {
-> +		delta =3D abs(cpu_data(cpu).topo.apicid - first);
+> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
+> +		return sysfs_emit(buf, "%s\n", "none");
 > +
-> +		if (!step) {
-> +			step =3D delta;
-> +			continue;
-> +		}
-> +
-> +		if (step > delta)
-> +			step =3D delta;
+> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
+> +		pcpu_state =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
+> +		len +=3D sysfs_emit_at(buf, len, "%s%s", (len > 0) ? " " : "",
+> +				     status_msg[pcpu_state->test_result]);
 > +	}
+> +	len +=3D sysfs_emit_at(buf, len, "\n");
 > +
-> +	/* A Hyper-Threading (HT) system with HT disabled. */
-> +	if (!step)
-> +		step =3D 2;
+> +	return len;
+> +}
+
+[Severity: High]
+Can status_list_show(), details_list_show(), and cpus_ran_list_show() report
+bogus state or dereference invalid per-CPU pointers when a write to run_test
+fails validation in do_core_test()?
+
+In drivers/platform/x86/intel/ifs/runtest.c, run_test_store() only checks
+cpu < nr_cpu_ids before calling do_core_test(), which unconditionally calls
+build_cpugroup_mask() before checking cpu_online(cpu) and ifsd->loaded:
+
+drivers/platform/x86/intel/ifs/runtest.c:do_core_test() {
+	cpus_read_lock();
+	build_cpugroup_mask(dev, cpu);
+
+	if (!cpu_online(cpu)) {
+		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
+		ret =3D -EINVAL;
+		goto out;
+	}
+
+	switch (test->test_num) {
+	case IFS_TYPE_SAF:
+		if (!ifsd->loaded)
+			ret =3D -EPERM;
+		else
+			ifs_test_core(cpu, dev);
+		break;
+}
+
+drivers/platform/x86/intel/ifs/runtest.c:build_cpugroup_mask() {
+	cpumask_clear(&ifsd->grp_cpumask);
+	...
+	if (!ifsd->all_lp_join) {
+		cpumask_set_cpu(cpu, &ifsd->grp_cpumask);
+		return;
+	}
+
+	cpumask_copy(&ifsd->grp_cpumask, topology_cluster_cpumask(cpu));
+}
+
+When do_core_test() fails with -EPERM because !ifsd->loaded,
+build_cpugroup_mask() has already populated ifsd->grp_cpumask. Reading
+cpus_ran_list, status_list, and details_list afterwards reports that group =
+as
+having run (or overwrites the group mask from a prior valid test while lega=
+cy
+status and details keep the old results).
+
+Similarly, when an offline or non-possible CPU < nr_cpu_ids is written to
+run_test:
+- If ifsd->all_lp_join is true and cpu is offline, topology_cluster_cpumask=
+()
+  is empty, wiping out ifsd->grp_cpumask from any previous valid test run.
+- If ifsd->all_lp_join is true and cpu is not in cpu_possible_mask on a
+  system with CONFIG_CPUMASK_OFFSTACK=3Dy, topology_cluster_cpumask(cpu) is
+  NULL, causing a NULL pointer dereference in cpumask_copy().
+- If ifsd->all_lp_join is false, build_cpugroup_mask() sets the offline or
+  non-possible CPU in ifsd->grp_cpumask, causing status_list_show() and
+  details_list_show() to dereference per_cpu_ptr(ifsd->result_ptr, lcpu) for
+  that CPU.
+
+Should do_core_test() validate cpu_online(cpu) and ifsd->loaded before
+updating ifsd->grp_cpumask in build_cpugroup_mask()?
+
 > +
-> +	cpus =3D cpumask_weight(cpumask);
-> +	dist =3D step * cpus;
+> +static DEVICE_ATTR_RO(status_list);
 > +
-> +	if (dist !=3D (1 << shift)) {
-> +		pr_err_once("APICID step %u, group cpus %u, TID_BIT_SHIFT %u\n", step,=
- cpus, shift);
-> +		return false;
+> +static ssize_t details_list_show(struct device *dev, struct device_attri=
+bute *attr, char *buf)
+> +{
+> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
+> +	struct ifs_test_output *pcpu_state;
+> +	int lcpu, len =3D 0;
+> +
+> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
+> +		return sysfs_emit(buf, "%s\n", "none");
+> +
+> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
+> +		pcpu_state =3D per_cpu_ptr(ifsd->result_ptr, lcpu);
+> +		len +=3D sysfs_emit_at(buf, len, "%s%#llx", (len > 0) ? " " : "",
+> +				     pcpu_state->test_details);
 > +	}
+> +	len +=3D sysfs_emit_at(buf, len, "\n");
 > +
-> +	return true;
+> +	return len;
+> +}
+> +
+> +static DEVICE_ATTR_RO(details_list);
+> +
+> +static ssize_t cpus_ran_list_show(struct device *dev, struct device_attr=
+ibute *attr, char *buf)
+> +{
+> +	struct ifs_data *ifsd =3D ifs_get_data(dev);
+> +
+> +	if (cpumask_weight(&ifsd->grp_cpumask) =3D=3D 0)
+> +		return sysfs_emit(buf, "%s\n", "none");
+> +
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&ifsd->grp_cpumask));
 > +}
 
 [Severity: Medium]
-Can topology_cluster_matched() fail when CPUs in cluster 0 are offline or
-undergoing hotplug during module initialization?
+Should status_list_show(), details_list_show(), and cpus_ran_list_show()
+serialize with ifs_sem when reading ifsd->grp_cpumask and the per-CPU resul=
+ts?
 
-topology_cluster_cpumask(0) returns a pointer to per_cpu(cpu_l2c_shared_map,
-0), which only tracks currently online CPUs and is updated in-place by
-set_cpu_sibling_map() and remove_siblinginfo() under the CPU hotplug lock:
+In run_test_store(), test execution is serialized under ifs_sem while
+do_core_test() -> build_cpugroup_mask() clears and updates ifsd->grp_cpumask
+and ifs_test_core() updates per-CPU test_details and test_result across chu=
+nk
+retries.
 
-arch/x86/kernel/smpboot.c:remove_siblinginfo() {
-	...
-	for_each_cpu(sibling, cpu_l2c_shared_mask(cpu))
-		cpumask_clear_cpu(cpu, cpu_l2c_shared_mask(sibling));
-	...
-}
-
-Because CONFIG_INTEL_IFS is tristate, ifs_init() can run at module load time
-without holding cpus_read_lock(). topology_cluster_matched() iterates over
-cpumask in for_each_cpu_andnot() to compute step and then re-reads cpumask
-in cpumask_weight(cpumask) to compute cpus, so concurrent CPU hotplug on a
-cluster-0 sibling can mutate the mask between the two reads.
-
-Furthermore, if any CPU in cluster 0 is offline when the module is loaded
-(for example, when a core or thread in a Dual-Core Module is offline, or
-when booted with maxcpus=3D1), cpumask_weight(cpumask) and step will not
-reflect the full hardware cluster, causing dist !=3D (1 << shift) and faili=
-ng
-driver initialization with -EINVAL.
-
-In addition, when cpumask contains only CPU 0 (cpus =3D=3D 1), the fallback:
-
-	if (!step)
-		step =3D 2;
-
-forces dist to 2, while when cpus >=3D 2, step >=3D 1 also makes dist >=3D =
-2. Can
-dist ever match (1 << shift) on a non-SMT single-CPU cluster where
-TID_BIT_SHIFT is 0?
-
-> +
->  #define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
-> =20
->  static void ifs_cleanup(void)
-> @@ -122,6 +163,13 @@ static int __init ifs_init(void)
->  		 */
->  		ifs_devices[i].rw_data.all_lp_join =3D ifs_devices[i].rw_data.generati=
-on ?
->  						(msrval & MSR_INTEGRITY_CAPS_ALL_LP_JOIN) : true;
-> +
-> +		if (ifs_devices[i].rw_data.all_lp_join && !topology_cluster_matched(ms=
-rval)) {
-> +			pr_err_once("TID_BIT_SHIFT mismatched topology_cluster_cpumask().\n");
-> +			ret =3D -EINVAL;
-> +			goto err_exit;
-> +		}
-
-[Severity: High]
-Won't this check cause ifs_init() to unconditionally fail with -EINVAL on
-Sapphire Rapids and Emerald Rapids (SAF_GEN=3D0) processors?
-
-On SAF_GEN=3D0 CPUs, ifs_devices[i].rw_data.generation is 0, so
-ifs_devices[i].rw_data.all_lp_join is forced to true. However, bits 20:16
-(TID_BIT_SHIFT) of MSR_INTEGRITY_CAPS were only introduced in SAF_GEN=3D2 a=
-nd
-read as 0 on SAF_GEN=3D0 platforms.
-
-When ifs_init() calls topology_cluster_matched(msrval) with shift =3D=3D 0,
-(1 << shift) is 1, whereas dist =3D step * cpus evaluates to 2 (both with
-Hyper-Threading enabled where cpus =3D=3D 2 and step =3D=3D 1, and with
-Hyper-Threading disabled where cpus =3D=3D 1 and step is forced to 2). As a
-result, dist !=3D (1 << shift) is always true and topology_cluster_matched()
-always returns false on SAF_GEN=3D0 hardware.
-
-Should the topology_cluster_matched() check also be gated on
-ifs_devices[i].rw_data.generation (or only performed when ALL_LP_JOIN is
-enumerated by hardware)?
+Because status_list_show(), details_list_show(), and cpus_ran_list_show() r=
+ead
+ifsd->grp_cpumask twice without holding ifs_sem (first in cpumask_weight() =
+and
+then in for_each_cpu() or cpumask_pr_args()), a concurrent
+build_cpugroup_mask() clearing ifsd->grp_cpumask between the two reads caus=
+es
+these attributes to emit an empty line ("\n") instead of "none\n". In
+addition, reading status_list or details_list while a test is in progress c=
+an
+pair the newly updated ifsd->grp_cpumask with stale test_result values from=
+ a
+previous run and intermediate per-chunk test_details.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026183820.1294=
-59-1-ehab.ababneh@intel.com?part=3D10
+59-1-ehab.ababneh@intel.com?part=3D12
