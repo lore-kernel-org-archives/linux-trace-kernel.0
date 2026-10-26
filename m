@@ -1,58 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793042747;
-	b=fRFwEojT7BitmRa/LUIKHigU78M2cg9lfGWG51xyA0ry19bJCPHN+R7+Uv0XhHPpytj3
-	 KHb0WOnOen9/2tNfr0oq0Zv4atOXajf2VZfQaPnyP2d8kTjlDQfaLlNjinXR1RJYafWMf
-	 rz8Uh5io+R07tF7F/hoCrvOpDNlEIOGTHczayT3QEBggW57zXkbxcQjbJqwFx5d0QzfQZ
-	 CBEPh2D6p+7tPqa/+lphz7DEO6MySxabWiC22h4OnM0gY97CYDGWwjhcT0x9+WnfH7sLi
-	 YHOZtWzafUq0q0h4PL7jP+zm4lHyogRuHQulMW3BqPBV+1cZIQmaB+9an8Hnux1srtQ==
+	t=1793043199;
+	b=SzsisnHp16SWu3iLEr0jYqHaboqh8p841QzDASWf5Api/JhpRheqd+Cg8f4Hb1PkY9fn
+	 Vu3EXyJzcIHe7+HfmQ+bGwMNFj7vhnnlztK8EPIv8PfDXqFjTw98S2chOAtg5pPP0KvxI
+	 1lb0ZeCgPG0m7sx10uLQg++kLgGEdA8N7a2WoFl6/oGaycbWZbNuZU8O+Cy/N/aXGT0GU
+	 ZrGxYt30xwZCyV8pjZaTkM8ji7BYNXCyo7tfD154HotbelsSaATgI4oKC36EGPuFM0K9S
+	 rUjiHGO+5hsVfk0mumdV/JGk9yea9LpX2IQ1G/2YlSMyRNULv0oUvg35eY1sX3CEiFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793042747;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
-	bh=YeW/vsuTURatWo8vjPgKFuIFk5Oa69ycBygNEDu8EaQ=;
-	b=HkXPga8rUJ4UrKP7HOFL6gmT6/u0ydzTL3wAc+0B0tK3CmISH/UukyIa9OUZDwVrL/jM
-	 RTlAe+fwuHMjcLOHSPFBSBgczzMSW+OncYHxjbbPAYe6DrIhin9yVgWMwAtdj4fS9Lj92
-	 JsGYXWJgIw65k5fBtxddTgA4plYKKL7w+1OgaEAz5jRhDVwcqHdIMc8b/ocEYbxJI9hXl
-	 c2Z355H9kAX+2L0PEcpPFqmZ33XMmXW4qoe1rEe1MM65B5BBYPLAwS+xP8zWLK9zxuUpy
-	 Yuy3BTXhmThw1PN5n+oL9iVz9KOb5mdcjza/b47y1VMJy2lg1joNTsiMh7Q0eOget0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793043199;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=7FroyQfmGccRo/6Ojp1n1yG7KvHfRDE9iUS1JPBi4tA=;
+	b=LmWySa6llty0NeHGDhUkZq5E1yupmA15MBIYh2sukPCBAY5jOB/RhEtPwNjJTGkBEBGo
+	 ByaYYUxtUWs1VCRo4UxeLdMfkR+jQQjKYiZtc/BCNDMX83UHgBcVxG0BUizGNqA4yX+K0
+	 Mmg9yNiBUqQVWrd1jvV5NoSPDEKT8nxV1JgBhpojyIbK2hlUSV9XfoSJ0LwD06O4/9XMi
+	 49mnSbcJXgVrDOAJnmgYomxPj669Jwmm2/SZeFHX9jjmHzD6QTpH/dI3EJT1XOGLwSUKW
+	 f1gR6yorS1e10ZUFz7zhQyjaETYd7HqPEuFaNMsHJ5epU6rl3s54HTUevr54gha+T9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.microsoft.com;
-	spf=pass smtp.mailfrom=linux.microsoft.com;
-	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=hJIVYZtl;
-	arc=none smtp.remote-ip=13.77.154.182
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954B1606A31E;
-	Mon, 26 Oct 2026 19:25:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 954B1606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=o3qhcDEp;
+	arc=none smtp.remote-ip=216.40.44.16
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9099606A31A;
+	Mon, 26 Oct 2026 19:33:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9099606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=hJIVYZtl
-Received: from CPC-beaub-VBQ1L.localdomain (unknown [70.37.26.58])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 60E5220B7166;
-	Mon, 26 Oct 2026 12:25:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 60E5220B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1793042736;
-	bh=YeW/vsuTURatWo8vjPgKFuIFk5Oa69ycBygNEDu8EaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hJIVYZtlPTmPI5cyNa7YnpdtY68LGbJYo+ASmCKVcm1MZxUN0pDAXIz2UYC3R2wNX
-	 eltpn2wFwj3M0ZvBMZt3/IRpTnCzKxaYamBnD0p1bNQDrvsKEJfxEDYIHhTthzPJ4o
-	 kBVR526gFDxi2Fbu52VjNCOQ1LeU1PSxrX9ezdNw=
-Date: Mon, 26 Oct 2026 19:25:41 +0000
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Haoran Wang <haoranwangsec@gmail.com>, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH] tracing: guard trace_event_get_offsets() against an
- empty fields list
-Message-ID: <20261026192541.GA65-beaub@linux.microsoft.com>
-References: <6ad1f2ca.6048f038.32d739.a530@mx.google.com>
- <20261016102249.090d33af@gandalf.local.home>
- <20261016105100.7a64aa51@gandalf.local.home>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=o3qhcDEp
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 67014C082C;
+	Mon, 26 Oct 2026 19:33:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 7DFC72002D;
+	Mon, 26 Oct 2026 19:33:08 +0000 (UTC)
+Date: Mon, 26 Oct 2026 15:33:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 02/10] tracing/filters: Fix false success return in
+ process_system_preds()
+Message-ID: <20261026153258.5259323d@gandalf.local.home>
+In-Reply-To: <179285914279.466249.18363232291728825688.stgit@devnote2>
+References: <179285912318.466249.7425922682086130057.stgit@devnote2>
+	<179285914279.466249.18363232291728825688.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,60 +62,143 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261016105100.7a64aa51@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: thwpb7popeprf8q1p8e567zoydgbqdnt
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 7DFC72002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19n6zJjGGG/dMguuPm3g8hioVpXwuAfxOs=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=7FroyQfmGccRo/6Ojp1n1yG7KvHfRDE9iUS1JPBi4tA=; b=o3qhcDEp6ZUw/1N6aAxNUGtgb0fM+WpVyS99Cgl/CBI2IbqYO4OZ48KFBlPVpPEp6i1sqzPEYLoqX55s2NLvwEdiQv5TNTyB762AAQCg5i+RlQBt0OG9KNeRmW2RSBTLIBIiy3DDGuxvMJPwlD+FTqiBkd4zOoQU2Y44TDIrMEM=
+X-HE-Tag: 1793043188-40761
+X-HE-Meta: U2FsdGVkX1+p/N4uQdBG2PVX04ya0aV9sLJPfjmDhd/YgbvjOHbNuT11ylfKbF2M6+0ioHko+Mls50AYzyt8Ttm038TUHDa6DARfBPFpUv6tex9dNkD2o1zJFl4jV/zQHJdeeal5qpDbStpupDp+UDtBK59hZ+n4ijjoA6upTzpfbygXOy8l2Qe4I1qcM9fCyewrsaQ3L/845Mbh9LLqdiKvgM2V5yC95F1X/ErlBBm8UATiOL6wSf4hbofCxfjJa9MUD3e6Im4MarEQcLd2609ZAklmQvtrtZa1jE1E1WTWYhzbCm4IFN08clsECE/cw5jFCc9UAKwBPD1bxrKd1VPynDbcCj5g
 
-On Fri, Oct 16, 2026 at 10:51:00AM -0400, Steven Rostedt wrote:
-> On Fri, 16 Oct 2026 10:22:56 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Fri, 16 Oct 2026 17:47:51 +0800
-> > Haoran Wang <haoranwangsec@gmail.com> wrote:
-> > 
-> > > From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-> > > From: Haoran Wang <haoranwangsec@gmail.com>
-> > > Date: Fri, 16 Oct 2026 16:30:00 +0800
-> > > Subject: [PATCH] tracing: guard trace_event_get_offsets() against an empty fields list
-> > > 
-> > > trace_event_get_offsets() dereferences the first entry of the fields list
-> > > returned by trace_get_fields() via list_first_entry().  list_first_entry()
-> > > then returns the list head itself, and tail->offset + tail->size reads past
-> > > it.  The corrupted result is used as the BPF context-size bound in
-> > > __perf_event_set_bpf_prog():
-> > > 
-> > >     int off = trace_event_get_offsets(event->tp_event);
-> > >     if (prog->aux->max_ctx_offset > off)
-> > >             return -EACCES;
-> > > 
-> > > so a context-reading BPF program that ought to be rejected can instead be
-> > > attached to a zero-field tracepoint (which still carries
-> > > TRACE_EVENT_FL_TRACEPOINT) and read adjacent kernel memory when the
-> > > tracepoint fires, bypassing the verifier's context-size confinement.
-> > > 
-> > > This is reachable through user_events: a user can register an event with no
-> > > fields (e.g. `echo u:my_event > dynamic_events`), which leaves user->fields
-> > > empty while the event remains a BPF-attachable tracepoint,
-> > > trace_get_fields() then routes through user_event_get_fields() to that
-> > > empty list. The corrupted
-> > > result after list_first_entry is then used as the BPF context-size bound in
-> > > __perf_event_set_bpf_prog(), which lets context-reading BPF programs attach
-> > > to a zero-field tracepoint when they should be rejected with -EACCES.
-> > >   
-> > 
-> > Hmm, so user events can have empty events. :-/
-> 
-> I meant "empty fields".
-> 
-> > 
-> > Beau, Is that a thing?
-> 
+On Sun, 25 Oct 2026 01:25:42 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-There have been events in the past that are used simply to signal
-something has happened and have no payload/fields. That is a valid
-scenario from previous discussions with folks on our side, yes.
+> Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_events_filter.c |   15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 18ce3ec00d34..c2c35b4de85e 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -2332,8 +2332,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  			filter_disable(file);
+>  			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  			append_filter_err(tr, pe, filter);
+> -		} else
+> +		} else {
+>  			event_set_filtered_flag(file);
+> +			fail = false;
+> +		}
+>  
+>  
+>  		filter_item = kzalloc_obj(*filter_item);
+> @@ -2348,8 +2350,6 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  		filter_item->filter = event_filter(file);
+>  		event_set_filter(file, filter);
+>  		filter = NULL;
+> -
+> -		fail = false;
+>  	}
+>  
+>  	if (fail)
+> @@ -2364,14 +2364,17 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	return 0;
+>   fail:
+>  	/* No call succeeded */
+> -	free_filter_list(filter_list);
+> +	if (!list_empty(&filter_list->list))
+> +		delay_free_filter(filter_list);
+> +	else
+> +		free_filter_list(filter_list);
+>  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  	return -EINVAL;
+>   fail_mem:
+>  	__free_filter(filter);
+>  
+> -	/* If any call succeeded, we still need to sync */
+> -	if (!fail)
+> +	/* If any filter was replaced, we still need to sync */
+> +	if (!list_empty(&filter_list->list))
+>  		delay_free_filter(filter_list);
+>  	else
+>  		free_filter_list(filter_list);
 
-Thanks,
--Beau
+Hmm, I think this can be cleaned up a bit better.
 
-> -- Steve
+ 1) remove the fail boolean
+ 2) consolidate the if (!list_empty()) logic.
+
+Like this:
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 5e74d2dae40a..4d763c55bb7b 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -2305,7 +2305,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	struct filter_list *filter_item;
+ 	struct event_filter *filter = NULL;
+ 	struct filter_head *filter_list;
+-	bool fail = true;
++	int ret = -ENOMEM;
+ 	int err;
+ 
+ 	filter_list = kmalloc_obj(*filter_list);
+@@ -2332,8 +2332,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 			filter_disable(file);
+ 			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 			append_filter_err(tr, pe, filter);
+-		} else
++		} else {
+ 			event_set_filtered_flag(file);
++			ret = 0;
++		}
+ 
+ 
+ 		filter_item = kzalloc_obj(*filter_item);
+@@ -2348,11 +2350,9 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 		filter_item->filter = event_filter(file);
+ 		event_set_filter(file, filter);
+ 		filter = NULL;
+-
+-		fail = false;
+ 	}
+ 
+-	if (fail)
++	if (ret)
+ 		goto fail;
+ 
+ 	/*
+@@ -2364,19 +2364,18 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	return 0;
+  fail:
+ 	/* No call succeeded */
+-	free_filter_list(filter_list);
+ 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+-	return -EINVAL;
++	ret = -EINVAL;
+  fail_mem:
+ 	__free_filter(filter);
+ 
+-	/* If any call succeeded, we still need to sync */
+-	if (!fail)
++	/* If any filter was replaced, we still need to sync */
++	if (!list_empty(&filter_list->list))
+ 		delay_free_filter(filter_list);
+ 	else
+ 		free_filter_list(filter_list);
+ 
+-	return -ENOMEM;
++	return ret;
+ }
+ 
+ static int create_filter_start(char *filter_string, bool set_str,
+
+
+-- Steve
