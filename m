@@ -1,45 +1,128 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793054571;
-	b=B7T/neuu5eKFWTj4eDIbafaZix0ObE4pl/aQ+4WZuK94+TcpL9e6d6os9ixA8SQzbXd7
-	 RPzhCdaKysTRkLum7w1125ZdgRD4y8fJ635SW4uiGTTNSYItcMHGw/y7GGeMkIlOZpVyx
-	 9cs/cNhC1US+YFllBwkTu8PYw2WNYY2jC7R6B+X4dhnAO5u06lp6Gf9dpDTFo4cyhm0gM
-	 ACQ8VttFuUMkD7yvNGJ1IBEVyXlMD+uYtetY0U9IWRNscJ6MiAiPF8J5Y6wGPyykWZ+X2
-	 labOgYyQjH4XmSZFZdEA1UD4kvclR3eQ1T8EI8z3tEkfkbFY/np1fVNoelOE9I8A86g==
+	t=1793054781;
+	b=qh9NFF9dY4A5xkNNSPl8qhs7wZ9F6oQrwmIQBwPRSSI7bjBXv9eiGMdmK9wOAVQVa8zl
+	 T0M8Nt7kHX7fYNngJ3xfeZCNicENHS4N+o0SjHjhWdFnq15vNaC0/suKEzawoGYMQTKUL
+	 6kpJHIhKKLPq6nrzQ5W23Akp0nQNc54XaYtFrjt0lM/6tK9i3PaXqyhRRgek0tVO+BkJY
+	 JUpzapTYfOFOeZLw30W4FU17Ov5hgRhORnutFSU1h4lMJjhtGKIarz3q9X9H/nGpb1T5y
+	 IDBHM5zwQbT/O4uMrrQA5A9kmZ2EGMugmgPPSQySKfB/UGtmOpwlR5C66Ql7aN8Jj7Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793054571;
-	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
-	 In-Reply-To:References:Subject:From:To:Cc:Date;
-	bh=zcu2D4FJ8AUuSLc0io/ntAE/p7xplg+q76zeVM6cDrI=;
-	b=5bwOMS+l1bJQ01out63Z5Y0I4oVC8npZT0DsVR4urseF3P33EeFUmSedN9CKnpiRx9wu
-	 kjxgR/Wy0FzskDh/aPVygTBxJvYjvXYQYA/fx9pfm8YNN48Oldr2qarpdpmsjZ4h5PFfB
-	 +XJ78y4AlDggvHKSo2+aQNHpgkD3hvFaVmoeWwKlxvfCzgzYZLfVZJuXBBqCtPjx0hbiB
-	 yvGgnH6L6uZYCKhc4x+uY25lNYk6Xv3DU4K0YSl6qp8GB2XMpUuktUjpikQXH9eHflJcd
-	 jvoTLv8SSNh6RgPk6KWKj7UMTUZ84KTZjDXMbBkojUnAYNsF4eGREudGsUeRweGZpxg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793054781;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=+Idt4XOOJiJpLeVn+jwc4zJtq10BdWV/RKYdo6dVBsA=;
+	b=XdLI0UlupaWAEP2TOQWoKI0ouvxE4Q05exGEwghA756DYsElhlRMs1YmcdiE0CT++7ZB
+	 +ZqwnTKpZtOqFUZNIRW8NyYmTwJJCfQdegfC1zCH1nqgJdSbn9bryLDkVYF/xYVq4HLO8
+	 XJSiXHoSnbslWWx+p8fb5omBHmiI86SPEMeVvOEqNUnmnAILTjgw4eRXnLAN4+6bEnpCF
+	 wQNAS+cLk3YqWawi0X5GU7+/vtmfXn+inslVozRru7uqjjDqxqQZhjfWaNXj/9dSMMdTp
+	 1TYRQZnJMAbIb9EXj+RA7V0liU+ls6XC3457ukvz8T04ai75OzdHUaFrBgJBD/GzWhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=fail reason="signature verification failed" header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+uwSINy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=none header.from=ziepe.ca;
+	spf=pass smtp.mailfrom=ziepe.ca;
+	dkim=pass header.d=ziepe.ca header.i=@ziepe.ca header.a=rsa-sha256 header.s=google header.b=FkMZwh2x;
+	arc=none smtp.remote-ip=209.85.222.182
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BF1606A31B;
-	Mon, 26 Oct 2026 22:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1CC606A321
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 22:46:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E1CC606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+uwSINy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365B01F01825;
-	Mon, 26 Oct 2026 22:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793054571;
-	bh=zcu2D4FJ8AUuSLc0io/ntAE/p7xplg+q76zeVM6cDrI=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=m+uwSINyQXwtu73UZ6EyuYN1h51rwPwU+wBhwQ3x6vmKi83kNfW/gfdRbFyu2HNka
-	 7VReOVigciR9zgZA89RZbtbnvj5XXQ/G6TNtz4hWpZsN9YfowyTTvxcAd5CV23+dCo
-	 kwOl5dmVClKxNRL9LoZLcTCJjd7Oi+GEyiutZ+FQrSiTq5KfDAS1cTn+Qetc1J45UA
-	 tlo8YpMhi0rPJU2nlQprIjVkP6LSttyfZaSKzxm5CdW5t1SoWlXNdh7eay4cH9TrvB
-	 dDcwGOzRtd1woJrWVPijYslHDOfGawLoQdVx6NOSD7HbBD401iC78cwGYI3UppwGB3
-	 AB4oKffoYrJrg==
-Content-Type: multipart/mixed; boundary="===============7206656739672881745=="
+	dkim=pass (2048-bit key, unprotected) header.d=ziepe.ca header.i=@ziepe.ca header.a=rsa-sha256 header.s=google header.b=FkMZwh2x
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-93e503815adso381120085a.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 15:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1793054775; x=1793659575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+Idt4XOOJiJpLeVn+jwc4zJtq10BdWV/RKYdo6dVBsA=;
+        b=FkMZwh2xzPGwRXd/6L6YakG28E0XxcbpH4yKhlkVxLiFKRDjnkg0rF4SuQFtOzIsX3
+         f5EydNInmzCSCkyh6zkwX5LrW6pJx+yykjP8eF8zTTd4GpSQj2j9YnRNaZqf70z8RmUZ
+         V0j9HOG4zRyyPYbjGh8fDJ0CD1b0yexVSSPmIWU3JWr5lLooPlsfB7nv06CCSg5v12eV
+         SoxqEP3dz0sh5FDLSqHEK/sK60fYdYH1JO0HlXuGIhkW+uO84PFYtLiQpk8JsiURcZjY
+         uPsNy3n6D4nHtcEj11lG1ob2im6ANFeMkqY+1XCA/fQxPdUxjOQ6lMGPBUzC0mYbVssK
+         Q32w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793054775; x=1793659575;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+Idt4XOOJiJpLeVn+jwc4zJtq10BdWV/RKYdo6dVBsA=;
+        b=Bcrc6zdQh1yq/FScBy31UmawDZXMR2xq77QUf9loiPn8gwN07Lvw1E5oXsM/KfrA8z
+         JiubMIf2yWfTVKGFZZC2NkJKSqRh+X6FqO01kS6VSX29L9Pg5aC/6RvN8TzeM7sJzkkq
+         4OEYFSo9ncsmH7iFF1WCGNTO2ec2prFZVed2ZFuwV3R3RVJyAHKQSL7MUb9CRe8Efxrn
+         m3oM6UwhdiRkEN+WG5jtn0HHp+ldeHKLLOeCp2y3MHXq3QL/ddXnsQShnIqNhI4Rdjls
+         UEV6cq8p1t6Efv13FZAmV3xLIThfZv0hI0DDH9+PJuTawJtIGhfoipaUkA2loWhAF1Uh
+         cLnA==
+X-Forwarded-Encrypted: i=1; AKwUvBwlvTTOlTkW342naacOr/fjlzDd1tjn79BRGkuDV2kO4GNRTRjFp/gpwdzz9do19YJ1Ajbcso4WxvT/mIdpJU9Lfh8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJZF2iYHVfPulLb+msGTfzgcmzExHLbpfrHP1cvQiQhBK5x7acW
+	5uWf9yMquJXYfjzaA3rKR9vsdCuaJ943KmS7WpSnRIhWU3flCyAzYh0KAjpML+WYGk0=
+X-Gm-Gg: AYBFou3dHyZc0PW3jUdxoBQ1I5wIV+Z5B6KF0V+WtKSV+emkzwIFDf3XqFPLCq9Q9gi
+	yPjXbEZg+jTGLWPuIztXpZlbBsU8zkq3Ig4tflmR2ChusIn5XVJdji+Y7K1DJakQywp6/TtNoue
+	BxGvSjfZMwJmPNg59xxSnjh63M9q4uy4YsYa6VSH1ynhmlmRgHQpIxD+SZTs4Ds4mdZDkKlEIm8
+	8E5ShxKWB7zK3tfo89rdq4iQBzBsXWKrcqWgam9GHXQ9K4P1vZmaJua4M3RRMDFFUoNjDy8/T2p
+	/XIWw21bG6wpvogwLmFtxQwT/ykY1kz/3/4c1tHXObtoAVXLc2Mv9XpInRNgh00P5HOD3aOgRyy
+	J0/zGhZxXPBjYiFC3fs70Yt2xwLwOsjE23u5eaVpqZjZN8NH2uClwtIxK35+pDth/P31uWm8kSz
+	y3WyjWsd0/ldv1mdOsXIr7Ol+eqk7hp1Ckp4dfosnqDEb+OjblflzL3GK99ubIhI3/PCQcvStVr
+	gwXQnJ985Ci5NbZMhoT6SY8MPIKptKTN50zH/qXAuQspMiJX286peYI4HyHWxRn6qaol2+i9oQl
+	AuY3S4f7IAWYz2ivlD/kEhH5zzSvhB56yeQe0w==
+X-Received: by 2002:a05:620a:4728:b0:93f:2eaf:64cc with SMTP id af79cd13be357-940ef942794mr1259449285a.44.1793054775098;
+        Mon, 26 Oct 2026 15:46:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns010zw-159-2-239-150.pppoe-dynamic.high-speed.ns.bellaliant.net. [159.2.239.150])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-940f05b20e0sm810207185a.3.2026.10.26.15.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 15:46:12 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1xLTSF-000000087nJ-1Z9f;
+	Mon, 26 Oct 2026 19:46:11 -0300
+Date: Mon, 26 Oct 2026 19:46:11 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Leon Romanovsky <leon@kernel.org>, Alex Williamson <alex@shazbot.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <20261026224611.GB1685504@ziepe.ca>
+References: <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+ <arOfHEsGGglNse7T@monoceros>
+ <2026092348-victory-erased-0e5a@gregkh>
+ <20261023181326.0dc2f7ed@shazbot.org>
+ <20261026122243.GA28851@unreal>
+ <20261026184312.GA1685504@ziepe.ca>
+ <2026102604-tint-catcall-433e@gregkh>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -49,203 +132,63 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <b9959bd7711dee7a83a07b012b5967980d178c95eae90adeebebcb6040fc526f@mail.kernel.org>
-In-Reply-To: <20261026215226.3713941-7-jthoughton@google.com>
-References: <20261026215226.3713941-7-jthoughton@google.com>
-Subject: Re: [RFC PATCH 06/10] uaccess: Refuse and warn on user copies when current->mm is NULL
-From: bot+bpf-ci@kernel.org
-To: jthoughton@google.com,akpm@linux-foundation.org,viro@zeniv.linux.org.uk
-Cc: tglx@kernel.org,peterz@infradead.org,kees@kernel.org,arnd@arndb.de,david@kernel.org,ljs@kernel.org,liam@infradead.org,vbabka@kernel.org,rppt@kernel.org,surenb@google.com,mhocko@suse.com,seanjc@google.com,pbonzini@redhat.com,jmattson@google.com,axboe@kernel.dk,asml.silence@gmail.com,James.Bottomley@HansenPartnership.com,mkp@kernel.org,dsterba@suse.com,mason@kernel.org,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,jpoimboe@kernel.org,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,linux-mm@kvack.org,linux-fsdevel@vger.kernel.org,kvm@vger.kernel.org,io-uring@vger.kernel.org,linux-scsi@vger.kernel.org,linux-btrfs@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,jthoughton@google.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.
- org,ihor.solodrai@linux.dev
-Date: Mon, 26 Oct 2026 22:42:50 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026102604-tint-catcall-433e@gregkh>
 
---===============7206656739672881745==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Mon, Oct 26, 2026 at 09:05:06PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Oct 26, 2026 at 03:43:12PM -0300, Jason Gunthorpe wrote:
+> > On Mon, Oct 26, 2026 at 02:22:43PM +0200, Leon Romanovsky wrote:
+> > 
+> > > This is needed for two reasons: to save hardware and software resources
+> > > when creating a large number of VFs, and to allow the PCI config space to
+> > > be configured *before* the driver starts using it.
+> > > 
+> > > There is no in-kernel alternative.
+> > 
+> > Having userspace involved in driver binding has also always been the
+> > plan for confidential computing needs. We cannot have a device driver
+> > bound across some of the HW transitions like TDISP shared/private, so
+> > there has always been an expectation of bind/unbind.
+> 
+> What, why?  What forces that decision?  What's wrong with the proper
+> driver for the hardware being bound automatically to the device?
 
-> uaccess: Refuse and warn on user copies when current->mm is NULL
+It would be a proper driver, with a real match. I would expect this to
+be done with sysfs driver_probe, which is like bind, except it doesn't
+override the matches, AFAIK.
 
-TL;DR:
-- Possible spurious -EFAULT on valid kernel addresses on xtensa/nios2 from
-  mm-less tasks (kworkers), e.g. d_path
-- nofault helpers may hit the new WARN_ON_ONCE (BPF/tracing); fix is later in
-  series, breaking bisection
+There are two sort of related isues. Userspace is in charge of
+sequencing the new PCI features like link encryption and TDISP. They
+have complex authentication policies tied to them so the kernel can't
+reasonably do it. These features change how the CPU does address
+translation, effectively it adds/removes the iommu - and that can't be
+changed while the DMA API is active or it breaks every translation in
+effect.
 
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index eddbbb65ccc4..e54a6d804bf9 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -50,6 +50,23 @@
+So.. We need a gap a system boot when the driver is not bound so the
+PCI stuff can be done prior to driver_probe, and a gap if there is a
+PCIe error of some kind to do error recovery and go back to the start
+to reauthenticate and reload.
 
-[ ... ]
+> > For this case the existing sysf drivers_probe is good enough for bind,
+> > but we must have taint-free unbind for PCI devices too.
+>
+> Why?
 
-> +static __always_inline bool uaccess_should_fail(void)
-> +{
-> +	if (WARN_ON_ONCE(!current->mm))
-> +		return true;
-> +	return should_fail_usercopy();
-> +}
+See above. That should be the easiest thing to ask for! PCI is hot
+plug, disabling unbind makes zero sense from any way you look at it.
 
-[ ... ]
+> > I think this patch should be reverted ASAP, it is a pretty major
+> > regression for a lot of users.
+> 
+> But this use case hasn't even happened yet, so what would regress?
 
-> @@ -114,7 +131,7 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
->  
->  	might_fault();
->  	instrument_copy_from_user_before(to, from, n);
-> -	if (should_fail_usercopy())
-> +	if (uaccess_should_fail())
->  		return n;
->  	check_object_size(to, n, false);
->  	res = raw_copy_from_user(to, from, n);
+I'm reflecting the other commentators, I care about VFIO too. I think
+tainting every hypervisor is unacceptable.
 
-Can this refuse legitimate kernel address copies on xtensa and nios2?
+But for CC I find myself one of the maintainers for that now and many
+people have been diligently working on this bind/unbind direction for
+a long time now. If it goes away I have no idea what could replace it.
 
-On both architectures __copy_from_user() and __copy_to_user() also sit under
-the generic kernel nofault accessors.  Neither architecture defines
-__get_kernel_nofault or arch_get_kernel_nofault, so both use the fallback in
-include/linux/uaccess.h, which goes through __get_user()/__put_user() on the
-kernel address:
-
-    #define __get_kernel_nofault(dst, src, type, label)    \
-    ...
-            if (__get_user(data, p))                       \
-                    goto label;                            \
-
-On xtensa, 8-byte __get_user()/__put_user() are implemented with
-__copy_from_user()/__copy_to_user() (arch/xtensa/include/asm/uaccess.h):
-
-    case 8: {
-            u64 __x;
-            if (unlikely(__copy_from_user(&__x, ptr, 8))) {
-    ...
-            retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;
-
-On nios2, __put_user_common() sends any size other than 1, 2 or 4 to
-__copy_to_user().
-
-Neither architecture selects HAVE_EFFICIENT_UNALIGNED_ACCESS, so
-copy_from_kernel_nofault() and copy_to_kernel_nofault() (mm/maccess.c) use
-the u64 loop whenever dst and src are both 8-byte aligned and at least 8
-bytes remain:
-
-    if (!(align & 7))
-            copy_from_kernel_nofault_loop(dst, src, size, u64, Efault);
-
-With this patch, every such access from a task with current->mm == NULL
-(kworkers, khungtaskd, kernel_init before exec, the idle task in IRQ, kgdb
-entered from idle) hits WARN_ON_ONCE(!current->mm), and __copy_from_user()
-returns n.  copy_from_kernel_nofault() then returns -EFAULT on valid kernel
-memory.
-
-Concrete generic callers include:
-
-  d_path() -> prepend() -> prepend_copy() (fs/d_path.c) fills the component
-  with 'x' and stops the walk.  This is reachable from LSM/IMA path hooks
-  run by kworkers, for example async firmware loading.
-
-  print_worker_info() (kernel/workqueue.c), called from
-  dump_stack_print_info() and sched_show_task() for kworkers, which copies
-  wq->name and worker->desc.
-
-  copy_to_kernel_nofault() from kgdb_hex2mem()/kgdb_ebin2mem() on nios2,
-  which selects HAVE_ARCH_KGDB.
-
-Before this patch these accesses worked on kernel addresses, since
-raw_copy_{from,to}_user() on these architectures is a plain fixup-protected
-copy and access_ok() is not involved.  Only opt-in fault injection could
-make them fail.
-
-The commit message rationale ("Accessing user memory from a task that has no
-mm is always a bug") does not apply to kernel addresses.  The commit message
-also says get_user()/put_user() are not covered, which does not hold for
-8-byte accesses on these two architectures.
-
-No later commit in this series appears to touch these paths.
-
-[ ... ]
-
-> diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-> index 5bb752ff7c61..565b3125e752 100644
-> --- a/lib/strncpy_from_user.c
-> +++ b/lib/strncpy_from_user.c
-> @@ -115,7 +115,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
->  	unsigned long max_addr, src_addr;
->  
->  	might_fault();
-> -	if (should_fail_usercopy())
-> +	if (uaccess_should_fail())
->  		return -EFAULT;
->  	if (unlikely(count <= 0))
->  		return 0;
-
-Can strncpy_from_user_nofault() now trip this WARN_ON_ONCE() from contexts
-where current->mm is NULL by design?
-
-In this tree strncpy_from_user_nofault() (mm/maccess.c) has no current->mm
-check and no nmi_uaccess_okay() check.  It goes straight to
-strncpy_from_user():
-
-    pagefault_disable();
-    ret = strncpy_from_user(dst, unsafe_addr, count);
-    pagefault_enable();
-
-and strncpy_from_user() now calls uaccess_should_fail(), which does:
-
-    if (WARN_ON_ONCE(!current->mm))
-            return true;
-
-The callers of strncpy_from_user_nofault() are tracing helpers that run in
-whatever context the probe fires in, including kernel threads and IRQs taken
-while the idle task runs:
-
-  bpf_probe_read_user_str() via bpf_probe_read_user_str_common()
-  (kernel/trace/bpf_trace.c), and bpf_probe_read_str() for addresses below
-  TASK_SIZE.
-
-  bpf_trace_printk()/bpf_snprintf() through bpf_trace_copy_string()
-  (kernel/bpf/helpers.c).  With CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-  (x86, arm64, ...), any '%s' argument below TASK_SIZE takes this path,
-  including a NULL pointer.  So bpf_printk("%s", ptr) with ptr == NULL in a
-  kprobe that fires in a kworker now triggers the warning.
-
-  kprobe/fprobe/eprobe ustring fetch args (fetch_store_string_user() in
-  kernel/trace/trace_probe_kernel.h).
-
-  The .ustring event filters (test_ustring() in
-  kernel/trace/trace_events_filter.c).
-
-  Synthetic event string fields (trace_string() in
-  kernel/trace/trace_events_synth.c).
-
-  The bpf_copy_from_user_str_dynptr family (copy_user_str_nofault()).
-
-Before this patch these calls either failed quietly with -EFAULT or read the
-lazily loaded mm.  Now a tracing user (CAP_BPF plus CAP_PERFMON, or tracefs
-access) can trigger a warning splat, and a panic with panic_on_warn, just by
-tracing a function that kernel threads run.
-
-The same applies to copy_to_user_iter_nofault() in lib/iov_iter.c, which this
-patch also switches to uaccess_should_fail().  The commit message lists
-copy_to_user_nofault() as intentionally covered, but it does not account for
-the nofault helpers being used from mm-less contexts by design.
-
-A fix appears later in the series, e8bf23b5b30d ("uaccess: Fail user nofault
-helpers quietly when current->mm is NULL").  It adds an early !current->mm
-return to copy_{from,to}_user_nofault(), strncpy_from_user_nofault() and
-strnlen_user_nofault(), and switches copy_to_user_iter_nofault() back to
-should_fail_usercopy().  Its message describes this exact problem
-(bpf_probe_read_user_str() from a BPF program attached to a function called
-by a kernel thread would now trip the WARN_ON_ONCE() in
-strncpy_from_user()).
-
-This commit on its own still introduces the regression, which breaks
-bisection.  Could that fix be folded into this patch, or ordered before it?
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/40410166379
---===============7206656739672881745==--
+Jason
