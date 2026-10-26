@@ -1,56 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793046526;
-	b=YdV7w9+biZ0cXJgy7IWR84upW9LvnkeVmu/4g1dty+Fut6Nwv9CSXKg/U06YvIZOnEES
-	 YdKI7FlNYTRt4WQO+YocmE89EyGkAV+xTr+Jm18HYcOuucYHaSXSVi9zOzASTgF+eBE3q
-	 Kch3Ix7wib1gCsJ862+QOKBJDg3xDwkNKpxTc6FZvWmscBMeTQzuxrZHFGFik4rhV7dSq
-	 lhFph+MMF/GrPbBedA1bXsWF4jxFV+la6g9B6D0xD673x6bBFydSZsBsT3UZG5oW6NRgr
-	 7OoR9i8NBgLE+k7aK+q6x7/QcSUcDcbtbVEBt9dTuje0qqkWoSIZBIXR+qFYETNgrSw==
+	t=1793046534;
+	b=tIJ0ZbVQUXrrzEwABhepXQHO3Rzkue24NeGFAhcnJ1wlC4+nAzysCsTW8d9F7PzTcHSp
+	 tl5VRmntb889ycLCGsu73JJ6ZDKlKsZnolW0Ui+mY4FhfsGNge70OGHuhYjirRknwwzGb
+	 wbA6QXWMGo05YfDUTp325MacA7pZaMih3KXZfFYZf5SFRZf5fq/1awJLDwqkmjdIK4VPH
+	 7w/7aJ4YlFKhk0mJEhT46WRWt42zYTihXCg1CUNcWEDyPKsPPYEfht0AkUpDDtr1t/QkI
+	 chH/RuA1yJH6u7GWDNEk8sx75jyoLBSOUAnBHlV8+oy+Otob7xERcc99T1Ks2OLr/Ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793046526;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=EhwuTnHu+ix/BI2sCrY08QcOZBgFTj13dOHwcWXnDHw=;
-	b=MSpUtuSHL5x3/casRx0G+OkQUTGcIdLpxdP/9lqa1ozmNuYsmj2fF8ldSb3jDZWi9L69
-	 7rF+yZG8S3stdjrpPudqWFp34vWkW3UQrLlmxKhVxgVX5cy3dt9SH06xy23InmIdO7oK9
-	 ZBZgDkwS1I4KpDDwUl4MfeGD/VZ4JdwGIhd3pniTbhlJfAF3WwPFhW8nanyJMog+nEzjw
-	 j92QnvKJQdj6fDjEYrGBjt3XOyvZBGLiMWfB4lJSpjJxnuBE6kcV9vPB1pFzZjVvK7vNc
-	 4V8DyQ9OH8HSX4qfCoC6ru9AIeKT5xvpRnMLNXicNH7cWGhOl2ULA+hXWaavos8qmMQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793046534;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=JOR5bbIbiInINDDKl8udJD2n2rQt1cixikmX67XYQ94=;
+	b=q4oQJW3inJkJywzlbMBBJ1WYUSbGhdm18EtP1Rqx8w8Y72IXNansu7VjjMJRg+/t85pg
+	 0K39Yb5MDhyGKEz1ZSsyR5pir0ELpbqm6BnhbbMWIrh7WekgiBMj0NpEQBv3BYH+zgUfE
+	 gxvWahL/F3tgraubpev3+VYIsuK5dc2TXDgJ/3Gl4KLpHmhekpBQ/8U5mGJgrleUK6UD1
+	 YhQMmbFIweI+YnrZpi6nY/yrc1nDOPE36HBoU0xGAlNhM/CMdyitT5j0CHTK7oCilptmE
+	 pe6GQUCSB4HMFA4mtI5BsbZaGd6BVuSuP2FtmwT+EPOVStENGsdDui2TF73s7Z5WEyQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AZQ32iKI;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="5G/pFS4k";
+	arc=none smtp.remote-ip=216.40.44.14
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B03606A324
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 20:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5153C606A31A;
+	Mon, 26 Oct 2026 20:28:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5153C606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AZQ32iKI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 676111F01828;
-	Mon, 26 Oct 2026 20:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793046525;
-	bh=EhwuTnHu+ix/BI2sCrY08QcOZBgFTj13dOHwcWXnDHw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AZQ32iKIs7R0IFQvVjr6mQClNMBkQf64VioEZnicQhSQmydTvxBhKgz5P+smeXjt+
-	 xPnHQ8GCRnH3f5ffgzV+M8EiIRcbtiWau4eGkwJxxBXkwvr2mw41VDO3FLBVhTb63y
-	 mG2msSX1doVH+TI2zzyU1qoy9pZqKtWk5LAoqX8gjpmRN4ZjjJaam+710LWKFR51sq
-	 fePPnMcM4A+H7/AB2i8eJKc1TgOFNNj/NTDR3XM2AvaC2LD4LejPPBBOkTXdnqfXEy
-	 H7KEjYCp7C8kwMk0ci3PkHhXIBJok/YWO67CxvpHkQedAhxIhf+9u69vLsYLdaXSyv
-	 ZuLablhUf7ycg==
-Message-ID: <sashiko-outbox-185721@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/4] openrisc: Add Kretprobes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sahil Siddiq" <sahilcdq0@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261026201240.107462-5-sahilcdq0@gmail.com>
-References: <20260930202744.50489-1-sahilcdq0@gmail.com>
- <20261026201240.107462-5-sahilcdq0@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 20:28:44 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=5G/pFS4k
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id ECC7D140864;
+	Mon, 26 Oct 2026 20:28:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 1955118;
+	Mon, 26 Oct 2026 20:28:48 +0000 (UTC)
+Date: Mon, 26 Oct 2026 16:28:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: BoxStrikesTeam <BoxStrikesTeam@proton.me>
+Cc: "brauner@kernel.org" <brauner@kernel.org>, "kees@kernel.org"
+ <kees@kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "jack@suse.cz" <jack@suse.cz>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "jkoolstra@xs4all.nl" <jkoolstra@xs4all.nl>, "farid.m.zakaria@gmail.com"
+ <farid.m.zakaria@gmail.com>, "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, "linux-mm@kvack.org"
+ <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [RFC PATCH] binfmt_misc: add binfmt_misc_select tracepoint
+Message-ID: <20261026162846.23686159@gandalf.local.home>
+In-Reply-To: <cmtfuzYFZMj7WozUoEjFs3RxYWe9UgdY5rK3ZGT7CPwO1mpemvEwNhG4v5ucoKBgUHMqFa7kSzOvLjFcVcxAybfmKdURZ4h-qoKX1lHXlAA=@proton.me>
+References: <cmtfuzYFZMj7WozUoEjFs3RxYWe9UgdY5rK3ZGT7CPwO1mpemvEwNhG4v5ucoKBgUHMqFa7kSzOvLjFcVcxAybfmKdURZ4h-qoKX1lHXlAA=@proton.me>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,102 +66,168 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 1955118
+X-Stat-Signature: nk3fjntisjjnbaxtd3wt5bdqzs5m9dw7
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX193Yt8I2BKFgojrvTfdeQfvY6W/MQa/MvM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=JOR5bbIbiInINDDKl8udJD2n2rQt1cixikmX67XYQ94=; b=5G/pFS4kvRmY+FpqSfvYmgy1VmMMFvFIYFHxl+48nU9Q+OVL316//PslVP42qJzTQy+TJdC59hDbcVyb1GLW1YoUSJhkbm7wiSUUMR9Sjq9f8n1Pm5As6qgNjijzS9k+qBLc2+9PswJgFqS5pc0EMZ49z1Q22DHKMvSYB6pNQBk=
+X-HE-Tag: 1793046528-319477
+X-HE-Meta: U2FsdGVkX1/JMOcv1OjDojaLV+nCutKkXq36M/X9yG5D2u9mr6nzoEnPM7M+QucS41MT2z3fV9QQaSDEg85HXXiQNmFkcUj/ElBU/bA3Jkb7czxONW7s8b61PU1nZlCTSiML7BF9dwTqD2SZ7yx8ZbmmNRjnv7V3rmABebYT8ErViBrHGIsfMPR7RUNkjGK0k1fFKfcz+Gc+pGArKoXCTiN9yDmPU7zluTP3b7rRr7S1HiOvmwdEPIfrZ3QSWvtB7BOUc0RSnQl0LCaWjyeFkb7lgp/pxtVNMggzodPwzdzG2I/aFD2+mHADp3cLjs25m5aAwMwAAz5VYXAM7zgMk7TUC6+CmMfk
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] openrisc: missing NOKPROBE annotation on arch_rethook_trampoline()
---
 
-commit 20e73d01661b40600429433415de2e9c63032d8f
-Author: Sahil Siddiq <sahilcdq0@gmail.com>
+You shouldn't attach patches but inline them. Yeah, I know a lot of email
+clients can't handle that. But claws-mail can! (and it can also reply to
+attachments like they were inlined ;-) ).
 
-openrisc: Add Kretprobes
+I'll let others comment on whether or not this patch is needed, but I'll
+comment on the tracing side of things.
 
-This commit adds Kretprobes support for OpenRISC on top of the generic
-rethook framework, providing arch_rethook_prepare(),
-arch_rethook_trampoline_callback(), and the assembly return trampoline
-arch_rethook_trampoline.
 
-> diff --git a/arch/openrisc/kernel/rethook_trampoline.S b/arch/openrisc/ke=
-rnel/rethook_trampoline.S
+On Mon, 26 Oct 2026 20:17:26 +0000
+BoxStrikesTeam <BoxStrikesTeam@proton.me> wrote:
+
+> From: Eneshan Erdo=C4=9Fan Karaca <BoxStrikesTeam@proton.me>
+> Subject: [RFC PATCH] binfmt_misc: add binfmt_misc_select tracepoint
+>=20
+> A binfmt_misc entry can select an interpreter for an exec.  With a BPF
+> 'B' handler, that selection can be made by a BPF struct_ops program.
+> The kernel commits the decision in bprm->interp and bprm->flags, but it
+> does not emit an event at the selection point.
+>=20
+> Existing observers have to reconstruct the decision from
+> /proc/PID/exe, AT_EXECFD, AT_FLAGS, or /proc/PID/maps.  These sources
+> are mode-dependent: a transparent dispatch still reports the original
+> binary in /proc/PID/exe, and a short-lived process can exit before the
+> observer reads it.  A classic dispatch reports the interpreter, but
+> not which handler selected it or which invocation flags were used.
+>=20
+> Add a tracepoint after the interpreter and the invocation flags are
+> selected.  It reports the binary filename, the selected interpreter,
+> the handler name (for BPF handlers), the invocation flags, and the
+> pid.  The flags are masked with MISC_FMT_INVOCATION_FLAGS so that
+> static entry state does not leak into the event.
+>=20
+> The tracepoint is observability only; it does not change exec
+> behavior.
+>=20
+> Assisted-by: LLM
+> Signed-off-by: Eneshan Erdo=C4=9Fan Karaca <BoxStrikesTeam@proton.me>
+> ---
+>=20
+> This is an RFC.  A small PoC and short A/B results are available for
+> context; they are not needed to review the patch.
+>=20
+>  fs/binfmt_misc.c                  |  8 ++++++++
+>  include/trace/events/binfmt_misc.h | 52 ++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 60 insertions(+)
+>=20
+> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+> --- a/fs/binfmt_misc.c
+> +++ b/fs/binfmt_misc.c
+> @@ -41,6 +41,9 @@
+> =20
+>  #include "internal.h"
+> =20
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/binfmt_misc.h>
+> +
+>  /* Entry status and match type bit numbers. */
+>  enum binfmt_misc_entry_bits {
+>  	MISC_FMT_ENABLED_BIT	=3D 0,
+> @@ -644,6 +647,11 @@
+> =20
+>  	flags =3D entry_invocation_flags(fmt, bprm);
+> =20
+> +	trace_binfmt_misc_select(bprm, interpreter,
+> +				 test_bit(MISC_FMT_BPF_BIT, &fmt->flags) ?
+> +				 fmt->bpf_ops->name : "",
+> +				 flags & MISC_FMT_INVOCATION_FLAGS);
+
+Logic like the above should be done in the trace event itself. Not in the
+code path. That is, pass in fmt and flags.
+
+> +
+>  	/* No argv is built for a staged argument to land in. */
+>  	if ((flags & (MISC_FMT_LOADER | MISC_FMT_TRANSPARENT)) &&
+>  	    bprm->bpf_interp_arg)
+>=20
+> diff --git a/include/trace/events/binfmt_misc.h b/include/trace/events/bi=
+nfmt_misc.h
 > new file mode 100644
-> index 0000000000000..5e8fd5a652222
 > --- /dev/null
-> +++ b/arch/openrisc/kernel/rethook_trampoline.S
-> @@ -0,0 +1,111 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +++ b/include/trace/events/binfmt_misc.h
+> @@ -0,0 +1,52 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 > +/*
-> + * Author: Sahil Siddiq <sahilcdq0@gmail.com>
+> + * Tracepoint for binfmt_misc binary type handler dispatch.
+> + *
+> + * Fires once for every exec a binfmt_misc entry matches, after the
+> + * interpreter and the invocation flags have been selected. Unlike
+> + * sched_process_exec (which reports bprm->filename) and /proc/PID/exe
+> + * (which a transparent dispatch sets to the binary), this reports the
+> + * interpreter that actually runs, so observers can see through a
+> + * transparent dispatch.
 > + */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM binfmt_misc
 > +
-> +#include <linux/linkage.h>
+> +#if !defined(_TRACE_BINFMT_MISC_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_BINFMT_MISC_H
 > +
-> +#include <asm/asm.h>
-
-[ ... ]
-
-> +SYM_CODE_START(arch_rethook_trampoline)
-> +	/* Allocate enough space on stack for pt_regs */
-> +	l.addi	r1,r1,-PT_SIZE
-> +	save_all_base_regs
+> +#include <linux/tracepoint.h>
+> +#include <linux/binfmts.h>
 > +
-> +	l.addi	r3,r1,0	/* pt_regs */
-> +	l.jal	arch_rethook_trampoline_callback
-> +	l.nop
+> +TRACE_EVENT(binfmt_misc_select,
 > +
-> +	/* use the result as the return-address */
-> +	l.addi	r9,r11,0
+> +	TP_PROTO(struct linux_binprm *bprm, const char *interp,
+> +		 const char *handler, unsigned long flags),
 > +
-> +	restore_all_base_regs
-> +	l.addi	r1,r1,PT_SIZE
+> +	TP_ARGS(bprm, interp, handler, flags),
 > +
-> +	l.jr	r9
-> +	l.nop
-> +SYM_CODE_END(arch_rethook_trampoline)
+> +	TP_STRUCT__entry(
+> +		__string(filename,	bprm->filename)
+> +		__string(interp,	interp)
+> +		__string(handler,	handler)
 
-[Severity: High]
-Should arch_rethook_trampoline be marked with _ASM_NOKPROBE() here (or
-NOKPROBE_SYMBOL() in arch/openrisc/kernel/rethook.c)?
+Then here you would have:
 
-Although arch/openrisc/kernel/rethook_trampoline.S includes <asm/asm.h> and
-arch/openrisc/kernel/rethook.c marks arch_rethook_trampoline_callback() and
-arch_rethook_prepare() with NOKPROBE_SYMBOL(), arch_rethook_trampoline is
-placed in .text without a kprobe blacklist annotation.
+		__string(handler, test_bit(MISC_FMT_BPF_BIT, &fmt->flags) ?
+				 fmt->bpf_ops->name : "")
 
-Because arch_rethook_trampoline is not blacklisted, registering a kretprobe
-or kprobe on arch_rethook_trampoline is permitted. When a kretprobed functi=
-on
-returns to arch_rethook_trampoline with r9 holding the address of
-arch_rethook_trampoline, a kretprobe on arch_rethook_trampoline triggers:
 
-pre_handler_kretprobe()
-  rethook_hook()
-    arch_rethook_prepare()
-      rhn->ret_addr =3D regs->gpr9;
+> +		__field(unsigned long,	flags)
+> +		__field(pid_t,		pid)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(filename);
+> +		__assign_str(interp);
+> +		__assign_str(handler);
+> +		__entry->flags =3D flags;
 
-which pushes a rethook_node with ret_addr set to arch_rethook_trampoline on=
-to
-current->rethooks. When arch_rethook_trampoline_callback() then calls
-rethook_trampoline_handler(), __rethook_find_ret_addr() skips nodes whose
-ret_addr equals arch_rethook_trampoline:
+and here:
 
-kernel/trace/rethook.c:__rethook_find_ret_addr() {
-    ...
-	while (node) {
-		rh =3D container_of(node, struct rethook_node, llist);
-		if (rh->ret_addr !=3D (unsigned long)arch_rethook_trampoline) {
-			*cur =3D node;
-			return rh->ret_addr;
-		}
-		node =3D node->next;
-	}
-	return 0;
-}
+		__entry->flags =3D flags & MISC_FMT_INVOCATION_FLAGS;
 
-Can this corrupt the current->rethooks shadow stack or trigger the BUG_ON(1)
-in rethook_trampoline_handler() when a probe is attached to
-arch_rethook_trampoline?
+-- Steve
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026201240.1074=
-62-1-sahilcdq0@gmail.com?part=3D4
+
+> +		__entry->pid =3D current->pid;
+> +	),
+> +
+> +	TP_printk("pid=3D%d filename=3D%s interp=3D%s handler=3D%s flags=3D%#lx=
+",
+> +		  __entry->pid, __get_str(filename), __get_str(interp),
+> +		  __get_str(handler), __entry->flags)
+> +);
+> +
+> +#endif /* _TRACE_BINFMT_MISC_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+
