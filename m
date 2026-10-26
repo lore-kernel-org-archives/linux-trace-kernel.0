@@ -1,83 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793046446;
-	b=dkDdsL+1Q8dA9jZqJgCNbR9LDrCCY3I7XNhpRz48fMSyAmUKqT8CK/ClYXjLtIsEJxVw
-	 X1gAP0Yye0In6Mu/MKl8wugG0Ykf0Gsei+ZJnVQbLhlbEBLvWxWMSnte2kYtVpbydV0iZ
-	 +4L3U6IcRN69qYvO09ksl45Qoe7uA5sHfWGT/uJ2M5cZq7HZtByqTCZLFB0XO/Neeic7I
-	 jJWJQh+xCTsmviLeyuO6ax814OAGGEJ6BcZ/EZEqKmmvrzWgGs0EwDTntfwRFKyIQhCaa
-	 t55ciMuNtW4R1v2l8ZJ9tYs+Nv5Saw1T07iAstbg7tWZ0pOdezKuMxeK6W1e/wXFHBQ==
+	t=1793046526;
+	b=YdV7w9+biZ0cXJgy7IWR84upW9LvnkeVmu/4g1dty+Fut6Nwv9CSXKg/U06YvIZOnEES
+	 YdKI7FlNYTRt4WQO+YocmE89EyGkAV+xTr+Jm18HYcOuucYHaSXSVi9zOzASTgF+eBE3q
+	 Kch3Ix7wib1gCsJ862+QOKBJDg3xDwkNKpxTc6FZvWmscBMeTQzuxrZHFGFik4rhV7dSq
+	 lhFph+MMF/GrPbBedA1bXsWF4jxFV+la6g9B6D0xD673x6bBFydSZsBsT3UZG5oW6NRgr
+	 7OoR9i8NBgLE+k7aK+q6x7/QcSUcDcbtbVEBt9dTuje0qqkWoSIZBIXR+qFYETNgrSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793046446;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=LFCglxF3YnOUeWs+Z5oFeCuqJ1fUCZ2MGnIwDKgVXec=;
-	b=SdvbJKsuYWFx5h7/wgv+aVy4RsSX15WavLhN3KlOcb7uUDpSRZGUVnejrHETPPd9SCSn
-	 DtUC08OfS5pSfP6isr49J+TTx6b5AW9e5bU5ZrLepq4cg//znRb724dXeVr8pNxo7hNaH
-	 ekDSTa+uERxpnxxBurg+kdUVl8t5TFooLyQpq0xDNvRT73y2mgWgh8fcrRLjjfHVZjGFy
-	 FtX6ZttmPTXMectfzIGi3/uacw7Y2T9BJWuYJibhd/F8wabFBP3xBTratI83dAqCLKSXw
-	 LkGgyNHwU4ZSfa1MrR8eSt9g08ntuvZGKJZBfHP6FTx9Ius10Bxsdeh0TroEpyWY/Ww==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793046526;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=EhwuTnHu+ix/BI2sCrY08QcOZBgFTj13dOHwcWXnDHw=;
+	b=MSpUtuSHL5x3/casRx0G+OkQUTGcIdLpxdP/9lqa1ozmNuYsmj2fF8ldSb3jDZWi9L69
+	 7rF+yZG8S3stdjrpPudqWFp34vWkW3UQrLlmxKhVxgVX5cy3dt9SH06xy23InmIdO7oK9
+	 ZBZgDkwS1I4KpDDwUl4MfeGD/VZ4JdwGIhd3pniTbhlJfAF3WwPFhW8nanyJMog+nEzjw
+	 j92QnvKJQdj6fDjEYrGBjt3XOyvZBGLiMWfB4lJSpjJxnuBE6kcV9vPB1pFzZjVvK7vNc
+	 4V8DyQ9OH8HSX4qfCoC6ru9AIeKT5xvpRnMLNXicNH7cWGhOl2ULA+hXWaavos8qmMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=c3W3E1id;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AZQ32iKI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250F9606A31A;
-	Mon, 26 Oct 2026 20:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B03606A324
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 20:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=c3W3E1id
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 116BE1F01825;
-	Mon, 26 Oct 2026 20:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1793046445;
-	bh=LFCglxF3YnOUeWs+Z5oFeCuqJ1fUCZ2MGnIwDKgVXec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=c3W3E1id0F+qhx0MI/3yl4YHWFa0JK35WvxQQ4ViH7gpyd/iDSJkcOvJlLjIrAM6z
-	 91sd+foBp+g36SI388PdvEdp3FoHb4Kp9FkVnpI0qG7GERFpMftCCh8aar+vr2z84g
-	 l2PMs8cC/HVVfnTiKkoKwH5h89JA3k4nGZQ6eVgk=
-Date: Mon, 26 Oct 2026 21:27:25 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Alex Williamson <alex@shazbot.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Bradley Morgan <brads@mainlining.org>,
-	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <helgaas@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
- userspace manually messes with devices and drivers
-Message-ID: <2026102654-enlighten-perkiness-193c@gregkh>
-References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
- <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
- <arIvG0nx4LXG9nlW@monoceros>
- <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
- <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
- <2026092321-province-yearly-44aa@gregkh>
- <arOfHEsGGglNse7T@monoceros>
- <2026092348-victory-erased-0e5a@gregkh>
- <20261023181326.0dc2f7ed@shazbot.org>
- <20261026122243.GA28851@unreal>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AZQ32iKI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 676111F01828;
+	Mon, 26 Oct 2026 20:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793046525;
+	bh=EhwuTnHu+ix/BI2sCrY08QcOZBgFTj13dOHwcWXnDHw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AZQ32iKIs7R0IFQvVjr6mQClNMBkQf64VioEZnicQhSQmydTvxBhKgz5P+smeXjt+
+	 xPnHQ8GCRnH3f5ffgzV+M8EiIRcbtiWau4eGkwJxxBXkwvr2mw41VDO3FLBVhTb63y
+	 mG2msSX1doVH+TI2zzyU1qoy9pZqKtWk5LAoqX8gjpmRN4ZjjJaam+710LWKFR51sq
+	 fePPnMcM4A+H7/AB2i8eJKc1TgOFNNj/NTDR3XM2AvaC2LD4LejPPBBOkTXdnqfXEy
+	 H7KEjYCp7C8kwMk0ci3PkHhXIBJok/YWO67CxvpHkQedAhxIhf+9u69vLsYLdaXSyv
+	 ZuLablhUf7ycg==
+Message-ID: <sashiko-outbox-185721@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 4/4] openrisc: Add Kretprobes
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sahil Siddiq" <sahilcdq0@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261026201240.107462-5-sahilcdq0@gmail.com>
+References: <20260930202744.50489-1-sahilcdq0@gmail.com>
+ <20261026201240.107462-5-sahilcdq0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 26 Oct 2026 20:28:44 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,81 +59,102 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261026122243.GA28851@unreal>
 
-On Mon, Oct 26, 2026 at 02:22:43PM +0200, Leon Romanovsky wrote:
-> On Fri, Oct 23, 2026 at 06:13:26PM -0600, Alex Williamson wrote:
-> > On Wed, 23 Sep 2026 12:29:56 +0200
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > 
-> > > On Wed, Sep 23, 2026 at 11:54:50AM +0200, Uwe Kleine-König wrote:
-> > > > > No, drivers should NOT have to do that in their .probe() function,
-> > > > > that's what we moved away from decades ago!  The match function should
-> > > > > handle all of that for you, otherwise it's contant duplication
-> > > > > everywhere that is unneeded.  
-> > > > 
-> > > > Well then you have to accept that root can provoke a null pointer
-> > > > exception (e.g. by forcing the pwm-tegra driver on a device) because at
-> > > > least with today's platform bus match function such a match is ok.  
-> > > 
-> > > Agreed, yes, root can cause a crash and can do tons of horrible things
-> > > much worse than this, that's not the issue.
-> > > 
-> > > That's why this taint is there, to make it obvious that this is not a
-> > > "real" bug at all.
-> > > 
-> > > > > Please, learn from our history, don't make the same mistakes.
-> > > > > 
-> > > > > Now I might be convinced that driver_override is the way to go here, but
-> > > > > it still feels really odd as again, bind/unbind was created as a driver
-> > > > > debugging option only, it should NOT be a normal operation that any user
-> > > > > should rely on.  The driver should "just work" properly instead, without
-> > > > > requiring manual bind work, as that's not a good model at all.  
-> > > > 
-> > > > I agree in principle, but (in my case wifi) drivers are buggy sometimes
-> > > > (due to missing documentation and/or engineering effort) and being able
-> > > > to rebind the driver instead of rebooting to get a working device again
-> > > > is very useful.  
-> > > 
-> > > Fine, use it!  Just don't expect that to be "normal".
-> > > 
-> > > > So yes, theoretically bind/unbind isn't needed, but theory and practise
-> > > > differ in practise.  
-> > > 
-> > > Agreed, but again, don't rely on this as a "real" solution fo ranything.
-> > 
-> > Sorry, late to the party, but this isn't a few user scripts that rely
-> > on this behavior.  Effectively every use case of vfio relies on this
-> > behavior.  We rely on unbinding the default driver from the device
-> > before using driver_override and drivers_probe.  That means every
-> > hypervisor with device assignment and every userspace driver use case
-> > now experiences a tainted kernel. That seems like a significant
-> > regression.
-> 
-> Sorry, I was on vacation and missed this change earlier. This change will
-> affect SR-IOV deployments around the world, which *rely* on being able to
-> bind a driver manually *after* virtual functions are created but before
-> they are used.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] openrisc: missing NOKPROBE annotation on arch_rethook_trampoline()
+--
 
-Why can't a real driver bind to those virtual functions?  Like is
-happening in the rust apis?
+commit 20e73d01661b40600429433415de2e9c63032d8f
+Author: Sahil Siddiq <sahilcdq0@gmail.com>
 
-> This is needed for two reasons: to save hardware and software resources
-> when creating a large number of VFs, and to allow the PCI config space to
-> be configured *before* the driver starts using it.
+openrisc: Add Kretprobes
 
-How is hardware and software resources an issue here at all?  And you
-can write to PCI config space from userspace today, no driver needed
-anywhere at all, that's always been allowed.
+This commit adds Kretprobes support for OpenRISC on top of the generic
+rethook framework, providing arch_rethook_prepare(),
+arch_rethook_trampoline_callback(), and the assembly return trampoline
+arch_rethook_trampoline.
 
-> There is no in-kernel alternative.
+> diff --git a/arch/openrisc/kernel/rethook_trampoline.S b/arch/openrisc/ke=
+rnel/rethook_trampoline.S
+> new file mode 100644
+> index 0000000000000..5e8fd5a652222
+> --- /dev/null
+> +++ b/arch/openrisc/kernel/rethook_trampoline.S
+> @@ -0,0 +1,111 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Author: Sahil Siddiq <sahilcdq0@gmail.com>
+> + */
+> +
+> +#include <linux/linkage.h>
+> +
+> +#include <asm/asm.h>
 
-Then just don't have a in-kernel driver for the device and all is good?
+[ ... ]
 
-thanks,
+> +SYM_CODE_START(arch_rethook_trampoline)
+> +	/* Allocate enough space on stack for pt_regs */
+> +	l.addi	r1,r1,-PT_SIZE
+> +	save_all_base_regs
+> +
+> +	l.addi	r3,r1,0	/* pt_regs */
+> +	l.jal	arch_rethook_trampoline_callback
+> +	l.nop
+> +
+> +	/* use the result as the return-address */
+> +	l.addi	r9,r11,0
+> +
+> +	restore_all_base_regs
+> +	l.addi	r1,r1,PT_SIZE
+> +
+> +	l.jr	r9
+> +	l.nop
+> +SYM_CODE_END(arch_rethook_trampoline)
 
-greg k-h
+[Severity: High]
+Should arch_rethook_trampoline be marked with _ASM_NOKPROBE() here (or
+NOKPROBE_SYMBOL() in arch/openrisc/kernel/rethook.c)?
+
+Although arch/openrisc/kernel/rethook_trampoline.S includes <asm/asm.h> and
+arch/openrisc/kernel/rethook.c marks arch_rethook_trampoline_callback() and
+arch_rethook_prepare() with NOKPROBE_SYMBOL(), arch_rethook_trampoline is
+placed in .text without a kprobe blacklist annotation.
+
+Because arch_rethook_trampoline is not blacklisted, registering a kretprobe
+or kprobe on arch_rethook_trampoline is permitted. When a kretprobed functi=
+on
+returns to arch_rethook_trampoline with r9 holding the address of
+arch_rethook_trampoline, a kretprobe on arch_rethook_trampoline triggers:
+
+pre_handler_kretprobe()
+  rethook_hook()
+    arch_rethook_prepare()
+      rhn->ret_addr =3D regs->gpr9;
+
+which pushes a rethook_node with ret_addr set to arch_rethook_trampoline on=
+to
+current->rethooks. When arch_rethook_trampoline_callback() then calls
+rethook_trampoline_handler(), __rethook_find_ret_addr() skips nodes whose
+ret_addr equals arch_rethook_trampoline:
+
+kernel/trace/rethook.c:__rethook_find_ret_addr() {
+    ...
+	while (node) {
+		rh =3D container_of(node, struct rethook_node, llist);
+		if (rh->ret_addr !=3D (unsigned long)arch_rethook_trampoline) {
+			*cur =3D node;
+			return rh->ret_addr;
+		}
+		node =3D node->next;
+	}
+	return 0;
+}
+
+Can this corrupt the current->rethooks shadow stack or trigger the BUG_ON(1)
+in rethook_trampoline_handler() when a probe is attached to
+arch_rethook_trampoline?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026201240.1074=
+62-1-sahilcdq0@gmail.com?part=3D4
