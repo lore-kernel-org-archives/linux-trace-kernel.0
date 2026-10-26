@@ -1,58 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793043618;
-	b=ID0MmWXY5XHK5H5wKktKa+0aPOY07umW5DvBNi3UkAKvzbjOGZ7AJrK2Kp9PakIKqzuT
-	 AmgjigE6DjsSapzSPkWXnz1ADvESLtX0qnXc0UjIOermF2zuK832WQE+owsfoZyYaiJsz
-	 uHzKkCf4S0+KJVcp5DuHEJHDfajjGpDlbNAtNbpVjRT0iSxsUho7xTRqi8Bk4oXwQDWQa
-	 zUZekGqyr43oW0yBWH7VhYvSV5CN4oryfWsyBnBSHcNW0z1BO+BrztQWhIMoUMn/QrQUO
-	 yqQeJDepFcYy6/x1Rlu21CkWFNpfNvWVoFWxvmeESNYmO0Mqxdsgg1EA8piM+X+B7hw==
+	t=1793045108;
+	b=F0Ip3MryqY85Vdq/dOP9DxjlIfS3PAt2YtPUS+i0lrIzAb9IXmnfn5/OXJJK9GBQs2Ft
+	 gYP/h3I35ljYQN8q1di/K0hvv+2zV4O8IP+jB9tQbMybw1srL18PaOaHLZQIXkSR6Todk
+	 ewRvV/DZc9BBErVK0+Ki8VlsmmR/Zc+v9AIn7BgjWPktOTR0Uwar03M1z6fmX3Kac6g4t
+	 X7kTzPOGJPsUjelo0PU3NLsUVRP7WIrrE+ndBtxGKT3dtLun/WH9Y03URlDL7wMaLK9Fk
+	 EPVnhcF3VlbmVQ8L+WMAb3M7pNWbGR1k6FTggD5ks4nKZES3FC3w2cdE8aEXgJdt0iw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793043618;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=PDSSmLHMXxPmsr020cNYPfn2DiyVMYpKQJWU5sCcgVI=;
-	b=sfhbTKkwjA81eyvmvteuLMSTd2UOizaoWpoRnIPiPokXvh8+hwAuvSSkoiwEjZBstDe1
-	 u0yc4LOUMFAMlADIhMULhemwQXQqZPPIOIDlenuOYDdebh7EPYyEzznxZN2YfNE1j7u+v
-	 fRKgXNOhmgqy+umUC5DPzb2ty0J1ca/gyFrMkN4j3/KCFbgSXghcWCCq0DMQ9r4Qcqemq
-	 UtneGAcNeLXBwFte7acD7wYJ0dFNtj3H9Rnj3SLAE+TSwTIDcYNq1pqKXtv2biV1mEfGB
-	 V0i5TB0SPH0N/N5Rws3DszkO66aJbti1i+/v6QhAGj3kL8onSYFF/gwSJD8jy+X+Bxw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793045108;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=BawehOGx+swDNz30BXtD0rUayjwrRWdohfXeiD3Nwuc=;
+	b=rxd/TfUd8nEkr+Bhk134tT+Avsdhy0ugVOzSOk2nX0w0aX2B0atn/IoIOEr2rwIY26d7
+	 ga1q3AjO5GecHsaWBRcMhyFpR50ROnhOxa9VBnB7huH0LvCshEuMgL0Ab4uGpUocQh8C4
+	 pT2Ht/LTW/f89mqFKXVpOlovhOHXrVwEJoXMSjl6+nquGF0tVu6xBZwV1vMQans8JTRdP
+	 IGUrAVtCDqC8YHsJmxJDzGlPSVybnX2/R9ZsMpwDjPMziIxP0pjxs/kCpFckCMxl62qkJ
+	 bS16L3cvVoho4AEHVyMAgYyMFDz01V5NNfPpPTFQPC2YutztW1LJcoqGrnZl1GyL69A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=WPAztoNj;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=uqkQoFM5;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238DD606A323;
-	Mon, 26 Oct 2026 19:40:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 238DD606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B8C606A31A;
+	Mon, 26 Oct 2026 20:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=WPAztoNj
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 92A2F12086C;
-	Mon, 26 Oct 2026 19:40:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id C819530;
-	Mon, 26 Oct 2026 19:40:14 +0000 (UTC)
-Date: Mon, 26 Oct 2026 15:40:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 05/10] tracing/filters: Report parse error on all
- -EINVAL paths in filter parsing
-Message-ID: <20261026154013.70598e93@gandalf.local.home>
-In-Reply-To: <179285917054.466249.6580828464905931113.stgit@devnote2>
-References: <179285912318.466249.7425922682086130057.stgit@devnote2>
-	<179285917054.466249.6580828464905931113.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=uqkQoFM5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFCD41F01825;
+	Mon, 26 Oct 2026 20:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1793045107;
+	bh=BawehOGx+swDNz30BXtD0rUayjwrRWdohfXeiD3Nwuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=uqkQoFM52klwzT7RGNaUFA6Qga4FuWuGaYyefzROIzukjBhIFqREK+pqTr4hriVoK
+	 PDd/0ELiJmI8EHpbo0nbvO9gLFbi48BLIx5y9dL4ZVWfdn+SY805AGZXuJumJAO/Tm
+	 19C/ca7D7sF/slrGjQ3K2AJ2vFy+qN+CzA+phAus=
+Date: Mon, 26 Oct 2026 21:05:06 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>, Alex Williamson <alex@shazbot.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <2026102604-tint-catcall-433e@gregkh>
+References: <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+ <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+ <arOfHEsGGglNse7T@monoceros>
+ <2026092348-victory-erased-0e5a@gregkh>
+ <20261023181326.0dc2f7ed@shazbot.org>
+ <20261026122243.GA28851@unreal>
+ <20261026184312.GA1685504@ziepe.ca>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,47 +85,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: C819530
-X-Stat-Signature: t535pa9wd76h3n86eyxcn4rzkkey1t7a
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19YiGV4EBQ5XP13rbOy1E7Ps+GBvY4AkRc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=PDSSmLHMXxPmsr020cNYPfn2DiyVMYpKQJWU5sCcgVI=; b=WPAztoNjx8vMNtls979Kw0suFaB2zq6UH8tvWDM0CAvcO5Krl77xi8/mWbY3wLCDMJ1/N7g6UOI8Cn+IcrHNR9zXyiefTSywRIARI9oo+8OCkbsY3MJmbtox8WcG/TSMdrUeJoxw8oTpTOFgknlbsHJT8OyOdf74L0RcqzPN4dw=
-X-HE-Tag: 1793043614-289953
-X-HE-Meta: U2FsdGVkX1+3ZfLJviU9nB/ZePQ1z0a6jeiLj7EamLjwX/KNZrOsaSsWrAQsuLA1S7wS8v397/XtftFLzIVz6WcL+R9WOhkhfLoTW1QmN/RTTFKiUcLnA1vO0N5gJ+oMrwsC5Z1Pff0Hx6QBdOG5frr4UPhv9TLF+fiairIEmfVuLWDT7aGSV+be1dEgprsXY5bSttXKE4ipmKZ+xH9rpm5VXGT1UR6Zkzw/oSWmmQEPMtpo/lth0IFV2pxONTl+bDslLaEvUhYVwwQO5Se8UVM0vHbO2Ubzx+dwYUM8hMh03ABX00HkbUMteh0xcvQJDt7lqD0QHmKiuEWESh3k3lS5mbqcL5T8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261026184312.GA1685504@ziepe.ca>
 
-On Sun, 25 Oct 2026 01:26:10 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, Oct 26, 2026 at 03:43:12PM -0300, Jason Gunthorpe wrote:
+> On Mon, Oct 26, 2026 at 02:22:43PM +0200, Leon Romanovsky wrote:
+> 
+> > This is needed for two reasons: to save hardware and software resources
+> > when creating a large number of VFs, and to allow the PCI config space to
+> > be configured *before* the driver starts using it.
+> > 
+> > There is no in-kernel alternative.
+> 
+> Having userspace involved in driver binding has also always been the
+> plan for confidential computing needs. We cannot have a device driver
+> bound across some of the HW transitions like TDISP shared/private, so
+> there has always been an expectation of bind/unbind.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Several error paths in filter parsing return -EINVAL (or -1) without
-> calling parse_error() to set pe->lasterr:
-> 
-> 1. In parse_pred(), when an invalid token is encountered where a field name
->    is expected (e.g., "common_pid == 1 || (common_pid == 2 && )"), len is 0
->    and it returns -1 without calling parse_error().
-> 2. In process_preds(), when !nr_preds (e.g., empty or whitespace-only
->    filter), it returns -EINVAL before predicate_parse() can set
->    FILT_ERR_NO_FILTER.
-> 3. In predicate_parse(), when op_stack overflows or the jump target check
->    fails, it returns -EINVAL without calling parse_error().
-> 
-> Because pe->lasterr remains 0 on these paths, append_filter_err() falls
-> back to printing an uninformative "Error: (0)" instead of reporting the
-> diagnostic and error position.
-> 
-> Call parse_error() with the appropriate error code on all of these paths.
-> 
-> Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+What, why?  What forces that decision?  What's wrong with the proper
+driver for the hardware being bound automatically to the device?
 
-This is more of a cleanup than fixes. You can keep the "fixes" tag but
-remove the stable. It's not that important to backport. Sure, the stable
-folks may backport it anyway, but I use the stable tag for what I feel is
-important to backport.
+> For this case the existing sysf drivers_probe is good enough for bind,
+> but we must have taint-free unbind for PCI devices too.
 
--- Steve
+Why?
+
+> I think this patch should be reverted ASAP, it is a pretty major
+> regression for a lot of users.
+
+But this use case hasn't even happened yet, so what would regress?
+
+I'm not talking about the vfio thing, that's different here...
+
+thanks,
+
+greg k-h
