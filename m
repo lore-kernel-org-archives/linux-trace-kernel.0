@@ -1,96 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792949753;
-	b=y9w2J2g9M65if4qhfrZeSnJf8ek1B6FR5fGGb4wh62zhMi/b0yaLErgzEHgt/MSrxEYU
-	 PMLtPtPj+Ym/rHZNAjc4nkXO/U80cGNka8Ol1S92Gr8eozmgFZYGW45KGN4PnDRDepT2j
-	 VtgG8+2lVApD9Xno+ghrHfZkX4TimVY7MgVaBPMr6rtfK7hAUWlrTll/huFe9tEGdqTQJ
-	 IaayrLmsyWZORkR2SWJx8dAEAy2+3srh5CBAUMiXJLh+CTdt4R8k3Z0A+tVmKxkiR0P9K
-	 EC/O4u58AkDCAzFAotT21hZp3Fp+SHEuCrPoY7ngPC88fTI1QMBayh6cXho7Bn4TuNg==
+	t=1792979623;
+	b=nxLz6W1M8o0cM4dNZcIDHJvg7qFxnzYt6n8vz1XMMEXt3osfEh08LGIBZVt/m0nfOt6c
+	 N8NUcxgUzjkoRHIenOE1rsctdzIiXiw+q94oXX6N+Lq+617AvwO2M8jNNjwJezhnawWbD
+	 KkLCBfvCIRbEMxHufNZXBWlLSOLJys3N7QETzI3EGuLl3HMVIj++hhMJVxtIUlcdLAzno
+	 fNhVppbEOe73HavZHoROg1Jaz/zsceEzneABHvLp6EQat4lVrvf9TCraJ/co9VkewBgp1
+	 3J7M4eIQlI2Pms/uPOwTcYw+1rcRqaVec81/EnHSMP6OXEm4TLprNt6iRWrCPLwDnPw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792949753;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=nluO+KDJonnXvVPmQXImi9sjBFQpJ5/zuHQkNadSdV8=;
-	b=E5K7oGfl9cdSiAbA92PgnuOee5gFNbTP+ErlI8K+j15HHKeFtptpKcU/CaOBqNN70I6Z
-	 OOVHj/d0WOTHakHBUL3C1ifykNlwDpqOxTJFRNneoL6wh0KCPyoctp34lfo2fjSK9D8qC
-	 PUu7oaZ2b3o2qQY0FCp1JVFb8YSayQEBm3BLpyujt54AOsCFf+hF0LX/L3rqIKyTeLPLj
-	 VAkhGCiCGUeOjWOp5VEAr9/SbdPnltJNCkbqVtCGzYPQI3TRcorRqV9au/p5h/QpKpETG
-	 3V5xsZzNR4g+IetTJns3PqN3PCZZujl7Og4vwbcElc1uHA7eMGTR1By1DUMgXJEGPaA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792979623;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=n0TA3FzCIGpnxlwr6L+aCV/S8fQL4bPUb1PUN1c74K0=;
+	b=CtVvXmWqxpxfjXbHq8eGmYCfVq0RLX8+zqLZ7g3Q95RsrDPmurVTdVt4q9cCW0zxPcsf
+	 VD1E1c8tCQunZsDFEbMEApJoasNR9D8m5DF4IauaLd2dX5S1t4F2VeqnGBYRN9GRvHc3X
+	 xLeogZL/rNMlsJuyU8hpp6EV/jxHcSRLq+NFQ/dvqzRuFGLQpjorcy3Cd7QAqpOs3j8h2
+	 cFdP04WF0MyuycXjLV0ygrN6tmTYEWno57fgHQEk4D66vEAz+hyOMMRoGidKd7UbtfC8k
+	 Myaxp1VpwvbXUlSsg0ZqPOen2qdLNumrxt+4Y36IGz4Qc4yptzw1d137RMmy3+UclDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="R+8/FDb5";
-	arc=none smtp.remote-ip=209.85.221.47
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTFkJb0E;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CBA606A332
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 17:35:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48CBA606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45979606A31B;
+	Mon, 26 Oct 2026 01:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=R+8/FDb5
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-48df8fe8513so2146397f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 10:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792949751; x=1793554551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=nluO+KDJonnXvVPmQXImi9sjBFQpJ5/zuHQkNadSdV8=;
-        b=R+8/FDb5fxrpNY+uCXHRxKSTrtMrCfHqll3y0cSL4iHIOGhtsL/5TE4O6C8OZl4I//
-         XkOtwCviFy855IMbLA9RvrjezK41mwVyWqbe91M5UZFHufp66alXpDQKn9XzEGiLXC2x
-         HhLFmlObZzsEEe33GqIDcVrovCEwB5JxdqNII0BzwHL87Bk1g7wPxF+DLmtKN6A5JUHO
-         alJDec5mV9LJpyt2HhxAn07Lt8NG1wiGgtEr+zdtWReWQGDLkKIVlt7qy8LoJbyEErf3
-         5Fr/Uthydv/NlrHrEl04evb+eatpZAvwnJ5gZVQRzgidJYz5IJoUhZcT5U+/qAH+BNyR
-         5zMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792949751; x=1793554551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nluO+KDJonnXvVPmQXImi9sjBFQpJ5/zuHQkNadSdV8=;
-        b=sOy0budClbdEjY+qhurSJXbdyPszPDYJGCulvQqEOFKtRQq/MdqsIyv5J+lYEWJCNc
-         w278dcf4cjmE4K1Xg3FEFb0Op0XX2kDqJ1pskZIcNiaG72sL5LCkz369Rt1I5kiBBjSc
-         5Yfvnvn5SIirnF3jkS4k43tIxxW33PS4QDiN1GjA4fr2iCp3MgtDatfjJf4il+v9zMe5
-         IrFoWgd6S+hdoWP7qms2H8wHVgD/0KEohlIrEkVxtcmfI3sdzQZ5NJElBsw3geRs3NVY
-         pRp7p/WLaii85AvwAULTsnfVUMjDJlTonyznGFOnDmTxdgSaAiR1ydCi98+mCpBKJ+2m
-         AL1g==
-X-Forwarded-Encrypted: i=1; AKwUvBw/02Xt/8EAUynXNtgBLnrGpW9RrlRUQ8AKjt7oq4096nqTxSXcfv0LbiCBYUzDTJQhzX5k4UFI7OkqdG39Uhu5GaY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIqZb6zP3adJ58Cv4+ZG5gbLJyXel4b0zEzc/SfBFKy7hmJMt0O
-	uqpdy8/y7xP20VV7Rvi48T5pqYgWYrFROkMIYnUW3QcHlIwsAkSk05Z1
-X-Gm-Gg: AYBFou0VIOgrgk0b4XwGn/empPOEAIP5T83LghqyyulIDkL81QLYs9NU2+aa2Txjico
-	OnirUIwlvtvgtrlBm/bAZu4fZuV4Xg/5J3A2xhCwbeM8+l5fdsqSb046RlP02DzIv33C9nN4oVR
-	7ozBxYD7uMT0bIB2476leljAFuYycVN96zu5YyL4nBXfo2gBCGDaHm80NCI3oPuISqB7sNyokAQ
-	zmsVTOFHrQT45ePDlbfFL7Kkaze6lkMmvNcq38nUYFZM26qgx1mgYvE/ULvgfUO5DBOHCa6g1aa
-	t22J3QD3pzBIAiYS/PdYDdClugGjv28kaXgATETSsx1VUM1yDTOqgvcfK1zSc83QnbZ6HjpOFj9
-	ub0B18rALXG2gGxamznyXbWpjWyC+6JK2wY7tuOGLZqJuqFTxTufVeYDPZc0e8fBexffszPVv0f
-	5gUtmP5FbQ0XQKDr4rxGyuTmZRpb8axUpzBy7GhgSUrlpepxDd/wZTlyIpK4VRPOnXK6H5sdouu
-	NGIo9GkKHaRUJEZvTINAvK1862zaM/+QTGr46EA7nbK+x8CcxsnM15qvtbRgJHJvWZ58qIHed3H
-	9iUGZcMSdpyjU0fndz1bif0AnTUOul5uD2Xvw/DMg3E0h6Fd2zrrEOHm83E42FwVIFacp0fNdKq
-	nBJa481ngrniJmUYOgwU9gXBbKboZydM2f2iXgDv9Oz40YprYfzoVM/u7u4yc8KwDxMopu0BaYG
-	BqiozuiBzB
-X-Received: by 2002:a05:6000:430d:b0:48d:ffcb:28e1 with SMTP id ffacd0b85a97d-48e3eb780b0mr7726162f8f.11.1792949751568;
-        Sun, 25 Oct 2026 10:35:51 -0700 (PDT)
-Received: from longitude (2a02-8434-fda5-4201-ce3d-9b69-45b1-5da5.rev.sfr.net. [2a02:8434:fda5:4201:ce3d:9b69:45b1:5da5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ebcb90dsm10234070f8f.22.2026.10.25.10.35.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2026 10:35:50 -0700 (PDT)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] tools/bootconfig: Recognize underscores in histogram variables
-Date: Sun, 25 Oct 2026 18:35:24 +0100
-Message-ID: <6343726e630448ee14c091fe369d8ae5331a0345.1792949723.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1792949723.git.edumucelli@gmail.com>
-References: <undine-1792936915899334889-d965251e73c20670@undined.local> <cover.1792949723.git.edumucelli@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTFkJb0E
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60301F01825;
+	Mon, 26 Oct 2026 01:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792979622;
+	bh=n0TA3FzCIGpnxlwr6L+aCV/S8fQL4bPUb1PUN1c74K0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=iTFkJb0EdDmwPa2Ge0eGs87BpHYCrLXuXJpgbueCOHU8mLWftT72ptm4wWphRcke2
+	 ahRAtG43pmGVI9XHJ7OoJFLCJekPLit6X8euC/RDZxZRO+2dIdz0RvPkQORgKpX2Y9
+	 iQsSRsxSseO4qYM6/wnb7LPEQl0k1Bd4KEtEKOiQ1Dx1hSxg8GfiepiQ8AzVcy4taP
+	 wxs/Uwsxh6xQCyeXR98FsQii7cOLtVb30BA7XmL6xaRV+TDpkMcBolO227SgeVZ+i0
+	 0+b8dczquB3QMddVaMqYiqsXp00ORUxnTqb3ZJS7SjcAMSs+WSNovubRw+BHCFDGBu
+	 dVYdaEIDmIzQw==
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Baek Kyu, Kim" <pocj8ur4in@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Free tracer resources on instance creation failure
+Date: Mon, 26 Oct 2026 10:53:40 +0900
+Message-ID: <undine-1792979620229535425-240da28948f7e6f5@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <20261025165250.65363-1-pocj8ur4in@gmail.com>
+References: <20261025165250.65363-1-pocj8ur4in@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -100,54 +58,70 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-The variable dependency resolver in ftrace2bconf.sh only recognizes
-letters and digits in histogram variable names. A reference such as
-$start_ts is read as $start, and the start_ts definition is missed.
-The consumer is repeatedly deferred and eventually omitted from the
-export with an undefined-variable diagnostic.
+Hi,
 
-Include underscores when matching both definitions and references so
-that valid histogram variables are resolved and their consumers are
-exported after the providers.
+On Mon, 26 Oct 2026 01:52:50 +0900, Baek Kyu, Kim <pocj8ur4in@gmail.com> wrote:
+> Creating a tracefs instance can allocate private tracer nodes, copied
+> flags and option arrays before trace_array_create_dir() returns. If a
+> later allocation fails, trace_array_create_systems() jumps to
+> out_free_tr and frees the trace_array without releasing those private
+> allocations. The failed instance is never registered, so normal removal
+> cannot reclaim them.
+> 
+> Free the tracer nodes and option arrays when trace_array_create_dir()
+> fails, then continue through the existing trace_array cleanup. Earlier
+> failures still use out_free_tr because the tracer list is not yet
+> initialized there.
+> 
+> Signed-off-by: Baek Kyu, Kim <pocj8ur4in@gmail.com>
 
-Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
----
-The histogram-variable documentation even uses names such as wakeup_lat
-and us_per_sec [1]. These are valid in tracefs, but the exporter cannot
-resolve references to them and leaves out the dependent histogram.
+Please add the appropriate Fixes tag before the Signed-off-by:
 
-I tested this in a temporary tracefs instance on my Ubuntu machine,
-running kernel 7.0.0-38-generic, with recording disabled. I created a
-provider histogram defining start_ts and a consumer using $start_ts.
-The original exporter reported an undefined variable and left out the
-consumer. With the fix, both were exported and restored correctly.
-A separate pair using ts0 worked in both versions.
+Fixes: 428add559b69 ("tracing: Have tracer option be instance specific")
 
-[1] https://docs.kernel.org/trace/histogram.html#histogram-variables
+Commit 428add559b69 introduced per-instance private tracer nodes (tr->tracers),
+flags, and option arrays, and called __update_tracer() from
+trace_array_create_dir(). When trace_array_create_dir() fails, these allocated
+resources were leaked because out_free_tr did not release them.
 
- tools/bootconfig/scripts/ftrace2bconf.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> ---
+> Tested under ARM64 QEMU/KVM through tracefs instance mkdir with
+> failslab targeting tracer flags, a later tracer node and option-array
+> growth. The baseline retained one or four private allocations after
+> the failed mkdir; the patched kernel retained none. Normal instance
+> option read/write and removal also passed.
+> 
+>  kernel/trace/trace.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-index 032ac5b10a4a..b01297217cf3 100755
---- a/tools/bootconfig/scripts/ftrace2bconf.sh
-+++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-@@ -88,10 +88,10 @@ DEFINED_VARS=
- UNRESOLVED_EVENTS=
- 
- defined_vars() { # event-dir
--	grep "^hist" $1/trigger | grep -o ':[a-zA-Z0-9]*='
-+	grep "^hist" $1/trigger | grep -o ':[a-zA-Z0-9_]*='
- }
- referred_vars() {
--	grep "^hist" $1/trigger | grep -o '$[a-zA-Z0-9]*'
-+	grep "^hist" $1/trigger | grep -o '$[a-zA-Z0-9_]*'
- }
- 
- event_is_enabled() { # enable-file
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+[...]
+> @@ -8761,6 +8761,11 @@ trace_array_create_systems(const char *name, const char *systems,
+>  	return tr;
+>  
+> + out_free_tracers:
+> +	free_tracers(tr);
+> +	for (int i = 0; i < tr->nr_topts; i++)
+> +		kfree(tr->topts[i].topts);
+> +	kfree(tr->topts);
+
+Two minor nits:
+
+- Please declare `int i;` at the beginning of trace_array_create_systems()
+  rather than inlining it inside `for (int i = 0; ...)`, matching the
+  prevailing style in trace.c (e.g. in __remove_instance()).
+
+- The cleanup loop freeing tr->topts[i].topts and tr->topts exactly mirrors
+  the logic in __remove_instance(). Consider refactoring this into a small
+  helper function, e.g. `free_tracer_options(struct trace_array *tr)`,
+  shared by both trace_array_create_systems() and __remove_instance().
+
+Thanks,
+
 -- 
-2.53.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
