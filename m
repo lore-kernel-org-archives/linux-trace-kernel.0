@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793051570;
-	b=CdqE9L7n4SGiSL9u568jqI+GeJEjB+J3Qi/QqL5kuwY2z9HIOP+8djBn78Brp3uNJLP0
-	 Ss3+IgiTvU6DFdBi4a+ZGo9l0/9oevuilEy2YrZflrFhrqeLYXomJsw3pkR0uuFGh1lJT
-	 lvGM8LZ1tPsQwCQHXA3NIP+BUgQn6sbqRaIGZG5P+jennJo5D52avrdpBJSrVbkbHe9Bh
-	 aWnVjhO+ipI0VYcWMnVQDT3Jbj5qaJsXo++3brcBfRdPxVrpytXnFTJ+34soALn8RtxSI
-	 oevBIkQv4qtwD4QztklzTTs5jfAr6XTGWO7/g5sta6Xk1c6JSaJquGCBVcbs0M08tcg==
+	t=1793051572;
+	b=iIFUIi09RpyRbbczVFZuz5rWEa5lAS++QdHoOkMiNWPqKtDfa82sRYQu2/zuIu+/wk/o
+	 rgLGoNWjm6SIchL885RKmCOVzz1ZY95pcw4/zb/1I9uql+wEr9WszNk17jP6R11Jn7rts
+	 gpXUBTys1BULZeb+3AzDHhRa06K2/hdLfXR/KwlAh6feqEVIVfIkh59dAssP/R+pvi2ui
+	 Rvd2xBRCp9XkRoT7PQIKs61ZOJyZjloheWg74hbxS2U+pMC9JndmeV2r9th/Pt7DlhjYw
+	 uqWpdyMR6LrCERGvol+hhg6/+TYpWLYvK+Ek3oxaxXxhOpnV8rmMFMD1N+73YOURaWw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793051570;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793051572;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
-	b=tD/SH6NA5KBfiiArZr1cwiqxbFV1eVRhxDv635qG/35j2ZzAxF1Dv5kBpeqBsRimyywV
-	 /RFOufmVu6YgtmtUXNp9HRxlveLfzda97vz/NsRFFRTfsP+T3YsKZ3EuSUl07jrziZCDS
-	 JvNmyeHs6nsHoFesl8Ym2JwHPlsKrT2VM9qX61bKCpc4WRqVfl8pRtgbxWyIOcd4mHqur
-	 zkcowSJc2jyV4AnLL/2sCjEijFu9yD852pruiT0R2XQK1j4dzkT4SAJGhyZ8WZ06TN+fH
-	 HCmlv0RZqXEAQUA97F7gRw0+DjPRqll2ZdA3W9OvyvSry84QDEGq71afclJwDn8U53Q==
+	bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
+	b=4vT+ynTwZs5LFmlR+MrnK8m5vdhoQSgq3hpUP69geGwfN1OZIM0sZQVcwbRwHEcKwUqe
+	 jhTgN6lAQe05KiyWPz32RObwhm0tqA8lKVo5xv6xVS5lFgh6fkm1c+mNOKoRLw/BN2mQ0
+	 Hg+8B7xtyFKtsAeOu6IZqBQMLUnl49JhnZO877+GySqUoGPMKeOqEXlNv9RaRDSbhu0dd
+	 Qa45EwkXQtWEJQWtLmzf41Xo6bLuq5y9zs/FoMiVCGKF6S5uEKhioFM8pzSgvnCCdfU6M
+	 CRMLv3kPSc4CeR/jdNjmVhFICV3UTiHkT2YrUz6lWlbV2J82KUgIwITzkDYXisptLZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=fU7gA7Dl;
-	arc=none smtp.remote-ip=209.85.215.198
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=RC8kMmU1;
+	arc=none smtp.remote-ip=209.85.210.200
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879D60A2614
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 21:52:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3879D60A2614
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AA360A3819
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 21:52:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34AA360A3819
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=fU7gA7Dl
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cdacb64970bso329756a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 14:52:50 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=RC8kMmU1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-8a01e2962a1so3748357b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 14:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1793051570; x=1793656370; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1793051572; x=1793656372; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
-        b=fU7gA7DljvCqdvdMpaU2dp8kIrEccZFKOmWnfW6sw+A054S6dlNZugZLhIYYcfiePQ
-         hsLgQW99gw7/40gSfJI6nU0rtnm0+1dPDbRaUoY665tdkjNVHr2UFbegtIbotfU9v9/A
-         uK7QOilz2oAfaWXl/tsF91D3vAUMVrFCU+UmdWgUF2++tfRICFcImVM7cH8b81croIe/
-         3gbPbeDpIxRnPDaXaoU22kL/RynJy6L0hYZfzyDRTzTeCDcQlDb8FUzF1BEGuZLmjKzH
-         eeONqBOhxrAFnMU8HI0VT7oOvpOxL8LajgaOKQMUvvRXhW0M5pmi7s9QGStFhbTf6Lb8
-         9JRA==
+        bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
+        b=RC8kMmU1ng9PI0xVDUVB9y4b2qkHrIc62PNyX4CzWbIdDe/vbucy2fxbMQVvz5M/xe
+         IO7bs505etfgEHNsbXHOq1v8h8HofxMyo+PKPU+my9lhsGvDArvAYhYz55zgEC2MkyOf
+         J46ym8a3S5Jp5fu3b7pIzq3ZgvKG/BWDa77DRrlIIXA6EMPsQpKBLv7/sbzdO6/CUcKe
+         Hm4Zk7JL4UbMt2ax+X6noxQGwVuFhcvfgX+0jyCFIlr0T4a+inqsYhiXD0iuHZueewf4
+         BhOxnojGjwJATQ35C5SS63tXVQxqgWO4TEgqnfuB0+6qy3MHnLM2dV3exIa8s5AQ+XD5
+         5Lxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793051570; x=1793656370;
+        d=1e100.net; s=20260707; t=1793051572; x=1793656372;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
-        b=OUb9p4i+UDekaH9CWyCCl0e9k6CESSHnhd4oRTTCbMtOeJOiq+CfalStqKeXAONy6S
-         JleePtu+kiwpF1+8pLDARcaOL1UhRak3B+dBjLPk+41LSMivt0I8oT1/nJb34o1Eqm9R
-         cYNDUyOblOV2LBdpmCnQdqNZrjbnZOI56tfrjaGqjq7ymPm29DxLHDmGrjhCJx35ncCH
-         URmAw8PbuFgF2+pliQNIbI7Q/qIBQpiBIYyLTDhW9K9CCGQSKZix2ISmEtzbhMgWf4AW
-         npJyFqivuGrosaRwA+C31qtso0wrKkapwTmucZA21HI1AWiLYCC1F+SuwkURDVBvCHWW
-         EJvQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz2cbAjYGdOXfMGU+pGbm9PBmwieaeAy7Y4WLF9wZv40uYBSC8urT2DjoGP0rV1VbgmvhF5/35qE6xIIqLN/FXHJLY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ+3xiHmf/zTgdAo+k9NP2/vbb0CZLzjH4ahPE4NsiemKj3Iw4L
-	t2UBQTadZCmp/tExaV7MJP5+frTFdMRJSo8Yx0O1WdbSQNEECZ+l0Y4XRIN7KFaj6nbt17xIBQ2
-	iUUPjGuHYSbbAXf0H4nde4Q==
-X-Received: from pjbme4.prod.google.com ([2002:a17:90b:17c4:b0:3ae:349e:2bcd])
+        bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
+        b=j/7kprWP4T++4xxf6Mqms0V24m+q8/Fw4ljzAJkT94uURpGpNsGaaQw+gAc03ugSWO
+         J/iovF9AXF+ddFvpmUM4LLtJBcIBWpBbJvwr4X1T2nm2Kl74PKvPfi8cqGh+SOQeSFBq
+         Z6lgm3yLL9a4XuD0eYP/8bcWei3D8zz3SZolJSfc+uZy51uigf+NeeCJwHbk9dRujpog
+         Sv/Pza9crB0sjNOONBm6HCU/NtLyl96OOs6GzTT/1tSi9ShkvuDDmIBIea5mVzn4zWCE
+         5HxY5HieJ84G1dvJT9uC8ta0UTlBihlkraxggkckqcySKZzrK86XQ47NSVsXiT+TPvZf
+         s8Fg==
+X-Forwarded-Encrypted: i=1; AKwUvByb5ZRxGiueCZkyINCbVi8Ji3BW3qktQoL95lEAu3IQj7hcHIfpro2z+WOGvzqL6z61uq9buMZkl/4fFzVjr+9Bouw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKM4+v6LAw7lsxhj9G0iLEX02fMtA472d9Fy6NWibhH+l3sIjkz
+	cANFOBrRheZj9h1L4DdZBvL4JinJPflvLZul3XZEIVVxYa7G7zgS5k5JtoB2yHaz7cY6ZMBmpNv
+	0mPP6Z265u98l9vkhV/Ymxw==
+X-Received: from pfbho14.prod.google.com ([2002:a05:6a00:880e:b0:8a0:6a08:e927])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:35cc:b0:3ad:1b31:92d8 with SMTP id 98e67ed59e1d1-3adeb16ecffmr5865801a91.60.1793051569572;
- Mon, 26 Oct 2026 14:52:49 -0700 (PDT)
-Date: Mon, 26 Oct 2026 21:52:18 +0000
+ 2002:a05:6a00:bd81:b0:87c:e44e:5694 with SMTP id d2e1a72fcca58-8a366b88ce9mr5902881b3a.21.1793051571129;
+ Mon, 26 Oct 2026 14:52:51 -0700 (PDT)
+Date: Mon, 26 Oct 2026 21:52:20 +0000
 In-Reply-To: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261026215226.3713941-3-jthoughton@google.com>
-Subject: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user memory
- when canceled
+Message-ID: <20261026215226.3713941-5-jthoughton@google.com>
+Subject: [RFC PATCH 04/10] stacktrace: Don't unwind the user stack without an mm
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
@@ -106,48 +105,55 @@ Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ke
 	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-btrfs_uring_read_finished() copies the data of an io_uring encoded read
-to the submitter's buffers with copy_page_to_iter(). It runs as io_uring
-task work, but io_uring may also run it with tw.cancel set from other
-contexts when the submitting task can't run it: from a kworker when the
-submitting task has exited (io_tctx_fallback_work()), or from
-io_cancel_local_task_work() when a DEFER_TASKRUN ring is torn down.
+stack_trace_save_user() only refuses to unwind the user stack of tasks
+with PF_KTHREAD set. That doesn't cover all tasks without an mm:
 
-In a kworker, current->mm is NULL, and the copy does not reliably fail:
-the user half of the address space belongs to whatever mm happens to be
-lazily loaded, if any, so the data may be written into an unrelated
-process.
+ - A user task that has already gone through exit_mm(), e.g. when an
+   event fires from exit_files(), exit_task_work() or the final context
+   switch in do_exit().
+ - PID 1 before it execs init, and usermode helper children before they
+   exec, which are created with user_mode_thread() and don't have
+   PF_KTHREAD set. E.g. booting with trace_options=userstacktrace and
+   an event enabled with trace_event= unwinds PID 1's "user stack"
+   during initcalls.
 
-Don't copy the data when the task work is canceled, and complete the
-command with -ECANCELED.
+With the ftrace userstacktrace option enabled, the architecture
+unwinders then read the user stack without an mm. That access does not
+reliably fail: the user half of the address space belongs to whatever
+mm happens to be lazily loaded, if any, so the unwinder may read
+another task's memory.
 
-Fixes: 34310c442e17 ("btrfs: add io_uring command for encoded reads (ENCODED_READ ioctl)")
+Use is_user_task() instead, which also checks current->mm, as perf
+already does for the same reason since commit 76ed27608f7d ("perf:
+sched: Fix perf crash with new is_user_task() helper"). This also stops
+unwinding the user stack of PF_USER_WORKER threads, which never run in
+user space, matching perf.
+
+Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- fs/btrfs/ioctl.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/stacktrace.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index f3e2afe221be..d9044fbd9547 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -4609,6 +4609,16 @@ static void btrfs_uring_read_finished(struct io_tw_req tw_req, io_tw_token_t tw)
- 		goto out;
- 	}
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index afb3c116da91..f96a5ec12f6c 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -228,8 +228,12 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
+ 		.size	= size,
+ 	};
  
+-	/* Trace user stack if not a kernel thread */
+-	if (current->flags & PF_KTHREAD)
 +	/*
-+	 * If the request is being canceled, e.g. because the submitting task
-+	 * has exited, this may run from a kworker or in a different task, so
-+	 * don't copy the data to the submitter's buffers.
++	 * Trace user stack only if this is a user task that still has an mm,
++	 * i.e. not a kernel thread or user worker, and not a task that has
++	 * already gone through exit_mm().
 +	 */
-+	if (unlikely(tw.cancel)) {
-+		ret = -ECANCELED;
-+		goto out;
-+	}
-+
- 	if (priv->compressed) {
- 		index = 0;
- 		page_offset = 0;
++	if (!is_user_task(current))
+ 		return 0;
+ 
+ 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
