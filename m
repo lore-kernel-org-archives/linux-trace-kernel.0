@@ -1,56 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.96
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793045857;
-	b=1N7neRQ9HoOyhtitmzW9GjG8qQc0pWd6aJyy/JrjKYLNTcxZKeSH23qG4szvd0l7Ocs6
-	 29N5IEnPtPf5/wwSBYzEqaoXyzsAwrsyn6DJmB6ElnqbGdVKH7zF/BFbGbcbLgNafOZDE
-	 F+dMKW5FpHgMUhwNh4d2i39BmZ8+Cw+Dw4XhA6yIl48Pwg5/ou2FFONCWC20M3F1xMbiX
-	 YTL3aOZho+cMKTG+DDvHZvAq3lcsrYNY8UpoMYx1BfuHRIsMZQsHUX+5Zd89bf0NU1enl
-	 AuoXd5HAdb53QFBtTZA/0266gn8YBD+e/4JsU5FPUhfGWS2NITmfYgpIPOrCtRfmYeQ==
+	t=1793046381;
+	b=UnKoiBjbK4OeE/dSDbQwV+a24p8VmhcoFMq54A3e28ICHGZ86//W9fsoH6GkKta0XPNw
+	 hYkb7iWxP5jXTaJH0a6KKRx12uKpt/bXb7wn2+jHNNyM7rXB8c6J7IaMDNqYlIPV7oIeO
+	 47GhBiLL9K7iYK8IcBZXWiN7/79ycE8mb0rdDnDgIkVKA/A2AS7pnNIFJiREkbpcg1o6+
+	 v3JXHv1IB+o5iC5+woIvEwzCQRXjIVNBZkcw/2XPwyUAoDEKY9e8yXE9vWmbLQg7GUbST
+	 ptEQFtLv49fcub8d7+uYArDpqtD/FofMojdrg20vJDSg6wHal+HdXkq3rY3yUQ2wlXQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793045857;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type;
-	bh=sVSjN/XqWDLZDr7IXQQnJDQT7Ga3u1tyb5UkYEWZhRk=;
-	b=3qesQCBoS0HtBsc0tWJixtdk2S7EmsabePnCnBPE0/eIjjxYF29e+g1fSX5rgOs+bUHB
-	 huCIrWWG5gckuV3uFaECbEBk3ExxtF4z197GwkcbOlV+71ZrPVjpbjgsWVaashYQgWGUY
-	 xQkJgSjFfTBQePWMFhZ4LMVJwc6hKPcPTptowJc9i9a2wm5//f6MzLhYgsrUoql5E3J00
-	 1hJZIuoSwwwyddta6xf02kRVWi9XjT2yeErynhC0lU8DZqC6ichYPylMp390I2TdW+qTN
-	 j5lh8BUWodjCAwsMPwjVm9IAwHph+4KQnneWzPoQlq4ZCY7xe2ShbjlMuRyn05OGwaQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793046381;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=r1kwqOn9s+Z1Iv4jtlKJw++IdaDVWzo01BlrEy3WNcY=;
+	b=MdjQFYrdROI8pdVvVbUWwxtq5ixjJGX5+GEkOtIRLORYYO1uq3RAK5fMu0UNrY4Z4Q9m
+	 47zBeZj9xmK6ByK8rL5/uNNXdBEmITCwQsRh7fIBnHhzLTtiSI67l/tkD+5IUHp3XQ2QP
+	 oWWnPOfF8uq4HAW1FO/D2ewqS3oDRc4OEf8+o9gFy6JMA2I31+8ZILyVXwac0oCAI2raz
+	 7yw2WgVynqQGHhv2dprz4611s8NCJrBCCLc6Xp28bjqBXm4lG57qH2g3oTzXj3nBOtYfH
+	 Zr2VDOSw6VKnaLDCJqCDUeRvTObKTlBFF9kvtVePbWZP8AH0kO7W7gPrghrXrHM9CbA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=proton.me;
-	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=yvlmz5wuurh5rfsoiol3dfcmfy.protonmail2 header.b=zU2lBZAR;
-	arc=none smtp.remote-ip=79.135.106.96
-Received: from mail-10696.protonmail.ch (mail-10696.protonmail.ch [79.135.106.96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kHQDMnDr;
+	arc=none smtp.remote-ip=74.125.82.43
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89F4606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 20:17:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D89F4606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FA5606A321
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 20:26:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97FA5606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=yvlmz5wuurh5rfsoiol3dfcmfy.protonmail2 header.b=zU2lBZAR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=yvlmz5wuurh5rfsoiol3dfcmfy.protonmail2; t=1793045853;
-	x=1793305053; bh=sVSjN/XqWDLZDr7IXQQnJDQT7Ga3u1tyb5UkYEWZhRk=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=zU2lBZAR2+tXbDzRvPC8eEgaPslt5ccH5CgJ6w6DgGQIWCDYiaWlrkAc90YdsVG0H
-	 iMeWt3zEBBBZwAF01E+bVRJYqKV6oPWPndut+foblGBxfiG8SXEUiLEIlLly/x94nr
-	 TQ8tFAiYAf2rJBwCoEx0POuwvDgGv9xXvOwQLMHabQVY4/4h8O21RIPM3zdREbOqOs
-	 DIhPCcoXZRa2ylzG2mRWwlKunEdsbcOescd62Pk7phVGhshd3wDWMvJovMYgAs6oZ4
-	 5pxZdgru7l4ckNfqzdsR+ZiqdQ8WNqZ6vc1HEPMD6uNrfqyQ0ZHLf8nb6sgvW2R1J1
-	 eIfaJvPymTZtg==
-Date: Mon, 26 Oct 2026 20:17:26 +0000
-To: "brauner@kernel.org" <brauner@kernel.org>, "kees@kernel.org" <kees@kernel.org>, "rostedt@goodmis.org" <rostedt@goodmis.org>
-From: BoxStrikesTeam <BoxStrikesTeam@proton.me>
-Cc: "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "jack@suse.cz" <jack@suse.cz>, "mhiramat@kernel.org" <mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, "jkoolstra@xs4all.nl" <jkoolstra@xs4all.nl>, "farid.m.zakaria@gmail.com" <farid.m.zakaria@gmail.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: [RFC PATCH] binfmt_misc: add binfmt_misc_select tracepoint
-Message-ID: <cmtfuzYFZMj7WozUoEjFs3RxYWe9UgdY5rK3ZGT7CPwO1mpemvEwNhG4v5ucoKBgUHMqFa7kSzOvLjFcVcxAybfmKdURZ4h-qoKX1lHXlAA=@proton.me>
-Feedback-ID: 205449183:user:proton
-X-Pm-Message-ID: c38ae376d3bc2a6c337eca8d28b04e53faf2a787
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kHQDMnDr
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-1931ff67a29so1783684c88.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 13:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1793046380; x=1793651180; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=r1kwqOn9s+Z1Iv4jtlKJw++IdaDVWzo01BlrEy3WNcY=;
+        b=kHQDMnDrUY/rB35jHhCGT4DG1U9ACLnZK+QMoyoDjUir2QJ8hat3p+xKM4iqJgtEII
+         5zT9Xd8f7DEVY5uH5+v/A2hnUZx0qaPU0Vm9TsmHAz8zkZaSvJdAkp0qtPac3si0RhcB
+         f6HrNt10P98lT4K/bkZ9pu5AaxqJ5AMXbX7Y29XOAVqkpoiNn6mtPFqbvZDVkffWHVH9
+         Z3qjFXoXZQq2iqy7z1R0Qw24bZ2jUcCxLxF1+qaM7Lf1DTWu+qvus9A+ukeZbkMfW2gm
+         ezOW95i0CBdGnGfCuhyr6qvJ+p64PvFmt8say3CPVpkh1A0JBGP5+Zhq07FJyWlgOtRY
+         OERw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793046380; x=1793651180;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=r1kwqOn9s+Z1Iv4jtlKJw++IdaDVWzo01BlrEy3WNcY=;
+        b=nwkylmLtOtCKG+mlxS0DGYJ+i8J84tR8g4pt0HE7Vb6HdPWmgATp6mpYeAI6J7S68D
+         ej40i7Z6EVqOdvLxlhtwXeDs8znkv7/NZNsHEaGrUF26yE0BUUv7lqYTSaf52Xj8A5XY
+         7YKHCF00fzsTnsR101B0e8Lisk1j/Lih8a7sniUBwBeZmEjU0o2y0NoiysNQr29K4g/U
+         ceVGzeWqq8BazvwINRE+dMfIxPwUOePQ1pWlQ39mCnHzKU/SQ1QhLncPkzbwj4qpnPkz
+         cCYU6/doz9UZQXb02IIZ0oVYoN9JHcTMfGIIt8c3ZP4+7TvuAAZOGEMDRwYmyRdD6q5E
+         XXjg==
+X-Forwarded-Encrypted: i=1; AKwUvBxg9TGM4M7bjuVgCZ5N5FnFjlUcw+riz0WoPsk2JMHdGuwjoqMKeqoAPsk+sJ+aYpfkB3MtWd6zfbWTStxry8A14dE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLxV1LsCiriXMFJHf9KXP7eTd47p/uWnsWSghhfxzfL0BPgKXoG
+	EKZwn0dWGJkv/MC2k3tqbBIKCQ+90GhhEFvYl63NEiM25tNQQk/o8GlI
+X-Gm-Gg: AYBFou38QRNQm8+P8c0nmmon977en0NkDw58couD+O5dLkCUM3vpLYNzY58YlTfvqa2
+	efTtdAZh526aBTHG1Ni7nmXqJrfIeTOuyJilvUhL8wlUHVR7nPFIG99+JL/hPNlqGK7rbSOHS7Y
+	JGQIP2bLsADy1ZCwqNpL5SfpSs6UoGtROmUunvrZGBWmqcIWS1Mkfnmf8Yn6S6rZDRpBrSJ8mcP
+	N7Wa4G44FoUkC8KED36Niln4wApJaCWmMjylVyLRHsPuyAx634g10wdO2oZbRNDktPCgrajra4X
+	vo2ZHG6dvbpiOE1ldaOgNWutptfikDxoT58ybxdKg6mx9tOra45C1mLD8tyPz4iSTX2RrMWw+cX
+	KWHoLZNBYUHD75Y6GnHzSM4Fxo3Kt0wNE0ZupnPheP5uRQgiuNOjp862hSSbzHKCdRqB8iITTUO
+	a2Uh4xp8yRTPkcy8wV8IRxkpYQ3a9PM4HrHzJeMp6WSUnNSLuZBeiOb8JfJAqmMV4MiLz5IHkk6
+	cdlGZeArggLnFO8XYdskVPvvzlc3HQhLljPAHxEFY0lctqZzLngu6gG+CBoJAAD3t10BnVLXxAf
+	4clH7Ka5e+1LHpBXjT4=
+X-Received: by 2002:a05:701b:2714:b0:1a2:2da2:b278 with SMTP id a92af1059eb24-1a22da2b352mr3210683c88.14.1793046379474;
+        Mon, 26 Oct 2026 13:26:19 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c44:61b8:f26f:bd5b:b550:7a07? ([2401:4900:1c44:61b8:f26f:bd5b:b550:7a07])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-19886f790e4sm26156609c88.0.2026.10.26.13.26.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Oct 2026 13:26:18 -0700 (PDT)
+Message-ID: <19f2782e-c631-4668-99f2-95107cd2e6d3@gmail.com>
+Date: Tue, 27 Oct 2026 01:56:14 +0530
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,96 +92,126 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="b1=_kzBFLx7iHgjUHNurMWuTQCh250lsH2OVRDJ5zxSdQ4M"
-
---b1=_kzBFLx7iHgjUHNurMWuTQCh250lsH2OVRDJ5zxSdQ4M
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] openrisc: Add KProbes
+To: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+ naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org
+Cc: pjw@kernel.org, wangruikang@iscas.ac.cn, namcao@linutronix.de,
+ kees@kernel.org, linux-openrisc@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260930202744.50489-1-sahilcdq0@gmail.com>
+ <20261026201240.107462-3-sahilcdq0@gmail.com>
+Content-Language: en-US
+From: Sahil <sahilcdq0@gmail.com>
+In-Reply-To: <20261026201240.107462-3-sahilcdq0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-This is an RFC patch for a binfmt_misc_select tracepoint. The patch
-was tested on v7.3-rc7, but I currently have limited computer access
-and no usable SMTP setup, so I could not send it with git send-email.
-I know patches should be inline; the patch is attached as
-0001-binfmt_misc-select-tracepoint.patch, and I can resend it inline
-once I have access to a suitable environment.
---b1=_kzBFLx7iHgjUHNurMWuTQCh250lsH2OVRDJ5zxSdQ4M
-Content-Type: text/x-diff; name=0001-binfmt_misc-select-tracepoint.patch
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=0001-binfmt_misc-select-tracepoint.patch
+I have two queries in this commit.
 
-RnJvbTogRW5lc2hhbiBFcmRvxJ9hbiBLYXJhY2EgPEJveFN0cmlrZXNUZWFtQHByb3Rvbi5tZT4K
-U3ViamVjdDogW1JGQyBQQVRDSF0gYmluZm10X21pc2M6IGFkZCBiaW5mbXRfbWlzY19zZWxlY3Qg
-dHJhY2Vwb2ludAoKQSBiaW5mbXRfbWlzYyBlbnRyeSBjYW4gc2VsZWN0IGFuIGludGVycHJldGVy
-IGZvciBhbiBleGVjLiAgV2l0aCBhIEJQRgonQicgaGFuZGxlciwgdGhhdCBzZWxlY3Rpb24gY2Fu
-IGJlIG1hZGUgYnkgYSBCUEYgc3RydWN0X29wcyBwcm9ncmFtLgpUaGUga2VybmVsIGNvbW1pdHMg
-dGhlIGRlY2lzaW9uIGluIGJwcm0tPmludGVycCBhbmQgYnBybS0+ZmxhZ3MsIGJ1dCBpdApkb2Vz
-IG5vdCBlbWl0IGFuIGV2ZW50IGF0IHRoZSBzZWxlY3Rpb24gcG9pbnQuCgpFeGlzdGluZyBvYnNl
-cnZlcnMgaGF2ZSB0byByZWNvbnN0cnVjdCB0aGUgZGVjaXNpb24gZnJvbQovcHJvYy9QSUQvZXhl
-LCBBVF9FWEVDRkQsIEFUX0ZMQUdTLCBvciAvcHJvYy9QSUQvbWFwcy4gIFRoZXNlIHNvdXJjZXMK
-YXJlIG1vZGUtZGVwZW5kZW50OiBhIHRyYW5zcGFyZW50IGRpc3BhdGNoIHN0aWxsIHJlcG9ydHMg
-dGhlIG9yaWdpbmFsCmJpbmFyeSBpbiAvcHJvYy9QSUQvZXhlLCBhbmQgYSBzaG9ydC1saXZlZCBw
-cm9jZXNzIGNhbiBleGl0IGJlZm9yZSB0aGUKb2JzZXJ2ZXIgcmVhZHMgaXQuICBBIGNsYXNzaWMg
-ZGlzcGF0Y2ggcmVwb3J0cyB0aGUgaW50ZXJwcmV0ZXIsIGJ1dApub3Qgd2hpY2ggaGFuZGxlciBz
-ZWxlY3RlZCBpdCBvciB3aGljaCBpbnZvY2F0aW9uIGZsYWdzIHdlcmUgdXNlZC4KCkFkZCBhIHRy
-YWNlcG9pbnQgYWZ0ZXIgdGhlIGludGVycHJldGVyIGFuZCB0aGUgaW52b2NhdGlvbiBmbGFncyBh
-cmUKc2VsZWN0ZWQuICBJdCByZXBvcnRzIHRoZSBiaW5hcnkgZmlsZW5hbWUsIHRoZSBzZWxlY3Rl
-ZCBpbnRlcnByZXRlciwKdGhlIGhhbmRsZXIgbmFtZSAoZm9yIEJQRiBoYW5kbGVycyksIHRoZSBp
-bnZvY2F0aW9uIGZsYWdzLCBhbmQgdGhlCnBpZC4gIFRoZSBmbGFncyBhcmUgbWFza2VkIHdpdGgg
-TUlTQ19GTVRfSU5WT0NBVElPTl9GTEFHUyBzbyB0aGF0CnN0YXRpYyBlbnRyeSBzdGF0ZSBkb2Vz
-IG5vdCBsZWFrIGludG8gdGhlIGV2ZW50LgoKVGhlIHRyYWNlcG9pbnQgaXMgb2JzZXJ2YWJpbGl0
-eSBvbmx5OyBpdCBkb2VzIG5vdCBjaGFuZ2UgZXhlYwpiZWhhdmlvci4KCkFzc2lzdGVkLWJ5OiBM
-TE0KU2lnbmVkLW9mZi1ieTogRW5lc2hhbiBFcmRvxJ9hbiBLYXJhY2EgPEJveFN0cmlrZXNUZWFt
-QHByb3Rvbi5tZT4KLS0tCgpUaGlzIGlzIGFuIFJGQy4gIEEgc21hbGwgUG9DIGFuZCBzaG9ydCBB
-L0IgcmVzdWx0cyBhcmUgYXZhaWxhYmxlIGZvcgpjb250ZXh0OyB0aGV5IGFyZSBub3QgbmVlZGVk
-IHRvIHJldmlldyB0aGUgcGF0Y2guCgogZnMvYmluZm10X21pc2MuYyAgICAgICAgICAgICAgICAg
-IHwgIDggKysrKysrKysKIGluY2x1ZGUvdHJhY2UvZXZlbnRzL2JpbmZtdF9taXNjLmggfCA1MiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA2
-MCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZnMvYmluZm10X21pc2MuYyBiL2ZzL2JpbmZt
-dF9taXNjLmMKLS0tIGEvZnMvYmluZm10X21pc2MuYworKysgYi9mcy9iaW5mbXRfbWlzYy5jCkBA
-IC00MSw2ICs0MSw5IEBACiAKICNpbmNsdWRlICJpbnRlcm5hbC5oIgogCisjZGVmaW5lIENSRUFU
-RV9UUkFDRV9QT0lOVFMKKyNpbmNsdWRlIDx0cmFjZS9ldmVudHMvYmluZm10X21pc2MuaD4KKwog
-LyogRW50cnkgc3RhdHVzIGFuZCBtYXRjaCB0eXBlIGJpdCBudW1iZXJzLiAqLwogZW51bSBiaW5m
-bXRfbWlzY19lbnRyeV9iaXRzIHsKIAlNSVNDX0ZNVF9FTkFCTEVEX0JJVAk9IDAsCkBAIC02NDQs
-NiArNjQ3LDExIEBACiAKIAlmbGFncyA9IGVudHJ5X2ludm9jYXRpb25fZmxhZ3MoZm10LCBicHJt
-KTsKIAorCXRyYWNlX2JpbmZtdF9taXNjX3NlbGVjdChicHJtLCBpbnRlcnByZXRlciwKKwkJCQkg
-dGVzdF9iaXQoTUlTQ19GTVRfQlBGX0JJVCwgJmZtdC0+ZmxhZ3MpID8KKwkJCQkgZm10LT5icGZf
-b3BzLT5uYW1lIDogIiIsCisJCQkJIGZsYWdzICYgTUlTQ19GTVRfSU5WT0NBVElPTl9GTEFHUyk7
-CisKIAkvKiBObyBhcmd2IGlzIGJ1aWx0IGZvciBhIHN0YWdlZCBhcmd1bWVudCB0byBsYW5kIGlu
-LiAqLwogCWlmICgoZmxhZ3MgJiAoTUlTQ19GTVRfTE9BREVSIHwgTUlTQ19GTVRfVFJBTlNQQVJF
-TlQpKSAmJgogCSAgICBicHJtLT5icGZfaW50ZXJwX2FyZykKCmRpZmYgLS1naXQgYS9pbmNsdWRl
-L3RyYWNlL2V2ZW50cy9iaW5mbXRfbWlzYy5oIGIvaW5jbHVkZS90cmFjZS9ldmVudHMvYmluZm10
-X21pc2MuaApuZXcgZmlsZSBtb2RlIDEwMDY0NAotLS0gL2Rldi9udWxsCisrKyBiL2luY2x1ZGUv
-dHJhY2UvZXZlbnRzL2JpbmZtdF9taXNjLmgKQEAgLTAsMCArMSw1MiBAQAorLyogU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8KKy8qCisgKiBUcmFjZXBvaW50IGZvciBiaW5mbXRf
-bWlzYyBiaW5hcnkgdHlwZSBoYW5kbGVyIGRpc3BhdGNoLgorICoKKyAqIEZpcmVzIG9uY2UgZm9y
-IGV2ZXJ5IGV4ZWMgYSBiaW5mbXRfbWlzYyBlbnRyeSBtYXRjaGVzLCBhZnRlciB0aGUKKyAqIGlu
-dGVycHJldGVyIGFuZCB0aGUgaW52b2NhdGlvbiBmbGFncyBoYXZlIGJlZW4gc2VsZWN0ZWQuIFVu
-bGlrZQorICogc2NoZWRfcHJvY2Vzc19leGVjICh3aGljaCByZXBvcnRzIGJwcm0tPmZpbGVuYW1l
-KSBhbmQgL3Byb2MvUElEL2V4ZQorICogKHdoaWNoIGEgdHJhbnNwYXJlbnQgZGlzcGF0Y2ggc2V0
-cyB0byB0aGUgYmluYXJ5KSwgdGhpcyByZXBvcnRzIHRoZQorICogaW50ZXJwcmV0ZXIgdGhhdCBh
-Y3R1YWxseSBydW5zLCBzbyBvYnNlcnZlcnMgY2FuIHNlZSB0aHJvdWdoIGEKKyAqIHRyYW5zcGFy
-ZW50IGRpc3BhdGNoLgorICovCisjdW5kZWYgVFJBQ0VfU1lTVEVNCisjZGVmaW5lIFRSQUNFX1NZ
-U1RFTSBiaW5mbXRfbWlzYworCisjaWYgIWRlZmluZWQoX1RSQUNFX0JJTkZNVF9NSVNDX0gpIHx8
-IGRlZmluZWQoVFJBQ0VfSEVBREVSX01VTFRJX1JFQUQpCisjZGVmaW5lIF9UUkFDRV9CSU5GTVRf
-TUlTQ19ICisKKyNpbmNsdWRlIDxsaW51eC90cmFjZXBvaW50Lmg+CisjaW5jbHVkZSA8bGludXgv
-YmluZm10cy5oPgorCitUUkFDRV9FVkVOVChiaW5mbXRfbWlzY19zZWxlY3QsCisKKwlUUF9QUk9U
-TyhzdHJ1Y3QgbGludXhfYmlucHJtICpicHJtLCBjb25zdCBjaGFyICppbnRlcnAsCisJCSBjb25z
-dCBjaGFyICpoYW5kbGVyLCB1bnNpZ25lZCBsb25nIGZsYWdzKSwKKworCVRQX0FSR1MoYnBybSwg
-aW50ZXJwLCBoYW5kbGVyLCBmbGFncyksCisKKwlUUF9TVFJVQ1RfX2VudHJ5KAorCQlfX3N0cmlu
-ZyhmaWxlbmFtZSwJYnBybS0+ZmlsZW5hbWUpCisJCV9fc3RyaW5nKGludGVycCwJaW50ZXJwKQor
-CQlfX3N0cmluZyhoYW5kbGVyLAloYW5kbGVyKQorCQlfX2ZpZWxkKHVuc2lnbmVkIGxvbmcsCWZs
-YWdzKQorCQlfX2ZpZWxkKHBpZF90LAkJcGlkKQorCSksCisKKwlUUF9mYXN0X2Fzc2lnbigKKwkJ
-X19hc3NpZ25fc3RyKGZpbGVuYW1lKTsKKwkJX19hc3NpZ25fc3RyKGludGVycCk7CisJCV9fYXNz
-aWduX3N0cihoYW5kbGVyKTsKKwkJX19lbnRyeS0+ZmxhZ3MgPSBmbGFnczsKKwkJX19lbnRyeS0+
-cGlkID0gY3VycmVudC0+cGlkOworCSksCisKKwlUUF9wcmludGsoInBpZD0lZCBmaWxlbmFtZT0l
-cyBpbnRlcnA9JXMgaGFuZGxlcj0lcyBmbGFncz0lI2x4IiwKKwkJICBfX2VudHJ5LT5waWQsIF9f
-Z2V0X3N0cihmaWxlbmFtZSksIF9fZ2V0X3N0cihpbnRlcnApLAorCQkgIF9fZ2V0X3N0cihoYW5k
-bGVyKSwgX19lbnRyeS0+ZmxhZ3MpCispOworCisjZW5kaWYgLyogX1RSQUNFX0JJTkZNVF9NSVND
-X0ggKi8KKworLyogVGhpcyBwYXJ0IG11c3QgYmUgb3V0c2lkZSBwcm90ZWN0aW9uICovCisjaW5j
-bHVkZSA8dHJhY2UvZGVmaW5lX3RyYWNlLmg+Cg==
+On 10/27/26 1:42 AM, Sahil Siddiq wrote:
+> Add KProbes support for OpenRISC. This work is primarily based
+> on similar work done for LoongArch, MIPS and RISC-V.
+> 
+> KProbes make it possible to trap at almost any address in the
+> kernel to collect performance/debugging info.
+>
+> [...]
+> diff --git a/arch/openrisc/include/asm/kprobes.h b/arch/openrisc/include/asm/kprobes.h
+> new file mode 100644
+> index 000000000000..2b5847002141
+> --- /dev/null
+> +++ b/arch/openrisc/include/asm/kprobes.h
+> @@ -0,0 +1,77 @@
+> [...]
+> +
+> +struct prev_kprobe {
+> +	struct kprobe *kp;
+> +	unsigned int status;
+> +	unsigned long restore_pc;
+> +};
+> +
+> +/* per-cpu kprobe control block */
+> +struct kprobe_ctlblk {
+> +	unsigned int kprobe_status;
+> +	unsigned long irq_flags;
+> +	/* address of next instruction in case of SSOL */
+> +	unsigned long restore_pc;
+> +	struct prev_kprobe prev_kprobe;
+> +};
+> +
 
---b1=_kzBFLx7iHgjUHNurMWuTQCh250lsH2OVRDJ5zxSdQ4M--
+There was a review comment from Sashiko about saving "irq_flags" in
+"struct prev_kprobe". I am not sure if that's actually required.
+
+My understanding is that a KProbe will be reentered if a probe is hit
+before single-stepping (e.g. a probe in the pre-handler) or after it
+(e.g. a probe in the post-handler). If a KProbe is reentered before
+single-stepping, nothing will be present in kprobe_ctlblk.irq_flags that
+requires restoration. So, it doesn't need to be saved in prev_kprobe.
+And if the KProbe is reentered after single-stepping, by that point the
+value in kprobe_ctlblk.irq_flags should have already been restored (i.e.
+IRQs should be reenabled by then) and so it shouldn't need saving in
+prev_kprobe.
+
+Could you please let me know if I am missing something, or if my
+reasoning is sound?
+
+> [...]
+> diff --git a/arch/openrisc/kernel/kprobes.c b/arch/openrisc/kernel/kprobes.c
+> new file mode 100644
+> index 000000000000..0b8762e340d5
+> --- /dev/null
+> +++ b/arch/openrisc/kernel/kprobes.c
+> @@ -0,0 +1,426 @@
+> [...]
+> +
+> +int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> +{
+> +	struct kprobe *cur = kprobe_running();
+> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> +
+> +	switch (kcb->kprobe_status) {
+> +	case KPROBE_HIT_SS:
+> +	case KPROBE_REENTER:
+> +		/*
+> +		 * The instruction being single-stepped caused a page fault.
+> +		 * Reset the current KProbe and set PC to the probe's address.
+> +		 * Then allow the page fault handler to continue as usual.
+> +		 */
+> +		instruction_pointer_set(regs, (unsigned long)cur->addr);
+> +
+
+There was another review comment from Sashiko. It stated that in the case
+of a page fault which is triggered in the delay slot of a jump-and-link
+instruction, resetting PC to the branch instruction can corrupt the state.
+It theorized that this is due to the modification made to regs->gpr[9]
+(the link register) in "simulate_branch()".
+
+I haven't really understood why the state would get corrupted in this case.
+Rewinding PC to the branch instruction implies it'll get executed again.
+If it gets re-executed, the value in regs->gpr[9] should also get re-evaluated
+and it should hold the correct value after re-execution.
+
+> +		if (kcb->kprobe_status == KPROBE_REENTER)
+> +			restore_previous_kprobe(kcb);
+> +		else
+> +			reset_current_kprobe();
+> +
+> +		kprobe_local_irq_restore(kcb, regs);
+> +		preempt_enable_no_resched();
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> [...]
+
+Thanks,
+Sahil
+
+[1] https://sashiko.dev/#/patchset/20260407185650.79816-1-sahilcdq0%40gmail.com?part=2 (1st comment)
+[2] https://sashiko.dev/#/patchset/20260930203129.51048-1-sahilcdq0%40gmail.com?part=2 (6th comment)
 
