@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793023742;
-	b=ar4jB7RQ93FbMkMYsfvu9Rhu2QHF/KF7qmuEKE+B98kxVK2Ok1Mud4jNc86qooc/6iPU
-	 gBDuZTC+WSsg5Pc2YTVHcOLhMhMctVXpbMvHKxsNlHHu+64NSc7ROR2s1w1AF5CZ9bHGN
-	 6knu3X/sJaDQQy2GoVyyGPdl/O8QketAmtqKN++I7RmI/Yk8RrOh3zpB+6I/0KJSPOcuZ
-	 mRtg/aJKeosYpesDceoApEXg7iQrgONxFuB57y1tqcoJpIGktccvyObaJIBuk1NmnsOh0
-	 ySfm/P1gfO+MbisCWz/5lwjZgKfUeStZlb+xDfyfYET4eDtyeXz0phWAJJodoDE33RQ==
+	t=1793027224;
+	b=QfGwzPmrLZZ0HTq6QNAS02SfoaXPiCEnNa2GkSjnYtvK1Yq4RjCGCheoWZKIgR1emAdT
+	 qpCCpKw9nDfalkpIvV1tUDf3C/NzhGyzZD8KfCowZjZHnEmh8QG1dU5Nc47Lu5FEI3fMp
+	 FoxN6wlkGte/1rMoXLYhJv0dbY1yr5SuTNjsJdnAjQk3g8sEGWEgd/cX33xf/c2hbMyO9
+	 C4yAcBthpxszGUNOlsmJI4E3JKsBKENh0ooCVrrzkUg8NqI4gbIoUGuXgNi8kfiRi4llt
+	 c23iA8AvKv8mRZJRDLQT+RIokOsrXFUwR6OImaZcy/TK/+I0xUndXSr58vhU8bxS8BA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793023742;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=a1WmV4QAtGrFp/Wbi4toS+hF3KEftfKLEYN8Q4lCxC0=;
-	b=cJL3BXAOx+0HydtRGfi7BANWere1+D8h+++BC1EVKy85oWHNEqmml9fQI8ZKTActu56c
-	 FTFR5eOdNmsqAD9yZIAKep8QKOuSbgJmq+YBYr36Z7i3+Siy6jc2XaerB3YllbJiN3eyi
-	 SVmsXpniY23/I8iIN9+/HFzSrhy/d5PRzGy5rtWtMvepJ0Ug5w3sAnSNAZlAa7jqcBWux
-	 qRv7MSpDh6H6ejewcfgVGgGmxs/7BI2v2k6hdrXGEiejnHTuJaymcXPPrP/mmNbZvRCp9
-	 DxFtVZuphlNtA9n0h/PGGE7caJ+Wr3itCP+9XDcu57YFRZ+APvYMoRek6INt+H9kvCg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793027224;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=J0h2FhD1/ZqD4NmuBs6+MD7h5IX24/kXFYvf/GTy2DY=;
+	b=fOfKpC7pQPVfW3FMtnBOJS6CjS8zaLaS/6jc8Pztl4ThfPjOFHBYGQZqeJJEGJZavrME
+	 iLHqsgNEBjWaNiZTDtFR8wRdHH26t4Rqp8xMalcvc56bbjocCBB3tIHY3HyKt85cT4Bkg
+	 3pEOkbz/CnHF0pxwA9eYjgDtnm6hCTAyU0AI+W0AHOR7VHFNiZp6Ij1XEMk9h92X02TlF
+	 qN1y2MweuD7qnlNF0DALcAZGJlrQy9Nll4+33TZj7xZiDsNqkDxPmr+oHN2zQfh8f3oq6
+	 NH04z/Bo7y2tAJN4KTa87Wg0azNH6FCY/BCe0GV9j56QzQf0LBq2LRUoiWULwc+EMlQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iDOGWW1p;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=U1jWtkhE;
+	arc=none smtp.remote-ip=91.218.175.100
+Received: from mta0.migadu.com (out-100.mta0.migadu.com [91.218.175.100])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48233606A321;
-	Mon, 26 Oct 2026 14:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AC0606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 15:07:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9AC0606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iDOGWW1p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602831F01825;
-	Mon, 26 Oct 2026 14:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793023741;
-	bh=a1WmV4QAtGrFp/Wbi4toS+hF3KEftfKLEYN8Q4lCxC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iDOGWW1p/w01kTwpcgzRE65r9HDbMD91Wq39zeOUcpxYlfHCUb6EGuILi0aGYlMjj
-	 lMTIOQ1E0aQWk53Ao+ZlZOri4tFmi3tiyWyolTKfQYr5auzVNpnRKCbES6ylksEJnT
-	 GaQTfJnWG7TYmiU2hOPzZs7Cd1saEXrDdYdyuFSgQdH2MUBIau1zx3776RjX67FU4A
-	 GjXXzgHeFk0NXzDbyvxKEZQk3yOQnb7KrApZl/iq9K0wefkeZeygA1xqJ9bLybv1rs
-	 cMTdDcufQQy/A8UajwXQbTPF/Yig36oGbTd5U6CvSjd9RJN19gljL6u2MA79FTr7XG
-	 VIbdtL4G+iAgA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Jaewon Jung <jaewon8868@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Add missing spaces after ! in probe syntax tests
-Date: Mon, 26 Oct 2026 23:08:58 +0900
-Message-ID: <undine-1793023738390905423-e7126e9971bd4f80@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261025075044.1750113-1-jaewon8868@gmail.com>
-References: <20261025075044.1750113-1-jaewon8868@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=U1jWtkhE
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=kiILAlyer4KDpB0b5u3nzcUamLQxdEs4r06HO3T5veo=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793027221; v=1; x=1793632021;
+ b=U1jWtkhEvPVicrPfdsHIpVLOXo72c7aLMno8krFfUvbgKnzQsQpIlLhKe3tWUCA4k/pcRgwN
+ qErXJJ4YbcFpURTDKybz1aMWxpjWl0W3BHrLy0z/i5nPS7cZc4kBHMa7M0k/VJ3qs7NRUf3T0cZ
+ 7lu0GyCuVUrxV99CeJ12NyK8=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 873537cec047169a;
+	Mon, 26 Oct 2026 15:07:00 +0000
+X-Mizu-Trace-ID: 873537cec047169a
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f971dbdc-cc00-42fc-8989-5e6460f88c22@linux.dev>
+Date: Mon, 26 Oct 2026 23:06:51 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,27 +58,75 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 2/6] bpf: Add syscall common attrs support for
+ xdp link_create
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Shuah Khan <shuah@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>,
+ Hangbin Liu <liuhangbin@gmail.com>, Martin Karsten <mkarsten@uwaterloo.ca>,
+ Masashi Honma <masashi.honma@gmail.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20261024153608.58569-1-leon.hwang@linux.dev>
+ <20261024153608.58569-3-leon.hwang@linux.dev>
+ <DMDIVEW7P9QN.1TB58XDPD7V3A@gmail.com>
+Content-Language: en-US
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <DMDIVEW7P9QN.1TB58XDPD7V3A@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 25 Oct 2026 16:50:42 +0900, Jaewon Jung <jaewon8868@gmail.com> wrote:
-> Add the missing space between ! and grep. Otherwise, the shell tries
-> to run !grep and reports "!grep: not found". This always skips the
-> conditional checks without checking for kernel return probe argument
-> support.
+On 2026/10/25 09:19, Alexei Starovoitov wrote:
+> On Sat, Oct 24, 2026 at 08:36 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>> Instead of passing bpf log or extack to bpf_xdp_link_attach(), pass an
+>> errmsg pointer to receive the kstrdup() error msg, because
 > 
-> Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
+> [...]
+> 
+>> 2) passing extack will access underlying driver string out of dev_put()
+>>    guard, which will crash kernel when the device is unloaded
+>>    concurrently.
+> 
+> Netlink does exactly that.
+> rtnl_setlink() looks up the dev with __dev_get_by_index(), so no refcnt,
+> do_setlink() -> dev_change_xdp_fd(dev, extack, ...) calls into the same
+> drivers that set the same strings, rtnl is unlocked, and only then
+> netlink_rcv_skb() -> netlink_ack() does strlen(extack->_msg).
+> All extack users work this way. kstrdup() in one of them fixes nothing.
 
-Looks good to me! Also we need followings.
+Oops, I was overthinking about it when self-reviewing the patch. Failed
+to verify the describing crash issue just now. I should verify my review
+when self-reviewing.
 
-Fixes: 25f00e40ce79 ("tracing/probes: Support $argN in return probe (kprobe and fprobe)")
-Cc: stable@vger.kernel.org
+> 
+> Instead of patches 1 and 2:
+> 
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Will change like this.
 
-Shuah, can you pick this fix?
+> 
+> I'm think I gave this suggestion earlier. Why did you go with strdup()?
+> 
+
+Sorry for my overthinking. Will verify my review to my patches in the
+future.
 
 Thanks,
+Leon
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
