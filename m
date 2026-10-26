@@ -1,54 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792979623;
-	b=nxLz6W1M8o0cM4dNZcIDHJvg7qFxnzYt6n8vz1XMMEXt3osfEh08LGIBZVt/m0nfOt6c
-	 N8NUcxgUzjkoRHIenOE1rsctdzIiXiw+q94oXX6N+Lq+617AvwO2M8jNNjwJezhnawWbD
-	 KkLCBfvCIRbEMxHufNZXBWlLSOLJys3N7QETzI3EGuLl3HMVIj++hhMJVxtIUlcdLAzno
-	 fNhVppbEOe73HavZHoROg1Jaz/zsceEzneABHvLp6EQat4lVrvf9TCraJ/co9VkewBgp1
-	 3J7M4eIQlI2Pms/uPOwTcYw+1rcRqaVec81/EnHSMP6OXEm4TLprNt6iRWrCPLwDnPw==
+	t=1792988745;
+	b=sFCAj2z29fs0naz5WUTfG6YhP8B5yB0uJ+MKjTdhyrMu/enzf5AaPwvJmObHHmD8neJI
+	 96at+oPfYt5MzkZ4wu4agShT+cf4xGnmefh5F2fM2S6CKzEM79PhiZpMnBtk7mTS2C8FG
+	 aRWS/+1FzGW1bkCsqbAk9aEOxSTNCuaHuBOtaOaqXAmk7zB3kJQ47C28q99o9+sFVNq3e
+	 fxxCzpwtPeCCPBLb/wlJa3u8rQnuzVgORGcBVW/axMEWE6SKqMdWRZD3FYr1xdAIru2l1
+	 lOsp4V8GV1JNQMTEcxHW6AZQagoID7N6B2Qthm9Exknt6BN3bB7wnDy/9wjgslDMPpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792979623;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=n0TA3FzCIGpnxlwr6L+aCV/S8fQL4bPUb1PUN1c74K0=;
-	b=CtVvXmWqxpxfjXbHq8eGmYCfVq0RLX8+zqLZ7g3Q95RsrDPmurVTdVt4q9cCW0zxPcsf
-	 VD1E1c8tCQunZsDFEbMEApJoasNR9D8m5DF4IauaLd2dX5S1t4F2VeqnGBYRN9GRvHc3X
-	 xLeogZL/rNMlsJuyU8hpp6EV/jxHcSRLq+NFQ/dvqzRuFGLQpjorcy3Cd7QAqpOs3j8h2
-	 cFdP04WF0MyuycXjLV0ygrN6tmTYEWno57fgHQEk4D66vEAz+hyOMMRoGidKd7UbtfC8k
-	 Myaxp1VpwvbXUlSsg0ZqPOen2qdLNumrxt+4Y36IGz4Qc4yptzw1d137RMmy3+UclDg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792988745;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=7mQckdVoqDDwNSwgKOH35rCXSMgCp0iItUYI9NdOZh8=;
+	b=0hXp7ZWzjYoAs0aei88zn6j0K+iuYiKsVAqePacQhwx04RlfrkF2LSMK5BvZ8ir1KPac
+	 3QkxtVQ7irV0H2tKHzlGYouOQ1cqnmKvmjJ+9iZewb+t+JmgqbliFS1hFkXl7GkUHY6OG
+	 HBiT7jxXW0ghGBBQYRoH21u8Vw+vf3BjrNvLnmWTDTLmnJyFafKAnhv9MvWm6jqZ8lXA3
+	 I5yFMYcd8hItnMCAN1oL1cDMaSAdkGh/sR98rbXgdqRMI8uUiFGw73rmHL+J5IBRZyauR
+	 k1nTRW7034QfyQfU/AXXzrl76sZRVrdAG80jWCKx7P0Vs2sDWktgkfaY6OJReyFwoNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTFkJb0E;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=OKpiugzi;
+	arc=none smtp.remote-ip=74.125.82.169
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45979606A31B;
-	Mon, 26 Oct 2026 01:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EA606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 04:25:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5E2EA606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTFkJb0E
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60301F01825;
-	Mon, 26 Oct 2026 01:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792979622;
-	bh=n0TA3FzCIGpnxlwr6L+aCV/S8fQL4bPUb1PUN1c74K0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iTFkJb0EdDmwPa2Ge0eGs87BpHYCrLXuXJpgbueCOHU8mLWftT72ptm4wWphRcke2
-	 ahRAtG43pmGVI9XHJ7OoJFLCJekPLit6X8euC/RDZxZRO+2dIdz0RvPkQORgKpX2Y9
-	 iQsSRsxSseO4qYM6/wnb7LPEQl0k1Bd4KEtEKOiQ1Dx1hSxg8GfiepiQ8AzVcy4taP
-	 wxs/Uwsxh6xQCyeXR98FsQii7cOLtVb30BA7XmL6xaRV+TDpkMcBolO227SgeVZ+i0
-	 0+b8dczquB3QMddVaMqYiqsXp00ORUxnTqb3ZJS7SjcAMSs+WSNovubRw+BHCFDGBu
-	 dVYdaEIDmIzQw==
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Baek Kyu, Kim" <pocj8ur4in@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Free tracer resources on instance creation failure
-Date: Mon, 26 Oct 2026 10:53:40 +0900
-Message-ID: <undine-1792979620229535425-240da28948f7e6f5@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261025165250.65363-1-pocj8ur4in@gmail.com>
-References: <20261025165250.65363-1-pocj8ur4in@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=OKpiugzi
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-35829219da8so4590464eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Oct 2026 21:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792988744; x=1793593544; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=7mQckdVoqDDwNSwgKOH35rCXSMgCp0iItUYI9NdOZh8=;
+        b=OKpiugziXYboBMw6cR6frUtuKeRR1Khot153CgmwsHq4U5LS//3gyGZVV6KzejolnJ
+         50b5JkT7hp5qavIQYzrUPp/vMJOQ+EIJdOGsfSUyQcn/z7MzbQwJB65NsWEkRcLwss7H
+         lEvSHynr1pWxnUq4bFXEHQejyTSgebjifEv/g32YeN6BdDwhsbEfWwnwbrQHbykd+eMs
+         /CQy8285a0CqpGix45YmThueJW+xGDeCmCE5ua5zmQMJAro+6JAvcIWZcolJnuyqlUug
+         V4AsGHab/y06oDkcXQLV/IrFui/QGg7I2kAAHEDN5aU5uAv4BCRzzNDW2jAqcWO1gtQf
+         tOPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792988744; x=1793593544;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7mQckdVoqDDwNSwgKOH35rCXSMgCp0iItUYI9NdOZh8=;
+        b=kSdMQWDY4C/V/AplIUpOlSuxz8n0ReoVC8gHSCIjXlrpdofV1uFwLq1639w7MCTQOO
+         3QMcfaBiceVCPkIVHApJbt21ohZrHFCG2W6iwxCsLZSVeTALsvLZwi0KoHnDYyZCPMpB
+         EtRp1KtRRXMKZ9N/AUslMQe56DIff9AI9wwGCCN67181kCY1wSgDbFEb+ztuLdbpPaWL
+         bD07uc1IsGCNBJvAqGr7fupsbzj7K78sMatLJjlVzy4U33mIodcMIA6wqVWg7ak018j4
+         YUCaMnUlwyjB1XPZvWbfsSL4ZezEzwe2PFDDgqfyd5lwwzWZLHH7nOS57WyIntKfqkIb
+         WZQg==
+X-Gm-Message-State: AFq9FYJ47247MxtSVc8B5WAVHNmhcWBA07gVJOx6kUj+4rmDEGGT0lZY
+	VgcmOv0HGjvkhZSZR1n1EfdZJd8UHK14XsmMu4hy7aOH788WC9z6Pj7AWWE3
+X-Gm-Gg: AYBFou3u8RO68CFFizaTLfuhVN6IvaMk/UVV45QOf14jHg+RYNmC1ZgTNIuFSyZopGt
+	0q8ZVEb1JkzzBkDgY6HEl5aphzbtLT0dSIyk+3pln9e9Pb+UETaitFky3koHOLpeG+bAmk7/Lzc
+	71k1cVucICE/gwpl6/lXQUqPDqobOSJgQm/YtXrhY2lwFEOOL2FGaMluTfg608BwO75igFHTo1A
+	wnQAvp/JbfeXuK3ZGlkuH9f5joELq/h5r1pU59dvwQNAjeYnanBK8HywFBZrgeTWRAplr7LCNUq
+	+vMC8+Wo6sjoGgvzink3zEwKahNEnao2tbpmy4GOGsOAJGMOuognUdRWIR3Z7LjDkidsTeK2Rrj
+	0xwX4SjcY//uV6rpVN/zW3kV0fdjX3wUAfsBhJz3OwMIDHiRekvaWK7jZ3fF4LKikp8RlKKB5KO
+	NJ885bHb7IBWxlHDStBlD6D/GrgUFcxHuZznJkjEIEBAEmQ8c/+AYw8NBWYEdwPDaKiCueoKcOm
+	MmmzApcoYnYkFi9N4CQg8dG2jJtWnOMON0uZyfPIFay3da3yAHofMB9+lCMR08OUETFfNeEhxAY
+	3zDGXtJgn4YMfpgNdA==
+X-Received: by 2002:a05:7301:1530:b0:351:77a3:55f1 with SMTP id 5a478bee46e88-369e84e00c3mr8104891eec.19.1792988744218;
+        Sun, 25 Oct 2026 21:25:44 -0700 (PDT)
+Received: from MalHyuk.localdomain ([211.201.32.99])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369ff5a4d68sm6569034eec.14.2026.10.25.21.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Oct 2026 21:25:43 -0700 (PDT)
+From: "JongHyuk Kim (MalHyuk)" <malhyuk97@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Reject filter expressions that end on an operator
+Date: Mon, 26 Oct 2026 13:25:39 +0900
+Message-ID: <20261026042540.2478566-1-malhyuk97@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,70 +91,85 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+predicate_parse() seeds every new program entry with a backwards link:
 
-On Mon, 26 Oct 2026 01:52:50 +0900, Baek Kyu, Kim <pocj8ur4in@gmail.com> wrote:
-> Creating a tracefs instance can allocate private tracer nodes, copied
-> flags and option arrays before trace_array_create_dir() returns. If a
-> later allocation fails, trace_array_create_systems() jumps to
-> out_free_tr and frees the trace_array without releasing those private
-> allocations. The failed instance is never registered, so normal removal
-> cannot reclaim them.
-> 
-> Free the tracer nodes and option arrays when trace_array_create_dir()
-> fails, then continue through the existing trace_array cleanup. Earlier
-> failures still use out_free_tr because the tracer list is not yet
-> initialized there.
-> 
-> Signed-off-by: Baek Kyu, Kim <pocj8ur4in@gmail.com>
+	prog[N].target = N-1;
 
-Please add the appropriate Fixes tag before the Signed-off-by:
+so prog[0].target starts out as -1. It is expected to be overwritten by
+update_preds() before the second pass walks the program.
 
-Fixes: 428add559b69 ("tracing: Have tracer option be instance specific")
+If the expression ends right after "&&" or "||", the pending PROCESS_AND
+or PROCESS_OR bit on the operator stack is never consumed, update_preds()
+never runs, and prog[0].target is still -1 when the second pass starts:
 
-Commit 428add559b69 introduced per-instance private tracer nodes (tr->tracers),
-flags, and option arrays, and called __update_tracer() from
-trace_array_create_dir(). When trace_array_create_dir() fails, these allocated
-resources were leaked because out_free_tr did not release them.
+	for (i = N-1 ; i--; ) {
+		int target = prog[i].target;
+		if (prog[i].when_to_branch == prog[target].when_to_branch)
+			prog[i].target = prog[target].target;
+	}
 
-> ---
-> Tested under ARM64 QEMU/KVM through tracefs instance mkdir with
-> failslab targeting tracer flags, a later tracer node and option-array
-> growth. The baseline retained one or four private allocations after
-> the failed mkdir; the patched kernel retained none. Normal instance
-> option read/write and removal also passed.
-> 
->  kernel/trace/trace.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+That reads prog[-1], 16 bytes in front of the kcalloc()ed program. The
+value read there is then stored back as a branch target, and the only
+check on a branch target is the lower bound in the third pass:
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-[...]
-> @@ -8761,6 +8761,11 @@ trace_array_create_systems(const char *name, const char *systems,
->  	return tr;
->  
-> + out_free_tracers:
-> +	free_tracers(tr);
-> +	for (int i = 0; i < tr->nr_topts; i++)
-> +		kfree(tr->topts[i].topts);
-> +	kfree(tr->topts);
+	if (WARN_ON(prog[i].target <= i))
 
-Two minor nits:
+so any positive value is accepted, and filter_match_preds() goes on to
+use it as an unchecked index into prog[].
 
-- Please declare `int i;` at the beginning of trace_array_create_systems()
-  rather than inlining it inside `for (int i = 0; ...)`, matching the
-  prevailing style in trace.c (e.g. in __remove_instance()).
+Reproduced on 6.12.112 with KASAN as uid 1000, with perf_event_paranoid=2
+and without tracefs. One perf_event_open() and one ioctl() are enough:
 
-- The cleanup loop freeing tr->topts[i].topts and tr->topts exactly mirrors
-  the logic in __remove_instance(). Consider refactoring this into a small
-  helper function, e.g. `free_tracer_options(struct trace_array *tr)`,
-  shared by both trace_array_create_systems() and __remove_instance().
+	a.type = PERF_TYPE_TRACEPOINT;
+	a.config = <any tracepoint id>;
+	a.exclude_kernel = 1;
+	fd = perf_event_open(&a, 0, -1, -1, 0);
+	ioctl(fd, PERF_EVENT_IOC_SET_FILTER, "common_pid==1||common_pid==1&&");
 
-Thanks,
+	BUG: KASAN: slab-out-of-bounds in process_preds+0x151e/0x1b60
+	Read of size 4 at addr ffff8881014ad474 by task exp_progm1/123
+	CPU: 1 UID: 1000 PID: 123 Comm: exp_progm1 Not tainted 6.12.112-dirty #1
+	Call Trace:
+	 process_preds
+	 create_filter
+	 ftrace_profile_set_filter
+	 _perf_ioctl
+	 perf_ioctl
+	 __x64_sys_ioctl
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The faulting address is prog - 12, that is prog[-1].when_to_branch. On a
+kernel built with CONFIG_SLAB_VIRTUAL the same read lands on the unmapped
+guard page in front of the slab whenever the program happens to be the
+first object in it, and that is a fatal page fault rather than a silent
+read.
+
+An expression is not supposed to end on an operator, and that is the only
+way a PROCESS_AND or PROCESS_OR bit survives to the end of the parse, so
+reject it there.
+
+Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+Cc: stable@vger.kernel.org
+Signed-off-by: JongHyuk Kim (MalHyuk) <malhyuk97@gmail.com>
+---
+ kernel/trace/trace_events_filter.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -602,6 +602,13 @@
+ 		goto out_free;
+ 	}
+ 
++	if (*top & (PROCESS_AND | PROCESS_OR)) {
++		/* Expression ends on an operator */
++		ret = -EINVAL;
++		parse_error(pe, FILT_ERR_INVALID_OP, ptr - str);
++		goto out_free;
++	}
++
+ 	if (!N) {
+ 		/* No program? */
+ 		ret = -EINVAL;
