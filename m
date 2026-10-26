@@ -1,93 +1,127 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793039749;
-	b=dr5lEbempelTl0CzpNhJh4RmWFOUxie5xzTqySb3B397uElr767oxAOi2sm4HfLrXTFb
-	 gO1BuzrvliSCt8rZFo5o5Kk33rJzhRF7ZDqCd4x51OcFwYmTwjl4JV1oDZRq+0A52Mhgb
-	 KrjIbDjuVpVlkN+Dz1ldYn6cCAz/HdjVyytKdj9SbCGFOEwekorv1HKs+uO16chJNftP4
-	 AjTj6CgIAXkt6qSrsSHvg5260KI3+fxFyUwp6ErClCp4L1aMRUyfbmtrQ467bWApzb5xI
-	 Uu7xG/Dqvjabg1KS0nuP2R3Xm927BQYLx22dbStZoySf6IlKbVxDH2fr5J1PZfJLWrQ==
+	t=1793040200;
+	b=q01yRW6PxBPCMET/in3EJKdSu9i4S0ZEkn3WmtIyMTiljYF15PS8T6ve6IZTogtrnX2D
+	 d3r++kV6i7Io3SrWT5icpyzCZROdWgQJH1+RVmlweYxRU5AJCQUiohyESFzjg774cHaF2
+	 Fg/HbGxgEdtwWeHcj065SMYqOefidXWNjmKDkYIrHBEQpwYezgAtzIOIaJCu4DdMx09NL
+	 XUdl+ky9gXPSV7B4Dob4Gw+i5YWw56bFUeUQEJOJS3POkjl5Ma4UZ9jWNagY1nW+16fsL
+	 c/njJ6zUQAnKJYvgRXZuijwCDvZXsKHApoMauo7sr96MT4Vod6EN2WSeqJ/Ic4tQ4FQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793039749;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=eAs5vZDXx73edOgOG4NPVpmJ+c14EhkC4FV7ULARZWI=;
-	b=rnWLO6BuPZmrCEAt37rzTxxVHlqADuUABxZXuu/GuThDvkivfUSe6DuRfrUoZG2DHtdg
-	 l+iwQrFwoZwa//GoRKfCLPg0WwRv9DiLezEuPDzihhSo2gHM/hZCNQtFgdWJPOY0j7HRD
-	 PtAjEyEClarln0dcyn/LtFpECtdTpuB2YsiXh3U3OfJJJcc2wgKyVLtCbVMVRFTGPiNy5
-	 C+RvHHOk3Lcv4IHaLYZD6aIckHw5LXkd11QCEvdgXWBqPAsNkC1eD8gL4Nj9BGls/2gI6
-	 Tu/LElbQmnLPTkrI3PMZuC2CPGfAzS38b6hZloMGxoUDwhTzhMAYfHxgYLFXOqVh2nw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793040200;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=ZWci1OY37Q98PjNDa+DsqfD5q79/im0Ez6T5Vupv1s4=;
+	b=giM9LjxwvE/t/fLIYONsl4CIZPP5uurQLh8TtAq8PKuAzNzp5tzqL88o/T5Ussym3dzX
+	 4zPlnlw47YLvlGnYkpMB3KLeenkKRDMO0raBJ/2yXfGv1VN6mILJuElvbblOUqxtPKUcF
+	 nXCxGYnZlMlfTXYmjUDbmjqCLk14UxpfozzOB++XZ8NUm5XDgyHzquR0NmZLNKStpXi30
+	 MlcYLZcvlHhTREPGMhSU8xUc58ZEAbQ++FgVjwAK4dEjx0XI7k2TQvRcyQm1VcuXXmZeE
+	 cyN7ErjFkGH2gsaqt0aSkBRPZ0vv984/cFDDkz7yzdnbBHclC0FViblfKiMIIUMH++A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NMff88ob;
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=ziepe.ca;
+	spf=pass smtp.mailfrom=ziepe.ca;
+	arc=none smtp.remote-ip=209.85.222.178
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDF760A5BD2;
-	Mon, 26 Oct 2026 18:35:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0EDF760A5BD2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NMff88ob
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793039749; x=1824575749;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ikC4Qlj4ZvTMIl4+e308BeDjgeA84T+eaaVkCJnu6sg=;
-  b=NMff88obdxnCkOEfzRMFcpOx1XIK6Oz6xQNyV/nkGYCzdRHCACXirDmM
-   2FBms8HLrymWngZZnnbkKaUyXBQkPnZahwR8L5XTkIbZNL+Lo2IY1HrC7
-   fZPqcfxk4IMvI6vN71ZLp/FiaJ5ooFi6vwZqX8fL5rz9IrSfOE+qK9fEd
-   MKwp3l/RQKdL5PLLAoK9MPiVrmieb1usS/aYT9PAA6vJuShiA00S31g2C
-   eIYBfuRN/dp4EeIIoiMgPs3sVvmZCWLjY47/MtSVhw/qOi6wS7tfkLCAb
-   ttIm7z9WuTXeYapDLWDD9mch3h8XSsLaMHTOaoAzkAp4gWvTsGYYnipA1
-   Q==;
-X-CSE-ConnectionGUID: 5Y6PvyEiRFG4nyE2EitYGQ==
-X-CSE-MsgGUID: /xssWpGbR7OwBaMIhb+dwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731571"
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1731571"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:38 -0700
-X-CSE-ConnectionGUID: pnLmmyuhTOWOLvjhINFJ1g==
-X-CSE-MsgGUID: buWCoSRqTVC8mrkdhJPHIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4293914"
-Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
-  by orviesa003.jf.intel.com with ESMTP; 26 Oct 2026 11:35:38 -0700
-From: Ehab Ababneh <ehab.ababneh@intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	tony.luck@intel.com
-Cc: ashok.raj.linux@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tglx@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	pengfei.xu@intel.com,
-	ravi.v.shankar@intel.com
-Subject: [PATCH 16/17] platform/x86/intel/ifs: Update IFS documentation
-Date: Mon, 26 Oct 2026 11:38:19 -0700
-Message-ID: <20261026183820.129459-17-ehab.ababneh@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261026183820.129459-1-ehab.ababneh@intel.com>
-References: <20261026183820.129459-1-ehab.ababneh@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45571606A322
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 18:43:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 45571606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-943e8d35f74so94699085a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 11:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1793040194; x=1793644994; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZWci1OY37Q98PjNDa+DsqfD5q79/im0Ez6T5Vupv1s4=;
+        b=azZPsctqXRKqpOwzOSUanbXvvxd+v2oxaACaz4naHK4U/NBQWTZSH1+8VRwPrLVwY0
+         DocnyrGmPyv8LQRxTMk4K4sAlQVJBR98rqP+2aWoEAiU0n2xJtP2lXe11PdsBX9zw7zH
+         rykKuo4jE8Sw3g1ZHf1cUaz2vGbXwYAs98RHcsf375OaxpJvYYqyPF71AEMIeOtk1CIf
+         vDE/ajmi0uLVqaMusVBTVkVR8NUGi0AybkTdqBwAenvqpPLeBFRcUdif9SgXW44+UVBP
+         XcslWkg4kCuQnmXySZ0RwdZ8wSe243a/pyuPpY5dxc6Pr/hlCqlSwaLgYcUdwFY6ZPLq
+         p4lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793040194; x=1793644994;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZWci1OY37Q98PjNDa+DsqfD5q79/im0Ez6T5Vupv1s4=;
+        b=F5k2Tr59Xaani6zIgEn+xO2Sy4uddVkdQIk/jnOzdY+r6TCbTLuq4jebYVQXsylhLQ
+         E+zyU0uDLhzQQ6NTWMweosnPRD6bjsb+pQ1U9EsAuwILDTZHjkL7SQanbsboINSOuLAM
+         sFVj382auz6q97spVjBi3+vge2YZWLJVy8EVqDIo6myBRacYUdAKbrnoq21oVgqXoSEc
+         mI4bslZA1kjSYr5JlN8NsZEE87pAwfM9FBkI+uMeZ3dy/TZhoY0CsIK023vZwP8OztYu
+         zBtgmqeO/UIWl6fDoOQ08M5fga+O4hzgWNu5L7AoC0UA3aqtcgwruRhMoN95zzqzsLTS
+         hklQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzqy3nlcYTEJSJd9uhbBCRM/iLx9kr624K9qA6XpTMdoZ9GgfXihj/vq1RJPzkS76NTCIrI9rUDgckTf77AXKGi/2A=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKfPfxDWUUgzQeDrZpfd0Sg5CMxPsCwre58ffy1xC4j5cliZrMY
+	I57tiaQ5z65aZr8iNFG1NaU8KUkov0RSd51UH5ctIMzMQIy/+WkW0kuDr4CSBiGigJg=
+X-Gm-Gg: AYBFou2XKODgT/BW2jbCVY4mnVoe8JQ5+cPR/G3JXR74c7GJJcfgy1wyCfeZLw78NoG
+	QIxtbfO/kwK6QiAZ8PXMNnPQQfdWNcYcyUuSELFjno643aJQEoi8QgKGYOghxPjXVJICaXUksxK
+	oDZx3W50+St6tNymuN0Z2YrfcZL/qFh6g/2OVZmgirc2QJngcWUvadKZJ8kKN2CihV7rv/Rc/tM
+	3f1LaOBxhPrSu7MjDKcN4tEbDzux0NFEbl9gQLFBWJaY+D88T6FxsSejoNWDlwC7yLPD9DiNaWi
+	KV6/I7JX2GnjiuKOR77VFij0Bgt5vKzecBtXGn5uOujKMTZrqiAKco/ZqOqokcd66dF3eBO0xgR
+	0QWUT5aOGj/1FD3XuUw8uoY73KzqdGw7zpH49X6zW7wLHpw4UG3a+Fe4m60Rs8iJw9KOfVI2WZi
+	d2qYmw9TlYgU++rS6VzagXD244VQiLBILuupEYdkGVD/CEgM3ARJCHN9A1hO1m1NaHYaLlpn12T
+	yDQkBBpQsxUbu68t1HhW2uZU2Qszeyy48chFX1yUf4tANAWIRKgceUqtj2Bb6ib1/iMKp7pQ9oS
+	uqMVUk3hkVqvqVn8maJeTAwj4irvAYRABO9czQRp/u5gBNKQEy5maV0z6SsrfIOrYtIlXBw7EVU
+	QxnTPfJYbgvE=
+X-Received: by 2002:a05:620a:172a:b0:939:6c31:2318 with SMTP id af79cd13be357-940ef8d8389mr1233127985a.34.1793040193950;
+        Mon, 26 Oct 2026 11:43:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns010zw-159-2-239-150.pppoe-dynamic.high-speed.ns.bellaliant.net. [159.2.239.150])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-940f067c879sm758709385a.16.2026.10.26.11.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Oct 2026 11:43:13 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1xLPf6-00000007foP-2hO4;
+	Mon, 26 Oct 2026 15:43:12 -0300
+Date: Mon, 26 Oct 2026 15:43:12 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Alex Williamson <alex@shazbot.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>, David Lechner <dlechner@baylibre.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Bradley Morgan <brads@mainlining.org>,
+	Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <20261026184312.GA1685504@ziepe.ca>
+References: <20260914-bind_taint-v4-0-eadf8a090903@linuxfoundation.org>
+ <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+ <arIvG0nx4LXG9nlW@monoceros>
+ <defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+ <9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+ <2026092321-province-yearly-44aa@gregkh>
+ <arOfHEsGGglNse7T@monoceros>
+ <2026092348-victory-erased-0e5a@gregkh>
+ <20261023181326.0dc2f7ed@shazbot.org>
+ <20261026122243.GA28851@unreal>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -97,134 +131,27 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261026122243.GA28851@unreal>
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Mon, Oct 26, 2026 at 02:22:43PM +0200, Leon Romanovsky wrote:
 
-Update the simultaneous IFS testing domain in the IFS documentation from
-a core to a group that shares the same SCAN engine, which works for both
-the traditional Hyper-Threading (HT) systems and the Dual-Core Module (DCM)
-based systems (e.g., Diamond Rapids).
+> This is needed for two reasons: to save hardware and software resources
+> when creating a large number of VFs, and to allow the PCI config space to
+> be configured *before* the driver starts using it.
+> 
+> There is no in-kernel alternative.
 
-Add documentation for the new sysfs interfaces {status, details,
-additional_details, cpus_ran}_list.
+Having userspace involved in driver binding has also always been the
+plan for confidential computing needs. We cannot have a device driver
+bound across some of the HW transitions like TDISP shared/private, so
+there has always been an expectation of bind/unbind.
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
----
- drivers/platform/x86/intel/ifs/ifs.h | 64 +++++++++++++++++++---------
- 1 file changed, 43 insertions(+), 21 deletions(-)
+For this case the existing sysf drivers_probe is good enough for bind,
+but we must have taint-free unbind for PCI devices too.
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 3f11ae08dce1..551202f86cea 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -14,11 +14,11 @@
-  * Introduction
-  * ------------
-  *
-- * In Field Scan (IFS) is a hardware feature to run circuit level tests on
-- * a CPU core to detect problems that are not caught by parity or ECC checks.
-- * Future CPUs will support more than one type of test which will show up
-- * with a new platform-device instance-id.
-- *
-+ * In-Field Scan (IFS) is a hardware feature that runs circuit-level tests on
-+ * all CPUs in a group, where all CPUs share the same SCAN test engine to
-+ * detect problems that are not caught by parity or ECC checks. Future CPUs
-+ * will support more than one type of test, which will show up with a new
-+ * platform-device instance-id.
-  *
-  * IFS Image
-  * ---------
-@@ -59,19 +59,19 @@
-  * Running tests
-  * -------------
-  *
-- * Tests are run by the driver synchronizing execution of all threads on a
-- * core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
-- * execution continues when:
-+ * Tests are run by the driver synchronizing execution of all CPUs in a group
-+ * that share the same SCAN test engine, then writing to the ACTIVATE_SCAN MSR
-+ * on all CPUs. Instruction execution continues when:
-  *
-  * 1) All tests have completed.
-  * 2) Execution was interrupted.
-  * 3) A test detected a problem.
-  *
-- * Note that ALL THREADS ON THE CORE ARE EFFECTIVELY OFFLINE FOR THE
-+ * Note that ALL CPUs IN THE GROUP ARE EFFECTIVELY OFFLINE FOR THE
-  * DURATION OF THE TEST. This can be up to 200 milliseconds. If the system
-- * is running latency sensitive applications that cannot tolerate an
-+ * is running latency-sensitive applications that cannot tolerate an
-  * interruption of this magnitude, the system administrator must arrange
-- * to migrate those applications to other cores before running a core test.
-+ * to migrate those applications to other CPUs before running a group test.
-  * It may also be necessary to redirect interrupts to other CPUs.
-  *
-  * In all cases reading the corresponding test's STATUS MSR provides details on what
-@@ -81,30 +81,52 @@
-  * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_<n>/
-  * to control execution:
-  *
-- * Test a specific core::
-+ * Test a specific group::
-  *
-  *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-- * when HT is enabled any of the sibling CPU# can be specified to test
-- * its corresponding physical core. Since the tests are per physical core,
-- * the result of testing any thread is same. All siblings must be online
-- * to run a core test. It is only necessary to test one thread.
-+ * Any CPU in the same group that shares the same SCAN test engin can be
-+ * specified to test its corresponding group. All CPUs in the same group
-+ * must be online to run a group test. It is only necessary to test one
-+ * CPU in the group.
-  *
-- * For e.g. to test core corresponding to CPU5
-+ * For e.g. to test a group corresponding to CPU5
-  *
-  *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-- * Results of the last test is provided in /sys::
-+ * The result of the last test for the primary CPU in the group is provided in /sys::
-  *
-  *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/status
-  *   pass
-  *
-- * Status can be one of pass, fail, untested
-+ * Status can be one of pass, fail, untested.
-  *
-- * Additional details of the last test is provided by the details file::
-+ * Additional details of the last test for the primary CPU in the group are provided in /sys::
-  *
-  *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/details
-- *   0x8081
-+ *   0x7f0080
-+ *
-+ * For intel_ifs_0, there are following additional sysfs files:
-+ *
-+ * All CPUs in the same group that ran the test are provided in /sys::
-+ *
-+ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/cpus_ran_list
-+ *   5,149
-+ *
-+ * The results of the last test for all CPUs in the same group are provided in /sys::
-+ *
-+ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/status_list
-+ *   pass pass
-+ *
-+ * Additional details of the last test for all CPUs in the same group are provided in /sys::
-+ *
-+ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/details_list
-+ *   0x7f0080 0x7f0080
-+ *
-+ * More additional details of the last test for all CPUs in the same group are provided in /sys::
-+ *
-+ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/addnl_details_list
-+ *   0xc44191a 0xc44191a
-  *
-  * The details file reports the hex value of the test specific status MSR.
-  * Hardware defined error codes are documented in volume 4 of the Intel
--- 
-2.43.0
+I think this patch should be reverted ASAP, it is a pretty major
+regression for a lot of users.
 
+Jason
