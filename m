@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793039739;
-	b=2FFM7xGAR9hMcNHlv8zLMffT3cjDC5lrQt1M9XPb5vHXiR6XBaHpTaXJfRE0/tMwuSFj
-	 BqAjSmdWznRRnPk9Faep5iBupyHRGtodinnkj5SUHiNk3C6ept+QBaCj8P6Mh8bQCVLvo
-	 FMEf9OLH+KkJH61ttBkzuxBH/qGqGadapq4Lz1vLol0NCR43rcAzx+0iyaosH/Zxz5gU9
-	 71++cpBT+cU5MC1sue421kPw38kTWGm93YCJ/RY5qYqlYaIOMNrQ18K7lJ7bsD4JJBzdf
-	 5tfDr3hn8yR3Etp1PooQEJDr/Db2VIYvYP/oS2tF6jMn0bz9mGKc2CJbU4rih65NBtQ==
+	b=Jntw4L1p73zjRfVVOAOWcjLSUfg9OfTw1O9uXC7/JmvRP21w6DodockD+8xdqyzUJBwU
+	 XDgTPFQVR+qK3nYhiFhmq2fj8gQw6Cj/jacS1wV/MZPPclc9V+bRK8s7idtHuW+g8irg2
+	 r2mhYjGO3D43velaMITD5OWEeqlvsHlPU9k7wclS6CQ+VkwRbSGaXVhMUj6tQEfviYYp7
+	 tMmvGi43qH3TxWfVSKpx0xCAYfgb6gX+on054n3Wm1v4cTOd/h+jgW4hrxsJ6D+tI0QWB
+	 CNVQKmrvrwlLU79kexiLeEGfiz08+/450g/iVdqQA67jPUEuFTIz3zLpNzIZGfk7nGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793039739;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,52 +13,52 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=EHZiiwB2jC0ynFjIbqY1k8ej0FqmnVaJZUQ0AjdtGwE=;
-	b=h/WStHKg/QAtind3AhiowJZHAad77A+8dQxnd/9MjZpIyf3JiBiiiW80fbH17ia3Zgn0
-	 r81iAJPX5k5xjCFNRt524//tzf9OsnqH0xCLo2jGtRgFyuARn5LTIi5Nr9J1DAU+5eKMK
-	 8kjUMnicNjYWKDJv+dxuKO7u2WFiJf/N0tKhUGVe3ZY6W6w+UY1MvRPvz887Owc3+Ss6i
-	 dpT8rQHdrQYeh5MOqwgu2x/Yj2XGpVRPx479BaLhty7M0fhzmmLTNm2k6UOcHJkxq9KB4
-	 FBfvjP1sKbTF/TXPLWYvjMSaPurhsI64hTy0e748yEUzIygV6H2wAfh7oAFwX7AjChg==
+	bh=zYc1qAVr0ISWTHVsxU8GI+37KVT00reqFx70LBZ02HQ=;
+	b=L3SXmg68rtyZXgzslfgiuFEHTXOxESIo9qEcjU7LX28U18LAzTRDLVziQ8/+WqmM3MVW
+	 hZ6yMJv362PDXt692LlmolRdOx+vKowJXlcZuRG3Q2kkNfiBTgJJ8h0kRFnBTeTCCt0nU
+	 HFL6Md3u8+4Haxik132Gn6T9Bc1SON5LB5/zXLe36TNOvxDQLzK2olBtio1hV07ltwFu4
+	 wwz7MrHqWZH1ueNalxD4U4IWUy0hJIRZkeyHtW9o4v4ZjFPCJem0bysKlzRa2XnE15bNd
+	 nkisohJGHBN7LOREaLrrbknCz6N8BuwzI+sD3z4v7MXDmmbAUsT9HWciH/FSe13v3eQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E4wBP0vb;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FXMV8+My;
 	arc=none smtp.remote-ip=192.198.163.16
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E957606A323;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC2606A322;
 	Mon, 26 Oct 2026 18:35:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E957606A323
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EDBC2606A322
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E4wBP0vb
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FXMV8+My
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1793039738; x=1824575738;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=B6ofUcualEXrKcpSuDJW9R1mIcskONvqVnrqOGvC34k=;
-  b=E4wBP0vbe0B56GiT8Mh6eSVfFmm59i7odeXtmR51Wb4nO7VBIEa0Xa6Y
-   yW/POntGH4hgDN2aR/wPOun/T4DoErfhwO+mH5AUKfoI2srq2NvSgVVyj
-   qGoCoLTdhTZl06VAzUEB3tuO6h+QbOEK+rTaf8qCH4XTLT2ek91sHX7UG
-   6dlsIColvJXqdsK28U2Jwc0tRCtUg7Tt5+YcFKdLq0wjSQPPzkzo1rVu0
-   Jwtfv+0btTiWys0jmEmoY/7L1dd2Xx1mtafbpbHDQk3Qdd+XuSaIvKq74
-   /P2GamWM9Rcjt/kkYvSe+PMF6Jh0iyiGOHic3VyVSzRlGrbc/Ax4bt8KT
+  bh=wiGXJW5Ajpuf77PQD6Ta/tn8uoRwAjZ5goY4B0Ax0lI=;
+  b=FXMV8+MyWZjmU4PWIM8oaVo0d8qEFOKPtHeXpEI64MbUELwpbUxpbtpc
+   LZzlFrESgTH0gFv4R9e2cgu9tIQo0EVXnOc46uBUOHteKka5Jt8nly0Ju
+   Yya02o0TAvMchYUU5gJNtkk7Fyd4PagAlWkbS6ecIjDteHNYfEKTsb0so
+   SSc0lxZ+5sUWEtcXjv/Ii3cnXc/9ufbACw4OM5oFeYEbj8uXtydZNEHvu
+   Cuar9W5MdVOnaanz90wKMZH0O2fOCnSNxa42vVqXHc5penqt7GHw+20v1
+   BEp/lpuWPIGntGamxHl2XFsq8/SoVF1FPYUuGSOIrUcoo9WSX1M8+p6EU
    Q==;
-X-CSE-ConnectionGUID: WwjOz6+RRX6aZCqsptD0Pw==
-X-CSE-MsgGUID: SgJjoCybSIqF6jCk+UjGyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731444"
+X-CSE-ConnectionGUID: oWsaUUwGSviGIA62zhvF9Q==
+X-CSE-MsgGUID: 8MlVkaS5TPCoK7Zd9DwSow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1731460"
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="1731444"
+   d="scan'208";a="1731460"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 11:35:35 -0700
-X-CSE-ConnectionGUID: bu1pf30sSriKXxVOPugqCA==
-X-CSE-MsgGUID: uy3C7eCxQQWtup+n3/8oUw==
+X-CSE-ConnectionGUID: skM+Px+yQxOn2HOXCjYUvw==
+X-CSE-MsgGUID: 5IvpKqaNR4y3r4MALXt/xg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
-   d="scan'208";a="4293863"
+   d="scan'208";a="4293866"
 Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
   by orviesa003.jf.intel.com with ESMTP; 26 Oct 2026 11:35:35 -0700
 From: Ehab Ababneh <ehab.ababneh@intel.com>
@@ -82,9 +82,9 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH 02/17] platform/x86/intel/ifs: Fix IFS sysfs interfaces in the comments
-Date: Mon, 26 Oct 2026 11:38:05 -0700
-Message-ID: <20261026183820.129459-3-ehab.ababneh@intel.com>
+Subject: [PATCH 03/17] platform/x86/intel/ifs: Clarify In-Field Scan MSR bit macro definitions
+Date: Mon, 26 Oct 2026 11:38:06 -0700
+Message-ID: <20261026183820.129459-4-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261026183820.129459-1-ehab.ababneh@intel.com>
 References: <20261026183820.129459-1-ehab.ababneh@intel.com>
@@ -101,166 +101,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-The sysfs interfaces in the comments in sysfs.c are incorrect. Fix them.
-Additionally, improve some IFS comments and fix some typos in the comments
-such as: s/cpu/CPU, s/intel/Intel, s/ifs/IFS.
+Current macros for Intel In-Field Scan MSR bits are confusing. They don't
+clearly distinguish between testing types (Scan At Field vs. Array BIST)
+or testing timing (processor startup vs. Linux Intel IFS driver at
+runtime).
+
+Clarify these macros by adopting the naming convention from [1]:
+
+  - PERIODIC (vs. STARTUP) indicates testing capability at runtime.
+
+  - SCAN_BIST indicates Scan At Field testing capability.
+
+  - ARRAY_BIST indicates Array BIST testing capability [2].
+
+Additionally, align these macros vertically for better readability.
 
 No functional changes.
 
+[1] Intel 64 and IA-32 Architectures Software Developer's Manual (SDM),
+    Vol. 4, "Additional MSRs Supported by the Intel Xeon 6 P-Core
+    Processors".
+
+[2] Use ARRAY_BIST instead of MEM_BIST used in [1], which is confusing
+    with DDR memory.
+
+Suggested-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h     | 16 ++++++++--------
- drivers/platform/x86/intel/ifs/load.c    |  2 +-
- drivers/platform/x86/intel/ifs/runtest.c |  8 ++++----
- drivers/platform/x86/intel/ifs/sysfs.c   | 23 +++++++++++------------
- 4 files changed, 24 insertions(+), 25 deletions(-)
+ arch/x86/include/asm/msr-index.h       | 12 ++++++------
+ drivers/platform/x86/intel/ifs/core.c  |  4 ++--
+ tools/arch/x86/include/asm/msr-index.h | 12 ++++++------
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index f55528ac517b..0f5cdc1ad14d 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -35,10 +35,10 @@
-  * IFS Image Loading
-  * -----------------
-  *
-- * The driver loads the tests into memory reserved BIOS local to each CPU
-- * socket in a two step process using writes to MSRs to first load the
-- * SHA hashes for the test. Then the tests themselves. Status MSRs provide
-- * feedback on the success/failure of these steps.
-+ * The driver loads the tests into memory reserved by BIOS, local to each CPU
-+ * socket in a two-step process. It first writes to MSRs to load the SHA hashes
-+ * for the test, followed by the tests themselves. Status MSRs provide feedback
-+ * on the success or failure of these steps.
-  *
-  * The test files are kept in a fixed location: /lib/firmware/intel/ifs_<n>/
-  * For e.g if there are 3 test files, they would be named in the following
-@@ -83,14 +83,14 @@
-  *
-  * Test a specific core::
-  *
-- *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-+ *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-- * when HT is enabled any of the sibling cpu# can be specified to test
-+ * when HT is enabled any of the sibling CPU# can be specified to test
-  * its corresponding physical core. Since the tests are per physical core,
-  * the result of testing any thread is same. All siblings must be online
-  * to run a core test. It is only necessary to test one thread.
-  *
-- * For e.g. to test core corresponding to cpu5
-+ * For e.g. to test core corresponding to CPU5
-  *
-  *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-@@ -284,7 +284,7 @@ struct ifs_test_msrs {
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index ac73dadb44e0..660b0c332be2 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -275,12 +275,12 @@
+ #define MSR_IA32_POWER_CTL_BIT_EE	19
+ 
+ /* Abbreviated from Intel SDM name IA32_INTEGRITY_CAPABILITIES */
+-#define MSR_INTEGRITY_CAPS			0x000002d9
+-#define MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT      2
+-#define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+-#define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+-#define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
+-#define MSR_INTEGRITY_CAPS_SAF_GEN_MASK	GENMASK_ULL(10, 9)
++#define MSR_INTEGRITY_CAPS				0x000002d9
++#define MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST_BIT	2
++#define MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST		BIT(MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST_BIT)
++#define MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST_BIT	4
++#define MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST		BIT(MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST_BIT)
++#define MSR_INTEGRITY_CAPS_SAF_GEN_MASK			GENMASK_ULL(10, 9)
+ 
+ #define MSR_LBR_NHM_FROM		0x00000680
+ #define MSR_LBR_NHM_TO			0x000006c0
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 574f2a366d06..85a04ecc9dbe 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -32,12 +32,12 @@ ATTRIBUTE_GROUPS(plat_ifs_array);
+ bool *ifs_pkg_auth;
+ 
+ static const struct ifs_test_caps scan_test = {
+-	.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
++	.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST_BIT,
+ 	.test_num = IFS_TYPE_SAF,
  };
  
- /**
-- * struct ifs_data - attributes related to intel IFS driver
-+ * struct ifs_data - attributes related to Intel IFS driver
-  * @loaded_version: stores the currently loaded ifs image version.
-  * @loaded: If a valid test binary has been loaded into the memory
-  * @loading_error: Error occurred on another CPU while loading image
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 329400908cb2..dde3f5eb379f 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -108,7 +108,7 @@ static void auth_err_message(struct device *dev, u32 err_code)
- }
- 
- /*
-- * To copy scan hashes and authenticate test chunks, the initiating cpu must point
-+ * To copy scan hashes and authenticate test chunks, the initiating CPU must point
-  * to the EDX:EAX to the test image in linear address.
-  * Run wrmsr(MSR_COPY_SCAN_HASHES) for scan hash copy and run wrmsr(MSR_AUTHENTICATE_AND_COPY_CHUNK)
-  * for scan hash copy and test chunk authentication.
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 1762eab7fe5c..96b538c665f4 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -149,7 +149,7 @@ static atomic_t array_cpus_in;
- static atomic_t scan_cpus_in;
- 
- /*
-- * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-+ * Simplified CPU sibling rendezvous loop based on microcode loader wait_for_cpus()
-  */
- static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
- {
-@@ -389,8 +389,8 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
- }
- 
- /*
-- * Initiate per core test. It wakes up work queue threads on the target cpu and
-- * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
-+ * Initiate per core test. It wakes up work queue threads on the target CPU and
-+ * its sibling CPU. Once all sibling threads wake up, the scan test gets executed and
-  * wait for all sibling threads to finish the scan test.
-  */
- int do_core_test(int cpu, struct device *dev)
-@@ -403,7 +403,7 @@ int do_core_test(int cpu, struct device *dev)
- 	cpus_read_lock();
- 
- 	if (!cpu_online(cpu)) {
--		dev_info(dev, "cannot test on the offline cpu %d\n", cpu);
-+		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
- 		ret = -EINVAL;
- 		goto out;
- 	}
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-index 01b7502f46b0..287f96bb033e 100644
---- a/drivers/platform/x86/intel/ifs/sysfs.c
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -10,14 +10,14 @@
- #include "ifs.h"
- 
- /*
-- * Protects against simultaneous tests on multiple cores, or
-- * reloading can file while a test is in progress
-+ * Protect against simultaneous tests on multiple cores and prevent
-+ * the reloading of IFS image file while a test is in progress.
-  */
- static DEFINE_SEMAPHORE(ifs_sem, 1);
- 
- /*
-- * The sysfs interface to check additional details of last test
-- * cat /sys/devices/system/platform/ifs/details
-+ * The sysfs interface to check additional details of the last test:
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/details
-  */
- static ssize_t details_show(struct device *dev,
- 			    struct device_attribute *attr,
-@@ -37,9 +37,8 @@ static const char * const status_msg[] = {
+ static const struct ifs_test_caps array_test = {
+-	.integrity_cap_bit = MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT,
++	.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST_BIT,
+ 	.test_num = IFS_TYPE_ARRAY_BIST,
  };
  
- /*
-- * The sysfs interface to check the test status:
-- * To check the status of last test
-- * cat /sys/devices/platform/ifs/status
-+ * The sysfs interface to check the last test status:
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
-  */
- static ssize_t status_show(struct device *dev,
- 			   struct device_attribute *attr,
-@@ -53,12 +52,12 @@ static ssize_t status_show(struct device *dev,
- static DEVICE_ATTR_RO(status);
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index d70f160425a2..8c4424c43a4a 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -275,12 +275,12 @@
+ #define MSR_IA32_POWER_CTL_BIT_EE	19
  
- /*
-- * The sysfs interface for single core testing
-- * To start test, for example, cpu5
-- * echo 5 > /sys/devices/platform/ifs/run_test
-+ * The sysfs interface for single-core testing.
-+ * To start a test, for example on CPU5:
-+ * echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  * To check the result:
-- * cat /sys/devices/platform/ifs/result
-- * The sibling core gets tested at the same time.
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
-+ * The sibling thread gets tested at the same time.
-  */
- static ssize_t run_test_store(struct device *dev,
- 			      struct device_attribute *attr,
+ /* Abbreviated from Intel SDM name IA32_INTEGRITY_CAPABILITIES */
+-#define MSR_INTEGRITY_CAPS			0x000002d9
+-#define MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT      2
+-#define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+-#define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+-#define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
+-#define MSR_INTEGRITY_CAPS_SAF_GEN_MASK	GENMASK_ULL(10, 9)
++#define MSR_INTEGRITY_CAPS				0x000002d9
++#define MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST_BIT	2
++#define MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST		BIT(MSR_INTEGRITY_CAPS_PERIODIC_ARRAY_BIST_BIT)
++#define MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST_BIT	4
++#define MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST		BIT(MSR_INTEGRITY_CAPS_PERIODIC_SCAN_BIST_BIT)
++#define MSR_INTEGRITY_CAPS_SAF_GEN_MASK			GENMASK_ULL(10, 9)
+ 
+ #define MSR_LBR_NHM_FROM		0x00000680
+ #define MSR_LBR_NHM_TO			0x000006c0
 -- 
 2.43.0
 
