@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793051570;
-	b=09b19H5WQrg/lvoSpx3wj1BtPv7XpPkornrDxncRetejSiLe5lMOcX85BQTdHs5jcouc
-	 hl1r2UORYOhfP1LFNwV80MgsI1JV3LzTD7TW+u+X8KqzptUdjCFWhpnVqaPFkO1MXwvsx
-	 xWWiHFzUCAytO9pryY33PI34ZiO2jxhXSGPgbEi+ZBO+ZwQOWG0m6mfh/RpFTA7sze1cF
-	 IRvub93a8delKFeDfTn58WgxozgObKCOpgRavnJ5Q3YHzlo6b/yEx+HPIAyc6LY4yvWfn
-	 UYz3zv3CBkW4gzkJ9U2iVLJ04T6+iAQvScwWZPpvl5hxYGHMrHqzTKZcrOUbtNEzXpQ==
+	b=CdqE9L7n4SGiSL9u568jqI+GeJEjB+J3Qi/QqL5kuwY2z9HIOP+8djBn78Brp3uNJLP0
+	 Ss3+IgiTvU6DFdBi4a+ZGo9l0/9oevuilEy2YrZflrFhrqeLYXomJsw3pkR0uuFGh1lJT
+	 lvGM8LZ1tPsQwCQHXA3NIP+BUgQn6sbqRaIGZG5P+jennJo5D52avrdpBJSrVbkbHe9Bh
+	 aWnVjhO+ipI0VYcWMnVQDT3Jbj5qaJsXo++3brcBfRdPxVrpytXnFTJ+34soALn8RtxSI
+	 oevBIkQv4qtwD4QztklzTTs5jfAr6XTGWO7/g5sta6Xk1c6JSaJquGCBVcbs0M08tcg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793051570;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=RD5MWqHEB8iYDLFdQXvkJ0xSc6fsoJ0ZXufXHQQ7zgM=;
-	b=z8Yp6qFdm+t7mQDUZCnCD/G0K+DlvU8VvODnbixosvaAzl9bmTqy6aVvVMsnwNSIvvoe
-	 OImjpop6xlY107ChCqrHJC31B4BmoUPtktyuZdkxLQuF4F/POnFpKmWcrpv+Z1UYdEhV+
-	 S9eM5Einnk4zvhHqLqzjmqru5rnQbHe58RRxK3/JSzPxEW4pEj9ix+3ykdb7jOD98uvMC
-	 85CCN2U7tqD/GiYAUbtIs/iL0cnUmtaI0eP0OgQ8JRki45K3ngYufMsaU895/WMe/JrjK
-	 YIUbrj7blUhK53q2NTWaWkv+0ddYo3e6xD36RTqZcqHuXT/L6CuHhHKhEA+at56EY9w==
+	bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
+	b=tD/SH6NA5KBfiiArZr1cwiqxbFV1eVRhxDv635qG/35j2ZzAxF1Dv5kBpeqBsRimyywV
+	 /RFOufmVu6YgtmtUXNp9HRxlveLfzda97vz/NsRFFRTfsP+T3YsKZ3EuSUl07jrziZCDS
+	 JvNmyeHs6nsHoFesl8Ym2JwHPlsKrT2VM9qX61bKCpc4WRqVfl8pRtgbxWyIOcd4mHqur
+	 zkcowSJc2jyV4AnLL/2sCjEijFu9yD852pruiT0R2XQK1j4dzkT4SAJGhyZ8WZ06TN+fH
+	 HCmlv0RZqXEAQUA97F7gRw0+DjPRqll2ZdA3W9OvyvSry84QDEGq71afclJwDn8U53Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ttuByBgZ;
-	arc=none smtp.remote-ip=209.85.214.200
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=fU7gA7Dl;
+	arc=none smtp.remote-ip=209.85.215.198
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE87606A337
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 21:52:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABE87606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879D60A2614
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 21:52:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3879D60A2614
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ttuByBgZ
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2e818ca61bfso36138445ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 14:52:49 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=fU7gA7Dl
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cdacb64970bso329756a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 14:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1793051569; x=1793656369; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1793051570; x=1793656370; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=RD5MWqHEB8iYDLFdQXvkJ0xSc6fsoJ0ZXufXHQQ7zgM=;
-        b=ttuByBgZyXhz+vCIDU5aBy90hRWqwioXsk1DTyafweNnvz2VRwJpnWhZTDjU/ruhRF
-         +eNkpq2S/OLTAC4WKDyiSOVdOZpoaInxvu9UjK8OVtqVOVGoXQz0xw4USi3sYBtAAjKW
-         xFkNF7RtNx3C8ylvzrtr3yIDJFmQr5Fpx5GMG7lg7Zxkb9Zz76slRyBARq30C4fj/GZc
-         lewXB4OZG8GXpxXvg/Z2Si+lR9m0f1WY60ZFwIRoGIQ8gBxO4HkEYP6M2T1bDHZOH6bh
-         LsWrGaMFI/TsCQGQozWRU1Jk+J5GWR7q6ZBrNLB6qEnTv5RGoUe2N/rfxG8p6ofbEptr
-         6CiQ==
+        bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
+        b=fU7gA7DljvCqdvdMpaU2dp8kIrEccZFKOmWnfW6sw+A054S6dlNZugZLhIYYcfiePQ
+         hsLgQW99gw7/40gSfJI6nU0rtnm0+1dPDbRaUoY665tdkjNVHr2UFbegtIbotfU9v9/A
+         uK7QOilz2oAfaWXl/tsF91D3vAUMVrFCU+UmdWgUF2++tfRICFcImVM7cH8b81croIe/
+         3gbPbeDpIxRnPDaXaoU22kL/RynJy6L0hYZfzyDRTzTeCDcQlDb8FUzF1BEGuZLmjKzH
+         eeONqBOhxrAFnMU8HI0VT7oOvpOxL8LajgaOKQMUvvRXhW0M5pmi7s9QGStFhbTf6Lb8
+         9JRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793051569; x=1793656369;
+        d=1e100.net; s=20260707; t=1793051570; x=1793656370;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=RD5MWqHEB8iYDLFdQXvkJ0xSc6fsoJ0ZXufXHQQ7zgM=;
-        b=0He7Jqf19F3O4Lj6SWkQcSgh+x5gKXGOqAnrsi/00VqS8CMOVrikCIoHqNvskpj8fh
-         FUxN+SrJ5As28N9wYPpvpQkJmPUcrc7xv1+KQ+K9Oke4/LJ2v5l9nh2/NMZ3I8SxnBQK
-         VdW0wa6dpFFApNs3XrbznE1Gq6bzVDurRgTpk60G1hZTAxqhoXWMaidKZxWy6tzqngMp
-         hVAXnfZ6C5yn2z+j8S5rXgxbuC9/6BE9rocwOe3hxmSoQ+hFba/mCVvXzk/+gqwqOhwe
-         wV7yyl3eEZNqcyWb4glLeMijwRnINjQNfUMtrujdFHdi0LwCe/xmf1GiyC5LbkLGWmcw
-         egCg==
-X-Forwarded-Encrypted: i=1; AKwUvBy2IGaFuPzsxV6pxAN55997r1Z5RoyOVKjnv4WFm/0Ug5RLVKOy8PwG0Zj7WPEi+BUmXWQPzNoLyoRMRQMYlItfm8w=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJkvhEUqhJAH+TAzebuGferFCbovyH5xn9kjag37bWZa2PpyiBi
-	qfXeYOZz40v72Mq8PJ9N3oCCxFPeTI8bYmGgCy6c4yneSn0PPbvYRyI9bSil7gNWdjxP21P7RrV
-	TIPoQ29Xjhk8i5nCQaN2JyA==
-X-Received: from pjps6.prod.google.com ([2002:a17:90a:a106:b0:3ad:c8d8:70c3])
+        bh=/8L34Uc9Xo1d4oJ1WUUvtNMd/yh9NNapi89sPDAfm6Y=;
+        b=OUb9p4i+UDekaH9CWyCCl0e9k6CESSHnhd4oRTTCbMtOeJOiq+CfalStqKeXAONy6S
+         JleePtu+kiwpF1+8pLDARcaOL1UhRak3B+dBjLPk+41LSMivt0I8oT1/nJb34o1Eqm9R
+         cYNDUyOblOV2LBdpmCnQdqNZrjbnZOI56tfrjaGqjq7ymPm29DxLHDmGrjhCJx35ncCH
+         URmAw8PbuFgF2+pliQNIbI7Q/qIBQpiBIYyLTDhW9K9CCGQSKZix2ISmEtzbhMgWf4AW
+         npJyFqivuGrosaRwA+C31qtso0wrKkapwTmucZA21HI1AWiLYCC1F+SuwkURDVBvCHWW
+         EJvQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz2cbAjYGdOXfMGU+pGbm9PBmwieaeAy7Y4WLF9wZv40uYBSC8urT2DjoGP0rV1VbgmvhF5/35qE6xIIqLN/FXHJLY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ+3xiHmf/zTgdAo+k9NP2/vbb0CZLzjH4ahPE4NsiemKj3Iw4L
+	t2UBQTadZCmp/tExaV7MJP5+frTFdMRJSo8Yx0O1WdbSQNEECZ+l0Y4XRIN7KFaj6nbt17xIBQ2
+	iUUPjGuHYSbbAXf0H4nde4Q==
+X-Received: from pjbme4.prod.google.com ([2002:a17:90b:17c4:b0:3ae:349e:2bcd])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2688:b0:3a8:cb54:e135 with SMTP id 98e67ed59e1d1-3adea899125mr6172313a91.19.1793051568668;
- Mon, 26 Oct 2026 14:52:48 -0700 (PDT)
-Date: Mon, 26 Oct 2026 21:52:17 +0000
+ 2002:a17:90b:35cc:b0:3ad:1b31:92d8 with SMTP id 98e67ed59e1d1-3adeb16ecffmr5865801a91.60.1793051569572;
+ Mon, 26 Oct 2026 14:52:49 -0700 (PDT)
+Date: Mon, 26 Oct 2026 21:52:18 +0000
 In-Reply-To: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261026215226.3713941-2-jthoughton@google.com>
-Subject: [RFC PATCH 01/10] scsi: bsg: Don't copy sense data to user memory
+Message-ID: <20261026215226.3713941-3-jthoughton@google.com>
+Subject: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user memory
  when canceled
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>
@@ -106,50 +106,48 @@ Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ke
 	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-scsi_bsg_uring_task_cb() copies the sense data to the submitter's
-response_addr with copy_to_user(). It runs as io_uring task work, but
-io_uring may also run it with tw.cancel set from other contexts when the
-submitting task can't run it: from a kworker when the submitting task
-has exited (io_tctx_fallback_work()), or from io_cancel_local_task_work()
-when a DEFER_TASKRUN ring is torn down.
+btrfs_uring_read_finished() copies the data of an io_uring encoded read
+to the submitter's buffers with copy_page_to_iter(). It runs as io_uring
+task work, but io_uring may also run it with tw.cancel set from other
+contexts when the submitting task can't run it: from a kworker when the
+submitting task has exited (io_tctx_fallback_work()), or from
+io_cancel_local_task_work() when a DEFER_TASKRUN ring is torn down.
 
 In a kworker, current->mm is NULL, and the copy does not reliably fail:
 the user half of the address space belongs to whatever mm happens to be
-lazily loaded, if any, so up to max_response_len bytes of sense data may
-be written into an unrelated process.
+lazily loaded, if any, so the data may be written into an unrelated
+process.
 
-Don't copy the sense data when the task work is canceled, and complete
-the command with -ECANCELED.
+Don't copy the data when the task work is canceled, and complete the
+command with -ECANCELED.
 
-Fixes: 7b6d3255e7f8 ("scsi: bsg: add io_uring passthrough handler")
+Fixes: 34310c442e17 ("btrfs: add io_uring command for encoded reads (ENCODED_READ ioctl)")
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- drivers/scsi/scsi_bsg.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/btrfs/ioctl.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/scsi/scsi_bsg.c b/drivers/scsi/scsi_bsg.c
-index 5eec248a77a6..3755e33fcdd2 100644
---- a/drivers/scsi/scsi_bsg.c
-+++ b/drivers/scsi/scsi_bsg.c
-@@ -43,9 +43,17 @@ static void scsi_bsg_uring_task_cb(struct io_tw_req tw_req, io_tw_token_t tw)
- 	if (pdu->bio)
- 		blk_rq_unmap_user(pdu->bio);
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index f3e2afe221be..d9044fbd9547 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -4609,6 +4609,16 @@ static void btrfs_uring_read_finished(struct io_tw_req tw_req, io_tw_token_t tw)
+ 		goto out;
+ 	}
  
 +	/*
 +	 * If the request is being canceled, e.g. because the submitting task
 +	 * has exited, this may run from a kworker or in a different task, so
-+	 * don't copy the sense data to the submitter's address.
++	 * don't copy the data to the submitter's buffers.
 +	 */
-+	if (unlikely(tw.cancel))
++	if (unlikely(tw.cancel)) {
 +		ret = -ECANCELED;
++		goto out;
++	}
 +
- 	if (scsi_status_is_check_condition(scmd->result)) {
- 		driver_status = DRIVER_SENSE;
--		if (pdu->response_addr)
-+		if (pdu->response_addr && !tw.cancel)
- 			sense_len_wr = min_t(unsigned int, pdu->max_response_len,
- 					     scmd->sense_len);
- 	}
+ 	if (priv->compressed) {
+ 		index = 0;
+ 		page_offset = 0;
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
