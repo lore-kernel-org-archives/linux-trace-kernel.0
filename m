@@ -1,59 +1,116 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793112573;
-	b=m1ayz8rawkJyAWg/naysz9Q20uIXE6hGBdHaEr1JT5b4xf4LsvFl6E6kttvJn9lxFz/h
-	 QL68JVgviAFK+Y8aQZi21d1Ui9uhb4j6skA4AnolJ7rtgWseqiCT7GPfqk7XUiMJs57KZ
-	 1eL1VFsJsF8DlHkumihoaMquQ6kD8TRwNyyR3G7ttOdyxp0hpmj2XQs8JGbx2/vOdC7RN
-	 UfUgYsksOS19AIZZQpdlgaB8D0URUY7+h/g/h70Az/EvL8LBbRTY/vOrH/oVs5gUat2ZS
-	 IxEc4M72Aci/wgY19VpawEc66uX4UTrErJ9BkPKci7hO8Ytw2g0XuP9m1XBW5mWTApQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793112573;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=W/8wkjuXUaxQBi9FIunmH+nQRSTuPQutF4GUQqiAULY=;
-	b=zOi/rmxd2ASkCrNdhlQ3fK/iZhTbI9/DBzEaVgZs94BmTi6g98snBJupqGNkK+tknq8t
-	 ENFBu9qgqsLQobWFr/eLSk2G40Vx4l2NKqn0hDrQXAZJQ87IgEVuT5qnSs2niJyAqBxGS
-	 +0RZH50jzXo1x/W6PWcZrUQOToLmbKg5/R5Nla5fnb1etM7g44hKPaEDj/n/3SEQ3XLZ/
-	 grjXyDTfsotFQ4teli4aC/t8oyCkurVjT/afMFaDgUAhV599yFS1S11MCreGa3Z8xa+RA
-	 BFhXPcK7sO+syzJNohi5RJbbVWNH7zktJ+ZSpCFmQ9FAom/MV0mlyaWQND4pFHpZ9Mw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=isBBl2oc;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.55
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793113200;
+	b=NQZZXEw27vDlxFerjQe9kli+a29iUolmZQvoyw+JmgbrM+WOsOrckZtvtm7VStlNy+GT
+	 QaCxqfcQDIwW23fp7SHU7w0aO+OJBeN2J4I0AS/9x144tetDT3UVQ5tRutkmv5z5YyX1W
+	 DkpVVmBQXNT6W1zLDZlk5ydy+YQvSVzfFrfB7BWzAhPfZTSLBK9ILBsBDLMpSaJZcy5Hc
+	 79a4z3d0iE/NEyBGgxU2SNaSdbm+AusgDzEfNr7+LjBVydvM+8qe7p6+qvFKlNNn2jKHb
+	 Ir32wQ0MJ75LoIsCNqm/V2J3iGhG0WbG09yJjzDiZtZWEeJlAWLfY+GIgch1fUvDJkA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793113200;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=pABlS6hjZixmx7DLsVt+Gh3/D2QR7yvzOR3o2BqpkiI=;
+	b=f6lWguxfmZ0WQ35Ef9rJGAMuXGp3OyQjGlRGFHDImwVCCa5jb2zwkyABNWJP0SPr4iGS
+	 duarDggC/GQhw08oZaETfd62T1a/RXP3zj/QXgxzgtpmcWZRZ6LTYzgLkhOzp2OdfOVIQ
+	 GOIjvkzc5HDqO1u3vMbHVV6dEM4edMud452iVPZAfpAtX8fSJlWQd+/k1cVa6QuEFEZ8d
+	 tSa8Q9uqSp6ftJWTUDKUAI6pF62WtLNub9b8ouOUY87o1UE+FKdS9pIgImMZ6KmOrZdWW
+	 a/QEAjlg2xn78h3H5uWrGMs5x4S2TBvqIAVxLFyD0PZVlubdgJ+9NuqX3PyvFGN//fw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=N79ZeVuX;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.48.55
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012055.outbound.protection.outlook.com [52.101.48.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE32606A31F;
-	Tue, 27 Oct 2026 14:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D88B606A31D;
+	Tue, 27 Oct 2026 14:59:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D88B606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=isBBl2oc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C971F01825;
-	Tue, 27 Oct 2026 14:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793112572;
-	bh=W/8wkjuXUaxQBi9FIunmH+nQRSTuPQutF4GUQqiAULY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=isBBl2ocQtsR/MEqdHJtQ8tQa0LNFzfmiVt0OjJwGMbYxxwtndz85UrxH4nmDf2++
-	 ME2DMMMJrRyS0Cd+mPZvOrPfgi+pZiTjAMlOtR2pEo96sEXqmBX0lDUD2K78/xaq8R
-	 KOmkWv2lvBeoiA0hcDAYJoBQ7tEncx1h7nbRhFhxP0DdB0BilmBFxMRypOu4w67mMx
-	 IbevUCVeHA0dLBhqWUV5I/sRmgBnORw8mTe8s2nuLShDYK4qlyAISXu9l3h+kUDFqt
-	 ZqGnj+FxawTg8cqXdA9U2pzLse4Fn7vnec5t6YB9dRvi6BoLAtfyPHvehXYWjvNPOA
-	 lDTmBYAfJg+ow==
-Message-ID: <sashiko-outbox-186764@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 -next 15/18] landlock: Add READ_METADATA and
- WRITE_METADATA access rights
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Cai Xinchen" <caixinchen1@huawei.com>
-Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, dsterba@suse.cz, "Chuck
- Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
- Schumaker" <anna@kernel.org>
-In-Reply-To: <20261027121151.1887650-16-caixinchen1@huawei.com>
-References: <20261027121151.1887650-1-caixinchen1@huawei.com>
- <20261027121151.1887650-16-caixinchen1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 14:49:31 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=N79ZeVuX
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oVNiXEyTzDIrBLWDPN10HICUvUJdh7LwKVzVTc/o0H+0959j/8c3iYruwFjcvKjXeUPI2GvyL3WZzDEWKEu2XwfdiNWI1NVSw9kHs58cIuOWxcTPlt1UpdJIWBb0zeaI+utDRD++2uCnL+p5BVfU6ADC5B6f225P2xshlAqhDznNQ/LiUtmh5MwDjkCIX7E6606BCOEvn9oYhyXRajzG0jAVXUtE0Hk8Xu6hJTlUufRGuSG9iIphODKt1ivZloRZBTiMhlMuPPag93/XTCSbctcTMOdYXt5hA+d/oZvBKnW2GMtZer8R2NOKUF2FI7WBlvN56JetqCt07ZhmgfZrCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pABlS6hjZixmx7DLsVt+Gh3/D2QR7yvzOR3o2BqpkiI=;
+ b=xNif/K4Iy/OPNQymS7Pi+E65P76FhZFXzoWtaOUvYHmT4BkqVSQJJQ1YwcaghPimoCZjBs82w65Shs0B+gtjyhnEYIAXCqHBWeE0aB4x+3LwzPvo10xULJEflERlkn9m/KKn3ISOKH9JLbJ/X/01VfmBJqT1VvKmlBQMDw/cr+rtc9dmgCZ2etYfaUKmafyWnyRZhRb29d82KDQKwFs6sidZATyvX5nFHBKOOfbw79PgNTKn65qpov6XaY7Hy0G8qEQbIE346/Px+XAFD42xSkqEk5pJ4qzVnXPFsSJFiYIt3fXLxKu1JwCbDErIDiEkUXzbi+SC8VwZJV0TcgrZVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pABlS6hjZixmx7DLsVt+Gh3/D2QR7yvzOR3o2BqpkiI=;
+ b=N79ZeVuX4XEkoF0V+UavXEDLEJnueV6t55DC0hN+3WXLy0Ak5Gnb8XjjRNpQmysMacIgiaSwaeyKtCJH55y2z4RLUUrbTzu84yFmG5+Z0WC9plgBVs0bJ7UN3LojnxUIWT0jChOHeiQIWsOIRwgstiHBiaqDYM+XnK3xdytQhrA=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CYYPR12MB8872.namprd12.prod.outlook.com (2603:10b6:930:c8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
+ 2026 14:59:56 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c%3]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
+ 14:59:54 +0000
+Message-ID: <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
+Date: Tue, 27 Oct 2026 15:59:45 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
+To: phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Daniel Almeida <daniel.almeida@collabora.com>,
+ Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot
+ <acourbot@nvidia.com>, =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20261020100034.759183-2-phasta@kernel.org>
+ <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
+ <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
+ <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
+ <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
+ <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
+ <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0222.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e4::8) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,226 +119,140 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CYYPR12MB8872:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c7c9e24-0f89-4390-63ee-08df343af5a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|23010399003|18002099003|6133799003|22082099003|261026140227099003|921020|56012099006|11063799006|4143699003|261021121427099003|261021123027099003|10067099003|261022105027099003|261026121527099003;
+X-Microsoft-Antispam-Message-Info:
+	Fxfcg+0D0A+KVfPGIf9Vtz+6OXu1nDn0niuTgbNlAjhcOmnuQUuQs0bU/9CJWe95T1AJ6Jy9+buFSGZaQime+JmHPGPpUi719NPS7LQNX75LseVr/7KM+ILufyB34ma3zz9Uqd61CmcRUhiVUQDc/yNy72wTNlWuSKcjdzhT92E75Y23YflrP14dURLte20RzMT9TB7G8YVolPQ3VztMq4e/ojqCmzInZq8LYxpIp9M5Jg9wjKRUR0sJvbBxIg6a43PHe+SmulConnmtAZhjWm1SbXUyaiIhwlIDYQ0+EV6TWVhP0sn/EKD+7dDrlzuf1P32bKYndiG9swCQR8vOFTaOmbJefHfLcQL4fukkMkoFI2kSwlMcEGWxBhWIGp2ux/syZW7g0AqKBUI2HVV1fTxeS7LoklulddoZKE2XSkvBetz+Voo+GnwQGTPP/Ljhafzwb6hPRFZKU2NmoDgAPr9YujGIA4cZMY+iR8Fjtvx6o0d3uU99MgkQJdSqiyo0sUmiLCVU1HvQfnqZfFhy3LZRRNvZZpIM6E+BLuHljNjPj7on7es56SQM3PhKSW/VMUZZ8iNSQ/ARiItCckyqi3YmadWrRKFLfDp+gDzVxO1K8crlBVnUeir4WnPd9973CMGXDHeWOy3O0xSf959WAIvFDoJiVHKfHze7WCotFGPSPfV2Asj9WZL5cwBAgL9oOqfEZYEHFZe36JSLwfhgUQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(23010399003)(18002099003)(6133799003)(22082099003)(261026140227099003)(921020)(56012099006)(11063799006)(4143699003)(261021121427099003)(261021123027099003)(10067099003)(261022105027099003)(261026121527099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dVljTGgwZDN0VHdHRDI4TzRxbHBqTjIyRWNHVWhOTjZTdmUyOFVVTytmR0NC?=
+ =?utf-8?B?SFJaRU5wTTVXNlFOSHEvVUJ2eFFUZXJjdWkzV1BBeUlJT3UvYUFMcjJERHRV?=
+ =?utf-8?B?cWdUZms0MEVGaWpPRWFtYlc4Uk51bXVuZWJBS0Nad3NCOGhwOG9CeFd6Q0ly?=
+ =?utf-8?B?SkpQTnI5a3Z2VldqbHl5M2VxTnRvblAvOE1MRUZzMnU2SDl5Q3llR1F6NVVa?=
+ =?utf-8?B?NVFLR3I2UTE4cEVoaW9MRFhqYURXNzhUWmdoRTQyNlcyenRYN0lqbW0rUDBp?=
+ =?utf-8?B?RTBsV1NSSG1xQXFKSExVNkFoQWVCYUkvc1k0WkFhaS93dm5GVXMyU0xDWXpR?=
+ =?utf-8?B?ZFJ2V3JKUy9FekVWdHE3QUZFOHl3TE1RNWxYZUpiNU85c0xDaHVyeU1CdnVz?=
+ =?utf-8?B?SnpPNU9Vb2ROM2lRV2JYMHRPM0ZpZlQxWDhBc243Z2dsNFNIWG4zMHh1YlhN?=
+ =?utf-8?B?SDVRcEdRemxMLytRR0pOVnI1MWFNUUFjV0ZMR28zejdRWW1FV1dhQWVHNHBv?=
+ =?utf-8?B?Y3ZtUmJEZjVOODlqak9NVnVld1VUdzg1ZWN0cVVVbVF6ZzNaRzB1Q1VFTlR0?=
+ =?utf-8?B?ZTlVYU9yNVBMUzJvcm56NVpJQ085OHBMRTZnK281U3B0cTdVK1krOXhub3ZU?=
+ =?utf-8?B?eHJIR2lIeFo3TnNWdkR6OE5HbEt0UGFLZlJSM3VvUUwyek1rUkdHS1FGVW4v?=
+ =?utf-8?B?SWlWdS9lQXN3QXNQRXkvSG9OYlpYb2FiTEVoUjNxNUxrUFhDbnppV0NsSEtN?=
+ =?utf-8?B?QlVYaGxRSWxIb2J1MndEZEpXcW5kUjliMEtCN2VpdFBSNmJ1R2llU3NYdmps?=
+ =?utf-8?B?VjhEamlwM1NLS3FIYm0wd2ExWk1jUFc4YVdKN2JTVmNtTmU4N0RrSktTeDIz?=
+ =?utf-8?B?SVFKelpvMTBmTHN2MVVqdzFrTFliemZCRHJwSThkdS9jeGRuOGxLdFdoSnd6?=
+ =?utf-8?B?OXQySW5LQ05uOVNMWEtsZU1MTUQ5SXp3U2lLa3VpMklDMEp5dkV5OS92L3ha?=
+ =?utf-8?B?SmUrSVpzUWZCL1Y5dkNpTVVva2IzbllCMDJTcHNOcjRQaGkzNk5Db3ZRdWE4?=
+ =?utf-8?B?S0NHcnJ1MW93ZUJrRHoxS0dlTXRRWW1KTXNOS0wrMVRrN01GVnVueU5Ic1VX?=
+ =?utf-8?B?ZDUxUjlzV053Q1ltVlRSdjB3bk9lMEN1RDl1Z3ZxblAyY1VkRTE0c3pRTXM4?=
+ =?utf-8?B?a1NGNWxuWW5DdVNLSzFHMDdGT2hjRnJHazZ6TWJDQlFTeXZ4S2I2TFhNWUtS?=
+ =?utf-8?B?M1NUMzMvQ01OUUU1TFNMM2FUMFYzRFdPTG41TE90Ykd3NlNrV0F6N093MDNX?=
+ =?utf-8?B?ZE1kQzVZU0lEejNTOFBjeXZwSUs3TU5aYmgzOWFKQ2ZTQ1FqdmpFb251VUxm?=
+ =?utf-8?B?RlRxQ05qMDRuc3ZFdms1U2paRTdYeXV5aWlhZTZVcGZRK0o3NEZwVTNuUW9G?=
+ =?utf-8?B?Y2t2cmlOa2o4bWZYdlkzUGJjUGpudjJFb21HSWVSa2o1QmZjclJ6K0tUdUhz?=
+ =?utf-8?B?ZVR5L1QwazdiR3YvTkovYk5kZ3VNRitCQ3lkb1NlbTg1VEVHVHBBSmpqVVVk?=
+ =?utf-8?B?Tmw3YWh5cWhpQ1owMzB4TTBUb1pnaVJSNXg3b1BUQkxxL0pzaE0vcGJHOWZT?=
+ =?utf-8?B?RVlmVWlmQ0pKdXNlSnBiYnFQdHNCNEpLR0JiWlFhZzJqQkdMQVFvbUVoZnlB?=
+ =?utf-8?B?bkdxUzZDb1ZkbmhjR29WU21MR3RHUVBvbzl0V2dpQXMwa1BOMkdsMlM1Z3hi?=
+ =?utf-8?B?ODRPd1RDbHd3UDN3dncyY1ZsZHYxaTlaYUN6V2pXaW9qbFZQeW9ZNW5WTW5n?=
+ =?utf-8?B?MzZMNFRjK3VLeWt0V1d4ZS9oUWhpSm5SYld1OEdNc1gxWHVabUVnRDgwQkJL?=
+ =?utf-8?B?NUpnQWQzcWdvT2xUTE14NDRUbWJLMG0xaGRqaDd0cThIakxQWWlTMzMrUXMz?=
+ =?utf-8?B?RkZHaytkOXowWEdQVnJ6OWJhN1UyRXo0MEI3MnpEZ000TENTRWkxeHkrWG9r?=
+ =?utf-8?B?d3h4cjh6SmluQTNzY1FiY1hIdXhYTXd5UVNvTm5HY29yVmhOQlUycnZrSUR0?=
+ =?utf-8?B?OVhUam8yZmp4NVZkTk1STVdqZC9vbFJhVUV4Z1dxU1VwSmI2NjZnbk1pMUdy?=
+ =?utf-8?B?RXBvc1dDQ2dvM1I2dTMyTFIvTmVxRWFRY2FreVhLeCtzMWNyWHozTVFyT3Bv?=
+ =?utf-8?B?QjNseDlOZlFUTlkxUkEwSVVMZkhraVNXMVAxdDhNK1c4ZEpROHVIeVcxWTZ3?=
+ =?utf-8?B?QnNNWEQ1OU1GeW9Uck1wRUU3OVNZRS93SkhyVkt3WnZUZndEWGpRRm5VRG16?=
+ =?utf-8?Q?AlxWSjYoir99RHEoRa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c7c9e24-0f89-4390-63ee-08df343af5a6
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 14:59:54.5350
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zzN4NHXMBMwd/TaEYD1LAcuT2hA2pFwCV5H4b1GVjV8/F2/Fmk5IHQHy1RoJffq3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8872
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] landlock: missing ATTR_KILL_PRIV check in hook_path_setattr()
-- [Medium] landlock: hook_path_getattr() misses file check in io_statx() AT=
-_EMPTY_PATH
-- [Medium] landlock: unguarded second metadata hook check on ecryptfs lower=
-_path
---
+On 10/21/26 14:49, Philipp Stanner wrote:
+> On Wed, 2026-10-21 at 13:53 +0200, Christian König wrote:
+>> On 10/20/26 17:36, Philipp Stanner wrote:
+> […]
+> 
+>>>
+>>> Nope, I want to protect shared data, which is the signaled-state. Which
+>>> is currently a race-condition worked around with RCU (and sometimes
+>>> with manually doing the right thing (locking!)) [1], stemming from the
+>>> fact that the fence's spinlock is not used consistently.
+>>
+>> The fence spinlock is consistently used for protecting the fence
+>> signaling, in other words it always happens with the spinlock held,
+>> same for adding callbacks.
+>>
+>> The only thing which happens without the spinlock held is the fast
+>> path checking of the signaled and enable_signaling bits and as far as
+>> I can see that is ok as well.
+> 
+> No, it isn't. It makes the API fragile.
+> 
+> 	commit c8a5d5ea3ba6 ("nouveau: fix client work fence deletion race")
 
-commit c5b94acf0094997d0231e58b264ebd0f262e2631
-Author: Cai Xinchen <caixinchen1@huawei.com>
+This bug is exactly what I'm trying to prevent here.
 
-landlock: Add READ_METADATA and WRITE_METADATA access rights
+This problem only exists because we call the backend operations with the lock held!
 
-This commit introduces the LANDLOCK_ACCESS_FS_READ_METADATA and
-LANDLOCK_ACCESS_FS_WRITE_METADATA filesystem access rights to control
-reading and modifying file and directory metadata through path and file
-LSM hooks, bumping the Landlock ABI version to 13.
+What nouveau does is to delegate the cleanup since it can't do that in the signaling handler because of the lock inversion.
 
-> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> index 2ab67bcad1983..73c6353ecbf85 100644
-> --- a/security/landlock/fs.c
-> +++ b/security/landlock/fs.c
+This problem doesn't happen any more if you just completely drop the approach of calling the backend operations with the fence lock held and then re-structure the cleanup handling in Nouveau.
 
-[ ... ]
+> 	commit 7c703a7d3f2b ("drm/amdgpu: Fix one use-after-free of VM")
 
-> @@ -1676,6 +1678,192 @@ static int hook_path_truncate(const struct path *=
-const path)
->  	return current_check_access_path(path, LANDLOCK_ACCESS_FS_TRUNCATE);
->  }
-> =20
-> +static int check_access_file(const struct file *const file,
-> +			     const access_mask_t access)
-> +{
+I already discussed that with Simona back then. Simona actually explicitly rejected my approach to take the spinlock to check for signaling. Pointing out that amdgpu is using the API in a wrong way.
 
-[ ... ]
+The problem is that amdgpu doesn't track the callback structure and so can't remove the callback. It's on my TODO list every since to fix that miss use of the API.
+> There are certainly more related bugs around.
+> 
+> Also think of the various ordering issues between signaled-bit and ops
+> pointer that you and I observed.
 
-> +}
-> +
-> +static int check_access_path_or_file(const struct path *const path,
-> +				     const struct file *const file,
-> +				     const access_mask_t access)
-> +{
-> +	if (file)
-> +		return check_access_file(file, access);
-> +
-> +	return current_check_access_path(path, access);
-> +}
+It's just that we changed the behavior so that we drop the ops pointer and are missing places where that pointer is used.
 
-[Severity: Medium]
-How does check_access_path_or_file() interact with eCryptfs when forwarding
-metadata operations to the lower filesystem?
+I wouldn't really call that ordering issues, but rather something we have overlooked.
 
-Unlike overlayfs, eCryptfs forwards operations under current_cred(). While
-ecryptfs_getattr(), ecryptfs_getxattr(), ecryptfs_listxattr(),
-ecryptfs_removexattr(), ecryptfs_fileattr_get(), and ecryptfs_fileattr_set()
-call unchecked VFS helpers so the LSM hooks run only once on the upper path,
-four operations in fs/ecryptfs/inode.c call LSM-checked VFS helpers on
-lower_path with file set to NULL:
+>> The problem here is not about the state of the fence, but if the
+>> callbacks are still executed or not. And that is not a good task for
+>> a lock, instead what is usually used for that is a barrier and that
+>> is exactly what RCU provides.
+> 
+> Locks are for mutual exclusion. Which is what you want here: you want
+> to exclude someone from signaling the fence while you are working on
+> it.
+> 
+> Tell me one thing:
+> If locking is the wrong approach, then how come it was added to
+> literally all callbacks except for set_deadline()? Seems to me that it
+> must have solved some issues.
 
-fs/ecryptfs/inode.c:ecryptfs_setattr()
-	notify_change(&nop_mnt_idmap, &lower_path, &lower_ia, NULL, NULL);
+Well, it's because concerns with the lock inversion brought up by Alex and me was ignored and the patches merged anyway.
 
-fs/ecryptfs/inode.c:ecryptfs_setxattr()
-	__vfs_setxattr_locked(&nop_mnt_idmap, &lower_path, name, value,
-			      size, flags, NULL, NULL);
+This is just another one of those DMA-buf design problems which would have been fully preventable if I would have clearly NAKed that stuff from the very beginning.
 
-fs/ecryptfs/inode.c:ecryptfs_get_acl()
-	vfs_get_acl(idmap, &lower_path, posix_acl_xattr_name(type), NULL);
+Back then I made the mistake to believe the argumentation you come up here as well and so I don't explicitly rejected that approach, but by now we have strong evidence that this was a mistake and I'm trying to fix that mistake ever since.
 
-fs/ecryptfs/inode.c:ecryptfs_set_acl()
-	vfs_set_acl(&nop_mnt_idmap, &lower_path,
-		    posix_acl_xattr_name(type), acl, NULL);
+We should have never taken the lock for the callbacks in the first place, this just made the implementation much more complicated and caused way more problems than the few raised by putting the ops pointer under RCU.
 
-When a sandboxed task invokes fchmod(), fchown(), futimens(), fsetxattr(),
-or POSIX ACL operations on an eCryptfs file descriptor opened before
-landlock_restrict_self(), the upper check succeeds via check_access_file(),
-but the internal forward reaches hook_path_setattr(), hook_path_setxattr(),
-hook_path_get_acl(), or hook_path_set_acl() with file =3D=3D NULL and evalu=
-ates
-current_check_access_path(&lower_path, access) against the current domain.
-Path-based chmod(), chown(), utimensat(), setxattr(), and ACL operations
-allowed by a Landlock rule on the upper eCryptfs mount point also fail with
--EACCES unless the current domain additionally grants metadata rights on
-the underlying lower path.
+So even if it is possible to implement the backend with those locks being held I will keep pushing hard for removing that.
 
-> +
-> +static int hook_path_getattr(const struct path *const path,
-> +			     struct file *const file)
-> +{
-> +	return check_access_path_or_file(path, file,
-> +					 LANDLOCK_ACCESS_FS_READ_METADATA);
-> +}
+Regards,
+Christian.
 
-[Severity: Medium]
-When IORING_OP_STATX is submitted with AT_EMPTY_PATH and an empty pathname
-string on an open file descriptor, will hook_path_getattr() check the
-current task's domain instead of the file's open-time access rights?
-
-For the statx() syscall, sys_statx() uses filename_maybe_null, which turns
-an empty string with AT_EMPTY_PATH into name =3D=3D NULL and dispatches to
-do_statx_fd() -> vfs_statx_fd(), passing the struct file to
-vfs_statx_path() -> security_path_getattr().
-
-In contrast, io_uring's io_statx_prep() calls delayed_getname_uflags() ->
-do_getname() with LOOKUP_EMPTY, producing a non-NULL struct filename where
-name->name[0] =3D=3D '\0', and io_statx() then calls do_statx() -> vfs_stat=
-x():
-
-io_uring/statx.c:io_statx()
-	ret =3D do_statx(sx->dfd, name, sx->flags, sx->mask, sx->buffer);
-
-fs/stat.c:vfs_statx()
-	error =3D filename_lookup(dfd, filename, lookup_flags, &path, NULL);
-	if (error)
-		return error;
-	error =3D vfs_statx_path(&path, flags, stat, request_mask, NULL);
-
-Because file is passed as NULL to vfs_statx_path(), hook_path_getattr()
-falls back to current_check_access_path() instead of check_access_file().
-Wouldn't this allow a file descriptor opened without
-LANDLOCK_ACCESS_FS_READ_METADATA to leak metadata when passed to an
-unrestricted process that uses IORING_OP_STATX with AT_EMPTY_PATH, while
-rejecting IORING_OP_STATX with AT_EMPTY_PATH in a sandboxed process using
-a file descriptor opened before sandboxing?
-
-> +
-> +static int hook_path_file_getattr(const struct path *const path,
-> +				  struct file_kattr *const fa,
-> +				  struct file *const file)
-> +{
-> +	return check_access_path_or_file(path, file,
-> +					 LANDLOCK_ACCESS_FS_READ_METADATA);
-> +}
-> +
-> +static int hook_path_setattr(const struct mnt_idmap *const idmap,
-> +			     const struct path *const path,
-> +			     struct iattr *const attr,
-> +			     struct file *const file)
-> +{
-> +	unsigned int ia_valid =3D attr->ia_valid;
-> +
-> +	/*
-> +	 * Only explicit metadata changes are checked: implicit
-> +	 * timestamp updates never go through notify_change(), and size
-> +	 * changes (ATTR_SIZE) are governed by the truncate hooks
-> +	 * instead.  See the "File metadata" section in the user space
-> +	 * documentation for the full semantics.
-> +	 *
-> +	 * The setuid/setgid bit clearing that the kernel performs
-> +	 * after write(2) or truncate(2) is an implicit change as
-> +	 * well: it comes through __remove_privs() and do_truncate()
-> +	 * with ATTR_FORCE set, and do_notify_change() then adds a
-> +	 * synthesized ATTR_MODE (with these bits removed) before
-> +	 * calling this hook.  As do_notify_change() makes it a bug for
-> +	 * callers to pass ATTR_MODE together with a kill flag, an
-> +	 * ATTR_MODE seen along with ATTR_FORCE is always
-> +	 * kernel-synthesized and must not be checked.  An explicit
-> +	 * chown(2) does not set ATTR_FORCE, so the same clearing
-> +	 * requested through chown(2), including chown(2) with
-> +	 * (-1, -1) on a privileged file, is still checked through the
-> +	 * synthesized ATTR_MODE, matching the SELinux behavior.  A
-> +	 * chown(2) that changes nothing (e.g. with (-1, -1) on a file
-> +	 * without privilege bits) sets neither a changed attribute
-> +	 * nor a synthesized ATTR_MODE, and is not checked.
-> +	 */
-> +	if (ia_valid & ATTR_FORCE)
-> +		ia_valid &=3D ~(ATTR_KILL_SUID | ATTR_KILL_SGID | ATTR_MODE);
-> +
-> +	if (!(ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID |
-> +			  ATTR_TIMES_SET | ATTR_TOUCH)))
-> +		return 0;
-> +
-> +	return check_access_path_or_file(path, file,
-> +					 LANDLOCK_ACCESS_FS_WRITE_METADATA);
-> +}
-
-[Severity: Medium]
-What happens in hook_path_setattr() when chown(path, -1, -1) or
-fchown(fd, -1, -1) is called on a file that has file capabilities
-(security.capability) but neither S_ISUID nor S_ISGID set?
-
-In chown_common(), when user =3D=3D -1 and group =3D=3D -1 on a non-directo=
-ry,
-newattrs.ia_valid is set to ATTR_CTIME | ATTR_KILL_SUID | ATTR_KILL_PRIV
-(plus potentially ATTR_KILL_SGID) without ATTR_UID, ATTR_GID, or ATTR_FORCE:
-
-fs/open.c:chown_common()
-	if (!S_ISDIR(inode->i_mode))
-		newattrs.ia_valid |=3D ATTR_KILL_SUID | ATTR_KILL_PRIV |
-				     setattr_should_drop_sgid(idmap, inode);
-
-In do_notify_change(), security_inode_need_killpriv() returns 1 when
-security.capability is present, so ATTR_KILL_PRIV remains set in
-attr->ia_valid, while ATTR_MODE is not synthesized because S_ISUID and
-S_ISGID are not set:
-
-fs/attr.c:do_notify_change()
-	if (ia_valid & ATTR_KILL_PRIV) {
-		error =3D security_inode_need_killpriv(dentry);
-		if (error < 0)
-			return error;
-		if (error =3D=3D 0)
-			ia_valid =3D attr->ia_valid &=3D ~ATTR_KILL_PRIV;
-	}
-
-When do_notify_change() then calls security_path_setattr() ->
-hook_path_setattr(), ia_valid only contains ATTR_CTIME | ATTR_KILL_PRIV,
-so hook_path_setattr() returns 0 without checking
-LANDLOCK_ACCESS_FS_WRITE_METADATA. Execution then proceeds to
-setattr_prepare(), which strips the security.capability xattr via
-security_inode_killpriv() -> cap_inode_killpriv() -> __vfs_removexattr()
-and updates inode ctime.
-
-Should hook_path_setattr() also clear ATTR_KILL_PRIV when ATTR_FORCE is
-set (for implicit capability removal during write() or truncate()) and
-include ATTR_KILL_PRIV in the checked ia_valid mask alongside ATTR_MODE,
-ATTR_UID, ATTR_GID, ATTR_TIMES_SET, and ATTR_TOUCH?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027121151.1887=
-650-1-caixinchen1@huawei.com?part=3D15
