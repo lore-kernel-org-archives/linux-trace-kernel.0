@@ -1,59 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793117307;
-	b=g55nXfqXCXGjlL6YITK19US4XP31MCxAHhet6SoM7OawaH+EDxmLduLt531zCJwd0TCQ
-	 Y+oSbfZkIyhwZ1C9/WhjcCKlkUWSo3+5XYVnM6RXc/FNvhlLudQhCIbQadivvAyzs/aRF
-	 2MKFEnndj/67KamLsF/VHjPAcXJDcfJ4zIGPXpL4YkBQi03rEru1/n8/6wfPNNoUDtYs/
-	 mrsa4Dw+ycwv0LzzPJ88oE42tB2uPUKRT4R3ye8vX4F+eoSf6BOXff+cfqRBQNiyV606s
-	 +OhXJpjA5alu0Pn5fCWYnNJvZ0fGawTI4I/3rJSMmY8jaSkMAMmdm7bk74WEpFx2XJg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793117307;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=4MX40vMMhwSIHoMJnZpT+uK1BwJ4FDZXqJbJwtrNmj0=;
-	b=BMA49qimvqKIDeMKBVm/cn1xwfPca80zGKBRlSeD5SYbOjVW0dvc/oNwoAWMyg/gSfPc
-	 4G+yMiUxfQUQYYsh7H3mu9v2g8UH8+1i6zDttlBmPdFlN9+6qLJrMaEghe5xspL/yP9dP
-	 ct+EjaV+bTeDNH43bY9UUng5/NexaQECgctrOJ15PCHMZArgX7kugorUp4//jyR6cWqeY
-	 wgZZRYwNKPhLNPdFi4z/Tkhgq5lu0QFK8F2oVDtxziVgnt0YqZdQI4AnYh7fAtW8brD0z
-	 bPFtCwT5FzgzGSM6cTQ4/Ns1+cvsdiSsChA/R5Na8T7RB3rDTtWxxy5yyIJgHHXJZsA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bJOQ4Ie7;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793122223;
+	b=o0pBvonE4ROoSQ9cOhLqimQTG0b1WMziqHnG8DENnR5axOOtd8tOJVgWkpeMHisn+11X
+	 7OgDAPnexWUhqN7pv81ss0atswPQwqZ8vHWx1qrMp3SjdbZ+ZAIGKG7iBENAyFEn72KkS
+	 JzNaWPEmmNrQSRQRZNYcGrgL0GcSM9lY3W7LVpWTSgpzBZ5AZAZNQgnj4Dw8WdTE4rk35
+	 VqRbhTdmVifXeXKIBDgXyW0yjASArOFksfDJi1x/LczokMMgVY5zbub48uvboaxOsEvzo
+	 WJdwxSGqs4F/VJPDFmYd702KnA56J4bMFWA5PXloiXvreAYq4M9MI1KKFKTyPmY3Jww==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793122223;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
+	b=Dx0MirQhEDmKJyLSi6H9IGRg323qsyovjXYxQf8hv42g3oC/fJvd9lBNS5IfTJp4hxxz
+	 llBJfu/JaQP9OP+L2NhJPOe+CjwbfR8JQSxK3FPS8LLdbcYDoskjFUwL9TGzPFTQsZ5bd
+	 eHP0RAWeorRj0svw8hJegF2wN2ROjeCWygcO0hzGM4kkzzqdnSaw0SYx20/Hf6vtZCaKD
+	 9GMDOu+/6Sl4LAMv1AUGk61XodN/r4TTHGhH8TqsZE5Mik5QJSYig9jLKbJ3xcxqVZqm8
+	 6n2z5TGY8Iwq4J4vcJRnkVp3VbwC/ywyMj1ynPfZ6qSsssq8dN30pWyUfjFcz2uMdFA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH5XVSYu;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6FA606A31A;
-	Tue, 27 Oct 2026 16:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96873606A327
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 17:30:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96873606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bJOQ4Ie7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB7811F01825;
-	Tue, 27 Oct 2026 16:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793117306;
-	bh=4MX40vMMhwSIHoMJnZpT+uK1BwJ4FDZXqJbJwtrNmj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bJOQ4Ie75jztOfmmLJtR3Zr7sfWZTccT4f3F6H7QMypZ/Ed5q0hF2WzJZgNabVjGZ
-	 eDHxKLaQa4cCxSJN6CnJSwmQtAYe+YAROMgsCX5hyWKDGfet1YRv7o/PcbziDuyzy4
-	 o1LuIUObpKr2q2h4qYW486ZcsECR/lMVXBRXl4AC/WTJ+EuB+ZGShnTBBtdWcpsSgT
-	 K6WogJB4fsz5WN81jPNmqGkLNRXj57jMdCk07RN/yTaZDfg61LcTJ5HmnkdoZZt69C
-	 ZUsleMbuBFv5/0hDPpnXE7Fyruczg4OfN73Vp44wrr6l0FvbNLECErGsgO6JzYFjug
-	 oVRFOeN+MdolA==
-Date: Tue, 27 Oct 2026 16:08:17 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com, peterz@infradead.org, 
-	mhiramat@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org, liam@infradead.org, 
-	surenb@google.com, david@kernel.org, vbabka@kernel.org, jannh@google.com, 
-	hughd@google.com, kees@kernel.org, mingo@redhat.com, tglx@kernel.org, 
-	x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 7/9] fork: Let the new task point to its mm
- before uprobes can find it
-Message-ID: <auDGKwWWNuhuB3IE@gremlin>
-References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
- <20261022015712.1297331-8-alexei.starovoitov@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH5XVSYu
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c4322d310e7so11514666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 10:30:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793122222; cv=none;
+        d=google.com; s=arc-20260327;
+        b=gO+raGfHh+Ns8uyzAYuIeGRyRk0DEkkpIsgFs6Y9R+mfX+0AAiCI0UkMK+HEAhAtib
+         dQpdLhxCoomDR1E3rkElutX1znt4/qoBKBHbLwgRmAbLe/JDpInj/qlStmNsoOff9y8B
+         AaqowqJaRdSrswhq8kUbQYR+hZxG9TDlFXB5wfC4iYcrSrgdJGnwTt9VdpfKRtNAuUP4
+         yjUNjT2nLYm5NR/ev/W3ag3FHsASlSZ6meJ1RMtvIjrZ/3gUvC5HQHh/IPesHrmBqEv3
+         IgqHJDKDDyEiYJ5a0UmIkXMetGU7sLDuod0tFxmu5iP0DeWow+KYWm2oq6rqMt99mhfT
+         jGtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
+        fh=rAzhvnCLc1kozuqL+7iQNe3+qekgypMeaBy2kOxlGRs=;
+        b=CGLUBrZCWn0x3obWAhAgWB4KqbTyzF3bBiJIChlLoG2NUwLJgdh6YKVh9ND3oBl0/H
+         CAwWWgXTumOCGPSyX9c3g0ytB12IA68u1fG9kLRhYfMkxPTnE1/u9pMq/EbtFIr1Z6v9
+         aMd8H9epE+MvlfUo0kw5JBobyooBS4BrLwtq+8HbxvZUtt45DN9j3/6gfMvCBhmtarpL
+         lpS+FWbD19DtjGa+p+6okCd7Itkps0ca1z4p67ObFxsk/ANWv+fHazS8gp/G6eCkmhai
+         fV2alOSHMf01Uh+EkEe6aWHgLmojlRE+SkcQTjsr+y1yQ53P8z9V3G4n0G7vpnx0CP1T
+         Chqg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793122222; x=1793727022; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
+        b=AH5XVSYuq6HUx6QejcrLzJHXiZbWI9DboIxOz+yByNgh84gxZAIKBuzZHV99EG6rqB
+         sL71z4Wm6MSPA3Nnza0i731ilrImuFj3jUTow6hkS/0r7bYzxQobbOzdeIyt6ASGeEbF
+         yTa0PHt944q+HSgG6NrCVe3wZJYFAVwhpzaLqX011nHEVLqO4I7UJy1zd5cfMTXQHdaA
+         BSUKBBxl7R08MamwKyO7Ss8mI2wGFLi7Y2RxS2XZ75lMQCOMaDZ6YNjy/Um35SI/BQEx
+         H9A/IMXo16KCWMivgQdBOKUL0g+UWglSQzebhEs3U4Ckl7bH2Y72gGHNDHSXACje/sxH
+         22yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793122222; x=1793727022;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
+        b=QSM/9Ocb1/DK7TFJmuKu4dqMSvfv0QR6OqZTMPR8wgtC9h3YIbXAv6G6brG4AobZhp
+         /5pZ3Y4TqYPVxsDaBHXnNUUJ6+21YXmbcHxFh/0E0DB8/0mx/QSwxhm0Z+e6i5HAPoCs
+         X5CUEv39ZkKSx8PhaNW/o80qoHjQkxKzOzq6Fi5/8HkZvuykMtI9G1V+9SscYSDjYtWX
+         lPZ/tTc+E3f41i7SDCrS9ruWbvHAKbZkEJc+UTycDkT8NxGK1rZdOrQjNZ5gH+nHqUJv
+         +UyMZt1NC3KtSucFk0yIGAwfJCIC2Yh7822hVNB3hJHkPoZx3fyhHz+BrMLCCnR/W41I
+         avaA==
+X-Forwarded-Encrypted: i=1; AKwUvBzhBg9QAX4p3anZBF1fHnXoMSmyPJUnHU2IkvkOuwrmglwqVGmpDd688dPzpPxD+CGIhdsUK9LMkqzik72yIRmJLZI=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI9CpIpWfDn7Az02Aa0jUw0t0qhAQTqr95t7wj7flVCQxLXM2mq
+	LxLMFQZQOKKLYVfVLbHaGiqWaYNjGSgJFtTREZ+wHaufzWBQLmFBltwLcFymvYsDb8tWgAMu6A0
+	peIgHlmm/Lva+78zgwh3I0sSE6JkHluiZcP7HudrA
+X-Gm-Gg: AYBFou08TeFenK/WwdhcqOcUdhrXIafpiJRCbeEqz/NTNDq9FFmSs9fY29Ma1oOXtYJ
+	BwsSrxmEGf81QHLiM1tLFTmR19+HyhPlDmPyt9O4d3/WR2/4zrtCMvciW+BGv0esdFtx8Phgho4
+	c0PIejUbhZeAWuMY+p1pc7j8eAikOXED0rbLam2S/EFluBvIhoekzBZcMXbei+hVKZL96K6DaFd
+	EdDqfU8bvzJaZsYoUk0MY4bK+bcE+aFCYMYilbuMcy57z33X2hkPhk6vlzwVx+BFvgspAy1LQR+
+	JDhpiPulMCvIM9v5q51DsU2gdZ9QOF1yAoYuAhl5rBBhQUsxR5IURSHkgTR4mHToZOSFewrRjwc
+	ESTtDa62OXJE85tfY9bbuhXnTXge/y1VwTAzpn3dw2d/mbCN2IkME4DEnaWQodsm1uxVtCG/e+V
+	rCTIy+dQUM3+z+5iQBxQCTtCi1kcgbrKHJq5T1ZfSdiYO7i+JZwRC1QFO4tGPxSqVbiuPk3YNx9
+	nzl22QNtt1s02ExH7xOb9kjltzPO7N66w==
+X-Received: by 2002:a17:907:80c:b0:c46:6a50:40c2 with SMTP id
+ a640c23a62f3a-c46bdee2675mr1178260566b.39.1793122221137; Tue, 27 Oct 2026
+ 10:30:21 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,179 +106,121 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261022015712.1297331-8-alexei.starovoitov@gmail.com>
+References: <20261026215226.3713941-1-jthoughton@google.com> <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com>
+In-Reply-To: <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com>
+From: James Houghton <jthoughton@google.com>
+Date: Tue, 27 Oct 2026 10:29:43 -0700
+X-Gm-Features: AclHuK_V7ZmMdE83iy-wOvaliSqHMUcbKVcnfqQwnRgRgjPYRFDHKTZOMwXOk5E
+Message-ID: <CADrL8HXQdzcroeGN-ACjyy-jSAdBNHiT1_BCVVe0P+Y8ZueiyA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
+ current->mm is NULL
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
+	"David Hildenbrand (Red Hat)" <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jim Mattson <jmattson@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	Pavel Begunkov <asml.silence@gmail.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <mkp@kernel.org>, David Sterba <dsterba@suse.com>, Chris Mason <mason@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, io-uring@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-btrfs@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 22, 2026 at 01:57:10AM +0000, Alexei Starovoitov wrote:
-> From: Alexei Starovoitov <ast@kernel.org>
+On Mon, Oct 26, 2026 at 5:13=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
 >
-> uprobe_perf_filter() compares event->hw.target->mm with mm. The target of
-> an inherited event is the new task. copy_mm() sets tsk->mm after dup_mm()
-> returned, but register_for_each_vma() can find the new mm as soon as
-> dup_mmap() releases dup_mmap_sem. No task points to this mm yet, so
-> the filter says that nobody wants it.
+> On Mon, Oct 26, 2026, at 22:52, James Houghton wrote:
+> >
+> > This series comes out of a set of bugs that were found in KVM where the
+> > kernel can sometimes write to a random process's user memory[1]. The KV=
+M
+> > fixes at [1] are still required, even with this uaccess series, as note=
+d
+> > by Sean here[2] and below in this cover letter. The beginning of this
+> > series includes fixes for similar bugs found through static analysis
+> > with Claude Opus 5.5. I don't think any of these bugs are more severe
+> > than the KVM bugs[1].
+> >
+> > We hit one of the KVM bugs in production, and it was challenging to
+> > debug. This series makes such bugs, where the kernel is doing uaccess
+> > without an mm, much more obvious.
 >
-> The walk that removes the breakpoint, because another consumer of the same
-> uprobe goes away, sees !filter_chain() and removes it from the child.
-> Nobody installs it again, and the inherited event doesn't see this child.
->
-> It's an old bug with a short window. The previous patch releases
-> dup_mmap_sem before dup_userfaultfd_complete(), so with UFFD_EVENT_FORK
-> the window is as long as the monitor likes.
->
-> Set tsk->mm at the end of dup_mmap() before it releases dup_mmap_sem.
-> Not earlier. The new task can be reached via its perf events and from bpf
-> progs. They shouldn't find mm that is half copied. Clear tsk->mm when
-> dup_mm() fails after dup_mmap(). Do both under task_lock() like exec_mmap()
-> and exit_mm().
->
-> The tasks with such event fork, while another consumer of the same uprobe
-> comes and goes. 5 cpu VM, 90 sec and 7000 children per run. The number of
-> children that the inherited event didn't see:
->
->   without this series          11 to 24, 8 runs
->   patches 1, 2, 5, 6 only      23, 12, 21
->   this series                  0, 0, 0
->
-> With UFFD_EVENT_FORK monitor that reads the event after 5 sec the child
-> lost the breakpoint in 5 of 5 runs without this patch, and in 0 of 5 with.
->
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> Nice work!
 
-This feels like a 'fix in the wrong place' thing again really.
+Thanks!
 
-What would a fix in uprobe code look like?
-
-I don't love that core mm fork code is being changed to address uprobe
-problems in general.
-
-> ---
->  kernel/fork.c |  9 ++++++++-
->  mm/internal.h |  3 ++-
->  mm/mmap.c     | 14 +++++++++++++-
->  mm/nommu.c    |  3 ++-
->  4 files changed, 25 insertions(+), 4 deletions(-)
+> > Such an access does not reliably fail. The user portion of the address
+> > space belongs to whatever mm happens to be lazily loaded, if any. If
+> > the access faults, the fault handler refuses to handle it and the copy
+> > fails, but if the page is already mapped, the access silently reads or
+> > writes another task's memory.
 >
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 8fd6be932afe..5a2f571b64b7 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1539,7 +1539,7 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
->  	if (!mm_init(mm, tsk))
->  		goto fail_nomem;
+> This sounds like the problem depends a lot on the architecture,
+> and to what degree they implement lazy mm switching. If an architecture
+> makes all user pointers invalid for a kernel thread, this does not
+> actually happen, right?
 >
-> -	err = dup_mmap(mm, oldmm);
-> +	err = dup_mmap(tsk, mm, oldmm);
->  	if (err)
->  		goto free_pt;
+> E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
+> the current process is only set in user_access_begin() and would
+> not point to any task here. Without ttbr0_pan, it should be
+> covered by cpu_set_reserved_ttbr0() turning off all user space access
+> for kernel threads.
 >
-> @@ -1552,6 +1552,13 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
->  	return mm;
->
->  free_pt:
-> +	/*
-> +	 * dup_mmap() has set it if it succeeded. get_task_mm() must not find
-> +	 * it after the mmput() below.
-> +	 */
-> +	task_lock(tsk);
-> +	tsk->mm = NULL;
-> +	task_unlock(tsk);
+> Should this perhaps be addressed in architecture specific code
+> instead of in a common place?
 
-It's not great to straddle some task stuff here, and some in
-dup_mmap(). Could it all just live in copy_mm(), where other task stuff is
-done?
+You're right that whether corruption can actually occur depends on the
+architecture and config. I'll write a note about this in the v2 cover
+letter.
 
-It seems like changes you did in the previous patch dictate a move here,
-but the fix that David mentions moves the mmap lock back to dup_mm() anyway
-so a rework should hopefully avoid all that :)
+That being said, I still think the right thing to do is to have the
+new check(s) in common code. Instances of improper uaccesses are still
+bugs, even if no corruption occurs.
 
->  	/* don't put binfmt in mmput, we haven't got module yet */
->  	mm->binfmt = NULL;
->  	mm_init_owner(mm, NULL);
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 9e3be236f18c..70e40306d881 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -1520,7 +1520,8 @@ int walk_page_range_debug(struct mm_struct *mm, unsigned long start,
->  			  pgd_t *pgd, void *private);
+> > =3D=3D The New WARN =3D=3D
+> >
+> > The rest of the series makes the generic uaccess helpers WARN_ON_ONCE()
+> > and refuse the access when current->mm is NULL:
+> >
+> >  - Patch 6 adds uaccess_should_fail(), which combines the existing
+> >    should_fail_usercopy() fault injection check with the NULL mm check,
+> >    and uses it in place of should_fail_usercopy(). This covers
+> >    copy_{to,from}_user() on all architectures (including the masked
+> >    user access paths, which never call access_ok()), the
+> >    __copy_{to,from}_user() variants used by KVM's guest memory
+> >    accessors, the user-backed iov_iter copy routines and
+> >    strncpy_from_user().
+> ...
+> > The checks are deliberately limited to generic code. Accesses
+> > implemented entirely by architectures (get_user(), put_user(),
+> > clear_user(), and direct users of user_access_begin() or
+> > masked_user_access_begin()) are not covered. Please let me know if the
+> > new check should be placed elsewhere.
 >
->  void dup_mm_exe_file(struct mm_struct *mm, struct mm_struct *oldmm);
-> -int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm);
-> +int dup_mmap(struct task_struct *tsk, struct mm_struct *mm,
-> +	     struct mm_struct *oldmm);
->
->  int remap_pfn_range_prepare(struct vm_area_desc *desc);
->  int remap_pfn_range_complete(struct vm_area_struct *vma,
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 6ce654e33e3b..3167272a77ad 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -46,6 +46,7 @@
->  #include <linux/pkeys.h>
->  #include <linux/oom.h>
->  #include <linux/sched/mm.h>
-> +#include <linux/sched/task.h>
->  #include <linux/ksm.h>
->  #include <linux/memfd.h>
->
-> @@ -1705,7 +1706,8 @@ bool mmap_read_lock_maybe_expand(struct mm_struct *mm,
->  	return true;
->  }
->
-> -__latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
-> +__latent_entropy int dup_mmap(struct task_struct *tsk, struct mm_struct *mm,
-> +			      struct mm_struct *oldmm)
->  {
->  	struct vm_area_struct *mpnt, *tmp;
->  	int retval;
-> @@ -1897,6 +1899,16 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
->  	mmap_write_unlock(mm);
->  	flush_tlb_mm(oldmm);
->  	mmap_write_unlock(oldmm);
-> +	if (!retval) {
-> +		/*
-> +		 * As soon as dup_mmap_sem is released uprobes can find mm via
-> +		 * the rmap tree and ask the consumers if they want it. The
-> +		 * filter of an inherited perf event looks for mm in tsk->mm.
-> +		 */
-> +		task_lock(tsk);
-> +		tsk->mm = mm;
-> +		task_unlock(tsk);
-> +	}
+> I would think that user_access_begin() is a more natural place
+> for the added checks, as this should be called exactly once for
+> any function that accesses user space and also stays out of the
+> way of the copy_from_kernel_nofault() etc.
 
-Yeah this isn't lovely, it feels like you're having mm logic handle
-uprobe's problems. I don't like the idea of changing the signature here and
-having core mm deal with the task stuff like this, and now it's being
-fiddled with over 3 separate functions.
+user_access_begin() isn't used in a lot of places that I want to
+catch, including the KVM case. Roughly:
 
-You should be doing this in the more generic fork code.
+  kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
 
-Or, ideally, if you could find a solution that doesn't involve changing
-core fork code but rather modified uprobe to stop making what are,
-currently, seemingly broken or at least sub-optimal assumptions that'd be a
-lot better!
+There's no user_access_begin() in there. :/
 
->  	uprobe_end_dup_mmap();
->  	if (!retval)
->  		dup_userfaultfd_complete(&uf);
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index 68b05565e15a..7529e03d3f2c 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -1885,7 +1885,8 @@ static int __meminit init_admin_reserve(void)
->  }
->  subsys_initcall(init_admin_reserve);
->
-> -int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
-> +int dup_mmap(struct task_struct *tsk, struct mm_struct *mm,
-> +	     struct mm_struct *oldmm)
->  {
->  	mmap_write_lock(oldmm);
->  	dup_mm_exe_file(mm, oldmm);
-> --
-> 2.55.0
->
+I do think user_access_begin() should have the new check though, so
+I've added it in the v2.
 
---
-Cheers, Lorenzo
+Thanks for the feedback, Arnd. :)
