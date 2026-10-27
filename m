@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793106179;
-	b=IvjKwjFCXtX+11lvZo+kdYY6sVWqramnhhvL5lzhXwve/lh+zZcqjQhoghQQVzz91qE7
-	 JhL2zlEWAXbcguLaKk63ndgxcdZH9oJQyQoKk+wpkiOSkp2J79oMWow8EWPdDhr2UEOUR
-	 TYdEfPmhwCB/E4HOPhfOyl06zTaxGDhAY1mfR0Vf8mWgXxLYyazirqiaOgnNqTfXd3HSj
-	 JoF3v5alT+9D076gl8X9CbiVD3KACfW8bKp5WVP7zjq8KSmEASldIDWCTEGhYHM8tlGYt
-	 Wg1DrDBmdwFZxO+zdvUiIRsjCxseN8L0vwLrau/BeJMglq7slc51P869e7J4e6k3Mrg==
+	t=1793108739;
+	b=1iDmAolP75QMbx5f+2dawkIJy1MLsINLivepRcCvVqi9y002ul8yPB2k3SJggzxBdYVK
+	 eCZx4cgBjRPGp/SqeSmlRAJgMesRWx9gHCuYM9UZm8m5Tbl1Pe8HTUl2EsmRXwV14Pgqo
+	 NGEUfXLRfUk6YXpmlhKwVRk0kax1pNi3Lm/2I612Lk/t9qxqev20Ivenx/uvJnS/xUPO9
+	 yV/6LMWzxj3DApcNZxaMRhAWOfS8W1npoYZ1j4Eqr9d4y8vgZwndB+coSpzF2RUpo/r7e
+	 dwgAL2uLet+c9chyp8eNDNELMFQJyZ4pfoYmKkAfcSkaDBG/cgSJ331Y3CB9uh3Pprg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793106179;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793108739;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=AuGd6/0lV3u80K6afDNvZ6QslFjyuo8zZBO2WmTuR6Q=;
-	b=wXM3FDP9+z9ZXeYbdlLdkBf8td6eviZOKtrD+TjZmM9GFZ2fuoyxX35nTRXWlkbdVDl5
-	 Ibtllzz0yG6CjXrlVdJnL/OxOQ3WGGPpR5GTzHz/pDQ6mWFaGSKX0j1dGWIcNs8hGEQJM
-	 5tzVuLTzr6A3scvCVe3AXrz6RDNBrh8jBiuRSOqtrB211EmcDmh0SOpdkiCPTHK0+WXdJ
-	 YjoPzoXTrTOYbonL5J2+FD/r1K2dhlXsE6tSKBbOkViqXle3GBG8T0DGXc/uQxFjjMrSL
-	 AmReBDuuWokcLkb1daWDJ65QbhU8ywjfN6rEqxveA3uX+S8aw+Wew/OjLqllX0Ohz3g==
+	bh=0xTTV2LlXzhh+YL+DnIceW8Od0RkrWLTRt8+p/f2sP8=;
+	b=n77/jA8AP5U5dDLap46o7JfL9xAYUnRgztCkpGI2mNDtzRPXm98RM14jKHem2eaechQt
+	 EVA28yWuxOi/q1J+RFOc1FPDyDlLD4qehAAsVCu8pw4UU500dz+AawQET00RgS2qiCVA3
+	 FVtwGLvu4sL/Ors8/IaRyEoCKOWAtTHl+ZF/gRcZif/3/c0okI7nZ98zgpIWB0guEN8dZ
+	 R3VntyYcyUKBbmp7yzlDyenCNuBJyY4Bzq0/c4LEQ4j0BcIrjLfMaYMWzdtKmIdIkKhqV
+	 5aRIF6PWfYwUhpekJI0Pb+6p+AeHor1XGbU9EsLlLFxXP1g2GyzZchz2/gaX+U4rVeA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HCLDFWFq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oliOqBmk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C87606A31B;
-	Tue, 27 Oct 2026 13:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D21606A31A;
+	Tue, 27 Oct 2026 13:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HCLDFWFq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972DC1F01825;
-	Tue, 27 Oct 2026 13:02:58 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oliOqBmk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADD01F01825;
+	Tue, 27 Oct 2026 13:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793106179;
-	bh=AuGd6/0lV3u80K6afDNvZ6QslFjyuo8zZBO2WmTuR6Q=;
+	s=k20260515; t=1793108738;
+	bh=0xTTV2LlXzhh+YL+DnIceW8Od0RkrWLTRt8+p/f2sP8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HCLDFWFqpPC5fPv/s1XgegxV2pfFOiq6gDYLjEeL0KW/FEwXvunP3SyV/oAzGvCjS
-	 g8BrXQBlLfguB4lxYcGKFlaxDbT+UhNYIOniJE9dBuc21qbI1/BXZUt2dI5ur/tDZP
-	 tnjmwSpSxC4QLOz9L6YFQvpLmcdhjc9JDYYsAcX+d8QYGOvXMAAa4HV5UNBXTKFlIr
-	 TyICR5pjWpbKKfepf3/oNfoopSxHZQr3uzW0i23FBKh6tYzjegG0tJsPBX6CiN/31R
-	 PujZZArYR/oSwmOHBIOrv0qsVzmvWZLP+/JnJ90MAC33CDPa7mR81KVTShE5wq7E8M
-	 voYqIXBu/VDng==
-Message-ID: <sashiko-outbox-186599@kernel.org>
+	b=oliOqBmk9jrj7oNPmH6X8wky8AOEwhzKXQdpbQFZQDJrs0jwI+nmjQOpT5hWkl6YP
+	 HdfmzXXWEtzgFYFpw8Md+YOSjF7G5Yr04IdwhA/57fVpCZC9836M5Z62v/p2XMv+65
+	 NrDkYTmqh7TP8EgRZKjZs21qB2goWWyAA4UuOuQ2DTLNJD+rj16SmUty6x7MQ4eTeF
+	 3yFGcomi4JyL+zZvHa8ZBgzTxiGaWexd4wH95woxI77JMCV8oFmtK3OhZB2TxsHZ34
+	 FDfHK7zlR3yPraOZ9jZenoaz/qwfayCJnQ07tFVHehWcLOeYZSun5KJuOmwCuWEeAn
+	 W0vZ9SFvJZvfw==
+Message-ID: <sashiko-outbox-186665@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 -next 06/18] LSM: pass struct path and struct file to
- the inode xattr hooks
+Subject: Re: [PATCH v3 -next 08/18] LSM: pass struct path and struct file to
+ the inode fileattr hooks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Cai Xinchen" <caixinchen1@huawei.com>
 Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, dsterba@suse.cz, "Chuck
  Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
  Schumaker" <anna@kernel.org>
-In-Reply-To: <20261027121151.1887650-7-caixinchen1@huawei.com>
+In-Reply-To: <20261027121151.1887650-9-caixinchen1@huawei.com>
 References: <20261027121151.1887650-1-caixinchen1@huawei.com>
- <20261027121151.1887650-7-caixinchen1@huawei.com>
+ <20261027121151.1887650-9-caixinchen1@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 13:02:58 +0000
+Date: Tue, 27 Oct 2026 13:45:37 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,205 +63,269 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Critical] bpf: missing __nullable on file arg in inode xattr LSM hooks a=
-llows NULL deref
-- [High] bpf: untrusted path->dentry in inode xattr LSM hooks breaks dentry=
- kfuncs
-- [Low] security: missing @idmap kernel-doc in cap_inode_removexattr()
+- [High] ovl: bypass of underlying LSM checks in ovl_real_fileattr_get() an=
+d set
+- [Medium] vfs: vfs_fileattr_get() runs LSM hook before checking i_op->file=
+attr_get
 --
 
-commit e83206fa3b704333b0de2a23321bc120a419f251
+commit 2d42ade8215536e97143b2105a207c59391b323b
 Author: Cai Xinchen <caixinchen1@huawei.com>
 
-LSM: pass struct path and struct file to the inode xattr hooks
+LSM: pass struct path and struct file to the inode fileattr hooks
 
-This commit updates the inode_setxattr, inode_getxattr, inode_listxattr, and
-inode_removexattr LSM hooks and their callers to take a const struct path
-instead of a struct dentry, and passes the associated struct file when
-available (or NULL for path-based and in-kernel operations). It also updates
-the BPF LSM selftests attached to these hooks to pass path->dentry to the
-dentry xattr kfuncs.
+This commit updates vfs_fileattr_get(), vfs_fileattr_set(), and the
+inode_file_getattr and inode_file_setattr security hooks to accept a
+const struct path and struct file. It also introduces unchecked
+__vfs_fileattr_get() and __vfs_fileattr_set() helpers and switches
+ecryptfs, overlayfs, and nfsd internal fileattr calls to use them.
 
-> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> index ea6e0fbaa3b9c..2315961b6d713 100644
-> --- a/include/linux/lsm_hook_defs.h
-> +++ b/include/linux/lsm_hook_defs.h
-> @@ -156,14 +156,16 @@ LSM_HOOK(void, LSM_RET_VOID, inode_post_setattr, co=
-nst struct mnt_idmap *idmap,
->  LSM_HOOK(int, 0, inode_getattr, const struct path *path)
->  LSM_HOOK(int, 0, inode_xattr_skipcap, const char *name)
->  LSM_HOOK(int, 0, inode_setxattr, const struct mnt_idmap *idmap,
-> -	 struct dentry *dentry, const char *name, const void *value,
-> -	 size_t size, int flags)
-> +	 const struct path *path, const char *name, const void *value,
-> +	 size_t size, int flags, struct file *file)
->  LSM_HOOK(void, LSM_RET_VOID, inode_post_setxattr, struct dentry *dentry,
->  	 const char *name, const void *value, size_t size, int flags)
-> -LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
-> -LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
-> +LSM_HOOK(int, 0, inode_getxattr, const struct path *path, const char *na=
-me,
-> +	 struct file *file)
-> +LSM_HOOK(int, 0, inode_listxattr, const struct path *path,
-> +	 struct file *file)
->  LSM_HOOK(int, 0, inode_removexattr, const struct mnt_idmap *idmap,
-> -	 struct dentry *dentry, const char *name)
-> +	 const struct path *path, const char *name, struct file *file)
-
-[Severity: Critical]
-Since path-based xattr syscalls (filename_setxattr(), filename_getxattr(),
-filename_listxattr(), and filename_removexattr() in fs/xattr.c) and in-kern=
-el
-callers pass file =3D NULL to these hooks, can omitting the __nullable suff=
-ix
-on the new file parameter allow a BPF LSM program to trigger a kernel NULL
-pointer dereference?
-
-In kernel/bpf/btf.c:btf_ctx_access(), pointer arguments of trusted BPF LSM
-hooks are marked as non-NULL PTR_TO_BTF_ID | PTR_TRUSTED unless the paramet=
-er
-name ends with __nullable:
-
-kernel/bpf/btf.c:btf_ctx_access() {
-	...
-	info->reg_type =3D PTR_TO_BTF_ID;
-	if (prog_args_trusted(prog))
-		info->reg_type |=3D PTR_TRUSTED;
-
-	if (btf_param_match_suffix(btf, &args[arg], "__nullable"))
-		info->reg_type |=3D PTR_MAYBE_NULL;
-}
-
-Without PTR_MAYBE_NULL on file, bpf_may_fault_on_deref() returns false, so
-convert_ctx_accesses() does not rewrite loads from file (such as walking the
-trusted field file->f_inode via BTF_TYPE_SAFE_TRUSTED(struct file)) to
-BPF_PROBE_MEM. In addition, the verifier allows passing file without a NULL
-check directly to kfuncs that require a non-NULL trusted struct file * and
-immediately dereference it, such as bpf_get_file_xattr():
-
-fs/bpf_fs_kfuncs.c:bpf_get_file_xattr() {
-	struct dentry *dentry;
-
-	dentry =3D file_dentry(file);
-	return bpf_get_dentry_xattr(dentry, name__str, value_p);
-}
-
-Should these four hooks either name the parameter file__nullable or provide
-strong bpf_lsm_* overrides with file__nullable in kernel/bpf/bpf_lsm_proto.c
-(similar to bpf_lsm_mmap_file())?
-
-> diff --git a/security/commoncap.c b/security/commoncap.c
-> index 565c893c6d4b4..0a94b9cd231fa 100644
-> --- a/security/commoncap.c
-> +++ b/security/commoncap.c
-[ ... ]
-> @@ -1044,25 +1048,21 @@ int cap_inode_setxattr(struct dentry *dentry, con=
-st char *name,
->  /**
->   * cap_inode_removexattr - Determine whether an xattr may be removed
->   *
-> - * @idmap:	idmap of the mount the inode was found from
-> - * @dentry:	The inode/dentry being altered
-> + * @path:	The inode/path being altered
->   * @name:	The name of the xattr to be changed
-> + * @file:	the file through which the xattr removal is requested, if any
->   *
->   * Determine whether an xattr may be removed from an inode, returning 0 =
-if
->   * permission is granted, -ve if denied.
->   *
-> - * If the inode has been found through an idmapped mount the idmap of
-> - * the vfsmount must be passed through @idmap. This function will then
-> - * take care to map the inode according to @idmap before checking
-> - * permissions. On non-idmapped mounts or if permission checking is to be
-> - * performed on the raw inode simply pass @nop_mnt_idmap.
-> - *
->   * This is used to make sure security xattrs don't get removed by those =
-who
->   * aren't privileged to remove them.
->   */
->  int cap_inode_removexattr(const struct mnt_idmap *idmap,
-> -			  struct dentry *dentry, const char *name)
-> +			  const struct path *path, const char *name,
-> +			  struct file *file)
-
-[Severity: Low]
-Was the @idmap kernel-doc description above cap_inode_removexattr() dropped
-by mistake? Since const struct mnt_idmap *idmap is still a parameter of
-cap_inode_removexattr(), removing @idmap from the comment block will trigger
-a scripts/kernel-doc warning.
-
-> diff --git a/tools/testing/selftests/bpf/progs/test_get_xattr.c b/tools/t=
-esting/selftests/bpf/progs/test_get_xattr.c
-> index 54305f4c9f2dd..97361ff10e9f1 100644
-> --- a/tools/testing/selftests/bpf/progs/test_get_xattr.c
-> +++ b/tools/testing/selftests/bpf/progs/test_get_xattr.c
-> @@ -56,7 +56,8 @@ int BPF_PROG(test_file_open, struct file *f)
+> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+> index fcb5b4de897e4..2b8daf21aea85 100644
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -1077,7 +1077,7 @@ static int ecryptfs_removexattr(struct dentry *dent=
+ry, struct inode *inode,
+> =20
+>  static int ecryptfs_fileattr_get(struct dentry *dentry, struct file_katt=
+r *fa)
+>  {
+> -	return vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
+> +	return __vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
 >  }
 > =20
->  SEC("lsm.s/inode_getxattr")
-> -int BPF_PROG(test_inode_getxattr, struct dentry *dentry, char *name)
-> +int BPF_PROG(test_inode_getxattr, const struct path *path, char *name,
-> +	     struct file *file)
->  {
->  	struct bpf_dynptr value_ptr;
->  	__u32 pid;
-> @@ -69,7 +70,7 @@ int BPF_PROG(test_inode_getxattr, struct dentry *dentry=
-, char *name)
->  	bpf_dynptr_from_mem(value2, sizeof(value2), 0, &value_ptr);
+>  static int ecryptfs_fileattr_set(const struct mnt_idmap *idmap,
+> @@ -1086,7 +1086,7 @@ static int ecryptfs_fileattr_set(const struct mnt_i=
+dmap *idmap,
+>  	struct dentry *lower_dentry =3D ecryptfs_dentry_to_lower(dentry);
+>  	int rc;
 > =20
->  	for (i =3D 0; i < ARRAY_SIZE(xattr_names); i++) {
-> -		ret =3D bpf_get_dentry_xattr(dentry, xattr_names[i], &value_ptr);
-> +		ret =3D bpf_get_dentry_xattr(path->dentry, xattr_names[i], &value_ptr);
->  		if (ret =3D=3D sizeof(expected_value))
->  			break;
->  	}
+> -	rc =3D vfs_fileattr_set(&nop_mnt_idmap, lower_dentry, fa);
+> +	rc =3D __vfs_fileattr_set(&nop_mnt_idmap, lower_dentry, fa);
+>  	fsstack_copy_attr_all(d_inode(dentry), d_inode(lower_dentry));
+> =20
+>  	return rc;
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index 833e03810b24c..08b4cdbef9ffa 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -75,27 +75,48 @@ void fileattr_fill_flags(struct file_kattr *fa, u32 f=
+lags)
+>  EXPORT_SYMBOL(fileattr_fill_flags);
+> =20
+>  /**
+> - * vfs_fileattr_get - retrieve miscellaneous file attributes
+> + * __vfs_fileattr_get - retrieve miscellaneous file attributes
+>   * @dentry:	the object to retrieve from
+>   * @fa:		fileattr pointer
+>   *
+> - * Call i_op->fileattr_get() callback, if exists.
+> + * Call i_op->fileattr_get() callback, if exists.  Unlike
+> + * vfs_fileattr_get(), no security hook is called: this is the variant to
+> + * use for internal forwards, where the LSM checks were already performed
+> + * on the user-facing path (e.g. by a stacking filesystem).
+>   *
+>   * Return: 0 on success, or a negative error on failure.
+>   */
+> -int vfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+> +int __vfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+>  {
+>  	struct inode *inode =3D d_inode(dentry);
+> -	int error;
+> =20
+>  	if (!inode->i_op->fileattr_get)
+>  		return -ENOIOCTLCMD;
+> =20
+> -	error =3D security_inode_file_getattr(dentry, fa);
+> +	return inode->i_op->fileattr_get(dentry, fa);
+> +}
+> +EXPORT_SYMBOL(__vfs_fileattr_get);
+> +
+> +/**
+> + * vfs_fileattr_get - retrieve miscellaneous file attributes
+> + * @path:	the object to retrieve from
+> + * @fa:		fileattr pointer
+> + * @file:	file through which the attributes are retrieved, if any
+> + *
+> + * Call i_op->fileattr_get() callback, if exists.
+> + *
+> + * Return: 0 on success, or a negative error on failure.
+> + */
+> +int vfs_fileattr_get(const struct path *path, struct file_kattr *fa,
+> +		     struct file *file)
+> +{
+> +	int error;
+> +
+> +	error =3D security_inode_file_getattr(path, fa, file);
+>  	if (error)
+>  		return error;
+> =20
+> -	return inode->i_op->fileattr_get(dentry, fa);
+> +	return __vfs_fileattr_get(path->dentry, fa);
+>  }
 
-[Severity: High]
-Will the BPF verifier reject loading test_inode_getxattr() here (as well as
-test_inode_getxattr() and test_inode_setxattr() in
-tools/testing/selftests/bpf/progs/test_set_remove_xattr.c) when passing
-path->dentry to bpf_get_dentry_xattr(), bpf_set_dentry_xattr(), and
-bpf_remove_dentry_xattr()?
+[Severity: Medium]
+Should vfs_fileattr_get() check whether inode->i_op->fileattr_get is
+implemented before calling security_inode_file_getattr()?
 
-Previously, dentry was a direct argument to the inode_getxattr and
-inode_setxattr hooks, so btf_ctx_access() marked it as
-PTR_TO_BTF_ID | PTR_TRUSTED.
+Previously, vfs_fileattr_get() checked !inode->i_op->fileattr_get and
+returned -ENOIOCTLCMD before invoking security_inode_file_getattr(), matchi=
+ng
+do_vfs_fileattr_set() in fs/file_attr.c:
 
-With the hook argument changed to const struct path *path, dereferencing
-path->dentry goes through check_ptr_to_btf_access(), which only preserves
-PTR_TRUSTED if type_is_trusted() or type_is_trusted_or_null() returns true:
+    if (!inode->i_op->fileattr_set)
+        return -ENOIOCTLCMD;
 
-kernel/bpf/verifier.c:check_ptr_to_btf_access() {
-	...
-	if (flag & PTR_TRUSTED) {
-		if (type_is_trusted(env, reg, field_name, btf_id)) {
-			flag |=3D PTR_TRUSTED;
-		} else if (type_is_trusted_or_null(env, reg, field_name, btf_id)) {
-			flag |=3D PTR_TRUSTED | PTR_MAYBE_NULL;
-		} else if (in_rcu_cs(env) && !type_may_be_null(reg->type)) {
-			clear_trusted_flags(&flag);
-			flag |=3D MEM_RCU;
-		} else {
-			flag =3D PTR_UNTRUSTED;
-		}
-	}
+With the check moved into __vfs_fileattr_get(), calling vfs_fileattr_get() =
+on
+an inode whose filesystem does not implement i_op->fileattr_get (such as
+tmpfs, procfs, sysfs, NFS, FUSE without fileattr_get, or special files) runs
+security_inode_file_getattr() first.
+
+If an LSM denies the hook, vfs_fileattr_get() returns -EACCES (and generates
+audit denial records) instead of -ENOIOCTLCMD. Callers such as
+do_vfs_ioctl() -> ioctl_getflags() / ioctl_fsgetxattr(), file_getattr(), and
+ksmbd's smb2_get_info_filesystem(), ksmbd_vfs_get_compression(), and
+__ksmbd_vfs_set_compression() rely on -ENOIOCTLCMD to fall back to
+vfs_ioctl(), -EOPNOTSUPP, or default attributes:
+
+fs/smb/server/smb2pdu.c:smb2_get_info_filesystem() {
+    ...
+    err =3D vfs_fileattr_get(&path, &fa, NULL);
+    if (err && err !=3D -ENOIOCTLCMD && err !=3D -ENOTTY &&
+        err !=3D -EINVAL && err !=3D -EOPNOTSUPP) {
+        path_put(&path);
+        return err;
+    }
+    ...
 }
 
-Because struct path is not listed in BTF_TYPE_SAFE_TRUSTED in
-kernel/bpf/verifier.c:type_is_trusted(), walking path->dentry drops
-PTR_TRUSTED (marking the register PTR_UNTRUSTED in sleepable lsm.s programs=
-).
-Since bpf_get_dentry_xattr(), bpf_set_dentry_xattr(), and
-bpf_remove_dentry_xattr() require a trusted struct dentry * argument, the
-verifier rejects the call with -EINVAL ("R1 must be referenced or trusted").
+[ ... ]
 
-Does struct path need to be added to BTF_TYPE_SAFE_TRUSTED in
-kernel/bpf/verifier.c so that path->dentry and path->mnt remain trusted when
-accessed from LSM hooks?
+> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+> index eb408284df082..4f1d3077735bd 100644
+> --- a/fs/overlayfs/inode.c
+> +++ b/fs/overlayfs/inode.c
+> @@ -608,47 +608,10 @@ static int ovl_fiemap(struct inode *inode, struct f=
+iemap_extent_info *fieinfo,
+>  		return realinode->i_op->fiemap(realinode, fieinfo, start, len);
+>  }
+> =20
+> -/*
+> - * Work around the fact that security_file_ioctl() takes a file argument.
+> - * Introducing security_inode_fileattr_get/set() hooks would solve this =
+issue
+> - * properly.
+> - */
+> -static int ovl_security_fileattr(const struct path *realpath, struct fil=
+e_kattr *fa,
+> -				 bool set)
+> -{
+> -	struct file *file;
+> -	unsigned int cmd;
+> -	int err;
+> -	unsigned int flags;
+> -
+> -	flags =3D O_RDONLY;
+> -	if (force_o_largefile())
+> -		flags |=3D O_LARGEFILE;
+> -
+> -	file =3D dentry_open(realpath, flags, current_cred());
+> -	if (IS_ERR(file))
+> -		return PTR_ERR(file);
+> -
+> -	if (set)
+> -		cmd =3D fa->fsx_valid ? FS_IOC_FSSETXATTR : FS_IOC_SETFLAGS;
+> -	else
+> -		cmd =3D fa->fsx_valid ? FS_IOC_FSGETXATTR : FS_IOC_GETFLAGS;
+> -
+> -	err =3D security_file_ioctl(file, cmd, 0);
+> -	fput(file);
+> -
+> -	return err;
+> -}
+> -
+>  int ovl_real_fileattr_set(const struct path *realpath, struct file_kattr=
+ *fa)
+>  {
+> -	int err;
+> -
+> -	err =3D ovl_security_fileattr(realpath, fa, true);
+> -	if (err)
+> -		return err;
+> -
+> -	return vfs_fileattr_set(mnt_idmap(realpath->mnt), realpath->dentry, fa);
+> +	return __vfs_fileattr_set(mnt_idmap(realpath->mnt), realpath->dentry,
+> +				  fa);
+>  }
+> =20
+>  int ovl_fileattr_set(const struct mnt_idmap *idmap,
+> @@ -718,11 +681,7 @@ int ovl_real_fileattr_get(const struct path *realpat=
+h, struct file_kattr *fa)
+>  {
+>  	int err;
+> =20
+> -	err =3D ovl_security_fileattr(realpath, fa, false);
+> -	if (err)
+> -		return err;
+> -
+> -	err =3D vfs_fileattr_get(realpath->dentry, fa);
+> +	err =3D __vfs_fileattr_get(realpath->dentry, fa);
+>  	if (err =3D=3D -ENOIOCTLCMD)
+>  		err =3D -ENOTTY;
+>  	return err;
+
+[Severity: High]
+Won't removing ovl_security_fileattr() while also switching
+ovl_real_fileattr_set() and ovl_real_fileattr_get() (as well as
+ecryptfs_fileattr_get() and ecryptfs_fileattr_set() in fs/ecryptfs/inode.c)
+to the unchecked __vfs_fileattr_set() and __vfs_fileattr_get() helpers bypa=
+ss
+mandatory access control checks on the underlying layer?
+
+As described in Documentation/filesystems/overlayfs.rst ("Permission model"=
+),
+overlayfs performs two permission checks on each access:
+
+ a) check if current task is allowed access based on local DAC (owner,
+    group, mode and posix acl), as well as MAC checks
+
+ b) check if stashed credentials would be allowed real operation on lower or
+    upper layer based on underlying filesystem permissions, again including
+    MAC checks
+
+Other overlayfs metadata operations (such as ovl_do_notify_change(),
+ovl_xattr_get(), ovl_do_setxattr(), ovl_do_removexattr(), ovl_get_acl_path(=
+),
+and ovl_do_set_acl()) invoke the hook-checked VFS helpers on the underlying
+realpath under with_ovl_creds() to enforce the second check.
+
+Commit 66dbfabf10d3 ("ovl: stack fileattr ops") added ovl_security_fileattr=
+()
+under the mounter's credentials to check the underlying realpath when
+vfs_fileattr_get() and vfs_fileattr_set() lacked LSM hooks. Now that
+vfs_fileattr_get() and vfs_fileattr_set() invoke the security hooks on a
+struct path, using __vfs_fileattr_get() and __vfs_fileattr_set() in
+ovl_real_fileattr_get() and ovl_real_fileattr_set() skips the second MAC
+check on realpath altogether.
+
+For example, when an unprivileged user namespace mounts overlayfs with a
+context=3D mount option (or with override_creds) and calls path-based
+file_getattr() or file_setattr() on an upper file, the first check only
+evaluates the overlay mountpoint label, and __vfs_fileattr_get() /
+__vfs_fileattr_set() bypass SELinux FILE__GETATTR and FILE__SETATTR checks =
+on
+the underlying inode. Similarly, in ecryptfs, the lower filesystem can have
+per-file SELinux xattr labels distinct from the ecryptfs genfscon label, and
+ecryptfs_setattr(), ecryptfs_setxattr(), and ecryptfs_set_acl() all call the
+hook-checked VFS helpers on the lower dentry/path.
+
+Should ovl_real_fileattr_get(), ovl_real_fileattr_set(),
+ecryptfs_fileattr_get(), and ecryptfs_fileattr_set() call vfs_fileattr_get()
+and vfs_fileattr_set() instead of the unchecked helpers?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027121151.1887=
-650-1-caixinchen1@huawei.com?part=3D6
+650-1-caixinchen1@huawei.com?part=3D8
