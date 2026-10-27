@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793058830;
-	b=03vpQKx6Za9SOvx0VCmdigXsZ+fXPOyO3vc0FjTjBpySI6v4mR7EhV+J7gRZDtN8ycKz
-	 KywNJuV9S2uwsstWRYiW4EDSBMxRSmJX369uTOVgE0AMb0lggoharWmallMEUDeLztwkv
-	 KcMcu98TrpoajlES41+CVOkWfVCgGXTKEY6DAJyqH0ALKPpz8mq9m7XlUbdTdFqDd/qqR
-	 iV+PLXuxG0XBi3WbF81I9cPw69nNwE7DgtYhSI+03I/DMvS8YSrd1UzosHrr1vvFyTksF
-	 4xXPwnenIrsYcNpBOz3RzSHWEkBJhbwYqCyKrL2oRS1peCi1eoMfEvEGUPJIGwiXZcw==
+	t=1793059967;
+	b=fXGMEkhYnKAsELfzHUF2qjXEsGXKQzTRUCxPJKSZymWO3+2o31tnpRCOXmSpZ66BmGUp
+	 aG+QK61nBeyEQpIN0Mq5Rw9/d2VBgjzWwZB7iL89tjGQoSsXU5OPmKc6V+3OV+JSq7HLs
+	 OLC2RLFK3lOwmruCro9j9zX9t+OHQ4XCwfysECVpdmmqUTFiIpQtIfvoWkQjTA92kOXzi
+	 HAH1DiP+er0BxtXYZuCLnP02Vxqc82cgOpz82PIyWC2iEv+D6iiNMn8/4A3Fhx0sdR03e
+	 xgVCcXga9OeJX5R1aT4EhI0tkwQBU68rNgy5PjS2asXnXaIAC7dT3KnCuzhNOp6egbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793058830;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793059967;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=PmF4pFDTWVfRk9VwnvwOLzqp+cbYioNIQEmFKh6Wsbo=;
-	b=Af9o/DMPXjCAQE+rJxpRYSTTCvKlCYVYHTSE/HCVea5p1mDB1C9rLjF/fFEaBPz/BpOS
-	 7AzcyUm9zenD+C8bHO48aQPO583688NnX33g75zl9wKXwAYL+4iwhe8Y24mBY6F9mS+R6
-	 LtvlRvlvRke8+vVtZuwisnSPPLUx4rI1Bh5RfHNEt6AJ3yfJDZVqexKbgHqwHCJkuJTDG
-	 65l6Twgk8IoS90rnttfk+hsqUSA8lpTm1Asc2vvuHXWHz80IfDe6QF/fQHa6hllMwJmsf
-	 3gWzJkr+gNub8plw8sLZsJTj3crKWPgJJ5rCBEhji2LmEfjyp7BfWNSjfskYuHULodg==
+	bh=6NxHfrzCjecfqUYYIBMtEF1a0oXYC5iaevKK2QCBX88=;
+	b=PErkI1MJjsSDHBotXOk+oiBdS8zA4X+UrraXhZ6zUM6bOUA3jMBHVomn0iV418oXGZ50
+	 jjoUORY5PcGVYO40Ivg/RvzoEHfD2+RQXaRnQAJ+UKKk8sns2q4r3t2kHyEWGFwyry6eb
+	 +PFib0JnxcD7NuVb3w2+CFffaHFgvr303tw17j9CmB6qU+G0iZjidWX5JLe1bYpwr3BfH
+	 lP8y3XGdri4o7nnb9za8c1UTx/70k5T7gaMhJeNFacbc/FepgMuXxzZVRY8VR7wIF29FU
+	 cZN5BtXbaAWHENrpQY2RnyvRJl6flekPih+U0tYWt62nsgdOP/1cZv6HgpJ+zr2SuSw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mjSgjfpX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZxImIoNH;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EF4606A31A;
-	Mon, 26 Oct 2026 23:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A74606A31E;
+	Tue, 27 Oct 2026 00:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mjSgjfpX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347811F01825;
-	Mon, 26 Oct 2026 23:53:48 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZxImIoNH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA03C1F01828;
+	Tue, 27 Oct 2026 00:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793058829;
-	bh=PmF4pFDTWVfRk9VwnvwOLzqp+cbYioNIQEmFKh6Wsbo=;
+	s=k20260515; t=1793059966;
+	bh=6NxHfrzCjecfqUYYIBMtEF1a0oXYC5iaevKK2QCBX88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mjSgjfpX+iKdI+lEz2Meif1r6g/wl979HYK4oNQihAFrb8aYon4Pp3E8i6m0agPgH
-	 Vg9v8ZbXDx0WLrulvHPUYAeCnVW2aRDMT1F1wGIW8I0n1DxRfZj27KAP0OS7DV6DoA
-	 3z5uofYerhtYC5Iyprmx4g1Ytn8haQpO0iGjOiTjJklJCoUQe1ojIWBd/rJFHM69QO
-	 ZZOsM01E4DIRqDO2e5K3azbenG60+4odEolGlkxtWOhSHBpZlEWfYdCUvDp8FdiTwa
-	 JnVFfw4Tlnx9NMjdfwcGfgQxsDkZ8M/BzXS3zTBBsc9MvSNBK5f8ZOOcx7POvAamw0
-	 7ne8/mLfgmMKg==
+	b=ZxImIoNHx8kXLySCT62e36TwqiehoPOB6cJ27sYttuEjlXG8xclt9wCKA3dXYQrc7
+	 sy8UN6f2Y6X66kI+YNuBD9BUAmgpkJqOLoRkdhTxcSxOfbKzmdD9W15Z+pSWPFLhp6
+	 b+ZgYx2jjIGU5yB+R+UEkmgOashbA9Nt2WBYAAhrCMiDhYKidfUIq7lIEkgEmi0CQU
+	 mdcQ61Ji24HDnxWsddAk5EhZfHzCZkwT9fwVVtYjmIT5so5cYvAY5XThfk37iIUUjN
+	 jfgiS6Nw5hcn7/om6bAGPZ7qf0sF93DfbQdzSJ2JXB0Woldz7Lx1XXxCtH+G8beF9Y
+	 3XQ03PlFbFo+A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] tracing/filters: Terminate filter string at first newline
-Date: Tue, 27 Oct 2026 08:53:46 +0900
-Message-ID: <undine-1793058826691817022-492dfd11556f9184@undined.local>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 6/9] tracing/filters: Skip second character of '&&' and '||' in calc_stack()
+Date: Tue, 27 Oct 2026 09:12:43 +0900
+Message-ID: <undine-1793059963392038141-496f89524ad52c64@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <20261026164957.0e498c52@gandalf.local.home>
-References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291750264.492959.17808238344327959450.stgit@devnote2> <20261026164957.0e498c52@gandalf.local.home>
+In-Reply-To: <undine-1793058642821980546-e873f302f6a6d563@undined.local>
+References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291748555.492959.3275503783612449972.stgit@devnote2> <20261026164727.0d1636cb@gandalf.local.home> <undine-1793058642821980546-e873f302f6a6d563@undined.local>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,104 +61,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 26 Oct 2026 16:49:57 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Sun, 25 Oct 2026 17:38:22 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Tue, 27 Oct 2026 08:50:42 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Mon, 26 Oct 2026 16:47:27 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Sun, 25 Oct 2026 17:38:05 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > In calc_stack(), when encountering '||' or '&&' (where str[i+1] == str[i]),
+> > > the loop sets 'is_pred = false' and continues without advancing 'i' past
+> > > the second character of the operator. On the next iteration, the second '|'
+> > > or '&' sees str[i+1] != str[i], breaks out of the switch statement, and is
+> > > counted as the start of a new predicate (incrementing nr_preds and setting
+> > > is_pred = true).
+> > > 
+> > > Consequently, a trailing logical operator (e.g. 'common_pid == 1 ||') is
+> > > counted as having 2 predicates instead of 1, and any subsequent non-space
+> > > character before a delimiter fails to increment nr_preds.
+> > 
+> >  "common_pid ||' is an invalid expression.
+> > 
+> > > 
+> > > Increment 'i' when matching '||' or '&&' so the entire two-character
+> > > operator is skipped.
+> > 
+> > This is just wrong.
+> > 
+> > Masami, don't blindly trust AI.
+> > 
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Each trace event or subsystem only holds a single filter, and
-> > append_filter_err() / tracing_log_err() caret placement assumes a
-> > single-line filter string. However, apply_event_filter() and
-> > apply_subsystem_event_filter() only call strstrip(), which strips
-> > trailing newlines but leaves embedded newlines intact.
-> > 
-> > An embedded newline in a filter string (for example inside 'CPUS{0\n"}')
-> > causes cpulist_parse() / bitmap_parselist() to treat '\n' as the end of
-> > the cpulist and ignore trailing characters before '}', desynchronizing
-> > quote tracking between calc_stack() and parse_pred() and misaligning
-> > error_log caret reporting.
-> > 
-> > Terminate filter_string at the first '\n' in apply_event_filter(),
-> > apply_subsystem_event_filter(), and create_filter_start() so only the
-> > first line is parsed.
+> Oops, I might mislead by the code. (I thought I've checked it...)
 > 
-> How about also checking if there's any non white space after the newline,
-> and if so, fail the filter outright with -EINVAL?
+> > I purposely did it this way. Because && and || creates a new predicate.
+> > 
+> >  If you have "x||y"
+> >               ^
+> >               i
+> 
+> OK,
+> 
+> > 
+> >  Start with i = 0; is_pred = false; nr_preds = 0;
+> > 
+> >    str[i] == 'x'
+> >    if (!is_pred) {
+> > 	nr_preds++;  // nr_preds = 1
+> >         is_pred = true;
+> >    }
+> > 
+> >  in for loop i++;  // i = 1; str[i] = '|'
+> > 
+> >    switch (str[i])
+> >    case '|':
+> >       if (str[i+1] != str[i]) // false
+> 
+> Ah, somehow I completely misread this is if (str[i+1] == str[i]) ....
+> 
+> >       is_pred = false;
+> >       continue;
+> > 
+> >  in for loop i++; // i = 2; str[i] == '|';
+> > 
+> >    switch (str[i])
+> >    case '|':
+> >       if (str[i+1] != str[i]) // true
+> >           break;
+> > 
+> >    if (!is_pred) {
+> > 	nr_preds++;  // nr_preds = 2
+> >         is_pred = true;
+> >    }
+> > 
+> >  in for loop i++; // i = 3; str[i] == 'y';
+> >  
+> >    if (!is_pred) { // false because is_pred == true
+> > 
+> > Loop ends.
+> > 
+> > nr_preds == 2. This is correct.
+> > 
+> > This patch is garbage.
+> 
+> OK, let me drop it.
 
-Hm, indeed. That sounds good to me, because user gave a wrong input.
+BTW, to check the correct input is encoded correctly, we may need
+in kernel selftest or a feature to dump the interpreted pred after
+"#" line via filter file. Latter one allows us to test it via tracefs
+(ftracetest).
 
-Thanks!
-
-> 
-> -- Steve
-> 
-> 
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_events_filter.c |   15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> > index 8d7fb6e9d7f8..14afcca7a444 100644
-> > --- a/kernel/trace/trace_events_filter.c
-> > +++ b/kernel/trace/trace_events_filter.c
-> > @@ -2426,10 +2426,15 @@ static int create_filter_start(char *filter_string, bool set_str,
-> >  	struct event_filter *filter;
-> >  	struct filter_parse_error *pe = NULL;
-> >  	int err = 0;
-> > +	char *p;
-> >  
-> >  	if (WARN_ON_ONCE(*pse || *filterp))
-> >  		return -EINVAL;
-> >  
-> > +	p = strchr(filter_string, '\n');
-> > +	if (p)
-> > +		*p = '\0';
-> > +
-> >  	filter = kzalloc_obj(*filter);
-> >  	if (filter && set_str) {
-> >  		filter->filter_string = kstrdup(filter_string, GFP_KERNEL);
-> > @@ -2543,11 +2548,16 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
-> >  {
-> >  	struct trace_event_call *call = file->event_call;
-> >  	struct event_filter *filter = NULL;
-> > +	char *p;
-> >  	int err;
-> >  
-> >  	if (file->flags & EVENT_FILE_FL_FREED)
-> >  		return -ENODEV;
-> >  
-> > +	p = strchr(filter_string, '\n');
-> > +	if (p)
-> > +		*p = '\0';
-> > +
-> >  	if (!strcmp(strstrip(filter_string), "0")) {
-> >  		filter_disable(file);
-> >  		filter = event_filter(file);
-> > @@ -2595,6 +2605,7 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
-> >  	struct trace_array *tr = dir->tr;
-> >  	struct event_filter *filter = NULL;
-> >  	int err = 0;
-> > +	char *p;
-> >  
-> >  	guard(mutex)(&event_mutex);
-> >  
-> > @@ -2602,6 +2613,10 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
-> >  	if (!dir->nr_events)
-> >  		return -ENODEV;
-> >  
-> > +	p = strchr(filter_string, '\n');
-> > +	if (p)
-> > +		*p = '\0';
-> > +
-> >  	if (!strcmp(strstrip(filter_string), "0")) {
-> >  		filter_free_subsystem_preds(dir, tr);
-> >  		remove_filter_string(system->filter);
-> 
-> 
->
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
