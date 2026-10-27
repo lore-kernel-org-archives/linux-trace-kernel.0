@@ -1,88 +1,117 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793068959;
-	b=ebzHzSySNVNbwdAuvkLFn9stO+iAWgajaNqg82vzt4lVH08H8YOx0OgnIxCw5KEImJL1
-	 R0low8MniOWQ1URrk3qztQVYZZKvHUBwy/CIfganTYJBPXvavAyrXQhqmZFM57q2mzWI9
-	 MlWm8z2XX4/i8+e2ReQ9jZMIaPkV8435ojkjNvtrqgoNFOLQGq30FpVEDDVhkhLebicyo
-	 8iZKPqRb5I15unsnpEwnUvd8ceqie8IgrPc+Tmyg9ygGM0Qsv2DqHLQx5RnIb4LDEUpmb
-	 4Qs5FqAObDQLgA6r5YNuJ3Yoq4JhPd5ZIkKRWjHP1wJ3C8WkVxDqmpD0AI2VWqLP2fw==
+	t=1793080993;
+	b=wzFjDI7Rf9P42p/bBjV/3VE5WqICqAhEWWue6EA8PCdEj8m7wUctm0j/5V38HWcyvz9I
+	 pSsfwXJtqBNNYRrifPXCg3Rrz6/YUmzfafPeiClHZZG+Mp2eKwSzr10+KNxiNbHDH/6Ao
+	 CRd5/xu2QOzmh26NlWB64Zl8Y0wJD6hgRWHWFvyxHZOxYEZFg+VlwSEQNBqsSGla8qk+f
+	 KztUrRyYKJY8RAVy7SvM5bEwK3pcutC5Fsben8Nl3MFNd7cFlbo5LCpO1rEKXMOyORiJA
+	 bN3sMCAkxBRmAq8MsIbPffOhjO0fUmLKmM6kQ/Vnx6GwC9QwcsToar2eBIQ5g2HZPvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793068959;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793080993;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-	b=E0Iv76sc+++tRmnOuHNyMaYYW6dbIN9aWH2kbFTZy/PN2ma1J7cvXILh5qoOcppFRf6o
-	 rLSc33+eBW6DahkI0AGbpanVU+NwflaYjghfTxu7gK+oQm7LZKmPFn5K4T34KLYd4ZNpx
-	 /08OTnYOG8rQzXRyP5dH6BzC5ADmheEV6LmfxU/u/m+6KoAHFjI7cyKrljgokHyKsiaw6
-	 te3BVtbXvzX5HrHTBAqjG9alQzGrWGPT1pYkeFe8R6hDUL3OBtrX+J4vljZh3JgZmlkkt
-	 U3JRfCxsRTPT79xoUu7gndWhfwFB6VOuS3NnhWerM2kVYWddUBvqggNHxmJa9CQb7Aw==
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=KtHkcu0sQsAK751caVzJBQDY0o4i7F/zlOnjMPPeE5I=;
+	b=AiQgFh5YTISQqQFFu5l2v5FgCVBAUWe9eobX6kyZ5YRstg20S6zGduMEiztsjE1rXCyM
+	 2Jr4NGXMZQJCMmWcQGexPqfselj+Rvf6JJSu+yLaXUaWMp6HkEsuXa9Bnkq+rgyMq6H39
+	 IyXiXDjd25Bxp1iKCEGxuTMSizGmTHsjBi4ILcDr66VGr3l0C8jJNUU1Wf7iC5llEbTgV
+	 beaOgEQ4X60kdOqwmsigOFfBMB/N8PEgILnjm6Hx5AWIisKZvOSYGnfMf1OaSJNdFjxEi
+	 v6FkqX2UsaUFZyVNiKRxscSP/SqdGFDgAWGVo0MokONAeOLJg/cy0G5Qq1KsxD+jJ+g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kernel.dk;
-	spf=pass smtp.mailfrom=kernel.dk;
-	dkim=pass header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po;
-	arc=none smtp.remote-ip=74.125.82.49
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Fd+rVQCT;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BF3606A323
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 02:42:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84BF3606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B82606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 06:03:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 43B82606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1846bc43c28so4071761c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 19:42:38 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Fd+rVQCT
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a218c463d1so23199295e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 23:03:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1793068957; x=1793673757; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=nAMLJ4pov/UKnTCLgH305UyFiee1Kbb1n3tCzOl712VaepOkFQaBHOfe8TqG3p1lZU
-         FcmqVqrrqUreTloBdzXh9C3S8RzvKdqK0Wdm3ymTtA2e7F8hg+g3tAXi0qMz5tjjKhfg
-         XZsmI+gaR0xwl7nmIQiVOSWVXQuFdQ0nDSV/JTrdP8vh+zCmGEp4ByKhGzO7Q9EFAqG7
-         Z9UxSRbzl1SyjYddPBfqeotnjUxiWUf5QMQHMI+2cHXwFS8e7Vcd6faApvoLAEI8hyVq
-         H9p+0vB8HKXlTDO8gBcIdyEeUOqojMCpKudjjewsxrlbiMp0bSMq+X14CJGfZa/XuOHM
-         djkQ==
+        d=gmail.com; s=20251104; t=1793080991; x=1793685791; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=KtHkcu0sQsAK751caVzJBQDY0o4i7F/zlOnjMPPeE5I=;
+        b=Fd+rVQCT6h6iWDR02V4pfE6w4B9VB1S0lffsv2IDdIHHIRdyK3jUEt2FmHBfZxMBXo
+         /6CAn9UDjbhCtzDFEAD5X9jRnzYGPQcAkOmikfnG13ul8dm2gAbZsM9KyfdVDLAcz/Ay
+         UiOYwyOaUeF+/xVxB9iMXFcDyDlueTVmMgBFt8QsaC3JgphcNjaakCDKqO2hcesvrHWK
+         9oqTpTZC6ExZY6JzDB3EJe6w45YuoOXY55hHfzjgqADewKP+nXACtXCBTHV/WG0pE4Ke
+         YqA7i+Nq+iwiszDPQZGl2GpPWw21M4pwSa8W/8EODi1AZRQE76335KaE1hQ2D2r+gA/7
+         74bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793068957; x=1793673757;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=eYb+vGqW2z7LH9IfqUdie4cSQzIFQocNsPBV5Zw31Sy1ZJlo0f8IY2kcuEqN1DAZf8
-         S5ksVO+/j2SFvC1xecahEI4w6RrC2Ji7iDcm74FUHz1EBUuP7sFk7RXGwwNsegElzojR
-         usaSG/BOVYbCsfYsHsy7ovT+hKg3RPbAAhJf8E5Dz6OP4t+75+zwUYOyF4T5FyWE8bwm
-         HG/CFY5mrfMOLlN76dcxAD6RX8StSKIXscBCMNorbgJC6pSwZnJlQcuRt94/zqbwrDjJ
-         WgorKjO1Ja/JM9aKjChdnJJkUVvYURIOv3ABfHLuoUJhpc/BusmPlV/egw6Lwi4J7Ump
-         mNsg==
-X-Forwarded-Encrypted: i=1; AKwUvBwBBejQPQRsh8vGdl2Zv1c0VrS6GtxciQT04dgIfKLNgoPzPte5NN+MV1iMWVjuObM53eikIJ/WWimuIDpsRRdrM1o=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJB/dxU5OFbkId2H66sOTz+d8mrcbW5YUtOj154bRubJfmgqgzN
-	GvaVaBDSlMQRaryH21xjUfKgPxukWzu1zukLdBAFRfNgIuFlDj4fBlYidbWiuURAINA=
-X-Gm-Gg: AYBFou3mjOse6TDB1hitUDQf8jgpSY4ak03VMRTNVCs8p7dMrDtRVN6h9EFrQ+agwjd
-	blU4cQAyB70mzTHfzzNrL3/BmqalrTQW0gvPXnAf+I/8fN7LvkdAuhabJSd9W4yxLw9lnHrgXWi
-	AtvwCbcjhTAp7cZv7Q35jntQ8qAyL7a9Qn8YM1uonCUpGMDvMujJUyV5bvoX7MuUQAl/gzI9hPD
-	BbGly9bh4qphCfi2ovUW9CbBNtqWf/sPQz/8Ms4wzb73zOB211pMcERZcBPQjZB1rRPCE08imxQ
-	Z+KAyr6Z6x81e9ObR34d4Q9ir84GcoUDA81+nPH2av7WnQ+eSHPrj2GcFa5j/s01nt/vi84gytJ
-	aAwqqfjUJ9MtNbxQtBmOe2juf300s+OZ4OuQKmXBOjBKbHQtXnKw80Ajn8uahU0yM2Wvbnrz3i2
-	+nM8KO9yFYlsJEjmDC5OLXfytOK/jmbm1BvHLVVA8u7N0PaZC63+NMoWco6TxQp7AicljPvQC1o
-	tY/vbNYtevZXWxptm0jg2VFa23YbnzHSX9P+mAcisoOa1I5GVrVZdORjX0+Nc4bLHyZ9wLvO7rB
-	qFmIe1w+/eQ/SxZNMJAPSsgZ0aaDybPokfDEJbM=
-X-Received: by 2002:a05:701a:ca07:b0:144:fd7c:84fe with SMTP id a92af1059eb24-19937307669mr13761314c88.35.1793068957501;
-        Mon, 26 Oct 2026 19:42:37 -0700 (PDT)
-Received: from [192.168.1.106] ([198.8.77.135])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a249c331sm59514670c88.17.2026.10.26.19.42.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2026 19:42:36 -0700 (PDT)
-Message-ID: <30b1cf28-61e6-4f28-8e28-79815bd87617@kernel.dk>
-Date: Mon, 26 Oct 2026 20:42:35 -0600
+        d=1e100.net; s=20260707; t=1793080991; x=1793685791;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=KtHkcu0sQsAK751caVzJBQDY0o4i7F/zlOnjMPPeE5I=;
+        b=L7lmTWRWJ/eRKIOkDLxcGHx7flctvIYCybiA67dQB9fLcuVd+fLz+NWs4tKSfIYKHB
+         b82OiqNxNMZB4xb8XsUkdQGdmJ/PVTMU/ZqmeRHCX6WUv4dbt3H10ecwq1sjohC8rDrV
+         dAgvmPrzDGvfCcADVWUjIIIRTGfF1tmxQFbPWlKlqk5APyiC2aRJbK0+U7P8y+FxOz/h
+         Qn+NLKzsFjCByMd0TMkkYz/qB6JM77WrRUCpjjJvFkQfLPE+4i+hp5AAtLUEh2/cRBWp
+         I/iJ+J9vmTEKIf7NTuajdnXW5lAke54mxMwzJMn7BkyANDdcnFui1t1KHcvRFNhKKwwa
+         OYMA==
+X-Forwarded-Encrypted: i=1; AKwUvBxrU2OMhAbXeqv4WOgZUW9pgfRoj5ot6F5BkJUIrhfhwF+TwwklbQl9BK5KWlZ16nFu0Wj4gV42U1BE0U3IW61TS5k=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLO2tzDNAtuo4PBm5i0FFphQuAl8JMCyT7v2F58ORMED0shuPdn
+	6HtdeOILmQKLMffhPwTuBk4BLtoiOLOoWQjp1f4SGRhBn/sB3PR95ueW
+X-Gm-Gg: AYBFou1Hg408B79h6qp0bN8+LMcgUCFe7p9HI9S88vVZWUrRSXYFIKT8B+irUsDz515
+	xN1BJ9qSoHbLHcCxeW5Ba0kosTUmDVkPVjB495bHJc3Sbm2z/1OFkyB39AAIExzaEpNUE6W3usP
+	hWyrREIF72ZMQDD2cukUDWFJC8UOlfTXaJO7wCxKcej5zOQD+JJXPYAB9UYxBqgkcup4CAklenL
+	KuX122tmFBOtrUkAKMwf8/bayDPlYBST05WjqzdooxYLEVHT8kLUmkYyAnYDnk2mv96dLeGJsvb
+	SpeMPTtrYBlsrfRIaFgzakoDEeSvpKVksJUXSd7hlRW4hGFZK4xuvQ/J/6judd011LopGBwCHlE
+	EGOtD76BbWqfrvlrF3LrvaIdAnHRa3B95dwpmNkx4v6avpDd6KCGMBbCgZH2HiZ1I7vp4YPQTCy
+	92VZk1xJK6AOkwDSqHY4twG/vxotx0Z0MIxaWG25Ss2rAH+CzE87jlVhUTXwZ2TLdAmVvitTQoP
+	LzQV4vrLQqbjZZzZHI168SLj4Pp3Ia5pO9tzfLoWO+3my5NBYI6MlYudPVwNQIk
+X-Received: by 2002:a05:600c:3acb:b0:4a1:992f:d0e7 with SMTP id 5b1f17b1804b1-4a35aca4fe1mr159192175e9.16.1793080991458;
+        Mon, 26 Oct 2026 23:03:11 -0700 (PDT)
+Received: from foxbook (bgu81.neoplus.adsl.tpnet.pl. [83.28.84.81])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a35a5698f1sm240600745e9.8.2026.10.26.23.03.08
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 26 Oct 2026 23:03:11 -0700 (PDT)
+Date: Tue, 27 Oct 2026 07:03:00 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alex Williamson <alex@shazbot.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@baylibre.com>, Armin Wolf <W_Armin@gmx.de>, David Lechner
+ <dlechner@baylibre.com>, Danilo Krummrich <dakr@kernel.org>, Luis
+ Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Daniel
+ Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Aaron
+ Tomlin <atomlin@atomlin.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Bradley Morgan <brads@mainlining.org>,
+ Aleksandr Nogikh <nogikh@google.com>, linux-modules@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-usb@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+ Richard Weinberger <richard@nod.at>, Thierry Reding
+ <thierry.reding@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v4 0/3] driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers
+Message-ID: <20261027070300.4c45616a.michal.pecio@gmail.com>
+In-Reply-To: <2026102637-buggy-mothball-2a08@gregkh>
+References: <DLIL9H50MALI.3JROXYEEUM3KU@kernel.org>
+	<arIvG0nx4LXG9nlW@monoceros>
+	<defb3953-7516-437e-b70b-d57de55b91bf@baylibre.com>
+	<9bd3a34b-5e98-4038-80d6-da2c3b1948dd@gmx.de>
+	<2026092321-province-yearly-44aa@gregkh>
+	<arOfHEsGGglNse7T@monoceros>
+	<2026092348-victory-erased-0e5a@gregkh>
+	<20261023181326.0dc2f7ed@shazbot.org>
+	<2026102437-vista-unsoiled-b089@gregkh>
+	<20261024103512.4601ee4f@shazbot.org>
+	<2026102637-buggy-mothball-2a08@gregkh>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -92,45 +121,76 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user
- memory when canceled
-To: James Houghton <jthoughton@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
- Pavel Begunkov <asml.silence@gmail.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <mkp@kernel.org>, David Sterba <dsterba@suse.com>,
- Chris Mason <mason@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
- io-uring@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-btrfs@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261026215226.3713941-1-jthoughton@google.com>
- <20261026215226.3713941-3-jthoughton@google.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20261026215226.3713941-3-jthoughton@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
+On Mon, 26 Oct 2026 21:34:57 +0100, Greg Kroah-Hartman wrote:
+> > Even if we could come up with a set of device IDs, it's a policy
+> > decision whether a given device is intended by the admin to be used
+> > by the default in-kernel driver or a userspace driver.  
+> 
+> Great, then have the admin never allow the in-kernel driver to be on
+> the system, or be loaded (modprobe has deny lists) and all is fine.
 
--- 
-Jens Axboe
+As some maintainers like to say, it's not the '90s anymore :)
 
+Users don't reboot systems to kick a kernel driver off a PCI device to
+try something in a disposable VM on a whim.
+
+Even if they did, it's completely normal for desktop users to have two
+GPUs from the same vendor or two xHCI controllers and pass only one of
+them to Windows/macOS while using the other on the host.
+
+bind/unbind feature prominently on every distribution wiki and forum,
+this cat is absolutely out of the bag at this point.
+
+> > That means that at one point we want the default driver bound and at
+> > another we want a vfio driver bound.  Coordinating this is exactly
+> > why we have driver_override and, building on that, match IDs that
+> > require driver_override.  This allows drivers to describe
+> > themselves as vfio-pci compatible drivers via modules.alias while
+> > requiring userspace to enable the match via driver_override.  
+> 
+> And as said before, that's a horrid hack and one that is breaking
+> things today in all sorts of ways, which is why the taint was added.
+
+Are you aware of bind/unbind breaking things for PCI specifically?
+
+Without also involving 'driver_override' or 'new_id'? Everyone agrees
+that these APIs used for anything other than pci-stub or vfio are foot
+guns. But your patch targets something different.
+
+We can even bind PCI drivers to wrong devices *without* using bind and
+hence, I presume but don't care to test, without tripping this taint.
+
+> If you wish to override the kernel, then great, a taint flag is added
+> and all is fine.  All this means is that now developers know what you
+> did and can decide to ignore your bug report or not.  No functionality
+> changed at all.
+
+I believe people pointed out that it's a functional change for users of
+panic_on_taint who also use bind without being idiots.
+
+Does this taint even solve a "real" problem? Those bug reports weren't
+coming from users, they were coming from "abusers" like syzbot looking
+for trouble. They were quite obvious even without a taint message.
+
+And at least on linux-usb, they seem to have stopped after Google and
+one other copycat were told to stop sending them, and before this taint
+reaches released kernels.
+
+I even told them to block not only bind but also new_id, so there will
+be no second wave of reports caused by syzbot discovering that it can
+bypass the taint by using new_id intsead of driver_override.
+
+> Why are you worried about a taint flag?  So many servers run with
+> taint flags enabled due to out-of-tree or questionable licenses with
+> no problems, what's one more informational bit here?
+
+And what's the point of a flag which is always set on countless normal
+systems in the wild? If this feature survives to April 1st, I will send
+a patch to rename it to "VM passthrough taint" because everybody (or at
+least those dealing with desktop users) knows what it *really* means.
+
+Regards,
+Michal
