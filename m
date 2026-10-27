@@ -1,102 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.53
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793122223;
-	b=o0pBvonE4ROoSQ9cOhLqimQTG0b1WMziqHnG8DENnR5axOOtd8tOJVgWkpeMHisn+11X
-	 7OgDAPnexWUhqN7pv81ss0atswPQwqZ8vHWx1qrMp3SjdbZ+ZAIGKG7iBENAyFEn72KkS
-	 JzNaWPEmmNrQSRQRZNYcGrgL0GcSM9lY3W7LVpWTSgpzBZ5AZAZNQgnj4Dw8WdTE4rk35
-	 VqRbhTdmVifXeXKIBDgXyW0yjASArOFksfDJi1x/LczokMMgVY5zbub48uvboaxOsEvzo
-	 WJdwxSGqs4F/VJPDFmYd702KnA56J4bMFWA5PXloiXvreAYq4M9MI1KKFKTyPmY3Jww==
+	t=1793123182;
+	b=riNgcEdvgtZ4qOCaRjXui9xXJhZSQglhRUppeCAMNmdA9KNJz67divvcfLnk5olo7Rhj
+	 Nnz0V4wh5VqhGt7QL45gwvchVDCRrDy9iOWSeCdeiwZ0x7RMssVtBdDTk3B6nxpvQheqs
+	 Z58qht1ozI7C+XfmyvORIpxOcZ4IzKRG28Q2XPtFkk/wPLd9h8OaaqPuwbrIdV5beqCHK
+	 bMfjfsiIe5I0POq0vMDMNvDbkCDytdf0NhpbB6znlX7q8iWY0e2wOggkdkUwmRH8C7iuv
+	 rohLTbmH+jnrAB8t94K6mify6+VxiQJSM9EsfvaMu9u6pkHyVqoXaGNM8S5JsCJO7NA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793122223;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793123182;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
-	b=Dx0MirQhEDmKJyLSi6H9IGRg323qsyovjXYxQf8hv42g3oC/fJvd9lBNS5IfTJp4hxxz
-	 llBJfu/JaQP9OP+L2NhJPOe+CjwbfR8JQSxK3FPS8LLdbcYDoskjFUwL9TGzPFTQsZ5bd
-	 eHP0RAWeorRj0svw8hJegF2wN2ROjeCWygcO0hzGM4kkzzqdnSaw0SYx20/Hf6vtZCaKD
-	 9GMDOu+/6Sl4LAMv1AUGk61XodN/r4TTHGhH8TqsZE5Mik5QJSYig9jLKbJ3xcxqVZqm8
-	 6n2z5TGY8Iwq4J4vcJRnkVp3VbwC/ywyMj1ynPfZ6qSsssq8dN30pWyUfjFcz2uMdFA==
+	bh=zJVDlsrsrfYz550OKB/3hdZdazvfDU9t83gGSE4oBec=;
+	b=0+E8GHZLgDjxvq/UPP0sazeGOENTM0XC0Lr6VFYVZcFipUo+iiLnihWvD/hRIfJy9+Ux
+	 BpIjlLatmllET2XlN/6Sy3c/6WeWFTvh0ExP2f8W4SatpMQpI6hGLQgdcFokGCshhVaeB
+	 Dsja6TPlfrC3VSWlvJwpqO8ohtDgXkt+IS1CzMv1AAGnd63kGSH9cGsVvLEOTlyzx6Kvw
+	 DCSZ7kYrP36EXN8A1EaitivcCprtn5mzZGFwOmzNfSzDE9kh+YJDZnAQLneG07VLxckLI
+	 w5sHXdVvjlB85Z5DwzqAPKc8vk/Yo0wtBSLRSUeBwbhND34lGR339KUVOlUfBBN2gXw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH5XVSYu;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=evKXogKr;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.53
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96873606A327
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 17:30:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96873606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4D606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 17:46:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2FA4D606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH5XVSYu
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c4322d310e7so11514666b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 10:30:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793122222; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=evKXogKr
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c4550d8ab15so10971766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 10:46:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793123180; cv=none;
         d=google.com; s=arc-20260327;
-        b=gO+raGfHh+Ns8uyzAYuIeGRyRk0DEkkpIsgFs6Y9R+mfX+0AAiCI0UkMK+HEAhAtib
-         dQpdLhxCoomDR1E3rkElutX1znt4/qoBKBHbLwgRmAbLe/JDpInj/qlStmNsoOff9y8B
-         AaqowqJaRdSrswhq8kUbQYR+hZxG9TDlFXB5wfC4iYcrSrgdJGnwTt9VdpfKRtNAuUP4
-         yjUNjT2nLYm5NR/ev/W3ag3FHsASlSZ6meJ1RMtvIjrZ/3gUvC5HQHh/IPesHrmBqEv3
-         IgqHJDKDDyEiYJ5a0UmIkXMetGU7sLDuod0tFxmu5iP0DeWow+KYWm2oq6rqMt99mhfT
-         jGtQ==
+        b=cB2Nt1BrD8Lr42jGkIsFvxcfWXCjUi5XAfjGnOlHVyilca7BzfQ5bWFIQFBzoQ4Dki
+         ANoBWffTAZaIqXhaCqCdCr/cr6rYDPJdW86yx4dC6qPNt6WZ/N3NHIZASkWIKUn3gRzp
+         XPxwnyb8RCaevsmWZu9klBylXp5QTzRxfkfQQosGBIGK9Y8zZ/60igyg0ydHAwE7ZFzs
+         hbiAXIj9DpNc5fOd2d5IuJBQGABDYGJKKgr8XxIwZGlLYEHty7poUDi3c1i4KusJuoNZ
+         NIpX2uv5Zqdl1XOp+r4qHWGIkVjlu/19D/sPDA/OYcWYKFxVzlVZFIWl7By0cOiPwuHo
+         e+2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
-        fh=rAzhvnCLc1kozuqL+7iQNe3+qekgypMeaBy2kOxlGRs=;
-        b=CGLUBrZCWn0x3obWAhAgWB4KqbTyzF3bBiJIChlLoG2NUwLJgdh6YKVh9ND3oBl0/H
-         CAwWWgXTumOCGPSyX9c3g0ytB12IA68u1fG9kLRhYfMkxPTnE1/u9pMq/EbtFIr1Z6v9
-         aMd8H9epE+MvlfUo0kw5JBobyooBS4BrLwtq+8HbxvZUtt45DN9j3/6gfMvCBhmtarpL
-         lpS+FWbD19DtjGa+p+6okCd7Itkps0ca1z4p67ObFxsk/ANWv+fHazS8gp/G6eCkmhai
-         fV2alOSHMf01Uh+EkEe6aWHgLmojlRE+SkcQTjsr+y1yQ53P8z9V3G4n0G7vpnx0CP1T
-         Chqg==;
+        bh=zJVDlsrsrfYz550OKB/3hdZdazvfDU9t83gGSE4oBec=;
+        fh=SbD/0vqXhhMMIbN392Ny2PVm0X5tCA1LfWjr26c2Gbs=;
+        b=G9z4yVLbLvw3Uqv6AdaK/gzKdvHFDpf7mQXRPA2VmZVjt7Ow4H+gDMr0naSXWZwhLK
+         MLWzNSqiPSM6NcUbWGMEPmK6eJmr1aSDzch4+NkJp+hWJtoYGbVIjP1dMfQIwlq1CSyy
+         mbNlpD1iShi8ObRS37QWENDKEPYlxzK7b7BAV3xt0aHg75Ubh4xrMu0ZupK6iO+9e2O+
+         OfKt+Cubt1jUZGQyFy59b0gLexh5/1nuxOCJ24ttsdSra58AWJ8ZoI2gzx03krKLNE1P
+         YHqq9Tlug9GoKoEDL+AYtCNiH42MMpzeXLRl9tKxxmkMBKSyeAT7dl4BcTehRCHnldM2
+         oaAQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793122222; x=1793727022; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793123180; x=1793727980; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
-        b=AH5XVSYuq6HUx6QejcrLzJHXiZbWI9DboIxOz+yByNgh84gxZAIKBuzZHV99EG6rqB
-         sL71z4Wm6MSPA3Nnza0i731ilrImuFj3jUTow6hkS/0r7bYzxQobbOzdeIyt6ASGeEbF
-         yTa0PHt944q+HSgG6NrCVe3wZJYFAVwhpzaLqX011nHEVLqO4I7UJy1zd5cfMTXQHdaA
-         BSUKBBxl7R08MamwKyO7Ss8mI2wGFLi7Y2RxS2XZ75lMQCOMaDZ6YNjy/Um35SI/BQEx
-         H9A/IMXo16KCWMivgQdBOKUL0g+UWglSQzebhEs3U4Ckl7bH2Y72gGHNDHSXACje/sxH
-         22yg==
+        bh=zJVDlsrsrfYz550OKB/3hdZdazvfDU9t83gGSE4oBec=;
+        b=evKXogKrv4QLmHYqCokY6eoxjCFUmFkxFngkD+J5pd+U8PqGflJnjYXElfwUyBFmzF
+         qV4wiic+wqbW2dbP2pY/QKOyX8Swo34I5YK8mrIPfmquTi4YHY3KtxS9Y4oCL4EYN8+b
+         gZgC3px2HQD2ClUQ58JAFPuTSuRNsxHfG7Ksla9B2okECXJvEvGeRLEkfL0w1iLCQuRf
+         XY+TtQ6+OqXyzAWBWKoLnCli9E1dJ9okU3IZtHsHGFSJ7oI+uUVEKLZVuggzNHkBO8bv
+         MIwH/ZO2fAiLc7nxHKiQCb/8R1CLEajO8mjY8W0wf+4Jx9ahNvsdYjka3DkvChZTYg8P
+         y67A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793122222; x=1793727022;
+        d=1e100.net; s=20260707; t=1793123180; x=1793727980;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7gQ+97vReKa4toS9130cb0MEUCUe5fofr2ehSKz/dNw=;
-        b=QSM/9Ocb1/DK7TFJmuKu4dqMSvfv0QR6OqZTMPR8wgtC9h3YIbXAv6G6brG4AobZhp
-         /5pZ3Y4TqYPVxsDaBHXnNUUJ6+21YXmbcHxFh/0E0DB8/0mx/QSwxhm0Z+e6i5HAPoCs
-         X5CUEv39ZkKSx8PhaNW/o80qoHjQkxKzOzq6Fi5/8HkZvuykMtI9G1V+9SscYSDjYtWX
-         lPZ/tTc+E3f41i7SDCrS9ruWbvHAKbZkEJc+UTycDkT8NxGK1rZdOrQjNZ5gH+nHqUJv
-         +UyMZt1NC3KtSucFk0yIGAwfJCIC2Yh7822hVNB3hJHkPoZx3fyhHz+BrMLCCnR/W41I
-         avaA==
-X-Forwarded-Encrypted: i=1; AKwUvBzhBg9QAX4p3anZBF1fHnXoMSmyPJUnHU2IkvkOuwrmglwqVGmpDd688dPzpPxD+CGIhdsUK9LMkqzik72yIRmJLZI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI9CpIpWfDn7Az02Aa0jUw0t0qhAQTqr95t7wj7flVCQxLXM2mq
-	LxLMFQZQOKKLYVfVLbHaGiqWaYNjGSgJFtTREZ+wHaufzWBQLmFBltwLcFymvYsDb8tWgAMu6A0
-	peIgHlmm/Lva+78zgwh3I0sSE6JkHluiZcP7HudrA
-X-Gm-Gg: AYBFou08TeFenK/WwdhcqOcUdhrXIafpiJRCbeEqz/NTNDq9FFmSs9fY29Ma1oOXtYJ
-	BwsSrxmEGf81QHLiM1tLFTmR19+HyhPlDmPyt9O4d3/WR2/4zrtCMvciW+BGv0esdFtx8Phgho4
-	c0PIejUbhZeAWuMY+p1pc7j8eAikOXED0rbLam2S/EFluBvIhoekzBZcMXbei+hVKZL96K6DaFd
-	EdDqfU8bvzJaZsYoUk0MY4bK+bcE+aFCYMYilbuMcy57z33X2hkPhk6vlzwVx+BFvgspAy1LQR+
-	JDhpiPulMCvIM9v5q51DsU2gdZ9QOF1yAoYuAhl5rBBhQUsxR5IURSHkgTR4mHToZOSFewrRjwc
-	ESTtDa62OXJE85tfY9bbuhXnTXge/y1VwTAzpn3dw2d/mbCN2IkME4DEnaWQodsm1uxVtCG/e+V
-	rCTIy+dQUM3+z+5iQBxQCTtCi1kcgbrKHJq5T1ZfSdiYO7i+JZwRC1QFO4tGPxSqVbiuPk3YNx9
-	nzl22QNtt1s02ExH7xOb9kjltzPO7N66w==
-X-Received: by 2002:a17:907:80c:b0:c46:6a50:40c2 with SMTP id
- a640c23a62f3a-c46bdee2675mr1178260566b.39.1793122221137; Tue, 27 Oct 2026
- 10:30:21 -0700 (PDT)
+        bh=zJVDlsrsrfYz550OKB/3hdZdazvfDU9t83gGSE4oBec=;
+        b=mJFhnFwltvAigtM3SiGAtNQ7Fu9PX0ir9/iT6hNdtCHAZL/JqaobfZAya3cozrRTDn
+         TbqGs2/N8CuybEQCfzuDS5fh4vmaWKBpqT8uV90B0KMLkxIXIL3XfRkBJB2SarD4wIll
+         w1Hk5TthzOpMaTr2hsxBKuOcJrZN3MAI53lfVyuXj/J5Oj+JOohbgYBAyrHXMvl17iIC
+         SMChoKHUE8imKIo6+UOJRnhKyjjjH3Eyh6JoFrgvJuWhFDAoqsYLHUsvS0VFTnRAel3C
+         PNMpVZ6XlvFFey9cW8rSumWJ53xrPOwIqpUAK229EycBc1vWtEwwkQobK5SnBfvVEF9F
+         66NQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzglBkJ2LhlUDtaqCqyxjTxI300XFZszYMlOgstrxreuxa3vsM/iREei43TsqPbSMze1hKiu6eViTxdIS0QlVWwqX0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK/QRPsZHkekgSwq9IqIqvT8Bnzh+jiOv8sfn9L8oAo6OcVxlc5
+	JZXuQqFVjftn0pppiaOvn3c2H2JeGWFJfJ87HQ5Qh/z0mMsq6pNAcw8EiKEUqDpM1j21pXr23tD
+	EHN5isw8SSCdBh5X7c5L8wmM+iL8lEAU/Ii6yyMfl
+X-Gm-Gg: AYBFou1Nj9++xXiQmfCcADWyo1lt6ZE4ihZOfdH+kWsPQxU5G7DvxKGVZNjUnqe4++L
+	9YLSLUIKQWcahj8CysAi5xRpCOwWGQf4MCS3Ekq3JAUlO++PwQbtxjpMlmHpqE1t7wMF9XjaoGW
+	TtEwybpdpcXdtzsw7dq+NGWM2PjTjP5xH5jHPl8cARkZyrud85/S/VFfxvXvTnLzba8is0JnzVk
+	d0uwfTRlPP0I0jsJtv1Uj6+6Ijfv25qMublovI7BUKVYbOsiydks2BhSXEWTCW8ZtGqFwhpy1Ct
+	F3B3IxdfXfM0xh2d2BaMoBQTCTNquFgzj+wORAHCTFx46OSdRqnHMde8dgPBQocn14mChRiMlmq
+	HEgAV5rmIi9zUq7f5hddf8cFqugwc+hSK0UFt14AThX8i8vYm/jULlT1AvhEWcqxIHaZHfeHpcp
+	/rtqhqLUy9USJYBBWo/NeZ4EFlbJjvEWvuKnVDedY3BYH6efN/+TA2J+OTbebs1td/h6lZunUX1
+	bXM0sLsiHCMxEFVxk7HUPjslnHsMAFgFw==
+X-Received: by 2002:a17:907:7b9e:b0:c41:b94c:4538 with SMTP id
+ a640c23a62f3a-c46bdec03f8mr1197886866b.47.1793123179946; Tue, 27 Oct 2026
+ 10:46:19 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -106,24 +106,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261026215226.3713941-1-jthoughton@google.com> <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com>
-In-Reply-To: <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com>
+References: <20261026215226.3713941-1-jthoughton@google.com>
+ <20261026215226.3713941-6-jthoughton@google.com> <20261027110948.GI2668564@noisy.programming.kicks-ass.net>
+In-Reply-To: <20261027110948.GI2668564@noisy.programming.kicks-ass.net>
 From: James Houghton <jthoughton@google.com>
-Date: Tue, 27 Oct 2026 10:29:43 -0700
-X-Gm-Features: AclHuK_V7ZmMdE83iy-wOvaliSqHMUcbKVcnfqQwnRgRgjPYRFDHKTZOMwXOk5E
-Message-ID: <CADrL8HXQdzcroeGN-ACjyy-jSAdBNHiT1_BCVVe0P+Y8ZueiyA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-To: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 27 Oct 2026 10:45:43 -0700
+X-Gm-Features: AclHuK-GDZyG6m8BFpUMWxfSIBXFJlvlZbCjTm5c1oLpEFzow0OEe9cdwDWWw7s
+Message-ID: <CADrL8HXtBxf=qixBZV5-iz1sqfZAqSrMR4ZsJTFXS0N84G+nkw@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/10] perf/core: Don't unwind the user stack without
+ an mm
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
-	"David Hildenbrand (Red Hat)" <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
 	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Jim Mattson <jmattson@google.com>, Jens Axboe <axboe@kernel.dk>, 
 	Pavel Begunkov <asml.silence@gmail.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
 	"Martin K. Petersen" <mkp@kernel.org>, David Sterba <dsterba@suse.com>, Chris Mason <mason@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	John Fastabend <john.fastabend@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
@@ -137,90 +138,89 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 26, 2026 at 5:13=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
+On Tue, Oct 27, 2026 at 4:09=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> On Mon, Oct 26, 2026, at 22:52, James Houghton wrote:
-> >
-> > This series comes out of a set of bugs that were found in KVM where the
-> > kernel can sometimes write to a random process's user memory[1]. The KV=
-M
-> > fixes at [1] are still required, even with this uaccess series, as note=
+> On Mon, Oct 26, 2026 at 09:52:21PM +0000, James Houghton wrote:
+> > get_perf_callchain() only checks is_user_task(current) when the regs it
+> > is given aren't user mode regs. However, BPF's bpf_get_task_stack() (an=
 d
-> > by Sean here[2] and below in this cover letter. The beginning of this
-> > series includes fixes for similar bugs found through static analysis
-> > with Claude Opus 5.5. I don't think any of these bugs are more severe
-> > than the KVM bugs[1].
+> > bpf_get_task_stack_sleepable()) pass task_pt_regs(current) when called =
+on
+> > the current task, which are user mode regs for a user task, even if tha=
+t
+> > task has already gone through exit_mm(), e.g. when called from a progra=
+m
+> > attached to exit_files() or to the dying task's final sched_switch.
 > >
-> > We hit one of the KVM bugs in production, and it was challenging to
-> > debug. This series makes such bugs, where the kernel is doing uaccess
-> > without an mm, much more obvious.
->
-> Nice work!
-
-Thanks!
-
-> > Such an access does not reliably fail. The user portion of the address
-> > space belongs to whatever mm happens to be lazily loaded, if any. If
-> > the access faults, the fault handler refuses to handle it and the copy
-> > fails, but if the page is already mapped, the access silently reads or
-> > writes another task's memory.
->
-> This sounds like the problem depends a lot on the architecture,
-> and to what degree they implement lazy mm switching. If an architecture
-> makes all user pointers invalid for a kernel thread, this does not
-> actually happen, right?
->
-> E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
-> the current process is only set in user_access_begin() and would
-> not point to any task here. Without ttbr0_pan, it should be
-> covered by cpu_set_reserved_ttbr0() turning off all user space access
-> for kernel threads.
->
-> Should this perhaps be addressed in architecture specific code
-> instead of in a common place?
-
-You're right that whether corruption can actually occur depends on the
-architecture and config. I'll write a note about this in the v2 cover
-letter.
-
-That being said, I still think the right thing to do is to have the
-new check(s) in common code. Instances of improper uaccesses are still
-bugs, even if no corruption occurs.
-
-> > =3D=3D The New WARN =3D=3D
+> > perf_callchain_user() then unwinds the user stack without an mm. That
+> > access does not reliably fail: the user half of the address space
+> > belongs to whatever mm happens to be lazily loaded, if any, so the
+> > unwinder may read another task's memory. This affects e.g. arm64,
+> > riscv, loongarch and csky, whose perf_callchain_user() doesn't check
+> > current->mm itself. perf events themselves are not affected, as
+> > perf_callchain() already clears the user callchain request when
+> > current is not a user task with an mm.
 > >
-> > The rest of the series makes the generic uaccess helpers WARN_ON_ONCE()
-> > and refuse the access when current->mm is NULL:
+> > Check is_user_task(current) regardless of the regs' mode.
 > >
-> >  - Patch 6 adds uaccess_should_fail(), which combines the existing
-> >    should_fail_usercopy() fault injection check with the NULL mm check,
-> >    and uses it in place of should_fail_usercopy(). This covers
-> >    copy_{to,from}_user() on all architectures (including the masked
-> >    user access paths, which never call access_ok()), the
-> >    __copy_{to,from}_user() variants used by KVM's guest memory
-> >    accessors, the user-backed iov_iter copy routines and
-> >    strncpy_from_user().
-> ...
-> > The checks are deliberately limited to generic code. Accesses
-> > implemented entirely by architectures (get_user(), put_user(),
-> > clear_user(), and direct users of user_access_begin() or
-> > masked_user_access_begin()) are not covered. Please let me know if the
-> > new check should be placed elsewhere.
+> > Fixes: fa28dcb82a38 ("bpf: Introduce helper bpf_get_task_stack()")
+> > Signed-off-by: James Houghton <jthoughton@google.com>
+> > ---
+> >  kernel/events/callchain.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> > index 9d24b6e0c91f..a451ca2a5573 100644
+> > --- a/kernel/events/callchain.c
+> > +++ b/kernel/events/callchain.c
+> > @@ -245,11 +245,15 @@ get_perf_callchain(struct pt_regs *regs, bool ker=
+nel, bool user,
+> >       }
+> >
+> >       if (user && !crosstask) {
+> > -             if (!user_mode(regs)) {
+> > -                     if (!is_user_task(current))
+> > -                             goto exit_put;
+> > +             /*
+> > +              * Even if @regs are user mode regs, e.g. task_pt_regs(cu=
+rrent)
+> > +              * passed in by bpf_get_task_stack(), current may already=
+ have
+> > +              * gone through exit_mm().
+> > +              */
+> > +             if (!is_user_task(current))
+> > +                     goto exit_put;
+> > +             if (!user_mode(regs))
+> >                       regs =3D task_pt_regs(current);
+> > -             }
+> >
+> >               if (defer_cookie) {
+> >                       /*
 >
-> I would think that user_access_begin() is a more natural place
-> for the added checks, as this should be called exactly once for
-> any function that accesses user space and also stays out of the
-> way of the copy_from_kernel_nofault() etc.
+> We have perf_event_exit_task() before exit_mm().
+>
+> Still, it doesn't hurt to be cautious. So no real objection, but perhaps
+> adjust the Changelog?
 
-user_access_begin() isn't used in a lot of places that I want to
-catch, including the KVM case. Roughly:
+Right, perf events can't get here, since perf_event_exit_task() runs
+before exit_mm() (and CPU-wide events go through perf_callchain()'s
+is_user_task() check).
 
-  kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
+The case this fixes is BPF: bpf_get_task_stack() calls
+get_perf_callchain() directly with task_pt_regs(current), so a program
+attached to e.g. exit_files() or the task's final sched_switch would
+unwind the user stack without an mm.
 
-There's no user_access_begin() in there. :/
+I've added this paragraph to the start of the changelog to make it a
+little clearer that the perf event case isn't the interesting one:
 
-I do think user_access_begin() should have the new check though, so
-I've added it in the v2.
+  get_perf_callchain() only checks is_user_task(current) when the regs it
+  is given aren't user mode regs. That's fine for perf events: a task's
+  own events are torn down by perf_event_exit_task() before exit_mm(), and
+  samples from CPU-wide events go through perf_callchain(), which already
+  skips the user callchain if current isn't a user task with an mm.
 
-Thanks for the feedback, Arnd. :)
+Are you happy with that?
+
+Thanks for the feedback. :)
