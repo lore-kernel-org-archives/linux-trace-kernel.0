@@ -1,54 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.138
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793059967;
-	b=fXGMEkhYnKAsELfzHUF2qjXEsGXKQzTRUCxPJKSZymWO3+2o31tnpRCOXmSpZ66BmGUp
-	 aG+QK61nBeyEQpIN0Mq5Rw9/d2VBgjzWwZB7iL89tjGQoSsXU5OPmKc6V+3OV+JSq7HLs
-	 OLC2RLFK3lOwmruCro9j9zX9t+OHQ4XCwfysECVpdmmqUTFiIpQtIfvoWkQjTA92kOXzi
-	 HAH1DiP+er0BxtXYZuCLnP02Vxqc82cgOpz82PIyWC2iEv+D6iiNMn8/4A3Fhx0sdR03e
-	 xgVCcXga9OeJX5R1aT4EhI0tkwQBU68rNgy5PjS2asXnXaIAC7dT3KnCuzhNOp6egbw==
+	t=1793060028;
+	b=f5nq5YcIgB1jrwaXKszHxAdXcKjUZvClWxog3hwdJIp9M3DrDPvxzlcYTXE9QteyYyRB
+	 nlOQVT7/vzSvKsx/RoC0UAM36CoZbkMsrH2Xi8d8k7l6vZZwsIrWvM0FbPK0wiLo+1mcp
+	 NKZm7ukO7Qu3AIrRjbsRsu3dVGve0mIPTgag0Ujf0Xia8oVddBJdmJPMmkM/a7svOMLyD
+	 bsLZIIyUjN81f2qQRabc1sQBejFeRfo0NlptVsQJkZMT3HtBQxW5k+smmTV4G1jNAGFhK
+	 DtKkPErWDoy2NcmvInbRg89QYWMizPc6IfgbxpZLfGgaG2RSgzDseIdRupMzsmgR02Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793059967;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=6NxHfrzCjecfqUYYIBMtEF1a0oXYC5iaevKK2QCBX88=;
-	b=PErkI1MJjsSDHBotXOk+oiBdS8zA4X+UrraXhZ6zUM6bOUA3jMBHVomn0iV418oXGZ50
-	 jjoUORY5PcGVYO40Ivg/RvzoEHfD2+RQXaRnQAJ+UKKk8sns2q4r3t2kHyEWGFwyry6eb
-	 +PFib0JnxcD7NuVb3w2+CFffaHFgvr303tw17j9CmB6qU+G0iZjidWX5JLe1bYpwr3BfH
-	 lP8y3XGdri4o7nnb9za8c1UTx/70k5T7gaMhJeNFacbc/FepgMuXxzZVRY8VR7wIF29FU
-	 cZN5BtXbaAWHENrpQY2RnyvRJl6flekPih+U0tYWt62nsgdOP/1cZv6HgpJ+zr2SuSw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793060028;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=si+Qhande5UvxFya2tFMhl+nVzGoE+GcsU0vRngX6G8=;
+	b=qGWSHXeDxIMMFyI1xeM5XoXmmLewn9y4HT2dn6P9wDsWBL40ZrmHIx3ZsBZVTJ7MaQqZ
+	 ol3ZyIYUwk49J5z0fcifo9XFUYKsFX5oxNJ4ygReRzCx6gkGHyA3d8YyOpjdr0EROKmN+
+	 Up6aZYI1UlIOAk/zDtZXfk51BBKzU7vDCqmMebvyazN3Y55eAje1zcIHGmIeJALKNXYBu
+	 GTNFp2NY4G6mF3j4MT4vpTMeiKUFIj4BJNvfuBT1d065gCTxQsDFOfXoJg6lV7lPymSme
+	 Kz2MqAn1auc/uYbUbitNu87XawQcxmmHr09tUddKsTGB+9dSYzZ2xHJq+ZdhIC3eWLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZxImIoNH;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=arndb.de;
+	spf=pass smtp.mailfrom=arndb.de;
+	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=U3YGvdOt;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=sNtb+bIv;
+	arc=none smtp.remote-ip=202.12.124.138
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A74606A31E;
-	Tue, 27 Oct 2026 00:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF09606A326
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 00:13:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BAF09606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZxImIoNH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA03C1F01828;
-	Tue, 27 Oct 2026 00:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793059966;
-	bh=6NxHfrzCjecfqUYYIBMtEF1a0oXYC5iaevKK2QCBX88=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZxImIoNHx8kXLySCT62e36TwqiehoPOB6cJ27sYttuEjlXG8xclt9wCKA3dXYQrc7
-	 sy8UN6f2Y6X66kI+YNuBD9BUAmgpkJqOLoRkdhTxcSxOfbKzmdD9W15Z+pSWPFLhp6
-	 b+ZgYx2jjIGU5yB+R+UEkmgOashbA9Nt2WBYAAhrCMiDhYKidfUIq7lIEkgEmi0CQU
-	 mdcQ61Ji24HDnxWsddAk5EhZfHzCZkwT9fwVVtYjmIT5so5cYvAY5XThfk37iIUUjN
-	 jfgiS6Nw5hcn7/om6bAGPZ7qf0sF93DfbQdzSJ2JXB0Woldz7Lx1XXxCtH+G8beF9Y
-	 3XQ03PlFbFo+A==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] tracing/filters: Skip second character of '&&' and '||' in calc_stack()
-Date: Tue, 27 Oct 2026 09:12:43 +0900
-Message-ID: <undine-1793059963392038141-496f89524ad52c64@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <undine-1793058642821980546-e873f302f6a6d563@undined.local>
-References: <179291742944.492959.11659339795290028998.stgit@devnote2> <179291748555.492959.3275503783612449972.stgit@devnote2> <20261026164727.0d1636cb@gandalf.local.home> <undine-1793058642821980546-e873f302f6a6d563@undined.local>
+	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=U3YGvdOt;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=sNtb+bIv
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailflow.stl.internal (Postfix) with ESMTP id 11BF9130202A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Oct 2026 20:13:46 -0400 (EDT)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Mon, 26 Oct 2026 20:13:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1793060001;
+	 x=1793067201; bh=si+Qhande5UvxFya2tFMhl+nVzGoE+GcsU0vRngX6G8=; b=
+	U3YGvdOtK5z0MLENZikfRWb/SLS3tN5q2KIlnncV8n8B6q/88GUIqRcHk/vGydtQ
+	FS8sX9A1oRc3mRQPJMpF50WBg9qz94gDLC3+879cQZLNq1dxKLVBYjC/iOaTUChX
+	mxYIwZLx1N3S7bbCZ/mImfn8wbd38nHV7hIgmF7vOKzU3+YYZrTQArEcc9rh+B/b
+	KMdlqf5SKzL/f6s1EDnpY7XZ8W3nVEZg2L4msxlrfAqv/Jk0j7ZUlk/GsDSjkXPc
+	ldA/XX4CvvPyKEcROFVx1tYb/KKG9fiNGXG9DUyjX7qxlOooitBLu4KPvsZBp7i9
+	9oEthDoRglV3rZfQE2aOZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793060001; x=
+	1793067201; bh=si+Qhande5UvxFya2tFMhl+nVzGoE+GcsU0vRngX6G8=; b=s
+	Ntb+bIvyt+finyiKcLyWraqD04yZyKS+0SUAaPYjEqXDnBV6zHgtFQ/8TfAY9oC2
+	NDiZXZWH0JHbhKyfa1dHcOfE0J4IpkbiAbjxrRL6Y92l1UGmObDGPnVKe7qP6YNt
+	ST33rmDlLN6L8h6ZJEuWP90+wHD72V6+GnQYLlAgKBpi3+n3Tgh5LXp1sVOi4boh
+	Bf6krYfz26TvqByg1xmWAI/FLJ4XaWMrrOUl2SAGfnYbLBUMdXBTuQqeXeSFgFhJ
+	3u/qloOapbu5S9e4vggtczW5heu5UykY3T8a2TZe7BZh1Nhjsya/HZaj/yXAM/kO
+	TVxuIgUxJs7lnyHSGRSHA==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793060001; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:GuRqkyvaJ5pGb4MFB97EjUGrGA12NkKlDm8cukhSKlqWnGR
+	yUWlbpTifd9o2A5a4UdKp5ik7KZQM/5Obv6Qh7cdRvjIPPS8eCrL/TYGQyvv5fi/
+	o1cltL4l5FLc+4Di3AuYm4+UvbYeX9pKS5vfvmuEQCO0tnNx2C7goBhqQbZrA2bj
+	r0MkrtspCZjYdCgTlNIcz6dB28brO9OOlMYVYyKZrxgfkGd1i2K9GAINL0hErwrP
+	rIvLP7Z8p0w/nq0MSkht2xvVnFRljJpyFVZwT4Zg1kSiZkLgDcSO1cEzLBSsBvHb
+	tXnbbjkE1zg9lpCyymjkmyRJutvMG7XJc6umYjQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-07;
+	repo=github.com/dkim2wg/interop; date=2026-10-18; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:HO8bCNZuevoE55ZZzGJNSZMW2blajER/wEIsZJ9pK+U=:caeGQziho4FRHDY3cNygzudu2C/MJTIFaWIByauHPSA=;
+X-ME-Sender: <xms:l-zfarV0xYG9cXbLNAjMRS-NGrB533bJUDrO7tw7IQmuiTHIfxDTsA>
+    <xme:l-zfauYiWBD4kCpdnyho0MnGGS33y2LYgKSF3XrgxyjM0QpY1wMBQocd-rpAOPVla
+    nZ0dh4NOasjKIpo07zSdaKi1DqWFf69ISgOfkfcgdJ9b6UCfL3hL_c>
+X-ME-Proxy-Cause: dmFkZTEkf/YaqXBD6OkPCTBsCAQbPu2YW9sbt7UK3+UhRfBeofSSrl6hJkJHf9dF0rJg3N
+    JfESDt4DvGRtzl+GmwBe7qsV2Za2TtScaDpwb+1nPiSEC23L7O5/QDGDDHkkqePFksREHl
+    XU5dvNKC1hdHByCH0NgqiobHBjKrbj9jbD1I59fEdgTH3JMsZ6ZfDuO/z1c68fjUXFLL2r
+    J8hVDQMrH064UmFfogQ8Sz3DesWwtSvTSw63x8Z2kd6ltXcHMkLp3Ud6vNRQYsKU7hjmRl
+    /dP3RtDx62S+ikAxBE3BB1G+xG8JEObZSy6tVfPtEaGsqzPsdEyV7tjpBYy5RPu8eU7BtS
+    pv/NdncJ9PUvwVRDTUHemZZgQCYS4NTDfHPcBktTUdmOVeXMmbEO8J4RkdFLvOctoGnsjm
+    MVxFXKbZLUEIAQ1qS8Q5E64WXtwtwZQLEOfzHiJJZqf8ZryZPcMBmzKQXQ0QwZaN8ISNoJ
+    S/ftgSQ59xD5mN0KYsovSy7v5Z8EmqiU+uzfw84F4PDmfcqLkrFleRwPnXor2ZPToL7Wwl
+    zTDxlH62iD2P8UDUZF6+tWzflaIgNhpxvWwWeDJ+xjJX2nrXZjEv7k2ySwKy1geKMzAXKF
+    fXgvX+juI9JxqNHFvQYpFjKMgWBUIHvrzcyM5V1fLrWdFMQTCqVFLDiOYoUQ
+X-ME-Proxy: <xmx:nOzfajGF0xNsYNmV8YCc2Pd7UeABRUtRBqoYjhYIYDhiMjlpvI7yag>
+    <xmx:nOzfapiRovMD9ZE1E5hDJaY6sWPoZ7pT4XzsIJ-j-hZWrrCg_-UouA>
+    <xmx:nOzfapbAE3BpExg8FlH_xCskPyBv08PzQc5zXuuGtwgjeA7VlWveEQ>
+    <xmx:nOzfam3GHyXyAuCx5jGFzvSyfiLGeSUA3AocyLyTLvC2vt2ZvIcxnw>
+    <xmx:oezfastyPfBJRPG1FGvyHsNW7nf3RRKHw_57JGdRsQgtKDzwvORkdPKN>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 5628B32A0093; Mon, 26 Oct 2026 20:13:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,98 +115,104 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AUJ1OXWu3nCJ
+Date: Tue, 27 Oct 2026 01:12:50 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Houghton" <jthoughton@google.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>
+Cc: "Thomas Gleixner" <tglx@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Kees Cook" <kees@kernel.org>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Sean Christopherson" <seanjc@google.com>,
+ "Paolo Bonzini" <pbonzini@redhat.com>, "Jim Mattson" <jmattson@google.com>,
+ "Jens Axboe" <axboe@kernel.dk>, "Pavel Begunkov" <asml.silence@gmail.com>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <mkp@kernel.org>, "David Sterba" <dsterba@suse.com>,
+ "Chris Mason" <mason@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, io-uring@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-btrfs@vger.kernel.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com>
+In-Reply-To: <20261026215226.3713941-1-jthoughton@google.com>
+References: <20261026215226.3713941-1-jthoughton@google.com>
+Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
+ current->mm is NULL
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, 27 Oct 2026 08:50:42 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> On Mon, 26 Oct 2026 16:47:27 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Sun, 25 Oct 2026 17:38:05 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > 
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > In calc_stack(), when encountering '||' or '&&' (where str[i+1] == str[i]),
-> > > the loop sets 'is_pred = false' and continues without advancing 'i' past
-> > > the second character of the operator. On the next iteration, the second '|'
-> > > or '&' sees str[i+1] != str[i], breaks out of the switch statement, and is
-> > > counted as the start of a new predicate (incrementing nr_preds and setting
-> > > is_pred = true).
-> > > 
-> > > Consequently, a trailing logical operator (e.g. 'common_pid == 1 ||') is
-> > > counted as having 2 predicates instead of 1, and any subsequent non-space
-> > > character before a delimiter fails to increment nr_preds.
-> > 
-> >  "common_pid ||' is an invalid expression.
-> > 
-> > > 
-> > > Increment 'i' when matching '||' or '&&' so the entire two-character
-> > > operator is skipped.
-> > 
-> > This is just wrong.
-> > 
-> > Masami, don't blindly trust AI.
-> > 
-> 
-> Oops, I might mislead by the code. (I thought I've checked it...)
-> 
-> > I purposely did it this way. Because && and || creates a new predicate.
-> > 
-> >  If you have "x||y"
-> >               ^
-> >               i
-> 
-> OK,
-> 
-> > 
-> >  Start with i = 0; is_pred = false; nr_preds = 0;
-> > 
-> >    str[i] == 'x'
-> >    if (!is_pred) {
-> > 	nr_preds++;  // nr_preds = 1
-> >         is_pred = true;
-> >    }
-> > 
-> >  in for loop i++;  // i = 1; str[i] = '|'
-> > 
-> >    switch (str[i])
-> >    case '|':
-> >       if (str[i+1] != str[i]) // false
-> 
-> Ah, somehow I completely misread this is if (str[i+1] == str[i]) ....
-> 
-> >       is_pred = false;
-> >       continue;
-> > 
-> >  in for loop i++; // i = 2; str[i] == '|';
-> > 
-> >    switch (str[i])
-> >    case '|':
-> >       if (str[i+1] != str[i]) // true
-> >           break;
-> > 
-> >    if (!is_pred) {
-> > 	nr_preds++;  // nr_preds = 2
-> >         is_pred = true;
-> >    }
-> > 
-> >  in for loop i++; // i = 3; str[i] == 'y';
-> >  
-> >    if (!is_pred) { // false because is_pred == true
-> > 
-> > Loop ends.
-> > 
-> > nr_preds == 2. This is correct.
-> > 
-> > This patch is garbage.
-> 
-> OK, let me drop it.
+On Mon, Oct 26, 2026, at 22:52, James Houghton wrote:
+>
+> This series comes out of a set of bugs that were found in KVM where the
+> kernel can sometimes write to a random process's user memory[1]. The KVM
+> fixes at [1] are still required, even with this uaccess series, as noted
+> by Sean here[2] and below in this cover letter. The beginning of this
+> series includes fixes for similar bugs found through static analysis
+> with Claude Opus 5.5. I don't think any of these bugs are more severe
+> than the KVM bugs[1].
+>
+> We hit one of the KVM bugs in production, and it was challenging to
+> debug. This series makes such bugs, where the kernel is doing uaccess
+> without an mm, much more obvious.
 
-BTW, to check the correct input is encoded correctly, we may need
-in kernel selftest or a feature to dump the interpreted pred after
-"#" line via filter file. Latter one allows us to test it via tracefs
-(ftracetest).
+Nice work!
 
-Thank you,
+> Such an access does not reliably fail. The user portion of the address
+> space belongs to whatever mm happens to be lazily loaded, if any. If
+> the access faults, the fault handler refuses to handle it and the copy
+> fails, but if the page is already mapped, the access silently reads or
+> writes another task's memory.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This sounds like the problem depends a lot on the architecture,
+and to what degree they implement lazy mm switching. If an architecture
+makes all user pointers invalid for a kernel thread, this does not
+actually happen, right?
+
+E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
+the current process is only set in user_access_begin() and would
+not point to any task here. Without ttbr0_pan, it should be
+covered by cpu_set_reserved_ttbr0() turning off all user space access
+for kernel threads.
+
+Should this perhaps be addressed in architecture specific code
+instead of in a common place?
+
+> == The New WARN ==
+>
+> The rest of the series makes the generic uaccess helpers WARN_ON_ONCE()
+> and refuse the access when current->mm is NULL:
+>
+>  - Patch 6 adds uaccess_should_fail(), which combines the existing
+>    should_fail_usercopy() fault injection check with the NULL mm check,
+>    and uses it in place of should_fail_usercopy(). This covers
+>    copy_{to,from}_user() on all architectures (including the masked
+>    user access paths, which never call access_ok()), the
+>    __copy_{to,from}_user() variants used by KVM's guest memory
+>    accessors, the user-backed iov_iter copy routines and
+>    strncpy_from_user().
+...
+> The checks are deliberately limited to generic code. Accesses
+> implemented entirely by architectures (get_user(), put_user(),
+> clear_user(), and direct users of user_access_begin() or
+> masked_user_access_begin()) are not covered. Please let me know if the
+> new check should be placed elsewhere.
+
+I would think that user_access_begin() is a more natural place
+for the added checks, as this should be called exactly once for
+any function that accesses user space and also stays out of the
+way of the copy_from_kernel_nofault() etc.
+
+       Arnd
