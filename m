@@ -1,75 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.137.202.133
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793143050;
-	b=lWqyZ0IPERe67FI8B6lE3qYxOsK+KUwbwbEjj7OX61nvbdb17RuGShJsMmLa9ja98IM4
-	 eqCuhLsTgD3LgBMa1pf0mvIoix5W0cjlrXFsHQJQo6OeYT5sYzht5qCaQDqm/NIeMcFXy
-	 0l/ivlbRPBCWLuR8XXzDFe5gFFhfqbdf2YD1/VTS8W9WtjlfPvjOqo7O6PD0YtK5OoBCF
-	 lygYDSfXWTsjMNtEN35kVhx43+PUHm2endLHI1zV1ngfVE2b1qGDNWy60eqkz4kI8raww
-	 klWxL3bRLe66XyUlyGDbYTBQKrTIoRPdvZrxpTrTRlciQjuqNuEUhMFh+FI3CSkjk8A==
+	t=1793145309;
+	b=1RQw9bBUc9P1Sx5DBl4ooRMGeMTpWP9Lc1HXCnJAZcOC1Au9x6JpaTfv2FGGaSnWrpnr
+	 oVJH2bc3I5A1UerqoV1v9znYvt+az4dMrz7xbYRHmjrzH8sLDVa52n/FSzdPERZpUOumq
+	 s96qfMskCauLFc+boC14pEymLwkQ06R/M+KbgiD0BSz201D7CHMJSOPyLjh42qaoaBz7H
+	 CTVLM6OUgcoXoOMFkonEhyN30ETMRDw4k1n5k/TVj7bU7pkFD6rScmG4sTONEcFk1xEQT
+	 5sztE9qcPJdBCYF5h+DXx4GN3RgY2z0nA6ESmcFE80VREcraNMJHn1Z4JUaNs1apnEw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793143050;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-	b=P2qI9CFlr/pBdJMXScBAhiOPwW7f2gwYji8O1/HqGW5+xpda9HY1DgCorfRH/LdfRKFs
-	 CHoN3qKJlSJ0zgrJomVV0PaWK17hfDr8x9PM5h/SEQ33SR4NrE2MYQtnyDJY7F0qb41p8
-	 COXHgGW+NOi8s+iJoE9vQqY3nTVpclerz6++PXP+4HFvrkOMw4xGfW8oBMmkES0q6VMpy
-	 3cxQbEZkoo7+a/n0QDFTYuG4JpqIeLZMK8AjGRK3Sv7GDRhDEaSeQny5wYVwcuERNq8uq
-	 JGYM2LmnoKoqeVbHBBBsvG/UbaJPx6ABogNI5rMXzl1pV8Kc1JOh9D3DN6tq2V/SuOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793145309;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=Vj7zCX35JT4jkXfawg+CKE/Afwp2p1ZmDlu/iEQuq2Q=;
+	b=tTc9PAT4uhAA1anCbfBbNXa7gMnZnjxEDotN3vmyPjLqpJIMon69fEceociDdjzxwsX/
+	 kyIpz6I8RK9X7Aww05+O01yFSEwEU/CPNEpmR53+3Eqz0UNIKlMQ8t6q+4I5VSmhhySNn
+	 S+wfhp8pEKxdHgeytSnXHsoQz8mLndr6NTOB1ySNeUuhzXOr360AFk6C4ONcOEQowZ1t3
+	 DBQpGWHeT7GPYm+wU+f9hohbQo1xigzqukQTw24BcoWkow7AetA83H0Sy33t1X9LYpZay
+	 zG+ccd9gw933NsQmiZgF5XszmjHWjyGEhakn7u+ZiX5ATvFNJFpuaQ+tFUlRdWpolmA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="PE/zx+6A";
-	arc=none smtp.remote-ip=209.85.210.200
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1LLocZaI;
+	arc=none smtp.remote-ip=198.137.202.133
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6CA606A322
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 23:17:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF6CA606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DE5606A31A;
+	Tue, 27 Oct 2026 23:55:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38DE5606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PE/zx+6A
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-8a0688a43d3so320373b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 16:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793143049; x=1793747849; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-        b=PE/zx+6Af4cB6kwCb3KWCo2kLDvj8fl2ys7izWUyFpH5zLYmX810u3AzXitpejplQE
-         /jQClQeXVkg24Hq2EtapZZmYZqBqVAzhuerBOXqcEml3pCLmsPFzhUKaKVVRYh78e5jo
-         h8KkCLUPmxBFXlpb/JITMIblABhQ7NlF7KMjGGjdd9IyszPk9+1oO7oOT2MoBvY5XheR
-         C7sZ+dVfMbfS+HyT7uTrugl1sk73k+pwHG2Pfa3KfOiBB28qEE/Udtp4Y7cVn9gp7foT
-         HEcU/cZ1gEdP98XXJk+xlaxcfEGrza6u+gZED9q0MMpJmn/0VM46cFjFyrKNEI0geaag
-         VHHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793143049; x=1793747849;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-        b=eX0tK5wnCkYgg2rw4W0/CL1T2EmH1rBuIIibkYD0jZL7AfCCxrqYu6g2m3i59ySEcc
-         EUmNYGAOz5D6ol3j31cvFu3knaxeJ4Gr9GwmqduC760EZCnSCxmHfx1gWENzdZEGs0z+
-         uAKZSZrDo0wg4b2kL/xsgBYZpjsFqih6QczjdaI1Up5CCV9XiGlGjGsvusUy8v5UtJWv
-         JOW/F3C/pbO5HZy+5dhpK5PSnq2I9G9Opi5koMhF63ojEva++gH3KLyyDyEXqnpspKUL
-         S9WwxePhJM6WOCpuvY4sHKBiPc6veGZNqC55Bc972G6voMYiqAEwLn9I1ojlqAVFXlIk
-         QnlQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzYtBQfiIbpvaoBrMJ9tuiF2HPczLOpTGVkidahCz1bCxFmq/LckIjMX5ItHbkc+fyHCN1fJSDNxAYzIcnJSF5Bue8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKGVbFQjEJ2hS6iN7pww9wdjN61iecKKAn7TNKKXt5t6bfyzCpc
-	AihEIlQImpppiLb8U/vo8YPe/9pGio29E26d1D0IMLA6SlXveuxGLUrikKKQMFJhFJk3YTTvanL
-	SA4SaASosDQmMUp9LYyAVaQ==
-X-Received: from pgcgn27-n2.prod.google.com ([2002:a05:6a02:6a1b:20b0:cda:df40:b50f])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:b7a6:b0:3e2:4c65:5905 with SMTP id adf61e73a8af0-3e902404531mr513567637.60.1793143048797;
- Tue, 27 Oct 2026 16:17:28 -0700 (PDT)
-Date: Tue, 27 Oct 2026 23:17:28 +0000
-In-Reply-To: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=1LLocZaI
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=Vj7zCX35JT4jkXfawg+CKE/Afwp2p1ZmDlu/iEQuq2Q=; b=1LLocZaI1ii529MwHFQECtpVM7
+	wXCRYCv6btan4eAXQ1pXZgAfJ1jUKnaSF0clE14mVbES2ixOadHYMEIEyi4DOxHkn0A0FkNibXRPc
+	yJDJALYtVIx1AfQoed4ybWXVL4Z948P1hrMUGUyDDR4w5AO4s7ObNBIgf2hdfQiyHcYv4++J2NXGw
+	2oowa2p4qHY45EthYqNPTxnv6KqTUFoQEejSBAndLL/unU1Akwk0pX7pkVbEBlEnEQqd5ygaI+AoI
+	C4mso0DcRjPnJtus6dJb0M6XLgcAmkT4LnIb2QJRriKiY1QpaMrzNBzVqnyaRyez8O49jSJh8IBXN
+	j33Q/VgA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xLr0Q-00000005xuP-1dGN;
+	Tue, 27 Oct 2026 23:55:02 +0000
+Message-ID: <f34f14ca-21bf-4ae4-9e7b-da7f72d1b134@infradead.org>
+Date: Tue, 27 Oct 2026 16:55:01 -0700
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,193 +57,46 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
-X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261027231728.1466446-1-jthoughton@google.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-From: James Houghton <jthoughton@google.com>
-To: arnd@arndb.de
-Cc: James.Bottomley@hansenpartnership.com, acme@kernel.org, 
-	akpm@linux-foundation.org, asml.silence@gmail.com, ast@kernel.org, 
-	axboe@kernel.dk, bpf@vger.kernel.org, daniel@iogearbox.net, david@kernel.org, 
-	dsterba@suse.com, io-uring@vger.kernel.org, jmattson@google.com, 
-	john.fastabend@gmail.com, jpoimboe@kernel.org, jthoughton@google.com, 
-	kees@kernel.org, kvm@vger.kernel.org, liam@infradead.org, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ljs@kernel.org, mason@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mhocko@suse.com, 
-	mingo@redhat.com, mkp@kernel.org, namhyung@kernel.org, pbonzini@redhat.com, 
-	peterz@infradead.org, rostedt@goodmis.org, rppt@kernel.org, seanjc@google.com, 
-	surenb@google.com, tglx@kernel.org, vbabka@kernel.org, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/shmem: trace swapin results and order fallbacks
+To: Xuewen Wang <wangxuewen@kylinos.cn>, hughd@google.com,
+ baolin.wang@linux.alibaba.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, corbet@lwn.net, skhan@linuxfoundation.org,
+ akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20261027094014.2432692-1-wangxuewen@kylinos.cn>
+ <20261027094014.2432692-2-wangxuewen@kylinos.cn>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20261027094014.2432692-2-wangxuewen@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 27, 2026 at 11:32 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Oct 27, 2026, at 18:29, James Houghton wrote:
-> > On Mon, Oct 26, 2026 at 5:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>
-> >> E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
-> >> the current process is only set in user_access_begin() and would
-> >> not point to any task here. Without ttbr0_pan, it should be
-> >> covered by cpu_set_reserved_ttbr0() turning off all user space access
-> >> for kernel threads.
-> >>
-> >> Should this perhaps be addressed in architecture specific code
-> >> instead of in a common place?
-> >
-> > You're right that whether corruption can actually occur depends on the
-> > architecture and config. I'll write a note about this in the v2 cover
-> > letter.
-> >
-> > That being said, I still think the right thing to do is to have the
-> > new check(s) in common code. Instances of improper uaccesses are still
-> > bugs, even if no corruption occurs.
->
-> I agree we have to do something to prevent the problem for most
-> configurations and find any newly introduced bugs.  The questions
-> that need to be properly decided are
->
->  - does there need to be any compile-time configuration to skip
->    the extra checks and/or the warnings?
 
-Since patch 10 moves the warning out of line, it costs nothing on the
-fast path, so making the WARN configurable wouldn't save anything. The
-question is really whether the mm check itself should be configurable,
-and that check is also what makes the access safe.
 
-The text size increase seems manageable[1], but it would be great to
-hear other people's thoughts. For the runtime cost, I'll do some
-performance testing. My guess is that a load of current->mm and a
-well-predicted branch per user access will be negligible, but I'll get
-numbers.
-
->  - are there any cheaper ways to make it safe than to add a
->    condition on each user access?
->    E.g. the original lazy mm switch was intended to avoid
->    expensive TLB flushes when switching to a kernel thread and
->    back to the original task on 32-bit x86. On modern CPUs,
->    the MMU can deal with multiple ASIDs cheaply, so turning
->    off user access in a kernel thread may be cheaper than
->    adding code to uaccess depending on the architecture.
-
-That's a fair point. If user memory were inaccessible in kernel threads
-and after exit_mm(), every such access would fault, and the fault
-handler could WARN about it (x86's do_user_addr_fault() already has a
-!mm branch), so it could still be loud without a check on every access.
-
-I'll look into disabling lazy mm switching on x86 and doing some
-performance testing with that (like comparing the per-uaccess check
-with the added cost of non-lazy mm switching).
-
-Other than the performance difference, I see these issues with making
-uaccess safe entirely with the mm switch mechanics:
-
- - It only helps on architectures (and configs) that implement it,
-   while the common check works everywhere today.
-
- - The fault handler would need to tell legitimate faults apart from
-   bugs, e.g. copy_from_user_nofault() from BPF or perf in a kernel
-   thread is fine and must stay quiet. The series handles that today by
-   checking current->mm in the nofault helpers (patch 6).
-
-The two approaches are mostly complementary: if non-lazy switching
-turns out to be cheap enough, an architecture that does this will have
-better defense against uaccess bugs. But I'd still like the common
-check so that these bugs are reported on every architecture.
-
-> >> I would think that user_access_begin() is a more natural place
-> >> for the added checks, as this should be called exactly once for
-> >> any function that accesses user space and also stays out of the
-> >> way of the copy_from_kernel_nofault() etc.
-> >
-> > user_access_begin() isn't used in a lot of places that I want to
-> > catch, including the KVM case. Roughly:
-> >
-> >   kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
-> >
-> > There's no user_access_begin() in there. :/
->
-> Good point, yes. After the changes described in
-> https://lwn.net/Articles/1102061/, I had assumed that all
-> __copy_{from,to}_user() are going from common code, but it looks
-> like the series so far only touches __{get,put}_user().
->
-> There are of course few enough of these left that I think
-> we can consider doing the same thing here and turn them all
-> into the checking version:
->
-> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
-> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> drivers/gpu/drm/i915/i915_gem.c
-> drivers/gpu/drm/i915/i915_query.c
-> drivers/usb/gadget/udc/atmel_usba_udc.c
-> drivers/vhost/scsi.c
-> drivers/vhost/vhost.c
-> mm/kasan/kasan_test_c.c
-> virt/kvm/kvm_main.c
-
-Agreed, I think we should clean those up, but that can be done
-separately. This series already adds the check to the common
-__copy_{from,to}_user() and __copy_{from,to}_user_inatomic() wrappers
-in include/linux/uaccess.h (patches 7 and 8), so the KVM path is
-covered without converting the callers first.
-
-> > I do think user_access_begin() should have the new check though, so
-> > I've added it in the v2.
->
-> I had the details confused here. Seing that user_access_begin()
-> and the other accessors always call access_ok() at some
-> point, maybe that would be enough?:
->
-> --- a/include/asm-generic/access_ok.h
-> +++ b/include/asm-generic/access_ok.h
-> @@ -33,6 +33,9 @@ static inline int __access_ok(const void __user *ptr, unsigned long size)
->         unsigned long limit = TASK_SIZE_MAX;
->         unsigned long addr = (unsigned long)ptr;
->
-> +       if (WARN_ONCE(!current->mm))
-> +               return false;
+On 10/27/26 2:40 AM, Xuewen Wang wrote:
+> diff --git a/Documentation/trace/events-shmem.rst b/Documentation/trace/events-shmem.rst
+> new file mode 100644
+> index 000000000000..45da82761360
+> --- /dev/null
+> +++ b/Documentation/trace/events-shmem.rst
+> @@ -0,0 +1,73 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
->         if (IS_ENABLED(CONFIG_ALTERNATE_USER_ADDRESS_SPACE) ||
->             !IS_ENABLED(CONFIG_MMU))
->                 return true;
->
-> (plus the few extra copies of access_ok()/__access_ok())
->
-> As a quick fix I would probably start with just the 'if (!mm) return false'
-> bit here to get something merged while we still discuss the other
-> details.
+> +Tmpfs and shmem events
+> +=====================
 
-Making the same point as Sean[2] but with a little more detail, I had
-thought about making the change in access_ok(), but:
+Underline is one character too short:
 
- - On x86-64 and powerpc, the masked user access paths don't call
-   access_ok() at all. That includes copy_from_user(),
-   strncpy_from_user(), strnlen_user() and every scoped_user_*_access()
-   block, which is where many of the converted __get_user() users ended
-   up.
+Documentation/trace/events-shmem.rst:4: WARNING: Title underline too short.
 
- - __copy_{from,to}_user() and __copy_from_user_inatomic() skip it too,
-   and the KVM bug followed exactly that pattern: the range was checked
-   once up front, and the access came much later from a different
-   context.
+Tmpfs and shmem events
+===================== [docutils]
 
- - access_ok() is also used as a plain range check where having no mm
-   is fine. For example, copy_{from,to}_user_nofault() call
-   __access_ok()/access_ok(), and BPF and perf legitimately call those
-   from kernel threads, so a WARN there would fire on valid tracing.
 
-Even the quiet 'if (!mm) return false' version would have missed the
-KVM case, because of the first two points. I don't think there's really
-a "small" fix here, unfortunately. :/
 
-Thanks again for all the feedback, Arnd. I really hope we can get this
-series into a mergeable state. :)
+-- 
+~Randy
 
-[1] https://lore.kernel.org/linux-mm/CADrL8HUZ3t8RdMEeBPfqsy1_1rN0Ty9B2c4iP6OzNS12te6vOg@mail.gmail.com/
-[2] https://lore.kernel.org/kvm/auEVMrMDqVuKtDqh@google.com/
