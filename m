@@ -1,58 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793102850;
-	b=G36RzLEWWLYGEoPRpf5Se/n3dbgGfuSgdS8uou8kOHE3uL6QTBa6Ec6pZsvLM4zJBZ7C
-	 Gg08gmRBx0IZ4WflNPeZJYHvyezWTWwtV9oBzQLlNK72+haWr3YGNAYmJhH3OqKfw4yqa
-	 VhA2+IXC/dCu9Y85nW0eFjTZ0w4hElk+MkHVK0S4tkFhUbTphyUNOQCXOzuH3EdnuNiMO
-	 QtyAJHMmvrCBo8Q4kJVeC/dds3ukCuO826zAGx3/2kJIv/d6/bavMdVdpyPIC1FlmgBCd
-	 3PPxeChQ2l6UOydbtFVEH39PPxdXLT3RvTExGU7c0DBEWXl4HwnyAHX+2Iog5Tb5++g==
+	t=1793105120;
+	b=QU9LOZ0ML1Ap04AFFYjJg2biV9CBZEnUryx0yAwbJpCx1hxDb2S5jluVPqEbtivsqxJQ
+	 zX2cZWfMGA+ob9jSPE5K3wAa4xcdRbB05+cfakVNFRT64iUNpz/+v5CZ1odYYOy8JAmv0
+	 BkBTZ+RhUTmRyqEUxQtpqC4jYeymXPGGLVHcx8P4eQezghfOW6i4nQWfe0exWgHFlfmAj
+	 QprAAsT8xSFV4OdPmM1rQ380aetlLRa9IDTVtnlcSJUsYZmpjNSX33iWyyBRDQDUkdk76
+	 Z62ZfTioKOjlsKWvXpYqreYEW2wVsPMVtgfzliLUTXuYRdHW/0lh7DrMPHXAvLEBzZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793102850;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=XuAqvW/17/K4S72P6BveYIRMwFq7nJ4rumTZEaNiaZo=;
-	b=vpKpD62UjQKgHGSTxpTgVtWfUPhi7s4x7P/o+spoO/Bk1Jul2gnClgXaVJtIuOZaIAIm
-	 49Wnu/ENNCQa679SkxftqGUPIn1TwlVJvUyP3v4ZZAN5/ReFhnv94rbjDkJ/bErrGaw72
-	 +tL73/CW5mcbJBgYR0nuoFVRoUonQh0q6YMg4z71TyuIYs+Xu41Dq9fNcWF/42RJEAUPn
-	 cQOj7tVpAt4kfOv5hvxGV0k7U9vMaJUi+9j28M8YV1wA7fN1nxAMtitdFqn+j5SfJWAB7
-	 AntQdEYcRqIKMi2iY+gaP6FvZ8wLrnP0wPc+Y872GdLxYBDJ5mMaccPryopgj3hXXdw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793105120;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=cp5F5plX1o9uNVRyUnVlyzWtsNabM89/L+nyYHXZXX8=;
+	b=EhfuI1OSGf74KevBak/85hVDVwbRRVBCjAtufXfK9llFid1tIQcxHXD8nAxG3bB+FcoQ
+	 Rrl574lOmVwMQxtOOPdGMgm0Og9oftTOvIp0IS+/brj+y/7CFyjeYa2do3O9POvmrVTBZ
+	 jQmY6zGHHQguKjjqimth3NqeJhG0/ImQqKkBbjjGSAkBl/HY3jY0hjHGrjqbUpRTEV95E
+	 9jTqYyK9SwKV4CQNmnUTQscgS8N1dc/Nrm8r1UrwL/wwQU+JTEkK3BuSorBlhKslR5K48
+	 F9EPHjqu7KEVJZ2yB1OT4q9Afyhs50DicMtTXu5TLzSFFGHHaHFW32qYSydGgRCsUlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aepiy6Pr;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Q9pYh5eX;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F4F606A320;
-	Tue, 27 Oct 2026 12:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529BD606A330;
+	Tue, 27 Oct 2026 12:45:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 529BD606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aepiy6Pr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E471F031E1;
-	Tue, 27 Oct 2026 12:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793102849;
-	bh=XuAqvW/17/K4S72P6BveYIRMwFq7nJ4rumTZEaNiaZo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Aepiy6PrXjWdKUfE1o3JOEWJ7QmDYyGMp0xIKeaRQaEYFFNU92l9eHWmpaMPc8Ih/
-	 DA5ZKcUt2BtnnUjrwlLYkVXwDhpKkO+Al0REzcpyIChrmEhBfe2Ll6TGsRRG2bD/vI
-	 Z2AgSZxCxN1PgBF63gUcbSsQzWohxYoPp4mShCuJdsHDzcHrUxWa61Y4iU/efFP8sg
-	 FpLtK9TcNBpnPr+VNIX4ABCaGtIRa8NJIdIQiNzPKhCq5nBY3UGMFqedBs3a6agh9f
-	 kGinMsLibqXunAF+WpYhUlIdxSASW5ndy23WeVEZv5sId0RHUhPRCIAr+nsI83yLK8
-	 MiAdek65P3GcQ==
-Message-ID: <sashiko-outbox-186508@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 -next 01/18] fs: pass struct path to notify_change()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Cai Xinchen" <caixinchen1@huawei.com>
-Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, dsterba@suse.cz, "Chuck
- Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
- Schumaker" <anna@kernel.org>
-In-Reply-To: <20261027121151.1887650-2-caixinchen1@huawei.com>
-References: <20261027121151.1887650-1-caixinchen1@huawei.com>
- <20261027121151.1887650-2-caixinchen1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 12:07:28 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Q9pYh5eX
+Received: from omf05.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 03BCB1C3F4F;
+	Tue, 27 Oct 2026 12:45:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 1F84E20018;
+	Tue, 27 Oct 2026 12:45:15 +0000 (UTC)
+Date: Tue, 27 Oct 2026 08:45:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 6/9] tracing/filters: Skip second character of '&&'
+ and '||' in calc_stack()
+Message-ID: <20261027084513.16dcb663@gandalf.local.home>
+In-Reply-To: <undine-1793059963392038141-496f89524ad52c64@undined.local>
+References: <179291742944.492959.11659339795290028998.stgit@devnote2>
+	<179291748555.492959.3275503783612449972.stgit@devnote2>
+	<20261026164727.0d1636cb@gandalf.local.home>
+	<undine-1793058642821980546-e873f302f6a6d563@undined.local>
+	<undine-1793059963392038141-496f89524ad52c64@undined.local>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,132 +64,30 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: whotn9q6szo35b7buf4zhw3e6c6kk6is
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 1F84E20018
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+zguBbqu5krc6CbB7lx/helQypDPpL6/o=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=cp5F5plX1o9uNVRyUnVlyzWtsNabM89/L+nyYHXZXX8=; b=Q9pYh5eXyKKG3lpi69ZRFB7U6Oi+Qe1mPKkgGR4SRLc0tBzDQesXRZ/Gllo8DgkqN6Q33qoWaS51imiTYdmcdIb2U42pj+WJH+t5qYABWVz0XvYfE/oCWsi6i3X4i/TcKTkFO+hDd/vmboDs/Q+CWqHMh9qzD1HCI9o1DRUbdLI=
+X-HE-Tag: 1793105115-725216
+X-HE-Meta: U2FsdGVkX1/Td6Ojvo70Dsv0u/cRljFIAxmwzShFO+L7SxtpEthVgsRY+yTpTFkxKgocBQZ7yXh2flLfdwZWRexMCZgTAH5yCYRXDkUtMlxsGmpM64LVXdnQ1ljKYQTxQoSrHbzlMdZDtbAYnFB1RGhb14RU3Kc0YvrxCBJpWw8k5a3GBoAWb2/pbMDPktbihTNJvwXGpc6L81QHoQbEZruQad3e99I/7bYRklF8p2PQQTWppziz7u8jzb294rw3NAvh4esWlkra3bN2TzXjW62mywMgKrSP7BNpj2RpyaX7CVcUiigcjDgzfjwR2oAElS5WCOA3ex1nUal42HH79Aq7aOizuWY7
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] fs: __notify_change() in ntfs_stream_setattr_common() bypasses bas=
-e inode LSM checks
-- [Low] nfsd: stale @dentry kernel-doc parameter in nfsd4_deleg_getattr_con=
-flict()
---
+On Tue, 27 Oct 2026 09:12:43 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-commit 205fb5135661a50181cb638aff919af8443d55ff
-Author: Cai Xinchen <caixinchen1@huawei.com>
+> BTW, to check the correct input is encoded correctly, we may need
+> in kernel selftest or a feature to dump the interpreted pred after
+> "#" line via filter file. Latter one allows us to test it via tracefs
+> (ftracetest).
 
-fs: pass struct path to notify_change()
+Hmm, I guess we can update the filter file, although I'm a bit nervous
+about backward compatibility.
 
-This commit updates notify_change() and do_truncate() to accept a struct pa=
-th
-pointer instead of a struct dentry pointer alongside the mount idmap. It al=
-so
-introduces __notify_change() without the security_inode_setattr() check and
-uses it in ntfs_stream_setattr_common() when forwarding attribute updates to
-the base inode.
+IIRC, the libtracefs does self tests and clears filters. That may be a way
+to see if it breaks user space.
 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 1de6c6d757c3e..3a08c56a27c60 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-
-[ ... ]
-
-> @@ -10531,7 +10533,7 @@ static int cb_getattr_update_times(struct dentry =
-*dentry, struct nfs4_delegation
->   * caller must put the reference.
->   */
->  __be32
-> -nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dent=
-ry,
-> +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, const struct path *=
-path,
->  			     struct nfs4_delegation **pdp)
-
-[Severity: Low]
-Since the second parameter of nfsd4_deleg_getattr_conflict() in
-fs/nfsd/nfs4state.c was changed from dentry to path, should the kernel-doc
-comment right above it also be updated from @dentry to @path to avoid
-scripts/kernel-doc warnings when building with W=3D1 or htmldocs?
-
-[ ... ]
-
-> diff --git a/fs/ntfs/named_stream.c b/fs/ntfs/named_stream.c
-> index 95a3c05f98211..f0b577a6f7c3e 100644
-> --- a/fs/ntfs/named_stream.c
-> +++ b/fs/ntfs/named_stream.c
-> @@ -897,7 +897,7 @@ static int ntfs_stream_setattr_common(const struct mn=
-t_idmap *idmap,
->  			goto out;
->  		}
->  		if (base_attr.ia_valid)
-> -			err =3D notify_change(idmap, base_dentry, &base_attr,
-> +			err =3D __notify_change(idmap, base_dentry, &base_attr,
->  					NULL);
->  		else
->  			err =3D 0;
-
-[Severity: High]
-Does switching to __notify_change() in ntfs_stream_setattr_common() skip
-required LSM and EVM checks on the base inode when a user calls chmod, chow=
-n,
-or utimensat on an NTFS named stream?
-
-The stream inode (vi) and the base inode (base_vi) are separate struct inode
-objects with distinct security state and potentially different file types.
-
-First, NTFS permits named data streams on directories, and
-ntfs_stream_setattr_common() preserves base_vi's S_IFMT when forwarding mode
-changes:
-
-    else if (base_attr.ia_valid & ATTR_MODE)
-        base_attr.ia_mode =3D (base_attr.ia_mode & ~S_IFMT) |
-                (base_vi->i_mode & S_IFMT);
-
-However, ntfs_read_locked_attr_inode() and ntfs_stream_inode_refresh() alwa=
-ys
-force the stream inode's mode to S_IFREG:
-
-    base_vi =3D VFS_I(ni->ext.base_ntfs_ino);
-    vi->i_uid =3D base_vi->i_uid;
-    vi->i_gid =3D base_vi->i_gid;
-    vi->i_mode =3D (base_vi->i_mode & ~S_IFMT) | S_IFREG;
-
-In SELinux, the initial notify_change() on the stream dentry checks the
-stream inode with sclass SECCLASS_FILE, whereas base_vi has sclass
-SECCLASS_DIR. Skipping security_inode_setattr() on base_dentry via
-__notify_change() allows a caller with file setattr permission (but not dir
-setattr permission) to modify the base directory's mode, ownership, or
-timestamps through a directory stream.
-
-Second, ntfs_setxattr() rejects stream inodes with -EOPNOTSUPP while allowi=
-ng
-security.* xattr changes on base_vi. If base_vi is relabeled via setxattr()
-while a stream inode is cached in memory (such as via an open stream file
-descriptor), security_inode_post_setxattr() (including
-selinux_inode_post_setxattr(), smack_inode_post_setxattr(), and
-evm_reset_status()) only updates base_vi's security state, leaving the stre=
-am
-inode's cached label and EVM status stale.
-
-Furthermore, in fs/attr.c, do_notify_change() skips security_inode_setattr()
-when path is NULL, but still runs security_inode_post_setattr() at the end:
-
-    if (path) {
-        error =3D security_inode_setattr(idmap, dentry, attr);
-        if (error)
-            return error;
-    }
-    ...
-    if (!error) {
-        fsnotify_change(dentry, ia_valid);
-        security_inode_post_setattr(idmap, dentry, ia_valid);
-    }
-
-Wouldn't calling __notify_change() on base_dentry bypass
-selinux_inode_setattr(), smack_inode_setattr(), and evm_inode_setattr() on
-base_dentry while still invoking evm_inode_post_setattr(), causing EVM to
-write a new valid security.evm HMAC onto base_dentry without prior integrity
-verification on base_dentry?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027121151.1887=
-650-1-caixinchen1@huawei.com?part=3D1
+-- Steve
