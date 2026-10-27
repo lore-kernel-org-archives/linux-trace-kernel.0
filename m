@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793113872;
-	b=hh3oSsCzLx6/mhXueQmWgcnG0A1Qa21z+XAAXo42X0F4dWYJP0BgWMUwLzJdV5y1yZAC
-	 LWPYMExVilgIUwVGiJSykC8rMWlIemkJVic1Eq14fB2XCmr6uu+JX6RDTMr/W/hglTOf9
-	 mt2h9vY+adUgClxSRCtgw48BijhAMN0odjDtsYJyEcR8FKRPCMG6A4Zt9FvyQtO9rFaR6
-	 tEKan7sygx1DPvLLiMAMr4QCCg0DDWv7ZE6ZgSV9wc7VzYHIzxV6XlSlFmwSL2qiJVBcA
-	 Tf/FZgdyeSJ/WQEAJBm4eMHJPeFdPfty5027Q06jkApdI22DDBWIDiVqbLgz192DBoA==
+	t=1793115510;
+	b=NB66UjMNv4dfkTZUGmEUKzG2JcuRoGSZwB1nc7HR0GqRjZD17CqiCOAyafR/vUBRWUN9
+	 hPLeKIjYovm5KslLwTDnMc53LBFqrSykNcl0YEQaQIY4FoNjHRBR4JUROVC/ApxlPlWUY
+	 d9WU5CUxBf8YQFh+mqqP9oyRT2vALN39jIpIUQp3o4U+g8jZrzFwZuaajjk5BknMonu5v
+	 gTK1TPqNDaMm6MLbkB76YmQgxbr7ho/1FBYFHG8zkIdbpbxblzUaob3nvpxxX4QQk+pLD
+	 x7OlrufvMLsrXNbdHzu8ZMRU5+jUnXjSnHIKkGzV+BEeU2JsmwYvEutyqpTgbCDtxsw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793113872;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=WAORpCca99WVFsa9yjQHj3w3E3G9OGYxMnl8hxLGEco=;
-	b=eiaWKYX3L6a76ovH9CeZS0149LetLkoH2yyrucytglRCxFNlWlT/foutEEr3apOvo7uw
-	 rDZHaxm6+RkBy1yhO/mYve/WEpReqFkDVZ4kwr45Ge1DeBL49N96rb6eoMCIQJqL3+VCI
-	 Blt8Yd6BFayYDBpsm6gUqolwVjoiVZKJtFQRW9l+ZCkMF0rqRhd97pzixvV5c3oSWbCeM
-	 gCOEE+jBcrMO4FjQBvaCLDJVWmShUUvkHY+gdZSj4Z8krIBHbhnJ4xqm/Y1Cam0WpVBAf
-	 CHjeXrJIU6nrQm2DRPHUxNPXjEEM7K2Dst6BUdNV0Em4hd5Po58NAIP9g6l9M9GL5LA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793115510;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=P4QDwDejSsPjI6QsC7K2e4l+YE6idf6liU1KvYAti6A=;
+	b=v6WpV/E4FiSHEu8weAE9ogXFOtccFnxrFs91FNr7nd6qR+/RbzjlYUHJb2AWcsFL3gwS
+	 re77p6cYEA3NRjfEz7Yp4PY3jFBqnTm7LbZeRbMuhOH2FMvKJKQHmFbbZKMP2hYW2vPkD
+	 iK9oRuRMrFLGU+AmRiSxX4Jglp1Fw7AVivgY17z5eX4cNAWfMmnQ/QSjCiPOO1+3AabRk
+	 NuYoQRGc8HzY/a3VZIVbxmtGFaMCJHvglxCVD4E7KnmYL5cSU75qMdnIit3W2vRemdSx8
+	 DzyfK8P/SOLvM4bCb01UVS+MbdMl2URWSh3MiUnQHlGEkqRrMgDDVx4uc7PXfrydtqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SCwdUWcP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n3PnWGSE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D14606A31A;
-	Tue, 27 Oct 2026 15:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DFF606A31B;
+	Tue, 27 Oct 2026 15:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SCwdUWcP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8BAE1F01825;
-	Tue, 27 Oct 2026 15:11:10 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n3PnWGSE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E4A1F01825;
+	Tue, 27 Oct 2026 15:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793113871;
-	bh=WAORpCca99WVFsa9yjQHj3w3E3G9OGYxMnl8hxLGEco=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SCwdUWcPJ5GOGJmMBPaMdlKCnxMINtnDlwsm7Wy3p/b/7ZazvgRlOdAn7c6eoUE7l
-	 MiyeWLL83tdWmgZ43WmhtGBV8nkfNRe8WJZrvFpMaKVqNDLM6Aq1S3Ai39+jvlwPXY
-	 lHE1bDqcDl/GFY+RmDmOEM2n9evKzxa1Ur0lwbLcY3p0u68fQLjTtDCM+X4hhJlZhC
-	 kyH31xi5KQ9sYUoRBYyBIKssFDb9Zk2mYjtVBNcp1Hm0MvaxzpzWyOwfoH8D0H2Wzc
-	 08D3A/YXh3TQzjPo4HZA2ojOQd/BOGWFpRcvRGg24EOY8B9AigBU95bLSZfVJ3LXzt
-	 3JSQDSVsEWSiQ==
-Message-ID: <sashiko-outbox-186809@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 -next 16/18] selftests/landlock: Add tests for
- metadata access rights
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Cai Xinchen" <caixinchen1@huawei.com>
-Cc: bpf@vger.kernel.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, dsterba@suse.cz, "Chuck
- Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>, "Anna
- Schumaker" <anna@kernel.org>
-In-Reply-To: <20261027121151.1887650-17-caixinchen1@huawei.com>
-References: <20261027121151.1887650-1-caixinchen1@huawei.com>
- <20261027121151.1887650-17-caixinchen1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 15:11:10 +0000
+	s=k20260515; t=1793115509;
+	bh=P4QDwDejSsPjI6QsC7K2e4l+YE6idf6liU1KvYAti6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=n3PnWGSEy63TkshTbN+NH8Lz7qKC2SA8BzUpk+tmV1MeonlnzUWDIuBkzYaozxT3Z
+	 TJuesb05R2Pm5JRavby+Id3CDOR+kOvkFdCodgze+hSIFOYNb0H3jPFqCe8pAWDr+h
+	 QV0ABQe5oaV3oQvreewvONhUys5vgEHtAqlstJ/rjTPZYP0XClTFKPjezt4pZtzYPy
+	 F1cnDPPZQYxciQ7wC+9ibZoYSUUWqMclFS2Ymoq0Ma232n5JNGXX3/RYFcSWnSS7Ai
+	 ppF8o8avIYgpka5fUBCD16Z1rhQ9NYdLIYFPlOzOV36IyZnqZg4rOn9rcyDk8FbuTn
+	 WeSaUXLtumYBA==
+Date: Tue, 27 Oct 2026 15:38:20 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com, peterz@infradead.org, 
+	mhiramat@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org, liam@infradead.org, 
+	surenb@google.com, david@kernel.org, vbabka@kernel.org, jannh@google.com, 
+	hughd@google.com, kees@kernel.org, mingo@redhat.com, tglx@kernel.org, 
+	x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 6/9] uprobes: Don't sleep on mmap_lock with
+ dup_mmap_sem held in dup_mmap()
+Message-ID: <auDApO7ECoVLs-Jp@gremlin>
+References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
+ <20261022015712.1297331-7-alexei.starovoitov@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,161 +62,193 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261022015712.1297331-7-alexei.starovoitov@gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] selftests/landlock: hardcoded GID 0 in chown metadata tests fail=
-s for non-root
-- [Low] selftests/landlock: duplicate linux/fs.h include before sys/mount.h
-- [Low] selftests/landlock: missing MIPS offset in file_getattr/setattr fal=
-lback NRs
---
-
-commit 76c1b6128ed1afd1dd4933dbcba43ffec623cd33
-Author: Cai Xinchen <caixinchen1@huawei.com>
-
-selftests/landlock: Add tests for metadata access rights
-
-This commit adds selftests covering the LANDLOCK_ACCESS_FS_READ_METADATA and
-LANDLOCK_ACCESS_FS_WRITE_METADATA access rights across chmod, chown,
-utimensat, xattr, stat, fileattr, open-time semantics, and overlayfs. It al=
-so
-updates the ABI version and access mask definitions in the Landlock test
-suite.
-
-> diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/s=
-elftests/landlock/fs_test.c
-> index f725882fa4a78..1e819ba952ac6 100644
-> --- a/tools/testing/selftests/landlock/fs_test.c
-> +++ b/tools/testing/selftests/landlock/fs_test.c
-> @@ -12,6 +12,7 @@
->  #include <fcntl.h>
->  #include <libgen.h>
->  #include <linux/fiemap.h>
-> +#include <linux/fs.h>
->  #include <linux/landlock.h>
->  #include <linux/magic.h>
->  #include <sched.h>
-
-[Severity: Low]
-Could adding this include of linux/fs.h before sys/mount.h break compilation
-on toolchains where glibc headers conflict with UAPI linux/mount.h?
-
-Further down in tools/testing/selftests/landlock/fs_test.c, linux/fs.h is
-already included after sys/mount.h and sys/vfs.h with a comment noting the
-ordering requirement:
-
-    /*
-     * Intentionally included last to work around header conflict.
-     * See https://sourceware.org/glibc/wiki/Synchronizing_Headers.
-     */
-    #include <linux/fs.h>
-    #include <linux/mount.h>
-
-Because UAPI linux/fs.h includes linux/mount.h when __KERNEL__ is not
-defined, including linux/fs.h at the top of the file pulls in linux/mount.h
-prior to sys/mount.h and makes the deferred include a no-op.
-
-[ ... ]
-
-> @@ -10916,4 +10921,918 @@ TEST_F(trace_layout1, check_rule_fs_empty_grant)
-
-[ ... ]
-
-> +TEST_F_FORK(layout1, unhandled_metadata)
+On Thu, Oct 22, 2026 at 01:57:09AM +0000, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
+>
+> dup_mm() takes dup_mmap_sem for reading and then dup_mmap() sleeps on
+> mmap_lock of the parent. When another thread keeps that mmap_lock busy
+> register_for_each_vma() waits for the reader, and every other fork() in
+> the system waits for the writer. The parent doesn't have to map the file:
+>
+>   A thread 1:  mmap(MAP_POPULATE) -> mmap_read_lock(A)
+>   A thread 2:  fork() -> percpu_down_read(&dup_mmap_sem),
+>                mmap_write_lock_killable(A) sleeps
+>   tracer:      percpu_down_write(&dup_mmap_sem) sleeps
+>   others:      fork() -> percpu_down_read(&dup_mmap_sem) sleeps
+>
+> dup_mmap() needs both locks. Don't sleep on one of them while holding
+> the other. Sleep on mmap_lock and trylock dup_mmap_sem. If that fails sleep
+> on dup_mmap_sem and trylock mmap_lock, and so on. Taking mmap_lock and then
+> sleeping on dup_mmap_sem is simpler, but then all threads of the parent
+> wait for mmap_lock as long as the writer holds dup_mmap_sem.
+>
+> Both are taken in dup_mmap() now, so release dup_mmap_sem there too.
+> Commit 8ac662f5da19 ("fork: avoid inappropriate uprobe access to invalid
+> mm") moved that to dup_mm() to hide the child from uprobes until mmput()
+> when dup_mmap() fails. Since commit 43873af772f8 ("mm: change dup_mmap()
+> recovery") dup_mmap() removes all vmas of such child before it drops
+> mmap_lock.
+>
+> dup_mmap_sem is released before dup_userfaultfd_complete(), so the monitor
+> that doesn't read UFFD_EVENT_FORK no longer blocks every fork(). During
+> that wait register_for_each_vma() can find the child, while no task points
+> to its mm. The next patch deals with that.
+>
+> Thread 1 of process A loops over mmap(4G, MAP_POPULATE) and munmap().
+> Thread 2 calls fork() in a loop. Nobody maps the file. Process B calls
+> fork() in a loop. 32 cpu VM. Median (max) of 15-25 runs, msec:
+>
+>                          the longest fork() in B    attach
+>                          before      after          before  after
+>  uprobe_multi, 1 uprobe  206 (219)   0.10 (0.30)       220   11.7
+>  uprobe_multi, 4 uprobes 208 (428)   0.08 (0.32)       219   13.5
+>  perf_event, 4 uprobes   419 (424)   0.10 (0.44)       632   11.4
+>
+> During detach: 265-293 -> 0.19-0.37.
+>
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+> ---
+>  include/linux/uprobes.h |  5 +++++
+>  kernel/events/uprobes.c |  5 +++++
+>  kernel/fork.c           |  4 ----
+>  mm/mmap.c               | 19 +++++++++++++++++--
+>  4 files changed, 27 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index d34dbc0fbbfe..6d74efa80d04 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -211,6 +211,7 @@ extern void uprobe_unregister_sync(void);
+>  extern int uprobe_mmap(struct vm_area_struct *vma);
+>  extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
+>  extern void uprobe_start_dup_mmap(void);
+> +extern bool uprobe_try_start_dup_mmap(void);
+>  extern void uprobe_end_dup_mmap(void);
+>  extern void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm);
+>  extern void uprobe_free_utask(struct task_struct *t);
+> @@ -277,6 +278,10 @@ uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end
+>  static inline void uprobe_start_dup_mmap(void)
+>  {
+>  }
+> +static inline bool uprobe_try_start_dup_mmap(void)
 > +{
-> +	int file_fd;
-> +	int ruleset_fd;
-> +	const char *const file1 =3D file1_s1d1;
-> +	const char *const file2 =3D file2_s1d1;
-> +	const char *const dir1 =3D dir_s1d1;
-> +	struct stat statbuf;
-> +	const struct rule rules[] =3D {
-> +		{
-> +			.path =3D file1,
-> +			.access =3D LANDLOCK_ACCESS_FS_WRITE_FILE,
-> +		},
-> +		{
-> +			.path =3D file2,
-> +			.access =3D LANDLOCK_ACCESS_FS_READ_FILE |
-> +				  LANDLOCK_ACCESS_FS_WRITE_FILE,
-> +		},
-> +		{
-> +			.path =3D dir1,
-> +			.access =3D ACCESS_RW,
-> +		},
-> +		{},
-> +	};
+> +	return true;
+> +}
+>  static inline void uprobe_end_dup_mmap(void)
+>  {
+>  }
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index a9274016c55d..92ccb730278f 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1927,6 +1927,11 @@ void uprobe_start_dup_mmap(void)
+>  	percpu_down_read(&dup_mmap_sem);
+>  }
+>
+> +bool uprobe_try_start_dup_mmap(void)
+> +{
+> +	return percpu_down_read_trylock(&dup_mmap_sem);
+> +}
 > +
+>  void uprobe_end_dup_mmap(void)
+>  {
+>  	percpu_up_read(&dup_mmap_sem);
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 10f2d05d816a..8fd6be932afe 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1539,11 +1539,9 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+>  	if (!mm_init(mm, tsk))
+>  		goto fail_nomem;
+>
+> -	uprobe_start_dup_mmap();
+>  	err = dup_mmap(mm, oldmm);
+>  	if (err)
+>  		goto free_pt;
+> -	uprobe_end_dup_mmap();
+>
+>  	mm->hiwater_rss = get_mm_rss(mm);
+>  	mm->hiwater_vm = mm->total_vm;
+> @@ -1558,8 +1556,6 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+>  	mm->binfmt = NULL;
+>  	mm_init_owner(mm, NULL);
+>  	mmput(mm);
+> -	if (err)
+> -		uprobe_end_dup_mmap();
+>
+>  fail_nomem:
+>  	return NULL;
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 4bf26b0f1e6e..6ce654e33e3b 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1713,8 +1713,22 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  	LIST_HEAD(uf);
+>  	VMA_ITERATOR(vmi, mm, 0);
+>
+> -	if (mmap_write_lock_killable(oldmm))
+> -		return -EINTR;
 > +	/*
-> +	 * READ_METADATA and WRITE_METADATA are not handled, so metadata
-> +	 * access should be allowed.
+> +	 * Take mmap_lock of oldmm and dup_mmap_sem of uprobes.
+> +	 * Don't sleep on one of them while holding the other.
 > +	 */
-> +	ruleset_fd =3D create_ruleset(_metadata, ACCESS_RW, rules);
-> +	ASSERT_LE(0, ruleset_fd);
-> +	file_fd =3D open(file1, O_WRONLY | O_CLOEXEC);
-> +	ASSERT_LE(0, file_fd);
+> +	for (;;) {
+> +		if (mmap_write_lock_killable(oldmm))
+> +			return -EINTR;
+> +		if (uprobe_try_start_dup_mmap())
+> +			break;
+> +		mmap_write_unlock(oldmm);
 > +
-> +	enforce_ruleset(_metadata, ruleset_fd);
-> +	ASSERT_EQ(0, close(ruleset_fd));
-> +
-> +	EXPECT_EQ(0, test_chmod(file1, 0644));
-> +	EXPECT_EQ(0, test_fchmod(file_fd, 0644));
-> +	EXPECT_EQ(0, test_chmod(file2, 0400));
-> +	EXPECT_EQ(0, test_chmod(dir1, 0700));
-> +
-> +	EXPECT_EQ(0, test_chown(file1, -1, 0));
-> +	EXPECT_EQ(0, test_fchown(file_fd, -1, 0));
-> +	EXPECT_EQ(0, test_lchown(file1, -1, 0));
+> +		uprobe_start_dup_mmap();
+> +		if (mmap_write_trylock(oldmm))
+> +			break;
+> +		uprobe_end_dup_mmap();
+> +	}
 
-[Severity: Medium]
-What happens in unhandled_metadata (as well as in write_metadata,
-metadata_open_time, and metadata_transfer) when the test binary runs with a
-non-zero GID or inside a user namespace where GID 0 is unmapped?
+This isn't beautiful :)
 
-Landlock selftests support running as a non-root user with capabilities via
-SECBIT_NOROOT in _init_caps(). During fixture setup,
-FIXTURE_SETUP(layout1) -> prepare_layout_opt() -> disable_caps() clears
-effective capabilities and drops CAP_CHOWN from the permitted set, creating
-test files owned by geteuid():getegid().
+As David says, we have an incoming fix that moves things around, i.e. this will
+no longer actually live in dup_mmap() but rather dup_mm() [which, by the by, I
+do want to move into mm], but that'd just move this there i guess?
 
-When getegid() is non-zero and the caller is not a member of group 0,
-chown_common() -> notify_change() -> setattr_prepare() -> chgrp_ok() rejects
-changing the group to hardcoded GID 0 with -EPERM because CAP_CHOWN is not
-held, causing the positive EXPECT_EQ(0, ...) assertions to fail. Similarly,
-if GID 0 is unmapped in the current user namespace, chown_common() fails
-setattr_vfsgid() with -EINVAL before reaching security_path_setattr(),
-causing the EXPECT_EQ(EACCES, ...) checks to fail as well.
+I'm concerned by what Jann says re: a livelock here though. I'm not sure this
+should be unbounded, and fork is a super-sensitive time for mm.
 
-Would passing getegid() instead of 0 to test_chown(), test_fchown(), and
-test_lchown() avoid depending on the caller's GID while still setting
-ATTR_GID in chown_common() and exercising hook_path_setattr()?
+I would feel more comfortable with it if it were bounded, and really it'd be
+nice if this was abstracted into its own function too rather than something
+open-coded.
 
-[ ... ]
+Do you have numbers on how many loops you are usually observing? Could you get
+most of the way there by just doing a trylock on uprobe before trying to take
+the mmap write lock?
 
-> +#ifndef __NR_file_getattr
-> +#if defined(__alpha__)
-> +#define __NR_file_getattr 578
-> +#else
-> +#define __NR_file_getattr 468
-> +#endif
-> +#endif
-> +#ifndef __NR_file_setattr
-> +#if defined(__alpha__)
-> +#define __NR_file_setattr 579
-> +#else
-> +#define __NR_file_setattr 469
-> +#endif
-> +#endif
+I mean if 99% of the time you only need 1 iteration, for example, then the fix
+looks a lot more sensible.
 
-[Severity: Low]
-When building against older UAPI headers on MIPS, won't these fallback
-definitions for __NR_file_getattr and __NR_file_setattr evaluate to raw 468
-and 469 without the MIPS ABI base offset (__NR_Linux + 468 and
-__NR_Linux + 469, where __NR_Linux is 4000 for o32, 5000 for n64, and 6000
-for n32), causing test_file_getattr() and test_file_setattr() to fail with
-ENOSYS?
+All in all it feels a bit egregious for core mm to be held hostage to uprobe
+like this, isn't a better fix possible? Does uprobe actually need to exclude
+fork, or could it just eat the cost of checking to see if something forked
+since?
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027121151.1887=
-650-1-caixinchen1@huawei.com?part=3D16
+>  	flush_cache_dup_mm(oldmm);
+>  	uprobe_dup_mmap(oldmm, mm);
+>  	/*
+> @@ -1883,6 +1897,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  	mmap_write_unlock(mm);
+>  	flush_tlb_mm(oldmm);
+>  	mmap_write_unlock(oldmm);
+> +	uprobe_end_dup_mmap();
+>  	if (!retval)
+>  		dup_userfaultfd_complete(&uf);
+>  	else
+> --
+> 2.55.0
+>
+
+--
+Cheers, Lorenzo
