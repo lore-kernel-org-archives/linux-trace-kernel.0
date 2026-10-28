@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793149230;
-	b=AYIxLpxxBNnhvV+RZW7chQ4l0DpBdJZrHUb7MQuCAQJiJk2mjBdaxU3Tbp21t+f3fwXS
-	 BohW9kVRQ/MeZFj8TrDZfF/kCQq/i4GISoFHmN6dzdzWk7DI/NnN57hTZujb6zQWUPBRd
-	 hhpC+aI8BhM1a6xe47rZUtMsGipZacgD2FMHSXFguHV0T3p/FPyJ6ekUjbezFuBh1t9l1
-	 y7156xnXVAtrK6/2DqLvLfegqtcg/uTa7e2C+8kVchlHidP+21ryxKXwcGOvhm8STFjky
-	 DO3Tn1nOCBjAMtP6Nv5fI4GuJ7u2dYE7CTc1tg9XpV1TM8mXmazpMMEXuyGSgcrTpZA==
+	t=1793149519;
+	b=Ij5aJMW+8VnKK1CGED1uGTgK4bwhanJS4NIVYTQ/5D4dVLgWrjysBqWHuUydNgZG55g6
+	 ER2Abu04YcsztV8WLbpcvne3qUpBDKHTDPIcUrqbY19wAftsp4p4nqjt+koSIgo1AB7v0
+	 0+bwwHwjPsx4kLle48jHylKZKSYWoAh/eEUOhbUbnIa4FpPT7+NCbOFc2E1pnYuKqrZpA
+	 B5pIFdiH3BK8vuegbTY4POPacjgN0kGz+fQWwmvaf7tvcEWGyfsbZmYQe3jFEQphy6qFd
+	 Rhcjee184ahiX3whsQ8dX5XR+XHENbYQ8RqRwFuXipBdVq+PIqrWA8x5ZmMiveNNFRw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793149230;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793149519;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=0dQOwYdE5ByoLjcl/jg92NRQrV/xKvRLu+ZqjDeTH+4=;
-	b=KooN4xpAZ1JLvgIAYPUl+OFv/Wk3NO2zD2vgwv7fgoBGk79YuHq7gmnkDhk4SJ4xp9Te
-	 /bPRhV5CIf5goq05Dhz0M55QWoXUCFRCgxla+ZZJCfRTwSsOkjEaDxaq3WlpPseget9Ri
-	 It/k3aaiPIUltMDr3y8MHUDjXk7iqEkKzcHviPWpxMjSckWkx2u1pKkMWmlCxlULQex2q
-	 UGH2jkpUixBzDvfAa5KWq7nkwfO9leIWqEFp6snvEmFKv4EHFhDuCl5XjYOCBYoghUEDd
-	 zwifbyIbfezgv2mUNFp9P+YQR9xpBk4yIm7ER/LKKe4VKLrPhNz8WOkDpextHUSdFwg==
+	bh=szoEDWTwAfJgUM/XjAfJzEfU2Hrm2J3J757AHXdl3Es=;
+	b=1+n/OXwlJuCkzFOb0+Nn73sbyLOVVXZA3oX0VhDPAZalTafUBjCJRkdkVd21jTjmmMMV
+	 41Jts2V0AZKm7C6KA5jhDYgKMcDVfYtT/tBkVGsNctvtI9p0RegVsBzdEx1LGyk57HFhs
+	 8huV/BryGb3b4tNSaue1QWkPpfDopFpu1+I/LdH22SVrW2fF6oWG+vlj5vheDz6dq/Eg4
+	 iCDUmW1rAmgp2hu+4+Cg0Exz1ukXrolkLj7VQSQVyhjkU+koNMpnwPCdjidVK70v+j0Zs
+	 JhaGz7HMJHpIROsAlxtUybBNsPzKyHfhqoxZlhMsqaN8kyULQes0moQDxLmjBXo59ng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lxe25K+N;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ZhHMAfk/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A58606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 01:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91388606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 01:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lxe25K+N
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E2CE1F01825;
-	Wed, 28 Oct 2026 01:00:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZhHMAfk/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401401F01828;
+	Wed, 28 Oct 2026 01:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793149229;
-	bh=0dQOwYdE5ByoLjcl/jg92NRQrV/xKvRLu+ZqjDeTH+4=;
+	s=k20260515; t=1793149519;
+	bh=szoEDWTwAfJgUM/XjAfJzEfU2Hrm2J3J757AHXdl3Es=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Lxe25K+NL6YWVgW01Y8D3kvArfPzUDhgh4966AVvfZD3gXpOenP1eMkImSo9HhGs4
-	 K4ALoniZs/xfByhqh5o5BMyEQppcQeHWE534HRCVKYl/DServJg4lyBTx6sg1InHPx
-	 n9yKqnjKi/dZEV+CiRG6tOYnaCsLTQTyPj5vkB/oXBomYIfg5RAeS+XKm3rBQBuWjz
-	 iVB1Ax6QkzZVl1SJI+EaSHc+EVrYONdbyqsecjSJgEDISEHdeBY085S/RQyQxF69mw
-	 bTRpatWyEP6P0xIEvfhnQpK3lcjf77mUuW/hdeYfAz8FuH6Wx85KpdNpx4LidrUHzM
-	 nBN6WIxIE1AlQ==
-Message-ID: <sashiko-outbox-187296@kernel.org>
+	b=ZhHMAfk/d3Gy5ezVuoJwyVvZJlAGJ+Ir5Gtuxe9/hDFoozmQUlw4zg0Ur12/mb37e
+	 5APoI8j3Ra8d19gxT0xHiOdgwZehVUOR9qcWpCyXXxVYVdi2D5VocVf6+frTin4HEx
+	 DbN8g3UJsZlFZMmseI/u+GzuVhJ2k0TCwrxWm77YkH0PVVnaITDHkhtn3SoeNCsbGA
+	 881Oj4G3ujcQNccb6OAfIvPOLoJQcyeTXXHBM43SIIKhpSR2O856ENRwGSxMCnqy3a
+	 +DYGINwlwS8drvVHmb6hill5LpT9K+F/uvMdlJXvt9InZX0nBXTQfyz9OmZ++ZfEYZ
+	 G14v6pbGfd4vQ==
+Message-ID: <sashiko-outbox-187301@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 11/16] tracing/filters: Check for trailing characters
- after newline in filter string
+Subject: Re: [PATCH v3 02/16] tracing/filters: Fix MATCH_END_ONLY regex
+ matching for fixed-size strings
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179314830681.684037.17927533770192828788.stgit@devnote2>
+In-Reply-To: <179314822364.684037.9099512445135198750.stgit@devnote2>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
- <179314830681.684037.17927533770192828788.stgit@devnote2>
+ <179314822364.684037.9099512445135198750.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 01:00:29 +0000
+Date: Wed, 28 Oct 2026 01:05:18 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,94 +63,91 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] tracing/filters: in-place truncation on error in filter_check_ne=
-wline()
+- [Medium] tracing/filters: unhandled zero len in regex_match_end_str()
 --
 
-commit 8f43e3c8d713c8d0669d239d3455b033bcd6f4f2
+commit 92251abf42afdb93bef9298fec46088f078a4aa8
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-tracing/filters: Check for trailing characters after newline in filter stri=
-ng
+tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
 
-This commit introduces filter_check_newline() to truncate the filter string
-at the first newline and reject inputs that contain non-whitespace
-characters after that newline with -EINVAL.
+This commit introduces regex_match_end_str() to handle suffix regex matching
+on fixed-size string buffers using strnlen(), and assigns it in parse_pred()
+for comm and static string fields.
 
 > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_even=
 ts_filter.c
-> index 9d1446464058a..f3c18324b07a8 100644
+> index 59a0d3ba72740..f7c067a58ba41 100644
 > --- a/kernel/trace/trace_events_filter.c
 > +++ b/kernel/trace/trace_events_filter.c
-> @@ -2441,6 +2441,31 @@ static int process_system_preds(struct trace_subsy=
-stem_dir *dir,
->  	return -ENOMEM;
+> @@ -1087,6 +1087,20 @@ static int regex_match_end(char *str, struct regex=
+ *r, int len)
+>  	return 0;
 >  }
 > =20
-> +/*
-> + * Convert the first newline to '\0' and check that the rest of the input
-> + * contains no non-whitespace characters.
-> + */
-> +static int filter_check_newline(char *str)
+> +static int regex_match_end_str(char *str, struct regex *r, int len)
 > +{
-> +	char *p;
+> +	int slen;
 > +
-> +	if (!str)
+> +	if (len < r->len)
 > +		return 0;
 > +
-> +	p =3D strchr(str, '\n');
-> +	if (!p)
-> +		return 0;
-> +
-> +	*p++ =3D '\0';
-> +	while (*p) {
-> +		if (!isspace(*p))
-> +			return -EINVAL;
-> +		p++;
-> +	}
-> +
+> +	slen =3D strnlen(str, len);
+> +	if (slen >=3D r->len &&
+> +	    memcmp(str + slen - r->len, r->pattern, r->len) =3D=3D 0)
+> +		return 1;
 > +	return 0;
 > +}
 
 [Severity: Medium]
-Should filter_check_newline() verify that all trailing characters are
-whitespace before writing '\0' to str?
+How does regex_match_end_str() behave when len is 0?
 
-Because *p++ =3D '\0' mutates str in-place before the loop checks the remai=
-ning
-characters, returning -EINVAL leaves str truncated at the newline.
+For the ftrace/print event, the buf field is defined in
+kernel/trace/trace_export.c with a size of 0:
 
-When __ftrace_set_clr_event_nolock() in kernel/trace/trace_events.c iterates
-over matching events and passes the same filter buffer to apply_event_filte=
-r():
+#undef __dynamic_array
+#define __dynamic_array(_type, _item) {					\
+	.type =3D #_type "[]", .name =3D #_item,				\
+	.size =3D 0, .align =3D __alignof__(_type),				\
+	is_signed_type(_type), .filter_type =3D FILTER_OTHER },
 
-kernel/trace/trace_events.c:__ftrace_set_clr_event_nolock() {
-	list_for_each_entry(file, &tr->events, list) {
-		...
-		if (filter)
-			ret =3D apply_event_filter(file, filter);
+Because its type is "char[]", filter_assign_type() classifies it as a static
+string field while field->size remains 0. In parse_pred(),
+pred->regex->field_len is set to field->size (0) and pred->regex->match is
+set to regex_match_end_str():
 
-		if (!filter || !ret)
-			ret =3D ftrace_event_enable_disable(file, set);
-	}
-}
+		} else if (field->filter_type =3D=3D FILTER_STATIC_STRING) {
+			pred->fn_num =3D FILTER_PRED_FN_STRING;
+			pred->regex->field_len =3D field->size;
+			if (pred->regex->match =3D=3D regex_match_end)
+				pred->regex->match =3D regex_match_end_str;
 
-a multi-line filter string with non-whitespace characters after the newline
-fails with -EINVAL on the first matching event, but truncates filter in-pla=
-ce.
-On subsequent matching events in the loop, filter_check_newline() no longer
-sees the newline and returns 0, causing the truncated filter to be applied =
-and
-those events to be enabled.
+When a trigger or eprobe with a suffix filter (such as buf ~ "*foo") is
+evaluated via write_marker_to_buffer() -> event_triggers_call() ->
+filter_match_preds() -> filter_pred_string(), regex_match_end_str() is call=
+ed
+with len =3D=3D 0.
 
-Similarly, in trace_boot_init_one_event() in kernel/trace/trace_boot.c:
+As noted in the comment above regex_match_full() (added in commit
+10f20e9f9da9 ("tracing: Have zero size length in filter logic be full
+string")), a len of zero indicates that str is a NUL-terminated string, whi=
+ch
+regex_match_full(), regex_match_front(), and regex_match_middle() handle
+explicitly:
 
-		else if (apply_event_filter(file, buf) < 0)
-			pr_err("Failed to apply filter: %s\n", buf);
+static int regex_match_full(char *str, struct regex *r, int len)
+{
+	/* len of zero means str is dynamic and ends with '\0' */
+	if (!len)
+		return strcmp(str, r->pattern) =3D=3D 0;
 
-the error message logs the truncated prefix in buf instead of the full
-invalid filter string.
+In regex_match_end_str(), however, when len is 0, the (len < r->len) check
+returns 0 for any non-empty pattern, and strnlen(str, 0) also returns 0.
+
+Should regex_match_end_str() check for !len and use strlen(str) in that cas=
+e,
+so that suffix filters on ftrace/print work as expected?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179314820431.684037=
-.4147763044424284198.stgit@devnote2?part=3D11
+.4147763044424284198.stgit@devnote2?part=3D2
