@@ -1,55 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793226051;
-	b=wyYIUpMnNdDwPutGe5zCwyyghwRbzxjNKmWIfjC8JicyAyekk9eyXord4HxtKLuCcK/q
-	 ApAs1XFwstInm/8IPDQOmLzM494DyIC2ujZlV4SIJ+cnqlm8Sy6UaPubsWI3opZfBOWyn
-	 tM+YpxVZvYaS7ef2jREIPEdnIR6sGeEV1XtyN6KidDSJscXrHke41i2jjxBtW3k9/OjPi
-	 7bX/31q2vE64yOEhZlcFgWBX995BkVaJGB/2wwsP4PTPDbKA0tjEWzGhe7cbeukNuZ4f1
-	 D6Way1kHfuqshba8sd+uQh60R8e388TebEIU6ToCGaXwz21oMwFq4T8L1zZpDxE0XXQ==
+	t=1793226243;
+	b=QG/xvB9xcw0rNmuiDwQwtMQBFNoX1UhV+uOVMJ0E9WR5+R2yalvQ72n6WU58DeMe/Tbj
+	 WfJ/6o36i8NWac40x3AfNOWax7CDz52vnealhy66KuRQs2LMRbt66D+jjKpnwEeE3oLov
+	 Q7RAh4AUtv9ZcO2xebvKzorQc3ntaiQJkPgKq3KSK10n9lt9rZWm3NLUelfNOCh7/R3tW
+	 tqr0DT4OisQJ7IyyPVSMOgxVnDBwlQucOsIkSGdrgPK7Qwo/bhb8LyHPAEUHbxtqoX71H
+	 Ne2nx3mRlfD5uLn/XTW+y8VertRcM5xOpej+4Bdau3bqV3roP5IKpQo1i/z3wxeNVAQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793226051;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=6k3mwGo0Ko38RJGbMaFKnc5cA44pMnEE+a+lrwIaTnI=;
-	b=rXLfpPkO0Rwq1MBL8+X2H7LxAw+eW5UkFBi7RqDxO9DBuaYNgMUdfQjPb7jfasR4MrOu
-	 Q/tQXt4XZlWofgq7HsU9cd7JWE44KqsFaOCRDopCIAbMGZaUrMOJiAXhCBs67dxY1VvMV
-	 gqcBjzrnsQoPI3WwbgjhrRewE7Q9hDkkgbC1q5HLAmMqPCQsD7TnOioIT7Wd7AR3iUjYQ
-	 ShnylkJKfho4v2PDOrtpQFFTVq0115RirQnmtK00zrJCOCNia2bTkySszP6Yq1aJEx675
-	 QcNHZsjcfrxYtv/t11vEuICfQVtXSwpd8SVUXF2gXJ7nMkAGxkztAuS5n7eo/f5Yf9Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793226243;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=TwvgzAdEr20eUmNpzrmKJfdu9EJe6GS1KE3+2fR27iU=;
+	b=fPi++QwRdu6AMASt6F3POm6K9SOJDEiD6+0dquCLikd077zlghhBk+6okGRVxa8sOKS1
+	 iEL9uHbreySu+W6Z8PmPSlwWKklfPn62XTTGb96YqVQdzs1Cegw6V2mAoNn/E8wrvEx9s
+	 XVnz4LcYgFBTg39dK+z6mn6EtUreWSHbjKkRuvWBo9HuaR0mbXG9jos81PxDTGyg/jwZ1
+	 bSoKyYkIQ7d/Yr6lVYZ7aaSbPFQGY0QPqRq4/7nPTh5jDGADkGwT2jjRdVqcnGmhl6uMz
+	 qxoCdVF/wd7o0bpEMICzW1Z2bE2VqVeV1FAQ0w1zCB1dnz5IYpVvzHhAz4xnfV9nmzg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DfNOl7LW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jy877mHf;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E075D606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 22:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21E1606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 22:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DfNOl7LW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7FE1F031E0
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 22:20:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jy877mHf
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0551F01825;
+	Wed, 28 Oct 2026 22:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793226050;
-	bh=6k3mwGo0Ko38RJGbMaFKnc5cA44pMnEE+a+lrwIaTnI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=DfNOl7LW3mlO1WeVo+osAJO3xRBGgRYFDMESofUDg/nh+OSVwMsJgqiouTyQh88aH
-	 mfoO9cLgEeSp22LU2BmcfDzqmhaP586pfJHyCF5Ovq4Jl1DIregbBOS2ltflaVnzKM
-	 Zo6/YrcnijC9PGL5xoWAgPHidpUpyzHS436a4Hlj/JXYCnKPqjsi4w0hqYMraxIABu
-	 T7tqqnIYhNAsPvdWrbpgAiIt1n3MgMwaahTuaVc3tI+Hz4n2pjmLObCTj1l5ibZYzY
-	 1LvI+GQpJmVscNx6rEl2aCH4v6fvfP99SQ8jHLSGpu+W5+T3qVy1W2j2QvxeHCFJJP
-	 ppnoAUsgeDyRQ==
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-93f3c89594cso101186585a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 15:20:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBy69f+mjRjHvIwdSt6UhsfAtaY8A7+XSvG8Kofqv+m9h7Eajf1LhLL2jWT+EuF4vjjOiBot4hBbmbkH9+d93P3Yg14=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIlzqTKKrJC4GlDyT+90Mrlb11BpmNqg5wtxNwXmav+gpBpU5aS
-	/CVo55avLdGgnO+iXX7eEFJXLascrY9VYXP+Un2gxl0xXwRiCd5H+ZIEKx9DrKq+guQLEHOXMZD
-	DKfiFQpUNaNEoX+ww+DEoNHIlY2p42GE=
-X-Received: by 2002:a05:620a:29cb:b0:93f:3cb0:464b with SMTP id
- af79cd13be357-94408a92d54mr568990785a.49.1793226049819; Wed, 28 Oct 2026
- 15:20:49 -0700 (PDT)
+	s=k20260515; t=1793226242;
+	bh=TwvgzAdEr20eUmNpzrmKJfdu9EJe6GS1KE3+2fR27iU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Jy877mHf7sbZoBDKLysEJKGyjqPcAPf7EQTOFIyZAXni2QX7fCvXgviUEBHc7Pvo8
+	 X9IMevbClxGWVQiYuw1rvsOR50ZM8Xm63sia4I/Fby4ghbht2T6WtUbsYhf6SN2Db5
+	 g8yJ4V4D118eb+QHRymbVNgoKewBhm7vgGuxWOmN3T4Lq7reb0CtSEMgiiT3ZlOYwl
+	 5Y+kSxoj4YmZzlsKGYwLQ0W/lKocJuvfiLhViSkztVKMOflQi0OdIE6RgxrPoyoJmD
+	 lJwyEaErq/zxtwqMKAyig2jnQkQ75Sy85+5doV2ehLnCxqMmbNhK62coT4ZGiNvHNu
+	 rA8Wg8i8Ing4A==
+Message-ID: <sashiko-outbox-188499@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 06/10] tracing/osnoise: Split out per-cpu variable
+ resets
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Crystal Wood" <crwood@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261028220120.4005187-7-crwood@redhat.com>
+References: <20261028220120.4005187-1-crwood@redhat.com>
+ <20261028220120.4005187-7-crwood@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Oct 2026 22:24:01 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,48 +60,146 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261023011049.1164625-1-song@kernel.org> <20261023011049.1164625-8-song@kernel.org>
- <20261023093256.20d3e300@gandalf.local.home>
-In-Reply-To: <20261023093256.20d3e300@gandalf.local.home>
-From: Song Liu <song@kernel.org>
-Date: Wed, 28 Oct 2026 15:20:37 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
-X-Gm-Features: AclHuK-FDTrAy-23MCIT0G9xMBF8_Y6vMb52wr6WlZqzmScWbO6PAc8beSFR7FE
-Message-ID: <CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 07/16] tracepoint: Mark __do_trace_##name() notrace
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	live-patching@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] tracing/osnoise: unreset delta_start and arrival_time in osn_res=
+et_cpu()
+- [Medium] tracing/osnoise: race on osn->pid in timerlat_fd_detach() vs mig=
+ration check
+--
 
-Do you plan to apply this set to the trace tree (after the merge window,
-I guess)? If not, how should we proceed?
+commit fffc251bf1aed17ce8e75b3b4c7d5990c0ecad11
+Author: Crystal Wood <crwood@redhat.com>
 
-Thanks,
-Song
+tracing/osnoise: Split out per-cpu variable resets
 
-On Fri, Oct 23, 2026 at 6:33=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 22 Oct 2026 18:10:40 -0700
-> Song Liu <song@kernel.org> wrote:
->
-> > __do_trace_##name() takes the tracepoint SRCU read lock and calls the
-> > probes. It is called from trace_##name(), trace_call__##name(), and the
-> > notrace rust_do_trace_##name(). It is a plain inline function, so if
-> > the compiler emits it out of line, that copy is untraced only because
-> > inline implies notrace.
-> >
-> > Mark it notrace explicitly. No functional change.
-> >
-> > Assisted-by: Claude:claude-opus-5
-> > Signed-off-by: Song Liu <song@kernel.org>
->
-> Acked-by: Steven Rostedt <rostedt@goodmis.org>
->
-> -- Steve
+This commit splits per-CPU variable resets out of osn_var_reset() and
+tlat_var_reset() into osn_reset_cpu() and tlat_reset_cpu(), resetting
+per-CPU state whenever stopping a kthread or detaching an fd. It also moves
+the interrupt and thread tracking structures out of the zeroed group in
+struct osnoise_variables.
+
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index cd386c75926e4..1abe2c3507f76 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -237,15 +237,15 @@ struct osnoise_variables {
+>  	struct mutex		lock; /* covers kthread and fdd changes */
+>  	struct task_struct	*kthread;
+>  	struct fd_data		*fdd;
+> +	struct osn_nmi		nmi;
+> +	struct osn_irq		irq;
+> +	struct osn_softirq	softirq;
+> +	struct osn_thread	thread;
+> +	local_t			int_counter;
+> =20
+>  	struct_group(zero,
+>  		bool			sampling;
+>  		pid_t			pid;
+> -		struct osn_nmi		nmi;
+> -		struct osn_irq		irq;
+> -		struct osn_softirq	softirq;
+> -		struct osn_thread	thread;
+> -		local_t			int_counter;
+>  	);
+>  };
+
+[Severity: Medium]
+Can moving nmi, irq, softirq, and thread out of struct_group(zero, ...)
+without resetting their delta_start and arrival_time fields in
+osn_reset_cpu() leave stale non-zero timestamps across runs?
+
+In addition to count, struct osn_nmi, struct osn_irq, struct osn_softirq,
+and struct osn_thread contain arrival_time and delta_start. A non-zero
+delta_start is used to detect an active window in
+cond_move_irq_delta_start(), cond_move_softirq_delta_start(),
+cond_move_thread_delta_start(), and timerlat_irq():
+
+    if (!IS_ENABLED(CONFIG_PREEMPT_RT) && osn_var->softirq.delta_start) {
+        copy_int_safe_time(osn_var, &osn_var->thread.delta_start,
+                           &osn_var->softirq.delta_start);
+
+        copy_int_safe_time(osn_var, &osn_var->softirq.delta_start,
+                            &osn_var->irq.delta_start);
+    }
+
+Normally, delta_start and arrival_time are cleared to zero in
+osnoise_trace_irq_exit(), trace_softirq_exit_callback(), and thread_exit().
+However, all three exit callbacks return early when osn_var->sampling is
+false:
+
+    if (!osn_var->sampling)
+        return;
+
+If osn_var->sampling is cleared while a measurement window is open (for
+example, when timerlat_main() exits while sampling is still true and
+schedules in the next task via thread_entry() before stop_kthread() runs,
+when NO_OSNOISE_WORKLOAD or timerlat_fd stops while a task is running on the
+CPU, or when timerlat_tracer_stop() clears sampling from another CPU while
+a softirq or IRQ is in flight), the exit callback skips clearing
+delta_start and arrival_time.
+
+On a subsequent timerlat or NO_OSNOISE_WORKLOAD run, won't a stale non-zero
+osn_var->softirq.delta_start cause timerlat_irq() to misdetect softirq
+preemption and overwrite thread.delta_start on every period, or a stale
+osn_var->thread.delta_start corrupt the first thread_exit() duration?
+
+[ ... ]
+
+> @@ -2452,25 +2452,22 @@ static void timerlat_fd_detach(struct fd_data *fd=
+d)
+>  	if (WARN_ON(fdd !=3D osn->fdd))
+>  		return;
+> =20
+> -	WARN_ON(osn->kthread);
+>  	WARN_ON(fdd->thread !=3D tlat->thread);
+>  	tlat->detach =3D true;
+>  	wake_up_process(tlat->thread);
+> =20
+>  	mutex_lock(&tlat->detach_lock);
+> =20
+> -	osn->sampling =3D 0;
+> -	osn->pid =3D 0;
+> -
+>  	WARN_ON_ONCE(hrtimer_active(&tlat->timer));
+>  	hrtimer_cancel(&tlat->timer);
+>  	put_task_struct(fdd->thread);
+> =20
+>  	fdd->thread =3D NULL;
+> +	tlat->thread =3D NULL;
+>  	osn->fdd =3D NULL;
+> -	memset(&tlat->zero, 0, sizeof(tlat->zero));
+> =20
+>  	mutex_unlock(&tlat->detach_lock);
+> +
+>  }
+
+[Severity: Medium]
+Does removing osn->pid =3D 0 from timerlat_fd_detach() open a race window
+with trace_sched_migrate_callback() before osn_reset_cpu() runs?
+
+In timerlat_fd_detach(), waking tlat->thread and unlocking
+tlat->detach_lock allows the user thread in timerlat_fd_read() to finish
+its read path, call migrate_enable(), and return to userspace (or get
+pushed off a dying CPU during hotplug via osnoise_cpu_die() ->
+stop_kthread() -> timerlat_fd_detach()) before the caller invokes
+osn_reset_cpu(cpu) to zero osn->pid.
+
+While osn->pid still holds the detaching thread's PID,
+trace_sched_migrate_callback() checks osn_var->pid locklessly:
+
+    osn_var =3D cpu_osn_var(cpu);
+    if (osn_var->pid =3D=3D p->pid && dest_cpu !=3D cpu) {
+        cpu_tmr_var(cpu)->uthread_migrate =3D 1;
+        osnoise_taint("timerlat user-thread migrated\n");
+        osnoise_stop_exception("timerlat user-thread migrated", cpu);
+    }
+
+If the detached thread migrates in that window before osn_reset_cpu()
+clears osn->pid, won't trace_sched_migrate_callback() falsely taint and
+stop tracing?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028220120.4005=
+187-1-crwood@redhat.com?part=3D6
