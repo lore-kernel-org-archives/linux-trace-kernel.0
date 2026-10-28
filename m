@@ -1,54 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.3
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793151397;
-	b=grPDUNOr02bPRrFezxUWWKXRqUCf/cVmgPztJH56pCFgRhjLaeOHZG7/xani0iP64iSC
-	 ABmGwx09FoldqCbx4/wDqzBXq14pcvYv7o7OCdy1JQHEDBSPwReQ3rUJuwEESU2RAMLZE
-	 M38zlfXJPOgMsQywrBH16zTPtPa5eqTAWiPO+4kocAIZg3AP6WTDnkxcZwjUk9bdWPhTu
-	 S/pLq1/+zF40/KvEBanWZoVZ1VO+YAsVcM5IAN5q+CtYdyaFdha91OLYgC9zOzqYhc18L
-	 SV86SD1TUZDG2ohhqf7EWUNS975NrX5P/R9CKaGjJ/hg+NZYfq5Du4lPPPk+z/Afz0A==
+	t=1793158063;
+	b=AOuByMgtT/7uaf+JZgUHi4BvLKUnKdxIFFyXEen3/NHvVJDkQzKTvCEhKBjnRn54rlpF
+	 jdq6td7P4HsZhL5pRpHE4ZYLm+lc93QmH6/NSPv/mk0Tvg7UhzFjksrvs/fWfPscOS2lR
+	 p01DGNiLSx8P+7D1UDIWqOZLe/XbntVqVxsf401YS5V6DyuKkA11h5JZbKqCCzCkzje5W
+	 Iug0vp9G1yNWPSsx/lyf30ilCBGzsqwfA6kOaalL9q6U5VwlsD8aF6lmrX1Yc/+knyTMS
+	 ewlaYtkpD99sUTowWSgReFgyXydl06QqaUm/6Nm6Zic8z3eEnzNxnb3c/yoyynrXVVg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793151397;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793158063;
+	h=DMARC-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
 	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=5D7stKc56HS9FFceJOHD+aSTvyyeXeTrf5re3Zvqxu8=;
-	b=WOyA7w3P4/kdfUpkxRjigIZKUyFK7VPTbv6yz93WrrcRiQn9X61SYwgnYO0eNIDgu2cs
-	 BcXSlblslhmkhuFF9QPGdPZHZSXh4zaHBnrdDiHj0FLCxS6x0oc9ceq8p71zr7jUqDDti
-	 l68gQ/36qUv/LxFDTJrzbqHbLwsxxGkycyO9FCAr+i1Hecb0AEbi8lHyyd9rcI4DAiRup
-	 f5+QbjpTzIXrin6l+fUsGOYPCcXoI7AV4v+XoXhKaMHK6B/xR+mQOqIEQQhGDGUaLHCjE
-	 7bUoniyyyU2ElVN1unIoDLt9pRtvvj5uDCft0ySmN1QRTVRsOHGpI+KAh4aTqxBnwDQ==
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=YJZmD/Zi49UN7sLwX34mBzYQixZ1bT9Ts04aoLBSwKo=;
+	b=h4hufflR0DVHg3EN814o5OSdfeKElfOkSKM4Hrxw/nPPZIEiYEAha7fGSzVrGysL8jjz
+	 2mbxMTp65ujGVH5NU1bi9wrxsLb4AowMex6+BBBgwrwXvobVrmqcUeZoz8qzgo4sukRmN
+	 P4xFaZOaGZOeqXgFbisJmR8YYjI8K0GPOiP9n1dbLWcKGEneFQImug9/GA1LD+JTXRQQJ
+	 wxMTcBHrbRuecLBjDfwg7XgBjXisQyU868ocLdaaRgVWa7D3Cw8IMPgU8NVIhqKIF8pKw
+	 S4I9xLnpuLwBa4GP6rgtGmP4i9VZS1WYz2YZTR0NrGVLBwEfRiHdgczZ7al///gLtqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="J9yXC/Pt";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=S6RlbAN0;
+	arc=none smtp.remote-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27A606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 01:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C01606A31D;
+	Wed, 28 Oct 2026 03:27:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07C01606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J9yXC/Pt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84A91F01825;
-	Wed, 28 Oct 2026 01:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793151396;
-	bh=5D7stKc56HS9FFceJOHD+aSTvyyeXeTrf5re3Zvqxu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=J9yXC/PtXFCjVrYduyIdopJiOcwfqYjxqtPrdVtuvRMgCMwkQn77UyT0VZYQDmEfd
-	 r2sKR7ZQgIQbploC0nGh36apc/vY22nUcYdywdH1tpFteWkGdutItRNmWJOpoOhXJL
-	 wY2XfJk13IWh/Q8QwoX6GYswMgZ+Lc7nXFCPXYmyjB6IKWi+uIcGEaXGdnOtVp5Ie4
-	 i2dOpTUo6e+ryJmvE0WG9CfyEo30OMK8h+3Ueofmj8nSAYButecTlmRZDPqocrFGIh
-	 3wEAMhh0u4ZgTawqxcey0DDxcS6kRhagKx6dC11KjMEHNL0FCPdAf/3J72J7ty9KHa
-	 kWO3FyXsFNh7A==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: sashiko-bot@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 02/16] tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
-Date: Wed, 28 Oct 2026 10:36:34 +0900
-Message-ID: <undine-1793151394494774416-9d9d9da0ddabc611@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <sashiko-outbox-187301@kernel.org>
-References: <179314820431.684037.4147763044424284198.stgit@devnote2> <179314822364.684037.9099512445135198750.stgit@devnote2> <sashiko-outbox-187301@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=S6RlbAN0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
+	Content-Type; bh=YJZmD/Zi49UN7sLwX34mBzYQixZ1bT9Ts04aoLBSwKo=;
+	b=S6RlbAN0LOrbntaVGNNzoJ7aB+6MECf0HW0JE6ZdmdbkdWtXzX84Xbgp6Wg0C7
+	MKbjF7UZM1dYuDh/UpJztkbeKnHrQMQcE6QOKjGWORMayaZTlDS/gCg6ZjSqfgiq
+	N63gQThUVvd+p5q+XI2EsMxq3oBoTgAXIrw9gt42zMHJU=
+From: Chaosheng Qu <quchaosheng000406@163.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing: record jiffies in writeback events instead of computing age
+Date: Wed, 28 Oct 2026 11:25:24 +0800
+Message-ID: <1793157924.328974.4869096@163.com>
+In-Reply-To: <20261026084709.26f7737f@fedora>
+References: <179299543891.294518.18224691820856958686@163.com> <20261026084709.26f7737f@fedora>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,104 +57,120 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3jyZ8a+FqYjd8DQ--.30226S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXr1kKw4DXryrWry5XFWxtFb_yoWrCrW3pF
+	ZFyr9rKr4vvrW7Kw1kuay0qr1Uu3ykCFW7KF1UWFy7Z3Z5XFs5tF90gr1Fvwn8ArZa9342
+	va90vr95A3W8XrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07joHq7UUUUU=
+X-CM-SenderInfo: xtxfxtprvkv0bjqqikiqw6il2tof0z/xtbC5B0Ngmrha30gGwAA3Q
 
-On Wed, 28 Oct 2026 01:05:18 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] tracing/filters: unhandled zero len in regex_match_end_str()
-> --
-> 
-> commit 92251abf42afdb93bef9298fec46088f078a4aa8
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
-> 
-> This commit introduces regex_match_end_str() to handle suffix regex matching
-> on fixed-size string buffers using strnlen(), and assigns it in parse_pred()
-> for comm and static string fields.
-> 
-> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> > index 59a0d3ba72740..f7c067a58ba41 100644
-> > --- a/kernel/trace/trace_events_filter.c
-> > +++ b/kernel/trace/trace_events_filter.c
-> > @@ -1087,6 +1087,20 @@ static int regex_match_end(char *str, struct regex *r, int len)
-> >  	return 0;
-> >  }
-> >  
-> > +static int regex_match_end_str(char *str, struct regex *r, int len)
-> > +{
-> > +	int slen;
-> > +
-> > +	if (len < r->len)
-> > +		return 0;
-> > +
-> > +	slen = strnlen(str, len);
-> > +	if (slen >= r->len &&
-> > +	    memcmp(str + slen - r->len, r->pattern, r->len) == 0)
-> > +		return 1;
-> > +	return 0;
-> > +}
-> 
-> [Severity: Medium]
-> How does regex_match_end_str() behave when len is 0?
-> 
-> For the ftrace/print event, the buf field is defined in
-> kernel/trace/trace_export.c with a size of 0:
-> 
-> #undef __dynamic_array
-> #define __dynamic_array(_type, _item) {					\
-> 	.type = #_type "[]", .name = #_item,				\
-> 	.size = 0, .align = __alignof__(_type),				\
-> 	is_signed_type(_type), .filter_type = FILTER_OTHER },
-> 
-> Because its type is "char[]", filter_assign_type() classifies it as a static
-> string field while field->size remains 0. In parse_pred(),
-> pred->regex->field_len is set to field->size (0) and pred->regex->match is
-> set to regex_match_end_str():
-> 
-> 		} else if (field->filter_type == FILTER_STATIC_STRING) {
-> 			pred->fn_num = FILTER_PRED_FN_STRING;
-> 			pred->regex->field_len = field->size;
-> 			if (pred->regex->match == regex_match_end)
-> 				pred->regex->match = regex_match_end_str;
-> 
-> When a trigger or eprobe with a suffix filter (such as buf ~ "*foo") is
-> evaluated via write_marker_to_buffer() -> event_triggers_call() ->
-> filter_match_preds() -> filter_pred_string(), regex_match_end_str() is called
-> with len == 0.
+From 677560a14dae0d9581effc5cdb9375052902bb21 Mon Sep 17 00:00:00 2001
+From: Chaosheng Qu <quchaosheng000406@163.com>
+Date: Tue, 27 Oct 2026 14:28:09 +0800
+Subject: [PATCH] tracing: record jiffies in writeback events instead of
+ computing age
 
-Good catch... this may be yet another issue.
+writeback_sb_inodes_requeue and writeback_single_inode_start/() compute
+the inode age with:
 
-I think we need another different set of matching functions for dynamic
-string. Sharing it with static string (where len = 0 means zero length)
-and dynamic string (where len = 0 means variable length string) is
-a bad idea.
+	(jiffies - __entry->dirtied_when) / HZ
 
-> 
-> As noted in the comment above regex_match_full() (added in commit
-> 10f20e9f9da9 ("tracing: Have zero size length in filter logic be full
-> string")), a len of zero indicates that str is a NUL-terminated string, which
-> regex_match_full(), regex_match_front(), and regex_match_middle() handle
-> explicitly:
-> 
-> static int regex_match_full(char *str, struct regex *r, int len)
-> {
-> 	/* len of zero means str is dynamic and ends with '\0' */
-> 	if (!len)
-> 		return strcmp(str, r->pattern) == 0;
-> 
-> In regex_match_end_str(), however, when len is 0, the (len < r->len) check
-> returns 0 for any non-empty pattern, and strnlen(str, 0) also returns 0.
-> 
-> Should regex_match_end_str() check for !len and use strlen(str) in that case,
-> so that suffix filters on ftrace/print work as expected?
+inside TP_printk().  TP_printk() is not part of the recorded event: it
+runs when the trace is read back, so the expression is evaluated at
+formatter time, not at the time the event was recorded.
 
-I rather like to have regex_match_end_dynstr() in this case.
+It is also evaluated outside of the kernel: tracefs renders the format
+string once and userspace re-evaluates it.  A tool that has to resolve
+every symbol in the expression (trace-cmd and the parser in LISA both
+do) resolves the bare "jiffies" to its address, so the printed age
+becomes ((unsigned long)&jiffies - dirtied_when) / HZ, which is
+nonsense.  This was reported as a wrong "age" value in trace-cmd
+output:
 
-Anyway, we should have a unit test for filters.
+  https://bugzilla.kernel.org/show_bug.cgi?id=219839
 
-Thanks,
+Nothing in TP_printk() may depend on the state of the machine at read
+time, which is the same rule that keeps ktime_get() and friends out of
+it.
 
+v1 stored the age itself in TP_fast_assign().  Steve pointed out that
+the division then runs on the trace path, which is where the side
+effects have to stay small, and that recording the jiffies snapshot
+instead lets userspace compute whatever it wants from the raw value.
+Do that: save jiffies in TP_fast_assign() and keep the subtraction and
+the division in TP_printk(), where they run on the slow path.  This
+follows the same shape as xprtrdma_req's connect/reconnect fields.
+
+The new __entry->jiffies field is appended after the existing fields,
+so no existing field changes offset and trace consumers that index the
+event by offset keep working.  The "age=%lu" placeholder keeps its
+position in the output text, and the value it prints is unchanged.
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=219839
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Chaosheng Qu <quchaosheng000406@163.com>
+---
+ include/trace/events/writeback.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 13ee076cc..b7dfc9f7b 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -745,6 +745,7 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
+ 		__field(u64, cgroup_ino)
+ 		__field(unsigned long, state)
+ 		__field(unsigned long, dirtied_when)
++		__field(unsigned long, jiffies)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -753,6 +754,7 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode_state_read_once(inode);
+ 		__entry->dirtied_when	= inode->dirtied_when;
++		__entry->jiffies	= jiffies;
+ 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(inode_to_wb(inode));
+ 	),
+ 
+@@ -761,7 +763,7 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
+ 		  __entry->ino,
+ 		  show_inode_state(__entry->state),
+ 		  __entry->dirtied_when,
+-		  (jiffies - __entry->dirtied_when) / HZ,
++		  (__entry->jiffies - __entry->dirtied_when) / HZ,
+ 		  __entry->cgroup_ino
+ 	)
+ );
+@@ -784,6 +786,7 @@ DECLARE_EVENT_CLASS(writeback_single_inode_template,
+ 		__field(unsigned long, writeback_index)
+ 		__field(unsigned long, wrote)
+ 		__field(long, nr_to_write)
++		__field(unsigned long, jiffies)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -795,6 +798,7 @@ DECLARE_EVENT_CLASS(writeback_single_inode_template,
+ 		__entry->writeback_index = inode->i_mapping->writeback_index;
+ 		__entry->nr_to_write	= nr_to_write;
+ 		__entry->wrote		= nr_to_write - wbc->nr_to_write;
++		__entry->jiffies	= jiffies;
+ 		__entry->cgroup_ino	= __trace_wbc_assign_cgroup(wbc);
+ 	),
+ 
+@@ -804,7 +808,7 @@ DECLARE_EVENT_CLASS(writeback_single_inode_template,
+ 		  __entry->ino,
+ 		  show_inode_state(__entry->state),
+ 		  __entry->dirtied_when,
+-		  (jiffies - __entry->dirtied_when) / HZ,
++		  (__entry->jiffies - __entry->dirtied_when) / HZ,
+ 		  __entry->writeback_index,
+ 		  __entry->nr_to_write,
+ 		  __entry->wrote,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
+
