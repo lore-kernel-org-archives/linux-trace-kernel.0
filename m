@@ -1,94 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793180850;
-	b=HW+7uNvJAkIFzxP1XxMWDYkLXyuRFWUKtyA0M40DpM2+hld4XoShipa+NRXBzx8DmLxF
-	 aXI1qIlzUSwCpl2KZIsCes5zS6siFTYpnY3E10nUrzzhva1mUsRuoA88sdojTS+mDH7vc
-	 j+0FtFMbNb4LNWaHuom2CaBBrUosek6PV4YcizL3PL4bhyzom6f0Sj9XU0gszON7t5bLV
-	 3rqNieJy69aSkcZhmVyd5OHdu9pomXiu2Lqm14PdiTVMOkZITzHPtAcyYMjH0mJw8rqPa
-	 STGqcGu5yigRSLvJese0jugXy89oSpbaPzMcr4RVGAGpsqQgv3jfsyACKzWxYXH6yvw==
+	t=1793181597;
+	b=aWL2VimvF5pL8sbGumk1ApEkqgc0n1VdfzfG1ER8mxam+AKMraEWCbdSduAKf6x14FmB
+	 axCMGrNm3K8LJYKal1WzP474/rmgZY+ItL04oQRpgXd5qgdVfDay53pTDPA3Dy4HW5xU2
+	 O8Krs33v6L7F3H4MN2asydpuOn7GByee22PYb3jtqDpegCiuXO9So8/PB0luvcr9TAhBC
+	 s+KEvR2NExdbstNgL0ZP1/uiehi7cs9kW/nu2A+wUZjPPnAk/udAl5DluRDT6sXvALguc
+	 uA6ioOKW7df7U9lkxwsYK6gzKlnklQRdvQJ2aqkkzQkfLUdQusqxDca35eiZ8zvTJaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793180850;
-	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Subject:From:
-	 Reply-To:To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-MBO-RS-ID:
-	 X-MBO-RS-META;
-	bh=nKYFxQRH1vuVIe7/MLAy4kkLQU+A9Me4O9WKmx61f9U=;
-	b=OzdztJsnyFDv23c7OYM1Raqway8UBJONqD6R1XmlpEeQd4/iA7sAcWcfFftKEiAXalar
-	 o9pZBrk4YbSyM8PhoQO11Tk5z5KMmBBKzKz7Go3zUGaWqFm09V3PjFhmPF/bsdqwDJ/LX
-	 XrjcSIh3fFXQObCBwHHbzQHGcpiVRbNR3moECAh/igH2VUtkP5D3v9PKzsO6Q0qgY7y1d
-	 hrgNDoULJhlLk/+Yo2BLmpsjTkOBL9WmTab5qBjpTIFlUcGJiqvltEy6KXrdf7lHX8kxu
-	 Lf5u2UDjTimkGnx7Pg/Pk6YxwpnIpYG6WSLq/t9r22x1+jKoobjTmRANRlveEVtdjcQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793181597;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=4PURH1B9VR3wyETq8zfkWcWy50ocxSt1URto7TUlM3I=;
+	b=JADtadlMpBQ2AeSv8LvXMquSfzYTSu3Q3qYsyYVETzRGItU5Pcs/judJqK+KZ3PA6OId
+	 a/Fj2TUxG8gjZ0xAjAVkKZ9bUt/W/Wp4KD7tzzZPz8gddD9fUgQOJBkbqejaHHiVOwifx
+	 F5bHSwcl02VmJQeILLCBnH49TnC5JexT3hBmcsduUArL0PJoXjczJHRw5cEMecKFLs2Mg
+	 U5Bqxt57rxO/cncuj4oZxw/hpd4k/RbDKTlHa0XTI5NwYe6NFZTCfE+mKPCV3uaslbFvD
+	 rpMxHfR14LSXdzalxZYoLus19Y6ohKWUhjdMD6K0muqTmAGzz5sZ4lhdAi2taQHCX0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mailbox.org;
-	spf=pass smtp.mailfrom=mailbox.org;
-	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=wxh7nxPZ;
-	arc=none smtp.remote-ip=80.241.56.152
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="dNA9WxE/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9030E606A31C;
-	Wed, 28 Oct 2026 09:47:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9030E606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B950606A325;
+	Wed, 28 Oct 2026 09:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=wxh7nxPZ
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4jF2b05FVDzKnB8;
-	Wed, 28 Oct 2026 10:47:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1793180844; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nKYFxQRH1vuVIe7/MLAy4kkLQU+A9Me4O9WKmx61f9U=;
-	b=wxh7nxPZ3iBUYyzqOmx2XDE76ZphfykyCRuAosYPWP47z0Pzf1bVpl04m5X6WPVpxqDb76
-	C9IMwFNXAO0Bc/rF0AAjmptGHmYtscrD+MmJRaj/SMYdBhD9TAhIG4oNy7QPVoISU0+tSj
-	562hrglSu9820+OAFhoF3wrPOV73urXb1ouVgfb5bJhZdcOcsMoyOXcAKr1+nU1H2xdUCj
-	ukuSIDc2A/mpXaPld+JwbzLD3X9yYXpOQPYSOTLZX1z3YZZv6pKWrKVn0s2f0PVZWxFC96
-	6SS7e7Jgkb/AWiKJedqhGOu5sXW+OwHfal+83mB+gJZ1DHVXpTo7rR+UsLY3ow==
-Message-ID: <f9a47d563f896e0789fffa72df5847e2878cbe5e.camel@mailbox.org>
-Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
-	phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>, Jani Nikula	
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun
- Feng <boqun@kernel.org>,  Gary Guo <gary@garyguo.net>,
- =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
- Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
- Krummrich <dakr@kernel.org>, Daniel Almeida	
- <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, Onur =?ISO-8859-1?Q?=D6zkan?=
- <work@onurozkan.dev>, Boris Brezillon	 <boris.brezillon@collabora.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Date: Wed, 28 Oct 2026 10:47:18 +0100
-In-Reply-To: <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
-References: <20261020100034.759183-2-phasta@kernel.org>
-	 <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
-	 <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
-	 <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
-	 <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
-	 <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
-	 <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
-	 <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dNA9WxE/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A4341F031E1;
+	Wed, 28 Oct 2026 09:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793181597;
+	bh=4PURH1B9VR3wyETq8zfkWcWy50ocxSt1URto7TUlM3I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=dNA9WxE/kF5eFTFnG3rWHmpMzFJ+DcQkW6R/ctVAGiyfv+ZqyFcF0s3RTP26ioG3w
+	 JqcDqa8In0oBCpeaXqXH9/ecF3FAc++QoheKNavEQDI8Eb82PMKBwpM4yZy36vkioo
+	 Ibahi818Y5SvJIi0ezXNj/QsUNQoEDiZmjvuYUbazz7UVhQhYxVWvclCFXNfQDjVIb
+	 SvR7VNvU71h/se91+VLo1OUAaTnAmL2u/kMhdzv+57PW+cGxvmch8LhraoZ31w7c/R
+	 EkTSVnULmKNtYjOlarohYtRzYhkCPo+JG0jNaaalpF8u30xaQIsXMEHkHy14IDYdt4
+	 Kt/0O/O9RI7PQ==
+Message-ID: <sashiko-outbox-187711@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable
+ bpf_get_stack()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Feng Yang" <yangfeng59949@163.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261028093548.790977-1-yangfeng59949@163.com>
+References: <20261028093548.790977-1-yangfeng59949@163.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
+Date: Wed, 28 Oct 2026 09:59:56 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -97,191 +59,119 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-X-MBO-RS-ID: 16b7de5af4c5b86025a
-X-MBO-RS-META: rb53xxngg1k75mcmbijsukd3yebomd1t
 
-On Tue, 2026-10-27 at 15:59 +0100, Christian K=C3=B6nig wrote:
-> On 10/21/26 14:49, Philipp Stanner wrote:
-> > On Wed, 2026-10-21 at 13:53 +0200, Christian K=C3=B6nig wrote:
-> > > On 10/20/26 17:36, Philipp Stanner wrote:
-> > [=E2=80=A6]
-> >=20
-> > > >=20
-> > > > Nope, I want to protect shared data, which is the signaled-state. W=
-hich
-> > > > is currently a race-condition worked around with RCU (and sometimes
-> > > > with manually doing the right thing (locking!)) [1], stemming from =
-the
-> > > > fact that the fence's spinlock is not used consistently.
-> > >=20
-> > > The fence spinlock is consistently used for protecting the fence
-> > > signaling, in other words it always happens with the spinlock held,
-> > > same for adding callbacks.
-> > >=20
-> > > The only thing which happens without the spinlock held is the fast
-> > > path checking of the signaled and enable_signaling bits and as far as
-> > > I can see that is ok as well.
-> >=20
-> > No, it isn't. It makes the API fragile.
-> >=20
-> > 	commit c8a5d5ea3ba6 ("nouveau: fix client work fence deletion race")
->=20
-> This bug is exactly what I'm trying to prevent here.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] bpf: per-CPU bpf_raw_tp_regs corruption in bpf_get_stack_raw_tp_sl=
+eepable()
+--
 
-What is your proposed strategy for preventing it?
+commit c66538ad7075b69839a1969f72a7ea7eff53e112
+Author: Feng Yang <yangfeng@kylinos.cn>
 
->=20
-> This problem only exists because we call the backend operations with
-> the lock held!
+bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
 
-Nope, this particular bug exists because Nouveau thought that it can
-drop its reference when dma_fence_is_signaled() returns true, which is
-not the case, because the fence backend has a race condition there.
+This patch routes sleepable tracepoint and raw tracepoint/tracing BPF
+programs calling bpf_get_stack() to bpf_get_stack_sleepable() so that
+classic RCU read lock is held when accessing callchain entries and the
+helper is marked might_sleep.
 
-A race condition that was allowed for performance reasons.
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 14adfb85fdb2b..7887d1c00be83 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+[ ... ]
+> @@ -1705,6 +1727,33 @@ static const struct bpf_func_proto bpf_get_stack_p=
+roto_raw_tp =3D {
+>  	.arg4_type	=3D ARG_ANYTHING,
+>  };
+> =20
+> +BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepoint_arg=
+s *, args,
+> +	   void *, buf, u32, size, u64, flags)
+> +{
+> +	struct pt_regs *regs =3D get_bpf_raw_tp_regs();
+> +	int ret;
+> +
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	perf_fetch_caller_regs(regs);
+> +	ret =3D bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) b=
+uf,
+> +				      (unsigned long) size, flags, 0);
+> +	put_bpf_raw_tp_regs();
+> +	return ret;
+> +}
 
+[Severity: High]
+Can holding the per-CPU bpf_raw_tp_regs slot across bpf_get_stack_sleepable=
+()
+corrupt active register state or exhaust the per-CPU slots on the local CPU?
 
-> What nouveau does is to delegate the cleanup since it can't do that
-> in the signaling handler because of the lock inversion.
+In kernel/trace/bpf_trace.c, get_bpf_raw_tp_regs() and put_bpf_raw_tp_regs()
+manage a 3-slot per-CPU array indexed as a LIFO stack via
+bpf_raw_tp_nest_level:
 
-What signaling handler are you referring to?
+    static struct pt_regs *get_bpf_raw_tp_regs(void)
+    {
+        struct bpf_raw_tp_regs *tp_regs =3D this_cpu_ptr(&bpf_raw_tp_regs);
+        int nest_level =3D this_cpu_inc_return(bpf_raw_tp_nest_level);
 
->=20
-> This problem doesn't happen any more if you just completely drop the
-> approach of calling the backend operations with the fence lock held
-> and then re-structure the cleanup handling in Nouveau.
+        if (nest_level > ARRAY_SIZE(tp_regs->regs)) {
+            this_cpu_dec(bpf_raw_tp_nest_level);
+            return ERR_PTR(-EBUSY);
+        }
 
-ops->signaled() is typically not called with the lock held. You might
-be referring to ops->enable_signaling(), which is consistently locked.
+        return &tp_regs->regs[nest_level - 1];
+    }
 
->=20
-> > 	commit 7c703a7d3f2b ("drm/amdgpu: Fix one use-after-free
-> > of VM")
->=20
-> I already discussed that with Simona back then. Simona actually
-> explicitly rejected my approach to take the spinlock to check for
-> signaling. Pointing out that amdgpu is using the API in a wrong way.
->=20
-> The problem is that amdgpu doesn't track the callback structure and
-> so can't remove the callback. It's on my TODO list every since to fix
-> that miss use of the API.
+    static void put_bpf_raw_tp_regs(void)
+    {
+        this_cpu_dec(bpf_raw_tp_nest_level);
+    }
 
-You mean the issue is that amdgpu cannot deregister callbacks?
+Sleepable BPF programs using raw_tp_prog_func_proto() or
+tracing_prog_func_proto() run under rcu_read_lock_trace() and
+migrate_disable() with preemption enabled. When such a program calls
+bpf_get_stack_raw_tp_sleepable() with BPF_F_USER_STACK | BPF_F_USER_BUILD_I=
+D,
+bpf_get_stack_sleepable() -> __bpf_get_stack() only disables preemption aro=
+und
+get_perf_callchain() and callchain_store(), and then re-enables preemption
+before calling callchain_finalize():
 
-I don't see how that's related. The lock-unlock-cycle clearly ensures
-that amdgpu cannot continue while the fence is signaling.
+    /* trace should not be dereferenced after this point */
+    if (may_fault)
+        rcu_read_unlock();
+    preempt_enable();
 
-To clarify: our conversation circles around two partially independent
-topics:
+    return callchain_finalize(buf, size, trace_nr, elem_size, flags, may_fa=
+ult);
 
-a) the signaled-bit is read without lock-protection as a fast path in
-dma_fence_is_signaled() and
+Inside callchain_finalize() -> stack_map_get_build_id_offset_sleepable() ->
+build_id_parse_file(), the task can sleep on page faults or filesystem reads
+while still holding the per-CPU bpf_raw_tp_regs slot.
 
-b) the ops are not consistently called with the lock held.
+If task A on a CPU acquires regs[0] (nest_level becomes 1) and sleeps or is
+preempted inside callchain_finalize(), task B on the same CPU can call
+get_bpf_raw_tp_regs(), acquire regs[1] (nest_level becomes 2), populate
+regs[1] via perf_fetch_caller_regs(), and get preempted before
+__bpf_get_stack() disables preemption. If task A then wakes up on the same
+CPU and calls put_bpf_raw_tp_regs(), bpf_raw_tp_nest_level is decremented
+from 2 to 1 while task B is still about to use regs[1]. Any subsequent call=
+er
+on that CPU (another task, or an IRQ/NMI raw tracepoint program calling
+bpf_get_stack_raw_tp(), bpf_get_stackid_raw_tp(), or
+bpf_perf_event_output_raw_tp()) will increment bpf_raw_tp_nest_level back to
+2, receive the same &tp_regs->regs[1] pointer, and overwrite task B's saved
+registers before task B runs get_perf_callchain().
 
->=20
-> > Tell me one thing:
-> > If locking is the wrong approach, then how come it was added to
-> > literally all callbacks except for set_deadline()? Seems to me that it
-> > must have solved some issues.
->=20
-> Well, it's because concerns with the lock inversion brought up by
-> Alex and me was ignored and the patches merged anyway.
->=20
-> This is just another one of those DMA-buf design problems which would
-> have been fully preventable if I would have clearly NAKed that stuff
-> from the very beginning.
+In addition, if three sleepable tasks on the same CPU block concurrently in
+build_id_parse_file(), bpf_raw_tp_nest_level stays at 3 for the duration of
+the I/O, causing all get_bpf_raw_tp_regs() calls on that CPU across task,
+IRQ, and NMI contexts to fail with -EBUSY.
 
-My impression was more that central design criteria for dma_fence (like
-module unload of the driver who issued your fence, which is designed to
-live arbitrarily long) were ignored, there was no clear guidance for
-drivers how they should use what callback, and then driver problems
-were solved in dma_fence, for instance with this shared lock. So same
-story as with drm_sched.
-
-If *everything* would have been locked from the get-go, that would have
-forced drivers to design their locking correctly, and decide wisely
-what tasks they want to perform where.
-
->=20
-> Back then I made the mistake to believe the argumentation you come up
-> here as well and so I don't explicitly rejected that approach, but by
-> now we have strong evidence that this was a mistake and I'm trying to
-> fix that mistake ever since.
-
-Well, I am a different person with my own background that informs my
-thinking. Please keep that in mind.
-
-The "strong evidence" you claim to exist has still not been shown to
-me. I show you concrete bugs that we could have prevented, but the only
-piece of code you ever showed me where something would break is the
-list_del() in nouveau.
-
->=20
-> We should have never taken the lock for the callbacks in the first
-> place, this just made the implementation much more complicated and
-> caused way more problems than the few raised by putting the ops
-> pointer under RCU.
-
-Lock-inversions are not being solved by just not taking the lock, they
-are addressed by having good lock design. We recently solved exactly
-that in the Rust JobQueue, where drivers also reported lock-inversions,
-but we could eliminate them with just a few discussions, discovering
-that the driver does not need these locks when interacting with the
-JobQueue.
-
-Often enough btw the only object the driver really needs is the
-sequence number anyways, which can trivially be passed and shared
-around.
-
-Now with dma_fence, I strongly suspect that the problem came to be
-because of no clear guidance by dma_fence as to what the driver must
-and must not do in its ops implementation.
-
-The only evidence I have ever seen is the fence-list-lock, and it's
-just not clear at all why any callback would need access to that.
-
-
-Let's walk it through together, shall we?
-
-ops->release() and ->wait(): deprecated
-
-ops->get_XXX_name() -> never needs driver locks
-
-ops->signaled(): "Driver, here you read an atomic integer, the sequence
-number, and tell the fence backend whether this fence shall be regarded
-as completed"
-No need for any driver lock.
-If this particular driver also signals fences through an interrupt
-handler, it can take a list lock, then signal the fence. The ops must
-not do that.
-Why would a driver need both modes, sw *and* hw signaling? And why then
-is it supposedly the case that both paths need to keep a list updated?
-
-
-ops->enable_signaling(): "Make sure that this fence will get signaled.
-Register an interrupt or schedule a work item". These locks also don't
-interfere with the fence-lock.
-
-ops->set_deadline(): clock up the CPU frequency. The only implementor
-trivially does that through a work item, too =E2=80=93 after voluntarily ta=
-king
-the fence lock over the entire section.
-
-
-As you saw from our recent amdgpu discussions, the confusion of what a
-ops is even good for caused drivers to mess around with the fence
-directly in their callbacks, checking for the signaled state etc.
-
-It was too much freedom that has caused the trouble. There are no
-canonical solutions now.
-
-
-So except for updating the linked list in ops, can you show me any code
-example where a lock inversion would occur? I'm quite confident that it
-will turn out that the driver has no good justification for performing
-the related acts in the ops in the first place.
-
-
-P.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028093548.7909=
+77-1-yangfeng59949@163.com?part=3D1
