@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793148339;
-	b=f9F5uzy3vCGORDnFm1lbMw4jCebRgzZVCUmdA51BPkArNVVKtZvuxc3RnNlRUIN5Zu4K
-	 5RNhKJPTrLTcYmsdqzJqDRz9M1M3o9PjAzqPggC3jJzDHAgRYPjWFwpvD9b9w8g+icyp9
-	 BfBBC9Ao5IBopmj8jjutj1qyv4AVSxeyDkoZblCISUBWT/oXgK3d8wLbaL9AhHFxVAZPA
-	 HmnS8bajZVv28opLb1twCuAAKeOmpLS25dnycj+MsOXbXf0wayj3izzGZHrhIhsw8xGdM
-	 BAh3sSdTy2xRbKSkSbVaSZoY+AZI0M8CsvVJN0Q3M2uqf3wU7KrYPJiVruKOja/28kg==
+	t=1793148348;
+	b=YomqZPMrLde3LCv94tTQJhwMGnlqpVRhbd3DJC5LGdkIpIoR1KiePzfHFfcUfKggwMgp
+	 +W5Jw079UopP34wvP10U1/jZ7tM1LmboffwKLHZEfslhfvV9idDIrqfeM/kLQlcn9YVGi
+	 wJe7gxAohIhpZ/0t4IxXDmorKYZXDgmREVU66gdLAie8OUyF5NoKjT1XEmMW9jrgU7YTv
+	 vxEMB29FSh4srq9zEY53xCLBnNcxyiBSMZIy55dw71Y7ZTK4yELhdXVpABfkyiFpoC320
+	 BcKK27/Ur5CDaQMtduaIfGBbaVZkNymKM0dhMb6O7ZxtPqgItXtOImTCSdN+9x5EOIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793148339;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793148348;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Zikjmxn4blupE0+aVq/9mgn+mL2GyrCryi1Ub9ulwQc=;
-	b=FFO5MufPu/T+YU+h9ZCBh+3wQ8+KHIrYfroYXzL8Rh0geqpalpBfHtqX9q8mJwPOuvxP
-	 nvFk4GsrBdcaxtF9snXUc9DnK74glwLp3gBz2bCjJObJwAEmflgmJrjUQbIUxR2EHZDLe
-	 19vtsXuheioZHClRtZVObvgR4nf0mcqUR3EZigv9ERqpGGH3K0+XZV3ljyItx+sFDTqI+
-	 DR9vvWqPlhK88hR4WdUkLh8mDf10ONtcrnj3pRpovazEb1KyiV+s4Z/+vG3rK9n8gZxKQ
-	 nfOvu1C6gSTgecKwAVtSTeJChdOtQ7ggT7v3n8gMBHDcgFzxJ5FLmtFUbagTkoLuE2g==
+	bh=3Jnkd04CEyP0dWSx09HnzluUFZrxOekFX/gIfNQsPrc=;
+	b=4r4wyiyOH0XfIFnWNSfR9nEAFeya1xPSyaCnS4dsyTJTCwNNdBmJi4wp6tSkOExiGJtn
+	 xuiprW6ssxMzTtKXffEoQifoPZu5vqOX3oHqos/bXfSl4+9VOBom0SP8Di4P/vVmrC/NW
+	 z3BnCi2wZlwjEU0wT1DMIAjtcdSzUY3nDE9iW+nqU4dNvlUp5Zv2NlsSRNn19ZPmhIF/Q
+	 jJhZeJuRVnRKV/xopwz9Ji4CK+mHjsFmCng4twaJ1ZAlZ8TNFmoE2Sp0RbZ4DryF88+oD
+	 xPSQUOz6FAXu9RGUEX7xBYkyB1DGDexnENOiYO1BhPq3BxactJfxGOYwCK26DMKxHQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WYYpPTF4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CAHu6Igz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1029606A31D;
-	Wed, 28 Oct 2026 00:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4E0606A324;
+	Wed, 28 Oct 2026 00:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WYYpPTF4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69BD1F01825;
-	Wed, 28 Oct 2026 00:45:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CAHu6Igz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB911F01828;
+	Wed, 28 Oct 2026 00:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793148338;
-	bh=Zikjmxn4blupE0+aVq/9mgn+mL2GyrCryi1Ub9ulwQc=;
+	s=k20260515; t=1793148347;
+	bh=3Jnkd04CEyP0dWSx09HnzluUFZrxOekFX/gIfNQsPrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WYYpPTF4yChdo+9mswIHuw8bUIX1wVce7VmNfmwRtYdIU6O8ekDSWO/qH/OD7TzEn
-	 rLbQQGqCkmBhGjKb71sM5J9w3Dw7X+++ZnKMBGq21B+cCB00BnVA261pW2AZrSJqYd
-	 Aanz4shm4XGsn3hOYLofp7iL7CQjn31X3yG4yKMuHMJte6p9MN4kphU89r2IBCknYD
-	 w3mRKEEQWNH4GKj3tIpwX1/Yr7h4Nsue0DGBvl0JFCzoIMuNaReGQABGARYqCBAlZL
-	 5Lewg2bv3iqlhwWalO2fSk+IpP9GoxRy/bIfrjMfZqVZQ+dvM9sHFXidcjj/4G+ewi
-	 yCsrk+Cjxg3uQ==
+	b=CAHu6IgzfOcVwy1P/x02iVIC7/BY/x3VYyOjvVfVVJ9mK674WSw2jHHlqqlpZWfm/
+	 4RWN9iJ9gcbCULHXGdVSkm2kUawY2gtdR881bfSoollEg3RsRrDaDSCW7FSzekCHzJ
+	 HhE9ZclNfU84nsAdRJxFvoyWW7naDlR0f4aZYwOOoskKpp9efLzqyL3PphnmY4qLFy
+	 n6/sWpxbWO9gfQMBQOxLTEBAycvsaIwp9xi97c6tm7NePr3VTkf6StD6qdaPRbdu0r
+	 Q8fV2/pHa7yU85rkP6bVMhM2rl96z87hlD4MT1ckEDUN52xIoYvZcqNfdkXpn7fauN
+	 vOtbZPkbBc2uw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 14/16] tracing/filters: Fix error positions for CPUS mask parsing
-Date: Wed, 28 Oct 2026 09:45:34 +0900
-Message-ID: <179314833461.684037.17086962324116116493.stgit@devnote2>
+Subject: [PATCH v3 15/16] tracing/filters: Fix error position for within filter operator check
+Date: Wed, 28 Oct 2026 09:45:44 +0900
+Message-ID: <179314834404.684037.11531560120132558147.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179314820431.684037.4147763044424284198.stgit@devnote2>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
@@ -69,60 +69,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In parse_pred(), CPUS mask error paths report incorrect error positions:
-- Checking 'str[i++] != '\'{'\'' post-increments 'i' before calling
-  parse_error(), shifting the error caret one character past the
-  missing brace position.
-- In the CPUS operator check and comparison function selection check,
-  'pos + i' points to the CPUS operand or past it instead of the
-  unsupported operator.
+In parse_pred(), when the '~' operator is used with a 'within' filter,
+'pos + i' points to the closing quote of the operand rather than to
+the unsupported '~' operator.
 
-Check 'str[i] != '\'{'\'' before incrementing 'i', and pass 'pos + op_pos'
-for the operator checks so the error caret points accurately.
+Pass 'pos + op_pos' so the error caret points to the invalid operator.
 
-Fixes: 39f7c41c908b ("tracing/filters: Enable filtering a cpumask field by another cpumask")
-Fixes: 3cbec9d7b93d ("tracing/filters: Enable filtering a scalar field by a cpumask")
+Fixes: 7884b0bf098c ("tracing: Add "within" filter for call-stack-based event filtering")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v3:
- - Group error position fixes for CPUS mask parsing into a single patch
-   targeting commit 39f7c41c908b and commit 3cbec9d7b93d.
+ - Newly added to fix error position for within filter operator check.
 ---
- kernel/trace/trace_events_filter.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events_filter.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index b1b4f1a57dc9..291c9805e119 100644
+index 291c9805e119..bd54fa6e58ee 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1926,16 +1926,17 @@ static int parse_pred(const char *str, void *data,
- 		case OP_BAND:
- 			break;
- 		default:
--			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
- 			goto err_free;
- 		}
+@@ -2096,7 +2096,7 @@ static int parse_pred(const char *str, void *data,
+ 			unsigned long func;
  
- 		/* Skip CPUS */
- 		i += 4;
--		if (str[i++] != '{') {
-+		if (str[i] != '{') {
- 			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i);
- 			goto err_free;
- 		}
-+		i++;
- 		maskstart = i;
- 
- 		/* Walk the cpulist until closing } */
-@@ -2023,7 +2024,7 @@ static int parse_pred(const char *str, void *data,
+ 			if (op == OP_GLOB) {
+-				parse_error(pe, FILT_ERR_GLOB_WITHIN, pos + i);
++				parse_error(pe, FILT_ERR_GLOB_WITHIN, pos + op_pos);
+ 				goto err_free;
  			}
- 		}
- 		if (pred->fn_num == FILTER_PRED_FN_NOP) {
--			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-+			parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
- 			goto err_free;
- 		}
  
 
