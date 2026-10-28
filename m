@@ -1,93 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793158306;
-	b=Tu08bC3iUN8Uajf/8XZlRKMW4gHasEVP0H8/G0uDJXlvNb3/PrMmBtb4pVIbSiIZzBhW
-	 5EnCaH2L7TaapT3+8OYRbQGBCzbAZA0mkDaNUMTlGXmqj9bekT1rsQMhysJjIMyDlszGr
-	 tCmlCyssF9giWPHYidvXspt3igafSlzH/Jj71jsc52pyYbifL+uJ+VmR4jd+uESOyE56c
-	 PYZsbceL6I/7JGyeNJy4I5yi74jV0COiw9ww1Fg64I0FJ7NSsYI1MW0BAZ81ggu92EtOY
-	 uPJF/waf+XGADO/S3VutCGFZqSsCL7so4BVEalb6g6aUp7FrCoxR8dQq+6lWUeqVE/Q==
+	t=1793158309;
+	b=ztplNW9VC4J8wRTk9aFGiNut36bFV2yzh9A+H64u2JNmj1+0ZSOcNq/V+92gKUjZVmnj
+	 E8E2GVaBb9lXtEv9B8L4V5QQrm0327+vtEKUOiVrX4NMAQL8KSB6K2mtfhHtZwZi2nken
+	 +CLY04AkKHKFJaJ/Y/WxJV9p2Uh3gNYqiiDhbXsG39Zs4oddQUFPhHjMpSwtO6yeNqiyu
+	 RRw/RzDaeTZAVe54ygUsKrosH5ONoktcfJUmlp9CdTNGyUSMmC6aqnJMQOSMhfsNQTjBT
+	 9THtq2AB9BqeLxwHcG+9O6bbHwlTiyNVdVNm8jUyjUHZ6fe503Z9PCM5M3jhddWAedA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793158306;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793158309;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=MfmoCWntxjvUsJ5jQdE0fli1C/EPjSIgsdskzAxULLU=;
-	b=EY6frrArUCdorVWuhQmHIihd8iSC//e7jgUJVXvvzU6wJd0FTNCO6+xZWiyd8d/5Wb4h
-	 SBZUiLZ8NVVB0y5yoZr9B0OfR8Tbz9/RhdOk5AadDeto3ut0jQqqtsCeL3CJ/P3evxtea
-	 aWqkcch8gND8b7OeV5QHwrRj9DlXroPnkoYbiPHq+2eUTnnEoen4xO9Yhfb6FsjgJzfM8
-	 W1nv0tS85xDnwK4Z3QYGL1y4tzuNgoRCEVElVCKSWpv9iIBfZcu6tA0bhlfNTNs8JrQh2
-	 K/YWOGwHWAPjJ7BCjUH/7BDAbVmCIbNS2OMTDcsLYdeDlxD+qlhyKqyejF8TmiwK27w==
+	bh=XMTbYYVHlMzt/kOSKupfitaPTvvxuFfzu7jXp67o424=;
+	b=zz7WU72xgyLsG5ZIT53afYT39r9hQZnxXUA0aKbf1FgkKnpazjLlXnvSNJ1BA3r1zKYN
+	 H9HkSv7dgcBaTPuaVT0MvKDN3HGRVqXyvYNlfHqTFwU+L/AuaJHMi76RWMulit4Kc9jBf
+	 ZwtrNw+hqEiqd6AM1i+AvEXXe8zGtEtmC/y6I0O6UFPMw2h0IBQ0FXz2Oxoq4rPlJdRw1
+	 Fx2FDazLNhNtvnUjWuLFahR5+H0Hvs8/lf4a2ze76z4YwPOHK/V6Cqm2IEu13RBrcz3yZ
+	 0iNij5AJKcWnQWQIL9lPte1Sag56McCSM1eGRjneyffORNP7I9EnXGxQz190LWmn1Gw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ism9fz3i;
-	arc=none smtp.remote-ip=209.85.128.43
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xBKeCNf5;
+	arc=none smtp.remote-ip=209.85.221.44
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E8F606A323
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 03:31:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 73E8F606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD14A606A321
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 03:31:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD14A606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ism9fz3i
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso4901235e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 20:31:45 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xBKeCNf5
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48e04773687so174892f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 20:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793158304; x=1793763104; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793158307; x=1793763107; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MfmoCWntxjvUsJ5jQdE0fli1C/EPjSIgsdskzAxULLU=;
-        b=ism9fz3iddL8+FiO9jcwvJueqXy51UdSpEHoZ+RaRyPHfAv6q7SnK61TCZBa9qIT6f
-         L+fzMna4qndMiioKJV4ZVWatZmEhyXc2+EmhNQHW3l6vP/I7Wo9zSf0STFjilhh9tWCi
-         eLLdlj19UpxqCfQ4ax6CfVTaHnOyFzN0xnAApBKB9pf/kWmKiAmODe2Kww12drjmPg9K
-         4oruhUAJoSw/kKC6em2VdQKVmH1fStmxgJzGO6JIXxsXov3UIGgyk+k9iwdLIWCDmWwB
-         c43UjWt5W8pH1LCgxlOHt/79KuWbGnpbd5vUpJlXlpwdBi7Wg8jk8P4xabHqYZWdm4NX
-         n9oA==
+        bh=XMTbYYVHlMzt/kOSKupfitaPTvvxuFfzu7jXp67o424=;
+        b=xBKeCNf5ITTDcklqB6jjif7vTfdV2S6+gqmE3n+nD6xcvqqK/ms1k46RxlvyqTFTPR
+         tg0Ok2ZPztpGofsrbFwqltnbRcBObY0jQ2oT7bcsJihnVn0retaP6WmYvZSnZRafJaSF
+         lzyLC4cgf7vVmHVrhNe2lHXvKZCAavK4pVUVQDZuzJty1+0y8+MO92i2n+ZI9/LcRieA
+         AR+uOT9Na0OlkKSbgnEB3XdRgG3YkGA1EJrtpIOmode+Ttp1Ops99NyzsrbHJ2J7oiVg
+         ipm+uP9HWhXMDLxLU3Be7rLWH60b9UpOpalvYdsNG0Aj6oMjxel/K3CLNJhDAGVLQKnC
+         PdNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793158304; x=1793763104;
+        d=1e100.net; s=20260707; t=1793158307; x=1793763107;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MfmoCWntxjvUsJ5jQdE0fli1C/EPjSIgsdskzAxULLU=;
-        b=GbIQ3kMu25OgPHK3H0OnagRjrzsGSAS963OR9ySmRibgjFPKV0PJmceWNBccPqbNJU
-         ORLdXdRm5LZ9rDG5tUJgZh32WeGGAOtPQWssFlt4PJqh+yeinvDppleUkI4dvZEyVcTb
-         KALdH/T+UATHdQlMEOFgiwgwRvcCRYCLu/ac6k7JR4PIRgxitnha5hSrtYSJmfQWg2B1
-         X6+Uzj1ksHy3LflsjHZkBMb+N2KAL97lhhVUF3LbGVk8NVnlNmTXG2A2rJJ3BZXwL5oc
-         A0suUtc1dgQ+nHkscTqdW90ffbLNy03joTs90Bw4YXcXxFww6ozl8LykpZokgFK/HsA3
-         E6gA==
-X-Forwarded-Encrypted: i=1; AKwUvBws7y4u8bSUe9hZp+RJ4VaNEHCmo7mOGIuPrIqeAkR665mpiHcEDlDwbhjtWZPrrP1qT+eBB8nslPRzo+DM0LpSqRk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLzMJGXr8d0e98IhRR9tbjJWPJaK9tYWOHqrmJukocSHjgQEfLq
-	IDkDZwRVAQdkJXjeYHz5NBN54Mjg0Xesdk04uYcrKzIbI17jxIpEC+3U
-X-Gm-Gg: AYBFou24DTopuE78qEezXvI1JpYBSCTVAx1LQDyJs9luHCWZeBg6ncoqSN8PnJZ2Unr
-	y3tJ7Xabt55i/6oLUDna+3BbNY52vr+W9DAWF11lGFob+z8EeaSdDtgOtxOWCbv4gweqngqPPZU
-	/MCWRQlP/kBXr4fNsS6W3hQPXxvsf3eAUp/WW5E3ph+S2p+ojIhqsnIbBApvbMukovKSvilfVpF
-	8Bn8O3Ry3wvm3ULujEllFy+tDYBu+s8ahhPmrFtGXo40Za8IsOi3SRof+BNAvpnDqMdEofkX6zq
-	LbFvk31rQmoFitovKYJQ8pd7Cs7bKQPGKiMe0P9xtkoRw/CpNKSulTLE39OFYJyvgoHm09Wx8Kh
-	XdjvIi6hcCjMA3GsTiWYZ5ru/7Z1krIC3PbkwhIjSWIwS77WgkqefaIiy/nvkohLz0HsuiwJgVR
-	ltIPfYjgl8FNG5VgjKKzmX3tnsgoLRripDEIlVPxHyljlXpUmpICk95MzFYZ/Bwur5GSJ1iAlU/
-	tX9PYBE1J87xEFbxpzKZLrW94YyrbwzNihT5AXzsEx/bMTkgZJPUtmE1BlA+y0FHlNAGUuyc37k
-	feyybtmdrgYHfWpaYvMJA5xz3vJAG3CfKNEdxMHuaXxaM0l5co+ywi1afqnoeaq24IBVn6YVgyK
-	h4fK/6WZPno+a4f0sFYflh5V2VvpvhPvdJxBDlc9G+JLq/6Ma2nPFv0r8Won0MUanXk7+tDZmKK
-	Nild3cH0fvjvgRSpjC/vRHv0Wqzj0nQpHk
-X-Received: by 2002:a05:600c:6206:b0:4a1:f377:5c68 with SMTP id 5b1f17b1804b1-4a967e8c07cmr16606825e9.34.1793158303715;
-        Tue, 27 Oct 2026 20:31:43 -0700 (PDT)
+        bh=XMTbYYVHlMzt/kOSKupfitaPTvvxuFfzu7jXp67o424=;
+        b=X48hlO8IScUswBYw/hyB2fQpTlKk28ik8lgepCLKEdGcVqSxRMEUp5RpQoCnfMD7TA
+         Ul/RDYDmJe6J5/J+Tnmg5HGOM+STB0yQd/Sn050HOgbP+udK1vGbqK9Otr7v3kzPmmKJ
+         uZBzIbzBFA2ZCbvCP8DkmX9S3JkF/WPpRcdFQI7nVaVqxafgi5QZyqA2Z0v91vZUb121
+         fxtOw6a7U6GiXFPAcJcWIQgyAHX2VMLZQnbq51cfbnZvo1z+8XitKbvd/4WNAE3gWdNv
+         SLbgruPsLaxNQT9WhPwBcxHYIQknH+UVFh3ans/YDpHh2VDfCOoXM6DlLgsTUTv0tf9b
+         SMKA==
+X-Forwarded-Encrypted: i=1; AKwUvBxeN/hdRNh3zW6b5TqmqiCSDN47rw4lFZmL2PLjvzyVcmKrz8WXEd/MHa/iKdHfYRa7EUfKa1ZDMmhvP7pD5qnDgTY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJfO+CVfueloHRw5hEsyO/Ibrob6L+u0nT/HnUndqfLeyw/JUm0
+	8b87ds4eKAJvw6v/1LIjpjOBNW9FtHq0YBknGIbMcsiKvM2boM4BlDdW
+X-Gm-Gg: AYBFou1gnaHOXNIifl7Gihr3nxx1NHGO0xHjxLjTqF63QRyBIWKN7Yy4xa6QGL4LC3M
+	zUkpwQAniZOUau4xZ5ATQIG6y6oH7aWlk+niAelvuEqYq0T/iLLp/Z+pW58w1IpX2xIT/d4smhs
+	CNu4v1kMHcvzh2TxF3U0YBxgKWLBLnv0DScdc1LSHtuYZ6LNGQPjTMF1g2El6FqH1NUI59nkSkQ
+	Wbc3RdBoGw7P4m+BAdPPcPr1Xt6gHU6W4YlJyBNTRxCACAQFWacCXxCg9IqbdPZ5OW9qVJPuwWJ
+	GKbR6CbpYFNC3hM1/1mu6KdM1dULk/hQk42Cq5qOs4gc6YlR9oKdb/Ez0NIRXezqzREHKEUwgtm
+	Xt+LJpb35eTVuQo1b+qz5161pZP77KWRVHxT72Kzrpgg6c0qp86jwTUDslqe0EQ7B0gB+jO8rRj
+	/b7CBUw1Qw6hD5+dZYwsif5bn320AfcZYVD/HdTRuXkyvMwk0nfAmQQtmrA3wTiCPhQv6U6tnLI
+	WE/ToWbCFspuaQ1NGTy8ejoDK2EiwlFFsBtDUoYWJ2eWWW868M3ZYknV54r9zxcml8yCNmUdQEu
+	4Ti/gCcZumo2qltzQtTMbs4ttk4z6TpMOk0Ywj1CD8Desng0SwUecqghkEaV3MyHwrsDEcrk7My
+	lNksEga5P8XGEUuqZbqjiPYruqWCcNzy1kBNS9/HO2rGFZvBkLXyiZvvBDTDnm5HUDfojivb+Ri
+	MgwUdNntIQawrl++MpuqdSwyfuiuZjXU5Tt+sAowJ3r6jIU1Sx3o99Gg==
+X-Received: by 2002:a5d:6f13:0:b0:48e:4e00:b737 with SMTP id ffacd0b85a97d-48e5d56d4fdmr2944765f8f.54.1793158307173;
+        Tue, 27 Oct 2026 20:31:47 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-a45b-7d01-5035-b393-698f-53f0.310.pool.telefonica.de. [2a02:3100:a45b:7d01:5035:b393:698f:53f0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecdfd8dsm24290569f8f.56.2026.10.27.20.31.40
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecdfd8dsm24290569f8f.56.2026.10.27.20.31.43
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 Oct 2026 20:31:42 -0700 (PDT)
+        Tue, 27 Oct 2026 20:31:45 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Hongyan Xia <hongyan.xia@transsion.com>,
+Cc: Will Deacon <will@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
@@ -102,6 +101,7 @@ Cc: Hongyan Xia <hongyan.xia@transsion.com>,
 	Mel Gorman <mgorman@suse.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Hongyan Xia <hongyan.xia@transsion.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
@@ -115,10 +115,12 @@ Cc: Hongyan Xia <hongyan.xia@transsion.com>,
 	linux-rt-devel@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 01/13] arm64: Always inline raw preempt count updates
-Date: Wed, 28 Oct 2026 04:31:15 +0100
-Message-Id: <20261028033127.82193-2-kmehltretter@gmail.com>
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: [RFC PATCH v2 02/13] arm64: percpu: Annotate __kern_my_cpu_offset() as '__always_inline'
+Date: Wed, 28 Oct 2026 04:31:16 +0100
+Message-Id: <20261028033127.82193-3-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20261028033127.82193-1-kmehltretter@gmail.com>
 References: <20261028033127.82193-1-kmehltretter@gmail.com>
@@ -133,42 +135,32 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Hongyan Xia <hongyan.xia@transsion.com>
+From: Will Deacon <will@kernel.org>
 
-Clang can outline the raw preempt count helpers from noinstr callers into
-ordinary instrumentable text. Force the add and subtract operations inline
-so entry code performs the count update in its own noinstr section.
+Allow the use of per-cpu variables from noinstr functions by marking
+__kern_my_cpu_offset() as '__always_inline'. This will later be relied
+upon to detect stack overflow of the overflow stack from noinstr C code.
 
-This is the preempt-count hunk from Hongyan Xia's pending Kprobe noinstr
-RFC. Keep it as a separate prerequisite so the early-hardirq work neither
-hides nor claims that fix.
-
-Link: https://lore.kernel.org/all/c3a90368dd6c096af9d918e036a27728696fb8a4.1786603168.git.hongyan.xia@transsion.com/
-Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Link: https://lore.kernel.org/r/20260918161407.2300-12-will@kernel.org
 ---
- arch/arm64/include/asm/preempt.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/percpu.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
-index 75a592b7f47f7..f3a5c2cd1936d 100644
---- a/arch/arm64/include/asm/preempt.h
-+++ b/arch/arm64/include/asm/preempt.h
-@@ -41,14 +41,14 @@ static inline bool test_preempt_need_resched(void)
- 	return !current_thread_info()->preempt.need_resched;
- }
+diff --git a/arch/arm64/include/asm/percpu.h b/arch/arm64/include/asm/percpu.h
+index 3cc316091d665..105f659bf8061 100644
+--- a/arch/arm64/include/asm/percpu.h
++++ b/arch/arm64/include/asm/percpu.h
+@@ -37,7 +37,7 @@ static inline unsigned long __hyp_my_cpu_offset(void)
+ 		    "mrs " dst ", tpidr_el2",				\
+ 		       ARM64_HAS_VIRT_HOST_EXTN)
  
--static inline void __preempt_count_add(int val)
-+static __always_inline void __preempt_count_add(int val)
+-static inline unsigned long __kern_my_cpu_offset(void)
++static __always_inline unsigned long __kern_my_cpu_offset(void)
  {
- 	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
- 	pc += val;
- 	WRITE_ONCE(current_thread_info()->preempt.count, pc);
- }
+ 	unsigned long off;
  
--static inline void __preempt_count_sub(int val)
-+static __always_inline void __preempt_count_sub(int val)
- {
- 	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
- 	pc -= val;
 -- 
 2.39.5 (Apple Git-154)
