@@ -1,60 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793148357;
-	b=bTIKAPaH78BHFIerDFUwhtrlCeJmMr6iBK8YAPUXbQrgDUNlHtTWDputVM1Jh8adSp2D
-	 7W/3QpDodHERUgUXGaJcIzRkTHwpBbSIwQIumN871FDsG1Yr7VXf0pOcS2q0tzQ/qdZ/X
-	 +N1yKrTBnSPyyK2eO4RD0/MRRqHuYN14p/bLWWGK4rJPF6LBriT0TO0+4SXEFii5unZzl
-	 G4YrJ2KaakjWjnkcRW5Dp9wUScidRbqYMTKWfbTqfXjm8VaxD9Yx/HFxiCYaEqpSC4RTx
-	 qLdB4OuB7J2iEe+lioL9CkW8LIuIwTU1RSiwVAhROj1LD5juqLvsVD8qJ+yu63cJo9g==
+	t=1793149174;
+	b=Aw4LOOqJenGLc7lPruk27v0/qXfQTSb68zGQb4EggQCO74SHAEP0IeV+HUlp8/CX+Ag3
+	 B65x/C7odj+wl4FWsJ2s+/z9X7FkMrkljUEWKpbRfyCMaF5xBkg50SK0J+odWkTk6CNQ9
+	 rrjbGqKeZIyA6izQmSEL3LiBzPBBb7QY+a7DmF4nHobM9n7hm+E95Hg2/BFAOqwoKa7Iz
+	 b2yQ3wS/ah0GQtZEWVC/yT8lA518y007dCS6ygHyKz/I2lKcIH0ukeW3V+rc0zEmlsqw/
+	 TJ6k78BrSY7Nbn6ecOSeO4ZJzo9kd924RVH6G+i8dZHxceITbLHAlCqKFVCBv14zc7Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793148357;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=DWQxbmV0bH8re7GX2QHEPfKuuqupaaE79RPxwBK2nIA=;
-	b=CsVSjVNw7PUdI9AvVc53F8kyEs4EYOAWjox2dQCLyS+QY9kjLSo/0VOgrbhl93Mm0RR9
-	 LVIIQW4hIDU2ZBVfnCbXMchwdr0lXu3jibVyZfejROwC2HzkmzlrwN8sTYs/x0+0XL27G
-	 GswTIH7vGWBKSwYiL10VAhlmGW2JEpMoqo42NxoiHgxRiaOKQgjzWLQptRpf5ghvLyZoX
-	 spTRIqA3A9q6clWux1KUXPDe5002HDZyvUF6pHom+6f8CYVUux2cIod5e6seoOBlbSK/r
-	 U+1QEBZe+7dESueZvCSOlIc6InA8g5Wjlf0tNDuG3nW876vhWEZpCC2qbJ+mQM4lTyg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793149174;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=ml2xjQJmqz5iCIqIJIRvH+MPhWkpy3JYO1E2rR6asSA=;
+	b=jAVepPxADOx89hnjp1AEeuGx7DZuUeFaM3cJ379ZpxYXQDY0nAEtTsEFR76oet+D1Qwo
+	 y8PKKXObC0aDJupakB3wlENNVqQP/tqdthijp3LZEuspQCS0P/8ZzNIf5enzwI0tpo1Q3
+	 yS9HEA+NDYFkvSKIvOXnkj9mUDF9IhuxYri27PPgepQD7jyaCM7LoBpWPpKb4DHOQBFbp
+	 a+DAVnsCgZ3suyOCYEPsIkqWZY/K+986pJlKC/WLj4ch09wUkUcTiboCitzp17IJR5wRr
+	 BzdHRphltTJoChzhNsB1/MB3gO9mBdY89myx5TVt4Gjg1PIbJ1H7u4HWioqf+myd3vA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gu6mJ4RA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhMdMNog;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF4F606A31A;
-	Wed, 28 Oct 2026 00:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8C4606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 00:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gu6mJ4RA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720501F031E1;
-	Wed, 28 Oct 2026 00:45:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhMdMNog
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50AC1F01825;
+	Wed, 28 Oct 2026 00:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793148357;
-	bh=DWQxbmV0bH8re7GX2QHEPfKuuqupaaE79RPxwBK2nIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Gu6mJ4RAip16wkYgzDoTlI/LTzy82ccA1thYJeU6eprt/XgYoDTPw2ePddUizGfI/
-	 GvSN038TE3K5uru6mfy1QD2rrEtQh/jKbUTAdl+9nN/HnhLZHA2sNgJwzaUAAK3mwD
-	 FeI8371SOf/QDrcmb0yl4wvRLjwyyDXBiLmFYucVJV3AGeW6IXx1GfogKuFeGzBXTk
-	 IjsNKo/aIzBVuo2qLnWTxw/ire+CWYIWVMj865ijMA5soUYl6L1P9bQomz5PuTls99
-	 evsvFj67wdfAnhmHOa8CrNV7hDbOzfNjw7gZTzrQTou80jINKnqdfyGOjcFDd3LsQO
-	 lj7pOjSVgewLw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 16/16] selftests/ftrace: Add event filter syntax check test case
-Date: Wed, 28 Oct 2026 09:45:53 +0900
-Message-ID: <179314835316.684037.6225998891000249085.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <179314820431.684037.4147763044424284198.stgit@devnote2>
+	s=k20260515; t=1793149173;
+	bh=ml2xjQJmqz5iCIqIJIRvH+MPhWkpy3JYO1E2rR6asSA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=XhMdMNogOMsmNlDgYxnFsBsdzyWGoJUDEnRO8blXqGnHHqSCX2OSZ0GdPeyfA6Eoy
+	 g+v6MZC/ruNtaqVoC1rrwnV2l4zQc4m5VNhSvaeduVGAFBLRDuF2Y14e4uwwboEiN5
+	 dEgekodtGnLFTU2OLqJHK0fj4Yzyz+J5lv2//Esmt1ijT948/00D55+MwDiTIsLn/0
+	 7GUl49MuWrVy6x204daU5ppdh4n7oVRxLydxT5Cx15F9mURGOzj+8ZmoPJ1ZPtPOlB
+	 CRhtz9qKqJrdG1XHyQyG4fzUqa5qZd3gQzp7xwuKkxWbE8w/EDimeX0wIsfBcSg/ta
+	 HzW26pTtH7mzg==
+Message-ID: <sashiko-outbox-187295@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 01/16] tracing/filters: Fix regex_match_end() for
+ zero-length strings
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <179314821463.684037.6329696159956371930.stgit@devnote2>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
-User-Agent: StGit/0.19
+ <179314821463.684037.6329696159956371930.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Oct 2026 00:59:33 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,144 +60,74 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] tracing/filters: redundant check in regex_match_end() makes patc=
+h a no-op
+--
 
-Add a new ftracetest test case (filter-syntax-check.tc) to verify valid
-event filter expressions, error_log caret reporting for malformed filter
-expressions (empty filters, missing fields, unbalanced parentheses and
-quotes, dangling logical operators, invalid fields/values/cpulists),
-newline truncation on multi-line filter input, and error returns on
-invalid subsystem filters.
+commit 8e400c22f46c7fff9d91b8c8e837ab24dfa0f5cd
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v3:
- - Replace negated pipelines (! cmd) with explicit
-   "if cmd; then exit_fail; fi" checks to properly catch unexpected success
-   under POSIX sh with set -e.
- - Add test cases for empty string matching (prev_comm == "",
-   prev_comm ~ "").
- - Add test cases for out-of-range CPU IDs with CPUS{} comparison.
- - Add test cases for missing operands after operators.
- - Add test cases for empty operands and stray operators.
- - Add test cases for operand type mismatches and brace errors.
- - Add test cases for function event filter syntax checks (including
-   INVALID_OP and ILLEGAL_FIELD_OP caret checks).
- - Add test cases for multi-line input validation on event and subsystem
-   filters.
----
- .../ftrace/test.d/filter/filter-syntax-check.tc    |  100 ++++++++++++++++++++
- 1 file changed, 100 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
+tracing/filters: Fix regex_match_end() for zero-length strings
 
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
-new file mode 100644
-index 000000000000..02fb2be6e6eb
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
-@@ -0,0 +1,100 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event filter - test filter syntax error check
-+# requires: set_event events/sched/sched_switch/filter error_log
-+# flags: instance
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'event filter parse error' "$1" 'events/sched/sched_switch/filter'
-+}
-+
-+# Valid filter expressions
-+echo '(common_pid == 0)' > events/sched/sched_switch/filter
-+echo '((common_pid == 0) && (prev_pid == 0))' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ "*sh"' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ "*"' > events/sched/sched_switch/filter
-+echo 'prev_comm == ""' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ ""' > events/sched/sched_switch/filter
-+echo 'common_pid == CPUS{0}' > events/sched/sched_switch/filter
-+echo 'common_pid != CPUS{0}' > events/sched/sched_switch/filter
-+echo 0 > events/sched/sched_switch/filter
-+
-+# Empty or meaningless filter expressions
-+check_error '^()'						# NO_FILTER
-+check_error '^== 1'						# INVALID_FILTER
-+check_error 'common_pid ==^'					# INVALID_FILTER
-+check_error 'common_pid !=^'					# INVALID_FILTER
-+check_error 'common_pid >=^'					# INVALID_FILTER
-+
-+# Unbalanced parentheses and quotes
-+check_error '^(common_pid == 1'					# TOO_MANY_OPEN
-+check_error 'common_pid == 1^)'					# TOO_MANY_CLOSE
-+check_error 'prev_comm == ^"bash'				# MISSING_QUOTE
-+
-+# Dangling logical operators and empty operands
-+check_error 'common_pid == 1 &&^'				# TOO_MANY_PREDS
-+check_error 'common_pid == 1 ||^'				# TOO_MANY_PREDS
-+check_error 'common_pid == 1 || (common_pid == 2 && ^)'		# INVALID_FILTER
-+check_error '(common_pid == ^)'					# INVALID_VALUE
-+check_error 'common_pid == ^&& common_pid == 0'			# INVALID_VALUE
-+
-+# Invalid field, operator, or operand type
-+check_error '^no_such_field == 1'				# FIELD_NOT_FOUND
-+check_error 'common_pid == ^@'					# INVALID_VALUE
-+check_error 'common_pid == ^"1"'				# EXPECT_DIGIT
-+check_error 'prev_comm == ^0'					# EXPECT_STRING
-+check_error 'common_pid ^~ 1'					# ILLEGAL_FIELD_OP
-+
-+# CPUS{} syntax errors
-+check_error 'common_pid ^> CPUS{0}'				# ILLEGAL_FIELD_OP
-+check_error 'common_pid == CPUS^0}'				# MISSING_BRACE_OPEN
-+check_error 'common_pid == CPUS{0^'				# MISSING_BRACE_CLOSE
-+check_error 'common_pid == CPUS{^}'				# INVALID_CPULIST
-+check_error 'common_pid == CPUS{99999^}'			# INVALID_CPULIST
-+
-+# Function event filter errors (if supported)
-+if [ -f events/kmem/kmem_cache_free/filter ]; then
-+    check_kmem_error() {
-+        ftrace_errlog_check 'event filter parse error' "$1" 'events/kmem/kmem_cache_free/filter'
-+    }
-+    check_kmem_error 'call_site.function == non_exist_func^'	# NO_FUNCTION
-+    check_kmem_error 'call_site.function ==^'			# INVALID_FILTER
-+    check_kmem_error 'call_site.function ^> 0'			# INVALID_OP
-+    check_kmem_error 'common_type^.function == 0'		# ILLEGAL_FIELD_OP
-+    echo 0 > events/kmem/kmem_cache_free/filter
-+fi
-+
-+# Multi-line input with non-whitespace characters after newline must fail
-+if ( printf "common_pid == 0\ncommon_pid == 1" | \
-+     dd of=events/sched/sched_switch/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+if ( printf "common_pid == CPUS{0\n\"} && common_pid == 0" | \
-+     dd of=events/sched/sched_switch/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+
-+# Trailing whitespace characters after newline are permitted
-+printf "common_pid == 0\n  \n\t \n" | \
-+    dd of=events/sched/sched_switch/filter bs=4096 2> /dev/null
-+echo 0 > events/sched/sched_switch/filter
-+
-+# Subsystem filter must fail on invalid filter expressions
-+echo 'common_pid >= 0' > events/sched/filter
-+if echo 'no_such_field == 1' > events/sched/filter 2> /dev/null; then
-+    exit_fail
-+fi
-+if echo 'common_pid == 1 &&' > events/sched/filter 2> /dev/null; then
-+    exit_fail
-+fi
-+if ( printf "common_pid == 0\nfoo" | \
-+     dd of=events/sched/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+
-+# Subsystem filter with trailing whitespace after newline must succeed
-+printf "common_pid == 0\n  \n\t \n" | \
-+    dd of=events/sched/filter bs=4096 2> /dev/null
-+echo 0 > events/sched/filter
-+
-+exit 0
+This commit adds an early return in regex_match_end() when len <=3D r->len =
+to
+avoid underflowing len - 1 and accessing the input string when len is 0 or
+smaller than the pattern.
 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_even=
+ts_filter.c
+> index 5e74d2dae40a3..59a0d3ba72740 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1075,8 +1075,12 @@ static int regex_match_middle(char *str, struct re=
+gex *r, int len)
+> =20
+>  static int regex_match_end(char *str, struct regex *r, int len)
+>  {
+> -	int strlen =3D len - 1;
+> +	int strlen;
+> =20
+> +	if (len <=3D r->len)
+> +		return 0;
+> +
+> +	strlen =3D len - 1;
+>  	if (strlen >=3D r->len &&
+>  	    memcmp(str + strlen - r->len, r->pattern, r->len) =3D=3D 0)
+>  		return 1;
+
+[Severity: Medium]
+Does this change have any functional effect in regex_match_end() in
+kernel/trace/trace_events_filter.c?
+
+In regex_match_end(), len, strlen, and r->len (defined in struct regex in
+kernel/trace/trace.h and initialized from strlen(search) >=3D 0 in
+filter_build_regex()) are all signed int variables.
+
+When len is 0, strlen =3D len - 1 evaluates to -1. Because both strlen and
+r->len are signed ints and r->len >=3D 0, the existing check:
+
+	if (strlen >=3D r->len &&
+	    memcmp(str + strlen - r->len, r->pattern, r->len) =3D=3D 0)
+
+evaluates -1 >=3D r->len, which is false and short-circuits before calling
+memcmp() or dereferencing str.
+
+More generally, for signed integers len >=3D 0 and r->len >=3D 0, the new c=
+heck
+len <=3D r->len is equivalent to (len - 1) < r->len (i.e. strlen < r->len),
+which is the exact negation of the existing strlen >=3D r->len check. With =
+the
+early return in place, strlen >=3D r->len is also unconditionally true and
+redundant.
+
+Since the pre-existing condition already prevented out-of-bounds access when
+len =3D=3D 0 or len <=3D r->len, is this patch (along with the Fixes and st=
+able
+tags) necessary, or was a different change intended here?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179314820431.684037=
+.4147763044424284198.stgit@devnote2?part=3D1
