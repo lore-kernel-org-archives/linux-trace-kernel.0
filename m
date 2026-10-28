@@ -1,57 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.143
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793226243;
-	b=QG/xvB9xcw0rNmuiDwQwtMQBFNoX1UhV+uOVMJ0E9WR5+R2yalvQ72n6WU58DeMe/Tbj
-	 WfJ/6o36i8NWac40x3AfNOWax7CDz52vnealhy66KuRQs2LMRbt66D+jjKpnwEeE3oLov
-	 Q7RAh4AUtv9ZcO2xebvKzorQc3ntaiQJkPgKq3KSK10n9lt9rZWm3NLUelfNOCh7/R3tW
-	 tqr0DT4OisQJ7IyyPVSMOgxVnDBwlQucOsIkSGdrgPK7Qwo/bhb8LyHPAEUHbxtqoX71H
-	 Ne2nx3mRlfD5uLn/XTW+y8VertRcM5xOpej+4Bdau3bqV3roP5IKpQo1i/z3wxeNVAQ==
+	t=1793229271;
+	b=BWi3ubhTFeZ8P9qKdHOl86Za/ziCIsK0CNM79RDXIHXn3WEtojyAakfDSt9oEJ4/HbMT
+	 TyWxIo6N2M5k2Zpt2FZZ4QMLQVOzT44LiNv1rh7kG412e0jol1JnlWSUePJrH5SDE4Yqt
+	 TQCFC3C7npxN1KSh45weEHRBwTv8oH7/bEQZuBdzcQmUY/D5in9o1b34h8aL6+soKQUYg
+	 87+qU0qIKwqOR9SuVm25jZ4/KLhN3/BapdmY0mu5QS8M//WviNJsc+49PnU55LQKA1GME
+	 ZeM8PbQAe9e95oIFzIHg1ZCpA1m5IeiHMii22+nY6DAQw4qU8zyfLYmiD7HvdgYrmUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793226243;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=TwvgzAdEr20eUmNpzrmKJfdu9EJe6GS1KE3+2fR27iU=;
-	b=fPi++QwRdu6AMASt6F3POm6K9SOJDEiD6+0dquCLikd077zlghhBk+6okGRVxa8sOKS1
-	 iEL9uHbreySu+W6Z8PmPSlwWKklfPn62XTTGb96YqVQdzs1Cegw6V2mAoNn/E8wrvEx9s
-	 XVnz4LcYgFBTg39dK+z6mn6EtUreWSHbjKkRuvWBo9HuaR0mbXG9jos81PxDTGyg/jwZ1
-	 bSoKyYkIQ7d/Yr6lVYZ7aaSbPFQGY0QPqRq4/7nPTh5jDGADkGwT2jjRdVqcnGmhl6uMz
-	 qxoCdVF/wd7o0bpEMICzW1Z2bE2VqVeV1FAQ0w1zCB1dnz5IYpVvzHhAz4xnfV9nmzg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793229271;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=;
+	b=3xdL8y7V9/l67MNetLTKs/VXYsjFGZ6uLFpb4m3qd6oXbKgXU1Qn7nyupGIqh7SYRmoU
+	 qq9IfRhaP9Zuoq3PF6l5UoATWTbWV2+Ea+SYHyeL2jh9eUfOxCFJIACDXEFgoFa+cvJ7b
+	 lIklufuxDzvhgPHzAPEyEhQVHSq2kAqnViRuj7Lv7hHyt8ukEDK/0Bcc1rUDKqLurfdnV
+	 RugJaEw32QRDjh+xTySpdSrS1GEn/+Uv6plivvfT8LYecIwecTJpvc/3gTfL53JRiMJ1H
+	 86xr6qu3cjyQpModY4EYERh3Qnj3NdWNViIV3HrfWGyy9/OZ1KrYqCHdhSeHboqQ79A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jy877mHf;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=arndb.de;
+	spf=pass smtp.mailfrom=arndb.de;
+	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b="HJ/9oA4h";
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=F4QP1K0C;
+	arc=none smtp.remote-ip=103.168.172.143
+Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21E1606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 22:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7EC606A323
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 23:14:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA7EC606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jy877mHf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0551F01825;
-	Wed, 28 Oct 2026 22:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793226242;
-	bh=TwvgzAdEr20eUmNpzrmKJfdu9EJe6GS1KE3+2fR27iU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Jy877mHf7sbZoBDKLysEJKGyjqPcAPf7EQTOFIyZAXni2QX7fCvXgviUEBHc7Pvo8
-	 X9IMevbClxGWVQiYuw1rvsOR50ZM8Xm63sia4I/Fby4ghbht2T6WtUbsYhf6SN2Db5
-	 g8yJ4V4D118eb+QHRymbVNgoKewBhm7vgGuxWOmN3T4Lq7reb0CtSEMgiiT3ZlOYwl
-	 5Y+kSxoj4YmZzlsKGYwLQ0W/lKocJuvfiLhViSkztVKMOflQi0OdIE6RgxrPoyoJmD
-	 lJwyEaErq/zxtwqMKAyig2jnQkQ75Sy85+5doV2ehLnCxqMmbNhK62coT4ZGiNvHNu
-	 rA8Wg8i8Ing4A==
-Message-ID: <sashiko-outbox-188499@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 06/10] tracing/osnoise: Split out per-cpu variable
- resets
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Crystal Wood" <crwood@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261028220120.4005187-7-crwood@redhat.com>
-References: <20261028220120.4005187-1-crwood@redhat.com>
- <20261028220120.4005187-7-crwood@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 22:24:01 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=HJ/9oA4h;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=F4QP1K0C
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailflow.phl.internal (Postfix) with ESMTP id 0627F13802F1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 19:14:29 -0400 (EDT)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Wed, 28 Oct 2026 19:14:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1793229250;
+	 x=1793236450; bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=; b=
+	HJ/9oA4hbL+gy2W2kMtoUPBRMb9eb02SBFs9WSPPnJVSTb2YkROErs+OQKZmTQsa
+	/HAx4OZA4I59jgFxYJGn9YUl2KYjlgqWA7GFaoY0wylZIVB4q1nbAUDpdfa4o09t
+	WWsqQ5J1DWjqWCqo8kyeajw9PZ0cA8oUWKxPt9aRyHcwwDWhjT5OXeZ7mzVSm6HX
+	r8xlrtYfvkTPlDqPvGK4K2sLrtKGVkdLYmvyYHm27NOyz+6WOId+oJ9OacAGyQMg
+	xaUbbMWZwFjs9YfqBlQ6P2T1ZylMdfFcchf1+nt57spZu/nWs3smfEeZfMCE+LAv
+	EscA093JciZyQqQR/verjA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793229250; x=
+	1793236450; bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=; b=F
+	4QP1K0CA3b/8rkN/0r9Jiljf/MNNz1l2g0iDRWxKMMXIk/c7/kFyNtXScKPTH8xZ
+	pWV5M22SkLFbtNBXoXgEqBmV66mY3WCzF6Prp9k01J3kHgIjwKosS/v8fRcBKDeI
+	IZnXLmSEnOQ6f/mgh+HcFPZccEDPEnEMJvUTH5oJHp5fU600Mt9BlUy9rSuvE/15
+	r6wcZTudJ2H68Cbj0qUQ59Y4a0bBqlXe6YjFrnDkPcIPqzgKQB4C0a1eDq8lMKJd
+	8zzbSsKUyGTI11IW8FG5nZm4UeKwpveeux55SiqnEKlzQKCec6dkF9MOMvuvE3ZH
+	xQ7+m56qYDDn/w9gI1vIg==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1793229250; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:d8Om/qx82AKOzrzNx2qz3rLW9DhKWnrtUztsDP+kAujhqRm
+	x+4x0kGu7IhMJbpIPJYOkd9UtiCzzCxVth5B+D6TFCw7wCDFjLvXEE7VqIuJgd7Y
+	z07BvfbayT3CjKaKQbIwBTSZAebltUueIO5hElk8QZHEJIi/GwMgbf2NK4POFr/J
+	xol5crtoKc/XBaC4G72RXthtNkz9L6U9cJgF5pGScxwdYlT+ZDU2eRh+XEFgyx7l
+	Cb1A7LZFtLCAQMwAGmtVJjXSqLsLv7a8esMrB2Nzrl6pIF8+WC8b4ALMbq0x0dF9
+	A66zCOmomkVmns/bPTuJF1zWJALKM8fdQT3hB7Q==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
+	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:1ox/+T3m0kOEAlmq1sGFbMgtCHtFlHB6pbQZya3sc78=:3uzdn1y57rhQviNcmBHgc6VsykPb90eUb7QRIui7pyA=;
+X-ME-Sender: <xms:uIHiagz5NZKzNbUpd03HG5vXYGfXVtC_KWUDGUCYSoiONAiEqrFnUQ>
+    <xme:uIHiavGlWpmT8co8loBrIMpSoDTcUgvQQ9m62webm9VRn1pGNdgefR57QudOBjngy
+    jNYgqv6h-RF3HivHRPEmVDPjxX2_vFOg75DVB2XQ-_x1lQ1SdeoI9Fd>
+X-ME-Proxy-Cause: dmFkZTEIv3O/hjA+DS1Gn0fVIHXS/AlrjN17sOycg4LFHdjHUhYgnSW9A9AfSzFMp/tRm8
+    XfzEySVBTxN8zIPtS+CBPtsSP6JNszBAZNX5W9UfT6bJN/vk/EOs8PaPWJeniA9XSfocWz
+    ftw6UyZ82qNvgXYFyKx0TpuXs6v45cKeeqQd8Mpq+fygU/HDIH1Cl55hzEiOly+Hq4Lmva
+    Mymau3PyFPZn57CVBaS63qJjDtn72IWwCaMsSnq0xiuo9pwYW5Q8wmSZpK0gpir1EDpvKi
+    gMehYxBD1ROulWm68oebxW1gk4S9kv3puG4HMihu+ei8PgnmJ2t0Lgup3TXw41U8PLDWsK
+    lS3YQ4A9PipsOmhEztB5/SlxefvJ1nc2wZmxLHv6g2J9A2gE1rUvs5VgiZvup5xsiNLNWa
+    oCb02kALZx9kVU0Pbtlg1t5Wm2h1SbQ5sBYXcRcIPXKEnpkzBWuUWGS/IZuLCyeSskFdN4
+    4zzXKs6wdkeXLrcX2HN20wB6cnvglYFjzZpBZU/958a1bdaRLtaX1oa7NrbEeIe+Oi76LR
+    sBgOLQlP7wp8klAd+GM8pibMeyBYQiX0sOJVu/JcWhO8d3+qVoN1NucM4DAHeS/nLHASOa
+    Od1p7CERwQ/XC73A0PBBx5FIjswIECwC2i7xersOpHk9io1VqHTZq13jr8Pw
+X-ME-Proxy: <xmx:voHiarhT6uMUhmm_U_iPa7YbilWgfR-kEMAw9AaIdneW7rGVZLPpEw>
+    <xmx:voHiahPLWYEUdHWB3dFXUZ3sZzMV7pgFvvp3hwS9J2O20euYSZk0JQ>
+    <xmx:voHiavW7HwyLicLjcznxZnjDILSFDs8HfztwqWvl1HyOzTj2E8i-WQ>
+    <xmx:voHiauAnpXc7yD4RMne4mY95VUK1oeWFxoQIS-UMCuMdj932dAInNA>
+    <xmx:woHiavrbcCXzohZqImWksNq-zvdo8ZPbhv-nacyxu0TrfbZLEl9kZl0d>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id A817332A0093; Wed, 28 Oct 2026 19:14:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,146 +114,191 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-ThreadId: AUJ1OXWu3nCJ
+Date: Thu, 29 Oct 2026 00:13:29 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Houghton" <jthoughton@google.com>
+Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Pavel Begunkov" <asml.silence@gmail.com>,
+ "Alexei Starovoitov" <ast@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
+ bpf@vger.kernel.org, "Daniel Borkmann" <daniel@iogearbox.net>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "David Sterba" <dsterba@suse.com>, io-uring@vger.kernel.org,
+ "Jim Mattson" <jmattson@google.com>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ kvm@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>,
+ linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, "Lorenzo Stoakes" <ljs@kernel.org>,
+ "Chris Mason" <mason@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, "Michal Hocko" <mhocko@suse.com>,
+ "Ingo Molnar" <mingo@redhat.com>, "Martin K. Petersen" <mkp@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "Sean Christopherson" <seanjc@google.com>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Thomas Gleixner" <tglx@kernel.org>,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>
+Message-Id: <32fad21b-5bad-4640-97df-ef0f638cd9e9@app.fastmail.com>
+In-Reply-To: <20261027231728.1466446-1-jthoughton@google.com>
+References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+ <20261027231728.1466446-1-jthoughton@google.com>
+Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
+ current->mm is NULL
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] tracing/osnoise: unreset delta_start and arrival_time in osn_res=
-et_cpu()
-- [Medium] tracing/osnoise: race on osn->pid in timerlat_fd_detach() vs mig=
-ration check
---
+On Wed, Oct 28, 2026, at 00:17, James Houghton wrote:
+>>
+>>  - does there need to be any compile-time configuration to skip
+>>    the extra checks and/or the warnings?
+>
+> Since patch 10 moves the warning out of line, it costs nothing on the
+> fast path, so making the WARN configurable wouldn't save anything. The
+> question is really whether the mm check itself should be configurable,
+> and that check is also what makes the access safe.
 
-commit fffc251bf1aed17ce8e75b3b4c7d5990c0ecad11
-Author: Crystal Wood <crwood@redhat.com>
+Right, makes sense.
 
-tracing/osnoise: Split out per-cpu variable resets
+> The text size increase seems manageable[1], but it would be great to
+> hear other people's thoughts. For the runtime cost, I'll do some
+> performance testing. My guess is that a load of current->mm and a
+> well-predicted branch per user access will be negligible, but I'll get
+> numbers.
 
-This commit splits per-CPU variable resets out of osn_var_reset() and
-tlat_var_reset() into osn_reset_cpu() and tlat_reset_cpu(), resetting
-per-CPU state whenever stopping a kthread or detaching an fd. It also moves
-the interrupt and thread tracking structures out of the zeroed group in
-struct osnoise_variables.
+Sounds good. I agree this should not have much of a performance
+impact, and for the size it is probably as good as it gets without
+a major rework of the lazy mm switch.
 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index cd386c75926e4..1abe2c3507f76 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -237,15 +237,15 @@ struct osnoise_variables {
->  	struct mutex		lock; /* covers kthread and fdd changes */
->  	struct task_struct	*kthread;
->  	struct fd_data		*fdd;
-> +	struct osn_nmi		nmi;
-> +	struct osn_irq		irq;
-> +	struct osn_softirq	softirq;
-> +	struct osn_thread	thread;
-> +	local_t			int_counter;
-> =20
->  	struct_group(zero,
->  		bool			sampling;
->  		pid_t			pid;
-> -		struct osn_nmi		nmi;
-> -		struct osn_irq		irq;
-> -		struct osn_softirq	softirq;
-> -		struct osn_thread	thread;
-> -		local_t			int_counter;
->  	);
->  };
+>>  - are there any cheaper ways to make it safe than to add a
+>>    condition on each user access?
+>>    E.g. the original lazy mm switch was intended to avoid
+>>    expensive TLB flushes when switching to a kernel thread and
+>>    back to the original task on 32-bit x86. On modern CPUs,
+>>    the MMU can deal with multiple ASIDs cheaply, so turning
+>>    off user access in a kernel thread may be cheaper than
+>>    adding code to uaccess depending on the architecture.
+>
+> That's a fair point. If user memory were inaccessible in kernel threads
+> and after exit_mm(), every such access would fault, and the fault
+> handler could WARN about it (x86's do_user_addr_fault() already has a
+> !mm branch), so it could still be loud without a check on every access.
+>
+> I'll look into disabling lazy mm switching on x86 and doing some
+> performance testing with that (like comparing the per-uaccess check
+> with the added cost of non-lazy mm switching).
+>
+> Other than the performance difference, I see these issues with making
+> uaccess safe entirely with the mm switch mechanics:
+>
+>  - It only helps on architectures (and configs) that implement it,
+>    while the common check works everywhere today.
 
-[Severity: Medium]
-Can moving nmi, irq, softirq, and thread out of struct_group(zero, ...)
-without resetting their delta_start and arrival_time fields in
-osn_reset_cpu() leave stale non-zero timestamps across runs?
+Yes, this would probably be opt-in by architecture, unless we decide
+to give up on lazy mm switch altogether and pay the performance
+penalty for that on CPUs without ASID support. Either way it is not
+be something we can do right away but that we can still consider
+in the future.
 
-In addition to count, struct osn_nmi, struct osn_irq, struct osn_softirq,
-and struct osn_thread contain arrival_time and delta_start. A non-zero
-delta_start is used to detect an active window in
-cond_move_irq_delta_start(), cond_move_softirq_delta_start(),
-cond_move_thread_delta_start(), and timerlat_irq():
+>  - The fault handler would need to tell legitimate faults apart from
+>    bugs, e.g. copy_from_user_nofault() from BPF or perf in a kernel
+>    thread is fine and must stay quiet.
 
-    if (!IS_ENABLED(CONFIG_PREEMPT_RT) && osn_var->softirq.delta_start) {
-        copy_int_safe_time(osn_var, &osn_var->thread.delta_start,
-                           &osn_var->softirq.delta_start);
+Would it be possible to move those checks into the individual
+callers that want to avoid the WARN_ON(), with a comment on
+each one explaining why they do that? It feels more consistent
+to always warn here, and I would expect that for most of the
+_nofault() users we do want the warning, and I'm still unsure
+what is special about these.
 
-        copy_int_safe_time(osn_var, &osn_var->softirq.delta_start,
-                            &osn_var->irq.delta_start);
-    }
+> The series handles that today by
+>    checking current->mm in the nofault helpers (patch 6).
+>
+> The two approaches are mostly complementary: if non-lazy switching
+> turns out to be cheap enough, an architecture that does this will have
+> better defense against uaccess bugs. But I'd still like the common
+> check so that these bugs are reported on every architecture.
 
-Normally, delta_start and arrival_time are cleared to zero in
-osnoise_trace_irq_exit(), trace_softirq_exit_callback(), and thread_exit().
-However, all three exit callbacks return early when osn_var->sampling is
-false:
+Agreed. My main remaining concern is about the number of functions
+that need the additional check, if we want to avoid missing
+any of them. If we can have the check in access_ok(), that would
+cover the majority of the functions you are changing right now,
+and it looks like we can deal with the corner cases individually.
 
-    if (!osn_var->sampling)
-        return;
+Since in principle every user access should go through both
+access_ok/mask_user_address and current->mm check at some point,
+so combining the two as much as possible should help long-term
+maintainability.
 
-If osn_var->sampling is cleared while a measurement window is open (for
-example, when timerlat_main() exits while sampling is still true and
-schedules in the next task via thread_entry() before stop_kthread() runs,
-when NO_OSNOISE_WORKLOAD or timerlat_fd stops while a task is running on the
-CPU, or when timerlat_tracer_stop() clears sampling from another CPU while
-a softirq or IRQ is in flight), the exit callback skips clearing
-delta_start and arrival_time.
+>> There are of course few enough of these left that I think
+>> we can consider doing the same thing here and turn them all
+>> into the checking version:
+>>
+>> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
+>> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+>> drivers/gpu/drm/i915/i915_gem.c
+>> drivers/gpu/drm/i915/i915_query.c
+>> drivers/usb/gadget/udc/atmel_usba_udc.c
+>> drivers/vhost/scsi.c
+>> drivers/vhost/vhost.c
+>> mm/kasan/kasan_test_c.c
+>> virt/kvm/kvm_main.c
+>
+> Agreed, I think we should clean those up, but that can be done
+> separately. This series already adds the check to the common
+> __copy_{from,to}_user() and __copy_{from,to}_user_inatomic() wrappers
+> in include/linux/uaccess.h (patches 7 and 8), so the KVM path is
+> covered without converting the callers first.
 
-On a subsequent timerlat or NO_OSNOISE_WORKLOAD run, won't a stale non-zero
-osn_var->softirq.delta_start cause timerlat_irq() to misdetect softirq
-preemption and overwrite thread.delta_start on every period, or a stale
-osn_var->thread.delta_start corrupt the first thread_exit() duration?
+Right, if dropping __copy_{from,to}_user() as global interfaces does
+not help add the check in a consistent way, that can wait as well.
+It looks like we are very slowly converting away from them already,
+as we have about half the call sites left compared to v5.0.
 
-[ ... ]
+There are probably few enough of these that we could address them
+by either adding current->mm checks or converting them to use
+the full versions instead where that is an obvious change like
+that usb gadget driver.
 
-> @@ -2452,25 +2452,22 @@ static void timerlat_fd_detach(struct fd_data *fd=
-d)
->  	if (WARN_ON(fdd !=3D osn->fdd))
->  		return;
-> =20
-> -	WARN_ON(osn->kthread);
->  	WARN_ON(fdd->thread !=3D tlat->thread);
->  	tlat->detach =3D true;
->  	wake_up_process(tlat->thread);
-> =20
->  	mutex_lock(&tlat->detach_lock);
-> =20
-> -	osn->sampling =3D 0;
-> -	osn->pid =3D 0;
-> -
->  	WARN_ON_ONCE(hrtimer_active(&tlat->timer));
->  	hrtimer_cancel(&tlat->timer);
->  	put_task_struct(fdd->thread);
-> =20
->  	fdd->thread =3D NULL;
-> +	tlat->thread =3D NULL;
->  	osn->fdd =3D NULL;
-> -	memset(&tlat->zero, 0, sizeof(tlat->zero));
-> =20
->  	mutex_unlock(&tlat->detach_lock);
-> +
->  }
+>> As a quick fix I would probably start with just the 'if (!mm) return false'
+>> bit here to get something merged while we still discuss the other
+>> details.
+>
+> Making the same point as Sean[2] but with a little more detail, I had
+> thought about making the change in access_ok(), but:
+>
+>  - On x86-64 and powerpc, the masked user access paths don't call
+>    access_ok() at all. That includes copy_from_user(),
+>    strncpy_from_user(), strnlen_user() and every scoped_user_*_access()
+>    block, which is where many of the converted __get_user() users ended
+>    up.
 
-[Severity: Medium]
-Does removing osn->pid =3D 0 from timerlat_fd_detach() open a race window
-with trace_sched_migrate_callback() before osn_reset_cpu() runs?
+Ok. Apparently there is some of this on arm64 as well, using
+__uaccess_mask_ptr() instead of mask_user_address().
 
-In timerlat_fd_detach(), waking tlat->thread and unlocking
-tlat->detach_lock allows the user thread in timerlat_fd_read() to finish
-its read path, call migrate_enable(), and return to userspace (or get
-pushed off a dying CPU during hotplug via osnoise_cpu_die() ->
-stop_kthread() -> timerlat_fd_detach()) before the caller invokes
-osn_reset_cpu(cpu) to zero osn->pid.
+>  - __copy_{from,to}_user() and __copy_from_user_inatomic() skip it too,
+>    and the KVM bug followed exactly that pattern: the range was checked
+>    once up front, and the access came much later from a different
+>    context.
 
-While osn->pid still holds the detaching thread's PID,
-trace_sched_migrate_callback() checks osn_var->pid locklessly:
+Arguably this is itself a TOCTOU issue and replacing
+all __copy_{from,to}_user() with copy_{from,to}_user() would be a better
+solution long-term, if we can do that.
 
-    osn_var =3D cpu_osn_var(cpu);
-    if (osn_var->pid =3D=3D p->pid && dest_cpu !=3D cpu) {
-        cpu_tmr_var(cpu)->uthread_migrate =3D 1;
-        osnoise_taint("timerlat user-thread migrated\n");
-        osnoise_stop_exception("timerlat user-thread migrated", cpu);
-    }
+>  - access_ok() is also used as a plain range check where having no mm
+>    is fine. For example, copy_{from,to}_user_nofault() call
+>    __access_ok()/access_ok(), and BPF and perf legitimately call those
+>    from kernel threads, so a WARN there would fire on valid tracing.
 
-If the detached thread migrates in that window before osn_reset_cpu()
-clears osn->pid, won't trace_sched_migrate_callback() falsely taint and
-stop tracing?
+These at least could be easily worked around by just skipping the
+calls to copy_{from,to}_user_nofault() as mentioned above.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028220120.4005=
-187-1-crwood@redhat.com?part=3D6
+      Arnd
