@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793158336;
-	b=HAk3j8T3vmUWcWVR+b72bCvNAaCztk+dYc/yTaDOHyDP9WOYt35N6GhFCvF2XTSyyUZj
-	 C+Ac6QleQsrKxuWw13OiuwhNfsYbARjrT0hkUy3LhtGlxj+4bCkcAaOaCOWV3GufqXDD3
-	 y5rXNkfdtNVliQF690hexnmsg0xhZ2C18783rjj+5SgDSuHMkUF84biKMplJt7EBcjiM6
-	 779JpGgGKSuDCThzbq9wZQW6jKREA57WhGbUFWl7CYvQ6dd8c9vIm5/NWF1pbq7PNlqnA
-	 T6ao6J9+nyb2nddp9vUPlD7ANzoAcJWqNNURaeymwZguCb6bQ3w/rkYZushUV4Qic3w==
+	t=1793158341;
+	b=BOCB/UtBhPWE+DYblG3lVTKVoOJIz2r7jEKp/yeSgvTebLek50IP6jhioTJLLwCREc3x
+	 9lUnEpjWkih++v5HDHZKOeEm+QAf6iFNLcIKaSG7wROPZpPnO7wJFQHQZjngu7+pGfbgQ
+	 cUEkP64ovH1iDJM3MVk9vrkhsOQxp0TSEUfzIAfeyCl46pBjkK1Bo03S/nhmy43XRWBAN
+	 Jk1573rSS5H1WwR82Ds6TVskOg7DdCfYwVjVlCvCDvVrpgY4U6oAuGGnWL5vCBCiuUZiz
+	 lrktZ9C5tFa7a4XnUbfu1lD7L/PmPRzHgOKWZ6ec4wWvxfZ+8Kko4zi+Bjj+tdQJkSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793158336;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793158341;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=WCtCiCeMvqleVCPGIStS9YbFBYnceHXr+HhJDm7YwVI=;
-	b=36fgsKvAYVtTs8YAllXKzsE5D8sLIsWjt0PAucUNzLT5+xV8lkWG3c6qlxpmNLRNkNHk
-	 WDs7dfcl1Iyk03I1qrEzKByjQOKcPHpGOewtVAauPAiMVHdWfIBe8jhZ5BQP1uenTyqBO
-	 GiXE++rZ7IlM7/41JI7fzpYfOleNqdxzEJLa2brDDS3a/8hTrSKQ827UwOlwJjeOsJcpb
-	 3Hs4fOeHLU5XXaBJqJP8+fCMLlhNiAKyj/edeJCTDkwzFFIGqb3bdR/kh0rvvlgHgh3jD
-	 WaSc/8jcS3lC5/wI+ZHUzQJVz87hN7mACEQAPYjthmnxzb/WV/h2fcR9Y98Ki7VDY3Q==
+	bh=ZR3iK/21HRL590OT/HWs7TggzA8Gmahp8IuVcPxIo1I=;
+	b=2+SyjT930EcYdRYIJV3FZpZFLQpP8UkV9y2dBs33ICHUBBKro9wK4mymMsvasT/RIOJG
+	 AL24swtBKtVInMw9HfPiHk3rQPmf/0msKLRHoZJL5fjSPiQtIHmJ2nGmj4U6AAK2ccFIr
+	 3KUEOwXMSTbjd0AI3e4D0gZjNnTQ5XKX8f3Wk4Nozvr4scY8i5bM0r4yJ/Np+yJkMRvEm
+	 B/bDkgu/64thAbLt7OGA1UOGfpwZF8CsxZDvq39pexi32zvPBupgOybPjNakA8V9BUMwE
+	 Ii6cPhJCnAGaRrF0RPaSp0Qz+3+wly3nqXlniOsFdZ7M6uGwaIoNZdlQjSGyKlHb0MQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=m6rhB1DT;
-	arc=none smtp.remote-ip=209.85.221.45
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Td9F3R7p;
+	arc=none smtp.remote-ip=209.85.128.53
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257AD606A33B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 03:32:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 257AD606A33B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA54606A33F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 03:32:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DA54606A33F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=m6rhB1DT
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48dfaa3fa12so1177789f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 20:32:14 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Td9F3R7p
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a9a8d6cea8so949565e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Oct 2026 20:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793158333; x=1793763133; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793158340; x=1793763140; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=WCtCiCeMvqleVCPGIStS9YbFBYnceHXr+HhJDm7YwVI=;
-        b=m6rhB1DTxD/frThV3rkb81u9I768z3nILRhLvGcghPRdtT0iqdaHBK3PiE4u2uhfb3
-         cU6Ijw38u6Gx8Qm3+T1UAB36f54YQtQB/O0yC7YCx4ypqHuDOZyaWkXW/PTDe2HZaU2p
-         QS+PE3tT+t8MDIrOMiNDpgStB8k3C/tVX+nJuXvpIV1Ps9OdVA0JUbkdodzdootAOlRp
-         23ukxHzOIdJW3xo5xO8MC4ejW9Y283YuV/JkWq9IRoYScVwEJypmIfH9rSADkOq2es6y
-         kZq5CVkR0TxB120nYsFh+kUeV8YvBaRJFnbeHA+YPkGtCaBPPfP6rXL6ACX6otHLxNNR
-         zomA==
+        bh=ZR3iK/21HRL590OT/HWs7TggzA8Gmahp8IuVcPxIo1I=;
+        b=Td9F3R7pKt9XoyGMCk2tSwEFepXc6mG0UKbjwl4qrQPGswD12MrUnQNew0T0VRdVx7
+         Z0ASLPwsJAX6QRsg5D6z23EVXQ2Ij7jQvCFtTbdkbwv2ZLCC/x1dqh6Bf1tgIJW8y3zf
+         K8R58PTVmwPzqGUT4lIFqDjBHVlL3f8McSL/ryhcPxOO+n36Tl/svJ7iBjqTIdlIDe8S
+         YORIEupvQ+PVliBwnBmNTvqvHz64J9V4C495f7Pv297tROUMULxaTRDp6OIyJPGQsbeg
+         6UlwdRVZsD3MQN95UOXuEcpKM9WBvg4sTUemDgeJMG5zEst3NYtyD0tLqVDiikRt2uiG
+         kmNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793158333; x=1793763133;
+        d=1e100.net; s=20260707; t=1793158340; x=1793763140;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=WCtCiCeMvqleVCPGIStS9YbFBYnceHXr+HhJDm7YwVI=;
-        b=QJlTG6AvcC4/egv2pnKMn8mOnwKloTDdaVgxjZW9tT/pc85BVR4qrwjY5GdaLNCh5s
-         XimkWdY09VFYa9TUMyP6aff3DnXsprH6APAc6W132OSc147e8kbPwnzVlZPf0pTalkPK
-         iAHtjrnkqfNXszZCEEojRrczJdxvCcMBCuTKGfmHrFyQVt8y/UV7k9eGeYxw05HMkfze
-         7MtWBmQNKEsLICVcu+Ob3Cc0GhDqZi7y4ks6FnboVWPuxlsLX4bBTvcNjgNgIdCd/qfw
-         BTwsi0ID/ZPyh40h/gI625CAxVFYySxZkz6d7n3wWSdFKqqj7GEeYcj9RuWfy0L4iLqT
-         zAiw==
-X-Forwarded-Encrypted: i=1; AKwUvBxW5tK7Ghk8mSca1QXoO/lSw96GqqrNPguQt6SLh69SaUhgJSskYt17VIsKpWbvOUxId2VlpMVeJyhpMs6PpU3jgFI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKDqIetL9gfAeiNut/mdpkxbqLi2c61mzvbE++oKnGQZkcG1hj9
-	3MWUTGtcoobEDH5/dSOSO89HsAcG/6eQl4o1Izlgdf2d56f6O9zbfw5a
-X-Gm-Gg: AYBFou04M3cxsG8mZm1UgO/NqFtVsFUQMSMGQd14OnZxrnyME8E23E2TIwwrRcAtkMF
-	dEAns97NkJWh3a5/Idd5C6NRuQR2+fQQBsyMg7cksGwxhavdo9WWZE29snQJU+5TaxPUlsvYgQk
-	E4gvZRKzxhlMo6kJ2LeVOqEh2ThnSmjKFfLK6PTcSEFBMJXFIu6v4M9Ya4eTN1iV2d2OYhr3Wzv
-	Gwy8p+2XH7B8n+Ra8f9zFZo5vhRrm8INuGwtlRS3lGSBVDFq8dEeib67ZE2zpmeDerTkx9eZkwq
-	IdSg2ObCnXb8mku/MRZpvSEKsRJ5JeBkrbnyJjpYppyq8OlwAHjJ2LhmWpQ8p7fpi/zsO24RhrB
-	kCPNmDlWmK9gsC9Q9k73RP4dPDsa/39hnsnUdaeehbFLMdbWTHIPUnG1LWiqdZshk4mnWMFJpfm
-	Lo3vre00WZd3M8DlBxHgmewlOt73JGBfGVIRqq4q04t8dYAePMiorrco/jdm4ojt055AgArS6kE
-	ppLXuVNNOEeTS/i5L/MUxiO61xatb49DBId+cLJzkiqO5wSY6Lpcd8XXMYGRRkj3eAQFR6ZPZWo
-	xvBZpvmUWLdhMXlOOrFtxmzf66n9/ucEK18vqNPXisUdoKBE1Fl/wJQP5Mgbk8jBkavckcTvl9f
-	XPv37KdRvelKj/4vqU4NAEuKW2hvfAeOYyEUFNBC3MN6bD5+SvIHFbEY3gG7ND330ndxgDZNtUd
-	+dUgiWEfP89iBh0RsWAkUAglb2I4UVB5rm
-X-Received: by 2002:a5d:5d88:0:b0:48e:5c9b:f12c with SMTP id ffacd0b85a97d-48e60212fb8mr338598f8f.16.1793158333537;
-        Tue, 27 Oct 2026 20:32:13 -0700 (PDT)
+        bh=ZR3iK/21HRL590OT/HWs7TggzA8Gmahp8IuVcPxIo1I=;
+        b=DrL1O0MOq+TnwiZH5I9v0Xc3+QoZRCL6RJEKxk4ww8pOC5w32Wm16qjKClehe6ou1V
+         9Aq8EVIy5HKzCtR3DCOwH5X12zZYsxCnVFPn/BPm8ZgAPN/8/UZ2w086Z9Gy4buAx7sk
+         oV+q15c5hYI4IpyOPKgcG8I3TToO1aNljXTBp6VQUL36qCWDhl7Dcky1Rza1LrJPoOYj
+         P0GaV0wJxb+J29teEhYUI/CCFDnaJmjpDmhTuvEah4QLoCe55l4aGigJIxFd4NZy4Nb9
+         qdjvrg1ZYqw0iJUHrUUNeNvDqm+Al8TiCiPFlWgqrK0gWHGSMSadeWEu0EEgS3yD9Cxh
+         bcKw==
+X-Forwarded-Encrypted: i=1; AKwUvBxfdPp3euPLPGqCr33GLSFngJKtgvKcfAru0hUp1LBm0OFuOqAxol2SCSYts86ERsNcLAj/uq9lcjvdi6IhnGW0qzs=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLCUiF4Rp5YD5V5OJMbq2q2bYGvUDifWQgmbxvSUK/TZ6bi323X
+	pUYbXdHotDKr5V6y1aPETtgze/GBZKYLF0kLkf14esW4xEPVNs1q2vQ1
+X-Gm-Gg: AYBFou2X3omM7SdWvNiZ8qahMJQyresqsXuBdtrQHAI4AtGj92q7AX0PwMwdesWCIvJ
+	a5LRl7pWR4f5mMILBTCTnhgJXptjasvvgGAhMl2cDddTsiivOV42NyaKNZqyauWZAcpSCC8kL/p
+	WgcuEwPybCGeeWpbaxs/oJqiAeRVbQ5/9ZHzyZROgi22dc8xto20c3SjoRCKsQdvsfBFaQV2uD9
+	M7h6pLYPPmL8oHWMk8xhIDaOMFmQrwidUvTl6yMBaGl+MhRlGIprsFiiosC2Y7a8hWPOeyRqy1A
+	PvD94kz8o1KZWqpzi30JgeX+c2ZvvoUiSY9XcCVMluT3kAUW5u4DyoqRa+t3LvdUtnrSX0/qKSI
+	cTUuH0BJ/OfC0GspMaJPNkxLaZx7n5yfwu+vJpN29Wln2XPe1Sxqpmpyk3eCXGiabeeBqy2w210
+	1VtrLPPmlJgHw2n/kIoo6tnpjSAS1YsQuH+ZAQUbkIRskb0pyXWJGXkAJ/laB8XvRVUNfu7i9Od
+	0CdRYqzN+S3mEiKNEmiB8K+dM4eH2RUsxKJxj/P95+OH9jEw5SiLJ6p9ELyJBMjFOUuJdR5QXjX
+	ZB9+sLJYFISEtjcZs7Zsh9T43KnQEtFXUbcUdpB3bMa6o5JYZJVMv2knUWQsm6jfNFpBBbFPUIJ
+	rhNCmd77ajtT0juJii67I3O/5ckrjP2jn4SYXZOutVPHLW0C+y5mHd5m377sFn44WJc2aRGpks1
+	Rjn5VeoM4KAWmuzhabMBFMsVdgmTWvk7kH
+X-Received: by 2002:a05:600d:8641:20b0:4a2:10d:5e0d with SMTP id 5b1f17b1804b1-4a7c58f389cmr88355155e9.14.1793158339700;
+        Tue, 27 Oct 2026 20:32:19 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-a45b-7d01-5035-b393-698f-53f0.310.pool.telefonica.de. [2a02:3100:a45b:7d01:5035:b393:698f:53f0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecdfd8dsm24290569f8f.56.2026.10.27.20.32.11
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecdfd8dsm24290569f8f.56.2026.10.27.20.32.17
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 Oct 2026 20:32:13 -0700 (PDT)
+        Tue, 27 Oct 2026 20:32:19 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -117,9 +117,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-doc@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 11/13] arm64: Use the pre-counted hardirq lifecycle
-Date: Wed, 28 Oct 2026 04:31:25 +0100
-Message-Id: <20261028033127.82193-12-kmehltretter@gmail.com>
+Subject: [RFC PATCH v2 13/13] locking/selftest: Exercise hardirq return-tail preparation
+Date: Wed, 28 Oct 2026 04:31:27 +0100
+Message-Id: <20261028033127.82193-14-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20261028033127.82193-1-kmehltretter@gmail.com>
 References: <20261028033127.82193-1-kmehltretter@gmail.com>
@@ -134,96 +134,90 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ordinary EL0 and EL1 interrupt paths establish generic entry state before
-irq_enter_rcu() adds HARDIRQ_OFFSET and lockdep nesting. Callbacks in that
-early window are therefore not classified as hardirq work. Their exit paths
-also drop the classification before function-graph return callbacks and the
-kernel return tail have completed.
+The return-tail lockdep preparation must see a live hardirq context. A zero
+depth must fail. Depth one and nested contexts must pass. The ordinary
+preparation helper must continue to reject a live hardirq context.
 
-After the EL1 pseudo-NMI decision, enter ordinary interrupts through
-irqentry_hardirq_enter(). Finish the staged count update and delayed timer
-and accounting work with irq_enter_rcu_preempt_counted(). Use the retained
-exit preparation followed immediately by conditional raw count and lockdep
-teardown.
+Add focused boot-time lockdep cases for those four states. Skip the final
+IRQ-state transition after an expected preparation failure so that each
+failure remains attributable to the preparation invariant.
 
-For kernel returns, preserve the existing per-CPU register adjustment, then
-stage hardirq return-tail classification before MTE exit tracing. Keep the
-pseudo-NMI lifecycle unchanged.
-
-The noinstr path also depends on the raw preempt-count and
-__kern_my_cpu_offset() inlining prerequisites earlier in this series.
-
-Link: https://lore.kernel.org/all/c3a90368dd6c096af9d918e036a27728696fb8a4.1786603168.git.hongyan.xia@transsion.com/
-Link: https://lore.kernel.org/r/20260918161407.2300-12-will@kernel.org
 Assisted-by: LLM
 ---
- arch/arm64/kernel/entry-common.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ lib/locking-selftest.c | 53 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index 003f84109a913..d70cffffe71c6 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -94,6 +94,8 @@ static void noinstr __arm64_exit_to_kernel_mode(struct pt_regs *regs,
- {
- 	local_daif_mask();
- 	irqentry_exit_pcpu_adjust(regs);
-+	/* arm64 uses the split exit API, so enter the tail before MTE tracing. */
-+	irqentry_hardirq_tail_enter(&state);
- 	mte_check_tfsr_exit();
- 	irqentry_exit_to_kernel_mode_after_preempt(regs, state);
- }
-@@ -560,13 +562,19 @@ static __always_inline void __el1_pnmi(struct pt_regs *regs,
- static __always_inline void __el1_irq(struct pt_regs *regs,
- 				      void (*handler)(struct pt_regs *))
- {
-+	struct irqentry_hardirq_cookie cookie;
- 	irqentry_state_t state;
-+	bool do_sub;
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index c3d976c801bb4..7e26b757344a4 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -222,6 +222,55 @@ static void init_shared_classes(void)
+ 		local_irq_enable();		\
+ 		local_bh_enable();
  
--	state = arm64_enter_from_kernel_mode(regs);
-+	state = irqentry_hardirq_enter(regs);
-+	cookie = irqentry_hardirq_count_state(state);
-+	mte_check_tfsr_entry();
-+	mte_disable_tco_entry(current);
- 
--	irq_enter_rcu();
-+	irq_enter_rcu_preempt_counted(cookie);
- 	do_interrupt_handler(regs, handler);
--	irq_exit_rcu();
-+	do_sub = irq_exit_rcu_preempt_counted_prepare(cookie);
-+	irqentry_hardirq_exit_finish(do_sub);
- 
- 	arm64_exit_to_kernel_mode_preempt(regs, state);
- }
-@@ -877,16 +885,24 @@ asmlinkage void noinstr el0t_64_sync_handler(struct pt_regs *regs)
- static void noinstr el0_interrupt(struct pt_regs *regs,
- 				  void (*handler)(struct pt_regs *))
- {
--	arm64_enter_from_user_mode(regs);
-+	struct irqentry_hardirq_cookie cookie;
-+	irqentry_state_t state;
-+	bool do_sub;
++static void irqtail_prepare_test_enter(unsigned int nr)
++{
++	unsigned int i;
 +
-+	state = irqentry_hardirq_enter(regs);
-+	cookie = irqentry_hardirq_count_state(state);
-+	mte_disable_tco_entry(current);
-+	sme_enter_from_user_mode();
++	local_irq_disable();
++	for (i = 0; i < nr; i++)
++		__irq_enter_raw();
++	trace_hardirqs_on_prepare();
++}
++
++static void irqtail_prepare_test_exit(unsigned int nr)
++{
++	unsigned int i;
++
++	for (i = 0; i < nr; i++)
++		__irq_exit_raw();
++	if (debug_locks)
++		lockdep_hardirqs_on(_THIS_IP_);
++	raw_local_irq_enable();
++}
++
++static void prepare_irqtail_0(void)
++{
++	irqtail_prepare_test_enter(0);
++	lockdep_hardirqs_on_prepare_irqtail();
++	irqtail_prepare_test_exit(0);
++}
++
++static void prepare_irqtail_1(void)
++{
++	irqtail_prepare_test_enter(1);
++	lockdep_hardirqs_on_prepare_irqtail();
++	irqtail_prepare_test_exit(1);
++}
++
++static void prepare_irqtail_2(void)
++{
++	irqtail_prepare_test_enter(2);
++	lockdep_hardirqs_on_prepare_irqtail();
++	irqtail_prepare_test_exit(2);
++}
++
++static void prepare_regular_1(void)
++{
++	irqtail_prepare_test_enter(1);
++	lockdep_hardirqs_on_prepare();
++	irqtail_prepare_test_exit(1);
++}
++
+ /*
+  * Shortcuts for lock/unlock API variants, to keep
+  * the testcases compact:
+@@ -2934,6 +2983,10 @@ void locking_selftest(void)
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion", irq_read_recursion);
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion #2", irq_read_recursion2);
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion #3", irq_read_recursion3);
++	DO_TESTCASE_1B("IRQ tail prepare", prepare_irqtail, 0);
++	DO_TESTCASE_1("IRQ tail prepare", prepare_irqtail, 1);
++	DO_TESTCASE_1("IRQ tail prepare", prepare_irqtail, 2);
++	DO_TESTCASE_1B("regular IRQ prepare", prepare_regular, 1);
  
- 	write_sysreg(DAIF_PROCCTX_NOIRQ, daif);
+ 	ww_tests();
  
- 	if (regs->pc & BIT(55))
- 		arm64_apply_bp_hardening();
- 
--	irq_enter_rcu();
-+	irq_enter_rcu_preempt_counted(cookie);
- 	do_interrupt_handler(regs, handler);
--	irq_exit_rcu();
-+	do_sub = irq_exit_rcu_preempt_counted_prepare(cookie);
-+	irqentry_hardirq_exit_finish(do_sub);
- 
- 	arm64_exit_to_user_mode(regs);
- }
 -- 
 2.39.5 (Apple Git-154)
 
