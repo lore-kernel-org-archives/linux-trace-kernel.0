@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793224900;
-	b=GScewP4VurXlIgih/chKLwZcG+re/ktQ+ub3UAaWwSah8pBVJ9g1fGy8iwonKT8/3Is8
-	 ZI6alLZcLWeYq/nQWhjtGwJCba9INFMzknWc472GReWH84fWgYYWPZoczjOpc3/Ob8CHL
-	 mT6N8QzZvbZQrI8D/hBmbYlJlbAWf0ChVmEQTjzLh65DphTyBNrlrg6/KqcblGeQu27On
-	 MSLyl8cO8JQ1cWY2VmPKCbrWqJHo9WaffA/Xtv2Dg621WxMgeJyU48NueFMCN93oqlnil
-	 ZGXbqvBoNTA/YS0SYpuk3XKsu2gbdye0GMtpiz6IXLTUPrbQjGBZ/ww/+9H9JfTk4iw==
+	b=DE0QLO57k8v1dCTP3jR0kQ5tCmP/iai8s5fO0WZ0W9jJ28hfRKn3xINbZEWMG05pvjs7
+	 cJcOV7L6ijipCOH4nzwohZ6ctO074DL8EDtSa5l6oOPkTbjB15QvX2HkWGqBpNFtJj3mb
+	 1aBcoi9M2ZZorlXXOH7c/Qs7LiKqKureraGm86PjJYFOJwXZckpal00YGz9Ii3EBPq3TV
+	 Ayog8d0ff37MLB9jG+AU2iqojc4E3ONRBdtXqMQriK0OIDpSpYr1E9U5/fmWS/beEDjYU
+	 voSM68uoiV52IJXm+134FvUKVU9iSX6OtK5R0K5kfHQK0bDel2tRW9bE4Z0eLrLpaHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793224900;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
@@ -15,87 +15,87 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 In-Reply-To:References:MIME-Version:X-Mimecast-Spam-Score:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Transfer-Encoding:content-type;
-	bh=fB/vVdtm1ti9+e078MDAaOjyHHssd91+hzP1CWZkiRY=;
-	b=AdEABvy/65Jwp/YMhS4zXbK+s+zJnYo4qcNY9V8JbuLlE1AgSor9AQCMK2X54HGZGEyP
-	 x4Ul4vxDH4y4NRFLlOAbfC2lVRDp/zc7jveJ0G2SgSSnIhxNRMYVSkxMRv1kVHvjzdfvY
-	 wz9MnNy2P5OdUFps+/N6agZBPAEhNSYyMSq6ti5Z3SxR7Wkh7dbivkmPM12GVtoPAufnC
-	 uRMMzrXiPllQoW20ZIzKRp6GhotW7JAd8UGa1ciLTAMSIMF2BbzTAbWYyLy+Psr/0h2fm
-	 LPNcIkvXaIgOfdE7szF6CcLWxN7H+xJQgod4YlUyy9cM6wyOeIR4mjBThKeY3Rwi2SQ==
+	bh=RKp/3M0iS7re8x5LR9Ok74AY4kzetWwP06CN5KGokeA=;
+	b=XRQ6eqt1Y17xpWpA0hp1ikZlsILVO7Am5VZlVWOlK5GgIoHqMF3Yz2O53R1A3CCWgU4w
+	 paSF/LXK7lm+dHW5XFLD/vbmh1wElofXar1QEy2cp3KNgvnMYJQZf9vqy28/F6jGzP+1g
+	 DZSsYIXNP6Dmyf1XOurC6O6uZN8DVPtkxKua4YawWfHD5WTXmmhkSSVdnTUluBUbbCZer
+	 0wsiLPJJC3ixRhMB/foG/U+39AIW/5+H6irqPHAOm7HbKZCa12dKPPPWGLdq81Rmg/3AG
+	 SOLPVYV0vVVorGCXqx0i75sSZLd+4EiwtPTHV95uxtI9GcXOqvEsSbMOrhWDt1EkqJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iaqNg8V+;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h+6ckgJb;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9069606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA350606A31E
 	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 22:01:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9069606A31D
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA350606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iaqNg8V+
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h+6ckgJb
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793224898;
+	s=mimecast20190719; t=1793224899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fB/vVdtm1ti9+e078MDAaOjyHHssd91+hzP1CWZkiRY=;
-	b=iaqNg8V+zt6C5Simttu6R13dA0O5IGK0pgTgFnsjdVujSr5gj3UsikBBtciiUYFSGX8jwz
-	glwa5enm9LLt2JvlaBaYRbakPx5HJv+t+NS0pyh/QZVuEpU9U7QmqmVLM8K2TiFb9AGJgZ
-	IY+vgtBoKT9jef3pc4oQQCp7KS+311o=
+	bh=RKp/3M0iS7re8x5LR9Ok74AY4kzetWwP06CN5KGokeA=;
+	b=h+6ckgJbKRcBOMTsarSy3u40HVlV2yr9i4LuHjG8RWhVH2OSsitzRJz4QjC9U6YU+vUQ7q
+	b1sc9ogA1GFXpHX9weXUE//sMv4Uuc0ryIoH3TqMJlAeuSKeyuP8gTCExd6Qb03s1Ni88v
+	GjQ/LkEndP2a+CU0NVQnlKn4gg6tHkw=
 Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
  [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-QOHWgguBOYKGdLT0ImWkiQ-1; Wed, 28 Oct 2026 18:01:35 -0400
-X-MC-Unique: QOHWgguBOYKGdLT0ImWkiQ-1
-X-Mimecast-MFC-AGG-ID: QOHWgguBOYKGdLT0ImWkiQ_1793224895
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-53664602c7fso34509381cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 15:01:35 -0700 (PDT)
+ us-mta-679-5lbrXoOPN7ShNYs4a8hT3A-1; Wed, 28 Oct 2026 18:01:38 -0400
+X-MC-Unique: 5lbrXoOPN7ShNYs4a8hT3A-1
+X-Mimecast-MFC-AGG-ID: 5lbrXoOPN7ShNYs4a8hT3A_1793224897
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-5338ff2cf14so30379391cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 15:01:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793224895; x=1793829695;
+        d=1e100.net; s=20260707; t=1793224897; x=1793829697;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fB/vVdtm1ti9+e078MDAaOjyHHssd91+hzP1CWZkiRY=;
-        b=FoQBJpyZcxkWU85ogL81EMY707ETWIsQsj0fqApjk0Cvc+CrFXB/TGsqKbHbFG8gSJ
-         FnH84pY8Qt5E2f2niiO34MdI/LwLSWns+NJLJ3KQJdESqsF3BkEkjAsKu5d74dIuUx9T
-         FJlFoesmfLNUL02S1m/KKdneyZmmRcapuMR4Sx0w7UNIkiJcet7FosDD2SHLNSFXXUVh
-         FcE39G8Wth2Z3+OaGFvnJl4ESiD/v/gG8WZkHza8WyQ4xh74VzkM8PBPfsfNoylHTq3Y
-         uM79sruql7FoAPBtFWOyCnAtDkym2ZNG+oSIYoZ20ERKDc7RLmR0aevOuwA2Y7VpUnz3
-         33yA==
-X-Forwarded-Encrypted: i=1; AKwUvBxNX4KtZ8pPdxrhPu8qGG37M+0aevYoZfQtEzM1AfII4vGEATgtAP4KWbj+YXOmoKX0/OFKqLmtOBgeX1lbd4FAptQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI9G6CPoIzmpMzA40nRaN7e8XA3yQppDBDS+MazU962R7OICDHn
-	75WOOuIK563LEcys8xfHG92lYaDRNzV13ZKmvRx5g9yTyl8z+fHEvYtHdHwXHl+9yUbsa0dC4Lg
-	vD3GJ100Ykjl1F5wTyCeJoPwe7naDA9FpPQgSkTrThACKXXPkutreYP68ypNYm3qUE6jviQi/Lw
-	==
-X-Gm-Gg: AYBFou1aGAqK3f80B0AnoApXZBm1ChQKimxxyNk0FxOLdqDZDthLTE6j9iDYPQn7m0H
-	yDAgLkRaNN2aX28AfwitCGm40hWazGaf0Kbe6rNBuJKOWNZSo4nQxUL+PueSofkwqw+Ky+jngmI
-	LPTWug7pA+1Is8ZaQyYkzUJB6AD0lehR+Ih128KvlH4T2xuZ5iKSMOGijc3V4PxbquX7sI+xgxZ
-	Ba811NRHUFikhHVJAVDx/Dy98Q3xYlHHbhBCoaYdnSvKQcVW7fZVkW3lZhPJ7AVi4vyrJFh9Lr0
-	6D/FNUnqmHDesfFM349FoKmWScmvhKCYllo7760D6iix3wll23D9uWLBxlc0Pf6XZlE1yzA31b5
-	Zk/sgfN2ma/r9grYDK7RCjNfkDl6orrfZR3x1lrY0t10ghbKyNvR/z4n6FW5EKadR4WwyrhFnUq
-	i0ZguoLiKlafxwwKD1MuWH63Snzj3H
-X-Received: by 2002:ac8:5a54:0:b0:536:35e1:b5 with SMTP id d75a77b69052e-53fc8fac376mr65745091cf.1.1793224894734;
-        Wed, 28 Oct 2026 15:01:34 -0700 (PDT)
-X-Received: by 2002:ac8:5a54:0:b0:536:35e1:b5 with SMTP id d75a77b69052e-53fc8fac376mr65744421cf.1.1793224894054;
-        Wed, 28 Oct 2026 15:01:34 -0700 (PDT)
+        bh=RKp/3M0iS7re8x5LR9Ok74AY4kzetWwP06CN5KGokeA=;
+        b=uXshZ0ip05sXLTFvkui93L6DWG1mnRi+JjAQLil/CCqp8d3P5x63ojOOgZJgBCPnlw
+         ydAOWm1NKo+2yzu7M9wPfY+bJiueHVC64cnpXFWY34kVkE9Mqv3FVfGGjEXLRnU11a3u
+         iiikH0mkiWsMei4S/0oKlz2SoCvOH5pmZvIfqLSONEZIGKxNRbyXqi6EH/0rkfnoBmbd
+         X6fpzPTvI3jSuEHNk+Vu8h5cv6M7uYf4ILBLBp03j0P+1FurOnZorwWRbTA1EBzvKTDf
+         Me4cmS5/HIgL2019yF9n+ILIc003Xo2K0zqNYtcQGgyKPEjUSid8VAS5ikQDKbj3dla9
+         QLwA==
+X-Forwarded-Encrypted: i=1; AKwUvBzMjTZbFqKTIy/Hg8v4joBWDFFsg3LqxEZBL10qIVhNFl9C0b8XxLsVvDzkdoWSqBEpAnk7zmZ6DC74A1vfIk7UD5s=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJKjjCirNcngG407QPiol0cAfyPsb2KZwLGX408S9AselmLROWj
+	3tUsSPofFTA4JoGNiN2yW+6G+P1nzXezfqIvCdBFI1pCeTxT77ehYIq1fXSZKjtgXGz3al/nArG
+	W26a20cf+bTZVpSmLkW7n/j9tt7EBvYE7jXGwlztcTOnOzZRuy8anhy1l3mC1ChfTw1pGZ3Fs2E
+	5PpVCjKQ==
+X-Gm-Gg: AYBFou0P9HaMMIDMWoN8MWv1qygozWsNbYxXqjuO8uOBsd9bwGU59SLpfuJbtPVQg9w
+	HZYnx978KUhnbSgnLWRM01PJAWQ6v/F1W2J/dMR4eWpf68WraJBw4hhXa0umsJLjhA+8d7kGEkC
+	/jLoImBvtM0POVAdJp5Y0wrR/meaGmcejR7tUCHIrkCamNwfNdSXeOBmKU0IdBKxnnU+l3+mfri
+	Q4AuUYc6H+h02dbaAcAWSYvszBoAOw2JfbqndrZcGPr8tdZQZ9vLdeP2j/q59PHlWm2rZA4z67x
+	On6rS/uT8f8tXNfTTnU743NbT4Qo1RnH2VM1+epGt95bVNYw8TSQtSo5kuAZf9YVOZrXynQgTW/
+	NL+5tkZYT5zOzBHjEvt0HsqWXsCjYwIRX91TpvxCMhBIw2G84l6FWGRJ+tpbb8VZpqxoELInRpm
+	jzuB4Q0t/R/5w311Nx7w4+NwNqKJ4Q
+X-Received: by 2002:a05:622a:40c:b0:535:33a:c75d with SMTP id d75a77b69052e-53fcb6faccemr62816931cf.32.1793224897155;
+        Wed, 28 Oct 2026 15:01:37 -0700 (PDT)
+X-Received: by 2002:a05:622a:40c:b0:535:33a:c75d with SMTP id d75a77b69052e-53fcb6faccemr62816421cf.32.1793224896672;
+        Wed, 28 Oct 2026 15:01:36 -0700 (PDT)
 Received: from crwood-thinkpadp16vgen1.redhat.corp (71-34-16-191.mpls.qwest.net. [71.34.16.191])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-538394f7e49sm114884001cf.15.2026.10.28.15.01.33
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-538394f7e49sm114884001cf.15.2026.10.28.15.01.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 15:01:33 -0700 (PDT)
+        Wed, 28 Oct 2026 15:01:36 -0700 (PDT)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH v6 07/10] tracing/osnoise: kthreads: Verify CPU after migrate_disable()
-Date: Wed, 28 Oct 2026 17:01:17 -0500
-Message-ID: <20261028220120.4005187-8-crwood@redhat.com>
+Subject: [PATCH v6 09/10] tracing/osnoise: Print taint message for timerlat
+Date: Wed, 28 Oct 2026 17:01:19 -0500
+Message-ID: <20261028220120.4005187-10-crwood@redhat.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261028220120.4005187-1-crwood@redhat.com>
 References: <20261028220120.4005187-1-crwood@redhat.com>
@@ -109,104 +109,44 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LjORbZyx7C-HzjB7eHEoa11IqYE1mQnMmItWH7peO6s_1793224895
+X-Mimecast-MFC-PROC-ID: j3nkaG5JjkqRVlaohrjzbn9ZuIKz2E1jAUsCk1G-JPs_1793224897
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Pass osn vars as the kthread arg, and make sure it matches where ve're
-running in case of (e.g.) hotplug issues.
+Provide taint information the same as is done in print_osnoise_headers().
 
 Signed-off-by: Crystal Wood <crwood@redhat.com>
 ---
-v2:
- - Do it for osnoise too, not just timerlat
- - I haven't been able to reproduce this in a while, and I'm not seeing the
-   hole in the hotplug sync that would allow it, but I also don't see what
-   would have allowed it in v1 (maybe it was in some pre-v1 iteration? or
-   maybe just a tiny race window).
-
-   So we can maybe drop this patch, though it still feels better to explicitly
-   splat if problems happen rather than rely on this_cpu_osn_var() blowing up
-   due to the affinity being set to multiple cpus.
+v2: new patch
 ---
- kernel/trace/trace_osnoise.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ kernel/trace/trace_osnoise.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index f07b62a5ccb8..614adac25a89 100644
+index 9e37733f7395..ff4744c0701e 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -241,6 +241,7 @@ struct osnoise_variables {
- 	struct osn_softirq	softirq;
- 	struct osn_thread	thread;
- 	local_t			int_counter;
-+	int			cpu;
- 
- 	struct_group(zero,
- 		bool			sampling;
-@@ -1723,6 +1724,7 @@ static inline int osnoise_migration_pending(void)
-  */
- static int osnoise_main(void *data)
+@@ -576,6 +576,9 @@ static void record_osnoise_sample(struct osnoise_sample *sample)
+ #ifdef CONFIG_PREEMPT_RT
+ static void print_timerlat_headers(struct seq_file *s)
  {
-+	struct osnoise_variables *osn = data;
- 	unsigned long flags;
- 
- 	/*
-@@ -1733,6 +1735,11 @@ static int osnoise_main(void *data)
- 	 * flag.
- 	 */
- 	migrate_disable();
-+	if (WARN_ON_ONCE(osn->cpu != smp_processor_id())) {
-+		migrate_enable();
-+		return 1;
-+	}
++	if (osnoise_data.tainted)
++		seq_puts(s, "# timerlat is tainted!\n");
 +
- 	raw_spin_lock_irqsave(&current->pi_lock, flags);
- 	current->flags &= ~(PF_NO_SETAFFINITY);
- 	raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-@@ -1923,8 +1930,8 @@ static int wait_next_period(struct timerlat_variables *tlat)
-  */
- static int timerlat_main(void *data)
+ 	seq_puts(s, "#                                _-------=> irqs-off\n");
+ 	seq_puts(s, "#                               / _------=> need-resched\n");
+ 	seq_puts(s, "#                              | / _-----=> need-resched-lazy\n");
+@@ -593,6 +596,9 @@ static void print_timerlat_headers(struct seq_file *s)
+ #else /* CONFIG_PREEMPT_RT */
+ static void print_timerlat_headers(struct seq_file *s)
  {
--	struct osnoise_variables *osn_var = this_cpu_osn_var();
--	struct timerlat_variables *tlat = this_cpu_tmr_var();
-+	struct osnoise_variables *osn_var = data;
-+	struct timerlat_variables *tlat;
- 	struct timerlat_sample s;
- 	struct sched_param sp;
- 	unsigned long flags;
-@@ -1944,6 +1951,13 @@ static int timerlat_main(void *data)
- 	 * flag.
- 	 */
- 	migrate_disable();
-+	if (WARN_ON_ONCE(osn_var->cpu != smp_processor_id())) {
-+		migrate_enable();
-+		return 1;
-+	}
++	if (osnoise_data.tainted)
++		seq_puts(s, "# timerlat is tainted!\n");
 +
-+	tlat = this_cpu_tmr_var();
-+
- 	raw_spin_lock_irqsave(&current->pi_lock, flags);
- 	current->flags &= ~(PF_NO_SETAFFINITY);
- 	raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-@@ -2077,7 +2091,7 @@ static int start_kthread(unsigned int cpu)
- 		snprintf(comm, 24, "osnoise/%d", cpu);
- 	}
- 
--	kthread = kthread_create_on_cpu(main, NULL, cpu, comm);
-+	kthread = kthread_create_on_cpu(main, cpu_osn_var(cpu), cpu, comm);
- 
- 	if (IS_ERR(kthread)) {
- 		pr_err(BANNER "could not start sampling thread\n");
-@@ -3248,6 +3262,7 @@ __init static int init_osnoise_tracer(void)
- 		struct osnoise_variables *osn = cpu_osn_var(cpu);
- 
- 		mutex_init(&osn->lock);
-+		osn->cpu = cpu;
- 	}
- 
- 	cpumask_copy(&osnoise_cpumask, cpu_all_mask);
+ 	seq_puts(s, "#                                _-----=> irqs-off\n");
+ 	seq_puts(s, "#                               / _----=> need-resched\n");
+ 	seq_puts(s, "#                              | / _---=> hardirq/softirq\n");
 -- 
 2.54.0
 
