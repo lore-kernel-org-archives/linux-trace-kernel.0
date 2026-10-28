@@ -1,63 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793210720;
-	b=kk8vWVlZMdKnvq9Kl5MOr3Ht6J0fbkWQNQaXWNyuElN0p16efaq/qowJeS7ySpydaKXD
-	 9s3NYUbJ9LHIilCKkHXZqxXUkFEImPxENgVd2dNos3wWYiV/ScfFVZGd/lp+6QPrRctKK
-	 WMGcKUt1fGcLbnw2HB+X6IDLYxBkvlniftt4RStsoDyMMyEKgew5RJ+lFj9dpiDsUUcpr
-	 StaaWiM1jvfyoB34ANtYRvsab0r5Kdzn1uYCa1nwiBFJV7//YOl3h9ZJiNvnWNgHPMsah
-	 Qz2vfkbZQiR/3/QlT3hws2CDF2fGPkMnKwxuM/Hu37cB3v10DAB8Gh7tGUfq7rzRlDg==
+	t=1793216221;
+	b=vCiBI17Dx9KpgN0V1CZ1rBZdzAQs42/F0ArljuY99ed2SeF6cGKURnrzehV3VJb/JEay
+	 3gJX95Tc/YvRaYz7WiFhmCBoECJSqtqrUZREGqiAsaabV82YD5QXdbQticXzk+A+fb8+T
+	 ALvuysKy1DKC1oXkAHdKQZ0Y1n0z1gTqGmZz3OjTEJxnjITvDifF7WM2XA7k95qWslfOq
+	 NT0pKdCJ7EGT8xlEkdwbRUpk3Rh0Xl4ejjh45FCL2s6OnV73h3AAE5Jx1sWzdLC8xGf1g
+	 7oRHB9ZGaprW/LGQaYM5a5wojsXQ88JjiQ6P6K7hvCvbsZmEUvsQKi81Sh27kvcRY3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793210720;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=wEUOSGCIpQzoTNVTbR0auAYK0KYHBuNLYj/30GCU/js=;
-	b=TuOEha8EFdEJsJSpRiwqMu30M3OI1CIrEHgWeHcK3dc++k1bUtBDq0T7MFJRj5Smt+oR
-	 b26zSnltvT9qxXX2KCAXqvDkDfcMtUdti/g0ozuqoH4mQmO+B8MgPx8lwxtdBegENqa5e
-	 RfEUHYRyE5oR9M4obF5H7A5GjycoI3nFzg5ewHsLDv8gccpfEK0r8ho9VG8lWziIpb65q
-	 5knyf3qo3gJQlNnyOK6+XwD5N+uQ8uGSblzm+NxcOkxdhFvx94Od63mORlnqnr9cFxY8F
-	 yAD4iQJBv726a1QGL0Cax0L0ctdRGxV36q4CdmjLUceECqGhyXLu2dMkJThpGg4g3kA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793216221;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=qFb6n4TRYRQMHItVUvZoh8iS3ZAnG4e4uqRFxHODcmA=;
+	b=AVScUo7vP/ry4Mfz5e6Gqpb4HYusvPCTz8o9RVzAWIUPHJjYuMReZbcLimrSUg35VjeT
+	 mtQW8PXpl0LkeRDm966QcOGzOlylUaNmuuO/UM20SvBIVVjFurbH4BntFPMWW/JviHUMB
+	 97eTIx6rLfzMkoE806FEXU08vxgzeKBR7e+Z19PGGuR7AsKdhtebNXGS2wRjOmVZ6KeOx
+	 4o3HWVWpko+0/GjmqWVIvJgqmFHFAevH04BJjU8LbPG7Nm0CCUoTTpNgOXWd2VJg+vI6A
+	 qHcHmGyDmro2eVEGJcHVX25jbI3MWCy0J0Hn6BfmXPAxr8C30WOu2WEPft32SBsQe0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QXvzC3R4;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q+rIeEt6;
+	arc=none smtp.remote-ip=209.85.221.43
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9959606A31A;
-	Wed, 28 Oct 2026 18:05:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9959606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9DD606A31D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 19:37:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC9DD606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QXvzC3R4
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 42CB21A01B3;
-	Wed, 28 Oct 2026 18:05:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 5EF0D20025;
-	Wed, 28 Oct 2026 18:05:16 +0000 (UTC)
-Date: Wed, 28 Oct 2026 14:05:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yury Norov <ynorov@nvidia.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Yury Norov
- <yury.norov@gmail.com>
-Subject: Re: [PATCH] lockdep: Add #include <linux/instruction_pointer.h> to
- lockdep.h
-Message-ID: <20261028140514.172d70cb@gandalf.local.home>
-In-Reply-To: <auI22-Woy8ap8cz-@yury>
-References: <20261028110558.623a92d1@gandalf.local.home>
-	<auIRtQjGjb0yeYCX@yury>
-	<20261028114528.137acd81@gandalf.local.home>
-	<auIZQDojrrv43MrA@yury>
-	<20261028123051.0c65e19f@gandalf.local.home>
-	<auI22-Woy8ap8cz-@yury>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q+rIeEt6
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48e0d1da913so14221f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 12:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793216219; x=1793821019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=qFb6n4TRYRQMHItVUvZoh8iS3ZAnG4e4uqRFxHODcmA=;
+        b=Q+rIeEt6CpPE7F9GmV6ZVG6bNBW9xBSxS4jPWJRmIRxRh8hxy6RSMVzncRB5HbHWGt
+         OP6zIuqBhz/Sq5ZV9EVwnWbn2d94slghb9HfFMX9RvmlGXz/3LjTEfg32REhOmg1YiYv
+         4g7rk+NNrhO1koPKzqK9PO+iKwxEYPDHwo1BAL1iNrPXvXIypiTv7Qs16gwEOclfjk0A
+         zLbuEdVpomtSbKJgsIfvhot83IOSbB6u+UbsBUoBSa/fWUo9uk8wBaulUrqfMc5e7mGa
+         AOIHO5HdbwqFB54Ll/7CjcTZ1o7xDEP50ODsf6uW3qrJGXqtZrvFQXjeDuz5oG12yIK9
+         7DJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793216219; x=1793821019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=qFb6n4TRYRQMHItVUvZoh8iS3ZAnG4e4uqRFxHODcmA=;
+        b=evlH/Q/rB9sy+aUqcyTejnK7yIm29W2IlSpwPS0I2R7ksVgCGHOy/Mo1qiDOiMlfH3
+         UPV//GIOZ7vCBiIJTCr1LBwV+k8ebu0un2ElpcGDBNFXFXMEZN9AEs6C6NWR26Q+hl1V
+         0+L95vE8XYJgqHSwG4uH5AE7PQJmLWce4EsE2vTTi0N2cKhChKekFMXztZBgatUWumLP
+         8NKH/8LrH04KnZ9jwzs+jcfJpHBtTzQzfYNZuEuE7wzsK2X559XWAbGssW4DivuxyMOJ
+         hVGIme6wikwf0la1GIL0BnpWDAJ9TTPCRRLLrAVW3Rx/37QDk2b5qL6dcckSpVg4WGtE
+         jxzQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwudY8n4SAo0qIDsrHfkFF6xZjxlFpgdw2SfXeCpGkG+McvfDXBCExmmnvOacNAqyik5reyztJUvqycyUOQezs2vTA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLsE5n/Ao8oAehEyiy3iDj21BsKKw9qo80CYYETQDcfNrnsn8wJ
+	UKoQ43SLtRHoXmQmUy/11qYroXDvKGEboDdzYzHow+KylnAlkiTU4+tQ
+X-Gm-Gg: AYBFou121Q0+M4jIVSlAB6zpxfIX38kB5RXsQuv0AEJPKSITdPXskVfyXFq0vdAtChZ
+	4WC0YHYPbkCTFCp4uq4lH6lhwmJipcPGCYscjSpgCG0Ntd196Q09qy6iOgKndjfKBA1/Ej7xRVE
+	R8gtZabM18j9gab3vVzMgeEccD+1PUKZFzudEUHbb/esJl7V9Bs4vkSLtoeKQB3nipe2nDEbimR
+	x6WybAJ9IgbvuDkaK6/LAiaCJaSR9yQxGdfMxGsBrEptv7VsPiRSfd4ACxBFNp2PIu3kYn83Y+d
+	ghAaGkgbHQI74MGZO/d/+CR+Sm2Szg8B9fWrQj5C2X4e4knMtfCzoUsepQFO+MrTy+/N75sUiAD
+	HJ78XeYLv9kbbY/Nvd+oDLxDUz2APapC1uOd23Ue9RaS+0zalTYyJ9G140hcAECqX7thaB05MCK
+	YRgI+X12S9XjR8Hlw6sPZwblLZIpfSsL9RioKUNlCYuiIPlu4TGAqMvVKaJUbYCTR5kLUiYGr+Q
+	aMwAyMDW7FtlkT0TfnyonF5i94KuC/EgFarFYSkIR4U3J9hd5bEl5SjSVUmpNp2bsa3G7eJ/ukh
+	K7UY+Q/VbZl8AGQq1nrPs1AFCrkkNczlG8elJMTw/g2Nvo8D6IYvQhyDVw8cbd4eg5vg63LRftj
+	jSGlYYTkTZRnQEoczrjCfiDeGEGWCysd4toNA9ctXPXIXiGrOmhgwsq5INT2v8Vx4lV4OTpNdAU
+	tWQEnEfPhxiGE3KNLy2dUW/4esC9ciADJbbuLZZEp1yUbXvfxYURoZdQRWpg==
+X-Received: by 2002:a05:6000:4a16:b0:48e:5d06:8b66 with SMTP id ffacd0b85a97d-48e649b0958mr1497723f8f.19.1793216219054;
+        Wed, 28 Oct 2026 12:36:59 -0700 (PDT)
+Received: from longitude (2a02-8434-fda5-4201-3fca-2040-fad6-74df.rev.sfr.net. [2a02:8434:fda5:4201:3fca:2040:fad6:74df])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecd3418sm27004611f8f.41.2026.10.28.12.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 12:36:58 -0700 (PDT)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tools/bootconfig: Preserve filters when resetting and applying tracing
+Date: Wed, 28 Oct 2026 20:36:22 +0100
+Message-ID: <cover.1793216183.git.edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -67,29 +97,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 83eghaxr55671je6uto74zqdbqoi47uq
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 5EF0D20025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18rax3BPHg44DaLCe1//TVvutoMf7LmI/8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=wEUOSGCIpQzoTNVTbR0auAYK0KYHBuNLYj/30GCU/js=; b=QXvzC3R4vbahvEfngiRwXtG1y0BrBBj7+zTz+9jLRpEy3we/G9BWcdtbmIBBl6UZWhtKftVMJReLLaYzjwb1fPjqdiHBiJfiP3tkLmWutdXuMCBxoTrkpidmHRshlokGBX6HAmoy/jeCdLPbyfd0i4a3lSs3t8MzwnS62b26Pd8=
-X-HE-Tag: 1793210716-141690
-X-HE-Meta: U2FsdGVkX18MdYMN6yJ8SRVWkSOAuKuXVoujKfZttUzaPfGYpm/BiEbTQ1ZwfM/aygH0C+1ZM3DW4jkl8Ehfg2p4Re2pVLz/bCYXbjXI/TLsdEqaW8SG5WSwD5yNaenBj1n9CaPR5NoNw1Avuen55/sExxtIKEar5QjJjUub/Uxd41CyGIAGWUKHBqlBPj5FMptpZsYX5HOCx0612Sy1RQRMZzKTpMBuM8QU34UPtM2vMdkctMThjUzgVmKI6hOLkfXOoVPmR4Lv20kWX4bNbZn/ukK87mUUs7+g/kpIfTl4Zw9Eo8ocUv9Ktn0j6K+IcEgOJ2gT7Af3TPdpJuKMr4gvEl2GFdBMbhCUvsbRGAswwok4MsEKzg==
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Oct 2026 13:54:35 -0400
-Yury Norov <ynorov@nvidia.com> wrote:
+Hi Masami,
 
-> Hmm... Seems I overlooked that v4. If not too late, please add my:
-> 
-> Reviewer-by: Yury Norov <ynorov@nvidia.com>
+Here are two more fixes for the bootconfig tracing scripts. They address
+resetting existing histograms and applying saved filter strings. The
+patches can be applied independently.
 
-Sure, no problem. Except I'll put it as:
+The first patch fixes histogram removal when a filter contains brackets
+or repeated spaces. A failed removal can leave a variable provider
+installed after reset, including a case where the helper returns success.
+It uses separate sed expressions for [active] and [paused], following
+your portability feedback.
 
- Reviewed-by: Yury Norov <ynorov@nvidia.com>
+The second patch keeps quoted strings intact when applying a bootconfig.
+Currently, repeated spaces can be collapsed and literal wildcard
+characters can expand to filenames, changing the filter being installed.
 
- ;-)
+Both were tested in temporary tracefs instances on my Ubuntu machine,
+running kernel 7.0.0-38-generic, with recording disabled. The individual
+patch emails include the reproduction details.
 
--- Steve
+Feedback is welcome.
+
+Thanks,
+Eduardo
+
+Eduardo Mucelli Rezende Oliveira (2):
+  tools/bootconfig: Preserve filters when resetting histogram triggers
+  tools/bootconfig: Quote command strings when applying ftrace settings
+
+ tools/bootconfig/scripts/bconf2ftrace.sh | 2 +-
+ tools/bootconfig/scripts/ftrace.sh       | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+
+base-commit: e28458ef30ad66ce7cd2299ec5ee8a8a016d67ff
+-- 
+2.53.0
 
