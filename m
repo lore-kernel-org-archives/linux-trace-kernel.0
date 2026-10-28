@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793148283;
-	b=IaF66S9NlfQLAuR5XYdcXi8Xq+KZvjN5MJGizT83iU0TQf0ttCy5k7gsYhyBmRIGm0E/
-	 7BOl/t+HC8Z/pRs/k8Wyx50UT5qylB8PGnIwC/LbLNvAlopEJC8Q4dJd0a4vEJk94KJiS
-	 XIqIaZqawzeARvpMEWkLUESKBpuyMy50eXmCI7WvA+enkLbLUVjFKPOw+h30brHOIoWXA
-	 NUoheB4YTVqw31OR9XY7T/11yp61E5Er8QZZ/LIsQ1u4G4RrYGieLFsjXek5Ignq9GMg0
-	 d+NaVd8QiyPdA92CuPsGLhSUPZ+owIIm5NvLWbKLxJue4ImnI0QZaKQI0zcR80S8o9g==
+	t=1793148292;
+	b=myejljBMtuf8B40zeMeUjlq1mliTt7kyIRhTBRILco43E7id5pHBU3uqR90cJg8+ZMSx
+	 myEnfY3D8s3kfdxw0Lu3uQ0wL85A//wn8NlcOLG7LF3s7QfYMQaMI5gQY60Qjdn25sLVp
+	 fo/BnOAwupQWcwpBzo5XeCVkacy0WIe/BNTCJMZg3MqzwIo8usINu+PdL24mZZUl8O3UD
+	 wr/E146Wyettavbf1XolKln1oPno/ranYfJRSwQcQkWcYPAmJwXBQc0JHdEt0Xd4Z5LHc
+	 Cnt7MVgYoUv5RbgM0IyWRy1/F2IE1UI7yG4fKrk75ICONBcU8NTb5OynVjo4GUVdqiQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793148283;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793148292;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=kACJ7ZXaXHUkFBoUsoTZ6BZYp/kJP/DHJGEnR2BBz7E=;
-	b=Bz5u0WE6hH5aFNQv+u9R969/5U4D+qIH3mn0202CpDDmS3JFQYEMJMHLRVAiPAvrsz5q
-	 YKUcCCI3EnlEU7yU+WxynkGPiUrlaoUPwHoL33zffWDlF8WC2bzWQakiG7oIqEJddfrKq
-	 wMGGEIQKa9Vnlqr6Qni39oPCwIBJwXolvReP4AFLFFuSrHr5qdDdWTTiwAAIFbzVv2nCl
-	 KcoVv0ikjps3+3+hSt0Tcqgy1YdhYFw5WUxQcf6sKdxZRg/QIelCXBa3JykzOo99zagxO
-	 dX85qm07RoqOdO0oW0d8vic9EziBkGzJTBTp8uvqNGfUgsRV7wjIdWpSYOxbHzC/Fsg==
+	bh=IgL8NI0+jVuPGw0j5V6hwopHTIPzPDvMLUwmZ3dLpdI=;
+	b=Corz3YXIe0DAJvzJhkf0+gpnjT0fytw/jGdm7tlFDDiXAUrQCkn+zwWZpNfSrl/wmNEr
+	 CqOH6zqUWZ1gAJK8lo5nxsnHsmV3+bOINOy+RofXqdPEW3hS/IsYyN4YVecFGQXv6GcFh
+	 1nBIOLPZKhDHFplXLb6nHqwy7L0Ehfc6ahRYsV6jL6ab9op5I/H44sZspiYtcmLrpvJ1o
+	 9VB4aUYXOJBgamW+YDNRWDlmt5qfaBvVbwlsVA2N3h92DW0Gk7w/4wkle1Pcd2tP5pYOe
+	 gtQEvaiAEwW6Jfz2aEyR1TBGaUEPIV7xf7Ub2J7TOp/P/cviNY+HmzITlB5MSDzpiIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Tldq5/Bx";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IM5sY49g;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67556606A327;
-	Wed, 28 Oct 2026 00:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EA3606A31A;
+	Wed, 28 Oct 2026 00:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tldq5/Bx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A631F01828;
-	Wed, 28 Oct 2026 00:44:41 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IM5sY49g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902681F031E0;
+	Wed, 28 Oct 2026 00:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793148283;
-	bh=kACJ7ZXaXHUkFBoUsoTZ6BZYp/kJP/DHJGEnR2BBz7E=;
+	s=k20260515; t=1793148292;
+	bh=IgL8NI0+jVuPGw0j5V6hwopHTIPzPDvMLUwmZ3dLpdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Tldq5/BxTvPJhtrfEGKGTcRHiRDtETBVZtkpWEe25TBMvOWeJ2EwAsyP3xqr9fi5I
-	 QcyxYReidt3XBY4jD6nFBDf8KtTtopAKmdfPvHBOJMP9D13Kew/gl1hgZCeLw2tTXp
-	 lbZg3xl3PzdqWFRc1uW0jUl1Dsj+30UZTNKhNMj1y2td58tev15aAL1fdNrkcswrZv
-	 Ik8hOcFME+7Uc8jai3oFcMmWnPXY6RtxWN6UTNLy1ByVLPBuELmCpSihpU4DWCGT40
-	 dVeiXAqnS1s2Wq/hHRRso9FFGXXm/ae3hBY22BfcrGAVkMTw66s0tuIJ86h1XOAhQ7
-	 JLUJpr5W7XpZQ==
+	b=IM5sY49gM6N/7ktqXHwu6Zd4jjA9KJi0kunGE9qFwyPBN/G5dmMPbNyeP5N6T4Wxs
+	 BcM6regGtA17GVC88vyZE/Ny93iGa4HYTIAabMsY9pMGQ/3ngqyNKEwa+H5Pq47moJ
+	 m8lPJke9g9ZBvGLyN8VmE1NfS76cZ0fZ/7seL0TX1XNTp0IpJd1oPCqpu41g3o26IP
+	 0VDCr3rjb+rt2G4envTGT/AECHxyWGPzjSVDGoAZXL3mO4xCY6bYcsmyaswECY+70O
+	 Ol6x9/cojzEsLfkXd7Kz2opdd6abARIEdUFjJPsepe39AC6nGWYSa1C+SHKmt+I87t
+	 ti0rYxatsor1g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 08/16] tracing/filters: Reject empty unquoted operand in function event filter
-Date: Wed, 28 Oct 2026 09:44:39 +0900
-Message-ID: <179314827916.684037.3528281616412050059.stgit@devnote2>
+Subject: [PATCH v3 09/16] tracing/filters: Reject stray quotes and parentheses in unquoted function event operand
+Date: Wed, 28 Oct 2026 09:44:48 +0900
+Message-ID: <179314828848.684037.8273600995293830928.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179314820431.684037.4147763044424284198.stgit@devnote2>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
@@ -70,16 +70,16 @@ Content-Transfer-Encoding: 8bit
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 In parse_pred(), when parsing an unquoted operand for function events,
-if the filter expression has no operand before a delimiter (e.g.
-'(ip == )' or '(ip == && x == 1)'), the loop terminates with len == 0.
+the loop only stops at ')', '&', '|', or the NUL terminator.
 
-While an empty quoted string (e.g. 'ip == ""') is syntactically valid
-and denotes an empty pattern, an unquoted empty operand is a syntax
-error where an operand was expected before the delimiter. Previously,
-this accepted the predicate with an empty pattern.
+However, calc_stack() parses '(', '\'', and '"' independently to
+determine stack depth and string boundaries. If an unquoted function
+operand contains stray quotes or an open parenthesis (e.g. "ip == foo'bar"
+or "ip == foo(bar)"), parse_pred() consumes them as part of the function
+name operand, causing parse_pred() and calc_stack() to desynchronize.
 
-Reject empty unquoted operands by checking '!q && !len' and reporting
-FILT_ERR_INVALID_VALUE.
+Reject unquoted function event operands containing '(', '\'', or '"'
+by reporting FILT_ERR_INVALID_VALUE.
 
 Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
@@ -87,24 +87,34 @@ Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v3:
  - Split from the monolithic function event parsing patch into a
-   standalone patch rejecting empty unquoted operands (!q && !len).
+   standalone patch rejecting stray quotes and '(' in unquoted operands.
 ---
- kernel/trace/trace_events_filter.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/trace/trace_events_filter.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 170d51ff337c..96977eb9af85 100644
+index 96977eb9af85..48e16d75be74 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1874,6 +1874,10 @@ static int parse_pred(const char *str, void *data,
- 		len = i - s;
- 		if (q)
- 			i++;
-+		if (!q && !len) {
-+			parse_error(pe, FILT_ERR_INVALID_VALUE, pos + i);
-+			goto err_free;
-+		}
- 		if (len >= MAX_FILTER_STR_VAL) {
- 			parse_error(pe, FILT_ERR_OPERAND_TOO_LONG, pos + i);
- 			goto err_free;
+@@ -1863,9 +1863,17 @@ static int parse_pred(const char *str, void *data,
+ 		for (; str[i]; i++) {
+ 			if (q && str[i] == q)
+ 				break;
+-			if (!q && (str[i] == ')' || str[i] == '&' ||
+-				   str[i] == '|'))
+-				break;
++			if (!q) {
++				if (str[i] == ')' || str[i] == '&' ||
++				    str[i] == '|')
++					break;
++				if (str[i] == '(' || str[i] == '\'' ||
++				    str[i] == '"') {
++					parse_error(pe, FILT_ERR_INVALID_VALUE,
++						    pos + i);
++					goto err_free;
++				}
++			}
+ 		}
+ 		if (q && !str[i]) {
+ 			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
 
