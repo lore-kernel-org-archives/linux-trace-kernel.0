@@ -1,70 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793180222;
-	b=CmaMhlF2jAH8LIo94IaNq0hLn1FHKYPNFqAn1lYXRWjhBRbMEWwvjocS/zdYnY1LugcQ
-	 fgJA3sSwNq5Tivqw+WRxvUELyqRH6R61SFswq8whYZNZ+YUdQd7KMU9Ozg/NBfYWAEoF9
-	 XdBuKxRlnYIWN+G+cKxBb5d+n0etc5yMXTArVbxa2DoD9VPOPFUerAN4AusVxIcoB+Rn7
-	 StZVKBvpBG9ftPiUTCwHH1puYbm/Y/IH0Xa/0lnt7n/rkpcWf2r4wT4HbE7jUuQJpgvYZ
-	 d2f77cvkaW2ujaTsSO0+puGoentXdm2VJq13heRcH4TUlC9NX1V3fSX6gGfEmLVa3Pw==
+	t=1793180850;
+	b=HW+7uNvJAkIFzxP1XxMWDYkLXyuRFWUKtyA0M40DpM2+hld4XoShipa+NRXBzx8DmLxF
+	 aXI1qIlzUSwCpl2KZIsCes5zS6siFTYpnY3E10nUrzzhva1mUsRuoA88sdojTS+mDH7vc
+	 j+0FtFMbNb4LNWaHuom2CaBBrUosek6PV4YcizL3PL4bhyzom6f0Sj9XU0gszON7t5bLV
+	 3rqNieJy69aSkcZhmVyd5OHdu9pomXiu2Lqm14PdiTVMOkZITzHPtAcyYMjH0mJw8rqPa
+	 STGqcGu5yigRSLvJese0jugXy89oSpbaPzMcr4RVGAGpsqQgv3jfsyACKzWxYXH6yvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793180222;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=v4mpiG/I5NwSPXtUiBGXM9rWjGORly/Rcu8pnm4rux4=;
-	b=ez6cIJ7BL/56EBQNNPwUl20R22GFyzUU+umCnumoMHnvuP4x7ra4pIpaCcO5LTldakK0
-	 Nby0RcH2KIz4jSsBGhmteFeI0xTpLivSLCsXgvxQYzu92QTOv71wuH3nxzdDb+HNdyf7c
-	 2Sq4zmGZPjuRcliM77E6K9PHjAvDYxoO4FYelTLyGRP0uSD1mCjiKySRdS8mWi86zPVul
-	 sfQ2kMzwJcIfCbAD8Jj+o+cTmv9Nr21jJaNFpXrsAXVNlXz3g2DKMzW3+OL93r5vgi/zj
-	 xlId91Tke1LoW6jTMiSjlJ//khbstkFGk7izaandUIpj+Wr3MUdnAlZQBdBjdGjD0YQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793180850;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Subject:From:
+	 Reply-To:To:Cc:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-MBO-RS-ID:
+	 X-MBO-RS-META;
+	bh=nKYFxQRH1vuVIe7/MLAy4kkLQU+A9Me4O9WKmx61f9U=;
+	b=OzdztJsnyFDv23c7OYM1Raqway8UBJONqD6R1XmlpEeQd4/iA7sAcWcfFftKEiAXalar
+	 o9pZBrk4YbSyM8PhoQO11Tk5z5KMmBBKzKz7Go3zUGaWqFm09V3PjFhmPF/bsdqwDJ/LX
+	 XrjcSIh3fFXQObCBwHHbzQHGcpiVRbNR3moECAh/igH2VUtkP5D3v9PKzsO6Q0qgY7y1d
+	 hrgNDoULJhlLk/+Yo2BLmpsjTkOBL9WmTab5qBjpTIFlUcGJiqvltEy6KXrdf7lHX8kxu
+	 Lf5u2UDjTimkGnx7Pg/Pk6YxwpnIpYG6WSLq/t9r22x1+jKoobjTmRANRlveEVtdjcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=MHmPxkd7;
-	arc=none smtp.remote-ip=117.135.210.2
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	dmarc=pass header.from=mailbox.org;
+	spf=pass smtp.mailfrom=mailbox.org;
+	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=wxh7nxPZ;
+	arc=none smtp.remote-ip=80.241.56.152
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4B4606A31C;
-	Wed, 28 Oct 2026 09:36:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD4B4606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9030E606A31C;
+	Wed, 28 Oct 2026 09:47:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9030E606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=MHmPxkd7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=v4
-	mpiG/I5NwSPXtUiBGXM9rWjGORly/Rcu8pnm4rux4=; b=MHmPxkd7yPkWQAaYQL
-	wz9GYbb1+U0YqTDDjGIvVt3Jyhy6Xmh14kXYp3EtFqjaPq2HbCKjwx198FhGeVuc
-	rqAEr+3o07eD8JfIir/mNEmsLrFEH4uPnwVpOn0sY0/s3BhqiDX2L2yttABeC3p8
-	DJaO8YYHoXYHr/sawyCWR/CNA=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3_670weFqtKo6Cg--.4521S2;
-	Wed, 28 Oct 2026 17:35:49 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: song@kernel.org,
-	jolsa@kernel.org,
-	ihor.solodrai@linux.dev,
-	kpsingh@kernel.org,
-	matt@bobrowski.net,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	martin.lau@linux.dev,
-	yonghong.song@linux.dev,
-	emil@etsalapatis.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
-Date: Wed, 28 Oct 2026 17:35:48 +0800
-Message-Id: <20261028093548.790977-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key, unprotected) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=wxh7nxPZ
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4jF2b05FVDzKnB8;
+	Wed, 28 Oct 2026 10:47:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1793180844; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nKYFxQRH1vuVIe7/MLAy4kkLQU+A9Me4O9WKmx61f9U=;
+	b=wxh7nxPZ3iBUYyzqOmx2XDE76ZphfykyCRuAosYPWP47z0Pzf1bVpl04m5X6WPVpxqDb76
+	C9IMwFNXAO0Bc/rF0AAjmptGHmYtscrD+MmJRaj/SMYdBhD9TAhIG4oNy7QPVoISU0+tSj
+	562hrglSu9820+OAFhoF3wrPOV73urXb1ouVgfb5bJhZdcOcsMoyOXcAKr1+nU1H2xdUCj
+	ukuSIDc2A/mpXaPld+JwbzLD3X9yYXpOQPYSOTLZX1z3YZZv6pKWrKVn0s2f0PVZWxFC96
+	6SS7e7Jgkb/AWiKJedqhGOu5sXW+OwHfal+83mB+gJZ1DHVXpTo7rR+UsLY3ow==
+Message-ID: <f9a47d563f896e0789fffa72df5847e2878cbe5e.camel@mailbox.org>
+Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>, Jani Nikula	
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun
+ Feng <boqun@kernel.org>,  Gary Guo <gary@garyguo.net>,
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, Daniel Almeida	
+ <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, Onur =?ISO-8859-1?Q?=D6zkan?=
+ <work@onurozkan.dev>, Boris Brezillon	 <boris.brezillon@collabora.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Date: Wed, 28 Oct 2026 10:47:18 +0100
+In-Reply-To: <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
+References: <20261020100034.759183-2-phasta@kernel.org>
+	 <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
+	 <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
+	 <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
+	 <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
+	 <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
+	 <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
+	 <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -74,155 +98,190 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgD3_670weFqtKo6Cg--.4521S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GFW7KFWfJFyDtr1UKFWUXFb_yoW7try3pF
-	9IyF9FyFs8X3ySqrZxGw1qvFy5W3ykXrW2kFyfCrya9r1UZr18KFy7KF4agF1rur97G342
-	vFy0qrsFkw4Iva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jVGQhUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbC8hXAOWrhwfUAfQAA3c
+X-MBO-RS-ID: 16b7de5af4c5b86025a
+X-MBO-RS-META: rb53xxngg1k75mcmbijsukd3yebomd1t
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Tue, 2026-10-27 at 15:59 +0100, Christian K=C3=B6nig wrote:
+> On 10/21/26 14:49, Philipp Stanner wrote:
+> > On Wed, 2026-10-21 at 13:53 +0200, Christian K=C3=B6nig wrote:
+> > > On 10/20/26 17:36, Philipp Stanner wrote:
+> > [=E2=80=A6]
+> >=20
+> > > >=20
+> > > > Nope, I want to protect shared data, which is the signaled-state. W=
+hich
+> > > > is currently a race-condition worked around with RCU (and sometimes
+> > > > with manually doing the right thing (locking!)) [1], stemming from =
+the
+> > > > fact that the fence's spinlock is not used consistently.
+> > >=20
+> > > The fence spinlock is consistently used for protecting the fence
+> > > signaling, in other words it always happens with the spinlock held,
+> > > same for adding callbacks.
+> > >=20
+> > > The only thing which happens without the spinlock held is the fast
+> > > path checking of the signaled and enable_signaling bits and as far as
+> > > I can see that is ok as well.
+> >=20
+> > No, it isn't. It makes the API fragile.
+> >=20
+> > 	commit c8a5d5ea3ba6 ("nouveau: fix client work fence deletion race")
+>=20
+> This bug is exactly what I'm trying to prevent here.
 
-Sleepable BPF programs run under rcu_read_lock_trace(), not classic RCU.
-bpf_get_stack() relies on the caller holding a classic RCU read lock:
-get_perf_callchain() -> get_callchain_entry() dereferences
-callchain_cpus_entries, and the returned entry is read until
-callchain_store().  __bpf_get_stack() takes that lock only for the
-sleepable variant, i.e. when may_fault is true.
+What is your proposed strategy for preventing it?
 
-The sleepable variant was added by commit d4dd9775ec24 ("bpf: wire up
-sleepable bpf_get_stack() and bpf_get_task_stack() helpers") but only
-wired up for kprobe/uprobe.  All other program types that can be
-sleepable still get the non-sleepable variant:
+>=20
+> This problem only exists because we call the backend operations with
+> the lock held!
 
- - tracing_prog_func_proto() serves BPF_TRACE_ITER, fentry/fexit/fmod_ret
-   and BPF_TRACE_RAW_TP programs, and falls back to
-   raw_tp_prog_func_proto() for BPF_FUNC_get_stack, which always returns
-   bpf_get_stack_proto_raw_tp.  Sleepable iterators have been allowed
-   since commit cf83b2d2e2b6 ("bpf: Permit cond_resched for some
-   iterators"), e.g. for the task_file target.
+Nope, this particular bug exists because Nouveau thought that it can
+drop its reference when dma_fence_is_signaled() returns true, which is
+not the case, because the fence backend has a race condition there.
 
- - tp_prog_func_proto() serves BPF_PROG_TYPE_TRACEPOINT programs and
-   always returns bpf_get_stack_proto_tp.  Sleepable programs of that
-   type are allowed on syscall tracepoints since commit 8cfb77d30920
-   ("bpf: Verifier support for sleepable tracepoint programs"); they run
-   through trace_call_bpf_faultable() and bpf_prog_run_array_sleepable(),
-   which hold rcu_tasks_trace but no classic RCU read lock.
+A race condition that was allowed for performance reasons.
 
-So a sleepable program calling bpf_get_stack() triggers:
 
-  WARNING: suspicious RCU usage
-  suspicious rcu_dereference_check() usage!
+> What nouveau does is to delegate the cleanup since it can't do that
+> in the signaling handler because of the lock inversion.
 
-Route these paths to bpf_get_stack_sleepable() and mark the new protos
-might_sleep, since build_id_parse() may fault in file data for
-BPF_F_USER_STACK | BPF_F_USER_BUILD_ID.  Sleepable programs that call
-bpf_get_stack() from inside a bpf_rcu_read_lock() region are now rejected
-by the verifier, which is the correct behavior for a helper that can
-sleep.
+What signaling handler are you referring to?
 
-Reported-by: Kaiyan Mei <M202472210@hust.edu.cn>
-Reported-by: Yinhao Hu <dddddd@hust.edu.cn>
-Closes: https://lore.kernel.org/all/41ce77bf.17656.1a17b3fcb04.Coremail.kaiyanm@hust.edu.cn/
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- kernel/trace/bpf_trace.c | 54 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
+>=20
+> This problem doesn't happen any more if you just completely drop the
+> approach of calling the backend operations with the fence lock held
+> and then re-structure the cleanup handling in Nouveau.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index dfac5e1b8f40..8cfc9a6542f2 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -84,6 +84,7 @@ static struct bpf_raw_event_map *bpf_get_raw_tracepoint_module(const char *name)
- 
- u64 bpf_get_stackid(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
- u64 bpf_get_stack(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
-+u64 bpf_get_stack_sleepable(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
- 
- static int bpf_btf_printf_prepare(struct btf_ptr *ptr, u32 btf_ptr_size,
- 				  u64 flags, const struct btf **btf,
-@@ -1469,6 +1470,26 @@ static const struct bpf_func_proto bpf_get_stack_proto_tp = {
- 	.arg4_type	= ARG_ANYTHING,
- };
- 
-+BPF_CALL_4(bpf_get_stack_tp_sleepable, void *, tp_buff, void *, buf, u32, size,
-+	   u64, flags)
-+{
-+	struct pt_regs *regs = *(struct pt_regs **)tp_buff;
-+
-+	return bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
-+				       (unsigned long) size, flags, 0);
-+}
-+
-+static const struct bpf_func_proto bpf_get_stack_proto_tp_sleepable = {
-+	.func		= bpf_get_stack_tp_sleepable,
-+	.gpl_only	= true,
-+	.might_sleep	= true,
-+	.ret_type	= RET_INTEGER,
-+	.arg1_type	= ARG_PTR_TO_CTX,
-+	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
-+	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
-+	.arg4_type	= ARG_ANYTHING,
-+};
-+
- static const struct bpf_func_proto *
- tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-@@ -1478,7 +1499,8 @@ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_stackid:
- 		return &bpf_get_stackid_proto_tp;
- 	case BPF_FUNC_get_stack:
--		return &bpf_get_stack_proto_tp;
-+		return prog->sleepable ? &bpf_get_stack_proto_tp_sleepable
-+				       : &bpf_get_stack_proto_tp;
- 	case BPF_FUNC_get_attach_cookie:
- 		return &bpf_get_attach_cookie_proto_trace;
- 	default:
-@@ -1708,6 +1730,33 @@ static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
- 	.arg4_type	= ARG_ANYTHING,
- };
- 
-+BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepoint_args *, args,
-+	   void *, buf, u32, size, u64, flags)
-+{
-+	struct pt_regs *regs = get_bpf_raw_tp_regs();
-+	int ret;
-+
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	perf_fetch_caller_regs(regs);
-+	ret = bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
-+				      (unsigned long) size, flags, 0);
-+	put_bpf_raw_tp_regs();
-+	return ret;
-+}
-+
-+static const struct bpf_func_proto bpf_get_stack_proto_raw_tp_sleepable = {
-+	.func		= bpf_get_stack_raw_tp_sleepable,
-+	.gpl_only	= true,
-+	.might_sleep	= true,
-+	.ret_type	= RET_INTEGER,
-+	.arg1_type	= ARG_PTR_TO_CTX,
-+	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
-+	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
-+	.arg4_type	= ARG_ANYTHING,
-+};
-+
- static const struct bpf_func_proto *
- raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-@@ -1717,7 +1766,8 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_stackid:
- 		return &bpf_get_stackid_proto_raw_tp;
- 	case BPF_FUNC_get_stack:
--		return &bpf_get_stack_proto_raw_tp;
-+		return prog->sleepable ? &bpf_get_stack_proto_raw_tp_sleepable
-+				       : &bpf_get_stack_proto_raw_tp;
- 	case BPF_FUNC_get_attach_cookie:
- 		return &bpf_get_attach_cookie_proto_tracing;
- 	default:
--- 
-2.25.1
+ops->signaled() is typically not called with the lock held. You might
+be referring to ops->enable_signaling(), which is consistently locked.
 
+>=20
+> > 	commit 7c703a7d3f2b ("drm/amdgpu: Fix one use-after-free
+> > of VM")
+>=20
+> I already discussed that with Simona back then. Simona actually
+> explicitly rejected my approach to take the spinlock to check for
+> signaling. Pointing out that amdgpu is using the API in a wrong way.
+>=20
+> The problem is that amdgpu doesn't track the callback structure and
+> so can't remove the callback. It's on my TODO list every since to fix
+> that miss use of the API.
+
+You mean the issue is that amdgpu cannot deregister callbacks?
+
+I don't see how that's related. The lock-unlock-cycle clearly ensures
+that amdgpu cannot continue while the fence is signaling.
+
+To clarify: our conversation circles around two partially independent
+topics:
+
+a) the signaled-bit is read without lock-protection as a fast path in
+dma_fence_is_signaled() and
+
+b) the ops are not consistently called with the lock held.
+
+>=20
+> > Tell me one thing:
+> > If locking is the wrong approach, then how come it was added to
+> > literally all callbacks except for set_deadline()? Seems to me that it
+> > must have solved some issues.
+>=20
+> Well, it's because concerns with the lock inversion brought up by
+> Alex and me was ignored and the patches merged anyway.
+>=20
+> This is just another one of those DMA-buf design problems which would
+> have been fully preventable if I would have clearly NAKed that stuff
+> from the very beginning.
+
+My impression was more that central design criteria for dma_fence (like
+module unload of the driver who issued your fence, which is designed to
+live arbitrarily long) were ignored, there was no clear guidance for
+drivers how they should use what callback, and then driver problems
+were solved in dma_fence, for instance with this shared lock. So same
+story as with drm_sched.
+
+If *everything* would have been locked from the get-go, that would have
+forced drivers to design their locking correctly, and decide wisely
+what tasks they want to perform where.
+
+>=20
+> Back then I made the mistake to believe the argumentation you come up
+> here as well and so I don't explicitly rejected that approach, but by
+> now we have strong evidence that this was a mistake and I'm trying to
+> fix that mistake ever since.
+
+Well, I am a different person with my own background that informs my
+thinking. Please keep that in mind.
+
+The "strong evidence" you claim to exist has still not been shown to
+me. I show you concrete bugs that we could have prevented, but the only
+piece of code you ever showed me where something would break is the
+list_del() in nouveau.
+
+>=20
+> We should have never taken the lock for the callbacks in the first
+> place, this just made the implementation much more complicated and
+> caused way more problems than the few raised by putting the ops
+> pointer under RCU.
+
+Lock-inversions are not being solved by just not taking the lock, they
+are addressed by having good lock design. We recently solved exactly
+that in the Rust JobQueue, where drivers also reported lock-inversions,
+but we could eliminate them with just a few discussions, discovering
+that the driver does not need these locks when interacting with the
+JobQueue.
+
+Often enough btw the only object the driver really needs is the
+sequence number anyways, which can trivially be passed and shared
+around.
+
+Now with dma_fence, I strongly suspect that the problem came to be
+because of no clear guidance by dma_fence as to what the driver must
+and must not do in its ops implementation.
+
+The only evidence I have ever seen is the fence-list-lock, and it's
+just not clear at all why any callback would need access to that.
+
+
+Let's walk it through together, shall we?
+
+ops->release() and ->wait(): deprecated
+
+ops->get_XXX_name() -> never needs driver locks
+
+ops->signaled(): "Driver, here you read an atomic integer, the sequence
+number, and tell the fence backend whether this fence shall be regarded
+as completed"
+No need for any driver lock.
+If this particular driver also signals fences through an interrupt
+handler, it can take a list lock, then signal the fence. The ops must
+not do that.
+Why would a driver need both modes, sw *and* hw signaling? And why then
+is it supposedly the case that both paths need to keep a list updated?
+
+
+ops->enable_signaling(): "Make sure that this fence will get signaled.
+Register an interrupt or schedule a work item". These locks also don't
+interfere with the fence-lock.
+
+ops->set_deadline(): clock up the CPU frequency. The only implementor
+trivially does that through a work item, too =E2=80=93 after voluntarily ta=
+king
+the fence lock over the entire section.
+
+
+As you saw from our recent amdgpu discussions, the confusion of what a
+ops is even good for caused drivers to mess around with the fence
+directly in their callbacks, checking for the signaled state etc.
+
+It was too much freedom that has caused the trouble. There are no
+canonical solutions now.
+
+
+So except for updating the linked list in ops, can you show me any code
+example where a lock inversion would occur? I'm quite confident that it
+will turn out that the driver has no good justification for performing
+the related acts in the ops in the first place.
+
+
+P.
