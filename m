@@ -1,94 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793216225;
-	b=wNSjcoMVOjhAHYzEG6pB7LemJ2IE4dMTO1BFJY1oOfnJPoqORrwiIACztGSe/jSesgOJ
-	 yjvMpqsVfEgimUj7vu5P1itaOmbySDLtW9GCnUrrkHq/xbaUyRm6KYYKrNQDDG6fJIQFZ
-	 yg2v6vn9gVhR6vU463tTkKZJzeVXp7eJ1QcRlanTiouAz3db+MzCw2u0O9BZogcf+Ojh6
-	 J4JyemBtvg+42Eo+YN3I2Kql16vN9XEQxOaKVJgTY7fGTCkaPyUsZWey5cm+RIuz1LCWe
-	 sBRALz+aaTEcfnGTdshvdDYX9cQqt11m+cGANctzAcmZZyRpa39fd8e0lpwOAT9oyxw==
+	t=1793216227;
+	b=I4XyWbUT1X2LiVBMg9YtfLeh/G6RN3fPTGYtLSUMrPtwZu/6wVsFFVBebN7haUyq3RI7
+	 DYcjCqpP7sSRNMuN6oSlbOX96QyUW7pab/KqGTRFwp3gYr7DUM6KSviIExmBadXsb8quj
+	 nVmd7Dz+Us7wHx9WS+DBGWE/Qf1E+a867cqLpfFKtEMkinduMDLEh0D85WxPW4LCz1c1v
+	 nCMgEAJu9qr4R+vgggMW+5tmSJd0mueYtBRf/ZQGnJmG7riVWsia6KBY5GE3pnhjYOs+m
+	 cydfUGO9Zp9Uk5MTlvu1Yrl6ytUS2EK828UyLjqpgaVOxK1heYuR9IyxCXQOZv223mQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793216225;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793216227;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=KAHDR/durFaCmnXZCSbDEqTD1WV/JZNcTJmjD7z7vr8=;
-	b=HkTGvzNCRV7W/uUo1WiDkBVnSmfSdz1Kb33Cgu0OcE1KAP5y2sP2WNHDyenqwoeL++vR
-	 Izf3ZqQ3gn1d6WLMP/36ZEx80glX5dcZhulq+oZb7GGWIXrBdwrN/Om63S1LTsNY+W0gH
-	 gjsYDQzd/MRQLY2FjMOFQgF+5M8sTQOyugdMCStE57zbsEQ/n+5ChuQR77L3+ftxk4Foe
-	 jsTqy9pidZ7ThdG5iPEHOwBKGCdw2M3gaKnc0A0x4BcglnMNlSi6on5Zz8pPc3l4wer4O
-	 n1bnkZzP+X+4YldIwRKBtoiLp0njG4l2Pej1hF+YRD/5PlKaDeL4j0CPRCsmHNp7gJA==
+	bh=2yS6B1fdODzUh4XgV3Cebo3LhVzp5X0snjiUXq/0jiU=;
+	b=lU4WZwrJCKBVB7Zc8+iKVvkmW99FYkz9iJBW3fbEtDvsw0lRMS685FCcvDMEavnw4/Rn
+	 YUK8s7PzMdcirPB0WcJdz5od0vAJ4r2h10yStMWE7T/cKt+PA7joKR9TAfGUS1etDn671
+	 eV3TeBFlyK8pbtNsYZ0W0EOc25HIn6JoVFGlXTO1lJp/PaDpoUU5oThua9xq4BzWkXy+y
+	 OytiAfXTdx2SMIayVsGN+jBhO29IDlbXWb+GGkDuiZF6wOutciymHtfp0MTkP0HiqDI23
+	 WtY+o81xKNjmhUC0QmyzebOt9I0mMEyfXuDaWiZw7fZuCaSC5M/3q4K1IOR9mzzqaHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QZtT3Nmb;
-	arc=none smtp.remote-ip=209.85.221.49
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kUTQlOEa;
+	arc=none smtp.remote-ip=209.85.221.53
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C95606A333
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 19:37:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4C95606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEEA60A2600
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 19:37:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3CEEA60A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QZtT3Nmb
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso1055594f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 12:37:04 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kUTQlOEa
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso1055619f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 12:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793216223; x=1793821023; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793216225; x=1793821025; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=KAHDR/durFaCmnXZCSbDEqTD1WV/JZNcTJmjD7z7vr8=;
-        b=QZtT3NmbOEWA1FFBrpkAGLiZ1OpC5NOgVcG1N/pEP+Uy5PvPsEyJub0sgE0xDWgw4X
-         nIRIzca3KeFlYGzEnHuZdzlUqc3wa1c7PQ/HtWqLJiJT349iQCppxk+Yp6R1GDzGk1Mk
-         4BrsGfKzP3UGJo4y0qcePod4SEOu0LRIrGgDA36jrWJVDh+t7Tc+8OMgMebjECQe3n7m
-         ZCBOe+1cKDabtkI3NSRLzvXpnZHQ2dG4pZnL0R9XVUz1KmJtsnQXGUSFUnihmqgibwHI
-         MvvJ4mcVKGte0LnB5jUcFjmPj8QST7h/dVgIsykHIQXGkspKWMAthpN0VXDkUfAI/Cm9
-         Dvcw==
+        bh=2yS6B1fdODzUh4XgV3Cebo3LhVzp5X0snjiUXq/0jiU=;
+        b=kUTQlOEaEk4kKhvJEXcdd8ICHwy9lwjwxfP+jr0bFV9BQmeknLAEhDf/8mfHtqmy2r
+         DsykJtGs9CyKxc77xokx9OZQXDgQIf23IM6rGMadOb1W7uqhF6ptzScJCZNQTGZDc+dn
+         syHiN3JyCIq7lApRCP1A64puUwwsAZL3wu0bBJe7XdoVSv4GBT133LQ2eSpJy5/CPs97
+         /BDrW2oGQE0MORQnqMOIY+zWb5n/lD6bSAG46kb0DBH9CmAMRGltBg1XfW/7yivMClub
+         TOrpK079S79OgF6g0rlOA9nT81DTHaPniu5KlqkwxTW+r0M7CH+p7VM24yhxmUDwGTvq
+         8txA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793216223; x=1793821023;
+        d=1e100.net; s=20260707; t=1793216225; x=1793821025;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KAHDR/durFaCmnXZCSbDEqTD1WV/JZNcTJmjD7z7vr8=;
-        b=2tuu6wBUrJtznKfDKgxlY9g6c+sdBCLagp88dB28C0Wq5FEHrgvRT4coUV0oR07v9o
-         yltDn3yhumP5dDe55VbISHkURqLyHMC+pIogdA4qEJXyjv2iDi5KA25GzrGXJn+/1yf/
-         xfY10sqR5oVLJgns11fOQOJh5/KWefT6hbpMgx2xSlwYaasMaoYLydcpIps4rVYMmANP
-         wzGZZn3l24NJ9khWHPWwWf3Z5+22dSH4ShPLoGjQseVA2HUHLCbJHirKW58JE5Ksf+6n
-         xclX69CR8Z+UGoYmg07CFKLJCRPIrh+EkTfza+ojkRzixMeJmHlQH803saaF9DgT7lUp
-         Ph6A==
-X-Forwarded-Encrypted: i=1; AKwUvByh9tZBCgzSabER3AoSmOfVypCNpgNE8X/Bzb+s55CEmjn4e85EFh7TS3q4C5cbENkrSWt2t/7XU4l7mNkhPhxSMmM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLxtkuXustHceoPDxmQbPkoHlTVQN+caFsYpzgYgP7Ar0fycFBy
-	/Wf7YUSiQmvDCG7vo5gADqXzSVay0eaE7RDjQy+I3cMcUNHEzHdKZ93w
-X-Gm-Gg: AYBFou32ZzqkGddm1wmxfbzo3ocp/jsQmCRsrpmTky3li7drnwqV8wLN4VcyqCLZtwy
-	Y3dcPqHpP7dfvF0wkgYhIUkN1qvnVF0MuNstUpbJljVmuUQAMpFqNTfP5IbZLltFYVkAyExgP7F
-	A1483YonPs6vfSimPqqqc1BM3OwskOj/OoNpm18pM5FHfF9iGwwDGGjkj0orAUkD+Do04kGBfcu
-	DeLrlEbxkKaCLR//ybAaDUO3/pT0117ekuYSDTWRuYW3RQSYrtp+9UMmqjWZgjtPhskCm/u2iJ4
-	rfEeGpTizq1frPyWcxwrCQP0Ob0gqVuoDYqwcinLaAsKlGud1I0+rg91ecSrn9SKZsXxoet5CZ2
-	NRGyj7fh6ohK9Q+r4PjzVgioBXO6kUOvHApNlrBofG/YH7QswgxkwcNUrOk5zSh+VWgHG5tWnFf
-	CAgaBQvTM5lPzEcRQ6H5kuXbRosy5/T3xD4c5fJWqjwou+SOe6X2ORXCb1KfMrwe8dInpF8rOzV
-	TRggBbnawLn95ITMKPLQfxrB4moN6i37zoUVYwnVZILWcwGFe0kYR0DwqVbNSN6pPFDHhJfY2NV
-	2fxJ1ujsBaNhqRsjThM+18WvA7IqWv/zxtTdImYvf7tjWLwIEhxeKT9yQ3zsOXsMDG74JZYMKTg
-	chMggVdtT/JEpIpXcrMeRA0IsU9LznuJtZ5p2vQdjALE8E4ETA+Dc3uVvhoZGU9PjjMbBk/asE0
-	R/tgKQh5IyUJYK3YbaEw/yMgt7/9xT02gD2ZI4AWAHunoFThjxybhXUwtHYPcTMgLewz8kC6Cm/
-	zvX7OI=
-X-Received: by 2002:a5d:5e86:0:b0:48e:21d:7265 with SMTP id ffacd0b85a97d-48e5d306296mr8258369f8f.34.1793216223127;
-        Wed, 28 Oct 2026 12:37:03 -0700 (PDT)
+        bh=2yS6B1fdODzUh4XgV3Cebo3LhVzp5X0snjiUXq/0jiU=;
+        b=PhhhenaU1xbpf4z5zNxFnMNxiHlt2JG8hUE5J/vO/9ZGn3+dvU6BYacU4pNUn+GC7t
+         ntSJALY4SdqJQf3eXQZWaDVrR7QNB5QEsIm4rdxrivBUoo6aPDwH16/LX69QoJ029cKw
+         UAaRnTBkFB15QnyS+d8oB8CsWO2fzrGJHpIV1FngnVrxa7eTfZ08t1Fgb9mNL8whjiLy
+         wrUaDPTBct1ifVZdLcRhp6Q5Yz0oQHZeUI50t9ZrVEf6/yPm++gYn1FZWOqmWXQNkiCl
+         gtJry/ZTG6Pb4KAlsO6+zIDejwvWnzpqXf017ugOhVgXJcjTcgJHh5OCLaqaZXwK8OKl
+         Uihw==
+X-Forwarded-Encrypted: i=1; AKwUvBzv6eiZ+mvYRwsLx3JM3yZyUueSbvEyHa8yrfr/UC+N5Lm4JeFtNZeJN0mTIIXyJJhNSYn8pczHNIJT81p8/muJYxo=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK/GUwst0xxhmDVPw+1hWlWswJxdzX/0JsUMlE6wo84PNnh8tpS
+	u8VPxKXngcg3TekQGSuJIJ9rd8vdDUJ+1snFaGBWAmy/Dyimrfj38njDbosB7peVeVo=
+X-Gm-Gg: AYBFou2KapbMIsFPG9G2bchi+BzRhQFP74T9/i/hIo01HW+qC8Wf+LxqDsBvUFKgIYI
+	vfZIJFhl9c5bJHbo/qmXB8EyVlGAYD34PMAB6B+GAAxGAgss2MAw3EX+OasYR1I+v4UF2nFowNl
+	dXZdUKjxOlmS5KEIlvuwqRQJQMJwkldqX/Rd7DuYokUZ6KmmoYs6ej4aMki5M2A3bWlHsR2EWHB
+	Jo41ZQd1z8/LnnrOro7F0vmOtniOXVmJgAV2wZ4uZmU0FzLONf18VERl3EQ9oreUoH20DxX6SoI
+	T/4AVyiZZaiZ/x6aO8C3Ch3LXoKb5IyP/2tw1Ri32AdUP34t1Xm6f61iOB1JhCtfro9UjwwI54p
+	HOZXQhKRqHAMPEQ2kduGvz/x8hFbOy92MlUH5iIFgs3CwiBwItbxrjKm0mI0Ho17OsXwvp1IQXk
+	gQjfnAGCg95n/iwuPTyQ3PgdjxYPkC3mARPWepoD14G+5OJFPD6lXZQ7jiI5SNN3RHpKYFcDOcx
+	jF8xxpbjNSfLm9UgGDId1ku8PVGljqWtmJNK7ZyGrp8P5BzZlle+XneE83vR91WP7bGSWuNZ61K
+	lw1Y0jW7aAWBG5ovxlc8Hf/xoquqHJS5GUV37qRjaNk018IXa7PKM1h4uz3ermrYJN2qV2HiFDH
+	tLjcDBWt3HqT6iPc01OKn7n80p9TsEwpAkR/wY+qckmRCsYimt/aSbIjglFifdBvvIpxWd3dJA9
+	4Ms4wpbBnXdCR3UMa7sRypbFxhGzNVUOKrQP0GyFJbXwbDfXbLtD+DayJNoA==
+X-Received: by 2002:a5d:5f52:0:b0:48c:4658:602b with SMTP id ffacd0b85a97d-48e5d2e7375mr8599298f8f.10.1793216225566;
+        Wed, 28 Oct 2026 12:37:05 -0700 (PDT)
 Received: from longitude (2a02-8434-fda5-4201-3fca-2040-fad6-74df.rev.sfr.net. [2a02:8434:fda5:4201:3fca:2040:fad6:74df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecd3418sm27004611f8f.41.2026.10.28.12.37.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3ecd3418sm27004611f8f.41.2026.10.28.12.37.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 12:37:02 -0700 (PDT)
+        Wed, 28 Oct 2026 12:37:05 -0700 (PDT)
 From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 To: mhiramat@kernel.org
 Cc: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] tools/bootconfig: Preserve filters when resetting histogram triggers
-Date: Wed, 28 Oct 2026 20:36:23 +0100
-Message-ID: <9653f7959268a03234c33ec5eb25d16294241fce.1793216183.git.edumucelli@gmail.com>
+Subject: [PATCH 2/2] tools/bootconfig: Quote command strings when applying ftrace settings
+Date: Wed, 28 Oct 2026 20:36:24 +0100
+Message-ID: <97454eceb5d56bf956740b8998972767bcfe6c70.1793216183.git.edumucelli@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1793216183.git.edumucelli@gmail.com>
 References: <cover.1793216183.git.edumucelli@gmail.com>
@@ -103,55 +102,45 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-reset_trigger_file() cuts a trigger line at its first '[' to discard the
-histogram state suffix. A filter such as prev_comm ~ "[ab]" is truncated
-inside its quoted string, producing an invalid removal command.
+run_cmd() passes its command string to eval using an unquoted $*. The
+shell performs field splitting and pathname expansion before eval can
+parse the quotes in that string.
 
-This also breaks the first pass that removes action histograms before
-their variable providers. If an action histogram cannot be removed and
-its provider is visited first in the second pass, the provider is busy
-and remains installed after reset.
+For example, an event filter prev_comm == "a  b" is applied as
+prev_comm == "a b". A literal "*" surrounded by spaces inside a filter
+can also expand to filenames in the current directory. The printed
+command still contains the intended string, so --apply changes the
+settings even though the preview looks correct.
 
-Remove only the trailing [active] or [paused] annotation. Quote the line
-while extracting the command so that repeated spaces inside the filter
-also survive, allowing the action histogram to match and be removed.
+Quote "$*" when passing it to eval to preserve the command string. This
+fixes both per-event filters and histogram actions.
 
-Fixes: 5675fd4ef51f ("tools/bootconfig: Add --init option for bconf2ftrace.sh")
+Fixes: 7e66ef0046cc ("tools/bootconfig: Add a script to generate ftrace shell-command from bootconfig")
 Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 ---
-I tested reset_trigger_file in a temporary tracefs instance on my Ubuntu
-machine, running kernel 7.0.0-38-generic, with recording disabled.
-With an action histogram depending on a provider that comes first in
-the event-directory order, the original helper left the provider behind.
-This happened with a bracketed filter and with repeated spaces inside
-a string. The spaced-string case even returned success.
+I tested this with hand-written configs in a temporary tracefs instance
+on my Ubuntu machine, running kernel 7.0.0-38-generic, with recording
+disabled. I checked both event filters and histogram action filters.
+The original helper collapsed repeated spaces and expanded a literal *
+into filenames. With the fix, the strings were preserved. Ordinary
+string and numeric filters worked in both versions.
 
-With the fix, both histograms were removed. I also checked active and
-paused histograms, onmax actions, and ordinary filter controls.
+ tools/bootconfig/scripts/bconf2ftrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- tools/bootconfig/scripts/ftrace.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
-index cc5250c64699..c2b993f8e366 100644
---- a/tools/bootconfig/scripts/ftrace.sh
-+++ b/tools/bootconfig/scripts/ftrace.sh
-@@ -21,13 +21,13 @@ reset_trigger_file() {
-     # remove action triggers first
-     grep -H ':on[^:]*(' $@ |
-     while read line; do
--        cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
-+	cmd=`echo "$line" | cut -f2- -d: | sed -e 's/ \[active\]$//' -e 's/ \[paused\]$//'`
- 	file=`echo $line | cut -f1 -d:`
- 	echo "!$cmd" >> $file
-     done
-     grep -Hv ^# $@ |
-     while read line; do
--        cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
-+	cmd=`echo "$line" | cut -f2- -d: | sed -e 's/ \[active\]$//' -e 's/ \[paused\]$//'`
- 	file=`echo $line | cut -f1 -d:`
- 	echo "!$cmd" > $file
-     done
+diff --git a/tools/bootconfig/scripts/bconf2ftrace.sh b/tools/bootconfig/scripts/bconf2ftrace.sh
+index 7745c97e7abd..ea7b17d0d4d7 100755
+--- a/tools/bootconfig/scripts/bconf2ftrace.sh
++++ b/tools/bootconfig/scripts/bconf2ftrace.sh
+@@ -41,7 +41,7 @@ fi
+ run_cmd() { # command
+ 	echo "$*"
+ 	if [ x"$APPLY" != x ]; then # apply command
+-		eval $*
++		eval "$*"
+ 	fi
+ }
+ 
 -- 
 2.53.0
 
