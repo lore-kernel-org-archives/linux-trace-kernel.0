@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793148265;
-	b=x19lYAJ18NDMj0e3XKqdhKOFxwC8zH7QO/9vvuHd/5ehGW9AFydkN0z+JZFJ4g+LWVyh
-	 rHAALsI4wAxBNNyMniF3PJies6YJXmbd4loil7BlBAdgaNShtYx1EU7i+5sccnPo4zJXI
-	 axapJR/4rG0gecGF2BW2VklHFetcHC95Wi8+TVNWRpWvHeByGZ8A8gXLyBF5KPMcmMGRN
-	 NVHR1+Suygru4CVmsDtqqH14p44F2wjUXXy4L9wpEAzh4D1QujHAGnq0GAjVseTPh/dsr
-	 tWtC+WmEvbB3pC/1rTjWSrFqBuFeJZJzon+RNLIDdvNL+bJLcRhr/1X74F0OntSKM1Q==
+	t=1793148274;
+	b=wZQsYBHwQ6KrDHAfNKWKz/XRkCD9sSH2lte+6nUzHv5b33EyvZe/piZ+JoN2LkP8lFni
+	 QTJmhuGXyoR7XTIMRL6QPM6mJDurMBmQLIJUy+oJcFlVYoElH7GyCmY5HDUPjERWJrVhT
+	 nXmjqvqHaOQD4XRdxm2wogdGXA6negiZwuCNrtYPR5dtSZ8vSuPGjTslh9lTH/KFlSg1F
+	 niUf2P9xGfgKFUhuReMZWs5+m1oWyHO6+axYStCakBG2Z0WhzJzQYJP0w9tVtd6vTELf9
+	 3+milsHStNoOXQDrydv3dvl674LWh+dmqsVOf8xFXhL+eHlF91P/h6xrlrEncr1CLLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793148265;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793148274;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=9qaLBeCoOIl+OvSFopDgW1JD4zQoPNa1Eh24UPcQ/JI=;
-	b=ujmhuDF6OudlzLLdEuC3khmVY1W6zKNSnEsMHS9VwFkhG+5W+H/PJ2wubnNXWu6mPEBs
-	 YS6TCfEH6sZMnhSaSDJ6fycxuxF8FhiAtPAmtz97hBlMfrm9kg6IoZxFM8LxTyPcREQh+
-	 buK1IE12YzbVt33hTMXfZoO4+sdbbRUE/pChmJkHOjplg4Kb9SmgyNisHtvSMP+bO5OTD
-	 SlUugQtST7BIu+LQfKNTQU9QJPOK1+7kyiH7Bue4ZV3IQ/mtMequNoAuSXzQYdiWCUhGK
-	 8isVObolhXa33cVe4gpM3eUPd5z/eyndfL5z2mZkxhuzbCvzrykdMwkjqk3Z8BgzE0A==
+	bh=0AjV6bYWF1r75TLZarB0zqfpDpujBtOqdxX7XWbSDaU=;
+	b=UgxMTY5JoJHDLC5+rerBxymrioTKudOC7uyKrjH2VWb8ngjh3zFOC+3ROP+gU0rNNfGj
+	 3ojH4yMmrmcdtlDOEsttpagohmX2G/adFNcgqAsVGUwYNpmF8eGFYbYp1KQOTuUzF8k8K
+	 MxrRC3UDejGTj8jCmVsbpqsp1oJlZyUBNneaLvN/O6IPKQa8frZDApwV5Wn+oPI6ygWRk
+	 I8/kjwLkvBMuIK5X+REoTw8TabC9QQE30JSjCEva0y3DbOhnTyoaw0KQ4vTozbNMZ2G7T
+	 CyDi0y79L7NmQIj1uJZGQUU176J0g1WQkffFVcPEoeWiskiZPFnppreu0K6Ua7ZF1gg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R40eMISi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="oDZmL+B/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6997606A31D;
-	Wed, 28 Oct 2026 00:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3735D606A31D;
+	Wed, 28 Oct 2026 00:44:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R40eMISi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD57B1F01828;
-	Wed, 28 Oct 2026 00:44:22 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oDZmL+B/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D5A1F01828;
+	Wed, 28 Oct 2026 00:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793148264;
-	bh=9qaLBeCoOIl+OvSFopDgW1JD4zQoPNa1Eh24UPcQ/JI=;
+	s=k20260515; t=1793148273;
+	bh=0AjV6bYWF1r75TLZarB0zqfpDpujBtOqdxX7XWbSDaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R40eMISiVdxdpfIP9D5tpA1U5XrKaR54eskFB+pH/E4Jq5494bSdwpHnyJjeIEUUu
-	 g+G5se+bl4aQX3JFgCP9264wX8Upw8UtLyXXRWAWSWd4YJ0vSJ9AquT9h6+luL67T8
-	 jc17huuGxN6F3b09N2BpxxeRU8EXnfoPmZqn4jt8chvroVIQvODGM8Ol05BJKwU8B7
-	 Lwm6NN7ssq3j5Tv6dTx4ODgBQBEqKyqF52+58or6kuH4mmTo0naSGwnijKM/Rz8VjB
-	 YWx52ZWkbGdSPt/WozZblnYfvifjINgc4dTF/hZoKBFgUQ6xrGeoDWPCzxcenhm7je
-	 mO2/8mXatcz2g==
+	b=oDZmL+B/euwFBNO6Y2kCdU6/tw62kL2qtTGWdtjlqeVujTwGEjpf0R2AxM8dbwBVF
+	 jEW1pb4qRe8aF6AdhhMBAUCx4VfvF9gEz4JX+VyKnfxzp1Ti8Snfhqtyr5LTgqtIHN
+	 epsNUagd4rBsuiN2rvg+BAydoElm93P8+tBxLOOcz2jIhNur/bqxmGiz10/6uHr8M2
+	 kMlMo7t7FMme1qGgwihOmzbBfW//WGVIyEPJqVrunY/Os9Lw0bkTzVtH+SbY4ww3Rm
+	 cx5vyla2IsELtjySiwjgTgSSOuebwjW217SH25QBt3rzjGQLLLYerQVPI/qlxklIBY
+	 RHwP9BX5Y9MVQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 06/16] tracing/filters: Check for missing operand after operator in parse_pred()
-Date: Wed, 28 Oct 2026 09:44:20 +0900
-Message-ID: <179314826057.684037.9228661030047991277.stgit@devnote2>
+Subject: [PATCH v3 07/16] tracing/filters: Fix quoted operand parsing in function event filter
+Date: Wed, 28 Oct 2026 09:44:30 +0900
+Message-ID: <179314826994.684037.9596014447755216572.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179314820431.684037.4147763044424284198.stgit@devnote2>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
@@ -69,17 +69,24 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In parse_pred(), after matching the operator and skipping whitespace,
-the filter string may terminate (str[i] == '\0') if the operand is
-missing (e.g. "ip ==" or "common_pid ==").
+In parse_pred(), when parsing a quoted operand for function events (e.g.
+ip == "schedule"):
+1. The loop 'for (i++; str[i]; i++)' breaks when str[i] matches the
+   closing quote, but 'i' is never incremented past the closing quote.
+   As a result, parse_pred() returns 'i' pointing at the closing quote,
+   causing the caller predicate_parse() to immediately re-parse the
+   closing quote as the start of the next token and fail with
+   FILT_ERR_TOO_MANY_PREDS.
+2. If the closing quote is missing (e.g. ip == "schedule), the loop stops
+   at the NUL terminator without reporting an error.
+3. The loop started with 'i++', which was intended to skip the opening
+   quote, but also unconditionally skipped the first character of unquoted
+   function operands.
 
-For function events, the loop 'for (i++; str[i]; i++)' unconditionally
-increments 'i' past the NUL terminator, causing an out-of-bounds read.
-For other event types, allocating a predicate only to fail later during
-value parsing is wasteful.
-
-Check if 'str[i]' is NUL immediately after skipping whitespace after
-the operator, and report FILT_ERR_INVALID_FILTER.
+Fix this by advancing 'i' and setting 's = i' past the opening quote
+before the loop, starting the loop at 'i' without unconditional
+increment, reporting FILT_ERR_MISSING_QUOTE if the closing quote is
+missing, and advancing 'i' past the closing quote.
 
 Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
 Cc: stable@vger.kernel.org
@@ -87,27 +94,48 @@ Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v3:
  - Split from the monolithic function event parsing patch.
- - Check if str[i] is NUL immediately after skipping whitespace after
-   the operator in parse_pred() across all event types, as suggested
-   by Steven Rostedt.
+ - Allow empty quoted operand ("") as valid syntax per Steven Rostedt.
 ---
- kernel/trace/trace_events_filter.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/trace/trace_events_filter.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 2554120ff6d6..3d2a075ec425 100644
+index 3d2a075ec425..170d51ff337c 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1756,6 +1756,11 @@ static int parse_pred(const char *str, void *data,
- 	while (isspace(str[i]))
- 		i++;
+@@ -1853,22 +1853,27 @@ static int parse_pred(const char *str, void *data,
+ 		 * Quotes are not required, but if they exist then we need
+ 		 * to read them till we hit a matching one.
+ 		 */
+-		if (str[i] == '\'' || str[i] == '"')
+-			q = str[i];
+-		else
++		if (str[i] == '\'' || str[i] == '"') {
++			q = str[i++];
++			s = i;
++		} else {
+ 			q = 0;
++		}
  
-+	if (!str[i]) {
-+		parse_error(pe, FILT_ERR_INVALID_FILTER, pos + i);
-+		goto err_free;
-+	}
-+
- 	s = i;
- 
- 	pred = kzalloc_obj(*pred);
+-		for (i++; str[i]; i++) {
++		for (; str[i]; i++) {
+ 			if (q && str[i] == q)
+ 				break;
+ 			if (!q && (str[i] == ')' || str[i] == '&' ||
+ 				   str[i] == '|'))
+ 				break;
+ 		}
+-		/* Skip quotes */
+-		if (q)
+-			s++;
++		if (q && !str[i]) {
++			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
++			goto err_free;
++		}
+ 		len = i - s;
++		if (q)
++			i++;
+ 		if (len >= MAX_FILTER_STR_VAL) {
+ 			parse_error(pe, FILT_ERR_OPERAND_TOO_LONG, pos + i);
+ 			goto err_free;
 
