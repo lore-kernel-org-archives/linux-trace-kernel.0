@@ -1,49 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793174200;
-	b=KKCa9HPtEAP5XafSDxD0zfAdl70rJspgR+U9NfgIpk2bojUf8rtkhognLxbWRPVnb2G2
-	 kTBsrz81qmfgdZZK/YFMBFsyY8W2n26K/wc38FMlbxA1ZsMZqv/N++JW4kIIU+9v+OMgp
-	 YJPGXry1LGNfird3ilYeogl/Kd/FuE/EoWrnWeIrHOXuuTX5Q6Kx4deFFB5CELZ9ScEi0
-	 qIPlF0uP2x7uW9K9sVYlsfExkkdmO0VjK41nlcDMKULo1hxYWoOKj2XGRUtwjE5Upwhln
-	 LVmMbUz5CDcKvjmFHu4LhOP8jDjboGEB65GoJMLpWfiNHbBFdB4Lr8HGxowFgEM6AtA==
+	t=1793176669;
+	b=dTwbsA6W7NoYoYcIL7z/3CNMseJ67ov5eC6URvR51ZmXKgM+LgiSYACz1IIAuNd7pj1o
+	 N+ewYmcaoJ9rIJ/82asbPueLnShWpfCzzxxcacXOdTOgeCT1CSE8VpJPs3GStRmL8lGTr
+	 5sRUmnYAivBkm4HIdWJmgITJB7nFstUubzmlm9wBHPvWNGIKYwYMAvqTuU/pmxPVsZwNO
+	 4RwxCndL1J6auJ2FyltIhEUeScXwzKRoUDReiZoG5D1ELhd9lKf8cd8VPvR3rR2T+0y9F
+	 6q7nMsf9PTqAK2uulwjfdrlEIK28ke2VdtD7rZKUi3uodwXNX1HPY8Ltyr1/iM/2G3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793174200;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=kHjcBED3Ycog4A3HXnCvRQAGAdc1n7vzZLXNcrluU/c=;
-	b=JFThKs7glSTf+8Wl6KkiOaKDV5INIw/pP5ZLJul+SS7Pgz+YPiVE+xpO0pUOwgAWVAL2
-	 n/hMqHcKMkA+47Ez0NWprMa6D3AFPcmTZpZV80Sks9yJeDRvCRMgflp8Nu0pcgkntruQS
-	 9bEIBGNzTNEEyMm0DhUkF+fSKFJlK4waVkg8VRBt12rfCNlnP7Yo8wClza5TQyerdMB4I
-	 riCttZ0i1IixBcySSfk1P/pHz1aEBOaXyX+J1etbZOhHgBMknMYZIWZ88/5ao2L42LOSX
-	 yWm/+de5qUDhxeg+78wc/bAx/eWWHiufCphi4Te/F6dJpm7k+bd1XmX8Bsyc9S+uiZA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793176669;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=1wbs7cHydDEQXXO5KItG+AMA3doDxVoVAxLbCzDRe70=;
+	b=ESZkGTm6bp8FDnoVjqNN3xHQ6L7RQJSK/oI6996f+/prWPmd1+4MCC5jppKSAgaAYyYb
+	 0Pz9daicOMewS9kjTBOJ1sIQGzvBp6/U1CxhV0VM2GP381Scdm/JK3j1I3fEYsVeulev1
+	 GCtcexFEhTZWz97ultRFuB0p6C8q++8adMW8b8v5/vKV0IvMIK0W0g5tApPNcp0Z+2j4W
+	 546y+bQPoVKsHZpmj+1wm3+65H8E+U9SxG2p3FNBNN2yElz8QJynoLqhQE5G9OI09iREN
+	 mFicm7HIPBoxODcunRrtVbSjpIks6TXbAiwnDpODMS9sIa2+zqno8jpZWychJIB6yyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.alibaba.com;
-	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LdMbv88D;
-	arc=none smtp.remote-ip=115.124.30.133
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ppjq6uci;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50547606A31A;
-	Wed, 28 Oct 2026 07:56:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50547606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FEB606A31A;
+	Wed, 28 Oct 2026 08:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LdMbv88D
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793174189; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kHjcBED3Ycog4A3HXnCvRQAGAdc1n7vzZLXNcrluU/c=;
-	b=LdMbv88DsHfP5BNmZrH5JZ4tjB9eb0cURyKLKqmRvFtZpE4ZJOuLwyCg3xLZ3RQTwmhNvgu1+iW9fVLMhJh30F3eO6bckP14w7TwbagpvnAK5MxCtc6LF7TYRctQvS32tIeO6wREx4EWqwRvjX9udDK4aLgYiPKc8sG5YdFJiRE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0XDg8HhM_1793174186;
-Received: from 30.74.144.137(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XDg8HhM_1793174186 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 Oct 2026 15:56:27 +0800
-Message-ID: <03363c4b-ed04-4921-8bc8-165ed8c363e4@linux.alibaba.com>
-Date: Wed, 28 Oct 2026 15:56:26 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ppjq6uci
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCC61F01825;
+	Wed, 28 Oct 2026 08:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793176668;
+	bh=1wbs7cHydDEQXXO5KItG+AMA3doDxVoVAxLbCzDRe70=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Ppjq6ucixIquylI1RXa0glpRlIx0VRokubeu3+Rd9Zd3zOXS9VnLl/cf7El20ued2
+	 LHGK6Xk9IQaRqA1ZpE5lW55bE8uTquQAGIOd9nbpx+msITLI5rBfXXBi6zLH41Zeqc
+	 PQVQTbbhTl+Xu3JKPXDUPG5SFtltCsZNT5zDz5R5fMPIh9kI/s6nMR6wCLH/WBSttZ
+	 Jd5uHYmnCRco+nGQQ0WjggVO4uKe9cQrI20/3HnGRX8jkvjhI3JLTfX7mJMkM07Cdu
+	 F2b+fzMNBq2vYgLkkqQ8IJadCUPcQEYgH5F/oqVQGjN5I00CKnmk+1zKvUPVkVo3LC
+	 m4OYLuMKXTIMQ==
+Message-ID: <5e980194-d892-4b68-80fe-612c910c29d7@kernel.org>
+Date: Wed, 28 Oct 2026 09:37:39 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -54,232 +52,95 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm/shmem: trace swapin results and allocation
- fallbacks
-To: Xuewen Wang <wangxuewen@kylinos.cn>, hughd@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20261027094014.2432692-1-wangxuewen@kylinos.cn>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20261027094014.2432692-1-wangxuewen@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v3 0/8] mm: fix allocator races with memory hotplug
+To: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, kernel-team@meta.com,
+ akpm@linux-foundation.org, mhocko@suse.com, rientjes@google.com,
+ shakeel.butt@linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, muchun.song@linux.dev, osalvador@suse.de,
+ ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
+ surenb@google.com, brendan.jackman@linux.dev, hannes@cmpxchg.org,
+ ziy@nvidia.com, bigeasy@linutronix.de, clrkwllms@kernel.org,
+ mgorman@techsingularity.net, anshuman.khandual@arm.com,
+ Bessel.Wang@huawei.com, jiang.liu@huawei.com
+References: <20261021023940.1940971-1-gourry@gourry.net>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261021023940.1940971-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 10/21/26 04:39, Gregory Price (Meta) wrote:
+> Eight fixes for allocator paths that can act on state another CPU is
+> updating: zonelists rebuilt by memory hotplug, and the pagesets of a
+> zone that offlining empties.
+> 
+> I've packaged these together because they're all related to hotplug.
+> 
+> *** Backport note - Patches 5-7 build on patch 1: without it, their
+>     retry is compiled out when CONFIG_MEMORY_HOTREMOVE=n.
+> 
+> Most of these race conditions stem from zonelists being re-ordered
+> in-place at runtime during hotplug.  The result is a mixture of failed
+> allocations, NULL dereferences, incorrect placement (GFP_KERNEL in
+> ZONE_MOVABLE), node misplacement, or incorrectly allowing hugetlb /
+> contig allocations on a node/zone otherwise not eligible.
+> 
+> Most of these are incredibly narrow race conditions, but since the most
+> likely impacted machines are VMs with memory hotplug, the narrow
+> condition can more easily occur when a vCPU takes a long interrupt / VM
+> exit of some kind.  I've made all of these race conditions
+> deterministics with a kprobe reproduction module described below.
 
+What's the status of this? "memory hotplug" caught my attention, but then then
+is all page_alloc material :)
 
-On 10/27/26 5:40 PM, Xuewen Wang wrote:
-> The tmpfs swapin and allocation paths are currently a blind spot for
-> tracing: the swap layer has no tracepoints at all, the existing
-> counters cannot attribute events to a file, and an mTHP request can be
-> silently downgraded at two layers - or fail outright - with only one
-> of those having any accounting.
-> 
-> On the swapin side:
-> 
-> - PGMAJFAULT only accounts the page fault path; swapins triggered by
->    read()/write()/fallocate()/truncate/symlink go through
->    shmem_get_folio() with vmf/fault_type NULL and are not counted
-> - PSWPIN/ZSWPIN are counted at the I/O and zswap layers with global
->    and memcg granularity, but cannot be attributed to an inode or file
-> - the mTHP order degradations in shmem_swap_alloc_folio() (uffd/zswap
->    forced order-0, order-0 retry after sync allocation failure) have
->    no counters at all, unlike the swapout side which counts
->    THP_SWPOUT_FALLBACK and MTHP_STAT_SWPOUT_FALLBACK
-> 
-> On the allocation side:
-> 
-> - the order mask from shmem_suitable_orders() (vma filtering, page
->    cache layout conflicts) can drop the order with no counter at all;
->    the code comment notes that -EEXIST "would be the right code, but
->    not here"
-> - the allocation fallback loop is counted by MTHP_STAT_SHMEM_FALLBACK
->    without attribution
-> - a fully masked-out request fails with -ENOMEM while the caller
->    silently retries at order 0
-> - when mem_cgroup_charge() fails with the target range already
->    occupied, the error is rewritten to -EEXIST, making a cgroup limit
->    event indistinguishable from a benign insertion race
-> 
-> Patch 1 adds a single shmem_swapin_folio event at every return from
-> shmem_swapin_folio(): the original caller index and XArray entry, the
-> requested (entry) and actual (folio) orders, the branch taken -
-> validation failure, initial swap cache hit, synchronous helper,
-> readahead helper, or poison marker - and the return value. For the
-> synchronous helper it also records why the request became order 0: a
-> fallback bitmask reporting the userfaultfd and zswap restrictions
-> together when both apply, sync_fail plus the initial errno when a
-> higher-order attempt failed and was retried, or none.
-> 
-> The fallback field is a bitmask rather than an enum because the two
-> policy restrictions are independent: a VMA can have userfaultfd armed
-> while the boot-wide zswap latch is also set. Reporting only one value
-> would hide that the other restriction must also go away before large
-> folios come back. sync_fail never combines with them - a policy
-> downgrade forces order 0 before the first attempt, so the retry that
-> sets sync_fail can only run when no policy bit was set.
-> 
-> Patch 2 adds a shmem_alloc_folio_finish event with the full order
-> chain (requested/suitable/actual) separating VMA and page-cache
-> filtering from allocator fallback, a stage value (filter, alloc,
-> charge, cache, account, done) identifying where the attempt ended,
-> and both the stage errno and the returned errno: a memcg charge
-> failure stays visible as error=-ENOMEM even when a page-cache
-> conflict rewrites the return to -EEXIST. A fully filtered-out request
-> reports stage=filter with error=0 and suitable_order=-1 because no
-> allocator call occurred. Successes at the requested order - including
-> ordinary base-page allocations - are omitted, so order-0 traffic
-> never floods the ring buffer.
-> 
-> shmem_swapin_folio does fire on every swapin attempt, and that is
-> deliberate: a swapin is a major-fault or I/O slow path whose rate is
-> bounded by actual swap traffic, and each event is precisely what
-> PSWPIN cannot attribute. Folio allocation is the opposite - it runs
-> for every page ever touched, "succeeded at the requested order"
-> carries no information, and it is already counted by
-> MTHP_STAT_SHMEM_ALLOC and THP_FILE_ALLOC. Hence the asymmetric
-> gating between the two patches. Both events, their fields and the
-> attempt semantics are documented in Documentation/trace/events-shmem.rst.
-> 
-> Three questions answered up front:
-> 
-> Why not vmstat counters?  Counters show trends, tracepoints do
-> per-inode attribution; the two are complementary, and the trend side
-> already has its counters.
-> 
-> Why not eBPF/kprobes?  BPF programs attach to tracepoints, so this
-> series is an enabler for BPF rather than competition. The interesting
-> data is mid-function state (suitable_order is a local consumed by the
-> fallback loop, the fallback bitmask is an internal policy decision,
-> and the charge error is rewritten in place before the return) that is
-> not visible at any function boundary; the functions involved are
-> static and may be inlined, so kprobe scripts silently break across
-> kernel versions, while a tracepoint's fields are documented in its
-> format file and any change is visible in review.
-> 
-> Why not extend trace_mm_filemap_add_to_page_cache()?  tmpfs never
-> emits it.  Its only call site is in mm/filemap.c, while
-> shmem_add_to_page_cache() runs its own XArray insertion loop with no
-> trace calls at all, so tmpfs folios entering the page cache produce
-> no filemap event.  Even if they did, it reports only the final order -
-> no requested/suitable/actual chain, no stage, no errno - and nothing
-> whatsoever for the swapin side.
-> 
-> Reproduced on x86_64 (8 CPUs), kernel v7.3.0-rc3 + this series, tmpfs
-> on disk-backed swap with cgroup v1 memory limits forcing swapout
-> deterministically; zram provides the SWP_SYNCHRONOUS_IO device for
-> the synchronous path.
-> 
-> Swapin attribution - three tmpfs files (400M + 500M + 150M) charged
-> to one cgroup, 965M forced out with a 100M limit, then the 400M and
-> 150M files read back with read():
-> 
->      PSWPIN +116219 pages, PGMAJFAULT +0
-> 
->      ino=2 (db_shm,    400M, read back): 102400 events - every one of
->                                          its 102400 pages
->      ino=3 (app_cache, 500M, untouched):      0 events
->      ino=4 (misc,      150M, read back):  16661 events, exactly the
->                                          pages that had left memory
-> 
-> 104528 events took the cache branch and 14533 the readahead branch;
-> all carry error=0 and fallback=none. PGMAJFAULT never moved while
-> 119061 read()-triggered swapin events were recorded.
-> 
-> mTHP order degradation on the readahead path - huge=always mount,
-> 512M faulted in as 256 2M folios, 414M swapped out to disk swap and
-> read back:
-> 
->      102672 events  requested_order=0 actual_order=0
->        1656 events  requested_order=5 actual_order=0
->        1449 events  requested_order=6 actual_order=0
->         207 events  requested_order=9 actual_order=0
-> 
-> The 3312 events with requested_order > 0 all came back order 0 while
-> fallback stays none: the readahead path returning a smaller folio
-> without any policy downgrade, exactly the case the documentation
-> describes.
-> 
-> Synchronous whole-folio swapin - the same workload with zram as the
-> swap device and the zswap latch unset:
-> 
->      207 events, all path=sync requested_order=9 actual_order=9
-> 
-> 207 2M folios account for the 414M that went out: with no policy
-> restriction the synchronous helper preserves the entry order end to
-> end.
-> 
-> zswap policy downgrade - zswap enabled once then disabled (arming the
-> one-way latch), 128M fault-written with zram swap, 90M forced out:
-> 
->      23040 events, one per page swapped out
->        720 events with requested_order > 0, every one fallback=zswap
->            360 order=5 / 315 order=6 / 45 order=9, all actual_order=0
-> 
-> fallback_error=0 and error=0 throughout: policy downgrades, not
-> failed attempts. The remaining 22320 events are order-0 entries that
-> had nothing to downgrade (fallback=none).
-> 
-> Combined policy restrictions - a userfaultfd registered over the
-> faulting VMA plus the armed zswap latch, 158M forced out and read
-> back through the armed VMA. This is the case a single-value fallback
-> field cannot report:
-> 
->      1264 events  fallback=userfaultfd|zswap
->          632 order=5 / 553 order=6 / 79 order=9, all actual_order=0
-> 
-> The 39184 order-0 events in the same run report fallback=none: an
-> order-0 request has nothing to downgrade.
-> 
-> Allocation filtering - MADV_NOHUGEPAGE 64K stripes every 2M on a
-> huge=always mount, 512M fault-written:
-> 
->      1280 events, all stage=done error=0 ret=0
->      256 each for requested_order=9 with suitable_order and
->      actual_order of 4, 5, 6, 7 and 8
-> 
-> Not one 2M folio is allocated across the whole 512M file
-> (shmem_alloc 2M stat delta 0), yet nothing today reports why.
-> 
-> Allocation failures under a cgroup limit - 300M fault-written inside
-> a 100M memory limit, 8365 events in one run:
-> 
->      1976 stage=charge  error=-12 ret=-12  memcg charge failure, the
->                                           errno preserved
->      1976 stage=filter  error=0    ret=-12  suitable_order=-1
->                                           actual_order=-1, no
->                                           allocator call occurred
->      4413 stage=done    error=0    ret=0    cascade fallback,
->                                           suitable_order 1 to 9
-> 
-> Filesystem accounting - a 16m tmpfs mount written with 64M of 4K
-> pwrites: 24576 stage=account events, all error=-28 ret=-28, firing
-> at the block where accounting ran out; 12288 carry requested_order=9
-> (the large-folio write attempt) and 12288 requested_order=0 (its
-> order-0 retry), two events per failed write.
-> 
-> Negative controls: 0 events for re-reading a file already in cache,
-> 0 with the events disabled, and 0 for a 64M plain order-0 write
-> (patch 2's volume filter).
-> 
-> Not exercised at runtime: path=lookup and path=poison with nonzero
-> error, fallback=sync_fail with fallback_error (these need a failing
-> higher-order synchronous attempt or fault injection), userfaultfd
-> without zswap (the latch is one-way per boot and was already armed
-> for the combined test), stage=alloc with a real allocator failure,
-> and stage=cache (a concurrent insertion race). Everything quoted
-> above was observed on the target machine.
+-- 
+Cheers,
 
-Sorry, I'm not a fan of adding such tracepoints without any real use 
-cases in production to show which data is truly useful. And as you 
-mentioned, eBPF can do most of the data tracing.
-
-Moreover, I don't think shmem is special. I don't want shmem to have its 
-own swapout/swapin tracepoints while anonymous memory has its own 
-swapout/swapin tracepoints. If there are swap related tracepoints that 
-are actually needed, they should be considered together as proper 
-interfaces.
-
-Finally, tell your LLM to simplify the cover letter.
+David
