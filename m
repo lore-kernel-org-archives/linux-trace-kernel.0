@@ -1,67 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793191926;
-	b=A7ehLpQQ4wpV5T8GEF9bf5XH+5PXlJjC3Z4EH6IiPq8y2aCzZOmDotzhNuWfK1noAqHr
-	 J9blgB2BkCd9z32tHvW5KcpvaNpf4Nxfjl/3Y4eeHNOL1lQ1JX7OaBK6LfIYiOe+XDpdR
-	 /TC4NMuMEnQ6orslKT06eCVY7zpcSOijwRTJXxLl/hLTCn0JIsbTfY/elbBpLuB54AfpB
-	 h1hAJDqdWj0BIVfp5FT7vLJB06BvgggFMJvjVM3jJkC+vr8IWv8xtIQPJy+YJ+qgfkvkR
-	 8V2+6I6cb6TYX7JZRSe/4ADIb/5VB1odRFg2fVFCKe65POKMaAxO/uHvYrpJwvw30qg==
+	t=1793194138;
+	b=40ec0jH5PlfIoOH72+nzB1/YueuwDQiTIeR3vL6hF3ayVejYf4JwoaXWgilCt19ncfK+
+	 8mZV1cqysT9RnnDWjMU2cWbqF+TKDQFHMDforsCryiSu53PZFYAQrLodlzdZMOLcvO5TB
+	 miMtk7b0u1y33PHjCPbQCV5ilosLEdGNFaUxJSsc8Xxm9pXSWmfUNnZgrKgd/EmxuqTb6
+	 RlOD3oOMc08WkC4RT3LjC2H5twGfMiTdV73DFV6X3pQj0aO5zswcXPhyrz5vdPojm/Pmz
+	 53aGDZl2quAJFcKc0288vgNULR6fTUqEdBAbkZ6WmgvgTQCojZHrbYjbMxsIvTBSSDg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793191926;
-	h=DMARC-Filter:DKIM-Signature:Message-Id:Content-Type:Subject:
-	 X-Original-From:Cc:Content-Transfer-Encoding:X-Mailer:References:
-	 In-Reply-To:Received:To:From:Date:Mime-Version:X-Lms-Return-Path;
-	bh=ruJcFMq+T+PYshOYgwUo5k4oqvbhd5wL7JLOkO0njoo=;
-	b=eLn98hDfpuGCiiokr3yK6Hl7VRASNDbn8IVaQCeI1L0xIsaidsNcZVFdJ2O0XoYV05NE
-	 jAScqJ7pC+4Xv8FQA+I1JoLKsbLdH4eYFesIhazCiQADi6SoG3BgfFhcQwNkkMpb06rr3
-	 sL1nR6EHnz3ul1c87EMvuxfkEfOJxsaZwDsXmS+gwaHtaLJz0vDACYW5ctWbJ94DTzs7c
-	 YhioE6Ux8vMXjJU/RBOz3TSZoO4YvZWN+jpk8w9CYo6wLN7Piqcg0HSPyyKh+IAj9cnK+
-	 9FBDibf3Kzo0k6cZDacjujLLtnRDT4CSqZOokGs0OU5kl6ItleXPZzrnjo2kY7RK3Xw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793194138;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=FLKnlRbJD1/tet/3IiAp1mZT2KpI2WVfTfQBZi4MnUQ=;
+	b=l3mfQo/eqfmheQvuC+L73NuSxSHRZAypcozYbMfFR3FxOsxLN2OVY2i5dPOT70erS+PO
+	 kQDBqidfgt3Dqw31g7v5wUA1XpfwpDuGi0GazUQhzBcPPzUx/DzhfFGkBqw/eoISVM1Xv
+	 nbSmLkj5ZVPuhyiNZjqxgaMVEinpv6z2UQyX+zDDPE9OhJa/z1TozDV2ahzdauFMbJmbo
+	 XtbG4aO3MXtYwR3v/+U60MgiW05bGGx+353yu9UGzLVPKjgiHl2bz555uvXiiPTe51KM0
+	 Uw5fEWlfAbfeec3kE+Pq/xNeuyrakM3RhmFJFwdL1DuBEIbI+T5W9JggpDqE6OHUSwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=insta360.com;
-	spf=pass smtp.mailfrom=insta360.com;
-	dkim=pass header.d=insta360.com header.i=@insta360.com header.a=rsa-sha256 header.s=feishu2606151854 header.b=q2WpuNEn;
-	arc=none smtp.remote-ip=209.127.231.18
-Received: from va-2-18.ptr.blmpb.com (va-2-18.ptr.blmpb.com [209.127.231.18])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=qQvuRZzS;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0317606A334
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 12:52:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D0317606A334
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=insta360.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=insta360.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D67606A31A;
+	Wed, 28 Oct 2026 13:28:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24D67606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=insta360.com header.i=@insta360.com header.a=rsa-sha256 header.s=feishu2606151854 header.b=q2WpuNEn
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2606151854; d=insta360.com; t=1793191917; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=ruJcFMq+T+PYshOYgwUo5k4oqvbhd5wL7JLOkO0njoo=;
- b=q2WpuNEnardC3QCL0XlIgUTNG849iFNdxmtXxDCnkbehfuy6pzCMr+l/asWPKvhvdcTN+o
- /2xQOuIcOC+Vkp2bjqVy2OsE/YCKYVBOBDFO0bC5o9zFOPbfnsA4w8OaoS11F3tjW4o6Tw
- otJYc68qhRLqapRdTBYWAFY902QG6nhtZY2fh2xPN7M49yrSUL8hEty2JwdOKV03DRsv3U
- pkDiAg/BRwn8+mJntQstJUX+WOToWsLaOEiL88zBda/KvG4JU1o/9nfwZJPuDtjLzMf29A
- RefFgTFIc6ioaglfhzkI0qyTmihOIjlwPO8kBhls528VNMn1CqrjqcRxiA2aCQ==
-Message-Id: <20261028125148.1348-1-yangsongsen@insta360.com>
-Content-Type: text/plain; charset=UTF-8
-Subject: Re: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
-X-Original-From: Songsen Yang <yangsongsen@insta360.com>
-Cc: <song@kernel.org>, <jolsa@kernel.org>, <ihor.solodrai@linux.dev>, 
-	<kpsingh@kernel.org>, <matt@bobrowski.net>, <ast@kernel.org>, 
-	<daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>, 
-	<memxor@gmail.com>, <martin.lau@linux.dev>, <yonghong.song@linux.dev>, 
-	<emil@etsalapatis.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>, 
-	<mathieu.desnoyers@efficios.com>, <bpf@vger.kernel.org>, 
-	<linux-trace-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-X-Mailer: git-send-email 2.53.0.windows.2
-References: <20261028093548.790977-1-yangfeng59949@163.com>
-In-Reply-To: <20261028093548.790977-1-yangfeng59949@163.com>
-Received: from DT-9806 ([61.241.19.90]) by smtp.feishu.cn with ESMTPS; Wed, 28 Oct 2026 20:51:54 +0800
-To: "Feng Yang" <yangfeng59949@163.com>
-From: "Songsen Yang" <yangsongsen@insta360.com>
-Date: Wed, 28 Oct 2026 20:51:47 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=qQvuRZzS
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 881D080C8B;
+	Wed, 28 Oct 2026 13:28:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id B33A320028;
+	Wed, 28 Oct 2026 13:28:47 +0000 (UTC)
+Date: Wed, 28 Oct 2026 09:28:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 03/16] tracing/filters: Fix false success return in
+ process_system_preds()
+Message-ID: <20261028092846.3782e698@gandalf.local.home>
+In-Reply-To: <179314823296.684037.17602272705996028005.stgit@devnote2>
+References: <179314820431.684037.4147763044424284198.stgit@devnote2>
+	<179314823296.684037.17602272705996028005.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -70,50 +61,99 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Lms-Return-Path: <lba+26ae1efeb+57b5aa+vger.kernel.org+yangsongsen@insta360.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: B33A320028
+X-Stat-Signature: fjmr4z6yb7u84x13waruh7dcciwpi13n
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/7VmVCgvu1oMBM+JBddpevWT5GzRegh8Q=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=FLKnlRbJD1/tet/3IiAp1mZT2KpI2WVfTfQBZi4MnUQ=; b=qQvuRZzS4Mv8IDFULHOF5ttRvBP7irHxHzjl2PfEcCYIG6wUHoKDCLrffdcAchMqblXv0y0tULtIGJr/1mfV7gCtpfx4shnKaMIPH+Dc+qDmS1JDQqo8RJitrGHuwYBzzvbrUQAcFpBXukN87jC9FtfiXkv5lhRrpSrTer6/07c=
+X-HE-Tag: 1793194127-434769
+X-HE-Meta: U2FsdGVkX18QH3hilVK39IPdqSs9Dt6zlZZxHRTm6dS9YMboGgj2f4JbgPnciIgJ+YjTq+rXwomyQl2XifRRpIlon6hlqmkoAyAEXoUS/dDHeM2CKviEyCS9XDDlSiKHYxGLUGUAIXLnSCwwDPjbfPwH8tontCIlC9uAfsxguvi1It3n/BdNvYRcoKgtl+1P/FydI3DHekFyWF2EmSmwbwV76UFzTza/wdReWAP3FHecZgSRWK/SBKiNrY6fY+hJ30cH+FKXzuGS6kR8DXupx3rWnAOVmUGIdLb+2VLVYBsuzkPk3pGebyDDOcEfH6SDbCcYDvXhPC/Mz8YeVb882fjb34M8fKcU
 
-On Wed, Oct 28, 2026 at 05:35:48PM +0800, Feng Yang wrote:
-> Sleepable BPF programs run under rcu_read_lock_trace(), not classic RCU.
-> bpf_get_stack() relies on the caller holding a classic RCU read lock:
-> get_perf_callchain() -> get_callchain_entry() dereferences
-> callchain_cpus_entries, and the returned entry is read until
-> callchain_store().  __bpf_get_stack() takes that lock only for the
-> sleepable variant, i.e. when may_fault is true.
+On Wed, 28 Oct 2026 09:43:53 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Hi Feng,
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> In process_system_preds(), "fail" is initialized to true to indicate
+> whether any event in the subsystem successfully applied the filter.
+> However, "fail = false;" was placed at the end of the event loop outside
+> the error check, unconditionally clearing "fail" on every iteration even
+> when process_preds() returned an error.
+> 
+> As a result, if every event in the subsystem fails to match the filter
+> (e.g., an invalid field), process_system_preds() returns 0 (success)
+> instead of -EINVAL. Consequently, create_system_filter() considers the
+> operation successful and silently resets the subsystem filter display to
+> the default global filter message instead of reporting the parse error.
+> 
+> Move "fail = false;" into the else branch of the error check so that
+> "fail" is only cleared when at least one event filter succeeds. Because
+> file->filter is still replaced even when process_preds() fails, check
+> !list_empty(&filter_list->list) on the fail and fail_mem paths so any
+> replaced old filters are freed after an RCU grace period via
+> delay_free_filter().
+> 
+> Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_events_filter.c |   15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index f7c067a58ba4..617bc3c0bb0c 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -2354,8 +2354,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  			filter_disable(file);
+>  			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  			append_filter_err(tr, pe, filter);
+> -		} else
+> +		} else {
+>  			event_set_filtered_flag(file);
+> +			fail = false;
+> +		}
+>  
+>  
+>  		filter_item = kzalloc_obj(*filter_item);
+> @@ -2370,8 +2372,6 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  		filter_item->filter = event_filter(file);
+>  		event_set_filter(file, filter);
+>  		filter = NULL;
+> -
+> -		fail = false;
+>  	}
+>  
+>  	if (fail)
+> @@ -2386,14 +2386,17 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	return 0;
+>   fail:
+>  	/* No call succeeded */
+> -	free_filter_list(filter_list);
+> +	if (!list_empty(&filter_list->list))
+> +		delay_free_filter(filter_list);
+> +	else
+> +		free_filter_list(filter_list);
+>  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  	return -EINVAL;
+>   fail_mem:
+>  	__free_filter(filter);
+>  
+> -	/* If any call succeeded, we still need to sync */
+> -	if (!fail)
+> +	/* If any filter was replaced, we still need to sync */
+> +	if (!list_empty(&filter_list->list))
+>  		delay_free_filter(filter_list);
+>  	else
+>  		free_filter_list(filter_list);
 
-I hit the same root cause independently via syzbot and sent a fix a
-few hours after yours, without having seen this patch -- sorry for the
-overlap:
+I still prefer my suggestion which cleans up the code and gets rid of the
+duplicate if statement for freeing.
 
-  https://lore.kernel.org/bpf/20261028121859.994-1-yangsongsen@insta360.com/
+  https://lore.kernel.org/all/20261026153258.5259323d@gandalf.local.home/
 
-It also covers the syzbot report for BPF_PROG_TYPE_SYSCALL programs
-(always sleepable, run via bpf_prog_test_run_syscall() under
-rcu_read_lock_trace() only), which reach bpf_get_stack_raw_tp() through
-tracing_prog_func_proto():
-
-  https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
-
-The approach is different: instead of routing sleepable programs to new
-sleepable protos, it simply takes rcu_read_lock() unconditionally in
-__bpf_get_stack() around get_perf_callchain()/callchain_store(), as
-Andrii suggested earlier that an extra nested rcu_read_lock() is
-harmless:
-
-  https://lore.kernel.org/all/CAEf4BzYN33yQhO-tsF8pUWDMZoiLAXkV+Z1oP6fJkByocYcjpw@mail.gmail.com/
-
-That is a 3+/6- change in kernel/bpf/stackmap.c, it covers every caller
-of __bpf_get_stack() (including the tracepoint, raw_tp, iter and syscall
-cases listed above), and since no helper gains might_sleep it does not
-hold the per-CPU bpf_raw_tp_regs slot across a possible sleep in
-callchain_finalize(), which is the issue the Sashiko review raised here.
-
-It does not do what your patch additionally does, i.e. allow
-BPF_F_USER_BUILD_ID to fault in build IDs from these program types.
-
-I'm happy to go with whichever the maintainers prefer, or to drop mine.
-
-Thanks,
-Songsen
+-- Steve
