@@ -1,47 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.2
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793176669;
-	b=dTwbsA6W7NoYoYcIL7z/3CNMseJ67ov5eC6URvR51ZmXKgM+LgiSYACz1IIAuNd7pj1o
-	 N+ewYmcaoJ9rIJ/82asbPueLnShWpfCzzxxcacXOdTOgeCT1CSE8VpJPs3GStRmL8lGTr
-	 5sRUmnYAivBkm4HIdWJmgITJB7nFstUubzmlm9wBHPvWNGIKYwYMAvqTuU/pmxPVsZwNO
-	 4RwxCndL1J6auJ2FyltIhEUeScXwzKRoUDReiZoG5D1ELhd9lKf8cd8VPvR3rR2T+0y9F
-	 6q7nMsf9PTqAK2uulwjfdrlEIK28ke2VdtD7rZKUi3uodwXNX1HPY8Ltyr1/iM/2G3Q==
+	t=1793180222;
+	b=CmaMhlF2jAH8LIo94IaNq0hLn1FHKYPNFqAn1lYXRWjhBRbMEWwvjocS/zdYnY1LugcQ
+	 fgJA3sSwNq5Tivqw+WRxvUELyqRH6R61SFswq8whYZNZ+YUdQd7KMU9Ozg/NBfYWAEoF9
+	 XdBuKxRlnYIWN+G+cKxBb5d+n0etc5yMXTArVbxa2DoD9VPOPFUerAN4AusVxIcoB+Rn7
+	 StZVKBvpBG9ftPiUTCwHH1puYbm/Y/IH0Xa/0lnt7n/rkpcWf2r4wT4HbE7jUuQJpgvYZ
+	 d2f77cvkaW2ujaTsSO0+puGoentXdm2VJq13heRcH4TUlC9NX1V3fSX6gGfEmLVa3Pw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793176669;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=1wbs7cHydDEQXXO5KItG+AMA3doDxVoVAxLbCzDRe70=;
-	b=ESZkGTm6bp8FDnoVjqNN3xHQ6L7RQJSK/oI6996f+/prWPmd1+4MCC5jppKSAgaAYyYb
-	 0Pz9daicOMewS9kjTBOJ1sIQGzvBp6/U1CxhV0VM2GP381Scdm/JK3j1I3fEYsVeulev1
-	 GCtcexFEhTZWz97ultRFuB0p6C8q++8adMW8b8v5/vKV0IvMIK0W0g5tApPNcp0Z+2j4W
-	 546y+bQPoVKsHZpmj+1wm3+65H8E+U9SxG2p3FNBNN2yElz8QJynoLqhQE5G9OI09iREN
-	 mFicm7HIPBoxODcunRrtVbSjpIks6TXbAiwnDpODMS9sIa2+zqno8jpZWychJIB6yyg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793180222;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=v4mpiG/I5NwSPXtUiBGXM9rWjGORly/Rcu8pnm4rux4=;
+	b=ez6cIJ7BL/56EBQNNPwUl20R22GFyzUU+umCnumoMHnvuP4x7ra4pIpaCcO5LTldakK0
+	 Nby0RcH2KIz4jSsBGhmteFeI0xTpLivSLCsXgvxQYzu92QTOv71wuH3nxzdDb+HNdyf7c
+	 2Sq4zmGZPjuRcliM77E6K9PHjAvDYxoO4FYelTLyGRP0uSD1mCjiKySRdS8mWi86zPVul
+	 sfQ2kMzwJcIfCbAD8Jj+o+cTmv9Nr21jJaNFpXrsAXVNlXz3g2DKMzW3+OL93r5vgi/zj
+	 xlId91Tke1LoW6jTMiSjlJ//khbstkFGk7izaandUIpj+Wr3MUdnAlZQBdBjdGjD0YQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ppjq6uci;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=MHmPxkd7;
+	arc=none smtp.remote-ip=117.135.210.2
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FEB606A31A;
-	Wed, 28 Oct 2026 08:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4B4606A31C;
+	Wed, 28 Oct 2026 09:36:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD4B4606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ppjq6uci
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCC61F01825;
-	Wed, 28 Oct 2026 08:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793176668;
-	bh=1wbs7cHydDEQXXO5KItG+AMA3doDxVoVAxLbCzDRe70=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ppjq6ucixIquylI1RXa0glpRlIx0VRokubeu3+Rd9Zd3zOXS9VnLl/cf7El20ued2
-	 LHGK6Xk9IQaRqA1ZpE5lW55bE8uTquQAGIOd9nbpx+msITLI5rBfXXBi6zLH41Zeqc
-	 PQVQTbbhTl+Xu3JKPXDUPG5SFtltCsZNT5zDz5R5fMPIh9kI/s6nMR6wCLH/WBSttZ
-	 Jd5uHYmnCRco+nGQQ0WjggVO4uKe9cQrI20/3HnGRX8jkvjhI3JLTfX7mJMkM07Cdu
-	 F2b+fzMNBq2vYgLkkqQ8IJadCUPcQEYgH5F/oqVQGjN5I00CKnmk+1zKvUPVkVo3LC
-	 m4OYLuMKXTIMQ==
-Message-ID: <5e980194-d892-4b68-80fe-612c910c29d7@kernel.org>
-Date: Wed, 28 Oct 2026 09:37:39 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=MHmPxkd7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=v4
+	mpiG/I5NwSPXtUiBGXM9rWjGORly/Rcu8pnm4rux4=; b=MHmPxkd7yPkWQAaYQL
+	wz9GYbb1+U0YqTDDjGIvVt3Jyhy6Xmh14kXYp3EtFqjaPq2HbCKjwx198FhGeVuc
+	rqAEr+3o07eD8JfIir/mNEmsLrFEH4uPnwVpOn0sY0/s3BhqiDX2L2yttABeC3p8
+	DJaO8YYHoXYHr/sawyCWR/CNA=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3_670weFqtKo6Cg--.4521S2;
+	Wed, 28 Oct 2026 17:35:49 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ihor.solodrai@linux.dev,
+	kpsingh@kernel.org,
+	matt@bobrowski.net,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	martin.lau@linux.dev,
+	yonghong.song@linux.dev,
+	emil@etsalapatis.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
+Date: Wed, 28 Oct 2026 17:35:48 +0800
+Message-Id: <20261028093548.790977-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -51,96 +74,155 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/8] mm: fix allocator races with memory hotplug
-To: "Gregory Price (Meta)" <gourry@gourry.net>, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, kernel-team@meta.com,
- akpm@linux-foundation.org, mhocko@suse.com, rientjes@google.com,
- shakeel.butt@linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, muchun.song@linux.dev, osalvador@suse.de,
- ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
- surenb@google.com, brendan.jackman@linux.dev, hannes@cmpxchg.org,
- ziy@nvidia.com, bigeasy@linutronix.de, clrkwllms@kernel.org,
- mgorman@techsingularity.net, anshuman.khandual@arm.com,
- Bessel.Wang@huawei.com, jiang.liu@huawei.com
-References: <20261021023940.1940971-1-gourry@gourry.net>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261021023940.1940971-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgD3_670weFqtKo6Cg--.4521S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GFW7KFWfJFyDtr1UKFWUXFb_yoW7try3pF
+	9IyF9FyFs8X3ySqrZxGw1qvFy5W3ykXrW2kFyfCrya9r1UZr18KFy7KF4agF1rur97G342
+	vFy0qrsFkw4Iva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jVGQhUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbC8hXAOWrhwfUAfQAA3c
 
-On 10/21/26 04:39, Gregory Price (Meta) wrote:
-> Eight fixes for allocator paths that can act on state another CPU is
-> updating: zonelists rebuilt by memory hotplug, and the pagesets of a
-> zone that offlining empties.
-> 
-> I've packaged these together because they're all related to hotplug.
-> 
-> *** Backport note - Patches 5-7 build on patch 1: without it, their
->     retry is compiled out when CONFIG_MEMORY_HOTREMOVE=n.
-> 
-> Most of these race conditions stem from zonelists being re-ordered
-> in-place at runtime during hotplug.  The result is a mixture of failed
-> allocations, NULL dereferences, incorrect placement (GFP_KERNEL in
-> ZONE_MOVABLE), node misplacement, or incorrectly allowing hugetlb /
-> contig allocations on a node/zone otherwise not eligible.
-> 
-> Most of these are incredibly narrow race conditions, but since the most
-> likely impacted machines are VMs with memory hotplug, the narrow
-> condition can more easily occur when a vCPU takes a long interrupt / VM
-> exit of some kind.  I've made all of these race conditions
-> deterministics with a kprobe reproduction module described below.
+From: Feng Yang <yangfeng@kylinos.cn>
 
-What's the status of this? "memory hotplug" caught my attention, but then then
-is all page_alloc material :)
+Sleepable BPF programs run under rcu_read_lock_trace(), not classic RCU.
+bpf_get_stack() relies on the caller holding a classic RCU read lock:
+get_perf_callchain() -> get_callchain_entry() dereferences
+callchain_cpus_entries, and the returned entry is read until
+callchain_store().  __bpf_get_stack() takes that lock only for the
+sleepable variant, i.e. when may_fault is true.
 
+The sleepable variant was added by commit d4dd9775ec24 ("bpf: wire up
+sleepable bpf_get_stack() and bpf_get_task_stack() helpers") but only
+wired up for kprobe/uprobe.  All other program types that can be
+sleepable still get the non-sleepable variant:
+
+ - tracing_prog_func_proto() serves BPF_TRACE_ITER, fentry/fexit/fmod_ret
+   and BPF_TRACE_RAW_TP programs, and falls back to
+   raw_tp_prog_func_proto() for BPF_FUNC_get_stack, which always returns
+   bpf_get_stack_proto_raw_tp.  Sleepable iterators have been allowed
+   since commit cf83b2d2e2b6 ("bpf: Permit cond_resched for some
+   iterators"), e.g. for the task_file target.
+
+ - tp_prog_func_proto() serves BPF_PROG_TYPE_TRACEPOINT programs and
+   always returns bpf_get_stack_proto_tp.  Sleepable programs of that
+   type are allowed on syscall tracepoints since commit 8cfb77d30920
+   ("bpf: Verifier support for sleepable tracepoint programs"); they run
+   through trace_call_bpf_faultable() and bpf_prog_run_array_sleepable(),
+   which hold rcu_tasks_trace but no classic RCU read lock.
+
+So a sleepable program calling bpf_get_stack() triggers:
+
+  WARNING: suspicious RCU usage
+  suspicious rcu_dereference_check() usage!
+
+Route these paths to bpf_get_stack_sleepable() and mark the new protos
+might_sleep, since build_id_parse() may fault in file data for
+BPF_F_USER_STACK | BPF_F_USER_BUILD_ID.  Sleepable programs that call
+bpf_get_stack() from inside a bpf_rcu_read_lock() region are now rejected
+by the verifier, which is the correct behavior for a helper that can
+sleep.
+
+Reported-by: Kaiyan Mei <M202472210@hust.edu.cn>
+Reported-by: Yinhao Hu <dddddd@hust.edu.cn>
+Closes: https://lore.kernel.org/all/41ce77bf.17656.1a17b3fcb04.Coremail.kaiyanm@hust.edu.cn/
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ kernel/trace/bpf_trace.c | 54 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index dfac5e1b8f40..8cfc9a6542f2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -84,6 +84,7 @@ static struct bpf_raw_event_map *bpf_get_raw_tracepoint_module(const char *name)
+ 
+ u64 bpf_get_stackid(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
+ u64 bpf_get_stack(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
++u64 bpf_get_stack_sleepable(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
+ 
+ static int bpf_btf_printf_prepare(struct btf_ptr *ptr, u32 btf_ptr_size,
+ 				  u64 flags, const struct btf **btf,
+@@ -1469,6 +1470,26 @@ static const struct bpf_func_proto bpf_get_stack_proto_tp = {
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_4(bpf_get_stack_tp_sleepable, void *, tp_buff, void *, buf, u32, size,
++	   u64, flags)
++{
++	struct pt_regs *regs = *(struct pt_regs **)tp_buff;
++
++	return bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
++				       (unsigned long) size, flags, 0);
++}
++
++static const struct bpf_func_proto bpf_get_stack_proto_tp_sleepable = {
++	.func		= bpf_get_stack_tp_sleepable,
++	.gpl_only	= true,
++	.might_sleep	= true,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
++	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
++	.arg4_type	= ARG_ANYTHING,
++};
++
+ static const struct bpf_func_proto *
+ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+@@ -1478,7 +1499,8 @@ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stackid:
+ 		return &bpf_get_stackid_proto_tp;
+ 	case BPF_FUNC_get_stack:
+-		return &bpf_get_stack_proto_tp;
++		return prog->sleepable ? &bpf_get_stack_proto_tp_sleepable
++				       : &bpf_get_stack_proto_tp;
+ 	case BPF_FUNC_get_attach_cookie:
+ 		return &bpf_get_attach_cookie_proto_trace;
+ 	default:
+@@ -1708,6 +1730,33 @@ static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepoint_args *, args,
++	   void *, buf, u32, size, u64, flags)
++{
++	struct pt_regs *regs = get_bpf_raw_tp_regs();
++	int ret;
++
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	perf_fetch_caller_regs(regs);
++	ret = bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
++				      (unsigned long) size, flags, 0);
++	put_bpf_raw_tp_regs();
++	return ret;
++}
++
++static const struct bpf_func_proto bpf_get_stack_proto_raw_tp_sleepable = {
++	.func		= bpf_get_stack_raw_tp_sleepable,
++	.gpl_only	= true,
++	.might_sleep	= true,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
++	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
++	.arg4_type	= ARG_ANYTHING,
++};
++
+ static const struct bpf_func_proto *
+ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+@@ -1717,7 +1766,8 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stackid:
+ 		return &bpf_get_stackid_proto_raw_tp;
+ 	case BPF_FUNC_get_stack:
+-		return &bpf_get_stack_proto_raw_tp;
++		return prog->sleepable ? &bpf_get_stack_proto_raw_tp_sleepable
++				       : &bpf_get_stack_proto_raw_tp;
+ 	case BPF_FUNC_get_attach_cookie:
+ 		return &bpf_get_attach_cookie_proto_tracing;
+ 	default:
 -- 
-Cheers,
+2.25.1
 
-David
