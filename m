@@ -1,57 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793195443;
-	b=ssr8H7E4zXpr7vj+s6yJQVKRdyV2HBpzeymQrrOXgA965osR3lIvzu/dyi+hW0+J+rZB
-	 x4HwKp4zmDbCEROdLrRKMrkHbbgBqe9EnuEIe2ramH3u7VabhOq/2iYaUUPhTITjkyAd9
-	 IioX4GKAWnHHi+VqtK4+re3pVXclos1oM950Y3zvSQ/onF9CLiY3RiaUhVbHdbf9CqnAP
-	 g8SSt/tj8h2KxEQsL47hZYu1WEOn/yxGUE3oLaVUYCtcBIM3G043HP+fNMFYxO1OPjIm5
-	 Lkf7cILlGsecV4KRFpiQEH2QviK0IAfBh85D682znnHP6YxvR1SE+YNVNz98AIXpMqg==
+	t=1793196239;
+	b=yEkAQjqeqOYg/VQ9e9czIwXlytgyxyIypzqSEpjbcE5fddAJG7vDAyWYW/GUxFTbPo88
+	 Z3QKgb8i20gctLqGaTwdyr1PL62QpTIa/tGFT4rTibyKzDWERAoX9ZmrVINROxc4uib2S
+	 ODeKyh1PKgQoIlDlG+S55hXifn96vne0ZMW6HycSdCShszt8ImMCl8Ko1xgB5JmSjY4Eu
+	 wnVrfGxSQyYZYgSTo9Y+0mPb7QdcCxgKyFZFCDD5ZMbl7nRCsA2isINHUagSeyFU2jD1y
+	 o573XsGLN41urroWZUVEknxZd/36GEATHyYlwedGWDEdG8/E14e4+5UCti5URmJxFQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793195443;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793196239;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=kQovNqOnu/lDqzmDc2nmur9m8xiHHfYg6zgT6o8CmZc=;
-	b=xDyeza449PxChqkjLhiyQz4IMjIfbt5pPHDuwYWw2S0NSEWq07bltZoEev46XIrVFY/x
-	 AwqztVlIQGi3c/W+uhzL7QvN1Sq7fO/7uUFSSBoRJToeGXHo7kptRGN/Z7q2JKheij+bU
-	 bVRCKjnPiowF+4HD36Ato3KJ1NCESCJTJqXgBFiEalQLGpUKtoq1geaI4ULLuIH29rr2C
-	 GF6ENji5oAzFDP7oKlhYEqPPuhfs9FvCdS65ZDDZ49WVei2KBCrUG1oIFnwXCePjw54co
-	 pICPCbbUJanFSAP3SpU/oEsNZymRj/AF1DYe++RXYwFHyRcbFq74HNCofhFYIDv7vng==
+	bh=FeITB3lTvkD4sD9e7qjlJRHDr/1h1infkSsxqDZY/y8=;
+	b=1HLQWH/UNQmNNz09gNB3NghIQ5aK58ISbDKWKP/nzTcFL/crEvAn/TzvcmxZ2Xze4fiC
+	 ETAs3XNAVKL6QZ3ltHzHYvflvKpAmnlhVL+hA/bljLIJRGOQlONjWYgQpAaZeOOEC4CUz
+	 0rvSKadm5ctBbrV/NAsLCD6W8Tg0zrp7bjKv8IaRhup2NXWCvBFTX6r0pi2xb8cf4aTRl
+	 00dZvoljOjvxI0yuv3BJumCrFipm0E3sCm5i/QBZnnRDYNXxtFwPU6VY6w3Me7q5oBL2J
+	 1x/3UBCyiPWuD8jW+qSCIkbuqTNnSAUjxacf/W0WMnYVZ5I/tYJQNnSZnaSylrUC7nQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=dLcsRIce;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=hVOEyjdS;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B2606A31C;
-	Wed, 28 Oct 2026 13:50:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F39B2606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D00606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Oct 2026 14:03:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2D00606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=dLcsRIce
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 68BDF1A0C85;
-	Wed, 28 Oct 2026 13:50:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 74D398000F;
-	Wed, 28 Oct 2026 13:50:38 +0000 (UTC)
-Date: Wed, 28 Oct 2026 09:50:37 -0400
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=hVOEyjdS
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6812E120D1B;
+	Wed, 28 Oct 2026 14:03:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id DC5FD20028;
+	Wed, 28 Oct 2026 14:03:49 +0000 (UTC)
+Date: Wed, 28 Oct 2026 10:03:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 09/16] tracing/filters: Reject stray quotes and
- parentheses in unquoted function event operand
-Message-ID: <20261028095037.39c9109a@gandalf.local.home>
-In-Reply-To: <179314828848.684037.8273600995293830928.stgit@devnote2>
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/16] tracing/filters: Check for trailing characters
+ after newline in filter string
+Message-ID: <20261028100348.584836ec@gandalf.local.home>
+In-Reply-To: <undine-1793150890261749864-1d389ec021e6edea@undined.local>
 References: <179314820431.684037.4147763044424284198.stgit@devnote2>
-	<179314828848.684037.8273600995293830928.stgit@devnote2>
+	<179314830681.684037.17927533770192828788.stgit@devnote2>
+	<sashiko-outbox-187296@kernel.org>
+	<undine-1793150890261749864-1d389ec021e6edea@undined.local>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,78 +64,34 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 74D398000F
-X-Stat-Signature: 8i1w7ab9n58q41tpqzdh1u3htskrbhs5
+X-Stat-Signature: xxyci75n75xj4swt458xky36udwp3jx8
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: DC5FD20028
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX195paMB6BqNfe7MT1rNQtQVS+Ffdp0Jqmg=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=kQovNqOnu/lDqzmDc2nmur9m8xiHHfYg6zgT6o8CmZc=; b=dLcsRIceUIsmwYxxJI/TPiEVDsd0QqacHgQxYZHuFD8ESFbj6rvGTpO/0CDwnoLF1SRRDzfPJJrG9msGP5s6decjXrC5wWnMAhsQziy2r2FmmBeAhJv6U2SysTbULkM3iIqCq1l8rVHLCNtFunJje/XVhgByMoIbEUZI3XSxBpY=
-X-HE-Tag: 1793195438-634045
-X-HE-Meta: U2FsdGVkX19skSxYU4ojqKihr13ef/QFf7dXJEFZyGynjhbNkVcJUZ28CA7foZdltKZGvCICP0D5fKodnnXS+laz+wX+h33JshqsA3jUjozxo5NhXG5F7xAfn2AZ+DhY2rRP4ERyBbm3k5/Z+I4/m11ea/yjeNucg4H94KvHZfyQDp6RHo1u2dwaFlMXlr10dEcbyHdrEykYx8Yf8QU/wBFS/cNFW3RQSsO6/yc6zR6SEH2Ckrg5JQnKYcqEd7I9mVUO248gYz2hai4Jmx8higkdbhpkfX1vHP3NTjKFuNiiaGNAOTf6C4EWXANh98uZJ3BJjUizeUmst+lix+Ha5F+5ENWDt6OF
+X-Session-ID: U2FsdGVkX18BdxyKeneUetF18/88G/lTtKHN+n4EAbE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=FeITB3lTvkD4sD9e7qjlJRHDr/1h1infkSsxqDZY/y8=; b=hVOEyjdS0gMebykgBPPlBr5FUXe38fCEGiiDMRJA5LEgajs+PHvkfLtSkCRylGeJ9Oew30a5j7JW8+0kBPXQZjvoYhgsrUYQWklAOYqRRx2LLDy25Eddw2IRD6j+9T6XLY/BFRPnMkykRM5dQU9mnk7rQY5Nk5ajQ2nDgxF6t4o=
+X-HE-Tag: 1793196229-889443
+X-HE-Meta: U2FsdGVkX19zLHh/5gyEKm6nnFWAPMhhnrc7/6gnRSgNMBkBNP/unbm//T+Y55PZX0j4Bw5zjfXRToX9NyFn7oyeunyJvSjadMU2HLCAgSTWlwwR3Q1qnqWj/HtXvas2KRt5GfjX77uJPq3Jo0KTizX5uQFPjRY7+vGcuv8GXbfY8kcFQeZCzVvsMGNadNFjVVOXJcX01fXmV8IKVRNqAmKQhKCUBB0UHbeJMfYZscSMLhD2lNJ63Dz5z+ISB8NpQpPuDgZSLYL3PmMtBIjIycUT2pdiL7PB9sDFmdd+4Pf/XRtW9d7/txUcDZfCAGtuTMjinXvyxkjuq5JWmmjtK1ediEMqBzsS
 
-On Wed, 28 Oct 2026 09:44:48 +0900
+On Wed, 28 Oct 2026 10:28:10 +0900
 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> In parse_pred(), when parsing an unquoted operand for function events,
-> the loop only stops at ')', '&', '|', or the NUL terminator.
-> 
-> However, calc_stack() parses '(', '\'', and '"' independently to
-> determine stack depth and string boundaries. If an unquoted function
-> operand contains stray quotes or an open parenthesis (e.g. "ip == foo'bar"
-> or "ip == foo(bar)"), parse_pred() consumes them as part of the function
-> name operand, causing parse_pred() and calc_stack() to desynchronize.
-> 
-> Reject unquoted function event operands containing '(', '\'', or '"'
-> by reporting FILT_ERR_INVALID_VALUE.
-> 
-> Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-> Cc: stable@vger.kernel.org
+> Hmm, IMHO, there is a bad implementation in __ftrace_set_clr_event_nolock().
+> It should make a working copy of the filter string and pass it to
+> apply_event_filter(). Or pass the filter string as `const char *`
+> so that it is copied in the apply_event_filter() side. The ownership
+> of the filter string is not clear here.
 
-I wouldn't really call this a fix, as I can't see this breaking anything.
-Yes, the calc_stack may say there's more elements than what parse_pred()
-sees, but the parsing still fails.
+I noticed this when I applied the patch.
 
-This looks more of a clean up than a fix.
+Yes, the correct solution is to pass in const char *filter to
+__ftrace_set_clr_event_nolock() (I was planning on doing this after the
+merge window closed). But no, making a copy in
+__ftrace_set_clr_event_nolock() is *not* the right solution. There's
+nothing in that function that modifies that string to suggest it needs to
+make a copy of it.
 
-Unless, the current code allows something to actually be broken. Does it?
+The correct solution is to pass const char *filter to apply_event_filter()
+and have *that* function do the copy. That was my plan to make a patch for.
 
 -- Steve
-
-
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v3:
->  - Split from the monolithic function event parsing patch into a
->    standalone patch rejecting stray quotes and '(' in unquoted operands.
-> ---
->  kernel/trace/trace_events_filter.c |   14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 96977eb9af85..48e16d75be74 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1863,9 +1863,17 @@ static int parse_pred(const char *str, void *data,
->  		for (; str[i]; i++) {
->  			if (q && str[i] == q)
->  				break;
-> -			if (!q && (str[i] == ')' || str[i] == '&' ||
-> -				   str[i] == '|'))
-> -				break;
-> +			if (!q) {
-> +				if (str[i] == ')' || str[i] == '&' ||
-> +				    str[i] == '|')
-> +					break;
-> +				if (str[i] == '(' || str[i] == '\'' ||
-> +				    str[i] == '"') {
-> +					parse_error(pe, FILT_ERR_INVALID_VALUE,
-> +						    pos + i);
-> +					goto err_free;
-> +				}
-> +			}
->  		}
->  		if (q && !str[i]) {
->  			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
-
