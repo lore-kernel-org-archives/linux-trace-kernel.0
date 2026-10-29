@@ -1,60 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.107
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793241016;
-	b=k7j3lLoPxbnLTiHzWgCYzHYi4zCXTRRhcR1CHLAQ5fKXwo0hXDjfmSO677WXTDX5cdkq
-	 2nfRbEPxu3PxucIsyptAs6Q0IavDmJLbz1TCVauY77LqeJGsnqxS86zeYu6yDdLyBpLtm
-	 oAQ56ws7gBSNhn/pJogM+EVM5EJVK14Lnw7L+MSPUEnP8QQHGZS4n3/e2BICHYCuD2x0f
-	 afFhpRuWxFMP5lKGMtPboYFelkR9LNq5c22v0V1kSap5xW0E9XUt0xWATEILDL3xy/Hl5
-	 YTxpfTPDmfQd0L+N2cFGBv/tV+U9+YSi6kZoNKPvpKV8b7AXhXnObWOy93ASc32I1VQ==
+	t=1793255762;
+	b=QChBMRaQiA+8JSR6XkkmJtwOSXUUG19GpiAEeZkdKtRq3cZbpL6gAFt4HcRuFynq0uDH
+	 lYj7gKQkx39X4nV+8ucr1HQAB5m2u6ACmvTO2GzOqLTlxcLeHf2DTuw7PPlTNE11trycH
+	 zvUwj7EOGNAgl29RgMHfXQwRickZr2G/4S9Sxikfv3wNbO0GgUUJL0MZx98kDYWUuGO/t
+	 dy7SeeBXxcZ5iUduYZ8YQJydeKV1HoSqS35X5pVkhp7sA0DhjrUwZTChd/IigncqrRQ0A
+	 kTGWtiHD8bM/7TcZOhHKYK4Z5wjK505XwaUzbjsfooonlm+w8owsxcMbSMqKZuuaJLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793241016;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=9fy076pAcz5orhmpfztB9xT2wFCRJQvV1U6xK17MGms=;
-	b=ahgfkozSXcCdn59Y3kDsKywCVPU1Q8HkCWt7OClSBRe7U/Qqvj8eFqVeBm6uTtHgOeaz
-	 5D4Ar0uFkvVSsIzaQN12q05FTAGUrsncr0wqF6m0lml8/QFgWlLsGgTQy8o7JXyAsm/NN
-	 Kgu6qgnMbWg/ZWFZhlI2ODrAY9rDgACyz9vm5YBRnbcKs5ZouStmL5PTG9rAEaPtEFghj
-	 H+vnTBpZLm9V/jP8CYbo6TYaw+3Th/gaTkjp4u0/x6MwEaEHjLgWCQA5QWF+xd84iwqD5
-	 WD6yxG4jpoDfd+Xj6Tji3pMHbdhh6qm3RDxali1vD6hxni52ArQZU0bwjJWxIXUMi/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793255762;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=x9hcFsZYsd6lEY7YKGasOWcWiv3TT8mTfld9Fg2H7/s=;
+	b=rPkqB32keAIyvMQrFhxyExfrQt8O7IHjdUr3W57blJjK+vebBw7+UdY3Ndqrx1z0ziP4
+	 ovHs6kKzIV3Tl5s5MVhdEkpSEKHI56y1JltRbnV2pOsY88zbP13yUBBgHHMDIaFBa8/2o
+	 k948cv66aNx5FTP4XyR6Tmk9nPfma8Ub57pbaFHuRhg2a/Zy4s9FncgAdJyrvSHTf6ha1
+	 bpDSo6r78pszdqnYaWr4EkrZx789l75dZYdOwmJnfq31iYqbxkHqjLsVNdbmit9OwPPq7
+	 vH4BhcIdSbCAIO8zseZktdIzBiCjoH00QMXtz/lLzstMUfJyfYQfNtm2lcrSPEY7fHg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l4cfbUY+;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GFj46ab0;
+	arc=none smtp.remote-ip=91.218.175.107
+Received: from mta0.migadu.com (out-107.mta0.migadu.com [91.218.175.107])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27A1606A320;
-	Thu, 29 Oct 2026 02:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3E9606A31D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 06:36:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D3E9606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l4cfbUY+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E681F01829;
-	Thu, 29 Oct 2026 02:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793241015;
-	bh=9fy076pAcz5orhmpfztB9xT2wFCRJQvV1U6xK17MGms=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l4cfbUY+vxh3vT/fMqbxtLwKN0Ckz+LXHsWUzDqOjWQCfBkzQclI3QB6gaqsRSE2/
-	 rNpFSIQO7X0TnOa7chkmJSC5WfXcByk7mINpswxAlaQuZxB+ZB6Zt59omLlT7tUh25
-	 TcjCal624msc6l29AgCVDXldMGRAd46TlPyzoAlBwxU8CnT9vIjhHgwbeKLl4KlH3H
-	 WUQabcJgVJr6glP72zbdlvPI9Zk29sxJ1gKb1mLQaij73XCdxKGWfq2cHimJq/ZUsu
-	 YQmMKWXvM6cedtnYWmUKMTrcGUpevv6p8+BFE7vf8E0lPsvK8Xyxt/qRlM0XmcUXs1
-	 J9mN1+Uqz9PQQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4.1 02/15] tracing/filters: Fix false success return in process_system_preds()
-Date: Thu, 29 Oct 2026 11:30:11 +0900
-Message-ID: <179324101176.752804.17624386967710135045.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <sashiko-outbox-188613@kernel.org>
-References: <sashiko-outbox-188613@kernel.org>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GFj46ab0
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=fsw4mEaKOvVgj+UGUu/LrZpgPLPWzYv2PlwxGv6ciVk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793255759; v=1; x=1793860559;
+ b=GFj46ab0bahb2NJJpx9VLGKnugsr2ZfmJ/AnfDS9TKNd8SH+O1aWvGcx6Wg1i2z9TcwlY944
+ YyMVSevlCJNajAycn6aCniQ1YRwBfJo5iD7NFG1uP5PSl13dRb9RMyzvErQ688KWBKg/jeIkDOu
+ 74+5rQA4xFtfDk4kzWl4+v1E=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 0482426e1b8de320;
+	Thu, 29 Oct 2026 06:35:59 +0000
+X-Mizu-Trace-ID: 0482426e1b8de320
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <d41c063e-55f0-40e2-93b7-999aa0138cbd@linux.dev>
+Date: Thu, 29 Oct 2026 14:35:53 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -64,100 +58,105 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v5 1/6] bpf: Add syscall common attrs support for
+ link_create
+To: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+References: <20261026154948.99408-1-leon.hwang@linux.dev>
+ <20261026154948.99408-2-leon.hwang@linux.dev>
+ <sashiko-outbox-185494@kernel.org>
+Content-Language: en-US
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <sashiko-outbox-185494@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 27/10/26 00:06, sashiko-bot@kernel.org wrote:
 
-In process_system_preds(), "fail" was initialized to true to indicate
-whether any event in the subsystem successfully applied the filter.
-However, "fail = false;" was placed at the end of the event loop outside
-the error check, unconditionally clearing "fail" on every iteration even
-when process_preds() returned an error.
+[...]
 
-As a result, if every event in the subsystem fails to match the filter
-(e.g., an invalid field), process_system_preds() returns 0 (success)
-instead of -EINVAL. Consequently, create_system_filter() considers the
-operation successful and silently resets the subsystem filter display to
-the default global filter message instead of reporting the parse error.
+>>  
+>>  	switch (prog->type) {
+>>  	case BPF_PROG_TYPE_CGROUP_SKB:
+>> @@ -5959,12 +5972,20 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
+>>  			ret = bpf_uprobe_multi_link_attach(attr, prog);
+>>  		break;
+>>  	default:
+>> +		bpf_log(log, "Invalid prog type.\n");
+>>  		ret = -EINVAL;
+>>  	}
+> 
+> [Severity: Medium]
+> Does calling bpf_prog_attach_check_attach_type() before switch (prog->type)
+> in kernel/bpf/syscall.c:link_create() cause misleading or missing log
+> messages in a few cases?
+> 
+> First, for almost all program types that are unsupported by link_create()
+> (such as BPF_PROG_TYPE_SOCKET_FILTER, BPF_PROG_TYPE_SCHED_ACT,
+> BPF_PROG_TYPE_RAW_TRACEPOINT, or BPF_PROG_TYPE_SYSCALL),
+> link_create() -> bpf_prog_attach_check_attach_type() hits the default
+> branch:
+> 
+> kernel/bpf/syscall.c:bpf_prog_attach_check_attach_type() {
+> 	...
+> 	default:
+> 		ptype = attach_type_to_prog_type(attach_type);
+> 		if (ptype == BPF_PROG_TYPE_UNSPEC || ptype != prog->type)
+> 			return -EINVAL;
+> 		return 0;
+> }
+> 
+> Because attach_type_to_prog_type() never returns those program types for any
+> attach_type, bpf_prog_attach_check_attach_type() returns -EINVAL and
+> link_create() logs "Invalid attach_type.\n" instead of reaching the default
+> branch of switch (prog->type) to log "Invalid prog type.\n".
 
-Fix this by clearing "fail" only when at least one event filter succeeds.
-Consolidate the cleanup logic in fail and fail_mem by using ret
-initialized to -ENOMEM, setting ret to -EINVAL in fail, and falling
-through to fail_mem, freeing any replaced filters via delay_free_filter()
-if !list_empty(&filter_list->list).
+Either "Invalid attach_type.\n" or "Invalid prog type.\n" is not
+accurate for this case.
 
-Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-Cc: stable@vger.kernel.org
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v4.1:
- - Recover 'fail' flag instead of clearing 'ret'.
-Changes in v4:
- - Clean up process_system_preds() by replacing the 'fail' boolean with
-   'ret' and consolidating the cleanup logic between fail and fail_mem,
-   as suggested by Steven Rostedt.
----
- kernel/trace/trace_events_filter.c |   17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+The log here is not required to accurately describe the reason. Instead,
+the log tells users something wrong at the position.
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 28977d10e60b..981cddf01e65 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -2338,6 +2338,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	struct event_filter *filter = NULL;
- 	struct filter_head *filter_list;
- 	bool fail = true;
-+	int ret = -ENOMEM;
- 	int err;
- 
- 	filter_list = kmalloc_obj(*filter_list);
-@@ -2364,9 +2365,10 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 			filter_disable(file);
- 			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 			append_filter_err(tr, pe, filter);
--		} else
-+		} else {
- 			event_set_filtered_flag(file);
--
-+			fail = false;
-+		}
- 
- 		filter_item = kzalloc_obj(*filter_item);
- 		if (!filter_item)
-@@ -2380,8 +2382,6 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 		filter_item->filter = event_filter(file);
- 		event_set_filter(file, filter);
- 		filter = NULL;
--
--		fail = false;
- 	}
- 
- 	if (fail)
-@@ -2396,19 +2396,18 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	return 0;
-  fail:
- 	/* No call succeeded */
--	free_filter_list(filter_list);
- 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
--	return -EINVAL;
-+	ret = -EINVAL;
-  fail_mem:
- 	__free_filter(filter);
- 
--	/* If any call succeeded, we still need to sync */
--	if (!fail)
-+	/* If any filter was replaced, we still need to sync */
-+	if (!list_empty(&filter_list->list))
- 		delay_free_filter(filter_list);
- 	else
- 		free_filter_list(filter_list);
- 
--	return -ENOMEM;
-+	return ret;
- }
- 
- static int create_filter_start(char *filter_string, bool set_str,
+> 
+> Second, for BPF_PROG_TYPE_CGROUP_SKB, bpf_prog_attach_check_attach_type()
+> also performs a capability check:
+> 
+> 	case BPF_PROG_TYPE_CGROUP_SKB:
+> 		if (!bpf_token_capable(prog->aux->token, CAP_NET_ADMIN))
+> 			return -EPERM;
+> 
+> When this check fails with -EPERM, link_create() still logs
+> "Invalid attach_type.\n" even when attach_type is valid.
+
+Same above.
+
+> 
+> Third, for BPF_PROG_TYPE_LSM and BPF_PROG_TYPE_TRACING,
+> bpf_prog_attach_check_attach_type() only checks that attach_type maps to the
+> general program type. The stricter expected_attach_type check happens inside
+> switch (prog->type) in link_create():
+> 
+> 	case BPF_PROG_TYPE_LSM:
+> 	case BPF_PROG_TYPE_TRACING:
+> 		if (attr->link_create.attach_type != prog->expected_attach_type) {
+> 			ret = -EINVAL;
+> 			goto out;
+> 		}
+> 
+> If a caller passes an attach_type of the same program type that does not
+> match prog->expected_attach_type, link_create() jumps to out without logging
+> "Invalid attach_type.\n".
+
+Will add a log here when adding log support for tracing link_create in
+the future.
+
+Thanks,
+Leon
+
+> 
+> Should the program type validation and attach_type logging be ordered so
+> that unsupported program types, -EPERM failures, and expected_attach_type
+> mismatches report accurate messages?
+> 
 
