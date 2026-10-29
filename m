@@ -1,95 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793295092;
-	b=ohAqgIQuwqBh0cJs3fKRg2iITyGbW4+/YPm++M4XkZ46Ic3h+9ImY7Ww2Ma7K5VP8sFW
-	 VPbklMr9o2S+LWC+SND1FyALPGcF8QB2pMTBSnh3RG3wYgtS+/yaXcGe0fS4QVcLk9yWD
-	 CESKrv2eDzf7nEphaWCzZi/uoz8XaqjYfZGeOdNExYa3PJ6ysY3tmXIsWVz8lIMVsRWhj
-	 GTZ8Iw7sWYvDTLlkKyvlbf+S46Y+L9Ee2g+uzoms+IkpjYGzAlG8jcFKjNzBMR8eWq4Ib
-	 D+z9MrIj7Qb9QkrY3wIo+VzCti2CPUJ+BFoY8YEKfL8/mV/9yTRDju5fZWBhlXyH5xg==
+	t=1793295561;
+	b=JvHspN2e2vNhdAW06KlBNFcPE4ebLwON1ipviDcuZggYRAEJieT6xoDJ8hLuBKXl/u4a
+	 UacL8gSozFQLd/6G1OLW7P68cwPHlsGDvdqMbk6Lvnr6D6GdM4xZ/0ABGXEdr7GzkkTBa
+	 SuDJwkmFyiW3wmQbCJLn5ke0qgap7ew9i/5vgN4uBF5rrDPGjOEEY9iiW1VuylqMqfBlH
+	 JmJrdSNjstwbs5Vbnj5fnm/MjwbNBqQVlBwdNZvmQFbQM4EjcRHDERrme+XCnuHtJw+i5
+	 L41+GL2P/afxu92pQmW9ZH9FFYdNQeX4ltLCini8nfrNF26qYRvxoiOW8Rya37EZL3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793295092;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793295561;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=77OMp/0RKdeQKOVvIsvn+1zTLaU1Gb/6YMZNIkI1ZZg=;
-	b=IQUYtEBIgX17VFU7D4crvI+yVf+WatZU+yBPx11H6QWjCiu/VNFm+o2DMiLlHeMJqDxd
-	 SBY8ZnrFt1oD7x/lQ62TR7pU8965NhEF7qJ1KJKcRd4sHmYPyOTt+vm4HdXWp/mZqu9lX
-	 zgF85qJbvJchhf2VCaMXVjj07Ozf0hYBGhuTM2TiWYRjlyOTGxlSsRmhKHxus+0ehkOUd
-	 e78Y7l4IIDEhOJ0OoEt8PZCoYY7qPEO8uf6XY505LIF6MWxvsH2UZS7VI0l54hktZ2Cx/
-	 9HzLFLg/zt8rebhVssfYeiXtDgUHXF2LS2gELJWf6D1qSW6IlVliDiq4IyM3LvAracg==
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=VxKnxxpthVZvnSjcILi92P8UHB/DkKivIP1tzJVYEyI=;
+	b=dy3cZVh6QQhRc/hzcL12foatavpO7e/5ZAp8IjM7m3NR5Q0uxTEJNqbpUeXD0CzWZyQ5
+	 dDYCB8Wy5bCAmw6j8fh68pjU3WJqF4UdN0+8u+IVBvR6HOilDxQBBNaf2Vtg17mNfjZTG
+	 Lmf6WfZP0Z+fy9o6h9OqPWfMUWnJ4gWOZyLA4yXtZqRcb6enHHA52FaFXgQuY5nHr1gNK
+	 l2yvq+kowE6r83vVOSkTUVBvhdN1ND7f/Ix4KFMHewj2EJWjL/KsbkawCFWz6JHsYBDwD
+	 L3Qm3WQk0//Vj7b913oxZGbcq/XApIZAEyv/QnO4qkoLGMpgTdFcJE3iwmSoZetFo4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tEBc4HTr;
-	arc=none smtp.remote-ip=74.125.82.54
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
+	dmarc=none header.from=baylibre.com;
+	spf=pass smtp.mailfrom=baylibre.com;
+	dkim=pass header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=MKktIpQI;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1802D606A324
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 17:31:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1802D606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE98606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 17:39:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3FE98606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tEBc4HTr
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-14394530ec6so2770076c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 10:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=MKktIpQI
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a140e7405dso24904785e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 10:39:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793295091; x=1793899891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=77OMp/0RKdeQKOVvIsvn+1zTLaU1Gb/6YMZNIkI1ZZg=;
-        b=tEBc4HTrN67zaTaZFfqoEWfgdEhGwrxC/QqC7gVvwYOGZ6D+rLHsTpFCWRU9B6z3Ym
-         S1MV/1+EqFbEiTYDPM/kkX9AWG1SEC+z1j/uPji42T2zjT2gm/iWX7lZqq9qbIiRxMye
-         eg/CZ0/awlu9bv/vW0Z82RRMwBWy9x2kS/DHd72Bp2ei8sUegaVBkAlJ0PSDjBhtXOB2
-         cEKMoZT/tfnEzGAi8GLB3dUEHRw0HKfVAoGQNvSglucv2/vW0ZcNtKtbvM3CZfS3e1qc
-         pcK4YlfcLwb8f4H8O+uc/kSVlbQpEuL/qJWR9VU118Ve2sP4qIS3tcNlG86lmLKLd3t7
-         gMSQ==
+        d=baylibre.com; s=google; t=1793295559; x=1793900359; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=VxKnxxpthVZvnSjcILi92P8UHB/DkKivIP1tzJVYEyI=;
+        b=MKktIpQIJblhwONy/EFQnvOcJoJNVS/qb0uFX43/yrvQxg+k1Ha2ClQk5hEE4FF9Qo
+         io5cWMTquRCrNT359I5fvkpK8CXr8Za76kdts6pe7snQ07myzBMYYe098M+uRS5ZT0kG
+         Tw4b/BUx0MFSVAx/wmMGdDSuMVqL0RVuvWkPaWkeoGqudG/YhVr064KXafY2u/Eix4x9
+         B4rB6ahwthYp29bj05SWvmyhLoWzGdweTBVVTNOxuuxrVb26vamDabXpDtAxQru8ABc/
+         E06G5MhNFJvVo6VSm0gLjj/6rTpATeaDw5jahm0Gvfv8f85nDrYBnatqw0gE+RKMaW9j
+         KNBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793295091; x=1793899891;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=77OMp/0RKdeQKOVvIsvn+1zTLaU1Gb/6YMZNIkI1ZZg=;
-        b=OqzZoJNQkpKgrt5GK+nPSgbsybNhsj6cGGc0Gxg5CUOj2+58c9b2PPBmLidrCmkDiL
-         u3kuEgExvvfIiKIR6qf4/+tl0C0sqgcYCk1gGHkx3j3dCEHOt9mJnLgkeqPxTIZqP/CQ
-         fpKCxD5wLpGH8xQY0VTetuphWkdiNd1l6cybSctM2sUH5yX6Yc9rSXi6FGNp4ZO0Mc7C
-         YRBl9eRN8Hf4YqrzTy9RwCC7KTmyt02ONojPF7/18S8J5zBrnIkvYnWVKNzDj9NBKC6p
-         Ip/QSgGqea4cH7Y/J9HoWIMByneaTvk6E2XQpCyShv+l+HV5ybbrHwUn/De/N/ZGsS+y
-         688Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwa/34SgxdGySxunyxP8EOeVlK9ObNe/wNHj+phh1E2+6ZMkbMHdIctsCVg3QwMq3iVJrsozMYIMskTnUkdAUtNe+8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIlbIMb3XAen/FAR6rlRTE162X0WwMle25UuywMvPe55tMxlNJs
-	+nyaUMipNvJt06ckJdEN3FMPdS0thOnjk0cLaJD2KeArXS1l/kGzOImtAmESpqVMxdI=
-X-Gm-Gg: AYBFou26paCbQmuV9oRBO8HYrygJp5QhzR/jLq/MeULAe31V5aDJMXP9Qs9Kkp9s9ri
-	Ay4t6aatd3u4Aje597E7KmOoGvP67my12AQfZjmxwe1vd14pjPsTmMamYt9avoMMROhhNd73NWI
-	GXjy0Cjs6zXLP0h5hx0M0tNwZ3Dcuc1cPJqadJUfhroj34HArcnaq0E9h0dkirc2vOvctGBpDxK
-	uWFkZh7hP2f1+1HRijNnPPS1hNXuHUjRIOrNlHWcuLYRt1axispVR19I/gIz0+JtqD7yinLbZyx
-	TMqc/4LblgI+JEp1lAsCEGJ5arBQ26NMwd2/qro6jpX2BhO3GyxVBWH6ShVYbLPO9BdWqSqoq26
-	/9f8Fdz/VGlcvTNQ5NyFGkG+/uJ8499DHVcmYKVyubGWK2wSzP2VYcZ7R9YDoFNyaZDuzHg39NX
-	X/Ch/6uU/i5TXwFF1cdijDLrxE7nOEi4AQg9qqyPJvWqq4RvWz4plGGYPd8dVCKku077k1ZKKnn
-	dD73ZOIL6+ukxt/oW+sq1W7Q6b5AYLD/dPQM36Hta1WYijRFhvNbCMc0OHk0g2kZG0Katv50VFd
-	pJaCq4p+Gv2sJYelK3HvfnNEWmA3qMDzPkDjiN3NBUMzfA==
-X-Received: by 2002:a05:701b:42d1:10b0:1a2:6b9f:f7e1 with SMTP id a92af1059eb24-1a6ced8ff72mr8827239c88.14.1793295090098;
-        Thu, 29 Oct 2026 10:31:30 -0700 (PDT)
-Received: from asahi.tail4da9e3.ts.net ([218.48.198.193])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac0e738445sm228707c88.0.2026.10.29.10.31.28
+        d=1e100.net; s=20260707; t=1793295559; x=1793900359;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VxKnxxpthVZvnSjcILi92P8UHB/DkKivIP1tzJVYEyI=;
+        b=KOX7guN4dQGWNj7uzgsBMbzWp7nkdZ8CU8/zoJQW8IPr6exPy71jdvOom8fwWDFteD
+         TeSUvIa0+HCXdhfi+418KcjVxyAkAMzCyo06HjPY1mRVJMYlxKx/t/OzbmVroCLvCFyI
+         fljneYhkzvYV2rWYfzUId3QQP46Qt/Fj/R0A7etEWu8h59q6eEUTXpBo53Vn3yz+SzPm
+         bK1F9nNZWX0cCIn+qQ/M+z7OyWJ1EyO00oTP/OcF4Mk1+RnsqBZSWcbDYxuaEhODpQgT
+         ArvsJNhqfC2aDC3N4dUKBuTlEpl/CblGL66njiooojeamHTHc/rE1+1AFMfIliP3Tkb2
+         QEGg==
+X-Forwarded-Encrypted: i=1; AKwUvBwPiGUVuTA78MTOCxHpxd+BdlB7B/9O6qNu3KY1qpOb2bkA0Pxgc3XY/kcfP59+NWakvcdJ4BU333stSPGo6GqR4Ms=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLDAOq+MCdfHAdtx1Zw16+ipMUjt9QwbAOwxY2DIp2w8GLHugQM
+	G4F8FeRqvnlqHqzKWlLu89/bSu5wIq0Ap6I8W7kUCQ2bsen6e+sFDxq8Q8Py3NHe6Aw=
+X-Gm-Gg: AYBFou3KfEUZV8bgtm1srhZyzSGLqmaf0tPm/jYF1pv/0VXVKVg32xVPURPx5P2+t/3
+	+Krn6qlihCcGQIMZighwvFdskDpoV9jwd1HQErCbv3yxMYI2nLRKQGZ7wJEUO7qL/ErQ/9qe7R5
+	H3/lGnEuYq38f7JX6RmW1JAKSBc2s/Ixra5XxCXtkArISrH6uQqeaA3+GMqclm9grKCW7CBueXY
+	ZcLT0P/Kg02K6nQsy++xhzSlpcM2X2HDdwt40F2tCbw1dISEcQ5Be3n6C+eaCrb+djlIDsxPlT3
+	6Y1AVSYe8or+d2pZOJUTp7slDc58JiChtfUjQztj3KnNfKvcam6MDLBuF41j+nt+zOy3E4U5LJp
+	X380k3E4Sda8tt5Op8IbclI4v5dazgwHpxk52sbjeNtQXY8MZmgPr+5YA4Q7s09ts2LCMk16Kxh
+	CvcsPfzK5angZ0S6e6x4RqA0wc1vemgFcY3jC73GheCXpLlKDopVcpzlqek7zTTC5RFwMhCzGBc
+	YtzVYvb4/EjuhAAZVgpA9ydIRQXl+/QXOgRIYJnNwIYyFU8Dxl+BP7+pnc2yeaCVbTR6ElbavJS
+	0geXKFAI12aMBusKY1bjrlO78AGPa89kDa0=
+X-Received: by 2002:a05:600c:b8a:b0:4a2:b89:b02 with SMTP id 5b1f17b1804b1-4a96667c848mr135986785e9.10.1793295558589;
+        Thu, 29 Oct 2026 10:39:18 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-48e6df1e458sm627445f8f.5.2026.10.29.10.39.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Oct 2026 10:31:29 -0700 (PDT)
-From: "Baek Kyu, Kim" <pocj8ur4in@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: Free tracer resources on instance creation failure
-Date: Fri, 30 Oct 2026 02:31:27 +0900
-Message-ID: <20261029173127.387835-1-pocj8ur4in@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261025165250.65363-1-pocj8ur4in@gmail.com>
-References: <20261025165250.65363-1-pocj8ur4in@gmail.com>
+        Thu, 29 Oct 2026 10:39:17 -0700 (PDT)
+Date: Thu, 29 Oct 2026 18:39:16 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Michal Pecio <michal.pecio@gmail.com>
+Subject: Re: [PATCH] Revert "driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers"
+Message-ID: <auODHyLrfQylISX2@monoceros>
+References: <20261028-bind_taint-revert-v1-1-7c6b9cef30c9@linuxfoundation.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -99,75 +103,118 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l6fyrt6fnoykrkwe"
+Content-Disposition: inline
+In-Reply-To: <20261028-bind_taint-revert-v1-1-7c6b9cef30c9@linuxfoundation.org>
 
-Creating a tracefs instance can allocate private tracer nodes, copied
-flags and option arrays before trace_array_create_dir() returns. If a
-later allocation fails, trace_array_create_systems() frees the trace_array
-without releasing those private allocations. The failed instance is never
-registered, so normal removal cannot reclaim them.
 
-Free the tracer nodes and option arrays when trace_array_create_dir()
-fails, then continue through the existing trace_array cleanup. Share the
-option array cleanup with normal instance removal. Earlier failures still
-use out_free_tr because the tracer list is not yet initialized there.
+--l6fyrt6fnoykrkwe
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] Revert "driver core: add TAINT_FORCED_BIND for when
+ userspace manually messes with devices and drivers"
+MIME-Version: 1.0
 
-Fixes: 428add559b69 ("tracing: Have tracer option be instance specific")
-Signed-off-by: Baek Kyu, Kim <pocj8ur4in@gmail.com>
----
-Changes in v2:
-  - Add the Fixes tag requested by Masami Hiramatsu.
-  - Share option array cleanup between failed creation and normal removal.
+On Wed, Oct 28, 2026 at 02:42:15PM +0100, Greg Kroah-Hartman wrote:
+> This reverts commit fcbfaffee51a452cc8efcbaa3b88ec4595678424.
+>=20
+> Turns out that vfio is a crazy beast and people have been "relying" on
+> the bind/unbind debugging feature as a way to handle passing through
+> devices to guest instances.  Because of this (https://xkcd.com/1172/),
+> let's revert the feature for now until we can figure out a more agreable
+> way to handle this such that normal workflows do not taint the kernel.
+>=20
+> Odds are something like what Uwe proposes at:
+> 	https://lore.kernel.org/lkml/cover.1790612298.git.u.kleine-koenig@baylib=
+re.com/
+> will be the best way forward and will be revisited after for after 7.4.
+>=20
+> The feature was originally intended to stem the flow of unnecessary
+> fuzzing reports of "broken" drivers where random devices were being
+> bound to random drivers and of course things were going wrong.  The main
+> syzbot tool is now not doing this anymore, and hopefully no one else
+> starts it up again (but in this madness of LLMs these days, you can't be
+> sure.)
+>=20
+> Thanks to everyone for telling me just how wrong I was to implement
+> this, I appreciated the feedback :)
+>=20
+> Link: https://lore.kernel.org/all/DLIL9H50MALI.3JROXYEEUM3KU@kernel.org/
+> To: Jonathan Corbet <corbet@lwn.net>
+> To: Shuah Khan <skhan@linuxfoundation.org>
+> To: Randy Dunlap <rdunlap@infradead.org>
+> To: "Rafael J. Wysocki" <rafael@kernel.org>
+> To: Danilo Krummrich <dakr@kernel.org>
+> To: Johan Hovold <johan@kernel.org>
+> To: Steven Rostedt <rostedt@goodmis.org>
+> To: Masami Hiramatsu <mhiramat@kernel.org>
+> To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Reported-by: Leon Romanovsky <leon@kernel.org>
+> Reported-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Reported-by: Michal Pecio <michal.pecio@gmail.com>
+> Reported-by: "Uwe Kleine-K=F6nig" <u.kleine-koenig@baylibre.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  Documentation/admin-guide/tainted-kernels.rst | 52 +++++++++++++--------=
+------
+>  drivers/base/bus.c                            |  3 --
+>  include/linux/panic.h                         |  3 +-
+>  include/trace/events/module.h                 |  3 +-
+>  kernel/panic.c                                |  5 ++-
+>  tools/debugging/kernel-chktaint               |  8 -----
+>  6 files changed, 28 insertions(+), 46 deletions(-)
+>=20
+> diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentatio=
+n/admin-guide/tainted-kernels.rst
+> index a208811ad525..3d312bc17942 100644
+> --- a/Documentation/admin-guide/tainted-kernels.rst
+> +++ b/Documentation/admin-guide/tainted-kernels.rst
 
- kernel/trace/trace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+It's not part of commit fcbfaffee51a452cc8efcbaa3b88ec4595678424, but
+conceptually we need=20
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 97a058623f94..faa90323809c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1456,6 +1456,13 @@ static void free_tracers(struct trace_array *tr)
- 	}
- }
- 
-+static void free_tracer_options(struct trace_array *tr)
-+{
-+	for (int i = 0; i < tr->nr_topts; i++)
-+		kfree(tr->topts[i].topts);
-+	kfree(tr->topts);
-+}
-+
- /**
-  * register_tracer - register a tracer with the ftrace system.
-  * @type: the plugin for the tracer
-@@ -8751,7 +8758,7 @@ trace_array_create_systems(const char *name, const char *systems,
- 	if (trace_instance_dir) {
- 		ret = trace_array_create_dir(tr);
- 		if (ret)
--			goto out_free_tr;
-+			goto out_free_tracers;
- 	} else
- 		__trace_early_add_events(tr);
- 
-@@ -8761,6 +8768,9 @@ trace_array_create_systems(const char *name, const char *systems,
- 
- 	return tr;
- 
-+ out_free_tracers:
-+	free_tracers(tr);
-+	free_tracer_options(tr);
-  out_free_tr:
- 	ftrace_free_ftrace_ops(tr);
- 	free_trace_buffers(tr);
-@@ -8914,10 +8924,7 @@ static int __remove_instance(struct trace_array *tr)
- 	if (tr->flags & TRACE_ARRAY_FL_VMALLOC)
- 		vfree((void *)tr->range_addr_start);
- 
--	for (i = 0; i < tr->nr_topts; i++) {
--		kfree(tr->topts[i].topts);
--	}
--	kfree(tr->topts);
-+	free_tracer_options(tr);
- 
- 	free_cpumask_var(tr->pipe_cpumask);
- 	free_cpumask_var(tr->tracing_cpumask);
+diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/=
+admin-guide/tainted-kernels.rst
+index 3d312bc17942..fcb8b9734548 100644
+--- a/Documentation/admin-guide/tainted-kernels.rst
++++ b/Documentation/admin-guide/tainted-kernels.rst
+@@ -74,7 +74,7 @@ a particular type of taint. It's best to leave that to th=
+e aforementioned
+ script, but if you need something quick you can use this shell command to =
+check
+ which bits are set::
+=20
+-	$ for i in $(seq 0 20); do echo $i $(($(cat /proc/sys/kernel/tainted)>>$i=
+&1));done
++	$ for i in $(seq 0 19); do echo $i $(($(cat /proc/sys/kernel/tainted)>>$i=
+&1));done
+=20
+ Table for decoding tainted state
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+in this change which was fixed in commit f1850e443b0e ("docs:
+admin-guide: Handle TAINT_FORCED_BIND when parsing
+/proc/sys/kernel/tainted"), but that commit shouldn't be reverted as it
+contains a simplification that we should keep.
+
+Best regards
+Uwe
+
+--l6fyrt6fnoykrkwe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmrjhMEACgkQj4D7WH0S
+/k7pjQf/fZLeX4jg8q6vdwBmv7dGxKbev3ARRZTtVOacOQwftIek8l6UKQWlMwoG
+/tiokVc22lkSxsHq47w6eKUKpucHydGzT8Y7OZvHNjOjZ1o9WS00lJRh6uhVTh06
+MK6k0za6dBbrOWnTBeTGZuWlLCOQKpDB/6t93V1fIYYJSd0ir3GpvVZzfM16Pk0d
+opyBimIxlfjCuxzRbj7DZjzv0I5PbjXdox41VKx2cx60OzFJdN0MKZifLp9yNV4s
+s6Tc4Q1oK/Ih66hhbojNkTp6Xyzsy2m0lvku9N0DitT5/VXqoI/mdedlPK7tFWeh
+qZAoONEgzf9TmSM0/P2g0K+1mpLkrg==
+=/byF
+-----END PGP SIGNATURE-----
+
+--l6fyrt6fnoykrkwe--
