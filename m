@@ -1,60 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793237988;
-	b=W60CDXnb3trvniO6c4nGy8a9anXYPmr0TAfzi4hAKCUHFvKC2t7Kk2n8LDuGv+Y1hNlx
-	 BGv//mjHo7iVhxIAorHGjf1ewBCl7gaFFh7SMg5xb9dx72lxzJA6Qjor2qbW93rHRVtAD
-	 n78zU03YbPAVyVdGVSoR0DHBYZQyfhMxnfrqhB/JUcKS4qnZ6NDxVpItRtMCeob9k6NvO
-	 4S1B1UVYFzJZzlNCfibn09JTFq6hO861iVBSwFpLFeWWv6IcycVV5vYcgr7iPRqsjk2er
-	 FoKPD6P7mcwh82Ll0TakGSH9Mx3mH6bNEWu0U7Q6RtytyrT2qvjGFjGmVmwG+GfvGew==
+	t=1793238354;
+	b=pBmSiP8+18UbQNtCl18iDWYm06A0J9/66+avu00SMWT97VNdrqZD4ajI9lTufAQ/PeTz
+	 Kqv9F7yu/9MoCossSScIjg+1LeEU9+GQlNkA3aZt8pmUMSBoPmbdUo4PQ1S69w+J5m1pp
+	 B+5hz9OBrMc6gYgMwnNT64G67OugHyLta8SkC7H6G+s2gj38zAOXEb0D6SHPE/ForFpTc
+	 sDsEIwjH6KmIhjZpD1LJ6bBCSTmI3LJOTO5GDmihVDrIVnXLGbyEwF9Yi12dIsRk+midO
+	 eyjhyFbXOXiqEcETHdMO/12IrnmJytnR8Z1w5vGmpaEI1/jyvlC43C8v4EhK/BVUYNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793237988;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=DWQxbmV0bH8re7GX2QHEPfKuuqupaaE79RPxwBK2nIA=;
-	b=pU8ZbQvaS0sn63hQLOTIga4a5Eht4Qobzmn4HHQx9Aj4L7J3bGCcvqAaxFG6UvK9rsJz
-	 c2KMO/bSy5SQzJoaNs/bdqHkqQwkMNQbvGrhlP2gKaJ+6uKperi2uWluMCWtbvtmz6kaF
-	 Z4E/Gy4Amg4Cft2RkJQJNMTHF5xyfUptOvcIESxossvzF2SUJpp0JE1XbIL+3Dmu4bM+J
-	 p/2Wh2xz7w6wTCdJPS9TODyBDUAAJSHYWhnmlSG+fWp1vr/DQhFUEBSO0LrwinlAEpXcZ
-	 BNpUjfYSK/R9DQSzh7Ji109PkmE1d7BvfqhvFsI2QrU2YxpuPPp5UEzrE+J0BqvEnaw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793238354;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=caRfaUuoFZqEHx5LHXdDO9Dj6w/upOzu07kckMhttfA=;
+	b=Y9HpCRD08MzzZ8iLPYVqWxyBD1cSGUHAlFWtIYx8kb/elPD52SNUXv5ssQJhIpsyyGo9
+	 Dr7GOtVKXquM74aTwYZ/AGvL1bEYsTbp+WPYwNrLSS194GoqDtBQYCwH3TdNZ7LhmG7l2
+	 YS9ooU7eiiCttVJmYk7bL+N79pj45iXLoe8Q9NSX30awBuprkvxhcm3zvV4Z7M6NU7hLK
+	 GyI/pubij4mUegrgmZIq6evolmD5XaAYwnzNlXmAUDkmty9Lxqz0r7oU2rGtvE8w4hJe+
+	 PIUHDDqAYrUgQv2tAgpJLYJWgbrHQASlCJ99BNbaKbszyU2JoTKhQZ3hpmbBNn3O9dg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dumBjmEs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gFQUC1PK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB79606A31C;
-	Thu, 29 Oct 2026 01:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68680606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 01:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dumBjmEs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D6E1F01828;
-	Thu, 29 Oct 2026 01:39:46 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gFQUC1PK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4EF1F01825;
+	Thu, 29 Oct 2026 01:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793237988;
-	bh=DWQxbmV0bH8re7GX2QHEPfKuuqupaaE79RPxwBK2nIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dumBjmEs4eiLodakeYnT3akEBBb0DysCs9Cor+j8+D1UuNJx7P3luwR2NRZsUKNTK
-	 lj3MtlzOOH6UKK9ZLdsjtlLviGhfRyvPkYtfj46Qw9J5+hiCmqMlIFY1UMIYJktdCd
-	 yEJaVwguacAUuRGH0nbgloUrcWPG6LhMoF5eMDaW586t6ecZvCVjrjJ+Pw40+XasZL
-	 BPoS/rzIMJDwaZz+NUfZ+s+ER9Q76W2ZM1kRVUpusE+kgX0JzzLIpoYZgd+oP2DQ0O
-	 LKunZyahiEH6AtjFF71zn4WyM9I+/SfAeyQUEPgDFXmAPxZzJt5aVpeR+HMh3SMeBl
-	 k6HphE2eM0MyQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 15/15] selftests/ftrace: Add event filter syntax check test case
-Date: Thu, 29 Oct 2026 10:39:44 +0900
-Message-ID: <179323798449.740114.5416715723328926616.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <179323784538.740114.15323117974242744566.stgit@devnote2>
+	s=k20260515; t=1793238353;
+	bh=caRfaUuoFZqEHx5LHXdDO9Dj6w/upOzu07kckMhttfA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gFQUC1PK8csizjwos8hK5GznjYhLbPWHC8KHFL17V4b+sdb3JatAhrubzGHHBKTnF
+	 e8Ow8uznzH7Wfh+drZ7veUtfGHU/xVvowp8IU4txn70u0ktQLr+7YKY9+5y2UBPAl/
+	 nxZr3mJFrZRk5zYjoMYfFT0Uv10Ipz1kQ4SAHVyAjy10FaCxI+GqSe1br6zBV0nk0M
+	 /PgUiDIBpAxbzGisA82R4lTWUJAUG9/XCp1sZ6AX9LvLsCvpTVbnyROtfnqJljvr9o
+	 PPqBy1Gpmaw4nJ41UpVYIHOyfChZ6UP237z4GFqjKy3YfBY4T9OazLvqPPfU2vqhAo
+	 NahOcmHefusNg==
+Message-ID: <sashiko-outbox-188613@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 02/15] tracing/filters: Fix false success return in
+ process_system_preds()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <179323786427.740114.10413984130946236850.stgit@devnote2>
 References: <179323784538.740114.15323117974242744566.stgit@devnote2>
-User-Agent: StGit/0.19
+ <179323786427.740114.10413984130946236850.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 Oct 2026 01:45:53 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,144 +60,120 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] tracing/filters: process_system_preds() returns 0 on ENOMEM afte=
+r match
+--
 
-Add a new ftracetest test case (filter-syntax-check.tc) to verify valid
-event filter expressions, error_log caret reporting for malformed filter
-expressions (empty filters, missing fields, unbalanced parentheses and
-quotes, dangling logical operators, invalid fields/values/cpulists),
-newline truncation on multi-line filter input, and error returns on
-invalid subsystem filters.
+commit a15564919ee696f8c1b9df5aeee0a37935f51db7
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v3:
- - Replace negated pipelines (! cmd) with explicit
-   "if cmd; then exit_fail; fi" checks to properly catch unexpected success
-   under POSIX sh with set -e.
- - Add test cases for empty string matching (prev_comm == "",
-   prev_comm ~ "").
- - Add test cases for out-of-range CPU IDs with CPUS{} comparison.
- - Add test cases for missing operands after operators.
- - Add test cases for empty operands and stray operators.
- - Add test cases for operand type mismatches and brace errors.
- - Add test cases for function event filter syntax checks (including
-   INVALID_OP and ILLEGAL_FIELD_OP caret checks).
- - Add test cases for multi-line input validation on event and subsystem
-   filters.
----
- .../ftrace/test.d/filter/filter-syntax-check.tc    |  100 ++++++++++++++++++++
- 1 file changed, 100 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
+tracing/filters: Fix false success return in process_system_preds()
 
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
-new file mode 100644
-index 000000000000..02fb2be6e6eb
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
-@@ -0,0 +1,100 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event filter - test filter syntax error check
-+# requires: set_event events/sched/sched_switch/filter error_log
-+# flags: instance
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'event filter parse error' "$1" 'events/sched/sched_switch/filter'
-+}
-+
-+# Valid filter expressions
-+echo '(common_pid == 0)' > events/sched/sched_switch/filter
-+echo '((common_pid == 0) && (prev_pid == 0))' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ "*sh"' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ "*"' > events/sched/sched_switch/filter
-+echo 'prev_comm == ""' > events/sched/sched_switch/filter
-+echo 'prev_comm ~ ""' > events/sched/sched_switch/filter
-+echo 'common_pid == CPUS{0}' > events/sched/sched_switch/filter
-+echo 'common_pid != CPUS{0}' > events/sched/sched_switch/filter
-+echo 0 > events/sched/sched_switch/filter
-+
-+# Empty or meaningless filter expressions
-+check_error '^()'						# NO_FILTER
-+check_error '^== 1'						# INVALID_FILTER
-+check_error 'common_pid ==^'					# INVALID_FILTER
-+check_error 'common_pid !=^'					# INVALID_FILTER
-+check_error 'common_pid >=^'					# INVALID_FILTER
-+
-+# Unbalanced parentheses and quotes
-+check_error '^(common_pid == 1'					# TOO_MANY_OPEN
-+check_error 'common_pid == 1^)'					# TOO_MANY_CLOSE
-+check_error 'prev_comm == ^"bash'				# MISSING_QUOTE
-+
-+# Dangling logical operators and empty operands
-+check_error 'common_pid == 1 &&^'				# TOO_MANY_PREDS
-+check_error 'common_pid == 1 ||^'				# TOO_MANY_PREDS
-+check_error 'common_pid == 1 || (common_pid == 2 && ^)'		# INVALID_FILTER
-+check_error '(common_pid == ^)'					# INVALID_VALUE
-+check_error 'common_pid == ^&& common_pid == 0'			# INVALID_VALUE
-+
-+# Invalid field, operator, or operand type
-+check_error '^no_such_field == 1'				# FIELD_NOT_FOUND
-+check_error 'common_pid == ^@'					# INVALID_VALUE
-+check_error 'common_pid == ^"1"'				# EXPECT_DIGIT
-+check_error 'prev_comm == ^0'					# EXPECT_STRING
-+check_error 'common_pid ^~ 1'					# ILLEGAL_FIELD_OP
-+
-+# CPUS{} syntax errors
-+check_error 'common_pid ^> CPUS{0}'				# ILLEGAL_FIELD_OP
-+check_error 'common_pid == CPUS^0}'				# MISSING_BRACE_OPEN
-+check_error 'common_pid == CPUS{0^'				# MISSING_BRACE_CLOSE
-+check_error 'common_pid == CPUS{^}'				# INVALID_CPULIST
-+check_error 'common_pid == CPUS{99999^}'			# INVALID_CPULIST
-+
-+# Function event filter errors (if supported)
-+if [ -f events/kmem/kmem_cache_free/filter ]; then
-+    check_kmem_error() {
-+        ftrace_errlog_check 'event filter parse error' "$1" 'events/kmem/kmem_cache_free/filter'
-+    }
-+    check_kmem_error 'call_site.function == non_exist_func^'	# NO_FUNCTION
-+    check_kmem_error 'call_site.function ==^'			# INVALID_FILTER
-+    check_kmem_error 'call_site.function ^> 0'			# INVALID_OP
-+    check_kmem_error 'common_type^.function == 0'		# ILLEGAL_FIELD_OP
-+    echo 0 > events/kmem/kmem_cache_free/filter
-+fi
-+
-+# Multi-line input with non-whitespace characters after newline must fail
-+if ( printf "common_pid == 0\ncommon_pid == 1" | \
-+     dd of=events/sched/sched_switch/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+if ( printf "common_pid == CPUS{0\n\"} && common_pid == 0" | \
-+     dd of=events/sched/sched_switch/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+
-+# Trailing whitespace characters after newline are permitted
-+printf "common_pid == 0\n  \n\t \n" | \
-+    dd of=events/sched/sched_switch/filter bs=4096 2> /dev/null
-+echo 0 > events/sched/sched_switch/filter
-+
-+# Subsystem filter must fail on invalid filter expressions
-+echo 'common_pid >= 0' > events/sched/filter
-+if echo 'no_such_field == 1' > events/sched/filter 2> /dev/null; then
-+    exit_fail
-+fi
-+if echo 'common_pid == 1 &&' > events/sched/filter 2> /dev/null; then
-+    exit_fail
-+fi
-+if ( printf "common_pid == 0\nfoo" | \
-+     dd of=events/sched/filter bs=4096 ) 2> /dev/null; then
-+    exit_fail
-+fi
-+
-+# Subsystem filter with trailing whitespace after newline must succeed
-+printf "common_pid == 0\n  \n\t \n" | \
-+    dd of=events/sched/filter bs=4096 2> /dev/null
-+echo 0 > events/sched/filter
-+
-+exit 0
+This commit replaces the boolean fail flag in process_system_preds() with
+ret so that process_system_preds() returns -EINVAL when no event in the
+subsystem matches the filter. It also consolidates the fail and fail_mem
+error cleanup paths.
 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_even=
+ts_filter.c
+> index 28977d10e60b6..b35ecb01697b8 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -2337,7 +2337,7 @@ static int process_system_preds(struct trace_subsys=
+tem_dir *dir,
+>  	struct filter_list *filter_item;
+>  	struct event_filter *filter =3D NULL;
+>  	struct filter_head *filter_list;
+> -	bool fail =3D true;
+> +	int ret =3D -ENOMEM;
+>  	int err;
+> =20
+>  	filter_list =3D kmalloc_obj(*filter_list);
+> @@ -2364,8 +2364,10 @@ static int process_system_preds(struct trace_subsy=
+stem_dir *dir,
+>  			filter_disable(file);
+>  			parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  			append_filter_err(tr, pe, filter);
+> -		} else
+> +		} else {
+>  			event_set_filtered_flag(file);
+> +			ret =3D 0;
+> +		}
+> =20
+> =20
+>  		filter_item =3D kzalloc_obj(*filter_item);
+> @@ -2380,11 +2382,9 @@ static int process_system_preds(struct trace_subsy=
+stem_dir *dir,
+>  		filter_item->filter =3D event_filter(file);
+>  		event_set_filter(file, filter);
+>  		filter =3D NULL;
+> -
+> -		fail =3D false;
+>  	}
+> =20
+> -	if (fail)
+> +	if (ret)
+>  		goto fail;
+> =20
+>  	/*
+> @@ -2396,19 +2396,18 @@ static int process_system_preds(struct trace_subs=
+ystem_dir *dir,
+>  	return 0;
+>   fail:
+>  	/* No call succeeded */
+> -	free_filter_list(filter_list);
+>  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+> -	return -EINVAL;
+> +	ret =3D -EINVAL;
+>   fail_mem:
+>  	__free_filter(filter);
+> =20
+> -	/* If any call succeeded, we still need to sync */
+> -	if (!fail)
+> +	/* If any filter was replaced, we still need to sync */
+> +	if (!list_empty(&filter_list->list))
+>  		delay_free_filter(filter_list);
+>  	else
+>  		free_filter_list(filter_list);
+> =20
+> -	return -ENOMEM;
+> +	return ret;
+
+[Severity: Medium]
+Can process_system_preds() return 0 instead of -ENOMEM when an allocation
+fails after at least one event matches the filter?
+
+In kernel/trace/trace_events_filter.c:process_system_preds(), ret is
+initialized to -ENOMEM and cleared to 0 as soon as process_preds() succeeds
+for an event:
+
+	err =3D process_preds(file->event_call, filter_string, filter, pe);
+	if (err) {
+		...
+	} else {
+		event_set_filtered_flag(file);
+		ret =3D 0;
+	}
+
+	filter_item =3D kzalloc_obj(*filter_item);
+	if (!filter_item)
+		goto fail_mem;
+
+If kzalloc_obj(*filter_item) fails on that same iteration, or if
+kzalloc_obj(*filter), kstrdup(), or kzalloc_obj(*filter_item) fails on a
+subsequent event in the loop, jumping to fail_mem returns ret (which is now
+0) instead of -ENOMEM.
+
+That causes create_system_filter() and apply_subsystem_event_filter() to
+treat the aborted update as a success, leaving the remaining events in the
+subsystem without the new filter applied. Also, if kzalloc_obj(*filter_item)
+fails right after event_set_filtered_flag(file) runs, EVENT_FILE_FL_FILTERED
+is set and trace_buffered_event_enable() is called, while fail_mem frees the
+new filter without installing it via event_set_filter(file, filter).
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179323784538.740114=
+.15323117974242744566.stgit@devnote2?part=3D2
