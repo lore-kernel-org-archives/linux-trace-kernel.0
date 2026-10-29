@@ -1,49 +1,73 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793291409;
-	b=Vy3TAmseMnY3GhUkcDgXqUsIBMjoepTvRnsJM+5Aer1jtZIdKxVD3MxGbWv1JJ2Lv31O
-	 7XXNFHlAzv5ogJbL3LhKWdpMezfMn8Idq2oyl4aGo5gLBAhEa55ABFQUEmB3ksYzM/+ei
-	 O7hwmW4njCvN8ul7/tgSIjaCip3RphQJjxjaW2cSyjPvvoPRZIr7zFBUMoUuoDTQw2h1J
-	 hLiPvPws5HcFFIahj+ZJtT8POElLMvmgtbLjbNj7XiYmGE8iNuRwznMZTeyZXXNvdxduB
-	 jYRK6A6FR39HywdIGcJrdIWrB8aszIepQAa/pCqH2WxZJMvN+3UT6CJ2GdEWkt/Ghmg==
+	t=1793292554;
+	b=FE4MX0fuK9vKkLaIlxo5lIDQDaCZ0Atx14cMIjML04LAlQg2d535zUp7N/gLdQxEDHGa
+	 uo6pq4dTCc5hqu/IB/XHQWoS8gz5a0KdfdpfzKggibs1FH9n0JyT/XTrWuP0ZWNzME918
+	 OhWAPiXh+ceAcg+62ATlC3hZaos3SFTK/QxzwrWRj63j6PU03pDJ1tillznbcHSXBWEkL
+	 F8bZ1469vW72mPyV7mCamkS3rcSlY3tktLQTB0acMF9KVCtUoYZah91rza+y8zx8XuyUn
+	 Henjs5lkZuLI0OBf/eBHhIInWqO2pY6K/V7sTvBz0AMq8nEjgcrJtarVCf5chUorn8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793291409;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=9sdoxOsij3ml0E4hBz0Uk1W+O3KE/Jevu63peRDA6+g=;
-	b=nibnCAR6UztfyS6rKyDcyVp89ARhbh3Ig9XmAycy79mk0X4WTEptqCDpdXCzBkN0K94h
-	 EJaSimUo1OjZKqPBDE5HGtHGLnzWBg5M1OgZNHq3h4+jUSlSwCeWqAdF29dfLeMOjs67j
-	 P93HQzlEBZFbP/ajVQcnzkZBLEdLOLRfPS+rgjs7Aku+NoDTYfuC+1s+eVD9mjLF7gyEd
-	 3sBBKXyonVDZ5wG1UWReaFGK9Nd/1aypv97Fa7J9rAGjJ2+Jlrg/4e+lGoamGxBZPEHXb
-	 eVftrbIq2nDPhW+if/cQp7MbRz32uwWGXTJLDGjMEohYHAKV1IXQuovOMRu72NUOU4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793292554;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=5wi6r2Bh1Iv9QLbnNFqtqG0uwuLtzn/pkDXD94Z+vfY=;
+	b=k5gVCJOWbrHdytBdkHQcBnlNqANwRa7Xp5iy0CCVoVHwLAR1U5Jh6YQpf7kccXnB03bp
+	 ga09urW2SnKnLLobEVuH4UiN+Cv1+UXT0W8s+rBzTcLlnEoIqZwipu+7YNvtKJZ8aZy8U
+	 AO2qkDPYc4gjQBxOEriAD1QoAvyNMWVi+9fJCm79kVBOw6qUUkPpGL5TcPpoecwdazgCp
+	 AmeRkSqR0fcT8Q+AwViTUopQWzWi90i4VBtGTiDOuHyqwTSDV0JC5pFU1hR3GFkULn+C4
+	 +tCbVlKwZQsadVU66a54QAlFKA8deP8LpCgp0+XGS2X6xCqmd04eUdPTUpdeeu+7FRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LuYpXVpz;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jo8fCLzQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3F606A320;
-	Thu, 29 Oct 2026 16:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D14606A31A;
+	Thu, 29 Oct 2026 16:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LuYpXVpz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C63D21F01816;
-	Thu, 29 Oct 2026 16:30:07 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jo8fCLzQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E314D1F01816;
+	Thu, 29 Oct 2026 16:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793291407;
-	bh=9sdoxOsij3ml0E4hBz0Uk1W+O3KE/Jevu63peRDA6+g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=LuYpXVpzcgZf5I4egFlI4i+W1uV5kDaqKb6zxyn667htazDz/UY5voP6+zzEpXm80
-	 ioWwC0HW+4d/gANJuXS4MTqacHCbrVpK4gMBKRJdj+XgtgjC+Mx/+CO5DeCaVYL/J1
-	 Cf4iWG8Fd0kJDrHQrsfQ17eNGej57KeXNRkpKsVYksC98LjBXhLPUIPSqFEbcPjwp1
-	 SQPUBku2b8m6YljgP62sQ7XYU2ijiMmgXifT2DwJbYSusl6tjT35PPSv9RnOr+81tJ
-	 lxRDpXr7kcht53KRFVmgOLFvu3AwOqQHK9LfqfzdQW1d5kRmrEZ7lMXfXK8fY0PeUy
-	 GLpEJSB1STrjQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA3963808223;
-	Thu, 29 Oct 2026 16:30:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1793292553;
+	bh=5wi6r2Bh1Iv9QLbnNFqtqG0uwuLtzn/pkDXD94Z+vfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jo8fCLzQXKF02wU2RYT3THNRYIo6oYKarU7ZSxQMGfgseSFX22gAow3w3didTfBiN
+	 IDtqFugaiIQBFdhlXyAlM9Hb+KbjcnS4Kh0WQ5OePvIjoe35IpI5JqjQ/RB4Ad1rDg
+	 LQieX2k5UTDQqOazFftaFHd/HB56LjtJIg9PwAuDvcnuRwtga0nV8oUsThcSBImJYt
+	 mhEi7EM1F8PUgGauhXwwZ9LiiEF9fqBXghIsvYfiBpyUArpgidd/n4P2eB6/ronNaC
+	 qX1DjrimPuZpkw77rx3TVi4ThEGAufAa/w5ag8O75EfYgjhfpT9lmIdAagdu0RrbSU
+	 I5uBDOmRqYoIQ==
+Date: Thu, 29 Oct 2026 17:49:10 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peng Wang <peng_wang@linux.alibaba.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	He Rongguang <herongguang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/2] tick/nohz: Add a policy dependency for full
+ dynticks
+Message-ID: <auN5Bku9w2VDZFFX@localhost.localdomain>
+References: <cover.1792242566.git.peng_wang@linux.alibaba.com>
+ <58bc33cb018a2651e9cc3fc02baad7de4d543705.1792242566.git.peng_wang@linux.alibaba.com>
+ <att2hiYaaHTIkzG9@localhost.localdomain>
+ <atuMJiJEwbzGjiu4@MacBook-Pro.local>
+ <auIbt5JAC2cHw5jr@localhost.localdomain>
+ <auLqmMdd8RIdf6st@U-3K7XLPQ6-0046.local>
+ <auNR5c6hXlb_FFkB@localhost.localdomain>
+ <auNuLZiBZyHLFYUr@MacBook-Pro.local>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -53,63 +77,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v5 0/6] bpf: Add syscall common attrs support for
- xdp
- link_create
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179329140655.559085.2587539582409074788.git-patchwork-notify@kernel.org>
-Date: Thu, 29 Oct 2026 16:30:06 +0000
-References: <20261026154948.99408-1-leon.hwang@linux.dev>
-In-Reply-To: <20261026154948.99408-1-leon.hwang@linux.dev>
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: bpf@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
- memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
- ihor.solodrai@linux.dev, hawk@kernel.org, john.fastabend@gmail.com,
- sdf@fomichev.me, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, shuah@kernel.org, kuniyu@google.com,
- liuhangbin@gmail.com, mkarsten@uwaterloo.ca, masashi.honma@gmail.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+In-Reply-To: <auNuLZiBZyHLFYUr@MacBook-Pro.local>
 
-Hello:
-
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Mon, 26 Oct 2026 23:49:41 +0800 you wrote:
-> I'm planning to add syscall common attrs support for LINK_CREATE cmd.
+Le Fri, Oct 30, 2026 at 12:02:53AM +0800, Peng Wang a écrit :
+> > Ok in that case, do you know about the current work in progress
+> > to make nohz_full opt-able through cpusets? It implies taking the
+> > target CPUs offline shortly but the policy is to be setup before VM
+> > is launched, right?
 > 
-> This is the first series for the plan, that adds syscall common attrs
-> support for xdp LINK_CREATE.
+> Not always. Waiman mentioned the cpuset work earlier; it could
+> cover selecting the policy before a new VM starts.
 > 
-> Thereafter, retire the tracepoint bpf_xdp_link_attach_failed, because
-> the underlying driver's error can be back-propagated to user space via
-> the syscall common attrs.
+> Some customers express a preference for host tick suppression
+> through the management interface when changing workloads within
+> a running VM. The host operator decides whether to allow
+> suppression on the CPUs backing that VM.
+
+I think people should know ahead if they will run latency critical workloads
+or common workloads in their VMs. Because those are completely different.
+
 > 
-> [...]
+> We want to support revisiting that decision while keeping those
+> CPUs online and the VM running, with nohz_full membership
+> unchanged. Could such an operation fit into the cpuset work?
 
-Here is the summary with links:
-  - [bpf-next,v5,1/6] bpf: Add syscall common attrs support for link_create
-    https://git.kernel.org/bpf/bpf-next/c/b891bce3fe4d
-  - [bpf-next,v5,2/6] bpf: Add syscall common attrs support for xdp link_create
-    https://git.kernel.org/bpf/bpf-next/c/cbb143cc97b6
-  - [bpf-next,v5,3/6] bpf: Retire tracepoint bpf_xdp_link_attach_failed
-    https://git.kernel.org/bpf/bpf-next/c/d33d3ec8f730
-  - [bpf-next,v5,4/6] libbpf: Factor out __sys_bpf_fd helper
-    https://git.kernel.org/bpf/bpf-next/c/d6ef68efcece
-  - [bpf-next,v5,5/6] libbpf: Add log_opts support for bpf_link_create
-    https://git.kernel.org/bpf/bpf-next/c/0be729f9f030
-  - [bpf-next,v5,6/6] selftests/bpf: Add tests to verify link_create logs
-    https://git.kernel.org/bpf/bpf-next/c/a1a714b7e947
+If that is really necessary then I guess we can have a file to control that
+in cpuset once the nohz_full interface is ready. Though I'm a bit skeptical due
+to the overhead of user <-> kernel transitions and housekeeping.
 
-You are awesome, thank you!
+Thanks.
+
+> 
+> Thanks,
+> Peng
+> 
+> > 
+> > Thanks.
+> > 
+> > -- 
+> > Frederic Weisbecker
+> > SUSE Labs
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Frederic Weisbecker
+SUSE Labs
