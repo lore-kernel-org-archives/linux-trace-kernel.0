@@ -1,61 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.154.239.223
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793296052;
-	b=xq2zMGWUZJ2bMVQvoRtagywDHI8eiCsVetPCN3I++3r7vWXlixpGrj9P/UBbdIdvz66h
-	 UAw+s9otpfBHFzangtPz6MpXeXkpacDzl5a6w+u9OK2ykLVAaLlpiP2K0thczuBEG76vH
-	 5xJM0ohic2TBNKC64F7nArNPzqNViMIqSoqmx69f/NvzTcGpyvQBTxV/rITfXa/dUYK0J
-	 X57ijwNf8OtQuaWbOWFmfS58iSxs4WzdgxR/ZQs6S/uBnkqcmcN94848SkbHUX5Vl/LHa
-	 25YAmvQrb2lrCAKSSF/ugouU7uq2ZAtaFoYpIT/x9vJ09EEnWNLt39s8Xn+DJIcXKDw==
+	t=1793300347;
+	b=CorfllNirPEOcBD/DyEAO4JgLSexu1S71O4tLMl+13OWrH96z6IzJnbnmhHx1ECqyjCF
+	 jrItctU429QwkOGvWGHphJLPJHOLiWPIdlEGZ+BI4uWWUPQe3CC9z0XWWp9yZgVt+koyU
+	 FsCmxxe+mq57dJ+6UDnHqLdgPur7841QQQ9BBTG7XyZ8YAwGrJDUh4i8hZNUTT47fkiv8
+	 7dvXRymhw3W/EMrb7oGv30WZvAycNAmBWTvfCs45QImVNZDico0M/89QNCUHtmx/7gr70
+	 prV2oiFmTwaExPDm9u0Qjg9L7dcXeIGFE7z/v036a5v6MZSCQLVnyUcBJkpp+bNvQNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793296052;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=TZqWEhV2y/lvzzClRPojBV8sMBYlwAYy6VL/gIbvyug=;
-	b=2XfDa2UcW7tEUqDI6kZZPUEPuzmZipIE3fM9DRJTh4XGV3u698q/yOM/3Q/bbQeDaoNe
-	 4fi3YGWF73+Vgo37G41mHdHHL0K+QvuISqisgn4dYLBZ6cDXPz+vRyUEK2tttIZOZCfrl
-	 Vt+CUp8fGm/Z6hJF8nkowaaYQ/zTTeSDA4x1Em9jNSu0kzcKWM8YVBIut2UXhjU/gKHqN
-	 SfFIh9c5L4JvyXGflpMCVkVHpBvhnykIpCeJNctec4qyp5NY6/9GrbaaHRxBFK+BqKd5S
-	 alw2ijjEnsiorE8ZY8+2Urh8PMVl1CrDRLr+fG9MK4SEYihl2puKHEr9uk56F8ywcQg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793300347;
+	h=DMARC-Filter:Received:Received:X-Yandex-Fwd:DKIM-Signature:From:To:
+	 Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=UfCr7SMBp2MWLVqMbTLms5eQnif5CMZeedqFoCGKq5U=;
+	b=LE3PSVpnYwT7h3N65UaxqCZbgvdpOw6tkX18I4sVGRVJxCPgghQtdcaGpO/hGLTqo8TR
+	 hrWCHR3QAygCFIksLaKPpm1TqT0AflKQ0Ysyj+tTzALyfmeFjREmairQsRhy5mKJ6Hw5Q
+	 pYgH3HK9ZHqK4xLVIyoN2pqcF1Hak4l+7t05YfVsDjztycjJ3w7dAcnKvHmWCbUIn33iQ
+	 sL97ZgNOooTV5fkNDl6qEmxvj/j++lUHiHqjm+oxJVwXPrpFaHQL0RY5XzQ6B4YAfCNT1
+	 SOK3kUjT+fGWFME2lMzAWK2SVewT+L73LkgGj9IT2GGpvkqcQI7t/0tMNpIV55rYhJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=k5xCO8Td;
-	arc=none smtp.remote-ip=216.40.44.12
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	dmarc=pass header.from=yandex.com;
+	spf=pass smtp.mailfrom=yandex.com;
+	dkim=pass header.d=yandex.com header.i=@yandex.com header.a=rsa-sha256 header.s=mail header.b=l84f8WVn;
+	arc=none smtp.remote-ip=178.154.239.223
+Received: from forward400d.mail.yandex.net (forward400d.mail.yandex.net [178.154.239.223])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8239606A31A;
-	Thu, 29 Oct 2026 17:47:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D8239606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFE7606A320;
+	Thu, 29 Oct 2026 18:59:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDFE7606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=k5xCO8Td
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 2A5B6A050D;
-	Thu, 29 Oct 2026 17:47:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 43BA32E;
-	Thu, 29 Oct 2026 17:47:22 +0000 (UTC)
-Date: Thu, 29 Oct 2026 13:47:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- live-patching@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
- kernel-team@meta.com
-Subject: Re: [PATCH v2 07/16] tracepoint: Mark __do_trace_##name() notrace
-Message-ID: <20261029134721.66bb584c@gandalf.local.home>
-In-Reply-To: <CAPhsuW54Tco1Y_khWHeomq_ZTxvDoHFuX77w9cqojuXCrhGKWg@mail.gmail.com>
-References: <20261023011049.1164625-1-song@kernel.org>
-	<20261023011049.1164625-8-song@kernel.org>
-	<20261023093256.20d3e300@gandalf.local.home>
-	<CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
-	<20261028210844.105c431f@fedora>
-	<CAPhsuW54Tco1Y_khWHeomq_ZTxvDoHFuX77w9cqojuXCrhGKWg@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=yandex.com header.i=@yandex.com header.a=rsa-sha256 header.s=mail header.b=l84f8WVn
+Received: from mail-nwsmtp-smtp-production-main-89 (unknown [IPv6:2a02:6b8:c0c:1f29:0:640:95da:0])
+	by forward400d.mail.yandex.net (postfix) with ESMTPS id 3F3DE81375;
+	Thu, 29 Oct 2026 21:58:56 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-89 with ESMTPSA id nwoaPAGntOs0-SbXmwiTF;
+	Thu, 29 Oct 2026 21:58:54 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.com; s=mail;
+	t=1793300334; bh=UfCr7SMBp2MWLVqMbTLms5eQnif5CMZeedqFoCGKq5U=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=l84f8WVnf0WHjjRwv2BsHGMCY32Tq9OY+zOcb7WWDKUREDKTCRetEM9eTAiV5mTi6
+	 y4CEzvWJLMwIbTQH3jg6QlToyw2wtJO9noRgrTD+bLSzO1Bmwp9m8cBzJpa+zdSjqX
+	 KARciJ392A+xPz93jkzx1cwIBtcRQz9IlOo5UBdU=
+Authentication-Results: mail-nwsmtp-smtp-production-main-89; dkim=pass header.i=@yandex.com
+From: Eneshan Karaca <Eneshan-Karaca@yandex.com>
+To: brauner@kernel.org,
+	kees@kernel.org,
+	rostedt@goodmis.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	jkoolstra@xs4all.nl,
+	farid.m.zakaria@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [RFC PATCH v2] binfmt_misc: add binfmt_misc_select tracepoint
+Date: Thu, 29 Oct 2026 21:58:49 +0300
+Message-ID: <20261029185849.8016-1-Eneshan-Karaca@yandex.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,50 +75,134 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 43BA32E
-X-Stat-Signature: drxb1cnkyexensd37b1u4a49sqbji47x
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18NORkA5fioUOLAX9SsNx3u5SPSwUmH0e4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TZqWEhV2y/lvzzClRPojBV8sMBYlwAYy6VL/gIbvyug=; b=k5xCO8Td4pNr8GUnAHOmFxw0PniFVCmAijvq9Om+QIDCXCVj0CYvY/niKkFnfk1fp4JpMVTdosKVvT8dEixw4jB8uGqVUTf1zFfEOIN6AqTXrVWIeE91l1KdDTYXoD0m2NvIUBnsa6po2ACt8oNRSPwZrEGEhiFqV4cooGU61xs=
-X-HE-Tag: 1793296042-951613
-X-HE-Meta: U2FsdGVkX19+m4toOwYeAxCMuZBtYopgyOAuy4o4bNKDshcgXGTmCaxB1LDLJxS8Zt5fArQywqkEr8MkMmbK5O0qBaUyM2LLjNXz3Sl3oc7ufqgnCfC5mE6kWZhWVvYgT5Ah0kkfSpzeXKa6p6O82Dd/JqYGevW1nZFqaOD1gkLeS9bB5QOKNvy+OpL8gywg5ZT3k3Q9wcZyjRO7CnG0vhilN1rr1oZOuv8wtkrHj6ZENDGeyxJ7LpRPj4A0eket044bZKb6nJ2n1VuscCoAopEOH6gT+DrtiBJZp6PkgdFZP4B6dtrJWZ0sadxr390jr+Bg7bPLXeGqmlp5h9hqeZxcsEL+ZjjxM/Ei3K7h+syNcWUjLvo3cqouTUpW+7+nI28kNWtOMFMB+4CURMXUEg==
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 Oct 2026 10:40:57 -0700
-Song Liu <song@kernel.org> wrote:
+From: Eneshan Erdoğan Karaca <BoxStrikesTeam@proton.me>
 
-> Hi Steven,
->=20
-> On Wed, Oct 28, 2026 at 6:08=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Wed, 28 Oct 2026 15:20:37 -0700
-> > Song Liu <song@kernel.org> wrote:
-> > =20
-> > > Do you plan to apply this set to the trace tree (after the merge wind=
-ow,
-> > > I guess)? If not, how should we proceed? =20
-> >
-> > I can take it if we get all the necessary acks, or it can go through
-> > the BPF tree. Either way is fine with me. =20
->=20
-> > If you prefer me to take it (as I do have a lot of ftrace specific
-> > tests), I'll do it. But I'd like acks from maintainers of all the code
-> > this touches. =20
->=20
-> I think this should go through the ftrace tree. It has very little to do =
-with
-> BPF. We discovered the need for this change when building live patches.
->=20
-> Regarding ACKs, it is a bit tricky. For the code we touched in this set,
-> there is actually no behavior change at all. OTOH, the real change
-> happens to "inline"s that we didn't touch in this set. If such a function
-> was left out-of-line by the compiler, it was not traceable before, but is
-> traceable after this set. How should we approach this? Maybe we can
-> just ask ACKs from the maintainers of all the code touched here.
->
+A binfmt_misc entry can select an interpreter for an exec.  With a BPF
+'B' handler, that selection can be made by a BPF struct_ops program.
+The kernel commits the decision in bprm->interp and bprm->flags, but it
+does not emit an event at the selection point.
 
-OK, I'll just add it to Linux next around -rc2 then.
+Existing observers have to reconstruct the decision from
+/proc/PID/exe, AT_EXECFD, AT_FLAGS, or /proc/PID/maps.  These sources
+are mode-dependent: a transparent dispatch still reports the original
+binary in /proc/PID/exe, and a short-lived process can exit before the
+observer reads it.  A classic dispatch reports the interpreter, but
+not which handler selected it or which invocation flags were used.
 
--- Steve
+Add a tracepoint after the interpreter and the invocation flags are
+selected.  The caller passes the matched entry and the raw flags; the
+trace event resolves the handler name and masks the flags with
+MISC_FMT_INVOCATION_FLAGS.  The event reports the binary filename, the
+selected interpreter, the handler name, the invocation flags, and the
+pid.
+
+The tracepoint is observability only; it does not change exec
+behavior.
+
+Assisted-by: LLM
+Signed-off-by: Eneshan Erdoğan Karaca <BoxStrikesTeam@proton.me>
+---
+v2:
+ - Pass the matched entry and the raw flags to the tracepoint.
+ - Resolve the handler name and mask the flags in the trace event.
+
+Thanks to Steven Rostedt for the review and the claws-mail tip.  The
+PoC and A/B results are available on request.
+
+ fs/binfmt_misc.c                   |  9 +++++
+ include/trace/events/binfmt_misc.h | 55 ++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 include/trace/events/binfmt_misc.h
+
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index 620da85..58a8283 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -118,6 +118,13 @@ struct binfmt_misc_entry {
+        char buf[];                     /* register string, fields point in here */
+ };
+
++/*
++ * The trace event needs struct binfmt_misc_entry and the MISC_FMT_*
++ * flags, so include it after they are defined.
++ */
++#define CREATE_TRACE_POINTS
++#include <trace/events/binfmt_misc.h>
++
+ /*
+  * Max length of the register string.  Determined by:
+  *  - 7 delimiters
+@@ -644,6 +651,8 @@ static int load_misc_binary(struct linux_binprm *bprm)
+
+        flags = entry_invocation_flags(fmt, bprm);
+
++       trace_binfmt_misc_select(bprm, fmt, interpreter, flags);
++
+        /* No argv is built for a staged argument to land in. */
+        if ((flags & (MISC_FMT_LOADER | MISC_FMT_TRANSPARENT)) &&
+            bprm->bpf_interp_arg)
+diff --git a/include/trace/events/binfmt_misc.h b/include/trace/events/binfmt_misc.h
+new file mode 100644
+index 0000000..61a0de0
+--- /dev/null
++++ b/include/trace/events/binfmt_misc.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Tracepoint for binfmt_misc binary type handler dispatch.
++ *
++ * Fires once for every exec a binfmt_misc entry matches, after the
++ * interpreter and the invocation flags have been selected. Unlike
++ * sched_process_exec (which reports bprm->filename) and /proc/PID/exe
++ * (which a transparent dispatch sets to the binary), this reports the
++ * interpreter that actually runs, so observers can see through a
++ * transparent dispatch.
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM binfmt_misc
++
++#if !defined(_TRACE_BINFMT_MISC_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_BINFMT_MISC_H
++
++#include <linux/tracepoint.h>
++#include <linux/binfmts.h>
++#include <linux/binfmt_misc.h>
++#include <linux/bitops.h>
++
++TRACE_EVENT(binfmt_misc_select,
++
++       TP_PROTO(struct linux_binprm *bprm, const struct binfmt_misc_entry *fmt,
++                const char *interp, unsigned long flags),
++
++       TP_ARGS(bprm, fmt, interp, flags),
++
++       TP_STRUCT__entry(
++               __string(filename,      bprm->filename)
++               __string(interp,        interp)
++               __string(handler,       test_bit(MISC_FMT_BPF_BIT, &fmt->flags) ?
++                                       fmt->bpf_ops->name : "")
++               __field(unsigned long,  flags)
++               __field(pid_t,          pid)
++       ),
++
++       TP_fast_assign(
++               __assign_str(filename);
++               __assign_str(interp);
++               __assign_str(handler);
++               __entry->flags = flags & MISC_FMT_INVOCATION_FLAGS;
++               __entry->pid = current->pid;
++       ),
++
++       TP_printk("pid=%d filename=%s interp=%s handler=%s flags=%#lx",
++                 __entry->pid, __get_str(filename), __get_str(interp),
++                 __get_str(handler), __entry->flags)
++);
++
++#endif /* _TRACE_BINFMT_MISC_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+--
+2.53.0
