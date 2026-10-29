@@ -1,89 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793266347;
-	b=NhjEfWNecmWmLXeUrLcax1SQANYinfRQat6GnoxXJPjlwS/IcJLaBQ2b56foQfgsqJiw
-	 RxFxKR8dB2DvOvT3SZCrrlXvU+skf9uCRhDpxS+Lwio2RRQx9CQqlqfO97wRnZdJdsCvJ
-	 iE51zOZgx8NkqTu3tuaUfbYH4QeGqmXcDZC1jX3br7001Q2bJ6Vvdu7pmcVmx+l4Zc7oh
-	 m7gWDEepkCw/nUUcg9tlyxvhVqRuug2yTo6iq4AmEvUPjLydUgH+yArUKvGxc7o8hdrnx
-	 QXxQKuKZYhPaKwENcL0w2R9izyMLNWbVBua7/9XXgy69sT77mKs6nYVQnF1dTNZUz0A==
+	t=1793281490;
+	b=DuY1F3L/PnSw8pUY20o8EWp+DJMyevHjAraJMXvddou+2IARtmaL4Ed/EzONFSbyVMC2
+	 XxE7N/jMMNF2WtgJ6jqCCuyrreSmJafERgjY8YZI6KzzXP/afMET1nzE6Nu8GmAdZaseP
+	 MekgLPRQRi5TRsy1S0NvsuLy9+AXhYhGPfPoFPudMsAEajnmOEXQgA5GRcm3eszXW7s9O
+	 0d4cMiYo5Gczp1vrz0y2OEsCe9Hp5KR3ge8Nw4Y48d8GnX/NYi1ki0yn2bjihKZ7io3uR
+	 tbcJSReKAig7rwt2WKfuV9kplO7UTUovHSwUtYBDM3vrP4oG7fUbgtrYW2QRe0pSTqQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793266347;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=9QVb+91XYYBUr8R59VhzK+f/JX4StneV4cYQuLGB04s=;
-	b=zuH1puDq+TinQPSCrf4rClDdVj/nP3Ae2981GWdMxED32LYdVmYXoz9M0l4/yjsP1/L8
-	 jSLedYkIJxZc9G5lXfmX6V3Q3fZJGK4WwxjpfE1KZKHCxFabvcr9ar+0ay/w51Sx9Md14
-	 ZnKmhonXAB+vk+qRtFfb2kgTtBtp55RAehlskAQovOpc7n1b4InhqPnbQfL+0geDEeSYN
-	 FZIZF7pjNDjiEL2CeYZT57X0rMX7g9Txiv7pdwZsgdjC1jBiJFKsiaLEmYQfYjxZl6v8a
-	 IZM+jGA/jY3Y1qE52IYKxo14MufSQYQZt7n8/EvFaFwQKUkgNk4g2F3Z0q37jUA/Ggg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793281490;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=r9Yjn03pj845I6dvouQuyeLdqWNVyS+hRwAp++oHECs=;
+	b=zJB+8HFH25MN9QWEjT5k0JWzRnksIbqiYD7SX8OeleUsj/rLg9FHDdj0pk/SF6esHIV3
+	 KZ6cKg11U+lI1ctTt7hGEot1iK47bkhdykWV1LLdFH5b4alA6xtpSx1/yBKkgtNEFEP93
+	 QuSoFj3dzIfm+9guNozTxBKzqsO8LUWpeuFvyppwU7P30lrRPIYCdh5bMWQ9BwzczTUC2
+	 1Y+CnLzFTER864r1YaaRUOPEzlskZgd2fNfkFI5ZV2nmjYizfndxZroO3VIZKsEBQQ6I6
+	 NkzdLBF5mPkuneKZVR2jaaFaW/wNha+kv1MyNnpsjPmPghZgoxdYPajwvHO1BxP72Lg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=tvo3Kx0W;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=none header.from=kernel.dk;
+	spf=pass smtp.mailfrom=kernel.dk;
+	dkim=pass header.d=kernel-dk.20260707.gappssmtp.com header.i=@kernel-dk.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=t1jGd2wP;
+	arc=none smtp.remote-ip=74.125.82.177
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B709606A31C;
-	Thu, 29 Oct 2026 09:32:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0B709606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E33606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 13:44:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65E33606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=tvo3Kx0W
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9QVb+91XYYBUr8R59VhzK+f/JX4StneV4cYQuLGB04s=; b=tvo3Kx0WyXFmj5M1UvwLLzlyRd
-	+tPht+PutUDK9vhZCFChbmxYV68/EO1F64DavgTMgqxxqQKL795BQUJuLN6EviC/v9eCsVF0z5uRC
-	x19XRvbyqDt4SmLO/C0GjnzTmlX+3X5ClUru9Os+JtIBJtPmh1JX4q5R7N0X1uE76fBfVwMFUMfHX
-	GNOEX8uD1TPYzyljcWQZnMmsMD+Q6hEvICezSBh4ITqD8fAbL9XAeHO2IatFqLLinlugDee5J3UDa
-	chJ92lordKxmQdKlAl430pe6b5m1qQQt8HKYWyta3yjE8QAkfeSG7UXMEmHRgaJWvr/3u0cJozy0+
-	1XgqVJVQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMMUe-0000000E6mx-1M9Z;
-	Thu, 29 Oct 2026 09:32:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6E93C300329; Thu, 29 Oct 2026 10:32:19 +0100 (CET)
-Date: Thu, 29 Oct 2026 10:32:19 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Hongyan Xia <hongyan.xia@transsion.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 03/13] sched: Split preempt-count bookkeeping from
- raw updates
-Message-ID: <20261029093219.GH1779021@noisy.programming.kicks-ass.net>
-References: <20261028033127.82193-1-kmehltretter@gmail.com>
- <20261028033127.82193-4-kmehltretter@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel-dk.20260707.gappssmtp.com header.i=@kernel-dk.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=t1jGd2wP
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-36a18fc7a38so4296056eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 06:44:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20260707.gappssmtp.com; s=20260707; t=1793281483; x=1793886283; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=r9Yjn03pj845I6dvouQuyeLdqWNVyS+hRwAp++oHECs=;
+        b=t1jGd2wP7FlHqhzmTXGMAvuTeVcRzBygvgwkK6YYcGJy//C+hGySWO7TU8DaNDK4S8
+         l0flg4KDDpWc8i4IhrrKvC4w+jUb14sMNyjEzTOr0DONkCQzbgK9+8BbKYuGiXXD+Aom
+         iJzZhvniayMx5de3s22t6ZyFplh3tR5zb+VEVSKx8hd7VlKyuAFiK+05SA5+wOwbH3KR
+         8+01y4WGIUcgwBDY+K5Xek0IFb2Ih32teGQ3smyx6oF2EKVhxectETtW9wNRfLuR53Jo
+         wUnYUQyU6/kcrUMZYTwYR5LoTFkyk54tbOoCOzlPzm9a/gZmFWawqN2VXML4AFDfUxJp
+         JQRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793281483; x=1793886283;
+        h=content-transfer-encoding:content-type:mime-version:date:message-id
+         :subject:references:in-reply-to:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=r9Yjn03pj845I6dvouQuyeLdqWNVyS+hRwAp++oHECs=;
+        b=yaW76iBDzrHfOJAQKNFGACon8eSQlnN2YojO3PAl2wPD689TP6X/a0DzEQlPJ4953z
+         gulJyXJRogxhmWWY6eYeSdmBzyIb+En3Zd2rqtUMe4pLLNF6kqgC2QjLaS4czoNLTxJ0
+         Jvypktt8OGMpAJCAaySjaTSjlHcjD8U8zzjB6HXk+6+TagJaw/V95gdFC67VLU3Y1ygl
+         gPINEG8doykjjVjJC/kYsiXUpDBdqydLs+Yf4JC5/y8QvOoTOuINGL6WjZk7w6zEOKtn
+         1mrAo3fqZ9y52Kb1q5HvYbJY1Zjl/Uvg10EOXhf8q8ARRLgmvsdPilex/oAFWM0VqGkX
+         +53g==
+X-Forwarded-Encrypted: i=1; AKwUvBwNchyy029BhZZZtM23l12LibWFOlW6JXO+g3aXhmrAan2+Cl64TcKgvjYUzFYzFOJ3hrdiIJD4zLtkgJPV3o7STcM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIuAGq5L752GuhAnnXXhv0u0wuuV47qBEmuhaSd+SsgiSwj5+JB
+	+jw7T2zkC7echOFvL4jQnY8IgCG+O59LITN9JgNknKdYh5fHhtZUU5ojrxH7eFbk+LA=
+X-Gm-Gg: AYBFou3M3OEquKLLamDie+ON5kuBPObosVQXcaOgP8BbWRZLqHCKSGhrxHzYcux6R3/
+	wr2tMLS9MiAZtUYbfPhdrlXNnoFmk4+2bcoZfMT5O4a09l6Ymv31n64hYbuBS9dXSJrqwSTHysY
+	Dc1ch3BZA+Jx5ozSIp6WMRdKOQvE2u94e5BCF6ILs8nsOHS8troUzwQBejdKwhtvzAF4U2hLylE
+	+t1iyHM5oKTgL67yz56gooWmseW8RKWKSmoMQKN/43MNRk01HJzEXDfcyir4l81/L5mN1KIkcpj
+	ROGlOL7ErXjIXOPlHpGih8D6biyEVmxLii+pZZu281YiNhm9gStI8uFPt7MThwaZr7MiuZ/xhbt
+	+diXx131OlJBoG9yXRqgRpQRC/0tmsuvDvZA6CuTNC7HlIXzQ8O8ev4CY/+ajuIRf5erJg9Otrm
+	EgLaT2lXfyHj/jzU+X/UCJ1qQKaYrmIv39WrDZVc9TNM0W4dg6UzQahKXI5mYmmICBHmdNHYvBh
+	iWcGCYHc12Z1Ah1NEVg/rDg4kmh7icW4C1KOuUhkpku2zf8wjYmGIZMYoz/1B845xEeRIItHcjb
+	bjegu1Z6Z26DlL3rH1Bnz0oYgQYvakiYYRycoiVRni1+Y8UkDVbNZOzNXHBjSxy2FFpQPwnOXSf
+	9pJ8OOd+gokpO
+X-Received: by 2002:a05:693c:41d7:10b0:356:b370:a0ee with SMTP id 5a478bee46e88-36a2044d2a0mr7712963eec.20.1793281483283;
+        Thu, 29 Oct 2026 06:44:43 -0700 (PDT)
+Received: from [192.168.1.106] ([198.8.77.135])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a2390929asm21976894eec.12.2026.10.29.06.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 06:44:41 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: tj@kernel.org, Kunhai Dai <daikunhai@didiglobal.com>
+Cc: josef@toxicpanda.com, yukuai@fygo.io, cui.tao@linux.dev, 
+ cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261019125412.3123895-1-daikunhai@didiglobal.com>
+References: <20261019125412.3123895-1-daikunhai@didiglobal.com>
+Subject: Re: [PATCH v2 0/2] blk-iocost: fix hweight cache publication and
+ donation fail-safe
+Message-Id: <179328148122.1447413.1375912231299331612.b4-ty@b4>
+Date: Thu, 29 Oct 2026 07:44:41 -0600
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -93,39 +101,33 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261028033127.82193-4-kmehltretter@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-On Wed, Oct 28, 2026 at 04:31:17AM +0100, Karl Mehltretter wrote:
-> Very early hardirq entry code needs to update the preempt count before
-> instrumentable debug and tracing code can run. Conversely, hardirq return
-> code needs to finish instrumentable validation and latency tracing before
-> raw teardown.
+
+On Mon, 19 Oct 2026 08:54:10 -0400, Kunhai Dai wrote:
+> This series fixes the blk-iocost hweight cache publication race and adds a
+> fail-safe for invalid donation weights.
 > 
-> Add a small hardirq-entry header with irqentry_hardirq_count_start() to
-> stage the raw HARDIRQ_OFFSET addition and record whether it was applied in
-> an opaque cookie. With DEBUG_PREEMPT and without separate reschedule bits,
-> route an already-negative count through a noinstr slow helper which
-> preserves the existing DEBUG_LOCKS_WARN_ON() oops short circuit. Add
-> irqentry_hardirq_count_finish() to report a rejected addition or complete
-> post-add debug checks and latency tracing, and add
-> irqentry_hardirq_count_sub_prepare() for validation and tracing before a
-> raw subtraction. Keep preempt_count_add() and preempt_count_sub() behavior
-> and ordering unchanged.
+> Previous version:
+>   https://lists.openwall.net/linux-kernel/2026/10/15/1954
+> Replies:
+>   https://lists.openwall.net/linux-kernel/2026/10/16/1431
+>   https://lists.openwall.net/linux-kernel/2026/10/16/2798
 > 
-> Keep latency tracing in each calling path so CALLER_ADDR0 identifies the
-> caller. Force the start and stop helpers inline because trace provenance
-> depends on their stack frames.
+> [...]
 
-Urgh, so much crazy.
+Applied, thanks!
 
-So WARNs in noinstr code are 'fine'. That is, they should not happen, if
-they do, bad things have happened and we need the warning out ASAP, if
-it takes the machine down, too bad. See the
-instrumentation_{begin,end}() markers in x86 asm/bug.h.
+[1/2] blk-iocost: abort weight transfer on invalid donation weights
+      commit: c810ee88cdab27f443c32270dc7c0eaad2cca3f8
+[2/2] blk-iocost: publish hweights as one atomic value
+      commit: 0150554a3f38e1850d5964102eb89a720c5fe789
 
-But yes, the tracing needs to go. But moving that around should not be
-this ugly and also, that will give you the opportunity to fix
-preempt_{en,dis}able_notrace(), since they currently also skip the bound
-checks.
+Best regards,
+-- 
+Jens Axboe
+
+
+
