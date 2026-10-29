@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793305927;
-	b=wVzTPD7hMALg2kKlboyJ1XNP9cE0UDWlIiP02m0tqsCDa2fq9GnZPYnjNe0VrVk/tA/o
-	 Zeo8kUAJcW1nRrMyItdZVXnmsP00LBEHb3i2dl/KYm8Urxk6qLJ3EoCKlRz7Fd+xDdgij
-	 7zmj5fnQWoNoK1WgDZdFOy6dWVDriChRn3ZDtfR2GxgnJu43CxEiv7MlHD4EwJiqhVTTw
-	 og4bmnqYSG/HLfZ6+LFvTG+BCXx01Fhes9VaCZeIrXiNmueSeSErGQkl2ocnCy/3OxS8s
-	 rEKpT15wVl8sz1p2Wi0rTINgACH+ATuEQntSRzXDGrfPPdEdKtQMcesmXm4UotBiV+w==
+	b=3z6IxhhBzpLqUeMbjn4jQlxQsKTMiXx+o5mQzC7ndC4bpQqI0KPCZ2JzNUyMS28s/nBi
+	 DXxAertjLihHTnuBE86/YaJD5QNvEZH4jIAT8V3LH8DzhDDVm923R2y4zEDh2Ydh+Bj60
+	 oTwc7otOoBhiRJueZYV9PgbhcQMNAeYcxNwaJr1WcFRIIeipKrw9EMAMujdn/dRi4xFQ6
+	 im8h9CsMvzTDjbSga4Ja7o1JeexvJJKncHj0cMVnpoBybCEeKluhyLUiXSiO+WHdQ3NHU
+	 Xnl/V9t7TDWi6FUzzJAmr65G4MgTnwuGGAwAs7WM0GNd4KKczm+XndsSuYyn+hkPeIA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793305927;
 	h=Received:DKIM-Signature:Received:Message-ID:User-Agent:Date:From:To:
 	 Cc:Subject:References:MIME-Version:Content-Type;
-	bh=8hkwVtxP+8+AhK5KECd3ruUT2wJCHZuckbGZKEwrBno=;
-	b=QA/yx+o1aceDuAAUSbePmOpIB5wVtjcEoGAqVtI16FBzQtfuYnBjjlWEY+NGfDdAFD4j
-	 QaNJ2yLj3JFibWD5UUi5fZ8fyXv6CW6IV08+4YSwksLl10tSqlCu+8/8cnWLcCGZ4wl/G
-	 sLcid6jf5fAmx1ZJz9LJS/21vWzwyPtbzyM9dJYQVqcCeGqBOoRK9vCVoIKJWuGdkgOPy
-	 +bAYWsr8VQeB7rpKXNa9hqE4AMxVvTr9y1t29+26l+yxED9J3ifyY+huZJ6q98D4JBRg9
-	 oAlV2d5tc1n6ukwIsF6weyioZz6y842GD+peHXiTZ+yZ2D5MsK/NflBmlj3uiPu1Ylw==
+	bh=lOXsVk/LOAYRFlKc/sjuVZNXV6wF1VG20Uf0h1t9Qsc=;
+	b=WdGY5bMq6pQm6KPYd1uNzS4y9HuyQP0l0ZwrF+1u+B5SLuC2/kuREr3ppHq0i0wJUd5k
+	 FraBP/YE65Yj0ap3aPVO8lVbyif0rEKRvqwKt02JE/VMHabXYxSp6T7CT4ll6EUiwZYZt
+	 ZZUyi6BonNYup5ow53KloJoSPrg264ujAqW0xe/ky58ymsI2SR5iRJ5trZ7Daxa3c4UHZ
+	 Rjz6GrZ/dmxWB5awluFiQ98iVXedExVZhk4o538g+DJ/Um6iN9axdfAzLl3fRbovC1ve+
+	 duO6jjcPB57GMT1sRT0VNLNENR3E78KEJbML2hPflsR4rCH8Epv0lt21kObgQuwOZsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkWz5WgV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UiGoFy2g;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AC1606A321;
-	Thu, 29 Oct 2026 20:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5A8606A325;
+	Thu, 29 Oct 2026 20:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkWz5WgV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927741F01824;
-	Thu, 29 Oct 2026 20:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UiGoFy2g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C09B1F01828;
+	Thu, 29 Oct 2026 20:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793305926;
-	bh=8hkwVtxP+8+AhK5KECd3ruUT2wJCHZuckbGZKEwrBno=;
+	s=k20260515; t=1793305927;
+	bh=lOXsVk/LOAYRFlKc/sjuVZNXV6wF1VG20Uf0h1t9Qsc=;
 	h=Date:From:To:Cc:Subject:References;
-	b=LkWz5WgVnpZEt1a3TEM0o10M8tNopABZ+Bl57eZf06mIIY/8Khh9GaQpAwdWvxwOp
-	 spqawlSQSk533+Tls4hkMnSoYHLqS4rkJFFUSrmxDw2BgW+HpO0eBkZ8opeQJpLFdd
-	 TGypB61R2NzWu6MGut5SukI1sArr3vd3e74gZuX1slAMZPk0Wx0JoyAE8ojCrAJBEe
-	 L+kxHtzfXDpaFn0vxiKAhZHGPeoFOj6i/DDfFGzsC8Qx1PcHIrV7Mv9gGwS6rzKswx
-	 ZfOQBNQARKQgZUYqkTKfs7YyLwCz8yq4Qcc+bNWT2r9yfas8ukHWkNhW4sUKoDXowR
-	 I/adZlc6Y3/0w==
+	b=UiGoFy2gbzskAAj0Z6M6bHjNWh3V+kiunvHu+vzx48rodgrID83UCnH0Jf3b3dtE+
+	 Mb6IkDeyc9JEIiCmU2ZH9o3B2atdjK1n0G2ZPZMPITFq56LchLp6r/uanUIgTfQz00
+	 iVxIpbcXTjiWnf5UKbC5dLZRI55/XDzjRVyrrYoagC5Rkr0cwCq5TMZNKXFSp+Mgg3
+	 ar1Cst73iOjWqjKDI4lbEMTPzXes5+/ZtMRv/53vlfLAr1Cqa7Qh7SGvWFdmTLAGWe
+	 Uzw13lJMtMq+DHdyVhpRbqe2yDmqcllycqF9Ypp9NVARiDaVZtfRDEoGJTu2xQjLjb
+	 LR1cp/jevsg0g==
 Received: from rostedt by gandalf with local (Exim 4.100.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1xMWn7-00000008ybf-3zEq;
-	Thu, 29 Oct 2026 16:32:05 -0400
-Message-ID: <20261029203205.757392992@kernel.org>
+	id 1xMWn8-00000008ycE-0d0a;
+	Thu, 29 Oct 2026 16:32:06 -0400
+Message-ID: <20261029203205.969033931@kernel.org>
 User-Agent: quilt/0.69
-Date: Thu, 29 Oct 2026 16:28:50 -0400
+Date: Thu, 29 Oct 2026 16:28:51 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -55,7 +55,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 1/2] tracing/selftests: Fix instance test to actually test races
+Subject: [PATCH 2/2] tracing/selftests: Add reading all instance files to instance test
 References: <20261029202849.245864353@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,83 +70,66 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The instance selftest creates and removes the "foo" instance while
-enabling sched_switch event and reading its trace file. The issue is that
-the read of the trace file prevents the removal of foo, and it constantly
-fails to remove it. The stress test is not really stressing the situation.
+Commit f4a771cc684c7 ("tracing: Have show_event_filters/triggers files take
+trace array ref") fixed a bug where the show_event_filters and triggers
+did not take a trace array reference allowing an instance to be removed
+while active. This would have the reader of these files read data that was
+freed by the remove.
 
-Instead of running the creating and deletion in a loop as a separate
-process and sleeping for one second, call it directly in a loop that forces
-it to happen 10 times.  Also update the removal to keep trying until it
-removes the instance, otherwise if it doesn't remove it then the next mkdir
-is a nop.
+Update the instance test to read all the files in the instance,
+instance/events, instance/events/sched and
+instance/events/sched/sched_switch directories (with the exception of not
+reading trace or trace_pipe). This would hopefully catch issues with files
+not taking references.
 
-Convert the reading of the trace file to use "head" instead of "cat" so it
-is limited in how much it reads and add a .1 sleep in between reads. This
-gives the removal of the instance time to succeed.
-
-Fixes: 91e6f1ce86577 ("ftracetest: Add instance created, delete, read and enable event test")
 Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 ---
- .../ftrace/test.d/instances/instance-event.tc | 26 +++++++++----------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ .../ftrace/test.d/instances/instance-event.tc | 20 ++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-index 42422e425107..b0e9d3abbf2f 100644
+index b0e9d3abbf2f..9374c20c6aaa 100644
 --- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
 +++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-@@ -25,15 +25,16 @@ if [ $result -ne 0 ]; then
- fi
- 
- instance_slam() {
--        while :; do
--                mkdir foo 2> /dev/null
--                rmdir foo 2> /dev/null
--        done
-+	mkdir foo 2> /dev/null
-+	while ! rmdir foo; do
-+		echo could not rmdir foo
-+	done
- }
- 
- instance_read() {
-         while :; do
--                cat foo/trace 1> /dev/null 2>&1
-+                head foo/trace 1> /dev/null 2>&1
-+		sleep 0.1
-         done
- }
- 
-@@ -43,26 +44,23 @@ instance_set() {
+@@ -44,6 +44,19 @@ instance_set() {
          done 2> /dev/null
  }
  
--instance_slam &
-+instance_set &
++instance_cat() {
++        while :; do
++		find instances/foo -maxdepth 1 -type f  ! \( -name trace -o -name trace_pipe \) -exec head {} \;
++		sleep 0.1
++		find instances/foo/events -maxdepth 1 -type f  -exec cat {} \;
++		sleep 0.1
++		find instances/foo/events/sched -maxdepth 1 -type f  -exec cat {} \;
++		sleep 0.1
++		find instances/foo/events/sched/sched_waking -maxdepth 1 -type f  -exec cat {} \;
++		sleep 0.1
++        done 2> /dev/null
++}
++
+ instance_set &
  p1=$!
  echo $p1
- 
--instance_set &
-+instance_read &
+@@ -52,15 +65,20 @@ instance_read &
  p2=$!
  echo $p2
  
--instance_read &
--p3=$!
--echo $p3
--
--sleep 1
-+for i in `seq 10`; do
-+	instance_slam
-+done
++instance_cat &
++p3=$!
++echo $p3
++
+ for i in `seq 10`; do
+ 	instance_slam
+ done
  
--kill -1 $p3
++kill -1 $p3
  kill -1 $p2
  kill -1 $p1
  
  echo "Wait for processes to finish"
--wait $p1 $p2 $p3
-+wait $p1 $p2
+-wait $p1 $p2
++wait $p1 $p2 $p3
  echo "all processes finished, wait for cleanup"
  sleep 1
  
