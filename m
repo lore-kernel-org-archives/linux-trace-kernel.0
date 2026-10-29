@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793237970;
-	b=lG+595z3wuqCLaR4QBFSq92fl4WuJPcrh6ygErF6oQcWY6TNWICzXKBhdP93y+IHEq67
-	 VNMiJcoTMf817Ti1Wh7j/Q6RxaWgRZFSNhpKyn3VJJc15iAfGpCbc/rCAMP9TJZSEZ5u9
-	 jkrJL1mc2NMS42yQkhOGiMMK42qevtUrJqIUm5he0pWxIgDI4LM5P6vJGVFg3Ul6bJP3L
-	 TZ5ITDhU8Rr8RwGe3h6SF8xsyFeYPlmlH5hYPXiwhr56LUwtsBY6j77+czNcY1xUSLos1
-	 zrtK+hvNodnUVeX6/tAkJ/slJHR+VVKcICCWKhaspAZDa3aJGnSaFoZwiUFtY9961DQ==
+	t=1793237979;
+	b=oHkqU2VuR/2G5yAQW2LrX0HoyTzB5FXPXMd7E6pSSjS+hY0kHRiGU5hAYmBpZvOqzBeg
+	 yNv3osLbdvZ1q+SfyVmTgi5bbut2DPsKVoIODan7911lMSi/ae3ACr6wCR+hWyEnZDmyl
+	 sBctGkEdgUjehM0DF6SKzcqkyu0R9csJG+OuiiIyJH61G7lvDUZRhOM88RWZxytev4dn7
+	 YZVNdq1TGJhPt4bctvnMgZxN7mETMpe7DOIbz/oPR6Qz0nxasJbUfVdHyRA76/iLrOwA3
+	 NqvsJW5sNoHmgR4zTeQonfebKRtVhafl2duzIV9EplgFhV199d9Ucx96vDfYNzdSJ/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793237970;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793237979;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=6rCPF0CTrQ3k1mxd4WynCcmI/nixNYhjIdPTAW8jCQo=;
-	b=goysNwciLocBLN7uzpYnJLKn2rOj4agIMxpwvVdVS1WLH8hJzkJ3Sv0ykcuDOCMlLIc4
-	 DtIUxxq6IiviaAkulFMSH2Cgct2FFcQOQ1HrgNwpMQ7bWdtgklEMzwy7A/Ce1f7UFr174
-	 RD3TPQN8rO4aoVi/hSm+Fm8K/xvYHDPQ4fwCnE8viX5jJWwT8m1f2A9Q/ZXth246hBB/D
-	 QT3jUhH0PZIiK11XZ/dWK0qf6KsSARQJzVdupviQA699UK8zTnNh1fw7zMYqUlWP8vBrf
-	 tDDzM/YDT9gGdpsZSWx2RkfO8jjBTFKMjBWj7dCpj6lvpdqhoqPkAZi+xDwm28IU/zA==
+	bh=T8b9kEgTQ/KBKDQOynSVjYHGydeX+Yb4+LNxI2dlkYg=;
+	b=Xgvhgo2FZFWODh0BDDaYrnbOoTDH0yL0oTH9U3fGBnFxZNM/5yLPuqw2XLNv3IhMW98Y
+	 VCdBavPkl3/YRKSOtJlh17jBzTXF9Pmcw7zJQ8Mwd8yb0tlxJgACTDqzmHzyrF4AGKqcJ
+	 ulww4vks26jEPOzDG3fU+9MUYfKQJi6grPbB9gzBy45eIqdoVHIZcTeXAXXL5oDeESM0i
+	 Bqdx77kcOW/mCXBY6JQrUdBW9HtWC8355xc9AIFc8zstg/Y6Pq0BaY4/VCAXAsQT58EV7
+	 uFkxP33GitHvRs92GxrOC/seoGd/zTn8uchkzNabQj7pN7pSy+YCs8J/HXe2jqcWilw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ct2cPCOS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="de/sAm2T";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B23606A31C;
-	Thu, 29 Oct 2026 01:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67055606A31A;
+	Thu, 29 Oct 2026 01:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ct2cPCOS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082751F01825;
-	Thu, 29 Oct 2026 01:39:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=de/sAm2T
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 603701F01829;
+	Thu, 29 Oct 2026 01:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793237969;
-	bh=6rCPF0CTrQ3k1mxd4WynCcmI/nixNYhjIdPTAW8jCQo=;
+	s=k20260515; t=1793237979;
+	bh=T8b9kEgTQ/KBKDQOynSVjYHGydeX+Yb4+LNxI2dlkYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ct2cPCOSwpY1PSvQLej18EXFKbSDPbW75k/kfAfEZ0Ai1xB9jCEnj4x2Qws1lGM/T
-	 iankJyIwg9LbBBAY978xmdNLwdcmxUSp837cmmWsKFmFpPwoVa4jvWsfluaJ8xYHr/
-	 89rNjho9kCVzkecQK634JlCVGbiY1fDw2qxMNQyHs7aKWOOc39PE4q9eoDwZzpjsku
-	 SXHY5mktKCmxgcArOTr5Y0T6QuvHxGB94nveau3IeAQX86JfLKYupG3Mo/Fhiju1X3
-	 7F9EqzFlNJfz+d94KJyp0M4BUEXEme/AcFF2/rbpCAseV9OzuD6wqYnG7NJ4KeNzPb
-	 9rxYOFDPxcY1A==
+	b=de/sAm2TihN5UHjEDSXP/akiBXgySrIHnqVu4S8UgyGwwMyKff0WguHowrBqAfOs5
+	 gj/NmjHCEZbZNuY+fliz6vtRVbBgwuCFe+qBf2lOX6zlfpFN/M7mF3LbuS2FkeC6kq
+	 1/IJF6eBd2WPyA2u6/fQBI2GeGJJGyQmlbtDUPF32jhkg2sMUlOeKfeyiWmaKNEuwF
+	 jnsgzX5eggNDuI6g8hY9drFTKJHLP6dmDpT8j4BB8utMCmQCOlS9y6upvNpoL5X8YM
+	 Tbi/UQiVKquM7A9HZwEwJKQ3OJxN27VNlUu3ShjuiSVyAQwqMTdnDvxolwksW6yIy8
+	 SkzHf9nVdpBzg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 13/15] tracing/filters: Fix error positions for CPUS mask parsing
-Date: Thu, 29 Oct 2026 10:39:25 +0900
-Message-ID: <179323796570.740114.12151091552524337676.stgit@devnote2>
+Subject: [PATCH v4 14/15] tracing/filters: Fix error position for within filter operator check
+Date: Thu, 29 Oct 2026 10:39:35 +0900
+Message-ID: <179323797517.740114.18128311506466612662.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179323784538.740114.15323117974242744566.stgit@devnote2>
 References: <179323784538.740114.15323117974242744566.stgit@devnote2>
@@ -69,60 +69,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In parse_pred(), CPUS mask error paths report incorrect error positions:
-- Checking 'str[i++] != '\'{'\'' post-increments 'i' before calling
-  parse_error(), shifting the error caret one character past the
-  missing brace position.
-- In the CPUS operator check and comparison function selection check,
-  'pos + i' points to the CPUS operand or past it instead of the
-  unsupported operator.
+In parse_pred(), when the '~' operator is used with a 'within' filter,
+'pos + i' points to the closing quote of the operand rather than to
+the unsupported '~' operator.
 
-Check 'str[i] != '\'{'\'' before incrementing 'i', and pass 'pos + op_pos'
-for the operator checks so the error caret points accurately.
+Pass 'pos + op_pos' so the error caret points to the invalid operator.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v4:
- - Drop Fixes and Cc: stable tags since these error position fixes are
-   cleanups.
+ - Drop Fixes and Cc: stable tags since this error position fix is a
+   cleanup.
 Changes in v3:
- - Group error position fixes for CPUS mask parsing into a single patch
-   targeting commit 39f7c41c908b and commit 3cbec9d7b93d.
+ - Newly added to fix error position for within filter operator check.
 ---
- kernel/trace/trace_events_filter.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events_filter.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 9b1100769676..1a9a1cc8daa2 100644
+index 1a9a1cc8daa2..1a50de4e7e8d 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -1932,16 +1932,17 @@ static int parse_pred(const char *str, void *data,
- 		case OP_BAND:
- 			break;
- 		default:
--			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
- 			goto err_free;
- 		}
+@@ -2106,7 +2106,7 @@ static int parse_pred(const char *str, void *data,
+ 			unsigned long func;
  
- 		/* Skip CPUS */
- 		i += 4;
--		if (str[i++] != '{') {
-+		if (str[i] != '{') {
- 			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i);
- 			goto err_free;
- 		}
-+		i++;
- 		maskstart = i;
- 
- 		/* Walk the cpulist until closing } */
-@@ -2029,7 +2030,7 @@ static int parse_pred(const char *str, void *data,
+ 			if (op == OP_GLOB) {
+-				parse_error(pe, FILT_ERR_GLOB_WITHIN, pos + i);
++				parse_error(pe, FILT_ERR_GLOB_WITHIN, pos + op_pos);
+ 				goto err_free;
  			}
- 		}
- 		if (pred->fn_num == FILTER_PRED_FN_NOP) {
--			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-+			parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
- 			goto err_free;
- 		}
  
 
