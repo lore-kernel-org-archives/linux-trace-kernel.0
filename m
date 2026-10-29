@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793237932;
-	b=At+2j18dP7ro/05798qNoCLMzN3fnRd8B6U/Pw3onlVkGmA2yJAn6FXV84Rxr/BiJRvS
-	 Eg4vh+UFljV+Wp8/74ooQUqKkMsfFYmS1q99kYQgcfypLFXmvWbo44NX3bM7nLykjBWiJ
-	 2l4KIlqrsBjvwfYXaw5Y6cdn8o+3HljLM6magNIEh9b3tIV8huLjek/EgEqmaIFGyEEot
-	 BBHag8ABJ/2HR/9hAt+OklnuOc8c3R9TgQI1HmRtFZtupnFVSUL849npvcJFr4gGgFNlz
-	 KRwxUTh52aMLrfRo1Bp2axnXFob2TgTVbkyMynH7o972+nBimXEPXI91nyE71WV6i8w==
+	t=1793237942;
+	b=4at5eWPMC5tUglrZDd3mRVAH68f6i0GokwQm3uBSnCL8sPaOV5fNMZLlWX5vsIS2iX60
+	 lbO/UWN9REvqfxX6vzfibb+1wCEEFDdx/6YMrLnBbqPDiT8kyMQgjCzhn+1LBA1PjK0m+
+	 8yzfmALEg2RkkKihYoz1eST0tVm9rQKv8JtwGBKt8nX92V0zkdlB5uPaJnlbp53yOPAjt
+	 FME/PRtZatoKZBAlPUsMZG/MxiKL06l56V4Zrp5pi8tVjIyqVtu+YJ042UPtE13DW8ldM
+	 6H/avHOw5Dq6kK+ogk6xY3F/4B8J/+27dXshr9OuWIWvZM3JhOTxi8gr8pf2iPErlsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793237932;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793237942;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=5milwe+zUcr1Bxa93G4m3eDpIs6Bq/oA13FtjUoRTYk=;
-	b=c+WXauHKMC/Mx0lgJz5UQUv7VHVhzg+pWdL7PbWui2J14fsa/opUmyn+tgbkBmgUe/BN
-	 WOD7halnqXp1v7hb4Pc1ruY9hxBpzlSKaRQUyp69tWyGOf+it3+Yhnp6CF60i3cDlxBMF
-	 TRkja3G5mC6hzsz3wzwdR+/Tlfme0JI2Kek5UM7ESm/dttezRlfUop2lgwazu+2QVZlO6
-	 13DWHSagBdjagkB+66YmuGhGL887W4uCPqf3GEWRulu+7rBCifgCafIFQxnO40PvTS6Cf
-	 lRhgzbh1pPYp2J4ZqGofKHZqYWkr6eLU13SJHBvrAe24HLA0Zv/YGPHzJhmV74nwDxQ==
+	bh=hx67ukgl5G+1XLFCkrbBKxs6+lBIv4+lyhvxHggPIfw=;
+	b=avCGwBzQtXXaeRMGO+XZMGWzNlkEccb1JS7mJV7T5aaI3xMPRcb2vYt50OnH3BlU7ptt
+	 S3VelO1LesCcJcB0QolHha4aELWaQ6AOIehWIYFqUKRSoZI3QiFTm3WdfvMq6vj9DMu1f
+	 uWKdvkyZ1iNqGVYmOtFXzKdTVaKLHZ1yMBr9lFXNilZad8P1PpBGkgljRafRRNhefrjgf
+	 N6RyM2C6E5oWuamsn52ej+aNB3l3+aZvCGO42veRihhY2yv5+oHGF5jIbFAx+Zv9MyCqB
+	 BhX2zLn5Ku4dWYwKQmK8AlDnng97Ajwm4jpgFZK9CzA/2KEvfnF+kEhcUyXsybvuMgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mJi3GXrd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HSqGalT1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964D606A33B;
-	Thu, 29 Oct 2026 01:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ABA606A31A;
+	Thu, 29 Oct 2026 01:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mJi3GXrd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768831F01829;
-	Thu, 29 Oct 2026 01:38:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HSqGalT1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3C21F01828;
+	Thu, 29 Oct 2026 01:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793237932;
-	bh=5milwe+zUcr1Bxa93G4m3eDpIs6Bq/oA13FtjUoRTYk=;
+	s=k20260515; t=1793237941;
+	bh=hx67ukgl5G+1XLFCkrbBKxs6+lBIv4+lyhvxHggPIfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mJi3GXrd8Rgm/q0o1+JjAe/kQDt1hZrnRb75nHazwi/AHUWTPiDKnKFL7zVcPABC1
-	 FMO5thLjeO+h32tB1tiUWwgjDjesV3lNM8gfTBPUFTKZ3pmXi34rR6bkU9nI1brTVD
-	 Fq+U5C+58cTG6Ws54X69PtX2FZNtUNUPCoOmDWYGOwu+qPWaX8FIY32V+g2wpWd+6c
-	 jPeZQh6HibhuXUMq70ybDvXMy8shngVS4EAEafD/aD1KtG/i7fz2whHziNjs8uJafu
-	 EnFofUY7fqdsqKZ6h7qzv0WePJCHAe4Cx+KR3ajW/1X7z9O0500p1jyHOQ4Bgdk+DP
-	 SOpPzJWzDmcjw==
+	b=HSqGalT1PYR2YD1SZlmxj7Tscs5rMbGqVaBrYb0XbMyqmoAlP/yikZnYysWjO0qqZ
+	 0wX8rsRAmDaalOJleD92i0HQs1tIn5Lsj3ZijKo/dKHb9we6aU/97TTXR0k52rY1Ux
+	 tVQAhbdt3Me6DLmhR4kDegIsrT31sE3THmBCny107krmFXm+GepYMvsKOHq9fGbC4Y
+	 F+uyVlLSNflPQSyZL9D++kPZDKULjqu6TmGlcVNFKoHbQcq1LPM4H/Avbqhr15bsIW
+	 tn4P31JKno4SKslK33aDPFB57A69SGwuGTQdQLC6BkY75pSZB3ZvXlXcDUobPq1csJ
+	 nouURUoiOwW7Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 09/15] tracing/filters: Check for trailing characters after newline in filter string
-Date: Thu, 29 Oct 2026 10:38:48 +0900
-Message-ID: <179323792832.740114.8136681613581516243.stgit@devnote2>
+Subject: [PATCH v4 10/15] tracing/filters: Reject stray quotes and parentheses in unquoted function event operand
+Date: Thu, 29 Oct 2026 10:38:57 +0900
+Message-ID: <179323793740.740114.16357488115964317102.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179323784538.740114.15323117974242744566.stgit@devnote2>
 References: <179323784538.740114.15323117974242744566.stgit@devnote2>
@@ -69,104 +69,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Each trace event or subsystem only holds a single filter, and
-append_filter_err() / tracing_log_err() caret placement assumes a
-single-line filter string. However, apply_event_filter() and
-apply_subsystem_event_filter() only called strstrip(), which strips
-trailing newlines but leaves embedded newlines intact.
+In parse_pred(), when parsing an unquoted operand for function events,
+the loop only stops at ')', '&', '|', or the NUL terminator.
 
-An embedded newline in a filter string (for example inside 'CPUS{0\n"}')
-causes cpulist_parse() / bitmap_parselist() to treat '\n' as the end of
-the cpulist and ignore trailing characters before '}', desynchronizing
-quote tracking between calc_stack() and parse_pred() and misaligning
-error_log caret reporting.
+However, calc_stack() parses '(', '\'', and '"' independently to
+determine stack depth and string boundaries. If an unquoted function
+operand contains stray quotes or an open parenthesis (e.g. "ip == foo'bar"
+or "ip == foo(bar)"), parse_pred() consumes them as part of the function
+name operand, causing parse_pred() and calc_stack() to desynchronize.
 
-Introduce an internal function filter_check_newline() to convert the
-first newline to NUL and check that the rest of the input contains no
-non-whitespace characters. If any non-whitespace character follows the
-newline, report it as an invalid input error (-EINVAL) without modifying
-the input string in-place.
+Reject unquoted function event operands containing '(', '\'', or '"'
+by reporting FILT_ERR_INVALID_VALUE.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v4:
- - Verify all characters following the newline are whitespace before
-   writing '\0' in filter_check_newline(), preventing in-place truncation
-   on error, as pointed out by Sashiko.
+ - Drop Fixes and Cc: stable tags since this is an error log improvement
+   cleanup rather than a bug fix, as pointed out by Steven Rostedt.
 Changes in v3:
- - Introduce filter_check_newline() to convert the first newline to
-   NUL and reject any non-whitespace characters after the newline with
-   an invalid input error (-EINVAL).
+ - Split from the monolithic function event parsing patch into a
+   standalone patch rejecting stray quotes and '(' in unquoted operands.
 ---
- kernel/trace/trace_events_filter.c |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ kernel/trace/trace_events_filter.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 40efcef94e02..0a362ccb14ad 100644
+index 0a362ccb14ad..e91ec41bfd2a 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -2439,6 +2439,30 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	return ret;
- }
- 
-+/*
-+ * Check that the rest of the input after the first newline contains no
-+ * non-whitespace characters, and convert the newline to '\0'.
-+ */
-+static int filter_check_newline(char *str)
-+{
-+	char *nl, *p;
-+
-+	if (!str)
-+		return 0;
-+
-+	nl = strchr(str, '\n');
-+	if (!nl)
-+		return 0;
-+
-+	for (p = nl + 1; *p; p++) {
-+		if (!isspace(*p))
-+			return -EINVAL;
-+	}
-+
-+	*nl = '\0';
-+	return 0;
-+}
-+
- static int create_filter_start(char *filter_string, bool set_str,
- 			       struct filter_parse_error **pse,
- 			       struct event_filter **filterp)
-@@ -2450,6 +2474,10 @@ static int create_filter_start(char *filter_string, bool set_str,
- 	if (WARN_ON_ONCE(*pse || *filterp))
- 		return -EINVAL;
- 
-+	err = filter_check_newline(filter_string);
-+	if (err)
-+		return err;
-+
- 	filter = kzalloc_obj(*filter);
- 	if (filter && set_str) {
- 		filter->filter_string = kstrdup(filter_string, GFP_KERNEL);
-@@ -2568,6 +2596,10 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
- 	if (file->flags & EVENT_FILE_FL_FREED)
- 		return -ENODEV;
- 
-+	err = filter_check_newline(filter_string);
-+	if (err)
-+		return err;
-+
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_disable(file);
- 		filter = event_filter(file);
-@@ -2622,6 +2654,10 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 	if (!dir->nr_events)
- 		return -ENODEV;
- 
-+	err = filter_check_newline(filter_string);
-+	if (err)
-+		return err;
-+
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_free_subsystem_preds(dir, tr);
- 		remove_filter_string(system->filter);
+@@ -1869,9 +1869,17 @@ static int parse_pred(const char *str, void *data,
+ 		for (; str[i]; i++) {
+ 			if (q && str[i] == q)
+ 				break;
+-			if (!q && (str[i] == ')' || str[i] == '&' ||
+-				   str[i] == '|'))
+-				break;
++			if (!q) {
++				if (str[i] == ')' || str[i] == '&' ||
++				    str[i] == '|')
++					break;
++				if (str[i] == '(' || str[i] == '\'' ||
++				    str[i] == '"') {
++					parse_error(pe, FILT_ERR_INVALID_VALUE,
++						    pos + i);
++					goto err_free;
++				}
++			}
+ 		}
+ 		if (q && !str[i]) {
+ 			parse_error(pe, FILT_ERR_MISSING_QUOTE, pos + i);
 
