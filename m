@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793237951;
-	b=tlKpupPcWZ0Hw1if0fU8MnH1D/udWb/x1Hgen9+Qz1Yg+0zm90I0uY4HId1FEXJJNh/w
-	 sbjbD67gR+bokWaaTMKkzKqcYZjReiLhoUTy66iaT4Oa7zzV3Xe12BzG9yKhMUGyqE/ph
-	 v5n+dxPMh+0MHOic4tlHmnS4QZVtcoyQihv56jjnppYiWwY4Vc9PX7J3HVt1UNX6xfEyj
-	 sNa4z9W/CJn7SuELTF+2sCUR6ESUvXhmVmlhYZZY0gDRfmjKRzkoLG+eCtVp/769x/O5S
-	 IKJGZ/M+51Gr/oRzGxqzmr2biah2j/tfwxUROKlm1LrMOjzNjAJMKeOIY14UafgKz5g==
+	t=1793237960;
+	b=S2zeKR0ZzC31UQYWdHspKs37aNZEB4BaSq9ZY5Ii4FMYrNpcpE8H9ti7gnWnjX0AjESO
+	 o9rC5hFwFmygzJxkyLzo0ctLqfsPyk8Xm3Vt4gx1ehMGkvpSz16HCplSrlE9WY55vPNcK
+	 +BvsDNdkyF0DrIQN8yVhEQ1gww3Psqtk4muLZ9h/odxmGQeInBoU/QkyfFSu/qYCvpvXl
+	 nRt4k3HwulKtiW0hElLQ67SHtGnzwM1P9U37eRqRJ6x9DFIRat67jhr0AGsNYdqgDXBGm
+	 YBksehaKDTVq3hG53fm1xxD4PchMzekGJZIr7DNXZIEbupDfSTKhaDG/D2XT74WC22w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793237951;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793237960;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=zUzlcpuBM6t+utt5NdbvheCXI+f+IpOfFstVTVIUADY=;
-	b=pym4PBKNUbQAUriHZmdyxALjii1qDaOBDWQe4KCs5K5pKIgel2ymU9P07JpjkCfAKilI
-	 /hRd/lj9+hFp2LCBFVjtHwdhXQ/skIAiVpWBnrEcSRCYd18ij233DWpCKWJEh9tSnCgyY
-	 eDxvJZHUzKznnkfmk6n61hzDCvgQXyfZ4COov7lWsR3gEZ+W+0SjgHgrLSWkRlYx7yxuJ
-	 T5u668bkk88cnYwe3uUl/juDvSqKFUa9S27abNBdtPVzkhuIFNvyQYyDusEdrLJDcsCfs
-	 9UpfNlJGnyMgPdnKnO0wwZUok23+P9EYM8ur77JSl1FtxhO9JTUh9Fmf8iSSHHSi2vg==
+	bh=s99K6eWhcW5sgoLWTd5wVX3zjRGcVmpyGmpRZ78IheI=;
+	b=5KerM+3DxP/+nBWejR4bxazTOj3kVzDX8nlRzEqhZ90qxta4ilq5+WF1N5zhEfrHQ0s/
+	 e9rrfgrrFUewET7SkN8fgp9EELBU7MDelwBxYwYxYNtKpjIfuKxwnsbRr5INlrPtdZFT4
+	 GE/eYEYWtyjdT+6j/ch/uDICJecjU6Bix2F/sG6UnVj7WDpBqkRBNuftqMfh7HW5Y3cpJ
+	 POmI7DEKP6NBDquyQcNRvn/vPsMROAGK19oEKbz3umANZAq5v7wUc0ggAngeBFns7VVOk
+	 PQX72BcyJmmWdxage4Dl8Y8otwzQ59JAt4JpMzGuQbAXfUCB+HoSL6wC/+GYM1g9Cdg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnotiYKa;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="kid/ci80";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D519606A31E;
-	Thu, 29 Oct 2026 01:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CEE606A31A;
+	Thu, 29 Oct 2026 01:39:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnotiYKa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39AD71F01825;
-	Thu, 29 Oct 2026 01:39:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kid/ci80
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D25A61F01825;
+	Thu, 29 Oct 2026 01:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793237951;
-	bh=zUzlcpuBM6t+utt5NdbvheCXI+f+IpOfFstVTVIUADY=;
+	s=k20260515; t=1793237960;
+	bh=s99K6eWhcW5sgoLWTd5wVX3zjRGcVmpyGmpRZ78IheI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KnotiYKacMGrZxT6lRR6ltrj1EygcPPOWXD4GsunjrC6xuz87P6C7m9yCs4tQZ7Tf
-	 agh7i0gHJGWUEeX6kxqGVLBJl0wBtARvyShUdHxvlp5c19NWyB2ljAJkK0qnOOcFS3
-	 /l20h4CSBSEc371C+QbA0Sq8EmMdresyrTavkLFnAX00o8SPFLfUKn+WWvIT7cyGKu
-	 509cTHiMedFqH3cGaDVB/Gi25d0+YYk700C61bfx+jbYB2s+2W66oDKTSWYbDjBm+p
-	 CA4zqgLsXwr3X/kUWOayc7iZ+t/6QHuHroZfoXUkopdmpZbZpruQfo8O9MN34KBhJ0
-	 LV6s57j03U1QQ==
+	b=kid/ci80f6sFSRIdRzVhfzpal0oCctbrcptKq3m9rcI6kn2KPFup1HXECyZpQt2Ru
+	 5FlzFpaa+P2FXZ6pyzRs1lWhwkBZlR38S3WdeH9Yoxl5l6fInyDcLI5ioXJqyjX/66
+	 KF56DsVB0Wh/K0tDC7T23FKBrwBzZmAXz2gywmEQYeSJRyU0w5Fnbh3e2354Rfq2jx
+	 jEZ22Oh0g1JQJ1rO0WSNMvriXnjcTUP+FyGGiI3P668z3ubjBeD1fSXO767aX+2/kc
+	 +mThQue2+BKrdxj/Tgw+owwVEPAbZqFpwqiMcYEMe/q/u97mYS+Yj8w22hgUpaXnBC
+	 5N8QYKM6c946w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 11/15] tracing/filters: Fix error positions in filter parser
-Date: Thu, 29 Oct 2026 10:39:07 +0900
-Message-ID: <179323794702.740114.679129900715570251.stgit@devnote2>
+Subject: [PATCH v4 12/15] tracing/filters: Fix error position for function filter operations
+Date: Thu, 29 Oct 2026 10:39:16 +0900
+Message-ID: <179323795644.740114.16497027792194996862.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179323784538.740114.15323117974242744566.stgit@devnote2>
 References: <179323784538.740114.15323117974242744566.stgit@devnote2>
@@ -69,22 +69,13 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In predicate_parse(), 'ptr' has already been advanced past 'next',
-shifting 'pos' passed to parse_pred() one character to the right.
+In parse_pred(), by the time the '.function' field size and operator
+checks are reached, 'i' has already been advanced past the operator to
+the operand.
 
-In parse_pred(), several error paths report 'pos + i' after 'i' has
-already been advanced to subsequent tokens:
-- When a field is not found (FILT_ERR_FIELD_NOT_FOUND) or when a
-  function event field is not "ip" (FILT_ERR_IP_FIELD_ONLY), 'pos + i'
-  points past the field name or to the operand instead of the field.
-- In operator validation checks for string and numeric operands, and
-  when select_comparison_fn() returns NOP, 'pos + i' points to the
-  operand or past it instead of the unsupported operator.
-
-Fix these by passing 'next - str' in predicate_parse(), saving the
-field position in 'field_pos' and the operator position in 'op_pos', and
-passing 'pos + field_pos' or 'pos + op_pos' accordingly. Also update the
-tracing-error-log.tc selftest to reflect the corrected error position.
+Save the position of the '.function' modifier in 'fn_pos' and pass
+'pos + fn_pos' for ILLEGAL_FIELD_OP and 'pos + op_pos' for INVALID_OP
+so the error caret points to '.function' and the operator respectively.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
@@ -92,115 +83,48 @@ Changes in v4:
  - Drop Fixes and Cc: stable tags since this error position fix is a
    cleanup.
 Changes in v3:
- - Group all error position fixes for commit 80765597bc58 together into
-   a single patch for ease of backporting.
+ - Newly added to fix error positions for .function modifier and
+   operator checks in parse_pred().
 ---
- kernel/trace/trace_events_filter.c                 |   19 ++++++++++++-------
- .../ftrace/test.d/ftrace/tracing-error-log.tc      |    2 +-
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ kernel/trace/trace_events_filter.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index e91ec41bfd2a..6ff208f0e033 100644
+index 6ff208f0e033..9b1100769676 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -537,7 +537,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 		inverts[N] = invert;				/* #4 */
- 		prog[N].target = N-1;
- 
--		len = parse_pred(next, data, ptr - str, pe, &prog[N].pred);
-+		len = parse_pred(next, data, next - str, pe, &prog[N].pred);
- 		if (len < 0) {
- 			ret = len;
- 			goto out_free;
-@@ -1700,12 +1700,15 @@ static int parse_pred(const char *str, void *data,
- 	int ret;
+@@ -1701,6 +1701,7 @@ static int parse_pred(const char *str, void *data,
  	int op;
  	int s;
-+	int field_pos = 0;
-+	int op_pos = 0;
+ 	int field_pos = 0;
++	int fn_pos = 0;
+ 	int op_pos = 0;
  	int i = 0;
  
- 	/* First find the field to associate to */
- 	while (isspace(str[i]))
- 		i++;
- 	s = i;
-+	field_pos = i;
- 
- 	while (isalnum(str[i]) || str[i] == '_')
- 		i++;
-@@ -1726,7 +1729,7 @@ static int parse_pred(const char *str, void *data,
- 	field = trace_find_event_field(call, field_name);
- 	kfree(field_name);
- 	if (!field) {
--		parse_error(pe, FILT_ERR_FIELD_NOT_FOUND, pos + i);
-+		parse_error(pe, FILT_ERR_FIELD_NOT_FOUND, pos + field_pos);
- 		return -EINVAL;
+@@ -1742,6 +1743,7 @@ static int parse_pred(const char *str, void *data,
+ 	/* See if the field is a kernel function name */
+ 	if ((len = str_has_prefix(str + i, ".function"))) {
+ 		function = true;
++		fn_pos = i;
+ 		i += len;
  	}
  
-@@ -1745,6 +1748,8 @@ static int parse_pred(const char *str, void *data,
- 	while (isspace(str[i]))
- 		i++;
- 
-+	op_pos = i;
-+
- 	/* Make sure this op is supported */
- 	for (op = 0; ops[op]; op++) {
- 		/* This is why '<=' must come before '<' in ops[] */
-@@ -1753,7 +1758,7 @@ static int parse_pred(const char *str, void *data,
- 	}
- 
- 	if (!ops[op]) {
--		parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-+		parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
- 		goto err_free;
- 	}
- 
-@@ -1850,7 +1855,7 @@ static int parse_pred(const char *str, void *data,
- 		 * (perf doesn't use it) and grab everything.
- 		 */
- 		if (strcmp(field->name, "ip") != 0) {
--			parse_error(pe, FILT_ERR_IP_FIELD_ONLY, pos + i);
-+			parse_error(pe, FILT_ERR_IP_FIELD_ONLY, pos + field_pos);
+@@ -1785,7 +1787,7 @@ static int parse_pred(const char *str, void *data,
+ 	if (function) {
+ 		/* The field must be the same size as long */
+ 		if (field->size != sizeof(long)) {
+-			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
++			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + fn_pos);
  			goto err_free;
  		}
- 		pred->fn_num = FILTER_PRED_FN_NOP;
-@@ -2039,7 +2044,7 @@ static int parse_pred(const char *str, void *data,
+ 
+@@ -1795,7 +1797,7 @@ static int parse_pred(const char *str, void *data,
  		case OP_EQ:
  			break;
  		default:
--			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
+-			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
++			parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
  			goto err_free;
  		}
  
-@@ -2140,7 +2145,7 @@ static int parse_pred(const char *str, void *data,
- 		}
- 
- 		if (op == OP_GLOB) {
--			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
- 			goto err_free;
- 		}
- 
-@@ -2179,7 +2184,7 @@ static int parse_pred(const char *str, void *data,
- 			pred->fn_num = select_comparison_fn(pred->op, field->size,
- 							    field->is_signed);
- 			if (pred->fn_num == FILTER_PRED_FN_NOP) {
--				parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-+				parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
- 				goto err_free;
- 			}
- 			if (pred->op == OP_NE)
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
-index 6c190620db47..2c900873ce3c 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
-@@ -10,6 +10,6 @@ fail() { #msg
-     exit_fail
- }
- 
--ftrace_errlog_check 'event filter parse error' '((sig >= 10 && sig < 15) || dsig ^== 17) && comm != bash' 'events/signal/signal_generate/filter'
-+ftrace_errlog_check 'event filter parse error' '((sig >= 10 && sig < 15) || ^dsig == 17) && comm != bash' 'events/signal/signal_generate/filter'
- 
- exit 0
 
