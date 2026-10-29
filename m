@@ -1,75 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793259310;
-	b=RYSIiWMH9LeiAU3EDIrNT/1sHTZw/C8MUawoAALNqOvtM9IYrv5OCGR7Xk9U2ZDVF7Ll
-	 etlJ6qky9M/buAes1mnHA2RFIU5fwOEcBpPsoylI4SwH8mBoUGIcs1Ns4+0DvkxrBRJBt
-	 CzjMfVTgO/iccv1v2xNjHb8fgQyPQxhCqa5IACY0RfjWiV3l9K7v4HmmzAmdHp0BSw1mU
-	 RT56kNgNH6e7en3a0udZk20JcugUQzXmvz331Av09Tx/MgB1u3T892/fKKTkZsTaHT02M
-	 wwncWpcsStxDcHvFjUcsLrkQoEVacim7FWO7wFddVH9ScwGvJHs4h8nYzniiQ2PwFTQ==
+	t=1793262848;
+	b=HfaI4h8wyQywGf1IQARQWnSfJBSx+9Fqp1o6EOTXppW6v1Tq7vXyX4H/YdWz/R8JfcG5
+	 1VhTLilcj+w3y5u94G/BzGwWRKEI4hPDDDxrYZYUeCu2ZA2jwU3jis/LBQtcAWYHKD1Je
+	 ZWk69wO9gsmI9ksYDQBDtEUXmeyg8Ag/D4KFLu07rIXuWnBPMyaaUGi0P/p10ruddPaML
+	 hzoSLTk3K3VZV3OJbNRpL3nMnx+iuHP3E0AVlaUbApx9zqmkJGwGzbFO/4fnq/SIzpgEu
+	 9i3UILsqjDEzNArC/ATKw61kXN0OHSSL6ngUqYJNQx31UOM4gfQlhbzowrX8yyRbFdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793259310;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo;
-	bh=sRoXQOLMcZAIEFXJdx6jUj5MNy5hDFeGder7q1cCC+k=;
-	b=krsrS2Zr9EU+lZw/qpyQsZTFJcbrN2bUhBPjbgw9LjK+EIpR6LSdbpbdMfpfQEcFuDmH
-	 nVQqnr7mpNbNJTIFpEp6f0+CviZ9NgZ4xSB5qk+qFO5DdIbhZYE/NNQ0BlL4t8k2gp6og
-	 gIYSwdy1c28hOqf3zVAp/2241Wq3WZ3xD+jyoKHtHwmnvIXFf/lTlmmngkEDR3IFQPaDY
-	 Wxvjqd8vHukTJbKWn2qZb0XK8cpL2uSAAmyVPB9U/dJqxIGLNwOqbBrlsaVUPl7v1ru9y
-	 knTjHFjKnswZ+HtgLrigHZWBGYI6gVsHqGDqXPM2kyHdXt7gvcRpeY0pRo5j6s0ZxwA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793262848;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=EhgAgTm52pgiixrPe9CqfL75nlW6cKpRZ11fJQCD/PE=;
+	b=5n5AEO2pjjPdbgNQzmfW1qLL3eVy9AxXhBCVvxKwIK9bBGEybLZXsO8DNp7NUiwJwX9i
+	 r4ohNkqz8V5/dD7Y9uZwrOoVFZXHgUvyumOR52n8wVM6WUu6Kxa9skDibKvjduwoAXReD
+	 +NPKntkL0Hj41MfWR7kkDpLd7gypZPeK3eR1ccxU0Oi/Y66pD/hJN6sAxtcjhVCxIDqZR
+	 W//p4ZVSOF9DtBAurXbdJ51nWdVqDwW/xFrYm/tXpxK1afObWDTs0u83PfECXB1CGjFOn
+	 +dZj8ooyqeJ19RnEmQ4aZt1/D9w3aJLXar6vI7RBZYINd1TMV/yb8dPzCiaHoDGZySA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=QR750SsO;
-	arc=none smtp.remote-ip=117.135.210.4
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=YFQyddmq;
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219B6606A32A;
-	Thu, 29 Oct 2026 07:35:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 219B6606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63AF606A31D;
+	Thu, 29 Oct 2026 08:34:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D63AF606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=QR750SsO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=sR
-	oXQOLMcZAIEFXJdx6jUj5MNy5hDFeGder7q1cCC+k=; b=QR750SsOf1DZIgPHzd
-	/TDXBV8N6t7pbIn2YAJRhOgICMYTjR4trMl/Khm8/1/EHeiAWqyGU9BZGbMdkT0S
-	rZeZbf3Ap9OXFMMKd7hfRHiYFEucAAsFwMdoXU/Q1J4YINzOKw3/NFXyKEcQLpq0
-	wQRT2JID+Ub4g8UKEYM0jhVSs=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgBXMJHY9uJqilfyCg--.26815S2;
-	Thu, 29 Oct 2026 15:33:46 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: yangsongsen@insta360.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	emil@etsalapatis.com,
-	ihor.solodrai@linux.dev,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	matt@bobrowski.net,
-	memxor@gmail.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
-Date: Thu, 29 Oct 2026 15:33:44 +0800
-Message-Id: <20261029073344.729148-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20261028125148.1348-1-yangsongsen@insta360.com>
-References: <20261028125148.1348-1-yangsongsen@insta360.com>
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=YFQyddmq
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EhgAgTm52pgiixrPe9CqfL75nlW6cKpRZ11fJQCD/PE=; b=YFQyddmqhJ4oKe1IKsEIhTkVy/
+	UhCKP91ig4WJ82vsubrBqyold4fB6frrMTJACCH7bTzT93xjNwfF6Bl88ESAjC1v2Un/IjG3xTz4u
+	ijvYmJkU6SvHIdwCMzPwU2fjFH6DzAKkHLeV1w5jdcJfgwBDWwKMDCLL9T0isDBYTi35Oaf/W3W3T
+	/uHg9kcQyP/GMO/baXZcn3ZuygxRkuPoysVl2jJx65bLx4fOTaEToUw3Qw42ZBOMHWuLmHqFD9wdL
+	Dx0mTBsy7IKwMDl7xXIwYbtH28rNjjKbJKb1g9xtO0jwQdgReHS4SqRZ42YOSAaZuh2FYO+O6dqAW
+	ItMqSITQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xMLaE-0000000Dq9G-49rd;
+	Thu, 29 Oct 2026 08:34:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EF5E2300329; Thu, 29 Oct 2026 09:34:01 +0100 (CET)
+Date: Thu, 29 Oct 2026 09:34:01 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>
+Subject: Re: [PATCH] lockdep: Add #include <linux/instruction_pointer.h> to
+ lockdep.h
+Message-ID: <20261029083401.GD1779021@noisy.programming.kicks-ass.net>
+References: <20261028110558.623a92d1@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -79,44 +69,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgBXMJHY9uJqilfyCg--.26815S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JFy3try7XFy7WFyfAF17Awb_yoWftwb_ur
-	WqvFn7GasYqrWvyan3Gw13Xr9xK3yYqr1xGFW0q3sIvry3Ja4kZayvv3s3X3y3Xw48tryv
-	vFZxWw1jgFyS9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_uyxtUUUUU==
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbCzxtHv2ri9ttuLQAA3K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261028110558.623a92d1@gandalf.local.home>
 
-On Wed, 28 Oct 2026 20:51:47 +0800, Songsen Yang wrote:
-> Hi Feng,
+On Wed, Oct 28, 2026 at 11:05:58AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> I hit the same root cause independently via syzbot and sent a fix a
-> few hours after yours, without having seen this patch -- sorry for the
-> overlap:
->
->  https://lore.kernel.org/bpf/20261028121859.994-1-yangsongsen@insta360.com/
+> On 32bit x86, _THIS_IP_ is not defined in asm/linkage.h. It happens to get
+> included into lockdep.h via kernel.h pulling in trace_printk.h which
+> includes instruction_pointer.h that has _THIS_IP_ defined when linkage.h
+> does not.
+> 
+> In order to remove trace_printk.h from kernel.h, have lockdep.h include
+> instruction_pointer.h directly.
+> 
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 
-Hi Songsen,
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Please don't worry about the overlap.
-
-I hadn't noticed the issue Sashiko raised when I prepared my fix; 
-It looks like a pt_regs on the stack can fix this.:
-
-	BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepoint_args *, args,
-		   void *, buf, u32, size, u64, flags)
-	{
-		struct pt_regs regs;
-
-		perf_fetch_caller_regs(&regs);
-		return bpf_get_stack_sleepable((unsigned long) &regs, (unsigned long) buf,
-					       (unsigned long) size, flags, 0);
-	}
-
-That said, I think your approach is the simpler one and the better fit
-for the fix itself.  So if the maintainers prefer your version, feel
-free to ignore my patch.
-
-Thanks,
-Feng
-
+> ---
+>  include/linux/lockdep.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+> index a6451ecbbe9a..c6b0168f5fc9 100644
+> --- a/include/linux/lockdep.h
+> +++ b/include/linux/lockdep.h
+> @@ -22,6 +22,7 @@ struct task_struct;
+>  #include <linux/list.h>
+>  #include <linux/debug_locks.h>
+>  #include <linux/stacktrace.h>
+> +#include <linux/instruction_pointer.h> /* In case _THIS_IP_ isn't defined */
+>  
+>  static inline void lockdep_copy_map(struct lockdep_map *to,
+>  				    struct lockdep_map *from)
+> -- 
+> 2.53.0
+> 
