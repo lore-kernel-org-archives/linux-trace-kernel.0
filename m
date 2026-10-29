@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.107
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793255762;
-	b=QChBMRaQiA+8JSR6XkkmJtwOSXUUG19GpiAEeZkdKtRq3cZbpL6gAFt4HcRuFynq0uDH
-	 lYj7gKQkx39X4nV+8ucr1HQAB5m2u6ACmvTO2GzOqLTlxcLeHf2DTuw7PPlTNE11trycH
-	 zvUwj7EOGNAgl29RgMHfXQwRickZr2G/4S9Sxikfv3wNbO0GgUUJL0MZx98kDYWUuGO/t
-	 dy7SeeBXxcZ5iUduYZ8YQJydeKV1HoSqS35X5pVkhp7sA0DhjrUwZTChd/IigncqrRQ0A
-	 kTGWtiHD8bM/7TcZOhHKYK4Z5wjK505XwaUzbjsfooonlm+w8owsxcMbSMqKZuuaJLg==
+	t=1793255795;
+	b=x95SpNqhPxt5bHwW6eaXw4Qm3SInKQwYtDjYsAcFPXnnCi+XblgNPgubOJTCOPn9Xejb
+	 YHi5+skBqsF6JcKpUriy/OiR2VMMuZ4YvNE0F604YWro0g7QY8AB2GSwJjH4FD5ZZXRy6
+	 BLuB5pXKjUKQeQdyth/N6ioUu1IS84icNSRTvbGBOH8+bkwQbKm7T5o6qiHdZxgVHPoVi
+	 YbzGRRR8TMCCcbsSAm4/qcZg3mXYHT/3KzmtyoJm80wTS8HDLtylZdDmOX1BvukAV9Bci
+	 +TIUaGb2XqGwRv74Ll1gYz/NWxcOxGLqYw/837LJL/50z7Jrr/QSY0xD/HFp7A0e/ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793255762;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793255795;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=x9hcFsZYsd6lEY7YKGasOWcWiv3TT8mTfld9Fg2H7/s=;
-	b=rPkqB32keAIyvMQrFhxyExfrQt8O7IHjdUr3W57blJjK+vebBw7+UdY3Ndqrx1z0ziP4
-	 ovHs6kKzIV3Tl5s5MVhdEkpSEKHI56y1JltRbnV2pOsY88zbP13yUBBgHHMDIaFBa8/2o
-	 k948cv66aNx5FTP4XyR6Tmk9nPfma8Ub57pbaFHuRhg2a/Zy4s9FncgAdJyrvSHTf6ha1
-	 bpDSo6r78pszdqnYaWr4EkrZx789l75dZYdOwmJnfq31iYqbxkHqjLsVNdbmit9OwPPq7
-	 vH4BhcIdSbCAIO8zseZktdIzBiCjoH00QMXtz/lLzstMUfJyfYQfNtm2lcrSPEY7fHg==
+	bh=e9iJkXpRXYXbKJ8YCCtjeFCD9Hy6xZkuFkKL1cPOJqk=;
+	b=uu6ky8L2bSGaEwUF0WvRNgxXo9pvm4sZGvWm2XC2xTksr7Y2Emw8DwJgsgKaqT5l6FNS
+	 QHu8TU2VHxZH4IdobmZ/iVVRkjW3B4x6+Fuu4Kr8P+SE6NRj2lA7Q0bwfqP3llgsBM1k/
+	 +VmLAibLlvIw+qwZt1V3zrCS0UKUdG8nKk2uWAzo0oIC0Kn2gGv1dEf2ooUmoxgAJjhXk
+	 Yzvbt1JislxXDN6yyG1kgydGp/sBzIYBfOWzo8Ey4XH6lueTytysDJYv6jovH0enlLfq0
+	 oHriawKCk1GkqJTWIZmMxcDDz6Oc9/AQLG+Ex/AFZBU0jK16CHkJuehc+znVq5R4exg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GFj46ab0;
-	arc=none smtp.remote-ip=91.218.175.107
-Received: from mta0.migadu.com (out-107.mta0.migadu.com [91.218.175.107])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mjhIZ7Jh;
+	arc=none smtp.remote-ip=91.218.175.113
+Received: from mta0.migadu.com (out-113.mta0.migadu.com [91.218.175.113])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3E9606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 06:36:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D3E9606A31D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F10606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 06:36:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24F10606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GFj46ab0
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mjhIZ7Jh
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=fsw4mEaKOvVgj+UGUu/LrZpgPLPWzYv2PlwxGv6ciVk=;
+DKIM-Signature: a=rsa-sha256; bh=vfvRt1Fm/vOTY1RQFLMCd0NgP0okjDh8EthFOA7WL3k=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793255759; v=1; x=1793860559;
- b=GFj46ab0bahb2NJJpx9VLGKnugsr2ZfmJ/AnfDS9TKNd8SH+O1aWvGcx6Wg1i2z9TcwlY944
- YyMVSevlCJNajAycn6aCniQ1YRwBfJo5iD7NFG1uP5PSl13dRb9RMyzvErQ688KWBKg/jeIkDOu
- 74+5rQA4xFtfDk4kzWl4+v1E=
+ t=1793255793; v=1; x=1793860593;
+ b=mjhIZ7JhBxBVZdnCSTA8OZmIemi9AJUtkyTv96zkbnFwXK96rKFn4ZxP/w570Xh8B7npS1S2
+ /ax9FAP1vLpT01EqPXxuDyDrgdQ3gLS1Py5clE0/sCmWusncdRasCw7k06Yv3tcUnnwDe3OflNr
+ 4Zz+9g9tPN0A36Ogz/uRyXqQ=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 0482426e1b8de320;
-	Thu, 29 Oct 2026 06:35:59 +0000
-X-Mizu-Trace-ID: 0482426e1b8de320
+Received: by smtp.migadu.com with ESMTPS id 2e800ba7b5c5cc6c;
+	Thu, 29 Oct 2026 06:36:33 +0000
+X-Mizu-Trace-ID: 2e800ba7b5c5cc6c
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <d41c063e-55f0-40e2-93b7-999aa0138cbd@linux.dev>
-Date: Thu, 29 Oct 2026 14:35:53 +0800
+Message-ID: <99bbc23f-a3a0-4357-99d7-0f0167136432@linux.dev>
+Date: Thu, 29 Oct 2026 14:36:30 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,104 +59,155 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v5 1/6] bpf: Add syscall common attrs support for
- link_create
+Subject: Re: [PATCH bpf-next v5 5/6] libbpf: Add log_opts support for
+ bpf_link_create
 To: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org
 Cc: linux-trace-kernel@vger.kernel.org
 References: <20261026154948.99408-1-leon.hwang@linux.dev>
- <20261026154948.99408-2-leon.hwang@linux.dev>
- <sashiko-outbox-185494@kernel.org>
+ <20261026154948.99408-6-leon.hwang@linux.dev>
+ <sashiko-outbox-185491@kernel.org>
 Content-Language: en-US
 From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <sashiko-outbox-185494@kernel.org>
+In-Reply-To: <sashiko-outbox-185491@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/10/26 00:06, sashiko-bot@kernel.org wrote:
-
-[...]
-
+On 27/10/26 00:05, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] libbpf: type confusion between iter_info and log_opts in bpf_link_create()
+> --
+> 
+> commit b4af2771f4c0edb6656b6ddcd881019158c55a55
+> Author: Leon Hwang <leon.hwang@linux.dev>
+> 
+> libbpf: Add log_opts support for bpf_link_create
+> 
+> This commit adds log_opts support to bpf_link_create() by placing log_opts in
+> an anonymous union with iter_info in struct bpf_link_create_opts and passing
+> it to __sys_bpf_fd().
+> 
+>> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+>> index aea534764dfe2..38dcb31e8c0ed 100644
+>> --- a/tools/lib/bpf/bpf.c
+>> +++ b/tools/lib/bpf/bpf.c
+>> @@ -794,6 +794,8 @@ int bpf_link_create(int prog_fd, int target_fd,
+>>  {
+>>  	const size_t attr_sz = offsetofend(union bpf_attr, link_create);
+>>  	__u32 target_btf_id, iter_info_len, relative_id;
+>> +	union bpf_iter_link_info *iter_info = NULL;
+>> +	struct bpf_log_opts *log_opts = NULL;
+>>  	int fd, err, relative_fd;
+>>  	union bpf_attr attr;
 >>  
->>  	switch (prog->type) {
->>  	case BPF_PROG_TYPE_CGROUP_SKB:
->> @@ -5959,12 +5972,20 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
->>  			ret = bpf_uprobe_multi_link_attach(attr, prog);
->>  		break;
->>  	default:
->> +		bpf_log(log, "Invalid prog type.\n");
->>  		ret = -EINVAL;
->>  	}
+>> @@ -803,6 +805,14 @@ int bpf_link_create(int prog_fd, int target_fd,
+>>  	iter_info_len = OPTS_GET(opts, iter_info_len, 0);
+>>  	target_btf_id = OPTS_GET(opts, target_btf_id, 0);
+>>  
+>> +	if (iter_info_len && attach_type != BPF_TRACE_ITER)
+>> +		return libbpf_err(-EINVAL);
+>> +
+>> +	if (iter_info_len)
+>> +		iter_info = OPTS_GET(opts, iter_info, (void *)0);
+>> +	else
+>> +		log_opts = OPTS_GET(opts, log_opts, (void *)0);
 > 
 > [Severity: Medium]
-> Does calling bpf_prog_attach_check_attach_type() before switch (prog->type)
-> in kernel/bpf/syscall.c:link_create() cause misleading or missing log
-> messages in a few cases?
+> Can overlaying iter_info and log_opts in struct bpf_link_create_opts and
+> selecting between them using only iter_info_len cause type confusion when a
+> caller passes a non-NULL iter_info with iter_info_len == 0?
+
+Users must not do like this. By convention, iter_info_len==0 means no
+iter_info.
+
 > 
-> First, for almost all program types that are unsupported by link_create()
-> (such as BPF_PROG_TYPE_SOCKET_FILTER, BPF_PROG_TYPE_SCHED_ACT,
-> BPF_PROG_TYPE_RAW_TRACEPOINT, or BPF_PROG_TYPE_SYSCALL),
-> link_create() -> bpf_prog_attach_check_attach_type() hits the default
-> branch:
+> For example, a caller of bpf_link_create() or bpf_program__attach_iter() in
+> tools/lib/bpf/libbpf.c:
 > 
-> kernel/bpf/syscall.c:bpf_prog_attach_check_attach_type() {
+> tools/lib/bpf/libbpf.c:bpf_program__attach_iter() {
 > 	...
-> 	default:
-> 		ptype = attach_type_to_prog_type(attach_type);
-> 		if (ptype == BPF_PROG_TYPE_UNSPEC || ptype != prog->type)
-> 			return -EINVAL;
-> 		return 0;
+> 	link_create_opts.iter_info = OPTS_GET(opts, link_info, (void *)0);
+> 	link_create_opts.iter_info_len = OPTS_GET(opts, link_info_len, 0);
+> 	...
+> 	return bpf_link_create(prog_fd, target_fd, BPF_TRACE_ITER, &link_create_opts);
 > }
 > 
-> Because attach_type_to_prog_type() never returns those program types for any
-> attach_type, bpf_prog_attach_check_attach_type() returns -EINVAL and
-> link_create() logs "Invalid attach_type.\n" instead of reaching the default
-> branch of switch (prog->type) to log "Invalid prog type.\n".
-
-Either "Invalid attach_type.\n" or "Invalid prog type.\n" is not
-accurate for this case.
-
-The log here is not required to accurately describe the reason. Instead,
-the log tells users something wrong at the position.
-
+> might pass a non-NULL union bpf_iter_link_info pointer while leaving
+> iter_info_len (or link_info_len) set to 0.
 > 
-> Second, for BPF_PROG_TYPE_CGROUP_SKB, bpf_prog_attach_check_attach_type()
-> also performs a capability check:
+> Previously, bpf_link_create() forwarded both the non-NULL iter_info pointer
+> and iter_info_len == 0 to the kernel, where bpf_iter_link_attach() rejected
+> the mismatched arguments with -EINVAL:
 > 
-> 	case BPF_PROG_TYPE_CGROUP_SKB:
-> 		if (!bpf_token_capable(prog->aux->token, CAP_NET_ADMIN))
-> 			return -EPERM;
+> kernel/bpf/bpf_iter.c:bpf_iter_link_attach() {
+> 	...
+> 	if (bpfptr_is_null(ulinfo) ^ !linfo_len)
+> 		return -EINVAL;
+> 	...
+> }
 > 
-> When this check fails with -EPERM, link_create() still logs
-> "Invalid attach_type.\n" even when attach_type is valid.
+> With this change, when iter_info_len == 0, bpf_link_create() leaves iter_info
+> as NULL (so attr.link_create.iter_info is 0 and the kernel check is bypassed)
+> and instead assigns the union bpf_iter_link_info pointer to log_opts.
+> 
+> When bpf_link_create() then calls __sys_bpf_fd(), log_opts is dereferenced as
+> struct bpf_log_opts:
+> 
+> tools/lib/bpf/bpf.c:__sys_bpf_fd() {
+> 	...
+> 	if (!OPTS_VALID(log_opts, bpf_log_opts))
+> 		return libbpf_err(-EINVAL);
+> 
+> 	if (log_opts && feat_supported(NULL, FEAT_BPF_SYSCALL_COMMON_ATTRS)) {
+> 		memset(&attr_common, 0, attr_common_sz);
+> 		attr_common.log_buf = ptr_to_u64(OPTS_GET(log_opts, buf, NULL));
+> 		attr_common.log_size = OPTS_GET(log_opts, size, 0);
+> 		attr_common.log_level = OPTS_GET(log_opts, level, 0);
+> 		fd = sys_bpf_ext_fd(cmd, attr, attr_sz, &attr_common, attr_common_sz);
+> 		OPTS_SET(log_opts, true_size, attr_common.log_true_size);
+> 	} else {
+> 		fd = sys_bpf_fd(cmd, attr, attr_sz);
+> 		OPTS_SET(log_opts, true_size, 0);
+> 	}
+> 	...
+> }
+> 
+> Since union bpf_iter_link_info is 16 bytes while struct bpf_log_opts extends
+> to offsetofend(struct bpf_log_opts, true_size) (28 bytes on 64-bit, 20 bytes
+> on 32-bit), interpreting the first sizeof(size_t) bytes of iter_info (such as
+> map.map_fd, task.tid, task.pid, or cgroup.cgroup_fd) as log_opts->sz can
+> cause out-of-bounds reads in OPTS_VALID() and OPTS_GET(), as well as a 4-byte
+> out-of-bounds write past union bpf_iter_link_info via OPTS_SET(log_opts,
+> true_size, ...).
+> 
+> In addition, aliasing iter_info and log_opts prevents BPF_TRACE_ITER links
+> from using log_opts whenever iter_info is specified. Would it be safer to
+> place log_opts in its own field at the end of struct bpf_link_create_opts
+> instead of sharing a union with iter_info?
+> 
 
-Same above.
+Not at the end of struct bpf_link_create_opts.
 
-> 
-> Third, for BPF_PROG_TYPE_LSM and BPF_PROG_TYPE_TRACING,
-> bpf_prog_attach_check_attach_type() only checks that attach_type maps to the
-> general program type. The stricter expected_attach_type check happens inside
-> switch (prog->type) in link_create():
-> 
-> 	case BPF_PROG_TYPE_LSM:
-> 	case BPF_PROG_TYPE_TRACING:
-> 		if (attr->link_create.attach_type != prog->expected_attach_type) {
-> 			ret = -EINVAL;
-> 			goto out;
-> 		}
-> 
-> If a caller passes an attach_type of the same program type that does not
-> match prog->expected_attach_type, link_create() jumps to out without logging
-> "Invalid attach_type.\n".
+When adding log_opts support for iter link in the future, both iter_info
+and iter_info_len will be moved to the last union.
 
-Will add a log here when adding log support for tracing link_create in
-the future.
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index fe3b7fd8512b..8bfada1f3ea3 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -478,6 +478,10 @@ struct bpf_link_create_opts {
+                        const __u64 *cookies;
+                        __u32 cnt;
+                } tracing_multi;
++               struct {
++                       union bpf_iter_link_info *info;
++                       __u32 len;
++               } iter;
+        };
+        size_t :0;
+ };
+
+Afterwards, log_opts will be valid at the iter_info position for iter link.
 
 Thanks,
 Leon
-
-> 
-> Should the program type validation and attach_type logging be ordered so
-> that unsupported program types, -EPERM failures, and expected_attach_type
-> mismatches report accurate messages?
-> 
 
