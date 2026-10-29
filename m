@@ -1,59 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793236130;
-	b=ErUCNwJi6Wxh76wiJ8IqW0Z774WEAAeJRHAfOTlDp972PRVOrixIN7zsbLqZUZiOiQ2F
-	 FvbwRcqFDVxKlihIWdLqpbksoIbFfWmSm1IhXJHvmlDh5ssn6DlS+fqECvIsM+FMKnAih
-	 r6GXIHZs/JO5t5GkgQcBPbCHZuwnWYZ+uHcCkhQUtMWIzkVyL9YPX+j2lHURapBm/CUcy
-	 ZIbq+8CSsCgh8fC/14sMaL383WnBxyRn6obvqQzVgXWSck/GQrt0UulOnOuQI6BmsaYIa
-	 FoyR8aQxrWWkiTYed+DZem/JRuzq9b7iYrgT6TomWlLT6Oy1MIqM8C+gY4Ybk2gxH1g==
+	t=1793237850;
+	b=F0jltZEyIUEnsmem0jbsHwTPGSAgPuTj/2LUwu1EVgWG77A48eV8PjOWJ2ou9ql0if9C
+	 zLnzJjj2YB9xcHE3Kf+v/2BUyfbLYSRgEEeog9HzW7jOaI/XnaZ+fxzVYzrg66RDDHYFI
+	 LC+aODIXVodQp32B1gMxlalP3DNxcjc9DnVYMkxOrYoJfQbQd5YShgbA/joej0S5nHeQW
+	 MLjvMWqJzXELgQ6OJtjM9s2m2X6+/atQYeTxwXnjym/0LnQ6OtT/iDNdXEkaZblG9Bier
+	 fuB5S61ZXSXcm/wjb2fjenYW7F2+HpQPRK1noGxWFZ3IGJxegW7vvYY8V+FbQhLr+qA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793236130;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=5dUAdbD583w0cxZdPyqG0/8OuDFEv0NHP0fbuKgWWMk=;
-	b=OB2FUYfVFtPBSg1s2n2OzeEg8h9UzXAIG1llafS/jAetRSiSjEfCZwVdtIqc62nlqSGy
-	 dtTakHIpIqUAuYtsrJj19NH9mybyympRrQ6fbjJG2ywnFJbZtu9kKb1FPC9LCb/yCC1CG
-	 f6XtCwjLA11U/geyFmNVlKjdw4p1YnOBFriTxeam4LK4Z0PQtIaxlZHv/hVNRrqF//6Kd
-	 AJ+ZJ9GPDMrrMnv+xzLNPywCu+EMfio2ehNFS43H/e7dkFeTd5Z3o+spdj96A79qBRRFg
-	 gVozADpHlI7lcsXvtm3SSL/7Eny9Y6prrTQO4XxQ3kMptolw69IqDMLEkO4OplkJPkw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793237850;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 User-Agent:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=xvU3H0FSV6/NrrW+yhwNygjcSR4mNQwktBgxwlF2Pr8=;
+	b=WAr5geuoe9v/3ALdWTaj7oTzRdLaEIygfhHof+CU2ILXofNNoa2pNuIaRdF/aAbzLYPo
+	 lDRlrwEVHV+LlWjMJ2KTUcuMlT4ZBcySdhRANJK/HFVWcKubRma6jFp2nEX2t3z2V4vo/
+	 NmsRPEJRq/D+wgFJ18BJsoxaGxz8MNsKGXMKYd1mJ1EJedZX+zFGOg62DG4EflsmRQndL
+	 1+aW6NfoSj3hFOSBOpvP6CVVGInkpZyQjptyr2ygJYjTAYPNbGAWam8dH9rZwBHkBc0rx
+	 TvY+e5HVzxtRdEu+EaHHbW9P7q/U0UGIjPzhuKJK7W9nnAfAV/8SN5wJo+K6cPkjfeg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=m4tvVkIj;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ji34zmTS;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68A1606A31C;
-	Thu, 29 Oct 2026 01:08:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B68A1606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A28E606A31A;
+	Thu, 29 Oct 2026 01:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=m4tvVkIj
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 0979D1201F7;
-	Thu, 29 Oct 2026 01:08:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 24E4480011;
-	Thu, 29 Oct 2026 01:08:46 +0000 (UTC)
-Date: Wed, 28 Oct 2026 21:08:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- live-patching@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
- kernel-team@meta.com
-Subject: Re: [PATCH v2 07/16] tracepoint: Mark __do_trace_##name() notrace
-Message-ID: <20261028210844.105c431f@fedora>
-In-Reply-To: <CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
-References: <20261023011049.1164625-1-song@kernel.org>
-	<20261023011049.1164625-8-song@kernel.org>
-	<20261023093256.20d3e300@gandalf.local.home>
-	<CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ji34zmTS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E841F01825;
+	Thu, 29 Oct 2026 01:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793237849;
+	bh=xvU3H0FSV6/NrrW+yhwNygjcSR4mNQwktBgxwlF2Pr8=;
+	h=From:To:Cc:Subject:Date;
+	b=ji34zmTS+n30tri4UBu5EvGb3ObnjHCuwWwVD8Y75cCmo7Wfb1+fQPdYZQ0nNIl8z
+	 BesVJuH4Lp9jTS7fcdPXh7IuoFspAXQGDhx0ajiCbwuyMOYsNgsgMXLxD2fBevPfZM
+	 pPvdQn7MZ3atECHL+2jPQSST++pbP4CBRAj56EAvctVwZAX/F9Ns1V1bjRpZgSfJ8I
+	 zssDDeU98x98bQHZhhRc7UxjVoasUOKl+oKHGHjw3p0ZUTU5qyNRzdb2IWuP0U+4EQ
+	 PgNXLiialab5tJpL/r2trGMiSas+ijgDPxiFNzvK8tINHMhh7WcM8niEO5ygKoPDYD
+	 PeJZVUHkErllQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v4 00/15] tracing/filters: Fix event filter parsing and matching bugs
+Date: Thu, 29 Oct 2026 10:37:25 +0900
+Message-ID: <179323784538.740114.15323117974242744566.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,28 +61,122 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: fbiqak3gh69qxotq9ppcdtg358g34ibz
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 24E4480011
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19OfcNoiNsy0Lzx1Co9eO1IsS1FQ0e7MsU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=5dUAdbD583w0cxZdPyqG0/8OuDFEv0NHP0fbuKgWWMk=; b=m4tvVkIj2mL1WETv8pacDGjDciq2kEHF3zKuMhpY1mR4RIIIftdq62ztpRYI1IJb9pdg4pQ3E+mwO5mbvbSes+7204gEG0nyjP5Xf79defNIMm69p76YoMnXb0b8+nmCvVHaGuFdNVgYXzLNVbR3pr86mGtGw+8pDFZEOBPygEc=
-X-HE-Tag: 1793236126-653337
-X-HE-Meta: U2FsdGVkX18rdRVD82s61VMXfWJQHgQORymeZdncNXfzImetPHMJjA4YvMPEO2bdg/ywUw+8Kz7xewfI4Zya+iRC1gT/OeRsac6UOyrPIEctFg38NUdSauMmDK3xjTEruTn74FU+IBhetF9jJerKox5lF10/akqpVk37r15c9j1qZfM6HiMqcQCviC7qOQTAytpEi0zwpiyNjjD/zzPI7UukGeZjJ5Xqt+LIezuPfPh7+r9+NRng0TizMWbJ7ZLQEYpuoShhVbj9Sl1sfIVa0fSrWL2CpdM/0sqhda1GxVS5o4WLmDFB9v5CJ6WpiIyTqs2/5ipqval5IVhh6p0cOfQztPSrEhdA
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Oct 2026 15:20:37 -0700
-Song Liu <song@kernel.org> wrote:
+Hi,
 
-> Do you plan to apply this set to the trace tree (after the merge window,
-> I guess)? If not, how should we proceed?
+Here is the 4th version of fixes for various bugs in the trace event
+filter parser and predicate evaluation in kernel/trace/trace_events_filter.c,
+along with a new ftracetest test case covering filter syntax checks.
 
-I can take it if we get all the necessary acks, or it can go through
-the BPF tree. Either way is fine with me.
+The previous version is here:
+ https://lore.kernel.org/all/179314820431.684037.4147763044424284198.stgit@devnote2
 
-If you prefer me to take it (as I do have a lot of ftrace specific
-tests), I'll do it. But I'd like acks from maintainers of all the code
-this touches.
+In this version, according to the comment from Sashiko and Steve, dropped
+a redundant patch and reorder the patches for separating real bug fixes
+(1-8) and cleanups & test (9-15). Steve and I agreed that the patches which
+just fixes the error message will be a cleanup or improvement, so I removed
+Fixes/Cc:stable tags from those.
 
--- Steve
+Changes in v4:
+- Dropped the separate regex_match_end() zero-length string fix patch
+  ([01/16] in v3) as redundant per review from Sashiko.
+- In [01/15], introduce regex_match_end_dynstr() for FILTER_STATIC_STRING
+  fields defined with size 0 (such as the 'buf' field of ftrace/print
+  events / trace_marker), so that suffix filtering on unbounded NUL-terminated
+  strings works as expected without penalizing fixed-size buffer matching.
+- In [02/15], clean up process_system_preds() by replacing the 'fail'
+  boolean with 'ret' and consolidating the cleanup logic between fail
+  and fail_mem, as suggested by Steven Rostedt.
+- In [09/15] (was [10/16]), verify that all characters following the
+  newline are whitespace before writing '\0' in filter_check_newline(),
+  preventing in-place truncation of the filter string on error, as
+  pointed out by Sashiko.
+- In [10/15] (was [08/16]), drop Fixes and Cc: stable tags, as this is an
+  error log improvement cleanup rather than a bug fix.
+  Also move it after other Cc: stable patches.
+- In [11/15] to [14/15], drop Fixes and Cc: stable tags from error
+  position fixes as these are cleanups.
+
+
+Summary of the patches:
+
+~~~~~~(fixes)~~~~~~
+- [01/15] Introduce regex_match_end_str() for fixed-size string fields
+  (FILTER_COMM, FILTER_STATIC_STRING with field->size > 0), and
+  regex_match_end_dynstr() for unbounded strings (field->size == 0)
+  in parse_pred().
+- [02/15] Fix process_system_preds() so that "fail" is only cleared when
+  at least one event in the subsystem succeeds, and use
+  delay_free_filter() when freeing replaced filters on error paths.
+- [03/15] Return "pred->op == OP_NE" when "cpu >= nr_cpu_ids" in
+  DEFINE_CPUMASK_COMPARISON_PRED so "!=" against a cpumask evaluates to
+  true for out-of-range CPU numbers.
+- [04/15] Ensure parse_error() is called on all -EINVAL error paths in
+  parse_pred(), predicate_parse(), and process_preds() instead of
+  leaving lasterr as 0 ("Error: (0)").
+- [05/15] Check if str[i] is NUL immediately after operator whitespace
+  in parse_pred() to prevent out-of-bounds reads on missing operands.
+- [06/15] Fix quoted operand parsing in function event filters, check for
+  missing quotes, and advance past closing quotes.
+- [07/15] Reject empty unquoted operands in function event filters.
+- [08/15] Reject unsupported field sizes in parse_pred() when
+  select_comparison_fn() or CPUS{} size matching leaves pred->fn_num as
+  FILTER_PRED_FN_NOP, avoiding a kernel warning in update_pred_fn().
+
+~~~~~~(improvement/cleanups)~~~~~~
+- [09/15] Convert the first newline to NUL and reject multi-line input
+  containing non-whitespace characters after the newline in
+  create_filter_start(), apply_event_filter(), and
+  apply_subsystem_event_filter().
+- [10/15] Reject stray quotes and '(' in unquoted function event operands.
+- [11/15] Fix parser error positions for base filter expressions
+  (predicate_parse(), FIELD_NOT_FOUND, IP_FIELD_ONLY, string/numeric
+  operators), and update tracing-error-log.tc.
+- [12/15] Pass 'pos + fn_pos' for ILLEGAL_FIELD_OP and 'pos + op_pos' for
+  INVALID_OP in function filter operations in parse_pred().
+- [13/15] Pass 'pos + op_pos' for CPUS operator checks and check
+  'str[i] != '{'' before incrementing 'i' for MISSING_BRACE_OPEN.
+- [14/15] Pass 'pos + op_pos' for GLOB_WITHIN when '~' is used with a
+  'within' filter.
+- [15/15] Add filter-syntax-check.tc to ftrace selftests to test valid
+  filters, syntax error diagnostics and caret positions, multi-line
+  input validation, and subsystem filter error returns.
+
+Notes:
+
+- These bugs were identified and the fixes and cover letter were
+prepared with the assistance of an LLM coding assistant.
+
+Thank you,
+
+---
+base-commit: 1fdc4164e488916402badddbb1f51e9380dabb91
+
+Masami Hiramatsu (Google) (15):
+      tracing/filters: Fix MATCH_END_ONLY regex matching for fixed-size strings
+      tracing/filters: Fix false success return in process_system_preds()
+      tracing/filters: Handle out-of-range CPU for OP_NE in cpumask comparison
+      tracing/filters: Report parse error on all -EINVAL paths in filter parsing
+      tracing/filters: Check for missing operand after operator in parse_pred()
+      tracing/filters: Fix quoted operand parsing in function event filter
+      tracing/filters: Reject empty unquoted operand in function event filter
+      tracing/filters: Reject unsupported field sizes in parse_pred()
+      tracing/filters: Check for trailing characters after newline in filter string
+      tracing/filters: Reject stray quotes and parentheses in unquoted function event operand
+      tracing/filters: Fix error positions in filter parser
+      tracing/filters: Fix error position for function filter operations
+      tracing/filters: Fix error positions for CPUS mask parsing
+      tracing/filters: Fix error position for within filter operator check
+      selftests/ftrace: Add event filter syntax check test case
+
+
+ kernel/trace/trace_events_filter.c                 |  182 ++++++++++++++++----
+ .../ftrace/test.d/filter/filter-syntax-check.tc    |  100 +++++++++++
+ .../ftrace/test.d/ftrace/tracing-error-log.tc      |    2 
+ 3 files changed, 248 insertions(+), 36 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/filter/filter-syntax-check.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
