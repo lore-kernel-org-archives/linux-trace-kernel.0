@@ -1,101 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.42
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793290985;
-	b=O318QfxBkCqvj5/3ZzXTuHMvk4F4YTWciUqV+tXLHNQtnGVQYVqHZSFYQi+aQhDXd0FK
-	 tq4qcTMEXwcfypvxdVPhNaZZVjmhDoU96AZkJ5BWu0DAbT9lsAPTkfi17i15h0fW1/psz
-	 3bK08NMZiyeAFHdYoP5hbjxGCrbAgn4xFjt8xL3Y7RkZCXjeOiov3z5mDX6U0yncj015l
-	 xIAHb7tMuMiiINZeievG07tdYoy9ndU8kVe19gZ3ZUZuQKbW/XGPQ+0N+Cpw4o8s2OdLJ
-	 90VMp9ZgEpDhWC5pDrFAJYkJczXeB1el2J/LGcuOJUntlr3GrhjKp4uLKGAYySCGimA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793290985;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=yVlt7H45FB16jm/ALidosmXiC35Hp/64GX3dy/IZRoo=;
-	b=XS1UFsQ2GmUMcpq8kyM/uEIUNoP/O+RBIXEHJP2Hm3l/UQnPoMk/d5pSDuo0eg/ncgh3
-	 AtLWFtN8VviFA0E+3ImAn/9DIE2Ix2wS519pBBXib+NEwtSP4UN9Ok1EOzlbleROdEJTO
-	 zHf2Chm63wPfuBABePoig8a+cV5ZUfWr3AUolhG19z5OOehvRUrIOCpOFr/aBKprMrC2S
-	 bs/QY6qle6Ed1sqwyHYwhepgguSNYNR3NhCDV/Mn3RcsZ80OfyDEQ0RO/ALCpJXLcHJ1r
-	 kJS64msaKU5yCvAUfLZWKOcGdkNXPncjcY0V2Zc9NJHdoqrChuDpdCBteHVSxlAnm4g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vl6h3FxT;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.42
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793291409;
+	b=Vy3TAmseMnY3GhUkcDgXqUsIBMjoepTvRnsJM+5Aer1jtZIdKxVD3MxGbWv1JJ2Lv31O
+	 7XXNFHlAzv5ogJbL3LhKWdpMezfMn8Idq2oyl4aGo5gLBAhEa55ABFQUEmB3ksYzM/+ei
+	 O7hwmW4njCvN8ul7/tgSIjaCip3RphQJjxjaW2cSyjPvvoPRZIr7zFBUMoUuoDTQw2h1J
+	 hLiPvPws5HcFFIahj+ZJtT8POElLMvmgtbLjbNj7XiYmGE8iNuRwznMZTeyZXXNvdxduB
+	 jYRK6A6FR39HywdIGcJrdIWrB8aszIepQAa/pCqH2WxZJMvN+3UT6CJ2GdEWkt/Ghmg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793291409;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc;
+	bh=9sdoxOsij3ml0E4hBz0Uk1W+O3KE/Jevu63peRDA6+g=;
+	b=nibnCAR6UztfyS6rKyDcyVp89ARhbh3Ig9XmAycy79mk0X4WTEptqCDpdXCzBkN0K94h
+	 EJaSimUo1OjZKqPBDE5HGtHGLnzWBg5M1OgZNHq3h4+jUSlSwCeWqAdF29dfLeMOjs67j
+	 P93HQzlEBZFbP/ajVQcnzkZBLEdLOLRfPS+rgjs7Aku+NoDTYfuC+1s+eVD9mjLF7gyEd
+	 3sBBKXyonVDZ5wG1UWReaFGK9Nd/1aypv97Fa7J9rAGjJ2+Jlrg/4e+lGoamGxBZPEHXb
+	 eVftrbIq2nDPhW+if/cQp7MbRz32uwWGXTJLDGjMEohYHAKV1IXQuovOMRu72NUOU4A==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LuYpXVpz;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA57E60A2621
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 16:23:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA57E60A2621
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3F606A320;
+	Thu, 29 Oct 2026 16:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vl6h3FxT
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c4682977f9aso298141866b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Oct 2026 09:23:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793290983; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sa2sHcwZu9leLuc1YQRjb7BnYMQyJguMR88visXg+CpTlzfaoRmTDMQbyA2O5i4Jpr
-         YUJYRRADBcmeyoJVXRkzJ9gHfWrKm4nLUmSSm2z5BQCbEGV+cD5O0sB0m6XK8xQfknx6
-         8M6g78l22Ti6l+fdKD/1LWTpbQsMUxavbNk1+HnmZoThXNM8pfqJ+bPxKY3E2gsr+34M
-         13aQ0Yp9EzJZhEnMxYeVvOJBimpbydEhUXCdxupMW79cQmvEGLSugqVkShyLKFsjgScU
-         2CmiFEU/P8no9ZALJl+F9ts5e5SrxC4pLggS42kBortMBDB6EKI4rbjke7GR5Yt3Igw8
-         Lhmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=yVlt7H45FB16jm/ALidosmXiC35Hp/64GX3dy/IZRoo=;
-        fh=LDo0FJKz6J5ZhDOIcRKe57WgooAodgZrbkvqNmwyPj0=;
-        b=X+Z+IjDZfXJ4s9XcrOfITChYMczWEhuNoDnj7OitRjLCVqiAdadC61Ya5NNSXsEKYx
-         MHy2rakzhb/nBgqb+kOw0WBScamny9WvQq+iwegq6hVknUz//186cu8E/aDAAfy3Ynga
-         5zfSXbkrq4v+ITEPZLPlDEjUQ7lJBxVug45UInf24BoT0Lfo49XvJAO1CfAfeXNMr2W+
-         fni95jrl/dWF8ghdPom4KX4cAJnBnhGJP82D7kkH3PpFMuS4NxJ/RtG5q4xaC8hFujtx
-         gqG69Wf2HZczJsqQOkArcY/r2gQTdsl08dVghFEoEJUBJI1uIQJHO9DQU1rvhv7pbpLv
-         DNIg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793290983; x=1793895783; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yVlt7H45FB16jm/ALidosmXiC35Hp/64GX3dy/IZRoo=;
-        b=vl6h3FxTysc9yet6D3Q0d2GO8gweert+j49hx6iOwi7wFPNTUWfuBL7fsyyfVvnyvZ
-         +Z1/kzcfRHuriJXExOiQjIZH32FZIEYk36Du+K2Qp+xNd/zW+Vw7+cZ+3sHCdKppJ5o8
-         eatU0GNm4EFgoeUQ+hg+aufwcL0fsR0bxtDwsqwYPSmTHeXFmK4DaWOmC6SqnWgBoZ3w
-         PCxuGBUd4CKVgczgjA3vYepQkhpbhYZnVWmJ7nhg0H7W7tE5tOgms8p4YL8rZwXyG2iI
-         Zc2yNh+LlvzPXc6XiXnDpdY/AAXfxq39EqGeUq5qFxEMHK/EKYejffUV2/LJ4wO5JK9I
-         JZlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793290983; x=1793895783;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yVlt7H45FB16jm/ALidosmXiC35Hp/64GX3dy/IZRoo=;
-        b=v+XaBsjSII0eN+u+X9iNO3HDnY3I6aep/BVdA1CTxtKxN/dA9WbRZesHFVskvxu7uI
-         E4j/SvgdYp4OuX9rS+tAGnwF82m5jV8Nrfn6Fd1+FVv2VHXnKhu63ywVy2wthG3MPWu5
-         DD66iBkDCycBGhbta3e/z2o/J1dyHi5KB/2C29WGoelgvbyL/pBOlfjYRNl7mz1pGCcD
-         HJhdHMKnqp9dh6CHAauO/UQsLyXvXKzV772KK9aYRs/Huy+hOpaMwewu2x24xXRpT6Gz
-         nWTGXl3FDdxiJo37Y387F0bawze9hDG48C5ssi47KeqnRfgREtn7jGprlqC7HzwGaW1e
-         WeeA==
-X-Forwarded-Encrypted: i=1; AKwUvByPZRjusUEDe4cHFoFVMUeyiyJl4vV+DtqZt3kR5FiQr2qM+s2aoWiL3pTKMydcL2r930p0DmWjOkVqZlj4caMvQ5w=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI3MZLRCByTvEa/p0qW+VM95abEy9rR4zVzkS/iBiiDGQ1w5Ni0
-	GRqjgdQRHmTZWYnaPDU81ZX0KQ2WxECWjZeDG5elsvygPj8peHvE+tW+PAzdhd/5yK0bf5Nbk5R
-	LHI5VayJlWTfOorvX6bY0OSNVUzaeiyY=
-X-Gm-Gg: AYBFou2T8xMF+c7D+nlCqgsh0qftUJGHLoFp7s0OeTmbljPTQdPEg1beSkrqlbk0sE7
-	XU3jodI1Yxe1gVSG7rzDqT1CbDbrKn0VVYpCZsfg6TsRhTGCZFCmC3Qd0glkuSKqDix+hVH0CKQ
-	wRq/wm3+V7dkJs8ivUMJcLaBXY/SLHa9/o5Jn77WdyyhaCL5+LR56Pjkyx95gBiPMLjUjv5iX+E
-	H8S7v8hfzpIWzHtBwk7lgELAUNfgNILm6ujf7P3csmahsnrShGIrMoHQbTPVGAOKTESNvXKA5Mx
-	MOxcGMYnAMeBFEzkHsqG5c6p4fopgt3NruNadnmAtlj+huXd1IidpCKyu3EYAETOcP0jqAOkNIy
-	EiLRmqb5BEyyQZT+2LM9yD+plV6cAyop++JvlamN5mzz6wBCgoPicQaGIfa4f7ho/dnFRvmNUE8
-	e9uQYmhkOCCktf0kQ5FsRFId27AiTKRcbJDjZR31DJb/GmQ0Dfkn2LVeo=
-X-Received: by 2002:a17:907:2d10:b0:c31:91f9:60b7 with SMTP id
- a640c23a62f3a-c49bdf43869mr561025466b.34.1793290982774; Thu, 29 Oct 2026
- 09:23:02 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LuYpXVpz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C63D21F01816;
+	Thu, 29 Oct 2026 16:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793291407;
+	bh=9sdoxOsij3ml0E4hBz0Uk1W+O3KE/Jevu63peRDA6+g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=LuYpXVpzcgZf5I4egFlI4i+W1uV5kDaqKb6zxyn667htazDz/UY5voP6+zzEpXm80
+	 ioWwC0HW+4d/gANJuXS4MTqacHCbrVpK4gMBKRJdj+XgtgjC+Mx/+CO5DeCaVYL/J1
+	 Cf4iWG8Fd0kJDrHQrsfQ17eNGej57KeXNRkpKsVYksC98LjBXhLPUIPSqFEbcPjwp1
+	 SQPUBku2b8m6YljgP62sQ7XYU2ijiMmgXifT2DwJbYSusl6tjT35PPSv9RnOr+81tJ
+	 lxRDpXr7kcht53KRFVmgOLFvu3AwOqQHK9LfqfzdQW1d5kRmrEZ7lMXfXK8fY0PeUy
+	 GLpEJSB1STrjQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA3963808223;
+	Thu, 29 Oct 2026 16:30:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,157 +53,63 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261026154948.99408-1-leon.hwang@linux.dev> <20261026154948.99408-6-leon.hwang@linux.dev>
-In-Reply-To: <20261026154948.99408-6-leon.hwang@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 29 Oct 2026 09:22:44 -0700
-X-Gm-Features: AclHuK8UvOBWlBbj0vfMh3zLVN3mKm1giM1eECBMPqUpu-79pHcpcFNIaDEnC_I
-Message-ID: <CAEf4BzbW4zwL-9j8e2B6KNXVNwsfWyMSAo_RsGCqv-nu_yGhTg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 5/6] libbpf: Add log_opts support for bpf_link_create
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v5 0/6] bpf: Add syscall common attrs support for
+ xdp
+ link_create
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <179329140655.559085.2587539582409074788.git-patchwork-notify@kernel.org>
+Date: Thu, 29 Oct 2026 16:30:06 +0000
+References: <20261026154948.99408-1-leon.hwang@linux.dev>
+In-Reply-To: <20261026154948.99408-1-leon.hwang@linux.dev>
 To: Leon Hwang <leon.hwang@linux.dev>
-Cc: bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Shuah Khan <shuah@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>, Hangbin Liu <liuhangbin@gmail.com>, 
-	Martin Karsten <mkarsten@uwaterloo.ca>, Masashi Honma <masashi.honma@gmail.com>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: bpf@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+ memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
+ ihor.solodrai@linux.dev, hawk@kernel.org, john.fastabend@gmail.com,
+ sdf@fomichev.me, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, shuah@kernel.org, kuniyu@google.com,
+ liuhangbin@gmail.com, mkarsten@uwaterloo.ca, masashi.honma@gmail.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-On Mon, Oct 26, 2026 at 8:51=E2=80=AFAM Leon Hwang <leon.hwang@linux.dev> w=
-rote:
->
-> Since the iter_info and iter_info_len in struct bpf_link_create_opts are
-> legacy, reuse the slot of iter_info to place log_opts.
->
-> When adding log_opts support for iter link_create in the future, we will
-> move the iter_info and iter_info_len to the last union, see below. And,
-> keep the backward compatibility meanwhile, that uses iter_info if
-> iter_info_len is set.
->
-> struct bpf_link_create_opts {
->         /* ... */
->         union {
->                 /* ... */
->                 strut {
->                         struct bpf_iter_link_info *info;
->                         __u32 len;
->                 } iter;
->         };
-> };
->
-> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
-> ---
->  tools/lib/bpf/bpf.c | 20 +++++++++++++++++---
->  tools/lib/bpf/bpf.h |  5 ++++-
->  2 files changed, 21 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> index aea534764dfe..38dcb31e8c0e 100644
-> --- a/tools/lib/bpf/bpf.c
-> +++ b/tools/lib/bpf/bpf.c
-> @@ -794,6 +794,8 @@ int bpf_link_create(int prog_fd, int target_fd,
->  {
->         const size_t attr_sz =3D offsetofend(union bpf_attr, link_create)=
-;
->         __u32 target_btf_id, iter_info_len, relative_id;
-> +       union bpf_iter_link_info *iter_info =3D NULL;
-> +       struct bpf_log_opts *log_opts =3D NULL;
->         int fd, err, relative_fd;
->         union bpf_attr attr;
->
-> @@ -803,6 +805,14 @@ int bpf_link_create(int prog_fd, int target_fd,
->         iter_info_len =3D OPTS_GET(opts, iter_info_len, 0);
->         target_btf_id =3D OPTS_GET(opts, target_btf_id, 0);
->
-> +       if (iter_info_len && attach_type !=3D BPF_TRACE_ITER)
-> +               return libbpf_err(-EINVAL);
-> +
-> +       if (iter_info_len)
-> +               iter_info =3D OPTS_GET(opts, iter_info, (void *)0);
-> +       else
-> +               log_opts =3D OPTS_GET(opts, log_opts, (void *)0);
-> +
->         /* validate we don't have unexpected combinations of non-zero fie=
-lds */
->         if (iter_info_len || target_btf_id) {
->                 if (iter_info_len && target_btf_id)
-> @@ -824,7 +834,7 @@ int bpf_link_create(int prog_fd, int target_fd,
->
->         switch (attach_type) {
->         case BPF_TRACE_ITER:
-> -               attr.link_create.iter_info =3D ptr_to_u64(OPTS_GET(opts, =
-iter_info, (void *)0));
-> +               attr.link_create.iter_info =3D ptr_to_u64(iter_info);
->                 attr.link_create.iter_info_len =3D iter_info_len;
->                 break;
->         case BPF_PERF_EVENT:
-> @@ -960,12 +970,12 @@ int bpf_link_create(int prog_fd, int target_fd,
->                         return libbpf_err(-EINVAL);
->                 break;
->         default:
-> -               if (!OPTS_ZEROED(opts, flags))
-> +               if (!OPTS_ZEROED(opts, iter_info_len))
+Hello:
 
-semantically cleaner would be to use log_opts here instead of
-iter_info_len, send in a follow up?
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
->                         return libbpf_err(-EINVAL);
->                 break;
->         }
->  proceed:
-> -       fd =3D sys_bpf_fd(BPF_LINK_CREATE, &attr, attr_sz);
-> +       fd =3D __sys_bpf_fd(BPF_LINK_CREATE, &attr, attr_sz, log_opts);
->         if (fd >=3D 0)
->                 return fd;
->         /* we'll get EINVAL if LINK_CREATE doesn't support attaching fent=
-ry
-> @@ -975,6 +985,10 @@ int bpf_link_create(int prog_fd, int target_fd,
->         if (err !=3D -EINVAL)
->                 return libbpf_err(err);
->
-> +       /* bpf_raw_tracepoint_open() does not support log_opts */
-> +       if (log_opts)
-> +               return libbpf_err(err);
-> +
->         /* if user used features not supported by
->          * BPF_RAW_TRACEPOINT_OPEN command, then just give up immediately
->          */
-> diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-> index 826d9cc9ab65..fe3b7fd8512b 100644
-> --- a/tools/lib/bpf/bpf.h
-> +++ b/tools/lib/bpf/bpf.h
-> @@ -422,7 +422,10 @@ union bpf_iter_link_info; /* defined in up-to-date l=
-inux/bpf.h */
->  struct bpf_link_create_opts {
->         size_t sz; /* size of this struct for forward/backward compatibil=
-ity */
->         __u32 flags;
-> -       union bpf_iter_link_info *iter_info;
-> +       union {
-> +               union bpf_iter_link_info *iter_info;
-> +               struct bpf_log_opts *log_opts;
-> +       };
->         __u32 iter_info_len;
+On Mon, 26 Oct 2026 23:49:41 +0800 you wrote:
+> I'm planning to add syscall common attrs support for LINK_CREATE cmd.
+> 
+> This is the first series for the plan, that adds syscall common attrs
+> support for xdp LINK_CREATE.
+> 
+> Thereafter, retire the tracepoint bpf_xdp_link_attach_failed, because
+> the underlying driver's error can be back-propagated to user space via
+> the syscall common attrs.
+> 
+> [...]
 
-in a follow up, let's add comment next to iter_info above and
-iter_info_len here that these are deprecated and that iter.info and
-iter.info_len should be used instead
+Here is the summary with links:
+  - [bpf-next,v5,1/6] bpf: Add syscall common attrs support for link_create
+    https://git.kernel.org/bpf/bpf-next/c/b891bce3fe4d
+  - [bpf-next,v5,2/6] bpf: Add syscall common attrs support for xdp link_create
+    https://git.kernel.org/bpf/bpf-next/c/cbb143cc97b6
+  - [bpf-next,v5,3/6] bpf: Retire tracepoint bpf_xdp_link_attach_failed
+    https://git.kernel.org/bpf/bpf-next/c/d33d3ec8f730
+  - [bpf-next,v5,4/6] libbpf: Factor out __sys_bpf_fd helper
+    https://git.kernel.org/bpf/bpf-next/c/d6ef68efcece
+  - [bpf-next,v5,5/6] libbpf: Add log_opts support for bpf_link_create
+    https://git.kernel.org/bpf/bpf-next/c/0be729f9f030
+  - [bpf-next,v5,6/6] selftests/bpf: Add tests to verify link_create logs
+    https://git.kernel.org/bpf/bpf-next/c/a1a714b7e947
 
-applied series to bpf-next, thank you!
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
->         __u32 target_btf_id;
->         union {
-> --
-> 2.55.0
->
