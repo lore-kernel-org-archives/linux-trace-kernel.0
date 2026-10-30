@@ -1,54 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793322083;
-	b=j6vCZ+nUjgUC5QSY5fMi+5M1kHu06cAAhOfWHDmRyir2wU61IsXSaZni14eptESkE8Qf
-	 YeB13V9QabtQJcE7I6bwYPLqqJMuXt09KWFU6SrM+Zu26yTsNggvqSwYz/hCD3r0ov0af
-	 rDRW5n4Aum20NcZHG2GNsI2/XzhoWIuoS2gKkQVyQQl72Pt+FsDOaoiKoMY85YPCP6Dfv
-	 O7KDV/Tj3KH6CaIbHPz1g+RXBK2CwuLszZbXzlazuMgUeUQJ4gZ/jNt4TqBUv1nz2yvKd
-	 0uYSCoMKSgGfoIOlUHkeH4rJ5Rn5Dd/+KAOALdpqHdUzZ9BOyGb2wce8nUM+9ZxteEA==
+	t=1793322744;
+	b=a00kgk/1rGcUJO1cpfhx9vVPgnO0oUWZkR5u2mTVuMEb7W+PzAumz0MKtYOmBLOGfZ1v
+	 V2xSFmbZtf4oTfkDjXO6+U8ELXrEk7ZSlhnQBUcdt6f0wKMFFsCRP91hBPfWMbR6pGHX+
+	 Qt1zESgawjfIdTaCQrrblcHAezj1Pr/li8bz0OaUyzSThkSD9FXrOrHDcZfVZbagSK8lZ
+	 Vg6G8/RyYkagObkooHMyo+a3mCgAhvoP0YiRBNWtWxA+3M15G+eJ080lFWdQm0YWVDs4J
+	 maGKmiQlrZX877mUPXv3BWG4wJBag796QhXznQpKwnj3OMH3zZ/uIrTnhvNJw2Hn+FQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793322083;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=Vdd3kyoZA+FmufzVBQTN+34rF4mMwG7QhmRXSycjpqg=;
-	b=DN093DefWg9nGGckgTUpuxUjUtikypmce7OUd3E2GWsHyN1b2NRC2VSGUM0wWv5To0GH
-	 uiGRnNHr8jYhUYcpC+Q53cXibOK/mp87l24HAINlUiqRTikbmSPIn0++eloo8CAUlE57j
-	 QjB0lxbJefII5s4I4OZZQTpZF1FZBV3wwjAoiAu0nRbA4YJuzNWxiOn7BVIJMMLfBNT8+
-	 L8i7jUTjXHptlhgfNUvN7bEvLJSLV99u4Qpw3axMCagUleyOEjhlgtHiyO+JVU7sOjANf
-	 nH7COPPvxVELi1jWTV8qm8OxBuTimR2K1f4bvT66tNmMt4uh4/WmGNQnGjQljtQKHRw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793322744;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=Sx9cgUbkh4RV32DkF3afUIrb56A2Z++6wre5+9dXJ3s=;
+	b=LbVyewo4ExUWcPLo/Iq+yuBhLowsMMt++PaAUNXp/A7no4UN7rkgsFkim/9nDNsomjEf
+	 i9mN8kE9JzkYvZ3KN5bEyb+ovy0L4NKD8H3MG9RaFXAI3GjEIq7Fr4YGqNnDHTT8iHxF+
+	 Eo6Nz2MzZnmxY1Bna4FBJu+5orpuaKKtxnLRf3pDbmPUfAYhCAW0Jkc+D3bAL9EQLMqSu
+	 8AsRjo7vXDKBD0HTh6pLQ1gGt+H1ImPgJ8GQPlIhtFcc/YzTRsDt7FG8vVYqQbHa8igBE
+	 7J2mDn+oz89yQRU1Bn7uJ3c+vHHqlNK2pOL5Vtb3xMbpalfeHYlT1tWMVFPmOHPNX6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RsjXuMl4;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jxsPVX1f;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FE8606A31A;
-	Fri, 30 Oct 2026 01:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA14606A31C;
+	Fri, 30 Oct 2026 01:12:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8DA14606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RsjXuMl4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D496E1F000C1;
-	Fri, 30 Oct 2026 01:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793322082;
-	bh=Vdd3kyoZA+FmufzVBQTN+34rF4mMwG7QhmRXSycjpqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RsjXuMl4Ih9wcfsL7qU6JllcpPOZ1JmvI+yMRM3kER+FrkvdeUdXdm4St3Qbem0/b
-	 HQFc4fNsJkIWAhRUwYGdri2dnqDan1D66LF4/17DxiKRwa9Kii85qFaVRDigJFWC7M
-	 D0zpFU928h4JYShARwF6ssLrJtKSk+yakPevcgoGKCXoJIrdUPijR2Fu3tUKJUdaXg
-	 fAIkQ6idKJESnWP6Gm+p02JW5dcV4t/VXMDlOFVdjHKRlsGunX+UYsYz/4al2KjQ6L
-	 wYq1YFinfjH8lHTg73UGXqHFWR4LgPui8+oLxqfxcO0lyUFwa0azA89El7JICgSUp+
-	 N//uAczFsn9RA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] tracing/selftests: Fix instance test to actually test races
-Date: Fri, 30 Oct 2026 10:01:19 +0900
-Message-ID: <undine-1793322079170721165-fee1052e7bb8c899@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261029203205.757392992@kernel.org>
-References: <20261029202849.245864353@kernel.org> <20261029203205.757392992@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jxsPVX1f
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id AF38EA05F6;
+	Fri, 30 Oct 2026 01:12:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id C48B620027;
+	Fri, 30 Oct 2026 01:12:19 +0000 (UTC)
+Date: Thu, 29 Oct 2026 21:12:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH] tracing/selftests: Fix false bashism in
+ kprobe_non_uniq_symbol.tc
+Message-ID: <20261029211218.3749963a@fedora>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,58 +59,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: C48B620027
+X-Stat-Signature: isupbdz5emkx8xr1doh7tstj36ztjmmq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+IrwqZlzfa0SJGHmF54C1N9es/CffkMgQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Sx9cgUbkh4RV32DkF3afUIrb56A2Z++6wre5+9dXJ3s=; b=jxsPVX1fUpyyeNg5aDIQaxDZdsiEIzo5NKnVxd0Y+j6c7BhsUV0oLNK5UM0kL8OhylVY8QXKHwoaTpDq/HHnhKnZ5/CgCJImJUfIWKpT5zYA2ZlZJp4hQCkrJAZxi9PGw3sRcFJMundSQv4V3g49eY4CwloCexOd1fFPFTdXUJ8=
+X-HE-Tag: 1793322739-507075
+X-HE-Meta: U2FsdGVkX1933phtu4h//lzzoJEOBrHMnMZtUVx+jtTCoz3HJn6yEM6zf8l8UtEH6VQ9PwhUt8i1PJetWddn9s4dWtnrBwSzIsMh6cuDWSKlrt5QqmsC8NHxBgjH0EpMKVCwjYHK+IIohWn5pVgKJkJTdfYKlKGvCSHfCym1bU2G/cl4+F94C1XChRdskMoUvXKpj24QLH5RAvqVaw3ECi/M4jgxPL7YWJZvGLSAN36tNw7MFQL4jAKkDzF5EXh+DYBEmNB2vTEezS8Ylulkkn9Vtag1hKSZmdstJ/WxNJpb1ePKBqkgnGEC8hR15GNcEYg8Y7Iy349q3XQD7NIkrmPTAopZlQYs8xEGWN6xr2NeQHv+9ZbQm8IITDfZUWaMF8+Idb7oxsaBAxt/+0WGMg==
 
-On Thu, 29 Oct 2026 16:28:50 -0400, Steven Rostedt <rostedt@kernel.org> wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The instance selftest creates and removes the "foo" instance while
-> enabling sched_switch event and reading its trace file. The issue is that
-> the read of the trace file prevents the removal of foo, and it constantly
-> fails to remove it. The stress test is not really stressing the situation.
-> 
-> Instead of running the creating and deletion in a loop as a separate
-> process and sleeping for one second, call it directly in a loop that forces
-> it to happen 10 times.  Also update the removal to keep trying until it
-> removes the instance, otherwise if it doesn't remove it then the next mkdir
-> is a nop.
-> 
-> Convert the reading of the trace file to use "head" instead of "cat" so it
-> is limited in how much it reads and add a .1 sleep in between reads. This
-> gives the removal of the instance time to succeed.
-> 
-> Fixes: 91e6f1ce86577 ("ftracetest: Add instance created, delete, read and enable event test")
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  .../ftrace/test.d/instances/instance-event.tc | 26 +++++++++----------
->  1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-> index 42422e425107..b0e9d3abbf2f 100644
-> --- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-> @@ -25,15 +25,16 @@ if [ $result -ne 0 ]; then
->  fi
->  
->  instance_slam() {
-> -        while :; do
-> -                mkdir foo 2> /dev/null
-> -                rmdir foo 2> /dev/null
-> -        done
-> +	mkdir foo 2> /dev/null
-> +	while ! rmdir foo; do
-> +		echo could not rmdir foo
+From: Steven Rostedt <rostedt@goodmis.org>
 
-nit: If we retry this, do we need to warn it?
-(maybe we can add a limitation of continuous failure and make the
-test fail if the failure exceeds it.)
+The checkbashism is giving a false positive to the kprobe test of:
 
-> +	done
->  }
->  
+  ($"foo" should be eval_gettext "foo"):
+  if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
 
-Thanks,
+This is because it sees the $" at the end of the grep as a bash symbol.
+Instead, escape the '$' with a backslash as it is within quotes and that
+'$' is for grep to process an end of line character and not a bash
+variable.
 
+Cc: stable@vger.kernel.org
+Fixes: d22c3e0088e85 ("selftests/ftrace: Fix unique symbol check in kprobe_non_uniq_symbol.tc")
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+index 03eb9e70b438..f8e18ea8c268 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+@@ -6,7 +6,7 @@
+ SYMBOL='init_once'
+ 
+ # We skip this test on kernel where SYMBOL is unique or does not exist.
+-if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
++if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}\$" /proc/kallsyms)" -le '1' ]; then
+ 	exit_unsupported
+ fi
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.53.0
+
