@@ -1,93 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793364730;
-	b=KcrqZN2k25OTlrhCcn10iyEmw0YurvggB/Gz3/mapk3LgBLOiXiC/+3kaBDRT8O430QV
-	 azyfpoJ4V7Cw3WXZsrER7XJqjgOZRlPSHW4p7W28ElFF+q/rm8ca7B9QwEE0lghR1EXwP
-	 upZVFoZU6oWmxfXHz4PVvXSy/u7OEperGHbxlHJkKCedqCZyR3ZkdI+ttafnUmlVJNhu6
-	 x4hjSeX0687cn+4Y75tJXsXaaG4NqtqY8ewLHM9tdLP9DrvtUVnW+rOnKhQmh4VfMXNOJ
-	 kMTC3+RgC3CJbU29ylbEk8lkdaroflLHVGIjxosUvgPFuHeQUzMQ2R9WF3DsTPbFSBw==
+	t=1793364733;
+	b=bIEwKCs3mvs0od5LnIKo2mvpbs309Ctte+jR9Ceo70BFuz7MQKAXFRxdn24A78TaZC3e
+	 bNTvDItnMk2kRXyIVL74bl2kru+OnZtyGOngb6kdYbyt5hjoPNvU6bNeAiwgI/WCudNdV
+	 ngElVvJxccYDit2eHF5OMN8XhcW8fPlY5/cNc3Rrsilu/Wetut9tb9hmj6QHAsr0iGQnF
+	 /mnmWp6Cl8WVLxKAINUDMF/b/2QJwTYGsAq54pv/bDN44OvPJCPpQTxRjdIOaHeHVQLeA
+	 hyonnpCmOlzRph5pvbGyZ+xNJrEBEXzOCQmpadtaXpL6wFQmDeeCHkbZm3U605Fm8iQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793364730;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793364733;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=73NnDYgtRRq+RR5ApFnv+ewgHDtuK4aFIM31WIpoV/0=;
-	b=1edv6lpZQY+k4UKcTyY0TBao2dHRIUPpAad9YrR7gJsadq8whhksQSy6lFcjWMO8nv26
-	 JMrAB7CiIDxHg4MtiCu5NqLvkkCfJC0Iiex2z8opxY62tvKLjg9/h7vlehvm8bnXs/2tq
-	 ra043pVnWDRcl7amwVCljazbK82MSQ1m6RFeDwPLehA6ldojL9CBuXXuWZ8GkfAcHG3su
-	 Pjz0qBW43lIhUIZLx/Ak0j8RglmtaS4+h2XFAlDnA+80eZ9/tKhfiqKVGoYrr0cjH8jPx
-	 nryTen2BU8ly96JkWufWstyMzC0sKNicv0eQArk+VV8ezcMtWeV0gs06mjImX6EBOEA==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
+	b=wvWs4MyITQtkeqfJhl+W4pkZSlMrRw4EVvqcW4S33b2F6D9Qtj3aY5VrKHPBABWGnbEO
+	 04jceFNFlolkTD7s0NjTrSR3duemdoNqFPAFySdwBNsmFe61VWklJ7zlNPv1Jbaja8cPe
+	 dZIurEBUYfsxNsle1+yLAjWWzSSbDX5pTl1Om9O3LMXE/1mhTiD/A5kOMMcQTmgWZO7Gv
+	 +CfKi8k3nXN91Q/UzLodPe+0swFeJR38x/r+KJU0CsIh9oW8hB51ATm2xeHwPT+Ab+GUx
+	 6coW80ApoaptfsiGI3ZxgQjX3abYDXgUIs0W9FwP1E3xrFtYTPnFv0eYZiqsV91MlTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=w6GBc0nF;
-	arc=none smtp.remote-ip=209.85.221.46
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QxY32tUv;
+	arc=none smtp.remote-ip=209.85.221.53
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A459606A323
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 12:52:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0A459606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9719606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 12:52:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C9719606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=w6GBc0nF
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48df8fe8513so608687f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 05:52:09 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QxY32tUv
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e20edd106so557326f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 05:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793364728; x=1793969528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=73NnDYgtRRq+RR5ApFnv+ewgHDtuK4aFIM31WIpoV/0=;
-        b=w6GBc0nFTcH1bU9gFpNJz4jKHzL2LRKnugmQjv4u+E2EwJCeko9qkHrdOWIcl6H2xc
-         aRdfXuCNVh3dNTF5f20ryGz/vi8a8ZHMHHf0zd8KiVjCaJlHeYqvFv0AprRX7KFLtStv
-         yhyycR9X/RwtJIPcf3f4AStCSZ+IUnxMgmVd5G20SRnsSJJ0YdNQYl4SdKttPXreOk5I
-         EAHLiUPCp7R536SddUo7wSXkXDyGObo/ptlqbr0AbOek5+CWuNdSOlCTv6/5q44AqE+V
-         o/3Yrd8lzZQLQFzRvzt1Kt3oOhYw36JS39XMPhw8ay5J5BLUAUMLuBrfZmVZtlZVR/Z8
-         T6LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793364728; x=1793969528;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1793364731; x=1793969531; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=73NnDYgtRRq+RR5ApFnv+ewgHDtuK4aFIM31WIpoV/0=;
-        b=NpeJOmn0L9bGjs+Bh/En+NLy+gz4FQ3iRGlZy+RIMhcUUVjIULmEWWnBV6mSuonnM5
-         N6vUsi1fYX2lPQ0KmCOqu4L3o3wMxnsI0DYPu/8JDwsdaALPwqbGSFFNqM+OmrzeEN5Q
-         VXpRmJoarmpoevOxpJjtKEfwfsHE/g4zswQi9OJKTfamjAdtOGD7cZCCekT6UBMCxoaB
-         ODlqOBkLTrVmaXsWu3ixc3ffEaHaVhJIdj8I5ZZJXiFt7GEdsOjHHBdDyVdAUHNat2fe
-         U2H4ixbDHWX1fN9UUw/xy5e4aUP8sFaUfqL5xNOe9cmNYyNPkbamhDPvm7kC5tBiESMI
-         36tA==
-X-Forwarded-Encrypted: i=1; AKwUvByVDozqbALYwWChrKtFz8kOdsloUYZACcRMvD6nTl1AQcDCMuDLDVrM3llDL3FGV73PtsOJtx8SsQ77rdgGdZ6vhJw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIvkyyFg22q0UE8Hexu5gg3MUNH9+rCu7byUDL7lnyQ3l7f449p
-	93/7ln5Xjtx6aZ2jpRpsi2QIIUb83ttiHuufFaWXdeXBsaFUFauSVzUVs+F2fDx5f21KLg==
-X-Gm-Gg: AYBFou2IuC3PXVuPVtVP7qItvH/vGQdzRaUQn3eRWZMlFkncARokgEpPMtPnM/5df8n
-	DQ9vcat4Qp5vCSK6/mP52iZfZjh0eiTCJRnwCdSBeJKDxJfzhzACWKdwr4LoCKTPueY4KI2h1Zd
-	nV5q1pM19o8d0d3+Evfhy9Q8Vl80LzFMCUstbGcmo0bCC9bQyV7CklqWo6UTzyycB9cSceN3OH9
-	F9WH6e8hbt6yJFmtFihDYOA/Ys/IwpH10BTfcPLEO7kY1FKSOAHvkVXAwMyWxPlfRzkyGwYzMrj
-	zfcoMCPQaRIzMV/PoluAJd8dfWtOmzQaYe/IcxZl038P8vxaKGAQEZu0n+xFvTUxeYZRi38dZeC
-	Z94OAOKxmyHUkZrDy850uwXzgOkzwKWsHrmqy7hv9aahuzFFOt6rGk99wKdQGj2XXs16KhOqlha
-	B+RE+KRxtrTNBHvB/A6XoZSg2Ro1aU9Jst3exMFSkLOIOH7GicmjkgMm7wC6F8m6WeEAJDjiAvd
-	x2pLzlVnq2wu+Q5YxQEbZWItjUVVbZG7lJkuaJy2UnG+wuufrwNIPp5RLtvI9oGuCPmsXgpcV9V
-	O9inX4l48ffDgyybRms77TFMiO49/coWvJXOZeV1jmdp6OPzKEfV8UFjQTLN5lWPf4c5f3xrAFc
-	GAjAtsq6bBTRxc2sEt4HRNvZyLdNp2KmWNJtmR2glDpziMejG9zLIXzi5aUSxJgygxlmNrGP2qK
-	BLkq7ffFaG9UcDnbLfTtBqLsSYHQRGGmxdMrFhOkMP328ZyhNHwVbT2xRp6g==
-X-Received: by 2002:a05:6000:2884:b0:48e:6eb1:3d02 with SMTP id ffacd0b85a97d-48e6eb13d20mr4529254f8f.0.1793364728190;
-        Fri, 30 Oct 2026 05:52:08 -0700 (PDT)
+        bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
+        b=QxY32tUvnWs7viGQJ0XZgaAd80fTZU3QcbZDkWyuOD+bWe3SdyAnFYsQesGkthYgBn
+         7SxBn5KJDQgNx1c51eyfCyi9oeSiVbzX/CHPkXAVj/r8aBMZk+Q8P4fcTuGeajX2EHme
+         A7D2KaATNPspXRe2ZbWsl21Ir3fQXB3XcpzrDeSAdhhf+mq1+5OO1P/CuRPCk+BG6WPI
+         eld1qqwUlsDz7+mb3UPKmnGSs8bEFaot3P/XE3+FZc1TggI8GBCMjeqI5U8adrcZtXNK
+         T4vc0E/HFlMqaO/i+SWpucA/TdpZhvrcpCU2gbrfkQsVLnIx11bETVQP29DotxvBG0Ql
+         HPmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793364731; x=1793969531;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
+        b=z6zjULdABiDUSph1mAArMtf0Mpziia1toZ0bGGaRWrw5O77c22tnOql2A389ZpOJsT
+         EFcOPo3D/aBkihr6PGBfpbBCOqLJP9lahL3DWwhmasMvYxVEJe81yi6ZRpJR/aKelDyI
+         H1KNkaD70+625RS4zjZshsmLmLScYz6FzDZnFfVbZJGcEL2i2+pfCaVCqL0Zl+Mq2uxG
+         KslK16deuzVbKzT6lItx8RBg9XwtS3B/zDP/e2THMgd9fhNIRj+DNNu+s0mbdhWBAV35
+         RH7nTHKGOyxTggDntaW1DffwTqz5WEe0b1iJ31b2J7knHL1snKWXHBLSybQ9Rf5Ewf52
+         EhKQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxoEWs9EWlESCG9p2LL6SYaUEAfMJBhPW1qrixW7eyNnZs+KOIVFabGupXuckB2/FqMnc4lyF1/f8UEMNJ52NkxHao=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLOppD5zqYHqd0t5Z3cBUxH7BLYk7uF79VNxepWPuXpKpXOTuem
+	sEKDOzdsYykoUAjS7hCwqFiOmkNcIR8M6YVPd+nOsXPjpRJHEjOuLUS8
+X-Gm-Gg: AYBFou25bTMfXdc3Bk52mujeZJocjSL+buTJPTigrvbxhTuQLLP8Cf+eqsPKvesU9TD
+	LX4OTLPrQTB4TkcuJE4RYorBUIqUPIGFO5sZxssmArSkgbuRAtqwC2hPTHyu0AdFKQdf0pIuTaX
+	Hpz0s+SbxB4f9LmO7vHYZxjfvsPkt180qfdRFzix5Az3CGgseDJ+S8RbCg4HbjmMJV/OGp+BhIE
+	yuXschL9YFQNBCPMjA3FPtOyAh6h90xR1KAsp7knmiOo3SuMk/H9+30zlJMVik4n68Pugv932as
+	O8AvPLbnNjMgR7ai2XGv1gJD5u3cnSPbFTLxg89/t8yA29mM3bw7pPt6bxit0VZZab71i/66KKE
+	D0h2D2eFeCEyuO8ZZXL0fBPqdRIwOK7pPJnpbYqbbBqF1GmExwzgaDesPG5/eC7CIG5koSmDfgT
+	iEK9gbaVXsPaGNkESQGxZ4a9kbiCT4edcq4gISRuee3HrDh0u/5gaCp08sVV81rjf4aoNGu+OCd
+	cdxKfVsICXcWeos4NIrjBdl4jYrQT5895o9VzN7m0Cuh4Ur6bVtBko2w8g9yJG/XPj5vwF4sHjN
+	/7Zc5XMWSjLBfvsQUjX5RplykIRaGO831gU2whRKEBS4EEYncLpGjxj66gQBie2vHaiVD+4m1ki
+	M7iDzhHSLL8SHXdVArJehw8csL4AbJT4ll2uAqXUQpD9BYs/XqU18jmIlFXZ2y8XzzGgsD0TQzj
+	G/Lcxq1RPy8hU9MARjl27i2Tqn9BM8UPX9syZWY2keRbV3QGyZJm6mAEeqQnNvaoYxlhAKd8Y2x
+	gbR9fcW
+X-Received: by 2002:a5d:64c4:0:b0:48d:facb:5937 with SMTP id ffacd0b85a97d-48e6e2b9ed0mr5326056f8f.7.1793364730865;
+        Fri, 30 Oct 2026 05:52:10 -0700 (PDT)
 Received: from longitude (2a02-8434-fda5-4201-a479-65ed-4521-39bf.rev.sfr.net. [2a02:8434:fda5:4201:a479:65ed:4521:39bf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b723cdsm3170047f8f.12.2026.10.30.05.52.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b723cdsm3170047f8f.12.2026.10.30.05.52.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 05:52:07 -0700 (PDT)
+        Fri, 30 Oct 2026 05:52:10 -0700 (PDT)
 From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 To: mhiramat@kernel.org
 Cc: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] tools/bootconfig: Preserve tracing settings during export
-Date: Fri, 30 Oct 2026 13:51:47 +0100
-Message-ID: <cover.1793364709.git.edumucelli@gmail.com>
+Subject: [PATCH 1/4] tools/bootconfig: Quote event filters in ftrace2bconf.sh
+Date: Fri, 30 Oct 2026 13:51:48 +0100
+Message-ID: <a60d6ff14ecfc1ea7a20444fd61c5ca47385e163.1793364709.git.edumucelli@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1793364709.git.edumucelli@gmail.com>
+References: <cover.1793364709.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -99,40 +103,50 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+ftrace2bconf.sh emits event filters without enclosing bootconfig quotes.
+A filter such as prev_comm == "a,b" is therefore parsed as an array,
+while a # truncates the value and a semicolon or closing brace can make
+the exported configuration invalid.
 
-Here are four more fixes for ftrace2bconf.sh, based on bootconfig/fixes.
-They address settings that change or fail to restore after export:
+Quote filters containing bootconfig delimiters so that the complete
+expression remains one value. Choose the enclosing quote in the same
+way as the bootconfig utility. Leave filters without delimiters as they
+are, including expressions that contain both kinds of quote.
 
-- Event filters containing punctuation are quoted as one bootconfig value.
-- Generic trigger counts are written in the syntax accepted by tracefs.
-- Histogram variable tracking starts fresh for each tracing instance.
-- Paused histograms keep their paused state when restored.
+Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
+Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+---
+I tested event filters containing a comma, semicolon, # and closing
+brace in a temporary tracefs instance on my Ubuntu machine, running
+kernel 7.0.0-38-generic, with recording disabled.
 
-The base includes the trigger-filter and underscore fixes you picked up.
-The new sed expression also uses POSIX syntax, following your feedback.
+The original export split or truncated these filters, or produced a
+config that could not be parsed. With the fix, each expression remained
+one value and was restored unchanged. A filter containing an ordinary
+space worked in both versions.
 
-I tested each fix and the full series in temporary tracefs instances on
-my Ubuntu machine, running kernel 7.0.0-38-generic, with recording
-disabled. The patch emails include the individual reproduction details.
-The fixture checks also cover each step of the series.
+ tools/bootconfig/scripts/ftrace2bconf.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Feedback is welcome.
-
-Thanks,
-Eduardo
-
-Eduardo Mucelli Rezende Oliveira (4):
-  tools/bootconfig: Quote event filters in ftrace2bconf.sh
-  tools/bootconfig: Export replayable event trigger counts
-  tools/bootconfig: Reset histogram variable tracking for each instance
-  tools/bootconfig: Preserve paused histograms in ftrace2bconf.sh
-
- tools/bootconfig/scripts/ftrace2bconf.sh | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-
-base-commit: 1dc6d173c43e10a1d0ee36b43d0d2f371f4d262a
+diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
+index b01297217cf3..8c5889d0420c 100755
+--- a/tools/bootconfig/scripts/ftrace2bconf.sh
++++ b/tools/bootconfig/scripts/ftrace2bconf.sh
+@@ -126,6 +126,14 @@ per_event_options() { # event-dir
+ 	fi
+ 	val=`cat $evdir/filter`
+ 	if [ "$val" != "none" ]; then
++		case "$val" in
++		*[',;#}']*)
++			case "$val" in
++			*\"*) val="'$val'";;
++			*) val="\"$val\"";;
++			esac
++			;;
++		esac
+ 		emit_kv $PREFIX.event.$group.$event.filter = "$val"
+ 	fi
+ }
 -- 
 2.53.0
 
