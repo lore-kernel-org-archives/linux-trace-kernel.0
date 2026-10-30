@@ -1,101 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.43
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793386012;
-	b=sBJyPsdK9WIffK3eldFzHQcoR8cqa/ZudVhZWinHVZQMM3gM77KJW3zw/VJwkenStVVg
-	 5lSgmgvT5Zw3bpcScEkB0x7gvDE2Ul2pRdPcawFWBSAiOi8omsQexS2/I/C1LdcoZRgKZ
-	 jOknFa7Y5F9GOohFtpN6CSYg6fl8ir1bzHseAMBojKAU3NEv96QEdHaVujdtKwAntWltl
-	 VxSxZ4YPgiBikLgtoqK43m2X6vBlETEaAimGJzam/JpnUPnBMLiBujB+BxrjnlmtUZFTC
-	 Jfa3QpJMUn5+A7W0XhKhwDX+Ka2AnFJ0NkswT6TNohWZQlF4XNa4w3QLBHKTk2GzHTA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793386012;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Yft5IyV/xpJOt9PtsEc3/1GOTRmgmfnSHPrRuIdkolU=;
-	b=QKQeaBCJ7P+jankgko7EjdxS8DmmX1S3uHbrADCrEtyxeadkTaEHApVJ6SUT1UeAlvjQ
-	 69om4hq1TkZpjig+NzN11Qsk3kW2g9t9B2BprDUw8h1/F2cjbom5+JouEunBfM1j/v1bI
-	 ECrUUFoB1jxQbXcqpO0M1ro+tyIEesfRgZc+L7EKwav+K5QZUJO4yrkt27okvmXaMIe3c
-	 R8gxTshkvFdCXxOdEoSyXl/aUn3u4CaN3/E9V7dDXYzrYY7SeXEZMH2wxMsSwewmeI/WX
-	 XyLl9xHj4wkzq9L577xOszsBqXSaamhBcxbwLwQWwWhvzhXK9zSWq0u9SPsEst6wGVg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=RpG9nWi+;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.43
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793395863;
+	b=kTnQD+NqMI3nHGmX0ltHt7j870+viVc6rk1N3BCENrpV7cjTFFdfx7GQ5q+7QErthKjj
+	 y143aOcwMncEXUhMqKOPBvzIA+NB7qfFS1Bwh4XYQsBc4WbccInS/LoJfApO+uvcko8o9
+	 PQ398jo32RDjIo+qDB4ZiBkG7QQllqt7FmX8E8aEVKfJjDexPz/AtQDEp4U6rFjBlsgtF
+	 EezDGTXowRRZ7lyfHLJWFewh47WjribPPVJ1/8sY406Ky82RAt9546utytMvOmnjvpM7d
+	 z9OHLNUoLlKv0AThpFGgcV7ZdZQmWJ3aJZZbOEYXVXaR9CKxQBc1oGG5eLnrb5FMrxw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793395863;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=oMsLb/DFitXdzNYA1WSrlTGfxGJputCfg0bfurbuFrQ=;
+	b=0s6AsEUR0RS7A2SICO5LgyQIILerH5uZebhtwUli2tTZqHHwt8CUXWf6nI7+diIrs6IB
+	 BPlZFwZwlk+26dd2k/ZiOQ/zYJY417SnBzfeeQVHaaA7e9HoZXGzytm46RjW+AlDlpQ7e
+	 nqE81DXUb/XSPe/asRdMX8JRW3WbNCXnzYlWm8d/owp47W5eNnUryZj4DNniRVHSN/9QZ
+	 6x+NxXpV3XxCQuvR1Oj3peerFWrvpK2zWFctEsvWQTvY66gYEMQ4lpTGo3nzlqkjBHqir
+	 bjp8wwA5nLOLa1imU5JelggoIkkL3/YpULbQkFNdQZKc+jxKLMNuvIKe22UfH2IkhBg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=HEgm7fIY;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB96606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 18:46:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1EB96606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A2606A31A;
+	Fri, 30 Oct 2026 21:31:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC9A2606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=RpG9nWi+
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3adac5b29ebso692589a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 11:46:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793386011; cv=none;
-        d=google.com; s=arc-20260327;
-        b=glkvuc5a7872vKO3K418qupKw2ftp3OkJ7H2j1jl5hsLzUoTvYFIHtTC0bcgP8mhCL
-         MsvGS+xrv1AJgSHLLi2OOXb+pG6KGCBuCCZQmTvTfglM7rEYSFZkeDcLGyJISw6jumpY
-         kxLQNaurZyOmw6RCiuwsuTMbiAsQJ6k98ezvN8xVSqJyTHlfg0b4y6s3D4AwhXcvsi76
-         Fs2AKgWqEPR7ma8XRxJDiaVuJrRroNZRm2SHXe7xiUXUF0dF3cys9l/n05m0c5T0vaTI
-         2LchPHsvB+rQh49H1J5TgXOaj/t65kcCpz2Q5btfXS9XNFTDUmJA8aDav5TOhTkxmzGE
-         UCcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Yft5IyV/xpJOt9PtsEc3/1GOTRmgmfnSHPrRuIdkolU=;
-        fh=uEafMxPyhK3uZgrMURGuIhoTgTKAZUcy0gYLpnMQsDo=;
-        b=WwMeJeJ3dkzrZgLhnluEW8KCfNQck3musT19wRhNzTMMzdgkGtKE+Ca02vas3qmIdY
-         7/Rx/bR7IfIY4THPRWZthkE/qMaQYqlq9C0ijoCeOJYd3e3Ab57aAQfkpjKZMtFC0nCS
-         bnE32ZbTimHspxUpQcOp1a1+KVDGd2Wxd9ESKilTxfnu7bZIIYQR05Vb+HeJdC3f6DLa
-         gx+DsQMYSk9w6NyQHgsXZCug6g73Hc7CtY/wdS6D/VQxsen9LntEFiwgjPuIY+8/of8x
-         J4YhgvqOZYT0LndXo9O9IvOxI6h60Y01WYzSY1l5d9miFD56bbT/RjTxhUzE+9ri3nXy
-         Y1qw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793386011; x=1793990811; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Yft5IyV/xpJOt9PtsEc3/1GOTRmgmfnSHPrRuIdkolU=;
-        b=RpG9nWi+ZKZZWc/DkNMA83Z9UtRpSslN4KqWD6J5EXh+HiXKD2gHraxT5ud7euPIBF
-         cZe/CRChoqxgWOsLvo1/dZceKUHRRMfv1PNbN5fCPEonX8k+7y4Fo6QQKdoesI69izGD
-         R7wcqjNUTF40M+owIN41gjfFh2MaOUIikO2wxjlDsv1n9TwXBPcEDRcdrKiWXhKU/yAE
-         gasrhk1UJOT32b34GxEzm1jygwYHNf8R/0ZC6KwwHz6i8zBf0NWrX9VSoyo8Dzx2Nz3Q
-         an6SUyaW9AasJAe7rIckyBn/crcOLhcLkVx6htT8C/dHctAMsYKTLBzZiYOnM1NLIyWZ
-         XlZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793386011; x=1793990811;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Yft5IyV/xpJOt9PtsEc3/1GOTRmgmfnSHPrRuIdkolU=;
-        b=oGuS8mHRi0LkDB7uHLD2g24yuPts1XdhKGR8CD4Y8o9rH7iYcS4WgVuysHnyrwjIE4
-         iLK75llyOYBa5yBSotYRGHqXkdFLoSQ8i1E2gvPDp4EKfN3pQiEGlT3jbUvM3rlL7efA
-         a7ZwRp9nI2IGdn/GijyuCwkwYS0JiH7+3Mbx6Ro2/MrWcQyKOGoHwnLHaILGrlIOi5dd
-         EfriwYfWIiYnSy1KEjHCtJe9rU6xLaAUCCoVoEJuqYRhbUvLZGSsaA4e1HmQh5bfBSs1
-         /MGp/CnTac6/7pPtmF8KpBA9krI+HiT/VemmASHED3Wt8JATq45+IXOPA8Yzerhl9GcF
-         ouNA==
-X-Forwarded-Encrypted: i=1; AKwUvBzL4ALA8RyaXKro3uin5vBrKH5Hp5EGMhBbvbtetFkiMj+oj9LYPmw3kZRapE0HFalcu93CfY47IGDu2NxB3eoxpBs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLhXfnNbreVuTdszHGf/tH1aAfOY2uMUX8OZqgK8HcojE4t00Yt
-	e6FnIM4clmH4YCfPT2FPG3DgMMoUFfUtTaAPpmHZ/I9F8YgADLSXB/bXeE5sGRZ0GQsKqSOsCdR
-	Eu9tF8MCbYyBEt2xiEoSQ0j4g+ek58Fw=
-X-Gm-Gg: AYBFou1R4Il3IvEYlzQyjPYrScOkYp37ztT7QbM0VusH/6SWWGRVl742KEeZx6TN9TX
-	jDRTarN0guYNcuGv0SjKf7JooGAAz6Y7YIwpJp/AMmkKquM4Wp9SebkL9edwSMdoPIzcAspAxYe
-	HLMpwAxKjXMLdQ1k2x5/gUt5Rrweab+inWs1yM4Uv0nVOgpzmEC4FQ0tXd1ZfaKTL5dpBr1+0FH
-	a40QA3qV2m/nkohrV2ySvxuclPNlgDTPM/QUVIEpFj+Ib8sGxq1j2jXWUq/ywJ8NgWQyj0iSGjk
-	4xR8RipwNsG9VG3Os5zMxenEDSFsOoDH24tYFH+mBU30dBIvTiDFyHuUs6eD8zrUql3/a4IHiU6
-	Gqm1VUiRouzv92oblT9xX3hWGMRG0KkgUmcMpbmi5Tm/k9BKG4Jri5qDGwkZDFkw356dVHGc8ep
-	3ritJ3i36j5J0rnv3KCqFTEddRb/9c0mWMew==
-X-Received: by 2002:a17:90b:2803:b0:3a4:bd4e:6d15 with SMTP id
- 98e67ed59e1d1-3ae89763070mr2620334a91.34.1793386011367; Fri, 30 Oct 2026
- 11:46:51 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=HEgm7fIY
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 17581807EC;
+	Fri, 30 Oct 2026 21:30:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 2C14F2000E;
+	Fri, 30 Oct 2026 21:30:50 +0000 (UTC)
+Date: Fri, 30 Oct 2026 17:30:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Cao Ruichuang <create0818@163.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>, Daniel Gomez <da.gomez@kernel.org>, Sami
+ Tolvanen <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>,
+ Shuah Khan <shuah@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tracing: Export live module tracepoint strings in
+ printk_formats
+Message-ID: <20261030173049.6656d506@gandalf.local.home>
+In-Reply-To: <178647423521.280401.10184675433127100074@163.com>
+References: <20260428083920.4a64eaf6@gandalf.local.home>
+	<178647423521.280401.10184675433127100074@163.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,68 +66,420 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261028125148.1348-1-yangsongsen@insta360.com> <20261029073344.729148-1-yangfeng59949@163.com>
-In-Reply-To: <20261029073344.729148-1-yangfeng59949@163.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 30 Oct 2026 11:46:37 -0700
-X-Gm-Features: AclHuK9JgZQ0yY9pjUZS0J7oNwln-ZzXOo3HkJmw0fssJ8tLcUosj90ClGtkpxo
-Message-ID: <CAEf4BzbRh4sof8aD4kj1y27kE3-VfAR3SOr8QMcH5n8rkUB-bA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
-To: Feng Yang <yangfeng59949@163.com>
-Cc: yangsongsen@insta360.com, andrii@kernel.org, ast@kernel.org, 
-	bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com, 
-	emil@etsalapatis.com, ihor.solodrai@linux.dev, jolsa@kernel.org, 
-	kpsingh@kernel.org, linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, 
-	mathieu.desnoyers@efficios.com, matt@bobrowski.net, memxor@gmail.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, song@kernel.org, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ubn3dezjxx81ghku4sghe97xcf6efjmp
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 2C14F2000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+p6zVZCfshOXdXdtQ8doj6JThgneZZKho=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=oMsLb/DFitXdzNYA1WSrlTGfxGJputCfg0bfurbuFrQ=; b=HEgm7fIYzQr/kbGuiWESOMsIUC+zI8ivUcYNnaB1fVeeeIyZCt05PhiavqMKz0XUrZef83OhIvAmfXyMUQCgoJp/MY0ljBgXksf1Ie666HuM9iBPSlrMNnT1WZy9gAXi+LWkhVP54uTVVe1Mj/dtmoTqoSjS9e3JmIdxNwXmxs0=
+X-HE-Tag: 1793395850-433973
+X-HE-Meta: U2FsdGVkX1/5tOWGQknL5oBXzt4xh+llECwTdv/3xHtyPxqO/mXKvY72/O1s3k3XaTHOBZQz/POGSJCgqR7kf3uiCK0gMbyy/qn693nO3WSTeuIcsS7vaBv6EDXlsuXqEIp1TR6EOMFwd/D+wsrvzQ4w+qL+4H7cXY4cM3aU0SlOXOciJ/KO1RLqFB3kn/9XrxBVJJOhkF7LxLQBG/qbxzQTRe6x04MPhO61DJDA6VMJkmMW/9IUMvOg9+b1HgfVYMwSBO9cQId6M4VuW5Q096KlcAkAVKFYI/dOdIYlV5cRdYBy1vX8Xw3DOVVj0/L5JZUWy1FfHZ953RwVssux4L4rkyXwjdNi
 
-On Thu, Oct 29, 2026 at 12:34=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
-wrote:
->
-> On Wed, 28 Oct 2026 20:51:47 +0800, Songsen Yang wrote:
-> > Hi Feng,
-> >
-> > I hit the same root cause independently via syzbot and sent a fix a
-> > few hours after yours, without having seen this patch -- sorry for the
-> > overlap:
-> >
-> >  https://lore.kernel.org/bpf/20261028121859.994-1-yangsongsen@insta360.=
-com/
->
-> Hi Songsen,
->
-> Please don't worry about the overlap.
->
-> I hadn't noticed the issue Sashiko raised when I prepared my fix;
-> It looks like a pt_regs on the stack can fix this.:
->
->         BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepo=
-int_args *, args,
->                    void *, buf, u32, size, u64, flags)
->         {
->                 struct pt_regs regs;
->
->                 perf_fetch_caller_regs(&regs);
->                 return bpf_get_stack_sleepable((unsigned long) &regs, (un=
-signed long) buf,
->                                                (unsigned long) size, flag=
-s, 0);
+On Tue, 11 Aug 2026 18:15:13 +0000
+Cao Ruichuang <create0818@163.com> wrote:
 
-using sleepable variant of bpf_get_stacks is a better approach,
-because stack traces might request build id, and in sleepable mode
-that works reliably instead of bailing early if memory is not paged
-in, so I think having specialized sleepable version is better.
+Hi Cao,
+
+Sorry for the late reply, with AI bugs coming in, as well as travel and
+conferences, I fell very behind in submitted patches.
+
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 7566815fa..d9ac1fd6e 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -513,7 +513,9 @@ struct module {
+>  #endif
+>  #ifdef CONFIG_TRACING
+>  	unsigned int num_trace_bprintk_fmt;
+> +	unsigned int num_tracepoint_strings;
+>  	const char **trace_bprintk_fmt_start;
+> +	const char **tracepoint_strings_start;
+>  #endif
+>  #ifdef CONFIG_EVENT_TRACING
+>  	struct trace_event_call **trace_events;
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index e0d838c9c..2b973cc72 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -508,10 +508,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>   * the ASCII strings they represent.
+>   *
+>   * The @str used must be a constant string and persistent as it would not
+> - * make sense to show a string that no longer exists. But it is still fine
+> - * to be used with modules, because when modules are unloaded, if they
+> - * had tracepoints, the ring buffers are cleared too. As long as the string
+> - * does not change during the life of the module, it is fine to use
+> + * make sense to show a string that no longer exists. For modules, the string
+> + * mapping is exported while the module is loaded. When the module is unloaded,
+> + * its trace buffers are cleared before the mapping is removed. As long as the
+> + * string does not change during the life of the module, it is fine to use
+>   * tracepoint_string() within a module.
+>   */
+>  #define tracepoint_string(str)						\
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 46dd8d25a..cb0acb2ce 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2729,6 +2729,10 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>  	mod->trace_bprintk_fmt_start = section_objs(info, "__trace_printk_fmt",
+>  					 sizeof(*mod->trace_bprintk_fmt_start),
+>  					 &mod->num_trace_bprintk_fmt);
+> +	mod->tracepoint_strings_start =
+> +		section_objs(info, "__tracepoint_str",
+> +			     sizeof(*mod->tracepoint_strings_start),
+> +			     &mod->num_tracepoint_strings);
+>  #endif
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  	/* sechdrs[0].sh_size is always zero */
+> diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
+> index 98171a239..2aca8d206 100644
+> --- a/kernel/trace/trace_printk.c
+> +++ b/kernel/trace/trace_printk.c
+> @@ -13,21 +13,29 @@
+>  #include <linux/string.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/rcupdate.h>
+
+Please keep this in "upside-down x-mas tree" format. The order of headers
+goes by the length of their names.
+
+>  #include <linux/ctype.h>
+>  #include <linux/list.h>
+>  #include <linux/slab.h>
+>  
+>  #include "trace.h"
+>  
+> +static int trace_bprintk_fmt_cnt;
+> +
+>  #ifdef CONFIG_MODULES
+>  
+>  /*
+>   * modules trace_printk()'s formats are autosaved in struct trace_bprintk_fmt
+>   * which are queued on trace_bprintk_fmt_list.
+> + *
+> + * modules tracepoint_string() entries are kept as ranges into the owning
+> + * module's __tracepoint_str section and are removed again when the module
+> + * goes away.
+>   */
+>  static LIST_HEAD(trace_bprintk_fmt_list);
+> +static LIST_HEAD(tracepoint_str_list);
+>  
+> -/* serialize accesses to trace_bprintk_fmt_list */
+> +/* serialize updates and printk_formats iteration of the module lists */
+>  static DEFINE_MUTEX(btrace_mutex);
+>  
+>  struct trace_bprintk_fmt {
+> @@ -35,6 +43,14 @@ struct trace_bprintk_fmt {
+>  	const char *fmt;
+>  };
+>  
+> +struct tracepoint_mod_str {
+> +	struct list_head list;
+> +	struct rcu_head rcu;
+> +	struct module *mod;
+> +	const char **start;
+> +	unsigned int num;
+> +};
+> +
+>  static inline struct trace_bprintk_fmt *lookup_format(const char *fmt)
+>  {
+>  	struct trace_bprintk_fmt *pos;
+> @@ -75,6 +91,7 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
+>  			if (fmt) {
+>  				list_add_tail(&tb_fmt->list, &trace_bprintk_fmt_list);
+>  				tb_fmt->fmt = fmt;
+> +				trace_bprintk_fmt_cnt++;
+>  			} else
+>  				kfree(tb_fmt);
+>  		}
+> @@ -84,16 +101,63 @@ void hold_module_trace_bprintk_format(const char **start, const char **end)
+>  	mutex_unlock(&btrace_mutex);
+>  }
+>  
+> +static void hold_module_tracepoint_strings(struct module *mod)
+> +{
+> +	struct tracepoint_mod_str *tp_str;
+> +
+> +	if (!mod->num_tracepoint_strings)
+> +		return;
+> +
+> +	tp_str = kmalloc_obj(*tp_str);
+> +	if (!tp_str)
+> +		return;
+> +
+> +	tp_str->mod = mod;
+> +	tp_str->start = mod->tracepoint_strings_start;
+> +	tp_str->num = mod->num_tracepoint_strings;
+> +
+> +	guard(mutex)(&btrace_mutex);
+> +	list_add_tail_rcu(&tp_str->list, &tracepoint_str_list);
+> +}
+> +
+> +static void release_module_tracepoint_strings(struct module *mod)
+> +{
+> +	struct tracepoint_mod_str *tp_str;
+> +
+> +	if (!mod->num_tracepoint_strings)
+> +		return;
+> +
+> +	guard(mutex)(&btrace_mutex);
+> +	list_for_each_entry(tp_str, &tracepoint_str_list, list) {
+
+Please use list_for_each_entry_safe(). You are removing tp_str from the
+list. Do not rely on internals of RCU to protect this. If the lock was a
+spin lock, then it may have been safe (even though I would still ask for
+this change). But because it is a mutex, this could be preempted, the RCU
+grace period finish, the tp_str freed and then the loop will crash.
+
+> +		if (tp_str->mod != mod)
+> +			continue;
+> +
+> +		list_del_rcu(&tp_str->list);
+> +		/* Module teardown waits for RCU before freeing the section. */
+> +		kfree_rcu(tp_str, rcu);
+> +		return;
+> +	}
+> +}
+> +
+>  static int module_trace_bprintk_format_notify(struct notifier_block *self,
+>  		unsigned long val, void *data)
+>  {
+>  	struct module *mod = data;
+> -	if (mod->num_trace_bprintk_fmt) {
+> -		const char **start = mod->trace_bprintk_fmt_start;
+> -		const char **end = start + mod->num_trace_bprintk_fmt;
+>  
+> -		if (val == MODULE_STATE_COMING)
+> +	switch (val) {
+> +	case MODULE_STATE_COMING:
+> +		if (mod->num_trace_bprintk_fmt) {
+> +			const char **start = mod->trace_bprintk_fmt_start;
+> +			const char **end = start + mod->num_trace_bprintk_fmt;
+> +
+>  			hold_module_trace_bprintk_format(start, end);
+> +		}
+> +		hold_module_tracepoint_strings(mod);
+> +		break;
+> +	case MODULE_STATE_GOING:
+> +		/* Trace event teardown runs first and clears module event buffers. */
+> +		release_module_tracepoint_strings(mod);
+> +		break;
+>  	}
+>  	return NOTIFY_OK;
+>  }
+> @@ -119,7 +183,7 @@ static int module_trace_bprintk_format_notify(struct notifier_block *self,
+>   * next format in the list.
+>   */
+>  static const char **
+> -find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
+> +find_next_mod_format(loff_t start_index, void *v, const char **fmt, loff_t *pos)
+>  {
+>  	struct trace_bprintk_fmt *mod_fmt;
+>  
+> @@ -158,6 +222,42 @@ find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
+>  	return &mod_fmt->fmt;
+>  }
+>  
+> +static const char **
+> +find_next_mod_tracepoint_str(loff_t start_index, loff_t *pos)
+> +{
+> +	struct tracepoint_mod_str *tp_str;
+> +	loff_t offset = *pos - start_index;
+> +
+> +	if (offset < 0)
+> +		return NULL;
+> +
+> +	list_for_each_entry(tp_str, &tracepoint_str_list, list) {
+> +		if (offset < (loff_t)tp_str->num)
+> +			return tp_str->start + offset;
+> +
+> +		offset -= tp_str->num;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static bool is_module_tracepoint_string(const char *str)
+> +{
+> +	struct tracepoint_mod_str *tp_str;
+> +	unsigned int i;
+> +
+> +	/* The tracepoint printk path can call this with IRQs disabled. */
+> +	guard(rcu)();
+> +	list_for_each_entry_rcu(tp_str, &tracepoint_str_list, list) {
+> +		for (i = 0; i < tp_str->num; i++) {
+> +			if (str == tp_str->start[i])
+> +				return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static void format_mod_start(void)
+>  {
+>  	mutex_lock(&btrace_mutex);
+> @@ -176,10 +276,21 @@ module_trace_bprintk_format_notify(struct notifier_block *self,
+>  	return NOTIFY_OK;
+>  }
+>  static inline const char **
+> -find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
+> +find_next_mod_format(loff_t start_index, void *v, const char **fmt, loff_t *pos)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline const char **
+> +find_next_mod_tracepoint_str(loff_t start_index, loff_t *pos)
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline bool is_module_tracepoint_string(const char *str)
+> +{
+> +	return false;
+> +}
+>  static inline void format_mod_start(void) { }
+>  static inline void format_mod_stop(void) { }
+>  #endif /* CONFIG_MODULES */
+> @@ -194,6 +305,7 @@ void trace_printk_control(bool enabled)
+>  __initdata_or_module static
+>  struct notifier_block module_trace_bprintk_format_nb = {
+>  	.notifier_call = module_trace_bprintk_format_notify,
+> +	.priority = 0, /* lower than the trace event notifier */
+>  };
+>  
+>  __printf(2, 3)
+> @@ -259,14 +371,14 @@ bool trace_is_tracepoint_string(const char *str)
+>  		if (str == *ptr)
+>  			return true;
+>  	}
+> -	return false;
+> +	return is_module_tracepoint_string(str);
+>  }
+>  
+>  static const char **find_next(void *v, loff_t *pos)
+>  {
+>  	const char **fmt = v;
+> -	int start_index;
+> -	int last_index;
+> +	loff_t start_index;
+> +	loff_t last_index;
+>  
+>  	start_index = __stop___trace_bprintk_fmt - __start___trace_bprintk_fmt;
+>  
+> @@ -292,7 +404,11 @@ static const char **find_next(void *v, loff_t *pos)
+>  		return __start___tracepoint_str + (*pos - last_index);
+>  
+>  	start_index += last_index;
+> -	return find_next_mod_format(start_index, v, fmt, pos);
+> +	if (*pos - start_index < trace_bprintk_fmt_cnt)
+> +		return find_next_mod_format(start_index, v, fmt, pos);
+> +
+> +	start_index += trace_bprintk_fmt_cnt;
+> +	return find_next_mod_tracepoint_str(start_index, pos);
+>  }
+>  
+>  static void *
+> diff --git a/samples/trace_printk/trace-printk.c b/samples/trace_printk/trace-printk.c
+> index cfc159580..54c709c82 100644
+> --- a/samples/trace_printk/trace-printk.c
+> +++ b/samples/trace_printk/trace-printk.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/irq_work.h>
+> +#include <linux/tracepoint.h>
+>  
+>  /* Must not be static to force gcc to consider these non constant */
+>  char *trace_printk_test_global_str =
+> @@ -31,6 +32,9 @@ static int __init trace_printk_init(void)
+>  {
+>  	init_irq_work(&irqwork, trace_printk_irq_work);
+>  
+> +	(void)tracepoint_string("tracepoint_string_test_module_string_1");
+> +	(void)tracepoint_string("tracepoint_string_test_module_string_2");
+
+Actually this shouldn't be in trace_printk() as that's not how it would be
+used. Please add it to samples. Something like this:
+
+diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
+index ca5d98c360cb..e00630c2d922 100644
+--- a/samples/trace_events/trace-events-sample.c
++++ b/samples/trace_events/trace-events-sample.c
+@@ -51,6 +51,10 @@ static void do_simple_thread_func(int cnt, const char *fmt, ...)
+ 	trace_foo_with_template_print("I have to be different", cnt);
+ 
+ 	trace_foo_rel_loc("Hello __rel_loc", cnt, bitmask, current->cpus_ptr);
++
++	trace_foo_tracepoint_str(tracepoint_string("tracepoint_string_test_module_string_1"));
++	trace_foo_tracepoint_str(tracepoint_string("tracepoint_string_test_module_string_2"));
++
+ }
+ 
+ static void simple_thread_func(int cnt)
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 816848a456a2..48bca97086b6 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -623,6 +623,23 @@ TRACE_EVENT(foo_timer_fn,
+ 
+ 	TP_printk("name=%s count=%d", __get_str(name), __entry->count)
+ );
++
++TRACE_EVENT(foo_tracepoint_str,
++
++	TP_PROTO(const char *str),
++
++	TP_ARGS(str),
++
++	TP_STRUCT__entry(
++		__field(	const char *,		str	)
++	),
++
++	TP_fast_assign(
++		__entry->str = str;
++	),
++
++	TP_printk("str=%s", __entry->str)
++);
+ #endif
+ 
+ /***** NOTICE! The #if protection ends here. *****/
 
 
->         }
->
-> That said, I think your approach is the simpler one and the better fit
-> for the fix itself.  So if the maintainers prefer your version, feel
-> free to ignore my patch.
->
-> Thanks,
-> Feng
->
+> +
+>  	trace_printk("This is a static string that will use trace_bputs\n");
+>  	trace_printk(trace_printk_test_global_str);
+>  
+> diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> index b02550b42..d66a8134c 100644
+> --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> @@ -23,5 +23,10 @@ grep -q ": (irq) .* trace_printk" trace
+>  
+>  grep -q "This is a %s that will use trace_bprintk" printk_formats
+>  grep -q "(irq) This is a static string that will use trace_bputs" printk_formats
+> +grep -q "tracepoint_string_test_module_string_1" printk_formats
+> +grep -q "tracepoint_string_test_module_string_2" printk_formats
+>  
+>  rmmod trace-printk ||:
+> +
+> +! grep -q "tracepoint_string_test_module_string_1" printk_formats
+> +! grep -q "tracepoint_string_test_module_string_2" printk_formats
+
+You would need different test that relies on the trace event sample code
+and do this test there.
+
+
+> 
+> base-commit: d5b201ed4feb7a11da242a97669424efeb724031
+
+
+Thanks,
+
+-- Steve
+
