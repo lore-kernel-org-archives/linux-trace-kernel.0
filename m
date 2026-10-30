@@ -1,94 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793364733;
-	b=bIEwKCs3mvs0od5LnIKo2mvpbs309Ctte+jR9Ceo70BFuz7MQKAXFRxdn24A78TaZC3e
-	 bNTvDItnMk2kRXyIVL74bl2kru+OnZtyGOngb6kdYbyt5hjoPNvU6bNeAiwgI/WCudNdV
-	 ngElVvJxccYDit2eHF5OMN8XhcW8fPlY5/cNc3Rrsilu/Wetut9tb9hmj6QHAsr0iGQnF
-	 /mnmWp6Cl8WVLxKAINUDMF/b/2QJwTYGsAq54pv/bDN44OvPJCPpQTxRjdIOaHeHVQLeA
-	 hyonnpCmOlzRph5pvbGyZ+xNJrEBEXzOCQmpadtaXpL6wFQmDeeCHkbZm3U605Fm8iQ==
+	t=1793364736;
+	b=WL4OULWVhSJrBqqmNx3u0fN9AvLh4ih6F8OS9cHpPPZ6JYEYj+vEtdaq3ZesNQaxFgZk
+	 mPMe63I3HqJSIiGZOXSqvdREVfgN6H7Ninh6sAK0m456Q8mqmmVtUVgb8v08WDNf0OAtH
+	 NZLXUJI3sB9xt/1wVLVj6dzdoyWctZhXZHfMEkocxhv98KpT1KiPKox5hklq+Htf+q8RW
+	 wsmdclMCudf6T3I9geVK9gPoX1oB/T341RqpN3iVwGG7zsDKOW0z5sl/PEtn2wI14+0X+
+	 qADCvOcSWdaRpMBqKcOPJwwlVhgxG2FxPDUH/HVcj5T1Sq9PbkzNMpOsP1jbbzGGpyQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793364733;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793364736;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
-	b=wvWs4MyITQtkeqfJhl+W4pkZSlMrRw4EVvqcW4S33b2F6D9Qtj3aY5VrKHPBABWGnbEO
-	 04jceFNFlolkTD7s0NjTrSR3duemdoNqFPAFySdwBNsmFe61VWklJ7zlNPv1Jbaja8cPe
-	 dZIurEBUYfsxNsle1+yLAjWWzSSbDX5pTl1Om9O3LMXE/1mhTiD/A5kOMMcQTmgWZO7Gv
-	 +CfKi8k3nXN91Q/UzLodPe+0swFeJR38x/r+KJU0CsIh9oW8hB51ATm2xeHwPT+Ab+GUx
-	 6coW80ApoaptfsiGI3ZxgQjX3abYDXgUIs0W9FwP1E3xrFtYTPnFv0eYZiqsV91MlTA==
+	bh=jlQZUr+lfyU+BwYrVoDCooNI8opcaovsjvfRljhTeI8=;
+	b=pIV+72sMkao3GB9wwI3+CebCP4J64VZVYo5EYzMgA7DTQAs/no6VxQh/Ca3roTsVIfcU
+	 /iCGvxpNXygWOYeZTuvA5//315IKVmqLJXX/3ytMlvPyJCIHSPsTLgiMnrdCbGJB9/Di8
+	 AaQypjiQRgkJF95Jh9In648NHekAFU5l8CKnJHmvVyeQZu7q1sNVm4A/51/jz3l9U2Apc
+	 2jxvkryNf2MaFqScFywiIkerNSNlFLX6PuVNXeZzAxoczMLqY9GsIcIcA2kTjaIOevt9o
+	 CnZkhmxJ5GNuOxSNtxd4RE5PdMCwSUHuRx37nGvUfWTlRgVj9cwruN2Oy5i0POun95Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QxY32tUv;
-	arc=none smtp.remote-ip=209.85.221.53
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BpTH3AXF;
+	arc=none smtp.remote-ip=209.85.128.45
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9719606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 12:52:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C9719606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AB660A2600
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 12:52:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21AB660A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QxY32tUv
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e20edd106so557326f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 05:52:12 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BpTH3AXF
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so3005625e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 05:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793364731; x=1793969531; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793364734; x=1793969534; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
-        b=QxY32tUvnWs7viGQJ0XZgaAd80fTZU3QcbZDkWyuOD+bWe3SdyAnFYsQesGkthYgBn
-         7SxBn5KJDQgNx1c51eyfCyi9oeSiVbzX/CHPkXAVj/r8aBMZk+Q8P4fcTuGeajX2EHme
-         A7D2KaATNPspXRe2ZbWsl21Ir3fQXB3XcpzrDeSAdhhf+mq1+5OO1P/CuRPCk+BG6WPI
-         eld1qqwUlsDz7+mb3UPKmnGSs8bEFaot3P/XE3+FZc1TggI8GBCMjeqI5U8adrcZtXNK
-         T4vc0E/HFlMqaO/i+SWpucA/TdpZhvrcpCU2gbrfkQsVLnIx11bETVQP29DotxvBG0Ql
-         HPmA==
+        bh=jlQZUr+lfyU+BwYrVoDCooNI8opcaovsjvfRljhTeI8=;
+        b=BpTH3AXFoX7o71pKSUHHr5CT6lRB8RlH/mu9zk4FATSimhehH7FmBXZwbZt2mzdMek
+         8AhDCzUJz5BmqcwuvC4iloh2iyilwFjWY7/cYvwPjf6H+DX1mDG2KzbQAMiym3/cy+2L
+         +d3LprCQO4gb+Zxo5c698muoVAZJphtCnVA/EEU0Wr2F89ejN2zOxi8lcccjQbWiivlO
+         bjjSlEGCbQRJ6scqROw5AYv+0oQ8mVQN+ROm7LgXlruPdXrz+mnWX+84ZR7IESOs7lM+
+         AmzsUCDRS2tRhjAbfSMb21VKjJs921ynsmJTVwaV58e+s5PEvplrlmdWAwqgcHsajFTK
+         o4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793364731; x=1793969531;
+        d=1e100.net; s=20260707; t=1793364734; x=1793969534;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3wEqCnXTJdlE03KrHWY7VarW5N0vNs2ZED7L58Yvpi0=;
-        b=z6zjULdABiDUSph1mAArMtf0Mpziia1toZ0bGGaRWrw5O77c22tnOql2A389ZpOJsT
-         EFcOPo3D/aBkihr6PGBfpbBCOqLJP9lahL3DWwhmasMvYxVEJe81yi6ZRpJR/aKelDyI
-         H1KNkaD70+625RS4zjZshsmLmLScYz6FzDZnFfVbZJGcEL2i2+pfCaVCqL0Zl+Mq2uxG
-         KslK16deuzVbKzT6lItx8RBg9XwtS3B/zDP/e2THMgd9fhNIRj+DNNu+s0mbdhWBAV35
-         RH7nTHKGOyxTggDntaW1DffwTqz5WEe0b1iJ31b2J7knHL1snKWXHBLSybQ9Rf5Ewf52
-         EhKQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxoEWs9EWlESCG9p2LL6SYaUEAfMJBhPW1qrixW7eyNnZs+KOIVFabGupXuckB2/FqMnc4lyF1/f8UEMNJ52NkxHao=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLOppD5zqYHqd0t5Z3cBUxH7BLYk7uF79VNxepWPuXpKpXOTuem
-	sEKDOzdsYykoUAjS7hCwqFiOmkNcIR8M6YVPd+nOsXPjpRJHEjOuLUS8
-X-Gm-Gg: AYBFou25bTMfXdc3Bk52mujeZJocjSL+buTJPTigrvbxhTuQLLP8Cf+eqsPKvesU9TD
-	LX4OTLPrQTB4TkcuJE4RYorBUIqUPIGFO5sZxssmArSkgbuRAtqwC2hPTHyu0AdFKQdf0pIuTaX
-	Hpz0s+SbxB4f9LmO7vHYZxjfvsPkt180qfdRFzix5Az3CGgseDJ+S8RbCg4HbjmMJV/OGp+BhIE
-	yuXschL9YFQNBCPMjA3FPtOyAh6h90xR1KAsp7knmiOo3SuMk/H9+30zlJMVik4n68Pugv932as
-	O8AvPLbnNjMgR7ai2XGv1gJD5u3cnSPbFTLxg89/t8yA29mM3bw7pPt6bxit0VZZab71i/66KKE
-	D0h2D2eFeCEyuO8ZZXL0fBPqdRIwOK7pPJnpbYqbbBqF1GmExwzgaDesPG5/eC7CIG5koSmDfgT
-	iEK9gbaVXsPaGNkESQGxZ4a9kbiCT4edcq4gISRuee3HrDh0u/5gaCp08sVV81rjf4aoNGu+OCd
-	cdxKfVsICXcWeos4NIrjBdl4jYrQT5895o9VzN7m0Cuh4Ur6bVtBko2w8g9yJG/XPj5vwF4sHjN
-	/7Zc5XMWSjLBfvsQUjX5RplykIRaGO831gU2whRKEBS4EEYncLpGjxj66gQBie2vHaiVD+4m1ki
-	M7iDzhHSLL8SHXdVArJehw8csL4AbJT4ll2uAqXUQpD9BYs/XqU18jmIlFXZ2y8XzzGgsD0TQzj
-	G/Lcxq1RPy8hU9MARjl27i2Tqn9BM8UPX9syZWY2keRbV3QGyZJm6mAEeqQnNvaoYxlhAKd8Y2x
-	gbR9fcW
-X-Received: by 2002:a5d:64c4:0:b0:48d:facb:5937 with SMTP id ffacd0b85a97d-48e6e2b9ed0mr5326056f8f.7.1793364730865;
-        Fri, 30 Oct 2026 05:52:10 -0700 (PDT)
+        bh=jlQZUr+lfyU+BwYrVoDCooNI8opcaovsjvfRljhTeI8=;
+        b=Z1qAS+jrd+lCSMVgdILIr4TyeKcfVdLUKlHMlalfSx0KPf+Gnw9zv5W/QOQ42BClPj
+         S87/T22qS0bhiXvUStuTdENljDUHX6xpGl+M4TrB2pENd9Fh9bgjxuqszcwu/XY13rIV
+         U7ZBPaZfggLS35d5VY1GIGDCeeVujilFFEcopMcbga8UKdjl5C4o9qYrlCCJMCxBQ5Vv
+         iAaPID+jDdpgOnzZRLWvEgsXiwQ0uZ8zTexXSIxJRqk/ahoi4mVRzSrQwkCBzZdAPwPj
+         imyMthZJFx0p9VYN10ugce8YK2CBtsAVxavHLEPdPXtWFYRaNT9LBAYRj5aIHdou1Pon
+         wJiw==
+X-Forwarded-Encrypted: i=1; AKwUvBwJLHtJZgBA5xG8jraZ1ePLwV2dun+/O2y9OBfiC1uiXZ7j+NwPdCHBlMoPl4R0YskvULNs6QCl8CTnUWN3rlmaMAc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKHCbsLq6iI3V+WoYu3RzKqDoqvphAB5gWsKaPgAZtj8j9G+ybR
+	iIRWGUVHB6+SuhF5aZW28zZEL4D9TSY+evfqGcLlR5jjz4D+FCy6yrVs
+X-Gm-Gg: AYBFou1HlqsEnB151m8rkwreAH30/5BfXiBr6cC9rV8B5GRj0U60Sq431Ntw83k0lha
+	CwID2rSr20h2hWmWCQS8DYo2yqxjkpx0UMiqKFYnTXKu/rLA8wtIxQBNkpe40zvjGaI3XPCEMUa
+	McF6YiSWAMr89JQHsGoKLf9+aWpMj0igO4Xxsj3171sMrzZRwYIIZGKyrj9BDe/Q46TmpgA27hr
+	8Gr969OJlx+IAfsWkKzwPE1iihbbFgdDCpXuDaTA35UygnfII3F8MaWG1Y2fvFXY+jaaywtyxgF
+	TUo98C7lWl8nBgLZ7DFb7TfA1eGHUyO6/Wri8nCyAD0HW5BT5owx3ogJCW1juRdTX08CEk2BERG
+	rn82huCO62tukV8xJje2Dbqyro1WPqarR1eT/KPErydqmQmxgIRoJMS36oD3fIRYQvqP3GXtpBl
+	EyvJ9H9n1HcOiW5OAcKpWWPWQy+e4v/kuOH66AA+BhHoJFrO6J/jcfu+DcFfR7pIbTAta3KjOnU
+	eIhu/PmenfgvsxWksVDWpjG8etrKdcRs7h+l0BBfWu982pk6+5C+vsQPT02wLzBM+mVfjv9+/Gk
+	wXxQo/NDz8NiPhg010db3MLQTFK22iifaSJY0z/RUWx86eOqqVTMYrY+mSMNuy4Ghgx4UL4LZx3
+	++NjTpwqvVrNu6XvLb9+zOqObFQ39HwPYFZ+B7K4anKN/J3Iy90xLWZGFB1DvQw4iaYh2AQiNCD
+	3tF6ZSolP8ebmZi7M+BQ88mOOzxL4OB9KLGn9/jnd5OUOLZ1Uk6GYtMy7qjQ==
+X-Received: by 2002:a05:600c:a30a:b0:4ac:b0b2:fa12 with SMTP id 5b1f17b1804b1-4acb0b2fac0mr19920875e9.1.1793364734284;
+        Fri, 30 Oct 2026 05:52:14 -0700 (PDT)
 Received: from longitude (2a02-8434-fda5-4201-a479-65ed-4521-39bf.rev.sfr.net. [2a02:8434:fda5:4201:a479:65ed:4521:39bf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b723cdsm3170047f8f.12.2026.10.30.05.52.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b723cdsm3170047f8f.12.2026.10.30.05.52.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Oct 2026 05:52:10 -0700 (PDT)
+        Fri, 30 Oct 2026 05:52:13 -0700 (PDT)
 From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 To: mhiramat@kernel.org
 Cc: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] tools/bootconfig: Quote event filters in ftrace2bconf.sh
-Date: Fri, 30 Oct 2026 13:51:48 +0100
-Message-ID: <a60d6ff14ecfc1ea7a20444fd61c5ca47385e163.1793364709.git.edumucelli@gmail.com>
+Subject: [PATCH 3/4] tools/bootconfig: Reset histogram variable tracking for each instance
+Date: Fri, 30 Oct 2026 13:51:50 +0100
+Message-ID: <a97b10be8978ecc64a7c5251af1cc2d91fdd4958.1793364709.git.edumucelli@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1793364709.git.edumucelli@gmail.com>
 References: <cover.1793364709.git.edumucelli@gmail.com>
@@ -103,50 +102,52 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ftrace2bconf.sh emits event filters without enclosing bootconfig quotes.
-A filter such as prev_comm == "a,b" is therefore parsed as an array,
-while a # truncates the value and a semicolon or closing brace can make
-the exported configuration invalid.
+Histogram variables are scoped to a trace instance, but ftrace2bconf.sh
+keeps DEFINED_VARS across calls to event_options(). If an earlier instance
+has defined ts0, a later instance can export a consumer of its own ts0
+before exporting that instance's provider. Replaying the configuration
+then fails because the local variable has not been defined yet.
 
-Quote filters containing bootconfig delimiters so that the complete
-expression remains one value. Choose the enclosing quote in the same
-way as the bootconfig utility. Leave filters without delimiters as they
-are, including expressions that contain both kinds of quote.
+Initialize the variable resolver state when starting each instance so
+that its consumers are deferred until their local providers are exported.
 
 Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
 Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 ---
-I tested event filters containing a comma, semicolon, # and closing
-brace in a temporary tracefs instance on my Ubuntu machine, running
-kernel 7.0.0-38-generic, with recording disabled.
+I reproduced this with two temporary tracefs instances on my Ubuntu
+machine, running kernel 7.0.0-38-generic, with recording disabled. Both
+instances defined a histogram variable with the same name. In the second
+instance, a consumer sorted before its local provider.
 
-The original export split or truncated these filters, or produced a
-config that could not be parsed. With the fix, each expression remained
-one value and was restored unchanged. A filter containing an ordinary
-space worked in both versions.
+The original exporter put that consumer first and replay failed with an
+undefined variable. With the fix, the local provider was exported first
+and all three histograms were restored correctly.
 
- tools/bootconfig/scripts/ftrace2bconf.sh | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/bootconfig/scripts/ftrace2bconf.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-index b01297217cf3..8c5889d0420c 100755
+index 82c4fe021fb7..6d36219eb997 100755
 --- a/tools/bootconfig/scripts/ftrace2bconf.sh
 +++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-@@ -126,6 +126,14 @@ per_event_options() { # event-dir
- 	fi
- 	val=`cat $evdir/filter`
- 	if [ "$val" != "none" ]; then
-+		case "$val" in
-+		*[',;#}']*)
-+			case "$val" in
-+			*\"*) val="'$val'";;
-+			*) val="\"$val\"";;
-+			esac
-+			;;
-+		esac
- 		emit_kv $PREFIX.event.$group.$event.filter = "$val"
- 	fi
+@@ -84,8 +84,6 @@ synth_event_options() {
  }
+ 
+ # Variables resolver
+-DEFINED_VARS=
+-UNRESOLVED_EVENTS=
+ 
+ defined_vars() { # event-dir
+ 	grep "^hist" $1/trigger | grep -o ':[a-zA-Z0-9_]*='
+@@ -159,6 +157,8 @@ retry_unresolved() {
+ 
+ event_options() {
+ 	# PREFIX and INSTANCE must be set
++	DEFINED_VARS=
++	UNRESOLVED_EVENTS=
+ 	if [ $PREFIX = "ftrace" ]; then
+ 		# define the dynamic events
+ 		kprobe_event_options
 -- 
 2.53.0
 
