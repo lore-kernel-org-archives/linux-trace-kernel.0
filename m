@@ -1,54 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793322744;
-	b=a00kgk/1rGcUJO1cpfhx9vVPgnO0oUWZkR5u2mTVuMEb7W+PzAumz0MKtYOmBLOGfZ1v
-	 V2xSFmbZtf4oTfkDjXO6+U8ELXrEk7ZSlhnQBUcdt6f0wKMFFsCRP91hBPfWMbR6pGHX+
-	 Qt1zESgawjfIdTaCQrrblcHAezj1Pr/li8bz0OaUyzSThkSD9FXrOrHDcZfVZbagSK8lZ
-	 Vg6G8/RyYkagObkooHMyo+a3mCgAhvoP0YiRBNWtWxA+3M15G+eJ080lFWdQm0YWVDs4J
-	 maGKmiQlrZX877mUPXv3BWG4wJBag796QhXznQpKwnj3OMH3zZ/uIrTnhvNJw2Hn+FQ==
+	t=1793323271;
+	b=XB/GZ+2HrE5Puveg9toYEqqbZfXl/w4M3OuTEZ41/bGWsoB3yv6EMqhLGs9gTJYh0i2V
+	 1MqAH/6eEuO4EH6+6y81UckNygiEav4qyLbMJfTUysDEfLEDQVB3oUl5ZmJ8Ux7lJh7QK
+	 C3XpuOTkcHMhO8J3W3t3ZjgXWOTSrf6HSvcSpuU0lRXWiOgvmDD0q9vp1rRu/NwhL+EOX
+	 eijOEytpysWaJcAKX237Q54KWK26z4Kl8OEX8QtYRJE4tHHzlACKxK6p/IubaSSZ1Jatz
+	 GUhw6hGh6RVf0ogczwMfKuq0Jppl5IK8pw3nsnYhKpurMolpyRmt7lhYGtLB+ZAN2uQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793322744;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
-	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=Sx9cgUbkh4RV32DkF3afUIrb56A2Z++6wre5+9dXJ3s=;
-	b=LbVyewo4ExUWcPLo/Iq+yuBhLowsMMt++PaAUNXp/A7no4UN7rkgsFkim/9nDNsomjEf
-	 i9mN8kE9JzkYvZ3KN5bEyb+ovy0L4NKD8H3MG9RaFXAI3GjEIq7Fr4YGqNnDHTT8iHxF+
-	 Eo6Nz2MzZnmxY1Bna4FBJu+5orpuaKKtxnLRf3pDbmPUfAYhCAW0Jkc+D3bAL9EQLMqSu
-	 8AsRjo7vXDKBD0HTh6pLQ1gGt+H1ImPgJ8GQPlIhtFcc/YzTRsDt7FG8vVYqQbHa8igBE
-	 7J2mDn+oz89yQRU1Bn7uJ3c+vHHqlNK2pOL5Vtb3xMbpalfeHYlT1tWMVFPmOHPNX6Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793323271;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=KFQrcaSDTNv8E13IBteawzqm+5tXdy4e+ERYsBvWvE8=;
+	b=d1ff5sUzbg3ClKm+MIB06tqJtz4t5oQAd3aoK6aqo+daRwXpk63zoFGllNoMyXhWL4/w
+	 +pJFRzX8z+qKcLvel24rn7W7XfiTwfMVokWs9FUfnr7X1E4PRClPp/cmq39WoIr+rWlsD
+	 jaa3BitYxJPYq/PaQgn6WQ837QAGo0woTCp4A6Ev6LUTO03Er51HRH2VMJGNp81Yg7dM1
+	 hWuwXRXmt6yGAPCVHhQ0vcvFNurfTKC8G+rCp5E/uPXnyjJZoVDnz6MF40cuj5Q1M+1Hl
+	 j31hChgyi3U1JWN8sIqn19uWco+valVebFFlraLPu0w9ASDPf09bwgPgZ7FoHE4XI9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jxsPVX1f;
-	arc=none smtp.remote-ip=216.40.44.12
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CRl0mZ4o;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA14606A31C;
-	Fri, 30 Oct 2026 01:12:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8DA14606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68808606A31A;
+	Fri, 30 Oct 2026 01:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=jxsPVX1f
-Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id AF38EA05F6;
-	Fri, 30 Oct 2026 01:12:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id C48B620027;
-	Fri, 30 Oct 2026 01:12:19 +0000 (UTC)
-Date: Thu, 29 Oct 2026 21:12:18 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sven Schnelle <svens@linux.ibm.com>,
- Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH] tracing/selftests: Fix false bashism in
- kprobe_non_uniq_symbol.tc
-Message-ID: <20261029211218.3749963a@fedora>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CRl0mZ4o
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 151721F000C1;
+	Fri, 30 Oct 2026 01:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793323271;
+	bh=KFQrcaSDTNv8E13IBteawzqm+5tXdy4e+ERYsBvWvE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=CRl0mZ4oiS+fC0LvCLRmL8cQ2p39/6O9pTGImPcQ2+DOJFCmtLzzG+4AZ9J/4MT7g
+	 8mZgBrBJQG3nVogg8ntjLXZErd2DIRc56lmtg89224Rzk5a5tre9LbCgwiMRNqJMi3
+	 g5XYbeSq8xa0ScYT9sK827R0xrvpjypsch8cNECgDWT7AiL9CbSpAZx8/iok8Cdzm7
+	 vcUiHo5L3yEWFLVFcpxq9kBDywCG/KmVCM6ZDoT3gzmh4zP4bhiBMYYG7c5p3BzANQ
+	 c7M71M5thB/1T2GmMi4xvsbUcUP/RdkKf2H+5ZeQO8B9LCudtLGQjGM6iThyvrUbQy
+	 4VxbY85POXd6A==
+Date: Thu, 29 Oct 2026 21:20:55 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH 1/2] tracing/selftests: Fix instance test to actually
+ test races
+Message-ID: <20261029212055.41a6141f@fedora>
+In-Reply-To: <undine-1793322079170721165-fee1052e7bb8c899@undined.local>
+References: <20261029202849.245864353@kernel.org>
+	<20261029203205.757392992@kernel.org>
+	<undine-1793322079170721165-fee1052e7bb8c899@undined.local>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,47 +66,37 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: C48B620027
-X-Stat-Signature: isupbdz5emkx8xr1doh7tstj36ztjmmq
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+IrwqZlzfa0SJGHmF54C1N9es/CffkMgQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=Sx9cgUbkh4RV32DkF3afUIrb56A2Z++6wre5+9dXJ3s=; b=jxsPVX1fUpyyeNg5aDIQaxDZdsiEIzo5NKnVxd0Y+j6c7BhsUV0oLNK5UM0kL8OhylVY8QXKHwoaTpDq/HHnhKnZ5/CgCJImJUfIWKpT5zYA2ZlZJp4hQCkrJAZxi9PGw3sRcFJMundSQv4V3g49eY4CwloCexOd1fFPFTdXUJ8=
-X-HE-Tag: 1793322739-507075
-X-HE-Meta: U2FsdGVkX1933phtu4h//lzzoJEOBrHMnMZtUVx+jtTCoz3HJn6yEM6zf8l8UtEH6VQ9PwhUt8i1PJetWddn9s4dWtnrBwSzIsMh6cuDWSKlrt5QqmsC8NHxBgjH0EpMKVCwjYHK+IIohWn5pVgKJkJTdfYKlKGvCSHfCym1bU2G/cl4+F94C1XChRdskMoUvXKpj24QLH5RAvqVaw3ECi/M4jgxPL7YWJZvGLSAN36tNw7MFQL4jAKkDzF5EXh+DYBEmNB2vTEezS8Ylulkkn9Vtag1hKSZmdstJ/WxNJpb1ePKBqkgnGEC8hR15GNcEYg8Y7Iy349q3XQD7NIkrmPTAopZlQYs8xEGWN6xr2NeQHv+9ZbQm8IITDfZUWaMF8+Idb7oxsaBAxt/+0WGMg==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 30 Oct 2026 10:01:19 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-The checkbashism is giving a false positive to the kprobe test of:
+> >  instance_slam() {
+> > -        while :; do
+> > -                mkdir foo 2> /dev/null
+> > -                rmdir foo 2> /dev/null
+> > -        done
+> > +	mkdir foo 2> /dev/null
+> > +	while ! rmdir foo; do
+> > +		echo could not rmdir foo  
+> 
+> nit: If we retry this, do we need to warn it?
+> (maybe we can add a limitation of continuous failure and make the
+> test fail if the failure exceeds it.)
 
-  ($"foo" should be eval_gettext "foo"):
-  if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
+Retrying is actually quite normal. The rmdir *should* fail if one of
+the instance files is open.
 
-This is because it sees the $" at the end of the grep as a bash symbol.
-Instead, escape the '$' with a backslash as it is within quotes and that
-'$' is for grep to process an end of line character and not a bash
-variable.
+Now perhaps we can add a counter to make it fail if it exceeds a large
+threshold?
 
-Cc: stable@vger.kernel.org
-Fixes: d22c3e0088e85 ("selftests/ftrace: Fix unique symbol check in kprobe_non_uniq_symbol.tc")
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- .../selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	let x=0
+	while ! rmdir  foo; do
+		let x=$x+1
+		if [ $x -gt 10000 ]; then
+			exit_fail
+		fi
+	done
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-index 03eb9e70b438..f8e18ea8c268 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-@@ -6,7 +6,7 @@
- SYMBOL='init_once'
- 
- # We skip this test on kernel where SYMBOL is unique or does not exist.
--if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
-+if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}\$" /proc/kallsyms)" -le '1' ]; then
- 	exit_unsupported
- fi
- 
--- 
-2.53.0
+?
 
+-- Steve
