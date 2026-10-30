@@ -1,54 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.219
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.101
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793325339;
-	b=AHeBEGINSFAUCRUd+GnumXYzQtWrTsTLESjuJolCp7dUZtfkORycg75WKgmVQyBFxCUk
-	 FIfE7AO/jgJnHUbGR0CMc9AxMM5kRCoktinYKPanq8iqlqb/plLaxZvSaW2xcz89l/vp9
-	 DsPyKZd6awBIjeKFht3Lh/kJLG+nPtkaalxMoRMocFhr85zrp/924vMersI32Zf9gPzpQ
-	 6uyUrbiuj/XvuoFGOpbubfSx4wapGVD7fi801w21S19zVZJTHj/WxXQZMDONJJgmD6BvG
-	 OAzDKytMofkgKNBTfIUrtcMNkwfDhZEVGPypGjdMKRh7FFuceQiBgrvnylbFaj9mesQ==
+	t=1793354390;
+	b=fnVJHkT2GjTh+IDjcEYIPxh2rtYVonLZr/AVnqRQXO0OUMnMIHPIgPogQ6ZvPgLa3VNG
+	 g1FlZ0/GCAmMTx6151vLL3MuQ3rw8ToVodKcSE/jmWurDM5fj5RKO36gdBBJMx6lZJJa5
+	 PSTW2H+3GK+qnfparfTTSh1QJhJc12M5bSPDY0ReTnzTgpoWPwvBC9FfA4HhmRkBHBRts
+	 0YvrQmBVSCx/XECF4P05Iw5cSmGSNWYsnJRdtP5Vp2Td9i8B+lDHBfRG5rjqPySmuKOkm
+	 OBWd2gpJ6yQa1bvpoqS1HBSqrmrbzH2sx7Vg2mY46rAK1CxtPY0OwRCEG0rjA4zFuyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793325339;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=NW47OZGG+imSFWQTUojgxKaRsVA/dxTDAH6Z79eqPk4=;
-	b=XKF+PA0YHUCzDOeWDfonQJ0BpDJ6aimDU1K8Dk8LzanUDF+Po6CJGhSUutmcbIUpd3bI
-	 Np0aykM/BWKYX38aunxinKXNk3B5QiyRuntEgXraBSLPbPYZFyGNZgNgz+aF3iuP0eLV8
-	 3a7eLWsMemS84EprtFlcbdH1xv7lDvW0VxTLf/q1EZHZq5xc/tZB05gU7DYjK/6+ONsGZ
-	 cLu7hKjzdzzeOvtzCD3uHeMs/MMYqQmvbXz687GDVL5bGRoscHuY9FJOk86yoclxQnw9G
-	 jUTHoFRSRU4FZ9x+Q9G+XOKbAQ3CTpdTVCRlfsPg9xfxsoGayKVBMJV2ru23JjtokDA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793354390;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Date:From:To:
+	 Cc:Subject:Message-ID:Reply-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=yXMPGRPBcfckMgFC4bysmDdGptiT+3XkF28FfzngIW0=;
+	b=KKMUnKMP7Q4AUTRfpBusFOHzFrR2+g+t0+C6AdEdZJJgY7E8vNdEAcdkscWcHZY4j7x7
+	 LegyZfovL/NgnlQWF3XeDLv6q5zntWqDmxlVFDCJAJ4lypzrbhF79z58BzDuw7N5e+ZZo
+	 AA6ilB1LZJqwAQXb5kdIT225RTIbb5myGFS6OskNZT0shG+aQMFBhy2GGP2o1by5XgJ0x
+	 1GKo6ufe69W9fyzGzgWN1k0TqVKAG+Zk3epn3gWG0dx35UQLdgtJpnJdQ4m9IWRqEVJBO
+	 5nZqOsSRdWO5Xx6MBBTfuHX8UsJK/UwgkF3sAh++ZLZqC/VGUNaJW1nOJdnU6Wgou5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tJinQgl7;
-	arc=none smtp.remote-ip=95.215.58.219
-Received: from mta1.migadu.com (out-219.mta1.migadu.com [95.215.58.219])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=iSz6lxwV;
+	arc=none smtp.remote-ip=115.124.30.101
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B27606A322
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Oct 2026 01:55:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55B27606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EEE606A31C;
+	Fri, 30 Oct 2026 09:59:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B4EEE606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tJinQgl7
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=yLibGXRg0x614xy7jj1umLLnLSoSQ8rxXuFtkSyAjTw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793325336; v=1; x=1793930136;
- b=tJinQgl73cr3AUsCPm6B+YtFCqmb7GEy7gRNXN1Ncvnor1T3bPpjZNMlreCZ6Im6e2wSkI1F
- twibpD/2a6cx4UBL8xznzC7Rj5gmRvDynXTyjbjomOjWdixbUPIYb78y5hd4XRCHD5ujWxUOz/x
- SG3SuSCSmmfttwXvvbeosLaM=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 6e53ba925bba0fe2;
-	Fri, 30 Oct 2026 01:55:29 +0000
-X-Mizu-Trace-ID: 6e53ba925bba0fe2
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <96dfb9b7-1eaf-4bb2-8136-9a2478e1a068@linux.dev>
-Date: Fri, 30 Oct 2026 09:55:17 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=iSz6lxwV
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793354386; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=yXMPGRPBcfckMgFC4bysmDdGptiT+3XkF28FfzngIW0=;
+	b=iSz6lxwVe8spp+ofYs8Azo6Gjrdha62/u6JpqJG3DH4UyoUHNpctIOKOW6SJf6oWigVyAqvRFUY+MdkBtQCn4oAIY8FtGMkVQzukmXAEHnQLcg6JO9Fe24lx2AejElTP8za0A5uvZC2yl/ljBF1ahrsz8vVqPdGQLsH0Uzf4fw8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=peng_wang@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0XDlw3AF_1793354384;
+Received: from localhost(mailfrom:peng_wang@linux.alibaba.com fp:SMTPD_---0XDlw3AF_1793354384 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 Oct 2026 17:59:45 +0800
+Date: Fri, 30 Oct 2026 17:59:43 +0800
+From: Peng Wang <peng_wang@linux.alibaba.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	He Rongguang <herongguang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/2] tick/nohz: Add a policy dependency for full
+ dynticks
+Message-ID: <auRqj5y4bym8KGj8@U-3K7XLPQ6-0046.local>
+Reply-To: Peng Wang <peng_wang@linux.alibaba.com>
+References: <cover.1792242566.git.peng_wang@linux.alibaba.com>
+ <58bc33cb018a2651e9cc3fc02baad7de4d543705.1792242566.git.peng_wang@linux.alibaba.com>
+ <att2hiYaaHTIkzG9@localhost.localdomain>
+ <atuMJiJEwbzGjiu4@MacBook-Pro.local>
+ <auIbt5JAC2cHw5jr@localhost.localdomain>
+ <auLqmMdd8RIdf6st@U-3K7XLPQ6-0046.local>
+ <auNR5c6hXlb_FFkB@localhost.localdomain>
+ <auNuLZiBZyHLFYUr@MacBook-Pro.local>
+ <auN5Bku9w2VDZFFX@localhost.localdomain>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,100 +81,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v5 5/6] libbpf: Add log_opts support for
- bpf_link_create
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Kuniyuki Iwashima <kuniyu@google.com>,
- Hangbin Liu <liuhangbin@gmail.com>, Martin Karsten <mkarsten@uwaterloo.ca>,
- Masashi Honma <masashi.honma@gmail.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20261026154948.99408-1-leon.hwang@linux.dev>
- <20261026154948.99408-6-leon.hwang@linux.dev>
- <CAEf4BzbW4zwL-9j8e2B6KNXVNwsfWyMSAo_RsGCqv-nu_yGhTg@mail.gmail.com>
-Content-Language: en-US
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAEf4BzbW4zwL-9j8e2B6KNXVNwsfWyMSAo_RsGCqv-nu_yGhTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=gb2312
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <auN5Bku9w2VDZFFX@localhost.localdomain>
 
-On 30/10/26 00:22, Andrii Nakryiko wrote:
-> On Mon, Oct 26, 2026 at 8:51â€¯AM Leon Hwang <leon.hwang@linux.dev> wrote:
-
-[...]
-
->> @@ -960,12 +970,12 @@ int bpf_link_create(int prog_fd, int target_fd,
->>                         return libbpf_err(-EINVAL);
->>                 break;
->>         default:
->> -               if (!OPTS_ZEROED(opts, flags))
->> +               if (!OPTS_ZEROED(opts, iter_info_len))
+On Thu, Oct 29, 2026 at 05:49:10PM +0100, Frederic Weisbecker wrote:
+> Le Fri, Oct 30, 2026 at 12:02:53AM +0800, Peng Wang a éãrit :
+> > > Ok in that case, do you know about the current work in progress
+> > > to make nohz_full opt-able through cpusets? It implies taking the
+> > > target CPUs offline shortly but the policy is to be setup before VM
+> > > is launched, right?
+> > 
+> > Not always. Waiman mentioned the cpuset work earlier; it could
+> > cover selecting the policy before a new VM starts.
+> > 
+> > Some customers express a preference for host tick suppression
+> > through the management interface when changing workloads within
+> > a running VM. The host operator decides whether to allow
+> > suppression on the CPUs backing that VM.
 > 
-> semantically cleaner would be to use log_opts here instead of
-> iter_info_len, send in a follow up?
+> I think people should know ahead if they will run latency critical workloads
+> or common workloads in their VMs. Because those are completely different.
+> 
+> > 
+> > We want to support revisiting that decision while keeping those
+> > CPUs online and the VM running, with nohz_full membership
+> > unchanged. Could such an operation fit into the cpuset work?
+> 
+> If that is really necessary then I guess we can have a file to control that
+> in cpuset once the nohz_full interface is ready. Though I'm a bit skeptical due
+> to the overhead of user <-> kernel transitions and housekeeping.
 
-Will do.
+Hi Frederic,
 
-> 
->>                         return libbpf_err(-EINVAL);
->>                 break;
->>         }
->>  proceed:
->> -       fd = sys_bpf_fd(BPF_LINK_CREATE, &attr, attr_sz);
->> +       fd = __sys_bpf_fd(BPF_LINK_CREATE, &attr, attr_sz, log_opts);
->>         if (fd >= 0)
->>                 return fd;
->>         /* we'll get EINVAL if LINK_CREATE doesn't support attaching fentry
->> @@ -975,6 +985,10 @@ int bpf_link_create(int prog_fd, int target_fd,
->>         if (err != -EINVAL)
->>                 return libbpf_err(err);
->>
->> +       /* bpf_raw_tracepoint_open() does not support log_opts */
->> +       if (log_opts)
->> +               return libbpf_err(err);
->> +
->>         /* if user used features not supported by
->>          * BPF_RAW_TRACEPOINT_OPEN command, then just give up immediately
->>          */
->> diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
->> index 826d9cc9ab65..fe3b7fd8512b 100644
->> --- a/tools/lib/bpf/bpf.h
->> +++ b/tools/lib/bpf/bpf.h
->> @@ -422,7 +422,10 @@ union bpf_iter_link_info; /* defined in up-to-date linux/bpf.h */
->>  struct bpf_link_create_opts {
->>         size_t sz; /* size of this struct for forward/backward compatibility */
->>         __u32 flags;
->> -       union bpf_iter_link_info *iter_info;
->> +       union {
->> +               union bpf_iter_link_info *iter_info;
->> +               struct bpf_log_opts *log_opts;
->> +       };
->>         __u32 iter_info_len;
-> 
-> in a follow up, let's add comment next to iter_info above and
-> iter_info_len here that these are deprecated and that iter.info and
-> iter.info_len should be used instead
-> 
-Will add comment when adding log_opts support for BPF_TRACE_ITER in
-libbpf in near future.
+Thanks for clarifying.
+
+For some of our database workloads, we have observed a net
+benefit from nohz_full despite the transition and housekeeping
+overheads. We understand that those overheads remain when the
+tick is kept running.
+
+We'll follow the cpuset work and see whether this control
+would fit.
 
 Thanks,
-Leon
+Peng
 
+> 
+> Thanks.
+> 
+> > 
+> > Thanks,
+> > Peng
+> > 
+> > > 
+> > > Thanks.
+> > > 
+> > > -- 
+> > > Frederic Weisbecker
+> > > SUSE Labs
+> 
+> -- 
+> Frederic Weisbecker
+> SUSE Labs
