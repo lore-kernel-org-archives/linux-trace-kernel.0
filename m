@@ -1,95 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793481899;
-	b=oCMY4QvwVCAkJ5oecdC5u4l43KmpAZtgDIOXYmQNtZhgYX8ML4kZhzYp4xtGiCKeB7Ho
-	 SkUQ18xsha3JI5YXPLnZqRdOaLc8uCKmO/kScH4JOYFrp/+Y8YrPNkuDLWBUowk9/wGD2
-	 +1rMJUF+x5C7hyz86xtJTNV7IRvJHf4eS83ldPPGBeWnBebPic3ubJJNviq4/6oZC/q/9
-	 vrqaHvoYqiWUyHkJLnUThf5dOpS7640A9JAKqH1foXvDTHxZC57eiWM6kCe1fNkL3iuKJ
-	 tb71B8NqOE1t9boMMBcB9fFiLdcdWmOJDGVrwrHN2A3PHw55Wv5CHfwK5A7Me5PYVaQ==
+	t=1793482766;
+	b=2GjbEQ4N3NdZofzJV/hTwuZzIxbC/obM7V6Y75HsJf4D3vAtP0IdGVygRg7chPz9ViZL
+	 8NAI5rge7g3TuF1D5cafcORsBIq2OU9pIftZhcEBFsltMPje4+OoODCXjUtrjdHO4rnm4
+	 zz+4AGrMtvVZQ+t9C5KXGFppJZ7tIb3phO77zEnys2JZz8dEOAkGPvOMRzKi2WDk7psDB
+	 Jylhc9vagycDWdAPyiD8TQ/1NNajYN/jTgb6ewvZPluaDyeEmRBdKpPQ5REsKIY6YfzA6
+	 wi6/nVkscDKxPu0P2UQ8dcbbuAZY9oVEV7vA1hADR55nRJWQMPI8LjkMuPVfa6SKPdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793481899;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=1Vk1hJfR0u61Fe9qHt5Nn3FgFhmPztbFsxazzVHlKZY=;
-	b=dhq25GiaFsspH43wByuX+hw2QfKI1XqVElAQTp4/3TOZ6ULfjVDKFT8MQtdinD/5I5xw
-	 CksmZE0aMlp+nJ9iRSIMOzIX9psw6KOZfERLTxKC9YOEba+F42o2jwQC8GkxHiI8QnSLs
-	 co6ZwZHZLgQBW8rO4bEiG5pPLrxhvBJggKuFx+nDN5nGtovid3O3txkVJxdBIvwamdJcH
-	 J2/JwMc6ziQNvbX3cQvSkRqIOnDO67FQsIX87vhQB2Yv8WcWXptHl/9MdJMnlWCBN0FYf
-	 +2gcmf/QAKOeS4HSsaT8HmziiK+CvY2CJOx2yYDRoEp9uDIIOt/gMUzqJO9fazj1pnA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793482766;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=3S03iCV4dK9dJWIYRZ6o0GPEOUkUn6vSd4nqDG1Mmw8=;
+	b=LWGH+6TtvpFeCYDOWMlmPmmKO5hkX/fJe7QoNOEBm8XmsFSDp3tBfnWw27/aohA6vXXF
+	 4aCinni32m90uLyhVXxJPc3br02g33GaFTzX4cnjL5zeaMKBrUPFdV9Uj8UcrjqXqzVI5
+	 l9HrAjkLeKWXlScjulsDGYiUearLo1yRV+k0b1AY+REnYHG1c4L2bfu+K4JiM6ao5hBnA
+	 gdLYg/dLIpssYxvf6zpacFeS+E5EzQ+wbRq3yRB6TSZonJUtpZTGQl+Qnx0dgxIs8DDRL
+	 2a2J35o7VNKJoDPPOVw8quMMmhFC/CmJQkk8d/aw6sg9MxeIXBpulVROL02IaGTUByw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fRulVzh3;
-	arc=none smtp.remote-ip=209.85.221.52
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NQYoCgfO;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4496606A31A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 21:24:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4496606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E084606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 21:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fRulVzh3
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-48c4d870d54so1062414f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 14:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793481897; x=1794086697; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=1Vk1hJfR0u61Fe9qHt5Nn3FgFhmPztbFsxazzVHlKZY=;
-        b=fRulVzh31Bhqv4/NY0qSOKuAao7KoNFrPQExsVBxY7qusbFaVTWyHO4RWrHIdAtg07
-         vFUPO5eJXntEXjdfR1QLkzpfOsUJKagNOTK8XkC/c0eOnia4NkMKvJI/Nk3VrVFoxsOh
-         i3oPWiPPU2rtDbWV4kOkc6izndYKP4KXuDEkGhXYsoeRWL/kH2x1YXIiD+1hnaPPH9HG
-         9EzMsLOiHjBNpJGxgjQQzJ7ekqcK37vxtBU4edxk2DSn5o2ErNIoJFaP/+AoToO0aF3U
-         MxjsXR6/F34luSr3gv8m2/9Ro5kDnFDCdNXHMzKkM8aUGzvbYkTbhDMjdSXCvtxNlOXL
-         N7fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793481897; x=1794086697;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=1Vk1hJfR0u61Fe9qHt5Nn3FgFhmPztbFsxazzVHlKZY=;
-        b=y6D89RDsrgr6MeqLnUkzHhxp7KiC9L9h9ubpWNmDXuplKzhmbaHyQuO78y1Q7SJPFY
-         rImmpSXiv7i64mXqCAnunPowy/UWET/ak8j0Jj5xLc1rd+iCsbxfVGw3/GLakkTDap4N
-         lA5+Mx0vvDETKS1VhA0AjJaaQ0efLxHz/KdiwpKQS5eaIfS9d3vxylD/jTM608GNXjPC
-         xphpbopVjgFd3S3IC6sUSfkxhLWnvNjKrYa8/Fgyfk5cNx8Ra6ri4nnsHSkfCt22zK6g
-         FfjaNU1yNT9zI1TAFKmwTE76OOAhLKUtsRvZQDyYutBvFHr6Ci4hsVyjNxyWkr/76UX5
-         W4VA==
-X-Forwarded-Encrypted: i=1; AKwUvBzdy7eIgVZP17BswgqGgwELVHVbMIXeeY23ot3D5P0TE2fvtFNybdxuFZWRg++gVNXJAPM7nrxG/0O4wjGtasakGls=@vger.kernel.org
-X-Gm-Message-State: AFq9FYL+SfumCs81cLSeouarD80V8WLhXX2eqDKYH1xhAi2OEoj95aK+
-	CqsvynSqXfL7myM7lOD5btwQ9GDojdXBNAqtCcms5899vyoCfpxcPVXC
-X-Gm-Gg: AYBFou0XXFA5TBNG/2lAWfY/HRGTfnoJUh7olxmU4Zpt6p0QVW3tYtSIR7xT3VfH6IL
-	S4kf2t++7CNpzK+UqnRwcZDnB7OMDsWfxU3HmMRVtx1WglD3ZLlZmmz6tzKXXYBYo/20hgawIwM
-	v4d4pUWbUVREUtKQqD/GG8t/P50+j5Zy4PRkIhcZ4u/oU2BLay7HKXZu/50pFP68CG7WP8Yx4tN
-	d+Qmpae3hRwZqp43+iXsrjnVq194CClym2boTEz6YYSwna/H+HscJF5OCMLcggj8nuzp5JWE5AV
-	67kB5bHaifqQJKScCtLaaI2OIQsYXDWCpfFlQ7IA751arFp5OcIQ7BlebIUXK/TwJx/PUhMz0ZL
-	t3v0jo1UYBev93IurjNkBvEPWEZbL2++dckRWzOeejUdMEsw96rkLakeFeu9Q9U3njXUwFl1tFv
-	6dBHFo5RWywNo5rbs5TJ5vOL8R/PByXAe224XT1Px9Svv+qgqQz2bavVvPKU377tFiMLqbYP5en
-	CXIq9xRWNlQoilCGl2QP002evweaswv8cJq4ZLJk4cdYJvsaEpGTAr5QYROsxEG143GaTYH+l5N
-	tBUwS7LcMoK8/zjRE0xJT3f8u36IWg5KWNPlaZ30Pk54tE6AKkDKKHOQrnStf3BnLjUinHg/6sO
-	LABgf88iP06IwkzUJo/BFel+ZG+5Wif6oejE=
-X-Received: by 2002:a5d:4982:0:b0:48c:7306:18e9 with SMTP id ffacd0b85a97d-48e6e307204mr9624281f8f.43.1793481897073;
-        Sat, 31 Oct 2026 14:24:57 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b81c74sm10204530f8f.36.2026.10.31.14.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 14:24:56 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] tracing/user_events: Don't free an event that a dynamic event still references
-Date: Sat, 31 Oct 2026 21:24:35 +0000
-Message-ID: <20261031212453.16116-1-devnexen@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NQYoCgfO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1831F1F00919;
+	Sat, 31 Oct 2026 21:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793482766;
+	bh=3S03iCV4dK9dJWIYRZ6o0GPEOUkUn6vSd4nqDG1Mmw8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NQYoCgfOR+/eaqcXcfxqPWGIt5MQfh3HfJmWUNTfTfBMiMeDZemhE9dkDX7MaL/Xh
+	 wMvhden+1pqNtQ0QuondGl3OZa78iqW2P5D3HlJWYOalge64f/Ai2+iS06M8l/G8Zb
+	 EDKtLUUM5tU34GwcGxvTyqJ72AEVG3WrQpeiFeeAz6GKQLWNX3Bi5b8nHf8ajxQwoa
+	 dSvIPV41RUM4jknMgfMf1aAUDKXj+uQTMR+HN6gCVNXE0XgnBHJ9twYP5UZB6Gwl6u
+	 sz6A4D3bDWD1Ag6jFl+TS0tBtOWbXjIhxZQ2Ko3aiH2LqVDcLhpVlaD4C0zXC6LwsK
+	 MkcP2ZtjeeTIw==
+Message-ID: <sashiko-outbox-192180@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 3/6] lib/string_kunit: Add test for copy_task_comm()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@igalia.com>, "Peter
+ Zijlstra" <peterz@infradead.org>, "Juri Lelli" <juri.lelli@redhat.com>, "Vincent
+ Guittot" <vincent.guittot@linaro.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Christian
+ Brauner" <brauner@kernel.org>, "Kees Cook" <kees@kernel.org>, "Shuah Khan" <shuah@kernel.org>, willy@infradead.org, mathieu.desnoyers@efficios.com, "David
+ Laight" <david.laight.linux@gmail.com>, "Linus Torvalds" <torvalds@linux-foundation.org>, akpm@linux-foundation.org, "Yafang
+ Shao" <laoar.shao@gmail.com>, andrii.nakryiko@gmail.com, arnaldo.melo@gmail.com, "Petr
+ Mladek" <pmladek@suse.com>
+Cc: kernel-dev@igalia.com, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261030-tonyk-long_name-v8-3-c9b030332254@igalia.com>
+References: <20261030-tonyk-long_name-v8-0-c9b030332254@igalia.com>
+ <20261030-tonyk-long_name-v8-3-c9b030332254@igalia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 31 Oct 2026 21:39:24 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -98,66 +65,103 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-An eprobe takes a reference on the call of the event it attaches to,
-and kprobe, uprobe, fprobe and synth events all refuse to go away while
-trace_event_dyn_busy() says such a reference exists. user_events never
-checks it, so a user event can be freed under an eprobe:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] lib/string_kunit: uninitialized stack read in string_copy_task_c=
+omm()
+--
 
-  echo 'u:test u32 a' >> dynamic_events
-  echo 'e:ep user_events/test a=$a' >> dynamic_events
-  echo '-:user_events/test' >> dynamic_events
-  echo '-:eprobes/ep' >> dynamic_events
+commit 0d3a01595d2cc8a60f5d8a8716e5935db351758d
+Author: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
 
-The last write drops the reference on the freed call.
+lib/string_kunit: Add test for copy_task_comm()
 
-If the last fd of a non-persistent event closes while such a reference
-is held, the delayed destroy now fails. Mark the event persistent then,
-so it can still be deleted once the reference is gone instead of being
-leaked.
+This commit adds a KUnit test case for copy_task_comm() in
+lib/tests/string_kunit.c to verify copying a task command name into buffers
+of equal, smaller, and larger sizes.
 
-Return -EBUSY from destroy_user_event() in that case.
+> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+> index 0819ace5b0275..66c3398f23174 100644
+> --- a/lib/tests/string_kunit.c
+> +++ b/lib/tests/string_kunit.c
+> @@ -881,6 +881,43 @@ static void string_bench_strrchr(struct kunit *test)
+>  	STRING_BENCH_BUF(test, buf, len, strrchr, buf, '\0');
+>  }
+> =20
+> +#define TASK_NAME "task_name"
+> +#define TASK_NAME_LEN 9
+> +#define TASK_MAX_LEN TASK_COMM_LEN
+> +#define SMALLER_LEN (TASK_NAME_LEN - 3)
+> +#define BIGGER_LEN (TASK_MAX_LEN + 3)
+> +
+> +static void string_copy_task_comm(struct kunit *test)
+> +{
+> +	char str[TASK_MAX_LEN] =3D TASK_NAME, copy[TASK_MAX_LEN],
+> +	     smaller_buf[SMALLER_LEN], bigger_buf[BIGGER_LEN];
+> +	static struct task_struct task, *tsk =3D &task;
+> +	int len1, len2, i;
+> +
+> +	/* set and get task name */
+> +	strscpy_pad(tsk->comm, str);
+> +	copy_task_comm(copy, tsk, TASK_COMM_LEN);
+> +
+> +	len1 =3D strlen(str);
+> +	len2 =3D strlen(copy);
+> +
+> +	KUNIT_ASSERT_EQ(test, len1, len2);
+> +	KUNIT_ASSERT_EQ(test, len2, TASK_NAME_LEN);
+> +	KUNIT_ASSERT_EQ(test, copy[len2], '\0');
+> +	KUNIT_ASSERT_TRUE(test, !strcmp(str, copy));
+> +
+> +	/* copy to a smaller dst buffer */
+> +	copy_task_comm(smaller_buf, tsk, sizeof(smaller_buf));
+> +	KUNIT_ASSERT_TRUE(test, !strncmp(str, smaller_buf, SMALLER_LEN - 1));
+> +	KUNIT_ASSERT_EQ(test, smaller_buf[SMALLER_LEN - 1], '\0');
+> +
+> +	/* copy to a bigger dst buffer */
+> +	copy_task_comm(bigger_buf, tsk, sizeof(bigger_buf));
+> +	KUNIT_ASSERT_TRUE(test, !strncmp(str, bigger_buf, TASK_NAME_LEN));
+> +	for (i =3D TASK_NAME_LEN; i < BIGGER_LEN; i++)
+> +		KUNIT_ASSERT_EQ(test, bigger_buf[i], '\0');
+> +}
 
-Fixes: 7f5a08c79df3 ("user_events: Add minimal support for trace_event into ftrace")
-Cc: stable@vger.kernel.org
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
-v2: keep an event whose delayed destroy fails deletable by marking it
-persistent (Sashiko). Deleting it then needs CAP_PERFMON, like any
-persistent event.
-v1: https://lore.kernel.org/all/20261031210420.501187-1-devnexen@gmail.com/
- kernel/trace/trace_events_user.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+[Severity: Medium]
+Does this loop in string_copy_task_comm() read uninitialized stack memory at
+ the end of bigger_buf[]?
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index f658c3a77aa7..ea6a20a30cf5 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -256,6 +256,11 @@ static void delayed_destroy_user_event(struct work_struct *work)
- 		 * attempt to delete it later.
- 		 */
- 		pr_warn("user_events: Unable to delete event\n");
-+		/*
-+		 * Keep it as persistent so it can be still deleted
-+		 * since nobody own this event
-+		 */
-+		user->reg_flags |= USER_EVENT_REG_PERSIST;
- 		refcount_set(&user->refcnt, 1);
- 	}
- out:
-@@ -1506,6 +1511,10 @@ static int destroy_user_event(struct user_event *user)
- 
- 	lockdep_assert_held(&event_mutex);
- 
-+	/* If there is a reference to a dynamic event */
-+	if (trace_event_dyn_busy(&user->call))
-+		return -EBUSY;
-+
- 	/*
- 	 * Detach the fields before removing the call. Removing the event
- 	 * frees the field list memory (trace_destroy_fields() is run on
--- 
-2.55.0
+In string_copy_task_comm(), bigger_buf is declared on the stack without an
+initializer and sized to BIGGER_LEN (TASK_MAX_LEN + 3, where TASK_MAX_LEN is
+TASK_COMM_LEN).
 
+However, copy_task_comm() in include/linux/sched.h clamps the copy length to
+TASK_COMM_LEN and does not zero-pad dst beyond _len:
+
+include/linux/sched.h:copy_task_comm() {
+	const char *_src =3D tsk->comm;
+	size_t _len =3D min(len, TASK_COMM_LEN);
+
+	if (!_len)
+		return;
+
+	memcpy(dst, _src, _len);
+	dst[_len - 1] =3D '\0';
+}
+
+Because copy_task_comm() only writes TASK_MAX_LEN bytes into bigger_buf, the
+trailing 3 bytes from TASK_MAX_LEN to BIGGER_LEN - 1 are never written. When
+the loop iterates i up to BIGGER_LEN, won't KUNIT_ASSERT_EQ() read those 3
+uninitialized stack bytes and fail the test (or trigger a KMSAN report) when
+stack variables are not zero-initialized?
+
+Note that in the later commit de6fdb508944 ("sched: Extend task command name
+with TASK_COMM_EXT_LEN"), tsk->comm and the clamp in copy_task_comm() are
+increased to TASK_COMM_EXT_LEN (64) while TASK_MAX_LEN here remains
+TASK_COMM_LEN (16). That masks the uninitialized read only because
+bigger_buf (19 bytes) ceases to be larger than tsk->comm (64 bytes), which
+leaves this commit broken during bisection and means the bigger_buf test
+case is no longer testing a buffer larger than tsk->comm after that commit.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-tonyk-long=
+_name-v8-0-c9b030332254@igalia.com?part=3D3
