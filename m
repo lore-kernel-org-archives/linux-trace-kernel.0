@@ -1,55 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793480571;
-	b=m0tNLOz1tjbfTQ6nx/cU1JrrgLtizVYpL0sBtt0n0lx20wCTcEtMvdTWWgMUsN15UcLG
-	 mt6aCdygrF2FXbvP92vNhiKIGXQmcD6K0gcJXp/nR9KmWHPM3QOS9vL2msONnFaoXqrpj
-	 v+XYytCguLw566Gkz4sS+IBv1gV6A8e0kkm/9pogkhGpMzHy+4WG0avybQcjbCYBgzhBL
-	 5wJL9uf2UGWJzeFn/EFVxK+C/OG845HexyFiGY0bGiHOyg1SOTj8G4NIrE9xt9mzZYYoK
-	 AFIiN1VQUHsTtntJRSX8P/AtSQHUkzUuv8tWbG67Qd9yCqzaabNc+l11fcLaCz9sgRg==
+	t=1793480666;
+	b=iGpTx4Q/XPlE1Y/ZpkvI1MEL4Uh8qPcyxc8RlonQPoVCf1DjEYPq9/UJTogEI3sNzPiW
+	 eB8l8yh6S4+yV1MFCJsJF8OXhu+LyNXiIqCmDjXn07raPlijAHLeESC9mHUZja0LOe4Tm
+	 JpRrguQSseHI1VIOKRDJ0zOmIGKbZeC4bwycEzrV1IMjrclQyEYrzlO0yl8IiPjp8Wk2X
+	 beKwKBCJ8Duhrm2wA37Miuf4i238Oj90eDHbvYLpqyl5Xr9knTNgjPpgWw0dbMLjW8aDI
+	 Dmf+H9o00ceYc8jj4BrR/FTyeOZKrgAoJnlhkauEMgCTwdP+Q6WWoYR93hRy7DvsxeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793480571;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=JovmbRKKM9xZ3bzkOvnYz4tRy1n03KhMCiMLiQXxNrY=;
-	b=yaPNmysA23lV0AHvddYyrEGLHJ6mJwx1O/riffZvdsw5oPjsXTZTPLF5YJfC7ANMTFMy
-	 viG+IN0D9RT5w603iPIcy17L4vgj34AR/NcjTToKdCPk6Vplipa+OsDTklzaF5KnJMWbn
-	 FkEQTW73zjNAlAtc7FvZEB0pCDDZgQ0hsPe7xhhiuRpqIRWVX3gkEaiwtqhFY23ErcTe1
-	 bL1QINOq87ngVN4lb4vELNRMDxPSQ5LPFuzG6sB9GZtGOB+pdhFxnATyqz9XKsdFTJLM0
-	 7ZqjV6uCSwGw7V63PYRV1JunwER495TWZPD2RuSSFbyGu9cDUucd6puX7AGHxsBktLw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793480666;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=4szFGphMtUoKYDwEO3ILc85/4qEVkI9CTfJtlLVXdJ8=;
+	b=SPZC3qkyUNUyNuHTjiHsJVWjHNS5pSnXHSOsEjKcPYVoXbW3EgJS1hDlr1YiOnXoVbDK
+	 kFi3RIpAemwiDHfyZb3C9ayYy7UzdaYG472nUJge66gwnMmTmemd5EOyte9q4tQwWznBh
+	 Zm7Vmy6lW+t6iQfftY0PaLJMfDZl//dBwXJKwoJzzw+jGJQrkl6ORP/FabcuPh6eHo+26
+	 MqL9FBH0Mhrs6HmbQAi1VE78/3N32n4aY4+il3Hzsd+509BR65KX05gTUQtRFwgNAqyxf
+	 K1u4+/prJTSiCpfqiujkbuoxwE1rKE/mlH5yOWzkBs0flK3VQ+tZbS+H0WLTGNm6a3g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="iaL8/2dm";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Zv+gfP3h;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F1A606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 21:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADE0606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 21:04:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4ADE0606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iaL8/2dm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 122AF1F00A17
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 21:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793480571;
-	bh=JovmbRKKM9xZ3bzkOvnYz4tRy1n03KhMCiMLiQXxNrY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=iaL8/2dma4L2E5r6CldXJPvKqp8fRpEetqR8UoiqvMhoMOwGzo04tlrKZ3hw8EDxx
-	 cm57XH3+C30FHetLJsF+AU5ydcWWignbnOVFSCy0PIfJwSsEVfg3skS30rwWyifbPv
-	 U2DodA5o6IN77nFMpvde1QBph7M3eFFfIV+uZR5G+3JWsajtB3rmlGcjGU5bJFvyro
-	 wJBN8iIVuhoZKq9Sw6xHp2MABjFjNgMzgfQxODk65Rq7NP58URXO4T3qf/UqfXlamp
-	 MNCknK2zE8IQ2p5CWIYCBUDbnrUU7S4noc9BOPlq+4B1pL2x3E6pFx0OyAuy/R6Qht
-	 ielu/hDoaTKCw==
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-93f30660e69so131918785a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 14:02:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBy4p/4EMvT22Dc1CtD4VDmcxX4P4yi515Lj6UGnlCh3Wts56KjnDi0isVAm80AQjWj0ld0mMxSRnFgguguF5gBj/xM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKBA1iZLIkhSk37QZgPu16Smydxgpv/50tErVxn+3LbSOMJJ/tU
-	ipkpxS0AB0rEaiFj2xe6EMEWzSirci3MiJeytZQh13wo13/38ISAkXlFM9vbCPxwzpVthOTeSeW
-	PsoUoe9avlgnF1YHSRpG0oAe/jXQNl2k=
-X-Received: by 2002:a05:620a:8393:b0:93e:c12c:4416 with SMTP id
- af79cd13be357-94421805919mr873994685a.82.1793480570337; Sat, 31 Oct 2026
- 14:02:50 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Zv+gfP3h
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a3517554f7so14627155e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 14:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793480665; x=1794085465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4szFGphMtUoKYDwEO3ILc85/4qEVkI9CTfJtlLVXdJ8=;
+        b=Zv+gfP3h0dCGmKQSZJgc9BXKNly7hCWlQkiAVteubsCa1u8VJ8/1FknfrfEcBt+UkT
+         mOnyh6DWoAmpnQqC81pg58KWwTDOT9GxDj1gRLyayrMmXzDhpHmc9aIQT0Ulc3qv9X9x
+         IePk9f+V2iIgPxdC/nJEzxDizOpW4wiwUb2U/RNLyQtG9VtPjEQqmA23Sj6PQPmexqMW
+         anVZDFm1hcJSP8zcwfreAaYqg3gklAghiV2RgGjgEumSkmteloWLAJCDnAPnUejHy6xp
+         RUlG7Y5Y1YMBYmWPwNz/xMwU7JeVpsvK5YtHqiudSHqfmKGFrt7CfHw3qhBD5xQc80i3
+         or0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793480665; x=1794085465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4szFGphMtUoKYDwEO3ILc85/4qEVkI9CTfJtlLVXdJ8=;
+        b=NWzqJSB+quuM62D2SbsP3nxI7J55sjHsBboAarmubt011qE8ItOiJ7d7vFW4P8Vb0V
+         bGe79w+2nNGpnphRSRl2ePw1lO8lCQvl8W8iREPUovLMZ04mfABvZILqx3UbwEp9mgkK
+         0BP40TqLTH5nqUNMJMjzf7XjSlBxVRKa5nHoknFCVgQtSeLGVobzSjuuZGYT/J/0qQzE
+         9Zlda+hCP6WGkV68qQzUdwEa3jp0556S3ANqRyNLcgrDh1rZnXyaOzg1PdEmCVUPL61F
+         pO5rwFCHu4azwz+UnwB52R3F/UPu/bOs772B/PTYEYiTgAzYfXGOt8wNccAVZurohmcv
+         zPOg==
+X-Forwarded-Encrypted: i=1; AKwUvBysp0g4wJkQu1mNx8A+4vlqQK97oBQpW4aO7++VvvYimZ/0X/q4qjdKh1Ek7BVnsnWqoweo07O0erShJcHbk5JRcpc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJJKLePh9uHpZAb0VbRRuN21vxShqUkr8RFMWYlbW8o14QJOwHK
+	LJeperJrZhFDbrsC2ORzjSXegVdVg1WTXwstVGkAgNMissw/dFi9BwWo
+X-Gm-Gg: AYBFou0DGyw+PLjnl1awAZpEZl4wuGQvG2wilhm+woPFwfq+yEUb99J1FjReX3oMXa4
+	lC2HdNEoHRUq5Vbbc+bGOwc1y/pslThBASALpEq/TeQh/gv4yyap+ZAWbqeLylAx+puPUk1CTmV
+	d5f3lVU+uynuFkd3JcRny07vUq6T5WrtC8/Yfmoqx67787NY6kuMqcz6IHQu2cb2fKBE66Xnmi2
+	k60B+rJtxk/zoPqJtst0704SP1+FSMKEQj9S/QLL79DL0o0NNR2bdGSdb75TkJi829gPDtORdKr
+	KZWKVvE4PrZghufzRr6Pem4tGyvRsKxy9RUbRNJqyKekw2JXv9qErqP4nHLnPlVkIUJcXHXynO8
+	ToVEGZqHdzHm7D3RhKjGJX+mNNuklSYNmS5ph4R5wOIWCJfIvBahxFCq9Rt2iqKmUcHlvQLu6My
+	EgyU/d9nzYGQKKNhm0EKjD3WvizN8nKRNU5Gp7pmOxkypIyOXZihOiBemM7lDvlcmUCJdBxKmEz
+	uKWWN1Ok79kzZh2jntwgHp/JaqcaY6Aryqlz1/jqoAn0sXn0y+HJt1R/81/q5lNkLeJeFRV3vHH
+	JvcqZJdSIfPKF3QQg/4RMoAO6ztzEAO6hI5ROb9k+4zZle3/UDL10tdJhvkGs238sl+QtQkLwBc
+	71vz30cJ63UaaGg==
+X-Received: by 2002:a05:600c:6214:b0:4a2:9cda:57cb with SMTP id 5b1f17b1804b1-4ac151a9077mr149862625e9.1.1793480664317;
+        Sat, 31 Oct 2026 14:04:24 -0700 (PDT)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abea72254csm82768725e9.1.2026.10.31.14.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Oct 2026 14:04:23 -0700 (PDT)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing/user_events: Don't free an event that a dynamic event still references
+Date: Sat, 31 Oct 2026 21:03:59 +0000
+Message-ID: <20261031210420.501187-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,158 +99,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261031090041.58574-1-ridong.chen@linux.dev> <20261031090041.58574-6-ridong.chen@linux.dev>
-In-Reply-To: <20261031090041.58574-6-ridong.chen@linux.dev>
-From: Barry Song <baohua@kernel.org>
-Date: Sun, 1 Nov 2026 05:02:39 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4yarkUMWjuJ+MVw3EkNDHanDU8_LKk0Td2tO9DJUe2cyw@mail.gmail.com>
-X-Gm-Features: AclHuK_IJBi8BwrNBY8KWJ9NBHd1SSJ62zreD3OjXulz7n9Nc2RkMxdC4i3O-Xc
-Message-ID: <CAGsJ_4yarkUMWjuJ+MVw3EkNDHanDU8_LKk0Td2tO9DJUe2cyw@mail.gmail.com>
-Subject: Re: [PATCH v5 5/6] mm/mglru: add tracepoint for scan_folios()
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Muchun Song <muchun.song@linux.dev>, 
-	Qi Zheng <qi.zheng@linux.dev>, Kairui Song <kasong@tencent.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
-	Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>, Ridong Chen <chenridong@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 31, 2026 at 5:01=E2=80=AFPM Ridong Chen <ridong.chen@linux.dev>=
- wrote:
->
-> From: Ridong Chen <chenridong@xiaomi.com>
->
-> MGLRU's scan_folios() emits the classic-LRU tracepoint
-> trace_mm_vmscan_lru_isolate(), which predates MGLRU. It reports the
-> scan/isolate counts and the LRU type, but carries no generation or
-> memcg context, so a trace of an MGLRU run cannot tell which memcg a
-> given scan belongs to, nor how far reclaim has progressed through the
-> generations.
->
-> Add mm_mglru_scan_folios next to it, reporting the same counters plus
-> nr_sorted (folios moved to a younger generation by sort_folio()) and
-> the context the classic tracepoint lacks: the node id and memcg id of
-> the lruvec, and the max_seq, tier and min_seq of the type being
-> scanned.
->
-> Now that struct scan_control is visible to the trace header, pass sc,
-> lruvec, type and tier straight in and derive everything else in
-> TP_fast_assign(), so nothing is computed at the call site when the
-> event is disabled. The int fields are grouped at the end of the entry
-> to avoid padding on 64-bit.
->
-> scan_folios() is the MGLRU-specific layer where folios are actually
-> scanned, so it has no classic-LRU counterpart. The existing tracepoint
-> is left unchanged.
->
-> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
-> ---
+An eprobe takes a reference on the call of the event it attaches to,
+and kprobe, uprobe, fprobe and synth events all refuse to go away while
+trace_event_dyn_busy() says such a reference exists. user_events never
+checks it, so a user event can be freed under an eprobe:
 
-Ran a test on this:
+  echo 'u:test u32 a' >> dynamic_events
+  echo 'e:ep user_events/test a=$a' >> dynamic_events
+  echo '-:user_events/test' >> dynamic_events
+  echo '-:eprobes/ep' >> dynamic_events
 
-/sys/kernel/tracing/events/vmscan/mm_mglru_scan_folios # cat format
-name: mm_mglru_scan_folios
-ID: 491
-format:
-field:unsigned short common_type; offset:0; size:2; signed:0;
-field:unsigned char common_flags; offset:2; size:1; signed:0;
-field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
-field:int common_pid; offset:4; size:4; signed:1;
+The last write drops the reference on the freed call.
 
-field:u64 memcg_id; offset:8; size:8; signed:0;
-field:unsigned long nr_requested; offset:16; size:8; signed:0;
-field:unsigned long nr_scanned; offset:24; size:8; signed:0;
-field:unsigned long nr_sorted; offset:32; size:8; signed:0;
-field:unsigned long nr_skipped; offset:40; size:8; signed:0;
-field:unsigned long nr_taken; offset:48; size:8; signed:0;
-field:unsigned long max_seq; offset:56; size:8; signed:0;
-field:unsigned long min_seq; offset:64; size:8; signed:0;
-field:int nid; offset:72; size:4; signed:1;
-field:int highest_zoneidx; offset:76; size:4; signed:1;
-field:int order; offset:80; size:4; signed:1;
-field:int lru; offset:84; size:4; signed:1;
-field:int tier; offset:88; size:4; signed:1;
+Return -EBUSY from destroy_user_event() in that case.
 
-print fmt: "nid=3D%d memcg_id=3D%llu classzone=3D%d order=3D%d
-nr_requested=3D%lu nr_scanned=3D%lu nr_sorted=3D%lu nr_skipped=3D%lu
-nr_taken=3D%lu lru=3D%s max_seq=3D%lu tier=3D%d min_seq=3D%lu", REC->nid,
-REC->memcg_id, REC->highest_zoneidx, REC->order, REC->nr_requested,
-REC->nr_scanned, REC->nr_sorted, REC->nr_skipped, REC->nr_taken,
-__print_symbolic(REC->lru, {0, "inactive_anon"}, {1, "active_anon"},
-{2, "inactive_file"}, {3, "active_file"}, {4, "unevictable"}),
-REC->max_seq, REC->tier, REC->min_seq
+Fixes: 7f5a08c79df3 ("user_events: Add minimal support for trace_event into ftrace")
+Cc: stable@vger.kernel.org
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+A non-persistent event whose last fd closes while an eprobe
+holds it now stays registered after the eprobe is gone. Can follow
+up with a retry on the eprobe put if wanted.
+ kernel/trace/trace_events_user.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index f658c3a77aa7..49b857a7f1d7 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1506,6 +1506,10 @@ static int destroy_user_event(struct user_event *user)
+ 
+ 	lockdep_assert_held(&event_mutex);
+ 
++	/* If there is a reference to a dynamic event */
++	if (trace_event_dyn_busy(&user->call))
++		return -EBUSY;
++
+ 	/*
+ 	 * Detach the fields before removing the call. Removing the event
+ 	 * frees the field list memory (trace_destroy_fields() is run on
+-- 
+2.55.0
 
-
-~ # echo 1 > /sys/kernel/tracing/events/vmscan/mm_mglru_scan_folios/enable
-~ # ./a.out
-[+] mapped 500 MB at 0xffff9f000000 (128000 pages)
-[+] duration: 60 seconds
-[+] first pass done, start looping writes
-^C
-~ # cat /sys/kernel/tracing/trace | grep mglru_scan_folios | head
-         kswapd0-50      [000] d..1.   650.877105:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D0 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D0
-lru=3Dinactive_anon max_seq=3D3 tier=3D3 min_seq=3D1
-         kswapd0-50      [000] d..1.   650.877686:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D64 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D6=
-4
-lru=3Dinactive_file max_seq=3D3 tier=3D3 min_seq=3D0
-         kswapd0-50      [000] d..1.   650.907558:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D0 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D0
-lru=3Dinactive_anon max_seq=3D3 tier=3D3 min_seq=3D1
-         kswapd0-50      [000] d..1.   650.907729:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D64 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D6=
-4
-lru=3Dinactive_file max_seq=3D3 tier=3D3 min_seq=3D0
-         kswapd0-50      [000] d..1.   650.909040:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D0 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D0
-lru=3Dinactive_anon max_seq=3D3 tier=3D3 min_seq=3D1
-         kswapd0-50      [000] d..1.   650.909198:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D64 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D6=
-4
-lru=3Dinactive_file max_seq=3D3 tier=3D3 min_seq=3D0
-         kswapd0-50      [000] d..1.   650.910520:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D0 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D0
-lru=3Dinactive_anon max_seq=3D3 tier=3D3 min_seq=3D1
-         kswapd0-50      [000] d..1.   650.910710:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D64 nr_sorted=3D4 nr_skipped=3D0 nr_taken=3D6=
-0
-lru=3Dinactive_file max_seq=3D3 tier=3D3 min_seq=3D0
-         kswapd0-50      [000] d..1.   650.911866:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D0 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D0
-lru=3Dinactive_anon max_seq=3D3 tier=3D3 min_seq=3D1
-         kswapd0-50      [000] d..1.   650.911988:
-mm_mglru_scan_folios: nid=3D0 memcg_id=3D1 classzone=3D2 order=3D0
-nr_requested=3D64 nr_scanned=3D66 nr_sorted=3D0 nr_skipped=3D0 nr_taken=3D6=
-6
-lru=3Dinactive_file max_seq=3D3 tier=3D3 min_seq=3D0
-
-The LRU naming feels a bit weird to me. We have
-"inactive_file" and "inactive_anon", but MGLRU doesn't
-have active/inactive lists. I guess it's not a big issue,
-though, since we also use the same names in
-trace_mm_vmscan_lru_isolate() in scan_folios().
-
-For the patch:
-
-Tested-by: Barry Song <baohua@kernel.org>
-Reviewed-by: Barry Song <baohua@kernel.org>
