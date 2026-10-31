@@ -1,97 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793471757;
-	b=zQgNvkrH/mjfdUa8Vc1+aMBW91gmLcIjEh/5yBADgZq9y8KAG+sp/EdXtqeU9yMWx4Gp
-	 QRO5xngj48hoRCiSwPYwpvTzQFySHZFiijVAGComPirE+T5YpEkShCHaqXFkCLZtjM5zK
-	 W4tAwRuurCmmpdkv0qZwOtCKLHEa18+cQ3tBYlUZLu6pOlnqIF7k8A/5CAu6xZplfvs0b
-	 FApXz6wkKj+ak4AePmh8h89aXZlEiBR1WtRAzrqK6YzxngVoFmhM3uOq41SWUdcrCm8cL
-	 M5URj0L+kSSQhH9g3wgehPgQn3Nk6bA7CFyrjqYt3IJkRcKzDqCW5iJpPk9ZHxXscKw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793471757;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.208.53
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793476354;
+	b=36ve3Y39WP5K04a+uV2VarwPeMVBUkVIg3RV+8GkfJECxJzexRuWMStM9m1Y1qwIKzfu
+	 1appkzKvRkZW83GPYPpuKnQYXaJAvH10GqdeKVkFVUcnM27FjhJB/LOex9TdMxDdF+Tsb
+	 D+uxiVEoFddhtjwoxIvH2KI/+YyoQlNprA5wmXxralHkGVoE6pES9mzICe0dptbklc1Hd
+	 CeCgbiNNT2E1B0JsGx6SUYmQEnuRhJ+DknMrWUeplETrADaqj9PXl/VFyuuyw+CQZmISc
+	 6sQP/Er+ggFEmE2LQThT4F5QftdWX9YwV/iiKSIQUHjwLTqYdZLONRvIiWjlyzEByow==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793476354;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=ScNzawShXKrGXlogOPyfxSlb2G6dZe7SaUn4tH+A76o=;
-	b=kvNpW4YzOTIymMkZ5PK18Ut+UwNpiAfYLeNSImMIQspY13Pe99C9IiIyTLU171RI9yr/
-	 FcDQt+jjFzzWG+zw/QfFRZCwP4tH2XrU9z2bxssuKpFlaUiegEoA4euDGrT/uM19NMKmQ
-	 X3NRCoi2H9juIt6qtxKjpyUpeGK6HMflSJbv29ptIS6LmypC58nu6nf3pkd5qRmzOGzAw
-	 VFAGBLlrwDFt7yoUnTcNK9H34EH3+GafBU9sO0pgWegzczMpYtDnGV2n+Y99J/l+wyekW
-	 AkIaPTIN8fJw5grVTAGbQUUT1HABeKcGjocXXkuT2t7Rfz+Ttr/a8B0f7IS8VMUjaGw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=ymL5qvPWIyrF5/LXgeDe0TiyyznlTEQO60Qfnl1OooM=;
+	b=is3LH2R/d4QdQsZnVtPIipBO2PiB15bWCADmfsSkBdhFrVv+5EhZkrN3bE3ZJT1h/Ovw
+	 YyrcounwGe0uR5OgTF7pn8FY40cWC7SlQZrjPQvfpSL20OrixUsElRKFtiDwmT3TFoOEz
+	 kLott5vEtWqRWxUqKU2jhn+Wq1Y5Cr642q474JrI7GodAKkLidsY20bKaM65qrOaoKMf1
+	 puS2A/vPdtG5giI/zMuxczt22IE9VnwPpyWKyhElVVC+IaSGnW29a1QubgRr3yiJvzXIV
+	 5afAvqs5S/zkengZwe54FCdzTnwjYIbnp2IJCK9ctrmo9woHyanSwD549ZhyyHMxa6w==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mBvdOo+n;
-	arc=none smtp.remote-ip=209.85.128.49
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="sJ/qWUYe";
+	arc=fail smtp.remote-ip=209.85.208.53
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2551E606A32E
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 18:35:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2551E606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3524606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 19:52:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E3524606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mBvdOo+n
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a5b2be99a8so11004215e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 11:35:56 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sJ/qWUYe
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6b1ec41d8e9so1916656a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 12:52:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793476352; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RzDYsD/oq0kZk+ltAtr1jta4puXSf3VipdJZajp6sGyldA3jAyjYIHNFqHvoB6AsPU
+         Db+R1fFwmo/+NUmLbZmXExf277k/IGvR6zGEdS6LfEYR3/mfXPmNQp2xdopDNlUkxf1D
+         qV/Y6BPFtGqSwUN797tSrCBI8xWqSowZ5j/dpOY/KmQSQpwLvtWg4WW8IPacrQ8p25fJ
+         UUvbyrsbpKyiKKgLHEh9gfhDKcgKQ0NwDGBZfg8BWRVVkgpPgColgmYlTyMGdQE5inhh
+         EkqeVa/0y7P8O/jDtcVAyF1zzKSEPq3aLulO2+R3MpGoepqSIiBG/eh7ufDKiuzJHxmB
+         l6/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ymL5qvPWIyrF5/LXgeDe0TiyyznlTEQO60Qfnl1OooM=;
+        fh=Hr/Hek5iE0qlHfTDcsaQZevuhoQsKK7YzYeOeHByuUo=;
+        b=eBK/8awo2qmqghei4AtgQc24PXBmmfgfSMoNbUm4iCYdVFulzapR8lxrbaBKTrlaC9
+         aS9Zu8LSWb8zDBDwLBVoNsIDxjg9GQk8wCTSMY1G1ixkpcmLidYQzxiSWKQg6NGX8L4+
+         h035se+1ht7004dZbkseFvVTK9gBcxEnYxyVYBx89dP5wtaBqkwxD6ISC1kk3BZE4TZE
+         FDQRkc0R0ntwQCLd3KuyWj39QNjA0/8FTRveJXMlFdKHpN+iBhfOoXhniOL9PHXYMb+/
+         qC8Kw/XNjQtzDjHM0yCnarmfNpRt293tZKiNd9K8ygp0isKBJxCUZmyWpwtOqSDTk5A0
+         MEKg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793471755; x=1794076555; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ScNzawShXKrGXlogOPyfxSlb2G6dZe7SaUn4tH+A76o=;
-        b=mBvdOo+n8cXHG28ipFe+13Gso+AWyV/hRigrGb5kWoswYk5R67XD/07LHKNsBoZXcB
-         ow/YP6wVyfX0CjWwoFCxxirB44LWlwuzl+mye077n1u82LSfgKsR8KLtqZ9F3CZ0wbc8
-         oK1f2rX/jSfzhVle1MjR/gSgN5Qhi9N5rgN278fwMsGgsIQhwpFOqLT6Kc5jFS6YEiEj
-         fjGftOuE2z+FZKUfU41RU7lexSlWb7yz/nTuNsm8EHf3dj9FgKNRiUsxtoPrt41K5WPC
-         6rUbaSOjGKgTv8D3J6FVwxRJnNzRn0ywh7EaR6SLmmT5p0vB87q55GAO/WQq94MyBBoX
-         9Xuw==
+        d=gmail.com; s=20260707; t=1793476352; x=1794081152; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ymL5qvPWIyrF5/LXgeDe0TiyyznlTEQO60Qfnl1OooM=;
+        b=sJ/qWUYeZK3rLitin7DaQ9yR/pCebouLwaMLZeW0zFLKw3JOTi5tpBBOBhfTiigatX
+         aNkDwjzEzA25nxematR9HFA6xoSmHuw96vCPGJUk6ZkK6VDZYcY6UPNzAvwAmEInCkAQ
+         /yjyiOxvlwkfygsIpVxverGM1ljusLCQPI2fJBrkpbmAEpByvCxX29uKySihIIXlY1By
+         gugiY22kKh3IzGU/m2TyxZT88UvRA6yrv9gXEwOY1bBm2sdmOeH9iWxUJRyRTKN8XkXg
+         z0yuTAwJ9XrK7vYBDJMHtBR8hNosaHskp6xxZVhUtQO/lIJR5AEERY8o5PyjlFsok5U3
+         kIbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793471755; x=1794076555;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ScNzawShXKrGXlogOPyfxSlb2G6dZe7SaUn4tH+A76o=;
-        b=JEO4ZPigsyIXJbzDjhN2zTTpOF2p2W+Z7e+qqKm7puMqPWSSMjNRpr5sjCJbvxA+2t
-         Uax4vfFzdlqoBuJh6gI1l4AJX3+J6bHi3f6zVKNgItCy4KuDqHrbDyG38o4F9CHJOH41
-         e4rTdvA3pl3PL1IzjEHLdu232RjFHeh5khxPb+suzY6rA9JOckOXU9kmTAGR8FAeztH/
-         A4aSdyRHYvwmxXW5bY0VFHjdbShC73mGfrJibUjWLzsf/zFTSMCGbwHrYvEoRHfULRr3
-         n9DMYVY7TzqamUxovCZ5IQWAaJWSk7L2edqbIJyxyL1SDZyo9v3C2q2ZRmE8c4LIfXPq
-         MdvA==
-X-Forwarded-Encrypted: i=1; AKwUvBw2KcaXQFSGvohJOijSOBB4Lxmw+zQ3pRaIlTY141rWwHyGHevhHw0EfRYLAdaFzkIRS948lmPtWctnGAP6FmFY3Uw=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK1DEvOh26ru8XLmcmDiYBO7mNokXTgotALY+YKmFMFcOkWP/Tm
-	ej11/9znyi7P45jmXCMwCUHa7fBmX87RGExS4gl8PY4PnuTGSGzr7NpUCfD8qLOo+EnbIg==
-X-Gm-Gg: AYBFou3nwRp33+EYOJy++ugyYaVhX8OsFIpWp5xKc/d2ih9CfwQiZz6f/5xmY1qWc5z
-	Jos2zsDYeLtl7qYveyfzkJrMrFBdeWqsiFZEGU6q/7E47SaBPCYo01bExHN++ydnoEJw+lmbUg6
-	PeLQlZMcKcJLTsrn2drG1QeBkFreNLe5Bdf79VyMbnthHODyc+cUjiz9wujkIKAPAqOAjaTlfrZ
-	jXfadtroMX/8TvJ8jQtt5HIjkrRhrMVCzZ1wCWtSi0jJZSdvxbO22bKFMxvMMpWIqlyVb134+Xu
-	n0XAqoUD62IlD6AJencYoWRBUe16SbvdDUcjO/ti09W0Fb9LHoFUUTbh1esHNslJsO/hRU0UGnd
-	VE10V/zCoMjGRQfcSBHiSqRnA899DfwgRUWrgOgy2+8huqki7EkKQTrmzmt1Yz+eIOBxWmTEWe3
-	rx/bmCB8yTkViZdWkdzPK519SxYb3Id0qwb+I5vBoS/HrULoy8nFtsTfOBE6vJ/SEFY/JcwnrsN
-	e2FLVDCX9KxOO6ZAU+683ABjkjYjfPzj2ljANGtbFo+GaOE6b4L197jIWm5ATdk+61mazrOGk3t
-	hBdYWbAjT9eL/d+k/fK/hU0xFwKM57lNJcX7YyQBVbgVLRgFFWDNIjANflK8v77sr0JBicxzt40
-	g6JOIoso6pv4KkQmaRdDPdu5MmK18edgRFwsTeLhewezyHnXhQu+uSOKgLsBu2igcCzAHGspXtE
-	CZUUpBAevcGrDqltCZDbtchQxYIVOclWDtVvljF3XZxL/YE1uWwrwTLlsHtjJYuphMfb5IinTBh
-	napgbn8VFm24+T1
-X-Received: by 2002:a05:600c:524c:b0:4a1:fcfa:2a07 with SMTP id 5b1f17b1804b1-4ac1960dd8dmr133921025e9.30.1793471755505;
-        Sat, 31 Oct 2026 11:35:55 -0700 (PDT)
-Received: from longitude (2a02-8434-fda5-4201-0247-bf06-1f38-d09d.rev.sfr.net. [2a02:8434:fda5:4201:247:bf06:1f38:d09d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f3229dbsm219745075e9.1.2026.10.31.11.35.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 11:35:55 -0700 (PDT)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] tools/bootconfig: Match literal keys in tracing script helpers
-Date: Sat, 31 Oct 2026 19:35:34 +0100
-Message-ID: <694f66b67c017072c0246997a09e67a79ebee04f.1793471731.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1793471731.git.edumucelli@gmail.com>
-References: <cover.1793471731.git.edumucelli@gmail.com>
+        d=1e100.net; s=20260707; t=1793476352; x=1794081152;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ymL5qvPWIyrF5/LXgeDe0TiyyznlTEQO60Qfnl1OooM=;
+        b=vY7BUZbibW4qcp9aZ4woi9WQbNgunE/OR+he+SKmEnB8yfC26EJH9BZFFXyfTWkgoM
+         OSGlwBbT/PRTi8pEV2E6NbMakQYORRtbxLIKax5OgIcmMwyuTpu0ucL4iYki24uqVHzq
+         wLAY0h/cjfWfXLPsHkrVHuH8kkG90tA+IjYbdSODcIcO4Dys0wnkq1uwLVL/w9Zr0msE
+         2hcJYfmVY7ErlNdBUxhUbrIktFaItfeNcjHC8ii4LM5hCmar5mipaJBSt3Ltmid7nhYS
+         YMzFIyCEOTS+LroUT6zwIUSGkjIYeG46IpY6UpY0HH9qg874KckvdGL4KGS35Cj0uMVK
+         q8nQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxVApk0X+bNwaX1UnTw3XxonTnqpMU7NJqAb7aDVInFgJw8csxCHJ/+f96agv3hhG3wb4j9nsD9BJagRT8Ur2S994Q=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ3Jma5d6mMO/fNQG2oU66lQZiff6hD9Vt1pvp7G89vYuTy+dFi
+	4gNz1rdmpCRiXYYnOIgRS498LtxoWqEP8mMMUt3xU9MWzOj+ScKFL6eO1Qo+wH5X1Wsu5BoiK1z
+	8VQ2QJn563jlwIFZUqUo37ir6+ON6A4T3ndu40s7bxMeu
+X-Gm-Gg: AYBFou32YyX+CBSWeJkvunZxrUsb/1mpw7KatqhTEfMrxAA4u7mhoT+8QixInoVwMJ2
+	Wr793PsPyq0R/2D2xM5FrwW+StOPVUIsNhxyIDZYTsKqn3KD/zpS4AAU17fDUq17ZJRzD6E+Gya
+	TW2zvRSXRt/uqkzLx38b6k/hvsA50FN/j2w65YTwgMB7G54Jj3i4OqlErewG+qciKvWdpLfyBJ0
+	2qhaQ5nIWkUIhnRFY7+yq/aEAPARP68ZQOI5GrpVUkB2t+tfrmJ3a0VUyznI+DNetZdxP9//dS2
+	SAurjOG+zmqbWQ/iIU02b851VycH70TIaCneaN77JUl5jENYMsSWzl+a/FdfwaGt3j6zurcKh7D
+	4eWli6LmpYsPUM59zSBFhn8rDMSO0xyfhTJMmlCo39iMKoEv9MfIGjOeq6nTvCigOrbEBCQ==
+X-Received: by 2002:a17:906:7952:b0:c2e:40a0:7978 with SMTP id
+ a640c23a62f3a-c4ca7a54f88mr480913466b.9.1793476352048; Sat, 31 Oct 2026
+ 12:52:32 -0700 (PDT)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -101,62 +103,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261031175213.704021-1-bestswngs@gmail.com>
+In-Reply-To: <20261031175213.704021-1-bestswngs@gmail.com>
+From: Weiming Shi <bestswngs@gmail.com>
+Date: Sun, 1 Nov 2026 03:51:55 +0800
+X-Gm-Features: AclHuK_4noahyXUVMwaXTRsGR35d3pI531O4mEpXqwFeyal3vHlzCksnNBM6N8I
+Message-ID: <CANgPUi06dtO2xecWUE044CWYAaFbA4au5Lb4XU08-z==YAWX0Q@mail.gmail.com>
+Subject: Re: [PATCH v3] ftrace: Complete subops teardown on shutdown failure
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Xiang Mei <xmei5@asu.edu>
+Content-Type: text/plain; charset="UTF-8"
 
-The xbc shell helpers interpolate bootconfig keys into regular expressions.
-Dots in keys consequently match arbitrary characters: asking for
-ftrace.options can also return ftraceXoptions. Branch and subkey lookups
-also match unrelated keys that merely share the requested prefix.
+Please ignore and disregard this patch ([PATCH v3] ftrace: Complete
+subops teardown on shutdown failure). It was sent by mistake.
 
-Compare complete keys literally and require a dot at descendant boundaries.
-Keep the optional subkey pattern operating on the suffix only.
+I apologize for any inconvenience caused.
 
-Fixes: 7e66ef0046cc ("tools/bootconfig: Add a script to generate ftrace shell-command from bootconfig")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
----
-The helper checks cover literal dotted keys, missing keys, branch
-boundaries and subkey selection. The original helpers passed one of
-five checks; the fixed helpers pass all five. These checks also pass
-when combined with the other fixes in this series.
-
- tools/bootconfig/scripts/xbc.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/tools/bootconfig/scripts/xbc.sh b/tools/bootconfig/scripts/xbc.sh
-index 1f0ebf50dd2d..16ee590661b4 100644
---- a/tools/bootconfig/scripts/xbc.sh
-+++ b/tools/bootconfig/scripts/xbc.sh
-@@ -36,21 +36,26 @@ xbc_get_val() { # key [maxnum]
- 	if [ "$2" ]; then
- 		MAXOPT="-L $2"
- 	fi
--	grep "^$1 =" $XBC_TMPFILE | cut -d= -f2- | \
-+	awk -v key="$1" '$1 == key && $2 == "="' "$XBC_TMPFILE" | cut -d= -f2- | \
- 		sed -e 's/", /" /g' -e "s/',/' /g" | \
- 		xargs $MAXOPT -n 1 echo
- }
- 
- xbc_has_key() { # key
--	grep -q "^$1 =" $XBC_TMPFILE
-+	awk -v key="$1" '$1 == key && $2 == "=" { found = 1 }
-+		END { exit !found }' "$XBC_TMPFILE"
- }
- 
- xbc_has_branch() { # prefix-key
--	grep -q "^$1" $XBC_TMPFILE
-+	awk -v key="$1" '$1 == key || index($1, key ".") == 1 { found = 1 }
-+		END { exit !found }' "$XBC_TMPFILE"
- }
- 
- xbc_subkeys() { # prefix-key depth [subkey-pattern]
- 	__keys=`echo $1 | sed "s/\./ /g"`
- 	__s=`nr_args $__keys`
--	grep "^$1$3" $XBC_TMPFILE | cut -d= -f1| cut -d. -f$((__s + 1))-$((__s + $2)) | uniq
-+	awk -v key="$1" -v pattern="$3" '
-+		index($1, key ".") == 1 &&
-+		substr($1, length(key) + 1) ~ ("^" pattern) { print $1 }
-+	' "$XBC_TMPFILE" | cut -d. -f$((__s + 1))-$((__s + $2)) | uniq
- }
--- 
-2.53.0
-
+Best regards,
+Weiming Shi
