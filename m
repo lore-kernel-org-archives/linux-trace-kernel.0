@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.133
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.137
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793437282;
-	b=o0+7o52rlDB6+vJsepZfFmN9ZWTUQ8VM6f9yrvuY3HtR4n3dbYvhYVXAIDCdg9PWAFGr
-	 Vt0DL+2Xio6Z+VpzHygv9oGwPTpRCvGQDya8Pr/Tn77nQOEGVMPqeh1/ZIKGOWaketYCq
-	 DB9ucNxR8KFiOMLZn0odrxX1VgPeiX4eTKx3l3uj94Fruw/5NaATBmweFYjQuLCOGQjHl
-	 8QL2MLwLkzCC0w6el68wMHOHA9Es0MOJZw9UlwRwFKnIT4ysscn5EpwZQAjRZYRI2ZcBj
-	 dzyUEZ6XGRefaIF7QSdEMMJJDocgRGNo2dUVcPq4d12yP4kIKeWG65GM1am/cql1QSQ==
+	t=1793437292;
+	b=cpw3YhaVgTyoIKcBLzRu/w0LIBLilzK4ohM5sWmz8ZJ7QhM2xlbmTXGm/ivgPrM17qrb
+	 o4tgcVYavT2DNSNG6s3Hv7rxtSkdSzzWBHEAQE8RvYH7j++0juTLHah80DcrL467mz9Nx
+	 NddtjcLJcaKgAQEN0nN8jocb80ZSUHcYWxlOWrpndpcmHSojmebW/VHqwHcA0WbpX44J0
+	 drF0Eu91iXLqkDLpV35809vbM6f7o4JLatse4KVuiKTQs81joeLz2dGxGSWAR9nLv2lZb
+	 QNJYfcg7LXEWi0LdQVUUY0L8RY42B2VJW5n1t0zFbT5hlZhwnwhoBrPw0HAXG59Te5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793437282;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793437292;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=8EAs3QvFvaSFhq2cyIL1T9bjNJc6WlnZgmI91srTaNI=;
-	b=WVlH4HtbtoYd8r9avfTn2uV9KEOsyWUxK00DfH0MCCoCu6o7JdTdzs5d02/bCG/JLeOD
-	 GaLj1SJ3kBA56B3pit8iNwnpVqOS8VyghFns95/zg/D3wx6zKHNa8eNEJOZ1n68urUaZg
-	 Fal7WucRgYKxns5FH68StMDd2ZJc/hxO1cICNx4JXLwAMgsnVucrpjRXkMUCrnnIeJ7ZK
-	 DXlxvadxzf8dsHTaZF9b4n2lcJHsHs47EkGi6NicHmVBnTUpYGjl4JBYpX/f+0arY01Cw
-	 axtgIiKlLBOHbUM+u7PRk6hLBnC4ne12etYxXjchpLSzmM+FTqeCnZYXzpS0GQZDvvg==
+	bh=fiiKrBCpHUYOHtqd9WqUWhp2nvmCUlooq/peEHqO4Go=;
+	b=qVs9xN/G86dbPvyKqE9qadQaGiXufNfV2Sdh2PUdfW57RSJQHHwEcGL5om7ytAjEIDmV
+	 B1yEpeb5DaufaTi1hw5firQ6wONnQ1VqCWQ3BuX2CM1EgAWTuZ1po/ldHH6gHKKUEvruL
+	 VXLrkAzgQFFKHcvVBJed7EdSWpOxKsLHDDkWIxPVCJzpW8xoi6K3/khQONcIqaR6VqmqT
+	 yxso5NNfDHxFUGDrXhJx55gepqVZXY7OxzmzmAgq7vxrlG4tSCBp9xMW3KvfLxZyYGM5t
+	 6pzIrscszqV5IL0fZCFt0d2XaTcPgkylc+P1lfta3V0di/5GgHHGW7bHTv4NKgLHobQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VO9QeCJo;
-	arc=none smtp.remote-ip=91.218.175.133
-Received: from mta0.migadu.com (out-133.mta0.migadu.com [91.218.175.133])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tozsAYZQ;
+	arc=none smtp.remote-ip=91.218.175.137
+Received: from mta0.migadu.com (out-137.mta0.migadu.com [91.218.175.137])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C500606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 09:01:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C500606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32BB606A31D
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 09:01:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F32BB606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VO9QeCJo
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=tozsAYZQ
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=LMPLkNm0J12/2POSpRky5OUFx70cELWQjCjS53X+ghs=;
+DKIM-Signature: a=rsa-sha256; bh=Ef7uDXCWASIprI+9tULZE2dA/Lb+54sHHrZJ8AHqF0o=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793437279; v=1; x=1794042079;
- b=VO9QeCJo6tA9e7R4mzmG/fTi9CKbqJgpnb57ZmPVL7ZdQcZnKby2sChqxWzTDVT969INNbfq
- eUEc5kIPF1WoSH6RgBugN4FIItl69N/Rnjw+/llWfFjw3LVWCWQzzPTfQwb+R6dENF3sp91PmA4
- CbzB2uvjIlqNz77Jlgaaufcc=
+ t=1793437290; v=1; x=1794042090;
+ b=tozsAYZQlWfc8MmPR1dbsAqTWJhTZ8NmRXZXD4xx7CZEfONDAItng6jipxhZBC6xc7OJpUyA
+ ZF6A88vaAecXXnZtEV4UAmi7NNuw461Ul7c6Ymi2OFx0fF2127gBOlkwNQ/PvYO2kAW0YI9R6GJ
+ CFnDhIeg20qynC3EinLYnfP0=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id d03afa4a643ee410;
-	Sat, 31 Oct 2026 09:01:19 +0000
-X-Mizu-Trace-ID: d03afa4a643ee410
+Received: by smtp.migadu.com with ESMTPS id d33284fd3119d6cd;
+	Sat, 31 Oct 2026 09:01:29 +0000
+X-Mizu-Trace-ID: d33284fd3119d6cd
 X-Migadu-Flow: FLOW_OUT
 From: Ridong Chen <ridong.chen@linux.dev>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -75,9 +75,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_)),
 	Ridong Chen <ridong.chen@linux.dev>,
 	Ridong Chen <chenridong@xiaomi.com>
-Subject: [PATCH v5 2/6] mm/vmscan: move vmscan tracepoints to a local header
-Date: Sat, 31 Oct 2026 17:00:37 +0800
-Message-ID: <20261031090041.58574-3-ridong.chen@linux.dev>
+Subject: [PATCH v5 3/6] mm/vmscan: move struct scan_control to a dedicated header
+Date: Sat, 31 Oct 2026 17:00:38 +0800
+Message-ID: <20261031090041.58574-4-ridong.chen@linux.dev>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261031090041.58574-1-ridong.chen@linux.dev>
 References: <20261031090041.58574-1-ridong.chen@linux.dev>
@@ -94,101 +94,306 @@ Content-Transfer-Encoding: 8bit
 
 From: Ridong Chen <chenridong@xiaomi.com>
 
-Move include/trace/events/vmscan.h to mm/trace_vmscan.h so that the
-tracepoints can be extended to reference vmscan-internal structures such
-as struct scan_control, which is not visible outside mm/.  This mirrors
-what several other subsystems already do with their trace headers (e.g.
-fs/fuse/fuse_trace.h, fs/gfs2/trace_gfs2.h, fs/lockd/trace.h).  As they
-do, set TRACE_INCLUDE_PATH to "." and add mm/ to the include path of
-vmscan.o, the only user that defines CREATE_TRACE_POINTS.
+The definition of struct scan_control has lived inline at the top of
+mm/vmscan.c. Move it out to a new mm/vmscan.h so the reclaim-internal
+state can be referenced from other reclaim translation units without
+duplicating the definition.
+
+The header uses an ordinary include guard and pulls in only what the
+struct needs (nodemask_t, gfp_t and struct reclaim_state).
+
+mm/trace_vmscan.h includes the new header directly so that any
+translation unit pulling in the trace events (mm/vmscan.c, mm/shrinker.c)
+sees the full definition of struct scan_control regardless of include
+order.
 
 No functional change.
 
 Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
-Reviewed-by: Barry Song <baohua@kernel.org>
 ---
- MAINTAINERS                                        | 2 ++
- mm/Makefile                                        | 1 +
- mm/shrinker.c                                      | 2 +-
- include/trace/events/vmscan.h => mm/trace_vmscan.h | 4 ++++
- mm/vmscan.c                                        | 2 +-
- 5 files changed, 9 insertions(+), 2 deletions(-)
- rename include/trace/events/vmscan.h => mm/trace_vmscan.h (99%)
+ MAINTAINERS       |   2 +
+ mm/trace_vmscan.h |   2 +
+ mm/vmscan.c       | 108 ------------------------------------------
+ mm/vmscan.h       | 118 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 122 insertions(+), 108 deletions(-)
+ create mode 100644 mm/vmscan.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index aaf2825ac945..2ad01107fa05 100644
+index 2ad01107fa05..724791bb779f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -17653,6 +17653,7 @@ F:	Documentation/admin-guide/mm/multigen_lru.rst
- F:	Documentation/mm/multigen_lru.rst
- F:	include/linux/mm_inline.h
+@@ -17655,6 +17655,7 @@ F:	include/linux/mm_inline.h
  F:	include/linux/mmzone.h
-+F:	mm/trace_vmscan.h
+ F:	mm/trace_vmscan.h
  F:	mm/vmscan.c
++F:	mm/vmscan.h
  F:	mm/workingset.c
  
-@@ -17802,6 +17803,7 @@ R:	Shakeel Butt <shakeel.butt@linux.dev>
- R:	Lorenzo Stoakes <ljs@kernel.org>
- L:	linux-mm@kvack.org
+ MEMORY MANAGEMENT - MIGRATION
+@@ -17805,6 +17806,7 @@ L:	linux-mm@kvack.org
  S:	Maintained
-+F:	mm/trace_vmscan.h
+ F:	mm/trace_vmscan.h
  F:	mm/vmscan.c
++F:	mm/vmscan.h
  F:	mm/workingset.c
  
-diff --git a/mm/Makefile b/mm/Makefile
-index 2a3ec53d62ee..277b97f7f8d7 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -32,6 +32,7 @@ KCOV_INSTRUMENT_vmstat.o := n
- KCOV_INSTRUMENT_failslab.o := n
- 
- CFLAGS_init-mm.o += -Wno-override-init
-+CFLAGS_vmscan.o += -I$(src)
- 
- mmu-y			:= nommu.o
- mmu-$(CONFIG_MMU)	:= highmem.o memory.o mincore.o \
-diff --git a/mm/shrinker.c b/mm/shrinker.c
-index 4fb424e721bc..4fbdade6d2f6 100644
---- a/mm/shrinker.c
-+++ b/mm/shrinker.c
-@@ -3,7 +3,7 @@
- #include <linux/rwsem.h>
- #include <linux/shrinker.h>
- #include <linux/rculist.h>
--#include <trace/events/vmscan.h>
-+#include "trace_vmscan.h"
- 
- #include "internal.h"
- 
-diff --git a/include/trace/events/vmscan.h b/mm/trace_vmscan.h
-similarity index 99%
-rename from include/trace/events/vmscan.h
-rename to mm/trace_vmscan.h
-index 8a872990b4be..ad90f0e9bf2e 100644
---- a/include/trace/events/vmscan.h
+ MEMORY MANAGEMENT - RMAP (REVERSE MAPPING)
+diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
+index ad90f0e9bf2e..3917e1b62dfa 100644
+--- a/mm/trace_vmscan.h
 +++ b/mm/trace_vmscan.h
-@@ -648,4 +648,8 @@ TRACE_EVENT(mm_vmscan_kswapd_clear_hopeless,
- #endif /* _TRACE_VMSCAN_H */
+@@ -11,6 +11,8 @@
+ #include <linux/memcontrol.h>
+ #include <trace/events/mmflags.h>
  
- /* This part must be outside protection */
-+#undef TRACE_INCLUDE_FILE
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE trace_vmscan
- #include <trace/define_trace.h>
++#include "vmscan.h"
++
+ #define RECLAIM_WB_ANON		0x0001u
+ #define RECLAIM_WB_FILE		0x0002u
+ #define RECLAIM_WB_MIXED	0x0010u
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 9959ca158ce8..79d2d614afd0 100644
+index 79d2d614afd0..49677464fc9a 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -71,7 +71,7 @@
- #include "swap.h"
- 
+@@ -73,114 +73,6 @@
  #define CREATE_TRACE_POINTS
--#include <trace/events/vmscan.h>
-+#include "trace_vmscan.h"
+ #include "trace_vmscan.h"
  
- struct scan_control {
- 	/* How many pages shrink_list() should reclaim */
+-struct scan_control {
+-	/* How many pages shrink_list() should reclaim */
+-	unsigned long nr_to_reclaim;
+-
+-	/*
+-	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
+-	 * are scanned.
+-	 */
+-	const nodemask_t *nodemask;
+-
+-	/*
+-	 * The memory cgroup that hit its limit and as a result is the
+-	 * primary target of this reclaim invocation.
+-	 */
+-	struct mem_cgroup *target_mem_cgroup;
+-
+-	/*
+-	 * Scan pressure balancing between anon and file LRUs
+-	 */
+-	unsigned long	anon_cost;
+-	unsigned long	file_cost;
+-
+-	/* Swappiness value for proactive reclaim. Always use sc_swappiness()! */
+-	int *proactive_swappiness;
+-
+-	/* Can active folios be deactivated as part of reclaim? */
+-#define DEACTIVATE_ANON 1
+-#define DEACTIVATE_FILE 2
+-	unsigned int may_deactivate:2;
+-	unsigned int force_deactivate:1;
+-	unsigned int skipped_deactivate:1;
+-
+-	/* zone_reclaim_mode, boost reclaim */
+-	unsigned int may_writepage:1;
+-
+-	/* zone_reclaim_mode */
+-	unsigned int may_unmap:1;
+-
+-	/* zone_reclaim_mode, boost reclaim, cgroup restrictions */
+-	unsigned int may_swap:1;
+-
+-	/* Not allow cache_trim_mode to be turned on as part of reclaim? */
+-	unsigned int no_cache_trim_mode:1;
+-
+-	/* Has cache_trim_mode failed at least once? */
+-	unsigned int cache_trim_mode_failed:1;
+-
+-	/* Proactive reclaim invoked by userspace */
+-	unsigned int proactive:1;
+-
+-	/*
+-	 * Cgroup memory below memory.low is protected as long as we
+-	 * don't threaten to OOM. If any cgroup is reclaimed at
+-	 * reduced force or passed over entirely due to its memory.low
+-	 * setting (memcg_low_skipped), and nothing is reclaimed as a
+-	 * result, then go back for one more cycle that reclaims the protected
+-	 * memory (memcg_low_reclaim) to avert OOM.
+-	 */
+-	unsigned int memcg_low_reclaim:1;
+-	unsigned int memcg_low_skipped:1;
+-
+-	/* Shared cgroup tree walk failed, rescan the whole tree */
+-	unsigned int memcg_full_walk:1;
+-
+-	unsigned int hibernation_mode:1;
+-
+-	/* One of the zones is ready for compaction */
+-	unsigned int compaction_ready:1;
+-
+-	/* There is easily reclaimable cold cache in the current node */
+-	unsigned int cache_trim_mode:1;
+-
+-	/* The file folios on the current node are dangerously low */
+-	unsigned int file_is_tiny:1;
+-
+-	/* Always discard instead of demoting to lower tier memory */
+-	unsigned int no_demotion:1;
+-
+-	/* Allocation order */
+-	s8 order;
+-
+-	/* Scan (total_size >> priority) pages at once */
+-	s8 priority;
+-
+-	/* The highest zone to isolate folios for reclaim from */
+-	s8 reclaim_idx;
+-
+-	/* This context's GFP mask */
+-	gfp_t gfp_mask;
+-
+-	/* Incremented by the number of inactive pages that were scanned */
+-	unsigned long nr_scanned;
+-
+-	/* Number of pages freed so far during a call to shrink_zones() */
+-	unsigned long nr_reclaimed;
+-
+-	struct {
+-		unsigned int dirty;
+-		unsigned int congested;
+-		unsigned int writeback;
+-		unsigned int immediate;
+-		unsigned int taken;
+-	} nr;
+-
+-	/* for recording the reclaimed slab by now */
+-	struct reclaim_state reclaim_state;
+-};
+-
+ #ifdef ARCH_HAS_PREFETCHW
+ static inline void prefetchw_prev_lru_folio(struct folio *folio,
+ 		struct list_head *base)
+diff --git a/mm/vmscan.h b/mm/vmscan.h
+new file mode 100644
+index 000000000000..adb22e80d760
+--- /dev/null
++++ b/mm/vmscan.h
+@@ -0,0 +1,118 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _MM_VMSCAN_H
++#define _MM_VMSCAN_H
++
++#include <linux/gfp_types.h>
++#include <linux/nodemask.h>
++#include <linux/swap.h>
++#include <linux/types.h>
++
++struct scan_control {
++	/* How many pages shrink_list() should reclaim */
++	unsigned long nr_to_reclaim;
++
++	/*
++	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
++	 * are scanned.
++	 */
++	const nodemask_t *nodemask;
++
++	/*
++	 * The memory cgroup that hit its limit and as a result is the
++	 * primary target of this reclaim invocation.
++	 */
++	struct mem_cgroup *target_mem_cgroup;
++
++	/*
++	 * Scan pressure balancing between anon and file LRUs
++	 */
++	unsigned long	anon_cost;
++	unsigned long	file_cost;
++
++	/* Swappiness value for proactive reclaim. Always use sc_swappiness()! */
++	int *proactive_swappiness;
++
++	/* Can active folios be deactivated as part of reclaim? */
++#define DEACTIVATE_ANON 1
++#define DEACTIVATE_FILE 2
++	unsigned int may_deactivate:2;
++	unsigned int force_deactivate:1;
++	unsigned int skipped_deactivate:1;
++
++	/* zone_reclaim_mode, boost reclaim */
++	unsigned int may_writepage:1;
++
++	/* zone_reclaim_mode */
++	unsigned int may_unmap:1;
++
++	/* zone_reclaim_mode, boost reclaim, cgroup restrictions */
++	unsigned int may_swap:1;
++
++	/* Not allow cache_trim_mode to be turned on as part of reclaim? */
++	unsigned int no_cache_trim_mode:1;
++
++	/* Has cache_trim_mode failed at least once? */
++	unsigned int cache_trim_mode_failed:1;
++
++	/* Proactive reclaim invoked by userspace */
++	unsigned int proactive:1;
++
++	/*
++	 * Cgroup memory below memory.low is protected as long as we
++	 * don't threaten to OOM. If any cgroup is reclaimed at
++	 * reduced force or passed over entirely due to its memory.low
++	 * setting (memcg_low_skipped), and nothing is reclaimed as a
++	 * result, then go back for one more cycle that reclaims the protected
++	 * memory (memcg_low_reclaim) to avert OOM.
++	 */
++	unsigned int memcg_low_reclaim:1;
++	unsigned int memcg_low_skipped:1;
++
++	/* Shared cgroup tree walk failed, rescan the whole tree */
++	unsigned int memcg_full_walk:1;
++
++	unsigned int hibernation_mode:1;
++
++	/* One of the zones is ready for compaction */
++	unsigned int compaction_ready:1;
++
++	/* There is easily reclaimable cold cache in the current node */
++	unsigned int cache_trim_mode:1;
++
++	/* The file folios on the current node are dangerously low */
++	unsigned int file_is_tiny:1;
++
++	/* Always discard instead of demoting to lower tier memory */
++	unsigned int no_demotion:1;
++
++	/* Allocation order */
++	s8 order;
++
++	/* Scan (total_size >> priority) pages at once */
++	s8 priority;
++
++	/* The highest zone to isolate folios for reclaim from */
++	s8 reclaim_idx;
++
++	/* This context's GFP mask */
++	gfp_t gfp_mask;
++
++	/* Incremented by the number of inactive pages that were scanned */
++	unsigned long nr_scanned;
++
++	/* Number of pages freed so far during a call to shrink_zones() */
++	unsigned long nr_reclaimed;
++
++	struct {
++		unsigned int dirty;
++		unsigned int congested;
++		unsigned int writeback;
++		unsigned int immediate;
++		unsigned int taken;
++	} nr;
++
++	/* for recording the reclaimed slab by now */
++	struct reclaim_state reclaim_state;
++};
++
++#endif /* _MM_VMSCAN_H */
 -- 
 2.43.0
 
