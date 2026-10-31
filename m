@@ -1,54 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.100
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793441579;
-	b=4Q8mPIvpyaXgTrCf7GIoXRt/tdhMoXX+Q9lmyJ+Pgd/G3RaOFR1NhaQXtInuuYjQyZpH
-	 Wseg96+mZyAJBtKLggHB3chhAYPPLxGDswo0G/z7UCuPa/SfRFaVeE38rjIt+eTvqyBOO
-	 e8hZX/bJduvd/eRGldZf7214Bl2ALa9gMCnqpvrnicrJ2VQxJPG9+pof7U9y2PcYqj3UG
-	 1uybmaB3HIaBJn3tegwnek+ilu5eE/6mnXtN4HePQKkUEzdNIG/Px5WjkY9YlXqqjnS9G
-	 qdNfqsO++/s7ATo4/i5T2kGCrcUTX/b6G4B4wzJkek06GfZfSEmopRHH8Vhi2Bk3MLw==
+	t=1793442349;
+	b=Il7PBoZ+BNM+yRZvD6e8ybdMyvBb9fqa6hlWWJkMxGZnPgQfeqm7Uf3jyWlQZ5abygRN
+	 yPjHvcinF/BloWycj1Iytfq3MYt9EJ8EieKfZt2se3yxJ0vE6DIgxosWIwDnvI4jnUhf0
+	 HdIM2HMpVnyXCB54WgSS9Qe36wpETnTdTxAb3i/kWsQPM+XF2pbzUDCQzURERzl6T56na
+	 eNtAjSF/vnpXq4r7DvE0pquFDdInRNKg1PncFN3tqe7na8c5i2dsyL4m1W8emfmrgmulQ
+	 uYY295BeRDBOnpaJ7AKEota65FJ/A82CYJuzm0gcKJKvBVR8xNWRtN20Ai95Id9Un6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793441579;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
-	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
-	 To:X-Mailer;
-	bh=dDCOuaNWdFHWDg4eo0if1LTvwbtTxO+pnWs7/GHeHF8=;
-	b=LTfEJ73HLhD000FvN3vOjmT9qefyCrLl93QgzHeGdZI4AOyPLm4zxI61ZaR/LEUBXqN8
-	 csJmnHer9bPj3w2G9qwHmywum1u/K0kvPJCTMqBlliZK79dOj84UKrFGbf/v/M+GhERzJ
-	 jV0kpVkf+lLW0OkLUC1qp+zclWWeGMBKiv39mlHH+9LV2JWQ+Fp0kSi/Y0wbxbzium3Zu
-	 PK7bzhGIzCm2Egfj2qcXWeHoiVlZPF+v5t3OYjzKqUTQZLjPxKBnQHEWc8JL2+gO6v4/2
-	 Wv+wdasq85ys/SB8+bhDrtP9UoRceORSGSPJf5Dm65SuLSENLXvT0kPRKexxz/HN3IQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793442349;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=7yVmIuop4gnsPfbSLW6KTepFf/okMUAMYmN1g1+o1FQ=;
+	b=eRyvvW9lcWGkJFZqH8a59wYE1pMWXYulvbHvmSDQXCS0fTWd40D42lDTxFaipqLBgd73
+	 8B89KHLn5DE0mYEabjJ7BRw4dF21c4KU88OSCkofd8234qsdfEyk1pmUmojsAvLW0fYPQ
+	 Dx1TVPHW5zLtJPF5YurMz0H1lcJTEDRas61dVedncHH6x82M8Exir542i1EhlY232bhkF
+	 ggn2N7wGTkBQSpOQQsaITQoZJJnevW5PtPZa5tX5BFHsfPzkkf05lxuPsI8hLefAvrpjO
+	 FfRbPRvJHJEY7SaRcGxiPB2Y6xURGSkHqJ+UpkfFgE+RdkegOxvupcj0MkcLvGRlT+w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=oLB06oPt;
-	arc=none smtp.remote-ip=95.215.58.100
-Received: from mta1.migadu.com (out-100.mta1.migadu.com [95.215.58.100])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aDrysK9X;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68E7606A31D
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 10:12:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A68E7606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD36A606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 10:25:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD36A606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=oLB06oPt
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=lZTmGrotgsDGI65tFXKRdBILlZ1ISbBZpIj7+K9DZDI=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793441574; v=1; x=1794046374;
- b=oLB06oPtTuGAdIRr8hXKWIyuAE/VFfRZ2aSmX+nn2L9fhl77u8r1uFIBARMhGEesrc4oTcLk
- Ny18QOASskvHzGJGUQU9J9Xr62mA/lMG67loRk4XIPBfwTHygeyAP57pQtg+X9uScl77eSjNhc9
- ynBvjhd1WXGHSz4P5Yf3JqXA=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 3800c739b860db0f;
-	Sat, 31 Oct 2026 10:12:54 +0000
-X-Mizu-Trace-ID: 3800c739b860db0f
-X-Migadu-Flow: FLOW_OUT
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aDrysK9X
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a5b2be99a8so9439015e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 03:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793442347; x=1794047147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7yVmIuop4gnsPfbSLW6KTepFf/okMUAMYmN1g1+o1FQ=;
+        b=aDrysK9XtMByDqlPYhyjkKCi2TLyC2moFntn4CYFUbAnVC2HRTL2JAU0qZmvPZYyKL
+         r+hfeQ4QebXQg9U00GN5jkoBvFjaherbdm8zE8hcyRpZonXsCuIaKNkZXBPV0W3Wq+ZQ
+         k7n4SRMb3Idy1ZG7SeFaYQGB2tMmF9J9LeUv7C837LqeNeXJ495njbegamdStcUVh/jd
+         rydSv6oDaW5UO+po/BN3ha6JR49sndZBtLsAJG5920zKndYytYxKrUdjpbZjZ/q6a1lU
+         QWvp1szLr1vCSuiHv/lyd/oLnTs8dDexjSWyWj2uJ1psf0qachRPL5038Q8JbNlTX4c3
+         NpSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793442347; x=1794047147;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=7yVmIuop4gnsPfbSLW6KTepFf/okMUAMYmN1g1+o1FQ=;
+        b=abIJVKfW81oapE+Snhsr5FbtqOVQoClo1+rTLlXXmSxhV2nsgD3J/gsDjA9yiC+sMg
+         A293AXllrOdS3isN5Vtgi+aOLP74Jwbib/VKQJ0neAdVXjycDoIlmpItwbR6wJWmR8dC
+         91M1Qejp1FLl6mBWLG+Qu9GXZTRj7q303t+MsKNCn8iTC1dR46pyttnqPfL+Iu2YnDNN
+         bi2Yy21wi0tW7YisdAfcthGfIyI3xx6jTdOwsuFyprWIdiGFFHrlBxKB3PvI84vuCGH7
+         iLoQj+wkpV6t5LAjONfarUr2oFp8tg74R1g6FX61TpVzF66HvrFKWWsz17Zk6DVuSlW4
+         mK/Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxjN9GJrC9y2m+mW0qrk7dLYWqd5newTfyDA6mVI+zDo0YiS1nHe+ejIWV4mXK0e5Va4AH+NPWLDqTzu1B1JShVvyg=@vger.kernel.org
+X-Gm-Message-State: AFq9FYINibb684i1NAE+JsSZwto7WTwssVAnNCc50tqwAAoLduwz/Y8q
+	MxllNLGbNgGf44/aMXJHhjWilio1iOMSnLMZafdVyShuNbvQEIl026zX
+X-Gm-Gg: AYBFou0OXb0+YZk1ayfP0Q/kVnfEaoYpMZIOyvWXvIs8Md9812QGjyzyHpqLGIDof2K
+	R0HTNWtc1t6ArBq3t3etNcJYpuOzJG0I59sASPG3A6VNsmGtqyZOb9Tp0Lnc32Y1NI5p0BO54/b
+	ruf2lkN3mjoNpNkIBotD8mc3PHh434WNVUmFMK9MGrPBlN+TLqfuxVpuLPUbr8xSciBAdWl7QcT
+	hLnG5oX9ra+AHUZHrT9yqLIrNW/8CX8GTcVHh4GKdaO8eSDo+I7m/OnWrguoHuyMPjev3qAdAOD
+	OkVhzwlim6OHXB5AS7sHonLQPJuK1pi8HT3URBj4y10BniOkLUYdCp2yuajrq/A3A9QE7KZzz1c
+	3Vda5LM9gadIFc3taO0lQuH7bOiuW+3fBJ+1Vjv/S4sHj+YSlE6sWjjNF4YEN4G3WOmm+vRCEwM
+	BC3KtiU4jBF7wdws7om2jW8TUmJxpCs+pDC3sVYi07CxRTXfZw+yQvxtu078wS3GiVW1dtCa+Nw
+	DBg/924EtytizUxjWYp8dXDzAv7+1U+FwwLPUXa1LuUCATZ3KzeOhofuQziVos5QqHzWfHI6znN
+	YWLcmLtZ32Uu3sxQEwcPbzM1yIxSM+utmerVranvzYCc1LufWPtjejmlPG9pYPrn7QVear6AIr/
+	4kr+mYUTTawpsmNW4d4nNZPpmx5faZpipvB/aLcth3k51j3KAR+8QZ9UOPRBcjXTY3k+uX1Bt6t
+	CiGUwLIHTqezc5FlSFXl0w6XuzBk29BzN9k2+DhG6nYSUCdLWHCr7+qvuAVw==
+X-Received: by 2002:a05:600c:19c8:b0:4a3:59c9:a743 with SMTP id 5b1f17b1804b1-4ac1913ef8fmr108040225e9.27.1793442347043;
+        Sat, 31 Oct 2026 03:25:47 -0700 (PDT)
+Received: from longitude (2a02-8434-fda5-4201-994c-f615-42f0-2afb.rev.sfr.net. [2a02:8434:fda5:4201:994c:f615:42f0:2afb])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f3229dbsm195363135e9.1.2026.10.31.03.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Oct 2026 03:25:46 -0700 (PDT)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] tools/bootconfig: Preserve tracing settings during export
+Date: Sat, 31 Oct 2026 11:25:30 +0100
+Message-ID: <cover.1793442331.git.edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1793364709.git.edumucelli@gmail.com>
+References: <cover.1793364709.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,80 +99,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [PATCH v5 4/6] mm/vmscan: pass scan_control to the vmscan
- tracepoints
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20261031090041.58574-5-ridong.chen@linux.dev>
-Date: Sat, 31 Oct 2026 18:12:27 +0800
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Dave Chinner <david@fromorbit.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Qi Zheng <qi.zheng@linux.dev>,
- Kairui Song <kasong@tencent.com>,
- Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org,
- "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>,
- bpf@vger.kernel.org,
- Ridong Chen <chenridong@xiaomi.com>,
- "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org (ope>)
-Content-Transfer-Encoding: 7bit
-Message-Id: <DBDE2024-5586-4938-A8A5-B6247E2B2BF2@linux.dev>
-References: <20261031090041.58574-1-ridong.chen@linux.dev>
- <20261031090041.58574-5-ridong.chen@linux.dev>
-To: Ridong Chen <ridong.chen@linux.dev>
-X-Mailer: Apple Mail (2.3901.100.1.1.12)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Hi Masami,
+
+Thanks for the review. I've updated the event-filter patch to use the
+explicit delimiter pattern you suggested. It now warns and skips filters
+that contain delimiters and both quote types, since bootconfig cannot
+represent them. The other three patches are unchanged.
+
+Changes in v2:
+- Patch 1: use explicit escapes in *[,\;\#\}]* for the delimiter check.
+  The semicolon also needs escaping for the shell to parse the pattern.
+- Patch 1: detect both quote types, warn on stderr and skip the filter.
+- Patches 2-4: no changes.
+
+The series keeps event filters, generic trigger counts, histogram
+variable ordering and paused histogram state during export. It is still
+based on bootconfig/fixes, including the two fixes you picked up earlier.
+
+I retested the filter change in a temporary tracefs instance on my Ubuntu
+machine, running kernel 7.0.0-38-generic, with recording disabled. I also
+checked the mixed-quote cases against real tracefs filters and added
+regression checks for both quote orders and all four delimiters. The
+fixture checks cover each fix and the full series.
+
+Feedback is welcome.
+
+Thanks,
+Eduardo
+
+Eduardo Mucelli Rezende Oliveira (4):
+  tools/bootconfig: Quote event filters in ftrace2bconf.sh
+  tools/bootconfig: Export replayable event trigger counts
+  tools/bootconfig: Reset histogram variable tracking for each instance
+  tools/bootconfig: Preserve paused histograms in ftrace2bconf.sh
+
+ tools/bootconfig/scripts/ftrace2bconf.sh | 29 +++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
 
-
-> On Oct 31, 2026, at 17:00, Ridong Chen <ridong.chen@linux.dev> wrote:
-> 
-> From: Ridong Chen <chenridong@xiaomi.com>
-> 
-> Several vmscan tracepoints spell out reclaim state as individual
-> arguments, all of which the caller already holds in struct scan_control.
-> Now that the struct is visible from the trace header, pass sc directly
-> and pick the fields out in TP_fast_assign instead of spelling them out
-> at every callsite:
-> 
-> - mm_vmscan_direct_reclaim_begin, mm_vmscan_memcg_reclaim_begin and
->  mm_vmscan_node_reclaim_begin: gfp_mask and order.
-> 
-> - mm_vmscan_lru_isolate, mm_vmscan_lru_shrink_inactive and
->  mm_vmscan_lru_shrink_active: reclaim_idx, order and priority.
-> 
-> - mm_vmscan_reclaim_pages: nr_scanned. nr_reclaimed stays a separate
->  argument: it is the return value of shrink_folio_list(), which does
->  not update sc->nr_reclaimed.
-> 
-> - mm_vmscan_balance_pgdat_end: order and nr_reclaimed. highest_zoneidx
->  stays a separate argument: it is a balance_pgdat() parameter, and
->  sc.reclaim_idx may differ from it by the time the end event fires.
-> 
-> No functional change. The tracefs event format (TP_STRUCT__entry and
-> TP_printk) is unchanged, so tracefs-based consumers are unaffected.
-> BPF programs attached via raw_tp/tp_btf see the new TP_PROTO and need
-> to be adjusted; tracepoints are not a stable ABI (see
-> Documentation/bpf/bpf_design_QA.rst).
-> 
-> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
-
-Acked-by: Muchun Song <muchun.song@linux.dev>
-
-Thanks
+base-commit: 1dc6d173c43e10a1d0ee36b43d0d2f371f4d262a
+-- 
+2.53.0
 
