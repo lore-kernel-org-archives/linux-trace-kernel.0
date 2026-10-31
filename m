@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793439042;
-	b=Vnr++d87B+XmRiT/piiM5nncs6AB7APB12iIk5pYZZxxDF+UEtqDqKMB4Tpom9KPjMuq
-	 twq0v2GPtUqZqi17tt4Iifn/ZearLxNgorI7fj5kZR27tG7A0aQYDZ9php61TB1iipBtt
-	 Wd8uaVrAkzPkqvi3KZZewFNFdZtZ0rOSA5dXW0BCT5OL/AMZsaAZEUHtGu9PWOmLcn98h
-	 sDAkjsw3Vd27dymWpI7vzaxR7g/PowrwUhM3iRNs4J1mSjwP9chlBGtjzYHdsBPBODLrY
-	 P63Oj5biJZ2sXSbM/C7R4gYjlHwER8abTKE2dQxsQOAp1WUWJ8qiAjkhkZWmXQ+cm+g==
+	t=1793441579;
+	b=4Q8mPIvpyaXgTrCf7GIoXRt/tdhMoXX+Q9lmyJ+Pgd/G3RaOFR1NhaQXtInuuYjQyZpH
+	 Wseg96+mZyAJBtKLggHB3chhAYPPLxGDswo0G/z7UCuPa/SfRFaVeE38rjIt+eTvqyBOO
+	 e8hZX/bJduvd/eRGldZf7214Bl2ALa9gMCnqpvrnicrJ2VQxJPG9+pof7U9y2PcYqj3UG
+	 1uybmaB3HIaBJn3tegwnek+ilu5eE/6mnXtN4HePQKkUEzdNIG/Px5WjkY9YlXqqjnS9G
+	 qdNfqsO++/s7ATo4/i5T2kGCrcUTX/b6G4B4wzJkek06GfZfSEmopRHH8Vhi2Bk3MLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793439042;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793441579;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Content-Type:Mime-Version:Subject:From:
 	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
 	 To:X-Mailer;
-	bh=znrLCuEJJGmNbO1Yhr6pNkt2XZN+PDlviOAs+EksPeM=;
-	b=W8C8znTefYG0ju72u7Ma3pQPP3BoMpMIPhEZZY6oE4TwZPi5TWs7MYeMqs+iwGN3oT71
-	 gcviSDgfj6UzUH8NCoWNjyryA8gFxwSNWyyKT+8rulXi6cVrEjvI8c34WqcTeAhd2irRN
-	 XB7MKS+p/BbgOrqeobQyK8vA+zr8tyy53gGrexRT4YdRTlcP9R4YhUUP7zNhazKF6StTA
-	 aTZc7LB+lewsHZsXbok/ixbYzuRtb2r6CJKkXTGA9txaodkEUo6BIAJfDlDUtSc+QLNDn
-	 ZMvHUdJ7y5Jmp2/povHJLF2FblLUiOIEwsiE62yyzV2IyHzWNMkqDV9werw3sTEjj1g==
+	bh=dDCOuaNWdFHWDg4eo0if1LTvwbtTxO+pnWs7/GHeHF8=;
+	b=LTfEJ73HLhD000FvN3vOjmT9qefyCrLl93QgzHeGdZI4AOyPLm4zxI61ZaR/LEUBXqN8
+	 csJmnHer9bPj3w2G9qwHmywum1u/K0kvPJCTMqBlliZK79dOj84UKrFGbf/v/M+GhERzJ
+	 jV0kpVkf+lLW0OkLUC1qp+zclWWeGMBKiv39mlHH+9LV2JWQ+Fp0kSi/Y0wbxbzium3Zu
+	 PK7bzhGIzCm2Egfj2qcXWeHoiVlZPF+v5t3OYjzKqUTQZLjPxKBnQHEWc8JL2+gO6v4/2
+	 Wv+wdasq85ys/SB8+bhDrtP9UoRceORSGSPJf5Dm65SuLSENLXvT0kPRKexxz/HN3IQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=onn1sehd;
-	arc=none smtp.remote-ip=91.218.175.97
-Received: from mta0.migadu.com (out-97.mta0.migadu.com [91.218.175.97])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=oLB06oPt;
+	arc=none smtp.remote-ip=95.215.58.100
+Received: from mta1.migadu.com (out-100.mta1.migadu.com [95.215.58.100])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76D7606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 09:30:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B76D7606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68E7606A31D
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 10:12:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A68E7606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=onn1sehd
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=oLB06oPt
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=PvpE2xVkJZQp9Z5Dmn2rK7a3rOZLgmd/wYqlMX90kr4=;
+DKIM-Signature: a=rsa-sha256; bh=lZTmGrotgsDGI65tFXKRdBILlZ1ISbBZpIj7+K9DZDI=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793439039; v=1; x=1794043839;
- b=onn1sehdzhf2xVt9I5V0tDQ5w9aAfRk0sOy/O9MWDjUCaWL8OHQphb5kYXw9lprgNKlkr/MS
- yocmdX1yyu4yR+KFfILxLldFXdGYjd9gx/6b43A2Zc+p2/kh4Dr2f8mKdfMkwsgEkWOdiGpuCX+
- 7ItVumMlQ8COOuay8M73TH1s=
+ t=1793441574; v=1; x=1794046374;
+ b=oLB06oPtTuGAdIRr8hXKWIyuAE/VFfRZ2aSmX+nn2L9fhl77u8r1uFIBARMhGEesrc4oTcLk
+ Ny18QOASskvHzGJGUQU9J9Xr62mA/lMG67loRk4XIPBfwTHygeyAP57pQtg+X9uScl77eSjNhc9
+ ynBvjhd1WXGHSz4P5Yf3JqXA=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta12.migadu.com with ESMTPS id 9f95f1fa206c4141;
-	Sat, 31 Oct 2026 09:30:09 +0000
-X-Mizu-Trace-ID: 9f95f1fa206c4141
+Received: by mta11.migadu.com with ESMTPS id 3800c739b860db0f;
+	Sat, 31 Oct 2026 10:12:54 +0000
+X-Mizu-Trace-ID: 3800c739b860db0f
 X-Migadu-Flow: FLOW_OUT
 Content-Type: text/plain;
 	charset=us-ascii
@@ -58,11 +58,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.100.1.1.12\))
-Subject: Re: [PATCH v5 3/6] mm/vmscan: move struct scan_control to a dedicated
- header
+Subject: Re: [PATCH v5 4/6] mm/vmscan: pass scan_control to the vmscan
+ tracepoints
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20261031090041.58574-4-ridong.chen@linux.dev>
-Date: Sat, 31 Oct 2026 17:29:49 +0800
+In-Reply-To: <20261031090041.58574-5-ridong.chen@linux.dev>
+Date: Sat, 31 Oct 2026 18:12:27 +0800
 Cc: Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
@@ -90,9 +90,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
  Ridong Chen <chenridong@xiaomi.com>,
  "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org (ope>)
 Content-Transfer-Encoding: 7bit
-Message-Id: <CB3856A6-C6D5-41E1-B6BB-B263BB63BCD6@linux.dev>
+Message-Id: <DBDE2024-5586-4938-A8A5-B6247E2B2BF2@linux.dev>
 References: <20261031090041.58574-1-ridong.chen@linux.dev>
- <20261031090041.58574-4-ridong.chen@linux.dev>
+ <20261031090041.58574-5-ridong.chen@linux.dev>
 To: Ridong Chen <ridong.chen@linux.dev>
 X-Mailer: Apple Mail (2.3901.100.1.1.12)
 
@@ -102,20 +102,31 @@ X-Mailer: Apple Mail (2.3901.100.1.1.12)
 > 
 > From: Ridong Chen <chenridong@xiaomi.com>
 > 
-> The definition of struct scan_control has lived inline at the top of
-> mm/vmscan.c. Move it out to a new mm/vmscan.h so the reclaim-internal
-> state can be referenced from other reclaim translation units without
-> duplicating the definition.
+> Several vmscan tracepoints spell out reclaim state as individual
+> arguments, all of which the caller already holds in struct scan_control.
+> Now that the struct is visible from the trace header, pass sc directly
+> and pick the fields out in TP_fast_assign instead of spelling them out
+> at every callsite:
 > 
-> The header uses an ordinary include guard and pulls in only what the
-> struct needs (nodemask_t, gfp_t and struct reclaim_state).
+> - mm_vmscan_direct_reclaim_begin, mm_vmscan_memcg_reclaim_begin and
+>  mm_vmscan_node_reclaim_begin: gfp_mask and order.
 > 
-> mm/trace_vmscan.h includes the new header directly so that any
-> translation unit pulling in the trace events (mm/vmscan.c, mm/shrinker.c)
-> sees the full definition of struct scan_control regardless of include
-> order.
+> - mm_vmscan_lru_isolate, mm_vmscan_lru_shrink_inactive and
+>  mm_vmscan_lru_shrink_active: reclaim_idx, order and priority.
 > 
-> No functional change.
+> - mm_vmscan_reclaim_pages: nr_scanned. nr_reclaimed stays a separate
+>  argument: it is the return value of shrink_folio_list(), which does
+>  not update sc->nr_reclaimed.
+> 
+> - mm_vmscan_balance_pgdat_end: order and nr_reclaimed. highest_zoneidx
+>  stays a separate argument: it is a balance_pgdat() parameter, and
+>  sc.reclaim_idx may differ from it by the time the end event fires.
+> 
+> No functional change. The tracefs event format (TP_STRUCT__entry and
+> TP_printk) is unchanged, so tracefs-based consumers are unaffected.
+> BPF programs attached via raw_tp/tp_btf see the new TP_PROTO and need
+> to be adjusted; tracepoints are not a stable ABI (see
+> Documentation/bpf/bpf_design_QA.rst).
 > 
 > Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
 
