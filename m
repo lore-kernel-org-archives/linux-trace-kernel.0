@@ -1,111 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793445050;
-	b=3Ia9At7gj89suvTvdJ6WpnvvtRbn3GFd95L6MkphNQy1qwSAVYX3LzCRcQiv1zBd83s6
-	 TXYpLYu6J4HQUdMTXqnFSCTnO+SVF8pvY4KlfFoJGZzFRjEhYZc5E1TMx8MTrVc/kSRp/
-	 63YORGB2aCoYMp6KbpZICBr3EiNSioB3zdu09p7aQBpDGd+pdKif/1ZcZ6DKIcarePnZN
-	 3PMjOe15ldnOgac+74RbugzM94lhjovZVFAQsuAZjRSCuazkgwaR0feLgT2bw2F94TbGM
-	 DAwORxwznZXvY6HUvrm/4vBj4jeG5bLEnSHKexnqEFGyNgsyq+TOI2IRQu6wkgBt+vA==
+	t=1793452031;
+	b=yDJl6HrJoyrnzhlyuOoxlssgj2KiJk8+lS76kLs1MbU03HuR8kP1tVee40By4H0uaGlw
+	 CmjznqlfcaLTaFLb1JjYRWay4at6i2QSvvOxYUPOkv2P1vyZWng8iKLbYyeWeJF0kGci2
+	 HNt2tH962nxJ83t9FPmeu3r0osSoLqRV/7CVj13RZ3uKXTSns60hbX9eKRoPDMePfE5Bj
+	 3sBvcxu/leq5RoXElRv2Uwn35ECH5jtyIS8ESBK3gQwfB7tTNNiKiN3SODhCwLUsljb0U
+	 xbhKTj4jo3G228H5o2Pxbiwf+L9EKU5jBBrsT5pF08YJGYw2IKdniCe4+YTnJnIF6yQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793445050;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=8/DEyBWZeNjbIYVLMYEXjqZxeouD7j/CxCTXFjXVFWE=;
-	b=YP37pjl+t7m/jsnsh0FRcUy68G8Zi3qPZK0NaUeSWUd+qmTUoaEh900II1LzkUTsckuM
-	 KN54pHtD1z4+nlRI3yi/Ju5jAVOOAlLXyEIVKgA+XCu+chwHnfart1Jm8ix0VrqmtZIqt
-	 YHYpsSpaCd0yBsG+L78GBjNUy2xbouocGN5IxNqsrK63Xp0DHQOFw9yrlfjcyLqmTXXcN
-	 G8uH/EApQIiAigoB53A1IyGE+i4vP/N8Oy2iwfwLlC6MxEkNfilTt+We8B/79L4MNUCfO
-	 mJqxfSNwVC2lujnfTS9UfKtnbWWnHc/VsNMBGlpRGI40DYQhdnLSIS+rayU9ajSoz4g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793452031;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=rvdPv4hRvTf7pVG1n6aNMYDnMjBNHKJfM9FYI7MvNRU=;
+	b=mmYn8Htxr5yFRb94+czYzraUB+rFDIzGDJpea1UZbPKOTE/D3PPBLSiTk+rNw2CJEA3G
+	 gqcwCdnKk9D3c912NDQYu9cdnTmo6gVJhJZTVWix1qaFL13Z7pIGiO09Ru7i9vDeWNJGM
+	 vkWvHWpCN8wWF5156xlfiwn/xngk4NQZo0ofb7/Zy6zcK53Jf5bUgNNeBRJHYAQHtMln4
+	 fjVSG+7Kab+QPwIA8IM57noP102OE04C/Si7gSzzRge0pXHZ3PqaHxqNnXOd2iS5u+bzU
+	 NJtHHXsXgQp2M/5Z/ziMdHdjW3aeSNoHQOt9AGHsXR4HE4OIdlBKSLI1snYO1NqLWLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nlvriD47;
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DKoXxjoi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB1C606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 11:10:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7EB1C606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788D9606A31A;
+	Sat, 31 Oct 2026 13:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nlvriD47
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48dee593f18so1257292f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 04:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793445049; x=1794049849; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=8/DEyBWZeNjbIYVLMYEXjqZxeouD7j/CxCTXFjXVFWE=;
-        b=nlvriD47siSUj/pHhAZKx+QLV5KHM/oCUhB2Z72IcmRKuDh3jiEue41W2bEqqDFxx/
-         epSfCs0ji+w96+RHDverYdlufb2BeD51SHb8d3aVAf+bP+sHMqHpLrleLcr8XhEat+Nm
-         VvdLIP08AZAu/HYXHTlVeHrk2AaqHs9omZ+vtzdVJZTnqNPbFwfOqYWohu0mLNHzx5kJ
-         UjaZlR+pqvdN6OFKp6OtIFKhTA/nOquQtmw59tEofdPcG/4gvVN33faezMupVGz9Vq6b
-         7noxXbyB6tLXWzdp8rBQ+Uvzirz/0qTMpQojvrDhungxg0breARLZraCM2bJ7BqfbDNO
-         f57Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793445049; x=1794049849;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8/DEyBWZeNjbIYVLMYEXjqZxeouD7j/CxCTXFjXVFWE=;
-        b=MMax64LzN7KTAfqPkomLNGvNw8fpyDKCBXEspdZmmTRyrjTZ7ms84lsaKJL8EUliEb
-         yMFKGMToR4CLzkZPxFMcV0q+4ZalSvN9op86+u9+An4zJ2L2psugWzBQ0pLCMSIoIfaB
-         fFhqyy2KZwIWJbIY3IPu0UWw+ha+802yEfFTGX/Rnb1BuDSeoUCpbTnXXw8uNx/kgwPu
-         5SJGq3DlqShDehM83CBIy9NmREnWuT5GoMA/BDvbK6kQ5T9rKpkHbxB2DZENEm3FTJDI
-         8SGWOJV2TER9XyrFftz15HynlQhNugVE8zp/65qzEWCdQs4aAzQaO4xv5YQNoUIhxO1f
-         3YhQ==
-X-Forwarded-Encrypted: i=1; AKwUvBw3vw6wSvFe1Aa2/oVKaUc0JzQTO+lOHA/Hwg3Cjxnk/95xIpQ8wRa4JyY2iPh4U2x37oFTuydw8bYpDtJ9ympkpUo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLMiLEJfXdqEh+DWi1AwScz+xGxuUM7s5qLxJC74JsXc5GiygUu
-	g6hHo5KXT6OrmSXSXzgc7cMrXhmH7GasU0PypIYq9JgnWolF2vRRYNPg
-X-Gm-Gg: AYBFou0HeEQDf9CY1mduI9kYJQdzz54cVKHNDuiSARIeozgblMLOrFvuDawm/kWcuMe
-	yemctWVB2XofoRQXjdxwAcFahUOICtfIapIqGWOykZya2hTQGBR8pax2TDOtq05Qb1xFc2G74Qi
-	ggtZKT/Qz61td9cmhlB3+6sNn3vRf4o3L3G7tPYHbTQ0NVGU/Qy8C7t2QoNDUDn3++RUtFWGNkz
-	huUAfDkCHQ7indBZEWoZYyCQk/OJobIX/Y5lERqn7b/tD7tAWhdxJPdWKKZjCKSDqJhQr8fss0J
-	zhBLEZ0Qt7oIC+JEMByMWgKuadn5n1pz3RrwUOu9Ha6e19RLBOK8BJtnU35bT/Snp1qxYnexjDC
-	vtoy2pk3AS19TsD11Ff6D+3Kw/sZf2+avQoJv6O2oXGB7H5gtm2q8JcQ39OzhErnv9CAPTHFrm+
-	kABuRvDtYaiQpiLUFRLj4jS+n0nGZJLU5HX+3/SONuVCjcTutNUq0t3jLbVce0DL0XwhpdrOsKY
-	gKE7KnpKYq0xh52DGWNRkaLNUUu92+S043iiTKtVEYg1w27lLk0FV8vaZH9DR5jtJ1JV8Tnc4Hc
-	YaijmDEQEfJdxr0RilsYxpso+WS5EjJYPZir2sZvsgv034G2ErBd7ng/hQobC+vtrlqrn8LftrW
-	b0JcfOevrB8Eo46vS0FeKHSPlmJG3a7f4Y3eUV1AkAblH7qoJa20w83ih6i8+fkYKsaFaOOox/q
-	h+dX/kjshaY0L1JjtFF2CDaj6t7wJp
-X-Received: by 2002:a05:600c:198c:b0:4a2:5ca:767f with SMTP id 5b1f17b1804b1-4ac151a9a36mr117500995e9.4.1793445048512;
-        Sat, 31 Oct 2026 04:10:48 -0700 (PDT)
-Received: from unknown748F3CBA5068 (dynamic-2a02-3100-a81d-e001-9c9b-db33-f166-0fda.310.pool.telefonica.de. [2a02:3100:a81d:e001:9c9b:db33:f166:fda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf67aa704sm117315545e9.8.2026.10.31.04.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 04:10:47 -0700 (PDT)
-Date: Sat, 31 Oct 2026 12:10:45 +0100
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Hongyan Xia <hongyan.xia@transsion.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, linux-doc@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 03/13] sched: Split preempt-count bookkeeping from
- raw updates
-Message-ID: <auXLfz6mFh_uOvRr@gmail.com>
-References: <20261028033127.82193-1-kmehltretter@gmail.com>
- <20261028033127.82193-4-kmehltretter@gmail.com>
- <20261029093219.GH1779021@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DKoXxjoi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14AE51F000C1;
+	Sat, 31 Oct 2026 13:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793452031;
+	bh=rvdPv4hRvTf7pVG1n6aNMYDnMjBNHKJfM9FYI7MvNRU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=DKoXxjoiV6quLf3es4UT1I3AzJQI2dmDLtMeemLY1n2qSpH6C9y0eMmNJIts8/Y4a
+	 Gf9DOO2dB4dL97eTVr3PBUfxUOe6Cf78kTqslJNKaPCQB/lSxXJsDCE6qytwLF5OYG
+	 PdVa2ftyQEf9fuqtHBEI3nvdIjxDBgKlEz0IuoxfEpwJ5vKVBteAp1s7GTzvBZgwq0
+	 GBjUi6LFM9Yc43z3U+mks2pPXWL2OGb1mzZo7Rg5X2pTvIextOtQ+tveX2TjSa9hak
+	 dH7x38IPVNsGt+6tz8xT0CS4s92CXMF4S2Kj4RU8SX1es9ZUMJg4cNP3f3lIenBlcb
+	 lBZ2YVY05V27Q==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] tools/bootconfig: Preserve tracing settings during export
+Date: Sat, 31 Oct 2026 22:07:08 +0900
+Message-ID: <undine-1793452028139689664-4d0bf20c02a1c855@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <cover.1793442331.git.edumucelli@gmail.com>
+References: <cover.1793364709.git.edumucelli@gmail.com> <cover.1793442331.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,30 +58,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261029093219.GH1779021@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 29, 2026 at 10:32:19AM +0100, Peter Zijlstra wrote:
-> Urgh, so much crazy.
+On Sat, 31 Oct 2026 11:25:30 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
+> Hi Masami,
 > 
-> So WARNs in noinstr code are 'fine'. That is, they should not happen, if
-> they do, bad things have happened and we need the warning out ASAP, if
-> it takes the machine down, too bad. See the
-> instrumentation_{begin,end}() markers in x86 asm/bug.h.
+> Thanks for the review. I've updated the event-filter patch to use the
+> explicit delimiter pattern you suggested. It now warns and skips filters
+> that contain delimiters and both quote types, since bootconfig cannot
+> represent them. The other three patches are unchanged.
 > 
-> But yes, the tracing needs to go. But moving that around should not be
-> this ugly and also, that will give you the opportunity to fix
-> preempt_{en,dis}able_notrace(), since they currently also skip the bound
-> checks.
+> Changes in v2:
+> - Patch 1: use explicit escapes in *[,\;\#\}]* for the delimiter check.
+>   The semicolon also needs escaping for the shell to parse the pattern.
+> - Patch 1: detect both quote types, warn on stderr and skip the filter.
+> - Patches 2-4: no changes.
+> 
+> The series keeps event filters, generic trigger counts, histogram
+> variable ordering and paused histogram state during export. It is still
+> based on bootconfig/fixes, including the two fixes you picked up earlier.
+> 
+> I retested the filter change in a temporary tracefs instance on my Ubuntu
+> machine, running kernel 7.0.0-38-generic, with recording disabled. I also
+> checked the mixed-quote cases against real tracefs filters and added
+> regression checks for both quote orders and all four delimiters. The
+> fixture checks cover each fix and the full series.
 
-Yes, that's a good direction.
+Thanks, this series looks good to me. Let me pick those.
 
-I checked the call chain and DEBUG_LOCKS_WARN_ON() is already fine in
-noinstr. arm64 just needs __always_inline on preempt_count() and
-should_resched() so Clang doesn't outline them.
 
-I will work on that.
+> 
+> Feedback is welcome.
+> 
+> Thanks,
+> Eduardo
+> 
+> Eduardo Mucelli Rezende Oliveira (4):
+>   tools/bootconfig: Quote event filters in ftrace2bconf.sh
+>   tools/bootconfig: Export replayable event trigger counts
+>   tools/bootconfig: Reset histogram variable tracking for each instance
+>   tools/bootconfig: Preserve paused histograms in ftrace2bconf.sh
+> 
+>  tools/bootconfig/scripts/ftrace2bconf.sh | 29 +++++++++++++++++++++---
+>  1 file changed, 26 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: 1dc6d173c43e10a1d0ee36b43d0d2f371f4d262a
+> -- 
+> 2.53.0
+> 
+>
 
-Thanks,
-Karl
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
