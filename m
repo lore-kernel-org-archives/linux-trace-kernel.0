@@ -1,93 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793442353;
-	b=doMM5MipzMDwhHFjYqink3TlJAEblpeIYmnGVfMOEVEP0iKfjsiP+Iyf3FDN4hQHufvo
-	 NaY2Tjt166i4jhlDDwFkcZZAhlSvJkCk27vDeu8hn7Yvbgx4U4UAd+cvMxF98Yz5XMrMR
-	 rNYUsQIrvXMIILcccN/FaMQ6VTUR3Kz+ixPzlg4Cuab4Q5+PCroh1cO+bzfbuQPrFDK/J
-	 8ppd5GiNdijPcRfTOig6Ct/vUkm6TDkgEZ+EJ6md3PAvzBLwHypDr2ZP3nQ7DcPfTbJfC
-	 woa1ozKhDY0FYdqBgECqSO9A2koY66hcUDZLT2UJUBooAvEnT3WtGdk4wNsJCFOiyYw==
+	t=1793442355;
+	b=3eRjfFnC34AHJVEGNGhHVInm5Nak1Ev+Rk3VOfjvhy1sXDCu7lP0VuoHLCntHbtmuCX6
+	 JPI0niLcadIUpp+5aN9xiM1/rSFonSF1f1eaWRxTWCofo2WdD20U9Y3gXtusGSt8yHSrg
+	 Ab8Pt05+WzSvx5/urhGdIo02aa940fLAoQiBdypHw9M/xavExYUEyoEE0+YGJ031tbzym
+	 QG7SBcpRqvjYe8EukmlcBp53UhII0BPyQQwZiFVGFGHDSldZI5Vsd8Cgbn9ebXlWHJA+T
+	 ps46VAZZjSf5ZDwjgUnWyhFN2vCZ4d3+cmMi/M004aP/qwcQOKQQTdnCY2wrmH+jcpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793442353;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793442355;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=xC1Pndi3QD2rxB4U2UtHXjrmrtX3tvt+J7O1Ci09mUk=;
-	b=fny/SF+GFMUlqLEBNK49JuYQC8dCfoRrboPw/Gx2vPSwKuHYssIspxunya4HVHBvOen6
-	 b0apuY8pcRfknzBi7hsEc6/5nM/IOZfnZgvy6V5U8UGhI8pDHguvrSjx78GSlNsN1sGA7
-	 1N7QxnYw5nKxVBGpV6l/n1a9oL9nKblCDwv8kVLAdFdkqVBewKKlW0kClyG9bVxSsZDPx
-	 Knl1bLy1+Fmpa+1CRPYEUE7EaK+Q6+1rA2i04vmrRT9bJ/kwVh68BZOXY/WZeKDr5SMgG
-	 2E28/S8a8mTpyqu2shDclJ1knu0LaIUqpjDW7bLcKQafZQ3PqEgrhn2LFEza4tEx8rQ==
+	bh=kplK2CyKAy4yx/18GwkbblUjaSX+3r2sP8SLaekUd+Q=;
+	b=2w6QqDe2Fz3nqp1CYVlR/K7eUjCg8S0N090KgkcI2QgJ+n81VTNt+/TwwA72GvAeQ/OP
+	 pWRDOmN/NEzlW4hhdOy6KrW0V+srA1Ekbs2Ed8pxfgpb57cUWX0MX8UDBR0Pk1CkbIPIH
+	 xRvsn/vseC5DxyZG5qZq92jUVYSUVY2vv/kQS3OwWv82hn2KPD4DUgBGOHk2iXWWLFT73
+	 2hBiKjv6Ko9ayQT8nKglTsy0TpUtKorxvg21/pQtnXcKlhL+A8NO5YeUnIFp5Ky83LVS3
+	 fhI5yu+JPrPjQgwPcSWDzebxgPA8eM7LMvbg+YPT8CX4V8f4q8Ok2AqI6ojGj+DXL+Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gsg3ejiv;
-	arc=none smtp.remote-ip=209.85.128.52
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zv35mfUN;
+	arc=none smtp.remote-ip=209.85.221.44
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35BD606A329
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 10:25:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F35BD606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4721606A337
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 10:25:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4721606A337
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gsg3ejiv
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a60f9474c4so17081595e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 03:25:52 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zv35mfUN
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso1422058f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 03:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793442351; x=1794047151; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793442353; x=1794047153; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xC1Pndi3QD2rxB4U2UtHXjrmrtX3tvt+J7O1Ci09mUk=;
-        b=gsg3ejivSyTLdtK2LZzOiX4TodC/JqnFJyPLqdVQY34L03IF+PP3tZRZq7WmuI2b2I
-         LTJU7jZ7HANyXrlIdNuqS2rwNx6ft5v9eA2X1csioEiDJo/rnSCT/dh7kWcj3o25lYCl
-         mn7YvEqPsV5D+8MxZubYUglTqpwCZBMSkqmJc49jnmxOuwh8pSQmMNW+fSE7zW11VxmT
-         7lS2RkqKzgt+amJu1VUbxjPmLXpdrVyZlAJNLnhltbjrNDi0XMR9ApbSxAzXgJXx5I7N
-         8cHNoSMTrjI42t/7xfNqarEMvRt5XmxgAGg+R5UfjXohmEKo6r8k/rapktZy4LHCbEqK
-         KZfQ==
+        bh=kplK2CyKAy4yx/18GwkbblUjaSX+3r2sP8SLaekUd+Q=;
+        b=zv35mfUNlYL5jWE7rjG3YIAd0Um6VkKlBC3QpTka8fQVd2GZOTq53mM2BPr6mTohCt
+         zbVUMbIId6O4cA8netO5aa1HDI62F4Uk//wgC8s6tL9tKrO6CsekMCzcxDMhBckPwLVV
+         YdKaTSpx2NCrop9HcGNkSIqPDquLMklXA2FOcWGFOf/adPazhqSQU0I+Qf2wZWUUbdhZ
+         t1/IKumb1EEYN4lD6C3LDH7yaFKoGHzsgQ9R7q1VgrcwVeSyXjaVu8wZoEYPIEzkis68
+         /VBySBAMDWZMzRFUGjPjF8ssxBoejzyvXq2acblYrOwh036M5+xPbH+PxPfK3hY4DCY7
+         8dKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793442351; x=1794047151;
+        d=1e100.net; s=20260707; t=1793442353; x=1794047153;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xC1Pndi3QD2rxB4U2UtHXjrmrtX3tvt+J7O1Ci09mUk=;
-        b=dpCnbMoe57QK+H4AoNTJs902gxKofHky+LTeiFdFw/mnqCCvaTn3bHLrNO0pQ2ADnn
-         iqkWOUnDTvz4FtebLVG7hoJ00iZOB4v3WVrEvXdKNGnIiIVHumd1mljeydXOFXlzjUTr
-         99XkeKRUOY06yXL1x3/OdHsJlCOqoHkIWKdpKX2UPKoUrlir7Oq6oq09+x9PY30KSTU6
-         fQ7VUiD10WuIqPUlAa0UWs+D48X5wXg0hIRxjwFJyo6zHrczwxejQyzK15h6s0VJHRaS
-         L4yy344Yv+fTwZVPOsib6JiRfmRJJ6dMeu2XnURjpipopYLZsH+Q+uSAGyx8ScgH8+2S
-         a9ng==
-X-Forwarded-Encrypted: i=1; AKwUvBw59CeBVvfKrAE5eKTsBTlYSdO8YY0+pqJd8GQUF4xX4y+uCF88/EakSUsJDFMZnWohj7kkZ0DjFRlzWJANKcq6UMU=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLw2Zg0gF3UM8mqaXVW9GRyQ3NaaIAe9QnaPzgOca/zAJoDll8r
-	pBDNZniZUJTdktEGxY89k304Hkob0Fc3VSngPFl9G0kYy9Kj4MMgBECy4s3voqvaU9addw==
-X-Gm-Gg: AYBFou0suM+Bv9ZZvn6wP1pHOSm13uTw+h1VuyB4VYCkkFtqffaGYyDyh1+y3WZfrJM
-	zDIK+03vr0VFbGm1H5lFrSt3YkZOZyFaF/YXj3rWy0FGVSrLMw94z8ZkmZ2uddYEkyPzQPhLxHQ
-	2fTCRImV1PnWcAxv0GY1whLnpHgqqOcOJ47HjjQi56wAXd0x+aYHvPEcfkYu5dUryOlqDHrleZD
-	K2hOhxoszCcTHBrkqHAQfuhjgQF9R1eEuabqcvh7pGGj+3AgsfxzxYn5S56XmWoZk5KsX1juKeB
-	Zt6k/ldLZn8U+qVQDNc9I51V9MLI+lZq1rKSQ3fTti6mavnknB2bn0JsveFPOC8Oe7I30k2XoyG
-	Msrtths40juaTeORhHg2Gq216ZmOtwkCUfEJeGZJObEglao340k7LwVsTHhB1V+J5+NYLHOr6nb
-	ZdkSAvGfKvYfiin6Y5rx9bmFpsys/1wNZcsPuC0dXANUMIj8oyi8qxH6QLyAyimslPUPnRr/CWE
-	3FGizuUkOP43EQvPx0xfIZQAfQvJFhtmgsa8Y2WOOLTSoTvUs+sEp2hbYlZY0sT5KiNrarqJRYd
-	B6fLcna16ChTQ+kYa6GLsOamPpFRgSIKnxcVpPtBJ7r6iycwOy/LsAJ1eQfa/kCU6M6rhPWu+iD
-	nDuuNhVrzPaKa6lbE7ZWv2XZWVnNPKjwyY2iHuamc/TymaFeJZj9C5a4r7TodLLO0mv8FKjjG/j
-	RClEmUi9Ud0ms4K+lcKcvjZLXZeNxR/6UBsaqchLvt+YCIQn8J+kYS7Tv1uw==
-X-Received: by 2002:a05:600c:8b2c:b0:4a2:5267:3cd4 with SMTP id 5b1f17b1804b1-4ac151a8c26mr111384845e9.3.1793442351329;
-        Sat, 31 Oct 2026 03:25:51 -0700 (PDT)
+        bh=kplK2CyKAy4yx/18GwkbblUjaSX+3r2sP8SLaekUd+Q=;
+        b=VpK1bb9S0m68zezX7OVVt8ZG+3tT7BSPSbWv1PHJpl6qjVoyw+pM8VH8AxsuC7ib9b
+         RN/nijiBME1wCYQqMZJShGXL2V++pENSrKWuBuumTYWG3r/IEWMpipCp4gJ/e/RzvTmU
+         k9l4b/APe0XoMid8rVsFW0mz4aozHzKMtll3o5IDPEcbYeTz5I2BT9jITeF8B4cgO0wn
+         Ln8j/xvPbl4aynuC+o7hpU1hBLIugggBybJJLQnZxJi2htHGTWKU4BskXTDqm3ww9RtV
+         5Y1I2tLd1NkszTgbzgHPaOptBr8mVJ+2he2qUyfm8ufropiuDq5lr/mRQnnvmZhl1ULx
+         zxTw==
+X-Forwarded-Encrypted: i=1; AKwUvBy2nqHUuz1n9SAx54+IvOTn8OUUsfPoC+ZihxVQX0k/xDUzXB1xH6AE+T7v+eROeH8riJUn5/qBaK5iPVxdvI2YjpA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLRg25iZX2U6QQJV0X8gVpBOkuJx5FGJznS9UFqfZo0Rdcufe91
+	o8EgbCUFmzGWhGJ/IpZc7afCVzvT8luvB3oYwjuLIrOQjzyYUqSNt8ae
+X-Gm-Gg: AYBFou1E7BzzWgl9YeO0sQTOfaulM6llZLMWFTTJuFavVsl37ptAQMK9Tg+krWbBKZM
+	6Wiaih2LcOzl2/hwPdpcY21b5MG5NcrH3+GsVwWSBwnnqB+w9WgadMj1A4vLbAt4La1sAiMlca0
+	O8oQtK8gumg1DRK26ZsXl+TPba5ZHhkqURqhAY4/RhWTBzADjD6DC9p/FvQPtHXrys97+Ir1hhN
+	02MIE0lhQpsVC7oJyDD7OXrSpGvP7/zwPyqeiz59IN+AwGXWfP3foT3Fr65g/npBKTGA0brm/Ej
+	wxgLaBHOxhW0EblgnbFluJhpZmx2QwgzlJj1FG2YfsCAJGn1+Uc+zKdB36T/80iEUor2GHYXzCD
+	OyXOPJvRWaMgF4w97Iau0bXN1ulE6/oqstLA2T3Ef+ewPmwJYzZtune536/VG+caJJ7qdeXlzM0
+	p+7D5VxTQZGTzp+UD1ghYMLSEeqDtzEnYrCJCFXpSkSV0qoAucAhUJ/H4sFc/LL505ESLcltdke
+	nKX40EY5+HcGISu/EbUYJHhpGCJ1ozDgx6voW4dmP+mJzallwc3jndHsD29VDuuxPAJ0Z7VCZMK
+	D44oAWntM3ErwtXaY2MJt3O3Ik7FcsxmWP5H8GS1/K1Xr3peGo+Le2HVwnfO+xahBf628azUo4O
+	HTjlq2fyLcUphBTHdoyZd8KVIKhlTCmVCq3Z+M8Ly0KKei96qgjxIEcmETN/gsilS2zNjm6Wo7p
+	1UOQyL0PsYgQ0BvJCDnMmtaQRmOIwMQtT4alPVq6ymgeypugQgzXyUAeAGNq/VdxsdJdXnEYoaF
+	uQpt0Q=
+X-Received: by 2002:a05:600c:4f82:b0:4a1:d8fc:8165 with SMTP id 5b1f17b1804b1-4ac1889c857mr99757055e9.20.1793442353201;
+        Sat, 31 Oct 2026 03:25:53 -0700 (PDT)
 Received: from longitude (2a02-8434-fda5-4201-994c-f615-42f0-2afb.rev.sfr.net. [2a02:8434:fda5:4201:994c:f615:42f0:2afb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f3229dbsm195363135e9.1.2026.10.31.03.25.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4aa7f3229dbsm195363135e9.1.2026.10.31.03.25.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 03:25:50 -0700 (PDT)
+        Sat, 31 Oct 2026 03:25:52 -0700 (PDT)
 From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 To: mhiramat@kernel.org
 Cc: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] tools/bootconfig: Export replayable event trigger counts
-Date: Sat, 31 Oct 2026 11:25:32 +0100
-Message-ID: <94b1ba8f2b3ee827211f1cfc33a1521303f2e118.1793442331.git.edumucelli@gmail.com>
+Subject: [PATCH v2 3/4] tools/bootconfig: Reset histogram variable tracking for each instance
+Date: Sat, 31 Oct 2026 11:25:33 +0100
+Message-ID: <3ffce36857ca841dc9fb69da304f7575bb637499.1793442331.git.edumucelli@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1793442331.git.edumucelli@gmail.com>
 References: <cover.1793364709.git.edumucelli@gmail.com> <cover.1793442331.git.edumucelli@gmail.com>
@@ -102,50 +103,52 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tracefs displays generic event trigger counts as :unlimited or :count=N.
-ftrace2bconf.sh copies these annotations into the exported action, but
-the trigger input syntax requires an omitted count or :N. Replaying an
-exported traceoff or enable_event action therefore fails.
+Histogram variables are scoped to a trace instance, but ftrace2bconf.sh
+keeps DEFINED_VARS across calls to event_options(). If an earlier instance
+has defined ts0, a later instance can export a consumer of its own ts0
+before exporting that instance's provider. Replaying the configuration
+then fails because the local variable has not been defined yet.
 
-Remove :unlimited and convert :count=N to :N in the command token before
-emitting the action. Keep the filter text unchanged and leave histogram
-commands alone, where count can be a variable name.
+Initialize the variable resolver state when starting each instance so
+that its consumers are deferred until their local providers are exported.
 
 Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
 Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 ---
-I tested traceoff with an unlimited count, traceoff:7 with a filter,
-and enable_event with a finite count and filter in a temporary tracefs
-instance on my Ubuntu machine, running kernel 7.0.0-38-generic, with
-recording disabled.
+I reproduced this with two temporary tracefs instances on my Ubuntu
+machine, running kernel 7.0.0-38-generic, with recording disabled. Both
+instances defined a histogram variable with the same name. In the second
+instance, a consumer sorted before its local provider.
 
-The original exported count annotations were rejected during replay.
-With the fix, the triggers and their filters were restored correctly.
-A histogram defining a variable named count also worked unchanged.
+The original exporter put that consumer first and replay failed with an
+undefined variable. With the fix, the local provider was exported first
+and all three histograms were restored correctly.
 
- tools/bootconfig/scripts/ftrace2bconf.sh | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/bootconfig/scripts/ftrace2bconf.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-index 8f3edea79ca0..9100ebcd5af6 100755
+index 9100ebcd5af6..b63e04bf9400 100755
 --- a/tools/bootconfig/scripts/ftrace2bconf.sh
 +++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-@@ -118,6 +118,15 @@ per_event_options() { # event-dir
- 	grep -v "^#" $evdir/trigger |
- 		sed -e 's/ \[active\]$//' -e 's/ \[paused\]$//' |
- 		while IFS= read -r action; do
-+		action_cmd=${action%% *}
-+		action_rest=${action#"$action_cmd"}
-+		case "$action_cmd" in
-+		hist:*) ;;
-+		*:unlimited)
-+			action="${action_cmd%:unlimited}$action_rest";;
-+		*:count=*)
-+			action="${action_cmd%:count=*}:${action_cmd##*:count=}$action_rest";;
-+		esac
- 		emit_kv $PREFIX.event.$group.$event.actions += "'$action'"
- 	done
+@@ -84,8 +84,6 @@ synth_event_options() {
+ }
  
+ # Variables resolver
+-DEFINED_VARS=
+-UNRESOLVED_EVENTS=
+ 
+ defined_vars() { # event-dir
+ 	grep "^hist" $1/trigger | grep -o ':[a-zA-Z0-9_]*='
+@@ -164,6 +162,8 @@ retry_unresolved() {
+ 
+ event_options() {
+ 	# PREFIX and INSTANCE must be set
++	DEFINED_VARS=
++	UNRESOLVED_EVENTS=
+ 	if [ $PREFIX = "ftrace" ]; then
+ 		# define the dynamic events
+ 		kprobe_event_options
 -- 
 2.53.0
 
