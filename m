@@ -1,92 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=52.35.192.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793452403;
-	b=pXdYMNiVS5DZkUxpM/I0Cwc+i4dqvjZeY0vpO1q47yhiqTrD82OzWcoC93R5kzgoY4tA
-	 tNx98nEQH9vvzd2WQxioFEMhNBglZNeXZ6plZm6dOOZQr/0OsPfwkZH4Rx+Y0AywWdkK9
-	 AjG4RTD0xgyWoXOswX0WAT8c54pNFuCy373T/v2Y0b+gnNseL2/IEfKWKd+BQjybGrT4p
-	 evRu/Ezm6Xt1JOwzRloUyI3F7Ke3/49WMv4EEch93xeFtt0/MdmdO7sur68KXoh+5dFLk
-	 tx/3Rr3wL6JGjapAC+lK/P+ptkKXwXdgzLvhehKa8R2JJPCRrmvLTQlK5WVMIMdjOkA==
+	t=1793453486;
+	b=pIU+2WSTxhWCZ5SMYPP8jEpt+/1BCgdl4RIZ75iyja5wGG+3nRhTvJEL2iu9rBF3Q1eB
+	 Kaemm8mjbcPzL6AmNjYHXnxe58nHoV/RGaux1aaUFF0aLBCrdDmP4fvzlf5eQmw6pat5V
+	 48wGkFt1foAtU+TnKYNxCw60FYUTL/t8tWP0X+lNuVz4jRmtLg9eFHPTLIPZlflRmdhVv
+	 T8PRWzgLvXt8ovlDiJoywKO2jXP7KOZ1WxW5Hl0xmpP+zli5Ey4YN1qkVm5n6W5bu+ASh
+	 0isS8dwqNk8ULVMPNv5jk7YZvJTsLSU/iQYK921hqFdPeOVld3kEnk+AF2kLSxppCsw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793452403;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:Received:Received:X-Farcaster-Flow-ID:Received:Received:
-	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy;
-	bh=7C18DKFZIWaFXskMKG5hKpW3a2jitMcBzhWiOTJcy4Q=;
-	b=UphYYkj7DxnLnPUmq9tWtUdS4qID09hGZdLrVPhl2go+zKbUmoxG3uP+ctj1Talni5PX
-	 X7gdTciHQZS1fkzMg3q4HPe9IsbcAvPwQ/3Ydfg627XVvAjIhn2voZO4NO2sjI/PUl6Vb
-	 HDYPc6Y+FlJlnPOME8aKPOqe63b2vNvPovDWd3sCqbN6DBs3A3CVeHPWv3Jj5OH0baVf9
-	 jJXHnpOJIxcOrxvYgR/EKQDuUiWeDxmTy8/On48gAUljrt9wDnIVvScsw/9m57bOPGjUj
-	 qU+xeDmO8oRUHrplafjrl5kT3Bj2YXv/PetPrB5p59Y5mMWAlx20azE+6XX1DJzH5TQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793453486;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=PJNVVxE7OIZ4yKjAIaacSz6SsBBJvpnt+JxXa9+t5Sg=;
+	b=XpplT1vxkfqoVvuwSRQneJxF0Zv5GhFJ+xfQozeMKnZk7jXV4oKxun9S5rD9YTstAbd7
+	 125FSR5SC1lzq/qaYH1JQ3CElwNuju1nNZIAJ8OS/O3KFVGDMgFdeK+q/s8C5yoQ6Y2oa
+	 fgxXitUiiAARJx9HcPUBpXMT5FZ/IjiN84HDZGRQ1Jb6FHxc+5lehV5cwA7HWctKm8VDz
+	 B3dN3cyX9/RO+Fgk7PzQTUH4P4K547bz6/5rXCgc54OmiytOZkabRwdXqR6svL50HSsU2
+	 OUZqxXGwI0jYfAcG8CFTgD4ZU8ZGbAVS8RTJtXIT4t7ocj3oETCuGfhMaApxGtO8Hdg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amazon.com;
-	spf=pass smtp.mailfrom=amazon.com;
-	dkim=pass header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b="U6g/Z67i";
-	arc=none smtp.remote-ip=52.35.192.45
-Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.35.192.45])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g2TadhsM;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD27B606A31C;
-	Sat, 31 Oct 2026 13:13:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD27B606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA22D606A31C;
+	Sat, 31 Oct 2026 13:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=U6g/Z67i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1793452402; x=1824988402;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7C18DKFZIWaFXskMKG5hKpW3a2jitMcBzhWiOTJcy4Q=;
-  b=U6g/Z67iK4x8Y1I6/dLnX63RTOF01pAodjoboBRMTDkAMLu36jxylpTX
-   clCKZMNABggKj7HQfFinWZtpEygJB6n45WiZl7/4Baad9K2vxDgxjx6iF
-   XcLIyEJ3gLdGm0Ygph3oUwqoOggE2mVsTiyRnY+sGxsrjAilKCM6wANzh
-   FLmHT3PMOjv4l7ECwKzCiEaFKH2EAhaElHC4IbArS6LYKxS00PRQlzGhP
-   p69XKgYaqD+CZBJ46xtWdWbaP4MyOnUAdUPUj2twY8FNagSVkobbeJpaJ
-   QH6ilrMLMSgMeDUbKhDrFCVx+bGw/LXHWMn8pynPROBO5bGucEtDEIbDk
-   Q==;
-X-CSE-ConnectionGUID: hly44ySaR9uFED7ZApa/Hg==
-X-CSE-MsgGUID: RD5UJqX+T3e1daIfth8l6w==
-X-IronPort-AV: E=Sophos;i="6.27,188,1787011200"; 
-   d="scan'208";a="32516003"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2026 13:13:22 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.104:25917]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.15.208:2525] with esmtp (Farcaster)
- id 4b22ba2f-c8ad-4f9e-bc22-f51de3ab3b3b; Sat, 31 Oct 2026 13:13:21 +0000 (UTC)
-X-Farcaster-Flow-ID: 4b22ba2f-c8ad-4f9e-bc22-f51de3ab3b3b
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56;
- Sat, 31 Oct 2026 13:13:21 +0000
-Received: from dev-dsk-wanjay-2c-d25651b4.us-west-2.amazon.com (172.19.198.4)
- by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.56;
- Sat, 31 Oct 2026 13:13:21 +0000
-From: Jay Wang <wanjay@amazon.com>
-To: <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
-	"Eduard Zingerman" <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi
-	<memxor@gmail.com>
-CC: Ihor Solodrai <ihor.solodrai@linux.dev>, Alan Maguire
-	<almagui@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Yonghong Song
-	<yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>,
-	<linux-trace-kernel@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, <linux-kbuild@vger.kernel.org>, "Arnd
- Bergmann" <arnd@arndb.de>, <linux-arch@vger.kernel.org>, <x86@kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Hazem Mohamed
- Abuelfotoh" <abuehaze@amazon.com>, Bjoern Doebel <doebel@amazon.de>, "Martin
- Pohlack" <mpohlack@amazon.de>, <jay.wang.upstream@gmail.com>
-Subject: [PATCH bpf-next 13/13] Documentation/bpf: describe CONFIG_DEBUG_INFO_BTF_LAZY
-Date: Sat, 31 Oct 2026 13:09:59 +0000
-Message-ID: <20261031130959.23472-14-wanjay@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20261031130959.23472-1-wanjay@amazon.com>
-References: <20261031130959.23472-1-wanjay@amazon.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g2TadhsM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4AA1F00919;
+	Sat, 31 Oct 2026 13:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793453485;
+	bh=PJNVVxE7OIZ4yKjAIaacSz6SsBBJvpnt+JxXa9+t5Sg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=g2TadhsMJggUoREUlf+t814kuuj29R2baqc4pV8biJAkBr2mE4OJvb8HWSooU3HDs
+	 9+DwvD5ql/UUsadMKXTDQWSXXFAh12Q9+j4YFpeNQCQgm4hsQ1gTo63/U48vKgEJ3D
+	 yKMY7KvVdJTrppqlDe7k+tb5pFNXkz+utlO9MuT3gNEinMgR42rXusSWiDdEyAOGn6
+	 9ZZpvxXfWp5TEh0IIpqA0VhLAmWyQQhYa3L12Dc8YzeZ70YVH/zF09Vr87JpMVsKZ1
+	 nbpinYJeqOgt1i+EoHICO3SZkPtFCGP6+LG0jV/mKeXH5bb6kfxWAMG1nL6GudYvuw
+	 rQlFsmJF06m/A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>, rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] tools/bootconfig: Preserve tracing settings during export
+Date: Sat, 31 Oct 2026 22:31:23 +0900
+Message-ID: <undine-1793453483000634761-30a1647e17bcfa19@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <undine-1793452028139689664-4d0bf20c02a1c855@undined.local>
+References: <cover.1793364709.git.edumucelli@gmail.com> <cover.1793442331.git.edumucelli@gmail.com> <undine-1793452028139689664-4d0bf20c02a1c855@undined.local>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -96,62 +58,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWC002.ant.amazon.com (10.13.139.212) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Describe what the option does, where it is available, when the
-vmlinux BTF gets parsed, and what changes for users: registrations and
-module BTF that wait for the first use, the BTF id, the missing
-__start_BTF/__stop_BTF symbols, and what still parses it at boot.
+On Sat, 31 Oct 2026 22:07:08 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Sat, 31 Oct 2026 11:25:30 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
+> > Hi Masami,
+> > 
+> > Thanks for the review. I've updated the event-filter patch to use the
+> > explicit delimiter pattern you suggested. It now warns and skips filters
+> > that contain delimiters and both quote types, since bootconfig cannot
+> > represent them. The other three patches are unchanged.
+> > 
+> > Changes in v2:
+> > - Patch 1: use explicit escapes in *[,\;\#\}]* for the delimiter check.
+> >   The semicolon also needs escaping for the shell to parse the pattern.
+> > - Patch 1: detect both quote types, warn on stderr and skip the filter.
+> > - Patches 2-4: no changes.
+> > 
+> > The series keeps event filters, generic trigger counts, histogram
+> > variable ordering and paused histogram state during export. It is still
+> > based on bootconfig/fixes, including the two fixes you picked up earlier.
+> > 
+> > I retested the filter change in a temporary tracefs instance on my Ubuntu
+> > machine, running kernel 7.0.0-38-generic, with recording disabled. I also
+> > checked the mixed-quote cases against real tracefs filters and added
+> > regression checks for both quote orders and all four delimiters. The
+> > fixture checks cover each fix and the full series.
+> 
+> Thanks, this series looks good to me. Let me pick those.
 
-Signed-off-by: Jay Wang <wanjay@amazon.com>
----
- Documentation/bpf/btf.rst | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+BTW, I will move these fixes (including your previous series of patches)
+to bootcofig/core, instead of bootconfig/fixes, because it fixes a script
+which is not related to kernel build/boot process but just helping specific
+users - who can easily get the latest kernel.
 
-diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
-index 29de1222c3e7..1ebce5cf5783 100644
---- a/Documentation/bpf/btf.rst
-+++ b/Documentation/bpf/btf.rst
-@@ -1276,6 +1276,36 @@ format.::
-             .long   58
-             .long   8206                    # Line 8 Col 14
- 
-+6.1 Compressed vmlinux BTF
-+--------------------------
-+
-+With ``CONFIG_DEBUG_INFO_BTF_LAZY``, the kernel image carries the vmlinux BTF
-+zstd-compressed, at about a quarter of its size, and the kernel decompresses
-+and parses it when something first needs it: a BPF program or map that uses
-+kernel types, ``BPF_BTF_GET_NEXT_ID``, tracing options that print arguments or
-+return values by their BTF types.
-+``/sys/kernel/btf/vmlinux`` has its full size from the start; reading or
-+mapping it decompresses the BTF but does not parse it. Systems that never use
-+BTF keep only the compressed copy in memory. The vmlinux file keeps the
-+uncompressed ``.BTF`` section, not loaded, for tools and module builds.
-+The option is available on x86 and arm64.
-+
-+Kernel function, destructor kfunc and struct_ops registrations made before the
-+first use, and the BTF of modules loaded before it, are kept and applied by the
-+task that parses the vmlinux BTF, before anyone else can see it. Errors of
-+those registrations then only show in the kernel log, and a module whose BTF
-+fails validation at that point stays loaded without BTF and without its files
-+in ``/sys/kernel/btf``. A first use that runs out of memory fails with
-+``-ENOMEM`` and leaves all of this as it was, for the next one to start over.
-+The vmlinux BTF gets the next free BTF id, not necessarily 1, and the image has
-+no ``__start_BTF``/``__stop_BTF`` symbols. The inline BTF
-+(``CONFIG_DEBUG_INFO_BTF_INLINE``) is not compressed.
-+
-+Users of kernel types during boot still parse it during boot, for example BPF
-+LSM programs, the iterators of ``CONFIG_BPF_PRELOAD`` (loaded at boot, or at the
-+first bpffs mount if ``bpf_preload`` is a module), or a module with a
-+``.BTF.base`` section.
-+
- 7. Testing
- ==========
- 
+Thanks,
+
 -- 
-2.47.3
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
