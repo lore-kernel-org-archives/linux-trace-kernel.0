@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793499236;
-	b=kW8s0I4BRQg2pzMFIaBlYVWLq7FF31uuLFydztTv46FPtBK3AmoutwkmjMg22iQ1vos4
-	 3qiWaYdonCgmHMR30S1OKPkkpw3sLMQYv/17DRMh81PLuID1J9+EGzk/XuUL6bGxaMkyw
-	 IDMLr0DR00NTwmkDh8LSM7gbCYK9XcRr2PdWBt50PPW3TYfna61FzihoIyTdARQ72+lB2
-	 na4jJJ2HeP9paGvC5D50rI74aErpO0GhYAOoeukZUzbhR4GbjToRLtp9Q/rNbljgEh6iG
-	 QtKeDxAx2KETKpL0gI1Z1dkLwsnLbwqDhgt5g0uKNH/abNZ+PWI7oMNetF2UjOs1Iqg==
+	t=1793499239;
+	b=1Y1ZWzwNuB2qJSzc6w5/vLiYOvLcuD474hkxcgkyXmd9HSYI5dUS8/fvbviedDjWA2fG
+	 OwhizU0qXRZ1/16KVj8QvLxf0g0xN3wSqWOvk90brEUWV42YpmrS3Nt+SYVd+9AzJZ51E
+	 kmr6Cjaqjmqpj3jdHOEwgb2OVnqvpohlmATzjzONRFI5/TqpTmWQBKm76VdjmuJQ/gisO
+	 WFIP23wynklWGVNEXnbrkjpBIs/72X/7SHZrHwc4ugYgb85TdsUF5My9Wmp7u9kXqQeUL
+	 ufrePSpxa7zWi7X3QWdt52caqzO3FIrDwWRsb2pxcevEgyEBCw+sstt3z+N6D/aqQ5A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793499236;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793499239;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Eix5k5b+jwvTTGRDCXBmAoEN+puq/mJ3KZwbyS9PKSk=;
-	b=TOm0BFP30FOWc4ejl9YqzFnbxPDqCAOjDdEUII704zCvd3k7oKr7VA/x84IXnL9vOGar
-	 Or443STnAnqmDlwsp+1UM7Bkg8FOwBuXJWGaE01G3M4yqg31BabTHPObe5xl7BD2E9T6w
-	 U25dEPpvykz0rWCoP7v8k63OMsyQgRc3Tlc/YTsLxyvLWCFh9cjkVcAONHYJk4XBFJwDY
-	 9SQo4zQ1ETK2tMnXJb6r6Jes5BHjAsBz/oqfoy3l8rSXlvUSypH0TP8ckDb9Pm/8C7pyL
-	 y3X6/27Dxh924Tsq/Qa0q7WAdMk6AGjAKozeHwulOOtvNkvcscGVMNZ87c8CBEIyTJQ==
+	bh=PsOknrkq/nzec9hQG23km3v2sM//hYMRVRxTHFDDb+s=;
+	b=sIsz9g11u13iztVLGjwuTON5EhZ3hg5P202s+llkEAQgKLHYZTAQ9wJzT5YBIwWDmHn4
+	 oQbKXcW68iaaJrZo6l0FDT2H6qo1yqeA6eyEPSq2rP8wF336H+KRd57KpQcjMf3Gbmb7p
+	 WjynfNZ96JNbdvCW9QPFWn7JJfVrGqbYVVW0wJm/Xamm7moy95oD7rapW4a3eVenIiVM4
+	 +2m3/OhjcTkuKVE2K5aPt7jmYqUfoWw4F069K2U3yNlyL4Y5i3NmzrA7PLXWl3yf8s8ni
+	 n/hEOTJAvxkTGp3l7qpsKGRoyegmQpSy32IY9Eihe9QWucvQtaNbZf0nUdxHxft+bHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=gourry.net;
 	spf=pass smtp.mailfrom=gourry.net;
-	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=TpVI1F15;
-	arc=none smtp.remote-ip=209.85.222.170
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b="H/L+nA9j";
+	arc=none smtp.remote-ip=209.85.222.169
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD740606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  1 Nov 2026 02:13:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD740606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAE0606A338
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  1 Nov 2026 02:13:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CAE0606A338
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=TpVI1F15
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-93f1ca4132bso181921785a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 19:13:55 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=H/L+nA9j
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-945ae2daa3eso39846585a.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Oct 2026 19:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1793499235; x=1794104035; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1793499238; x=1794104038; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Eix5k5b+jwvTTGRDCXBmAoEN+puq/mJ3KZwbyS9PKSk=;
-        b=TpVI1F15EqWq+9Dt7LnuohChw9c1xQWLhpz+mP0apOhCRXWYe2F1ZJ1JkwKCTkdS4a
-         C6LjtMChI0Gg5j5QbVZ1rteVHi/71GkW5i5xIE/y65dDvDtea1kq0uFea+ZbEik4iL43
-         wKlIkGAdaWTjJhEDGdcKDK3DdjFn8W8126Si5zWOgrQojds8AtCC4e3a0xtnQXohbSlZ
-         +WRlCX4awxDeV4qV8hRB6+BdbCjWINKo43CmjvBIxq/rLp/MoAxJaZKeGzzwPbpZGwSO
-         xOP9eM2PHPHHeAt8D1yunZzFxvJqhnyKFt3kXmJKMwwHS37kopOVP/Z3BzWWHfCpRRST
-         aqyg==
+        bh=PsOknrkq/nzec9hQG23km3v2sM//hYMRVRxTHFDDb+s=;
+        b=H/L+nA9jNizIm/iixoLRh1fmKt4I7O+jnIUupPKcZ/0xeRQEkk9svkGxMoN6A+8+Eo
+         F8N34TrsvjwnymM2DpnGBCCWXp7hpqDpb4Af+Nj2BQRyOx3PbIAXiYrJ+yzKE7C3rRwj
+         gIvMYNIBFusvovNyfROiuFl3AQG2m6xvwikiJdU1F4ZG5DoXZmqINu2F8DHiok5GTU6S
+         1Jnm45OspMEHCl2fFapGV7BT9v8L5lw5MnIbM9jKybmAwuAwB5SRr0yOEhD7O8OgBbYN
+         awMKxVAL6++0JEY5JinhPTKHctCI0LPTbyEavcuwa3NdazWQRTgVqiit/991KsZr6pQE
+         7/3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793499235; x=1794104035;
+        d=1e100.net; s=20260707; t=1793499238; x=1794104038;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Eix5k5b+jwvTTGRDCXBmAoEN+puq/mJ3KZwbyS9PKSk=;
-        b=OSibzhdxkk99helXCwSamdELb11v8Zq+jTcl9UGZCSyd8CNoo54B4jDxtTuPi8rjp0
-         nJxWRmIOKB7Y95r7osZ7Au8aJ5yZ4I5L0bIqHMRrIHbJvSHfjGRgfNbc3wQ3zcNr8QBX
-         GUuEUAMC1bJkIZ5nZ35z99IPUFREi2/2pbyuf8hbENXlYdj40pLSuMFW5omu0weKFw4t
-         Hr/l+KRR4r6AZdSOC0h4ES3H2cxkNxOEp7RQ3TQl6/ysgD6gnqP45GgDhWE18mI1vIpu
-         Rvzkt70IKyjksNWktjwVexV4XMdb4oqSButtMAqhgdBWI1268jR1iw9iq7dQ1KuD7tRk
-         hc5w==
-X-Gm-Message-State: AFq9FYIuBmYrxZYeudq/CsqlbCVH75FfWp4/Kb0QpuNKzktbOlG5hYFQ
-	Nu6HFjcqW0nH+RUF8NH3F+ZZl6ZyaSPJeI7Zba+XFr3dnFNUHY82o3g1W+44cqkRTQM=
-X-Gm-Gg: AYBFou0nZ7Y6+3Vqmg3n3gWVBozLdibbPQIjVSaVWyhoFh5G8UcZosWQHVhxXDqMWMW
-	ncPpeM3LINsG21WBVDm3F2npQ9md5QD9+pY7Ra8l1hJPZ7ozWlKploeb1xb4kr40zP9RrBZKRhL
-	h/uKrm4M6VN5DpE5We0HzxHuF9FB4aR6UxK7AaCKiCtv4greERF8glHbPOZwqjJ262eElUP9flu
-	U7WZnoVnUW/2NKcyfNUnIMhifZlPXSzDjXuOPRAQX9hOEM3568pIH3BnHzKwVi4BwJzRtZa0iH3
-	7/jzW6tD4/ay6N56jBR5OXSmHfXK8ll1WSz3MxCSR7kFQ0d4KvuVK+sc5yto0kuDiqgxTYwzaLt
-	/oTer25JZk26d6zkhJXudWhO02Sr5y9GfcWWaEO339fCUsNLwZNcsyk1GzI+yb1swA1xtLjzKc0
-	DZAfNveAdesHeuxK8ZjqHexNVyXYg2XSXrzWDIaiqVMsq2FFSSPNrgKX5uWSwuKJSCrMpr37GjL
-	zmvr8w0+tX4G5JeZ5Bw8och85Ez9J+CgSvqiYIYFgqGpUaDKvVZ5HhUC4egbW3th90UCQeSp3J6
-	A18QdF8uJXe7TY29PzprSMuQTN3M7Cj0eIbu9gYvfsI+K6ik9SkFgevUiuQqY1bAgj1pRoZAuV+
-	Ez5BjpKQmiQ==
-X-Received: by 2002:a05:620a:17a3:b0:93e:6a4b:3ea6 with SMTP id af79cd13be357-94421659b40mr1079691685a.24.1793499234785;
-        Sat, 31 Oct 2026 19:13:54 -0700 (PDT)
+        bh=PsOknrkq/nzec9hQG23km3v2sM//hYMRVRxTHFDDb+s=;
+        b=z3S+perruohk3sLNg1uFD241fCFEp3v8ZMHJEsdtREGFQWKdAXI69jz1rIW3r4xolP
+         BcOjUVEquYJhpceFJupuVR47Ju2jkGbhasBdnyHRdoY3YX6s7KGczDA9ldcv0KuwtXIO
+         RcOmg+kL8GHSuO07V13rNrK1ushwTStekpGHRCmKDEUm4+3wyy26EuZZMhSfTzYqNUFx
+         OYnDVt0524KGVAgnawVFEOJUbkC/nR72j47N936UBfTiUTncuzmSqANfj5cq9q3OThzR
+         KLH9oPpCVcrETrxVtHq7q+AYvhFhGRRWn6MGBy0RBEEBANyepoYk94SdWIQP8f88OMYR
+         ShAg==
+X-Gm-Message-State: AFq9FYJD39mqY3a+HnxV7YwRy4+sLwA6IPE3MLXc7cQztNFbNdUlMsvk
+	zhzkahSG4kUbm2uj8xGSJRgyhzbYofyK1qtFLxE2v+Q+OPvpeASJKkyFqkWqK7cy6E8=
+X-Gm-Gg: AYBFou371rTq3DkYdr5fzS8HFtbGgPaSwDTFLPKikBVjrzwYmM5qTC7pcH68Wu/1DH7
+	f9bR4pDP3mRLSdhjhJpGseLpXAqugY/WCFR7e2iP+IKh6V2ojCMlwdLDVW6+CU/f80d5eVcxIW8
+	DjljY9lSrBt9g4PoKCeIeA3xuPEFPJqeHXojDjmVGZNbWqah1AfUV3O18bBmIIcf89fRzWicWAw
+	bvWWbaNwgE9XlequBpVUv+V9bvCxT+Phc+boqTAc68YCTbOmZt5JyUTrbTTXBy4Qqposv5/xPOb
+	xSetWOrWvl9YCz0AbgfQL1PytaazgQHCWxqeveGmxyG8ZViTs0HeoBT8MwZhaYT3au6ypminM6b
+	zHQTvZEAvpKFUN4lzIIdbbRMBKai7nsuUzxJYMENUeI9oxSlEnZLTpTV31XD2o3wrapD4qRSZFr
+	1744DbIqQR5Z6/pc9sAR+y+eF4D1wHS7llCr4DROHb1D9yLtcl0wXguVOrqW0bI4M2nfz1RIrVm
+	stdcOGYNR0P8RkXwWTlDnXrEY4EYIF8K7SpRkPJ8yVZ/RUcdw41A9mF5tcUB2lTBLB8n3A/it+L
+	3XR4H3bFo6YSXlGa5lQGsWjmmTPhn50bUn32I2nFJA8c8i9+YZArEgAT2sSG7GtICHNwAwBVh9Q
+	JyBJU++yIRw==
+X-Received: by 2002:a05:620a:45a5:b0:93e:e175:ee92 with SMTP id af79cd13be357-9442175ae0emr1102271485a.39.1793499238054;
+        Sat, 31 Oct 2026 19:13:58 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425858552sm498131985a.18.2026.10.31.19.13.53
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425858552sm498131985a.18.2026.10.31.19.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Oct 2026 19:13:54 -0700 (PDT)
+        Sat, 31 Oct 2026 19:13:57 -0700 (PDT)
 From: "Gregory Price (Meta)" <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -124,9 +124,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	mgorman@techsingularity.net,
 	anshuman.khandual@arm.com,
 	stable@vger.kernel.org
-Subject: [PATCH v5 05/12] mm/mmzone: read the zoneref slot once in zonelist_zone()
-Date: Sat, 31 Oct 2026 22:13:33 -0400
-Message-ID: <20261101021340.2251928-6-gourry@gourry.net>
+Subject: [PATCH v5 07/12] mm/mmzone: read each zoneref slot once when filtering by nodemask
+Date: Sat, 31 Oct 2026 22:13:35 -0400
+Message-ID: <20261101021340.2251928-8-gourry@gourry.net>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261101021340.2251928-1-gourry@gourry.net>
 References: <20261101021340.2251928-1-gourry@gourry.net>
@@ -141,38 +141,76 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory hotplug rebuilds zonelists in place while allocations walk them,
-so a zoneref slot can change between two loads of it.
+__next_zones_zonelist() tests a slot's zone for NULL, then reads the
+slot again to look up the zone's node. Offlining a zone's last block
+rebuilds the zonelists in place, so the second read can return the
+terminator:
 
-zonelist_zone() loads the slot with a plain access.  The compiler may
-load it again later instead of keeping the zone it already read, so a
-caller can check one zone and then use another, or the NULL terminator.
+  CPU 0                             CPU 1
+  __next_zones_zonelist(nodemask)
+    zonelist_zone(slot 1) = NORMAL
+                                    offline_pages()
+                                      build_all_zonelists()
+                                        [MOVABLE, NORMAL, NULL]
+                                        -> [NORMAL, NULL]
+    zref_in_nodemask(slot 1)
+      zone_to_nid(NULL)
 
-Use READ_ONCE().  Callers that take a zone from a slot and keep using
-it, such as get_page_from_freelist() with ac->preferred_zoneref, need
-that single load.
+Current GCC and clang merge the two reads, but nothing requires it.
+With mm/mmzone.o built with -fno-inline -fno-ipa-sra, holding a
+nodemask allocation between the reads while the node's last movable
+block goes offline oopses every time:
+
+  BUG: kernel NULL pointer dereference, address: 0000000000000060
+  RIP: 0010:zone_to_nid+0x0/0x10
+  Call Trace:
+   zref_in_nodemask+0x9/0x20
+   __next_zones_zonelist+0x23/0x70
+   prepare_alloc_pages.constprop.0+0x16c/0x190
+   __alloc_frozen_pages_noprof+0xaf/0x330
+
+Read the slot once and test that zone. A NULL zone still ends the walk.
 
 Fixes: 11cd8638c37f ("mm, page_alloc: remove stop_machine from build_all_zonelists")
 Cc: stable@vger.kernel.org
 Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 ---
- include/linux/mmzone.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/mmzone.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ecd1ebd49756..4bc2318ac37f 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1855,7 +1855,8 @@ extern struct zone *next_zone(struct zone *zone);
- 
- static inline struct zone *zonelist_zone(struct zoneref *zoneref)
- {
--	return zoneref->zone;
-+	/* Memory hotplug rewrites zonelists in place. */
-+	return READ_ONCE(zoneref->zone);
+diff --git a/mm/mmzone.c b/mm/mmzone.c
+index 9cc9ef588580..65880396f104 100644
+--- a/mm/mmzone.c
++++ b/mm/mmzone.c
+@@ -43,13 +43,14 @@ struct zone *next_zone(struct zone *zone)
+ 	return zone;
  }
  
- static inline int zonelist_zone_idx(const struct zoneref *zoneref)
+-static inline int zref_in_nodemask(struct zoneref *zref,
+-				   const nodemask_t *nodes)
++/* A NULL zone terminates the zonelist, so it ends the search. */
++static inline bool zone_in_nodemask(const struct zone *zone,
++				    const nodemask_t *nodes)
+ {
+ #ifdef CONFIG_NUMA
+-	return node_isset(zonelist_node_idx(zref), *nodes);
++	return !zone || node_isset(zone_to_nid(zone), *nodes);
+ #else
+-	return 1;
++	return true;
+ #endif /* CONFIG_NUMA */
+ }
+ 
+@@ -67,7 +68,7 @@ struct zoneref *__next_zones_zonelist(struct zoneref *z,
+ 			z++;
+ 	else
+ 		while (zonelist_zone_idx(z) > highest_zoneidx ||
+-				(zonelist_zone(z) && !zref_in_nodemask(z, nodes)))
++		       !zone_in_nodemask(zonelist_zone(z), nodes))
+ 			z++;
+ 
+ 	return z;
 -- 
 2.56.0
 
