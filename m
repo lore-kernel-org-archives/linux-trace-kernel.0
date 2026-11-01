@@ -1,109 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.21
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793565114;
-	b=I+ctJ3fAn/5iSEZgndm/Wg1MJOSAuDLRn+OqtSe1f7SeYeVzMcsWtJkWMnCoCGR3YWwp
-	 Uqr7YMNbEoq1eyFIBrlflX0QoO6ai+0FBvximRaTxqKkhQKg8zdsVNV6Q0H0gwBCqmjBa
-	 ScquuvLhWlLTGLDSEUI6FAWiX+sbAO84KAjsR73OAMW1F+H0fvqpSd378iwXZ8ExEYh/d
-	 6PON2LA8h1HuY3NOOu21HCCK8aiAyQlARbQQjeiHT3O/FbwQE6z3e0TnJq7/RtNx58j3x
-	 MWeJwiwcblxPqwurbSX1tERItD1xFq6SxFt9NK5l35jXWULOi8redJ+PZyvlM8/qcDw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793565114;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 Content-Transfer-Encoding:Content-Type:Date:Message-Id:Subject:Cc:To:
-	 From:X-Mailer:References:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=qwY6kIQTLPzWov54qHOvM+TK62ot9H/ibtyULblRoOY=;
-	b=if1kqEy5zvdhkpKSqm68n0UAbEBJHVAyHDVqX11lWswTJjlrbl1D5ag3z+txX/IuNzkJ
-	 Ly/JeKSarqMCKGPraqRORmudTugGv94E4ta2uHWm/lB1GEGbMVT6Cyl8rzqek10B5IhXR
-	 iv1ffZaXG2Nw4CkDDCYWa6Ja543iHd6+hcbvSdW0Xj4Iu38JrZk7InHI7QGOi7ds6TGy8
-	 tzcB+ODvXh6r4gIR/EECqSAXBOsC7/AaahPMgsqsx5cf2CA3fyB5ikASsjjPJTTCFcHA2
-	 amQrH3Hrih0wreFh/9DGOsM8xNr0Dn+J1GYT2uTYVrVbJmGjvTZLlTbqujZLpEQh74g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=EgcdEJ9N;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.21
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010021.outbound.protection.outlook.com [52.101.85.21])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793571358;
+	b=WRYXjjqcdiymMtLEDeK4EJy4oXhfR3SovdrmA1GLFQOmfNzWwBt4WpuGr7vYd5qznl7B
+	 tw3HpHJB/w5TjnMS1bZQjJ6TeiUhZGEKcQZeU/gYj2E27gClQas20c2X2P8dPfozszdS9
+	 Kor4lxKNJrrUpAHIBVqgecKnqgEnwwr5xTsHpKKxAvdR9xC1fp0ReZZ0OUDT9TfXHsPN/
+	 SnZ9M0nNSPH7RQ4oolC7q9oW8SuP/bDDtavfwEJINKNAGNqbG17QWpZ6WJ6Y33P3rKQWQ
+	 mUqLi2ovjm3FdZt513vPID4dlSWahY2H0YWYo9W1gbhOpkwH7VkXo9yKdJvIjvCnTXA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793571358;
+	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
+	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc;
+	bh=FTHI4iJKGW8nTdZJYWi2ZEsJRVp05NwkVgRYnkQTnQI=;
+	b=1QHtu6rNVURm7eD0rqTrDslkatx7XA0p/kvhzHe/A3lWszK0pPcVd4b6Yj0NUWYhq7bO
+	 dYTFONS1nTgl3HIy6MaT2k+lWdzFfp28U6CLkCrfemkqR02GGE/QI8ktiTsjX5dAicfD5
+	 mTiCP2dmdXI+LJfYkXxdQhphEYRWZvtZQlMkz2p+nTEoYtsm++RRFMPeR9RF4D7+WI7nX
+	 BPfxmKmPZL1wFmoE+JZdRUTW5MYN/e2sDKTcR+shOEGorjHfH6Z3y4Rbc3EYKDi0nA00D
+	 wjoCzNMpYhOETbbxvNiIMX0fVVT6ZBRl/V+UIu50+SKBIc6Gbf7DVzuR6M8GLMYXH4Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kSuQm1gi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D49606A324;
-	Sun,  1 Nov 2026 20:31:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D5D49606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C24F60A2602;
+	Sun,  1 Nov 2026 22:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=EgcdEJ9N
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fz/dCxGTz0x2XvaSPV9lc4FreAi31xI7dDJAyZ4cVpRCqkrjs67LmuBnCftLRucSXTWqS1oDSGYRjppFK6OREn1+7EzPvz4dnjL2GRipICeguEF8AWwNeQ25wvRWZVX/w/wFqGSz/1XxY5xYS7nitBskY/xP9i+JAH68Rp0epZXGvxhkgJ2xd/tygzwuIEECze9Yv0ZW2DlFi/xwDThOzerdzug5RPaRmdOkfw+2907IaVKQyMBrd/cKSW/Jxysrmblmz+s9Aig3JqGX/Qap23nZrHsZVZkXmwCNuXuYlIzi0DuxXk965abmgKqgL/bu/ntNUGntIRPn0fUuXyqOFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qwY6kIQTLPzWov54qHOvM+TK62ot9H/ibtyULblRoOY=;
- b=CHPte8F57CqKe5NCoTLuWx6JM25UeciGmSKYQcSuTsJJOSqKjz4I2asHS8Q3tEZyynJcm57iAMTRNBPOdhvOsTCA+cxdvgKQTPW80WICDydqeDhLrYVwEQsA1GM+9bQAr7AnZ2aNG4FdddXgBdoM4O5dpr7S7RUlaAIxoOnR3gYSpW1aIJTIY7hYKt3ESVM8z2E4UI9pb/OUuH/9gHrh0mUqN4ZR76EXxPpxaxNpkmIpvv9uwZO/sm+37c9KGOF/Tk2ckf4ISexHgq/tLQ41frSqYFfj7oIMV+fXPcLwj7S+xTMW2xREjTwpAVwpEE/eh9m68d707L9DqPImPBb34A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qwY6kIQTLPzWov54qHOvM+TK62ot9H/ibtyULblRoOY=;
- b=EgcdEJ9NRCVK3UoEbJdrcfU3JqEpRBeQ5g1HndObOFbl6kcYWvU8STp6pSGJwMzrztsSZcbFDfOrZFNHydassq8m7CZMnkooJSkpKJRTQTd3RJs6SFCUhDuPaZ0jP9Fxydx8z62zoKN6yCPK15JyYIwa2gaZoLZ5l2m1kul6oUKjWj2pUzw7Lnsfm//qhAxg97zBsykUc4ruRfT6z7yUXsMk1EZ++uQ18pG9WQjT9e8fjOfMQLw83x3PeAghkIZM201//OdF4tWY8ttaHCaCWP/W9Iy5QtD2mYD6mdNe/03C9zLlifuVvC+sdTJXSCiNzX5si/aA1kM3L5xfl5kSjQ==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DM4PR12MB8452.namprd12.prod.outlook.com (2603:10b6:8:184::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Sun, 1 Nov
- 2026 20:31:45 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0569.011; Sun, 1 Nov 2026
- 20:31:45 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 01 Nov 2026 15:31:42 -0500
-Message-Id: <DMK5RLDQBPQE.O1YJZ0ZX5YBV@nvidia.com>
-Subject: Re: [PATCH v5 04/12] mm/page_alloc: detect zonelist rebuilds from
- memory hot-add
-Cc: <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-team@meta.com>, <akpm@linux-foundation.org>, <david@kernel.org>,
- <ljs@kernel.org>, <liam@infradead.org>, <vbabka@kernel.org>,
- <rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>,
- <kasong@tencent.com>, <qi.zheng@linux.dev>, <shakeel.butt@linux.dev>,
- <baohua@kernel.org>, <axelrasmussen@google.com>, <yuanchu@google.com>,
- <weixugc@google.com>, <baoquan.he@linux.dev>,
- <baolin.wang@linux.alibaba.com>, <rientjes@google.com>,
- <rostedt@goodmis.org>, <mhiramat@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <muchun.song@linux.dev>,
- <osalvador@suse.de>, <joshua.hahnjy@gmail.com>, <rakie.kim@sk.com>,
- <ying.huang@linux.alibaba.com>, <brendan.jackman@linux.dev>,
- <hannes@cmpxchg.org>, <bigeasy@linutronix.de>, <clrkwllms@kernel.org>,
- <nathan@kernel.org>, <ndesaulniers@google.com>, <morbo@google.com>,
- <justinstitt@google.com>, <Bessel.Wang@huawei.com>, <jiang.liu@huawei.com>,
- <mgorman@techsingularity.net>, <anshuman.khandual@arm.com>,
- <stable@vger.kernel.org>
-To: "Gregory Price (Meta)" <gourry@gourry.net>, <linux-mm@kvack.org>
-From: "Zi Yan" <ziy@nvidia.com>
-X-Mailer: aerc 0.22.0
-References: <20261101021340.2251928-1-gourry@gourry.net>
- <20261101021340.2251928-5-gourry@gourry.net>
-In-Reply-To: <20261101021340.2251928-5-gourry@gourry.net>
-X-ClientProxiedBy: YQZPR01CA0046.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:86::25) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kSuQm1gi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225BF1F00A1B;
+	Sun,  1 Nov 2026 22:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793571353;
+	bh=FTHI4iJKGW8nTdZJYWi2ZEsJRVp05NwkVgRYnkQTnQI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=kSuQm1gig26F3a5hbFrlCEgTV6KZdAUm8pVgji64pGU9IHFtmj1+0lqa6FjFwtpwY
+	 RQDDMAWpx0nuTd442k2/dkXZmO3ak6/b0bODbLMMOiXHR7sqan7+OYTSomVvsVhatc
+	 5sO4YlxH84ZbDrCWiv6NIlf3enn6ckTlaSH0A2hbLwanZ7TAw2vRzqI9LjdgxD9mYw
+	 rVyzHjy74WbfzuCKilIc61p8YM/etpQQgk31aiPP5AoELP2cxYQDze2rDXYJz/8udp
+	 9mbnMTtDK0Vamho7QvOMgWKAobDTF7XMy60kwODafcPU8OakiOi1fCrlQV4kt03Hd9
+	 bPj8B6YTEsy3w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 032DA38003B8;
+	Sun,  1 Nov 2026 22:15:53 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -113,106 +53,168 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM4PR12MB8452:EE_
-X-MS-Office365-Filtering-Correlation-Id: d6da741a-3ea4-41a7-3547-08df38572587
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|7416014|261021123027099003|261021121427099003|261022113327099003|261022105027099003|261022075727099003|261026140227099003|261026121527099003|261028144727099003|11063799006|4143699003|10067099003|56012099006|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	QupNHcujqHpU3PwbHyhSOdv1fpb0WZx75ZFn559AjdsN6jETmuoOj00DoKvEgNmC0DiUF64K/DWvTxxFolAV8UVzoGtEpGPU+3abebyVyD8Mh1wsxxS5HV7cBn9Yht/Vury2wedly+hvwlGGKkb9MGPM4ySPLqEXiC0RVp6uhJIDcPF3921SRzbgD5cRPMrfXTLW8FCuRyXQld5NqmudIo4+OzMecintadWWqdG+7Qyi3L4FDWYzPxXg8ABroN1LGwzd/RxfQUkeNRyxLQLQdAjTgqIhRP2X15euN+HwJcAoiodGVdSdFnaesUMthZTpjMX2UGc9BLfdKNCmNQ0wvyRbg/dUvJJ+qtu7IEAIbzsCktQp528Pjj5K339OuvrKWOS+PP2U98zn4Wo9GXdHWKPDjQoigKy8HkEWOSK2i7QepTlIg3pXJcCfHdq/D4nrIk+a0s1wpYX2SI64hHCiX2PAHWF2JtkO3Z0SIFn8uJ/11STR0y2ksMG44N6vvYREpGgkYdJKp8iF37yAkl1Klvrw+CuVxm2ummPd9ewzJyKF6gOiJnfCWRKhw3cMHlOpWRzsCHMw4C7fTVqRTOCmJdIzym5SRpFECxtvOP+WzpwXfDtQoxAeswwx4kFzdEyg6V3q/kSbUt0ekXRq/i1puEO3nBMrdPLAdfIEHZxHTQE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(7416014)(261021123027099003)(261021121427099003)(261022113327099003)(261022105027099003)(261022075727099003)(261026140227099003)(261026121527099003)(261028144727099003)(11063799006)(4143699003)(10067099003)(56012099006)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cHlsSHRjOGIvZ1pEZU5RVFBnTkZySWhnakx4K2hGZzJuanBtWUI5b1FEdWlE?=
- =?utf-8?B?dUFvWUovVkpRN1pSbGJLZzVmd0tFS25WWENhSU1yS01EY3JxV3lHN2xhekNU?=
- =?utf-8?B?ZEVLRy9SODhYR2dpa3VvUzNUbi9MZUhIYXI0N1BkN1hzOG9KQzRxUnQwTVBy?=
- =?utf-8?B?M1A1SUlYUkVlTnNMc2Q0bzRybFo4N0VvM0RKdlRGajkrMlE1dllvOGtXdXZT?=
- =?utf-8?B?SFhSVGFoRHZpUW1CaENQbXNqSlF4SUJSbjJhblZGUnRQNHpHckEzeWVta3JE?=
- =?utf-8?B?NmFEd1lydXI1YVczeDNVbXRPbjRZbVRSUlV1THJtVXZCWEtmSmtRMGRxSHQ4?=
- =?utf-8?B?aktMcitHbFd4U0hQUEpkL2ZrRU8wOFZWTkllY0VBdkNWNERLYjZWVlU2MDVC?=
- =?utf-8?B?Y0FLUWJEU1laVExtQ0xRWm5JTlpmSGtWQmt1VHFyQndvL1I3b2lMdERxMXgr?=
- =?utf-8?B?UWd1T2N5cm01NGxWVS9RM0lxRm10VUVaZStRakNkdkt4SXJwQXRTUHdSbHBi?=
- =?utf-8?B?N2s5aE5rY1p4NFIrQTRpZFVHeGFRMmJHU1RpelA4WmE4M3pYZ1dmemlRTkJk?=
- =?utf-8?B?Q1Q4S2tGL3EzblhIR1FWWUlSdHVYTmRpa3BvVmFJN2Z0M215M0R0VDc4cis0?=
- =?utf-8?B?Mk5YS2hwRG5zVEhvZFdITWhPT2NPeFk1NkRVTlFXK3dQYmVLQWp5UUZxd3E2?=
- =?utf-8?B?WlRtVDFZYy9nWWJRVmlsN2tmUDVndHRzelZRazQ5ai84cVJpVDZsU1NHMGNt?=
- =?utf-8?B?WkVDeU5XVEgyZUFDR09rUFgraWl0TVhOUDZDRjB5T3JWTVBBczg1dmhGK3Z4?=
- =?utf-8?B?NDgzWStwV1FqVWFCeEF5Qm5HNzRqZzNKUmx5NG1LTlRYdm1EVnBTNGNuY2Qv?=
- =?utf-8?B?T0F0aXcxZDZKUFQraldSRDNtL3d5cEE2Y2lkZTY4UENzdllQQUNHVUxlVk1j?=
- =?utf-8?B?ZUNJejQ3WUNhTVVzK0MzdHJONUJOTGZJRDZ6RXFSNEJTQ2JXczlHelV1N0tQ?=
- =?utf-8?B?elIrM3Z6dUlUNDdSbmtzeTc0emZSdC9mRXdaOGo3ZG9qUHIzR3ViTFFNSkd4?=
- =?utf-8?B?ckNLVmZCMWxFdWJGWVVHODZ6cjNEYk5OcHhnWm0rSG90c1JKWDlSQlVreFZy?=
- =?utf-8?B?REhuMk80c3R5U0lOTzN4bU9WaC95QjR6ZHMrKzJ3d3E1S0ttekpxWVU4Ynli?=
- =?utf-8?B?bVlQWjI1R21XY01zMkZEOFFSZjFXQVR6NkhaakN3UGhRMXREK2hwdlRrQWM3?=
- =?utf-8?B?Qlg1dGFIVGUzTHhpQjJVSVhTYSt6a2ovWUNQR1hoaVJTYkkxSzRrT2JBQlFM?=
- =?utf-8?B?TUpvQ1g5ZjFjalBnRG4rTkVnbnIrSjI3alRRbHVKRGw3TFJhaXA3WGF3ckFS?=
- =?utf-8?B?MGFVS2I1U04zZlNpd3MyNUFocmtLWWFxVnA0N3JnNWVDQVRVQkhPbVBiS2pB?=
- =?utf-8?B?a01wU3B5SzhlazJwTE54c0REaXVRZUk0Q29NcEJMcjE4dHlPSHJHQ2lrRmlE?=
- =?utf-8?B?cGFWbnNiRUU0YTUxaHh4d1l5MzExVGIxSUp4Yzc0YkFYekRsdlBsQUZWc3Nw?=
- =?utf-8?B?Sm1vV2toUDJqQWZSNEd2OFVvSXhnN2JrV3Fybi81dVYrRVF5T3BleEdFQTds?=
- =?utf-8?B?RXVTUEp1L1dQT1IvM1NlUFM4aXdyR29ZemF0L09xemZkMjJYeGRYbjdtTkpZ?=
- =?utf-8?B?d0dNTEtpeWhTTXBHcEc1NE1wMHhHOFRUNEdQUWVnZDBQQjh3d1B4aGJwN3Y3?=
- =?utf-8?B?dTVOeFFkK0htc21NUzBZczdhUTRPK2NyKzJBVUp2U2w1cTEzWnY0Q2RISTJM?=
- =?utf-8?B?eUdsN1dVSnRtclo3YVNReXgxOEphb2N4VU1jS1BnMjdMZGowQWUzeTczcHFT?=
- =?utf-8?B?T1haTktxcVAwZVkzSTc1ckxqVVpMQk9lRXpDdStQeXk4ZnhTSVp4ZWtRV2dE?=
- =?utf-8?B?c2Q5SzlVTDFFcXdxY1dNSi9vcEdrNWF5cmQvZStoY24vVkVOOUVJblJ3ejRC?=
- =?utf-8?B?VTZvQjNydGsxRXFBUXd6Y042M2xxVjFyd09vRkU5aUJrYklicXdjam9YRVRK?=
- =?utf-8?B?T1l5WnVzWW1JWmpUQVo4Umh6dmVQeFI2N2VHUm1ZYitzNnhKdjhkQkxvSmdv?=
- =?utf-8?B?eGx1QlBibkpkMURYNVB5TDZiUUZzdGZVOWpHbXI3TjlpYUFoRnNsRXRiUWhQ?=
- =?utf-8?B?bnFkNmRBQ0ZSa3FVYmM4Z2Z1OC9Nb1luMzNDSzVISFJ1NkhXOXlvbU5UakFl?=
- =?utf-8?B?MDFOWWxFYnNlQUdTR2RvV1AwTUpuZU9ianVTeTVseDYxU2thbk9KMjJEK0Jk?=
- =?utf-8?Q?ltx4gaVSJaV0/dOrf9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6da741a-3ea4-41a7-3547-08df38572587
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2026 20:31:45.3682
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PCkTGY+GARRPSyq/ivwgPNqzrWdHPRqNU07aRTW2txn1nBDxPUJmiGdwjswUPskp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8452
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 00/39] mm: make VMA flag semantics explicit, eliminate
+ VM_SPECIAL
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <179357135155.2624073.13862678489444424470.git-patchwork-notify@kernel.org>
+Date: Sun, 01 Nov 2026 22:15:51 +0000
+References: 
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+In-Reply-To: 
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+To: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
+ liam@infradead.org, vbabka@kernel.org, jannh@google.com, pfalcato@suse.de,
+ david@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ corbet@lwn.net, gregkh@linuxfoundation.org,
+ dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca, leon@kernel.org,
+ paul@paul-moore.com, stephen.smalley.work@gmail.com, perex@perex.cz,
+ tiwai@suse.com, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ eddyz87@gmail.com, memxor@gmail.com, ziy@nvidia.com,
+ baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ usama.arif@linux.dev, kas@kernel.org, dgilbert@interlog.com,
+ James.Bottomley@HansenPartnership.com, mkp@kernel.org, simona@ffwll.ch,
+ deller@gmx.de, sre@kernel.org, jhubbard@nvidia.com, peterx@redhat.com,
+ mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, riel@surriel.com,
+ harry@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, will@kernel.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, arnd@arndb.de, muchun.song@linux.dev, osalvador@suse.de,
+ willy@infradead.org, jack@suse.cz, maz@kernel.org, oupton@kernel.org,
+ catalin.marinas@arm.com, maddy@linux.ibm.com, anup@brainfault.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com,
+ agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+ gor@linux.ibm.com, davem@davemloft.net, andreas@gaisler.com,
+ viro@zeniv.linux.org.uk, brauner@kernel.org, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+ chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com,
+ nphamcs@gmail.com, baoquan.he@linux.dev, youngjun.park@lge.com,
+ hannes@cmpxchg.org, qi.zheng@linux.dev, shakeel.butt@linux.dev,
+ axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+ chengming.zhou@linux.dev, mhocko@kernel.org, miklos@szeredi.hu,
+ xu.xin@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-rdma@vger.kernel.org, selinux@vger.kernel.org,
+ linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev,
+ ihor.solodrai@linux.dev, spasswolf@web.de, tiwai@suse.de,
+ emil@etsalapatis.com
 
-On Sat Oct 31, 2026 at 10:13 PM EDT, Gregory Price (Meta) wrote:
-> The zonelist_update_seq retry was limited to CONFIG_MEMORY_HOTREMOVE,
-> presumably because only hot-remove takes zones out of a zonelist.
->
-> However, build_zonerefs_node() rewrites the zonelists in place, so
-> onlining the first block of a zone shifts the entries that follow it
-> in every zonelist containing that zone.  This can cause a spurious
-> allocation failure for a __GFP_THISNODE caller.
->
-> For a node with only ZONE_NORMAL, onlining its first ZONE_MOVABLE block
-> rewrites the node's ZONELIST_NOFALLBACK list as:
->
->   [NORMAL, NULL] -> [MOVABLE, NULL] -> [MOVABLE, NORMAL, NULL]
->
-> A concurrent GFP_KERNEL | __GFP_THISNODE allocation can observe the
-> intermediate list, skip ZONE_MOVABLE, and find no eligible zone. With
-> CONFIG_MEMORY_HOTREMOVE=3Dn, check_retry_zonelist() returns 0 and the
-> allocation fails even though the node has free ZONE_NORMAL memory.
->
-> Gate the sequence checks on CONFIG_MEMORY_HOTPLUG, which covers every
-> configuration that rebuilds zonelists after boot.
->
-> Fixes: 3d36424b3b58 ("mm/page_alloc: fix race condition between build_all=
-_zonelists and page allocation")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
-> ---
->  mm/page_alloc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
+Hello:
 
-Acked-by: Zi Yan <ziy@nvidia.com>
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
+On Tue, 13 Oct 2026 16:04:40 +0100 you wrote:
+> The VM_SPECIAL / VMA_SPECIAL_FLAGS mask conflates several unrelated
+> properties:
+> 
+> * Is this managed by core mm, or by a driver mapping MMIO, kernel-allocated
+>   pages, or even ordinary pages itself?
+> * Can it be expanded or merged?
+> * Is this a 'weird' case like mlock where migration might race and we
+>   'have' to set invalid flags to notify?
+> * Is it another 'weird' case where we just want to stop GUP from touching
+>   it?
+> 
+> [...]
 
---=20
-Best Regards,
-Yan, Zi
+Here is the summary with links:
+  - [v6,01/39] mm/vma: fix mmap_prepare file handling, remove file_doesnt_need_get
+    (no matching commit)
+  - [v6,02/39] mm/vma: introduce and use vma_[flags_]can_merge()
+    https://git.kernel.org/riscv/c/86a779c53204
+  - [v6,03/39] mm: consistently validate VMA state after mmap[_prepare] hooks
+    https://git.kernel.org/riscv/c/9cae38dc11da
+  - [v6,04/39] mm/vma: ensure mmap_prepare doesn't set actions on a mergeable vma
+    https://git.kernel.org/riscv/c/6335c786299f
+  - [v6,05/39] mm: make map_kernel_pages_[prepare,complete] internal and unexported
+    https://git.kernel.org/riscv/c/2a234f79d416
+  - [v6,06/39] mm/vma: tidy up map kernel pages enum values
+    https://git.kernel.org/riscv/c/4852f3421456
+  - [v6,07/39] mm: assert mmap lock held, use new flags API in vm_insert_page[s]
+    https://git.kernel.org/riscv/c/dad8e88fcfce
+  - [v6,08/39] mm: add mmap action for discontiguous kernel page mapping
+    https://git.kernel.org/riscv/c/b7b4d8f37a4f
+  - [v6,09/39] docs: filesystems: update mmap_prepare docs for discontig kernel pgs
+    https://git.kernel.org/riscv/c/ae60723abb65
+  - [v6,10/39] drivers/usb/mon: update to use mmap_prepare + map kernel pages
+    https://git.kernel.org/riscv/c/5323bb5f6ef3
+  - [v6,11/39] infiniband: update hfi1 to use remap_vmalloc_range()
+    (no matching commit)
+  - [v6,12/39] selinux: reject writable opens of policy file, drop mmap shared/write check
+    https://git.kernel.org/riscv/c/c6ce4378f20a
+  - [v6,13/39] ALSA: pcm: use vm_insert_page() to map PCM status page
+    https://git.kernel.org/riscv/c/ceb0de27371f
+  - [v6,14/39] bpf: arena: mark arena_map_mmap() mappings VM_MIXEDMAP
+    https://git.kernel.org/riscv/c/0c2c9885c5e9
+  - [v6,15/39] mm/vma: add vma[_flags]_is_mm_managed() predicates
+    https://git.kernel.org/riscv/c/7fdbc26b69c0
+  - [v6,16/39] mm/vma: only allow mmap to clear VMA_MAYWRITE_BIT if not mm-managed
+    https://git.kernel.org/riscv/c/d99c4a302c5a
+  - [v6,17/39] mm/vma: add and use vma_[flags]_is_fixed_mapping
+    https://git.kernel.org/riscv/c/9201d0f5b9d5
+  - [v6,18/39] scsi: sg: convert mmap hook to mmap_prepare and rework
+    https://git.kernel.org/riscv/c/abdd54cef5fc
+  - [v6,19/39] fbdev: defio: assert FBINFO_VIRTFB, drop VM_IO, add VM_MIXEDMAP
+    https://git.kernel.org/riscv/c/19458d015fcc
+  - [v6,20/39] HSI: cmt_speech: convert mmap hook to mmap_prepare, refactor
+    https://git.kernel.org/riscv/c/5605c40895fc
+  - [v6,21/39] mm/gup: error out early on !VMA_MAYREAD_BIT VMAs
+    https://git.kernel.org/riscv/c/2d2b1c508f21
+  - [v6,22/39] uprobes: remove VM_IO, set VM_MIXEDMAP for mapped kernel pages
+    https://git.kernel.org/riscv/c/0d219bc3cb88
+  - [v6,23/39] mm/mlock: clear VMA_LOCKED_MASK over mmap callback
+    https://git.kernel.org/riscv/c/61e012ab9a1c
+  - [v6,24/39] mm/mlock: eliminate weird VMA_IO_BIT abuse and simplify
+    https://git.kernel.org/riscv/c/aea83f2694ed
+  - [v6,25/39] mm/vma: enforce that mm-managed mappings may not set VMA_IO_BIT
+    https://git.kernel.org/riscv/c/99fd6bf43d5d
+  - [v6,26/39] mm: remove VMA_IO_BIT check in vma[_flags]_is_mm_managed()
+    https://git.kernel.org/riscv/c/88d77002e1a1
+  - [v6,27/39] mm: remove hugetlb_inline.h
+    https://git.kernel.org/riscv/c/94c86564538e
+  - [v6,28/39] mm: rename is_vm_hugetlb_page() to vma_is_hugetlb()
+    (no matching commit)
+  - [v6,29/39] mm: drop some redundant checks around hugetlb VMAs
+    (no matching commit)
+  - [v6,30/39] mm/vma: introduce vma[_flags]_is_mm_backed()
+    https://git.kernel.org/riscv/c/44debd840ec9
+  - [v6,31/39] mm/madvise: update is_valid_guard_vma() to use vma_is_mm_backed()
+    https://git.kernel.org/riscv/c/fc95d1cf4a13
+  - [v6,32/39] mm/uffd: use predicates for userfaultfd checks
+    https://git.kernel.org/riscv/c/fb700342f506
+  - [v6,33/39] mm/madvise: use predicates for madvise(..., MADV_DOFORK)
+    https://git.kernel.org/riscv/c/1d1104fe6dc6
+  - [v6,34/39] mm: eliminate VMA_SPECIAL_FLAGS usage when hugetlb explicitly tested
+    https://git.kernel.org/riscv/c/531e56359ffb
+  - [v6,35/39] mm: eliminate VMA_SPECIAL_FLAGS check in lru_gen_look_around()
+    https://git.kernel.org/riscv/c/5997da57a09b
+  - [v6,36/39] mm: avoid use of VMA_SPECIAL_FLAGS in migrate_vma_setup()
+    https://git.kernel.org/riscv/c/8bf792b7afcb
+  - [v6,37/39] mm: eliminate VM_SPECIAL, VMA_SPECIAL_FLAGS
+    https://git.kernel.org/riscv/c/72a993449cb0
+  - [v6,38/39] fuse: dax: do not set VM_MIXEDMAP
+    https://git.kernel.org/riscv/c/b0d88bfa7515
+  - [v6,39/39] mm/huge_memory: remove vma_is_special_huge()
+    https://git.kernel.org/riscv/c/e2a1d080f510
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
