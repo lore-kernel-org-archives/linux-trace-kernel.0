@@ -1,57 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793629082;
-	b=1ItWG67VLTEH1PyVW3mkJHylu9+UvHJhi5DP36OyBd7D+K4cJLKVcKBvUjlrnTdIWqCv
-	 IbHOY6MdyhkUL/4TJacLsaV+ocy8vLFuzxfSzguloPBEWv7MTh0pYXtpzRcBLLb839j7b
-	 tp9smF5OC/YnQj4XRDXOtATZWdKfxGw89bvxuB4HEekTXk7WVgnn0KoOyxhWNEYWAdyF0
-	 za4RYwnWg0WeR+Qhg2xWrBEmLgj+OnqtbMTu8DENSA6/mFBHyEP7EhWVV5+7s8HTSLFwE
-	 5inCcv0reZhvgrW/zAWyEu8TOL8C+amiz55BneINVkE6hyZw4uRFqHfn+evb9mTAW0w==
+	t=1793629826;
+	b=LLYkhrsDiZ385AR3pATU6O9oqVBFXuRyeieL+hndPZfy156w9IZs2qgnrI435RfjBMNw
+	 PgNVNrSGusUENcXY8CjIwgc+WrdjL3GSk9Kej5t5rNWTlfrIyRHuvCi/b6oRFSYrneyB/
+	 SemtYcffSNztz8nOtRFOClPpzShaE+uUSuo7r8fWYP/70p1XNHZUEVTlK7nat+nRIEonX
+	 oZNSKtwsL9/POIv84I584o6Z0+W/O91Joi2VwLr4Pi0MGm2qrB9gdES9Ek0fDu1wWQuoe
+	 pR8qblTkcCwB+VAV8zkcp3UsZ1+JBLT5ORt4QMgKgaVdQk9VO4QQVrXMjsFgWPemgRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793629082;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=0vE2MW8oPr2NcLO5kkPhYCSI7fkp6SgzAyef2r6+0G4=;
-	b=MRyTL6Kzo1NsLda3c88cL1eiHijpwDj+FgiKSv+0327iUNZVP3xLSM9S1N26L9fbwAc8
-	 xfR8Ckz5+sf3te6Z7J28FwAtR57VLwToxHzEhLdZSKjp7X+A/cDwD9rj2SMadNRM1LrC8
-	 qhAvAwnDk4t05gk7apibnrQtlGyPGjdVnryAfpcHrZKzdw5igRkj1tw+iUR8XmAv2KYRf
-	 YzM/JzVOMv5Nhl14Q3B1HEOUIMqNNzwu0Gbysg4W6LAlU6EEqOd8/SRvoBqdIPJa+gwJp
-	 Jkf6ZmieUqmrHhdTKyK1z1Tn08kD5+K5xZIfcPKGyC09u0cddGLr6g2LZeDCumFQmog==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793629826;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Debian-User;
+	bh=xXAdh7MCtVXkdjkxwFTBIoqLmR1zeTpwQISlrhQl0XY=;
+	b=2mkapEodz5buQn/R2XfAbWnnjW9tspd2Z8Ni+FqkpWn/lcUNQZBdZhjLWgVQHZfy81xE
+	 EyiTe7YzDFQHu8jmvWZC3i8hGLjHowHA5PHH6frgc2FQmQD2uWSjzUMiKP/vxrBa0qKYM
+	 GGYQgRhHUNGwBO95SGAfOVBJBQPRuNYHpJsllCRwpQ4j7iTotLOLXBibKhYha7olzIoKd
+	 txsxSqEu8iNp84k70KHeayK4Wm+1GIOagV/TrTPqJbKtD3llsMO9t2rUpRO9d/BwA6/Pu
+	 MeyNYJp/vEuzVgUpwuK4A0t2fhzTjQ/zmrwjmcFXYpL5HvzfthrtQInWhnKPtplDlNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PxLVRN95;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b="Ly/x5Cvr";
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D44606B5F7;
-	Mon,  2 Nov 2026 14:18:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4D44606B5F7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A706087A15;
+	Mon,  2 Nov 2026 14:30:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81A706087A15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PxLVRN95
-Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 8963816012D;
-	Mon,  2 Nov 2026 14:17:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id AEB112002A;
-	Mon,  2 Nov 2026 14:17:52 +0000 (UTC)
-Date: Mon, 2 Nov 2026 09:17:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jaewon Jung <jaewon8868@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Keep copying markers when one instance is
- stopped
-Message-ID: <20261102091751.2ee7c4d3@gandalf.local.home>
-In-Reply-To: <20261031073549.2991066-1-jaewon8868@gmail.com>
-References: <20261031073549.2991066-1-jaewon8868@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=Ly/x5Cvr
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=xXAdh7MCtVXkdjkxwFTBIoqLmR1zeTpwQISlrhQl0XY=; b=Ly/x5CvreHuBiPAnQMKDdkaOoP
+	5g1n8x9SaFMSRd4Bt1ttji4by1J+9VgG6wHlA2e59iBjKUJpXJE0Ec0xcH2I8a1DJvzTiGr+TQdG2
+	C19W6h2R/HdEvhFI9IzfRYxQ7sM75SarbDxLBnalEyd/5Pi+MuBk6/k1koMJ3GE71DhYIGpWV+VmS
+	QgFN/48z+zo1fXqSb1HALOre1dxhOXUk+MqdZi6FuWYdlmwfnGiQX1y9NTbSaSf0uX1UIEL5Cn9uo
+	q0DCptFOyEaahlwPyiqyIXILzhpALHID8gr2FHolvSrv/I2Zp/pBYIxOBwJf6NfBNTUwLcB/oLcF3
+	fxTbqLvg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xNt3A-006DkU-1r;
+	Mon, 02 Nov 2026 14:30:16 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 02 Nov 2026 06:30:11 -0800
+Subject: [PATCH] ring-buffer: Handle a reader taking the new head in
+ rb_handle_head_page()
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,53 +63,151 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: AEB112002A
-X-Stat-Signature: zisrbxd1p3catgtzpzq16r3ymu54ifq3
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+LOQGCiAMa+/kHer8Q/vyDiTbyEEJ4w+k=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=0vE2MW8oPr2NcLO5kkPhYCSI7fkp6SgzAyef2r6+0G4=; b=PxLVRN95U4bpQKmnGAh8I2tiSNseVUpUC2AlABDjfIPi30rhUTXFr6+glpukh0p2Z4gDSTkUl7SwsqoCAorOmmQzSNHnDRcYssXXltRTuH+QEmRWpMdkz37nz1KvDF/4b85bUTz2dW0Qnx9QPuSC8ZTuBy9m6MUgkLLPms3aJwI=
-X-HE-Tag: 1793629072-197361
-X-HE-Meta: U2FsdGVkX1/9V4bQ67ornv0sgZ2E2DvtnZJNxhCMiLeDuzXBR8vVQiE+JLgAHYljUVFoJBOTqweDrUCPau1qI3h2uZp9cvTPuOJVk3c8pkMuiyOK0LrC+vEmnzlqduUWK+4DFr/89ia6DjMed62TG5OhpbiTcxEQVUvVc5L24tIai5Q2MAYcpHSzELewvrqwnvprsf8zaFjObSng/gXLQhUlB7Z31o7cg6IwCpVTKWXBQm9dT9ET+Q/dC4f3nHiNCjXbDP9iN46O3xprz2CE7uJ+W6wGTkXyF1QRkz6PH9iLtVTz3dtOkHl+hXvkhzaK9Gd3CPseDtDKIlzgw1IJG9J+9nmlpOo472XdaDjo+GVwFEveSO4KxA==
+Message-Id: <20261102-ring-buffer-head-moved-v1-1-165973790be4@debian.org>
+X-B4-Tracking: v=1; b=H4sIAHKe6GoC/yXMQQqDMBBA0avIrDtgQizYqxQXMZnRKTTKpIog3
+ t1ol2/x/w6ZVCjDq9pBaZUsUyowjwrC6NNAKLEYbG2fxtQWVdKA/cJMiiP5iN9ppYjcBs9N9K1
+ zDko8K7Fs9/jd/Z2X/kPhd93gOE7KoBd5egAAAA==
+X-Change-ID: 20261102-ring-buffer-head-moved-f9caf5da9444
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Vincent Donnefort <vdonnefort@google.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Steven Rostedt <srostedt@redhat.com>, kernel-team@meta.com, 
+ stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4635; i=leitao@debian.org;
+ h=from:subject:message-id; bh=MqirCjy4LMxfEGQqwd42zRmE/cvyrglBE7IpN4USET0=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBq6J51RwGT3+NFq8ETCFmY/EVcHmkiOEfARz06i
+ YqqvuXCm12JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCauiedQAKCRA1o5Of/Hh3
+ bcyND/4leZ9SfRd9S5lAT3epSqzEECQiRsU17LEQpHJe81jIuRbClmf2W9sS/FDvyunoGWnH+aL
+ VtC01Y8i83InOeKuomDYbE90oVz6el64QF7YKjXU38rQQRZx+W1diwwxjcxi8hkb6JOu62GOxvi
+ IaEsrONWR4HoTdYl3y+hX1Vto9JEwFXnjMfMMUcy6EvF+AuKFzLIqztyFmbTrtTbF+9Nnb8DCIm
+ d+AKg4bluHcbnJV5XFPZKq2E1UL/SLrDZoai0qqf1edPYk1nhqcBBrGYjLIQ8C2pMMnzzkmwAIE
+ LzFpsn6kruu/LnsOvkvuw+nfYbKlIweq7/WfeHUFtx/duQ21cGDfPBgiPIs8Ie1MWsRhL1KT4G1
+ hA08QXrLrQTyjNmPxRM38pGj/ohvSoUB7D1BThGaZXEuLlsfpCY5ofyFBWRSvhAyUHaG7XiULR1
+ LgKJEa8sd68f+J21W8PYtCtGr3LSHArdgqiuYRmIBAYETt6/lkSFUUfaqtjyorZxAhB8gN+OAVN
+ ryQWZ/I0Vqa2RulNa3AscLpIf8+fgQ78T6TVS6MF8agbI69EJO4Pva7f1lvJroHRQeQiawCf9LK
+ gZuyYqlX3ePlSqipwBMZqx4EYjniGUfBdrXpoVCldtdyiJEvjNBPSvBQDZQF9c6ferEGX2oFZaY
+ BBNybhJcLNpf2DA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Sat, 31 Oct 2026 16:35:45 +0900
-Jaewon Jung <jaewon8868@gmail.com> wrote:
+I am occasionally seeing the following  KASAN warning when running
+some debug kernel at Meta's fleet:
 
-> When several instances enable copy_trace_marker, stopping one instance
-> can prevent the remaining buffers from receiving markers.
-> 
-> Continue copying text and raw markers even if one copy fails, and
-> return the last error after trying all buffers.
-> 
-> Fixes: 7b382efd5e8a ("tracing: Allow the top level trace_marker to write into another instances")
-> Cc: stable@vger.kernel.org
+  WARNING: kernel/trace/ring_buffer.c:3793 at rb_move_tail+0xf78/0x1050
+  Call trace:
+   rb_move_tail+0xf78/0x1050 (P)
+   __rb_reserve_next+0x648/0xac0
+   ring_buffer_lock_reserve+0xd00/0xf00
+   trace_buffer_lock_reserve+0x28/0x188
+   trace_graph_return+0x220/0x3e8
+   ftrace_return_to_handler+0x2bc/0x5a8
+   return_to_handler+0x20/0x48
+   __arm64_sys_sched_yield+0x18/0x30 (F)
 
-Please remove the stable tag, this is more of an enhancement than a bug fix.
-You can keep the fixes tag though.
+I've understood that rb_handle_head_page() moves the head page forward
+in two steps: it marks the pointer to the old head page UPDATE, then
+marks the pointer to the page after it (new_head) HEAD. The second
+cmpxchg is assumed to return only HEAD or NORMAL, but it can also return
+RB_PAGE_MOVED:
 
-> Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
-> ---
-> The current code stops at the first error without trying the remaining
-> buffers. This patch tries all buffers even if a write fails, and returns
-> the last error.
-> 
-> Returning either the first or last error cannot report all failures.
-> I chose the last error to keep the code simple. Per-buffer error
-> reporting is outside the scope of this patch.
-> 
-> Please let me know if you prefer a different error return policy.
-> 
-> Tested on x86_64 QEMU:
-> - Setup: Enable copy_trace_marker in multiple instances and set
->   tracing_on=0 in one instance before a live buffer in the copy order.
-> - Before: No markers in live buffers after the stopped instance;
->   write() returns an error.
-> - After: Markers in all live buffers; write() returns an error.
-> - Existing text/raw marker and instance selftests: 6 PASS.
+  CPU 0 (writer)                        CPU 1 (reader)
+  ------------------------------------  --------------------------------
+  rb_handle_head_page()
+    old head ptr: HEAD -> UPDATE
+    new_head = page after old head
+    <interrupt: nested write>
+      sees UPDATE, marks new_head
+      HEAD and moves the tail page
+    </interrupt>
+                                        rb_get_reader_page()
+                                          swaps new_head out for the
+                                          reader page
+    cmpxchg(new_head|NORMAL ->
+            new_head|HEAD) -> MOVED
+    RB_WARN_ON()
 
-Honestly, just skip the warnings of the copies and don't even bother
-returning its value.
+RB_WARN_ON() disables the whole ring buffer, and the function returns
+without clearing its UPDATE flag, so tracing stays off until the buffer
+is reset.
 
--- Steve
+Do not treat RB_PAGE_MOVED as fatal, retry after clearing UPDATE. The
+head already advanced past both pages, so the caller can simply try
+again without losing tracing.
+
+Fixes: 77ae365eca89 ("ring-buffer: make lockless")
+Cc: stable@vger.kernel.org
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+A nested writer and a consuming reader can race so that the second
+cmpxchg of a head page move in rb_handle_head_page() returns
+RB_PAGE_MOVED. That trips RB_WARN_ON(), which disables the ring buffer
+and leaves the old head pointer flagged UPDATE. The patch handles the
+return like the RB_PAGE_MOVED case of the first cmpxchg: clear the
+UPDATE flag if this writer set it, and retry.
+
+Testing, on arm64 KVM guests under virtme-ng (32 vCPUs, KASAN config,
+next-20261030; kernel/trace/ring_buffer.c is identical in v7.4-rc1):
+- Setup: function_graph tracer filtered to "*sched*", buffer_size_kb=7
+  (two pages per CPU), overwrite on, a trace_pipe_raw reader on every
+  CPU plus a trace_pipe reader, and stress-ng --yield/--timer/--futex.
+- Without the patch the warning fired after about 12 minutes. With a
+  debug-only 50us udelay() between computing new_head and the cmpxchg
+  it fired within a second, and a debug print showed ret ==
+  RB_PAGE_MOVED, type == RB_PAGE_HEAD and new_head being the reader's
+  page.
+- With the patch: no warning in a 5 minute run with the udelay() (the
+  RB_PAGE_MOVED case ran about 1000 times) or in a 25 minute run
+  without it (it ran once), and the buffer kept recording in both.
+- checkpatch --strict is clean, and kernel/trace/ring_buffer.o builds
+  without warnings at W=1 on v7.4-rc1.
+
+Not tested: the fix has not run on the arm64 Grace host where the
+original WARN was seen.
+
+The original WARN came from a next-20261030 KASAN kernel on an NVIDIA
+Grace host under stress-ng, after an interrupted ftracetest run had left
+that tracing setup in place.
+
+The analysis, reproducer and patch were developed with an AI coding
+assistant (Claude Code). It triaged the WARN from the netconsole logs,
+wrote the virtme-ng reproducer and the debug instrumentation, and
+drafted the fix and changelog.
+---
+ kernel/trace/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1fd28a72e6ee13..7a60fa175e2cc6 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3789,6 +3789,15 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	case RB_PAGE_NORMAL:
+ 		/* OK */
+ 		break;
++	case RB_PAGE_MOVED:
++		if (type == RB_PAGE_HEAD) {
++			ret = rb_head_page_set_normal(cpu_buffer, next_page,
++						      tail_page,
++						      RB_PAGE_UPDATE);
++			if (RB_WARN_ON(cpu_buffer, ret != RB_PAGE_UPDATE))
++				return -1;
++		}
++		return 1;
+ 	default:
+ 		RB_WARN_ON(cpu_buffer, 1);
+ 		return -1;
+
+---
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+change-id: 20261102-ring-buffer-head-moved-f9caf5da9444
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
