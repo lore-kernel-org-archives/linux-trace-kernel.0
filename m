@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793603470;
-	b=nkDsU5ai6j0OzfRwXt5MMMDBuwUTToWcAmMeTZmqbnZjFoaVPkNrq9nk4IFquRaHKmx5
-	 pCbEB0GaZF9lmHv52MWsUYZsjUlueHZNZTWkMJcgoJq2oM7O9OD0tWwWOsx26StRY36W3
-	 74TLzevt1cfA72/TFWvKqGJR/gunuQJcasIetthvlbG0lLYoTpZFxd9pmxDsrE8Mh9QnZ
-	 54PgHBsWvDRgNhqQg5rT2Y+ZOA6mDxRi6lkCsrx5fuOtJUvF2fqC11sFUgWDThzUdDqkc
-	 c9iIgMwaSJo9UQy7a9kovMQDbM8eSM9nPT+VvDbKle413TrRS6SjFKnedOmD6/6a1RA==
+	t=1793603480;
+	b=4vP8qKjk5Lk8IB06CxjWbchKMsgEeNMwbAt05bQ53eM59jpsmoMRfppcBZBj22VnI//R
+	 we7abKnF2NCDYhta3LXnNpVRhM+xoW8BRopQWQoSGsDbhMlrrlXKcLLgI4zDtG9ocMuTj
+	 BjKeTkKmYnLXqm0agAOXXXpYeeYmdrGWLUrSWHCUFzsng8IDh9SrP55M9xKTTerj+G2Dz
+	 NTI/k+tFMHYr9xbZLJsxrhLpCF3hOX0dg+pyJ6eVfsCt9tWwhf0IPmwkRBhumKjYTIBna
+	 KAiBVX9u2R5JgYjMtvbgbppGbAmYITHrSohz4rtXH98id/LqmZNHKp2YvRkvlbiCCQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793603470;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793603480;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=yAzS75saZByb9apMhQrSWjtwxztW1efeFrQVJDeKCUE=;
-	b=4s5Z1SZ0114sItNG2e6q8RdvcmujmEHXpGSV/0IHqbAwF7dFWNjFc2X21tupkEEGhZvA
-	 YK4x6X/gF3tLSK+iZ6L4fzc4fc6rPl7dcit2w3QYAQ9EIadmYnAhdxFDOGl+mHEf88Y01
-	 SPL/Lw9rmJn1SEJLRpXwaayamdI3BYTYabXumwlkXIR6O1Z31zHyjsc+B1y+zM5pGo8Xf
-	 17GX9G6vAKJmNbLdppOiCmsTy1ciKYKo9XpJ9GLkBHFK0SrTKz/ljWEaoXOgZnHFsVam2
-	 mGdbqOVY84O877b2UCWqWvL+FeHXN5GG4TAajEb9UT/1tNA1aumLKwJ5cbe2BpWnShA==
+	bh=vdJ+DRR1faeDX0v1ueX7wcbZbUYELAr7oYz44rJN8Lo=;
+	b=CWM63uInek8kxyMzayulTm0SKIzvmO/rgjj0FexVt0x89AwB+wKos42KJPiVE1PhN/OA
+	 Z2293518nFGGbMYwy7oOnCfRnNB0bbuk1MQYVObdznW3vLrsxST6PxlLpQlKh8RFI6JqQ
+	 ujfiBZY9K/odgM7hGZNZSKRYGLirfVJ7/d5rOXfsT3S8iOVWyhbikeELkiPEIykOyk4TK
+	 g1d/uYTiLvfIxZc9aawXem1DhhTXp1ok8o73fwysDP2DFVjqwl2zuHZg19rWtbU2lrwCd
+	 G/emeUIfse+F2Cq2JjT+WEvq5fHtuUwD8+R/biS7OShHJohSeyJpmD3tdrJ5kydj7Pg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ozCn8FnB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PAmcE8te;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CA1606A326;
-	Mon,  2 Nov 2026 07:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BD2606A326;
+	Mon,  2 Nov 2026 07:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ozCn8FnB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40ED91F00A15;
-	Mon,  2 Nov 2026 07:11:07 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PAmcE8te
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B5C1F000C1;
+	Mon,  2 Nov 2026 07:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793603469;
-	bh=yAzS75saZByb9apMhQrSWjtwxztW1efeFrQVJDeKCUE=;
+	s=k20260515; t=1793603479;
+	bh=vdJ+DRR1faeDX0v1ueX7wcbZbUYELAr7oYz44rJN8Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ozCn8FnBhg2+g0osZpghCb0aTSKuYKtfipEMGcp+OEXAOaIHF0BQMQX/r+g2nOROn
-	 5VI52DW9WBzhhAlB8ogKVB7WqShv0zOrA/V0q399A4q37+MygMO9k39/vC20HdOWyH
-	 OV2q73M9dBHn6HK2/Giq0pyDw2FqjmrksRO2e/kCQpO1OqnUPsRLUKU4C/LXpPnK37
-	 Xut6suWrNw+0cQRF0pUTBCm1hReLGFOV+cne/KGYN5+hH6djEv274Sg6kQyA4Cxh2O
-	 neGRb9oGgPSt/Wy9o60bodY1P+C8cSJrpi1N1lT5hMavXD4v1VKXHW/tDKkpjl3mOX
-	 5qfAwyFK4mSWw==
+	b=PAmcE8teEI5/r9lpAn92elD6CCPy5HQA1EENzUvMLrx9h4QpWTPRrvh3Qr2ysL1ND
+	 2rx9LSOUusnFOklhFvhmP1wwjIJsRbidJ+wZhvggsFYFnEGyfrErVtngHlNlgNS309
+	 v5GpNJnZO5ZIakjkIfiZQ4330b4wW4Buzjpnua6sB22gAnkja90hYun7d3PPR1Y9Qt
+	 0l21iPPbcmR7Est63UlCoqALta9SUG0BExp1FyIiE6WJA5EvjpM1uGxDY5esXb/OuJ
+	 8OR8wZRFcHAzL3hc4QCx+X4A0C9jTzLvinpgVW77q6V17sv6Y6il59qP/4RmzwEFSw
+	 kily4Ig3ZOy+Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -53,9 +53,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH 1/3] samples/kprobes: Use trace_printk() in probe handlers
-Date: Mon,  2 Nov 2026 16:11:04 +0900
-Message-ID: <179360346488.115681.12990812332058260390.stgit@devnote2>
+Subject: [PATCH 2/3] samples/fprobe: Use trace_printk() and trace_dump_stack()
+Date: Mon,  2 Nov 2026 16:11:15 +0900
+Message-ID: <179360347512.115681.7201999490892291449.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179360345418.115681.193455787480210412.stgit@devnote2>
 References: <179360345418.115681.193455787480210412.stgit@devnote2>
@@ -74,212 +74,131 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Probe handlers execute in atomic/non-preemptible contexts. Furthermore,
-unless hit via an unoptimized breakpoint on certain architectures,
-they do not run with in_nmi() set (e.g. jump-optimized kprobes,
-ftrace-based kprobes, or kretprobe return handlers). Calling printk()
-from probe handlers can directly attempt to acquire console and
-scheduler locks (via console_unlock()), risking a deadlock if the
-probed context or interrupted code already holds one of those locks.
+Fprobe entry and exit callbacks execute in atomic context with
+preemption disabled under ftrace recursion protection. Calling
+printk() directly inside handlers can lead to deadlocks if console
+or scheduler locks are already held by the probed or interrupted context.
 
-Replace printk() (pr_info) in handler_pre(), handler_post(), and
-ret_handler() with trace_printk(), and update the comments to direct
-users to /sys/kernel/tracing/trace. Also update the stack backtrace
-comment in kprobe_example to reference trace_dump_stack(0).
+Drop the use_trace module parameter and always use trace_printk()
+for handler logging. In addition, replace stack_trace_print() (which
+uses printk()) with trace_dump_stack(0) to output backtraces safely
+to the ftrace buffer. Also update the module header comment to
+reference /sys/kernel/tracing/trace.
 
-Also fix a minor format string typo ("p->addr," -> "p->addr =") in the
-S390 pre and post handlers while touching those lines.
-
-Additionally, update CONFIG_SAMPLE_KPROBES in samples/Kconfig to
+Additionally, update CONFIG_SAMPLE_FPROBE in samples/Kconfig to
 depend on EVENT_TRACING so that the tracing subsystem is enabled
-when building the samples.
+when building the sample.
 
-Reported-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Closes: https://lore.kernel.org/all/d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn/
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- samples/Kconfig                     |    2 +
- samples/kprobes/kprobe_example.c    |   69 ++++++++++++++++++-----------------
- samples/kprobes/kretprobe_example.c |   10 +++--
- 3 files changed, 41 insertions(+), 40 deletions(-)
+ samples/Kconfig                 |    2 +-
+ samples/fprobe/fprobe_example.c |   49 ++++++++-------------------------------
+ 2 files changed, 11 insertions(+), 40 deletions(-)
 
 diff --git a/samples/Kconfig b/samples/Kconfig
-index 00eed83c07df..54414e57ff75 100644
+index 54414e57ff75..744d991ea620 100644
 --- a/samples/Kconfig
 +++ b/samples/Kconfig
-@@ -71,7 +71,7 @@ config SAMPLE_KOBJECT
+@@ -88,7 +88,7 @@ config SAMPLE_HW_BREAKPOINT
  
- config SAMPLE_KPROBES
- 	tristate "Build kprobes examples -- loadable modules only"
--	depends on KPROBES && m
-+	depends on KPROBES && EVENT_TRACING && m
+ config SAMPLE_FPROBE
+ 	tristate "Build fprobe examples -- loadable modules only"
+-	depends on FPROBE && m
++	depends on FPROBE && EVENT_TRACING && m
  	help
- 	  This build several kprobes example modules.
- 
-diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
-index 53ec6c8b8c40..0f516a2b04be 100644
---- a/samples/kprobes/kprobe_example.c
-+++ b/samples/kprobes/kprobe_example.c
-@@ -6,7 +6,7 @@
-  * For more information on theory of operation of kprobes, see
-  * Documentation/trace/kprobes.rst
+ 	  This builds a fprobe example module. This module has an option 'symbol'.
+ 	  You can specify a probed symbol or symbols separated with ','.
+diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+index bfe98ce826f3..3b94839b3199 100644
+--- a/samples/fprobe/fprobe_example.c
++++ b/samples/fprobe/fprobe_example.c
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Here's a sample kernel module showing the use of fprobe to dump a
+- * stack trace and selected registers when kernel_clone() is called.
++ * stack trace and function entry/exit when kernel_clone() is called.
+  *
+- * For more information on theory of operation of kprobes, see
+- * Documentation/trace/kprobes.rst
++ * For more information on theory of operation of fprobe, see
++ * Documentation/trace/fprobe.rst
   *
 - * You will see the trace data in /var/log/messages and on the console
 + * You will see the trace data in /sys/kernel/tracing/trace
   * whenever kernel_clone() is invoked to create a new process.
   */
  
-@@ -15,6 +15,7 @@
+@@ -15,10 +15,9 @@
  #include <linux/kernel.h>
  #include <linux/module.h>
- #include <linux/kprobes.h>
+ #include <linux/fprobe.h>
+-#include <linux/sched/debug.h>
+ #include <linux/slab.h>
 +#include <linux/trace_printk.h>
  
- static char symbol[KSYM_NAME_LEN] = "kernel_clone";
- module_param_string(symbol, symbol, KSYM_NAME_LEN, 0644);
-@@ -28,39 +29,39 @@ static struct kprobe kp = {
- static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
- {
- #ifdef CONFIG_X86
--	pr_info("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
--		p->symbol_name, p->addr, regs->ip, regs->flags);
-+	trace_printk("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->ip, regs->flags);
- #endif
- #ifdef CONFIG_PPC
--	pr_info("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
--		p->symbol_name, p->addr, regs->nip, regs->msr);
-+	trace_printk("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->nip, regs->msr);
- #endif
- #ifdef CONFIG_MIPS
--	pr_info("<%s> p->addr = 0x%p, epc = 0x%lx, status = 0x%lx\n",
--		p->symbol_name, p->addr, regs->cp0_epc, regs->cp0_status);
-+	trace_printk("<%s> p->addr = 0x%p, epc = 0x%lx, status = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->cp0_epc, regs->cp0_status);
- #endif
- #ifdef CONFIG_ARM64
--	pr_info("<%s> p->addr = 0x%p, pc = 0x%lx, pstate = 0x%lx\n",
--		p->symbol_name, p->addr, (long)regs->pc, (long)regs->pstate);
-+	trace_printk("<%s> p->addr = 0x%p, pc = 0x%lx, pstate = 0x%lx\n",
-+		     p->symbol_name, p->addr, (long)regs->pc, (long)regs->pstate);
- #endif
- #ifdef CONFIG_ARM
--	pr_info("<%s> p->addr = 0x%p, pc = 0x%lx, cpsr = 0x%lx\n",
--		p->symbol_name, p->addr, (long)regs->ARM_pc, (long)regs->ARM_cpsr);
-+	trace_printk("<%s> p->addr = 0x%p, pc = 0x%lx, cpsr = 0x%lx\n",
-+		     p->symbol_name, p->addr, (long)regs->ARM_pc, (long)regs->ARM_cpsr);
- #endif
- #ifdef CONFIG_RISCV
--	pr_info("<%s> p->addr = 0x%p, pc = 0x%lx, status = 0x%lx\n",
--		p->symbol_name, p->addr, regs->epc, regs->status);
-+	trace_printk("<%s> p->addr = 0x%p, pc = 0x%lx, status = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->epc, regs->status);
- #endif
- #ifdef CONFIG_S390
--	pr_info("<%s> p->addr, 0x%p, ip = 0x%lx, flags = 0x%lx\n",
--		p->symbol_name, p->addr, regs->psw.addr, regs->flags);
-+	trace_printk("<%s> p->addr = 0x%p, ip = 0x%lx, flags = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->psw.addr, regs->flags);
- #endif
- #ifdef CONFIG_LOONGARCH
--	pr_info("<%s> p->addr = 0x%p, era = 0x%lx, estat = 0x%lx\n",
--		p->symbol_name, p->addr, regs->csr_era, regs->csr_estat);
-+	trace_printk("<%s> p->addr = 0x%p, era = 0x%lx, estat = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->csr_era, regs->csr_estat);
- #endif
+-#define BACKTRACE_DEPTH 16
+ #define MAX_SYMBOL_LEN 4096
+ static struct fprobe sample_probe;
+ static unsigned long nhit;
+@@ -35,34 +34,14 @@ static bool stackdump = true;
+ module_param(stackdump, bool, 0644);
+ MODULE_PARM_DESC(stackdump, "Enable stackdump.");
  
--	/* A dump_stack() here will give a stack backtrace */
-+	/* A trace_dump_stack(0) here will give a stack backtrace */
+-static bool use_trace = false;
+-module_param(use_trace, bool, 0644);
+-MODULE_PARM_DESC(use_trace, "Use trace_printk instead of printk. This is only for debugging.");
+-
+-static void show_backtrace(void)
+-{
+-	unsigned long stacks[BACKTRACE_DEPTH];
+-	unsigned int len;
+-
+-	len = stack_trace_save(stacks, BACKTRACE_DEPTH, 2);
+-	stack_trace_print(stacks, len, 24);
+-}
+-
+ static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
+ 				unsigned long ret_ip,
+ 				struct ftrace_regs *fregs, void *data)
+ {
+-	if (use_trace)
+-		/*
+-		 * This is just an example, no kernel code should call
+-		 * trace_printk() except when actively debugging.
+-		 */
+-		trace_printk("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
+-	else
+-		pr_info("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
++	trace_printk("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
+ 	nhit++;
+ 	if (stackdump)
+-		show_backtrace();
++		trace_dump_stack(0);
  	return 0;
  }
  
-@@ -69,36 +70,36 @@ static void __kprobes handler_post(struct kprobe *p, struct pt_regs *regs,
- 				unsigned long flags)
+@@ -72,19 +51,11 @@ static void sample_exit_handler(struct fprobe *fp, unsigned long ip,
  {
- #ifdef CONFIG_X86
--	pr_info("<%s> p->addr = 0x%p, flags = 0x%lx\n",
--		p->symbol_name, p->addr, regs->flags);
-+	trace_printk("<%s> p->addr = 0x%p, flags = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->flags);
- #endif
- #ifdef CONFIG_PPC
--	pr_info("<%s> p->addr = 0x%p, msr = 0x%lx\n",
--		p->symbol_name, p->addr, regs->msr);
-+	trace_printk("<%s> p->addr = 0x%p, msr = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->msr);
- #endif
- #ifdef CONFIG_MIPS
--	pr_info("<%s> p->addr = 0x%p, status = 0x%lx\n",
--		p->symbol_name, p->addr, regs->cp0_status);
-+	trace_printk("<%s> p->addr = 0x%p, status = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->cp0_status);
- #endif
- #ifdef CONFIG_ARM64
--	pr_info("<%s> p->addr = 0x%p, pstate = 0x%lx\n",
--		p->symbol_name, p->addr, (long)regs->pstate);
-+	trace_printk("<%s> p->addr = 0x%p, pstate = 0x%lx\n",
-+		     p->symbol_name, p->addr, (long)regs->pstate);
- #endif
- #ifdef CONFIG_ARM
--	pr_info("<%s> p->addr = 0x%p, cpsr = 0x%lx\n",
--		p->symbol_name, p->addr, (long)regs->ARM_cpsr);
-+	trace_printk("<%s> p->addr = 0x%p, cpsr = 0x%lx\n",
-+		     p->symbol_name, p->addr, (long)regs->ARM_cpsr);
- #endif
- #ifdef CONFIG_RISCV
--	pr_info("<%s> p->addr = 0x%p, status = 0x%lx\n",
--		p->symbol_name, p->addr, regs->status);
-+	trace_printk("<%s> p->addr = 0x%p, status = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->status);
- #endif
- #ifdef CONFIG_S390
--	pr_info("<%s> p->addr, 0x%p, flags = 0x%lx\n",
--		p->symbol_name, p->addr, regs->flags);
-+	trace_printk("<%s> p->addr = 0x%p, flags = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->flags);
- #endif
- #ifdef CONFIG_LOONGARCH
--	pr_info("<%s> p->addr = 0x%p, estat = 0x%lx\n",
--		p->symbol_name, p->addr, regs->csr_estat);
-+	trace_printk("<%s> p->addr = 0x%p, estat = 0x%lx\n",
-+		     p->symbol_name, p->addr, regs->csr_estat);
- #endif
+ 	unsigned long rip = ret_ip;
+ 
+-	if (use_trace)
+-		/*
+-		 * This is just an example, no kernel code should call
+-		 * trace_printk() except when actively debugging.
+-		 */
+-		trace_printk("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
+-			(void *)ip, (void *)ip, (void *)rip, (void *)rip);
+-	else
+-		pr_info("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
+-			(void *)ip, (void *)ip, (void *)rip, (void *)rip);
++	trace_printk("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
++		     (void *)ip, (void *)ip, (void *)rip, (void *)rip);
+ 	nhit++;
+ 	if (stackdump)
+-		show_backtrace();
++		trace_dump_stack(0);
  }
  
-diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
-index 65d6dcafd742..9dd5cf9a7432 100644
---- a/samples/kprobes/kretprobe_example.c
-+++ b/samples/kprobes/kretprobe_example.c
-@@ -14,9 +14,8 @@
-  * Documentation/trace/kprobes.rst
-  *
-  * Build and insert the kernel module as done in the kprobe example.
-- * You will see the trace data in /var/log/messages and on the console
-- * whenever the probed function returns. (Some messages may be suppressed
-- * if syslogd is configured to eliminate duplicate messages.)
-+ * You will see the trace data in /sys/kernel/tracing/trace
-+ * whenever the probed function returns.
-  */
- 
- #include <linux/kernel.h>
-@@ -24,6 +23,7 @@
- #include <linux/kprobes.h>
- #include <linux/ktime.h>
- #include <linux/sched.h>
-+#include <linux/trace_printk.h>
- 
- static char func_name[KSYM_NAME_LEN] = "kernel_clone";
- module_param_string(func, func_name, KSYM_NAME_LEN, 0644);
-@@ -63,8 +63,8 @@ static int ret_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
- 
- 	now = ktime_get();
- 	delta = ktime_to_ns(ktime_sub(now, data->entry_stamp));
--	pr_info("%s returned %lu and took %lld ns to execute\n",
--			func_name, retval, (long long)delta);
-+	trace_printk("%s returned %lu and took %lld ns to execute\n",
-+		     func_name, retval, (long long)delta);
- 	return 0;
- }
- NOKPROBE_SYMBOL(ret_handler);
+ static int __init fprobe_init(void)
 
