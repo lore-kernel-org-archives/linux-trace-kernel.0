@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793603480;
-	b=4vP8qKjk5Lk8IB06CxjWbchKMsgEeNMwbAt05bQ53eM59jpsmoMRfppcBZBj22VnI//R
-	 we7abKnF2NCDYhta3LXnNpVRhM+xoW8BRopQWQoSGsDbhMlrrlXKcLLgI4zDtG9ocMuTj
-	 BjKeTkKmYnLXqm0agAOXXXpYeeYmdrGWLUrSWHCUFzsng8IDh9SrP55M9xKTTerj+G2Dz
-	 NTI/k+tFMHYr9xbZLJsxrhLpCF3hOX0dg+pyJ6eVfsCt9tWwhf0IPmwkRBhumKjYTIBna
-	 KAiBVX9u2R5JgYjMtvbgbppGbAmYITHrSohz4rtXH98id/LqmZNHKp2YvRkvlbiCCQQ==
+	t=1793603490;
+	b=sN3wFXJ6nu/1nNVDRMd5Yr78v2J9dbCjNIqZIQVsNgjO8im647hiqMdTSph99B0sbtP5
+	 FcN5oEv8IYqNDGHTTPldkr0fgyOwt6qnq6DEGQCL2FawvWij/siV2ackRHvfcKFRF4rc0
+	 0498gLnwvvQ5F7gXxFfY7WudIIq8EwFx+/zIw2oqybbvfrnfvTUJEVjuXzsf2wwg41pee
+	 8sLb3nr6E6bYaCrvxlNSa/ii/7fL0ARRVzT5ad/9pTAgbMRpMVXpQchj9tMTCLMaK8hYj
+	 HRfUm+CHf61RJuJnig7ao3Q/z8MPv0U448j3hJRU2BnCDflbJCltKoayPas2F6zhiQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793603480;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793603490;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=vdJ+DRR1faeDX0v1ueX7wcbZbUYELAr7oYz44rJN8Lo=;
-	b=CWM63uInek8kxyMzayulTm0SKIzvmO/rgjj0FexVt0x89AwB+wKos42KJPiVE1PhN/OA
-	 Z2293518nFGGbMYwy7oOnCfRnNB0bbuk1MQYVObdznW3vLrsxST6PxlLpQlKh8RFI6JqQ
-	 ujfiBZY9K/odgM7hGZNZSKRYGLirfVJ7/d5rOXfsT3S8iOVWyhbikeELkiPEIykOyk4TK
-	 g1d/uYTiLvfIxZc9aawXem1DhhTXp1ok8o73fwysDP2DFVjqwl2zuHZg19rWtbU2lrwCd
-	 G/emeUIfse+F2Cq2JjT+WEvq5fHtuUwD8+R/biS7OShHJohSeyJpmD3tdrJ5kydj7Pg==
+	bh=ZV0tab7VysaykfUEfxp751GYptchpJHxcMrTzqLLZ4o=;
+	b=KF7p8/g8/s5vFpwWA40B8D5hFt27A862BTmfVX7YLM6y3J/ZkiMb6Cg+WAFiUfNBK4GS
+	 ZHf6OhgonLDNn9rxv1N3KGeb+UdTaaulvIa7eoRGM97DFICNFTAPU8/SRGob96R2roZtu
+	 x+yepAgVv7smE1l13PnH2ebF+kg27CBDj6sMWEdTy70//tEQFOphjomMnh+9fSRAAFxze
+	 H9dRoCnP7bNGdw1+MHJXe/p5rbivX/zSZh/Z+yQFgHDi2szTIkTFgGj5wEKgL0uu/TYXI
+	 nsKkJ0hZ7dL1EGMDOFuhm3CWDc7ytfUjF7h2Gcj6/6KT7dJWofu7nP8aJgwiH3PQ3sQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PAmcE8te;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=elp9ahrs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BD2606A326;
-	Mon,  2 Nov 2026 07:11:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C437606A326;
+	Mon,  2 Nov 2026 07:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PAmcE8te
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B5C1F000C1;
-	Mon,  2 Nov 2026 07:11:17 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=elp9ahrs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED431F000C1;
+	Mon,  2 Nov 2026 07:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793603479;
-	bh=vdJ+DRR1faeDX0v1ueX7wcbZbUYELAr7oYz44rJN8Lo=;
+	s=k20260515; t=1793603489;
+	bh=ZV0tab7VysaykfUEfxp751GYptchpJHxcMrTzqLLZ4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PAmcE8teEI5/r9lpAn92elD6CCPy5HQA1EENzUvMLrx9h4QpWTPRrvh3Qr2ysL1ND
-	 2rx9LSOUusnFOklhFvhmP1wwjIJsRbidJ+wZhvggsFYFnEGyfrErVtngHlNlgNS309
-	 v5GpNJnZO5ZIakjkIfiZQ4330b4wW4Buzjpnua6sB22gAnkja90hYun7d3PPR1Y9Qt
-	 0l21iPPbcmR7Est63UlCoqALta9SUG0BExp1FyIiE6WJA5EvjpM1uGxDY5esXb/OuJ
-	 8OR8wZRFcHAzL3hc4QCx+X4A0C9jTzLvinpgVW77q6V17sv6Y6il59qP/4RmzwEFSw
-	 kily4Ig3ZOy+Q==
+	b=elp9ahrsIrEjpgWnlZp5Cp9aX93TOL93VsWU/VvpfbLp16hlzNeViKjMHY+5I0oP8
+	 T8pM9M83/RNIRfEdKbL7Pp7hv5K2/nfyFVZaZ8/YtKoig7DRlh+DvDyPxNMW7sZnTw
+	 p0eRKrV+4dx9Rq40iYUz2qjlMvr0fKGBdCKjHOUa3VgN4UG3enaFMCHxXqprXA1E0W
+	 gNXozluPXqrwRkqlI4s/e+PUswMl/ANR5m6Kn2pUXRb1l602YC3AqO2dXTWMsIWLrT
+	 +6VVyHr6lN1rF8VzXN8aQ0Z+pFhlXxuI4n62Gk71FNAb0mhVZhOQnh586U4rLdjwP8
+	 TCNEbto7lVE9A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -53,9 +53,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH 2/3] samples/fprobe: Use trace_printk() and trace_dump_stack()
-Date: Mon,  2 Nov 2026 16:11:15 +0900
-Message-ID: <179360347512.115681.7201999490892291449.stgit@devnote2>
+Subject: [PATCH 3/3] docs: trace: Warn against using printk() in probe handlers
+Date: Mon,  2 Nov 2026 16:11:25 +0900
+Message-ID: <179360348516.115681.16358304979974648339.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179360345418.115681.193455787480210412.stgit@devnote2>
 References: <179360345418.115681.193455787480210412.stgit@devnote2>
@@ -74,131 +74,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fprobe entry and exit callbacks execute in atomic context with
-preemption disabled under ftrace recursion protection. Calling
-printk() directly inside handlers can lead to deadlocks if console
-or scheduler locks are already held by the probed or interrupted context.
+Probe handlers (kprobes, kretprobes, and fprobes) execute in atomic or
+non-preemptible contexts. Because handlers do not run in NMI context
+(especially when jump-optimized or ftrace-based), calling printk()
+directly can attempt to synchronously acquire console driver locks or
+scheduler locks (via console_unlock()), risking a deadlock if the probed
+or interrupted context already holds those locks.
 
-Drop the use_trace module parameter and always use trace_printk()
-for handler logging. In addition, replace stack_trace_print() (which
-uses printk()) with trace_dump_stack(0) to output backtraces safely
-to the ftrace buffer. Also update the module header comment to
-reference /sys/kernel/tracing/trace.
-
-Additionally, update CONFIG_SAMPLE_FPROBE in samples/Kconfig to
-depend on EVENT_TRACING so that the tracing subsystem is enabled
-when building the sample.
+Document this restriction in both kprobes.rst and fprobe.rst, and
+recommend using trace_printk() instead to safely log messages to the
+ftrace buffer.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- samples/Kconfig                 |    2 +-
- samples/fprobe/fprobe_example.c |   49 ++++++++-------------------------------
- 2 files changed, 11 insertions(+), 40 deletions(-)
+ Documentation/trace/fprobe.rst  |    5 +++++
+ Documentation/trace/kprobes.rst |   11 +++++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 54414e57ff75..744d991ea620 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -88,7 +88,7 @@ config SAMPLE_HW_BREAKPOINT
+diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
+index 46dd46a97c1f..72e0fd9e1808 100644
+--- a/Documentation/trace/fprobe.rst
++++ b/Documentation/trace/fprobe.rst
+@@ -101,6 +101,11 @@ handler.
+ If the entry callback function returns !0, the corresponding exit callback
+ will be cancelled.
  
- config SAMPLE_FPROBE
- 	tristate "Build fprobe examples -- loadable modules only"
--	depends on FPROBE && m
-+	depends on FPROBE && EVENT_TRACING && m
- 	help
- 	  This builds a fprobe example module. This module has an option 'symbol'.
- 	  You can specify a probed symbol or symbols separated with ','.
-diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-index bfe98ce826f3..3b94839b3199 100644
---- a/samples/fprobe/fprobe_example.c
-+++ b/samples/fprobe/fprobe_example.c
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Here's a sample kernel module showing the use of fprobe to dump a
-- * stack trace and selected registers when kernel_clone() is called.
-+ * stack trace and function entry/exit when kernel_clone() is called.
-  *
-- * For more information on theory of operation of kprobes, see
-- * Documentation/trace/kprobes.rst
-+ * For more information on theory of operation of fprobe, see
-+ * Documentation/trace/fprobe.rst
-  *
-- * You will see the trace data in /var/log/messages and on the console
-+ * You will see the trace data in /sys/kernel/tracing/trace
-  * whenever kernel_clone() is invoked to create a new process.
-  */
++Since the callbacks run with preemption disabled under ftrace recursion
++protection, calling printk() or pr_*() from these callbacks is not safe
++and can cause deadlocks on console driver or scheduler locks. Use
++trace_printk() instead to log debugging output.
++
+ @fp
+         This is the address of `fprobe` data structure related to this handler.
+         You can embed the `fprobe` to your data structure and get it by
+diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+index 5e606730cec6..19c04a91a664 100644
+--- a/Documentation/trace/kprobes.rst
++++ b/Documentation/trace/kprobes.rst
+@@ -563,8 +563,8 @@ course, has no way to distinguish the deliberately injected faults
+ from the accidental ones.  Don't drink and probe.
  
-@@ -15,10 +15,9 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/fprobe.h>
--#include <linux/sched/debug.h>
- #include <linux/slab.h>
-+#include <linux/trace_printk.h>
+ Kprobes makes no attempt to prevent probe handlers from stepping on
+-each other -- e.g., probing printk() and then calling printk() from a
+-probe handler.  If a probe handler hits a probe, that second probe's
++each other -- e.g., probing trace_printk() and then calling trace_printk()
++from a probe handler.  If a probe handler hits a probe, that second probe's
+ handlers won't be run in that instance, and the kprobe.nmissed member
+ of the second probe will be incremented.
  
--#define BACKTRACE_DEPTH 16
- #define MAX_SYMBOL_LEN 4096
- static struct fprobe sample_probe;
- static unsigned long nhit;
-@@ -35,34 +34,14 @@ static bool stackdump = true;
- module_param(stackdump, bool, 0644);
- MODULE_PARM_DESC(stackdump, "Enable stackdump.");
+@@ -579,6 +579,13 @@ which depends on the architecture and optimization state.  (e.g.,
+ kretprobe handlers and optimized kprobe handlers run without interrupt
+ disabled on x86/x86-64).  In any case, your handler should not yield
+ the CPU (e.g., by attempting to acquire a semaphore, or waiting I/O).
++Furthermore, probe handlers should avoid calling printk() or pr_*().
++Because probe handlers execute in atomic/non-preemptible contexts without
++being in NMI context (especially when jump-optimized or ftrace-based),
++calling printk() may attempt to synchronously acquire console driver locks
++or scheduler locks via console_unlock(), risking a deadlock if the probed
++or interrupted context already holds those locks. Use trace_printk()
++instead to safely output messages to the trace buffer.
  
--static bool use_trace = false;
--module_param(use_trace, bool, 0644);
--MODULE_PARM_DESC(use_trace, "Use trace_printk instead of printk. This is only for debugging.");
--
--static void show_backtrace(void)
--{
--	unsigned long stacks[BACKTRACE_DEPTH];
--	unsigned int len;
--
--	len = stack_trace_save(stacks, BACKTRACE_DEPTH, 2);
--	stack_trace_print(stacks, len, 24);
--}
--
- static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
- 				unsigned long ret_ip,
- 				struct ftrace_regs *fregs, void *data)
- {
--	if (use_trace)
--		/*
--		 * This is just an example, no kernel code should call
--		 * trace_printk() except when actively debugging.
--		 */
--		trace_printk("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
--	else
--		pr_info("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
-+	trace_printk("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
- 	nhit++;
- 	if (stackdump)
--		show_backtrace();
-+		trace_dump_stack(0);
- 	return 0;
- }
- 
-@@ -72,19 +51,11 @@ static void sample_exit_handler(struct fprobe *fp, unsigned long ip,
- {
- 	unsigned long rip = ret_ip;
- 
--	if (use_trace)
--		/*
--		 * This is just an example, no kernel code should call
--		 * trace_printk() except when actively debugging.
--		 */
--		trace_printk("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
--			(void *)ip, (void *)ip, (void *)rip, (void *)rip);
--	else
--		pr_info("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
--			(void *)ip, (void *)ip, (void *)rip, (void *)rip);
-+	trace_printk("Return from <%pS> ip = 0x%p to rip = 0x%p (%pS)\n",
-+		     (void *)ip, (void *)ip, (void *)rip, (void *)rip);
- 	nhit++;
- 	if (stackdump)
--		show_backtrace();
-+		trace_dump_stack(0);
- }
- 
- static int __init fprobe_init(void)
+ Since a return probe is implemented by replacing the return
+ address with the trampoline's address, stack backtraces and calls
 
