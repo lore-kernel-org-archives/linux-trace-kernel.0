@@ -1,54 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.152
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793618566;
-	b=JnIi1pOFtsWs3mzx06WpGDZ/nq9k/JVvI5bqQWeMjdT3PuQEw0ZNMo6yhx3/HnsvA9zH
-	 8gEfl5zrsf+SP22YbJ0TXIIImU6MdPTFxgmxka5bRkOVjtFm7Qlh+Sxz/7EcbqLtBlS3U
-	 oJpN69rnVFFLMwhrwdH7NQP7vAn9DFZTdQIrV6jjXfFHx/4BfBaBi4sfZWY4FrQwKaCaG
-	 r1uiPE1N/LLnL9sQzNmtFryJjSmRWwK2p8AyPVeTG84QhJcPtIX+YQjdqUl/8346cnhS2
-	 uFWl4CEu/sJ1PM5HJRSnp0oelLhyKdLE2hGSSrANDRsDqig6Tcrw4d+Qs67KTJCsRFw==
+	t=1793620727;
+	b=iA0BaXffMEQtDIaJw9zZvhe8FVBbRZzNrCHGOpZ4tTycRKwfuSCDCis6TFMHeB0VOgt+
+	 IFFHCS4d9bW4IGFvqvBqHPP7N1g6KEV00m0jSxnbIX2z+cKmHbZ3+EMKSPQl5yyGuqsL1
+	 juzx/PLciJNGpn/f4xH9h4ugMdfzsJWRB7aX0FNo+X11vmWokM6IaggYrzYm2/FWsqTLm
+	 SUHtVwy6F6vaqpzhY6nvpU0rWKORorsQI5VI7FwGTgzztZnRalwlrHskY4XP6Gg+wsZnO
+	 /1+Rzc8Cd3k7bLZc33CAecpELFbeJQ7uuDOabAvaQ6+h5uoey63J0rpGSWzF2+bpxCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793618566;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=X7loASgn+yxCJuZyuGOGYaVSPjNHXEWeXeKmMCLTikE=;
-	b=G5dCv0HT+p2FlnjGG84BEF/LuYyWn4Gk9X3CmvEO2r+s8dU2DLwR9ngSz3HODRAbnDRg
-	 8axwnCtqNGuAAHYyBwn7Qv56ONAEL0geeq98YfkhWN41ffqubXIiBBHjT5w2e4EqZDDHu
-	 pNKAx2gOz/Y52gp0Jm40hHy8bEp/MPkOzVPB3Nm/b2KGv1Ro8r4r94Oh43xDISrgwV2Em
-	 ZZdcRuHqLtuDU62IpYfjsGsvz8wJ6sm/mjSebBWvSMKZMFyn4fBIQxJUyNSsw2LzYgyUj
-	 WYBQD8dtk/YEhtM7ODSdzkxcq6YUjWHHZVQsyySzbZskW7/kDnZZh/PB1nJ56G39DHg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793620727;
+	h=DMARC-Filter:Received:From:To:Cc:Date:Message-ID:Subject:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version:X-HM-Tid:
+	 X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
+	bh=039MTMt2BSB8g/lZc/n6iywXg8buaWiLt7iqhR1lW1c=;
+	b=aP0EPu7/HtVSt/5DFx8ghjD+hYywmZwU1s9Cj74KI8SvvlD2uzX1sXm7guGid8AGYKgF
+	 RU2ThnPdbRmfXzJguclFKwUqHeMbvo/lnqjnPqu91PDTYB9iDa5Y2i8PkNnZomQnV//Ej
+	 nHYb/ArGK7+9cfS3Ty7UZ0DoY26OcM01oX+IRs36DUMojvrVlI1rvuxj+D55DQx7bp2cV
+	 CjkAIC/FBF0JMs5+rYQJ9FuuvweXU0/UiWfvRFNQ2uMUN+p4EuyPsHy6qWoORU1u68LVE
+	 DTWZAS+LHOe3wRdRuXJ7uAG8ceAbdRQjFqOaOLbRht8PwVOHqfqKET3LGvxkYB2CG4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WCOu+cj6;
-	arc=none smtp.remote-ip=95.215.58.152
-Received: from mta1.migadu.com (out-152.mta1.migadu.com [95.215.58.152])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=stu.pku.edu.cn;
+	spf=pass smtp.mailfrom=stu.pku.edu.cn;
+	dkim=pass header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=RpSFwV0q;
+	arc=none smtp.remote-ip=45.254.49.197
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5F060A6F6B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 11:22:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA5F060A6F6B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3708606A336;
+	Mon,  2 Nov 2026 11:58:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3708606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stu.pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WCOu+cj6
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=72Z50eGsX0yBdCzUdD2DRF1kVAo5WdsTx+d6WyLQP4A=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793618564; v=1; x=1794223364;
- b=WCOu+cj6kNM/m98bWxhFmENNuPadN6C2HuhsVN5hVy9dukRiBKNa8k/8PLbFdbj/DXlRF5kM
- IhFFkIS71wTN8YJ4rJr7SHL38vMi1MqQuSvb6+c8wYtyI1xkIsAstcsyHjJeTILcKR6C0ek4Wsf
- CQM217qhkiW4oWusR+yozJyQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id aa70f3ab710337ec;
-	Mon, 02 Nov 2026 11:22:43 +0000
-X-Mizu-Trace-ID: aa70f3ab710337ec
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <65edd0da-008a-4c1d-bfd1-7f0b892a76bf@linux.dev>
-Date: Mon, 2 Nov 2026 19:22:28 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=RpSFwV0q
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa (unknown [1.202.162.49])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 5330b234d;
+	Mon, 2 Nov 2026 19:58:43 +0800 (GMT+08:00)
+From: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>, linux-kernel@vger.kernel.org
+Date: Mon, 02 Nov 2026 19:58:37 +0800
+Message-ID: <179362071771.29269.15129360535376085397@stu.pku.edu.cn>
+Subject: [PATCH 0/2] tracing/user_events: harden dynamic field validation
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,161 +55,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/6] mm/mglru: add tracepoint for inc_max_seq()
-To: Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org,
- "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)"
- <cgroups@vger.kernel.org>,
- "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
- Ridong Chen <chenridong@xiaomi.com>
-References: <20261031090041.58574-1-ridong.chen@linux.dev>
- <20261031090041.58574-7-ridong.chen@linux.dev>
- <CAGsJ_4zUbkFXBhAesVV74-Ndga5f6xEbestK7Qinqddip8xBrw@mail.gmail.com>
- <aufxuOaKZWMYqEQi@bogon>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <aufxuOaKZWMYqEQi@bogon>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0aa19c20456603a2kunmab045f0fe84e3
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkZHx8eVhpNSUMeSk9OS0NOSVYeHw
+	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKVUlLSVVKTUlVT0JZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0
+	xVSktLVUtZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=RpSFwV0qikGlPVllKRCwIRwuKrFI3NB8XqfqKKNDrydhVoqL42wq6lLm3ViDoNfl1/GFnYfT0MWgRyWJ46u7ax89SgxjOBPcdpP5qjDmUnnCY6EK2V3pYywUFmU2GD6O3NAa08Wg+6qOWjoydzciZIYK2zN8rwJinixFvzNPXY0=; s=default; c=relaxed/relaxed; d=stu.pku.edu.cn; v=1;
+	bh=039MTMt2BSB8g/lZc/n6iywXg8buaWiLt7iqhR1lW1c=;
+	h=date:mime-version:subject:message-id:from;
 
+Harden two user-event field validation boundaries found with KASAN.  The
+first patch enforces the minimum storage required for a dynamic cpumask.
+The second rejects field layouts whose accumulated offsets overflow or no
+longer fit the signed fields used downstream.
 
+Yifan Zhang (2):
+  tracing/user_events: validate dynamic cpumask size
+  tracing/user_events: reject overflowing field offsets
 
-On 11/2/2026 10:13 AM, Baoquan He wrote:
-> On 11/01/26 at 05:21am, Barry Song wrote:
->> On Sat, Oct 31, 2026 at 5:02 PM Ridong Chen <ridong.chen@linux.dev> wrote:
->>>
->>> From: Ridong Chen <chenridong@xiaomi.com>
->>>
->>> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
->>> youngest generation. There is currently no tracepoint on this path, so
->>> the moment a new generation is created, and how the min_seq of each type
->>> trails behind it, cannot be observed as it happens.
->>>
->>> Add mm_mglru_inc_max_seq, emitted right after max_seq is bumped while
->>> the lruvec lock is still held, with the node id, memcg id, the new
->>> max_seq, the anon and file min_seq, and the number of pages in each
->>> generation for both types, summed over zones and clamped to >= 0 the
->>> same way the debugfs lru_gen file reports them. The nr_anon/nr_file
->>> arrays are indexed by generation slot, so the emitted max_seq/min_seq
->>> say which slot holds which seq. They are printed with __print_array(),
->>> so the output is hex and its length follows MAX_NR_GENS automatically.
->>>
->>> Only the lruvec is passed in; all of the above is collected in
->>> TP_fast_assign(), so inc_max_seq() does no extra work when the event is
->>> disabled. Paired with mm_mglru_scan_folios it makes the full
->>> aging-to-eviction window observable per memcg.
->>>
->>> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
->>> ---
->>>   mm/trace_vmscan.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->>>   mm/vmscan.c       |  2 ++
->>>   2 files changed, 49 insertions(+)
->>>
->>> diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
->>> index 8148b8224422..cddf42b5849a 100644
->>> --- a/mm/trace_vmscan.h
->>> +++ b/mm/trace_vmscan.h
->>> @@ -456,6 +456,53 @@ TRACE_EVENT(mm_mglru_scan_folios,
->>>                  __entry->min_seq)
->>>   );
->>>
->>> +TRACE_EVENT(mm_mglru_inc_max_seq,
->>> +
->>> +       TP_PROTO(struct lruvec *lruvec),
->>> +
->>> +       TP_ARGS(lruvec),
->>> +
->>> +       TP_STRUCT__entry(
->>> +               __field(u64, memcg_id)
->>> +               __field(unsigned long, max_seq)
->>> +               __field(unsigned long, anon_min_seq)
->>> +               __field(unsigned long, file_min_seq)
->>> +               __array(unsigned long, nr_anon, MAX_NR_GENS)
->>> +               __array(unsigned long, nr_file, MAX_NR_GENS)
->>> +               __field(int, nid)
->>> +       ),
->>> +
->>> +       TP_fast_assign(
->>> +               struct lru_gen_folio *lrugen = &lruvec->lrugen;
->>> +               int gen, zone;
->>> +
->>> +               __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
->>> +               __entry->max_seq = lrugen->max_seq;
->>> +               __entry->anon_min_seq = lrugen->min_seq[LRU_GEN_ANON];
->>> +               __entry->file_min_seq = lrugen->min_seq[LRU_GEN_FILE];
->>> +               /* summed over zones and clamped to >= 0, as debugfs lru_gen does */
->>> +               for (gen = 0; gen < MAX_NR_GENS; gen++) {
->>> +                       __entry->nr_anon[gen] = 0;
->>> +                       __entry->nr_file[gen] = 0;
->>> +                       for (zone = 0; zone < MAX_NR_ZONES; zone++) {
->>> +                               __entry->nr_anon[gen] +=
->>> +                                       max(lrugen->nr_pages[gen][LRU_GEN_ANON][zone], 0L);
->>> +                               __entry->nr_file[gen] +=
->>> +                                       max(lrugen->nr_pages[gen][LRU_GEN_FILE][zone], 0L);
->>> +                       }
->>> +               }
->>
->> I feel this is wrong. Can we calculate the newest and
->> oldest generations from seq, then print them in order
->> from newest to oldest?
-> 
-> Agree, from newest to oldest or oldest to newest makes it clearer.
-> 
-> Printing from lrugen->max_seq - MAX_NR_GENS + 1, or from MAX_NR_GENS,
-> both looks good.
-> 
-
-Hi Barry, Baoquan,
-
-You are right, thanks. In v6 the arrays are ordered by seq, from the
-oldest to the newest, i.e. the same order in which the debugfs lru_gen
-file lists the generations from top to bottom.
-
->>
->> The nr_pages[] array isn't ordered from newest to
->> oldest or vice versa, as we have:
->>
->> static inline int lru_gen_from_seq(unsigned long seq)
->> {
->>          return seq % MAX_NR_GENS;
->> }
->>
->> And I added a helper here:
->> https://lore.kernel.org/linux-mm/20261022220203.91911-11-baohua@kernel.org/
->>
->> +static inline unsigned long lruvec_gen_size(struct lru_gen_folio *lrugen,
->> + int type, unsigned long seq)
->> +{
->> +     int gen = lru_gen_from_seq(seq);
->> +     unsigned long size = 0;
->> +
->> +     for (int zone = 0; zone < MAX_NR_ZONES; zone++)
->> +          size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
->> +     return size;
->> +}
->>
->> Maybe you could port it here as a separate patch so it
->> can land earlier as part of your tracepoints series. We
->> could then use it in the next version of the swappiness
->> series.
->>
-Sure. I will port lruvec_gen_size() as a separate patch with your Suggested-by, 
-and put it in mm/vmscan.h so the tracepoint can use it.
+ kernel/trace/trace_events_user.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 -- 
-Best regards
-Ridong
-
+2.39.5 (Apple Git-154)
