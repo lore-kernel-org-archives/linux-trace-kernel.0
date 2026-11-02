@@ -1,50 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793602925;
-	b=QoGOlJDX8xPzfuKpZvj3imR1fkxELdgiAbxR5vM8lNmoUGdajTpxgokRvPFwshwZIwjc
-	 FUwm36tn+eR11hEYoc8F727epnOehA0kZ52zwu2FeBbLcR7SyaCGHTb3bp2+UR+TzrfP9
-	 Bq7o6WExluVzHprkp65vi2kA6jQzHx5hw+oSI/8YhRuWPQszgUKIevw4Y4m3xxxVYP6zk
-	 4pTkGUc22pgqbvBHBJZBO77kEBgteP2bIs8KfV4c54NGZhB9dHv26rTKiBLn5sydNTQTf
-	 iyNKcnJtmG7uJXTsvVpdBVriIVkCSCncf2G1wbt67JL7/y9cWY/MDww5l1FBYzDh+ig==
+	t=1793603460;
+	b=XYOItl5A3CyFX3xMBrVm/TAHAGrFnlWj/gqX/gBhPWEjMp+EAx/fUQOppNUSgOWMOfhf
+	 VTn30n7HGB+CjrHRtonrOtw0q7H4c7g3sKyYWvkrZlSnK1zZO5+pCf2Qd4GKyzZKZyK3b
+	 HmLYI+J2UsCPLzVslEpp0OyLH8MTKkP7h3WwdxdRJS2TOzLLsfyALDMJKi9Kn9nzsKem4
+	 pVQr+AVeTpA3fMYeWGwSHjkV49kv20+0GsncWgpfFOxG8h232yAgT83p8qxkqbVDs1hVd
+	 DSCpIlYcYymILJH2hbkENK0RWIWtDtBuwVqHFyGIOLkfaUTp79wbM54q71AgaDYK6VA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793602925;
-	h=DMARC-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=o3unYrqPCzOkBcZOxi4mzaJllESmWrBv+ToHLviEttE=;
-	b=cWFd1G6qaYHs985r1Hep2EhjCwUffy5VMGVF3WZR0M6vPBnhp+99UKUBgQCWTR641SiJ
-	 vGrDFkKgWZ5BNhV2HHndkvov7jIzYl2GEjDIKqz3zCq8JSY/GaOvn71+TEhiwhoJYXoi6
-	 UPEpfVttpKtFHV8oo/HbRhryWyb+ERtNkVaSI6F0k4gMRN07H676yhzY1WdQaWao7bmBz
-	 8eiumPrUFFJ1G3+9MDSA0Gm7fq4IANo89rxmTX4CFOfCYXVP55FSrDy9407qrNEnsE/Rc
-	 b/UekEqusmRRU1fFSFFXjUzR63mob+gg4q1PI/lCavED/gs33udZqByteaNgoIl8YhA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793603460;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 User-Agent:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=ev+GPuJSMdjcYYdxrSBBzZgvVzbRgj/2WINJJ71YQXc=;
+	b=Rxs10iyjzYl6IW9P8VNeJcQp4KqEVbp9gsImno8AqDqcA/w0KaI9C9+74to1r3tIF3O9
+	 KaDu0bRPSsg1GM/qr2vfMaiLAkb/14GNsyQRaojbbDkpJ2EyPLENR+oE7CMqOCnoTwMmL
+	 lwcuard3/41NsAx76iXhFej+Lp82bfXGz0OqIZ+Mb+S6K0U0kz+CKSe0oQpNBqixc8nNH
+	 IODgWbp5fOzAnqnKYxpyw9DCzE91Ah165loBj/UPjN/fxRKUgIhrPuEVCseexgeL2Y5Ty
+	 8zLBzcgWKYwX99GpXq2+2wrXBVclZsvy0vD25SWWaZeWbXiUp8bm4G/LkJzclypnBhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=RV88SlN1;
-	arc=none smtp.remote-ip=220.197.31.5
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jVhwU9iN;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C4F606A32F;
-	Mon,  2 Nov 2026 07:02:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41C4F606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B9E606A324;
+	Mon,  2 Nov 2026 07:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=RV88SlN1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
-	Content-Type; bh=o3unYrqPCzOkBcZOxi4mzaJllESmWrBv+ToHLviEttE=;
-	b=RV88SlN1JKsjaJSFcbAe7/KUJ8evmlhLyalceJg19oHR4+TowhGe0yCHFGFLdl
-	E1scwJMluYHOt832sXTV63nROH41Oit71/HyZTfVimGVLu1c0jv3sH0HGuMH6kQM
-	eoBsJBLrxk8mWMEnvAhB07sfQFaysskdmUDn/nMX+gYaU=
-From: Chaosheng Qu <quchaosheng000406@163.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtla: test that events are rejected without --trace
-Date: Mon, 02 Nov 2026 15:01:31 +0800
-Message-ID: <179360289114.124676.17105773066185078008@163.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jVhwU9iN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A811F000C1;
+	Mon,  2 Nov 2026 07:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793603459;
+	bh=ev+GPuJSMdjcYYdxrSBBzZgvVzbRgj/2WINJJ71YQXc=;
+	h=From:To:Cc:Subject:Date;
+	b=jVhwU9iNwwkB2N6Egl5t70pSkVQCJty0oL2pPVQ7gkQdxyEIaSBM5y1z8KJjaJ2Kk
+	 3ebJ/0HbzKPDwUtFOqG0XqdqDw5J2jPkxZWQpoEI3jCn/xtWwn4pksReQ2+V4OUBp5
+	 okpWtnZ2nWYlTIKLGW6PZY0ddFiH38kbSbsdguDg3Blo3sCLvqsHRsfBq4fYAsUNuQ
+	 yjbQV1n7zYqQbxVAZUojcjRKy0kqNQfRO/HIKT1OYbL7If3g2XLgNbHMuN5rj1DLsd
+	 89Cwn9wHWHfjWUHOXZWffW1lRdLGmHgZk6PYZnXHRMRO9LgXhWIdUg1GaqMqY6n44V
+	 eSv8RdAMzRk7w==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 0/3] probes: Use trace_printk() in probe handlers
+Date: Mon,  2 Nov 2026 16:10:54 +0900
+Message-ID: <179360345418.115681.193455787480210412.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -56,79 +68,43 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgDH17BdNehq7sfwDQ--.60071S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZr15Jw4kZr1rCF13tF48tFb_yoW5urWxpa
-	90vr92yr1DGan0vw4rur18AFWDGrZ7WrW7KF1kGw1Yyry3Ar4fGF4xKFy7XrW3CrWfZ34a
-	k3yv9w12qa4UWaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UMq2iUUUUU=
-X-CM-SenderInfo: xtxfxtprvkv0bjqqikiqw6il2tof0z/xtbC5B45rmroNV562AAA3m
 
-From: Chaosheng Qu <quchaosheng000406@163.com>
-Subject: [PATCH] rtla: test that events are rejected without --trace
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>,
-    linux-trace-kernel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
+Hi,
 
--e, --filter and --trigger configure events of the trace instance that
---trace creates.  Before the previous patch they were silently dropped
-when no --trace was given, and the tool still exited 0; the tests here
-pin down the messages and exit codes for both the rejected and the
-accepted cases.
+Here are patches to update the probe sample code to use trace_printk
+instead of normal printk. Since the fprobe and kprobe/kretprobe handlers
+can be called from somewhere where console is locked, using printk() is
+basically unsafe. Only the unoptimized kprobe on x86 is safe because it
+is ran with NMI context (in this case, the kernel uses printk_deferred()
+automatically), but optimized kprobe/kretprobe/fprobe are not.
 
-hwnoise.t already covers the success path of -e with --trigger, so this
-adds the failure paths only.
+Thus, this series replaces those printk() (pr_*()) with trace_printk()
+which should be safe to output the result into trace buffer, and use
+trace_dump_stack() instead of stack_trace_print().
 
-Signed-off-by: Chaosheng Qu <quchaosheng000406@163.com>
+The similar issue had been reported by Tiezhu Yang [1] in 2023, but
+it was pointed different reason, and not applicable to upstream.
+I investigated it again.
+
+[1] https://lore.kernel.org/all/d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn/
+
+Thank you,
 ---
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 214fd40..ce9ff3e 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -99,4 +99,20 @@ check_top_q_hist "with conditional continue" \
- check_top_hist "with trace output at end" \
- 	"osnoise TOOL -d 1s --on-end trace" 0 "^  Saving trace to osnoise_trace.txt$"
- 
-+# -e, --filter and --trigger only take effect with --trace: they configure
-+# events of the instance it creates.  Without it rtla used to drop them and
-+# exit 0, so a typo in an event name went unnoticed.
-+check "filter without a preceding -e" \
-+	"osnoise top -q --filter 'prev_pid == 0' -d 1s" 129 "has no previous event to apply to"
-+check "event without --trace" \
-+	"osnoise top -q -e sched:sched_switch -d 1s" 1 "need --trace or --on-end trace"
-+check "invalid event without --trace" \
-+	"osnoise top -q -e nosuchsys:nosuchevent -d 1s" 1 "need --trace or --on-end trace"
-+check "filter without --trace" \
-+	"osnoise top -q -e sched:sched_switch --filter 'prev_pid == 0' -d 1s" 1 "need --trace or --on-end trace"
-+check "invalid event with --trace" \
-+	"osnoise top -q -e nosuchsys:nosuchevent -t -d 1s" 1 "Error enabling event"
-+check "valid event with --trace" \
-+	"osnoise top -q -e sched:sched_switch -t -d 1s" 0 ""
-+
- test_end
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index 5116857..18d7730 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -153,4 +153,20 @@ else
- fi
- done
- 
-+# -e, --filter and --trigger only take effect with --trace: they configure
-+# events of the instance it creates.  Without it rtla used to drop them and
-+# exit 0, so a typo in an event name went unnoticed.
-+check "filter without a preceding -e" \
-+	"timerlat top -q --filter 'prev_pid == 0' -d 1s" 129 "has no previous event to apply to"
-+check "event without --trace" \
-+	"timerlat top -q -e sched:sched_switch -d 1s" 1 "need --trace or --on-end trace"
-+check "invalid event without --trace" \
-+	"timerlat top -q -e nosuchsys:nosuchevent -d 1s" 1 "need --trace or --on-end trace"
-+check "filter without --trace" \
-+	"timerlat top -q -e sched:sched_switch --filter 'prev_pid == 0' -d 1s" 1 "need --trace or --on-end trace"
-+check "invalid event with --trace" \
-+	"timerlat top -q -e nosuchsys:nosuchevent -t -d 1s" 1 "Error enabling event"
-+check "valid event with --trace" \
-+	"timerlat top -q -e sched:sched_switch -t -d 1s" 0 ""
-+
- test_end
+base-commit: bc71431221f5ba8bb33918399552636e059c2c45
 
+Masami Hiramatsu (Google) (3):
+      samples/kprobes: Use trace_printk() in probe handlers
+      samples/fprobe: Use trace_printk() and trace_dump_stack()
+      docs: trace: Warn against using printk() in probe handlers
+
+
+ Documentation/trace/fprobe.rst      |    5 +++
+ Documentation/trace/kprobes.rst     |   11 +++++-
+ samples/Kconfig                     |    4 +-
+ samples/fprobe/fprobe_example.c     |   49 +++++--------------------
+ samples/kprobes/kprobe_example.c    |   69 ++++++++++++++++++-----------------
+ samples/kprobes/kretprobe_example.c |   10 +++--
+ 6 files changed, 66 insertions(+), 82 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
