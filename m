@@ -1,63 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793611447;
-	b=mzT+xwMxKnogEvlXd+L22Yqv6S16Xu+jbpi7s339xlrCj0N5/f491/MGonrdRlAdFGhV
-	 9YR5KpSj6POlS0TtPyldEUiyy11bKhTplAvA1wb1Yh0XvkXb4IGc/HXa5X6yES1S1MWPp
-	 rWPwYab7XGgyv4iliXjQ/8n6GMo29qXvzbciUordTjY7XdsdP4EUoPfCGUs60AAo1C9ix
-	 ZjC21Ruv1mHFaOq8wDecJNUDWbY0dX0ZtOYnIIXnR0n/+eQgdLcAQo6TYcHaY+5f2xD8k
-	 YffpzdnZv8iEin2Rmw9W66QhoXBmejXtMCKQn/twjB+++xY2j9TQYnqMgm2BuQ96HCA==
+	t=1793612167;
+	b=D4/TI1sqRAy9n7G7dBoOiAi8I5Lu3gM1bLJ8f2PEaAPIImb/aEffPSrsJEsX+xTLkQJ3
+	 /GZg+mt7TexQ5jVr21JKjT3N7OqJlJHDzpF3mitMVx3DwfqNlAxKTT4626Fu3I18b9v8Z
+	 OqAad4O3Ye+rdwg5m0elm7b5MMlCA+6AoAS37N+cxHeEDL36Ff4EZ7tfBCVfyh+QRunME
+	 gT0FwVP6qkEluTZwScGug2iggh7pIPZC+O6Nv79gIFWtSQXCM98LLYbinW3sLRSfZUZht
+	 +UEcxsrFgsbl/dmaGhj0MAvguz2bhnrjcVJxGD+U6OFOiNAno017br6MX5xvBEdYb3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793611447;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=f2W5mYDF5OyICWdxbTulTo2Xs0l8NIvi3HpphFNiK5k=;
-	b=kwdVI8/4gMOfh/gu/XVFsgrYvuny+0SPfx8GC8C3Yxqnf7czeqIBEZ4ONhJ9Zta41N6w
-	 OW5wqmOMLstRScCp5fyj7ftmb2GUhd05Bzxv3u/mSd6vNbtajGZ5V1HZAuW9qW2s1WOFk
-	 qsimlZGBDuK6hrYeA62wLbEz7f7SRR/6bM06HR/RA92Qfjvl8f/B+y/LKTovTHso06V/2
-	 pWosvbSzEom+ZD2PHhmMJcLEIZCZ37UdkWdpLE1h1FcrSTJsfZTnOZ9Qy/sD7d9u/mXGG
-	 cf0I4dv9vLDSn7Engvdd77d5Xs3zbpRdueKq6W/GYjARwNkLW14L4cTxCJPL/JtCh4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793612167;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Subject:From:
+	 Reply-To:To:Cc:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version:X-MBO-RS-ID:
+	 X-MBO-RS-META;
+	bh=+/sMZYds1uhOZXW3Ia/g+6VA7auA/l8PP9TjhomiEy4=;
+	b=M4HSH7aUzHtqfWCQZzcQWYE2HRh+9QEDRzKsTOHOorsEWZyg6pQoSa7eahPZT18Zp2lP
+	 ccsjkVDoIKgzNT+hMTmDmPv/AmK0PsVVAhJmx0IOrS7lLpUlYOTouyVgUqpPezgoFzhHg
+	 m+LOV6p/krdFnQDAVZgXguky4VieZyzGWkoK2GcLLqYAkGPC8cDds2g/8/aS248hipOEc
+	 skMlK4rwYc/reWB/rAudPXDeE5wIEVAleQK/mNt9RGd18eeQPnvX2tA29i/6Upo1tj1z4
+	 lk3YZYhMoBwV3ZnEl+Y9/AokXBxWeZLJWflwYM8EeDkngAHol4rlq0axDPDXjqIEWUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZBXXKqgE;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=mailbox.org;
+	spf=pass smtp.mailfrom=mailbox.org;
+	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=LdTYYRbv;
+	arc=none smtp.remote-ip=80.241.56.172
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABB3606A32D;
-	Mon,  2 Nov 2026 09:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CC606A338;
+	Mon,  2 Nov 2026 09:36:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 131CC606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZBXXKqgE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591501F00A02;
-	Mon,  2 Nov 2026 09:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793611446;
-	bh=f2W5mYDF5OyICWdxbTulTo2Xs0l8NIvi3HpphFNiK5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZBXXKqgEs3cSEuo6JJMv4uQVYjwdPeUgKfOBFx3sGgRKSwaV7jr59rwXU6tl4kL1f
-	 UIlGzQEfsGQkHOH/TbbDmLFtZg8Lg5fdSCTziFBdnk6TsVtI5yXd8hryFE0Ipc+XR6
-	 jJwyfimv9DUYz/zcOWn3gUb3rQMyTHBdKf3AE1AilwXPZhOf+ikg0TX9pmlQWbt4p3
-	 ZxklufKeISTuCfcwr1O/n49giKkDK76NYcCUf7r480LRRgWGND519LzVuzJFnKMhbQ
-	 jEx/+S+Q2WxLeS4zw0Vr4+AL7I6IVMMHfFAho+9Ili2hsun175IqIkvSxRP6wDwmZG
-	 02nxh+L9gixOw==
-Date: Mon, 2 Nov 2026 09:23:58 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Qiliang Yuan <odys.yuan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async
- compaction on every THP fault
-Message-ID: <auhSzBcVE0M23miL@gremlin>
-References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=LdTYYRbv
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4jJ65Z1smrzMlFg;
+	Mon, 02 Nov 2026 10:36:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1793612162; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+/sMZYds1uhOZXW3Ia/g+6VA7auA/l8PP9TjhomiEy4=;
+	b=LdTYYRbve+2a9AsrYz20m520ncMvUqWtNFNrebXBDHnKI8ybVi/PYzzpfE9c2aWuFQazCh
+	Yanfhn1iktpfZnQvu6kAr70M9l9F5WvWdkfMTslOXz1AiDpwxsLPj04BF7RZ5NgJt2Mrio
+	YY5bbjEEPl6bCHSmIjrPAAqY8i0x94+e6LlSve+QrM9iyCGTKdUjw9uOK33jJpYH+ZHH/Q
+	ZXCFvol5foGJGa5kgTewdfkcTM6PPV/7x+yH/OVp/6tN+BAr23IGPKCZD7XpsivZOn9fCH
+	C3bAI15a1dLfcj0+ibFzUcP+JhkDXEA4k6fD+tfyudO2wKsvS/NOOAMT/wbNdg==
+Message-ID: <3a81450158fe5a46d76257c5018eaf5592168f18.camel@mailbox.org>
+Subject: Re: [RFC PATCH v2 0/3] Solve dma_fence's problems by locking
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	phasta@kernel.org, Sumit Semwal <sumit.semwal@linaro.org>, Jani Nikula	
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun
+ Feng <boqun@kernel.org>,  Gary Guo <gary@garyguo.net>,
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, Daniel Almeida	
+ <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, Onur =?ISO-8859-1?Q?=D6zkan?=
+ <work@onurozkan.dev>, Boris Brezillon	 <boris.brezillon@collabora.com>,
+ Alex Deucher <alexdeucher@gmail.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Date: Mon, 02 Nov 2026 10:35:57 +0100
+In-Reply-To: <5d15d668-7191-4e96-922c-82982787b50c@amd.com>
+References: <20261020100034.759183-2-phasta@kernel.org>
+	 <3e8bc11d-6f90-47a4-ae63-cf2ff37f1ff6@amd.com>
+	 <ca78cdb7c24a9be9b640db782168cdcc5fe30b60.camel@mailbox.org>
+	 <ed2728bd-1df4-478e-9e6f-a96dfd172b48@amd.com>
+	 <4a7294da65c8744ba6355730e304b5250d0ca351.camel@mailbox.org>
+	 <d13d1a6e-bba2-4275-984b-145e0252eb0f@amd.com>
+	 <320b6e7c75da6f05c015e89df0e2c7d11f20d70a.camel@mailbox.org>
+	 <22d66945-8854-442f-a69d-fe02726eccda@amd.com>
+	 <f9a47d563f896e0789fffa72df5847e2878cbe5e.camel@mailbox.org>
+	 <5d15d668-7191-4e96-922c-82982787b50c@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-2.fc44) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -67,19 +100,220 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
+X-MBO-RS-ID: 9c9e0b972831da15e15
+X-MBO-RS-META: rpf1r7o51nkurn4xtfgfh9p8yhndq3x9
 
-You had 2 maintainers NAK your v1, why on earth are you sending a v2?
+On Wed, 2026-10-28 at 14:38 +0100, Christian K=C3=B6nig wrote:
+> On 10/28/26 10:47, Philipp Stanner wrote:
+> > > > 	commit c8a5d5ea3ba6 ("nouveau: fix client work fence deletion race=
+")
+> > >=20
+> > > This bug is exactly what I'm trying to prevent here.
+> >=20
+> > What is your proposed strategy for preventing it?
+>=20
+> nouveau_fence_signal() is consistently used by all signaling path to
+> both signal and cleanup a fence.
 
-For avoidance of doubt:
+No, you miss the point. Look at the bug. It exists because nouveau
+thinks it can drop a reference now because the fence is signaled.
 
-Nacked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+I grant the point, though, that this is actually a refcounting issue.
+The path that is signaling does not have its own extra reference.
 
-For this and any future revisions. Stop sending it.
+> When we stop calling callbacks with locks held and signaling fences
+> from dma_fence_is_signaled() and dma_fence_enable_signaling() nouveau
+> can call nouveau_fence_signal() consistently from all cleanup paths
+> with the proper handling.
+>=20
+> This makes it completely unecessary to have those cleanup hacks as
+> well as the nouveau_fence_release() callback.
+>=20
+> Background is that you can then put the fence context directly after
+> the fence is signaled=20
+>=20
+> > > This problem only exists because we call the backend operations with
+> > > the lock held!
+> >=20
+> > Nope, this particular bug exists because Nouveau thought that it can
+> > drop its reference when dma_fence_is_signaled() returns true, which is
+> > not the case, because the fence backend has a race condition there.
+>=20
+> No it doesn't, the fence backend works exactly like intended.
 
-I have no confidence you understand any of this.
+You mean the lockless checking of a bit that is set under lock-
+protection works as intended?
 
---
-Cheers, Lorenzo
+>=20
+> I agree that we made tons of mistakes here but that is actually one
+> of the few things which we got right on dma_fences from the very
+> beginning.
+> > A race condition that was allowed for performance reasons.
+>=20
+> Well it is at least partially for correctness as well.
+>=20
+> It is mandatory for quite a number of use cases that the signaling
+> status becomes visible before the callbacks finish because otherwise
+> you run into race conditions with the callbacks again.
+
+That's not what I mean. There are two things here:
+
+a) signaled-bit is read without lock-protection
+b) signaled-bit is set before callbacks execute
+
+fixing a) makes b) irrelevant.
+
+But that's not even my point in this mail.
+
+
+I'm still interested btw in who is busy-polling on a fence, waiting
+until the signaled-bit gets true (that would be the "performance"
+argument).
+
+If you want to know when a fence changes from unsignaled to signaled,
+use this function:
+
+dma_fence_add_callback()
+
+problem solved.
+
+> > What signaling handler are you referring to?
+>=20
+> Take a look at the hack nouveau_fence_is_signaled() does for example.
+> The cleanup part the other signaling call path do is completely
+> missing here because the function can't take the fctx->lock.
+
+Again, ops->signaled() merely has to read an atomic64_t and return a
+bool. Driver locks are not required here.
+
+>=20
+> Yes, but if we want to get away from the external lock concept in
+> dma_fence we must allow drivers to take their own fctx->lock inside
+> the enable_signaling callback.
+>=20
+> Just take a look at what nouveau_fence_enable_signaling() does, that
+> is only possible because the dma_fence framework has grabbed fctx-
+> >lock before calling this function.
+>=20
+> The alternative is forcing drivers to use lockless approaches for
+> their internal handling, and that is much much worse than that a
+> dma_fence signaling status is visible without taking the lock.
+
+[=E2=80=A6]
+
+> Just take nouveau_fence_enable_signaling() as an example, if we don't
+> use fctx->lock as external dma_fence lock then the whole approach
+> used here doesn't work any more.
+
+My entire point is that the driver does not need any driver-lock
+conflicting with the fence-lock-order at all.
+
+I tried to point this out several times, but you keep iterating back to
+"this is what nouveau does".
+
+That nouveau does it does not proof that it's necessary. It just proofs
+that nouveau does it.
+
+> > >=20
+> > My impression was more that central design criteria for dma_fence (like
+> > module unload of the driver who issued your fence, which is designed to
+> > live arbitrarily long) were ignored, there was no clear guidance for
+> > drivers how they should use what callback, and then driver problems
+> > were solved in dma_fence, for instance with this shared lock. So same
+> > story as with drm_sched.
+>=20
+> Yes, exactly that.
+
+Good!
+
+So we agree that the dma_fence backend should give clear guidance about
+what a driver must, must not and should do in its backend_ops
+implementations.
+
+Right?
+
+Because so far the conversation sounded to me like "the driver must be
+able to do whatever it wants and therefore needs to be able to grab
+whatever locks".
+
+>=20
+>=20
+> And that is strong evidence. Nouveau is actually the perfect example
+> of why this approach causes so much trouble for driver
+> implementations.
+
+Calling Nouveau a "perfect example" is like calling Ronald McDonald a
+role model in dietary choices.
+
+Nova is being written right now, for reasons.
+
+>=20
+> And such guidance should not exist in the first place.
+>=20
+> It is up to the driver if they want to use locks for their internal
+> state protection and the dma_fence framework should absolutely not
+> enforce anything it doesn't need to deal with.
+>=20
+> That the dma_fence lock should protect the state of the dma_fence is
+> something I can perfectly agree on, but that does not include the ops
+> call chain because that isn't dma_fence state in the first place.
+>=20
+> > The only evidence I have ever seen is the fence-list-lock, and it's
+> > just not clear at all why any callback would need access to that.
+>=20
+> Because they need to clean things up after signaling.
+>=20
+> > Let's walk it through together, shall we?
+> >=20
+> > ops->release() and ->wait(): deprecated
+> >=20
+> > ops->get_XXX_name() -> never needs driver locks
+> >=20
+> > ops->signaled(): "Driver, here you read an atomic integer, the sequence
+> > number, and tell the fence backend whether this fence shall be regarded
+> > as completed"
+> > No need for any driver lock.
+>=20
+> Incorrect, you can only work without driver locks here when you delegate =
+the cleanup.
+>=20
+> In other words either to a worker or the ->release callback, both are thi=
+ngs we try to avoid.
+>=20
+> Again see nouveau as a perfect example of the problem.
+>=20
+> > If this particular driver also signals fences through an interrupt
+> > handler, it can take a list lock, then signal the fence. The ops must
+> > not do that.
+> > Why would a driver need both modes, sw *and* hw signaling? And why then
+> > is it supposedly the case that both paths need to keep a list updated?
+>=20
+> Because the signaling through the interrupt is mandatory for correct,
+> the signaling through the is_signaled callback is then on top for
+> performance optimizations.
+
+is_signaled() never conflicts with any lock, see my list above.
+
+I think at this point you and I should really first get in sync
+regarding what the backend_ops are supposed to do, because we seem to
+turn in circles a bit in our discussion.
+
+And the only ops that seems to be controversial and that informs the
+nouveau argument is ops->enable_signaling()
+
+What should enable_signaling() do, in your mind? What should we tell
+the driver to do in there?
+
+And why does nouveau even implement it, when its interrupt handler will
+ultimately signal the fence anyways. Since, as usual, nothing is
+documented, and one enable_signaling function carries literally the
+name "no_signaling", I don't give it the benefit of the doubt and just
+assume that this is broken, bad design.
+
+
+My impression is that ops->enable_signaling() and having an interrupt
+handler signaling fences is mutually exclusive design-wise.
+
+
+P.
+>=20
