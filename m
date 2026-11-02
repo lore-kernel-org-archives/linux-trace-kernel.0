@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.57
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793616376;
-	b=niX4rYZqMt7PgnUatsEP46aMZQlG1d3ocNGsvC54xoATCC4xJyc613MmCLYjONzRkojW
-	 NU2WcsNqi/SGoTRbeYYtMnYSxg5cc1sabpJuOwLEI43DsyzWNcEHGChV6a1dCxQvYBHez
-	 2QQR6dHv9rjADyMtSEExuLgmm0fxif7RxuvNlKOz6XRm31EnJN63qnobKrrKEm7mLVDvc
-	 QyXvnSkWjoj/txMOiwnx0A4Hv1KCa0QvP29TmWxrtbhaPLeWOa3VgNVt2iDPzwpIK3o30
-	 AUEN9db38LLViJP6ynaCgXCf1flMo5tUbQV5tZW+ZEHeHDar49MvzrcIfO4QRDv7yMQ==
+	t=1793618566;
+	b=JnIi1pOFtsWs3mzx06WpGDZ/nq9k/JVvI5bqQWeMjdT3PuQEw0ZNMo6yhx3/HnsvA9zH
+	 8gEfl5zrsf+SP22YbJ0TXIIImU6MdPTFxgmxka5bRkOVjtFm7Qlh+Sxz/7EcbqLtBlS3U
+	 oJpN69rnVFFLMwhrwdH7NQP7vAn9DFZTdQIrV6jjXfFHx/4BfBaBi4sfZWY4FrQwKaCaG
+	 r1uiPE1N/LLnL9sQzNmtFryJjSmRWwK2p8AyPVeTG84QhJcPtIX+YQjdqUl/8346cnhS2
+	 uFWl4CEu/sJ1PM5HJRSnp0oelLhyKdLE2hGSSrANDRsDqig6Tcrw4d+Qs67KTJCsRFw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793616376;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793618566;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=lxWH9yX4Vl4mKtXKvGkvQaa05rH5ZKTvpkSa847Tggg=;
-	b=EWg5MzCYWb2j8pPKYLRnQjk7ilvYHPnXQJcski5YlQyh5tMhF6c3hgWZJONK4HxZlMm9
-	 w7ulk3GOXbGHlH+JPfDpjfE0IqzeJzqH6+5R4R6hDRH9sJlXCFWBZv4LOr9qNmwVaGBBi
-	 ykhlo5Z6ZflnNLT0empBifVEg4jZY1b53QgDIkZu5aGs3iOXAgHoG4Err0/DcWIaVcvDS
-	 TGfJGRdJOR4OnMIrhIem1C1sdbjvT0YN245ppCxmq29uSCtMu1xlEjTGVpwLjh3eOii6Q
-	 P5w1QDMDzd4Z18ykeBivMzBol+30W+A4yM2ZHLNsxvYskW/0bpSkqSQaBddUgfBioUA==
+	bh=X7loASgn+yxCJuZyuGOGYaVSPjNHXEWeXeKmMCLTikE=;
+	b=G5dCv0HT+p2FlnjGG84BEF/LuYyWn4Gk9X3CmvEO2r+s8dU2DLwR9ngSz3HODRAbnDRg
+	 8axwnCtqNGuAAHYyBwn7Qv56ONAEL0geeq98YfkhWN41ffqubXIiBBHjT5w2e4EqZDDHu
+	 pNKAx2gOz/Y52gp0Jm40hHy8bEp/MPkOzVPB3Nm/b2KGv1Ro8r4r94Oh43xDISrgwV2Em
+	 ZZdcRuHqLtuDU62IpYfjsGsvz8wJ6sm/mjSebBWvSMKZMFyn4fBIQxJUyNSsw2LzYgyUj
+	 WYBQD8dtk/YEhtM7ODSdzkxcq6YUjWHHZVQsyySzbZskW7/kDnZZh/PB1nJ56G39DHg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QYtjFkK8;
-	arc=none smtp.remote-ip=91.218.175.57
-Received: from mta0.migadu.com (out-57.mta0.migadu.com [91.218.175.57])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WCOu+cj6;
+	arc=none smtp.remote-ip=95.215.58.152
+Received: from mta1.migadu.com (out-152.mta1.migadu.com [95.215.58.152])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABBC606A33E
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 10:46:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6ABBC606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5F060A6F6B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 11:22:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA5F060A6F6B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=QYtjFkK8
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=WCOu+cj6
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=JxbpZPWbvfuRPXcn2jrt5kFSz35KdLS4+oLLTN6f2mY=;
+DKIM-Signature: a=rsa-sha256; bh=72Z50eGsX0yBdCzUdD2DRF1kVAo5WdsTx+d6WyLQP4A=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793616373; v=1; x=1794221173;
- b=QYtjFkK8hdk8uOiuA9MT2L7rULzj6PvZ/woEcPBaMxFOK9IyGKXj46if9X4hA8tRUNGFiCjg
- C7HPhZDSQMLBvF21fWEp+ecXXpS1KL5mc/FMg6wEgebAVov0Exmd0UzZGDodA18lK0sjro9d8Eg
- Qor1mDKFyw2GLZhqJ7x4CPwc=
+ t=1793618564; v=1; x=1794223364;
+ b=WCOu+cj6kNM/m98bWxhFmENNuPadN6C2HuhsVN5hVy9dukRiBKNa8k/8PLbFdbj/DXlRF5kM
+ IhFFkIS71wTN8YJ4rJr7SHL38vMi1MqQuSvb6+c8wYtyI1xkIsAstcsyHjJeTILcKR6C0ek4Wsf
+ CQM217qhkiW4oWusR+yozJyQ=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 92e7062bea360beb;
-	Mon, 02 Nov 2026 10:46:13 +0000
-X-Mizu-Trace-ID: 92e7062bea360beb
+Received: by smtp.migadu.com with ESMTPS id aa70f3ab710337ec;
+	Mon, 02 Nov 2026 11:22:43 +0000
+X-Mizu-Trace-ID: aa70f3ab710337ec
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <2f272a9b-ea83-4157-8968-0081990cb709@linux.dev>
-Date: Mon, 2 Nov 2026 18:46:00 +0800
+Message-ID: <65edd0da-008a-4c1d-bfd1-7f0b892a76bf@linux.dev>
+Date: Mon, 2 Nov 2026 19:22:28 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,9 +59,8 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] mm/vmscan: move vmscan tracepoints to a local
- header
-To: Baoquan He <baoquan.he@linux.dev>
+Subject: Re: [PATCH v5 6/6] mm/mglru: add tracepoint for inc_max_seq()
+To: Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
@@ -70,9 +69,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
  Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- Kairui Song <kasong@tencent.com>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
  David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-mm@kvack.org,
@@ -81,175 +80,137 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
  "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
  Ridong Chen <chenridong@xiaomi.com>
 References: <20261031090041.58574-1-ridong.chen@linux.dev>
- <20261031090041.58574-3-ridong.chen@linux.dev> <aufpQS0XL-CD9YW_@bogon>
+ <20261031090041.58574-7-ridong.chen@linux.dev>
+ <CAGsJ_4zUbkFXBhAesVV74-Ndga5f6xEbestK7Qinqddip8xBrw@mail.gmail.com>
+ <aufxuOaKZWMYqEQi@bogon>
 From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <aufpQS0XL-CD9YW_@bogon>
+In-Reply-To: <aufxuOaKZWMYqEQi@bogon>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 11/2/2026 9:37 AM, Baoquan He wrote:
-> On 10/31/26 at 05:00pm, Ridong Chen wrote:
->> From: Ridong Chen <chenridong@xiaomi.com>
+On 11/2/2026 10:13 AM, Baoquan He wrote:
+> On 11/01/26 at 05:21am, Barry Song wrote:
+>> On Sat, Oct 31, 2026 at 5:02 PM Ridong Chen <ridong.chen@linux.dev> wrote:
+>>>
+>>> From: Ridong Chen <chenridong@xiaomi.com>
+>>>
+>>> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
+>>> youngest generation. There is currently no tracepoint on this path, so
+>>> the moment a new generation is created, and how the min_seq of each type
+>>> trails behind it, cannot be observed as it happens.
+>>>
+>>> Add mm_mglru_inc_max_seq, emitted right after max_seq is bumped while
+>>> the lruvec lock is still held, with the node id, memcg id, the new
+>>> max_seq, the anon and file min_seq, and the number of pages in each
+>>> generation for both types, summed over zones and clamped to >= 0 the
+>>> same way the debugfs lru_gen file reports them. The nr_anon/nr_file
+>>> arrays are indexed by generation slot, so the emitted max_seq/min_seq
+>>> say which slot holds which seq. They are printed with __print_array(),
+>>> so the output is hex and its length follows MAX_NR_GENS automatically.
+>>>
+>>> Only the lruvec is passed in; all of the above is collected in
+>>> TP_fast_assign(), so inc_max_seq() does no extra work when the event is
+>>> disabled. Paired with mm_mglru_scan_folios it makes the full
+>>> aging-to-eviction window observable per memcg.
+>>>
+>>> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
+>>> ---
+>>>   mm/trace_vmscan.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>>>   mm/vmscan.c       |  2 ++
+>>>   2 files changed, 49 insertions(+)
+>>>
+>>> diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
+>>> index 8148b8224422..cddf42b5849a 100644
+>>> --- a/mm/trace_vmscan.h
+>>> +++ b/mm/trace_vmscan.h
+>>> @@ -456,6 +456,53 @@ TRACE_EVENT(mm_mglru_scan_folios,
+>>>                  __entry->min_seq)
+>>>   );
+>>>
+>>> +TRACE_EVENT(mm_mglru_inc_max_seq,
+>>> +
+>>> +       TP_PROTO(struct lruvec *lruvec),
+>>> +
+>>> +       TP_ARGS(lruvec),
+>>> +
+>>> +       TP_STRUCT__entry(
+>>> +               __field(u64, memcg_id)
+>>> +               __field(unsigned long, max_seq)
+>>> +               __field(unsigned long, anon_min_seq)
+>>> +               __field(unsigned long, file_min_seq)
+>>> +               __array(unsigned long, nr_anon, MAX_NR_GENS)
+>>> +               __array(unsigned long, nr_file, MAX_NR_GENS)
+>>> +               __field(int, nid)
+>>> +       ),
+>>> +
+>>> +       TP_fast_assign(
+>>> +               struct lru_gen_folio *lrugen = &lruvec->lrugen;
+>>> +               int gen, zone;
+>>> +
+>>> +               __entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
+>>> +               __entry->max_seq = lrugen->max_seq;
+>>> +               __entry->anon_min_seq = lrugen->min_seq[LRU_GEN_ANON];
+>>> +               __entry->file_min_seq = lrugen->min_seq[LRU_GEN_FILE];
+>>> +               /* summed over zones and clamped to >= 0, as debugfs lru_gen does */
+>>> +               for (gen = 0; gen < MAX_NR_GENS; gen++) {
+>>> +                       __entry->nr_anon[gen] = 0;
+>>> +                       __entry->nr_file[gen] = 0;
+>>> +                       for (zone = 0; zone < MAX_NR_ZONES; zone++) {
+>>> +                               __entry->nr_anon[gen] +=
+>>> +                                       max(lrugen->nr_pages[gen][LRU_GEN_ANON][zone], 0L);
+>>> +                               __entry->nr_file[gen] +=
+>>> +                                       max(lrugen->nr_pages[gen][LRU_GEN_FILE][zone], 0L);
+>>> +                       }
+>>> +               }
 >>
->> Move include/trace/events/vmscan.h to mm/trace_vmscan.h so that the
->> tracepoints can be extended to reference vmscan-internal structures such
->> as struct scan_control, which is not visible outside mm/.  This mirrors
->> what several other subsystems already do with their trace headers (e.g.
->> fs/fuse/fuse_trace.h, fs/gfs2/trace_gfs2.h, fs/lockd/trace.h).  As they
->> do, set TRACE_INCLUDE_PATH to "." and add mm/ to the include path of
->> vmscan.o, the only user that defines CREATE_TRACE_POINTS.
+>> I feel this is wrong. Can we calculate the newest and
+>> oldest generations from seq, then print them in order
+>> from newest to oldest?
+> 
+> Agree, from newest to oldest or oldest to newest makes it clearer.
+> 
+> Printing from lrugen->max_seq - MAX_NR_GENS + 1, or from MAX_NR_GENS,
+> both looks good.
+> 
+
+Hi Barry, Baoquan,
+
+You are right, thanks. In v6 the arrays are ordered by seq, from the
+oldest to the newest, i.e. the same order in which the debugfs lru_gen
+file lists the generations from top to bottom.
+
 >>
->> No functional change.
+>> The nr_pages[] array isn't ordered from newest to
+>> oldest or vice versa, as we have:
 >>
->> Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
->> Reviewed-by: Barry Song <baohua@kernel.org>
->> ---
->>   MAINTAINERS                                        | 2 ++
->>   mm/Makefile                                        | 1 +
->>   mm/shrinker.c                                      | 2 +-
->>   include/trace/events/vmscan.h => mm/trace_vmscan.h | 4 ++++
->>   mm/vmscan.c                                        | 2 +-
->>   5 files changed, 9 insertions(+), 2 deletions(-)
->>   rename include/trace/events/vmscan.h => mm/trace_vmscan.h (99%)
+>> static inline int lru_gen_from_seq(unsigned long seq)
+>> {
+>>          return seq % MAX_NR_GENS;
+>> }
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index aaf2825ac945..2ad01107fa05 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -17653,6 +17653,7 @@ F:	Documentation/admin-guide/mm/multigen_lru.rst
->>   F:	Documentation/mm/multigen_lru.rst
->>   F:	include/linux/mm_inline.h
->>   F:	include/linux/mmzone.h
->> +F:	mm/trace_vmscan.h
->>   F:	mm/vmscan.c
->>   F:	mm/workingset.c
->>   
->> @@ -17802,6 +17803,7 @@ R:	Shakeel Butt <shakeel.butt@linux.dev>
->>   R:	Lorenzo Stoakes <ljs@kernel.org>
->>   L:	linux-mm@kvack.org
->>   S:	Maintained
->> +F:	mm/trace_vmscan.h
->>   F:	mm/vmscan.c
->>   F:	mm/workingset.c
->>   
->> diff --git a/mm/Makefile b/mm/Makefile
->> index 2a3ec53d62ee..277b97f7f8d7 100644
->> --- a/mm/Makefile
->> +++ b/mm/Makefile
->> @@ -32,6 +32,7 @@ KCOV_INSTRUMENT_vmstat.o := n
->>   KCOV_INSTRUMENT_failslab.o := n
->>   
->>   CFLAGS_init-mm.o += -Wno-override-init
->> +CFLAGS_vmscan.o += -I$(src)
-> 
-> One nit:
-> 
-> Does it really need the above line? It affects mm/shrinker.c too, did your
-> shrinker.o building fail?
-> 
-> Seems it's redundant because kbuild adds -I$(src) -I$(obj) for every object
-> in the directory since commit cdd750bfb1f7 ("kbuild: remove 'addtree' and
-> 'flags' magic for header search paths"). Please correct me if I am
-> wrong.
-> 
-
-Hi Baoquan,
-
-Thanks for the review.
-
-The line is needed for vmscan.o, and mm/shrinker.c is fine without it,
-because the two files include trace_vmscan.h in different ways.
-
-mm/shrinker.c only does a plain #include "trace_vmscan.h". The lookup
-starts from mm/, where the header lives, so no -I is needed.
-
-mm/vmscan.c defines CREATE_TRACE_POINTS before including the header.
-In that case <trace/define_trace.h>, included at the end of
-trace_vmscan.h, includes the header again to generate the tracepoint
-definitions:
-
-#include TRACE_INCLUDE(TRACE_INCLUDE_FILE)  /* -> "./trace_vmscan.h" */
-
-This #include is in include/trace/define_trace.h, so the lookup starts
-from include/trace/ and only finds the header through -I. Without the
-flag, vmscan.o fails to build:
-
-./include/trace/define_trace.h:118:42: fatal error: ./trace_vmscan.h: No such 
-file or directory
-
-As for cdd750bfb1f7, it doesn't add -I$(src) for every build. kbuild
-only adds -I$(src) -I$(obj) automatically when building with O=
-(see "ifdef building_out_of_srctree" in scripts/Makefile.lib). So
-with O= the line is indeed redundant and vmscan.o builds fine without
-it, but a plain in-tree "make" fails with the error above. The
-explicit flag keeps both working.
-
-To be honest, I had the same worry at first: I thought every .c file
-that includes the header would need a Makefile change. That's why v3
-used a relative TRACE_INCLUDE_PATH (../../mm) instead. Steven corrected
-me and pointed out that the proper way is TRACE_INCLUDE_PATH "." plus
--I$(src) for the one object that defines CREATE_TRACE_POINTS [1]. That
-turned out to need only this one line. Thanks again to Steven for
-that.
-
-[1] https://lore.kernel.org/all/20261014124914.21c21559@gandalf.local.home/
-
-
-> Other than the nit, this patch looks good to me,
-> 
-> Reviewed-by: Baoquan He <baoquan.he@linux.dev>
-> 
-> Thanks.
->>   
->>   mmu-y			:= nommu.o
->>   mmu-$(CONFIG_MMU)	:= highmem.o memory.o mincore.o \
->> diff --git a/mm/shrinker.c b/mm/shrinker.c
->> index 4fb424e721bc..4fbdade6d2f6 100644
->> --- a/mm/shrinker.c
->> +++ b/mm/shrinker.c
->> @@ -3,7 +3,7 @@
->>   #include <linux/rwsem.h>
->>   #include <linux/shrinker.h>
->>   #include <linux/rculist.h>
->> -#include <trace/events/vmscan.h>
->> +#include "trace_vmscan.h"
->>   
->>   #include "internal.h"
->>   
->> diff --git a/include/trace/events/vmscan.h b/mm/trace_vmscan.h
->> similarity index 99%
->> rename from include/trace/events/vmscan.h
->> rename to mm/trace_vmscan.h
->> index 8a872990b4be..ad90f0e9bf2e 100644
->> --- a/include/trace/events/vmscan.h
->> +++ b/mm/trace_vmscan.h
->> @@ -648,4 +648,8 @@ TRACE_EVENT(mm_vmscan_kswapd_clear_hopeless,
->>   #endif /* _TRACE_VMSCAN_H */
->>   
->>   /* This part must be outside protection */
->> +#undef TRACE_INCLUDE_FILE
->> +#undef TRACE_INCLUDE_PATH
->> +#define TRACE_INCLUDE_PATH .
->> +#define TRACE_INCLUDE_FILE trace_vmscan
->>   #include <trace/define_trace.h>
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index 9959ca158ce8..79d2d614afd0 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -71,7 +71,7 @@
->>   #include "swap.h"
->>   
->>   #define CREATE_TRACE_POINTS
->> -#include <trace/events/vmscan.h>
->> +#include "trace_vmscan.h"
->>   
->>   struct scan_control {
->>   	/* How many pages shrink_list() should reclaim */
->> -- 
->> 2.43.0
+>> And I added a helper here:
+>> https://lore.kernel.org/linux-mm/20261022220203.91911-11-baohua@kernel.org/
 >>
+>> +static inline unsigned long lruvec_gen_size(struct lru_gen_folio *lrugen,
+>> + int type, unsigned long seq)
+>> +{
+>> +     int gen = lru_gen_from_seq(seq);
+>> +     unsigned long size = 0;
+>> +
+>> +     for (int zone = 0; zone < MAX_NR_ZONES; zone++)
+>> +          size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
+>> +     return size;
+>> +}
+>>
+>> Maybe you could port it here as a separate patch so it
+>> can land earlier as part of your tracepoints series. We
+>> could then use it in the next version of the swappiness
+>> series.
+>>
+Sure. I will port lruvec_gen_size() as a separate patch with your Suggested-by, 
+and put it in mm/vmscan.h so the tracepoint can use it.
 
 -- 
 Best regards
