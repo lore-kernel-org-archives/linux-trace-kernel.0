@@ -1,54 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793621491;
-	b=2lWjuQqEsunQT4sv0KGF1YGypW8jRLLGJSwhJxqDhNZIS7DcbCNvVfdrnfrgGDz0loE6
-	 UmrgtQkN4uODEPC0vfkY2ycdF5vuh+sL7B48lRfpOHAyUxNAOFEJ5OdYNO5RPah944crj
-	 DH/SOf//wG+WJ8K8qYDeWO/QAae0AZtTZWlgjD/Kgsk/uOolK0DDBsk8j9D9+c3kq9Dnl
-	 3O3x7XeAGSb/Uxm+81Y3WVtZPswGTlVPcfalqdUQ8kBwMKbrJkxbr5OxAbpY6z+wwti21
-	 U+LgKrAOP227Q2Y/fHBVyRhy6VZAwNI5T8mA3xN4ySjC4rJJE16dv6sx4/ina+JsUQQ==
+	t=1793629082;
+	b=1ItWG67VLTEH1PyVW3mkJHylu9+UvHJhi5DP36OyBd7D+K4cJLKVcKBvUjlrnTdIWqCv
+	 IbHOY6MdyhkUL/4TJacLsaV+ocy8vLFuzxfSzguloPBEWv7MTh0pYXtpzRcBLLb839j7b
+	 tp9smF5OC/YnQj4XRDXOtATZWdKfxGw89bvxuB4HEekTXk7WVgnn0KoOyxhWNEYWAdyF0
+	 za4RYwnWg0WeR+Qhg2xWrBEmLgj+OnqtbMTu8DENSA6/mFBHyEP7EhWVV5+7s8HTSLFwE
+	 5inCcv0reZhvgrW/zAWyEu8TOL8C+amiz55BneINVkE6hyZw4uRFqHfn+evb9mTAW0w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793621491;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iCi31SBjchG6edMTJPjXxk3dmyE2BGaCYm2JOWMiTRo=;
-	b=iv/x5Alzw5HkCSnd/ta9rlRGVZN4wNjTR5zyDMqh2KG6EaeWU2NzQGDWy+aQqOO6RUga
-	 aPruYSEw1vNpYY0nvbC8+Co+dzjSjBQXan91+MMoDp6Y28AKC4WPW7UokuYeBDblgKSq6
-	 AlRUoB5Yc4WWDgoGsz2+rs6/qJj0m/T42rwuVJ1qyn87pK+N0JBHayWlD/GJWHMYEgBMT
-	 G/oNaYIFnIWCEwhzZ4I4Lh25BYVGvMV03VofOuIP7NP1HBcdPiKKQ9F2aoT+0f5dKEDC4
-	 0+WQWuSrOeejvjjYLxYx80hwWXLPnorx60XAQsxNKBZMOxyLvrX97DXrY/1Q524Rtmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793629082;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=0vE2MW8oPr2NcLO5kkPhYCSI7fkp6SgzAyef2r6+0G4=;
+	b=MRyTL6Kzo1NsLda3c88cL1eiHijpwDj+FgiKSv+0327iUNZVP3xLSM9S1N26L9fbwAc8
+	 xfR8Ckz5+sf3te6Z7J28FwAtR57VLwToxHzEhLdZSKjp7X+A/cDwD9rj2SMadNRM1LrC8
+	 qhAvAwnDk4t05gk7apibnrQtlGyPGjdVnryAfpcHrZKzdw5igRkj1tw+iUR8XmAv2KYRf
+	 YzM/JzVOMv5Nhl14Q3B1HEOUIMqNNzwu0Gbysg4W6LAlU6EEqOd8/SRvoBqdIPJa+gwJp
+	 Jkf6ZmieUqmrHhdTKyK1z1Tn08kD5+K5xZIfcPKGyC09u0cddGLr6g2LZeDCumFQmog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hhhl5ER7;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PxLVRN95;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84894606A331
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 12:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D44606B5F7;
+	Mon,  2 Nov 2026 14:18:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4D44606B5F7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hhhl5ER7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9951F00A16;
-	Mon,  2 Nov 2026 12:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793621491;
-	bh=iCi31SBjchG6edMTJPjXxk3dmyE2BGaCYm2JOWMiTRo=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=hhhl5ER7RClWryrHcvWIDQkMj9LyAXhSGE4bNAZLdHmIhIVfFyWAZCkgfnx3aaCJ3
-	 qDT0xK7DSeFZQtOjy0I4invhKhfG8dxvNuHB9BjPq++viBhFXF5Ba6ZXxniYWJmoqH
-	 Vx/ATkvIS817wJW/VP45W2g6O0uifHssrhtJkGEC6T3LB9EdD70wHb2vERqUSxQisd
-	 75PZuAwzz69p7g0M8mFq9jA1jfTRwdZaXGSvUMnjoSdKNu8DJ9W0Wiypbuz6Jxzz4t
-	 anF3+xyvKtzNREbgctmegifHUtPNMwzkrweQNsHFhgY8DsyUQuHJOFiwh7/Lol5lji
-	 xnZ3wd1oGq2uQ==
-Message-ID: <sashiko-outbox-193373@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] tracing/probes: bound symstr stores to reserved length
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Yifan Zhang" <yfzhang23@stu.pku.edu.cn>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179362071772.29269.13958672165986396737@stu.pku.edu.cn>
-References: <179362071772.29269.13958672165986396737@stu.pku.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 12:11:30 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PxLVRN95
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 8963816012D;
+	Mon,  2 Nov 2026 14:17:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id AEB112002A;
+	Mon,  2 Nov 2026 14:17:52 +0000 (UTC)
+Date: Mon, 2 Nov 2026 09:17:51 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jaewon Jung <jaewon8868@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Keep copying markers when one instance is
+ stopped
+Message-ID: <20261102091751.2ee7c4d3@gandalf.local.home>
+In-Reply-To: <20261031073549.2991066-1-jaewon8868@gmail.com>
+References: <20261031073549.2991066-1-jaewon8868@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,103 +60,54 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: AEB112002A
+X-Stat-Signature: zisrbxd1p3catgtzpzq16r3ymu54ifq3
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+LOQGCiAMa+/kHer8Q/vyDiTbyEEJ4w+k=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=0vE2MW8oPr2NcLO5kkPhYCSI7fkp6SgzAyef2r6+0G4=; b=PxLVRN95U4bpQKmnGAh8I2tiSNseVUpUC2AlABDjfIPi30rhUTXFr6+glpukh0p2Z4gDSTkUl7SwsqoCAorOmmQzSNHnDRcYssXXltRTuH+QEmRWpMdkz37nz1KvDF/4b85bUTz2dW0Qnx9QPuSC8ZTuBy9m6MUgkLLPms3aJwI=
+X-HE-Tag: 1793629072-197361
+X-HE-Meta: U2FsdGVkX1/9V4bQ67ornv0sgZ2E2DvtnZJNxhCMiLeDuzXBR8vVQiE+JLgAHYljUVFoJBOTqweDrUCPau1qI3h2uZp9cvTPuOJVk3c8pkMuiyOK0LrC+vEmnzlqduUWK+4DFr/89ia6DjMed62TG5OhpbiTcxEQVUvVc5L24tIai5Q2MAYcpHSzELewvrqwnvprsf8zaFjObSng/gXLQhUlB7Z31o7cg6IwCpVTKWXBQm9dT9ET+Q/dC4f3nHiNCjXbDP9iN46O3xprz2CE7uJ+W6wGTkXyF1QRkz6PH9iLtVTz3dtOkHl+hXvkhzaK9Gd3CPseDtDKIlzgw1IJG9J+9nmlpOo472XdaDjo+GVwFEveSO4KxA==
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] tracing/probes: symbol format mismatch in fetch_store_symstring()
---
+On Sat, 31 Oct 2026 16:35:45 +0900
+Jaewon Jung <jaewon8868@gmail.com> wrote:
 
-commit 1dd7922bca1f3057be72658bb3bb50c1a3ed082f
-Author: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+> When several instances enable copy_trace_marker, stopping one instance
+> can prevent the remaining buffers from receiving markers.
+> 
+> Continue copying text and raw markers even if one copy fails, and
+> return the last error after trying all buffers.
+> 
+> Fixes: 7b382efd5e8a ("tracing: Allow the top level trace_marker to write into another instances")
+> Cc: stable@vger.kernel.org
 
-tracing/probes: bound symstr stores to reserved length
+Please remove the stable tag, this is more of an enhancement than a bug fix.
+You can keep the fixes tag though.
 
-This commit bounds symbol string formatting in fetch_store_symstring() to
-the length reserved during the sizing pass by replacing sprint_symbol() with
-scnprintf(..., "%pS", ...), preventing out-of-bounds writes when a probed
-pointer changes between passes.
+> Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
+> ---
+> The current code stops at the first error without trying the remaining
+> buffers. This patch tries all buffers even if a write fails, and returns
+> the last error.
+> 
+> Returning either the first or last error cannot report all failures.
+> I chose the last error to keep the code simple. Per-buffer error
+> reporting is outside the scope of this patch.
+> 
+> Please let me know if you prefer a different error return policy.
+> 
+> Tested on x86_64 QEMU:
+> - Setup: Enable copy_trace_marker in multiple instances and set
+>   tracing_on=0 in one instance before a live buffer in the copy order.
+> - Before: No markers in live buffers after the stopped instance;
+>   write() returns an error.
+> - After: Markers in all live buffers; write() returns an error.
+> - Existing text/raw marker and instance selftests: 6 PASS.
 
-> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_t=
-mpl.h
-> index 8db12f758fdae..cc317cb444e43 100644
-> --- a/kernel/trace/trace_probe_tmpl.h
-> +++ b/kernel/trace/trace_probe_tmpl.h
-> @@ -95,7 +95,7 @@ fetch_store_symstring(unsigned long addr, void *dest, v=
-oid *base)
-> =20
->  	__dest =3D get_loc_data(dest, base);
-> =20
-> -	return sprint_symbol(__dest, addr);
-> +	return scnprintf(__dest, maxlen, "%pS", (void *)addr) + 1;
+Honestly, just skip the warnings of the copies and don't even bother
+returning its value.
 
-[Severity: Medium]
-Can switching fetch_store_symstring() to "%pS" while leaving
-fetch_store_symstrlen() on sprint_symbol() cause a size mismatch between
-the reservation pass and the store pass even when addr does not change?
-
-In kernel/trace/trace_probe_tmpl.h, __get_data_size() ->
-process_fetch_insn() -> fetch_store_symstrlen() still computes the required
-buffer size with sprint_symbol():
-
-kernel/trace/trace_probe_tmpl.h:fetch_store_symstrlen() {
-	char namebuf[KSYM_SYMBOL_LEN];
-	int ret;
-
-	ret =3D sprint_symbol(namebuf, addr);
-	if (ret < 0)
-		return 0;
-
-	return ret + 1;
-}
-
-However, in lib/vsprintf.c, pointer() -> symbol_string() handles "%pS"
-differently from a direct sprint_symbol() call in two ways:
-
-lib/vsprintf.c:pointer() {
-	switch (*fmt) {
-	case 'S':
-	case 's':
-		ptr =3D dereference_symbol_descriptor(ptr);
-		fallthrough;
-	case 'B':
-		return symbol_string(buf, end, ptr, spec, fmt);
-}
-
-lib/vsprintf.c:symbol_string() {
-#ifdef CONFIG_KALLSYMS
-	...
-	else if (*fmt !=3D 's')
-		sprint_symbol(sym, value);
-	...
-	return string_nocheck(buf, end, sym, spec);
-#else
-	return special_hex_number(buf, end, value, sizeof(void *));
-#endif
-}
-
-On architectures with CONFIG_HAVE_FUNCTION_DESCRIPTORS=3Dy, sprint_symbol()=
- in
-fetch_store_symstrlen() inspects the raw descriptor address (for example,
-formatting a short hex address when CONFIG_KALLSYMS_ALL is disabled),
-whereas "%pS" in fetch_store_symstring() dereferences the descriptor to the
-target function symbol, which can be longer than the reserved length.
-
-Similarly, when CONFIG_KALLSYMS is disabled (such as with
-CONFIG_EPROBE_EVENTS=3Dy), sprint_symbol() writes an empty string and
-fetch_store_symstrlen() reserves 1 byte, whereas "%pS" formats the full hex
-address via special_hex_number().
-
-When the formatted "%pS" string is longer than the sprint_symbol() result,
-scnprintf() either truncates the symstr field or, if another dynamic
-argument (such as string, ustring, or symstr) follows in the same probe
-event, consumes the remaining shared dynamic buffer maxlen passed by
-store_trace_args() and causes subsequent dynamic arguments to be truncated
-or fail with -ENOMEM.
-
-Should fetch_store_symstrlen() and fetch_store_symstring() use matching
-symbol formatting logic (or "%pB" if descriptor dereferencing is not
-desired)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179362071772.29269.=
-13958672165986396737@stu.pku.edu.cn?part=3D1
+-- Steve
