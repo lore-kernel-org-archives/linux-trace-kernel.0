@@ -1,54 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793637148;
-	b=reE+bPaMkMZ8l/mgv7pZfXZADOUgdo4ISZ5MIuF38MZECL+ciSkZnFjvy1DmE77Il58q
-	 4+rEI/9DFSe9uV36ohf9DmhMgHgZmw58wkBa9gNRmNiI/nMGo+iB0IrtAgdql1OamRbvd
-	 hK4WP7vuw/6v5ihyUtSw0QOMd2gMkqd0e34dBJQcShxkhdywFAHs1yEUKIp3AkaDePnqU
-	 x+YBP7pyVOQWD0OZJwSNtnhM0B5IagOIN6g1uobz5tZO9+rT9Aadkt9F+i5u5JfFO3xBI
-	 3uZHrhHYhHkiY4F2csraOq5vVfhoCqSFz7ksLu7Z/X7mytfsWNYbrcjXbqPjgjD91hg==
+	t=1793640141;
+	b=JghXyoZ/1FMaHh7kpapm/2Cz7ODpVhCQElPIEI90bx3tRz/IFeVFHMzW0Zym4EIE9Bra
+	 kj2Hec860i1hNFAqeP+NGLoVpEz0DAYA+4Jr6L09+LBCL1GCBtxWTNpWap8w0JSj56Q29
+	 Uq9AIWvZ1ihwTrwIITIPh9QexxA8nrtpOokovY63zDZ/Y1A48FQkiAUUzc420bSBDVLPQ
+	 Isf1oVk5FlhbTbtFqmogIWDNM53ASE4AAiaarEW9VJGZB2jbO1fYBDK90maAt1xGexZaI
+	 3Ba4gp9idmGbNX5nhT2TY8wooUc2daFDl1vy0By7KDpbPaO5r41mCnZU4TSlSOQs6cw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793637148;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=I2DcIW001sUYVfzNlJQeVBewOygtd2GgakfGiD8PY+M=;
-	b=tSq6CFwawWhB9ECXy+yh5QAeKmOS8Fg2bYo275fOH2/nF3a6nMRHwqXxWlXsS88MHOX7
-	 M6HrpfFOsA8o/jkuREtW4XOCw6R2ePDFsUAKdaD2lk7Iqb2LpbEOVqw+ZuGx2RC7IJpTM
-	 45oikTMQ657apIiQDwDqubfJpHL88lIu01TeU3x5Eq11JeBlHqb/ohSEBOlFAMRYHaabn
-	 p6ofVo5ztVZvAm9KO/RmvUhBRZcERr+7hkjwlMH/w2SHImhEiNc5WWWI5xmVZdwnTuEih
-	 wiL1rVrmme54r+hEwaXZ4+5tbQ/vZHArWccsIaUMYJSG3yAoOc5/qngovEv6mJpVEEQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793640141;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=hDso38Lo6BucfYQi/WKDSXYlCRCkhjHvbZZQPjbIWjU=;
+	b=ju58iSc0LvyTWQbEoSJhHJYBX747hovO4v8pILXX3rZoPQRLwzreudDpb5z3XaYY/7/L
+	 4VMzDW6J9KKM0LLMtODt0cfdja5TxhoabcssMMpBg4+N4xXbWzXxHqSxQ+uQRP1qC7CQK
+	 f7qklTdVzAb1yRPhuiJ3CLNOStae1ecyf6a6ubQ4QmvQWMPeVPcsv1hHN71YLQUmwRYPc
+	 Ou7FETNydspXeLKI03t/boLj1z5HQ5nevNJTVpx6amo25rEjlSQhgo4+hCt1K86cI5djk
+	 sn3ipNfJiJ5YYYAGGUHvOJCb1ZhvoNyu4YSQaLkvffDwhCoyTElORie6pSTsnTzAKVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vW5f75lY;
-	arc=none smtp.remote-ip=91.218.175.130
-Received: from mta0.migadu.com (out-130.mta0.migadu.com [91.218.175.130])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=l3r8EZp1;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7EA6072EE1
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 16:32:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E7EA6072EE1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B67606BA52;
+	Mon,  2 Nov 2026 17:22:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98B67606BA52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=vW5f75lY
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=cMQd7ViTEEFLx21Upc27tT5FD51v8xytsO/TzIbpq/Q=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793637144; v=1; x=1794241944;
- b=vW5f75lY3uvwR6vtyN4jMAiR3ZGYHp4XmhktZZtRb7heFqmmGVd/+GHTe91uOlvftWfQxUuz
- 5y45N2G5f/OplEFKtvM2MD0zSaUHbtMdpy/nbWAI4t/ve+TBmEdKaFpiayC08c/dWQ57jPVbJau
- E5O557Zdl3lZY02EyDt/i0hQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id e5fc46e4f632b820;
-	Mon, 02 Nov 2026 16:32:24 +0000
-X-Mizu-Trace-ID: e5fc46e4f632b820
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <e2cab3ba-e363-4d21-ab44-c009476f61f2@linux.dev>
-Date: Tue, 3 Nov 2026 00:32:17 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=l3r8EZp1
+Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 0F66E1A01A1;
+	Mon,  2 Nov 2026 17:22:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 0EEF21A;
+	Mon,  2 Nov 2026 17:22:16 +0000 (UTC)
+Date: Mon, 2 Nov 2026 12:22:15 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Weiming Shi <bestswngs@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Xiang Mei
+ <xmei5@asu.edu>
+Subject: Re: [PATCH v3] ftrace: Complete subops teardown on shutdown failure
+Message-ID: <20261102111707.484df6f5@gandalf.local.home>
+In-Reply-To: <20261031175213.704021-1-bestswngs@gmail.com>
+References: <20261031175213.704021-1-bestswngs@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,173 +61,332 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/14] rv: Add task latency over budget RV monitor
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1791745088.git.wen.yang@linux.dev>
- <3eb0948c9ca67f64b3b311f823cd0f7628033c68.camel@redhat.com>
- <6a8b5d26-37cc-4a8f-ab1d-0df2c2e6c2d3@linux.dev>
- <8e13471b64e11218cab612e7662e8068c34e1219.camel@redhat.com>
-Content-Language: en-US
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <8e13471b64e11218cab612e7662e8068c34e1219.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 0EEF21A
+X-Stat-Signature: 6us6zc4xqhyfrbsbmtpgp36jpowasxze
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19B/jQdySa7H6oYtXfs6XggTV84APC5CfA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=hDso38Lo6BucfYQi/WKDSXYlCRCkhjHvbZZQPjbIWjU=; b=l3r8EZp15VGz0B+EBzA4KkLIJEv9ZnGsgR18Hya3MX5c+CnI0G/3KDQMWWRFiiG1+qJEunBjjq4kU/4/b5I4bdxUduKLvBDCyO/o4ZTdxSDAR04S9RpU6WSOysjImgK3em0JxRGvtO1tlUipa2lVgBiKCVUorzZzw3/w2fm9V5c=
+X-HE-Tag: 1793640136-409405
+X-HE-Meta: U2FsdGVkX1/BX7i1uokAGBDczCBHFjkFoapCL+fxaJiUtIo2gt2S5MdJA3a7Ax9WkRxxoTaK6GNcj4pHn4LMcHTy/NBiISz6GANBb3cUalEm+BhwtDDxLEfIY+t2YMK7lBGniOT+2+86xEMyVk0trSn7TjBJDeXhNQKdzjdfSiTXRBkhjAWWCBE5jqR7kv7vPJJHmG7NQSjxgJqBbc47NP4YiNgT9Sa1qEm6FkOvdKNYqAztE1spmlwZvTmnRwRTdFIT/IRSvovCbNUdHq7gUppyJybL7umAUnT2vf1+4UOEqoXwMwpskZBqyzCPitoUc2UieyL56C+gtZaswryrRHgNqo7D4dtAcvFEazJxVIXhKCEXgGFgOGoa4sy8/RCx3Iw4AAW0Byg=
+
+On Sat, 31 Oct 2026 10:52:13 -0700
+Weiming Shi <bestswngs@gmail.com> wrote:
+
+> ftrace_shutdown_subops() unlinks a subop before rebuilding the manager
+> hashes, but leaves it enabled and managed when rebuilding or updating
+> fails. unregister_ftrace_graph() cannot recover from that partial
+> teardown, and a later registration can corrupt the empty manager state.
+> 
+> Always detach and clear the subop once shutdown begins. Keep conservative
+> manager hashes behind per-subop filtering when an update fails, and disable
+> direct graph dispatch until those hashes are exact again. If the last
+> manager cannot be shut down, disable ftrace and normalize its list, flags,
+> count, and hashes before the caller releases the graph operation.
+
+What exactly is the above saying? It looks like pure AI output (non human
+readable). AKA, AI slop!
+
+Is it fixing something when a subop is unregistered but fails? Where
+exactly is the failure? What failed? Have an example of what happened?
+
+Direct calls is mentioned once, but there seems to be a bit of changes for
+that too. Some of it looks like it should be a separate patch.
+
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 0ae6b8ce200d ("ftrace: Fix accounting of subop hashes")
+> Reported-by: Xiang Mei <xmei5@asu.edu>
+> Assisted-by: OpenAI Codex <noreply@openai.com>
+> Signed-off-by: Weiming Shi <bestswngs@gmail.com>
+> ---
+>  kernel/trace/fgraph.c          | 35 +++++++++++++++++----
+>  kernel/trace/ftrace.c          | 57 +++++++++++++++++++++-------------
+>  kernel/trace/ftrace_internal.h |  3 ++
+>  3 files changed, 68 insertions(+), 27 deletions(-)
+> 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index ed455b535..1a8e092ec 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1306,7 +1306,7 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
+>  
+>  	static_call_update(fgraph_func, func);
+>  	static_call_update(fgraph_retfunc, retfunc);
+> -	if (enable_branch)
+> +	if (enable_branch && !static_key_enabled(&fgraph_do_direct.key))
+>  		static_branch_enable(&fgraph_do_direct);
+
+Ug that is horrible. If anything static_branch_enable() should handle this.
+Or we have to have another type of accounting.
 
 
+>  }
+>  
+> @@ -1315,13 +1315,27 @@ static void ftrace_graph_disable_direct(bool disable_branch)
+>  	if (FGRAPH_NO_DIRECT)
+>  		return;
+>  
+> -	if (disable_branch)
+> +	if (disable_branch && static_key_enabled(&fgraph_do_direct.key))
+>  		static_branch_disable(&fgraph_do_direct);
 
-On 10/20/26 23:30, Gabriele Monaco wrote:
-> On Tue, 2026-10-20 at 03:18 +0800, Wen Yang wrote:
->>
-> 
->>> there's been a conversation at the LPC conference about completely migrating
->>> RV
->>> to BPF.
->>> While we aren't sure of its feasibility yet, and it will take time, it's
->>> something to keep in mind for new contributions.
->>>
->>
->> Understood, and I have been following that direction.  I spent the last
->> few days reading the v2 "rv: Add support for BPF monitors" series in
->> detail, so the comparison below is against that code rather than the
->> general idea.
-> 
-> Great, I'm going to review your series when I get some time.
-> 
->>> First of all, would dropping RV in-kernel support negatively affect your
->>> current
->>> workflow?
->>>
->> Yes, it would.  Some concrete points, all from the current tree.
->> (a) Event ABI.  event_da_monitor / error_env_* in
->>       kernel/trace/rv/rv_trace.h are plain tracepoints, so trace-cmd,
->>       perf and anything else reading tracefs consume them today with no
->>       extra userspace.  The BPF series delivers events through a ring
->>       buffer read by the rv tool, so the two backends are not
->>       interchangeable for existing consumers.
-> 
-> Good point, you might have noticed a similar discussion is happening also on the
-> RV-BPF thread. We cannot have the absolute same ABI in BPF, but we probably need
-> tracepoints or anything that can easily interact with other tracing tools.
-> 
->> (b) Build and deployment.  On the images we target, BPF is often not
->>       compiled in or not permitted:
->>         CONFIG_BPF_SYSCALL            default n
->>         CONFIG_BPF_EVENTS             needs BPF_SYSCALL
->>         CONFIG_DEBUG_INFO_BTF         needed for CO-RE; depends on
->>                                       !DEBUG_INFO_REDUCED and pahole
->>         LOCKDOWN_BPF_READ_KERNEL      disables the probe_read helpers
->>       Those are product constraints, not local build issues.  tracefs/RV
->>       works in all of these configurations.
->>
->>       There is also a size cost: BPF implies CONFIG_DEBUG_INFO_BTF, and
->>       .BTF is resident in RO_DATA and kept in the boot image - about
->>       5 MB uncompressed on a full kernel, 1.2-1.6 MB compressed, plus
->>       roughly 25% per module with DEBUG_INFO_BTF_MODULES.  On a
->>       16-32 MB kernel partition that matters.
->>
-> 
-> I've vaguely heard automotive folks saying they don't want to build BPF support
-> several times. Finally I get a proper technical reason!
-> 
-> Now I think this isn't easy to sort out, if that's a hard requirement, we are
-> probably going to need to keep in-kernel monitors around.
-> 
->> (c) Timing semantics.  tlob arms a per-task hrtimer with
->>       HRTIMER_MODE_REL_HARD.  bpf_timer is fixed to
->>       HRTIMER_MODE_REL_SOFT and the verifier states "bpf_timer callbacks
->>       are never sleepable" .  On PREEMPT_RT the callback runs in a
->> threaded
->>       softirq, so the expiry time carries scheduler latency.
-> 
-> I haven't looked into this yet, but from what you say, the bpf_timers code
-> doesn't really support PREEMPT_RT.
-> 
->>       For a budget monitor the expiry time is the output, so this is a
->>       semantic change, not just overhead.
-> 
-> Well, the expiry time you get from an hrtimer is what you configured + some
-> system jitter. The jitter here is just going to be less predictable but is it
-> really the output you need in your monitor?
-> Or am I missing your point?
-> 
+Same.
 
-Hi Gabriele,
+>  	static_call_update(fgraph_func, ftrace_graph_entry_stub);
+>  	static_call_update(fgraph_retfunc, ftrace_graph_ret_stub);
+>  	fgraph_direct_gops = &fgraph_stub;
+>  }
+>  
+> +void fgraph_update_direct_func(struct ftrace_ops *ops, bool enable)
 
-Thanks for the feedback.
+What is this for? It requires a kerneldoc as it is not a static function.
 
-For tlob, the primary goal is detecting deadline overruns on the order 
-of milliseconds or sub-milliseconds (e.g. 10 ms budget).
-Under HRTIMER_MODE_REL_SOFT on PREEMPT_RT, the timer callback runs in a
-threaded softirq (ksoftirqd or threaded irq context).  If the system is
-under CPU or scheduler pressure, the softirq latency itself can easily 
-add several milliseconds of unpredictable delay.  When that happens, it
-blurs attribution: users cannot distinguish whether the monitored task
-exceeded its budget, or whether the task finished on time but the timer
-callback was delayed in the scheduler queue.  HARD hrtimer avoids this 
-by firing directly in hardirq context at the physical deadline.
+It also looks unrelated to the partial shutdown. Is his needed as a
+separate patch?
 
->>
->>       What a BPF tlob would look like once those exist:
->>         - model: still tlob.dot, with rvgen -b extended to the hybrid
->>           backend;
->>         - state: one record per task in BPF_MAP_TYPE_TASK_STORAGE (or
->>           the per-object hash map the series has today), holding the
->>           state, the binding id and the budget;
-> 
-> Yeah I wasn't aware of BPF_MAP_TYPE_TASK_STORAGE before, I have a draft V3
-> (coming some time after the merge window) using that.
-> But I'd assume this type of storage would simplify the design of your monitor,
-> which is currently using a PER_OBJ just to add more things to a PER_TASK.
-> I'm going to keep in mind your use-case where you essentially extend the storage
-> (which is perfectly fine in BPF since we don't use the task_struct slot).
-> 
+> +{
+> +	struct fgraph_ops *gops;
+> +
+> +	if (ftrace_graph_active != 1 || !(ops->flags & FTRACE_OPS_FL_GRAPH))
+> +		return;
+> +
+> +	gops = container_of(ops, struct fgraph_ops, ops);
+> +	if (enable)
+> +		ftrace_graph_enable_direct(true, gops);
+> +	else
+> +		ftrace_graph_disable_direct(true);
+> +}
+> +
+>  /* The cpu_boot init_task->ret_stack will never be freed */
+>  static int fgraph_cpu_init(unsigned int cpu)
+>  {
+> @@ -1406,16 +1420,24 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  	gops->ops.flags |= FTRACE_OPS_FL_GRAPH;
+>  
+>  	ret = ftrace_startup_subops(&graph_ops, &gops->ops, command);
+> -	if (!ret)
+> +	if (!ret) {
+>  		fgraph_array[i] = gops;
+> +		if (ftrace_graph_active == 1)
+> +			ftrace_graph_enable_direct(true, gops);
+> +	}
+>  
+>  error:
+>  	if (ret) {
+>  		ftrace_graph_active--;
+> +		gops->ops.flags &= ~FTRACE_OPS_FL_GRAPH;
+
+Hmm, clearing the flag looks like a separate bug that should be fixed in
+its own patch.
 
 
-Thanks.
-On the in-kernel side, your DA_OBJ_EMBEDDED_TYPE PoC delivered
-the exact same simplification.
+>  		gops->saved_func = NULL;
+>  		fgraph_lru_release_index(i);
+> -		if (!ftrace_graph_active)
+> +		if (ftrace_graph_active == 1) {
+> +			ftrace_graph_enable_direct(true, NULL);
+> +		} else if (!ftrace_graph_active) {
+> +			ftrace_graph_disable_direct(false);
+>  			unregister_pm_notifier(&ftrace_suspend_notifier);
+> +		}
 
-In v8, we adopted DA_OBJ_EMBEDDED_TYPE so struct tlob_record is embedded
-directly into struct da_monitor_storage:
-- Deleted the private mempool and custom allocator entirely; tlob now
-   relies 100% on the framework pre-allocated pool.
-- Deleted the parallel state machine (OPEN / CLOSED / RETIRED) and
-   tlob_binding_lock.  The window lifecycle is now driven purely by the
-   automaton states (stopped, running, waiting, sleeping).
-- Overall, tlob.c shrunk from ~1065 lines to ~660 lines (-38%), with no
-   locking on the scheduler hot path.
+Nit, but I would have the above opposite. That is, don't make the current
+if statement the else, unless there's a good reason to. Because it makes
+reviewing harder.
 
-We are currently testing and will send out v8 soon.
-
---
-Best wishes,
-Wen
+		if (!ftrace_graph_active) {
+			ftrace_graph_disable_direct(false);
+ 			unregister_pm_notifier(&ftrace_suspend_notifier);
+		} else if (ftrace_graph_active == 1) {
+			ftrace_graph_enable_direct(true, NULL);
+		}
 
 
->>         - window: two uprobe programs attached to PATH:START and
->>           PATH:STOP, with the binding id and budget passed through the
->>           attach cookie or a small config map populated before load;
->>         - expiry: a bpf_timer in the same record, armed on state
->>           transitions and cancelled on STOP, submitting an error entry
->>           to the monitor's ringbuf;
->>         - output: the rv tool reads the ringbuf and prints it, and the
->>           reactor is linked in with bpf_linker as v2 already does.
->>
->>       The DA engine and the ringbuf/reactor plumbing would carry over
->>       unchanged.  The three missing pieces are the uprobe
->>       attach/configuration path, the timer and env handling in
->>       da_monitor_bpf.h, and the hybrid backend in rvgen.
->>
->>       None of this argues against migrating.  It argues that the BPF
->>       backend has to reach parity on (a)-(c) before the in-kernel path
->>       can be removed.
->>
-> 
-> 
-> Thanks for taking time to assess this, it looks like the right direction.
-> 
-> Gabriele
-> 
+>  	}
+>  	return ret;
+>  }
+> @@ -1423,6 +1445,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  void unregister_ftrace_graph(struct fgraph_ops *gops)
+>  {
+>  	int command = 0;
+> +	int ret;
+>  
+>  	if (WARN_ONCE(!(gops->ops.flags & FTRACE_OPS_FL_GRAPH),
+>  		      "function graph ops unregistered without registering"))
+> @@ -1447,9 +1470,9 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+>  	if (!ftrace_graph_active)
+>  		command = FTRACE_STOP_FUNC_RET;
+>  
+> -	ftrace_shutdown_subops(&graph_ops, &gops->ops, command);
+> +	ret = ftrace_shutdown_subops(&graph_ops, &gops->ops, command);
+>  
+> -	if (ftrace_graph_active == 1)
+> +	if (ftrace_graph_active == 1 && !ret)
+>  		ftrace_graph_enable_direct(true, NULL);
+>  	else if (!ftrace_graph_active)
+>  		ftrace_graph_disable_direct(false);
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 673a54fdf..831f04de6 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3667,6 +3667,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
+>  	bool first = true;
+>  	int ret;
+>  
+> +	*filter_hash = EMPTY_HASH;
+> +	*notrace_hash = EMPTY_HASH;
+>  	temp_hash.filter_hash = EMPTY_HASH;
+>  	temp_hash.notrace_hash = EMPTY_HASH;
+>  
+> @@ -3708,7 +3710,13 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
+>   * will not affect functions that are being traced by other subops that
+>   * still exist in @ops.
+>   *
+> - * If the last subops is removed from @ops, then @ops is shutdown normally.
+> + * Once removal starts, @subops is detached even if rebuilding the manager
+> + * hashes fails. The old manager hashes are conservative in that case and the
+> + * remaining subops continue to filter callbacks. If the last-manager shutdown
+> + * fails, ftrace is disabled before the manager state is discarded.
+> + *
+> + * Return: 0 on success or a negative error code if the manager could not be
+> + * updated or shut down.
+>   */
+>  int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+>  {
+> @@ -3716,9 +3724,6 @@ int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, in
+>  	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+>  	int ret;
+>  
+> -	if (unlikely(ftrace_disabled))
+> -		return -ENODEV;
+
+Wait! Why this???
+
+> -
+>  	if (WARN_ON_ONCE(!(subops->flags & FTRACE_OPS_FL_ENABLED)))
+>  		return -EINVAL;
+>  
+> @@ -3727,36 +3732,45 @@ int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, in
+>  	if (list_empty(&ops->subop_list)) {
+>  		/* Last one, just disable the current ops */
+>  
+> -		ret = ftrace_shutdown(ops, command);
+> +		if (unlikely(ftrace_disabled))
+> +			ret = -ENODEV;
+> +		else
+> +			ret = ftrace_shutdown(ops, command);
+
+Ug no!
+
+>  		if (ret < 0) {
+> -			list_add(&subops->list, &ops->subop_list);
+> -			return ret;
+> +			bool enabled = ops->flags & FTRACE_OPS_FL_ENABLED;
+> +
+> +			FTRACE_WARN_ON_ONCE(!ftrace_disabled);
+> +			remove_ftrace_ops(&ftrace_ops_list, ops);
+> +			if (enabled && ftrace_start_up > 0)
+> +				ftrace_start_up--;
+> +			ops->flags &= ~(FTRACE_OPS_FL_ENABLED |
+> +					FTRACE_OPS_FL_ADDING |
+> +					FTRACE_OPS_FL_REMOVING);
+> +			ops->func = ops->saved_func;
+
+Please explain the above.
+
+>  		}
+>  
+> -		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
+> -
+>  		free_ftrace_hash(ops->func_hash->filter_hash);
+>  		free_ftrace_hash(ops->func_hash->notrace_hash);
+>  		ops->func_hash->filter_hash = EMPTY_HASH;
+>  		ops->func_hash->notrace_hash = EMPTY_HASH;
+> -		subops->flags &= ~(FTRACE_OPS_FL_ENABLED | FTRACE_OPS_FL_SUBOP);
+> -		subops->managed = NULL;
+> +		goto out;
+> +	}
+>  
+> -		return 0;
+> +	if (unlikely(ftrace_disabled)) {
+> +		ret = -ENODEV;
+> +		goto out;
+>  	}
+>  
+>  	/* Rebuild the hashes without subops */
+>  	ret = rebuild_hashes(&filter_hash, &notrace_hash, ops);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto out;
+>  
+>  	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
+> -	if (ret < 0) {
+> -		list_add(&subops->list, &ops->subop_list);
+> -	} else {
+> -		subops->flags &= ~(FTRACE_OPS_FL_ENABLED | FTRACE_OPS_FL_SUBOP);
+> -		subops->managed = NULL;
+> -	}
+> +
+> +out:
+> +	subops->flags &= ~(FTRACE_OPS_FL_ENABLED | FTRACE_OPS_FL_SUBOP);
+> +	subops->managed = NULL;
+
+
+The above is doing a lot without really explaining why.
+
+-- Steve
+
+>  	free_ftrace_hash(filter_hash);
+>  	free_ftrace_hash(notrace_hash);
+>  	return ret;
+> @@ -3767,8 +3781,8 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
+>  					      struct ftrace_hash *hash)
+>  {
+>  	struct ftrace_ops *ops = subops->managed;
+> -	struct ftrace_hash *notrace_hash;
+> -	struct ftrace_hash *filter_hash;
+> +	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+> +	struct ftrace_hash *filter_hash = EMPTY_HASH;
+>  	struct ftrace_hash *save_hash;
+>  	struct ftrace_hash *new_hash;
+>  	int ret;
+> @@ -3800,6 +3814,7 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
+>  	} else {
+>  		free_ftrace_hash_rcu(save_hash);
+>  	}
+> +	fgraph_update_direct_func(subops, !ret);
+>  	return ret;
+>  }
+>  
+> diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+> index 3235470e6..3d5934b1c 100644
+> --- a/kernel/trace/ftrace_internal.h
+> +++ b/kernel/trace/ftrace_internal.h
+> @@ -16,6 +16,7 @@ int ftrace_startup(struct ftrace_ops *ops, int command);
+>  int ftrace_shutdown(struct ftrace_ops *ops, int command);
+>  int ftrace_ops_test(struct ftrace_ops *ops, unsigned long ip, void *regs);
+>  int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
+> +/* Once started, shutdown always detaches @subops, even when it returns an error. */
+>  int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
+>  
+>  #else /* !CONFIG_DYNAMIC_FTRACE */
+> @@ -52,6 +53,7 @@ static inline int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_o
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  extern int ftrace_graph_active;
+> +void fgraph_update_direct_func(struct ftrace_ops *ops, bool enable);
+>  # ifdef CONFIG_DYNAMIC_FTRACE
+>  extern void fgraph_update_pid_func(void);
+>  # else
+> @@ -59,6 +61,7 @@ static inline void fgraph_update_pid_func(void) {}
+>  # endif
+>  #else /* !CONFIG_FUNCTION_GRAPH_TRACER */
+>  # define ftrace_graph_active 0
+> +static inline void fgraph_update_direct_func(struct ftrace_ops *ops, bool enable) {}
+>  static inline void fgraph_update_pid_func(void) {}
+>  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+>  
+
