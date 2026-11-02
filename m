@@ -1,56 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793621451;
-	b=dvwXYy2ovmRol66dbey5Xb4JOhYxiN+OUCVIKh8CQnER+o5q10vv0zsy20N9emP2D9fh
-	 LtrznGkc7xQeX6TtcoBKXswmiIgO8alWL5z7ySgwZEJt0lznpCmD5CtQlw+9lVeKn9iRs
-	 4EBGdbe9HlTRRFGvmd3WWTW/Nei+tFyb/H/4AxHOYQaMAfzL+fldGMEotuxKi1XqZyiSA
-	 HjK1qJF+oFHa3sj7PGZnylfjj9/khVjxiXRRvoASxnVWGYy9kwvq9Su3TcngahQDSM/zH
-	 Y02zMmifpuCAu+5WZ67Gk5WCcqLugBxGoFiLJj1z8jNirtQreU6XLwyie3FVl9wZN/w==
+	t=1793621491;
+	b=2lWjuQqEsunQT4sv0KGF1YGypW8jRLLGJSwhJxqDhNZIS7DcbCNvVfdrnfrgGDz0loE6
+	 UmrgtQkN4uODEPC0vfkY2ycdF5vuh+sL7B48lRfpOHAyUxNAOFEJ5OdYNO5RPah944crj
+	 DH/SOf//wG+WJ8K8qYDeWO/QAae0AZtTZWlgjD/Kgsk/uOolK0DDBsk8j9D9+c3kq9Dnl
+	 3O3x7XeAGSb/Uxm+81Y3WVtZPswGTlVPcfalqdUQ8kBwMKbrJkxbr5OxAbpY6z+wwti21
+	 U+LgKrAOP227Q2Y/fHBVyRhy6VZAwNI5T8mA3xN4ySjC4rJJE16dv6sx4/ina+JsUQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793621451;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793621491;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=zHhnSfmCxi4LPlup55E2DgppTfqzi+1MwMcIeSt1IiQ=;
-	b=4XeFNtY5qAj3yurj4gAvxdi+1eqMEW8+ooql5SpZbQqPB2g8FmRIP3a62LENFu//PBvv
-	 W10WG19c57tT+PeOro3L8JOqVPYHCtcyUd7thST4aubHvSoweJtzKV+VnH/X119Jo1Ws6
-	 BjPP4kx1kEUkBVoPBzDCvtWrJ4dnIJlAiOFDlbD9PsUBN/XI2qfZgg1plUIUV0X8f1lhE
-	 SN9KYhNj4l1XC29qXe7jYZrSMPpfc0ijOKMmfjbpIB/DjFmnJhlGP7crICXrxB7qfXRkQ
-	 xSQ+W277oTzHlGHMd1HmtlFoLKpqaFArR8gCXuGlVNmj3XT8/BzPoREhERlISfouYVw==
+	bh=iCi31SBjchG6edMTJPjXxk3dmyE2BGaCYm2JOWMiTRo=;
+	b=iv/x5Alzw5HkCSnd/ta9rlRGVZN4wNjTR5zyDMqh2KG6EaeWU2NzQGDWy+aQqOO6RUga
+	 aPruYSEw1vNpYY0nvbC8+Co+dzjSjBQXan91+MMoDp6Y28AKC4WPW7UokuYeBDblgKSq6
+	 AlRUoB5Yc4WWDgoGsz2+rs6/qJj0m/T42rwuVJ1qyn87pK+N0JBHayWlD/GJWHMYEgBMT
+	 G/oNaYIFnIWCEwhzZ4I4Lh25BYVGvMV03VofOuIP7NP1HBcdPiKKQ9F2aoT+0f5dKEDC4
+	 0+WQWuSrOeejvjjYLxYx80hwWXLPnorx60XAQsxNKBZMOxyLvrX97DXrY/1Q524Rtmw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IziYnIaL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hhhl5ER7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B847C606A324
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 12:10:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84894606A331
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Nov 2026 12:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IziYnIaL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFC71F00A17;
-	Mon,  2 Nov 2026 12:10:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hhhl5ER7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9951F00A16;
+	Mon,  2 Nov 2026 12:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793621450;
-	bh=zHhnSfmCxi4LPlup55E2DgppTfqzi+1MwMcIeSt1IiQ=;
+	s=k20260515; t=1793621491;
+	bh=iCi31SBjchG6edMTJPjXxk3dmyE2BGaCYm2JOWMiTRo=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=IziYnIaLUjTvvIiVOAmetkuteMR0XBLe3+Du9i5wW2DTCAHYtBh+6wPt69SqSpN4f
-	 LUlSlrggf2oAbUDOIS0nXJwZTrqZpNRf+XCT5Oeu7OI1cW4o7CMp7QqZDRO0Ohewbr
-	 qmA0Fcz9sOlY3p7yc/YFdWJJS+6iw0TUsTGx8dgCTVZG3bIO9zso8IkCSC9G6uoxeV
-	 xETs6ac/kbDPj/1EHPxw01khlBjkvzOmMbpbzl5ObUDnOgNRRyk8AffAj8sQ1pIwrb
-	 oYDTTLFckrjUf7rgea+hmwYZjmDAwoY/houd1Brt1AlyyTpdcDivMZv4dKvSAGocjt
-	 K+M9q5FyDdEYg==
-Message-ID: <sashiko-outbox-193372@kernel.org>
+	b=hhhl5ER7RClWryrHcvWIDQkMj9LyAXhSGE4bNAZLdHmIhIVfFyWAZCkgfnx3aaCJ3
+	 qDT0xK7DSeFZQtOjy0I4invhKhfG8dxvNuHB9BjPq++viBhFXF5Ba6ZXxniYWJmoqH
+	 Vx/ATkvIS817wJW/VP45W2g6O0uifHssrhtJkGEC6T3LB9EdD70wHb2vERqUSxQisd
+	 75PZuAwzz69p7g0M8mFq9jA1jfTRwdZaXGSvUMnjoSdKNu8DJ9W0Wiypbuz6Jxzz4t
+	 anF3+xyvKtzNREbgctmegifHUtPNMwzkrweQNsHFhgY8DsyUQuHJOFiwh7/Lol5lji
+	 xnZ3wd1oGq2uQ==
+Message-ID: <sashiko-outbox-193373@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] tracing/user_events: reject overflowing field
- offsets
+Subject: Re: [PATCH] tracing/probes: bound symstr stores to reserved length
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yifan Zhang" <yfzhang23@stu.pku.edu.cn>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179362071771.29269.8333068920166316746@stu.pku.edu.cn>
-References: <179362071771.29269.15129360535376085397@stu.pku.edu.cn>
- <179362071771.29269.8333068920166316746@stu.pku.edu.cn>
+In-Reply-To: <179362071772.29269.13958672165986396737@stu.pku.edu.cn>
+References: <179362071772.29269.13958672165986396737@stu.pku.edu.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 12:10:49 +0000
+Date: Mon, 02 Nov 2026 12:11:30 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,80 +60,100 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] tracing/user_events: u32 struct size wrap in user_event_parse_fiel=
-d()
+- [Medium] tracing/probes: symbol format mismatch in fetch_store_symstring()
 --
 
-commit 3b2945a002d22d5a8a1ae3cae8f4c9ec6c460511
+commit 1dd7922bca1f3057be72658bb3bb50c1a3ed082f
 Author: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
 
-tracing/user_events: reject overflowing field offsets
+tracing/probes: bound symstr stores to reserved length
 
-This patch adds an overflow check in user_event_parse_field() to reject fie=
-ld
-offsets that overflow a u32 or exceed INT_MAX when registering a user event.
+This commit bounds symbol string formatting in fetch_store_symstring() to
+the length reserved during the sizing pass by replacing sprint_symbol() with
+scnprintf(..., "%pS", ...), preventing out-of-bounds writes when a probed
+pointer changes between passes.
 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events=
-_user.c
-> index 85938b45b7618..88d384c9e101f 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1207,6 +1207,7 @@ static int user_event_parse_field(char *field, stru=
-ct user_event *user,
->  {
->  	char *part, *type, *name;
->  	u32 depth =3D 0, saved_offset =3D *offset;
-> +	u32 new_offset;
->  	int len, size =3D -EINVAL;
->  	bool is_struct =3D false;
+> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_t=
+mpl.h
+> index 8db12f758fdae..cc317cb444e43 100644
+> --- a/kernel/trace/trace_probe_tmpl.h
+> +++ b/kernel/trace/trace_probe_tmpl.h
+> @@ -95,7 +95,7 @@ fetch_store_symstring(unsigned long addr, void *dest, v=
+oid *base)
 > =20
-> @@ -1287,7 +1288,11 @@ static int user_event_parse_field(char *field, str=
-uct user_event *user,
->  	if (size < 0)
->  		return size;
+>  	__dest =3D get_loc_data(dest, base);
 > =20
-> -	*offset =3D saved_offset + size;
-> +	if (check_add_overflow(saved_offset, (u32)size, &new_offset) ||
-> +	    new_offset > INT_MAX)
-> +		return -E2BIG;
+> -	return sprint_symbol(__dest, addr);
+> +	return scnprintf(__dest, maxlen, "%pS", (void *)addr) + 1;
 
-[Severity: High]
-What happens when a user supplies a struct field size between INT_MAX + 1 a=
-nd
-U32_MAX?
+[Severity: Medium]
+Can switching fetch_store_symstring() to "%pS" while leaving
+fetch_store_symstrlen() on sprint_symbol() cause a size mismatch between
+the reservation pass and the store pass even when addr does not change?
 
-Earlier in user_event_parse_field(), the struct size is parsed into the sig=
-ned
-int variable size via kstrtou32():
+In kernel/trace/trace_probe_tmpl.h, __get_data_size() ->
+process_fetch_insn() -> fetch_store_symstrlen() still computes the required
+buffer size with sprint_symbol():
 
-	case FIELD_DEPTH_SIZE:
-		if (!is_struct)
-			return -EINVAL;
+kernel/trace/trace_probe_tmpl.h:fetch_store_symstrlen() {
+	char namebuf[KSYM_SYMBOL_LEN];
+	int ret;
 
-		if (kstrtou32(part, 10, &size))
-			return -EINVAL;
-		break;
+	ret =3D sprint_symbol(namebuf, addr);
+	if (ret < 0)
+		return 0;
 
-When part is in [2147483648, 4294967295], kstrtou32() succeeds and writes a
-value into size that is negative when interpreted as a signed int. The
-preceding check:
+	return ret + 1;
+}
 
-	if (size < 0)
-		return size;
+However, in lib/vsprintf.c, pointer() -> symbol_string() handles "%pS"
+differently from a direct sprint_symbol() call in two ways:
 
-then returns that user-controlled negative integer directly instead of
-reaching the new overflow check.
+lib/vsprintf.c:pointer() {
+	switch (*fmt) {
+	case 'S':
+	case 's':
+		ptr =3D dereference_symbol_descriptor(ptr);
+		fallthrough;
+	case 'B':
+		return symbol_string(buf, end, ptr, spec, fmt);
+}
 
-When reached through user_events_ioctl() -> user_events_ioctl_reg() ->
-user_event_parse_cmd() -> user_event_parse() -> user_event_parse_fields() ->
-user_event_parse_field(), or through create_dyn_event() ->
-user_event_create(), could this return arbitrary negative values (including
-kernel-internal restart codes like -ERESTARTSYS, values outside [-MAX_ERRNO,
--1], or -ECANCELED) to the caller? Also, since both saved_offset and size a=
-re
-bounded to INT_MAX after the size < 0 check, can check_add_overflow() ever
-trigger here?
+lib/vsprintf.c:symbol_string() {
+#ifdef CONFIG_KALLSYMS
+	...
+	else if (*fmt !=3D 's')
+		sprint_symbol(sym, value);
+	...
+	return string_nocheck(buf, end, sym, spec);
+#else
+	return special_hex_number(buf, end, value, sizeof(void *));
+#endif
+}
+
+On architectures with CONFIG_HAVE_FUNCTION_DESCRIPTORS=3Dy, sprint_symbol()=
+ in
+fetch_store_symstrlen() inspects the raw descriptor address (for example,
+formatting a short hex address when CONFIG_KALLSYMS_ALL is disabled),
+whereas "%pS" in fetch_store_symstring() dereferences the descriptor to the
+target function symbol, which can be longer than the reserved length.
+
+Similarly, when CONFIG_KALLSYMS is disabled (such as with
+CONFIG_EPROBE_EVENTS=3Dy), sprint_symbol() writes an empty string and
+fetch_store_symstrlen() reserves 1 byte, whereas "%pS" formats the full hex
+address via special_hex_number().
+
+When the formatted "%pS" string is longer than the sprint_symbol() result,
+scnprintf() either truncates the symstr field or, if another dynamic
+argument (such as string, ustring, or symstr) follows in the same probe
+event, consumes the remaining shared dynamic buffer maxlen passed by
+store_trace_args() and causes subsequent dynamic arguments to be truncated
+or fail with -ENOMEM.
+
+Should fetch_store_symstrlen() and fetch_store_symstring() use matching
+symbol formatting logic (or "%pB" if descriptor dereferencing is not
+desired)?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179362071771.29269.=
-15129360535376085397@stu.pku.edu.cn?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179362071772.29269.=
+13958672165986396737@stu.pku.edu.cn?part=3D1
