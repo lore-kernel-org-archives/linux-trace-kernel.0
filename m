@@ -1,50 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793646461;
-	b=hiOr+jJJnv3i9XXfS1wTr5fis6uchnfmIYKEJlZsb0oyYYEcXFSQvPy/FCfILoYGv3NF
-	 /9A2Lwuz7i0fpwtWjGVXLITmr8l9fw5irA6QtSUAHfHrBrmmvgHB8D45JV7PkcXEeIojt
-	 duXXAkdlNKKG2kCNFnOW/CFodBBzQOGt4yQPumzp52UN3c41cpIbr99G6c0OSWXwVWHFi
-	 j0smhB1RFO7eBDKELgVQuT0hDT18jQXBfjB3Xm/HG+hUhyb827QSD6ILI0RYq8EdIoDDG
-	 gAJ2DV3uSGb7kMSa7OeM+UTHoMTTV8AiiQBcyhSmcDCTk1I/TpksEqy2E29AJqPOjDA==
+	b=U5CeDm5ceIiFsFryKjWaIDoroPXJRG0CqpQMNwVpuN6sGye4G1HU6nlXoyA7D5EzIznc
+	 HA9AOR9M7guutB5l8q8d8Ud7yq1bx8vu2C5HKcs+o1T6g/LZV/h/cntjdMJT8fZPtXA2r
+	 DuIdy+YE8i1xKsQrgEO1W6/Q5h07txGYmtv7tG3c6m++6EnuErUlkHKWRLg8Nzm7IEIix
+	 TKCjXM7u3vNy4XIKRTHVXIRuCuV4or/T7FuNnqmGy4Gr3KzUb1tb1heAEIAbxX/cy0wt3
+	 lqP3BJ7aZfZgLftGXwC2aQpvepcgarJjX0QrOZlrx0tL1IOBsj0jujBb8bgjksszcBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793646461;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=facLPGn/+qga3YSbDc6N/+NwNj3uIaPlZZmodCVjN5M=;
-	b=NpUpMwSC1khjkKHU7TsVP102sxiL1vONeYo05glGzbqtFUy1b8OzDm7dYPCit3T1OdLe
-	 KwSEi0+C0FnmIglutEk3IBDLx9kSQe1mQPaaqeM3oohNnxYfW3bt8ErAvbJ3Po6KtrF8T
-	 UJi2rs1oswsLsZYxup7vJtkpIJTm9gYUp+s4XBg82TCSIYLcSOuz5Ft8WWwEmuGNUrls9
-	 loLOkF3RbjkcB/h/d526ksaXgM2qVZqg2bUrNPr4aM/XkznY1nqMImCtR6bfy/vAgXlD6
-	 nadS3TETMdui9tORw+JHWBpyaEZNymEL/5WBGpdtdCGgSwCSzQZa8cE1kIRo/9jHIew==
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=V4K/Ra2y0KJquK1Qst0bbK6WcBmdJsB5IprzgFqeRWU=;
+	b=LYSN7UgbKqB/pojwiJmCH7zkJiSj7XJ4mEOJVIaeBTHZ1hyh9/dR7UETt3YIk5lbcD2G
+	 h/E4KypRtqv1ziktR8I1qFpWLOS4tVENKpgnHSYFHJVtICC2uDrbib3yLpGQUuxJlMxWV
+	 dut8FT9Wf6e5yVDluN8hvrbv/foabU0fVCpiskukIrEZ4vJ7EjiFyNfgE5/ZCeId18rxZ
+	 axiVkUDpI4LYF+vypKWnNLaVNkcTcRAuOWLiVsI6dSf/XQs+sd2l6B47F1MMEFeCrqgt2
+	 M/2DKxpIzkPLJp1PTRK7KvBj247OhrJXxQJ3HbSoLQFqJdC3mFBBZPIixWBhWrhMvNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=gT92ilfw;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=lVGlgGRN;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31859606A32C;
-	Mon,  2 Nov 2026 19:07:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 31859606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8757606A33D;
+	Mon,  2 Nov 2026 19:07:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8757606A33D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=gT92ilfw
+	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=lVGlgGRN
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1793646451;
-	bh=facLPGn/+qga3YSbDc6N/+NwNj3uIaPlZZmodCVjN5M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gT92ilfwMYKwFYfzeRNQR7LnWOZ16CQNsLHfz9YkzqPez3sTVG+8HUP4/BBPZpTVF
-	 Ne3ibJfMLq6H3XdMqR9ZoksF10NEEEtkRe0dvgrWWWSd/XGEtKH9ePN9xgM7svBYJb
-	 IyeE7U6j8vXIX9ZCG3YoiE61ACa0dji5d06q05oLPcvjjQSLXMy4aY/QDdxgMljiPV
-	 WOX1pSN981/KJHRCNyeVrBVU6OMFIi5aQl12mU8msQmKXk7o5V5FS1oa8HKi+Uo93M
-	 kuKa96RdpnO07Z6wY3YMpHYSVsiLkcL6f4Q580rn5YCb4rqjq/nqJyPtlr55ncwuPJ
-	 hRzNbwSySlKfg==
+	s=smtpout1; t=1793646454;
+	bh=V4K/Ra2y0KJquK1Qst0bbK6WcBmdJsB5IprzgFqeRWU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lVGlgGRNGftznmXGxQtKfCmdRkVXjH0/e7fCQfQxiyjJzrsDybznD91KCLM8v44TC
+	 TexdBFpYdB2PjxHiOSqwsdU+a28Puh/Anq/riHWh7lISJ3Dacw+gjc9PHBoC+1P9pP
+	 WAHH6u4Wr2ZZ5p7DmyH+0BWNrkbXdlZQUapv+/PWn1Njysxm+VY1hENZSEQP167w2x
+	 fVZ7ugm12FKBDnLh+VyknAKn2d5pfZFoF/f4qU1e72wQSddvdYKMmnszypgi1M0tGc
+	 o1v24anE6XU4wYsoaDE2tnD0V+DZkWPKgK3EO05h3XsM3Rq7Eukfudlz3BxLopxMjU
+	 S1pvimRrj2pSg==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jJLmz3T8pzJpy;
-	Mon, 02 Nov 2026 14:07:31 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jJLn16MbRzKlS;
+	Mon, 02 Nov 2026 14:07:33 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -100,10 +101,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	linux-fsdevel@vger.kernel.org,
 	Oleg Nesterov <oleg@redhat.com>
-Subject: [RFC PATCH v23 00/10] Hierarchical Percpu Counters for RSS
-Date: Mon,  2 Nov 2026 14:06:58 -0500
-Message-Id: <20261102190708.1287100-1-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v23 10/10] lib: add a benchmark of hierarchical per-cpu counters
+Date: Mon,  2 Nov 2026 14:07:08 -0500
+Message-Id: <20261102190708.1287100-11-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20261102190708.1287100-1-mathieu.desnoyers@efficios.com>
+References: <20261102190708.1287100-1-mathieu.desnoyers@efficios.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,294 +118,713 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi David,
+Add a KUnit benchmark comparing the hierarchical per-cpu counters with
+struct percpu_counter, so their performance can be compared on various
+machines:
 
-Here is the hierarchical per-cpu counters series for the RSS counters,
-based on v7.4-rc1.  It is an RFC because of the questions at the end,
-and because of the significant changes since v22 [1], notably the
-per-cpu counter size (long -> byte), the configuration heuristics, and
-the lazy activation introduced by patches 6 and 7.
+- update: cost of an update with a kthread on each online CPU, on one
+  shared counter, on one counter per thread, on groups of 4 counters
+  initialized together like the RSS counters of an mm, and on one lazily
+  initialized counter per thread updated by its owner, like a
+  single-threaded process, with increments of +1, alternating +1/-1, and
+  random increments up to 32 and 512.
+- lifecycle: cost of initializing and destroying 4 counters together,
+  like fork and exit of an mm, eagerly or lazily, from one thread or from
+  all online CPUs.
+- churn: like lifecycle, with a few updates, keeping some of the
+  counters alive until the end, like long-lived processes.
 
-The problem
------------
+The batch size of the hierarchical counters is selected with the
+percpu_counter_tree_bench.batch= parameter (32 by default, like the RSS
+counters), and the tree shape with the percpu_counter_tree.arity= boot
+parameter.  The struct percpu_counter variants use their default batch
+size, like the RSS counters before the hierarchical counters.
 
-Since commit f1a7941243c1 ("mm: convert mm's rss stats into
-percpu_counter"), the RSS counters are struct percpu_counter with a
-batch size of max(32, 2 * nr_cpus): their approximation error grows with
-O(nr_cpus^2), up to 1.1GB per counter at 384 logical CPUs.
-/proc/PID/status, /proc/PID/statm and the OOM killer moved to precise
-sums (commits 82241a83cd15 and 5898aa8f9a0b), but the other readers
-still use the approximation: the RSS high watermark (VmHWM, the
-ru_maxrss reported as "Maximum resident set size" by /usr/bin/time -v,
-taskstats), /proc/PID/stat (ps, top, monitoring agents), the taskstats
-RSS-time integral (coremem, sampled at each tick), NUMA balancing and
-the mark_victim tracepoint.  On the test machine below, the
-/proc/PID/stat RSS of a test process was off by 17MB while
-single-threaded, and by up to 134MB with 64 threads.
+The benchmark reports the accuracy of both counter implementations along
+with the timings.  It runs for a few minutes on large machines, so it
+has its own config option, CONFIG_PERCPU_COUNTER_TREE_BENCH.
 
-Precise sums cannot fix the high watermark or the RSS-time integral:
-update_hiwater_rss() samples the RSS on every unmap path, and the
-integral at each tick, while a precise sum reads every possible CPU,
-about 4us per counter at 384 logical CPUs.  A smaller struct
-percpu_counter batch takes the counter spinlock on every carry: at batch
-32, an update of the counters of a shared mm costs 4.4 to 69us with one
-thread per CPU, compared to 26ns to 1.2us with this series.
+For example:
 
-The series
-----------
+  ./tools/testing/kunit/kunit.py run --arch=x86_64 \
+	--kconfig_add CONFIG_PERCPU_COUNTER_TREE_BENCH=y \
+	--kconfig_add CONFIG_NR_CPUS=256 --qemu_args="-smp 64 -m 8192" \
+	--kernel_args percpu_counter_tree.arity=8,8 \
+	--kernel_args percpu_counter_tree_bench.batch=16 \
+	--timeout 3000 percpu_counter_tree_bench
 
-Patches 1 to 5 replace struct percpu_counter for the RSS counters with
-hierarchical per-cpu counters: per-cpu bytes carry into a tree of atomic
-counters shaped at boot from nr_cpu_ids, with a fixed batch of 32, an
-error bound in O(n*log(n)) and no global lock.  Each level carries only
-once its residual reaches the batch in either direction, so updates
-going back and forth around a boundary do not climb the tree.  The
-comparison functions have no user in this series; a follow-up will use
-them for a faster OOM killer task selection.
+or, on a running kernel with CONFIG_PERCPU_COUNTER_TREE_BENCH=m:
 
-Patches 6 and 7 keep the RSS counters of single-threaded processes exact
-and without per-cpu memory: until a second thread shares the mm, the
-task running on the mm adds to the bias of each counter without atomic
-instructions, and other tasks add to its atomic bias, both read in O(1).
-Creating the second thread allocates the per-cpu counters and tree
-items, and activates the tree.  struct percpu_counter cannot do this as
-is: its count is an s64 under a raw spinlock, which the remote updates
-(reclaim, khugepaged, remote GUP) would then take.
+  modprobe percpu_counter_tree_bench batch=16
 
-Patches 8 to 10 are the tools to tune the tree shape on other hardware:
-the percpu_counter_tree.arity= and rss_stat_batch= boot parameters, and
-a KUnit benchmark.  The default shapes were measured on one machine,
-with up to 384 logical CPUs, so results from other hardware are welcome.
-
-Results
--------
-
-2-socket AMD EPYC 9654, 192 cores, 384 logical CPUs with SMT (the CPU
-counts in this letter are logical CPUs, as in nr_cpu_ids), tree 8,8,8,
-batch 32, whole series; details in patches 3 and 7.  The bare-metal
-results were measured on v7.3: the rebase onto v7.4-rc1 had no conflict,
-and the hpcc update costs of the series as sent, measured in a pinned
-384-vCPU guest, match the bare-metal ones within 2%.
-
-  Accuracy per counter: bound, and largest |approximate - precise| seen
-  by get_mm_counter() while a process hops across all CPUs doing
-  mmap/munmap of 1 to 16 pages (384-vCPU KVM guest pinned to the host):
-
-                                        hpcc   upstream
-    bound                            158.5MB      1.1GB
-    measured, single-threaded      0 (exact)      841MB
-    measured, with a second thread      96MB      845MB
-
-  Update cost, ns per update per thread, one thread per CPU, bare metal
-  (mm: the 4 counters of one mm; private: one counter per thread; batch
-  32: local change of the benchmark, bound 46.5MB):
-
-                                              upstream   upstream
-                                       hpcc  batch 768   batch 32
-    mm, +1                               26        288       4370
-    mm, random +-32                     135        385      69171
-    mm, random +-512                   1174      20229      69186
-    private, random +-32                 31         20          -
-
-  /proc/PID/statm read with 1000 to 16000 processes, bare metal:
-  5.3-6.5us vs 16.5-19.0us for single-threaded processes, on par for
-  multi-threaded ones (14.4-16.0us vs 14.5-17.1us, guest).  fork + exit
-  of a single-threaded child: 116us vs 139us.  will-it-scale
-  page_fault1, 2 and 3: no regression (-0.6% to +5.1%, one boot each,
-  the upstream one on the previous day).
-
-  Memory per mm, counting the slab objects of mm_struct and of the tree
-  items, and the per-cpu memory of the RSS counters, in bytes (guest,
-  v7.4-rc1):
-
-                  single-threaded   threaded   upstream
-    16 CPUs                  1820       1948       2076
-    384 CPUs                 1928       8145       8072
-    1024 CPUs                2185      17204      18569
-
-  The tree items are allocated with the per-cpu counters when the second
-  thread is created, and the mm_struct slab object keeps its upstream
-  size.
-
-Behavior changes
-----------------
-
-- The allocation of the per-cpu counters and tree items moves from
-  fork() to the second thread (clone() with CLONE_VM, without
-  CLONE_VFORK), which can then fail with -ENOMEM.
-- mm_struct gains rss_owner, the task running on the mm, compared with
-  current and never dereferenced, and rss_stat_mutex, which serializes
-  the activations of the tree, as mm_cid.mutex serializes the mode
-  changes of mm_cid at fork and exit.
-- The precise sums (/proc/PID/status, /proc/PID/statm, the OOM killer)
-  take no lock: under concurrent updates of a multi-threaded process,
-  they can miss a carry on its way up the tree, where upstream counts
-  each concurrent update either whole or not at all.  They are exact for
-  a process at rest.
-- The rss_stat tracepoint reports the approximation (patch 5): exact for
-  single-threaded processes, within the bound otherwise.
-- Like struct percpu_counter, the tree is sized at boot and not
-  reshaped on hotplug; its shape and bound depend on nr_cpu_ids, while
-  the default upstream batch follows the online CPUs.
-
-Caveats
--------
-
-- From 33 to 39 CPUs, up to 1.37 times less accurate than upstream.
-- The tree is shaped for the number of CPUs rounded up to a power of 2:
-  just above a power of 2, the RSS counters of a threaded process, with
-  rss_owner and the mutex, use up to 1.50 times the memory of upstream
-  (129 CPUs, 1.28 times at 65 and 1.38 times at 257), compared to at
-  most 0.90 times at a power of 2, and 1.02 times at 384 logical CPUs.
-- Private counters with random +-32 updates: 31ns vs 20ns, the price of
-  a 7 times tighter bound.
-- A multi-threaded process which ran on few CPUs can hold more error
-  than upstream: 2047 pages per CPU path vs 767 at 384 logical CPUs.  A
-  follow-up could index the counters by concurrency ID (mm_cid) instead
-  of CPU, so the accuracy bound and the precise sums would scale with
-  the concurrency the process uses.
-- Before activation, concurrent remote updates of a single-threaded
-  process contend on one atomic per counter.
-- The second thread allocates per-cpu memory, which the per-cpu
-  allocator serializes, as it does upstream at every fork: with 384
-  threads at once, init + destroy of 4 counters takes 874us per
-  operation (1004us upstream, 6.0us alone).  Tree item slab objects
-  owning their per-cpu counters, with slab destructors, could avoid it.
-- The accuracy was measured in a guest, with a debug patch and a test
-  program which are not part of the series.  The bound is analytic and
-  tested in both directions.
-
-Changes since v22 [1]
----------------------
-
-- Per-cpu byte counters with hysteresis, updated with
-  this_cpu_try_cmpxchg(); the tree items of counters initialized
-  together share cache lines; the library allocates the per-cpu
-  counters and tree items, so struct percpu_counter_tree has a fixed
-  size of 40 bytes, like struct percpu_counter, and mm_struct no longer
-  embeds tree items.
-- Flat tree up to 32 CPUs, 16,4 up to 64, fan-out 8 beyond, with a root
-  fan-out of 16 when one order remains (8,16 at 128 CPUs, 8,8,16 at
-  1024).
-- New patches 6 and 7, for single-threaded processes.
-- Fixed approximation margins in the comparison functions; hysteresis
-  on the intermediate levels, so the accuracy range is exact and
-  symmetric.
-- Userspace test of every tree configuration, KUnit tests on per-CPU
-  workqueues, Sashiko review comments, MAINTAINERS entry.
-
-Testing: every commit builds without warnings on x86_64 (SMP and UP),
-arm64, ppc64le and 32-bit powerpc, sparse adds no warnings, KUnit passes
-on bare metal (v7.3) and in guests with 1, 16 and 384 vCPUs, the
-userspace test passes on simulated topologies up to 65536 CPUs, and the
-RSS counters match a page table walk from 1 to 64 threads.  KUnit and
-the RSS check also pass with lockdep (PROVE_LOCKING) in guests with 16
-and 64 vCPUs, without report.
-
-Starting from v22, which I wrote, an LLM coding assistant drove the
-implementation of this revision from my design decisions: it wrote the
-code, the tests, the benchmark and the measurement scripts, ran the
-measurements in guests and prepared the bare-metal ones, and drafted the
-comments, the changelogs and this letter.  I made the design decisions,
-reviewed every change and directed the rework through my review
-comments.
-
-Questions
----------
-
-1. Is mm->rss_owner acceptable, or would you prefer current->mm == mm
-   (without PF_KTHREAD) and an "activated" flag?
-2. Is moving the -ENOMEM from fork() to the second thread acceptable?
-3. Would you rather take the single-threaded mode first, on its own?
-4. Should the rss_stat tracepoint report the approximation, stay
-   precise, or report both?
-5. Should the tuning tools be merged, built only with the benchmark
-   config, or dropped later?  Who could run them on non-AMD, 4-socket,
-   arm64 or POWER machines?
-6. Is tools/testing/hpcc the right home for the topology test?
-
-Thanks,
-
-Mathieu
-
-[1] https://lore.kernel.org/lkml/20260227153730.1556542-1-mathieu.desnoyers@efficios.com/
-
-Mathieu Desnoyers (10):
-  lib: introduce hierarchical per-cpu counters
-  lib: test hierarchical per-cpu counters
-  mm: use hierarchical per-cpu counters for the RSS counters
-  tools/testing/hpcc: add userspace test of hierarchical per-CPU
-    counters
-  mm: report the approximate RSS in the rss_stat tracepoint
-  lib: percpu_counter_tree: add lazy tree activation
-  mm: keep the RSS counters of single-threaded processes exact
-  lib: percpu_counter_tree: add the arity boot parameter
-  mm: add the rss_stat_batch boot parameter
-  lib: add a benchmark of hierarchical per-cpu counters
-
- .../admin-guide/kernel-parameters.txt         |   24 +
- Documentation/core-api/index.rst              |    1 +
- .../core-api/percpu-counter-tree.rst          |  145 ++
- MAINTAINERS                                   |   12 +
- fs/exec.c                                     |    5 +
- include/linux/mm.h                            |   28 +-
- include/linux/mm_types.h                      |   19 +-
- include/linux/percpu_counter_tree.h           |  365 +++++
- include/trace/events/kmem.h                   |    3 +-
- init/main.c                                   |    3 +
- kernel/exit.c                                 |    3 +
- kernel/fork.c                                 |   61 +-
- lib/Kconfig                                   |   27 +
- lib/Makefile                                  |    1 +
- lib/percpu_counter_tree.c                     | 1450 +++++++++++++++++
- lib/tests/Makefile                            |    3 +
- lib/tests/percpu_counter_tree_bench.c         |  604 +++++++
- lib/tests/percpu_counter_tree_kunit.c         | 1050 ++++++++++++
- tools/testing/hpcc/.gitignore                 |    2 +
- tools/testing/hpcc/Makefile                   |   18 +
- tools/testing/hpcc/include/hpcc_shim.h        |  203 +++
- tools/testing/hpcc/include/kunit/visibility.h |    2 +
- tools/testing/hpcc/include/linux/args.h       |    4 +
- tools/testing/hpcc/include/linux/atomic.h     |    2 +
- tools/testing/hpcc/include/linux/bug.h        |    2 +
- tools/testing/hpcc/include/linux/cache.h      |    2 +
- tools/testing/hpcc/include/linux/cpumask.h    |    2 +
- tools/testing/hpcc/include/linux/errno.h      |    3 +
- tools/testing/hpcc/include/linux/limits.h     |    2 +
- tools/testing/hpcc/include/linux/math.h       |    2 +
- .../testing/hpcc/include/linux/moduleparam.h  |   12 +
- tools/testing/hpcc/include/linux/percpu.h     |    2 +
- .../hpcc/include/linux/percpu_counter_tree.h  |    2 +
- tools/testing/hpcc/include/linux/preempt.h    |    2 +
- tools/testing/hpcc/include/linux/slab.h       |    2 +
- tools/testing/hpcc/main.c                     |  536 ++++++
- 36 files changed, 4592 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/core-api/percpu-counter-tree.rst
- create mode 100644 include/linux/percpu_counter_tree.h
- create mode 100644 lib/percpu_counter_tree.c
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ MAINTAINERS                           |   1 +
+ lib/Kconfig                           |  15 +
+ lib/tests/Makefile                    |   1 +
+ lib/tests/percpu_counter_tree_bench.c | 604 ++++++++++++++++++++++++++
+ 4 files changed, 621 insertions(+)
  create mode 100644 lib/tests/percpu_counter_tree_bench.c
- create mode 100644 lib/tests/percpu_counter_tree_kunit.c
- create mode 100644 tools/testing/hpcc/.gitignore
- create mode 100644 tools/testing/hpcc/Makefile
- create mode 100644 tools/testing/hpcc/include/hpcc_shim.h
- create mode 100644 tools/testing/hpcc/include/kunit/visibility.h
- create mode 100644 tools/testing/hpcc/include/linux/args.h
- create mode 100644 tools/testing/hpcc/include/linux/atomic.h
- create mode 100644 tools/testing/hpcc/include/linux/bug.h
- create mode 100644 tools/testing/hpcc/include/linux/cache.h
- create mode 100644 tools/testing/hpcc/include/linux/cpumask.h
- create mode 100644 tools/testing/hpcc/include/linux/errno.h
- create mode 100644 tools/testing/hpcc/include/linux/limits.h
- create mode 100644 tools/testing/hpcc/include/linux/math.h
- create mode 100644 tools/testing/hpcc/include/linux/moduleparam.h
- create mode 100644 tools/testing/hpcc/include/linux/percpu.h
- create mode 100644 tools/testing/hpcc/include/linux/percpu_counter_tree.h
- create mode 100644 tools/testing/hpcc/include/linux/preempt.h
- create mode 100644 tools/testing/hpcc/include/linux/slab.h
- create mode 100644 tools/testing/hpcc/main.c
 
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4d421a784e88..3878203de1c3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11955,6 +11955,7 @@ S:	Supported
+ F:	Documentation/core-api/percpu-counter-tree.rst
+ F:	include/linux/percpu_counter_tree.h
+ F:	lib/percpu_counter_tree.c
++F:	lib/tests/percpu_counter_tree_bench.c
+ F:	lib/tests/percpu_counter_tree_kunit.c
+ F:	tools/testing/hpcc/
+ 
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 3921177a0d24..6ab9644a4cb8 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -53,6 +53,21 @@ config PERCPU_COUNTER_TREE_KUNIT_TEST
+ 
+ 	  When in doubt, say N.
+ 
++config PERCPU_COUNTER_TREE_BENCH
++	tristate "Benchmark of hierarchical per-cpu counters"
++	depends on KUNIT && SMP
++	help
++	  This builds a KUnit benchmark comparing the hierarchical per-cpu
++	  counters with struct percpu_counter: update cost with all online
++	  CPUs updating shared and private counters, and init/destroy cost.
++	  It runs for a few minutes on large machines.
++
++	  The batch size and the tree shape can be changed with the
++	  percpu_counter_tree_bench.batch= and percpu_counter_tree.arity=
++	  parameters, see lib/tests/percpu_counter_tree_bench.c.
++
++	  When in doubt, say N.
++
+ config BITREVERSE
+ 	tristate
+ 	select GENERIC_BITREVERSE if !HAVE_ARCH_BITREVERSE
+diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+index e98687da8706..d158a8be8a19 100644
+--- a/lib/tests/Makefile
++++ b/lib/tests/Makefile
+@@ -60,5 +60,6 @@ obj-$(CONFIG_RATELIMIT_KUNIT_TEST) += test_ratelimit.o
+ obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
+ 
+ obj-$(CONFIG_PERCPU_COUNTER_TREE_KUNIT_TEST) += percpu_counter_tree_kunit.o
++obj-$(CONFIG_PERCPU_COUNTER_TREE_BENCH) += percpu_counter_tree_bench.o
+ 
+ obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
+diff --git a/lib/tests/percpu_counter_tree_bench.c b/lib/tests/percpu_counter_tree_bench.c
+new file mode 100644
+index 000000000000..bf260bef196a
+--- /dev/null
++++ b/lib/tests/percpu_counter_tree_bench.c
+@@ -0,0 +1,604 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++/*
++ * Benchmark of hierarchical per-CPU counters against struct percpu_counter.
++ *
++ * update: ns per percpu_counter_tree_add() per thread, one kthread pinned
++ *         on each online CPU, on one shared counter, on one counter per
++ *         thread, or on the counters of a few mm-like groups of 4 counters
++ *         initialized together. The "single" variant gives each thread a
++ *         lazily initialized counter updated with
++ *         percpu_counter_tree_add_owner(), like a single-threaded process.
++ *         The "percpu_counter" variants use percpu_counter_add() with the
++ *         default batch, like the RSS counters before hierarchical counters.
++ * lifecycle: ns per init_many(4) + destroy_many(4), like fork + exit of an
++ *         mm, from one thread or from all online CPUs at once; "lazy" uses
++ *         init_many_lazy(4), like a single-threaded process.
++ * churn: like lifecycle with a few updates, keeping one in @pin_period sets
++ *         of counters alive until the end, like long-lived processes.
++ *
++ * Each result ends with the implementation measured: "tree" for the
++ * hierarchical counters, "percpu_counter" for struct percpu_counter.
++ *
++ * The knobs to try on a given machine are:
++ * - the batch size: percpu_counter_tree_bench.batch=<2..128> (power of 2),
++ *   or "modprobe percpu_counter_tree_bench batch=<n>",
++ * - the tree shape: percpu_counter_tree.arity=<fan-out>,... on the kernel
++ *   command line, from level 0 to the root. The product of the fan-outs
++ *   is nr_cpu_ids rounded up to a power of 2, e.g. "16" (flat) or "4,4"
++ *   when nr_cpu_ids is 16. The shape in use is shown in
++ *   /sys/module/percpu_counter_tree/parameters/arity.
++ *
++ * For example, in a VM:
++ *   ./tools/testing/kunit/kunit.py run --arch=x86_64 \
++ *	--kconfig_add CONFIG_PERCPU_COUNTER_TREE_BENCH=y \
++ *	--kconfig_add CONFIG_NR_CPUS=256 --qemu_args="-smp 64 -m 8192" \
++ *	--kernel_args percpu_counter_tree.arity=8,8 \
++ *	--kernel_args percpu_counter_tree_bench.batch=16 \
++ *	--timeout 3000 percpu_counter_tree_bench
++ */
++#include <kunit/test.h>
++#include <linux/percpu_counter_tree.h>
++#include <linux/percpu_counter.h>
++#include <linux/kthread.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/ktime.h>
++#include <linux/math64.h>
++#include <linux/sched/task.h>
++#include <linux/cpuhplock.h>
++#include <linux/moduleparam.h>
++
++/* Like the RSS counters by default. */
++static unsigned int batch = 32;
++module_param(batch, uint, 0444);
++MODULE_PARM_DESC(batch, "Batch size of the hierarchical counters (power of 2, 2 to 128)");
++
++#define BENCH_MS	300
++#define LIFECYCLE_NR	4	/* Counters per mm. */
++#define LIFECYCLE_ITER	2000
++#define CHURN_ITER	4096
++
++enum { W_MONO, W_BOUNCE, W_RAND32, W_RAND512, NR_W };
++static const char * const wname[] = { "monotonic +1", "bounce +-1", "random +-32", "random +-512" };
++
++enum bench_impl { IMPL_TREE, IMPL_PERCPU_COUNTER };
++static const char * const impl_name[] = { "tree", "percpu_counter" };
++
++struct bench_shared {
++	atomic_t ready;
++	int wl;
++	unsigned int pin_period;	/* churn: keep one in pin_period sets, 0: none. */
++	enum bench_impl impl;
++	bool go, stop;
++	bool owner;		/* update: percpu_counter_tree_add_owner(). */
++	bool lifecycle;
++	bool lazy;		/* lifecycle: percpu_counter_tree_init_many_lazy(). */
++};
++
++struct bench_thread {
++	u64 ns;
++	unsigned long ops;
++	struct bench_shared *sh;
++	struct percpu_counter_tree *c;
++	struct percpu_counter *pc;	/* update: IMPL_PERCPU_COUNTER. */
++	struct percpu_counter_tree *pinned;	/* churn: IMPL_TREE sets kept alive. */
++	struct percpu_counter *pinned_pc;	/* churn: IMPL_PERCPU_COUNTER sets kept alive. */
++	struct task_struct *task;
++	unsigned int nr_pinned;
++	u32 seed;
++} ____cacheline_aligned_in_smp;
++
++/*
++ * Buffers are allocated through KUnit, which frees them if an assertion
++ * aborts the test, and are freed explicitly otherwise, since the benchmark
++ * runs many steps within one test.
++ */
++KUNIT_DEFINE_ACTION_WRAPPER(bench_kvfree, kvfree, const void *);
++
++static void *bench_kvzalloc(struct kunit *test, size_t size)
++{
++	void *p = kvzalloc(size, GFP_KERNEL);
++
++	if (p && kunit_add_action_or_reset(test, bench_kvfree, p))
++		return NULL;
++	return p;
++}
++
++static void bench_kvfree_now(struct kunit *test, void *p)
++{
++	kunit_release_action(test, bench_kvfree, p);
++}
++
++/* Wait for the start signal; return true if the benchmark is cancelled. */
++static bool bench_wait_go(struct bench_shared *sh)
++{
++	atomic_inc(&sh->ready);
++	/* Pairs with bench_start(): a cancellation sets stop before go. */
++	while (!smp_load_acquire(&sh->go))
++		cond_resched();
++	return READ_ONCE(sh->stop);
++}
++
++static int bench_update_fn(void *data)
++{
++	struct bench_thread *t = data;
++	struct bench_shared *sh = t->sh;
++	unsigned long ops = 0;
++	long sign = -1;
++	u32 x = t->seed;
++	int i;
++
++	if (bench_wait_go(sh))
++		return 0;
++	while (!READ_ONCE(sh->stop)) {
++		for (i = 0; i < 1024; i++) {
++			long inc;
++
++			switch (sh->wl) {
++			case W_MONO:
++				inc = 1;
++				break;
++			case W_BOUNCE:
++				inc = sign;
++				sign = -sign;
++				break;
++			default:
++				x ^= x << 13;
++				x ^= x >> 17;
++				x ^= x << 5;
++				inc = sh->wl == W_RAND32 ? 32 : 512;
++				if (x & 1)
++					inc = -inc;
++				break;
++			}
++			if (sh->impl == IMPL_PERCPU_COUNTER)
++				percpu_counter_add(t->pc, inc);
++			else if (sh->owner)
++				percpu_counter_tree_add_owner(t->c, inc);
++			else
++				percpu_counter_tree_add(t->c, inc);
++		}
++		ops += 1024;
++		cond_resched();
++	}
++	t->ops = ops;
++	return 0;
++}
++
++static int bench_lifecycle_fn(void *data)
++{
++	struct bench_thread *t = data;
++	struct percpu_counter_tree c[LIFECYCLE_NR];
++	struct percpu_counter pc[LIFECYCLE_NR];
++	u64 t0;
++	int i;
++
++	if (bench_wait_go(t->sh))
++		return 0;
++	t0 = ktime_get_ns();
++	for (i = 0; t->sh->impl == IMPL_PERCPU_COUNTER && i < LIFECYCLE_ITER; i++) {
++		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
++			break;
++		percpu_counter_add(&pc[0], 1);
++		percpu_counter_add(&pc[0], -1);
++		percpu_counter_destroy_many(pc, LIFECYCLE_NR);
++		cond_resched();
++	}
++	for (; t->sh->impl == IMPL_TREE && t->sh->lazy && i < LIFECYCLE_ITER; i++) {
++		if (percpu_counter_tree_init_many_lazy(c, LIFECYCLE_NR, batch))
++			break;
++		percpu_counter_tree_add_owner(&c[0], 1);
++		percpu_counter_tree_add_owner(&c[0], -1);
++		percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
++		cond_resched();
++	}
++	for (; t->sh->impl == IMPL_TREE && !t->sh->lazy && i < LIFECYCLE_ITER; i++) {
++		if (percpu_counter_tree_init_many(c, LIFECYCLE_NR, batch, GFP_KERNEL))
++			break;
++		percpu_counter_tree_add(&c[0], 1);
++		percpu_counter_tree_add(&c[0], -1);
++		percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
++		cond_resched();
++	}
++	t->ns = ktime_get_ns() - t0;
++	t->ops = i;
++	return 0;
++}
++
++static int bench_churn_fn(void *data)
++{
++	struct bench_thread *t = data;
++	unsigned int pin_period = t->sh->pin_period;
++	struct percpu_counter_tree tmp[LIFECYCLE_NR], *c;
++	struct percpu_counter tmp_pc[LIFECYCLE_NR], *pc;
++	u64 t0;
++	int i;
++
++	if (bench_wait_go(t->sh))
++		return 0;
++	t0 = ktime_get_ns();
++	for (i = 0; t->sh->impl == IMPL_PERCPU_COUNTER && i < CHURN_ITER; i++) {
++		bool pin = pin_period && !(i % pin_period);
++
++		pc = pin ? &t->pinned_pc[t->nr_pinned * LIFECYCLE_NR] : tmp_pc;
++		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
++			break;
++		percpu_counter_add(&pc[0], 100);
++		percpu_counter_add(&pc[1], -77);
++		percpu_counter_add(&pc[2], 1);
++		if (pin)
++			t->nr_pinned++;
++		else
++			percpu_counter_destroy_many(pc, LIFECYCLE_NR);
++		cond_resched();
++	}
++	for (; t->sh->impl == IMPL_TREE && i < CHURN_ITER; i++) {
++		bool pin = pin_period && !(i % pin_period);
++
++		c = pin ? &t->pinned[t->nr_pinned * LIFECYCLE_NR] : tmp;
++		if (percpu_counter_tree_init_many(c, LIFECYCLE_NR, batch, GFP_KERNEL))
++			break;
++		percpu_counter_tree_add(&c[0], 100);
++		percpu_counter_tree_add(&c[1], -77);
++		percpu_counter_tree_add(&c[2], 1);
++		if (pin)
++			t->nr_pinned++;
++		else
++			percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
++		cond_resched();
++	}
++	t->ns = ktime_get_ns() - t0;
++	t->ops = i;
++	return 0;
++}
++
++/* List at most @max online CPUs in @cpus, and return their number. */
++static unsigned int bench_cpus(int *cpus, unsigned int max)
++{
++	unsigned int n = 0;
++	int cpu;
++
++	for_each_online_cpu(cpu) {
++		if (n == max)
++			break;
++		cpus[n++] = cpu;
++	}
++	return n;
++}
++
++static void bench_stop(struct bench_thread *t, unsigned int n)
++{
++	unsigned int i;
++
++	for (i = 0; i < n; i++)
++		kthread_stop_put(t[i].task);
++}
++
++/*
++ * Start a thread on each of the @n CPUs of @cpus, waiting for the start
++ * signal. On failure, cancel and join the threads already started.
++ */
++static int bench_start(struct bench_shared *sh, struct bench_thread *t, const int *cpus,
++		       unsigned int n)
++{
++	unsigned int i;
++
++	for (i = 0; i < n; i++) {
++		t[i].sh = sh;
++		t[i].task = kthread_create_on_cpu(sh->pin_period != UINT_MAX ? bench_churn_fn :
++						  sh->lifecycle ? bench_lifecycle_fn :
++						  bench_update_fn, &t[i], cpus[i], "hpcc_bench/%u");
++		if (IS_ERR(t[i].task)) {
++			int ret = PTR_ERR(t[i].task);
++
++			WRITE_ONCE(sh->stop, true);
++			/* Pairs with bench_wait_go(): the threads see stop with go. */
++			smp_store_release(&sh->go, true);
++			bench_stop(t, i);
++			return ret;
++		}
++		get_task_struct(t[i].task);
++		wake_up_process(t[i].task);
++	}
++	while (atomic_read(&sh->ready) < n)
++		usleep_range(1000, 2000);
++	return 0;
++}
++
++enum bench_mode { BENCH_SHARED, BENCH_PRIVATE, BENCH_MM, BENCH_SINGLE };
++static const char * const mode_name[] = { "shared", "private", "mm", "single" };
++
++/*
++ * BENCH_SHARED: all threads update one counter.
++ * BENCH_PRIVATE: each thread updates its own counter (a separate mm).
++ * BENCH_MM: blocks of n / LIFECYCLE_NR threads each update one counter of
++ * one mm. Its counters share the cache lines of their tree items, and
++ * CPUs sharing an item are strided, so each line is updated for every
++ * counter.
++ * BENCH_SINGLE: each thread owns a lazily initialized counter, like a
++ * single-threaded process, never activated. Its IMPL_PERCPU_COUNTER
++ * comparison is BENCH_PRIVATE.
++ */
++/* Counters @i of bench_update(), @c_stride and @pc_stride bytes apart. */
++#define BENCH_C(i)	((struct percpu_counter_tree *)((char *)c + (i) * c_stride))
++#define BENCH_PC(i)	((struct percpu_counter *)((char *)pc + (i) * pc_stride))
++
++static void bench_update(struct kunit *test, enum bench_mode mode, int wl,
++			 enum bench_impl impl)
++{
++	bool shared = mode == BENCH_SHARED || mode == BENCH_MM;
++	unsigned int n, i, nr_counters, nr_init = 0;
++	struct bench_shared sh = { .wl = wl, .pin_period = UINT_MAX, .impl = impl,
++				   .owner = mode == BENCH_SINGLE };
++	struct percpu_counter_tree *c;
++	struct percpu_counter *pc;
++	struct bench_thread *t;
++	unsigned long ops = 0;
++	unsigned int *perm;
++	size_t c_stride, pc_stride;
++	void *c_mem, *pc_mem;
++	u64 t0, t1;
++	int *cpus;
++	int ret;
++
++	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
++	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
++	perm = kunit_kcalloc(test, nr_cpu_ids, sizeof(*perm), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, cpus);
++	KUNIT_ASSERT_NOT_NULL(test, t);
++	KUNIT_ASSERT_NOT_NULL(test, perm);
++	/*
++	 * Set up the counters for the CPUs online now, before taking
++	 * cpus_read_lock(), which a failed assertion would leave held. The
++	 * threads then run on the CPUs online under the lock, at most as many.
++	 */
++	n = num_online_cpus();
++	nr_counters = mode == BENCH_SHARED ? 1 : mode == BENCH_MM ? LIFECYCLE_NR : n;
++	/*
++	 * Each private counter is written by its own thread: give each its
++	 * own cache line, as the RSS counters of separate mms, to avoid false
++	 * sharing. The counters of one mm stay packed, as in mm_struct.
++	 */
++	c_stride = shared ? sizeof(*c) : ALIGN(sizeof(*c), SMP_CACHE_BYTES);
++	pc_stride = shared ? sizeof(*pc) : ALIGN(sizeof(*pc), SMP_CACHE_BYTES);
++	c_mem = kunit_kzalloc(test, nr_counters * c_stride + SMP_CACHE_BYTES, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, c_mem);
++	c = PTR_ALIGN(c_mem, SMP_CACHE_BYTES);
++	pc_mem = kunit_kzalloc(test, nr_counters * pc_stride + SMP_CACHE_BYTES, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, pc_mem);
++	pc = PTR_ALIGN(pc_mem, SMP_CACHE_BYTES);
++	/*
++	 * Each private counter stands for a separate mm: initialize them
++	 * separately so they do not share the cache lines of their tree items.
++	 */
++	if (impl == IMPL_PERCPU_COUNTER && mode == BENCH_MM) {
++		if (!percpu_counter_init_many(pc, 0, GFP_KERNEL, nr_counters))
++			nr_init = nr_counters;
++	} else if (impl == IMPL_PERCPU_COUNTER) {
++		for (; nr_init < nr_counters; nr_init++)
++			if (percpu_counter_init(BENCH_PC(nr_init), 0, GFP_KERNEL))
++				break;
++	} else if (mode == BENCH_MM) {
++		if (!percpu_counter_tree_init_many(c, nr_counters, batch, GFP_KERNEL))
++			nr_init = nr_counters;
++	} else {
++		for (; nr_init < nr_counters; nr_init++) {
++			if (mode == BENCH_SINGLE ?
++			    percpu_counter_tree_init_many_lazy(BENCH_C(nr_init), 1, batch) :
++			    percpu_counter_tree_init(BENCH_C(nr_init), batch, GFP_KERNEL))
++				break;
++		}
++	}
++	if (nr_init < nr_counters) {
++		KUNIT_FAIL(test, "cannot initialize %u counters", nr_counters);
++		goto destroy;
++	}
++	cpus_read_lock();
++	n = bench_cpus(cpus, n);
++	/* Random placement of the private counters. */
++	for (i = 0; i < n; i++)
++		perm[i] = mode == BENCH_SHARED ? 0 : mode == BENCH_MM ? i * LIFECYCLE_NR / n : i;
++	for (i = n - 1; !shared && i > 0; i--)
++		swap(perm[i], perm[get_random_u32_below(i + 1)]);
++	for (i = 0; i < n; i++) {
++		t[i].c = BENCH_C(perm[i]);
++		t[i].pc = BENCH_PC(perm[i]);
++		t[i].seed = get_random_u32() | 1;
++	}
++	ret = bench_start(&sh, t, cpus, n);
++	if (ret) {
++		cpus_read_unlock();
++		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
++		goto destroy;
++	}
++	t0 = ktime_get_ns();
++	WRITE_ONCE(sh.go, true);
++	msleep(BENCH_MS);
++	WRITE_ONCE(sh.stop, true);
++	t1 = ktime_get_ns();
++	bench_stop(t, n);
++	cpus_read_unlock();
++	for (i = 0; i < n; i++)
++		ops += t[i].ops;
++	for (i = 0; impl == IMPL_TREE && i < nr_counters; i++)
++		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_check_residuals(BENCH_C(i)));
++	kunit_info(test, "update %-8s %-14s %3u thr %10llu ns/op/thr %s\n",
++		   mode_name[mode], wname[wl], n,
++		   ops ? div64_ul((t1 - t0) * n, ops) : 0, impl_name[impl]);
++destroy:
++	if (impl == IMPL_PERCPU_COUNTER && mode == BENCH_MM) {
++		if (nr_init)
++			percpu_counter_destroy_many(pc, nr_counters);
++	} else if (impl == IMPL_PERCPU_COUNTER) {
++		for (i = 0; i < nr_init; i++)
++			percpu_counter_destroy(BENCH_PC(i));
++	} else if (mode == BENCH_MM) {
++		if (nr_init)
++			percpu_counter_tree_destroy_many(c, nr_counters);
++	} else {
++		for (i = 0; i < nr_init; i++)
++			percpu_counter_tree_destroy(BENCH_C(i));
++	}
++	kunit_kfree(test, pc_mem);
++	kunit_kfree(test, c_mem);
++	kunit_kfree(test, perm);
++	bench_kvfree_now(test, t);
++	kunit_kfree(test, cpus);
++}
++
++static void bench_lifecycle(struct kunit *test, bool all, enum bench_impl impl, bool lazy)
++{
++	struct bench_shared sh = { .lifecycle = true, .pin_period = UINT_MAX,
++				   .impl = impl, .lazy = lazy };
++	unsigned int n, i;
++	struct bench_thread *t;
++	unsigned long ops = 0;
++	u64 ns = 0;
++	int *cpus;
++	int ret;
++
++	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
++	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
++	KUNIT_ASSERT_NOT_NULL(test, cpus);
++	KUNIT_ASSERT_NOT_NULL(test, t);
++	cpus_read_lock();
++	n = bench_cpus(cpus, all ? num_online_cpus() : 1);
++	ret = bench_start(&sh, t, cpus, n);
++	if (ret) {
++		cpus_read_unlock();
++		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
++		goto free;
++	}
++	WRITE_ONCE(sh.go, true);
++	bench_stop(t, n);
++	cpus_read_unlock();
++	for (i = 0; i < n; i++) {
++		ops += t[i].ops;
++		ns += t[i].ns;
++	}
++	KUNIT_EXPECT_EQ(test, ops, (unsigned long)n * LIFECYCLE_ITER);
++	kunit_info(test, "lifecycle init_many%s(%d)+destroy_many %3u thr %10llu ns/op %s\n",
++		   lazy ? "_lazy" : "", LIFECYCLE_NR, n, ops ? div64_ul(ns, ops) : 0,
++		   impl_name[impl]);
++free:
++	bench_kvfree_now(test, t);
++	kunit_kfree(test, cpus);
++}
++
++static void bench_churn(struct kunit *test, bool all, unsigned int pin_period,
++			enum bench_impl impl)
++{
++	struct bench_shared sh = { .pin_period = pin_period, .impl = impl };
++	unsigned int n, i, j, max_pinned = pin_period ? DIV_ROUND_UP(CHURN_ITER, pin_period) : 0;
++	unsigned long ops = 0, live = 0;
++	unsigned int nr_alloc;
++	struct bench_thread *t;
++	u64 ns = 0;
++	int *cpus;
++	int ret;
++
++	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
++	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
++	KUNIT_ASSERT_NOT_NULL(test, cpus);
++	KUNIT_ASSERT_NOT_NULL(test, t);
++	/* Allocate before taking cpus_read_lock(), as in bench_update(). */
++	nr_alloc = all ? num_online_cpus() : 1;
++	for (i = 0; i < nr_alloc; i++) {
++		t[i].pinned = bench_kvzalloc(test, array_size(max_pinned * LIFECYCLE_NR + 1,
++							      sizeof(*t[i].pinned)));
++		t[i].pinned_pc = bench_kvzalloc(test, array_size(max_pinned * LIFECYCLE_NR + 1,
++								 sizeof(*t[i].pinned_pc)));
++		KUNIT_ASSERT_NOT_NULL(test, t[i].pinned_pc);
++		KUNIT_ASSERT_NOT_NULL(test, t[i].pinned);
++	}
++	cpus_read_lock();
++	n = bench_cpus(cpus, nr_alloc);
++	ret = bench_start(&sh, t, cpus, n);
++	if (ret) {
++		cpus_read_unlock();
++		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
++		goto destroy;
++	}
++	WRITE_ONCE(sh.go, true);
++	bench_stop(t, n);
++	cpus_read_unlock();
++	for (i = 0; i < n; i++) {
++		ops += t[i].ops;
++		ns += t[i].ns;
++		live += t[i].nr_pinned * LIFECYCLE_NR;
++	}
++	KUNIT_EXPECT_EQ(test, ops, (unsigned long)n * CHURN_ITER);
++	kunit_info(test, "churn pin 1/%-4u %3u thr %8llu ns/op live %6lu %s\n",
++		   pin_period, n, ops ? div64_ul(ns, ops) : 0, live, impl_name[impl]);
++destroy:
++	for (i = 0; i < nr_alloc; i++) {
++		for (j = 0; j < t[i].nr_pinned; j++) {
++			if (impl == IMPL_PERCPU_COUNTER)
++				percpu_counter_destroy_many(&t[i].pinned_pc[j * LIFECYCLE_NR],
++							    LIFECYCLE_NR);
++			else
++				percpu_counter_tree_destroy_many(&t[i].pinned[j * LIFECYCLE_NR],
++								 LIFECYCLE_NR);
++		}
++		bench_kvfree_now(test, t[i].pinned_pc);
++		bench_kvfree_now(test, t[i].pinned);
++	}
++	bench_kvfree_now(test, t);
++	kunit_kfree(test, cpus);
++}
++
++static void hpcc_bench(struct kunit *test)
++{
++	static const unsigned int pin_periods[] = { 0, 256, 64, 16, 4 };
++	struct percpu_counter_tree probe;
++	unsigned int p;
++	int wl;
++
++	if (batch < 2 || !is_power_of_2(batch) || batch > PERCPU_COUNTER_TREE_MAX_BATCH)
++		kunit_skip(test, "invalid batch size %u", batch);
++	KUNIT_ASSERT_EQ(test, 0, percpu_counter_tree_init(&probe, batch, GFP_KERNEL));
++	kunit_info(test, "%u CPUs online, nr_cpu_ids %u\n", num_online_cpus(), nr_cpu_ids);
++	kunit_info(test, "%s batch %u, accuracy +-%lu\n", impl_name[IMPL_TREE], batch,
++		   percpu_counter_tree_approximate_accuracy(&probe));
++	kunit_info(test, "%s batch %d, accuracy +-%lu\n", impl_name[IMPL_PERCPU_COUNTER],
++		   percpu_counter_batch, (unsigned long)nr_cpu_ids * (percpu_counter_batch - 1));
++	percpu_counter_tree_destroy(&probe);
++	bench_lifecycle(test, false, IMPL_TREE, false);
++	bench_lifecycle(test, false, IMPL_TREE, true);
++	bench_lifecycle(test, false, IMPL_PERCPU_COUNTER, false);
++	bench_lifecycle(test, true, IMPL_TREE, false);
++	bench_lifecycle(test, true, IMPL_TREE, true);
++	bench_lifecycle(test, true, IMPL_PERCPU_COUNTER, false);
++	for (p = 0; p < ARRAY_SIZE(pin_periods); p++) {
++		bench_churn(test, false, pin_periods[p], IMPL_TREE);
++		bench_churn(test, false, pin_periods[p], IMPL_PERCPU_COUNTER);
++		bench_churn(test, true, pin_periods[p], IMPL_TREE);
++		bench_churn(test, true, pin_periods[p], IMPL_PERCPU_COUNTER);
++	}
++	for (wl = 0; wl < NR_W; wl++) {
++		bench_update(test, BENCH_SHARED, wl, IMPL_TREE);
++		bench_update(test, BENCH_SHARED, wl, IMPL_PERCPU_COUNTER);
++		bench_update(test, BENCH_PRIVATE, wl, IMPL_TREE);
++		bench_update(test, BENCH_PRIVATE, wl, IMPL_PERCPU_COUNTER);
++		bench_update(test, BENCH_MM, wl, IMPL_TREE);
++		bench_update(test, BENCH_MM, wl, IMPL_PERCPU_COUNTER);
++		bench_update(test, BENCH_SINGLE, wl, IMPL_TREE);
++	}
++}
++
++static struct kunit_case hpcc_bench_cases[] = {
++	KUNIT_CASE_SLOW(hpcc_bench),
++	{}
++};
++
++static struct kunit_suite hpcc_bench_suite = {
++	.name = "percpu_counter_tree_bench",
++	.test_cases = hpcc_bench_cases,
++};
++
++kunit_test_suite(hpcc_bench_suite);
++
++MODULE_DESCRIPTION("Benchmark for hierarchical per-CPU counters");
++MODULE_LICENSE("Dual MIT/GPL");
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
 -- 
 2.47.3
 
