@@ -1,52 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793620735;
-	b=Pm6e5QM9rBvuiyA4HrRGwc7T27a8p3LSn7XEdhjUgsx0bnIxzlQL2GJrkYoP27kmgXQo
-	 axX0boQr7drXv/MYrrl8Zh8eM2bRzb4zhvQfYrbjHZj98ABSRExRbf/xeTQ3S0WvuBjXQ
-	 x+3ZkvKl++h0twB6b7rBxrWXZHmulc2VM6j904stTbHgdFLVNIiHKG6Y4ym42aOzix9wY
-	 TDnv2mLJiyhAr5P5X2AhhgPS+QnD9caQEp4/BVRiq1h1wZaP84C5XOx4JkyLKyLsZ7J7k
-	 /RQrF1dqOXQzTDMtEQV9pzOop2AOZbFxFnEBNPuwHVvYm+z6LP5dcdME5untHSdNkog==
+	t=1793620742;
+	b=Xfh8bry6WxwaqtMq0BsdZz/IZBbTFB23/ODqJn9fiDrHHL9UmB5ljdnWkxOk5aA0KLPr
+	 OvP+lvpsU1vjsxn8or4KYgZdSIciQAfiC4DvteZ1ayxV03X9OsBZTAbTuoBKb/jIfd38K
+	 HXWy7ZUr+dBwWD284hWfw0GSIgBED8rHqAhhHmV2sTIc5RW4YUgQ36+bJzHSRZWz2v2ef
+	 uvvXMfEfJVkYW5AzBJ9iHRtq5yzDfwTlXW1NvgPdoeKXypeBpD3fi8VMbq1AbigeAuO7n
+	 IlIIBBDk5XMkNt4Tl99NhA8ysbxHcEtiO1uxKLuz2Xq7BwFoWN3agBtV2T55m8HFdAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793620735;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793620742;
 	h=DMARC-Filter:Received:From:To:Cc:Date:Message-ID:Subject:In-Reply-To:
 	 References:MIME-Version:Content-Type:X-HM-Tid:X-HM-MType:
 	 X-HM-Spam-Status:DKIM-Signature;
-	bh=dvYjBbbapJe16bd9r6oBXI5n6Xf+TxEDchYxe3Ds+r4=;
-	b=F3nQr335zLlCDFeewOuTMnshifd1aCVn5mj7sYU9k9LcUO/L8pkyWQtIS+tRuLzunk01
-	 Knq2HjsFZ68azA2yBdB1vFsZg5JIt4YhKHJcgxk6K/FT767un2s17C/wUAUAkLaZWrLHH
-	 gM2T6cUfIY+MdUx5WFqXOLOzJn3Dq8UGbR/Le/6tcyoQvoatfCZqeCZ3WTUu9PAkL87gA
-	 QvzqAlz3M1kuk/tKopvxUjp3zDQ4WqMqs3HdrFp0KMOgeJUMQmj9euspz7CQqfIfF2jB2
-	 Dh0Dix3NuFN2osaUOPgOHtinMVm6ArEt8CT2uaXa5ouLzg5sdal9fH2T4tzGrvfKK4A==
+	bh=XJunOl+HdrK2e2lzrAVn6OUZs8ZpbUOQbYWWlp8tZB4=;
+	b=p7nV7O5exhdBorMtOaz8m2f7WJVJ12wmE2CPsVgw+ahnjKIlHmaVSo2m3FtrVJtEoSGL
+	 Xt7doLoumkS+m5nzdfLZqG+meW0cQOBvr4nPIZKtPCX26a3vaQl4rWQaD4qQNFjPlNGIr
+	 TSk++j623LdWj9Z8o/jh8+ad1Zax9ZkGyggecX0ykCV198WD8jJNMei1SQ/CkvxJD3Xp0
+	 Yy1EhcGhLvRkidDqNTkjkzZQU7mK/KFJxanHXwipS09HoiaSJBTsDksABDj2H+lqrzh4e
+	 MdluJtr3L9aOSdAlu4s/n01M51Kl9inLK7kO3SZofKnR+R6bpF4ET0mQ2925WAVukqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=stu.pku.edu.cn;
 	spf=pass smtp.mailfrom=stu.pku.edu.cn;
-	dkim=pass header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=Q5iAhEQV;
-	arc=none smtp.remote-ip=45.254.49.198
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+	dkim=pass header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=a9HwFcSe;
+	arc=none smtp.remote-ip=45.254.49.197
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC1E60A5BC6;
-	Mon,  2 Nov 2026 11:58:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBC1E60A5BC6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E003C606DDBD;
+	Mon,  2 Nov 2026 11:58:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E003C606DDBD
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stu.pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=Q5iAhEQV
+	dkim=pass (1024-bit key, unprotected) header.d=stu.pku.edu.cn header.i=@stu.pku.edu.cn header.a=rsa-sha256 header.s=default header.b=a9HwFcSe
 Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa (unknown [1.202.162.49])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 5330b2357;
-	Mon, 2 Nov 2026 19:58:49 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 5330b235a;
+	Mon, 2 Nov 2026 19:58:55 +0800 (GMT+08:00)
 From: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
 To: Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Beau Belgrave <beaub@linux.microsoft.com>, linux-kernel@vger.kernel.org
+ Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org
 Date: Mon, 02 Nov 2026 19:58:37 +0800
-Message-ID: <179362071772.29269.588884594828959818@stu.pku.edu.cn>
-Subject: Re: [PATCH 1/2] tracing/user_events: validate dynamic cpumask size
-In-Reply-To: <179362071771.29269.12274333629550524596@stu.pku.edu.cn>
-References: <179362071771.29269.15129360535376085397@stu.pku.edu.cn>
- <179362071771.29269.12274333629550524596@stu.pku.edu.cn>
+Message-ID: <179362071774.29269.10253440258938666471@stu.pku.edu.cn>
+Subject: Re: [PATCH] tracing: fprobe: stop when the address array is full
+In-Reply-To: <179362071771.29269.16527354623976202893@stu.pku.edu.cn>
+References: <179362071771.29269.16527354623976202893@stu.pku.edu.cn>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -56,51 +55,55 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4804767349960394518=="
-X-HM-Tid: 0aa19c205e4103a2kunmab045f0fe84f6
+Content-Type: multipart/mixed; boundary="===============4240354128132478706=="
+X-HM-Tid: 0aa19c20763d03a2kunmab045f0fe8502
 X-HM-MType: 10
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVlCQx9OVk1LT0lNGR0ZSx0eT1YeHw
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVlDSRlKVhkeGkwaGkhKS0NLT1YeHw
 	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKVUlLSVVKTUlVT0JZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0
 	xVSktLVUtZBg++
 DKIM-Signature: a=rsa-sha256;
-	b=Q5iAhEQVsjwKg2XHh9TDvk9fMuMvJKW1EOUlbxgj06xK3tM+/Hx2mWKhk2b9/U5H2JZSCfpg0TslIapJ4+mx6duE0fJk3dHTiwgJDxTBjS6hbg5grGUWI0mc+/Xros5RhRLngCAayrKbnuR0JVnYfmzBcgLL0+CKtTp7eW4E0NQ=; s=default; c=relaxed/relaxed; d=stu.pku.edu.cn; v=1;
-	bh=dvYjBbbapJe16bd9r6oBXI5n6Xf+TxEDchYxe3Ds+r4=;
+	b=a9HwFcSePtVJkf7g5/sC3WtyH4++0P8pMINaRcAt+qV9Yp9nlilMvuOCXx3YluGx6zzPgXUd7P2SuXHve6s6TIZgYg/HWKTZu2FrnA27Rm4Xb7Qg0dAAo0ndZMQRyeNUKxPBOl1spVcscRpIdavBKFSGh3xV3rolSnrZhlGn0jQ=; s=default; c=relaxed/relaxed; d=stu.pku.edu.cn; v=1;
+	bh=XJunOl+HdrK2e2lzrAVn6OUZs8ZpbUOQbYWWlp8tZB4=;
 	h=date:mime-version:subject:message-id:from;
 
---===============4804767349960394518==
+--===============4240354128132478706==
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-I found an out-of-bounds read in user_events filtering when a dynamic cpumask
-is shorter than cpumask_size(). I reproduced it on two independent boots of
-an unmodified Linux v7.3 KASAN kernel. Both runs reported:
+I found an out-of-bounds write in the fprobe filter address collection path.
+I reproduced it on two independent boots of an unmodified Linux v7.3 KASAN
+kernel. Both runs first reported:
 
-  BUG: KASAN: slab-use-after-free in filter_match_preds
-  Read of size 8
-  filter_match_preds
-  trace_event_buffer_commit
-  user_event_ftrace
-  user_events_write_core
+  BUG: KASAN: slab-out-of-bounds in filter_match_callback+0x276/0x2a0
+  Write of size 8
+  filter_match_callback
+  module_kallsyms_on_each_symbol
+  get_ips_from_filter
+  register_fprobe
 
-user_event_validate() only checks that the encoded dynamic location lies
-inside the event. It accepts a one-byte __data_loc cpumask_t field, while
-filter_pred_cpumask() and filter_pred_cpumask_cpu() consume a complete
-cpumask. The reproducer places the one-byte location at the end of the
-temporary trace-event page, so the cpumask load leaves the event buffer.
+register_fprobe() first counts matching symbols and allocates address and
+module arrays of that size. If a matching module is loaded before the fill
+pass, the vmlinux walk can fill the arrays. get_ips_from_filter() ignores the
+positive stop result and starts the module walk with index equal to size, so
+the first module match writes past both arrays.
 
-Build and run the attached reproducer as root:
+The attached reproducer uses a small control module to call the exported
+register_fprobe() API while another thread loads a module containing one more
+matching symbol:
 
-  cc -O2 -static repro.c -o repro
-  ./repro
+  make -C /lib/modules/$(uname -r)/build M=$PWD modules
+  cc -O2 -pthread repro.c -o repro
+  ./repro ./fprobe_control_module.ko ./fprobe_race_module.ko 100
 
-Both runs used copies of the default syzkaller ext4 image.
+It requires root, CONFIG_FPROBE=y, and CONFIG_MODULES=y. Both runs used copies
+of the default syzkaller ext4 image.
 
-The attached patch records when a dynamic field is a cpumask and rejects a
-location shorter than cpumask_size(). The patched kernel rejects the short
-event and accepts the full-size control event without a KASAN report.
+The attached patch returns when the vmlinux walk reports that the address
+array is full. The patched kernel completed all 100 timing offsets without a
+KASAN report.
 
 The patch is in the parent message. The reproducer source(s), KASAN
 report(s), and kernel config are attached.
@@ -108,7 +111,7 @@ report(s), and kernel config are attached.
 Regards,
 Yifan Zhang
 
---===============4804767349960394518==
+--===============4240354128132478706==
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="repro.c"
@@ -116,538 +119,925 @@ MIME-Version: 1.0
 
 // SPDX-License-Identifier: GPL-2.0
 #define _GNU_SOURCE
-
 #include <errno.h>
 #include <fcntl.h>
-#include <linux/user_events.h>
+#include <linux/memfd.h>
+#include <pthread.h>
 #include <sched.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ioctl.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <sys/types.h>
+#include <sys/syscall.h>
+#include <time.h>
 #include <unistd.h>
 
-#define TRACEFS "/sys/kernel/tracing"
-#define DATA_FILE TRACEFS "/user_events_data"
-#define EVENT_NAME "ue_short_cpumask"
-#define EVENT_DIR TRACEFS "/events/user_events/" EVENT_NAME
+#ifdef SELF_CONTAINED
+/* The generated standalone reproducer inserts both .ko byte arrays here. */
+EMBEDDED_MODULE_ARRAYS
 
-static void die(const char *what)
+static int module_memfd(const char *name, const unsigned char *data, size_t l=
+en)
 {
-	perror(what);
-	exit(1);
-}
-
-static void write_text(const char *path, const char *text)
-{
-	int fd =3D open(path, O_WRONLY | O_CLOEXEC);
-	ssize_t len =3D strlen(text);
+	int fd =3D syscall(SYS_memfd_create, name, MFD_CLOEXEC);
+	size_t done =3D 0;
 
 	if (fd < 0)
-		die(path);
-	if (write(fd, text, len) !=3D len)
-		die("write");
-	close(fd);
-}
-
-int main(int argc, char **argv)
-{
-	static const char desc[] =3D EVENT_NAME " __data_loc cpumask_t mask";
-	/*
-	 * With event filtering enabled, tracing first formats the event in its
-	 * per-CPU one-page temporary buffer.  The ring-buffer header consumes 8
-	 * bytes, leaving 4088 bytes for the trace event on x86-64.
-	 */
-	enum { EVENT_LEN =3D 4088, TRACE_ENTRY_LEN =3D 8, DATA_LEN =3D EVENT_LEN - T=
-RACE_ENTRY_LEN };
-	struct user_reg reg =3D {0};
-	uint32_t enable_word =3D 0;
-	uint8_t *record;
-	uint32_t loc;
-	size_t payload_len, write_len;
-	char path[256];
-	int fd, first_cpu, last_cpu, cpu;
-	cpu_set_t set;
-	int valid =3D argc > 2 && !strcmp(argv[2], "valid");
-	long online =3D sysconf(_SC_NPROCESSORS_ONLN);
-
-	if (geteuid() !=3D 0) {
-		fprintf(stderr, "run as root\n");
-		return 1;
-	}
-
-	if (online < 1 || online > CPU_SETSIZE)
-		online =3D 1;
-	first_cpu =3D argc > 1 ? atoi(argv[1]) : 0;
-	last_cpu =3D argc > 1 ? first_cpu : (int)online - 1;
-
-	(void)mkdir(TRACEFS, 0755);
-	if (access(DATA_FILE, F_OK) &&
-	    mount("tracefs", TRACEFS, "tracefs", 0, NULL) && errno !=3D EBUSY)
-		die("mount tracefs");
-
-	fd =3D open(DATA_FILE, O_RDWR | O_CLOEXEC);
-	if (fd < 0)
-		die(DATA_FILE);
-
-	reg.size =3D sizeof(reg);
-	reg.enable_bit =3D 0;
-	reg.enable_size =3D sizeof(enable_word);
-	reg.enable_addr =3D (uintptr_t)&enable_word;
-	reg.name_args =3D (uintptr_t)desc;
-	if (ioctl(fd, DIAG_IOCSREG, &reg))
-		die("DIAG_IOCSREG");
-
-	snprintf(path, sizeof(path), EVENT_DIR "/filter");
-	write_text(path, "mask =3D=3D CPUS{0}");
-	snprintf(path, sizeof(path), EVENT_DIR "/enable");
-	write_text(path, "1");
-
-	record =3D calloc(1, sizeof(uint32_t) + DATA_LEN);
-	if (!record)
-		die("calloc");
-	memcpy(record, &reg.write_index, sizeof(reg.write_index));
-
-	/*
-	 * The invalid form supplies one byte at the very end of the trace event.
-	 * "valid" supplies a conventional eight-byte cpumask in a small event and
-	 * is useful when regression-testing a fix on the four-vCPU test guest.
-	 */
-	loc =3D valid ? (8U << 16) | 16U :
-		      (1U << 16) | (EVENT_LEN - 1);
-	memcpy(record + sizeof(uint32_t), &loc, sizeof(loc));
-	payload_len =3D valid ? 16 : DATA_LEN;
-	record[sizeof(uint32_t) + (valid ? 8 : DATA_LEN - 1)] =3D 1;
-	write_len =3D sizeof(uint32_t) + payload_len;
-
-	for (cpu =3D first_cpu; cpu <=3D last_cpu; cpu++) {
-		ssize_t ret;
-
-		CPU_ZERO(&set);
-		CPU_SET(cpu, &set);
-		if (sched_setaffinity(0, sizeof(set), &set)) {
-			fprintf(stderr, "CPU%d unavailable: %s\n", cpu,
-				strerror(errno));
-			continue;
+		return -1;
+	while (done < len) {
+		ssize_t ret =3D write(fd, data + done, len - done);
+		if (ret <=3D 0) {
+			close(fd);
+			return -1;
 		}
-
-		fprintf(stderr, "CPU%d index=3D%u, writing %zu bytes (%s)\n",
-			cpu, reg.write_index, write_len,
-			valid ? "valid" : "short cpumask");
-		ret =3D write(fd, record, write_len);
-		if (ret < 0)
-			fprintf(stderr, "CPU%d rejected: %s\n", cpu,
-				strerror(errno));
-		else
-			fprintf(stderr, "CPU%d accepted %zd bytes\n", cpu, ret);
+		done +=3D ret;
 	}
+	if (lseek(fd, 0, SEEK_SET) < 0) {
+		close(fd);
+		return -1;
+	}
+	return fd;
+}
+#endif
 
-	free(record);
+#ifndef SYS_finit_module
+#define SYS_finit_module 313
+#endif
+#ifndef SYS_delete_module
+#define SYS_delete_module 176
+#endif
+
+static const char *tracefs =3D "/sys/kernel/tracing";
+static const char *module_name =3D "fprobe_race_module";
+static const char *control_name =3D "fprobe_control_module";
+static atomic_int go;
+static atomic_ullong race_begin_ns;
+static atomic_ullong load_start_ns;
+static atomic_ullong load_done_ns;
+static int module_fd;
+static int control_fd;
+static uint64_t delay_ns;
+
+static uint64_t nsec_now(void)
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (uint64_t)ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+}
+
+static void pin_cpu(int cpu)
+{
+	cpu_set_t set;
+	CPU_ZERO(&set);
+	CPU_SET(cpu, &set);
+	if (sched_setaffinity(0, sizeof(set), &set))
+		perror("sched_setaffinity");
+}
+
+static int write_dynamic(const char *cmd)
+{
+	char path[256];
+	ssize_t len =3D strlen(cmd), ret;
+	int fd;
+
+	snprintf(path, sizeof(path), "%s/dynamic_events", tracefs);
+	fd =3D open(path, O_WRONLY | O_CLOEXEC);
+	if (fd < 0)
+		return -errno;
+	ret =3D write(fd, cmd, len);
+	if (ret !=3D len) {
+		int err =3D ret < 0 ? errno : EIO;
+		close(fd);
+		return -err;
+	}
 	close(fd);
 	return 0;
 }
 
---===============4804767349960394518==
+static int write_trigger(void)
+{
+	const char *path =3D "/sys/module/fprobe_control_module/parameters/trigger";
+	int fd =3D open(path, O_WRONLY | O_CLOEXEC);
+	ssize_t ret;
+
+	if (fd < 0)
+		return -errno;
+	ret =3D write(fd, "1\n", 2);
+	close(fd);
+	return ret =3D=3D 2 ? 0 : -(ret < 0 ? errno : EIO);
+}
+
+static void remove_event(void)
+{
+	int ret =3D write_dynamic("-:fprobes/fprace\n");
+	if (ret && ret !=3D -ENOENT)
+		fprintf(stderr, "remove event: %s\n", strerror(-ret));
+}
+
+static void unload_module(void)
+{
+	if (syscall(SYS_delete_module, module_name, O_NONBLOCK) && errno !=3D ENOENT)
+		fprintf(stderr, "delete_module: %s\n", strerror(errno));
+}
+
+static void unload_control(void)
+{
+	if (syscall(SYS_delete_module, control_name, O_NONBLOCK) && errno !=3D ENOEN=
+T)
+		fprintf(stderr, "delete control module: %s\n", strerror(errno));
+}
+
+static void *loader(void *unused)
+{
+	struct timespec ts;
+	int ret;
+
+	(void)unused;
+	pin_cpu(1);
+	while (!atomic_load_explicit(&go, memory_order_acquire))
+		sched_yield();
+	ts.tv_sec =3D delay_ns / 1000000000ULL;
+	ts.tv_nsec =3D delay_ns % 1000000000ULL;
+	clock_nanosleep(CLOCK_MONOTONIC, 0, &ts, NULL);
+	atomic_store_explicit(&load_start_ns,
+			      nsec_now() - atomic_load_explicit(&race_begin_ns,
+								memory_order_relaxed),
+			      memory_order_relaxed);
+	ret =3D syscall(SYS_finit_module, module_fd, "", 0);
+	atomic_store_explicit(&load_done_ns,
+			      nsec_now() - atomic_load_explicit(&race_begin_ns,
+								memory_order_relaxed),
+			      memory_order_relaxed);
+	if (ret && errno !=3D EEXIST)
+		fprintf(stderr, "finit_module: %s\n", strerror(errno));
+	return NULL;
+}
+
+static uint64_t baseline(void)
+{
+	uint64_t begin, elapsed;
+	int ret;
+
+	unload_module();
+	begin =3D nsec_now();
+	ret =3D write_trigger();
+	elapsed =3D nsec_now() - begin;
+	if (ret)
+		fprintf(stderr, "baseline create: %s\n", strerror(-ret));
+	return elapsed;
+}
+
+int main(int argc, char **argv)
+{
+	uint64_t base;
+	int loops =3D 200;
+
+#ifndef SELF_CONTAINED
+	if (argc < 3) {
+		fprintf(stderr, "usage: %s fprobe_control_module.ko fprobe_race_module.ko [=
+loops]\n", argv[0]);
+		return 2;
+	}
+	if (argc > 3)
+		loops =3D atoi(argv[3]);
+#else
+	if (argc > 1)
+		loops =3D atoi(argv[1]);
+#endif
+	if (mkdir(tracefs, 0755) && errno !=3D EEXIST)
+		perror("mkdir tracefs");
+	if (mount("tracefs", tracefs, "tracefs", 0, NULL) && errno !=3D EBUSY) {
+		perror("mount tracefs");
+		return 1;
+	}
+#ifdef SELF_CONTAINED
+	control_fd =3D module_memfd("fprobe_control_module.ko",
+				  fprobe_control_module_ko,
+				  fprobe_control_module_ko_len);
+	module_fd =3D module_memfd("fprobe_race_module.ko",
+			       fprobe_race_module_ko,
+			       fprobe_race_module_ko_len);
+#else
+	control_fd =3D open(argv[1], O_RDONLY | O_CLOEXEC);
+	module_fd =3D open(argv[2], O_RDONLY | O_CLOEXEC);
+#endif
+	if (control_fd < 0) {
+		perror("open control module");
+		return 1;
+	}
+	if (module_fd < 0) {
+		perror("open target module");
+		return 1;
+	}
+	unload_control();
+	if (syscall(SYS_finit_module, control_fd, "", 0)) {
+		perror("load control module");
+		return 1;
+	}
+	pin_cpu(0);
+	base =3D baseline();
+	printf("baseline registration: %.3f ms\n", base / 1000000.0);
+
+	for (int i =3D 0; i < loops; i++) {
+		pthread_t thread;
+		uint64_t begin;
+		int ret;
+
+		unload_module();
+		/* Sweep the final count/fill and registration interval. */
+		delay_ns =3D base * (70 + (i % 30)) / 100;
+		atomic_store_explicit(&go, 0, memory_order_relaxed);
+		atomic_store_explicit(&load_start_ns, 0, memory_order_relaxed);
+		atomic_store_explicit(&load_done_ns, 0, memory_order_relaxed);
+		if (pthread_create(&thread, NULL, loader, NULL)) {
+			perror("pthread_create");
+			return 1;
+		}
+		begin =3D nsec_now();
+		atomic_store_explicit(&race_begin_ns, begin, memory_order_relaxed);
+		atomic_store_explicit(&go, 1, memory_order_release);
+		ret =3D write_trigger();
+		pthread_join(thread, NULL);
+		printf("attempt %d delay %.3f ms create=3D%d elapsed %.3f ms load %.3f..%.3=
+f ms\n",
+		       i, delay_ns / 1000000.0, ret,
+		       (nsec_now() - begin) / 1000000.0,
+		       atomic_load_explicit(&load_start_ns, memory_order_relaxed) / 1000000=
+.0,
+		       atomic_load_explicit(&load_done_ns, memory_order_relaxed) / 1000000.=
+0);
+		unload_module();
+		usleep(1000);
+	}
+	close(module_fd);
+	close(control_fd);
+	unload_control();
+	return 0;
+}
+
+--===============4240354128132478706==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="fprobe_control_module.c"
+MIME-Version: 1.0
+
+// SPDX-License-Identifier: GPL-2.0
+#include <linux/fprobe.h>
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+
+static int noop_entry(struct fprobe *fp, unsigned long entry_ip,
+		      unsigned long ret_ip, struct ftrace_regs *regs,
+		      void *entry_data)
+{
+	return 0;
+}
+
+static struct fprobe race_fp = {
+	.entry_handler = noop_entry,
+};
+
+static int set_trigger(const char *val, const struct kernel_param *kp)
+{
+	bool trigger;
+	int ret;
+
+	if (kstrtobool(val, &trigger) || !trigger)
+		return -EINVAL;
+	ret = register_fprobe(&race_fp, "schedule*", NULL);
+	if (!ret)
+		unregister_fprobe(&race_fp);
+	return ret;
+}
+
+static const struct kernel_param_ops trigger_ops = {
+	.set = set_trigger,
+};
+
+module_param_cb(trigger, &trigger_ops, NULL, 0200);
+
+static int __init fprobe_control_init(void)
+{
+	return 0;
+}
+
+static void __exit fprobe_control_exit(void)
+{
+}
+
+module_init(fprobe_control_init);
+module_exit(fprobe_control_exit);
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("fprobe count/fill race control module");
+
+--===============4240354128132478706==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="fprobe_race_module.c"
+MIME-Version: 1.0
+
+// SPDX-License-Identifier: GPL-2.0
+#include <linux/compiler.h>
+#include <linux/init.h>
+#include <linux/module.h>
+
+/*
+ * The fprobe reproducer uses a filter that also matches one or more
+ * ftraceable vmlinux symbols.  Loading this module between the count and
+ * fill passes adds one more matching ftrace location.
+ */
+void schedule_zzfp_target(void);
+
+noinline void schedule_zzfp_target(void)
+{
+	barrier();
+}
+
+static int __init fprobe_race_module_init(void)
+{
+	schedule_zzfp_target();
+	return 0;
+}
+
+static void __exit fprobe_race_module_exit(void)
+{
+}
+
+module_init(fprobe_race_module_init);
+module_exit(fprobe_race_module_exit);
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("fprobe filter count/fill race reproducer module");
+
+--===============4240354128132478706==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="Makefile"
+MIME-Version: 1.0
+
+obj-m += fprobe_race_module.o
+obj-m += fprobe_control_module.o
+
+--===============4240354128132478706==
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="kasan-run1.txt"
 MIME-Version: 1.0
 
-[  115.639269] BUG: KASAN: slab-use-after-free in filter_match_preds+0x24e5/0=
-x3080
-[  115.639371] Read of size 8 at addr ff1100000cc9cfff by task repro/433
-[  115.639381]=20
-[  115.639393] CPU: 2 UID: 0 PID: 433 Comm: repro Not tainted 7.3.0 #1 PREEMP=
-T(lazy)=20
-[  115.639410] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+[  308.828706] BUG: KASAN: slab-out-of-bounds in filter_match_callback+0x276/=
+0x2a0
+[  308.828750] Write of size 8 at addr ff110000126c5f80 by task repro_fprobe_=
+fi/678
+[  308.828761]=20
+[  308.828811] CPU: 0 UID: 0 PID: 678 Comm: repro_fprobe_fi Tainted: G       =
+    O        7.3.0 #1 PREEMPT(la
+** replaying previous printk message **
+[  308.828811] CPU: 0 UID: 0 PID: 678 Comm: repro_fprobe_fi Tainted: G       =
+    O        7.3.0 #1 PREEMPT(lazy)=20
+[  308.828836] Tainted: [O]=3DOOT_MODULE
+[  308.828841] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
 ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  115.639423] Call Trace:
-[  115.639435]  <TASK>
-[  115.639440]  dump_stack_lvl+0x7b/0xa0
-[  115.639509]  print_report+0xd0/0x630
-[  115.639549]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[  115.639577]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.639618]  ? filter_match_preds+0x24e5/0x3080
-[  115.639638]  kasan_report+0xce/0x100
-[  115.639656]  ? filter_match_preds+0x24e5/0x3080
-[  115.639680]  kasan_check_range+0x105/0x1b0
-[  115.639700]  filter_match_preds+0x24e5/0x3080
-[  115.639727]  ? ring_buffer_event_data+0xc9/0x120
-[  115.639756]  trace_event_buffer_commit+0x6ad/0x9f0
-[  115.639785]  user_event_ftrace+0x1c2/0x450
-[  115.639814]  ? __pfx_user_event_ftrace+0x10/0x10
-[  115.639833]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.639849]  ? fault_in_readable+0x121/0x180
-[  115.639888]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.639906]  user_events_write_core.isra.0+0x3b6/0x560
-[  115.639931]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.639947]  ? __pfx_user_events_write_core.isra.0+0x10/0x10
-[  115.639969]  ? __entry_text_end+0x1020f5/0x1020f9
-[  115.639990]  ? kill_fasync+0x21/0x220
-[  115.640029]  user_events_write+0x11b/0x190
-[  115.640050]  ? __pfx_user_events_write+0x10/0x10
-[  115.640071]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640088]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640105]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640122]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640137]  ? security_file_permission+0x40/0xe0
-[  115.640197]  vfs_write+0x26c/0xd00
-[  115.640214]  ? __pfx_user_events_write+0x10/0x10
-[  115.640235]  ? __pfx_vfs_write+0x10/0x10
-[  115.640251]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640267]  ? fdget_pos+0x1c1/0x520
-[  115.640288]  ksys_write+0x114/0x200
-[  115.640300]  ? __pfx_ksys_write+0x10/0x10
-[  115.640314]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  115.640329]  ? do_user_addr_fault+0x391/0xb10
-[  115.640367]  do_syscall_64+0xdd/0x4a0
-[  115.640387]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[  115.640401] RIP: 0033:0x41aad4
-[  115.640425] Code: 89 02 48 c7 c0 ff ff ff ff eb bd 66 2e 0f 1f 84 00 00 00=
- 00 00 90 f3 0f 1e fa 80 3d 8d 85 09 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d=
- 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
-[  115.640438] RSP: 002b:00007fff79e6f0a8 EFLAGS: 00000202 ORIG_RAX: 00000000=
+[  308.828862] Call Trace:
+[  308.828887]  <TASK>
+[  308.828895]  dump_stack_lvl+0x7b/0xa0
+[  308.828913]  print_report+0xd0/0x630
+[  308.828933]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[  308.828956]  ? filter_match_callback+0x276/0x2a0
+[  308.828977]  kasan_report+0xce/0x100
+[  308.828995]  ? filter_match_callback+0x276/0x2a0
+[  308.829018]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[  308.829034]  filter_match_callback+0x276/0x2a0
+[  308.829057]  module_kallsyms_on_each_symbol+0x208/0x3a0
+[  308.829073]  ? __pfx_filter_match_callback+0x10/0x10
+[  308.829097]  get_ips_from_filter+0xe3/0x160
+[  308.829118]  ? __pfx_get_ips_from_filter+0x10/0x10
+[  308.829140]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.829157]  ? __kmalloc_noprof+0x1e9/0x510
+[  308.829170]  ? register_fprobe+0x9f/0x1c0
+[  308.829193]  register_fprobe+0xc5/0x1c0
+[  308.829216]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[  308.829233]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[  308.829250]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.829265]  ? param_check_unsafe+0x5d/0x120
+[  308.829283]  param_attr_store+0x18f/0x2e0
+[  308.829303]  ? __pfx_param_attr_store+0x10/0x10
+[  308.829322]  module_attr_store+0x5d/0x90
+[  308.829338]  ? __pfx_module_attr_store+0x10/0x10
+[  308.829354]  sysfs_kf_write+0x1d1/0x270
+[  308.829376]  kernfs_fop_write_iter+0x3af/0x560
+[  308.829393]  ? __pfx_sysfs_kf_write+0x10/0x10
+[  308.829414]  vfs_write+0x65e/0xd00
+[  308.829428]  ? __pfx_kernfs_fop_write_iter+0x10/0x10
+[  308.829446]  ? __pfx_vfs_write+0x10/0x10
+[  308.829459]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.829484]  ? __pfx_mutex_lock+0x10/0x10
+[  308.829499]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.829514]  ? fdget_pos+0x1c1/0x520
+[  308.829532]  ksys_write+0x114/0x200
+[  308.829546]  ? __pfx_ksys_write+0x10/0x10
+[  308.829560]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.829575]  ? restore_fpregs_from_fpstate+0x55/0x100
+[  308.829598]  do_syscall_64+0xdd/0x4a0
+[  308.829614]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  308.829629] RIP: 0033:0x4205dd
+[  308.829647] Code: e5 48 83 ec 20 48 89 55 e8 48 89 75 f0 89 7d f8 e8 c8 fb=
+ 02 00 48 8b 55 e8 48 8b 75 f0 41 89 c0 8b 7d f8 b8 01 00 00 00 0f 05 <48> 3d=
+ 00 f0 ff ff 77 33 44 89 c7 48 89 45 f8 e8 1f fc 02 00 48 8b
+[  308.829661] RSP: 002b:00007ffceb232fd0 EFLAGS: 00000293 ORIG_RAX: 00000000=
 00000001
-[  115.640462] RAX: ffffffffffffffda RBX: 000000000cc9b900 RCX: 000000000041a=
-ad4
-[  115.640471] RDX: 0000000000000ff4 RSI: 000000000cc9b900 RDI: 0000000000000=
-003
-[  115.640479] RBP: 0000000000000003 R08: 000000000000001c R09: 0000000000000=
+[  308.829689] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000420=
+5dd
+[  308.829705] RDX: 0000000000000002 RSI: 000000000049a07f RDI: 0000000000000=
+005
+[  308.829714] RBP: 00007ffceb232ff0 R08: 0000000000000000 R09: 00007f93f977d=
 000
-[  115.640487] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000=
-000
-[  115.640497] R13: 00007fff79e6f328 R14: 00000000004ad868 R15: 0000000000000=
-001
-[  115.640510]  </TASK>
-[  115.640519]=20
-[  115.640523] The buggy address belongs to the physical page:
-[  115.640528] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xf=
-f11000000000000 pfn:0xcc9c
-[  115.640539] flags: 0x100000000000000(node=3D0|zone=3D1)
-[  115.640561] raw: 0100000000000000 0000000000000000 dead000000000122 000000=
+[  308.829729] R10: 0000000000000000 R11: 0000000000000293 R12: 000000002df5f=
+0aa
+[  308.829737] R13: 00007ffceb233050 R14: 000000001f2d3176 R15: 0000000000000=
+005
+[  308.829751]  </TASK>
+[  308.829765]=20
+[  308.829768] Allocated by task 678:
+[  308.829783]  kasan_save_stack+0x33/0x60
+[  308.829799]  kasan_save_track+0x14/0x30
+[  308.829813]  __kasan_kmalloc+0x8f/0xa0
+[  308.829827]  __kmalloc_noprof+0x1e9/0x510
+[  308.829839]  register_fprobe+0x9f/0x1c0
+[  308.829858]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[  308.829872]  param_attr_store+0x18f/0x2e0
+[  308.829889]  module_attr_store+0x5d/0x90
+[  308.829903]  sysfs_kf_write+0x1d1/0x270
+[  308.829920]  kernfs_fop_write_iter+0x3af/0x560
+[  308.829935]  vfs_write+0x65e/0xd00
+[  308.829946]  ksys_write+0x114/0x200
+[  308.829958]  do_syscall_64+0xdd/0x4a0
+[  308.829972]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  308.829984]=20
+[  308.829986] The buggy address belongs to the object at ff110000126c5f00
+[  308.829986]  which belongs to the cache kmalloc-128 of size 128
+[  308.829999] The buggy address is located 0 bytes to the right of
+[  308.829999]  allocated 128-byte region [ff110000126c5f00, ff110000126c5f80)
+[  308.830011]=20
+[  308.830016] The buggy address belongs to the physical page:
+[  308.830023] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0=
+ pfn:0x126c5
+[  308.830042] flags: 0x100000000000000(node=3D0|zone=3D1)
+[  308.830062] page_type: f5(slab)
+[  308.830073] raw: 0100000000000000 ff11000009838a00 dead000000000100 dead00=
+0000000122
+[  308.830085] raw: 0000000000000000 0000000000100010 00000000f5000000 000000=
 0000000000
-[  115.640574] raw: ff11000000000000 0000000000000000 00000001ffffffff 000000=
-0000000000
-[  115.640581] page dumped because: kasan: bad access detected
-[  115.640592]=20
-[  115.640595] Memory state around the buggy address:
-[  115.640600]  ff1100000cc9cf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00
-[  115.640610]  ff1100000cc9cf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00
-[  115.640619] >ff1100000cc9d000: fa fb fb fb fb fb fb fb fc fc fc fc fa fb f=
-b fb
-[  115.640632]                    ^
-[  115.640638]  ff1100000cc9d080: fb fb fb fb fc fc fc fc fa fb fb fb fb fb f=
-b fb
-[  115.640647]  ff1100000cc9d100: fc fc fc fc fa fb fb fb fb fb fb fb fc fc f=
+[  308.830093] page dumped because: kasan: bad access detected
+[  308.830098]=20
+[  308.830107] Memory state around the buggy address:
+[  308.830113]  ff110000126c5e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
 c fc
-[  115.640654] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+[  308.830122]  ff110000126c5f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+0 00
+[  308.830131] >ff110000126c5f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[  308.830138]                    ^
+[  308.830145]  ff110000126c6000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb f=
+b fb
+[  308.830154]  ff110000126c6080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc f=
+c fc
+[  308.830161] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[  115.640679] Disabling lock debugging due to kernel taint
+[  308.830201] Disabling lock debugging due to kernel taint
+[  308.830206] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[  308.830211] BUG: KASAN: slab-out-of-bounds in filter_match_callback+0x248/=
+0x2a0
+[  308.830232] Write of size 8 at addr ff1100000da4ac80 by task repro_fprobe_=
+fi/678
+[  308.830242]=20
+[  308.830248] CPU: 0 UID: 0 PID: 678 Comm: repro_fprobe_fi Tainted: G    B  =
+    O        7.3.0 #1 PREEMPT(lazy)=20
+[  308.830268] Tainted: [B]=3DBAD_PAGE, [O]=3DOOT_MODULE
+[  308.830274] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[  308.830283] Call Trace:
+[  308.830287]  <TASK>
+[  308.830292]  dump_stack_lvl+0x7b/0xa0
+[  308.830309]  print_report+0xd0/0x630
+[  308.830326]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[  308.830350]  ? filter_match_callback+0x248/0x2a0
+[  308.830370]  kasan_report+0xce/0x100
+[  308.830388]  ? filter_match_callback+0x248/0x2a0
+[  308.830411]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[  308.830427]  filter_match_callback+0x248/0x2a0
+[  308.830449]  module_kallsyms_on_each_symbol+0x208/0x3a0
+[  308.830463]  ? __pfx_filter_match_callback+0x10/0x10
+[  308.830487]  get_ips_from_filter+0xe3/0x160
+[  308.830507]  ? __pfx_get_ips_from_filter+0x10/0x10
+[  308.830530]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.830546]  ? __kmalloc_noprof+0x1e9/0x510
+[  308.830558]  ? register_fprobe+0x9f/0x1c0
+[  308.830581]  register_fprobe+0xc5/0x1c0
+[  308.830604]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[  308.830620]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[  308.830636]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.830658]  ? param_check_unsafe+0x5d/0x120
+[  308.830675]  param_attr_store+0x18f/0x2e0
+[  308.830706]  ? __pfx_param_attr_store+0x10/0x10
+[  308.830725]  module_attr_store+0x5d/0x90
+[  308.830743]  ? __pfx_module_attr_store+0x10/0x10
+[  308.830759]  sysfs_kf_write+0x1d1/0x270
+[  308.830779]  kernfs_fop_write_iter+0x3af/0x560
+[  308.830796]  ? __pfx_sysfs_kf_write+0x10/0x10
+[  308.830817]  vfs_write+0x65e/0xd00
+[  308.830830]  ? __pfx_kernfs_fop_write_iter+0x10/0x10
+[  308.830860]  ? __pfx_vfs_write+0x10/0x10
+[  308.830873]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.830890]  ? __pfx_mutex_lock+0x10/0x10
+[  308.830906]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.830921]  ? fdget_pos+0x1c1/0x520
+[  308.830939]  ksys_write+0x114/0x200
+[  308.830952]  ? __pfx_ksys_write+0x10/0x10
+[  308.830966]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.830982]  ? restore_fpregs_from_fpstate+0x55/0x100
+[  308.831003]  do_syscall_64+0xdd/0x4a0
+[  308.831020]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  308.831034] RIP: 0033:0x4205dd
+[  308.831043] Code: e5 48 83 ec 20 48 89 55 e8 48 89 75 f0 89 7d f8 e8 c8 fb=
+ 02 00 48 8b 55 e8 48 8b 75 f0 41 89 c0 8b 7d f8 b8 01 00 00 00 0f 05 <48> 3d=
+ 00 f0 ff ff 77 33 44 89 c7 48 89 45 f8 e8 1f fc 02 00 48 8b
+[  308.831058] RSP: 002b:00007ffceb232fd0 EFLAGS: 00000293 ORIG_RAX: 00000000=
+00000001
+[  308.831070] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000420=
+5dd
+[  308.831078] RDX: 0000000000000002 RSI: 000000000049a07f RDI: 0000000000000=
+005
+[  308.831086] RBP: 00007ffceb232ff0 R08: 0000000000000000 R09: 00007f93f977d=
+000
+[  308.831095] R10: 0000000000000000 R11: 0000000000000293 R12: 000000002df5f=
+0aa
+[  308.831103] R13: 00007ffceb233050 R14: 000000001f2d3176 R15: 0000000000000=
+005
+[  308.831116]  </TASK>
+[  308.831121]=20
+[  308.831123] Allocated by task 678:
+[  308.831129]  kasan_save_stack+0x33/0x60
+[  308.831144]  kasan_save_track+0x14/0x30
+[  308.831159]  __kasan_kmalloc+0x8f/0xa0
+[  308.831173]  __kmalloc_noprof+0x1e9/0x510
+[  308.831184]  register_fprobe+0x7c/0x1c0
+[  308.831204]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[  308.831218]  param_attr_store+0x18f/0x2e0
+[  308.831235]  module_attr_store+0x5d/0x90
+[  308.831249]  sysfs_kf_write+0x1d1/0x270
+[  308.831267]  kernfs_fop_write_iter+0x3af/0x560
+[  308.831282]  vfs_write+0x65e/0xd00
+[  308.831294]  ksys_write+0x114/0x200
+[  308.831306]  do_syscall_64+0xdd/0x4a0
+[  308.831320]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  308.831332]=20
+[  308.831334] The buggy address belongs to the object at ff1100000da4ac00
+[  308.831334]  which belongs to the cache kmalloc-128 of size 128
+[  308.831344] The buggy address is located 0 bytes to the right of
+[  308.831344]  allocated 128-byte region [ff1100000da4ac00, ff1100000da4ac80)
+[  308.831356]=20
+[  308.831359] The buggy address belongs to the physical page:
+[  308.831364] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0=
+ pfn:0xda4a
+[  308.831374] flags: 0x100000000000000(node=3D0|zone=3D1)
+[  308.831382] page_type: f5(slab)
+[  308.831392] raw: 0100000000000000 ff11000009838a00 dead000000000100 dead00=
+0000000122
+[  308.831405] raw: 0000000000000000 0000000000100010 00000000f5000000 000000=
+0000000000
+[  308.831425] page dumped because: kasan: bad access detected
+[  308.831430]=20
+[  308.831432] Memory state around the buggy address:
+[  308.831438]  ff1100000da4ab80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[  308.831447]  ff1100000da4ac00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+0 00
+[  308.831457] >ff1100000da4ac80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[  308.831464]                    ^
+[  308.831470]  ff1100000da4ad00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb f=
+b fb
+[  308.831479]  ff1100000da4ad80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[  308.831486] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[  308.831565] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[  308.831571] BUG: KASAN: slab-out-of-bounds in register_fprobe_ips+0xe00/0x=
+10a0
+[  308.831593] Read of size 8 at addr ff1100000da4ac80 by task repro_fprobe_f=
+i/678
+[  308.831604]=20
+[  308.831610] CPU: 0 UID: 0 PID: 678 Comm: repro_fprobe_fi Tainted: G    B  =
+    O        7.3.0 #1 PREEMPT(lazy)=20
+[  308.831629] Tainted: [B]=3DBAD_PAGE, [O]=3DOOT_MODULE
+[  308.831655] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[  308.831665] Call Trace:
+[  308.831669]  <TASK>
+[  308.831674]  dump_stack_lvl+0x7b/0xa0
+[  308.831690]  print_report+0xd0/0x630
+[  308.831708]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[  308.831735]  ? register_fprobe_ips+0xe00/0x10a0
+[  308.831756]  kasan_report+0xce/0x100
+[  308.831775]  ? register_fprobe_ips+0xe00/0x10a0
+[  308.831798]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[  308.831814]  ? schedule_hrtimeout+0x4/0x30
+[  308.831831]  register_fprobe_ips+0xe00/0x10a0
+[  308.831854]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.831870]  ? __kmalloc_noprof+0x1e9/0x510
+[  308.831884]  ? register_fprobe+0x9f/0x1c0
+[  308.831908]  register_fprobe+0x18e/0x1c0
+[  308.831931]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[  308.831948]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[  308.831965]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  308.831981]  ? param_check_unsafe+0x5d/0x120
 
---===============4804767349960394518==
+--===============4240354128132478706==
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="kasan-run2.txt"
 MIME-Version: 1.0
 
-[   32.307913] BUG: KASAN: slab-use-after-free in filter_match_preds+0x24e5/0=
-x3080
-[   32.308038] Read of size 8 at addr ff110000165fcfff by task repro/412
-[   32.308049]=20
-[   32.308070] CPU: 3 UID: 0 PID: 412 Comm: repro Not tainted 7.3.0 #1 PREEMP=
-T(lazy)=20
-[   32.308085] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
-ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   32.308105] Call Trace:
-[   32.308120]  <TASK>
-[   32.308125]  dump_stack_lvl+0x7b/0xa0
-[   32.308237]  print_report+0xd0/0x630
-[   32.308268]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[   32.308293]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308336]  ? filter_match_preds+0x24e5/0x3080
-[   32.308357]  kasan_report+0xce/0x100
-[   32.308375]  ? filter_match_preds+0x24e5/0x3080
-[   32.308399]  kasan_check_range+0x105/0x1b0
-[   32.308422]  filter_match_preds+0x24e5/0x3080
-[   32.308444]  ? ring_buffer_event_data+0xc9/0x120
-[   32.308471]  trace_event_buffer_commit+0x6ad/0x9f0
-[   32.308504]  user_event_ftrace+0x1c2/0x450
-[   32.308533]  ? __pfx_user_event_ftrace+0x10/0x10
-[   32.308552]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308568]  ? fault_in_readable+0x121/0x180
-[   32.308602]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308619]  user_events_write_core.isra.0+0x3b6/0x560
-[   32.308642]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308658]  ? __pfx_user_events_write_core.isra.0+0x10/0x10
-[   32.308680]  ? __entry_text_end+0x1020f5/0x1020f9
-[   32.308695]  ? kill_fasync+0x21/0x220
-[   32.308728]  user_events_write+0x11b/0x190
-[   32.308748]  ? __pfx_user_events_write+0x10/0x10
-[   32.308769]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308784]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308801]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308817]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308832]  ? security_file_permission+0x40/0xe0
-[   32.308886]  vfs_write+0x26c/0xd00
-[   32.308901]  ? __pfx_user_events_write+0x10/0x10
-[   32.308923]  ? __pfx_vfs_write+0x10/0x10
-[   32.308939]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.308955]  ? fdget_pos+0x1c1/0x520
-[   32.308974]  ksys_write+0x114/0x200
-[   32.308986]  ? __pfx_ksys_write+0x10/0x10
-[   32.308999]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   32.309020]  ? do_user_addr_fault+0x391/0xb10
-[   32.309050]  do_syscall_64+0xdd/0x4a0
-[   32.309069]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   32.309082] RIP: 0033:0x41ab44
-[   32.309104] Code: 89 02 48 c7 c0 ff ff ff ff eb bd 66 2e 0f 1f 84 00 00 00=
- 00 00 90 f3 0f 1e fa 80 3d 1d 85 09 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d=
- 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
-[   32.309118] RSP: 002b:00007fff83518578 EFLAGS: 00000202 ORIG_RAX: 00000000=
-00000001
-[   32.309152] RAX: ffffffffffffffda RBX: 000000003a43b900 RCX: 000000000041a=
-b44
-[   32.309161] RDX: 0000000000000ff4 RSI: 000000003a43b900 RDI: 0000000000000=
-003
-[   32.309169] RBP: 0000000000000003 R08: 000000000000001c R09: 0000000000000=
-000
-[   32.309177] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000=
-000
-[   32.309185] R13: 00007fff83518878 R14: 00000000004ad868 R15: 0000000000000=
-001
-[   32.309198]  </TASK>
-[   32.309205]=20
-[   32.309208] The buggy address belongs to the physical page:
-[   32.309214] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xf=
-f11000000000000 pfn:0x165fc
-[   32.309230] flags: 0x100000000000000(node=3D0|zone=3D1)
-[   32.309251] raw: 0100000000000000 0000000000000000 dead000000000122 000000=
-0000000000
-[   32.309264] raw: ff11000000000000 0000000000000000 00000001ffffffff 000000=
-0000000000
-[   32.309271] page dumped because: kasan: bad access detected
-[   32.309281]=20
-[   32.309284] Memory state around the buggy address:
-[   32.309290]  ff110000165fcf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00
-[   32.309299]  ff110000165fcf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00
-[   32.309308] >ff110000165fd000: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   32.309315]                    ^
-[   32.309321]  ff110000165fd080: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   32.309330]  ff110000165fd100: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   32.309338] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   32.309392] Disabling lock debugging due to kernel taint
-[   69.409633] sshd-session (427) used greatest stack depth: 23928 bytes left
-[   69.642114] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   69.642129] BUG: KASAN: slab-use-after-free in filter_match_preds+0x24e5/0=
-x3080
-[   69.642164] Read of size 8 at addr ff110000165fcfff by task repro/436
-[   69.642174]=20
-[   69.642192] CPU: 3 UID: 0 PID: 436 Comm: repro Tainted: G    B            =
+[   29.743312] BUG: KASAN: slab-out-of-bounds in filter_match_callback+0x276/=
+0x2a0
+[   29.743347] Write of size 8 at addr ff1100001b0ef880 by task repro/413
+[   29.743357]=20
+[   29.743379] CPU: 0 UID: 0 PID: 413 Comm: r
+** replaying previous printk message **
+[   29.743379] CPU: 0 UID: 0 PID: 413 Comm: repro Tainted: G           O     =
    7.3.0 #1 PREEMPT(lazy)=20
-[   69.642212] Tainted: [B]=3DBAD_PAGE
-[   69.642217] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+[   29.743398] Tainted: [O]=3DOOT_MODULE
+[   29.743403] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
 ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   69.642227] Call Trace:
-[   69.642233]  <TASK>
-[   69.642238]  dump_stack_lvl+0x7b/0xa0
-[   69.642259]  print_report+0xd0/0x630
-[   69.642279]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[   69.642300]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642319]  ? filter_match_preds+0x24e5/0x3080
-[   69.642349]  kasan_report+0xce/0x100
-[   69.642367]  ? filter_match_preds+0x24e5/0x3080
-[   69.642414]  kasan_check_range+0x105/0x1b0
-[   69.642435]  filter_match_preds+0x24e5/0x3080
-[   69.642460]  ? ring_buffer_event_data+0xc9/0x120
-[   69.642491]  trace_event_buffer_commit+0x6ad/0x9f0
-[   69.642517]  user_event_ftrace+0x1c2/0x450
-[   69.642543]  ? __pfx_user_event_ftrace+0x10/0x10
-[   69.642565]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642580]  ? fault_in_readable+0x121/0x180
-[   69.642602]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642619]  user_events_write_core.isra.0+0x3b6/0x560
-[   69.642642]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642658]  ? __pfx_user_events_write_core.isra.0+0x10/0x10
-[   69.642680]  ? __entry_text_end+0x1020f5/0x1020f9
-[   69.642695]  ? kill_fasync+0x21/0x220
-[   69.642719]  user_events_write+0x11b/0x190
-[   69.642739]  ? __pfx_user_events_write+0x10/0x10
-[   69.642759]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642774]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642791]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642807]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642822]  ? security_file_permission+0x40/0xe0
-[   69.642849]  vfs_write+0x26c/0xd00
-[   69.642864]  ? __pfx_user_events_write+0x10/0x10
-[   69.642889]  ? __pfx_vfs_write+0x10/0x10
-[   69.642908]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642926]  ? fdget_pos+0x1c1/0x520
-[   69.642945]  ksys_write+0x114/0x200
-[   69.642959]  ? __pfx_ksys_write+0x10/0x10
-[   69.642975]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.642993]  ? do_user_addr_fault+0x391/0xb10
-[   69.643012]  do_syscall_64+0xdd/0x4a0
-[   69.643030]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   69.643046] RIP: 0033:0x41ab44
-[   69.643064] Code: 89 02 48 c7 c0 ff ff ff ff eb bd 66 2e 0f 1f 84 00 00 00=
- 00 00 90 f3 0f 1e fa 80 3d 1d 85 09 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d=
- 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
-[   69.643081] RSP: 002b:00007fffa7387208 EFLAGS: 00000202 ORIG_RAX: 00000000=
+[   29.743418] Call Trace:
+[   29.743438]  <TASK>
+[   29.743446]  dump_stack_lvl+0x7b/0xa0
+[   29.743464]  print_report+0xd0/0x630
+[   29.743484]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[   29.743507]  ? filter_match_callback+0x276/0x2a0
+[   29.743527]  kasan_report+0xce/0x100
+[   29.743546]  ? filter_match_callback+0x276/0x2a0
+[   29.743569]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[   29.743585]  filter_match_callback+0x276/0x2a0
+[   29.743608]  module_kallsyms_on_each_symbol+0x208/0x3a0
+[   29.743624]  ? __pfx_filter_match_callback+0x10/0x10
+[   29.743652]  get_ips_from_filter+0xe3/0x160
+[   29.743673]  ? __pfx_get_ips_from_filter+0x10/0x10
+[   29.743696]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.743712]  ? __kmalloc_noprof+0x1e9/0x510
+[   29.743726]  ? register_fprobe+0x9f/0x1c0
+[   29.743749]  register_fprobe+0xc5/0x1c0
+[   29.743772]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[   29.743788]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[   29.743805]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.743821]  ? param_check_unsafe+0x5d/0x120
+[   29.743839]  param_attr_store+0x18f/0x2e0
+[   29.743859]  ? __pfx_param_attr_store+0x10/0x10
+[   29.743880]  module_attr_store+0x5d/0x90
+[   29.743897]  ? __pfx_module_attr_store+0x10/0x10
+[   29.743913]  sysfs_kf_write+0x1d1/0x270
+[   29.743935]  kernfs_fop_write_iter+0x3af/0x560
+[   29.743953]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   29.743973]  vfs_write+0x65e/0xd00
+[   29.743987]  ? __pfx_kernfs_fop_write_iter+0x10/0x10
+[   29.744005]  ? __pfx_vfs_write+0x10/0x10
+[   29.744018]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.744035]  ? __pfx_mutex_lock+0x10/0x10
+[   29.744050]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.744065]  ? fdget_pos+0x1c1/0x520
+[   29.744083]  ksys_write+0x114/0x200
+[   29.744097]  ? __pfx_ksys_write+0x10/0x10
+[   29.744111]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.744126]  ? do_user_addr_fault+0x391/0xb10
+[   29.744142]  do_syscall_64+0xdd/0x4a0
+[   29.744159]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   29.744174] RIP: 0033:0x42061d
+[   29.744185] Code: e5 48 83 ec 20 48 89 55 e8 48 89 75 f0 89 7d f8 e8 c8 fb=
+ 02 00 48 8b 55 e8 48 8b 75 f0 41 89 c0 8b 7d f8 b8 01 00 00 00 0f 05 <48> 3d=
+ 00 f0 ff ff 77 33 44 89 c7 48 89 45 f8 e8 1f fc 02 00 48 8b
+[   29.744202] RSP: 002b:00007ffe8375f010 EFLAGS: 00000293 ORIG_RAX: 00000000=
 00000001
-[   69.643094] RAX: ffffffffffffffda RBX: 0000000018b7e900 RCX: 000000000041a=
-b44
-[   69.643103] RDX: 0000000000000ff4 RSI: 0000000018b7e900 RDI: 0000000000000=
-003
-[   69.643111] RBP: 0000000000000003 R08: 000000000000001c R09: 0000000000000=
+[   29.744223] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000420=
+61d
+[   29.744231] RDX: 0000000000000002 RSI: 000000000049a07f RDI: 0000000000000=
+005
+[   29.744240] RBP: 00007ffe8375f030 R08: 0000000000000000 R09: 00007f1192254=
 000
-[   69.643119] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000=
-000
-[   69.643127] R13: 00007fffa7387510 R14: 00000000004ad868 R15: 0000000000000=
-001
-[   69.643141]  </TASK>
-[   69.643145]=20
-[   69.643148] The buggy address belongs to the physical page:
-[   69.643167] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xf=
-f11000000000000 pfn:0x165fc
-[   69.643182] flags: 0x100000000000000(node=3D0|zone=3D1)
-[   69.643197] raw: 0100000000000000 0000000000000000 dead000000000122 000000=
+[   29.744248] R10: 0000000000000000 R11: 0000000000000293 R12: 000000002817c=
+738
+[   29.744256] R13: 00007ffe8375f090 R14: 000000001fdb8edf R15: 0000000000000=
+064
+[   29.744270]  </TASK>
+[   29.744275]=20
+[   29.744278] Allocated by task 413:
+[   29.744290]  kasan_save_stack+0x33/0x60
+[   29.744305]  kasan_save_track+0x14/0x30
+[   29.744320]  __kasan_kmalloc+0x8f/0xa0
+[   29.744334]  __kmalloc_noprof+0x1e9/0x510
+[   29.744345]  register_fprobe+0x9f/0x1c0
+[   29.744364]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[   29.744381]  param_attr_store+0x18f/0x2e0
+[   29.744398]  module_attr_store+0x5d/0x90
+[   29.744412]  sysfs_kf_write+0x1d1/0x270
+[   29.744429]  kernfs_fop_write_iter+0x3af/0x560
+[   29.744444]  vfs_write+0x65e/0xd00
+[   29.744455]  ksys_write+0x114/0x200
+[   29.744467]  do_syscall_64+0xdd/0x4a0
+[   29.744481]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   29.744493]=20
+[   29.744496] The buggy address belongs to the object at ff1100001b0ef800
+[   29.744496]  which belongs to the cache kmalloc-128 of size 128
+[   29.744506] The buggy address is located 0 bytes to the right of
+[   29.744506]  allocated 128-byte region [ff1100001b0ef800, ff1100001b0ef880)
+[   29.744520]=20
+[   29.744524] The buggy address belongs to the physical page:
+[   29.744531] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0=
+ pfn:0x1b0ef
+[   29.744544] flags: 0x100000000000000(node=3D0|zone=3D1)
+[   29.744558] page_type: f5(slab)
+[   29.744570] raw: 0100000000000000 ff11000009838a00 dead000000000122 000000=
 0000000000
-[   69.643209] raw: ff11000000000000 0000000000000000 00000001ffffffff 000000=
+[   29.744582] raw: 0000000000000000 0000000000100010 00000000f5000000 000000=
 0000000000
-[   69.643223] page dumped because: kasan: bad access detected
-[   69.643229]=20
-[   69.643232] Memory state around the buggy address:
-[   69.643239]  ff110000165fcf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+[   29.744589] page dumped because: kasan: bad access detected
+[   29.744595]=20
+[   29.744597] Memory state around the buggy address:
+[   29.744603]  ff1100001b0ef780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[   29.744612]  ff1100001b0ef800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
 0 00
-[   69.643249]  ff110000165fcf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+[   29.744622] >ff1100001b0ef880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[   29.744629]                    ^
+[   29.744635]  ff1100001b0ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
 0 00
-[   69.643260] >ff110000165fd000: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
+[   29.744650]  ff1100001b0ef980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
 c fc
-[   69.643268]                    ^
-[   69.643276]  ff110000165fd080: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   69.643287]  ff110000165fd100: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   69.643296] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+[   29.744657] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   69.891881] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+[   29.744689] Disabling lock debugging due to kernel taint
+[   29.744695] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   69.891894] BUG: KASAN: slab-use-after-free in filter_match_preds+0x24e5/0=
-x3080
-[   69.891922] Read of size 8 at addr ff110000165fcfff by task repro/444
-[   69.891932]=20
-[   69.891942] CPU: 3 UID: 0 PID: 444 Comm: repro Tainted: G    B            =
+[   29.744699] BUG: KASAN: slab-out-of-bounds in filter_match_callback+0x248/=
+0x2a0
+[   29.744723] Write of size 8 at addr ff1100001b0ef980 by task repro/413
+[   29.744733]=20
+[   29.744739] CPU: 0 UID: 0 PID: 413 Comm: repro Tainted: G    B      O     =
    7.3.0 #1 PREEMPT(lazy)=20
-[   69.891962] Tainted: [B]=3DBAD_PAGE
-[   69.891967] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+[   29.744758] Tainted: [B]=3DBAD_PAGE, [O]=3DOOT_MODULE
+[   29.744764] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
 ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   69.891978] Call Trace:
-[   69.891983]  <TASK>
-[   69.891988]  dump_stack_lvl+0x7b/0xa0
-[   69.892007]  print_report+0xd0/0x630
-[   69.892026]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[   69.892048]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892067]  ? filter_match_preds+0x24e5/0x3080
-[   69.892088]  kasan_report+0xce/0x100
-[   69.892107]  ? filter_match_preds+0x24e5/0x3080
-[   69.892132]  kasan_check_range+0x105/0x1b0
-[   69.892156]  filter_match_preds+0x24e5/0x3080
-[   69.892177]  ? ring_buffer_event_data+0xc9/0x120
-[   69.892198]  trace_event_buffer_commit+0x6ad/0x9f0
-[   69.892222]  user_event_ftrace+0x1c2/0x450
-[   69.892243]  ? __pfx_user_event_ftrace+0x10/0x10
-[   69.892262]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892277]  ? fault_in_readable+0x121/0x180
-[   69.892301]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892318]  user_events_write_core.isra.0+0x3b6/0x560
-[   69.892341]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892357]  ? __pfx_user_events_write_core.isra.0+0x10/0x10
-[   69.892380]  ? __entry_text_end+0x1020f5/0x1020f9
-[   69.892396]  ? kill_fasync+0x21/0x220
-[   69.892419]  user_events_write+0x11b/0x190
-[   69.892441]  ? __pfx_user_events_write+0x10/0x10
-[   69.892462]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892477]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892501]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892516]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892596]  ? security_file_permission+0x40/0xe0
-[   69.892620]  vfs_write+0x26c/0xd00
-[   69.892633]  ? __pfx_user_events_write+0x10/0x10
-[   69.892657]  ? __pfx_vfs_write+0x10/0x10
-[   69.892673]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892689]  ? fdget_pos+0x1c1/0x520
-[   69.892705]  ksys_write+0x114/0x200
-[   69.892717]  ? __pfx_ksys_write+0x10/0x10
-[   69.892732]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   69.892748]  ? do_user_addr_fault+0x391/0xb10
-[   69.892764]  do_syscall_64+0xdd/0x4a0
-[   69.892780]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   69.892794] RIP: 0033:0x41ab44
-[   69.892806] Code: 89 02 48 c7 c0 ff ff ff ff eb bd 66 2e 0f 1f 84 00 00 00=
- 00 00 90 f3 0f 1e fa 80 3d 1d 85 09 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d=
- 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
-[   69.892820] RSP: 002b:00007fff5084b058 EFLAGS: 00000202 ORIG_RAX: 00000000=
+[   29.744774] Call Trace:
+[   29.744778]  <TASK>
+[   29.744783]  dump_stack_lvl+0x7b/0xa0
+[   29.744799]  print_report+0xd0/0x630
+[   29.744817]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[   29.744840]  ? filter_match_callback+0x248/0x2a0
+[   29.744861]  kasan_report+0xce/0x100
+[   29.744882]  ? filter_match_callback+0x248/0x2a0
+[   29.744905]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[   29.744920]  filter_match_callback+0x248/0x2a0
+[   29.744943]  module_kallsyms_on_each_symbol+0x208/0x3a0
+[   29.744957]  ? __pfx_filter_match_callback+0x10/0x10
+[   29.744980]  get_ips_from_filter+0xe3/0x160
+[   29.745001]  ? __pfx_get_ips_from_filter+0x10/0x10
+[   29.745024]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.745040]  ? __kmalloc_noprof+0x1e9/0x510
+[   29.745053]  ? register_fprobe+0x9f/0x1c0
+[   29.745075]  register_fprobe+0xc5/0x1c0
+[   29.745098]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[   29.745114]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[   29.745131]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.745147]  ? param_check_unsafe+0x5d/0x120
+[   29.745163]  param_attr_store+0x18f/0x2e0
+[   29.745184]  ? __pfx_param_attr_store+0x10/0x10
+[   29.745202]  module_attr_store+0x5d/0x90
+[   29.745218]  ? __pfx_module_attr_store+0x10/0x10
+[   29.745235]  sysfs_kf_write+0x1d1/0x270
+[   29.745255]  kernfs_fop_write_iter+0x3af/0x560
+[   29.745272]  ? __pfx_sysfs_kf_write+0x10/0x10
+[   29.745293]  vfs_write+0x65e/0xd00
+[   29.745306]  ? __pfx_kernfs_fop_write_iter+0x10/0x10
+[   29.745325]  ? __pfx_vfs_write+0x10/0x10
+[   29.745338]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.745356]  ? __pfx_mutex_lock+0x10/0x10
+[   29.745370]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.745387]  ? fdget_pos+0x1c1/0x520
+[   29.745404]  ksys_write+0x114/0x200
+[   29.745418]  ? __pfx_ksys_write+0x10/0x10
+[   29.745432]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.745448]  ? do_user_addr_fault+0x391/0xb10
+[   29.745463]  do_syscall_64+0xdd/0x4a0
+[   29.745480]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   29.745497] RIP: 0033:0x42061d
+[   29.745505] Code: e5 48 83 ec 20 48 89 55 e8 48 89 75 f0 89 7d f8 e8 c8 fb=
+ 02 00 48 8b 55 e8 48 8b 75 f0 41 89 c0 8b 7d f8 b8 01 00 00 00 0f 05 <48> 3d=
+ 00 f0 ff ff 77 33 44 89 c7 48 89 45 f8 e8 1f fc 02 00 48 8b
+[   29.745519] RSP: 002b:00007ffe8375f010 EFLAGS: 00000293 ORIG_RAX: 00000000=
 00000001
-[   69.892833] RAX: ffffffffffffffda RBX: 00000000255b0900 RCX: 000000000041a=
-b44
-[   69.892842] RDX: 0000000000000ff4 RSI: 00000000255b0900 RDI: 0000000000000=
-003
-[   69.892850] RBP: 0000000000000003 R08: 000000000000001c R09: 0000000000000=
+[   29.745534] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000420=
+61d
+[   29.745543] RDX: 0000000000000002 RSI: 000000000049a07f RDI: 0000000000000=
+005
+[   29.745551] RBP: 00007ffe8375f030 R08: 0000000000000000 R09: 00007f1192254=
 000
-[   69.892866] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000=
-000
-[   69.892874] R13: 00007fff5084b360 R14: 00000000004ad868 R15: 0000000000000=
-001
-[   69.892889]  </TASK>
-[   69.892894]=20
-[   69.892898] The buggy address belongs to the physical page:
-[   69.892902] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xf=
-f11000000000000 pfn:0x165fc
-[   69.892914] flags: 0x100000000000000(node=3D0|zone=3D1)
-[   69.892930] raw: 0100000000000000 0000000000000000 dead000000000122 000000=
+[   29.745560] R10: 0000000000000000 R11: 0000000000000293 R12: 000000002817c=
+738
+[   29.745568] R13: 00007ffe8375f090 R14: 000000001fdb8edf R15: 0000000000000=
+064
+[   29.745582]  </TASK>
+[   29.745587]=20
+[   29.745590] Allocated by task 413:
+[   29.745596]  kasan_save_stack+0x33/0x60
+[   29.745611]  kasan_save_track+0x14/0x30
+[   29.745625]  __kasan_kmalloc+0x8f/0xa0
+[   29.745645]  __kmalloc_noprof+0x1e9/0x510
+[   29.745656]  register_fprobe+0x7c/0x1c0
+[   29.745676]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[   29.745690]  param_attr_store+0x18f/0x2e0
+[   29.745708]  module_attr_store+0x5d/0x90
+[   29.745722]  sysfs_kf_write+0x1d1/0x270
+[   29.745740]  kernfs_fop_write_iter+0x3af/0x560
+[   29.745755]  vfs_write+0x65e/0xd00
+[   29.745767]  ksys_write+0x114/0x200
+[   29.745778]  do_syscall_64+0xdd/0x4a0
+[   29.745792]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   29.745805]=20
+[   29.745808] The buggy address belongs to the object at ff1100001b0ef900
+[   29.745808]  which belongs to the cache kmalloc-128 of size 128
+[   29.745817] The buggy address is located 0 bytes to the right of
+[   29.745817]  allocated 128-byte region [ff1100001b0ef900, ff1100001b0ef980)
+[   29.745829]=20
+[   29.745832] The buggy address belongs to the physical page:
+[   29.745836] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0=
+ pfn:0x1b0ef
+[   29.745847] flags: 0x100000000000000(node=3D0|zone=3D1)
+[   29.745855] page_type: f5(slab)
+[   29.745865] raw: 0100000000000000 ff11000009838a00 dead000000000122 000000=
 0000000000
-[   69.892942] raw: ff11000000000000 0000000000000000 00000001ffffffff 000000=
+[   29.745878] raw: 0000000000000000 0000000000100010 00000000f5000000 000000=
 0000000000
-[   69.892950] page dumped because: kasan: bad access detected
-[   69.892955]=20
-[   69.892958] Memory state around the buggy address:
-[   69.892963]  ff110000165fcf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+[   29.745886] page dumped because: kasan: bad access detected
+[   29.745891]=20
+[   29.745893] Memory state around the buggy address:
+[   29.745899]  ff1100001b0ef880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
+c fc
+[   29.745908]  ff1100001b0ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
 0 00
-[   69.892974]  ff110000165fcf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00
-[   69.892983] >ff110000165fd000: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
+[   29.745917] >ff1100001b0ef980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
 c fc
-[   69.892990]                    ^
-[   69.892997]  ff110000165fd080: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
+[   29.745925]                    ^
+[   29.745932]  ff1100001b0efa00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb f=
+b fb
+[   29.745941]  ff1100001b0efa80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc f=
 c fc
-[   69.893006]  ff110000165fd100: fa fb fb fb fc fc fc fc fa fb fb fb fc fc f=
-c fc
-[   69.893013] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+[   29.745948] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   70.132040] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+[   29.746024] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   29.746034] BUG: KASAN: slab-out-of-bounds in register_fprobe_ips+0xe00/0x=
+10a0
+[   29.746056] Read of size 8 at addr ff1100001b0ef980 by task repro/413
+[   29.746066]=20
+[   29.746072] CPU: 0 UID: 0 PID: 413 Comm: repro Tainted: G    B      O     =
+   7.3.0 #1 PREEMPT(lazy)=20
+[   29.746093] Tainted: [B]=3DBAD_PAGE, [O]=3DOOT_MODULE
+[   29.746098] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_ca=
+ps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   29.746107] Call Trace:
+[   29.746112]  <TASK>
+[   29.746117]  dump_stack_lvl+0x7b/0xa0
+[   29.746133]  print_report+0xd0/0x630
+[   29.746151]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[   29.746174]  ? register_fprobe_ips+0xe00/0x10a0
+[   29.746195]  kasan_report+0xce/0x100
+[   29.746214]  ? register_fprobe_ips+0xe00/0x10a0
+[   29.746237]  ? __pfx_schedule_zzfp_target+0x10/0x10 [fprobe_race_module]
+[   29.746253]  ? schedule_hrtimeout+0x4/0x30
+[   29.746270]  register_fprobe_ips+0xe00/0x10a0
+[   29.746293]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.746309]  ? __kmalloc_noprof+0x1e9/0x510
+[   29.746322]  ? register_fprobe+0x9f/0x1c0
+[   29.746345]  register_fprobe+0x18e/0x1c0
+[   29.746369]  set_trigger+0x9d/0x100 [fprobe_control_module]
+[   29.746385]  ? __pfx_set_trigger+0x10/0x10 [fprobe_control_module]
+[   29.746402]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   29.746418]  ? param_check_unsafe+0x5d/0x120
 
---===============4804767349960394518==
+--===============4240354128132478706==
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="config"
@@ -6368,7 +6758,7 @@ CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
 CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
 CONFIG_DYNAMIC_FTRACE_WITH_JMP=3Dy
 # CONFIG_FUNCTION_SELF_TRACING is not set
-# CONFIG_FPROBE is not set
+CONFIG_FPROBE=3Dy
 # CONFIG_FUNCTION_PROFILER is not set
 # CONFIG_STACK_TRACER is not set
 # CONFIG_IRQSOFF_TRACER is not set
@@ -6384,6 +6774,7 @@ CONFIG_BRANCH_PROFILE_NONE=3Dy
 # CONFIG_PROFILE_ANNOTATED_BRANCHES is not set
 # CONFIG_PROFILE_ALL_BRANCHES is not set
 CONFIG_BLK_DEV_IO_TRACE=3Dy
+CONFIG_FPROBE_EVENTS=3Dy
 # CONFIG_PROBE_EVENTS_DUMP_FETCHARG is not set
 CONFIG_KPROBE_EVENTS=3Dy
 # CONFIG_KPROBE_EVENTS_ON_NOTRACE is not set
@@ -6394,7 +6785,7 @@ CONFIG_DYNAMIC_EVENTS=3Dy
 CONFIG_PROBE_EVENTS=3Dy
 CONFIG_FTRACE_MCOUNT_USE_CC=3Dy
 # CONFIG_SYNTH_EVENTS is not set
-CONFIG_USER_EVENTS=3Dy
+# CONFIG_USER_EVENTS is not set
 # CONFIG_HIST_TRIGGERS is not set
 # CONFIG_TRACE_EVENT_INJECT is not set
 # CONFIG_TRACEPOINT_BENCHMARK is not set
@@ -6508,4 +6899,4 @@ CONFIG_ARCH_USE_MEMTEST=3Dy
 CONFIG_IO_URING_ZCRX=3Dy
 CONFIG_IO_URING_BPF=3Dy
 
---===============4804767349960394518==--
+--===============4240354128132478706==--
