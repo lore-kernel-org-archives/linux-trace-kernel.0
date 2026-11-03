@@ -1,74 +1,41 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=159.226.251.25
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793696627;
-	b=J068j2JdH/0Ha7KJOXUMwO2hKhe0/A/Uu2+j+oeRMsU5oZEa3se19oeSCZVm7QyKqA27
-	 5s7nmL4MMqsoD88XbKvk1y3tuVuPSzeUCSUzAckgFiYlVDmxn/lUhPt1jUpjpUJZrR7XS
-	 ZZiSgMMxRv3a5FN6fM6iKK6249ZVSt+3A9FrCJG7Tk6pxPyIsbNC9JoAGzLv/Se9yoHhM
-	 +KGmOpvGes34Yjuw6yRCA5vwA5AcOhxlUUa7HfFd0AhT2KtDTvGEboOydRcdlaDTps4P9
-	 2tcNCuFxbcb2Pe0AIglur13S92cjUscdK0KnjqbvbB0dwNHiXAkGJuO0AgUIa4Ms/CA==
+	t=1793699464;
+	b=d7+EjfF01Y3Age3NYpfKtqGUOQEeqbFW6Mo3i8QFoDguMvenfm6vDpFCehrnkDESacIF
+	 8zrrzFkJGBpXj3wilfdsAijrF6Dpz2X3cq3an/HUgdyM425WlUa+JW0dMNJvD5KGRji96
+	 WXz2HQs/iRD5PmovNH7OZHFklrHYc7DJ8NUI40FFPkkg/6s0mpqBCL+4Jk/1NHsZO6q0J
+	 1yDE36yJPIJ7B7mrE3OdH5HiMp6p4sKpR0VhllTiSmesVQM7nPXYjFNNno/8gyTZrrR0N
+	 H5mJSEDhaK/oJq0BsLrt7XDL2dqY7dwgxKTk13yf7X59KltEEO++ez5nWQtjfEjSOMA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793696627;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793699464;
+	h=DMARC-Filter:Received:Content-Type:Mime-Version:Subject:From:
+	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
+	 To:X-Mailer:X-CM-TRANSID:X-Coremail-Antispam:X-Originating-IP:
 	 X-CM-SenderInfo;
-	bh=rF3lwQrlgvyoEcEb2mTJ5z+aXEk03V2/91Tqdny4RHk=;
-	b=sRe5Fzm8DGadBu4kBTABUFaRWFxiwBFgFw7BPVbxtm868B9IONpJsJ/R33hiEvX6M+2B
-	 /4dBA2YLbVH36G/0/ebRQgV3k5TlmmZI12srxKoW12hwhSnyzwhDAo2BjhlghPhmeFgkg
-	 vQy61ztoXBH7wlOjLsVU6duwpeTYhaDmFzI1e0fu8X8vfGBcK/clJsaYuBXh9EJZ5Qv72
-	 9nkwPHFEIF8ZKklE5xJRl/qsd6nwHhIP+uBSoE33l7O8DBesppuK5m6oP17vsnzZV+ZyQ
-	 AIQLW2bKwghgW1xQLHeKnpmzOK7cnDLxfUAXry5V5XJTh9p2L9yeO9i5lOJlCdELwIA==
+	bh=9Ytf/hgVA5s6xuBkEZhEYc5g21hKogJ9a5/6yr9VeuA=;
+	b=as543yLrsgFhZZB8kXU8akzOTxrJ58MmC/oe59sFTwO+du3J1rDDC7bbhgVo+/aQJh6D
+	 +lYpHwcRBqfBcZ4bb0vub2niRmItigtg2oatXJJyyLnYnyjRvxA13PO+JAXmkDjjtqhzB
+	 fBSLJOUX2yKecmKSV6Qfl73WtIhQB7DhvNOYy2re3oU+a8g3ZSB5AYp8lqo4kU2ejWK2S
+	 XDNLH7xPP20+2K3f4+a460Q6ElHA9ErZAlv1mACzLU6H23VoqnyHulQ7tPWKB+2+4iSRa
+	 P38sAuIaDTFL0Mmok7KSM/1bT8+cQEdl4hPr+sVLDZ55Iq0zdV1s6KtXIVgZ492MWRw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=BiLfIXx9;
-	arc=none smtp.remote-ip=220.197.31.4
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	dmarc=none header.from=iscas.ac.cn;
+	spf=pass smtp.mailfrom=iscas.ac.cn;
+	arc=none smtp.remote-ip=159.226.251.25
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D44606A327;
-	Tue,  3 Nov 2026 09:03:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4D44606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=BiLfIXx9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=rF
-	3lwQrlgvyoEcEb2mTJ5z+aXEk03V2/91Tqdny4RHk=; b=BiLfIXx9RjMXEnQtb9
-	QSO8NrVbPKRHOcKoy7lSNWOhVpoChejG9bW79ViG2r8cVtuZeRu1J0/jXq5Zjw0e
-	/g3OZKEAFuz2sRURAqgQHfjeXlsNKG6Yb1fQhXDw8LPMrI7AopQNsZJcGaEz2xi4
-	3t5vBj3tbXVi1juplIBYwW2PU=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDHT6oyo+lq0SHqDg--.7504S2;
-	Tue, 03 Nov 2026 17:02:44 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: alexei.starovoitov@gmail.com
-Cc: andrii@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	emil@etsalapatis.com,
-	ihor.solodrai@linux.dev,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	matt@bobrowski.net,
-	memxor@gmail.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v2 bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
-Date: Tue,  3 Nov 2026 17:02:42 +0800
-Message-Id: <20261103090242.680147-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <DML8PRKSQ4ZX.2A8Q5SC26RO6Q@gmail.com>
-References: <DML8PRKSQ4ZX.2A8Q5SC26RO6Q@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBD7606A333;
+	Tue,  3 Nov 2026 09:51:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4CBD7606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from smtpclient.apple (unknown [121.237.245.232])
+	by APP-05 (Coremail) with SMTP id zQCowAAHobZ_rulqo_g+AA--.1625S2;
+	Tue, 03 Nov 2026 17:50:55 +0800 (CST)
+Content-Type: text/plain;
+	charset=utf-8
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -77,51 +44,154 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgDHT6oyo+lq0SHqDg--.7504S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw17Xr4rur1DuFWrZF17trb_yoW8Aw1DpF
-	93tr1Skr4UXr1Fyr47Ww4kWa45CwnxXa17WF1rKr1rA3W5Zr17WrWxKF48ZF98CrykWw1j
-	qFyjq39rGr4UAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR4KZLUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbCzxULg2rpozXY7wAA3w
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.200.71.1.16\))
+Subject: Re: [PATCH v2] uprobes: Restore original return address in uretprobe
+ context
+From: daichengrong <daichengrong@iscas.ac.cn>
+In-Reply-To: <20260810080140.96587-1-daichengrong@iscas.ac.cn>
+Date: Tue, 3 Nov 2026 16:58:03 +0800
+Cc: linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ alex@ghiti.fr,
+ Albert Ou <aou@eecs.berkeley.edu>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <313E1182-DADD-485A-AE2C-36ACA58F35DE@iscas.ac.cn>
+References: <20260810080140.96587-1-daichengrong@iscas.ac.cn>
+To: Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>
+X-Mailer: Apple Mail (2.3901.200.71.1.16)
+X-CM-TRANSID:zQCowAAHobZ_rulqo_g+AA--.1625S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxArWkCr1UKF4fAFy5GryrCrg_yoWrXrWkpa
+	1vka43KFWDG34UuFZxXr45Z3WFvrZ5Xw47Cr1xK34fC345KryxJw1I93yUZF1FyrZ2gF17
+	Ar4jkFWUAa9rJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1D
+	MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+	Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU5iB_UUUUUU==
+X-CM-SenderInfo: pgdluxxhqj201qj6x2xfdvhtffof0/
 
-On Tue, 03 Nov 2026 03:03:02 +0000, Alexei Starovoitov wrote:
-> On Sun, Nov 01, 2026 at 11:37 PM Feng Yang <yangfeng59949@163.com> wrote:
-> > Route these paths to bpf_get_stack_sleepable() and mark the new protos
-> > might_sleep, since build_id_parse() may fault in file data for
-> > BPF_F_USER_STACK | BPF_F_USER_BUILD_ID.  Sleepable programs that call
-> > bpf_get_stack() from inside a bpf_rcu_read_lock() region are now rejected
-> > by the verifier, which is the correct behavior for a helper that can
-> > sleep.
-> 
-> That's a new feature. It's not a fix for the splat.
-> Andrii's point in v1 is about build IDs. That's a good reason for this
-> patch, but the splat needs Songsen's patch anyway:
-> https://lore.kernel.org/bpf/20261028121859.994-1-yangsongsen@insta360.com/
-> 
->                                         Songsen's patch  this patch
->   ------------------------------------  ---------------  -------------
->   splat in sleepable progs              fixed            fixed
->   splat in bpf_wq, task_work callbacks  fixed            still there
->   build ID when the page is paged out   no               yes
->   progs that load today                 all load         some rejected
-> 
-> Row 2: the callback is sleepable, but its prog is not.
-> 
->   bpf_wq_work()                    rcu_read_lock_trace() only
->     callback_fn()                  prog->sleepable == false
->       bpf_get_task_stack()         may_fault == false
->         __bpf_get_stack()          no rcu_read_lock()
->           get_callchain_entry()    rcu_dereference(): splat
-> 
-> Row 4: sleepable fentry, lsm, iter, syscall and tracepoint progs that
-> call bpf_get_stack() under bpf_rcu_read_lock() or bpf_preempt_disable()
-> load fine today. With this patch the verifier rejects them.
-> It does so even when flags don't have BPF_F_USER_BUILD_ID.
-> 
-> Pls respin it as a feature, with a new subject and commit log
-> and a selftest.
+Hi,
 
-Thanks. I will add the selftest and respin this patch as a feature change.
+Just a friendly ping about this patch. Any feedback or review would be =
+appreciated.
+
+Thanks!
+
+> 2026=E5=B9=B48=E6=9C=8810=E6=97=A5 16:01=EF=BC=8Cdaichengrong =
+<daichengrong@iscas.ac.cn> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> uretprobe replaces the original return address of a probed function =
+with
+> a trampoline address to capture function return events.
+>=20
+> After the trampoline is entered and the uretprobe handler completes, =
+the
+> original return address needs to be restored in the user register =
+context
+> to keep the register state consistent with the state before probing.
+>=20
+> Add an architecture-specific hook for restoring the original return
+> address during uretprobe handling.
+>=20
+> The initial implementation adds support for RISC-V. Other =
+architectures
+> keep the default empty implementation until their corresponding =
+restore
+> logic is implemented.
+>=20
+> Signed-off-by: daichengrong <daichengrong@iscas.ac.cn>
+> ---
+> Change in v2:
+> - Rename arch_uretprobe_hijack_set_addr() to =
+arch_uretprobe_restore_return_address() as suggested
+>=20
+> v1: =
+https://lore.kernel.org/all/20260717082331.27058-1-daichengrong@iscas.ac.c=
+n/
+> ---
+> arch/riscv/kernel/probes/uprobes.c | 7 +++++++
+> include/linux/uprobes.h            | 1 +
+> kernel/events/uprobes.c            | 5 +++++
+> 3 files changed, 13 insertions(+)
+>=20
+> diff --git a/arch/riscv/kernel/probes/uprobes.c =
+b/arch/riscv/kernel/probes/uprobes.c
+> index eb177d0ce8ab..90ed8596e73f 100644
+> --- a/arch/riscv/kernel/probes/uprobes.c
+> +++ b/arch/riscv/kernel/probes/uprobes.c
+> @@ -139,6 +139,13 @@ arch_uretprobe_hijack_return_addr(unsigned long =
+trampoline_vaddr,
+> return ra;
+> }
+>=20
+> +void
+> +arch_uretprobe_restore_return_address(unsigned long orig_ret_vaddr,
+> +  struct pt_regs *regs)
+> +{
+> + regs->ra =3D orig_ret_vaddr;
+> +}
+> +
+> int arch_uprobe_exception_notify(struct notifier_block *self,
+> unsigned long val, void *data)
+> {
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index f548fea2adec..af5b633f92dd 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -230,6 +230,7 @@ extern bool arch_uprobe_xol_was_trapped(struct =
+task_struct *tsk);
+> extern int  arch_uprobe_exception_notify(struct notifier_block *self, =
+unsigned long val, void *data);
+> extern void arch_uprobe_abort_xol(struct arch_uprobe *aup, struct =
+pt_regs *regs);
+> extern unsigned long arch_uretprobe_hijack_return_addr(unsigned long =
+trampoline_vaddr, struct pt_regs *regs);
+> +extern void arch_uretprobe_restore_return_address(unsigned long =
+orig_ret_vaddr, struct pt_regs *regs);
+> extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum =
+rp_check ctx, struct pt_regs *regs);
+> extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs =
+*regs);
+> extern void arch_uprobe_copy_ixol(struct page *page, unsigned long =
+vaddr,
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 6300b216012c..9a2e9ce4e398 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1748,6 +1748,10 @@ void * __weak =
+arch_uretprobe_trampoline(unsigned long *psize)
+> return &insn;
+> }
+>=20
+> +void __weak arch_uretprobe_restore_return_address(unsigned long =
+orig_ret_vaddr, struct pt_regs *regs)
+> +{
+> +}
+> +
+> static struct xol_area *__create_xol_area(unsigned long vaddr)
+> {
+> struct mm_struct *mm =3D current->mm;
+> @@ -2659,6 +2663,7 @@ void uprobe_handle_trampoline(struct pt_regs =
+*regs)
+> valid =3D !next_chain || arch_uretprobe_is_alive(next_chain, =
+RP_CHECK_RET, regs);
+>=20
+> instruction_pointer_set(regs, ri->orig_ret_vaddr);
+> + arch_uretprobe_restore_return_address(ri->orig_ret_vaddr, regs);
+> do {
+> /* pop current instance from the stack of pending return instances,
+> * as it's not pending anymore: we just fixed up original
+> --=20
+> 2.25.1
 
