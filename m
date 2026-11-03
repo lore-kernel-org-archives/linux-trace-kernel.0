@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.95.113
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.83
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793673903;
-	b=UuqsAiDCMSO1Xn9MKQubR46UxLp9686oNDSCIQ672hh7YicPNRUljaHtzGnmMDImXHsg
-	 YYN8fDakvNzBE2CrSYfcJ5AWgKM4iNA043+CZJyxR1339VFMcwB/4PNeNONd3dMNzePbd
-	 3u5TN9TF003oKTqC5kcUE+HT0in0Ros2SV/ztSDh8HAl3n9sH0MNryeksptuVxnXlgjnd
-	 /182lbci7CcVkjeRvlrQvdfgjcTVqHOoED2T+MwJ1ccMEPBbEGlg01Cp8sJIntumJI5y8
-	 7/oz6ECmoBLcwTF9m7viZeaYEncSgvgo0P85g6Sd7oztLG8ty8xH8jOpyVpuYSvhd3g==
+	t=1793673917;
+	b=RQEJceC37PRK+QsMZAdOooTHnXvN0wuL0alwdZWC3gXfpwi1dIdNighN3ETaxNUuvyq0
+	 owS9zpBpJdCzp7+smjKNtoGcvygfQy7k8MWf5VZRjwCzuDoWS0ILP8ERyCoLWc+FSvsRV
+	 tzWhLbervvURpzekkXEXtxu1XiDP0cgOIsUhAllvMKLgar1BmUzE+2D+0rRdXi2MJtccZ
+	 2vFQy35C5zA5AWeOGTjSzisF+OUwbVcUpWEnpFrsVnLJNNTaxSuUKCiTj6ZH7w0uXrIYE
+	 FSVI0Y6drfVTq7o00Y0lXITdq8MwKipjz5fUH3U+COxeGDnn5rV/Kf2EQohKOXA3TRw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793673903;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793673917;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:Content-Transfer-Encoding:
 	 Content-Type:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,45 +24,45 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=j2PzMKclJ0XXRtE8rhnZiT/fJmdBjVtkmRUeMkoGe1o=;
-	b=lY7FuWhPG9SoNJwQ5D5knFZ/Ied2BUMxH/k51QkMDjdEyVdY5SbRuIGWIrxmOB5vB4+2
-	 OvuOEc3JgZ7hLG0FMG2J775oXaVtj4yAJWCV9OJtbc4H0Xg67muJZ4XVuD4jO2MVr7NUl
-	 H15eVzYGPGHCWeyINbp2wVoXwlas9nTV5lo2Vo+CNp6ScWPZGcuFAVMXpVsW/3Gpp8/UP
-	 efIlWFlDqTufN1K+3Sd29SlpeYgpMxqU0bNzj1PJR1C56Ski5eG5OvmkdQ+C2aLWMIBZv
-	 Efmb15PPCHrpyi37kOZD/k5Ab7e728J/WPn3ayl6R+TrXSlEKivJ+HH9dBtyuq37COw==
+	bh=FpVFQ8e1PJDHQiin+SzHK4wSa7oGdWib0m+YrbhAu7o=;
+	b=xkYlowF6vc+xV3K7aQRE4taRykYxAEIUhoE71KbGKsgeJ+UVH5Zm9nwAIQYt9zgezyTa
+	 gd3IRvd6YpYf5K281yDVmGDCQCRFm1gnI0dfQtsvesIRvs1AZKKh1zwri2rwT8oBCay7D
+	 nc4HtEixtHUPclBwyw9ebTjvEFjFJsILXLiP3r6tNcMyeqwYFYFFlZmmNvwJ5IYW/xiij
+	 WZztkdBRM00pVkG/NRMxAWGZSRzAZvPte6OV15ogtjqn2uKZGeWHfC+JV6VJSlUl/5h3k
+	 w6gx8uXXlK/Bv2U0VmnLTnHPEJJajnz8InGQwshj1hdr/Pvo8UE1mFVIvqdCgHTCpOQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=none header.from=atomlin.com;
 	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.95.113
-Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021113.outbound.protection.outlook.com [52.101.95.113])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.83
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020083.outbound.protection.outlook.com [52.101.195.83])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6B5606A32E;
-	Tue,  3 Nov 2026 02:45:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CC6B5606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FDC606A333;
+	Tue,  3 Nov 2026 02:45:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20FDC606A333
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RLgNaDJfLbPKbrknciQlJHtQSBuwl53EQEOmCwnqZWaFY8eJpbF0sFllRb/6XGuQHW8JRMFQQhGrgYUYFqwCAGVusavMVzXNyW5MfYvLCISXNbtoUpGiMGsKDW/Chl7IC446oQh/pvDz7CR+AlWZvWn1La3oC/1jyCpMg5LMFUsz09xWG3U4/cUZlf4tDUkH3Y6DBx5hy+xW18O/wGzAJc8kLi5s2XtmXhhjO8s96eUiKM++2DK9V7GSRWxWBpzS6oaPnXWKc0qlbsPAJHBF60Ke/7NR8UXUpvSt1Y7FN8J+NsuToAGCxgJs6XPx4cRjz4j/ihH0VOYM36nvNC3iVg==
+ b=xYjh4WsiGUCPy369ZBetS7rPBUy7k8SmYDcFyZsJJKJe9934Q8TEnLYAhehsFT4vxz+GMXjuaF2jw8jmZpDwQS/mBzxqY8I7xtgSar0S8N4i5EMMDLsWFTpBPwbDV39QOeAC6YI2DSBWeXvoWkYWUxGyRs6eVUg1x8WFDSx3T0Qm/55zbic3nRxjGM5dPFB/RE+6bsdisnabPmZmIEFXVwV+EvIEs30oxpxtCpABmuv8/YJrELPBJYwuQsh0qqrv8JVjQERgkMGt1b8rvNCDYgI3MaJRFf8EpzOF8IZDQXSY77pl4p6xAkVfYrBDx4EsPVnGK2Qp5axonR/+LJxGYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=j2PzMKclJ0XXRtE8rhnZiT/fJmdBjVtkmRUeMkoGe1o=;
- b=jSSrn+aSALN396aeUl93CwFDNAI1GW5TPjDFLzXuGXBrCojzJDjcG0yJ+HaHOqS14ISMRXwI04JPyww07CqnGa8uXf4GdMb2Z3Ust51lgAAAGJQuIh+LH0oADYDa52Dit0VeKvQOYGvWoyvjbXD/NctF0N6QpPDJeq5uuuBoSqJr0KHK27Uwor/JNllb6E9ruOtpd8Qu0kJ2Rszigx0gEHXUU01vRV3aRfMiAUnRbslqvVYMW8Omb/aGZD9sOavMwO9UKkK7qLRxGyIWfgkqIxQydeP6LSH0G7fmHV0DARMy83UJhXZERiTdYZIH8A+lt/jeRipdUIVNMRMWbvNUVA==
+ bh=FpVFQ8e1PJDHQiin+SzHK4wSa7oGdWib0m+YrbhAu7o=;
+ b=a2OufrHVnJ3jGDpXih+GjuatXlpM/ylrmXYkSJ4DNKCvQWes+oNFIOS3YpU5bNsc/POxeUrBpdDnk4WLpqtTpYfyHE7x0A0B6gphHNhTn+L+xJJGigb4+7Lr3NWwf1GsMRhFdoWY6T/ELkJgAE9AJKbR+q5Pi/J//Sq9y2R2jDHgtu3lSKuvLhvH+4zYoEEE6iDItbGeB9oMQoRKwpPETh9JCmiwtkRSXL+TMa8BloRpoLVlyMSpYmkAIRlfPih++fy1ElWtxRGikVevwloOjixdCLuIJk72HKM0VApibu65t08Iel30xVBCTE10gevQsfpR3zvOsMUiQ2SbP9rjlA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LO2P123MB6972.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:31d::5) with
+ by LODP123MB490682.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:4e0::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
- 2026 02:45:00 +0000
+ 2026 02:45:12 +0000
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 02:45:00 +0000
+ 02:45:12 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: pmladek@suse.com,
 	john.ogness@linutronix.de,
@@ -105,16 +105,16 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
-Subject: [RFC PATCH v2 1/5] panic, sys_info: Fix duplicate and dropped all-CPU backtraces in panic
-Date: Mon,  2 Nov 2026 21:44:49 -0500
-Message-ID: <20261103024453.922373-2-atomlin@atomlin.com>
+Subject: [RFC PATCH v2 4/5] printk, tracing: Support console flush suppression and tail pinning
+Date: Mon,  2 Nov 2026 21:44:52 -0500
+Message-ID: <20261103024453.922373-5-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261103024453.922373-1-atomlin@atomlin.com>
 References: <20261103024453.922373-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN8PR04CA0066.namprd04.prod.outlook.com
- (2603:10b6:408:d4::40) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN0PR04CA0029.namprd04.prod.outlook.com
+ (2603:10b6:408:ee::34) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:163::8)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -126,237 +126,612 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LO2P123MB6972:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1f62944-3cfd-4731-5407-08df39547478
+X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LODP123MB490682:EE_
+X-MS-Office365-Filtering-Correlation-Id: aaa4f8c6-1a27-4bf3-6d85-08df39547b46
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|7416014|376014|1800799024|6133799003|10067099003|22082099003|261102123227099003|18002099003|261102130727099003|921020|56012099006|5023799004|261026140227099003|261022105027099003|261021121427099003|261021123027099003|261022075727099003|261026121527099003|261009223027099003|261028144727099003|261021135927099003;
+	BCL:0;ARA:13230040|366016|23010399003|7416014|1800799024|376014|6133799003|10067099003|22082099003|18002099003|261102123227099003|261102130727099003|3023799007|56012099006|261009221227099003|261022105027099003|261026121527099003|261022075727099003|921020|261026140227099003|261009223027099003|261028144727099003|261021121427099003|261021123027099003|261021135927099003;
 X-Microsoft-Antispam-Message-Info:
-	DEEsuFzEaAIPMEIC59UGqHjLCniHLOC0ny/ExPwmC4p8xvIGuUTG+kyGMDlxfSJpGiSkHxQvpkUFxdYYlLNr5nYPrzxFHKgCE2NVzRWmC96LncgucyQWT7GbT1RUMnH3JBlwKRJRQb755FQBZyYqAbiLy/DkRy58+FhxPzT1MdINAVyolkgWCGdT6NBr/2f0R6I+sk1zwJ1Ha5pilCUnjUB7uUELYG9vrObZPD5bHbxEiMCL0UZrG98mBx7TvFvOgLzJ2xnWfSlr47y6Qr5n3NeCepfraVHydSLit4yEHoANCRJbEQ4dAqrYmV4qyb8udl2BbhP9GiuyuWp1l8aPtLl3cOyL49kE9l5am2vzY3VJwNgbePK9TDV8Mdhl3sBe4EVXjbxl6lfoAVO8at+NyhsoQJvxe6rx9YN6vqD5764f4fQ0iKMR8mEbeoBfOOyBgmAky1rVIOaZ+UID/h28CGeOFiTH2jnfsGhuVzVHmwTnOgm36Pj2us1xnf00twlfPC0leBzM7+O431mO7rg/zE07oh8ATNTXvKce4I4vfumTBwVZrTkKU26zr5x2OLWylIxAYBr+mbUlqNY5dEC3eiUtIShGLzjwx44BxYBuIIojEjlvK05y1MhpnvAuwgKdAqJn0Yr4kYulYjlAEqGr6v0dAjNEnBXThYvvPuVboqrkT2qQr+fISoGP2Ovpyj5jAh1MVqa1dfCvdBZYkPf3IQ==
+	8WE5TeV1HSF2K3frH4zYlQnI2HGYWZC9wa8LbaUtHsYh84pFGz1XlFRlzrkqGpDZu/+jpaP8d5Li434IONm4uGwBoquLIzWrZM5oV09xrP7xUNDQVY0/WeoCoigT5gFphTPC4gkQamcjjMItK+61bxIRyIune5bJRzeHN3s5pu9WOYGtKfzbS0z3CY1Z2L1onrxTNDsPYWvl+QcePgRVKbTuygW8P5KPuvM0jDuX2A+mAq7B87S0YR6wrDrjrkfqYOwCzC6IqpCw25Oo8QJ/HN47QyUyLcVHAuomlMPd3bQSTsxirAXixeL2+/Q1FJFQ4Gab5C2LCtvpf1Pj0QQANvHybXPgpCjmzTDaZ1SV/+8UM9X8UyY4kqRpo/CPalO+QCRkhZ9ypcAw79lUjHXlT3FU7rpaR/8Ewi1e+1zvPC9BQNLuhkH+P+hTwqK4AbuxA09R9cHKM3tN2zkknCCXS4zojxEFOl39Tr389KMS/vbIHA/EY4FRgBpNYsyOQEo6oz4VjCgPlX8CzdddjADrE6Rft8ueSxbYBu2UrT9VbjYxWcLDFYCyfC+KwdZ1Xkj0TyUzkYmh1RMfuloIwht4tArx6RwtSv/OjM+l0ObVNWKXW2mpju1LVWPu8nWkCMKOJHWqIFrofYm+eshAhyYdW1wILwfUmjvauuvAwIjdvDq38KfdoX0Ohy8emc77YCksYiDAvv3p5PCJV/tonhr22A==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(7416014)(376014)(1800799024)(6133799003)(10067099003)(22082099003)(261102123227099003)(18002099003)(261102130727099003)(921020)(56012099006)(5023799004)(261026140227099003)(261022105027099003)(261021121427099003)(261021123027099003)(261022075727099003)(261026121527099003)(261009223027099003)(261028144727099003)(261021135927099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(7416014)(1800799024)(376014)(6133799003)(10067099003)(22082099003)(18002099003)(261102123227099003)(261102130727099003)(3023799007)(56012099006)(261009221227099003)(261022105027099003)(261026121527099003)(261022075727099003)(921020)(261026140227099003)(261009223027099003)(261028144727099003)(261021121427099003)(261021123027099003)(261021135927099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bu+rvqO3I51fLboa/uhLhKXgVxpP3g6ZKzHeUKAbzBACr7PI157grrvBIxEv?=
- =?us-ascii?Q?GmVlXuMu21o5Jeq/gyS7LiBZrt58oc9dR7nMUEaNa65MfIyCnSi0MA89eDUU?=
- =?us-ascii?Q?O+EWA2n3ow7d3Tf+4YG5PiKO04azoeIQdLdCEvx40AwNqRmApGxKjmbzzUNm?=
- =?us-ascii?Q?LttsaiiELtR6xj+IEAe3PLW7JqHdpfcz8IwmKGur5zXNdNo83DZuf4Bc7rCx?=
- =?us-ascii?Q?Q0+Pm14iMHt01Zg/dsqULBIWYMwDFRKrgNAbGk66EeaiF1C8rla/PJGCbIae?=
- =?us-ascii?Q?ZikJg4XZkVJDCXoaoGPdfxFDC/oMAbpxKD5NGcc31rh3nxT+alM8MSyE0dTJ?=
- =?us-ascii?Q?7hKU40hBSrdxKJQvgcw9g803TZowQz4DEyguSlHA1Dnsnj02RUUGbXZmx1oi?=
- =?us-ascii?Q?08rLLtLyapk0pojabQu1YxhtkOsJPAjo7z+jx07WinP1q3mQAlWySMtZZVeK?=
- =?us-ascii?Q?/H7kecDGYrSqOwY7jd88TM/dKpQyLZrFt20c7HzOxfMW2J5tvHEsF0uUOT1a?=
- =?us-ascii?Q?2/C9sFIFD/SwMGUfNYSGv6tZeLPiGxEYf/0nGREtOWEDgT1eVPb7RLmvvDlo?=
- =?us-ascii?Q?VCKSCoXsCRW1257auPG/l+wvIUQMmySQVvx6hsfdfUaUpa6QM3fm8nTlAc23?=
- =?us-ascii?Q?4wlJhzEujFJ/qMR4AnZGUxlNk7x9LuCK/U0BxXHH4VPJY8Y1fMt74P3Z11s1?=
- =?us-ascii?Q?yNd08hby+aYYsKjtrvPXI1j4RV0+2QI64J+TtoMC43bBLl6WbS3StIVHAdEk?=
- =?us-ascii?Q?OlnG+12lvD+CRACsVpMt7Gfn15mmDpnAQ/t2ZUFXTU4yDmORlyE7Tq2B5dHW?=
- =?us-ascii?Q?4wcYQcnA/DlkKWce5oDAlnWaHO+aT0TLsPetUfpfNn2f60u2Z4mgLBbASHc0?=
- =?us-ascii?Q?4i0wKtqHHUc6P01vXe5QySUaYeIcgPPQMe+0MXuzDBps4h3jc/QV6nzWW0Oh?=
- =?us-ascii?Q?bXojOMvKGQn2Ll0kDrXA+k598/5MLt6TMLQeOqKdGqWFTJwlQpRtZliM/qbh?=
- =?us-ascii?Q?QSP3V7cgap6fMbSDjNd3rKjWUvUSUjoI8T4Dihuy1NGcsrN9cD6409CJSD1O?=
- =?us-ascii?Q?lqHobJd3RqNueabi0dYm+uUrlmwI2Lokw6XVR/0LrypypJ76Oht0aotkRJMX?=
- =?us-ascii?Q?63zOWNdKGNggPae0CsSqPRL2zHZc2nK50LhcHxgm77mCrNSu5OT+xMk2seV3?=
- =?us-ascii?Q?G4JZ9vQNydmpl2UisxPgWWVUAfcBBbzxkWHVVj9LlvXvJRWIIMtXs0SFTXqt?=
- =?us-ascii?Q?fsX5WakncsEGPpcFcjizWtCOdZafihsdoNVS4R6Xf1rXGWivH/6fvzsms7Nb?=
- =?us-ascii?Q?ZFXNXMoXd94tz58tt5Kz1KBDLodKOQgBic8yx9NpMXvkJqiYA9jmol/MqYcp?=
- =?us-ascii?Q?+hohjBIXAnkmxE6Z/xQWnY9WLUya1fuYgACldiwHV2wOuxcTKCxDIBCAVuGx?=
- =?us-ascii?Q?/0JrsMUeaIOFXv2JHejxYS/ueLa32v+G1uxVPzJ5cvbg97cLsnm/0OQujgLy?=
- =?us-ascii?Q?br0dlje9qUtel5+oLK966cx1anOpanYkhgh2dRKCK+V+tb0G0qkWcvqTIgEB?=
- =?us-ascii?Q?rfiDvyyYdbUSWisoa61iZhUMEU7Geap2fXroCrd18gQuIAjvK9hkF4BPni6K?=
- =?us-ascii?Q?a0AMfaYqzP3VVQJiUwBhgME5jDPycyduCHIo/uwN1ymXeKMckcknhOKDp8ih?=
- =?us-ascii?Q?MgIOmph//Wih5zWQhEXsA7OxEPse8tRxPERF1d0gDsacLYG4+kKlCZfE8+Jj?=
- =?us-ascii?Q?0kDAXGkh2Q=3D=3D?=
+	=?us-ascii?Q?/GsH+1vLcv1GGkHIF/4hii6T8ht/sEowsjC6L1wcu9dCtGVBQs/h7EXsPXSK?=
+ =?us-ascii?Q?SzNLMON1xNDXsjqcdcZg240vr2F6Ow7O3Yy+RZIaszY8p4wLg7F4ChJ5r8Ss?=
+ =?us-ascii?Q?Lz5xs2/XeTLPGXOjIYqcvRYGEykDO3pNllQUCv9gF1fYSt0bILmJqodfwsm6?=
+ =?us-ascii?Q?DpZB+VHq7KQH+x7saKOTNbqsezliajrpm1l07DgQ7EXZZWW7SCYMVuEYfmoy?=
+ =?us-ascii?Q?8Elw8Z/JZWwV+ku2PR6sV/MGSo3gkk1Jet3aWIDLIKsaxIPLDX1pqqM0GL/t?=
+ =?us-ascii?Q?0WzwZRGrjvEO8kSVeHUJggqqBAbyC0SiqhMst1qM9o7e9F7PY9BNM8DYCxrw?=
+ =?us-ascii?Q?QBMeEpDVYDAakNMu9sMh74JxsMcDz31bF0+UUIBWFpxUIGNu1JpwU3J22+xO?=
+ =?us-ascii?Q?3R56372SWREWBnhT2bSwipsCmVWXV4yxaUedTGtQqBF6XnaAkALxqxfQ4dCt?=
+ =?us-ascii?Q?Xod3kzbC5Zs9tGMkvgOcweArTKsdbkEW7wYDt3c6Hs99cQYpmN5lyXEmUnqF?=
+ =?us-ascii?Q?TX0iDFc19Glwvm7TAPNl1y1nMNiPSrxrFnZ4Xq2mAc9sVhiVEsR3p2TvtPcv?=
+ =?us-ascii?Q?gg/xSj9atiCRG9yMMP3hj3Qp9DXNQY7bHn2HG6YjXZL34w4O9bldRpY4sPGC?=
+ =?us-ascii?Q?PaLbWv4dVlyhNJQNFDKTFsjtrxLgx7FUiv0vF4DqPftr0HCaR87lOaLpV5BR?=
+ =?us-ascii?Q?peT3/qZJF+AUuVJ+qG9xaZY0GtILsxGZBYtgLgmzq8ljF4Yd9DRf71BFGpJw?=
+ =?us-ascii?Q?9o5+NLZwe3inNgiWG2wdNz12f/yYPhakpoNqyWQmNpwDCP/00MYK7M7vWRMM?=
+ =?us-ascii?Q?ZTUD2c9tV8JUTz8z7TqozbQeOSSmlgR3IpnV9PJzghNl90CGmfCi9cY/PSRq?=
+ =?us-ascii?Q?kTQniWc5QMA9RZXXrLlz5Rinn8mvrZC3ID6+jdO6R9ivIEpXDHTSwvub0bFq?=
+ =?us-ascii?Q?ciJm3hr2R3+sYUlrpdzk49LWLv+d49Gh66ZAyh+J+gVT38r9/pXszAZcIgg9?=
+ =?us-ascii?Q?pk8b4rYxPVOT4S87D3jc8ZdnIi69gwjkPprhhZpwRlg1Ebpy4Zoh5O0Y2KKf?=
+ =?us-ascii?Q?CJYqqh+7wwKDGkZbiZ3BfJDq558bSWDTm4rzrkz5glC2N+mSVrUjHgXLX7CZ?=
+ =?us-ascii?Q?OkM7bqcg1KinBJkfDmrla4sn0SzDXzb6YYUlyLg932kKLluS2l9V7sGiInB9?=
+ =?us-ascii?Q?BJPw8mEwZFj/TxIN/sf3Q4MYKlKT5R9uBobJw3NXGHPATaPOKVPh/NUoE6Zp?=
+ =?us-ascii?Q?6sH6kDyDjDF8w4pUkbgeF18uJARy1lju7D5JEe7ycD7aZkzcMA3Mby2Kbmit?=
+ =?us-ascii?Q?ukeaMSmfQ3Y8lR8UiL53i9qABNWPyN3IWfmo/0Qf0Gg6JWzDxIXoNGL+s25J?=
+ =?us-ascii?Q?pCEOXEHwmwZzRngBBoeK+r1wxxJX1mtpapNqsqP0YP2JeAbx4OjkshxXoWE3?=
+ =?us-ascii?Q?Nj8QnHjAHxZvzUUQc5fmfY0E5Ly6SRmFuWROTmH4TqAPPDi7iIYfyAUDCfz8?=
+ =?us-ascii?Q?+e2TWqdR2tRxwvkGiAUNcnoV2EPF1s+Fl9u4Eo9hpX6Z7GPvX/KtiwHi7lNE?=
+ =?us-ascii?Q?UHF18KhqaYBSoQus6mdZ3KAQoGQnuGAEtGN0/H+AVUPa3uk+rXmaTIWnnIlw?=
+ =?us-ascii?Q?cC1fIVg9QqLceV9Y47PDIaPsndjiFRm6c5kTv+GIZbVyqpyvaDj6z06zKMuF?=
+ =?us-ascii?Q?+W5vamCbdbkj9hvIf9Yq/+OAR+7s46U/cdzr1Wq9PdqY470BG1Lw9GTyHY4O?=
+ =?us-ascii?Q?0n1KKNjyXQ=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f62944-3cfd-4731-5407-08df39547478
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaa4f8c6-1a27-4bf3-6d85-08df39547b46
 X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:45:00.5994
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:45:11.9329
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: snS+TJ8ZAX+FWrsGp79hOQY3IBrFLpSVtXF6jzdwv9K5gkFMQxgsuE6flNqpPN/vH2kcvIxLXs3bsqSrxKdQRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB6972
+X-MS-Exchange-CrossTenant-UserPrincipalName: NHGdTMJ+aCy79ZWeWy1vWnhSJN0NCnDL1vpkXx+GPnMF10zcpGoR/SvF1ldb1uA+wvtqNXBk++fm7XejjKbABg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LODP123MB490682
 
-When sys_info() was factored out of kernel/panic.c by
-commit b76e89e50fc3 ("panic: generalize panic_print's function to show
-sys info"), __sys_info() gained an unconditional call to
-trigger_all_cpu_backtrace() when SYS_INFO_ALL_BT is set, while
-panic_other_cpus_shutdown() retained its own call to
-panic_trigger_all_cpu_backtrace().
+When collecting high-volume diagnostic output into the printk ring
+buffer during a kernel crash prior to kexec, synchronous console
+emission can stall the panicking CPU for tens of seconds on slow serial
+or IPMI Serial-over-LAN links, risking external hardware watchdog
+resets. At the same time, uninhibited ring buffer rotation can wrap and
+overwrite the initial Oops, faulting registers, and primary call trace.
 
-This causes two problems during a kernel panic:
+Introduce two scoped mechanisms for in-memory crash telemetry
+collection:
 
-    1.  vpanic() invokes panic_trigger_all_cpu_backtrace() inside
-        panic_other_cpus_shutdown() before stopping secondary CPUs, and
-        then invokes trigger_all_cpu_backtrace() a second time inside
-        sys_info(panic_print) after secondary CPUs have already been
-        shut down, stalling for up to 10 seconds waiting for offline
-        CPUs to respond to NMIs. Furthermore, if SYS_INFO_ALL_BT is
-        configured via the kernel.kernel_sys_info sysctl rather than
-        panic_print, panic_other_cpus_shutdown() misses it prior to CPU
-        shutdown.
+    1.  Console flush suppression
 
-    2.  If sys_info(SYS_INFO_ALL_BT) is invoked on the panicking CPU
-        prior to panic_other_cpus_shutdown(), calling
-        trigger_all_cpu_backtrace() directly bypasses
-        panic_trigger_all_cpu_backtrace() and leaves
-        panic_triggering_all_cpu_backtrace unset. Because panic_cpu is
-        already active, vprintk_emit() silently drops all NMI backtrace
-        messages originating from non-panic CPUs.
+        Provide printk_suppress_console_flush(bool) to clear the console
+        flush mask in printk_get_console_flush_type(), guard legacy
+        record emission and kthread wakeups, and suppress
+        wake_up_klogd() in vprintk_emit(). Records written via
+        vprintk_store() are stored in the in-memory ring buffer while
+        bypassing synchronous hardware console emission and kthread
+        wakeups.
 
-Export panic_trigger_all_cpu_backtrace() with a panic_on_this_cpu() and
-one-shot guard so all-CPU backtraces are only emitted once before
-secondary CPUs are stopped, consult sys_info_get_mask(panic_print) in
-panic_other_cpus_shutdown(), record prior Oops stack dumps in
-panic_try_start(), and route SYS_INFO_ALL_BT in __sys_info()
-through panic_trigger_all_cpu_backtrace() on the panicking CPU.
+    2.  Ring buffer tail pinning
 
-Fixes: b76e89e50fc3 ("panic: generalize panic_print's function to show sys info")
+        Provide printk_mark_panic_start(), printk_clear_panic_start(),
+        printk_freeze_tail(bool), and printk_is_tail_full(). Recording
+        the next reserved sequence number at the start of a crash (or
+        clamping to prb_first_valid_seq(prb) if the crash output itself
+        already wrapped the buffer) allows data_make_reusable() and
+        desc_push_tail() to continue recycling older pre-crash records
+        while refusing to advance the tail past the pinned crash
+        sequence number. Once the watermark is reached, prb_reserve(),
+        prb_reserve_in_last(), and ftrace_dump_one() finalize the last
+        record and stop reserving descriptors or consuming trace entries
+        so the primary crash context and remaining trace buffer remain
+        intact.
+
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- include/linux/panic.h    |  1 +
- include/linux/sys_info.h |  1 +
- kernel/panic.c           | 31 +++++++++++++++++++++++++++----
- lib/sys_info.c           | 17 ++++++++++++++---
- 4 files changed, 43 insertions(+), 7 deletions(-)
+ include/linux/printk.h            |  27 +++++
+ kernel/printk/internal.h          |   4 +
+ kernel/printk/nbcon.c             |  11 +-
+ kernel/printk/printk.c            |  29 +++++-
+ kernel/printk/printk_ringbuffer.c | 168 ++++++++++++++++++++++++++++--
+ kernel/trace/trace.c              |  20 +++-
+ 6 files changed, 244 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index 17e61b61c45f..3b56f873f1e2 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -57,6 +57,7 @@ void panic_reset(void);
- bool panic_in_progress(void);
- bool panic_on_this_cpu(void);
- bool panic_on_other_cpu(void);
-+void panic_trigger_all_cpu_backtrace(void);
- 
- /*
-  * Only to be used by arch init code. If the user over-wrote the default
-diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
-index a5bc3ea3d44b..e7699b82aa49 100644
---- a/include/linux/sys_info.h
-+++ b/include/linux/sys_info.h
-@@ -18,6 +18,7 @@
- #define SYS_INFO_BLOCKED_TASKS		0x00000080
- 
- void sys_info(unsigned long si_mask);
-+unsigned long sys_info_get_mask(unsigned long si_mask);
- unsigned long sys_info_parse_param(char *str);
- 
- #ifdef CONFIG_SYSCTL
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 574ee5a12f92..4cb26914b2af 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -70,6 +70,7 @@ static bool panic_console_replay;
- 
- bool panic_triggering_all_cpu_backtrace;
- static bool panic_this_cpu_backtrace_printed;
-+static bool panic_all_cpu_backtrace_printed;
- 
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
- EXPORT_SYMBOL_GPL(panic_timeout);
-@@ -451,13 +452,21 @@ bool panic_try_start(void)
- 	old_cpu = PANIC_CPU_INVALID;
- 	this_cpu = raw_smp_processor_id();
- 
--	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
-+	if (!atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu))
-+		return false;
-+
-+	if (atomic_read(&panic_redirect_cpu) == PANIC_CPU_INVALID &&
-+	    (test_taint(TAINT_DIE) || oops_in_progress))
-+		panic_this_cpu_backtrace_printed = true;
-+
-+	return true;
- }
- EXPORT_SYMBOL(panic_try_start);
- 
- void panic_reset(void)
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index f594c1266bfd..17806c515fe6 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -205,6 +205,11 @@ extern asmlinkage void dump_stack(void) __cold;
+ void printk_trigger_flush(void);
+ void console_try_replay_all(void);
+ void printk_legacy_allow_panic_sync(void);
++void printk_suppress_console_flush(bool suppress);
++bool printk_mark_panic_start(void);
++void printk_clear_panic_start(void);
++void printk_freeze_tail(bool freeze);
++bool printk_is_tail_full(void);
+ extern bool nbcon_device_try_acquire(struct console *con);
+ extern void nbcon_device_release(struct console *con);
+ void nbcon_atomic_flush_unsafe(void);
+@@ -309,6 +314,28 @@ static inline void printk_legacy_allow_panic_sync(void)
  {
--	atomic_set(&panic_cpu, PANIC_CPU_INVALID);
-+	panic_this_cpu_backtrace_printed = false;
-+	atomic_set_release(&panic_cpu, PANIC_CPU_INVALID);
- }
- EXPORT_SYMBOL(panic_reset);
- 
-@@ -538,8 +547,21 @@ void check_panic_on_warn(const char *origin)
- 		      origin, limit);
  }
  
--static void panic_trigger_all_cpu_backtrace(void)
-+/**
-+ * panic_trigger_all_cpu_backtrace - trigger NMI backtraces on all CPUs once
-+ *
-+ * Temporarily permit non-panic CPUs to emit messages into the printk ring
-+ * buffer while capturing all-CPU backtraces during a panic. Subsequent calls
-+ * are ignored so backtraces are not re-triggered after secondary CPUs have
-+ * been shut down.
-+ */
-+void panic_trigger_all_cpu_backtrace(void)
- {
-+	if (!panic_on_this_cpu() || panic_all_cpu_backtrace_printed)
-+		return;
-+
-+	panic_all_cpu_backtrace_printed = true;
-+
- 	/* Temporary allow non-panic CPUs to write their backtraces. */
- 	panic_triggering_all_cpu_backtrace = true;
- 
-@@ -558,8 +580,9 @@ static void panic_trigger_all_cpu_backtrace(void)
-  */
- static void panic_other_cpus_shutdown(bool crash_kexec)
- {
--	if (panic_print & SYS_INFO_ALL_BT)
-+	if (sys_info_get_mask(panic_print) & SYS_INFO_ALL_BT)
- 		panic_trigger_all_cpu_backtrace();
-+	panic_all_cpu_backtrace_printed = true;
- 
- 	/*
- 	 * Note that smp_send_stop() is the usual SMP shutdown function,
-diff --git a/lib/sys_info.c b/lib/sys_info.c
-index f32a06ec9ed4..496893eb776b 100644
---- a/lib/sys_info.c
-+++ b/lib/sys_info.c
-@@ -7,6 +7,7 @@
- #include <linux/kernel.h>
- #include <linux/ftrace.h>
- #include <linux/nmi.h>
-+#include <linux/panic.h>
- #include <linux/sched/debug.h>
- #include <linux/string.h>
- #include <linux/sysctl.h>
-@@ -153,14 +154,24 @@ static void __sys_info(unsigned long si_mask)
- 	if (si_mask & SYS_INFO_FTRACE)
- 		ftrace_dump(DUMP_ALL);
- 
--	if (si_mask & SYS_INFO_ALL_BT)
--		trigger_all_cpu_backtrace();
-+	if (si_mask & SYS_INFO_ALL_BT) {
-+		if (panic_on_this_cpu())
-+			panic_trigger_all_cpu_backtrace();
-+		else if (!panic_in_progress())
-+			trigger_all_cpu_backtrace();
-+	}
- 
- 	if (si_mask & SYS_INFO_BLOCKED_TASKS)
- 		show_state_filter(TASK_UNINTERRUPTIBLE);
- }
- 
-+unsigned long sys_info_get_mask(unsigned long si_mask)
++static inline void printk_suppress_console_flush(bool suppress)
 +{
-+	return (si_mask & ~SYS_INFO_PANIC_CONSOLE_REPLAY) ? :
-+		READ_ONCE(kernel_si_mask);
 +}
 +
- void sys_info(unsigned long si_mask)
++static inline bool printk_mark_panic_start(void)
++{
++	return false;
++}
++
++static inline void printk_clear_panic_start(void)
++{
++}
++
++static inline void printk_freeze_tail(bool freeze)
++{
++}
++
++static inline bool printk_is_tail_full(void)
++{
++	return false;
++}
++
+ static inline bool nbcon_device_try_acquire(struct console *con)
  {
--	__sys_info(si_mask ? : kernel_si_mask);
-+	__sys_info(sys_info_get_mask(si_mask));
+ 	return false;
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 85fbf1801cbe..72f0a5d154ec 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -186,6 +186,7 @@ struct console_flush_type {
+ };
+ 
+ extern bool console_irqwork_blocked;
++extern bool console_flush_suppressed;
+ 
+ /*
+  * Identify which console flushing methods should be used in the context of
+@@ -195,6 +196,9 @@ static inline void printk_get_console_flush_type(struct console_flush_type *ft)
+ {
+ 	memset(ft, 0, sizeof(*ft));
+ 
++	if (unlikely(READ_ONCE(console_flush_suppressed)))
++		return;
++
+ 	switch (nbcon_get_default_prio()) {
+ 	case NBCON_PRIO_NORMAL:
+ 		if (have_nbcon_console && !have_boot_console) {
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 5f8afaca8866..36db1a8abe94 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -1194,7 +1194,8 @@ static bool nbcon_kthread_should_wakeup(struct console *con, struct nbcon_contex
+ 	 * ownership in the middle of a message.
+ 	 */
+ 	if (unlikely(atomic_read(&nbcon_cpu_emergency_cnt)) ||
+-	    unlikely(panic_in_progress()))
++	    unlikely(panic_in_progress()) ||
++	    unlikely(READ_ONCE(console_flush_suppressed)))
+ 		return false;
+ 
+ 	cookie = console_srcu_read_lock();
+@@ -1253,7 +1254,8 @@ static int nbcon_kthread_func(void *__console)
+ 		 * mode. See nbcon_kthread_should_wakeup() for more details.
+ 		 */
+ 		if (unlikely(atomic_read(&nbcon_cpu_emergency_cnt)) ||
+-		    unlikely(panic_in_progress()))
++		    unlikely(panic_in_progress()) ||
++		    unlikely(READ_ONCE(console_flush_suppressed)))
+ 			goto wait_for_event;
+ 
+ 		backlog = false;
+@@ -1642,7 +1644,7 @@ static void nbcon_atomic_flush_pending_con(struct console *con, u64 stop_seq)
+ 	 * is not available do it.
+ 	 */
+ 	printk_get_console_flush_type(&ft);
+-	if (!ft.nbcon_offload &&
++	if (ft.nbcon_atomic && !ft.nbcon_offload &&
+ 	    prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
+ 		stop_seq = prb_next_reserve_seq(prb);
+ 		goto again;
+@@ -1659,6 +1661,9 @@ static void __nbcon_atomic_flush_pending(u64 stop_seq)
+ 	struct console *con;
+ 	int cookie;
+ 
++	if (unlikely(READ_ONCE(console_flush_suppressed)))
++		return;
++
+ 	cookie = console_srcu_read_lock();
+ 	for_each_console_srcu(con) {
+ 		short flags = console_srcu_read_flags(con);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9a205f94bfac..cf60bcd5acfb 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -467,6 +467,9 @@ bool legacy_allow_panic_sync;
+ /* Avoid using irq_work when suspending. */
+ bool console_irqwork_blocked;
+ 
++/* Suppress synchronous console flushing during in-memory panic dumps. */
++bool console_flush_suppressed;
++
+ #ifdef CONFIG_PRINTK
+ DECLARE_WAIT_QUEUE_HEAD(log_wait);
+ static DECLARE_WAIT_QUEUE_HEAD(legacy_wait);
+@@ -2386,6 +2389,23 @@ int vprintk_store(int facility, int level,
+ 	return ret;
  }
+ 
++/**
++ * printk_suppress_console_flush - suppress console flushing in printk()
++ * @suppress: true to suppress console emission and klogd wakeups, false to
++ *            restore normal flushing behaviour
++ *
++ * Context: Any context.
++ */
++void printk_suppress_console_flush(bool suppress)
++{
++	WRITE_ONCE(console_flush_suppressed, suppress);
++	if (!suppress) {
++		printk_trigger_flush();
++		if (!console_irqwork_blocked)
++			wake_up_klogd();
++	}
++}
++
+ /*
+  * This acts as a one-way switch to allow legacy consoles to print from
+  * the printk() caller context on a panic CPU. It also attempts to flush
+@@ -2482,7 +2502,8 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 
+ 	if (ft.legacy_offload)
+ 		defer_console_output();
+-	else if (!console_irqwork_blocked)
++	else if (!console_irqwork_blocked &&
++		 !unlikely(READ_ONCE(console_flush_suppressed)))
+ 		wake_up_klogd();
+ 
+ 	return printed_len;
+@@ -3243,6 +3264,9 @@ static bool console_flush_one_record(bool do_cond_resched, u64 *next_seq, bool *
+ 
+ 	*try_again = false;
+ 
++	if (unlikely(READ_ONCE(console_flush_suppressed)))
++		return false;
++
+ 	printk_get_console_flush_type(&ft);
+ 
+ 	cookie = console_srcu_read_lock();
+@@ -3665,6 +3689,9 @@ static bool legacy_kthread_should_wakeup(void)
+ 	if (kthread_should_stop())
+ 		return true;
+ 
++	if (unlikely(READ_ONCE(console_flush_suppressed)))
++		return false;
++
+ 	printk_get_console_flush_type(&ft);
+ 
+ 	cookie = console_srcu_read_lock();
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index d38e7c2f6887..60c8bd2f6490 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -377,6 +377,90 @@ static struct prb_data_block *to_block(struct prb_data_ring *data_ring,
+ 	return (void *)&data_ring->data[DATA_INDEX(data_ring, begin_lpos)];
+ }
+ 
++static atomic64_t printk_panic_seq = ATOMIC64_INIT(U64_MAX);
++static bool printk_tail_frozen;
++static bool printk_tail_full;
++
++/**
++ * printk_mark_panic_start - record the ring buffer sequence at crash start
++ *
++ * Pin the next reserved sequence number at the beginning of a top-level Oops,
++ * fatal warning, or panic so subsequent tail freezing can recycle older
++ * pre-crash records without overwriting the primary crash output.
++ *
++ * Context: Any context.
++ * Return: true if this call newly pinned the crash start sequence from
++ *         U64_MAX, false if a crash start sequence was already active.
++ */
++bool printk_mark_panic_start(void)
++{
++	s64 panic_seq = atomic64_read(&printk_panic_seq);
++	u64 first_seq, next_seq;
++	bool pinned;
++
++	do {
++		first_seq = prb_first_valid_seq(prb);
++		if ((u64)panic_seq == U64_MAX) {
++			next_seq = prb_next_reserve_seq(prb);
++			pinned = true;
++		} else if ((u64)panic_seq < first_seq) {
++			next_seq = first_seq;
++			pinned = false;
++		} else {
++			return false;
++		}
++	} while (!atomic64_try_cmpxchg(&printk_panic_seq, &panic_seq, next_seq));
++
++	return pinned;
++}
++
++/**
++ * printk_clear_panic_start - clear a previously recorded crash start sequence
++ *
++ * Clear the pinned sequence number when a warning or Oops completes without
++ * triggering a kernel panic.
++ *
++ * Context: Any context.
++ */
++void printk_clear_panic_start(void)
++{
++	atomic64_set(&printk_panic_seq, U64_MAX);
++}
++
++/**
++ * printk_freeze_tail - prevent ring buffer tail from passing the crash start
++ * @freeze: true to stop tail advancement at the pinned crash sequence number,
++ *          false to restore normal ring buffer rotation
++ *
++ * Context: Any context.
++ */
++void printk_freeze_tail(bool freeze)
++{
++	if (freeze) {
++		printk_mark_panic_start();
++		WRITE_ONCE(printk_tail_full, false);
++		WRITE_ONCE(printk_tail_frozen, true);
++	} else {
++		WRITE_ONCE(printk_tail_frozen, false);
++		WRITE_ONCE(printk_tail_full, false);
++		atomic64_set(&printk_panic_seq, U64_MAX);
++	}
++}
++EXPORT_SYMBOL_GPL(printk_freeze_tail);
++
++/**
++ * printk_is_tail_full - check if the frozen ring buffer tail hit its limit
++ *
++ * Context: Any context.
++ * Return: true if tail freezing is active and the ring buffer has reached the
++ *         pinned crash sequence number, false otherwise.
++ */
++bool printk_is_tail_full(void)
++{
++	return unlikely(READ_ONCE(printk_tail_frozen) &&
++			READ_ONCE(printk_tail_full));
++}
++
+ /*
+  * Increase the data size to account for data block meta data plus any
+  * padding so that the adjacent data block is aligned on the ID size.
+@@ -591,6 +675,9 @@ static bool data_make_reusable(struct printk_ringbuffer *rb,
+ 	struct prb_desc desc;
+ 	struct prb_data_blk_lpos *blk_lpos = &desc.text_blk_lpos;
+ 	unsigned long id;
++	u64 seq;
++
++	*lpos_out = lpos_begin;
+ 
+ 	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+ 	while (need_more_space(data_ring, lpos_begin, lpos_end)) {
+@@ -607,12 +694,20 @@ static bool data_make_reusable(struct printk_ringbuffer *rb,
+ 		id = blk->id; /* LMM(data_make_reusable:A) */
+ 
+ 		d_state = desc_read(desc_ring, id, &desc,
+-				    NULL, NULL); /* LMM(data_make_reusable:B) */
++				    &seq, NULL); /* LMM(data_make_reusable:B) */
+ 
+ 		switch (d_state) {
+ 		case desc_miss:
++			return false;
+ 		case desc_reserved:
+ 		case desc_committed:
++			if (unlikely(READ_ONCE(printk_tail_frozen))) {
++				*lpos_out = lpos_begin;
++				/* Pairs with data_push_tail:D. */
++				smp_rmb();
++				if (lpos_begin == atomic_long_read(&data_ring->tail_lpos))
++					WRITE_ONCE(printk_tail_full, true);
++			}
+ 			return false;
+ 		case desc_finalized:
+ 			/*
+@@ -621,6 +716,15 @@ static bool data_make_reusable(struct printk_ringbuffer *rb,
+ 			 */
+ 			if (blk_lpos->begin != lpos_begin)
+ 				return false;
++			if (unlikely(READ_ONCE(printk_tail_frozen)) &&
++			    seq >= (u64)atomic64_read(&printk_panic_seq)) {
++				*lpos_out = lpos_begin;
++				/* Pairs with data_push_tail:D. */
++				smp_rmb();
++				if (lpos_begin == atomic_long_read(&data_ring->tail_lpos))
++					WRITE_ONCE(printk_tail_full, true);
++				return false;
++			}
+ 			desc_make_reusable(desc_ring, id);
+ 			break;
+ 		case desc_reusable:
+@@ -690,6 +794,12 @@ static bool data_push_tail(struct printk_ringbuffer *rb, unsigned long lpos)
+ 		 * data blocks before @lpos.
+ 		 */
+ 		if (!data_make_reusable(rb, tail_lpos, lpos, &next_lpos)) {
++			if (next_lpos != tail_lpos) {
++				if (atomic_long_try_cmpxchg(&data_ring->tail_lpos,
++							    &tail_lpos, next_lpos))
++					tail_lpos = next_lpos;
++				continue;
++			}
+ 			/*
+ 			 * 1. Guarantee the block ID loaded in
+ 			 *    data_make_reusable() is performed before
+@@ -787,8 +897,9 @@ static bool desc_push_tail(struct printk_ringbuffer *rb,
+ 	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+ 	enum desc_state d_state;
+ 	struct prb_desc desc;
++	u64 seq;
+ 
+-	d_state = desc_read(desc_ring, tail_id, &desc, NULL, NULL);
++	d_state = desc_read(desc_ring, tail_id, &desc, &seq, NULL);
+ 
+ 	switch (d_state) {
+ 	case desc_miss:
+@@ -813,6 +924,14 @@ static bool desc_push_tail(struct printk_ringbuffer *rb,
+ 	case desc_committed:
+ 		return false;
+ 	case desc_finalized:
++		if (unlikely(READ_ONCE(printk_tail_frozen)) &&
++		    seq >= (u64)atomic64_read(&printk_panic_seq)) {
++			/* Pairs with desc_push_tail:B. */
++			smp_rmb();
++			if (atomic_long_read(&desc_ring->tail_id) == tail_id)
++				WRITE_ONCE(printk_tail_full, true);
++			return false;
++		}
+ 		desc_make_reusable(desc_ring, tail_id);
+ 		break;
+ 	case desc_reusable:
+@@ -881,8 +1000,11 @@ static bool desc_push_tail(struct printk_ringbuffer *rb,
+ 		 * not in an allowed tail state. But if the tail has since
+ 		 * been moved by another CPU, then it does not matter.
+ 		 */
+-		if (atomic_long_read(&desc_ring->tail_id) == tail_id) /* LMM(desc_push_tail:D) */
++		if (atomic_long_read(&desc_ring->tail_id) == tail_id) { /* LMM(desc_push_tail:D) */
++			if (unlikely(READ_ONCE(printk_tail_frozen)))
++				WRITE_ONCE(printk_tail_full, true);
+ 			return false;
++		}
+ 	}
+ 
+ 	return true;
+@@ -1428,6 +1550,9 @@ bool prb_reserve_in_last(struct prb_reserved_entry *e, struct printk_ringbuffer
+ 	struct prb_desc *d;
+ 	unsigned long id;
+ 
++	if (printk_is_tail_full())
++		goto fail_reopen;
++
+ 	local_irq_save(e->irqflags);
+ 
+ 	/* Transition the newest descriptor back to the reserved state. */
+@@ -1505,8 +1630,11 @@ bool prb_reserve_in_last(struct prb_reserved_entry *e, struct printk_ringbuffer
+ 
+ 	return true;
+ fail:
+-	prb_commit(e);
+-	/* prb_commit() re-enabled interrupts. */
++	if (printk_is_tail_full())
++		prb_final_commit(e);
++	else
++		prb_commit(e);
++	/* prb_commit() / prb_final_commit() re-enabled interrupts. */
+ fail_reopen:
+ 	/* Make it clear to the caller that the re-reserve failed. */
+ 	memset(r, 0, sizeof(*r));
+@@ -1664,6 +1792,12 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	if (!data_check_size(&rb->text_data_ring, r->text_buf_size))
+ 		goto fail;
+ 
++	if (printk_is_tail_full()) {
++		desc_make_final(rb, atomic_long_read(&desc_ring->head_id));
++		atomic_long_inc(&rb->fail);
++		goto fail;
++	}
++
+ 	/*
+ 	 * Descriptors in the reserved state act as blockers to all further
+ 	 * reservations once the desc_ring has fully wrapped. Disable
+@@ -1672,7 +1806,24 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	 */
+ 	local_irq_save(e->irqflags);
+ 
++	if (unlikely(READ_ONCE(printk_tail_frozen)) && r->text_buf_size) {
++		struct prb_data_ring *data_ring = &rb->text_data_ring;
++		unsigned int size = to_blk_size(r->text_buf_size);
++		unsigned long begin_lpos = atomic_long_read(&data_ring->head_lpos);
++		unsigned long next_lpos = get_next_lpos(data_ring, begin_lpos, size);
++
++		if (!data_push_tail(rb, next_lpos - DATA_SIZE(data_ring))) {
++			if (printk_is_tail_full())
++				desc_make_final(rb, atomic_long_read(&desc_ring->head_id));
++			atomic_long_inc(&rb->fail);
++			local_irq_restore(e->irqflags);
++			goto fail;
++		}
++	}
++
+ 	if (!desc_reserve(rb, &id)) {
++		if (printk_is_tail_full())
++			desc_make_final(rb, atomic_long_read(&desc_ring->head_id));
+ 		/* Descriptor reservation failures are tracked. */
+ 		atomic_long_inc(&rb->fail);
+ 		local_irq_restore(e->irqflags);
+@@ -1725,8 +1876,11 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	r->text_buf = data_alloc(rb, r->text_buf_size, &d->text_blk_lpos, id);
+ 	/* If text data allocation fails, a data-less record is committed. */
+ 	if (r->text_buf_size && !r->text_buf) {
+-		prb_commit(e);
+-		/* prb_commit() re-enabled interrupts. */
++		if (printk_is_tail_full())
++			prb_final_commit(e);
++		else
++			prb_commit(e);
++		/* prb_commit() / prb_final_commit() re-enabled interrupts. */
+ 		goto fail;
+ 	}
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e8c4efa8107b..35a56f04e9b3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9519,6 +9519,9 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
+ 	else
+ 		iter.cpu_file = RING_BUFFER_ALL_CPUS;
+ 
++	if (printk_is_tail_full())
++		goto out_enable;
++
+ 	if (tr == &global_trace)
+ 		printk(KERN_TRACE "Dumping ftrace buffer:\n");
+ 	else
+@@ -9537,10 +9540,13 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
+ 	 * and then release the locks again.
+ 	 */
+ 
+-	while (!trace_empty(&iter)) {
++	while (!trace_empty(&iter) && !printk_is_tail_full()) {
+ 
+-		if (!cnt)
++		if (!cnt) {
+ 			printk(KERN_TRACE "---------------------------------\n");
++			if (printk_is_tail_full())
++				break;
++		}
+ 
+ 		cnt++;
+ 
+@@ -9551,19 +9557,25 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
+ 			int ret;
+ 
+ 			ret = print_trace_line(&iter);
++			trace_printk_seq(&iter.seq);
++			if (printk_is_tail_full())
++				break;
++
+ 			if (ret != TRACE_TYPE_NO_CONSUME)
+ 				trace_consume(&iter);
+-
+-			trace_printk_seq(&iter.seq);
+ 		}
+ 		touch_nmi_watchdog();
+ 	}
+ 
++	if (printk_is_tail_full())
++		goto out_enable;
++
+ 	if (!cnt)
+ 		printk(KERN_TRACE "   (ftrace buffer empty)\n");
+ 	else
+ 		printk(KERN_TRACE "---------------------------------\n");
+ 
++out_enable:
+ 	tr->trace_flags |= old_userobj;
+ 
+ 	tracer_tracing_enable(tr);
 -- 
 2.55.0
 
