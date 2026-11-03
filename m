@@ -1,63 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793714955;
-	b=Ul5YaEvosntLfneYsM1QJh5j4erCqtptGrMVNxqkH/lm+8jvklDHThD+uMRlZiqzw3tc
-	 QualWS+dxnnwglrW2frl/WV32hFBEiPF6iGlM7ZCaSkbfiX+1L0cHZJECsVuu7hmDjj1u
-	 IEme45UDIkUhVkr0YfBqGtUXREfyVOT2UUd++2aXQO/r/aO10j4riIpeHcfQLyhiQUVu/
-	 /Nh4orNA6Owh4BOfBEv+GSTNnbAQKwkzUaa7vK7AeZb7p2bZJRy6sWHE9LpXn0sUeSKaF
-	 E+d/zaCWAdryvJ74ImS5Kw+xRy8Qzko4ekksJCTGrJ5C/SM05X0CfxFbJJw+gzLNN7Q==
+	t=1793717430;
+	b=h664BkdC4BLBxDYuWPy2GW78Gy+tjtcqQzuZ2ioKihRsrbsK2/2SYZhhhZj1KYtdeYab
+	 GeobJYxSa7kzZtDDTEEcDUL/HC6e6kF7DdnGOb9w8ZUnnt/ewwH/LxfizmpCkwoO0PyK6
+	 8MI8JTrdy22j8KGJ+4oKzzLDS+RsUFR/ovB2yBPoprW5RanlZbzgQgvTPMGhFmfFPt+0a
+	 /XqevlcRSlvrF4WByhM34EhmgS62BhBTxA3+uGuzRBFbCFHfXcYkptcEJUgRoIPWJtwYb
+	 yn6gND1BQ1L9UiVADajm+BP6ekUIDR4JdFYg5lcLezuPbn1PLMIEjE+IoK1Ef023HRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793714955;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793717430;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
+	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=v+uRgwbRUU4aheoQPyto2Oz4JzeLx90BnFlBnJNi9qE=;
-	b=mwDttaefKD8Wn3qaoNwUWrUdJptMkZfGwmy4UnFAVS/h4VhZ/OXQphbf44KZRvjyGC5R
-	 2mB7L1ENXIcp3MmF0kNuATfFt6MmRzDqUJQ8NM6PQbF8v1/Fi4Br10HAqlqLWOUxuU4Ob
-	 UI8/3NzAgyzWURyDvcDfE1oSHmwu3Vwayb3Re5AT6joNIHHfrmKxMZ4/n3rsyG6h6TDT6
-	 99D9DxqoPMD4DXd7662+RW0SXGw+93SKBggeAgv4jkEEMoeJSABzX3r1OtnO5rj81H2Au
-	 mEJp5Zdo+HcTRfUZ8WZPlt2uPgKlcdiFCZcuonDZ+ll95IGf+aLgd22zbauxzAP75lw==
+	bh=3KZBN4g8hHRhd5aTLy1dmEYizxY7WtdZWKzgT4zNB+k=;
+	b=UG/mFQolDbS0BhTGc6ZfVyszw5AH9TeLogFr2Gid7mASoAdU5kM+b4CTxYPo+Xmflxh4
+	 wicFxjWq1iFDvs542yP/ikRelyEu2tmGhH5g6vn44YugVLxM3D7xYmgMcR8tTW/OFT3eg
+	 Sw88dUs17ngDXhrwkfMTSy7+N9yrP6ZGzmDPkLX7Aa+8EGs9fejgGyddIc04HvxCaWNjm
+	 uHlfj+4JNqBDAweSYOUW1bUvXCa7dfqe9wu1kM7ZyaKVv7EDbTu7zYViR0V5VSguCpFdv
+	 RAmInDzRvte1koVIK70u3lvTcGIo4G5i86de1blktAWbTu7xxtwumjvJMDD+8gLzYlQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="RcA/7teZ";
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=D12nnsLJ;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0DA606A324;
-	Tue,  3 Nov 2026 14:09:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C0DA606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BC6606D83C
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 14:50:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4BC6606D83C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=RcA/7teZ
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8F06640454;
-	Tue,  3 Nov 2026 14:09:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id B861F60016;
-	Tue,  3 Nov 2026 14:09:02 +0000 (UTC)
-Date: Tue, 3 Nov 2026 09:09:01 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=D12nnsLJ
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id C368D120285;
+	Tue,  3 Nov 2026 14:50:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 1C5EB20024;
+	Tue,  3 Nov 2026 14:50:21 +0000 (UTC)
+Date: Tue, 3 Nov 2026 09:50:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, John Ogness
- <john.ogness@linutronix.de>, Jonathan Corbet <corbet@lwn.net>, Naveen N Rao
- <naveen@kernel.org>, "David S . Miller" <davem@davemloft.net>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan
- <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Tiezhu
- Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/3] probes: Use trace_printk() in probe handlers
-Message-ID: <20261103090901.0b5957e9@gandalf.local.home>
-In-Reply-To: <aunBcxXXNhXDd-U5@pathway.suse.cz>
-References: <179360345418.115681.193455787480210412.stgit@devnote2>
-	<20261102123408.0fb950bf@gandalf.local.home>
-	<871p9251ve.fsf@jogness.linutronix.de>
-	<undine-1793671566795563056-fb7169cffcc7ac3c@undined.local>
-	<aunBcxXXNhXDd-U5@pathway.suse.cz>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, "Jaewon Jung" <jaewon8868@gmail.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Keep copying markers when one instance is
+ stopped
+Message-ID: <20261103095019.6a88e783@gandalf.local.home>
+In-Reply-To: <sashiko-outbox-194417@kernel.org>
+References: <20261103005219.3236380-1-jaewon8868@gmail.com>
+	<sashiko-outbox-194417@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,32 +63,90 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: nq4s4fjsfjocj8t6iixs6h4humbp4ruq
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: B861F60016
+X-Rspamd-Queue-Id: 1C5EB20024
+X-Stat-Signature: 7terwbbhgw4rj3d6qmmwwwokauigtmpa
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/QnPlfa3I395bqi8l8xsN2mnoDaFGMewc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=v+uRgwbRUU4aheoQPyto2Oz4JzeLx90BnFlBnJNi9qE=; b=RcA/7teZrODlM5KYH8KSEoVpU9j+dS0QzO/mc6D1E+jRxUPuqH2Cz6ZCUrK3AT3Z/IwKoNHIsvGfj2xrlx3t3LDvl7Bz7JchdPFVwr9uanXdvVth6hMwYGLkXz+7XGA8UUuf+TwiYRJtt4vYKKE+tYyH1U/bXFsJUxbP9qLbrTo=
-X-HE-Tag: 1793714942-743349
-X-HE-Meta: U2FsdGVkX1/3qNtaCofL59FjZEa84TUZgw3Trz2OZkzfhk3I3l4+qiIfQnr1P2qj0FRkGu9WhokLbcR5J4EAU3BbnVEimd2bqlqnNPrewt/Dua1s5+6CrZLk7sxitIndDGTbqqEzY84oKQ3Tzntwg1nR7CtZpMx1QiIyJ8zRorLweoKnmK5K7VAK1l/rw5w3iJ6N0bpyEDqPB8MtcsZW8nZIVYBeztctiovl41KH5gaB8uwuZpSMXFmx91OEMVjxpHbV5LRepnFO9icODD+X3xHwp8JsahuROZflTCfaAJwT7GfhjpEGb9FwrjSordW4Ui58wK+0+lhiYDBsKeaX6L6WFLfkJM+8gaim7OvZVy9KQ4PHHZiRXlUI3EP5f4gX
+X-Session-ID: U2FsdGVkX186CmU9YsXUeVI7SLF9eisJ+p2TAcKubaI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=3KZBN4g8hHRhd5aTLy1dmEYizxY7WtdZWKzgT4zNB+k=; b=D12nnsLJWW6Sf/FmjqJg8oEBdbzsiLqapgPyIfxQBcfku13C0ND3VV9o/ySaf95RggDsp5vgJNw2jPJh949GMqO9obgOKpAlIb2wqgWKeYbrlIqKLJg9VtVoGhDl8CjKqwUgLUGiFiF1D15rntIq+OAE15qPLah6icuuRa+7dTY=
+X-HE-Tag: 1793717421-52474
+X-HE-Meta: U2FsdGVkX1/V5AjvAbqQGsbmHxIX4njFY5YwlCgJQ2w0HmiByd2ygSymNw5+I29yScVEMY6JGyyMS0uGZZ3WCoR0yTLG2Pz0mpYXHkUBGdL7v0p2Cw9pMoReuMxOVzaxx8iFDA3ZW8QmcVoFZoZ7ygUfiEyEmAO5e3deii/hUVorY+NvQLFXF8CICKaeD7TpJm+AY1rEkk07P6gaBkpgjKK8pINlaCcrJmq78WiCJ3IhwrJqB8F5JbbzhTIB/ne6gMv2/k5SxPUcJps6mfLudA/GSDq/ef1ga68HwKlcLw5hdDmtehQcqZHUqshAFUeCE+EGC81QcVk9Wd4WZBss79U33mleFvrIBUah2fjIhmwrBdLIf8UmMA==
 
-On Tue, 3 Nov 2026 12:11:47 +0100
-Petr Mladek <pmladek@suse.com> wrote:
+On Tue, 03 Nov 2026 01:05:27 +0000
+sashiko-bot@kernel.org wrote:
 
-> I believe that trace_printk() has a similar problem. You could
-> not use it inside the code used by trace_printk() because
-> it might cause an unbound recursion.
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] tracing: successful marker write overwritten by tail error in marker_copies
+> --
+> 
+> commit 2345280f3b3625fa6e36116fc50947e792b25719
+> Author: Jaewon Jung <jaewon8868@gmail.com>
+> 
+> tracing: Keep copying markers when one instance is stopped
+> 
+> This commit removes the early break on write errors in tracing_mark_write()
+> and tracing_mark_raw_write() when iterating over marker_copies so that
+> stopped instances do not prevent remaining instances from receiving markers.
+> 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 08614af8fad1c..0b66c55d378b1 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -6330,8 +6330,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+> >  		guard(rcu)();
+> >  		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
+> >  			written = write_marker_to_buffer(tr, buf, cnt, ip);
+> > -			if (written < 0)
+> > -				break;
+> >  		}
+> >  	} else {
+> >  		written = write_marker_to_buffer(tr, buf, cnt, ip);
+> > @@ -6409,8 +6407,6 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+> >  		guard(rcu)();
+> >  		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
+> >  			written = write_raw_marker_to_buffer(tr, buf, cnt);
+> > -			if (written < 0)
+> > -				break;  
+> 
+> [Severity: Medium]
+> As reported by Steven Rostedt on v1 [1], should errors from stopped
+> instances in marker_copies be prevented from overwriting a successful write
+> return value?
+> 
+> When instances enable copy_trace_marker, update_marker_trace() adds each
+> instance to the head of marker_copies:
+> 
+> kernel/trace/trace.c:update_marker_trace() {
+> 	if (enabled) {
+> 		if (tr->trace_flags & TRACE_ITER(COPY_MARKER))
+> 			return false;
+> 
+> 		list_add_rcu(&tr->marker_list, &marker_copies);
+> 		tr->trace_flags |= TRACE_ITER(COPY_MARKER);
+> 		return true;
+> 	}
+> 
+> This leaves earlier-enabled instances and global_trace at the tail of
+> marker_copies.
+> 
+> Because tracing_mark_write() and tracing_mark_raw_write() unconditionally
+> assign written on every iteration of marker_copies, if an earlier instance
+> in the list is active and receives the marker (setting written = cnt), but
+> the last instance in marker_copies has tracing disabled,
+> write_marker_to_buffer() or write_raw_marker_to_buffer() will return -EBADF
+> on that tail instance. Won't that overwrite written and cause the syscall
+> to return -EBADF to userspace even though the marker was successfully
+> written to the active instance(s)?
+> 
 
-That is slightly incorrect. I use trace_printk() to debug tracing! ;-)
+We only want to record the the output of the global array, so we should have it be:
 
-Well, adding trace_printk() to the trace_printk() function itself will have
-issues, but the ring buffer logic allows trace_printk() to be injected into
-it. The ring buffer has recursion protection, so adding trace_printk() into
-the ftrace ring buffer will print the trace_printk(). You may need to add a
-way to not do the trace_printk() again, otherwise you may get multiple
-prints until the nested limit is reached.
-
-But I just wanted to point out that I do use trace_printk() to debug the
-ring buffer even though trace_printk itself uses the ring buffer too.
+	if (tr == &global_trace) {
+		guard(rcu)();
+		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
+			ssize_t w = write_marker_to_buffer(tr, buf, cnt, ip);
+			if (tr == @global_trace)
+				written = w;
+		}
 
 -- Steve
