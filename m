@@ -1,54 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793708636;
-	b=G5uztWnP3X59tHQ46TFQUijtN3daA5xFPQ9L7C9Rtu605PbD4qe1XOXY0osHPM4SF8j0
-	 q25MOnsMpGiCdjx+U4HtNtpblC8eeuyheniE11u3N7V8XfaJkLmwzZi6F97njHs/QDQNb
-	 D6wsFnC34gJDH9c/GaHxQYwgrLFAEyWHs8XCgfK+nkOMj1NerkStLhI79ulaxBTkN7qRv
-	 TNU9j7dDYS1/tUL5icdb6Tx6IlDX1ZObdvhM9VdRNPgad2fSdA+4UahwZtOQWIxe8JcyH
-	 JrvSqWcmYJsEc2WdXGxZ1le9wwGkBv9UP4G/OUre5YzqgtlCHAvdMcQunTHmD6wqvMw==
+	t=1793711275;
+	b=3DyoV4r0NrbF5cT1NTjbklWrH9hyDux2gCUw0ji6AKju8Zx0NB6klxVsgD6qlDKI722E
+	 XJEF306nYZNfbmRAfUXNwaZIMKDpNuwli7oFsTdscBsn+RtEAgilX3Rw3Po4hl/ZRDvDJ
+	 8WKWJEV4Yk55xAY82S0irjQ8iQPc7NLiKVhMq0eUFhvk1ei+Ig22HTOrl+sv/nWm0O6n/
+	 mR7Dz77mEjykmr6Q3G1xAvxC1dfWF2MuOCpwwOSHGos/ngaqGDkUxzTOv0q3PNoOk4d+X
+	 UXRri5rf3eJxeIqm4kVhziYs2gJUybhaRKV5BSpp1QRbPlhuC8Gf9m3/lZwtZHDWj1w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793708636;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793711275;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=5+giExnZG9PbIRprmj3rcwLAC4uTyxxBQab4OXS7D6o=;
-	b=KEU7EWJW6oxBKMCIG2MXj9BCwx9XdWqDKKNwFR+6CHie4yitHAl5/oJCLgxfoCiC8CTY
-	 vV/h0fzdw0BNqiCQAiGdS83YPUfGqpKZwa5+qWI6W1/jL1R3A3Vzg6JmDsbfjhC2AK/Wo
-	 QYTommvh6Ksk1Jho74VDGN4UIMT94qwajhWdGJPW974BdWO04lc7fpR2ICBf41Gp1Dv4W
-	 ny4PIbSv6YzFLDQO94B2/YqcLfUVy2ojVYEQbys8Pidt0ohbHlHnFHj1OHmb5PKY74H+n
-	 uhN/jJGU05kUnUjUGISPe5JBAjpbc8thrqRJQUUr123mUo5RMB/1qxpHc4GySvt77zA==
+	bh=zW6mfRDfJlJujbvw1IGU4dhItJDWWt4lFHg3ixIXfNc=;
+	b=uigcP5wNEP9+cow+n749aYp+pbwcjTZRYzrEdrYSz/4WYA4aRW48orFqEDeIeyJ7viiU
+	 BrHt028gPfvn/t6w2jD2cwZZz1d05hIaxiAz5gAHHI1+w5bJdjGu9s6MVif7FCCi/UKZH
+	 ofRgxS16WfolJS6JEwlX2n/fMcV3vuMtaFK8YdwEPiQOHAhuLQkpXJZ6iQ5xSmJGiV8D9
+	 xYpXypMhz52LG2Xt4sfAjeYH47JiLHz/NTaswLOunoD+54bZIrXBJn+GxVJfciJedVIJi
+	 +jr41qRLDlPERl/u1/BKKogbrT8dZrDTTJ8IFlXywTt64flW9cxvu4R4xqsWFV4jAeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dbTCJdF2;
-	arc=none smtp.remote-ip=91.218.175.144
-Received: from mta0.migadu.com (out-144.mta0.migadu.com [91.218.175.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=iqCzK0sc;
+	arc=none smtp.remote-ip=185.70.43.100
+Received: from mail-43100.protonmail.ch (mail-43100.protonmail.ch [185.70.43.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECD4606A326
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 12:23:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EECD4606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA8A606A32C;
+	Tue,  3 Nov 2026 13:07:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BFA8A606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dbTCJdF2
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=ZCZPLAdU2GP8PtTvn35MB7p7rMmvQ15GA72KpLOK3eo=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793708632; v=1; x=1794313432;
- b=dbTCJdF2uGcqzh37oFPtMCzkhAalFFRRJDdXJ3PFE5wouyD0ejuykduxUhTOFCxnMbQqANKp
- nlP4F/PNQVafFAM1T3CV9vFtgoIYVeJCBEZZiwrQe0Xfppf5goqSZKwXRYoVzz477MXUSzNJH49
- rlmPhYYvxKH+9ZumpGmTeFfs=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id e671a108ae62cf5d;
-	Tue, 03 Nov 2026 12:23:52 +0000
-X-Mizu-Trace-ID: e671a108ae62cf5d
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <f5137dbb-b0ed-44ea-a23f-5c848315a68a@linux.dev>
-Date: Tue, 3 Nov 2026 20:23:37 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=iqCzK0sc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1793711271; x=1793970471;
+	bh=zW6mfRDfJlJujbvw1IGU4dhItJDWWt4lFHg3ixIXfNc=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=iqCzK0sc7cecORzDmY3YWfT5hLlIEjoJA6u80pAONmYNHB6PUjlxR4C2E/mV4SFs1
+	 uGCKeFcrBFBXgC1TzTk+VbkD+jBjepV9clKS8SsfZXsZdAxqgR8WDVzvpzA6lb+FRd
+	 lPy/fD63GhNciaLjtIqflt+L5mOgzG6eGdBBb3NY+hFrmfbg9XeDPjURob9scBI1e6
+	 hiDfXXLcSYDu9Tij7TaJZztU4h+0ck5rfWRIJ7J71xcam9fjxpkqnwj1t5zwNtlMzX
+	 pid9Kj1LeyhzARMLaM2YazATJN4fa2WPd2evwiU2QDZQTXUlZEKvsx9ElsujCTllj8
+	 40H3fIPmMkD6g==
+Date: Tue, 03 Nov 2026 13:07:42 +0000
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+From: Paolo Bertinetti <paolobertinetti200f4@proton.me>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, Francesco Nigro <nigro.fra@gmail.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [PATCH 0/2] perf: Fix PERF_EVENT_IOC_REFRESH for tracepoints and breakpoints
+Message-ID: <20261103130732.764081-1-paolobertinetti200f4@proton.me>
+Feedback-ID: 117280896:user:proton
+X-Pm-Message-ID: 2045d11603ba2f0177be2f8a7bfbb574cb29152f
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,173 +61,64 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
-To: Barry Song <baohua@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- cgroups@vger.kernel.org,
- "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
- Ridong Chen <chenridong@xiaomi.com>
-References: <20261103025610.3738894-1-ridong.chen@linux.dev>
- <20261103025610.3738894-8-ridong.chen@linux.dev>
- <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
- <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
- <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Since commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage"),
+an event that reaches its PERF_EVENT_IOC_REFRESH limit is stopped with
+pmu->stop() and disabled. Re-arming it adds it back with PERF_EF_START,
+but perf_trace_add() and hw_breakpoint_add() never clear
+PERF_HES_STOPPED. Tracepoint, kprobe, uprobe and breakpoint events
+re-armed this way deliver only their first overflow. Francesco reported
+it with the "Event re-armed with PERF_EVENT_IOC_REFRESH" perf test,
+found through an async-profiler bug.
+
+These patches make both PMUs set the state from PERF_EF_START on every
+add, as perf_swevent_add() does. The pmu->stop() call stays, so the
+POLL_HUP fix of 18dbcbfabfff is kept.
+
+Leo's series [1] removes that pmu->stop() call instead, which also
+avoids this, and is still pending. Either way, add() with PERF_EF_START
+should start the event.
+
+Tested in QEMU/KVM, x86_64, 4 vCPUs, v7.4-rc1 with PROVE_LOCKING:
+
+- perf test "Event re-armed with PERF_EVENT_IOC_REFRESH": the tracepoint
+  case goes from FAILED (count 1, 1 overflow) to Ok (count 1000, 1000
+  POLL_HUP signals).
+
+- A small test that re-arms each event from its signal handler and
+  triggers it 200 times, overflows delivered:
+
+                 v7.4-rc1   + patch 1   + patch 2
+    tracepoint       1         200         200
+    kprobe           1         200         200
+    uprobe           1         200         200
+    breakpoint       1           1         200
+
+- The full perf test suite and tools/testing/selftests/perf_events give
+  the same results before and after, apart from the REFRESH test. Many
+  perf tests fail in my VM on both kernels, for setup reasons.
+
+- No lockdep or other warnings in dmesg.
+
+I can add kprobe, uprobe and breakpoint cases to the perf test if that
+helps.
+
+[1] https://lore.kernel.org/r/20260514-arm_cs_clean_perf_handle-v2-0-cbb29c=
+3b3661@arm.com/
+
+Paolo Bertinetti (2):
+  tracing/perf: Clear stop state in perf_trace_add()
+  perf/hw_breakpoint: Clear stop state in hw_breakpoint_add()
+
+ kernel/events/hw_breakpoint.c   | 3 +--
+ kernel/trace/trace_event_perf.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+--=20
+2.53.0
 
-On 11/3/2026 6:00 PM, Barry Song wrote:
-> On Tue, Nov 3, 2026 at 4:39 PM Ridong Chen <ridong.chen@linux.dev> wrote:
->>
->>
->>
->> On 11/3/2026 2:48 PM, Barry Song wrote:
->>> On Tue, Nov 3, 2026 at 10:58 AM Ridong Chen <ridong.chen@linux.dev> wrote:
->>>>
->>>> From: Ridong Chen <chenridong@xiaomi.com>
->>>>
->>>> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
->>>> youngest generation. There is currently no tracepoint on this path, so
->>>> the moment a new generation is created, and how the min_seq of each type
->>>> trails behind it, cannot be observed as it happens.
->>>
->>> We might be more interested in why aging is triggered rather
->>> than the exact moment when max_seq is advanced.
->>>
->>> With your patch, we get:
->>>
->>> ~ # cat /sys/kernel/tracing/trace | grep mglru_inc_max_seq
->>>              a.out-93      [001] d..1.   278.276539:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=4 anon_min_seq=2
->>> file_min_seq=1 nr_anon={0x0,0xf016,0x12,0x0}
->>> nr_file={0x1886,0xb,0x4c,0x0}
->>>            kswapd0-50      [000] d..1.   278.422400:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=5 anon_min_seq=2
->>> file_min_seq=2 nr_anon={0x5,0xccb6,0x3439,0x0}
->>> nr_file={0x4ae,0x4f,0x55,0x0}
->>>            kswapd0-50      [000] d..1.   278.508003:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=6 anon_min_seq=3
->>> file_min_seq=4 nr_anon={0xccb6,0x3d29,0x1,0x0}
->>> nr_file={0x0,0x59,0x7,0x0}
->>>            kswapd0-50      [000] d..1.   280.046056:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=7 anon_min_seq=4
->>> file_min_seq=5 nr_anon={0x3bf3,0xcbbd,0x23e,0x0}
->>> nr_file={0x0,0xb,0x1,0x0}
->>>            kswapd0-50      [000] d..1.   280.124876:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=8 anon_min_seq=5
->>> file_min_seq=6 nr_anon={0xcafd,0x3e31,0x0,0x0}
->>> nr_file={0x0,0x5,0x7,0x0}
->>>              a.out-96      [001] d..1.   290.629014:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=9 anon_min_seq=7
->>> file_min_seq=6 nr_anon={0x0,0x10615,0xb,0x0}
->>> nr_file={0x331,0xb,0x9a,0x0}
->>>            kswapd0-50      [000] d..1.   290.653098:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=10 anon_min_seq=7
->>> file_min_seq=7 nr_anon={0x15,0xef23,0x18c4,0x0}
->>> nr_file={0xb,0xb8,0x55,0x0}
->>>              a.out-96      [001] d..1.   290.684875:
->>> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=11 anon_min_seq=8
->>> file_min_seq=9 nr_anon={0xeee3,0x1afb,0x2,0x0}
->>> nr_file={0x0,0x76,0x4,0x0}
->>>
->>> You can see that the youngest generation is always zero,
->>> because you're just getting the newly added youngest
->>> generation :-)
->>>
->>
->> Hi Barry,
->>
->> Thank you very much for testing and reviewing.
->>
->>> This somehow suggests that the information is redundant, as
->>> there is always a zero there.
->>>
->>> I suspect we'll need an additional tracepoint to show why
->>> aging is triggered and at what sc->priority it happens.
->>>
->>> But do you know why you trace the moment just after aging
->>> is completed, rather than the reason why aging is needed?
->>>
->> My original goal was to pair it with mm_mglru_scan_folios, to see how
->> the aging window of each memcg moves. The per-generation anon/file
->> nr_pages were added following your suggestion on v1. I put it at the
->> end of inc_max_seq() because of the restart there, as max_seq and
->> min_seq are only final after that.
-> 
-> The per-generation anon/file nr_pages are perfectly good, as
-> they can also help explain why aging is needed, especially
-> now that we're introducing new code for imbalance-based
-> aging.
-> 
->>
->> You make a very good point that the reason for aging is also
->> important. So I'd like to discuss which way is better:
->>
->> 1) Keep mm_mglru_inc_max_seq, and add another tracepoint at the aging
->>    decision in try_to_shrink_lruvec(), reporting why aging is needed
->>    and at what sc->priority.
->>
->> 2) Replace mm_mglru_inc_max_seq with a single tracepoint in
->>    try_to_shrink_lruvec(), right before try_to_inc_max_seq(), reporting
->>    the reason, sc->priority, swappiness, max_seq/min_seq and the
->>    per-generation nr_pages before aging. The youngest generation is
->>    not empty at that point, and the new window after aging can still
->>    be seen from the following mm_mglru_scan_folios.
->>
->> Which one do you prefer?
-> 
-> Maybe we should keep option 2 for now. Understanding why
-> we are aging and at what priority is much more important,
-> especially since we're still introducing some
-> imbalance-based aging code.
-> 
-> It should be quite simple, just a matter of moving the code
-> around a little.
-> 
-> If we later find a good reason to have option 1, we can
-> always add it, right?
-> 
-
-Hi Barry,
-
-Agreed, I'll go with option 2. Two things I'd like to confirm first:
-
-1) To report the reason, should_run_aging() would need to return it
-  instead of a bool, e.g. an enum like:
-
-   enum lru_gen_aging_reason {
-	AGING_NONE,
-	AGING_NO_EVICTABLE,     /* eviction is not possible anymore */
-	AGING_MIN_GENS,		/* better to age, eviction still possible */
-   };
-	
-Or just report sc->priority, swappiness, max_seq/min_seq and the
-per-generation nr_pages, and let users derive the reason from them?
-The former is more direct, the latter keeps should_run_aging()
-unchanged.
-
-2) try_to_shrink_lruvec() has changed quite a lot recently, e.g.
-Kairui's reclaim loop rework, and your swappiness series also touches it, 
-including the aging part. Is it stable enough now to carry a tracepoint there?
-
--- 
-Best regards
-Ridong
 
