@@ -1,41 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=159.226.251.25
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699464;
-	b=d7+EjfF01Y3Age3NYpfKtqGUOQEeqbFW6Mo3i8QFoDguMvenfm6vDpFCehrnkDESacIF
-	 8zrrzFkJGBpXj3wilfdsAijrF6Dpz2X3cq3an/HUgdyM425WlUa+JW0dMNJvD5KGRji96
-	 WXz2HQs/iRD5PmovNH7OZHFklrHYc7DJ8NUI40FFPkkg/6s0mpqBCL+4Jk/1NHsZO6q0J
-	 1yDE36yJPIJ7B7mrE3OdH5HiMp6p4sKpR0VhllTiSmesVQM7nPXYjFNNno/8gyTZrrR0N
-	 H5mJSEDhaK/oJq0BsLrt7XDL2dqY7dwgxKTk13yf7X59KltEEO++ez5nWQtjfEjSOMA==
+	t=1793700027;
+	b=1H0b3Ll7m9Q5UyESL4OaKcxD/OIRaZV8WTU0pYy+OV1jhOsXBLcGz2j3+R4ZqRxfBHO4
+	 c6oBeLQDx1O3IHwHu9w058B3TNckcdzx0XPw7uDgc6PIGVmhOePrvBec1RiXJ/3rBTl79
+	 HZ5CjFyk9YeaONTGMgJjcO+sYBJLRo7OZ/aAUXmk+hvflk+a+OrFKeTAW671LV51GZjZJ
+	 BfP3E1CX/1DJpY3ZfgLeDteVQHpYD5lj5SWkZ7+qTpppyoEi9usGf5beSD8fPI7SPENkc
+	 jA/o3EyhMIAdisMAGuQufeJJHLFo9i5SiLxYToK6Zph9qFckTC0NgZ5Haqe+GFk/sIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699464;
-	h=DMARC-Filter:Received:Content-Type:Mime-Version:Subject:From:
-	 In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:
-	 To:X-Mailer:X-CM-TRANSID:X-Coremail-Antispam:X-Originating-IP:
-	 X-CM-SenderInfo;
-	bh=9Ytf/hgVA5s6xuBkEZhEYc5g21hKogJ9a5/6yr9VeuA=;
-	b=as543yLrsgFhZZB8kXU8akzOTxrJ58MmC/oe59sFTwO+du3J1rDDC7bbhgVo+/aQJh6D
-	 +lYpHwcRBqfBcZ4bb0vub2niRmItigtg2oatXJJyyLnYnyjRvxA13PO+JAXmkDjjtqhzB
-	 fBSLJOUX2yKecmKSV6Qfl73WtIhQB7DhvNOYy2re3oU+a8g3ZSB5AYp8lqo4kU2ejWK2S
-	 XDNLH7xPP20+2K3f4+a460Q6ElHA9ErZAlv1mACzLU6H23VoqnyHulQ7tPWKB+2+4iSRa
-	 P38sAuIaDTFL0Mmok7KSM/1bT8+cQEdl4hPr+sVLDZ55Iq0zdV1s6KtXIVgZ492MWRw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793700027;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=5eBsKnOAtib/53cPHq4YDPTfnBHbrb23tyc46Pd1NRs=;
+	b=ckxlQ3LAkvtPc+tLyZ628C2JpHB372TOuDWZk283lSgBFSbHTQVwQ8M+7BNCkimouue4
+	 apFGocBsv6K6B3U+ShZvaPMdW3oW5iZfc/v3+mushSdzFRLxQCFK05DFsYMwNUcT9vaUB
+	 1f2jyzVePshvqbsU7I8TDVr6qfEIcMzES6FkS5JkcIjj3btkepZLzNQ6sMv47CdmwbSCh
+	 SDqFMMhqpjLYy60RIEBiuoedw7O/Aj17hbBdOD+beb6HLbguJdroDcwjAwtSxiT2AMgQr
+	 8cgcqZz2Kmt9xB2Gr1xQi/4uU8pBGMdKH0zlUNvLumZEXB+NhlHCvDconGqzd2VMr3w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=iscas.ac.cn;
-	spf=pass smtp.mailfrom=iscas.ac.cn;
-	arc=none smtp.remote-ip=159.226.251.25
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eiSil1mq;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBD7606A333;
-	Tue,  3 Nov 2026 09:51:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4CBD7606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from smtpclient.apple (unknown [121.237.245.232])
-	by APP-05 (Coremail) with SMTP id zQCowAAHobZ_rulqo_g+AA--.1625S2;
-	Tue, 03 Nov 2026 17:50:55 +0800 (CST)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCE0606A833
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 10:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eiSil1mq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 042DB1F00A02
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 10:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793700026;
+	bh=5eBsKnOAtib/53cPHq4YDPTfnBHbrb23tyc46Pd1NRs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=eiSil1mqSE0j2PYtwUbO9UfsvsIc5feXXEeOV0FGZxcqNNvxcFFzgkmJz2YYlj5KA
+	 W4xh6ZLH6hqIBcKHCrN/zbE+Nyix2wwVQh2jGgY9APgvDVsvgLjOBTOyyClHwvO/au
+	 xbLkvvIHhYgbqAR0qXbZwlp0ztXzvvK1lTFj6O5wjuZOXUwx8tkp4fSciwzsrUhAQ2
+	 Bh5v+AZ5LNxws7W1zrbh6S7jUGTtlLIsIA3WPGQLMQtgFidT76LzNqYUg8xD1uKKcS
+	 olKLS5u8FGkqrefsr146rJBCUIXSysi3dMug3YD64IteAWnOz21nM6rO9eDwY5o2oN
+	 MDpFozkxNK7jg==
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-93f269e335eso516297585a.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Nov 2026 02:00:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBzoovN6I8aCwXTyOxF/AsvQFgV95UBNOiplBeeFLIy4X96QfG6DLjivpgX4uRmjiyGL6EL/2p1T65oiEEgDJxn30D0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+i70hkG8VgyTBhlwbN/P2+3tGJBeYVLx4Y5ScfexYBX5oRVq28
+	vW21TpaSvTZHnz9D3lqXCl+95QjUu8uipZDmtmDrbIYV/BTexJooW7wFUSfwkVu50JscrdMIBao
+	SrLUfWznM5xKYvkzkMmdiSqI3ghE0vcs=
+X-Received: by 2002:a05:620a:7303:10b0:945:b101:67c1 with SMTP id
+ af79cd13be357-945b10169d1mr751687785a.24.1793700025088; Tue, 03 Nov 2026
+ 02:00:25 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -44,154 +58,147 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3901.200.71.1.16\))
-Subject: Re: [PATCH v2] uprobes: Restore original return address in uretprobe
- context
-From: daichengrong <daichengrong@iscas.ac.cn>
-In-Reply-To: <20260810080140.96587-1-daichengrong@iscas.ac.cn>
-Date: Tue, 3 Nov 2026 16:58:03 +0800
-Cc: linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>,
- alex@ghiti.fr,
- Albert Ou <aou@eecs.berkeley.edu>
+MIME-Version: 1.0
+References: <20261103025610.3738894-1-ridong.chen@linux.dev>
+ <20261103025610.3738894-8-ridong.chen@linux.dev> <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
+ <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
+In-Reply-To: <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
+From: Barry Song <baohua@kernel.org>
+Date: Tue, 3 Nov 2026 18:00:13 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
+X-Gm-Features: AclHuK-l8OdgfBebeJ7I2lXBHNEFb91IlwAm3Z2gmv4eIjSIYhVp7xL_4GoZss8
+Message-ID: <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
+Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Muchun Song <muchun.song@linux.dev>, 
+	Qi Zheng <qi.zheng@linux.dev>, David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>, Ridong Chen <chenridong@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <313E1182-DADD-485A-AE2C-36ACA58F35DE@iscas.ac.cn>
-References: <20260810080140.96587-1-daichengrong@iscas.ac.cn>
-To: Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>
-X-Mailer: Apple Mail (2.3901.200.71.1.16)
-X-CM-TRANSID:zQCowAAHobZ_rulqo_g+AA--.1625S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxArWkCr1UKF4fAFy5GryrCrg_yoWrXrWkpa
-	1vka43KFWDG34UuFZxXr45Z3WFvrZ5Xw47Cr1xK34fC345KryxJw1I93yUZF1FyrZ2gF17
-	Ar4jkFWUAa9rJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1D
-	MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
-	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
-	Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
-	vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU5iB_UUUUUU==
-X-CM-SenderInfo: pgdluxxhqj201qj6x2xfdvhtffof0/
 
-Hi,
+On Tue, Nov 3, 2026 at 4:39=E2=80=AFPM Ridong Chen <ridong.chen@linux.dev> =
+wrote:
+>
+>
+>
+> On 11/3/2026 2:48 PM, Barry Song wrote:
+> > On Tue, Nov 3, 2026 at 10:58=E2=80=AFAM Ridong Chen <ridong.chen@linux.=
+dev> wrote:
+> >>
+> >> From: Ridong Chen <chenridong@xiaomi.com>
+> >>
+> >> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
+> >> youngest generation. There is currently no tracepoint on this path, so
+> >> the moment a new generation is created, and how the min_seq of each ty=
+pe
+> >> trails behind it, cannot be observed as it happens.
+> >
+> > We might be more interested in why aging is triggered rather
+> > than the exact moment when max_seq is advanced.
+> >
+> > With your patch, we get:
+> >
+> > ~ # cat /sys/kernel/tracing/trace | grep mglru_inc_max_seq
+> >             a.out-93      [001] d..1.   278.276539:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D4 anon_min_seq=3D2
+> > file_min_seq=3D1 nr_anon=3D{0x0,0xf016,0x12,0x0}
+> > nr_file=3D{0x1886,0xb,0x4c,0x0}
+> >           kswapd0-50      [000] d..1.   278.422400:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D5 anon_min_seq=3D2
+> > file_min_seq=3D2 nr_anon=3D{0x5,0xccb6,0x3439,0x0}
+> > nr_file=3D{0x4ae,0x4f,0x55,0x0}
+> >           kswapd0-50      [000] d..1.   278.508003:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D6 anon_min_seq=3D3
+> > file_min_seq=3D4 nr_anon=3D{0xccb6,0x3d29,0x1,0x0}
+> > nr_file=3D{0x0,0x59,0x7,0x0}
+> >           kswapd0-50      [000] d..1.   280.046056:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D7 anon_min_seq=3D4
+> > file_min_seq=3D5 nr_anon=3D{0x3bf3,0xcbbd,0x23e,0x0}
+> > nr_file=3D{0x0,0xb,0x1,0x0}
+> >           kswapd0-50      [000] d..1.   280.124876:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D8 anon_min_seq=3D5
+> > file_min_seq=3D6 nr_anon=3D{0xcafd,0x3e31,0x0,0x0}
+> > nr_file=3D{0x0,0x5,0x7,0x0}
+> >             a.out-96      [001] d..1.   290.629014:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D9 anon_min_seq=3D7
+> > file_min_seq=3D6 nr_anon=3D{0x0,0x10615,0xb,0x0}
+> > nr_file=3D{0x331,0xb,0x9a,0x0}
+> >           kswapd0-50      [000] d..1.   290.653098:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D10 anon_min_seq=3D=
+7
+> > file_min_seq=3D7 nr_anon=3D{0x15,0xef23,0x18c4,0x0}
+> > nr_file=3D{0xb,0xb8,0x55,0x0}
+> >             a.out-96      [001] d..1.   290.684875:
+> > mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D11 anon_min_seq=3D=
+8
+> > file_min_seq=3D9 nr_anon=3D{0xeee3,0x1afb,0x2,0x0}
+> > nr_file=3D{0x0,0x76,0x4,0x0}
+> >
+> > You can see that the youngest generation is always zero,
+> > because you're just getting the newly added youngest
+> > generation :-)
+> >
+>
+> Hi Barry,
+>
+> Thank you very much for testing and reviewing.
+>
+> > This somehow suggests that the information is redundant, as
+> > there is always a zero there.
+> >
+> > I suspect we'll need an additional tracepoint to show why
+> > aging is triggered and at what sc->priority it happens.
+> >
+> > But do you know why you trace the moment just after aging
+> > is completed, rather than the reason why aging is needed?
+> >
+> My original goal was to pair it with mm_mglru_scan_folios, to see how
+> the aging window of each memcg moves. The per-generation anon/file
+> nr_pages were added following your suggestion on v1. I put it at the
+> end of inc_max_seq() because of the restart there, as max_seq and
+> min_seq are only final after that.
 
-Just a friendly ping about this patch. Any feedback or review would be =
-appreciated.
+The per-generation anon/file nr_pages are perfectly good, as
+they can also help explain why aging is needed, especially
+now that we're introducing new code for imbalance-based
+aging.
 
-Thanks!
+>
+> You make a very good point that the reason for aging is also
+> important. So I'd like to discuss which way is better:
+>
+> 1) Keep mm_mglru_inc_max_seq, and add another tracepoint at the aging
+>   decision in try_to_shrink_lruvec(), reporting why aging is needed
+>   and at what sc->priority.
+>
+> 2) Replace mm_mglru_inc_max_seq with a single tracepoint in
+>   try_to_shrink_lruvec(), right before try_to_inc_max_seq(), reporting
+>   the reason, sc->priority, swappiness, max_seq/min_seq and the
+>   per-generation nr_pages before aging. The youngest generation is
+>   not empty at that point, and the new window after aging can still
+>   be seen from the following mm_mglru_scan_folios.
+>
+> Which one do you prefer?
 
-> 2026=E5=B9=B48=E6=9C=8810=E6=97=A5 16:01=EF=BC=8Cdaichengrong =
-<daichengrong@iscas.ac.cn> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> uretprobe replaces the original return address of a probed function =
-with
-> a trampoline address to capture function return events.
->=20
-> After the trampoline is entered and the uretprobe handler completes, =
-the
-> original return address needs to be restored in the user register =
-context
-> to keep the register state consistent with the state before probing.
->=20
-> Add an architecture-specific hook for restoring the original return
-> address during uretprobe handling.
->=20
-> The initial implementation adds support for RISC-V. Other =
-architectures
-> keep the default empty implementation until their corresponding =
-restore
-> logic is implemented.
->=20
-> Signed-off-by: daichengrong <daichengrong@iscas.ac.cn>
-> ---
-> Change in v2:
-> - Rename arch_uretprobe_hijack_set_addr() to =
-arch_uretprobe_restore_return_address() as suggested
->=20
-> v1: =
-https://lore.kernel.org/all/20260717082331.27058-1-daichengrong@iscas.ac.c=
-n/
-> ---
-> arch/riscv/kernel/probes/uprobes.c | 7 +++++++
-> include/linux/uprobes.h            | 1 +
-> kernel/events/uprobes.c            | 5 +++++
-> 3 files changed, 13 insertions(+)
->=20
-> diff --git a/arch/riscv/kernel/probes/uprobes.c =
-b/arch/riscv/kernel/probes/uprobes.c
-> index eb177d0ce8ab..90ed8596e73f 100644
-> --- a/arch/riscv/kernel/probes/uprobes.c
-> +++ b/arch/riscv/kernel/probes/uprobes.c
-> @@ -139,6 +139,13 @@ arch_uretprobe_hijack_return_addr(unsigned long =
-trampoline_vaddr,
-> return ra;
-> }
->=20
-> +void
-> +arch_uretprobe_restore_return_address(unsigned long orig_ret_vaddr,
-> +  struct pt_regs *regs)
-> +{
-> + regs->ra =3D orig_ret_vaddr;
-> +}
-> +
-> int arch_uprobe_exception_notify(struct notifier_block *self,
-> unsigned long val, void *data)
-> {
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index f548fea2adec..af5b633f92dd 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -230,6 +230,7 @@ extern bool arch_uprobe_xol_was_trapped(struct =
-task_struct *tsk);
-> extern int  arch_uprobe_exception_notify(struct notifier_block *self, =
-unsigned long val, void *data);
-> extern void arch_uprobe_abort_xol(struct arch_uprobe *aup, struct =
-pt_regs *regs);
-> extern unsigned long arch_uretprobe_hijack_return_addr(unsigned long =
-trampoline_vaddr, struct pt_regs *regs);
-> +extern void arch_uretprobe_restore_return_address(unsigned long =
-orig_ret_vaddr, struct pt_regs *regs);
-> extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum =
-rp_check ctx, struct pt_regs *regs);
-> extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs =
-*regs);
-> extern void arch_uprobe_copy_ixol(struct page *page, unsigned long =
-vaddr,
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 6300b216012c..9a2e9ce4e398 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1748,6 +1748,10 @@ void * __weak =
-arch_uretprobe_trampoline(unsigned long *psize)
-> return &insn;
-> }
->=20
-> +void __weak arch_uretprobe_restore_return_address(unsigned long =
-orig_ret_vaddr, struct pt_regs *regs)
-> +{
-> +}
-> +
-> static struct xol_area *__create_xol_area(unsigned long vaddr)
-> {
-> struct mm_struct *mm =3D current->mm;
-> @@ -2659,6 +2663,7 @@ void uprobe_handle_trampoline(struct pt_regs =
-*regs)
-> valid =3D !next_chain || arch_uretprobe_is_alive(next_chain, =
-RP_CHECK_RET, regs);
->=20
-> instruction_pointer_set(regs, ri->orig_ret_vaddr);
-> + arch_uretprobe_restore_return_address(ri->orig_ret_vaddr, regs);
-> do {
-> /* pop current instance from the stack of pending return instances,
-> * as it's not pending anymore: we just fixed up original
-> --=20
-> 2.25.1
+Maybe we should keep option 2 for now. Understanding why
+we are aging and at what priority is much more important,
+especially since we're still introducing some
+imbalance-based aging code.
 
+It should be quite simple, just a matter of moving the code
+around a little.
+
+If we later find a good reason to have option 1, we can
+always add it, right?
+
+Best,
+Barry
