@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793750357;
-	b=078bWGw56KG/u+K0hVynKH6+DiiuXoeTABj/wW8VvfXTM/Sxpw8Te9DpXTwbXiiutSuf
-	 oelddVPCp2/MEGeIijIwarHVW7JteXsQzxW1LBQYBHyKwZpI+SAe9x+r3+wbx9su89ugs
-	 Q8Fg1Yhms5yhIip5/JAGR86nnssXw28/I08zUK2ZsMkbg20lTAbvYqMqILJoKeKM7owF+
-	 DLuWOYKlMYH0T+3Zw7OV8xum10ZPo/i6hJBK516S5JQ5F1EPcFWpjiRtutIZMQ80Fr8Qf
-	 2v7UHldhWX4TmcfWUqAkZiK6bUo/Gf5os39xoWS5Kx7ZNZnKJzKLcZcc6H/J5C3uVQw==
+	t=1793750366;
+	b=OfgYRLGR2Ccpp7cYwk1nU7h+vNdEKf7szxP731lkP4+3jQCPzUubHutZ7/VjjIzs3lmB
+	 R++5scBHryUXPcKmcp12xhnWMc5f9iYlB5dIuZLLwxoB5qm7TuDossTls92jTYC0+ZfQs
+	 5/5nHkFr961XhZ7r2JdHlkR/VLiSj2qjDf4ujvpWbsIz1TP7S5HRdnC+WAga1DQjHnxT4
+	 BYHLo3SC5ugcrzHbt1UApjdOuyNtLhzMJWKLlOtWDmg9AKmlocteEcV4i4pIPq9YxreEE
+	 l816Q9k57z1+TX8veW9XMCRP63cpWbJ4C/MTjpZqcpUR09DmIEPgkLrrFhyErTczV3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793750357;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793750366;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=OueITjgPJiOqPhTlLFS3/DWCPGpRJaYBRkjxNsSisag=;
-	b=FDoZhY1/VA9aTSGGBkIUSDcVZNaquwEVtcUeWwcNYAwilDezj6Zwp3UWf5704VS0K9SC
-	 bsSo5mPWEkRciUOTLZcXz9dmwCGJWJdijBuQExMLsP9WZ9e242jIK6u1KmAP+MdGnpriX
-	 ArKK3tNCAEujtj/MFKdwiQ7l7Pl5vl5iEhpJF19veQ1GTIrSI8jwXpztGnUQiJO/8dkKF
-	 P0MPPm/QQVqiNI+UGmah64IRcqN3NemRIblj9Ys5XzdgU2yP9PIeNtc9Uwpk6xD18Jqth
-	 bcES5bVMfBts0+p/LGF5+PiYu+GwhRa84xkbWMlE99dXNAsE4Xttjwia9E6TK1cytCw==
+	bh=anq0QKvJksdloG0ALwLr8t3bLi61ikHVmrLSFmZApqg=;
+	b=0F5G39KAsm50w5uZfwo87zSWZfJgdW1KB8Fw0yQ2bTyyo7mzcxHfvv7DNfS55ps0tPPV
+	 E5yBtg90yJRa8DsP6TSeb4UDUP1nDcWZiYLRp8Eap981tRznHln0ZDQqbAq0jVZPjbixm
+	 5UtKrdXyj7gYlPq8yZEqPoA0eSYJo1JHr/QCs7qJJB88K//hY3VyejnFWPv4SzhV9nhWD
+	 0/BMYrUy5PKttSjKX6EboAw0BI5uGlG2CTySQpVZ1bcBGua1cBCHzqcWLpDpARfilfbHP
+	 29X1R1L/zJZaTl+QdDlALrXyOF5DRoNJhhKE1CjOFXFuJhQyqEqg03rCTvcIGsT5eJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YSIw5J2R;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CEhh6riX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB8C606A324;
-	Tue,  3 Nov 2026 23:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F35D606A31B;
+	Tue,  3 Nov 2026 23:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YSIw5J2R
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC031F00919;
-	Tue,  3 Nov 2026 23:59:15 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CEhh6riX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A855B1F00919;
+	Tue,  3 Nov 2026 23:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793750357;
-	bh=OueITjgPJiOqPhTlLFS3/DWCPGpRJaYBRkjxNsSisag=;
+	s=k20260515; t=1793750366;
+	bh=anq0QKvJksdloG0ALwLr8t3bLi61ikHVmrLSFmZApqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YSIw5J2RdBHVm8f5HAm2MoplqMssosm13JN9pftJwLijhrfIGS8jBfupbWfKo2pVL
-	 Yf9n0QeHf9lj3dYnOBg2tHRXnFhGrepoBX5Zr2XOH0waiSGr8FHW2uU9mjlg7kdlw+
-	 7+TV4w6yLP4EYc6aLu5DYPf3HbOSTHdjObzoRjzfKInFjFeCCDjvIYiIgIMMEUhWMl
-	 F/nV0A+uwlmdHNh1a7bcObc8iq2o6UEXQywtpc4GofHvtjA9upSnZtaEKn4RRAQxKv
-	 b7vaIe15jDIWz9x1IbDrwQHtgcbuAxK+mMimr88qCm6k74geuY0H7anu6HH6Q23ISV
-	 Su1RwOZVp+KkQ==
+	b=CEhh6riXyXnMgDf6zbJbSCdYYLTH+zpB9vrEhEqT6vIV/IQ6z7BMLyKpocnRENySG
+	 cw1aN/ogX8RssLvpGrKTwRmK3vPgKeVRJO8HfWEUGPBCRkjgC+qldteH9zoB3Tm8pV
+	 sG+AHgTN2XBBVSjn5K46uc++04YKOpTDt57muKb85+kYwq1HBXWJiD1eAPF3c1OPNz
+	 TPec0FzFkHG6/0u9rUwHW4eO8PcalcL5x+sga4f0UhsXrt6VkxmpzRgGDbia/PKtwB
+	 +On5+ZcUe66r0sZy0AvjWWKI7bAeskfGBPwcCTZltUYJ6jkuR7aUNrLvz3LTSxuT/D
+	 02GVpNJ+A+VRg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,9 +47,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	"David S . Miller" <davem@davemloft.net>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 6/8] kprobes: Do not overwrite jump instruction when re-arming unoptimizing probe
-Date: Wed,  4 Nov 2026 08:59:13 +0900
-Message-ID: <179375035312.247640.1506834064717441186.stgit@devnote2>
+Subject: [PATCH 7/8] kprobes: Fix slot reclaim and sibling re-opt in optprobe state machine
+Date: Wed,  4 Nov 2026 08:59:22 +0900
+Message-ID: <179375036234.247640.2681461872008285645.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179375029807.247640.13024754173032838618.stgit@devnote2>
 References: <179375029807.247640.13024754173032838618.stgit@devnote2>
@@ -68,101 +68,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When an optimized probe is temporarily disarmed or disabled,
-unoptimize_kprobe() places it on the unoptimizing list, but leaves
-the relative jump in text until the optimizer thread runs.
-__disarm_kprobe() explicitly skips arch_disarm_kprobe() when
-kprobe_queued_unopt(p) is true.
+Several edge cases in the optprobe state machine can prematurely release
+instruction slots or stall blocked sibling probes:
 
-However, if __arm_kprobe() is called before the unoptimization pass
-executes, it unconditionally called arch_arm_kprobe(p), writing a
-breakpoint instruction over the first byte of the jump while leaving the
-trailing 4 bytes intact. optimize_kprobe(p) then dequeued the probe from
-the unoptimizing queue, leaving the jump opcode overwritten and corrupted
-in text.
+1. In kill_optimized_kprobe(), when a probed module is unloaded while child
+probes still exist on p->list, the probe is not unused (!kprobe_unused(p)).
+If op was queued for unoptimization, move it to the cooling list rather
+than immediately calling arch_remove_optimized_kprobe(), ensuring Tasks
+RCU elapses before slot reclamation. In optprobe_finalize_generation(),
+reclaim the optinsn slot once cooling finishes for kprobe_gone() probes.
 
-Skip calling arch_arm_kprobe() in __arm_kprobe() when
-kprobe_queued_unopt(p) is true, keeping the existing relative jump intact
-while unoptimization is cancelled. If optimize_kprobe() cannot optimize
-the probe (e.g. due to a post_handler or disabled optimization), force
-unoptimization immediately. Also, in reuse_unused_kprobe(), do not
-prematurely clear KPROBE_FLAG_DISABLED or call optimize_kprobe(), leaving
-arming and optimization to register_aggr_kprobe().
+2. In optprobe_finalize_generation(), when a disabled cooling probe
+finishes cooling and transitions to safely disarmed, re-optimize any
+blocked sibling probe at the same address.
 
 Fixes: 06e0d3b89da1 ("kprobes: Make optprobe optimizer multi-generational and asynchronous")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/kprobes.c |   39 +++++++++++++++++----------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+ kernel/kprobes.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index ceacd56245c2..0ef3a8701eda 100644
+index 0ef3a8701eda..53725c09ef9b 100644
 --- a/kernel/kprobes.c
 +++ b/kernel/kprobes.c
-@@ -1059,19 +1059,11 @@ static int reuse_unused_kprobe(struct kprobe *ap)
- {
- 	struct optimized_kprobe *op;
- 
--	/*
--	 * Unused kprobe MUST be on the way of delayed unoptimizing (means
--	 * there is still a relative jump) and disabled.
--	 */
- 	op = container_of(ap, struct optimized_kprobe, kp);
- 	WARN_ON_ONCE(list_empty(&op->list));
--	/* Enable the probe again */
--	ap->flags &= ~KPROBE_FLAG_DISABLED;
--	/* Optimize it again. (remove from 'op->list') */
- 	if (!kprobe_optready(ap))
- 		return -EINVAL;
- 
--	optimize_kprobe(ap);
- 	return 0;
- }
- 
-@@ -1262,6 +1254,19 @@ static void __init kprobe_sysctls_init(void)
- }
- #endif /* CONFIG_SYSCTL */
- 
-+/* Return true if the probe is queued on unoptimizing lists */
-+static bool kprobe_queued_unopt(struct kprobe *p)
-+{
-+	struct optimized_kprobe *op;
+@@ -725,10 +725,19 @@ static void optprobe_finalize_generation(struct optprobe_generation *gen)
+ 			list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+ 			kick_kprobe_optimizer();
+ 		} else {
++			struct kprobe *_p;
 +
-+	if (kprobe_aggrprobe(p)) {
-+		op = container_of(p, struct optimized_kprobe, kp);
-+		if (optprobe_queued_unopt(op))
-+			return true;
-+	}
-+	return false;
-+}
-+
- /* Put a breakpoint for a probe. */
- static void __arm_kprobe(struct kprobe *p)
- {
-@@ -1275,21 +1280,11 @@ static void __arm_kprobe(struct kprobe *p)
- 		/* Fallback to unoptimized kprobe */
- 		unoptimize_kprobe(_p, true);
+ 			/* Still in use; now safely disarmed */
+ 			list_del_init(&op->list);
+-			if (!kprobe_disabled(&op->kp))
++			if (kprobe_gone(&op->kp)) {
++				arch_remove_optimized_kprobe(op);
++			} else if (!kprobe_disabled(&op->kp)) {
+ 				optimize_kprobe(&op->kp);
++			} else {
++				_p = get_optimized_kprobe(op->kp.addr);
++				if (unlikely(_p))
++					optimize_kprobe(_p);
++			}
+ 		}
+ 	}
  
--	arch_arm_kprobe(p);
-+	if (!kprobe_queued_unopt(p))
-+		arch_arm_kprobe(p);
- 	optimize_kprobe(p);	/* Try to optimize (add kprobe to a list) */
--}
--
--/* Return true if the probe is queued on unoptimizing lists */
--static bool kprobe_queued_unopt(struct kprobe *p)
--{
--	struct optimized_kprobe *op;
--
--	if (kprobe_aggrprobe(p)) {
--		op = container_of(p, struct optimized_kprobe, kp);
--		if (optprobe_queued_unopt(op))
--			return true;
--	}
--	return false;
-+	if (unlikely(kprobe_queued_unopt(p)))
-+		unoptimize_kprobe(p, true);
- }
+@@ -1084,13 +1093,20 @@ static void kill_optimized_kprobe(struct kprobe *p)
+ 				list_del_init(&op->list);
+ 			}
+ 		} else {
+-			list_del_init(&op->list);
++			if (optprobe_queued_unopt(op)) {
++				/* Move to cooling list so optinsn slot is cooled down */
++				list_move(&op->list,
++					  &optprobe_gens[optprobe_cur_gen].cooling_list);
++				kick_kprobe_optimizer();
++			} else if (!optprobe_queued_cooling(op) && !optprobe_queued_freeing(op)) {
++				list_del_init(&op->list);
++			}
+ 		}
+ 	}
+ 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
  
- /* Remove the breakpoint of a probe. */
+ 	/*
+-	 * Don't remove the slot if it is queued for freeing or unoptimization;
++	 * Don't remove the slot if it is queued for freeing, unoptimization, or cooling;
+ 	 * the optimizer will reclaim it after the quiescence period.
+ 	 */
+ 	if (!optprobe_queued_freeing(op) && !optprobe_queued_unopt(op) &&
 
