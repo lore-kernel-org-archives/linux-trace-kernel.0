@@ -1,78 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793685258;
-	b=WivdR7R+NxFNOLrCqt1lC3khHxYGSn3wru4pkogruxBDuB6IcTC3/n2zhHuQqmxoTYiu
-	 6Y+Vums478d+EnNu6rVuuXP/3EaPhlBQsF5g6E2j81JHQUbQ+dokSiNwcnehV/EySK55D
-	 uRV8EJoESfo4B8BMP4DAaEiNOGDrE4QydxepSZogJe9IfLnFxxC4h62eB/JvLiqT3R5HP
-	 e7LrAIrz3/NtC5gibfp5gAajHuDSxLuo9AHAilGraXgi/PNNRYnQxRsJbUBjmcWEPpXMM
-	 6v438LeRv//1w8O6QRj3WKMNWlAdyEK4tqeU8HuTpUpJ7bWDAkxfqE6QQ0tPaLKEA5A==
+	t=1793687205;
+	b=pOw83IjgvA1Zp5K77DjWFDYx5YPIhAjkckgtSq9YHglBrSHDacX/2De94xR2582MbRMQ
+	 C7toZDU7nF3fcyU1EXEW+eVAQf4fcsYgw7CdOCHN9NtBwiqxDSD55+Hd9Z3rN0ShhJpF7
+	 F7RqwMa16QqlKo9et7pHfOvAUX+iuHfLg6GXdX/bJzW2D3lQ+sKKhly9orCosy6BnkDzK
+	 QyGGcceOTY97CPKhYCiypKKyddJJj7a3GRsgAgbGEb+bueB17Yp1iecFeBSNB3C/EOOz8
+	 f2iSQ/q9KwzXKw98pDjYkOo5hatctWNeYi9i8q0OpHtWghOxLfSzZpyljG13s1FT2KQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793685258;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=f6tohwCPgHiuZF8eRH66ZKcFUC+TlKOu4ZWfBkxIU9w=;
-	b=5k2s/LLebKlVD3Kq3w69puWyuHUJMIyrnhFOyxXr/CfsFdaCAGEsUAlJCQkbDyuzP2vJ
-	 NoCYeX0PTK7uwTsgM0P+XRgO1Vv5Jv8GLIGIHJbV4Xq8bEqBDTg8BkYzw7Cx7/K5VZq6C
-	 aHP7FiFiK96m7oF5lthDfNaNkIrFpx12LIdruKWfifLdxsLnRJgFNfK1qmIJNqBZvEbEL
-	 UKqTkmLMBqAN1iyYL1P1zEPRw3bCVb/BXrlQ+Zeu+Ez1ljEKeGc/KRC1ZnyqHptVlr1Fe
-	 p110PyJ6GOCwm2cBmyh7cMtGCpVbmjYAE0TZnXKiDQJQ+87milX/HkZtGyD7EQt33rg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793687205;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=8YqOpFkmr9cAx+aebIVE0MX85yK0hEwpHWmKUBVI4T8=;
+	b=BoA0zwnc6oVzPSmcsPBFedcTVALbIbQ6tBniPjvTMLEkIPi7mqL1lKPrDQjW0f2k/y6q
+	 WXfQjhWPsJGFU5gjlFhRHXhrTAookx2tjlQoIGzyeRs4eSzXvsE5j0Vs6v8RrZQs3zQMA
+	 bXcKKSjGH9jMzKmYEEWa3+j77i+SAyMMNYFkAiJnni1rBeksOopyxaUy+5RPOU9k66Cs8
+	 Ch9v4Gvi17YkUJnjOaR1g9d4olmBriRPVl9fRlViEfMmdoXq5eymiDUCvIQe+OKTUnZ5V
+	 Cr4OfYM+o75bwf8i+vPkiPF5RKjy/d/zZbL1oPNEyY9/9kgLnxzHjVcL4dT7SJ0KkBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="PU6M/JuI";
-	arc=none smtp.remote-ip=91.218.175.200
-Received: from mta0.migadu.com (out-200.mta0.migadu.com [91.218.175.200])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QsxeWVGs;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A45B606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 05:54:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8A45B606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACD4606A332
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 06:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=PU6M/JuI
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=0iTU/obU9AJ9W0pesgfQNaEftQkREMOsnsvVS/OmldY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793685254; v=1; x=1794290054;
- b=PU6M/JuIkSLzUXuS6JZKKUvE//74A4tu1nNGmYcFb/OMTL0YL2iWlmVRngQpvLppWY+UhK4L
- kOzLqJsPN0sy3ZFQ/p/WeBzIG0EjJn/+UE88cigpF9T1Kfjp+xeur+8O/wE60EIjkouagxq2puf
- 25tElufqBKwzf+kZFylFCdkE=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 4e3eec371c58ba17;
-	Tue, 03 Nov 2026 05:54:14 +0000
-X-Mizu-Trace-ID: 4e3eec371c58ba17
-X-Migadu-Flow: FLOW_OUT
-Date: Tue, 3 Nov 2026 13:54:07 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Dave Chinner <david@fromorbit.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Kairui Song <kasong@tencent.com>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
-	Ridong Chen <chenridong@xiaomi.com>
-Subject: Re: [PATCH v6 6/7] mm/mglru: add lruvec_gen_size() helper
-Message-ID: <aul2_8m90FuzSnqv@fedora>
-References: <20261103025610.3738894-1-ridong.chen@linux.dev>
- <20261103025610.3738894-7-ridong.chen@linux.dev>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QsxeWVGs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4D01F000C1
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 06:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793687200;
+	bh=8YqOpFkmr9cAx+aebIVE0MX85yK0hEwpHWmKUBVI4T8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=QsxeWVGs+KYTOUEkspb59iQwhUOSBK2FJX4t7WZhE3xlXkV2tPSSGG81hQg9f7bkV
+	 SwSjUOfneP/7rcLzcidgl/1JltBikccpwF1OOtQFYWtq3YnlTTYd0oVNZxqBIn2Kvd
+	 LxgPlDMXTqob7xiuqgZcDszFA+gs/M7q4omjZsQW7kSInuBePN+8R6NyqgpIho0fct
+	 M43xAqjg2+bvEs2UiN1dJqvzAPRITyY0Z1F5LqWj8YsPhupHQpbyjY6hE145zpqcbC
+	 NB8bwYvKoLGZviwk1QW64CgTjhHFPMFn/ZHZUmi4s+4g0zsDntpmAcl3hs+VXcupW5
+	 wFOGJL2Ej1krQ==
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-93f079a63b8so382656885a.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Nov 2026 22:26:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvByX3NWvr8ngRcJbU6fjyXgRdtBz3TEyeYPzc3epIMlvL3lF2MPK5hsgi8+KH/cyMZay+wWGzfh6qFy9l3QozDibfo4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+sVbc5tDpIDk8PkofdA9tR63gFOnKaQuM09M+mYtOI/L0XkhWk
+	IFgSVg5sxSlap2pNPxrqlqHX2TTytRXHl8chSoTrstgvzotLxM3MZu22FJJbfjNuJsAJkdN4/7+
+	msCN8nzI1tylmtItXBEr0iuLQIBbVIYE=
+X-Received: by 2002:a05:620a:880c:b0:93f:1936:b229 with SMTP id
+ af79cd13be357-944217ee7a9mr1684444285a.77.1793687199176; Mon, 02 Nov 2026
+ 22:26:39 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -82,120 +59,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20261103025610.3738894-1-ridong.chen@linux.dev> <20261103025610.3738894-7-ridong.chen@linux.dev>
 In-Reply-To: <20261103025610.3738894-7-ridong.chen@linux.dev>
+From: Barry Song <baohua@kernel.org>
+Date: Tue, 3 Nov 2026 14:26:28 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4zLDFkp9vfK+PxyF21LV5rEnUqmUumgmMGuwRx8MzAfnA@mail.gmail.com>
+X-Gm-Features: AclHuK8HVKdqMIREpv0PqEm0E3nZYzV_dWHIZArjnQaiOz33ddVcOx-caGz6_NQ
+Message-ID: <CAGsJ_4zLDFkp9vfK+PxyF21LV5rEnUqmUumgmMGuwRx8MzAfnA@mail.gmail.com>
+Subject: Re: [PATCH v6 6/7] mm/mglru: add lruvec_gen_size() helper
+To: Ridong Chen <ridong.chen@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Muchun Song <muchun.song@linux.dev>, 
+	Qi Zheng <qi.zheng@linux.dev>, David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>, Ridong Chen <chenridong@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/03/26 at 10:56am, Ridong Chen wrote:
+On Tue, Nov 3, 2026 at 10:57=E2=80=AFAM Ridong Chen <ridong.chen@linux.dev>=
+ wrote:
+>
 > From: Ridong Chen <chenridong@xiaomi.com>
-> 
+>
 > The number of pages of a given type in a generation is computed by
 > summing lrugen->nr_pages[gen][type][] over all zones and clamping each
-> per-zone counter to >= 0, since the counters are updated locklessly and
+> per-zone counter to >=3D 0, since the counters are updated locklessly and
 > can transiently go negative. This loop is open-coded in
 > lruvec_evictable_size() and in the debugfs lru_gen output.
-> 
+>
 > Add lruvec_gen_size() to compute it from a seq, and convert both users.
 > Put it in mm/vmscan.h so that the vmscan tracepoints, which include that
 > header, can use it as well.
 > An upcoming tracepoint and the MGLRU swappiness rework will also use it.
-> 
+>
 > No functional change.
-> 
+>
 > Suggested-by: Barry Song <baohua@kernel.org>
 > Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
 > ---
->  mm/vmscan.c | 18 ++++++------------
->  mm/vmscan.h | 16 ++++++++++++++++
->  2 files changed, 22 insertions(+), 12 deletions(-)
 
-LGTM,
-
-Reviewed-by: Baoquan He <baoquan.he@linux.dev>
-
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 3054175717ab..1581b73aec56 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -4207,18 +4207,15 @@ static void set_initial_priority(struct pglist_data *pgdat, struct scan_control
->  
->  static unsigned long lruvec_evictable_size(struct lruvec *lruvec, int swappiness)
->  {
-> -	int gen, type, zone;
-> +	int type;
->  	unsigned long seq, total = 0;
->  	struct lru_gen_folio *lrugen = &lruvec->lrugen;
->  	DEFINE_MAX_SEQ(lruvec);
->  	DEFINE_MIN_SEQ(lruvec);
->  
->  	for_each_evictable_type(type, swappiness) {
-> -		for (seq = min_seq[type]; seq <= max_seq; seq++) {
-> -			gen = lru_gen_from_seq(seq);
-> -			for (zone = 0; zone < MAX_NR_ZONES; zone++)
-> -				total += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
-> -		}
-> +		for (seq = min_seq[type]; seq <= max_seq; seq++)
-> +			total += lruvec_gen_size(lrugen, type, seq);
->  	}
->  
->  	return total;
-> @@ -5723,20 +5720,17 @@ static int lru_gen_seq_show(struct seq_file *m, void *v)
->  		seq = 0;
->  
->  	for (; seq <= max_seq; seq++) {
-> -		int type, zone;
-> +		int type;
->  		int gen = lru_gen_from_seq(seq);
->  		unsigned long birth = READ_ONCE(lruvec->lrugen.timestamps[gen]);
->  
->  		seq_printf(m, " %10lu %10u", seq, jiffies_to_msecs(jiffies - birth));
->  
->  		for (type = 0; type < ANON_AND_FILE; type++) {
-> -			unsigned long size = 0;
->  			char mark = full && seq < min_seq[type] ? 'x' : ' ';
->  
-> -			for (zone = 0; zone < MAX_NR_ZONES; zone++)
-> -				size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
-> -
-> -			seq_printf(m, " %10lu%c", size, mark);
-> +			seq_printf(m, " %10lu%c",
-> +				   lruvec_gen_size(lrugen, type, seq), mark);
->  		}
->  
->  		seq_putc(m, '\n');
-> diff --git a/mm/vmscan.h b/mm/vmscan.h
-> index adb22e80d760..c6b583fc7493 100644
-> --- a/mm/vmscan.h
-> +++ b/mm/vmscan.h
-> @@ -3,6 +3,7 @@
->  #define _MM_VMSCAN_H
->  
->  #include <linux/gfp_types.h>
-> +#include <linux/mm_inline.h>
->  #include <linux/nodemask.h>
->  #include <linux/swap.h>
->  #include <linux/types.h>
-> @@ -115,4 +116,19 @@ struct scan_control {
->  	struct reclaim_state reclaim_state;
->  };
->  
-> +#ifdef CONFIG_LRU_GEN
-> +/* The number of pages of @type in the generation @seq, summed over all zones */
-> +static inline unsigned long lruvec_gen_size(struct lru_gen_folio *lrugen,
-> +					    int type, unsigned long seq)
-> +{
-> +	int gen = lru_gen_from_seq(seq);
-> +	unsigned long size = 0;
-> +
-> +	for (int zone = 0; zone < MAX_NR_ZONES; zone++)
-> +		size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
-> +
-> +	return size;
-> +}
-> +#endif /* CONFIG_LRU_GEN */
-> +
->  #endif /* _MM_VMSCAN_H */
-> -- 
-> 2.34.1
-> 
+Reviewed-by: Barry Song <baohua@kernel.org>
