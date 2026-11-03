@@ -1,60 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.123
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793711280;
-	b=bKJYlCfz8lDtAvKi/TXFAi5maDsEXp7b8lxIiR7N4agAZPOHZgh7iyLLuhDExO1uVL1D
-	 4IDLVq/wGp5lCrWff1zJUgHO64k8UhuVgKg7y0Y6V+hDwuFs29Vi/PXmgzt0JGIkMTk/K
-	 8pDwxwWkU9hm5ayD4n/3aj38113tJGMHkEv2EuHM0ItdFskyWq39mVS1DsUHRUai8kIPq
-	 9r1BxrEYyleVZ6xz7PE1xHGBKa/3gy3rTD9UogUnWUxlxhB6mQiX1ug8pxf5/NV2LsG8X
-	 VMYYzjy7TFfQUiF3sdt4Jcs9kD+48NUs0i8soP2soHV6YAJv6t4hy/qS800sT7uuPWw==
+	t=1793711349;
+	b=K1KkOhD5JfUk3RML87hpJbbY0zonzVFsEpgjGWm9urwIshrFE1g/gtjNQjH01E8rKCVT
+	 7jN4TeFUNDFCN2iylNbXTCdrmClUj4mF2dwW8L2XXtROYWbdW5IdUZxJ2GZH024P6e9p/
+	 /e//GM3bQ6bEbiajNVD+NHFUON1RbActvtgodX3RZ9LP+PWvf/7dRSkNAq3No4bieUgDG
+	 cPv8CZHmQyYmK8AG0NtO53ZkhjJzYTgIZ39Fci32GBohMcglwGiPWKEYcbDBZMeBc0TFG
+	 TFv1NwoFRuhByqDnpm1H/RtAESmB6NrDFaKhiVxA6M7Y91IoDpoHE0HMQYNNA6dk+Lw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793711280;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793711349;
 	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=MYoRPDO2ldHCIxVRmX3/6hlZLkNTnG6TdvBQMsOgf4o=;
-	b=t2K6sK1x4K2Afa1Nv8mqzGAAfaJbIONxgLgos/hDoNYIeE5peLl6h5+3avgIKUyaCRsb
-	 g9/iIKT76HnVT6zHGwbwH8mOu3TyfZGLki8+gMYH3kBaBy6v+rO3bfq7xzueVni7z6Umd
-	 Og6MRoCJuC4G2anhzoPsY7WTfBl2Sg2fXJ5jZI1gUWjE9iI+HQQQQpvR349793v4q1QrJ
-	 MNbtL5FLisIWGejFRqBVwoC5epyTtEU3dwr1Umue1IAdjKXcpu4HzX77oyScKxuXCzu0R
-	 L+SnK1wPX/pFkvK9v0zscnBvJ92yiaXFZw2DbUvj8Z/WoQqt/ty4WGMAhnh2LwJjh1A==
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=c+qujEuDk3Qk423JLDWr5FOQJN45fWvJPf+U4ORaBOQ=;
+	b=rriE2z9z0JvWgMnpLYIPjyPV7MdIo9uICIz0BZKso/IsDchXIeVvYQzKdNP13qS4vOS9
+	 FiJeVvBol1PJg3xthHwAvdElGodhLSiJ6y880rUzEHnZ4/o4/Hu/Xv41kBh8mSYcFi9o0
+	 I3Skzfouj95ace1ZuwryV04TgSGznTAkSPloRlUSO6/NDkWmlUIOA8lULO7szGyE/GMqw
+	 yWuIwfvWmQZQaw9i6hTlsMW6ICCPdKFdSinr0Zrm9Uj9e++KOs1FZMMhPxgsT7re80dRA
+	 Xsmr9YxTpvnfdvLnElyjcCcRyb0s2AaVTo7B6fgJUzf1NKAlFPs+w6mi7E5bSnsCDkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=proton.me;
 	spf=pass smtp.mailfrom=proton.me;
-	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=fLhOBE6A;
-	arc=none smtp.remote-ip=185.70.43.101
-Received: from mail-43101.protonmail.ch (mail-43101.protonmail.ch [185.70.43.101])
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=HvC6Zhg7;
+	arc=none smtp.remote-ip=109.224.244.123
+Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A16606D821
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 13:07:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33A16606D821
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA053606A331;
+	Tue,  3 Nov 2026 13:09:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DA053606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=fLhOBE6A
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=HvC6Zhg7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail2; t=1793711277; x=1793970477;
-	bh=MYoRPDO2ldHCIxVRmX3/6hlZLkNTnG6TdvBQMsOgf4o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=fLhOBE6AFg3XWS36/vKh6bMXv3GdufcKcBir46hWFdiMN051iR0bysnC1QRzvwWHd
-	 7YxWvFVLxdu62amRoAYorKShfKUd+DF/d+BMNm2m5cFdwmbIm7ri5br63e/F46HrUR
-	 CyspmqC7WgBZiHxi1Lus4oX2rPaK4dT1Rwl0ixbSvrw2P8aZ5VDDsbFzvRE6jc9m0X
-	 Su6c6owfYYdk609hsTsVUqWPuLDq2M3XN0XTcdxUVnsg02b7GHxXh30D5a62aXsSNx
-	 hDItWg89a9WBoTzstcs9C3tVJJEo0H2vsdv+NkSlgRqpU5hXfXUBrxExG8Dc21hAvf
-	 GXcGSmNzLJIww==
-Date: Tue, 03 Nov 2026 13:07:53 +0000
+	s=protonmail2; t=1793711346; x=1793970546;
+	bh=c+qujEuDk3Qk423JLDWr5FOQJN45fWvJPf+U4ORaBOQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=HvC6Zhg70YgYD5MpyV3iXydlnPHHkevNUWeBECfdu4VfLlF1mFNiM6rxtnje1LSlZ
+	 pLy61DrB7Ego/7JT5pbBZmLfukU0+Ea3iY7Hsyq3k04j15L9RJ6RZoCsXhBV8uYHU7
+	 vpGLyJju/mcsxUUynNuKYksmRUR8qOxyautdg/YH6qqt/8dDJ4AcXqkzMxdJJ/G1mE
+	 JNuz8SvXry3oIlRiqXoAjMrjfRLYEGpjUqGMP9T0OTYaWwq1Lg2GnSsNCzxwrQl4fh
+	 2OWs3XLwZ4z3n32mlug9SVlV5QgbBgkBRV76Uhm61xjnsNeblBlJAJwy6uRRrB35wD
+	 hUpuwe7ZWAvJg==
+Date: Tue, 03 Nov 2026 13:09:01 +0000
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
 From: Paolo Bertinetti <paolobertinetti200f4@proton.me>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, Francesco Nigro <nigro.fra@gmail.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [PATCH 2/2] perf/hw_breakpoint: Clear stop state in hw_breakpoint_add()
-Message-ID: <20261103130732.764081-3-paolobertinetti200f4@proton.me>
-In-Reply-To: <20261103130732.764081-1-paolobertinetti200f4@proton.me>
-References: <20261103130732.764081-1-paolobertinetti200f4@proton.me>
+Subject: [PATCH 1/2] tracing/perf: Clear stop state in perf_trace_add()
+Message-ID: <20261103130859.764885-2-paolobertinetti200f4@proton.me>
 Feedback-ID: 117280896:user:proton
-X-Pm-Message-ID: 23b129853125ff2a3bd4b098af01727aed75e499
+X-Pm-Message-ID: 45b61b53caece3e7dd1946562e99d041bf4d108f
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -73,37 +70,47 @@ it when the PERF_EVENT_IOC_REFRESH limit is reached. When userspace
 re-arms the event with PERF_EVENT_IOC_REFRESH, the event is enabled
 again and pmu->add() is called with PERF_EF_START.
 
-hw_breakpoint_add() sets PERF_HES_STOPPED when PERF_EF_START is
-missing, but never clears it. The flag set by pmu->stop() stays, and
-perf_bp_event() drops every later hit, so a breakpoint re-armed this
-way delivers only its first overflow.
+perf_trace_add() sets PERF_HES_STOPPED when PERF_EF_START is missing,
+but never clears it. The flag set by pmu->stop() stays, and
+perf_tp_event_match() drops every later hit. A tracepoint, kprobe or
+uprobe event re-armed this way delivers only its first overflow. This
+breaks self-profilers such as async-profiler, and the "Event re-armed
+with PERF_EVENT_IOC_REFRESH" perf test fails:
+
+  1000 events, count 1, 1 overflows (1 POLL_HUP), re-arm errno 0
+  Tracepoint event : FAILED!
 
 Set the state from PERF_EF_START on every add, as perf_swevent_add()
 does.
 
 Fixes: 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage")
+Reported-by: Francesco Nigro <nigro.fra@gmail.com>
+Closes: https://lore.kernel.org/r/20261021131006.2101248-1-nigro.fra@gmail.=
+com/
 Assisted-by: LLM
 Signed-off-by: Paolo Bertinetti <paolobertinetti200f4@proton.me>
 Cc: stable@vger.kernel.org
+Link: https://github.com/async-profiler/async-profiler/issues/1813
 ---
- kernel/events/hw_breakpoint.c | 3 +--
+ kernel/trace/trace_event_perf.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 789add0c185a..7a606213f33d 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -968,8 +968,7 @@ static int hw_breakpoint_event_init(struct perf_event *=
-bp)
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_per=
+f.c
+index 5b272856e5ab..a549897ee408 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -354,8 +354,7 @@ int perf_trace_add(struct perf_event *p_event, int flag=
+s)
+ =09struct trace_event_call *tp_event =3D p_event->tp_event;
+ =09struct hw_perf_event *hwc =3D &p_event->hw;
 =20
- static int hw_breakpoint_add(struct perf_event *bp, int flags)
- {
 -=09if (!(flags & PERF_EF_START))
--=09=09bp->hw.state =3D PERF_HES_STOPPED;
-+=09bp->hw.state =3D (flags & PERF_EF_START) ? 0 : PERF_HES_STOPPED;
+-=09=09p_event->hw.state =3D PERF_HES_STOPPED;
++=09hwc->state =3D (flags & PERF_EF_START) ? 0 : PERF_HES_STOPPED;
 =20
- =09if (is_sampling_event(bp)) {
- =09=09bp->hw.last_period =3D bp->hw.sample_period;
+ =09if (is_sampling_event(p_event)) {
+ =09=09hwc->last_period =3D hwc->sample_period;
 --=20
 2.53.0
 
