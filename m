@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793750329;
-	b=PirJAPYkeeYMfzIW4/ZbzKwI6sVdBdbGo99ktnXmYQcFzvsSHSTUiunfireEmvKlvbwf
-	 kQNyZP59sKhEajT2w17DgsFTm4ke+j9wqcOuBXt2fE8V7bBVr8kRWG2hOnh56CahOES5d
-	 05RPctvJ77m01vuwT3VJHJEhOj4qPLi502rfj5mEgH/kYsDkkXsmoUhkjHlOOlxABYWhD
-	 Vd6tSUEQK0+L+GZGBEajIH0z75gOcSZ6z8smbW0aNoU7sqlV+KHxbQEK66al0JJ0HYww2
-	 AcS/IVEzHnshF099blVAiiwVDv9nMwnao95OtJzB2qgAmU+cA5SLaQ3JjCAFaYEG+hw==
+	t=1793750339;
+	b=dX6pJzHwX4bxhTJhNWjze7GQhNFxLZnndeE6kusiDhiK8rDHI0SM+7KhxW4xIdL0Isqi
+	 K7XwdNCBht2JkZ4mvDz5KkTiwUgDwtPPQ2YIPWrI860VM2jsYhKpVgFm/fFIQ6SSzcCF9
+	 0E3eQGPwdEwTAdoUEp3MtdXPeZHv1UcmVpZyiZGKSZLAq88AJyERvYDmteJsFBqykUcj1
+	 0Q3eWThQupWTVnAYI1duYpy24GM7LGc0ctDKLGdcp76kNeA8GOVXpsIGAU75IWNwms/iP
+	 4lvu3bCYzPrN1h7r5hBjDRewCep0xKhgE5G+zuYXs2ufQs/+Pj28EwMpEC2j4raHWmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793750329;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793750339;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=qd2iCywGDpitsLzlhl91Kh3S1izNYB4FIjR0QAkR6OM=;
-	b=x6+OptgTDXaAWjmNg0jFbkBYdlbHx/CYaCd4MzbFiawpwuWHXMR+tSJiyn9NiN4UlKWg
-	 CsXoam6Xjm6OkCHawq4+ohzBmcX4IqSobpIexxZ5n8h8lYg5lvfqkrdnQT+jhbXMlOn5O
-	 Tffi8lhLlzZU3WFmBglgbQfe4p4fqmSYUgpvXxM7oXYGMSTIG81sZWuNzuRs9u05HBBUa
-	 RuqxyXKlxIAwYdHTTPgqWEJ8rayBT75LV//ildf4LliNLy2hcR88gYqN9R/unk6Yg1FK8
-	 NJVQIbJZNJ3A3yuowUv5d+ziYriFx9et/VfXBlf30kQ2S1H7Iv0sCVVTW70uii/LkUA==
+	bh=D9Lp8ejoSl0CbPgh+r4mawte3O11aZxdP5a4HLYSWxo=;
+	b=HHg5qdjdpZ6vgce2logey27cNC1A6vSHTypq76r6moguH9qRlsfPTTYJbWcLQMSwpIUK
+	 u/rLYT9Lf/bePoDSt8ZkHpTp0PEKiZTJazP19I0z+DzO5EXwxOCJCBoKt4GET24gUbJ0n
+	 h5h8B579sGpNpCy3gJGbLmLm99UqSiOI/1edHCXkkOOQS6bCha0nuBspCzoN0noztJ+FB
+	 ZsqaIppnSpTZYFAGR2hoVE7VYkB4mclNiGEM1OnEYjAuUYYhCb3Z8MdFMdMgfdVewx+y2
+	 XXzX/2yeVj/wefuhsDzAfGyKa9Bb2ln7fUUwmObZZcNbpSynm2g/YAk3tCtj6v/Ob4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EhBUsDMh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ncxTI/oI";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702AB606A326;
-	Tue,  3 Nov 2026 23:58:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB62606A328;
+	Tue,  3 Nov 2026 23:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EhBUsDMh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9721F000C1;
-	Tue,  3 Nov 2026 23:58:47 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ncxTI/oI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A3C1F000C1;
+	Tue,  3 Nov 2026 23:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793750329;
-	bh=qd2iCywGDpitsLzlhl91Kh3S1izNYB4FIjR0QAkR6OM=;
+	s=k20260515; t=1793750338;
+	bh=D9Lp8ejoSl0CbPgh+r4mawte3O11aZxdP5a4HLYSWxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EhBUsDMhsa1O0m/abhC6OcAsCiibPfx9u3P5yikF8HpmVV1Rd6bputtpLqUGUxTwD
-	 UUUUDJUjYYvtjKoyXTD70Wnic8te18hNuve6Ruts7t86VUlH412+nnCFuWYcSYMKA7
-	 +Nk6sPE2v3Ae2t1nC8MGWaeAu5OU52rMq7nXJaAGQpkM3uBiEDjcbqZ0zm5CQ71psR
-	 AayekDTIlNVEbliX0wjn3YhIhGPoH67mTitO/sMRM5W4GRuOEAIxWJcCUua0/rP5Bz
-	 iXMOMk0KRRmsiZmrL5cF1yRNYIUfk07QPvnvBJekGu/ejHILuzw4f1wPq8qyAHoEHu
-	 ULKMSU1g1H9Gw==
+	b=ncxTI/oIDnDibl2PF8t5qbGq46aqb0SZN5VFmPuyHsL8OFOs74ed2594REsRAfokk
+	 +ydKHLpEGJD+GuZB+KMgWveHOv01DoBeDWdQ78TfC1/Z6h0k1kNPzcPlmE4rC6TewA
+	 XQeweF/vIl6TOz78E4hniX75VirxgrqPiUgAwfr4/KGtIAVAyWsqRUF8Hxm70kphL0
+	 OW+ECabXCAGAv9KjonDe3JntWW1YldNmJiYfwmHABtHtHi9Y6elgq+umvQeh00drk0
+	 sIsYP5YI110E9AxOXlqmR6u3+D5oXl1mLWJeWRL+C18M3Bqx3kr/NK9sbchxkG1zrr
+	 TVSpuKgLMl3ew==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,9 +47,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	"David S . Miller" <davem@davemloft.net>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/8] kprobes: Validate re-registration earlier in register_kretprobe()
-Date: Wed,  4 Nov 2026 08:58:45 +0900
-Message-ID: <179375032568.247640.17429793187163536192.stgit@devnote2>
+Subject: [PATCH 4/8] kprobes: Switch ftrace ops when adding probe with post_handler
+Date: Wed,  4 Nov 2026 08:58:54 +0900
+Message-ID: <179375033462.247640.15676311043239442590.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179375029807.247640.13024754173032838618.stgit@devnote2>
 References: <179375029807.247640.13024754173032838618.stgit@devnote2>
@@ -68,152 +68,133 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-register_kretprobe() only checked for re-registration if rp->kp.addr was
-specified, skipping the check when rp was registered with symbol_name
-and rp->kp.addr was NULL. In that scenario, register_kretprobe()
-proceeded to allocate a new rethook (or kretprobe holder), and when
-register_kprobe(&rp->kp) subsequently failed due to re-registration, the
-error path freed and NULL-ed rp->rh (or rp->rph) on the still-active
-kretprobe, leading to NULL pointer dereferences when the active probe
-was hit.
+When an ftrace-based kprobe is registered without a post_handler, it is
+armed using kprobe_ftrace_ops. If a second probe with a post_handler is
+subsequently registered at the same address, register_aggr_kprobe() sets
+ap->post_handler to aggr_post_handler, but leaves the probe armed using
+kprobe_ftrace_ops.
 
-Resolve the target address via _kprobe_addr() up-front and check whether
-the probe is already registered at that address via
-check_kprobe_rereg_at() before allocating any resources, and drop the
-WARN_ON_ONCE() in the re-registration check now that re-registration is
-gracefully detected and rejected.
+When the probe is later disarmed or disabled, disarm_kprobe_ftrace()
+checks whether p->post_handler is non-NULL and attempts to disarm from
+kprobe_ipmodify_ops. This fails with -ENOENT, decrements
+kprobe_ipmodify_enabled below zero, leaves the probe armed on
+kprobe_ftrace_ops, and aborts unregistration, leading to a use-after-free
+if the probe module is unloaded.
 
-Fixes: 0188b87899ff ("kretprobe: Avoid re-registration of the same kretprobe earlier")
+Switch the armed probe from kprobe_ftrace_ops to kprobe_ipmodify_ops in
+register_aggr_kprobe() outside of text_mutex and cpus_read_lock to avoid
+lockdep and deadlock issues when modifying ftrace code. Also restore
+ftrace ops registration and counter if ftrace_set_filter_ip() fails in
+__disarm_kprobe_ftrace().
+
+Fixes: 5dd7caf0bdc5 ("kprobes: Skip clearing aggrprobe's post_handler in kprobe-on-ftrace case")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/kprobes.c |   72 ++++++++++++++++++++++++++++++------------------------
- 1 file changed, 40 insertions(+), 32 deletions(-)
+ kernel/kprobes.c |   56 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 46 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 7a3da809bac7..0b41d69540ae 100644
+index 0b41d69540ae..135fec5d49cf 100644
 --- a/kernel/kprobes.c
 +++ b/kernel/kprobes.c
-@@ -1793,52 +1793,61 @@ _kprobe_addr(kprobe_opcode_t *addr, const char *symbol_name,
- 	return addr;
- }
+@@ -1435,9 +1435,14 @@ static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+ 	(*cnt)--;
  
--static kprobe_opcode_t *kprobe_addr(struct kprobe *p)
--{
--	bool on_func_entry;
--
--	return _kprobe_addr(p->addr, p->symbol_name, p->offset, &on_func_entry);
--}
--
- /*
-  * Check the 'p' is valid and return the aggregator kprobe
-  * at the same address.
-  */
--static struct kprobe *__get_valid_kprobe(struct kprobe *p)
-+static struct kprobe *__get_valid_kprobe_at(struct kprobe *p, kprobe_opcode_t *addr)
- {
-+	struct hlist_head *head;
- 	struct kprobe *ap, *list_p;
- 
- 	lockdep_assert_held(&kprobe_mutex);
- 
--	ap = get_kprobe(p->addr);
--	if (unlikely(!ap))
-+	if (unlikely(!addr))
- 		return NULL;
- 
--	if (p == ap)
--		return ap;
--
--	list_for_each_entry(list_p, &ap->list, list)
--		if (list_p == p)
--		/* kprobe p is a valid probe */
-+	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
-+	hlist_for_each_entry_rcu(ap, head, hlist,
-+				 lockdep_is_held(&kprobe_mutex)) {
-+		if (ap == p) {
-+			p->addr = addr;
- 			return ap;
-+		}
-+		if (ap->addr == addr && kprobe_aggrprobe(ap)) {
-+			list_for_each_entry(list_p, &ap->list, list) {
-+				if (list_p == p) {
-+					p->addr = addr;
-+					return ap;
-+				}
-+			}
-+		}
+ 	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
+-	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (error %d)\n",
+-		  p->addr, ret);
+-	return ret;
++	if (WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (error %d)\n",
++		      p->addr, ret)) {
++		if (*cnt == 0)
++			register_ftrace_function(ops);
++		(*cnt)++;
++		return ret;
 +	}
- 
- 	return NULL;
++	return 0;
  }
  
--/*
-- * Warn and return error if the kprobe is being re-registered since
-- * there must be a software bug.
-- */
--static inline int warn_kprobe_rereg(struct kprobe *p)
-+static inline struct kprobe *__get_valid_kprobe(struct kprobe *p)
-+{
-+	return __get_valid_kprobe_at(p, p->addr);
-+}
-+
-+/* Return error if the kprobe is being re-registered */
-+static inline int check_kprobe_rereg_at(struct kprobe *p, kprobe_opcode_t *addr)
- {
- 	guard(mutex)(&kprobe_mutex);
- 
--	if (WARN_ON_ONCE(__get_valid_kprobe(p)))
-+	if (__get_valid_kprobe_at(p, addr))
- 		return -EINVAL;
- 
- 	return 0;
+ static int disarm_kprobe_ftrace(struct kprobe *p)
+@@ -1566,16 +1571,12 @@ void kprobe_busy_end(void)
  }
  
-+static inline int check_kprobe_rereg(struct kprobe *p)
-+{
-+	return check_kprobe_rereg_at(p, p->addr);
-+}
-+
- static int check_ftrace_location(struct kprobe *p)
+ /* Add the new probe to 'ap->list'. */
+-static int add_new_kprobe(struct kprobe *ap, struct kprobe *p)
++static void add_new_kprobe(struct kprobe *ap, struct kprobe *p)
  {
- 	unsigned long addr = (unsigned long)p->addr;
-@@ -1969,7 +1978,7 @@ int register_kprobe(struct kprobe *p)
- 		return PTR_ERR(addr);
- 	p->addr = addr;
+ 	if (p->post_handler)
+ 		unoptimize_kprobe(ap, true);	/* Fall back to normal kprobe */
  
--	ret = warn_kprobe_rereg(p);
-+	ret = check_kprobe_rereg(p);
- 	if (ret)
- 		return ret;
+ 	list_add_rcu(&p->list, &ap->list);
+-	if (p->post_handler && !ap->post_handler)
+-		ap->post_handler = aggr_post_handler;
+-
+-	return 0;
+ }
  
-@@ -2505,20 +2514,19 @@ int register_kretprobe(struct kretprobe *rp)
- 	int ret;
- 	int i;
- 	void *addr;
-+	bool on_func_entry;
+ /*
+@@ -1608,6 +1609,8 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
+ {
+ 	int ret = 0;
+ 	struct kprobe *ap = orig_p;
++	bool reset_post_handler = false;
++	bool ftrace_switch_ops = false;
  
--	ret = kprobe_on_func_entry(rp->kp.addr, rp->kp.symbol_name, rp->kp.offset);
--	if (ret)
--		return ret;
-+	addr = _kprobe_addr(rp->kp.addr, rp->kp.symbol_name, rp->kp.offset, &on_func_entry);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
+ 	scoped_guard(cpus_read_lock) {
+ 		/* For preparing optimization, jump_label_text_reserved() is called */
+@@ -1654,18 +1657,51 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
+ 					| KPROBE_FLAG_DISABLED;
+ 		}
  
--	/* If only 'rp->kp.addr' is specified, check reregistering kprobes */
--	if (rp->kp.addr && warn_kprobe_rereg(&rp->kp))
-+	if (!on_func_entry)
- 		return -EINVAL;
++		if (p->post_handler && !ap->post_handler) {
++			reset_post_handler = true;
++			if (kprobe_ftrace(ap) && !kprobes_all_disarmed &&
++			    !kprobe_disabled(ap))
++				ftrace_switch_ops = true;
++			else
++				ap->post_handler = aggr_post_handler;
++		}
++
+ 		/* Copy the insn slot of 'p' to 'ap'. */
+ 		copy_kprobe(ap, p);
+-		ret = add_new_kprobe(ap, p);
++		add_new_kprobe(ap, p);
++	}
++
++	if (ftrace_switch_ops) {
++		/*
++		 * Must switch ftrace ops outside of text_mutex and cpus_read_lock
++		 * to prevent deadlocks when ftrace code modification acquires text_mutex.
++		 */
++		ret = disarm_kprobe_ftrace(ap);
++		if (ret) {
++			list_del_rcu(&p->list);
++			synchronize_rcu();
++			return ret;
++		}
++		ap->post_handler = aggr_post_handler;
++		ret = arm_kprobe_ftrace(ap);
++		if (ret) {
++			ap->post_handler = NULL;
++			arm_kprobe_ftrace(ap);
++			list_del_rcu(&p->list);
++			synchronize_rcu();
++			return ret;
++		}
+ 	}
  
--	if (kretprobe_blacklist_size) {
--		addr = kprobe_addr(&rp->kp);
--		if (IS_ERR(addr))
--			return PTR_ERR(addr);
-+	if (check_kprobe_rereg_at(&rp->kp, addr))
-+		return -EINVAL;
- 
-+	if (kretprobe_blacklist_size) {
- 		for (i = 0; kretprobe_blacklist[i].name != NULL; i++) {
- 			if (kretprobe_blacklist[i].addr == addr)
- 				return -EINVAL;
+-	if (ret == 0 && kprobe_disabled(ap) && !kprobe_disabled(p)) {
++	if (kprobe_disabled(ap) && !kprobe_disabled(p)) {
+ 		ap->flags &= ~KPROBE_FLAG_DISABLED;
+ 		if (!kprobes_all_disarmed) {
+ 			/* Arm the breakpoint again. */
+ 			ret = arm_kprobe(ap);
+ 			if (ret) {
+ 				ap->flags |= KPROBE_FLAG_DISABLED;
++				if (reset_post_handler)
++					ap->post_handler = NULL;
+ 				list_del_rcu(&p->list);
+ 				synchronize_rcu();
+ 			}
 
