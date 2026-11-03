@@ -1,78 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
 	t=1793731561;
-	b=dyaDTdT+hVcBpZrDo/YYRPgQHf1vyQMVhbkYWOSFd/B23LhHyS4LL/GFfGPiHRdNTcBu
-	 w1Xl3b9ORv7LNmpd7gZnbjgC9c/5FrgXw9Hft/VSIp4b7TyYMZXqqWEHMzt+lVBdgY3kg
-	 zmMsqq6VG0/KhEl7tMXOHv/N045vzx3kkNNluinkfMqyrrDKQSKkFGDWJBTUidTp51YGX
-	 AOvDk18gVw+Ei83QGY/gKPOQZLNwGta7I/w25oD/si/VTsxORxWj7MV0gevwPe/fd0JkR
-	 fTdd/qnnEKJWHRT+rFfueCPhpwA4K9qdIuSFSiswJFnvhxrZhYK2SUbvbUYSkFHQ5Hw==
+	b=cacGNHnPn+Xh6hDCOvRyaBDZbgiBPKtfDHMNFHMGWNa0k4B0R5KjnEkQqFyWrPU2OMh7
+	 FA4burdNVF1jn25kZOOmFxmpS2HN2DaFkT+jJiPu2KGm19xk82Pd+GU2mQwqL+WZVjg3Q
+	 asq1/RaREiM3wVwvTxw57sUNCSWyMbNCRAoVit/j9iUplMALc/WLGcZvKM1y6eNpnhuLl
+	 EvCNn64K/wNQqcUe8Hv8GxpFyieAZ066hNOKCAFt92HaJUszis6kz/bDMyIVwy8X+J3Xh
+	 vyTkrgcS8P5WCWIAwz2JYhRPJpJDFSIpT/uKeN+7hkHbo0rbyGFvU1AFud+giBC1wiQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793731561;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=lNecyHGRIIaxT1G2r1uMqcZKJaHbTJn9ZphQMR3yKzQ=;
-	b=jnmlhlIhxpjL9d6lK2SmYTMzvSdkZ0aci8u81PFY2R8H0r5B/rkQByExzZzVeH7ficIS
-	 +5w8c1InKZmvhT5/JzkjVcFzknqFP2Y0Lkn8YMl1HlN6WNAqMdGrMtl87f0QhsoNTTD+1
-	 9aIQpvGdFlHvJG2TLFr5uv/ioUop7bPkYJcYiEm8JnoQfDU/xIw5Ub/H0PTTwi9ydfFcu
-	 S+SHFEvsqRKy4etPcnsC1QkYDzokBXKugQd/4S4pBfUJU1pPKMdp3FjCPmSq1PBWhjuMd
-	 HoJU3K0djht8XHfTuoa3y9/GeTa7r+IYTKDQoLrAPAN0OkLD86ewNp5Co458D3eRvjg==
+	bh=OLiL26+JaECzvxzhRI+kjCTDvuR4Lj34ib/t+JPRQp8=;
+	b=mnLDAmvQbj1ir96FrHC6CQCgiG7bjqS9LLwlN62t8NLqXX9x2AZoDDdK9Pyqxd7i8oM9
+	 WeT34ZH3qFjbJnGFhob86FCH2w4Tqj4Cf5txpgjw0IocAC2mM2nzcba4+R5BhaHrAC6d/
+	 t96xcHr8VuOg+JbydBPKCZfIsyEHW5EozOEy6gHsKRmv9DiNhy4LvmzWvx5AbgqCGHC8e
+	 GmVeGfsDoWeyhi8bSoERF0ejYXnzzB9Mx8sCkhMVhJ0v5nR7mBDiMI3gbjhTJjkqCkkmn
+	 cws/D6OHy3kGpO0kgDwMvDqKIQ/QC5d2OWyOfxGiwZxW9wps/D5MC4ZFCjkV1Kp2Uhg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IPXQTPfV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nW9s8ZSu;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857DA606A326;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0057606A329;
 	Tue,  3 Nov 2026 18:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IPXQTPfV
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nW9s8ZSu
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
 	t=1793731561;
-	b=Y8oBFxJaZXvUoyeYfeve4kpmpzZYoWMom1nXlIpUJZMHg7GTjLHeRorfzkpD+7DLoZ/2
-	 wL2KWwf6yHkrikF1SnQep/UZGbZL05Q1wa3tdSPI5H5WMBg8MEdyu2i+vGuhsSFf5WH6F
-	 YL4nSA81RcHts1xrO585J1YvQph8xJikMOtOctcD1IqcQ+/T37hav/vE6dzsWKVLy7bDs
-	 DNOH+w23yxmtfhMYTFldmQAr2kwvFbXVU0xJmzi6Ae0NcLX+12GLNtHJevrqmUZ8f0GY7
-	 tLxoDvkWK+TK72NdGBj0u0UTolW13dI4y3fgzS2oWcRVWGO959oZqIDXWRKSNw7Bpwg==
+	b=H2dov04ZuYfWR0gEwxWWtRBvmNXnKO6qPSxHx/nlGqGPzhRrQmg8HKDR4xPbVLvoXOnl
+	 vAAXuoqPPXLjPdvdH6/kYpPjlU4UHeYGqnyM3v+i1cdMv3YsW/8YDlTkB8IxLfI0TEzky
+	 yramL2k7qRzYPbZPsX4Oc2HPrD0Vc6mDJEdmBj6/sIlEWk8TyA9qKN7C350Idd2EqUl2O
+	 Gf0ZTwHSbBCtHjOn8aNRiImSEAPsbASeUCOxVwMMjOANW8UbjIPFldrThxTBArlpQalG5
+	 S+JDb/liNmYwEM8ufvX6X48ukAnnpWpDTTJ/88+O4Xz0k0Sm2JUjf0M4XHf3tt1o0Xw==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
 	c=relaxed/relaxed; t=1793731561;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=lNecyHGRIIaxT1G2r1uMqcZKJaHbTJn9ZphQMR3yKzQ=;
-	b=XGzhKzTp3E93gquunWslHkkqjja2RC2ZiI309O6Avj07idO9AyZAhxuADW6YGfPZTslz
-	 m6nU0uyd7WMXNuFCfLxcqVINGFhjruwz/TTbaGBioRlGD8liM33CL8FGrc+Ym3LBGOxfY
-	 TPyNoPEtGrM5V9Ykvt7JY4t48WWdp36uUWLeL1KZO0BwY2W7V3diCi/66XQKdw67Olfbm
-	 mCqpD3+USsdaEZuiPpcU2QXead42I6HUumEC2SOoBF0spNcMm4o55CMXu9PY26PgJu3jA
-	 sijgusJT5HxCaZQoExdlUIxfcaQvgKYNv8BME7Ki2Tt3WZSmiE98jjfG8k1T5nDscHw==
+	bh=OLiL26+JaECzvxzhRI+kjCTDvuR4Lj34ib/t+JPRQp8=;
+	b=Sw2hEoNjhmRx3hqtFSJq/UTYXb5BTCruOG6iY0iRTlwZoPnlurAy4HGQtaUp38+qEbDW
+	 oOHWIJReLOKR3dTAIlrT6YSDgE9P1RHYOMTs34MiaXmaEPu5TlET3fiZoec0CJndzmBI4
+	 z2/j9yyRZq3zI4BtAaZ8C5mygf5mXLLaQuB1O0o6ZKMAQl/BS3BxCSffhrzBZQp1k7Kzt
+	 vFAW9TBKc4M4a2Hdy3fOhvXYeD2XRNvSN+YO0cYA4GxTgBaGqgT9i2hpA5ef9RyKaJr4/
+	 qgzg9D9Lua2Kd0dGh4Fcl3mQkW/zDx5WWVtWJi3K74E16mbxx2l/lnBvLexcKdDU+Kg==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 60F4E1F00919;
+	by smtp.kernel.org (Postfix) with ESMTPS id 60FBA1F00A02;
 	Tue,  3 Nov 2026 18:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793731561;
-	bh=lNecyHGRIIaxT1G2r1uMqcZKJaHbTJn9ZphQMR3yKzQ=;
+	bh=OLiL26+JaECzvxzhRI+kjCTDvuR4Lj34ib/t+JPRQp8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=IPXQTPfVH5DwCLiI8GFHB3m4dAtVsNNcQgt16NR10CZe6vaMe/rQJ/VkyAuVvJg6f
-	 PRKwuSgzUPkcn4qCsaToaKUhzWNtrJePH4u7lu36rFrxytdW+QKDkumxnihF/8Ozh6
-	 Bmn2lvMWXewuPMBItOt7ujfFzPFbsAMP6zpdo9JQ8hjiYNVQwuKmf8vkPMiCffT7/H
-	 w33GJjl8CdYzcs+L78brQHTZ566or7raia0ysqerEw7P1ggh0ojES0N/smZ+h/6+Wl
-	 +BvqatqyGHrhOdiG0VrVvLBu8lRoSNftKBBiN6MPOInDUeU/DduSEK/rz3CZIWvUe9
-	 QJp0czQSLyYeg==
+	b=nW9s8ZSumVD7ng8Ak4Dnns98e+8HnCxfK/rqr+8a0BlOqC1OiT+IcpVd69AWAIIiW
+	 8YP87WeFOEYj4fK/A4g595aNYa9p8vK+0muW5MTd4gy672F37UNGfWte64ohCb8Zid
+	 1wSCGi+48hFzQCI8HcEA8EBEOZNji4j0I1WVtgrOeT1H+R7UEtx+/E13lty8J4s5Tp
+	 0a6MVYO/0A32g0dD8O4NZcTfeaAhFR0i20ESQP2uvn2eNbIWpgYBoFZIgZCjNfjGrU
+	 i5gC059tUa+/kHrhRaMamuWz9U2AGDErzbXaCNju3iQGjH3tq3CLPyOGEpIqQ0qDVl
+	 DZWN6512XZb7A==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id DBFC746AA2;
+	by lkml.kernel.org (Postfix) with ESMTP id C1ED346A8B;
 	Tue,  3 Nov 2026 18:45:59 +0000 (UTC)
 From: Mani Tofigh via B4 Relay <devnull+mt4022.columbia.edu@kernel.org>
-Date: Tue, 03 Nov 2026 13:46:01 -0500
-Subject: [PATCH 3/3] kprobes: Arm reused optprobe on cooling list
+Date: Tue, 03 Nov 2026 13:45:59 -0500
+Subject: [PATCH 1/3] kprobes: Disarm disabled optprobe on forced
+ unoptimization
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,7 +84,7 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261103-kprobes-optprobe-state-v1-3-6aaac612abe6@columbia.edu>
+Message-Id: <20261103-kprobes-optprobe-state-v1-1-6aaac612abe6@columbia.edu>
 References: <20261103-kprobes-optprobe-state-v1-0-6aaac612abe6@columbia.edu>
 In-Reply-To: <20261103-kprobes-optprobe-state-v1-0-6aaac612abe6@columbia.edu>
 To: Masami Hiramatsu <mhiramat@kernel.org>, 
@@ -93,11 +94,11 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
  linux-kernel@vger.kernel.org, tz2294@columbia.edu, 
  Mani Tofigh <mt4022@columbia.edu>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793731559; l=1380;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1793731559; l=2481;
  i=mt4022@columbia.edu; s=20261026; h=from:subject:message-id;
- bh=A4hzeYXnyu4gqCtaHPk+uqW5lGcpJ7XKim4n6VIIG3I=;
- b=WT5Kqr62jfYJJeNpsYt50OGs4bjDsKR9DqcIbR5UvllsI/9clbltJSFOEdzqct1LaUqj0mxzJ
- 6o/UqV1tYYzCMRgryOZ2zzE6Y6D8XVTSRatbx2yR1gEM4FH0Kl11UJn
+ bh=O1s7x+S8Y9RffIFDZ2Gdq0pngTBLL9OlQLH23gRHjU0=;
+ b=6In0Ln+1sBlRCxdaltggdp9+etXkgvKBsIvLEvYDDDm+3+6RbkcyxKYAkZwZum1rM/KeRedhw
+ cPeWIbqJR7lBfKHD2S2s7tGL7fxZ5f9pqw0OG70lE/H0dB+IyAMMs9d
 X-Developer-Key: i=mt4022@columbia.edu; a=ed25519;
  pk=gljCMQDuxyKPmd5y37CRpEJGSPXDV1MyAnHBhCgXl0I=
 X-Endpoint-Received: by B4 Relay for mt4022@columbia.edu/20261026 with
@@ -108,45 +109,66 @@ Content-Transfer-Encoding: 7bit
 
 From: Mani Tofigh <mt4022@columbia.edu>
 
-A new probe that reuses an unused probe still on a cooling list doesn't
-fire.  reuse_unused_kprobe() clears DISABLED without arming it, so the
-probe has no int3 until it's optimized again, or ever if it can't be
-(e.g., it has a post_handler).
+A disabled optimized probe can be freed with its int3 still in the
+text.  It waits on the unoptimizing list for the optimizer to remove its
+jump.  If another probe is armed on one of the bytes that jump replaced,
+unoptimize_kprobe() forces the unoptimization and moves the disabled
+probe straight to a cooling list without removing its int3:
 
-Arm a reused cooling probe.  With the fix, it fires.
+  Task A (tracefs)                       Task B (optimizer)
+  disable k1
+    /* k1 queued to unoptimize */
+                                         /* still on an earlier batch */
+  enable k2 on a byte k1's jump replaced
+    unoptimize_kprobe(k1, true)
+      /* int3 back, k1 on a cooling list */
+  remove k1
+    /* k1 freed, int3 left in the text */
+
+The next call into the function then oopses:
+
+  [    9.924313] Oops: int3: 0000 [#1] SMP KASAN NOPTI
+  [    9.925627] CPU: 0 UID: 0 PID: 68 Comm: kprobeopt Tainted: G        W            7.3.0-17087-gd865f2677c44 #1 PREEMPT
+  [    9.930933] RIP: 0010:__do_sys_sysinfo+0x8/0xe0
+  ...
+  [    9.949348] Call Trace:
+  [    9.949890]  <TASK>
+  [    9.950404]  do_syscall_64+0xfb/0x590
+  [    9.952027]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  ...
+  [    9.966436]  </TASK>
+  ...
+  [    9.968009] Kernel panic - not syncing: Fatal exception in interrupt
+
+Disarm a disabled probe on that path like do_unoptimize_kprobes() does.
+With the fix, the int3 is gone by the time the probe is freed.
+
+This bug was identified and confirmed with the help of a deterministic
+hypervisor currently under development.  The C reproducer below however
+hits it within about 10s.
 
 Fixes: 06e0d3b89da1 ("kprobes: Make optprobe optimizer multi-generational and asynchronous")
 Signed-off-by: Mani Tofigh <mt4022@columbia.edu>
 ---
- kernel/kprobes.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reproducer: https://github.com/manitofigh/files/blob/main/linux-repros/kprobeopt.c
+---
+ kernel/kprobes.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 84a5f68476eb..59c5689299ce 100644
+index 11add929ea16..4c35cc24aadc 100644
 --- a/kernel/kprobes.c
 +++ b/kernel/kprobes.c
-@@ -536,6 +536,7 @@ static struct optprobe_generation optprobe_gens[OPTPROBE_GEN_MAX];
- static int optprobe_cur_gen;
- 
- static void optimize_kprobe(struct kprobe *p);
-+static void __arm_kprobe(struct kprobe *p);
- static struct task_struct *kprobe_optimizer_task;
- static wait_queue_head_t kprobe_optimizer_wait;
- static atomic_t optimizer_state;
-@@ -1067,6 +1068,13 @@ static int reuse_unused_kprobe(struct kprobe *ap)
- 	if (!kprobe_optready(ap))
- 		return -EINVAL;
- 
-+	if (optprobe_queued_cooling(op)) {
-+		/* Already disarmed. It will be optimized again upon finalize */
-+		if (!kprobes_all_disarmed)
-+			__arm_kprobe(ap);
-+		return 0;
-+	}
-+
- 	optimize_kprobe(ap);
- 	return 0;
- }
+@@ -1006,6 +1006,9 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+ 					hlist_del_init_rcu(&op->kp.hlist);
+ 					list_move(&op->list, &cur->freeing_list);
+ 				} else {
++					/* Disarm probes if marked disabled and not gone */
++					if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
++						arch_disarm_kprobe(&op->kp);
+ 					list_move(&op->list, &cur->cooling_list);
+ 				}
+ 				kick_kprobe_optimizer();
 
 -- 
 2.53.0
