@@ -1,55 +1,77 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793731881;
-	b=iA4UGje6nhKUNJPZFDo5NjotK0B0BcOyGMSA+DFH18jm00M7NOmdLBP5RjahBA5JQymd
-	 3OIGcTpay5bhJ++dXWpftIjzXfQDBr7rI7Fbj6nx+7Wn8Zx3ZB6X+0uITKqVnR8Mi2k/o
-	 Lv/xMIaQskzxhkPAjQ+uKBCoM4Mt4wZPcyU1gjv2Zu577+vxuEURKa/ahdbHMt1IpqHq8
-	 0hkMnMCG0bG2biQJS3FOBvQHIqNU4ImV///kEm87wxYUN0sZqhTKI3pzDWRCmuMS6rVcP
-	 L0q4FJu/kXgXDu8MlUgQ+PvVPe1UN8U1QsC+1yA+h2V05htLLB8i0fdCI/+zyitAa1g==
+	t=1793732873;
+	b=wSnUTE3tEQHmeKAydCDCD5iU2tswerW+qN/W8eLjdTEOuKwspnAuZlZvpDc2/x2Szpwi
+	 6UhhbtsBwBQ5T16s+Ni++FKLFmUjfBKiUc+aWY+w95A/2RwWdGZ9uP7lNGOQsGJPYgiM4
+	 TsDuHbj3Dq5fSX2s0Ch9XRmYzCUMn2knJCp4I2YszqWGb72waV0/kJ6W1xB3QljfLacCe
+	 W9CQvn3UMDQVTFi5ylg5gXTcXmadmZunCwdNxynZ5PtnG/FE8Echgo61RZ6zanaVcVlzO
+	 zgUFmmF2CnwaBgx/GcoeND8xdJHcPXvt1Xd/jr0fAaRZFKN541Sdko5VjiJg19PEX2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793731881;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793732873;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=7R7w0SiHikbEXLW0o3Xe2zM8x44XPoNu8WiKjw2opBE=;
-	b=gh5Td1Tf80nn1Ut2wW8v8SpHc7ESkTI0JjP/aaxvvtgPxKwY7GmfSnecItBMlrJL2QyL
-	 U2tbbPXx2dCfOiaMavbFywSMLoo+Vs2DWN4jJt9at+ETVUALCis93oPTLhNO2lVnBtKaY
-	 xvOEUICeNAALlTKOCGcYMls75B3M/2hWKBOeFhUPwVYHN3bn/2KRZN/k141tEeyNohLGZ
-	 noQRB6ekmcfFELG/onnTTD8yoPotgiFzc8WtGo1DNYuir3GPS0aY2gwRu0JYA8FjKH2bL
-	 7TZQ6TBdQXmaPnSib3+1Jdbt+NZ8IpbDhd2TB856LCu9vKRg4C1dANbUHoMSikWuJMQ==
+	bh=Hj5sGf4zuQDzxKH9qB3EIUe2aXuw6LNNWfdi8I5hW/k=;
+	b=040awTw9CARqaCzIZLS0PHECSSJbo/VJSVQwQtzN2MAK2+JtHLb5C2NI338gLprmYSV3
+	 3jj21MekhzEk43aMY+TK920XKdnlrQdp7xQYKWQaC2Fz/P8WWBNwDDjTP7gHnqybxS0M6
+	 e/B0dBCmptRkdkEmN0p9Kpu3kzNKWLkKtgIrud7v6PTmtEe48yYEZm11NGEvgVdmp7xtZ
+	 Ysy7ZvTARG9kAn2RnIjSG5RJ563B7BbULTVuco36PIqJsKUuso0ZV/LmWrLCO4CncnZS0
+	 CTgQF8xOjtlOF+y5G+cYbRS3boScoUWf83YIxMte706Y/xgQsVwFuSLUcOE+fzU1Wzg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CV4t4Fn9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngGMpUJa;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3C5606A326
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 18:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B28606A328
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 19:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CV4t4Fn9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 631861F0093A;
-	Tue,  3 Nov 2026 18:51:20 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngGMpUJa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8221F000C1;
+	Tue,  3 Nov 2026 19:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793731880;
-	bh=7R7w0SiHikbEXLW0o3Xe2zM8x44XPoNu8WiKjw2opBE=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=CV4t4Fn9py0eFKZcUSPMoIuk0/+O2mK7yhQh0bHWBkiFGHGsOEU9H7qxCFrH4ML5i
-	 NCj/z853lRlKUIX1FIbS84/SSVExmXOvR0/5QrrjxSEBXKoEYAUgqbgxd2MzNApmOz
-	 HIUM3CojndHnI5K8rithpG3WP5/qK8NWHEP1UdwvkejQM4p6TBohLSUmY+JR1G7ung
-	 ZpkaA8cXXvhjfM7uRYfZATQ1BSAEeI76/yPLWCiDWUsTxuyoSbSTUqtC1GjvooAvt5
-	 SKE0sNlC3pu2jRqHWanX5xNejCn4IFXHWT12NrIZncUNHVVoZE9SM0IYjQq4elZmkR
-	 8VofoEGnlXmzQ==
-Message-ID: <sashiko-outbox-195864@kernel.org>
+	s=k20260515; t=1793732872;
+	bh=Hj5sGf4zuQDzxKH9qB3EIUe2aXuw6LNNWfdi8I5hW/k=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ngGMpUJa26AXpOYCLOj8Ws2TWAtRrkSUJNmAMWoILDJ/YqTAp7sZpQTVsoS1jSuN6
+	 2GzbPOEBiHxEnnKlesKpTlg3zLI6egZjPUSvDK/qL0DYBNlDHXBIBUyjl739WFA52M
+	 QGMIbVxGdSoz2RqEr5vKBT2KQXwgctslR2Rh9hgjjdxrXGLdtwLdF2RZSa0jcf9cKh
+	 g6GSjyKpKgu6gK7xAHo5EsfUzkMAZDls82BoEd8VdXwvDS5HtF81yMIaNcdWeMWjUk
+	 9DwCMnxXu3qOQr5th0d6Gz1UfZf1igpLEPpLT9F9iuKweOptfFcAJbx1zFBR/zL8j7
+	 cRLu58yPfANVg==
+Message-ID: <sashiko-outbox-195884@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5] tracefs: Add read-only eventfs filesystem at
- /sys/kernel/events
+Subject: Re: [RFC PATCH v23 02/10] lib: test hierarchical per-cpu counters
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
-In-Reply-To: <20261103133517.6e54a8db@gandalf.local.home>
-References: <20261103133517.6e54a8db@gandalf.local.home>
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
+ Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
+ Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
+ Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
+ Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
+ Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
+ Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
+ Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
+ Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
+ Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Josh
+ Law" <objecting@objecting.org>, "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan
+ Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Kees Cook" <kees@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
+ Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
+ Prateek Nayak" <kprateek.nayak@amd.com>, linux-trace-kernel@vger.kernel.org, "Jan
+ Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>
+In-Reply-To: <20261102190708.1287100-3-mathieu.desnoyers@efficios.com>
+References: <20261102190708.1287100-1-mathieu.desnoyers@efficios.com>
+ <20261102190708.1287100-3-mathieu.desnoyers@efficios.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 18:51:19 +0000
+Date: Tue, 03 Nov 2026 19:07:49 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,252 +83,252 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] tracefs: tracefs_apply_options() overwrites eventfs_ro inode own=
-ership
-- [Medium] tracefs: eventfs_ro_fill_super() sets i_nlink to 2 on dynamic ev=
-entfs root
-- [Low] tracefs: mismatched kernel-doc function name for __eventfs_root_loo=
-kup()
+- [Medium] lib/tests: unlocked cpu_online_mask read passed to work_on_cpu()
+- [Medium] lib/tests: missing release/acquire ordering on sh.started in con=
+tention test
+- [Low] lib/tests: unlocked num_online_cpus() check in do_hpcc_test_saturat=
+ed_compare()
 --
 
-commit 8a085766e708c607f0750dab297b23f146dfe8b9
-Author: Anubhav Shelat <ashelat@redhat.com>
+commit 48b3ce088047ee1ccff5c20155903c1a143e78df
+Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-tracefs: Add read-only eventfs filesystem at /sys/kernel/events
+lib: test hierarchical per-cpu counters
 
-This commit introduces a read-only eventfs pseudo-filesystem mounted at
-/sys/kernel/events that exposes trace event format and id files with mode
-0444 to unprivileged users. It reuses the existing eventfs_inode
-lazy-lookup infrastructure and tracefs inode allocator on a separate
-read-only superblock.
+Introduce KUnit tests for hierarchical per-CPU counters covering
+single-threaded updates, concurrent multi-threaded updates, contended
+carries, and saturated counter comparisons.
 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 6e3513b13cfa2..43ae382cfbbfc 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -16,14 +16,96 @@
->   */
->  #include <linux/fsnotify.h>
->  #include <linux/fs.h>
-> +#include <linux/fs_context.h>
->  #include <linux/namei.h>
->  #include <linux/workqueue.h>
->  #include <linux/security.h>
->  #include <linux/tracefs.h>
-> +#include <linux/magic.h>
->  #include <linux/kref.h>
->  #include <linux/delay.h>
->  #include "internal.h"
-> =20
-> +static struct vfsmount *eventfs_ro_mount;
-> +static int eventfs_ro_mount_count;
-> +
-> +static int eventfs_ro_fill_super(struct super_block *sb, struct fs_conte=
-xt *fc)
+Link: https://lkml.kernel.org/r/20260227153730.1556542-3-mathieu.desnoyers@=
+efficios.com
+
+> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
+nter_tree_kunit.c
+> new file mode 100644
+> index 0000000000000..58b2e488e3c6b
+> --- /dev/null
+> +++ b/lib/tests/percpu_counter_tree_kunit.c
+
+[ ... ]
+
+> +static void do_hpcc_test_single_thread(struct kunit *test, int _cpu0, in=
+t _cpu1,
+> +				       enum up_test_inc_type type)
 > +{
-> +	struct inode *inode;
-> +	struct dentry *root;
+> +	unsigned long batch_size_order =3D 5;
+> +	int cpu0 =3D _cpu0;
+> +	int cpu1 =3D _cpu1;
+> +	unsigned long deadline =3D jiffies + SINGLE_THREAD_MAX_SECONDS * HZ;
+> +	int ret, i;
 > +
-> +	sb->s_blocksize =3D PAGE_SIZE;
-> +	sb->s_blocksize_bits =3D PAGE_SHIFT;
-> +	sb->s_magic =3D EVENTFS_SUPER_MAGIC;
-> +	sb->s_op =3D &eventfs_ro_super_operations;
-> +	sb->s_time_gran =3D 1;
-> +	sb->s_flags |=3D SB_RDONLY;
+> +	ret =3D init_counters(1UL << batch_size_order);
+> +	KUNIT_EXPECT_EQ(test, ret, 0);
+> +	if (ret)
+> +		return;
+> +	cpus_read_lock();
+> +	for (i =3D 0; i < 10000 && time_before(jiffies, deadline); i++) {
+> +		struct single_thread_update u0 =3D { .counter_index =3D 0 };
+> +		struct single_thread_update u1 =3D { .counter_index =3D 1 };
+> +		long increment;
 > +
-> +	inode =3D new_inode(sb);
-> +	if (!inode)
-> +		return -ENOMEM;
+> +		switch (type) {
+> +		case INC_ONE:
+> +			increment =3D 1;
+> +			break;
+> +		case INC_MINUS_ONE:
+> +			increment =3D -1;
+> +			break;
+> +		case INC_RANDOM:
+> +			increment =3D (long)get_random_long() % 50000;
+> +			break;
+> +		default:
+> +			WARN_ON_ONCE(1);
+> +			increment =3D 0;
+> +		}
+> +		if (_cpu0 < 0)
+> +			cpu0 =3D cpumask_any_distribute(cpu_online_mask);
+> +		if (_cpu1 < 0)
+> +			cpu1 =3D cpumask_any_distribute(cpu_online_mask);
+> +		u0.increment =3D increment;
+> +		u1.increment =3D increment;
+> +		work_on_cpu(cpu0, single_thread_update_fn, &u0);
+> +		work_on_cpu(cpu1, single_thread_update_fn, &u1);
+> +		check_counters(test);
+> +	}
+> +	cpus_read_unlock();
+> +	fini_counters();
+> +}
 > +
-> +	inode->i_ino =3D 1;
-> +	inode->i_mode =3D S_IFDIR | 0555;
-> +	simple_inode_init_ts(inode);
-> +	inode->i_op =3D &simple_dir_inode_operations;
-> +	inode->i_fop =3D &simple_dir_operations;
-> +	set_nlink(inode, 2);
+> +static void hpcc_test_single_thread_first(struct kunit *test)
+> +{
+> +	int cpu =3D cpumask_first(cpu_online_mask);
+> +
+> +	do_hpcc_test_single_thread(test, cpu, cpu, INC_ONE);
+> +	do_hpcc_test_single_thread(test, cpu, cpu, INC_MINUS_ONE);
+> +	do_hpcc_test_single_thread(test, cpu, cpu, INC_RANDOM);
+> +}
+> +
+> +static void hpcc_test_single_thread_first_random(struct kunit *test)
+> +{
+> +	int cpu =3D cpumask_first(cpu_online_mask);
+> +
+> +	do_hpcc_test_single_thread(test, cpu, -1, INC_ONE);
+> +	do_hpcc_test_single_thread(test, cpu, -1, INC_MINUS_ONE);
+> +	do_hpcc_test_single_thread(test, cpu, -1, INC_RANDOM);
+> +}
 
 [Severity: Medium]
-Should the root inode keep i_nlink at 1 rather than calling
-set_nlink(inode, 2) in eventfs_ro_fill_super()?
+Can cpu go offline before or between the calls to
+do_hpcc_test_single_thread()?
 
-When eventfs_create_events_ro_copy() later configures this root inode as the
-top-level eventfs directory with eventfs_ro_dir_inode_operations and
-eventfs_ro_file_operations, its subsystem subdirectories are created
-dynamically on demand in lookup_dir_entry() without incrementing the parent
-directory link count.
+Both hpcc_test_single_thread_first() and
+hpcc_test_single_thread_first_random() sample cpumask_first(cpu_online_mask)
+without holding cpus_read_lock(), and then pass that cpu across three
+separate calls to do_hpcc_test_single_thread(), each of which acquires and
+releases cpus_read_lock() on its own.
 
-As noted in eventfs_create_events_dir(), eventfs directories keep i_nlink =
-=3D=3D 1
-so userspace tools do not trust the link count:
+Because _cpu0 >=3D 0 (and _cpu1 >=3D 0 in hpcc_test_single_thread_first()),
+do_hpcc_test_single_thread() never re-reads or validates cpu0 or cpu1 under
+cpus_read_lock() before passing them to work_on_cpu(), which requires the
+caller to ensure the target CPU cannot go offline.
 
-    /*
-     * Keep all eventfs directories with i_nlink =3D=3D 1.
-     * Due to the dynamic nature of the dentry creations and not
-     * wanting to add a pointer to the parent eventfs_inode in the
-     * eventfs_inode structure, keeping the i_nlink in sync with the
-     * number of directories would cause too much complexity for
-     * something not worth much. Keeping directory links at 1
-     * tells userspace not to trust the link number.
-     */
-
-With i_nlink set to 2 on /sys/kernel/events, won't userspace directory
-traversal tools such as find and fts assume the directory has no
-subdirectories (st_nlink =3D=3D 2) and skip recursing into the event subsys=
-tem
-directories?
+If CPU hot-unplug runs concurrently under CONFIG_HOTPLUG_CPU=3Dy, could
+work_on_cpu() be called on an offline CPU?
 
 [ ... ]
 
-> @@ -308,12 +404,17 @@ void eventfs_remount(struct tracefs_inode *ti, bool=
- update_uid, bool update_gid)
->  }
-> =20
->  static void update_inode_attr(struct inode *inode, umode_t mode,
-> -			      struct eventfs_attr *attr, struct eventfs_root_inode *rei)
-> +			      struct eventfs_attr *attr, struct eventfs_root_inode *rei,
-> +			      bool ro)
->  {
-> +	inode->i_mode =3D mode;
+> +static int contention_worker_fn(void *data)
+> +{
+> +	struct contention_data *cd =3D data;
+> +	struct contention_shared *sh =3D cd->sh;
+> +	int round;
 > +
-> +	/* The read-only version does not allow updates to owership or permissi=
-ons */
-> +	if (ro)
-> +		return;
-> +
->  	if (attr && attr->mode & EVENTFS_SAVE_MODE)
->  		inode->i_mode =3D attr->mode & EVENTFS_MODE_MASK;
-> -	else
-> -		inode->i_mode =3D mode;
-> =20
->  	if (attr && attr->mode & EVENTFS_SAVE_UID)
->  		inode->i_uid =3D attr->uid;
-
-[ ... ]
-
-> @@ -407,22 +512,28 @@ static struct dentry *lookup_file(struct eventfs_in=
-ode *parent_ei,
->   * @dentry: the directory to look up
->   * @pei: Pointer to the parent eventfs_inode if available
->   * @ei: the eventfs_inode that represents the directory to create
-> + * @ro: boolean to denote if this lookup is for the read-only version
->   *
->   * This function will look up a dentry for a directory represented by
->   * a eventfs_inode.
->   */
->  static struct dentry *lookup_dir_entry(struct dentry *dentry,
-> -	struct eventfs_inode *pei, struct eventfs_inode *ei)
-> +	struct eventfs_inode *pei, struct eventfs_inode *ei, bool ro)
->  {
->  	struct inode *inode;
->  	umode_t mode =3D S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-> =20
-> -	inode =3D eventfs_get_inode(dentry, &ei->attr, mode, ei);
-> +	inode =3D eventfs_get_inode(dentry, &ei->attr, mode, ei, ro);
->  	if (unlikely(!inode))
->  		return ERR_PTR(-ENOMEM);
-> =20
-> -	inode->i_op =3D &eventfs_dir_inode_operations;
-> -	inode->i_fop =3D &eventfs_file_operations;
-> +	if (ro) {
-> +		inode->i_op =3D &eventfs_ro_dir_inode_operations;
-> +		inode->i_fop =3D &eventfs_ro_file_operations;
-> +	} else {
-> +		inode->i_op =3D &eventfs_dir_inode_operations;
-> +		inode->i_fop =3D &eventfs_file_operations;
+> +	wait_event(contention_wq, READ_ONCE(sh->started));
+> +	for (round =3D 1; round <=3D CONTENTION_NR_ROUNDS; round++) {
+> +		if (cd->coordinator) {
+> +			atomic_set_release(&sh->round, round);
+> +			contention_add(cd);
+> +			while (atomic_read_acquire(&sh->nr_done) < round * (sh->nr_workers - =
+1))
+> +				cond_resched();
+> +#ifdef CONFIG_SMP
+> +			if (percpu_counter_tree_check_residuals(&counter[0]))
+> +				sh->nr_errors++;
+> +#endif
+> +		} else {
+> +			while (atomic_read_acquire(&sh->round) < round)
+> +				cond_resched();
+> +			contention_add(cd);
+> +			/* Order the additions before the coordinator check. */
+> +			atomic_inc_return_release(&sh->nr_done);
+> +		}
 > +	}
+> +	complete_work();
+> +	return 0;
+> +}
+> +
+> +static void do_hpcc_test_contended_carries(struct kunit *test, unsigned =
+long batch_size)
+> +{
 
 [ ... ]
 
-> @@ -521,14 +640,16 @@ lookup_file_dentry(struct dentry *dentry,
->   * @dir: in which a lookup is being done
->   * @dentry: file/dir dentry
->   * @flags: Just passed to simple_lookup()
-> + * @ro: Denote if this is from a read-only eventfs
->   *
->   * Used to create dynamic file/dir with-in @dir, search with-in @ei
->   * list, if @dentry found go ahead and create the file/dir
->   */
-> =20
-> -static struct dentry *eventfs_root_lookup(struct inode *dir,
-> -					  struct dentry *dentry,
-> -					  unsigned int flags)
-> +static struct dentry *__eventfs_root_lookup(struct inode *dir,
-> +					    struct dentry *dentry,
-> +					    unsigned int flags,
-> +					    bool ro)
+> +	for_each_cpu(cpu, cpus) {
+> +		cd[cpu].sh =3D &sh;
+> +		cd[cpu].coordinator =3D first;
+> +		cd[cpu].seed =3D get_random_u32() | 1;
+> +		task[cpu] =3D kthread_create_on_cpu(contention_worker_fn, &cd[cpu], cp=
+u,
+> +						  "kunit_hpcc_contention/%u");
+> +		KUNIT_EXPECT_FALSE(test, IS_ERR(task[cpu]));
+> +		if (IS_ERR(task[cpu]))
+> +			break;
+> +		atomic_inc(&kernel_threads_to_run);
+> +		get_task_struct(task[cpu]);
+> +		wake_up_process(task[cpu]);
+> +		sh.nr_workers++;
+> +		first =3D false;
+> +	}
+> +	/* Start the workers once their number is known. */
+> +	WRITE_ONCE(sh.started, true);
+> +	wake_up_all(&contention_wq);
+
+[Severity: Medium]
+On weakly-ordered architectures, can the coordinator thread in
+contention_worker_fn() observe sh->started =3D=3D true before seeing all
+increments to sh.nr_workers?
+
+In do_hpcc_test_contended_carries(), each worker kthread (starting with the
+coordinator on the first iteration) is woken via wake_up_process(task[cpu])
+inside the loop while sh.nr_workers++ is still being incremented on
+subsequent iterations, and completion is published with
+WRITE_ONCE(sh.started, true).
+
+In contention_worker_fn(), if the already-running coordinator hits the
+wait_event(contention_wq, READ_ONCE(sh->started)) fastpath before
+wake_up_all() is called, it does not go through the waitqueue spinlock and
+there is no release/acquire pairing ordering the updates to sh.nr_workers
+before the coordinator reads sh->nr_workers in:
+
+	while (atomic_read_acquire(&sh->nr_done) < round * (sh->nr_workers - 1))
+
+Could this cause the coordinator to wait for fewer workers than were created
+and call percpu_counter_tree_check_residuals(&counter[0]) while other worke=
+rs
+are still updating counter[0]? Should sh.started use smp_store_release() and
+smp_load_acquire()?
+
+[ ... ]
+
+> +static void do_hpcc_test_saturated_compare(struct kunit *test, unsigned =
+long batch_size,
+> +					   long inc)
+> +{
+
+[ ... ]
+
+> +	cpus_read_lock();
+> +	for_each_online_cpu(cpu) {
+> +		work_on_cpu(cpu, saturate_worker_fn, &sd);
+> +		KUNIT_EXPECT_FALSE(test, sd.overrun);
+> +		if (sd.overrun)
+> +			break;
+> +	}
+> +	cpus_read_unlock();
+> +
+> +	precise =3D percpu_counter_tree_precise_sum(c);
+> +	approx =3D percpu_counter_tree_approximate_sum(c);
+> +	kunit_info(test, "batch_size=3D%lu inc=3D%ld precise=3D%ld approx=3D%ld=
+ accuracy=3D%lu\n",
+> +		   batch_size, inc, precise, approx, accuracy);
+> +
+> +	check_residuals(test, c);
+> +	check_residuals(test, &probe);
+> +
+> +	/* Accuracy contract. */
+> +	KUNIT_EXPECT_GE(test, approx, precise - (long)accuracy);
+> +	KUNIT_EXPECT_LE(test, approx, precise + (long)accuracy);
+> +	/* Saturating every possible CPU reaches the accuracy exactly. */
+> +	if (num_online_cpus() =3D=3D nr_cpu_ids)
+> +		KUNIT_EXPECT_EQ(test, (precise - approx) * inc, (long)accuracy);
 
 [Severity: Low]
-This isn't a bug, but since eventfs_root_lookup() was renamed to
-__eventfs_root_lookup(), should the function name in the kernel-doc comment
-header above it also be updated to __eventfs_root_lookup to avoid a W=3D1
-kernel-doc warning?
+In do_hpcc_test_saturated_compare(), what happens if a CPU is offline during
+the for_each_online_cpu() saturation loop and comes online after
+cpus_read_unlock()?
 
-[ ... ]
+Because num_online_cpus() =3D=3D nr_cpu_ids is checked after cpus_read_unlo=
+ck()
+is dropped, a CPU brought online in that window would make
+num_online_cpus() =3D=3D nr_cpu_ids true even though saturate_worker_fn() d=
+id not
+run on it, causing the KUNIT_EXPECT_EQ(test, (precise - approx) * inc,
+(long)accuracy) assertion to fail spuriously.
 
-> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> index f3d6188a3b7b2..dafa0d587f04c 100644
-> --- a/fs/tracefs/inode.c
-> +++ b/fs/tracefs/inode.c
-> @@ -423,6 +423,14 @@ static const struct super_operations tracefs_super_o=
-perations =3D {
->  	.show_options	=3D tracefs_show_options,
->  };
-> =20
-> +const struct super_operations eventfs_ro_super_operations =3D {
-> +	.alloc_inode    =3D tracefs_alloc_inode,
-> +	.free_inode     =3D tracefs_free_inode,
-> +	.destroy_inode  =3D tracefs_destroy_inode,
-> +	.drop_inode     =3D tracefs_drop_inode,
-> +	.statfs		=3D simple_statfs,
-> +};
-
-[Severity: Medium]
-As reported by Sashiko on v4 [1], because eventfs_ro_super_operations uses
-tracefs_alloc_inode, all inodes allocated on the read-only eventfs
-superblock (including the pinned root inode configured by
-eventfs_create_events_ro_copy() and any cached subdirectories or files) are
-linked into the global tracefs_inodes list.
-
-While update_inode_attr() now returns early when ro is true during lookup,
-when tracefs is mounted or remounted with uid=3D or gid=3D options,
-tracefs_apply_options() still walks the global tracefs_inodes list without
-checking if the inode belongs to the tracefs superblock:
-
-fs/tracefs/inode.c:tracefs_apply_options() {
-    ...
-	list_for_each_entry_rcu(ti, &tracefs_inodes, list) {
-		if (update_uid) {
-			ti->flags &=3D ~TRACEFS_UID_PERM_SET;
-			ti->vfs_inode.i_uid =3D fsi->uid;
-		}
-
-		if (update_gid) {
-			ti->flags &=3D ~TRACEFS_GID_PERM_SET;
-			ti->vfs_inode.i_gid =3D fsi->gid;
-		}
-
-		if (ti->flags & TRACEFS_EVENT_INODE)
-			eventfs_remount(ti, update_uid, update_gid);
-	}
-    ...
-}
-
-Won't mounting or remounting tracefs with uid=3D or gid=3D overwrite i_uid =
-and
-i_gid on the pinned /sys/kernel/events root inode and all currently cached
-eventfs_ro inodes, as well as invoke eventfs_remount() a second time on the
-shared eventfs_inode via the eventfs_ro root inode?
-
-Also, in lookup_dir_entry(), mode is initialized to:
-
-	umode_t mode =3D S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-
-When ro is true, should lookup_dir_entry() clear S_IWUSR (or use 0555 to
-match the root inode in eventfs_ro_fill_super()) so subdirectories in the
-read-only eventfs mount do not report 0755 permissions?
-
-[1] https://lore.kernel.org/r/sashiko-outbox-194145@kernel.org
+Should num_online_cpus() =3D=3D nr_cpu_ids be recorded while cpus_read_lock=
+() is
+still held?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103133517.6e54=
-a8db@gandalf.local.home?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102190708.1287=
+100-1-mathieu.desnoyers@efficios.com?part=3D2
