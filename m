@@ -1,109 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.61
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793674568;
-	b=HA3w7iz4KylDlOR2/qiQGf/XTJaDZ4kZDhX/+TCYY+aPf/In9HOUyJqbtlG8bXCvqQG6
-	 M3M3BR5XQl2RcPhcZaE+Czlu2N9KIfc6+X10jbWnrV+8rozOq33Z7uD8M9UMKB0xGXM5R
-	 1kJ5TrQI6T3tiugJbpdhlaTki8ihpg/dTkeFDvDwYUcqL54oa16NwMb6B+nwZKczVAaCO
-	 VH4SkRkT+oD/WKTJMQGOTEoXqAN7xUa9YR8fzSYkRbPmDC/HsZCKWQMfo59UIroSakfH9
-	 9pjNknWa+5kVOmFyWdht8ZMg8PhkCtGwQDQhmyYoP50Y6kPZSv62bEy6ckxV/RHKBUQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793674568;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 Content-Transfer-Encoding:Content-Type:Date:Message-Id:To:From:
-	 Subject:Cc:X-Mailer:References:In-Reply-To:X-ClientProxiedBy:
-	 MIME-Version:X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=/LIexXArgNuaA8DPhwaSHPdePSYgOAljRu5ZyPoAIZw=;
-	b=5iquY++JLzinJAbATycGwxev/ZNt7UEWxS1L4/S1VE+1F16+4ZnetsER48bzg89xJAUo
-	 /Qi31GNJ5ew8ABbzsvFvs3hcjy8nW6rmT4guS/z3lIw8oUdrfmhrHN7xDfp7Yjb8r17mA
-	 xPeQxSSbed6gsbkEknOWsS45lre2M/RIL/lw/CCIPr+7GuQciOLzS881bfRlxeD5jna7P
-	 QuHHf2IUwDhiNaV3WYNy7/cgIBl1mHrzhbGVFaNSUyBJ5BCCuKMGp2rFR3S8Uj49Y3rCs
-	 W/oT+U3W3bUAEyK57BxE2RqEuNnrj6BsyodvIhTdU+UhcvPnstdXmZ9iyrCyQ2iMGJg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=iphSZI0n;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.61
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011061.outbound.protection.outlook.com [52.101.52.61])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.179
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793674595;
+	b=tmyEKe2mYtLJFtgdGCr1S8z5e2d/TFJ3axemlhb9I1aym0ZQ6OwL13q7/v2LnurDU8Ri
+	 14x5kY+r9F7dptDyJSiiuuor1O0ZNYgkcPBPKjpZ87vuQfHQz4/NK4Bek8R0gWHTygaXo
+	 iD7cvHhDpwSfeLYnOVcsYWnjh5SNfktK7Mp/OAEo+MqwZxBTd5WZQl+oCISW5e+PCu3Wg
+	 Xi3inKqfpaj8GV/ybIc0tY1OK7z9Z45+EDE6GIMhi8KaRYQZaSCc/KtEMblc6G0wM7rEn
+	 u9Y2qEwulj5VCSY0ETj7VCbauVs27dTR2hwtMbuoCwzzBAK5FlRM4mjnI++6e+XtqLA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793674595;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=KYNqJoD8jiVVbVGjViquLsodb0bTWH0Q2lSk5f0SxWk=;
+	b=PD8xXVhXyXuLzkpeH4d7M86l/NI8MeRS0SRkkvWVc3Wxn8y44b+37cfkA6kM/BinTsZy
+	 I/4S+D+3coJqonCKNPFQ5rF8N+r1Fxgp2AJXlrQhclEIvRKL+GO6Sf7La2siNfRS9ap3x
+	 0pPCCe49MvGnx+9YqvtdXYNreXRlgQ8wuj/GhVkPwpSpM1Yq1qU+X9Joghy+7nbg1tV7U
+	 bc3BZ4PcGjbV4Bk2PwRP1wstjz/NQZUgmwQ7qSh2W4C6HnG5lrKtqUpiBW7gi5x1XH6OL
+	 p8+Ym5BYeGEiGC4hWOYv31PmIfIkYeY5UkuKoZtaC55Xq6jvDESASUVVKnxoJeJxk0Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ulakeDBY;
+	arc=none smtp.remote-ip=95.215.58.179
+Received: from mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC41606A324;
-	Tue,  3 Nov 2026 02:56:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5CC41606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FE7606A327
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 02:56:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 67FE7606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=iphSZI0n
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e9mInCDf1iD1u2wUzN38JGKoYHETXaQh+v1XI/zJAdetgSpk+y4uENjtNtZBddvVTQ0nHl1Pe8OrbiIeuu2HlcP8MPSwOUxodKQKTkLpqB3xexQWlxdxMdmAso+8Gewvbg6z9PJA1xV7Nvj2fuof5VlccwqiZpVhh4lHLXFlU6PL8cUIj5ahTLLL2ivrom8GWzhh6I7bpRAv9elqAa7mo0E5CmDDhqu6qYyDeimIwCjb2IEZS9QamiuDXP3WmjeKrI9eB0QGHIOTEzeDGH37s99awEnatyI5Jvn3nw5+InuNCC3O+L6+gjt3+Jtu2a1O6f9jk+9HNn6opR8lL6jEJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/LIexXArgNuaA8DPhwaSHPdePSYgOAljRu5ZyPoAIZw=;
- b=PC51a8+LXFjYv2/smB9uTLRBDmt+Yo6HJ9buLmKLjm72g0KNJlOMRKirYFMg3yEI7gVtFdUp8IXg6Bepeq4aR+vgVxX6yHbBchn8TLL34MWXpD1oqxljCVFXafM2JfLJuu8W/rHtvW0RKihfsNvYlcg20CXFXIa77aF1eopeMRMeDh2yAue3GaXbZmX5/a0Bn688+pk7M84TAB/tsh5Gt+pUIHNZJ4kFFURWQ2+xWAbltHblQW0JMiTVkjrqLDHPLK6isFpqbcQo1J7mDgjoNF/BXPPwHUzdRTmF7HWgm5V6vUCayF3Xkne78Bq1Nh1KSB8NOaNJ8swZCyAqqVSpGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/LIexXArgNuaA8DPhwaSHPdePSYgOAljRu5ZyPoAIZw=;
- b=iphSZI0n9pAPh2q+qDI7joIjuIsoXxatf5sqpRvGyJIJPuLXqwT7JDrEbRGJa8lgqKCWnAyvWGoF0xEMq6zCIFpeRDaTvX/i01AfWsDdkb+iPsBtaDfFUPyJGBEr29dhjJvQ3UTdykrZ2bzcbmMEl3vlcdj58I58Uzg8mxfU4o1W2Jyw5jE6+uF3qatGyYSWdIlsXgQa1V4crpYbkTwxyp8fSVKq3V03RcbvCQ1rT+EM/jhLTwwFmO+E3FIr+h7uVliwzxSWqcV6yHGjrj0k0KWf2Kq8VU/Q/NfNI5EdiUqaOmA83k4hjpQaUHj3PAgCxz42og7U+fxmGMe1FCf6PQ==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by IA0PR12MB7531.namprd12.prod.outlook.com (2603:10b6:208:43f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
- 2026 02:56:03 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 02:56:03 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Nov 2026 21:56:00 -0500
-Message-Id: <DML8KDR7YID9.33GEINNZBE22Q@nvidia.com>
-To: "Gregory Price (Meta)" <gourry@gourry.net>, <linux-mm@kvack.org>
-From: "Zi Yan" <ziy@nvidia.com>
-Subject: Re: [PATCH v5 06/12] mm/page_alloc: snapshot the preferred zone
- against shrink rebuilds
-Cc: <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-team@meta.com>, <akpm@linux-foundation.org>, <david@kernel.org>,
- <ljs@kernel.org>, <liam@infradead.org>, <vbabka@kernel.org>,
- <rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>,
- <kasong@tencent.com>, <qi.zheng@linux.dev>, <shakeel.butt@linux.dev>,
- <baohua@kernel.org>, <axelrasmussen@google.com>, <yuanchu@google.com>,
- <weixugc@google.com>, <baoquan.he@linux.dev>,
- <baolin.wang@linux.alibaba.com>, <rientjes@google.com>,
- <rostedt@goodmis.org>, <mhiramat@kernel.org>,
- <mathieu.desnoyers@efficios.com>, <muchun.song@linux.dev>,
- <osalvador@suse.de>, <joshua.hahnjy@gmail.com>, <rakie.kim@sk.com>,
- <ying.huang@linux.alibaba.com>, <brendan.jackman@linux.dev>,
- <hannes@cmpxchg.org>, <bigeasy@linutronix.de>, <clrkwllms@kernel.org>,
- <nathan@kernel.org>, <ndesaulniers@google.com>, <morbo@google.com>,
- <justinstitt@google.com>, <Bessel.Wang@huawei.com>, <jiang.liu@huawei.com>,
- <mgorman@techsingularity.net>, <anshuman.khandual@arm.com>,
- <stable@vger.kernel.org>
-X-Mailer: aerc 0.22.0
-References: <20261101021340.2251928-1-gourry@gourry.net>
- <20261101021340.2251928-7-gourry@gourry.net>
-In-Reply-To: <20261101021340.2251928-7-gourry@gourry.net>
-X-ClientProxiedBy: YQBPR0101CA0239.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:66::22) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ulakeDBY
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=WJg7BBQIRH/pepd9pdWNt5emlhFaI0LINxhKgnwGpSg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793674592; v=1; x=1794279392;
+ b=ulakeDBY++UvLs7xFlPO3zbqz1z2Ru1JVAFJfG6Rh39uujL3CUgLlYWPdZxrjpm7oBOLsrSy
+ M5s9+dh2G9dxkd4WspF3jmg+P6KDoVluseY01XSKExYPoVLY95SFS58fuWWAdA487xITVWchfa7
+ wW7bk9/UxEfJw7vqPJfUgy8I=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 087df93ef1622e83;
+	Tue, 03 Nov 2026 02:56:32 +0000
+X-Mizu-Trace-ID: 087df93ef1622e83
+X-Migadu-Flow: FLOW_OUT
+From: Ridong Chen <ridong.chen@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Dave Chinner <david@fromorbit.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Kairui Song <kasong@tencent.com>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_)),
+	Ridong Chen <ridong.chen@linux.dev>,
+	Ridong Chen <chenridong@xiaomi.com>
+Subject: [PATCH v6 0/7] mm/vmscan: move tracepoints to mm/ and add MGLRU tracepoints
+Date: Tue,  3 Nov 2026 10:56:03 +0800
+Message-Id: <20261103025610.3738894-1-ridong.chen@linux.dev>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -113,108 +87,207 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|IA0PR12MB7531:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e7afeda-0b8b-4d01-e6e1-08df3955ffbd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|23010399003|22082099003|18002099003|56012099006|261102123227099003|10067099003|261009223027099003|261022105027099003|261021121427099003|261021123027099003|4143699003|11063799006|261028144727099003|261026140227099003;
-X-Microsoft-Antispam-Message-Info:
-	T/34YU3bee4zyixZbv4zM69gUu3xeeWsfFGEd1m1ci4Y4cIZ1yenVbk0GG7r2zovFPCl1fOoTcssxT5ae4I4hp3U0ZWZXtOBFKxP3rYFsESkF9NZS3Y+nto2hfc8Byp67fBu3mOqB/p3VGpG3h8OMwifhpxAhgZwoE2rDfMvMtVhtUB1faML26HyZaiCWt038OWbgwA5e8ptt5riaUOT0TwF1B3OUVGHUbXK9h1oL6aQ9HXmnfpnxTFvGN1VwQo1nc05c0KoRdGTu6eh2OAzdMF33ptiQbUx0PKlaf+2mbhrkrvX/5byNc8Bp1/nUQUoXF91cdqfxGGIB1HhFsZ+7HPjpse/SPeLBtshhXSWyuRoQo8nYAMbMNI+G+s9A8EjmvRKW7377bgMVM/VqVJTkmL0WAEbNOiuaoNw7xIxNnHBR8IMh/re0CIoVBj6Nmq9STJPGJPVHzQHQe+j6F7etV7ydvKGKgCAwmmasWyQv2OdmqhKr45avWAFOelRfIsCLcg7VgbkoTEqYhbkg67NPeleqjQJAvsAJ/rczIZIF6yVM1e44KC3EBjOaU5TsHn2KK3QWWFQfyEg9eTPaX9PcFX1UFYkKnphAfrySp/hW+sw+0PMSPpSWf1l86HtL+gRRn2Iim+Z4RdGDE5Hp7V2IE0hcWo/LFFWsd39HWHdRP0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(23010399003)(22082099003)(18002099003)(56012099006)(261102123227099003)(10067099003)(261009223027099003)(261022105027099003)(261021121427099003)(261021123027099003)(4143699003)(11063799006)(261028144727099003)(261026140227099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OGxQZUVqL05CNjRFUmpsaGVRSEVXSEhIa0Y5V241VGhUUllmRFBnbEhpbUdq?=
- =?utf-8?B?Y2dWU0hOODA0UDZpRS9icnpOMWZZQUtORE40TTdCdldMeDkrRFFjZmhHTGFN?=
- =?utf-8?B?TUVQTlVZZHVCbm0yN0t6dlNvVjF6R2pHSXVlMU10NTZnaGlJRTFrUm4zUW50?=
- =?utf-8?B?dnV1cHJzN0kxUHRMODc2SHVRL0VqTThUZmhWckZiWWN6ZTdqWG4zTXMwcEkz?=
- =?utf-8?B?UHZjMjdXUXlGeGljbzBZSlVUalBiQkJsVHBNZTMyRkhsSHdtWVFuSERtMkFX?=
- =?utf-8?B?cS9jSW9EZG1FZzlDcngwdGJYMmVWR3FtYmN2MGtTMHAwTmdvQytqQWdwcGdJ?=
- =?utf-8?B?cnBqQ1FlZUQxWC93SXpZVFhHQ0VrME9US0w2MEk4KzVXaCtJbnpQalUvWmo4?=
- =?utf-8?B?cGxWcjlNa0JCamY3R2trdmtpNXNkNW1LZjJvZ0ZWVmxGeHdBbFlUb2hLM0lj?=
- =?utf-8?B?cis4ZWpTcjlpWnBrZGNFbWNHYVRUUFpzNVpZRXdkY1lRbVVtYUp5b2QvZ3Rx?=
- =?utf-8?B?Qm53L1hsQ0J4Wjk4KzR0bVJyaXZ5UjUvNlhMT2dzTytrWm1rMmIwSm0vVUhT?=
- =?utf-8?B?ODloVldtVWtYc1FseHNEcStsbUFjNnEyR09pMXhoR0pEME9sWEgvcS9RNVA2?=
- =?utf-8?B?ekFxcnkwZVNtVVoxbE8zNEZHR2pieWZHRXp4Y09pTS9WOEpvZ0FuSlRrYktN?=
- =?utf-8?B?ZC9rdzlwczBmS1BHcHRCaThSOWtnbXN2bmhlUmdVYVVxZWZKQk9kMlJaTmVw?=
- =?utf-8?B?M3BqRERqdTR5RVFaeXJEZDBERzJoMHQ2V1pDOXZxbmZZVHExUnExOHF3eXht?=
- =?utf-8?B?N2UzN3UrTVVVdjhYRGh6S3hpeFRicTJza0hKdWtFV0dhQkdQWmdmUndQdTlX?=
- =?utf-8?B?UFdOVTA0d243eWNPTDJiUUsxUE5NWEZpb0c0endBaDBGeGhqSDRjUzZJOFJB?=
- =?utf-8?B?NHFyUDVjRmY0SzRXMmg0WFplMEJsaG1iK1h1N3E0ZW5lLzRPT1BabDBJUFpF?=
- =?utf-8?B?cWxtT1plYTdVbWJtSVFFYjJWQlM3aFBoTkJJemtTQWwrZ3RlQWdjOWlvSmd0?=
- =?utf-8?B?cUNjdzRvbjVDVkkwd0kxdVdjMTRVaGhkcFE2ZmJvRllTUTEvWWl0RE52MFBs?=
- =?utf-8?B?aDg2K3ZXVFJwcVE0aEQwc1Q2MExtb1g2Umt2N0FaUjZ4dEYxQmxlckpDaFhl?=
- =?utf-8?B?bTJMZE53SThsZVpKVnlzS2FtWmltU0xmd1lGaE1YTys3YXc3ZUhWcWNraXBT?=
- =?utf-8?B?SGZVUnNsQkt1L09ISllXV0JZVFhLVTFZZVpMdkFCWXZpMm40aE12clREb2Vm?=
- =?utf-8?B?SmVyaTl6UkFQNTBGR3VjZTZzT2NDLzdDSUlNY1JmNlVWY1kvMXNYMGE1SExl?=
- =?utf-8?B?Nm5FS1V0dkZ1ZVVhNnlENzFINXJMMk9vbHVBSXdnbnU0RTljTXZ1eGpYV2o5?=
- =?utf-8?B?SFp0cG42S3pJc29rbEtpR3dyU0hlMFJoK3diZS92czJmZ3J3MUZJZEpoR2RY?=
- =?utf-8?B?MmFjV2x0S0dTblM0SFhnZ1RvSkRZbEhwZUwrM05tK3RRZkxUSDBCbVA5Mm1T?=
- =?utf-8?B?TWJMYUQzak53bmJIL0xweDlzQStDbEFENGJ0aTdSM0RwTEpGQ21OdHBzK0pj?=
- =?utf-8?B?c2xub21XQlA4dHdYYm9VeEIvUzdxSmhtV3FCRTNhT29taCt4STBFR0dXRUkw?=
- =?utf-8?B?OWRpSUIwcmxkVllxZ0hFaFNZNVBZMkliN2lmRXpzMnVHT3hqOTM2OHNiODZh?=
- =?utf-8?B?b2JZOVVxUEFZVXYwdEtoRXFnN0xvRlVvTm5PajJGS1IyaFNYQmFxdWJrSlVm?=
- =?utf-8?B?dkZFbnNkaFpWeDd0MmF0bnN0eG9XZ3RuL2ZDWjljc1llSmF3bkg0alRQUGxu?=
- =?utf-8?B?MnBPcHlXeTZNZkhuSHNoMURVQkRETGdTSjhldHQ2ekR3UXRpZndJVG1oRHJV?=
- =?utf-8?B?cXRRUS9wQ1dpUjNNVW1OUHhTMUdHOWtrbUZBSTNsMFdBTVduU3kySGdqcEJT?=
- =?utf-8?B?b2wweVArS0hiUFAra01wUFYvazJBdXljSGhyOTZWZkxndWdaVGdMRG5hZWlI?=
- =?utf-8?B?YWlEZmhIN3d1Tjl4VmdpTkQ3c3NudHdrY09vU0h6c2lJMGZNclhsZ2k4Wnlp?=
- =?utf-8?B?ZVYyNmRnb01HcG9uQis0VmVtWUYwbnFLNi82c0lnUXJSandQUFBWUU5pUkhn?=
- =?utf-8?B?U2hoSUhTQXhOWjBDZ3pCOEQzUU1aeVRqQlRpZkF4ak45THV3L3NBeFBydEtw?=
- =?utf-8?B?UmpkNFYxMEpNODhMaS90RWpyMXJGWlRXeFV1Wi82YUwwcFpIbnBnWG1ubHQ0?=
- =?utf-8?Q?HwH9k3AVBxJkzX6Q/j?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7afeda-0b8b-4d01-e6e1-08df3955ffbd
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 02:56:03.6955
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PY0O8CvjDcjNL7i7kvtrmmImNkh8QD2XyNAQHYoQCB3IER+ttgr3jNS+sFBQzIB7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7531
+Content-Transfer-Encoding: 8bit
 
-On Sat Oct 31, 2026 at 10:13 PM EDT, Gregory Price (Meta) wrote:
-> get_page_from_freelist() and alloc_pages_bulk_noprof() reread
-> ac->preferred_zoneref->zone at every use. Offlining a zone's last block
-> rebuilds the zonelists in place, and the shrunk list's NULL terminator
-> can land on the preferred slot mid-walk:
->
->   CPU 0                             CPU 1
->   get_page_from_freelist(GFP_KERNEL | __GFP_THISNODE)
->     zone =3D NORMAL (slot 1)
->                                     offline_pages()
->                                       build_all_zonelists()
->                                         [MOVABLE, NORMAL, NULL]
->                                         -> [NORMAL, NULL]
->     rmqueue(zonelist_zone(slot 1), zone)
->       zone_statistics(NULL, zone)
->
->   BUG: kernel NULL pointer dereference, address: 0000000000000060
->   RIP: 0010:get_page_from_freelist+0x6a5/0x15f0
->   Call Trace:
->    __alloc_frozen_pages_noprof+0x125/0x330
->
-> Read the slot once. Zones are never freed, so a stale zone is safe, and
-> a NULL slot fails the same way as walking off the end.
->
-> Fixes: 11cd8638c37f ("mm, page_alloc: remove stop_machine from build_all_=
-zonelists")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
-> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-> ---
->  mm/page_alloc.c | 31 +++++++++++++++++++++++--------
->  1 file changed, 23 insertions(+), 8 deletions(-)
->
-Makes sense.
+From: Ridong Chen <chenridong@xiaomi.com>
 
-Acked-by: Zi Yan <ziy@nvidia.com>
+Background
+==========
 
---=20
-Best Regards,
-Yan, Zi
+MGLRU currently has no tracepoints of its own. The scan and evict paths
+reuse the classic-LRU tracepoints (trace_mm_vmscan_lru_isolate() and
+trace_mm_vmscan_lru_shrink_inactive()), which predate MGLRU and carry no
+generation, sequence or memcg context. A trace of a running system
+therefore cannot tell which memcg a given scan belongs to, how far
+reclaim has progressed through the generations, or when a new generation
+is created.
+
+While reviewing an earlier version that added two MGLRU tracepoints,
+Steven suggested moving include/trace/events/vmscan.h to
+mm/trace_vmscan.h [1], as several other subsystems already do. Once the
+header lives under mm/, struct scan_control can be moved there too,
+letting the trace events access its fields directly instead of having
+each callsite copy the scalars out by hand. This version merges the two
+efforts into one series: the restructuring first, then the two new
+tracepoints built on top of it.
+
+Implementation
+==============
+
+Part 1, restructuring (patches 1-4):
+
+  1) drop the unused vmscan trace include from memcontrol.c;
+  2) move include/trace/events/vmscan.h to mm/trace_vmscan.h, setting
+     TRACE_INCLUDE_PATH to "." and adding -I$(src) for vmscan.o;
+  3) move struct scan_control into a dedicated mm/vmscan.h with an
+     ordinary include guard, which trace_vmscan.h pulls in;
+  4) pass scan_control to the vmscan tracepoints and pick the fields
+     out in TP_fast_assign: the reclaim-begin events, the LRU
+     isolate/shrink events, mm_vmscan_reclaim_pages and
+     mm_vmscan_balance_pgdat_end.
+
+Part 2, MGLRU tracepoints (patches 5-7):
+
+  5) add mm_mglru_scan_folios on the scan path, next to the classic
+     mm_vmscan_lru_isolate, reporting the same counters plus nr_sorted
+     and the nid, memcg id, max_seq, tier and min_seq of the lruvec;
+  6) add lruvec_gen_size() to mm/vmscan.h, returning the number of
+     pages of one type in the generation of a given seq, and convert
+     the two open-coded users in vmscan.c;
+  7) add mm_mglru_inc_max_seq on the aging path, reporting the nid,
+     memcg id, the new max_seq, the anon/file min_seq and the
+     per-generation page counts of both types, from the oldest
+     generation to the newest as in the debugfs lru_gen file.
+
+Both new events only take pointers (lruvec, sc) plus the local counters,
+and derive everything else in TP_fast_assign(), so the reclaim paths do
+no extra work when they are disabled.
+
+Effect
+======
+
+Part 1 moves the loads of the tracepoint arguments out of the reclaim
+paths and into the trace event callbacks, which only run when the event
+is enabled. On x86_64 with gcc 11.4, the callers in mm/vmscan.o shrink
+accordingly (bytes), e.g.:
+
+  isolate_lru_folios    4499 -> 4335 (-164)
+  __node_reclaim        2402 -> 2220 (-182)
+  isolate_folios        8706 -> 8577 (-129)
+  shrink_active_list    3669 -> 3544 (-125)
+  evict_folios          4858 -> 4769  (-89)
+
+There is no functional change in part 1. TP_STRUCT__entry and TP_printk
+of the existing events are untouched, so their tracefs format is
+identical. This was confirmed by diffing the tracefs format files before
+and after, and by capturing the direct/memcg/node reclaim-begin events
+under load in a QEMU guest (order, gfp_flags and memcg_id all match).
+BPF programs attached via raw_tp/tp_btf do see the new TP_PROTO and need
+to be adjusted; tracepoints are not a stable ABI (see
+Documentation/bpf/bpf_design_QA.rst).
+
+highest_zoneidx and nr_reclaimed stay separate arguments: the former is
+a balance_pgdat() parameter (sc.reclaim_idx may differ from it by the
+time the end event fires), and the latter is the return value of
+shrink_folio_list(), which does not update sc->nr_reclaimed.
+
+Part 2 makes the full aging-to-eviction window observable per memcg:
+aging advances max_seq (the leading edge), scanning consumes the oldest
+generations, and the min_seq/max_seq pair on each event shows how the
+generation window moves over time. A sample trace, captured under
+memory.reclaim of a test memcg, with the classic-LRU tracepoints left
+enabled to show how they interleave:
+
+  mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=64 nr_scanned=36 nr_skipped=0 nr_taken=36 lru=inactive_file
+  mm_mglru_scan_folios: nid=0 memcg_id=1833 classzone=4 order=0 nr_requested=64 nr_scanned=36 nr_sorted=0 nr_skipped=0 nr_taken=36 lru=inactive_file max_seq=3 tier=3 min_seq=0
+  mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=36 nr_reclaimed=31 nr_dirty=1 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=1 nr_ref_keep=4 nr_unmap_fail=0 priority=2 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+  mm_mglru_inc_max_seq: nid=0 memcg_id=1833 max_seq=4 anon_min_seq=1 file_min_seq=2 nr_anon={0x0,0x802,0x0,0x0} nr_file={0x0,0x357,0x0,0x0}
+  mm_vmscan_lru_isolate: classzone=4 order=0 nr_requested=64 nr_scanned=64 nr_skipped=0 nr_taken=64 lru=inactive_file
+  mm_mglru_scan_folios: nid=0 memcg_id=1833 classzone=4 order=0 nr_requested=64 nr_scanned=64 nr_sorted=0 nr_skipped=0 nr_taken=64 lru=inactive_file max_seq=4 tier=3 min_seq=2
+  mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=64 nr_reclaimed=64 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+
+The mm_mglru_scan_folios lines carry the node, memcg id and the
+generation window (max_seq/min_seq) that the bare mm_vmscan_lru_isolate
+lines above them cannot - those cannot even say which memcg they came
+from. The mm_mglru_inc_max_seq line then shows a new generation being
+created (max_seq 3 -> 4) with the per-generation page counts for both
+types, listed from the oldest generation (seq 1) to the newest (seq 4),
+and the following scan already reports the moved window (max_seq=4
+min_seq=2).
+
+Testing
+=======
+
+The output of mm_mglru_inc_max_seq matches the debugfs lru_gen file,
+e.g. right after aging a test memcg:
+
+  mm_mglru_inc_max_seq: nid=0 memcg_id=1833 max_seq=4 anon_min_seq=1 file_min_seq=1 nr_anon={0x0,0x4002,0x0,0x0} nr_file={0x2412,0x0,0x0,0x0}
+
+  # cat /sys/kernel/debug/lru_gen
+  memcg 1833 /tpt
+   node     0
+            1       4541          0        9234
+            2       4541      16386           0
+            3       4541          0           0
+            4         76          0           0
+
+[1]: https://lore.kernel.org/linux-mm/20260916095122.50cbb620@robin/
+
+This series was developed with the assistance of an LLM-based coding
+assistant.
+
+---
+Changes in v6:
+  - Rebase onto mm-new; MAINTAINERS already listed
+    include/trace/events/vmscan.h under MEMORY MANAGEMENT - RECLAIM,
+    patch 2 now renames that entry.
+  - New patch 6: add lruvec_gen_size(), ported from Barry's swappiness
+    series [3], in mm/vmscan.h so the tracepoint can use it too, and
+    convert lruvec_evictable_size() and the debugfs lru_gen output
+    (Barry).
+  - Patch 7: order nr_anon/nr_file by seq, from the oldest generation
+    to the newest, the same order as the debugfs lru_gen file, instead
+    of by generation slot (Barry, Baoquan).
+  - Collect Reviewed-by/Acked-by/Tested-by tags from Baoquan, Muchun
+    and Barry.
+  - Link to v5: https://lore.kernel.org/linux-mm/20261031090041.58574-1-ridong.chen@linux.dev/
+
+Changes in v5:
+  - Squash v4 patches 4-7 into a single patch 4 (Barry).
+  - Link to v4: https://lore.kernel.org/linux-mm/20261019034426.2354049-1-ridong.chen@linux.dev/
+
+Changes in v4:
+  - Merge the MGLRU tracepoint series [2] into this one, on top of the
+    restructuring, and drop the RFC tag.
+  - Patch 2: use TRACE_INCLUDE_PATH "." with CFLAGS_vmscan.o += -I$(src)
+    instead of a relative path (Steven).
+  - Patches 8-9: pass lruvec/sc and compute the fields in
+    TP_fast_assign() instead of at the call site (Steven).
+  - Patches 8-9: add nid, derived from the lruvec (Baoquan).
+  - Patch 8: group the int fields at the end of the entry to avoid
+    padding on 64-bit (Steven).
+  - Drop "mm/mglru: factor out lru_gen_seq_nr_pages()" from [2]: the
+    per-generation page count is now summed inside TP_fast_assign(), so
+    the helper has no user. The Reviewed-by tags given to [2] are not
+    carried over, as patches 8-9 changed substantially.
+  - Link to RFC v3: https://lore.kernel.org/all/20261013131309.2790253-1-ridong.chen@linux.dev/
+
+Changes in RFC v3:
+  - Use "Assisted-by: LLM" (Muchun).
+  - Note the BPF raw_tp/tp_btf impact in the changelogs (Sashiko).
+  - Changelog wording fixes and minor indentation fixes.
+  - Link to RFC v2: https://lore.kernel.org/all/20260928114625.3609130-1-ridong.chen@linux.dev/
+
+Changes in RFC v2:
+  - Convert the remaining vmscan tracepoints too.
+  - Move struct scan_control to mm/vmscan.h (Baoquan).
+
+[2]: https://lore.kernel.org/all/20260911102939.2485750-1-ridong.chen@linux.dev/
+[3]: https://lore.kernel.org/linux-mm/20261022220203.91911-11-baohua@kernel.org/
+
+
+Ridong Chen (7):
+  mm/memcontrol: drop unused vmscan tracepoint include
+  mm/vmscan: move vmscan tracepoints to a local header
+  mm/vmscan: move struct scan_control to a dedicated header
+  mm/vmscan: pass scan_control to the vmscan tracepoints
+  mm/mglru: add tracepoint for scan_folios()
+  mm/mglru: add lruvec_gen_size() helper
+  mm/mglru: add tracepoint for inc_max_seq()
+
+ MAINTAINERS                                   |   5 +-
+ mm/Makefile                                   |   1 +
+ mm/memcontrol.c                               |   2 -
+ mm/shrinker.c                                 |   2 +-
+ .../events/vmscan.h => mm/trace_vmscan.h      | 192 ++++++++++++++----
+ mm/vmscan.c                                   | 158 +++-----------
+ mm/vmscan.h                                   | 134 ++++++++++++
+ 7 files changed, 317 insertions(+), 177 deletions(-)
+ rename include/trace/events/vmscan.h => mm/trace_vmscan.h (76%)
+ create mode 100644 mm/vmscan.h
+
+
+base-commit: 0e02eb17f263e4a3ae6bf1fe45122c23361f0cf7
+-- 
+2.34.1
 
