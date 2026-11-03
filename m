@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793717855;
-	b=llKtmKpC818N1SNDKOtD6Q6An1A5Nkxumwd231wuX2KYQMH31a+iOjLZ2+8iDegKPPdi
-	 rbkSifY4g1pT3EdMDLaMEAz57hWp7RyccagNjg3ruHwkTwLRU64G/iJ5E75kiePyVb6GI
-	 zaf4kLExmOvb1EDFg3Rt1wwa2XtFFbiDhweHbWKyiIZzblZ8xf9B2+oQ/T2sAfs9YjypB
-	 OkfPmaAH0ULEAlFmHlkAkd38sLIIL6i1vXVrwpSVNX9ap0toBCA0vJMkt04+IYy5lX+Av
-	 liPzujExj5fSGhIwTh1RWuf74cR0eyEXBbCeJEprkWxlKoFlPfQN+cTrHkfs1Z36CvQ==
+	t=1793718056;
+	b=VZlU/7RJu94nKmdP6aox7+AM/TFg6BGzsPT7QAYXVAnOj8q/05PZlv4vvFeaAYJsgC6f
+	 F28C0dEP7aVUh/CUFuVPKb4mQT7Kksj+5i3agGD3WvBjifD+1kNpKswcHbO5GoSB3urr/
+	 WJ2gemq1W3sFELKZb482RCWmSEj2LH+ushZcf+ucR8ePwxxaEmt3sTBrRVmjdzN6CS5DL
+	 vct7AKYdoObnedNc6HkMiaiXVRy/SRRWbweCCIjCgJ1ni58Cfvt4DZR25kQOTn/pTJx1H
+	 ezOc5FF6TTPcM56u7aY7AroOI2P7PP6G3IQkLQCh4w/pUSuaJ53Bq9xzpMQVnMaRt5A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793717855;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793718056;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=wVPZHBHmTVqQc0Jh1TfnVqktWkBiefvtfViUxrs9XWI=;
-	b=JPruHMCJy4RQ/8NfVnNcL9ttx+6Q4CS9mjsHTUwK90sc+wfwxrkDta3T2VurloekRSHb
-	 VtxB5HvO2rAk+GbMO69RytMG7GweNXqdGIVoW205Ko9AUrxNYa3LvKKgffK4gQRroGUDl
-	 dpNY+iDPA83z64zaMqubGzSIoe+KgAXYRsRyq4TdaqoS1WM4AqrWMrQ8cb2LzPP2aPqLn
-	 ncFJ0MuIdqkePGNE6zJNDtrIz2j7H+pOMTKn6eMK5NTGY8XpD9izy7ROUrGpU+4xcfFtO
-	 OVJUwJRjZq1UwXM7LNdjPKN+cgNm1W92ro8jX4B/d4VtGz2TJRRb3YwHOMd8cYjvZFQ==
+	bh=bA0DUmnnxVPUL6fKcA1U0PeMmih16OqQLXC+FqdAHTU=;
+	b=wGGZZyTVMcrcxJd1iM2AZfcSeDTEdVe5Fg0FWkXRixi+m+0GE1F8+1siJ7MnWeZPv0Ia
+	 vP7lzxcM+Yf+rFfCvZfUidvvXUHXwgQ7I8PAnrMMc6npPODZ/MWM8F7DHTSNGF6GY3MkV
+	 GMBSD+akLNbpklOq458xzFNoPFVctxTBc445c6iVfSOkoDzwBVss8SMRwsojBqvCG00zn
+	 0rlZamdVkcBGKOTzIXvhyNco8nBou0yI566Eun5RZ+zxpC9jHkAd/F+bPJjV5ET5byDts
+	 9cWevF1yPymmGGs0ru+I1445jWrG2ZxlAHMv9gDo5AwzyaCL3FV/WPvU9m11DLUV2Mg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iFpNS6bE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d3K6pDSF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11971606A789;
-	Tue,  3 Nov 2026 14:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AE4606A324;
+	Tue,  3 Nov 2026 15:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iFpNS6bE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F7AB1F000C1;
-	Tue,  3 Nov 2026 14:57:26 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d3K6pDSF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423AF1F000C1;
+	Tue,  3 Nov 2026 15:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793717854;
-	bh=wVPZHBHmTVqQc0Jh1TfnVqktWkBiefvtfViUxrs9XWI=;
+	s=k20260515; t=1793718056;
+	bh=bA0DUmnnxVPUL6fKcA1U0PeMmih16OqQLXC+FqdAHTU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iFpNS6bEHhR8ebqCRAZfPuhOs7jQqMJg1MsO+wzz4LEUgwINXXdloo6S46CgitXEI
-	 zYonEJHRlcZqRY6aThjvqxXrj3AX8jxOjgqX3bObrW9ObuduRggGNRmmO9KFYohsRl
-	 MIc91meGUPijHpP/YqjnmEV5W7/FlzDSESbVcNFR5w4BzlHrg91Jk7W4tW4k5/eUZN
-	 /NlyXJ+CwNd8BQ7ts0WIZmAItdKpGa82Z1OBMYyBw/7+EnfNYi+M8USFOpg3o+Y8+e
-	 GE4/1hwkFqy6zr1LqI2w09Vg4hF6CilTyMvRd+OfcFrWHuSd23gfU6WTwlpTKwwRKN
-	 sdsCQNQa0h1sA==
-Message-ID: <489b668a-033c-4161-93e8-15d6b9b28b51@kernel.org>
-Date: Tue, 3 Nov 2026 15:57:24 +0100
+	b=d3K6pDSFh52zVCjIc/hBdsflRe5uFDEz0Fmn1nI+IKthHiXVq1OjvLBo8PS8Y7GfJ
+	 L6G5tw9QmaAoflgCwnDY08eRL/Ga120L9Q1f7tOGn94gVVV4Zdt/sQyCLyuZhP3Mxp
+	 UmONMR9peZ0sBrCDpOCrPthNxS+XUm5DPf7OZLwL9Rv3d3KK7VGugZs6A3VMEANKa9
+	 OivpMxXoXJ/30qchLqIfmTlrvWU2x1m87FS8C82zMIbmuXeYq2tYTDcslOIE+U1x35
+	 BgtTY9XjTURfxoHL+kKtzxrdkdqBnO9Ub7CK+2Z0a/9pA6XNBVVaMuIH942o52QY1U
+	 aLWb9/Wg3nTbA==
+Message-ID: <a5270059-e5a7-4c8a-9f04-96135f79ea72@kernel.org>
+Date: Tue, 3 Nov 2026 16:00:45 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -52,8 +52,9 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/12] mm/page_alloc: keep the pagesets of an empty
- zone
+Subject: Re: [PATCH v5 07/12] mm/mmzone: read each zoneref slot once when
+ filtering by nodemask
+Content-Language: en-US
 To: Zi Yan <ziy@nvidia.com>, "Gregory Price (Meta)" <gourry@gourry.net>,
  linux-mm@kvack.org
 Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -69,13 +70,11 @@ Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
  bigeasy@linutronix.de, clrkwllms@kernel.org, nathan@kernel.org,
  ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
  Bessel.Wang@huawei.com, jiang.liu@huawei.com, mgorman@techsingularity.net,
- anshuman.khandual@arm.com, Josef Bacik <josef@toxicpanda.com>,
- stable@vger.kernel.org
+ anshuman.khandual@arm.com, stable@vger.kernel.org
 References: <20261101021340.2251928-1-gourry@gourry.net>
- <20261101021340.2251928-3-gourry@gourry.net>
- <DMK59DO8M3AP.3OTG2YR62D9WO@nvidia.com>
+ <20261101021340.2251928-8-gourry@gourry.net>
+ <DML8OO28WT5O.3U6NG100XWKZP@nvidia.com>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Content-Language: en-US
 Autocrypt: addr=vbabka@kernel.org; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
  KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
@@ -115,101 +114,64 @@ Autocrypt: addr=vbabka@kernel.org; keydata=
  NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
  OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
  jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <DMK59DO8M3AP.3OTG2YR62D9WO@nvidia.com>
+In-Reply-To: <DML8OO28WT5O.3U6NG100XWKZP@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/1/26 21:07, Zi Yan wrote:
+On 11/3/26 04:01, Zi Yan wrote:
 > On Sat Oct 31, 2026 at 10:13 PM EDT, Gregory Price (Meta) wrote:
->> From: Josef Bacik <josef@toxicpanda.com>
+>> __next_zones_zonelist() tests a slot's zone for NULL, then reads the
+>> slot again to look up the zone's node. Offlining a zone's last block
+>> rebuilds the zonelists in place, so the second read can return the
+>> terminator:
 >>
->> When the last memory of a zone goes offline, zone_pcp_reset() frees
->> zone->per_cpu_pageset and zone->per_cpu_zonestats. Nothing waits for those
->> who found the zone populated and still use the two pointers. They take
->> neither the memory hotplug lock nor any other lock which offline_pages()
->> holds, and some of them can sleep:
+>>   CPU 0                             CPU 1
+>>   __next_zones_zonelist(nodemask)
+>>     zonelist_zone(slot 1) = NORMAL
+>>                                     offline_pages()
+>>                                       build_all_zonelists()
+>>                                         [MOVABLE, NORMAL, NULL]
+>>                                         -> [NORMAL, NULL]
+>>     zref_in_nodemask(slot 1)
+>>       zone_to_nid(NULL)
 >>
->>   CPU0 vmstat_update()                CPU1 offline_pages()
->>   refresh_cpu_vm_stats()
->>     for_each_populated_zone(zone)
->>       pcp = zone->per_cpu_pageset
->>       cond_resched()
->>                                       adjust_present_page_count()
->>                                       zone_pcp_reset(zone)
->>                                         free_percpu(zone->per_cpu_pageset)
->>       decay_pcp_high(zone, pcp)
->>       __this_cpu_write(pcp->expire, 0)
+>> Current GCC and clang merge the two reads, but nothing requires it.
+>> With mm/mmzone.o built with -fno-inline -fno-ipa-sra, holding a
+>> nodemask allocation between the reads while the node's last movable
+>> block goes offline oopses every time:
 >>
->> The same goes for drain_all_pages(NULL), which takes pcp->lock, for
->> zone_pcp_update(), show_free_areas() and the readers and writers of the
->> zonestats. If the per-cpu memory has got a new owner in the meantime, it
->> is corrupted.
+>>   BUG: kernel NULL pointer dereference, address: 0000000000000060
+>>   RIP: 0010:zone_to_nid+0x0/0x10
+>>   Call Trace:
+>>    zref_in_nodemask+0x9/0x20
+>>    __next_zones_zonelist+0x23/0x70
+>>    prepare_alloc_pages.constprop.0+0x16c/0x190
+>>    __alloc_frozen_pages_noprof+0xaf/0x330
 >>
->> The pagesets are only freed because setup_zone_pageset() would otherwise
->> leak them when the zone gets memory again. Keep them instead and let
->> setup_zone_pageset() and zone_pcp_init() use them again, like it is done
->> with pgdat->per_cpu_nodestats. Their lists are empty, and their limits
->> have been calculated for a zone without memory by the
->> init_per_zone_wmark_min() of offline_pages(), which is what
->> setup_zone_pageset() would come up with as well.
->>
->> Fixes: 340175b7d14d ("mm/hotplug: free zone->pageset when a zone becomes empty")
->> Cc: <stable@vger.kernel.org>
->> Assisted-by: LLM
->> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
->> Reviewed-by: Johannes Weiner <hannes@cmpxchg.org>
->> Signed-off-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
->> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
->> ---
->>  mm/page_alloc.c | 20 ++++++++++++++------
->>  1 file changed, 14 insertions(+), 6 deletions(-)
+>> Read the slot once and test that zone. A NULL zone still ends the walk.
 > 
-> LGTM. Just a nit below:
+> It is better to spell out the rename from zref_in_nodemask() to
+> zone_in_nodemask().
+
+Added:
+
+To achieve that, rename zref_in_nodemask() to zone_in_nodemask() and
+pass a zone instead of zoneref pointer.
+
+> 
+>>
+>> Fixes: 11cd8638c37f ("mm, page_alloc: remove stop_machine from build_all_zonelists")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gregory Price (Meta) <gourry@gourry.net>
+>> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+>> ---
+>>  mm/mmzone.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+> 
+> Makes sense.
 > 
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
-> 
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index f1048168c90c..1850a41f24f7 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -6308,6 +6308,10 @@ void __meminit setup_zone_pageset(struct zone *zone)
->>  {
->>  	int cpu;
->>  
->> +	/* The zone has been populated before, see zone_pcp_reset(). */
->> +	if (zone->per_cpu_pageset != &boot_pageset)
->> +		return;
->> +
->>  	/* Size may be 0 on !SMP && !NUMA */
->>  	if (sizeof(struct per_cpu_zonestat) > 0)
->>  		zone->per_cpu_zonestats = alloc_percpu(struct per_cpu_zonestat);
->> @@ -6400,6 +6404,10 @@ void __init setup_per_cpu_pageset(void)
->>  
->>  __meminit void zone_pcp_init(struct zone *zone)
->>  {
->> +	/* A node which is added again, see zone_pcp_reset(). */
-> 
-> it might be better to explain zone->per_cpu_pageset can only be NULL at
-> boot time and it needs an initialization.
-
-Hmm.
-
->> +	if (zone->per_cpu_pageset && zone->per_cpu_pageset != &boot_pageset)
->> +		return;
-
-Shouldn't then the check be just:
-
-if (zone->per_cpu_pageset)
-	return;
-
-Because if it's == &boot_pageset, we are just setting the same values that
-area already there?
-
->>  	/*
->>  	 * per cpu subsystem is not up at this point. The following code
->>  	 * relies on the ability of the linker to provide the
 > 
 > 
 
