@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793719119;
-	b=hQnLWMrzPQH6dJxub/PbjFpfTRMt0OAI/ICkY+UWvJNFYZznFQImJBk19hEO/0XxIn4o
-	 pqh+/E3sFgbHLHY0QrV+1Bsosubhb1Qg6TCtIE/OO01zh4HgUEyMnkioqdupWOsmEhNEa
-	 M8bxwEDCC/LdgKrdj0V5oxz842QdemIg1mwABAQcS7kf3As6kT1WnPRveItBbOZczeTrj
-	 pCz5JOhsYO2A1HM2aOZkIMY58pDqhel6th0Xpto0UEGMX7Ip/WpBsdSNg7flKymT4Klei
-	 aoHeS/+hLtNuEUm8YK8KEj8lC0nyoZ7/L4Nk7ZdEMMkSWwBeOvYsu3jr5xy2co16iJw==
+	t=1793719133;
+	b=TUFdWk+ioWvQO1u/R15pstokiB/RVT8paTj83+EE4aYqW43IUODzlZCf4IJElh+oqqEC
+	 faTDB1CVXQlLCSJmB1Met4Kn6lFnTtI7ukgQvZf8MELvw2CNMTX9MFPqBukbNQ/T1OYYh
+	 7RS21VSJZhTMJNeqHcknuCh7Hxsi9+2AA4VttLW7V0QJ84J61Evo4l9WGH46oGbQbJ6Fo
+	 yCpGL7tY/07TcrkOLQBaCNG40aIzyW01N1wXeTgmGqCJntPHLVia/QsmlgOTVxNz55rdc
+	 KAVvGIR4If5SX8V43xVRzZK6Q1N2tW55+f0KWNlZ+w+w++8ti/1N4kLv9y8T+iqejOA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793719119;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793719133;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
-	b=nymvb07QnH85EH8q5eqvqjP9OCxMdpPbW+od5HYNcJlcbwAiYWDCgQ/2vhAmi1p+rzRH
-	 o2k3xKEZuIuL7oq3DLSNo7+2qaS7LmqsBDg0IeQd9Ez4Ets+B1DKZH+d0CIeg5GhnUmuq
-	 3rRK3RSRmahUfT8UaQVycoluw44wh4XW3nDYu8+scAgE96lZ83I91DbxgrX/J1xMRLwTV
-	 f8UxvcIzScMqR/Lw/5+A9onUHTm5wuWtWCENa2w9lW7vM2jz3ym9xvBI+/fiZgo38Yt4a
-	 da7RUyN6WWDZVn2VKOwerMkFodawSCo9O872G3iDVxQCAFFO4dDUZ9y/oiBs74lF02g==
+	bh=x+ielrpl05GqbiDgrjkNFqFmUWyU2mlgjjUSLSA7ydE=;
+	b=FpW2x0wOmN8du0+1aZ1+Fcy0RyNIVO/29qC8zX3SnP9o5qEdYaXwZNqs3JosqzXSKzf9
+	 6DW/YPrAhpy7XP3KIdhMUUjKOvk1qYzYqTjoIaL6p6UOnp4eOZov3iJjlgxI89oprhWgD
+	 VRitiCq141ze/ULfnsUZMcZacQTW011NVkZEDkgN5f1/Eo2nkLMpMDYVqMWz2yQIVFKOZ
+	 ACOf136Gcrw1pMgx+7jeF8S6a8W8qt6jn7toTtgi6e7vXV37aD1WOWByNB15IbAmIfuXp
+	 njrKcIT/XXGYDae6vAgHmOH69Km7px+HnL4ZZ0c5EFOgrBiAKY+dH+CaMCnZgjtrI9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=chrisdown.name;
 	spf=pass smtp.mailfrom=chrisdown.name;
-	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=NzH9v5uE;
-	arc=none smtp.remote-ip=209.85.210.172
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=XJy5WLJl;
+	arc=none smtp.remote-ip=209.85.214.180
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CBF606FCE5
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 15:18:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33CBF606FCE5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BE06082BDE
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 15:18:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 66BE06082BDE
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=NzH9v5uE
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-8a064dcfcfdso1544411b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Nov 2026 07:18:39 -0800 (PST)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=XJy5WLJl
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2e60f9af6e6so40256015ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Nov 2026 07:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google; t=1793719118; x=1794323918; darn=vger.kernel.org;
+        d=chrisdown.name; s=google; t=1793719133; x=1794323933; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
-        b=NzH9v5uEH+MPtdumNErHcLU8TI7esovID+0FCTg4cq4Ny7OB6Jbv2iuLnSDCRB39Vh
-         z1jm9WbnlKgC0FM/ImPLdCDbfHy1wPtGKCnh7nLr66I2ZWRMh6r61Gw1Myi8kqqxygS/
-         MP+GB+led6l0lrR+WCQZnEEeUcd7JizQOJMcs=
+        bh=x+ielrpl05GqbiDgrjkNFqFmUWyU2mlgjjUSLSA7ydE=;
+        b=XJy5WLJl/KGluYS1/F4VW4v6k6VyGhteiZQJFtWPoTcx/SvN10DLFHXPZQlIvRT6UP
+         Hpae4Oq4Wqt0fWSDTJyIcK7TOpMTEIlxdmK89VeW42IAQclMGfNCtJHvN7rGpfgmrg74
+         k4HNO2eNR63JrGMry9w/vqCs7wB+paZYgii/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793719118; x=1794323918;
+        d=1e100.net; s=20260707; t=1793719133; x=1794323933;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
-        b=qs+iSuORpdn/fkH5XL7E/4QbEwed0TCnquAtY8w0BBi/exou5PLVVcuqOjA5V1mtyA
-         aob1dDv/ycg9veMkv8D2vFdvO9Bs8g9KV85GlP2LviRhMNQNkPPcRt701ScdHeGwhiHk
-         ZKuJJtQGrWcWMdF6sp4GhHQ1swDgeW+O2Q3nZ+2EID3bdEDbJE5zd5ja7x9+xXgw3rBr
-         GWPt0haASj1eBhfY5O7CMZ0fnp0W8M3yAU5bT1X4gHwQGj6ql8U2Z+1RmukARFqfPwsa
-         3BI19oKKHMtRdqMP8eP8dT7MKVsVG4RJBEoN3hS28+E9ydezW76IpO6Q5mDF7ZwgNBu+
-         yDWg==
-X-Forwarded-Encrypted: i=1; AKwUvBxGvXmBdd1M71HsKOSzA8y2I54kPfgYVZxRC+fu12zCGSLLPEYmL2s4+3852MpGQZjM0Lrb6tv5MGAvsYkPYq5sZ9k=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9SR26buh69YAjowctTXiQ7SIsWGW+C53OS3uba4zZ2yoWS7/a+
-	wTrcCyYxq2xo6iLWXtEs1jmBNJSZaI0HoseVpQUjJEltQiyotavVi2iT0HAVqiiHqPk=
-X-Gm-Gg: AYBFou1VsdMiBsnNzMaltWrEHNGbiz0m7ZPBERrF10HhOUcKzK9H6NuHvAJYNs1gwzU
-	xDHsGIR+oGn2ZLywrIKyK1V/wInHHVH8zQ1pK7IJcT25dWl3FMI+jYgYIQnk11UXWL9RvxbHHA/
-	IRtAIF8f3HC6XAmfGgffhl1H1xYnB8hJqjhKlaNxYDiashNhmNVFVHit7iB3onwHtMZvcMlPas+
-	Co/4mU5uXfZn6F0JOY6c3aR1scbn/jaxNz0b4vOcG6NQva2qXk7lgo4i5cGxKw0eH3t3Rt6H5PU
-	bfDo+g6fJWNy3sfJAw7rijnueocAkAUvVznyqxP3o+d4gRjbq/X4CiK6XWA2ryfuQgj8DNTfAJW
-	l1nOZBWuhdAwSH3BY6jKFJm72ckkTznnHvp80y6NDAgWJIdA/d77wZvbsxplFiVxJ2rG2lv5VQH
-	RdcFowanvp0LanrFJ6KQP3cq8J0KESenkVDfoNOxFbDfPnVkziRY1SSUZpeighd/7UTC4u6JTYq
-	eR4pOCCvjRKnHb/6K4LWCIt//aFh0NeWnmGJvdcMdjV7uo/FBfU4zkhq/mwHTFCxXvxOKPJXIpy
-	NE+jqPdiaSBLOQVxLOCVlXdus1GV6F1kuqH9U4usO77KQRUy3IqQrZoX/B+uCxeR6xuZcxP6vB+
-	qJsu6Z/anA7fK/k/8ZpcoJEOXZuvgIP1beHz20zjPNnMvkSKtWi1aUoPpc5AmkRM2+7vhSVx0Ax
-	C3wyQpleyQVvZZ4BGCTg==
-X-Received: by 2002:a05:6a20:914a:b0:3dd:a009:3182 with SMTP id adf61e73a8af0-3e928e2909amr12529216637.42.1793719118513;
-        Tue, 03 Nov 2026 07:18:38 -0800 (PST)
+        bh=x+ielrpl05GqbiDgrjkNFqFmUWyU2mlgjjUSLSA7ydE=;
+        b=BYp8tsZlhHCL8EUNPyJvLSOUR+OL3zt1SKyhLrvn+mKZWUg7aXY4/l//ch3fV5XjBy
+         YPi5+Zrv4+5eWG1wvuhJl1TBFncjQfm3YHticFwtzCuBowFpzosZXVqBCuP9OGQOEY3s
+         jkXcPCRUZTLKIBYewz5ZCM5g2cXJkrL7FiQ5+gEI4Na1JasO+srVCetxYpNP0Ly8meIH
+         fvqS44FBIR8QEd98GyWw25KklnZDtx5EHbkQg99zpAu3p0sZaY6e6t6/vzx3jJNCON4P
+         U1tOf9kDJb//AlI5LbuESOYeW1Mo91vIcU1ytOZc9eQHBQkdVud/JwrSav5NxmfkCm1y
+         /mAQ==
+X-Forwarded-Encrypted: i=1; AKwUvByIlg2R/ryeQqB0VLC6i94DWMaPRfnK2agMBwWp072dXjxc6BaitLXwtJ1yyb6kLUyk7BdXtbzbqQfXCpUSDKZxVag=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+wnL59HySI3e86WPJ4TypjFuQbHVRIfan4PsP4niet6FKiiI+Z
+	qrAuWRr5vnyY9qAcQKr1ZC9X/wOXdKWAsl/Iih1LfYc1FsteTJn5nwJEDk3vIYSDwTE=
+X-Gm-Gg: AYBFou2RgHHO4or1MfZcwcDiF3jcGMAaioEZsojSoCZA7r/mu9SqvYmIoH43y6WgXHw
+	aOv6N5C7HHAWsiY4go5tPg6OV0Pd3izwHGqO//tlE/49L1eP8bsFDLKq5kgf7fkFBxETJQNjL46
+	hjfeLem2Lu4tVcZ9Z0ZOkw0/QSJeW4Ee6SqOAfY/ZeyIp6tyQy2U9Z9wMvogi/Rg6TcEv7nZqvS
+	XRKCMFsa3Lf+ULr5nrUaphMDac9Od8Funeru3eum/dmwY/IHyqQp0IlMr9bXfElPHor+8oJFpFu
+	+ctBB2zTQDwmpFmeYIEl8aErhrvBtyNrjB6Z8J1pLDzik4UDYdXEvwGe3QYJSgEE1TKXSjpMfvM
+	i4nMzOMP3W9sRmBNYo4QwIegWlM7ur96MiDPOgmXiDH7YMHBggqq6Y/1JhpYeV00sSfk3xHEW5t
+	e5f4iYRXVI79FrU9iANxNbeIddigbl07GYhmfna5UxdriHsKngNqE3CZINxXKG98Eku0ROe5iET
+	HthBz8OoJQuj7qsLa9Pwq0geJFUih+8YzdOa/+s6A/cxjk4sA4To+VbW/DQ6mvSdNHZdgn0ah69
+	ohJDbdt1KO0KuprwkyxMpMhrzweprJxSJb+U02BY3xBQC3DK9jVOWy271nNaasMYrFMk/UpCCCP
+	HRU4auwq+lcU62dO+T1ZX5SnGCeX954cW+GKB7p3Yu33Qtbc/JH7sw6Si55ACIo2D4oswlbtjcf
+	bxnSya7Vd5ZLW+JBoysA==
+X-Received: by 2002:a17:903:1b26:b0:2eb:1e07:adc5 with SMTP id d9443c01a7336-2eb364026e5mr130622425ad.2.1793719132693;
+        Tue, 03 Nov 2026 07:18:52 -0800 (PST)
 Received: from localhost ([116.86.153.182])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdb362ab313sm1592131a12.0.2026.11.03.07.18.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb39266b84sm43036115ad.43.2026.11.03.07.18.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 07:18:35 -0800 (PST)
-Date: Tue, 3 Nov 2026 23:18:33 +0800
+        Tue, 03 Nov 2026 07:18:48 -0800 (PST)
+Date: Tue, 3 Nov 2026 23:18:45 +0800
 From: Chris Down <chris@chrisdown.name>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Liam R. Howlett" <liam@infradead.org>,
@@ -119,9 +119,9 @@ Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: [PATCH v2 5/8] uprobes/x86: Leave sealed trampolines in place on
- optimisation failure
-Message-ID: <eafd3da2cd2c3e2c4d137a46f50351dc6290c5ea.1793718940.git.chris@chrisdown.name>
+Subject: [PATCH v2 6/8] mm/mseal: Seal system mappings in
+ __install_special_mapping()
+Message-ID: <74ead8d457288df215405298e213246ef6a1ce68.1793718940.git.chris@chrisdown.name>
 References: <cover.1793718940.git.chris@chrisdown.name>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -137,35 +137,251 @@ Content-Disposition: inline
 In-Reply-To: <cover.1793718940.git.chris@chrisdown.name>
 User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-If swbp_optimize() fails, __arch_uprobe_optimize() unmaps the
-trampoline it has just created. The next patch seals all special
-mappings when CONFIG_MSEAL_SYSTEM_MAPPINGS is enabled, which includes
-uprobe trampolines, and then this do_munmap() would fail with -EPERM
-and warn a second time.
+VM_SEALED_SYSMAP isn't really a VMA flag, it's an alias for VM_SEALED or
+VM_NONE depending on CONFIG_MSEAL_SYSTEM_MAPPINGS. Every caller of
+_install_special_mapping() on an architecture which supports sealing
+system mappings has to remember to pass it, and it keeps those callers
+on the legacy vm_flags_t API.
 
-Nothing is really leaked if we leave the trampoline mapped in that
-case, since get_uprobe_trampoline() reuses any existing trampoline
-which is in reach of the probe. So let's just leave it in place when
-it's sealed.
+Let's instead have __install_special_mapping() seal the mapping itself
+when mseal_system_mappings() says so, and remove VM_SEALED_SYSMAP.
+
+The only special mapping on these architectures which didn't already
+pass VM_SEALED_SYSMAP is the x86 uprobe trampoline, which is now sealed
+as well. The previous patch makes sure that's safe.
+
+Since this seals all special mappings, the architecture opt-in now
+requires that none of them are moved or unmapped.
 
 Signed-off-by: Chris Down <chris@chrisdown.name>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/userspace-api/mseal.rst | 3 ++-
+ arch/arm64/kernel/vdso.c              | 9 +++------
+ arch/loongarch/kernel/vdso.c          | 3 +--
+ arch/riscv/kernel/vdso.c              | 2 +-
+ arch/s390/kernel/vdso.c               | 2 +-
+ arch/x86/entry/vdso/vma.c             | 5 ++---
+ include/linux/mm.h                    | 6 ------
+ init/Kconfig                          | 5 ++---
+ kernel/events/uprobes.c               | 2 +-
+ lib/vdso/datastore.c                  | 2 +-
+ mm/Kconfig                            | 3 ++-
+ mm/vma.c                              | 2 ++
+ mm/vma.h                              | 5 +++++
+ 13 files changed, 23 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 0f60c0d076b6..fb895bfc09e0 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1183,7 +1183,7 @@ static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct
- 	if (IS_ERR(tramp))
- 		return PTR_ERR(tramp);
- 	ret = swbp_optimize(auprobe, vma, vaddr, tramp->vm_start);
--	if (WARN_ON_ONCE(ret) && new_mapping)
-+	if (WARN_ON_ONCE(ret) && new_mapping && !vma_test(tramp, VMA_SEALED_BIT))
- 		WARN_ON_ONCE(do_munmap(mm, tramp->vm_start, PAGE_SIZE, NULL));
- 	return ret;
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
+index c039d782f9f5..060c9829306b 100644
+--- a/Documentation/userspace-api/mseal.rst
++++ b/Documentation/userspace-api/mseal.rst
+@@ -133,7 +133,8 @@ Use cases
+ 
+ - System mappings:
+   The system mappings are created by the kernel and include vdso, vvar,
+-  vvar_vclock, vectors (arm compat-mode), sigpage (arm compat-mode), uprobes.
++  vvar_vclock, vectors (arm compat-mode), sigpage (arm compat-mode), uprobes,
++  uprobe trampolines (x86).
+ 
+   Those system mappings are readonly only or execute only, memory sealing can
+   protect them from ever changing to writable or unmapped/remapped as different
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 50596dab23f9..542adc47cd02 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -127,8 +127,7 @@ static int __setup_additional_pages(enum vdso_abi abi,
+ 	mm->context.vdso = (void *)vdso_base;
+ 	ret = _install_special_mapping(mm, vdso_base, vdso_text_len,
+ 				       VM_READ|VM_EXEC|gp_flags|
+-				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC|
+-				       VM_SEALED_SYSMAP,
++				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+ 				       vdso_info[abi].cm);
+ 	if (IS_ERR(ret))
+ 		goto up_fail;
+@@ -254,8 +253,7 @@ static int aarch32_kuser_helpers_setup(struct mm_struct *mm)
+ 	 */
+ 	ret = _install_special_mapping(mm, AARCH32_VECTORS_BASE, PAGE_SIZE,
+ 				       VM_READ | VM_EXEC |
+-				       VM_MAYREAD | VM_MAYEXEC |
+-				       VM_SEALED_SYSMAP,
++				       VM_MAYREAD | VM_MAYEXEC,
+ 				       &aarch32_vdso_maps[AA32_MAP_VECTORS]);
+ 
+ 	return PTR_ERR_OR_ZERO(ret);
+@@ -278,8 +276,7 @@ static int aarch32_sigreturn_setup(struct mm_struct *mm)
+ 	 */
+ 	ret = _install_special_mapping(mm, addr, PAGE_SIZE,
+ 				       VM_READ | VM_EXEC | VM_MAYREAD |
+-				       VM_MAYWRITE | VM_MAYEXEC |
+-				       VM_SEALED_SYSMAP,
++				       VM_MAYWRITE | VM_MAYEXEC,
+ 				       &aarch32_vdso_maps[AA32_MAP_SIGPAGE]);
+ 	if (IS_ERR(ret))
+ 		goto out;
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 1edc8fb720de..c9ffc124bfb1 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -109,8 +109,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	vdso_addr = data_addr + VVAR_SIZE;
+ 	vma = _install_special_mapping(mm, vdso_addr, info->size,
+ 				       VM_READ | VM_EXEC |
+-				       VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC |
+-				       VM_SEALED_SYSMAP,
++				       VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
+ 				       &info->code_mapping);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
+diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+index 5666cec180ac..4213de6afb9a 100644
+--- a/arch/riscv/kernel/vdso.c
++++ b/arch/riscv/kernel/vdso.c
+@@ -140,7 +140,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
+ 
+ 	ret =
+ 	   _install_special_mapping(mm, vdso_base, vdso_text_len,
+-		(VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC | VM_SEALED_SYSMAP),
++		(VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC),
+ 		vdso_info->cm);
+ 
+ 	if (IS_ERR(ret))
+diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+index a905f989f910..a9dd3876e7fd 100644
+--- a/arch/s390/kernel/vdso.c
++++ b/arch/s390/kernel/vdso.c
+@@ -65,7 +65,7 @@ static int map_vdso(unsigned long addr, unsigned long vdso_mapping_len)
+ 	vdso_text_start = vvar_start + VDSO_NR_PAGES * PAGE_SIZE;
+ 	/* VM_MAYWRITE for COW so gdb can set breakpoints */
+ 	vma = _install_special_mapping(mm, vdso_text_start, vdso_text_len,
+-				       VM_READ|VM_EXEC|VM_SEALED_SYSMAP|
++				       VM_READ|VM_EXEC|
+ 				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+ 				       &vdso_mapping);
+ 	if (IS_ERR(vma)) {
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 4bd3b22beea9..e49d4e4d7b67 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -178,8 +178,7 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+ 				       text_start,
+ 				       image->size,
+ 				       VM_READ|VM_EXEC|
+-				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC|
+-				       VM_SEALED_SYSMAP,
++				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+ 				       &vdso_mapping);
+ 
+ 	if (IS_ERR(vma)) {
+@@ -198,7 +197,7 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+ 				       VDSO_VCLOCK_PAGES_START(addr),
+ 				       VDSO_NR_VCLOCK_PAGES * PAGE_SIZE,
+ 				       VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|
+-				       VM_PFNMAP|VM_SEALED_SYSMAP,
++				       VM_PFNMAP,
+ 				       &vvar_vclock_mapping);
+ 
+ 	if (IS_ERR(vma)) {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d89e6f823c9f..09c047dc9faf 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -567,12 +567,6 @@ enum {
+ /* Temporary until VMA flags conversion complete. */
+ #define VM_STACK_FLAGS vma_flags_to_legacy(VMA_STACK_FLAGS)
+ 
+-#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+-#define VM_SEALED_SYSMAP	VM_SEALED
+-#else
+-#define VM_SEALED_SYSMAP	VM_NONE
+-#endif
+-
+ /* VMA basic access permission flags */
+ #define VM_ACCESS_FLAGS (VM_READ | VM_WRITE | VM_EXEC)
+ #define VMA_ACCESS_FLAGS mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT)
+diff --git a/init/Kconfig b/init/Kconfig
+index 4013781e0a02..35d349cff1a3 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1955,9 +1955,8 @@ config ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+ 	  A 64-bit kernel is required for the memory sealing feature.
+ 	  No specific hardware features from the CPU are needed.
+ 
+-	  To enable this feature, the architecture needs to update their
+-	  special mappings calls to include the sealing flag and confirm
+-	  that it doesn't unmap/remap system mappings during the life
++	  To enable this feature, the architecture needs to confirm that it
++	  doesn't unmap/remap any of its special mappings during the life
+ 	  time of the process. The existence of this flag for an architecture
+ 	  implies that it does not require the remapping of the system
+ 	  mappings during process lifetime, so sealing these mappings is safe
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index caf444762a27..2290a4cbebf8 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1727,7 +1727,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 
+ 	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
+ 				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|
+-				VM_MIXEDMAP|VM_SEALED_SYSMAP,
++				VM_MIXEDMAP,
+ 				&xol_mapping);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
+diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
+index 1426bf4e0c12..e8933ff44aa4 100644
+--- a/lib/vdso/datastore.c
++++ b/lib/vdso/datastore.c
+@@ -124,6 +124,6 @@ struct vm_area_struct *vdso_install_vvar_mapping(struct mm_struct *mm, unsigned
+ {
+ 	return _install_special_mapping(mm, addr, VDSO_NR_PAGES * PAGE_SIZE,
+ 					VM_READ | VM_MAYREAD | VM_DONTDUMP |
+-					VM_MIXEDMAP | VM_SEALED_SYSMAP,
++					VM_MIXEDMAP,
+ 					&vdso_vvar_mapping);
  }
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 40172787dfa7..316515589cdb 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1363,7 +1363,8 @@ config MSEAL_SYSTEM_MAPPINGS
+ 	help
+ 	  Apply mseal on system mappings.
+ 	  The system mappings includes vdso, vvar, vvar_vclock,
+-	  vectors (arm compat-mode), sigpage (arm compat-mode), uprobes.
++	  vectors (arm compat-mode), sigpage (arm compat-mode), uprobes,
++	  uprobe trampolines (x86).
+ 
+ 	  A 64-bit kernel is required for the memory sealing feature.
+ 	  No specific hardware features from the CPU are needed.
+diff --git a/mm/vma.c b/mm/vma.c
+index 423383d59c59..67116be0260a 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -3705,6 +3705,8 @@ struct vm_area_struct *__install_special_mapping(
+ 
+ 	vma_flags_set_mask(&vma_flags, mm->def_vma_flags);
+ 	vma_flags_set(&vma_flags, VMA_DONTEXPAND_BIT);
++	if (mseal_system_mappings())
++		vma_flags_set(&vma_flags, VMA_SEALED_BIT);
+ 	if (pgtable_supports_soft_dirty())
+ 		vma_flags_set(&vma_flags, VMA_SOFTDIRTY_BIT);
+ 	vma_flags_clear_mask(&vma_flags, VMA_LOCKED_MASK);
+diff --git a/mm/vma.h b/mm/vma.h
+index 3fc3b47a954b..3982b239d0b4 100644
+--- a/mm/vma.h
++++ b/mm/vma.h
+@@ -800,6 +800,11 @@ static inline bool vma_is_sealed(struct vm_area_struct *vma)
+ }
+ #endif
+ 
++static inline bool mseal_system_mappings(void)
++{
++	return IS_ENABLED(CONFIG_MSEAL_SYSTEM_MAPPINGS);
++}
++
+ #if defined(CONFIG_STACK_GROWSUP)
+ int expand_upwards(struct vm_area_struct *vma, unsigned long address);
+ #endif
 -- 
 2.54.0
 
