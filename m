@@ -1,52 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.74
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793688525;
-	b=jGwEVCpzv5PdBXXaqWOSkBUBl8b1Cb+OLB9EM+Cy8zdJ6XycHo1mzjNbfy3B7lMHIsHo
-	 UG6BJyErh0iGAwzq4UfX31TSTjYsu2eHHtLB9RIueTplC7+AL1K1P3GEa8FDpWR7pZR0k
-	 sYbtYs1DpSizRLc0nAPDnK26FY2dFLfi8TZgUS4R4K5H9agYaD5GyUHKMXCYrD3W5F5bu
-	 /+udNORwW8UNRpoNhk4Gv13Yeng56aK8J3iTXspbu2qen/pRuHv6fqRjqr7+f1W5b72bs
-	 0uIpj88IXbxCTGnjTvJk4qRN3Qff8z/U8q9zLXonmKXeUJsD9ZAIcQGMaXm7xlV/BMA==
+	t=1793695140;
+	b=Skqkg1e538+Z0KY9pWa+a2QkGgjVjcNjrQJ8SQAVmshfvRBzH5LFMpw1JhV9B20t6k2F
+	 v6mtPQQ5O7YTPmpKOuJUNNUUrjxsglgdjr6aYUhb795gVmw8vPtk7IEgwAY1XyFf+jHFl
+	 9Zn3A6bEtpf5vM9Ijob1D99nPB3O27KJsIbXWO0fHA+8SSRNx04IY+/kF/bUpyeaJVnnu
+	 Tj+XFYtszx8377Ipu2kaHgVXAdg/NPgud+qjgbseESzL0tX29HCsQI4AM8WQybeFneYWv
+	 2Hajb63uJTQ4IQoMJd10oM8nSYerp9VogH/HFwLh7HhrfHd0v/PKwaHs7fQJXzvGSlw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793688525;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=47gVMNE2szA456na8yleBIvHosW+wgwadu3yBUGMAhw=;
-	b=0e+vKfpAsVvkgdC0zsZmIZnP8ssqvvNp4WLUE6nGEaCnyyJN4//J1VR0QggjF0gMxyzw
-	 e4oGWB1i9+pm5tNieQDTO9MUbDQlpavTmtzjxMcaFY0QoQZqGvWZW1KEdUc2fxzHNt3L8
-	 uXZ31TMh8NxfagNqzvEWbbCuqNbcrGwhrNcVurHQbE6idW+p86tGD5we4omEgeGE8zDgN
-	 FuDvfOE3L6LPFQsLGHyJ10qHjXBeOLh98jHwQa3X5r8/zzSGfQDjscYpB8Jn3rZjlvxrC
-	 afT8nf63YKouNjny9yXQ+TB59PKlVW562KsB6lai8KBGzrTlN2RMYsZGDoD2kzyp1Nw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793695140;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=qeqwFlyJpg/hyC5+cDpsscxjxixuGz6INW/VspMuWu8=;
+	b=d6zeIWV81EpSGZByXKmZG2px43Lor/GvOwbBLWi7nJazii5oCAWelyX/aBttdiTMDDUb
+	 h/es0X3vbhpKqdOVdGX4uoS5cNFZ/Eu6T0TlZv+lctxMlpmMSgDzbh2E/0Ep/BZA9CW/f
+	 rbaU0mxEktsi1bQNIojI3IeUoYjcIum4gNn6KghzIGBQELgThGqtBPI1LlhCtHmfEyc5G
+	 sk3elbrMWGSXV5tcu4LpnPvgEBhT05Y2ecOhF9kN6fT+oX2AXGjsSw22qwCb8Ls3dwCSJ
+	 I5V6BNAJCgJ5a7I6BgrGyT49ovhuPJahD8L45xl0RVFn/37bJuDvT1kAgQETYHiz5Cw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	arc=none smtp.remote-ip=95.215.58.74
+Received: from mta1.migadu.com (out-74.mta1.migadu.com [95.215.58.74])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E39606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 06:48:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D26CE1F00A18
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 06:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793688522;
-	bh=47gVMNE2szA456na8yleBIvHosW+wgwadu3yBUGMAhw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=PCXHJlLx5uT56I3g2/299SMhwphQgkeJYW0rwrP1IMJM6akhAulBEQfoHh3VWV4xt
-	 U0ZcdcUBR3fic8CzRDhJOCn42qoqXRkoYBFAPjvFubsywIy1mQJJYPhR+2QMWhX3H/
-	 NcT8Kn1k86ZutxegRMnWH1vTBbHmilczKGpffIL282zNGISD/Qe+Uy5f1dEoVD4oky
-	 X/kkT2+y3+vWiKRmlMJ3TE3QZ8R5gBDYl2jAh7abWtOFU1ecZkW801ThldTB8Xijze
-	 CxdEYu4adfyo+TwF3Vc5QNP4FZF/YppvW+3ZF9+SPuqdS2liHpz41EMnWURyK5t0Un
-	 EqqwDUsXvhPrQ==
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-93a40a9a01aso47588885a.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Nov 2026 22:48:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvByoZFTjXmephxZKjR8mjxJ9dXbvjbbbFKcB2CCNQ9IJJvdBldph7+kmupfAv1icKA2FRB6Md8qbpg4Qq+ANlqMVz2M=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+bTDjPLNSa8TWEYLDMTbJJa5X9rHlrF1l8G0brBYrEqpDXyKc6
-	/iwn6C5b+NKur4efvjjTopE3FQ99R6Lx9q+7ixV4IsIktbGa7xehggjtlAifxbpT/mFwBBcYc54
-	z0h+eKAMacvyMonUW7ZpM6HeE9LGz3c8=
-X-Received: by 2002:a05:620a:6013:b0:93e:5de7:fd45 with SMTP id
- af79cd13be357-94413382637mr2049169685a.18.1793688522192; Mon, 02 Nov 2026
- 22:48:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18129606A951
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 08:38:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18129606A951
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=OSN5qGHgqiHVh7/05xFfowZL4pMsF7I9FTtrXt2Dh7Y=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793695132; v=1; x=1794299932;
+ b=ROPqMjXI5XlPI4j2+AMYhgpbz8V4jO1vsprSWBij54GaljEpun6cdUgvud1esw4g1ip9qwvg
+ fsTAQ9gdAlNWK7zqvCd/jneT7dLIbvPehxzOCbiFFcMIHZx1ClxtmYq+gcr3R7jTmQ9V53IVzlH
+ yyMf7sjmzypXX+cjR/BV8gP0=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id c2bade759b0e2b73;
+	Tue, 03 Nov 2026 08:38:51 +0000
+X-Mizu-Trace-ID: c2bade759b0e2b73
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
+Date: Tue, 3 Nov 2026 16:38:39 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -56,91 +55,125 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261103025610.3738894-1-ridong.chen@linux.dev> <20261103025610.3738894-8-ridong.chen@linux.dev>
-In-Reply-To: <20261103025610.3738894-8-ridong.chen@linux.dev>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 3 Nov 2026 14:48:30 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
-X-Gm-Features: AclHuK9iw40Xx1JKG7xg0GhepEe64uIgtchPvP4-nxYEY5aIoWWOik_yiFOewsU
-Message-ID: <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
-To: Ridong Chen <ridong.chen@linux.dev>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Muchun Song <muchun.song@linux.dev>, 
-	Qi Zheng <qi.zheng@linux.dev>, David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>, Ridong Chen <chenridong@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Barry Song <baohua@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ cgroups@vger.kernel.org,
+ "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
+ Ridong Chen <chenridong@xiaomi.com>
+References: <20261103025610.3738894-1-ridong.chen@linux.dev>
+ <20261103025610.3738894-8-ridong.chen@linux.dev>
+ <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
+From: Ridong Chen <ridong.chen@linux.dev>
+In-Reply-To: <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 3, 2026 at 10:58=E2=80=AFAM Ridong Chen <ridong.chen@linux.dev>=
- wrote:
->
-> From: Ridong Chen <chenridong@xiaomi.com>
->
-> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
-> youngest generation. There is currently no tracepoint on this path, so
-> the moment a new generation is created, and how the min_seq of each type
-> trails behind it, cannot be observed as it happens.
 
-We might be more interested in why aging is triggered rather
-than the exact moment when max_seq is advanced.
 
-With your patch, we get:
+On 11/3/2026 2:48 PM, Barry Song wrote:
+> On Tue, Nov 3, 2026 at 10:58 AM Ridong Chen <ridong.chen@linux.dev> wrote:
+>>
+>> From: Ridong Chen <chenridong@xiaomi.com>
+>>
+>> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
+>> youngest generation. There is currently no tracepoint on this path, so
+>> the moment a new generation is created, and how the min_seq of each type
+>> trails behind it, cannot be observed as it happens.
+> 
+> We might be more interested in why aging is triggered rather
+> than the exact moment when max_seq is advanced.
+> 
+> With your patch, we get:
+> 
+> ~ # cat /sys/kernel/tracing/trace | grep mglru_inc_max_seq
+>             a.out-93      [001] d..1.   278.276539:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=4 anon_min_seq=2
+> file_min_seq=1 nr_anon={0x0,0xf016,0x12,0x0}
+> nr_file={0x1886,0xb,0x4c,0x0}
+>           kswapd0-50      [000] d..1.   278.422400:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=5 anon_min_seq=2
+> file_min_seq=2 nr_anon={0x5,0xccb6,0x3439,0x0}
+> nr_file={0x4ae,0x4f,0x55,0x0}
+>           kswapd0-50      [000] d..1.   278.508003:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=6 anon_min_seq=3
+> file_min_seq=4 nr_anon={0xccb6,0x3d29,0x1,0x0}
+> nr_file={0x0,0x59,0x7,0x0}
+>           kswapd0-50      [000] d..1.   280.046056:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=7 anon_min_seq=4
+> file_min_seq=5 nr_anon={0x3bf3,0xcbbd,0x23e,0x0}
+> nr_file={0x0,0xb,0x1,0x0}
+>           kswapd0-50      [000] d..1.   280.124876:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=8 anon_min_seq=5
+> file_min_seq=6 nr_anon={0xcafd,0x3e31,0x0,0x0}
+> nr_file={0x0,0x5,0x7,0x0}
+>             a.out-96      [001] d..1.   290.629014:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=9 anon_min_seq=7
+> file_min_seq=6 nr_anon={0x0,0x10615,0xb,0x0}
+> nr_file={0x331,0xb,0x9a,0x0}
+>           kswapd0-50      [000] d..1.   290.653098:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=10 anon_min_seq=7
+> file_min_seq=7 nr_anon={0x15,0xef23,0x18c4,0x0}
+> nr_file={0xb,0xb8,0x55,0x0}
+>             a.out-96      [001] d..1.   290.684875:
+> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=11 anon_min_seq=8
+> file_min_seq=9 nr_anon={0xeee3,0x1afb,0x2,0x0}
+> nr_file={0x0,0x76,0x4,0x0}
+> 
+> You can see that the youngest generation is always zero,
+> because you're just getting the newly added youngest
+> generation :-)
+> 
 
-~ # cat /sys/kernel/tracing/trace | grep mglru_inc_max_seq
-           a.out-93      [001] d..1.   278.276539:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D4 anon_min_seq=3D2
-file_min_seq=3D1 nr_anon=3D{0x0,0xf016,0x12,0x0}
-nr_file=3D{0x1886,0xb,0x4c,0x0}
-         kswapd0-50      [000] d..1.   278.422400:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D5 anon_min_seq=3D2
-file_min_seq=3D2 nr_anon=3D{0x5,0xccb6,0x3439,0x0}
-nr_file=3D{0x4ae,0x4f,0x55,0x0}
-         kswapd0-50      [000] d..1.   278.508003:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D6 anon_min_seq=3D3
-file_min_seq=3D4 nr_anon=3D{0xccb6,0x3d29,0x1,0x0}
-nr_file=3D{0x0,0x59,0x7,0x0}
-         kswapd0-50      [000] d..1.   280.046056:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D7 anon_min_seq=3D4
-file_min_seq=3D5 nr_anon=3D{0x3bf3,0xcbbd,0x23e,0x0}
-nr_file=3D{0x0,0xb,0x1,0x0}
-         kswapd0-50      [000] d..1.   280.124876:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D8 anon_min_seq=3D5
-file_min_seq=3D6 nr_anon=3D{0xcafd,0x3e31,0x0,0x0}
-nr_file=3D{0x0,0x5,0x7,0x0}
-           a.out-96      [001] d..1.   290.629014:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D9 anon_min_seq=3D7
-file_min_seq=3D6 nr_anon=3D{0x0,0x10615,0xb,0x0}
-nr_file=3D{0x331,0xb,0x9a,0x0}
-         kswapd0-50      [000] d..1.   290.653098:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D10 anon_min_seq=3D7
-file_min_seq=3D7 nr_anon=3D{0x15,0xef23,0x18c4,0x0}
-nr_file=3D{0xb,0xb8,0x55,0x0}
-           a.out-96      [001] d..1.   290.684875:
-mm_mglru_inc_max_seq: nid=3D0 memcg_id=3D1 max_seq=3D11 anon_min_seq=3D8
-file_min_seq=3D9 nr_anon=3D{0xeee3,0x1afb,0x2,0x0}
-nr_file=3D{0x0,0x76,0x4,0x0}
+Hi Barry,
 
-You can see that the youngest generation is always zero,
-because you're just getting the newly added youngest
-generation :-)
+Thank you very much for testing and reviewing.
 
-This somehow suggests that the information is redundant, as
-there is always a zero there.
+> This somehow suggests that the information is redundant, as
+> there is always a zero there.
+> 
+> I suspect we'll need an additional tracepoint to show why
+> aging is triggered and at what sc->priority it happens.
+> 
+> But do you know why you trace the moment just after aging
+> is completed, rather than the reason why aging is needed?
+> 
+My original goal was to pair it with mm_mglru_scan_folios, to see how
+the aging window of each memcg moves. The per-generation anon/file
+nr_pages were added following your suggestion on v1. I put it at the
+end of inc_max_seq() because of the restart there, as max_seq and
+min_seq are only final after that.
 
-I suspect we'll need an additional tracepoint to show why
-aging is triggered and at what sc->priority it happens.
+You make a very good point that the reason for aging is also
+important. So I'd like to discuss which way is better:
 
-But do you know why you trace the moment just after aging
-is completed, rather than the reason why aging is needed?
+1) Keep mm_mglru_inc_max_seq, and add another tracepoint at the aging
+  decision in try_to_shrink_lruvec(), reporting why aging is needed
+  and at what sc->priority.
 
-Best,
-Regards
+2) Replace mm_mglru_inc_max_seq with a single tracepoint in
+  try_to_shrink_lruvec(), right before try_to_inc_max_seq(), reporting
+  the reason, sc->priority, swappiness, max_seq/min_seq and the
+  per-generation nr_pages before aging. The youngest generation is
+  not empty at that point, and the new window after aging can still
+  be seen from the following mm_mglru_scan_folios.
+
+Which one do you prefer?
+-- 
+Best regards
+Ridong
+
