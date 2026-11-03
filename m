@@ -1,51 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.74
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.4
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793695140;
-	b=Skqkg1e538+Z0KY9pWa+a2QkGgjVjcNjrQJ8SQAVmshfvRBzH5LFMpw1JhV9B20t6k2F
-	 v6mtPQQ5O7YTPmpKOuJUNNUUrjxsglgdjr6aYUhb795gVmw8vPtk7IEgwAY1XyFf+jHFl
-	 9Zn3A6bEtpf5vM9Ijob1D99nPB3O27KJsIbXWO0fHA+8SSRNx04IY+/kF/bUpyeaJVnnu
-	 Tj+XFYtszx8377Ipu2kaHgVXAdg/NPgud+qjgbseESzL0tX29HCsQI4AM8WQybeFneYWv
-	 2Hajb63uJTQ4IQoMJd10oM8nSYerp9VogH/HFwLh7HhrfHd0v/PKwaHs7fQJXzvGSlw==
+	t=1793696627;
+	b=J068j2JdH/0Ha7KJOXUMwO2hKhe0/A/Uu2+j+oeRMsU5oZEa3se19oeSCZVm7QyKqA27
+	 5s7nmL4MMqsoD88XbKvk1y3tuVuPSzeUCSUzAckgFiYlVDmxn/lUhPt1jUpjpUJZrR7XS
+	 ZZiSgMMxRv3a5FN6fM6iKK6249ZVSt+3A9FrCJG7Tk6pxPyIsbNC9JoAGzLv/Se9yoHhM
+	 +KGmOpvGes34Yjuw6yRCA5vwA5AcOhxlUUa7HfFd0AhT2KtDTvGEboOydRcdlaDTps4P9
+	 2tcNCuFxbcb2Pe0AIglur13S92cjUscdK0KnjqbvbB0dwNHiXAkGJuO0AgUIa4Ms/CA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793695140;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=qeqwFlyJpg/hyC5+cDpsscxjxixuGz6INW/VspMuWu8=;
-	b=d6zeIWV81EpSGZByXKmZG2px43Lor/GvOwbBLWi7nJazii5oCAWelyX/aBttdiTMDDUb
-	 h/es0X3vbhpKqdOVdGX4uoS5cNFZ/Eu6T0TlZv+lctxMlpmMSgDzbh2E/0Ep/BZA9CW/f
-	 rbaU0mxEktsi1bQNIojI3IeUoYjcIum4gNn6KghzIGBQELgThGqtBPI1LlhCtHmfEyc5G
-	 sk3elbrMWGSXV5tcu4LpnPvgEBhT05Y2ecOhF9kN6fT+oX2AXGjsSw22qwCb8Ls3dwCSJ
-	 I5V6BNAJCgJ5a7I6BgrGyT49ovhuPJahD8L45xl0RVFn/37bJuDvT1kAgQETYHiz5Cw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793696627;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=rF3lwQrlgvyoEcEb2mTJ5z+aXEk03V2/91Tqdny4RHk=;
+	b=sRe5Fzm8DGadBu4kBTABUFaRWFxiwBFgFw7BPVbxtm868B9IONpJsJ/R33hiEvX6M+2B
+	 /4dBA2YLbVH36G/0/ebRQgV3k5TlmmZI12srxKoW12hwhSnyzwhDAo2BjhlghPhmeFgkg
+	 vQy61ztoXBH7wlOjLsVU6duwpeTYhaDmFzI1e0fu8X8vfGBcK/clJsaYuBXh9EJZ5Qv72
+	 9nkwPHFEIF8ZKklE5xJRl/qsd6nwHhIP+uBSoE33l7O8DBesppuK5m6oP17vsnzZV+ZyQ
+	 AIQLW2bKwghgW1xQLHeKnpmzOK7cnDLxfUAXry5V5XJTh9p2L9yeO9i5lOJlCdELwIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	arc=none smtp.remote-ip=95.215.58.74
-Received: from mta1.migadu.com (out-74.mta1.migadu.com [95.215.58.74])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=BiLfIXx9;
+	arc=none smtp.remote-ip=220.197.31.4
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18129606A951
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 08:38:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18129606A951
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=OSN5qGHgqiHVh7/05xFfowZL4pMsF7I9FTtrXt2Dh7Y=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793695132; v=1; x=1794299932;
- b=ROPqMjXI5XlPI4j2+AMYhgpbz8V4jO1vsprSWBij54GaljEpun6cdUgvud1esw4g1ip9qwvg
- fsTAQ9gdAlNWK7zqvCd/jneT7dLIbvPehxzOCbiFFcMIHZx1ClxtmYq+gcr3R7jTmQ9V53IVzlH
- yyMf7sjmzypXX+cjR/BV8gP0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id c2bade759b0e2b73;
-	Tue, 03 Nov 2026 08:38:51 +0000
-X-Mizu-Trace-ID: c2bade759b0e2b73
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
-Date: Tue, 3 Nov 2026 16:38:39 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D44606A327;
+	Tue,  3 Nov 2026 09:03:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4D44606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=BiLfIXx9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=rF
+	3lwQrlgvyoEcEb2mTJ5z+aXEk03V2/91Tqdny4RHk=; b=BiLfIXx9RjMXEnQtb9
+	QSO8NrVbPKRHOcKoy7lSNWOhVpoChejG9bW79ViG2r8cVtuZeRu1J0/jXq5Zjw0e
+	/g3OZKEAFuz2sRURAqgQHfjeXlsNKG6Yb1fQhXDw8LPMrI7AopQNsZJcGaEz2xi4
+	3t5vBj3tbXVi1juplIBYwW2PU=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDHT6oyo+lq0SHqDg--.7504S2;
+	Tue, 03 Nov 2026 17:02:44 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: alexei.starovoitov@gmail.com
+Cc: andrii@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	emil@etsalapatis.com,
+	ihor.solodrai@linux.dev,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	matt@bobrowski.net,
+	memxor@gmail.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	song@kernel.org,
+	yangfeng59949@163.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH v2 bpf-next] bpf: Fix suspicious RCU usage for sleepable bpf_get_stack()
+Date: Tue,  3 Nov 2026 17:02:42 +0800
+Message-Id: <20261103090242.680147-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <DML8PRKSQ4ZX.2A8Q5SC26RO6Q@gmail.com>
+References: <DML8PRKSQ4ZX.2A8Q5SC26RO6Q@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -55,125 +78,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
-To: Barry Song <baohua@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- cgroups@vger.kernel.org,
- "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
- Ridong Chen <chenridong@xiaomi.com>
-References: <20261103025610.3738894-1-ridong.chen@linux.dev>
- <20261103025610.3738894-8-ridong.chen@linux.dev>
- <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgDHT6oyo+lq0SHqDg--.7504S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw17Xr4rur1DuFWrZF17trb_yoW8Aw1DpF
+	93tr1Skr4UXr1Fyr47Ww4kWa45CwnxXa17WF1rKr1rA3W5Zr17WrWxKF48ZF98CrykWw1j
+	qFyjq39rGr4UAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR4KZLUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbCzxULg2rpozXY7wAA3w
 
-
-
-On 11/3/2026 2:48 PM, Barry Song wrote:
-> On Tue, Nov 3, 2026 at 10:58 AM Ridong Chen <ridong.chen@linux.dev> wrote:
->>
->> From: Ridong Chen <chenridong@xiaomi.com>
->>
->> Aging in MGLRU advances max_seq via inc_max_seq(), creating a new
->> youngest generation. There is currently no tracepoint on this path, so
->> the moment a new generation is created, and how the min_seq of each type
->> trails behind it, cannot be observed as it happens.
+On Tue, 03 Nov 2026 03:03:02 +0000, Alexei Starovoitov wrote:
+> On Sun, Nov 01, 2026 at 11:37 PM Feng Yang <yangfeng59949@163.com> wrote:
+> > Route these paths to bpf_get_stack_sleepable() and mark the new protos
+> > might_sleep, since build_id_parse() may fault in file data for
+> > BPF_F_USER_STACK | BPF_F_USER_BUILD_ID.  Sleepable programs that call
+> > bpf_get_stack() from inside a bpf_rcu_read_lock() region are now rejected
+> > by the verifier, which is the correct behavior for a helper that can
+> > sleep.
 > 
-> We might be more interested in why aging is triggered rather
-> than the exact moment when max_seq is advanced.
+> That's a new feature. It's not a fix for the splat.
+> Andrii's point in v1 is about build IDs. That's a good reason for this
+> patch, but the splat needs Songsen's patch anyway:
+> https://lore.kernel.org/bpf/20261028121859.994-1-yangsongsen@insta360.com/
 > 
-> With your patch, we get:
+>                                         Songsen's patch  this patch
+>   ------------------------------------  ---------------  -------------
+>   splat in sleepable progs              fixed            fixed
+>   splat in bpf_wq, task_work callbacks  fixed            still there
+>   build ID when the page is paged out   no               yes
+>   progs that load today                 all load         some rejected
 > 
-> ~ # cat /sys/kernel/tracing/trace | grep mglru_inc_max_seq
->             a.out-93      [001] d..1.   278.276539:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=4 anon_min_seq=2
-> file_min_seq=1 nr_anon={0x0,0xf016,0x12,0x0}
-> nr_file={0x1886,0xb,0x4c,0x0}
->           kswapd0-50      [000] d..1.   278.422400:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=5 anon_min_seq=2
-> file_min_seq=2 nr_anon={0x5,0xccb6,0x3439,0x0}
-> nr_file={0x4ae,0x4f,0x55,0x0}
->           kswapd0-50      [000] d..1.   278.508003:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=6 anon_min_seq=3
-> file_min_seq=4 nr_anon={0xccb6,0x3d29,0x1,0x0}
-> nr_file={0x0,0x59,0x7,0x0}
->           kswapd0-50      [000] d..1.   280.046056:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=7 anon_min_seq=4
-> file_min_seq=5 nr_anon={0x3bf3,0xcbbd,0x23e,0x0}
-> nr_file={0x0,0xb,0x1,0x0}
->           kswapd0-50      [000] d..1.   280.124876:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=8 anon_min_seq=5
-> file_min_seq=6 nr_anon={0xcafd,0x3e31,0x0,0x0}
-> nr_file={0x0,0x5,0x7,0x0}
->             a.out-96      [001] d..1.   290.629014:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=9 anon_min_seq=7
-> file_min_seq=6 nr_anon={0x0,0x10615,0xb,0x0}
-> nr_file={0x331,0xb,0x9a,0x0}
->           kswapd0-50      [000] d..1.   290.653098:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=10 anon_min_seq=7
-> file_min_seq=7 nr_anon={0x15,0xef23,0x18c4,0x0}
-> nr_file={0xb,0xb8,0x55,0x0}
->             a.out-96      [001] d..1.   290.684875:
-> mm_mglru_inc_max_seq: nid=0 memcg_id=1 max_seq=11 anon_min_seq=8
-> file_min_seq=9 nr_anon={0xeee3,0x1afb,0x2,0x0}
-> nr_file={0x0,0x76,0x4,0x0}
+> Row 2: the callback is sleepable, but its prog is not.
 > 
-> You can see that the youngest generation is always zero,
-> because you're just getting the newly added youngest
-> generation :-)
+>   bpf_wq_work()                    rcu_read_lock_trace() only
+>     callback_fn()                  prog->sleepable == false
+>       bpf_get_task_stack()         may_fault == false
+>         __bpf_get_stack()          no rcu_read_lock()
+>           get_callchain_entry()    rcu_dereference(): splat
 > 
-
-Hi Barry,
-
-Thank you very much for testing and reviewing.
-
-> This somehow suggests that the information is redundant, as
-> there is always a zero there.
+> Row 4: sleepable fentry, lsm, iter, syscall and tracepoint progs that
+> call bpf_get_stack() under bpf_rcu_read_lock() or bpf_preempt_disable()
+> load fine today. With this patch the verifier rejects them.
+> It does so even when flags don't have BPF_F_USER_BUILD_ID.
 > 
-> I suspect we'll need an additional tracepoint to show why
-> aging is triggered and at what sc->priority it happens.
-> 
-> But do you know why you trace the moment just after aging
-> is completed, rather than the reason why aging is needed?
-> 
-My original goal was to pair it with mm_mglru_scan_folios, to see how
-the aging window of each memcg moves. The per-generation anon/file
-nr_pages were added following your suggestion on v1. I put it at the
-end of inc_max_seq() because of the restart there, as max_seq and
-min_seq are only final after that.
+> Pls respin it as a feature, with a new subject and commit log
+> and a selftest.
 
-You make a very good point that the reason for aging is also
-important. So I'd like to discuss which way is better:
-
-1) Keep mm_mglru_inc_max_seq, and add another tracepoint at the aging
-  decision in try_to_shrink_lruvec(), reporting why aging is needed
-  and at what sc->priority.
-
-2) Replace mm_mglru_inc_max_seq with a single tracepoint in
-  try_to_shrink_lruvec(), right before try_to_inc_max_seq(), reporting
-  the reason, sc->priority, swappiness, max_seq/min_seq and the
-  per-generation nr_pages before aging. The youngest generation is
-  not empty at that point, and the new window after aging can still
-  be seen from the following mm_mglru_scan_folios.
-
-Which one do you prefer?
--- 
-Best regards
-Ridong
+Thanks. I will add the selftest and respin this patch as a feature change.
 
