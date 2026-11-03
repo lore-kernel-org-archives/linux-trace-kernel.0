@@ -1,78 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793732878;
-	b=5ecvyVP36kDvDP9w3BZjBYfRbIKenwgU9Df5x5U/H7taBEXzwZUGwuMzpghNNs6MMRxM
-	 luQP0OYlTm965Ayl0b/G418h3q8VnKChqScxT7iCMPtv4hc5sK88LNpAT/VuNCQ9eeVUx
-	 CH1nBI8XpcDromB4CqCPG5aNXdNWQu+v+ynkaWc0Q19/BE05MxQR2VBVOYdpUstw77SWu
-	 ZHbUShlwmc0NW6QDgr3TLVgPTg3x4vJsivYrWSjfPz3Rf5sPe4m++blDXMFqRWO2TEW0N
-	 4L6YaJ/0WqHqKdHwEabQmjRLDF4vWcucORB/cG1f6FPTF6Lwc5Y+vR+/dYlO4kfOTxg==
+	t=1793733167;
+	b=M25kjnUdSLGbzbmDpQc56z5V2c1NlsyEkaVxs/Lc9VxPsxoM6/YPmqUzqFl9SfHk5pul
+	 PJ3huMlv0WmquLDjnFDxpCVCP5kjowrnxl0FO+fHVTvOJzJJFjFFN8w0kX08au4tyFdAX
+	 WRo3wWsv9VLx9tdaaoUag83zFVe8+k09DCCobN8d8jSTMurCfiCNrkJZu0xg/1Se47GX8
+	 3rAFvHq+NqUdpzd4pPKqLWJvHHSpo3Wb2bKxc10Rir8e1H0zrcE3CmhXru9PFo5F6FjOr
+	 DVhctkcivLSU7x3x5IJcs2rWllJfxTN06h19htxVG684YNw8R7TORhPrTVQYlQNOMUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793732878;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793733167;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Lmbd2zINdcFJEsKttels94/lSvSKbYVRhf8W4gVvI0M=;
-	b=ChjBvLc2PTs6d64A/gnXzHx1RRARBLb6+Yz07yfR1YAy5yEpRo967qD75ILn7WM2QPss
-	 zDhSjXMn/jHzYe2+pMR9pnaXJBC2+mwyUpvbHfNjmxWln7XmlKopygZb5lgAUSyZAJPYD
-	 oFGWMz5/Hgh3rmSf5oRGRcAztW+rcayjlunMgvYF76twtzxCNmmkRoRoOg/8WZD84AQxc
-	 qyH4YvZ2tw6Ys3azpRJFVj3zHO3U082c5eaOyFCZu1RLDSbG1jUldd1WC1f4wHt081/Yk
-	 OXPHr8znA1yQFftOjG1XbZP5rDeExmQq1gJ5xhy2nfy5LYYAr2qN3jesJeazAWGfd+w==
+	bh=5Yq5VvxEmv53ds/rIgb2dzacOIX5pqmv6SRkWQjU/1E=;
+	b=4tuf3/wbR/48Pyo7BsBI+4uRKItw8hjYUV856vSVjhi4FdNVUq+SO9HvFQNP25Z2Rwv4
+	 r+JNNEHYLhL5iAzzAXj3jf/KaLujC1iYNvSg7BS1CfonDFN7BWAjpnyoZ5qdp9vfXBKg6
+	 zcdvMfgBgvWdY8YYpgvJmbnIO9EfnLU5+JH59D35kPu/8vt1KKrOS1AbUa7nHimeF3ERg
+	 tLMcvfhaCZBdjRT0UcSYKnlLvQBXt3l/e/+0To6xb6ReuAIFUHjD/9TYyxeFIaSx3jOXI
+	 scKi1cMTvKuVmO7b+RGuIN7sL1CNgh6YkaGsqn8D9lppVit0gtQLXiTe9KaC4CpvE5g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q1PUiHki;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LaWkXRzz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAF7606A331
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 19:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26E606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 19:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q1PUiHki
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBB51F0093A;
-	Tue,  3 Nov 2026 19:07:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LaWkXRzz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57371F000C1;
+	Tue,  3 Nov 2026 19:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793732878;
-	bh=Lmbd2zINdcFJEsKttels94/lSvSKbYVRhf8W4gVvI0M=;
+	s=k20260515; t=1793733166;
+	bh=5Yq5VvxEmv53ds/rIgb2dzacOIX5pqmv6SRkWQjU/1E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q1PUiHkiuD66i9itoKJxIYkyzDAK6zu7VDkvdc50PUOnlxFunr5pBcD4FVxjXxouL
-	 Z1dp8U35zueBMTTlphtnvBi4Tor463tYtZAlB6LT+rv+XG3Lk10OfxOquRMwLrW/Ow
-	 /IhV6pS8GAteyqGLnAhMTlPFZusubLD8OKs+US5UJU/lXR40VtEzHa5PVr+3kXFScn
-	 3xN6T+iBY9fB57SaRPL+JYtkcrJJ06HYsTfAMEqWtRl0fFIewzAdlZGyv8euY4Xe/g
-	 FN3RLZRvJs0RYzFrB2ItlFrIIHo3E99ldcv/h8xio85KHzdFAjHOdSM1sdFrWCTDBy
-	 y7fMmb812dzdA==
-Message-ID: <sashiko-outbox-195892@kernel.org>
+	b=LaWkXRzzwzI43j0PoPIUUUAqzTrBhl/moZYMVtgbdu4k5fBc4SOLokAXuSbDsfUW2
+	 BJ3gVDDEK7TL8Y9cOD0v9rmruMo18Yl9r3+VzyC02fbKB6SSNpFA8APzwQby5rRjXL
+	 04IWuEXHeA+MsPdswsWYb+Ov8oN4IujD5PkmSm8ybVHkiWGkzydq72zGarvYVtKKfV
+	 7LIpl7FWYxsepTLOg6LiAzawk+kyWbplg8QjDGlzvJR/9yMWhki8m4Fh/shT8UosqO
+	 gk2wVTPeI/aGmRmGXbGMiljRgbe9wjeHdWPjtNX+DZeQH9k/m4HDlfOyqY35SCu0Ma
+	 HZkdiWCFz9HWw==
+Message-ID: <sashiko-outbox-195906@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v23 10/10] lib: add a benchmark of hierarchical
- per-cpu counters
+Subject: Re: [PATCH 3/3] kprobes: Arm reused optprobe on cooling list
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
- Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
- Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
- Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
- Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
- Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
- Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
- Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
- Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
- Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Josh
- Law" <objecting@objecting.org>, "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan
- Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, "Randy
- Dunlap" <rdunlap@infradead.org>, "Kees Cook" <kees@kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
- Prateek Nayak" <kprateek.nayak@amd.com>, linux-trace-kernel@vger.kernel.org, "Jan
- Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>
-In-Reply-To: <20261102190708.1287100-11-mathieu.desnoyers@efficios.com>
-References: <20261102190708.1287100-1-mathieu.desnoyers@efficios.com>
- <20261102190708.1287100-11-mathieu.desnoyers@efficios.com>
+To: "Mani Tofigh" <mt4022@columbia.edu>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261103-kprobes-optprobe-state-v1-3-6aaac612abe6@columbia.edu>
+References: <20261103-kprobes-optprobe-state-v1-0-6aaac612abe6@columbia.edu>
+ <20261103-kprobes-optprobe-state-v1-3-6aaac612abe6@columbia.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 19:07:55 +0000
+Date: Tue, 03 Nov 2026 19:12:46 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -82,115 +60,104 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] lib: stack-allocated percpu_counter in bench triggers debugobjec=
-ts WARN_ON
-- [Low] lib: missing kernel-parameters.txt entry for percpu_counter_tree_be=
-nch.batch
+- [High] kprobes: reuse_unused_kprobe() arms cooling probe when new probe i=
+s disabled
 --
 
-commit a1a6611650e4e4f4d5279cc3d46fb8ab12ea614c
-Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+commit c03ba118d217fb856e6a911233d52037e4e98250
+Author: Mani Tofigh <mt4022@columbia.edu>
 
-lib: add a benchmark of hierarchical per-cpu counters
+kprobes: Arm reused optprobe on cooling list
 
-This commit adds a KUnit benchmark comparing hierarchical per-CPU counters
-with struct percpu_counter across update, lifecycle, and churn workloads.
-It introduces CONFIG_PERCPU_COUNTER_TREE_BENCH and the batch module
-parameter to configure the hierarchical counter batch size.
+This commit arms an unused aggregator kprobe in reuse_unused_kprobe() when
+it is still on an optprobe cooling list so that a newly registered probe
+at the same address will fire before optimization finishes.
 
-> diff --git a/lib/tests/percpu_counter_tree_bench.c b/lib/tests/percpu_cou=
-nter_tree_bench.c
-> new file mode 100644
-> index 0000000000000..bf260bef196a5
-> --- /dev/null
-> +++ b/lib/tests/percpu_counter_tree_bench.c
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 84a5f68476eb1..59c5689299ce3 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
 
 [ ... ]
 
-> +/* Like the RSS counters by default. */
-> +static unsigned int batch =3D 32;
-> +module_param(batch, uint, 0444);
-> +MODULE_PARM_DESC(batch, "Batch size of the hierarchical counters (power =
-of 2, 2 to 128)");
-
-[Severity: Low]
-Should percpu_counter_tree_bench.batch=3D also be documented in
-Documentation/admin-guide/kernel-parameters.txt?
-
-Both the commit message and the CONFIG_PERCPU_COUNTER_TREE_BENCH help text =
-in
-lib/Kconfig advertise passing percpu_counter_tree_bench.batch=3D on the ker=
-nel
-command line alongside percpu_counter_tree.arity=3D, which is documented th=
-ere.
-
-[ ... ]
-
-> +static int bench_lifecycle_fn(void *data)
-> +{
-> +	struct bench_thread *t =3D data;
-> +	struct percpu_counter_tree c[LIFECYCLE_NR];
-> +	struct percpu_counter pc[LIFECYCLE_NR];
-> +	u64 t0;
-> +	int i;
-> +
-> +	if (bench_wait_go(t->sh))
+> @@ -1067,6 +1068,13 @@ static int reuse_unused_kprobe(struct kprobe *ap)
+>  	if (!kprobe_optready(ap))
+>  		return -EINVAL;
+> =20
+> +	if (optprobe_queued_cooling(op)) {
+> +		/* Already disarmed. It will be optimized again upon finalize */
+> +		if (!kprobes_all_disarmed)
+> +			__arm_kprobe(ap);
 > +		return 0;
-> +	t0 =3D ktime_get_ns();
-> +	for (i =3D 0; t->sh->impl =3D=3D IMPL_PERCPU_COUNTER && i < LIFECYCLE_I=
-TER; i++) {
-> +		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
-> +			break;
-> +		percpu_counter_add(&pc[0], 1);
-> +		percpu_counter_add(&pc[0], -1);
-> +		percpu_counter_destroy_many(pc, LIFECYCLE_NR);
-> +		cond_resched();
 > +	}
 
-[ ... ]
+[Severity: High]
+What happens here if the newly registered kprobe has KPROBE_FLAG_DISABLED
+set, such as when __register_trace_kprobe() registers a new tracefs
+kprobe_events entry before enabling it?
 
-> +static int bench_churn_fn(void *data)
-> +{
-> +	struct bench_thread *t =3D data;
-> +	unsigned int pin_period =3D t->sh->pin_period;
-> +	struct percpu_counter_tree tmp[LIFECYCLE_NR], *c;
-> +	struct percpu_counter tmp_pc[LIFECYCLE_NR], *pc;
-> +	u64 t0;
-> +	int i;
-> +
-> +	if (bench_wait_go(t->sh))
-> +		return 0;
-> +	t0 =3D ktime_get_ns();
-> +	for (i =3D 0; t->sh->impl =3D=3D IMPL_PERCPU_COUNTER && i < CHURN_ITER;=
- i++) {
-> +		bool pin =3D pin_period && !(i % pin_period);
-> +
-> +		pc =3D pin ? &t->pinned_pc[t->nr_pinned * LIFECYCLE_NR] : tmp_pc;
-> +		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
-> +			break;
+In __register_kprobe() -> register_aggr_kprobe(), reuse_unused_kprobe(ap)
+is called before checking whether the new probe p is disabled:
 
-[Severity: Medium]
-Will passing stack-allocated struct percpu_counter arrays (pc in
-bench_lifecycle_fn() and tmp_pc in bench_churn_fn()) to
-percpu_counter_init_many() trigger a debugobjects WARN_ON(1) when
-CONFIG_DEBUG_OBJECTS_PERCPU_COUNTER is enabled?
+kernel/kprobes.c:register_aggr_kprobe() {
+	...
+		} else if (kprobe_unused(ap)) {
+			/* This probe is going to die. Rescue it */
+			ret =3D reuse_unused_kprobe(ap);
+			if (ret)
+				return ret;
+		}
+	...
+	if (ret =3D=3D 0 && kprobe_disabled(ap) && !kprobe_disabled(p)) {
+		ap->flags &=3D ~KPROBE_FLAG_DISABLED;
+		if (!kprobes_all_disarmed) {
+			/* Arm the breakpoint again. */
+			ret =3D arm_kprobe(ap);
+	...
+}
 
-The call chain is:
+Because reuse_unused_kprobe(ap) unconditionally clears KPROBE_FLAG_DISABLED
+on ap and calls __arm_kprobe(ap) when op is on a cooling_list, it bypasses
+the !kprobe_disabled(p) check in register_aggr_kprobe(). This arms a
+breakpoint in kernel text (and later jump-optimizes ap in
+optprobe_finalize_generation()) even though all child probes on ap->list
+are disabled.
 
-  percpu_counter_init_many()
-    __percpu_counter_init_many()
-      debug_percpu_counter_activate()
-        debug_object_init()
-          __debug_object_init(..., onstack =3D 0)
-            lookup_object_or_alloc()
-              debug_object_is_on_stack()
+Furthermore, if the disabled child probe p is later unregistered without
+ever being enabled, __unregister_kprobe_top() calls __disable_kprobe(p),
+which sees kprobe_disabled(p) and returns early without setting
+KPROBE_FLAG_DISABLED on ap or disarming it:
 
-Because debug_object_init() is called with onstack =3D 0 while pc and tmp_pc
-reside on the kthread stack, debug_object_is_on_stack() will warn that a
-non-onstack object is on the stack.
+kernel/kprobes.c:__disable_kprobe() {
+	...
+	if (kprobe_disabled(p))
+		return orig_p;
+	...
+}
+
+Then in __unregister_kprobe_top(), kprobe_disarmed(ap) is false because
+KPROBE_FLAG_DISABLED is not set on ap:
+
+kernel/kprobes.c:__unregister_kprobe_top() {
+	...
+	if (ap =3D=3D p ||
+		(list_is_singular(&ap->list) && kprobe_disarmed(ap))) {
+		/*
+		 * !disarmed could be happen if the probe is under delayed
+		 * unoptimizing.
+		 */
+		hlist_del_rcu(&ap->hlist);
+		return 0;
+	}
+	...
+}
+
+Does this leave the aggregator struct optimized_kprobe permanently hashed
+and leaked in kprobe_table with an empty ap->list and an active breakpoint
+or jump instruction patched into kernel text?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102190708.1287=
-100-1-mathieu.desnoyers@efficios.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-kprobes-op=
+tprobe-state-v1-0-6aaac612abe6@columbia.edu?part=3D3
