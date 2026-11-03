@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.234
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.240
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793674656;
-	b=vXIp/zPCoJMZXJXSQAE/6oX3LusMtOD69ULm0iyA4AqrwizIsbetCT4oLwrtsh/1lpPb
-	 Kz99XUjDht5desW34pRggBWcMb4wwWDI1l+6VvtrqRJobIXN20EDnAqHxwHckyJE4UDfH
-	 MmWeL3TAF15EjXv/g29fpl8VFy+8SvABHCOokQ1hImGPudJAHQ8TtWxQkUbVCIpg301+L
-	 oH0C8n04GX+C9voyC10bEtTyzIaVEAYffG09eiUdirydnoqurARIP1I+qM3/mbwegRXux
-	 a+1yTy63thFT6Wldu3I8g4RdlppJBAgmjP3c3IcAAC4MhEV/En+KPLGFABAF11jJP2Q==
+	t=1793674671;
+	b=Hm07x2dvtxl4gjLg37jlaLD7+aKsuZaq2O0U1s8LAY5IyDhkGMStGREIgOo7svpnioH0
+	 aTAu4JSrWyk1rnrM5Zsihf9AO1KE9i32Yhl+D9/YaVS9bH5wbU7XiwA10BLsAHOsFidMJ
+	 9ZZlWTUEf56VKw+bL5gwicvQqohMWo60LYRgVbFuVZwCw96QGH62iWiE88i5mthOpM6/2
+	 ckuHXScFlulFftyyFncdBR7w4EioRFP0w/ONFaQ/eCIFTPIY4sLSbw4Hl1MBw07SCIe87
+	 qgdvMO/2d0cof87Vy+nFmCU09qjgBNfiWTxm8aFAABevufPsrzdG3hOJb73eESPGSqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793674656;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793674671;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=3PU94Mtq5y2jfrWNzTTXz2hKQJlADRro9ghWjEf4hyI=;
-	b=ZK7aVKSVe6HVBfRoBYRGP5RDnL3f8IzqUtQIhX8qhuiZkQvyMp02b4tqIOsbiqamMyXs
-	 rmGedF+jLUYOfRp5LuoaiIsynkynT4bffOOHyQJr2BvvN+2g4WHDODeuYzD2CihLUfH1u
-	 9YaT1WTdxdbtB4Du4e6MpaNfPiq0yX2PrBLIOvlpQdLHUEIGdSm7VuuZLrMCveJ2twcNn
-	 bDMrNH7Pdt4j1ajqpQIgqeFv4hJo08TSgIo/fwaafWYs4tx96HI5w9r3H6B/4WxsNq2Kn
-	 CZVN+UULEEfOk2QGz+EBqWAtyavi5P+oSLHZ6e0AngsVV3sw9VCmKke7SxTB1f7+I4Q==
+	bh=2CYw4TJon3a1gyE3IXvNjkyv8y6xkEjfo7VNXh+JX/8=;
+	b=fkbpPxsr6pdVvM6LYmqt+Xj6QzB4+VaTKJ55fF4vn19ZLfptDwVz3trNdZXy8C2mdzzK
+	 kTk9Qw9ignTF4zZ3WYbDKmC9XeP5y6KuvCsHFAR8l9XdMfs3LMIKtG92EAD51vSnJgbTI
+	 FnJOKbbpKEm1jDKNDpOGVrr/089UEbHMPWd6bZUrt4wbZz+LpDmX7E81CWscZcolqcUjj
+	 syv43aiVtQHQzg2V9Ij935rtYKsMzPrwL4blYZU62veP8y7S1wfauO9PcE3x4Alm2TO52
+	 Xx53ULVJ7uGQ7Gu2oa1w4cO6WHQruBdP5LvuzamP+EaSq+2doXX/3q6CUPnsONfwsDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sh3Z7f4Y;
-	arc=none smtp.remote-ip=95.215.58.234
-Received: from mta1.migadu.com (out-234.mta1.migadu.com [95.215.58.234])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=qRmZKOvx;
+	arc=none smtp.remote-ip=95.215.58.240
+Received: from mta1.migadu.com (out-240.mta1.migadu.com [95.215.58.240])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA440606A327
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 02:57:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA440606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8B9606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 02:57:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DF8B9606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=sh3Z7f4Y
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=qRmZKOvx
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Q+dvcKKj0mIW3aumvJN6ron6Z+0VLRCZBIIddebUpDE=;
+DKIM-Signature: a=rsa-sha256; bh=JI4Fvh2wr8Cnl+a4gBEMEis0OoLVQQsg/DZU5Vjf0/o=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793674653; v=1; x=1794279453;
- b=sh3Z7f4Ytk1TiTaWSJa5Hn5qre75h8aoP0cRSiJlcO8JeMILXfaGO45Clj5NIG36xZxczU2r
- cZmo9IfhksyML7ue9CdFgkxl076XN+riveJcTzK6k2EuJFVlSjR1FhGYywuDDs7dz3FvS6JzwK3
- TUBWCHIMBj4TpSkdl/KBYj94=
+ t=1793674668; v=1; x=1794279468;
+ b=qRmZKOvxAZzm29pWdZ4p+FiOcdAlOd31TkwZ1mYWu/Aio0acThHVchO6FD9KWaFd/nRjO78T
+ e5LBfuH+TgccdMlIR8DpejX0pY34wf/rrevm06HpYXTCB0J5wGvvHe4/wTPC9n+m7nXwVgfTJYX
+ 53zm5OnXyfcKKE7BNqjbDBS4=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 9d15e9a4ed6a39cb;
-	Tue, 03 Nov 2026 02:57:32 +0000
-X-Mizu-Trace-ID: 9d15e9a4ed6a39cb
+Received: by smtp.migadu.com with ESMTPS id 066f37554edb6d0d;
+	Tue, 03 Nov 2026 02:57:46 +0000
+X-Mizu-Trace-ID: 066f37554edb6d0d
 X-Migadu-Flow: FLOW_OUT
 From: Ridong Chen <ridong.chen@linux.dev>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -75,9 +75,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_)),
 	Ridong Chen <ridong.chen@linux.dev>,
 	Ridong Chen <chenridong@xiaomi.com>
-Subject: [PATCH v6 5/7] mm/mglru: add tracepoint for scan_folios()
-Date: Tue,  3 Nov 2026 10:56:08 +0800
-Message-Id: <20261103025610.3738894-6-ridong.chen@linux.dev>
+Subject: [PATCH v6 6/7] mm/mglru: add lruvec_gen_size() helper
+Date: Tue,  3 Nov 2026 10:56:09 +0800
+Message-Id: <20261103025610.3738894-7-ridong.chen@linux.dev>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261103025610.3738894-1-ridong.chen@linux.dev>
 References: <20261103025610.3738894-1-ridong.chen@linux.dev>
@@ -94,128 +94,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Ridong Chen <chenridong@xiaomi.com>
 
-MGLRU's scan_folios() emits the classic-LRU tracepoint
-trace_mm_vmscan_lru_isolate(), which predates MGLRU. It reports the
-scan/isolate counts and the LRU type, but carries no generation or
-memcg context, so a trace of an MGLRU run cannot tell which memcg a
-given scan belongs to, nor how far reclaim has progressed through the
-generations.
+The number of pages of a given type in a generation is computed by
+summing lrugen->nr_pages[gen][type][] over all zones and clamping each
+per-zone counter to >= 0, since the counters are updated locklessly and
+can transiently go negative. This loop is open-coded in
+lruvec_evictable_size() and in the debugfs lru_gen output.
 
-Add mm_mglru_scan_folios next to it, reporting the same counters plus
-nr_sorted (folios moved to a younger generation by sort_folio()) and
-the context the classic tracepoint lacks: the node id and memcg id of
-the lruvec, and the max_seq, tier and min_seq of the type being
-scanned.
+Add lruvec_gen_size() to compute it from a seq, and convert both users.
+Put it in mm/vmscan.h so that the vmscan tracepoints, which include that
+header, can use it as well.
+An upcoming tracepoint and the MGLRU swappiness rework will also use it.
 
-Now that struct scan_control is visible to the trace header, pass sc,
-lruvec, type and tier straight in and derive everything else in
-TP_fast_assign(), so nothing is computed at the call site when the
-event is disabled. The int fields are grouped at the end of the entry
-to avoid padding on 64-bit.
+No functional change.
 
-scan_folios() is the MGLRU-specific layer where folios are actually
-scanned, so it has no classic-LRU counterpart. The existing tracepoint
-is left unchanged.
-
-Tested-by: Barry Song <baohua@kernel.org>
-Reviewed-by: Barry Song <baohua@kernel.org>
-Reviewed-by: Baoquan He <baoquan.he@linux.dev>
+Suggested-by: Barry Song <baohua@kernel.org>
 Signed-off-by: Ridong Chen <chenridong@xiaomi.com>
 ---
- mm/trace_vmscan.h | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/vmscan.c       |  2 ++
- 2 files changed, 68 insertions(+)
+ mm/vmscan.c | 18 ++++++------------
+ mm/vmscan.h | 16 ++++++++++++++++
+ 2 files changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/mm/trace_vmscan.h b/mm/trace_vmscan.h
-index b2ad83e5f25e..8148b8224422 100644
---- a/mm/trace_vmscan.h
-+++ b/mm/trace_vmscan.h
-@@ -392,6 +392,72 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
- 		__print_symbolic(__entry->lru, LRU_NAMES))
- );
- 
-+#ifdef CONFIG_LRU_GEN
-+TRACE_EVENT(mm_mglru_scan_folios,
-+
-+	TP_PROTO(struct lruvec *lruvec,
-+		 struct scan_control *sc,
-+		 unsigned long nr_requested,
-+		 unsigned long nr_scanned,
-+		 unsigned long nr_sorted,
-+		 unsigned long nr_skipped,
-+		 unsigned long nr_taken,
-+		 int type,
-+		 int tier),
-+
-+	TP_ARGS(lruvec, sc, nr_requested, nr_scanned, nr_sorted, nr_skipped,
-+		nr_taken, type, tier),
-+
-+	TP_STRUCT__entry(
-+		__field(u64, memcg_id)
-+		__field(unsigned long, nr_requested)
-+		__field(unsigned long, nr_scanned)
-+		__field(unsigned long, nr_sorted)
-+		__field(unsigned long, nr_skipped)
-+		__field(unsigned long, nr_taken)
-+		__field(unsigned long, max_seq)
-+		__field(unsigned long, min_seq)
-+		__field(int, nid)
-+		__field(int, highest_zoneidx)
-+		__field(int, order)
-+		__field(int, lru)
-+		__field(int, tier)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->memcg_id = mem_cgroup_id(lruvec_memcg(lruvec));
-+		__entry->nr_requested = nr_requested;
-+		__entry->nr_scanned = nr_scanned;
-+		__entry->nr_sorted = nr_sorted;
-+		__entry->nr_skipped = nr_skipped;
-+		__entry->nr_taken = nr_taken;
-+		__entry->max_seq = lruvec->lrugen.max_seq;
-+		__entry->min_seq = lruvec->lrugen.min_seq[type];
-+		__entry->nid = lruvec_pgdat(lruvec)->node_id;
-+		__entry->highest_zoneidx = sc->reclaim_idx;
-+		__entry->order = sc->order;
-+		__entry->lru = type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON;
-+		__entry->tier = tier;
-+	),
-+
-+	TP_printk("nid=%d memcg_id=%llu classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_sorted=%lu nr_skipped=%lu nr_taken=%lu lru=%s max_seq=%lu tier=%d min_seq=%lu",
-+		__entry->nid,
-+		__entry->memcg_id,
-+		__entry->highest_zoneidx,
-+		__entry->order,
-+		__entry->nr_requested,
-+		__entry->nr_scanned,
-+		__entry->nr_sorted,
-+		__entry->nr_skipped,
-+		__entry->nr_taken,
-+		__print_symbolic(__entry->lru, LRU_NAMES),
-+		__entry->max_seq,
-+		__entry->tier,
-+		__entry->min_seq)
-+);
-+
-+#endif /* CONFIG_LRU_GEN */
-+
- TRACE_EVENT(mm_vmscan_write_folio,
- 
- 	TP_PROTO(struct folio *folio),
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f3ec19352e6d..3054175717ab 100644
+index 3054175717ab..1581b73aec56 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -4833,6 +4833,8 @@ static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	trace_mm_vmscan_lru_isolate(sc, nr_to_scan,
- 				    scanned, skipped, isolated,
- 				    type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
-+	trace_mm_mglru_scan_folios(lruvec, sc, nr_to_scan, scanned, sorted,
-+				   skipped, isolated, type, tier);
+@@ -4207,18 +4207,15 @@ static void set_initial_priority(struct pglist_data *pgdat, struct scan_control
  
- 	*isolatedp = isolated;
- 	return scanned;
+ static unsigned long lruvec_evictable_size(struct lruvec *lruvec, int swappiness)
+ {
+-	int gen, type, zone;
++	int type;
+ 	unsigned long seq, total = 0;
+ 	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+ 	DEFINE_MAX_SEQ(lruvec);
+ 	DEFINE_MIN_SEQ(lruvec);
+ 
+ 	for_each_evictable_type(type, swappiness) {
+-		for (seq = min_seq[type]; seq <= max_seq; seq++) {
+-			gen = lru_gen_from_seq(seq);
+-			for (zone = 0; zone < MAX_NR_ZONES; zone++)
+-				total += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
+-		}
++		for (seq = min_seq[type]; seq <= max_seq; seq++)
++			total += lruvec_gen_size(lrugen, type, seq);
+ 	}
+ 
+ 	return total;
+@@ -5723,20 +5720,17 @@ static int lru_gen_seq_show(struct seq_file *m, void *v)
+ 		seq = 0;
+ 
+ 	for (; seq <= max_seq; seq++) {
+-		int type, zone;
++		int type;
+ 		int gen = lru_gen_from_seq(seq);
+ 		unsigned long birth = READ_ONCE(lruvec->lrugen.timestamps[gen]);
+ 
+ 		seq_printf(m, " %10lu %10u", seq, jiffies_to_msecs(jiffies - birth));
+ 
+ 		for (type = 0; type < ANON_AND_FILE; type++) {
+-			unsigned long size = 0;
+ 			char mark = full && seq < min_seq[type] ? 'x' : ' ';
+ 
+-			for (zone = 0; zone < MAX_NR_ZONES; zone++)
+-				size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
+-
+-			seq_printf(m, " %10lu%c", size, mark);
++			seq_printf(m, " %10lu%c",
++				   lruvec_gen_size(lrugen, type, seq), mark);
+ 		}
+ 
+ 		seq_putc(m, '\n');
+diff --git a/mm/vmscan.h b/mm/vmscan.h
+index adb22e80d760..c6b583fc7493 100644
+--- a/mm/vmscan.h
++++ b/mm/vmscan.h
+@@ -3,6 +3,7 @@
+ #define _MM_VMSCAN_H
+ 
+ #include <linux/gfp_types.h>
++#include <linux/mm_inline.h>
+ #include <linux/nodemask.h>
+ #include <linux/swap.h>
+ #include <linux/types.h>
+@@ -115,4 +116,19 @@ struct scan_control {
+ 	struct reclaim_state reclaim_state;
+ };
+ 
++#ifdef CONFIG_LRU_GEN
++/* The number of pages of @type in the generation @seq, summed over all zones */
++static inline unsigned long lruvec_gen_size(struct lru_gen_folio *lrugen,
++					    int type, unsigned long seq)
++{
++	int gen = lru_gen_from_seq(seq);
++	unsigned long size = 0;
++
++	for (int zone = 0; zone < MAX_NR_ZONES; zone++)
++		size += max(READ_ONCE(lrugen->nr_pages[gen][type][zone]), 0L);
++
++	return size;
++}
++#endif /* CONFIG_LRU_GEN */
++
+ #endif /* _MM_VMSCAN_H */
 -- 
 2.34.1
 
