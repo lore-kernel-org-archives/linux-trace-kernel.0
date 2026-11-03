@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793719108;
-	b=OUxME//rG7d2X+kdEwnpmyAOAoejV1NtvAc1NKK/DfSCgnUIyWnjkB0OgAL6FOdlLW17
-	 1KI8ltkyAlt+BkFBInVKQEYNLqqfNzjlqoQg8TTDnLVRNm/RREdRmth7yUgASqTy6JEpl
-	 fvZWLykKoLe/RnX87Rdun16mDlFtXnRjzM7+Mn03CVivD0Ebo3s9MEHDlzjDsgcr/iuAm
-	 H+/DQbDbFjHpSuxJgSSi06AMn0NSqK1ou0Y+JY6SoDKD4+NdHL7TZ8PlskzrX9n5bNLPf
-	 E94qfBWorlZ2vtFPVNrL5DtTlefxwo3S9iLpblYyHonKdbFRHGws0/v8Z+jSSKtH5ew==
+	t=1793719119;
+	b=hQnLWMrzPQH6dJxub/PbjFpfTRMt0OAI/ICkY+UWvJNFYZznFQImJBk19hEO/0XxIn4o
+	 pqh+/E3sFgbHLHY0QrV+1Bsosubhb1Qg6TCtIE/OO01zh4HgUEyMnkioqdupWOsmEhNEa
+	 M8bxwEDCC/LdgKrdj0V5oxz842QdemIg1mwABAQcS7kf3As6kT1WnPRveItBbOZczeTrj
+	 pCz5JOhsYO2A1HM2aOZkIMY58pDqhel6th0Xpto0UEGMX7Ip/WpBsdSNg7flKymT4Klei
+	 aoHeS/+hLtNuEUm8YK8KEj8lC0nyoZ7/L4Nk7ZdEMMkSWwBeOvYsu3jr5xy2co16iJw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793719108;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793719119;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=DEpA7EB35ETX+QEM+S0rPeRue+CXb/aqgZ9fcs/1WrA=;
-	b=EUPlD02QwR0VX/R2jsS7S2tETLZMOhBELnaAD5fJJ9UhmrQ6UqNcoNG3/z0I5NXFIF33
-	 ip1EDLQCXsnIEQJIf4ol1Lo0+JmH52Kfi7bTDXcNwiC1DmJYIbi+Krrj0lVwTf9fGpM8f
-	 0EWFKxVBaSwwci/5bX163ccHX23b96HH1dLHhLib9SHTAOxduCwDEhV3mTBxrACPyU7mm
-	 kpnm3xwjk32FdCJnRJkqK81et5vZSeCShJVgJegPYCy5pOvLE5R4UBw1HaR9kyle33eNs
-	 UCoZNha4CTD2fbk9Ni3uIf2t+N0gGt9vLZS6Bhs4poNkQQfCh8yos6+QxOdhOzhoriA==
+	bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
+	b=nymvb07QnH85EH8q5eqvqjP9OCxMdpPbW+od5HYNcJlcbwAiYWDCgQ/2vhAmi1p+rzRH
+	 o2k3xKEZuIuL7oq3DLSNo7+2qaS7LmqsBDg0IeQd9Ez4Ets+B1DKZH+d0CIeg5GhnUmuq
+	 3rRK3RSRmahUfT8UaQVycoluw44wh4XW3nDYu8+scAgE96lZ83I91DbxgrX/J1xMRLwTV
+	 f8UxvcIzScMqR/Lw/5+A9onUHTm5wuWtWCENa2w9lW7vM2jz3ym9xvBI+/fiZgo38Yt4a
+	 da7RUyN6WWDZVn2VKOwerMkFodawSCo9O872G3iDVxQCAFFO4dDUZ9y/oiBs74lF02g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=chrisdown.name;
 	spf=pass smtp.mailfrom=chrisdown.name;
-	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=iJQAdWul;
-	arc=none smtp.remote-ip=209.85.214.176
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=NzH9v5uE;
+	arc=none smtp.remote-ip=209.85.210.172
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44CD606A7AD
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 15:18:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B44CD606A7AD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CBF606FCE5
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Nov 2026 15:18:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33CBF606FCE5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=iJQAdWul
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ea94541adbso18876015ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Nov 2026 07:18:27 -0800 (PST)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=NzH9v5uE
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-8a064dcfcfdso1544411b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Nov 2026 07:18:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google; t=1793719107; x=1794323907; darn=vger.kernel.org;
+        d=chrisdown.name; s=google; t=1793719118; x=1794323918; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=DEpA7EB35ETX+QEM+S0rPeRue+CXb/aqgZ9fcs/1WrA=;
-        b=iJQAdWul3W/CUJhIrS5dvX0eM6WuXTz1S48rZb7FrM5HAGY2k2eULG3UN7fMf2HesU
-         BgcewLwYarj5CoCIUK0cf985AauuA6PTll3ljWMb/GhZikHr2S8DKVa6H7UHtVmQA1VC
-         Y1mKhneDjNU802KN7Ay4+ex61G7mP1iOn6T9o=
+        bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
+        b=NzH9v5uEH+MPtdumNErHcLU8TI7esovID+0FCTg4cq4Ny7OB6Jbv2iuLnSDCRB39Vh
+         z1jm9WbnlKgC0FM/ImPLdCDbfHy1wPtGKCnh7nLr66I2ZWRMh6r61Gw1Myi8kqqxygS/
+         MP+GB+led6l0lrR+WCQZnEEeUcd7JizQOJMcs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793719107; x=1794323907;
+        d=1e100.net; s=20260707; t=1793719118; x=1794323918;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DEpA7EB35ETX+QEM+S0rPeRue+CXb/aqgZ9fcs/1WrA=;
-        b=mViN1Az0xj+NzSrwkndTrH3sC6QUN9tG94CT73yD9DtkOtj0nmDykG7WJmiEZdGBu9
-         NvDOjYbhaCuqj+fydUlDL1s0M/jYptUtkTPsyDTUaiOXM9W2Qg7SiZFLxaNCw3f5Pwai
-         DwFFsk00GFXdfy5Z6noVeLkVtaN5uN/C/8VQ1b6P1u5s6xxB6M1qbEUIdUnMf5vRUd3d
-         q3QOk+PT163avKTHyuGk2cwiDTQEsL7SuhY0C2hD+O/f94OT21LOAY2C/tUQjEpLV94F
-         jwgMKxPxBGZCJlwcJrY0sn3/VCyCgfwwDBBlr7eEvUrd6N613/3CCtWQfiNbRhnJDJh1
-         Cgsg==
-X-Forwarded-Encrypted: i=1; AKwUvByPZ723xBtO0wmNRXqOBVw2DkubPD5MydQ56cqyz78KDpzgUOIlGeWdmdLMs96NljxUXRUarV4ObjgMJf/DVdxacQo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/oxuxbwpSDcERHgHsJg4sSJ29neO7cGq4EOE5reoot9z8jsVeQ
-	Ngvw185BDYwZT8PQlTS1zZVjFDgV3zaJLNWjw+QBdP22K5JTttQiLeQX31/S3SwNK80=
-X-Gm-Gg: AYBFou3nhf2YR94bICTM21pXV9h4AOnQv7LlFbL3AhAfXGpOFl/nN+UB/8WVwUQTk/w
-	WX79QV0hu+oiRkz4ByU8Q/9uCSbk1Z/UHBFlYPNTs1oX7u/bwjUdfq/Suxm40s6gcD4oH7cBEEm
-	0qLqFUOj2DBqehXeKJXmeyPVxlCKyz8t5u0SOJCjGFnMDxjze79T93kkVcTFZRt3SbxBaH8uLpw
-	YM4FzcYyKSqNmI3wVAeIwmC3/kSHmZ5qOn8bKwaUWtpvdGSmXUzg0snhWd4tPD3s7M8ADtcW6vD
-	EmkGX/+Q8nkP3Gi1qiTfeRm7ttvQK6sBmQGn48Ln5C/umBmxf/0uJKj3QMTBN2y/rpMxUPSfv1f
-	GgTboi9BkW0VAe27jyNXTOMhQjoccu2sWOTflv6ZgWQ0yL5eqqCXHd7RpAvaOdPbdRCVilnQvl1
-	SPYx/Mq9YgXkN/d41WLHVP4MAskAnk289VASOvy8CXPBeTtwC+bZh0shMI7SQgBYZG8qzPaY1Cm
-	ShaI3YPxeyWj80MHpg5BihWAFQcQbtWmc4sB6pEyrdDI2YKfnl1nvi2oewnL6jAxgXNjNDf5Qd1
-	8/OH2vn4WDyRhybI3WildeP7nra/Kw35dO2aAs+79I2Ah7biX4vMlu7JT562R7hHu/s9NZ6oaCU
-	48J/TrU6p4k8TeHIZzH+LAOuX25GAQy/86Ninu3maZakYn/DT6Btrb4XBiEB8+TIBeHZmo6Fw03
-	mS9Qmhtawljdt2Q33MEbQ=
-X-Received: by 2002:a17:903:1aef:b0:2e2:f2f9:b1ef with SMTP id d9443c01a7336-2eb364bc076mr131151785ad.39.1793719107092;
-        Tue, 03 Nov 2026 07:18:27 -0800 (PST)
+        bh=wslCY1XSUoR3v4P9N4tk1erDlQSR29c2WrcvV4W33z8=;
+        b=qs+iSuORpdn/fkH5XL7E/4QbEwed0TCnquAtY8w0BBi/exou5PLVVcuqOjA5V1mtyA
+         aob1dDv/ycg9veMkv8D2vFdvO9Bs8g9KV85GlP2LviRhMNQNkPPcRt701ScdHeGwhiHk
+         ZKuJJtQGrWcWMdF6sp4GhHQ1swDgeW+O2Q3nZ+2EID3bdEDbJE5zd5ja7x9+xXgw3rBr
+         GWPt0haASj1eBhfY5O7CMZ0fnp0W8M3yAU5bT1X4gHwQGj6ql8U2Z+1RmukARFqfPwsa
+         3BI19oKKHMtRdqMP8eP8dT7MKVsVG4RJBEoN3hS28+E9ydezW76IpO6Q5mDF7ZwgNBu+
+         yDWg==
+X-Forwarded-Encrypted: i=1; AKwUvBxGvXmBdd1M71HsKOSzA8y2I54kPfgYVZxRC+fu12zCGSLLPEYmL2s4+3852MpGQZjM0Lrb6tv5MGAvsYkPYq5sZ9k=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9SR26buh69YAjowctTXiQ7SIsWGW+C53OS3uba4zZ2yoWS7/a+
+	wTrcCyYxq2xo6iLWXtEs1jmBNJSZaI0HoseVpQUjJEltQiyotavVi2iT0HAVqiiHqPk=
+X-Gm-Gg: AYBFou1VsdMiBsnNzMaltWrEHNGbiz0m7ZPBERrF10HhOUcKzK9H6NuHvAJYNs1gwzU
+	xDHsGIR+oGn2ZLywrIKyK1V/wInHHVH8zQ1pK7IJcT25dWl3FMI+jYgYIQnk11UXWL9RvxbHHA/
+	IRtAIF8f3HC6XAmfGgffhl1H1xYnB8hJqjhKlaNxYDiashNhmNVFVHit7iB3onwHtMZvcMlPas+
+	Co/4mU5uXfZn6F0JOY6c3aR1scbn/jaxNz0b4vOcG6NQva2qXk7lgo4i5cGxKw0eH3t3Rt6H5PU
+	bfDo+g6fJWNy3sfJAw7rijnueocAkAUvVznyqxP3o+d4gRjbq/X4CiK6XWA2ryfuQgj8DNTfAJW
+	l1nOZBWuhdAwSH3BY6jKFJm72ckkTznnHvp80y6NDAgWJIdA/d77wZvbsxplFiVxJ2rG2lv5VQH
+	RdcFowanvp0LanrFJ6KQP3cq8J0KESenkVDfoNOxFbDfPnVkziRY1SSUZpeighd/7UTC4u6JTYq
+	eR4pOCCvjRKnHb/6K4LWCIt//aFh0NeWnmGJvdcMdjV7uo/FBfU4zkhq/mwHTFCxXvxOKPJXIpy
+	NE+jqPdiaSBLOQVxLOCVlXdus1GV6F1kuqH9U4usO77KQRUy3IqQrZoX/B+uCxeR6xuZcxP6vB+
+	qJsu6Z/anA7fK/k/8ZpcoJEOXZuvgIP1beHz20zjPNnMvkSKtWi1aUoPpc5AmkRM2+7vhSVx0Ax
+	C3wyQpleyQVvZZ4BGCTg==
+X-Received: by 2002:a05:6a20:914a:b0:3dd:a009:3182 with SMTP id adf61e73a8af0-3e928e2909amr12529216637.42.1793719118513;
+        Tue, 03 Nov 2026 07:18:38 -0800 (PST)
 Received: from localhost ([116.86.153.182])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eb392613bbsm43426035ad.37.2026.11.03.07.18.25
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdb362ab313sm1592131a12.0.2026.11.03.07.18.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 07:18:25 -0800 (PST)
-Date: Tue, 3 Nov 2026 23:18:23 +0800
+        Tue, 03 Nov 2026 07:18:35 -0800 (PST)
+Date: Tue, 3 Nov 2026 23:18:33 +0800
 From: Chris Down <chris@chrisdown.name>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Liam R. Howlett" <liam@infradead.org>,
@@ -119,8 +119,9 @@ Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
 	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: [PATCH v2 4/8] mm/mseal: Move MSEAL_SYSTEM_MAPPINGS to mm/Kconfig
-Message-ID: <6d72b96fdd36c8870393d8d6e67a811a9bce9e4f.1793718940.git.chris@chrisdown.name>
+Subject: [PATCH v2 5/8] uprobes/x86: Leave sealed trampolines in place on
+ optimisation failure
+Message-ID: <eafd3da2cd2c3e2c4d137a46f50351dc6290c5ea.1793718940.git.chris@chrisdown.name>
 References: <cover.1793718940.git.chris@chrisdown.name>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -136,83 +137,35 @@ Content-Disposition: inline
 In-Reply-To: <cover.1793718940.git.chris@chrisdown.name>
 User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-MSEAL_SYSTEM_MAPPINGS is in security/Kconfig, but it's an mm feature,
-it's implemented in mm, and changes to it need to go past mm.
+If swbp_optimize() fails, __arch_uprobe_optimize() unmaps the
+trampoline it has just created. The next patch seals all special
+mappings when CONFIG_MSEAL_SYSTEM_MAPPINGS is enabled, which includes
+uprobe trampolines, and then this do_munmap() would fail with -EPERM
+and warn a second time.
 
-Let's move it to mm/Kconfig, next to the other VMA features. No
-functional change.
+Nothing is really leaked if we leave the trampoline mapped in that
+case, since get_uprobe_trampoline() reuses any existing trampoline
+which is in reach of the probe. So let's just leave it in place when
+it's sealed.
 
-Suggested-by: Lorenzo Stoakes <ljs@kernel.org>
 Signed-off-by: Chris Down <chris@chrisdown.name>
 ---
- mm/Kconfig       | 21 +++++++++++++++++++++
- security/Kconfig | 21 ---------------------
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ arch/x86/kernel/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index afff1b25b543..40172787dfa7 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1355,6 +1355,27 @@ config ANON_VMA_NAME
- 	  area from being merged with adjacent virtual memory areas due to the
- 	  difference in their name.
- 
-+config MSEAL_SYSTEM_MAPPINGS
-+	bool "mseal system mappings"
-+	depends on 64BIT
-+	depends on ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-+	depends on !CHECKPOINT_RESTORE
-+	help
-+	  Apply mseal on system mappings.
-+	  The system mappings includes vdso, vvar, vvar_vclock,
-+	  vectors (arm compat-mode), sigpage (arm compat-mode), uprobes.
-+
-+	  A 64-bit kernel is required for the memory sealing feature.
-+	  No specific hardware features from the CPU are needed.
-+
-+	  WARNING: This feature breaks programs which rely on relocating
-+	  or unmapping system mappings. Known broken software at the time
-+	  of writing includes CHECKPOINT_RESTORE, UML, gVisor, rr. Therefore
-+	  this config can't be enabled universally.
-+
-+	  For complete descriptions of memory sealing, please see
-+	  Documentation/userspace-api/mseal.rst
-+
- config HAVE_ARCH_USERFAULTFD_WP
- 	bool
- 	help
-diff --git a/security/Kconfig b/security/Kconfig
-index f7bf6cdc6229..1679e8d009c3 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -49,27 +49,6 @@ config PROC_MEM_NO_FORCE
- 
- endchoice
- 
--config MSEAL_SYSTEM_MAPPINGS
--	bool "mseal system mappings"
--	depends on 64BIT
--	depends on ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
--	depends on !CHECKPOINT_RESTORE
--	help
--	  Apply mseal on system mappings.
--	  The system mappings includes vdso, vvar, vvar_vclock,
--	  vectors (arm compat-mode), sigpage (arm compat-mode), uprobes.
--
--	  A 64-bit kernel is required for the memory sealing feature.
--	  No specific hardware features from the CPU are needed.
--
--	  WARNING: This feature breaks programs which rely on relocating
--	  or unmapping system mappings. Known broken software at the time
--	  of writing includes CHECKPOINT_RESTORE, UML, gVisor, rr. Therefore
--	  this config can't be enabled universally.
--
--	  For complete descriptions of memory sealing, please see
--	  Documentation/userspace-api/mseal.rst
--
- config SECURITY
- 	bool "Enable different security models"
- 	depends on SYSFS
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 0f60c0d076b6..fb895bfc09e0 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1183,7 +1183,7 @@ static int __arch_uprobe_optimize(struct arch_uprobe *auprobe, struct mm_struct
+ 	if (IS_ERR(tramp))
+ 		return PTR_ERR(tramp);
+ 	ret = swbp_optimize(auprobe, vma, vaddr, tramp->vm_start);
+-	if (WARN_ON_ONCE(ret) && new_mapping)
++	if (WARN_ON_ONCE(ret) && new_mapping && !vma_test(tramp, VMA_SEALED_BIT))
+ 		WARN_ON_ONCE(do_munmap(mm, tramp->vm_start, PAGE_SIZE, NULL));
+ 	return ret;
+ }
 -- 
 2.54.0
 
