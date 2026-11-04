@@ -1,96 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.101.122
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793827469;
-	b=J6jHscoQruauaxYmKsVqcvwPbCUCjYEH7EP2JiPs+6OH/Q+yH+MRCFHbndv4P19TfMTX
-	 ogN28jgvw4qybVEcRpXq+TEXefNGt3Act0iFb/P0QhPEV2bOFc7EpxOiRkc7lrqsMHgSE
-	 75HMj3zc5dCDbtYrfGIv4iq4dGcuZKWT7m5T1g0B7rB33dlJf0Z/YYJXn5A1QrU2UxTqc
-	 lEc2ni8DyXjuiUZHyr8ec+D91m/rjlqF7u0gD7BMMgDveba7+c3xCyD0yXO+kNEc5Ey62
-	 CNTKeWRaAolaLnKLqAF4AsJ2blxzuAZ5u0UKjZC4iLDiTyEU6pieHvz6b3Kzru6mKHQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793827469;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:Content-Transfer-Encoding:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=;
-	b=qUXSTYarQAQkULLN1M7hacyEskGdxY4pryTORW+rwyWYW7pz19u/nv2CSkA7F4fKT6zR
-	 aQysjQb5VO3cnvGHMPdNAjp8szZtmz3gvRcUGZneDwFPtFMXdJoiB97Dy1PNzup6+kQkX
-	 d3p3Devd9tFLxgdEL4G9NkXhQL2rmxKWxtWUYh1m9BtE6CpH5KoLUmu/f/pgn1cBpP53y
-	 V/UzdPuXAgwWddroXpmZI8TN7ZADoO9/hE/4Z75Ed/YW/RqL5smZSRe4KdtXAwllgEyLF
-	 91kDRO9vlvgTKhz6pwes5MCtXIeMOsmdlaBAsL216Jvru0j/zA8ItX6QjZIUAGKIhdg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=atomlin.com;
-	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.101.122
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022122.outbound.protection.outlook.com [52.101.101.122])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D27606BA30;
-	Wed,  4 Nov 2026 21:24:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49D27606BA30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G6NsO0r4xCNeZX6jUviRajHvXxBhECwlo8UdIoRtyVsYaAW3/6ZTU1ytjUUjl8dtU+hRZ5ZH1GgriFwwWxAwV41mdc7rh8408segnS4icCc49CVK3q1c8RlaPdIcca8skG7kmauyrr1MbcSHSsblllJVIwhuwkQ1FqSwFLPT4Oq8IqZ54N+hp6lJ5klepcOYA0Mk4xyUqp664wmkqjwYShVd4Kc1dCaCezm4vBmdyL6Tb9EEcRPUR7qSWRG1Ni1nra7VgoO4PiYAUdhgSDOr8MVge3iCZstZ8v+jSeFGs0anZz+dLqk08VG7eOxsWGu2QrBFmLDty5hhFKGGfhfp6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=ZvbyKWbvjRXfdCahcmMw/zZ48pSDnL9iKfnxz5mk/hI=;
- b=Cg6tDfhFZO6GU53VHwZmE6miLHANG+kxVHAjMmq83V0anqcR//IFLdvnmrafibIvu9qdtVPNTXUuEM5K5VDYarc+3ywyHVIpSdRDBTASygm11Z3qy6Zw4CxnihdbFpKmTSGgsnrValB6HQvuYg1IzEoRfA1HCXNHputbIQ802SHVqe7XxolAbR5wF1oS2fzBV9wLyS51H4Z/dMnZeqtKtzUaLVUU8AzFT7wqZbcGHCHmvkX8DR5Jhk4aG+C0wwWneeLeK0rLuzhOMujM0TMW6aig6cbwMDoXqnjOgYn6QD7/shmXdPc0y+kYog7j0mWi8AfFpbFcV1hh/xSWg2oleQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LOYP123MB3006.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:f3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Wed, 4 Nov 2026
- 21:24:24 +0000
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0592.009; Wed, 4 Nov 2026
- 21:24:23 +0000
-Date: Wed, 4 Nov 2026 16:24:19 -0500
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: pmladek@suse.com, john.ogness@linutronix.de, rostedt@goodmis.org, 
-	senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, kprateek.nayak@amd.com, akpm@linux-foundation.org, 
-	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org, 
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, 
-	bigeasy@linutronix.de, clrkwllms@kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/5] mm/show_mem: Avoid blocking on zone->lock
- during Oops or panic
-Message-ID: <ygc3ylz5hxlkqt7n5xnl6klydhmjtflkctidr4qabf3p4dxxsq@64gqisbenf5k>
-References: <20261103024453.922373-1-atomlin@atomlin.com>
- <20261103024453.922373-3-atomlin@atomlin.com>
- <sashiko-outbox-196525@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-196525@kernel.org>
-X-ClientProxiedBy: BL1P223CA0018.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::23) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:163::8)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793828374;
+	b=bTDPlPNfDg4fHxeWuCnFOCf++asl4Ku6apMzBMxJvR3VMCSWPiUIxuPJwdJdaoHf0ojF
+	 ch6KtyrSboO4WT0pv+Luf7vHN4P1Mu7x5l3z+lz9jlWeJn/5wt5BN8g1r24nrKJ/XJxaK
+	 u0CE5hTAz5lJ8YHa8b3Ep+Np9W1i/xFNTFw37MKe/lo13juhbEUJx9QkDqn+ddMr2C7Ta
+	 A384nflZIHk4/TSWF6iy8x1/xIogm4UpBjNRvuvHJK2UBiR+tBpkw3wc15WJg2zI9leVW
+	 fDITPsnm3DNDp3qnEYf0ZT6p5SUcAAtGY7dXU945tNnWoQak1+2bXtn1WP5LixenwPA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793828374;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
+	bh=KL1hmlvWAkZ/YeoXB36i/Q1Q9UPf9z5TUNk0Z4f7ulk=;
+	b=SMEyS2gt6azS0Q3N0xGLO4TVyOrwGEc/20ANmxZXitkUCYu1NdrC+7rUMAGy/JiaNERB
+	 AzxxQEuVU5gQFUzZnaKuVNdGSMwc6+KKo50Ifl3lJEux4ubBQHMUwyk0x+02ToLchFxWV
+	 zCCTnkIabDMHvowRAN/3epjiVOGC/tMwkPPz+tfcQgC6zA88GEO2Bb0apx2WckTgoLwBW
+	 nPRYKuInD4IyXdfvEtDGEsGhjJ9cRLXdmmFN5hIZmKhZR/991QAwm8P+sQZ7evi1/17/T
+	 uPFMNGEzJJdq5KTrQS+mXUZoznObarA9zTuNSDr/kTfIRwPpZTh369UO9Sy92F6aiNw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=G2CDuH+B;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 861C6606D4F0;
+	Wed,  4 Nov 2026 21:39:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 861C6606D4F0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=G2CDuH+B
+Received: from CPC-beaub-VBQ1L.localdomain (unknown [70.37.26.59])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 735B520B7166;
+	Wed,  4 Nov 2026 13:39:18 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 735B520B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1793828358;
+	bh=KL1hmlvWAkZ/YeoXB36i/Q1Q9UPf9z5TUNk0Z4f7ulk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G2CDuH+Bh7dWM3ap/DTkd8h0PAyXrfM6gxm6I7URHKGGDOMTBkIo7u1muvuah4Vnf
+	 wipUSW6cYVVK0bU6i7O36urSJM61BYLtFV/T7nLRCdLXn7R+JqT38LQB2Dlgpu+QdE
+	 HAMG+NBZ5xZ3r0mK15hhl/yFlHpkJ8VZCj36vCIY=
+Date: Wed, 4 Nov 2026 21:39:29 +0000
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing/user_events: validate dynamic cpumask size
+Message-ID: <20261104213929.GA65-beaub@linux.microsoft.com>
+References: <179367391951.8187.1770217673912340635@stu.pku.edu.cn>
+ <179367391951.8187.4749000539954371762@stu.pku.edu.cn>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -100,146 +62,103 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOYP123MB3006:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|56012099006|261021135927099003|261022105027099003|4143699003|261022075727099003|261009223027099003|261026140227099003|261028144727099003|10067099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	B4MoVTGX6QLPHc+rDooe8rpV0f7vcatJRj14LiHX5sUs3tpra6pgmap5fY4PgUJPhDztj/sQ4L2bvD+gAtoPXI6N3MG+W3SBbhWP/AFMzdio0ss6A8/FJrrVP8bwYQXDYeNM1Cdqvkvz/bXoztWTrL3NoACdkSq4XIAtGGwOekt9g3VwO5eFtCBaoxMaKQSERahZS+7TVOGJL1arxhzKslqWQStJ09nfJxHmCq8ncehglf+PHoYDX1jbg2/zjcXAHU+R1ZK+10a0sxSKDCYAkZgtMvDg9zfXatynLgEv9JUgqzAk27Rw1/wpTmLDfN0O5wCFol6Yz6JbcSnOpJGqnKnoYVrhgio3gS66upSlQjijf3Ucv57UrMwAr13qmILc+YrWWLJ6otjpp0hDF2GFeXn20PgGlxgBFBRMwFzXTpw/I4PPsQxrMXFS7D0uNRJ1HJhCRN4fRQv/HgYFd0qfkcQeLNlv7Tx0VJSnKAGONRpaZkjiF7tI86nn9ONVr+jvuT9y+PpQKFy/z6XhNr36HUyJ+nwNnVY+LaY7g9ZSUqgT0HtizqxKOntAp4seBKGwslto086V+CNvszriBp547KONbG/iLmvMfv/r7qVMorY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(56012099006)(261021135927099003)(261022105027099003)(4143699003)(261022075727099003)(261009223027099003)(261026140227099003)(261028144727099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U0VPVTJuVklUMTZNdW51SXU1dlFySm81LzlEZWY4WnNHN1pVbFFtV2dMR1NY?=
- =?utf-8?B?anlEbGFQbFRweGd5Q1hqeFNMVUN3SUV2L0hxVmwyZDZyS25RQnBPemRwbEhM?=
- =?utf-8?B?aWlqdW8ySDRkcldaS2lrNkxvVW5SUE81b29COEFCSjlGTS9rbTVuYXNjM2x6?=
- =?utf-8?B?UnZMNHdNN09qZGE5RkE5bnlxM2psN1ZLZS8vT21VWVpZbWgxZHdPWkxBeXZ0?=
- =?utf-8?B?ZVk3V0ZtSGo0Mk95WDJ6RlFEYUEwUklUckJ0NkVPbGdtMTU5MU15S05FQXlu?=
- =?utf-8?B?MjlYQmxMVTZsZElxUHFVUlVlaDNnVkxZNzJ3eTl6WGNtWUlBa0JZSTRjTkg5?=
- =?utf-8?B?Sy9nSGh0MmkxU1N0bmZkK2EzS3pob2FUN3gvNC9oMnhObDNuTEtYN0xQd2Zv?=
- =?utf-8?B?VWtkdk1JdXBhSEU5bThQNFR3R0RLU3pBRzlFMU1yM0NVQklFWUNnckpXblhG?=
- =?utf-8?B?OHkxYW4rd1Y2Z2RKd1RXcjNFTHdSTjRTNkpnUmRlWHhkQysrbkM1SExSRlBJ?=
- =?utf-8?B?Ly9sS3dOTU42N200d1A3d0VyTW8xTEpPcXZ5SkM1aE9zUTN6VkJ5SkhxZ0pP?=
- =?utf-8?B?eWJ1cVp6eDdVWEUyOWZZbEtRTzVXMnBlU1R5Ulhic1ZJOGljekthd1lXcHBn?=
- =?utf-8?B?OHB6ZlRZd2NDajRXRXZsWUJ4NnkwanpMM3U3WTZ3QTFrUCtTSHhPTXdBZ09s?=
- =?utf-8?B?RVZiYWhidGo4dFJaMVRSRWdsWEFyclhucnUxQW02amRlYk5iUDl2NHFONGJH?=
- =?utf-8?B?Nzc1eTJNS2V6Rm0zc2MwWXlMTjZPS0FTVlhodVIwRzdmS2pxUy96WCtiRkN0?=
- =?utf-8?B?YStraStmY0VjbzN4cndQcWZTZ3VsRlRhZXNRalp3eldBWFBWZzJSQmhyRks3?=
- =?utf-8?B?RWhyR1laWWc0a0NwR3NSSDAwR1lvOVIwT1UzakhYNmI0T0wwNlZjcmdyMnpa?=
- =?utf-8?B?NWE4aGpNWFR2TnN3TlFCemVXSWNaNDcybms0dllPM1hJc0NVcG9XL0tKRFdI?=
- =?utf-8?B?VU5IRFRIZEZMeG5sWFFxK0xDekxxejNzdU9SeG1EVHowV3ZIWHFZMWtYMGpF?=
- =?utf-8?B?T1VuSjFQMHVRb09JMHlBcmF5RWJJc2Joa0V4RVluVU1VQ2FrWDZnSjdTczF0?=
- =?utf-8?B?VHduc0Jaei9sZm1aQVI3MXF1NGp5UVNYVTVLbnJWVjhhWFBzWGlEdzc5cTN4?=
- =?utf-8?B?YUlMSWp2bmVRK3Y5UnRrajJrVkFpOVRneWdtc3kzYnVsQWpBM0NMcnE3YnEz?=
- =?utf-8?B?Uk16VzZ0OWwycHVab0k3Ti9BVSt5QWNTbUlmSkh4b2pudU9vMkJqUFZlMzI0?=
- =?utf-8?B?ZU9Eb0tTeWZLY1RaY2hWWDZqMEhxblhoSzc2VW1kWmtoeGF6YWNBMlQvNGZN?=
- =?utf-8?B?cjFKUDc1Tm5qNWhSSjlEU0QrSDI0b3hHUVUrVU1sYXlaQVVNVXZIY3k1Qk16?=
- =?utf-8?B?bXVxY2pPMUtncE00MWNUT0xpcVUwQysrWFREQ011UjhIYnJzMVkxOW45cVdp?=
- =?utf-8?B?dVpGYU53NllZMkxsNEFMUlY0OHZPb0VLcE9RMEtqNi9GR1FCT29iTVJ0eVc0?=
- =?utf-8?B?aTlZb3hYRlJkb1FWYjQ1NFAzeTFhUTFpU0Z5OElmMWdrVVdXWUNLYmc1bFdH?=
- =?utf-8?B?cHl5UFN6dFo2TXpzV1lKRzFIYk9jd1orRVRHTzNNaWZQcldwYWNQT2paR2k0?=
- =?utf-8?B?VDRiczBsT2dZVS9WaW9oMVpUTGRyb3Uyb085cU93bDVHWU1pQzRPZUxkWEc4?=
- =?utf-8?B?K2F6dnlIN3VvTnQxV21qdVJtckpoSlQ5NllYM0tvYWtJZ2hDUFcyckxyUm9K?=
- =?utf-8?B?dU84U3FnVmdKQWZJSmhYTWJLUFhnaWwwMHVWUkw1cWxqYmMzdzIrWUVUbk80?=
- =?utf-8?B?b1JOOXZLVTA1d1R0ekplNlU1eGxVUWZ3U3hkTVBRV3F2K0lpeDk2a2VnWXdS?=
- =?utf-8?B?SDRKU2NYaFY5TFZxWkpDU2s4TTZ6ekpkUGo4MS9rYUlvKzVCN2RqYVdnYmd3?=
- =?utf-8?B?dkpoa2dTcVBsaFdGaHhUZEdRWFR1a1dadlpla2FVdU8zeWNscGxhSmx1LzlO?=
- =?utf-8?B?aWYzUEs5ZUU4WFNaMGR2S3NzWVJvSytVMGFoTFZDaFpKNnZEcjdjbXBIMHo1?=
- =?utf-8?B?OS9aZGRlQk9JU2NodmkxbXdFbk5mNUVNY1hGbnJQN1BicjB4T1VkUFB0MlEw?=
- =?utf-8?B?WTBuZkJnNFhjTlpjbWI5ZVNBRUtwd2xrTWJBb3QyTkExVmlpQ2I0SmRzLzdq?=
- =?utf-8?B?SWlGMXV5WnZhYUZrTTZKd3lEZHdPc1VDdGdMMHo3YUFtNSsyZDNNTW9rdTFa?=
- =?utf-8?B?aGlEdnBuUXRtTE44Y2hLdW5zZituSThsczByYTNwcXE5NFZZV1ZrUT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5936cbd9-4fda-4842-de67-08df3ab9ff2d
-X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 21:24:23.6745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mX83XXz0UDS6Kd6a3dostHVE/ly4PP7cXSCUxkqCM/OEnhV61pwEeyjX1e94r/wQgKwvWWz40ckXFkOdBC7r2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3006
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179367391951.8187.4749000539954371762@stu.pku.edu.cn>
 
-On Wed, Nov 04, 2026 at 02:49:19AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] mm/show_mem: false lock contention warning in show_free_areas()
-> --
+On Tue, Nov 03, 2026 at 10:45:19AM +0800, Yifan Zhang wrote:
+> user_event_validate() checks that a dynamic field lies inside the event but
+> does not verify the minimum size required by its filter type.  A one-byte
+> dynamic cpumask can therefore reach filter_pred_cpumask(), which consumes
+> cpumask_size() bytes beyond the event buffer.
 > 
-> commit e1c6e11316c0b99b2f700b8251c5ed2b76aad84a
-> Author: Aaron Tomlin <atomlin@atomlin.com>
+> KASAN reports:
 > 
-> mm/show_mem: Avoid blocking on zone->lock during Oops or panic
+>   BUG: KASAN: slab-use-after-free in filter_match_preds
+>   Read of size 8
+>   filter_match_preds
+
+Hey Yifan,
+
+In the V1 there was a repro case where this value was a __data_loc,
+which defines where the actual data (and it's size) is in the payload.
+
+There isn't a type min-size requirement when __data_loc is used, this
+seems like the bug resides possibly in filter_match_preds for
+__data_loc cases? See comments futher down.
+
+Steve, do you think this is the case?
+
+If not, then I guess we would have to validate min-size requirements of
+all types in the dynamic case, and I hope we could do that centrally to
+avoid fixing these in various spots.
+
+>   trace_event_buffer_commit
+>   user_event_ftrace
+>   user_events_write_core
 > 
-> This commit updates show_free_areas() in mm/show_mem.c to avoid unconditionally calling spin_lock_irqsave() on zone->lock during Oops, panic, or NMI/atomic contexts, skipping zones when acquiring the lock is unsafe or contended.
+> Mark dynamic cpumask fields and reject locations shorter than
+> cpumask_size().
 > 
-> > diff --git a/mm/show_mem.c b/mm/show_mem.c
-> > index b938cbcd774a1..77098077523a9 100644
-> > --- a/mm/show_mem.c
-> > +++ b/mm/show_mem.c
-> > @@ -367,10 +367,17 @@ static void show_free_areas(unsigned int filter, const nodemask_t *nodemask,
-> >  			continue;
-> >  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
-> >  			continue;
-> > -		show_node(zone);
-> > -		printk(KERN_CONT "%s: ", zone->name);
-> >  
-> > -		spin_lock_irqsave(&zone->lock, flags);
-> > +		if (!can_spin_trylock() || in_nmi() ||
-> > +		    oops_in_progress || panic_in_progress()) {
-> > +			if (!can_spin_trylock() ||
-> > +			    !spin_trylock_irqsave(&zone->lock, flags)) {
-> > +				pr_warn("zone %s lock contended\n", zone->name);
-> > +				continue;
-> > +			}
-> > +		} else {
-> > +			spin_lock_irqsave(&zone->lock, flags);
-> > +		}
+> The patched kernel rejects the short event and accepts a full-size control
+> event without a KASAN report.
 > 
-> [Severity: Medium]
-> In show_free_areas(), when can_spin_trylock() returns false (such as in NMI or
-> hardirq context under CONFIG_PREEMPT_RT, or in NMI context under !CONFIG_SMP):
+> Fixes: 2467cda1b5c9 ("user_events: Validate user payloads for size and null termination")
+> Signed-off-by: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+> ---
+>  kernel/trace/trace_events_user.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> mm/internal.h:can_spin_trylock() {
-> 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && (in_nmi() || in_hardirq()))
-> 		return false;
-> 
-> 	/* On UP, spin_trylock() always succeeds even when it is locked */
-> 	if (!IS_ENABLED(CONFIG_SMP) && in_nmi())
-> 		return false;
-> 
-> 	return true;
-> }
-> 
-> the inner !can_spin_trylock() check short-circuits before
-> spin_trylock_irqsave() is ever called, yet still prints "zone %s lock
-> contended" for every populated zone even when zone->lock is completely
-> uncontended.
-> 
-> The commit message also states:
-> 
->   Check can_spin_trylock() and use spin_trylock_irqsave() when
->   !can_spin_trylock(), in_nmi(), oops_in_progress, or panic_in_progress()
->   is active
-> 
-> Additionally, because show_node(zone) is moved after spin_unlock_irqrestore()
-> below, skipping a zone here only logs zone->name (for example, Normal or
-> DMA32) without the NUMA node ID on CONFIG_NUMA systems.
-> 
-> Should the !can_spin_trylock() case avoid claiming that zone->lock is
-> contended (and match the commit message description), and should the skipped
-> zone message include the node ID?
-> 
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index f658c3a77aa7a..85938b45b7618 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -170,6 +170,7 @@ struct user_event_file_info {
+>  
+>  #define VALIDATOR_ENSURE_NULL (1 << 0)
+>  #define VALIDATOR_REL (1 << 1)
+> +#define VALIDATOR_CPUMASK BIT(2)
+>  
+>  struct user_event_validator {
+>  	struct list_head	user_event_link;
+> @@ -1159,6 +1160,9 @@ static int user_event_add_field(struct user_event *user, const char *type,
+>  	if (strstr(type, "char") != NULL)
+>  		validator_flags |= VALIDATOR_ENSURE_NULL;
+>  
+> +	if (strstr(type, "cpumask_t"))
+> +		validator_flags |= VALIDATOR_CPUMASK;
+> +
+
+You can only get to this case if you put struct, __rel_loc, or __data_loc.
+Those have their own size requirements and are dynamic in nature, IE:
+Each write describes the actual size in the __rel_loc and __data_loc
+cases, and statically for the struct case.
+
+user_field_size() checks if a type name has a known size, if not, it
+gets rejected. The only time this isn't the case is if you put struct in
+front and then have to give a size that's expected. The other case is if
+you put __data_loc or __rel_loc, both require the payload to dynamically
+have a size associated.
+
+In the dynamic case, the filter should be ensuring these values are
+minimally sized.
+
+>  	validator = kmalloc_obj(*validator, GFP_KERNEL_ACCOUNT);
+>  
+>  	if (!validator) {
+> @@ -1598,6 +1602,10 @@ static int user_event_validate(struct user_event *user, void *data, int len)
+>  		offset = loc & 0xffff;
+>  		size = loc >> 16;
+>  
+> +		if (unlikely((validator->flags & VALIDATOR_CPUMASK) &&
+> +			     size < cpumask_size()))
+> +			return -EFAULT;
+> +
+>  		if (likely(validator->flags & VALIDATOR_REL))
+>  			pos += offset + sizeof(loc);
+>  		else
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261103024453.922373-1-atomlin@atomlin.com?part=2
+> 2.39.5 (Apple Git-154)
 
-I have updated the commit message in the next revision to accurately
-describe this two-stage check, and updated the pr_warn() message to include
-the NUMA node ID via zone_to_nid(zone).
-
-Kind regards,
--- 
-Aaron Tomlin
+Thanks,
+-Beau
