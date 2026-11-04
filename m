@@ -1,51 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.61
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793755778;
-	b=sDcOvFr/0prcNysU5mo+g0tIKbd1ekntxk38e1TaYURjgySVGHaE1cy0zqfxZnAb2RAx
-	 Y+T6MqQC0BXbGJlrwI9n0ZYHWwmIj4wbIrJ6CegwM3USou8Lfq0ubGCV/laeUtRMSjMwA
-	 bfObr9t+SSc4Wa+jmmfCY9spCetaz7l5kDem4/J+gP0NR9gLEUkW6hSfhZ1MmFp6cC/Td
-	 nk50S72ocBWMkum4SHn3BP8IwB1D0TOQTxdEgUb2yBblHwYs/qH6gaiMqw3qsB1DWLcHR
-	 9ksp24dLSm97o709XD9Y59HlbYJYk+HPzWiRiARVJfx7ybYBY0CaaWey0i8S7xiygaQ==
+	t=1793760562;
+	b=Nco//YRiAcs2wk2cKcfnSoTeI74KIkYl1KKdlHF21JVfvROKn7wp/PnywvNF33oFlGPc
+	 Z0l4dQLV5vnnAbdB5Ck7JOEGqy42Rr6kkElOgOCZ3SJHs/j5uFCTFzGTmnS4TyQ/FVS7m
+	 vnXLsy5HAZO9OOlQTN0op5yWR3u872s/e5eIPkrMftYGx8fpGud2vbE+w9ED25PUf11Bs
+	 l+Jm+gdGXDZUrrhz5/tiOQxKYtwRi17789neBlY/BylIKVuYLA+NHn4svei5lFSDwRfft
+	 AqxDCEINednSJYEIKElFKJItusQMJlyv61Rz4jpA6RdorKnFhuXKwtTziWlMW9OgLlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793755778;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=CE0t5hOROhr+8knZGqTWCAomcPgxGmzw+Md6f9Efdfw=;
-	b=jgl3MKqReDCMhJAVPtKX2OIf91nupUrhI4jNla9m8vyoH5v2pxeV2XCP5JIO4EsnMh82
-	 iFAom2gLiEwUln2J+1T7RaaFzYx1aJs99RQNWh5chb22TSfi6fAfPUES/aIzR4AvW3sUM
-	 mRyUtivfOQ5H++++BuUhkHFZDsfCD6aRTdXqQslhnhRDb47MzCn6MRsYNkel2NDVxp+h/
-	 EB+BKglnc4xiVSxsZ6q7qXn2fv9ADz8hKwYU3yJgU2kkxgBSbsT7CVY8c9Qz3SAwMsIep
-	 9lJ8n2xp+G7gHVlbhlz+Gu9/CTWJexokCQjZM9WEAEIjYIpfogngMBZmkIEwEUbfYWw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793760562;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=cGl7bC3fWAoAUhJbWEmSTM5Y06Elv8KWXkaBb9P48hA=;
+	b=siXFu3VX/qvNyNNbx+uAcWZ7LuVskfCFriP49/DnmYSxt108WHegK1xayUWxzZ1unr8e
+	 PpkaP+NN1NO7XNFo+CjctYrsc3ZQJsKOicGfRbw4e83iR5d38j3rvQNfioh4hjv2bdvLd
+	 Ft1zaVfWV1DimiVVmxnZIqMxbMr2hRnmnxhwGe4zkRNrvWXDf3QYQ5n8K9joNr9ZqCEUg
+	 0S4+u9kjCge6z4k6g02eVkbNj8qPSLjgI7qXs6eSGPnWO6lchqIaJ0129w6MsHP3632kr
+	 Lvz5GgO8YYoiwZeOL15cQVLRypvXXMoINy3Zb9lnRi2y7swgehpQTqpte6YBTUeOINw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	arc=none smtp.remote-ip=91.218.175.61
-Received: from mta0.migadu.com (out-61.mta0.migadu.com [91.218.175.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jb96h4h0;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E416606D823
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 01:29:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E416606D823
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=QwlcNBQAVDxk0/AvVL+NWkQwGw6IW0hqKl+WZhIVwVQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793755765; v=1; x=1794360565;
- b=o3nkAPqoiAhQCuG7W+cYJPXVqRbfmnABmAgU+ifZRUe+hpALHAZdbLU71L1/bypKy1hCRZel
- LrXg8QFqzflrTyf3WsCyaOUfD0hqrsfE7HFQUcMd5CRxhTZ3TmZ3IyBnoia8EK1s6VZ0g9JteeF
- u9uGQgAu7/aT6Re0f9SxG8j8=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 59a6eb213e4c26de;
-	Wed, 04 Nov 2026 01:29:25 +0000
-X-Mizu-Trace-ID: 59a6eb213e4c26de
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <dd07c949-eb56-425a-8b1f-ceda118d3a5a@linux.dev>
-Date: Wed, 4 Nov 2026 09:29:17 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3813606A31B;
+	Wed,  4 Nov 2026 02:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jb96h4h0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657D51F00919;
+	Wed,  4 Nov 2026 02:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793760561;
+	bh=cGl7bC3fWAoAUhJbWEmSTM5Y06Elv8KWXkaBb9P48hA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jb96h4h0oM3x4HuMId9uj2LqKZoeAZgCuatFL0X+g/wCJ7W3yMOe0X+dGWF5LZ1Bh
+	 RJgMrUz3AHHIUC+Z4+HAGKWnlgwAZ9sGm1hChg1XwsbZwTUL/TrZPNINyYw/XIX/ZG
+	 G30TzK2SZ8L+TUdKRouOFuOavuK9HgEczJgXAsaU0LjsPd6BEZYiIs9ndCujj6YC3M
+	 74rzfop9P769vcC6l+1fnC6yfgQwNV3B8wKFg0bvJLdTiJ6mZxinQL54u8rpdtn6et
+	 ThQeKLK7GDRuz9JleE7CZdoIlyEP2yoD0Isb0vVwMAbdqEsQGFhpadeotBCvbBSezs
+	 SepM0zq9kLE7w==
+Message-ID: <sashiko-outbox-196525@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v2 2/5] mm/show_mem: Avoid blocking on zone->lock
+ during Oops or panic
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aaron Tomlin" <atomlin@atomlin.com>, pmladek@suse.com, john.ogness@linutronix.de, rostedt@goodmis.org, senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com, akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, surenb@google.com, mhocko@suse.com, kees@kernel.org, anna-maria@linutronix.de, frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev, hannes@cmpxchg.org, ziy@nvidia.com, bigeasy@linutronix.de, clrkwllms@kernel.org
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+In-Reply-To: <20261103024453.922373-3-atomlin@atomlin.com>
+References: <20261103024453.922373-1-atomlin@atomlin.com>
+ <20261103024453.922373-3-atomlin@atomlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 02:49:19 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -54,84 +60,83 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
-To: Barry Song <baohua@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
- Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- cgroups@vger.kernel.org,
- "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
- Ridong Chen <chenridong@xiaomi.com>
-References: <20261103025610.3738894-1-ridong.chen@linux.dev>
- <20261103025610.3738894-8-ridong.chen@linux.dev>
- <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
- <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
- <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
- <f5137dbb-b0ed-44ea-a23f-5c848315a68a@linux.dev>
- <CAGsJ_4zNZynkZn1mb+nT1n6dq4n399VC8Lbo5Sv92gioDfPxUg@mail.gmail.com>
-From: Ridong Chen <ridong.chen@linux.dev>
-In-Reply-To: <CAGsJ_4zNZynkZn1mb+nT1n6dq4n399VC8Lbo5Sv92gioDfPxUg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] mm/show_mem: false lock contention warning in show_free_areas()
+--
 
+commit e1c6e11316c0b99b2f700b8251c5ed2b76aad84a
+Author: Aaron Tomlin <atomlin@atomlin.com>
 
-On 11/4/2026 2:28 AM, Barry Song wrote:
-> On Tue, Nov 3, 2026 at 8:23 PM Ridong Chen <ridong.chen@linux.dev> wrote:
-> [...]
->>
->> Hi Barry,
->>
->> Agreed, I'll go with option 2. Two things I'd like to confirm first:
->>
->> 1) To report the reason, should_run_aging() would need to return it
->>    instead of a bool, e.g. an enum like:
->>
->>     enum lru_gen_aging_reason {
->>          AGING_NONE,
->>          AGING_NO_EVICTABLE,     /* eviction is not possible anymore */
->>          AGING_MIN_GENS,         /* better to age, eviction still possible */
->>     };
->>
->> Or just report sc->priority, swappiness, max_seq/min_seq and the
->> per-generation nr_pages, and let users derive the reason from them?
->> The former is more direct, the latter keeps should_run_aging()
->> unchanged.
-> 
-> Right. We can let users infer the reason from max_seq,
-> min_seq, and nr_pages in each generation. This shouldn't
-> be difficult, especially since should_run_aging() may
-> change. We don't need to spell out the exact reason.
-> Just present users with the overall state of the lru_gen.
-> 
->>
->> 2) try_to_shrink_lruvec() has changed quite a lot recently, e.g.
->> Kairui's reclaim loop rework, and your swappiness series also touches it,
->> including the aging part. Is it stable enough now to carry a tracepoint there?
->>
-> 
-> Yes, I think aging will always be needed, regardless of how
-> we change the code, so this should remain stable.
-> 
+mm/show_mem: Avoid blocking on zone->lock during Oops or panic
 
-Thank you for your patience. That makes sense to me.
+This commit updates show_free_areas() in mm/show_mem.c to avoid uncondition=
+ally calling spin_lock_irqsave() on zone->lock during Oops, panic, or NMI/a=
+tomic contexts, skipping zones when acquiring the lock is unsafe or contend=
+ed.
 
-Will update.
+> diff --git a/mm/show_mem.c b/mm/show_mem.c
+> index b938cbcd774a1..77098077523a9 100644
+> --- a/mm/show_mem.c
+> +++ b/mm/show_mem.c
+> @@ -367,10 +367,17 @@ static void show_free_areas(unsigned int filter, co=
+nst nodemask_t *nodemask,
+>  			continue;
+>  		if (show_mem_node_skip(filter, zone_to_nid(zone), nodemask))
+>  			continue;
+> -		show_node(zone);
+> -		printk(KERN_CONT "%s: ", zone->name);
+> =20
+> -		spin_lock_irqsave(&zone->lock, flags);
+> +		if (!can_spin_trylock() || in_nmi() ||
+> +		    oops_in_progress || panic_in_progress()) {
+> +			if (!can_spin_trylock() ||
+> +			    !spin_trylock_irqsave(&zone->lock, flags)) {
+> +				pr_warn("zone %s lock contended\n", zone->name);
+> +				continue;
+> +			}
+> +		} else {
+> +			spin_lock_irqsave(&zone->lock, flags);
+> +		}
 
--- 
-Best regards
-Ridong
+[Severity: Medium]
+In show_free_areas(), when can_spin_trylock() returns false (such as in NMI=
+ or
+hardirq context under CONFIG_PREEMPT_RT, or in NMI context under !CONFIG_SM=
+P):
 
+mm/internal.h:can_spin_trylock() {
+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && (in_nmi() || in_hardirq()))
+		return false;
+
+	/* On UP, spin_trylock() always succeeds even when it is locked */
+	if (!IS_ENABLED(CONFIG_SMP) && in_nmi())
+		return false;
+
+	return true;
+}
+
+the inner !can_spin_trylock() check short-circuits before
+spin_trylock_irqsave() is ever called, yet still prints "zone %s lock
+contended" for every populated zone even when zone->lock is completely
+uncontended.
+
+The commit message also states:
+
+  Check can_spin_trylock() and use spin_trylock_irqsave() when
+  !can_spin_trylock(), in_nmi(), oops_in_progress, or panic_in_progress()
+  is active
+
+Additionally, because show_node(zone) is moved after spin_unlock_irqrestore=
+()
+below, skipping a zone here only logs zone->name (for example, Normal or
+DMA32) without the NUMA node ID on CONFIG_NUMA systems.
+
+Should the !can_spin_trylock() case avoid claiming that zone->lock is
+contended (and match the commit message description), and should the skipped
+zone message include the node ID?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103024453.9223=
+73-1-atomlin@atomlin.com?part=3D2
