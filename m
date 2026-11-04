@@ -1,59 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793831519;
-	b=mUgdvs81I8E0t98jVjm1Xb2fDW+rl9a4QSAvNIqab6fwCIYNbnXg8t4+jmXh8mc2ClAD
-	 hkepjyhRT5C0miOngcg3ESlkksZvD8x5bbrzrZ/GGijyxwCG1Kle/KC+Ca6G4qQLG8EFw
-	 M2jAi/fl0i/2pYcuBe1ZOmL8+6fIZJ6klBbS5qEJLA9ikG91pug+iCz4WI0M9FIKwdHVz
-	 RhQE3DsybAzEWJqpI09TqKUInGOkN1GBmo43yMIyESMaUhE/IqRpMdWHFzbrraG0yHrxY
-	 51Gk7LiUPQuO9o9cVApC8cFUXJrJKhp7WMjSAJdzg3Z5nSbNpBp8bGaoMy4r9AUPMyg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793831519;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=1pY66RTAg4gskpB0/23Dm2MncTkJlPFKDiLc2XwKGdA=;
-	b=hENaoPky+efogjNy5Nhx+pSLujT60XphOGhwkWg2UjZX2VYuDEfVRfOMVmRCcHcrD7DY
-	 qCpFkanVRBzO2yp5Nua1O1AZTSRSGwjYog8x/4mvGhi8halgBhFcg2P1HWgfYYpUWFxdj
-	 p0gXyzpTQNFsBSM9SLA8+2u4kYSX50luiyc6hKT0CS6JBm3nFhAyDrjpPcv1KsfjgtDNu
-	 PWAHuB4sw7y6nGoZtVt/GXCypc75azYFG5sfiI2fekvDknnEBS+nROQwlbNNAocvA1ids
-	 wa27ujbHGmEGVcwU1VfjYV00cB8C0svf6eIqOJIjIwHtrqhRgeakuQlZmHTGavIXrpw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D6q3gpTp;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793832123;
+	b=LV7FQrj6tyLN+FkFDkplbYub5rLpeoep8is/INw4KBgYiTstMLfiFlvIoAaD3VXjTFyh
+	 5baoHDM0/bfVwuRqx0jlkJYopufSW5p7X2VIXAKAC+cQFT9DW7QeNPCTrT551reFRjdiI
+	 yB66RefAkYHtZUpaotehgjHQkw+Kcw8FktHAiFJor92YU3j/6EWkEGvbW26+oMHrQjTwd
+	 5JLxdPOezSGjuHyVI4frOLdG0PUQGZ0Nzzdh/Y9w4N3wFV8uRc19qlJv3DxlfimclY8W3
+	 EIN7Kdwmjrk8I5YZL69N499LdkKLiiwRC3bWQhoy1671Y3S9P7Dkna5GQknDUg1p3aQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793832123;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:From:X-Mailer:In-Reply-To:References:MIME-Version:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
+	bh=WErvo2GLUvNSKhdIQULmZWHJk9AdernDD4tBPDZdzN0=;
+	b=j6g6Xhrx91X7C18zcKmmo1QPN/Y/+qpnv/eU4dLg25ob9vOA9Rrq1NGA7mJsXIECEFgD
+	 HI/nBvBE7taqst2/hET/5ZGl4Uh451l+Q9jb+0CLCdElzVydhfkQVGrI/8D3f89u1d/Zf
+	 Oa0ajDIns0U4LPQ5VqiKWoGDXLHputR//dhBa8vNdt2LAG85HXcAMNuMBeuiAr3Rxcz/s
+	 +BuwdyWt739UXi703uk8W1yH9h3ATT9rx4aQClomDK/dL2xVckaO39iLBuqa8KnfC2Nz8
+	 gY1jUoxy21modY9tRFYuhDEuXAMwhnfMl5Ak6pwKB2k7P0kXn2rCo9s0OwLaASMus8g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=q6L7IR3F;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.182
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB906606D82E
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 22:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA580606A332
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 22:42:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA580606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D6q3gpTp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8845A1F00A15;
-	Wed,  4 Nov 2026 22:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793831518;
-	bh=1pY66RTAg4gskpB0/23Dm2MncTkJlPFKDiLc2XwKGdA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D6q3gpTpKYEmJrHIaehomVhi1poKU/XVJMTpb4cma30HCgRYKwXEi0yg94psAaPV9
-	 +jfeWPrBd1TSAnMyF9xk9WcIi0wKWkhiDH8FAKfcEbx0CLASo9cMQC7p5v0MKsj+Pr
-	 qiLAT7mWhjo5FcN/Sdq6IfwKEPvwmn763Q8I3DukPb4Kxpexmxi6gJbEuDgYMpXTPg
-	 AiBno42Cq1EmQ8F0bRjOdxLrt4o+sV5AedjjqedD/VQt9n/KwEqkLF6QDV2I6+/QXM
-	 0AA88mroPgaAl7s0I53yYK/sCANQL2fpCcqCWSqvtUZjRpGZSpWlAWyg9fKJ0c0wXx
-	 cHaPLHcrGWwQA==
-Message-ID: <sashiko-outbox-198231@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v3 2/3] mm/migrate: introduce async non-temporal
- migration mode
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Huan Nguyen" <nhuhuan@google.com>, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, Liam.Howlett@oracle.com, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, trondmy@kernel.org, anna@kernel.org, ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, jackmanb@google.com, hannes@cmpxchg.org, shivankg@amd.com
-Cc: rientjes@google.com, dave@stgolabs.net, nifan.cxl@gmail.com, fvdl@google.com, jic23@kernel.org, rkodsara@amd.com, bharata@amd.com, sj@kernel.org, weixugc@google.com, xuezhengchu@huawei.com, yiannis@zptcorp.com, yiannis.nikolakop@gmail.com, dimitrios.palyvos@zptcorp.com, alirad.malek@zptcorp.com, ryan.roberts@arm.com, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, "Chuck
- Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>
-In-Reply-To: <20261103223025.2482227-3-nhuhuan@google.com>
-References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
- <20261103223025.2482227-1-nhuhuan@google.com>
- <20261103223025.2482227-3-nhuhuan@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 22:31:56 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=q6L7IR3F
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-5058b105df7so494905b6e.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Nov 2026 14:42:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793832122; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FASKBYVdJlLo+rZemzFzl0QwqsHa34945sw0KYFnHEOeVlVoAOdNPFPYczcfHRW7yF
+         YKaEh5WgcNc7mzK/AGNg2OEuSZwwvUIubp5tnFIWJ15dmUlLLYzlEWrRpwFaky5i6lMN
+         CK3cLGp8PTdgRl5DJOZ+D17dSE9pitxtK7y8m848t6GG6Rcc14ucC+X/zLVxs6Qj4hZL
+         j1uMK6555lVpEkc//ToqyBmVxvmh/ozSeJ+Yw3SQDe5ORjRNliqjj93dffUCGUGIuWY/
+         0ypxUyh6R4oFc8vycW68rnh1bk/22XbtQelQBMe/49LJJeLABOM5UGgIbgQ3xpIE4vTr
+         duDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=WErvo2GLUvNSKhdIQULmZWHJk9AdernDD4tBPDZdzN0=;
+        fh=08wX0+2Bxr3s67vMHsosfyjl/BbdRffukLAFSth2440=;
+        b=fiODPWhHleWrI8i+zsgfqD6fBT7CcN+9P3nrdstzZp2i6ZKu/aeL2uYatQj1db2Q5j
+         6Mp0/D45HpbbOPlz6jvSJS62p0P13DQUtboo93to9vHF7VpA4iAF6f6Fenvzmn4zr284
+         a8swWoeGoKnJCE1mnbIR2gk0IQo04EsKp+HpEQxDpVMaka+Uy7sHZrrXeLL8tmFI8gZy
+         GeKI/ULuhjZLBgv5EssGYfv9bxd9/+pru96ld8dD4IDFGYvsabqyYgYMKYP2d4+/uBOe
+         kK0+ZqaUnd3BzOvQ1jE7vVrHLZRysQmas6wL0X2ugzgLOwkvj2PXCM9B6mRU8cuKvb4p
+         75lw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793832122; x=1794436922; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WErvo2GLUvNSKhdIQULmZWHJk9AdernDD4tBPDZdzN0=;
+        b=q6L7IR3FtwIQ0LkPfu40pZoBfPvKqcXL94JSwnjEeU1VRPv45r41nGikNoRjoE6Lz8
+         77lQlxZW89Vo7SeWgBTaBEMaMOpRPEIATBduFwLR5eivyQhkLKMb7ebKSylU/zcxAMAn
+         QdEQ1u6CmPjFSsiYNaj4KC5t6jTNNT41P6amusS7ikGkxTAkfqgufR9YwGD5n/NsdoS2
+         aNTAeeAbvMxzklhxrj9gajGaAY5XC7gbB7a1tPPoXeL9/8A1O9dsLuQHtiIWbSES0Nec
+         3mRKNkaJOnRlXQZjcd5BviFWfwnRY3UO1KxvuyTl+O5RHhZndfBroxLdbHo7DdVYrqpC
+         C+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793832122; x=1794436922;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WErvo2GLUvNSKhdIQULmZWHJk9AdernDD4tBPDZdzN0=;
+        b=mp/UriH05FaxWOb/7/j36ujNZQGf6b0VKz6AS5V/i5B7fSyLbH150wqCIgxBYP3ElX
+         dTJJI6Qff6CzwOzbtYygRAq3KLVTD8dmPPzxqkv87qkWmDEsCkdXZCPn+IuZFDTn7kWH
+         cIHQNLkbMEvsowbu9xy+F1su9UcI1AII4zICtWUMshb2fiKgNg+ShKjuxz2OTkqyJcMh
+         gv5oRC/SO79fQaH25rKH6vF96/Oxa0Q6ka2mR8rbxFb1gwVa9dzTQHLNtPge5Mcj6Ni1
+         4A/CZDtSTsUtgZ5kVb+sMP+jSmT93YoGFBPL7th3r3RT5KpMolyak8hZULoxTWCZaeso
+         4YRw==
+X-Forwarded-Encrypted: i=1; AKwUvBzV1cXG6hGlMqfDjsflZ8Lq5XDeVWISG+/fg+IH7wDhAAaC3/vAa1G8V6DNWOK2JjaKzFEuVKqmbyDORvqhxEdQIqo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9bcvEE4JomefYbHIggzUI4RhkxGtl4UUIUilJ27PCerc5CAWly
+	3l244ZISPYbLEIFDW1+9GQzM6f/CvWm994DSsVOWfmmMYmZKGU4Iq3dkolhjEDU6pcSm/Ul3D+5
+	vsJyumNsKFIIWruIZ46bG7PfJf+XBPgNXGdQ/eO0=
+X-Gm-Gg: AYBFou2If6YKspiyxj3MmtJXT+BwcWPcIvITqh3QpOsCwjQz/e/V6TQraZOFKSCRvRW
+	I5/wF/zgfDRhf4JIJJR6G20n9pQ9g/v4tlWuqmbdLRSQuj8OGcKLWdxnA6/tlSzNbFzwgxJjtEn
+	hD6uiEBaxHjjgVVGZTSH9PjjVACA55Ig8jBsVWAlrpAFedJwbR6Eoal1Y07qdp+evldaK81CmgM
+	WsQ8a1361/IemWdsrhORM53hxs5JVrv8nJWkiO9j2l9IR8g5lhH0/QbMR5/10ufWiTzKINFFO6t
+	Zvpob/+GqShumE63k/dQuxqZpUN3hshDUpoL581iWQTr9XlXNvH6NGDf/SD54zCsEx8RrjF4ydd
+	0GIPRcUsJ/wQZ4Ge95LBF5j0HETj7yjg06TDY5xi3tBUCq5uqe+pZ+vy0UGMiLC1lyvbFog4=
+X-Received: by 2002:a05:6808:11c7:b0:539:dfe8:9960 with SMTP id
+ 5614622812f47-5640de0f2bamr12348302b6e.56.1793832121760; Wed, 04 Nov 2026
+ 14:42:01 -0800 (PST)
+Received: from 41474967715 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 4 Nov 2026 14:42:00 -0800
+Received: from 41474967715 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 4 Nov 2026 14:42:00 -0800
+From: Kirtikumar Anandrao Ramchandani <kirtiar15502@gmail.com>
+X-Mailer: git-send-email 2.54.0.windows.1
+In-Reply-To: <CADZg-m04iG5kCZ5-yh=Vz_ysYjVDGSYn3je4_-8AzWWfiC-bXQ@mail.gmail.com>
+References: <CADZg-m04iG5kCZ5-yh=Vz_ysYjVDGSYn3je4_-8AzWWfiC-bXQ@mail.gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,74 +110,54 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Date: Wed, 4 Nov 2026 14:42:00 -0800
+X-Gm-Features: AclHuK8VXrXubivnKeWdOi0BsvXqCf5pOWGutxidKBItsHpI5FtVw2Y7RLuRbVQ
+Message-ID: <CADZg-m0FeLntAS6XxE-kc74vwH-jAh+jXT68qnVwXuHZNUHzfA@mail.gmail.com>
+Subject: [PATCH v2] ring-buffer: Skip time delta validation for the counter clock
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	syzbot+eb74dca0d1eb3ec227a7@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mm/compaction: enum migrate_mode ordering breaks compact_zone() =
-async check
---
+The counter trace clock increments on every read. Time delta validation
+assumes that the clock values read while reserving and checking an event
+can be reconciled with the deltas stored in the page. With the counter
+clock, this assumption can fail for an intact ring buffer and report a
+spurious TIME DOES NOT MATCH warning.
 
-commit 047765d971a4b565eac5e2dd50bc528791c2e77e
-Author: Huan Nguyen <nhuhuan@google.com>
+Skip time delta validation while the buffer uses trace_clock_counter().
+Clock selection already resets the buffer, so events recorded under a
+previous clock are not retained for this check. Recording and reading
+counter-clock events are unchanged.
 
-mm/migrate: introduce async non-temporal migration mode
+Link: https://lists.openwall.net/linux-kernel/2026/09/20/1283
+Reported-by: syzbot+eb74dca0d1eb3ec227a7@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=eb74dca0d1eb3ec227a7
+Signed-off-by: Kirtikumar Anandrao Ramchandani <kirtiar15502@gmail.com>
+---
+Changes in v2:
+- Resend as plain text after the previous mail client reformatted the diff.
 
-This commit introduces MIGRATE_ASYNC_NONTEMPORAL to migrate cold folios
-using non-temporal stores via folio_mc_copy_nt() in __migrate_folio(), and
-adds migrate_is_async() to update callers across compaction, NFS, and
-migration.
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-> index 05102d4d2490e..fd752fddc972e 100644
-> --- a/include/linux/migrate_mode.h
-> +++ b/include/linux/migrate_mode.h
-> @@ -12,6 +12,7 @@ enum migrate_mode {
->  	MIGRATE_ASYNC,
->  	MIGRATE_SYNC_LIGHT,
->  	MIGRATE_SYNC,
-> +	MIGRATE_ASYNC_NONTEMPORAL,
->  };
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1fd28a7..c860d5b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4747,6 +4747,10 @@ static void check_buffer(struct
+ring_buffer_per_cpu *cpu_buffer,
+ 	bool full = false;
+ 	int ret;
 
-[Severity: Medium]
-Does placing MIGRATE_ASYNC_NONTEMPORAL after MIGRATE_SYNC in enum
-migrate_mode break the relational check in compact_zone()?
++	/* The counter clock advances on every read, invalidating this check. */
++	if (cpu_buffer->buffer->clock == trace_clock_counter)
++		return;
++
+ 	dpage = info->tail_page->page;
 
-In mm/compaction.c, compact_zone() checks (cc->mode < MIGRATE_SYNC) when a
-page fails to migrate within a pageblock:
+ 	if (tail == CHECK_FULL_PAGE) {
 
-mm/compaction.c:compact_zone() {
-    ...
-			/*
-			 * If an ASYNC or SYNC_LIGHT fails to migrate a page
-			 * within the pageblock_order-aligned block and
-			 * fast_find_migrateblock may be used then scan the
-			 * remainder of the pageblock.
-			 * ...
-			 */
-			if (!pageblock_aligned(cc->migrate_pfn) &&
-			    !cc->ignore_skip_hint && !cc->finish_pageblock &&
-			    (cc->mode < MIGRATE_SYNC)) {
-				cc->finish_pageblock =3D true;
-    ...
-				goto rescan;
-			}
-    ...
-}
-
-Because MIGRATE_ASYNC_NONTEMPORAL has an enum value greater than
-MIGRATE_SYNC, (cc->mode < MIGRATE_SYNC) evaluates to false when compact_zon=
-e()
-runs with cc->mode =3D=3D MIGRATE_ASYNC_NONTEMPORAL and migration fails
-mid-pageblock. That causes compact_zone() to skip setting
-cc->finish_pageblock =3D true and jumping to rescan, leaving the pageblock
-partially scanned without marking it skip so fast_find_migrateblock() can
-repeatedly revisit it.
-
-Should MIGRATE_ASYNC_NONTEMPORAL be placed before MIGRATE_SYNC_LIGHT in enum
-migrate_mode (matching the ordering in include/trace/events/migrate.h), or
-should compact_zone() check cc->mode !=3D MIGRATE_SYNC like
-isolate_migratepages() does?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103223025.2482=
-227-1-nhuhuan@google.com?part=3D2
+base-commit: 05441d697f7f9a927264f4058cbbc6a03dfcac9d
