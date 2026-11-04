@@ -1,57 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793782625;
-	b=otbQEIXVpcM334w9+Trk9V1LzPPs4OVn45CpJQS3ce2ssvg57Mvk+Sdj3gzhXi+HtxhS
-	 si3iYQDMGq1aJIqM2F1fIjWCT/6ey5qiis8n+YQLiHEx/LC7wwTRFDmFs2aNLYxaDLzHJ
-	 ScOAScJ9Ns373A0ZsvSN5B/R7SIMQ4VlJXhhQ85R51YVM7sCWgK4ZuPqmVh5gHIScjX/Y
-	 c8m+eZBMLG0mn62s6AvDOAniDKJ4efVueSBCffChu8X359wZrnNKs0IpfltOKhohqCJqd
-	 n+B4OWXWWB1XoczitWoH1DNLB4wwDCcR4Fxux61ohOS2+9sdij534tZ8rEcli9tBr1g==
+	t=1793783259;
+	b=ytbpjFhTbJyxsgkjgL5GCRYzJ4aa7jH+mrt1gp0gp5xsGgX68/cs1d4ZfRpLaMeSIRjH
+	 psVHUB52vHQBVggHAc4IuQCFwKwTtxEjXVjJloh13Y7CuYZbVTly4SaHSMz7VeMipSSwN
+	 73hFPDx46vhNaWTTE849PgECDBibcY/cGboHsh0s31YzlYQi38jN984ngdUFfTL5jSqX5
+	 zywrMpD78188GEP9QVnHe8V6vDE5fDl4jPibEPiyu7r5+mPTunklbTkuaAKzbI8et4XJj
+	 134qCmrVRup9asRGwmAucliWBp73gliFlw7B1QNxynUkUm8YSIjl8tutsqQHQPNWPZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793782625;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=HlALTijt5CRapJC/NolluYCFJC6FcDyvgnNPx8+9O8Q=;
-	b=N487hteNYPfkiPivu7jAdEbffqlydxIThFK4mVLfE98pb9t+xIT4EvVDdV6eNDUIdbBu
-	 YASmP00zwJaLXiI/3P+d2djySJZ94t4tXfXx1TpyozDgQeheuDab+Oql0QAeUJdYRQgjB
-	 k+F93MFqE3NnaoFj0gjrd7wi3oNDFNlZiIjF6LfmgPgKy3igLp0PRikaoyZ1SsMOdtaTq
-	 vbx4kPGcbosU74KTaEWWLAeVbY+8oJE0KzNOswzPsaaoTdJe3311ubBL2O+BLSv7HZRuD
-	 kFXrWqER2DWJaQ23uH9SHOgJPNb2Y2zq62KGbe8m+ZQPllwfi/jzajxXEcCuSP7eGew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793783259;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=/wtgYPMXZXp6zUY4OHNPQsnexKANsg38h6IetxV4HVw=;
+	b=VJpMiwYIzeyazWnax3Q4E4PwGp28W3IEyXShFaQNGP+u0s0xzPaJZZkjtanHNcQABTo7
+	 ahaSqbpqeBi/v7+PmnlAvBTlNotdwjS23pY3YE/6Ersjh3e2u6lpMY4G+dOPtsQ3tIU+x
+	 mE4CyGQW1OKNOuOBfTMz8kaL0knUAtTnwTAsoktO4RPMeS1w/Nn7mPrGK1YcYumhOEaTa
+	 UQ1DjXNrsbcCyH7g6LxGwG2cfTZbjqfnHT3uohRRp5GyjdCS6M+sRyHLUUlyVVMOmNwC9
+	 a+PLVeLY/Si94MNwoIgR90CeEkKUOjU0uqSI+OVZW2oMCyrZ2dRuPVJ395evT1+Czrw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MkDzc0YG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G2dP9jW8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FBE606A31B;
-	Wed,  4 Nov 2026 08:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62613606A326;
+	Wed,  4 Nov 2026 09:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MkDzc0YG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859421F000C1;
-	Wed,  4 Nov 2026 08:57:04 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G2dP9jW8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4D31F000C1;
+	Wed,  4 Nov 2026 09:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793782624;
-	bh=HlALTijt5CRapJC/NolluYCFJC6FcDyvgnNPx8+9O8Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MkDzc0YGaVlxHbugFKLbnuWK0745cupfb7jX+eTKrUvH3035K0+7pUi0/FkS6Z61L
-	 2H8PmPUIJPAmrtApKGcxIVnhbgun6m8XARe9em1XEannlNPEiWF4BfyrIrUeHJi/60
-	 Gbr4W0Y4RAoBBu07DL8ZwtBEOO8SH1634Oke05lDAWM7MGPiTGGed3vEEMNXKs09OX
-	 JF+m6j3i8U7OpDGf8uD5iiVnJ1D83waL4Pl63FLnoKFYq4ELvWW4X1BhXdXub7Z/Fr
-	 dc56o6vkNRfkp4CQtveqnvui46cVFoxAI2LQjJuN9v4xs6fXlX2M+XNmO1wvc/6xtc
-	 k9iTUoXwdvj7w==
-Message-ID: <sashiko-outbox-196902@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: Test faulting build IDs
- from a sleepable raw tracepoint
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Feng Yang" <yangfeng59949@163.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261104083833.971911-2-yangfeng59949@163.com>
-References: <20261104083833.971911-1-yangfeng59949@163.com>
- <20261104083833.971911-2-yangfeng59949@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 08:57:04 +0000
+	s=k20260515; t=1793783259;
+	bh=/wtgYPMXZXp6zUY4OHNPQsnexKANsg38h6IetxV4HVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=G2dP9jW8XN9fwXCrGnjt6PUjB94dMWk22P5oRER6/dYD3zXvvuzlKIrKLzPlfnYCC
+	 qOcuBRM28rAzRCFJukigtV7OTBeLQcFImEoDeS3a5YMb8bob19T1P9EA2nb4kKdQ0v
+	 WWHlHf/gkNd+l4NpDAM32yRLg64mUtajz2yXneujyfLyPRx2qQuV3v8Ma7iE4TggCu
+	 hw4qQHy1lBXXlmkThiO3lpG/9nEypbtPLVCAmyrzUS9uiZ4azhCT29uKjwonTiORlb
+	 ytNHnHqtR1POQ5gnAFwbKO4J0o16idIKO1z9oen/GYwHDy+SyUWj9m3HYs3YIT9dyZ
+	 mamCDVhtpL9BA==
+Date: Wed, 4 Nov 2026 09:07:25 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Huan Nguyen <nhuhuan@google.com>
+Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org, 
+	david@kernel.org, Liam.Howlett@oracle.com, vbabka@kernel.org, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, trondmy@kernel.org, anna@kernel.org, 
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, jackmanb@google.com, hannes@cmpxchg.org, shivankg@amd.com, 
+	rientjes@google.com, dave@stgolabs.net, nifan.cxl@gmail.com, fvdl@google.com, 
+	jic23@kernel.org, rkodsara@amd.com, bharata@amd.com, sj@kernel.org, 
+	weixugc@google.com, xuezhengchu@huawei.com, yiannis@zptcorp.com, 
+	yiannis.nikolakop@gmail.com, dimitrios.palyvos@zptcorp.com, alirad.malek@zptcorp.com, 
+	ryan.roberts@arm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/3] mm: use non-temporal stores for demotion
+Message-ID: <aur1xv84Siddlg3P@gremlin>
+References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
+ <20261103223025.2482227-1-nhuhuan@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,205 +68,28 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261103223025.2482227-1-nhuhuan@google.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] selftests/bpf: raise(SIGSTOP) in trigger_stop() overwrites recor=
-ded stack
-- [Medium] selftests/bpf: broken s390x unwind and missing IP check in subte=
-st_raw_tp()
---
+Hi,
 
-commit f32a6f825aa7edd03a124636be8381204465d887
-Author: Feng Yang <yangfeng@kylinos.cn>
+Please always send new revisions of series individually, not in-reply-to
+any other email.
 
-selftests/bpf: Test faulting build IDs from a sleepable raw tracepoint
+The easiest way of accomplishing this is to use b4 [0] (the recommended
+way of sending patches to mm), otherwise format patches like this:
 
-This commit extends the build_id selftest with sleepable and non-sleepable
-raw tracepoints on sys_enter to test faulting in build IDs when the build
-ID page of uprobe_multi has been evicted.
+For a patch series, e.g. at v2:
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/build_id.c b/tools/te=
-sting/selftests/bpf/prog_tests/build_id.c
-> index aec9c8d6bc96b..885dc3da5900b 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/build_id.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/build_id.c
+$ git format-patch -v2 --cover-letter --thread ...
 
-[ ... ]
+For an individual patch, e.g. at v2:
 
-> @@ -104,6 +106,138 @@ static void subtest_sleepable(void)
->  	test_build_id__destroy(skel);
->  }
-> =20
-> +static bool stack_has_build_id(const struct bpf_stack_build_id *stack, i=
-nt frame_cnt,
-> +			       const char *id, int id_sz)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < frame_cnt; i++)
-> +		if (stack[i].status =3D=3D BPF_STACK_BUILD_ID_VALID &&
-> +		    !memcmp(stack[i].build_id, id, id_sz))
-> +			return true;
-> +
-> +	return false;
-> +}
+$ git format-patch -v2 HEAD~1
 
-[ ... ]
+[0]: https://b4.docs.kernel.org/en/latest/contributor/send.html
 
-> +static void subtest_raw_tp(bool sleepable)
-> +{
-
-[ ... ]
-
-> +	ASSERT_GT(frame_cnt, 0, "frames");
-> +	if (sleepable)
-> +		ASSERT_TRUE(stack_has_build_id(stack, frame_cnt, build_id, build_id_sz=
-),
-> +			    "sleepable_build_id");
-> +	else
-> +		ASSERT_FALSE(stack_has_build_id(stack, frame_cnt, build_id, build_id_s=
-z),
-> +			     "nofault_build_id");
-
-[Severity: Medium]
-In trigger_stop(), uprobe_multi invokes the syscall via libc's syscall()
-wrapper:
-
-    subtest_raw_tp()
-      -> run_uprobe_multi_stopped()
-        -> trigger_stop()
-          -> syscall(SYS_getpid)
-
-When rawtp_nofault or rawtp_sleepable fires on sys_enter and calls
-bpf_get_stack() with BPF_F_USER_STACK | BPF_F_USER_BUILD_ID, stack[0] is
-inside libc.so rather than uprobe_multi, so reaching uprobe_multi requires
-perf_callchain_user() to unwind user stack frames past libc.so.
-
-On s390x, arch_stack_walk_user_common() in arch/s390/kernel/stacktrace.c
-unwinds user stacks via sf->back_chain. Because uprobe_multi is built with
--fno-omit-frame-pointer but without -mbackchain in
-tools/testing/selftests/bpf/Makefile, sf->back_chain is 0 and unwinding
-stops after stack[0] in libc.so. Will raw-tp-sleepable-paged-out fail on
-s390x because stack_has_build_id() never sees a frame from uprobe_multi?
-
-Also, the commit message states that for the non-sleepable control:
-
-    the same frame must be reported as IP, which also proves that the page
-    was really evicted.
-
-However, the non-sleepable branch in subtest_raw_tp() only asserts that
-stack_has_build_id() is false without checking that any frame has status
-BPF_STACK_BUILD_ID_IP. If unwinding stops at stack[0] in libc.so (whose
-build ID is resident and valid), won't the non-sleepable subtest pass even
-though uprobe_multi was never reached and no frame was reported with
-BPF_STACK_BUILD_ID_IP?
-
-[ ... ]
-
-> diff --git a/tools/testing/selftests/bpf/progs/test_build_id.c b/tools/te=
-sting/selftests/bpf/progs/test_build_id.c
-> index 32ce59f9aa27b..a6d6712888dc9 100644
-> --- a/tools/testing/selftests/bpf/progs/test_build_id.c
-> +++ b/tools/testing/selftests/bpf/progs/test_build_id.c
-> @@ -3,6 +3,7 @@
-> =20
->  #include "vmlinux.h"
->  #include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> =20
->  struct bpf_stack_build_id stack_sleepable[128];
->  int res_sleepable;
-> @@ -28,4 +29,41 @@ int uprobe_sleepable(struct pt_regs *ctx)
->  	return 0;
->  }
-> =20
-> +struct bpf_stack_build_id stack_rawtp_sleepable[128];
-> +int res_rawtp_sleepable;
-> +
-> +struct bpf_stack_build_id stack_rawtp_nofault[128];
-> +int res_rawtp_nofault;
-> +
-> +int target_tgid;
-> +int target_syscall;
-> +
-> +SEC("raw_tp/sys_enter")
-> +int BPF_PROG(rawtp_nofault, struct pt_regs *regs, long id)
-> +{
-> +	if ((u32)(bpf_get_current_pid_tgid() >> 32) !=3D (u32)target_tgid ||
-> +	    id !=3D target_syscall)
-> +		return 0;
-> +
-> +	res_rawtp_nofault =3D bpf_get_stack(ctx, stack_rawtp_nofault,
-> +					  sizeof(stack_rawtp_nofault),
-> +					  BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
-> +
-> +	return 0;
-> +}
-> +
-> +SEC("raw_tp.s/sys_enter")
-> +int BPF_PROG(rawtp_sleepable, struct pt_regs *regs, long id)
-> +{
-> +	if ((u32)(bpf_get_current_pid_tgid() >> 32) !=3D (u32)target_tgid ||
-> +	    id !=3D target_syscall)
-> +		return 0;
-> +
-> +	res_rawtp_sleepable =3D bpf_get_stack(ctx, stack_rawtp_sleepable,
-> +					    sizeof(stack_rawtp_sleepable),
-> +					    BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
-> +
-> +	return 0;
-> +}
-> +
->  char _license[] SEC("license") =3D "GPL";
-> diff --git a/tools/testing/selftests/bpf/uprobe_multi.c b/tools/testing/s=
-elftests/bpf/uprobe_multi.c
-> index 0af330b6c3646..ef44d86962c13 100644
-> --- a/tools/testing/selftests/bpf/uprobe_multi.c
-> +++ b/tools/testing/selftests/bpf/uprobe_multi.c
-
-[ ... ]
-
-> @@ -123,12 +125,39 @@ int __attribute__((weak)) trigger_uprobe(bool build=
-_id_resident)
-
-[ ... ]
-
-> +int __attribute__((weak)) trigger_stop(void)
-> +{
-> +	int err =3D prep_build_id_page(false /* page-out build ID */);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Make one syscall that the BPF program under test filters on, then
-> +	 * stop this process so that the recorded stack cannot be overwritten
-> +	 * by another syscall while the caller inspects it.
-> +	 */
-> +	(void)syscall(SYS_getpid);
-> +	raise(SIGSTOP);
-
-[Severity: Medium]
-Does raise(SIGSTOP) here end up issuing a second SYS_getpid syscall that
-overwrites stack_rawtp_nofault and stack_rawtp_sleepable?
-
-In glibc, raise(SIGSTOP) calls __pthread_kill_implementation(), which calls
-__getpid() and executes SYS_getpid before invoking tgkill(). Because
-rawtp_nofault and rawtp_sleepable in
-tools/testing/selftests/bpf/progs/test_build_id.c only filter on
-target_tgid and target_syscall without disarming after the first hit, the
-SYS_getpid inside raise(SIGSTOP) will trigger the BPF program a second
-time.
-
-In raw-tp-sleepable-paged-out, the first syscall(SYS_getpid) has already
-faulted in uprobe_multi's build ID page, so the second call records the
-stack when the page is already resident. Furthermore, when libc.so is built
-with -fomit-frame-pointer, unwinding out of __pthread_kill_implementation()
-during the second SYS_getpid can fail to reach uprobe_multi, overwriting
-the valid trace captured during syscall(SYS_getpid) and causing the
-sleepable_build_id assertion in subtest_raw_tp() to fail.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104083833.9719=
-11-1-yangfeng59949@163.com?part=3D2
+-- 
+Cheers, Lorenzo
