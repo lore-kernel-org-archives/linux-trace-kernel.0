@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793785035;
-	b=rRS3Da8caxdavKboYirxpsgeYJHuLa/0jw/j8PWUtLcVe96QpR2AxZS/aypDExPtCFMr
-	 Bij0nQBUPPt+yTGHUisQ+wgPLpFdWAYIk035LpWfVZE5s1x/YFLZ5pVGZiu5T25Hw8gtW
-	 09Hy+9DlMVrqXpPywRm0VjGqmGTWnB2M+WH+/r0d//gwYUl4LcD2MScy22UgR1pgXXTqu
-	 ZQ5hpQIYwd7B2lCySwnmWLyDpBl8biULDJlwhw7WIt2cnF5WW0vroCXAN71FpPvdifI84
-	 zZAx6IjPdjCNbifgrjoTgz5YYflpH2wo8a1KasY+6/FegfZ8xdor0vXaZDNS+gGceYg==
+	t=1793785148;
+	b=fdnsZLnz0BgkwJnP4L2inYFqpQHnVqKl/9476dj60JYz6qZrs7lvBna/NYEt/fik/T9V
+	 XsBpseK0cgQG6R7bY6nfeaeiR9eM5x/vMwZGe6fi9bD8zxWI0nftUwsAe9wep/QuMFF+j
+	 +9xh50mHi/33cMtEklzPRkVMpi1iF3ky3WM047g09pxFaVYPIHq+7787taNEsqtsiHu2X
+	 FtPOIOKxNSkqnv8cr3CB6R0d+ClEllsgXYi08lNOpdbpCzZCMgn7IAmDrfelyDt5J4ERQ
+	 WGT67mqBWkIx/E3nOddMGUs5GZ3p9aFuJxp5JKnl5tWPFThx9Pa50IzkqyyOJJ9Ty/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793785035;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793785148;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=+18W1Qz9UtmKIOIfymdE7GzGzs4tDdcUL8jM0vu2r8Y=;
-	b=uDLm356pWCzBlPrOuZvFqF2SXpIJNCBX4LMXydM2SlAVKwJ4pOUZQ8HhBn5+k8T0ze8z
-	 bPMbKrY7x8JQkmmgn7DTVOXJM/letQssZUyV8PokKOOo33ZKdHmmAyXcMY1sw4Pn7inUr
-	 fM3ewDoC5CxfWopFbZVGvJgGZq/FOuXJNucxRsY79zRYAiyBXJjcrBjvhfi2RjXyRF1Up
-	 ZL0ks0N9RBsi8UuRF+2KcjYPbs4RT9b5nkR7l94rhOMSEScmEPn3ZQp8GsWU/bK3LDMwX
-	 y7TLoojDXnhPMDf2NOs3MxnnYC6/HD0BpdMMvqmmmcEaitoOPzpiKi6jf/pYoYa4a7A==
+	bh=MJV9+cPTtmqT+ERvAUlD1ow1B1vhqphHRU0ZKg5DZMU=;
+	b=SGxOHr8fx7aGmyRJnGU2V/hk0H0hZdi+ilO0cU4PnoydS/1vTYQvaCDJOt7yEs/K3Sr7
+	 E6WiN6fwwicO0F5D7C17WopvyNTHlDKiMJuC4flcea3LVsBA/U40hCv+RfpNRPKNGOt97
+	 W95KwMXrrLEZJOJes3+5MDAI3r9R/XLXYBI6O8qNK7gBhG/TLMAuf6NaBZm7ICEAyz5ic
+	 iMfvPjArosssfeQx8rlGW2eGNJ2zxRfUFgwWYEZYcS+mGKN3Gn5Xe98WskjKUIFnmzza4
+	 S/4P/HNHbV6hmMoq2ujmzPiNksTnV+wCOF/sxXiP+86N4AStUDXVixoRS4VK09LqdZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="PWbAoY/e";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+54kQR+;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1CB606A335
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 09:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20CE606A333
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 09:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PWbAoY/e
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03C831F0093A;
-	Wed,  4 Nov 2026 09:37:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+54kQR+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 453F71F0093A;
+	Wed,  4 Nov 2026 09:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793785035;
-	bh=+18W1Qz9UtmKIOIfymdE7GzGzs4tDdcUL8jM0vu2r8Y=;
+	s=k20260515; t=1793785147;
+	bh=MJV9+cPTtmqT+ERvAUlD1ow1B1vhqphHRU0ZKg5DZMU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PWbAoY/etYxxLZC+jmIuSRdhNTgwDbi4gGvYuvkyQY5+2j5Ig9xEEsGPrAYdK3RII
-	 6xnmX2GASl75MTpeB8zrWxIbHgH/fBNMzyu4BALWlPHEMrFade57K+7mAdJVcN/63q
-	 bSkMQNW+Ars94sRVIXlcHXE5ry2EPFPmo+EYX/07JZjRQR3YYBgEpso99vJZkccl5U
-	 R/UQcCfkud4+1gmztxHgL32DFJudyyKzVEBJMLXlt7/D+/dqoS6WuKyktCXoC8105A
-	 zg0TiCdV6/tY5J+vanITZfKY3vXzMLSinur2Iri2YAV7uNF0iFnJd2/jptyvuidW9v
-	 JBThO8n/YJj8A==
-Message-ID: <sashiko-outbox-196972@kernel.org>
+	b=F+54kQR+jAY8iStIEwiTPYUktk5vMVSTj0ypud3IpwehIe7PfeQF5rLUwDgmF4sKi
+	 VnGOqjDafvZ4v6P68fA3kWyBEwqs3+me+Xlg+G9juMqXaCpDB5LNBTnW0q/DG2E/8d
+	 S7qYqkX5iSrKIgBrO4Iv0K4Lpt0zrzYgXgGpJCbbFK5g0v0NmDfxS6WRukmf94oy+T
+	 uywJV9y0beUoL+sVit6l+pIkKgnwZKla8AvnEwbKRUOamHRKBPtmn/LefT/w0j8K8/
+	 FydJaa4mZXuTIFzNA7/OcXxTGxp5Do2nRuw5KjicaJsEtSBDVImVveNRZfqbPosUVy
+	 IZi5g3uYPSy0A==
+Message-ID: <sashiko-outbox-196976@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/6] rv: Show the mixed enable state of containers
+Subject: Re: [PATCH 5/6] tools/rv: Parse the mixed enable state of
+ containers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Wei Li" <liwei1412@hotmail.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <CY8PR19MB70099F2263C408361053B295B7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+In-Reply-To: <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
 References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
- <CY8PR19MB70099F2263C408361053B295B7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+ <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 09:37:14 +0000
+Date: Wed, 04 Nov 2026 09:39:06 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,106 +63,87 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] rv: stale parent container state on re-enable error in rv_update=
-_single()
+- [Medium] tools/rv: ikm_run_monitor() still treats mixed-state container a=
+s enabled
 --
 
-commit 2db3de084bc5c2af773f028e5905ec5c314ba488
+commit 46a912d6c838892960e060f3a3369c5f213319f7
 Author: Wei Li <liwei391@huawei.com>
 
-rv: Show the mixed enable state of containers
+tools/rv: Parse the mixed enable state of containers
 
-This commit converts struct rv_monitor::enabled into enum rv_monitor_state
-so container monitors can report a mixed ("X") enable state when only a
-subset of their nested monitors are enabled. It updates rv_enable_single()
-and rv_disable_single() to refresh the parent container state.
+This commit updates __ikm_read_enable() to parse the "X" mixed enable state
+of containers as 2 and displays such containers as [MIX] in rv list.
 
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 4e689d4590aee..7846e4092b9c4 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-[ ... ]
-> @@ -269,10 +272,22 @@ static int __rv_disable_monitor(struct rv_monitor *=
-mon, bool sync)
-> =20
->  static void rv_disable_single(struct rv_monitor *mon)
+> diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/r=
+v/src/in_kernel.c
+> index e6dea4040f8f4..0f2e9f1eca51f 100644
+> --- a/tools/verification/rv/src/in_kernel.c
+> +++ b/tools/verification/rv/src/in_kernel.c
+> @@ -29,21 +29,38 @@ static char *config_reactor;
+>   *
+>   * __does not log errors.
+>   *
+> - * Returns the current status, or -1 if the monitor does not exist,
+> - * __hence not logging errors.
+> + * Returns 0 if disabled, 1 if enabled, 2 if a container with children
+> + * in mixed states, or -1 if the monitor does not exist, __hence not
+> + * logging errors.
+>   */
+>  static int __ikm_read_enable(char *monitor_name)
 >  {
-> +	struct rv_monitor *cntr =3D mon->parent;
-> +	struct rv_monitor *p =3D cntr;
-> +
->  	__rv_disable_monitor(mon, true);
-> +	if (!cntr)
-> +		return;
-> +	cntr->enabled =3D 0;
-> +	list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> +		if (p->parent !=3D cntr)
-> +			break;
-> +		if (p->enabled)
-> +			cntr->enabled =3D 2;
-> +	}
->  }
+>  	char path[MAX_PATH];
+> -	long long enabled;
+> -	int retval;
+> +	char *buffer;
+> +	int enabled;
 > =20
-> -static int rv_enable_single(struct rv_monitor *mon)
-> +static int __rv_enable_monitor(struct rv_monitor *mon)
->  {
->  	int retval;
+>  	snprintf(path, MAX_PATH, "rv/monitors/%s/enable", monitor_name);
 > =20
-> @@ -289,6 +304,27 @@ static int rv_enable_single(struct rv_monitor *mon)
->  	return retval;
->  }
+> -	retval =3D tracefs_instance_file_read_number(NULL, path, &enabled);
+> -	if (retval < 0)
+> +	buffer =3D tracefs_instance_file_read(NULL, path, NULL);
+> +	if (!buffer)
+>  		return -1;
 > =20
-> +static int rv_enable_single(struct rv_monitor *mon)
-> +{
-> +	struct rv_monitor *cntr =3D mon->parent;
-> +	struct rv_monitor *p =3D cntr;
-> +	int retval;
-> +
-> +	retval =3D __rv_enable_monitor(mon);
-> +
-> +	if (!retval && cntr) {
-> +		cntr->enabled =3D 1;
-> +		list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> +			if (p->parent !=3D cntr)
-> +				break;
-> +			if (!p->enabled)
-> +				cntr->enabled =3D 2;
-> +		}
+> +	switch (buffer[0]) {
+> +	case '0':
+> +		enabled =3D 0;
+> +		break;
+> +	case '1':
+> +		enabled =3D 1;
+> +		break;
+> +	case 'X':
+> +		enabled =3D 2;
+> +		break;
+> +	default:
+> +		enabled =3D -1;
 > +	}
 > +
-> +	return retval;
-> +}
+> +	free(buffer);
 > +
->  static int rv_update_single(struct rv_monitor *mon, rvmon_update_fn_t up=
-date, void *data)
->  {
->  	int retval =3D 0;
-> @@ -297,7 +333,7 @@ static int rv_update_single(struct rv_monitor *mon, r=
-vmon_update_fn_t update, vo
->  	enabled =3D __rv_disable_monitor(mon, true);
->  	update(mon, data);
->  	if (enabled)
-> -		retval =3D rv_enable_single(mon);
-> +		retval =3D __rv_enable_monitor(mon);
+>  	return enabled;
+>  }
 
 [Severity: Medium]
-Can this leave mon->parent->enabled stale if re-enabling a nested monitor
-fails in rv_update_single()?
+The commit message notes that rv fails to start a container in a mixed state
+because rv mon takes the return value of __ikm_read_enable() as a true value
+and reports a spurious "already enabled" message.
 
-When updating a single nested monitor (for example via
-monitor_reactors_write() -> monitor_swap_reactors() -> rv_update_monitor() =
-->
-rv_update_single()), __rv_disable_monitor() sets mon->enabled =3D 0 without
-updating mon->parent->enabled.
+However, in tools/verification/rv/src/in_kernel.c, ikm_run_monitor() still
+checks for any non-zero return value from __ikm_read_enable():
 
-If the subsequent __rv_enable_monitor(mon) call fails (such as
-enable_nomiss() failing in init_storage(false)), mon remains disabled while
-mon->parent->enabled still holds its previous enabled or mixed state.
+	retval =3D __ikm_read_enable(full_name);
+	if (retval) {
+		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
+		return -1;
+	}
 
-Also, this isn't a bug, but would it be cleaner to use a shared helper with
-the enum rv_monitor_state constants instead of open-coding the parent state
-loops with raw 0, 1, and 2 literals in rv_disable_single() and
-rv_enable_single()?
+When a container has children in mixed states, __ikm_read_enable() now
+returns 2, which is still non-zero (as is -1 on read errors). Won't
+ikm_run_monitor() still treat a mixed-state container as already enabled and
+refuse to start it?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/CY8PR19MB70098BF493=
-A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com?part=3D3
+A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com?part=3D5
