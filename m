@@ -1,57 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=101.71.155.101
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793785148;
-	b=fdnsZLnz0BgkwJnP4L2inYFqpQHnVqKl/9476dj60JYz6qZrs7lvBna/NYEt/fik/T9V
-	 XsBpseK0cgQG6R7bY6nfeaeiR9eM5x/vMwZGe6fi9bD8zxWI0nftUwsAe9wep/QuMFF+j
-	 +9xh50mHi/33cMtEklzPRkVMpi1iF3ky3WM047g09pxFaVYPIHq+7787taNEsqtsiHu2X
-	 FtPOIOKxNSkqnv8cr3CB6R0d+ClEllsgXYi08lNOpdbpCzZCMgn7IAmDrfelyDt5J4ERQ
-	 WGT67mqBWkIx/E3nOddMGUs5GZ3p9aFuJxp5JKnl5tWPFThx9Pa50IzkqyyOJJ9Ty/Q==
+	t=1793786226;
+	b=IaG7jWRGdOYg/ujiVTDQSmujPvJSKcyZZqoGqsuVbkGq/Cm9IfsIVbTb8AvrmyzWYok6
+	 VlaQsI9FPHg2DBKs1Y3hnvSMfncuaf4G0x5GhEtb9ECdD5BQoBAeXy/bq3jEg+mf7dHhR
+	 bQOPOX75G7/Er0L0AL+jw4L2x4T3RD+SDY5NFbRAkoziJqw5G92zYryXYgEiEjBxlCX+b
+	 VHkEop3ozf9ZHg9T+UUmLnu91+nXYXZ9h4SJvkcoWMOu9ZiQ2O1zpoQ3FJeJdfudS8/aO
+	 NXYuq92MiSZleO7/b1HYMZLXgG9kj4hsAs7TJklcDywLf7iPCOUhyW2+f8XnN8vM+NQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793785148;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=MJV9+cPTtmqT+ERvAUlD1ow1B1vhqphHRU0ZKg5DZMU=;
-	b=SGxOHr8fx7aGmyRJnGU2V/hk0H0hZdi+ilO0cU4PnoydS/1vTYQvaCDJOt7yEs/K3Sr7
-	 E6WiN6fwwicO0F5D7C17WopvyNTHlDKiMJuC4flcea3LVsBA/U40hCv+RfpNRPKNGOt97
-	 W95KwMXrrLEZJOJes3+5MDAI3r9R/XLXYBI6O8qNK7gBhG/TLMAuf6NaBZm7ICEAyz5ic
-	 iMfvPjArosssfeQx8rlGW2eGNJ2zxRfUFgwWYEZYcS+mGKN3Gn5Xe98WskjKUIFnmzza4
-	 S/4P/HNHbV6hmMoq2ujmzPiNksTnV+wCOF/sxXiP+86N4AStUDXVixoRS4VK09LqdZA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793786226;
+	h=DMARC-Filter:Received:From:To:Cc:Date:Message-ID:Subject:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:
+	 X-HM-Tid:X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
+	bh=Yj/cYH2V4QNf36wK2nXeT6NREFy2vtk6o6Y7I0HUTvw=;
+	b=LmxVRZk7G7ymoNlOhBgZnEo9blSr2GKr97NJ/hIUOF+G0Nsh4xgSaNC/rqUr0eZzNKLs
+	 o+iwBEk98mLVZeBPpbe+KGQ8sRELYMJ8SoNcLX1biqkfdzql+n2zPNFpbzGe0RHjWwdIL
+	 ANCwMH/8YGFzMBN6PbNFhNdrZ04WJxfuv/hUUF2dbJktG57crlsS//HfkjjbplZGJ7Une
+	 AxwROBLmz4PT4FfmmLcM0+F8vGz4qbj3s3cQStOOHq49fdFCxiEKIz8zTmyQncyGfbTKF
+	 NnbRnj/0lbStvIimWxBAkbuU2t/S/5ZWAulpZQEcSlCMyWWLNHHOkVO5najRGTk6tBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+54kQR+;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=stu.pku.edu.cn;
+	spf=pass smtp.mailfrom=stu.pku.edu.cn;
+	arc=none smtp.remote-ip=101.71.155.101
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20CE606A333
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 09:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F+54kQR+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 453F71F0093A;
-	Wed,  4 Nov 2026 09:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793785147;
-	bh=MJV9+cPTtmqT+ERvAUlD1ow1B1vhqphHRU0ZKg5DZMU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F+54kQR+jAY8iStIEwiTPYUktk5vMVSTj0ypud3IpwehIe7PfeQF5rLUwDgmF4sKi
-	 VnGOqjDafvZ4v6P68fA3kWyBEwqs3+me+Xlg+G9juMqXaCpDB5LNBTnW0q/DG2E/8d
-	 S7qYqkX5iSrKIgBrO4Iv0K4Lpt0zrzYgXgGpJCbbFK5g0v0NmDfxS6WRukmf94oy+T
-	 uywJV9y0beUoL+sVit6l+pIkKgnwZKla8AvnEwbKRUOamHRKBPtmn/LefT/w0j8K8/
-	 FydJaa4mZXuTIFzNA7/OcXxTGxp5Do2nRuw5KjicaJsEtSBDVImVveNRZfqbPosUVy
-	 IZi5g3uYPSy0A==
-Message-ID: <sashiko-outbox-196976@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/6] tools/rv: Parse the mixed enable state of
- containers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Wei Li" <liwei1412@hotmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
- <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 09:39:06 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC946606A326;
+	Wed,  4 Nov 2026 09:57:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC946606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stu.pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.pku.edu.cn
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa (unknown [1.202.162.49])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 5378c9735;
+	Wed, 4 Nov 2026 17:56:54 +0800 (GMT+08:00)
+From: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+To: linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org
+Date: Wed, 04 Nov 2026 17:56:53 +0800
+Message-ID: <179378621331.55520.2052332247156241151@stu.pku.edu.cn>
+Subject: [PATCH v3] tracing/probes: bound symstr stores to reserved length
+In-Reply-To: <179367391951.8187.17152618045554425533@stu.pku.edu.cn>
+References: <179367391951.8187.17152618045554425533@stu.pku.edu.cn>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,90 +52,71 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-HM-Tid: 0aa1a5fd79cb03a2kunm548c819715b7cc
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaHR1DVhgfGBpJTElOHUNMQlYeHw
+	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKVUlLSVVKTUlVT0JZV1kWGg8SFR0UWUFZT0tIVUpLSEpMTU
+	NVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=DWZvHNRd4473L4oOwcT7qRJ13ZU4UnQDc7vN2LoWZDnLi1PtJa875Nzs4UY3fAPgzNuUxFzgqUbUK8GvEGRG/gy7dX0oWxGkBLQ1HFm8tb4EIfguhZIaD+h1/amQN4fv1Uq1A5dbh6/ym91IpRu4HXBbZd+bWGUrgLh/gaKdKzs=; s=default; c=relaxed/relaxed; d=stu.pku.edu.cn; v=1;
+	bh=Yj/cYH2V4QNf36wK2nXeT6NREFy2vtk6o6Y7I0HUTvw=;
+	h=date:mime-version:subject:message-id:from;
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] tools/rv: ikm_run_monitor() still treats mixed-state container a=
-s enabled
---
+Traceprobe calculates dynamic string sizes before storing the values.  A
+probed pointer can change between those passes, so
+fetch_store_symstrlen() can reserve space for a short symbol while
+fetch_store_symstring() observes a longer one.  The store path then
+overwrites the trace record.
 
-commit 46a912d6c838892960e060f3a3369c5f213319f7
-Author: Wei Li <liwei391@huawei.com>
+Format the symbol into a temporary KSYM_SYMBOL_LEN buffer and copy only
+the bytes that fit in the reserved field, including a trailing NUL.
+Update __data_loc with the length actually stored so consumers do not
+read beyond the truncated value.
 
-tools/rv: Parse the mixed enable state of containers
+Fixes: b26a124cbfa8 ("tracing/probes: Add symstr type for dynamic events")
+Signed-off-by: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+---
+Changes in v3:
+- encode the actual stored length in __data_loc after truncation
+- encode a zero length if symbol formatting fails
 
-This commit updates __ikm_read_enable() to parse the "X" mixed enable state
-of containers as 2 and displays such containers as [MIX] in rv list.
+ kernel/trace/trace_probe_tmpl.h | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-> diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/r=
-v/src/in_kernel.c
-> index e6dea4040f8f4..0f2e9f1eca51f 100644
-> --- a/tools/verification/rv/src/in_kernel.c
-> +++ b/tools/verification/rv/src/in_kernel.c
-> @@ -29,21 +29,38 @@ static char *config_reactor;
->   *
->   * __does not log errors.
->   *
-> - * Returns the current status, or -1 if the monitor does not exist,
-> - * __hence not logging errors.
-> + * Returns 0 if disabled, 1 if enabled, 2 if a container with children
-> + * in mixed states, or -1 if the monitor does not exist, __hence not
-> + * logging errors.
->   */
->  static int __ikm_read_enable(char *monitor_name)
->  {
->  	char path[MAX_PATH];
-> -	long long enabled;
-> -	int retval;
-> +	char *buffer;
-> +	int enabled;
-> =20
->  	snprintf(path, MAX_PATH, "rv/monitors/%s/enable", monitor_name);
-> =20
-> -	retval =3D tracefs_instance_file_read_number(NULL, path, &enabled);
-> -	if (retval < 0)
-> +	buffer =3D tracefs_instance_file_read(NULL, path, NULL);
-> +	if (!buffer)
->  		return -1;
-> =20
-> +	switch (buffer[0]) {
-> +	case '0':
-> +		enabled =3D 0;
-> +		break;
-> +	case '1':
-> +		enabled =3D 1;
-> +		break;
-> +	case 'X':
-> +		enabled =3D 2;
-> +		break;
-> +	default:
-> +		enabled =3D -1;
-> +	}
-> +
-> +	free(buffer);
-> +
->  	return enabled;
->  }
-
-[Severity: Medium]
-The commit message notes that rv fails to start a container in a mixed state
-because rv mon takes the return value of __ikm_read_enable() as a true value
-and reports a spurious "already enabled" message.
-
-However, in tools/verification/rv/src/in_kernel.c, ikm_run_monitor() still
-checks for any non-zero return value from __ikm_read_enable():
-
-	retval =3D __ikm_read_enable(full_name);
-	if (retval) {
-		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
-		return -1;
-	}
-
-When a container has children in mixed states, __ikm_read_enable() now
-returns 2, which is still non-zero (as is -1 on read errors). Won't
-ikm_run_monitor() still treat a mixed-state container as already enabled and
-refuse to start it?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/CY8PR19MB70098BF493=
-A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com?part=3D5
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 8db12f758fdae..8acc0f0ebd7a6 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -87,15 +87,27 @@ fetch_store_symstrlen(unsigned long addr)
+ static nokprobe_inline int
+ fetch_store_symstring(unsigned long addr, void *dest, void *base)
+ {
++	char namebuf[KSYM_SYMBOL_LEN];
+ 	int maxlen = get_loc_len(*(u32 *)dest);
+ 	void *__dest;
++	int len;
+ 
+ 	if (unlikely(!maxlen))
+ 		return -ENOMEM;
+ 
+ 	__dest = get_loc_data(dest, base);
++	len = sprint_symbol(namebuf, addr);
++	if (len < 0) {
++		*(u32 *)dest = make_data_loc(0, __dest - base);
++		return 0;
++	}
++
++	len = min(len, maxlen - 1);
++	memcpy(__dest, namebuf, len);
++	((char *)__dest)[len] = '\0';
++	*(u32 *)dest = make_data_loc(len + 1, __dest - base);
+ 
+-	return sprint_symbol(__dest, addr);
++	return len + 1;
+ }
+ 
+ /* common part of process_fetch_insn*/
+-- 
+2.39.5 (Apple Git-154)
