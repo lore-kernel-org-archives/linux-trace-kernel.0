@@ -1,74 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793781583;
-	b=weeW/GjMZWclkCHs1KcQAscf6rQsofkJUyWdtVpv8F0gip7Is4x626eRpsOU7huTEG9k
-	 vCeecDYRSUAd2JOKTDZ+j9kgePYQ0uanC6t2teaXieGfBDhTyxPRt87BhE2rSnGL45xZf
-	 tf6oiQrKXoEBZbeMJfF2T5nMEVa2Tf0QbKA6iudcn4UZU2YsvFX2qpOy7qwiy9TFcPvCN
-	 U+VgCv9r25G07AT6oNfArSvggqh+XXH1M36phgwg1RDqG54g3cAvhZNHP5aAr5F6GFcpf
-	 u1Te8nfhSRHmMsXnAibmCzHcOqJ8ubyhE/Jy7kxjmVz+sh3W5wszXBXwdbxJuIwMCwg==
+	t=1793782625;
+	b=otbQEIXVpcM334w9+Trk9V1LzPPs4OVn45CpJQS3ce2ssvg57Mvk+Sdj3gzhXi+HtxhS
+	 si3iYQDMGq1aJIqM2F1fIjWCT/6ey5qiis8n+YQLiHEx/LC7wwTRFDmFs2aNLYxaDLzHJ
+	 ScOAScJ9Ns373A0ZsvSN5B/R7SIMQ4VlJXhhQ85R51YVM7sCWgK4ZuPqmVh5gHIScjX/Y
+	 c8m+eZBMLG0mn62s6AvDOAniDKJ4efVueSBCffChu8X359wZrnNKs0IpfltOKhohqCJqd
+	 n+B4OWXWWB1XoczitWoH1DNLB4wwDCcR4Fxux61ohOS2+9sdij534tZ8rEcli9tBr1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793781583;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
-	 X-CM-SenderInfo;
-	bh=hWspUsi6qY4l04i5YVyJ9OGNkdZBfBmZDkAUG/jAooc=;
-	b=Qe0pIyX2s/9+p8eIbbITV3GT2b9D7kJZP8O/oomRdnkBPU3pJuqbCOH99p4zlDnPk2w6
-	 ztvTJtM3oXJtNRqXq82am1hQs6XG7AcWIlzdz/zotdTas3z+L5UJgz5nnu0RmXkSL7F0h
-	 m51xDEt/jAr0m4qNEt3VKgMABFO9PBcq9c5ON8oxFifc/HqtxnxyI+Hqp62Uh33rZbBg3
-	 6fVz/DL2sOKfLR2pK+h6safIlBQJrR7qoT9w2Gv2ZRwY7fJ5DNj76/ecKHRnrTFmBAoxb
-	 FCtXmBnLSS9c3xO1omEVm6R+eltt82spB4cLlYhP3jUzBl7dQ04VfDIhStMtJDCjRGQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793782625;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=HlALTijt5CRapJC/NolluYCFJC6FcDyvgnNPx8+9O8Q=;
+	b=N487hteNYPfkiPivu7jAdEbffqlydxIThFK4mVLfE98pb9t+xIT4EvVDdV6eNDUIdbBu
+	 YASmP00zwJaLXiI/3P+d2djySJZ94t4tXfXx1TpyozDgQeheuDab+Oql0QAeUJdYRQgjB
+	 k+F93MFqE3NnaoFj0gjrd7wi3oNDFNlZiIjF6LfmgPgKy3igLp0PRikaoyZ1SsMOdtaTq
+	 vbx4kPGcbosU74KTaEWWLAeVbY+8oJE0KzNOswzPsaaoTdJe3311ubBL2O+BLSv7HZRuD
+	 kFXrWqER2DWJaQ23uH9SHOgJPNb2Y2zq62KGbe8m+ZQPllwfi/jzajxXEcCuSP7eGew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=163.com;
-	spf=pass smtp.mailfrom=163.com;
-	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b="I5XUh/z3";
-	arc=none smtp.remote-ip=220.197.31.3
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MkDzc0YG;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B84606A31B;
-	Wed,  4 Nov 2026 08:39:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30B84606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FBE606A31B;
+	Wed,  4 Nov 2026 08:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=I5XUh/z3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=hW
-	spUsi6qY4l04i5YVyJ9OGNkdZBfBmZDkAUG/jAooc=; b=I5XUh/z3Hkj1gzo1k8
-	QbkO+l6hJjOWFvSK83VXxC0TK092gCgSumwt3cB7xzHTzuj6xptcFiokyir5h0MV
-	QsJWlwB3K7hTnp6z4RiKpjKukMEFYc/yc403cDqB19inbaOQNdwKGEH+BRv5Jn7O
-	XI/P3GNMnmAuKCmX5wG2MjdgU=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3vy8J7+pqdSeZFQ--.24622S3;
-	Wed, 04 Nov 2026 16:38:37 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: song@kernel.org,
-	jolsa@kernel.org,
-	ihor.solodrai@linux.dev,
-	kpsingh@kernel.org,
-	matt@bobrowski.net,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	martin.lau@linux.dev,
-	yonghong.song@linux.dev,
-	emil@etsalapatis.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v3 2/2] selftests/bpf: Test faulting build IDs from a sleepable raw tracepoint
-Date: Wed,  4 Nov 2026 16:38:33 +0800
-Message-Id: <20261104083833.971911-2-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20261104083833.971911-1-yangfeng59949@163.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MkDzc0YG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 859421F000C1;
+	Wed,  4 Nov 2026 08:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793782624;
+	bh=HlALTijt5CRapJC/NolluYCFJC6FcDyvgnNPx8+9O8Q=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=MkDzc0YGaVlxHbugFKLbnuWK0745cupfb7jX+eTKrUvH3035K0+7pUi0/FkS6Z61L
+	 2H8PmPUIJPAmrtApKGcxIVnhbgun6m8XARe9em1XEannlNPEiWF4BfyrIrUeHJi/60
+	 Gbr4W0Y4RAoBBu07DL8ZwtBEOO8SH1634Oke05lDAWM7MGPiTGGed3vEEMNXKs09OX
+	 JF+m6j3i8U7OpDGf8uD5iiVnJ1D83waL4Pl63FLnoKFYq4ELvWW4X1BhXdXub7Z/Fr
+	 dc56o6vkNRfkp4CQtveqnvui46cVFoxAI2LQjJuN9v4xs6fXlX2M+XNmO1wvc/6xtc
+	 k9iTUoXwdvj7w==
+Message-ID: <sashiko-outbox-196902@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: Test faulting build IDs
+ from a sleepable raw tracepoint
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Feng Yang" <yangfeng59949@163.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261104083833.971911-2-yangfeng59949@163.com>
 References: <20261104083833.971911-1-yangfeng59949@163.com>
+ <20261104083833.971911-2-yangfeng59949@163.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 08:57:04 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -77,326 +60,205 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3vy8J7+pqdSeZFQ--.24622S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AF18WrWrtw47ZFy3tw4fKrg_yoWfWF4fpa
-	s2kryYyr4fGr4FvF4xG3yDXFyFvw4kXa47CayfKr9xAw12yry5KF4xKF4UXFnxJrZ5Wws0
-	9rZ5t3y5ArW7ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jIa0PUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbC8g1UzGrq7w0KHwAA3Q
 
-From: Feng Yang <yangfeng@kylinos.cn>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] selftests/bpf: raise(SIGSTOP) in trigger_stop() overwrites recor=
+ded stack
+- [Medium] selftests/bpf: broken s390x unwind and missing IP check in subte=
+st_raw_tp()
+--
 
-Extend the test with a sleepable raw tracepoint on sys_enter.  A helper
-process pages out the build ID page, issues a getpid() syscall and then
-stops itself, so that the recorded stack cannot be overwritten.  The BPF
-program filters on the target tgid and syscall id, captures the user
-stack with BPF_F_USER_BUILD_ID, and the test asserts that one of the
-frames carries uprobe_multi's build ID.  A non-sleepable raw tracepoint
-is used as a control: the same frame must be reported as IP, which also
-proves that the page was really evicted.
+commit f32a6f825aa7edd03a124636be8381204465d887
+Author: Feng Yang <yangfeng@kylinos.cn>
 
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- .../selftests/bpf/prog_tests/build_id.c       | 138 ++++++++++++++++++
- .../selftests/bpf/progs/test_build_id.c       |  38 +++++
- tools/testing/selftests/bpf/uprobe_multi.c    |  37 ++++-
- 3 files changed, 210 insertions(+), 3 deletions(-)
+selftests/bpf: Test faulting build IDs from a sleepable raw tracepoint
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/build_id.c b/tools/testing/selftests/bpf/prog_tests/build_id.c
-index aec9c8d6bc96..885dc3da5900 100644
---- a/tools/testing/selftests/bpf/prog_tests/build_id.c
-+++ b/tools/testing/selftests/bpf/prog_tests/build_id.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-+#include <signal.h>
-+#include <sys/syscall.h>
- #include <test_progs.h>
- 
- #include "test_build_id.skel.h"
-@@ -104,6 +106,138 @@ static void subtest_sleepable(void)
- 	test_build_id__destroy(skel);
- }
- 
-+static bool stack_has_build_id(const struct bpf_stack_build_id *stack, int frame_cnt,
-+			       const char *id, int id_sz)
-+{
-+	int i;
-+
-+	for (i = 0; i < frame_cnt; i++)
-+		if (stack[i].status == BPF_STACK_BUILD_ID_VALID &&
-+		    !memcmp(stack[i].build_id, id, id_sz))
-+			return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * Run uprobe_multi, let it page out the build ID page and stop itself on
-+ * SIGSTOP, so that the recorded stack cannot be overwritten by a later
-+ * syscall while the caller inspects it.  target_tgid is set before the
-+ * child is released, so only its syscalls are recorded.
-+ */
-+static int run_uprobe_multi_stopped(const char *mode, struct test_build_id *skel,
-+				    pid_t *pid_out)
-+{
-+	char c = 'x';
-+	int pfd[2], status, err;
-+	pid_t pid;
-+
-+	*pid_out = -1;
-+
-+	if (pipe(pfd))
-+		return -errno;
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		err = -errno;
-+		close(pfd[0]);
-+		close(pfd[1]);
-+		return err;
-+	}
-+	if (pid == 0) {
-+		close(pfd[1]);
-+		if (read(pfd[0], &c, 1) != 1)
-+			_exit(127);
-+		close(pfd[0]);
-+		execl("./uprobe_multi", "uprobe_multi", mode, NULL);
-+		_exit(127);
-+	}
-+
-+	close(pfd[0]);
-+	skel->bss->target_tgid = pid;
-+	skel->bss->target_syscall = SYS_getpid;
-+	if (write(pfd[1], &c, 1) != 1) {
-+		err = -errno;
-+		close(pfd[1]);
-+		kill(pid, SIGKILL);
-+		waitpid(pid, NULL, 0);
-+		return err;
-+	}
-+	close(pfd[1]);
-+
-+	if (waitpid(pid, &status, WUNTRACED) < 0) {
-+		err = -errno;
-+		kill(pid, SIGKILL);
-+		waitpid(pid, NULL, 0);
-+		return err;
-+	}
-+
-+	if (WIFSTOPPED(status)) {
-+		*pid_out = pid;
-+		return 0;
-+	}
-+	if (WIFEXITED(status))
-+		return WEXITSTATUS(status);
-+	return -1;
-+}
-+
-+static void subtest_raw_tp(bool sleepable)
-+{
-+	struct test_build_id *skel;
-+	struct bpf_stack_build_id *stack;
-+	int frame_cnt, err, res;
-+	pid_t pid = -1;
-+
-+	skel = test_build_id__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open"))
-+		return;
-+
-+	if (sleepable) {
-+		skel->links.rawtp_sleepable = bpf_program__attach(skel->progs.rawtp_sleepable);
-+		if (!ASSERT_OK_PTR(skel->links.rawtp_sleepable, "attach_rawtp_sleepable"))
-+			goto cleanup;
-+	} else {
-+		skel->links.rawtp_nofault = bpf_program__attach(skel->progs.rawtp_nofault);
-+		if (!ASSERT_OK_PTR(skel->links.rawtp_nofault, "attach_rawtp_nofault"))
-+			goto cleanup;
-+	}
-+
-+	err = run_uprobe_multi_stopped("uprobe-paged-out-stop", skel, &pid);
-+	if (err == 2) {
-+		/* could not evict the build ID page, nothing to test */
-+		test__skip();
-+		goto cleanup;
-+	}
-+	if (!ASSERT_OK(err, "trigger_uprobe_multi"))
-+		goto cleanup;
-+
-+	if (sleepable) {
-+		res = skel->bss->res_rawtp_sleepable;
-+		stack = skel->bss->stack_rawtp_sleepable;
-+	} else {
-+		res = skel->bss->res_rawtp_nofault;
-+		stack = skel->bss->stack_rawtp_nofault;
-+	}
-+	frame_cnt = res / sizeof(struct bpf_stack_build_id);
-+	if (env.verbosity >= VERBOSE_NORMAL)
-+		print_stack(stack, frame_cnt);
-+
-+	ASSERT_GT(frame_cnt, 0, "frames");
-+	if (sleepable)
-+		ASSERT_TRUE(stack_has_build_id(stack, frame_cnt, build_id, build_id_sz),
-+			    "sleepable_build_id");
-+	else
-+		ASSERT_FALSE(stack_has_build_id(stack, frame_cnt, build_id, build_id_sz),
-+			     "nofault_build_id");
-+
-+cleanup:
-+	if (pid > 0) {
-+		kill(pid, SIGKILL);
-+		waitpid(pid, NULL, 0);
-+	}
-+	test_build_id__destroy(skel);
-+}
-+
- void serial_test_build_id(void)
- {
- 	build_id_sz = read_build_id("uprobe_multi", build_id, sizeof(build_id));
-@@ -115,4 +249,8 @@ void serial_test_build_id(void)
- 		subtest_nofault(true /* resident */);
- 	if (test__start_subtest("sleepable"))
- 		subtest_sleepable();
-+	if (test__start_subtest("raw-tp-nofault-paged-out"))
-+		subtest_raw_tp(false /* non-sleepable */);
-+	if (test__start_subtest("raw-tp-sleepable-paged-out"))
-+		subtest_raw_tp(true /* sleepable */);
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_build_id.c b/tools/testing/selftests/bpf/progs/test_build_id.c
-index 32ce59f9aa27..a6d6712888dc 100644
---- a/tools/testing/selftests/bpf/progs/test_build_id.c
-+++ b/tools/testing/selftests/bpf/progs/test_build_id.c
-@@ -3,6 +3,7 @@
- 
- #include "vmlinux.h"
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
- 
- struct bpf_stack_build_id stack_sleepable[128];
- int res_sleepable;
-@@ -28,4 +29,41 @@ int uprobe_sleepable(struct pt_regs *ctx)
- 	return 0;
- }
- 
-+struct bpf_stack_build_id stack_rawtp_sleepable[128];
-+int res_rawtp_sleepable;
-+
-+struct bpf_stack_build_id stack_rawtp_nofault[128];
-+int res_rawtp_nofault;
-+
-+int target_tgid;
-+int target_syscall;
-+
-+SEC("raw_tp/sys_enter")
-+int BPF_PROG(rawtp_nofault, struct pt_regs *regs, long id)
-+{
-+	if ((u32)(bpf_get_current_pid_tgid() >> 32) != (u32)target_tgid ||
-+	    id != target_syscall)
-+		return 0;
-+
-+	res_rawtp_nofault = bpf_get_stack(ctx, stack_rawtp_nofault,
-+					  sizeof(stack_rawtp_nofault),
-+					  BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
-+
-+	return 0;
-+}
-+
-+SEC("raw_tp.s/sys_enter")
-+int BPF_PROG(rawtp_sleepable, struct pt_regs *regs, long id)
-+{
-+	if ((u32)(bpf_get_current_pid_tgid() >> 32) != (u32)target_tgid ||
-+	    id != target_syscall)
-+		return 0;
-+
-+	res_rawtp_sleepable = bpf_get_stack(ctx, stack_rawtp_sleepable,
-+					    sizeof(stack_rawtp_sleepable),
-+					    BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
-+
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
-diff --git a/tools/testing/selftests/bpf/uprobe_multi.c b/tools/testing/selftests/bpf/uprobe_multi.c
-index 0af330b6c364..ef44d86962c1 100644
---- a/tools/testing/selftests/bpf/uprobe_multi.c
-+++ b/tools/testing/selftests/bpf/uprobe_multi.c
-@@ -4,7 +4,9 @@
- #include <string.h>
- #include <stdbool.h>
- #include <stdint.h>
-+#include <signal.h>
- #include <sys/mman.h>
-+#include <sys/syscall.h>
- #include <unistd.h>
- #include <sdt.h>
- 
-@@ -95,12 +97,12 @@ static int usdt(void)
- extern char build_id_start[];
- extern char build_id_end[];
- 
--int __attribute__((weak)) trigger_uprobe(bool build_id_resident)
-+/* Returns 2 if the build ID page could not be evicted. */
-+static int prep_build_id_page(bool build_id_resident)
- {
- 	int page_sz = sysconf(_SC_PAGESIZE);
--	void *addr;
--
- 	unsigned char vec[1];
-+	void *addr;
- 	int poll = 0;
- 
- 	/* page-align build ID start */
-@@ -123,12 +125,39 @@ int __attribute__((weak)) trigger_uprobe(bool build_id_resident)
- 			poll++;
- 			usleep(100);
- 		} while (poll < 500);
-+		if (vec[0] & 1)
-+			return 2;
- 	}
-+	return 0;
-+}
-+
-+int __attribute__((weak)) trigger_uprobe(bool build_id_resident)
-+{
-+	(void)prep_build_id_page(build_id_resident);
-+
- 	(void)uprobe();
- 
- 	return 0;
- }
- 
-+int __attribute__((weak)) trigger_stop(void)
-+{
-+	int err = prep_build_id_page(false /* page-out build ID */);
-+
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Make one syscall that the BPF program under test filters on, then
-+	 * stop this process so that the recorded stack cannot be overwritten
-+	 * by another syscall while the caller inspects it.
-+	 */
-+	(void)syscall(SYS_getpid);
-+	raise(SIGSTOP);
-+
-+	return 0;
-+}
-+
- int main(int argc, char **argv)
- {
- 	if (argc != 2)
-@@ -142,6 +171,8 @@ int main(int argc, char **argv)
- 		return trigger_uprobe(false /* page-out build ID */);
- 	if (!strcmp("uprobe-paged-in", argv[1]))
- 		return trigger_uprobe(true /* page-in build ID */);
-+	if (!strcmp("uprobe-paged-out-stop", argv[1]))
-+		return trigger_stop();
- 
- error:
- 	fprintf(stderr,
--- 
-2.25.1
+This commit extends the build_id selftest with sleepable and non-sleepable
+raw tracepoints on sys_enter to test faulting in build IDs when the build
+ID page of uprobe_multi has been evicted.
 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/build_id.c b/tools/te=
+sting/selftests/bpf/prog_tests/build_id.c
+> index aec9c8d6bc96b..885dc3da5900b 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/build_id.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/build_id.c
+
+[ ... ]
+
+> @@ -104,6 +106,138 @@ static void subtest_sleepable(void)
+>  	test_build_id__destroy(skel);
+>  }
+> =20
+> +static bool stack_has_build_id(const struct bpf_stack_build_id *stack, i=
+nt frame_cnt,
+> +			       const char *id, int id_sz)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < frame_cnt; i++)
+> +		if (stack[i].status =3D=3D BPF_STACK_BUILD_ID_VALID &&
+> +		    !memcmp(stack[i].build_id, id, id_sz))
+> +			return true;
+> +
+> +	return false;
+> +}
+
+[ ... ]
+
+> +static void subtest_raw_tp(bool sleepable)
+> +{
+
+[ ... ]
+
+> +	ASSERT_GT(frame_cnt, 0, "frames");
+> +	if (sleepable)
+> +		ASSERT_TRUE(stack_has_build_id(stack, frame_cnt, build_id, build_id_sz=
+),
+> +			    "sleepable_build_id");
+> +	else
+> +		ASSERT_FALSE(stack_has_build_id(stack, frame_cnt, build_id, build_id_s=
+z),
+> +			     "nofault_build_id");
+
+[Severity: Medium]
+In trigger_stop(), uprobe_multi invokes the syscall via libc's syscall()
+wrapper:
+
+    subtest_raw_tp()
+      -> run_uprobe_multi_stopped()
+        -> trigger_stop()
+          -> syscall(SYS_getpid)
+
+When rawtp_nofault or rawtp_sleepable fires on sys_enter and calls
+bpf_get_stack() with BPF_F_USER_STACK | BPF_F_USER_BUILD_ID, stack[0] is
+inside libc.so rather than uprobe_multi, so reaching uprobe_multi requires
+perf_callchain_user() to unwind user stack frames past libc.so.
+
+On s390x, arch_stack_walk_user_common() in arch/s390/kernel/stacktrace.c
+unwinds user stacks via sf->back_chain. Because uprobe_multi is built with
+-fno-omit-frame-pointer but without -mbackchain in
+tools/testing/selftests/bpf/Makefile, sf->back_chain is 0 and unwinding
+stops after stack[0] in libc.so. Will raw-tp-sleepable-paged-out fail on
+s390x because stack_has_build_id() never sees a frame from uprobe_multi?
+
+Also, the commit message states that for the non-sleepable control:
+
+    the same frame must be reported as IP, which also proves that the page
+    was really evicted.
+
+However, the non-sleepable branch in subtest_raw_tp() only asserts that
+stack_has_build_id() is false without checking that any frame has status
+BPF_STACK_BUILD_ID_IP. If unwinding stops at stack[0] in libc.so (whose
+build ID is resident and valid), won't the non-sleepable subtest pass even
+though uprobe_multi was never reached and no frame was reported with
+BPF_STACK_BUILD_ID_IP?
+
+[ ... ]
+
+> diff --git a/tools/testing/selftests/bpf/progs/test_build_id.c b/tools/te=
+sting/selftests/bpf/progs/test_build_id.c
+> index 32ce59f9aa27b..a6d6712888dc9 100644
+> --- a/tools/testing/selftests/bpf/progs/test_build_id.c
+> +++ b/tools/testing/selftests/bpf/progs/test_build_id.c
+> @@ -3,6 +3,7 @@
+> =20
+>  #include "vmlinux.h"
+>  #include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> =20
+>  struct bpf_stack_build_id stack_sleepable[128];
+>  int res_sleepable;
+> @@ -28,4 +29,41 @@ int uprobe_sleepable(struct pt_regs *ctx)
+>  	return 0;
+>  }
+> =20
+> +struct bpf_stack_build_id stack_rawtp_sleepable[128];
+> +int res_rawtp_sleepable;
+> +
+> +struct bpf_stack_build_id stack_rawtp_nofault[128];
+> +int res_rawtp_nofault;
+> +
+> +int target_tgid;
+> +int target_syscall;
+> +
+> +SEC("raw_tp/sys_enter")
+> +int BPF_PROG(rawtp_nofault, struct pt_regs *regs, long id)
+> +{
+> +	if ((u32)(bpf_get_current_pid_tgid() >> 32) !=3D (u32)target_tgid ||
+> +	    id !=3D target_syscall)
+> +		return 0;
+> +
+> +	res_rawtp_nofault =3D bpf_get_stack(ctx, stack_rawtp_nofault,
+> +					  sizeof(stack_rawtp_nofault),
+> +					  BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
+> +
+> +	return 0;
+> +}
+> +
+> +SEC("raw_tp.s/sys_enter")
+> +int BPF_PROG(rawtp_sleepable, struct pt_regs *regs, long id)
+> +{
+> +	if ((u32)(bpf_get_current_pid_tgid() >> 32) !=3D (u32)target_tgid ||
+> +	    id !=3D target_syscall)
+> +		return 0;
+> +
+> +	res_rawtp_sleepable =3D bpf_get_stack(ctx, stack_rawtp_sleepable,
+> +					    sizeof(stack_rawtp_sleepable),
+> +					    BPF_F_USER_STACK | BPF_F_USER_BUILD_ID);
+> +
+> +	return 0;
+> +}
+> +
+>  char _license[] SEC("license") =3D "GPL";
+> diff --git a/tools/testing/selftests/bpf/uprobe_multi.c b/tools/testing/s=
+elftests/bpf/uprobe_multi.c
+> index 0af330b6c3646..ef44d86962c13 100644
+> --- a/tools/testing/selftests/bpf/uprobe_multi.c
+> +++ b/tools/testing/selftests/bpf/uprobe_multi.c
+
+[ ... ]
+
+> @@ -123,12 +125,39 @@ int __attribute__((weak)) trigger_uprobe(bool build=
+_id_resident)
+
+[ ... ]
+
+> +int __attribute__((weak)) trigger_stop(void)
+> +{
+> +	int err =3D prep_build_id_page(false /* page-out build ID */);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	/*
+> +	 * Make one syscall that the BPF program under test filters on, then
+> +	 * stop this process so that the recorded stack cannot be overwritten
+> +	 * by another syscall while the caller inspects it.
+> +	 */
+> +	(void)syscall(SYS_getpid);
+> +	raise(SIGSTOP);
+
+[Severity: Medium]
+Does raise(SIGSTOP) here end up issuing a second SYS_getpid syscall that
+overwrites stack_rawtp_nofault and stack_rawtp_sleepable?
+
+In glibc, raise(SIGSTOP) calls __pthread_kill_implementation(), which calls
+__getpid() and executes SYS_getpid before invoking tgkill(). Because
+rawtp_nofault and rawtp_sleepable in
+tools/testing/selftests/bpf/progs/test_build_id.c only filter on
+target_tgid and target_syscall without disarming after the first hit, the
+SYS_getpid inside raise(SIGSTOP) will trigger the BPF program a second
+time.
+
+In raw-tp-sleepable-paged-out, the first syscall(SYS_getpid) has already
+faulted in uprobe_multi's build ID page, so the second call records the
+stack when the page is already resident. Furthermore, when libc.so is built
+with -fomit-frame-pointer, unwinding out of __pthread_kill_implementation()
+during the second SYS_getpid can fail to reach uprobe_multi, overwriting
+the valid trace captured during syscall(SYS_getpid) and causing the
+sleepable_build_id assertion in subtest_raw_tp() to fail.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104083833.9719=
+11-1-yangfeng59949@163.com?part=3D2
