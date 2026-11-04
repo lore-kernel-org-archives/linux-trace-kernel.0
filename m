@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793751915;
-	b=IIlfb+hEovtk+84Lxcy0PiEZrBbtAuWCfSvpdtpJpd/AqNr5y7jOiBCLt865kBz5G6x8
-	 B0+EG1fgRSa/gQAOMfhiNIWKm33eEQfYU3/u/mKvELFwTMSmD/ynkODYeZlZ+Rfi+x9Ib
-	 r04bvEg1u4hXzHem4SJIo2HSPaHDyEXrAE+Kht3G1ZGmCztrTfOqgbTVvx726uw522TIa
-	 mgfNRYXUH3JLANX3UTUPXmcS81Ql9yKlTIDZaT5+SH6j/EV8WPtc+04qaEJM8uyjdzVtg
-	 qZ6GimasrlAYhWcbhlh4ssaweN+Hv55+QqEzr+8TdJL8f/cxyt45FLKGhoW9oIvpTFw==
+	t=1793752243;
+	b=TWy9PwrNg75i01IxMc+M4GBjykMMRvEvj/6s0WwcuBWUwbpipjt7gjOhAQzXImpYNTA7
+	 5IWGGKlGLshV+/pYgaA56gLKwmNy92uBnCJZTKug4HRpRvaoSKU/El9YcWpBHGwSrnKG3
+	 i+1fLQvqnz9tTJ/Gga5/TKWYOLimzUcKzMfnhu52jsAdOz8SPCrPx2+LdoV+2V/ipq30h
+	 5xK10c1fPBYRZdq1imzIg+Dz9Au1mIk4MsyZqN+LTosCIwAamfZsOnwDb3ywnNJG6+a5d
+	 V2gvaPmlAB2PN21THXVLeXvZrIuQrWBDcGFhN1spisfZxm53ZRWR4YlDWS9vSVr4mlQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793751915;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793752243;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=BZs+4k1o+tG4wzLKryOffSsOJRoP3BAqcybXzzxP964=;
-	b=eQVD9honYqm7dUg+L6Et6nGDl1icSRONUvPjR1iXcs7e8F682VXeHlvY9xOiTeLUFe5J
-	 WO9N3JsZoS3kTN9+yxEX93eNxWEVZGSKiOMDZAesaaCvWNa46Ob4gzyBTR3ZkayGAKRq1
-	 N0HPxpNSsy11ZN4BUc7iFQ9d01KeiT1QfRWPbBLDLeVxnXXOY3jp68Zy4sR43tR2PjV9h
-	 6fLTm+WOh6uojcRl2sETAahsgpKoAK5NDJB4dX/CXOgBlXLIv6prljrDb041Jmw2Yve9L
-	 kb/H0HGs+T5NCAcgzaykl6DvOpVwrAqHaKc90d+N91vGxj+J7+1NEdLmNjKI7IMaV0Q==
+	bh=RCeuOn3VA6r3DNgyxLUBP/fIvlI2eQ/ebHYcQ7dZ/SE=;
+	b=Xpjhdw3+nPvY15vdUux3g71nknBLOajChBUR4QgaKCRvRb5XXEpe+oF596TFHjAkwY7n
+	 sG2tp+UhWnjSXKvLDiK88wJGa9Bw29jSf6FHXGRwQ3wGA6bOiGMkvz6WInlG3TcVEsPLO
+	 RDnqitY0heT+MbYLlKf9avTHooiJ9MZ9PNcjWzgFao3Rg1sVKDX1wgPPlN0QhJaxoFBGm
+	 jtpdUkAfdZVfBBeZHpK/ua2sDNzBWatY3uIPJti2c4X9A5PGC7ZN1ylhOCnObgTQUbzJT
+	 RDQ3qIu4cZlYdmqof8w/f8jDGDWU47sim75CC9ayoime1rW3c7wOjFbt14wCKriL+xw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YrwZ1yNh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Q/YgNV9Q";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393A5606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 00:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239C0606A324
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 00:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YrwZ1yNh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3331F000C1;
-	Wed,  4 Nov 2026 00:25:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q/YgNV9Q
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7591F000C1;
+	Wed,  4 Nov 2026 00:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793751914;
-	bh=BZs+4k1o+tG4wzLKryOffSsOJRoP3BAqcybXzzxP964=;
+	s=k20260515; t=1793752242;
+	bh=RCeuOn3VA6r3DNgyxLUBP/fIvlI2eQ/ebHYcQ7dZ/SE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YrwZ1yNhBcmU/nPGbcNsrYrxnD78tCp+Eh3FYjEGkEZvteGjmRtcwP2MK9xXmL4wO
-	 Xoj113dREXXp4m85MCmneSzvEGyi6IaYyO2xlS8y4XK09IMDn2bNVml3uCAC0FfgIq
-	 kp00lJDtv7UlA6WOWH1fCIN7e7XaDQhIDSoOSYoZbAfojtF92cms2rsEZ3OA6JQmI8
-	 n04SNRJbr/nQqnbB6HLJr/9v5K1OPSURu1E5Gfh9RMneo3pHZSAkhAWU+eu8a2JQg/
-	 O4j1tr8WLTwtqu5W5H8DDVruyRFBUPTrxh9Dvf4IYckBvV0BAU+PB/ZMS7bKXk5fye
-	 m65V+AiB7IiYQ==
-Message-ID: <sashiko-outbox-196309@kernel.org>
+	b=Q/YgNV9QzrQ0pnFP9e7j3CdILzNB59GGiaaKoMS2ShXlNYb5AF3Vq/hJWuwrhasBD
+	 WrmXNBZiPfriahB8Q1mhHqKvn9getTwNOz6LzxzIq5DV+9odwBMMwhOaVE8mY1hU3b
+	 mymKwqh3QRkycmEMDCbcTrKtFMKGhv5exIk4oYxvu9iBU4mAkcFfhgw7JEnN6WQR9d
+	 +1gNsvnUKWlndHAAIQFmKig6gY/iV96O4y00YHbSpm1Cj1cOSpmKosIcBQonZmVZvf
+	 VJJKceTJ0mh8O48l4L6uB9VTPrj/tLiq0T1pbd86DtJap/NqhGy8cmQBkTCdoIBZOs
+	 S3T928MQVYiQQ==
+Message-ID: <sashiko-outbox-196313@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 8/8] kprobes: Add KUnit test cases for kprobes
- regressions
+Subject: Re: [PATCH 7/8] kprobes: Fix slot reclaim and sibling re-opt in
+ optprobe state machine
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179375037150.247640.2739381151766036732.stgit@devnote2>
+In-Reply-To: <179375036234.247640.2681461872008285645.stgit@devnote2>
 References: <179375029807.247640.13024754173032838618.stgit@devnote2>
- <179375037150.247640.2739381151766036732.stgit@devnote2>
+ <179375036234.247640.2681461872008285645.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 00:25:14 +0000
+Date: Wed, 04 Nov 2026 00:30:42 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,142 +63,224 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] kprobes: test_optprobe_rearm_unoptimizing() probes ftrace entry
-- [Medium] kprobes: stack UAF if KUNIT_ASSERT_EQ() aborts with registered k=
-probe
-- [Low] kprobes: unexported wait_for_kprobe_optimizer() breaks module build
+- [High] kprobes: slot leak and stale optinsn reuse via register_aggr_kprob=
+e()
+- [High] kprobes: missing arch_disarm_kprobe() in unoptimize_kprobe() on fo=
+rce
+- [High] kprobes: premature unhash of rescued aggrprobe in add_new_kprobe()
 --
 
-commit 879cc55db87246da67610c427cb32cb35c372768
+commit 1b0eca43598590c99ad643a8f10e407a46a7cbcb
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-kprobes: Add KUnit test cases for kprobes regressions
+kprobes: Fix slot reclaim and sibling re-opt in optprobe state machine
 
-This commit adds four KUnit test cases to lib/tests/test_kprobes.c to
-verify fixes for regressions in kretprobe unregistration, kretprobe
-re-registration, ftrace ops switching, and optprobe re-arming.
+This commit moves gone optimized probes with remaining child probes onto the
+cooling list in kill_optimized_kprobe() and reclaims their instruction slots
+in optprobe_finalize_generation() after Tasks RCU completes. It also
+re-optimizes blocked sibling probes in optprobe_finalize_generation() once a
+disabled probe finishes cooling.
 
-> diff --git a/lib/tests/test_kprobes.c b/lib/tests/test_kprobes.c
-> index 06e729e4de051..c20f70cc63d73 100644
-> --- a/lib/tests/test_kprobes.c
-> +++ b/lib/tests/test_kprobes.c
-[ ... ]
-> +#if defined(CONFIG_KPROBES_ON_FTRACE)
-> +/* Test for: kprobes: Switch ftrace ops when adding probe with post_hand=
-ler */
-> +static void test_kprobe_ftrace_post_handler_switch(struct kunit *test)
-> +{
-> +	struct kprobe kp_entry =3D {
-> +		.symbol_name =3D "kprobe_target",
-> +		.pre_handler =3D kp_pre_handler,
-> +	};
-> +	struct kprobe kp_post =3D {
-> +		.symbol_name =3D "kprobe_target",
-> +		.post_handler =3D kp_post_handler,
-> +	};
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 0ef3a8701edad..53725c09ef9b0 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -725,10 +725,19 @@ static void optprobe_finalize_generation(struct opt=
+probe_generation *gen)
+>  			list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
+>  			kick_kprobe_optimizer();
+>  		} else {
+> +			struct kprobe *_p;
 > +
-> +	current_test =3D test;
-> +
-> +	/* 1. Register first probe without post_handler (armed with kprobe_ftra=
-ce_ops) */
-> +	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&kp_entry));
-> +
-> +	/* 2. Register second probe with post_handler at same IP (must switch o=
-ps) */
-> +	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&kp_post));
+>  			/* Still in use; now safely disarmed */
+>  			list_del_init(&op->list);
+> -			if (!kprobe_disabled(&op->kp))
+> +			if (kprobe_gone(&op->kp)) {
+> +				arch_remove_optimized_kprobe(op);
+> +			} else if (!kprobe_disabled(&op->kp)) {
+>  				optimize_kprobe(&op->kp);
+> +			} else {
+> +				_p =3D get_optimized_kprobe(op->kp.addr);
+> +				if (unlikely(_p))
+> +					optimize_kprobe(_p);
+> +			}
 
-[Severity: Medium]
-In test_kprobe_ftrace_post_handler_switch(), kp_entry is allocated on the
-test kthread stack. If the second register_kprobe(&kp_post) call fails (for
-example, if alloc_aggr_kprobe() or ftrace ops switching fails), the asserti=
-on
-macro aborts the test immediately via:
+[Severity: High]
+Can this re-optimize a sibling probe _p while a software breakpoint is still
+armed at op->kp.addr?
 
-  __kunit_abort()
-    -> kunit_try_catch_throw()
-      -> kthread_exit(0)
+When an optimized probe is disabled via disable_kprobe(), __disable_kprobe()
+calls __disarm_kprobe(), which calls unoptimize_kprobe(p, false) and skips
+arch_disarm_kprobe(p) because kprobe_queued_unopt(p) is true. Because the
+disabled child probe remains on op->kp.list, kprobe_disabled(&op->kp) is tr=
+ue
+while kprobe_unused(&op->kp) is false.
 
-Would this exit the kthread and free its stack while kp_entry is still
-registered in kprobe_table, leaving a dangling stack pointer that causes a
-stack use-after-free?
+If unoptimize_kprobe(&op->kp, true) is then called with force =3D true befo=
+re
+do_unoptimize_kprobes() runs (for example, when an overlapping probe is arm=
+ed
+via __arm_kprobe() -> get_optimized_kprobe() -> unoptimize_kprobe(_p, true),
+or when a child probe with a post_handler is added), force_unoptimize_kprob=
+e()
+replaces the jump at op->kp.addr with a software breakpoint. However, unlike
+do_unoptimize_kprobes():
 
-The same question applies to test_optprobe_rearm_unoptimizing() below, where
-opt_kp is on the stack and registered before the assertions on
-disable_kprobe(&opt_kp) and enable_kprobe(&opt_kp).
+kernel/kprobes.c:do_unoptimize_kprobes() {
+	...
+		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
+			arch_disarm_kprobe(&op->kp);
+	...
+}
 
-> +
-> +	/* 3. Execute target function to trigger both */
-> +	preh_val =3D 0;
-> +	posth_val =3D 0;
-> +	target(rand1);
-> +	KUNIT_EXPECT_NE(test, 0, preh_val);
-> +	KUNIT_EXPECT_NE(test, 0, posth_val);
-> +
-> +	/* 4. Unregistering must successfully disarm without -ENOENT */
-> +	unregister_kprobe(&kp_post);
-> +	unregister_kprobe(&kp_entry);
-> +}
-> +#endif
-> +
-> +#if defined(CONFIG_OPTPROBES)
-> +/* Test for: kprobes: Do not overwrite jump instruction when re-arming u=
-noptimizing probe */
-> +static void test_optprobe_rearm_unoptimizing(struct kunit *test)
-> +{
-> +	struct kprobe opt_kp =3D {
-> +		.symbol_name =3D "kprobe_target",
-> +		.pre_handler =3D kp_pre_handler,
-> +	};
-> +
-> +	current_test =3D test;
-> +	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&opt_kp));
+unoptimize_kprobe() only calls arch_disarm_kprobe(&op->kp) when
+kprobe_unused(&op->kp) is true:
 
-[Severity: Medium]
-Does test_optprobe_rearm_unoptimizing() actually exercise jump optimization
-when ftrace-based kprobes are enabled?
+kernel/kprobes.c:unoptimize_kprobe() {
+	...
+				force_unoptimize_kprobe(op);
+				if (kprobe_unused(&op->kp)) {
+					if (!kprobe_gone(&op->kp))
+						arch_disarm_kprobe(&op->kp);
+					hlist_del_init_rcu(&op->kp.hlist);
+					list_move(&op->list, &cur->freeing_list);
+				} else {
+					list_move(&op->list, &cur->cooling_list);
+				}
+	...
+}
 
-Because opt_kp is registered at kprobe_target with offset 0, on kernels with
-ftrace-based kprobes enabled, register_kprobe() marks the probe as an ftrace
-kprobe:
+When optprobe_finalize_generation() finishes cooling op and runs this else
+branch, op->list is emptied (making kprobe_disarmed(&op->kp) true) and
+optimize_kprobe(_p) is called on the overlapping probe while the breakpoint=
+ at
+op->kp.addr is still armed in kernel text. Wouldn't arch_optimize_kprobes()
+then copy the undisarmed breakpoint instruction into _p->optinsn.copied_ins=
+n,
+and leave an orphaned breakpoint in kernel text if op is later unregistered?
 
-  register_kprobe()
-    -> check_kprobe_address_safe()
-      -> check_ftrace_location()
-         if (ftrace_location(addr) =3D=3D addr)
-             p->flags |=3D KPROBE_FLAG_FTRACE;
+[Severity: High]
+In the same optprobe state machine, what happens when an unused aggregator
+probe on unoptimizing_list or cooling_list is rescued by
+register_aggr_kprobe() for a new kprobe p that has a post_handler?
 
-Then __register_kprobe() calls try_to_optimize_kprobe(), which bails out
-immediately:
+In commit 9db5fa1da371 ("kprobes: Do not overwrite jump instruction when
+re-arming unoptimizing probe"), reuse_unused_kprobe() was changed to leave
+KPROBE_FLAG_DISABLED set on ap and leave op on unoptimizing_list or
+cooling_list:
 
-  try_to_optimize_kprobe()
-    if (kprobe_ftrace(p))
-        return;
+kernel/kprobes.c:reuse_unused_kprobe() {
+	struct optimized_kprobe *op;
 
-As a result, disable_kprobe() and enable_kprobe() take the ftrace disarm/arm
-paths instead of queuing opt_kp on unoptimizing_list and re-arming an
-optimized probe. Should opt_kp be placed at a non-zero instruction offset
-within kprobe_target, or target a notrace function, so that jump optimizati=
-on
-is actually used?
+	op =3D container_of(ap, struct optimized_kprobe, kp);
+	WARN_ON_ONCE(list_empty(&op->list));
+	if (!kprobe_optready(ap))
+		return -EINVAL;
 
-> +
-> +	/* Allow background optimizer thread to jump-optimize the probe */
-> +	wait_for_kprobe_optimizer();
+	return 0;
+}
 
-[Severity: Low]
-Can this break the build when the test is compiled as a loadable module?
+register_aggr_kprobe() then calls add_new_kprobe(ap, p), which calls
+unoptimize_kprobe(ap, true) before adding p->list to ap->list:
 
-In lib/Kconfig.debug, this test suite is tristate:
+kernel/kprobes.c:add_new_kprobe() {
+	if (p->post_handler)
+		unoptimize_kprobe(ap, true);	/* Fall back to normal kprobe */
 
-  config KPROBES_SANITY_TEST
-  	tristate "Kprobes sanity tests" if !KUNIT_ALL_TESTS
+	list_add_rcu(&p->list, &ap->list);
+}
 
-However, wait_for_kprobe_optimizer() in kernel/kprobes.c is not exported to
-modules, causing modpost to fail with an undefined symbol when the test is
-built as a module with optprobes enabled. Should wait_for_kprobe_optimizer()
-be exported, or should this test be guarded like the stack_trace_save_regs()
-callers earlier in lib/tests/test_kprobes.c?
+Because ap->list is still empty and KPROBE_FLAG_DISABLED is still set when
+unoptimize_kprobe(ap, true) runs, kprobe_unused(&op->kp) evaluates to true =
+in
+both the optprobe_queued_unopt(op) and optprobe_queued_cooling(op) branches=
+ of
+unoptimize_kprobe(). Doesn't unoptimize_kprobe(ap, true) then unhash
+op->kp.hlist from kprobe_table and move op->list to cur->freeing_list right
+before register_aggr_kprobe() arms a breakpoint at ap->addr for the unhashed
+probe?
+
+>  		}
+>  	}
+> =20
+> @@ -1084,13 +1093,20 @@ static void kill_optimized_kprobe(struct kprobe *=
+p)
+>  				list_del_init(&op->list);
+>  			}
+>  		} else {
+> -			list_del_init(&op->list);
+> +			if (optprobe_queued_unopt(op)) {
+> +				/* Move to cooling list so optinsn slot is cooled down */
+> +				list_move(&op->list,
+> +					  &optprobe_gens[optprobe_cur_gen].cooling_list);
+> +				kick_kprobe_optimizer();
+> +			} else if (!optprobe_queued_cooling(op) && !optprobe_queued_freeing(o=
+p)) {
+> +				list_del_init(&op->list);
+> +			}
+>  		}
+>  	}
+>  	op->kp.flags &=3D ~KPROBE_FLAG_OPTIMIZED;
+> =20
+>  	/*
+> -	 * Don't remove the slot if it is queued for freeing or unoptimization;
+> +	 * Don't remove the slot if it is queued for freeing, unoptimization, o=
+r cooling;
+>  	 * the optimizer will reclaim it after the quiescence period.
+>  	 */
+>  	if (!optprobe_queued_freeing(op) && !optprobe_queued_unopt(op) &&
+
+[Severity: High]
+Does deferring arch_remove_optimized_kprobe(op) here leak op->optinsn.insn =
+or
+reuse a stale optinsn trampoline if a new kprobe is registered at the same
+virtual address before cooling completes?
+
+When kill_kprobe() runs on a probe that still has child probes on p->list
+(!kprobe_unused(p)) while op is on unoptimizing_list or cooling_list,
+kill_optimized_kprobe() now leaves op on cooling_list with op->optinsn.insn
+allocated, while ap (&op->kp) remains hashed in kprobe_table with
+KPROBE_FLAG_GONE set.
+
+If a module is loaded at the same virtual address and a new kprobe is
+registered at ap->addr before optprobe_finalize_generation() runs,
+__register_kprobe() finds ap in kprobe_table and calls
+register_aggr_kprobe():
+
+kernel/kprobes.c:register_aggr_kprobe() {
+	...
+		if (kprobe_gone(ap)) {
+			ret =3D arch_prepare_kprobe(ap);
+			if (ret)
+				return ret;
+
+			/* Prepare optimized instructions if possible. */
+			prepare_optimized_kprobe(ap);
+
+			ap->flags =3D (ap->flags & ~KPROBE_FLAG_GONE)
+					| KPROBE_FLAG_DISABLED;
+		}
+	...
+}
+
+Because register_aggr_kprobe() assumes the old instruction slots were alrea=
+dy
+freed by kill_kprobe(), it calls prepare_optimized_kprobe(ap) ->
+arch_prepare_optimized_kprobe(op, ap) and clears KPROBE_FLAG_GONE:
+
+1. If arch_prepare_optimized_kprobe() allocates a new slot, it overwrites
+   op->optinsn.insn without freeing the in-flight cooling slot, leaking the
+   old optinsn slot (and since KPROBE_FLAG_GONE is cleared,
+   optprobe_finalize_generation() will not reclaim it either).
+
+2. If arch_prepare_optimized_kprobe() fails before writing op->optinsn.insn
+   (for example, when can_optimize() rejects the new function at ap->addr),
+   op->optinsn.insn still points to the old unloaded module's optinsn slot.
+   Once register_aggr_kprobe() clears KPROBE_FLAG_GONE and arms ap, won't
+   optprobe_finalize_generation() see !kprobe_gone(&op->kp) and
+   !kprobe_disabled(&op->kp), and call optimize_kprobe(&op->kp) using the
+   stale optinsn trampoline from the unloaded module?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179375029807.247640=
-.13024754173032838618.stgit@devnote2?part=3D8
+.13024754173032838618.stgit@devnote2?part=3D7
