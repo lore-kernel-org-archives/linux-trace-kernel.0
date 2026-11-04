@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793751096;
-	b=GgXcqtUMOr8ePRP20KoVrXioCOkqIvqVKRVXe+1bjZQE2r2r57ND1t1pq79hY/CoTGNH
-	 6HnNvFPTh5WPPq9qViKjonsul5v9cVrl1zrHMz9jDIIzBTUeA96t8/ojBB3Bpkctwhi4t
-	 g+NAkz+KSZULqnsPK1v+ArQ8SAPC9Mk3zgWNZ9hXT4qG6P+a/SiKfEi/FSmC0TcsyaPfh
-	 sFDGESq3r3G2HQmUjG2SKwp477NM1Ew5T3d5zFvzktBc7ExRPOzZt+EfGwvg6LcS1yO+B
-	 2X9+w0X1Ehe34HcYE6xiPojBagJX0CIAg07GyN4hapxmAQ2fUaEWJudALcjv7F3Cf2Q==
+	t=1793751169;
+	b=A5yuw144KcSbu5Luj3MjjRlprwQsmQnQ88y77LgljVc9Hv+DvKXGMUONRbCcuuFlIDSZ
+	 PawkWFdu8R/9FvgEJ6rRu9HJI1phzsOX4AuuHycjG/+YpnIrlhWW7ejuE0FjWrgpzEAbk
+	 8dp1ldfsEAtYkxQowHnHT2QfpqLIr3YbNGL4SbSBDSCpVsJiFAvB2dev7OYwK/gRTpPPE
+	 yB3fqCN18dry+0VWsAbGE1N5WN29PpwP64fHWpVGm1yWyabJdfNKJta9jP2Bb2CqLZAht
+	 OvgRYYGx6AAfkHhNzV3vLT/F23W4FQE6MaprJ9WL/74ZDC7WoUeJyirkHLNJONsANsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793751096;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793751169;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=pw92iIg2DB7z6uRR4STU70B5VWO8DJd0BxVcHbTrbfU=;
-	b=mS2z7cSsI5Ry/QOFVJHskQz8mooQ4o3AXPtNWEugX/Lqj0zy1z37i4ef2NtwN8UizR2N
-	 jNITRxp1IX0ljDEceLjL2qZz4QdJB7NGNjp3U/H4BxLL1jsigAKWun6Yy8cXETQ8khfcN
-	 Iq+cenpxgLrfhukFqE2osyrwUlQmJC01xiD32DBsGw5Le4OUkaF3DjHPcDocht4QBBuX1
-	 b5p/tcRQ0Va7R6Ju25ke4iCdyjwMaQ8eoELz4wgQoexcQaX5vC39WXf+NT+iewd93ZZWG
-	 brlVke2s2Ad51PJ6LSCv7fUDf/mQAN2XZ0EoB5khxcGlaWBp6LDanmb+v8175eTWpOg==
+	bh=WungCBcVsLr6W2N8V26tJpvl38GWQ8cxeRedqfrVCmo=;
+	b=xfynVGH0pnxXBJWrESU/p55w5vFSr1Orxcbv1M6l8Ryz4eCE/c6kPvfY2hVuHvr/UlWy
+	 qlCwW0xcyJYcDdEE1X2psooNVN11vJSo0C1xTmW+erqIKmDHYosn7S/l6g8H+aPqSRhzt
+	 60o35vjvwbgmsxbnPE731IuXk+ITqlyf3mft8imNvj25J0umOIQ+dQ21A6tP69kvyoFO4
+	 x6A2BDLHq1GC39YdwWs17nMrRqd9Up8YNnRK3z9fQM0Wc1wvb8Jp9pud+9uWZmL76V6S3
+	 JEa+UVabLKwFQhbjq9oodQfh3DwLB4PvQ0Rd9qHXnLmdogYXzrVmOAX2ybOgpc+PF8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dcx7XAId;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k08JJQp7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5465D606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 00:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9C8606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 00:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dcx7XAId
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD6D1F000C1;
-	Wed,  4 Nov 2026 00:11:35 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k08JJQp7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9DE11F000C1;
+	Wed,  4 Nov 2026 00:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793751096;
-	bh=pw92iIg2DB7z6uRR4STU70B5VWO8DJd0BxVcHbTrbfU=;
+	s=k20260515; t=1793751169;
+	bh=WungCBcVsLr6W2N8V26tJpvl38GWQ8cxeRedqfrVCmo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dcx7XAIdrW3Cw2NfJpAO9625PzIqGK5lIsC+MP3VRXhgqbL34MIu3NTlTRibcH/Np
-	 cZ/wfXH0FfVH0mBuYcjSWdkSBn4uBVxoSwb/Sdce+Fl/VJiUXqlMJ29QHiLeKvAr9x
-	 Ntsyu/5AT3pe4EOCtyJrY+SIQOKoZyltdQl3XeM73ZHoRP/I0lRYhASYJoqwVDl+oA
-	 q/q8DoB7qioUTokM3svMZ1Ni3TWPAqsUfVxuXJct+phqyWM7aySsJvGsa2GUdDQabt
-	 DH4LMwj2N137glkljq1sYkEmTp2B1zpBhiRUjKKJAuo9Rfe5HgMZj8954Pmxrgrgzz
-	 CR8ql4Hh2f/GQ==
-Message-ID: <sashiko-outbox-196280@kernel.org>
+	b=k08JJQp79BWX+lPw0juBs0jXnyohZzfWLjYe5MkuXg5SBr9698TLFlh0hOPIZIZT5
+	 5L/Z0sXvBsELJo9H6HhkhdftHnYmWpR/6h1EoTxJa7irBHykLlQc5s0zzBD1aBHUXs
+	 abmIs4M2PmSxPGrXLPUHTmLBTHaGcZliczKAAGtGq4N/aJvOQxUIeYT8lNIJtZ/hOM
+	 oATpZ0f8F0lM4x2W1FtYh9W4HQGV9jX4Na1Poc2BK40tJdbVVayr1dLsNZ6CcQ+JHj
+	 Q8xbfkTp2RtxbCCxkrWkwYJeH2c235FHZ3V655XWx4KKTELT9l69iOoFmvV35r05ui
+	 GhYwI7zrxsgWA==
+Message-ID: <sashiko-outbox-196290@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/8] kprobes: Switch ftrace ops when adding probe with
- post_handler
+Subject: Re: [PATCH 6/8] kprobes: Do not overwrite jump instruction when
+ re-arming unoptimizing probe
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179375033462.247640.15676311043239442590.stgit@devnote2>
+In-Reply-To: <179375035312.247640.1506834064717441186.stgit@devnote2>
 References: <179375029807.247640.13024754173032838618.stgit@devnote2>
- <179375033462.247640.15676311043239442590.stgit@devnote2>
+ <179375035312.247640.1506834064717441186.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 00:11:35 +0000
+Date: Wed, 04 Nov 2026 00:12:48 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,142 +61,116 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] kprobes: premature kprobe publication onto ap->list in register_ag=
-gr_kprobe()
-- [High] kprobes: unchecked rollback arm_kprobe_ftrace() in register_aggr_k=
-probe()
+- [High] kprobes: unoptimize_kprobe() unhashes reused aggrprobe with post_h=
+andler
 --
 
-commit 90db6f90ad3cb02409cec15b4dabeb1b192665e6
+commit 9db5fa1da3716f288258348f174e01fe00a6f383
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-kprobes: Switch ftrace ops when adding probe with post_handler
+kprobes: Do not overwrite jump instruction when re-arming unoptimizing probe
 
-This commit switches an armed ftrace-based kprobe from kprobe_ftrace_ops to
-kprobe_ipmodify_ops in register_aggr_kprobe() when a new kprobe with a
-post_handler is added to an aggregated kprobe that previously had no
-post_handler. It also restores the ftrace ops registration and counter if
-ftrace_set_filter_ip() fails in __disarm_kprobe_ftrace().
+This commit avoids calling arch_arm_kprobe() in __arm_kprobe() when a
+probe is queued for unoptimization so that the existing jump instruction
+is not overwritten with a software breakpoint. It also stops
+reuse_unused_kprobe() from clearing KPROBE_FLAG_DISABLED or calling
+optimize_kprobe() early, deferring arming and optimization to
+register_aggr_kprobe().
 
 > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 0b41d69540ae4..135fec5d49cf5 100644
+> index ceacd56245c24..0ef3a8701edad 100644
 > --- a/kernel/kprobes.c
 > +++ b/kernel/kprobes.c
-
-[ ... ]
-
-> @@ -1654,18 +1657,51 @@ static int register_aggr_kprobe(struct kprobe *or=
-ig_p, struct kprobe *p)
->  					| KPROBE_FLAG_DISABLED;
->  		}
+> @@ -1059,19 +1059,11 @@ static int reuse_unused_kprobe(struct kprobe *ap)
+>  {
+>  	struct optimized_kprobe *op;
 > =20
-> +		if (p->post_handler && !ap->post_handler) {
-> +			reset_post_handler =3D true;
-> +			if (kprobe_ftrace(ap) && !kprobes_all_disarmed &&
-> +			    !kprobe_disabled(ap))
-> +				ftrace_switch_ops =3D true;
-> +			else
-> +				ap->post_handler =3D aggr_post_handler;
-> +		}
-> +
->  		/* Copy the insn slot of 'p' to 'ap'. */
->  		copy_kprobe(ap, p);
-> -		ret =3D add_new_kprobe(ap, p);
-> +		add_new_kprobe(ap, p);
-> +	}
+> -	/*
+> -	 * Unused kprobe MUST be on the way of delayed unoptimizing (means
+> -	 * there is still a relative jump) and disabled.
+> -	 */
+>  	op =3D container_of(ap, struct optimized_kprobe, kp);
+>  	WARN_ON_ONCE(list_empty(&op->list));
+> -	/* Enable the probe again */
+> -	ap->flags &=3D ~KPROBE_FLAG_DISABLED;
+> -	/* Optimize it again. (remove from 'op->list') */
+>  	if (!kprobe_optready(ap))
+>  		return -EINVAL;
+> =20
+> -	optimize_kprobe(ap);
+>  	return 0;
+>  }
 
 [Severity: High]
-When ftrace_switch_ops is true in register_aggr_kprobe(), add_new_kprobe(ap=
-, p)
-publishes p onto ap->list via list_add_rcu() while ap is still armed on
-kprobe_ftrace_ops and ap->post_handler is still NULL.
+Can leaving KPROBE_FLAG_DISABLED set and op->list queued here cause
+unoptimize_kprobe() to unhash ap from kprobe_table when reusing an unused
+aggrprobe for a new kprobe with a post_handler?
 
-If another CPU hits the probed function before disarm_kprobe_ftrace(ap)
-finishes updating the ftrace callsite, kprobe_ftrace_handler() will call
-aggr_pre_handler() -> p->pre_handler(), and then skip aggr_post_handler()
-because ap->post_handler is NULL:
+In kernel/kprobes.c, register_aggr_kprobe() calls reuse_unused_kprobe(ap)
+and then calls add_new_kprobe(ap, p) before clearing KPROBE_FLAG_DISABLED:
 
-arch/x86/kernel/kprobes/ftrace.c:kprobe_ftrace_handler() {
-	...
-	if (!p->pre_handler || !p->pre_handler(p, regs)) {
-		if (unlikely(p->post_handler)) {
-			instruction_pointer_set(regs, ip + MCOUNT_INSN_SIZE);
-			kcb->kprobe_status =3D KPROBE_HIT_SSDONE;
-			p->post_handler(p, regs, 0);
-		}
-	...
+register_aggr_kprobe(ap, p)
+  if (kprobe_unused(ap)) {
+      ret =3D reuse_unused_kprobe(ap);
+      ...
+  }
+  ...
+  add_new_kprobe(ap, p);
+  if (kprobe_disabled(ap) && !kprobe_disabled(p)) {
+      ap->flags &=3D ~KPROBE_FLAG_DISABLED;
+      if (!kprobes_all_disarmed)
+          ret =3D arm_kprobe(ap);
+  }
+
+Inside add_new_kprobe(), if p->post_handler is set, it calls
+unoptimize_kprobe(ap, true) before adding p to ap->list:
+
+static void add_new_kprobe(struct kprobe *ap, struct kprobe *p)
+{
+	if (p->post_handler)
+		unoptimize_kprobe(ap, true);	/* Fall back to normal kprobe */
+
+	list_add_rcu(&p->list, &ap->list);
 }
 
-In addition, p->pre_handler() executes under kprobe_ftrace_ops before
-arm_kprobe_ftrace(ap) has verified that kprobe_ipmodify_ops
-(FTRACE_OPS_FL_IPMODIFY) does not conflict with an active livepatch. A simi=
-lar
-window also occurs in the error path below if arm_kprobe_ftrace(ap) fails,
-where ap->post_handler is reset to NULL and ap is re-armed on
-kprobe_ftrace_ops before list_del_rcu(&p->list) removes p.
+Because KPROBE_FLAG_DISABLED is still set on ap, ap->list is still empty,
+and op->list is still on unoptimizing_list (or cooling_list),
+kprobe_unused(&op->kp) evaluates to true inside unoptimize_kprobe(ap, true):
 
-Could add_new_kprobe(ap, p) be deferred until after ap has been switched to
-kprobe_ipmodify_ops, or could p be removed from ap->list before re-arming ap
-on rollback?
-
-> +
-> +	if (ftrace_switch_ops) {
-> +		/*
-> +		 * Must switch ftrace ops outside of text_mutex and cpus_read_lock
-> +		 * to prevent deadlocks when ftrace code modification acquires text_mu=
-tex.
-> +		 */
-> +		ret =3D disarm_kprobe_ftrace(ap);
-> +		if (ret) {
-> +			list_del_rcu(&p->list);
-> +			synchronize_rcu();
-> +			return ret;
-> +		}
-> +		ap->post_handler =3D aggr_post_handler;
-> +		ret =3D arm_kprobe_ftrace(ap);
-> +		if (ret) {
-> +			ap->post_handler =3D NULL;
-> +			arm_kprobe_ftrace(ap);
-> +			list_del_rcu(&p->list);
-> +			synchronize_rcu();
-> +			return ret;
-> +		}
->  	}
-
-[Severity: High]
-What happens if the rollback call to arm_kprobe_ftrace(ap) in
-register_aggr_kprobe() also fails (for example, with -ENOMEM in
-ftrace_set_filter_ip() -> alloc_and_copy_ftrace_hash())?
-
-Because the return value of the rollback arm_kprobe_ftrace(ap) is ignored a=
-nd
-KPROBE_FLAG_DISABLED is not set on ap->flags, ap remains marked as enabled
-even though it is no longer registered in kprobe_ftrace_ops's filter hash.
-
-When the remaining probe on ap is later disabled or unregistered via
-unregister_kprobe() -> __unregister_kprobe_top() -> __disable_kprobe(),
-__disable_kprobe() sees !kprobe_disabled(orig_p) and calls
-disarm_kprobe_ftrace(), which fails with -ENOENT in ftrace_set_filter_ip(),
-triggers the WARN_ONCE() in __disarm_kprobe_ftrace(), and aborts
-unregistration while leaving the probe hashed in kprobe_table:
-
-kernel/kprobes.c:__disable_kprobe() {
-	...
-	if (!kprobes_all_disarmed && !kprobe_disabled(orig_p)) {
-		ret =3D disarm_kprobe(orig_p, true);
-		if (ret) {
-			p->flags &=3D ~KPROBE_FLAG_DISABLED;
-			return ERR_PTR(ret);
+	if (!list_empty(&op->list)) {
+		if (optprobe_queued_unopt(op)) {
+			if (force) {
+				force_unoptimize_kprobe(op);
+				if (kprobe_unused(&op->kp)) {
+					if (!kprobe_gone(&op->kp))
+						arch_disarm_kprobe(&op->kp);
+					hlist_del_init_rcu(&op->kp.hlist);
+					list_move(&op->list, &cur->freeing_list);
+				} else {
+					list_move(&op->list, &cur->cooling_list);
+				}
+				kick_kprobe_optimizer();
+			}
+		} else if (optprobe_queued_cooling(op)) {
+			if (force && kprobe_unused(&op->kp)) {
+				if (!kprobe_gone(&op->kp))
+					arch_disarm_kprobe(&op->kp);
+				hlist_del_init_rcu(&op->kp.hlist);
+				list_move(&op->list, &cur->freeing_list);
+				kick_kprobe_optimizer();
+			}
 		}
-	}
-	...
-}
 
-Should the rollback path check the return value of arm_kprobe_ftrace(ap) and
-set KPROBE_FLAG_DISABLED on ap->flags if re-arming fails?
+It looks like unoptimize_kprobe() will delete ap from kprobe_table via
+hlist_del_init_rcu(&op->kp.hlist) and move op->list to cur->freeing_list.
+Immediately after, add_new_kprobe() links p onto ap->list and
+register_aggr_kprobe() clears KPROBE_FLAG_DISABLED and calls arm_kprobe(ap),
+which writes a software breakpoint at ap->addr for a probe that is no longer
+in kprobe_table, leading to an unhandled breakpoint trap when ap->addr is
+executed and a warning in do_free_cleaned_kprobes().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179375029807.247640=
-.13024754173032838618.stgit@devnote2?part=3D4
+.13024754173032838618.stgit@devnote2?part=3D6
