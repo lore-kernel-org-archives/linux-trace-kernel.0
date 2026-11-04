@@ -1,60 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.61
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793753076;
-	b=gcfSo2IQbRfnHQwa5Hrc3Mo75gMHcnojUEdyi1tzvLSwGwgFJpG1AwUmdYAy8wSpb6+q
-	 BD8D0hRYHKBfm3BYsV8/s5xk2aFpoALLDVyMCXWDXHq2gEGTLcr00hgXMqm+oWmRRp5rN
-	 uh2GbseDPMF8XHeNZiQI7ILz0t7RXQg5SFf9rsI14ZvpfaaH3yJlK5rkne5mwXVlqtqtb
-	 ++DTSa9TnRrxwqvESg7zEdwFXd/oH1FPNtDpfRlfXApM6wtVDMgmjPgoRpqRwLiWD/JSw
-	 ddSlCaOkO35JuMEz9SCBW9mXMG5X6JLFLfp0mgehNDkRrJu9RMlynYokHo/51+B5jdg==
+	t=1793755778;
+	b=sDcOvFr/0prcNysU5mo+g0tIKbd1ekntxk38e1TaYURjgySVGHaE1cy0zqfxZnAb2RAx
+	 Y+T6MqQC0BXbGJlrwI9n0ZYHWwmIj4wbIrJ6CegwM3USou8Lfq0ubGCV/laeUtRMSjMwA
+	 bfObr9t+SSc4Wa+jmmfCY9spCetaz7l5kDem4/J+gP0NR9gLEUkW6hSfhZ1MmFp6cC/Td
+	 nk50S72ocBWMkum4SHn3BP8IwB1D0TOQTxdEgUb2yBblHwYs/qH6gaiMqw3qsB1DWLcHR
+	 9ksp24dLSm97o709XD9Y59HlbYJYk+HPzWiRiARVJfx7ybYBY0CaaWey0i8S7xiygaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793753076;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
-	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=aEGJHb/5zFbU60eZLgOxUEw96YHWbvU2+MVwYu/t60w=;
-	b=XqaEKTS7Zl3HFrh92rgK2yTJ4+dt3kKJ0LLg2/GSE1WyoGciOoDALrz5eApVnc9bk2Xk
-	 jxQnCruqORHcQKn+vl3LpC/jCz7LRVPhVw5Eevb18x3cT9nhTKmQ0nQlG+aFelEnzigiW
-	 IM8ElOlncLTxt8CD5iSKgavV7z9GDygHPJUEoXB9QmGNFjzV5+f0sI2VZ4PcKETV8du51
-	 oCymkRUnlWtK8LrxAIXEkYOdLjEDL3hav79WzJOBjoorrVad4Qet8bgKSGn84dSNH1Z4f
-	 E8HLNmAqqiylQtKc5sDSNUTNkhkFM8gGoWMFcYk0EFIte+/3wssr3x3INVJc+GotU+Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793755778;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=CE0t5hOROhr+8knZGqTWCAomcPgxGmzw+Md6f9Efdfw=;
+	b=jgl3MKqReDCMhJAVPtKX2OIf91nupUrhI4jNla9m8vyoH5v2pxeV2XCP5JIO4EsnMh82
+	 iFAom2gLiEwUln2J+1T7RaaFzYx1aJs99RQNWh5chb22TSfi6fAfPUES/aIzR4AvW3sUM
+	 mRyUtivfOQ5H++++BuUhkHFZDsfCD6aRTdXqQslhnhRDb47MzCn6MRsYNkel2NDVxp+h/
+	 EB+BKglnc4xiVSxsZ6q7qXn2fv9ADz8hKwYU3yJgU2kkxgBSbsT7CVY8c9Qz3SAwMsIep
+	 9lJ8n2xp+G7gHVlbhlz+Gu9/CTWJexokCQjZM9WEAEIjYIpfogngMBZmkIEwEUbfYWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=asaOTB5Z;
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	arc=none smtp.remote-ip=91.218.175.61
+Received: from mta0.migadu.com (out-61.mta0.migadu.com [91.218.175.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23520606A324;
-	Wed,  4 Nov 2026 00:44:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23520606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=asaOTB5Z
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id EE83440613;
-	Wed,  4 Nov 2026 00:44:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id A44C032;
-	Wed,  4 Nov 2026 00:44:30 +0000 (UTC)
-Date: Tue, 3 Nov 2026 19:44:29 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Li Pengfei <ljdlns1987@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- mark.rutland@arm.com, corbet@lwn.net, skhan@linuxfoundation.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- zhangbo56@xiaomi.com
-Subject: Re: [RFC PATCH v7 00/10] trace: stack trace deduplication for
- ftrace ring buffer
-Message-ID: <20261103194429.739feafc@gandalf.local.home>
-In-Reply-To: <20261013020321.1898006-1-lipengfei28@xiaomi.com>
-References: <20260912083753.3426176-1-lipengfei28@xiaomi.com>
-	<20261013020321.1898006-1-lipengfei28@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E416606D823
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Nov 2026 01:29:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8E416606D823
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=QwlcNBQAVDxk0/AvVL+NWkQwGw6IW0hqKl+WZhIVwVQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793755765; v=1; x=1794360565;
+ b=o3nkAPqoiAhQCuG7W+cYJPXVqRbfmnABmAgU+ifZRUe+hpALHAZdbLU71L1/bypKy1hCRZel
+ LrXg8QFqzflrTyf3WsCyaOUfD0hqrsfE7HFQUcMd5CRxhTZ3TmZ3IyBnoia8EK1s6VZ0g9JteeF
+ u9uGQgAu7/aT6Re0f9SxG8j8=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 59a6eb213e4c26de;
+	Wed, 04 Nov 2026 01:29:25 +0000
+X-Mizu-Trace-ID: 59a6eb213e4c26de
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <dd07c949-eb56-425a-8b1f-ceda118d3a5a@linux.dev>
+Date: Wed, 4 Nov 2026 09:29:17 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -64,103 +55,83 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A44C032
-X-Stat-Signature: b4xterkghayctsue88f8pn6o7yam4z68
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18q6qCv8Ph8nZb8xkdepwjLXLf8IlNcpLs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=aEGJHb/5zFbU60eZLgOxUEw96YHWbvU2+MVwYu/t60w=; b=asaOTB5Z4hcmswm1Wps0saK3glzogXDT6O0HY8WGLmBdBqIdug7KedIBfg1DH0JpwNpYACt6rIv2mZGJoWk2GkwsCiuSrEwZb0/OLbwjI/jnX+ZdXIQgfFzGkwmKB9vGrOa5Mz0FqqljicAiSqCR0zyrvvMhYjbAcLnujtRzclo=
-X-HE-Tag: 1793753070-516529
-X-HE-Meta: U2FsdGVkX19zsgS+XmZAhH+xydjGFdLZOA84525l5hFdOvxS70wl6GMJwf4OD+OHVYnTR7fTbSzKQonWPDkudxINph4GxAaan2BaKD+XItRBqasnT8TEOooz2e1VG64/GAeEEDe1cl2QF5uaOz3n+YyRzTGmZD1sDVe4D0FWi3/319hcH8IH1Lj84IrNW2l0SSPFwFIqMa/fgfXWdzfZACorb0pn40VFc6D2/wgUMxN7FQsDxWF2yq1Bc3KVB4RIy81tyOqc+cvopIB4hhz6JcSrPcwDO+s2qxCNq8Mp1luG3Th4DQJLHAX8cUBL++D2beXsZr7/SGrRovnAj3+kkaGzaa/c09yp
-
-On Tue, 13 Oct 2026 10:03:21 +0800
-Li Pengfei <ljdlns1987@gmail.com> wrote:
-
-> Hi Steven, Masami,
-> 
-> Open question 2 in the v7 cover letter was whether the map generation
-> should be part of the ABI. I think it has to be, and I would rather
-> settle the record format with you before sending a v8.
-> 
-> The problem is that reset clears the map and resets the element cursor to
-> zero, so a new stack takes slot 42 immediately afterwards. A stack_id 42
-> recorded before the reset is still sitting in the ring buffer, and
-> resolving it now yields the new occupant of that slot. Userspace cannot
-> tell that apart from a correct lookup - it gets a plausible stack, not an
-> error.
-
-
-> 
-> I first tried to fix it in the table, storing the generation per slot and
-> comparing it with the current one on lookup. That does not work: the
-> comparison tells you which generation the slot now holds, not which
-> generation the caller's id came from, and the case that matters is
-> exactly when those differ and the slot has already been refilled. The
-> identity has to travel with the record.
-> 
-> So for v8:
-> 
-> 	struct stack_id_entry {
-> 		struct trace_entry	ent;
-> 		u64			stack_cookie;	/* gen << 32 | id */
-> 	};
-> 
-> A single opaque 64-bit cookie, high half generation, low half slot. An id
-> is still only valid within its own generation; the cookie makes crossing
-> that boundary detectable.
-> 
-> stack_map_bin reports the generation of the dump in the header word that
-> is currently reserved (ABI version 1 -> 2), so a dump and a record can be
-> paired. Text output splits the cookie rather than printing it raw:
-> 
-> 	<stack_id 42 gen 3>
-> 
-> Cost, against the workload measured in the v7 cover letter:
-> 
-> 	full stack, ~20 frames   trace_entry + size + 8*20 = 172 B
-> 	v7, 4-byte id            trace_entry + 4           =  12 B
-> 	v8, 8-byte cookie        trace_entry + 8           =  16 B
-
-This is reasonable.
-
-> 
-> Retention on that workload drops from about 2.17x to about 2.0x. I will
-> re-measure rather than quote that from arithmetic.
-> 
-> Two alternatives I rejected, in case you would have picked one:
-> 
-> Packing the generation into the existing 32-bit id keeps the record at 4
-> bytes, but with FTRACE_STACKMAP_BITS_MAX at 18 the slot index needs 19
-> bits, leaving 12 bits of generation in a signed field. 4096 resets wrap,
-> and a wrapped generation passes the check - the same failure, only
-> rarer. It also ties the id layout to the capacity limit.
-> 
-> Two separate u32 fields come to the same 16 bytes and would make the
-> format file self-describing, so an event filter could match the slot
-> directly. I went with the cookie because an opaque value says the whole
-> thing is the identifier - two fields invite userspace to read the slot
-> number on its own, which is exactly what is not meaningful without its
-> generation. If the filtering matters more, that is an easy change.
-> 
-> One consequence I had not expected. If a trace spans several resets,
-> dumping stack_map_bin before each one keeps the whole timeline resolvable
-> afterwards: every record says which generation it belongs to and every
-> dump header says which generation it is. Without the tag, saving several
-> dumps is pointless, since nothing says which dump a given record should
-> be read against.
-> 
-> Does that format look right?
-
-Yeah, the cookie + generation looks like the best way forward.
-
-Thanks,
-
--- Steve
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 7/7] mm/mglru: add tracepoint for inc_max_seq()
+To: Barry Song <baohua@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Dave Chinner <david@fromorbit.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Muchun Song <muchun.song@linux.dev>, Qi Zheng <qi.zheng@linux.dev>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+ Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ cgroups@vger.kernel.org,
+ "open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>,
+ Ridong Chen <chenridong@xiaomi.com>
+References: <20261103025610.3738894-1-ridong.chen@linux.dev>
+ <20261103025610.3738894-8-ridong.chen@linux.dev>
+ <CAGsJ_4xCTSctcPcC7X6Dx4zYaOycaPqs0DG7AaxB55wx1Afwpg@mail.gmail.com>
+ <9cabcddf-d807-4a36-84f1-5bb06ea72aac@linux.dev>
+ <CAGsJ_4xXDZjhN+NkvtN+vAp8Bokack_JdNgP=nGPQtHUX8_rqg@mail.gmail.com>
+ <f5137dbb-b0ed-44ea-a23f-5c848315a68a@linux.dev>
+ <CAGsJ_4zNZynkZn1mb+nT1n6dq4n399VC8Lbo5Sv92gioDfPxUg@mail.gmail.com>
+From: Ridong Chen <ridong.chen@linux.dev>
+In-Reply-To: <CAGsJ_4zNZynkZn1mb+nT1n6dq4n399VC8Lbo5Sv92gioDfPxUg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+
+On 11/4/2026 2:28 AM, Barry Song wrote:
+> On Tue, Nov 3, 2026 at 8:23 PM Ridong Chen <ridong.chen@linux.dev> wrote:
+> [...]
+>>
+>> Hi Barry,
+>>
+>> Agreed, I'll go with option 2. Two things I'd like to confirm first:
+>>
+>> 1) To report the reason, should_run_aging() would need to return it
+>>    instead of a bool, e.g. an enum like:
+>>
+>>     enum lru_gen_aging_reason {
+>>          AGING_NONE,
+>>          AGING_NO_EVICTABLE,     /* eviction is not possible anymore */
+>>          AGING_MIN_GENS,         /* better to age, eviction still possible */
+>>     };
+>>
+>> Or just report sc->priority, swappiness, max_seq/min_seq and the
+>> per-generation nr_pages, and let users derive the reason from them?
+>> The former is more direct, the latter keeps should_run_aging()
+>> unchanged.
 > 
-> v7 split the series into 10 focused patches following Masami's review of
-> v6, and the design is otherwise unchanged.
+> Right. We can let users infer the reason from max_seq,
+> min_seq, and nr_pages in each generation. This shouldn't
+> be difficult, especially since should_run_aging() may
+> change. We don't need to spell out the exact reason.
+> Just present users with the overall state of the lru_gen.
+> 
+>>
+>> 2) try_to_shrink_lruvec() has changed quite a lot recently, e.g.
+>> Kairui's reclaim loop rework, and your swappiness series also touches it,
+>> including the aging part. Is it stable enough now to carry a tracepoint there?
+>>
+> 
+> Yes, I think aging will always be needed, regardless of how
+> we change the code, so this should remain stable.
+> 
+
+Thank you for your patience. That makes sense to me.
+
+Will update.
+
+-- 
+Best regards
+Ridong
 
