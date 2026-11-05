@@ -1,50 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793911011;
-	b=peL4gmzIRgb+jJWUWSvNtwrNIZ+qohHDPEzhw+XISW8l87CRvwu3R+d7CheX1a9AtyNH
-	 PLffg00xE1j0+GsZBojr++pSztDC4qvAKp/yr1hno+XjTMc3yzU56n43j63HtgJDbHCvH
-	 dQMBATT/UAjTDLvM1kyqC700HEjqfgV7ODnAaYvlLVPp+HIJOcnVDGEM/m2BbB/od7h5f
-	 /ijbdoLhCMIZ+jSPiD4ZEstm5AqDc76rZeQkz/RZNDvOmgtYs1uLshf6VYD1Yu4/slnvt
-	 Mg6jmpvif4o+18k8W0uwQ9qFJgmkwB5PuITvpOYram7IzASq22OjVMWI7GAWCbK/gzA==
+	t=1793911012;
+	b=i5VnaryeSm3Gxanc/FkHdmZ99mvfRdkpiJu1FXUx6s7t2BbnytGFlbX0O+53YmbcnnVf
+	 JglNSteyOftL9IM0UvzwFdwnJpv6ZGLjaMenLe900rQS8bCx8ZXu3hYhTwOiH4Imp6wq9
+	 Qc67nIa+Z+q0IiX3x9lqRrKvycArV5+GWF+rVsDZ3A59WAUBbp4I1qTVwPaQX3UO6sCSE
+	 hzchNujGEKUMRBMlL7y7JhqtGmM/ZH1lOgixHPOC2oiT2Y+PrlqZ47zpcfYTJZjDJDmTY
+	 lLzNA3eX6O05ngPzP9Y+cUuNjwaqTrSYyfOchz367C0cn/lIq/W75G9hQ9CGGvWDniA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793911011;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793911012;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=B2i0ZK07PlEBtX0QbaKuDG+2M0dY7t2yh0/Eybj/INg=;
-	b=GLyRcANvBiE6/rdh1iAm8zIFXAU/llV4Gjvic170ILV2s8MXLZUzNFqWEfM30PBaOESZ
-	 aRYY10XZLpAHQ0I4QJ8XqVZtNYPija3jU2ehxayQVwJd3l/bbRFmSaHRKobfv5o/rKE9G
-	 75D/9/Ks7SsPmpdRP51wPchGbQoX2LtQxs2caerhKB8roX8W71SHUPr3CnUZMxQVEXRK3
-	 QW68MBB7bnsJS6Ne/N65ErsepeqdI5BfuBzb2E0yzF0OVb9mwxLoLAQMmDvp0NwOsVrc+
-	 PXbI/dQZouXFurIizhZcFCtwopSl6fp74BFQC/A9tktsbGNi3tcPck83RPDVt7M0nnQ==
+	bh=u4szUUbd/kkYsYLlulDhD6NrSpjR5pa/uSMGvjF+Y58=;
+	b=hTeCldSMx1fnqBmMENV+S/IvzmwTDBz1VUr/ry4Y3R53ajDRF9OP2R+DqdWTCLvfB2Iv
+	 XTVUOPlh29Eu+SxsEThm+82FctJ7gZyo+RYAv9key9nCSu/HHi5i7EEko9TP6YGhv955+
+	 AZfo3JddUZdTZmQmPGoHw9u4JlMy1l/opZvv+qB91csbwBu8DoQoZ7mLL2WFLtvZ1R+Rp
+	 5ZpzSO5I2TH77EvCWtg2t4ULPXT+df0VN5j96/dPmbjjrAmiOU5T2lfCoOPSSv+WJoz9c
+	 V23P+vLqqxJL+emJQypYGk9fjh7Kp8IMNzREJb0CJpw6/AqTeU1GT+bftEx1nyUsXtQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=x5AekszR;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=HWPOoBAO;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5B0606D803;
-	Thu,  5 Nov 2026 20:36:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3C5B0606D803
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5610E606D813;
+	Thu,  5 Nov 2026 20:36:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5610E606D813
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=x5AekszR
+	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=HWPOoBAO
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1793911008;
-	bh=B2i0ZK07PlEBtX0QbaKuDG+2M0dY7t2yh0/Eybj/INg=;
+	s=smtpout1; t=1793911009;
+	bh=u4szUUbd/kkYsYLlulDhD6NrSpjR5pa/uSMGvjF+Y58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=x5AekszRqXdfQwKV+XhbMkYVoRhiQbfwjJnTLEDMQh7V2jor+1hO646aM2nSp2BN1
-	 P9VGVFbGxo8czJ/HoUNyrOxeZTGt62/CZF3QeP6a9PYcsOMYF7X44ZwTRrYYj65KFc
-	 Ud9/qEmBCCsSyYE/BPDh4AjeJ13l9gBbtthCIuuRcO1QYCxHB8oIUJwuLIGgN6zuDH
-	 MqlPItIlReuqKWqCzrWRGGsh+bBDUpg7H25DnJIDqRnqmsAXV/bCMqc/AoSjV5y2Kp
-	 1sNG2K6vEJ4lqf3SHbN9wpgoTK5JTe+ToKt1ojOy+hvFr3EgQRIzskf69nxUeXibOp
-	 MhZFIw13rrdsA==
+	b=HWPOoBAONOHGoH9GlpHdY9hLYCkK4t4XE1dFbOmYvnY8GEN9HOqN6uLhc+GcR744R
+	 yASYBTzLPMSfUi1kkwHhGDm1prCWTZhC5uafR5EtIYdFlKv0oR/oA5rwZl+ISsrrm0
+	 30tOpuVmZ6ULFMa1hhr7bzjUMFCsWXWVFy+qxhHLCj5erzOCBDHTT7rtmlwCpyjKEA
+	 xxQGhPB1b4kRzTgNciLVXY76L6xxnJQjUZSyVWuc/C6ihTBqkSF0Z2L4XnPrmey6G4
+	 Fr7vqrVBFylVc9tDyFoxxHfCx9YDT9V6YFZnNqdJ0WTyTuD3WhoAYRYyywgB47SQ6d
+	 8vXPiZd9oT/PA==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcc1LV9zM4n;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcc6bz1zLcy;
 	Thu, 05 Nov 2026 15:36:48 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
@@ -100,9 +100,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	linux-fsdevel@vger.kernel.org,
 	Oleg Nesterov <oleg@redhat.com>
-Subject: [RFC PATCH v24 05/10] mm: report the approximate RSS in the rss_stat tracepoint
-Date: Thu,  5 Nov 2026 15:36:34 -0500
-Message-Id: <20261105203639.1459524-6-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v24 08/10] lib: percpu_counter_tree: add the arity boot parameter
+Date: Thu,  5 Nov 2026 15:36:37 -0500
+Message-Id: <20261105203639.1459524-9-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
 References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
@@ -117,77 +117,377 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The rss_stat tracepoint is emitted on every RSS update, including each
-page fault.  When it is enabled, it reports the precise sum of the RSS
-counter, which iterates over all possible CPUs for each event: 384 per
-page fault on a machine with 384 logical CPUs.
+The fan-out of each tree level is selected at boot from nr_cpu_ids, the
+highest possible CPU number plus one, using a table tuned for the RSS
+counters on one machine, a 2-socket AMD EPYC 9654 with 192 cores and 384
+logical CPUs.  The best shape depends on the cost of cache line
+transfers on a given machine, which varies with the number of sockets,
+the cache topology and SMT, so it may differ on other hardware.
 
-Report the approximate sum of the hierarchical per-cpu counter instead,
-through get_mm_counter(), which reads the root of the counter tree.  The
-size field of the event, the RSS counter after the update, is therefore
-within the accuracy bound of the counter from the precise value: within
-158.5MB on a machine with 384 logical CPUs and 4kB pages.
+Add the percpu_counter_tree.arity= boot parameter, which overrides the
+tree shape with the fan-out of each level, from the per-cpu counters to
+the root, so the shapes can be compared on other machines, to improve
+the default table.  For example, when nr_cpu_ids is 16, "16" is a flat
+tree and "4,4" a tree with 4 intermediate counters.  Each fan-out is a
+power of 2, and their product must be nr_cpu_ids rounded up to a power
+of 2.  An invalid shape is ignored with a warning.
 
-The tracepoint reports the precise sum since commit f1a7941243c1 ("mm:
-convert mm's rss stats into percpu_counter").  Before that, it reported
-an atomic counter which only received the per-task cached updates in
-batches.
+The shape in use is printed at boot, and can be read from
+/sys/module/percpu_counter_tree/parameters/arity.
+
+Cover the parsing of the parameter in the userspace test, with valid and
+invalid shapes, and run the counter tests on the valid ones.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@gentwo.org>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Liam R. Howlett <liam@infradead.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: David Carlier <devnexen@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
 ---
-Changes since v22:
-- Split from "mm: improve RSS counter approximation accuracy for proc
-  interfaces", which now keeps reporting the precise sum.
----
- include/trace/events/kmem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../admin-guide/kernel-parameters.txt         | 14 +++
+ .../core-api/percpu-counter-tree.rst          |  3 +-
+ lib/percpu_counter_tree.c                     | 96 ++++++++++++++++++-
+ tools/testing/hpcc/include/hpcc_shim.h        |  4 +
+ .../testing/hpcc/include/linux/moduleparam.h  | 12 +++
+ tools/testing/hpcc/main.c                     | 78 ++++++++++++++-
+ 6 files changed, 201 insertions(+), 6 deletions(-)
+ create mode 100644 tools/testing/hpcc/include/linux/moduleparam.h
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index ac4c96db7638..8ee6d5df5961 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -448,7 +448,7 @@ TRACE_EVENT(rss_stat,
- 		 */
- 		__entry->curr = current->mm == mm && !(current->flags & PF_KTHREAD);
- 		__entry->member = member;
--		__entry->size = get_mm_counter_sum(mm, member) << PAGE_SHIFT;
-+		__entry->size = get_mm_counter(mm, member) << PAGE_SHIFT;
- 	),
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 0b3c140babd9..c368affa2115 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5342,6 +5342,20 @@ Kernel parameters
+ 			allocator.  This parameter is primarily	for debugging
+ 			and performance comparison.
  
- 	TP_printk("mm_id=%u curr=%d type=%s size=%ldB",
++	percpu_counter_tree.arity=	[KNL,SMP]
++			Format: <fan-out>[,<fan-out>...]
++			Override the shape of the hierarchical per-cpu
++			counter trees (used for the RSS counters), listing
++			the fan-out of each tree level from the per-cpu
++			counters to the root. Each fan-out is a power of 2
++			and their product must be nr_cpu_ids (the highest
++			possible CPU number plus one) rounded up to a power
++			of 2, e.g. "16" (flat) or "4,4" when nr_cpu_ids
++			is 16. An invalid shape is ignored with a warning.
++			The shape in use is shown in
++			/sys/module/percpu_counter_tree/parameters/arity.
++			This parameter is meant for performance comparison.
++
+ 	pirq=		[SMP,APIC] Manual mp-table setup
+ 			See Documentation/arch/x86/i386/IO-APIC.rst.
+ 
+diff --git a/Documentation/core-api/percpu-counter-tree.rst b/Documentation/core-api/percpu-counter-tree.rst
+index 87babe2276c4..8aebf91aa133 100644
+--- a/Documentation/core-api/percpu-counter-tree.rst
++++ b/Documentation/core-api/percpu-counter-tree.rst
+@@ -63,7 +63,8 @@ possible CPU, and the tree items, whose number depends on nr_cpu_ids, so
+ struct percpu_counter_tree has a fixed size.
+ 
+ The fan-out of each tree level is selected at boot from nr_cpu_ids, the
+-highest possible CPU number plus one.
++highest possible CPU number plus one. It can be overridden with the
++percpu_counter_tree.arity= boot parameter for performance comparison.
+ 
+ The bounded accuracy is a property of the settled tree. While updates are
+ in flight the transient error can exceed it, bounded by the number of
+diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
+index 32c4f05d7d7d..491675897e41 100644
+--- a/lib/percpu_counter_tree.c
++++ b/lib/percpu_counter_tree.c
+@@ -151,6 +151,7 @@
+ #define pr_fmt(fmt) "percpu_counter_tree: " fmt
+ 
+ #include <linux/percpu_counter_tree.h>
++#include <linux/moduleparam.h>
+ #include <linux/align.h>
+ #include <linux/cache.h>
+ #include <linux/cpumask.h>
+@@ -162,6 +163,7 @@
+ #include <linux/math.h>
+ #include <linux/log2.h>
+ #include <linux/args.h>
++#include <linux/string.h>
+ #include <kunit/visibility.h>
+ 
+ #define MAX_NR_LEVELS 7
+@@ -254,6 +256,8 @@ static_assert(ARRAY_SIZE(per_nr_cpu_order_config) == MAX_NR_CPUS_ORDER + 1);
+ static struct {
+ 	/* Hierarchical counter configuration for the hardware topology. */
+ 	const struct counter_config *config;
++	/* Tree shape selected with the "arity" boot parameter. */
++	struct counter_config boot_config;
+ 	/* Order of nr_cpu_ids. */
+ 	unsigned int nr_cpus_order;
+ 	/*
+@@ -272,6 +276,9 @@ static struct {
+ 	.nr_items = UINT_MAX,
+ };
+ 
++/* Value of the "arity" boot parameter, parsed at subsystem initialization. */
++static const char *arity_param;
++
+ /*
+  * Size of the items of one tree position for the counters initialized
+  * together by percpu_counter_tree_init_many(), packed in cache lines which
+@@ -1326,7 +1333,10 @@ void percpu_counter_tree_copy_state(struct percpu_counter_tree *dst,
+ EXPORT_SYMBOL_IF_KUNIT(percpu_counter_tree_copy_state);
+ #endif
+ 
+-/* Format the fan-out of each level, from level 0 to the root, e.g. "8,2,8". */
++/* Room for the fan-out of each level, up to 7 digits and a comma, and a NUL. */
++#define SHAPE_BUF_SIZE	(8 * MAX_NR_LEVELS + 1)
++
++/* Format the fan-out of each level, from level 0 to the root, e.g. "8,4,8". */
+ static
+ int format_shape(char *buf, size_t size, const struct counter_config *config)
+ {
+@@ -1339,9 +1349,78 @@ int format_shape(char *buf, size_t size, const struct counter_config *config)
+ 	return len;
+ }
+ 
++static
++int arity_param_set(const char *val, const struct kernel_param *kp)
++{
++	/* Applied once by percpu_counter_tree_subsystem_init(). */
++	if (tree_topology.config)
++		return -EBUSY;
++	arity_param = val;
++	return 0;
++}
++
++static
++int arity_param_get(char *buffer, const struct kernel_param *kp)
++{
++	int len;
++
++	if (!tree_topology.config)
++		return sprintf(buffer, "%s\n", arity_param ? : "");
++	/* The buffer is a page, larger than any shape and its newline. */
++	len = format_shape(buffer, SHAPE_BUF_SIZE, tree_topology.config);
++	buffer[len++] = '\n';
++	return len;
++}
++
++static const struct kernel_param_ops arity_param_ops = {
++	.set = arity_param_set,
++	.get = arity_param_get,
++};
++
++/*
++ * percpu_counter_tree.arity=<fan-out>[,<fan-out>...] overrides the tree
++ * shape chosen for nr_cpu_ids, to compare shapes on a given machine.
++ * Reading the parameter shows the shape in use.
++ */
++module_param_cb(arity, &arity_param_ops, NULL, 0444);
++MODULE_PARM_DESC(arity, "Fan-out of each tree level from level 0 to the root, e.g. 8,4,8");
++
++/*
++ * Parse a list of fan-outs, from level 0 to the root, into @config. Each
++ * fan-out is a power of 2 of at least 2, and their product is nr_cpu_ids
++ * rounded up to a power of 2.
++ *
++ * Return: 0 on success, -EINVAL if the list does not describe a tree
++ * covering the CPU numbers below nr_cpu_ids.
++ */
++static
++int __init parse_arity(const char *str, struct counter_config *config)
++{
++	int ints[MAX_NR_LEVELS + 2];	/* Count, levels, and one extra to detect overflow. */
++	unsigned int level, order = 0;
++
++	if (*get_options(str, ARRAY_SIZE(ints), ints) || ints[0] > MAX_NR_LEVELS)
++		return -EINVAL;
++	config->nr_levels = ints[0];
++	for (level = 0; level < config->nr_levels; level++) {
++		int fan_out = ints[level + 1];
++
++		if (fan_out < 2 || !is_power_of_2(fan_out))
++			return -EINVAL;
++		config->n_arity_order[level] = ilog2(fan_out);
++		order += config->n_arity_order[level];
++		if (order > tree_topology.nr_cpus_order)
++			return -EINVAL;
++	}
++	if (order != tree_topology.nr_cpus_order)
++		return -EINVAL;
++	return 0;
++}
++
+ int __init percpu_counter_tree_subsystem_init(void)
+ {
+-	char shape[8 * MAX_NR_LEVELS + 1] = "";
++	const char *origin = "default";
++	char shape[SHAPE_BUF_SIZE] = "";
+ 
+ 	tree_topology.nr_cpus_order = get_count_order(nr_cpu_ids);
+ 	if (tree_topology.nr_cpus_order >= ARRAY_SIZE(per_nr_cpu_order_config)) {
+@@ -1349,14 +1428,23 @@ int __init percpu_counter_tree_subsystem_init(void)
+ 		return -EINVAL;
+ 	}
+ 	tree_topology.config = &per_nr_cpu_order_config[tree_topology.nr_cpus_order];
++	if (arity_param && *arity_param) {
++		if (parse_arity(arity_param, &tree_topology.boot_config)) {
++			pr_warn("Invalid arity \"%s\" for %u CPUs, using the default\n",
++				arity_param, nr_cpu_ids);
++		} else {
++			tree_topology.config = &tree_topology.boot_config;
++			origin = "boot parameter";
++		}
++	}
+ 	calculate_topology();
+ 	tree_topology.items_cachep =
+ 		kmem_cache_create("percpu_counter_tree_items",
+ 				  tree_topology.nr_items * SMP_CACHE_BYTES,
+ 				  SMP_CACHE_BYTES, SLAB_PANIC, NULL);
+ 	format_shape(shape, sizeof(shape), tree_topology.config);
+-	pr_info("%u CPUs, fan-out %s, %u tree items\n",
+-		nr_cpu_ids, tree_topology.nr_cpus_order ? shape : "none",
++	pr_info("%u CPUs, fan-out %s (%s), %u tree items\n",
++		nr_cpu_ids, tree_topology.nr_cpus_order ? shape : "none", origin,
+ 		tree_topology.nr_items);
+ 	return 0;
+ }
+diff --git a/tools/testing/hpcc/include/hpcc_shim.h b/tools/testing/hpcc/include/hpcc_shim.h
+index d321c8363b0b..eaac72eab2d1 100644
+--- a/tools/testing/hpcc/include/hpcc_shim.h
++++ b/tools/testing/hpcc/include/hpcc_shim.h
+@@ -34,8 +34,12 @@
+ #define abs(x) ({ typeof(x) __x = (x); __x < 0 ? -__x : __x; })
+ 
+ #define pr_err(...)		fprintf(stderr, __VA_ARGS__)
++#define pr_warn(...)		fprintf(stderr, __VA_ARGS__)
+ #define pr_info(...)		do { if (0) printf(__VA_ARGS__); } while (0)
+ 
++/* Implemented in main.c. */
++char *get_options(const char *str, int nints, int *ints);
++
+ extern unsigned long hpcc_nr_warnings;
+ 
+ #define WARN(cond, ...) ({						\
+diff --git a/tools/testing/hpcc/include/linux/moduleparam.h b/tools/testing/hpcc/include/linux/moduleparam.h
+new file mode 100644
+index 000000000000..7e40df4295b2
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/moduleparam.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
++
++struct kernel_param;
++
++struct kernel_param_ops {
++	int (*set)(const char *val, const struct kernel_param *kp);
++	int (*get)(char *buffer, const struct kernel_param *kp);
++};
++
++#define module_param_cb(name, ops, arg, perm)
++#define MODULE_PARM_DESC(parm, desc)
+diff --git a/tools/testing/hpcc/main.c b/tools/testing/hpcc/main.c
+index 1b86fea543e5..e263a932c30f 100644
+--- a/tools/testing/hpcc/main.c
++++ b/tools/testing/hpcc/main.c
+@@ -81,6 +81,27 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...)
+ 	return len < (int)size ? len : (int)size - 1;
+ }
+ 
++/* Comma-separated integers, without the ranges of lib/cmdline.c. */
++char *get_options(const char *str, int nints, int *ints)
++{
++	char *end;
++	int i = 0;
++
++	while (i < nints - 1 && *str) {
++		long v = strtol(str, &end, 0);
++
++		if (end == str)
++			break;
++		ints[++i] = v;
++		str = end;
++		if (*str != ',')
++			break;
++		str++;
++	}
++	ints[0] = i;
++	return (char *)str;
++}
++
+ static void hpcc_init_topology(unsigned int nr_cpus)
+ {
+ 	nr_cpu_ids = nr_cpus;
+@@ -428,6 +449,58 @@ static int run_case(unsigned int nr_cpus, unsigned long batch_size)
+ 	return nr_case_failures ? 1 : 0;
+ }
+ 
++/* Tree shapes given with the arity boot parameter. */
++static const struct {
++	unsigned int nr_cpus;
++	const char *arity;
++	const char *shape;	/* Shape in use, NULL if the arity is invalid. */
++} test_arity[] = {
++	{ 16, "16", "16" },
++	{ 16, "4,4", "4,4" },
++	{ 16, "2,2,2,2", "2,2,2,2" },
++	{ 16, "4,2", NULL },		/* Covers 8 CPUs. */
++	{ 16, "4,8", NULL },		/* Covers 32 CPUs. */
++	{ 16, "4,4,1", NULL },		/* Fan-out of 1. */
++	{ 16, "4,3", NULL },		/* Not a power of 2. */
++	{ 16, "4,4x", NULL },		/* Trailing characters. */
++	{ 16, "-4,-4", NULL },
++	{ 17, "8,4", "8,4" },
++	{ 100, "128", "128" },
++	{ 192, "8,4,8", "8,4,8" },
++	{ 192, "2,2,2,2,2,2,2,2", NULL },	/* More than MAX_NR_LEVELS. */
++	{ 1024, "32,32", "32,32" },
++	{ 1, "2", NULL },
++};
++
++static int run_arity_case(unsigned int i)
++{
++	const char *expect = test_arity[i].shape;
++	char buf[SHAPE_BUF_SIZE];
++	int len;
++
++	nr_case_failures = 0;
++	hpcc_nr_warnings = 0;
++	tree_topology.config = NULL;
++	CHECK(!arity_param_set(test_arity[i].arity, NULL));
++	hpcc_init_topology(test_arity[i].nr_cpus);
++	arity_param = NULL;
++	CHECK(arity_param_set("16", NULL) == -EBUSY);
++	CHECK((tree_topology.config == &tree_topology.boot_config) == !!expect);
++	len = arity_param_get(buf, NULL);
++	CHECK(len > 0 && buf[len - 1] == '\n');
++	buf[len - 1] = '\0';
++	if (expect) {
++		CHECK(!strcmp(buf, expect));
++		test_saturated(2, 1);
++		test_saturated(32, -1);
++		test_random_walk(32, 20000);
++	}
++	CHECK(!hpcc_nr_warnings);
++	printf("%sok %d - arity nr_cpus=%u \"%s\" -> \"%s\"\n", nr_case_failures ? "not " : "",
++	       ++test_num, test_arity[i].nr_cpus, test_arity[i].arity, buf);
++	return nr_case_failures ? 1 : 0;
++}
++
+ static int run_check_config(void)
+ {
+ 	unsigned int nr_errors = percpu_counter_tree_check_config();
+@@ -455,12 +528,15 @@ int main(int argc, char **argv)
+ 	if (argc == 2)
+ 		large = true;
+ 
+-	nr_tests = 1 + ARRAY_SIZE(test_nr_cpus) * ARRAY_SIZE(test_batch_sizes);
++	nr_tests = 1 + ARRAY_SIZE(test_arity) +
++		   ARRAY_SIZE(test_nr_cpus) * ARRAY_SIZE(test_batch_sizes);
+ 	if (large)
+ 		nr_tests += ARRAY_SIZE(test_nr_cpus_large) * ARRAY_SIZE(test_batch_sizes);
+ 	printf("1..%u\n", nr_tests);
+ 
+ 	failed += run_check_config();
++	for (i = 0; i < ARRAY_SIZE(test_arity); i++)
++		failed += run_arity_case(i);
+ 	for (i = 0; i < ARRAY_SIZE(test_nr_cpus); i++)
+ 		for (j = 0; j < ARRAY_SIZE(test_batch_sizes); j++)
+ 			failed += run_case(test_nr_cpus[i], test_batch_sizes[j]);
 -- 
 2.47.3
 
