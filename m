@@ -1,57 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=168.119.38.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793898207;
-	b=gDOTS4csfd8Nib6d2iR9aUkajrSwPBLk9xQoB+DQT9r6eZQYQcDH3Ua+OuHD4Vl9EJWe
-	 HaCTx/zDUjOivhtMGnLSTJIJ3ntcEghFv1xY3SgmlKXr6+h85Y7WB1g/i78m38xwI+Yi+
-	 PGfkJMweoJxThnXsih5FaffIj6DqJyjJ5alC1BVIg1h9ME1EWo7ffbNsbzsLrgDtLT+wf
-	 3IGO7nD5lKYgUPrvbaMfBwAxN1DK32Gv6DM6OH5AwHjWaHXPWA2oEVJnK6gpY0Bvwojuf
-	 Cq+S1doi8QX4v9raY37krgM+D+Kd1atMTBkd+hIok33+ALAEqULoaTUAoZZ8Z9fxO/w==
+	t=1793898549;
+	b=pFIKNMajGe+9+yKhI+EhMZPAvxpYI4ut+vIXFf+1PDXMHuzQASFSU9HlvYH6cLqSStNA
+	 DXLzKYYuRlWs4VBi0knpJ9tdb19JZ/ggmQhJeMye/c47/oM/S6qVGVc+oF3PDpudWDwgG
+	 NLXksLtwter34CYjHXK+LcGbVmZGPSZ/RamEoGEAIDqWi0LCweOqidAGS0iyfXXxWGrUl
+	 sgY5kQftonk5VXYxNdWcphYxLo6E1bfBxh7C+rycRfZv4u8EprkenHstmcEZh+UINRDrI
+	 1fPu7K/M9M9EcawOx7CtnTeYjEmrzNshQT3x8jf8S2qdEy1FP56Q6d3/8Hk4CxW4tnQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793898207;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hfztDg25paIoRz2d1klOsMoFcv9JJEbXDHV48grZ9zs=;
-	b=wcbUkCs48bNTm2fqMBm+0WvEe6r+jXHydm6yzF/fBuL8LNOJ8uPLZzZyWfDfy7sCnvSn
-	 9UycVJ1vxzxbUmfR/sRiwCq2FMpAfrGeA91hotRNXFztIFKj8RLf09EH7bdtjFgqnCDfn
-	 Z95x/DgAJgGdMl0NnExkZp9/h/hDNulg3beOxR7wAh1Avn0iRT/M+3h2KSgaNJdUl8o7R
-	 NKmhjpxuBir5Gzi3KFE24vLAAYjBNqfjapE6dV1yhCMALzOaO1pserlTKqC2mh2RLg2IC
-	 rfsn+xrRqKZA6jMO0jJUPMojOIxR7JnJEuHmKMZB56GgCHWxPBGO0oPjV/cUmsKwd7w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793898549;
+	h=DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-malware-bazaar;
+	bh=9pcshHkbr1mkMc13IhC/TeO7WGUdu0MMea0JbyhMjVM=;
+	b=zWJWTOs5rXce1HUUgB6J8/lPz920iPvf35tINp8HkU/PA2VvdX68dt0F6YCLLx7bAWJQ
+	 WN5nfzEnarpolOCmPek77j0+TqqR6v761BWXOy3Zu6kG8rcCuCvGHMgs5s51IAzjTVw2x
+	 noiaGxDlM6D/lc1TkJyggnW8iycDP+J0e+uOSkSu2VKNoPyMcelvRVZitCN/P0a1MJFVK
+	 63LEtXpsAftXCRbrrkvNlesfVdc/pcW5JCurN2DJPmRxgXha0VdoCERvxEF+yf674oBp6
+	 3yEv9gStJ0cXJA7ckeRHYYOxzEBO6YndeBTVBDX7EpWY0FfLToNBHpf0+u23tlTGNLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F2ZCS2cj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=permerror header.from=sipsolutions.net;
+	spf=pass smtp.mailfrom=sipsolutions.net;
+	dkim=pass header.d=sipsolutions.net header.i=@sipsolutions.net header.a=rsa-sha256 header.s=mail header.b=JoJLrkcF;
+	arc=none smtp.remote-ip=168.119.38.16
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C835606D81E;
-	Thu,  5 Nov 2026 17:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A63606A326;
+	Thu,  5 Nov 2026 17:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F2ZCS2cj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F251F000C1;
-	Thu,  5 Nov 2026 17:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793898206;
-	bh=hfztDg25paIoRz2d1klOsMoFcv9JJEbXDHV48grZ9zs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F2ZCS2cje7ioHclfSeoh5Ib5zBGDsEfP45RaGAsiS0rphLWABtmeLiusiIyW/gGK9
-	 ms+u7rLo/yTIuh6+wp2L19hrXXX5P/BqDRW7Jy7vRs+EoHBcE43+Y5TDfSRvUcsrx9
-	 lvWT5VhmWItf10Z28Aan88rhUvuGmULNJ7p7mr7tdWRj4QG8LNyiQXRlFlc3g9eZ1V
-	 FrAyvjzsE23/mt7n4RpKAvRU9T4ozPjaQZ293U2oRmXHGL09EUfEkKf/OZsMEFzwch
-	 pD77msh1LpIt/pRbVws+e9WpaQka0bdIREkQNztMtgcl6aEbKf3038yCTfA0oGH57Y
-	 Ms/Bf9Gs8lzRA==
-Message-ID: <sashiko-outbox-199569@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 1/3] riscv: build kernel atomics from LR/SC when
- Zaamo is disabled
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261105-lrsc-only-v5-1-f0648f57b2e1@mobileye.com>
-References: <20261105-lrsc-only-v5-0-f0648f57b2e1@mobileye.com>
- <20261105-lrsc-only-v5-1-f0648f57b2e1@mobileye.com>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key, unprotected) header.d=sipsolutions.net header.i=@sipsolutions.net header.a=rsa-sha256 header.s=mail header.b=JoJLrkcF
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=9pcshHkbr1mkMc13IhC/TeO7WGUdu0MMea0JbyhMjVM=;
+	t=1793898547; x=1795108147; b=JoJLrkcFuse/iyva04KR4VR29KyHuQCtfkXvF5HFZ3CvqIJ
+	XV8l2qRihc09po6OTywHz9SncdYIdtWAzE+NtfUp0vI3j0/kU4+YIhw1LjLaWg6AKCIcRDDhzpiXS
+	L5iJoIQKnbeeOmy2SKNjMXv2uIXYOzTTt8PwBkwGEnwtE8+mp36PDKFbzwwrNTHrNwYV3vbA2Vtef
+	4J+GONLshBK/Hv16o7agRqFISIEeDdSgvZp2OjoRi0kAgLkoOE1sQtAYUxpwM04v64zlqkwxgNgr9
+	IB+tNGTUTTXM+6HdOUsx68aHJ97HSOk4R3wjzhfVuFKp2e7FY35roi8WKBoXp2VA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1xP0xR-00000008Eu8-1vkG;
+	Thu, 05 Nov 2026 18:09:01 +0100
+Message-ID: <69c7cb8d0567f96dd03c2f35abb12b41ffa09f59.camel@sipsolutions.net>
+Subject: Re: [PATCH v7 0/4] tracing: improve symbolic printing
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Ilya Maximets
+ <i.maximets@ovn.org>, Matthieu Baerts	 <matttbe@kernel.org>, Aaron Conole
+ <aconole@redhat.com>, Eelco Chaudron	 <echaudro@redhat.com>,
+ dev@openvswitch.org, Adrian Moreno <amorenoz@redhat.com>,  Antoine Tenart
+ <atenart@kernel.org>
+Date: Thu, 05 Nov 2026 18:09:00 +0100
+In-Reply-To: <20261105113857.4737cffb@gandalf.local.home>
+References: <20260922110955.363677-6-johannes@sipsolutions.net>
+		<20261105091216.7b91db5a@gandalf.local.home>
+		<8da2902c233de42ce756b3bfba5e5821f4dfa82b.camel@sipsolutions.net>
+		<20261105112444.7873d9c9@gandalf.local.home>
+		<ba474cdb3bb30c3eaf4aafc6534d0e77cfde64d4.camel@sipsolutions.net>
+	 <20261105113857.4737cffb@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 17:03:26 +0000
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,422 +77,203 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [Critical] riscv: missing RISCV_FULL_BARRIER in LR/SC value-returning ato=
-mics
-- [High] riscv: bitops: broken RVWMO ordering and leaked macros in LR/SC bi=
-tops
-- [Medium] riscv: missing Zaamo dependency for Zicfiss when RISCV_ISA_ZAAMO=
-=3Dn
-- [Low] riscv: unreachable _zaamo march rule and unused CONFIG_RISCV_ISA_ZA=
-LRSC
-- [Low] riscv: missing workload benchmarks and userspace slow-AMO reporting=
- for Zaamo
---
+On Thu, 2026-11-05 at 11:38 -0500, Steven Rostedt wrote:
+> On Thu, 05 Nov 2026 17:26:58 +0100
+> Johannes Berg <johannes@sipsolutions.net> wrote:
+>=20
+> > On Thu, 2026-11-05 at 11:24 -0500, Steven Rostedt wrote:
+> > > > Any objection to simply converting the __print_symbolic() sample? I=
+t
+> > > > would look something like this: =20
+> > >=20
+> > > Actually, keeping them both would be very useful. That way one can se=
+e how
+> > > to do it the other way. We can say, the old way is being deprecated s=
+o
+> > > please use the new way. =20
+> >=20
+> > What's the point? But OK, sure.
+>=20
+> I thought I mentioned the point? "That way one can see how to do it the
+> other way". Basically, seeing the equivalent way.
 
-commit 0594932503c2ca9d6aebe33d3c6b28a68cd3db5e
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+You did say that, but I guess I don't really understand it - I see the
+point of the sample as the status quo ("how to do it"), not the
+evolutionary history ("how to convert it").
 
-riscv: build kernel atomics from LR/SC when Zaamo is disabled
+But sure, whatever you say, I don't really care.
 
-This commit adds CONFIG_RISCV_ISA_ZAAMO (and CONFIG_RISCV_ISA_ZALRSC /
-CONFIG_RISCV_ISA_A) so kernels can be built using LR/SC loops instead of AMO
-instructions on CPUs where Zaamo is trap-emulated in M-mode.
+> > > > +const char *sample_names2_lookup(unsigned long long value);
+> > > > +void sample_names2_show(struct seq_file *m); =20
+> > >=20
+> > > Are the above going to be defined somewhere? =20
+> >=20
+> > Well, it's a sample, and I wasn't even using "sample_names2" in the
+> > below, so I didn't actually define it. I can flesh that out even more,
+> > but I'm not sure it's worth it?
+>=20
+> It is, otherwise it is confusing. If it is in the sample code, people wil=
+l
+> think it's required.
 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 5874ca30f4f6d..07d15a0bb3799 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -730,6 +730,59 @@ config RISCV_ISA_ZACAS
-> =20
->  	  If you don't know what to do here, say Y.
-> =20
-> +config TOOLCHAIN_HAS_ZALRSC_ZAAMO
-> +	bool
-> +	default y
-> +	depends on !64BIT || $(cc-option,-mabi=3Dlp64 -march=3Drv64im_zaamo_zal=
-rsc)
-> +	depends on !32BIT || $(cc-option,-mabi=3Dilp32 -march=3Drv32im_zaamo_za=
-lrsc)
-> +
-> +config RISCV_ISA_ZAAMO
-> +	bool "Zaamo extension support for AMO atomics" if TOOLCHAIN_HAS_ZALRSC_=
-ZAAMO
-> +	default y
-> +	help
-> +	  Use AMO instructions for kernel atomic memory operations. When
-> +	  disabled, those operations are built from LR/SC and the kernel
-> +	  is compiled with zalrsc instead of the A extension.
-> +
-> +	  Disable this for a CPU where AMO is much slower than LR/SC. That
-> +	  is the case when AMO instructions are emulated by a trap into
-> +	  M-mode, as on the MIPS P8700: an emulated atomic costs hundreds
-> +	  of cycles where LR/SC costs tens. Such a CPU still advertises
-> +	  the A extension, and userspace still sees it.
+All of the sample code is optional though, you don't have to use any one
+of the methods, either this, or enum, or ... if you want to use the
+dynamic way of __print_sym() then it indeed is required.
 
-[Severity: Low]
-As reported by Palmer Dabbelt on v4 [1], when treating M-mode trap-emulated
-AMOs on hardware like MIPS P8700 as implemented-but-slow and continuing to
-advertise the A extension to userspace in CONFIG_RISCV_ISA_ZAAMO, could
-real-world application performance numbers be provided (rather than only the
-40-cycle vs 600-cycle microbenchmark), along with a mechanism such as hwpro=
-be
-to report slow AMO behavior to userspace?
+Anyway I'll flesh this out more.
 
-> +
-> +	  A kernel built without Zaamo runs on any CPU that implements the
-> +	  A extension; it only does not use AMO.
-> +
-> +	  The compiler must accept _zaamo and _zalrsc in -march to make
-> +	  this choice. GCC 15.1 is the first release that does. With an
-> +	  older compiler the option stays enabled and -march keeps the A
-> +	  extension.
-> +
-> +	  If you don't know what to do here, say Y.
-> +
-> +config RISCV_ISA_ZALRSC
-> +	def_bool y
-> +	help
-> +	  Zalrsc provides LR/SC. cmpxchg and the conditional atomics are
-> +	  LR/SC sequences, so this is always enabled.
-> +
-> +	  It exists because asm/hwcap.h already has RISCV_ISA_EXT_ZALRSC
-> +	  next to RISCV_ISA_EXT_ZAAMO, and the kernel pairs each
-> +	  RISCV_ISA_EXT_<ext> it can be built for with a
-> +	  CONFIG_RISCV_ISA_<ext>; rv_ext_enabled() in the BPF JIT, for
-> +	  example, tests both.
-> +
-> +	  Zaamo plus Zacas could provide every atomic as well, with CAS
-> +	  loops in place of LR/SC. This option is where that would go,
-> +	  by allowing it to be disabled.
-> +
-> +config RISCV_ISA_A
-> +	def_bool RISCV_ISA_ZAAMO && RISCV_ISA_ZALRSC
-> +	help
-> +	  The A extension is Zaamo plus Zalrsc. This is the Kconfig
-> +	  counterpart of RISCV_ISA_EXT_A, for the same reason as
-> +	  RISCV_ISA_ZALRSC above, and puts "a" in -march.
-> +
->  config TOOLCHAIN_HAS_ZBB
->  	bool
->  	default y
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index 44f5a439741a9..5cdc9cc017bb1 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -58,8 +58,9 @@ ifeq ($(CONFIG_SHADOW_CALL_STACK),y)
->  endif
-> =20
->  # ISA string setting
-> -riscv-march-$(CONFIG_ARCH_RV32I)	:=3D rv32im
-> -riscv-march-$(CONFIG_ARCH_RV64I)	:=3D rv64ima
-> +riscv-march-$(CONFIG_ARCH_RV32I)	:=3D rv32im
-> +riscv-march-$(CONFIG_ARCH_RV64I)	:=3D rv64im
-> +riscv-march-$(CONFIG_RISCV_ISA_A)	:=3D $(riscv-march-y)a
->  riscv-march-$(CONFIG_FPU)		:=3D $(riscv-march-y)fd
->  riscv-march-$(CONFIG_RISCV_ISA_C)	:=3D $(riscv-march-y)c
->  riscv-march-$(CONFIG_RISCV_ISA_V)	:=3D $(riscv-march-y)v
-> @@ -75,9 +76,16 @@ else
->  riscv-march-$(CONFIG_TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI) :=3D $(ris=
-cv-march-y)_zicsr_zifencei
->  endif
-> =20
-> -KBUILD_BASE_ISA =3D -march=3D$(shell echo $(riscv-march-y) | sed -E 's/(=
-rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-> +KBUILD_BASE_ISA =3D -march=3D$(shell echo $(riscv-march-y) | sed -E 's/(=
-rv32ima?|rv64ima?)fd([^v_]*)v?/\1\2/')
->  export KBUILD_BASE_ISA
-> =20
-> +# Without "a", name the sub-extensions. Zaamo can be off only when the
-> +# compiler accepts _zaamo and _zalrsc in -march.
-> +ifneq ($(CONFIG_RISCV_ISA_A),y)
-> +riscv-march-$(CONFIG_RISCV_ISA_ZAAMO) :=3D $(riscv-march-y)_zaamo
-> +riscv-march-$(CONFIG_RISCV_ISA_ZALRSC) :=3D $(riscv-march-y)_zalrsc
-> +endif
+> Right, but if we want to deprecate the old way, we need to have the
+> simplest sample of it. That is, have one event that shows the simple way =
+to
+> do this (one that simply replaces the old way), and then have another
+> example of how to do it in a more complex and featureful way.
+>=20
+> Honestly, this is why I asked for this. Your updates use the complex
+> method, I wasn't sure from the code how to do it for the simple case. Tha=
+t
+> is, what wasn't needed for just replacing static __print_symbolic() lists=
+.
 
-[Severity: Medium]
-As reported by Sashiko on v4 [2], does disabling CONFIG_RISCV_ISA_ZAAMO bre=
-ak
-the build when CONFIG_RISCV_USER_CFI=3Dy (which defaults to y on 64-bit MMU
-kernels)?
+The simple way changes from
 
-When CONFIG_RISCV_ISA_ZAAMO=3Dn, riscv-march-y and KBUILD_BASE_ISA are buil=
-t with
-_zalrsc and omit both a and _zaamo. However, CONFIG_RISCV_USER_CFI in
-arch/riscv/Kconfig checks:
+	__print_symbolic(foo, BRACED_LIST)
 
-	depends on 64BIT && MMU && \
-		$(cc-option,-mabi=3Dlp64 -march=3Drv64ima_zicfiss_zicfilp -fcf-protection=
-=3Dfull)
+to
 
-without depending on RISCV_ISA_ZAAMO.
+TRACE_DEFINE_SYM_LIST(foo_names, BRACED_LIST);
+...
+	__print_sym(foo, foo_names)
 
-Because the Zicfiss extension requires Zaamo for ssamoswap, two build failu=
-res
-follow:
 
-1. In arch/riscv/kernel/usercfi.c, amo_user_shstk() emits:
+so I'm not sure I see how it's really that much more complex?
 
-	asm goto(".option push\n"
-		".option arch, +zicfiss\n"
-		"1: ssamoswap.d %[swap], %[val], %[addr]\n"
 
-In both GNU binutils and LLVM, .option arch, +zicfiss does not enable +zaam=
-o,
-so assembling ssamoswap.d fails when KBUILD_CFLAGS lacks a and _zaamo.
+Anyway, how about below sample update?
 
-2. In arch/riscv/kernel/vdso/Makefile (included by
-arch/riscv/kernel/vdso_cfi/Makefile with VDSO_CFI_BUILD :=3D 1), CFI_MARCH
-appends _zicfilp_zicfiss to $(KBUILD_BASE_ISA), which fails when the base
--march has _zalrsc without _zaamo.
+johannes
 
-Should RISCV_USER_CFI depend on RISCV_ISA_ZAAMO, or should +zaamo be enabled
-where Zicfiss is used?
 
-[Severity: Low]
-As reported by Conor Dooley on v3 [3], since CONFIG_RISCV_ISA_ZALRSC is
-unconditionally def_bool y and CONFIG_RISCV_ISA_A is defined as
-RISCV_ISA_ZAAMO && RISCV_ISA_ZALRSC, CONFIG_RISCV_ISA_A is always identical=
- to
-CONFIG_RISCV_ISA_ZAAMO.
 
-Doesn't that make the _zaamo assignment inside ifneq ($(CONFIG_RISCV_ISA_A)=
-,y)
-unreachable dead code, and could the unused CONFIG_RISCV_ISA_ZALRSC and
-CONFIG_RISCV_ISA_A options be dropped in favor of using CONFIG_RISCV_ISA_ZA=
-AMO
-directly?
-
-[ ... ]
-
-> diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/ato=
-mic.h
-> index 616b8b332ac56..3b189bea1d08c 100644
-> --- a/arch/riscv/include/asm/atomic.h
-> +++ b/arch/riscv/include/asm/atomic.h
-
-[ ... ]
-
-> @@ -108,6 +126,38 @@ c_type arch_atomic##prefix##_fetch_##op(c_type i, at=
-omic##prefix##_t *v)	\
->  		: "memory");						\
->  	return ret;							\
->  }
-> +#else
-> +#define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)	\
-> +static __always_inline							\
-> +c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,		\
-> +					     atomic##prefix##_t *v)	\
-> +{									\
-> +	register c_type ret, temp;					\
-> +	__asm__ __volatile__ (						\
-> +		"1:	lr." #asm_type " %1, %0\n"			\
-> +		"	" #asm_op " %2, %1, %3\n"			\
-> +		"	sc." #asm_type " %2, %2, %0\n"			\
-> +		"	bnez %2, 1b\n"					\
-> +		: "+A" (v->counter), "=3D&r" (ret), "=3D&r" (temp)		\
-> +		: "r" (I)						\
-> +		: "memory");						\
-> +	return ret;							\
-> +}									\
-> +static __always_inline							\
-> +c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *v)=
-	\
-> +{									\
-> +	register c_type ret, temp;					\
-> +	__asm__ __volatile__ (						\
-> +		"1:	lr." #asm_type ".aqrl %1, %0\n"			\
-> +		"	" #asm_op " %2, %1, %3\n"			\
-> +		"	sc." #asm_type ".aqrl %2, %2, %0\n"		\
-> +		"	bnez %2, 1b\n"					\
-> +		: "+A" (v->counter), "=3D&r" (ret), "=3D&r" (temp)		\
-> +		: "r" (I)						\
-> +		: "memory");						\
-> +	return ret;							\
-> +}
-> +#endif
-
-[Severity: Critical]
-As reported by Sashiko on v4 [2], does pairing lr.aqrl with sc.aqrl without=
- a
-trailing RISCV_FULL_BARRIER violate the LKMM full-barrier requirement for
-fully-ordered value-returning atomic RMW primitives when
-CONFIG_RISCV_ISA_ZAAMO=3Dn?
-
-Under RVWMO, a single AMO instruction with .aqrl is both a load and a store=
-, so
-PPO Rule 6 (rw -> store.rl) orders prior accesses before the AMO and PPO Ru=
-le 5
-(load.aq -> rw) orders the AMO before subsequent accesses. In an LR/SC loop,
-lr.aqrl is only a load and sc.aqrl is only a store: prior memory accesses a=
-re
-ordered before sc.aqrl, and subsequent memory accesses are ordered after
-lr.aqrl, but because lr.aqrl executes before sc.aqrl, a prior plain store a=
-nd a
-subsequent plain load to different addresses can be reordered into:
-
-	lr.aqrl -> subsequent load -> prior store -> sc.aqrl
-
-As established in commit 5ce6c1f3535f ("riscv/atomic: Strengthen
-implementations with fences") and commit 1d84afaf0252 ("riscv: Fix fully
-ordered LR/SC xchg[8|16]() implementations"), fully-ordered LR/SC sequences=
- in
-RISC-V Linux must use plain lr.{w,d}, sc.{w,d}.rl, and a trailing
-RISCV_FULL_BARRIER (fence rw, rw).
-
-This affects four places when CONFIG_RISCV_ISA_ZAAMO is disabled:
-- ATOMIC_FETCH_OP() in arch/riscv/include/asm/atomic.h (and ATOMIC_OP_RETUR=
-N()
-  built on top of it)
-- __test_and_op_bit_ord() / __test_and_op_bit() in
-  arch/riscv/include/asm/bitops.h
-- __arch_xchg() and _arch_xchg() in arch/riscv/include/asm/cmpxchg.h (where
-  cases 4 and 8 pass swap_sfx =3D ".aqrl" and swap_append =3D "" instead of
-  sc_sfx =3D ".rl" and sc_append =3D RISCV_FULL_BARRIER, and where __arch_x=
-chg()
-  declares __typeof__(*(__ptr)) temp; using caller variable __ptr rather th=
-an
-  macro parameter p)
-- __futex_atomic_op() in arch/riscv/include/asm/futex.h
-
-Should these four LR/SC sequences use plain lr, sc.rl, and a trailing
-RISCV_FULL_BARRIER instead of lr.aqrl + sc.aqrl?
-
-> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bit=
-ops.h
-> index 3c1a15be54d80..ab3ffc3bfcfcb 100644
-> --- a/arch/riscv/include/asm/bitops.h
-> +++ b/arch/riscv/include/asm/bitops.h
-> @@ -170,12 +170,17 @@ static __always_inline int variable_fls(unsigned in=
-t x)
-> =20
->  #if (BITS_PER_LONG =3D=3D 64)
->  #define __AMO(op)	"amo" #op ".d"
-> +#define __LR	"lr.d"
-> +#define __SC	"sc.d"
->  #elif (BITS_PER_LONG =3D=3D 32)
->  #define __AMO(op)	"amo" #op ".w"
-> +#define __LR	"lr.w"
-> +#define __SC	"sc.w"
->  #else
->  #error "Unexpected BITS_PER_LONG"
->  #endif
-> =20
-> +#ifdef CONFIG_RISCV_ISA_ZAAMO
->  #define __test_and_op_bit_ord(op, mod, nr, addr, ord)		\
->  ({								\
->  	unsigned long __res, __mask;				\
-> @@ -194,6 +199,35 @@ static __always_inline int variable_fls(unsigned int=
- x)
->  		: "+A" (addr[BIT_WORD(nr)])			\
->  		: "r" (mod(BIT_MASK(nr)))			\
->  		: "memory");
-> +#else
-> +#define __test_and_op_bit_ord(op, mod, nr, addr, ord)		\
-> +({								\
-> +	unsigned long __res, __mask, __temp;			\
-> +	__mask =3D BIT_MASK(nr);					\
-> +	__asm__ __volatile__ (					\
-> +		"1: " __LR #ord " %0, %1\n"			\
-> +		#op " %2, %0, %3\n"				\
-> +		__SC #ord " %2, %2, %1\n"			\
-> +		"bnez %2, 1b\n"					\
-> +		: "=3D&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=3D&r" (__temp)	\
-> +		: "r" (mod(__mask))				\
-> +		: "memory");					\
-> +	((__res & __mask) !=3D 0);				\
-> +})
-> +
-> +#define __op_bit_ord(op, mod, nr, addr, ord)			\
-> +do {								\
-> +	unsigned long __res, __temp;				\
-> +	__asm__ __volatile__ (					\
-> +		"1: " __LR #ord " %0, %1\n"			\
-> +		#op " %2, %0, %3\n"				\
-> +		__SC #ord " %2, %2, %1\n"			\
-> +		"bnez %2, 1b\n"					\
-> +		: "=3D&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=3D&r" (__temp)	\
-> +		: "r" (mod(BIT_MASK(nr)))			\
-> +		: "memory");					\
-> +} while (0)
-> +#endif
-> =20
->  #define __test_and_op_bit(op, mod, nr, addr) 			\
->  	__test_and_op_bit_ord(op, mod, nr, addr, .aqrl)
-> @@ -337,12 +371,25 @@ static __always_inline void arch___clear_bit_unlock(
->  static __always_inline bool arch_xor_unlock_is_negative_byte(unsigned lo=
-ng mask,
->  		volatile unsigned long *addr)
->  {
-> +#ifdef CONFIG_RISCV_ISA_ZAAMO
->  	unsigned long res;
->  	__asm__ __volatile__ (
->  		__AMO(xor) ".rl %0, %2, %1"
->  		: "=3Dr" (res), "+A" (*addr)
->  		: "r" (__NOP(mask))
->  		: "memory");
-> +#else
-> +	unsigned long res, temp;
-> +
-> +	__asm__ __volatile__ (
-> +		"1: " __LR ".rl %0, %1\n"
-> +		"xor %2, %0, %3\n"
-> +		__SC ".rl %2, %2, %1\n"
-> +		"bnez %2, 1b\n"
-> +		: "=3D&r" (res), "+A" (*addr), "=3D&r" (temp)
-> +		: "r" (__NOP(mask))
-> +		: "memory");
-> +#endif
->  	return (res & BIT(7)) !=3D 0;
->  }
-
-[Severity: High]
-As reported by Sashiko on v4 [2], in arch/riscv/include/asm/bitops.h when
-CONFIG_RISCV_ISA_ZAAMO=3Dn, __test_and_op_bit_ord() and __op_bit_ord() paste
-#ord onto both __LR and __SC, and arch_xor_unlock_is_negative_byte() emits
-__LR ".rl".
-
-Doesn't this produce reserved/ineffective Zalrsc ordering combinations and
-weaken release ordering in arch_xor_unlock_is_negative_byte()?
-
-1. When arch_test_and_set_bit_lock() calls __test_and_op_bit_ord() with
-ord =3D .aq, it emits sc.{d,w}.aq, which has aq=3D1, rl=3D0 on a store-cond=
-itional.
-2. When arch_clear_bit_unlock() calls __op_bit_ord() with ord =3D .rl, and =
-in
-arch_xor_unlock_is_negative_byte(), it emits lr.{d,w}.rl, which has aq=3D0,=
- rl=3D1
-on a load-reserved.
-3. In arch_xor_unlock_is_negative_byte(), callers such as
-folio_xor_flags_has_waiters() unlock PG_locked with release semantics while
-checking BIT(7) (PG_waiters) in the old value res. Because .rl on lr has no
-RVWMO release effect (PPO Rule 6 only orders prior accesses before stores w=
-ith
-.rl), memory accesses inside the critical section are only ordered before
-sc.rl and can be reordered after the lr load that samples BIT(7) into res.
-4. For __test_and_op_bit() (used by arch_test_and_set_bit(),
-arch_test_and_clear_bit(), and arch_test_and_change_bit()), ord =3D .aqrl e=
-mits
-lr.aqrl + sc.aqrl without a trailing RISCV_FULL_BARRIER.
-5. Finally, at the bottom of arch/riscv/include/asm/bitops.h:
-
-	#undef __test_and_op_bit
-	#undef __op_bit
-	#undef __NOP
-	#undef __NOT
-	#undef __AMO
-
-should __LR and __SC also be undefined here so they do not leak into
-translation units that include asm/bitops.h?
-
-[1] https://lore.kernel.org/r/mhng-6BAAFBCB-95B3-45AC-9087-C00241996255@Pal=
-mers-Mini.rwc.dabbelt.com
-[2] https://lore.kernel.org/r/20261101-lrsc-only-v4-1-4e1d010463b3@mobileye=
-.com
-[3] https://lore.kernel.org/r/20261102-persuader-catering-5ed81c35ae0e@spud
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-lrsc-only-=
-v5-0-f0648f57b2e1@mobileye.com?part=3D1
+--- a/samples/trace_events/trace-events-sample.c
++++ b/samples/trace_events/trace-events-sample.c
+@@ -11,6 +11,36 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace-events-sample.h"
+=20
++/* functions for the dynamic __print_sym() example */
++static const struct {
++	unsigned long val;
++	char *name;
++} print_sym_dynamic_names[] =3D {
++	{ 0, "zero" },
++	{ TRACE_SAMPLE_FOO, "TWO" },
++	{ TRACE_SAMPLE_BAR, "FOUR" },
++	{ TRACE_SAMPLE_ZOO, "EIGHT" },
++	{ 10, "TEN" }
++};
++
++const char *sample_names_dynamic_lookup(unsigned long long value)
++{
++	for (int i =3D 0; i < ARRAY_SIZE(print_sym_dynamic_names); i++) {
++		if (print_sym_dynamic_names[i].val =3D=3D value)
++			return print_sym_dynamic_names[i].name;
++	}
++
++	return NULL;
++}
++
++void sample_names_dynamic_show(struct seq_file *m)
++{
++	for (int i =3D 0; i < ARRAY_SIZE(print_sym_dynamic_names); i++)
++		seq_printf(m, ", { %lu, \"%s\" }",
++			   print_sym_dynamic_names[i].val,
++			   print_sym_dynamic_names[i].name);
++}
++
+ static const char *random_strings[] =3D {
+ 	"Mother Goose",
+ 	"Snoopy",
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_eve=
+nts/trace-events-sample.h
+index 816848a456a2..38d6bf808de6 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -297,6 +297,33 @@ TRACE_DEFINE_ENUM(TRACE_SAMPLE_FOO);
+ TRACE_DEFINE_ENUM(TRACE_SAMPLE_BAR);
+ TRACE_DEFINE_ENUM(TRACE_SAMPLE_ZOO);
+=20
++/*
++ * define the names as { value, "name" } tuples for __print_sym() below,
++ * same as the inline list for __print_dynamic()
++ */
++TRACE_DEFINE_SYM_LIST(sample_names_static,
++	{ 0, "zero" },
++	{ TRACE_SAMPLE_FOO, "TWO" },
++	{ TRACE_SAMPLE_BAR, "FOUR" },
++	{ TRACE_SAMPLE_ZOO, "EIGHT" },
++	{ 10, "TEN" }
++);
++
++/*
++ * Alternatively, you could define a function for the names:
++ *
++ * The _lookup() function returns the string for the given value.
++ *
++ * The _show() function must
++ *	seq_printf(m, ", { %u, \"%s\" }", value, name);
++ * for each value that userspace should be able to parse.
++ */
++const char *sample_names_dynamic_lookup(unsigned long long value);
++void sample_names_dynamic_show(struct seq_file *m);
++TRACE_DEFINE_SYM_FNS(sample_names_dynamic,
++		     sample_names_dynamic_lookup,
++		     sample_names_dynamic_show);
++
+ TRACE_EVENT(foo_bar,
+=20
+ 	TP_PROTO(const char *foo, int bar, const int *lst,
+@@ -328,7 +355,7 @@ TRACE_EVENT(foo_bar,
+ 		__assign_cpumask(cpum, cpumask_bits(mask));
+ 	),
+=20
+-	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
++	TP_printk("foo %s %d %s %s %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
+ 		  __entry->foo, __entry->bar,
+=20
+ /*
+@@ -340,6 +367,9 @@ TRACE_EVENT(foo_bar,
+  *    the variable matches one of the values, then it will print the
+  *    string in that pair. If non are matched, it returns a string
+  *    version of the number (if __entry->bar =3D=3D 7 then "7" is returned=
+).
++ *
++ * NOTE: This variant is deprecated, it uses more space than the below
++ *	 __print_sym() which is identical to this for userspace.
+  */
+ 		  __print_symbolic(__entry->bar,
+ 				   { 0, "zero" },
+@@ -349,6 +379,21 @@ TRACE_EVENT(foo_bar,
+ 				   { 10, "TEN" }
+ 			  ),
+=20
++/*
++ *  __print_sym( variable, symbol_list_definition ),
++ *
++ *    The variable is tested against each value of the symbol list.
++ *    The symbol list can be built statically (sample_names_static) or
++ *    dynamically (sample_names_dynamic). If the variable matches one
++ *    of the values, then it will print the string in that pair. If
++ *    no entry matches, the number itself is printed (e.g. here if
++ *    if __entry->bar =3D=3D 7 then "7" is shown).
++ *
++ *    See above for the declaration of sample_names_{static,dynamic}.
++ */
++		  __print_sym(__entry->bar, sample_names_static),
++		  __print_sym(__entry->bar, sample_names_dynamic),
++
+ /*
+  *  __print_flags( variable, "delim", { value, "flag" }, ... ),
+  *
