@@ -1,54 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793881452;
-	b=tDSoRH5WJEEuTKuEDkmYSu0yI722bQRy+cVHopqYmjwthZp6LjeeSHjbJ/yB/LqiQgdt
-	 JDrdnm7dSV1EOLBnydb2m7wpd5GOLPhBl3QGZ+u5ZpCN61EUVoiiDs+9GJojXDcqrPePu
-	 I4q0ptXSkqIUchDTPl8qiuMLlEFqp7dB4yVeDeREBmOXgRSlfA5nvSZwc+w7H1znnQlfP
-	 k7kY0xgyuZoz2XhQwz+iu345Hmat+dJFSh3/oqt5pRjYsUyljPNuv0i36GYcTQlq+NYe7
-	 JEn45tNVf25xM3lEDYG1swZLG57kG8ptlhbMxUNwdAR9UEgLQH8tnV877xBsGuttsFA==
+	t=1793882900;
+	b=S0Fv1yTkBEpcW1yAarnAU4o/fEAtX8qSSYZR3XpTaeqgQ1fjGvxBbS8q9KLUmQXeBwZS
+	 7XB3zOxsWCTc+LM+Er2/+xHXVgfB9hHYM1yJ29YSDfmUhquwV7rYX/4FmWicbB+A50etK
+	 Fkm2YKspzrpIebn5L4Ar1BgekLo+FXUJ7QozTibgnFmJFEWI3qHDC4IsL8NXopqJ2Bino
+	 SiOEXZeEB7n1F2OwINJzGS0ZVAZj36OfzGXyjIBu17drFVMuVrXgSmG4oNEq5eM36STml
+	 iVu7NHEjBc7CocJyV/Nv6o0rzY4q7DEJaiXwS6zKKIBT9COPoGqB28vacuPL5rtWRmw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793881452;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793882900;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Q8beI0u60Egzj7ijn/9kD45H6hqY9wYVgWCRUWY3M6k=;
-	b=wb8RwPZH1FB9vviaJ1HS546/qiPWUk7oT1yiUmzGV3uNffKRlHEVeAOPfv5E4Vo/pp2n
-	 Q+F7TSFu3Z4aZk9vCJxCnPsGIzfl8db2gXG4fyDOpxZ0w9q65hgDA6Za2dchfRoT4lb2s
-	 fecjUqa0+qYChWC1LGXtMOdx03jHTj7pBsoBEqnQyj/gRI7pjKQO6K7sIt5StyS/k9xF4
-	 7UAMPBmeTpDXQ0dxArHbD1jasnlJRqKnjeeqU1UCjPHc8H9ZZqZwvhq3TN7Zze60ZiShq
-	 5E7Q+wJHt801/BK45gVFcuskybJHH0rkmMkLAJQHgOJgYGOZpppnCV9SQthV7D2Ph1g==
+	bh=CeBw+s2LvMeqG/vb2nuXePt6wR8Y9lUm4clWyu7tZNY=;
+	b=4VzngWyIsfhNbuJU7/R28Ww5aTn6xxEn8brJWiwnAZ1g5DVx9hNZdBClYL7yTM8QrECB
+	 9QcmI6yPrCfQsGzKQCVzLDNczMNV9bm5Nz20ySzuEpbBJ6qgp7MX98FxK311L2iA+k5WZ
+	 44x+ZbZ/zuzrRxAn51zeCHTPjTQM/t9Ljrh/5LLEflwmUzXnz/QFoNqSR7Ur59B8dFfaT
+	 gImlPBwsyYO5NfnBabSwWRHobLPAmosCORBafK7TCOXKO+OMhv10qar0aPxsLWWI+HOzd
+	 fiN0wod41l80D/kXWlw5HpkuzsE/DZ1e0P41a6x6WStQhWZY3y4G40GU24Si6RjrlxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UFzp783A;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AIldk2Cs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C266606A31B;
-	Thu,  5 Nov 2026 12:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A5F606A32D;
+	Thu,  5 Nov 2026 12:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UFzp783A
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88E7D1F000C1;
-	Thu,  5 Nov 2026 12:24:10 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AIldk2Cs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A1F11F00919;
+	Thu,  5 Nov 2026 12:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793881451;
-	bh=Q8beI0u60Egzj7ijn/9kD45H6hqY9wYVgWCRUWY3M6k=;
+	s=k20260515; t=1793882899;
+	bh=CeBw+s2LvMeqG/vb2nuXePt6wR8Y9lUm4clWyu7tZNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UFzp783AeTJX5IhpDz7J/Nf4Td+VOJKGuxCc9LJG3fxuzkGPeHGOWnUA6M+9sI459
-	 XzJjgMtYMWR8xwcOHME433BF7WWegqPtwC+ItYLS8k1T3OORG/oBfHaMMSvPN3L4ox
-	 NKSIvkcAK7SmDwMiWpoV3i5b24XNve5tXVA9moXgtrJdq9dhEx7uj6eInH8yrx4B47
-	 9UdOCgTRBCOllToulK7xV180elIeUBMSKe4/2snRjPGDRBuey9PrVkumBcgzKD8fU+
-	 WSYixATf7rTW8IatJtguSdwKkJw94hZC87bry7U4ggOUsw3VjRRqFMZIwXi27i2YIi
-	 aRTMMj0z41/mA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Zhiqi Zhang <zhiqizhangg@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] tools/bootconfig: Test listing keys at the maximum depth
-Date: Thu, 05 Nov 2026 21:24:09 +0900
-Message-ID: <undine-1793881449199211465-434027ce0a1cd644@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261104073742.21202-3-zhiqizhangg@gmail.com>
-References: <20261104073742.21202-1-zhiqizhangg@gmail.com> <20261104073742.21202-3-zhiqizhangg@gmail.com>
+	b=AIldk2CsQlorkpHASsofuj2utGYZeupCKR07f2JeNTZhwNllI0w3n4vBScSUWISUR
+	 kWvqw0mbm73nc7U5eGM3r4OZz4iEO8RcMgt2Ytx6TVAyQxKP6Yc9P55jGHy0CWFQA3
+	 pGeETt5FIAJXShO5uaEoh9wHbn9TgCRVRA/nT+yTAYj0yizEVok3BI6q74VXDmp+hE
+	 0J4YcTRvwPNnx3VC1DZ0R/t8K1hzumaozg/yMf1fWht9tsHcpW2J7uKScggTfISm0d
+	 PJfhyy5a8yrXHGHk8RMCgpvJEhIrfM2SM5FQWmaBX5YMeygPOfOt8Y+P47M1dphDCK
+	 Lvrjgoj8y8VcQ==
+From: Sasha Levin <sashal@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/user_events: cast pointers through uintptr_t
+Date: Thu,  5 Nov 2026 07:48:17 -0500
+Message-ID: <20261105124817.1532094-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261105110333.0fa21741@pumpkin>
+References: <20261103163913.640876-1-sashal@kernel.org> <20261105110333.0fa21741@pumpkin>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,53 +64,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Wed,  4 Nov 2026 15:37:42 +0800, Zhiqi Zhang <zhiqizhangg@gmail.com> wrote:
-> Check that a key with 16 components can be attached to an initrd and
-> listed in full, and that a key with 17 components is still rejected.
-> Compare the complete list output instead of relying on the tool's
-> exit status: a failed key composition currently stops listing without
-> changing that status.
+On Thu, Nov 05, 2026 at 11:03:33AM +0000, David Laight wrote:
+>On Tue,  3 Nov 2026 11:39:13 -0500
+>Sasha Levin <sashal@kernel.org> wrote:
 >
-> The existing good sample checks exercise the compact tree renderer,
-> which does not use xbc_node_compose_key_after() and therefore misses
-> its depth boundary error.
+>>  	reg.size = sizeof(reg);
+>> -	reg.name_args = (__u64)full_args;
+>> +	reg.name_args = (__u64)(uintptr_t)full_args;
 >
-> I wrote and ran these regression tests after reviewing the fix.
->
-> Signed-off-by: Zhiqi Zhang <zhiqizhangg@gmail.com>
+>I'm sure you can't need both casts.
 
-Thanks, this also looks good to me.
-
-> ---
->  tools/bootconfig/test-bootconfig.sh | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-> index 530ce7e28d63..d19747e47890 100755
-> --- a/tools/bootconfig/test-bootconfig.sh
-> +++ b/tools/bootconfig/test-bootconfig.sh
-> @@ -100,6 +100,16 @@ xpass $BOOTCONF -a $TEMPCONF $INITRD
->  printf "badnode\n" >> $TEMPCONF
->  xfail $BOOTCONF -a $TEMPCONF $INITRD
->  
-> +echo "Max key depth check"
-> +
-> +printf 'a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p = "value"\n' > $TEMPCONF
-> +xpass $BOOTCONF -a $TEMPCONF $INITRD
-> +$BOOTCONF -l $INITRD > $OUTFILE
-> +xpass cmp $TEMPCONF $OUTFILE
-> +
-> +printf 'a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q = "value"\n' > $TEMPCONF
-> +xfail $BOOTCONF -a $TEMPCONF $INITRD
-> +
->  echo "Max filesize check"
->  
->  # Max size is 32767 (including terminal byte)
->
+It works as is, but you're right, the assignment widens the uintptr_t on its
+own and the (__u64) isn't needed. Happy to respin without it if the maintainers
+prefer.
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
+Thanks,
+Sasha
