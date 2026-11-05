@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.98
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.234
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793901033;
-	b=FfDPM+sBOt/821xY9MnXI2uCYB12wALdpTLkK+WnKngOu38VjetHTrTVSRU6m6nSSWJp
-	 7kumSXH5PnMgxzM0qE+V6bmVHa8jzGiptPqimhfnZlQhUKlmdsIz0F2MCuSA4x3p8O0XX
-	 U/l9l4o8vTl1YeEsTxxwHgmHy8ihFjW59axYWSz1ClUcPPYyM8TV6aHDfcA3fgEYI/ccb
-	 aTG07HhE0wCTfFCpu7aT1PJZeEgvsbFxFtfYg3pYyhBgrTuhrcI7iJIJmTco39UkehT7F
-	 gSnGMUUY5yHVb4m6pnLjzS2eGj9tx2BuMd6mIUwS47lQcplN5zTL7cvfyqe4VaC3OZQ==
+	t=1793901036;
+	b=FrqcH76yiEjWLIG6wjqD2AfecOnBh4RJF59AZasWwwuxq32KFkvxVDkpnOsPqpHkhMEL
+	 U811NzbEoIhZs342dsQKlzE/7QrMfGfjpKZxSFmagbLw8RWKJCdGCZD19rpcaFKSJk9g1
+	 RhBvuP9pfEhWFbRDupoBmwd6bsNEMssuSJAxcRIktSsxvewKp8uyuk7w0t8e4FaZ+HUwk
+	 +EPytUilbIyoyIk4FxcNRYaNjv004V/SMAioHlqxGhIaWnwh8kA6+0A3HQ/3wDDo+ctI1
+	 KZ3+74NIN9nIBFpZWj6M478ZfZHltVWHyr5EI4DylTQJJoLG/AEfLelNjKvOkRNpsyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793901033;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793901036;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-Id:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=XMVQF02q4X+VGcpwNkyoGjUCuuNYWvMCV42ZNpFJ900=;
-	b=SuXgK2sdCqOW/27jUBMuXAAjUTuYL0ZE6jeYFIsX21AtAOPAfxVVu4CLGx3crihv1rxf
-	 Xa5BWZSxMilJtmtiSZrjT4/l/Dw47aOYsj/O5NI4tKsRdz3zAKEKm1A3DIreCiYTGczQw
-	 aUdvBdNpYNjULOOCkdGgfMty3NlA/Paf6l6gFeXNpdysjBoXHQJIW8hIk0SNBuuQ2vAeA
-	 GfpolIsRiVu5RzGI+fqlR4haPK1BeDxpwP1ttWVNps4jqtwpauxpkyAGut9c1oBBOYt4n
-	 jH8oomrhghzLbA/rM2BESXjuQbsBqYc7+OKhT1ua2tH+s3pVEwECoEbHeCgKalnW64Q==
+	bh=/oKxyFlE8NF55gLRR8X32aZCsov7qgh8L2DMbJVvrnI=;
+	b=tpCrbBqWiZO2KMlmyNrlXOcLqJt/lVnjO7W47z2eYJn5TaXo062RMFOg+A/3jdegumR0
+	 IyfnAgqFqvyEEQLL1Eneem05pyqz8u77ZWHaKPVu9yyW+IdzAbZF+fZZZVo5emluxftjM
+	 tNq0aiDCzeBRu5mHyoKk2vjmNXRbC0HQFhT/y9wIluuKP7JfQZVyW1Lsm7/Okl5dMAu6I
+	 Wwe1i6tzXNxkcq2Hqaqn6Eo+Nx4birIgBv2lPwW7G0aYmXmxkL6FbfIk2gYBCj5KRsZUD
+	 pOj++9YEc2stsTvFo2whHZLFZkFAcA/vj1kp3fx9aDFsZSPnEXfX4Qgz83YF9Evci7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="wAf/ecML";
-	arc=none smtp.remote-ip=91.218.175.98
-Received: from mta0.migadu.com (out-98.mta0.migadu.com [91.218.175.98])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ffTWI+3M;
+	arc=none smtp.remote-ip=95.215.58.234
+Received: from mta1.migadu.com (out-234.mta1.migadu.com [95.215.58.234])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD38606A328
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 17:50:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DD38606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7AD606A330
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 17:50:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F7AD606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=wAf/ecML
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ffTWI+3M
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=2nYVH//TJP55/HDJ3Utcdp/AqqWGGVKXaZDBxK5lqJk=;
+DKIM-Signature: a=rsa-sha256; bh=Cp8CTnHN4cmW6VIwx8ueqqMqNedibQwmmaim2YdoyDI=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793901030; v=1; x=1794505830;
- b=wAf/ecMLlRh2yp8xN/xjSH9H7QAX2r940SXFZQMhJSedQHdxf/gfqqS344QGjFbVDj8x1aP/
- oBCmhfBIpVeQbldMRSiRtCztY+zYKLdtH9U6Gtzf2Si9ngYdmHUp63uRkiiY37AJca5fq+RWtMM
- OpYBWjMB/eHWzyaO+/qz40vA=
+ t=1793901034; v=1; x=1794505834;
+ b=ffTWI+3MqU9kkAz7Il/roqCAO8FxgUSWfjeOdYDhXcA/owTZQKd7TBy9/f/Slm3pr+0PdzxD
+ 3myBE4M2BHQkCx9OsCBAoTTLhbYtbQ4HkgG6r7kP/J3RI8WZaQAeLvk186HbUXSIG88qCVfVm59
+ yVYZJ1XNJJyTtYmbl1SKSIWA=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id d36ba3360128034a;
-	Thu, 05 Nov 2026 17:50:25 +0000
-X-Mizu-Trace-ID: d36ba3360128034a
+Received: by mta11.migadu.com with ESMTPS id 01ec1ce46df10c25;
+	Thu, 05 Nov 2026 17:50:34 +0000
+X-Mizu-Trace-ID: 01ec1ce46df10c25
 X-Migadu-Flow: FLOW_OUT
 From: wen.yang@linux.dev
 To: Gabriele Monaco <gmonaco@redhat.com>
@@ -53,9 +53,9 @@ Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v8 08/14] rv: Support embedded target types in per-object DA storage
-Date: Fri,  6 Nov 2026 01:49:08 +0800
-Message-Id: <49fd8e0482d2cf1f9c690031ab0cf9cc1eb1c5ad.1793900349.git.wen.yang@linux.dev>
+Subject: [PATCH v8 09/14] rv: Add generic uprobe infrastructure for RV monitors
+Date: Fri,  6 Nov 2026 01:49:09 +0800
+Message-Id: <21469501d58c0b7efc662226f4c9e9a9d7d32847.1793900349.git.wen.yang@linux.dev>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1793900349.git.wen.yang@linux.dev>
 References: <cover.1793900349.git.wen.yang@linux.dev>
@@ -72,176 +72,164 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wen.yang@linux.dev>
 
-A PER_OBJ monitor usually typedefs monitor_target itself, as a pointer to
-the monitored object (borrowed: the object exists independently of the
-monitor and outlives the storage).
+Monitors that instrument user-space function boundaries need to register
+uprobes and deregister them safely.  Provide a thin wrapper so monitors
+share a single implementation of this boilerplate.
 
-A monitor whose target is monitor-owned data can instead define
-DA_OBJ_EMBEDDED_TYPE with a complete struct type: the framework then
-derives monitor_target as a pointer to it, embeds one instance in each
-per-object storage, and allocates and frees it together with the storage.
-On storage creation the caller-supplied target is shallow-copied into
-the storage before it is published, so it may be a fully initialised
-stack object.
+struct rv_uprobe embeds struct uprobe_consumer directly, avoiding a
+separate heap allocation per probe.  The struct holds an inode reference
+(acquired via igrab()) for the probed binary for the full uprobe lifetime,
+as uprobe_register() does not take an inode reference.  On unregister,
+the inode reference is released with iput() only after
+rv_uprobe_unregister_sync().
 
-This allows per-object monitors to manage custom per-instance data without
-maintaining private mempools, complex multi-stage reference counting, or
-out-of-band teardown state machines.
+rv_uprobe_unregister_sync() calls uprobe_unregister_sync(), draining
+all in-flight handlers before the containing struct may be freed.
+
+The API provides register, nosync unregister, a global handler barrier
+(rv_uprobe_unregister_sync), and an active-state predicate.
 
 Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 ---
- include/rv/da_monitor.h | 82 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 76 insertions(+), 6 deletions(-)
+ include/rv/rv_uprobe.h      | 35 +++++++++++++++++++++++
+ kernel/trace/rv/Kconfig     |  4 +++
+ kernel/trace/rv/Makefile    |  1 +
+ kernel/trace/rv/rv_uprobe.c | 56 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 96 insertions(+)
+ create mode 100644 include/rv/rv_uprobe.h
+ create mode 100644 kernel/trace/rv/rv_uprobe.c
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 76169e41d4e5..ed9e7e740d80 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -61,6 +61,10 @@
- #include <linux/slab.h>
- #include <linux/hashtable.h>
- 
-+#if defined(DA_OBJ_EMBEDDED_TYPE) && RV_MON_TYPE != RV_MON_PER_OBJ
-+#error "DA_OBJ_EMBEDDED_TYPE is only supported by RV_MON_PER_OBJ monitors"
-+#endif
-+
- /*
-  * Per-cpu variables require a unique name although static in some
-  * configurations (e.g. CONFIG_DEBUG_FORCE_WEAK_PER_CPU or alpha modules).
-@@ -453,9 +457,24 @@ static inline void da_monitor_destroy(void)
-  * Functions to define, init and get a per-object monitor.
-  */
- 
-+#ifdef DA_OBJ_EMBEDDED_TYPE
+diff --git a/include/rv/rv_uprobe.h b/include/rv/rv_uprobe.h
+new file mode 100644
+index 000000000000..b93c2a81bc22
+--- /dev/null
++++ b/include/rv/rv_uprobe.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2026 Wen Yang <wen.yang@linux.dev> */
 +/*
-+ * Framework-owned target: one instance is embedded in each storage and
-+ * allocated/freed with it.  monitor_target keeps pointer semantics, but
-+ * da_get_target() points into the storage rather than to a borrowed object.
-+ * The header derives the typedef: do not define monitor_target by hand.
++ * Generic uprobe infrastructure for RV monitors.
 + */
-+typedef DA_OBJ_EMBEDDED_TYPE * monitor_target;
-+#endif
 +
- struct da_monitor_storage {
- 	da_id_type id;
-+#ifdef DA_OBJ_EMBEDDED_TYPE
-+	DA_OBJ_EMBEDDED_TYPE target;
-+	bool filled;
-+#else
- 	monitor_target target;
-+#endif
- 	union rv_task_monitor rv;
- 	struct hlist_node node;
- 	struct rcu_head rcu;
-@@ -466,6 +485,40 @@ struct da_monitor_storage {
- #endif
- static DEFINE_HASHTABLE(da_monitor_ht, DA_MONITOR_HT_BITS);
++#ifndef _RV_UPROBE_H
++#define _RV_UPROBE_H
++
++#include <linux/types.h>
++#include <linux/uprobes.h>
++
++struct inode;
++struct pt_regs;
++
++/*
++ * Free the containing struct only after rv_uprobe_unregister_nosync() +
++ * rv_uprobe_unregister_sync() + iput(p->inode).
++ *
++ * The inode reference does not pin the dentry, so callers that re-resolve the
++ * probed path must hold a struct path: 9p cache=none remints an inode per
++ * lookup.
++ */
++struct rv_uprobe {
++	struct uprobe_consumer	uc;
++	struct uprobe		*uprobe;
++	struct inode		*inode;
++};
++
++bool rv_uprobe_is_registered(const struct rv_uprobe *p);
++int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_uprobe *p);
++void rv_uprobe_unregister_nosync(struct rv_uprobe *p);
++void rv_uprobe_unregister_sync(void);
++
++#endif /* _RV_UPROBE_H */
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index efa930f94ea4..2bc412304293 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -86,6 +86,10 @@ source "kernel/trace/rv/monitors/nomiss/Kconfig"
  
-+#ifdef DA_OBJ_EMBEDDED_TYPE
+ # Add new monitors here
+ 
++config RV_UPROBE
++	bool
++	depends on RV && UPROBES
 +
-+#define TARGET_PTR(storage) (&(storage)->target)
+ config RV_REACTORS
+ 	bool "Runtime verification reactors"
+ 	default y
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 4b84b83b942b..8dc14a1819b8 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_RV_MON_DEADLINE) += monitors/deadline/deadline.o
+ obj-$(CONFIG_RV_MON_NOMISS) += monitors/nomiss/nomiss.o
+ obj-$(CONFIG_RV_MON_WAKEUP) += monitors/wakeup/wakeup.o
+ # Add new monitors here
++obj-$(CONFIG_RV_UPROBE) += rv_uprobe.o
+ obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
+ obj-$(CONFIG_RV_REACT_PANIC) += reactor_panic.o
+diff --git a/kernel/trace/rv/rv_uprobe.c b/kernel/trace/rv/rv_uprobe.c
+new file mode 100644
+index 000000000000..1c7f8466aeed
+--- /dev/null
++++ b/kernel/trace/rv/rv_uprobe.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic uprobe infrastructure for RV monitors.
++ */
++#include <linux/fs.h>
++#include <linux/uprobes.h>
++#include <rv/rv_uprobe.h>
 +
-+static inline bool da_storage_is_empty(struct da_monitor_storage *mon_storage)
++/*
++ * uprobe_register() takes no inode reference of its own, so grab one here and
++ * drop it only after rv_uprobe_unregister_sync().
++ */
++int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_uprobe *p)
 +{
-+	/* Pairs with smp_store_release in da_storage_set_target(). */
-+	return !smp_load_acquire(&mon_storage->filled);
++	int ret;
++
++	p->inode = igrab(inode);
++	if (!p->inode)
++		return -ESTALE;
++
++	p->uprobe = uprobe_register(inode, offset, 0, &p->uc);
++	if (IS_ERR(p->uprobe)) {
++		ret = PTR_ERR(p->uprobe);
++		p->uprobe = NULL;
++		iput(p->inode);
++		p->inode = NULL;
++		return ret;
++	}
++
++	return 0;
 +}
-+static inline void da_storage_set_target(struct da_monitor_storage *mon_storage,
-+					 monitor_target target)
++EXPORT_SYMBOL_GPL(rv_uprobe_register);
++
++bool rv_uprobe_is_registered(const struct rv_uprobe *p)
 +{
-+	if (WARN_ON_ONCE(!target))
++	return p && p->uprobe;
++}
++EXPORT_SYMBOL_GPL(rv_uprobe_is_registered);
++
++/* The inode stays held: in-flight handlers may still reach it. */
++void rv_uprobe_unregister_nosync(struct rv_uprobe *p)
++{
++	if (!p || !p->uprobe)
 +		return;
 +
-+	memcpy(&mon_storage->target, target, sizeof(mon_storage->target));
-+	/* Pairs with smp_load_acquire in da_storage_is_empty(). */
-+	smp_store_release(&mon_storage->filled, true);
++	uprobe_unregister_nosync(p->uprobe, &p->uc);
++	p->uprobe = NULL;
 +}
-+#else
++EXPORT_SYMBOL_GPL(rv_uprobe_unregister_nosync);
 +
-+#define TARGET_PTR(storage) storage->target
-+
-+static inline bool da_storage_is_empty(struct da_monitor_storage *mon_storage)
++/* Global barrier over every probe dequeued so far. */
++void rv_uprobe_unregister_sync(void)
 +{
-+	return !TARGET_PTR(mon_storage);
++	uprobe_unregister_sync();
 +}
-+static inline void da_storage_set_target(struct da_monitor_storage *mon_storage,
-+					 monitor_target target)
-+{
-+	mon_storage->target = target;
-+}
-+#endif
-+
- /*
-  * da_create_empty_storage - pre-allocate an empty storage
-  */
-@@ -503,7 +556,7 @@ static inline struct da_monitor *da_create_storage(da_id_type id,
- 	if (!mon_storage)
- 		return NULL;
- 
--	mon_storage->target = target;
-+	da_storage_set_target(mon_storage, target);
- 	return &mon_storage->rv.da_mon;
- }
- 
-@@ -536,10 +589,20 @@ static struct da_monitor *da_get_monitor(da_id_type id, monitor_target target)
- 
- /*
-  * da_get_target - return the object associated to the monitor
-+ *
-+ * NULL for an embedded target whose storage was pre-allocated but not filled
-+ * yet: a manual-allocation monitor publishes its storage before it has one.
-  */
- static inline monitor_target da_get_target(struct da_monitor *da_mon)
- {
--	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target;
-+	struct da_monitor_storage *mon_storage =
-+		container_of(da_mon, struct da_monitor_storage, rv.da_mon);
-+
-+#ifdef DA_OBJ_EMBEDDED_TYPE
-+	if (unlikely(da_storage_is_empty(mon_storage)))
-+		return NULL;
-+#endif
-+	return TARGET_PTR(mon_storage);
- }
- 
- /*
-@@ -572,8 +635,11 @@ static inline struct da_monitor *da_fill_empty_storage(da_id_type id,
- 						       monitor_target target,
- 						       struct da_monitor *da_mon)
- {
--	if (unlikely(da_mon && !da_get_target(da_mon)))
--		container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target = target;
-+	struct da_monitor_storage *mon_storage =
-+		container_of(da_mon, struct da_monitor_storage, rv.da_mon);
-+
-+	if (unlikely(da_mon && da_storage_is_empty(mon_storage)))
-+		da_storage_set_target(mon_storage, target);
- 	return da_mon;
- }
- 
-@@ -589,7 +655,11 @@ static inline monitor_target da_get_target_by_id(da_id_type id)
- 
- 	if (unlikely(!mon_storage))
- 		return NULL;
--	return mon_storage->target;
-+#ifdef DA_OBJ_EMBEDDED_TYPE
-+	if (unlikely(da_storage_is_empty(mon_storage)))
-+		return NULL;
-+#endif
-+	return TARGET_PTR(mon_storage);
- }
- 
- static void da_kfree_cb(struct rcu_head *head)
-@@ -635,7 +705,7 @@ da_create_pool_storage(da_id_type id, monitor_target target,
- 	memset(mon_storage, 0, sizeof(*mon_storage));
- 
- 	mon_storage->id = id;
--	mon_storage->target = target;
-+	da_storage_set_target(mon_storage, target);
- 
- 	hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
- 	return &mon_storage->rv.da_mon;
++EXPORT_SYMBOL_GPL(rv_uprobe_unregister_sync);
 -- 
 2.25.1
 
