@@ -1,51 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.162
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793901383;
-	b=0mer6s3TVWAoL1ha2j1qVAoPZGMAT+H/tkTD8vYn5DCz+4SdbLWjH+mbq2sIudBhKnSI
-	 CjOxDa6nIqLZaYUqs65mjgVBEkG3Yjeksqk9ZUZfAKA06h0lmeuIKMaYgB4rfDCD61ogL
-	 gXN4ewp1Yjsv/Sc4Gcuk4AgKS2ta7j0/Eti5P85BzXYnV9AwPtIQeC/M7UWKSdJZDEiio
-	 06SBwwlZ+VvD94gWpAvAO0JABnJjU1URxRMntavgL8oGslox4P9aMJnVbiqk4+MrRys+r
-	 VRfskMX6tlf1/790hiBfLtP5j8RQIrS3MLA82mnrAmZuiTIDZHOX+anv/stW6/EaPXw==
+	t=1793902425;
+	b=ZGXTETP56PtAnApR7ldxuAT4EwDidNYSbTUVMJp+rXBmxGv/R3xEntTFPKaXNqXSIeE9
+	 qqBKRMjPGK6mNxBzXYEW5HwsetEMxVprhXGBkb8hxPBvJOlduU/ittVIoUaIDbxE/D98E
+	 /lvNkawE4fmmB9t0YmWZiIBpbfRX3rfYuV5EWnadG0+OF0FdBp6B6XOIS4g02jaVSqJ1b
+	 ifWDtW1qwen75GqysTEi5hmQnoxI3PfWUWvdil1KqRMzR10EanBjcfnSxLXqWpsRbiwZe
+	 j33IIqHTzahxnwhfXqoEx2kqQH75z4PGd2UTY1YpR0kv7oC5mUTp8OKExqsE9pvmPhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793901383;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=c9l3GCx27vWCzWprqBUpZF8ewdrrLXW/RA/zgGEtIsE=;
-	b=D9+/EjV8t+tcXztKM8pIwDZJd+39/VTXG4dhLawMWowG35bD88/SmZN4gYNJ7qp3Z9xZ
-	 Tg/Pu3LumUP8l0Mo2KxPSfp3q9hUuVpohJK3aVi71YiYmqXpraUmGq7T/BI2MnAVdV2TQ
-	 G0gD2CchAfug+Vr7uLrXmFDrCa0pL6xqKHS+7hWIL7PryYtaqgGJAHIKM02R2X9Fjo+NS
-	 ezc2hR2mQEzxgNROEnDMc21+uTq1AMqgyqWmRRxyZnLvIAkD0aEmsBU/+uYj0DDO7Kxoa
-	 txjF1yyuGvpmr3AyFzEo1W/iQ1ate0kOkj/nBWx4Egmnb1P2EtZhYImVDEjzfMzrkSA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793902425;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=lrq8bWdQ+pA0IAPhEEj6+OyvmLelx5wL0GbYXTShkaI=;
+	b=KzfL8WcAWRuqTKlqpE54Jd2A5jh52yiit9mK22/jP/04udgJGsM+ZqLuiMBqKne1Yd3F
+	 4fQW996nLidheuRpOK1emKwzwHa7np8Sxz9O/b+an/k0WCSfqwOJ7jAwdeYumOKlD5/BN
+	 8GnbiAAWP0O3Oq7Q23LRFWPCcHkC0dsznf8ytz3oh8cprdzXzZm6e3+MONCR5Tmt3/IXo
+	 GEjxMu/JdaoszyFPy2C41znVVveLWySf0+DzAdiJIkWRs5Skvq3VI02OWfBMqB0PoUz2i
+	 oErqxWqhoVYOh2zZtAyZ4pgho/gCzASSTjGv0ceklGZjrNwlQNklm3UIGn2WMGLlDNg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	arc=none smtp.remote-ip=91.218.175.162
-Received: from mta0.migadu.com (out-162.mta0.migadu.com [91.218.175.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=at++mf3k;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1910606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 17:56:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1910606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=FaUkFUcHuP3BiesPQYnJEtWy77nW5jWOpPkoZ46/VDg=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793901375; v=1; x=1794506175;
- b=vhGOx06MUin+6IT6RcCDaNLs8FswwfRHcwxD5UprIwZuWACBn7FcbOWvYCWI2TIF8g6AonrQ
- NMbTaSfvKz5Iindtkfj8xEC/yfkjvLYXKrkB9ctLXnPvdSPA8t1EmnaiRLrUiVP8DQ6gPebHuPX
- kBVV1UCzbhXmbH2kHiP+952Q=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id bb547c92f083d415;
-	Thu, 05 Nov 2026 17:56:15 +0000
-X-Mizu-Trace-ID: bb547c92f083d415
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <53ee72a4-a5f7-4a7d-8a0a-fc3fc8804d75@linux.dev>
-Date: Thu, 5 Nov 2026 09:56:07 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E172606A329
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 18:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=at++mf3k
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A361F000C1;
+	Thu,  5 Nov 2026 18:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793902425;
+	bh=lrq8bWdQ+pA0IAPhEEj6+OyvmLelx5wL0GbYXTShkaI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=at++mf3kELnTGeUYn7KiO7VhHSMkEljxZl7n1LAzTjgUeXpvhEvDI41hU/DXzGW/l
+	 J5MAaSgRTNqtykxKVEEEqVI3MyuKmhCGxaFPS2XdASHYRKdR+uYDkqi6nRiwp9Uzc0
+	 XPYdWU2yhEt/uMxiPXRBId1pTRF/IlK9CNpQvfqCNbsP4ybE/chV8HzsxF8+jC3+NI
+	 FEOEtKWvoC5UINUnGb9s/M03/XzD8zbBCMjzXWr5XOl13szN3L0ELQSXsfz2X3kFya
+	 V52FpI41WgFq7AL4HqaiisUfkgX/pr4ir6gGnvTsYA2Q3pG2esbN/Z2G1XuXqv2i3g
+	 t488rB5TE84LA==
+Message-ID: <sashiko-outbox-199706@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC v3 12/14] i2c: nomadik: add support for I2C_XFER_V2
+ - detailed fault reporting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dmitry Guzman" <Dmitry.Guzman@mobileye.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261105-i2c-fault-reporting-v3-12-515ad74ac4c9@mobileye.com>
+References: <20261105-i2c-fault-reporting-v3-0-515ad74ac4c9@mobileye.com>
+ <20261105-i2c-fault-reporting-v3-12-515ad74ac4c9@mobileye.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Nov 2026 18:13:44 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -54,50 +60,116 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] tracing: fgraph: Raise FTRACE_RETSTACK_ALLOC_SIZE to
- 1024
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, andrii@kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
-References: <20260922225526.1554758-1-vineet.gupta@linux.dev>
- <20260922225526.1554758-2-vineet.gupta@linux.dev>
- <20260924100040.GD4121339@noisy.programming.kicks-ass.net>
- <1e223334-b371-487b-a60a-7f1f5c007f7e@linux.dev>
- <20261105122648.67abbe1d@gandalf.local.home>
-From: Vineet Gupta <vineet.gupta@linux.dev>
-Content-Language: en-US
-In-Reply-To: <20261105122648.67abbe1d@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 11/5/26 9:26 AM, Steven Rostedt wrote:
-> On Fri, 25 Sep 2026 12:32:49 -0700
-> Vineet Gupta <vineet.gupta@linux.dev> wrote:
->
->> For submission, would you take this up as reported-by me or do you
->> prefer I send a v2 (your authorship and SoB etc) ? No big deal either
->> ways just not sure what the std operating procedure is and nuances of
->> all the tags etc.
-> Please implement Peter's suggestion and send a v2 with the tags:
->
-> Link: https://lore.kernel.org/all/20260924100040.GD4121339@noisy.programming.kicks-ass.net/
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] i2c: nomadik: unpopulated transfer report on pm_runtime_get_sync=
+() early exit
+--
 
-I think you have some catching up to do still :-)
-This is v1, we are currently at v4 [1] with Peter's suggestion and 
-further split up for ease of backport and use of new rcu_scope 
-constructs as suggested by Masami san. It has been Acked by Andrii [2] 
-and Alexei [3]
+commit 22d1a25cd553d39ed6c3ad6c9998ec471c05f948
+Author: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 
-Thx,
--Vineet
+i2c: nomadik: add support for I2C_XFER_V2 - detailed fault reporting
 
-[1] 
-https://lore.kernel.org/bpf/20261021174406.2891598-1-vineet.gupta@linux.dev/
-[2] 
-https://lore.kernel.org/bpf/CAEf4BzaTYgNwiBtvYoSw1wzuFZchs-2CCP93gh2OeDt-919-eQ@mail.gmail.com/
-[3] https://lore.kernel.org/bpf/DMAUS3F32198.M27YWDF2F3UV@gmail.com/
+This commit converts the i2c-nomadik driver to the xfer_v2 callback so it c=
+an
+populate struct i2c_transfer_report with the number of completed messages,
+completed bytes, and the faulting message index when a transfer fails.
+
+> diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-no=
+madik.c
+> index 958adc51615e4..a8ccd863a6edf 100644
+> --- a/drivers/i2c/busses/i2c-nomadik.c
+> +++ b/drivers/i2c/busses/i2c-nomadik.c
+
+[ ... ]
+
+> @@ -739,8 +755,9 @@ static int nmk_i2c_xfer_one(struct nmk_i2c_dev *priv,=
+ u16 flags)
+>   * please use the i2c_smbus_read_i2c_block_data()
+>   * or i2c_smbus_write_i2c_block_data() API
+>   */
+> -static int nmk_i2c_xfer(struct i2c_adapter *i2c_adap,
+> -		struct i2c_msg msgs[], int num_msgs)
+> +static int nmk_i2c_xfer_v2(struct i2c_adapter *i2c_adap,
+> +		struct i2c_msg msgs[], int num_msgs,
+> +		struct i2c_transfer_report *report)
+>  {
+>  	int status =3D 0;
+>  	int i;
+> @@ -750,6 +767,8 @@ static int nmk_i2c_xfer(struct i2c_adapter *i2c_adap,
+>  	if (i)
+>  		return i;
+> =20
+> +	priv->bytes_cplt =3D 0;
+> +
+>  	/* setup the i2c controller */
+>  	setup_i2c_controller(priv);
+> =20
+> @@ -768,10 +787,15 @@ static int nmk_i2c_xfer(struct i2c_adapter *i2c_ada=
+p,
+>  	pm_runtime_put_sync(&priv->adev->dev);
+> =20
+>  	/* return the no. messages processed */
+> -	if (status)
+> +	if (status) {
+> +		report->msgs_cplt =3D i;
+> +		report->bytes_cplt =3D priv->bytes_cplt;
+> +		report->fault_msg_idx =3D i;
+>  		return status;
+> -	else
+> +	} else {
+> +		i2c_transfer_report_success(report, num_msgs);
+>  		return num_msgs;
+> +	}
+>  }
+
+[Severity: Medium]
+What happens to the transfer report in drivers/i2c/busses/i2c-nomadik.c when
+nmk_i2c_xfer_v2() takes the early return on pm_runtime_get_sync()?
+
+Before invoking adap->algo->xfer_v2(), __i2c_transfer_v2() in
+drivers/i2c/i2c-core-base.c initializes all fields of struct
+i2c_transfer_report to -EOPNOTSUPP via i2c_transfer_report_init(report):
+
+drivers/i2c/i2c-core-base.c:__i2c_transfer_v2() {
+	...
+	if (adap->algo->xfer_v2) {
+		i2c_transfer_report_init(report);
+		...
+		ret =3D adap->algo->xfer_v2(adap, msgs, num, report);
+	...
+}
+
+In nmk_i2c_xfer_v2(), if pm_runtime_get_sync(&priv->adev->dev) returns a
+non-zero value, the function returns immediately before reaching the block =
+at
+the end of nmk_i2c_xfer_v2() that populates report:
+
+	i =3D pm_runtime_get_sync(&priv->adev->dev);
+	if (i)
+		return i;
+
+If pm_runtime_get_sync() fails with a negative error code, 0 messages and 0
+bytes have been transferred before failing on message 0, but report->msgs_c=
+plt,
+report->bytes_cplt, and report->fault_msg_idx remain -EOPNOTSUPP instead of=
+ 0,
+telling callers of i2c_transfer_v2() and the I2C_RDWR_V2 ioctl that the
+controller does not support fault reporting.
+
+In addition, if pm_runtime_get_sync() returns 1 because the device was alre=
+ady
+active, nmk_i2c_xfer_v2() returns 1 while leaving all fields of report set =
+to
+-EOPNOTSUPP, resulting in a positive return value paired with a negative
+report->msgs_cplt.
+
+Should nmk_i2c_xfer_v2() populate report (or use pm_runtime_resume_and_get()
+and set msgs_cplt, bytes_cplt, and fault_msg_idx to 0 on error) before
+returning when runtime resume fails?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-i2c-fault-=
+reporting-v3-0-515ad74ac4c9@mobileye.com?part=3D12
