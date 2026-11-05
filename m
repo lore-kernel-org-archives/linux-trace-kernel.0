@@ -1,50 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793911009;
-	b=tVRq5sAmifYvYb32hZM8TbsEJMSnOqhK8GFiQd5fi/X4MtYm/KOMrrf6ZSHKJdrqct00
-	 TZ0nXKOUQDa3yF1p5/IcQiTNlR1oSsz2WTQPq5pbPHiVWOQGqUgP2Cbps9vmTRlEdIcXW
-	 Sf5X+VFbhY39eBh0Irog26PpNsjB4S/c6f2AQ7AiUTk6nSG+g2Zy9IYOnhIAvCJkM6Qwq
-	 KY8Mxwl/IWLjzmlmpLuEz28v6dpZlJdUIutQH9imCJETGcATOBN9VQt4ELt2Vw066O8m8
-	 PgbJZZcHckCFVJ8eoQW0tR0IWIhe+pgVnehDY/m9xVVcPsf+sbH7jLkgRsCJg+URBGQ==
+	t=1793911011;
+	b=Okbw8A0bkdrUlrrDgm2ewGsdz23NfMFZAoAZkAcaL27WGhdad1UIbQBLPBIHaN+SILPX
+	 t2EHsxicEUmRprGsaG518GrbWuvuoZWyhlBWn9BHoSV2efLevu0UDeKPFbYF19QPCHgxC
+	 ZQuOds9xPkzOwGzVwVVep2a20S/8qWaC6G3kMRs60kOuFoqWL3Ej8g4NKRE+dyHT24EhD
+	 7YnuKsqAFBaG7JjAAbOrIGwyJYlPLG0v9Bs/RBzZVwQXitzSYc7k5J1NTyLQtGvZw5AMu
+	 eG4xDc2Jcy0OP1IrJBfGu0aFTrTI8Z3AZqGRk0eCQDsN2a14G4Y0VOe6J8BiV+NxUUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793911009;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793911011;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=NExlCAuVenVrdev4I8pyDtaJQmhEMVf3AC2GANcPlas=;
-	b=mkv7rUXJ3zssEdvDpp2wfckd+iG2bylh2G6263QiaSl676SARELdGohZ2rtoBejQfIA3
-	 FdR36H4fLjVK8QQapOdEPz+SinxMZOsOtP9SnR99d+PzRcQyg+lCK0Pmqx/77yjZ8Kj5T
-	 PCqik+kf7X9PxnzwiCc3w4EerTeU+YW/5eOAtgAl/llS6deY38gFgaJw9gDFhC054RczO
-	 +CfF3gxqmP7H9+CnepqBSt1PsZRAwZvZ7NtiMJo4TTAGdCkUHPnzArMxlV4indtY9okT/
-	 XX0u7BrYwiW9Qhg+PAZjTYvkg7/Tn9KQVIxrdu627HhqqWpyBqRRbQDx0AInn1TG9Iw==
+	bh=MEjeXYAHsM/mZlyABkCVMFG/+f2zwbm0Ohf1JbTu1mw=;
+	b=rWSkujGnguQvR69sUeXrWvG0OUOvzF+ZHIm3yppFGDSpfoTPFWvsqIudcqw41TgJKUKD
+	 ERh4P2dstDWqnIVO8HqB7NDZBzoOGYf7aMBoMk0RSZOa9wtAxkwCrsDYQelReuzODvbDd
+	 HHW1gEWKdkgdu7quDcANnLwkEXBDEn9qxs9bw05PeJZH60/Io+2b4SfopqotDmJCsVgpB
+	 Ucbhv3z4ofJLgMgCRKByMc/PERBJeG+cdQRZGUyHhfDtWsBquAHuqyqPE8oI3pHL2Hn77
+	 i+qwPMXiXEbtVyvxNLyWXh3gc5jP21XUg4LXWRGtoHxnttd+acmfuh5fg9ooZvI3voQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=Jbx2Pupq;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=QaIbKmsy;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65492606A329;
-	Thu,  5 Nov 2026 20:36:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65492606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CD9606A32C;
+	Thu,  5 Nov 2026 20:36:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0CD9606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=Jbx2Pupq
+	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=QaIbKmsy
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1793911007;
-	bh=NExlCAuVenVrdev4I8pyDtaJQmhEMVf3AC2GANcPlas=;
+	s=smtpout1; t=1793911008;
+	bh=MEjeXYAHsM/mZlyABkCVMFG/+f2zwbm0Ohf1JbTu1mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jbx2PupqZkvkyk5Zz5/FP0K/wb6d6KGkXzuhJDjErVb5cdGvSiRqrHs6HdUsuuMX0
-	 Lpd4eCdF3/Qj3ZW2/Z+NGiKz88bXeOR/9+cYqasOarxCuucrdMF8tGIIy3D1Bi8S9T
-	 +OQJEo8sT/orYeHrkfCu/yL9iV3jvsfNcl7yYm7iX8494EYS94jl0gH5JqYgR8r0Jr
-	 enHoumai0t/D3aFF9Q7Gl3CnUVusha+siNfzb+NrkpLd7AwaipcRPxHGX7ZU7CvOPN
-	 CZ0nBZ65vjwPUgaBrhBqi0YX+fAnsNL+M4Y7dAFG48z23m2JePVfRJGC18/txW9c9w
-	 nk0MuPlczV/6Q==
+	b=QaIbKmsydpIXf3QTcBs2INp0Tq069v9ISPZRpy2n9iMQs+0Kx1/rhNygaFRfIQBoI
+	 gK+L1JK52nQRJk0lMxYf0HfilDpp8NdiywjJ6XE7hqywvuhBFCwQmW5dRSOSunEny6
+	 9lCRBL3/Ma+gkHOi2UTj3bA2Aoqctv9SzNKq7JE+P4VflrVOFYbq1yfNfgA0N/7gjG
+	 LzUAsWyw/SiNR0PCFmK3Y+g021pcW/TalDk2yzhM1RNho7WERDbb6mt0oTjI5JKeTQ
+	 dTr5VKubG+HxkVhXQjTALPnsBeRg2914abFgqGIP7kpI36w/vwG+TVahFLFF6Ylweg
+	 SXWUUj20QtBUQ==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcb3GffzKVS;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcb6hf5zM2M;
 	Thu, 05 Nov 2026 15:36:47 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
@@ -100,9 +100,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	linux-fsdevel@vger.kernel.org,
 	Oleg Nesterov <oleg@redhat.com>
-Subject: [RFC PATCH v24 02/10] lib: test hierarchical per-cpu counters
-Date: Thu,  5 Nov 2026 15:36:31 -0500
-Message-Id: <20261105203639.1459524-3-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v24 04/10] tools/testing/hpcc: add userspace test of hierarchical per-CPU counters
+Date: Thu,  5 Nov 2026 15:36:33 -0500
+Message-Id: <20261105203639.1459524-5-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
 References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
@@ -117,1033 +117,856 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce Kunit tests for hierarchical per-cpu counters.
+The KUnit test only covers the topology of the machine it runs on.
+Add a userspace test which builds lib/percpu_counter_tree.c with a
+simulated topology, which allows testing every supported tree
+configuration on a single machine, following the approach of
+tools/testing/vma and tools/testing/radix-tree.
 
-Keep track of two sets of hierarchical counters, each meant to have the
-same precise sum at any time, but distributed differently across the
-topology.
+A small shim header provides the kernel environment needed by the
+library, on top of tools/include: per-CPU data is an array indexed by
+the simulated current CPU, and atomic operations are plain operations,
+because the test is single-threaded. It therefore only covers settled
+counters.
 
-Keep track of an atomic counter along with each hierarchical counter, for
-sum validation.
+Validate the configuration table, then, for each simulated number of
+CPUs (1 to 65536, up to 1048576 with -a) and batch size (2 to 128):
 
-Those tests cover:
+- Saturate the counter upward and downward: leave every tree item with
+  its largest positive (or negative) residual which has not been
+  propagated yet, check that the distance between the precise and
+  approximate sums matches the residual capacity of the tree, computed
+  from the configuration table, which is exactly the accuracy range, the
+  same in both directions, and check the accuracy range contract and the
+  comparison functions in these worst-case states.  A lost carry fails
+  the saturation rather than hanging it.
 
-- Single-threaded (no concurrency) updates.
-- Concurrent updates of counters from various CPUs.
-- Contended carries: rounds of concurrent carries from many CPUs into
-  the tree items they share.
+- Random walk: apply random increments from random CPUs to two counters,
+  and check the accuracy range contract and the comparison functions
+  against shadow sums after each increment.
 
-The multi-threaded tests run their workers on at most 64 CPUs, spread
-evenly across the online CPUs, so their run time does not grow with the
-size of the machine.
+Along with the accuracy range contract, check the residuals of the tree
+items, and that no carry was lost or duplicated.
 
-The single-threaded and saturation tests run each update on its target
-CPU with work_on_cpu(), and the multi-threaded tests queue their updates
-on a CPU intensive workqueue, whose workers are reused across rounds
-and can preempt each other on a CPU.  The single and multi-threaded
-tests stop early after a time bound, so they complete on large virtual
-machines where cross-CPU wakeups are slow.
+The comparison checks include the edges of the possible precise range:
+the approximate comparison against a value must be definitive exactly
+outside of [approx - over, approx + under].
 
-Perform the following validations:
+Usage:
 
-- Compare the precise sum of counters with the sum tracked by
-  an atomic counter.
-- Compare the precise sum of two sets of hierarchical counters.
-- Approximated comparison of hierarchical counter with atomic counter.
-- Approximated comparison of two sets of hierarchical counters.
-- Validate the bounds of approximation ranges.
-- Check the residuals of the tree items, and that no carry was lost or
-  duplicated, whenever the counters are settled, including between the
-  rounds of contended carries.
-- Saturate a counter upward and downward to its worst-case approximation
-  errors, check that it reaches the edges of its accuracy range exactly
-  when all possible CPUs are online, and validate the comparisons at the
-  edges of its precise range.
+  make -C tools/testing/hpcc
+  tools/testing/hpcc/hpcc [-a]
 
-Run with the following .kunit/.kunitconfig:
-
-CONFIG_KUNIT=y
-CONFIG_SMP=y
-CONFIG_PREEMPT=y
-CONFIG_NR_CPUS=32
-CONFIG_HOTPLUG_CPU=y
-CONFIG_PERCPU_COUNTER_TREE_KUNIT_TEST=y
-
-With the following execution (to use SMP):
-
-./tools/testing/kunit/kunit.py run --arch=x86_64 --qemu_args="-smp 12"
-
-Link: https://lkml.kernel.org/r/20260227153730.1556542-3-mathieu.desnoyers@efficios.com
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@gentwo.org>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Liam R. Howlett <liam@infradead.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: David Carlier <devnexen@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
 ---
 Changes since v23:
-- Select the first online CPU of the single-threaded tests with the CPU
-  hotplug lock held. (Reported by Sashiko.)
-- Publish the start flag of the contended carries test with
-  smp_store_release(), paired with smp_load_acquire() in the workers.
-  (Reported by Sashiko.)
-- Check whether every possible CPU is online with the CPU hotplug lock
-  held in the saturated counter comparison test. (Reported by Sashiko.)
-- Check that a zeroed counter reads as 0.
-
-Changes since v22:
-- Fix CPU hotplug locking, module unload, and error handling: ERR_PTR
-  handling, a test data leak, allocation sizing, the cpu & ~1 skip, a
-  lost worker when kthread_stop() runs before the thread function, and
-  a task_struct reaping race. (Reported by Sashiko.)
-- Merge the four multi-thread increment tests into one function taking
-  a CPU selector.
-- Add a saturated counter comparison test, upward and downward.
-- Add a contended carries test.
-- Bound the number of CPUs running workers in the multi-threaded tests.
-- Check the residuals and carries of settled counters.
-- Add a configuration table validation test.
-- Run the updates with work_on_cpu() and a workqueue rather than
-  creating a kthread for each update, and bound the run time of the
-  single and multi-threaded tests, which timed out with 192 CPUs in a
-  virtual machine.
-- Fix checkpatch warnings.
-
-Changes since v19:
-- Rename config option to PERCPU_COUNTER_TREE_KUNIT_TEST.
+- Destroy the counters already initialized when an initialization fails
+  in test_saturated() and test_random_walk(). (Reported by Sashiko.)
 ---
- MAINTAINERS                           |   1 +
- lib/Kconfig                           |  12 +
- lib/tests/Makefile                    |   2 +
- lib/tests/percpu_counter_tree_kunit.c | 845 ++++++++++++++++++++++++++
- 4 files changed, 860 insertions(+)
- create mode 100644 lib/tests/percpu_counter_tree_kunit.c
+ MAINTAINERS                                   |   1 +
+ tools/testing/hpcc/.gitignore                 |   2 +
+ tools/testing/hpcc/Makefile                   |  18 +
+ tools/testing/hpcc/include/hpcc_shim.h        | 177 ++++++++
+ tools/testing/hpcc/include/kunit/visibility.h |   2 +
+ tools/testing/hpcc/include/linux/args.h       |   4 +
+ tools/testing/hpcc/include/linux/atomic.h     |   2 +
+ tools/testing/hpcc/include/linux/bug.h        |   2 +
+ tools/testing/hpcc/include/linux/cache.h      |   2 +
+ tools/testing/hpcc/include/linux/cpumask.h    |   2 +
+ tools/testing/hpcc/include/linux/errno.h      |   3 +
+ tools/testing/hpcc/include/linux/limits.h     |   2 +
+ tools/testing/hpcc/include/linux/math.h       |   2 +
+ tools/testing/hpcc/include/linux/percpu.h     |   2 +
+ .../hpcc/include/linux/percpu_counter_tree.h  |   2 +
+ tools/testing/hpcc/include/linux/preempt.h    |   2 +
+ tools/testing/hpcc/include/linux/slab.h       |   2 +
+ tools/testing/hpcc/main.c                     | 427 ++++++++++++++++++
+ 18 files changed, 654 insertions(+)
+ create mode 100644 tools/testing/hpcc/.gitignore
+ create mode 100644 tools/testing/hpcc/Makefile
+ create mode 100644 tools/testing/hpcc/include/hpcc_shim.h
+ create mode 100644 tools/testing/hpcc/include/kunit/visibility.h
+ create mode 100644 tools/testing/hpcc/include/linux/args.h
+ create mode 100644 tools/testing/hpcc/include/linux/atomic.h
+ create mode 100644 tools/testing/hpcc/include/linux/bug.h
+ create mode 100644 tools/testing/hpcc/include/linux/cache.h
+ create mode 100644 tools/testing/hpcc/include/linux/cpumask.h
+ create mode 100644 tools/testing/hpcc/include/linux/errno.h
+ create mode 100644 tools/testing/hpcc/include/linux/limits.h
+ create mode 100644 tools/testing/hpcc/include/linux/math.h
+ create mode 100644 tools/testing/hpcc/include/linux/percpu.h
+ create mode 100644 tools/testing/hpcc/include/linux/percpu_counter_tree.h
+ create mode 100644 tools/testing/hpcc/include/linux/preempt.h
+ create mode 100644 tools/testing/hpcc/include/linux/slab.h
+ create mode 100644 tools/testing/hpcc/main.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 712af0536005..21348605d06e 100644
+index 21348605d06e..4d421a784e88 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -11955,6 +11955,7 @@ S:	Supported
- F:	Documentation/core-api/percpu-counter-tree.rst
+@@ -11956,6 +11956,7 @@ F:	Documentation/core-api/percpu-counter-tree.rst
  F:	include/linux/percpu_counter_tree.h
  F:	lib/percpu_counter_tree.c
-+F:	lib/tests/percpu_counter_tree_kunit.c
+ F:	lib/tests/percpu_counter_tree_kunit.c
++F:	tools/testing/hpcc/
  
  HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS
  M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 1e42f5167c68..3921177a0d24 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -41,6 +41,18 @@ config PACKING_KUNIT_TEST
- 
- 	  When in doubt, say N.
- 
-+config PERCPU_COUNTER_TREE_KUNIT_TEST
-+	tristate "KUnit tests for hierarchical per-cpu counters" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds Kunit tests for the hierarchical per-cpu counters.
-+
-+	  For more information on KUnit and unit tests in general,
-+	  please refer to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  When in doubt, say N.
-+
- config BITREVERSE
- 	tristate
- 	select GENERIC_BITREVERSE if !HAVE_ARCH_BITREVERSE
-diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-index df0537e1b91f..e98687da8706 100644
---- a/lib/tests/Makefile
-+++ b/lib/tests/Makefile
-@@ -59,4 +59,6 @@ obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
- obj-$(CONFIG_RATELIMIT_KUNIT_TEST) += test_ratelimit.o
- obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
- 
-+obj-$(CONFIG_PERCPU_COUNTER_TREE_KUNIT_TEST) += percpu_counter_tree_kunit.o
-+
- obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
-diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_counter_tree_kunit.c
+diff --git a/tools/testing/hpcc/.gitignore b/tools/testing/hpcc/.gitignore
 new file mode 100644
-index 000000000000..5774278ea140
+index 000000000000..f362a8a46868
 --- /dev/null
-+++ b/lib/tests/percpu_counter_tree_kunit.c
-@@ -0,0 +1,845 @@
++++ b/tools/testing/hpcc/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0+ OR MIT
++hpcc
+diff --git a/tools/testing/hpcc/Makefile b/tools/testing/hpcc/Makefile
+new file mode 100644
+index 000000000000..e4758643a3f0
+--- /dev/null
++++ b/tools/testing/hpcc/Makefile
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: GPL-2.0+ OR MIT
++
++.PHONY: default clean
++
++default: hpcc
++
++CFLAGS += -O2 -g -Wall -I./include -I../../include -fno-strict-overflow -fno-strict-aliasing
++CFLAGS += -DCONFIG_SMP -DCONFIG_KUNIT=1 -D'NR_CPUS=(1U << 20)'
++
++DEPS = ../../../lib/percpu_counter_tree.c \
++	../../../include/linux/percpu_counter_tree.h \
++	include/hpcc_shim.h
++
++hpcc: main.c $(DEPS)
++	$(CC) $(CFLAGS) -o $@ main.c $(LDLIBS)
++
++clean:
++	$(RM) hpcc
+diff --git a/tools/testing/hpcc/include/hpcc_shim.h b/tools/testing/hpcc/include/hpcc_shim.h
+new file mode 100644
+index 000000000000..7e268de984c6
+--- /dev/null
++++ b/tools/testing/hpcc/include/hpcc_shim.h
+@@ -0,0 +1,177 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/*
++ * Minimal userspace environment to build lib/percpu_counter_tree.c.
++ *
++ * The test is single-threaded: per-CPU data is an array indexed by the
++ * simulated current CPU, and atomic operations are plain operations.
++ */
++#ifndef _HPCC_SHIM_H
++#define _HPCC_SHIM_H
++
++#include <stdbool.h>
++#include <stddef.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <errno.h>
++
++/* From tools/include. */
++#include <linux/compiler.h>
++#include <linux/gfp_types.h>
++#include <linux/init.h>
++#include <linux/kconfig.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++
++#define __ro_after_init
++#define __percpu
++#define SMP_CACHE_BYTES			64
++#define ____cacheline_aligned_in_smp	__aligned(SMP_CACHE_BYTES)
++#define S8_MAX				INT8_MAX
++
++#undef abs
++#define abs(x) ({ typeof(x) __x = (x); __x < 0 ? -__x : __x; })
++
++#define pr_err(...)		fprintf(stderr, __VA_ARGS__)
++#define pr_info(...)		do { if (0) printf(__VA_ARGS__); } while (0)
++
++extern unsigned long hpcc_nr_warnings;
++
++#define WARN(cond, ...) ({						\
++	int __ret_warn = !!(cond);					\
++	if (__ret_warn) {						\
++		hpcc_nr_warnings++;					\
++		fprintf(stderr, "WARNING at %s:%d: ", __FILE__, __LINE__); \
++		fprintf(stderr, __VA_ARGS__);				\
++	}								\
++	__ret_warn;							\
++})
++#define WARN_ON(cond)		WARN(cond, "%s\n", #cond)
++#define WARN_ON_ONCE(cond)	WARN_ON(cond)
++
++static inline int get_count_order(unsigned int count)
++{
++	int order;
++
++	if (!count)
++		return -1;
++	order = 31 - __builtin_clz(count);
++	if (count & (count - 1))
++		order++;
++	return order;
++}
++
++#define atomic_long_read(v)			READ_ONCE((v)->counter)
++#define atomic_long_set(v, i)			WRITE_ONCE((v)->counter, (i))
++#define atomic_long_add(i, v)			((void)((v)->counter += (i)))
++#define atomic_long_add_return_relaxed(i, v)	((v)->counter += (i))
++#define atomic_long_add_return_release(i, v)	((v)->counter += (i))
++#define smp_rmb()				barrier()
++
++static inline bool atomic_long_try_cmpxchg_relaxed(atomic_long_t *v, long *old, long new)
++{
++	if (v->counter == *old) {
++		v->counter = new;
++		return true;
++	}
++	*old = v->counter;
++	return false;
++}
++
++/* Simulated topology, and CPU on which the current code runs. */
++extern unsigned int nr_cpu_ids;
++extern unsigned int hpcc_current_cpu;
++
++#define raw_smp_processor_id()		hpcc_current_cpu
++#define for_each_possible_cpu(cpu)	for ((cpu) = 0; (cpu) < (int)nr_cpu_ids; (cpu)++)
++
++/*
++ * Each per-CPU allocation reserves HPCC_PCPU_UNIT bytes per CPU, so
++ * per_cpu_ptr() can be applied to a pointer within an allocation.
++ */
++#define HPCC_PCPU_UNIT	64
++
++static inline void *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp)
++{
++	if (size > HPCC_PCPU_UNIT || align > HPCC_PCPU_UNIT)
++		return NULL;
++	return calloc(nr_cpu_ids, HPCC_PCPU_UNIT);
++}
++
++static inline void free_percpu(void *ptr)
++{
++	free(ptr);
++}
++
++#define SLAB_PANIC	0
++
++struct kmem_cache {
++	size_t size;
++	size_t align;
++};
++
++static inline struct kmem_cache *kmem_cache_create(const char *name, unsigned int size,
++						   unsigned int align, unsigned int flags,
++						   void (*ctor)(void *))
++{
++	struct kmem_cache *s = malloc(sizeof(*s));
++
++	if (!s)
++		abort();
++	s->size = size;
++	s->align = align;
++	return s;
++}
++
++static inline void kmem_cache_destroy(struct kmem_cache *s)
++{
++	free(s);
++}
++
++static inline void *kmem_cache_zalloc(struct kmem_cache *s, gfp_t gfp)
++{
++	/* The allocation size needs to be a multiple of the alignment. */
++	void *p = aligned_alloc(s->align, (s->size + s->align - 1) / s->align * s->align);
++
++	if (p)
++		memset(p, 0, s->size);
++	return p;
++}
++
++static inline void kmem_cache_free(struct kmem_cache *s, void *p)
++{
++	free(p);
++}
++
++static inline void *kzalloc(size_t size, gfp_t gfp)
++{
++	return calloc(1, size);
++}
++
++static inline void kfree(void *p)
++{
++	free(p);
++}
++
++#define per_cpu_ptr(ptr, cpu)	\
++	((typeof(ptr))((char *)(ptr) + (size_t)(cpu) * HPCC_PCPU_UNIT))
++
++/* Level 0 counters are the only per-CPU data: s8. */
++static inline bool __hpcc_this_cpu_try_cmpxchg(s8 *pcp, s8 *old, s8 new)
++{
++	s8 *p = per_cpu_ptr(pcp, hpcc_current_cpu);
++
++	if (*p != *old) {
++		*old = *p;
++		return false;
++	}
++	*p = new;
++	return true;
++}
++
++#define this_cpu_read(pcp)	(*per_cpu_ptr(&(pcp), hpcc_current_cpu))
++#define this_cpu_try_cmpxchg(pcp, ovalp, nval)	\
++	__hpcc_this_cpu_try_cmpxchg(&(pcp), (ovalp), (nval))
++
++#endif /* _HPCC_SHIM_H */
+diff --git a/tools/testing/hpcc/include/kunit/visibility.h b/tools/testing/hpcc/include/kunit/visibility.h
+new file mode 100644
+index 000000000000..dfcbfd01a415
+--- /dev/null
++++ b/tools/testing/hpcc/include/kunit/visibility.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#define EXPORT_SYMBOL_IF_KUNIT(symbol)
+diff --git a/tools/testing/hpcc/include/linux/args.h b/tools/testing/hpcc/include/linux/args.h
+new file mode 100644
+index 000000000000..0c00a85fdd21
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/args.h
+@@ -0,0 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/* Also defined by the C library <sys/cdefs.h>. */
++#undef __CONCAT
++#include "../../../../../include/linux/args.h"
+diff --git a/tools/testing/hpcc/include/linux/atomic.h b/tools/testing/hpcc/include/linux/atomic.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/atomic.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/bug.h b/tools/testing/hpcc/include/linux/bug.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/bug.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/cache.h b/tools/testing/hpcc/include/linux/cache.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/cache.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/cpumask.h b/tools/testing/hpcc/include/linux/cpumask.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/cpumask.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/errno.h b/tools/testing/hpcc/include/linux/errno.h
+new file mode 100644
+index 000000000000..45fdd60261e7
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/errno.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/* Also included by the C library <errno.h>: only provide the error numbers. */
++#include <asm/errno.h>
+diff --git a/tools/testing/hpcc/include/linux/limits.h b/tools/testing/hpcc/include/linux/limits.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/limits.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/math.h b/tools/testing/hpcc/include/linux/math.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/math.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/percpu.h b/tools/testing/hpcc/include/linux/percpu.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/percpu.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/percpu_counter_tree.h b/tools/testing/hpcc/include/linux/percpu_counter_tree.h
+new file mode 100644
+index 000000000000..065a2aca4d5b
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/percpu_counter_tree.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../../../../../include/linux/percpu_counter_tree.h"
+diff --git a/tools/testing/hpcc/include/linux/preempt.h b/tools/testing/hpcc/include/linux/preempt.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/preempt.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/include/linux/slab.h b/tools/testing/hpcc/include/linux/slab.h
+new file mode 100644
+index 000000000000..b2aa26415cca
+--- /dev/null
++++ b/tools/testing/hpcc/include/linux/slab.h
+@@ -0,0 +1,2 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++#include "../hpcc_shim.h"
+diff --git a/tools/testing/hpcc/main.c b/tools/testing/hpcc/main.c
+new file mode 100644
+index 000000000000..28fb3af2ea1d
+--- /dev/null
++++ b/tools/testing/hpcc/main.c
+@@ -0,0 +1,427 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+// SPDX-FileCopyrightText: 2026 Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++/*
++ * Userspace test of the hierarchical per-CPU counters (lib/percpu_counter_tree.c).
++ *
++ * The library is built with a simulated topology, which allows testing
++ * every supported tree configuration on a single machine, whereas the
++ * KUnit test only covers the topology of the machine it runs on.
++ *
++ * For each simulated number of CPUs and batch size:
++ *
++ * - Saturate the counter upward and downward: leave every tree item with
++ *   its largest positive (or negative) residual which has not been
++ *   propagated yet, check that the distance between the precise and
++ *   approximate sums matches the residual capacity of the tree in that
++ *   direction, and check the accuracy range contract and the comparison
++ *   functions in these worst-case states.
++ *
++ * - Random walk: apply random increments from random CPUs to two counters,
++ *   and check the accuracy range contract and the comparison functions
++ *   against shadow sums after each increment.
++ *
++ * The test is single-threaded, so it only covers settled counters.
++ */
 +
-+#include <kunit/test.h>
-+#include <linux/percpu_counter_tree.h>
-+#include <linux/kthread.h>
-+#include <linux/wait.h>
-+#include <linux/random.h>
-+#include <linux/cpuhplock.h>
-+#include <linux/slab.h>
-+#include <linux/sched/task.h>
-+#include <linux/workqueue.h>
++#include <stdarg.h>
++#include "hpcc_shim.h"
 +
-+struct multi_thread_test_data {
-+	struct work_struct work;
-+	long increment;
-+	unsigned int nr_inc;
-+	int counter_index;
++unsigned int nr_cpu_ids;
++unsigned int hpcc_current_cpu;
++unsigned long hpcc_nr_warnings;
++
++#include "../../../lib/percpu_counter_tree.c"
++
++#define MAX_REPORTED_FAILURES	10
++
++static unsigned long nr_case_failures;
++
++#define CHECK(cond) do {							\
++	if (!(cond)) {								\
++		if (nr_case_failures++ < MAX_REPORTED_FAILURES)			\
++			printf("#   %s:%d: check failed: %s\n",			\
++			       __FILE__, __LINE__, #cond);			\
++	}									\
++} while (0)
++
++static uint64_t rng_state = 88172645463325252ULL;
++
++static uint64_t rnd(void)
++{
++	rng_state ^= rng_state << 13;
++	rng_state ^= rng_state >> 7;
++	rng_state ^= rng_state << 17;
++	return rng_state;
++}
++
++static int sign(long v)
++{
++	return (v > 0) - (v < 0);
++}
++
++struct test_counter {
++	struct percpu_counter_tree tree;
++	long shadow;	/* Expected precise sum. */
 +};
 +
-+#define NR_COUNTERS	2
-+
-+/* Hierarchical per-CPU counter instances. */
-+static struct percpu_counter_tree counter[NR_COUNTERS];
-+
-+/* Global atomic counters for validation. */
-+static atomic_long_t global_counter[NR_COUNTERS];
-+
-+static DECLARE_WAIT_QUEUE_HEAD(kernel_threads_wq);
-+static atomic_t kernel_threads_to_run;
-+
-+static void complete_work(void)
++int scnprintf(char *buf, size_t size, const char *fmt, ...)
 +{
-+	if (atomic_dec_and_test(&kernel_threads_to_run))
-+		wake_up(&kernel_threads_wq);
++	va_list args;
++	int len;
++
++	if (!size)
++		return 0;
++	va_start(args, fmt);
++	len = vsnprintf(buf, size, fmt, args);
++	va_end(args);
++	return len < (int)size ? len : (int)size - 1;
 +}
 +
-+/* Random tasks test. */
-+#define NR_RAND_TASKS	1000
-+
-+static void hpcc_print_info(struct kunit *test)
++static void hpcc_init_topology(unsigned int nr_cpus)
 +{
-+	kunit_info(test, "Running test with %d CPUs\n", num_online_cpus());
++	nr_cpu_ids = nr_cpus;
++	/* Reset the state accumulated by a prior subsystem initialization. */
++	kmem_cache_destroy(tree_topology.items_cachep);
++	memset(&tree_topology, 0, sizeof(tree_topology));
++	tree_topology.nr_items = UINT_MAX;
++	CHECK(!percpu_counter_tree_subsystem_init());
 +}
 +
-+static void add_to_counter(int counter_index, unsigned int nr_inc, long increment)
++static int test_counter_init(struct test_counter *c, unsigned long batch_size)
 +{
-+	unsigned int i;
-+
-+	for (i = 0; i < nr_inc; i++) {
-+		percpu_counter_tree_add(&counter[counter_index], increment);
-+		atomic_long_add(increment, &global_counter[counter_index]);
-+	}
++	c->shadow = 0;
++	return percpu_counter_tree_init(&c->tree, batch_size, GFP_KERNEL);
 +}
 +
-+/* Check the residuals and the carries of a settled counter. */
-+static void check_residuals(struct kunit *test, struct percpu_counter_tree *c)
++static void test_counter_destroy(struct test_counter *c)
 +{
-+#ifdef CONFIG_SMP
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_check_residuals(c));
-+#endif
++	percpu_counter_tree_destroy(&c->tree);
 +}
 +
-+static void check_counters(struct kunit *test)
++static void test_counter_add(struct test_counter *c, unsigned int cpu, long inc)
 +{
-+	int counter_index;
++	hpcc_current_cpu = cpu;
++	percpu_counter_tree_add(&c->tree, inc);
++	c->shadow += inc;
++}
 +
-+	/* Compare each counter with its global counter. */
-+	for (counter_index = 0; counter_index < NR_COUNTERS; counter_index++) {
-+		struct percpu_counter_tree *c = &counter[counter_index];
-+		long v = atomic_long_read(&global_counter[counter_index]);
-+		long approx_sum = percpu_counter_tree_approximate_sum(c);
-+		unsigned long accuracy;
-+		long precise_min, precise_max;
-+
-+		/* Precise comparison. */
-+		KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(c), v);
-+		check_residuals(test, c);
-+		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_precise_compare_value(c, v));
-+
-+		/* Approximate comparison. */
-+		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare_value(c, v));
-+
-+		/* Accuracy limits checks. */
-+		accuracy = percpu_counter_tree_approximate_accuracy(c);
-+
-+		/*
-+		 * The accuracy is an unsigned long, so the inner expression
-+		 * promotes to unsigned. Compute the difference in unsigned and
-+		 * cast to signed for the comparison against 0.
-+		 */
-+		KUNIT_EXPECT_GE(test, (long)(approx_sum - (v - accuracy)), 0);
-+		KUNIT_EXPECT_LE(test, (long)(approx_sum - (v + accuracy)), 0);
-+
-+		/* Precise min/max range check. */
-+		percpu_counter_tree_approximate_min_max_range(approx_sum, accuracy,
-+							      &precise_min, &precise_max);
-+
-+		KUNIT_EXPECT_GE(test, v - precise_min, 0);
-+		KUNIT_EXPECT_LE(test, v - precise_max, 0);
-+	}
-+	/* Compare each counter with the second counter. */
-+	KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(&counter[0]),
-+			percpu_counter_tree_precise_sum(&counter[1]));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_precise_compare(&counter[0], &counter[1]));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare(&counter[0], &counter[1]));
++static void test_counter_set(struct test_counter *c, long v)
++{
++	percpu_counter_tree_set(&c->tree, v);
++	c->shadow = v;
 +}
 +
 +/*
-+ * Workqueue running the updates of the multi-threaded tests. Its workers
-+ * are reused across rounds, which keeps the tests fast on machines where
-+ * creating threads on remote CPUs is slow. Work items are CPU intensive,
-+ * so several of them queued on one CPU run concurrently in separate
-+ * workers, and can preempt each other in the middle of an update.
++ * Residual capacity of the tree items above level 0, in either direction:
++ * sum of the largest residual which each item can hold without propagating
++ * a carry. A level L item only receives multiples of the level L - 1 carry,
++ * and propagates once its residual reaches the level L carry, so it holds
++ * at most bit(L) - bit(L - 1) in either direction.
 + */
-+static struct workqueue_struct *hpcc_test_wq;
-+
-+static void multi_thread_work_fn(struct work_struct *work)
++static unsigned long tree_item_capacity(unsigned long batch_size)
 +{
-+	struct multi_thread_test_data *td =
-+		container_of(work, struct multi_thread_test_data, work);
++	unsigned long capacity = 0, lo = batch_size, hi;
++	unsigned int level, level_items;
 +
-+	add_to_counter(td->counter_index, td->nr_inc, td->increment);
-+	kfree(td);
-+	complete_work();
-+}
++	level_items = 1U << tree_topology.nr_cpus_order;
++	for (level = 1; level < tree_topology.config->nr_levels; level++) {
++		unsigned int n_arity_order = tree_topology.config->n_arity_order[level - 1];
 +
-+/* Queue an update of a counter on @target_cpu. Call with the CPU hotplug lock held. */
-+static int test_queue_on_cpu(int target_cpu, int counter_index, unsigned int nr_inc,
-+			     long increment)
-+{
-+	struct multi_thread_test_data *td = kzalloc(sizeof(*td), GFP_KERNEL);
-+
-+	if (!td)
-+		return -ENOMEM;
-+	INIT_WORK(&td->work, multi_thread_work_fn);
-+	td->increment = increment;
-+	td->nr_inc = nr_inc;
-+	td->counter_index = counter_index;
-+	atomic_inc(&kernel_threads_to_run);
-+	queue_work_on(target_cpu, hpcc_test_wq, &td->work);
-+	return 0;
-+}
-+
-+static void init_kthreads(void)
-+{
-+	atomic_set(&kernel_threads_to_run, 1);
++		level_items >>= n_arity_order;
++		hi = lo << n_arity_order;
++		capacity += level_items * (hi - lo);
++		lo = hi;
++	}
++	return capacity;
 +}
 +
 +/*
-+ * The caller needs to wait for work completion _before_ stopping kthreads.
++ * Residual capacity of the tree, in either direction: a level 0 counter
++ * holds at most batch_size - 1 on top of the item capacity.
 + */
-+static void fini_kthreads(void)
++static unsigned long tree_residual_capacity(unsigned long batch_size)
 +{
-+	/* Release our own reference. */
-+	complete_work();
-+	/* Wait for all others threads to run. */
-+	wait_event(kernel_threads_wq, (atomic_read(&kernel_threads_to_run) == 0));
++	return nr_cpu_ids * (batch_size - 1) + tree_item_capacity(batch_size);
 +}
-+
-+static int init_counters(unsigned long batch_size)
-+{
-+	int i, ret;
-+
-+	ret = percpu_counter_tree_init_many(counter, NR_COUNTERS, batch_size, GFP_KERNEL);
-+	if (ret)
-+		return ret;
-+	for (i = 0; i < NR_COUNTERS; i++)
-+		atomic_long_set(&global_counter[i], 0);
-+	return 0;
-+}
-+
-+static void fini_counters(void)
-+{
-+	percpu_counter_tree_destroy_many(counter, NR_COUNTERS);
-+}
-+
-+enum up_test_inc_type {
-+	INC_ONE,
-+	INC_MINUS_ONE,
-+	INC_RANDOM,
-+};
-+
-+/*
-+ * Single-threaded tests. Those run the updates on various CPUs, one at a
-+ * time: work_on_cpu() waits for each update to complete before the next,
-+ * effectively making sure there are no concurrent updates. Each test
-+ * stops early after SINGLE_THREAD_MAX_SECONDS, because cross-CPU wakeups
-+ * can be slow on large virtual machines.
-+ */
-+#define SINGLE_THREAD_MAX_SECONDS	10
-+
-+struct single_thread_update {
-+	long increment;
-+	int counter_index;
-+};
-+
-+static long single_thread_update_fn(void *arg)
-+{
-+	struct single_thread_update *u = arg;
-+
-+	add_to_counter(u->counter_index, 1, u->increment);
-+	return 0;
-+}
-+
-+/* CPU selection for the updates of each counter. */
-+enum st_cpu_select {
-+	ST_FIRST_CPU,		/* First online CPU. */
-+	ST_RANDOM_CPU,		/* Any online CPU, for each update. */
-+};
-+
-+/* Call with the CPU hotplug lock held. */
-+static int st_select_cpu(enum st_cpu_select select)
-+{
-+	if (select == ST_FIRST_CPU)
-+		return cpumask_first(cpu_online_mask);
-+	return cpumask_any_distribute(cpu_online_mask);
-+}
-+
-+static void do_hpcc_test_single_thread(struct kunit *test, enum st_cpu_select select0,
-+				       enum st_cpu_select select1, enum up_test_inc_type type)
-+{
-+	unsigned long batch_size_order = 5;
-+	unsigned long deadline = jiffies + SINGLE_THREAD_MAX_SECONDS * HZ;
-+	int ret, i;
-+
-+	ret = init_counters(1UL << batch_size_order);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
-+		return;
-+	cpus_read_lock();
-+	for (i = 0; i < 10000 && time_before(jiffies, deadline); i++) {
-+		struct single_thread_update u0 = { .counter_index = 0 };
-+		struct single_thread_update u1 = { .counter_index = 1 };
-+		long increment;
-+
-+		switch (type) {
-+		case INC_ONE:
-+			increment = 1;
-+			break;
-+		case INC_MINUS_ONE:
-+			increment = -1;
-+			break;
-+		case INC_RANDOM:
-+			increment = (long)get_random_long() % 50000;
-+			break;
-+		default:
-+			WARN_ON_ONCE(1);
-+			increment = 0;
-+		}
-+		u0.increment = increment;
-+		u1.increment = increment;
-+		work_on_cpu(st_select_cpu(select0), single_thread_update_fn, &u0);
-+		work_on_cpu(st_select_cpu(select1), single_thread_update_fn, &u1);
-+		check_counters(test);
-+	}
-+	cpus_read_unlock();
-+	fini_counters();
-+}
-+
-+static void hpcc_test_single_thread_first(struct kunit *test)
-+{
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_FIRST_CPU, INC_ONE);
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_FIRST_CPU, INC_MINUS_ONE);
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_FIRST_CPU, INC_RANDOM);
-+}
-+
-+static void hpcc_test_single_thread_first_random(struct kunit *test)
-+{
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_RANDOM_CPU, INC_ONE);
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_RANDOM_CPU, INC_MINUS_ONE);
-+	do_hpcc_test_single_thread(test, ST_FIRST_CPU, ST_RANDOM_CPU, INC_RANDOM);
-+}
-+
-+static void hpcc_test_single_thread_random(struct kunit *test)
-+{
-+	do_hpcc_test_single_thread(test, ST_RANDOM_CPU, ST_RANDOM_CPU, INC_ONE);
-+	do_hpcc_test_single_thread(test, ST_RANDOM_CPU, ST_RANDOM_CPU, INC_MINUS_ONE);
-+	do_hpcc_test_single_thread(test, ST_RANDOM_CPU, ST_RANDOM_CPU, INC_RANDOM);
-+}
-+
-+/* Multi-threaded SMP tests. */
-+
-+/*
-+ * Bound the number of CPUs running workers in the multi-threaded tests,
-+ * so their run time does not grow with the size of the machine. Beyond
-+ * this bound, the workers run on a subset spread evenly across the
-+ * online CPUs, so they still reach every branch of the tree.
-+ */
-+#define MAX_WORKER_CPUS	64
-+
-+/*
-+ * Each multi-threaded test stops early after MULTI_THREAD_MAX_SECONDS,
-+ * because cross-CPU wakeups can be slow on large virtual machines.
-+ */
-+#define MULTI_THREAD_MAX_SECONDS	60
-+
-+static struct cpumask worker_cpus;
-+
-+/* Select the CPUs running workers. Call with the CPU hotplug lock held. */
-+static const struct cpumask *select_worker_cpus(void)
-+{
-+	unsigned int nr_online = num_online_cpus(), i = 0;
-+	int cpu;
-+
-+	cpumask_clear(&worker_cpus);
-+	for_each_online_cpu(cpu) {
-+		/* Pick MAX_WORKER_CPUS of the nr_online CPUs, evenly spaced. */
-+		if ((i + 1) * MAX_WORKER_CPUS / nr_online !=
-+		    i * MAX_WORKER_CPUS / nr_online)
-+			cpumask_set_cpu(cpu, &worker_cpus);
-+		i++;
-+	}
-+	return &worker_cpus;
-+}
-+
-+/*
-+ * CPU selection for the second counter's thread, relative to the CPU
-+ * running the first counter's thread.
-+ */
-+enum mt_cpu_select {
-+	MT_SAME_CPU,		/* Same CPU as the first counter. */
-+	MT_EVEN_CPU,		/* Funnel CPU pairs (0, 1), (2, 3), ... to 0, 2, ... */
-+	MT_FIRST_CPU,		/* First online CPU. */
-+	MT_RANDOM_CPU,		/* Any online CPU. */
-+};
-+
-+/* Return the CPU for the second counter's thread, or -1 to skip @cpu. */
-+static int mt_select_cpu(enum mt_cpu_select select, int cpu)
-+{
-+	int even_cpu;
-+
-+	switch (select) {
-+	case MT_SAME_CPU:
-+		return cpu;
-+	case MT_EVEN_CPU:
-+		even_cpu = cpu & ~1;
-+		return cpumask_test_cpu(even_cpu, cpu_online_mask) ? even_cpu : -1;
-+	case MT_FIRST_CPU:
-+		return cpumask_first(cpu_online_mask);
-+	case MT_RANDOM_CPU:
-+		return cpumask_any_distribute(cpu_online_mask);
-+	}
-+	WARN_ON_ONCE(1);
-+	return -1;
-+}
-+
-+static void do_hpcc_multi_thread_increment(struct kunit *test, enum mt_cpu_select select,
-+					   unsigned long batch_size, unsigned int nr_inc,
-+					   long increment)
-+{
-+	const struct cpumask *cpus;
-+	int ret, cpu;
-+
-+	ret = init_counters(batch_size);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
-+		return;
-+	init_kthreads();
-+	cpus_read_lock();
-+	cpus = select_worker_cpus();
-+	for_each_cpu(cpu, cpus) {
-+		int cpu1 = mt_select_cpu(select, cpu);
-+
-+		if (cpu1 < 0)
-+			continue;
-+		ret = test_queue_on_cpu(cpu, 0, nr_inc, increment);
-+		KUNIT_EXPECT_EQ(test, ret, 0);
-+		if (ret)
-+			break;
-+		ret = test_queue_on_cpu(cpu1, 1, nr_inc, increment);
-+		KUNIT_EXPECT_EQ(test, ret, 0);
-+		if (ret)
-+			break;
-+	}
-+	fini_kthreads();
-+	cpus_read_unlock();
-+	check_counters(test);
-+	fini_counters();
-+}
-+
-+static void hpcc_test_multi_thread_batch_increment(struct kunit *test)
-+{
-+	unsigned long deadline = jiffies + MULTI_THREAD_MAX_SECONDS * HZ;
-+	unsigned long batch_size_order;
-+
-+	for (batch_size_order = 2; batch_size_order <= 7; batch_size_order++) {
-+		unsigned long batch_size = 1UL << batch_size_order;
-+		unsigned int nr_inc;
-+
-+		for (nr_inc = 1; nr_inc < 1024; nr_inc *= 2) {
-+			long increment;
-+
-+			for (increment = 1; increment < 100000; increment *= 10) {
-+				enum mt_cpu_select select;
-+
-+				if (time_after(jiffies, deadline))
-+					return;
-+				for (select = MT_SAME_CPU; select <= MT_RANDOM_CPU; select++)
-+					do_hpcc_multi_thread_increment(test, select, batch_size,
-+								       nr_inc, increment);
-+			}
-+		}
-+	}
-+}
-+
-+static void hpcc_test_multi_thread_random_walk(struct kunit *test)
-+{
-+	unsigned long deadline = jiffies + MULTI_THREAD_MAX_SECONDS * HZ;
-+	unsigned long batch_size_order = 5;
-+	int loop;
-+
-+	for (loop = 0; loop < 100 && time_before(jiffies, deadline); loop++) {
-+		int ret, i;
-+
-+		ret = init_counters(1UL << batch_size_order);
-+		KUNIT_EXPECT_EQ(test, ret, 0);
-+		if (ret)
-+			return;
-+		init_kthreads();
-+		cpus_read_lock();
-+		for (i = 0; i < NR_RAND_TASKS; i++) {
-+			long increment = (long)get_random_long() % 512;
-+			unsigned int nr_inc = ((unsigned long)get_random_long()) % 1024;
-+
-+			ret = test_queue_on_cpu(cpumask_any_distribute(cpu_online_mask),
-+						0, nr_inc, increment);
-+			KUNIT_EXPECT_EQ(test, ret, 0);
-+			if (ret)
-+				break;
-+			ret = test_queue_on_cpu(cpumask_any_distribute(cpu_online_mask),
-+						1, nr_inc, increment);
-+			KUNIT_EXPECT_EQ(test, ret, 0);
-+			if (ret)
-+				break;
-+		}
-+		fini_kthreads();
-+		cpus_read_unlock();
-+		check_counters(test);
-+		fini_counters();
-+	}
-+}
-+
-+#define CONTENTION_NR_ROUNDS	20000
-+#define CONTENTION_NR_INC	8
-+
-+struct contention_shared {
-+	unsigned long batch_size;
-+	atomic_t round;			/* Round started by the coordinator. */
-+	atomic_t nr_done;		/* Rounds completed by the other workers. */
-+	unsigned int nr_workers;
-+	unsigned int nr_errors;		/* Rounds ending with invalid residuals. */
-+	bool started;
-+};
-+
-+struct contention_data {
-+	struct contention_shared *sh;
-+	long sum;
-+	u32 seed;
-+	bool coordinator;
-+} ____cacheline_aligned_in_smp;
-+
-+static DECLARE_WAIT_QUEUE_HEAD(contention_wq);
-+
-+/*
-+ * Add random multiples of the batch size, of either sign, so each
-+ * addition carries into the counters above level 0. Increments of
-+ * opposite signs and of more than one batch size exercise concurrent
-+ * carry extractions retrying after a concurrent update of the residual.
-+ */
-+static void contention_add(struct contention_data *cd)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < CONTENTION_NR_INC; i++) {
-+		u32 x = cd->seed;
-+		long inc;
-+
-+		/* xorshift32: get_random_u32() would dominate the loop. */
-+		x ^= x << 13;
-+		x ^= x >> 17;
-+		x ^= x << 5;
-+		cd->seed = x;
-+		inc = (long)((x & 15) + 1) * cd->sh->batch_size;
-+		if (x & 16)
-+			inc = -inc;
-+		percpu_counter_tree_add(&counter[0], inc);
-+		cd->sum += inc;
-+	}
-+}
-+
-+/*
-+ * The workers run rounds of a few additions each, all starting together.
-+ * Between rounds, the coordinator checks the residuals of the settled
-+ * counter: an invalid residual left by the last updaters of a round would
-+ * otherwise be repaired by the next additions.
-+ */
-+static int contention_worker_fn(void *data)
-+{
-+	struct contention_data *cd = data;
-+	struct contention_shared *sh = cd->sh;
-+	int round;
-+
-+	/* Pairs with the release of started: nr_workers is final. */
-+	wait_event(contention_wq, smp_load_acquire(&sh->started));
-+	for (round = 1; round <= CONTENTION_NR_ROUNDS; round++) {
-+		if (cd->coordinator) {
-+			atomic_set_release(&sh->round, round);
-+			contention_add(cd);
-+			while (atomic_read_acquire(&sh->nr_done) < round * (sh->nr_workers - 1))
-+				cond_resched();
-+#ifdef CONFIG_SMP
-+			if (percpu_counter_tree_check_residuals(&counter[0]))
-+				sh->nr_errors++;
-+#endif
-+		} else {
-+			while (atomic_read_acquire(&sh->round) < round)
-+				cond_resched();
-+			contention_add(cd);
-+			/* Order the additions before the coordinator check. */
-+			atomic_inc_return_release(&sh->nr_done);
-+		}
-+	}
-+	complete_work();
-+	return 0;
-+}
-+
-+static void do_hpcc_test_contended_carries(struct kunit *test, unsigned long batch_size)
-+{
-+	struct percpu_counter_tree *c = &counter[0];
-+	struct contention_shared sh = { .batch_size = batch_size };
-+	struct contention_data *cd;
-+	struct task_struct **task;
-+	const struct cpumask *cpus;
-+	unsigned long accuracy;
-+	long expected = 0, approx;
-+	bool first = true;
-+	int ret, cpu;
-+
-+	cd = kvcalloc(nr_cpu_ids, sizeof(*cd), GFP_KERNEL);
-+	task = kvcalloc(nr_cpu_ids, sizeof(*task), GFP_KERNEL);
-+	KUNIT_EXPECT_NOT_NULL(test, cd);
-+	KUNIT_EXPECT_NOT_NULL(test, task);
-+	if (!cd || !task)
-+		goto free;
-+	ret = init_counters(batch_size);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
-+		goto free;
-+	init_kthreads();
-+	cpus_read_lock();
-+	cpus = select_worker_cpus();
-+	for_each_cpu(cpu, cpus) {
-+		cd[cpu].sh = &sh;
-+		cd[cpu].coordinator = first;
-+		cd[cpu].seed = get_random_u32() | 1;
-+		task[cpu] = kthread_create_on_cpu(contention_worker_fn, &cd[cpu], cpu,
-+						  "kunit_hpcc_contention/%u");
-+		KUNIT_EXPECT_FALSE(test, IS_ERR(task[cpu]));
-+		if (IS_ERR(task[cpu]))
-+			break;
-+		atomic_inc(&kernel_threads_to_run);
-+		get_task_struct(task[cpu]);
-+		wake_up_process(task[cpu]);
-+		sh.nr_workers++;
-+		first = false;
-+	}
-+	/*
-+	 * Start the workers once their number is known. The coordinator may
-+	 * already be running and see started without the wait queue lock.
-+	 */
-+	smp_store_release(&sh.started, true);
-+	wake_up_all(&contention_wq);
-+	fini_kthreads();
-+	for_each_cpu(cpu, cpus) {
-+		if (IS_ERR_OR_NULL(task[cpu]))
-+			continue;
-+		kthread_stop_put(task[cpu]);
-+		expected += cd[cpu].sum;
-+	}
-+	cpus_read_unlock();
-+
-+	kunit_info(test, "batch_size=%lu workers=%u rounds with invalid residuals=%u\n",
-+		   batch_size, sh.nr_workers, sh.nr_errors);
-+	KUNIT_EXPECT_EQ(test, sh.nr_errors, 0);
-+	KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(c), expected);
-+	check_residuals(test, c);
-+	approx = percpu_counter_tree_approximate_sum(c);
-+	accuracy = percpu_counter_tree_approximate_accuracy(c);
-+	KUNIT_EXPECT_GE(test, approx, expected - (long)accuracy);
-+	KUNIT_EXPECT_LE(test, approx, expected + (long)accuracy);
-+	fini_counters();
-+free:
-+	kvfree(task);
-+	kvfree(cd);
-+}
-+
-+/*
-+ * Concurrent carries from the worker CPUs into the counters above level 0
-+ * which they share, with a check that the residuals are back within range
-+ * and that no carry was lost or duplicated after each round.
-+ */
-+static void hpcc_test_contended_carries(struct kunit *test)
-+{
-+	unsigned long batch_size_order;
-+
-+	if (num_online_cpus() < 2)
-+		kunit_skip(test, "needs at least 2 online CPUs");
-+	for (batch_size_order = 1; batch_size_order <= 5; batch_size_order += 2)
-+		do_hpcc_test_contended_carries(test, 1UL << batch_size_order);
-+}
-+
-+static void hpcc_test_init_one(struct kunit *test)
-+{
-+	struct percpu_counter_tree pct, zeroed = {};
-+	int ret;
-+
-+	/* A zeroed counter reads as 0 before its initialization. */
-+	KUNIT_EXPECT_EQ(test, percpu_counter_tree_approximate_sum(&zeroed), 0);
-+	ret = percpu_counter_tree_init(&pct, 32, GFP_KERNEL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
-+		return;
-+
-+	percpu_counter_tree_destroy(&pct);
-+}
-+
-+static void hpcc_test_set(struct kunit *test)
-+{
-+	static long values[] = {
-+		5, 100, 127, 128, 255, 256, 4095, 4096, 500000, 0,
-+		-5, -100, -127, -128, -255, -256, -4095, -4096, -500000,
-+	};
-+	struct percpu_counter_tree pct;
-+	int i, ret;
-+
-+	ret = percpu_counter_tree_init(&pct, 32, GFP_KERNEL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
-+		return;
-+
-+	for (i = 0; i < ARRAY_SIZE(values); i++) {
-+		long v = values[i];
-+
-+		percpu_counter_tree_set(&pct, v);
-+		KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(&pct), v);
-+		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare_value(&pct, v));
-+
-+		percpu_counter_tree_add(&pct, v);
-+		KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(&pct), 2 * v);
-+		KUNIT_EXPECT_EQ(test, 0,
-+				percpu_counter_tree_approximate_compare_value(&pct, 2 * v));
-+
-+		percpu_counter_tree_add(&pct, -2 * v);
-+		KUNIT_EXPECT_EQ(test, percpu_counter_tree_precise_sum(&pct), 0);
-+		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare_value(&pct, 0));
-+	}
-+
-+	percpu_counter_tree_destroy(&pct);
-+}
-+
-+struct saturate_data {
-+	struct percpu_counter_tree *c, *probe;
-+	long inc;
-+	unsigned long max_steps;
-+	bool overrun;
-+};
 +
 +/* Copy the state of counter @src into counter @dst, of the same topology. */
-+static void copy_counter_state(struct percpu_counter_tree *dst,
-+			       struct percpu_counter_tree *src)
++static void test_counter_copy(struct test_counter *dst, struct test_counter *src)
 +{
-+#ifdef CONFIG_SMP
-+	percpu_counter_tree_copy_state(dst, src);
-+#else
-+	atomic_long_set(&dst->count, atomic_long_read(&src->count));
-+#endif
++	percpu_counter_tree_copy_state(&dst->tree, &src->tree);
++	dst->shadow = src->shadow;
 +}
 +
 +/*
-+ * Add inc (1 or -1) until the next addition would propagate a carry to the
-+ * approximate sum. This leaves every tree item on the path from this CPU to
-+ * the root holding its largest residual in the direction of inc which has
-+ * not been propagated yet, without knowledge of the tree topology. Each
-+ * addition is first tried on the probe counter, which holds the same state:
++ * Check the accuracy range contract, and the comparison of the counter
++ * against values around its precise sum and its possible precise range.
++ */
++static void check_counter(struct test_counter *c)
++{
++	struct percpu_counter_tree *t = &c->tree;
++	long approx = percpu_counter_tree_approximate_sum(t);
++	long precise = c->shadow, precise_min, precise_max;
++	unsigned long accuracy;
++	long values[7];
++	unsigned int i;
++
++	CHECK(percpu_counter_tree_precise_sum(t) == precise);
++	CHECK(!percpu_counter_tree_check_residuals(t));
++
++	/* precise - accuracy <= approx <= precise + accuracy */
++	accuracy = percpu_counter_tree_approximate_accuracy(t);
++	CHECK(approx >= precise - (long)accuracy);
++	CHECK(approx <= precise + (long)accuracy);
++
++	percpu_counter_tree_approximate_min_max_range(approx, accuracy,
++						      &precise_min, &precise_max);
++	CHECK(precise >= precise_min);
++	CHECK(precise <= precise_max);
++
++	/* Approximate comparison is definitive exactly outside of the precise range. */
++	CHECK(percpu_counter_tree_approximate_compare_value(t, precise_min - 1) == -1);
++	CHECK(percpu_counter_tree_approximate_compare_value(t, precise_min) == 0);
++	CHECK(percpu_counter_tree_approximate_compare_value(t, precise_max) == 0);
++	CHECK(percpu_counter_tree_approximate_compare_value(t, precise_max + 1) == 1);
++
++	values[0] = precise - 1;
++	values[1] = precise;
++	values[2] = precise + 1;
++	values[3] = precise_min - 1;
++	values[4] = precise_min;
++	values[5] = precise_max;
++	values[6] = precise_max + 1;
++	for (i = 0; i < ARRAY_SIZE(values); i++) {
++		long v = values[i];
++		int expect = sign(v - precise);
++		int res = percpu_counter_tree_approximate_compare_value(t, v);
++
++		CHECK(res == 0 || res == expect);
++		CHECK(percpu_counter_tree_precise_compare_value(t, v) == expect);
++	}
++}
++
++/* Check the comparison of two counters against their shadow sums. */
++static void check_counter_pair(struct test_counter *a, struct test_counter *b)
++{
++	int expect = sign(a->shadow - b->shadow);
++	int res = percpu_counter_tree_approximate_compare(&a->tree, &b->tree);
++
++	CHECK(res == 0 || res == expect);
++	CHECK(percpu_counter_tree_precise_compare(&a->tree, &b->tree) == expect);
++	res = percpu_counter_tree_approximate_compare(&b->tree, &a->tree);
++	CHECK(res == 0 || res == -expect);
++	CHECK(percpu_counter_tree_precise_compare(&b->tree, &a->tree) == -expect);
++}
++
++/*
++ * On each CPU, add @inc (1 or -1) until the next addition would propagate a
++ * carry to the approximate sum. This leaves every tree item on the path from
++ * this CPU to the root holding its largest residual in the direction of @inc.
++ * Each addition is first tried on @probe, which holds the same state as @c:
 + * reverting an addition which reached the approximate sum would not restore
 + * the residuals subtracted on the way. The path from a CPU to the root
 + * holds less than the accuracy bound: more additions mean that a carry was
 + * lost.
 + */
-+static long saturate_worker_fn(void *data)
++static void saturate(struct test_counter *c, struct test_counter *probe, long inc)
 +{
-+	struct saturate_data *sd = data;
-+	unsigned long steps;
++	unsigned long max_steps;
++	unsigned int cpu;
 +
-+	for (steps = 0; steps < sd->max_steps; steps++) {
-+		long approx = percpu_counter_tree_approximate_sum(sd->probe);
++	max_steps = percpu_counter_tree_approximate_accuracy(&c->tree) +
++		    (1UL << c->tree.batch_order);
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		unsigned long steps;
 +
-+		percpu_counter_tree_add(sd->probe, sd->inc);
-+		if (percpu_counter_tree_approximate_sum(sd->probe) != approx) {
-+			copy_counter_state(sd->probe, sd->c);
-+			break;
++		for (steps = 0; steps < max_steps; steps++) {
++			long approx = percpu_counter_tree_approximate_sum(&probe->tree);
++
++			test_counter_add(probe, cpu, inc);
++			if (percpu_counter_tree_approximate_sum(&probe->tree) != approx) {
++				test_counter_copy(probe, c);
++				break;
++			}
++			test_counter_add(c, cpu, inc);
 +		}
-+		percpu_counter_tree_add(sd->c, sd->inc);
++		if (steps == max_steps) {
++			CHECK(0);
++			return;
++		}
 +	}
-+	if (steps == sd->max_steps)
-+		sd->overrun = true;
-+	return 0;
 +}
 +
-+static void do_hpcc_test_saturated_compare(struct kunit *test, unsigned long batch_size,
-+					   long inc)
++static void test_saturated(unsigned long batch_size, long inc)
 +{
-+	struct percpu_counter_tree *c = &counter[0], *exact = &counter[1], probe;
-+	struct saturate_data sd = { .c = c, .probe = &probe, .inc = inc };
++	struct test_counter c, probe, exact;
 +	unsigned long accuracy;
-+	long approx, precise, precise_min, precise_max;
-+	bool all_saturated;
-+	int ret, cpu;
++	long approx, delta;
 +
-+	ret = percpu_counter_tree_init(&probe, batch_size, GFP_KERNEL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
++	if (test_counter_init(&c, batch_size)) {
++		CHECK(0);
 +		return;
-+	ret = init_counters(batch_size);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	if (ret)
++	}
++	if (test_counter_init(&probe, batch_size)) {
++		CHECK(0);
++		goto destroy_c;
++	}
++	if (test_counter_init(&exact, batch_size)) {
++		CHECK(0);
 +		goto destroy_probe;
-+	accuracy = percpu_counter_tree_approximate_accuracy(c);
-+	sd.max_steps = batch_size + accuracy;
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		work_on_cpu(cpu, saturate_worker_fn, &sd);
-+		KUNIT_EXPECT_FALSE(test, sd.overrun);
-+		if (sd.overrun)
-+			break;
 +	}
-+	/* Whether every possible CPU was online, thus saturated. */
-+	all_saturated = num_online_cpus() == nr_cpu_ids;
-+	cpus_read_unlock();
++	saturate(&c, &probe, inc);
++	approx = percpu_counter_tree_approximate_sum(&c.tree);
++	accuracy = percpu_counter_tree_approximate_accuracy(&c.tree);
++	/* Symmetric residuals: the accuracy is reached in both directions. */
++	CHECK((c.shadow - approx) * inc == (long)tree_residual_capacity(batch_size));
++	CHECK((c.shadow - approx) * inc == (long)accuracy);
++	check_counter(&c);
 +
-+	precise = percpu_counter_tree_precise_sum(c);
-+	approx = percpu_counter_tree_approximate_sum(c);
-+	kunit_info(test, "batch_size=%lu inc=%ld precise=%ld approx=%ld accuracy=%lu\n",
-+		   batch_size, inc, precise, approx, accuracy);
-+
-+	check_residuals(test, c);
-+	check_residuals(test, &probe);
-+
-+	/* Accuracy contract. */
-+	KUNIT_EXPECT_GE(test, approx, precise - (long)accuracy);
-+	KUNIT_EXPECT_LE(test, approx, precise + (long)accuracy);
-+	/* Saturating every possible CPU reaches the accuracy exactly. */
-+	if (all_saturated)
-+		KUNIT_EXPECT_EQ(test, (precise - approx) * inc, (long)accuracy);
-+	percpu_counter_tree_approximate_min_max_range(approx, accuracy,
-+						      &precise_min, &precise_max);
-+	KUNIT_EXPECT_GE(test, precise, precise_min);
-+	KUNIT_EXPECT_LE(test, precise, precise_max);
-+
-+	/* Comparisons against a value. */
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare_value(c, precise));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_precise_compare_value(c, precise));
-+	KUNIT_EXPECT_EQ(test, -1, percpu_counter_tree_precise_compare_value(c, precise - 1));
-+	KUNIT_EXPECT_EQ(test, 1, percpu_counter_tree_precise_compare_value(c, precise + 1));
-+
-+	/* Comparisons against a counter with the same precise sum, exactly approximated. */
-+	percpu_counter_tree_set(exact, precise);
-+	KUNIT_EXPECT_EQ(test, percpu_counter_tree_approximate_sum(exact), precise);
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare(c, exact));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_approximate_compare(exact, c));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_precise_compare(c, exact));
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_precise_compare(exact, c));
-+
-+	fini_counters();
++	/* Compare with exactly approximated counters around the saturated precise sum. */
++	for (delta = -1; delta <= 1; delta++) {
++		test_counter_set(&exact, c.shadow + delta);
++		CHECK(percpu_counter_tree_approximate_sum(&exact.tree) == exact.shadow);
++		check_counter_pair(&c, &exact);
++	}
++	test_counter_destroy(&exact);
 +destroy_probe:
-+	percpu_counter_tree_destroy(&probe);
++	test_counter_destroy(&probe);
++destroy_c:
++	test_counter_destroy(&c);
 +}
 +
-+/*
-+ * Saturate the unpropagated residuals of every tree item reachable from
-+ * online CPUs, upward and downward, which yields the largest distance
-+ * between the precise and approximate sums of a settled counter in each
-+ * direction, and check that the comparison
-+ * functions do not return a wrong definitive answer. Small batch sizes
-+ * are the most likely to expose margin errors, because the fan-out of
-+ * the tree levels can be larger than the batch size.
-+ */
-+static void hpcc_test_saturated_compare(struct kunit *test)
++static long random_increment(unsigned long batch_size)
 +{
-+	unsigned long batch_size_order;
++	long v;
 +
-+	for (batch_size_order = 1; batch_size_order <= 5; batch_size_order++) {
-+		do_hpcc_test_saturated_compare(test, 1UL << batch_size_order, 1);
-+		do_hpcc_test_saturated_compare(test, 1UL << batch_size_order, -1);
++	switch (rnd() % 4) {
++	case 0:
++		v = rnd() % 4;
++		break;
++	case 1:
++		v = rnd() % (4 * batch_size);
++		break;
++	case 2:
++		v = rnd() % (64 * batch_size);
++		break;
++	default:
++		v = rnd() % 1000000;
++		break;
 +	}
++	return rnd() & 1 ? v : -v;
 +}
 +
-+static void hpcc_test_check_config(struct kunit *test)
++static void test_random_walk(unsigned long batch_size, unsigned long nr_steps)
 +{
-+#ifdef CONFIG_SMP
-+	KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_check_config());
-+#else
-+	kunit_skip(test, "The configuration table requires CONFIG_SMP");
-+#endif
++	struct test_counter c[2];
++	unsigned long step;
++
++	if (test_counter_init(&c[0], batch_size)) {
++		CHECK(0);
++		return;
++	}
++	if (test_counter_init(&c[1], batch_size)) {
++		CHECK(0);
++		test_counter_destroy(&c[0]);
++		return;
++	}
++	for (step = 0; step < nr_steps; step++) {
++		struct test_counter *t = &c[rnd() & 1];
++
++		test_counter_add(t, rnd() % nr_cpu_ids, random_increment(batch_size));
++		/* Bring the counters close to each other to exercise the precise comparison. */
++		if (!(rnd() % 8)) {
++			long delta = c[0].shadow - c[1].shadow;
++			unsigned long accuracy;
++
++			accuracy = percpu_counter_tree_approximate_accuracy(&c[0].tree);
++			delta += (long)(rnd() % (2 * accuracy + 1)) - (long)accuracy;
++			test_counter_add(&c[1], rnd() % nr_cpu_ids, delta);
++		}
++		check_counter(t);
++		check_counter_pair(&c[0], &c[1]);
++	}
++	test_counter_destroy(&c[0]);
++	test_counter_destroy(&c[1]);
 +}
 +
-+static struct kunit_case hpcc_test_cases[] = {
-+	KUNIT_CASE(hpcc_test_check_config),
-+	KUNIT_CASE(hpcc_print_info),
-+	KUNIT_CASE(hpcc_test_single_thread_first),
-+	KUNIT_CASE(hpcc_test_single_thread_first_random),
-+	KUNIT_CASE_SLOW(hpcc_test_single_thread_random),
-+	KUNIT_CASE(hpcc_test_multi_thread_batch_increment),
-+	KUNIT_CASE_SLOW(hpcc_test_multi_thread_random_walk),
-+	KUNIT_CASE(hpcc_test_init_one),
-+	KUNIT_CASE(hpcc_test_set),
-+	KUNIT_CASE(hpcc_test_saturated_compare),
-+	KUNIT_CASE(hpcc_test_contended_carries),
-+	{}
++static const unsigned int test_nr_cpus[] = {
++	1, 2, 3, 4, 5, 8, 9, 16, 17, 32, 33, 64, 65, 100, 128, 256, 512,
++	1000, 1024, 2048, 4096, 8192, 16384, 32768, 65536,
 +};
 +
-+static int hpcc_test_suite_init(struct kunit_suite *suite)
-+{
-+	hpcc_test_wq = alloc_workqueue("hpcc_test", WQ_PERCPU | WQ_CPU_INTENSIVE, 0);
-+	return hpcc_test_wq ? 0 : -ENOMEM;
-+}
-+
-+static void hpcc_test_suite_exit(struct kunit_suite *suite)
-+{
-+	destroy_workqueue(hpcc_test_wq);
-+}
-+
-+static struct kunit_suite hpcc_test_suite = {
-+	.name = "percpu_counter_tree",
-+	.suite_init = hpcc_test_suite_init,
-+	.suite_exit = hpcc_test_suite_exit,
-+	.test_cases = hpcc_test_cases,
++/* Exhaustive mode: also cover the largest supported configurations. */
++static const unsigned int test_nr_cpus_large[] = {
++	1U << 17, 1U << 18, 1U << 19, 1U << 20,
 +};
 +
-+kunit_test_suite(hpcc_test_suite);
++static const unsigned long test_batch_sizes[] = { 2, 4, 8, 16, 32, 64, 128 };
 +
-+MODULE_DESCRIPTION("Test cases for hierarchical per-CPU counters");
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++static int test_num;
++
++static int run_case(unsigned int nr_cpus, unsigned long batch_size)
++{
++	/* Each check iterates over all CPUs: bound the random walk cost. */
++	unsigned long nr_steps = 10000000 / nr_cpus;
++
++	if (nr_steps < 100)
++		nr_steps = 100;
++	if (nr_steps > 50000)
++		nr_steps = 50000;
++
++	nr_case_failures = 0;
++	hpcc_nr_warnings = 0;
++	hpcc_init_topology(nr_cpus);
++	test_saturated(batch_size, 1);
++	test_saturated(batch_size, -1);
++	test_random_walk(batch_size, nr_steps);
++	CHECK(!hpcc_nr_warnings);
++	printf("%sok %d - nr_cpus=%u batch_size=%lu\n", nr_case_failures ? "not " : "",
++	       ++test_num, nr_cpus, batch_size);
++	if (nr_case_failures > MAX_REPORTED_FAILURES)
++		printf("#   ... %lu failed checks in total\n", nr_case_failures);
++	return nr_case_failures ? 1 : 0;
++}
++
++static int run_check_config(void)
++{
++	unsigned int nr_errors = percpu_counter_tree_check_config();
++
++	printf("%sok %d - configuration table\n", nr_errors ? "not " : "", ++test_num);
++	return nr_errors ? 1 : 0;
++}
++
++static void usage(const char *name)
++{
++	fprintf(stderr, "Usage: %s [-a]\n", name);
++	fprintf(stderr, "  -a  Also test the largest supported numbers of CPUs (slow).\n");
++}
++
++int main(int argc, char **argv)
++{
++	unsigned int i, j, nr_tests;
++	bool large = false;
++	int failed = 0;
++
++	if (argc > 2 || (argc == 2 && strcmp(argv[1], "-a"))) {
++		usage(argv[0]);
++		return 2;
++	}
++	if (argc == 2)
++		large = true;
++
++	nr_tests = 1 + ARRAY_SIZE(test_nr_cpus) * ARRAY_SIZE(test_batch_sizes);
++	if (large)
++		nr_tests += ARRAY_SIZE(test_nr_cpus_large) * ARRAY_SIZE(test_batch_sizes);
++	printf("1..%u\n", nr_tests);
++
++	failed += run_check_config();
++	for (i = 0; i < ARRAY_SIZE(test_nr_cpus); i++)
++		for (j = 0; j < ARRAY_SIZE(test_batch_sizes); j++)
++			failed += run_case(test_nr_cpus[i], test_batch_sizes[j]);
++	if (large) {
++		for (i = 0; i < ARRAY_SIZE(test_nr_cpus_large); i++)
++			for (j = 0; j < ARRAY_SIZE(test_batch_sizes); j++)
++				failed += run_case(test_nr_cpus_large[i], test_batch_sizes[j]);
++	}
++	printf("# %d/%u test cases failed\n", failed, nr_tests);
++	return failed ? 1 : 0;
++}
 -- 
 2.47.3
 
