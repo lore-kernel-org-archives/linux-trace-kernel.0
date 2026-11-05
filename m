@@ -1,82 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793887353;
-	b=TjDuAAKm4dFIRHv1FDeTkFRV6nPlX7AJF37zbryiCHZONIAzZy6WKImdbmW9c+P9We9w
-	 T5cbW/7R7ueT9Vjn/nG/NolG1TtPmeYOVs3syxzjHM3bDztc8eesBEcsnHDaEr/Qwlnii
-	 +69HoWEsVvapjN6alVIeQQaZEl+Kazn5TZE1WNVqSOQN//xsLymAn5/jqiezcT1LZJYQt
-	 wLZgd4zCwwbW2OLCz1OTgtISlspHQAS7cIyUulpHfkUQx7sFvE4oYaIKg+Lo2cwd5NP0x
-	 zZLgVY5md7gHnCltuWU9Kh6x/c/jEdPtd2vTV8AYQdzKk/yzspqOhLMetzTJXrY1JFw==
+	t=1793887374;
+	b=zy/1/qkUWMzMZsCJUNoRR0X2ozSX2ZdtbOsSxNqnpqqc9RBnUnQ2WbEJnC/QSHQR7qp+
+	 /gX+hc8GA0ZkiqC/nClgKARTpavx4tu7S+5LtcTYNLPpxFyzZmE46Pfcrxs7nzmWaoo0Y
+	 qshLe1CbRioYBmjUIByjQQUO71d7hmn+AVCRH1F5G4cUODOCqP1yptT3qm4YmhAPozNyz
+	 a7/jz8y/5y8tOey8noMEgAEqaqy3Q58nmJQaMmcLUAdMiLqBOS872PgbKwZJLC3490eO7
+	 AE0+ExDX+z6gt3+gIe6stZduB+QhJhCiKbLHHSMG6QNeGgxiwyhkyKAvJH5V99zxbdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793887353;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793887374;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-Id:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=CsA47jlziSnaFpmvT7xQoqdEKB3PsFd0BRY4qsHG+7I=;
-	b=ePNIio6EJfcey0SN1hJrtrbym8oc715Ty8/JjSZoQD7utmzXjew5/pNDKmsUvy9L2/Ef
-	 9hgs+ycyNxUiGM9jM2oK5cRj2VgnjnNHx/hs9CQ/A4AYS4ls0Hyj2D8szc0j3kR6ToGnO
-	 aLRPzMRTJ83Oovi4H9Kng+VO/e6dtr6vTF0ecMImw2cmii+e9xxGArNV9ZSRTBOlD5n/v
-	 SquVwcQd6RZO5XZ/TC/InUCSlVACk+pSH+4U+q332Lny2xUVgCp6J8zRxWohXKRodRyjB
-	 ktfsoy0T504KFSjFtMr8Rs6S0jXU8bbifpzgmAzlu62UojyEkIkOzYGhxP2R+OuU0Fw==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=ccnom0mZGa552DJG6TPUMA/Iqkl36ZDF942n5bxWo1Y=;
+	b=wGQ9wrdMNAr1cH7WVoeJBC1c7gqJUtY3aRNff6Jz/hjgs1yCEhsEmDRIRHKNrDJaBsYC
+	 P6rPSpQRuxUezLtVwrsMy6lPKFhdLTN3ZA8oNBsQUFBV+eaN7RHpqf2MiEeQBVIA1otDh
+	 /8gILT9zt23Kw/eHWv5e6WJPQrFZ9Vo4I4bRZ0I8KQA1ZV6TFGZGg5NEUHL9L6AWWSAqB
+	 dKvm68ZPqxFIlqmI97t7ijFslC12b/Ckt2AQcnYmiHpaxk2f4RhPfmohaQ4B8iwC9qI1X
+	 p0E4LXnMsvlmPBD5fRreQxgbl9rZcZaxosbDcKqtLEyzI3wNCsefTeFH5VdeZIdQs3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=H6mgw6v5;
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=KGrHlaFA;
+	arc=none smtp.remote-ip=74.125.82.173
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F18606A328
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:02:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9F18606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82CD606A32F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:02:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A82CD606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=H6mgw6v5
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-36661f953e4so2640948eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 06:02:32 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=KGrHlaFA
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-36a18fc7a38so2155724eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 06:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793887352; x=1794492152; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CsA47jlziSnaFpmvT7xQoqdEKB3PsFd0BRY4qsHG+7I=;
-        b=H6mgw6v5CH/UL6jnl0LH+IpMHbKEAIG99n5A0BuqDhF/ASRwZ2uvQJYncSiGOC+fIA
-         /RBcbRsOTGK+L2ZceiuKoNNkIKqW1fj3itD5dWiXLVyyMNB13+54eUaMrdA8GDvVTYm1
-         AfYXMEQs4gG8aRha0p/7CBA+yRlqgXlyB0ESkwYOjmf6SJA1uhdYUeLUXQjFxXjsrvra
-         nnCDNZYifiQPD0dNVXR6FxLh/axGxqc6irQzaog9+nJf8V3S7lfaLEJ52/UgxVHIHnVs
-         bi6UWwkXFcIpt9szZjlpSC6nmH7P2EeLN7nmvgMo7QVGWvaGTmY9cgu8SWx7D1lCeCLr
-         wxuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793887352; x=1794492152;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1793887373; x=1794492173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CsA47jlziSnaFpmvT7xQoqdEKB3PsFd0BRY4qsHG+7I=;
-        b=nHrCMQPcm60XivndfA95FIdGfkSVh9N8CohOZFXJdZp0rztlln9k9oa19r7LRjrRhI
-         J+pTz5sAfaB9cXTqiUjiCcTwlcQN1zMEaq4Yc8a1h8DxnieijLrcy4/TL2OgxTcjMCbt
-         zKLC/o8koKchYUlzbMDOHct3/ZHylbIgoM5nHTEA90JXUErn6nBuhOLuu703H6Dp4VHb
-         L1d5k0OXnjKIP6TwSLWbfXO4giHhDQwGkbB8l1FW8kcpK1mzQ0BnlNpiOrwISHSSuGeL
-         VrZ111tPrCO3CSREM2nylKH7ft49kiRk4mCsRZdmxWNE5sMEq0AptAh6yh/x2ZB5sFmN
-         /v1g==
-X-Forwarded-Encrypted: i=1; AKwUvBxJRbI84oG/gs/U7hthMTZUxKsPHw2c/+GVq0fhAAJ6VNe0jwDKVJuu437dVnnvPK+L1BRapzI7zXI3JRm122oGyDo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8bLLXFsOX80dgvbjTChWG+Bv7uX1b8RzodznYELLvjXCKl7L15
-	UA0K7FXrb670c2LoboQbNKrcRBKmJyFdNsysVcuHGlXcZ+Ua2lxrhHwU
-X-Gm-Gg: AYBFou1YkdZGgcgrDYp1df9fDX1BY4CNOyMzIwv9YW61w6jgpPbrQYXJamOO5VKNFrW
-	3tNwHOjdV14wWl/O6EA16MVnK+DwS4q5BWeqCzf5FM6MdC7VaDs3/v7btBxtkH5Cu+SRmmnGI2a
-	T9IObFp5L/Nfd2NknqxMwSNux2G0GwR5+kd53UldHA6Q39AFZPYXy8WXNAGEw+kDzNa888BXu4h
-	CHPMSeFvRsyznYqrrdG5drTAYWvbjgF7tdQbiH0dc5+/gosXWaOmTiXIN0bsNAsZqL9upHYHjm3
-	gaOXb6ziuWaa0lB/1O96EGmkOQAecWRiaAN7qeFjXwFR/OWV/tcqKXkDFleJpfMSakcqlw8SU1J
-	zFNvd0pe+M39kiWfDeiAgwhOuDKShEmuSW8Tl8GLxjfRbT2COjZQ1Dmfr0taLZWQuSTZBqk16Qm
-	FG7d9A4OCpY5rmtivSKR3VAXogIIWsBhbaixlwsMmKrL7vcGYzYevXyxSUFMTWkz2kHmqjtF/0I
-	scuhDCMAXOj28z+T8E8EKWm9pUpmapZSiIsheWEKwOONP52uoVUVaGgrz71z/jotO7aLGZc55bX
-	vSCDcm2PfsUQA/HfPAuWx92p155zTgWqX4s5loA6QyhWRAE6dBDlv3YmKuEt32yI3FsWoA==
-X-Received: by 2002:a05:7300:cc93:b0:36d:7ec1:f38a with SMTP id 5a478bee46e88-36d7ec1fc14mr4539748eec.8.1793887351058;
-        Thu, 05 Nov 2026 06:02:31 -0800 (PST)
+        bh=ccnom0mZGa552DJG6TPUMA/Iqkl36ZDF942n5bxWo1Y=;
+        b=KGrHlaFABfrQQPuyh9DhZ4bkjg+B3lEvH+y0ekE1M0MxL9p6XcNHlvNZVoGHcrlyaf
+         YIyY36yVKrkBt+IF6hq7cKBFlFRqgpDffVNdesxUSWN06IdLLC97ghtZ5Cu8Vs2N5XUD
+         uKWXwhVnjGkiAJLkv7kF4tCJ7eDEEQ6rHASXwdrqC+iLxbijLfZhsflQAaVp+hYMzSmn
+         d9bcDbCfxfrrCboxWIcUn6eWwCb7cBOTEZttPrCSZ2pc7BVMyfZPv7C0SxOSryXnf9KD
+         nNLebG6+4Yge6gSY0m+NwE9159HYASPllg/y0uoZ7ZTGeeZO1oqLagWogFAYTW358FCn
+         P83g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793887373; x=1794492173;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ccnom0mZGa552DJG6TPUMA/Iqkl36ZDF942n5bxWo1Y=;
+        b=xnd3ksCEWVOS0eqVFf6t6EjyrmGqvHT8RT5r8lokDgA8WuHkktEswK+Nt/GareqxSN
+         j64F7Kw4m4+NRiD5xl92ATqWUAYUElBrR/hDsp1KSmksJEZGN0Hqw3LHUsW0NljciPSM
+         n6Gt9SDPIvhm9Xe9eiNW/U/EdG/ryARqets4do8Axp3vbCYsnfPYLvkwvx1rSdho2ug6
+         MGZAoyN/tNL3xRB9M0qOWjuJ34Tau04gWP4fyrOvjslv/gexC0qx7q2LRviSSw4SCRMw
+         HEI4I2q4F1nJG1PGN8hfAdWcc1DXcOBEKxDFqPVziVjxnQyJkgeikpaZynRYSuskqSDs
+         aFYA==
+X-Forwarded-Encrypted: i=1; AKwUvBxLiymjFMsJNB/8JeJmqPiQODHN7AwTmlNwIAvbDaWEUuPUqej2H4VLkSYZJ1PWAa6u1hBhlfXkmMCOKOKS0wPclcQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9RdkYCiOGYGaSFoDQ9Wzhua5PxE/HRD7QyFPl1OGynIPgTDoHj
+	aE508RoeTqE5PFyMcXFiDpYU0lnVRuSD3kfKL5sp2810plQbFrPoZV8w
+X-Gm-Gg: AYBFou0tiuC4Lu63COHJ8Eit+yxWd6RVZ29SegIUhll/DMu0+UN3ISQVGIl7m4j62Qx
+	NPEodD52OBIQtF+NhTuAOkElrapkw+sd3cRcEMHOTlGHnEA2JrUUCUv/09y9ucbYNYqIjr0JDsN
+	Gw+DqXCkkUFBPbI4ZmGBsNxlMbZUOdN3EhULcagV59gv108ArZg9oX1a6EGlhCw0TP5Gr+JO3oY
+	7DNwjOjlN18SDPoLzxzxwSEMY4df3LBXhgBSbwtC/lGzGV07NW1V8WgS3jL0CmLyDfyo1Q0pfof
+	1GZcgKSgn/0MYbKIEXODmQIOdu+IjaBojpygJcJj9z6mDLG4lnbzjAYwWUcQOIMV6AlxrWzdaz0
+	YtCUc/RTX2m+zmsnHf346wx1H0X22n8ORh5oOQFuU26ctX00Slwq0bEHiec/P3fGahFRGU/JH66
+	M0tELv3Y+j95RCfM3IPncvjJ8PL/fTrhaK+8jLVfJDi3wNp2MIAZAxFHm1fph0tclpw5pFwXNtP
+	+Vf5nnIRl7ejinFVvxZBQiT9+97GYsAPE/J9WSVh3NMfNOXtcXt0lG6WYSnxcXmekQ8khXHx6o3
+	TkGwPi5lpJ9z6IkdXrJGA7qe07jDbbktPkJF/b83jWzMqD0yOJXQBtkOEQWFbwRo6QePqg==
+X-Received: by 2002:a05:7300:7c16:b0:36e:1fbe:3571 with SMTP id 5a478bee46e88-36e1fbe3944mr4304252eec.3.1793887359174;
+        Thu, 05 Nov 2026 06:02:39 -0800 (PST)
 Received: from bj-kjy-standalone-gaoxiang17.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca3981ff0sm20969616eec.24.2026.11.05.06.02.26
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca3981ff0sm20969616eec.24.2026.11.05.06.02.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 06:02:29 -0800 (PST)
+        Thu, 05 Nov 2026 06:02:38 -0800 (PST)
 From: Xiang Gao <gxxa03070307@gmail.com>
 X-Google-Original-From: Xiang Gao <gaoxiang17@xiaomi.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -90,10 +91,12 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Xiang Gao <gaoxiang17@xiaomi.com>
-Subject: [PATCH v5 0/4] tracing: add ring-buffer memory usage statistics
-Date: Thu,  5 Nov 2026 22:02:17 +0800
-Message-Id: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
+Subject: [PATCH v5 1/4] ring-buffer: add ring_buffer_memory_size()
+Date: Thu,  5 Nov 2026 22:02:18 +0800
+Message-Id: <20261105140221.44614-2-gaoxiang17@xiaomi.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
+References: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,62 +108,82 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Report the memory consumed by the tracing ring buffers, rather than the
-usable data capacity exposed by buffer_size_kb. Android low-memory
-diagnostics need this to attribute the memory used by tracing when
-calculating lost RAM.
+Add a helper to report the page memory consumed by a ring buffer for a
+given CPU. It accounts for the data sub-buffers, the reader page, the
+cached read page, and the mmap metadata page. Unlike
+ring_buffer_capacity(), which reports the usable data capacity, this
+reports the full pages allocated to the buffer.
 
-The buffers can be spread across the global trace array, dynamically
-created instances, and snapshot buffers. Userspace currently has to
-discover and sum every instance, and snapshot memory is not exposed by
-the per-instance totals.
+The function is generic and returns a size for any buffer type, so
+callers that need the memory footprint of remote or persistent buffers
+can use it as well.
 
-This series adds:
+Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+---
+ include/linux/ring_buffer.h |  1 +
+ kernel/trace/ring_buffer.c  | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
-  /sys/kernel/tracing/trace_stats/memory_usage_kb
-
-reporting:
-
-  global:
-  instances:
-  snapshots:
-  persistents:
-  remotes:
-  total_system:
-  total_carveout:
-
-global, instances, and snapshots come from the page allocator.
-persistents use reserved memory. remotes are not yet reported and are
-always zero. total_system is the page-allocator memory, while
-total_carveout is reserved memory that was never in the free pool. A
-per-CPU view is provided under trace_stats/per_cpu/cpuN/.
-
-The memory source is split into system and carveout only for now. A
-finer-grained attribute (host/guest/reserved/device) can be added when
-remotes are enumerated, since guest and device memory do not exist in
-the current accounting.
-
-Changes since v4:
-- Categorize the report by buffer type and memory source.
-- Make ring_buffer_memory_size() generic so it returns a size for any
-  buffer type instead of zero for remote buffers.
-- Skip the backup instance, whose vmalloc memory is already accounted in
-  VmallocUsed.
-- Rebase on v7.4-rc1.
-- Split the documentation into its own patch.
-
-Xiang Gao (4):
-  ring-buffer: add ring_buffer_memory_size()
-  tracing: add aggregate buffer memory usage statistics
-  tracing: add per-CPU buffer memory usage statistics
-  Documentation: document trace_stats memory_usage_kb
-
- Documentation/trace/ftrace.rst |  22 ++++
- include/linux/ring_buffer.h    |   1 +
- kernel/trace/ring_buffer.c     |  37 +++++++
- kernel/trace/trace.c           | 188 +++++++++++++++++++++++++++++++++
- 4 files changed, 248 insertions(+)
-
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 649b2276b557..e83e94623e76 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -174,6 +174,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter);
+ bool ring_buffer_iter_dropped(struct ring_buffer_iter *iter);
+ 
+ unsigned long ring_buffer_capacity(struct trace_buffer *buffer, int cpu);
++unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu);
+ unsigned long ring_buffer_max_event_size(struct trace_buffer *buffer);
+ 
+ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1fd28a72e6ee..0396ec671998 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6566,6 +6566,43 @@ unsigned long ring_buffer_capacity(struct trace_buffer *buffer, int cpu)
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_capacity);
+ 
++/**
++ * ring_buffer_memory_size - return the memory used by the buffer (in bytes)
++ * @buffer: The ring buffer.
++ * @cpu: The CPU to get ring buffer memory from.
++ *
++ * Returns the page memory consumed by @cpu, including the data sub-buffers,
++ * the reader page, the cached read page, and the mmap metadata page. Unlike
++ * ring_buffer_capacity(), which reports the usable data capacity, this
++ * accounts for the full pages allocated to the buffer.
++ */
++unsigned long ring_buffer_memory_size(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	unsigned long subbuf_size;
++	unsigned long size;
++
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return 0;
++
++	cpu_buffer = buffer->buffers[cpu];
++	subbuf_size = PAGE_SIZE << READ_ONCE(buffer->subbuf_order);
++
++	/* Data sub-buffers plus the reader page. */
++	size = (READ_ONCE(cpu_buffer->nr_pages) + 1) * subbuf_size;
++
++	/* The cached read page, if present, is a full sub-buffer page. */
++	if (READ_ONCE(cpu_buffer->free_page.data))
++		size += subbuf_size;
++
++	/* The mmap metadata page is a single system page. */
++	if (READ_ONCE(cpu_buffer->meta_page))
++		size += PAGE_SIZE;
++
++	return size;
++}
++EXPORT_SYMBOL_GPL(ring_buffer_memory_size);
++
+ /**
+  * ring_buffer_max_event_size - return the max data size of an event
+  * @buffer: The ring buffer.
 -- 
 2.34.1
 
