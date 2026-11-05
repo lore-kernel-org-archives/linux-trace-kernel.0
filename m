@@ -1,62 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793898997;
-	b=wCWT1tdj+z+JThY3R8h1QhvsH1XlrgOhP21cgsF/GHmFLe0GI0acqcIA5/CM95LttvHs
-	 UD9GgyMevBtmf/nRocKKPYyB4JsHduWvs5NbXHJwYtggi5AHcPUqnMd/sn7F3urxwFiJC
-	 b2pfZYE/sNIOUCcYztC/TXF8o94nAEPCT8Eu9LAOAJLRR+jU7vLDz3wMgtal6px5q7x4N
-	 lM7E+lvk4HwNG35nDB2M+I05BQcsAnlkz4agUTGfDGpFIPRzHYbdMF5BVxSPKewBx5AlW
-	 Bg8sdqFl8VCsX8M/G1xlTPbjM93MomrqeSDlS+53/x9GCjcd5M/21s+CLeDI4AE1c7g==
+	t=1793898993;
+	b=oMOmJOnwqGwFq4/Xa8hfxiIBswqJEN+/H493vEFQUnY7+O3WjMf+B0ekLA9MjKQnPu/N
+	 +OkwITtPMgEKhxBM8/ua15Wcnds0ncEF9dDYBsGZ1Bp3bu1LRqH9DSVeL31ppERz7A/fy
+	 iuqKiGXNul55VNiO4VkcUokbLtTIZl4CYcEWSMDSsSRV+Mrec1vDYBojgDNhxb1U3yZaP
+	 p7Klo6DhsT65cgk4yD2EpjZoMmsnRqSIGGD5qo8AGgZPUspXGTzppOwnPQGB+QxZf9Y4/
+	 1KNyu+zJgCUmaifHgUZmYol3tCtMe4aZZx9ZcumFzcha0d2CvjP8OaTNFhXwzQ0594Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793898997;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793898993;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=L7PfW0w9w4vPHWcoJQq9wrlaGYaPvcqfDhLDkXUySZg=;
-	b=GUiNyYl3jt0kN3CZXQmyPxRmDAxBtxPlgsYpbN6r6ygoi5oJlVtYBu33EkGYaJE3EIc6
-	 ung7Q/76gBa3b5eKuLkvU2REEncEk7n62tSXHoUPhAAif2jie7IvA/Xw+uOzM0wgYuw4o
-	 lsnJES69iQdvWZqNn3CITtLsN09i4upTb/grv+rm4JVu8tmU7fLYCnedxkOPEKnkWMca6
-	 R55MXH5eEco2PoM7nxXVMUY/2LD96Mp+6SxBThwL1gDtlJ4WpfYot71tBDbTac7Qi5g8W
-	 sALdJhfieMpnasuDCKRPnt8aBtSEFmKQ0OjQ+BumEtd/ReUtQjpAlG+oqHe1HiAHL8w==
+	bh=ESR01hVfCK1gp7i8nW8yl8a1SOvyJZG5i7j+b3mjIrY=;
+	b=32pwemxUizoRJ0rZpKgHVpS88lFtQ+fv2GBqBjvpDl3yvSo3+pKnRheMzwTIOXGpyXba
+	 BhOqHdAvyo5UAevVntramBzlSsfFzLGask6rWvDdoP9Tw1b9ldg/eEVTniFjAn2+1j3Ek
+	 KA4NvNPUKadVKe+Zxy5bFcL6bMzDei57/WO6NW5S4YJrme5Z7xhXql+fAUTVMktoTQOiM
+	 8QFvdthoSK+XryYehC2v1PnJhYXmcAg7YG8wy7jrx1laX9bNTOqvaOMLOVFFTbjzd88q9
+	 olGmI5B4v7T3FHkktZLf51oyvVHP1qkhmxoi6F/J6KoG5wPPvrme0cpPsa7m7HUv1qQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
 	arc=none smtp.remote-ip=207.54.77.50
 Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB831606EE87;
-	Thu,  5 Nov 2026 17:16:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB831606EE87
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B930606A330;
+	Thu,  5 Nov 2026 17:16:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B930606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1793899004; x=1825435004;
+  t=1793898999; x=1825434999;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=mPXDpDXk7iYLdkJnXSbOYchRVsaiItuRno2Q6Q7CGuw=;
-  b=cC2AZqomeq6oR0EpDrLwHUUpPP/GKAN+FCO5kN4JuG+z9lhjvx8tYNST
-   1HnvMLcaLbeBakgSTe490HMraaHawp/pM3+H2GWGFsaGq2aWAhEE3CG1W
-   MxME/H2i1joAiQI56P8X++CcZYIb0a5JZYl4sxtlXYzUItPLjhVxS1Lv0
-   UJ+pXSlf/wfmI3HZNBkiwyD6fhaGQyqpNp0v0xEm/pv8vEazqJrgTmKS9
-   CnsIXcewrVB4Ipn1Z99aCIntlhR0GKIs8mi0ikW8cpRrFQ46wUoNgOc9e
-   Hu9qCG6B0M67mKUj5jqoefLwrLzoCNSdQd+Tpqe7993TFnoCf3I6ZRHq/
-   A==;
-X-CSE-ConnectionGUID: ZFaMPsdJTa+hF7AyHIluTQ==
-X-CSE-MsgGUID: P7aw34uVR76Dtmp7irlltw==
+  bh=ovadr4aQgfWIah4NDeZK3wouRVsN9xHwGwefizVmO4U=;
+  b=HPQHc6rWoPDXRhcQT2L/Dqv7tkh8Q2h34f7gpwOJ/GjAOCyUTvPelzIV
+   +VocVgMqz+ugRMDDBmQALmFQTOtEh17vHw2w7z1N4/b6Nf/w6KeMiNQDd
+   9Q7xVW48BHIa1YzzAF0y9OQqkAnDAGMlsCRheve2DfPVeSiX1tTtwflOF
+   M363cHpK5uwB+4ztQlWS3Y0hRp2KRNqK/JCh+9BG3Esvc4hWwH467yY3C
+   k7BfUZoBnC+QVCNKSierDCecYLS1ztEI2Aq8WljaJK3K5MqEtHmKEYsTQ
+   50sAmflbpsjhjAB87HtB4TjFVc5caGzOBMmqcRnoscCeWyHo8NIn1YgAD
+   g==;
+X-CSE-ConnectionGUID: k6QzcMJsStKTIHBSOZ6+Nw==
+X-CSE-MsgGUID: kwj54falRBCr5j7Wl1442w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 19:16:42 +0200
-X-CSE-ConnectionGUID: 6gkyCM6BQdqLiTZNHvDv0A==
-X-CSE-MsgGUID: suYRD3d+RUKY/qNhMfdJ9A==
+Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
+  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 19:16:37 +0200
+X-CSE-ConnectionGUID: 1sizQpTBSQ6izphpk93T/A==
+X-CSE-MsgGUID: CNcNhsHTS/Kt4pRyFB1dUQ==
 Received: from unknown (HELO epgd056.me-corp.lan) ([10.154.54.2])
-  by ces03_data.me-corp.lan with SMTP; 05 Nov 2026 19:24:23 +0200
-Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Thu, 05 Nov 2026 19:16:34 +0200
+  by ces04_data.me-crop.lan with SMTP; 05 Nov 2026 19:24:26 +0200
+Received: by epgd056.me-corp.lan (sSMTP sendmail emulation); Thu, 05 Nov 2026 19:16:28 +0200
 From: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-Date: Thu, 05 Nov 2026 19:15:29 +0200
-Subject: [PATCH RFC v3 08/14] i2c: uapi: add I2C_XFER_V2 ioctl - detailed
- fault reporting
+Date: Thu, 05 Nov 2026 19:15:24 +0200
+Subject: [PATCH RFC v3 03/14] i2c: core: add helper functions for transfer
+ report generation
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -68,7 +68,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261105-i2c-fault-reporting-v3-8-515ad74ac4c9@mobileye.com>
+Message-Id: <20261105-i2c-fault-reporting-v3-3-515ad74ac4c9@mobileye.com>
 References: <20261105-i2c-fault-reporting-v3-0-515ad74ac4c9@mobileye.com>
 In-Reply-To: <20261105-i2c-fault-reporting-v3-0-515ad74ac4c9@mobileye.com>
 To: Andi Shyti <andi.shyti@kernel.org>, 
@@ -83,58 +83,54 @@ Cc: Dmitry Guzman <Dmitry.Guzman@mobileye.com>, linux-i2c@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.16.0
 
-For user-space access to I2C multi-message transfer with detailed
-reporting functionality, add I2C_XFER_V2 ioctl and corresponding
-struct i2c_rdwr_v2_ioctl_data.
+Add three helper functions for I2C transfer report generation:
 
-The structure consists of struct i2c_rdwr_ioctl_data that used in the
-same way as in I2C_XFER, and struct i2c_transfer_report that the
-detailed transfer report is put in.
+- i2c_transfer_report_init() that puts -EOPNOTSUPP in all struct fields
+  (this should be used if the defailed reporting is not supported);
+
+- i2c_transfer_report_success() that is used to generate the report in
+  success case (all messages are transferred successfully);
+
+- i2c_transfer_report_bad_msg() that is used if one of messages cannot
+  be transferred and no data were actually transferred.
 
 Signed-off-by: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
 ---
- include/uapi/linux/i2c-dev.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/i2c.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/include/uapi/linux/i2c-dev.h b/include/uapi/linux/i2c-dev.h
-index 1c4cec4ddd84..5097568a3149 100644
---- a/include/uapi/linux/i2c-dev.h
-+++ b/include/uapi/linux/i2c-dev.h
-@@ -11,11 +11,13 @@
- 
- #include <linux/types.h>
- #include <linux/compiler.h>
-+#include <linux/i2c.h>
- 
- /* /dev/i2c-X ioctl commands.  The ioctl's parameter is always an
-  * unsigned long, except for:
-  *	- I2C_FUNCS, takes pointer to an unsigned long
-  *	- I2C_RDWR, takes pointer to struct i2c_rdwr_ioctl_data
-+ *	- I2C_RDWR_V2, takes pointer to struct i2c_rdwr_v2_ioctl_data
-  *	- I2C_SMBUS, takes pointer to struct i2c_smbus_ioctl_data
-  */
- #define I2C_RETRIES	0x0701	/* number of times a device address should
-@@ -33,6 +35,7 @@
- #define I2C_FUNCS	0x0705	/* Get the adapter functionality mask */
- 
- #define I2C_RDWR	0x0707	/* Combined R/W transfer (one STOP only) */
-+#define I2C_RDWR_V2	0x0709  /* I2C_RDWR with detailed fault reporting */
- 
- #define I2C_PEC		0x0708	/* != 0 to use PEC with SMBus */
- #define I2C_SMBUS	0x0720	/* SMBus transfer */
-@@ -52,6 +55,12 @@ struct i2c_rdwr_ioctl_data {
- 	__u32 nmsgs;			/* number of i2c_msgs */
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index bf7dc12f7264..9bee726592fc 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -601,6 +601,27 @@ struct i2c_algorithm {
+ #endif
  };
  
-+/* This is the structure as used in the I2C_RDWR_V2 ioctl call */
-+struct i2c_rdwr_v2_ioctl_data {
-+	struct i2c_rdwr_ioctl_data rdwr_data;
-+	struct i2c_transfer_report report;
-+};
++static inline void i2c_transfer_report_init(struct i2c_transfer_report *report)
++{
++	report->msgs_cplt = -EOPNOTSUPP;
++	report->fault_msg_idx = -EOPNOTSUPP;
++	report->bytes_cplt = -EOPNOTSUPP;
++}
 +
- #define  I2C_RDWR_IOCTL_MAX_MSGS	42
- /* Originally defined with a typo, keep it for compatibility */
- #define  I2C_RDRW_IOCTL_MAX_MSGS	I2C_RDWR_IOCTL_MAX_MSGS
++static inline void i2c_transfer_report_success(struct i2c_transfer_report *report, int num)
++{
++	report->msgs_cplt = num;
++	report->fault_msg_idx = num;
++	report->bytes_cplt = 0;
++}
++
++static inline void i2c_transfer_report_bad_msg(struct i2c_transfer_report *report, int i)
++{
++	report->msgs_cplt = 0;
++	report->bytes_cplt = 0;
++	report->fault_msg_idx = i;
++}
++
+ /**
+  * struct i2c_lock_operations - represent I2C locking operations
+  * @lock_bus: Get exclusive access to an I2C bus segment
 
 -- 
 2.43.0
