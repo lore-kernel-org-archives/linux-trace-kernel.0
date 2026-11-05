@@ -1,24 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793844542;
-	b=s4jeQWC66L/0YBrMilUztUhJzsSztQqM9aPQVUBu87q/Kcd1ZjYVnVmTyuyiXfKx1rkY
-	 HrQ/ouONJwcYlPyptVniI94JmrlxQrrKNKH01OvX3/euWuXyOpHSzjdbGl7VjthWAdV89
-	 u8ZL364VcjCn1eotiVPi9kXAAAdNuzVLFz8gSYvhgp+tSXqnmBOgqznvE5t5c44FNLd1Z
-	 /BlcNRDBAs9t/WW9eqUPxdc3LO6N/EB8sh7hfgHZVuT0NbeGtkCq+cS7jCAJJy89gN4wG
-	 0LY+ELvZHMrgZvWuJOxCpynLnP15fPVZ+AR4C68ws6saLMLJIXgg+W2yLb2ObM4lJ+Q==
+	t=1793848570;
+	b=n7XhDH8T7PuL7gvYh0kTgOw4ls8j1gzdi+RG99/zNxwt7i3Allb/RGe/kwTy0K7idMz3
+	 mcy8vP8VYZm94iiPdi7lBOHDgsQZbQin4X/whGxPaqQyaqiZkTDqpRv5ZjkefwHrFq+Rd
+	 6GI1uMPa02PrrhiO47eO8G5c00XlJkrXfCczU5CSWNb2T2IqUz2bY6BHLhDPdh+Xj6Gyq
+	 alz+kcZk7XFLvNrNpqQ0LESgR/UW9D57LbM2cYM2yPDRGEf7pe2UKCfQg0xthgHD1u4yV
+	 VB0/NK39wJiPGtpOSVRowtEStWjFRrg4YuuSIKBfl1tyDied3pnpr7YnsNOk4dAwe+A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793844542;
-	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793848570;
+	h=DMARC-Filter:X-UUID:X-CTIC-Tags:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:
+	 X-CID-META:X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=SQgq6rlpol2K3xeU2F2fDnv2paP/T7YA03jLXDqG4Dk=;
-	b=keZPuW9sTrDlsc48HXzokkLivc5P7HdJpn1m2uBTsS33kj7bVZ0SNfA4ySJIr5pjyhPl
-	 FW8IdQf9/EE8fhCC1/dnZDsfV2fbf2socV07JlBr9TcYMDicT1Lw6Q6cnuQFzUSzejncZ
-	 vTttkFHKlfTAsMAXuDyf4q6pbsg/muj5IfITnFXc3lPGv1Ki+uTtDTz5jNbGMVt57u/z2
-	 QQq40X/bopZr4B4fByRvtRH6m4+ycqXdS0HHBq+P3FJNbPpvaHWOoUcwQoIjGtzbxiPnU
-	 e+4nzEmgsg6pmAUpKM3JtPPlNwHQuZXyIBXe36Ku/UUJvi9L2mEPaIscBsEgMv0opXQ==
+	bh=ga6B7jCELkzHuVa0pEKdnU/De6nHNcAqX9HaxrGvbrA=;
+	b=NXEU+xZeCkvIPA9WJBhmvN10K6R/Cof+gF1HX7Q6p2WHc1ZxIC8VO9jMrzH9Y804hQYG
+	 EYja0CoGWeaEhP+IOKVoXZY2FCfG1HuQK6QScwU1GbvbAPKCogsFyURwx9a1nY0dbXOV3
+	 RXT0J0r3hBeDjnzzTlKzG9CweoFZFRPKsAllndOQ00DxlB0BrIrmnDc00HjglTAkR7F7Z
+	 XJSTqIsqaTA6t5WejaQW2wh0842FLl31RbrA9O/BaY+0Gl96DPDbGKE163imqxCHE493+
+	 NEunmUum2QzuU9iAJkPyHYOsK8FgljsYfEhfFtSXdZ1bsOMcK2D1iy4+TELu1KN5lnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=kylinos.cn;
 	spf=pass smtp.mailfrom=kylinos.cn;
@@ -27,32 +26,55 @@ Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37440606A326;
-	Thu,  5 Nov 2026 02:08:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37440606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1665C606A32D;
+	Thu,  5 Nov 2026 03:16:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1665C606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d9d02bc8d8bd11f19a56ed5b684f684d-20261105
+X-UUID: 3650c5e8d8c711f19a56ed5b684f684d-20261105
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED
+	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:c6f694f3-00d0-467c-acbd-be2f9f3a7602,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:7db8b62,CLOUDID:258a3d6ce4920a8cd0c21f11d44b5e16,BulkI
-	D:nil,BulkQuantity:0,SF:80|81|82|83|102|865|898,TC:nil,Content:0|15|50|99,
-	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.3.19,REQID:7f62fdda-3fc7-4db5-bfa9-97d101fe9e3f,IP:15,
+	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:15
+X-CID-INFO: VERSION:1.3.19,REQID:7f62fdda-3fc7-4db5-bfa9-97d101fe9e3f,IP:15,UR
+	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:15
+X-CID-META: VersionHash:7db8b62,CLOUDID:28c6da9c87e703cbf0257455612a5dc8,BulkI
+	D:261105111559WSM1TMSB,BulkQuantity:0,SF:17|19|38|66|78|102|127|153|865|89
+	8,TC:nil,Content:0|15|50|99,EDM:5,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:nil,
+	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+	,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: d9d02bc8d8bd11f19a56ed5b684f684d-20261105
+X-UUID: 3650c5e8d8c711f19a56ed5b684f684d-20261105
 X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
+Received: from kare.. [(116.128.244.171)] by mailgw.kylinos.cn
 	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 450346635; Thu, 05 Nov 2026 10:08:53 +0800
-Message-ID: <514ce95a-747c-45b0-91b6-3a5c03ff4e6d@kylinos.cn>
-Date: Thu, 5 Nov 2026 10:08:51 +0800
+	(Generic MTA)
+	with ESMTP id 1881586552; Thu, 05 Nov 2026 11:15:54 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v2] ftrace: speed up module enable by binary searching module symbols
+Date: Thu,  5 Nov 2026 11:15:30 +0800
+Message-ID: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,328 +84,204 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] ftrace: speed up module enable by binary searching
- module symbols
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260916082715.320853-1-tianyaxiong@kylinos.cn>
- <20261104134310.5cec1ebe@gandalf.local.home>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20261104134310.5cec1ebe@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Loading a module with many functions takes seconds, almost all of it in
+ftrace_module_enable().  amdgpu modules stall for about ten seconds, and
+disabling CONFIG_DYNAMIC_FTRACE makes the stall disappear.
 
-On 2026/11/5 02:43, Steven Rostedt wrote:
-> On Wed, 16 Sep 2026 16:27:15 +0800
-> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
->
-> +static int ftrace_mod_syms_cmp(const void *a, const void *b)
-> +{
-> +	unsigned long va = *(const unsigned long *)a;
-> +	unsigned long vb = *(const unsigned long *)b;
-> +
-> +	return (va > vb) - (va < vb);
-> +}
-> Interesting compare technique. I usually do:
->
-> static int ftrace_mod_syms_cmp(const void *a, const void *b)
-> {
-> 	unsigned long va = *(const unsigned long *)a;
-> 	unsigned long vb = *(const unsigned long *)b;
->
-> 	if (va < vb)
-> 		return -1;
->
-> 	return va > vb;
-> }
->
-> But I wanted to compare them, so I wrote this:
->
-> int cmp1(const void *a, const void *b)
-> {
->         int A = *(const int *)a;
->         int B = *(const int *)b;
->
->         return (A > B) - (A < B);
-> }
->
-> int cmp2(const void *a, const void *b)
-> {
->         int A = *(const int *)a;
->         int B = *(const int *)b;
->
->         if (A < B)
->                 return -1;
->         return A > B;
-> }
->
-> And complied with gcc with -O2 and the result was this:
->
-> 0000000000000000 <cmp1>:
->    0:   8b 06                   mov    (%rsi),%eax
->    2:   39 07                   cmp    %eax,(%rdi)
->    4:   0f 9f c0                setg   %al
->    7:   0f 9c c2                setl   %dl
->    a:   0f b6 d2                movzbl %dl,%edx
->    d:   0f b6 c0                movzbl %al,%eax
->   10:   29 d0                   sub    %edx,%eax
->   12:   c3                      ret
->   13:   66 90                   xchg   %ax,%ax
->   15:   66 66 2e 0f 1f 84 00    data16 cs nopw 0x0(%rax,%rax,1)
->   1c:   00 00 00 00 
->
-> 0000000000000020 <cmp2>:
->   20:   8b 06                   mov    (%rsi),%eax
->   22:   39 07                   cmp    %eax,(%rdi)
->   24:   ba ff ff ff ff          mov    $0xffffffff,%edx
->   29:   0f 9f c0                setg   %al
->   2c:   0f b6 c0                movzbl %al,%eax
->   2f:   0f 4c c2                cmovl  %edx,%eax
->   32:   c3                      ret
->
-> It looks like my version is a bit better with gcc.
->
-> I complied with clang and it did this:
->
-> 0000000000000000 <cmp1>:
->    0:   8b 07                   mov    (%rdi),%eax
->    2:   3b 06                   cmp    (%rsi),%eax
->    4:   0f 9c c0                setl   %al
->    7:   0f 9f c1                setg   %cl
->    a:   28 c1                   sub    %al,%cl
->    c:   0f be c1                movsbl %cl,%eax
->    f:   c3                      ret
->
-> 0000000000000010 <cmp2>:
->   10:   8b 07                   mov    (%rdi),%eax
->   12:   3b 06                   cmp    (%rsi),%eax
->   14:   0f 9c c0                setl   %al
->   17:   0f 9f c1                setg   %cl
->   1a:   28 c1                   sub    %al,%cl
->   1c:   0f be c1                movsbl %cl,%eax
->   1f:   c3                      ret
->
-> Which made the two identical!
->
-> Probably just a nit, but food for thought if you want to keep your method
-> or switch to mine ;-) I won't be picky about it.
+Every record is validated by test_for_valid_rec(), which resolves its ip
+through kallsyms_lookup(); for a module address that ends up in
+find_kallsyms_symbol(), which walks the whole module symbol table from
+index 1.  The core kernel instead binary searches its sorted kallsyms
+table in get_symbol_pos().  So only modules pay, and the cost is
+quadratic: both the record count and the symbol count grow with the
+module.  An amdgpu.ko from this tree has 17282 records and 55332 symbol
+table entries.
 
-I didn't think about the assembly side of this at the time ;-), and your
-version is valuable for this kind of optimization.
+Fix this by collecting the addresses of a module's symbols once, sorting
+them, and binary searching that array instead of walking the table once
+per record; a loaded module's symbol table cannot change, so the array
+stays valid for the whole pass.  What comes back is what the linear scan
+returned: the same entries are skipped - SHN_UNDEF, unnamed and mapping
+symbols - and the closest address not below the base of the record's
+memory region is taken.  Whenever the array cannot answer, because it
+could not be built or because no such symbol exists, the record is handed
+to test_for_valid_rec(), so the rest of kallsyms_lookup() still has its
+say and no verdict can change.
 
-I tried both with the type we actually use (unsigned long, -O2; the
-counts include ret):
+On the machine that reported the stall, modprobe of that amdgpu.ko takes
+12.242 s before and 2.870 s after, and the time spent inside ftrace_lock
+drops from 9.368 s to 1.585 ms - 15.195 ms if the price of building the
+array is included, that build being 13.6 ms, 0.15% of the 9.37 s saved.
+The array costs O(symbols * log symbols), it does not grow with the
+record count.  Across the 74 modules loaded at boot, total lock time
+drops from 491 ms to 2.33 ms.
 
-gcc 12.3.0:
-0000000000000000 <cmp1>:
-   0:    48 8b 0f                 mov    (%rdi),%rcx
-   3:    48 8b 16                 mov    (%rsi),%rdx
-   6:    31 c0                    xor    %eax,%eax
-   8:    48 39 ca                 cmp    %rcx,%rdx
-   b:    0f 92 c0                 setb   %al
-   e:    48 39 d1                 cmp    %rdx,%rcx
-  11:    83 d8 00                 sbb    $0x0,%eax
-  14:    c3                       ret
-                              (8 insns, branchless)
+Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+---
+v2:
+- Use rcu_dereference_raw() instead of a transient rcu_read_lock() pair.
+- Manage the symbol array with __free(kvfree).
+- Adapt to the v7.4-rc1 rename of is_mapping_symbol() to
+  is_ignored_kernel_symbol().
+- v1 discussion:
+  https://lore.kernel.org/all/20260916082715.320853-1-tianyaxiong@kylinos.cn/
 
-0000000000000020 <cmp2>:
-  20:    48 8b 17                 mov    (%rdi),%rdx
-  23:    48 8b 0e                 mov    (%rsi),%rcx
-  26:    b8 ff ff ff ff           mov    $0xffffffff,%eax
-  2b:    48 39 ca                 cmp    %rcx,%rdx
-  2e:    72 08                    jb     38 <cmp2+0x18>
-  30:    31 c0                    xor    %eax,%eax
-  32:    48 39 d1                 cmp    %rdx,%rcx
-  35:    0f 92 c0                 setb   %al
-  38:    c3                       ret
-                              (9 insns, with a data-dependent branch)
+ kernel/trace/ftrace.c | 124 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 123 insertions(+), 1 deletion(-)
 
-clang 17.0.6:
-0000000000000000 <cmp1>:
-   0:    48 8b 0f                 mov    (%rdi),%rcx
-   3:    31 c0                    xor    %eax,%eax
-   5:    48 3b 0e                 cmp    (%rsi),%rcx
-   8:    0f 97 c0                 seta   %al
-   b:    83 d8 00                 sbb    $0x0,%eax
-   e:    c3                       ret
-                              (6 insns, branchless)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index c7d74b33d36d..255e813fe70e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -26,6 +26,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/bsearch.h>
+ #include <linux/module.h>
++#include <linux/module_symbol.h>
+ #include <linux/ftrace.h>
+ #include <linux/sysctl.h>
+ #include <linux/slab.h>
+@@ -8034,8 +8035,129 @@ void ftrace_release_mod(struct module *mod)
+ 	}
+ }
+ 
++#ifdef FTRACE_MCOUNT_MAX_OFFSET
++/*
++ * ftrace_module_enable() validates every record with test_for_valid_rec(),
++ * which walks the whole symbol table of a module for each address in it, so a
++ * large module loads in quadratic time.  Search a sorted copy of the symbol
++ * addresses instead, the way get_symbol_pos() searches the kallsyms table.
++ * The array is an accelerator only; records it cannot resolve are tested the
++ * old way, so the verdict does not change.
++ */
++struct ftrace_mod_syms {
++	unsigned int	nr;
++	unsigned long	addr[];	/* sorted, @nr entries */
++};
++
++static int ftrace_mod_syms_cmp(const void *a, const void *b)
++{
++	unsigned long va = *(const unsigned long *)a;
++	unsigned long vb = *(const unsigned long *)b;
++
++	return (va > vb) - (va < vb);
++}
++
++static struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
++{
++	struct mod_kallsyms *kallsyms;
++	struct ftrace_mod_syms *syms;
++	unsigned int i, nr = 0;
++
++	/*
++	 * mod->kallsyms stays valid until do_init_module() replaces it later
++	 * in this thread, so no RCU read-side section is needed.
++	 */
++	kallsyms = rcu_dereference_raw(mod->kallsyms);
++
++	if (!kallsyms || kallsyms->num_symtab < 2)
++		return NULL;
++
++	syms = kvmalloc(struct_size(syms, addr, kallsyms->num_symtab),
++			GFP_KERNEL);
++	if (!syms)
++		return NULL;
++
++	/* The symbols find_kallsyms_symbol() would consider. */
++	for (i = 1; i < kallsyms->num_symtab; i++) {
++		const Elf_Sym *sym = &kallsyms->symtab[i];
++		const char *name = kallsyms->strtab + sym->st_name;
++
++		if (sym->st_shndx == SHN_UNDEF || !*name ||
++		    is_ignored_kernel_symbol(name))
++			continue;
++
++		syms->addr[nr++] = kallsyms_symbol_value(sym);
++	}
++	syms->nr = nr;
++
++	if (nr > 1)
++		sort(syms->addr, nr, sizeof(syms->addr[0]), ftrace_mod_syms_cmp,
++		     NULL);
++
++	return syms;
++}
++
++/* The verdict test_for_valid_rec() would give, without walking the table. */
++static bool ftrace_mod_rec_is_valid(struct module *mod,
++				    const struct ftrace_mod_syms *syms,
++				    struct dyn_ftrace *rec)
++{
++	unsigned long base, best;
++	unsigned int lo, hi;
++
++	if (!syms)
++		return test_for_valid_rec(rec) != 0;
++
++	/* A record is in executable memory; anything else kallsyms answers. */
++	if (within_module_mem_type(rec->ip, mod, MOD_TEXT))
++		base = (unsigned long)mod->mem[MOD_TEXT].base;
++	else if (within_module_mem_type(rec->ip, mod, MOD_INIT_TEXT))
++		base = (unsigned long)mod->mem[MOD_INIT_TEXT].base;
++	else
++		return test_for_valid_rec(rec) != 0;
++
++	/* The closest address at or below @rec->ip, if there is one. */
++	best = 0;
++	for (lo = 0, hi = syms->nr; lo < hi; ) {
++		unsigned int mid = lo + (hi - lo) / 2;
++
++		if (syms->addr[mid] <= rec->ip)
++			lo = mid + 1;
++		else
++			hi = mid;
++	}
++	if (lo)
++		best = syms->addr[lo - 1];
++
++	/*
++	 * No symbol, or only ones below @base: let kallsyms_lookup() answer,
++	 * as it also looks in the BPF and ftrace trampoline tables.
++	 */
++	if (best < base)
++		return test_for_valid_rec(rec) != 0;
++
++	return rec->ip - best <= FTRACE_MCOUNT_MAX_OFFSET;
++}
++#else
++struct ftrace_mod_syms;
++
++static inline struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
++{
++	return NULL;
++}
++
++static inline bool ftrace_mod_rec_is_valid(struct module *mod,
++					   const struct ftrace_mod_syms *syms,
++					   struct dyn_ftrace *rec)
++{
++	return test_for_valid_rec(rec) != 0;
++}
++#endif /* FTRACE_MCOUNT_MAX_OFFSET */
++
+ void ftrace_module_enable(struct module *mod)
+ {
++	struct ftrace_mod_syms *syms __free(kvfree) =
++		ftrace_disabled ? NULL : ftrace_mod_syms_alloc(mod);
+ 	struct dyn_ftrace *rec;
+ 	struct ftrace_page *pg;
+ 
+@@ -8074,7 +8196,7 @@ void ftrace_module_enable(struct module *mod)
+ 		cond_resched();
+ 
+ 		/* Weak functions should still be ignored */
+-		if (!test_for_valid_rec(rec)) {
++		if (!ftrace_mod_rec_is_valid(mod, syms, rec)) {
+ 			/* Clear all other flags. Should not be enabled anyway */
+ 			rec->flags = FTRACE_FL_DISABLED;
+ 			continue;
+-- 
+2.43.0
 
-0000000000000010 <cmp2>:
-  10:    48 8b 07                 mov    (%rdi),%rax
-  13:    31 c9                    xor    %ecx,%ecx
-  15:    48 3b 06                 cmp    (%rsi),%rax
-  18:    0f 97 c1                 seta   %cl
-  1b:    b8 ff ff ff ff           mov    $0xffffffff,%eax
-  20:    0f 43 c1                 cmovae %ecx,%eax
-  23: c3                       ret
-                              (7 insns, branchless)
-
-Your version is one instruction shorter for int, but for 64-bit gcc needs a
-second compare after the branch to tell > from ==, and picks a branch
-instead
-of cmov, which is worse for a sort comparator.  So I kept the subtract form.
-
->
->> +
->> +static struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
->> +{
->> +	struct mod_kallsyms *kallsyms;
->> +	struct ftrace_mod_syms *syms;
->> +	unsigned int i, nr = 0;
->> +
->> +	/* mod->kallsyms is not replaced until do_init_module() returns. */
->> +	rcu_read_lock();
->> +	kallsyms = rcu_dereference(mod->kallsyms);
->> +	rcu_read_unlock();
-> The above was already discussed.
->
->> +
->> +	if (!kallsyms || kallsyms->num_symtab < 2)
->> +		return NULL;
->> +
->> +	syms = kvmalloc(struct_size(syms, addr, kallsyms->num_symtab),
->> +			GFP_KERNEL);
->> +	if (!syms)
->> +		return NULL;
->> +
->> +	/* The symbols find_kallsyms_symbol() would consider. */
->> +	for (i = 1; i < kallsyms->num_symtab; i++) {
->> +		const Elf_Sym *sym = &kallsyms->symtab[i];
->> +		const char *name = kallsyms->strtab + sym->st_name;
->> +
->> +		if (sym->st_shndx == SHN_UNDEF || !*name ||
->> +		    is_mapping_symbol(name))
->> +			continue;
->> +
->> +		syms->addr[nr++] = kallsyms_symbol_value(sym);
->> +	}
->> +	syms->nr = nr;
->> +
->> +	if (nr > 1)
->> +		sort(syms->addr, nr, sizeof(syms->addr[0]), ftrace_mod_syms_cmp,
->> +		     NULL);
->> +
->> +	return syms;
->> +}
->> +
->> +/* The verdict test_for_valid_rec() would give, without walking the table. */
->> +static bool ftrace_mod_rec_is_valid(struct module *mod,
->> +				    const struct ftrace_mod_syms *syms,
->> +				    struct dyn_ftrace *rec)
->> +{
->> +	unsigned long base, best;
->> +	unsigned int lo, hi;
->> +
->> +	if (!syms)
->> +		return test_for_valid_rec(rec) != 0;
->> +
->> +	/* A record is in executable memory; anything else kallsyms answers. */
->> +	if (within_module_mem_type(rec->ip, mod, MOD_TEXT))
->> +		base = (unsigned long)mod->mem[MOD_TEXT].base;
->> +	else if (within_module_mem_type(rec->ip, mod, MOD_INIT_TEXT))
->> +		base = (unsigned long)mod->mem[MOD_INIT_TEXT].base;
->> +	else
->> +		return test_for_valid_rec(rec) != 0;
->> +
->> +	/* The closest address at or below @rec->ip, if there is one. */
->> +	best = 0;
->> +	for (lo = 0, hi = syms->nr; lo < hi; ) {
->> +		unsigned int mid = lo + (hi - lo) / 2;
->> +
->> +		if (syms->addr[mid] <= rec->ip)
->> +			lo = mid + 1;
->> +		else
->> +			hi = mid;
->> +	}
->> +	if (lo)
->> +		best = syms->addr[lo - 1];
->> +
->> +	/*
->> +	 * No symbol, or only ones below @base: let kallsyms_lookup() answer,
->> +	 * as it also looks in the BPF and ftrace trampoline tables.
->> +	 */
->> +	if (best < base)
->> +		return test_for_valid_rec(rec) != 0;
->> +
->> +	return rec->ip - best <= FTRACE_MCOUNT_MAX_OFFSET;
->> +}
->> +#else
->> +struct ftrace_mod_syms;
->> +
->> +static inline struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static inline bool ftrace_mod_rec_is_valid(struct module *mod,
->> +					   const struct ftrace_mod_syms *syms,
->> +					   struct dyn_ftrace *rec)
->> +{
->> +	return test_for_valid_rec(rec) != 0;
->> +}
->> +#endif /* FTRACE_MCOUNT_MAX_OFFSET */
->> +
->>  void ftrace_module_enable(struct module *mod)
->>  {
->> +	struct ftrace_mod_syms *syms;
-> Hmm, remove this...
->
->
->>  	struct dyn_ftrace *rec;
->>  	struct ftrace_page *pg;
->>  
->> +	/*
->> +	 * Allocates, so build it before taking ftrace_lock.  It is skipped when
->> +	 * ftrace never came up, where the loop below would not run anyway; that
->> +	 * also makes reading ftrace_disabled without the lock safe.
->> +	 */
->> +	syms = ftrace_disabled ? NULL : ftrace_mod_syms_alloc(mod);
-> and make the above:
->
-> 	struct ftrace_mod_syms *syms __free(kvfree) =
-> 		ftrace_disabled ? NULL : ftrace_mod_syms_alloc(mod);
->
->
->> +
->>  	mutex_lock(&ftrace_lock);
->>  
->>  	if (ftrace_disabled)
->> @@ -8050,7 +8177,7 @@ void ftrace_module_enable(struct module *mod)
->>  		cond_resched();
->>  
->>  		/* Weak functions should still be ignored */
->> -		if (!test_for_valid_rec(rec)) {
->> +		if (!ftrace_mod_rec_is_valid(mod, syms, rec)) {
->>  			/* Clear all other flags. Should not be enabled anyway */
->>  			rec->flags = FTRACE_FL_DISABLED;
->>  			continue;
->> @@ -8087,6 +8214,8 @@ void ftrace_module_enable(struct module *mod)
->>   out_unlock:
->>  	mutex_unlock(&ftrace_lock);
->>  
->> +	kvfree(syms);
-> Then we can also remove that.
-
-Done as suggested; the explicit kvfree() is gone.  The v2 also carries the
-rcu_dereference_raw() change discussed earlier.
-
-I will send the v2 shortly, after I finish testing it today.
-
-Thanks,
-Yaxiong
-
-
->
-> Thanks,
->
-> -- Steve
->
->> +
->>  	process_cached_mods(mod->name);
->>  }
->>
