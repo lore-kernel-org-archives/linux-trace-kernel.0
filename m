@@ -1,62 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.64.228
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793857509;
-	b=VDtNNZ7W+kwuV11GYLZb24mkN+wMhxmOKm3hWU0JKiDjEVp7IJOhY1+XIfulLTOCZyfk
-	 qk2KtOvNkHTQC/421sIF4cHqSeakwfM2gzXTWA1Kx8YUhErJ+jXXAVD2fJ1Y0zZEL2qUU
-	 mXv/nNtXNxyctFHqV5qX7cn0+8i3jo4bd259HgzYyZZCS4C2CQSqIdXBqfnc8Y1k/RypA
-	 fUjgpWug+tkJpSSi8t1M3Wi4GGkxh8GYDovI02IcD5zyU97vcZBflvirYtBGl+OOxpyH7
-	 4Wi3QMy5MgSGjB38s7MDuD+f6c4bye1UKdDGmlwST+SD9+jGnhhvcDh969UEBzANdmQ==
+	t=1793863156;
+	b=uiXIAOKQuW5kOe0GPRQbVNMRMigT+IMU7y4ljBE3AhIoG9oim1vIPJ7skZLuzybX5456
+	 e1FUfI7h9a4V4PPCfLQvl+Qixh/ximhnxSNFj+Ay8fEBOjFiKQ7h2rFU2U4sek14Enx9k
+	 qUPnAaP1gvR2Wu7AmXj6y/s7/fYgSpJe3C/6GQ4Z84ZKtglhWVAGrOBNDASuslyiHO6XW
+	 hrad/qq04dRQnrP1HntPTlFwMVVQkG3SqrU/RdjTpVE+jc7Lpe5WjZ05ILx6i/1pSmQc4
+	 WN41bi6TyR6K3AUw0yDxDowq5oc+RWWTDJtqfTiGxU9hasRPuqwOj4uWYFjfxRfeKBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793857509;
-	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:
-	 X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=yFKARAPhapz1J/TE9qnmiMZza1QjYae5bhZ4iVqttg4=;
-	b=GSwtjZH1rpRsl7SnkHLzawPLrUgxYVpFG89sCBjslxQLdJJHiIqCc+9g0OH73gMk/542
-	 v6qivPCblDYwsjIRTB77LEM7CysxgK+S88jlZxUKcQwaBCQDBPIe1OchqOvJwa27rs9/B
-	 FWWj5DgP+34+uZK589lk9M18/7DFLdWi+QyoUQKQu7+SdZfI2GHJYBeQlUFh2QkCJ6LWf
-	 +xHZHbZTbMKeSHOPu6QWNSGE166qoizCN7XtNw3NiLi6hTYVte08STpK2pymfTLAIhHJt
-	 eyOXPRH/a0cqGZvjfHFhWAr0abRPwSiRjSOwMCyCMtLRKl2gniAhasuze+Pq1EadVIw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793863156;
+	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
+	 Message-ID:MIME-Version:Content-Transfer-Encoding:
+	 X-Flowmailer-Platform:Feedback-ID;
+	bh=2UeepKs1wiyGHBtfdukXuMgoSbbJsCgDnloMbndsSsg=;
+	b=TQNok/2hbgA3xyx+pxHW8bXAq8xU3NNh0hXoQ59J2OdNtW9R9DltqLWTp4+kHE1ZCs9h
+	 2YUbcsHa0iD5et3nrBaT+gf3kU+frs7/OlB9Q/rAIIKcTYezTBB5LfgULk3JPYvY2y8y2
+	 ad7SHvpyF9DDoGqQHPogicIvtLeZmeIGZ7d/enXLdyQjpzSqG1Fp3dvmwlWoSyN+17MZd
+	 5XlR1jki9NVBNvLVLKf+s8FDMWPE8zbGcvwpqSiqJIZEylwxwl7yOVAlkOJ2nCic4kweK
+	 v5ghYBaqYzhvge5MIB/2ldDX+fIfINIpAcj0P+lMt4SPSegi39OFAB0hHY8x1mZZluw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinos.cn;
-	spf=pass smtp.mailfrom=kylinos.cn;
-	arc=none smtp.remote-ip=124.126.103.232
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=siemens.com;
+	spf=pass smtp.mailfrom=rts-flowmailer.siemens.com;
+	dkim=pass header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm2 header.b=MbHBkvax;
+	arc=none smtp.remote-ip=185.136.64.228
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2C9606A328
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 05:45:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C2C9606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 08295878d8dc11f19a56ed5b684f684d-20261105
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:5cb1efd1-3617-4c36-bbc9-ecfa8a2730ba,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:10
-X-CID-INFO: VERSION:1.3.19,REQID:5cb1efd1-3617-4c36-bbc9-ecfa8a2730ba,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:10
-X-CID-META: VersionHash:7db8b62,CLOUDID:6a52fa801b42c128cd7cfb76e3faa236,BulkI
-	D:261105112459LV42W7SB,BulkQuantity:1,SF:17|19|64|66|78|80|81|82|83|102|12
-	7|153|841|865|898,TC:nil,Content:0|15|50|99,EDM:-3,IP:-2|1,URL:0,File:nil,
-	RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DK
-	P:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_IBB
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 08295878d8dc11f19a56ed5b684f684d-20261105
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(116.128.244.169)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1092795518; Thu, 05 Nov 2026 13:44:56 +0800
-Message-ID: <e60a0b6c-85c1-424d-ae57-a7239e4ef776@kylinos.cn>
-Date: Thu, 5 Nov 2026 13:44:33 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F67606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 07:19:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34F67606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm2 header.b=MbHBkvax
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202611050719050d4011fed20002079f
+        for <linux-trace-kernel@vger.kernel.org>;
+        Thu, 05 Nov 2026 08:19:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=meng.ding@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=2UeepKs1wiyGHBtfdukXuMgoSbbJsCgDnloMbndsSsg=;
+ b=MbHBkvaxkeyUCwfUVzgQ1zs+Ifzqcm8ShV801eVKdDDdOajsC1zROPDsFOkPrRLIXualRq
+ ljtDbGgqh9sgFeK9izYu5evE/RyVB7DkhluMQi6IchNA2WJTSPoinSUux5Kh+O5m7J23Typ6
+ 6W/xUDmoZN3krR2c8DZVE//prNykK4KKliRt59nFJI4tTPArUEVhmZ6/aR6QRJnrtgqD2P6u
+ fNCZtVsRth7aWbl3n1hgVvlVxKHfcKfHe2goliePomWYhxBmJ63y44Z2kx6dZBZuKElPnmKY
+ 3lSy9Nl6UBDRzyRII9rw8EzNd+ksmnMP0x3M+QBl0zfTffwOUCNwBAIw==;
+From: Ding Meng <meng.ding@siemens.com>
+To: netdev@vger.kernel.org,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>
+Cc: florian.bezdeka@siemens.com,
+	jan.kiszka@siemens.com,
+	wq.wang@siemens.com,
+	p@1g4.org,
+	gerhard@engleder-embedded.com,
+	Ding Meng <meng.ding@siemens.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH] net: mark skb NAPI IDs independently of busy polling
+Date: Thu,  5 Nov 2026 15:16:08 +0800
+Message-ID: <20261105071706.7043-1-meng.ding@siemens.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,129 +99,206 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ftrace: speed up module enable by binary searching
- module symbols
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-References: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
- <sashiko-outbox-198512@kernel.org>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <sashiko-outbox-198512@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1335312:519-21489:flowmailer
 
+Commit 97dc7cd92ac6 ("ptp: Support late timestamp determination")
+added support for deferring RX timestamp conversion to
+ndo_get_tstamp(). When the timestamp is consumed, get_timestamp()
+uses the skb's NAPI ID to find the device that owns the timestamp
+cookie and invoke its callback.
 
-On 2026/11/5 11:24, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] ftrace: undeclared function is_ignored_kernel_symbol() breaks build
-> --
->
-> commit 4bde25e1c49a34cddab8dbd106c29413a3f1f699
-> Author: Yaxiong Tian <tianyaxiong@kylinos.cn>
->
-> ftrace: speed up module enable by binary searching module symbols
->
-> This commit speeds up ftrace_module_enable() by collecting and sorting a
-> module's symbol addresses once and binary searching them to validate
-> ftrace records instead of linearly scanning the module symbol table for
-> each record.
->
->> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->> index c7d74b33d36de..255e813fe70e1 100644
->> --- a/kernel/trace/ftrace.c
->> +++ b/kernel/trace/ftrace.c
->> @@ -26,6 +26,7 @@
->>  #include <linux/uaccess.h>
->>  #include <linux/bsearch.h>
->>  #include <linux/module.h>
->> +#include <linux/module_symbol.h>
->>  #include <linux/ftrace.h>
->>  #include <linux/sysctl.h>
->>  #include <linux/slab.h>
->> @@ -8034,8 +8035,129 @@ void ftrace_release_mod(struct module *mod)
->>  	}
->>  }
->>  
->> +#ifdef FTRACE_MCOUNT_MAX_OFFSET
-> [ ... ]
->
->> +static struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
->> +{
->> +	struct mod_kallsyms *kallsyms;
->> +	struct ftrace_mod_syms *syms;
->> +	unsigned int i, nr = 0;
->> +
->> +	/*
->> +	 * mod->kallsyms stays valid until do_init_module() replaces it later
->> +	 * in this thread, so no RCU read-side section is needed.
->> +	 */
->> +	kallsyms = rcu_dereference_raw(mod->kallsyms);
->> +
->> +	if (!kallsyms || kallsyms->num_symtab < 2)
->> +		return NULL;
->> +
->> +	syms = kvmalloc(struct_size(syms, addr, kallsyms->num_symtab),
->> +			GFP_KERNEL);
->> +	if (!syms)
->> +		return NULL;
->> +
->> +	/* The symbols find_kallsyms_symbol() would consider. */
->> +	for (i = 1; i < kallsyms->num_symtab; i++) {
->> +		const Elf_Sym *sym = &kallsyms->symtab[i];
->> +		const char *name = kallsyms->strtab + sym->st_name;
->> +
->> +		if (sym->st_shndx == SHN_UNDEF || !*name ||
->> +		    is_ignored_kernel_symbol(name))
->> +			continue;
-> [Severity: Low]
-> Does this break the build on architectures defining FTRACE_MCOUNT_MAX_OFFSET
-> (such as x86 with CONFIG_HAVE_FENTRY or powerpc)?
->
-> ftrace_mod_syms_alloc() calls is_ignored_kernel_symbol(), which is not
-> declared or defined in any kernel header in this tree. In
-> include/linux/module_symbol.h, the helper is still named is_mapping_symbol():
->
-> include/linux/module_symbol.h:
-> static inline bool is_mapping_symbol(const char *str)
-> {
-> 	if (str[0] == '.' && str[1] == 'L')
-> 		return true;
-> 	if (str[0] == 'L' && str[1] == '0')
-> 		return true;
-> 	return str[0] == '$';
-> }
->
-> and find_kallsyms_symbol() in kernel/module/kallsyms.c calls
-> is_mapping_symbol():
->
-> kernel/module/kallsyms.c:find_kallsyms_symbol() {
-> 	...
-> 		if (*kallsyms_symbol_name(kallsyms, i) == '\0' ||
-> 		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
-> 			continue;
-> 	...
-> }
->
-> Should ftrace_mod_syms_alloc() call is_mapping_symbol(name) here instead?
-This v2 is based on v7.4-rc1: the patch's index line is
-c7d74b33d36d..255e813fe70e, and c7d74b33d36d is
-HEAD^:kernel/trace/ftrace.c in that tree.
+Commit e68b6e50fa35 ("udp: enable busy polling for all sockets")
+gated NAPI ID bookkeeping with CONFIG_NET_RX_BUSY_POLL. As a result,
+when busy polling is disabled, the skb may not carry a usable NAPI ID.
+The device lookup then fails, so the driver callback is not invoked.
+get_timestamp() falls back to hwtstamp, which does not contain the
+converted timestamp, resulting in an incorrect RX hardware timestamp.
 
-is_mapping_symbol() no longer exists on that base.  Commit db91da8f0518
-("module/kallsyms: Rename is_mapping_symbol() to
-is_ignored_kernel_symbol()")
-is in v7.4-rc1; on that base include/linux/module_symbol.h defines
-is_ignored_kernel_symbol(), and find_kallsyms_symbol() uses it.
+Record skb NAPI IDs independently of busy-poll support to support
+drivers that use deferred timestamp conversion and future driver
+features that need to look up a device by its NAPI ID.
 
-The hunk you quote (is_mapping_symbol) is from the v1 base
-673a54fdf392, which predates that rename.  The patch compiles and runs on
-x86_64, which defines FTRACE_MCOUNT_MAX_OFFSET.  powerpc defines the same
-macro but uses the same common helper declaration, so there is no
-arch-specific issue.
+Signed-off-by: Ding Meng <meng.ding@siemens.com>
+Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
+---
+In the discussion of the issue reported at
+https://lore.kernel.org/netdev/20260630112056.885071-1-meng.ding@siemens.com/
+this previous patch added an igc-specific fallback for configurations
+with CONFIG_NET_RX_BUSY_POLL disabled. It populated skb's hwtstamp
+field with a timestamp converted using the default hardware timer,
+allowing get_timestamp() to return it without invoking ndo_get_tstamp().
+But Jakub Kicinski noted that the proposed fix appeared to be a
+driver-specific workaround for a generic problem. The engleder driver
+would also be affected by the same issue.
 
-If the review tree is older than v7.4-rc1, then is_mapping_symbol() is the
-right name for that tree and the patch needs a rebase there -- but that is
-not the base of this posting.
->
+This patch introduces a new configuration option to enable NAPI ID
+bookkeeping independently of busy polling. The option is enabled
+whenever busy polling is enabled, preserving the existing behavior.
+It is also selected by the igc and engleder drivers, ensuring that
+skbs carry a NAPI ID even when busy polling is disabled.
+
+Another approach considered was to require drivers using deferred
+timestamp conversion, such as igc and engleder, to enable busy polling.
+However, this would introduce an unnecessary dependency between two
+independent features: hardware timestamp reporting should not require
+busy polling to be enabled.
+
+Timestamping has been tested only with igc; it has not been tested
+with engleder.
+
+ Documentation/networking/timestamping.rst | 11 ++++++++---
+ drivers/net/ethernet/engleder/Kconfig     |  1 +
+ drivers/net/ethernet/intel/Kconfig        |  1 +
+ include/linux/skbuff.h                    |  4 ++--
+ include/net/busy_poll.h                   |  2 +-
+ include/trace/events/net.h                |  2 +-
+ net/Kconfig                               |  4 ++++
+ net/core/filter.c                         |  2 +-
+ net/core/skbuff.c                         |  2 +-
+ 9 files changed, 20 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/networking/timestamping.rst b/Documentation/networking/timestamping.rst
+index 2162c4f2b28a6..dbe40a1972639 100644
+--- a/Documentation/networking/timestamping.rst
++++ b/Documentation/networking/timestamping.rst
+@@ -278,9 +278,14 @@ SOF_TIMESTAMPING_OPT_PKTINFO:
+   packets with hardware timestamps. The message contains struct
+   scm_ts_pktinfo, which supplies the index of the real interface which
+   received the packet and its length at layer 2. A valid (non-zero)
+-  interface index will be returned only if CONFIG_NET_RX_BUSY_POLL is
+-  enabled and the driver is using NAPI. The struct contains also two
+-  other fields, but they are reserved and undefined.
++  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
++  enabled and the driver is using NAPI. This hidden configuration is
++  selected automatically by busy-poll support and by drivers that need
++  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
++  use deferred timestamp conversion must select it so the networking
++  stack can find the device and call its timestamp callback even when
++  busy polling is disabled. The struct contains also two other fields,
++  but they are reserved and undefined.
+ 
+ SOF_TIMESTAMPING_OPT_TX_SWHW:
+   Request both hardware and software timestamps for outgoing packets
+diff --git a/drivers/net/ethernet/engleder/Kconfig b/drivers/net/ethernet/engleder/Kconfig
+index 3df6bf476ae7e..9700a243bea11 100644
+--- a/drivers/net/ethernet/engleder/Kconfig
++++ b/drivers/net/ethernet/engleder/Kconfig
+@@ -22,6 +22,7 @@ config TSNEP
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	select PHYLIB
+ 	select PAGE_POOL
++	select SKB_MARK_NAPI_ID
+ 	help
+ 	  Support for the Engleder TSN endpoint Ethernet MAC IP Core.
+ 
+diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+index 780f113986ea8..7fb63f351fc20 100644
+--- a/drivers/net/ethernet/intel/Kconfig
++++ b/drivers/net/ethernet/intel/Kconfig
+@@ -376,6 +376,7 @@ config IGC
+ 	depends on PCI
+ 	depends on PTP_1588_CLOCK_OPTIONAL
+ 	depends on ETHTOOL_NETLINK
++	select SKB_MARK_NAPI_ID
+ 	help
+ 	  This driver supports Intel(R) Ethernet Controller I225-LM/I225-V
+ 	  family of adapters.
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 6787fcf6ac3e4..164c862f7a403 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1059,7 +1059,7 @@ struct sk_buff {
+ 			__u16	vlan_tci;
+ 		};
+ 	};
+-#if defined(CONFIG_NET_RX_BUSY_POLL) || defined(CONFIG_XPS)
++#if defined(CONFIG_SKB_MARK_NAPI_ID) || defined(CONFIG_XPS)
+ 	union {
+ 		unsigned int	napi_id;
+ 		unsigned int	sender_cpu;
+@@ -1267,7 +1267,7 @@ static inline bool skb_pkt_type_ok(u32 ptype)
+  */
+ static inline unsigned int skb_napi_id(const struct sk_buff *skb)
+ {
+-#ifdef CONFIG_NET_RX_BUSY_POLL
++#ifdef CONFIG_SKB_MARK_NAPI_ID
+ 	return skb->napi_id;
+ #else
+ 	return 0;
+diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
+index 6e172d0f6ef5f..f7c0e62c6a7d7 100644
+--- a/include/net/busy_poll.h
++++ b/include/net/busy_poll.h
+@@ -130,7 +130,7 @@ static inline void sk_busy_loop(struct sock *sk, int nonblock)
+ static inline void __skb_mark_napi_id(struct sk_buff *skb,
+ 				      const struct gro_node *gro)
+ {
+-#ifdef CONFIG_NET_RX_BUSY_POLL
++#ifdef CONFIG_SKB_MARK_NAPI_ID
+ 	/* If the skb was already marked with a valid NAPI ID, avoid overwriting
+ 	 * it.
+ 	 */
+diff --git a/include/trace/events/net.h b/include/trace/events/net.h
+index dbc2c5598e35a..99ed7645242eb 100644
+--- a/include/trace/events/net.h
++++ b/include/trace/events/net.h
+@@ -208,7 +208,7 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
+ 
+ 	TP_fast_assign(
+ 		__assign_str(name);
+-#ifdef CONFIG_NET_RX_BUSY_POLL
++#ifdef CONFIG_SKB_MARK_NAPI_ID
+ 		__entry->napi_id = napi_id_valid(skb->napi_id) ?
+ 				   skb->napi_id : 0;
+ #else
+diff --git a/net/Kconfig b/net/Kconfig
+index 76ab44aa439a6..8fa7586dc08ca 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -346,9 +346,13 @@ config CGROUP_NET_CLASSID
+ 	  Cgroup subsystem for use as general purpose socket classid marker that is
+ 	  being used in cls_cgroup and for netfilter matching.
+ 
++config SKB_MARK_NAPI_ID
++	bool
++
+ config NET_RX_BUSY_POLL
+ 	bool
+ 	default y if !PREEMPT_RT || (PREEMPT_RT && !NETCONSOLE)
++	select SKB_MARK_NAPI_ID
+ 
+ config BQL
+ 	bool
+diff --git a/net/core/filter.c b/net/core/filter.c
+index b7ac145b68b1f..e2218c18622b8 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -10274,7 +10274,7 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
+ 		break;
+ 
+ 	case offsetof(struct __sk_buff, napi_id):
+-#if defined(CONFIG_NET_RX_BUSY_POLL)
++#if defined(CONFIG_SKB_MARK_NAPI_ID)
+ 		*insn++ = BPF_LDX_MEM(BPF_W, si->dst_reg, si->src_reg,
+ 				      bpf_target_off(struct sk_buff, napi_id, 4,
+ 						     target_size));
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index eb9fcc4b1fd1a..386a32cdc0cc8 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -1581,7 +1581,7 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+ #ifdef CONFIG_NETWORK_SECMARK
+ 	CHECK_SKB_FIELD(secmark);
+ #endif
+-#ifdef CONFIG_NET_RX_BUSY_POLL
++#ifdef CONFIG_SKB_MARK_NAPI_ID
+ 	CHECK_SKB_FIELD(napi_id);
+ #endif
+ #ifdef CONFIG_XPS
+
+base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
+-- 
+2.47.3
+
