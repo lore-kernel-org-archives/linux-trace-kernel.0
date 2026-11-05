@@ -1,58 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.98
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793917809;
-	b=QniVy6vBQG9OfR9IqLaJAwKN+B0f9BsnUMklcikkqeKOAI4W3qc2WQkwO4QobYiRwv7i
-	 ul7UGwFfNS8khQQZ6vTcrK51d9blzCmumMPvldpskITiGiaRRU+ApqtMJyTZa8j56XCV4
-	 /3CnOaAB4uWhYUFDT0vnn1SRAtVhjoaDMSDWz+MyyAUNsu9Ep6cZXxIGCa2cvvpT0wTHW
-	 YJHOKNfZ+SF4BYMH6jUZmAcFoa1L7NEZMA98ChfufMBuyDyYDM43H2G3VtL5rC16ikQsN
-	 sIAFWtRz3VACNFpMlPkk1VkD7AX4tuO/L5G/bSFJdySnMFdc9y/qWaDJYEkeo+ViQqA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793917809;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=viuLjYesmtJpA1sjvM4v1Scr8RvgUg7KgCw53WlMpzY=;
-	b=SZU56wjK+CZGrNVEhWQ6EpVjavOuM7eBjIdzBtT05XYp7lCGfa2Rq6bEW8JGiDK2wYMS
-	 y3OND34Llxh3CT6Zxrz3bUKM93YDipagwNDluwSrbgBitA8SJwhTAX3GHsdkMEaGLJyCH
-	 H47Orh9oCftZSv8gauN3AWDmMo3NAEiKFA5OStaTo+aQt+MqHLyjEMO814dS7cRa3biw0
-	 zjvZi9995pZuwcXWg0LH6DCSOvDJeJPqxRsQIz5A8FhEYr+8eIDFWs4XpJSi2yHZTarZt
-	 3EeGfzBCipteTIFAY70Lp3mYOKE/8knAuTusDQREVtQ2Tf1ZBOB2O2ejp0zX3+EJB7A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=1g4.org;
-	spf=pass smtp.mailfrom=1g4.org;
-	arc=none smtp.remote-ip=185.70.43.98
-Received: from mail-4398.protonmail.ch (mail-4398.protonmail.ch [185.70.43.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.177
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793919289;
+	b=tG4pel6pbSENfL47UY+xYR4HhAlJKVkZ6clkGQjr8n+QMf0SQS5q4dmkeW1RWCZ5mvrW
+	 KM2lQedo4upq0esmUxwGHlb/gxjWbNSR1dw1xRQYr/u4UufzTrRZxXZjQE5/4eRMjAz97
+	 2pDuppCYoKtU0m2+s8m29awZgVkw7bMzsGa70cJQoNNSSJq1/+/SmLdAUWFDCbGvzmVAI
+	 VskSvvfl8Mwfb/oJN9RYVCPEgRbuBwwiWjM6SYSaLBpRQJxv1EeG9wCCJS1PUk8E+8UAv
+	 6ZXcfeTNEGGQNwjwMDPSXHNOrpv4JpDMygW1hT6SGO+Od98/UXdhqoKEP7qXbc164og==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793919289;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=53u7WY1TsnwmHunThsglDcDwR3ZhmgG0Jw62kG2eqzQ=;
+	b=WGtuOu6kMureyF2r4GDgJ54Jd/2Q4ybw3tGJouB6fBKLvX88NXe/bH9CDeoCX6Xws0U7
+	 eNyP9P8H11HrLDcHW++/v++FiW1RvmgJxDc/N21WZTykrS0CgtS4ZlnZceHu7G0dEFpLK
+	 Z1YPrRXNP+y0I3WMSYzti++jZ2wG4X+u/ayL53ICxcWpouYE39GocQVLecRxZYFMcZDqL
+	 VP8QY+aT8aCeI23OWMr5kkzlLCLGi8FPQqjIQ5FPZvG/tKzqtCSSdlyTPvTxkakoGJrgr
+	 fa/kyWGEnlknhgADBoQoCRur71MuC86AvCzXUItL2Cx4dlFG1AJFUPCHtdXCt3R1lKA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jv5Nue57;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.177
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FD9606A328;
-	Thu,  5 Nov 2026 22:30:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36FD9606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=1g4.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1g4.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1g4.org;
-	s=protonmail; t=1793917804; x=1794177004;
-	bh=viuLjYesmtJpA1sjvM4v1Scr8RvgUg7KgCw53WlMpzY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=mMSmuuwVIEGud4Y5aCYE/GSpTIRBaEj5qlZ61a615iQU2rVQrPljNtKoY6dsUMqFy
-	 Ue8+V6w38IEwHIPojjfg6Eqfa0bL88v7g8V9mmXFsOLNDHXGg2A5sBoOBFuPLpEWDA
-	 2klPrbRG+FVVDX2pWfgbJXH5LGwYWBu0MOKobG1RjXxBEcUjLADuWs/qAYY3aIckhK
-	 qrTq9dxw/AIPbB3Od1V72sUtcoUwRVyrJF8Bzh+EAdLj3CN8QfOsk3uU55LOFBPipJ
-	 hm0jVmvXG5YL5WqPR8OUOy/7cmq8wq2teyhRh6JO0DKGhPTpXtTSJW2B9P175aqNoO
-	 vmn3WSItZlIxA==
-Date: Thu, 05 Nov 2026 22:29:51 +0000
-To: Ding Meng <meng.ding@siemens.com>
-From: Paul Moses <p@1g4.org>
-Cc: netdev@vger.kernel.org, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Richard Cochran <richardcochran@gmail.com>, florian.bezdeka@siemens.com, jan.kiszka@siemens.com, wq.wang@siemens.com, gerhard@engleder-embedded.com, Jason Xing <kerneljasonxing@gmail.com>, Simon Horman <horms@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, John Fastabend <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] net: mark skb NAPI IDs independently of busy polling
-Message-ID: <Tif4BSB0H3l8O1bLzRnhCE9hUYhsz6G3MIhQAgYZImUx1_8YwnCyzy89IV6OSTsXdHDT6fFf7rEL1qfRFJC9OPDHRlhl3cgNJyyE_mVlHWM=@1g4.org>
-In-Reply-To: <20261105071706.7043-1-meng.ding@siemens.com>
-References: <20261105071706.7043-1-meng.ding@siemens.com>
-Feedback-ID: 8253658:user:proton
-X-Pm-Message-ID: 262a97350b81bd39ace0cec8114d774b513fee40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AF606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 22:54:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D2AF606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jv5Nue57
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2e9d7791b00so316925ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 14:54:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793919288; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TiEOWPEeQRV6v8cNCRsVCRSxcdbdsXBejSNJV7lFOv3Ay4Muo/gMC/GTnaGOrIALz3
+         xP2ohHO5ckmfvf7qWY/RhjjDV4x+i3YXJcJuVyPPA0NfphWlpb17Tx4z6GLYFY3UmhxH
+         TopZCf05f3lhgDrjurnm2pucq/C+RrzuBz8oFSuxp8OsEK7V7GCX5t2tsmiuLAju/zF9
+         HjuSCu/nDePB/Q/XxBdi/S74cmmTEabpjNELwUqi/CpzjCG7Qdb8nfca1soLqRmsNBlT
+         uNfNZ3RyPWh0RGo+yY6wvvB88bx735iFoXo96Oz//Gi5C3K63r+KC9vJzkxFnWVVMOyN
+         Lvag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=53u7WY1TsnwmHunThsglDcDwR3ZhmgG0Jw62kG2eqzQ=;
+        fh=5GfbuPp9JsN2pJguAFY1UO5Cl6Vvtx7rJNKfSY7sXL8=;
+        b=FCJIWb1rL/WlgGAY6wOcNByHUcyfMXDwGQVuvOHK6od5Wf81FW1Icftepaphm0CTAE
+         kAeGYzpJijTpdUmxJ6uAXKp6vJTwytrSjdSYBruS4DSvd7qS2nltUw3fgzrJl8skwuNz
+         R96vEzmD9iK/NSC8WMR9xBJu4icYQZ2/KgFtZB3pOsUbn8mvYkCAn4sCHF+c3jPZcaqS
+         zZuuK9HvklzJoTYwlrRo61LAf/+g3PpHXWkqTIKhIWYxuwLA9f9/2vFjibDHJb/5Hi+d
+         rbCXUs5NyXS9STNaeNHPffrLc+ECCIQaFIs3honHqetDiAwRWck5v5Dh08PDsPZOl70P
+         lUpQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793919288; x=1794524088; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=53u7WY1TsnwmHunThsglDcDwR3ZhmgG0Jw62kG2eqzQ=;
+        b=Jv5Nue57QjLkhMOEGuHs72frjV/ATniu1inojeuyfPkxMSjJgzY8tebX3s5VEt8P2M
+         5zk79Uevpau03DtEKgmydD39Tj+kq1mm8pJ3xYPkFc3lo63wbGviTt7xGz2nkQjTWgme
+         XZosPj/bHU4nk/vkXbgbH1DqTm2RdwSeIX2H3aB3tXuPraNBn0/VZGHwBP8W+HvX6wpN
+         cQGsBUj+EezVKnGRxvepwdJN5B9CD+NqeIcjKdhFZgQHf6FtucQaQmKlT/r3Gt24fCRj
+         uz6NppJAdxkzJP2Oo7zejufT3sR4pe3Kn6HPckZhMX9zdTnVv/XXjr20+UyoaaPwNtCV
+         tJpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793919288; x=1794524088;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=53u7WY1TsnwmHunThsglDcDwR3ZhmgG0Jw62kG2eqzQ=;
+        b=NTz/cxa/Sa9Ag0j45hNJcESOISyHRu3SmS/XOGDgwzRlKM4TlvLrIF4TVAUqq3A03F
+         gBHb2XKiQvnEY7YD+C2kA6TnSdjhC6fxxHJHWml++iJ4V4Z6Id1XxblO7gqFqLwqp++2
+         FEfY476UrctcxJYWqSmoN1Z3I34YpyqBe4IgXAOllgfD4UXQFYvdqoiyFsFnnU0dHxaN
+         /pnXTYI8wW7zASU0e3UPWAAFLhujrJG90tOJLrLdKxGFNFgM+b8+4sYTzU2UeqkeBEKR
+         xOkPNlQ8yWJYj5nDjJC0oCg89g884IMBvn2amkTTtjMIrJHgir4Flc9GmVZ5vK5V9/In
+         17Ig==
+X-Forwarded-Encrypted: i=1; AKwUvBwjtzhawr4VlkktXsJmyskJpOqjnNgrvGEL7m1SlG7wML7nj0yU5hECeQAcHjfM3x0uP8BpSDjWgxzyQE0kjPhuoIw=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9R5TZQuXTDICxy3UdDIcKScOEt4Eu1WCnEfQQWeDny6YQM3fww
+	ReRaYkI3YaYe2rYHA/dSEsxdSvfAxOZqJ6Mm6SlQHxAUbRK/EF9tzQX+Eeu+pK8oumt88R4J8sh
+	f9vPJ9yr8L++QSJkObzZumkap9wojiT8=
+X-Gm-Gg: AYBFou0bCVmKJgiNEpJybXfhadFX7Ud16flqV0cSjnYpjrGB89tOz/ftXdW2Bm7AcdN
+	j/eZTIwe99y5crC7GWGkHm23Xa+u7IvgDhr6vt6HhYpLVI4e3loB8cUEhoVo8Hm9qv2ftkpVvLx
+	73sC2QgzJb8vx1ORT1TXRdAmwn5k61daXwhzqWDrRn+wu2TPIS1lcX9Js7rkTDRkKwCpHBmiZ9Q
+	1FdE9+cTYgKsqX94Fh8RTvu7RqR3fxPjsjdzrrFaaWiQmkFoJzzYXhhgn3A77FG0ca9XU9H1umP
+	TMxhVai/CXoxn8J/9FNNH4G4xJejOWrNi2LXiERwwQy/dAqRBgsV7WwbhTDXP7oE9m1vMof6+gX
+	KPOfdcfbPC4UhhMikJiUivSE2L55UbqGqD2zrLuBdjYFqDJnsUwMq/Vq9k2+rZkTsXIMoWXbnAp
+	wdFOkRSbyW8ut356NgfOT7I/Daskobz9I6eg==
+X-Received: by 2002:a17:903:f8b:b0:2dd:ad73:5b6d with SMTP id
+ d9443c01a7336-2ed40ad432cmr11270975ad.29.1793919287795; Thu, 05 Nov 2026
+ 14:54:47 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,229 +105,66 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20261105093212.826479-1-yangfeng59949@163.com> <20261105093212.826479-2-yangfeng59949@163.com>
+In-Reply-To: <20261105093212.826479-2-yangfeng59949@163.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 5 Nov 2026 14:54:35 -0800
+X-Gm-Features: AclHuK-DzSYkqcsqv4sSPpyPME2cg_aHhMiCicQL_nOHKzRgCizS-_dThi2hBRo
+Message-ID: <CAEf4Bzaq7y9q-M94X-z7sBquXuB8yUOjFC+TAZ0C1+VxriLd8Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Test faulting build IDs
+ from a sleepable raw tracepoint
+To: Feng Yang <yangfeng59949@163.com>
+Cc: song@kernel.org, jolsa@kernel.org, ihor.solodrai@linux.dev, 
+	kpsingh@kernel.org, matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, 
+	yonghong.song@linux.dev, emil@etsalapatis.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-
-
-On Thursday, November 5th, 2026 at 1:19 AM, Ding Meng <meng.ding@siemens.co=
-m> wrote:
-
-> Commit 97dc7cd92ac6 ("ptp: Support late timestamp determination")
-> added support for deferring RX timestamp conversion to
-> ndo_get_tstamp(). When the timestamp is consumed, get_timestamp()
-> uses the skb's NAPI ID to find the device that owns the timestamp
-> cookie and invoke its callback.
->=20
-> Commit e68b6e50fa35 ("udp: enable busy polling for all sockets")
-> gated NAPI ID bookkeeping with CONFIG_NET_RX_BUSY_POLL. As a result,
-> when busy polling is disabled, the skb may not carry a usable NAPI ID.
-> The device lookup then fails, so the driver callback is not invoked.
-> get_timestamp() falls back to hwtstamp, which does not contain the
-> converted timestamp, resulting in an incorrect RX hardware timestamp.
->=20
-> Record skb NAPI IDs independently of busy-poll support to support
-> drivers that use deferred timestamp conversion and future driver
-> features that need to look up a device by its NAPI ID.
->=20
-> Signed-off-by: Ding Meng <meng.ding@siemens.com>
-> Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
+On Thu, Nov 5, 2026 at 1:33=E2=80=AFAM Feng Yang <yangfeng59949@163.com> wr=
+ote:
+>
+> From: Feng Yang <yangfeng@kylinos.cn>
+>
+> Extend the build_id test with a sleepable raw tracepoint on sys_enter.
+> A helper process pages out the build ID page and issues a getpid()
+> syscall; the BPF program filters on the target tgid and syscall id,
+> records only the first hit, and captures the user stack with
+> BPF_F_USER_BUILD_ID.  The test asserts that one of the frames carries
+> uprobe_multi's build ID.
+>
+> Frame 0 is libc's syscall wrapper, so reaching uprobe_multi needs user
+> stack unwinding; build uprobe_multi with -mbackchain on s390, where the
+> unwinder follows backchains.  The non-sleepable control requires at least
+> one BPF_STACK_BUILD_ID_IP frame, so it cannot pass just because the walk
+> never reached uprobe_multi.
+>
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
 > ---
-> In the discussion of the issue reported at
-> https://lore.kernel.org/netdev/20260630112056.885071-1-meng.ding@siemens.=
-com/
-> this previous patch added an igc-specific fallback for configurations
-> with CONFIG_NET_RX_BUSY_POLL disabled. It populated skb's hwtstamp
-> field with a timestamp converted using the default hardware timer,
-> allowing get_timestamp() to return it without invoking ndo_get_tstamp().
-> But Jakub Kicinski noted that the proposed fix appeared to be a
-> driver-specific workaround for a generic problem. The engleder driver
-> would also be affected by the same issue.
->=20
-> This patch introduces a new configuration option to enable NAPI ID
-> bookkeeping independently of busy polling. The option is enabled
-> whenever busy polling is enabled, preserving the existing behavior.
-> It is also selected by the igc and engleder drivers, ensuring that
-> skbs carry a NAPI ID even when busy polling is disabled.
->=20
-> Another approach considered was to require drivers using deferred
-> timestamp conversion, such as igc and engleder, to enable busy polling.
-> However, this would introduce an unnecessary dependency between two
-> independent features: hardware timestamp reporting should not require
-> busy polling to be enabled.
->=20
-> Timestamping has been tested only with igc; it has not been tested
-> with engleder.
->=20
->  Documentation/networking/timestamping.rst | 11 ++++++++---
->  drivers/net/ethernet/engleder/Kconfig     |  1 +
->  drivers/net/ethernet/intel/Kconfig        |  1 +
->  include/linux/skbuff.h                    |  4 ++--
->  include/net/busy_poll.h                   |  2 +-
->  include/trace/events/net.h                |  2 +-
->  net/Kconfig                               |  4 ++++
->  net/core/filter.c                         |  2 +-
->  net/core/skbuff.c                         |  2 +-
->  9 files changed, 20 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/networking/timestamping.rst b/Documentation/ne=
-tworking/timestamping.rst
-> index 2162c4f2b28a6..dbe40a1972639 100644
-> --- a/Documentation/networking/timestamping.rst
-> +++ b/Documentation/networking/timestamping.rst
-> @@ -278,9 +278,14 @@ SOF_TIMESTAMPING_OPT_PKTINFO:
->    packets with hardware timestamps. The message contains struct
->    scm_ts_pktinfo, which supplies the index of the real interface which
->    received the packet and its length at layer 2. A valid (non-zero)
-> -  interface index will be returned only if CONFIG_NET_RX_BUSY_POLL is
-> -  enabled and the driver is using NAPI. The struct contains also two
-> -  other fields, but they are reserved and undefined.
-> +  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
-> +  enabled and the driver is using NAPI. This hidden configuration is
-> +  selected automatically by busy-poll support and by drivers that need
-> +  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
-> +  use deferred timestamp conversion must select it so the networking
-> +  stack can find the device and call its timestamp callback even when
-> +  busy polling is disabled. The struct contains also two other fields,
-> +  but they are reserved and undefined.
->=20
->  SOF_TIMESTAMPING_OPT_TX_SWHW:
->    Request both hardware and software timestamps for outgoing packets
-> diff --git a/drivers/net/ethernet/engleder/Kconfig b/drivers/net/ethernet=
-/engleder/Kconfig
-> index 3df6bf476ae7e..9700a243bea11 100644
-> --- a/drivers/net/ethernet/engleder/Kconfig
-> +++ b/drivers/net/ethernet/engleder/Kconfig
-> @@ -22,6 +22,7 @@ config TSNEP
->  =09depends on PTP_1588_CLOCK_OPTIONAL
->  =09select PHYLIB
->  =09select PAGE_POOL
-> +=09select SKB_MARK_NAPI_ID
->  =09help
->  =09  Support for the Engleder TSN endpoint Ethernet MAC IP Core.
->=20
-> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/in=
-tel/Kconfig
-> index 780f113986ea8..7fb63f351fc20 100644
-> --- a/drivers/net/ethernet/intel/Kconfig
-> +++ b/drivers/net/ethernet/intel/Kconfig
-> @@ -376,6 +376,7 @@ config IGC
->  =09depends on PCI
->  =09depends on PTP_1588_CLOCK_OPTIONAL
->  =09depends on ETHTOOL_NETLINK
-> +=09select SKB_MARK_NAPI_ID
->  =09help
->  =09  This driver supports Intel(R) Ethernet Controller I225-LM/I225-V
->  =09  family of adapters.
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index 6787fcf6ac3e4..164c862f7a403 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -1059,7 +1059,7 @@ struct sk_buff {
->  =09=09=09__u16=09vlan_tci;
->  =09=09};
->  =09};
-> -#if defined(CONFIG_NET_RX_BUSY_POLL) || defined(CONFIG_XPS)
-> +#if defined(CONFIG_SKB_MARK_NAPI_ID) || defined(CONFIG_XPS)
->  =09union {
->  =09=09unsigned int=09napi_id;
->  =09=09unsigned int=09sender_cpu;
-> @@ -1267,7 +1267,7 @@ static inline bool skb_pkt_type_ok(u32 ptype)
->   */
->  static inline unsigned int skb_napi_id(const struct sk_buff *skb)
->  {
-> -#ifdef CONFIG_NET_RX_BUSY_POLL
-> +#ifdef CONFIG_SKB_MARK_NAPI_ID
->  =09return skb->napi_id;
->  #else
->  =09return 0;
-> diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
-> index 6e172d0f6ef5f..f7c0e62c6a7d7 100644
-> --- a/include/net/busy_poll.h
-> +++ b/include/net/busy_poll.h
-> @@ -130,7 +130,7 @@ static inline void sk_busy_loop(struct sock *sk, int =
-nonblock)
->  static inline void __skb_mark_napi_id(struct sk_buff *skb,
->  =09=09=09=09      const struct gro_node *gro)
->  {
-> -#ifdef CONFIG_NET_RX_BUSY_POLL
-> +#ifdef CONFIG_SKB_MARK_NAPI_ID
->  =09/* If the skb was already marked with a valid NAPI ID, avoid overwrit=
-ing
->  =09 * it.
->  =09 */
-> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
-> index dbc2c5598e35a..99ed7645242eb 100644
-> --- a/include/trace/events/net.h
-> +++ b/include/trace/events/net.h
-> @@ -208,7 +208,7 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
->=20
->  =09TP_fast_assign(
->  =09=09__assign_str(name);
-> -#ifdef CONFIG_NET_RX_BUSY_POLL
-> +#ifdef CONFIG_SKB_MARK_NAPI_ID
->  =09=09__entry->napi_id =3D napi_id_valid(skb->napi_id) ?
->  =09=09=09=09   skb->napi_id : 0;
->  #else
-> diff --git a/net/Kconfig b/net/Kconfig
-> index 76ab44aa439a6..8fa7586dc08ca 100644
-> --- a/net/Kconfig
-> +++ b/net/Kconfig
-> @@ -346,9 +346,13 @@ config CGROUP_NET_CLASSID
->  =09  Cgroup subsystem for use as general purpose socket classid marker t=
-hat is
->  =09  being used in cls_cgroup and for netfilter matching.
->=20
-> +config SKB_MARK_NAPI_ID
-> +=09bool
-> +
->  config NET_RX_BUSY_POLL
->  =09bool
->  =09default y if !PREEMPT_RT || (PREEMPT_RT && !NETCONSOLE)
-> +=09select SKB_MARK_NAPI_ID
->=20
->  config BQL
->  =09bool
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index b7ac145b68b1f..e2218c18622b8 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -10274,7 +10274,7 @@ static u32 bpf_convert_ctx_access(enum bpf_access=
-_type type,
->  =09=09break;
->=20
->  =09case offsetof(struct __sk_buff, napi_id):
-> -#if defined(CONFIG_NET_RX_BUSY_POLL)
-> +#if defined(CONFIG_SKB_MARK_NAPI_ID)
->  =09=09*insn++ =3D BPF_LDX_MEM(BPF_W, si->dst_reg, si->src_reg,
->  =09=09=09=09      bpf_target_off(struct sk_buff, napi_id, 4,
->  =09=09=09=09=09=09     target_size));
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index eb9fcc4b1fd1a..386a32cdc0cc8 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -1581,7 +1581,7 @@ static void __copy_skb_header(struct sk_buff *new, =
-const struct sk_buff *old)
->  #ifdef CONFIG_NETWORK_SECMARK
->  =09CHECK_SKB_FIELD(secmark);
->  #endif
-> -#ifdef CONFIG_NET_RX_BUSY_POLL
-> +#ifdef CONFIG_SKB_MARK_NAPI_ID
->  =09CHECK_SKB_FIELD(napi_id);
->  #endif
->  #ifdef CONFIG_XPS
->=20
-> base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
-> --
-> 2.47.3
->=20
->=20
+>  tools/testing/selftests/bpf/Makefile          |   4 +-
+>  .../selftests/bpf/prog_tests/build_id.c       | 134 ++++++++++++++++++
+>  .../selftests/bpf/progs/test_build_id.c       |  46 ++++++
+>  tools/testing/selftests/bpf/uprobe_multi.c    |  37 ++++-
+>  4 files changed, 216 insertions(+), 5 deletions(-)
 
-Are you sure this does not make the preexisting timestamp lifetime
-issue more pathological? I think it needs to be fixed now as well.
-It was the last item mentioned by Sashiko in your review if I=20
-remember correctly.
+this looks like an overkill, existing uprobe-based tests seem more
+straightforward, is there a problem following the same pattern?
 
-Paul
+for instance, why did we not need run_uprobe_multi_syscall() before?
+
+pw-bot: cr
+
+>
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
+ts/bpf/Makefile
+> index 77682bf28c6e..367166383246 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -650,7 +650,9 @@ $(OUTPUT)/veristat: $(OUTPUT)/veristat.o
+>         $(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(filter %.a %.o,$^) $(LDLIBS) -o =
+$@
+>
+
+[...]
