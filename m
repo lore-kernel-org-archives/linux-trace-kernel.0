@@ -1,98 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793870150;
-	b=CZKQ1xuUcVRU6Qy9Tm70eCkb1UWHCyUZ/YbiXZdcW/MGVfFxBk0WWtLONuEPcyG7UkBW
-	 U8TRRpB3UbkYXODuseprUehISOxaMueydHhCfryNN+tBVPNJ9I6wpngtvPkR+/IVQNRZF
-	 7VsFcZ5dJNiQhLBdwJLtSk8iQVo64ZRI1xs23QanwLggbqtVPkACKDeVJe5C/aDFwySqr
-	 FMOI4dzoee34evpyxAAicHA2ddJzndQlMRYIKNgGCnJTh0LHjKFThEtbssy6NX+mvmoHa
-	 klZn/3Pi2uJTxBX6WvwOY0qVaZmF8QI7f6dcho2k6eYWItKMQtum0LU+vRSbcuxCcPw==
+	t=1793870511;
+	b=njOl8HmR6BcucIV7VEgzZooCqwIHIjll5dRCAd6ia7n24VfLjmqYrbPUBqP0G/xj1MUw
+	 OarZ2wv1IjhwinecPqu1gfPXMy1wBbS7xEkgfRON1LJPiSWK0HW5Ihj4Xh0vBp7zU6eQQ
+	 xD7RyfjHSBn3tt/X3iGirIde3a+H8Q/XXYroB1fspc97FPuKByWbQ+uaQ9k/asu1LSQNr
+	 ZhLN68Cq9D2rsxcgVL6UFUx3ezs7a4FxsQPRSPqnyr9QL7/16arZZfWFqZ02v1HWXWcns
+	 6uiwfbYOcDk6jtrh6JxkZWJyn6E5yd78LI09MZplG/QDxzHB2CtU8Ako2soT1T71czQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793870150;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793870511;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=X2YbtttX2ljZ/Cx/Wqr/rTeYStGymakIlZJnGpjWoAU=;
-	b=1rgipEn1uLtONn/j42q/cdJ6cNhkbSGIqsuViwzMDxo8OAdK8ZTi8LmDoDhB7bq6SKkm
-	 8XwT6qGLh72OzK9emxcTuT7Jo1q/eqGjT/Ns/K8oDv+sBkjN/x1dkYCvjfgtQcSg3aMD5
-	 vaGcnuMRw/WieOjV24goZdMgykbjp3s47TGT9J0/EixufpxXShbeMs759ou8ZoVKN2hJa
-	 PPs+c0RpoAZJ6v+tgrRWS8SDhfq+HkBkPjlPSbhSUSD7DExxCF1/vWPEEP7jfzPsESU31
-	 nUFMdKnS76+xHzZ7sjfQX3VCgKWDrrVryKaDgCq+hDcZyHM1wU5oaDleu6oqeLVNrQg==
+	bh=ak9x5pn77LYpbrOAvo4GHkz6DjvrPWIAs7V9DJYOPhw=;
+	b=SJTD1867wNPnyCEz7BQy9TnCvVG2R43eXpT28l5Zj/+zmigW/RVqVGGGlEUgn6VkgUoH
+	 i6vXgFbdGHweiaA+8fPFyt3gQGZcgb3L5h3RpBi+l51YEmVzOsYzzI5oqQdxjnlHpB24S
+	 odzbK/Sj0MdrSR/V73qc8dcIEYgKLEhqLJ346tUi7txYmsqMVK1/jAtLNtJ5ZXjL7GRNf
+	 +26cM8LfqIu6qg4aXmoUURtviwGQyJchxO34+Auslx5D9DK7klivYi7kjtojLl+u/AYpW
+	 HubpnIJz8uN7YTKFcO9Snch0rzI8Yqm2t/CetP2zIjUlYk0YYEeARtQc+1xF9Mj6Uhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ik+qj3YW;
-	arc=none smtp.remote-ip=209.85.221.53
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=g11l1Mql;
+	arc=none smtp.remote-ip=209.85.221.47
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EF7606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 09:15:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E4EF7606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC02606A326
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 09:21:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2EC02606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ik+qj3YW
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e46e449e8so980421f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 01:15:49 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=g11l1Mql
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-49134c8509fso431303f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 01:21:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793870148; x=1794474948; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793870509; x=1794475309; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=X2YbtttX2ljZ/Cx/Wqr/rTeYStGymakIlZJnGpjWoAU=;
-        b=Ik+qj3YW6/tbM0GfgqD8u9GFlUuLRupsrDPDM3W86HK70+lqjEU0Ib2ss3aYQH7hIK
-         laxrlJD7u6ZwtCfi3T0HBPL52puC2CEJ5iHpdMuUvjelxMt2yN+KntPUAIzmsX9f0Fnq
-         C4JfHCYGQhEk5YpwZyfpPNIDDUME/xjqlb49duzpOn150X/42LPUkw7KqKHlFGmqArZ4
-         NQJWqwzcU0HmJvYHR8wcaNd4FV1+pFK4/JxZOsPm4vLsn77OmuE5/i7EUfcuVJg80wNu
-         /SLifkZMAJgpz95tXpEyw2rh4K4dYfJzP6ay7SfuFRq9lOttoEc3p5CLto02EYjtF7ON
-         0xLg==
+        bh=ak9x5pn77LYpbrOAvo4GHkz6DjvrPWIAs7V9DJYOPhw=;
+        b=g11l1MqlFn50b/Mcndil8CxwZ+kNwuc6jd5CyU8kBUAll8lMu7vxnu9Zu0Uwydeema
+         6RkzfBszlD5SqNS9+6GMk6gALC8ljV2+YeILbQgoFJb28rydlN3OzSNbiBvzoFhvRWcL
+         R1NTa9y8eLArb8diFr/txy/0tSodCipp0CLNMW7s+jppTYoOjg4LmS7xF2L29vwcCiRX
+         8Z0RMHFxuLwxmXnssan04mSWakR2KVI5dLQ8JP6uMChNFoWBjanEmDlIuD24OE2uY8eP
+         nn/5Pl4IaQcir3agR9xcs67x3Et7mU7TJG9VBGMWpRjI6Vd9MjZMndICusp7i5cQnK3k
+         uPHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793870148; x=1794474948;
+        d=1e100.net; s=20260707; t=1793870509; x=1794475309;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=X2YbtttX2ljZ/Cx/Wqr/rTeYStGymakIlZJnGpjWoAU=;
-        b=XBFfchJMPPE/JhwFlgaRl1n0qXjAkIpxofWsPCild0yHF24bFFSNE40DAkVIdv3TLP
-         ZCukXNzIEj1Jqn1wRvO4VU+HmwlaFE5JRsCUYY5oIx+6T4mzBZ5tGUTL3P2pluHAvqWT
-         co13pnsXdOUyEG2zCTGWNAFIjSs0veSg8h5KO62ZAh9b0CQvSO9FmvDcxK2RbQvsG2Ny
-         xK831ooTF+lj8S6MddLePgfzoSKfORm48YmWvGdSgAr/VZVj1qVGJJxM0aIY7MF1zx+M
-         EnEOgWsv69Py4Ve+eTaGCe6dqm1edcJhchCvvaWryQE2UCqJXFijk1q9cbLo2ubYptTg
-         CExQ==
-X-Forwarded-Encrypted: i=1; AKwUvByXa7wKK6kIFEQ74XPvJ6znyoknMF3AlFIkafeKB5q6mgDKaapjt++q7RTUOt96w+JcRwkqbjA1AJajGdxxxoVGqqQ=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/oMWgU3WVZ13vbmeBHwFxhvpxrOczIJFRYNzgNbMztbfL2HMRI
-	2ZWa2dVfW2G7nW48OGf12OdnM4kQ8tdsMzEt8V/wxrLApWOwOuWhHyAkgUk/cR/WfQ==
-X-Gm-Gg: AYBFou0unqza+izzp/Wi19Z0uk9I6ehsdYxuUKb4lU71C37zKJCoA/y6YftLyoErjtK
-	z29l4pzeq5Le1AnG2016FZrCW/45e4i25ORLTgwFtSjfdcxroeTT6493qkonn37aUT8U9PGXGUp
-	RW37OD9CbCkQ/KsMAB6i0uWBKJBaK7C23tQLvD+pXLQP/IWFxXjqoCv//TTnjKVmoVkdf4n49ZM
-	qWaiHZh7Wq0pIaG/8kX/cz30CFsIqUC/F92HBZZaeWisFxJZ0WlQHH3Zc0PlJ7hV8/Ts2BWsPr0
-	lXQuM4Mp6Ifz2erPV1TO6qby6RMAjzCAHDMJ7eRX0SMAOkSgUxFHT4HKwFGmnmg+SVBYQaDa5cA
-	nAcpdPBrahk8KuJOf3SQL5ZttOPMVbjbBIpvy9xeU0v5soGA5I0sKcbmenIXvIRn71ud5omrBDD
-	bGUXudVH3dqqy9gZ4ml2LGxf0UWzuPksV9Z3AxySjPB1PU1qk6opOAI9ez36NuknShjBuCCtYcU
-	VEFiB5qbIRasf7ce8+ybOa23HKdSIlEHSt9WNuzgXVCV0JCt3kY34faZThai9x8WZnweKNfZKOq
-	PhTCxgLn0ax9f6imUPiu1g0tSZxv8G4RQzga7X90niU0pWutUYGrca3i3fN9Fd0BzAI8lc4Slne
-	yPJThPbT0yg==
-X-Received: by 2002:a5d:5e8d:0:b0:48d:fd53:828d with SMTP id ffacd0b85a97d-48e6e50d75fmr36610544f8f.30.1793870147754;
-        Thu, 05 Nov 2026 01:15:47 -0800 (PST)
+        bh=ak9x5pn77LYpbrOAvo4GHkz6DjvrPWIAs7V9DJYOPhw=;
+        b=PUXAyWACiwuKCiPMhgdEgRivGToQVzNc6AklUuh2NsBr5XNkDX8Dsg6rBrIf589Aay
+         sP2zFur3Tak4Ulq6/XrOOBtaI/6wxM1z2G+/svc1WpwwaM2ghanIMCHurvdoVczOFXtF
+         Bc82rrJZEJIevYbJ2Bfsjrt9KAzTSDYJMC0+ZyeHRzSAxD6bhD65HUajGk27LJo6McKJ
+         ryJ2QUB1CxPAea76oQ/VKGrOicxsRTgof3bxZ1/Q9RqHBH85Zeq8CDyMiquFp6bsNRTC
+         hrLU64GCJfF5AsGn1NklqbCCEGTFvfE4oMNJ97MhJ0+De4GReIRQWjn4QstQQjgJ/FkY
+         h/tw==
+X-Forwarded-Encrypted: i=1; AKwUvBzUruMvCy80izefT0O3cGckDn92jlwwW8kF29vnhPDWO00IOII1KbML/wKN5MJiyiZbSgw/CnGrAteeg+I7UYrNprU=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9RX83BOYtTVJLwlJoSddLGdkI2bqeykXGsAvcXK/pK8ovGyUnw
+	zlU7ywXY63GnquRFLJfVImT9v2hbK0c9quhnpq4niXXw+gXF82kS4Hl8pvlUZkPfYw==
+X-Gm-Gg: AYBFou0YAhLKZUc1RGLKHXmHHfEfnlV8NE0xU4+xLp4D+9tfbYWke3a2Ze6Bh9jQUs1
+	n93AQa0mjor/1JWoE7dL3bIoPf1rsx6mlwyytQ9foRFnNMQxx9dCPhHRLM8Eb2EY0MQLYykiqCc
+	bIy22szzZBI/uf/FGct8hZxIZmBXrGDDd7tPSpW7pIl7Ai0DKoO67R38ab9TgjqlLn/6XHMiVEt
+	K1Mge0kIUafpc76hQcIFO5KCkLTAvzJC2Xs3mZTqR4/0Ujj+pYaR4RKE6o2c7wP+9Tsu8uS5FHh
+	HRBE3fT91/SME5YvKlFni/tIbnHs4D0GGoVwnGyNM3BgKHxF7WQNJC5I+D+fTDougVf/nudDYdz
+	Qbv84FxHSFpr0/GLIVuCRmOUMok+V0dMtmEKF5t1wd4uXsunOR+F/kErQkQQDWQIQ1k3Ysl0Uu7
+	ABNXtYezd/vx1szCR/fsiDiLdCu1pVVZpOvbH/dmy2fMez3hc+LLsTcs0RrPhhH9i+lq502Dey4
+	PK+CxDSkeE/0WMMP6moltXT+2UsvArahO1toCBTLcZRgbOwa2GvmATSK0vwXrlXf9ck/ygqvMqR
+	44IYsyigL6BXRCDreFWSVS8yLHS5liDBbU4eX7aj4Dq+h2CCBnDetjRp7mCnP4As
+X-Received: by 2002:a05:6000:288e:b0:491:45bc:d69a with SMTP id ffacd0b85a97d-49145bcd7a0mr3470214f8f.44.1793870509058;
+        Thu, 05 Nov 2026 01:21:49 -0800 (PST)
 Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fec8d87b5sm8550950f8f.11.2026.11.05.01.15.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fed08536dsm7877076f8f.32.2026.11.05.01.21.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 01:15:46 -0800 (PST)
-Date: Thu, 5 Nov 2026 09:15:43 +0000
+        Thu, 05 Nov 2026 01:21:48 -0800 (PST)
+Date: Thu, 5 Nov 2026 09:21:44 +0000
 From: Vincent Donnefort <vdonnefort@google.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <srostedt@redhat.com>, kernel-team@meta.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: Handle a reader taking the new head in
- rb_handle_head_page()
-Message-ID: <auxJP5fkEQOkvicE@google.com>
-References: <20261102-ring-buffer-head-moved-v1-1-165973790be4@debian.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] ring-buffer: Drop redundant
+ ring_buffer_iter::event_size
+Message-ID: <auxKqGjWEZa-7iNt@google.com>
+References: <20260922072944.1281427-1-vdonnefort@google.com>
+ <20260922072944.1281427-4-vdonnefort@google.com>
+ <20261104140723.1251aee1@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,146 +102,76 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261102-ring-buffer-head-moved-v1-1-165973790be4@debian.org>
+In-Reply-To: <20261104140723.1251aee1@gandalf.local.home>
 
-On Mon, Nov 02, 2026 at 06:30:11AM -0800, Breno Leitao wrote:
-> I am occasionally seeing the following  KASAN warning when running
+On Wed, Nov 04, 2026 at 02:07:23PM -0500, Steven Rostedt wrote:
+> On Tue, 22 Sep 2026 08:29:43 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > event_size contains the maximum size the iterator can read for each
+> > event. It corresponds to the maximum capacity of a ring-buffer page.
+> > During non-consuming read, resizing is disabled. It is therefore safe to
+> > just use rb_subbuf_capacity(), making event_size redundant. Remove it.
+> 
+> Hmm, I don't like the code dependency here. Yes, we disable resizing and
+> the event_size isn't going to change, but if in the future that is no
+> longer the case, then this becomes a hidden bug.
+> 
+> What's wrong with just having a field that keeps track of the size
+> allocated? It's more robust that way and doesn't have any hidden
+> dependencies.
+> 
+> -- Steve
 
-a KASAN warning?
+Ack. It was just an attempt at cleaning up the struct, but indeed this makes an
+additional assumption we didn't have before.
 
-> some debug kernel at Meta's fleet:
-> 
->   WARNING: kernel/trace/ring_buffer.c:3793 at rb_move_tail+0xf78/0x1050
->   Call trace:
->    rb_move_tail+0xf78/0x1050 (P)
->    __rb_reserve_next+0x648/0xac0
->    ring_buffer_lock_reserve+0xd00/0xf00
->    trace_buffer_lock_reserve+0x28/0x188
->    trace_graph_return+0x220/0x3e8
->    ftrace_return_to_handler+0x2bc/0x5a8
->    return_to_handler+0x20/0x48
->    __arm64_sys_sched_yield+0x18/0x30 (F)
-> 
-> I've understood that rb_handle_head_page() moves the head page forward
-
-Drop "I've understood". 
-
-> in two steps: it marks the pointer to the old head page UPDATE, then
-> marks the pointer to the page after it (new_head) HEAD. The second
-> cmpxchg is assumed to return only HEAD or NORMAL, but it can also return
-> RB_PAGE_MOVED:
-> 
->   CPU 0 (writer)                        CPU 1 (reader)
->   ------------------------------------  --------------------------------
->   rb_handle_head_page()
->     old head ptr: HEAD -> UPDATE
->     new_head = page after old head
->     <interrupt: nested write>
->       sees UPDATE, marks new_head
->       HEAD and moves the tail page
->     </interrupt>
->                                         rb_get_reader_page()
->                                           swaps new_head out for the
->                                           reader page
->     cmpxchg(new_head|NORMAL ->
->             new_head|HEAD) -> MOVED
->     RB_WARN_ON()
-> 
-> RB_WARN_ON() disables the whole ring buffer, and the function returns
-> without clearing its UPDATE flag, so tracing stays off until the buffer
-> is reset.
-> 
-> Do not treat RB_PAGE_MOVED as fatal, retry after clearing UPDATE. The
-> head already advanced past both pages, so the caller can simply try
-> again without losing tracing.
-> 
-> Fixes: 77ae365eca89 ("ring-buffer: make lockless")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> A nested writer and a consuming reader can race so that the second
-> cmpxchg of a head page move in rb_handle_head_page() returns
-> RB_PAGE_MOVED. That trips RB_WARN_ON(), which disables the ring buffer
-> and leaves the old head pointer flagged UPDATE. The patch handles the
-> return like the RB_PAGE_MOVED case of the first cmpxchg: clear the
-> UPDATE flag if this writer set it, and retry.
-> 
-> Testing, on arm64 KVM guests under virtme-ng (32 vCPUs, KASAN config,
-> next-20261030; kernel/trace/ring_buffer.c is identical in v7.4-rc1):
-> - Setup: function_graph tracer filtered to "*sched*", buffer_size_kb=7
->   (two pages per CPU), overwrite on, a trace_pipe_raw reader on every
->   CPU plus a trace_pipe reader, and stress-ng --yield/--timer/--futex.
-> - Without the patch the warning fired after about 12 minutes. With a
->   debug-only 50us udelay() between computing new_head and the cmpxchg
->   it fired within a second, and a debug print showed ret ==
->   RB_PAGE_MOVED, type == RB_PAGE_HEAD and new_head being the reader's
->   page.
-> - With the patch: no warning in a 5 minute run with the udelay() (the
->   RB_PAGE_MOVED case ran about 1000 times) or in a 25 minute run
->   without it (it ran once), and the buffer kept recording in both.
-> - checkpatch --strict is clean, and kernel/trace/ring_buffer.o builds
->   without warnings at W=1 on v7.4-rc1.
-> 
-> Not tested: the fix has not run on the arm64 Grace host where the
-> original WARN was seen.
-> 
-> The original WARN came from a next-20261030 KASAN kernel on an NVIDIA
-> Grace host under stress-ng, after an interrupted ftracetest run had left
-> that tracing setup in place.
-> 
-> The analysis, reproducer and patch were developed with an AI coding
-> assistant (Claude Code). It triaged the WARN from the netconsole logs,
-> wrote the virtme-ng reproducer and the debug instrumentation, and
-> drafted the fix and changelog.
-> ---
->  kernel/trace/ring_buffer.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 1fd28a72e6ee13..7a60fa175e2cc6 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3789,6 +3789,15 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
->  	case RB_PAGE_NORMAL:
->  		/* OK */
->  		break;
-> +	case RB_PAGE_MOVED:
-> +		if (type == RB_PAGE_HEAD) {
-> +			ret = rb_head_page_set_normal(cpu_buffer, next_page,
-> +						      tail_page,
-> +						      RB_PAGE_UPDATE);
-> +			if (RB_WARN_ON(cpu_buffer, ret != RB_PAGE_UPDATE))
-> +				return -1;
-> +		}
-
-We should avoid duplicating this.
-
-> +		return 1;
-
-Besides, I am not sure about returning 1. If the nested writer interrupts
-between rb_head_page_set_head() and rb_head_page_set_normal(), it can also get
-RB_PAGE_MOVED and skipping rb_tail_page_update() means the retry will observe
-the old tail.
-
-All in all, I wonder if it shouldn't simply be: 
-
-  case RB_PAGE_MOVED:
-     break;
-
-Additionally, the comment with "Valid returns" must be amended.
-
->  	default:
->  		RB_WARN_ON(cpu_buffer, 1);
->  		return -1;
-> 
-> ---
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-> change-id: 20261102-ring-buffer-head-moved-f9caf5da9444
-> 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
-> 
+I can drop this patch.
 
 -- 
 Vincent
+
+>  
+> 
+> > 
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > ---
+> >  kernel/trace/ring_buffer.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 1a158a24b3c8..3129589e2d0e 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -680,7 +680,6 @@ struct ring_buffer_iter {
+> >  	u64				read_stamp;
+> >  	u64				page_stamp;
+> >  	struct ring_buffer_event	*event;
+> > -	size_t				event_size;
+> >  	int				missed_events;
+> >  };
+> >  
+> > @@ -3558,9 +3557,11 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+> >  	 */
+> >  	barrier();
+> >  
+> > -	if ((iter->head + length) > commit || length > iter->event_size)
+> > +	if ((iter->head + length) > commit ||
+> > +	    length > rb_subbuf_capacity(iter->cpu_buffer->buffer)) {
+> >  		/* Writer corrupted the read? */
+> >  		goto reset;
+> > +	}
+> >  
+> >  	memcpy(iter->event, event, length);
+> >  	/*
+> > @@ -6488,8 +6489,7 @@ ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+> >  		mutex_unlock(&buffer->mutex);
+> >  
+> >  	/* Holds the entire event: data and meta data. */
+> > -	iter->event_size = rb_page_capacity(READ_ONCE(cpu_buffer->reader_page));
+> > -	iter->event = kmalloc(iter->event_size, flags);
+> > +	iter->event = kmalloc(rb_subbuf_capacity(buffer), flags);
+> >  	if (!iter->event) {
+> >  		atomic_dec(&cpu_buffer->resize_disabled);
+> >  		return NULL;
+> 
