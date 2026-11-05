@@ -1,57 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793887956;
-	b=BBiMLtQ3MqCr/mHoGCTh6weiwxGF1d7cm/DQ/DmVwjdZLmZB/7K2q0E7i3jISWb9W2NP
-	 doYb+SMqEOmVId8Qo0OmGtCTMw+tTyFmplQMEBINn2XZyfKEkHXp9WPRi46kRESEhXGig
-	 6WjjZoJv5EuAljECnyphPmfgl13g/ReRzZE7XcKGvM1JTeiTX+r3GbzES86PQtbqhSxA+
-	 RgNqezXvZNdz1MgoSpgQNwg9dqAwBAc7qhEvYJe3HDVcJS4gjsOGKJ+MWLs38mmAV5VmX
-	 Be9yJOT7OpiLhRejUK6lNVad70mx5dEbS9Qovuy4bwrc8eY/crtjCIgWonQN702eJwQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793887956;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=epReB34mJhoyIVXnBuftr0xqY+TB9SCuxEgMqdn9e9M=;
-	b=fg06Wbo6BkAgyv3R5x9eJaelxK0VnoupBsVF+UB/Sqti5PFxvDcyH4FAD11MtPmSIvc1
-	 SAkzb/2rGb3W52lwJcy+0K3cUDH7Vn7Z7dORHF6MfN+vBShS0PeqA8hhGCz6sZfVrCUyx
-	 epIRed/D9VTzHeqKL6H+rwk7wOYk4b4W27lPlBvEnKto5TWKjmJTg1JeKCf1eBwvwHbJk
-	 Fdk+5laVH7glVBWGI2b31t3MIjQsrg/ugw9F+2j7SZ4FHAwdMCtyhjVwl6Vr/uOMcplzt
-	 0frxShV145Tl/qpUwEurOmLL6v+XtM3r0mjSb1ZsXlLhu98cIyZwrq5sbCPBbLbLcPg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUtu4y00;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793888397;
+	b=j6A02nOnwQX1a+Drb1raWsq06L/NR7FGVxrudk8GtxtkdU+gQoOZGavp+Z84rTziH7vU
+	 XUD0fJ67R20OKSUlrowDvYXuxeOVgbQyovqao/vWRvpmn18Vs3xgzbzfXE5RYptvDvLtH
+	 A33j2EppFkcvMSRqQV4SA4UNzdBgBT5Lz6fk6kUaxMbBtHB/e+lSizGGCclmLQWI8MpPl
+	 2qdKUxNalHx6Rc1hJj5P0ZIlMUy93flrCPKFe5BcD5m9K5xWdPHqS1FoPTa5JjT9U3mqz
+	 Sx7gkERIuRaUT4nEZH0cfVwUKB06lo0dY6YpbBiLp6ms41y9Y4GMZRZ3vBREgOabhDQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793888397;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:From:In-Reply-To:References:MIME-Version:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=fVkiMhZqi2ixyREqRhA5BibXFDzbOUI516cKpXA0jJ8=;
+	b=tksrPqBka9aejw5cInk71lV8Migl+RAmm5ewFHvnQGGI0wpG4MuNndC281osoZr7l8Lt
+	 yKdahz/yiogVSJ/W/4Xtx8bPIGiPuKKFQICxPbGA6JKKjpl1YD8TPwNula5rIpCQNk2l4
+	 PrUVzna+3ofRCQ+ENnTVuZLITShpivQYeFNtFXkWQ7GZlXf+Fm1MEVFU6QU4zNw5GjLPG
+	 hEuVwAcIY6dNuJUdC5L7yOzOP5nSIsOZCkrC/AFSbC4Z/0BpAAe2D/sVGHToeqD0U2i3U
+	 mXvUXk99tYuM67D00pgp+UCt0RgOld0y4JODrxqBJS45XMdz2bb9OFWW0OUpOJM027g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="blxoTW8/";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.182
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CD3606A326
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A93606A334
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:19:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E3A93606A334
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUtu4y00
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D9A1F000C1;
-	Thu,  5 Nov 2026 14:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793887955;
-	bh=epReB34mJhoyIVXnBuftr0xqY+TB9SCuxEgMqdn9e9M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jUtu4y00WkJtpFj2+7sJp2HNJCGlUSO2IaBxo42/fMGckmJpPvp3D8ufvuFee2t13
-	 Gs/EJqxXzz8wKL/YhQ19KoPutu/pBW6SebGHC88YRgkOY7CPSSc8mf5vhUuGifdjtO
-	 1mrvYZjjMWghHotBgQw14i7O5vgv4hQObfkpBW/v7hlYgvPZ6BuE9Qwaq3AIklSUif
-	 2lcdcG/C/AcChJ0oPApTPqVAGzbMFsToke9y6Oe4pLJlU6pm3gRLRmo6q8I0K3tZsb
-	 KWTx/d1+nyw39ns0AXKoXYuPhfoMgDmrvJdRXuEvW+5IVOGVqAQsIPWKlUBpuCacLy
-	 /TX6F88cNF0tQ==
-Message-ID: <sashiko-outbox-199209@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 3/4] tracing: add per-CPU buffer memory usage
- statistics
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Xiang Gao" <gxxa03070307@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261105140221.44614-4-gaoxiang17@xiaomi.com>
-References: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
- <20261105140221.44614-4-gaoxiang17@xiaomi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 14:12:34 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=blxoTW8/
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-4f55a53898cso1015147b6e.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 06:19:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793888396; cv=none;
+        d=google.com; s=arc-20260327;
+        b=kiFHmSqSVOVwsdp8MrX6dbAR1eszc8cfh96i5dIX2yghiHfwwBl8umXw8ghYBRJSpN
+         g0hryW5LhTRY4LMXRFkHDENTMUALsZlf8/QlKkle3fVxCxpDvhNeN+cuxtLSyPqEYhDj
+         uOaLkeTqVsVmYbUuWkWQAWMysyRIgj9rAwudGgoEJmJW5F9An9n0P76NNeDpkSsmLBWt
+         iTeAU5Ev19/yVwZNoOKPycs82DFVB0xsDJ1Ja2mqO8xqHWMP0SfQXQjpEk3A0XM4dokp
+         lUwS0nePyKuQG0xaXd9kS6F3U5SOwr1eUVCLFNCGyrNkGAkAJqtoCPOBSTl5w4RUpPkh
+         ro+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=fVkiMhZqi2ixyREqRhA5BibXFDzbOUI516cKpXA0jJ8=;
+        fh=yfkNN22imA9/cJF+2JTc79iEXfRrHOaWIuX3pS6AbqM=;
+        b=W59jGYg1yqjdL0ZmgVsWYycTde5Z96BxrX5Kk0QXJk7wGD8LRHOYyMlQWpsK/cT3AV
+         hJg+Z6nLuvrEzr6iS0lpMyOj5UsDo4QA8FXZlGtnBefa5iscPqEHlBJSuTZKFYHBNxRL
+         VYW5gS8qRGFnsIgU1KdeLFQIaCFTYmcfUU9eNlAhvVS8rK03aN3qMzwNcWe3V8ryxSIV
+         HjVM4Ur0TdQo0OFlfSdLzHA9AEeVt4vqmQ4kgJdG2udaFtnipNKN6L2t3XwZ3DLMFcsO
+         53B0iLndf2mvjSGUBsTd+GuA453we8RirK2P5AA0Aq6HoW68b0FGzltxMQn0myAfxIB1
+         1PRw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793888396; x=1794493196; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fVkiMhZqi2ixyREqRhA5BibXFDzbOUI516cKpXA0jJ8=;
+        b=blxoTW8/aNM/CWg4jHCUAhzGaosYGE2A2gzS8dwn4fw5gebO7g7UUURqaC8tK2F1XX
+         ThI2g+MmlI7owPyZ/mBvX1jfaqJbecTO4KX84Jtr1jIdulsLy3kIw8/+bVhZIE/YeOov
+         56jUiX26Xlcm1dFvcbeu41ltmDgvjntYvFnzKeJscT78KghaiN1xRinaeYj063m/fhV1
+         kdmlM52Qz1Fga7LkCeltUP0ZrUzKP4ZVgypq2rc0Uvr0ji1joGaChCzwuL49pGeYP0kG
+         GFpthhELINSBOt5Q5RTAcZVr3QOy9Z+MLYdJm93lp0trm8o5ZvGuAqF59OSAQXucZasG
+         somQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793888396; x=1794493196;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fVkiMhZqi2ixyREqRhA5BibXFDzbOUI516cKpXA0jJ8=;
+        b=ruF/Jg280KQgA6AAXSe7a/V6j4ETtt5Pwh1DyBSk+QuMLdLzkg43btLBAyIDRWISKY
+         +VW/x/FXUp8XRHTLKiKnGza+8yKzyYEsm66dcj9HB0bbO5pkpQVy+b8+0RRN/gSW6em2
+         KUpkSTuMIzv+yIJPVJNyQVaPuqbjJqAIFC+CWH7LXeFQrDuGmvulCy2L1CJLQmNRPOwt
+         9w1wq7flFl/q3zY4rtSXJqWvimi3hQf8ukpNeyVLSkM/Pp/an4wMJkaMqk1hGYonEo5n
+         NG260iqQZz44/D5vfqyHYvjmmU7i1xmPqL7TWi1go4QxksyiQHQV22q5WGUquHeNKZVj
+         Pwug==
+X-Forwarded-Encrypted: i=1; AKwUvBz6ddmioVl6gcDrvK8dT9k3cbAXABh9hKFWoKiLiC4ZECKme1ORZBcuHBiNq9TVTDZMMIfOyPN9Xm+R5gb8Hi3Lfkc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+tBcZhdFbh2cfiTs1RydnBJGZYv5GBy1AsNHvm4cdxwFOwYbUZ
+	wOr0IPuNm9YbkpJIW/zM8paL4UtS1o2ufdNSBpdHPMCTyEbwYaYlvOOuHOmZJC/Z2nIhuzGze+1
+	QqQKlfC2RHQMEenrnoMa2flu+2C5alpk=
+X-Gm-Gg: AYBFou0rlL1VKBt6P/9kSSAAsH54+ndoD5IwueqDUltjCmpimLaiEAIhk7dKduYdX1G
+	xYyo1aFoBcQUk7/WaUxJk3oZvhdsrYRBlxpQ7njjRZda5JXkgrYPjk16NYyelCtnWhFcpBJZ759
+	CHfFs9ED8DVR7tcI/LR1HVW9D9yrw3vbxx/bsopCgJaV899cRVLErCpVe975h+JumgBY43sKFJQ
+	A3gi/fS5Ylj7HlqBH2tYZeIrhj/vtHsW9Af8xr3xLeTq6RcTU4W6Han318dRaglbH9L1Vo0P6W1
+	mYKx42bRsqQLYS4o38BsyN2eFpbPXxa802tG0o3rst+PAAWl3yVTIqh4YSVdNY65+XUmZ4JdcZe
+	q0qcCB+AnOaQA92TdRC+jBMQ6uuPXX9RnmpqJ4hIC+6JjIRzBAB1veo965TLB4kj0OE7k7s4=
+X-Received: by 2002:a05:6808:11cb:b0:53e:42e4:47c with SMTP id
+ 5614622812f47-5640ddafe6fmr14880307b6e.34.1793888395737; Thu, 05 Nov 2026
+ 06:19:55 -0800 (PST)
+Received: from 41474967715 named unknown by gmailapi.google.com with HTTPREST;
+ Thu, 5 Nov 2026 06:19:54 -0800
+Received: from 41474967715 named unknown by gmailapi.google.com with HTTPREST;
+ Thu, 5 Nov 2026 06:19:54 -0800
+From: Kirtikumar Anandrao Ramchandani <kirtiar15502@gmail.com>
+In-Reply-To: <CADZg-m0FeLntAS6XxE-kc74vwH-jAh+jXT68qnVwXuHZNUHzfA@mail.gmail.com>
+References: <CADZg-m04iG5kCZ5-yh=Vz_ysYjVDGSYn3je4_-8AzWWfiC-bXQ@mail.gmail.com>
+ <CADZg-m0FeLntAS6XxE-kc74vwH-jAh+jXT68qnVwXuHZNUHzfA@mail.gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,125 +110,57 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Date: Thu, 5 Nov 2026 06:19:54 -0800
+X-Gm-Features: AclHuK82Jb2KHgfgK5OPYnhW4ayXf8IsS89Dhx7joTBVnTmxHxJXKHLc-7hkZ_k
+Message-ID: <CADZg-m3Wxkze0t9u1+dvn3Rrart54_eyi5XDcOSE+9W94s983Q@mail.gmail.com>
+Subject: [PATCH v3] ring-buffer: Skip time delta validation for the counter clock
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	syzbot+eb74dca0d1eb3ec227a7@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] tracing: duplicate helpers and fops in trace_buffers_memory_cpu()
---
+The counter trace clock increments on every read. Time delta validation
+assumes that the clock values read while reserving and checking an event
+can be reconciled with the deltas stored in the page. With the counter
+clock, this assumption can fail for an intact ring buffer and report a
+spurious TIME DOES NOT MATCH warning.
 
-commit eebda64960929af5cb03f9b9f28c818ce9a75fce
-Author: Xiang Gao <gxxa03070307@gmail.com>
+Skip time delta validation while the buffer uses trace_clock_counter().
+Clock selection already resets the buffer, so events recorded under a
+previous clock are not retained for this check. Recording and reading
+counter-clock events are unchanged.
 
-tracing: add per-CPU buffer memory usage statistics
+Link: https://lore.kernel.org/all/20260920161648.7d9fda60@fedora/
+Reported-by: syzbot+eb74dca0d1eb3ec227a7@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=eb74dca0d1eb3ec227a7
+Signed-off-by: Kirtikumar Anandrao Ramchandani <kirtiar15502@gmail.com>
+---
+Changes in v3:
+- Replace the Openwall archive URL with the corresponding lore link.
 
-This commit adds per-CPU ring-buffer memory usage files under
-trace_stats/per_cpu/cpuN/memory_usage_kb using the same categorized output
-format as the aggregate trace_stats/memory_usage_kb file.
+Changes in v2:
+- Resend as plain text after the previous mail client reformatted the diff.
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 6036e368fe102..e7e23ff38105c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5898,6 +5898,60 @@ static const struct file_operations trace_mem_fops=
- =3D {
->  	.release	=3D single_release,
->  };
-> =20
-> +static struct trace_mem_stats trace_buffers_memory_cpu(int cpu)
-> +{
-> +	struct trace_mem_stats stats =3D {};
-> +	struct trace_array *tr;
-> +
-> +	guard(mutex)(&trace_types_lock);
-> +
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list)
-> +		trace_array_buffer_memory(tr, cpu, &stats);
-> +
-> +	/* Account for the bootstrapping temp_buffer as well. */
-> +	if (temp_buffer)
-> +		stats.global +=3D ring_buffer_memory_size(temp_buffer, cpu);
-> +
-> +	stats.total_system =3D stats.global + stats.instances +
-> +			     stats.snapshots + stats.remotes;
-> +	stats.total_carveout =3D stats.persistents;
-> +
-> +	return stats;
-> +}
-> +
-> +static int trace_mem_per_cpu_show(struct seq_file *m, void *v)
-> +{
-> +	struct trace_mem_stats stats =3D trace_buffers_memory_cpu((long)m->priv=
-ate);
-> +
-> +	seq_printf(m, "global: %lu\n", stats.global >> 10);
-> +	seq_printf(m, "instances: %lu\n", stats.instances >> 10);
-> +	seq_printf(m, "snapshots: %lu\n", stats.snapshots >> 10);
-> +	seq_printf(m, "persistents: %lu\n", stats.persistents >> 10);
-> +	seq_printf(m, "remotes: %lu\n", stats.remotes >> 10);
-> +	seq_printf(m, "total_system: %lu\n", stats.total_system >> 10);
-> +	seq_printf(m, "total_carveout: %lu\n", stats.total_carveout >> 10);
-> +
-> +	return 0;
-> +}
-> +
-> +static int trace_mem_per_cpu_open(struct inode *inode, struct file *file)
-> +{
-> +	int ret;
-> +
-> +	ret =3D tracing_check_open_get_tr(NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return single_open(file, trace_mem_per_cpu_show, inode->i_private);
-> +}
-> +
-> +static const struct file_operations trace_mem_per_cpu_fops =3D {
-> +	.open		=3D trace_mem_per_cpu_open,
-> +	.read		=3D seq_read,
-> +	.llseek		=3D seq_lseek,
-> +	.release	=3D single_release,
-> +};
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-[Severity: Low]
-As reported by Masami Hiramatsu (Google) on v4 [1], could this reuse
-trace_buffers_memory(), trace_mem_show(), trace_mem_open(), and
-trace_mem_fops instead of duplicating them?
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1fd28a7..c860d5b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4747,6 +4747,10 @@ static void check_buffer(struct
+ring_buffer_per_cpu *cpu_buffer,
+ 	bool full = false;
+ 	int ret;
 
-In kernel/trace/trace.c, the existing aggregate implementation already
-forwards inode->i_private to single_open() in trace_mem_open() and formats
-the exact same fields in trace_mem_show():
++	/* The counter clock advances on every read, invalidating this check. */
++	if (cpu_buffer->buffer->clock == trace_clock_counter)
++		return;
++
+ 	dpage = info->tail_page->page;
 
-kernel/trace/trace.c:trace_mem_show() {
-	struct trace_mem_stats stats =3D trace_buffers_memory();
+ 	if (tail == CHECK_FULL_PAGE) {
 
-	seq_printf(m, "global: %lu\n", stats.global >> 10);
-	...
-}
-
-kernel/trace/trace.c:trace_mem_open() {
-	int ret;
-
-	ret =3D tracing_check_open_get_tr(NULL);
-	if (ret)
-		return ret;
-
-	return single_open(file, trace_mem_show, inode->i_private);
-}
-
-If init_trace_stats_tracefs() passes (void *)(long)RING_BUFFER_ALL_CPUS for
-the aggregate memory_usage_kb file and (void *)(long)cpu for each per-CPU
-file, and trace_buffers_memory(int cpu) handles both RING_BUFFER_ALL_CPUS a=
-nd
-a specific CPU, all four duplicated definitions can be avoided.
-
-Also, the comment in trace_buffers_memory_cpu() describes temp_buffer as a
-bootstrapping buffer, whereas trace_buffers_memory() notes that temp_buffer
-is allocated in tracer_alloc_buffers() to hold temporary event data for
-triggers when tracing is off.
-
-[1] https://lore.kernel.org/r/20260924103621.734c895420a97a2d6f36332e@kerne=
-l.org
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105140221.4461=
-4-1-gaoxiang17@xiaomi.com?part=3D3
+base-commit: 05441d697f7f9a927264f4058cbbc6a03dfcac9d
