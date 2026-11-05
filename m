@@ -1,60 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793887944;
-	b=jbvJuezn99nvhS3iBbdYTCFU2KMZIuxZYPykQmUeujW4VVYG6bt7ZLDUC9W7NYq/cgfd
-	 UJ6owJVcqrl/zVysw/aXvtfLUzsJYDGCoJFUxDWbO5k0kfPA3kx9EE7+UUt6QC+QqAZaU
-	 0bsz8NbQwUysZiJeTOlCVBw/1Ps5lVMGAX4/F+Ak8lZFPkkzBxFUPdis4OujwOMSjCWc6
-	 7whez2+l6hmprq0Hno2nO1Ot6ct9r2p3Cl/dwK9IqRGvGl7P1dcNS3t2hKGz1N1ELBRYP
-	 kIMMnoxHAYsHiPSQWAJnYSGeZJSC1B+MdukDgH9J4Rbl5X6W58aBGLkC4v0L1Tok83w==
+	t=1793887956;
+	b=BBiMLtQ3MqCr/mHoGCTh6weiwxGF1d7cm/DQ/DmVwjdZLmZB/7K2q0E7i3jISWb9W2NP
+	 doYb+SMqEOmVId8Qo0OmGtCTMw+tTyFmplQMEBINn2XZyfKEkHXp9WPRi46kRESEhXGig
+	 6WjjZoJv5EuAljECnyphPmfgl13g/ReRzZE7XcKGvM1JTeiTX+r3GbzES86PQtbqhSxA+
+	 RgNqezXvZNdz1MgoSpgQNwg9dqAwBAc7qhEvYJe3HDVcJS4gjsOGKJ+MWLs38mmAV5VmX
+	 Be9yJOT7OpiLhRejUK6lNVad70mx5dEbS9Qovuy4bwrc8eY/crtjCIgWonQN702eJwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793887944;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=ZuyZA80OhXsTCt9eMx+qhWTC4yMPIt4JU/oWRmBa8MY=;
-	b=K1YyZ1ZXNIJY0U0UUSePj7E0nw/8zyNtFktWoOn03KNCqwvS4btMBs+YHQiKkM25flFY
-	 qGA8SASi+b1nY+R78qpLL2rm/NUo1HXmuDR3Ls/z5hbDLi2W4FCv+xDFkVjC7VBqkVlk8
-	 IlLS4nWsla5Osaz8nnWo/b0/i/EQvh5UUsGX1YiFrDQDevU4NR/TaWEzuaU2E4cdzqosI
-	 +ZGxS2cojpQ0sFJmANVtcTeHknRyJCwryrkg9DyJO8V1WE2W0onacKvPyfurHudM7Bggg
-	 IsRLu/3PyBvKcyjUICZozRIypPYYdQXY+yqRz3wBUosqsmFjHm1L1o0hGUs+pOIQJgw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793887956;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=epReB34mJhoyIVXnBuftr0xqY+TB9SCuxEgMqdn9e9M=;
+	b=fg06Wbo6BkAgyv3R5x9eJaelxK0VnoupBsVF+UB/Sqti5PFxvDcyH4FAD11MtPmSIvc1
+	 SAkzb/2rGb3W52lwJcy+0K3cUDH7Vn7Z7dORHF6MfN+vBShS0PeqA8hhGCz6sZfVrCUyx
+	 epIRed/D9VTzHeqKL6H+rwk7wOYk4b4W27lPlBvEnKto5TWKjmJTg1JeKCf1eBwvwHbJk
+	 Fdk+5laVH7glVBWGI2b31t3MIjQsrg/ugw9F+2j7SZ4FHAwdMCtyhjVwl6Vr/uOMcplzt
+	 0frxShV145Tl/qpUwEurOmLL6v+XtM3r0mjSb1ZsXlLhu98cIyZwrq5sbCPBbLbLcPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=CoEvBoFU;
-	arc=none smtp.remote-ip=216.40.44.16
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUtu4y00;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30D5606A31B;
-	Thu,  5 Nov 2026 14:12:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F30D5606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CD3606A326
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=CoEvBoFU
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 8CC92C0A0F;
-	Thu,  5 Nov 2026 14:12:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id A0FA617;
-	Thu,  5 Nov 2026 14:12:17 +0000 (UTC)
-Date: Thu, 5 Nov 2026 09:12:16 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Ilya Maximets
- <i.maximets@ovn.org>, Matthieu Baerts <matttbe@kernel.org>, Aaron Conole
- <aconole@redhat.com>, Eelco Chaudron <echaudro@redhat.com>,
- dev@openvswitch.org, Adrian Moreno <amorenoz@redhat.com>, Antoine Tenart
- <atenart@kernel.org>
-Subject: Re: [PATCH v7 0/4] tracing: improve symbolic printing
-Message-ID: <20261105091216.7b91db5a@gandalf.local.home>
-In-Reply-To: <20260922110955.363677-6-johannes@sipsolutions.net>
-References: <20260922110955.363677-6-johannes@sipsolutions.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUtu4y00
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D9A1F000C1;
+	Thu,  5 Nov 2026 14:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793887955;
+	bh=epReB34mJhoyIVXnBuftr0xqY+TB9SCuxEgMqdn9e9M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jUtu4y00WkJtpFj2+7sJp2HNJCGlUSO2IaBxo42/fMGckmJpPvp3D8ufvuFee2t13
+	 Gs/EJqxXzz8wKL/YhQ19KoPutu/pBW6SebGHC88YRgkOY7CPSSc8mf5vhUuGifdjtO
+	 1mrvYZjjMWghHotBgQw14i7O5vgv4hQObfkpBW/v7hlYgvPZ6BuE9Qwaq3AIklSUif
+	 2lcdcG/C/AcChJ0oPApTPqVAGzbMFsToke9y6Oe4pLJlU6pm3gRLRmo6q8I0K3tZsb
+	 KWTx/d1+nyw39ns0AXKoXYuPhfoMgDmrvJdRXuEvW+5IVOGVqAQsIPWKlUBpuCacLy
+	 /TX6F88cNF0tQ==
+Message-ID: <sashiko-outbox-199209@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 3/4] tracing: add per-CPU buffer memory usage
+ statistics
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xiang Gao" <gxxa03070307@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261105140221.44614-4-gaoxiang17@xiaomi.com>
+References: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
+ <20261105140221.44614-4-gaoxiang17@xiaomi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Nov 2026 14:12:34 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,100 +60,125 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: A0FA617
-X-Stat-Signature: 9993ajdnkirqqfjgyiomy5txnkn16gat
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX191ERUTatcYnoDmb5aynzKQhqeeWSoD2RY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZuyZA80OhXsTCt9eMx+qhWTC4yMPIt4JU/oWRmBa8MY=; b=CoEvBoFUueQ3s0mIEHKt46mqrflONFVjmmGg+zX6vv/BfOfO8LdoAL4s3r2saFOQLG8D6fxNi2pc9U6aBgQLyEKkxyzMEdmBOQXPfwVBsTMLwAOnnNGceL5vlHEToRsYXZD99dUWQWA6MpjLsDzYG0fOcodpoy7/lnnfQWybRpo=
-X-HE-Tag: 1793887937-685124
-X-HE-Meta: U2FsdGVkX1/3Wbpykymbkbb57VjYh0s2galJtG36rRIQW8TFwF+7E1IJjuw5NQAe25/iGWZNNQkyWT+a8422ISmZr96XK0nrAaQEFQ31qsZFoK0bMu8VBRYn6VvL73Iw7iM4mAs1x7vNeYUjyjDL3c/1373Vt3UVfuGBr/aheInp1BwjeQU4qskhLGjIZGxpuN+otXBJyaLAJMwU6vzQo+EBFJb7W1XoOglfKzxERKt0tKBVJ/xeoz5nURvKfDVGujYLXLVXYpN//WLEhk/vitnw4QDZ/T+mJ5xxRO8fWuMWQYYJurNrpktl9UUR14fwSJm2i229vjqGi5htXXN/jNCATliHKrTLZR9dxCLPnqYqpd0721dllAu7XYl6dDQKXFCyDNzz0Bkbs5xaOdHP9A==
 
-On Tue, 22 Sep 2026 13:08:39 +0200
-Johannes Berg <johannes@sipsolutions.net> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] tracing: duplicate helpers and fops in trace_buffers_memory_cpu()
+--
 
-> Hi,
-> 
-> Resend with the selftests and the two sashiko findings.
+commit eebda64960929af5cb03f9b9f28c818ce9a75fce
+Author: Xiang Gao <gxxa03070307@gmail.com>
 
-Hi Johannes,
+tracing: add per-CPU buffer memory usage statistics
 
-Could you also add code in the samples/trace_events directory. Perhaps add
-a new event?
+This commit adds per-CPU ring-buffer memory usage files under
+trace_stats/per_cpu/cpuN/memory_usage_kb using the same categorized output
+format as the aggregate trace_stats/memory_usage_kb file.
 
-This will make it easier to understand exactly how to add new __print_sym()s.
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 6036e368fe102..e7e23ff38105c 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5898,6 +5898,60 @@ static const struct file_operations trace_mem_fops=
+ =3D {
+>  	.release	=3D single_release,
+>  };
+> =20
+> +static struct trace_mem_stats trace_buffers_memory_cpu(int cpu)
+> +{
+> +	struct trace_mem_stats stats =3D {};
+> +	struct trace_array *tr;
+> +
+> +	guard(mutex)(&trace_types_lock);
+> +
+> +	list_for_each_entry(tr, &ftrace_trace_arrays, list)
+> +		trace_array_buffer_memory(tr, cpu, &stats);
+> +
+> +	/* Account for the bootstrapping temp_buffer as well. */
+> +	if (temp_buffer)
+> +		stats.global +=3D ring_buffer_memory_size(temp_buffer, cpu);
+> +
+> +	stats.total_system =3D stats.global + stats.instances +
+> +			     stats.snapshots + stats.remotes;
+> +	stats.total_carveout =3D stats.persistents;
+> +
+> +	return stats;
+> +}
+> +
+> +static int trace_mem_per_cpu_show(struct seq_file *m, void *v)
+> +{
+> +	struct trace_mem_stats stats =3D trace_buffers_memory_cpu((long)m->priv=
+ate);
+> +
+> +	seq_printf(m, "global: %lu\n", stats.global >> 10);
+> +	seq_printf(m, "instances: %lu\n", stats.instances >> 10);
+> +	seq_printf(m, "snapshots: %lu\n", stats.snapshots >> 10);
+> +	seq_printf(m, "persistents: %lu\n", stats.persistents >> 10);
+> +	seq_printf(m, "remotes: %lu\n", stats.remotes >> 10);
+> +	seq_printf(m, "total_system: %lu\n", stats.total_system >> 10);
+> +	seq_printf(m, "total_carveout: %lu\n", stats.total_carveout >> 10);
+> +
+> +	return 0;
+> +}
+> +
+> +static int trace_mem_per_cpu_open(struct inode *inode, struct file *file)
+> +{
+> +	int ret;
+> +
+> +	ret =3D tracing_check_open_get_tr(NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return single_open(file, trace_mem_per_cpu_show, inode->i_private);
+> +}
+> +
+> +static const struct file_operations trace_mem_per_cpu_fops =3D {
+> +	.open		=3D trace_mem_per_cpu_open,
+> +	.read		=3D seq_read,
+> +	.llseek		=3D seq_lseek,
+> +	.release	=3D single_release,
+> +};
 
-FYI, this series did pass all my tests.
+[Severity: Low]
+As reported by Masami Hiramatsu (Google) on v4 [1], could this reuse
+trace_buffers_memory(), trace_mem_show(), trace_mem_open(), and
+trace_mem_fops instead of duplicating them?
 
-Thanks,
+In kernel/trace/trace.c, the existing aggregate implementation already
+forwards inode->i_private to single_open() in trace_mem_open() and formats
+the exact same fields in trace_mem_show():
 
--- Steve
+kernel/trace/trace.c:trace_mem_show() {
+	struct trace_mem_stats stats =3D trace_buffers_memory();
 
+	seq_printf(m, "global: %lu\n", stats.global >> 10);
+	...
+}
 
-> 
-> v2 was:
->  - rebased on 6.9-rc1
->  - always search for __print_sym() and get rid of the DYNPRINT flag
->    and associated code; I think ideally we'll just remove the older
->    __print_symbolic() entirely
->  - use ':' as the separator instead of "//" since that makes searching
->    for it much easier and it's still not a valid char in an identifier
->  - fix RCU
-> 
-> v3:
->  - fix #undef issues
->  - fix drop_monitor default
->  - rebase on linux-trace/for-next (there were no conflicts)
->  - move net patches to 3/4
->  - clarify symbol name matching logic (and remove ")" from it)
-> 
-> v4:
->  - fix non-module build and possibly dynamic event handling
-> 
-> v5: (https://lore.kernel.org/all/20240614081956.19832-6-johannes@sipsolutions.net/)
->  - fix build warning in non-module build
-> 
-> v6: (https://lore.kernel.org/linux-trace-kernel/20260921101538.97286-6-johannes@sipsolutions.net/)
->  - rebase
->  - fix nit from Paolo (I hope, I don't remember changing it
->    but it looks fixed!)
->  - fix crash due to wrong data placement
-> 
-> v7: (this version)
->  - update ovs selftest
->  - don't ifdef drop_reason_lookup() prototype
->  - fix section alignment
-> 
-> 
-> To recap, it's annoying to have
-> 
->  irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: 0x20000
-> 
-> and much nicer to see
-> 
->  irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: RX_DROP_MONITOR
-> 
-> but this doesn't work now because __print_symbolic() can only
-> deal with a hard-coded list (which is actually really big.)
-> 
-> So here's __print_sym() which doesn't build the list into the
-> kernel image, but creates it at runtime. For userspace, it
-> will look the same as __print_symbolic() (it literally shows
-> __print_symbolic() to userspace) so no changes are needed,
-> but the actual list of values exposed to userspace in there
-> is built dynamically. For SKB drop reasons, this then has all
-> the reasons known when userspace queries the trace format.
-> 
-> I guess patches 3/4 should go through net-next, so not sure
-> how to handle this patch series. Or perhaps, as this will likely
-> not cause conflicts (in fact I've been rebasing it for years now),
-> go through tracing anyway with an Ack from netdev? But I can
-> also just wait for the trace patch(es) to land and resubmit the
-> net patches after. Assuming this looks good at all :-)
-> 
-> Thanks,
-> johannes
+kernel/trace/trace.c:trace_mem_open() {
+	int ret;
 
+	ret =3D tracing_check_open_get_tr(NULL);
+	if (ret)
+		return ret;
+
+	return single_open(file, trace_mem_show, inode->i_private);
+}
+
+If init_trace_stats_tracefs() passes (void *)(long)RING_BUFFER_ALL_CPUS for
+the aggregate memory_usage_kb file and (void *)(long)cpu for each per-CPU
+file, and trace_buffers_memory(int cpu) handles both RING_BUFFER_ALL_CPUS a=
+nd
+a specific CPU, all four duplicated definitions can be avoided.
+
+Also, the comment in trace_buffers_memory_cpu() describes temp_buffer as a
+bootstrapping buffer, whereas trace_buffers_memory() notes that temp_buffer
+is allocated in tracer_alloc_buffers() to hold temporary event data for
+triggers when tracing is off.
+
+[1] https://lore.kernel.org/r/20260924103621.734c895420a97a2d6f36332e@kerne=
+l.org
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105140221.4461=
+4-1-gaoxiang17@xiaomi.com?part=3D3
