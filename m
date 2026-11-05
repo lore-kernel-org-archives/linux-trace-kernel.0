@@ -1,85 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793913728;
-	b=OFmmO5POZZTwq3gCyL8klqe8yjp9Sjc6wD5sswDDPJVc+i36RQAjb+VUGjsA0ntQ+w+E
-	 63BD9Ib9Lu9LHWVhZSM7u6YoTIiFm1WpcQiUGMWfvtp6BmJo11y5GWfCAsgJKwaILKNNX
-	 migqUm2WS02Qqd3bPfypVkbI+VfPHmwU8N3M20zcktnycQYd+JCoFLpPtPNvhN1KVYdry
-	 zPnUhkjmruks2i4QD0cTtXIplawdD8JdTLylLi9897nC06YBpf2Anoowzkhq6RLYpaEef
-	 454uAqDuntltDOYpJwOmP3Q5rVq0zM7duhYEBTkkegGF79WsYDHd1OoOOVXJu2RYaAg==
+	t=1793914298;
+	b=1z5EjoMhqy0EdmuPMyj21tASlYZUd3cKtYg/ZiKHeAB1XrdE4VcigFopzpU7IHIfmdcM
+	 msJyhuSwiF+6Hde49rxUgJKL64qUIrPT34osxYfzNG7EHF+Kf+VuZmBaKBbv3BFfk06bA
+	 /xOFMAJyHE9IshoAWURzmlCN/q5WYm0YtId9T3oaxCymKpa2iMduGwl0keoIIlW6TZErq
+	 bh6zg6xQoIqe9V9MmaPpfS3CtXcwcrBdCkD65ecLqBmCVaCS+dKMdBsFzx4U8NVbAqw+n
+	 Ejg0ZjA2VcD31qRKUFowODJsAxIcunx4oM9iF29OZp/HD26LKc+8dGlRqG7u7+fWcdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793913728;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=aBGHCZkustJPVUltaen+A6WhD/Flx68KUOj5TtSCMzI=;
-	b=Gj4Uh2a8HN2G+zUStNo7jW2pmdDhGWCZ0lF+mezJ4MBDm6JRMtWivN7qwb65lAMvEC4p
-	 PMEtmsQ/NYVqGSS+NrjwnDKC198BDEuh0+a5xxnwk+6dvNKEmGvhsOv4fHkXcLuQoB2BM
-	 OMLVMkv/AwhkEga9Tj4LX0x7P9cQzard+msU1NgRvR4e3Hch84AQJphAo/EvQ55T5gJsT
-	 1JmlSd1NwivZogiOtxXTFk1rRselBVlyO/znsk4bKZcBTMW4ImUguKdPVhO4C1ItmtNEZ
-	 Kplpxj2JnxMDBJyvO/Qh3F6hCpRoST4TguLNN+9wzDEbq3sfSNI2ru6lXGRr7qeAx4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793914298;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=l/XBPzIruKyaT68fHsJTL6/0Y1whGy5OpPSy6WgTELw=;
+	b=nm++eguCki+POq6S1UrLZlZXxBBRbWTIZ33gj3TSSAI8zd6+2I+3kK1aVNcxmkjeA3eP
+	 jqPlScq3yWDvgZIzzeiqhr1kRwOt6fUc82TN+iAiMDdH00Qeh8aymdSuSdogkz4KA7jta
+	 6cwk6BARb37bSPhT1TSXum5KYXb9+yMfhDmVy9Ig8ryImZBws6Miqb8vSh7GtcG2wFagu
+	 95IFM2+YTUeTwmEy+k1sv6bSLnNqT9UwbSX23WHhWnJMYAEgtrnp2c8D40Kki5d9iipT3
+	 zgWcnYzC0j2iMMhvRf7xnaXnr/5aRqR6nlTAGNmA6DPzvYvP9ZIdP9U6NVMzc0v4bbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linuxfoundation.org;
-	spf=pass smtp.mailfrom=linuxfoundation.org;
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=M1zRf0uf;
-	arc=none smtp.remote-ip=209.85.210.41
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aE+anxcK;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAEA606A31B
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 21:22:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2BAEA606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5880A606A31B;
+	Thu,  5 Nov 2026 21:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=M1zRf0uf
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-8479f46ecd8so14843a34.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 13:22:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1793913726; x=1794518526; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aBGHCZkustJPVUltaen+A6WhD/Flx68KUOj5TtSCMzI=;
-        b=M1zRf0uf4eSX65ttB1CQosJZYv4SX0ATNjnBtizp7BgNgAmlUv4HoVyZ/BSNmEQ3DS
-         +wArByDyEFOgk6/XKSsQd+s17ECPk9EKKQFsTNZw2Hm693x7uNHNKUldZ2lIAWD0bpmq
-         VlYvM6A88fLa2vtc8V6TXqtLb0WlLFYbP4euI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793913726; x=1794518526;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=aBGHCZkustJPVUltaen+A6WhD/Flx68KUOj5TtSCMzI=;
-        b=2GcnXu0Ot44fuAWEyOOv1yrGC2DpIralOtO2kI/NfCiekha8r49V0/KLxHH2J+tDvv
-         GfM6cHOsEyxrJPArWF7VcIv1SqPsuhYr6wTkefaIJeuo0Rh+GJbOfmQmmmPla7FC0lu8
-         ZVUPbr1WMEcIYLB44vWHW000bMdl3Or0JGFh/M68ccaBu9KdOge3pqzgoZwmvwSARUl/
-         oACohu2I+gmI1sKKToMxbx3oNp/SOYX0AfYrY3OhqTA97mMqiTsODuPXl2PHZ/SQ+WhH
-         Et0ndB1yFAKsnTHRZ3cL6GQTMGFPheuWD9HmyNjr6/AEXXE7dvcvnQDaLRCYfHrMLz93
-         74QA==
-X-Forwarded-Encrypted: i=1; AKwUvByEMPM8Z09c9Eda9wE4H89EATY8vgnQTNaDUXBGji3CMFBP25DT+lq9XYHGSb0RGBQ8jSVfSaPImg4V3UmuL5ZgFhE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+gGDTZ2kwORbiXBFPIGD4oxir8ckVw0w+XZXMUaZE1uvmwTdwR
-	OGMuSaOQzxRj6iNQsO9cxpFMBx5tub9cg2Vblx66TQ5ByLOp15X0C1udmkf7quU4fXE=
-X-Gm-Gg: AYBFou22qRw0ZY0/cjfFWKy1rtujF0d2Ry/+ryvJ2ZYFRWhnV8aBSsqAXSO9wfLz9SD
-	fdbn17lNGYh5pk6bTileJgsC9FLBTIaVfxqpAyL5/MbpQfef8xN6bwo3HCjaZ94G47nIizckcry
-	zHAYlBthLtQJ+WbaqN3epur6ZspTbEM+D/ISP5pMCZU5/oqnY2SkFqSb99Vua3zcc4b+WGITgfH
-	uppbC5iE4PYAfWpZIhAjxA2z9tz1m0vGKbBuLFaay2kn0gP0ikoL7HRdBlZN4E7S8DkBzVsCwdj
-	mU3UwX3bOwVtWX6svB7UkGPbPZy9U6Q5AZz+roedhFhUnJ4TEBqv5jMHn50jq304HQTzbR2RS76
-	YuKZ4gCVFF7dgcajBUM5l11ZB7TZXEC0IsbRM8fZDE1hp2RRu2rGx2ZJ5YR9LzIHzyNZfcWITp3
-	8prG00DMjW7Zhax8HjhU8nLzUF3k2jNCSx14GL5R1FE+7aLCu8Dk4//eVv1BTaPBbb7IvVrgPDN
-	sbyp/zsU2dmp2hpG8AqBSDO743a3/eJxNBSvP4+3sv5rJ6cFvhOtaCeWmjqg+GBWklZEPojPFdZ
-	oAe5ewQSTSjOakUNJkQPMnsfoDuC/dy48t5jrua/PKCc9KP8oIZGl2ql/vLJhg==
-X-Received: by 2002:a05:6830:438f:b0:821:94d2:83cd with SMTP id 46e09a7af769-85f1cee4f2cmr703548a34.9.1793913725956;
-        Thu, 05 Nov 2026 13:22:05 -0800 (PST)
-Received: from [192.168.1.128] ([38.15.57.99])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-85f1dbf375dsm338315a34.13.2026.11.05.13.22.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 13:22:05 -0800 (PST)
-Message-ID: <7de6d2c9-0f2d-4f7e-a2a5-30eca1b42bfd@linuxfoundation.org>
-Date: Thu, 5 Nov 2026 14:22:03 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aE+anxcK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747CB1F0089F;
+	Thu,  5 Nov 2026 21:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793914298;
+	bh=l/XBPzIruKyaT68fHsJTL6/0Y1whGy5OpPSy6WgTELw=;
+	h=From:Subject:Date:To:Cc;
+	b=aE+anxcK5DVd4PxfaPeug+8Go7oXIkkyd0cr7QF/UCjgq9jQl+bNK0q+4BhKrFU6l
+	 nH9TpbM/0AmUyIRXZfMR7+ZGUYkgq1BDmA0gMwCZlN+dq+z3ta162TfttOjx4fBrgt
+	 5jqDEBSY60zS13wAtaGgurmcThNfq1GYkCiTlr6kkqTQkdSz/nP1SkszH09Zyo8Vxs
+	 gkd/MAkUnyzsOIfsT4YNgixR1lw3gB/K4VRz5l4xVnYXGhfODUOU8wO+APAcsQd4VM
+	 pobOy+eE76XoFeivYZrQgxoRdn9FhNGDUTwlg2/ulGNDaKNWkzGWtu8Q8T+PXTf1Xg
+	 PFYf3vnSp0ZNg==
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Subject: [PATCH 00/13] mm: continue vma_flags_t conversion
+Date: Thu, 05 Nov 2026 21:30:51 +0000
+Message-Id: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -89,52 +53,149 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/selftests: Fix false bashism in
- kprobe_non_uniq_symbol.tc
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- linux-kselftest@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Sven Schnelle <svens@linux.ibm.com>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20261029211218.3749963a@fedora>
- <undine-1793665155348284042-31145736d231a8b5@undined.local>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <undine-1793665155348284042-31145736d231a8b5@undined.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MSwqAMAwA0atI1gaMlQpeRVyEmtaAP1oRQby71
+ eVbzNyQJKok6IobopyadFszqCzATbwGQR2zoa5qS1QRznwIfsJzYfQzh4SNpdYQW2OdgVzuUbx
+ e/7UfnucF8MbcSGUAAAA=
+X-Change-ID: 20261101-late-2026-vma-flags-461731a636c3
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+ Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
+ Shakeel Butt <shakeel.butt@linux.dev>, 
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
+ SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, 
+ David Rientjes <rientjes@google.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ John Johansen <john.johansen@canonical.com>, 
+ Georgia Garcia <georgia.garcia@canonical.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+ Roberto Sassu <roberto.sassu@huawei.com>, 
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+ Stephen Smalley <stephen.smalley.work@gmail.com>, 
+ =?utf-8?q?Ondrej_Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ kvm@vger.kernel.org, damon@lists.linux.dev, 
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org, 
+ "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3442; i=ljs@kernel.org;
+ h=from:subject:message-id; bh=dw144I8hKInR8Qv8iKnjrU9/3cK4949dnMwWVIcVGbg=;
+ b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLLefF0a6K1vw5BxVPUqn46M6rZ32+yPLM/K3OK58Z/1t
+ UlJ376qdZSyMIhxMciKKbI8/yK+P0gkbF7nBX83mDmsTCBDGLg4BWAiQn8Y/scXBihtmHE7PkF4
+ 5fTvjHX5lf8yagzLot8b3ry68ZZUJgcjw8Jnxy6ELVt+JnMKc9vFq+wXXtq4lq3/3aB8muuMQpi
+ TOR8A
+X-Developer-Key: i=ljs@kernel.org; a=openpgp;
+ fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
 
-On 11/2/26 17:19, Masami Hiramatsu (Google) wrote:
-> On Thu, 29 Oct 2026 21:12:18 -0400, Steven Rostedt <rostedt@goodmis.org> wrote:
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> The checkbashism is giving a false positive to the kprobe test of:
->>
->>    ($"foo" should be eval_gettext "foo"):
->>    if [ "$(grep -c -E "[[:alnum:]]+ t ${SYMBOL}$" /proc/kallsyms)" -le '1' ]; then
->>
->> This is because it sees the $" at the end of the grep as a bash symbol.
->> Instead, escape the '$' with a backslash as it is within quotes and that
->> '$' is for grep to process an end of line character and not a bash
->> variable.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: d22c3e0088e85 ("selftests/ftrace: Fix unique symbol check in kprobe_non_uniq_symbol.tc")
->> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Oops, good catch!
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Shuah, can you pick this?
-> 
+Continue the conversion of legacy vm_flags_t flags to the new vma_flags_t
+bitmap type.
 
-Applied to kselftest fixes branch for next rc
+Do some more core mm conversion (we really should be the first to
+completely move to the new scheme :), but also update some mm-adjacent and
+otherwise straightforward cases - /proc/$pid/maps and friends, the coredump
+VMA dump size logic, uprobes, perf and LSM mmap/mprotect hooks.
 
-thanks,
--- Shuah
+This series only makes strictly mechanical changes to keep things gentle
+during this very busy cycle.
+
+No functional change intended.
+
+Build tested on x86-64 (allmodconfig, each patch individually), i386,
+arm64, riscv nommu and ppc64le.
+
+Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+---
+Lorenzo Stoakes (ARM) (13):
+      mm/gup: convert GUP code to use vma_flags_t
+      mm/filemap: convert fault and readahead logic to use vma_flags_t
+      mm/rmap: convert remaining VMA flag tests to use vma_flags_t
+      mm/migrate: convert VMA flag tests to use vma_flags_t
+      mm: convert THP VMA flag tests to use vma_flags_t
+      mm/ksm: convert VMA flag tests to use vma_flags_t
+      mm/madvise: convert madvise_vma_behavior() to use vma_flags_t
+      mm: convert miscellaneous VMA flag tests to use vma_flags_t
+      fs/proc/task_mmu: convert VMA flag tests to use vma_flags_t
+      fs/coredump: convert vma_dump_size() to use vma_flags_t
+      uprobes: convert VMA flag tests to use vma_flags_t
+      perf: convert VMA flag tests to use vma_flags_t
+      security: convert VMA flag tests to use vma_flags_t
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c | 10 ++++----
+ fs/coredump.c                      | 16 ++++++-------
+ fs/proc/task_mmu.c                 | 43 +++++++++++++++++-----------------
+ include/linux/huge_mm.h            |  4 ++--
+ include/linux/ksm.h                |  4 ++--
+ include/linux/mm_inline.h          |  2 +-
+ kernel/events/core.c               | 26 +++++++++++----------
+ kernel/events/uprobes.c            | 12 ++++++----
+ lib/test_hmm.c                     |  4 ++--
+ mm/damon/vaddr.c                   |  2 +-
+ mm/filemap.c                       | 24 ++++++++++---------
+ mm/gup.c                           | 45 +++++++++++++++++++-----------------
+ mm/hmm.c                           |  6 ++---
+ mm/huge_memory.c                   | 32 +++++++++++++-------------
+ mm/internal.h                      |  2 +-
+ mm/khugepaged.c                    | 18 ++++++++-------
+ mm/ksm.c                           | 22 ++++++++++--------
+ mm/madvise.c                       | 47 ++++++++++++++++++++------------------
+ mm/mempolicy.c                     |  4 ++--
+ mm/migrate.c                       |  5 ++--
+ mm/migrate_device.c                |  8 +++----
+ mm/mmap_lock.c                     |  4 ++--
+ mm/mremap.c                        |  2 +-
+ mm/msync.c                         |  4 ++--
+ mm/oom_kill.c                      |  4 ++--
+ mm/pagewalk.c                      |  2 +-
+ mm/rmap.c                          |  8 ++++---
+ mm/vma.h                           |  4 ++--
+ security/apparmor/lsm.c            |  2 +-
+ security/integrity/ima/ima_main.c  |  2 +-
+ security/ipe/hooks.c               |  2 +-
+ security/selinux/hooks.c           | 14 ++++++------
+ 32 files changed, 202 insertions(+), 182 deletions(-)
+---
+base-commit: b61fa14ce6bcbba2cb9a96feea31b760226d6b43
+change-id: 20261101-late-2026-vma-flags-461731a636c3
+
+Cheers,
+-- 
+Lorenzo Stoakes (ARM) <ljs@kernel.org>
+
