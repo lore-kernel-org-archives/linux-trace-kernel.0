@@ -1,57 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=168.119.38.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793889170;
-	b=aGLR39pzxSiai2gUIq0ubgPW0Z2v6iRzymnQcHtO/wbhoKOkr/A/CxtWnqb1j2+KL+P1
-	 VHUt536BOCxkpMXCQCpbnVrUmewIjfBKm0PlFPkeGMwvXyM3y83nUJEVGl7a4z8+FWM47
-	 hXx6UcL0Ml66w4kDlaThIUlaEX6DgEgQHaPA02WUWBVJHXRFegIbcG1yoNv8uEh0tQVez
-	 LJ8wfal0Kb7mU+GyfqG8WLjxOYSoMfiM61GKHBowzQqVmhS2ec1+xITT3cQFLHFJ0Tq/4
-	 A6m1ZItmXkFetHmt6wX0kf4iMbZG29jKcCOSX0ADDZxgi5zJSzmB/wdXWWgJXYPTcIg==
+	t=1793891073;
+	b=Pd6Y2Xa/mHzC8XMMpGazXgKJ+C6yMfZgXSnNf/ObGizzJ4VBhAlBcyUvmIuGMPxf8OcG
+	 iDCVsoxftIdMibOfzHhhxTsgIe/GBLc/waTtcIOYz6Sf7ZBX2GiUWuIPJiSQVL+dgQ06b
+	 6pH+ZiRQIut5yQo3SlIHXPgLBj2q0lGoDhvdLRnOPfznxja8y5WWxJJCtuBIteTcAEhz4
+	 btUHzbIWL6iVW8rX1nF62Ee2xMkoGMjJFYWILOCsrieDh2Awz4ONYcEZV1KfkxJhgCSv8
+	 7bj6822PQTJhZrWcn+bQa5fk+G9NK8f5uvKyA6v92n4oeW24w7s6dELGoYsu4+CzJag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793889170;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=1/giLd5dcTdfTnPTrP6WDd4N/voIOD0k3NX7FhgMSrY=;
-	b=FyC0Tpej/+0bNVcy5T6IvJ7JR0ZVIwmltlp9raA2Lwbkh2+M1i3rR/CsUsF+cNP/WCXb
-	 E85Qh8BjktpzzZ2mdVD1lmxzPcPVbcnt2XQbbn5oSVNm5dQVNyqpIHth1Ko8vT9LiqLCp
-	 omGy/mIux6F8UYF4KpDl6UpO75XmJohQLji1LCCbBKb4D0XDhTzoe1DAzozdVkrGMHsR8
-	 AJyj54OVpFZz3KmANc2A1q04vdOS3ssZ8UP42me/c23qm9XR3hUaFsDrfwT4S9PyahwhA
-	 e6ZhmOZtxO2ylRBJ3x5aPCFz8k4WTv5W3QUbgUoxGxXE4yob/1ukDGsjH9taea+Z7MA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793891073;
+	h=DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-malware-bazaar;
+	bh=5hdPZuerhWgKlWAPIqm6pL4yyIFyw2APmpiX9MIpxVM=;
+	b=KCjmd7ElXctlYJqvWVjAUvWt4EU0Zse8iUt3X5VyZfAerhki0eZ5OGe67lFftgeum8fx
+	 cBwVgOBbv1TtSVMcbDsmURrAL1da3dCDRJ+q8YP9vLReMhIfNgpNc0X71CK/R27fwUjGx
+	 lrG+Wjt79ROeObQEOdZyKI9FtNNYjN2pkE7478CMZ+m5Z5aLcXg+N5CFCJpcaK7yp7T0N
+	 vhMxG/5EJ7eP+FwCrjZH4CZ2hK7Vgf9mjiWex1P8wxGMRrmlBIQ4QH6CksNpG8TJ8viHo
+	 s7pjX41vlFiNk3d+F6DmV3KmIXyNMp3PHSsuzNJPkrU/dcM28+1Or5JEAG1TX4kBZww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="foh/8k/F";
-	arc=none smtp.remote-ip=216.40.44.14
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	dmarc=permerror header.from=sipsolutions.net;
+	spf=pass smtp.mailfrom=sipsolutions.net;
+	dkim=pass header.d=sipsolutions.net header.i=@sipsolutions.net header.a=rsa-sha256 header.s=mail header.b=e9j7ywGo;
+	arc=none smtp.remote-ip=168.119.38.16
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01710606A326
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 14:32:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01710606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E818E606A31B;
+	Thu,  5 Nov 2026 15:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=foh/8k/F
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 1DB001409F6;
-	Thu,  5 Nov 2026 14:32:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 7366832;
-	Thu,  5 Nov 2026 14:32:40 +0000 (UTC)
-Date: Thu, 5 Nov 2026 09:32:39 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yaxiong Tian <tianyaxiong@kylinos.cn>
-Cc: sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: speed up module enable by binary searching
- module symbols
-Message-ID: <20261105093239.6154d9b1@gandalf.local.home>
-In-Reply-To: <e60a0b6c-85c1-424d-ae57-a7239e4ef776@kylinos.cn>
-References: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
-	<sashiko-outbox-198512@kernel.org>
-	<e60a0b6c-85c1-424d-ae57-a7239e4ef776@kylinos.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=sipsolutions.net header.i=@sipsolutions.net header.a=rsa-sha256 header.s=mail header.b=e9j7ywGo
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=5hdPZuerhWgKlWAPIqm6pL4yyIFyw2APmpiX9MIpxVM=;
+	t=1793891072; x=1795100672; b=e9j7ywGoXsw2DPAC5YiiaZRaZXvqiFUwS4XSED/zRWqgS7b
+	TUQFWGenjmITERDEgYOrX7q4t4uTUhN4h4s/5xz782/4YClQvGiDL06AtGKAPWrKKdM7bURFOnLFp
+	t5viHWtdD3YrqTRCSowTWoCq+RUU+eGrkRGS5bW25hImbYo9nrKNQcMTbG/NjVNBfxmUWXKo4W354
+	dm3BKc+4wprU7pWmKJyrcMbA9QXil0W5EE/22joP704VN9iIQk/ToxV6CsxJAijkbjJ2CEyPUUp57
+	GamS+eJYO/K4w8uAqPr4rOPAuN9Bd/C2SjB7oNWTQGfmzlkl2wqQ9NjzN/jvqy7g==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__ECDSA_SECP256R1_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1xOz0o-000000080jP-0X49;
+	Thu, 05 Nov 2026 16:04:22 +0100
+Message-ID: <8da2902c233de42ce756b3bfba5e5821f4dfa82b.camel@sipsolutions.net>
+Subject: Re: [PATCH v7 0/4] tracing: improve symbolic printing
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Ilya Maximets
+ <i.maximets@ovn.org>, Matthieu Baerts	 <matttbe@kernel.org>, Aaron Conole
+ <aconole@redhat.com>, Eelco Chaudron	 <echaudro@redhat.com>,
+ dev@openvswitch.org, Adrian Moreno <amorenoz@redhat.com>,  Antoine Tenart
+ <atenart@kernel.org>
+Date: Thu, 05 Nov 2026 16:04:21 +0100
+In-Reply-To: <20261105091216.7b91db5a@gandalf.local.home>
+References: <20260922110955.363677-6-johannes@sipsolutions.net>
+	 <20261105091216.7b91db5a@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,46 +74,85 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 7366832
-X-Stat-Signature: p14od17inis9wxjs6jcyhu4rjnaqugak
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+6NuVhjbbqnVwtGTXuR8o0PTiVaTjUHYQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=1/giLd5dcTdfTnPTrP6WDd4N/voIOD0k3NX7FhgMSrY=; b=foh/8k/FITcn7t9zYuWbYG5JnfGFerKgg4wKjZMpW6LSORyYbEad66a1e0Mh95wl/mZUj4JpTVqL3hl6M6yBmCCk6hlb86u65N5jUPdkLzhzq4koBT5d0ie2b9gZJcnRChkwk/yCwFnKfwXMpuNZ64at9l3WvPMRwQK25ly+66k=
-X-HE-Tag: 1793889160-948809
-X-HE-Meta: U2FsdGVkX19T0hpionkWbb2YSnHohkhqJ9S8EOL/1HUYNpdqABTjFioyY4NJfI2bnw94ON0D02Tmhyw+l+W2NVNCLL/168MJkKx5TuoMWfeDNh58B8wirBFNQgoSIW+oSpb/nA0j3T/b4Td9Pn6OQgtMfwPH5/tkAABl4/GTh4SSX7TalrKzVtSYCxH1meMopRUwgixSCvRDc1k5bEawQUEFr0t3ctPDGxsICLjWfz4yNHIz64kqG6Vk+e42bZ/PmudYeP/9Z1Eb9vXLs35Tc61Y/togMBXn5b84IUVc7Vm06EprzownOnDk6JkoYMzR
+X-malware-bazaar: not-scanned
 
-On Thu, 5 Nov 2026 13:44:33 +0800
-Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
-
-> > Should ftrace_mod_syms_alloc() call is_mapping_symbol(name) here instea=
-d? =20
-> This v2 is based on v7.4-rc1: the patch's index line is
-> c7d74b33d36d..255e813fe70e, and c7d74b33d36d is
-> HEAD^:kernel/trace/ftrace.c in that tree.
+On Thu, 2026-11-05 at 09:12 -0500, Steven Rostedt wrote:
+> Could you also add code in the samples/trace_events directory. Perhaps ad=
+d
+> a new event?
 >=20
-> is_mapping_symbol() no longer exists on that base.=C2=A0 Commit db91da8f0=
-518
-> ("module/kallsyms: Rename is_mapping_symbol() to
-> is_ignored_kernel_symbol()")
-> is in v7.4-rc1; on that base include/linux/module_symbol.h defines
-> is_ignored_kernel_symbol(), and find_kallsyms_symbol() uses it.
->=20
-> The hunk you quote (is_mapping_symbol) is from the v1 base
-> 673a54fdf392, which predates that rename.=C2=A0 The patch compiles and ru=
-ns on
-> x86_64, which defines FTRACE_MCOUNT_MAX_OFFSET.=C2=A0 powerpc defines the=
- same
-> macro but uses the same common helper declaration, so there is no
-> arch-specific issue.
->=20
-> If the review tree is older than v7.4-rc1, then is_mapping_symbol() is the
-> right name for that tree and the patch needs a rebase there -- but that is
-> not the base of this posting.
+> This will make it easier to understand exactly how to add new __print_sym=
+()s.
 
-Yeah, I'm not sure what it's basing this on. It may be using one of the
-stale branches of linux-trace.git :-/
+I guess so. I was kinda hoping to simply convert all the others - it
+clearly has advantages this way.
 
--- Steve
+Any objection to simply converting the __print_symbolic() sample? It
+would look something like this:
+
+
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -297,6 +297,28 @@ TRACE_DEFINE_ENUM(TRACE_SAMPLE_FOO);
+ TRACE_DEFINE_ENUM(TRACE_SAMPLE_BAR);
+ TRACE_DEFINE_ENUM(TRACE_SAMPLE_ZOO);
+=20
++/* define the names as { value, "name" } tuples for __print_sym() below */
++TRACE_DEFINE_SYM_LIST(sample_names,
++	{ 0, "zero" },
++	{ TRACE_SAMPLE_FOO, "TWO" },
++	{ TRACE_SAMPLE_BAR, "FOUR" },
++	{ TRACE_SAMPLE_ZOO, "EIGHT" },
++	{ 10, "TEN" }
++);
++
++/*
++ * Alternatively, you could define a function for the names:
++ *
++ * The _lookup() function returns the string for the given value.
++ *
++ * The _show() function must
++ *	seq_printf(m, ", { %u, \"%s\" }", value, name);
++ * for each value that userspace should be able to parse.
++ */
++const char *sample_names2_lookup(unsigned long long value);
++void sample_names2_show(struct seq_file *m);
++TRACE_DEFINE_SYM_FNS(sample_names2, sample_names2_lookup, sample_names2_sh=
+ow);
++
+ TRACE_EVENT(foo_bar,
+=20
+ 	TP_PROTO(const char *foo, int bar, const int *lst,
+@@ -340,14 +362,10 @@ TRACE_EVENT(foo_bar,
+  *    the variable matches one of the values, then it will print the
+  *    string in that pair. If non are matched, it returns a string
+  *    version of the number (if __entry->bar =3D=3D 7 then "7" is returned=
+).
++ *
++ *    See above for the declaration of "sample_names".
+  */
+-		  __print_symbolic(__entry->bar,
+-				   { 0, "zero" },
+-				   { TRACE_SAMPLE_FOO, "TWO" },
+-				   { TRACE_SAMPLE_BAR, "FOUR" },
+-				   { TRACE_SAMPLE_ZOO, "EIGHT" },
+-				   { 10, "TEN" }
+-			  ),
++		  __print_sym(__entry->bar, sample_names),
+=20
+ /*
+  *  __print_flags( variable, "delim", { value, "flag" }, ... ),
+
+
+
+It did show a bug because TRACE_SYSTEM isn't a C var in that file (and
+perhaps only in that file?), so I'll have to resend with that fixed
+anyway.
+
+
+> FYI, this series did pass all my tests.
+
+Cool. Sorry the earlier (long time ago) version had the __init_data
+issue, I'd mostly tested on UML and that wasn't protected there.
+
+johannes
