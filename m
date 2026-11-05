@@ -1,57 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.162
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793901236;
-	b=GCwfVlv8W/PWGj1eoww/1Q3daZLPuxeA47CtLG8DDvfxOZaSI9QzlkSLnOgzMvI1vTtM
-	 wheb+tgNigGWLCl8qDaemmC6LNcpaHWAxTgpMBfs2Er9HVgOaCyLq+2a/3SSgXnHWThBb
-	 MPVxOJwzlh53bgzjPnGncOcDx0p76mqd7tUwc+ODv2bgoEG/byjSidE2a+CJsTNy4d1zY
-	 EalSsuJgn2JI3dhqT2CK6Ux9W9jnJVl3DlgxWIT6f7P4YtyXJ3GwT9TEEAPBrc9GW+wwd
-	 JP27oXEob80BLMIXmaKCQG+s3hOiA9289rEspVHQZdvhs1z06eJyApbLXR3Ts/UuIBg==
+	t=1793901383;
+	b=0mer6s3TVWAoL1ha2j1qVAoPZGMAT+H/tkTD8vYn5DCz+4SdbLWjH+mbq2sIudBhKnSI
+	 CjOxDa6nIqLZaYUqs65mjgVBEkG3Yjeksqk9ZUZfAKA06h0lmeuIKMaYgB4rfDCD61ogL
+	 gXN4ewp1Yjsv/Sc4Gcuk4AgKS2ta7j0/Eti5P85BzXYnV9AwPtIQeC/M7UWKSdJZDEiio
+	 06SBwwlZ+VvD94gWpAvAO0JABnJjU1URxRMntavgL8oGslox4P9aMJnVbiqk4+MrRys+r
+	 VRfskMX6tlf1/790hiBfLtP5j8RQIrS3MLA82mnrAmZuiTIDZHOX+anv/stW6/EaPXw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793901236;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=uCqgLwRe4NdF1J33IQOi0+xc8QVoV1b82/pUq3G9j88=;
-	b=HJKMdTtyAlLrODyK/7ncVy92GAYFJRvx+Hq44N4FMEOz5thwURL1jkXd1vusQrG607Tv
-	 BBJEy8fe6JMXBbuHt1BxeMg7AUsP4RdNIdTGDJGWX3xnJm5NDWgdIkM0rm+d2opLOpA9l
-	 qH+ysoNlqcJKLqPODMQMnz6kMsHCB25ebzvMLrq4IVxzmXSuIxhb9kASoNzwfjZ6e1CCo
-	 AehBJhuqf1lNVQEUtuX3Hvgxy00+BjcUiNNH3sZMpRzUL96Pr52BzQq+BR1pK+5xE5fc0
-	 pOFkm7fkQgzIMX2vB2IjumMxRTdMMilxaG53rYj9mAtL9dmlMJZZigHtRdZ/xKMnUGA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793901383;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=c9l3GCx27vWCzWprqBUpZF8ewdrrLXW/RA/zgGEtIsE=;
+	b=D9+/EjV8t+tcXztKM8pIwDZJd+39/VTXG4dhLawMWowG35bD88/SmZN4gYNJ7qp3Z9xZ
+	 Tg/Pu3LumUP8l0Mo2KxPSfp3q9hUuVpohJK3aVi71YiYmqXpraUmGq7T/BI2MnAVdV2TQ
+	 G0gD2CchAfug+Vr7uLrXmFDrCa0pL6xqKHS+7hWIL7PryYtaqgGJAHIKM02R2X9Fjo+NS
+	 ezc2hR2mQEzxgNROEnDMc21+uTq1AMqgyqWmRRxyZnLvIAkD0aEmsBU/+uYj0DDO7Kxoa
+	 txjF1yyuGvpmr3AyFzEo1W/iQ1ate0kOkj/nBWx4Egmnb1P2EtZhYImVDEjzfMzrkSA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MhGluoDx;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	arc=none smtp.remote-ip=91.218.175.162
+Received: from mta0.migadu.com (out-162.mta0.migadu.com [91.218.175.162])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFF9606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 17:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MhGluoDx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A221F00919;
-	Thu,  5 Nov 2026 17:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793901236;
-	bh=uCqgLwRe4NdF1J33IQOi0+xc8QVoV1b82/pUq3G9j88=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MhGluoDxUuhtCbTdvifvroJcTH+18MxA4Y9EOPuyAVbJG11+KhgjfUWYiYuBnYztB
-	 NP0LG3sD5nQQBaIvBV7x5H7dW6GfBVJ4BnVc980ZjaiINPEO3syxlm5xwOUod3hVe7
-	 4n5PnoCKq4t6A3KzOXGTd0yFWH8C05L7UHQ7/6rwn2Ubtf4dMMPw6P1pnubDRQ0dTs
-	 tB4KIUyic35CRVsGOav5t4UrseOK0ZDWW3xmGpcdBE8u+3J8qlnbKYggOiPSWqVurw
-	 4M2Buq7xldiyhpEn4jFfbXXVTF+DAdlsEX6Ep3245zkqMm925lfj9e9f3KN+vNa0My
-	 mb7L3+2NcP3lQ==
-Message-ID: <sashiko-outbox-199668@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v3 11/14] i2c: nomadik: save I2C_CR register before
- resetting HW in IRQ handler
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dmitry Guzman" <Dmitry.Guzman@mobileye.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261105-i2c-fault-reporting-v3-11-515ad74ac4c9@mobileye.com>
-References: <20261105-i2c-fault-reporting-v3-0-515ad74ac4c9@mobileye.com>
- <20261105-i2c-fault-reporting-v3-11-515ad74ac4c9@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 17:53:55 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1910606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 17:56:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1910606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=FaUkFUcHuP3BiesPQYnJEtWy77nW5jWOpPkoZ46/VDg=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793901375; v=1; x=1794506175;
+ b=vhGOx06MUin+6IT6RcCDaNLs8FswwfRHcwxD5UprIwZuWACBn7FcbOWvYCWI2TIF8g6AonrQ
+ NMbTaSfvKz5Iindtkfj8xEC/yfkjvLYXKrkB9ctLXnPvdSPA8t1EmnaiRLrUiVP8DQ6gPebHuPX
+ kBVV1UCzbhXmbH2kHiP+952Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id bb547c92f083d415;
+	Thu, 05 Nov 2026 17:56:15 +0000
+X-Mizu-Trace-ID: bb547c92f083d415
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <53ee72a4-a5f7-4a7d-8a0a-fc3fc8804d75@linux.dev>
+Date: Thu, 5 Nov 2026 09:56:07 -0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,44 +54,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] tracing: fgraph: Raise FTRACE_RETSTACK_ALLOC_SIZE to
+ 1024
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, andrii@kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
+References: <20260922225526.1554758-1-vineet.gupta@linux.dev>
+ <20260922225526.1554758-2-vineet.gupta@linux.dev>
+ <20260924100040.GD4121339@noisy.programming.kicks-ass.net>
+ <1e223334-b371-487b-a60a-7f1f5c007f7e@linux.dev>
+ <20261105122648.67abbe1d@gandalf.local.home>
+From: Vineet Gupta <vineet.gupta@linux.dev>
+Content-Language: en-US
+In-Reply-To: <20261105122648.67abbe1d@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] i2c: nomadik: commit subject refers to I2C_CR register instead of I=
-2C_SR
---
+On 11/5/26 9:26 AM, Steven Rostedt wrote:
+> On Fri, 25 Sep 2026 12:32:49 -0700
+> Vineet Gupta <vineet.gupta@linux.dev> wrote:
+>
+>> For submission, would you take this up as reported-by me or do you
+>> prefer I send a v2 (your authorship and SoB etc) ? No big deal either
+>> ways just not sure what the std operating procedure is and nuances of
+>> all the tags etc.
+> Please implement Peter's suggestion and send a v2 with the tags:
+>
+> Link: https://lore.kernel.org/all/20260924100040.GD4121339@noisy.programming.kicks-ass.net/
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
 
-commit d218bb5af34fbc63fe8a8b9dff6e05c3496a8824
-Author: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
+I think you have some catching up to do still :-)
+This is v1, we are currently at v4 [1] with Peter's suggestion and 
+further split up for ease of backport and use of new rcu_scope 
+constructs as suggested by Masami san. It has been Acked by Andrii [2] 
+and Alexei [3]
 
-i2c: nomadik: save I2C_CR register before resetting HW in IRQ handler
+Thx,
+-Vineet
 
-This commit adds an i2c_sr field to struct nmk_i2c_dev to save the
-I2C_SR status register value in i2c_irq_handler() before calling
-init_hw(), preserving the status for fault reporting in
-nmk_i2c_xfer_one().
-
->     i2c: nomadik: save I2C_CR register before resetting HW in IRQ handler
->    =20
->     On some interrupts, such as Bus Error interrupt or Arbitration Lost
->     interrupt, the interrupt handler calls init_hw() to reset the I2C
->     controller. This clears I2C_SR register value that might be used for
->     fault reporting.
->    =20
->     Add i2c_sr field to nmk_i2c_dev structure, store there I2C_SR register
->     value before resetting the hardware, and use this value instead of
->     reading it directly in nmk_i2c_xfer_one() if it was read in IRQ handl=
-er.
->    =20
->     Signed-off-by: Dmitry Guzman <Dmitry.Guzman@mobileye.com>
-
-[Severity: Low]
-This isn't a bug, but should the commit subject refer to the I2C_SR
-register instead of I2C_CR? Both the commit message body and the changes
-in drivers/i2c/busses/i2c-nomadik.c (in struct nmk_i2c_dev,
-nmk_i2c_xfer_one(), and i2c_irq_handler()) save and inspect I2C_SR rather
-than the I2C_CR control register.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-i2c-fault-=
-reporting-v3-0-515ad74ac4c9@mobileye.com?part=3D11
+[1] 
+https://lore.kernel.org/bpf/20261021174406.2891598-1-vineet.gupta@linux.dev/
+[2] 
+https://lore.kernel.org/bpf/CAEf4BzaTYgNwiBtvYoSw1wzuFZchs-2CCP93gh2OeDt-919-eQ@mail.gmail.com/
+[3] https://lore.kernel.org/bpf/DMAUS3F32198.M27YWDF2F3UV@gmail.com/
