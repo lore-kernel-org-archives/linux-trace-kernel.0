@@ -1,80 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793848570;
-	b=n7XhDH8T7PuL7gvYh0kTgOw4ls8j1gzdi+RG99/zNxwt7i3Allb/RGe/kwTy0K7idMz3
-	 mcy8vP8VYZm94iiPdi7lBOHDgsQZbQin4X/whGxPaqQyaqiZkTDqpRv5ZjkefwHrFq+Rd
-	 6GI1uMPa02PrrhiO47eO8G5c00XlJkrXfCczU5CSWNb2T2IqUz2bY6BHLhDPdh+Xj6Gyq
-	 alz+kcZk7XFLvNrNpqQ0LESgR/UW9D57LbM2cYM2yPDRGEf7pe2UKCfQg0xthgHD1u4yV
-	 VB0/NK39wJiPGtpOSVRowtEStWjFRrg4YuuSIKBfl1tyDied3pnpr7YnsNOk4dAwe+A==
+	t=1793849089;
+	b=cLuha3Hfjn/Ofam7vj9aUQsfxb3D5fdgs/acF7PbgcLV+sBW5Inup2XZ4Fu3z8bJie4Q
+	 5erYbiM2oqI4W11pttKaQwrCUTovbP5OnaCn3XVIIhL0GTmZmF6UpUg+2blKvMupqozOj
+	 nJiPehtqGob6P5Hd1it99QaHrBCRgH9IFSw1nq3Vl6DixI8zrfghown7q7qQD9BdGRo9J
+	 sdifpl+eNsG7Il5FNAxMO1DrVim7/A4nascxJgde+M7zntDDDCp1NYKySRLhovdwY/4w2
+	 H6DupC6LNip2EWjCX9iub8VP+sKLVpXG0RfGxw6nY19V0amYlBz15gJUcltV+9aq30Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793848570;
-	h=DMARC-Filter:X-UUID:X-CTIC-Tags:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:
-	 X-CID-META:X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:
-	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=ga6B7jCELkzHuVa0pEKdnU/De6nHNcAqX9HaxrGvbrA=;
-	b=NXEU+xZeCkvIPA9WJBhmvN10K6R/Cof+gF1HX7Q6p2WHc1ZxIC8VO9jMrzH9Y804hQYG
-	 EYja0CoGWeaEhP+IOKVoXZY2FCfG1HuQK6QScwU1GbvbAPKCogsFyURwx9a1nY0dbXOV3
-	 RXT0J0r3hBeDjnzzTlKzG9CweoFZFRPKsAllndOQ00DxlB0BrIrmnDc00HjglTAkR7F7Z
-	 XJSTqIsqaTA6t5WejaQW2wh0842FLl31RbrA9O/BaY+0Gl96DPDbGKE163imqxCHE493+
-	 NEunmUum2QzuU9iAJkPyHYOsK8FgljsYfEhfFtSXdZ1bsOMcK2D1iy4+TELu1KN5lnQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793849089;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=1Xm8rL1GwHu4r8B5iRjSenpHkcebJlj/5pUrpZbIBUs=;
+	b=TK4m7IWRC/9GIEa62472I8HsPTY9N2ftueXeHLkr4W3G1i8Bk6TTJQGF03z3mRTRv1EV
+	 n4eYlPGSbnv7JxG9bE2YFnduoDmthlnabOTabXV1j+uan3G84AHZfWXyLjp/BO5fJenPK
+	 EgHd6JfTFSl3+ZbQ667o2ufKlr4O4aw+XvxN2ItMtVi3mBHdJet9IKlYGOaAVIleBV0Cw
+	 P96YTriBTKQVOqqDr/4shz6WTKNOk9E3nUgvk9XoN5MKS9UZW4JfXyWFIg4m6uadISQy5
+	 oQQWp2VfJ3NJM4GFrnun6zCchGIMOxwDTBshiS5o2uJ7B8Ixn5P4u7ZgR86D2fhLoaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kylinos.cn;
-	spf=pass smtp.mailfrom=kylinos.cn;
-	arc=none smtp.remote-ip=124.126.103.232
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="IpC/cYK/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1665C606A32D;
-	Thu,  5 Nov 2026 03:16:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1665C606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3650c5e8d8c711f19a56ed5b684f684d-20261105
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:7f62fdda-3fc7-4db5-bfa9-97d101fe9e3f,IP:15,
-	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:15
-X-CID-INFO: VERSION:1.3.19,REQID:7f62fdda-3fc7-4db5-bfa9-97d101fe9e3f,IP:15,UR
-	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:15
-X-CID-META: VersionHash:7db8b62,CLOUDID:28c6da9c87e703cbf0257455612a5dc8,BulkI
-	D:261105111559WSM1TMSB,BulkQuantity:0,SF:17|19|38|66|78|102|127|153|865|89
-	8,TC:nil,Content:0|15|50|99,EDM:5,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:nil,
-	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-	,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 3650c5e8d8c711f19a56ed5b684f684d-20261105
-X-User: tianyaxiong@kylinos.cn
-Received: from kare.. [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1881586552; Thu, 05 Nov 2026 11:15:54 +0800
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v2] ftrace: speed up module enable by binary searching module symbols
-Date: Thu,  5 Nov 2026 11:15:30 +0800
-Message-ID: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FD3606A326
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 03:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IpC/cYK/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B0F1F000C1;
+	Thu,  5 Nov 2026 03:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793849088;
+	bh=1Xm8rL1GwHu4r8B5iRjSenpHkcebJlj/5pUrpZbIBUs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=IpC/cYK/v/XJ/b/yfESS9isZVryeFSPCMxMEHAEF2qECRI4GxY4ynRPXQ4/X0PG99
+	 Lzi9Kxcm3TAepqbRNnCGfRjDC41dF+gNe5aMZczVWTxYC2DjKZH+ak4qPANytqN3we
+	 +a9GegsPY9CSZyEDSUIcYc+TgtG0ht8DYlDrDqMycjkRcXI/XY1l60whZ+g4W1a3Zu
+	 qu/t+icbSirjfYQIo85Av/YCw26aP8uDUouO8Ctc54Dgpx93gi1S3O7ACi9ukXScJN
+	 muC6L60OwADvGyKfAtn4heNBMPdX3DpUowi26MWAzOPO3zNO38IIz8U8YeVt9TnvjZ
+	 OVVcsE26mXI/w==
+Message-ID: <sashiko-outbox-198512@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] ftrace: speed up module enable by binary searching
+ module symbols
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yaxiong Tian" <tianyaxiong@kylinos.cn>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
+References: <20261105031530.280442-1-tianyaxiong@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Nov 2026 03:24:47 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,205 +59,103 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Loading a module with many functions takes seconds, almost all of it in
-ftrace_module_enable().  amdgpu modules stall for about ten seconds, and
-disabling CONFIG_DYNAMIC_FTRACE makes the stall disappear.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] ftrace: undeclared function is_ignored_kernel_symbol() breaks build
+--
 
-Every record is validated by test_for_valid_rec(), which resolves its ip
-through kallsyms_lookup(); for a module address that ends up in
-find_kallsyms_symbol(), which walks the whole module symbol table from
-index 1.  The core kernel instead binary searches its sorted kallsyms
-table in get_symbol_pos().  So only modules pay, and the cost is
-quadratic: both the record count and the symbol count grow with the
-module.  An amdgpu.ko from this tree has 17282 records and 55332 symbol
-table entries.
+commit 4bde25e1c49a34cddab8dbd106c29413a3f1f699
+Author: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-Fix this by collecting the addresses of a module's symbols once, sorting
-them, and binary searching that array instead of walking the table once
-per record; a loaded module's symbol table cannot change, so the array
-stays valid for the whole pass.  What comes back is what the linear scan
-returned: the same entries are skipped - SHN_UNDEF, unnamed and mapping
-symbols - and the closest address not below the base of the record's
-memory region is taken.  Whenever the array cannot answer, because it
-could not be built or because no such symbol exists, the record is handed
-to test_for_valid_rec(), so the rest of kallsyms_lookup() still has its
-say and no verdict can change.
+ftrace: speed up module enable by binary searching module symbols
 
-On the machine that reported the stall, modprobe of that amdgpu.ko takes
-12.242 s before and 2.870 s after, and the time spent inside ftrace_lock
-drops from 9.368 s to 1.585 ms - 15.195 ms if the price of building the
-array is included, that build being 13.6 ms, 0.15% of the 9.37 s saved.
-The array costs O(symbols * log symbols), it does not grow with the
-record count.  Across the 74 modules loaded at boot, total lock time
-drops from 491 ms to 2.33 ms.
+This commit speeds up ftrace_module_enable() by collecting and sorting a
+module's symbol addresses once and binary searching them to validate
+ftrace records instead of linearly scanning the module symbol table for
+each record.
 
-Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
----
-v2:
-- Use rcu_dereference_raw() instead of a transient rcu_read_lock() pair.
-- Manage the symbol array with __free(kvfree).
-- Adapt to the v7.4-rc1 rename of is_mapping_symbol() to
-  is_ignored_kernel_symbol().
-- v1 discussion:
-  https://lore.kernel.org/all/20260916082715.320853-1-tianyaxiong@kylinos.cn/
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index c7d74b33d36de..255e813fe70e1 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/bsearch.h>
+>  #include <linux/module.h>
+> +#include <linux/module_symbol.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/sysctl.h>
+>  #include <linux/slab.h>
+> @@ -8034,8 +8035,129 @@ void ftrace_release_mod(struct module *mod)
+>  	}
+>  }
+> =20
+> +#ifdef FTRACE_MCOUNT_MAX_OFFSET
 
- kernel/trace/ftrace.c | 124 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 1 deletion(-)
+[ ... ]
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index c7d74b33d36d..255e813fe70e 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -26,6 +26,7 @@
- #include <linux/uaccess.h>
- #include <linux/bsearch.h>
- #include <linux/module.h>
-+#include <linux/module_symbol.h>
- #include <linux/ftrace.h>
- #include <linux/sysctl.h>
- #include <linux/slab.h>
-@@ -8034,8 +8035,129 @@ void ftrace_release_mod(struct module *mod)
- 	}
- }
- 
-+#ifdef FTRACE_MCOUNT_MAX_OFFSET
-+/*
-+ * ftrace_module_enable() validates every record with test_for_valid_rec(),
-+ * which walks the whole symbol table of a module for each address in it, so a
-+ * large module loads in quadratic time.  Search a sorted copy of the symbol
-+ * addresses instead, the way get_symbol_pos() searches the kallsyms table.
-+ * The array is an accelerator only; records it cannot resolve are tested the
-+ * old way, so the verdict does not change.
-+ */
-+struct ftrace_mod_syms {
-+	unsigned int	nr;
-+	unsigned long	addr[];	/* sorted, @nr entries */
-+};
-+
-+static int ftrace_mod_syms_cmp(const void *a, const void *b)
-+{
-+	unsigned long va = *(const unsigned long *)a;
-+	unsigned long vb = *(const unsigned long *)b;
-+
-+	return (va > vb) - (va < vb);
-+}
-+
-+static struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
-+{
-+	struct mod_kallsyms *kallsyms;
-+	struct ftrace_mod_syms *syms;
-+	unsigned int i, nr = 0;
-+
-+	/*
-+	 * mod->kallsyms stays valid until do_init_module() replaces it later
-+	 * in this thread, so no RCU read-side section is needed.
-+	 */
-+	kallsyms = rcu_dereference_raw(mod->kallsyms);
-+
-+	if (!kallsyms || kallsyms->num_symtab < 2)
-+		return NULL;
-+
-+	syms = kvmalloc(struct_size(syms, addr, kallsyms->num_symtab),
-+			GFP_KERNEL);
-+	if (!syms)
-+		return NULL;
-+
-+	/* The symbols find_kallsyms_symbol() would consider. */
-+	for (i = 1; i < kallsyms->num_symtab; i++) {
-+		const Elf_Sym *sym = &kallsyms->symtab[i];
-+		const char *name = kallsyms->strtab + sym->st_name;
-+
-+		if (sym->st_shndx == SHN_UNDEF || !*name ||
-+		    is_ignored_kernel_symbol(name))
-+			continue;
-+
-+		syms->addr[nr++] = kallsyms_symbol_value(sym);
-+	}
-+	syms->nr = nr;
-+
-+	if (nr > 1)
-+		sort(syms->addr, nr, sizeof(syms->addr[0]), ftrace_mod_syms_cmp,
-+		     NULL);
-+
-+	return syms;
-+}
-+
-+/* The verdict test_for_valid_rec() would give, without walking the table. */
-+static bool ftrace_mod_rec_is_valid(struct module *mod,
-+				    const struct ftrace_mod_syms *syms,
-+				    struct dyn_ftrace *rec)
-+{
-+	unsigned long base, best;
-+	unsigned int lo, hi;
-+
-+	if (!syms)
-+		return test_for_valid_rec(rec) != 0;
-+
-+	/* A record is in executable memory; anything else kallsyms answers. */
-+	if (within_module_mem_type(rec->ip, mod, MOD_TEXT))
-+		base = (unsigned long)mod->mem[MOD_TEXT].base;
-+	else if (within_module_mem_type(rec->ip, mod, MOD_INIT_TEXT))
-+		base = (unsigned long)mod->mem[MOD_INIT_TEXT].base;
-+	else
-+		return test_for_valid_rec(rec) != 0;
-+
-+	/* The closest address at or below @rec->ip, if there is one. */
-+	best = 0;
-+	for (lo = 0, hi = syms->nr; lo < hi; ) {
-+		unsigned int mid = lo + (hi - lo) / 2;
-+
-+		if (syms->addr[mid] <= rec->ip)
-+			lo = mid + 1;
-+		else
-+			hi = mid;
-+	}
-+	if (lo)
-+		best = syms->addr[lo - 1];
-+
-+	/*
-+	 * No symbol, or only ones below @base: let kallsyms_lookup() answer,
-+	 * as it also looks in the BPF and ftrace trampoline tables.
-+	 */
-+	if (best < base)
-+		return test_for_valid_rec(rec) != 0;
-+
-+	return rec->ip - best <= FTRACE_MCOUNT_MAX_OFFSET;
-+}
-+#else
-+struct ftrace_mod_syms;
-+
-+static inline struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
-+{
-+	return NULL;
-+}
-+
-+static inline bool ftrace_mod_rec_is_valid(struct module *mod,
-+					   const struct ftrace_mod_syms *syms,
-+					   struct dyn_ftrace *rec)
-+{
-+	return test_for_valid_rec(rec) != 0;
-+}
-+#endif /* FTRACE_MCOUNT_MAX_OFFSET */
-+
- void ftrace_module_enable(struct module *mod)
- {
-+	struct ftrace_mod_syms *syms __free(kvfree) =
-+		ftrace_disabled ? NULL : ftrace_mod_syms_alloc(mod);
- 	struct dyn_ftrace *rec;
- 	struct ftrace_page *pg;
- 
-@@ -8074,7 +8196,7 @@ void ftrace_module_enable(struct module *mod)
- 		cond_resched();
- 
- 		/* Weak functions should still be ignored */
--		if (!test_for_valid_rec(rec)) {
-+		if (!ftrace_mod_rec_is_valid(mod, syms, rec)) {
- 			/* Clear all other flags. Should not be enabled anyway */
- 			rec->flags = FTRACE_FL_DISABLED;
- 			continue;
--- 
-2.43.0
+> +static struct ftrace_mod_syms *ftrace_mod_syms_alloc(struct module *mod)
+> +{
+> +	struct mod_kallsyms *kallsyms;
+> +	struct ftrace_mod_syms *syms;
+> +	unsigned int i, nr =3D 0;
+> +
+> +	/*
+> +	 * mod->kallsyms stays valid until do_init_module() replaces it later
+> +	 * in this thread, so no RCU read-side section is needed.
+> +	 */
+> +	kallsyms =3D rcu_dereference_raw(mod->kallsyms);
+> +
+> +	if (!kallsyms || kallsyms->num_symtab < 2)
+> +		return NULL;
+> +
+> +	syms =3D kvmalloc(struct_size(syms, addr, kallsyms->num_symtab),
+> +			GFP_KERNEL);
+> +	if (!syms)
+> +		return NULL;
+> +
+> +	/* The symbols find_kallsyms_symbol() would consider. */
+> +	for (i =3D 1; i < kallsyms->num_symtab; i++) {
+> +		const Elf_Sym *sym =3D &kallsyms->symtab[i];
+> +		const char *name =3D kallsyms->strtab + sym->st_name;
+> +
+> +		if (sym->st_shndx =3D=3D SHN_UNDEF || !*name ||
+> +		    is_ignored_kernel_symbol(name))
+> +			continue;
 
+[Severity: Low]
+Does this break the build on architectures defining FTRACE_MCOUNT_MAX_OFFSET
+(such as x86 with CONFIG_HAVE_FENTRY or powerpc)?
+
+ftrace_mod_syms_alloc() calls is_ignored_kernel_symbol(), which is not
+declared or defined in any kernel header in this tree. In
+include/linux/module_symbol.h, the helper is still named is_mapping_symbol(=
+):
+
+include/linux/module_symbol.h:
+static inline bool is_mapping_symbol(const char *str)
+{
+	if (str[0] =3D=3D '.' && str[1] =3D=3D 'L')
+		return true;
+	if (str[0] =3D=3D 'L' && str[1] =3D=3D '0')
+		return true;
+	return str[0] =3D=3D '$';
+}
+
+and find_kallsyms_symbol() in kernel/module/kallsyms.c calls
+is_mapping_symbol():
+
+kernel/module/kallsyms.c:find_kallsyms_symbol() {
+	...
+		if (*kallsyms_symbol_name(kallsyms, i) =3D=3D '\0' ||
+		    is_mapping_symbol(kallsyms_symbol_name(kallsyms, i)))
+			continue;
+	...
+}
+
+Should ftrace_mod_syms_alloc() call is_mapping_symbol(name) here instead?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105031530.2804=
+42-1-tianyaxiong@kylinos.cn?part=3D1
