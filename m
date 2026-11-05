@@ -1,47 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793872733;
-	b=TDZK9ZrPB6BOXveEUdkV9cgTSuwLQw3n/wybId76k09kV0tIAaO3MBpQ7h02DUog5Shp
-	 VNf3xmVOXaCWwZ415S1cgnP1RopVSZ0lM3MHZ8j8WKUc/XGO9XQvlHUBVO23ARS79qb1N
-	 H5NGe+99LinEqGGg+Aq4dIuTIhSTetGXyR3EAzfEUL2EasIIIz7aoE9R0IWq061mbIbak
-	 czr5fEw/BVwWqXU09XIpBhI3QN1TT7A7RwJAOff7n+ZIZX97Ex8WLMc1/jPdv49hO6OGr
-	 bMkO1iyMQ914eLvXZ+lNAaGi009zYO89YaGR2OOyD9pWR1uVxuijuBTQwuHsf/jG8rg==
+	t=1793874776;
+	b=K24MY9Y3dHgc/b4InkKbkmc/WB9bOUK/f6JU4PhNuuVL6ebI7vvNA9MeAin41LEzDVPx
+	 xe0hd29mJpRzuqWwMvUstOgZ6NEN52BS5hP+9/mF3LFB+bTxG9WESPen5Ktfl2I+17C1Y
+	 16oZAZ2xgKkbLm9vCxHzF055lZ5cfJXwvWpkKd3LSrX0tnByIcE0RaPuOZU/WoKtabj5o
+	 p7oUk1reoJdARsamFbe85ihdonHMcZwbsnczJ8tzG+QuCNRiV/Hy7AkRx4+HUXsN1GtDq
+	 8POM0MsPqvTGv7criLNVacgkX7CdaKgE7WEuOyDi3YSFtmPPjIiQGhD9GhY7nuKkGbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793872733;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=q/X+C1Y8TceHHEUuqIf1Y7YzjYQg0qCuJDWINnus5m0=;
-	b=uBzRur8ehmlQAWHVvl6StS8WcYCciJVMGxphDfAqKk5nEn/YtLnZsVz1/IawZ3hy8vx2
-	 Uu8PSXvpXI7moFmnwjGNhcxVsCGm+jvFLPFjVu9IVc8TzpDGMOds5ySS+4JjgaZOpIvzx
-	 rGZIWUeMIXxrdUTRgd1ACIZj8pZnSFxkV8t3+PoEaf+QbxbcuQ2AeaNOtVyI+8Lbw5ni2
-	 t7Fx8vIWCcT6oMvqKRlDxgH3p2D75cihPsyJxVBXRAlbUleBkwbb7/F0yw5KZHAdjnNJ0
-	 N+jSFJOiE4ONZ3/LiK4P8FS9mMJtFDJjrgKBnRs2f22jugso/bSadqmux8wabsyWUyw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793874776;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=lR+NEFZOClI/Q7syF7pUxOZkq4s0tLc9i8788RwMvYM=;
+	b=gg7MsAb+QvbtpeLJEJ6WWxnDaBgjvEUmNPHZciYR3ck0KQwk9L0NQq5o65RFjp5BNge5
+	 RZOnePgWpn931/7tPp7HX3i/ID4xpZEzwWETn79QpHYIcWkPLVJzzvqveM3JFL5NVXty5
+	 adPeLYtRbiljJOgpuNjVGiQIuv+y4L9WtL+lH+nWIfAtMdvXjgCPLTZlATheJywljy4AT
+	 PZlJQAJaKNubBF6FVi033zKPyG2F4AhcrUmEy1IBNP4y3HOiWmfGCtBgA3f/NxZ0KtkaD
+	 M6OVuaTqOQk7QdcDJfR3fpGIVFwTli+6sLVBMdJBB0VCo/1xZlUQ+R8g55mqEGtoQwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7BZOv6y;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=fail header.from=debian.org;
+	spf=pass smtp.mailfrom=gmail.com;
+	arc=none smtp.remote-ip=74.125.224.46
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861F5606A32C;
-	Thu,  5 Nov 2026 09:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7BZOv6y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7802A1F000C1;
-	Thu,  5 Nov 2026 09:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793872733;
-	bh=q/X+C1Y8TceHHEUuqIf1Y7YzjYQg0qCuJDWINnus5m0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=d7BZOv6y47/RQ2Ml9iy4bi7L5V1/nD//V4d6VP/9soB5stou23M4Km74Szg3Nrm3p
-	 wCdMVRys8gcsqkPoyJyNnyL1U0/e2hdmDU2HkeQ3y++ZKgCL6NIKS2g+Xn1qVYUCIg
-	 /JOTkot7nWIHdNJmFwZ4NZYbrxBMA0spOxrsxhXtH4/7hCzWTyA9FMG0FQNRAqRlDC
-	 S8+JrNV0DEVmot9dYaua6ajAf7G92UMTuXxCX6VowkUJYKFOPGS0mBCz7JpMALgdFe
-	 ComZLv0SAKpc6/Opp4e7FLf0nsKozgFIVdJJK+EDJLejPETCTHHNJclf5I4qzf7mOg
-	 xnE9UCMW3swNA==
-Message-ID: <6c5f3ef1-188f-4a5d-8775-578dc2c84c59@kernel.org>
-Date: Thu, 5 Nov 2026 10:58:42 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA039606A31B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Nov 2026 10:32:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BA039606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-679e6ab6471so444729d50.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 02:32:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793874775; x=1794479575;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lR+NEFZOClI/Q7syF7pUxOZkq4s0tLc9i8788RwMvYM=;
+        b=BJySUFfRVWPrJm8FO4dyeVfk90sSls2jHVxg4b0oxQZeSL+TrUKXbQmgMhEXGxQqY+
+         XHG2aUwCM/6yqi4enDDaSrDCznelRuZj0cHnTQXcKdvlMAGFVHYp3CM6eljRfDGHk3NJ
+         rCdhLNgVzfyrnWbSU6Op59VVCNUEfRFyMjAX/jBaTmxHBnXqqKmdCSJPUp+9WlrIImSy
+         CL9/zDKl3ZiVyi1yMn1wiijmqgfjBaulRCuWJQuqQR/K+pvAVTq8Uv6RmtKJl19K/o07
+         DJXygCDbdY07/dlQ7KnDC6aEsrasmTPx3/Uj7r5MZA0OZ2Wl9+alj+hTvCJgDbsttlCG
+         2thw==
+X-Forwarded-Encrypted: i=1; AKwUvBw06OBOxyYk6nojv7TJX/Fx6rKyZgHFUgHtgdJv8aXvSenrvkQbULGqQxph8OffoPLrn4i6nNEtxTKm5mV0asrnUvk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9M5DsToS7lpCkiAoUQ0KiA4unyHbeQpDpguxgxDGeZ3cL5bgBT
+	GL18qGz93vPiTX+C6fWBkWifJYRj5Hm6KWLNLNePEOp+h++4u1ojvgRZ
+X-Gm-Gg: AYBFou1nYRf/qjPn5ebhyZcQLb8fPhR1T9ccQUlGxGh0JS7xvybMHsVIe9KtMjyUBAt
+	CsCkdFl1Y19QGGSqQ1omiK+wEXlkGJyhx4TO8E63510Ydxo7Y2c8hwyCF+r27oWP+XaSTVAtS5+
+	Kbyelh+JYz1Ln2vZn5tTAn0ls4wEKhKM8B6CVeMVjgHrABpc9spbRNINi4rB6TSGvdi1M0ygB8p
+	OTuQbsVYP58bNojMsYqJbJzw9m3IPRbcXakp3VW8K8H0EHoDnIo/DdogrWzhk/Wjj1tXqUZIQGO
+	n3Ju7voMF1GWK8dCSxDlCz6FXlSxqxp+aeWnS7QuyW/0GvGmfw5jL4L1aj24c9N0MfFjzM2yHJn
+	ZV/YKlzlU5Gx6QjX3e11KSs2ZjNhqPvhVPRSazmnZ0WDTVC1Qlm4prWB4Qvke+MPC7zQqTw3pAx
+	Uktg4tCaSaLSNfwtZ2FNHcCGtmcL3vFH9eJoA0O5lbSzzKumpydEBMHU4GDlLl5uaGfYzZS27+2
+	1+rk+bU0jKqaOanr1GXqsAUsIvYInDQWRF8vMOhUOfa5C/ltn0JjlZ4glT0wEjoO2m16QVFM4H3
+	239oPac3Py2qbTi0IDQ=
+X-Received: by 2002:a05:690c:3183:b0:8b3:310:244a with SMTP id 00721157ae682-8b328db924dmr11659227b3.9.1793874774842;
+        Thu, 05 Nov 2026 02:32:54 -0800 (PST)
+Received: from gmail.com ([2a03:2880:24ff:59::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b309712e25sm37003777b3.2.2026.11.05.02.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2026 02:32:54 -0800 (PST)
+Date: Thu, 5 Nov 2026 02:32:51 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <srostedt@redhat.com>, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: Handle a reader taking the new head in
+ rb_handle_head_page()
+Message-ID: <auxXYbBvbupetclu@gmail.com>
+References: <20261102-ring-buffer-head-moved-v1-1-165973790be4@debian.org>
+ <auxJP5fkEQOkvicE@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -51,138 +85,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/12] mm/page_alloc: keep the pagesets of an empty
- zone
-Content-Language: en-US
-To: Zi Yan <ziy@nvidia.com>, "Gregory Price (Meta)" <gourry@gourry.net>,
- linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, akpm@linux-foundation.org, david@kernel.org,
- ljs@kernel.org, liam@infradead.org, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, kasong@tencent.com, qi.zheng@linux.dev,
- shakeel.butt@linux.dev, baohua@kernel.org, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, baoquan.he@linux.dev,
- baolin.wang@linux.alibaba.com, rientjes@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, muchun.song@linux.dev,
- osalvador@suse.de, joshua.hahnjy@gmail.com, rakie.kim@sk.com,
- ying.huang@linux.alibaba.com, brendan.jackman@linux.dev, hannes@cmpxchg.org,
- bigeasy@linutronix.de, clrkwllms@kernel.org, nathan@kernel.org,
- ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
- Bessel.Wang@huawei.com, jiang.liu@huawei.com, mgorman@techsingularity.net,
- anshuman.khandual@arm.com, Josef Bacik <josef@toxicpanda.com>,
- stable@vger.kernel.org
-References: <20261101021340.2251928-1-gourry@gourry.net>
- <20261101021340.2251928-3-gourry@gourry.net>
- <DMK59DO8M3AP.3OTG2YR62D9WO@nvidia.com>
- <489b668a-033c-4161-93e8-15d6b9b28b51@kernel.org>
- <DMLPC0D7EWRW.EVYWUONVO18A@nvidia.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <DMLPC0D7EWRW.EVYWUONVO18A@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <auxJP5fkEQOkvicE@google.com>
 
-On 11/3/26 17:04, Zi Yan wrote:
-> On Tue Nov 3, 2026 at 9:57 AM EST, Vlastimil Babka (SUSE) wrote:
->>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>>> index f1048168c90c..1850a41f24f7 100644
->>>> --- a/mm/page_alloc.c
->>>> +++ b/mm/page_alloc.c
->>>> @@ -6308,6 +6308,10 @@ void __meminit setup_zone_pageset(struct zone *zone)
->>>>  {
->>>>  	int cpu;
->>>>  
->>>> +	/* The zone has been populated before, see zone_pcp_reset(). */
->>>> +	if (zone->per_cpu_pageset != &boot_pageset)
->>>> +		return;
->>>> +
->>>>  	/* Size may be 0 on !SMP && !NUMA */
->>>>  	if (sizeof(struct per_cpu_zonestat) > 0)
->>>>  		zone->per_cpu_zonestats = alloc_percpu(struct per_cpu_zonestat);
->>>> @@ -6400,6 +6404,10 @@ void __init setup_per_cpu_pageset(void)
->>>>  
->>>>  __meminit void zone_pcp_init(struct zone *zone)
->>>>  {
->>>> +	/* A node which is added again, see zone_pcp_reset(). */
->>> 
->>> it might be better to explain zone->per_cpu_pageset can only be NULL at
->>> boot time and it needs an initialization.
->>
->> Hmm.
->>
->>>> +	if (zone->per_cpu_pageset && zone->per_cpu_pageset != &boot_pageset)
->>>> +		return;
->>
->> Shouldn't then the check be just:
->>
->> if (zone->per_cpu_pageset)
->> 	return;
->>
->> Because if it's == &boot_pageset, we are just setting the same values that
->> area already there?
->>
+On Thu, Nov 05, 2026 at 09:15:43AM +0000, Vincent Donnefort wrote:
+> On Mon, Nov 02, 2026 at 06:30:11AM -0800, Breno Leitao wrote:
+> > I am occasionally seeing the following  KASAN warning when running
 > 
-> Right. And zone_pcp_init(), called by zone_init_internals(), becomes a nop for
-> free_area_init_core_hotplug(). Then I wonder if zone_init_internals() is
-> needed for hotplug, but that belongs to a later cleanup.
+> a KASAN warning?
 
-Yep, that's for later cleanup. Right now the minimum that's correct and not
-unnecessarily misleading is enough. So I've done this:
+Sorry. It is a regular WARN from RB_WARN_ON(), on a kernel that happened
+to have KASAN enabled. I will fix the wording.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 1850a41f24f7..20bfd11c5851 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6404,8 +6404,8 @@ void __init setup_per_cpu_pageset(void)
+> > I've understood that rb_handle_head_page() moves the head page forward
+> 
+> Drop "I've understood". 
 
- __meminit void zone_pcp_init(struct zone *zone)
- {
--       /* A node which is added again, see zone_pcp_reset(). */
--       if (zone->per_cpu_pageset && zone->per_cpu_pageset != &boot_pageset)
-+       /* This initialization only needs to be done once */
-+       if (zone->per_cpu_pageset)
-                return;
+Ack!
 
-        /*
+> Besides, I am not sure about returning 1. If the nested writer interrupts
+> between rb_head_page_set_head() and rb_head_page_set_normal(), it can also get
+> RB_PAGE_MOVED and skipping rb_tail_page_update() means the retry will observe
+> the old tail.
+> 
+> All in all, I wonder if it shouldn't simply be: 
+> 
+>   case RB_PAGE_MOVED:
+>      break;
+> 
 
+Good point, that handles both writers. The outer one falls through to
+the existing UPDATE clear, and rb_tail_page_update() finds the tail
+already moved by the interrupt, as when the cmpxchg returns HEAD. The
+nested one moves the tail to next_page, which is right because the outer
+writer already did the accounting for that page. And the duplication
+goes away.
 
+> Additionally, the comment with "Valid returns" must be amended.
 
+Will do.
+
+My reproducer used a two-page buffer, where this retry is harmless, so
+I will re-test v2 with a bigger buffer before sending it.
+
+Thanks for the review,
+--breno
