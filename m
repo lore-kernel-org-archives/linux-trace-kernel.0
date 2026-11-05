@@ -1,111 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793911012;
-	b=i5VnaryeSm3Gxanc/FkHdmZ99mvfRdkpiJu1FXUx6s7t2BbnytGFlbX0O+53YmbcnnVf
-	 JglNSteyOftL9IM0UvzwFdwnJpv6ZGLjaMenLe900rQS8bCx8ZXu3hYhTwOiH4Imp6wq9
-	 Qc67nIa+Z+q0IiX3x9lqRrKvycArV5+GWF+rVsDZ3A59WAUBbp4I1qTVwPaQX3UO6sCSE
-	 hzchNujGEKUMRBMlL7y7JhqtGmM/ZH1lOgixHPOC2oiT2Y+PrlqZ47zpcfYTJZjDJDmTY
-	 lLzNA3eX6O05ngPzP9Y+cUuNjwaqTrSYyfOchz367C0cn/lIq/W75G9hQ9CGGvWDniA==
+	t=1793912262;
+	b=lt6rt2qxl4Zxpg7aS8xtV6Nv5hZdnQNhK4sY93Ok22vapMZV8T8LHjpd3M94a1tXrVDQ
+	 IpU54qfB4z/T2xzfIiW2CNnaLwuZNS8zdn2fzWpbkPAjcuetLezDpxut6rlYmssw1d6/S
+	 jEj/gbFxJCKoWNFGhMvZK8VFQzVVoyNnGxGxtlpOM3PbgCs+OA8Ve9gfKavVziWllekYz
+	 0EEvjRGY9iYVep0WW4a80r2Y3dpNAmVyxzVCOmtjfBONbKLlhfawpMOOPK0V56id3ja6L
+	 BW1LcsSmCvF+X2xOMNyIKj08LneELh+leul/U57a3Zj4vsFmumVx3jlOaqESgi0R89g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793911012;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=u4szUUbd/kkYsYLlulDhD6NrSpjR5pa/uSMGvjF+Y58=;
-	b=hTeCldSMx1fnqBmMENV+S/IvzmwTDBz1VUr/ry4Y3R53ajDRF9OP2R+DqdWTCLvfB2Iv
-	 XTVUOPlh29Eu+SxsEThm+82FctJ7gZyo+RYAv9key9nCSu/HHi5i7EEko9TP6YGhv955+
-	 AZfo3JddUZdTZmQmPGoHw9u4JlMy1l/opZvv+qB91csbwBu8DoQoZ7mLL2WFLtvZ1R+Rp
-	 5ZpzSO5I2TH77EvCWtg2t4ULPXT+df0VN5j96/dPmbjjrAmiOU5T2lfCoOPSSv+WJoz9c
-	 V23P+vLqqxJL+emJQypYGk9fjh7Kp8IMNzREJb0CJpw6/AqTeU1GT+bftEx1nyUsXtQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793912262;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=blozq/9ueN/weaanR6fA4D8Rh3f233RzyvTmlM0ePmw=;
+	b=JUj3U26/DFkYTCppnh2B/lt2zW4UhNnY1LZpkVthJhxafE5UZkfyOGEA2gowVG4NYCiC
+	 MncrPlr+Lg1uIWFhTreCdKQIn0vDzo+u6q0Y/smsOIBWinKHYvKUqDEPTyBHX9UCb1lrk
+	 t+95fSy0FRdkZYA8aWD0mzrjyuhwXrDhr+8/7hmQdWkP4VDS2o0EXNt/CTtNnrWYQaFuB
+	 OmcXVll2pfdWNpJIi78Rmeo1pQffFz83H2OehVGvRv/pMMpZhCQNMNG26RHN24lBEZfEF
+	 TfckC58E0OxHS0bI3URWRi06sigNGamKmcquIjbxxPkgyIv1B+ehpJQR/ld9XoneMJA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=efficios.com;
-	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=HWPOoBAO;
-	arc=none smtp.remote-ip=158.69.130.18
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=It9CE4lv;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5610E606D813;
-	Thu,  5 Nov 2026 20:36:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5610E606D813
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A459606A31B;
+	Thu,  5 Nov 2026 20:57:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A459606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=HWPOoBAO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1793911009;
-	bh=u4szUUbd/kkYsYLlulDhD6NrSpjR5pa/uSMGvjF+Y58=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HWPOoBAONOHGoH9GlpHdY9hLYCkK4t4XE1dFbOmYvnY8GEN9HOqN6uLhc+GcR744R
-	 yASYBTzLPMSfUi1kkwHhGDm1prCWTZhC5uafR5EtIYdFlKv0oR/oA5rwZl+ISsrrm0
-	 30tOpuVmZ6ULFMa1hhr7bzjUMFCsWXWVFy+qxhHLCj5erzOCBDHTT7rtmlwCpyjKEA
-	 xxQGhPB1b4kRzTgNciLVXY76L6xxnJQjUZSyVWuc/C6ihTBqkSF0Z2L4XnPrmey6G4
-	 Fr7vqrVBFylVc9tDyFoxxHfCx9YDT9V6YFZnNqdJ0WTyTuD3WhoAYRYyywgB47SQ6d
-	 8vXPiZd9oT/PA==
-Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcc6bz1zLcy;
-	Thu, 05 Nov 2026 15:36:48 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: David Hildenbrand <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>,
-	Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>,
-	christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>,
-	David Carlier <devnexen@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: [RFC PATCH v24 08/10] lib: percpu_counter_tree: add the arity boot parameter
-Date: Thu,  5 Nov 2026 15:36:37 -0500
-Message-Id: <20261105203639.1459524-9-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
-References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=It9CE4lv
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 32065809DE;
+	Thu,  5 Nov 2026 20:57:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 105FE60010;
+	Thu,  5 Nov 2026 20:57:30 +0000 (UTC)
+Date: Thu, 5 Nov 2026 15:57:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <srostedt@redhat.com>, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] ring-buffer: Handle a reader taking the new head in
+ rb_handle_head_page()
+Message-ID: <20261105155729.0f9c7e4d@gandalf.local.home>
+In-Reply-To: <20261105-ring-buffer-head-moved-v2-1-05da40cebccc@debian.org>
+References: <20261105-ring-buffer-head-moved-v2-1-05da40cebccc@debian.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,379 +62,194 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 105FE60010
+X-Stat-Signature: 6qfsq7daudr6yyda71ijchhsf35r7559
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+4Bg73+KnseAa5PLXLoS9cef7i0GghHeQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=blozq/9ueN/weaanR6fA4D8Rh3f233RzyvTmlM0ePmw=; b=It9CE4lv+r3Uipb69ba2Za5u/pZmyJcCxz4re8T+sOE3Gr3BgCmIYaCPfb/xnPE+Hk5s3SJi4LaYySSpRaDba3dfBdUlneZzZVNW8dSOxrrMEl/SdIqnbwab2su9RPx8liRflmpcgYY3xXhz07xFWqpE633XIXUncP5bCKDxgTg=
+X-HE-Tag: 1793912250-675543
+X-HE-Meta: U2FsdGVkX1+Fu2fFcimacg/INWUVEqvFi2pTYqwZUUwVJY5vabqITdCd9b46KkJUUZbTkotHeKC/j+G9Xu2XUfLiisCJ3H75FAC3oA9SLradMCeWENpbOeUcGhRmZ1aP0ZNQ6j/m7ihVPbo52Tt7HIDU0OrPALad9lUlu069cy0xIfq15AkMEQqXFfX7WumiCrKtOE/es19IjC5KmRHM+3kQ98kKgWPDOh8nLESBntDk9vntr35sqSj/ngfXoDcvAH3GQxADfHfI00sFGrfmSKIjl3Oaa5mM1AKkcE2rXE+3xvBTeQSwxUTCycCk1dxtgQAXxB9UIB681YcCEHL+iuqG6/Iqmf8VTEOokcpr0m5rVPDYhJNBD8hY0v092hpKssa5tp3Nfh5sRWwrUs/xVHwmf6y9eRjtEEbbh2Rm520QNA84HdGcCAtV4c2LgkvcZG2OsVFBkk6GTtJcDMSHZC1sNb/IKMdr
 
-The fan-out of each tree level is selected at boot from nr_cpu_ids, the
-highest possible CPU number plus one, using a table tuned for the RSS
-counters on one machine, a 2-socket AMD EPYC 9654 with 192 cores and 384
-logical CPUs.  The best shape depends on the cost of cache line
-transfers on a given machine, which varies with the number of sockets,
-the cache topology and SMT, so it may differ on other hardware.
+On Thu, 05 Nov 2026 03:12:42 -0800
+Breno Leitao <leitao@debian.org> wrote:
 
-Add the percpu_counter_tree.arity= boot parameter, which overrides the
-tree shape with the fan-out of each level, from the per-cpu counters to
-the root, so the shapes can be compared on other machines, to improve
-the default table.  For example, when nr_cpu_ids is 16, "16" is a flat
-tree and "4,4" a tree with 4 intermediate counters.  Each fan-out is a
-power of 2, and their product must be nr_cpu_ids rounded up to a power
-of 2.  An invalid shape is ignored with a warning.
+> The following warning occasionally fires on a KASAN-enabled debug
+> kernel in Meta's fleet:
+>=20
+>   WARNING: kernel/trace/ring_buffer.c:3793 at rb_move_tail+0xf78/0x1050
+>   Call trace:
+>    rb_move_tail+0xf78/0x1050 (P)
+>    __rb_reserve_next+0x648/0xac0
+>    ring_buffer_lock_reserve+0xd00/0xf00
+>    trace_buffer_lock_reserve+0x28/0x188
+>    trace_graph_return+0x220/0x3e8
+>    ftrace_return_to_handler+0x2bc/0x5a8
+>    return_to_handler+0x20/0x48
+>    __arm64_sys_sched_yield+0x18/0x30 (F)
+>=20
+> rb_handle_head_page() moves the head page forward in two steps: it marks
+> the pointer to the old head page UPDATE, then marks the pointer to the
+> page after it (new_head) HEAD. The second cmpxchg is assumed to return
+> only HEAD or NORMAL, but it can also return RB_PAGE_MOVED:
+>=20
+>   CPU 0 (writer)                        CPU 1 (reader)
+>   ------------------------------------  --------------------------------
+>   rb_handle_head_page()
+>     old head ptr: HEAD -> UPDATE
+>     new_head =3D page after old head
+>     <interrupt: nested write>
+>       sees UPDATE, marks new_head
+>       HEAD and moves the tail page
 
-The shape in use is printed at boot, and can be read from
-/sys/module/percpu_counter_tree/parameters/arity.
+Wait? The interrupt should never change UPDATE to HEAD.
 
-Cover the parsing of the parameter in the userspace test, with valid and
-invalid shapes, and run the counter tests on the valid ones.
+Something else is broken here. Because only the one that set HEAD to update
+is allowed to set it back to NORMAL.
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
----
- .../admin-guide/kernel-parameters.txt         | 14 +++
- .../core-api/percpu-counter-tree.rst          |  3 +-
- lib/percpu_counter_tree.c                     | 96 ++++++++++++++++++-
- tools/testing/hpcc/include/hpcc_shim.h        |  4 +
- .../testing/hpcc/include/linux/moduleparam.h  | 12 +++
- tools/testing/hpcc/main.c                     | 78 ++++++++++++++-
- 6 files changed, 201 insertions(+), 6 deletions(-)
- create mode 100644 tools/testing/hpcc/include/linux/moduleparam.h
+>     </interrupt>
+>                                         rb_get_reader_page()
+>                                           swaps new_head out for the
+>                                           reader page
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0b3c140babd9..c368affa2115 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5342,6 +5342,20 @@ Kernel parameters
- 			allocator.  This parameter is primarily	for debugging
- 			and performance comparison.
- 
-+	percpu_counter_tree.arity=	[KNL,SMP]
-+			Format: <fan-out>[,<fan-out>...]
-+			Override the shape of the hierarchical per-cpu
-+			counter trees (used for the RSS counters), listing
-+			the fan-out of each tree level from the per-cpu
-+			counters to the root. Each fan-out is a power of 2
-+			and their product must be nr_cpu_ids (the highest
-+			possible CPU number plus one) rounded up to a power
-+			of 2, e.g. "16" (flat) or "4,4" when nr_cpu_ids
-+			is 16. An invalid shape is ignored with a warning.
-+			The shape in use is shown in
-+			/sys/module/percpu_counter_tree/parameters/arity.
-+			This parameter is meant for performance comparison.
+				This should not happen. The entire point of
+				setting the pointer to UPDATE is to prevent
+				swaps from happening when any commit is in
+				progress.
+
+The rb_handle_head_page() even states this:
+
+	/*
+	 * If this was the outer most commit (the one that
+	 * changed the original pointer from HEAD to UPDATE),
+	 * then it is up to us to reset it to NORMAL.
+	 */
+	if (type =3D=3D RB_PAGE_HEAD) {
+		ret =3D rb_head_page_set_normal(cpu_buffer, next_page,
+					      tail_page,
+					      RB_PAGE_UPDATE);
+		if (RB_WARN_ON(cpu_buffer,
+			       ret !=3D RB_PAGE_UPDATE))
+			return -1;
+	}
+
+
+
+>     cmpxchg(new_head|NORMAL ->
+>             new_head|HEAD) -> MOVED
+>     RB_WARN_ON()
+>=20
+> A nested writer that interrupts the outer one after the second cmpxchg
+> still sees the old head pointer UPDATE and repeats the second step. If
+> the reader swaps new_head out just before that cmpxchg, it returns
+> RB_PAGE_MOVED too.
+>=20
+> RB_WARN_ON() permanently disables recording on the whole ring buffer,
+> and the outer writer returns without clearing its UPDATE flag.
+>=20
+> In both cases another writer has already moved the head off the old
+> head page, as when the cmpxchg returns HEAD. Treat RB_PAGE_MOVED the
+> same way and fall through: the outer writer still clears its UPDATE
+> flag, and the caller updates the tail page as usual.
+>=20
+> Fixes: 77ae365eca89 ("ring-buffer: make lockless")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> Changes in v2:
+> - Fall through on RB_PAGE_MOVED instead of returning 1, so a nested
+>   writer still moves the tail page (Vincent)
+> - Drop the duplicated UPDATE clear (Vincent)
+> - Document RB_PAGE_MOVED in the "Valid returns" comment (Vincent)
+> - Commit message improvements
+> - Link to v1: https://patch.msgid.link/20261102-ring-buffer-head-moved-v1=
+-1-165973790be4@debian.org
+
+=46rom your v1 comment:
+
+> A nested writer and a consuming reader can race so that the second
+> cmpxchg of a head page move in rb_handle_head_page() returns
+> RB_PAGE_MOVED. That trips RB_WARN_ON(), which disables the ring buffer
+> and leaves the old head pointer flagged UPDATE. The patch handles the
+> return like the RB_PAGE_MOVED case of the first cmpxchg: clear the
+> UPDATE flag if this writer set it, and retry.
+>=20
+> Testing, on arm64 KVM guests under virtme-ng (32 vCPUs, KASAN config,
+> next-20261030; kernel/trace/ring_buffer.c is identical in v7.4-rc1):
+> - Setup: function_graph tracer filtered to "*sched*", buffer_size_kb=3D7
+>   (two pages per CPU), overwrite on, a trace_pipe_raw reader on every
+>   CPU plus a trace_pipe reader, and stress-ng --yield/--timer/--futex.
+
+OK, I think I see the issue here. I believe the reader is finding the wrong
+head page. Making the buffer really small can make this scenario happen
+more often.
+
+The problem is where the reader thinks the "head_page" is. When the reader
+swaps out the page, it first looks for the "head_page". The head page
+always has flags set in the pointer to it, so before the swap, the reader
+will search for the head page.
+
+It starts with the cpu_buffer->head_page pointer which is where it found it
+last. It then searches for the head page and when it finds it, it tries the
+swap. The swap will only succeed if the pointer is HEAD.
+
+The issue I think you hit was that we have two HEAD pages, when interrupts
+come in. That is, we can get a state of:
+
+  --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
+
+With the expectation that the reader will never be between those two
+pointers and it will always find the UPDATE before it sees the new HEAD. But
+since only the reader moves the cpu_buffer->head_page around and the writer
+does not, we can have a stale pointer of this:
+
+
+  --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
+                                      ^
+                                      |
+                            cpu_buffer->head_page
+
+And when the reader looks for the new head, it will find this:
+
+
+  --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
+                                                       ^
+                                                       |
+                                             cpu_buffer->head_page
+
+And possibly swap out the head page before it is allowed to.
+
+To prevent this, I believe having the writer move this pointer will keep it
+from being stale and ending up between the two.
+
+Can you try this?
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index c64e001c3fc0..f0bb2d23d818 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3721,6 +3721,14 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_=
+buffer,
+ 		local_sub(rb_page_commit(next_page), &cpu_buffer->entries_bytes);
+ 		local_inc(&cpu_buffer->pages_lost);
+=20
++		/*
++		 * To prevent a stale head_page from being between
++		 * the UPDATE and new HEAD pages, set it here to have
++		 * the reader check always find the update before
++		 * finding the HEAD page.
++		 */
++		cpu_buffer->head_page =3D next_page;
 +
- 	pirq=		[SMP,APIC] Manual mp-table setup
- 			See Documentation/arch/x86/i386/IO-APIC.rst.
- 
-diff --git a/Documentation/core-api/percpu-counter-tree.rst b/Documentation/core-api/percpu-counter-tree.rst
-index 87babe2276c4..8aebf91aa133 100644
---- a/Documentation/core-api/percpu-counter-tree.rst
-+++ b/Documentation/core-api/percpu-counter-tree.rst
-@@ -63,7 +63,8 @@ possible CPU, and the tree items, whose number depends on nr_cpu_ids, so
- struct percpu_counter_tree has a fixed size.
- 
- The fan-out of each tree level is selected at boot from nr_cpu_ids, the
--highest possible CPU number plus one.
-+highest possible CPU number plus one. It can be overridden with the
-+percpu_counter_tree.arity= boot parameter for performance comparison.
- 
- The bounded accuracy is a property of the settled tree. While updates are
- in flight the transient error can exceed it, bounded by the number of
-diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
-index 32c4f05d7d7d..491675897e41 100644
---- a/lib/percpu_counter_tree.c
-+++ b/lib/percpu_counter_tree.c
-@@ -151,6 +151,7 @@
- #define pr_fmt(fmt) "percpu_counter_tree: " fmt
- 
- #include <linux/percpu_counter_tree.h>
-+#include <linux/moduleparam.h>
- #include <linux/align.h>
- #include <linux/cache.h>
- #include <linux/cpumask.h>
-@@ -162,6 +163,7 @@
- #include <linux/math.h>
- #include <linux/log2.h>
- #include <linux/args.h>
-+#include <linux/string.h>
- #include <kunit/visibility.h>
- 
- #define MAX_NR_LEVELS 7
-@@ -254,6 +256,8 @@ static_assert(ARRAY_SIZE(per_nr_cpu_order_config) == MAX_NR_CPUS_ORDER + 1);
- static struct {
- 	/* Hierarchical counter configuration for the hardware topology. */
- 	const struct counter_config *config;
-+	/* Tree shape selected with the "arity" boot parameter. */
-+	struct counter_config boot_config;
- 	/* Order of nr_cpu_ids. */
- 	unsigned int nr_cpus_order;
- 	/*
-@@ -272,6 +276,9 @@ static struct {
- 	.nr_items = UINT_MAX,
- };
- 
-+/* Value of the "arity" boot parameter, parsed at subsystem initialization. */
-+static const char *arity_param;
-+
- /*
-  * Size of the items of one tree position for the counters initialized
-  * together by percpu_counter_tree_init_many(), packed in cache lines which
-@@ -1326,7 +1333,10 @@ void percpu_counter_tree_copy_state(struct percpu_counter_tree *dst,
- EXPORT_SYMBOL_IF_KUNIT(percpu_counter_tree_copy_state);
- #endif
- 
--/* Format the fan-out of each level, from level 0 to the root, e.g. "8,2,8". */
-+/* Room for the fan-out of each level, up to 7 digits and a comma, and a NUL. */
-+#define SHAPE_BUF_SIZE	(8 * MAX_NR_LEVELS + 1)
-+
-+/* Format the fan-out of each level, from level 0 to the root, e.g. "8,4,8". */
- static
- int format_shape(char *buf, size_t size, const struct counter_config *config)
- {
-@@ -1339,9 +1349,78 @@ int format_shape(char *buf, size_t size, const struct counter_config *config)
- 	return len;
- }
- 
-+static
-+int arity_param_set(const char *val, const struct kernel_param *kp)
-+{
-+	/* Applied once by percpu_counter_tree_subsystem_init(). */
-+	if (tree_topology.config)
-+		return -EBUSY;
-+	arity_param = val;
-+	return 0;
-+}
-+
-+static
-+int arity_param_get(char *buffer, const struct kernel_param *kp)
-+{
-+	int len;
-+
-+	if (!tree_topology.config)
-+		return sprintf(buffer, "%s\n", arity_param ? : "");
-+	/* The buffer is a page, larger than any shape and its newline. */
-+	len = format_shape(buffer, SHAPE_BUF_SIZE, tree_topology.config);
-+	buffer[len++] = '\n';
-+	return len;
-+}
-+
-+static const struct kernel_param_ops arity_param_ops = {
-+	.set = arity_param_set,
-+	.get = arity_param_get,
-+};
-+
-+/*
-+ * percpu_counter_tree.arity=<fan-out>[,<fan-out>...] overrides the tree
-+ * shape chosen for nr_cpu_ids, to compare shapes on a given machine.
-+ * Reading the parameter shows the shape in use.
-+ */
-+module_param_cb(arity, &arity_param_ops, NULL, 0444);
-+MODULE_PARM_DESC(arity, "Fan-out of each tree level from level 0 to the root, e.g. 8,4,8");
-+
-+/*
-+ * Parse a list of fan-outs, from level 0 to the root, into @config. Each
-+ * fan-out is a power of 2 of at least 2, and their product is nr_cpu_ids
-+ * rounded up to a power of 2.
-+ *
-+ * Return: 0 on success, -EINVAL if the list does not describe a tree
-+ * covering the CPU numbers below nr_cpu_ids.
-+ */
-+static
-+int __init parse_arity(const char *str, struct counter_config *config)
-+{
-+	int ints[MAX_NR_LEVELS + 2];	/* Count, levels, and one extra to detect overflow. */
-+	unsigned int level, order = 0;
-+
-+	if (*get_options(str, ARRAY_SIZE(ints), ints) || ints[0] > MAX_NR_LEVELS)
-+		return -EINVAL;
-+	config->nr_levels = ints[0];
-+	for (level = 0; level < config->nr_levels; level++) {
-+		int fan_out = ints[level + 1];
-+
-+		if (fan_out < 2 || !is_power_of_2(fan_out))
-+			return -EINVAL;
-+		config->n_arity_order[level] = ilog2(fan_out);
-+		order += config->n_arity_order[level];
-+		if (order > tree_topology.nr_cpus_order)
-+			return -EINVAL;
-+	}
-+	if (order != tree_topology.nr_cpus_order)
-+		return -EINVAL;
-+	return 0;
-+}
-+
- int __init percpu_counter_tree_subsystem_init(void)
- {
--	char shape[8 * MAX_NR_LEVELS + 1] = "";
-+	const char *origin = "default";
-+	char shape[SHAPE_BUF_SIZE] = "";
- 
- 	tree_topology.nr_cpus_order = get_count_order(nr_cpu_ids);
- 	if (tree_topology.nr_cpus_order >= ARRAY_SIZE(per_nr_cpu_order_config)) {
-@@ -1349,14 +1428,23 @@ int __init percpu_counter_tree_subsystem_init(void)
- 		return -EINVAL;
- 	}
- 	tree_topology.config = &per_nr_cpu_order_config[tree_topology.nr_cpus_order];
-+	if (arity_param && *arity_param) {
-+		if (parse_arity(arity_param, &tree_topology.boot_config)) {
-+			pr_warn("Invalid arity \"%s\" for %u CPUs, using the default\n",
-+				arity_param, nr_cpu_ids);
-+		} else {
-+			tree_topology.config = &tree_topology.boot_config;
-+			origin = "boot parameter";
-+		}
-+	}
- 	calculate_topology();
- 	tree_topology.items_cachep =
- 		kmem_cache_create("percpu_counter_tree_items",
- 				  tree_topology.nr_items * SMP_CACHE_BYTES,
- 				  SMP_CACHE_BYTES, SLAB_PANIC, NULL);
- 	format_shape(shape, sizeof(shape), tree_topology.config);
--	pr_info("%u CPUs, fan-out %s, %u tree items\n",
--		nr_cpu_ids, tree_topology.nr_cpus_order ? shape : "none",
-+	pr_info("%u CPUs, fan-out %s (%s), %u tree items\n",
-+		nr_cpu_ids, tree_topology.nr_cpus_order ? shape : "none", origin,
- 		tree_topology.nr_items);
- 	return 0;
- }
-diff --git a/tools/testing/hpcc/include/hpcc_shim.h b/tools/testing/hpcc/include/hpcc_shim.h
-index d321c8363b0b..eaac72eab2d1 100644
---- a/tools/testing/hpcc/include/hpcc_shim.h
-+++ b/tools/testing/hpcc/include/hpcc_shim.h
-@@ -34,8 +34,12 @@
- #define abs(x) ({ typeof(x) __x = (x); __x < 0 ? -__x : __x; })
- 
- #define pr_err(...)		fprintf(stderr, __VA_ARGS__)
-+#define pr_warn(...)		fprintf(stderr, __VA_ARGS__)
- #define pr_info(...)		do { if (0) printf(__VA_ARGS__); } while (0)
- 
-+/* Implemented in main.c. */
-+char *get_options(const char *str, int nints, int *ints);
-+
- extern unsigned long hpcc_nr_warnings;
- 
- #define WARN(cond, ...) ({						\
-diff --git a/tools/testing/hpcc/include/linux/moduleparam.h b/tools/testing/hpcc/include/linux/moduleparam.h
-new file mode 100644
-index 000000000000..7e40df4295b2
---- /dev/null
-+++ b/tools/testing/hpcc/include/linux/moduleparam.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
-+#include "../hpcc_shim.h"
-+
-+struct kernel_param;
-+
-+struct kernel_param_ops {
-+	int (*set)(const char *val, const struct kernel_param *kp);
-+	int (*get)(char *buffer, const struct kernel_param *kp);
-+};
-+
-+#define module_param_cb(name, ops, arg, perm)
-+#define MODULE_PARM_DESC(parm, desc)
-diff --git a/tools/testing/hpcc/main.c b/tools/testing/hpcc/main.c
-index 1b86fea543e5..e263a932c30f 100644
---- a/tools/testing/hpcc/main.c
-+++ b/tools/testing/hpcc/main.c
-@@ -81,6 +81,27 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...)
- 	return len < (int)size ? len : (int)size - 1;
- }
- 
-+/* Comma-separated integers, without the ranges of lib/cmdline.c. */
-+char *get_options(const char *str, int nints, int *ints)
-+{
-+	char *end;
-+	int i = 0;
-+
-+	while (i < nints - 1 && *str) {
-+		long v = strtol(str, &end, 0);
-+
-+		if (end == str)
-+			break;
-+		ints[++i] = v;
-+		str = end;
-+		if (*str != ',')
-+			break;
-+		str++;
-+	}
-+	ints[0] = i;
-+	return (char *)str;
-+}
-+
- static void hpcc_init_topology(unsigned int nr_cpus)
- {
- 	nr_cpu_ids = nr_cpus;
-@@ -428,6 +449,58 @@ static int run_case(unsigned int nr_cpus, unsigned long batch_size)
- 	return nr_case_failures ? 1 : 0;
- }
- 
-+/* Tree shapes given with the arity boot parameter. */
-+static const struct {
-+	unsigned int nr_cpus;
-+	const char *arity;
-+	const char *shape;	/* Shape in use, NULL if the arity is invalid. */
-+} test_arity[] = {
-+	{ 16, "16", "16" },
-+	{ 16, "4,4", "4,4" },
-+	{ 16, "2,2,2,2", "2,2,2,2" },
-+	{ 16, "4,2", NULL },		/* Covers 8 CPUs. */
-+	{ 16, "4,8", NULL },		/* Covers 32 CPUs. */
-+	{ 16, "4,4,1", NULL },		/* Fan-out of 1. */
-+	{ 16, "4,3", NULL },		/* Not a power of 2. */
-+	{ 16, "4,4x", NULL },		/* Trailing characters. */
-+	{ 16, "-4,-4", NULL },
-+	{ 17, "8,4", "8,4" },
-+	{ 100, "128", "128" },
-+	{ 192, "8,4,8", "8,4,8" },
-+	{ 192, "2,2,2,2,2,2,2,2", NULL },	/* More than MAX_NR_LEVELS. */
-+	{ 1024, "32,32", "32,32" },
-+	{ 1, "2", NULL },
-+};
-+
-+static int run_arity_case(unsigned int i)
-+{
-+	const char *expect = test_arity[i].shape;
-+	char buf[SHAPE_BUF_SIZE];
-+	int len;
-+
-+	nr_case_failures = 0;
-+	hpcc_nr_warnings = 0;
-+	tree_topology.config = NULL;
-+	CHECK(!arity_param_set(test_arity[i].arity, NULL));
-+	hpcc_init_topology(test_arity[i].nr_cpus);
-+	arity_param = NULL;
-+	CHECK(arity_param_set("16", NULL) == -EBUSY);
-+	CHECK((tree_topology.config == &tree_topology.boot_config) == !!expect);
-+	len = arity_param_get(buf, NULL);
-+	CHECK(len > 0 && buf[len - 1] == '\n');
-+	buf[len - 1] = '\0';
-+	if (expect) {
-+		CHECK(!strcmp(buf, expect));
-+		test_saturated(2, 1);
-+		test_saturated(32, -1);
-+		test_random_walk(32, 20000);
-+	}
-+	CHECK(!hpcc_nr_warnings);
-+	printf("%sok %d - arity nr_cpus=%u \"%s\" -> \"%s\"\n", nr_case_failures ? "not " : "",
-+	       ++test_num, test_arity[i].nr_cpus, test_arity[i].arity, buf);
-+	return nr_case_failures ? 1 : 0;
-+}
-+
- static int run_check_config(void)
- {
- 	unsigned int nr_errors = percpu_counter_tree_check_config();
-@@ -455,12 +528,15 @@ int main(int argc, char **argv)
- 	if (argc == 2)
- 		large = true;
- 
--	nr_tests = 1 + ARRAY_SIZE(test_nr_cpus) * ARRAY_SIZE(test_batch_sizes);
-+	nr_tests = 1 + ARRAY_SIZE(test_arity) +
-+		   ARRAY_SIZE(test_nr_cpus) * ARRAY_SIZE(test_batch_sizes);
- 	if (large)
- 		nr_tests += ARRAY_SIZE(test_nr_cpus_large) * ARRAY_SIZE(test_batch_sizes);
- 	printf("1..%u\n", nr_tests);
- 
- 	failed += run_check_config();
-+	for (i = 0; i < ARRAY_SIZE(test_arity); i++)
-+		failed += run_arity_case(i);
- 	for (i = 0; i < ARRAY_SIZE(test_nr_cpus); i++)
- 		for (j = 0; j < ARRAY_SIZE(test_batch_sizes); j++)
- 			failed += run_case(test_nr_cpus[i], test_batch_sizes[j]);
--- 
-2.47.3
+ 		if (cpu_buffer->ring_meta)
+ 			rb_update_meta_head(cpu_buffer, next_page);
+ 		/*
+
+We may need to add memory barriers here, but for now, I think this could
+fix it. As it should prevent the search from ever starting in between the
+two heads.
+
+-- Steve
 
