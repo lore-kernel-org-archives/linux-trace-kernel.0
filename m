@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793911010;
-	b=Lt2byXEdCHduGQxvX86LXISOuhGHRCFYkYewLyXmty8wMJqb+ZshgWYDCr0YvMdJHQN7
-	 W0KkqCAOLzToCHaKIxXzFloh9alBB4v+toCWGT5s5X+RCuZwx/FWebj6jWtQo2RhFOK7D
-	 RjexXsXVNXrJ2ci9fUnIJ27MfsbFajk3l7ZsJxCZnDe10p0UO8D02I9ZuEUAmHRP0bp5H
-	 xHsbS13Xc7BkN7HWa98CyxsVN9/B6ogsRy/Dil/NLXnXG9EHSuUeE3QDs/PujfQgS6tG8
-	 1zFBRqHSp0gO+9MbWhPvIx7YuZQnSRdFG46ite4He3HuoyEwwYObLArJJ7FiOqGIELw==
+	t=1793911011;
+	b=NINFLyD4kIAExEocEq6T2y4efoMtD9Aa7z1Dd/O0FFtHqmULC9/D/Uk1wES5rtycBD/l
+	 J8kMd6W4XbdjxLBiu2ranjNIj7qYJ91YPBoLq6qAtZ+F1jrbKV7P/9PyI4ei8vIcn/TGk
+	 IflU4EocvTUNbY8L56ZrOilcqvQnCsULs9L7r4SPkZn8UoVrFFPQjR4EwGyeLQq3jer7r
+	 7Xr3G2Ez1xM0+ogaf71bj5KfbziULhUBLvoWj4iOa2XagVaUD2haLQCsAxYgxtK6ettNm
+	 ccZ2yz3/+wJ9cUgubl47z3h0iSk9CRWgevN7HrpHU2KJUUXrzVKb2XdI2N37MsoYsAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793911010;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793911011;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=9eNr5ngzyUO/JcL1wUxnly4nq26y5iXkxq9gWf5TGKg=;
-	b=pBmBNq+pupcUOUxr4XZBvsGl+nd20J2a0pG1yngqX77szd9fvALG6dOqUEMAZsynJh7z
-	 Om+jIfXwu7osZIdmWZzAhpPQL63rAznClMLTC8yU6JdU34HrVhz93DfCs/VlDqKDjipAe
-	 9pwVgPqhA8KH0XqNAEmdQl4YUYrXclcHzRdh+KaxBbakKZbMDlFfFwxyRS0JUTpLSlKod
-	 ccvXC3WSl7hEPPYnu0aMQh+vaUR9MGFtzoP5NeRQ0VpnSLbx58r1kh7uqVa68DHf3qBv9
-	 W+cDXABNaxMogNagUhmGiqhjSd1pfiylk8GwoebSJr4j6mnt4fT4O/R8eOIIb+ILGrQ==
+	bh=Aksn1xaVgHle35uS+1fBiwvzomWYK3pQA4w7I7bCnB0=;
+	b=xBWaPYduWJF8D0Kd6TBdY/WPX9HOBddfjI64lmCslI+foNwnS/8i7sF9JOnb9vGZVXXl
+	 JcMAj5q7UP5HMVCJDhDmqqLfg2uBz78cNJAoe1XNY6jbhiuRPOYz9lmYnk5yikja49vYx
+	 XFNzSamPpWMG/kkZ/xKdzCdD06dt0ewVJtQuNUlysOB3N9b7s6R4JbHX6skg0AbzEbOcv
+	 ggDs7Arn9odEXj6mEHCyaR6jZTdPvFkPd18GJ85Lz9h5edHmYU4YozaIMUIRnwZ2N7hh+
+	 SPQnNGOG04WtJnKOFMqQ7eSRK9fGVoN02ywPWxsPcOe64yE64dse/OYuK0WPwWfcIFQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=qqmTNFYa;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=LohdS9Pu;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68545606A32D;
-	Thu,  5 Nov 2026 20:36:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 68545606A32D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4317606D801;
+	Thu,  5 Nov 2026 20:36:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4317606D801
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=qqmTNFYa
+	dkim=pass (2048-bit key, unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=LohdS9Pu
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1793911007;
-	bh=9eNr5ngzyUO/JcL1wUxnly4nq26y5iXkxq9gWf5TGKg=;
+	s=smtpout1; t=1793911008;
+	bh=Aksn1xaVgHle35uS+1fBiwvzomWYK3pQA4w7I7bCnB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qqmTNFYaExqVlKnaIGeRNwqsfpOC7NsCuPiFOdwi4qGmKGiiK3kdE0jCN6evJGOx8
-	 RGBzyH5HacMFmufmg/wQaYwNAoCzsJKdjkzc3M4c+yr+W0EfOwfzqH7V9n/GYxIAZ8
-	 XUPmFEvHm7w7VlVpeJXkcvJRkuNoE7kmaeuAtpm6H+nHi7EziIVGe+uH6nJ3EGBymc
-	 2+etGbfJirVyUcFLzxmdYZszVymMTUENTGBp5pSQEuXvEKgd+Oa3rhIg9mKruW1czz
-	 jTD3XQy1MPqY+372r2H/BFudN0TjbTMMbEE+EJuYqvhKc+pJ6t1gM7rHqLyMnZTmgO
-	 jS+A9Uvueu8rg==
+	b=LohdS9Pu3jJnWKSs1batg9FmWx//06UG+D5K53D1BHyPRTSddCMjcKFYORnmwXYg5
+	 wb/j+Yx8pqMvevUIPnaBTdJIOD2Hw66ZWWgJbeMnhYwTUzAjqo61fRv/1LIZoKrDWE
+	 XuzTIQxA1BDtjIGhUw9kZfy7NvVV/24Tvhg8U+/DiG8oqxSzuAPkdEZxIOBjBVmOeU
+	 S2t29DDEvbxp1gwu6Aw+/d5gUx5cBePq3JapbjO/TmKUZfJyBraX2V0zb0xi2J5YMJ
+	 pNl0+v4YuMysMn5rCzEsvh/6vG1/0tX+Khrw/9nxxwkYOK4YnPj1PKrhpH3DAQfqu+
+	 ggaTqcipL2ETQ==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcb4vmPzLvw;
-	Thu, 05 Nov 2026 15:36:47 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jLDcc4zKfzLrP;
+	Thu, 05 Nov 2026 15:36:48 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -100,9 +100,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	linux-fsdevel@vger.kernel.org,
 	Oleg Nesterov <oleg@redhat.com>
-Subject: [RFC PATCH v24 03/10] mm: use hierarchical per-cpu counters for the RSS counters
-Date: Thu,  5 Nov 2026 15:36:32 -0500
-Message-Id: <20261105203639.1459524-4-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v24 07/10] mm: keep the RSS counters of single-threaded processes exact
+Date: Thu,  5 Nov 2026 15:36:36 -0500
+Message-Id: <20261105203639.1459524-8-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
 References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
@@ -117,334 +117,325 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use hierarchical per-cpu counters for RSS tracking to bound the inaccuracy
-of the per-mm RSS approximation on large many-core systems [1].
+Until a second thread shares the mm, initialize the RSS counters lazily,
+without their counter tree: the task owning the mm adds to a plain
+counter, and other tasks, such as reclaim, khugepaged, the OOM reaper or
+remote GUP, add atomically.  The RSS counters of single-threaded
+processes are therefore exact, their precise sums for /proc/PID/status,
+/proc/PID/statm and the OOM killer take O(1), and they use no per-cpu
+memory.  The readers of the approximation, such as /proc/PID/stat, the
+RSS high watermark and the rss_stat tracepoint, get the exact value for
+these processes.
 
-The approximation is read by /proc/PID/stat (rss), by the RSS high
-watermark (VmHWM in /proc/PID/status, getrusage() ru_maxrss, taskstats
-hiwater_rss), by the taskstats integral RSS, by NUMA balancing to scale
-its scan period, and by the mark_victim OOM tracepoint.
-/proc/PID/status, /proc/PID/statm, the OOM killer and the rss_stat
-tracepoint use precise sums, which iterate over all CPUs for each read:
-the tracepoint since commit f1a7941243c1 ("mm: convert mm's rss stats
-into percpu_counter"), and the others since commit 82241a83cd15 ("mm:
-fix the inaccurate memory statistics issue for users") and
-commit 5898aa8f9a0b ("mm: fix OOM killer inaccuracy on large many-core
-systems").
+The owner, mm->rss_owner, is the task running on the mm: the child in
+dup_mm(), or the task in exec_mmap(), which also clears it from the mm
+it leaves, as exit_mm() does.  It stays NULL, which matches no task, in
+the mm of exec() until exec_mmap() and in those of the other users of
+mm_alloc(): all their updates are atomic.  It is only compared with
+current, never dereferenced, so a single task writes the plain counter,
+including while a vfork() child shares the mm.  mm->owner (CONFIG_MEMCG)
+is not used, because mm_update_next_owner() hands it over to another
+task while a vfork() child may still update the counters.
 
-Here is a (possibly incomplete) list of the prior approaches that were
-used or proposed, along with their downside:
+copy_mm() activates the counter tree when a thread is created with
+CLONE_VM, except for vfork(), whose parent waits while the child shares
+the mm.  mm->rss_stat_mutex serializes the activations, as
+mm->mm_cid.mutex serializes the mode changes of mm_cid at fork and exit,
+without relying on which tasks can create threads.  Once the tree is
+active, thread creation no longer takes the mutex.  This moves the
+allocation of the per-cpu counters and tree items of the RSS counters
+from fork() to the creation of the second thread of a process, which
+returns -ENOMEM if it fails, as fork() could before.  The tasks the
+kernel creates with CLONE_VM for a process, such as the io_uring workers
+and the vhost tasks, also share its mm: a single-threaded process using
+them gets the counter tree.  The updates made before the activation stay
+in the single counters, which the sums keep reading, so updates racing
+with the activation are not lost.  Once the tree is active,
+__add_mm_counter() no longer reads rss_owner, so the updates of the
+threads of a process do not pull in its cache line, which other
+mm_struct fields share.
 
-1) Per-thread rss tracking: large error on many-thread processes.
+The tree stays active when the process returns to a single thread:
+going back to the single counters would need a grace period for the
+remote updaters, and a process alternating between one and two threads
+would pay for each switch.
 
-2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
-   increased system time in make test workloads [1]. Moreover, the
-   inaccuracy increases with O(n^2) with the number of CPUs.
-
-3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
-   error is high with systems that have lots of NUMA nodes (32 times
-   the number of NUMA nodes).
-
-4) Use a precise per-cpu counter sum for each counter value query:
-   Requires iteration on each possible CPU for each sum, which
-   adds overhead on large many-core systems running many processes.
-
-The approach proposed here is to replace the per-cpu counters by the
-hierarchical per-cpu counters, which bounds the inaccuracy based on the
-system topology with O(N*logN).
+Before the activation, the updates of tasks other than the owner are
+atomic additions to one word per counter: concurrent remote updates
+of the same single-threaded process from many CPUs, such as direct
+reclaim unmapping its pages, contend on it.
 
 * Testing results:
 
-Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical CPUs)
+Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical
+CPUs).
 
-Methodology:
+With the test program and the instrumentation described in the patch
+switching the RSS counters to hierarchical counters, in a KVM guest with
+384 vCPUs, each pinned to its own CPU of the host, with the NUMA topology
+of the host, the approximation of the RSS counters of the single-threaded
+program is exact, compared to an 841MB delta for the upstream counters.
+With an idle second thread, which activates the counter tree, the
+hierarchical counters reach a 96MB delta, compared to 845MB for the
+upstream counters.
 
-Comparing the current upstream implementation with the hierarchical
-counters is done with a debug patch, which keeps both implementations
-wired up in parallel, and a test program, neither part of this series.
-The single-process, single-threaded program hops randomly across CPUs in
-the system, calling mmap(2) and munmap(2) on random CPUs, keeping track of
-an array of 100000 mapping slots, randomly choosing slots to either map 1
-to 16 pages or unmap them.
+On bare metal, with 1000 to 16000 single-threaded processes alive, a
+read of /proc/PID/statm, which computes 3 precise sums, takes 5.3 to
+6.5us, compared to 16.5 to 19.0us with the upstream counters, and a read
+of /proc/PID/status, which computes 4 precise sums, takes 11.4 to
+13.1us, compared to 26.6 to 28.6us.  A fork + exit of a child touching
+no pages takes 116us, compared to 139us (219us compared to 247us when it
+touches 64 pages): its counters are destroyed without 4 precise sums
+over 384 logical CPUs in check_mm(), and neither per-cpu memory nor tree
+items are allocated or freed.
 
-get_mm_counter() is instrumented to compare both counter approximations
-to the precise value, and to record the largest delta of each.  The test
-runs in a KVM guest with 384 vCPUs, each pinned to its own CPU of the test
-hardware, with the NUMA topology of the host.
-
-With the counters of this patch, before the single-threaded mode added
-later in the series, the upstream implementation counter approximation
-reaches an 830MB delta from the precise value within the first seconds,
-while the mappings accumulate, compared to a 106MB delta with the
-hierarchical counter.  The hierarchical counter approximation is
-guaranteed to be within 158.5MB of the precise value in both directions
-on that hardware topology, compared to 1.1GB for the upstream
-implementation (384 CPUs * 767 pages).
-
-* Fast path implementation comparison
-
-The new percpu_counter_tree_add() updates a per-cpu byte with a
-this_cpu_try_cmpxchg() loop on the fast path, like the upstream
-percpu_counter_add_batch().  When the per-cpu residual reaches the batch
-size, it calls a slow path which "trickles up" the carry to upper level
-counters with atomic_add_return(), each of them keeping its own residual.
-
-In comparison, the upstream percpu_counter_add_batch() takes a global
-raw_spin_lock_irqsave() when reaching the batch size, and flushes the
-whole per-cpu count into the global count.
-
-The hierarchical implementation is therefore expected to have less
-contention on mid-sized allocations than the upstream counters because
-the atomic counters tracking those bits are each shared by a fraction of
-the CPUs.
-
-* Benchmarks
-
-Using will-it-scale page_fault1 benchmarks to compare the upstream
-counters to the hierarchical counters of this patch.  This is done with
-hyperthreading disabled at runtime, so the counter tree keeps its shape
-for 384 logical CPUs, while the upstream batch size follows the 192
-online ones (384 instead of 768).  The differences are within the
-boot-to-boot spread of up to 3%, and the multi-threaded runs, bound by
-the mmap_lock, have a standard deviation of 5% to 11%: no regression is
-measured, and no gain is claimed.  The numbers with the whole series are
-in patch 7 and the cover letter.
-
-                                          upstream   hierarchical     delta
-page_fault1_processes -s 100 -t 1           544932         557092     +2.2%
-page_fault1_threads -s 100 -t 1             547501         557742     +1.9%
-page_fault1_processes -s 100 -t 96        37374404       37580199     +0.6%
-page_fault1_threads -s 100 -t 96           2311884        2299998     -0.5%
-page_fault1_processes -s 100 -t 192       69491758       70590309     +1.6%
-page_fault1_threads -s 100 -t 192          2284108        2271423     -0.6%
+On bare metal with SMT disabled at runtime, where the upstream batch
+size is 384, will-it-scale page_fault2 with one process is 5.1% faster
+than with the upstream counters, and page_fault3 1.3% faster (one boot
+each, the upstream one on the previous day; the boot-to-boot spread
+reaches 3%, so neither is claimed as a gain).
 
 * Memory Use
 
-Each mm_struct holds NR_MM_COUNTERS (4) counters, initialized together
-by percpu_counter_tree_init_many() with a batch size of 32, so their tree
-items share cache lines.  Per mm, on a 64-bit arch with 64-byte cache
-lines, compared to the upstream percpu counters, along with the maximum
-inaccuracy of each counter in pages:
+Per mm, on a 64-bit arch with 64-byte cache lines, including the
+rss_owner pointer and the 24-byte activation mutex, for a
+single-threaded and a multi-threaded process, compared to the upstream
+percpu counters:
 
-                  Bytes per mm         Accuracy (pages)
-  nr_cpus fan-out    hpcc  upstream      hpcc    upstream
-        2 2           200       192      +-62        +-62
-       16 16          256       416     +-496       +-496
-       64 16,4        704      1184    +-3904      +-8128
-      128 8,16       1728      2208    +-7552     +-32640
-      256 8,4,8      3776      4256   +-21248    +-130816
-      384 8,8,8      6336      6304   +-40576    +-294528
-      512 8,8,8      6848      8352   +-44544    +-523776
-     1024 8,8,16    13504     16544   +-89088   +-2096128
-     4096 8,8,8,8   53952     65696  +-471040  +-33550336
+                    Bytes per mm
+  nr_cpus fan-out  1 thread  threads  upstream
+        2 2             192      264       192
+       16 16            192      320       416
+       64 16,4          192      768      1184
+      384 8,8,8         192     6400      6304
+     1024 8,8,16        192    13568     16544
 
-This counts the 4 counter structures, their per-cpu data, and the tree
-items, without the rounding of the slab cache holding them.  The
-fan-out is listed from the per-cpu counters to the root.  Up to 32 CPUs,
-the tree is flat.  Up to 16 CPUs, its accuracy matches the upstream
-counters, whose batch size of max(32, 2 * nr_cpus) grows beyond, making
-them less accurate than the hierarchical counters, except from 33 to 39
-CPUs, where the intermediate counters of the 16,4 tree make the
-hierarchical counters up to 1.37 times less accurate.
+A single-threaded process uses 192 bytes for its RSS counters whatever
+the number of CPUs: the 4 counter structures, rss_owner and the mutex in
+mm_struct, compared to the 4 upstream counter structures (160 bytes) and
+their per-cpu memory.  On x86_64 with 16, 384 and 1024 possible CPUs,
+the mm_struct slab object keeps its upstream size (1752, 1872 and 2112
+bytes in /proc/slabinfo).  A multi-threaded process adds nr_cpus bytes
+of per-cpu memory per counter (1536 per mm at 384 logical CPUs),
+compared to 4 * nr_cpus bytes per counter (6144 per mm) for the upstream
+counters, and the tree items, without the rounding of their slab cache.
+fork() no longer allocates memory for the RSS counters.
 
-The hierarchical counters use less memory than the upstream counters
-from 3 to 64 CPUs.  The tree is shaped for nr_cpus rounded up to a power
-of 2: when nr_cpus is a power of 2, they also use less memory beyond 64
-CPUs (at most 0.89 times as much).  Between powers of 2, fewer CPUs
-share the cost of the tree items: 1.01 times at 384 logical CPUs, 1.09
-at 192 and 0.94 at 96, and up to 1.47 times just above a power of 2 (at
-129 CPUs, 1.23 at 65 and 1.36 at 257).
-
-* mm_struct layout
-
-percpu_counter_tree_init_many() allocates the per-cpu data and the tree
-items of the RSS counters, so their size in mm_struct does not depend on
-the number of CPUs: struct mm_struct shrinks by 32 bytes, as a struct
-percpu_counter_tree is 32 bytes, compared to 40 for a struct
-percpu_counter.
-
-* rss_stat tracepoint
-
-The rss_stat tracepoint keeps reporting the precise sum, now computed
-from the hierarchical per-cpu counter.
-
-Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
-Link: https://lkml.kernel.org/r/20260227153730.1556542-4-mathieu.desnoyers@efficios.com
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@gentwo.org>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Liam R. Howlett <liam@infradead.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: David Carlier <devnexen@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
 ---
-Changes since v22:
-- The library allocates the per-cpu counters and the tree items of the
-  RSS counters: mm_struct holds no tree items, and the static init_mm
-  and efi_mm need no change.
-- check_mm(): sum each RSS counter once.
-- Keep reporting the precise sum in the rss_stat tracepoint. Switching
-  it to the approximation is done by a separate patch.
-- Initialize the 4 RSS counters together so their tree items share cache
-  lines.
-- Fix checkpatch warnings.
----
- include/linux/mm.h          | 10 +++++-----
- include/linux/mm_types.h    |  3 ++-
- include/trace/events/kmem.h |  3 +--
- kernel/fork.c               | 13 +++++++++----
- 4 files changed, 17 insertions(+), 12 deletions(-)
+ .../core-api/percpu-counter-tree.rst          |  7 ++++
+ fs/exec.c                                     |  5 +++
+ include/linux/mm.h                            | 24 +++++++++++--
+ include/linux/mm_types.h                      | 16 +++++++++
+ kernel/exit.c                                 |  3 ++
+ kernel/fork.c                                 | 35 +++++++++++++++++--
+ 6 files changed, 85 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/core-api/percpu-counter-tree.rst b/Documentation/core-api/percpu-counter-tree.rst
+index 138e9b74b0c8..87babe2276c4 100644
+--- a/Documentation/core-api/percpu-counter-tree.rst
++++ b/Documentation/core-api/percpu-counter-tree.rst
+@@ -102,6 +102,13 @@ The activations of the same counters must be serialized by the caller:
+ a concurrent activation would publish a second tree and lose the
+ updates made to the first.
+ 
++The RSS counters of an mm use this: the task owning the mm updates the
++plain counter, and other tasks, such as reclaim, update the atomic
++counter. The tree is activated when a second thread shares the mm,
++under mm->rss_stat_mutex, which serializes the activations.
++A single-threaded process therefore has exact RSS counters, cheap
++precise sums, and neither per-cpu memory nor tree items for them.
++
+ Use Cases
+ =========
+ 
+diff --git a/fs/exec.c b/fs/exec.c
+index 8d2b14e1d455..7a6f07a6d482 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -875,6 +875,8 @@ static int exec_mmap(struct linux_binprm *bprm)
+ 		}
+ 	}
+ 
++	/* This task owns the RSS counters of the new mm, see __add_mm_counter(). */
++	WRITE_ONCE(mm->rss_owner, tsk);
+ 	task_lock(tsk);
+ 	membarrier_exec_mmap(mm);
+ 
+@@ -903,6 +905,9 @@ static int exec_mmap(struct linux_binprm *bprm)
+ 	if (old_mm) {
+ 		mmap_read_unlock(old_mm);
+ 		BUG_ON(active_mm != old_mm);
++		/* Updates of the old mm by this task are now atomic. */
++		if (READ_ONCE(old_mm->rss_owner) == tsk)
++			WRITE_ONCE(old_mm->rss_owner, NULL);
+ 		/* Defer teardown to setup_new_exec(), outside the exec locks. */
+ 		bprm->old_mm = old_mm;
+ 	} else {
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9f167950926a..36242c7ff84f 100644
+index 36242c7ff84f..4d740c0c5f54 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -3607,33 +3607,33 @@ static inline bool get_user_page_fast_only(unsigned long addr,
-  */
- static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- {
--	return percpu_counter_read_positive(&mm->rss_stat[member]);
-+	return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
- }
- 
- static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
- {
--	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-+	return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
- }
+@@ -3617,23 +3617,41 @@ static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
  
  void mm_trace_rss_stat(struct mm_struct *mm, int member);
  
++/*
++ * Until a second thread shares the mm, the RSS counters are exact single
++ * counters: the task which owns the mm updates a plain counter, and other
++ * tasks (reclaim, khugepaged, the OOM reaper, remote GUP, ...) an atomic
++ * one. See copy_mm(). Once the tree is active, all updates go to it:
++ * rss_owner is not read, so the updates of the threads of a process do not
++ * touch its cache line.
++ */
++static inline void __add_mm_counter(struct mm_struct *mm, int member, long value)
++{
++	struct percpu_counter_tree *counter = &mm->rss_stat[member];
++
++	if (!percpu_counter_tree_active(counter) && current == READ_ONCE(mm->rss_owner))
++		percpu_counter_tree_add_owner(counter, value);
++	else
++		percpu_counter_tree_add(counter, value);
++}
++
  static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
  {
--	percpu_counter_add(&mm->rss_stat[member], value);
-+	percpu_counter_tree_add(&mm->rss_stat[member], value);
+-	percpu_counter_tree_add(&mm->rss_stat[member], value);
++	__add_mm_counter(mm, member, value);
  
  	mm_trace_rss_stat(mm, member);
  }
  
  static inline void inc_mm_counter(struct mm_struct *mm, int member)
  {
--	percpu_counter_inc(&mm->rss_stat[member]);
-+	percpu_counter_tree_add(&mm->rss_stat[member], 1);
+-	percpu_counter_tree_add(&mm->rss_stat[member], 1);
++	__add_mm_counter(mm, member, 1);
  
  	mm_trace_rss_stat(mm, member);
  }
  
  static inline void dec_mm_counter(struct mm_struct *mm, int member)
  {
--	percpu_counter_dec(&mm->rss_stat[member]);
-+	percpu_counter_tree_add(&mm->rss_stat[member], -1);
+-	percpu_counter_tree_add(&mm->rss_stat[member], -1);
++	__add_mm_counter(mm, member, -1);
  
  	mm_trace_rss_stat(mm, member);
  }
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 1ed35d258d2e..20b4517b7329 100644
+index 20b4517b7329..f0d315d72adb 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -19,6 +19,7 @@
- #include <linux/workqueue.h>
- #include <linux/seqlock.h>
- #include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_tree.h>
- #include <linux/types.h>
- #include <linux/futex_types.h>
- #include <linux/rseq_types.h>
-@@ -1350,7 +1351,7 @@ struct mm_struct {
- 		unsigned long saved_e_flags;
+@@ -1352,6 +1352,22 @@ struct mm_struct {
  #endif
  
--		struct percpu_counter rss_stat[NR_MM_COUNTERS];
-+		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
+ 		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
++		/*
++		 * Task updating rss_stat with percpu_counter_tree_add_owner()
++		 * until the counter tree is activated by a second thread: the
++		 * task running on this mm, set by dup_mm() and exec_mmap(),
++		 * cleared when that task exits or execs, NULL for the other
++		 * users of mm_alloc(). Only compared with current, never
++		 * dereferenced. Not mm->owner, which depends on CONFIG_MEMCG
++		 * and which mm_update_next_owner() hands over to another task
++		 * while a vfork() child may still update the counters.
++		 */
++		struct task_struct *rss_owner;
++		/*
++		 * Serializes the activations of the rss_stat counter tree,
++		 * until the tree is active. See mm_activate_rss_stat().
++		 */
++		struct mutex rss_stat_mutex;
  
  		struct linux_binfmt *binfmt;
  
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index cd7920c81f85..ac4c96db7638 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -448,8 +448,7 @@ TRACE_EVENT(rss_stat,
- 		 */
- 		__entry->curr = current->mm == mm && !(current->flags & PF_KTHREAD);
- 		__entry->member = member;
--		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
--							    << PAGE_SHIFT);
-+		__entry->size = get_mm_counter_sum(mm, member) << PAGE_SHIFT;
- 	),
- 
- 	TP_printk("mm_id=%u curr=%d type=%s size=%ldB",
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d5e7bc2af804..c153cd064987 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -582,6 +582,9 @@ static void exit_mm(void)
+ 	local_irq_enable();
+ 	task_unlock(current);
+ 	mmap_read_unlock(mm);
++	/* From now on, this task updates the RSS counters of @mm atomically. */
++	if (READ_ONCE(mm->rss_owner) == current)
++		WRITE_ONCE(mm->rss_owner, NULL);
+ 	mm_update_next_owner(mm);
+ 	mmput(mm);
+ 	if (test_thread_flag(TIF_MEMDIE))
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 8b108ed37152..02e25115ff85 100644
+index 02e25115ff85..ac4eb1370e62 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -137,6 +137,11 @@
-  */
- #define MAX_THREADS FUTEX_TID_MASK
- 
-+/*
-+ * Batch size of rss stat approximation
-+ */
-+#define RSS_STAT_BATCH_SIZE	32
-+
- /*
-  * Protected counters by write_lock_irq(&tasklist_lock)
-  */
-@@ -633,7 +638,7 @@ static void check_mm(struct mm_struct *mm)
- 			 "Please make sure 'struct resident_page_types[]' is updated as well");
- 
- 	for (i = 0; i < NR_MM_COUNTERS; i++) {
--		long x = percpu_counter_sum(&mm->rss_stat[i]);
-+		long x = percpu_counter_tree_precise_sum(&mm->rss_stat[i]);
- 
- 		if (unlikely(x)) {
- 			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld Comm:%s Pid:%d\n",
-@@ -738,7 +743,7 @@ void __mmdrop(struct mm_struct *mm)
- 	check_mm(mm);
- 	mm_pasid_drop(mm);
- 	mm_destroy_cid(mm);
--	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
-+	percpu_counter_tree_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
- 
- 	free_mm(mm);
- }
-@@ -1143,8 +1148,8 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
+@@ -1108,6 +1108,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
+ 	memset(&mm->rss_stat, 0, sizeof(mm->rss_stat));
+ 	spin_lock_init(&mm->page_table_lock);
+ 	spin_lock_init(&mm->arg_lock);
++	mutex_init(&mm->rss_stat_mutex);
+ 	mm_init_cpumask(mm);
+ 	mm_init_aio(mm);
+ 	mm_init_owner(mm, p);
+@@ -1148,8 +1149,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
  	if (mm_alloc_sched(mm))
  		goto fail_sched;
  
--	if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
--				     NR_MM_COUNTERS))
-+	if (percpu_counter_tree_init_many(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE,
-+					  GFP_KERNEL_ACCOUNT))
+-	if (percpu_counter_tree_init_many(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE,
+-					  GFP_KERNEL_ACCOUNT))
++	if (percpu_counter_tree_init_many_lazy(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE))
  		goto fail_pcpu;
  
  	lru_gen_init_mm(mm);
+@@ -1542,6 +1542,8 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 
+ 	if (!mm_init(mm, tsk))
+ 		goto fail_nomem;
++	/* The child owns its RSS counters, see __add_mm_counter(). */
++	mm->rss_owner = tsk;
+ 
+ 	uprobe_start_dup_mmap();
+ 	err = dup_mmap(mm, oldmm);
+@@ -1569,6 +1571,23 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 	return NULL;
+ }
+ 
++/*
++ * Serialize the activations of the RSS counter tree, whichever tasks create
++ * threads. Once the last counter is active, the activation is complete and
++ * thread creation skips the mutex. That check needs no acquire: the updates
++ * and the sums of the counters order their own accesses to the tree. Not
++ * observing the other counters active yet only delays their updates going
++ * to the tree.
++ */
++static int mm_activate_rss_stat(struct mm_struct *mm)
++{
++	if (percpu_counter_tree_active(&mm->rss_stat[NR_MM_COUNTERS - 1]))
++		return 0;
++	guard(mutex)(&mm->rss_stat_mutex);
++	return percpu_counter_tree_activate_many(mm->rss_stat, NR_MM_COUNTERS,
++						 GFP_KERNEL_ACCOUNT);
++}
++
+ static int copy_mm(u64 clone_flags, struct task_struct *tsk)
+ {
+ 	struct mm_struct *mm, *oldmm;
+@@ -1593,6 +1612,18 @@ static int copy_mm(u64 clone_flags, struct task_struct *tsk)
+ 		return 0;
+ 
+ 	if (clone_flags & CLONE_VM) {
++		int err = 0;
++
++		/*
++		 * A second thread shares the mm: activate the RSS counter
++		 * tree. A vfork child shares the mm while the parent waits,
++		 * so the single counters still fit. The tree stays active if
++		 * the clone fails later, which is harmless.
++		 */
++		if (!(clone_flags & CLONE_VFORK))
++			err = mm_activate_rss_stat(oldmm);
++		if (err)
++			return err;
+ 		mmget(oldmm);
+ 		mm = oldmm;
+ 	} else {
 -- 
 2.47.3
 
