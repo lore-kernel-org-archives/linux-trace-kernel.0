@@ -1,75 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793988488;
-	b=zxOp9K7W2AeJnAtJWjyqu2nqVHMCu0dhreEmAxnGc7ZG2bbsYCYsUspr0IqxpNLLkJ3c
-	 NiEiAN8UUzny/kgeb0QZoCtPbKeHYgoI3xzfEekghiWGAiDnGZ0G07ph8zDTnT6ZKift8
-	 5kzoe4DoNzQkynDAzquW/DTGAliODpcU8QUz5IUOCWKBi4hrEwbr3txkXQF/uWDlGhi+l
-	 WzIFbY3fvXc3kC4Y9kWSNwbvGapEEbcUmAIoj8Q9vpbAeugUWORjNrVwVbvlB15FLC1/A
-	 WTpKJMEwg2S17Ll3eTajOX1LHhHJwbnIcVlZObbBvRUPAPx5+LKX7POSRb8YXK4PHeQ==
+	t=1793989256;
+	b=Y/P/rI/ikFFzhapD7Mq4RUSuDO5DL7qxH5v32d3sgrFr9oJi9lNO65UQV8o0haFRVJVL
+	 8LstrDEtXaLaOwEDfJKebIrYADBkv85zcf1Nh8OgccWjEYgIZjzToUIMiKx+OWQqslAJw
+	 Apzo+1Q6moPab3gB/CxL+hbKbdGD0H/pcQ4+Mi2WuOzT9aYGguq/tmYi19oscfJH9qJKF
+	 xd2FsDOJ96AIyl/OMCTF0oXcoKscUm5tFlrBzh2Bv3wb0zyF0K6zqd4k1XRZqUVSng7sZ
+	 GMuYCNbaGhe2ll/buyDCPHGWwzBy8GgcC6us5hk9aMVqJcOz6YtVieeDdsE2OcEgLYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793988488;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=+jXf5VIa4S1Z0Gmb+6hGuDOo/rmHYpFX4asd+dpjPrg=;
-	b=YYJOOtTYyx9zP5efJzF8lQncbbyusRrnxyEVIWhbz1/rchUKa74QAV0ioP9iN4WdEGwb
-	 EPR7WpUYN3a0orgKO7TJiafHHmA9HPsATTNhSaZbOzWTKuQLPUb7xe8VeioQgdtbpSwS6
-	 y3fnnsIQh91IDYwipOd74gXq+zpAfgY2QrRKLZlnM0yTBUG2SvUD06PejHXCPg+z0tvYE
-	 +Et/YntH+U9nghVHwHnaiQn/Ytw+yVTHZiEHGPkDjIiMiTaqKEMY9yz6nXMco1JgplBpA
-	 +XAgAN79njcmM8Xb2MbjNia8ezm++x+Rd6lDEyV5fZZ90faxzIo8dhydtrDZPGep6CQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793989256;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=9x/m+k1X9GxPQ0t8VEHlIEFREx1SNS6SbJFSV3ne3cM=;
+	b=zXxb3W6ZrKSQ0C5dEhCFs5qKmhMt/P04OzgFCoZ1zfvn3If4y22ObwAcohiyiD0Y9DeX
+	 4M+mDwIte7U5+Oimokwu+QFiq9WD+zrY3SNb4aLl3KWGtqgpSUgdmqlWInNJ9aflx1B8c
+	 R9e1h7E62dklk1Q00ZBP4gPbvQxGUVZHTmb2wVgy7FPm/HVcFYkSequ58GXuSKIMwmWmj
+	 7DGz8FdDrVVXAf0iUElhTt+7XxFXciWgYbypHuM8GOd1f4mr5KhcxlS0eA1eIp/37PeOc
+	 mLNza+cGYlqsHZz8Ep33mVLYs100J6KqeC0jj+0B2pV2p7/skYsA/2r1ACbYCHOM1fg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hS05jrxU;
-	arc=none smtp.remote-ip=209.85.128.71
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XrsEteAX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40667608362F
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:08:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 40667608362F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5C2606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hS05jrxU
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a1fa972b4fso5679595e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 10:08:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793988487; x=1794593287; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+jXf5VIa4S1Z0Gmb+6hGuDOo/rmHYpFX4asd+dpjPrg=;
-        b=hS05jrxUXFLiRzDNOI/TMO0g3gfX5G9+cfxkwZ2JTxjAkK7kIBu32H6lFiaglxhuVQ
-         6tgWlfA++3Ko26Q2v2akxN2jUMgQ0JPtYPP+7u3AZuDr5w0KN4NFupNP0i48359I0Bnk
-         heT0UHF8mdhq1dCv8l9oBygOJPwtBbuSKeXuxO9z4iuRvCldumeSeqrz9GlM338xdDjh
-         KubnZc/yiD3cjkzeLLChXeQxwkrmd46PvUn5eNxjeSXfNM0hSU5KL0CsIPEiQuQkSoWp
-         X9QEtok0AuQvJsB24rbifMPZslmWcQCPtelzskIBj40cZ7XIM5KHWGQoiXY6NE+9VyUt
-         +xwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793988487; x=1794593287;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+jXf5VIa4S1Z0Gmb+6hGuDOo/rmHYpFX4asd+dpjPrg=;
-        b=dqBz/svhFSVGqeUVWkH+19X5BSLeBuLz80LTwVvC0ZzzLf3vxjJQ8OlXvDc+gyiRww
-         sYMwM4u2ktQ3EypJqgxxyCzrB7/Ne9Kyxg2QPsNYsw1QaU2HukQwkwZgacku4mQYa+m4
-         BcZt/DqUKSRZRIZM9cXlEg+VcZGA4Yr9EfnNw+zBsZ+4CfN/NX1qT5HHEftK9MLyJoC+
-         mh0+Qc3QX5fx0fQRJ+eBva05MfKU5FEHUT0DIQn/pw8/TIKiKhhENuCtmGDlmE8NJ3Ob
-         QboBZmiow9xEJQ5iVt5PRw2VcIEf0l1vNz4aHXntEzBUmvO1JaQ75mLbBaLUHrnXpT+V
-         jDFQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwrjRL4kV4S8yFaSJbMP/U/rqgaK5PT8NMLG52XOOlADrfm7wTXnWNg1MzFCqeLghT1nYAPUq1wC/HitpioyKPn9lM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+PmXhHPNuxp+CRgajmcmcgUxO+BvtSmYlNzmDpWDlX8TaLyJPB
-	F+iA4Ad+pKXQFAzAcjI2BSp445ngcmBPEa8R9l/yy2oHc2EyTv75cq0UcgBf3tQTd5LmsTpHSsH
-	W0vwrC9uTUJ+d3PGGf3dLdw==
-X-Received: from wmbid1.prod.google.com ([2002:a05:600c:a181:b0:4a2:df9b:ef74])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c16b:b0:4ab:c447:49df with SMTP id 5b1f17b1804b1-4b6df3fd1damr52611335e9.23.1793988486780;
- Fri, 06 Nov 2026 10:08:06 -0800 (PST)
-Date: Fri,  6 Nov 2026 18:06:57 +0000
-In-Reply-To: <20261106180657.2460376-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XrsEteAX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5411F008BD;
+	Fri,  6 Nov 2026 18:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793989256;
+	bh=9x/m+k1X9GxPQ0t8VEHlIEFREx1SNS6SbJFSV3ne3cM=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=XrsEteAXH/SAFho5OWvuAqXFEh1Ic2KDcbeR0Y7AqXjrRl37z8pMNC9WXXPPzssD8
+	 KlRgfvwTtnthVq9kE6nHdR/jlCQpJVdaO0MLbeXHnlCSPb3yUxDNPDAvzWSB2AFDba
+	 w+fwA00IvnbEyjLgtN/WMOcxoA8O1nL/THNeSk2zQkrxEDrlF4jo6j9zByl2pg2C81
+	 2qvSA0dPtM6qrgtwNfQBobbAGe9MNKmGmejRD/TonbROybt4U8F8eRMWT930nCi7zo
+	 XwYSVuJi6Bhk6V7yaYeS+SZDkVttNqzZ+Z0GjTWUqzVcYW/K8Fibpkkfm1bqsX649x
+	 z1BiAQHTQYWcA==
+Message-ID: <sashiko-outbox-202012@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 07/21] tracing/simple_ring_buffer: Add support for
+ compressed length
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261106180657.2460376-8-vdonnefort@google.com>
+References: <20261106180657.2460376-1-vdonnefort@google.com>
+ <20261106180657.2460376-8-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 18:20:55 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,56 +59,115 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261106180657.2460376-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261106180657.2460376-22-vdonnefort@google.com>
-Subject: [PATCH v8 21/21] Documentation/kernel-parameters: Add trace_remote
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-The trace_remote parameter allows configuring a trace remote on
-registration. The syntax is similar to trace_instance.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [High] tracing: shared-memory TOCTOU in simple_ring_buffer_reserve()
+--
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- .../admin-guide/kernel-parameters.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+commit 9257cd3bebb215fd4b1122136bcc3bcfeab103ba
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0b3c140babd9..ac93402605d5 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7855,6 +7855,25 @@ Kernel parameters
- 			See also Documentation/trace/ftrace.rst "trace options"
- 			section.
- 
-+	trace_remote=[remote-info]
-+			[FTRACE] Configure a trace remote instance at boot.
-+			Format: <name>[^option1[^option2...]][,event1[,event2...]]
-+
-+			Supported options:
-+
-+			dump_on_panic   - Enable dumping the trace buffer on
-+					  panic.
-+			dmesg           - Redirect tracing output to dmesg.
-+			buf_size=<size> - Set the trace buffer size (e.g. 2M).
-+			poll=<ms>       - Set the trace remote polling interval
-+					  in milliseconds.
-+
-+			Events are a comma-separated list of events to enable.
-+			If events are specified, tracing is automatically enabled.
-+
-+			Multiple remotes can be configured by specifying this
-+			parameter multiple times.
-+
- 	trace_trigger=[trigger-list]
- 			[FTRACE] Add an event trigger on specific events.
- 			Set a trigger on top of a specific event, with an optional
--- 
-2.56.0.455.g6c5a503b38-goog
+tracing/simple_ring_buffer: Add support for compressed length
 
+This commit compresses small event lengths into the ring buffer event header
+type_len field and enforces ring-buffer alignment to save 4 bytes per small
+event.
+
+> diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring=
+_buffer.c
+> index abfaf9bee12e1..a305331d29ba9 100644
+> --- a/kernel/trace/simple_ring_buffer.c
+> +++ b/kernel/trace/simple_ring_buffer.c
+> @@ -207,7 +207,13 @@ static unsigned long rb_event_size(unsigned long len=
+gth)
+>  {
+>  	struct ring_buffer_event *event;
+> =20
+> -	return length + RB_EVNT_HDR_SIZE + sizeof(event->array[0]);
+> +	if (!length)
+> +		length++;
+> +
+> +	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT)
+> +		length +=3D sizeof(event->array[0]);
+> +
+> +	return ALIGN(length + RB_EVNT_HDR_SIZE, RB_ARCH_ALIGNMENT);
+>  }
+> =20
+>  static struct ring_buffer_event *
+> @@ -223,12 +229,15 @@ rb_event_add_ts_extend(struct ring_buffer_event *ev=
+ent, u64 delta)
+>  static struct ring_buffer_event *
+>  simple_rb_reserve_next(struct simple_rb_per_cpu *cpu_buffer, unsigned lo=
+ng length, u64 timestamp)
+>  {
+> -	unsigned long ts_ext_size =3D 0, event_size =3D rb_event_size(length);
+>  	struct simple_buffer_page *tail =3D cpu_buffer->tail_page;
+> +	unsigned long event_size, array_size, ts_ext_size =3D 0;
+>  	struct ring_buffer_event *event;
+>  	u32 write, prev_write;
+>  	u64 time_delta;
+> =20
+> +	event_size =3D rb_event_size(length);
+> +	array_size =3D event_size - RB_EVNT_HDR_SIZE;
+> +
+>  	time_delta =3D timestamp - cpu_buffer->write_stamp;
+> =20
+>  	if (test_time_stamp(time_delta))
+> @@ -259,9 +268,13 @@ simple_rb_reserve_next(struct simple_rb_per_cpu *cpu=
+_buffer, unsigned long lengt
+>  		time_delta =3D 0;
+>  	}
+> =20
+> -	event->type_len =3D 0;
+> +	if (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMENT) {
+> +		event->type_len =3D 0;
+> +		event->array[0] =3D array_size;
+> +	} else {
+> +		event->type_len =3D DIV_ROUND_UP(array_size, RB_ALIGNMENT);
+> +	}
+>  	event->time_delta =3D time_delta;
+> -	event->array[0] =3D event_size - RB_EVNT_HDR_SIZE;
+> =20
+>  	return event;
+>  }
+> @@ -284,7 +297,7 @@ void *simple_ring_buffer_reserve(struct simple_rb_per=
+_cpu *cpu_buffer, unsigned
+> =20
+>  	rb_event =3D simple_rb_reserve_next(cpu_buffer, length, timestamp);
+> =20
+> -	return &rb_event->array[1];
+> +	return rb_event->type_len ? &rb_event->array[0] : &rb_event->array[1];
+
+[Severity: High]
+Can reading rb_event->type_len back from the shared buffer page cause a
+4-byte out-of-bounds write at EL2?
+
+When compiled into the arm64 pKVM hypervisor (arch/arm64/kvm/hyp/nvhe/trace=
+.c),
+tail->page is shared with the untrusted host kernel via hyp_pin_shared_mem(=
+),
+and RB_FORCE_8BYTE_ALIGNMENT is 0. For length <=3D RB_MAX_SMALL_DATA,
+rb_event_size() does not reserve space for event->array[0], but
+simple_ring_buffer_reserve() re-reads rb_event->type_len from shared memory
+to choose between &rb_event->array[0] and &rb_event->array[1]:
+
+CPU0 (EL2 hypervisor)             CPU1 (EL1 host)
+simple_ring_buffer_reserve()
+  simple_rb_reserve_next()
+    event->type_len =3D ...
+    event->time_delta =3D ...
+                                  rb_event->type_len =3D 0;
+  if (rb_event->type_len)
+    ...
+  return &rb_event->array[1];  <-- 4 bytes past reserved space
+
+If an event is reserved at the end of a page (write =3D=3D PAGE_SIZE -
+BUF_PAGE_HDR_SIZE), the caller writes 4 bytes past the end of tail->page in
+EL2 memory. Checking (length > RB_MAX_SMALL_DATA || RB_FORCE_8BYTE_ALIGNMEN=
+T)
+instead of rb_event->type_len avoids reading back from shared memory.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106180657.2460=
+376-1-vdonnefort@google.com?part=3D7
