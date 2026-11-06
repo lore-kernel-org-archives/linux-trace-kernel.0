@@ -1,90 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793978548;
-	b=ffkctUyVfLOQw9VQV8MEG3myIs9iNNNarii8gvgA/Nmtxy91XQAtW5dwkBNs1RKeG1oC
-	 uUttN0b2MFF1wXaSRAUWy4gPbEm1TwhjBiKlUs3Of9U2HO0Y9aaSXsMIfFX92l0holULW
-	 StcdTdvIy2dLDxZMQv6e3I8BbNqhEUJXX+6Aywj81BjnTfQJcoCkxKjzxbAUjZxWvx3bl
-	 1HpaDAsUoD4eK+Iz8m3sgld0GuoP9XkVQXFXvxrDeDK16iEpoq9N4YAym79sIQR0TN4su
-	 akrVUsXqEjOBXpNgEwMbvLPBB9lbIZPoztWUKSRywnKJGFCKRs8TUswaqlaqVlgc2Vw==
+	t=1793978803;
+	b=3x6x39o9ZrxyWlW29uoU75hARy5cqr/It9TKWaTLW5X+XxL9b65DzlDrlvGF7aQ8/9J/
+	 6BxlRQWBm/g/uFMNI8l6an/CLLTWSYZgaFlIr3V3HFy8sjLCy2RhzXSTY5/XAmOGIBbHr
+	 5VRvDOLqUYizlCS0F7PSFR7v2TMvESYf2P9GMuUgDlRxQITiYYFH+fBOH2yzY8OpakauT
+	 JglGem1LdT0sWuWTbNsB79AwEKVJqcGPpmN2BHk1jLsNBcuFOqQIWF4kLBHzBdV0PIOIU
+	 pfwh1V7oIaXG7HX7upnH80DaYn9TOwjLr3CTjKeV2DdrXHTPH2ur4dMMne/s6isjgxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793978548;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=z3y+DELGAxT9V5PmpfgouMZn+gCc4O45ROBPQSi1BPo=;
-	b=zvG/pFCnX+N7P6i/0L8qwFk3gaCDMZRqcH+u65PWyybcl0c3wqFXnuorIBNRP1hVhKeK
-	 jlyONjui4CHYxLfeEEnsGzzLnB+AsOSmTMzl6a5MdGQ6iGDxiIvMkYbknBYkJOjpt2A79
-	 Dz6RFjVa1ujDWoQHB3suVg3Js+XhFuOarcI0WRcYoGnAWcWmRJA3mlIwcYBhnHorG/c51
-	 xZjj8mf3L8QnVuuaYZHMi8hYpPFwD6VmEaErkHX/8l87a9LLh8TpnUpDIKWq6R3AmO7oQ
-	 7iu7flhqx22l8dE1RB5S8Roc0lKmwpTe0Ty259Vwqad+/nPnOiX8UI69o6SlRztdPKg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793978803;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-Id:
+	 In-Reply-To:References:X-Mailer:Mime-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=NFRk93kVwDnKUZB/pcB0eF0UozOQGGbpKAYRpLOWGWw=;
+	b=es+0Ennyjx2h1r5bxFe+DnX8VyGrdNwM+TN9jqdZBOgxB1X8HKDhZ6hxCkblbH5PK2JZ
+	 lPIaU18qdGVEeAK6yIx/H2ld1ew8sa+7QYoTUBEBqdHgIO60ZqvwcF7Cqk6zjYoaWZ4VZ
+	 iI4d3n/DF5fxFeJbaNnO3YpVtIPY7Qx+AN70xy6Z5PK6vfE/LLRSzYj8hrGWJaXGug8i0
+	 PXoGA+AhOuuC0qf173Y7UlIrZ6NqxBWJpFbKTialhzOWrsrB26PZtJIwV1B1vWy4M6MqO
+	 fMexWItXMYWDddqFyfSm5B+YZLi4Qhsl5AH/DvIC0yzA5w3yCjNqRixAQ+uII62FixA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D0OBt12S;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E95606A32D;
-	Fri,  6 Nov 2026 15:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D0OBt12S
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73F71F0089F;
-	Fri,  6 Nov 2026 15:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793978547;
-	bh=z3y+DELGAxT9V5PmpfgouMZn+gCc4O45ROBPQSi1BPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=D0OBt12S5A0/61ajOHRCOvVj9Y496CxzkIZ539OmP2Egd7lJ1ZTg+93+bz35MlhhQ
-	 aEcmgJvs2K1rXKjoPty9afP418nmgDzNbNz3R49xM82YI+IZppcn7JPT2+rOR1oP3E
-	 aXPgvNxlojcYTHikG/NcZ6k0ko8+NVlu5A2DjoEJYkhK0Y6iRimNr2X51btaRYAQe4
-	 3oYkIoHH1FFpK2QL5UAfs5I6l1ULxHTF3yATZiallmsTHKUql1MDHJSRDkOp7LPZaS
-	 WDiRcIhr4R/mT8uJ1TsaVWpbDwDHCB8mxh70Ac0iVGTP+nI77JgCBpwlXJfuSijYjQ
-	 cOmEIk2xUD+nw==
-Date: Fri, 6 Nov 2026 15:22:08 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 00/13] mm: continue vma_flags_t conversion
-Message-ID: <au3r0-geuwtRYPiC@gremlin>
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <d0ea7929-7c12-4245-ba3f-6dd5c0269e6b@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC25E606D808;
+	Fri,  6 Nov 2026 15:26:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3EA1F008A4;
+	Fri,  6 Nov 2026 15:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1793978797;
+	bh=NFRk93kVwDnKUZB/pcB0eF0UozOQGGbpKAYRpLOWGWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=hNmDLPIPCIvMSZn0FOQJtTkkZXYaqyFnlZNSYPuCKTcNHe51SqoKWL3VMdVHTVsM7
+	 K9HIuP0ELk+KrsbSxnuHYQ2Ka8ZGcjchQ6Uxijf+zNY+KstKz0upt/iNNUPs6A4lbN
+	 cpGjgUjU6ke1JlbVlOQ8kyyZm4LV2/eGZZyLR2rs=
+Date: Fri, 6 Nov 2026 07:26:36 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Hao Ge <hao.ge@linux.dev>
+Cc: Abhishek Bapat <abhishekbapat@google.com>, Suren Baghdasaryan
+ <surenb@google.com>, oe-kbuild-all@lists.linux.dev, Linux Memory Management
+ List <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation
+ tracepoints
+Message-Id: <20261106072636.524e8f0a6a618e7b28988273@linux-foundation.org>
+In-Reply-To: <9a4323e1-a966-41fe-8268-9d6621346fea@linux.dev>
+References: <37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat@google.com>
+	<202611052344.mDV2DB89-lkp@intel.com>
+	<20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
+	<9a4323e1-a966-41fe-8268-9d6621346fea@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -93,50 +58,46 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0ea7929-7c12-4245-ba3f-6dd5c0269e6b@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 06, 2026 at 03:35:01PM +0100, David Hildenbrand (Arm) wrote:
-> I agree that this should be picked separately. For example, I will pick
-> everything that falls into my realm to reduce conflicts.
+On Fri, 6 Nov 2026 15:54:33 +0800 Hao Ge <hao.ge@linux.dev> wrote:
 
-Hmm, generally tree-wide mechanical changes are the exception to that rule
-no?
+> >  
+> > -static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
+> > +static __always_inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
+> >  {
+> >  	if (static_branch_unlikely(&alloc_tag_trace_key))
+> >  		return tag && alloc_tag_is_traced(tag);
+> > _
+> > 
+> 
+> 
+> Thanks a lot for looking at this - and for putting together a fix at all.
+> 
+> Perhaps alloc_tag_is_traced needs the same treatment as well?
+> 
+> Even with your patch applied, I still hit the warning, just attributed to a different symbol:
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference:
+> alloc_tag_is_traced+0x10 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
+> 
+> Marking both helpers __always_inline clears the warning in my build, and it would fit what the series
+> intends for the fast path anyway.
 
-It's going to make the rest of the VMA flags/mmap_prepare conversion really
-quite difficult if I have to chase every single driver maintainer in the
-kernel (literally in both cases pretty much :).
+Great, thanks, I added another -fix on top:
 
-And sometimes there are dependencies which mean you really can't split it
-across trees unless you establish functionality in one cycle and callers in
-another, but that seems a little silly.
+--- a/include/linux/alloc_tag.h~alloc_tag-introduce-ioctls-to-toggle-allocation-tracepoints-fix-fix
++++ a/include/linux/alloc_tag.h
+@@ -156,7 +156,7 @@ static inline void alloc_tag_clear_trace
+ 	atomic_andnot(CODETAG_FLAG_TRACE_ON, &tag->ct.flags);
+ }
+ 
+-static inline bool alloc_tag_is_traced(const struct alloc_tag *tag)
++static __always_inline inline bool alloc_tag_is_traced(const struct alloc_tag *tag)
+ {
+ 	return !!(atomic_read(&tag->ct.flags) & CODETAG_FLAG_TRACE_ON);
+ }
+_
 
-I was thinking that once the VMA tree is separate I'd put mechanical
-changes like this through it. Is that not the way to go?
-
->
-> Ideally, patches really only touch one component.
-
-Right, but sometimes functions are declared in one place and called in
-others. It is impossible to change the signature of one without also touching
-the others.
-
->
-> [PATCH 07/13] mm/madvise: convert madvise_vma_behavior() to use vma_flags_t
->
-> is all over the place :)
-
-It's not really all over the place, it's converting vm_flags_t to
-vma_flags_t across madvise.c, which involves changing a few function
-signatures, whose callers must be updated.
-
-I could split it up into 3 patches where 1 does internal-only, one changes 1
-function, and the next changes another, if that works?
-
-But there's no way for that change to only touch madvise() given the
-function decl/callers.
-
---
-Cheers, Lorenzo
