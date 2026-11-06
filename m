@@ -1,54 +1,148 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793940876;
-	b=dvTe1Hso6CbKxVqa5fhb5/Brk/mmY8h5MIuCEEo2xFamoJacspvDaKZ9toWl7U6pUNs5
-	 ioaBaceOdRaFNLAIx+cBBbq2N0LyT292IE3p5YDGCyLkOaGOhvIxJ/Jw+ke629jBFyVrg
-	 MAoZe3OOXX1Qjf+aLTZyVNOS0q9S0IRhoMNHeTdhJSApuISQObEqhafYGYtGDZmuGq8Vm
-	 VosIbs9kP8EDNwdVCViPRKkDwucZ5wVYjUsrbNTXdKm59pWsUDvLQMJwapA8X88vkqqD4
-	 dI8zy9V5iez2KIYWkcDbcf6PLV8oKkCSQkxEuAmGbWM8R/IEvEQ5I7OuMiqTSj/yvWw==
+	t=1793944059;
+	b=0/yVAM/EkQSOgZ2pDKpIldDgcWYouExWdpq+J8CHPhxtLzEg2j09nQ1BU0E12OvLiWu1
+	 Ny/p7LRZCssLxBBvrnE1RTm1pBD6aWiNtTMHC3FvCRB4DjtCrQdwdOTblbYkocYc9ASGw
+	 iguel/cLUtpIDdZUb8cKiF1iDVkd6/fr1sEBOHHpq84Nop5zxTgjVFYGl8voWr893b89v
+	 Mw0afE3EDdnJ1+Y/VZbK0BCVzw6V7EAv0XiRd5pzz/gvxn0/DPwyj7EI/eEhs1KeXhFM6
+	 CQEctoqaIxTcn/zGYgF5udK6P95e9CN5slj41deuOGvKea3gmjn2JWcEqbLl/lmx/xw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793940876;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793944059;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=0XXMzfFrMuhQ4F+XnXsFq3w4XgRZy5QKJgrtlHXBe4k=;
-	b=Z+mfnvAWBbJbINDSqYFxlEb1zgiSQ4HQUbg0sbmvE9X3Nt3wX5uYy/PjFRSeefj3VGyd
-	 SYHOyhVZKuBzLA4s9vnb2Cz0ahekA/+uAZX71sMz1UdszzbR/JqFMR2f8lfZsOHoerITY
-	 2vcsp4+dqHh6vQcp9ghre1pOmlAE952StxLHS3bvTSz8soMhkiOv5IWKp6qQED2uTcmPL
-	 5PbmQEVGz2UKOLkmNzPCXNY04X6FiSckUc01LKoLzwEA5GTMGkOUSqAO8VTfux+pKOp6Z
-	 /dyYxrijJbtQl5ZxaTx/waqWSiRVkcNB1Hf9Eovy/pn8OQ3VYyUtGjBGJvoP5FHXSSQ==
+	bh=ZT+3t8jUtNYvSMUXBsXE5t2lolnKWHLNl4pEvr8+Rfk=;
+	b=cFHZf28RARwQVlkJopQrKlLopsSIY6IkboVdCus6kL6EZBh8YkvdVnm4CFkR8yF+aj9+
+	 SHZhaMoQswd5JRtX2uqO7PDn8UGXl+UIXaRonfKtTLgBq+ljRse8qe4z9B7oJsj9e9m7p
+	 5PcQNVTL3+ucb5Es7BuCxitaoxxTLViYYXRP0NHNXCOrWAqow7YtX/72bUx3HURojeEV0
+	 T/OJw6FL8N1lQxrFbv6Wg8BfUgQH6+aWTh0ndqLDEv8ZkYmVKcSsmQa38UGtQfqeOzbQ4
+	 qVPcrq5tCZ1duDlB9KbKywqJng8jRP1VzxJ5DL7EHh1KbyQO2zYECJwsd6lR7dpHrKQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="EBCH59/y";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=XyEnwXpm;
+	arc=none smtp.remote-ip=95.215.58.139
+Received: from mta1.migadu.com (out-139.mta1.migadu.com [95.215.58.139])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E0E606A328;
-	Fri,  6 Nov 2026 04:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA6A606A33A
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 05:47:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7DA6A606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EBCH59/y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098411F008A3;
-	Fri,  6 Nov 2026 04:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793940876;
-	bh=0XXMzfFrMuhQ4F+XnXsFq3w4XgRZy5QKJgrtlHXBe4k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EBCH59/y9hilVF46mpV5nEtKYrzidn9xHBUwOKDUfytSuRZwVtYspUNP9VSGDt28B
-	 Rgcbt+W7bpMf+HAtpvA2n/TPaCgvQOAYwqEnL8XlwkeGhIAasR9/HImNm5gNBD3PYe
-	 9Zb/bbDwPxZMq/lzrmrFtkTfr94erDv9W98CG3cNvMI+jFeJKo9s/Ob05hig3pBmk/
-	 ofL+dsN2MsZI0j58TAMOWaOY3LB7dQdMPMQZolrjbfDIuPIVKgMwUgdg/V6brAVudm
-	 6vIgf4K/jcp4FQgXlqhsZWJFs+nn//23p7AyaZHc2S5LvNeZ1/zRnsOvPHZJ5NGVWs
-	 z+bsfUwPjBxQg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: kernel test robot <yi1.lai@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>, Vinod Koul <vkoul@kernel.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [tracing]  b5cc230af5: WARNING:at_kernel/trace/trace_events.c:#test_double_dereference
-Date: Fri, 06 Nov 2026 04:54:33 +0000
-Message-ID: <undine-1793940873129741182-d37e5f54bdcb36ed@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <202611060303.c90f27a7-lkp@intel.com>
-References: <202611060303.c90f27a7-lkp@intel.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=XyEnwXpm
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=ZT+3t8jUtNYvSMUXBsXE5t2lolnKWHLNl4pEvr8+Rfk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793944056; v=1; x=1794548856;
+ b=XyEnwXpmhEJhwikO48xAEwERbtdZKNxBwtFulAEQIhHcc7oSB8KiNcLldAsPqMZrW+nFfHFK
+ w4eeUOE5AiNeLIUDZJeDDutvC4Kl/RFYJdEWo1jv8AHEO0CN7EsqSivc3ku3bABCxO4cIYv0Zzb
+ Nr6SOF7c3L8A8xxzROl8vQ5g=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 094e1342a4777852;
+	Fri, 06 Nov 2026 05:47:33 +0000
+X-Mizu-Trace-ID: 094e1342a4777852
+X-Migadu-Flow: FLOW_OUT
+From: Lance Yang <lance.yang@linux.dev>
+To: ljs@kernel.org
+Cc: akpm@linux-foundation.org,
+	david@kernel.org,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	willy@infradead.org,
+	jack@suse.cz,
+	riel@surriel.com,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	harry@kernel.org,
+	jannh@google.com,
+	lance.yang@linux.dev,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	nico.pache@linux.dev,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	baohua@kernel.org,
+	usama.arif@linux.dev,
+	kas@kernel.org,
+	xu.xin@linux.dev,
+	chengming.zhou@linux.dev,
+	maddy@linux.ibm.com,
+	npiggin@gmail.com,
+	mpe@ellerman.id.au,
+	chleroy@kernel.org,
+	ritesh.list@gmail.com,
+	sshegde@linux.ibm.com,
+	pfalcato@suse.de,
+	kasong@tencent.com,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	baoquan.he@linux.dev,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	leon@kernel.org,
+	sj@kernel.org,
+	rakie.kim@sk.com,
+	rientjes@google.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	john.johansen@canonical.com,
+	georgia.garcia@canonical.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	zohar@linux.ibm.com,
+	roberto.sassu@huawei.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	wufan@kernel.org,
+	stephen.smalley.work@gmail.com,
+	omosnacek@gmail.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: Re: [PATCH 01/13] mm/gup: convert GUP code to use vma_flags_t
+Date: Fri,  6 Nov 2026 13:47:23 +0800
+Message-ID: <20261106054723.41863-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20261105-late-2026-vma-flags-v1-1-0d3cd15ab75f@kernel.org>
+References: <20261105-late-2026-vma-flags-v1-1-0d3cd15ab75f@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,59 +152,19 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Nov 2026 11:07:56 +0800, kernel test robot <yi1.lai@intel.com> wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "WARNING:at_kernel/trace/trace_events.c:#test_double_dereference" on:
-> 
-> commit: b5cc230af5e536ff752f8bd5c30e23612936d5c3 ("tracing: Warn when an event dereferences a pointer in TP_printk()") https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> [test failed on linux-next/master ddfe51b0a0f5dc9e415cc2c8ad8db17532dd426b]
-> 
-> in testcase: boot
-> 
-> config: x86_64-randconfig-r2309-20261012
-> compiler: gcc-14
-> test machine: qemu-system-x86_64 -enable-kvm -cpu Cascadelake-Server-noTSX,enforce -smp 4 -m 16G
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <yi1.lai@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202611060303.c90f27a7-lkp@intel.com
-> 
-> 
-> [    0.808840][    T0] ------------[ cut here ]------------
-> [    0.810236][    T0] Event hfi1_txq_complete has double dereference in TP_printk: REC->sde ? REC->sde->this_idx : 0
 
-This seems to be expected behavior. Because "REC->sde" can point already
-freed/reused object, this should not be allowed. The event must save the
-sde->this_idx at TP_fast_assign() instead of recording sde.
+On Thu, Nov 05, 2026 at 09:30:52PM +0000, Lorenzo Stoakes (ARM) wrote:
+>Replace use of the legacy vm_flags_t flags with vma_flags_t values
+>throughout the GUP logic, both for the MMU and nommu variants.
+>
+>No functional change intended.
+>
+>Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>---
 
-In drivers/infiniband/hw/hfi1/trace_tx.h:
+Nice work1
 
-DECLARE_EVENT_CLASS(/* AIP  */
-        hfi1_ipoib_txq_template,
-	...
-        TP_printk(/* print  */
-                "[%s] txq %llx idx %u sde %llx:%u cpu %d head %lx tail %lx flow %x used %u stops %d no_desc %d stopped %u",
-                __get_str(dev),
-                (unsigned long long)__entry->txq,
-                __entry->idx,
-                (unsigned long long)__entry->sde,
-                __entry->sde ? __entry->sde->this_idx : 0, // this must be recorded as a value
-                __entry->sde ? __entry->sde->cpu : 0,	// ditto
-
-
-So this is a bug in an infiniband driver.
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
