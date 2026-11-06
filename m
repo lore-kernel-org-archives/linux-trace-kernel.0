@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793989590;
-	b=0z1hKk12qo8VyH4vGGLGWuU0zRubolzsgq0oQe7QB1BGsA5F9hJcFpnaLYaRoKJrYjcr
-	 bomR1BIymrOKX0aBs7HyOlhK5LCuiJHsK5wIBUJrst6Ga/lu0j+CwfrQ+PiAGVU+GNqVy
-	 lSi0AWIkEWbcMZBcfFj/WoVKxHmqfp1q2QFb5n1FIH2T5IUn0BB/tmmCvAfKOS+uLFu6k
-	 6OZKbXKz8rmYZgmSzm4y1A77idetPxatof5ueRW6jeBebdqwLbnSZd4OG3/XrY9Ir2tA3
-	 h6PDHXvexeFPgWN9sjEMtv33A20QBlb+gkQOXCxSZcedEOqIDaq0SnpUsVWH+jUqX5g==
+	t=1793989607;
+	b=aHyflknLlR4AMzaJ5dq4c4yClXhICQhOxvbk6fsXT23o0EjkDEdna1v19M4Zg1zae3vI
+	 JaIb3oTNICisAXfdrS/+O5b95rtOhLJLFG9rl/uQrrqhsbzGqwK/xRlLzHQiSeFcPPYQm
+	 OA9AOJ8jgn8jYLuohWBKtjFzK7wxf90jRJjZ/fz2vpaprkohUNTIwUNmw70STFqOWY5Zc
+	 n2Htkm1LAwX7fPg6tO4bqf3frg7PkJYG09FstgRmS8Fkas3qu+4TgpqBcnB9hVynn/pwX
+	 sb1ZcQoy5YRJ8JuTd+IRI1JZWRRlsQuSlEOie6Cc/QDTsVpdqpAYwNQWZwmcEVCSIzw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793989590;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793989607;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=S+cRGxJUS6rBJ/+MgkkC63fs9wH+nic0cCeFUOm7ZhI=;
-	b=psNfbg6DvwbPsKXmaVlTG5+FM39Q05mmvz5INF2Kv62UWHDBrTUBXAEVVFF/vOu2afxd
-	 DE/F8jetYQUrrvtNVEhCVdbN2xr/RgPl7FgbLy6g97s5/cdd9OrYWHd35Ga1HhZDtbbSU
-	 2vRNURIL8HHn2X2XF43IO8vKW1eiyZP3mYYslobAftSs3T/4jPEVo4Uq5+sfQb4i58to/
-	 +ECkFg2c0f5sUIDs4r1w5K+nA/F0z/2Lcs86weJbXZupn9B7XNiqKO/c9WaQWwQsWvj1T
-	 m+OYScda+ZHjq6tZq769WpxuApt/PaXJDugP3LOWjjKIMtZoMWn4yvX4wYFOys85ouw==
+	bh=T+WndX5LT09lxsj+ZTwn3B958Z+4csPsMgcJskqKkEU=;
+	b=yNfKHBpKloakqo9n2+hPaD/hNDSrwdnZPz8bjm1D+1PPboLrFS6xu8DgJMjjIcy0Ceor
+	 hr6xmWctmL2KgM0NsCd0xPcT+hH6cbBKs25J+lahAjfPGg0j8mCwzZfULq+GJrtL7ngtC
+	 L1p1HqgCCuFkFofFe16t9g5btnX7m9EjOseNj5ggsLUr9+sRjeX3hzCVtEgbeOmR5i95W
+	 njaaLxKMV/zgVuNiibZx/3nGChe9yRbb/7jm2ACNA+yly05eqhJbcpS2dz/b0iFWoWQzH
+	 bQLkdlfs9Mk7isTHppDVfi3z2+72ckHiCGn7EV1NAaWpFKhXovW+wAsj7tAeNZ8aHSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OJi9muhK;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MUdO2kmH;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA4E606A326
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE835606A326
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OJi9muhK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C13961F0089F;
-	Fri,  6 Nov 2026 18:26:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MUdO2kmH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2111F0089F;
+	Fri,  6 Nov 2026 18:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793989589;
-	bh=S+cRGxJUS6rBJ/+MgkkC63fs9wH+nic0cCeFUOm7ZhI=;
+	s=k20260515; t=1793989606;
+	bh=T+WndX5LT09lxsj+ZTwn3B958Z+4csPsMgcJskqKkEU=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=OJi9muhK6W+qP5zNhnmVOvOFVsY10QQF/5d9iikNAVhEgq8dY+tknhHg8sngmbJts
-	 tz1QV6ZOpH/T2HC9iCM6E0hM4MdQsTlqCQJjz886E3E9B11RyA9FpwDyPRIkAvZRe+
-	 CaciWWYPjyRePgJx8/E9+rLSAa5HHNygCi12zyNyXoxsJsjOth9Mp0Xva0oBBEoGbl
-	 Z52gj6wbBggJ0Clt28w283Uwaeu1z3mHRCzklj6Uq+tppqybu++Boni69S9kbP+gxr
-	 i/WYMu8aNbKykodVGse5fm5TRLiol5yzXHrj7mPakkSgJPqgBXCkK8xqQrw7aXxPBS
-	 FY9EivASixtYw==
-Message-ID: <sashiko-outbox-202026@kernel.org>
+	b=MUdO2kmHh+QNuFWEuqyiAZTkenC8+P4HJATZNd4ri8IVrRH+uPFJ/T1oeoXkzpj7I
+	 Zb6I7XKe4R4f4FSgfHqWJADmHsrEk2UMBFHcEPa/vZZPiS/t56ZGJTNUz2XhorKrxk
+	 1ggTF53DAMEUuQx8ENcP5AA0VkgR9GcKd8Y5/sDGRlIun484A8IVJF2hPn/MT2mhXy
+	 AMlkM5SUDbUeRof+3OZtBZldp6YYYFdGmKGRhwna53wh1eGnbYhJSwTM6NSAq9ZcOT
+	 uSQH439nKAod8o2wLa3FRczWS+iZq7TLMptsOSM2PPLNHLuYWXxjd/Q6sBpPQ0pGuP
+	 lW73aKvTwjodg==
+Message-ID: <sashiko-outbox-202028@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 08/21] tracing/remotes: Add dmesg tracefs file
+Subject: Re: [PATCH v8 09/21] tracing/remotes: selftests: Add a test for the
+ dmesg tracefs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261106180657.2460376-9-vdonnefort@google.com>
+In-Reply-To: <20261106180657.2460376-10-vdonnefort@google.com>
 References: <20261106180657.2460376-1-vdonnefort@google.com>
- <20261106180657.2460376-9-vdonnefort@google.com>
+ <20261106180657.2460376-10-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 18:26:29 +0000
+Date: Fri, 06 Nov 2026 18:26:45 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,59 +60,79 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] tracing: trace_remote_do_dmesg() stalls iterator when
-  !CONFIG_PRINTK
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Low] tracing/remotes: selftests: dmesg.tc fails when
+  CONFIG_PRINTK_CALLER=3Dy
+- [Low] tracing/remotes: selftests: unpinned writes in test_dmesg() race
+  with poll
 --
 
-commit 8ec4000ae15e5140e201a48a2cd1db29b0828760
+commit 3fde60957549859280fe5d4a8fc22ed359270e5c
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-tracing/remotes: Add dmesg tracefs file
+tracing/remotes: selftests: Add a test for the dmesg tracefs file
 
-This commit adds a dmesg tracefs file to trace remotes that redirects
-remote trace events to dmesg when enabled.
+This commit adds ftrace selftests for the trace remote dmesg tracefs file
+to verify dmesg redirection on both the test remote and hypervisor remote.
 
-> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index 08a89b7315c3c..3dbb4912dbd6d 100644
-> --- a/kernel/trace/trace_remote.c
-> +++ b/kernel/trace/trace_remote.c
-
+> diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc b/too=
+ls/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+> new file mode 100644
+> index 0000000000000..a5dcdd91e516b
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+> @@ -0,0 +1,86 @@
 [ ... ]
-
-> @@ -883,6 +909,87 @@ static const struct file_operations trace_fops =3D {
->  	.release	=3D trace_release,
->  };
-> =20
-> +static bool trace_remote_do_dmesg(struct trace_remote *remote)
-> +{
-> +	struct trace_remote_iterator *iter =3D smp_load_acquire(&remote->dmesg);
-> +	unsigned int max_events =3D 1000;
-> +
-> +	if (!iter)
-> +		return false;
-> +
-> +	trace_remote_iter_read_start(iter);
-> +
-> +	while (trace_remote_iter_read_event(iter)) {
-> +		trace_seq_init(&iter->seq);
-> +
-> +		trace_remote_iter_print_event(iter);
-> +		trace_seq_putc(&iter->seq, 0);
-> +		if (!pr_info("%s", seq_buf_str(&iter->seq.seq)))
-> +			break;
-> +
-> +		trace_remote_iter_move(iter);
+> +    nr_events=3D128
+> +    for i in $(seq 1 $nr_events); do
+> +        echo $i > write_event
+> +    done
 
 [Severity: Low]
-Does this stall the iterator when CONFIG_PRINTK is disabled?
+Can unpinned writes to write_event here race with the periodic dmesg poller
+and log events out of order?
 
-With !CONFIG_PRINTK, the _printk() stub returns 0, so the loop breaks
-before trace_remote_iter_move() consumes the peeked event.  Enabling the
-dmesg file then keeps poll_work running and pins the remote trace buffer
-open while repeatedly peeking the same first event without making progress.
+Enabling dmesg starts the 100 ms periodic poll_work, and each write_event
+records into the current CPU's ring buffer.  If this loop migrates from a
+CPU that was already polled or drained in the current cycle to a CPU that
+is drained later in the same cycle, newer events on the second CPU are
+printed to dmesg before earlier events on the first CPU, which remain unseen
+until the next poll cycle and cause check_trace() to fail its monotonic
+timestamp and sequential ID checks.  Pinning the writer loop to a single
+CPU with taskset, as trace_pipe.tc does when writing concurrently with a
+reader, would avoid this.
+
+> +    sleep 1
+> +    output=3D$(mktemp $TMPDIR/remote_test.XXXXXX)
+> +    dmesg | awk -v ts=3D$last_ts '
+> +    /^\[ *[0-9]+\.[0-9]+\]/ {
+> +        t=3D$0; sub(/^[[ \t]*/, "", t); sub(/].*/, "", t);
+> +        if (t+0 > ts+0) print $0
+> +    }' | grep "selftest id=3D" | sed 's/^[^]]*] //'> $output
+> +
+> +    check_trace 1 $nr_events $output
+
+[Severity: Low]
+Does this sed expression fail to strip the printk prefix when
+CONFIG_PRINTK_CALLER=3Dy is enabled?
+
+With CONFIG_PRINTK_CALLER=3Dy, dmesg prefixes each line with a second
+bracketed caller ID field such as "[   12.345678][   T42] " or
+"[   12.345678] [   T42] ".  Because sed 's/^[^]]*] //' only strips a
+single bracketed field followed by a space, the caller ID (or the entire
+prefix) remains at the start of each line in $output.
+
+tools/testing/selftests/ftrace/test.d/remotes/functions:check_trace() {
+    ...
+	sed -e 's/\[[0-9]*\]\s*\([0-9]*.[0-9]*\): [a-z]* id=3D\([0-9]*\)/\1 \2/' $=
+file > $tmp
+}
+
+Because check_trace() does not strip characters preceding the numeric CPU
+field, cut extracts parts of the remaining printk prefix instead of the
+event timestamp and ID, causing the test to fail.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106180657.2460=
-376-1-vdonnefort@google.com?part=3D8
+376-1-vdonnefort@google.com?part=3D9
