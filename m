@@ -1,51 +1,48 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.78
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.133
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793944468;
-	b=J84lbYCybUmFJltqlEY9B3l4QwsWr4xtRfWYuUuCMy6EhedrUBIy1qNvQHbYO1rqKe+u
-	 C0SFN69D3wl/L4P1s5bgmscK/KYJphbi/7nFZq8MnKJo5fMVnQeWegkU3AXjDrwUHRUIh
-	 RNc3FJZk0Zc8pS6/ROomyjvRdxRTlX8PUgYRXof/lNrghOSs36f5RPD7jlKjtG0BB8+Vl
-	 WSAhvZfyrbuwfD/qtttgHlF9q0XQ/IA8iIasiDl5Np87iV0cSjB37n8JZ0Bf/BCRn5d2G
-	 3+gByNete+TM7VhRbugg5FiSgU+1IOGBeSUZnMGelEpEIn/VWN6Rk6xxSG6Wf1Q6bSQ==
+	t=1793944721;
+	b=ccZU4fk/SFJo5ZrkXTByQQJ1gLybA0QqB4/vusJMN+0Y1X/p0YxmV5TQzS2btBE/ZWwK
+	 VNFBgYszJvYH6GswuI06mVOvUqqinWsHu6L3aq7UGo2ObYn/1qjzWIUysVkBzIDp94xam
+	 oOrsoriYC+BQIU0kugnSBV+sIxutoqIfbQ9xsIowfJSbUW/QdwDsQJdAprLhN3k5H6mHc
+	 cayAnKXIT2DFO+zL+fOYsTMiFP2iiD5gr8xpLMm4WXkLhR7taFFPU1gQy7n6gsVoO38s6
+	 dpzb627RGIed1VqNbw/W4oqquflx9LfxSrqdqESs0CvvF/z/EZ+SJS2fWI7WrJoAwTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793944468;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793944721;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ZkVgJPqUyM/MWdECKVhoMlY0/kmR087+Z++BChEE7DA=;
-	b=ACsLqSpi6fOSZQduQVZXS9SpJXGjYwSRPdK7KQ5YTwkOwZGOwfqQ0OhiUGZhWSzwUrBq
-	 INXp6NAHwCEbnNbdRIhE1pAQ3JBH2vUDNgrG9AE63TljA8KRPli2MSUMNO6tcrrlqcp6H
-	 uJ3OzyGENCLRKZFANencdOn3YCvgZ4fz90WzmEc5Xhw7MEe3yfyqKhMa9iHll50vhcr1r
-	 See/3WKMCHK1zLxTOiSVSoYpHQL+ys95Q04wrOcFjmS5d8yhG8sNu/1+Za4HNw8Ix+Sw7
-	 Xz32KkOAiyUV+cHriJb0PsThyRBVHFi8YD2JuP/ReAXOLM66UHcubx69yHbe0MTPrsg==
+	bh=PkBehpMQ1APfXjT2IE3+mlc+y4KHDiIRfa6RZSDO6oE=;
+	b=GUzvzuL+mgS7nZLZ5s5+2j0ZvMncoDiIXX7pk+LwyI07R3XGdJ4COpfHuL4UKBLR0iMh
+	 kcyGnnKHB8uvAHhwwkz7RZ7QRBRuRFG0kmsErLdzflaLz1TFw1n6zLdRWUNaDhjvrBl/B
+	 7NLWsmofAAMi/MShN1BR9018v1OPk0q0j2QmmFQTBfQ7Ch0kaCR8qBMNoYpA9OuLmd6SP
+	 JSLvlB2rGZRk41qeBmpsTRlGew/Pq+9LPcCSCzP/xLTo2T5AV3TjrA0edq8G0ENRM08Nn
+	 WeQ28pUeWfeTlRg2teU5PkahJA8Wf7zhkzmIOyuFKb2+e2y2wFioK7fIo/Y5LKYzfqg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=XM73R6f9;
-	arc=none smtp.remote-ip=91.218.175.78
-Received: from mta0.migadu.com (out-78.mta0.migadu.com [91.218.175.78])
+	arc=none smtp.remote-ip=91.218.175.133
+Received: from mta0.migadu.com (out-133.mta0.migadu.com [91.218.175.133])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD2B606A330
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 05:54:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8CD2B606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864AD606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 05:58:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 864AD606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=XM73R6f9
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=ZkVgJPqUyM/MWdECKVhoMlY0/kmR087+Z++BChEE7DA=;
+DKIM-Signature: a=rsa-sha256; bh=PkBehpMQ1APfXjT2IE3+mlc+y4KHDiIRfa6RZSDO6oE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793944465; v=1; x=1794549265;
- b=XM73R6f923jyC0PZNUyIeEFMqCmB2nWVRY4vtPYRgmagU8XrWDY7HJJLfj60oHRnUklclkrW
- 8fpzquZt131BMUCZMDzlV7vXYXOvJjD0VgcEJK8HEYBBufNfV/c/nfxM5lCVTm6pt7vbauBgM8J
- J57tKB77ylquFvNEhY9WOQD0=
+ t=1793944717; v=1; x=1794549517;
+ b=XdOrnOffQTx1UPchmwcD3G9CjSPrVCHD4iwwf1eez29n+8UuEmQWBnNuo+tv+WX0jYnIuuKn
+ ZEDuk3T+aac75YrXwLgooXesiE0yhoWtAL4UfUotSKwnYE+DimImSE5t2leD493mh2Kd5la+QK2
+ G0d1yur0sUNpDmcaS0qriDm0=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 578f26654fbdc28a;
-	Fri, 06 Nov 2026 05:54:24 +0000
-X-Mizu-Trace-ID: 578f26654fbdc28a
+Received: by smtp.migadu.com with ESMTPS id d93371a15e2af6bb;
+	Fri, 06 Nov 2026 05:58:35 +0000
+X-Mizu-Trace-ID: d93371a15e2af6bb
 X-Migadu-Flow: FLOW_OUT
 From: Lance Yang <lance.yang@linux.dev>
 To: ljs@kernel.org
@@ -137,12 +134,12 @@ Cc: akpm@linux-foundation.org,
 	linux-security-module@vger.kernel.org,
 	linux-integrity@vger.kernel.org,
 	selinux@vger.kernel.org
-Subject: Re: [PATCH 03/13] mm/rmap: convert remaining VMA flag tests to use vma_flags_t
-Date: Fri,  6 Nov 2026 13:54:15 +0800
-Message-ID: <20261106055415.42873-1-lance.yang@linux.dev>
+Subject: Re: [PATCH 04/13] mm/migrate: convert VMA flag tests to use vma_flags_t
+Date: Fri,  6 Nov 2026 13:58:30 +0800
+Message-ID: <20261106055830.43260-1-lance.yang@linux.dev>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
-References: <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
+In-Reply-To: <20261105-late-2026-vma-flags-v1-4-0d3cd15ab75f@kernel.org>
+References: <20261105-late-2026-vma-flags-v1-4-0d3cd15ab75f@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -156,9 +153,13 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, Nov 05, 2026 at 09:30:54PM +0000, Lorenzo Stoakes (ARM) wrote:
->Replace the remaining uses of the legacy vm_flags_t flags in the rmap logic
->with vma_flags_t values.
+On Thu, Nov 05, 2026 at 09:30:55PM +0000, Lorenzo Stoakes (ARM) wrote:
+>Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
+>migration logic.
+>
+>We retain the READ_ONCE() of vma->vm_flags in remove_migration_pte(), as
+>there is no vma_flags_t equivalent, and arch_make_huge_pte() continues to
+>take legacy flags for the time being.
 >
 >No functional change intended.
 >
