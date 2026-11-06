@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793989302;
-	b=3Mfz0WK627dLt6qJqH9VA39oWRyBA0dSVJ34dESXftId5wak0h57qkjSKc1TSumVBC1E
-	 M0760k8+WbLP7Y6ILLnuBOdfs9AUv8Pq1iosT1b0Qr0lgZ6n4rZ6fiX7VAIV13i7dQPnT
-	 oVq/MofPJiZRKYyJn6iB5zeZPQBsrGVTJlGDIaLzxdGsSWvLIj2kxxWJCpSN92lP9KmIe
-	 wVmIIpGHmqE0K3iQfovWIKA5AAgWpKLybgGSBElnq9asw+y7vxwND+XzM4bcXxC90wxhG
-	 Tc9f4A7fZoDCYMRupmO2fTwkftiIthKMHpLcVoJdKtNhaggL9F863iNesKyoUNi953g==
+	t=1793989590;
+	b=0z1hKk12qo8VyH4vGGLGWuU0zRubolzsgq0oQe7QB1BGsA5F9hJcFpnaLYaRoKJrYjcr
+	 bomR1BIymrOKX0aBs7HyOlhK5LCuiJHsK5wIBUJrst6Ga/lu0j+CwfrQ+PiAGVU+GNqVy
+	 lSi0AWIkEWbcMZBcfFj/WoVKxHmqfp1q2QFb5n1FIH2T5IUn0BB/tmmCvAfKOS+uLFu6k
+	 6OZKbXKz8rmYZgmSzm4y1A77idetPxatof5ueRW6jeBebdqwLbnSZd4OG3/XrY9Ir2tA3
+	 h6PDHXvexeFPgWN9sjEMtv33A20QBlb+gkQOXCxSZcedEOqIDaq0SnpUsVWH+jUqX5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793989302;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793989590;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=aHmhjP5qG9gg2pGlj946ka5/BaStKcdztGsacXcb1m0=;
-	b=NpullDBcRBjIgFGTETnTioIJ2fFKbzY0zl8hOE2cHVmhcl6P9lisJ+q+FNI51XwLW8Cm
-	 0eu3twL0frz3iGQotEmi24Rkzi8Z7OjPdCG0mLEv7qMYSyQHJ0x4b+sHKNEGnjlT+l7w8
-	 cToJ3Vpe13CMspGShWly1yqsJhH6dNZa4353ZW5/P95tuk1Zdd8qcwjQrUNGjfyU6YoIE
-	 0JC/kNxJwWTywe2GUKq2mTPt+eR+La4/yjHKdbSrFwGjuYGorN9AAIylQ0iLN6Zbe9SOy
-	 vqlkHi1vDSt2W3x6jLL+84+ydv7mnGDqr7kVFPIqLY5jU2n0vppJx8xUJE01Lo43CeQ==
+	bh=S+cRGxJUS6rBJ/+MgkkC63fs9wH+nic0cCeFUOm7ZhI=;
+	b=psNfbg6DvwbPsKXmaVlTG5+FM39Q05mmvz5INF2Kv62UWHDBrTUBXAEVVFF/vOu2afxd
+	 DE/F8jetYQUrrvtNVEhCVdbN2xr/RgPl7FgbLy6g97s5/cdd9OrYWHd35Ga1HhZDtbbSU
+	 2vRNURIL8HHn2X2XF43IO8vKW1eiyZP3mYYslobAftSs3T/4jPEVo4Uq5+sfQb4i58to/
+	 +ECkFg2c0f5sUIDs4r1w5K+nA/F0z/2Lcs86weJbXZupn9B7XNiqKO/c9WaQWwQsWvj1T
+	 m+OYScda+ZHjq6tZq769WpxuApt/PaXJDugP3LOWjjKIMtZoMWn4yvX4wYFOys85ouw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8Bf9tdx;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OJi9muhK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D555606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA4E606A326
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8Bf9tdx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C480E1F0089F;
-	Fri,  6 Nov 2026 18:21:41 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OJi9muhK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C13961F0089F;
+	Fri,  6 Nov 2026 18:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793989302;
-	bh=aHmhjP5qG9gg2pGlj946ka5/BaStKcdztGsacXcb1m0=;
+	s=k20260515; t=1793989589;
+	bh=S+cRGxJUS6rBJ/+MgkkC63fs9wH+nic0cCeFUOm7ZhI=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=a8Bf9tdxAmOAKYAMkm2YqMAiobfapowQAglH9vuEyt8HK0OsU6ZIy/pryNytc+Wqy
-	 7HXrLMeM2F9cC9wF94V0wYuCtkBoKg5i/r9wYiXVq+EnD4w+d0GvEP/Y6Jq5PUDIIj
-	 iivbbz+ha1Q2S2L9OaoyumfZ9IFZsNjJDvd54T1i8FBi9Ddo6lww7PVJzXHEpxKY7D
-	 Bc7nRPjplgtvQhEqeMuUgE7cvzARfVkAsXi4j/urnwD3bh9x6m1F8AC6SQNEBc9Sgq
-	 /QfYtdwWoAEMUVSJLe6OEEjzRAXoP8fuJjIcdGwIEAfQy1ECEBVMQnevkKiYhPZkhR
-	 oSxcsIlEQ1tqQ==
-Message-ID: <sashiko-outbox-202014@kernel.org>
+	b=OJi9muhK6W+qP5zNhnmVOvOFVsY10QQF/5d9iikNAVhEgq8dY+tknhHg8sngmbJts
+	 tz1QV6ZOpH/T2HC9iCM6E0hM4MdQsTlqCQJjz886E3E9B11RyA9FpwDyPRIkAvZRe+
+	 CaciWWYPjyRePgJx8/E9+rLSAa5HHNygCi12zyNyXoxsJsjOth9Mp0Xva0oBBEoGbl
+	 Z52gj6wbBggJ0Clt28w283Uwaeu1z3mHRCzklj6Uq+tppqybu++Boni69S9kbP+gxr
+	 i/WYMu8aNbKykodVGse5fm5TRLiol5yzXHrj7mPakkSgJPqgBXCkK8xqQrw7aXxPBS
+	 FY9EivASixtYw==
+Message-ID: <sashiko-outbox-202026@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 02/21] tracing/remotes: Release tracefs,eventfs on
- registration failure
+Subject: Re: [PATCH v8 08/21] tracing/remotes: Add dmesg tracefs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261106180657.2460376-3-vdonnefort@google.com>
+In-Reply-To: <20261106180657.2460376-9-vdonnefort@google.com>
 References: <20261106180657.2460376-1-vdonnefort@google.com>
- <20261106180657.2460376-3-vdonnefort@google.com>
+ <20261106180657.2460376-9-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 18:21:41 +0000
+Date: Fri, 06 Nov 2026 18:26:29 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,98 +59,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] tracing/remotes: NULL deref in trace_remote_init_eventfs()
-  under lockdown
-- [Low] tracing/remotes: missing Fixes trailers for
-  trace_remote_register() leaks
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] tracing: trace_remote_do_dmesg() stalls iterator when
+  !CONFIG_PRINTK
 --
 
-commit 02468907e3da178a9b587aedf4931ee736d0fcda
+commit 8ec4000ae15e5140e201a48a2cd1db29b0828760
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-> tracing/remotes: Release tracefs,eventfs on registration failure
->
-> In trace_remote_register(), if registration of events or the init
-> callback fails, the created tracefs and eventfs directories are leaked.
->
-> Release the entire eventfs and tracefs hierarchy on trace_remote
-> registration failure.
->
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+tracing/remotes: Add dmesg tracefs file
 
-[Severity: Low]
-This fixes resource leaks on the trace_remote_register() error paths.
-Should it include Fixes: tags for the commits that introduced them:
-
-  Fixes: 072529158e60 ("tracing: Add events to trace remotes")
-  Fixes: bf2ba0f8ca1a ("tracing: Add init callback to trace remotes")
+This commit adds a dmesg tracefs file to trace remotes that redirects
+remote trace events to dmesg when enabled.
 
 > diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index e8cbbd01964df..10091ff9d42ab 100644
+> index 08a89b7315c3c..3dbb4912dbd6d 100644
 > --- a/kernel/trace/trace_remote.c
 > +++ b/kernel/trace/trace_remote.c
 
 [ ... ]
 
-> @@ -1374,35 +1395,37 @@ static int trace_remote_init_eventfs(const char *=
-remote_name, struct trace_remot
->  			.callback	=3D remote_event_callback,
->  		}
->  	};
-> -	bool eventfs_create =3D false;
-> +	struct eventfs_inode *eventfs_root, *eventfs_subdir, *e;
+> @@ -883,6 +909,87 @@ static const struct file_operations trace_fops =3D {
+>  	.release	=3D trace_release,
+>  };
 > =20
-> -	if (!eventfs) {
-> -		eventfs =3D eventfs_create_events_dir("events", remote->dentry, dir_en=
-tries,
-> -						    ARRAY_SIZE(dir_entries), remote);
-> -		if (IS_ERR(eventfs))
-> -			return PTR_ERR(eventfs);
-> +	eventfs_root =3D remote->eventfs_root;
-> +	eventfs_subdir =3D remote->eventfs_subdir;
-> +	if (!eventfs_root) {
-> +		eventfs_root =3D eventfs_create_events_dir("events", remote->dentry, d=
-ir_entries,
-> +							 ARRAY_SIZE(dir_entries), remote);
-> +		if (IS_ERR(eventfs_root))
-> +			return PTR_ERR(eventfs_root);
-> =20
->  		/*
->  		 * Create similar hierarchy as local events even if a single system is=
- supported at
->  		 * the moment
->  		 */
-> -		eventfs =3D eventfs_create_dir(remote_name, eventfs, NULL, 0, NULL);
-> -		if (IS_ERR(eventfs))
-> -			return PTR_ERR(eventfs);
-> -
-> -		remote->eventfs =3D eventfs;
-> -		eventfs_create =3D true;
-> +		eventfs_subdir =3D eventfs_create_dir(remote_name, eventfs_root, NULL,=
- 0, NULL);
-> +		if (IS_ERR(eventfs_subdir)) {
-> +			eventfs_remove_events_dir(eventfs_root);
-> +			return PTR_ERR(eventfs_subdir);
-> +		}
->  	}
+> +static bool trace_remote_do_dmesg(struct trace_remote *remote)
+> +{
+> +	struct trace_remote_iterator *iter =3D smp_load_acquire(&remote->dmesg);
+> +	unsigned int max_events =3D 1000;
+> +
+> +	if (!iter)
+> +		return false;
+> +
+> +	trace_remote_iter_read_start(iter);
+> +
+> +	while (trace_remote_iter_read_event(iter)) {
+> +		trace_seq_init(&iter->seq);
+> +
+> +		trace_remote_iter_print_event(iter);
+> +		trace_seq_putc(&iter->seq, 0);
+> +		if (!pr_info("%s", seq_buf_str(&iter->seq.seq)))
+> +			break;
+> +
+> +		trace_remote_iter_move(iter);
 
-[Severity: Medium]
-Can this dereference a NULL eventfs_root in eventfs_remove_events_dir() if
-kernel lockdown becomes active between trace_remote_init_tracefs() and
-trace_remote_init_eventfs()?
+[Severity: Low]
+Does this stall the iterator when CONFIG_PRINTK is disabled?
 
-When security_locked_down(LOCKDOWN_TRACEFS) is true,
-eventfs_create_events_dir() returns NULL rather than an ERR_PTR.
-IS_ERR(eventfs_root) does not catch NULL, so eventfs_create_dir() is called
-with a NULL parent and returns ERR_PTR(-EINVAL).  The new cleanup path then
-passes eventfs_root =3D=3D NULL to eventfs_remove_events_dir(), which
-unconditionally dereferences it in get_root_inode().
-
-Checking IS_ERR_OR_NULL(eventfs_root) or !eventfs_root after
-eventfs_create_events_dir() would avoid this regression.
+With !CONFIG_PRINTK, the _printk() stub returns 0, so the loop breaks
+before trace_remote_iter_move() consumes the peeked event.  Enabling the
+dmesg file then keeps poll_work running and pins the remote trace buffer
+open while repeatedly peeking the same first event without making progress.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106180657.2460=
-376-1-vdonnefort@google.com?part=3D2
+376-1-vdonnefort@google.com?part=3D8
