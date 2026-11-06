@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793997459;
-	b=jpGMm54FPQRkS74L6CYCVcKkIgqaq4iOuwnhA94fqvqbHtirVrQS/Z/wBQTnpwI3JhCF
-	 sHiveJXT3Z/eeQGy1Sop3pKzh+pgxvEyKT1Os3u3a3cvZ1M4z7T9h6hZ5rqbRPy3vTGhK
-	 J56WfdC72LFrGQk0y8leo8Mcx87G1B0f7sXPiJeMWDueLSQzgLILtyKISIqkbc5jErot9
-	 voGm9K6bb4MJmu75BHM6OWSeHJ3kwShmcDxsxq6Pck+jtZvE8A/dOSUJJY4Gejl0u1hhm
-	 594EAIoOxunZtr2BhPZ7XMb8vqvN04OWUpq0Zvo2kkj//OkKKVxwwb9YIXf0jX2r0EQ==
+	t=1793997462;
+	b=qkmR7kBYO6kYhf7Nl55MmLcLmuzYfoZh5CPnGl+oiIQfKJlWR7nCO5DaYbCjVCDG+kyn
+	 LO0yuBZfpj8GKlKhsVOmU5lBA/dz4Nr3Tsluu+ZFGAVcIzHUmvjBIoUcOd/wns2x6PvQV
+	 CXBaSurC+QQvs98O/WtkFLQ0PVp6abBxC052kcKYVKK0g4mev5dKPqi2J0REvL4GlqErP
+	 Epx+OB9llnkUCxp5906MzPp9xjfmrG5f2P5ne0c6yXw5ZDgnsjNMUmPe2P7mUUMKrp+zM
+	 0fGaii4dWrIQIXM0cPynhP2UDvneGw2dsz2EwE1fu8MUejWfys766EG+JjwHXBLWrrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793997459;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793997462;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=BWYW9Jgrcl2gGnqyPsWBDQDSCZ0rVrf6t2LCxBUN6Ak=;
-	b=tYCFfiU7uwwg9tX4YVmJ7WzDyHxWKQomjeqN9YR6AG/Y2rct/2u6RWOE3zHWACXobjlp
-	 qam+nALyknkMSYXwsZjuBStGlgf3IAmxzDctf6glG8rAlP6zbZkeD7HTqocNAlkSk5oBS
-	 YqeDxLMhZ6ITsG1t5UFL3CfOwSe/N7M7OKBTUqnfO8j+uIYiZ0uUZIBDByTjwmrnljSPh
-	 8UamTct8/oj/EmAH2m+Ezzw9pRQrWjzKCLnJ190qaaKicM8+To0dNnZIb81ULfKeuU+PR
-	 PRALr3/okw5OmkWzVfE4xhcclKCDDl6GpvWgxi8JxY6jOh4QAR81tEyUjMZlEVdgJXg==
+	bh=hL/BUrSoards4qYdGTIOreFUsYkypEZCF+8Ircdtmg8=;
+	b=eEVyHx6vz3/PWljw5ohM326m7/qICOcVApf8dRMfH9qxHpUbMJGoeTr5QRDZNQYA9Pal
+	 Z8yLeP4WaKIfxQJg7ynRNJC1EI857NHETjMtr2oICEtIQBBOfw9zfQG/r9Ip1fFLpnaAQ
+	 QfJUx9lkYUI6C5qOFWPIDYpKqOGEo2EGBUvTc5Uq+OqgXbRUuIEPlazCa05nqEkqyrhYY
+	 Jjw0SQof6I5i2enkLKF6HNWItqbDYUzR65wxuzCxEf6flwfk9D/tqm3cYy7F7JKs8t50o
+	 5A30ZU5l/KC3wL9ALi8kYjgcg42Lhva7NdlIOEfMQ23dvKfrg0v7g6cNkCZCo4CjG4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP4yg95p;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lo2URpio;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10BF606A326
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 20:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92A0606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 20:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP4yg95p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65201F0089F;
-	Fri,  6 Nov 2026 20:37:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lo2URpio
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F47B1F008A1;
+	Fri,  6 Nov 2026 20:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793997458;
-	bh=BWYW9Jgrcl2gGnqyPsWBDQDSCZ0rVrf6t2LCxBUN6Ak=;
+	s=k20260515; t=1793997461;
+	bh=hL/BUrSoards4qYdGTIOreFUsYkypEZCF+8Ircdtmg8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NP4yg95pp77J9I3+9dIx6Id5Ggm8gNQIz2izKKVMHv0vw7kDx8VIfyKmqJHnmsCug
-	 hBZ5jehsIN4zS1HxdMHTb2p08EmTIKk6z5HQjqEcu8vrBe6xOX1Cp5sD+z2AER2fTZ
-	 Cm8aOaSbqLkt4mvsx6fnENUDZUfTfae+9fFcilrGWl3T1hFky87QuPueb+qv0P5iHW
-	 Eco9wj6XjPSK5kqya9tZKw/Y6W4JDvHVqTOAW0xuqdpFBU+Lgf0Q3bDpIxI8ZWo1ES
-	 CHrrTz8MyLffHaqT88/W/aqyuzDiephCvxHY3m/KUFs2FJikGqQ2oN2SVWF4CXZcTU
-	 oOzvxVP2TAlJg==
-Message-ID: <sashiko-outbox-202244@kernel.org>
+	b=lo2URpiocl70MKyDLTSFrmpg8KcAY76MMuNWwwcQvWOehhH5uQV0FyV4Y/FdN8Emb
+	 GAGTGMfe2w8upSY/JpFZ4wySfsDQBxcf25rVOUS5emSHbM2rS9M+eBku27OXffpEHx
+	 8HsJhOlyfokrRXi+4W9nvRRofp5kVg86OUyjYJHJj6urXwmnbHWZ0SLv0c4OGtwpQa
+	 Qje4TovyevPF63aAaIxTfYlyv7eSuaJczPGIpTrQ1oHf4R9r3I9l1uHpxiJ4Dt7r9c
+	 xBICCYM3hejhgZPSXfZCG+uIDWFpSOMMsr4BIV6BPIyysCsq//Gs9QPLwLwq8tJHNx
+	 CjD6omd884hlg==
+Message-ID: <sashiko-outbox-202248@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v24 06/10] lib: percpu_counter_tree: add lazy tree
- activation
+Subject: Re: [RFC PATCH v24 10/10] lib: add a benchmark of hierarchical
+ per-cpu counters
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
@@ -66,12 +66,12 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.o
  Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
  Prateek Nayak" <kprateek.nayak@amd.com>, "Kees Cook" <kees@kernel.org>, linux-trace-kernel@vger.kernel.org, "Jan
  Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>
-In-Reply-To: <20261105203639.1459524-7-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20261105203639.1459524-11-mathieu.desnoyers@efficios.com>
 References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
- <20261105203639.1459524-7-mathieu.desnoyers@efficios.com>
+ <20261105203639.1459524-11-mathieu.desnoyers@efficios.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 20:37:36 +0000
+Date: Fri, 06 Nov 2026 20:37:38 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,136 +83,74 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] lib: percpu_counter_tree_kunit: missing release barrier on sh.go
+- [Low] lib: missing kernel-parameters.txt entry for
+  percpu_counter_tree_bench.batch
 --
 
-commit badb1aea7bc81016992df61a32943f786fc44dcf
+commit 88946339b389754c894fb27102ddde74cdda534f
 Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-lib: percpu_counter_tree: add lazy tree activation
+lib: add a benchmark of hierarchical per-cpu counters
 
-This commit introduces lazy tree initialization and activation for
-percpu_counter_tree so counters can remain exact without allocating per-CPU
-or tree memory until activated. It also adds KUnit and userspace tests for
-lazy counter updates and concurrent activation.
+This commit adds a KUnit benchmark comparing hierarchical per-CPU counters
+against struct percpu_counter across update, lifecycle, and churn workloads.
+It also introduces the CONFIG_PERCPU_COUNTER_TREE_BENCH option and a batch
+module parameter to configure the counter batch size.
 
-> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
-nter_tree_kunit.c
-> index 5774278ea1403..156bb63de3466 100644
-> --- a/lib/tests/percpu_counter_tree_kunit.c
-> +++ b/lib/tests/percpu_counter_tree_kunit.c
-> @@ -796,6 +798,220 @@ static void hpcc_test_saturated_compare(struct kuni=
-t *test)
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index 3921177a0d243..6ab9644a4cb83 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -53,6 +53,21 @@ config PERCPU_COUNTER_TREE_KUNIT_TEST
+> =20
+>  	  When in doubt, say N.
+> =20
+> +config PERCPU_COUNTER_TREE_BENCH
+> +	tristate "Benchmark of hierarchical per-cpu counters"
+> +	depends on KUNIT && SMP
+> +	help
+> +	  This builds a KUnit benchmark comparing the hierarchical per-cpu
+> +	  counters with struct percpu_counter: update cost with all online
+> +	  CPUs updating shared and private counters, and init/destroy cost.
+> +	  It runs for a few minutes on large machines.
+> +
+> +	  The batch size and the tree shape can be changed with the
+> +	  percpu_counter_tree_bench.batch=3D and percpu_counter_tree.arity=3D
+> +	  parameters, see lib/tests/percpu_counter_tree_bench.c.
 
 [ ... ]
 
-> +static void lazy_race_fn(struct work_struct *work)
-> +{
-> +	struct lazy_race_work *w =3D container_of(work, struct lazy_race_work, =
-work);
-> +	struct lazy_race_shared *sh =3D w->sh;
-> +	long sum =3D 0;
-> +	int i;
-> +
-> +	for (i =3D 0; i < LAZY_RACE_NR_INC; i++) {
-> +		long inc =3D (long)(get_random_u32() % 65) - 32;
-> +
-> +		if (i =3D=3D LAZY_RACE_NR_FIRST) {
-> +			/* Fully ordered: the first updates are visible before the pause. */
-> +			atomic_long_add_return(sum, &sh->first_sum);
-> +			atomic_inc_return(&sh->paused);
-> +			while (!READ_ONCE(sh->go))
-> +				cond_resched();
-> +			if (!w->owner) {
-> +				mutex_lock(&sh->activate_lock);
-> +				if (percpu_counter_tree_activate_many(sh->c, 1, GFP_KERNEL) ||
-> +				    !percpu_counter_tree_active(sh->c))
-> +					atomic_inc(&sh->activate_errors);
-> +				mutex_unlock(&sh->activate_lock);
-> +			}
-> +		}
-> +		if (w->owner)
-> +			percpu_counter_tree_add_owner(sh->c, inc);
-> +		else
-> +			percpu_counter_tree_add(sh->c, inc);
-> +		sum +=3D inc;
-> +		if (!(i & 1023))
-> +			cond_resched();
-> +	}
-> +	atomic_long_add(sum, &sh->expect);
-> +	kfree(w);
-> +	complete_work();
-> +}
-> +
-> +static void hpcc_test_lazy_activation_race(struct kunit *test)
-> +{
-> +	struct percpu_counter_tree pct;
-> +	int round;
-> +
-> +	if (num_online_cpus() < 2)
-> +		kunit_skip(test, "needs at least 2 online CPUs");
-> +	for (round =3D 0; round < 4; round++) {
-> +		struct lazy_race_shared sh =3D { .c =3D &pct };
-> +		unsigned long timeout =3D jiffies + 10 * HZ;
-> +		int cpu, nr_workers =3D 0;
-> +
-> +		KUNIT_ASSERT_EQ(test, 0, percpu_counter_tree_init_many_lazy(&pct, 1, 3=
-2));
-> +		mutex_init(&sh.activate_lock);
-> +		init_kthreads();
-> +		cpus_read_lock();
-> +		for_each_online_cpu(cpu) {
-> +			struct lazy_race_work *w;
-> +
-> +			if (nr_workers > LAZY_RACE_MAX_REMOTE)
-> +				break;
-> +			w =3D kzalloc_obj(*w);
-> +			KUNIT_EXPECT_NOT_NULL(test, w);
-> +			if (!w)
-> +				break;
-> +			INIT_WORK(&w->work, lazy_race_fn);
-> +			w->sh =3D &sh;
-> +			/* The first worker is the owner, the others update remotely. */
-> +			w->owner =3D !nr_workers;
-> +			atomic_inc(&kernel_threads_to_run);
-> +			queue_work_on(cpu, hpcc_test_wq, &w->work);
-> +			nr_workers++;
-> +		}
-> +		cpus_read_unlock();
-> +		while (atomic_read(&sh.paused) < nr_workers && time_before(jiffies, ti=
-meout))
-> +			usleep_range(100, 200);
-> +		smp_mb();	/* Read the counter after the first updates of the workers. =
-*/
-> +		/* Every worker, the owner included, has updates left for after the ac=
-tivation. */
-> +		KUNIT_EXPECT_EQ(test, atomic_read(&sh.paused), nr_workers);
-> +		/* Before activation, the owner and atomic updates are exact. */
-> +		check_lazy_counter(test, &pct, atomic_long_read(&sh.first_sum));
-> +		WRITE_ONCE(sh.go, true);
+> diff --git a/lib/tests/percpu_counter_tree_bench.c b/lib/tests/percpu_cou=
+nter_tree_bench.c
+> new file mode 100644
+> index 0000000000000..e041ba8ba8c74
+> --- /dev/null
+> +++ b/lib/tests/percpu_counter_tree_bench.c
+> @@ -0,0 +1,610 @@
+
+[ ... ]
+
+> +/* Like the RSS counters by default. */
+> +static unsigned int batch =3D 32;
+> +module_param(batch, uint, 0444);
+> +MODULE_PARM_DESC(batch, "Batch size of the hierarchical counters (power =
+of 2, 2 to 128)");
 
 [Severity: Low]
-In hpcc_test_lazy_activation_race(), can a weakly ordered CPU reorder the
-relaxed WRITE_ONCE(sh.go, true) before the loads of pct.bias and
-pct.atomic_bias inside check_lazy_counter()?
+As reported by Sashiko on RFC v23 [1], lib/tests/percpu_counter_tree_bench.c
+defines the batch module parameter via module_param(batch, uint, 0444) under
+CONFIG_PERCPU_COUNTER_TREE_BENCH, and both the commit description and the
+PERCPU_COUNTER_TREE_BENCH help text in lib/Kconfig advertise setting
+percpu_counter_tree_bench.batch=3D on the kernel command line at boot along=
+side
+percpu_counter_tree.arity=3D.
 
-Before activation, pct.level0 is NULL, so
-percpu_counter_tree_precise_sum_unbiased() returns early after
-smp_load_acquire(&counter->level0) and atomic_long_read(&counter->atomic_bi=
-as)
-without issuing a barrier after reading atomic_bias and bias.
+Should percpu_counter_tree_bench.batch=3D also be documented in
+Documentation/admin-guide/kernel-parameters.txt?
 
-Once sh.go becomes true in lazy_race_fn(), the owner worker immediately cal=
-ls
-percpu_counter_tree_add_owner(sh->c, inc) without acquiring sh->activate_lo=
-ck,
-and remote workers proceed to activate and update sh->c.
-
-Should sh.go be set with smp_store_release(&sh.go, true) (or preceded by
-smp_mb()) so the pre-activation reads in check_lazy_counter() complete befo=
-re
-the paused workers resume modifying pct?
+[1] https://lore.kernel.org/r/20261102190708.1287100-11-mathieu.desnoyers@e=
+fficios.com
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105203639.1459=
-524-1-mathieu.desnoyers@efficios.com?part=3D6
+524-1-mathieu.desnoyers@efficios.com?part=3D10
