@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793936864;
-	b=rCrV2/0GZIK5uxDgUrSo9gk986WL0yTkmme35B6IojW4KaWeZL+IrGBLQbbC/A0+/8Kk
-	 JMDY5Q0aKLIKRROzrWlYEo6hnBrKUAAi/LxVzOPJIjKNEOejh1I8u9DP+K7OFr7K5daLZ
-	 eM19DynBRfwoaqnEHbq5dyAPMdxb3sK5aGYdVHm1/BUh7bcsfndKKovJhVEE1Q+xn+SL1
-	 2VCpIRXwQsV+pDNSfceFoFTNPSXTjZYTRwqULPinuWlkfBGGy/NOGHVI9C7+C1LyErrHA
-	 edF3JkUZMdXbZV+kf4St7Ff9lC829n6/jM4doY+kYQF2z7IMpi3A1XoqPYdOzlEFr3A==
+	t=1793937442;
+	b=sVXV+xe2rOKABxKGRT7GACw/aQ5cQRsMKnMThG/JASLEkUON5/5L3YDizbNIj8hC0PQj
+	 JfjsO6PPpCb2mp9H6GCMwdZj5PslkA4kXeNMrpg71Rr33QxEdEh12/IX+JThYNixyeSQP
+	 xA3751/dliMTsSfIAzqod4I+VufYJL/TlRXtryWXd4IA03R2YWeiw7VnBYHqL7riiHUjl
+	 fsnSQ/70CqImIqjpEr/NqmVIrEYZPG1z8Hsl3QzEiMZa8e7Aq0imDv/6UFaUiSZeG+q8C
+	 vYf8l5/dVS/Paq08tNnGdUUSriS6EGWRMRiZTqyG6HffpeSuart1YxY7e1KpqNRyTGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793936864;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793937442;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=7itVVRO0OrCMzanAOyJRHIm0MPtgmrlnhYWCxSa5SEs=;
-	b=sTVLnQJUhgT2dTLUvI/20XcEdPStACTt2XklfZNHYyT8DYgIru0+F5i/a+KuvZH/vWHK
-	 3mKamIWEPEwYV58jJ01hyuMz7qOle2pMSHlSH9ni3vlcKWTi2gBOKrNOknq6Wez9Miajg
-	 XTK4c0Ecjrg0fWhgpyxQMxqFKgMSF3ojtuvnRaHVneVMGSSt7/7+d67z+U+bPK911Rk+/
-	 GgjFonIONBR6i01Y6HXp6kfgPP0dLgtjARgX8MCLM1+GxC95s+VALEvN6/Go22UxspYQE
-	 AlwLKLK3zo/ZoWy4TjvDdg3+8MfbT9YXcGzoe/T/BIHtsuYgTRPHeSedvRgqlx4RgSw==
+	bh=lHXR2FH3bh5spT35/G4nG+cv25q2yTDGLvo0NNx3ZVg=;
+	b=Xe4Io2+gMxbR5JIgJS1K4n3UChebnTX2TZk6IyfAzBa1pof0S0qHI4NyfBZFLL9DC4yz
+	 FNz0fiZvd1vdsMlPCtkmS2kR21Ik8mzlNBHOFNBTvOwz9DVIKOv8Tq7WvyRKQMmZzF3IU
+	 sO/71wRz3KG9YklR6JhJJi4blwiKMMWulO77heWPyoN4dBKagfTQ7UIHBnvqRRc0AvEj9
+	 QzQc5bifjMXnNYnPedRA82GU+mOe8Ze+L8xMf5hKdwPl1XrJYj5Iz10oAynpGXsRCiNCs
+	 LAUalwnVey1i6bHz4ErDi9CVLRt+3X5nr8nuWMHfwhkarhxGvmEffci0sIsmRBexiYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SHNJYmjZ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XqiaXlxi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4078606A328
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 03:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A0C606A32F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 03:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SHNJYmjZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924FD1F008A3
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 03:47:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XqiaXlxi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15CE1F00921
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 03:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793936863;
-	bh=7itVVRO0OrCMzanAOyJRHIm0MPtgmrlnhYWCxSa5SEs=;
+	s=k20260515; t=1793937441;
+	bh=lHXR2FH3bh5spT35/G4nG+cv25q2yTDGLvo0NNx3ZVg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=SHNJYmjZARW+KMI9weZlYiailG9olXiPUIy9DhCfIwXmV7q4793PyRrLUT1E0bUGo
-	 nmmkSMDlfuESlH1L51OEthu9tEkk2dz2ml2LZ2Yor/qURFWM9SBb47kSDL7kUWgh9C
-	 KsoGQQsyq8SQ3dBpKKj2a0u8iYdYRtyHNqGxCi2IdNRzvx7Jk2ogdHgO1WRtzTr3ck
-	 pbqvm15vJgAS3L3BUo1VvUPFU4RI+LQ3b7/f020/Qst049o3V6Tx1xgJr2l3zMg1Gi
-	 d0CgtsezOi7hf/YovyD6VXycvpTFmxYdwrokEbGNW+riJ23JkFlugyHUX1hoqofhzR
-	 GMHWANQP9U7qA==
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-945ae2daa68so28239885a.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 19:47:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvByEEbDSz5UtmzGR5r2AuP/3uLyb5X/28z9UJGYR4H5pchPSBfKmpQEtyre3i/7MITIk76KHAzIECVZw3VEDL5wM2ag=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+CEfEU4KRjSugTggGlsxkz6BSEqkMPLMnWtOYbWLHPqymM9yL8
-	DK3hvNIfEIrHYSGmWMI/KO8Fkc8XXRXD7cz6+emhQq4o+t8eLhqazGE9I2E6y/8Ldl9s6TZyqVU
-	plPdiKUlLTGuLhKOXVNhCHn0cXIz7D/Y=
-X-Received: by 2002:a05:620a:6ccd:b0:945:d3ba:7d99 with SMTP id
- af79cd13be357-945f3593146mr175996585a.37.1793936862458; Thu, 05 Nov 2026
- 19:47:42 -0800 (PST)
+	b=XqiaXlxiATDzJrgw9f0OYt1TfHLb2ipTeIcKivy65nis0f6TmA/08oHIZ0R0nf5m6
+	 nUvgA0EXaiwf1XpMUGGc013GsyUxECqfq1Uh00oLL7zzVrZ//HgstfV0QrxF9mqluK
+	 NKkBvgk64ubOOcbPj23ww4CMq5VaK+O5NA3iSPWNPiVWpS/jS5m6iqdqtnQXeGv5w0
+	 y48/IZagRGHa+F1jeQ+VqNbGxtUf9G7I+pzA0zivc6NUUr/7OjAG+Y1R8Paj8q4Cin
+	 LMpizKHXpmKlbmYFDP5mLxbU6mR0aZreEhaVl2amkcHQT9fKPqzhlS/9aCSoy1O64o
+	 /7S9mxQbxAZMA==
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-93f36c18b75so12730485a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Nov 2026 19:57:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBz15+WXlL2NPCgZdpfAAFhgaxA61As77V9P6U+sWN1pI2TuK7q8JxwxWh5we182/1JHkx7WGnOUt9DbbhHAxxwXrfc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/wUAMeW0jRr+R/HJtWkgai0ARxbCstBmHuU3CxFBStNVnyiabR
+	r1KIMNj9y858W135gKk650DAkOLZj8TmNz6s5uA+Q1NbQCdfWB/dxC5X4g7u0s+fwYrTS4t2aCv
+	DBUYW2m/wsC2LTNzo47QL5Av40Bq5KhI=
+X-Received: by 2002:a05:620a:6c88:b0:939:b8d6:9b1c with SMTP id
+ af79cd13be357-945f34af2acmr198595685a.19.1793937440071; Thu, 05 Nov 2026
+ 19:57:20 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org> <20261105-late-2026-vma-flags-v1-1-0d3cd15ab75f@kernel.org>
-In-Reply-To: <20261105-late-2026-vma-flags-v1-1-0d3cd15ab75f@kernel.org>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org> <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
+In-Reply-To: <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
 From: Barry Song <baohua@kernel.org>
-Date: Fri, 6 Nov 2026 11:47:31 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4wFi9mqSsq9RFoYP8m0GbqU01he_icbP2VLPhBfQAvCOg@mail.gmail.com>
-X-Gm-Features: AclHuK8VX6mOjbrvfm7oXhssK45doLoq2eZ9cV_P4690FurSVGBQe9E3r9SjObI
-Message-ID: <CAGsJ_4wFi9mqSsq9RFoYP8m0GbqU01he_icbP2VLPhBfQAvCOg@mail.gmail.com>
-Subject: Re: [PATCH 01/13] mm/gup: convert GUP code to use vma_flags_t
+Date: Fri, 6 Nov 2026 11:57:08 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4wCd_j5or0uHwPLq0PUixcXgiFim=_d7uUhUhAuQf0nTQ@mail.gmail.com>
+X-Gm-Features: AclHuK8deEInzaZZJ26UPrq6mS-8I8VnGN9Ocbio_nvLAi7VvywQ3Ss3UdDHcfM
+Message-ID: <CAGsJ_4wCd_j5or0uHwPLq0PUixcXgiFim=_d7uUhUhAuQf0nTQ@mail.gmail.com>
+Subject: Re: [PATCH 03/13] mm/rmap: convert remaining VMA flag tests to use vma_flags_t
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
 	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
@@ -111,34 +111,50 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.o
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 6, 2026 at 5:31=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.or=
+On Fri, Nov 6, 2026 at 5:32=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.or=
 g> wrote:
 >
-> Replace use of the legacy vm_flags_t flags with vma_flags_t values
-> throughout the GUP logic, both for the MMU and nommu variants.
+> Replace the remaining uses of the legacy vm_flags_t flags in the rmap log=
+ic
+> with vma_flags_t values.
 >
 > No functional change intended.
 >
 > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
+
+LGTM,
 
 Reviewed-by: Barry Song <baohua@kernel.org>
 
-> ---
->  mm/gup.c | 45 ++++++++++++++++++++++++---------------------
->  1 file changed, 24 insertions(+), 21 deletions(-)
+>  mm/rmap.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-
-> @@ -1514,9 +1514,8 @@ static bool vma_permits_fault(struct vm_area_struct=
- *vma,
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 1131b76bbbc2..cdc97fec8586 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1196,7 +1196,7 @@ static bool page_mkclean_one(struct folio *folio, s=
+truct vm_area_struct *vma,
+>
+>  static bool invalid_mkclean_vma(struct vm_area_struct *vma, void *arg)
 >  {
->         bool write   =3D !!(fault_flags & FAULT_FLAG_WRITE);
->         bool foreign =3D !!(fault_flags & FAULT_FLAG_REMOTE);
-> -       vm_flags_t vm_flags =3D write ? VM_WRITE : VM_READ;
->
-> -       if (!(vm_flags & vma->vm_flags))
-> +       if (!vma_test(vma, write ? VMA_WRITE_BIT : VMA_READ_BIT))
+> -       if (vma->vm_flags & VM_SHARED)
+> +       if (vma_test(vma, VMA_SHARED_BIT))
 >                 return false;
-
-This also improves readability. Thanks!
-
 >
+>         return true;
+> @@ -1660,7 +1660,8 @@ void folio_add_new_anon_rmap(struct folio *folio, s=
+truct vm_area_struct *vma,
+>          * VM_DROPPABLE mappings don't swap; instead they're just dropped=
+ when
+>          * under memory pressure.
+>          */
+> -       if (!folio_test_swapbacked(folio) && !(vma->vm_flags & VM_DROPPAB=
+LE))
+> +       if (!folio_test_swapbacked(folio) &&
+> +           !vma_test_single_mask(vma, VMA_DROPPABLE))
+
+Right, VMA_DROPPABLE_BIT is not available on
+32-bit architectures, so vma_test() cannot be
+used here.
