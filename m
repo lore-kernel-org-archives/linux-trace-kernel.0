@@ -1,72 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.152.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793927159;
-	b=hQ/K7/XM8woB8dWZ45/L91SNfWYGEN9Eg87ZQA9UTpVwwwg9otlR3ZXUaV6/zJqlES06
-	 KnvUSYnrwivg5616rejs91d35BOsLkyr+WYgWe0butFd/aJxsVHtDwcNZWgoT+kHHr+4+
-	 vRAdBlRPZiGDap8RxRQHV+AnY9EnzZ2/aM/BqDrSyiSKcQZncvWES+6SnrAZmPQ48g7pQ
-	 eCQ71AqAIlvQvHVlP7pjjs72bxK7bRB1ivmnYy2dkDjn+0G+lDxOZZOlyiPMgVD/EFsRP
-	 l0m8cGNhLWrjFPLoOlGNAstHDAxE8PWE7Htiz+8BnXDCD1OULZ5F1fbt8xA59U2zR4Q==
+	t=1793928065;
+	b=0kTVj+eEdF/Mu4TwMuhFxfzIxBY+H/QBAt0i2BhQe+AA73iAwhZJymoAiMyRN8RzT8lr
+	 aY8q657c7z1A1oBZOcNxYxW4ePuZjBxabChbHPlBOWowplAHn+F8E9nALpXXlREgqY7sb
+	 tKDyCYU9oRjY6HiSSoHBFC+Lx0qUqHQqoA+nWa/JOShqjch/Xom5TP3oMMWusrUzKZc4a
+	 y7S/8LQRYGwp+jQxnm6N1IT89C9nc12mgHUTDjYELO3RmvH2gcg9N2Jtv0zjeOMJaeXif
+	 NDEIxfScS/JqVuRt96Vgw4j9wVA52s7BVwXtwD9Zsvz3B6NSmrnq8Xcg+KXafH6epkg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793927159;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Info:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=1480WziVmWzWLtrWo0QtqaZspgLV6+CWWBx6N5NDweo=;
-	b=UBwelx4l20c2p2bmCjnlTNFMijzHOd67jjPEjpDUyRG0cAMVvjYy5YU484wxND72bz1P
-	 Fy4taHNc/mHFi+NNpFKEOrYTXeSjGThjP5CbRhSBvGzBlJzI/ZQmvvP19MdlN7RmP7cAn
-	 IdR+vl2fHxa+WpS7AgDM5Di08381JNztTGzcUZuvNK3RefwqKw6hROmrC8w7URngfNmXR
-	 KDdUpmqpWurvEkfUvhjmImE+xzd713DesKTlC4Mz2/Tyf5YDiCDBI8wm59nvDQODybJfa
-	 pFoInIcEvXZBMkoOod+PV4sgHxmbcDRDS5ZayQBZ9W1cjv4ToSuAi6ET9lHk+JZiEJA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793928065;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-Id:
+	 In-Reply-To:References:X-Mailer:Mime-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=7Unoc9ykJp/GThx0lrtdBnOWr0Hmq9Ix53iTlmBSWd4=;
+	b=xfX3k9nFTBoPRQq5F6nUNmF1mjbpXXAi3Ta4C1RVmLn6RDSPqfF00kz8c7EPX1cXjmyO
+	 72KV3B+jv1GLFQTvb+1ogpFnGHDPhit+XiphdkmLceEdFjoOYHDnNVnN1loUGSLCwT3BO
+	 xcTnIpSZ9B+jUrmetS66DknLA1PKm13l5Z8H4OKZmf0G7tWbgSCkPo/g7dY4WbGOV7shh
+	 AzIzicpV0pjvV0zeDLHQ9V4x33xCc69ZkCsoEND75OfzRQkmICWarcWEN+UZv+LS+Qk5v
+	 F170PFLCG1Zc2+ygx83GsHJe1XJMszcbkp7UTCiKBa77S4wVl/gt11fTOoyR/hXt3cg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=crowdstrike.com;
-	spf=pass smtp.mailfrom=crowdstrike.com;
-	dkim=pass header.d=crowdstrike.com header.i=@crowdstrike.com header.a=rsa-sha256 header.s=default header.b=kEEnoX4I;
-	arc=none smtp.remote-ip=148.163.152.16
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+	dkim=pass header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=KMes1A9s;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2257606A31B;
-	Fri,  6 Nov 2026 01:05:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E2257606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB7A606A31B;
+	Fri,  6 Nov 2026 01:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=crowdstrike.com header.i=@crowdstrike.com header.a=rsa-sha256 header.s=default header.b=kEEnoX4I
-Received: from pps.filterd (m0354653.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A5NhIhE2129198;
-	Fri, 6 Nov 2026 01:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=default; bh=1480WziVmWzWL
-	trWo0QtqaZspgLV6+CWWBx6N5NDweo=; b=kEEnoX4IndqgxzJuGtYJxYRAR5aEo
-	nyKW1gyX3sZApF3YU3m4f4N1pL51j0PS1e6MJEz0fDaPDUFOwXRyQ0zwFYhbOy2q
-	y6Arzk2HmzGRjpmHCVT2YZDH7qItk4Bz5SpmPyw8uDukqnTpXDLwA9y7jS47yWr4
-	O7uG85gRZLBzd+5BUCeLNXX7UzkVnNtKwGchKbPBgL1zQZxvJJs6zeurwwKew0iR
-	fu+yPeJZN3hSV0uH7tUKK3kLMaWRipwP3f7p3VDgjuTRSHAZNLCmFqzA0xK4XqIw
-	tZNz/DS1h8jtszBJg5x6k2oenNzVhJPVvuzQwSOhZdonlMj174Wpc7rVA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 4hs3qmg5nu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Nov 2026 01:05:39 +0000 (GMT)
-Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.53; Fri, 6 Nov 2026 01:05:37 +0000
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-To: <bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <rostedt@goodmis.org>
-CC: <ast@kernel.org>, <daniel@iogearbox.net>, <song@kernel.org>,
-        <jolsa@kernel.org>, <mhiramat@kernel.org>, <stable@vger.kernel.org>,
-        <linux-open-source@crowdstrike.com>
-Subject: [PATCH bpf-next v2 0/2] ftrace, kprobes, bpf: mark trampoline/kprobe ftrace_ops permanent
-Date: Thu, 5 Nov 2026 20:05:33 -0500
-Message-ID: <20261106010535.2137162-1-andrey.grodzovsky@crowdstrike.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key, unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=KMes1A9s
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7618B1F0089F;
+	Fri,  6 Nov 2026 01:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1793928064;
+	bh=7Unoc9ykJp/GThx0lrtdBnOWr0Hmq9Ix53iTlmBSWd4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=KMes1A9sA4g9PG6XPVvWwq4m8NUsIhBXxh5nU/wyof25j5ItRx98EzpODxaK5nLon
+	 yTx8RPDbOgpEagV+rxz0usgLwYAgIjV6kpO9b7yJ/ecSHddtQSEjRCllr+UsPOd7EL
+	 LLtDmGNP26YX8RWu0HaDtDnY9emISukuJDELCSzE=
+Date: Thu, 5 Nov 2026 17:21:04 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Abhishek Bapat <abhishekbapat@google.com>, Suren Baghdasaryan
+ <surenb@google.com>, Hao Ge <hao.ge@linux.dev>,
+ oe-kbuild-all@lists.linux.dev, Linux Memory Management List
+ <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation
+ tracepoints
+Message-Id: <20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
+In-Reply-To: <202611052344.mDV2DB89-lkp@intel.com>
+References: <37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat@google.com>
+	<202611052344.mDV2DB89-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,70 +60,67 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH009.crowdstrike.sys (10.100.11.79) To
- 04WPEXCH006.crowdstrike.sys (10.100.11.70)
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA2MDAwMyBTYWx0ZWRfX0KZlk93YKuwF
- P80EQg9bBJN69Y+vzDNNi1SGLyaSPWYLHlpnXuyeE0Ek4VV7cXyPE/qt6XzMs6O05Q+2/tEWc0I
- m3hkX+KywR4OtpJVXwet3YG1vTWVAxPuvrwkdHLwQWNceyN+6LKiPFeKBizaAmFcfM+tIuLaOJe
- FX8znbVukGAllrlxIiIfISVL4Sbt5KSDdkldf2a0jX1FZnJVRkTliY7zGPV9HX7I67C52ngfsYb
- ovDTrQDW92idW2k38JUPxgvy7xvzKb5b92x1/kyO8XtTsP+Q9+aCm3goDPIUVscXskUDN/VC2zA
- owB0N+YJpbwVEYrMrovuFTdUmgeA2sQ++bWI9MhdTNs9Dowm6Ts/lAgfRnZopaPqavf3yIHlQeJ
- PveVTGtNOeESoAPD3jleahEdxED1ttGhHqbuoeoZEAoMAwB/KGIUSBP69ABe30lUUviXQsa2kMP
- hQWVnEYdnOQz1CKbvcw==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA2MDAwMyBTYWx0ZWRfX6apaQSpnqG9W
- wvTEwL/rdlZoZhXN4Emo/MYSwu0qGJc3bNBMrwXrANthVxXYoHv7/rLBRSbqBPNLZfC3tckmLfU
- 9NC4M/Toklo0pJR3keqtKKiRDxAietLhBG/hPEW73JU7ZrffWbGe
-X-Authority-Analysis: v=2.4 cv=JuVkP84C c=1 sm=1 tr=0 ts=6aed27e3 cx=c_pps
- a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
- a=EjBHVkixTFsA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=T2KQ53IYiC3MXPrxx8bB:22 a=GCXdLZfFv8EKBZhKOxZ5:22 a=VwQbUJbxAAAA:8
- a=pl6vuDidAAAA:8 a=pGLkceISAAAA:8 a=ksgJiKQuinou5blJ7t0A:9
-X-Proofpoint-ORIG-GUID: UrX2s4fLU8oSh_e5tl_nDV66CCf4hJgS
-X-Proofpoint-GUID: UrX2s4fLU8oSh_e5tl_nDV66CCf4hJgS
-X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11957
- signatures=596817
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- clxscore=1011 bulkscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611060003
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This fixes a long-standing issue: kernel.ftrace_enabled=0 silently
-disables BPF trampolines (fentry/fexit) and ftrace-based
-kprobes/kretprobes. The write succeeds, the hook stops firing with no
-error, and re-enabling silently restores it. Livepatch already solved
-this for itself via FTRACE_OPS_FL_PERMANENT, which refuses to disable
-ftrace while a permanent ops is registered and refuses to register
-one while ftrace is disabled [1].
+On Thu, 5 Nov 2026 23:15:33 +0800 kernel test robot <lkp@intel.com> wrote:
 
-This problem is already addressed by [2] in mainline, but for backport
-to stable Steven asked to avoid using that solution, as it was a
-user-visible behavior change rather than a bug fix. Instead he
-suggested we upstream this work and from there it goes to stable [3].
+> Hi Abhishek,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on bcc036cfa1670a64500f6d857eaa71908b79e3fb]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Abhishek-Bapat/alloc_tag-Add-trace-events-for-tracing-allocations/20261104-190336
+> base:   bcc036cfa1670a64500f6d857eaa71908b79e3fb
+> patch link:    https://lore.kernel.org/r/37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat%40google.com
+> patch subject: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation tracepoints
+> config: xtensa-randconfig-1001-20261105 (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/config)
+> compiler: xtensa-linux-gcc (GCC) 8.5.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> 
+> >> WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_trace_enabled+0x2c (section: .text.unlikely) -> initcall_level_names (section: .init.data)
 
-Changes since v1 [4]:
-  - Rebase onto latest bpf-next_base
-  - Add Acked-by from Jiri Olsa (patch 1), Masami Hiramatsu (patch 2)
-    and Steven Rostedt (both patches)
-  - Drop the selftest patch as it is irrelevant in mainline [5]
+Thanks.
 
-[1] - https://lore.kernel.org/all/20191016113316.13415-1-mbenes@suse.cz/T/#u
-[2] - https://lore.kernel.org/all/20260806153000.4184871-1-andrey.grodzovsky@crowdstrike.com/
-[3] - https://lore.kernel.org/all/20260820182015.4272b7a4@fedora/
-[4] - https://lore.kernel.org/all/20260729005959.3853865-1-andrey.grodzovsky@crowdstrike.com/
-[5] - https://lore.kernel.org/all/CAOu3gNiaCgfPDjVJrt5hLkDuw9nU8-Om50MhZaP2U--91S9N+A@mail.gmail.com/
+#syz test
 
-Andrey Grodzovsky (2):
-  bpf: mark trampoline ftrace_ops permanent
-  kprobes: mark ftrace-based kprobe ops permanent
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: alloc_tag: force inline the allocation tracing check
+Date: Thu, 05 Nov 2026 17:18:09 -0800
 
- kernel/bpf/trampoline.c | 4 ++++
- kernel/kprobes.c        | 5 +++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+alloc_tag_trace_enabled() is declared inline, but the compiler can
+still emit an out-of-line copy. Force it inline,
 
--- 
-2.34.1
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
+Cc: Abhishek Bapat <abhishekbapat@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Hao Ge <hao.ge@linux.dev>
+---
+
+ include/linux/alloc_tag.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/linux/alloc_tag.h~alloc_tag-introduce-ioctls-to-toggle-allocation-tracepoints-fix
++++ a/include/linux/alloc_tag.h
+@@ -161,7 +161,7 @@ static inline bool alloc_tag_is_traced(c
+ 	return !!(atomic_read(&tag->ct.flags) & CODETAG_FLAG_TRACE_ON);
+ }
+ 
+-static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
++static __always_inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
+ {
+ 	if (static_branch_unlikely(&alloc_tag_trace_key))
+ 		return tag && alloc_tag_is_traced(tag);
+_
 
