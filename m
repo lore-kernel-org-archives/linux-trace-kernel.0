@@ -1,45 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793955003;
-	b=5EVTh+hqLQt6WmYygJhS4WhRtnfUp749lhNkr8PB+bh9/mFSmKCgTLc59V+8gsbDEkAB
-	 39N0q5/v7D5fzxr9rUR/bF30qVaMA7SHdBSDM+2mG7u3xEknKQbZ1vYC+u9tOnGECAk5j
-	 /QOSm6z/4uMMhxajyhK8FyroFonPBJuhZGtHK6cZHQNN4kIqinMffeH9KeQZvXmibENKV
-	 p7kbteOGnDMcV69rOtN9kw4e+rPSI3cgrrnwFfIiifoG0CTCf26uZBx8lLRsrJeK5E5vV
-	 jZzNlJ7mNgCVPsu4kToGd083RShYBj8eqt4qF5QN+31aUXwTIhnh7hwyIRa24Z39EuA==
+	t=1793955072;
+	b=3YI3pQ+Veamc1AOZdMCFFglyYeLaq7fM1Cjc63nAwR6dkBEiEMGWRW40xTl3rfo3T8Ss
+	 iVKs9RVIcYsQsgtij9U9FP/5zlmnt+N3rBfpctMCAFC5nOOezoqB7EunB8z1ddkKPn1EI
+	 oWNJa3pkUS+34vpxlUp7BkHlMUutiYQVss7W0w/IKFLvrkLyzeLnIi/AKvqKPRTlQJiqd
+	 22LT5NatCy2U92vDY8QvY+npSW0L4FqkMj65KJHyQ2CYmxPGFZJSL1PxnHVKpsitR0qED
+	 QkF0ILMBcHcPafPTkodyTP1spaZ16d9FFZ6oYs/Pp6OjLGnNZ1wOPtz2c7CMc8bClug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793955003;
-	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
-	 In-Reply-To:References:Subject:From:To:Cc:Date;
-	bh=SdF3Rp3aXseTSt7FOhdZEwPXaenKJclgaNBdiWfNt5U=;
-	b=qvrJzTZZTGSynD0/9eDesFyV3+XirR38DSmMh9NhZenWFD+NYvbi6CW5/haLGsCdggrV
-	 2DDn1Ky5EuL3BPQqrMqPwPWrmhv/e+V/MD9cnVFyDNZV6De4HKQVMaFmlqiVGgqFEVC+h
-	 BBu3AnIILQWRYmS005kXbNlRjV7FqE4IbZEpfNnIhlzfXkZFWx1zeID70dtxyG5K6WM/n
-	 eGUAAoOtgypVl6fxrwnnCuBuEUiJf0NvF6UlH6EDeirQmCVfZaKmbQWhKUAFBnA1wxeay
-	 HqMyFY4ZG90UJSYlg/gEEFyQfunIdhwKvOPJguRkauyix+LT+np9uqr9V69AhgMJ9dQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793955072;
+	h=DMARC-Filter:DKIM-Signature:To:Content-Transfer-Encoding:Subject:
+	 Content-Type:X-Original-From:X-Lms-Return-Path:Cc:Date:Message-Id:
+	 In-Reply-To:X-Mailer:From:Mime-Version:References;
+	bh=uw2jcbo2K94Ipub2qP4Q99pSQbMkC01ncZoy8NZ7ZtE=;
+	b=5rz/v61oCr4fH95BmPNakpvC6z5h67zo9ZtIWLM6zr+0XqzzggD528Ffs6Vsu3sVM2GG
+	 JxEyPJVKBY05CUiboYjn/p17SKRs83ESY/O3SJndD4zYuDmYo+PB3rtL0C9gaJJGMWH87
+	 LFXOKNzvXsbA2REdh/5afDsEScCoThas6Z8VxxeXn8cFbA+ROcJqxKaqEiWHrOQA+O8HY
+	 5ofw2cXDP8amO7Wt41dlDkoRvNxShAootc0yjtfcjEdKfqoZ2oNUb4Ak3RH8ZAASS3EOf
+	 WfUUSqY8y4Axc1QPHECggIxE8wz3w684X6GyDdRtZjNiP+WFCFA/zJztw5sruOWzpww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rv1daKAp;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=pMHWumRV;
+	arc=none smtp.remote-ip=209.127.231.112
+Received: from va-2-112.ptr.blmpb.com (va-2-112.ptr.blmpb.com [209.127.231.112])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E1B606A32E;
-	Fri,  6 Nov 2026 08:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C1C606A32F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 08:51:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34C1C606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rv1daKAp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C18A1F0089F;
-	Fri,  6 Nov 2026 08:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793955003;
-	bh=SdF3Rp3aXseTSt7FOhdZEwPXaenKJclgaNBdiWfNt5U=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=Rv1daKApPZsdy9p1MlRmXzwhKibB2xD8VaT/OpYZnlacG+jl0nEQ0gEmN+zeytTcG
-	 CD/KxGsG2A4chKOxahUbbr1vQwpvOf7OJo2L6Ig3JVTtWqkufmJNb6X8NxqF2ERut7
-	 N95K0Rju33TmZZ51i2IXNDJXZHsLvRG1FJ0lfZOTlqKj3fKKWdAMveS2GbLQqvfZPD
-	 3zE63W5EZmFkOJns0gdqXyu+Se/qis+aOLsBvdhB4J/ULoSCpmU3tRU+2/RUcDCMjQ
-	 zLat+wKlQjj+33KDQjdNfMq6BeY+Qsd5+T/nzoc7N8Ok9+ZN839+nGFubyeNv9oAEX
-	 BtCZVQtsOXcEQ==
-Content-Type: multipart/mixed; boundary="===============0514556948363618847=="
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=pMHWumRV
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1793955066; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=uw2jcbo2K94Ipub2qP4Q99pSQbMkC01ncZoy8NZ7ZtE=;
+ b=pMHWumRVhWl4GHAnN6yT80KLFBGpb6m22a8eJbNtT5sdmnpKL3wWxYDoQDwXyY2A2+0LcV
+ 63jD/uHcCGmMI9Wa3pq/gm6tAVjluNzHAZAGagXngnSq4e2mzmwCcdVIzJYUPpXsTI+LXH
+ t5lCCWMSrzMmMn5zfzRJmOmi3DmziRYoNh5iyMQ3o7zYTOjs2+lEDn/PTVz93jNcoNkvHC
+ NlhCVjk+KMYjvyFCZsatD7P5zGEQdiuE8037hSvXfT0Hv7WeB1fgRujUWHhmDEzX+Ior6C
+ QO545QQW2zxsRpJdCLRPsUIe89BUA2FFUOx1hY2bA3yCRdS5sBbSBPoWVVps8A==
+To: <nhuhuan@google.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC PATCH v3 0/3] mm: use non-temporal stores for demotion
+Content-Type: text/plain; charset=UTF-8
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+X-Lms-Return-Path: <lba+26aed94f7+7c0e03+vger.kernel.org+lizhe.67@bytedance.com>
+Cc: <Liam.Howlett@oracle.com>, <akpm@linux-foundation.org>, 
+	<alirad.malek@zptcorp.com>, <anna@kernel.org>, <apopple@nvidia.com>, 
+	<bharata@amd.com>, <bp@alien8.de>, <byungchul@sk.com>, 
+	<dave.hansen@linux.intel.com>, <dave@stgolabs.net>, <david@kernel.org>, 
+	<dimitrios.palyvos@zptcorp.com>, <fvdl@google.com>, <gourry@gourry.net>, 
+	<hannes@cmpxchg.org>, <hpa@zytor.com>, <jackmanb@google.com>, 
+	<jic23@kernel.org>, <joshua.hahnjy@gmail.com>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<linux-nfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>, 
+	<ljs@kernel.org>, <mathieu.desnoyers@efficios.com>, 
+	<matthew.brost@intel.com>, <mhiramat@kernel.org>, <mhocko@suse.com>, 
+	<mingo@redhat.com>, <nifan.cxl@gmail.com>, <rakie.kim@sk.com>, 
+	<rientjes@google.com>, <rkodsara@amd.com>, <rostedt@goodmis.org>, 
+	<rppt@kernel.org>, <ryan.roberts@arm.com>, <shivankg@amd.com>, 
+	<sj@kernel.org>, <surenb@google.com>, <tglx@kernel.org>, 
+	<trondmy@kernel.org>, <vbabka@kernel.org>, <weixugc@google.com>, 
+	<x86@kernel.org>, <xuezhengchu@huawei.com>, 
+	<yiannis.nikolakop@gmail.com>, <yiannis@zptcorp.com>, 
+	<ying.huang@linux.alibaba.com>, <ziy@nvidia.com>
+Date: Fri,  6 Nov 2026 16:50:19 +0800
+Message-Id: <20261106085019.90487-1-lizhe.67@bytedance.com>
+In-Reply-To: <20261103223025.2482227-1-nhuhuan@google.com>
+X-Mailer: git-send-email 2.45.2
+From: "Li Zhe" <lizhe.67@bytedance.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -48,99 +81,29 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Message-Id: <b7b3f0926c35e8192180326438de9b6c119125a50ffb23b8d5754f31f47a999c@mail.kernel.org>
-In-Reply-To: <20261106080746.661431-1-yangfeng59949@163.com>
-References: <20261106080746.661431-1-yangfeng59949@163.com>
-Subject: Re: [PATCH bpf-next v5 1/2] bpf: Add sleepable version of bpf_get_stack in raw_tp_prog_func_proto and tp_prog_func_proto
-From: bot+bpf-ci@kernel.org
-To: yangfeng59949@163.com,song@kernel.org,jolsa@kernel.org,ihor.solodrai@linux.dev,kpsingh@kernel.org,matt@bobrowski.net,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-kselftest@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Fri,  6 Nov 2026 08:50:02 +0000 (UTC)
+Mime-Version: 1.0
+References: <20261103223025.2482227-1-nhuhuan@google.com>
 
---===============0514556948363618847==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Tue, 3 Nov 2026 14:30:22 -0800, Huan Nguyen wrote:
 
-> bpf: Add sleepable version of bpf_get_stack in raw_tp_prog_func_proto and tp_prog_func_proto
+> Using non-temporal stores and prefetching on x86 bypasses CPU cache
+> allocation, protecting active workload working sets and improving
+> demotion throughput.
 
-TL;DR: Marking the new sleepable bpf_get_stack prototypes might_sleep may make
-the verifier reject sleepable programs that load today, e.g. calls inside
-rcu_read_lock regions, even without BPF_F_USER_BUILD_ID.
+Could you show some real workload numbers for this? I am wondering
+whether the reduced cache allocation and improved demotion throughput
+also translate into visible application-level benefits.
 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
+> - Memory ordering:
+>   Add a wmb() barrier at the end of folio_mc_copy_nt() to ensure weakly
+>   ordered non-temporal stores are drained before page tables are updated.
 
-[ ... ]
+I have not looked into all the details here, so I may be missing
+something. But before migration completes, there should eventually be a
+publication step that makes the new folio visible. In theory, that
+publication step should already provide the required ordering before
+userspace can observe the new folio. So I wonder whether the wmb() in
+folio_mc_copy_nt() is really needed here.
 
-> @@ -1725,7 +1774,8 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->  	case BPF_FUNC_get_stackid:
->  		return &bpf_get_stackid_proto_raw_tp;
->  	case BPF_FUNC_get_stack:
-> -		return &bpf_get_stack_proto_raw_tp;
-> +		return prog->sleepable ? &bpf_get_stack_proto_raw_tp_sleepable
-> +				       : &bpf_get_stack_proto_raw_tp;
->  	case BPF_FUNC_get_attach_cookie:
->  		return &bpf_get_attach_cookie_proto_tracing;
->  	default:
-
-Can this make sleepable programs that load today fail to load?
-
-The new prototypes set .might_sleep = true, and check_helper_call() rejects
-such a helper whenever in_sleepable_context() is false:
-
-    if (fn->might_sleep && !in_sleepable_context(env)) {
-            verbose(env, "sleepable helper %s#%d in %s\n", ...);
-            ...
-            return -EINVAL;
-    }
-
-in_sleepable_context() is false inside bpf_rcu_read_lock(),
-bpf_preempt_disable(), bpf_local_irq_save() and lock regions, and inside
-rcu callbacks such as bpf_for_each_map_elem() on hash maps and
-bpf_find_vma().
-
-Before this patch the same call resolved to bpf_get_stack_proto_raw_tp or
-bpf_get_stack_proto_tp, which do not set might_sleep and never fault.  For
-example:
-
-    SEC("lsm.s/file_open")
-    int prog(void *ctx) {
-            bpf_rcu_read_lock();
-            bpf_get_stack(ctx, buf, sizeof(buf), 0);
-            bpf_rcu_read_unlock();
-            return 0;
-    }
-
-loads today and would be rejected with "sleepable helper bpf_get_stack#67 in
-rcu_read_lock region".
-
-The call chain is bpf_lsm_func_proto() -> tracing_prog_func_proto() ->
-raw_tp_prog_func_proto().  The same applies to sleepable raw_tp,
-tracepoint, fentry/fexit/fmod_ret, fsession and iter programs.  It also
-applies to every BPF_PROG_TYPE_SYSCALL program, since check_attach_btf_id()
-forces those to be sleepable.
-
-The rejection happens even when BPF_F_USER_BUILD_ID is not passed, so the
-helper could not sleep in those calls.
-
-The commit message acknowledges this ("such programs load today") and cites
-commit 9d02927fdf4e as precedent.  That commit fixed prototypes that could
-actually sleep in non-sleepable regions, whereas here the old prototypes
-were correct.
-
-The verifier already records per-insn non-sleepable call sites in
-env->insn_aux_data[insn_idx].non_sleepable, and specialize_kfunc() uses
-that to pick bpf_arena_alloc_pages_non_sleepable().  Could the non-faulting
-implementation be selected the same way at fixup time for call sites that
-are not always sleepable, instead of rejecting them?
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/42188184517
---===============0514556948363618847==--
+Thanks,
+Zhe
