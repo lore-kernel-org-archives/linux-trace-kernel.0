@@ -1,101 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.50
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793985930;
-	b=SVHx6Qy9DWnutuBwaUQ2uBhI291ZT1tnqAficJB8wQUBMwYw1kNckNgDEtXYZV3LRrAk
-	 Q+RQrT5EVAzDVEoFMOn5gyQNpAsJjFwyTedyiUlLNMvKq1oSyMHjCm1D5BnBhON+Xk7k+
-	 KOmacn/iWcmQVT0CIxY8u0WDIocGTTAAYc9tV1sSclw0fsVw5xoFIauxaeozh10hu+C7U
-	 oXUMb3BIxndQ1FqAMgazJxDo++peitM3dvqLwq8EoELYsBrkueP7DIqPhvhynY12bo2xu
-	 Hl7Y6qgVVddrTxqcaqZO3YKdremScvNLca0Cr4m25knTmYWAj9Jhvuvus8aYmYUa4JQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793985930;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.69
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793988465;
+	b=nMCbuaJlpY88Wrnzhc2VMQ5vm9Ok+mVy8hu34MX3U3FY3Y8lohSUHJI109aklZOUnyiz
+	 PeC+Z3FHzweWpfYQyDXPidLsY9gCt9NycoMPcXt92V2Rqn4DOTZFbT99oejTJGASU+sse
+	 /jvX1R/dfsXssf5B4OUO/Y3n2ayV41Ar45CYE9RCi58y5x/30ZtU5ScdVbfGHSjRuimxI
+	 wxMiKCel6WWOlXHfreRbUgNCq3DouW7yIHBLlCkAE+jLq4rEtFCZsF56S+TwYuyNCrMYn
+	 48YqQZWAy/WPxdlH3+fl38zgrtioHDw1S1g0B79IIK7+2V4bibA1/C6QGegQkFYXIZQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793988465;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=fUrJNblI2O1hZNjcXmW6nSh+tuR5hYmiGJK5WvnJCM8=;
-	b=EGG3smyElSg3iGB1VBO7iGSn0HMN7YWvLOHvVl2HdHcDikLArlRUT/0HNHtsDRP3sUD9
-	 4a0rVii3C9+GwVnDfYNtIFP6e62wqN/RWI9+JMP8y5dIY7OKk2lcSZ8mOV/YTJemgGzxJ
-	 j/hSdkCLjJhW8v6d7B8QYECFpgyE4y5PKMmPXBM+kdsFHrCpy4YUT53gMi5q+ykBaxDMC
-	 6OUrpY69Y/QnYmF/Rr7Ra3dJE6aMCAcd7HrFWwyJke62STiV9uCXD3NmbVbpm4Kxzgq6U
-	 y5mjRl7TmwWMZL/h7/rdOVtnnZPaLMO1VZ90qURhOpE/MFAuzOFLzMN4Qf1wh6MEjkA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=V9J2B7uJaZnPBR4r78rPATYLPeUqp87tolhGzh3XV5Y=;
+	b=laaEQqg+VZTCDS0qTp4V3uyrF/0kEpSN6zr08la8802eBT40WfqGlDohNNrzvUFZlHRV
+	 UMM35l1zpoB1OS4tmm5UYvBx1s0vwkkvrnpN8xbE2CxtIoIR+beu4vrv7061LbuJsuOoE
+	 Xzlp8+NxtjWnm8hioEwna89KviBnJfs1nXEruQ/sgx0QrDl520gvaUtd82PexniLBsLQP
+	 S4C0Is03UKHRGBfbBji10dXuydqZ1eDiGn5oKCbyixtjGeDyvGWLOc0cJR9lgxqfQLZjE
+	 q81oI+XJtvllvkGXVG117C3SIrcvkhRz1GgLtBCVApJgneIado6pnbVXRfhrn0/2Qow==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="ewlCk/lT";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.50
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ATCMNNwG;
+	arc=none smtp.remote-ip=209.85.128.69
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3DE606A330
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 17:25:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C3DE606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21855606A329
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:07:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21855606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ewlCk/lT
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4b6266b5bc4so1245e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 09:25:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793985929; cv=none;
-        d=google.com; s=arc-20260327;
-        b=dbJePidWtLlApEMApD31Yi/dI5U3FG74ivDWda32xwk7y23wFieSTDvYRxGmM1sZFH
-         YLvsgJAfQodayntWkR8dg+kEaPrrIE/ysF2lDHcCKbwfPpZi9hNnsb39wqWokWKcafAB
-         qb0Z61j8E7ktm0V02sO7gAuUO+hAzCcFlR+2BUzoxW5IMZxjbpig22GYceh9qxchpvHk
-         eR0OIfvtHMr7F8SRcyXZkKMZzn609NQEekUkwuyYITbp0FVuqRt8LipAKhjKzMupe/ag
-         nzWqMcFAoec2ACdsPs9d1UVQhDnYAlIpo62GqJ4CLEoOIrmE+WkwllRqeGsOr3tNMB77
-         Z1Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=fUrJNblI2O1hZNjcXmW6nSh+tuR5hYmiGJK5WvnJCM8=;
-        fh=99AbH7kfSsqqee5ZUdOgQaoa4PANLuN5D32knYgecaM=;
-        b=ddbe/n1gA28y0OLLGSNxBk+2n2Sxg2ClGAtzpI9XRs/e8RIIiKGGDsEWPxAAg4ktjh
-         Jkzg499zWo9b3BnDsrDZTjtXXKZisxmiCx3JVO7bd6u9I/V0gkmx82FAG/EWsu//VdWb
-         ERFiMhFy8MoxPaTbs5V7I3/HJJHGmvcgCfKkf/XWSIvcuRZFUK6XlpN/3HeuCINNfHCT
-         lzgm6fmpesibYvdwBPI4sr6/y/ZuCJ2TJ6F3kgVc7IFvmaLRJgH82wAHxA4Zpss2S6o+
-         g6rEF4qx8RP7SNs5qLKoj1+u0fwZ1RN1ZY8rIiUJIkOBSsGYG5hgN5lLVG55RPeuCjK/
-         7vxg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ATCMNNwG
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a318cd95e8so7244295e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 10:07:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793985929; x=1794590729; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fUrJNblI2O1hZNjcXmW6nSh+tuR5hYmiGJK5WvnJCM8=;
-        b=ewlCk/lTPeKUbMBQjEFxdvXeSJcIPNy2WZqd3RMZR0f4utguz18d1I/25cveVMzzFo
-         RT7lseKNhSlQDjNcDMIS/DhwPwUeEMuf3p3QA2SuaR2YWynu3cJ86aMi1V+rohgW/ueU
-         wdYBRPMGl9NpfqRBybmsYTfqpJAAsq2YUA3wBescnBCrmLOck2h5FL8JtaVfjtntUhMa
-         atBGAqnYj6CPAyn1iWAem1TaZV6cbQ3Ry89bYsb3Y3ddSg87IS5+y0t3k5n/93i7MVsR
-         kOjiJQAHUQ9kOMLGGhlfbBtqgDPKlex2gLuJNJ4aUDDAFXSR7PLhJYKjThP1OZfQlk1U
-         nw6g==
+        d=google.com; s=20260707; t=1793988462; x=1794593262; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=V9J2B7uJaZnPBR4r78rPATYLPeUqp87tolhGzh3XV5Y=;
+        b=ATCMNNwGfsce7iutnocmc/UEnmNph/lus8rVFhMiN0tAxtcFYnnFNLHsi0x3TdrTMt
+         9+Xlh1dsL1hL3HtSHL1CoYfXcCaeN04OjXtKky4QFl75a/UJXvaw5xv1mRLyu74XsImF
+         1BQYs0QaztOp2bWA6zmD5RF00eIl/SazuyDu72Qode194QGe8Hhp/EMWhXyq9Gz9j2aO
+         ukkkQIpN4xOWF9uAMMSA8UtabvwAwEEQVy8Yk3dhGHX99XzJ5lb3lhFOKbdz8OvV/K+A
+         29hhQYZpMzI2H/yw7703HH87u7xJeYRHSjMdNxKFOKO5jRFwS1ZNRbesEZhg7YU+gJXi
+         SkLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793985929; x=1794590729;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1793988462; x=1794593262;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fUrJNblI2O1hZNjcXmW6nSh+tuR5hYmiGJK5WvnJCM8=;
-        b=mIzqITPcZ5SEeZZUN0ESvSczBDUh9YUwGQ34Hzhv2JeV9Bt/7HzxWUxjJ4Nkas2UBS
-         BvOBFMLK9CtwyyuC4jx+OU3VHQZa3NbB4/aJYQKKkfPIHunHu1YN0ua4PlUyBYTmnBYz
-         1qgCS2ACq/4L3a2VwxV1h/Po8lPue2O6iXlAYF2Q6C5L5v1FiST8p0106CK9stxmnN0f
-         iiEP1N5w0NIKHmZX+0vWmxkZ6Sj9OGsQvbZ03v3Ss2sVfT1/DJvWLG2bPK8wYfu6coZI
-         n1oXjuHQuGMdjYW0ANrsvayS0d2PbW0xPP28gUk7y1wstK3NS/7yPUJ3AymySDxv2MFb
-         cccA==
-X-Forwarded-Encrypted: i=1; AKwUvBy5u77Hi/55pJJVw535SlPTGsmam0LO/innZ8QFs64OklDEh/q4mcyt4a/2J2V5FDpo0S4bhnvUNKVLhSbG6UMmPcA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9sLVPyImy89jWRAc4DDO51azS+HpAWT4P9jhlUnpDnkL8PnMbF
-	eUta5zCCE1gQbS5z3S1pJ8UanpMQHYkx7h6+AQ83dM2GzyU+YEs23C347JhYs/Z1XX0CpmSjvcI
-	CwjZ02r9W6OaEA836bJSXmZNjDDgq5TA7ewGeZTE1
-X-Gm-Gg: AYBFou1tnlzROANUrqAUgPfL0pvTNCiRRqr5Zf+jZGB9goJLTwAQE7Z/8duPcgACLjG
-	KSdJaRY/HmXUHzN+/35QzQ++mzmlqbXxBe4TGj6zw2OdyX+2dSJmAqBBFa2BJTqycNg+UWQmEkZ
-	zlGOq2g2hEiJ3p0B4G8mLHqqNgybGEvOhbCGpd4K84o+4D/YULcl1rrLxuk1HVOmpuPLhSb5lD/
-	KuYX1Ms/42y7XK0dqlk6bCP7Ph1bIJrWzhDVzKXl2+gCBVxrQ/tfDS3tga8+IuAFbHBtaOuMuw9
-	Kk33RuUUG+TLr1eyS9KhJdcAkcIzuLcYZLJt+gM97X+13+KviDW6kZssjzyfK4FOD8looFQizoR
-	9FGaJvX1guzVNYpBH5cdKYJjoL2sE7hllQBie3b/qBElsX0iLzdz+nfvDyhXhB1Y0DepjY2l1+q
-	suuFK7Y+lBja+4cL1DM/xLyWpMoM1UE9Vd+IRJ6QPqdCRm
-X-Received: by 2002:a05:600d:644f:20b0:4a2:a8c:22ae with SMTP id
- 5b1f17b1804b1-4b78a315689mr14125e9.12.1793985928307; Fri, 06 Nov 2026
- 09:25:28 -0800 (PST)
+        bh=V9J2B7uJaZnPBR4r78rPATYLPeUqp87tolhGzh3XV5Y=;
+        b=GlaJ8o27E4wgKoU7mf6w5FQRrxlgmGPiiJtGHgr+Rpj2uSqbwUaJNsFeZiL2BeRG3H
+         t2v2hkrlJFBtppyJzyOBBC4sSSjdgscnmbE/SJ35x0QBSS0y5jVn0OJ63mFOvy8XLtKK
+         wtiKwCr6VcS2ZocaeeBetPUjE40A4fF0QA9EI602YJGjobKr4NYgxMZa+8jhHxowZgmX
+         PSjfBERCavK/S8IKzguY9npTyfj+fhOS5GR7Oa8fzVXhDLpCukZ9pkQJ9sSGmUN3cDTT
+         8JEOGx+qXiTZO5W+S8Fm8TF8Dz/7it7DWKJb9031hbRCyJV5ndYSbY0Nd5/3mzYnXoLg
+         sFdQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxboBIVw9ODVJPGwWFPdztFxyzmFPnzC8MfTlACpL/pCuEAaNY1xue+b6vksYocsR8BP0geSNr44hx0A+GTwl9YO28=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/d/m8ttH13ypaoPK3h5hVydzuKHyJo3TkoRXkUEpRcgMubnbdk
+	BTkkL22DvavlMM0fk4CGOnGnPhOtB9vjQ/5ijBXkUS2HuoDxkqOBxkuZtJ8Yj7jPaXylxJNJM6k
+	btcAp+az2SS7sMHzvZDjACw==
+X-Received: from wmep6.prod.google.com ([2002:a05:600c:4306:b0:4a5:7d42:bd0f])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:310f:b0:4a2:18c4:61a5 with SMTP id 5b1f17b1804b1-4b6dea69297mr54280945e9.6.1793988462339;
+ Fri, 06 Nov 2026 10:07:42 -0800 (PST)
+Date: Fri,  6 Nov 2026 18:06:36 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,89 +75,159 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261106131829.3228926-1-cui.tao@linux.dev> <20261106131829.3228926-3-cui.tao@linux.dev>
- <1e18fcfd-785d-43cc-afd6-d181bf8305eb@amd.com>
-In-Reply-To: <1e18fcfd-785d-43cc-afd6-d181bf8305eb@amd.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Fri, 6 Nov 2026 09:25:16 -0800
-X-Gm-Features: AclHuK_zmhBLd-fBLwMoqE-7QVB_DAT0nisVVyTe7VWHd67XlQDn1ECR61povKo
-Message-ID: <CABdmKX0nCB2hT+iMh=BB-nC=fUBPof8YvjvO-gtEw+zcHZgvZA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] dma-buf/udmabuf: account the page array metadata to memcg
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Tao Cui <cui.tao@linux.dev>, akpm@linux-foundation.org, dgilbert@interlog.com, 
-	mkp@kernel.org, loberman@redhat.com, jmeneghi@redhat.com, kraxel@redhat.com, 
-	vivek.kasireddy@intel.com, mst@redhat.com, jasowangio@gmail.com, 
-	eperezma@redhat.com, stefanha@redhat.com, sgarzare@redhat.com, 
-	rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org, jgg@ziepe.ca, 
-	kevin.tian@intel.com, axboe@kernel.dk, linux-mm@kvack.org, 
-	James.Bottomley@hansenpartnership.com, sumit.semwal@linaro.org, 
-	phasta@kernel.org, joro@8bytes.org, will@kernel.org, 
-	linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bobbyeshleman@meta.com, mathieu.desnoyers@efficios.com, robin.murphy@arm.com, 
-	mason@kernel.org, aesteve@redhat.com, harry@kernel.org, vbabka@suse.cz, 
-	cuitao@kylinos.cn
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
+Message-ID: <20261106180657.2460376-1-vdonnefort@google.com>
+Subject: [PATCH v8 00/21] tracing/remotes: Add printk, dump_on_panic and boot parameters
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 6, 2026 at 5:23=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
-ig@amd.com> wrote:
->
-> On 11/6/26 14:18, Tao Cui wrote:
-> > From: Tao Cui <cuitao@kylinos.cn>
-> >
-> > udmabuf pins the pages of a memfd and hands them out as a dma-buf.  The
-> > data pages keep the accounting of the memfd they were instantiated in,
-> > but the bookkeeping around them does not: the page pointer array and
-> > the pinned_folios array, both sized by the buffer page count, plus the
-> > transient folios array sized by the memfd folio count, are plain
-> > GFP_KERNEL.  A 1GB buffer costs about 4MB of uncharged SUnreclaim
-> > memory, and size_limit_mb defaults to INT_MAX.
-> >
-> > Charge the three kvmalloc allocations so the creator pays for the
-> > metadata it induces.  The system heap in the same subsystem already
-> > accounts its buffer allocation;
+This series extends the recently introduced trace remotes
+infrastructure, bringing useful features for developers:
 
-Only if the mem_accounting param is set to true. We (Android)
-currently depend on it being disabled because system heap buffers
-don't have a single owner for their entire lifetime (ownership often
-changes immediately after they are allocated), and the kernel doesn't
-have the ability to switch who is charged for the buffer memory quite
-yet. Albert is working hard on it at the moment.
+  * dump_on_panic: Dump the trace remote buffer on system panic.
+  * dmesg: Redirect remote events to dmesg.
+  * trace_remote=: Configure a trace_remote from the commandline.
+  * poll_ms: Modify the polling period.
 
-Could you update the message to note the mem_accounting param pls?
+It also brings a couple of optimisations:
 
-> > the data pages here stay with the
-> > memfd.
+  * In-header compressed length support for small events.
+  * Single work thread for remote polling.
 
-memfd / udmabuf is a little special because it uses shmem for the
-backing store, which is already tracked by memcg under all conditions
-(except hugetlb). We don't currently use udmabuf, so the lack of memcg
-charge transfer for udmabuf is not an issue. But once we get charge
-transfer working for the system heap it'd be good to follow up with
-udmabuf.
+And some misc improvements:
 
-> T.J. needs to take a look here, but I fear that this might break uAPI.
+  * Use kstrtobool where possible
+  * Free resources on remote registration failure
 
-Thanks for looping me in Christian. The buffer allocations cost
-gigabytes, but these metadata arrays are only 4MB per 1GB of buffer,
-so I don't expect charging them to break anyone. Leaving them
-uncharged is an accounting gap though, since someone could spam many
-udmabufs from the same memfd and only pay for the memfd pages once. So
-this change is ok with me.
+Changelog:
 
-> A lot of the DMA-buf resources are intentionally not charged against memc=
-g.
->
-> Regards,
-> Christian.
->
-> >
-> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+v8:
 
-With the commit message updated to mention the mem_accounting param:
-Reviewed-by: T.J. Mercier <tjmercier@google.com>
+  * Use trylock in rb_reader_lock() when panic_on_this_cpu(). (Sashiko)
+  * Drop ring_buffer_read_remote_meta_page() and use ring_buffer_capacity() in trace_remote_has_cpu().
+  * Avoid mixing __free(kfree) with goto in trace_remote_iter(). (Sashiko)
+  * Cancel and reschedule poll_work on poll_ms update. (Sashiko)
+  * Validate buf_size and use WRITE_ONCE() for poll_ms in cmdline parsing. (Sashiko)
+  * Rebase on 7.4-rc1
+
+v7 (https://lore.kernel.org/all/20260924145754.1285146-1-vdonnefort@google.com/):
+
+  * Check for printk timestamps in dmesg selftest. (Sashiko)
+  * Touch NMI watchdog in the panic dump loop. (Sashiko)
+  * Add READ_ONCE()/WRITE_ONCE() for panic_on. (Sashiko)
+  * Defer dmesg and tracing enabling after all cmdline options are parsed. (Sashiko)
+  * Guard sysrq panic trigger in dump_on_panic.tc with TRIGGER_PANIC env variable. (Sashiko)
+  * Rebase on 7.3-rc4
+
+v6 (https://lore.kernel.org/all/20260817135517.3919534-1-vdonnefort@google.com/):
+
+  * Replace WARN_ON with pr_warn for buf_size in cmdline parsing. (Sashiko)
+  * Add READ_ONCE()/WRITE_ONCE() for poll_ms (Sashiko)
+  * Add support for HAVE_64BIT_ALIGNED_ACCESS arch is set in simple_ring_buffer. (Sashiko)
+  * Add selftest tracefs file requirements, TMPDIR leak, and awk regex. (Sashiko)
+  * Rebase on 7.2
+
+v5 (https://lore.kernel.org/all/20260812161340.2417322-1-vdonnefort@google.com/):
+
+  * Use seq_buf_str() for safe, properly terminated trace_seq extraction. (Steven)
+  * Remove destructive dmesg -c from selftests and rely on timestamp matching instead. (Steven)
+  * Allow several trace_remote=XXX cmdline options.
+  * Rebase on 7.2-rc7
+
+v4 (https://lore.kernel.org/all/20260804140333.797210-1-vdonnefort@google.com/):
+
+  * Rebase on 7.2-rc6
+  * Use trace_append_boot_param() to parse cmdline options.
+  * Fix trace_remote_iterator cleanup order for non-consuming iterators
+    (Sashiko).
+
+v3 (https://lore.kernel.org/all/20260721103603.342266-1-vdonnefort@google.com/):
+
+  * Make sure dmesg and panic handlers are using null-terminated
+    trace_seq.
+  * Make struct trace_remote more compact
+  * Fix dump_on_panic test unloaded case (Sashiko)
+  * Rebase on 7.2-rc4
+
+v2 (https://lore.kernel.org/all/20260605163825.1762953-1-vdonnefort@google.com/):
+
+Sashiko had a few spot-on comments on the v1 which forced me to heavily
+re-arrange the series, so I thought it'd be alright to send a v2
+already including those changes.
+
+  * dump_on_oops -> dump_on_panic
+  * printk -> dmesg
+  * Allow to configure poll_ms
+  * Make the ring_buffer_iter functions panic-friendly
+  * Gate tracefs .open on remote registration (Sashiko)
+  * Use irqsave for reader lock (Sashiko)
+  * Fix iter locking for TRI_DMESG (Sashiko)
+  * Yield in the dmesg work (Sashiko)
+
+v1 (https://lore.kernel.org/all/20260602171146.2238998-1-vdonnefort@google.com/)
+
+Vincent Donnefort (21):
+  tracing/remotes: Gate tracefs files opening on trace remote
+    registration
+  tracing/remotes: Release tracefs,eventfs on registration failure
+  tracing/remotes: Use kstrtobool for boolean tracefs files
+  tracing/remotes: Initialise pos in trace_start()
+  tracing/remotes: Annotate remote shared fields with
+    READ_ONCE/WRITE_ONCE
+  tracing/remotes: Use a single per-remote polling work
+  tracing/simple_ring_buffer: Add support for compressed length
+  tracing/remotes: Add dmesg tracefs file
+  tracing/remotes: selftests: Add a test for the dmesg tracefs file
+  tracing/remotes: selftests: Prefix hypervisor folder
+  ring-buffer: Use irqsave for the reader lock in
+    ring_buffer_poll_remote
+  ring-buffer: Avoid reader_lock deadlock during panic
+  ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+  ring-buffer: Add kerneldoc for ring_buffer_poll_remote
+  tracing/remotes: Use ring_buffer_capacity() in trace_remote_has_cpu()
+  tracing/remotes: Add dump_on_panic tracefs file
+  tracing/remotes: selftests: Add a test for the dump_on_panic tracefs
+    file
+  tracing/remotes: Add poll_ms tracefs file
+  tracing/remotes: Add trace_remote cmdline options
+  Documentation: tracing/remotes: Add detailed tracefs layout
+  Documentation/kernel-parameters: Add trace_remote
+
+ .../admin-guide/kernel-parameters.txt         |  19 +
+ Documentation/trace/remotes.rst               |  66 +-
+ kernel/trace/ring_buffer.c                    |  48 +-
+ kernel/trace/simple_ring_buffer.c             |  23 +-
+ kernel/trace/trace_remote.c                   | 848 +++++++++++++++---
+ .../buffer_size.tc                            |   0
+ .../test.d/remotes/00hypervisor/dmesg.tc      |  11 +
+ .../remotes/00hypervisor/dump_on_panic.tc     |  11 +
+ .../{hypervisor => 00hypervisor}/hotplug.tc   |   0
+ .../{hypervisor => 00hypervisor}/reset.tc     |   0
+ .../{hypervisor => 00hypervisor}/trace.tc     |   0
+ .../trace_pipe.tc                             |   0
+ .../{hypervisor => 00hypervisor}/unloading.tc |   0
+ .../selftests/ftrace/test.d/remotes/dmesg.tc  |  86 ++
+ .../ftrace/test.d/remotes/dump_on_panic.tc    |  50 ++
+ .../selftests/ftrace/test.d/remotes/functions |   2 +
+ 16 files changed, 1018 insertions(+), 146 deletions(-)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/buffer_size.tc (100%)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/hotplug.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/reset.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace_pipe.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/unloading.tc (100%)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dmesg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.56.0.455.g6c5a503b38-goog
+
