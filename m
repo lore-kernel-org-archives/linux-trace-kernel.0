@@ -1,77 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793997462;
-	b=qkmR7kBYO6kYhf7Nl55MmLcLmuzYfoZh5CPnGl+oiIQfKJlWR7nCO5DaYbCjVCDG+kyn
-	 LO0yuBZfpj8GKlKhsVOmU5lBA/dz4Nr3Tsluu+ZFGAVcIzHUmvjBIoUcOd/wns2x6PvQV
-	 CXBaSurC+QQvs98O/WtkFLQ0PVp6abBxC052kcKYVKK0g4mev5dKPqi2J0REvL4GlqErP
-	 Epx+OB9llnkUCxp5906MzPp9xjfmrG5f2P5ne0c6yXw5ZDgnsjNMUmPe2P7mUUMKrp+zM
-	 0fGaii4dWrIQIXM0cPynhP2UDvneGw2dsz2EwE1fu8MUejWfys766EG+JjwHXBLWrrQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793997462;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hL/BUrSoards4qYdGTIOreFUsYkypEZCF+8Ircdtmg8=;
-	b=eEVyHx6vz3/PWljw5ohM326m7/qICOcVApf8dRMfH9qxHpUbMJGoeTr5QRDZNQYA9Pal
-	 Z8yLeP4WaKIfxQJg7ynRNJC1EI857NHETjMtr2oICEtIQBBOfw9zfQG/r9Ip1fFLpnaAQ
-	 QfJUx9lkYUI6C5qOFWPIDYpKqOGEo2EGBUvTc5Uq+OqgXbRUuIEPlazCa05nqEkqyrhYY
-	 Jjw0SQof6I5i2enkLKF6HNWItqbDYUzR65wxuzCxEf6flwfk9D/tqm3cYy7F7JKs8t50o
-	 5A30ZU5l/KC3wL9ALi8kYjgcg42Lhva7NdlIOEfMQ23dvKfrg0v7g6cNkCZCo4CjG4g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lo2URpio;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.169
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794003751;
+	b=PwbCG6UyytFJypuvPpXpPkIwHmc4xks0kC8ruxFmOlmPCZn0U3CE43nP1kUjtK860gVx
+	 ergeDW2C3yVTxxcEd/RcWz0YmGtdgni9tge8O5lB7Z5Vlf/8QDfNNAYZryyzVok2oMSrP
+	 U5q6zNICf6jqpwT5rfsjgUT0vmewHKmCU0c83W6neLMWdPfCEQBaj62P/iQoDBi0u90Sb
+	 +2xxlR/SQgDR3athZSSl2kTRyhsdKiBrkBtCHC+i5KqTtU5E5b1PPrQJ6FinJaxtpPXDs
+	 g8nlE5DKG19CNYG+3D4kSV2YTCbVRR3fIho5jLlOAEXh3/9yUrGjUk2v353WTkMk37Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794003751;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=FQ/cFlG3xWdEnQr8IGd7fdJaX0rgjv3jYzHWnWHzP/U=;
+	b=ToVrORvbIByedvEQTHNTAYUrkC5Ru6zd7PXyP2JXBEzlFcVlXhDW1jvrf9UBPHImAyOb
+	 hD+J3Bn71Li/en1n9+J9KAME7VzswWy8+bJntO9+V8FONpDKyyo48nCPvjPhM8fVewLjw
+	 mkY0rT7iTuN6p7VSSIpbErpeAoQDw1ME3LGJMTZbDxnI6VgrQzgKL4GcQK3oQymzcACpu
+	 n+b91cDnJ1zcKZ6qi6CSFm35n75wkQ77rLsybwIt4oNMVt2bfR4rQ6PyZnwmUyf4Bjy8n
+	 rzleMYMG45kIgclG8X+wKD9MIFKw7OKUVL5EvFNEQ/QpHg90xMp6zwEwlJEYbFr7NOQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cPyt+i3d;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.169
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92A0606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 20:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25229606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 22:22:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25229606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lo2URpio
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F47B1F008A1;
-	Fri,  6 Nov 2026 20:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793997461;
-	bh=hL/BUrSoards4qYdGTIOreFUsYkypEZCF+8Ircdtmg8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lo2URpiocl70MKyDLTSFrmpg8KcAY76MMuNWwwcQvWOehhH5uQV0FyV4Y/FdN8Emb
-	 GAGTGMfe2w8upSY/JpFZ4wySfsDQBxcf25rVOUS5emSHbM2rS9M+eBku27OXffpEHx
-	 8HsJhOlyfokrRXi+4W9nvRRofp5kVg86OUyjYJHJj6urXwmnbHWZ0SLv0c4OGtwpQa
-	 Qje4TovyevPF63aAaIxTfYlyv7eSuaJczPGIpTrQ1oHf4R9r3I9l1uHpxiJ4Dt7r9c
-	 xBICCYM3hejhgZPSXfZCG+uIDWFpSOMMsr4BIV6BPIyysCsq//Gs9QPLwLwq8tJHNx
-	 CjD6omd884hlg==
-Message-ID: <sashiko-outbox-202248@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v24 10/10] lib: add a benchmark of hierarchical
- per-cpu counters
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
- Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
- Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
- Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
- Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
- Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
- Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
- Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
- Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
- Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan Corbet" <corbet@lwn.net>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
- Prateek Nayak" <kprateek.nayak@amd.com>, "Kees Cook" <kees@kernel.org>, linux-trace-kernel@vger.kernel.org, "Jan
- Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>
-In-Reply-To: <20261105203639.1459524-11-mathieu.desnoyers@efficios.com>
-References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
- <20261105203639.1459524-11-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 20:37:38 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cPyt+i3d
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-53dbe9b8d6eso115794b6e.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 14:22:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794003750; cv=none;
+        d=google.com; s=arc-20260327;
+        b=GYlr5Uyd8X1XcynNZ/DSh2Nvp6jpfPwlC7UnNbL+MDJ9WQc/ZjErvsEc8HHCcvwlv7
+         DAKtGORUpL1EqWpLFv49klE2pfHnSatzPd178wQ2Langt+ej20E+3Xsxp/yjAzNpITPX
+         z+qULsC3T6uJoX8itRBmUjO6LFvI7pyf+1oFZUfKwdAJXDAz1+YTwFKLiYSxai6eSyH0
+         gisZ0E/xO0i4NV6bQ3ebZExZqigoEIogY6+wkYZE/z+jnUAhSOzIQNbLmcqe2zEkWurJ
+         pL9RsSIvM8G1HOd9U0MwCWlBY1JRyLCVFIoYLuysWZ/M760LpVDIPzNqd5Gcpi/xF2IN
+         qTRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=FQ/cFlG3xWdEnQr8IGd7fdJaX0rgjv3jYzHWnWHzP/U=;
+        fh=/lhUe22o91j++Z6QFyIKBJYMwFvwYOoz4T3tQeL+O2s=;
+        b=iJKWtk0LrIRatw6r9/esqMtAVWOveHYLV2nfrwt6ViIDCZUiRFOHlewZugK+YKE/tW
+         QwdL3E228P59nMjeTNGU1l1RalOJ/l6c0sjaHwnoeKXw+ZSyN46Abbztk4GNsB/YX7yk
+         wbqqUyCIT3ooQewBTe/wQvYTY8s9U0r6GZva44nvtVDb2Jb+RhQJfb0oprMCRGyMB6tV
+         GmOiTxSaBQG6sR0abqo+tfwTyQhF4RvvORFPywemYouPIvuLOazMtDktsSr40dGllyGM
+         j3i9sIvU2XVWxVMFtKdL3kEGeBFrGpv5KgWyDljmcaTL2K7PkcAjAdmmDLzMuzTmCOSK
+         kz4Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794003750; x=1794608550; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FQ/cFlG3xWdEnQr8IGd7fdJaX0rgjv3jYzHWnWHzP/U=;
+        b=cPyt+i3d95+KCeQQkOH8F2rDwgzTTfJHa/LbAjB9yasv9CzJ4zC/3OK589tpx8JtfR
+         MeA0VXlDYyh43VNR/VlvoSt6nkPIKqEFFaJVQY+/UvcaCkzf8hd3oHPbgmjkimjnS9Nm
+         1WYuMUgP5Rgy3nQLo+Jap9gUD0nQAbCZiNC3XPhFFTS2OjD60vbUFT99fK6Zi1V4aN5t
+         wNVcja6zVclHdwENvR4xakimgq1AmYbgb3znnVStoD/Y1GVMaGpvml5UQj2b7gI5yX5m
+         LNi4vDQBxiiBhLNmld01+CSNfO1DpyfkwvgspJL4lsmo+pXddu7wrLQ1Z7PFl4YhDMrl
+         fuYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794003750; x=1794608550;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=FQ/cFlG3xWdEnQr8IGd7fdJaX0rgjv3jYzHWnWHzP/U=;
+        b=fg95MbGPdK8KkAh26HwqueIfdf54fsnKFwLMcS81qPWLMOLZdE0+CpZgA9/HaOXHCX
+         CX418n2BtEy8B4dyBp793QKyiABtVAPCi01iNudVu12621IsXww/bhewdHYTTA47JtUt
+         gw2X6F6Tl4i9mrbxzJ5UQ2bUYXVbjGdXIyebuLXAyxi7v2aQeokQiyE+lada6yJ0C2rr
+         u/hpKRNE9SvCEuuj6yv32Tr1w/RA3hTdKyNjPCFNIvBmMGPuMtPJPpQam8a56tte8yO3
+         /W6WvyMLQ633orfc7+SVL6bjEg/v1ghPNohocZjsTDJSFN5XvxzzMK6z6ToZPfFHG9AS
+         0JOQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzC1OF+VEuklRKOfto1u42tVx5eeWqVNKGmlFIgh7Ul+zpcjla/+se8o7zxxR9GZQ0ACwkBUbk1rXNx9jwRC71gfPc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/niU2v8Ase60byMdstGjqIPewozN8SYacgQsLpgIn0S9lwQqY7
+	sqg+L4R2kcnMVxMZaiMjioifCEpUd99O07pyicdqtEuvSBE47PtmHoRm8UrZnM6ELVtQWxd4qic
+	PCj4rPYYO5bcp1xO0xzziKodRkYWkzy8=
+X-Gm-Gg: AYBFou3ZyWaHoXpVrGms7Pu7yEDgXQSF5C1tUTtXyMchfLFQlajxgTwJyrI3TOVd9cn
+	H+wPjoN7I06sp1SBUDwe8RYdV1EZJN8pC1vNqgRc/BUro/igGxMFNXxDe3LjgFNR6gTQDYCknvf
+	YKDZ3DLDhx6SOPymcO+0XRtM9p53vldcBECyxMBTKbdVYSRNuAdEzh42Zm3kLlzh3Z66NxvJaSb
+	3bkal/edz7vm9O+dBfbWeXrH3zFAaZ3ILVV/IbKJ+TJ98UzIz1ol3Hu/wlBlNxA8dkgFxHWw5z2
+	8YhE/r+ivHyDRnRzlj5+urZtu2UHzw4VUSZ0B0rC/S80qgx1uPbfCmLixxbiW2uaIVKi6LhLlF6
+	n8cyxcCCPCejJA9IkY7ggyEZuqXukJ1BS5vKDoB1TjGfzM1bAWFhJqmVaazKbk4gccSsojpGnaW
+	nly6BphIqeqwbD92b2nQ==
+X-Received: by 2002:a05:6808:2f0f:b0:4f5:214:fb96 with SMTP id
+ 5614622812f47-567fd5bde12mr191162b6e.42.1794003750060; Fri, 06 Nov 2026
+ 14:22:30 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -80,77 +103,20 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261004-ftrace-mod-bsearch-v2-0-c1de73e72e73@gmail.com>
+ <20261004-ftrace-mod-bsearch-v2-2-c1de73e72e73@gmail.com> <CALr3rD93RT_=w8VB6aKfuV5crbwXK4Tffq9bLD=eJBj07Tv1=A@mail.gmail.com>
+ <20261106111154.0e09925f@gandalf.local.home>
+In-Reply-To: <20261106111154.0e09925f@gandalf.local.home>
+From: Mitch Hen Chez <mitch9654@gmail.com>
+Date: Fri, 6 Nov 2026 23:22:18 +0100
+X-Gm-Features: AclHuK-7xQ6612mfqm3wxXygc4s6PKZhQY2O295ToyoiA417T-cVE2TxsGyvghM
+Message-ID: <CALr3rD-A037pOODDLMsOcFwFbQm2d=xna1sW3KMRJtnv41raYw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ftrace: Drop weak function locations of modules
+ when loading them
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] lib: missing kernel-parameters.txt entry for
-  percpu_counter_tree_bench.batch
---
-
-commit 88946339b389754c894fb27102ddde74cdda534f
-Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-
-lib: add a benchmark of hierarchical per-cpu counters
-
-This commit adds a KUnit benchmark comparing hierarchical per-CPU counters
-against struct percpu_counter across update, lifecycle, and churn workloads.
-It also introduces the CONFIG_PERCPU_COUNTER_TREE_BENCH option and a batch
-module parameter to configure the counter batch size.
-
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index 3921177a0d243..6ab9644a4cb83 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -53,6 +53,21 @@ config PERCPU_COUNTER_TREE_KUNIT_TEST
-> =20
->  	  When in doubt, say N.
-> =20
-> +config PERCPU_COUNTER_TREE_BENCH
-> +	tristate "Benchmark of hierarchical per-cpu counters"
-> +	depends on KUNIT && SMP
-> +	help
-> +	  This builds a KUnit benchmark comparing the hierarchical per-cpu
-> +	  counters with struct percpu_counter: update cost with all online
-> +	  CPUs updating shared and private counters, and init/destroy cost.
-> +	  It runs for a few minutes on large machines.
-> +
-> +	  The batch size and the tree shape can be changed with the
-> +	  percpu_counter_tree_bench.batch=3D and percpu_counter_tree.arity=3D
-> +	  parameters, see lib/tests/percpu_counter_tree_bench.c.
-
-[ ... ]
-
-> diff --git a/lib/tests/percpu_counter_tree_bench.c b/lib/tests/percpu_cou=
-nter_tree_bench.c
-> new file mode 100644
-> index 0000000000000..e041ba8ba8c74
-> --- /dev/null
-> +++ b/lib/tests/percpu_counter_tree_bench.c
-> @@ -0,0 +1,610 @@
-
-[ ... ]
-
-> +/* Like the RSS counters by default. */
-> +static unsigned int batch =3D 32;
-> +module_param(batch, uint, 0444);
-> +MODULE_PARM_DESC(batch, "Batch size of the hierarchical counters (power =
-of 2, 2 to 128)");
-
-[Severity: Low]
-As reported by Sashiko on RFC v23 [1], lib/tests/percpu_counter_tree_bench.c
-defines the batch module parameter via module_param(batch, uint, 0444) under
-CONFIG_PERCPU_COUNTER_TREE_BENCH, and both the commit description and the
-PERCPU_COUNTER_TREE_BENCH help text in lib/Kconfig advertise setting
-percpu_counter_tree_bench.batch=3D on the kernel command line at boot along=
-side
-percpu_counter_tree.arity=3D.
-
-Should percpu_counter_tree_bench.batch=3D also be documented in
-Documentation/admin-guide/kernel-parameters.txt?
-
-[1] https://lore.kernel.org/r/20261102190708.1287100-11-mathieu.desnoyers@e=
-fficios.com
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105203639.1459=
-524-1-mathieu.desnoyers@efficios.com?part=3D10
+Ah, thanks for clarifying, I appreciate it :)
