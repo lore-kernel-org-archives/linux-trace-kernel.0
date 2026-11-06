@@ -1,54 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.28
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.197.31.3
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793951597;
-	b=lS341vrSlY29KDSKHXOTUJbqlhbP7579fmtS7NNxqt4AYJmnbs5sw41yGBD0qMx+yC/K
-	 XusX91J/45R71Gq8cfNGhpzCDkycOu5O5o2qdPkJWR3uZG7y4VO1yR8NhUewe9hEy35ak
-	 ipFAaHNj3BZumukRTgC99FnUp16nQUMX/REI3ly7Bf5hz9DrSHnoOoZPMySeYYmBEwu65
-	 Zz83Wss5nragBd8jX15FAWpyP2OqlkkU3b/ypcIWAd76YfzJPhcP+7iydw61OIA5SVltu
-	 oMe1aSp1P0TNKmwIAz6DjX3870Lf4MhDGyM04wsqmJRSl5cxLjckqpUJLEc9/08JYZw==
+	t=1793952554;
+	b=zU/MPHS+PQPuS8UqDV1PdOBtyi99mfM+36o6DYvv807y56o+wQX/Zh6Z2o69QHfh4dDy
+	 tAmj+qm3P0v6/j4YYQ1JjE+e/4AwGZrUF4KtBnMIwEV8Pc1SR/rFyyCaLoI+HQswYf5IV
+	 DsC4TGA1X/5+dwEU3hWqfQ+YFhuaMau77QDAtr2NVydJUxXIa7k0zky3Ouo44rZ3/KVtW
+	 FW3xcOD25WHhqqSEFC/HbsChuveZE+gtqCWIX/DODq5bGZ1pgau1JG1UXacyVU/mxcDPP
+	 PHcAEiWT95UBdc/FRFgy4pcHGxGzsNbnw+g+PE84iLx1QIPR+T4Mf79bA8V3FE2fCqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793951597;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=nfNxFDQT6Xg6nXD5htivaWJyrQFYadRTu+IGG2oGCYk=;
-	b=jSQliTTKCZRG3pDlJn8KFCG1Yqg9yXOL3shJt0OSl0CaB13mm0rySed+w2pwIUMJ7OAS
-	 cW2bz6NYZKUZ07ADqszmp0clMIdUMzpXVsXCBsqAf51I4EQbKhHsO9/ApRYCjGGrGj6wV
-	 CpaxoA/6bEayfgHOkisZP3GEY5xAKx4gMmjH4VNSrpF11nuRjf034l9tbK18+HvTA2ssT
-	 xChtrqe/0t2DcmEqertf0bhpIQJS4s6J3rJ0s4hyo6rS5HUaAIgDqgzI4dyEXX+LIKRc0
-	 fd5IhoZZI693FAZsPH/+6d0TkISHoTU8jBf35mEEWRKXbgMhrHk/zJW3OrLNCdwUpUw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793952554;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=4B0+96Ua9JUPRUU6V7nXApJ0tB80K/PeVAZmqbV7vJI=;
+	b=21vAbv6qcGqwCccpIJNkJ0ApC2wuBikCk2yZ2HUvSNZvCgEW2I4ATio4vr3QxN4lPJ3h
+	 MxQqP6Y9O/batCxtK15qW0+t9jBgUaS1a87FokzWezEpjWJuPgCZ3pMvaytJ/FiiG2SaA
+	 Qp8RvHoMwZ+gmMNqdjsvxcEUHJNqj0/QkQAVzAuHpmyxK87j7oueU4E0/iB/1adv2WK0s
+	 XrrRGOU9CoO6pa4ER+sVZUyZAQltS231qMAiKZyP+ow+rBmPf0AGf37NICAbi5h719Uch
+	 Bta16gbsaBO8KAlU0BYElV0DdhTZ8XiOrN8QqI1nDvADY6LPfgkEpVQAArvsDHXgxvA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Vrz8qWT1;
-	arc=none smtp.remote-ip=95.215.58.28
-Received: from mta1.migadu.com (out-28.mta1.migadu.com [95.215.58.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=H6CvvIYg;
+	arc=none smtp.remote-ip=220.197.31.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97414606A328
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 07:53:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97414606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F508606A331;
+	Fri,  6 Nov 2026 08:09:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6F508606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Vrz8qWT1
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=n7/NfrBJOVijHE2gqo7g667Jx3EWyuJGPjofeyvSjCA=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793951594; v=1; x=1794556394;
- b=Vrz8qWT1P4W9M1nqC7wjtd2uGW5JAlG9erVpQzw06B9GbkT6XnYaHIpRQcPtbd4IOmUWqM4H
- DVyTGInze+DPWjDsu8AJ43BejySZ2F3e/ej9Kc9jOPYkgMN29gUnE8PKXIsR4EeJl0O0LyCjyek
- 7yhi2bihAA0XiJytIXTUi6ws=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id e8ec85b10918d5e0;
-	Fri, 06 Nov 2026 07:53:14 +0000
-X-Mizu-Trace-ID: e8ec85b10918d5e0
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <9a4323e1-a966-41fe-8268-9d6621346fea@linux.dev>
-Date: Fri, 6 Nov 2026 15:54:33 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=H6CvvIYg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=4B
+	0+96Ua9JUPRUU6V7nXApJ0tB80K/PeVAZmqbV7vJI=; b=H6CvvIYgt8gjIIm6SE
+	3AuJwyZCjX4/cCemQ4J6irtPXCNGpnMudZgC+cTfnByMiL4RjsUTNZuHtyf2eceJ
+	ySHm0VzXRul9DIZs7yP3H9RCe6Rm5ZybD6Nq/cLsMM2SPktxfTAo2jSoipJQaNLa
+	eZOx6zvo/pUgo92RiU79Nw4kY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3v47Siu1qAmURFg--.23264S2;
+	Fri, 06 Nov 2026 16:07:48 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ihor.solodrai@linux.dev,
+	kpsingh@kernel.org,
+	matt@bobrowski.net,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	martin.lau@linux.dev,
+	yonghong.song@linux.dev,
+	emil@etsalapatis.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v5 1/2] bpf: Add sleepable version of bpf_get_stack in raw_tp_prog_func_proto and tp_prog_func_proto
+Date: Fri,  6 Nov 2026 16:07:45 +0800
+Message-Id: <20261106080746.661431-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,101 +75,159 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation
- tracepoints
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Abhishek Bapat <abhishekbapat@google.com>,
- Suren Baghdasaryan <surenb@google.com>, oe-kbuild-all@lists.linux.dev,
- Linux Memory Management List <linux-mm@kvack.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat@google.com>
- <202611052344.mDV2DB89-lkp@intel.com>
- <20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
-Content-Language: en-US
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3v47Siu1qAmURFg--.23264S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gr1fKw4kKF1kZFW3uF43Awb_yoW7KFyDpF
+	9IyF1akrs5X3ySqrZxGw1qvFy5G3ykX3y8KryxC34a9r1UZr18tFy7KF4agF1rur97W342
+	v3W0qrsFkw40va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/xtbC8RXtZmrtitVdHAAA32
 
-Hi Andrew
+From: Feng Yang <yangfeng@kylinos.cn>
 
-On 2026/11/6 09:21, Andrew Morton wrote:
-> On Thu, 5 Nov 2026 23:15:33 +0800 kernel test robot <lkp@intel.com> wrote:
-> 
->> Hi Abhishek,
->>
->> kernel test robot noticed the following build warnings:
->>
->> [auto build test WARNING on bcc036cfa1670a64500f6d857eaa71908b79e3fb]
->>
->> url:    https://github.com/intel-lab-lkp/linux/commits/Abhishek-Bapat/alloc_tag-Add-trace-events-for-tracing-allocations/20261104-190336
->> base:   bcc036cfa1670a64500f6d857eaa71908b79e3fb
->> patch link:    https://lore.kernel.org/r/37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat%40google.com
->> patch subject: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation tracepoints
->> config: xtensa-randconfig-1001-20261105 (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/config)
->> compiler: xtensa-linux-gcc (GCC) 8.5.0
->> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/reproduce)
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <lkp@intel.com>
->> | Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
->>
->> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->>
->>>> WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_trace_enabled+0x2c (section: .text.unlikely) -> initcall_level_names (section: .init.data)
-> 
-> Thanks.
-> 
-> #syz test
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: alloc_tag: force inline the allocation tracing check
-> Date: Thu, 05 Nov 2026 17:18:09 -0800
-> 
-> alloc_tag_trace_enabled() is declared inline, but the compiler can
-> still emit an out-of-line copy. Force it inline,
-> 
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
-> Cc: Abhishek Bapat <abhishekbapat@google.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Hao Ge <hao.ge@linux.dev>
-> ---
-> 
->  include/linux/alloc_tag.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/include/linux/alloc_tag.h~alloc_tag-introduce-ioctls-to-toggle-allocation-tracepoints-fix
-> +++ a/include/linux/alloc_tag.h
-> @@ -161,7 +161,7 @@ static inline bool alloc_tag_is_traced(c
->  	return !!(atomic_read(&tag->ct.flags) & CODETAG_FLAG_TRACE_ON);
->  }
->  
-> -static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
-> +static __always_inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
->  {
->  	if (static_branch_unlikely(&alloc_tag_trace_key))
->  		return tag && alloc_tag_is_traced(tag);
-> _
-> 
+bpf_get_stack() has two implementations.  bpf_get_stack() passes
+may_fault == false and resolves build IDs with build_id_parse_nofault(),
+so an IP whose backing file page is not resident falls back to
+BPF_STACK_BUILD_ID_IP.  bpf_get_stack_sleepable() passes may_fault == true
+and uses build_id_parse_file(), which faults the page in and returns a real
+build ID.
 
+Only kprobe/uprobe programs are routed to the sleepable implementation
+today, so the other program types that can be sleepable keep losing
+build IDs for non-resident pages:
 
-Thanks a lot for looking at this - and for putting together a fix at all.
+ - tracing_prog_func_proto() serves BPF_TRACE_ITER, fentry/fexit/fmod_ret
+   and BPF_TRACE_RAW_TP programs, and falls back to
+   raw_tp_prog_func_proto() for BPF_FUNC_get_stack, which is also the
+   get_func_proto() of BPF_PROG_TYPE_RAW_TRACEPOINT and is reached by
+   BPF_PROG_TYPE_LSM and BPF_PROG_TYPE_SYSCALL through the default cases
+   of bpf_lsm_func_proto() and syscall_prog_func_proto().
 
-Perhaps alloc_tag_is_traced needs the same treatment as well?
+ - tp_prog_func_proto() serves BPF_PROG_TYPE_TRACEPOINT programs.
 
-Even with your patch applied, I still hit the warning, just attributed to a different symbol:
+Route them to bpf_get_stack_sleepable() as well and mark the new
+prototypes might_sleep, as
+commit 9d02927fdf4e ("bpf: Mark faultable stack helpers as sleepable")
+did for the faultable stack helper prototypes.
 
-WARNING: modpost: vmlinux: section mismatch in reference:
-alloc_tag_is_traced+0x10 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
+The verifier then rejects bpf_get_stack() from these program types
+marked sleepable whenever in_sleepable_context() is false:
+inside bpf_rcu_read_lock(), bpf_preempt_disable(), and so on. This also
+covers calls that do not pass BPF_F_USER_BUILD_ID and would not sleep;
+such programs load today. This is consistent with the existing constraints.
 
-Marking both helpers __always_inline clears the warning in my build, and it would fit what the series
-intends for the fast path anyway.
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+v5: selftest: Remove fork-related code, use getpgid. Thanks, Andrii
+Nakryiko.
 
-Thanks
-Best Regards
-Hao
+v4: Update commit messages. Test modification: limit capture to one hit, add s390 flags.
+https://lore.kernel.org/all/20261105093212.826479-1-yangfeng59949@163.com/
+
+v3: Add selftest. Update commit messages.
+https://lore.kernel.org/all/20261104083833.971911-1-yangfeng59949@163.com/
+
+v2: Move regs onto the stack.
+https://lore.kernel.org/all/20261102073714.1103088-1-yangfeng59949@163.com/
+
+v1: https://lore.kernel.org/all/20261028093548.790977-1-yangfeng59949@163.com/
+---
+ kernel/trace/bpf_trace.c | 54 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 2aec56d7f3d3..1229ee06dd71 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -84,6 +84,7 @@ static struct bpf_raw_event_map *bpf_get_raw_tracepoint_module(const char *name)
+ 
+ u64 bpf_get_stackid(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
+ u64 bpf_get_stack(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
++u64 bpf_get_stack_sleepable(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
+ 
+ static int bpf_btf_printf_prepare(struct btf_ptr *ptr, u32 btf_ptr_size,
+ 				  u64 flags, const struct btf **btf,
+@@ -1477,6 +1478,26 @@ static const struct bpf_func_proto bpf_get_stack_proto_tp = {
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_4(bpf_get_stack_tp_sleepable, void *, tp_buff, void *, buf, u32, size,
++	   u64, flags)
++{
++	struct pt_regs *regs = *(struct pt_regs **)tp_buff;
++
++	return bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
++				       (unsigned long) size, flags, 0);
++}
++
++static const struct bpf_func_proto bpf_get_stack_proto_tp_sleepable = {
++	.func		= bpf_get_stack_tp_sleepable,
++	.gpl_only	= true,
++	.might_sleep	= true,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
++	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
++	.arg4_type	= ARG_ANYTHING,
++};
++
+ static const struct bpf_func_proto *
+ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+@@ -1486,7 +1507,8 @@ tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stackid:
+ 		return &bpf_get_stackid_proto_tp;
+ 	case BPF_FUNC_get_stack:
+-		return &bpf_get_stack_proto_tp;
++		return prog->sleepable ? &bpf_get_stack_proto_tp_sleepable
++				       : &bpf_get_stack_proto_tp;
+ 	case BPF_FUNC_get_attach_cookie:
+ 		return &bpf_get_attach_cookie_proto_trace;
+ 	default:
+@@ -1716,6 +1738,33 @@ static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_4(bpf_get_stack_raw_tp_sleepable, struct bpf_raw_tracepoint_args *, args,
++	   void *, buf, u32, size, u64, flags)
++{
++	/*
++	 * Don't take a per-CPU bpf_raw_tp_regs slot here: those slots are a
++	 * LIFO nest counter and are vulnerable to slot overwrite and
++	 * corruption across sleep.  Sleepable programs never run in
++	 * IRQ/NMI context, so a local pt_regs is sufficient.
++	 */
++	struct pt_regs regs = {};
++
++	perf_fetch_caller_regs(&regs);
++	return bpf_get_stack_sleepable((unsigned long) &regs, (unsigned long) buf,
++				       (unsigned long) size, flags, 0);
++}
++
++static const struct bpf_func_proto bpf_get_stack_proto_raw_tp_sleepable = {
++	.func		= bpf_get_stack_raw_tp_sleepable,
++	.gpl_only	= true,
++	.might_sleep	= true,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_CTX,
++	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
++	.arg3_type	= ARG_MEM_SIZE_OR_ZERO,
++	.arg4_type	= ARG_ANYTHING,
++};
++
+ static const struct bpf_func_proto *
+ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+@@ -1725,7 +1774,8 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_get_stackid:
+ 		return &bpf_get_stackid_proto_raw_tp;
+ 	case BPF_FUNC_get_stack:
+-		return &bpf_get_stack_proto_raw_tp;
++		return prog->sleepable ? &bpf_get_stack_proto_raw_tp_sleepable
++				       : &bpf_get_stack_proto_raw_tp;
+ 	case BPF_FUNC_get_attach_cookie:
+ 		return &bpf_get_attach_cookie_proto_tracing;
+ 	default:
+-- 
+2.25.1
+
