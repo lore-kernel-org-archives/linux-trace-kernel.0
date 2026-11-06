@@ -1,56 +1,77 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793990038;
-	b=JyftdeUMxMqQRon7MFmUywf7JUw/8GJRpAe3ozSCk/Oa1R9apVf/liRJ8j441V24eJ4P
-	 EerVLNZxzrkk2tArb+nYqqlpxaaJV4TvOI7eCC0pSfm8g9zgL5uRjhCXfwoWcNEPCpKi9
-	 i39aKwtMxMdGnxe48Rwm8XCc1E3sIw+Afeim3/+j//0fh19sLl4KUmm+lmCLiBrYZZBBT
-	 Mi0S7dS3k4FUfi5VlJSbP2fAyT/Qhox8LdmzYMIDnGUBTOwPH7UlTJkWorprIz78S34Ey
-	 om6TqCo0PI+Sn+lO+bEwCy8xT/Wq5J9Fn7IAO++gALSEA5F6Zjk0ozWNFm4nqC+hYKA==
+	t=1793997459;
+	b=jpGMm54FPQRkS74L6CYCVcKkIgqaq4iOuwnhA94fqvqbHtirVrQS/Z/wBQTnpwI3JhCF
+	 sHiveJXT3Z/eeQGy1Sop3pKzh+pgxvEyKT1Os3u3a3cvZ1M4z7T9h6hZ5rqbRPy3vTGhK
+	 J56WfdC72LFrGQk0y8leo8Mcx87G1B0f7sXPiJeMWDueLSQzgLILtyKISIqkbc5jErot9
+	 voGm9K6bb4MJmu75BHM6OWSeHJ3kwShmcDxsxq6Pck+jtZvE8A/dOSUJJY4Gejl0u1hhm
+	 594EAIoOxunZtr2BhPZ7XMb8vqvN04OWUpq0Zvo2kkj//OkKKVxwwb9YIXf0jX2r0EQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793990038;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793997459;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bfEeDZNy9VOktRws6LkdyiANopNctBZHGNB+ub8cm50=;
-	b=2keb8uEl+VN5HDtF2kd2oPiDFhH1Zk91taNCRZ9LNE4K0iPm+2FWXGPYHanwTiUUj5J9
-	 rBneskInTkP5gUE17A722rzgh4tI26sBP9Z7a+R9/Ydr2ImXQVu0gR96WWbjnlGfC2ehT
-	 oUWN8wCkH+bzUHs/SBou7EqpRCbPzlX83g+wPOxqus7jDinOYCmuP6W7Pz+vVqTWSy/6e
-	 HMPRQHvpqMlfaj7NMem9lBPotrL/iHuP1xXXXf1J3PnJaIR7wkONODMdZHkL98COCJ/F4
-	 qcUWE4p9uYIxIChkzcvOKELDlCf8p8WNM2EjNBInJzxx9//vTh5uXrEt5/24iOvEYWw==
+	bh=BWYW9Jgrcl2gGnqyPsWBDQDSCZ0rVrf6t2LCxBUN6Ak=;
+	b=tYCFfiU7uwwg9tX4YVmJ7WzDyHxWKQomjeqN9YR6AG/Y2rct/2u6RWOE3zHWACXobjlp
+	 qam+nALyknkMSYXwsZjuBStGlgf3IAmxzDctf6glG8rAlP6zbZkeD7HTqocNAlkSk5oBS
+	 YqeDxLMhZ6ITsG1t5UFL3CfOwSe/N7M7OKBTUqnfO8j+uIYiZ0uUZIBDByTjwmrnljSPh
+	 8UamTct8/oj/EmAH2m+Ezzw9pRQrWjzKCLnJ190qaaKicM8+To0dNnZIb81ULfKeuU+PR
+	 PRALr3/okw5OmkWzVfE4xhcclKCDDl6GpvWgxi8JxY6jOh4QAR81tEyUjMZlEVdgJXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A42Y6JCg;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP4yg95p;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FBF606A337
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10BF606A326
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 20:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A42Y6JCg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C0D01F0089F;
-	Fri,  6 Nov 2026 18:33:58 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NP4yg95p
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65201F0089F;
+	Fri,  6 Nov 2026 20:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793990038;
-	bh=bfEeDZNy9VOktRws6LkdyiANopNctBZHGNB+ub8cm50=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=A42Y6JCg5PUGV4K+jLO2sFrf4IkwjaMDuLPtZBTap5ecmMLi99PNlDJaQqNYO+V/3
-	 BscEE08RIpJIJprVKSi9Ah1ubYpSxEWp0tLEa3xzGmp7CKI8hUXekcjyxZ5CErHSL4
-	 UGKMv6sVbq8T5ysK68PZJyIQz8T2wjOz2f2C71KBJw5phrsEVMpv8owQn6H9mc7Z/y
-	 AwKTNmk/5cIufc/XbmZPP/Yv3QGe7PwW8Hg+nHU3j8U93mCYiy/oo5ZlmRSWIdAtwS
-	 sirFqx8HQ7rKtp98yudTisvfWXaO3yBCihG1oYTCw4r3nwuXajP4R8i8njX92chZJZ
-	 QWJuHlL0GUNeg==
-Message-ID: <sashiko-outbox-202043@kernel.org>
+	s=k20260515; t=1793997458;
+	bh=BWYW9Jgrcl2gGnqyPsWBDQDSCZ0rVrf6t2LCxBUN6Ak=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NP4yg95pp77J9I3+9dIx6Id5Ggm8gNQIz2izKKVMHv0vw7kDx8VIfyKmqJHnmsCug
+	 hBZ5jehsIN4zS1HxdMHTb2p08EmTIKk6z5HQjqEcu8vrBe6xOX1Cp5sD+z2AER2fTZ
+	 Cm8aOaSbqLkt4mvsx6fnENUDZUfTfae+9fFcilrGWl3T1hFky87QuPueb+qv0P5iHW
+	 Eco9wj6XjPSK5kqya9tZKw/Y6W4JDvHVqTOAW0xuqdpFBU+Lgf0Q3bDpIxI8ZWo1ES
+	 CHrrTz8MyLffHaqT88/W/aqyuzDiephCvxHY3m/KUFs2FJikGqQ2oN2SVWF4CXZcTU
+	 oOzvxVP2TAlJg==
+Message-ID: <sashiko-outbox-202244@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 19/21] tracing/remotes: Add trace_remote cmdline
- options
+Subject: Re: [RFC PATCH v24 06/10] lib: percpu_counter_tree: add lazy tree
+ activation
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261106180657.2460376-20-vdonnefort@google.com>
-References: <20261106180657.2460376-1-vdonnefort@google.com>
- <20261106180657.2460376-20-vdonnefort@google.com>
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
+ Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
+ Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
+ Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
+ Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
+ Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
+ Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
+ Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
+ Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
+ Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan Corbet" <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
+ Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
+ Prateek Nayak" <kprateek.nayak@amd.com>, "Kees Cook" <kees@kernel.org>, linux-trace-kernel@vger.kernel.org, "Jan
+ Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>
+In-Reply-To: <20261105203639.1459524-7-mathieu.desnoyers@efficios.com>
+References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
+ <20261105203639.1459524-7-mathieu.desnoyers@efficios.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 18:33:57 +0000
+Date: Fri, 06 Nov 2026 20:37:36 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,47 +83,136 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] tracing/remotes: split __free() declaration in
-  trace_remote_apply_cmdline()
+- [Low] lib: percpu_counter_tree_kunit: missing release barrier on sh.go
 --
 
-commit 3674f78ef7ea9a2c747f5fd09bdd3df0f8cecb63
-Author: Vincent Donnefort <vdonnefort@google.com>
+commit badb1aea7bc81016992df61a32943f786fc44dcf
+Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-tracing/remotes: Add trace_remote cmdline options
+lib: percpu_counter_tree: add lazy tree activation
 
-This commit adds the trace_remote=3D kernel command-line option to configure
-trace remote options and enable events upon registration.
+This commit introduces lazy tree initialization and activation for
+percpu_counter_tree so counters can remain exact without allocating per-CPU
+or tree memory until activated. It also adds KUnit and userspace tests for
+lazy counter updates and concurrent activation.
 
-> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index ebfc2dd67b79c..9fa8d38caa3b8 100644
-> --- a/kernel/trace/trace_remote.c
-> +++ b/kernel/trace/trace_remote.c
+> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
+nter_tree_kunit.c
+> index 5774278ea1403..156bb63de3466 100644
+> --- a/lib/tests/percpu_counter_tree_kunit.c
+> +++ b/lib/tests/percpu_counter_tree_kunit.c
+> @@ -796,6 +798,220 @@ static void hpcc_test_saturated_compare(struct kuni=
+t *test)
 
 [ ... ]
 
-> +static void trace_remote_apply_cmdline(const char *name, struct trace_re=
-mote *remote)
+> +static void lazy_race_fn(struct work_struct *work)
 > +{
-> +	char *cmdline __free(kfree) =3D NULL;
-> +	char *events_cmdline =3D NULL;
-> +	char *opts_cmdline =3D NULL;
-> +	bool tracing_on =3D false;
-> +	bool dmesg_on =3D false;
-> +	char *curr, *next;
-> +	int ret;
+> +	struct lazy_race_work *w =3D container_of(work, struct lazy_race_work, =
+work);
+> +	struct lazy_race_shared *sh =3D w->sh;
+> +	long sum =3D 0;
+> +	int i;
 > +
-> +	if (!trace_remote_cmdline[0])
-> +		return;
+> +	for (i =3D 0; i < LAZY_RACE_NR_INC; i++) {
+> +		long inc =3D (long)(get_random_u32() % 65) - 32;
 > +
-> +	cmdline =3D kstrdup(trace_remote_cmdline, GFP_KERNEL);
+> +		if (i =3D=3D LAZY_RACE_NR_FIRST) {
+> +			/* Fully ordered: the first updates are visible before the pause. */
+> +			atomic_long_add_return(sum, &sh->first_sum);
+> +			atomic_inc_return(&sh->paused);
+> +			while (!READ_ONCE(sh->go))
+> +				cond_resched();
+> +			if (!w->owner) {
+> +				mutex_lock(&sh->activate_lock);
+> +				if (percpu_counter_tree_activate_many(sh->c, 1, GFP_KERNEL) ||
+> +				    !percpu_counter_tree_active(sh->c))
+> +					atomic_inc(&sh->activate_errors);
+> +				mutex_unlock(&sh->activate_lock);
+> +			}
+> +		}
+> +		if (w->owner)
+> +			percpu_counter_tree_add_owner(sh->c, inc);
+> +		else
+> +			percpu_counter_tree_add(sh->c, inc);
+> +		sum +=3D inc;
+> +		if (!(i & 1023))
+> +			cond_resched();
+> +	}
+> +	atomic_long_add(sum, &sh->expect);
+> +	kfree(w);
+> +	complete_work();
+> +}
+> +
+> +static void hpcc_test_lazy_activation_race(struct kunit *test)
+> +{
+> +	struct percpu_counter_tree pct;
+> +	int round;
+> +
+> +	if (num_online_cpus() < 2)
+> +		kunit_skip(test, "needs at least 2 online CPUs");
+> +	for (round =3D 0; round < 4; round++) {
+> +		struct lazy_race_shared sh =3D { .c =3D &pct };
+> +		unsigned long timeout =3D jiffies + 10 * HZ;
+> +		int cpu, nr_workers =3D 0;
+> +
+> +		KUNIT_ASSERT_EQ(test, 0, percpu_counter_tree_init_many_lazy(&pct, 1, 3=
+2));
+> +		mutex_init(&sh.activate_lock);
+> +		init_kthreads();
+> +		cpus_read_lock();
+> +		for_each_online_cpu(cpu) {
+> +			struct lazy_race_work *w;
+> +
+> +			if (nr_workers > LAZY_RACE_MAX_REMOTE)
+> +				break;
+> +			w =3D kzalloc_obj(*w);
+> +			KUNIT_EXPECT_NOT_NULL(test, w);
+> +			if (!w)
+> +				break;
+> +			INIT_WORK(&w->work, lazy_race_fn);
+> +			w->sh =3D &sh;
+> +			/* The first worker is the owner, the others update remotely. */
+> +			w->owner =3D !nr_workers;
+> +			atomic_inc(&kernel_threads_to_run);
+> +			queue_work_on(cpu, hpcc_test_wq, &w->work);
+> +			nr_workers++;
+> +		}
+> +		cpus_read_unlock();
+> +		while (atomic_read(&sh.paused) < nr_workers && time_before(jiffies, ti=
+meout))
+> +			usleep_range(100, 200);
+> +		smp_mb();	/* Read the counter after the first updates of the workers. =
+*/
+> +		/* Every worker, the owner included, has updates left for after the ac=
+tivation. */
+> +		KUNIT_EXPECT_EQ(test, atomic_read(&sh.paused), nr_workers);
+> +		/* Before activation, the owner and atomic updates are exact. */
+> +		check_lazy_counter(test, &pct, atomic_long_read(&sh.first_sum));
+> +		WRITE_ONCE(sh.go, true);
 
 [Severity: Low]
-This isn't a bug, but per the cleanup.h convention, __free() variables
-should be defined and initialized in a single statement after the
-!trace_remote_cmdline[0] check rather than declared as =3D NULL at the top
-of the function and assigned later.
+In hpcc_test_lazy_activation_race(), can a weakly ordered CPU reorder the
+relaxed WRITE_ONCE(sh.go, true) before the loads of pct.bias and
+pct.atomic_bias inside check_lazy_counter()?
+
+Before activation, pct.level0 is NULL, so
+percpu_counter_tree_precise_sum_unbiased() returns early after
+smp_load_acquire(&counter->level0) and atomic_long_read(&counter->atomic_bi=
+as)
+without issuing a barrier after reading atomic_bias and bias.
+
+Once sh.go becomes true in lazy_race_fn(), the owner worker immediately cal=
+ls
+percpu_counter_tree_add_owner(sh->c, inc) without acquiring sh->activate_lo=
+ck,
+and remote workers proceed to activate and update sh->c.
+
+Should sh.go be set with smp_store_release(&sh.go, true) (or preceded by
+smp_mb()) so the pre-activation reads in check_lazy_counter() complete befo=
+re
+the paused workers resume modifying pct?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106180657.2460=
-376-1-vdonnefort@google.com?part=3D19
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105203639.1459=
+524-1-mathieu.desnoyers@efficios.com?part=3D6
