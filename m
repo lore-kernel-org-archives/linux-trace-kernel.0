@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793988476;
-	b=ZEOkoSWaCFXHwR6i4/WzJE3cN12/iRovzR+sMpIek/YkAq7ITZcnMAnQDnIYZkPH9GiX
-	 rpVgWPyp/wNoRxSsighHEnAiNbtnb4oaKJvkX8KkcjDVtJsYFj/Ujn4m8NKJfNciKUPx2
-	 C5QLV6gQExTC389Sk9amJT81UeD5kaMOHCe7N8p2iNPCISvoOiruvhcYsux/k3GyjfTCx
-	 xDd1kjSMa0IImMhUm/JmHFrWS3flXQ46wDmFkmhax670pUmfiRKNz/UVY589AdOghsClp
-	 n6YNxRom+XtQqL2hy3dGMZSVpAUHPcw+UFekS7qF8v5/Ru0YmadKoDKDDmqcSyYCNDA==
+	t=1793988477;
+	b=c+Ws9pOHV65ImB74TOKM+klOD6YCbVEV/uGQFZVHUdZ+pZbRNsdbtFwtNF9bIMLjkisE
+	 uWA1nvevuMPeqrRpgcOn+xcmgeGJAWqYnUyMLQ3tneopSE4wpKuW4iHSXx1nAdi/HIvMa
+	 y9G+HIW0HEyGbH9fuTvZwO4seEDJGLX8mhdCn1l5OAfaW79NjUyPg0sPYE+83Ay7lM2a3
+	 w8+FU+qArzO7kDmChle0luk6CKYXU3NGGkdJq8SPJKuLqtOpbifESw2g3ELa84BEhnN6q
+	 vvAYPdiexnsr4Cqp/q9q0Xp5Cn6ZVTU87z2FnIIBt5X98eUqS7SGwpqhxGsvlDOSpfA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793988476;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793988477;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=dhTsJsvZqJnk5gOBxrG9eboMWFqOc2PMfpVCk05mF3Q=;
-	b=3RjlkGRi1xsypXu9nsGUtTFXLvF4Y3tXja1lHPcAb2Ysu91RpmBnw3b0xGElUUzA0hHZ
-	 7/ugtrxuExddZTY61dJ2vX8bFDXD3LdqdWHjRIGXwEMfufpLOLOuxodr0KAEEnd24s7CX
-	 jD+Gt49w2qUq5p3kmDsh0s/0BicMYBETgzItDWU9WjQJhq9Q1bJ7jENgGeOEtYHLSKKbL
-	 KGhqI41g5idc0gEi+JvSjv2R3VN1e/zLCPsOmAr1lEAjDuotdmHReUPWiyhJu0iWd+XvL
-	 kwSlMISW4IATsYW512iOp5txa6k4tPJVXe+o9JHCVhp4FmncRzJs+ewGY4Y4943aChA==
+	bh=IQDid1uWo3Rk9LF1eva5xEOZSHbjSCCIc2OFLDyobvc=;
+	b=KGrJ3X02Z/KRm6VIQ+1Rg6h/zYHcEWlpWi7Sc525htwKwJOxhOwbKOr5W5QTTyP2zTwq
+	 WNJC+SrXqsnMRcxm1SKkt0pwvY0pCcbUM/X8EcNLxDv+OGMGek4QUXYU/MVZCARlER+G/
+	 /JV9JT2HizqYsc6hQi3PlHWPh4Fw/ECc+x77IknJoLbaeULAYGF1zITG/TlsvRqgSy1b/
+	 8yaw5BTbk1OnTDk8zkMQzRJjILbci71vYG2MhfJLEkKTyyF+KN/+urWrUvp3i8xeaEzkz
+	 J/KnBTsSSsRgzJ0TDxVlkdUbfYTpZY9fnSjc2YzYshcDhHN+qwuwPKXC5utPLLCGqjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="A1RPkK/r";
-	arc=none smtp.remote-ip=209.85.218.71
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aT7PIYJA;
+	arc=none smtp.remote-ip=209.85.218.69
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C672606D82B
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:07:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C672606D82B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEE3606D801
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 18:07:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFEE3606D801
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=A1RPkK/r
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c4048584447so94325766b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 10:07:51 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aT7PIYJA
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-c42f98f354fso97302666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 10:07:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793988470; x=1794593270; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793988474; x=1794593274; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dhTsJsvZqJnk5gOBxrG9eboMWFqOc2PMfpVCk05mF3Q=;
-        b=A1RPkK/rcCdKOQg1pnsA34UFNHVQsOLqjtwjikIuzsp4wIHe0e4qQq/hXzzgYDjeCm
-         xRe3NjKrQUgXoy+XXRheJVsuKdlEwo9iw0Eu9p28xNmuWFCZ57gZfGvz5zVIHRmW1Sxn
-         xpDixUXWA3EWxwdznKcNSzUBeAjougbTVqR42kbHHQ/640TXxERJQ8jp8PIds68ISzTU
-         tR3NeWlS31ZQAPHvZKYcoQ7QyOq2H/RcVnU8h+9nhu4jJ5M8QBDnRfk/vGFR27UCQMIJ
-         She7IkxIqLm1gGDIPhCUZJLp9GCVz6qOeshlIyNdSavyHr1nMeB7seyf2kiQw4cVbGEr
-         MJog==
+        bh=IQDid1uWo3Rk9LF1eva5xEOZSHbjSCCIc2OFLDyobvc=;
+        b=aT7PIYJA2fQoZ+jZ03wnsHeZL/5jMK1H9FOgnCo3ezli8FjOT59x6c/bE5Lpm6EXbO
+         fMUbPWyOj1tjv6bqErcXVmLabzYeKrT0qCTPuNhtYYY5mOu5q/ohOgjDew5wJ9nvlc7w
+         9rtfulsBZaG9Yki24J4sTO3ReRs0wBrT9qt28relm8fFl+JXosEQozCPprxR+h9Yx+Up
+         lqqA7Oji+yjdOUxlggg/RRRoRL35LAbNUoE/PciUwtHNMz1M5LgvKYzy8u6VyKWMRbbS
+         w77MtJVw88QgbrDZY/pg09dB+F9oqF3d/SSZ+TM2dYc/ldM2yiQAIRvmBsZ9LboTB8Mb
+         +QJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793988470; x=1794593270;
+        d=1e100.net; s=20260707; t=1793988474; x=1794593274;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dhTsJsvZqJnk5gOBxrG9eboMWFqOc2PMfpVCk05mF3Q=;
-        b=kjfxx4+X4T2aBMdwTjTE5CufU9wVaBOTNPE0Yev8Ka/IV8u456uDewoi6gfYv67HRr
-         Toj7F+ZGmHwJ7VIeGI0IpfIt1sgNg4s7srnvx+JpbcKm+hAuU9dH8Sf/VFZkCSWvrbQp
-         eQH7zSiUhl2qxDBUGpUeejbNTWp9pCFLqVs14kSotbPrwLOvRKNdyibnsILm0ZW9S5O5
-         N2clCjA6B0uaX2fKopw1JUxYg1Ox4Ka418d/2kb+0yxIthV71D+PVLn0s6AqZZEnpUGb
-         WHuufMRBWvlOEppkdcHC3yaILVI2sz3mm9BDwmK/FDgukKCFt97Y5I3sl7R9dCeSxc8E
-         9tiA==
-X-Forwarded-Encrypted: i=1; AKwUvByzB8tT6q9e8irG3KGdvmHKPdLjDNbQYS9HSdLi1ZUMmOKXdz+C6bBYZUpQq4VJVbwYgqGjIVDDtZ2H2kHyUxeDQbI=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8VGdN4UBORv8QQb6oBVZBv0k45x/Cy2KSdqQg8RWsXlMTkYpAF
-	F9r8buORCE+jLdP+wjheIazSzA3FlJYTlIeS96D2NRjIGuG90yXIobX0kURPv5HZ1gooH8yxT6b
-	Pc4O2IujVlvWVKVmBUu2/ng==
-X-Received: from ejzb26.prod.google.com ([2002:a17:906:d11a:b0:c43:9f30:62f6])
+        bh=IQDid1uWo3Rk9LF1eva5xEOZSHbjSCCIc2OFLDyobvc=;
+        b=ajzPtTJLJLW56Is9u5N1G0Bv8HfHRC27CDYqHw2BRiTfll8hs89XgUcvCUKhkhw2no
+         icNoCHRcjkxBxe8tJI3/2Wubvq2lArm2sQ0G+W8x47pkqYp9yfgXIih50bPdW0iUq8AU
+         1jDlvC5t6a3WKgDn7eqt3YY7+tDi5/Ga18kovZo5SZIzkfkXHq/ffyaRnzL8N//RqsDf
+         WepFx7Wu31yvi+CrlDKXHOFKFpnOcsPWOn37j/oLMCAW9hRH13Kei/cEiXZAaDBOegiK
+         zS0oe/bw4T23ZZ418W8MuOJAicaL2eklwgglhDzGBfaJlDiG71vFHfkwMrSiEJ4uGJNy
+         OC5Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzLeAQIr5Ddtetcx9ZYBAaCIBJGc7pnw33QFtgRp8MvKPbsrWhi1woXDW06+rZiB3dqGO6OVvpY2illtYpJgylSt8c=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/ElxWomqe3vxjq0V7tTOivy30neo6h31zyqN4oJkzKyqEVxQDW
+	IgvWuOBa0w/VmepuUm1DWuu+07SjDjBGo+uhJubkXHYzHrc/Uq5HEuuJYft6cky72jCqTKc1TeN
+	SYkPWTub7wC4pq4uSWM7DQw==
+X-Received: from ejblh9.prod.google.com ([2002:a17:906:f8c9:b0:c36:c42d:ac42])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:3e18:b0:c29:3c97:c994 with SMTP id a640c23a62f3a-c4d354dea2bmr307738566b.35.1793988469701;
- Fri, 06 Nov 2026 10:07:49 -0800 (PST)
-Date: Fri,  6 Nov 2026 18:06:42 +0000
+ 2002:a17:907:a892:b0:c3f:153a:8663 with SMTP id a640c23a62f3a-c4d34bdd8camr263394666b.23.1793988474135;
+ Fri, 06 Nov 2026 10:07:54 -0800 (PST)
+Date: Fri,  6 Nov 2026 18:06:46 +0000
 In-Reply-To: <20261106180657.2460376-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261106180657.2460376-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261106180657.2460376-7-vdonnefort@google.com>
-Subject: [PATCH v8 06/21] tracing/remotes: Use a single per-remote polling work
+Message-ID: <20261106180657.2460376-11-vdonnefort@google.com>
+Subject: [PATCH v8 10/21] tracing/remotes: selftests: Prefix hypervisor folder
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -90,129 +90,56 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Having a per-iterator polling work is wasteful when logging several
-trace_remote per_cpu/trace_pipe files in parallel. This results in one
-work running per-CPU, where only one would suffice.
-
-Transition to a single per-remote polling work, scheduled on the first
-consumer creation and stopped when the last consuming iterator is freed.
-
-This blanket polls all CPUs, regardless of which ones are actually being
-read. This is acceptable because the poll consists of reading the
-meta-page, which is a fast operation. Also, it is more common to log all
-CPUs in the system than only one, so this use-case should be favoured.
+Rename the hypervisor tests directory to "00hypervisor" to ensure they
+run first. This prevents the hypervisor tests from being interleaved
+with other remote tests which is confusing.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/trace_remote.c | 51 +++++++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ .../test.d/remotes/{hypervisor => 00hypervisor}/buffer_size.tc    | 0
+ .../ftrace/test.d/remotes/{hypervisor => 00hypervisor}/dmesg.tc   | 0
+ .../ftrace/test.d/remotes/{hypervisor => 00hypervisor}/hotplug.tc | 0
+ .../ftrace/test.d/remotes/{hypervisor => 00hypervisor}/reset.tc   | 0
+ .../ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace.tc   | 0
+ .../test.d/remotes/{hypervisor => 00hypervisor}/trace_pipe.tc     | 0
+ .../test.d/remotes/{hypervisor => 00hypervisor}/unloading.tc      | 0
+ 7 files changed, 0 insertions(+), 0 deletions(-)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/buffer_size.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/dmesg.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/hotplug.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/reset.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/trace_pipe.tc (100%)
+ rename tools/testing/selftests/ftrace/test.d/remotes/{hypervisor => 00hypervisor}/unloading.tc (100%)
 
-diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index a677b093fa07..08a89b7315c3 100644
---- a/kernel/trace/trace_remote.c
-+++ b/kernel/trace/trace_remote.c
-@@ -26,7 +26,6 @@ enum tri_type {
- struct trace_remote_iterator {
- 	struct trace_remote		*remote;
- 	struct trace_seq		seq;
--	struct delayed_work		poll_work;
- 	unsigned long			lost_events;
- 	u64				ts;
- 	struct ring_buffer_iter		*rb_iter;
-@@ -55,8 +54,10 @@ struct trace_remote {
- 	struct rw_semaphore		reader_lock;
- 	struct rw_semaphore		*pcpu_reader_locks;
- 	unsigned int			nr_readers;
-+	unsigned int			poll_cnt;
- 	unsigned int			poll_ms;
- 	bool				tracing_on;
-+	struct delayed_work		poll_work;
- };
- 
- static DEFINE_MUTEX(trace_remotes_lock);
-@@ -351,17 +352,6 @@ static bool trace_remote_has_cpu(struct trace_remote *remote, int cpu)
- 	return ring_buffer_poll_remote(remote->trace_buffer, cpu) == 0;
- }
- 
--static void __poll_remote(struct work_struct *work)
--{
--	struct delayed_work *dwork = to_delayed_work(work);
--	struct trace_remote_iterator *iter;
--
--	iter = container_of(dwork, struct trace_remote_iterator, poll_work);
--	ring_buffer_poll_remote(iter->remote->trace_buffer, iter->cpu);
--	schedule_delayed_work((struct delayed_work *)work,
--			      msecs_to_jiffies(iter->remote->poll_ms));
--}
--
- static void __free_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
- {
- 	if (cpu != RING_BUFFER_ALL_CPUS) {
-@@ -405,6 +395,36 @@ static int __alloc_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
- 	return 0;
- }
- 
-+static void trace_remote_do_poll(struct trace_remote *remote)
-+{
-+	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
-+	schedule_delayed_work(&remote->poll_work, msecs_to_jiffies(remote->poll_ms));
-+}
-+
-+static void __poll_remote(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = to_delayed_work(work);
-+
-+	trace_remote_do_poll(container_of(dwork, struct trace_remote, poll_work));
-+}
-+
-+static void trace_remote_inc_poll(struct trace_remote *remote)
-+{
-+	/* poll_cnt <= nr_readers, inherits its overflow protection */
-+	if (!remote->poll_cnt++)
-+		trace_remote_do_poll(remote);
-+}
-+
-+static void trace_remote_dec_poll(struct trace_remote *remote)
-+{
-+	if (WARN_ON_ONCE(!remote->poll_cnt))
-+		return;
-+
-+	remote->poll_cnt--;
-+	if (!remote->poll_cnt)
-+		cancel_delayed_work_sync(&remote->poll_work);
-+}
-+
- static struct trace_remote_iterator
- *trace_remote_iter(struct trace_remote *remote, int cpu, enum tri_type type)
- {
-@@ -434,9 +454,7 @@ static struct trace_remote_iterator
- 
- 		switch (type) {
- 		case TRI_CONSUMING:
--			ring_buffer_poll_remote(remote->trace_buffer, cpu);
--			INIT_DELAYED_WORK(&iter->poll_work, __poll_remote);
--			schedule_delayed_work(&iter->poll_work, msecs_to_jiffies(remote->poll_ms));
-+			trace_remote_inc_poll(remote);
- 			break;
- 		case TRI_NONCONSUMING:
- 			ret = __alloc_ring_buffer_iter(iter, cpu);
-@@ -470,7 +488,7 @@ static void trace_remote_iter_free(struct trace_remote_iterator *iter)
- 
- 	switch (iter->type) {
- 	case TRI_CONSUMING:
--		cancel_delayed_work_sync(&iter->poll_work);
-+		trace_remote_dec_poll(remote);
- 		break;
- 	case TRI_NONCONSUMING:
- 		__free_ring_buffer_iter(iter, iter->cpu);
-@@ -1003,6 +1021,7 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
- 	remote->poll_ms = 100;
- 	mutex_init(&remote->lock);
- 	init_rwsem(&remote->reader_lock);
-+	INIT_DELAYED_WORK(&remote->poll_work, __poll_remote);
- 
- 	guard(mutex)(&trace_remotes_lock);
- 
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/buffer_size.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/dmesg.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dmesg.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/hotplug.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/hotplug.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/reset.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/trace_pipe.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
+similarity index 100%
+rename from tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
+rename to tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/unloading.tc
 -- 
 2.56.0.455.g6c5a503b38-goog
 
