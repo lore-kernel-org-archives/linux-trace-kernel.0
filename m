@@ -1,148 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.64
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.28
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793951500;
-	b=pDc3vIws3quY5p2k/xgYgobrMJVcTjp35iUPKSXghT28X2PzL9+HVT3/yGmI7242L3Dy
-	 jFP9TK8LMrOuSZj/rAgx+ZJK7CTXvWSr6tSd+IjKaWVwBoKSLHzw7ZHhFlK+ASp7aXXr1
-	 DYm6kE1dGleTLzKr7UfJkCWpfVWrIzQZg+XKlrV5c9UX6XVqVB88G6mUrqwMQ/5TR8uOH
-	 YExrHGcN2Fu/hbGr7KoAp8nAsGR/FnWO6njjsrFjI3n2TZeERmA1f9m1VSqmSBBaiL/S/
-	 0YcADfxxbO5pXYKOOk495aMnDz/6DbvCFbyMSI//cSraRgb2eTto5mWsCof/Jj3vCGw==
+	t=1793951597;
+	b=lS341vrSlY29KDSKHXOTUJbqlhbP7579fmtS7NNxqt4AYJmnbs5sw41yGBD0qMx+yC/K
+	 XusX91J/45R71Gq8cfNGhpzCDkycOu5O5o2qdPkJWR3uZG7y4VO1yR8NhUewe9hEy35ak
+	 ipFAaHNj3BZumukRTgC99FnUp16nQUMX/REI3ly7Bf5hz9DrSHnoOoZPMySeYYmBEwu65
+	 Zz83Wss5nragBd8jX15FAWpyP2OqlkkU3b/ypcIWAd76YfzJPhcP+7iydw61OIA5SVltu
+	 oMe1aSp1P0TNKmwIAz6DjX3870Lf4MhDGyM04wsqmJRSl5cxLjckqpUJLEc9/08JYZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793951500;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793951597;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=A8L/HnUYVSEblkQSsd0Qj26nxFzNN+cxfs3MphjQg/M=;
-	b=wOBi0GxKGHLzrIfqEIU/YuJ6m4CE0k7Vu5EbvvmM079fl+UeL4RqLWU5vGjI83HSu2UU
-	 sIWagotusOka4GRC/wsYGQZS++uhixhOVRUgPAKZGplb7rN636tuQ4SnkGOq3u03eQsmi
-	 JAZReJ/g5tKn7OlPkvQo8U65OWI5/wN1FFuhby3LVqKafKSizGwuaF46uCWJuU+lC0Qnb
-	 1aHum3FJwAEZVDZ1lFAOuLFKIrWrK1Y9NVwxV8t/PIZPoiJkpk7SUfxFYiRpjcQ67E02T
-	 03hzQ40aCf4N3n2Lil+HV/k7Sg7GP/69kwStddCo9F+61weo/GNP9Er9nKKWYcYqiHQ==
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=nfNxFDQT6Xg6nXD5htivaWJyrQFYadRTu+IGG2oGCYk=;
+	b=jSQliTTKCZRG3pDlJn8KFCG1Yqg9yXOL3shJt0OSl0CaB13mm0rySed+w2pwIUMJ7OAS
+	 cW2bz6NYZKUZ07ADqszmp0clMIdUMzpXVsXCBsqAf51I4EQbKhHsO9/ApRYCjGGrGj6wV
+	 CpaxoA/6bEayfgHOkisZP3GEY5xAKx4gMmjH4VNSrpF11nuRjf034l9tbK18+HvTA2ssT
+	 xChtrqe/0t2DcmEqertf0bhpIQJS4s6J3rJ0s4hyo6rS5HUaAIgDqgzI4dyEXX+LIKRc0
+	 fd5IhoZZI693FAZsPH/+6d0TkISHoTU8jBf35mEEWRKXbgMhrHk/zJW3OrLNCdwUpUw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="A7nV/aWe";
-	arc=none smtp.remote-ip=91.218.175.64
-Received: from mta0.migadu.com (out-64.mta0.migadu.com [91.218.175.64])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Vrz8qWT1;
+	arc=none smtp.remote-ip=95.215.58.28
+Received: from mta1.migadu.com (out-28.mta1.migadu.com [95.215.58.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04F3606A328
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 07:51:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E04F3606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97414606A328
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Nov 2026 07:53:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97414606A328
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=A7nV/aWe
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Vrz8qWT1
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=A8L/HnUYVSEblkQSsd0Qj26nxFzNN+cxfs3MphjQg/M=;
+DKIM-Signature: a=rsa-sha256; bh=n7/NfrBJOVijHE2gqo7g667Jx3EWyuJGPjofeyvSjCA=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793951498; v=1; x=1794556298;
- b=A7nV/aWehS3iF/YdRntSCF4k3F4factkbI1U/trrlw+jIcYTN3RO0mAVKpCv0tZuOjF/y6rn
- K3xiDXkkwDAZYuHixIjaxBlleqF30VvQ4NLDeNKaKCLuvQJ4feRzXVq6WcflBxw7dE+tfJf6Vyw
- OK0M/pssOvlE8nr7xfY2HuIY=
+ t=1793951594; v=1; x=1794556394;
+ b=Vrz8qWT1P4W9M1nqC7wjtd2uGW5JAlG9erVpQzw06B9GbkT6XnYaHIpRQcPtbd4IOmUWqM4H
+ DVyTGInze+DPWjDsu8AJ43BejySZ2F3e/ej9Kc9jOPYkgMN29gUnE8PKXIsR4EeJl0O0LyCjyek
+ 7yhi2bihAA0XiJytIXTUi6ws=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 2a97fd523a3d8c6c;
-	Fri, 06 Nov 2026 07:51:35 +0000
-X-Mizu-Trace-ID: 2a97fd523a3d8c6c
+Received: by smtp.migadu.com with ESMTPS id e8ec85b10918d5e0;
+	Fri, 06 Nov 2026 07:53:14 +0000
+X-Mizu-Trace-ID: e8ec85b10918d5e0
 X-Migadu-Flow: FLOW_OUT
-From: Lance Yang <lance.yang@linux.dev>
-To: ljs@kernel.org
-Cc: akpm@linux-foundation.org,
-	david@kernel.org,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	peterx@redhat.com,
-	willy@infradead.org,
-	jack@suse.cz,
-	riel@surriel.com,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	harry@kernel.org,
-	jannh@google.com,
-	lance.yang@linux.dev,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	nico.pache@linux.dev,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	baohua@kernel.org,
-	usama.arif@linux.dev,
-	kas@kernel.org,
-	xu.xin@linux.dev,
-	chengming.zhou@linux.dev,
-	maddy@linux.ibm.com,
-	npiggin@gmail.com,
-	mpe@ellerman.id.au,
-	chleroy@kernel.org,
-	ritesh.list@gmail.com,
-	sshegde@linux.ibm.com,
-	pfalcato@suse.de,
-	kasong@tencent.com,
-	qi.zheng@linux.dev,
-	shakeel.butt@linux.dev,
-	axelrasmussen@google.com,
-	yuanchu@google.com,
-	weixugc@google.com,
-	baoquan.he@linux.dev,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	leon@kernel.org,
-	sj@kernel.org,
-	rakie.kim@sk.com,
-	rientjes@google.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	mhiramat@kernel.org,
-	oleg@redhat.com,
-	john.johansen@canonical.com,
-	georgia.garcia@canonical.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	zohar@linux.ibm.com,
-	roberto.sassu@huawei.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	wufan@kernel.org,
-	stephen.smalley.work@gmail.com,
-	omosnacek@gmail.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org,
-	damon@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: Re: [PATCH 13/13] security: convert VMA flag tests to use vma_flags_t
-Date: Fri,  6 Nov 2026 15:51:30 +0800
-Message-ID: <20261106075130.55333-1-lance.yang@linux.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20261105-late-2026-vma-flags-v1-13-0d3cd15ab75f@kernel.org>
-References: <20261105-late-2026-vma-flags-v1-13-0d3cd15ab75f@kernel.org>
+Message-ID: <9a4323e1-a966-41fe-8268-9d6621346fea@linux.dev>
+Date: Fri, 6 Nov 2026 15:54:33 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -152,17 +58,101 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation
+ tracepoints
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Abhishek Bapat <abhishekbapat@google.com>,
+ Suren Baghdasaryan <surenb@google.com>, oe-kbuild-all@lists.linux.dev,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+References: <37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat@google.com>
+ <202611052344.mDV2DB89-lkp@intel.com>
+ <20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
+Content-Language: en-US
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <20261105172104.339c6f598a65056ed46e56fc@linux-foundation.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
+Hi Andrew
+
+On 2026/11/6 09:21, Andrew Morton wrote:
+> On Thu, 5 Nov 2026 23:15:33 +0800 kernel test robot <lkp@intel.com> wrote:
+> 
+>> Hi Abhishek,
+>>
+>> kernel test robot noticed the following build warnings:
+>>
+>> [auto build test WARNING on bcc036cfa1670a64500f6d857eaa71908b79e3fb]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Abhishek-Bapat/alloc_tag-Add-trace-events-for-tracing-allocations/20261104-190336
+>> base:   bcc036cfa1670a64500f6d857eaa71908b79e3fb
+>> patch link:    https://lore.kernel.org/r/37ae7dca766994d3872fcc65b623a80d5d506369.1793818636.git.abhishekbapat%40google.com
+>> patch subject: [PATCH v5 2/5] alloc_tag: Introduce IOCTLs to toggle allocation tracepoints
+>> config: xtensa-randconfig-1001-20261105 (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/config)
+>> compiler: xtensa-linux-gcc (GCC) 8.5.0
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261105/202611052344.mDV2DB89-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
+>>
+>> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>>
+>>>> WARNING: modpost: vmlinux: section mismatch in reference: alloc_tag_trace_enabled+0x2c (section: .text.unlikely) -> initcall_level_names (section: .init.data)
+> 
+> Thanks.
+> 
+> #syz test
+> 
+> From: Andrew Morton <akpm@linux-foundation.org>
+> Subject: alloc_tag: force inline the allocation tracing check
+> Date: Thu, 05 Nov 2026 17:18:09 -0800
+> 
+> alloc_tag_trace_enabled() is declared inline, but the compiler can
+> still emit an out-of-line copy. Force it inline,
+> 
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202611052344.mDV2DB89-lkp@intel.com/
+> Cc: Abhishek Bapat <abhishekbapat@google.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Hao Ge <hao.ge@linux.dev>
+> ---
+> 
+>  include/linux/alloc_tag.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/include/linux/alloc_tag.h~alloc_tag-introduce-ioctls-to-toggle-allocation-tracepoints-fix
+> +++ a/include/linux/alloc_tag.h
+> @@ -161,7 +161,7 @@ static inline bool alloc_tag_is_traced(c
+>  	return !!(atomic_read(&tag->ct.flags) & CODETAG_FLAG_TRACE_ON);
+>  }
+>  
+> -static inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
+> +static __always_inline bool alloc_tag_trace_enabled(const struct alloc_tag *tag)
+>  {
+>  	if (static_branch_unlikely(&alloc_tag_trace_key))
+>  		return tag && alloc_tag_is_traced(tag);
+> _
+> 
 
 
-On Thu, Nov 05, 2026 at 09:31:04PM +0000, Lorenzo Stoakes (ARM) wrote:
->Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
->mmap and mprotect LSM hooks of SELinux, AppArmor, IMA and IPE.
->
->No functional change intended.
->
->Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
->---
+Thanks a lot for looking at this - and for putting together a fix at all.
 
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Perhaps alloc_tag_is_traced needs the same treatment as well?
+
+Even with your patch applied, I still hit the warning, just attributed to a different symbol:
+
+WARNING: modpost: vmlinux: section mismatch in reference:
+alloc_tag_is_traced+0x10 (section: .text.unlikely) -> initcall_level_names (section: .init.data)
+
+Marking both helpers __always_inline clears the warning in my build, and it would fit what the series
+intends for the fast path anyway.
+
+Thanks
+Best Regards
+Hao
