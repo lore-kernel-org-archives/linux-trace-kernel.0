@@ -1,83 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794090923;
-	b=FqhdJN/HrKNGB0AmulyYoAl9gPh6DO9BNfUhH2+8aKYZOBks01RbCGRtDOuPI9kAkpgc
-	 8eIxknrmQxf9Wda8vgRUDIiFkjHfIy3EvFr7ZyPtNys7JXIx/eAK1HGIxphliOXqq2EEo
-	 7Gyd1gytDflRBGm1yGg0/IMLS4G8tiVjskX4pTGJmxR/fi5EF0yxtUj8BZ6nSeGTc3VJz
-	 KZp12U9WmPX780roB4DStF3tSuWKHcv6++jofj3JvsWmqJRK79SxLx1l9WrshNd+aiQdK
-	 JKGZQ+YAabgIEBzmQc9E348H0fK9gJ5d4KPFCkPEO2WTBTSAxHjEU3F6lAWqi/h8LSg==
+	t=1794095506;
+	b=xz5ONZ0fyqp0IB+/2+pUgEDHIM+LwritBr1gNqYY8sP022hGc/DAHXZGZSHVSeCuQh7m
+	 dUfbIXzY0xox9jciMG9OX8s+wuJ7FpXe4goGSgjD1ciKaKqxrrV3/hLCpzWd4QIjKImup
+	 piLdqVOOZvM72p57owgEr2rpCcNcgR6aHacpch+868nWE6qA4Z1gcLkaPkL4yucx7maeW
+	 SMIRuF/zNzOusvWhfnCBnQig9kIVeuKXuEMqawga0j3yapjBbiqDSGzbME+kuihTHcB+A
+	 SwD6md4Rz5A0aWioKipKwKceq6Um0rjtDMHiajoyhUIUqN9XqEOTQnnB/ygx7mav+Bg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794090923;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=fCU+AnXPgEumMAh4YcQYLrSJUtCBY0mNsJe/Mw2nKg4=;
-	b=Wg2xmhA0MSCxSXusvzUKPSNvjflJpxJL9k4scMa2SYVG1exECJSwhDO25y/wkyntfnLJ
-	 arb7IHBbx1otQ064dypFZzPE5P+aaFOnFdr5lOJlxLX4mWupCHxqGwnVTMSqZI2r5YN7K
-	 WUuqChcHJqEdmPJZ+TU8q19MmHRXHfFUnmbwD/fAdP6DfklQ0ftSMo91Yqsuo8u0cxgJA
-	 0W3qT2lYQkTqpaHJy05LXkik+QPU+UxyzMLX/2S15f3q8u/4MnULslcsfPNZtopAY3hJg
-	 7/tTdcwVUDI2AZs1dwOvUtvquE2PXvl5iBqcm4bWnAo8vOVTbIP7DzZaow3kIIfhicg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794095506;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=K0ntOgTxKwfnjgz9ueZ1U0o9Ee+0pV7D2zvWAxAaUHU=;
+	b=uKEYJ602JgiRSK932wOAgYUzu7C7IGh8GSHOo9sQDUxSp7w/KguoAIg6hmiLZTGdbv4h
+	 9ZjQ+tZy1ZFSsqS53YeobzwthG/k/CS1NoCtVrobLkRELPTXOu1Xu6E0LECVA4AKmspWJ
+	 zrtzQzY9k8gfJQX3b1/YGh1D73uZy+IM/xzVN3f4QekMAjRDjRGrMZwFq9TAHU1htBC8g
+	 zErVikth89iqCwRzlVVhsL8JLpuzdXlH/32Z3elrX3zXx61zsGkaPAsYyhHIu0933f7HI
+	 Vog4vG/FvRFRGTkVx/yDC+bWZNawHOR+mhQ5PjTZUJE0rkBmc1mjQviAmmgrsE3FchA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="e3MJ/f0L";
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U6wL5V0D;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EBA606A32D;
-	Sat,  7 Nov 2026 22:35:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0EBA606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F74606A326
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 23:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=e3MJ/f0L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794090923; x=1825626923;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XKPddSDGRmFTP15jF36GhiF3Ao2V9Pc70VbIn1MNsig=;
-  b=e3MJ/f0LA5EWkswm9yUNDq8odrbeZqadOcfnd8Bufu6kL/kHEty9Vax8
-   wITBl2ezE1fnzOB3dwWjR8ZHEuGp7nMzLzocVBEFBbk0PMYFchlrQOoey
-   NjawVPFM4aoUctna3TVnwNy30QHsHuH/wpfH8VQHkNr7BkgFXVx/BJHJ/
-   BA8hodK+xTOHoxAM92OIgOjEaYfckqSkiiWA062WuveJoPDbE/tk0qloD
-   WzXAmH38X3EqEHdAYEQMnR8iDoO4TQHFM6nrIvnurTHnAYS9MlydJELim
-   Gqxg2us1p4BwqjkVhaBqUZc2onIld0eHLvOPEsTA4Bee8UGUdDlts9ZJO
-   Q==;
-X-CSE-ConnectionGUID: S1Tits+5SjaCKzX3FDfaWQ==
-X-CSE-MsgGUID: jVzLMK++Rvun3p7grwLypQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11959"; a="2753746"
-X-IronPort-AV: E=Sophos;i="6.27,200,1787036400"; 
-   d="scan'208";a="2753746"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2026 14:35:22 -0800
-X-CSE-ConnectionGUID: DnPjUlIZRoGuk9BZS7accg==
-X-CSE-MsgGUID: D/3AICiJQqaSxkwaUn/bUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,200,1787036400"; 
-   d="scan'208";a="7425429"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 07 Nov 2026 14:35:19 -0800
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xPp0F-00000000rfT-2sqR;
-	Sat, 07 Nov 2026 22:35:15 +0000
-Date: Sun, 8 Nov 2026 06:35:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Li Pengfei <ljdlns1987@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	mark.rutland@arm.com, corbet@lwn.net, skhan@linuxfoundation.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	zhangbo56@xiaomi.com, lipengfei28@xiaomi.com, lkp@intel.com
-Subject: Re: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack
- recording path
-Message-ID: <202611080654.sqFxIlwl-lkp@intel.com>
-References: <20261107055139.3138633-3-lipengfei28@xiaomi.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U6wL5V0D
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E61EF1F0089F;
+	Sat,  7 Nov 2026 23:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794095506;
+	bh=K0ntOgTxKwfnjgz9ueZ1U0o9Ee+0pV7D2zvWAxAaUHU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=U6wL5V0DcCzpAiF5gp97ZStZk5Q6x65MWRq+u1CMrgOsCY0SAxpXXXN8E60zryzrF
+	 bOboO6MrG65Vpw7vpejDEvoQkm/st3ffipQFzITKXEiNsfRG6LPbWv3mFTR4BT874J
+	 YdpZ4ZtKrdvJcOisGxKStajTTel/6xQKHcEw+TidJ9k4RWTy/IIdO3g8rTCPzS5erp
+	 u6grRS8LtRPAssu2U6bCtAsow0dpxY40u/wQA2fRv6OaJc/K1bL/8SPDRhofl605/z
+	 N8hc2rN1HLXQARiSIa9NXosgaNKtKml19QjeekOQb91RnvpO5Ksu4vQWUS4jlox1R9
+	 T1aJMhkYL0GaQ==
+Message-ID: <sashiko-outbox-203403@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] mm/khugepaged: check for empty PTE tables before
+ retracting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>, "Jonathan
+ Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>, "Randy
+ Dunlap" <rdunlap@infradead.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Lorenzo Stoakes" <ljs@kernel.org>, "Vlastimil
+ Babka" <vbabka@kernel.org>, "Jann Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>, "Mike
+ Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>, "Michal
+ Hocko" <mhocko@suse.com>, "Peter Xu" <peterx@redhat.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Zi
+ Yan" <ziy@nvidia.com>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Nico
+ Pache" <nico.pache@linux.dev>, "Ryan Roberts" <ryan.roberts@arm.com>, "Dev
+ Jain" <dev.jain@arm.com>, "Barry Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau" <kas@kernel.org>, "Axel
+ Rasmussen" <axelrasmussen@google.com>
+Cc: linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261107-b4-uffd_marker_loss-v1-2-82926b22704c@kernel.org>
+References: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
+ <20261107-b4-uffd_marker_loss-v1-2-82926b22704c@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 07 Nov 2026 23:51:44 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,86 +72,239 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261107055139.3138633-3-lipengfei28@xiaomi.com>
 
-Hi Li,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 4539944e515183668109bdf4d0c3d7d228383d88]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Li-Pengfei/tracing-Add-lock-free-stackmap-for-stack-trace-deduplication/20261107-135135
-base:   4539944e515183668109bdf4d0c3d7d228383d88
-patch link:    https://lore.kernel.org/r/20261107055139.3138633-3-lipengfei28%40xiaomi.com
-patch subject: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack recording path
-config: powerpc-randconfig-1001-20261108 (https://download.01.org/0day-ci/archive/20261108/202611080654.sqFxIlwl-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261108/202611080654.sqFxIlwl-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202611080654.sqFxIlwl-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/rbtree.h:24,
-                    from include/linux/mm_types.h:11,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:8,
-                    from include/linux/ring_buffer.h:5,
-                    from kernel/trace/trace.c:15:
-   kernel/trace/trace.c: In function 'record_stackmap':
->> include/linux/rcupdate.h:502:9: error: dereferencing pointer to incomplete type 'struct ftrace_stackmap'
-     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-            ^
-   include/linux/rcupdate.h:684:2: note: in expansion of macro '__rcu_dereference_check'
-     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-     ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/rcupdate.h:758:34: note: in expansion of macro 'rcu_dereference_sched_check'
-    #define rcu_dereference_sched(p) rcu_dereference_sched_check(p, 0)
-                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace.c:2154:9: note: in expansion of macro 'rcu_dereference_sched'
-     smap = rcu_dereference_sched(tr->stackmap);
-            ^~~~~~~~~~~~~~~~~~~~~
-
-
-vim +502 include/linux/rcupdate.h
-
-76c8eaafe4f061f Paul E. McKenney        2021-04-21  492  
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  493  #define __rcu_access_pointer(p, local, space) \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  494  ({ \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  495  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-423a86a610cad12 Joel Fernandes (Google  2018-12-12  496) 	rcu_check_sparse(p, space); \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  497  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  498  })
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  499  #define __rcu_dereference_check(p, local, c, space) \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  500  ({ \
-ac59853c06993a4 Pranith Kumar           2014-11-13  501  	/* Dependency order vs. p above. */ \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15 @502  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-f78f5b90c4ffa55 Paul E. McKenney        2015-06-18  503  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
-423a86a610cad12 Joel Fernandes (Google  2018-12-12  504) 	rcu_check_sparse(p, space); \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  505  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  506  })
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  507  #define __rcu_dereference_protected(p, local, c, space) \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  508  ({ \
-f78f5b90c4ffa55 Paul E. McKenney        2015-06-18  509  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
-423a86a610cad12 Joel Fernandes (Google  2018-12-12  510) 	rcu_check_sparse(p, space); \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  511  	((typeof(*p) __force __kernel *)(p)); \
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  512  })
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  513  #define __rcu_dereference_raw(p, local) \
-995f1405610bd84 Paul E. McKenney        2016-07-01  514  ({ \
-995f1405610bd84 Paul E. McKenney        2016-07-01  515  	/* Dependency order vs. p above. */ \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  516  	typeof(p) local = READ_ONCE(p); \
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  517  	((typeof(*p) __force __kernel *)(local)); \
-995f1405610bd84 Paul E. McKenney        2016-07-01  518  })
-24ba53017e188e0 Chun-Hung Tseng         2021-09-15  519  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
-ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  520  
-
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] mm/khugepaged: race between retract_page_tables() and
+  copy_page_range()
+- [Medium] mm/khugepaged: retract_page_tables() breaks uffd RWP on file
+  and shmem VMAs
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+commit 15ea4d4b6e2586260561871f9acd4c3bff3278ec
+Author: David Hildenbrand (Arm) <david@kernel.org>
+
+mm/khugepaged: check for empty PTE tables before retracting
+
+This commit replaces the VMA flag checks in retract_page_tables() with a
+scan under the PTE lock to verify that the PTE table is empty before
+retracting it.
+
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 2a5ee8fc42335..f39ea3d076554 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+[ ... ]
+> @@ -2081,48 +2082,6 @@ void collapse_pte_mapped_thp(struct mm_struct *mm,=
+ unsigned long addr,
+>  	try_collapse_pte_mapped_thp(mm, addr, install_pmd);
+>  }
+> =20
+> -/* Can we retract page tables for this file-backed VMA? */
+> -static bool file_backed_vma_is_retractable(struct vm_area_struct *vma)
+> -{
+> -	/*
+> -	 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
+> -	 * got written to. These VMAs are likely not worth removing
+> -	 * page tables from, as PMD-mapping is likely to be split later.
+> -	 *
+> -	 * Can't use vma_has_anon_rmap() here as the VMA may be stabilised
+> -	 * by the file rmap lock.
+> -	 */
+> -	if (READ_ONCE(vma->anon_vma))
+> -		return false;
+> -
+> -	/*
+> -	 * When a vma is registered with uffd-wp or RWP, we cannot recycle
+> -	 * the page table because there may be pte markers installed.
+> -	 * VM_UFFD_RWP ranges similarly rely on per-PTE uffd state
+> -	 * and cannot be recycled to a shared PMD. Other vmas can still
+> -	 * have the same file mapped hugely, but skip this one: it will
+> -	 * always be mapped in small page size for these registrations.
+> -	 */
+> -	if (userfaultfd_protected(vma))
+> -		return false;
+> -
+> -	/*
+> -	 * Preserve guard and poison markers when retracting page tables.
+> -	 *
+> -	 * These flags are set atomically on marker installation under mmap/VMA
+> -	 * read lock, and here we may not hold any VMA or mmap lock at all.
+> -	 *
+> -	 * This is therefore serialised on the PTE page table lock, which is
+> -	 * obtained on marker installation after the flag is set, so this
+> -	 * check being performed under this lock excludes races.
+> -	 */
+> -	if (vma_test_atomic_flag(vma, VMA_MAYBE_GUARD_BIT) ||
+> -	    vma_test_atomic_flag(vma, VMA_MAYBE_UFFD_POISON_BIT))
+> -		return false;
+> -
+> -	return true;
+> -}
+> -
+>  static void retract_page_tables(struct address_space *mapping, pgoff_t p=
+goff)
+>  {
+>  	struct vm_area_struct *vma;
+> @@ -2133,10 +2092,18 @@ static void retract_page_tables(struct address_sp=
+ace *mapping, pgoff_t pgoff)
+>  		struct mm_struct *mm;
+>  		unsigned long addr;
+>  		pmd_t *pmd, pgt_pmd;
+> -		spinlock_t *pml;
+> -		spinlock_t *ptl;
+> +		pte_t *pte;
+> +		spinlock_t *pml =3D NULL, *ptl;
+>  		bool success =3D false;
+> =20
+> +		/*
+> +		 * Skip private mappings that have been written to: we'll likely
+> +		 * split them as soon as we CoW later. Use READ_ONCE() because
+> +		 * we are neither holding the VMA lock nor the mmap_lock.
+> +		 */
+> +		if (READ_ONCE(vma->anon_vma))
+> +			continue;
+
+[Severity: Medium]
+Can removing the VM_COPY_ON_FORK flag checks here cause retract_page_tables=
+()
+to race with copy_page_range() during fork()?
+
+In dup_mmap(), the child VMA is linked into mapping->i_mmap and
+i_mmap_unlock_write(mapping) is dropped before copy_page_range() runs.
+vma_needs_copy() copies page tables not only when vma_has_anon_rmap() is se=
+t,
+but also when VM_COPY_ON_FORK flags (VM_MAYBE_GUARD, VM_MAYBE_UFFD_POISON,
+VM_UFFD_WP, or VM_UFFD_RWP) are set on a file or shmem VMA whose anon_vma is
+still NULL.
+
+mm/memory.c:copy_pte_range() {
+	/*
+	 * copy_pmd_range()'s prior pmd_none_or_clear_bad(src_pmd), and the
+	 * error handling here, assume that exclusive mmap_lock on dst and src
+	 * protects anon from unexpected THP transitions; with shmem and file
+	 * protected by mmap_lock-less collapse skipping areas with an anon rmap
+	 * (whereas vma_needs_copy() skips areas without one).  A rework
+	 * can remove such assumptions later, but this is good enough for now.
+	 */
+	dst_pte =3D pte_alloc_map_lock(dst_mm, dst_pmd, addr, &dst_ptl);
+	if (!dst_pte) {
+		ret =3D -ENOMEM;
+		goto out;
+	}
+}
+
+Because retract_page_tables() no longer skips VMAs with VM_COPY_ON_FORK fla=
+gs
+set, it can retract the newly allocated empty dst_pmd in the child between
+__pte_alloc() and pte_offset_map_lock() (or across cond_resched() before a
+non-empty PTE is copied):
+
+CPU0                                      CPU1
+dup_mmap()
+  mapping_rmap_tree_insert_after(dst_vma, ...)
+  i_mmap_unlock_write(mapping)
+  copy_page_range(dst_vma, src_vma)
+    ...
+    copy_pte_range()
+      pte_alloc_map_lock(dst_mm, dst_pmd, ...)
+        __pte_alloc(dst_mm, dst_pmd)
+                                          collapse_file()
+                                            retract_page_tables()
+                                              pte_table_empty(pte) =3D=3D t=
+rue
+                                              pmdp_collapse_flush(..., dst_=
+pmd)
+        pte_offset_map_lock(dst_mm, dst_pmd, ...)
+          --> returns NULL
+      ret =3D -ENOMEM;  <-- fork() fails spuriously
+
+On the parent side, retracting an empty src_pmd concurrently with
+copy_pmd_range() can also clear *src_pmd between pmd_none(*src_pmd) and
+pmd_bad(*src_pmd) inside pmd_none_or_clear_bad(src_pmd), triggering a false
+pmd_clear_bad() report.
+
+> +
+>  		addr =3D vma->vm_start +
+>  			((pgoff - vma_start_pgoff(vma)) << PAGE_SHIFT);
+>  		if (addr & ~HPAGE_PMD_MASK ||
+> @@ -2150,52 +2117,48 @@ static void retract_page_tables(struct address_sp=
+ace *mapping, pgoff_t pgoff)
+>  		if (collapse_test_exit(mm))
+>  			continue;
+> =20
+> -		if (!file_backed_vma_is_retractable(vma))
+> -			continue;
+> -
+>  		/* PTEs were notified when unmapped; but now for the PMD? */
+>  		mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
+>  					addr, addr + HPAGE_PMD_SIZE);
+>  		mmu_notifier_invalidate_range_start(&range);
+> =20
+> -		pml =3D pmd_lock(mm, pmd);
+[ ... ]
+> +		pte =3D pte_offset_map_lock(mm, pmd, addr, &ptl);
+> +		if (!pte)
+> +			goto unlock;
+> =20
+>  		/*
+> -		 * Huge page lock is still held, so normally the page table must
+> -		 * remain empty; and we have already skipped vmas with an anon
+> -		 * rmap and userfaultfd_wp() vmas.  But since the mmap_lock is not
+> -		 * held, it is still possible for a racing userfaultfd_ioctl() or
+> -		 * madvise() to have inserted ptes or markers.  Now that we hold
+> -		 * ptlock, repeating the retractable checks protects us from
+> -		 * races against the prior checks.
+> +		 * The folio lock prevents file faults from modifying the
+> +		 * page table, but other things (userfaultfd, CoW, guard
+> +		 * markers) could have modified the page table until we lock it
+> +		 * and check.
+>  		 */
+> -		if (likely(file_backed_vma_is_retractable(vma))) {
+> -			pgt_pmd =3D pmdp_collapse_flush(vma, addr, pmd);
+> -			pmdp_get_lockless_sync();
+> -			success =3D true;
+> -		}
+> +		if (!pte_table_empty(pte))
+> +			goto unlock;
+
+[Severity: Medium]
+Does checking pte_table_empty() instead of userfaultfd_protected(vma) break
+userfaultfd RWP (and WP) on file and shmem VMAs?
+
+Unlike VM_UFFD_WP on write-protected PTEs, try_to_unmap_one() does not
+install PTE markers for VM_UFFD_RWP (or for VM_UFFD_WP PTEs that are not
+currently write-protected) when collapse_file() unmaps the small folios.
+pte_table_empty(pte) is then true and retract_page_tables() clears the PMD =
+to
+pmd_none, even though try_collapse_pte_mapped_thp() still refuses
+userfaultfd_protected(vma).
+
+Once the PMD is pmd_none, the next fault in finish_fault() installs a huge
+PMD before checking userfaultfd_armed(vma):
+
+mm/memory.c:finish_fault() {
+	if (pmd_none(*vmf->pmd)) {
+		if (!needs_fallback && folio_test_pmd_mappable(folio)) {
+			ret =3D do_set_pmd(vmf, folio, page);
+			if (ret !=3D VM_FAULT_FALLBACK)
+				return ret;
+		}
+    ...
+	/* Using per-page fault to maintain the uffd semantics */
+	if (unlikely(userfaultfd_armed(vma)) || unlikely(needs_fallback)) {
+		nr_pages =3D 1;
+}
+
+When userspace later issues UFFDIO_RWPROTECT on that file or shmem VMA,
+change_pmd_range() sees pgtable_split_needed() is true and calls
+__split_huge_pmd(), which zaps the file huge PMD back to pmd_none without
+populating a PTE table (since pgtable_populate_needed() is false for
+MM_CP_UFFD_RWP), so RWP protection is lost and subsequent accesses fault the
+unprotected huge PMD back in without delivering RWP faults.  Installing a
+huge PMD also causes PAGEMAP_SCAN to report all 512 pages as accessed or
+written after a single 4KB page fault.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261107-b4-uffd_ma=
+rker_loss-v1-0-82926b22704c@kernel.org?part=3D2
