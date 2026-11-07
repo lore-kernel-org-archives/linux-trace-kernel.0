@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794062956;
-	b=Q32bjZvQLfhbpHwZqAF8H00IrZ+rlGjGoWL6rO3e4mlPij2J+dGtygd9R6LEZkppjT6m
-	 5kpXElj+UgB/hGqk8bYfxZ1W4dYFaB4oSD1NshTSscWQyxarAxkf2LHdItgWHy4za1fRX
-	 k4K/AOMZvJCf6p9zaYngrAvAa2iORDQ5B7qW76Jbsylg3fzeKaCwk6drV3OgjESJaRQwX
-	 AH9XiaCN8kdlNasrN16nlin2IBehCrDz95FCOpf6hrPt6nICfRNJ/bK+SIbABOaRkiAQG
-	 1OordrYluzDWIxKgTI+sfCnqOuy1bvywQp1gnbAGVfcoBk853gt+J062ZjcZY2pmkcg==
+	t=1794063407;
+	b=3C02ekjgAAh4U367OLT1jyxQQADcL2vWkN0coH27qYh7LkMuyavqStvyPj3YEaOl8zxf
+	 0b/uOpLORxTW1zsg3smjsdV9hNrRc/jq8FTo27Q+9DTttP9dCc20EFjT5ip/gt0Qkszmd
+	 IyKDjVaosMNj/bOi0PRUKZXHyq5072/rEOUe349d0BJvJRu0+EjQ/dv4CPPmeo/yNlUKP
+	 mZ3YGNK91nzclC8AE+95mKzHpQqybiyAcfoVH9Cnc2erwDHg3upLJnyJXCsKVpsbgw88r
+	 ZfCWji7sMq7xPl7CLgke7zExvaKBPycFQI9SbE6hU8E40h3pYnaQJMj90/VDsvmBMeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794062956;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794063407;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=8qyCzlOCl9bU9afDLyhWqixwH5pt3+yWnVmKw7yb1QE=;
-	b=dg7z14h9WfnvtIhWbcfJ/G0eUzF9AUIsk6IOitENa6mfzw6hqRGlTHgaFDyWQulqfHy8
-	 xpo4t+aRH/fu34SlJqppmMdW75vQ6h8CoOSkdiL+VjeqTE2tl5ijqoxNUb9aiq57Cxn8r
-	 h6/nFF4/8w56s1cdDYi5+4RIn6Syv2V9e/YY46kiGRsCfsLly0hxWuSWzfyOS6jdnpG7r
-	 HW7bcnCFugEgIm0qkqd4IMTCqedW03HCWeZBA4C+C9TihFAjulvKTz7/XN+YvZ+YgX3Rr
-	 aF5Ops3l2mutLtguIFC15EQ0aBndPEmDii9sqG9tN3a63FgRJIOxcViv4iQ4ISUdL6A==
+	bh=zWydiZHIyWvc6/MWXFpYPpNynTNHAYYiaP3ylt1+2Sc=;
+	b=CPitLePBwYbQVMpukVaLXwdN6hsn/TR4nUER7fydNStI4mLChVtGYwoyrjSQM0C8Lg77
+	 Jj/QRSgWKmMKR73sZr4xY6Cc5N2e9Y+Z+avlaVKRsk6wkkfciHOwA+noOaN/wlf9EK+QD
+	 TEhl81Qf3ApTOi5fAxqKCDZzTJbclgRv+piUeSD9HOBBqDNKjhavs+3pCJImY7UAhcZmV
+	 LGKBTumgW+5I2/dS3sX8D80gblZfODF2sOf8/UgUXQvrU0JoS6qzKCTs53tY0o/6yG2VZ
+	 ZllPo7G0wXYR1wXrGP0n3qFHj0lqgNky95KvNvfg3+lDQIr5TQLfmnKtJDpq5JqpfDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JcuwyR6B;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owcdwXXy;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548D0606A33E;
-	Sat,  7 Nov 2026 14:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F40D606D832;
+	Sat,  7 Nov 2026 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JcuwyR6B
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13DE1F008A1;
-	Sat,  7 Nov 2026 14:49:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owcdwXXy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 265D41F0089F;
+	Sat,  7 Nov 2026 14:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794062955;
-	bh=8qyCzlOCl9bU9afDLyhWqixwH5pt3+yWnVmKw7yb1QE=;
+	s=k20260515; t=1794063407;
+	bh=zWydiZHIyWvc6/MWXFpYPpNynTNHAYYiaP3ylt1+2Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JcuwyR6BOH5/K8uSNfbDQtBS4do2OAMqYN4B72utk0P9aP0rd0djoWrvFn9OvTYDT
-	 aOp5L69j6KRctzgpUIw3PnI6QUewYm37QADNBQf5cOCyH9vY9OmCiOKbtt25E7h2KS
-	 n9QOaHkMR6LKLbKr0N1PVlreex7byjGI4zT3oJqrEVeAhOXh84J6l0g4buy9BlAnYT
-	 AX4scoeKyDufAqxyFj8OYWWHHOn421utMStiVYp48jkweM9SFOh9oZaUfxZjndAqzZ
-	 eZUtSKxie9KG9bZP5pZawu1CuUjoIWs6bTPmsXhOaHJJRG4t74HpN7IvgXRE/oAi8F
-	 bhOyFW/I9CRZg==
+	b=owcdwXXyyadB06qmWfPfF2FjPrETAXvqfONmdIhIu9sGSMXt8UM6jjUrz5c8XLI/S
+	 UUeFjqLPxXHHPJoW/0nj51CPMMPHZDm/fwyG5Ng0TLvgAExTIo5/rnDAXQc1kSyjLv
+	 ophM07zWgP3nXNHmju2CzHTKA5mI0htDVl9nGhxTp6LdPRCTSQ+a0FPWBTdINsOyXb
+	 fgQNAC7N3mAyP8CPN+qwbyEoJKlCCjmWRkDYdPgpg2YtM+PgvYqUsn3Ig5/FOEgMs7
+	 M/0kn/tly3b4NmkU5MX4xX3sN2itkRWgJR54cJkP7aUuArEz9xU6CO1OjC8ndN+SVx
+	 SrbwA+/qIk/lQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing/probes: bound symstr stores to reserved length
-Date: Sat, 07 Nov 2026 23:49:12 +0900
-Message-ID: <undine-1794062952872987224-6d2052c48f198876@undined.local>
+To: Pengfei Li <ljdlns1987@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, zhangbo56@xiaomi.com
+Subject: Re: [PATCH] tracing: Wait for marker writers when copy_trace_marker is cleared
+Date: Sat, 07 Nov 2026 23:56:44 +0900
+Message-ID: <undine-1794063404423071775-c4525958cf021399@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <179378621331.55520.2052332247156241151@stu.pku.edu.cn>
-References: <179367391951.8187.17152618045554425533@stu.pku.edu.cn> <179378621331.55520.2052332247156241151@stu.pku.edu.cn>
+In-Reply-To: <20261107110722.1241413-1-lipengfei28@xiaomi.com>
+References: <20261107110722.1241413-1-lipengfei28@xiaomi.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,66 +61,46 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Wed, 04 Nov 2026 17:56:53 +0800, Yifan Zhang <yfzhang23@stu.pku.edu.cn> wrote:
-> Traceprobe calculates dynamic string sizes before storing the values.  A
-> probed pointer can change between those passes, so
-> fetch_store_symstrlen() can reserve space for a short symbol while
-> fetch_store_symstring() observes a longer one.  The store path then
-> overwrites the trace record.
->
-> Format the symbol into a temporary KSYM_SYMBOL_LEN buffer and copy only
-> the bytes that fit in the reserved field, including a trailing NUL.
-> Update __data_loc with the length actually stored so consumers do not
-> read beyond the truncated value.
+On Sat,  7 Nov 2026 19:07:22 +0800, Pengfei Li <ljdlns1987@gmail.com> wrote:
+> Clearing copy_trace_marker removes the instance from marker_copies
+> without waiting for trace_marker writers still walking the list. If the
+> option is set again right away, a writer on that entry can revisit
+> instances and write the same marker twice.
+> 
+> Fixes: 7b382efd5e8a ("tracing: Allow the top level trace_marker to write into another instances")
+> Assisted-by: LLM
+> Signed-off-by: Pengfei Li <lipengfei28@xiaomi.com>
 
-Good catch! This looks good to me. Let me pick it to probes/fixes.
+Looks good to me.
 
-Thanks!
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
->
-> Fixes: b26a124cbfa8 ("tracing/probes: Add symstr type for dynamic events")
-> Signed-off-by: Yifan Zhang <yfzhang23@stu.pku.edu.cn>
+Thanks,
+
 > ---
-> Changes in v3:
-> - encode the actual stored length in __data_loc after truncation
-> - encode a zero length if symbol formatting fails
->
->  kernel/trace/trace_probe_tmpl.h | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-> index 8db12f758fdae..8acc0f0ebd7a6 100644
-> --- a/kernel/trace/trace_probe_tmpl.h
-> +++ b/kernel/trace/trace_probe_tmpl.h
-> @@ -87,15 +87,27 @@ fetch_store_symstrlen(unsigned long addr)
->  static nokprobe_inline int
->  fetch_store_symstring(unsigned long addr, void *dest, void *base)
->  {
-> +	char namebuf[KSYM_SYMBOL_LEN];
->  	int maxlen = get_loc_len(*(u32 *)dest);
->  	void *__dest;
-> +	int len;
+>  kernel/trace/trace.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 18710c190c92..b0357f1b5a69 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4016,7 +4016,9 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+>  		break;
 >  
->  	if (unlikely(!maxlen))
->  		return -ENOMEM;
->  
->  	__dest = get_loc_data(dest, base);
-> +	len = sprint_symbol(namebuf, addr);
-> +	if (len < 0) {
-> +		*(u32 *)dest = make_data_loc(0, __dest - base);
-> +		return 0;
-> +	}
-> +
-> +	len = min(len, maxlen - 1);
-> +	memcpy(__dest, namebuf, len);
-> +	((char *)__dest)[len] = '\0';
-> +	*(u32 *)dest = make_data_loc(len + 1, __dest - base);
->  
-> -	return sprint_symbol(__dest, addr);
-> +	return len + 1;
->  }
->  
->  /* common part of process_fetch_insn*/
+>  	case TRACE_ITER(COPY_MARKER):
+> -		update_marker_trace(tr, enabled);
+> +		/* Writers of the top level trace_marker may still be on this instance */
+> +		if (update_marker_trace(tr, enabled) && !enabled)
+> +			synchronize_rcu();
+>  		/* update_marker_trace updates the tr->trace_flags */
+>  		return 0;
+>  	}
+> 
+> base-commit: 4539944e515183668109bdf4d0c3d7d228383d88
+> -- 
+> 2.34.1
+> 
 >
 
 -- 
