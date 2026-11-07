@@ -1,97 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794085120;
-	b=4ZnslGI0v8gyIkosRmPQCkWHTZeHzd8RPqvn7MKU+UTcugqCvIGISJQm03OPmtysIFDa
-	 yDp5e09bd0sCazjLDu4yeBeSOT6OQTdv+xISGFqsdIp58K8lgkP+hJ48bNIJqU1tWYQQI
-	 ajaI55F5/dg7Dq0r+4MSNwshojhcpMCRHaxIu79EkrMMNP65QjGuSWiOdakuPnsFhg9I5
-	 RR5TgL7rn0wLD0TiLx3PE8gIZTKR0tNGUu10g7ICxyDadGziSiqhE+2ta88krSg402vKD
-	 1vrHxGBI0a8OKjQm/8RPZUk2LsgoX6hc3/L9YTI2L8nErzkbhnUic6MJB7yXjqt63/w==
+	t=1794090923;
+	b=FqhdJN/HrKNGB0AmulyYoAl9gPh6DO9BNfUhH2+8aKYZOBks01RbCGRtDOuPI9kAkpgc
+	 8eIxknrmQxf9Wda8vgRUDIiFkjHfIy3EvFr7ZyPtNys7JXIx/eAK1HGIxphliOXqq2EEo
+	 7Gyd1gytDflRBGm1yGg0/IMLS4G8tiVjskX4pTGJmxR/fi5EF0yxtUj8BZ6nSeGTc3VJz
+	 KZp12U9WmPX780roB4DStF3tSuWKHcv6++jofj3JvsWmqJRK79SxLx1l9WrshNd+aiQdK
+	 JKGZQ+YAabgIEBzmQc9E348H0fK9gJ5d4KPFCkPEO2WTBTSAxHjEU3F6lAWqi/h8LSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794085120;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
-	b=B+TtI24KpVvf9vtohXUWLXoOUIpU8JTW+I45x/KMACU1VfFC/iskCCt/j7dQBLUU3a9L
-	 T8Dv6zy6BjU81StsCN+Qh5yyl/EC9ltFMDTk5RyHdEXSGxyI9qngopixcwannB0FqY4iJ
-	 mNKY9UHvt8dV5FB/2Iowv24rmN5WmZJU8h/267Kz3VGD4+t/0Pefq8+JVNt5s0jXtwF58
-	 WhLW59z4euOnUR7lsfCd156NoBrKgJ4AskWfcBQNoAxrwH6x6jgaeOuZW/EQ9jTGd1lav
-	 v9pH9mD+nj13B+SEqs7nkd+6op77v2czfzfU68aBCFjZ0YBNIhx/k/muNJ9whhqa6ww==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794090923;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=fCU+AnXPgEumMAh4YcQYLrSJUtCBY0mNsJe/Mw2nKg4=;
+	b=Wg2xmhA0MSCxSXusvzUKPSNvjflJpxJL9k4scMa2SYVG1exECJSwhDO25y/wkyntfnLJ
+	 arb7IHBbx1otQ064dypFZzPE5P+aaFOnFdr5lOJlxLX4mWupCHxqGwnVTMSqZI2r5YN7K
+	 WUuqChcHJqEdmPJZ+TU8q19MmHRXHfFUnmbwD/fAdP6DfklQ0ftSMo91Yqsuo8u0cxgJA
+	 0W3qT2lYQkTqpaHJy05LXkik+QPU+UxyzMLX/2S15f3q8u/4MnULslcsfPNZtopAY3hJg
+	 7/tTdcwVUDI2AZs1dwOvUtvquE2PXvl5iBqcm4bWnAo8vOVTbIP7DzZaow3kIIfhicg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=O+zMOrQB;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="e3MJ/f0L";
+	arc=none smtp.remote-ip=192.198.163.9
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D027F606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 20:58:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D027F606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EBA606A32D;
+	Sat,  7 Nov 2026 22:35:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0EBA606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=O+zMOrQB
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a2069b9710so106225e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 12:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794085118; x=1794689918; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
-        b=O+zMOrQBc6YPVqLx7vh4M83N1v+pRXf5SAk27K9jRtk5LMl1sqRKMTIWe3E30PZ0n3
-         2ABeN4Zd0tE42EOb/hsgrDMSKQLNNWwG9JqvLrMa7Bt5vdLlAFRtx0JEPWa5ZYcXKh3t
-         JG/QKW6I8OD78M4TftXyCsvDJhoWWunh2trOJwV9ugF7hcKdo4VQsqZ8vBtzcGQP/fva
-         f2/3mJiuHqyIkJURlbT3oY96XldAAoiEbZ3NA82l0JqYW5GRfFoLhNhUUH6ScpEtS0Dc
-         t25t0Rt5wbLLDdp9Dw+FaTO748r1cvuXvySVLFtWMF3HTB6TBijZ+uzwWoe5nYZUSkt0
-         sKqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794085118; x=1794689918;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
-        b=Vkd2WL/RVYuQKFvfL+yQwr1ngGCWA110saxxfp1MTSKjXMVmd65udbU2C537g2t/w0
-         2bCe3rhSR6MQflXGHvRoYbvk6Iqtufj5hp36Dyg2j+i7cp3kSror1rzWRa8TCrtf+gW3
-         7fVl/5vrTeA/cz6Yg5sY/7S2mNeenVvbLr90ovdClmK2/UddPnl/WklCZ6eAZa6uEMMa
-         USm236VymZ/bFT5ZnnOhjWuXOOJr+aVqUUji2hN2NKkrfo9bk26kCYJYWp9Jxsv68RMi
-         ddkWxbAWVJZIMovoYTd14uGd9yYXSdSudweWBRbuOgdUSSSMTFdkzAncn6aOQQv3cWl6
-         5SXA==
-X-Forwarded-Encrypted: i=1; AKwUvBxywBHfC5zOUifFkxDp1QyTQyIcWJaQaHOtPhXYsb0F1K2Zz4W3gmt6ujTd5MoUJ4PSAWs9JN8Ar+T7wyZBbRCn/Dg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8+k145NCUXgdtgCfDDKjm8mKxOWqVstX4wsNNJh3oy95enm4cd
-	z1R61Y6ndYRrk6qaYRuG46Jttrp4xVMY4sswqIab1GLmGf3rsFNsbevk
-X-Gm-Gg: AYBFou3IHeHdQKqOp4HPv3Ld92I343LK7eGkWnPTqLQXkppQCNyMeVdrsS4JjuaItqm
-	xvivIyRhnVuSi6E1tnr8oQGNNBYfJFPQymJvrkJz+zLHlVyc8DvPfb5r5K0ydNL+GSCYQF5gozH
-	X8nhWimI3FDVOZsZ9X1Rnq1Ug9AphtBc54MJfWTmYIeXeoHDEdCRPpXPjRJmhz42N2TvXj0Zr2V
-	3FUo7mbV+SId0Vy+J0p+5AOOOqbSAOGL6yQlNRdFlrCVzaMbzywioFm5JUVVVj72wDWAFWd1vkP
-	G8MvDF/dwUxuRM9rdpSCqaf8QD2A3mGQ5uloiZ8KFEJVN2aPCS8hVpFndXlhbEXSgHgEgnwmGgp
-	VJVwx3NRfkvAzKrbdChP90bwR6Y8RLeaBtT5jshbTBngZRs3TGGXnVHtei1qvBszdrNjeDagf3X
-	aEnCgFDf8Y3WmxF/ftmpDrV/G8kNzYYfSXOcZaIWlvjtpGQnvcdqaSvrNrM3j9BK8/kjKpWFRmb
-	8tMLFvD98o7flB4ZRsbwGikyaOgHqdSWe1W2CEnfPW85GhLMixENu7y0qZDw11UUh5wKLxmM/ZH
-	kagsTXBWrlFRzgXilpVpfs1rMGbOiv1R8nP3tO2TfcvkgTkNsiW3G1SRIwRD1wKT/g8epjlD3RE
-	whIQXVxj9SJlyqvE1Kxzj4qOYxc/AXgwE33MTQg==
-X-Received: by 2002:a05:600c:3d96:b0:4a1:7ec7:a479 with SMTP id 5b1f17b1804b1-4b6df7d4d86mr97639175e9.33.1794085118056;
-        Sat, 07 Nov 2026 12:58:38 -0800 (PST)
-Received: from DESKTOP-0KSTGNI.localdomain ([197.52.47.229])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee1ddc7sm8536545e9.4.2026.11.07.12.58.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Nov 2026 12:58:37 -0800 (PST)
-From: Temitope obabi <obabitemitope765@gmail.com>
-To: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Temitope obabi <obabitemitope765@gmail.com>
-Subject: [PATCH v3] rxrpc: Remove unused rxrpc_drop_ack tracepoint
-Date: Sat,  7 Nov 2026 22:56:37 +0200
-Message-ID: <20261107205637.665-1-obabitemitope765@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=e3MJ/f0L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1794090923; x=1825626923;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XKPddSDGRmFTP15jF36GhiF3Ao2V9Pc70VbIn1MNsig=;
+  b=e3MJ/f0LA5EWkswm9yUNDq8odrbeZqadOcfnd8Bufu6kL/kHEty9Vax8
+   wITBl2ezE1fnzOB3dwWjR8ZHEuGp7nMzLzocVBEFBbk0PMYFchlrQOoey
+   NjawVPFM4aoUctna3TVnwNy30QHsHuH/wpfH8VQHkNr7BkgFXVx/BJHJ/
+   BA8hodK+xTOHoxAM92OIgOjEaYfckqSkiiWA062WuveJoPDbE/tk0qloD
+   WzXAmH38X3EqEHdAYEQMnR8iDoO4TQHFM6nrIvnurTHnAYS9MlydJELim
+   Gqxg2us1p4BwqjkVhaBqUZc2onIld0eHLvOPEsTA4Bee8UGUdDlts9ZJO
+   Q==;
+X-CSE-ConnectionGUID: S1Tits+5SjaCKzX3FDfaWQ==
+X-CSE-MsgGUID: jVzLMK++Rvun3p7grwLypQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11959"; a="2753746"
+X-IronPort-AV: E=Sophos;i="6.27,200,1787036400"; 
+   d="scan'208";a="2753746"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2026 14:35:22 -0800
+X-CSE-ConnectionGUID: DnPjUlIZRoGuk9BZS7accg==
+X-CSE-MsgGUID: D/3AICiJQqaSxkwaUn/bUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,200,1787036400"; 
+   d="scan'208";a="7425429"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 07 Nov 2026 14:35:19 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xPp0F-00000000rfT-2sqR;
+	Sat, 07 Nov 2026 22:35:15 +0000
+Date: Sun, 8 Nov 2026 06:35:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Li Pengfei <ljdlns1987@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com, corbet@lwn.net, skhan@linuxfoundation.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	zhangbo56@xiaomi.com, lipengfei28@xiaomi.com, lkp@intel.com
+Subject: Re: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack
+ recording path
+Message-ID: <202611080654.sqFxIlwl-lkp@intel.com>
+References: <20261107055139.3138633-3-lipengfei28@xiaomi.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -101,62 +87,85 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261107055139.3138633-3-lipengfei28@xiaomi.com>
 
-The only call to trace_rxrpc_drop_ack(), in rxrpc_send_ACK(), was removed
-by commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
-local processor work"). The tracepoint is no longer reached by any caller.
+Hi Li,
 
-Removing this tracepoint avoids keeping unused tracing code and makes the
-code easier to maintain. Each defined tracepoint also takes up around 5K of
-code and data, even when it is never used.
+kernel test robot noticed the following build errors:
 
-Fixes: 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and local processor work")
-Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
----
- include/trace/events/rxrpc.h | 29 -----------------------------
- 1 file changed, 29 deletions(-)
+[auto build test ERROR on 4539944e515183668109bdf4d0c3d7d228383d88]
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 56dc9b614071..ec145da21ca8 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1837,35 +1837,6 @@ TRACE_EVENT(rxrpc_send_ack,
- 		      __entry->serial)
- 	    );
- 
--TRACE_EVENT(rxrpc_drop_ack,
--	    TP_PROTO(struct rxrpc_call *call, enum rxrpc_propose_ack_trace why,
--		     u8 ack_reason, rxrpc_serial_t serial, bool nobuf),
--
--	    TP_ARGS(call, why, ack_reason, serial, nobuf),
--
--	    TP_STRUCT__entry(
--		    __field(unsigned int,			call)
--		    __field(enum rxrpc_propose_ack_trace,	why)
--		    __field(rxrpc_serial_t,			serial)
--		    __field(u8,					ack_reason)
--		    __field(bool,				nobuf)
--			     ),
--
--	    TP_fast_assign(
--		    __entry->call	= call->debug_id;
--		    __entry->why	= why;
--		    __entry->serial	= serial;
--		    __entry->ack_reason	= ack_reason;
--		    __entry->nobuf	= nobuf;
--			   ),
--
--	    TP_printk("c=%08x %s %s r=%08x nbf=%u",
--		      __entry->call,
--		      __print_symbolic(__entry->why, rxrpc_propose_ack_traces),
--		      __print_symbolic(__entry->ack_reason, rxrpc_ack_names),
--		      __entry->serial, __entry->nobuf)
--	    );
--
- TRACE_EVENT(rxrpc_retransmit,
- 	    TP_PROTO(struct rxrpc_call *call,
- 		     struct rxrpc_send_data_req *req,
--- 
-2.53.0
+url:    https://github.com/intel-lab-lkp/linux/commits/Li-Pengfei/tracing-Add-lock-free-stackmap-for-stack-trace-deduplication/20261107-135135
+base:   4539944e515183668109bdf4d0c3d7d228383d88
+patch link:    https://lore.kernel.org/r/20261107055139.3138633-3-lipengfei28%40xiaomi.com
+patch subject: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack recording path
+config: powerpc-randconfig-1001-20261108 (https://download.01.org/0day-ci/archive/20261108/202611080654.sqFxIlwl-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261108/202611080654.sqFxIlwl-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202611080654.sqFxIlwl-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/rbtree.h:24,
+                    from include/linux/mm_types.h:11,
+                    from include/linux/mmzone.h:22,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:8,
+                    from include/linux/ring_buffer.h:5,
+                    from kernel/trace/trace.c:15:
+   kernel/trace/trace.c: In function 'record_stackmap':
+>> include/linux/rcupdate.h:502:9: error: dereferencing pointer to incomplete type 'struct ftrace_stackmap'
+     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+            ^
+   include/linux/rcupdate.h:684:2: note: in expansion of macro '__rcu_dereference_check'
+     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
+     ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/rcupdate.h:758:34: note: in expansion of macro 'rcu_dereference_sched_check'
+    #define rcu_dereference_sched(p) rcu_dereference_sched_check(p, 0)
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.c:2154:9: note: in expansion of macro 'rcu_dereference_sched'
+     smap = rcu_dereference_sched(tr->stackmap);
+            ^~~~~~~~~~~~~~~~~~~~~
+
+
+vim +502 include/linux/rcupdate.h
+
+76c8eaafe4f061f Paul E. McKenney        2021-04-21  492  
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  493  #define __rcu_access_pointer(p, local, space) \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  494  ({ \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  495  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+423a86a610cad12 Joel Fernandes (Google  2018-12-12  496) 	rcu_check_sparse(p, space); \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  497  	((typeof(*p) __force __kernel *)(local)); \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  498  })
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  499  #define __rcu_dereference_check(p, local, c, space) \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  500  ({ \
+ac59853c06993a4 Pranith Kumar           2014-11-13  501  	/* Dependency order vs. p above. */ \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15 @502  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+f78f5b90c4ffa55 Paul E. McKenney        2015-06-18  503  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
+423a86a610cad12 Joel Fernandes (Google  2018-12-12  504) 	rcu_check_sparse(p, space); \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  505  	((typeof(*p) __force __kernel *)(local)); \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  506  })
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  507  #define __rcu_dereference_protected(p, local, c, space) \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  508  ({ \
+f78f5b90c4ffa55 Paul E. McKenney        2015-06-18  509  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
+423a86a610cad12 Joel Fernandes (Google  2018-12-12  510) 	rcu_check_sparse(p, space); \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  511  	((typeof(*p) __force __kernel *)(p)); \
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  512  })
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  513  #define __rcu_dereference_raw(p, local) \
+995f1405610bd84 Paul E. McKenney        2016-07-01  514  ({ \
+995f1405610bd84 Paul E. McKenney        2016-07-01  515  	/* Dependency order vs. p above. */ \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  516  	typeof(p) local = READ_ONCE(p); \
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  517  	((typeof(*p) __force __kernel *)(local)); \
+995f1405610bd84 Paul E. McKenney        2016-07-01  518  })
+24ba53017e188e0 Chun-Hung Tseng         2021-09-15  519  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
+ca5ecddfa8fcbd9 Paul E. McKenney        2010-04-28  520  
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
