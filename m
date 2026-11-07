@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794031672;
-	b=WRtKor6RxbkJN7ZnYlzJMoWdVMeBO9Gx6CrWJWOJ3dtDSlMWUYXN5twy5lkkkH9ylKkt
-	 7sxZJPNX1DUkBByoWYBcLl+1LEz+W2g8TwXAf2Zk1/rrUR9OwI9XHDklQP8haGmuaptBS
-	 6NCRNclA8b88Sf5xX0evWjnzddEdohum1S/yFkIewSQAKJ0SNeiBy6IP0DuwMFpILXMsv
-	 AzW2Xr/aVXHsGecYHOf7kBikTqrliDUkH39Kc/V3oiFPJB82YJUX0zt4UvffKqRg/YOlc
-	 lbqP6jQTT4aKnkYJLskjnMjfr3aSb8FnxZ5T4jsQ0r3uQOyPCH1rzUwU7vG1Ru/7Okg==
+	t=1794032271;
+	b=HCCT/YU+7A516YEK9YR0ZRbDJ7loH9ix/Ox3ATaACtx5HBiSjZCm8jC9Vv2UO0GLyW+7
+	 MWSQto+nbF3/cdGLZozWzYMe4djQrYQimSSeP3WJkoF/BERR+yr3yDjuOQ5OAM2bbWQMM
+	 4hMftb6xSKyxVQqmohyLenR5YIJ8I1uhT7cZwScJaDhsBYgeeAelnlDTKV4MrqjDOFQbT
+	 Ier4QTB+tV3qdcPcsLI/LuDU/O62K00PBe8YB7nC9UGWlI3GaijcyDHh9VGB4wSUn4FUw
+	 nQk/gXJiLsnZvbD9r8nQXZZA5j1eX5pvuEVX4TWtxbEcRDRJTueJuFDe4Yp3sUzW/ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794031672;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794032271;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=eivSpggppJzKXZCIzl3c5b2mGwyNAujIo12m1cSxZWs=;
-	b=NhWJWETLxVz8wF2ECaDehEBdFY/Nan05PmddZF31CPz0VvDX6TrYWDt88vnpdwhM4ELe
-	 nrAkxYntJZ/6JBYf/ajqllQBGJQSVo/prW5WFmaKXupseAbpaX8PhbqZ8mTqcVC7LteOm
-	 eUBAiIbtFUeJHR8Uq9ST4pISnKrL/jShKAHCuVJlLud15UhjaiT5DVawpU0FQcb/Z55y3
-	 fvkHzRHjns3xkFkQAZzeezDYWD2I6fO+ygbejg2lKo403W+gvymxR6FqqUAZfHAVSU4WO
-	 PUxrNd4JGQ1vkdW51u6p6ClUUtuJC+i2Yw69MZtF4GyIbkzhgiC3QXpU9cFs3B5SYYg==
+	bh=4NUp6zKi7OhNAqO7TyxoIhg2M2oKnsNewifMx2J5Wu8=;
+	b=Zf5SbYdMByN+SMGqlTfBQn+b5OT44K+S6TWveDYhLwMzDWJ95BmJMobkuu2dsqEJeej/
+	 0Y5BYmZpVMgVF0FqEgyhAbnfYHcfa6gojjkWFW87J0bfT+avPwJXW355ihk+SPr0EtvJs
+	 CqWckblULURILbwirKJaQavAUJ3Qa0BaQVk+xxcJJvNN9bzAZuHyFvntaP/PJNNeGrEIr
+	 osDxTkge4AU9DuW8WF2kpt73hENhjNQrIF00cMapfYTff1Sh01DsukQz/Hx1wTZWNZnKf
+	 I9NX3QJ6eRCJaED7pIDhafb9KCEGl1d1X+LRITuzwGPqF7ZmxUPhIsgC2r62z6C8ZGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hyv7x4XB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ARSIXRJs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB97E606A326
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 06:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E64606A326
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 06:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hyv7x4XB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 448EA1F0089F;
-	Sat,  7 Nov 2026 06:07:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ARSIXRJs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183AD1F0089F;
+	Sat,  7 Nov 2026 06:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794031671;
-	bh=eivSpggppJzKXZCIzl3c5b2mGwyNAujIo12m1cSxZWs=;
+	s=k20260515; t=1794032270;
+	bh=4NUp6zKi7OhNAqO7TyxoIhg2M2oKnsNewifMx2J5Wu8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hyv7x4XBiVn6O/GXkb07XTO5MsgvyC1rFVAwqXNtWylJiVybNf1R5FzXRq43Sp1KQ
-	 LthLr1aSk+rvYObsr3vqN0rHfLKvtdqzQ4bgUsQwIgAW1t/bri5NVu4Olwog921UCB
-	 S2sC6sHCJQhsB3J4qtiXbu3e/rmrZ51/vqwthMOXjOzek/3aTw40fBwYb7EJBY2bLt
-	 MGbEIKF+U3X3DDrGa0Hr/fSnPRC7m/KqvXgrWLokuuQZHe56zk5XW2vft2+5hhEmp8
-	 eEdYz1BtnRnfUA7qxKWYy4KwOdQTMVDSlOUnd5xbj+DRa5khxoJtHJEhvtsGoYccpp
-	 L6L55dRjyG7Ow==
-Message-ID: <sashiko-outbox-202648@kernel.org>
+	b=ARSIXRJsKst4yMR5LO6O/+l7CCPWKdg9/O2nb5z4cCrI4vwUR/XuWWAx+kjITlw1m
+	 eeA1KyNStiwWenqfPeiLYt0ez9eVDT34gAxJtcZ0VtozyNZ4hhkuQEPOXxjW8/RC7+
+	 P8uN+9mgfHuHcXtqhjoLwEyGiY9hITHAhInK9XW7+JHwCNOvP1jlz/hWzPLu91uWBP
+	 7YrYIuH1bQhw0pT/dpjymchnP4amz4JCKZ1/YGzDeU6BHLicmGv14kTibB19jL48e9
+	 f50e9gEgcuCoyFyURDubTYfT5DsvmzfusciC0rXSz8tDoIKbrTC1y8C6GxMVg5Y4vx
+	 CcTdhhpTgzI3g==
+Message-ID: <sashiko-outbox-202658@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 5/5] selftests/ftrace: Add a stackmap basic
- functionality test
+Subject: Re: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack
+ recording path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Li Pengfei" <ljdlns1987@gmail.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261107055139.3138633-6-lipengfei28@xiaomi.com>
+In-Reply-To: <20261107055139.3138633-3-lipengfei28@xiaomi.com>
 References: <20261107055139.3138633-1-lipengfei28@xiaomi.com>
- <20261107055139.3138633-6-lipengfei28@xiaomi.com>
+ <20261107055139.3138633-3-lipengfei28@xiaomi.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 07 Nov 2026 06:07:50 +0000
+Date: Sat, 07 Nov 2026 06:17:49 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,83 +61,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] selftests/ftrace: clear_trace() race after enable_tracing() in
-  stackmap test
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Critical] tracing: missing RCU grace period in update_marker_trace()
+  on disable [1]
 --
 
-commit dccfeaafcec2ce879803de3ca52edb3da1c1743d
+commit 7075e3df3e37a58db04cf4e9626607b29d78b5fc
 Author: Pengfei Li <lipengfei28@xiaomi.com>
 
-selftests/ftrace: Add a stackmap basic functionality test
+tracing: Use the stackmap from the ftrace stack recording path
 
-This commit adds an ftrace selftest that verifies stack_map deduplication,
-reset behavior with active and stopped writers, statistics reporting, and
-deferred freeing with open readers.
+This commit hooks the stackmap into __ftrace_trace_stack() when the new
+stackmap trace option is enabled, recording a TRACE_STACK_ID event with
+the stack cookie and adding a "free" command to stack_map to release the
+map when disabled.
 
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.=
-tc b/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc
-> new file mode 100644
-> index 0000000000000..f5d1ebd8728e8
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 18710c190c924..cdae2976d224f 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
 
 [ ... ]
 
-> +    echo 0 > stack_map || fail "stopped-writer verification reset failed"
-> +    n=3D$(records)
-> +    [ "$n" -eq 0 ] || fail "stopped-writer reset left $n records"
-> +    n=3D$(stat_val entries)
-> +    [ "$n" -eq 0 ] || fail "stopped-writer reset left stat entries $n"
+> @@ -3996,6 +4101,15 @@ int set_tracer_flag(struct trace_array *tr, u64 ma=
+sk, int enabled)
+>  			return -EINVAL;
+> =20
+>  	switch (mask) {
+> +	case TRACE_ITER(STACKMAP):
+> +		if (enabled) {
+> +			int ret =3D stackmap_set_flag(tr);
 > +
-> +    kill -CONT "$worker" || fail "could not resume reset workload"
-> +    enable_tracing
-> +    i=3D$((i + 1))
-> +done
+> +			if (ret)
+> +				return ret;
+> +		}
+> +		break;
 > +
-> +# Reset leaves old cookies in the buffer; drop them.
-> +clear_trace
-> +
-> +# Wait until some record is hit twice, i.e. reused.
-> +i=3D0
-> +while [ "$i" -lt 100 ]; do
-> +    [ "$(max_ref)" -ge 2 ] && break
-> +    sleep 0.1
-> +    i=3D$((i + 1))
-> +done
-> +
-> +kill -STOP "$worker" || fail "could not stop final reset workload"
-> +wait_for_worker_stopped ||
-> +    fail "final reset workload did not enter the stopped state"
-> +disable_tracing
+>  	case TRACE_ITER(TRACE_PRINTK):
 
-[Severity: Low]
-Can clear_trace race with the resumed worker and leave the trace ring
-buffer empty when max_ref reaches 2?
+[Severity: Critical]
+This problem wasn't introduced by this patch, but can disabling
+TRACE_ITER(COPY_MARKER) in set_tracer_flag() cause a use-after-free of tr
+or corrupt marker_copies [1]?
 
-On the last iteration of the reset loop, the worker is resumed and tracing
-is enabled before clear_trace runs.  Any sched_switch events recorded in
-that window populate stack_map and increment ref counts, and clear_trace
-then wipes their <stack_id N gen G> entries from trace without resetting
-stack_map.  If a stack reaches ref >=3D 2 before clear_trace finishes and no
-further sched_switch event occurs before disable_tracing, the loop exits
-immediately and the later check for <stack_id N gen G> events in trace
-fails:
+kernel/trace/trace.c:update_marker_trace() {
+	...
+	if (!(tr->trace_flags & TRACE_ITER(COPY_MARKER)))
+		return false;
 
-tools/testing/selftests/ftrace/test.d/ftrace/stackmap-basic.tc:
-    trace_pairs=3D$(sed -n \
-        's/.*<stack_id \([0-9][0-9]*\) gen \([0-9][0-9]*\)>.*/\1:\2/p' \
-        trace | sort -u)
-    [ -n "$trace_pairs" ] ||
-        fail "trace has no <stack_id N gen G> events after active-writer re=
-set"
+	list_del_rcu(&tr->marker_list);
+	tr->trace_flags &=3D ~TRACE_ITER(COPY_MARKER);
+	return true;
+}
 
-Calling clear_trace while the worker is still stopped and tracing is
-disabled (before resuming the worker on the final iteration, or by
-stopping it around clear_trace and resetting stack_map) would avoid this
-window.
+In set_tracer_flag(), the TRACE_ITER(COPY_MARKER) case calls
+update_marker_trace() without waiting for an RCU grace period when
+disabling the flag.  Meanwhile, tracing_mark_write() and
+tracing_mark_raw_write() walk marker_copies under RCU without holding
+event_mutex:
+
+CPU0                                    CPU1
+tracing_mark_write()
+  rcu_read_lock_sched_notrace()
+  list_for_each_entry_rcu(tr,
+      &marker_copies, marker_list)
+                                        set_tracer_flag(tr, COPY_MARKER, 0)
+                                          update_marker_trace(tr, 0)
+                                            list_del_rcu(&tr->marker_list)
+                                            tr->trace_flags &=3D ~COPY_MARK=
+ER
+                                        __remove_instance(tr)
+                                          if (update_marker_trace(tr, 0))
+                                            synchronize_rcu()  // skipped
+                                          free_trace_buffers(tr)
+                                          kfree(tr)
+    __trace_array_vprintk(tr->...)  <-- use-after-free
+
+Because COPY_MARKER was already cleared by set_tracer_flag(),
+__remove_instance() sees update_marker_trace(tr, 0) return false, skips
+synchronize_rcu(), and frees tr while CPU0 is still writing to it.
+Similarly, toggling COPY_MARKER off and immediately back on re-inserts
+tr->marker_list with list_add_rcu() before concurrent RCU readers have
+finished traversing from it.
+
+[1] https://sashiko.dev/#/bug/linux-3d780d38-c496-44e0-a5a4-9138bd4d11a0
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261107055139.3138=
-633-1-lipengfei28@xiaomi.com?part=3D5
+633-1-lipengfei28@xiaomi.com?part=3D2
