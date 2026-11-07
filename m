@@ -1,92 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794082215;
-	b=uHXW3fAvQtUp7AwtObeDMEY2z5xz2SuP20HBG6V+k8SvStKuexo39nTUdBe/7ZWaoWpI
-	 LD9qLi8kYqeizve7W5eR/GZIdZijURWkV1Ob8mRTQWduXYljpMX6dHWHjnPOrcFP14lF5
-	 sMS7c4eOwLqe3dL8NCLdc7ZfdmCFyqSFP71FUYAp8aA+9QqSBKdEX50t1PyuL9qvdDuZX
-	 TsqrRA31M8HFahZ37v08GKHuC8LdcGNG51utO8/8/0CIlaoXLPPHUUCTTPDfOagwLcFRL
-	 YMJn2PhLqPOtBJIsOt8GGlTIsXWOc06fFrOzdapk+ebBgATmGs5qPG+qZ7FyzhikI1w==
+	t=1794085120;
+	b=4ZnslGI0v8gyIkosRmPQCkWHTZeHzd8RPqvn7MKU+UTcugqCvIGISJQm03OPmtysIFDa
+	 yDp5e09bd0sCazjLDu4yeBeSOT6OQTdv+xISGFqsdIp58K8lgkP+hJ48bNIJqU1tWYQQI
+	 ajaI55F5/dg7Dq0r+4MSNwshojhcpMCRHaxIu79EkrMMNP65QjGuSWiOdakuPnsFhg9I5
+	 RR5TgL7rn0wLD0TiLx3PE8gIZTKR0tNGUu10g7ICxyDadGziSiqhE+2ta88krSg402vKD
+	 1vrHxGBI0a8OKjQm/8RPZUk2LsgoX6hc3/L9YTI2L8nErzkbhnUic6MJB7yXjqt63/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794082215;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=CMFxkbGnr/NpLAXZXk8rbwy5EGs+66IVJk9lKIVoNp8=;
-	b=uX1djr4KrJAMZKxMVMBGYBEm/Gr7wt1qgnOzrDxZK9R1iSBgprGdLPyP6K/Kq5ISNBIN
-	 wMVrjJPxY+WYgwM6OzCuCxosnXy6wpI7W2HCMKsmd4geOY/3EXgMLxeQzoTZZKzIr/H56
-	 N3barsESmMZbnsBeKFP/sE+lvJdpfnVBVYh6KtGrA6YPQCjDC5vbFEdrF/uGb8eu08gGQ
-	 IIiYpTSbihqegc9CVuAUJXC/ca/2FRym+yV5s/6JKpiCAr5bxDzblan4+s6Pnbta5N+DB
-	 y+rKReozhIyNO+exF3zibImrmrZ/WANB3SHiefsi5qtkY52sPd3I9px3QHhTq1zuMRg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794085120;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
+	b=B+TtI24KpVvf9vtohXUWLXoOUIpU8JTW+I45x/KMACU1VfFC/iskCCt/j7dQBLUU3a9L
+	 T8Dv6zy6BjU81StsCN+Qh5yyl/EC9ltFMDTk5RyHdEXSGxyI9qngopixcwannB0FqY4iJ
+	 mNKY9UHvt8dV5FB/2Iowv24rmN5WmZJU8h/267Kz3VGD4+t/0Pefq8+JVNt5s0jXtwF58
+	 WhLW59z4euOnUR7lsfCd156NoBrKgJ4AskWfcBQNoAxrwH6x6jgaeOuZW/EQ9jTGd1lav
+	 v9pH9mD+nj13B+SEqs7nkd+6op77v2czfzfU68aBCFjZ0YBNIhx/k/muNJ9whhqa6ww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iLeOYJRj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=O+zMOrQB;
+	arc=none smtp.remote-ip=209.85.128.47
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830D7606A331;
-	Sat,  7 Nov 2026 20:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D027F606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 20:58:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D027F606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iLeOYJRj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D661F008A3;
-	Sat,  7 Nov 2026 20:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794082215;
-	bh=CMFxkbGnr/NpLAXZXk8rbwy5EGs+66IVJk9lKIVoNp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iLeOYJRjjnhZl3LWMSGaUd1S27vEBJh9NrDzelAqlZmg4R2RciRfWoeIsojODwzqH
-	 AmV3EGrrSvx70iXnLVmV7/bs2dBDE1x/r3nyPcxADmxBtch4xZP+oTaqLUfx+eYAuG
-	 SGRWdAxli2sYIZwe/Tbuw0udh+c0QNfiwmJOXLSfQKYp1etxVNRgoDq0IPlAd0lt9t
-	 yDMA0BPoIWju9BFMAW7mO+dutMm2GHuzj6pjWBP8PMNdT9kLO2lCpBJij+NhIf7LIF
-	 N/2SXcwPj4meyprPc8KlcX/gZ5yZ2cdhj422kyiEPIrnEjIKnHoNmFfhk++nuATcLn
-	 UZoP1hyr/4Jww==
-Date: Sat, 7 Nov 2026 20:09:55 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 00/13] mm: continue vma_flags_t conversion
-Message-ID: <au-DXpEi4wHwsz0r@gremlin>
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <d0ea7929-7c12-4245-ba3f-6dd5c0269e6b@kernel.org>
- <au3r0-geuwtRYPiC@gremlin>
- <1c0b1368-a381-4b25-bba9-7a4f8e92b764@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=O+zMOrQB
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a2069b9710so106225e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 12:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794085118; x=1794689918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
+        b=O+zMOrQBc6YPVqLx7vh4M83N1v+pRXf5SAk27K9jRtk5LMl1sqRKMTIWe3E30PZ0n3
+         2ABeN4Zd0tE42EOb/hsgrDMSKQLNNWwG9JqvLrMa7Bt5vdLlAFRtx0JEPWa5ZYcXKh3t
+         JG/QKW6I8OD78M4TftXyCsvDJhoWWunh2trOJwV9ugF7hcKdo4VQsqZ8vBtzcGQP/fva
+         f2/3mJiuHqyIkJURlbT3oY96XldAAoiEbZ3NA82l0JqYW5GRfFoLhNhUUH6ScpEtS0Dc
+         t25t0Rt5wbLLDdp9Dw+FaTO748r1cvuXvySVLFtWMF3HTB6TBijZ+uzwWoe5nYZUSkt0
+         sKqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794085118; x=1794689918;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MquOJTyAOSA85wPBCkYjBgdo8R4QVbXqYtRJqICmdiI=;
+        b=Vkd2WL/RVYuQKFvfL+yQwr1ngGCWA110saxxfp1MTSKjXMVmd65udbU2C537g2t/w0
+         2bCe3rhSR6MQflXGHvRoYbvk6Iqtufj5hp36Dyg2j+i7cp3kSror1rzWRa8TCrtf+gW3
+         7fVl/5vrTeA/cz6Yg5sY/7S2mNeenVvbLr90ovdClmK2/UddPnl/WklCZ6eAZa6uEMMa
+         USm236VymZ/bFT5ZnnOhjWuXOOJr+aVqUUji2hN2NKkrfo9bk26kCYJYWp9Jxsv68RMi
+         ddkWxbAWVJZIMovoYTd14uGd9yYXSdSudweWBRbuOgdUSSSMTFdkzAncn6aOQQv3cWl6
+         5SXA==
+X-Forwarded-Encrypted: i=1; AKwUvBxywBHfC5zOUifFkxDp1QyTQyIcWJaQaHOtPhXYsb0F1K2Zz4W3gmt6ujTd5MoUJ4PSAWs9JN8Ar+T7wyZBbRCn/Dg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8+k145NCUXgdtgCfDDKjm8mKxOWqVstX4wsNNJh3oy95enm4cd
+	z1R61Y6ndYRrk6qaYRuG46Jttrp4xVMY4sswqIab1GLmGf3rsFNsbevk
+X-Gm-Gg: AYBFou3IHeHdQKqOp4HPv3Ld92I343LK7eGkWnPTqLQXkppQCNyMeVdrsS4JjuaItqm
+	xvivIyRhnVuSi6E1tnr8oQGNNBYfJFPQymJvrkJz+zLHlVyc8DvPfb5r5K0ydNL+GSCYQF5gozH
+	X8nhWimI3FDVOZsZ9X1Rnq1Ug9AphtBc54MJfWTmYIeXeoHDEdCRPpXPjRJmhz42N2TvXj0Zr2V
+	3FUo7mbV+SId0Vy+J0p+5AOOOqbSAOGL6yQlNRdFlrCVzaMbzywioFm5JUVVVj72wDWAFWd1vkP
+	G8MvDF/dwUxuRM9rdpSCqaf8QD2A3mGQ5uloiZ8KFEJVN2aPCS8hVpFndXlhbEXSgHgEgnwmGgp
+	VJVwx3NRfkvAzKrbdChP90bwR6Y8RLeaBtT5jshbTBngZRs3TGGXnVHtei1qvBszdrNjeDagf3X
+	aEnCgFDf8Y3WmxF/ftmpDrV/G8kNzYYfSXOcZaIWlvjtpGQnvcdqaSvrNrM3j9BK8/kjKpWFRmb
+	8tMLFvD98o7flB4ZRsbwGikyaOgHqdSWe1W2CEnfPW85GhLMixENu7y0qZDw11UUh5wKLxmM/ZH
+	kagsTXBWrlFRzgXilpVpfs1rMGbOiv1R8nP3tO2TfcvkgTkNsiW3G1SRIwRD1wKT/g8epjlD3RE
+	whIQXVxj9SJlyqvE1Kxzj4qOYxc/AXgwE33MTQg==
+X-Received: by 2002:a05:600c:3d96:b0:4a1:7ec7:a479 with SMTP id 5b1f17b1804b1-4b6df7d4d86mr97639175e9.33.1794085118056;
+        Sat, 07 Nov 2026 12:58:38 -0800 (PST)
+Received: from DESKTOP-0KSTGNI.localdomain ([197.52.47.229])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee1ddc7sm8536545e9.4.2026.11.07.12.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2026 12:58:37 -0800 (PST)
+From: Temitope obabi <obabitemitope765@gmail.com>
+To: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Temitope obabi <obabitemitope765@gmail.com>
+Subject: [PATCH v3] rxrpc: Remove unused rxrpc_drop_ack tracepoint
+Date: Sat,  7 Nov 2026 22:56:37 +0200
+Message-ID: <20261107205637.665-1-obabitemitope765@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -96,82 +101,62 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c0b1368-a381-4b25-bba9-7a4f8e92b764@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-I think we're slightly talking across purposes, so to be clear - I am totally
-fine with you taking any of this through your tree or whatever works for you and
-Andrew to avoid merge pain :)
+The only call to trace_rxrpc_drop_ack(), in rxrpc_send_ACK(), was removed
+by commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
+local processor work"). The tracepoint is no longer reached by any caller.
 
-I was just talking more generally about how to merge series that touch a lot of
-subsystems and maintainers-who-may-never-reply, etc.
+Removing this tracepoint avoids keeping unused tracing code and makes the
+code easier to maintain. Each defined tracepoint also takes up around 5K of
+code and data, even when it is never used.
 
-These are the edge cases that make things... fun :)
+Fixes: 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and local processor work")
+Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
+---
+ include/trace/events/rxrpc.h | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
-Anyway, I guess easiest resolution here is for you to take the bits that belong
-to your trees and Andrew takes the bits that belong elsewhere?
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index 56dc9b614071..ec145da21ca8 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1837,35 +1837,6 @@ TRACE_EVENT(rxrpc_send_ack,
+ 		      __entry->serial)
+ 	    );
+ 
+-TRACE_EVENT(rxrpc_drop_ack,
+-	    TP_PROTO(struct rxrpc_call *call, enum rxrpc_propose_ack_trace why,
+-		     u8 ack_reason, rxrpc_serial_t serial, bool nobuf),
+-
+-	    TP_ARGS(call, why, ack_reason, serial, nobuf),
+-
+-	    TP_STRUCT__entry(
+-		    __field(unsigned int,			call)
+-		    __field(enum rxrpc_propose_ack_trace,	why)
+-		    __field(rxrpc_serial_t,			serial)
+-		    __field(u8,					ack_reason)
+-		    __field(bool,				nobuf)
+-			     ),
+-
+-	    TP_fast_assign(
+-		    __entry->call	= call->debug_id;
+-		    __entry->why	= why;
+-		    __entry->serial	= serial;
+-		    __entry->ack_reason	= ack_reason;
+-		    __entry->nobuf	= nobuf;
+-			   ),
+-
+-	    TP_printk("c=%08x %s %s r=%08x nbf=%u",
+-		      __entry->call,
+-		      __print_symbolic(__entry->why, rxrpc_propose_ack_traces),
+-		      __print_symbolic(__entry->ack_reason, rxrpc_ack_names),
+-		      __entry->serial, __entry->nobuf)
+-	    );
+-
+ TRACE_EVENT(rxrpc_retransmit,
+ 	    TP_PROTO(struct rxrpc_call *call,
+ 		     struct rxrpc_send_data_req *req,
+-- 
+2.53.0
 
-I don't think anything here has an inter-dependency.
-
-
-On Sat, Nov 07, 2026 at 08:26:29PM +0100, David Hildenbrand (Arm) wrote:
-[ ... ]
->
-> Because of [PATCH 05/13] mm: convert THP VMA flag tests to use vma_flags_t which
-> is THP-only, and feels like it could go straight through one of my trees,
-> avoiding conflicts with Andrew's tree. But maybe there is more to it that I am
-> missing.
-
-Sorry about that! Please take that through your tree.
-
->
-> I assume stable topic branches would fix that, but they are currently
-> unfortunately not on the table ... :)
-
-I guess we need everybody-on-git for this!
-
-I guess when Liam and & I have the VMA tree we can do that at least for stuff
-that goes there :)
-
->
-> >
-> >>
-> >> Ideally, patches really only touch one component.
-> >
-> > Right, but sometimes functions are declared in one place and called in
-> > others. It is impossible to change the signature of one without also touching
-> > the others.
->
-> Yes. Something like that is unavoidable. Or if you need new APIs/
-
-Yes.
-
->
-> >
-> >>
-> >> [PATCH 07/13] mm/madvise: convert madvise_vma_behavior() to use vma_flags_t
-> >>
-> >> is all over the place :)
-> >
-> > It's not really all over the place, it's converting vm_flags_t to
-> > vma_flags_t across madvise.c, which involves changing a few function
-> > signatures, whose callers must be updated.
->
-> Ah, yeah. What on earth does arch/powerpc/kvm/book3s_hv_uvmem.c do with madvise :(
-
-Yeah it's quite worrying that... :)
-
->
-> >
-> > I could split it up into 3 patches where 1 does internal-only, one changes 1
-> > function, and the next changes another, if that works?
->
-> No, these things really have to go in as one unit, no need to split that up.
-
-Thanks, yeah, it's a pain I know but eventually 'one fine day' (probably in
-2028) everything will be converted to vma_flags_t/mmap_prepare and we won't have
-to think about this :P
-
---
-Cheers, Lorenzo
