@@ -1,49 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794009097;
-	b=TuWW6UnLD6VpWj8uFqnnKh+2cX3JnI+OH3rsH/j8jDTnSdkOzfErTQ76SXiS5HBd6YGA
-	 NrWx1meam8E8QeSHSXU5kba2JPwW3/Kendu8rjoReZfMzT2cLMtONunGaSXPNVOp/ByTl
-	 RQi6GL6f16qWD4zJTr8W0x0P+oI1IcZVm7xBYxP1FZSsQxM4qP+CDFdgbbSPi6nBUaWLx
-	 +Nc7nJrZBXeIp9qR4q2wu2g7l+c/W3RNQe4jwFfDcHFUpKia2jdor/sP9PX0q7xTWg297
-	 7LNl4XFUXV77K5lTLNmCoicLV2NdQHpWJ7Vc9+Uca13d25McFz+Xj2SplaSfVSRmuWA==
+	t=1794029974;
+	b=SP+7B/QzWVC53f5xaCxlEHw5seLAInWyh+CL4SdluYSUgjcac/h2gVqLQDtHUhvcqMeG
+	 DboVpQhwSIHfu4XdpjwhZCNkJZuNdF/UErx+S631IbCbWuDGGWM7P23gzrzI8sGzNmqdz
+	 7sK5XdJM/ozLBBJr9o1bosyLijUBCzZ+qW4tuiUYPQ7nnyyY30eoEP0AzRY4WpZMatziI
+	 Acmn9ziZJ5lZgQEsbAFnOBmZYuYL+MoWyd8NdT5kcDSzsmbzrY9KhZHsdp+/pDAdTFIKC
+	 hm0a7u+8kTpWivVDuUSs88uHw0oilap6jgAc9vCEpoi9f/KKcHUDQaep21hoAugq9DA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794009097;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=lfHkyy9F0GN/3hlkFeSrQiqR30IMzmcD3m/nAdVEVYo=;
-	b=0ChFzTih7pm5bbn9XvkLJKY+pIi8DKLE1g2VxRnQVkaiSqZILihL6hcKbdIVRFF1LFLs
-	 z9X/ExmyYcUGiWzuphGoHMKojd448qCxsoDIpG40G6yL6Q3xvJ7nxo5D8i4/7mcWoQUiA
-	 F9yS3uArHsEGROodEweoETe5G+iBFzlvW/7JQbJU4rjJ2mKR46utqAvdouuckl5IJuQnz
-	 G25XzAZbtP9AkRhsZiil8C5GNq34Wh7FeV9TbwcSEeTiTFnfC7e5H1yQ63lBZ3JjK/YzB
-	 e1BfTU6Zsyj2aKARg0MYiOzC1EEVpccayvHVYmOv+Nv1SM1VwMKVWJGWEHbmtg4hUDA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794029974;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=mf4ZlSzQK0A1YfaXfnQYSWywPw9KHcmgJ0Zlx/5jJks=;
+	b=dIjOkxYRw8NKaM4C7GTZT4Ri0uKnQUlU51hgc7TvJYf4auF7ORcAyiMJxJ+aMbEUjigw
+	 I+O6FohGTYIjwmCAfe56Z95hjMkRVMIZAsg7iAkYy/K5NS5hCaeH7N2uhsgL/sCOI3Ftm
+	 C2iMtpU4L3hRFFWbHBq0bEnAzFRI+jGyqrwwZbeID2jrFI4Or9pvQ8V96ON5KQW1SSf6k
+	 /TDiETBVQCjeE+EoeXC+ffacNNggin0GLtUTJZWPyEkWfpL3wrQ4xhxE0MwDbAFtF+X2p
+	 C1UpMLuroSmMuRYzOx1jOqrNWZQvMGEKRGYqjAJWt3F7LPW5yRWQlsKXWwnKUZts0oQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n2bUN91Q;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qYxxEQoA;
+	arc=none smtp.remote-ip=209.85.216.49
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FC7606A326;
-	Fri,  6 Nov 2026 23:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E251606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 05:39:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E251606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n2bUN91Q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D2C1F008A2;
-	Fri,  6 Nov 2026 23:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794009097;
-	bh=lfHkyy9F0GN/3hlkFeSrQiqR30IMzmcD3m/nAdVEVYo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=n2bUN91QYL5hhj1DTmnS8jzjWtwSLhUihk3RAJa64EoL5JgttMem1Pj0ZjstoIbbM
-	 2Bzby0qdkERcMPcX1r+7egf+b4XQ4DgBARNmV/S/+W1jQ6ki1+01e3qXE13QuTOeKN
-	 V1nNA4t0+0ZoPppyqkcb9IKd67ck0pifGttaprR3Nkbh5nkSanQp0s4UGdjL0IEiCh
-	 Ml3xz3BBUGUMEnCHK1piAuXfdtMSxy7Omso5MCb7pTUu7p+mJOPgFW2aFZ0zpf2ndP
-	 qBYnl71jg4YVL/9B90WfikpLPax7R374AvP+hR6Y5r7JxVpEasmlZaTKZQodLKJOWd
-	 EDRdnmhNPFWVQ==
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Sat, 07 Nov 2026 00:51:06 +0100
-Subject: [PATCH 2/2] mm/khugepaged: check for empty PTE tables before
- retracting
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=qYxxEQoA
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3b0d0b80fb9so815272a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Nov 2026 21:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794029974; x=1794634774; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mf4ZlSzQK0A1YfaXfnQYSWywPw9KHcmgJ0Zlx/5jJks=;
+        b=qYxxEQoAgeRTjMwaQDC2fAV485jTtyVXXUh6AN8P3ryYgsUwS7AzrM/L9YOTmUktBL
+         GrmxIh+aph7bmf1AxySbrEQwF1kVvNaiFABat9MAI0HWL4TvDQAeVqzgzJuqtoEuw6eQ
+         lXAm0ibaN7snVWedEdSBLO15ROieRTahbPsvyOWVseeXVlO35wemXKH3VSUJhQ0Lx4V7
+         yrTBrej7U/w/9xOobPcuIsCY53gGXyWvz1TUQHwH3AJNJsnHoe5Esl5h88vkgrjdYMVK
+         1usU1L8rLYsy61hnyX/H7fDmdOaYfPzLbXxMCOOAnoSzAfkb1XYCAlLKarUsU5kGF+KS
+         +3Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794029974; x=1794634774;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mf4ZlSzQK0A1YfaXfnQYSWywPw9KHcmgJ0Zlx/5jJks=;
+        b=nA5nvrGVQ0VlyPABuf6hEqnREaFjO+0rwBFIPQUdGFTwsGoiTfU4jg8ZJJU5vwtKzu
+         1R5eiom0b8U+0Dpg4dRtepnwwe4gFE56VTcnCGrI5xZ9UHlulrN8vu49Ua9GbEzBBJGH
+         8XFQzqUzovkQciODAiGv/K9hcFQuj3uALfLTzZYN7U6jag0F7VM/lMVHFU6iyx2hGUEJ
+         f/4wVNVCxMh8rgiaFe3+o9wFcBK9kEFLrtemU+o9keR+k7iBGn3d2JskS9AblFQqhuuf
+         xDZ/49V3L6tzIrVvCcuEcJ1K6JQhKBnihU/TtguT4+hpWLprbcuXx2Yi6zqoa6ggmPHU
+         D/WA==
+X-Forwarded-Encrypted: i=1; AL+hErGqAJCtw/u5juh15P7ywDryAVbICrYlDhW+PwMgnyWuqBs2SSqrFkDzd8wpOjj0Fa5COcBkA7w45oAYT7M/EULBt1E=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9ighUhIC6rIi6RBUFYgvqMorZsXmHZaUcZTXVrCDOmSSOnHyPu
+	q/Gwo5eFvFtHGYAO6KY2ISypzhquRvqfezhKcyZK3K1L9gGVnEflHxqd
+X-Gm-Gg: AYBFou2PkHbcVKWLTfi0X0m7GTGYmai7YI8pfqAxKpYwrxdwpmtK/DUCgPFpSLzrXwg
+	XAgvNjQEM7SSYCjruqw8XgphL5fdsuexm9/xhzUYcJwFcYxWtqA31WA57VSaCBJoHOxffpTyKae
+	/05QTI1k2Qk2n+cqVZVSLeYHTVJ2MXGxgEoRmtvfR4ES0LdTNTvWSL06gj65V1adlRzU+dXZfej
+	n23ytvkgjMIrfiCmqqTncjppTPYEpmxFIUmKp0LXko8NMvBngPsxVn/1BW3zEoa7cYfHydZpNYu
+	BT1NPquE/4zDWII0FsG7Q3EZ30ICKyNY46M1QX64KduBRqPPQW02Svc2VOnQtMSBO9QMyy0dM2i
+	I7jLDK5D+nPIGhM4h4HSz8LLGrexXgpahgSlSdmPk1b1Bg+82FF3xm8ER9DROqF0XO5m8Ixye8B
+	bX68+0yScO5ONpeSjob4bu2zZD3DQW12OjmX39VAJGvt/smui3IudkdtX0gPcEQeQkhdoyp/UFm
+	+JTqeqIA1K7YBSfBJXHIu1LLfo717yO2vQW81XFXTSrwTcriZVZGnPG51Obg5/uqBEh3/J/OGUa
+	Ry6oLUrKkr1z+MtZPoPoD+rbsMwykiPVzKD7bf9IuZBJ/3/UOh20GC1aCa2aQy9aNMdMfg==
+X-Received: by 2002:a17:90b:3950:b0:3b0:92b2:2e74 with SMTP id 98e67ed59e1d1-3b0db6f6c35mr4733562a91.62.1794029973785;
+        Fri, 06 Nov 2026 21:39:33 -0800 (PST)
+Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:a1a:7bc2:20ba:a479])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1057b17f8sm1838127a91.1.2026.11.06.21.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Nov 2026 21:39:33 -0800 (PST)
+From: Li Pengfei <ljdlns1987@gmail.com>
+X-Google-Original-From: Li Pengfei <lipengfei28@xiaomi.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	zhangbo56@xiaomi.com,
+	lipengfei28@xiaomi.com
+Subject: Re: [RFC PATCH v7 02/10] trace: use the stackmap from the ftrace stack recording path
+Date: Sat,  7 Nov 2026 13:38:58 +0800
+Message-Id: <20261107053858.3070072-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261103193421.63f4454a@gandalf.local.home>
+References: <20260912083753.3426176-1-lipengfei28@xiaomi.com> <20260912083753.3426176-3-lipengfei28@xiaomi.com> <20261103193421.63f4454a@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -53,242 +107,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261107-b4-uffd_marker_loss-v1-2-82926b22704c@kernel.org>
-References: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
-In-Reply-To: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Peter Xu <peterx@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Zi Yan <ziy@nvidia.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Kiryl Shutsemau <kas@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-mm@kvack.org, 
- linux-trace-kernel@vger.kernel.org, 
- "David Hildenbrand (Arm)" <david@kernel.org>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7308; i=david@kernel.org;
- h=from:subject:message-id; bh=34SRpvzvO0Nshm7TUytyAhxQ4DZ5vKoV8iMQD9fw14g=;
- b=owGbwMvMwCF2/OVpCdfQ3ZWMp9WSGLLepb9dk6Fe9D/PbQKT2/pqD++WFb+iS7KSb7He4/jBx
- F2ec+51RykLgxgHg6yYIktQ8H2Dly/X1Va78THDzGFlAhnCwMUpABMJXcfwv84jztwnKp3/84LA
- 1Y/i+JRX3V/9IHRep+emhIbNf1Rm/GD4Z/7w1PKfD7ueP2Li/K3+pfzqpcpUzvUPTloy6e9okX8
- 5hwkA
-X-Developer-Key: i=david@kernel.org; a=openpgp;
- fpr=1BD9CAAD735C4C3A460DFCCA4DDE10F700FF835A
+Content-Transfer-Encoding: 8bit
 
-retract_page_tables() uses elaborate (error-prone) logic to avoid scanning
-whether a page table is empty.
+From: Pengfei Li <lipengfei28@xiaomi.com>
 
-Let's prevent more future bugs and reduce the complexity by doing it
-just like try_collapse_pte_mapped_thp(): scan if the page table is
-empty. Keep the check for anon_vma in place.
+On Tue, 3 Nov 2026 19:34:21 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Scan under the PTE lock only and try to grab the PMD lock afterwards.
-If that fails, drop the PTE lock, take both locks in the right order
-and check again. This avoids holding the PMD lock during the scan in
-the common case.
+> FYI, the tracing subsystem requires starting subjects with capital letters:
+> 
+>   trace: Use the stackmap from the ftrace stack recording path
 
-This will now retract in more cases where the VMA flags were an
-over-indication, with the cost of scanning more frequently under lock.
+Will fix for all patches, and use the "tracing:" prefix that the rest of
+kernel/trace uses.
 
-We could scan lockless first, but it doesn't really seem worth it for
-now. If this ever becomes a problem, we could do that, or alternatively
-refuse again more of the VMA flags early.
+> Also, did you use AI for this? Most of the comments are useless, and sound
+> like they come from AI.
 
-The structure of the retraction code is now similar to
-try_collapse_pte_mapped_thp(), with some slight differences (e.g.,
-initial empty scan) that make this harder to generalize. But likely we
-should look in the future into merging more of that code.
+Yes. I used an AI assistant to help draft a substantial portion of the
+code, nearly all of the comments and changelogs, and most of the test
+programs. The design decisions are mine, and I checked the test results
+and went through every version, but I should have trimmed the comments
+myself before sending. Many of them were added in response to automated
+review findings rather than to explain the code, and they stayed. I
+should also have stated the AI use from the first version.
 
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- mm/khugepaged.c | 127 ++++++++++++++++++++------------------------------------
- 1 file changed, 45 insertions(+), 82 deletions(-)
+For v8 I am going through every comment in the series, removing the ones
+that only restate the code or the review history, and keeping only what
+the code cannot say. v8 carries Assisted-by tags, and the cover letter
+says what the assistant was used for.
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 2a5ee8fc42335..f39ea3d076554 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1884,8 +1884,9 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
- 		return SCAN_VMA_CHECK;
- 
- 	/*
--	 * Keep pmd pgtable while the uffd bit is in use; see comment in
--	 * retract_page_tables().
-+	 * Keep the PTE table for uffd-wp and RWP registrations: it may
-+	 * contain per-PTE protection state that cannot be reconstructed
-+	 * from the page cache.
- 	 */
- 	if (userfaultfd_protected(vma))
- 		return SCAN_PTE_UFFD;
-@@ -2081,48 +2082,6 @@ void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- 	try_collapse_pte_mapped_thp(mm, addr, install_pmd);
- }
- 
--/* Can we retract page tables for this file-backed VMA? */
--static bool file_backed_vma_is_retractable(struct vm_area_struct *vma)
--{
--	/*
--	 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
--	 * got written to. These VMAs are likely not worth removing
--	 * page tables from, as PMD-mapping is likely to be split later.
--	 *
--	 * Can't use vma_has_anon_rmap() here as the VMA may be stabilised
--	 * by the file rmap lock.
--	 */
--	if (READ_ONCE(vma->anon_vma))
--		return false;
--
--	/*
--	 * When a vma is registered with uffd-wp or RWP, we cannot recycle
--	 * the page table because there may be pte markers installed.
--	 * VM_UFFD_RWP ranges similarly rely on per-PTE uffd state
--	 * and cannot be recycled to a shared PMD. Other vmas can still
--	 * have the same file mapped hugely, but skip this one: it will
--	 * always be mapped in small page size for these registrations.
--	 */
--	if (userfaultfd_protected(vma))
--		return false;
--
--	/*
--	 * Preserve guard and poison markers when retracting page tables.
--	 *
--	 * These flags are set atomically on marker installation under mmap/VMA
--	 * read lock, and here we may not hold any VMA or mmap lock at all.
--	 *
--	 * This is therefore serialised on the PTE page table lock, which is
--	 * obtained on marker installation after the flag is set, so this
--	 * check being performed under this lock excludes races.
--	 */
--	if (vma_test_atomic_flag(vma, VMA_MAYBE_GUARD_BIT) ||
--	    vma_test_atomic_flag(vma, VMA_MAYBE_UFFD_POISON_BIT))
--		return false;
--
--	return true;
--}
--
- static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- {
- 	struct vm_area_struct *vma;
-@@ -2133,10 +2092,18 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- 		struct mm_struct *mm;
- 		unsigned long addr;
- 		pmd_t *pmd, pgt_pmd;
--		spinlock_t *pml;
--		spinlock_t *ptl;
-+		pte_t *pte;
-+		spinlock_t *pml = NULL, *ptl;
- 		bool success = false;
- 
-+		/*
-+		 * Skip private mappings that have been written to: we'll likely
-+		 * split them as soon as we CoW later. Use READ_ONCE() because
-+		 * we are neither holding the VMA lock nor the mmap_lock.
-+		 */
-+		if (READ_ONCE(vma->anon_vma))
-+			continue;
-+
- 		addr = vma->vm_start +
- 			((pgoff - vma_start_pgoff(vma)) << PAGE_SHIFT);
- 		if (addr & ~HPAGE_PMD_MASK ||
-@@ -2150,52 +2117,48 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- 		if (collapse_test_exit(mm))
- 			continue;
- 
--		if (!file_backed_vma_is_retractable(vma))
--			continue;
--
- 		/* PTEs were notified when unmapped; but now for the PMD? */
- 		mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
- 					addr, addr + HPAGE_PMD_SIZE);
- 		mmu_notifier_invalidate_range_start(&range);
- 
--		pml = pmd_lock(mm, pmd);
--		/*
--		 * The lock of new_folio is still held, we will be blocked in
--		 * the page fault path, which prevents the pte entries from
--		 * being set again. So even though the old empty PTE page may be
--		 * concurrently freed and a new PTE page is filled into the pmd
--		 * entry, it is still empty and can be removed.
--		 *
--		 * So here we only need to recheck if the state of pmd entry
--		 * still meets our requirements, rather than checking pmd_same()
--		 * like elsewhere.
--		 */
--		if (check_pmd_state(pmd) != SCAN_SUCCEED)
--			goto drop_pml;
--		ptl = pte_lockptr(mm, pmd);
--		if (ptl != pml)
--			spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
-+		pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
-+		if (!pte)
-+			goto unlock;
- 
- 		/*
--		 * Huge page lock is still held, so normally the page table must
--		 * remain empty; and we have already skipped vmas with an anon
--		 * rmap and userfaultfd_wp() vmas.  But since the mmap_lock is not
--		 * held, it is still possible for a racing userfaultfd_ioctl() or
--		 * madvise() to have inserted ptes or markers.  Now that we hold
--		 * ptlock, repeating the retractable checks protects us from
--		 * races against the prior checks.
-+		 * The folio lock prevents file faults from modifying the
-+		 * page table, but other things (userfaultfd, CoW, guard
-+		 * markers) could have modified the page table until we lock it
-+		 * and check.
- 		 */
--		if (likely(file_backed_vma_is_retractable(vma))) {
--			pgt_pmd = pmdp_collapse_flush(vma, addr, pmd);
--			pmdp_get_lockless_sync();
--			success = true;
--		}
-+		if (!pte_table_empty(pte))
-+			goto unlock;
- 
--		if (ptl != pml)
--			spin_unlock(ptl);
--drop_pml:
--		spin_unlock(pml);
-+		pml = pmd_lockptr(mm, pmd);
-+		if (ptl != pml && !spin_trylock(pml)) {
-+			pte_unmap_unlock(pte, ptl);
-+			ptl = NULL;
-+
-+			pml = pmd_lock(mm, pmd);
-+			pte = pte_offset_map_rw_nolock(mm, pmd, addr, &pgt_pmd, &ptl);
-+			if (!pte)
-+				goto unlock;
-+			if (ptl != pml)
-+				spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
- 
-+			if (!pte_table_empty(pte))
-+				goto unlock;
-+		}
-+
-+		pgt_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+		pmdp_get_lockless_sync();
-+		success = true;
-+unlock:
-+		if (pte)
-+			pte_unmap_unlock(pte, ptl);
-+		if (pml && pml != ptl)
-+			spin_unlock(pml);
- 		mmu_notifier_invalidate_range_end(&range);
- 
- 		if (success) {
+The rest of your comments on this patch will be in v8: a record_stackmap()
+helper with a stub, the depth check before loading the map, a named enum,
+the tracefs setup moved into a helper, a stub for
+stackmap_mark_init_failed() so the #ifdef goes away, and the comments you
+pointed out removed.
 
--- 
-2.43.0
-
+Thanks,
+Pengfei Li
