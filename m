@@ -1,84 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794071590;
-	b=xzhG+giNrqa8o/zsQJHWpK/1Za8J9/h55dZNJN3xEGAqyf4trS/4opmTgnDPRQ8ZvEBi
-	 6xl3fmL8fhjGmA5CCodOyjWrAL9pI+R/ooB0InEIiGjLowq4gfdHOBs8A6IVKHOg1S0cU
-	 enBlBkrE+uyoApY8ez+Ep9+7x6rWzkGaZryARsETYH+rg1N6jjbR6GojgWZF8UV4Jlwgo
-	 /7fWQajpL6l0fDoUhMZMjccZGcV5eEMcJ9cgEvEcd0QE+iETz6T3421lnNuXetQeP+8mx
-	 wuCblqcftA1/fddnQdUfDJr+XU7opkFvPubFmabp2411zAQE2h8JvHMszBF1KpqRnrg==
+	t=1794071592;
+	b=abYt2drS5MswkjGhxj4r8Rt9CjMjG7OIAWqmvLRoqMILgKT31Cb5uOW66ff4+KhzBUR5
+	 tYzhvLKBFBxKS0NJAg9tw1zvS8m9kLoN1YuZT4yH/sVzhY72+gD29YsG/25Ca+wMyoa4M
+	 L3pFmDpd0qgBENjA+Bz14xoUOJi92XvhspTDEz/98+ntVGemhN/DyXA5QZBmSDTQuw8KV
+	 ZdQHYg7Nol2qd/9+O0gRG1z8FanTGhdeXodkcFnoZ72Pd1HjEBlU93tioL3V2NnS2icVy
+	 +1J46j6MdSvCl3nvPp90lrxUurIy2aGnwssv82E8sz1SmlESByiCXx75Iy3NlNkm5/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794071590;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794071592;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=TIc6+YNxVXhGA8deHKYHd4FZyrT7f/jlj0igPXFCOsE=;
-	b=E1DEOXgGPeqeSQsU2BRNgJsz6N0D+mLnthEBjcbfZ3tlesLXyfZGkkZJFkd0c6TY0gO4
-	 w4Q+w/xan65AsIosrHjW6PLPiG088uq7WfUAsP3HuqFMKYyFqmleoL3onY358SwBN0cTR
-	 1NzWsXVP7nQea1zGgtztSrp1A2HfKfrglveYn4kdfzBgqk/ulkBSIjIgLb3sfXGGBkisH
-	 40rUYITJo1WmY4USG6VJfM6OsZyDVUin7L04REAPcpkIVF21R4IqpE8t+S5VD58WlhRwd
-	 JS/ZaBlBUj6vtWbrF7EN9YNb728OaNPUOgdL1NImWDiYOkEDAWM8/AbwewfO3dyGQzA==
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=mynYKR1ZAkpBPyX1Y39GAIXi0uQVHkLOFJGn8mGHCF8=;
+	b=n9Ytox1diaqtWWd3rg9qp94Nsgn8erPc46CoN9vMkrmE8qQM1sD/VDnUzOPuKMmWhZo1
+	 +vZ2hOF5lpvOE4pIanuYaKs3f1hU2egPgggEj67hocbMcZx8JG/l8UxaFmOVrEKfznxfS
+	 aDJcBKTTtn9AilGPNR5c2R2Mjw0K6nXH1PCI3Ms1y7ns/ZkjuW54K9t5+g6u9t4m+w+Me
+	 e/tMJFHP/n/8N9iib4D226dCseQHlqRRNm+7p42D61FRzQ7LlK9rPsF1AAQ18ideHnSVw
+	 /B8TwPp+Wc5QHD8Xd53VwkObFsG/BuHtBTEtI0U+H2WHdjMnonPX2HiHj4aUU6L8BsQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x6OSU7Ir;
-	arc=none smtp.remote-ip=209.85.221.45
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AlVGkqZf;
+	arc=none smtp.remote-ip=209.85.221.49
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5266606A335
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 17:13:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5266606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968B3606D833
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Nov 2026 17:13:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 968B3606D833
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x6OSU7Ir
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-491846221ffso1432457f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 09:13:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AlVGkqZf
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-490585eddfcso1039668f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 09:13:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794071588; x=1794676388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TIc6+YNxVXhGA8deHKYHd4FZyrT7f/jlj0igPXFCOsE=;
-        b=x6OSU7Ir21f6GzY3BamV86ebskkhQEG7OSMk1lTI9Nc1pNOHgHZ1lYDP5dTByyQXQq
-         pnVsizsC04hWjoEHcNOwKXoZx3hYdyuDm3u8Rr1r6LSkWoClZuTasWJQtvqbksHMUTH+
-         6o9rhfmCTfAQ5wkvWws3P4WzmcKJnM2fP4hwwPhHEGjbMeEPV2ZXU2KBKaZ+zIt78g5q
-         pZuC4zdWGnvbUAXkIPC3tVFK+8NFV99ba3CNQW2T0ePSTIOvzRKvXo5ivVAxeBvNtuS/
-         LSJCxqa0jl/W9OVD0I5dwsG1Za1gubmG7eYtCjrKPqOGmYtYLTx6Qis51cWznqkdGCi5
-         wqzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794071588; x=1794676388;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1794071590; x=1794676390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TIc6+YNxVXhGA8deHKYHd4FZyrT7f/jlj0igPXFCOsE=;
-        b=WFKp58ddD527v9+SxG/yOUMPJGWfbwGrzMfrSuhUT7BFDL3SuO4orPo0HUXmNfMGxk
-         eO46l1ee9JIcapkcp1Pk8T/vjvTSqeSVlGXyoOvM9XGdm3OQVoAFIT+BTpb1pcRunMJ7
-         C9uy/FpJLqZ7UeZQCq7Ag02/gcS3XJjEiQwON6r6fOLYZa6eqCqIOcr7sY5pRRMqLNnH
-         2te2R0Uw7LY4xugnUbnUJL3TpyAtgqnnXoO5Iy7i+NtyXYosgbEl2imcFgb0FzOnmElw
-         oL2ABcMukCMQYOB2ZbQpyci29afIRYgLJ36hAxPF6phcr1kk8nmLZd2kjoIkaU2OSoS+
-         sK+A==
-X-Forwarded-Encrypted: i=1; AL+hErHW0A76NcHv3TD56JcPxgfcm6ScoM2VK2ACQZ33vWTK/JSrl4ylw3dGh3U/yxgMNnZtOg8/LG5B0jLifO35STt/0wE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+w0D42ddao7Nb+rB+zuyTtFvOFIPlHOSEQ8wXbw/umAq51D2Ra
-	WgpwU2ate+RZbfkDMeb2QMeXKqTlZOat/AE+gmtjXGEH0gi80Z86Jwu8
-X-Gm-Gg: AYBFou3e55zl50kzBMUzejjFXwv1NL40EOjeqDq7qdKixshkt2dL9yEtuvB6zB2fqmZ
-	xWJFS7Zp2SPoLp6Z1oiluESHrkc0DZx/gKq/1sMIYzFkFELpw1vJHDq6oMKFqCdvmAY5+2CuNHH
-	LzZA4MzMzC3wdcAW9cfpkD3q02dapWtlgx4KP9C2m4gp2Bdp331MEeZvCmR6qoidRdGO42NXveC
-	5C4uCDJ5vi8OBzBhKpDqUz3EegRWhuMeFh+CXTsTKQnsboyBUZwvcKLBA6KTyuViqgbW0vHC2wj
-	hqJ7PrRuO0mis39vGU+VW9MtYzOc6dTl6JAI9+Y1C+6lOVShJuzNscKT56jwmX23pgwgICt55xu
-	3UlWYW97V7AEYDSbaIKqAMdn8unVqfNUP3hxwo10F7+06ND1RmNDP7KlkdDQkIOW4I1eIW0zWtz
-	bNLvduh658vouyFQh47zug+AkMm4Y3KMzp2smjK83WnnZAe4DmJjeC5Sw5wEXmixQbtKwoWbVqj
-	MXsujs5c3DeqJ4AtC26HQ+01BeZ0yU5oQ1mhLl17Wshr/uFfQ0I8Pv16WtnqhtJl5YEXBjscIAz
-	u1FY37btPwZe/wmYX01W5qXenfOJDGGHVcIIdUYiuGDn/szDztXwGT5Cmf/QiOizkXda5M6w3Jr
-	f3x9DrzZnNDGwp0JoH5oKQpYZyeYf5pUR0o1xT/iShFBeHVlaKswUuLSmaUmMkj6xsL1NFb5wIO
-	vxdeblI5M1z2pA4pTya0EZ5O7driqqDcQ=
-X-Received: by 2002:a05:6000:490d:b0:48f:fcac:a5e2 with SMTP id ffacd0b85a97d-49277404453mr10990954f8f.38.1794071587759;
-        Sat, 07 Nov 2026 09:13:07 -0800 (PST)
+        bh=mynYKR1ZAkpBPyX1Y39GAIXi0uQVHkLOFJGn8mGHCF8=;
+        b=AlVGkqZfi0ocabBbxkt2TvF5QtI39r3zXqB4qI3AH1FllhWANSWuGEqNJv5LOzmuxa
+         9ccpc/FYIqJMUn3gf7pEUnbdTJAGORDj3s/IqFYmC/ADcn1e0eYzqGCKU12Z2riCt4A0
+         mFraTB9qHtBpwxehnrJaooQE3e3KJ0i1Xv4Q75KnZuTew6xTXlaK2TNPLf3S9fr2OE5f
+         WBw8pxOlCFMaTwgGnNByzPQD05IrFWHGccXNS0hZm7QLT9Ri83BrYeI/4c127U8ZbwCU
+         J+ySr+wQ1tXiMVAbI343gkpyG8GstjI3kbT/OVmTmfbm9CFFrM2h6mJ+5RbpMRiDOISH
+         /6Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794071590; x=1794676390;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mynYKR1ZAkpBPyX1Y39GAIXi0uQVHkLOFJGn8mGHCF8=;
+        b=dA1CdsbwjTI0Zl7cECbCI1bJTol9JvZsKrXkYVgHnimYBli4/6yo9GmMnb9kRniGIT
+         mcDCP7ro9Vg5fZDvJPcUQiIGItaElyjyt3RCMljS8B5GNgD1MULP3S7r1VTUA997ibOy
+         jVcQPPjSz5prYo3uPpXivCtZESkZYJcrZLY4/OsWbdQpGL/5RTvEWX31Eb33lBQOjy+W
+         JXm70G3Q1wlEh8lq8Jk0VBiZQpDj9FteVxL4XWOb7BmjVrAB8QZdFnjch7tt0lkFQuVt
+         w6JC5HltehL24SGNp90at8J42fyAI0W261fTdtQ7p6xFNn1NXWQcciUxCBq/wMNOArCS
+         Qgaw==
+X-Forwarded-Encrypted: i=1; AL+hErEWJAqewekpkVTsozYA6tdCeaPoaWfgKO2eJmeIQhbCQJ0ra9+/riLV4axn0e1UhKRhsVD1Y531jWUvwhP68wlZL6w=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+MZuyLrapMg+haeE4Kjn+cfFiyVy8cpvrKh+zLcWcLui+z+56q
+	gMnR598JVVughRM4BI31jom0beBSO1cwYifWxXynW4/uD/aR8qUtOVUo
+X-Gm-Gg: AYBFou1TAiYg7wf5C9gsxGozD0yHIfuaHPUcN3vYO0LbvI3zyocI/AtoDTWBW5eSuy1
+	5CMcWvKDrF2MDq2JD2uDTSZr1ggD04FfARhDXC7OuqI1M9mKpHTAvGoB3hsyFvTTdJcprVe8tAB
+	E+NczhEZv6dGyE9I8zyBq2VxWm1OG0zcBD876JRGuyFb82XGcEdng9XeDk67SCBSJt5wWDu8Uia
+	qmfrn4SrndB6uPZtyFs9v89LAvGgTYCDE8LJ058L+m/8kUSPWDOMTh3n6QAiYESkygDtkxcfBXo
+	CoZOn3wYKN9/hI+Fih0Zfu/S/xS0m1JgtoKv0xEslZHy1pHLUnWih7HiOgbpM1qaXgHgMAHxJTk
+	kLo8FZiGlgMl3jZxiEM3sKy2Pu43GzSh6z658eGRlDOi6YzQX/cTHzUzrna2Kli1SDIg0KYrkK6
+	2lHHc1+eccouCx/r8lHPuZGJXXZYAa0zMfDUg1sOC+HgBvEr0cGJAAKhS5lgSBLOY7ama3U+PQ8
+	+9MRn7thNLV+2Y6mJpGQvhKbP/5EddQoBt5xc1Pn8xefeveAt7t+AjQlvZbSwfQ6CM8m+yBZTDd
+	btY1abyRAx+Hg4xoK2O4cuw9T5NedLR1KrL2Jff5DMnfjtzRVfnL9v68aFNBNLdw2JGtMLyW2wb
+	vwmE49Ll7sQJdB5yeK3suFugQ1HmfMSsrHbdN+dqlMpNeywvg1pTdv437+6grUSEu/7suMsKnV3
+	KSH/ua1QXF3j/1tio0rIcZ6jSLQsktdmw=
+X-Received: by 2002:a05:6000:2689:b0:48b:e50:714e with SMTP id ffacd0b85a97d-493aa8d24d2mr7126885f8f.36.1794071589545;
+        Sat, 07 Nov 2026 09:13:09 -0800 (PST)
 Received: from localhost.localdomain (dynamic-2a02-3100-b149-1401-90c6-65b4-035d-1e3d.310.pool.telefonica.de. [2a02:3100:b149:1401:90c6:65b4:35d:1e3d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-492d723222fsm10627105f8f.21.2026.11.07.09.13.05
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-492d723222fsm10627105f8f.21.2026.11.07.09.13.08
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 07 Nov 2026 09:13:06 -0800 (PST)
+        Sat, 07 Nov 2026 09:13:09 -0800 (PST)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>
@@ -106,10 +107,12 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-rt-devel@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 0/9] rv: Verify generic IRQ context transitions
-Date: Sat,  7 Nov 2026 18:12:43 +0100
-Message-Id: <20261107171252.25090-1-kmehltretter@gmail.com>
+Subject: [RFC PATCH v2 1/9] tracing/irq: Add generic IRQ context boundary tracepoints
+Date: Sat,  7 Nov 2026 18:12:44 +0100
+Message-Id: <20261107171252.25090-2-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20261107171252.25090-1-kmehltretter@gmail.com>
+References: <20261107171252.25090-1-kmehltretter@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -121,166 +124,253 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IRQ action tracepoints describe handlers, but not the lifetime of the
-enclosing IRQ context. One context may run several actions, and an action
-may be dispatched outside hardirq context. PREEMPT_RT may also enter
-serving-softirq state without invoking an action. This leaves no generic
-event stream from which an RV monitor can check IRQ-context transitions.
+IRQ action tracepoints describe handlers, not the enclosing interrupt
+context. One hardirq context may run several actions, while synthetic
+dispatch can invoke an action outside hardirq context.
 
-This RFC adds tracepoints at the generic hardirq and serving-softirq
-boundaries. The irq:irqstate RV monitor checks their order and agreement
-with live kernel state. irq:irqexit follows the owner of a
-preempt_schedule_irq() invocation across task switches and CPU migration.
+Add bare tracepoints at the generic hardirq and serving-softirq
+boundaries using DECLARE_TRACE() so they can be hooked by in-kernel
+verifiers and tests without exposing a new user-space tracefs ABI.
+Record hardirq depth and whether serving-softirq state temporarily
+replaces hardirq state during interrupt return.
 
-The hardirq tracepoints cover paths through irq_enter() or
-irq_enter_rcu() and their matching exits. They do not cover direct
-__irq_enter() and __irq_exit() users, raw paths, or architecture-specific
-entry and return intervals. irqexit covers preempt_schedule_irq(), not
-the complete interrupt-return path.
+A boundary callback can raise work after the normal pending-work
+decision. Include work raised at softirq entry in the initial pending
+snapshot, and hand work raised at a final boundary to the appropriate
+worker.
 
-Boundary callbacks can raise softirq work after the pending-work check.
-The series wakes ksoftirqd or ktimerd for remaining work. KUnit covers
-nesting, monitor synchronization, PREEMPT_RT worker intervals, provenance
-and late-work handoff.
+The tracepoints cover irq_enter() or irq_enter_rcu() and their matching
+exits. Raw and direct low-level entry users remain outside their scope.
 
-Gabriele answered two of the v1 questions [1]:
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+---
+ include/trace/events/irq.h | 56 +++++++++++++++++++++++++
+ kernel/softirq.c           | 83 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 137 insertions(+), 2 deletions(-)
 
-  - The boundaries are now bare DECLARE_TRACE() tracepoints like the
-    existing RV hooks in include/trace/events/sched.h, so they add no
-    tracefs ABI.
-  - irqstate and irqexit stay separate automata because one is per-CPU
-    and the other per-task. A hardirq or non-RT softirq belongs to the
-    CPU it interrupts. A preempt_schedule_irq() invocation belongs to
-    the interrupted task, several tasks can be inside one at the same
-    time, and it can migrate before it returns. Each RV automaton has a
-    single monitor type. Both now sit under an irq container, so they
-    are enabled together by default, and the irqentry/irqexit naming
-    clash is gone.
-
-Questions still open from v1:
-
-  1. Are dedicated scheduler tracepoints the right way to follow
-     preempt_schedule_irq() across task switches and migration?
-  2. Is the KUnit-only hook for an empty ksoftirqd invocation
-     acceptable? Outside a KUnit run, its worker checks take a disabled
-     static-key path.
-
-Patches 1-5 add the tracepoints, monitors and documentation. Patches 6-9
-add KUnit coverage.
-
-The series is based on v7.4-rc1, which contains the v1 prerequisite and
-Wen Yang's reactor lockdep fix:
-
-  commit feb5c9a2447a ("softirq: Preserve interrupt context on return from interrupt")
-  commit 39ccedfd9e55 ("rv: Use LD_WAIT_SPIN as the reactor lockdep wait type")
-
-The series is independent of the early-hardirq series [2], which
-installs hardirq state before entry tracing. Both change
-kernel/softirq.c, so applying one on top of the other needs a small
-conflict resolution in __irq_exit_rcu().
-
-Changes since v1:
-
-  - Use bare DECLARE_TRACE() tracepoints instead of trace events
-    (Gabriele)
-  - Rename the irqentry container to irq (Gabriele)
-  - Add text schematics of both models to the documentation (Gabriele)
-  - Document why irqstate and irqexit are separate automata
-  - Rebase onto v7.4-rc1
-
-Testing on v7.4-rc1 with Clang 23.1.5, GCC 14.2 (x86) and GCC 16.2
-(cross), and QEMU 10.0 TCG, with lockdep and the locking selftests:
-
-  - Each patch builds with W=1 on x86_64 without new warnings.
-    RV_MONITORS_KUNIT_TEST=m builds on x86_64 and arm64. kernel-doc
-    reports no warnings for the changed headers.
-  - The rv_mon KUnit suite and the reactor suites passed without
-    failures on:
-
-      x86_64   PREEMPT SMP4 and UP, PREEMPT with nohz_full=1-3 and
-               threadirqs, PREEMPT_RT SMP4, PREEMPT_RT SMP8 with
-               nohz_full=1-3
-      arm64    PREEMPT, PREEMPT with nohz_full=1-3 and threadirqs,
-               PREEMPT_RT, PREEMPT_RT SMP8 with nohz_full=1-3
-      riscv64  PREEMPT
-      ARMv7    UP
-
-    Each configuration ran 13 to 21 of the 29 rv_mon cases. The others
-    are skipped because they need a different configuration.
-  - RV=n kernels boot on x86_64 and arm64.
-  - On top of the early-hardirq series, the same suites passed on
-    x86_64 (PREEMPT, PREEMPT_RT), arm64 (PREEMPT, PREEMPT_RT) and
-    riscv64.
-
-An LLM assisted with the patches and the testing.
-
-v1: https://lore.kernel.org/all/20261022050712.75035-1-kmehltretter@gmail.com/
-
-[1] https://lore.kernel.org/all/FACA54EC-F846-4051-9ADD-DB46E7665FAD@redhat.com/
-[2] https://lore.kernel.org/all/20261028033127.82193-1-kmehltretter@gmail.com/
-
-Karl Mehltretter (9):
-  tracing/irq: Add generic IRQ context boundary tracepoints
-  tracing/sched: Add IRQ preemption lifecycle tracepoints
-  rv: Add a monitor for generic IRQ context transitions
-  rv: Add a monitor for IRQ-exit scheduling ownership
-  docs/rv: Document the IRQ monitors
-  rv: Add KUnit coverage for IRQ context transitions
-  rv: Add KUnit coverage for IRQ-exit scheduling
-  rv: Test empty PREEMPT_RT softirq worker intervals
-  rv: Test IRQ-exit softirq provenance and handoff
-
- Documentation/trace/rv/index.rst              |    1 +
- Documentation/trace/rv/monitor_irq.rst        |  475 ++++
- include/linux/interrupt.h                     |    8 +
- include/rv/kunit.h                            |   34 +-
- include/trace/events/irq.h                    |   56 +
- include/trace/events/sched.h                  |   26 +
- kernel/sched/core.c                           |    6 +
- kernel/softirq.c                              |  324 ++-
- kernel/trace/rv/Kconfig                       |   11 +-
- kernel/trace/rv/Makefile                      |    3 +
- kernel/trace/rv/monitors/irq/Kconfig          |   13 +
- kernel/trace/rv/monitors/irq/irq.c            |   35 +
- kernel/trace/rv/monitors/irq/irq.h            |    3 +
- kernel/trace/rv/monitors/irqexit/Kconfig      |   14 +
- kernel/trace/rv/monitors/irqexit/irqexit.c    |  172 ++
- kernel/trace/rv/monitors/irqexit/irqexit.h    |   85 +
- .../trace/rv/monitors/irqexit/irqexit_kunit.c |  540 ++++
- .../trace/rv/monitors/irqexit/irqexit_kunit.h |   21 +
- .../trace/rv/monitors/irqexit/irqexit_trace.h |   19 +
- kernel/trace/rv/monitors/irqstate/Kconfig     |   14 +
- kernel/trace/rv/monitors/irqstate/irqstate.c  |  289 ++
- kernel/trace/rv/monitors/irqstate/irqstate.h  |  139 +
- .../rv/monitors/irqstate/irqstate_kunit.c     | 2339 +++++++++++++++++
- .../rv/monitors/irqstate/irqstate_kunit.h     |   25 +
- .../rv/monitors/irqstate/irqstate_trace.h     |   15 +
- kernel/trace/rv/rv_monitors_test.c            |   30 +
- kernel/trace/rv/rv_trace.h                    |    2 +
- tools/verification/models/irq/irqexit.dot     |   21 +
- tools/verification/models/irq/irqstate.dot    |   32 +
- 29 files changed, 4737 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/trace/rv/monitor_irq.rst
- create mode 100644 kernel/trace/rv/monitors/irq/Kconfig
- create mode 100644 kernel/trace/rv/monitors/irq/irq.c
- create mode 100644 kernel/trace/rv/monitors/irq/irq.h
- create mode 100644 kernel/trace/rv/monitors/irqexit/Kconfig
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit.c
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit.h
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.c
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_kunit.h
- create mode 100644 kernel/trace/rv/monitors/irqexit/irqexit_trace.h
- create mode 100644 kernel/trace/rv/monitors/irqstate/Kconfig
- create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate.c
- create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate.h
- create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_kunit.c
- create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_kunit.h
- create mode 100644 kernel/trace/rv/monitors/irqstate/irqstate_trace.h
- create mode 100644 tools/verification/models/irq/irqexit.dot
- create mode 100644 tools/verification/models/irq/irqstate.dot
-
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+diff --git a/include/trace/events/irq.h b/include/trace/events/irq.h
+index 837c1740d0d07..1b2e05aaf7763 100644
+--- a/include/trace/events/irq.h
++++ b/include/trace/events/irq.h
+@@ -207,6 +207,62 @@ DEFINE_EVENT(tasklet, tasklet_exit,
+ 	TP_ARGS(t, func)
+ );
+ 
++/*
++ * Following tracepoints are not exported in tracefs and provide hooking
++ * mechanisms only for testing and debugging purposes.
++ */
++
++/*
++ * hardirq_context_entry - generic hardirq state has been established
++ * @depth: hardirq nesting depth, including the context being entered
++ *
++ * This tracepoint is emitted after generic hardirq preempt-count, lockdep,
++ * timer, and accounting state has been established. It does not describe the
++ * architecture-specific interval before irq_enter() or irq_enter_rcu().
++ */
++DECLARE_TRACE(hardirq_context_entry,
++	      TP_PROTO(unsigned int depth),
++	      TP_ARGS(depth));
++
++/*
++ * hardirq_context_exit - generic hardirq state is about to be removed
++ * @depth: hardirq nesting depth, including the context being exited
++ *
++ * This tracepoint is emitted with interrupts disabled near the end of generic
++ * hardirq exit, after tick-exit work and before hardirq preempt-count state is
++ * removed. A late-work handoff may run after callbacks return. Hardirq
++ * accounting ends earlier.
++ */
++DECLARE_TRACE(hardirq_context_exit,
++	      TP_PROTO(unsigned int depth),
++	      TP_ARGS(depth));
++
++/*
++ * softirq_context_entry - serving-softirq state has been established
++ * @serving: whether the current task is serving a softirq
++ * @from_hardirq: whether hardirq state was replaced by serving-softirq state
++ *
++ * This tracepoint runs with local interrupts disabled after the serving bit is
++ * set. On PREEMPT_RT it includes preparation before handle_softirqs(), even
++ * if the pending-work check finds nothing. It does not mark an individual
++ * action or the start of CPU-time accounting.
++ */
++DECLARE_TRACE(softirq_context_entry,
++	      TP_PROTO(bool serving, bool from_hardirq),
++	      TP_ARGS(serving, from_hardirq));
++
++/*
++ * softirq_context_exit - serving-softirq state is about to be removed
++ * @serving: whether the current task is serving a softirq
++ * @from_hardirq: whether hardirq state will replace serving-softirq state
++ *
++ * This tracepoint runs with local interrupts disabled before the serving bit is
++ * cleared. On PREEMPT_RT this includes teardown after handle_softirqs().
++ */
++DECLARE_TRACE(softirq_context_exit,
++	      TP_PROTO(bool serving, bool from_hardirq),
++	      TP_ARGS(serving, from_hardirq));
++
+ #endif /*  _TRACE_IRQ_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 7fc2200392cdf..0d5fe265e354b 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -178,7 +178,9 @@ bool local_bh_blocked(void)
+ 
+ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ {
++	unsigned long trace_flags = 0;
+ 	unsigned long flags;
++	bool trace_serving;
+ 	int newcnt;
+ 
+ 	WARN_ON_ONCE(in_hardirq());
+@@ -200,6 +202,16 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 		}
+ 	}
+ 
++	/*
++	 * A serving interval starts here, before handle_softirqs(). When its
++	 * entry is traced, keep IRQs and task switches from observing the bit
++	 * before the event. Any blocking BH lock was acquired above.
++	 */
++	trace_serving = (cnt & SOFTIRQ_OFFSET) &&
++			trace_softirq_context_entry_tp_enabled();
++	if (trace_serving)
++		local_irq_save(trace_flags);
++
+ 	/*
+ 	 * Track the per CPU softirq disabled state. On RT this is per CPU
+ 	 * state to allow preemption of bottom half disabled sections.
+@@ -233,15 +245,27 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 			raw_local_irq_restore(flags);
+ 		}
+ 	}
++
++	if (trace_serving) {
++		trace_softirq_context_entry_tp(!!in_serving_softirq(), false);
++		local_irq_restore(trace_flags);
++	}
+ }
+ EXPORT_SYMBOL(__local_bh_disable_ip);
+ 
+ static void __local_bh_enable(unsigned int cnt, bool unlock)
+ {
++	bool entering = (cnt & SOFTIRQ_OFFSET) && !in_serving_softirq();
++	bool trace_exiting = (cnt & SOFTIRQ_OFFSET) && !entering &&
++			     trace_softirq_context_exit_tp_enabled();
+ 	unsigned long flags;
+ 	bool sirq_en = false;
+ 	int newcnt;
+ 
++	/* Callers already disabled IRQs around the counter and its events. */
++	if (trace_exiting)
++		trace_softirq_context_exit_tp(!!in_serving_softirq(), false);
++
+ 	if (IS_ENABLED(CONFIG_PREEMPT_RT_NEEDS_BH_LOCK)) {
+ 		DEBUG_LOCKS_WARN_ON(current->softirq_disable_cnt !=
+ 				    this_cpu_read(softirq_ctrl.cnt));
+@@ -276,6 +300,18 @@ static void __local_bh_enable(unsigned int cnt, bool unlock)
+ 			WARN_ON_ONCE(current->softirq_disable_cnt < 0);
+ 		}
+ 	}
++
++	/*
++	 * An exit probe can raise a softirq while serving state still suppresses
++	 * the normal ksoftirqd wakeup. Hand it off once no outer BH-disable
++	 * reference remains.
++	 */
++	if (trace_exiting && sirq_en && unlikely(local_softirq_pending()))
++		wakeup_softirqd();
++
++	/* local_bh_enable() can turn BH-disabled state into serving state. */
++	if (entering)
++		trace_softirq_context_entry_tp(!!in_serving_softirq(), false);
+ }
+ 
+ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+@@ -640,11 +676,15 @@ static void handle_softirqs(bool ksirqd)
+ 	 */
+ 	current->flags &= ~PF_MEMALLOC;
+ 
+-	pending = local_softirq_pending();
+-
+ 	from_irq_exit = softirq_handle_begin();
+ 	in_hardirq = lockdep_softirq_start();
+ 	account_softirq_enter(current);
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
++		trace_softirq_context_entry_tp(!!in_serving_softirq(),
++					       from_irq_exit);
++
++	/* Include work raised by the context-entry event. */
++	pending = local_softirq_pending();
+ 
+ restart:
+ 	/* Reset the pending bitmask before enabling irqs */
+@@ -692,6 +732,14 @@ static void handle_softirqs(bool ksirqd)
+ 		wakeup_softirqd();
+ 	}
+ 
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT) &&
++	    trace_softirq_context_exit_tp_enabled()) {
++		trace_softirq_context_exit_tp(!!in_serving_softirq(),
++					      from_irq_exit);
++		/* The final pending-work decision above has already completed. */
++		if (unlikely(local_softirq_pending()))
++			wakeup_softirqd();
++	}
+ 	account_softirq_exit(current);
+ 	lockdep_softirq_end(in_hardirq);
+ 	softirq_handle_end(from_irq_exit);
+@@ -722,6 +770,7 @@ void irq_enter_rcu(void)
+ 		tick_irq_enter();
+ 
+ 	account_hardirq_enter(current);
++	trace_hardirq_context_entry_tp(hardirq_count() >> HARDIRQ_SHIFT);
+ }
+ 
+ /**
+@@ -796,6 +845,36 @@ static inline void __irq_exit_rcu(void)
+ 		wake_timersd();
+ 
+ 	tick_irq_exit();
++	if (trace_hardirq_context_exit_tp_enabled()) {
++		bool ksoftirqd_wake_requested = false;
++		bool timersd_wake_requested = false;
++
++		trace_hardirq_context_exit_tp(hardirq_count() >> HARDIRQ_SHIFT);
++
++		/* Hand work raised by the final boundary event to its worker. */
++		if (hardirq_count() == HARDIRQ_OFFSET) {
++			if (irq_count() == HARDIRQ_OFFSET &&
++			    unlikely(local_softirq_pending()) &&
++			    should_wake_ksoftirqd()) {
++				wakeup_softirqd();
++				ksoftirqd_wake_requested = true;
++			}
++
++			if (IS_ENABLED(CONFIG_IRQ_FORCED_THREADING) &&
++			    force_irqthreads() && local_timers_pending_force_th()) {
++				wake_timersd();
++				timersd_wake_requested = true;
++			}
++
++			/* The timersd wakeup can itself raise a softirq. */
++			if (timersd_wake_requested &&
++			    !ksoftirqd_wake_requested &&
++			    irq_count() == HARDIRQ_OFFSET &&
++			    unlikely(local_softirq_pending()) &&
++			    should_wake_ksoftirqd())
++				wakeup_softirqd();
++		}
++	}
+ 	preempt_count_sub(HARDIRQ_OFFSET);
+ }
+ 
 -- 
 2.39.5 (Apple Git-154)
 
