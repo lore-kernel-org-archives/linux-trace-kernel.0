@@ -1,135 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794142106;
-	b=oGAAUOMjnOpER8wH8RPqUPmmNNp+utRFTPA7HTT1YFCuY8AOpyiEqv53E5NHnBpGlLgc
-	 Sr3eyNt9kqhHPuvpp+TSDf9f+/9OIzTzAg4jSwDT1oDtNtZUoBaxYcJkShjrHWEN8oLEM
-	 YnchYe57UjqsVVJHiEFWWdq5kHubRco5npPmXH5PtVCT0uCd1kpqmI6D3iVse1RHddhZu
-	 BFl0b9REenqksCKYhdBmmXKHdFTX/sH/j367H8RO7LlCcUrET5GHmmNVgS9G7pyWiwuzn
-	 3s9ln5mdQR2fwMGoBZoDEaCBMMEF3RSpK6Aey+5vENAj70ijkLzVNhUFKhS0dVFkzxQ==
+	t=1794179549;
+	b=O9FgotLp08l9jaGcyvLd6t7xb85jTABsIAcK/9g1HoLV5/TmgtmRbdhCXLo4Ycsv+Jia
+	 2JA9P5pvF1yCYNU4CfS1W2oah1rhrT3gJrt546T569LhOdQUECN30B+OrZGuFTcZ+w9BL
+	 FSIegA6dywiNWJ/q03oHqFpS+V6VypBSe9UFj9kyKnwfxa9ucVRQ0HHXHNqeEDVczCGEp
+	 JvYmmlu5dD4k29C2ageqbIoeI/c41cP6DlPEDntksXVxRxJccyMB2GzQPfsSZ77fkNwVz
+	 xlzQrvP/831P+fw/szBLb/xdbzQLp49to00ZAo1LRxUVchDxiPrWjsuulZuQvwIFmNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794142106;
-	h=Received:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version;
-	bh=i3fScoYq2tKuXGNDb7x7fROa8Y1+Tfxv6jIYPhqmQ+0=;
-	b=YL5TFIP4k2EqUHQi8EImbNC6QcA6auTQLhxDSEHCQH+qESNOnyz9YyhFHJ5WoYJ+sXEf
-	 kGY6PEo3WINVFzP0IMGRMjE2QNwU905s6k+ca2vkbEXjyNye5L0y6oSYTPVILMZLqlXSt
-	 yEf1PenbGuKYFX+VJDIOBIZ0fqXiRxP89QPDckx4+BRmop7T5WBIKveQpErZ0pSL4y86u
-	 QeblA73ni4ls42CX/1XNfmqgfK9YEa/Grmep/5LsCAZ7RFYEAnrFTMJ0TbUC/s6EFlcaZ
-	 tKzb8GM0k6bnPpMy1GKo5XHyF/ApMAXKV8RyaCx3aZ4k9KSkAMgfezs07YNtNLG6+1Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794179549;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:From:To:Cc:References:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=CXQaE7qbV7eGxhp+28lFx0wX6wKu8htmvAmFNqL4VzI=;
+	b=0D4NJYIbd/4PYv82J+eE4v7PJVsELBvP9vAsGMO+WJs6xDhwAV8zCHtzKj7OUtVSOnzn
+	 UieRzODHOlEBx7H7fxPJTwPTgVyvKEAi8DpkixLjweGbcKb2hH7SHEL5v+5UxKKCQ+zO7
+	 Af+QKXh4ykytY7embUE8LD8bQfsqj8HN+zdwcx+x6YSUQ+5/BYWfRXuSG2JDnJIke8H97
+	 JExFfpYxpmmGDyBFeuJmZLRs5QJH6CWtV35kaaq/bsYdj5aqT3uJ4ab857opDdmt6zQqD
+	 H3fFETDkWjk8L/D/vBHD6bS9QoLOsuiT6fJfERAZuVjmNdseDJnno7gKeQruf0MPP7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UGvGK91m;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhynY7vy;
+	arc=none smtp.remote-ip=91.218.175.177
+Received: from mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD19606A320;
-	Sun,  8 Nov 2026 12:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5A8606A321
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Nov 2026 23:12:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE5A8606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UGvGK91m
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCA81F0089F;
-	Sun,  8 Nov 2026 12:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794142105;
-	bh=i3fScoYq2tKuXGNDb7x7fROa8Y1+Tfxv6jIYPhqmQ+0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UGvGK91myv0p6lFzbthO3S2lztPS4T5btsP3aPuiCnuMEkd1PjY2/b7lqoE99iLXF
-	 z1qL9ud0RHHzhiu0f27bYRgKhw3PdiYw7kxRepBsdLS/YYA7Diq+xlPYka8ZJhTyAq
-	 OVQVwN5hMpnY7fR0hWCx/CVorTKqVWsUTAYB+tgmZCkXN/NAr4BeOQUpFQW7xgBTb1
-	 XycLdcKRvvvYBaqGc/5PnLv4CsMdpoKHOgCvAVRt4bWkpI/IVLd4/3e1jT00N4Ng+W
-	 HkeBH9hXK82vvhVYyCM2kJMMsx1FtA0kFFfCAAqG6gZxFfUOtUOOEDf3yMVn9KEVrg
-	 pyxfnk0A4AjAw==
-Message-ID: <c44435291fe8c2116fd84795f2ebb3045d18559e.camel@kernel.org>
-Subject: Re: [PATCH] sunrpc: Remove unused rpc_socket_reset_connection
- tracepoint
-From: Jeff Layton <jlayton@kernel.org>
-To: Maria Sheikh <mariasheikh812@gmail.com>, cel@kernel.org,
- neil@brown.name, 	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- rostedt@goodmis.org, 	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	trond.myklebust@primarydata.com, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: outreachy@lists.linux.dev, julianbraha@gmail.com
-Date: Sun, 08 Nov 2026 07:48:13 -0500
-In-Reply-To: <20261108024943.8130-2-mariasheikh812@gmail.com>
-References: <20261108024943.8130-2-mariasheikh812@gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45) 
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FhynY7vy
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=uBz62HipOUpV8FMMhhDpcgo86aJTWb6jnbXPRjMq07s=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794179544; v=1; x=1794784344;
+ b=FhynY7vypwbTH9C2GVgf+ELSdqPZ2nvlql2cYf4Y9+UDNNV1s+M4jXEFZnWLt2vhHscqCdAh
+ ztsxTqCGIxlVdcyiii6yLlNN8PEl2u1IhxS4VbfXqFHxnecdQOsdEckGPmK9ryY6jpQWhXZnuhy
+ XeWr0bRndzX3/W7IV00QF+3Q=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id c8a84526f0e83049;
+	Sun, 08 Nov 2026 23:12:24 +0000
+X-Mizu-Trace-ID: c8a84526f0e83049
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <490eace6-4ad4-418e-8ef5-5abf18bc8c17@linux.dev>
+Date: Sun, 8 Nov 2026 15:12:18 -0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -139,34 +58,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] tracing: fgraph: allocate shadow stacks inline
+ with GFP_NOWAIT
+From: Vineet Gupta <vineet.gupta@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, mhiramat@kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, andrii@kernel.org,
+ peterz@infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com,
+ stable@vger.kernel.org
+References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
+ <20261021174406.2891598-2-vineet.gupta@linux.dev>
+ <CAEf4BzaTYgNwiBtvYoSw1wzuFZchs-2CCP93gh2OeDt-919-eQ@mail.gmail.com>
+ <20261023143816.48163575@gandalf.local.home>
+ <75b66acc-354e-4cd2-b9cb-4c22e8a02635@linux.dev>
+ <20261023180902.2bf7cef4@gandalf.local.home>
+ <88f41f2c-4226-4122-9627-4fc29a29b99b@linux.dev>
+Content-Language: en-US
+In-Reply-To: <88f41f2c-4226-4122-9627-4fc29a29b99b@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 2026-11-08 at 07:49 +0500, Maria Sheikh wrote:
-> Tracepoint definitions consume kernel memory even when they are not
-> used. The rpc_socket_reset_connection tracepoint has had no callers
-> since commit 4efdd92c9211 ("SUNRPC: Remove TCP client connection reset
-> hack") removed the code that used it, but its definition was left
-> behind.
-> Remove unused definition. This reduces the size of sunrpc.ko by 628
-> bytes.
->=20
-> Fixes: 4efdd92c9211 ("SUNRPC: Remove TCP client connection reset hack")
-> Signed-off-by: Maria Sheikh <mariasheikh812@gmail.com>
-> ---
->  include/trace/events/sunrpc.h | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.=
-h
-> index ff855197880d..a0d02d735a7c 100644
-> --- a/include/trace/events/sunrpc.h
-> +++ b/include/trace/events/sunrpc.h
-> @@ -950,7 +950,6 @@ DECLARE_EVENT_CLASS(xs_socket_event_done,
->  DEFINE_RPC_SOCKET_EVENT(rpc_socket_state_change);
->  DEFINE_RPC_SOCKET_EVENT_DONE(rpc_socket_connect);
->  DEFINE_RPC_SOCKET_EVENT_DONE(rpc_socket_error);
-> -DEFINE_RPC_SOCKET_EVENT_DONE(rpc_socket_reset_connection);
->  DEFINE_RPC_SOCKET_EVENT(rpc_socket_close);
->  DEFINE_RPC_SOCKET_EVENT(rpc_socket_shutdown);
-> =20
+On 10/23/26 3:25 PM, Vineet Gupta wrote:
+> On 10/23/26 3:09 PM, Steven Rostedt wrote:
+>> On Fri, 23 Oct 2026 13:13:41 -0700
+>> Vineet Gupta <vineet.gupta@linux.dev> wrote:
+>>
+>>> On 10/23/26 11:38 AM, Steven Rostedt wrote:
+>>>> On Fri, 23 Oct 2026 11:13:44 -0700
+>>>> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>>>>    
+>>>>> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+>>>>>
+>>>>> I presume this will go through Masami and Steven's tree, is that right?
+>>>> Yes, but it came in during the merge window, and since it's just a speed up
+>>>> and not fixing something that's broken, I was going to let this go in the
+>>>> next merge window. I rather have a change like this sit through a full -rc
+>>>> release.
+>>> It is a speed up but not for optimization sake but to cure rcu stalls in
+>>> production at Meta. IMHO it should go in sooner than wait a full release
+>>> cycle.
+>>>
+>> Either way, I'd like to give it a bit more testing first. That is, the
+>> earliest it will go is after -rc1.
+> That's fair.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+ping !
