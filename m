@@ -1,55 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794122437;
-	b=tZg/ylCXliAAzqN6II06qIva8kjGf5JhJ5CNkpAhyGV2fW9e4F53g3+QI8/YmqSSL4sB
-	 +9PQ7qsvxmesuuDGWBesnuOHrH58Qd/anaM094rk+jPghIITXvPa12gqQZhg1QttVKAir
-	 J2xDZ1TXbVBke8m0e9W+4WYwndzm+k0xszbGdxyL84mLj4Tw82WQl7x6yLK3EGPL+xyaI
-	 oIMLVgbVlEfFj47SIh8tVPktNWLvmfO3TGa96jWoVwmV81P8hEfIIH5G2doB/OnUkFHos
-	 23AxPibzmmpUtBegdDOmxc83V6TbvjmIdRqIt1j4eWR9EJOyAtUOJKEiae3A5JutwsQ==
+	t=1794122711;
+	b=jfwsIIxsRU+2gjfLxjKnVB1DjLJKoB3cVPgVP+QX7Lfs5N0I26ptQr6o6UtQhp3gUXhE
+	 ZIdVwDa8lF5CXVfOvcdQgUWpDDRBscGS3vISkNAtfN4VUfVGcE89g+o2D5SaUW4PkX6sw
+	 P5BGkywlc6ZBwddiDglXT3SF6HjH4OkL6fuPIYpJThPIQsddBOePW8o95TW0O+W5pEygf
+	 qKcwnA/vPM7R2C18gM4UKrqwzv0tNQZIWacY+s122oDSFEN4E0L1vlJr1wNoPD0mLKQnd
+	 AkSThW/oLKLB8u8OW37m8f6VG8B1tq5XkNPbUSn93EvbyKXFcPJ/UZDupjUl9aRpC7Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794122437;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=j18geaHLD1uUk2z5k4sfYhqgD5g0IHFNcch65ifUnps=;
-	b=byCtgYktWs/NZanLK1y2tkVdDV20C+ypxCM8UyFrTLgyuDCDDhRS37O31o9ksoxmfzcU
-	 3IIzqet1So5I2tL0JawGA7JtV5wHSJeqNeI0lQZklfT0zarpOeIYa1K9dmFh1Ab3dTgZd
-	 mEHy0sIOznUjvBeHcqneMwADSaz0h1ITHJeGbLT7lWOOUL/DjHGWD8Y1mkJlkP2hfkZHq
-	 UmcuUPI6Mw8zBCxgDuFC8HV1lIZjr40klQsfiRS31lV/tpySdg1tey+V9YuLyNZRkmkrT
-	 dLSDq1XrL1U/l1Vyt71UGfQi1nxrKlt4FSlVvy11iUYDzF6wu0JRjS8584JSGrARmmw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794122711;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=Dop4F8OKR7cXm1nUzbyU2g5S5dDo+bHScDg3mp5FzUA=;
+	b=zvwPCdipm3SJa2ioBZ2if+OrE8nq517hdGHGopgAotBkmVsh8+7q4hhG8RKB6tebZs3Y
+	 BZYKA761uMMHK4lrBWAMEMHfOQ8o8RtCWiYImb5GBvZIPeDu2NWf/IoTIyI3TnygMMwj8
+	 4wNXTixgNqOJpm1L76WJ/A2wo7ScITMsBB9LEC3mfpibPbvvRf11KnW/1w8i/5bQq3zb2
+	 tGvxvNthpDR+wHKrIittKlUHuoDH97UEvEIgmKFw8P1dLr58inM7mylUqyyUEskqi7aer
+	 ZqIUHsMopyQ/UF/ZT2mZi9DvpQBNSJr9wBGCQB6i9v/OEzi2hoJCE2kj4EApUsYKb0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nMR8+wvI;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0KlWNEhc;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98557606A33D
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Nov 2026 07:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFE9606A322
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Nov 2026 07:25:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9BFE9606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nMR8+wvI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BE61F00900
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Nov 2026 07:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794122437;
-	bh=j18geaHLD1uUk2z5k4sfYhqgD5g0IHFNcch65ifUnps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=nMR8+wvIKadhl0gb53COwD17VOLLA+rRcE4ZHBalTQd6dTblfN0N7okKJf7t+ZvYG
-	 i+1EPKK9teEdkZdwO91Euok2YuPx3bDEEyJZACadzh7IHZcjF1vei7j5i14ZyLr5ep
-	 VqIN9h39OurgetTUjWptuiHXXMyNj/ch3S+eFhG/T0fsNkyWJuX0YGPBQx6Lgex5/S
-	 FNRmmJykqrmIWyWTVXn405JXlsSS3qO9xBCUjnrmQGUYVaIl/HxcUmN8F/6FuB7OFc
-	 JL6U/ckBGoY/1PGMAYkrv+aSutNpdVyFBUeh4a+QlDevhJINYdHgtDXtuUo8725mbT
-	 sRhxrhcIRQeDA==
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-943e8d35f74so21119685a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 23:20:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErF1xQ+twnYSXVPYHOyIyBo+1wJUMh1K9WHcxMrfoYo+s1njZilFJEQoMahyAISL8gpbNDR3G/69nzYshdazuTwtUsc=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+3A8ZD7TOt0bZRAM7a2sCHvolO1TFVLk4YqMrnFCwDi1+vpFHA
-	HdIkHwVHSwE+wvyW1IvgaEXJlsV/82mq8EdfWzUr0dpd7yVBHx9dXaebiCHO5p0mDJFGM6ypYYN
-	30ODrQ/pArBt40/L6VvNBiToQ7K1HjjA=
-X-Received: by 2002:a05:620a:6190:b0:945:d7a2:4b58 with SMTP id
- af79cd13be357-9478427d0f5mr101426485a.65.1794122436125; Sat, 07 Nov 2026
- 23:20:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0KlWNEhc
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-36fb88ea38cso2830eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Nov 2026 23:25:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794122710; x=1794727510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Dop4F8OKR7cXm1nUzbyU2g5S5dDo+bHScDg3mp5FzUA=;
+        b=0KlWNEhccXytztXcpy8QDI9lEo0PCwVFU3u38U63n6E3HSrskIS1ZoHL5zE1ahXoOA
+         Mwg5mx3WBDNu1bBTw/HUKVQ83wW6jFdSi3Et4OyKGo0pC3mlXYp7epQtek1zgT75kEod
+         8PiiomRbBg2t81RKaJiSkW3QsAr4HmgGkGqhW6Y1dipfoiIAf6mNtWLukVfPilhdAMcb
+         PKaXQ0d3GBJHy46n/1HYInRyJzZD89FNMuwtM7Sxd6295HZwv1fr+i0M5e2YRl5XsQbD
+         QcmuaxSmb/mL/FuNb1Oe+W/b0oZoCcUJstHhQKExPS4En8BAQcYulKUdD9Yj9mYGqrgy
+         USwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794122710; x=1794727510;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Dop4F8OKR7cXm1nUzbyU2g5S5dDo+bHScDg3mp5FzUA=;
+        b=j8EsDjPtwGmgb1beotkAJzYJlYGVQfeonyCSy5N5kZSp89pWDp1lyVmtwBNua4J2Zv
+         vIn3KFJwzEL9jB4CNLBPOoWBE3MhMAobaoI9Rm/5GZlFsrShwROKlxZeNHIZq70DsUdP
+         1ugKlVIec6OeeG46oOwuiyRVI2Gp0h2MLmkclNEv2dEVBJmLYE3pknky+b13EPHad3Qz
+         QIKFQNe671rG8aqrKYKvx3EB5Ewfxn4sKmxlbxHh0GNBb5rk6C5ikqAiBt9uMqNosDYs
+         LhaWdLgUizmCcjo/xRlAWaZ28tj24Tv7r8MZQe0RwcWTUWD6as9opDj8zdndupCvNpIv
+         lQ4g==
+X-Forwarded-Encrypted: i=1; AL+hErE1mkLsYYT5ZFDj8z4LXroIoOwgBRnxkEkZaDjzpLeDVm0Sqiq7uajBmVF8IpW8UwOteWpQ10G4mM3E5wMGgg+9uOA=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/wiBvTb1Q1joBrGsyNY9Y+DryPdDhW2G/waUgm4dCwu6wxmnxM
+	G0mwYw/W+fT6bV/YiFgTP+3BkjpabtL9HwM95FnXAzxhq0hRAOZY7SkO
+X-Gm-Gg: AYBFou1qbhoBnT88D3gIQP0Hl1tU2xl5zFi6Lvrw7ZlTVlqZPahMrX2DweA8fB8+G2Z
+	Q+RfRndPYRf386XCC2PVYOMcprRB2vVA7CPDT5q0D9tXs3m1w7xEM4TiQraSI0Wp3Fik2OOPl14
+	wNdFmLdQPyvRrNm6EDO+6MLuZ1OttS1WuzyQY4sJuTdgE0Uw7hEtfFoeWUiiyFpr8GXDGoDmUAU
+	R8RDvX1384IQCbBq8eTsC4srCjN+sjUh0H5zpBc9EU57jpgiUkz2y5NWx7GoONDwDSKQS2Ec3bU
+	kFsETa0CLN63oPQ6gD2xe+/4ekRYFlg7WvstPm+lG/N76df/ETDksiB2UI7odFLx++GK0ixwpLJ
+	SxLk7FvrXq6D7ZxNBPa2yNIbybdtIb8ZwOUV9RchEMzZuPK5tjSdcxXxF/94/dLeFP6+lNT9Sxa
+	66z7zs5oGSb6EvkPbBuTZcjBTgrxIGxXRSCdqCfEj/naXlqI4enNCjPlwtQmpdFKdC7ntgviExy
+	rcB7K3qtlkAQHezGXa40n8tQ/+VeH/0pYgkTrHPk48ApCzdMdxPR4Ir/PRu7YMBZB/5vzpYG1EN
+	n9OuLIc2M9f0nuL78a1U/nEjzTeuxKXvrAoq3soZSm4Eh6ne6d18Skwcji2wKtrYy22Iiw==
+X-Received: by 2002:a05:7301:1a11:b0:368:2c6d:ddfe with SMTP id 5a478bee46e88-370f6115a74mr6028007eec.9.1794122709628;
+        Sat, 07 Nov 2026 23:25:09 -0800 (PST)
+Received: from lipengfei28-ThinkStation-P368.mioffice.cn ([2408:8607:1b00:8:5213:762b:b24:1be1])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37265a16f9csm3499775eec.12.2026.11.07.23.25.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2026 23:25:08 -0800 (PST)
+From: Pengfei Li <ljdlns1987@gmail.com>
+X-Google-Original-From: Pengfei Li <lipengfei28@xiaomi.com>
+To: lkp@intel.com
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	oe-kbuild-all@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	zhangbo56@xiaomi.com,
+	lipengfei28@xiaomi.com
+Subject: Re: [PATCH v8 2/5] tracing: Use the stackmap from the ftrace stack recording path
+Date: Sun,  8 Nov 2026 15:24:48 +0800
+Message-Id: <20261108072448.990755-1-lipengfei28@xiaomi.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <202611080654.sqFxIlwl-lkp@intel.com>
+References: <20261107055139.3138633-1-lipengfei28@xiaomi.com> <20261107055139.3138633-3-lipengfei28@xiaomi.com> <202611080654.sqFxIlwl-lkp@intel.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,121 +109,18 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-2-0d3cd15ab75f@kernel.org>
- <sashiko-outbox-200257@kernel.org> <au2_PPpdAMgRJZtX@gremlin>
-In-Reply-To: <au2_PPpdAMgRJZtX@gremlin>
-From: Barry Song <baohua@kernel.org>
-Date: Sun, 8 Nov 2026 15:20:25 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4yWQom=cG5vw2B-FR8+7wNU+rwZkvghjAxusym+3OH96A@mail.gmail.com>
-X-Gm-Features: AclHuK82gk7ruViNEj2rccGK1fXvxCJcs3PhbZ9Er7PSONJ4wRSmOw3bXHmiVAU
-Message-ID: <CAGsJ_4yWQom=cG5vw2B-FR8+7wNU+rwZkvghjAxusym+3OH96A@mail.gmail.com>
-Subject: Re: [PATCH 02/13] mm/filemap: convert fault and readahead logic to
- use vma_flags_t
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, 
-	Lance Yang <lance.yang@linux.dev>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
-	SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, John Johansen <john.johansen@canonical.com>, 
-	Georgia Garcia <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 6, 2026 at 7:53=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.or=
-g> wrote:
-[...]
-> > --
-> > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-late-2=
-026-vma-flags-v1-0-0d3cd15ab75f@kernel.org?part=3D2
->
-> It seems these are valid, oops!
->
-> Andrew suggested a fix off-list, and I agreed to this as an in-place fixu=
-p to
-> avoid respin.
->
-> I have also updated the series locally to reflect this change:
+On Sun, 08 Nov 2026 06:35:01 +0800, kernel test robot wrote:
+> kernel/trace/trace.c: In function 'record_stackmap':
+> include/linux/rcupdate.h:502:9: error: dereferencing pointer to incomplete type 'struct ftrace_stackmap'
 
-Seems like a reasonable fix. maybe_unlock_mmap_for_io()
-could have released mmap_lock, leaving the VMA
-unprotected. but  ra->size *=3D 2 is still going there no matter
-if the vma has disappeared
+struct ftrace_stackmap is only defined in trace_stackmap.c, and GCC
+before 10 rejects typeof(*p) on the incomplete type in
+rcu_dereference_sched(). I reproduced it with GCC 8.5.
 
-For the original patch combined with the fix,
+v9 will move the rcu_dereference_sched() into
+ftrace_stackmap_get_cookie(), which will take the trace_array instead
+of the map.
 
-Reviewed-by: Barry Song <baohua@kernel.org>
-
->
-> ----8<----
->  mm/filemap.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> --- a/mm/filemap.c~mm-filemap-convert-fault-and-readahead-logic-to-use-vm=
-a_flags_t-fix
-> +++ a/mm/filemap.c
-> @@ -3410,6 +3410,7 @@ static struct file *do_sync_mmap_readahe
->
->         if (force_thp_readahead) {
->                 unsigned long folio_nr_pages =3D 1UL << thp_order;
-> +               const bool random_read =3D vma_test(vma, VMA_RAND_READ_BI=
-T);
->
->                 fpin =3D maybe_unlock_mmap_for_io(vmf, fpin);
->                 ractl._index &=3D ~(folio_nr_pages - 1);
-> @@ -3418,7 +3419,7 @@ static struct file *do_sync_mmap_readahe
->                  * Fetch two folios so we get the chance to actually
->                  * readahead, unless we've been told not to.
->                  */
-> -               if (!vma_test(vma, VMA_RAND_READ_BIT))
-> +               if (!random_read)
->                         ra->size *=3D 2;
->                 ra->async_size =3D folio_nr_pages;
->                 ra->order =3D thp_order;
-> @@ -3438,7 +3439,6 @@ static struct file *do_sync_mmap_readahe
->                  * pad that might exist between sections, which would be =
-a waste
->                  * of memory.
->                  */
-> -               struct vm_area_struct *vma =3D vmf->vma;
->                 const unsigned long start =3D vma_start_pgoff(vma);
->                 const unsigned long end =3D vma_end_pgoff(vma);
->                 unsigned long ra_end;
-> _
->
-
-Thanks,
-Barry
+-- Pengfei
