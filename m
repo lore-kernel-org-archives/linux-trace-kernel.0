@@ -1,98 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794125006;
-	b=zNG7KHM+V1FkXGCx7cj1PQmBqD8Nf0NWKldIsxy/jw9gSaEU3dXoxOvtPCl77gTNn9q4
-	 V2AlzNiwmjbUEfvrPn3UNJnIfHZlMn2u1ekjqZRZEXp5ncvFKvSJXKLBWDZMCCo3bAG6R
-	 EViWGT7A+AvFgIT9GgjhKIgn/CSJotT8jddZERTh4yOA5sx1P8h+H0aCVl7nNTmUecRGl
-	 XdHJB9Nml11dsZmaMK36aryPGDXaJm5xBXKWqDmD5xYwOWm0Ob0kkAL3lW7vVnRkEvvWo
-	 kWIXgvuTve/j83f8EHNjyh7eaYje4LS+S/mn57H14Lw9ac6TCIeGNQr0wReYwjUzBTQ==
+	t=1794130994;
+	b=4Mg9A4tR4eY14R/qqARpQ1GN6aG31MERZgaD0XGOBdsDG9w9RK7gq2uWmqHwU+z3vfXt
+	 tSE+/u42BeStRnpIBD9IYqpJ7TwRRsgX2w7JEpUTrIrXuc13g9G1klxwiGXuT6C0VPb9U
+	 jLdUD5KnNYdVrdtoKoxJwU5w4cX4LIg0jYtOYpE8SrjKI1/+UC/v212QsooVvLYdufALc
+	 7vQgEIthEz76ym8eq913lgfXI57295cF4gJL/8ej2k/ofcChHO8YfyggZwi1glKxYSD8F
+	 Y055o6JyYhTWskRraCI4dGzkineswealMLEuuZMOGvs/BdECDyrVVaaUB1JOBUgoYyg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794125006;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=fAj+PQF4DhPbJju2nUJ6sKmnMGHnLxMygMvekucBWDU=;
-	b=Cp3aeDNBZaNJa7lswJkW7D5Hipq02yR1tt760ohP2uQ+Xm6A+3/R5hfR+9IzfX7J+2j7
-	 Ln5JmK6vaTLl1tWL62znO4w9yy1vgYPdTSZfuoYQFWfDbsatA9NyukOzmSPAYcY7ti7dO
-	 VyDL16bAkdyeKmtmLRDsz24Co61bBLAfF56Mf1BGH76AbBlJpLr1R8qnVckeS+ic5grxB
-	 vOZI0nqt2omGMU494OI8aVahzr31MkMLL8V7rGQ8NtENEqNlG4ln8imL5uZr6kum79xK2
-	 vOVAMPv0fgVcB7vk9BCHd9XZ7gfVLlahVqjLZhsWUGX0vf9tq84lSbWp3MJI9ZpxcNw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794130994;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=1TfJu2adm+ZzBFTjOpLNElhJnMO9Oc2JJFoITNsDH30=;
+	b=LXuHZ5JMPYamAcVfI7eDjGYTIl0Wp+BPZj5LSLDsmA5LXv8+pTE7ioNyaqhtm5JY49PX
+	 klfHKWo+yYVsoZaneynWfhZahBfj1O+RERd7hFs6Zv0BCRiBTQ1gY53sT12Ei0wOADf36
+	 QFUKdabAwTuJrFIwEfhapbnClQwBa+1qeOkbHC5YekgA9DjpEZiF4B50vl5v8EDQLFKhg
+	 VgWGaLUla6XYYECK1R9pKYt6udS5If3SdW0o5+b48UwLe6nUTHAyo8LbkHDS34fRXiyyP
+	 DCGPfDPg3j1CfBesfefLOSin3nfzTpNOFkb1spdEKLKvoJeNuKRUD2qPQ0U2acTDt/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QoJBR1qm;
-	arc=none smtp.remote-ip=209.85.221.48
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NLKQtqu9;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0B1606A321
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Nov 2026 08:03:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D0B1606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294E9606A31C;
+	Sun,  8 Nov 2026 09:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QoJBR1qm
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-490c1d337d8so129787f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Nov 2026 00:03:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794125005; x=1794729805; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fAj+PQF4DhPbJju2nUJ6sKmnMGHnLxMygMvekucBWDU=;
-        b=QoJBR1qmsTIXxmUvFfSgDo/VGHz66Y7zMDG4SH/unkeBlqtj7QK2SpMo155KfrclQ1
-         O18rX8xaz61cwZKiscvVT5PqZJTfAZ4ENVmcEiMXq5SUC3SFmIbbGjha50mtveZUAZ25
-         YDc2uMmjNIzvhpnoULYHe0LlCHM75DEgQuu3zdgWuMcKVyqU6dwVNfOW7qzVxq6iys8D
-         gIWDhTlXdAfTFAavmrhSwDLgyajZ/hMuvzIHX63WCsFXmJrf9WHv3HaRWAaUYP2BAIE9
-         ukKFigrE1eusPO6+o/m+i2Dradr3AZzOesu8Yq1WHG8ylKfrdD1nrTrmC8GBS6O9TXuM
-         8qkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794125005; x=1794729805;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fAj+PQF4DhPbJju2nUJ6sKmnMGHnLxMygMvekucBWDU=;
-        b=yk/FjVBSCW4SB0joLs7i4ELBFOcjurw571ZfQ84HyRjttqAtFkB8JBvT31ql3Dp7Va
-         dqTRWaqSF6jawG9p0qlVSKkgDGYOk0PLlxbC/OFA0kSw8I+IJbq/jl5nrt0/FuFiEbfU
-         x+OG2BCU4aTKVA2O9MIvZ8VCdC5XqB+bnQlDBeKmze++Q3e1RfvV8ONuLAlS883cwMyP
-         34BL0Kv5LrlSSXLGiuBizpzTV0Bn2F1fYkPm1OAa/SwfVNru30cSNKBbfkBQ4NDuPoz9
-         9z7/r9CoO6OsaLndsFL53UE9OZaYAt9xCy46VyhsL25eJrRxDPwJpFtUpBnsvM1I4Yo2
-         0h5Q==
-X-Forwarded-Encrypted: i=1; AL+hErG8GjNqusunNNtJwbekta+HQePVT/7FjtQT3Gf08ngt+mPvL1WWh9lvUaor1St2618ynv6IhwtZsh79Uo+lHNItV+o=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/LEWcgVoeqzAMani1rtgND2lywQCCNpGdmgzn8tmj35kqhgeEu
-	DxYSbqKmZwY2Xg1G9gIIMmlFQLS1KxjDt/tK9yTf/MolS3VgOg099VuV
-X-Gm-Gg: AYBFou3UY3Gv2m6EC8+pXdOS9dtmOrdvkrVh+CXSke8+GPtk7pDx9cIxx23dMxA116U
-	BhqD3+2e+/Ugdwf2cb2XOedhIj7p8FD+HEV7FpqzKZhxUT/j8hY4FoEBBYR7UiCkHiDF5jeWEB6
-	UdSfdDF3EjkZaofm5mXkKZvHehPGBSQahlkfFbQrMZMfPRiO2zm5O2V/lrSLtfg/ez5l48DWbX3
-	r6AD9HbYS9ndGKxHQHt00OkQl4nsqpSp9GorLfTTUseYLgc1T5uBRoMhAAqVLdBIaTz7SXC3Bsn
-	Ni3WesAUVJ1ETbGNHhiD2tJa2aWdSEJSdQRQ90SdN/hJB/2O9Zf7NfjBsHUN90PJWWwXwQwOhnE
-	u8Bpu6WRw5YQ5nNrexboskCVqr+LoNP2Xa9Vjd2Voqdrn5nT/xQqxooXlafIRPFdzTvCYzUoAng
-	OFxH0p5Vq01hYdV4Rp4vduPB/QlcZl0sZQPP3GBVBxvge6cFS3xLrEY173CZN/K9Gi54uIfDUQq
-	wzDIhqSjXKfGPZfa+dmCvitsUCZw+9i5BGp+y16vEqPVU358Dgj/nb8s3yeNd/F4U67vUgV6TpG
-	LEJnk8kyznxLvrB/En9CxQDY3r+PUirP8glTYCLzT+eZI9Jp/Niz2nJnWyVelrKHlURBIkPZBds
-	g6RuDRw==
-X-Received: by 2002:adf:e199:0:b0:48e:84e8:88c3 with SMTP id ffacd0b85a97d-49580830930mr1444729f8f.5.1794125004381;
-        Sun, 08 Nov 2026 00:03:24 -0800 (PST)
-Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49597e00d75sm2560903f8f.58.2026.11.08.00.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Nov 2026 00:03:23 -0800 (PST)
-Date: Sun, 8 Nov 2026 08:03:23 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Sahil Siddiq <sahilcdq0@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org,
-	pjw@kernel.org, wangruikang@iscas.ac.cn, namcao@linutronix.de,
-	kees@kernel.org, linux-openrisc@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] openrisc: Add unit tests for KProbes on branch
- instructions
-Message-ID: <avAsy43KVO-7Nm9z@antec>
-References: <20260930202744.50489-1-sahilcdq0@gmail.com>
- <20261026201240.107462-4-sahilcdq0@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NLKQtqu9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380291F0089F;
+	Sun,  8 Nov 2026 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794130993;
+	bh=1TfJu2adm+ZzBFTjOpLNElhJnMO9Oc2JJFoITNsDH30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NLKQtqu9KoBpvVemvr3gK8+r55tcl/IZvyK3DlMM4PIx/qDHOpZ6LGdrIfe9CjiVZ
+	 D2Inmhxp4c1qHagh7o0MgD+1FzLPWEJhaWnordfS0b4p9ikkfMmAlegxxgvzLcTLDe
+	 SX5mGp5a5Q0EqNA9SK7IyD+lEoAE/rXm8Y3mvalP9Dv2uY1ZDSsLeALm5JMZySudec
+	 V2bX+Azw7NrtCsO9dS3g1vVG4TRDw2wr1EHQy+sAN//03BX999u1aJZqWrSjjks6GI
+	 6HVJejdNwgh5DOCj7v6Z41VNiGZ5qlyA3n8rcJTAFsznpKMFgwCYxeFfXggJ8rXvXW
+	 g0pAolA+j3TvQ==
+Date: Sun, 8 Nov 2026 17:22:56 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>, Gary Guo <gary@garyguo.net>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Chao-ying Fu <chao-ying.fu@globalfoundries.com>,
+	torvalds@linux-foundation.org, olof@lixom.net,
+	aleksa.paunovic@htecgroup.com, arikalo@gmail.com,
+	Boqun Feng <boqun@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] riscv: build kernel atomics from LR/SC when Zaamo
+ is disabled
+Message-ID: <avA_cIffTse24u3m@xhacker>
+References: <20261105-lrsc-only-v5-0-f0648f57b2e1@mobileye.com>
+ <20261105-lrsc-only-v5-1-f0648f57b2e1@mobileye.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -102,363 +83,527 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261026201240.107462-4-sahilcdq0@gmail.com>
+In-Reply-To: <20261105-lrsc-only-v5-1-f0648f57b2e1@mobileye.com>
 
-On Tue, Oct 27, 2026 at 01:42:39AM +0530, Sahil Siddiq wrote:
-> Tests already exist lib/tests to verify the generic functionality of
-> KProbes. Add unit tests to verify that KProbes work on instructions
-> that require simulation in the OpenRISC ISA, and that the corresponding
-> delay slots are handled correctly.
+On Thu, Nov 05, 2026 at 06:37:36PM +0200, Vladimir Kondratiev wrote:
+> The A extension is Zaamo plus Zalrsc. On some CPUs Zaamo is present
+> only formally. MIPS P8700 traps every AMO instruction into M-mode and
+> emulates it there, so the extension is supported but very slow. A
+> typical uncontended atomic increment costs:
 > 
-> Signed-off-by: Sahil Siddiq <sahilcdq0@gmail.com>
+>   native AMO                                     2..5 cycles
+>   LR/SC, private L1 reservation monitor         6..12 cycles
+>   LR/SC, PoC (L2) reservation monitor       about 40 cycles
+>   AMO emulated by an M-mode trap           about 600 cycles
+> 
+> The last two were measured on the eyeq7h hardware. On such a CPU the
+> kernel must use LR/SC for every atomic.
+> 
+> Add RISCV_ISA_ZAAMO, default y. The default keeps "a" in -march and
+> the generated code unchanged. When it is disabled, -march carries
+> _zalrsc instead of "a", and atomic_*, bitops, xchg, futex and the
+> early boot code use LR/SC loops. The sequence is chosen with the
+> preprocessor, on CONFIG_RISCV_ISA_ZAAMO like the other ISA options in
+> the headers, because the assembler rejects AMO mnemonics once -march
+> lacks Zaamo. A kernel built this way runs on any hart that implements A; it just
+> does not use AMO. It is therefore a plain option, not a NONPORTABLE
+> one, and the hart keeps advertising "a" to userspace, which is true.
+> 
+> The choice is made at compile time rather than with alternatives.
+> Nearly every CPU has a native A extension, and an alternative would
+> inflate all those kernels with the nops needed to pad one AMO to the
+> size of an LR/SC loop, at every atomic site, for the benefit of a few.
+> 
+> Turning Zaamo off needs a compiler that accepts _zaamo and _zalrsc in
+> -march. GCC 15.1 is the first release that does.
+> TOOLCHAIN_HAS_ZALRSC_ZAAMO checks for it; with an older compiler the
+> option stays at y.
+> 
+> Add RISCV_ISA_ZALRSC as well, always y, because cmpxchg and the
+> conditional atomics are LR/SC sequences that Zaamo cannot replace. It
+> exists as the Kconfig counterpart of RISCV_ISA_EXT_ZALRSC in hwcap.h,
+> added by commit 35173b666a16 ("riscv: add parsing for Zaamo and Zalrsc
+> extensions"). The two sets are used together, for instance by
+> rv_ext_enabled() in the BPF JIT, so an extension the kernel can be
+> built for has both. RISCV_ISA_A, the counterpart of RISCV_ISA_EXT_A,
+> follows the same rule and puts "a" in -march.
+> 
+> Three sets of extensions provide every atomic Linux needs. "a" is what
+> the kernel supports today. Zalrsc plus Ziccrse is what this patch adds:
+> every atomic is a constrained LR/SC loop, and Ziccrse is the
+> forward-progress guarantee for such loops. Zaamo plus Zacas would do as
+> well, with CAS loops in place of LR/SC as on x86. This patch leaves
+> that option open: RISCV_ISA_ZALRSC is where it would go, by allowing
+> "n" there and making amocas the base implementation.
+
+'A' is part of linux's existing RISC-V minimum ISA from day1. So every
+piece of riscv arch code and linux userspace is written with that in mind.
+Making an im_zalrsc kernel work addresses the implemenation gaps(though I
+doubt current series close all gaps, e.g what about rust? rust part still
+assumes IMA), but would not by itself justify changing that minimum
+
+Your system already implements 'A' through firmware, the motivation
+of this series is performance. As Palmer pointed out, could you plz
+provide representative workload results showing the benefit warrants
+another supported ISA configuration and its maintenance cost?
+
+I'm not in favour of lowering the baseline which was set up from
+day1 solely to accommodate this implementation's AMO performance.
+Until that broader policy change is justified and determined by
+the riscv maintainers, I think retaining A as a mandatory and keep
+this serie out of tree is the best.
+
+> 
+> Suggested-by: Chao-ying Fu <chao-ying.fu@globalfoundries.com>
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 > ---
-> Changes v2 -> v3:
-> - arch/openrisc/kernel/tests/test_kprobes_asm.S:
->   - (test_kprobes_*): Set value in r11 register to 0 prior to running tests
->   - (test_kprobes_adrp):
->     Place function at page-aligned address
->     Use PAGE_SIZE macro instead of magic number
->     Move value in r13 to r11 before exiting
+>  arch/riscv/Kconfig               | 53 ++++++++++++++++++++++++++++++++++++++++
+>  arch/riscv/Makefile              | 16 +++++++++---
+>  arch/riscv/include/asm/atomic.h  | 52 ++++++++++++++++++++++++++++++++++++++-
+>  arch/riscv/include/asm/bitops.h  | 47 +++++++++++++++++++++++++++++++++++
+>  arch/riscv/include/asm/cmpxchg.h | 16 ++++++++++++
+>  arch/riscv/include/asm/futex.h   | 45 ++++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/entry.S        |  7 ++++++
+>  arch/riscv/kernel/head.S         | 12 +++++++++
+>  8 files changed, 243 insertions(+), 5 deletions(-)
 > 
-> Changes v1 -> v2: New commit
-> 
->  arch/openrisc/Kconfig.debug                   |  30 +++-
->  arch/openrisc/kernel/Makefile                 |   1 +
->  arch/openrisc/kernel/tests/Makefile           |   3 +
->  arch/openrisc/kernel/tests/test_kprobes.c     |  59 +++++++
->  arch/openrisc/kernel/tests/test_kprobes.h     |  24 +++
->  arch/openrisc/kernel/tests/test_kprobes_asm.S | 157 ++++++++++++++++++
->  6 files changed, 273 insertions(+), 1 deletion(-)
->  create mode 100644 arch/openrisc/kernel/tests/Makefile
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.c
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.h
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes_asm.S
-> 
-> diff --git a/arch/openrisc/Kconfig.debug b/arch/openrisc/Kconfig.debug
-> index 295942fe3fd5..54110f3a111f 100644
-> --- a/arch/openrisc/Kconfig.debug
-> +++ b/arch/openrisc/Kconfig.debug
-> @@ -1,2 +1,30 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -# dummy file, do not delete
-> +menu "openrisc Testing"
-> +
-> +menuconfig RUNTIME_KERNEL_TESTING_MENU
-> +    bool "openrisc kernel runtime testing"
-> +    default y
-> +    help
-> +      Enable openrisc kernel runtime testing. With this option, one can
-> +      build and run tests to verify the correctness of relevant components
-> +      in the kernel at runtime.
-> +
-> +if RUNTIME_KERNEL_TESTING_MENU
-> +
-> +config OR_KPROBES_KUNIT
-> +    tristate "KUnit test for kprobes on openrisc"
-> +    depends on KUNIT
-> +    depends on KPROBES
-> +    default KUNIT_ALL_TESTS
-> +    help
-> +      Enable testing of KProbes in OpenRISC for instructions that
-> +      require simulation. When further changes related to probes or
-> +      tracing are added to OpenRISC's port, these tests can help
-> +      verify that instruction simulation and processing of delay slots
-> +      continue to work as expected.
-> +
-> +      If unsure, say N
-> +
-> +endif # RUNTIME_KERNEL_TESTING_MENU
-> +
-> +endmenu # "openrisc Testing"
-> diff --git a/arch/openrisc/kernel/Makefile b/arch/openrisc/kernel/Makefile
-> index 2ac824867963..0c1cade09e0c 100644
-> --- a/arch/openrisc/kernel/Makefile
-> +++ b/arch/openrisc/kernel/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
->  obj-$(CONFIG_MODULES)		+= module.o
->  obj-$(CONFIG_OF)		+= prom.o
->  obj-$(CONFIG_KPROBES)		+= kprobes.o
-> +obj-$(CONFIG_OR_KPROBES_KUNIT)	+= tests/
->  obj-y	+= patching.o
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 5874ca30f4f6..07d15a0bb379 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -730,6 +730,59 @@ config RISCV_ISA_ZACAS
 >  
->  clean:
-> diff --git a/arch/openrisc/kernel/tests/Makefile b/arch/openrisc/kernel/tests/Makefile
-> new file mode 100644
-> index 000000000000..9e9693fd3550
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/tests/Makefile
-> @@ -0,0 +1,3 @@
-> +obj-$(CONFIG_OR_KPROBES_KUNIT)	+= openrisc_test_kprobes.o
+>  	  If you don't know what to do here, say Y.
+>  
+> +config TOOLCHAIN_HAS_ZALRSC_ZAAMO
+> +	bool
+> +	default y
+> +	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64im_zaamo_zalrsc)
+> +	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32im_zaamo_zalrsc)
 > +
-> +openrisc_test_kprobes-objs := test_kprobes.o test_kprobes_asm.o
-> diff --git a/arch/openrisc/kernel/tests/test_kprobes.c b/arch/openrisc/kernel/tests/test_kprobes.c
-> new file mode 100644
-> index 000000000000..a41bdec662e1
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/tests/test_kprobes.c
-> @@ -0,0 +1,59 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * KProbe unit tests for OpenRISC
-> + *
-> + * Unit tests borrowed liberally from similar work of RISC-V. All
-> + * original copyrights apply as per the original source declaration.
-> + */
+> +config RISCV_ISA_ZAAMO
+> +	bool "Zaamo extension support for AMO atomics" if TOOLCHAIN_HAS_ZALRSC_ZAAMO
+> +	default y
+> +	help
+> +	  Use AMO instructions for kernel atomic memory operations. When
+> +	  disabled, those operations are built from LR/SC and the kernel
+> +	  is compiled with zalrsc instead of the A extension.
 > +
-> +// #include <linux/kernel.h>
-> +#include <linux/kprobes.h>
-> +#include <kunit/test.h>
-> +#include "test_kprobes.h"
+> +	  Disable this for a CPU where AMO is much slower than LR/SC. That
+> +	  is the case when AMO instructions are emulated by a trap into
+> +	  M-mode, as on the MIPS P8700: an emulated atomic costs hundreds
+> +	  of cycles where LR/SC costs tens. Such a CPU still advertises
+> +	  the A extension, and userspace still sees it.
 > +
-> +static void test_kprobe_openrisc(struct kunit *test)
-> +{
-> +	unsigned int num_kprobe = 0;
-> +	unsigned long (*func)(void);
-> +	struct kprobe *kp;
-> +	int i;
+> +	  A kernel built without Zaamo runs on any CPU that implements the
+> +	  A extension; it only does not use AMO.
 > +
-> +	while (test_kprobes_addresses[num_kprobe])
-> +		num_kprobe++;
+> +	  The compiler must accept _zaamo and _zalrsc in -march to make
+> +	  this choice. GCC 15.1 is the first release that does. With an
+> +	  older compiler the option stays enabled and -march keeps the A
+> +	  extension.
 > +
-> +	kp = kcalloc(num_kprobe, sizeof(struct kprobe), GFP_KERNEL);
-> +	KUNIT_EXPECT_TRUE(test, kp);
-> +	if (!kp)
-> +		return;
+> +	  If you don't know what to do here, say Y.
 > +
-> +	for (i = 0; i < num_kprobe; ++i) {
-> +		kp[i].addr = test_kprobes_addresses[i];
-> +		KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp[i]));
-> +	}
+> +config RISCV_ISA_ZALRSC
+> +	def_bool y
+> +	help
+> +	  Zalrsc provides LR/SC. cmpxchg and the conditional atomics are
+> +	  LR/SC sequences, so this is always enabled.
 > +
-> +	for (i = 0;; ++i) {
-> +		func = test_kprobes_functions[i];
-> +		if (!func)
-> +			break;
-> +		KUNIT_EXPECT_EQ_MSG(test, KPROBE_TEST_MAGIC, func(), "function %d broken", i);
-> +	}
+> +	  It exists because asm/hwcap.h already has RISCV_ISA_EXT_ZALRSC
+> +	  next to RISCV_ISA_EXT_ZAAMO, and the kernel pairs each
+> +	  RISCV_ISA_EXT_<ext> it can be built for with a
+> +	  CONFIG_RISCV_ISA_<ext>; rv_ext_enabled() in the BPF JIT, for
+> +	  example, tests both.
 > +
-> +	for (i = 0; i < num_kprobe; ++i)
-> +		unregister_kprobe(&kp[i]);
-> +	kfree(kp);
+> +	  Zaamo plus Zacas could provide every atomic as well, with CAS
+> +	  loops in place of LR/SC. This option is where that would go,
+> +	  by allowing it to be disabled.
+> +
+> +config RISCV_ISA_A
+> +	def_bool RISCV_ISA_ZAAMO && RISCV_ISA_ZALRSC
+> +	help
+> +	  The A extension is Zaamo plus Zalrsc. This is the Kconfig
+> +	  counterpart of RISCV_ISA_EXT_A, for the same reason as
+> +	  RISCV_ISA_ZALRSC above, and puts "a" in -march.
+> +
+>  config TOOLCHAIN_HAS_ZBB
+>  	bool
+>  	default y
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index 44f5a439741a..5cdc9cc017bb 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -58,8 +58,9 @@ ifeq ($(CONFIG_SHADOW_CALL_STACK),y)
+>  endif
+>  
+>  # ISA string setting
+> -riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
+> -riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
+> +riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32im
+> +riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64im
+> +riscv-march-$(CONFIG_RISCV_ISA_A)	:= $(riscv-march-y)a
+>  riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+>  riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
+>  riscv-march-$(CONFIG_RISCV_ISA_V)	:= $(riscv-march-y)v
+> @@ -75,9 +76,16 @@ else
+>  riscv-march-$(CONFIG_TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI) := $(riscv-march-y)_zicsr_zifencei
+>  endif
+>  
+> -KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
+> +KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima?|rv64ima?)fd([^v_]*)v?/\1\2/')
+>  export KBUILD_BASE_ISA
+>  
+> +# Without "a", name the sub-extensions. Zaamo can be off only when the
+> +# compiler accepts _zaamo and _zalrsc in -march.
+> +ifneq ($(CONFIG_RISCV_ISA_A),y)
+> +riscv-march-$(CONFIG_RISCV_ISA_ZAAMO) := $(riscv-march-y)_zaamo
+> +riscv-march-$(CONFIG_RISCV_ISA_ZALRSC) := $(riscv-march-y)_zalrsc
+> +endif
+> +
+>  # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
+>  # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
+>  KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
+> @@ -85,7 +93,7 @@ KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
+>  KBUILD_AFLAGS += -march=$(riscv-march-y)
+>  
+>  # For C code built with floating-point support, exclude V but keep F and D.
+> -CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)([^v_]*)v?/\1\2/')
+> +CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima?|rv64ima?)([^v_]*)v?/\1\2/')
+>  
+>  KBUILD_CFLAGS += -mno-save-restore
+>  
+> diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
+> index 616b8b332ac5..3b189bea1d08 100644
+> --- a/arch/riscv/include/asm/atomic.h
+> +++ b/arch/riscv/include/asm/atomic.h
+> @@ -50,6 +50,7 @@ static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
+>   * have the AQ or RL bits set.  These don't return anything, so there's only
+>   * one version to worry about.
+>   */
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  #define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)		\
+>  static __always_inline							\
+>  void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
+> @@ -59,7 +60,23 @@ void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
+>  		: "+A" (v->counter)					\
+>  		: "r" (I)						\
+>  		: "memory");						\
+> -}									\
 > +}
+> +#else
+> +#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)		\
+> +static __always_inline							\
+> +void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
+> +{									\
+> +	register c_type ret, temp;					\
+> +	__asm__ __volatile__ (						\
+> +		"1:	lr." #asm_type " %1, %0\n"			\
+> +		"	" #asm_op " %2, %1, %3\n"			\
+> +		"	sc." #asm_type " %2, %2, %0\n"			\
+> +		"	bnez %2, 1b\n"					\
+> +		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
+> +		: "r" (I)						\
+> +		: "memory");						\
+> +}
+> +#endif
+>  
+>  #ifdef CONFIG_GENERIC_ATOMIC64
+>  #define ATOMIC_OPS(op, asm_op, I)					\
+> @@ -84,6 +101,7 @@ ATOMIC_OPS(xor, xor,  i)
+>   * There's two flavors of these: the arithmetic ops have both fetch and return
+>   * versions, while the logical ops only have fetch versions.
+>   */
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  #define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)	\
+>  static __always_inline							\
+>  c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,		\
+> @@ -108,6 +126,38 @@ c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *v)	\
+>  		: "memory");						\
+>  	return ret;							\
+>  }
+> +#else
+> +#define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)	\
+> +static __always_inline							\
+> +c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,		\
+> +					     atomic##prefix##_t *v)	\
+> +{									\
+> +	register c_type ret, temp;					\
+> +	__asm__ __volatile__ (						\
+> +		"1:	lr." #asm_type " %1, %0\n"			\
+> +		"	" #asm_op " %2, %1, %3\n"			\
+> +		"	sc." #asm_type " %2, %2, %0\n"			\
+> +		"	bnez %2, 1b\n"					\
+> +		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
+> +		: "r" (I)						\
+> +		: "memory");						\
+> +	return ret;							\
+> +}									\
+> +static __always_inline							\
+> +c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *v)	\
+> +{									\
+> +	register c_type ret, temp;					\
+> +	__asm__ __volatile__ (						\
+> +		"1:	lr." #asm_type ".aqrl %1, %0\n"			\
+> +		"	" #asm_op " %2, %1, %3\n"			\
+> +		"	sc." #asm_type ".aqrl %2, %2, %0\n"		\
+> +		"	bnez %2, 1b\n"					\
+> +		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
+> +		: "r" (I)						\
+> +		: "memory");						\
+> +	return ret;							\
+> +}
+> +#endif
+>  
+>  #define ATOMIC_OP_RETURN(op, asm_op, c_op, I, asm_type, c_type, prefix)	\
+>  static __always_inline							\
+> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
+> index 3c1a15be54d8..ab3ffc3bfcfc 100644
+> --- a/arch/riscv/include/asm/bitops.h
+> +++ b/arch/riscv/include/asm/bitops.h
+> @@ -170,12 +170,17 @@ static __always_inline int variable_fls(unsigned int x)
+>  
+>  #if (BITS_PER_LONG == 64)
+>  #define __AMO(op)	"amo" #op ".d"
+> +#define __LR	"lr.d"
+> +#define __SC	"sc.d"
+>  #elif (BITS_PER_LONG == 32)
+>  #define __AMO(op)	"amo" #op ".w"
+> +#define __LR	"lr.w"
+> +#define __SC	"sc.w"
+>  #else
+>  #error "Unexpected BITS_PER_LONG"
+>  #endif
+>  
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  #define __test_and_op_bit_ord(op, mod, nr, addr, ord)		\
+>  ({								\
+>  	unsigned long __res, __mask;				\
+> @@ -194,6 +199,35 @@ static __always_inline int variable_fls(unsigned int x)
+>  		: "+A" (addr[BIT_WORD(nr)])			\
+>  		: "r" (mod(BIT_MASK(nr)))			\
+>  		: "memory");
+> +#else
+> +#define __test_and_op_bit_ord(op, mod, nr, addr, ord)		\
+> +({								\
+> +	unsigned long __res, __mask, __temp;			\
+> +	__mask = BIT_MASK(nr);					\
+> +	__asm__ __volatile__ (					\
+> +		"1: " __LR #ord " %0, %1\n"			\
+> +		#op " %2, %0, %3\n"				\
+> +		__SC #ord " %2, %2, %1\n"			\
+> +		"bnez %2, 1b\n"					\
+> +		: "=&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=&r" (__temp)	\
+> +		: "r" (mod(__mask))				\
+> +		: "memory");					\
+> +	((__res & __mask) != 0);				\
+> +})
 > +
-> +static struct kunit_case kprobes_testcases[] = {
-> +	KUNIT_CASE(test_kprobe_openrisc),
-> +	{}
-> +};
+> +#define __op_bit_ord(op, mod, nr, addr, ord)			\
+> +do {								\
+> +	unsigned long __res, __temp;				\
+> +	__asm__ __volatile__ (					\
+> +		"1: " __LR #ord " %0, %1\n"			\
+> +		#op " %2, %0, %3\n"				\
+> +		__SC #ord " %2, %2, %1\n"			\
+> +		"bnez %2, 1b\n"					\
+> +		: "=&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=&r" (__temp)	\
+> +		: "r" (mod(BIT_MASK(nr)))			\
+> +		: "memory");					\
+> +} while (0)
+> +#endif
+>  
+>  #define __test_and_op_bit(op, mod, nr, addr) 			\
+>  	__test_and_op_bit_ord(op, mod, nr, addr, .aqrl)
+> @@ -337,12 +371,25 @@ static __always_inline void arch___clear_bit_unlock(
+>  static __always_inline bool arch_xor_unlock_is_negative_byte(unsigned long mask,
+>  		volatile unsigned long *addr)
+>  {
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  	unsigned long res;
+>  	__asm__ __volatile__ (
+>  		__AMO(xor) ".rl %0, %2, %1"
+>  		: "=r" (res), "+A" (*addr)
+>  		: "r" (__NOP(mask))
+>  		: "memory");
+> +#else
+> +	unsigned long res, temp;
 > +
-> +static struct kunit_suite kprobes_test_suite = {
-> +	.name = "kprobes_openrisc",
-> +	.test_cases = kprobes_testcases,
-> +};
-> +
-> +kunit_test_suites(&kprobes_test_suite);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("KUnit test for OpenRISC KProbes");
-> diff --git a/arch/openrisc/kernel/tests/test_kprobes.h b/arch/openrisc/kernel/tests/test_kprobes.h
-> new file mode 100644
-> index 000000000000..26c26920d430
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/tests/test_kprobes.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Unit tests borrowed liberally from similar work of RISC-V. All
-> + * original copyrights apply as per the original source declaration.
-> + */
-> +
-> +#ifndef TEST_KPROBES_H
-> +#define TEST_KPROBES_H
-> +
-> +#define KPROBE_TEST_MAGIC          0xDEADC0DE
-> +#define KPROBE_TEST_MAGIC_LOWER    0x0000C0DE
-> +#define KPROBE_TEST_MAGIC_UPPER    0x0000DEAD
-> +
-> +#ifndef __ASSEMBLER__
-> +
-> +/* array of addresses to install kprobes */
-> +extern void *test_kprobes_addresses[];
-> +
-> +/* array of functions that return KPROBE_TEST_MAGIC */
-> +extern unsigned long (*test_kprobes_functions[])(void);
-> +
-> +#endif /* __ASSEMBLER__ */
-> +
-> +#endif /* TEST_KPROBES_H */
-> diff --git a/arch/openrisc/kernel/tests/test_kprobes_asm.S b/arch/openrisc/kernel/tests/test_kprobes_asm.S
-> new file mode 100644
-> index 000000000000..bc87a5fb00d5
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/tests/test_kprobes_asm.S
-> @@ -0,0 +1,157 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * KProbes unit tests for OpenRISC
-> + *
-> + * Unit tests borrowed liberally from similar work of RISC-V. All
-> + * original copyrights apply as per the original source declaration.
-> + */
-> +
-> +#include <linux/linkage.h>
-> +#include <asm/asm.h>
-> +#include <asm/page.h>
-> +
-> +#include "test_kprobes.h"
-> +
-> +SYM_FUNC_START(test_kprobes_j)
-> +test_kprobes_j_addr1:
-> +	l.addi	r11,r0,0
-> +	l.j	2f
-> +	l.nop
-
-Just a tiny comment here about indenting the delay slots.
-
-You could also use the delayslots here, for example:
-
-	l.j	2f
-	 l.addi	r11,r0,0
-
-> +1:	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +	l.jr	r9
-> +	l.nop
-> +2:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +test_kprobes_j_addr2:
-> +	l.j	1b
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_j)
-> +
-> +SYM_FUNC_START(test_kprobes_jal)
-> +	l.addi	r11,r0,0
-> +	l.addi	r15,r9,0
-> +test_kprobes_jal_addr1:
-> +	l.jal	2f
-> +	l.nop
-> +1:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +	l.jr	r9
-> +	l.nop
-> +test_kprobes_jal_addr2:
-> +2:	l.jal	1b
-> +	l.nop
-> +	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +	l.addi	r9,r15,0
-> +	l.jr	r9
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_jal)
-> +
-> +SYM_FUNC_START(test_kprobes_jr)
-> +	l.addi	r11,r0,0
-> +	l.movhi	r15,hi(2f)
-> +	l.ori	r15,r15,lo(2f)
-> +test_kprobes_jr_addr1:
-> +	l.jr	r15
-> +	l.nop
-> +1:	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +	l.jr	r9
-> +	l.nop
-> +2:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +	l.movhi	r15,hi(1b)
-> +	l.ori	r15,r15,lo(1b)
-> +test_kprobes_jr_addr2:
-> +	l.jr	r15
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_jr)
-> +
-> +SYM_FUNC_START(test_kprobes_jalr)
-> +	l.addi	r11,r0,0
-> +	l.addi	r15,r9,0
-> +	l.movhi	r17,hi(2f)
-> +	l.ori	r17,r17,lo(2f)
-> +test_kprobes_jalr_addr1:
-> +	l.jalr	r17
-> +	l.nop
-> +1:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +	l.jr	r9
-> +	l.nop
-> +2:	l.movhi	r17,hi(1b)
-> +	l.ori	r17,r17,lo(1b)
-> +test_kprobes_jalr_addr2:
-> +	l.jalr	r17
-> +	l.nop
-> +	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +	l.addi	r9,r15,0
-> +	l.jr	r9
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_jalr)
-> +
-> +SYM_FUNC_START(test_kprobes_branch)
-> +	l.addi	r11,r0,0
-> +	l.addi	r15,r0,1
-> +	l.addi	r17,r0,0
-> +	l.sfgts	r15,r17
-> +test_kprobes_branch_addr1:
-> +	l.bf	2f
-> +	l.nop
-> +1:	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +	l.jr	r9
-> +	l.nop
-> +2:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +	l.sfeq	r15,r17
-> +test_kprobes_branch_addr2:
-> +	l.bnf	1b
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_branch)
-> +
-> +	.align	PAGE_SIZE
-> +SYM_FUNC_START(test_kprobes_adrp)
-> +	l.addi	r11,r0,0
-> +	l.addi	r13,r0,0
-> +	l.addi	r15,r9,0
-> +	l.addi	r17,r0,-PAGE_SIZE
-> +	l.jal	1f
-> +	l.nop
-> +1:	l.and	r19,r9,r17
-> +test_kprobes_adrp_addr:
-> +	l.adrp	r21,0
-> +	l.sfeq	r21,r19
-> +	l.bnf	2f
-> +	l.nop
-> +	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> +	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> +	l.addi	r11,r13,0
-> +2:	l.addi	r9,r15,0
-> +	l.jr	r9
-> +	l.nop
-> +SYM_FUNC_END(test_kprobes_adrp)
-> +
-> +    .section .rodata
-> +SYM_DATA_START(test_kprobes_addresses)
-> +	.word test_kprobes_j_addr1
-> +	.word test_kprobes_j_addr2
-> +	.word test_kprobes_jal_addr1
-> +	.word test_kprobes_jal_addr2
-> +	.word test_kprobes_jr_addr1
-> +	.word test_kprobes_jr_addr2
-> +	.word test_kprobes_jalr_addr1
-> +	.word test_kprobes_jalr_addr2
-> +	.word test_kprobes_branch_addr1
-> +	.word test_kprobes_branch_addr2
-> +	.word test_kprobes_adrp_addr
-> +	.word 0
-> +SYM_DATA_END(test_kprobes_addresses)
-> +
-> +    .section .rodata
-> +SYM_DATA_START(test_kprobes_functions)
-> +	.word test_kprobes_j
-> +	.word test_kprobes_jal
-> +	.word test_kprobes_jr
-> +	.word test_kprobes_jalr
-> +	.word test_kprobes_branch
-> +	.word test_kprobes_adrp
-> +	.word 0
-> +SYM_DATA_END(test_kprobes_functions)
-> -- 
-> 2.55.0
+> +	__asm__ __volatile__ (
+> +		"1: " __LR ".rl %0, %1\n"
+> +		"xor %2, %0, %3\n"
+> +		__SC ".rl %2, %2, %1\n"
+> +		"bnez %2, 1b\n"
+> +		: "=&r" (res), "+A" (*addr), "=&r" (temp)
+> +		: "r" (__NOP(mask))
+> +		: "memory");
+> +#endif
+>  	return (res & BIT(7)) != 0;
+>  }
+>  
+> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+> index 662e160b0522..883dc4aa1dc3 100644
+> --- a/arch/riscv/include/asm/cmpxchg.h
+> +++ b/arch/riscv/include/asm/cmpxchg.h
+> @@ -57,6 +57,7 @@
+>  	}									\
+>  })
+>  
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  #define __arch_xchg(sfx, prepend, append, r, p, n)			\
+>  ({									\
+>  	__asm__ __volatile__ (						\
+> @@ -67,6 +68,21 @@
+>  		: "r" (n)						\
+>  		: "memory");						\
+>  })
+> +#else
+> +#define __arch_xchg(sfx, prepend, append, r, p, n)			\
+> +({									\
+> +	__typeof__(*(__ptr)) temp;					\
+> +	__asm__ __volatile__ (						\
+> +		prepend							\
+> +		"1:	lr" sfx " %0, %1\n"				\
+> +		"	sc" sfx " %2, %3, %1\n"				\
+> +		"	bnez %2, 1b\n"					\
+> +		append							\
+> +		: "=&r" (r), "+A" (*(p)), "=&r" (temp)			\
+> +		: "r" (n)						\
+> +		: "memory");						\
+> +})
+> +#endif
+>  
+>  #define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend,			\
+>  		   sc_append, swap_append)				\
+> diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/futex.h
+> index 6f3bc9bdb85e..58f12bf2af68 100644
+> --- a/arch/riscv/include/asm/futex.h
+> +++ b/arch/riscv/include/asm/futex.h
+> @@ -19,6 +19,7 @@
+>  #define __disable_user_access()		do { } while (0)
+>  #endif
+>  
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)	\
+>  {								\
+>  	__enable_user_access();					\
+> @@ -32,6 +33,27 @@
+>  	: "memory");						\
+>  	__disable_user_access();				\
+>  }
+> +#else
+> +#define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)	\
+> +{								\
+> +	int temp;						\
+> +								\
+> +	__enable_user_access();					\
+> +	__asm__ __volatile__ (					\
+> +	"1:	lr.w.aqrl %[ov], %[u]			\n"	\
+> +	"	" insn "				\n"	\
+> +	"2:	sc.w.aqrl %[t], %[t], %[u]		\n"	\
+> +	"	bnez %[t], 1b				\n"	\
+> +	"3:						\n"	\
+> +	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %[r])			\
+> +	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %[r])			\
+> +	: [r] "+r" (ret), [ov] "=&r" (oldval),			\
+> +	  [t] "=&r" (temp), [u] "+m" (*(uaddr))			\
+> +	: [op] "Jr" (oparg)					\
+> +	: "memory");						\
+> +	__disable_user_access();				\
+> +}
+> +#endif
+>  
+>  static inline int
+>  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+> @@ -43,6 +65,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+>  	uaddr = untagged_addr(uaddr);
+>  
+>  	switch (op) {
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  	case FUTEX_OP_SET:
+>  		__futex_atomic_op("amoswap.w.aqrl %[ov],%z[op],%[u]",
+>  				  ret, oldval, uaddr, oparg);
+> @@ -63,6 +86,28 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+>  		__futex_atomic_op("amoxor.w.aqrl %[ov],%z[op],%[u]",
+>  				  ret, oldval, uaddr, oparg);
+>  		break;
+> +#else
+> +	case FUTEX_OP_SET:
+> +		__futex_atomic_op("mv %[t], %z[op]",
+> +				  ret, oldval, uaddr, oparg);
+> +		break;
+> +	case FUTEX_OP_ADD:
+> +		__futex_atomic_op("add %[t], %[ov], %z[op]",
+> +				  ret, oldval, uaddr, oparg);
+> +		break;
+> +	case FUTEX_OP_OR:
+> +		__futex_atomic_op("or %[t], %[ov], %z[op]",
+> +				  ret, oldval, uaddr, oparg);
+> +		break;
+> +	case FUTEX_OP_ANDN:
+> +		__futex_atomic_op("and %[t], %[ov], %z[op]",
+> +				  ret, oldval, uaddr, ~oparg);
+> +		break;
+> +	case FUTEX_OP_XOR:
+> +		__futex_atomic_op("xor %[t], %[ov], %z[op]",
+> +				  ret, oldval, uaddr, oparg);
+> +		break;
+> +#endif
+>  	default:
+>  		ret = -ENOSYS;
+>  	}
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 61b7a7716697..ba2db6804a6c 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -73,7 +73,14 @@
+>  	beq	a2, zero, .Lnew_valid_map_cpus_restore_context
+>  
+>  	/* Atomically reset the current cpu bit in new_valid_map_cpus */
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  	amoxor.d	a0, a1, (a0)
+> +#else
+> +1:	lr.d	a2, (a0)
+> +	xor	a2, a1, a2
+> +	sc.d	a2, a2, (a0)
+> +	bnez	a2, 1b
+> +#endif
+>  
+>  	/*
+>  	 * A sfence.vma is required here. Even if we had Svvptc, there's no
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index f6a8ca49e627..dc3862ed29c4 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -265,7 +265,19 @@ SYM_CODE_START(_start_kernel)
+>  	/* Pick one hart to run the main boot sequence */
+>  	la a3, hart_lottery
+>  	li a2, 1
+> +#ifdef CONFIG_RISCV_ISA_ZAAMO
+>  	amoadd.w a3, a2, (a3)
+> +#else
+> +	/*
+> +	 * hart_lottery is a small 32-bit counter. add is valid on RV32
+> +	 * and RV64; sc.w stores the low 32 bits.
+> +	 */
+> +1:	lr.w t0, (a3)
+> +	add t1, t0, a2
+> +	sc.w t1, t1, (a3)
+> +	bnez t1, 1b
+> +	mv a3, t0
+> +#endif
+>  	bnez a3, .Lsecondary_start
+>  #endif /* CONFIG_RISCV_BOOT_SPINWAIT */
+>  
 > 
+> -- 
+> 2.43.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
