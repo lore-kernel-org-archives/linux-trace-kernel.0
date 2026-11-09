@@ -1,91 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794227244;
-	b=srFN5VCe6g9DUFvI6/7vzQQ+zNiLnsYnrMjDjXXBAr39tbx4MGZRw4JN3IJLS7BHJDHC
-	 8rdpKa0KFmxZXsniJBE2w7/R1kon/XN1HHC9AmiKfc5Sq6C4lYV08Z0+6c+H/EQ/kSqA+
-	 fYYPla3ePT3oVUuyDYLPBnY/G3DoeuU7NwhSpfKpSsgutPkaggXOBYaNpD25gXrcggb9N
-	 qDDTDJfhVWOp0blCe4H8pta5wpPBZrf/6ymoW9Lobb5+DAXo9+5xHsZPL477JihtLXEK4
-	 8KUMdXq4478ADejRAQqBN/oYWLv5M7GemEZalq3vikERpHjQNJgXs1XzBZGUiYyX7fA==
+	t=1794229501;
+	b=NAhwnebgCrtCF1m64XCLc24Okw1Nrr6gwMbF+L8gDVcUhuqJQ3BJrRPrACaJz8HAKwet
+	 +pHqPmtsOmHsjI0jmc9QT/I4wZKSyJdQzQBXGCAW0jTI2Wz+7Uroy0D4l8A8FHehkRu+z
+	 Djyy9ANFuZVLZ5XJaKWujQXS1LtATjaHoZcZ/aDnb93t87PDHuQl9i6JB7RCEDTyS3iR9
+	 mEG8LHQRWUO2xyh4DAFll941ha6I8M8H4X+Y1RzXnHdyCzrLISul8yttKmZ3QDgdYYslt
+	 8Mn8Ca6O6EfTS5sFtcWLVngJs8q3oFQRwfICAqq5LH1v67ax6+DIPTXLAwHj59nz0Fg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794227244;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=RYIcWcYzIUZ35LbYpg6XHYKMwvcMU7zN300uv/7AjsM=;
-	b=5L3gcaWF4f153ORc5lQUt+i37o2pI0gDGZx6wvKghUNHjj4jL6ql+0HHEeKLXyK5xR08
-	 SfZhxoqnBZ130dJc9KVNs0oHOcXuJKC7agxPakP5Pj1ir+GmiDlu9VF4U8SX9TUP+uuCZ
-	 eRFccs1vW4sfrWsVLeSrXl7ZAN7PseEnZy2Bk/AQot6AhotKyWKcdU6pebF6kQx7wYaTq
-	 1irsGhfWYYXr+pMomL2CXpnY6OJxYwDYnCwLXf8MxGWIVAuStia+J+ZY3QKBEtXCKQCJl
-	 Xpopa0X+OLGPCclNMhvOGaS1skReCjGfGsBgPdR6kGCWEFmAy26d28mHpJARKstA1Qw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794229501;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Debian-User;
+	bh=EJpU1TPCJ8D+Q2T//JjeHAShFUrLh+PotIAWBFM5oJ8=;
+	b=b5Read69n5B7YdBy0E6SLwMASD+11eFxJqlwopvQerfH7kWI5SYtwPtgf3OyWfUS6EyN
+	 /mRj8vl3w8tMXUxuFKzNYyLZMKWXWLcVLfk+AhrTJp54az2khlm2ExVjSvj5lD8ECDefT
+	 0fI5b1NK5oiLCB1hyg7vEWJQ4/3irKB5lFL4AgBujkk9F7yiT8ERLKWoGhNW49vrjBnvZ
+	 cxRkYRRBTmZPXI55bCPyqpwgc2M9mSM+5Yx56kk/GtXbJYJCNE29L9jcKXspfOR1oOY2B
+	 U2OJbu7TJ5MKIs8LAnRC/UfZuFR0Mr9bINQYHPuaHrjsPUl7HpD1CZ8573KgeeesqKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WkYzP4rt;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=debian.org;
+	spf=pass smtp.mailfrom=debian.org;
+	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=N4Y3F+Pc;
+	arc=none smtp.remote-ip=82.195.75.108
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED134606A31C;
-	Mon,  9 Nov 2026 12:27:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8B606A33A
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 13:05:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04C8B606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WkYzP4rt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0D91F0089F;
-	Mon,  9 Nov 2026 12:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794227243;
-	bh=RYIcWcYzIUZ35LbYpg6XHYKMwvcMU7zN300uv/7AjsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WkYzP4rt/AxJflSDY4QvHlo3QQtj+85opjVNNjFvMZqJZn+bBCQKsOR1Vc56wCsWw
-	 FHwDkIcJj0dA8rBrIwiablgEvMq9q7ucu+JfX5ZN/0yOM8xaxvKN1o/8G1XCL0eIBJ
-	 b0Cv7HUFzyyS7CUgxu7a5sjYbh8AKtzd//4hZ8f+wOi407hdVAolsL1UEeBF+yDk3z
-	 Cz0noIGTuP+nGcjHMqce1MVu5INeoK3aRdrWAaXkeN9Rfm7WjlKS4/wg/Th3S/XzAR
-	 k2GkQM8y0M0SzQ1l9cxFRP1xd1zIG5cLpSzvpH/O1BlNyrFDSrS7beg0mpHerpJWoL
-	 FtSvpRHC0A2SA==
-Date: Mon, 9 Nov 2026 12:27:00 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 05/13] mm: convert THP VMA flag tests to use vma_flags_t
-Message-ID: <avG7_rb_PtU1jsbH@gremlin>
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-5-0d3cd15ab75f@kernel.org>
- <631047fa-8a19-44b8-9fed-6607ec79a1c1@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=N4Y3F+Pc
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EJpU1TPCJ8D+Q2T//JjeHAShFUrLh+PotIAWBFM5oJ8=; b=N4Y3F+Pcv9PmLGuwiUxla7xQCs
+	ZBXltqPd17AqjoNs9OPzjd4MqlQ6NY9sEJ1O0RxSmJlXJWi+nlmsjzVr0SzzStjEfDNKg0Zi8/G1X
+	meifZEnglHV6St7fJ2vSZRnIM2WfTtul/QUkhXI2IHNiMIMdjMslFBl+w9odWW6VRG1G8QJUULLSR
+	ZjyqH9G3040yu8cq2/30R7nHP/VRFVOQKUpHzMqolMnPwElGwhNAqR19O5y32Sfa3MYhX3ZEEekWU
+	QY/kZZtUJ3tt1TIgvdD6j70ii6c/aa9kJgOh7FsASSUST5YZmENcD2o9DS5ojjccj8X1jaZRm5d6a
+	oghCMj4A==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1xQP3P-00BdEu-1I;
+	Mon, 09 Nov 2026 13:04:55 +0000
+Date: Mon, 9 Nov 2026 05:04:50 -0800
+From: Breno Leitao <leitao@debian.org>
+To: sashiko-bot@kernel.org, rostedt@goodmis.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ring-buffer: Do not allow reader to see unfinished moved
+ head
+Message-ID: <avHEs_umssItSLHi@gmail.com>
+References: <20261109032241.55e57d26@fedora>
+ <sashiko-outbox-204599@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -97,48 +70,36 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <631047fa-8a19-44b8-9fed-6607ec79a1c1@kernel.org>
+In-Reply-To: <sashiko-outbox-204599@kernel.org>
+X-Debian-User: leitao
 
-On Fri, Nov 06, 2026 at 03:36:55PM +0100, David Hildenbrand (Arm) wrote:
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 0d3bd9e23613..a2c7c6a0768d 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -640,7 +640,8 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> >  		 * If the vma has the VM_DROPPABLE flag, the collapse will
-> >  		 * preserve the lazyfree property without needing to skip.
-> >  		 */
-> > -		if (cc->policy.anon_skip_lazyfree && !(vma->vm_flags & VM_DROPPABLE) &&
-> > +		if (cc->policy.anon_skip_lazyfree &&
-> > +		    !vma_test_single_mask(vma, VMA_DROPPABLE) &&
-> >  		    folio_test_lazyfree(folio) && !pte_dirty(pteval)) {
-> >  			result = SCAN_PAGE_LAZYFREE;
-> >  			goto out;
-> > @@ -1683,7 +1684,8 @@ static enum scan_result collapse_scan_anon(struct vm_area_struct *vma,
-> >  		 * If the vma has the VM_DROPPABLE flag, the collapse will
-> >  		 * preserve the lazyfree property without needing to skip.
-> >  		 */
-> > -		if (cc->policy.anon_skip_lazyfree && !(vma->vm_flags & VM_DROPPABLE) &&
-> > +		if (cc->policy.anon_skip_lazyfree &&
-> > +		    !vma_test_single_mask(vma, VMA_DROPPABLE) &&
-> >  		    folio_test_lazyfree(folio) && !pte_dirty(pteval)) {
-> >  			result = SCAN_PAGE_LAZYFREE;
-> >  			failed_pfn = folio_pfn(folio);
-> > @@ -1948,7 +1950,7 @@ static enum scan_result try_collapse_pte_mapped_thp(struct mm_struct *mm, unsign
-> >  	 * So page lock of folio does not protect from it, so we must not drop
-> >  	 * ptl before pgt_pmd is removed, so uffd private needs pml taken now.
-> >  	 */
-> > -	if (userfaultfd_armed(vma) && !(vma->vm_flags & VM_SHARED))
-> > +	if (userfaultfd_armed(vma) && !vma_test(vma, VMA_SHARED_BIT))
-> >  		pml = pmd_lock(mm, pmd);
->
-> A patch in mm/core.git will remove that entirely.
->
-> Right now it results in a conflict between mm-new and mm/core.git.
->
-> Beat to drop this here entirely. (I can also drop it when applying)
+Steve,
 
-Sorry I missed this, feel free to apply with this bit removed!
+Thank for the patch,
 
---
-Cheers, Lorenzo
+On Mon, Nov 09, 2026 at 08:39:43AM +0000, sashiko-bot@kernel.org wrote:
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index e760d2fe386fb..cf9e0dc10c88f 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -1494,7 +1494,13 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	if (RB_WARN_ON(cpu_buffer, rb_list_head(list->prev->next) != list))
+> >  		return NULL;
+> >  
+> > -	page = head = cpu_buffer->head_page;
+> > +	/*
+> > +	 * Make sure that the start of the search of the head_page does not
+> > +	 * start between the writer adding the UPDATE and the new HEAD that it
+> > +	 * moves forward.
+> > +	 */
+> > +	/* Sync with the writer moving the HEAD in rb_handle_head_page() */
+> > +	page = head = smp_load_acquire(&cpu_buffer->head_page);
+> 
+> [Severity: Medium]
+> Can the reader's non-atomic update of cpu_buffer->head_page in
+> __rb_get_reader_page() race with the writer's new store in
+> rb_handle_head_page() and advance cpu_buffer->head_page past the sub-buffer
+> marked for update?
+
+I've asked my robot to test this case, and it was still able to
+reproduce the race, even with this patch.
