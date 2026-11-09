@@ -1,54 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.247
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794190995;
-	b=PreCe95Zd+UcEiPldqOKGNvvFXVbmKL6aXcoNaWqkTM6kUIJDQ4bxDEq1xly7Xq9eUcr
-	 kxPv25WOzEArIlpw2pVwbWa5S37wTEpyS7Zhofg9ddcCXf3HKTjtnWzbqr0fyaKtc2aof
-	 nKvZv5Cu9qLXprazGU5y/NX3NKLubpN8mT/21gLaOvnHUNWDyWn2olREpCVhB1ARjkPcy
-	 BBGlXLqwy6qpyQQgR+xV9Uor8fVYu72QUb/jqM0rGQ4K0vFJ5zM8newSJH5JKpYPnzzDm
-	 Kv3HJi1E9nNV6ghWZak4VpSMeo+LiBOXFTiTksjwDOzL1cfEhkbhRcHBVmUADAhigzA==
+	t=1794191161;
+	b=CPu49R0poylSDQoBXgx0mEMV1hVbeTetXYb2k3iXQy6Ondio3wMd4qD9uavHzsJtVinh
+	 IXB+g6WRvRV1zP+r1FLETbvc3S40/sD3cspWARDKpwdrJF1mrMspaqgXrm8XFSQGnVRkQ
+	 obpuWN297RYjq9V5sX336QmGSCMpS2F8jEPdtLmmlcG3ambXQrT4iHh/j3mWFzGVIOLB/
+	 G1HybmHnzojClfLG0yayqYBanjPKIXt9BhdByfCxl7vJpddVnpjfASsoB2DHCwpuCQbMm
+	 XYkQ0VLXKgOQS4sXmTmmrSPNqeBzUll1jzOs6X/gb/jb1iKs7Zytcp1E5D56n+JM2jA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794190995;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794191161;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
 	 Cc:Subject:To:References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=616SavEERcf0wLBB3MtaB5Vjvy14ra3RY8LHIRO6Zwc=;
-	b=bi180/wIcJlJWBL3CBKaEieO+uxO2FAyH5jrZESbfMAN2Y2XlT/Cu00HGyOd/jOG8JNo
-	 4lrR0m4tSuhIuoTrjuSlLc72LudQ/PvFH+k7NY2LiNCk+dHHsU3L3Hw10CpSgoKg4WKGr
-	 G/vRTLzNXbvnPMb/1iRJU0IT9Fy226gCeZR/BWfGmVfgc1OIp44qPW/+JPUTmKPsXQmVg
-	 ULAh1jyaKp0AYNBL3tWZJ/A0IaaiCTP+L3wGzWhJ7jpznw5oDBOQKaPKpYrHAmCjGcgct
-	 AH0pyt6vr+M3FAkSsNdYoRSmWw8ntXUNCRbcF+A9uiDo5TbgSr2OgItfgZHDlEqY9VQ==
+	bh=WtwmJoa5jwRbvW7yFmjKyxfZjcIBewf+YKrRBbn3v2s=;
+	b=ygeaXFXMPKSuTPXwyVCYQpRcidbSfRDRA8WDQXW7aUO3c8ZJw+cM3IWdHP9SW4nRN4Ry
+	 3Xbx2Rb99Nl07r1Pw0nAnkd2x7jSCeLlA4ppZqh7xAQHM+cfqvKHdd90kaC746f6qOW8b
+	 00T5hfum1nOQO2bWLz+MLyO4l2Ilt+lpbpWzk9P7lFsyd1WMAAjQEEq45eJhRTNja3T4P
+	 MYbFJwkJVj64QDcE1Uj66kPvgkwmDRULolXHBCIaqgHefX7LHGOCBnCHN+Zk0biwDqte1
+	 Qcvus7UsSBeu3Tve0aKJwoBLiAF+CIKeDv5Rf6jDkItc0oWBIIG1gBRBXLzzk6tLzww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xM+kWndo;
-	arc=none smtp.remote-ip=91.218.175.247
-Received: from mta0.migadu.com (out-247.mta0.migadu.com [91.218.175.247])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mxJ5f8vT;
+	arc=none smtp.remote-ip=91.218.175.14
+Received: from mta0.migadu.com (out-14.mta0.migadu.com [91.218.175.14])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF13606A321
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 02:23:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ADF13606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688F4606A330
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 02:26:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 688F4606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xM+kWndo
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=mxJ5f8vT
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=5wreqCYW4ZBo70/LRl2EgOAhGbY7eNZsCbsiZu1vgfk=;
+DKIM-Signature: a=rsa-sha256; bh=3wQFNru/GSW5wMzbNQX/aezP9rAklvDUaKeBXnZI+gw=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794190992; v=1; x=1794795792;
- b=xM+kWndod1z2Bk3XjnVdMLp7WfWv/br1i8Ab2oUCjf2uJ10UFHT0jXjkFUcieB/z36P9nh8f
- EY0OQT+rLkczRKQh8G8tHQLu8biBduodhBkSLvu5uScRcaV1uSp+dY0nrtc1OhsTs5w7F2FZ5Et
- rvlnCT1TQzueZEZrI3pi5k7s=
+ t=1794191158; v=1; x=1794795958;
+ b=mxJ5f8vTD5vQI/xxFid8apJbYaunElojr7df5vF3uWKiE8sIfF7AXHUkOhzPmEzINJxLhVlA
+ QB5jKEX5FmNVqABGE1BGcfxACrjburhNnxQzOJ1Zb90mvmrXxE12AWSIOAg8A5UukyrxkPv8ZCP
+ tOv3XPDPn4x+AOdU9HhQ0lQg=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 68f29b38e50f4bf4;
-	Mon, 09 Nov 2026 02:23:12 +0000
-X-Mizu-Trace-ID: 68f29b38e50f4bf4
+Received: by smtp.migadu.com with ESMTPS id 1a20c7d2490421e5;
+	Mon, 09 Nov 2026 02:25:58 +0000
+X-Mizu-Trace-ID: 1a20c7d2490421e5
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <91c8d6b5-9496-4c0f-b81d-ac31fbe2748d@linux.dev>
-Date: Mon, 9 Nov 2026 10:22:59 +0800
+Message-ID: <a583bcd4-b502-4733-9592-58203e941d7d@linux.dev>
+Date: Mon, 9 Nov 2026 10:25:49 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,84 +59,243 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: cui.tao@linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] blktrace: require CAP_SYS_ADMIN for the BLKTRACE ioctls
-To: sashiko-reviews@lists.linux.dev
-References: <20261106142852.3233950-1-cui.tao@linux.dev>
- <sashiko-outbox-201597@kernel.org>
+Cc: cui.tao@linux.dev, linux-mm@kvack.org,
+ James.Bottomley@HansenPartnership.com, sumit.semwal@linaro.org,
+ christian.koenig@amd.com, phasta@kernel.org, joro@8bytes.org,
+ will@kernel.org, linux-scsi@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ bobbyeshleman@meta.com, mathieu.desnoyers@efficios.com,
+ robin.murphy@arm.com, mason@kernel.org, aesteve@redhat.com,
+ tjmercier@google.com, harry@kernel.org, vbabka@suse.cz, cuitao@kylinos.cn,
+ media-ci@linuxtv.org
+Subject: Re: [PATCH 1/7] scsi: sg and st: account the command buffer memory to
+ memcg
+To: sashiko-reviews@lists.linux.dev, akpm@linux-foundation.org,
+ dgilbert@interlog.com, mkp@kernel.org, loberman@redhat.com,
+ jmeneghi@redhat.com, kraxel@redhat.com, vivek.kasireddy@intel.com,
+ mst@redhat.com, jasowangio@gmail.com, eperezma@redhat.com,
+ stefanha@redhat.com, sgarzare@redhat.com, rostedt@goodmis.org,
+ vdonnefort@google.com, mhiramat@kernel.org, jgg@ziepe.ca,
+ kevin.tian@intel.com, axboe@kernel.dk
+References: <20261106131829.3228926-1-cui.tao@linux.dev>
+ <20261106131829.3228926-2-cui.tao@linux.dev>
+ <sashiko-outbox-202918@kernel.org>
 From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <sashiko-outbox-201597@kernel.org>
+In-Reply-To: <sashiko-outbox-202918@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi，
+Hi,
 
-在 2026/11/6 22:39, sashiko-bot@kernel.org 写道:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Medium] blktrace: missing CAP_SYS_ADMIN check in sg_ioctl_common()
+在 2026/11/7 21:27, sashiko-bot@kernel.org 写道:
+> Thank you for your contribution! Sashiko AI review found 4 potential
+> issues to consider:
+> - [High] scsi: sg: GFP_ATOMIC | __GFP_ACCOUNT in sg_build_indirect()
+>   bypasses memcg max
+I'll take another look at the allocation context and whether GFP_ATOMIC
+is still required here.
+> - [Medium] scsi: sg: unrelated and broken blktrace CAP_SYS_ADMIN gate in
+>   sg_ioctl_common()
+The capability check doesn't belong in this patch.  It was accidentally
+carried over while splitting the series and should have remained in the
+separate blktrace patch.  I'll remove it from this patch.
+> - [Medium] scsi: st: misattributed GFP_KERNEL_ACCOUNT probe charges in
+>   new_tape_buffer()
+Thanks for pointing this out.  v2 drops the st side and keeps the
+accounting on the sg side.
+> - [Low] scsi: sg: commit message cites non-existent history in
+>   sg_build_indirect()
+The commit message is indeed inaccurate.  I'll fix the historical
+description and clarify the reserved buffer limit in the next revision.
+> It also noticed 1 related pre-existing issue this patch does not
+> introduce:
+> - [High] scsi: sg: shift-out-of-bounds in sg_build_indirect() [1]
+Thanks for pointing that out.  It predates the series, and I'll
+investigate it separately.
 > --
 > 
-> commit 8392196724a6f06dfb860d63cf54fba3357cc04e
+> commit ec96b2b0cdd1df3575b4521cd9f81da9824bc2b2
 > Author: Tao Cui <cuitao@kylinos.cn>
 > 
-> blktrace: require CAP_SYS_ADMIN for the BLKTRACE ioctls
+> scsi: sg and st: account the command buffer memory to memcg
 > 
-> This commit adds a CAP_SYS_ADMIN capability check to blk_trace_ioctl() to
-> restrict block tracing ioctls to privileged users.
+> This commit adds __GFP_ACCOUNT to buffer and descriptor allocations in the
+> sg and st drivers to charge them to the calling process's memory cgroup, and
+> adds a CAP_SYS_ADMIN check for blktrace ioctls in sg_ioctl_common().
 > 
->> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
->> index 8cd2520b4c99e..c1bf8ca350fee 100644
->> --- a/kernel/trace/blktrace.c
->> +++ b/kernel/trace/blktrace.c
->> @@ -927,6 +927,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
->>  	int ret, start = 0;
->>  	char b[BDEVNAME_SIZE];
+>> The sg data buffers are unaccounted: the per-fd reserved buffer, the
+>> scatter-gather page array, and the order-0..N pages behind it, plus the
+>> per-device tape buffer in st.  All of it is user controllable.  The
+>> reserved size is capped only by the device max_sectors, SG_MAX_QUEUE
+>> (16) commands can be in flight per fd, and the fd count is bounded by
+>> RLIMIT_NOFILE.  Nothing is charged to the memcg of the process driving
+>> it.  The September 2026 fixes in sg_build_indirect reshaped the element
+>> sizing and left the accounting alone.
+> 
+> [Severity: Low]
+> Is the commit message accurate about the history of sg_build_indirect() and
+> the reserved buffer cap?
+> 
+> In git history, sg_build_indirect() has not been modified since
+> aaff5ebaa269 ("scsi: remove the unchecked_isa_dma flag") in 2021, and its
+> element sizing has not changed since 10db10d144c0 ("sg: convert the indirect
+> IO path to use the block layer") in 2008.  In addition, the initial per-fd
+> reserved buffer in sg_add_sfp() is capped by min_t(int, def_reserved_size,
+> max_sectors_bytes(sdp->device->request_queue)), while only resizing via
+> SG_SET_RESERVED_SIZE is capped solely by max_sectors_bytes().
+> 
+>> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+>> index 5408f002e6c01..80d919fa5cf91 100644
+>> --- a/drivers/scsi/sg.c
+>> +++ b/drivers/scsi/sg.c
+>> @@ -910,6 +910,19 @@ static int put_compat_request_table(struct compat_sg_req_info __user *o,
+>>  }
+>>  #endif
 >>  
->> +	if (!capable(CAP_SYS_ADMIN))
+>> +/*
+>> + * The sg passthrough of the blktrace ioctls has the same exposure as the
+>> + * block device path: holding the node is the only requirement today, and
+>> + * a created trace outlives the fd.  Must match the gate in
+>> + * blk_trace_ioctl().
+>> + */
+>> +static bool sg_is_blktrace_cmd(unsigned int cmd)
+>> +{
+>> +	return cmd == BLKTRACESETUP || cmd == BLKTRACESETUP2 ||
+>> +	       cmd == BLKTRACESTART || cmd == BLKTRACESTOP ||
+>> +	       cmd == BLKTRACETEARDOWN;
+>> +}
+>> +
+>>  static long
+>>  sg_ioctl_common(struct file *filp, Sg_device *sdp, Sg_fd *sfp,
+>>  		unsigned int cmd_in, void __user *p)
+>> @@ -919,6 +932,9 @@ sg_ioctl_common(struct file *filp, Sg_device *sdp, Sg_fd *sfp,
+>>  	Sg_request *srp;
+>>  	unsigned long iflags;
+>>  
+>> +	if (sg_is_blktrace_cmd(cmd_in) && !capable(CAP_SYS_ADMIN))
 >> +		return -EPERM;
 >> +
->>  	switch (cmd) {
->>  	case BLKTRACESETUP2:
->>  		snprintf(b, sizeof(b), "%pg", bdev);
 > 
 > [Severity: Medium]
-> Does checking CAP_SYS_ADMIN only in blk_trace_ioctl() leave the sg
-> passthrough path in sg_ioctl_common() ungated?
+> Does this capability check belong in a memcg accounting commit, and does it
+> cause a UAPI regression for unprivileged users with access to /dev/sg*?
 > 
-> drivers/scsi/sg.c:sg_ioctl_common() {
->     ...
-> 	case BLKTRACESETUP:
-> 		return blk_trace_setup(sdp->device->request_queue, sdp->name,
-> 				       MKDEV(SCSI_GENERIC_MAJOR, sdp->index),
-> 				       NULL, p);
-> 	case BLKTRACESTART:
-> 		return blk_trace_startstop(sdp->device->request_queue, 1);
-> 	case BLKTRACESTOP:
-> 		return blk_trace_startstop(sdp->device->request_queue, 0);
-> 	case BLKTRACETEARDOWN:
-> 		return blk_trace_remove(sdp->device->request_queue);
->     ...
+> Despite the comment, blk_trace_ioctl() in kernel/trace/blktrace.c does not
+> check capable(CAP_SYS_ADMIN); block devices gate these ioctls only on access
+> to the device node.  Moreover, sg_is_blktrace_cmd() matches BLKTRACESETUP2
+> even though sg_ioctl_common() only implements BLKTRACESETUP, BLKTRACESTART,
+> BLKTRACESTOP, and BLKTRACETEARDOWN, so unprivileged callers now get -EPERM
+> instead of -ENOTTY for BLKTRACESETUP2.
+> 
+>> @@ -1841,7 +1857,7 @@ static int
+>>  sg_build_sgat(Sg_scatter_hold * schp, const Sg_fd * sfp, int tablesize)
+>>  {
+>>  	int sg_bufflen = tablesize * sizeof(struct page *);
+>> -	gfp_t gfp_flags = GFP_ATOMIC | __GFP_NOWARN;
+>> +	gfp_t gfp_flags = GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT;
+>>  
+>>  	schp->pages = kzalloc(sg_bufflen, gfp_flags);
+>>  	if (!schp->pages)
+>> @@ -1856,7 +1872,8 @@ sg_build_indirect(Sg_scatter_hold * schp, Sg_fd * sfp, int buff_size)
+>>  	int ret_sz = 0, i, k, rem_sz, num, mx_sc_elems;
+>>  	int sg_tablesize = sfp->parentdp->sg_tablesize;
+>>  	int blk_size = buff_size, order;
+>> -	gfp_t gfp_mask = GFP_ATOMIC | __GFP_COMP | __GFP_NOWARN | __GFP_ZERO;
+>> +	gfp_t gfp_mask = GFP_ATOMIC | __GFP_COMP | __GFP_NOWARN |
+>> +			 __GFP_ACCOUNT | __GFP_ZERO;
+>>  
+>>  	if (blk_size < 0)
+>>  		return -EFAULT;
+> 
+> [Severity: High]
+> This problem wasn't introduced by this patch, but can the ret_sz shift in
+> sg_build_indirect() trigger a signed shift-out-of-bounds [1]?
+> 
+> drivers/scsi/sg.c:sg_build_indirect() {
+> 	...
+> 	num = scatter_elem_sz;
+> 	...
+> 	order = get_order(num);
+> retry:
+> 	ret_sz = 1 << (PAGE_SHIFT + order);
+> 	...
 > }
 > 
-> Because sg_ioctl_common() calls blk_trace_setup(), blk_trace_startstop()
-> and blk_trace_remove() directly rather than going through
-> blk_trace_ioctl(), an unprivileged process with access to an /dev/sg* node
-> can still allocate persistent relay buffers and control tracing state on
-> the underlying request_queue.
-Thanks for catching this.
-
-The sg path is covered by patch 1/7 of the memcg accounting series:
-https://lore.kernel.org/all/20261106131829.3228926-2-cui.tao@linux.dev/
-
-Originally these changes were part of a single series.  Since the
-blktrace capability check isn't itself a memcg accounting fix, I split
-it out into a separate series, but the corresponding sg_ioctl_common()
-change remained with the memcg patches.
-
-You're right that the standalone blktrace patch is incomplete by
-itself.  I'll fold the sg-side check into the blktrace patch in the
-next revision so it is self-contained.
-
-Thanks> 
+> On 4 KB page architectures, setting the scatter_elem_sz module parameter
+> near INT_MAX gives order == 19, so 1 << (PAGE_SHIFT + order) evaluates the
+> signed 32-bit shift 1 << 31, triggering UBSAN or yielding a negative ret_sz
+> that corrupts the allocation loop.
+> 
+>> @@ -2146,7 +2163,7 @@ sg_add_sfp(Sg_device * sdp)
+>>  	unsigned long iflags;
+>>  	int bufflen;
+>>  
+>> -	sfp = kzalloc_obj(*sfp, GFP_ATOMIC | __GFP_NOWARN);
+>> +	sfp = kzalloc_obj(*sfp, GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
+>>  	if (!sfp)
+>>  		return ERR_PTR(-ENOMEM);
+> 
+> [Severity: High]
+> Does combining GFP_ATOMIC with __GFP_ACCOUNT in sg_build_sgat(),
+> sg_build_indirect(), and sg_add_sfp() allow processes to bypass their memcg
+> memory.max limit?
+> 
+> GFP_ATOMIC sets __GFP_HIGH and lacks __GFP_DIRECT_RECLAIM.  When a memcg is
+> at memory.max, try_charge_memcg() skips reclaim because the allocation
+> cannot block and then force-charges past memory.max because __GFP_HIGH is
+> set:
+> 
+> mm/memcontrol.c:try_charge_memcg() {
+> 	...
+> nomem:
+> 	if (!(gfp_mask & (__GFP_NOFAIL | __GFP_HIGH)))
+> 		return -ENOMEM;
+> force:
+> 	page_counter_charge(&memcg->memory, nr_pages);
+> 	...
+> }
+> 
+> All callers of sg_add_sfp(), sg_build_sgat(), and sg_build_indirect()
+> (sg_open(), SG_SET_RESERVED_SIZE in sg_ioctl_common(), and sg_start_req())
+> run in sleepable process context holding only mutexes, so using GFP_KERNEL
+> would allow memcg reclaim and enforce memory.max.
+> 
+>> diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+>> index f1c3c49466379..7083d37622c08 100644
+>> --- a/drivers/scsi/st.c
+>> +++ b/drivers/scsi/st.c
+>> @@ -3973,7 +3973,7 @@ static struct st_buffer *new_tape_buffer(int max_sg)
+>>  {
+>>  	struct st_buffer *tb;
+>>  
+>> -	tb = kzalloc_obj(struct st_buffer);
+>> +	tb = kzalloc_obj(struct st_buffer, GFP_KERNEL_ACCOUNT);
+>>  	if (!tb) {
+>>  		printk(KERN_NOTICE "st: Can't allocate new tape buffer.\n");
+>>  		return NULL;
+>> @@ -3982,7 +3982,8 @@ static struct st_buffer *new_tape_buffer(int max_sg)
+>>  	tb->use_sg = max_sg;
+>>  	tb->buffer_size = 0;
+>>  
+>> -	tb->reserved_pages = kzalloc_objs(struct page *, max_sg);
+>> +	tb->reserved_pages = kzalloc_objs(struct page *, max_sg,
+>> +					  GFP_KERNEL_ACCOUNT);
+>>  	if (!tb->reserved_pages) {
+>>  		kfree(tb);
+>>  		return NULL;
+> 
+> [Severity: Medium]
+> Does using GFP_KERNEL_ACCOUNT in new_tape_buffer() charge the device probe
+> context instead of the process driving tape I/O?
+> 
+> new_tape_buffer() is only called from st_probe() when a tape device is
+> attached, and both tb and tb->reserved_pages live until scsi_tape_release(),
+> so they are never charged to the process performing I/O.  Meanwhile, the
+> per-I/O page array allocated in the driving process's context during direct
+> I/O in sgl_map_user_pages() (pages = kmalloc_objs(*pages, max_pages))
+> remains unaccounted.
+> 
+> [1] https://sashiko.dev/#/bug/linux-ccac9556-cc9e-4b08-b44f-5f7ffb342827
+> 
 
