@@ -1,57 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794239882;
-	b=vhVsNMQbRL5LN7Ln2GJzj0WDPLzklS/pydtkZNi6WSke1WocWfFGvIUysmyNBVih1n/G
-	 jZKODdM9nyb49gdOyG2/aTmX96qEd/xtZBYzAhtmfLaNwaEbaQHWMiG8/JJJQvGG4QNRN
-	 74TzM+fXdikkj2CnFm4f8eHpWjOceaUsQkkDeyAQCd3K9ONH0xHhPDeRQyxzRVWu1gcYd
-	 pm7pBXzg9frxOV4yv6AByWBPcNfr26wBZ24i0yCDDjxVaX20FysA0rm8k546VdnXyVQO9
-	 6ueK1AdOVzEVPWk5eqaQUG9mlJgsUMN1xKyC3WAvfTGKlUNcWUQsPHf9qW/WBOFIFGw==
+	t=1794241297;
+	b=h0IWhEnaUIxJ+BQ6vr7bN/pJPKiKX3K+wN9VA3aNuoSAH2rBFm7ih3aMc6rNOevFxSt+
+	 votU2zJRGXgC/Qi2dwOZmW4/0Fqepw4J3qww2P6LlSxR4njT8XSsG8vTQIEHEQ5zdrhdU
+	 FZy7LR67Te2Luwar+zTq8NjKC/hdMs7RoCW9aJ0te9Tb6N3k1VIn0Syw0sb9fo5v+op+9
+	 ACj+39TciCQRlOhuGn/C8oYwiQXrfI+taNFjc2z/GOuqdGKc+UMKe5w6qDz0iAg0qKaSr
+	 kDUb4NowwQQKNR8xv6eKeh8KwaDqY/h7jnan8Tudn3057zkbrfrnlkUixAGRh5VZC3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794239882;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=QetFUXmQTvTi5GhM8dae69LgbFNxC2nIrR2jqhJISIs=;
-	b=gxO0bPzxMOKYxwWmCbQBtFHYn7ZCf2/j72AbH719J1SuAgx06zjE+BfONYj7O4yIxZCD
-	 L6SvabNV41foslykHgo4W+PcB8dQNYJd3/6HZVQANGxKo/ZVHn+h52FBctyUWSMXIibB8
-	 bCFTlf5wWx1YCjNjP4nFU5m1K9u+7OHGVK2yP9X4EgAMlip8RtYT2OlpWtmXhvrPcihzj
-	 UuQC/UJ12W/y5qXMOofAh8PZlCMkJULMTCy6Qr+1xYr3dAHjmkX8qkpsLeZhGMGuL2nXF
-	 1SCsU9QtFBV/Esdi++LMSEfMemkFVvIIlyNQAJVIoC5juWGg5zA8lHtlo/mWn9fShew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794241297;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=GBnfYrS+jdIGXi8vDz34wJBQH3iwSSZ8fmePbZRwvag=;
+	b=hFuFefzVuzN+GHhpVWzyyzjwHIvdxgllNz4ezcRtQ72Mbr2NI4emS0cyraEaKUTv18ti
+	 sPJHDb5wcmtnblRFixJGiKDQg2DntZsmSaUCw2E9mGv/cPO9S5lrIu0VHYq6rgbUDtIxh
+	 WdUtyYLxF7QI9g872v9kmsK3N8DUsbHeYoE52dBFy2of3fxooX4SmZCgdF4EflnGHz5UL
+	 MDkUb/5M90qWy4xsGKu9Vph2J7rRKvqn6zvgQ/4dCIF/ywQvsahFardYfgCY62hUB7nXj
+	 ziI589KZCsaH0EmWe49TV0PSNS3hxTZC108rVYsN3UxmWqEJwIq02oYohkll44njuRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KW6NHFkd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kEaI7O+x;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73361606A326;
-	Mon,  9 Nov 2026 15:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D52F606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 16:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KW6NHFkd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BF31F00921;
-	Mon,  9 Nov 2026 15:58:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kEaI7O+x
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 920101F008A1;
+	Mon,  9 Nov 2026 16:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794239882;
-	bh=QetFUXmQTvTi5GhM8dae69LgbFNxC2nIrR2jqhJISIs=;
-	h=From:To:Cc:Subject:Date;
-	b=KW6NHFkdw/EK4toqHu1A9mnBCL4CdufpHWuxD3BbYCLyGBzZH8KLacD5kGPZzNGn2
-	 vqfXoe/tCUS0BCE/2hlMC3+sxCFncHwzxSKRYmClmob6Y19v9C5CpLLzI37uz8HygM
-	 pjrQ03d7z2mEZGaUpTNx5gb1idd/YwliON+aaewYpo2oRcUJt1OQVbwtHUWd5zdqry
-	 zNKtvERBphHQttvFYnfLNWnoygjtER+Dl0i2lb+/XCknrmNxbJLLuz/9tRpGHAZfpp
-	 OFd3np5L56z3n7dxVoCkrxnHg3A9kuL0HWBTitR/YKnYRjPXJ86EiwDIC0uo+87WEL
-	 uB/67u5LzdhLw==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [RESEND] tracing/synthetic: Handle dynamic string read faults
-Date: Mon,  9 Nov 2026 15:57:49 +0000
-Message-ID: <20261109155758.3330810-1-lee@kernel.org>
-X-Mailer: git-send-email 2.56.0.506.g506a7eabc5-goog
+	s=k20260515; t=1794241296;
+	bh=GBnfYrS+jdIGXi8vDz34wJBQH3iwSSZ8fmePbZRwvag=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=kEaI7O+xzprgImauUIEjVqR3z9PYjlcyYi0mv6jQsP4q07vWGLwg2POkoxg1rqQYn
+	 wTCLAMPfSWJvWnH3YBgdjUquY5AG8Nhvur5uABnWqnC/PTtfIqA9h3cScXO+PITxrk
+	 JFLs7/nCCyeT3mru4c2+ayt9CuyUKt+WXhJZDfSMreVwOc3uUrLDEkoeQ7z5Ejmjsx
+	 KMBU1a9l9/3qVYz6myghgWgDMuMYngmrr7GwdXhbfA1Eo+Qy2bUCwJwF4NcGtVjfa+
+	 WYE2IC9s+Q2z46CwuDAXjRLRyw1vJJDqnhPrh/AQGEDl4Oee+7WvPGWzPnvKLoa0kL
+	 lN8YrNu3MVdlg==
+Message-ID: <sashiko-outbox-205226@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RESEND] tracing/synthetic: Handle dynamic string read faults
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Lee Jones" <lee@kernel.org>, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261109155758.3330810-1-lee@kernel.org>
+References: <20261109155758.3330810-1-lee@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 09 Nov 2026 16:21:36 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,86 +57,101 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Commit 0934ae9977c2 ("tracing: Fix reading strings from synthetic
-events") switched synthetic event dynamic strings to use
-fetch_store_strlen() and fetch_store_string(), relying on commit
-2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
-to reserve and store FAULT_STRING when a string address faults.
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Critical] tracing: TOCTOU ring buffer overflow in trace_string() [1]
+--
 
-When commit 4ed8f337dee3 ("Revert "tracing: Add "(fault)" name injection
-to kernel probes"") and commit 797311bce5c2 ("tracing/probes: Fix to
-record 0-length data_loc in fetch_store_string*() if fails") later
-reverted FAULT_STRING injection in favour of recording a 0-length
-data_loc on fault, synthetic events were left unchanged.
+commit f7b85a2fa215ca47a63174ad2034f4bca609b931
+Author: Lee Jones <lee@kernel.org>
 
-Consequently, a faulting kernel string address causes get_field_size()
-to add a negative error code (-EFAULT) to fields_size, under-reserving
-the trace buffer entry, while trace_string() casts the negative return
-value to an unsigned length and passes it to fetch_store_string() and
-write_synth_entry(), corrupting the ring buffer.
+tracing/synthetic: Handle dynamic string read faults
 
-Skip non-positive lengths in get_field_size(), record a 0-length
-dynamic field in trace_string() when fetching a dynamic string fails,
-and print FAULT_STRING in print_synth_event() when a dynamic string has
-zero length, matching trace_probe.
+This commit updates synthetic event dynamic string handling to skip
+non-positive lengths in get_field_size(), record a 0-length dynamic field
+in trace_string() when fetching a string fails, and print FAULT_STRING in
+print_synth_event() when the dynamic string length is zero.
 
-Fixes: 4ed8f337dee3 ("Revert "tracing: Add "(fault)" name injection to kernel probes"")
-Cc: stable@vger.kernel.org
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- kernel/trace/trace_events_synth.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_event=
+s_synth.c
+> index e2870212e58d4..8492a5f285c4e 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+[ ... ]
+> @@ -438,11 +440,20 @@ static unsigned int trace_string(struct synth_trace=
+_event *entry,
+>  	if (is_dynamic) {
+>  		union trace_synth_field *data =3D &entry->fields[*n_u64];
+> =20
+> -		len =3D fetch_store_strlen((unsigned long)str_val);
+>  		data->as_dynamic.offset =3D struct_size(entry, fields, event->n_u64) +=
+ data_size;
+> -		data->as_dynamic.len =3D len;
+> +
+> +		ret =3D fetch_store_strlen((unsigned long)str_val);
+> +		if (ret <=3D 0) {
+> +			data->as_dynamic.len =3D 0;
+> +			(*n_u64)++;
+> +			return 0;
+> +		}
+> +
+> +		data->as_dynamic.len =3D ret;
+> =20
+>  		ret =3D fetch_store_string((unsigned long)str_val, &entry->fields[*n_u=
+64], entry);
+> +		if (ret > 0)
+> +			len =3D ret;
+> =20
+>  		(*n_u64)++;
+>  	} else {
+> @@ -522,6 +533,8 @@ static __always_inline int get_field_size(struct synt=
+h_event *event,
+>  			len *=3D sizeof(unsigned long);
+>  		} else {
+>  			len =3D fetch_store_strlen((unsigned long)str_val);
+> +			if (len <=3D 0)
+> +				continue;
+>  		}
+> =20
+>  		fields_size +=3D len;
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index dc15658a887c..7506e2e1f64a 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -376,7 +376,9 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 				union trace_synth_field *data = &entry->fields[n_u64];
- 
- 				trace_seq_printf(s, print_fmt, se->fields[i]->name,
--						 (char *)entry + data->as_dynamic.offset,
-+						 data->as_dynamic.len ?
-+						 (char *)entry + data->as_dynamic.offset :
-+						 FAULT_STRING,
- 						 i == se->n_fields - 1 ? "" : " ");
- 				n_u64++;
- 			} else {
-@@ -438,11 +440,20 @@ static unsigned int trace_string(struct synth_trace_event *entry,
- 	if (is_dynamic) {
- 		union trace_synth_field *data = &entry->fields[*n_u64];
- 
--		len = fetch_store_strlen((unsigned long)str_val);
- 		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
--		data->as_dynamic.len = len;
-+
-+		ret = fetch_store_strlen((unsigned long)str_val);
-+		if (ret <= 0) {
-+			data->as_dynamic.len = 0;
-+			(*n_u64)++;
-+			return 0;
-+		}
-+
-+		data->as_dynamic.len = ret;
- 
- 		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
-+		if (ret > 0)
-+			len = ret;
- 
- 		(*n_u64)++;
- 	} else {
-@@ -522,6 +533,8 @@ static __always_inline int get_field_size(struct synth_event *event,
- 			len *= sizeof(unsigned long);
- 		} else {
- 			len = fetch_store_strlen((unsigned long)str_val);
-+			if (len <= 0)
-+				continue;
- 		}
- 
- 		fields_size += len;
--- 
-2.56.0.506.g506a7eabc5-goog
+[Severity: Critical]
+This problem wasn't introduced by this patch, but can recalculating the
+string length in trace_string() overflow the reserved ring buffer entry
+[1]?
 
+trace_event_raw_event_synth() calls get_field_size() to measure each
+dynamic string with fetch_store_strlen() and reserves a ring buffer entry
+of that size.  write_synth_entry() -> trace_string() then calls
+fetch_store_strlen() a second time on str_val and sets
+data->as_dynamic.len to the new return value before calling
+fetch_store_string():
+
+CPU0                                    CPU1
+trace_event_raw_event_synth()
+  get_field_size()
+    fetch_store_strlen(str_val) -> 4
+  trace_event_buffer_reserve(...,
+    sizeof(*entry) + fields_size)
+                                        event_hist_trigger()
+                                          /* updates shared hist elt
+                                             str_val to a longer string */
+  write_synth_entry()
+    trace_string()
+      ret =3D fetch_store_strlen(str_val) -> 32
+      data->as_dynamic.len =3D ret
+      fetch_store_string(str_val, ...)  <-- writes 32 bytes past
+                                            4-byte reservation
+
+Because fetch_store_string() reads its maximum copy length from
+data->as_dynamic.len rather than the length reserved in get_field_size(),
+concurrent growth of the source string writes past the end of the reserved
+ring buffer entry and corrupts the ring buffer.
+
+[1] https://sashiko.dev/#/bug/linux-99ac32b2-e9bc-4529-bfdc-62d0b5345672
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109155758.3330=
+810-1-lee@kernel.org?part=3D1
