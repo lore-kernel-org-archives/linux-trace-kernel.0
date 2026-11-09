@@ -1,47 +1,68 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794256543;
-	b=bAerrWrmNUR0bRjijSaGPBgT8WqBb65lJnIPcXM3ScV8KP05X4yp0/9xxRvwvgA2j7jh
-	 UI6IlqkaIyazMIqz6/gmwezA/yC7n/6lQxwQ0LwPqvIw9MJ01v/MRSiIwTGc0kifFIMaX
-	 kRh94joVj4bL8w380om0B4b4o1+552dIjKar5LTej2z7fXUKqtjUbamXCe0k/vWO/bGFk
-	 RYzsoQCQD2CULvsAvChxB60bArsl4mbQtjaYtWveSnxuaQ7oTW1jFQNJhOF5xJCzTLzxT
-	 SzTf8+apXKbStqif8TXgxEnEPLECAoDOJ6BVXvPzwkT1a3pgJmlTAO9rRKWyg/MIQww==
+	t=1794263286;
+	b=A54/DaPtwZeHSUudmkfQeoJfalmNQGnL8ddLEigLPRbenibLyXyk8wprhu9aPC1PUCSM
+	 +/A5rO/eC8JssdE+ADSzETg2rhuu/8MMV1BkTBBvDFt7Pf5bhddx1E7l5ro9InxPWcGv5
+	 T+OhYCMAPsZa7JrTnbgg5pny/fsfynAzrEWHiJTM93IJ5dw33Cv8HvZD946yzh3AsNs2T
+	 4Irt1Vw7FSq/IEYHBt+xFDA5qPvleQ7BA7migKZnbCJnHzNvbInX1B8Zi/C2krZL3te72
+	 r+EhCtulQiY+PbxRomJR136EYe1T80N9jBoOO22XPdw5vS2gxOReF1x0YSAy2R2B8yA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794256543;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=4S0ZASTCxuNpF4rd1cySC3wOXo2N6s1iGqE54udrluA=;
-	b=Vi/P+ARoEVr7QPPRdzUViXssk0lV8DAIUMbDlgBYQUZwE+Ic4OZEl2oO7WAIU/am3eBT
-	 XSkdql7EPzzk4wde5q4YeSdJw5ViNXCiOqoRQaW31rfbXtRhJBGNtcHgwDKZxuJ/hRF03
-	 dhphV+h8s+tj4147h1spP9h7vRLnlT0U4BxJvHO6VPWWxy5qc9tjtwqI/rtQAQCbfPpXp
-	 rJ65ohyFmr4O+FjHxqTcSy4Z0nX9hm5wA/liQDuX+LuXtHy3G3O6284THWp7RefnvwJ01
-	 VusVEiWNM/qA2p0cW9CDwpkrvaD/G/U9zZ3PG3FwZ/zFOOXt1pv1iBYokL4jedMXWeQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794263286;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:In-Reply-To:References:
+	 Date:Message-ID:MIME-Version:Content-Type;
+	bh=wc4/ml/eH1O4k3Y1BTYhWYiLh1fjGgzYV80i4p3jK2o=;
+	b=Sr0so4fxI7c4A5FVCGPGly3rlZ1WlCz0BXvnLWY5ixXumctqiMDdfhdT4STrhdGslW7/
+	 RmwplxWgY9RtiWsgsPEIoQzUSdwsuEE+Zg/fb6akLEhA9Um61m9Z+EYUNhqZjf3ZJr1st
+	 RHcMGR3uDJe+vpl5rm7hsaZ4ksXRJGw/nQMqxLKhE34AZQA+rNegFZdV79aglrfG76i36
+	 nbJmE8LTiwLJs4weMbl/qpDXOYmCsa47WDQi6F+D/r4qPEXEa9xRdNh8y20573DcS9m9h
+	 y5Xg6WrHtKCgbqyCEf7gouqSr67rU/Acv63OdDz9eM+2KXXOpuR6+LR/K7q8FQSm/dA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P4sw6wQ3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iOW+0cZp;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBB1606A321;
-	Mon,  9 Nov 2026 20:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB4E606A321;
+	Mon,  9 Nov 2026 22:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P4sw6wQ3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87BE31F008A3;
-	Mon,  9 Nov 2026 20:35:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iOW+0cZp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A821F0089F;
+	Mon,  9 Nov 2026 22:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794256542;
-	bh=4S0ZASTCxuNpF4rd1cySC3wOXo2N6s1iGqE54udrluA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=P4sw6wQ3f4dx6u4pFALkqAd21ksXEckvh8fTjSyAtPK7pCZ5oCMgj9geo1WMAb8Zy
-	 T3WPTAqBAfrjyOIGwG13GeeN3JYJDQ0p0EnAA+3SeB7wR5mcK6LoOA4Lu6t6CzmY36
-	 2VQiGF1vIwZSWSmDUN9g9kebIsNKZ6E22tSOaeIO94SWxGBVGJ3qOC1yPcnVsH/Cn0
-	 UZ5K32bWw2VUooDNxET6m7PVp4kstgbO6IwT0nw08/ddOnnD9tbaGGmpT3knr++bkh
-	 7m8kKDrBrff07mDjClfAY1zac5v1ooNQvpK1hlOKoCgLMNjgZlX5N8FMDDhhJGVMAI
-	 B6ihb0Ustt8og==
-Message-ID: <88a96126-11be-41cc-ab0d-372d32189e79@kernel.org>
-Date: Mon, 9 Nov 2026 21:35:26 +0100
+	s=k20260515; t=1794263285;
+	bh=wc4/ml/eH1O4k3Y1BTYhWYiLh1fjGgzYV80i4p3jK2o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=iOW+0cZp8ZdjOcgvFLbFD+uA/y2u0ZimDukX5XfB+ExEssnw8F1bq1kKoI/2ZVJpY
+	 rbMTfE8olAdPf/hq54a+GiYhF7qaSsw3xa+8SNgZmpY17+Q1mnxXKsLUWJQaEbP9zs
+	 0dzJ7ubdV4evJffpMob/nnc3cboCInYpRD1J/5uTE1+LiUmyKSRFLci9D+HKq/JJEu
+	 5wm9OuTG8htEB7WROWFNmXrXxuXlbIKT4u5t8gH9S0kh6t8x7jcedJ1JUlF/8JdNZb
+	 bpU6EVSOVm2hYAmPTiq5ue2/UrtMqKRZrNNkYnsXHFmeUdHRJ5iF2Vzm1Dxb8bPj22
+	 wxWFi6w7Rgl1g==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Aaron Tomlin <atomlin@atomlin.com>, pmladek@suse.com,
+ john.ogness@linutronix.de, rostedt@goodmis.org, senozhatsky@chromium.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com,
+ akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
+ david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+ surenb@google.com, mhocko@suse.com, kees@kernel.org,
+ anna-maria@linutronix.de, frederic@kernel.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev,
+ hannes@cmpxchg.org, ziy@nvidia.com, bigeasy@linutronix.de,
+ clrkwllms@kernel.org
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev
+Subject: Re: [RFC PATCH v2 3/5] timers: Avoid blocking on hrtimer_cpu_base
+ lock during Oops or panic
+In-Reply-To: <20261103024453.922373-4-atomlin@atomlin.com>
+References: <20261103024453.922373-1-atomlin@atomlin.com>
+ <20261103024453.922373-4-atomlin@atomlin.com>
+Date: Mon, 09 Nov 2026 23:28:01 +0100
+Message-ID: <87y0b1tzbi.ffs@fw13>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -51,319 +72,484 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v24 00/10] Hierarchical Percpu Counters for RSS
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>,
- SeongJae Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Vlastimil Babka <vbabka@kernel.org>, Christian Brauner <brauner@kernel.org>,
- Wei Yang <richard.weiyang@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
- Al Viro <viro@zeniv.linux.org.uk>, Yu Zhao <yuzhao@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik
- <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>,
- David Carlier <devnexen@gmail.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-mm@kvack.org,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>, Kees Cook <kees@kernel.org>,
- linux-trace-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 11/5/26 21:36, Mathieu Desnoyers wrote:
-> Hi David,
+On Mon, Nov 02 2026 at 21:44, Aaron Tomlin wrote:
 
-Hi!
+> When sysrq_timer_list_show() dumps active high-resolution timers across
+> all online CPUs, it calls ktime_get() (which spins on tk_core.seq) and
+> print_active_timers() unconditionally acquires each CPU's
+> base->cpu_base->lock via raw_spin_lock_irqsave(). If invoked from an
+> Oops, NMI, or panic context while the crashing CPU or a wedged remote
+> CPU is inside a timekeeping write section or already holds
+> base->cpu_base->lock, sysrq_timer_list_show() will spin indefinitely
+> and prevent panic recovery or kexec from completing.
+>
+> Use the NMI-safe ktime_get_mono_fast_ns() helper in
+> sysrq_timer_list_show() and raw_spin_trylock_irqsave() in
+> print_active_timers() when in_nmi(), oops_in_progress, or
+> panic_in_progress() is active, noting any contended lock and returning cleanly instead of
+> deadlocking.
+>
+> Fixes: d999bd9392de ("panic: add options to print system info when panic happens")
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> ---
+>  kernel/time/timer_list.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+> index 0406bf4488e9..4973650c4ae5 100644
+> --- a/kernel/time/timer_list.c
+> +++ b/kernel/time/timer_list.c
+> @@ -68,7 +68,15 @@ static void print_active_timers(struct seq_file *m, struct hrtimer_clock_base *b
+>  
+>  	touch_nmi_watchdog();
+>  
+> -	raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
+> +	if (in_nmi() || oops_in_progress || panic_in_progress()) {
+> +		if ((!IS_ENABLED(CONFIG_SMP) && in_nmi()) ||
+> +		    !raw_spin_trylock_irqsave(&base->cpu_base->lock, flags)) {
+> +			SEQ_printf(m, "  [cpu_base lock contended]\n");
+> +			return;
+> +		}
+> +	} else {
+> +		raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
+> +	}
 
-> 
-> Here is the hierarchical per-cpu counters series for the RSS counters,
-> based on v7.4-rc1.  It is an RFC because of the questions at the end,
-> and because of the significant changes since v22 [1], notably the
-> per-cpu counter size (long -> byte), the configuration heuristics, and
-> the lazy activation introduced by patches 6 and 7.  v24 fixes the bugs
-> found by the Sashiko review of v23 [2], including a NULL pointer
-> dereference in patches 3 to 5 on sparc64.
+TBH, that's horrible and unreadable gunk.
 
-I think we discussed other possible applications (IIRC Michal expressed concern
-if a single user is sufficient motivation for these additional LOC). Did
-anything result from that discussion that is relevant to v24?
+Clearly the approach of all of this is:
+
+   1) Pick some existing code
+   2) Invoke it
+   3) Hope that it works
+   4) If not add bandaids to make it "work"
+
+Seriously?
+
+Each of the callers of sys_info() knows the exact context in which it is
+invoked, right?
+
+So the obvious and clean solution is to hand exactly that context
+information into sys_info() and further down into the invoked
+functions so they can make informed decisions and eventually omit
+pointless information which is otherwise emitted in proc/sysrq-t.
+
+Something like the uncompiled mockup below should give you an idea.
+
+>  	curr = timerqueue_linked_first(&base->active);
+>  	/*
+> @@ -262,7 +270,8 @@ static inline void timer_list_header(struct seq_file *m, ktime_t now)
+>  
+>  void sysrq_timer_list_show(void)
+>  {
+> -	ktime_t now = ktime_get();
+> +	ktime_t now = (in_nmi() || oops_in_progress || panic_in_progress()) ?
+> +		      ns_to_ktime(ktime_get_mono_fast_ns()) : ktime_get();
+
+That's a pointless exercise. Just use ktime_get_mono_fast_ns()
+unconditionally. It's perfectly fine for the purpose of this in all
+contexts.
+
+Thanks,
+
+        tglx
+---
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -17,10 +17,16 @@
+ 
+ #include "tick-internal.h"
+ 
++struct tlctx {
++	struct	seq_file	*seq_file;
++	ktime_t			ts_now;
++	enum sysinfo_context	si_ctx;
++};
++
+ struct timer_list_iter {
+-	int cpu;
+-	bool second_pass;
+-	ktime_t now;
++	int	cpu;
++	bool	second_pass;
++	ktime_t	now;
+ };
+ 
+ /*
+@@ -28,35 +34,51 @@ struct timer_list_iter {
+  * to the console (on SysRq-Q):
+  */
+ __printf(2, 3)
+-static void SEQ_printf(struct seq_file *m, const char *fmt, ...)
++static void SEQ_printf(struct tlctx *ctx, const char *fmt, ...)
+ {
+ 	va_list args;
+ 
+ 	va_start(args, fmt);
+ 
+-	if (m)
+-		seq_vprintf(m, fmt, args);
++	if (ctx->seq_file)
++		seq_vprintf(ctx->seq_file, fmt, args);
+ 	else
+ 		vprintk(fmt, args);
+ 
+ 	va_end(args);
+ }
+ 
+-static void
+-print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
+-	    int idx, ktime_t now)
+-{
+-	SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer, function));
+-	SEQ_printf(m, ", S:%02x", timer->is_queued);
+-	SEQ_printf(m, "\n");
+-	SEQ_printf(m, " # expires at %lld-%lld nsecs [in %lld to %lld nsecs]\n",
+-		(long long)hrtimer_get_softexpires(timer),
+-		(long long)hrtimer_get_expires(timer),
+-		(long long)ktime_sub(hrtimer_get_softexpires(timer), now),
+-		(long long)ktime_sub(hrtimer_get_expires(timer), now));
++static void print_timer(struct tlctx *ctx, struct hrtimer *taddr, struct hrtimer *timer,
++			int idx, ktime_t now)
++{
++	SEQ_printf(ctx, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer, function));
++	SEQ_printf(ctx, ", S:%02x", timer->is_queued);
++	SEQ_printf(ctx, "\n");
++	SEQ_printf(ctx, " # expires at %lld-%lld nsecs [in %lld to %lld nsecs]\n",
++		   (long long)hrtimer_get_softexpires(timer),
++		   (long long)hrtimer_get_expires(timer),
++		   (long long)ktime_sub(hrtimer_get_softexpires(timer), now),
++		   (long long)ktime_sub(hrtimer_get_expires(timer), now));
++}
++
++static bool lock_hrtimer_base(struct tlctx *ctx, struct hrtimer_clock_base *base,
++			      unsigned long *flags)
++{
++	switch (ctx->si_ctx) {
++	case SYSINFO_CTX_LOCK_SAFE:
++		raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
++		return true;
++	case SYSINFO_CTX_TRYLOCK_SAFE:
++		if (raw_spin_trylock_irqsave(&base->cpu_base->lock, *flags))
++			return true;
++		fallthrough;
++	default:
++		SEQ_printf(ctx, "  Unsafe context: Skip timers.\n");
++		return false;
++	}
+ }
+ 
+-static void print_active_timers(struct seq_file *m, struct hrtimer_clock_base *base, ktime_t now)
++static void print_active_timers(struct tlctx *ctx, struct hrtimer_clock_base *base, ktime_t now)
+ {
+ 	struct timerqueue_linked_node *curr;
+ 	struct hrtimer *timer, tmp;
+@@ -64,13 +86,14 @@ static void print_active_timers(struct s
+ 	unsigned long flags;
+ 
+ next_one:
+-	if (m && seq_has_overflowed(m))
++	if (ctx->seq_file && seq_has_overflowed(ctx->seqfile))
+ 		return;
+ 	i = 0;
+ 
+ 	touch_nmi_watchdog();
+ 
+-	raw_spin_lock_irqsave(&base->cpu_base->lock, flags);
++	if (!lock_hrtimer_base(ctx, base, &flags))
++		return;
+ 
+ 	curr = timerqueue_linked_first(&base->active);
+ 	/*
+@@ -83,51 +106,48 @@ static void print_active_timers(struct s
+ 	}
+ 
+ 	if (curr) {
+-
+ 		timer = container_of(curr, struct hrtimer, node);
+ 		tmp = *timer;
+ 		raw_spin_unlock_irqrestore(&base->cpu_base->lock, flags);
+ 
+-		print_timer(m, timer, &tmp, i, now);
++		print_timer(ctx, timer, &tmp, i, now);
+ 		next++;
+ 		goto next_one;
+ 	}
+ 	raw_spin_unlock_irqrestore(&base->cpu_base->lock, flags);
+ }
+ 
+-static void
+-print_base(struct seq_file *m, struct hrtimer_clock_base *base, ktime_t now)
++static void print_base(struct tlctx *ctx, struct hrtimer_clock_base *base)
+ {
+-	SEQ_printf(m, "  .base:       %p\n", base);
+-	SEQ_printf(m, "  .index:      %d\n", base->index);
++	SEQ_printf(ctx, "  .base:       %p\n", base);
++	SEQ_printf(ctx, "  .index:      %d\n", base->index);
+ 
+-	SEQ_printf(m, "  .resolution: %u nsecs\n", hrtimer_resolution);
++	SEQ_printf(ctx, "  .resolution: %u nsecs\n", hrtimer_resolution);
+ #ifdef CONFIG_HIGH_RES_TIMERS
+-	SEQ_printf(m, "  .offset:     %lld nsecs\n",
+-		   (long long) base->offset);
++	SEQ_printf(ctx, "  .offset:     %lld nsecs\n", (long long) base->offset);
+ #endif
+-	SEQ_printf(m,   "active timers:\n");
+-	print_active_timers(m, base, ktime_add(now, base->offset));
++	SEQ_printf(ctx,   "active timers:\n");
++	print_active_timers(ctx, base, ktime_add(ctx->ts_mono, base->offset));
+ }
+ 
+-static void print_cpu(struct seq_file *m, int cpu, ktime_t now)
++static void print_cpu(struct tlctx *ctx, int cpu)
+ {
+ 	struct hrtimer_cpu_base *cpu_base = &per_cpu(hrtimer_bases, cpu);
+ 	int i;
+ 
+-	SEQ_printf(m, "cpu: %d\n", cpu);
++	SEQ_printf(ctx, "cpu: %d\n", cpu);
+ 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
+-		SEQ_printf(m, " clock %d:\n", i);
+-		print_base(m, cpu_base->clock_base + i, now);
++		SEQ_printf(ctx, " clock %d:\n", i);
++		print_base(ctx, cpu_base->clock_base + i);
+ 	}
+ 
+ #define DIAG_READ(x) data_race(READ_ONCE(x))
+ 
+ #define P(x)				     \
+-	SEQ_printf(m, "  .%-15s: %llu\n", #x, \
++	SEQ_printf(ctx, "  .%-15s: %llu\n", #x, \
+ 		   (unsigned long long)DIAG_READ(cpu_base->x))
+ #define P_ktime(x) \
+-	SEQ_printf(m, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(cpu_base->x))
++	SEQ_printf(ctx, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(cpu_base->x))
+ 
+ #ifdef CONFIG_HIGH_RES_TIMERS
+ 	P_ktime(expires_next);
+@@ -141,13 +161,12 @@ static void print_cpu(struct seq_file *m
+ #undef P_ktime
+ 
+ #ifdef CONFIG_TICK_ONESHOT
+-# define P(x) \
+-	SEQ_printf(m, "  .%-15s: %llu\n", #x, \
+-		   (unsigned long long)DIAG_READ(ts->x))
+-# define P_ktime(x) \
+-	SEQ_printf(m, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(ts->x))
+-# define P_flag(x, f)			    \
+-	SEQ_printf(m, "  .%-15s: %d\n", #x, !!(DIAG_READ(ts->flags) & (f)))
++# define P(x)										\
++	SEQ_printf(ctx, "  .%-15s: %llu\n", #x, (unsigned long long)DIAG_READ(ts->x))
++# define P_ktime(x)									\
++	SEQ_printf(ctx, "  .%-15s: %lld nsecs\n", #x, (long long)DIAG_READ(ts->x))
++# define P_flag(x, f)									\
++	SEQ_printf(ctx, "  .%-15s: %d\n", #x, !!(DIAG_READ(ts->flags) & (f)))
+ 
+ 	{
+ 		struct tick_sched *ts = tick_get_tick_sched(cpu);
+@@ -162,8 +181,7 @@ static void print_cpu(struct seq_file *m
+ 		P(last_jiffies);
+ 		P(next_timer);
+ 		P_ktime(idle_expires);
+-		SEQ_printf(m, "jiffies: %llu\n",
+-			   (unsigned long long)jiffies);
++		SEQ_printf(ctx, "jiffies: %llu\n", (unsigned long long)jiffies);
+ 	}
+ #endif
+ 
+@@ -171,129 +189,138 @@ static void print_cpu(struct seq_file *m
+ #undef P_ktime
+ #undef P_flag
+ #undef DIAG_READ
+-	SEQ_printf(m, "\n");
++	SEQ_printf(ctx, "\n");
+ }
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+-static void
+-print_tickdevice(struct seq_file *m, struct tick_device *td, int cpu)
++static void print_tickdevice(struct tlctx *ctx, struct tick_device *td, int cpu)
+ {
+ 	struct clock_event_device *dev = td->evtdev;
+ 
+ 	touch_nmi_watchdog();
+ 
+-	SEQ_printf(m, "Tick Device: mode:     %d\n", td->mode);
++	SEQ_printf(ctx, "Tick Device: mode:     %d\n", td->mode);
+ 	if (cpu < 0)
+-		SEQ_printf(m, "Broadcast device\n");
++		SEQ_printf(ctx, "Broadcast device\n");
+ 	else
+-		SEQ_printf(m, "Per CPU device: %d\n", cpu);
++		SEQ_printf(ctx, "Per CPU device: %d\n", cpu);
+ 
+-	SEQ_printf(m, "Clock Event Device: ");
++	SEQ_printf(ctx, "Clock Event Device: ");
+ 	if (!dev) {
+-		SEQ_printf(m, "<NULL>\n");
++		SEQ_printf(ctx, "<NULL>\n");
+ 		return;
+ 	}
+-	SEQ_printf(m, "%s\n", dev->name);
+-	SEQ_printf(m, " max_delta_ns:   %llu\n",
+-		   (unsigned long long) dev->max_delta_ns);
+-	SEQ_printf(m, " min_delta_ns:   %llu\n",
+-		   (unsigned long long) dev->min_delta_ns);
+-	SEQ_printf(m, " mult:           %u\n", dev->mult);
+-	SEQ_printf(m, " shift:          %u\n", dev->shift);
+-	SEQ_printf(m, " mode:           %d\n", clockevent_get_state(dev));
+-	SEQ_printf(m, " next_event:     %lld nsecs\n", (long long)dev->next_event);
++	SEQ_printf(ctx, "%s\n", dev->name);
++	SEQ_printf(ctx, " max_delta_ns:   %llu\n", (unsigned long long) dev->max_delta_ns);
++	SEQ_printf(ctx, " min_delta_ns:   %llu\n", (unsigned long long) dev->min_delta_ns);
++	SEQ_printf(ctx, " mult:           %u\n", dev->mult);
++	SEQ_printf(ctx, " shift:          %u\n", dev->shift);
++	SEQ_printf(ctx, " mode:           %d\n", clockevent_get_state(dev));
++	SEQ_printf(ctx, " next_event:     %lld nsecs\n", (long long)dev->next_event);
+ 
+-	SEQ_printf(m, " set_next_event: %ps\n", dev->set_next_event);
++	SEQ_printf(ctx, " set_next_event: %ps\n", dev->set_next_event);
+ 
+ 	if (dev->set_state_shutdown)
+-		SEQ_printf(m, " shutdown:       %ps\n",
+-			dev->set_state_shutdown);
++		SEQ_printf(ctx, " shutdown:       %ps\n", dev->set_state_shutdown);
+ 
+ 	if (dev->set_state_periodic)
+-		SEQ_printf(m, " periodic:       %ps\n",
+-			dev->set_state_periodic);
++		SEQ_printf(ctx, " periodic:       %ps\n", dev->set_state_periodic);
+ 
+ 	if (dev->set_state_oneshot)
+-		SEQ_printf(m, " oneshot:        %ps\n",
+-			dev->set_state_oneshot);
++		SEQ_printf(ctx, " oneshot:        %ps\n", dev->set_state_oneshot);
+ 
+ 	if (dev->set_state_oneshot_stopped)
+-		SEQ_printf(m, " oneshot stopped: %ps\n",
+-			dev->set_state_oneshot_stopped);
++		SEQ_printf(ctx, " oneshot stopped: %ps\n", dev->set_state_oneshot_stopped);
+ 
+ 	if (dev->tick_resume)
+-		SEQ_printf(m, " resume:         %ps\n",
+-			dev->tick_resume);
++		SEQ_printf(ctx, " resume:         %ps\n", dev->tick_resume);
+ 
+-	SEQ_printf(m, " event_handler:  %ps\n", dev->event_handler);
+-	SEQ_printf(m, "\n");
+-	SEQ_printf(m, " retries:        %lu\n", dev->retries);
++	SEQ_printf(ctx, " event_handler:  %ps\n", dev->event_handler);
++	SEQ_printf(ctx, "\n");
++	SEQ_printf(ctx, " retries:        %lu\n", dev->retries);
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+ 	if (cpu >= 0) {
+ 		const struct clock_event_device *wd = tick_get_wakeup_device(cpu);
+ 
+-		SEQ_printf(m, "Wakeup Device: %s\n", wd ? wd->name : "<NULL>");
++		SEQ_printf(ctx, "Wakeup Device: %s\n", wd ? wd->name : "<NULL>");
+ 	}
+ #endif
+-	SEQ_printf(m, "\n");
++	SEQ_printf(ctx, "\n");
+ }
+ 
+ static void timer_list_show_tickdevices_header(struct seq_file *m)
+ {
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+-	print_tickdevice(m, tick_get_broadcast_device(), -1);
+-	SEQ_printf(m, "tick_broadcast_mask: %*pb\n",
++	print_tickdevice(ctx, tick_get_broadcast_device(), -1);
++	SEQ_printf(ctx, "tick_broadcast_mask: %*pb\n",
+ 		   cpumask_pr_args(tick_get_broadcast_mask()));
+ #ifdef CONFIG_TICK_ONESHOT
+-	SEQ_printf(m, "tick_broadcast_oneshot_mask: %*pb\n",
++	SEQ_printf(ctx, "tick_broadcast_oneshot_mask: %*pb\n",
+ 		   cpumask_pr_args(tick_get_broadcast_oneshot_mask()));
+ #endif
+-	SEQ_printf(m, "\n");
++	SEQ_printf(ctx, "\n");
+ #endif
+ }
+ #endif
+ 
+-static inline void timer_list_header(struct seq_file *m, ktime_t now)
++static inline void timer_list_header(struct seq_file *ctx)
+ {
+-	SEQ_printf(m, "Timer List Version: v0.11\n");
+-	SEQ_printf(m, "HRTIMER_MAX_CLOCK_BASES: %d\n", HRTIMER_MAX_CLOCK_BASES);
+-	SEQ_printf(m, "now at %lld nsecs\n", (long long)now);
+-	SEQ_printf(m, "\n");
++	SEQ_printf(ctx, "Timer List Version: v0.11\n");
++	SEQ_printf(ctx, "HRTIMER_MAX_CLOCK_BASES: %d\n", HRTIMER_MAX_CLOCK_BASES);
++	SEQ_printf(ctx, "now at %lld nsecs\n", (long long)ctx->ts_mono);
++	SEQ_printf(ctx, "\n");
+ }
+ 
+-void sysrq_timer_list_show(void)
++static void sys_timer_list_show(struct tlctx *ctx)
+ {
+-	ktime_t now = ktime_get();
++	ctx->ts_mono = ktime_get_ns_fast();
+ 	int cpu;
+ 
+-	timer_list_header(NULL, now);
++	timer_list_header(ctx);
+ 
+ 	for_each_online_cpu(cpu)
+-		print_cpu(NULL, cpu, now);
++		print_cpu(ctx, cpu);
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+-	timer_list_show_tickdevices_header(NULL);
++	timer_list_show_tickdevices_header(ctx);
+ 	for_each_online_cpu(cpu)
+-		print_tickdevice(NULL, tick_get_device(cpu), cpu);
++		print_tickdevice(ctx, tick_get_device(cpu), cpu);
+ #endif
+-	return;
++}
++
++void sysinfo_timer_list_show(enum sysinfo_context si_ctx)
++{
++	struct tlctx ctx = { .si_ctx = si_ctx, };
++
++	sys_timer_list_show(&ctx);
++}
++
++void sysrq_timer_list_show(void)
++{
++	struct tlctx ctx = {};
++
++	sys_timer_list_show(&ctx);
+ }
+ 
+ #ifdef CONFIG_PROC_FS
+ static int timer_list_show(struct seq_file *m, void *v)
+ {
+ 	struct timer_list_iter *iter = v;
++	struct tlctx ctx = {
++		.seq_file	= m,
++		.ts_mono	= iter->now,
++	};
+ 
+ 	if (iter->cpu == -1 && !iter->second_pass)
+-		timer_list_header(m, iter->now);
++		timer_list_header(&ctx, iter->now);
+ 	else if (!iter->second_pass)
+-		print_cpu(m, iter->cpu, iter->now);
++		print_cpu(&ctx, iter->cpu);
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
+ 	else if (iter->cpu == -1 && iter->second_pass)
+-		timer_list_show_tickdevices_header(m);
++		timer_list_show_tickdevices_header(&ctx);
+ 	else
+-		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
++		print_tickdevice(&ctx, tick_get_device(iter->cpu), iter->cpu);
+ #endif
+ 	return 0;
+ }
 
 
-> 
-> The problem
-> -----------
-> 
-> Since commit f1a7941243c1 ("mm: convert mm's rss stats into
-> percpu_counter"), the RSS counters are struct percpu_counter with a
-> batch size of max(32, 2 * nr_cpus): their approximation error grows with
-> O(nr_cpus^2), up to 1.1GB per counter at 384 logical CPUs.
 
-Okay, so that's a per-MM problem, not a per-system problem. On a large system
-with many CPUs I'd have said "likel we don't care" :)
-
-> /proc/PID/status, /proc/PID/statm and the OOM killer moved to precise
-> sums (commits 82241a83cd15 and 5898aa8f9a0b), but the other readers
-> still use the approximation: the RSS high watermark (VmHWM, the
-> ru_maxrss reported as "Maximum resident set size" by /usr/bin/time -v,
-> taskstats), /proc/PID/stat (ps, top, monitoring agents), the taskstats
-> RSS-time integral (coremem, sampled at each tick), NUMA balancing and
-> the mark_victim tracepoint.  On the test machine below, the
-> /proc/PID/stat RSS of a test process was off by 17MB while
-> single-threaded, and by up to 134MB with 64 threads.
-
-What's the resulting impact of that (temporary) imprecision?
-
-> 
-> Precise sums cannot fix the high watermark or the RSS-time integral:
-> update_hiwater_rss() samples the RSS on every unmap path, and the
-
-As a side-note, I absolutely hate update_hiwater_rss() on the unmap path.
-
-> integral at each tick, while a precise sum reads every possible CPU,
-> about 4us per counter at 384 logical CPUs.  A smaller struct
-> percpu_counter batch takes the counter spinlock on every carry: at batch
-> 32, an update of the counters of a shared mm costs 4.4 to 69us with one
-> thread per CPU, compared to 26ns to 1.2us with this series.
-> 
-> The series
-> ----------
-> 
-> Patches 1 to 5 replace struct percpu_counter for the RSS counters with
-> hierarchical per-cpu counters: per-cpu bytes carry into a tree of atomic
-> counters shaped at boot from nr_cpu_ids, with a fixed batch of 32, an
-> error bound in O(n*log(n)) and no global lock.  
-
-How does this interact with CPU hotplug?
-
-> Each level carries only
-> once its residual reaches the batch in either direction, so updates
-> going back and forth around a boundary do not climb the tree.  The
-> comparison functions have no user in this series; a follow-up will use
-> them for a faster OOM killer task selection.
-> 
-> Patches 6 and 7 keep the RSS counters of single-threaded processes exact
-> and without per-cpu memory: until a second thread shares the mm, the
-> task running on the mm adds to the bias of each counter without atomic
-> instructions, and other tasks add to its atomic bias, both read in O(1).
-> Creating the second thread allocates the per-cpu counters and tree
-> items, and activates the tree.  struct percpu_counter cannot do this as
-> is: its count is an s64 under a raw spinlock, which the remote updates
-> (reclaim, khugepaged, remote GUP) would then take.
-
-What was the particular reason to special-case single-threaded apps? Do we
-expect them in practice to really be that RSS heavy+dynamic such that it would
-matter?
-
-> 
-> Patches 8 to 10 are the tools to tune the tree shape on other hardware:
-> the percpu_counter_tree.arity= and rss_stat_batch= boot parameters, and
-> a KUnit benchmark.  The default shapes were measured on one machine,
-> with up to 384 logical CPUs, so results from other hardware are welcome.
-
-Hm, so that means one might have to fine tune these toggles to get the best
-performance? That's a bit unfortunate.
-
-> 
-> Results
-> -------
-> 
-> 2-socket AMD EPYC 9654, 192 cores, 384 logical CPUs with SMT (the CPU
-> counts in this letter are logical CPUs, as in nr_cpu_ids), tree 8,8,8,
-> batch 32, whole series; details in patches 3 and 7.  The bare-metal
-> results were measured on v7.3: the rebase onto v7.4-rc1 had no conflict,
-> and the hpcc update costs of the series as sent, measured in a pinned
-> 384-vCPU guest, match the bare-metal ones within 2%.
-> 
->   Accuracy per counter: bound, and largest |approximate - precise| seen
->   by get_mm_counter() while a process hops across all CPUs doing
->   mmap/munmap of 1 to 16 pages (384-vCPU KVM guest pinned to the host):
-> 
->                                         hpcc   upstream
->     bound                            158.5MB      1.1GB
->     measured, single-threaded      0 (exact)      841MB
->     measured, with a second thread      96MB      845MB
-> 
->   Update cost, ns per update per thread, one thread per CPU, bare metal
->   (mm: the 4 counters of one mm; private: one counter per thread; batch
->   32: local change of the benchmark, bound 46.5MB):
-> 
->                                               upstream   upstream
->                                        hpcc  batch 768   batch 32
->     mm, +1                               26        288       4370
->     mm, random +-32                     135        385      69171
->     mm, random +-512                   1174      20229      69186
->     private, random +-32                 31         20          -
-> 
->   /proc/PID/statm read with 1000 to 16000 processes, bare metal:
->   5.3-6.5us vs 16.5-19.0us for single-threaded processes, on par for
->   multi-threaded ones (14.4-16.0us vs 14.5-17.1us, guest).  fork + exit
->   of a single-threaded child: 116us vs 139us.  will-it-scale
->   page_fault1, 2 and 3: no regression (-0.6% to +5.1%, one boot each,
->   the upstream one on the previous day).
-> 
->   Memory per mm, counting the slab objects of mm_struct and of the tree
->   items, and the per-cpu memory of the RSS counters, in bytes (guest,
->   v7.4-rc1):
-> 
->                   single-threaded   threaded   upstream
->     16 CPUs                  1820       1948       2076
->     384 CPUs                 1928       8145       8072
->     1024 CPUs                2185      17204      18569
-> 
->   The tree items are allocated with the per-cpu counters when the second
->   thread is created, and the mm_struct slab object keeps its upstream
->   size.
-> 
-> Behavior changes
-> ----------------
-> 
-> - The allocation of the per-cpu counters and tree items moves from
->   fork() to the second thread (clone() with CLONE_VM, without
->   CLONE_VFORK), which can then fail with -ENOMEM.
-> - mm_struct gains rss_owner, the task running on the mm, compared with
->   current and never dereferenced, and rss_stat_mutex, which serializes
->   the activations of the tree, as mm_cid.mutex serializes the mode
->   changes of mm_cid at fork and exit.
-> - The precise sums (/proc/PID/status, /proc/PID/statm, the OOM killer)
->   take no lock: under concurrent updates of a multi-threaded process,
->   they can miss a carry on its way up the tree, where upstream counts
->   each concurrent update either whole or not at all.  They are exact for
->   a process at rest.
-> - The rss_stat tracepoint reports the approximation (patch 5): exact for
->   single-threaded processes, within the bound otherwise.
-> - Like struct percpu_counter, the tree is sized at boot and not
->   reshaped on hotplug; its shape and bound depend on nr_cpu_ids, while
->   the default upstream batch follows the online CPUs.
-> 
-> Caveats
-> -------
-> 
-> - From 33 to 39 CPUs, up to 1.37 times less accurate than upstream.
-> - The tree is shaped for the number of CPUs rounded up to a power of 2:
->   just above a power of 2, the RSS counters of a threaded process, with
->   rss_owner and the mutex, use up to 1.50 times the memory of upstream
->   (129 CPUs, 1.28 times at 65 and 1.38 times at 257), compared to at
->   most 0.90 times at a power of 2, and 1.02 times at 384 logical CPUs.
-> - Private counters with random +-32 updates: 31ns vs 20ns, the price of
->   a 7 times tighter bound.
-> - A multi-threaded process which ran on few CPUs can hold more error
->   than upstream: 2047 pages per CPU path vs 767 at 384 logical CPUs.  A
->   follow-up could index the counters by concurrency ID (mm_cid) instead
->   of CPU, so the accuracy bound and the precise sums would scale with
->   the concurrency the process uses.
-> - Before activation, concurrent remote updates of a single-threaded
->   process contend on one atomic per counter.
-> - The second thread allocates per-cpu memory, which the per-cpu
->   allocator serializes, as it does upstream at every fork: with 384
->   threads at once, init + destroy of 4 counters takes 874us per
->   operation (1004us upstream, 6.0us alone).  Tree item slab objects
->   owning their per-cpu counters, with slab destructors, could avoid it.
-> - The accuracy was measured in a guest, with a debug patch and a test
->   program which are not part of the series.  The bound is analytic and
->   tested in both directions.
-
-[...]
-
-> 
-> Questions
-> ---------
-> 
-> 1. Is mm->rss_owner acceptable, or would you prefer current->mm == mm
->    (without PF_KTHREAD) and an "activated" flag?
-
-I'm afraid I'm the wrong person to ask that question. I'd have to look into the
-details. If it's just a simple member, we likely don't care about the addition
-memory footprint (if that's your main concern).
-
-> 2. Is moving the -ENOMEM from fork() to the second thread acceptable?
-
-I'd assume that's not a problem.
-
-> 3. Would you rather take the single-threaded mode first, on its own?
-
-Again, the question is how much we care in practice, I guess.
-
-> 4. Should the rss_stat tracepoint report the approximation, stay
->    precise, or report both?
-
-No strong optinion on that. Do we know who uses these and for which purpose?
-
-> 5. Should the tuning tools be merged, built only with the benchmark
->    config, or dropped later?  Who could run them on non-AMD, 4-socket,
->    arm64 or POWER machines?
-
-Is there some way to have it be an auto-tuning instead of requiring this tooling?
-
-> 6. Is tools/testing/hpcc the right home for the topology test?
-Good question, I'd assume so.
-
--- 
-Cheers,
-
-David
