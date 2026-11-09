@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794185146;
-	b=hzPt3GVtKsUlFZwHOI1REZGyhz3W11Qpz96qCea+FCP2V0hFR/vPUbPuwX0jT1YNrgBc
-	 +IMBbnYyZUKGzGKCAxYuIAqietEPtQyc7dRNWMCZOtuYtKcanzSPbiV+aURZzGR9NJBCh
-	 NA1gqz8O9+UaehnCAbcYIhRz+OuG8gz73P02wY5PqsqBpT6PnaWmm+lqQtwzKCBKuoE+K
-	 m1zXkMM/+B6pcCoezAs6AzQ3glAkYQk7a6RKBCJZjVG0Q0TE9jAMt7yy/u6IPKQap5C71
-	 CzP/7oa1K4hU5Qd1rLDBKuq88eSMucXiP3fYEQDOE+mUX7MUWh2QGncOszVsGhJU2uQ==
+	t=1794185166;
+	b=iPj4w8Sc5ve0u3yz1wjAWoei9cMfLMoxI1k5grTZwmDPGAYEuSUoOjM6m74GunIVfT0M
+	 KTVHrYl5X4UknRtTvB6LMuZjWhY9LJ1jZMIsawmahQ/keyVI/iTUsO/5AHRQ9tpU4lKjX
+	 LkxDjpthHa0rFZ/WlRjjnxtzzG3dwIwuONsnj6zNGgP1uRzP0lT2nk7or1mUmaStOAx/n
+	 FadVZhP0p+m8YvSJ0glZdJvorlKmQU1BGLciAyYDZCKT/5IyYGcE3yNJ/8mnTK+T6EKUK
+	 TBedsrye0w9gdC1EmL6SgqLFpdUl5+HYwKAszw9bAkV658BA2oCabWoK89XPRMsnTMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794185146;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794185166;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=A/1izIu9bEdboB0UO5xnnls6YkMqoFiIG4UAcTS2UMo=;
-	b=LGc8O/zpdXwR2+KMydXGB2T1bywn27KXlNbBFVv1MiOXUek1UrS6ECi4wlMaPX7tWbll
-	 Je1v47ObscqcfPH7NoJhzYCZKj1ednua1jdTCIvil6ud7RyOY8pYqJ4yBM4CN22bm82nh
-	 E/x4jQzvFZGwL6n3RQ8WTS/c+9i0a8oDIhY9lJCPtgbFdnHWLOAIh3WqAmyauEaOJvJQR
-	 drylFbwkZC+6sm4eLSBpBmAsIDd7xemzU5gr15du/9k9w+dr+l9d3eYfQjDn3x0aFN5tj
-	 PV/K5NeRYL5w7LfvpE1nYCRrnjKq5FiT4gCZIwqyOKymWxfkOizlNr6QXFKYVheJ6ww==
+	bh=CVRsGO/wjjfOw1WgM9PAQZvNbtr0VcqhmWT2c0XZ2zY=;
+	b=POONV4mtfy1oBevLWP1Dle0jwt8UH7r2Siiu+8s0yr7H8y4Frjaz60ICBYquwwl/Wztf
+	 3djsmcz0dgIF2prttLyMUSKl0m/8DZYhPhJZrwYydh2sdECoAi5oPUTf8kCMqW5DSmJSm
+	 rHx6QolhRfbBP3/k/dOfP+3+9w5rsgXA1tI08KUGqYYIcNoyTrn8JJYIBBtZKQf6xefPt
+	 GBGsCq4idwu/oJXOp9SaJvWlrQBgEL70LiGjK/iV2ASGvUvpE9/SFc2a94o0g2PjH1Orb
+	 oLRThL1+rjGbiPYv/Cm78jh+OMJdL8slkJ+UiPcucqWtyJG7S88HFDVd5eKV3W/LUNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H10Yk1yf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkyxM2JY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE02606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 00:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F2B606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 00:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H10Yk1yf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FA71F0089F;
-	Mon,  9 Nov 2026 00:45:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LkyxM2JY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 478AE1F0089F;
+	Mon,  9 Nov 2026 00:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794185145;
-	bh=A/1izIu9bEdboB0UO5xnnls6YkMqoFiIG4UAcTS2UMo=;
+	s=k20260515; t=1794185166;
+	bh=CVRsGO/wjjfOw1WgM9PAQZvNbtr0VcqhmWT2c0XZ2zY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H10Yk1yfRoDZIW614YK+sWiTJ1KHw2hWCZLMWdQ0BornHYNq+ECgCpEMxYsvjPI+4
-	 5zYEvcLFsNax33qKSXsO5bbX/RIISxxI+TyZxjqt8tqmld6RyiBy5/DU5GV/+IuEmB
-	 eXMgCH4o9jnxiTIrqTVbOLoxtmlpfrGoantN5Memw8+Xv4s6ZM06B+HGY+RXSBD9QQ
-	 MkL3tUd7kKWDrK0w+xtDvxn++gFQIRf8kPxf8WY8SrfLs5KBiQQAUE4r5KKlEgmQ5e
-	 7n+HBFg/Lr7p/Jxqccyh1TOespVF+AJFcZXL2+Ti44MRn9RxxL8iSXS+ugJatKfPkt
-	 pp2gnPfBKNV0g==
-Message-ID: <sashiko-outbox-204254@kernel.org>
+	b=LkyxM2JYCw/E2z1Sb7ehWdPBlc0Bkc41pAo2iNlUrLduFahGtZAxALlx/4hVHld2e
+	 nyamWFwZgzGKhbR8tcSx98QPU5v0z8bpSbzK4phkAYxDEfE6xmIhW/2Jl0BNtvTJTK
+	 caiFN4khW8zHtZIGzwoX31kpIEoLK6PqaefErQWapUw6v/1T1OyPJ56kWAdyIuJNkJ
+	 PAOI02/siBUZtO1Kr5tbhEVZF3jBCfHJMWpIieibjKa8MHNLO1Q5RGoqCKYepMYIoC
+	 A+CquCcF10RfloNE6z0VAmdXWh6I6RRPKN2mCofMRqhwx0ROF36sbz1zm7SPog0ZAW
+	 y/cR4RukSyr4Q==
+Message-ID: <sashiko-outbox-204255@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/12] tracing/probes: Fix BTF bitfield parsing and
- out-of-bounds buffer write
+Subject: Re: [PATCH 12/12] tracing/probes: Propagate error codes in eprobe
+ and fprobe creation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179418411197.227715.5577722703946865281.stgit@devnote2>
+In-Reply-To: <179418419198.227715.15433232608137637935.stgit@devnote2>
 References: <179418408457.227715.1485179201014819821.stgit@devnote2>
- <179418411197.227715.5577722703946865281.stgit@devnote2>
+ <179418419198.227715.15433232608137637935.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 00:45:45 +0000
+Date: Mon, 09 Nov 2026 00:46:05 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,77 +63,34 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] tracing/probes: unaligned kflag=3D0 bitfields fail in
-  get_bitoffset_of_field()
+- [Low] tracing/probes: missing Fixes trailers for overwritten error
+  codes
 --
 
-commit 2e4831ec2095ef67023431da46d322fba9d204db
+commit 435aff670b6c20ffbcde000e1c0b092b53b663a8
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
+> tracing/probes: Propagate error codes in eprobe and fprobe creation
+>
+> In __trace_eprobe_create() and trace_fprobe_create_internal(), error
+> codes returned by helper and registration functions (such as -ENOMEM or
+> -EEXIST) are overwritten with -EINVAL.
+>
+> Propagate the actual error codes to the caller.
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This commit fixes BTF bitfield offset calculation, selects an unsigned fetch
-type wide enough to cover the bit offset and width, and derives the
-FETCH_OP_MOD_BF shift and basesize parameters from the selected fetch type.
+[Severity: Low]
+Since this fixes overwritten error codes in __trace_eprobe_create() and
+trace_fprobe_create_internal(), should it include the following Fixes:
+tags?
 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index a880a90642d7c..26e02929f1ffb 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-
-[ ... ]
-
-> @@ -653,6 +661,12 @@ static int get_bitoffset_of_field(char **pfieldname,=
- const struct btf_type **pty
->  		/* Add anonymous structure/union offset */
->  		bitoffs +=3D anon_offs;
-> =20
-> +		type =3D btf_type_skip_modifiers(btf, field->type, NULL);
-> +		if (!type) {
-> +			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> +			return -EINVAL;
-> +		}
-> +
->  		/* Accumulate the bit-offsets of the dot-connected fields */
->  		if (btf_type_kflag(container_type)) {
->  			bitoffs +=3D BTF_MEMBER_BIT_OFFSET(field->offset);
-> @@ -660,12 +674,15 @@ static int get_bitoffset_of_field(char **pfieldname=
-, const struct btf_type **pty
->  		} else {
->  			bitoffs +=3D field->offset;
->  			ctx->last_bitsize =3D 0;
-> -		}
-> +			if (BTF_INFO_KIND(type->info) =3D=3D BTF_KIND_INT) {
-> +				u32 intdata =3D btf_type_int(type);
-> =20
-> -		type =3D btf_type_skip_modifiers(btf, field->type, NULL);
-> -		if (!type) {
-> -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> -			return -EINVAL;
-> +				if (BTF_INT_OFFSET(intdata) ||
-> +				    BTF_INT_BITS(intdata) !=3D BYTES_TO_BITS(type->size)) {
-> +					bitoffs +=3D BTF_INT_OFFSET(intdata);
-> +					ctx->last_bitsize =3D BTF_INT_BITS(intdata);
-> +				}
-> +			}
->  		}
-
-[Severity: Medium]
-Does this leave ctx->last_bitsize as 0 when a kflag=3D0 bitfield has a bit
-width matching its underlying integer type size (such as an 8-bit bitfield
-backed by a 1-byte BTF_KIND_INT with BTF_INT_OFFSET(intdata) =3D=3D 0) at a
-non-byte-aligned member offset (bitoffs % 8 !=3D 0)?
-
-When that happens, parse_btf_field() sets a non-zero ctx->last_bitoffs while
-ctx->last_bitsize remains 0.  fetch_type_from_btf_type() then does not widen
-the fetch type to cover the unaligned field across the byte boundary, and
-parse_btf_bitfield() rejects the probe with BAD_BITFIELD (-EINVAL) because
-ctx->last_bitsize =3D=3D 0 while ctx->last_bitoffs !=3D 0.
-
-Checking bitoffs % 8 !=3D 0 alongside BTF_INT_OFFSET(intdata) and
-BTF_INT_BITS(intdata) !=3D BYTES_TO_BITS(type->size) would record
-ctx->last_bitsize for unaligned byte-sized kflag=3D0 bitfields as well.
+  Fixes: 752be5c5c910 ("tracing/eprobe: Add eprobe filter support")
+  Fixes: 08c9306fc2e3 ("tracing/fprobe-event: Assume fprobe is a return eve=
+nt by $retval")
+  Fixes: 8275637215bd ("tracing: Adopt __free() and guard() for trace_fprob=
+e.c")
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179418408457.227715=
-.1485179201014819821.stgit@devnote2?part=3D3
+.1485179201014819821.stgit@devnote2?part=3D12
