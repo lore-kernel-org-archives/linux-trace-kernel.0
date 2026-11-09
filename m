@@ -1,67 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794254314;
-	b=APr5gDi5p8oPKsd7y53sj45I5RnQOKqagaUg/fbNT7LvkhGFuzX2pWItg3f1HJdeHCRM
-	 L36eZm9kobdQdRMs5o+TaUNFSnxIJ9mBa+DtYfF7b9/eKa3Z6xf7p1EclQ5Y2ih6uEIQS
-	 Ycxo0KXCMBVOhOULNhyY2uUlgNeyTcyd8AyaEOSJTBTM60WxTzKnUufH9D9nxWijcc31E
-	 kz5kvfWuV1wrCrlgKSpNOarYSv9RF6OTxZGHuLMwQ6mvHOB8DmZfIK9utPFkqIhMk0sEm
-	 qE7dHNeZDlb4AznNDIdDGR9B6eD6NIYmHq1Za5V38M8jZXOGaz5Ux/lYXpYRqA5Y88A==
+	t=1794256543;
+	b=bAerrWrmNUR0bRjijSaGPBgT8WqBb65lJnIPcXM3ScV8KP05X4yp0/9xxRvwvgA2j7jh
+	 UI6IlqkaIyazMIqz6/gmwezA/yC7n/6lQxwQ0LwPqvIw9MJ01v/MRSiIwTGc0kifFIMaX
+	 kRh94joVj4bL8w380om0B4b4o1+552dIjKar5LTej2z7fXUKqtjUbamXCe0k/vWO/bGFk
+	 RYzsoQCQD2CULvsAvChxB60bArsl4mbQtjaYtWveSnxuaQ7oTW1jFQNJhOF5xJCzTLzxT
+	 SzTf8+apXKbStqif8TXgxEnEPLECAoDOJ6BVXvPzwkT1a3pgJmlTAO9rRKWyg/MIQww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794254314;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=4LLcytvgiqaTQB/HnV4lcSiqodwY4xf9iEicHvUEDSA=;
-	b=HHwEoCj6kzqkkxMi0t/YtWcEvRcm2MrSquZ1nTM1vC9Qr4RNSJkqB+X1v/oZNRMfkaFs
-	 2/pHxWBdfNMy1ZaKO9goRYaYDgr0jZ+61i7VfG7GiSSaFO55+4y22wNh42G8o/UQREfgT
-	 ZPQ5TZKUSummg7sNsROxPxenJcxpZQj0c4GC50gucO6z2/fSTuWk/oj55iY8QOmOO+rUC
-	 AqJ/P5V8AvQURUw+X6bf7XDu1GR8oAn3ZequwvLu2fEu0qyel4OusjuPWngD9E2ZgkgtQ
-	 K6KJane045tRAQx8WrL5ORqouHxvWFg0UXaWhcizgoA23Yl1p75zICchiMiUpRh7JQQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794256543;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=4S0ZASTCxuNpF4rd1cySC3wOXo2N6s1iGqE54udrluA=;
+	b=Vi/P+ARoEVr7QPPRdzUViXssk0lV8DAIUMbDlgBYQUZwE+Ic4OZEl2oO7WAIU/am3eBT
+	 XSkdql7EPzzk4wde5q4YeSdJw5ViNXCiOqoRQaW31rfbXtRhJBGNtcHgwDKZxuJ/hRF03
+	 dhphV+h8s+tj4147h1spP9h7vRLnlT0U4BxJvHO6VPWWxy5qc9tjtwqI/rtQAQCbfPpXp
+	 rJ65ohyFmr4O+FjHxqTcSy4Z0nX9hm5wA/liQDuX+LuXtHy3G3O6284THWp7RefnvwJ01
+	 VusVEiWNM/qA2p0cW9CDwpkrvaD/G/U9zZ3PG3FwZ/zFOOXt1pv1iBYokL4jedMXWeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O0HtUjlM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P4sw6wQ3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA798606A337;
-	Mon,  9 Nov 2026 19:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBB1606A321;
+	Mon,  9 Nov 2026 20:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O0HtUjlM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 965A61F008A3;
-	Mon,  9 Nov 2026 19:58:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P4sw6wQ3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87BE31F008A3;
+	Mon,  9 Nov 2026 20:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794254313;
-	bh=4LLcytvgiqaTQB/HnV4lcSiqodwY4xf9iEicHvUEDSA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=O0HtUjlMnfKb8uJ3PxaNMQy1IEDyhh4b88cUQ08awBNgLSrHbzwF2a6A7HkHXpIGM
-	 enUX4+RMAQRy+lJhvfGT04Jdu09bwZJ/15HD94h5xrRnCMoilCKfMY9JGEhJYYSiMY
-	 Tidqkws6mFfztUOqhNjyzrzYM/of2z5mSYMLUOLEuxJPuJiZzIiiQUGBDLCZ1IJqpn
-	 OuurByXiX148Ui63PzJUZrPQmKAlGMcjnJez2NRuTzjoYQodn8vd+cH3uSbX3g7PRg
-	 yAW7opPKzeeA7FuDhXgDZc1ofA/bD2XeX4FAhkBuBPwwrj1SepL5qiFgXc5Tu7xxSr
-	 VYfhyX1oApXOA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alan Maguire <almagui@kernel.org>,
-	x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH 13/13] samples/kprobes: Add batch probe example
-Date: Mon,  9 Nov 2026 20:58:27 +0100
-Message-ID: <20261109195827.1091410-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261109194916.1089703-1-jolsa@kernel.org>
-References: <20261109194916.1089703-1-jolsa@kernel.org>
+	s=k20260515; t=1794256542;
+	bh=4S0ZASTCxuNpF4rd1cySC3wOXo2N6s1iGqE54udrluA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=P4sw6wQ3f4dx6u4pFALkqAd21ksXEckvh8fTjSyAtPK7pCZ5oCMgj9geo1WMAb8Zy
+	 T3WPTAqBAfrjyOIGwG13GeeN3JYJDQ0p0EnAA+3SeB7wR5mcK6LoOA4Lu6t6CzmY36
+	 2VQiGF1vIwZSWSmDUN9g9kebIsNKZ6E22tSOaeIO94SWxGBVGJ3qOC1yPcnVsH/Cn0
+	 UZ5K32bWw2VUooDNxET6m7PVp4kstgbO6IwT0nw08/ddOnnD9tbaGGmpT3knr++bkh
+	 7m8kKDrBrff07mDjClfAY1zac5v1ooNQvpK1hlOKoCgLMNjgZlX5N8FMDDhhJGVMAI
+	 B6ihb0Ustt8og==
+Message-ID: <88a96126-11be-41cc-ab0d-372d32189e79@kernel.org>
+Date: Mon, 9 Nov 2026 21:35:26 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -71,249 +51,319 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v24 00/10] Hierarchical Percpu Counters for RSS
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
+ christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>,
+ SeongJae Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Wei Yang <richard.weiyang@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ Al Viro <viro@zeniv.linux.org.uk>, Yu Zhao <yuzhao@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik
+ <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>,
+ David Carlier <devnexen@gmail.com>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Valentin Schneider <vschneid@redhat.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, Kees Cook <kees@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+References: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20261105203639.1459524-1-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add a sample module that registers kprobes on a batch of
-generated functions and calls each function to trigger
-the probes.
+On 11/5/26 21:36, Mathieu Desnoyers wrote:
+> Hi David,
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- kernel/Makefile                       |  3 +
- kernel/kprobes_many.c                 | 81 ++++++++++++++++++++++++
- samples/Kconfig                       |  8 +++
- samples/kprobes/Makefile              |  1 +
- samples/kprobes/kprobe_many_example.c | 91 +++++++++++++++++++++++++++
- 5 files changed, 184 insertions(+)
- create mode 100644 kernel/kprobes_many.c
- create mode 100644 samples/kprobes/kprobe_many_example.c
+Hi!
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 4ff92e24680c..f307b29d4fef 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -99,6 +99,9 @@ obj-$(CONFIG_AUDITSYSCALL) += auditsc.o audit_watch.o audit_fsnotify.o audit_tre
- obj-$(CONFIG_GCOV_KERNEL) += gcov/
- obj-$(CONFIG_KCOV) += kcov.o
- obj-$(CONFIG_KPROBES) += kprobes.o
-+ifneq ($(CONFIG_SAMPLE_KPROBES_MANY),)
-+obj-y += kprobes_many.o
-+endif
- obj-$(CONFIG_FAIL_FUNCTION) += fail_function.o
- obj-$(CONFIG_KGDB) += debug/
- obj-$(CONFIG_DETECT_HUNG_TASK) += hung_task.o
-diff --git a/kernel/kprobes_many.c b/kernel/kprobes_many.c
-new file mode 100644
-index 000000000000..1c31a63309bf
---- /dev/null
-+++ b/kernel/kprobes_many.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+/*
-+ * Generated functions for the batch kprobe sample.
-+ */
-+
-+#include <linux/annotate.h>
-+#include <linux/export.h>
-+#include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/asm.h>
-+#include <asm/ibt.h>
-+
-+#define KPROBE_MANY_MAX_FUNCS	50000
-+#define KPROBE_MANY_FUNC_SIZE	24
-+#define KPROBE_MANY_PROBE_OFF	8
-+
-+#if defined(CONFIG_MITIGATION_RETHUNK)
-+#define KPROBE_MANY_RET		ASM_RET
-+#define KPROBE_MANY_RET_SIZE	5
-+#elif defined(CONFIG_MITIGATION_SLS)
-+#define KPROBE_MANY_RET		ASM_RET
-+#define KPROBE_MANY_RET_SIZE	2
-+#else
-+#define KPROBE_MANY_RET		ASM_RET
-+#define KPROBE_MANY_RET_SIZE	1
-+#endif
-+
-+#define KPROBE_MANY_TAIL_NOPS \
-+	(KPROBE_MANY_FUNC_SIZE - KPROBE_MANY_PROBE_OFF - 7 - \
-+	 KPROBE_MANY_RET_SIZE)
-+
-+extern char kprobes_many_func_0[];
-+EXPORT_SYMBOL_GPL(kprobes_many_func_0);
-+
-+/*
-+ * Keep these functions at a fixed size so the sample module can place
-+ * probes at the same offset in every function.
-+ *
-+ * For example, KPROBE_MANY_FUNC kprobes_many_func_0 emits:
-+ *
-+ * kprobes_many_func_0:		ENDBR
-+ * 				NOPS to offset 8
-+ * 1:				probe site (offset 8), annotated as NOENDBR
-+ * 				7 NOPS for the kprobe optimizer
-+ * 				NOPS to fill the function
-+ * 				RET
-+ *
-+ * The NOPS and return sequence keep each function 24 bytes long, including
-+ * the ENDBR instruction when enabled.
-+ */
-+asm (
-+	".pushsection .text, \"ax\", @progbits\n"
-+	".macro KPROBE_MANY_FUNC name\n"
-+	".type \\name, @function\n"
-+	"\\name:\n"
-+	ASM_ENDBR
-+	IBT_NOSEAL("\\name")
-+	".rept " __stringify(KPROBE_MANY_PROBE_OFF - ENDBR_INSN_SIZE) "\n"
-+	"	nop\n"
-+	".endr\n"
-+	"1:\n"
-+	ASM_ANNOTATE_LABEL(1b, ANNOTYPE_NOENDBR) "\n"
-+	".rept 7\n"
-+	"	nop\n"
-+	".endr\n"
-+	".rept " __stringify(KPROBE_MANY_TAIL_NOPS) "\n"
-+	"	nop\n"
-+	".endr\n"
-+	KPROBE_MANY_RET
-+	".size \\name, .-\\name\n"
-+	".endm\n"
-+	".macro KPROBE_MANY_FUNC_LOCAL\n"
-+	"KPROBE_MANY_FUNC kprobes_many_func_\\@\n"
-+	".endm\n"
-+	".globl kprobes_many_func_0\n"
-+	"KPROBE_MANY_FUNC kprobes_many_func_0\n"
-+	".rept " __stringify(KPROBE_MANY_MAX_FUNCS - 1) "\n"
-+	"	KPROBE_MANY_FUNC_LOCAL\n"
-+	".endr\n"
-+	".popsection\n");
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 00eed83c07df..92a41c5fdbfd 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -80,6 +80,14 @@ config SAMPLE_KRETPROBES
- 	default m
- 	depends on SAMPLE_KPROBES && KRETPROBES
- 
-+config SAMPLE_KPROBES_MANY
-+	tristate "Build batch kprobe example -- x86 loadable module only"
-+	depends on SAMPLE_KPROBES && X86 && m
-+	help
-+	  This builds a sample module that registers kprobes in the middle of
-+	  50000 generated x86 kernel functions using the batch kprobe
-+	  interface.
-+
- config SAMPLE_HW_BREAKPOINT
- 	tristate "Build kernel hardware breakpoint examples -- loadable module only"
- 	depends on HAVE_HW_BREAKPOINT && m
-diff --git a/samples/kprobes/Makefile b/samples/kprobes/Makefile
-index e774592718d6..2fd2150e523c 100644
---- a/samples/kprobes/Makefile
-+++ b/samples/kprobes/Makefile
-@@ -4,3 +4,4 @@
- 
- obj-$(CONFIG_SAMPLE_KPROBES) += kprobe_example.o
- obj-$(CONFIG_SAMPLE_KRETPROBES) += kretprobe_example.o
-+obj-$(CONFIG_SAMPLE_KPROBES_MANY) += kprobe_many_example.o
-diff --git a/samples/kprobes/kprobe_many_example.c b/samples/kprobes/kprobe_many_example.c
-new file mode 100644
-index 000000000000..5a58908c840c
---- /dev/null
-+++ b/samples/kprobes/kprobe_many_example.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Sample module that registers a batch of kprobes in generated kernel
-+ * functions.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/kprobes.h>
-+#include <linux/module.h>
-+
-+#define KPROBE_MANY_MAX_FUNCS 50000
-+#define KPROBE_MANY_FUNC_SIZE 24
-+#define KPROBE_MANY_PROBE_OFF 8
-+
-+extern char kprobes_many_func_0[];
-+
-+static unsigned int nr_functions = 20000;
-+module_param(nr_functions, uint, 0444);
-+MODULE_PARM_DESC(nr_functions, "number of generated functions to probe (1-50000)");
-+
-+static struct kprobe probes[KPROBE_MANY_MAX_FUNCS];
-+static struct kprobe *probe_ptrs[KPROBE_MANY_MAX_FUNCS];
-+static unsigned int kprobe_many_pre_handler_count;
-+
-+static int __kprobes kprobe_many_pre_handler(struct kprobe *p, struct pt_regs *regs)
-+{
-+	kprobe_many_pre_handler_count++;
-+	return 0;
-+}
-+
-+/* The generated assembly functions have no CFI type metadata. */
-+static noinline __nocfi void
-+kprobe_many_call_function(char *functions, unsigned int index)
-+{
-+	void (*function)(void);
-+
-+	function = (void (*)(void))(functions + index * KPROBE_MANY_FUNC_SIZE);
-+	function();
-+}
-+
-+static int __init kprobe_many_init(void)
-+{
-+	char *functions;
-+	unsigned int i;
-+	unsigned int hit_count;
-+	int ret;
-+
-+	if (!nr_functions || nr_functions > KPROBE_MANY_MAX_FUNCS)
-+		return -EINVAL;
-+
-+	functions = kprobes_many_func_0;
-+
-+	for (i = 0; i < nr_functions; i++) {
-+		probes[i].addr = (void *)(functions + i * KPROBE_MANY_FUNC_SIZE +
-+					  KPROBE_MANY_PROBE_OFF);
-+		probes[i].pre_handler = kprobe_many_pre_handler;
-+		probe_ptrs[i] = &probes[i];
-+	}
-+
-+	ret = register_kprobes(probe_ptrs, nr_functions);
-+	if (ret) {
-+		pr_err("register_kprobes failed, returned %d\n", ret);
-+		return ret;
-+	}
-+
-+	pr_info("registered %u probes\n", nr_functions);
-+	for (i = 0; i < nr_functions; i++)
-+		kprobe_many_call_function(functions, i);
-+
-+	hit_count = kprobe_many_pre_handler_count;
-+	if (hit_count != nr_functions) {
-+		pr_err("pre-handler triggered %u times, expected %u\n",
-+		       hit_count, nr_functions);
-+		unregister_kprobes(probe_ptrs, nr_functions);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit kprobe_many_exit(void)
-+{
-+	unregister_kprobes(probe_ptrs, nr_functions);
-+	pr_info("unregistered %u probes\n", nr_functions);
-+}
-+
-+module_init(kprobe_many_init);
-+module_exit(kprobe_many_exit);
-+
-+MODULE_DESCRIPTION("sample module registering kprobes in generated functions");
-+MODULE_LICENSE("GPL");
+> 
+> Here is the hierarchical per-cpu counters series for the RSS counters,
+> based on v7.4-rc1.  It is an RFC because of the questions at the end,
+> and because of the significant changes since v22 [1], notably the
+> per-cpu counter size (long -> byte), the configuration heuristics, and
+> the lazy activation introduced by patches 6 and 7.  v24 fixes the bugs
+> found by the Sashiko review of v23 [2], including a NULL pointer
+> dereference in patches 3 to 5 on sparc64.
+
+I think we discussed other possible applications (IIRC Michal expressed concern
+if a single user is sufficient motivation for these additional LOC). Did
+anything result from that discussion that is relevant to v24?
+
+
+> 
+> The problem
+> -----------
+> 
+> Since commit f1a7941243c1 ("mm: convert mm's rss stats into
+> percpu_counter"), the RSS counters are struct percpu_counter with a
+> batch size of max(32, 2 * nr_cpus): their approximation error grows with
+> O(nr_cpus^2), up to 1.1GB per counter at 384 logical CPUs.
+
+Okay, so that's a per-MM problem, not a per-system problem. On a large system
+with many CPUs I'd have said "likel we don't care" :)
+
+> /proc/PID/status, /proc/PID/statm and the OOM killer moved to precise
+> sums (commits 82241a83cd15 and 5898aa8f9a0b), but the other readers
+> still use the approximation: the RSS high watermark (VmHWM, the
+> ru_maxrss reported as "Maximum resident set size" by /usr/bin/time -v,
+> taskstats), /proc/PID/stat (ps, top, monitoring agents), the taskstats
+> RSS-time integral (coremem, sampled at each tick), NUMA balancing and
+> the mark_victim tracepoint.  On the test machine below, the
+> /proc/PID/stat RSS of a test process was off by 17MB while
+> single-threaded, and by up to 134MB with 64 threads.
+
+What's the resulting impact of that (temporary) imprecision?
+
+> 
+> Precise sums cannot fix the high watermark or the RSS-time integral:
+> update_hiwater_rss() samples the RSS on every unmap path, and the
+
+As a side-note, I absolutely hate update_hiwater_rss() on the unmap path.
+
+> integral at each tick, while a precise sum reads every possible CPU,
+> about 4us per counter at 384 logical CPUs.  A smaller struct
+> percpu_counter batch takes the counter spinlock on every carry: at batch
+> 32, an update of the counters of a shared mm costs 4.4 to 69us with one
+> thread per CPU, compared to 26ns to 1.2us with this series.
+> 
+> The series
+> ----------
+> 
+> Patches 1 to 5 replace struct percpu_counter for the RSS counters with
+> hierarchical per-cpu counters: per-cpu bytes carry into a tree of atomic
+> counters shaped at boot from nr_cpu_ids, with a fixed batch of 32, an
+> error bound in O(n*log(n)) and no global lock.  
+
+How does this interact with CPU hotplug?
+
+> Each level carries only
+> once its residual reaches the batch in either direction, so updates
+> going back and forth around a boundary do not climb the tree.  The
+> comparison functions have no user in this series; a follow-up will use
+> them for a faster OOM killer task selection.
+> 
+> Patches 6 and 7 keep the RSS counters of single-threaded processes exact
+> and without per-cpu memory: until a second thread shares the mm, the
+> task running on the mm adds to the bias of each counter without atomic
+> instructions, and other tasks add to its atomic bias, both read in O(1).
+> Creating the second thread allocates the per-cpu counters and tree
+> items, and activates the tree.  struct percpu_counter cannot do this as
+> is: its count is an s64 under a raw spinlock, which the remote updates
+> (reclaim, khugepaged, remote GUP) would then take.
+
+What was the particular reason to special-case single-threaded apps? Do we
+expect them in practice to really be that RSS heavy+dynamic such that it would
+matter?
+
+> 
+> Patches 8 to 10 are the tools to tune the tree shape on other hardware:
+> the percpu_counter_tree.arity= and rss_stat_batch= boot parameters, and
+> a KUnit benchmark.  The default shapes were measured on one machine,
+> with up to 384 logical CPUs, so results from other hardware are welcome.
+
+Hm, so that means one might have to fine tune these toggles to get the best
+performance? That's a bit unfortunate.
+
+> 
+> Results
+> -------
+> 
+> 2-socket AMD EPYC 9654, 192 cores, 384 logical CPUs with SMT (the CPU
+> counts in this letter are logical CPUs, as in nr_cpu_ids), tree 8,8,8,
+> batch 32, whole series; details in patches 3 and 7.  The bare-metal
+> results were measured on v7.3: the rebase onto v7.4-rc1 had no conflict,
+> and the hpcc update costs of the series as sent, measured in a pinned
+> 384-vCPU guest, match the bare-metal ones within 2%.
+> 
+>   Accuracy per counter: bound, and largest |approximate - precise| seen
+>   by get_mm_counter() while a process hops across all CPUs doing
+>   mmap/munmap of 1 to 16 pages (384-vCPU KVM guest pinned to the host):
+> 
+>                                         hpcc   upstream
+>     bound                            158.5MB      1.1GB
+>     measured, single-threaded      0 (exact)      841MB
+>     measured, with a second thread      96MB      845MB
+> 
+>   Update cost, ns per update per thread, one thread per CPU, bare metal
+>   (mm: the 4 counters of one mm; private: one counter per thread; batch
+>   32: local change of the benchmark, bound 46.5MB):
+> 
+>                                               upstream   upstream
+>                                        hpcc  batch 768   batch 32
+>     mm, +1                               26        288       4370
+>     mm, random +-32                     135        385      69171
+>     mm, random +-512                   1174      20229      69186
+>     private, random +-32                 31         20          -
+> 
+>   /proc/PID/statm read with 1000 to 16000 processes, bare metal:
+>   5.3-6.5us vs 16.5-19.0us for single-threaded processes, on par for
+>   multi-threaded ones (14.4-16.0us vs 14.5-17.1us, guest).  fork + exit
+>   of a single-threaded child: 116us vs 139us.  will-it-scale
+>   page_fault1, 2 and 3: no regression (-0.6% to +5.1%, one boot each,
+>   the upstream one on the previous day).
+> 
+>   Memory per mm, counting the slab objects of mm_struct and of the tree
+>   items, and the per-cpu memory of the RSS counters, in bytes (guest,
+>   v7.4-rc1):
+> 
+>                   single-threaded   threaded   upstream
+>     16 CPUs                  1820       1948       2076
+>     384 CPUs                 1928       8145       8072
+>     1024 CPUs                2185      17204      18569
+> 
+>   The tree items are allocated with the per-cpu counters when the second
+>   thread is created, and the mm_struct slab object keeps its upstream
+>   size.
+> 
+> Behavior changes
+> ----------------
+> 
+> - The allocation of the per-cpu counters and tree items moves from
+>   fork() to the second thread (clone() with CLONE_VM, without
+>   CLONE_VFORK), which can then fail with -ENOMEM.
+> - mm_struct gains rss_owner, the task running on the mm, compared with
+>   current and never dereferenced, and rss_stat_mutex, which serializes
+>   the activations of the tree, as mm_cid.mutex serializes the mode
+>   changes of mm_cid at fork and exit.
+> - The precise sums (/proc/PID/status, /proc/PID/statm, the OOM killer)
+>   take no lock: under concurrent updates of a multi-threaded process,
+>   they can miss a carry on its way up the tree, where upstream counts
+>   each concurrent update either whole or not at all.  They are exact for
+>   a process at rest.
+> - The rss_stat tracepoint reports the approximation (patch 5): exact for
+>   single-threaded processes, within the bound otherwise.
+> - Like struct percpu_counter, the tree is sized at boot and not
+>   reshaped on hotplug; its shape and bound depend on nr_cpu_ids, while
+>   the default upstream batch follows the online CPUs.
+> 
+> Caveats
+> -------
+> 
+> - From 33 to 39 CPUs, up to 1.37 times less accurate than upstream.
+> - The tree is shaped for the number of CPUs rounded up to a power of 2:
+>   just above a power of 2, the RSS counters of a threaded process, with
+>   rss_owner and the mutex, use up to 1.50 times the memory of upstream
+>   (129 CPUs, 1.28 times at 65 and 1.38 times at 257), compared to at
+>   most 0.90 times at a power of 2, and 1.02 times at 384 logical CPUs.
+> - Private counters with random +-32 updates: 31ns vs 20ns, the price of
+>   a 7 times tighter bound.
+> - A multi-threaded process which ran on few CPUs can hold more error
+>   than upstream: 2047 pages per CPU path vs 767 at 384 logical CPUs.  A
+>   follow-up could index the counters by concurrency ID (mm_cid) instead
+>   of CPU, so the accuracy bound and the precise sums would scale with
+>   the concurrency the process uses.
+> - Before activation, concurrent remote updates of a single-threaded
+>   process contend on one atomic per counter.
+> - The second thread allocates per-cpu memory, which the per-cpu
+>   allocator serializes, as it does upstream at every fork: with 384
+>   threads at once, init + destroy of 4 counters takes 874us per
+>   operation (1004us upstream, 6.0us alone).  Tree item slab objects
+>   owning their per-cpu counters, with slab destructors, could avoid it.
+> - The accuracy was measured in a guest, with a debug patch and a test
+>   program which are not part of the series.  The bound is analytic and
+>   tested in both directions.
+
+[...]
+
+> 
+> Questions
+> ---------
+> 
+> 1. Is mm->rss_owner acceptable, or would you prefer current->mm == mm
+>    (without PF_KTHREAD) and an "activated" flag?
+
+I'm afraid I'm the wrong person to ask that question. I'd have to look into the
+details. If it's just a simple member, we likely don't care about the addition
+memory footprint (if that's your main concern).
+
+> 2. Is moving the -ENOMEM from fork() to the second thread acceptable?
+
+I'd assume that's not a problem.
+
+> 3. Would you rather take the single-threaded mode first, on its own?
+
+Again, the question is how much we care in practice, I guess.
+
+> 4. Should the rss_stat tracepoint report the approximation, stay
+>    precise, or report both?
+
+No strong optinion on that. Do we know who uses these and for which purpose?
+
+> 5. Should the tuning tools be merged, built only with the benchmark
+>    config, or dropped later?  Who could run them on non-AMD, 4-socket,
+>    arm64 or POWER machines?
+
+Is there some way to have it be an auto-tuning instead of requiring this tooling?
+
+> 6. Is tools/testing/hpcc the right home for the topology test?
+Good question, I'd assume so.
+
 -- 
-2.43.0
+Cheers,
 
+David
