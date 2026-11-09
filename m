@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794184178;
-	b=Jzj9vZg9azQ3yspAa+f24RVQU7gh9Fd/NRpAmvr5xNjGHT9y9NtkmovSF+6o3yhQdpZ+
-	 TBhWQoYzyVc83PSKJ6xUBAZdcPTFvwIHn/1/yESyGLGUsSTc1+N6lNpQvaBGfgJXv4ruW
-	 30/LUp+GxFnqddWH5SwteIJE25MPy4/YZDOUUnjkaEBDsTNSmU+3sbgGlln4FAJPt5Y5s
-	 kTlyf4kQEuuviKkF+VvM2wNBotea3tBt5EOQuOM+gnMjTmBOQ0FCRJOkOGe8L1Xy4OSDe
-	 ifIyJsml1E+2EWLlNzDx/1xn/6YfURh4nEZRDGJ1BJkW921guiWZ0IgbuKXmqFePQBg==
+	t=1794184187;
+	b=Vkj/ja6/kIQg1gFXzPMxsYc1LzQgbYAf53rwx9mI5rNQTtpI0PX5EMloOw7Q6XdhWk42
+	 B5kFUFIHEy99hWIIvA8WOMUffdHf9CnrbF2GTKNacy+w3ItwYgKU0pRn44OjGiDBUsvWg
+	 3D1BkyNeSA2HyfrYxc+4nPrp6J1jZLRBSaZ55LAUWsU35FDhLjzi9do8JPOg/DxlNZ1dX
+	 xeyZjJZrI1G4wUbhl+ORH3WHwbc59VuUQGMbY9V21WQrt5vA6kAT58Mj0ajyI6/TgpS5w
+	 jARbZwu8LIU/Yxr6VbVWDm6VGAbDeSKV2ba2AhaFKuGLqPFg8J1U7mAYkQcU08RQ4oA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794184178;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794184187;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=6a0Z6nyuyBsfHABultW9tj7jTuhqOSr/F6lhJVbRuaY=;
-	b=jNMake5aILW381Tj4j4iFF7uYcLkOaZqVLCO3bqYPReW+qk6w5peVpm0g3VoJzf+NiVg
-	 huCBTAleKPRKcjWSq514hV4NBWeujFJdJiA+g8cNoT8n7M4FlavgxfwNZKcIECz1iX6u8
-	 jrO1a6UWr7gWzOFtMCPPmX81RQTgcsc06sU4yLCozxSKK2joUgc0yQkmdkHiEaR2+5o8L
-	 8q3oa8og+LYODb8R3JiIiQwi+O4KgQ2OfBz302mNr4MmmWedhD0Qb+UyZmhHvsjidyA/r
-	 GwoqkDJPy1iUHx0fqnFUWVKwBJW2cxMLujpx/q9f2jEEOj1e0g8wU75whxUUIiVd8HQ==
+	bh=njLkv7L7DZ1DconmI/jK0HeR4c+4UFpisnk1zk4PbAg=;
+	b=0Ybm/QVQkhfF3+vCg0fprwHAsTCP3c8//43xv1bnEEMWQ/SuuCbSAmtcJZHUijwheoqy
+	 3QBTpgVDrRJsT2o2PYeTQc0E1IVL1HfkqkuBLr/J8SDNxSVwwZ8VoBroo1bFCzyS9psk5
+	 EzRdQdiUbDNGCE7PETiUlJSgZ86pyZ3po0tHYSoDwF1zHA2dBZdS7W48RPK47nUS/iCVV
+	 vGJjkEZULF+86d2ZIB5YeucGFZoG/rl+YyzLAxh60Xi8gnro+1Znf80wQIiqjhEjjdUnh
+	 UrQg68/yWhRdHWuEJNDbbwnQA/9Q3gIsuBLY8J6pTufe2VUjxXv4e75aApf3hdrESIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yti4ohCy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I48TnUOB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9EE606D81C;
-	Mon,  9 Nov 2026 00:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D56606A326;
+	Mon,  9 Nov 2026 00:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yti4ohCy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B33781F00901;
-	Mon,  9 Nov 2026 00:29:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I48TnUOB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3F61F008A1;
+	Mon,  9 Nov 2026 00:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794184178;
-	bh=6a0Z6nyuyBsfHABultW9tj7jTuhqOSr/F6lhJVbRuaY=;
+	s=k20260515; t=1794184186;
+	bh=njLkv7L7DZ1DconmI/jK0HeR4c+4UFpisnk1zk4PbAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Yti4ohCyHRTquqjEVbaUze7eLLrfW8i6s9FhgNGfUt+4B6ClidjY9oad+spZajBoQ
-	 wN3Zp7YCZQoBoTeoD9aUyw9TZ/kG0Ir4u4quXa6BpNPVe7CZ9j2wNzXy8xBi40RvZt
-	 vJCtzNYV2CqcUuqEn3ROdYHzdVWPMvMQ5/gErsFgNlwUMfKKIfxO2DUjwaDyR4OH55
-	 fgqxCuPVfQXis5ktzrSJ5/4pRUbajXEJ8xaxe7w09xC4fI0Yx5YaMkCIx6PSgZU0i4
-	 XGX4Z5ApwGa1ecS6THY+5swUWVtoxsCHF/CEq2oYaK4MPfg0Oee3yDv5gYOb4xYV8A
-	 Agf+MG9YShcNw==
+	b=I48TnUOBfiorg8zDOnfdQKOvRXT4daK2+SW3h8d4b7rmydwppRHjenkbyUlef6ciq
+	 HtR+ibQ80iFvZzHGTJmOgJthj4V0eFL0snYim3Q43GT8WCsFsX/TfBQgVqIxoPRvr3
+	 HuTUwnoTI+dX85raP9t8j2N2h4dE0pQxrmR2G4f5w1ZHj6BsCcLCh+Bq57oMuOftyV
+	 rd9PF5mc+p6WuiytMbMychUv8wUEKMioRgVK62n+3mdPdpKfLvWkti8xOmhSmnAU54
+	 5Uko6msr0LpfwyGmyJCNsUKwiyox61h7oHrUUuaQlr3jjQvhSRrxsipnBYq9/gBmw2
+	 ZvdTI/9KkTmZw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 10/12] tracing/probes: Reject empty fetch expression for %pd and %pD
-Date: Mon,  9 Nov 2026 09:29:34 +0900
-Message-ID: <179418417434.227715.12236366534299353963.stgit@devnote2>
+Subject: [PATCH 11/12] tracing/probes: Validate command prefix in kprobe, uprobe, and eprobe
+Date: Mon,  9 Nov 2026 09:29:43 +0900
+Message-ID: <179418418328.227715.10680131052179044845.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179418408457.227715.1485179201014819821.stgit@devnote2>
 References: <179418408457.227715.1485179201014819821.stgit@devnote2>
@@ -67,41 +67,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When an argument ends with :%pd or :%pD but has an empty target fetch
-expression (such as ":%pd" or "name=:%pd"), traceprobe_expand_dentry_args()
-still expands it into an invalid nested dereference expression. The
-subsequent parser failure then logs an error position pointing into the
-expanded internal string past the end of the user's command.
+In kprobe, uprobe, and eprobe creation, trailing characters after the
+command prefix ('p', 'r', or 'e') without a ':' separator (or non-digit
+characters before ':') are silently ignored, creating a probe with the
+default event name instead of reporting a syntax error as fprobe does.
 
-Reject empty %pd and %pD fetch expressions upfront before expansion.
+Reject invalid characters following the command prefix with BAD_MAXACT.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/trace/trace_eprobe.c |   10 ++++++++--
+ kernel/trace/trace_kprobe.c |    3 +++
+ kernel/trace/trace_uprobe.c |   12 +++++++++---
+ 3 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 67453d0121c9..6e4fe9f6c722 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2434,11 +2434,17 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
- 		if (!tmp)
- 			return -ENOMEM;
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index f65393fb1c10..f65da7b3adf4 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -846,12 +846,18 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  
-+		arg_len = strlen(argv[i]);
-+		tmp[arg_len - 4] = '\0';
- 		equal = strchr(tmp, '=');
- 		if (equal)
- 			*equal = '\0';
--		arg_len = strlen(argv[i]);
--		tmp[arg_len - 4] = '\0';
-+		if (*(equal ? equal + 1 : tmp) == '\0') {
-+			trace_probe_log_set_index(i + 2);
-+			trace_probe_log_err(equal ? equal + 1 - tmp : 0,
-+					    BAD_FETCH_ARG);
+ 	trlog = trace_probe_log_init("event_probe", argc, argv);
+ 
+-	event = strchr(&argv[0][1], ':');
++	if (argv[0][1] != '\0') {
++		if (argv[0][1] != ':') {
++			trace_probe_log_set_index(0);
++			trace_probe_log_err(1, BAD_MAXACT);
 +			return -EINVAL;
 +		}
- 		if (argv[i][arg_len - 1] == 'd')
- 			ret = snprintf(tmpbuf + used, bufsize - used,
- 				       "%s%s+0x0(+0x%zx(%s)):string",
++		event = &argv[0][2];
++	}
+ 	if (event) {
+ 		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
+ 		if (!gbuf)
+ 			return -ENOMEM;
+-		event++;
+ 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+ 						  event - argv[0]);
+ 		if (ret)
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index a42af0e66009..35568d75723c 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -941,6 +941,9 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
+ 			trace_probe_log_err(1, MAXACT_TOO_BIG);
+ 			return -EINVAL;
+ 		}
++	} else if (argv[0][1] != '\0' && argv[0][1] != ':') {
++		trace_probe_log_err(1, BAD_MAXACT);
++		return -EINVAL;
+ 	}
+ 
+ 	/* try to parse an address. if that fails, try to read the
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 14ac52aebe34..3745eb07bd14 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -616,9 +616,6 @@ static int __trace_uprobe_create(int argc, const char **argv)
+ 		return -E2BIG;
+ 	}
+ 
+-	if (argv[0][1] == ':')
+-		event = &argv[0][2];
+-
+ 	if (!strchr(argv[1], '/'))
+ 		return -ECANCELED;
+ 
+@@ -631,6 +628,15 @@ static int __trace_uprobe_create(int argc, const char **argv)
+ 	if (!arg || !isdigit(arg[1]))
+ 		return -ECANCELED;
+ 
++	if (argv[0][1] != '\0') {
++		if (argv[0][1] != ':') {
++			trace_probe_log_set_index(0);
++			trace_probe_log_err(1, BAD_MAXACT);
++			return -EINVAL;
++		}
++		event = &argv[0][2];
++	}
++
+ 	trace_probe_log_set_index(1);	/* filename is the 2nd argument */
+ 
+ 	*arg++ = '\0';
 
