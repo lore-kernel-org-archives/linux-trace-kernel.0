@@ -1,79 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.62.57.137
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794215558;
-	b=IaHfs6G/bJdqfBw75pW6Me9PFNDmRi9A6yiea0TlIVKeaUcUpxtoCeXLkrzaJlVjzZli
-	 krBsMXdSGydJulT1WTAQ9BcTKm40qr6sy5QRtnle3PcJTv7DGlf1CTHyanxcIztffK4d8
-	 hrxxO681swEw7FEMvEgcvpuX31KyBpQvH+2wBs6vogH0edsrrP8Ch+2KlFyyCZDG71wz6
-	 2QTQWjJXbLyc6XmvBu1k655t6yzJ0rF2OPD9445SVe4I+Cr0/gRXEQiHK0UxsGgE6hk+O
-	 d4FsrWU+8H83RNBFy/DWK39LYTP+KKRM5CaP7a7yjUAlWNLolITJ3kSFNUcQQniSJ/g==
+	t=1794216104;
+	b=w8UW6eI5+KGmmHbyDEDg+b5pr5axRMlKOgMpdifzHjJuwhGk4/bOcoSTrjf6gDz1S3lj
+	 AT1pRvlsfbLp5OnIGLEccJntutS4bm1UFC0Yo0ILlk56fozvJri1Igj6dvn8rnzM7rTM6
+	 rihOAdv9flSwVE/4CjsgoicOeT3LtCxr9Ecm6cdaNyTrZnGJSnR7UQmEg3CXmfMYRj8xS
+	 iGbjGxuBcs6joqs6JEaWK3t+RdCepqtyPGoSYTFv/IFfX2ND8ay10jEsQs9VA4/L0LWYa
+	 dK//3hic8WhGtVNY9Da+Kd0SedWUBxqALBlHnc47LHuQq8rHjywAwCiDw0CW8pSIiNQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794215558;
-	h=DMARC-Filter:DKIM-Signature:Received:X-QQ-mid:Message-ID:
-	 X-QQ-XMAILINFO:X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=SCvXMsDg9UNfRJ3IbJ5geqOMg/Tb5+bzgdLYDGqXhJs=;
-	b=arC1f+fwAPScyBMGiuWFrkvC9ZQ40vKDhzul3I4l6+rmzQwtTQnrMs+3hIU4Qk6Vozpy
-	 tOeZX28myLmnJtEYwAHii7Z+4nnCyCeCTW2xlg9byoLr5FAIR3K3cAsgqnLuygYQ86q5M
-	 8XXmGanGZgz1Fi+jQw+63f0xvgqhQeqnMoAJEV8lr3VzD41zgZHBeyjL4cLp99YCifI4A
-	 S7IrKn8mq6DfEXkYACJx8hX/Kc6hqJicJYoS4+Zf5H6jbNk9zuFLOvVQBDFsuy6bgqR/i
-	 t9xIiAkKs4Zi/LbDKpZIGgmCaFknIEPfG0UM/lS3+hDPmk1nScFmkAmBdvNKXQuO69w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794216104;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=BP2nz3kgTNIKOGPU8LXmrMB/68D5MLYO7PO06upXzGc=;
+	b=FEvuyZj7NnPpcok82QSqarXtz63n9HbPXN7E2CdBN1ejcESHIKBOHWkQTEYrkPKrRxkh
+	 3nSclyf2b+MUS/8GwCii3P1EXhZzOeesK6tzvdr3piSEakJSx2nBmvGvtYUAwGLtf4G68
+	 aj5lNksaknqwF3iQ21bFDsFcJDr+lFBIuIgSMtbDA8Guhnt+V0vssgNY54dosRLBNVp93
+	 /Kv0bHzZUNxxCjxlbOUdwoypej8BMkHPnOsY2EASKnE2jR1N8sFjI6aiCVUzg3cNKThnO
+	 1YY+/fXRTiLMCGRWRFDtIBgTkDu/tmWR5ONriR5o674mfe2F2/G289JFaWhUfP7soew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=qq.com;
-	spf=pass smtp.mailfrom=qq.com;
-	dkim=pass header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=HMrqFvMC;
-	arc=none smtp.remote-ip=162.62.57.137
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=EsFCmFLS;
+	arc=none smtp.remote-ip=209.85.221.49
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4772606A31C;
-	Mon,  9 Nov 2026 09:12:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4772606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D303606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 09:21:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D303606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=HMrqFvMC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1794215545; bh=SCvXMsDg9UNfRJ3IbJ5geqOMg/Tb5+bzgdLYDGqXhJs=;
-	h=From:To:Cc:Subject:Date;
-	b=HMrqFvMCyfbTLWoLONUHM06pYJ6Ht0ao05S7tOGdLUEvANGuguh1+Hr0+OMfTLlgY
-	 QsiLUYKBnw7WrMovxwgkYapyVhuUtcrgDLsy6dZPUPU63F+aSm5eWQiULHonHBiBey
-	 bn5CPW/V1N0Vwq0B8o1RB6Lgs2rowazEorosxOl8=
-Received: from shuai-VMware-Virtual-Platform.. ([218.28.192.28])
-	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
-	id 3168D8C7; Mon, 09 Nov 2026 17:12:22 +0800
-X-QQ-mid: xmsmtpt1794215542tlhkaodfi
-Message-ID: <tencent_CEA7FC52933C6E9D98CB44A9FBB9F40D0B06@qq.com>
-X-QQ-XMAILINFO: OV1Zg0ZxpCRs8rM4l+kYyWhdHPfks5H0Hipq15lPHJX6KmBtpp4q+AnL0DkFW8
-	 YWnOJFG/xR5n4tSk+35y8OvtnpxCsko1Cdo4jdtQ8PPLo83BPX+4ZE/2fooqUsRHkusl2cD8s90y
-	 2abk0/fWa1k8X4V1xZsxvu17vFs71kfrVMKLupBuyFHPG/BJ6k17Dy+hbo1uiCF2uMhB4pQ1PlXv
-	 xUFG1d6rxc+LhXipyqdNiOGXoYWE89zKbMtYjtFDlCucOwBOxU85+S8JkDB3lAOqXTWGOolEI3Jw
-	 X5MFGJz33nKs4RwZkm3NMoa+i27eRuphnwChbenhzr+m/xQwZwoJcvEL1Hydxr+lrfbZAf+fag6p
-	 fOD3LKXmsjPIHvlWJqy5wUm9We8ewbSPKWPDEV3hiDX6dEqh9msrANy0wS0P85Bv/Qnsuo3N4iNs
-	 ptNWWptMpKb0ENrOjKoMIutmlid4Y5UaNX0ey0jJGyXPACpMCTEFJMmHFOVMgaLLuO2DXpRRLSO6
-	 ihpgpz11vemONuUlnvvtectaNKXHFQW3da4mMMqIBKGQfgd4izHIKuLtwx8Mnan3UenFtnHuhlWp
-	 f4A4i08nLUFhvAThQGa06SXba7WvpHWmKUPLP3wU0C9jLQqzGJ6ZidNOZdH1KcP02MxGKvsKtcoa
-	 hH6/sCxyh6CAwpptnm8W+RMGK4fTHV0L4/hHHFikyMPGm/5LmG/dlKe1gJ+Jvx2tLs0+q/t55403
-	 7pKS8Ub4pZHo5YjCw3srXb5ao3YiaNu/6AbQbWnVjrqw9tZ6u4Opil/eMnfwzf7Has16aZNoEdcJ
-	 bs8jXxb+ojo3ngc+Yt7GWqxzaYHAn2rBHNWarjx5cGcdDvpVU2IKQu3GfRSmUTOs2bz06asu1UAz
-	 HSU6fki0YfdrrWTw06FWIqh1aj971iEg/LD6a9W6jb8qj9B//Yhzxke2kGQQ7MLOzf/11Zz0s1zC
-	 vz77WLtKEw00OGErm94ZjGbZmFO+fKFKRuAEFzs7LIIeaGzIraJ3WSfC+NFS/7iIEpYdzN1lTB5G
-	 0gxGpk3e13ABYCekn9B+e9n1XWaB78spJ49ecI22emGptIWhE3Xncq81J+yFnaMpVIVqfHLKoLGb
-	 DF7DQ1w/0x3ujevGF8kuHvLD7SpH9SMdNHC/2w5zI4O0xvoZKAF6CJ6dcxYTna+3YBLS8P
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
-From: Shuai Liu <847807867@qq.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	vdonnefort@google.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+008851bf625629489e75@syzkaller.appspotmail.com,
-	sashiko-bot@kernel.org,
-	Shuai Liu <847807867@qq.com>
-Subject: [PATCH v3] ring-buffer: Reset per-CPU buffer state in ring_buffer_subbuf_order_set()
-Date: Mon,  9 Nov 2026 17:12:22 +0800
-X-OQ-MSGID: <20261109091222.266391-1-847807867@qq.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=EsFCmFLS
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48b001cd92bso239762f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Nov 2026 01:21:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794216102; x=1794820902; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=BP2nz3kgTNIKOGPU8LXmrMB/68D5MLYO7PO06upXzGc=;
+        b=EsFCmFLS53/z9iximGOpKSrrXAb1ZChn3+Q5On2+uJUibmwhch4tyLyNg824nwwhtx
+         GBeGCejsh7Y2Y63iEMp9/VJ5DUyMtzSpzMlwXC0GdollJcK+zxQWposcfpB8zQ/rQwXE
+         eHBP3aCIgV0HyigxlTHnc3Uw3H9uKtA4v/pkNTn4XgDNyaZOcmSjNmIoreuKAyoV+Wf7
+         s8jSGyBC0irfEuo6NZcVXmc/HIg8FP3qqfVZDzAdDZgHmtZEfSxT9GAL1c6LKswWWapT
+         Gv7qpId+xp1Fdl1FXdLvnhzyAhOO7Pzr9wNfU6x8I/9V3HZ4QkFXjq3OpjA+HWakd4De
+         BLsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794216102; x=1794820902;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BP2nz3kgTNIKOGPU8LXmrMB/68D5MLYO7PO06upXzGc=;
+        b=Y6JFVKrJT6cLtlubeFlFYIMw2ms59R/yn3SKJgHv+M27yP0EMved70ApQMntVEjP92
+         NaESUOsbS2on1ixQwt/WGrBTXxKRG4POkQIji2hfXWqjxT4Gw7fSuOLIA8rMD+frn2UB
+         YQ4yLc7JwiV+qJSyhQg+fjOPkt4AfYMCYhSCjwuNTm096Zwi14OD/PXxNsI4ZFhf86b8
+         S350jU6+tJSf1Qo0FU+LauMresuktHU1cWYq51fTdQ4rRxMQ9gOkpvKmv9iVpYgm8UYR
+         2twpP5z5ls7YCFrPaQVi8Y2G7yTZl6hlEOaMYa2krR7Sohh2OxUxeH6HnixSXCoVaImY
+         WBzg==
+X-Forwarded-Encrypted: i=1; AL+hErFh+VDvsuX6xoDXtNHaoibSbIqGass8oK95jybDHg4R3O7LcPoGQmIbqKmE+PYBBqDAMN+kR8f7hE1J63sG7ewhNHs=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+savbC8Yvqzc1tR4Z8PVSYfhcMizs9JK0jNRGyf8NBI51MkNQE
+	SxjkEd9c/F/VT9NY2ATQOmJtwi2JIScSA9GhtlL3eoNrD4Z67qEH05tyj+ubYSq9V/IxSJycnXl
+	kZ+Eiig==
+X-Gm-Gg: AYBFou3lYizpHXasE0m7vfTeNG67LtYQH0KECikZWe9TK9Z4gtb7cDk62135k3oejRY
+	PXtXdet29SunFRWmr66G7yaRfHGPR5K7DltuaeycCAs2JN7vqx/okGmHw7a3JskpG9CwwF4Uojs
+	DJ0rEAv9lUNJINc2YORIJPseFahi+WOuFuvPk+C/p0PudRgitCkVpqDB8X18+Cl6TmnZxUIkYTz
+	y1okphoShL00DVOJvn71M7iw+xBuu/CDysX+t42ufFgV+bKYLg6HLTT3DT7zHFfEZWeX5BE6EEH
+	jmZXvSO4wMfdk7Unr0y55lMSb4cj8D9Sg6rH8pjVj3vogNlbjlx3P0f5clWp4uu6nps3M7Yg+/M
+	orAIZT/fDvxJ124QY1881MrKlEUvK3TbxshUFo+Vk5rZQQsGoLzqs3jnKjCwTJ+RefM4oEWw5iE
+	ITKgjWQPGpR6xGOCks3nzD+mMRWLC6x8uLIEcDaTVLRTfmtMmjvqVVRC99KY4SWkb++dwW3jDjx
+	YO/Vui+rEEGjmqRynoNpOl5n3c96S0pblOAxKeX/wTMw7VcpEQaibeM5Q5IzdOiI61areic46t5
+	xL0vzyetMhMZoevryXazt9VLqRQtAbyf7cvuj934nAL3sjnNW4moVgAAp3HDXjmi
+X-Received: by 2002:a05:6000:40d9:b0:492:46e:d4ce with SMTP id ffacd0b85a97d-4958a01601dmr6811090f8f.13.1794216097055;
+        Mon, 09 Nov 2026 01:21:37 -0800 (PST)
+Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49596acf59esm8986229f8f.23.2026.11.09.01.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2026 01:21:36 -0800 (PST)
+Date: Mon, 9 Nov 2026 09:21:32 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Breno Leitao <leitao@debian.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Steven Rostedt <srostedt@redhat.com>, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] ring-buffer: Handle a reader taking the new head in
+ rb_handle_head_page()
+Message-ID: <avGQnBjyUMwunknT@google.com>
+References: <20261105-ring-buffer-head-moved-v2-1-05da40cebccc@debian.org>
+ <20261105155729.0f9c7e4d@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,75 +103,192 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261105155729.0f9c7e4d@gandalf.local.home>
 
-ring_buffer_subbuf_order_set() replaces every page of a ring buffer
-with newly allocated empty pages when the sub-buffer order changes.
-However, it does not reset the per-CPU accounting of the discarded
-pages. The stale counters (pages_read, pages_touched, pages_lost,
-entries, ...) continue to describe pages that no longer exist.
+On Thu, Nov 05, 2026 at 03:57:29PM -0500, Steven Rostedt wrote:
+> On Thu, 05 Nov 2026 03:12:42 -0800
+> Breno Leitao <leitao@debian.org> wrote:
+> 
+> > The following warning occasionally fires on a KASAN-enabled debug
+> > kernel in Meta's fleet:
+> > 
+> >   WARNING: kernel/trace/ring_buffer.c:3793 at rb_move_tail+0xf78/0x1050
+> >   Call trace:
+> >    rb_move_tail+0xf78/0x1050 (P)
+> >    __rb_reserve_next+0x648/0xac0
+> >    ring_buffer_lock_reserve+0xd00/0xf00
+> >    trace_buffer_lock_reserve+0x28/0x188
+> >    trace_graph_return+0x220/0x3e8
+> >    ftrace_return_to_handler+0x2bc/0x5a8
+> >    return_to_handler+0x20/0x48
+> >    __arm64_sys_sched_yield+0x18/0x30 (F)
+> > 
+> > rb_handle_head_page() moves the head page forward in two steps: it marks
+> > the pointer to the old head page UPDATE, then marks the pointer to the
+> > page after it (new_head) HEAD. The second cmpxchg is assumed to return
+> > only HEAD or NORMAL, but it can also return RB_PAGE_MOVED:
+> > 
+> >   CPU 0 (writer)                        CPU 1 (reader)
+> >   ------------------------------------  --------------------------------
+> >   rb_handle_head_page()
+> >     old head ptr: HEAD -> UPDATE
+> >     new_head = page after old head
+> >     <interrupt: nested write>
+> >       sees UPDATE, marks new_head
+> >       HEAD and moves the tail page
+> 
+> Wait? The interrupt should never change UPDATE to HEAD.
+> 
+> Something else is broken here. Because only the one that set HEAD to update
+> is allowed to set it back to NORMAL.
+> 
+> >     </interrupt>
+> >                                         rb_get_reader_page()
+> >                                           swaps new_head out for the
+> >                                           reader page
+> 
+> 				This should not happen. The entire point of
+> 				setting the pointer to UPDATE is to prevent
+> 				swaps from happening when any commit is in
+> 				progress.
+> 
+> The rb_handle_head_page() even states this:
+> 
+> 	/*
+> 	 * If this was the outer most commit (the one that
+> 	 * changed the original pointer from HEAD to UPDATE),
+> 	 * then it is up to us to reset it to NORMAL.
+> 	 */
+> 	if (type == RB_PAGE_HEAD) {
+> 		ret = rb_head_page_set_normal(cpu_buffer, next_page,
+> 					      tail_page,
+> 					      RB_PAGE_UPDATE);
+> 		if (RB_WARN_ON(cpu_buffer,
+> 			       ret != RB_PAGE_UPDATE))
+> 			return -1;
+> 	}
+> 
+> 
+> 
+> >     cmpxchg(new_head|NORMAL ->
+> >             new_head|HEAD) -> MOVED
+> >     RB_WARN_ON()
+> > 
+> > A nested writer that interrupts the outer one after the second cmpxchg
+> > still sees the old head pointer UPDATE and repeats the second step. If
+> > the reader swaps new_head out just before that cmpxchg, it returns
+> > RB_PAGE_MOVED too.
+> > 
+> > RB_WARN_ON() permanently disables recording on the whole ring buffer,
+> > and the outer writer returns without clearing its UPDATE flag.
+> > 
+> > In both cases another writer has already moved the head off the old
+> > head page, as when the cmpxchg returns HEAD. Treat RB_PAGE_MOVED the
+> > same way and fall through: the outer writer still clears its UPDATE
+> > flag, and the caller updates the tail page as usual.
+> > 
+> > Fixes: 77ae365eca89 ("ring-buffer: make lockless")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> > Changes in v2:
+> > - Fall through on RB_PAGE_MOVED instead of returning 1, so a nested
+> >   writer still moves the tail page (Vincent)
+> > - Drop the duplicated UPDATE clear (Vincent)
+> > - Document RB_PAGE_MOVED in the "Valid returns" comment (Vincent)
+> > - Commit message improvements
+> > - Link to v1: https://patch.msgid.link/20261102-ring-buffer-head-moved-v1-1-165973790be4@debian.org
+> 
+> From your v1 comment:
+> 
+> > A nested writer and a consuming reader can race so that the second
+> > cmpxchg of a head page move in rb_handle_head_page() returns
+> > RB_PAGE_MOVED. That trips RB_WARN_ON(), which disables the ring buffer
+> > and leaves the old head pointer flagged UPDATE. The patch handles the
+> > return like the RB_PAGE_MOVED case of the first cmpxchg: clear the
+> > UPDATE flag if this writer set it, and retry.
+> > 
+> > Testing, on arm64 KVM guests under virtme-ng (32 vCPUs, KASAN config,
+> > next-20261030; kernel/trace/ring_buffer.c is identical in v7.4-rc1):
+> > - Setup: function_graph tracer filtered to "*sched*", buffer_size_kb=7
+> >   (two pages per CPU), overwrite on, a trace_pipe_raw reader on every
+> >   CPU plus a trace_pipe reader, and stress-ng --yield/--timer/--futex.
+> 
+> OK, I think I see the issue here. I believe the reader is finding the wrong
+> head page. Making the buffer really small can make this scenario happen
+> more often.
+> 
+> The problem is where the reader thinks the "head_page" is. When the reader
+> swaps out the page, it first looks for the "head_page". The head page
+> always has flags set in the pointer to it, so before the swap, the reader
+> will search for the head page.
+> 
+> It starts with the cpu_buffer->head_page pointer which is where it found it
+> last. It then searches for the head page and when it finds it, it tries the
+> swap. The swap will only succeed if the pointer is HEAD.
+> 
+> The issue I think you hit was that we have two HEAD pages, when interrupts
+> come in. That is, we can get a state of:
+> 
+>   --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
 
-A full waiter (e.g. poll on per_cpu/*/trace_pipe_raw with
-buffer_percent set) then causes ring_buffer_nr_dirty_pages() to read
-the stale accounting, and the invariant pages_read <= pages_touched -
-pages_lost + 1 can be violated, which trips the WARN_ON_ONCE() there:
+How we can end-up in this situation? The cmpxch will only swap HEAD for UPDATE. 
 
-  WARNING: kernel/trace/ring_buffer.c:866 at ring_buffer_nr_dirty_pages
+> 
+> With the expectation that the reader will never be between those two
+> pointers and it will always find the UPDATE before it sees the new HEAD. But
+> since only the reader moves the cpu_buffer->head_page around and the writer
+> does not, we can have a stale pointer of this:
+> 
+> 
+>   --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
+>                                       ^
+>                                       |
+>                             cpu_buffer->head_page
+> 
+> And when the reader looks for the new head, it will find this:
+> 
+> 
+>   --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->
+>                                                        ^
+>                                                        |
+>                                              cpu_buffer->head_page
+> 
+> And possibly swap out the head page before it is allowed to.
+> 
+> To prevent this, I believe having the writer move this pointer will keep it
+> from being stale and ending up between the two.
+> 
+> Can you try this?
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index c64e001c3fc0..f0bb2d23d818 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -3721,6 +3721,14 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
+>  		local_sub(rb_page_commit(next_page), &cpu_buffer->entries_bytes);
+>  		local_inc(&cpu_buffer->pages_lost);
+>  
+> +		/*
+> +		 * To prevent a stale head_page from being between
+> +		 * the UPDATE and new HEAD pages, set it here to have
+> +		 * the reader check always find the update before
+> +		 * finding the HEAD page.
+> +		 */
+> +		cpu_buffer->head_page = next_page;
+> +
+>  		if (cpu_buffer->ring_meta)
+>  			rb_update_meta_head(cpu_buffer, next_page);
+>  		/*
+> 
+> We may need to add memory barriers here, but for now, I think this could
+> fix it. As it should prevent the search from ever starting in between the
+> two heads.
+> 
+> -- Steve
+> 
 
-Since the old pages are gone, the buffer state after swapping in the
-new pages is equivalent to a freshly allocated buffer. Replace the
-manual head/tail/commit page assignment and the rb_head_page_activate()
-call with rb_reset_cpu(), which performs the same page setup and also
-resets all per-CPU accounting.
-
-Verified on QEMU (x86_64, v7.4-rc2): enable sched_switch events,
-partially consume trace_pipe, set buffer_subbuf_size_kb to 32, then
-poll trace_pipe_raw with buffer_percent=50 while writing events. The
-unpatched kernel triggers the WARN above, while the patched kernel
-does not, and the per-CPU stats report a clean buffer after the order
-change.
-
-Fixes: 8e7b58c27b3c ("ring-buffer: Just update the subbuffers when changing their allocation order")
-Reported-by: syzbot+008851bf625629489e75@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=008851bf625629489e75
-Link: https://lore.kernel.org/linux-trace-kernel/6af009ed.4dd4714a.f8d02.000d.GAE@google.com/
-Signed-off-by: Shuai Liu <847807867@qq.com>
----
-Changes in v2:
-  - Fix the Fixes tag: the stale per-CPU accounting was introduced by
-    8e7b58c27b3c, not 2808e31ec12e5 which only added the interface stub
-    (Sashiko)
-
-Changes in v3:
-  - Drop unnecessary comment above rb_reset_cpu() (Vincent Donnefort)
-
- kernel/trace/ring_buffer.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 75cd8df23c1b9..4437b8b926c11 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7548,10 +7548,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 		list_del_init(&cpu_buffer->new_pages);
- 		cpu_buffer->cnt++;
- 
--		cpu_buffer->head_page
--			= list_entry(cpu_buffer->pages, struct buffer_page, list);
--		cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
--
- 		cpu_buffer->nr_pages = cpu_buffer->nr_pages_to_update;
- 		cpu_buffer->nr_pages_to_update = 0;
- 
-@@ -7560,7 +7556,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 		cpu_buffer->free_page.data = NULL;
- 		arch_spin_unlock(&cpu_buffer->lock);
- 
--		rb_head_page_activate(cpu_buffer);
-+		rb_reset_cpu(cpu_buffer);
- 
- 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
 -- 
-2.43.0
-
+Vincent
