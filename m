@@ -1,57 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.247
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794185249;
-	b=FkyWyafUFt7cHoGo1aZCjM111yCQBUZqRgaqfbDaiPO2uOVQ3131MBLsEO1UEwY6JvFt
-	 m8rcNi4gZ51GWd9YeLQIUuo/u0s9VOJUspMKbILLO5TcNwsBYXvDvWukAEWhWL2DATN48
-	 1JVe2Wg8AOtGVTnw1PKU5tETz5CYCH93Se7zFrib0JbwR2kuUr57JF/ji2eyPtmduvqWu
-	 xTM95ynhRjMjAD1Um7Cfs1XTbnCUAITih1XxZWxXbUrPK4PFbp7fIDQOQ3KS2ZoOZo2Im
-	 ttt+pnCMdC6rsTuz5isOgoibfunNgexd+p3tBsXq7m8gkUGjiZZ5qaEFiSZaTNSsevQ==
+	t=1794190995;
+	b=PreCe95Zd+UcEiPldqOKGNvvFXVbmKL6aXcoNaWqkTM6kUIJDQ4bxDEq1xly7Xq9eUcr
+	 kxPv25WOzEArIlpw2pVwbWa5S37wTEpyS7Zhofg9ddcCXf3HKTjtnWzbqr0fyaKtc2aof
+	 nKvZv5Cu9qLXprazGU5y/NX3NKLubpN8mT/21gLaOvnHUNWDyWn2olREpCVhB1ARjkPcy
+	 BBGlXLqwy6qpyQQgR+xV9Uor8fVYu72QUb/jqM0rGQ4K0vFJ5zM8newSJH5JKpYPnzzDm
+	 Kv3HJi1E9nNV6ghWZak4VpSMeo+LiBOXFTiTksjwDOzL1cfEhkbhRcHBVmUADAhigzA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794185249;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=23t6IVDbT2Ob9CsJOC8vIobPRm925WN5LySUff0XbtY=;
-	b=xNFsh0E63JBmZadQ3MLA7McIlbyMBr032wvhAqLpVav1y64qjyuXlV2GZNdcyF1hgh4G
-	 PlyLPKZVl3mTUP32K98V/kYQFB9qFiX/UCiCfquN9SrfM7tgLEYQcWmdLawDjg3cDQdF9
-	 mZ+H3Z+4I7+7hIKQTSnoH1ZZvhZ/P8d/TMmw+nQInHGlNb3LkrbLg/zLxfDC++7qDbzWC
-	 8PH/cbcSxfYxjDGJPC6fdcLQmmUZ7khOwYUZYxLkZdD/D0WGEyiLJnBls9SLDTTXw6TvW
-	 dipWQIxEuqUerRqA2ls5DS8S05I4fZKsp89+fq6mt6gIMFjcHFxtwSxBfeeND2rw4fA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794190995;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Cc:Subject:To:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=616SavEERcf0wLBB3MtaB5Vjvy14ra3RY8LHIRO6Zwc=;
+	b=bi180/wIcJlJWBL3CBKaEieO+uxO2FAyH5jrZESbfMAN2Y2XlT/Cu00HGyOd/jOG8JNo
+	 4lrR0m4tSuhIuoTrjuSlLc72LudQ/PvFH+k7NY2LiNCk+dHHsU3L3Hw10CpSgoKg4WKGr
+	 G/vRTLzNXbvnPMb/1iRJU0IT9Fy226gCeZR/BWfGmVfgc1OIp44qPW/+JPUTmKPsXQmVg
+	 ULAh1jyaKp0AYNBL3tWZJ/A0IaaiCTP+L3wGzWhJ7jpznw5oDBOQKaPKpYrHAmCjGcgct
+	 AH0pyt6vr+M3FAkSsNdYoRSmWw8ntXUNCRbcF+A9uiDo5TbgSr2OgItfgZHDlEqY9VQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XLgBcTm1;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xM+kWndo;
+	arc=none smtp.remote-ip=91.218.175.247
+Received: from mta0.migadu.com (out-247.mta0.migadu.com [91.218.175.247])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30B606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 00:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF13606A321
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Nov 2026 02:23:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ADF13606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XLgBcTm1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 613931F0089F;
-	Mon,  9 Nov 2026 00:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794185248;
-	bh=23t6IVDbT2Ob9CsJOC8vIobPRm925WN5LySUff0XbtY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XLgBcTm1DGB0rj/L86P1T0L2vxObSUGtFNgrBmDcWRQ+oJo8xrSUQ1LUtwnxtcAal
-	 iHX07MJ2iCwqvnsTUPelcwcbSL4DeXHv0lkFrZ4efbDIwTM4GZhcZZ0JUeR5wjM3jn
-	 VaFafmnzjZ1mxYKmCZe/yY5i0mTSpAFAvLLImYQ+RzLMNq4ukU77c10jb1YtGOF6/v
-	 iofo4pkU3+9HLqZFz6ur1qvOWrEona0+DhKWZDWBcj4O3pPxpibTQ47jwzDDO19yzU
-	 ZmYoOJZnBAQ4uIEHQnxRyaacTKYJMBK0XJ29MleMJOQwjr180kohcbyaLVy6wu7mTt
-	 LXEzVoOVXTxoA==
-Message-ID: <sashiko-outbox-204257@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 11/12] tracing/probes: Validate command prefix in
- kprobe, uprobe, and eprobe
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179418418328.227715.10680131052179044845.stgit@devnote2>
-References: <179418408457.227715.1485179201014819821.stgit@devnote2>
- <179418418328.227715.10680131052179044845.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 00:47:27 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xM+kWndo
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=5wreqCYW4ZBo70/LRl2EgOAhGbY7eNZsCbsiZu1vgfk=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794190992; v=1; x=1794795792;
+ b=xM+kWndod1z2Bk3XjnVdMLp7WfWv/br1i8Ab2oUCjf2uJ10UFHT0jXjkFUcieB/z36P9nh8f
+ EY0OQT+rLkczRKQh8G8tHQLu8biBduodhBkSLvu5uScRcaV1uSp+dY0nrtc1OhsTs5w7F2FZ5Et
+ rvlnCT1TQzueZEZrI3pi5k7s=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 68f29b38e50f4bf4;
+	Mon, 09 Nov 2026 02:23:12 +0000
+X-Mizu-Trace-ID: 68f29b38e50f4bf4
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <91c8d6b5-9496-4c0f-b81d-ac31fbe2748d@linux.dev>
+Date: Mon, 9 Nov 2026 10:22:59 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,79 +57,86 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] blktrace: require CAP_SYS_ADMIN for the BLKTRACE ioctls
+To: sashiko-reviews@lists.linux.dev
+References: <20261106142852.3233950-1-cui.tao@linux.dev>
+ <sashiko-outbox-201597@kernel.org>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <sashiko-outbox-201597@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Medium] tracing/uprobes: memory leak in __trace_uprobe_create() [1]
---
+Hi，
 
-commit d4f1d831d5c45144f78113e0b3ef37e7d6dc9844
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+在 2026/11/6 22:39, sashiko-bot@kernel.org 写道:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] blktrace: missing CAP_SYS_ADMIN check in sg_ioctl_common()
+> --
+> 
+> commit 8392196724a6f06dfb860d63cf54fba3357cc04e
+> Author: Tao Cui <cuitao@kylinos.cn>
+> 
+> blktrace: require CAP_SYS_ADMIN for the BLKTRACE ioctls
+> 
+> This commit adds a CAP_SYS_ADMIN capability check to blk_trace_ioctl() to
+> restrict block tracing ioctls to privileged users.
+> 
+>> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+>> index 8cd2520b4c99e..c1bf8ca350fee 100644
+>> --- a/kernel/trace/blktrace.c
+>> +++ b/kernel/trace/blktrace.c
+>> @@ -927,6 +927,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
+>>  	int ret, start = 0;
+>>  	char b[BDEVNAME_SIZE];
+>>  
+>> +	if (!capable(CAP_SYS_ADMIN))
+>> +		return -EPERM;
+>> +
+>>  	switch (cmd) {
+>>  	case BLKTRACESETUP2:
+>>  		snprintf(b, sizeof(b), "%pg", bdev);
+> 
+> [Severity: Medium]
+> Does checking CAP_SYS_ADMIN only in blk_trace_ioctl() leave the sg
+> passthrough path in sg_ioctl_common() ungated?
+> 
+> drivers/scsi/sg.c:sg_ioctl_common() {
+>     ...
+> 	case BLKTRACESETUP:
+> 		return blk_trace_setup(sdp->device->request_queue, sdp->name,
+> 				       MKDEV(SCSI_GENERIC_MAJOR, sdp->index),
+> 				       NULL, p);
+> 	case BLKTRACESTART:
+> 		return blk_trace_startstop(sdp->device->request_queue, 1);
+> 	case BLKTRACESTOP:
+> 		return blk_trace_startstop(sdp->device->request_queue, 0);
+> 	case BLKTRACETEARDOWN:
+> 		return blk_trace_remove(sdp->device->request_queue);
+>     ...
+> }
+> 
+> Because sg_ioctl_common() calls blk_trace_setup(), blk_trace_startstop()
+> and blk_trace_remove() directly rather than going through
+> blk_trace_ioctl(), an unprivileged process with access to an /dev/sg* node
+> can still allocate persistent relay buffers and control tracing state on
+> the underlying request_queue.
+Thanks for catching this.
 
-tracing/probes: Validate command prefix in kprobe, uprobe, and eprobe
+The sg path is covered by patch 1/7 of the memcg accounting series:
+https://lore.kernel.org/all/20261106131829.3228926-2-cui.tao@linux.dev/
 
-This commit validates trailing characters after the command prefix in
-kprobe, uprobe, and eprobe creation, rejecting invalid characters with
-BAD_MAXACT instead of silently ignoring them.
+Originally these changes were part of a single series.  Since the
+blktrace capability check isn't itself a memcg accounting fix, I split
+it out into a separate series, but the corresponding sg_ioctl_common()
+change remained with the memcg patches.
 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 14ac52aebe346..3745eb07bd14e 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -616,9 +616,6 @@ static int __trace_uprobe_create(int argc, const char=
- **argv)
->  		return -E2BIG;
->  	}
-> =20
-> -	if (argv[0][1] =3D=3D ':')
-> -		event =3D &argv[0][2];
-> -
->  	if (!strchr(argv[1], '/'))
->  		return -ECANCELED;
-> =20
-> @@ -631,6 +628,15 @@ static int __trace_uprobe_create(int argc, const cha=
-r **argv)
->  	if (!arg || !isdigit(arg[1]))
->  		return -ECANCELED;
-> =20
-> +	if (argv[0][1] !=3D '\0') {
-> +		if (argv[0][1] !=3D ':') {
-> +			trace_probe_log_set_index(0);
-> +			trace_probe_log_err(1, BAD_MAXACT);
-> +			return -EINVAL;
-> +		}
-> +		event =3D &argv[0][2];
-> +	}
+You're right that the standalone blktrace patch is incomplete by
+itself.  I'll fold the sg-side check into the blktrace patch in the
+next revision so it is self-contained.
 
-[Severity: Medium]
-This problem wasn't introduced by this patch, but can __trace_uprobe_create=
-()
-leak tail [1] when generating a default event name?
+Thanks> 
 
-kernel/trace/trace_uprobe.c:__trace_uprobe_create() {
-	...
-	if (!event) {
-		char *tail;
-		...
-		tail =3D kstrdup(kbasename(filename), GFP_KERNEL);
-		if (!tail)
-			return -ENOMEM;
-		...
-		buf =3D kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-		if (!buf)
-			return -ENOMEM;
-		...
-		kfree(tail);
-	}
-	...
-}
-
-When event is NULL and allocating buf fails, __trace_uprobe_create() returns
--ENOMEM without freeing tail (which is not declared with __free(kfree)).
-
-[1] https://sashiko.dev/#/bug/linux-160fa01f-1d70-4f17-984f-1bbf039dd3df
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179418408457.227715=
-.1485179201014819821.stgit@devnote2?part=3D11
