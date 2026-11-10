@@ -1,47 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.97
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274681;
-	b=I4IdBwTfZWVZSMEt49Ti3pA0jkj00d3bwm9crb7wupovtev9FTp7dvvcSkb6i4VSDXmY
-	 d5ZEwk/TXurhwQ+EWinpB7nV9Nw+tKEXm5S5PP1qmxPdixU9+6jTku4wZ7MefFG9n61/E
-	 CSA/r9MbcozhiUvPJlTNNs+syUFyJiY8RhdLd8cwkdeAmTdi1Bb9yeux+o81eddy5+hCF
-	 P6b37RqLH7xjbVbfUi2AaQB5c6/BxU+tp1mVmvMJcGauOzHdJKTuNi4Kt2+S4Ge/Msg2+
-	 6LpT/xOi+HwKUa8PWbZAjKKVRJw8VwS7xpvMXp3Z2Pg4vN1ad7Fr5i37eW7H79tLpyg==
+	t=1794274693;
+	b=Oa7zTn7F2/veSrR50cSaRz5uzyJmq++2iouBbnYeevZFFQWl/SDcdjS4e5Y3ugrhR5/G
+	 mwO2LaM3JN9GSv8enfEdmcaPeWVLUxck9eF3ZIfNkkXWWXWTE6/0B77x+cqqxelY8FQiK
+	 uIM7/nSad3N6sprONS0GAB6dR4KmsT84fGVaO/MOvLxe3tRTNyCocyWvI5EfSv0W3aqoC
+	 +XdP8R1n6Q6KwZJLif0GWhqSOHK0EvcwtLnDa4Hjz/R8gHktZI5/IPHSNaffn0n+0eUeI
+	 ymB7XcNQ213JuKLd+tSfILz5xSlGQT7KKAKHCFxW3FWLbj2wjaoJoNgMT95uCAiRzOg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274681;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274693;
 	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
 	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=hparW8e8dCEdVdkvsPSYalHwRzpVNFBZ+OuZJj5uJX0=;
-	b=rSN3lUiXWh3NugnsQSQtHOTuDh+bv/CDT5l78AWQWDf+ubCv2CftiyI6DS+3dW+nnuPU
-	 6OBvo8aI8lyHYWOye8xboYiyBBRZDvW1SbLm515AWBLrZAxbxgqRerOGAaFCiuWAu/6/C
-	 6E6Y55f7lqki5xrZ/q9OhADH0hsK/T50RX1j1FHVZFbjTjKQvKUn7R+MxYp/qnAkyEZ/I
-	 F4A8XLXTYSUvDuCfWtG/eNLI+Vc19H9JjLR+ORG38zOtierDWnFoIVlzI+x54RydyGde/
-	 EsbdyVknngBsAYzze2AHEE5XCz15ZA2UZaDbqksBcEr3TTVESleNGOMQogiqysd0Ljg==
+	bh=Q5YmmtbM1SABAOm/KP4HYIEpTxCJv3hCI3XTZLN6lEA=;
+	b=22kvV/6/9+JwnZNb1Q8/z/cQFDqUb3aCrSazJJteXGYlJ9rgbzQv+SD3V5iWfJd048tj
+	 pFcHWT0yMWjbCU+SEOVGZKAaGzTwYv5/zFXihecjqqzEyjBteNVPzL84UhofrAkbGRhJc
+	 r1CZzPA8oEpLlXUa4/d0E9gN1Ev6mV9ELdRiIc1EcuDBo7dLQxDiZr8YRTeT+x2UrznvR
+	 vkbHIIwvg24eENmt8NMTQKaSXzgA+olFTXLDksPa6uABawST7svv4F3c2ThzwZk+qQGzx
+	 XScclJ5bNgqobtkMJZeXJhVN2eKtIjqU+Z92s0PPYzC2HFE4wtdPQPCfXy24GvmiZYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.alibaba.com;
 	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CywNxalX;
-	arc=none smtp.remote-ip=115.124.30.99
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tgHpt3i0;
+	arc=none smtp.remote-ip=115.124.30.97
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6820B606A31C;
-	Tue, 10 Nov 2026 01:37:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6820B606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D09360A260E;
+	Tue, 10 Nov 2026 01:38:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D09360A260E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CywNxalX
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tgHpt3i0
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1794274676; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=hparW8e8dCEdVdkvsPSYalHwRzpVNFBZ+OuZJj5uJX0=;
-	b=CywNxalXjvZi2M6RYiN7lM0nrQKXS0r23rhDdAU/fk0v/vLJ5i8ij9JPW+H75ix01IXn9PNtEwW7CGQ0OU2hdtfx6McGrDGdIpMQ+osxLMcvou+rKb1esQSJcQ2kAcdjOyB/e7rVKCeT949zzzsMPV+s6d2CBHsmrgLfusO/7p0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0XETOX.U_1794274671;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XETOX.U_1794274671 cluster:ay36)
+	t=1794274689; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Q5YmmtbM1SABAOm/KP4HYIEpTxCJv3hCI3XTZLN6lEA=;
+	b=tgHpt3i0o2bPdsXmVUsHIN7RVamzIAi8oQzF6lgvn2z0e1EsJhjLWsV/PhfL1FF9/c1XTHhQ2l/9UopJE6S4znCOE4KTRrtOrGKXWN6opEhgNQwkdol+BM7RLJ404HHHP685N1l7fF/DGLtwzysd0CWheYhlBE85WYEi/WU8nMM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0XETOX5x_1794274685;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XETOX5x_1794274685 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 10 Nov 2026 09:37:53 +0800
+          Tue, 10 Nov 2026 09:38:07 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: palmer@dabbelt.com,
 	pjw@kernel.org,
@@ -79,12 +79,13 @@ Cc: alex@ghiti.fr,
 	linux-perf-users@vger.kernel.org,
 	live-patching@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v7 00/10] riscv: Add reliable stack unwinding for livepatch
-Date: Tue, 10 Nov 2026 09:37:40 +0800
-Message-Id: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
+Subject: [PATCH v7 05/10] riscv: stacktrace: disable KASAN and KCOV instrumentation for stacktrace.o
+Date: Tue, 10 Nov 2026 09:37:45 +0800
+Message-Id: <20261110013750.36800-6-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -96,134 +97,49 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Wang Han <wanghan@linux.alibaba.com>
 
-This is v7 of the RISC-V reliable stack unwinding series for livepatch.
+KASAN records stack traces for every alloc/free, which means it walks
+the unwinder very frequently. Instrumenting the stack trace collection
+code itself adds substantial overhead and makes the traces themselves
+noisier.
 
-The series starts with three standalone fixes for the existing stack
-walkers: Karl Mehltretter's fix for arch_stack_walk() reporting the
-walker's own frame, its KUnit test, and a fix for the function-graph
-return-address cookie that Martin Kaiser asked to be split out. The
-main part of the series then adds explicit frame-record metadata,
-preserves the frame pointer through dynamic ftrace, replaces the
-open-coded stack walker with a conservative frame-pointer based
-unwinder, enables the RISC-V livepatch capability and adds the
-syscall-wrapper selftest prefix.
+KCOV instruments every basic-block edge. The unwinder is a hot path,
+especially with KASAN enabled, so KCOV instrumentation has the same kind
+of cost and noise problem here.
 
-Changes since v6:
+Mark stacktrace.o as not KASAN- or KCOV-instrumented, matching the x86
+treatment of its stack unwinding code. RISC-V keeps the relevant unwinder
+code in stacktrace.o, so a single translation-unit annotation covers the
+equivalent scope. This is a prerequisite preference for the upcoming
+reliable unwinder, but the change is valid on its own.
 
-* Rebase onto the current riscv/for-next (based on 7.4-rc1).
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+Tested-by: Martin Kaiser <martin@kaiser.cx>
+Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+ arch/riscv/kernel/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-* Fold in Karl Mehltretter's two patches [1] as 1/10 and 2/10. Patch
-  1/10 stops arch_stack_walk() from reporting the walker's own frame as
-  the first entry, which corrupts the skip-frame accounting of
-  stack_trace_save() users (page_owner, perf), and adjusts
-  return_address() level accounting accordingly. Patch 2/10 adds a KUnit
-  test for the start frames. Both patches keep their original authorship;
-  I added my Reviewed-by/Tested-by and sign-off. I asked Karl on
-  3 November whether he would like to see his patches folded into this
-  series; he has not replied so far. Since 8/10 reuses the walker
-  extraction from 1/10 for its !CONFIG_FRAME_POINTER fallback, his
-  patches are included here to keep the series self-contained.
-
-* Split the function-graph return-address cookie change out of the old
-  5/7, as suggested by Martin Kaiser. It is now a separate patch (3/10)
-  that also fixes the old walker's cookie key, so it stands on its own
-  without the rest of the series and can be picked independently; it is
-  marked Fixes: and Cc: stable.
-
-* Reworked the !CONFIG_FRAME_POINTER fallback of the unwinder switch
-  patch (8/10) to use the __always_inline __walk_stackframe() helper
-  from 1/10, so both walkers report the same start frame.
-
-* Collected tags from the v6 review thread: Reviewed-by and Tested-by:
-  Martin Kaiser for the patches carried over from v6 (rv64 QEMU and
-  rv64 CHERI builds, livepatch working on both).
-
-The patches carried over from v6 are unchanged, except for the
-reworked !CONFIG_FRAME_POINTER fallback in 8/10, so the v6 validation
-results still apply to them. The v7-specific changes were covered by
-the fresh build and boot runs described below:
-
-* Built with riscv64-unknown-linux-gnu-gcc 15.2.0 and binutils 2.46,
-  including a CONFIG_IRQ_STACKS=n variant.
-* QEMU 8.2.2, 1 and 4 CPUs: livepatch selftests PASS: 7, SKIP: 1,
-  FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
-* No BUG, WARNING, Oops, panic, unreliable stack or Call Trace found by
-  the validation log scans.
-
-Patches 1-2/10 were tested by Karl with the KUnit suite from 2/10 on
-QEMU's virt machine with clang 22 (LLVM=1) and GCC 15.2, and on a
-BeagleV Ahead (TH1520), where all five test cases pass.
-
-In addition, the combined v7 tree was freshly built and booted:
-
-* Built with riscv64-unknown-linux-gnu-gcc 16.2.0 on top of 7.4-rc1:
-  a full livepatch configuration (CONFIG_LIVEPATCH=y with dynamic ftrace
-  and function graph tracer) and a !CONFIG_FRAME_POINTER variant both
-  link successfully.
-* QEMU 11.1.1, rv64 virt, 4 CPUs: the KUnit suite from 2/10 passes
-  5/5 on the frame-pointer build; the !CONFIG_FRAME_POINTER build boots
-  and its panic backtrace (no initramfs, by design) unwinds cleanly.
-
-Base:
-riscv/for-next 6628e7d4c6b2 ("Linux 7.4-rc1")
-
-Previous versions:
-v6: https://lore.kernel.org/r/20260914092648.51254-1-xueshuai@linux.alibaba.com
-v5: https://lore.kernel.org/r/20260804103626.2803112-1-wanghan@linux.alibaba.com
-v4 RESEND: https://lore.kernel.org/r/20260629072713.3273743-1-wanghan@linux.alibaba.com
-v3: https://lore.kernel.org/r/cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com
-v2: https://lore.kernel.org/r/20260528082310.1994388-1-wanghan@linux.alibaba.com
-v1: https://lore.kernel.org/r/20260527123530.2593918-1-wanghan@linux.alibaba.com
-
-[1] https://lore.kernel.org/r/20261010132712.46931-1-kmehltretter@gmail.com
-
-Karl Mehltretter (2):
-  riscv: stacktrace: do not report the walker's own frame from
-    arch_stack_walk()
-  riscv: Add KUnit test for stack trace start frames
-
-Shuai Xue (1):
-  riscv: ftrace: use the frame pointer as the function graph
-    return-address cookie
-
-Wang Han (7):
-  riscv: stacktrace: Add frame record metadata
-  riscv: stacktrace: disable KASAN and KCOV instrumentation for
-    stacktrace.o
-  riscv: ftrace: always preserve s0 in dynamic ftrace register frame
-  riscv: stacktrace: introduce stack-bound tracking helpers
-  riscv: stacktrace: switch to frame-pointer based unwinder
-  riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
-  selftests/livepatch: Add RISC-V syscall wrapper prefix
-
- arch/riscv/Kconfig                            |   4 +
- arch/riscv/include/asm/ptrace.h               |   9 +
- arch/riscv/include/asm/stacktrace.h           |  67 ++-
- arch/riscv/include/asm/stacktrace/common.h    | 159 +++++
- arch/riscv/include/asm/stacktrace/frame.h     |  53 ++
- arch/riscv/kernel/Makefile                    |   6 +
- arch/riscv/kernel/asm-offsets.c               |   6 +
- arch/riscv/kernel/entry.S                     |  39 +-
- arch/riscv/kernel/ftrace.c                    |   6 +-
- arch/riscv/kernel/head.S                      |  23 +
- arch/riscv/kernel/mcount-dyn.S                |   4 -
- arch/riscv/kernel/perf_callchain.c            |   2 +-
- arch/riscv/kernel/process.c                   |  33 +-
- arch/riscv/kernel/return_address.c            |   2 +-
- arch/riscv/kernel/stacktrace.c                | 583 +++++++++++++++---
- arch/riscv/kernel/tests/Kconfig.debug         |  12 +
- arch/riscv/kernel/tests/Makefile              |   1 +
- arch/riscv/kernel/tests/stacktrace_test.c      | 142 +++++
- .../livepatch/test_modules/test_klp_syscall.c |    2 +
- 19 files changed, 1043 insertions(+), 110 deletions(-)
- create mode 100644 arch/riscv/include/asm/stacktrace/common.h
- create mode 100644 arch/riscv/include/asm/stacktrace/frame.h
- create mode 100644 arch/riscv/kernel/tests/stacktrace_test.c
-
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index f54c336bf547..c4c0f4d73368 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -44,6 +44,12 @@ CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_sbi_ecall.o = $(CC_FLAGS_FTRACE)
+ endif
+ 
++# When KASAN is enabled, a stack trace is recorded for every alloc/free, which
++# can significantly impact performance. Avoid instrumenting the stack trace
++# collection code to minimize this impact.
++KASAN_SANITIZE_stacktrace.o := n
++KCOV_INSTRUMENT_stacktrace.o := n
++
+ always-$(KBUILD_BUILTIN) += vmlinux.lds
+ 
+ obj-y	+= head.o
 -- 
 2.39.3
 
