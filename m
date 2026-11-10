@@ -1,89 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794289455;
-	b=FQ/5Wf6t0DtlfI6w08uf4MsmIoNvXwTGqDywxgchW8QEJ1rAU3DOR49XSSVk/AEId0hy
-	 tSkjE+4fg5voHKs3dF8FjlEiqf4PnRimTyCE+vFIi2/+wVdhedIB98r1Fw1gmCnl1A15C
-	 8npHOH7RxseCDlq70SHr/liPYBlj5LelFR17Mt8mOsMgdP+fVIi8+EcRIWA+gN959UgRL
-	 4FNNxh1CAPqG+dLBZO7BbOa6LiLY7CiuRFyGyk0DpnPNFH90ha5Hp5YHQiw7CuhZpLGL3
-	 fee7drfZirE1y7TcU5Zrte1azhKOvH1FmYA05ZZK4WbE8NNFHeKZib5EwOViFAxw7PQ==
+	t=1794289496;
+	b=p8fXqwPj9Q/seQHn+WkQq8nkNFdX9gUzgnqErOEcTdIIDJ/0QY09pSYVoVSmyuLVx7O2
+	 jvxOPabe8BrYM5AJf+qogGs12HdNCg9TcidmnhC37yzTXHuqITRbHIEBWYL9K1oSaOJR5
+	 zjrZfXGAj8bYTqIohGUpoE/Iu507IMfH4bjrNc/NKfUmk7ZwUqElBTSwOqWeRkZLTG066
+	 MQtAYZhmKGtWxK3qlN8CQDfQwLTp+ZCePAVOeKFie4akUufUdZAmsobPWWURVqkl25i2w
+	 lm9BVUwgHMsvKTAgRu1ah5WHDNT2XnH+hxD6dk4l0Lj/0GlMDyp2vm4JAhgFAe0i9zA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794289455;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=9ljX0hqkFpVdDO4bWmsipvvF8GC2kb5FdkDBtLth2A8=;
-	b=3qDOvAlCFR59tKeeH6Hw9bjKeiHGsXZf0/xHY+R7mKWAVUpDWnnKzMwo5fpV5IF25tW9
-	 vKS6wqb2SQani7TR5fUU2FWd0bmgYw10ooHEeXYdci6YgbXegJeL8EeC+HAk1ZW1ykCBd
-	 /ct8aVJjivAz8lRvCx89MzxghxO3HVdISLbOMQ873DYuFu/Mt5hwq0rfXl8QDCtJDbw1A
-	 TDArFFKUVrRsZsBobM3gExdB3rwoZfJxqahJRmEgozsuCbd8n8hkUBHW9cazFxdWGy87K
-	 HFHt+bFZwoBOq3DECI3Ni/3+IlM42po6bNJ6jj1pAxHFJ+BuWAhEbKsvYaCSzfqnG+g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794289496;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=DNcjMlK21koA6XyHdj8/oF7BiXxFM+Jtloux+v/pOZM=;
+	b=tUUGO02pu/KY/KHCykf5Ki8blQ4rZoglBVW/e02BjrlJScHPrWoB1B8dJWEljVRNLY7e
+	 NcurQhginUh7wfZ+eiQTXtoeJ3wXeiqiU5kjn1OrnlJI3OxuxRdjZ7LgY0ehfxFKRHD1v
+	 HhQfM7iLmesGv67XOz52yKK2vpkpgeEr8b2zqLSlaokIZoaRPJ2uCW5vSPkpg9hk/FXWu
+	 9Kw/ZnYw7YPCvtAzsFDIy0T5NO/11jNrdK2512BhZ1pizZrFJSE2oAUo+wKPhxDxtHenn
+	 ugAGBK9+9dsXmt0nlcR58bAQYs8ynqQmJcetmcIGHrHUYX5C12hq6ozU2KkwaZBun3w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=openai.com;
-	spf=pass smtp.mailfrom=openai.com;
-	dkim=pass header.d=openai.com header.i=@openai.com header.a=rsa-sha256 header.s=google header.b=RhJ++tfx;
-	arc=none smtp.remote-ip=209.85.210.53
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xl2oZDkG;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF15606A321
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 05:44:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7CF15606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=openai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openai.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE3C606A330
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 05:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=openai.com header.i=@openai.com header.a=rsa-sha256 header.s=google header.b=RhJ++tfx
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-85f39332862so681372a34.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Nov 2026 21:44:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openai.com; s=google; t=1794289453; x=1794894253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9ljX0hqkFpVdDO4bWmsipvvF8GC2kb5FdkDBtLth2A8=;
-        b=RhJ++tfxyGJGDpKIOJ8gZfcgR0zcVVMYBoUUA1kFSVONTcW6gFCeveaHqWVII/dTTU
-         hexjA6eF414ePESlgAYZmU6NyQ8JgEaGpanTuQIWjPatc9XaMyWOtVa4mm3z/teCA97m
-         GatEe5tRuO2YgD2i6GFxHINJ7pAlNrdpacZs0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794289453; x=1794894253;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9ljX0hqkFpVdDO4bWmsipvvF8GC2kb5FdkDBtLth2A8=;
-        b=xT2cfQamAd/LQMspndrgCTzLh4HJnGyJ+ZgKu+NXRPTn/pgNW/wkUU/tDjWzuRdjza
-         llFGLbaQF2bjVmwEsPlUp8sdq8XF/evVYmT5+GG3nQEOo0iW4ODPd27xcslmJ4h/zgjg
-         x+dJ+cFqVUPSHTrXsh4EUZwLliHyQvhdQ9c8g05wD6NDIiWqCuMXONpq75eeMhaiamVi
-         wwKOYHBcJw1Bbx9bqZWBeeL8pDnh7F2heUOdj+lODEFSskp/xMekwVcZyL2R+gs98rqS
-         y0npK4QT4jzg/oATG/3xY+JlK2JDmeV8ew6qFs1/CJ/fCqhuqWmfPtvhtQOADpe6nU7U
-         7+Zg==
-X-Gm-Message-State: APuU4Z+HCYZd9e2DDdJcNAVkS8du/PvW7Fma4w/c1fwrkaO4QmzeoysM
-	aNBY/bkz+UGaFTPMR9+2fkUZhcn6db5t/+0pDpMhiKVv1BVnWruBGFYSLDPzlL1cKA03zmFwnMS
-	4dPbiHn0=
-X-Gm-Gg: AYBFou0kxNADLVVAwn9Fp1susOxIFeh7IGVuUCsaOfkX9VF97t+s7ua/1a+GJeG0RnS
-	Of30VT7rBy6SIxKKOkO5BRUOW6OTZ4NtNsXXT+Wv/7iv1PITxGoUSYBpqJ4/H5lKqN1NSg9i94D
-	dOG4CDcmbHzMGjup7ru/6YWYBdGsSkfVFGPorAsyr/DR9O4AQ5hhLk9oP2kel508oC2VbRmIVWT
-	vYHJTOZj16YJnNVUp1iUyB6ItjW2TcvEiWDfPm5ynshpVcLr3Tw1ZhCobCXnZLzmEkcr6YpUnmF
-	vYmYGlNyOdnp9RXEdVMIX0PYKkJVzAeENWDD75t5BF0Q14mY8k1akp/wdjYDSGdBZpTQozaQVDu
-	dxX66G/2Ut5QVtvQrQELvI2UyyPfDXOuKhCha41+RYE9BJ1zFd+PU5RGTx8lLSu2o4D4MH52Qd/
-	4KZQpuXmNntS1slblQC5DDi2AcheNIvBr9Px1QFqfmP0C1F6L4NNNyJmbP2xDwshD85j3OZg66y
-	7cVG2g2WhKqqWw6wmG0ziYBaj5ySBopjl3Vl2uVHtT1jY5QSepq0lVaRTFC9I8cHw1UQJR+Y9Y5
-	dp9GBCiHWI1GW+JiiI5B5i6sFxj7UysUcoO+7uukUxRdC/mxOTmippRii7Wa3/6aFU3SuXfmbek
-	1t0cfDPFU6OJa/rjd8ny9lUB9KNUUcA==
-X-Received: by 2002:a05:6808:3209:b0:4a4:744:a4ff with SMTP id 5614622812f47-5683c99ce5bmr1527259b6e.4.1794289453346;
-        Mon, 09 Nov 2026 21:44:13 -0800 (PST)
-Received: from com-75606.corp.openai.org ([199.47.143.1])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-56905735edasm1258958b6e.7.2026.11.09.21.44.12
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 09 Nov 2026 21:44:13 -0800 (PST)
-From: Kyle Zeng <kylebot@openai.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: Validate user addresses in faultable buffer copies
-Date: Mon,  9 Nov 2026 21:44:11 -0800
-Message-ID: <20261110054411.75788-1-kylebot@openai.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xl2oZDkG
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777901F0089F;
+	Tue, 10 Nov 2026 05:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794289495;
+	bh=DNcjMlK21koA6XyHdj8/oF7BiXxFM+Jtloux+v/pOZM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Xl2oZDkGyai2WGFLC5deBwkv7sjAsSi4U5zxSPfQC/eNQwKps+AdS355QoRgT4N9D
+	 iH5yKknAUmBq7lPKNYmL2qscIITaEhzEe+TxsOlxmUsvfACcaxGKSK4QV32Yqy/SQS
+	 wrPjQxLGN452r81K4E4aM1ywF482eWq7cog4bQybBoZ+m2cIpd2kowo3RFI6Bp6z37
+	 /RaMTa4vxIVAYwVQ+y+z6y5V8eqekqwyRGRQT/CHNJBmL7IPN8ssKVJjjXBHf3J1oK
+	 Vw1iLpuFAXd6TtcGdpPdsBAGVf6XutU5Oj+YAjqlASqAJfz6pBjjc0ZNPD1pTvgXO0
+	 tCjvlrjrKrE7A==
+Message-ID: <sashiko-outbox-206337@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: ring_buffer: wait for writers before removing
+ pages
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Haoli Zhang" <26031212468@stu.xidian.edu.cn>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261110045850.2786-1-26031212468@stu.xidian.edu.cn>
+References: <20261110045850.2786-1-26031212468@stu.xidian.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Nov 2026 05:44:54 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -92,50 +59,111 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-trace_user_fault_read() uses __copy_from_user() when no custom copy
-function is supplied. That primitive assumes the source address has
-already been validated, but the helper only checks the destination
-buffer size. A caller that passes an unchecked kernel address can
-therefore cause mapped kernel memory to be copied into the tracing
-buffer. The original syscall-array tracing implementation exposed this
-path to syscall arguments before the syscall validated them.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] tracing: ring_buffer: ineffective synchronize_rcu() in
+  rb_remove_pages()
+- [Low] tracing: ring_buffer: missing Fixes trailer for
+  rb_remove_pages() fix
+--
 
-Use copy_from_user() for the default copy as documented. Non-user
-addresses then fail the copy and follow the existing NULL-return path.
-Successful user copies, buffer bounds, and preemption and migration
-retry rules are unchanged.
+commit 47d13d1f3cd83bf8e86c2d2c4091f144764c4470
+Author: Haoli Zhang <26031212468@stu.xidian.edu.cn>
 
-Fixes: 64cf7d058a005 ("tracing: Have trace_marker use per-cpu data to read user space")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kyle Zeng <kylebot@openai.com>
----
-v1: https://lore.kernel.org/r/20261006225221.54513-1-kylebot@openai.com
-v2:
-- Drop the trace_syscalls.c change, already fixed by 097fd0050089d.
-- Keep only the trace.c change requested by Steven Rostedt.
-- Point Fixes at the commit that introduced the shared helper's copy.
+> tracing: ring_buffer: wait for writers before removing pages
+>
+> A writer can still be using the ring buffer page list when a concurrent
+> resize removes and frees pages. Disabling recording prevents new writers
+> from entering, but it does not wait for writers that are already in the
+> reserve/commit path. The reader lock protects reader-side page operations
+> and does not provide that writer-side synchronization.
+>
+> Disable recording before waiting for a grace period, then wait for
+> pre-existing writers to finish before taking the reader lock and changing
+> the page list. Keep recording disabled until after the page list has been
+> updated and the reader lock has been released. The removed pages are
+> unlinked and subsequently freed.
+>
+> This adds a grace-period wait to the resize path; it does not add
+> synchronization to the normal ring-buffer write path.
+>
+> Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D37e1793bdb0061ea3a47
+> Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
+> Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
+> Co-developed-by: Bin Yu <byu@xidian.edu.cn>
+> Signed-off-by: Bin Yu <byu@xidian.edu.cn>
+> Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>
 
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[Severity: Low]
+This is a bug fix for rb_remove_pages().  Should it include:
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4ccdefb5c3ef..e1127768c074 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6289,7 +6289,7 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
- 		if (copy_func) {
- 			ret = copy_func(buffer, ptr, size, data);
- 		} else {
--			ret = __copy_from_user(buffer, ptr, size);
-+			ret = copy_from_user(buffer, ptr, size);
- 		}
- 
- 		preempt_disable_notrace();
+  Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atom=
+ic")
 
-base-commit: b3dfbde62cf1981c4638939c159dfd087b7a72e9
--- 
-2.55.0.openai.911.g06873a30d2f3
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index e760d2fe386fb..7ec0e12493f52 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -3080,8 +3080,11 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_bu=
+ffer, unsigned long nr_pages)
+> =20
+>  	head_bit =3D 0;
+> =20
+> -	raw_spin_lock_irq(&cpu_buffer->reader_lock);
+>  	atomic_inc(&cpu_buffer->record_disabled);
+> +	/* Wait for in-flight writers to finish before unlinking pages. */
+> +	synchronize_rcu();
+> +
+> +	raw_spin_lock_irq(&cpu_buffer->reader_lock);
 
+[Severity: Medium]
+Can any writer on cpu_buffer actually be in flight when rb_remove_pages()
+reaches synchronize_rcu()?
+
+ring_buffer_lock_reserve() and ring_buffer_write() disable preemption with
+preempt_disable_notrace() across the entire reserve/commit path and only
+write to the local CPU's cpu_buffer.  Meanwhile, ring_buffer_resize() only
+runs rb_update_pages() -> rb_remove_pages() in task context on the target
+CPU itself (via schedule_work_on() or directly under migrate_disable()) or
+while the CPU is offline under cpus_read_lock():
+
+kernel/trace/ring_buffer.c:ring_buffer_resize() {
+    ...
+			if (!cpu_online(cpu)) {
+				rb_update_pages(cpu_buffer);
+				cpu_buffer->nr_pages_to_update =3D 0;
+			} else {
+				/* Run directly if possible. */
+				migrate_disable();
+				if (cpu !=3D smp_processor_id()) {
+					migrate_enable();
+					schedule_work_on(cpu,
+							 &cpu_buffer->update_pages_work);
+				} else {
+					update_pages_handler(&cpu_buffer->update_pages_work);
+					migrate_enable();
+				}
+			}
+    ...
+}
+
+Because rb_remove_pages() runs in task context on cpu_buffer->cpu, no
+task-context writer on that CPU can be inside its preempt-disabled
+reserve/commit section, and any interrupting softirq, hardirq, or NMI
+writer that started before atomic_inc(&cpu_buffer->record_disabled) has
+already finished before returning to task context.
+
+Calling synchronize_rcu() here therefore does not wait for any writer.
+Instead, it stalls recording on cpu_buffer for an entire RCU grace period,
+blocks ring_buffer_resize() under migrate_disable() before scheduling work
+on remaining CPUs, and leaves the use-after-free unfixed when
+__rb_get_reader_page() leaves cpu_buffer->reader_page->list.prev pointing
+to a buffer_page that rb_remove_pages() subsequently unlinks and frees
+before a writer checks rb_is_reader_page() in rb_move_tail() or
+rb_set_commit_to_write().
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110045850.2786=
+-1-26031212468@stu.xidian.edu.cn?part=3D1
