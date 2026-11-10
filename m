@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794271073;
-	b=u26ZMLLZ0FpNEvuaJ/jtY3TSzV5I45Gwq3ms2I/X/HLh1guRuNpR8g6DjbKvM5Pp99QJ
-	 EjBVWIwdP1OwuLIivRZz/QyZBQS1YQaQjExB5uTogzInIAO8skXKtcfADxRoG0megrAgR
-	 9N+GXIAPYQPgYe0obvuY9ol9jLBwYJMsHVZNSqiNDSWTazsyNsvGkAHhvdY43I8oVXhLd
-	 TNNV6l1SpDr0NIv4TyafRXVzZeYN/WnSgKze2gcJDNfjJeScrpspKIj+hYiIvt4iLfjJW
-	 GDmB+Dc45mCeMMPXQWUuVtdtvXTc1SClS8r27ozizg89uuDuZwOIRaSuXAScZ1ZHP4w==
+	t=1794273071;
+	b=xcmJX5X0ZfmuNaOEWTy33qTqqLrsNlB7Uh0owYVRUy4CZLcOxbx/AFdZO4JEo87jmUlQ
+	 LyHoEFoXSf7ERtxx/9+LQOwUhmxtLLab+/dlnkQqntJTa2xNjApe3xv/jgJ9mMerzHSda
+	 3WQ4e9yXCDHSQ6bkXlYuDlP8PqCmjmfSx3tGwaxE77IAuSMse0aYXQi7E/g/C3RhDtKLG
+	 FPdqgsSaspwkJP6iKMLbvU1B4TvJ8JgnB3WtILJ1v+MEkGalANV6mvCRVQr2DjRyIAf+A
+	 RCcua640BHs11xDxEKfuYnY9bXUl6dU/hhU8I0jbwHatVt52hFc8V6ci8cpe6GCSffg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794271073;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794273071;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=11VwdvWVBjicfkhCNHfmdTnfJSk3QGGQVEbbWOcy4jo=;
-	b=GuFVqbSrGl75N+VB3SJPoAvxen7P6C5rWZnf4j44v2bXDwa1XuAjmUChlXzWa8v2aMlw
-	 By5dNRvqecGQo9E1fnqdZhc0pD+iHaH2oJ2U5u6fjHeZ7gNYxWANCl8klplI4DEusRO7t
-	 JjFNHZSVURfxAS6omfxVWcK1HhYc1iMYtohyTWhT/SwgZBkFgnd1rG5xlKrNcXaj2DYjc
-	 BgxWBGSXrrF0AE+6M2WaLxVSG4ABTSYFNdZphEySQmeuBJhn0Bawmn6okWf7VQysRUDyn
-	 a8NwXdQPcCg9MP+IaLE4fPdUppu7A3PjHaP9qB01VSwwcs4/WwI0kLcS7rPVNYnKqqA==
+	bh=rfARRKJ2elGfshxD3wg6mA+RZ+/rVMBa8iNEe1Cr8iU=;
+	b=uu8Tb2d1api6EyJqE5aJAbt0vKPMVQUuj3I/ALjwrE31+PJrD5BdygAuBn6Nk4E1BLtA
+	 UXzbiZ4QTKj+8C+Z+uz6+nHsDpqW28BaFoywyFTd6WgDFTQR7lkJm+RtdJiLJGArVkuNf
+	 fTukn9HV0bZPGi9DYDQDZ674lkmWUryRJJWs3UHmgwqEvdRgdzkSc3CekeXQzIHML5M5v
+	 Pv/61L6NuRwHKdX5jUrDywJi+rt+Xm3TQAKrvDM/d9bOr8FIPbw79y6O3aUgvGudJcjFY
+	 qoEHGbmjKHgP8afXjsywgd+77RFnlFO4U9E+Bpo08Q6KNhgPxvxWQhUHTOnV1s5MylA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kCamavtj;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DvvPScHw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3480606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 00:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE2606A325
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 01:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kCamavtj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4656B1F008A3;
-	Tue, 10 Nov 2026 00:37:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DvvPScHw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8B61F008A2;
+	Tue, 10 Nov 2026 01:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794271072;
-	bh=11VwdvWVBjicfkhCNHfmdTnfJSk3QGGQVEbbWOcy4jo=;
+	s=k20260515; t=1794273070;
+	bh=rfARRKJ2elGfshxD3wg6mA+RZ+/rVMBa8iNEe1Cr8iU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kCamavtjF2X0MviAGc7tEez/R0890GmTl85g+q0Ok990NXE2UkoQxsGfMMwXTFn1M
-	 VFi3IZP54gi2vUtDB1On7TBJhlHeu4GvsFH7scGvXewfCOwQlz3LzGTfW/7EH5qXWi
-	 zuwqPZbIBZ0CEWksm89FtID0lrNKMwla3EYOSLlEXymMi4othPfnj1BOeG/GWe8GBo
-	 xgAsMtcFTwMK6cL7Rz1ygaNNBFLVPpRHHySoT4/JvcTyRZVQvtjPTHQnK9PjRSVw0R
-	 0TpLDxWjB1NofeJs8NAV6/GshdhOOEGh1rGqkqf0H/Rg/jngVTcBGsGP+xD59Yojb3
-	 yrj0b/VoHut9g==
+	b=DvvPScHwTCE+CG59p1c9FmvjPygbV1BcKY6o0FUtlE9iE4/MkC6rdWE8FZsopFSBO
+	 lOoqhDgyrx4cfdcvoI/6WDuOF4BqustXOVdWi3vH8aYpyskoFQPHmZWe7lJ509eNtE
+	 jst1j9nrXuDOZDVSQ3tSEkA+TNxxMrQLe+odHYkxzWz9f4DJXZjwP152fdKitrkiLV
+	 GFw0IOV6s1UbIRaB2rf9gRoOhZfBnQ+ikKsCTQytBXASGhAzvN6oO1GFaij1AFkbKp
+	 iLSmQulsVKo9Lb4wWvirSYiovLXBXELolk8XnbRNOckQ77vuOJ6FRglFwIfROu6We2
+	 3vPRg4gs85p8Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: sashiko-bot@kernel.org
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] kprobes: Switch ftrace ops when adding probe with post_handler
-Date: Tue, 10 Nov 2026 09:37:50 +0900
-Message-ID: <undine-1794271070437179827-50fc36883ce50b95@undined.local>
+Subject: Re: [PATCH 7/8] kprobes: Fix slot reclaim and sibling re-opt in optprobe state machine
+Date: Tue, 10 Nov 2026 10:11:08 +0900
+Message-ID: <undine-1794273068816464603-4d105c49559e2959@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <sashiko-outbox-196280@kernel.org>
-References: <179375029807.247640.13024754173032838618.stgit@devnote2> <179375033462.247640.15676311043239442590.stgit@devnote2> <sashiko-outbox-196280@kernel.org>
+In-Reply-To: <sashiko-outbox-196313@kernel.org>
+References: <179375029807.247640.13024754173032838618.stgit@devnote2> <179375036234.247640.2681461872008285645.stgit@devnote2> <sashiko-outbox-196313@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,106 +61,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Wed, 04 Nov 2026 00:11:35 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
-> 
-> [ ... ]
-> 
-> > @@ -1654,18 +1657,51 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
-> >  					| KPROBE_FLAG_DISABLED;
+On Wed, 04 Nov 2026 00:30:42 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] kprobes: slot leak and stale optinsn reuse via register_aggr_kprobe()
+
+OK, this remains.
+
+> - [High] kprobes: missing arch_disarm_kprobe() in unoptimize_kprobe() on force
+
+This has been fixed by Mani's patch. [1]
+
+> - [High] kprobes: premature unhash of rescued aggrprobe in add_new_kprobe()
+
+This also fixed by Mani's patch [2]
+
+[1] https://lore.kernel.org/all/20261105-kprobes-optprobe-state-v2-1-7a2f5290baa0@columbia.edu/
+[2] https://lore.kernel.org/all/20261105-kprobes-optprobe-state-v2-3-7a2f5290baa0@columbia.edu/
+
+[...]
 > >  		}
-> >  
-> > +		if (p->post_handler && !ap->post_handler) {
-> > +			reset_post_handler = true;
-> > +			if (kprobe_ftrace(ap) && !kprobes_all_disarmed &&
-> > +			    !kprobe_disabled(ap))
-> > +				ftrace_switch_ops = true;
-> > +			else
-> > +				ap->post_handler = aggr_post_handler;
-> > +		}
-> > +
-> >  		/* Copy the insn slot of 'p' to 'ap'. */
-> >  		copy_kprobe(ap, p);
-> > -		ret = add_new_kprobe(ap, p);
-> > +		add_new_kprobe(ap, p);
-> > +	}
-> 
-> [Severity: High]
-> When ftrace_switch_ops is true in register_aggr_kprobe(), add_new_kprobe(ap, p)
-> publishes p onto ap->list via list_add_rcu() while ap is still armed on
-> kprobe_ftrace_ops and ap->post_handler is still NULL.
-
-Nice catch!
-
-> 
-> If another CPU hits the probed function before disarm_kprobe_ftrace(ap)
-> finishes updating the ftrace callsite, kprobe_ftrace_handler() will call
-> aggr_pre_handler() -> p->pre_handler(), and then skip aggr_post_handler()
-> because ap->post_handler is NULL:
-> 
-> arch/x86/kernel/kprobes/ftrace.c:kprobe_ftrace_handler() {
-> 	...
-> 	if (!p->pre_handler || !p->pre_handler(p, regs)) {
-> 		if (unlikely(p->post_handler)) {
-> 			instruction_pointer_set(regs, ip + MCOUNT_INSN_SIZE);
-> 			kcb->kprobe_status = KPROBE_HIT_SSDONE;
-> 			p->post_handler(p, regs, 0);
-> 		}
-> 	...
-> }
-
-Indeed.
-
-> 
-> In addition, p->pre_handler() executes under kprobe_ftrace_ops before
-> arm_kprobe_ftrace(ap) has verified that kprobe_ipmodify_ops
-> (FTRACE_OPS_FL_IPMODIFY) does not conflict with an active livepatch. A similar
-> window also occurs in the error path below if arm_kprobe_ftrace(ap) fails,
-> where ap->post_handler is reset to NULL and ap is re-armed on
-> kprobe_ftrace_ops before list_del_rcu(&p->list) removes p.
-> 
-> Could add_new_kprobe(ap, p) be deferred until after ap has been switched to
-> kprobe_ipmodify_ops, or could p be removed from ap->list before re-arming ap
-> on rollback?
-
-Hmm, good catch! OK, let's defer adding p until switching to
-kprobe_ipmodify_ops.
-
-> 
-> > +
-> > +	if (ftrace_switch_ops) {
-> > +		/*
-> > +		 * Must switch ftrace ops outside of text_mutex and cpus_read_lock
-> > +		 * to prevent deadlocks when ftrace code modification acquires text_mutex.
-> > +		 */
-> > +		ret = disarm_kprobe_ftrace(ap);
-> > +		if (ret) {
-> > +			list_del_rcu(&p->list);
-> > +			synchronize_rcu();
-> > +			return ret;
-> > +		}
-> > +		ap->post_handler = aggr_post_handler;
-> > +		ret = arm_kprobe_ftrace(ap);
-> > +		if (ret) {
-> > +			ap->post_handler = NULL;
-> > +			arm_kprobe_ftrace(ap);
-> > +			list_del_rcu(&p->list);
-> > +			synchronize_rcu();
-> > +			return ret;
-> > +		}
 > >  	}
+> >  
+> > @@ -1084,13 +1093,20 @@ static void kill_optimized_kprobe(struct kprobe *p)
+> >  				list_del_init(&op->list);
+> >  			}
+> >  		} else {
+> > -			list_del_init(&op->list);
+> > +			if (optprobe_queued_unopt(op)) {
+> > +				/* Move to cooling list so optinsn slot is cooled down */
+> > +				list_move(&op->list,
+> > +					  &optprobe_gens[optprobe_cur_gen].cooling_list);
+> > +				kick_kprobe_optimizer();
+> > +			} else if (!optprobe_queued_cooling(op) && !optprobe_queued_freeing(op)) {
+> > +				list_del_init(&op->list);
+> > +			}
+> >  		}
+> >  	}
+> >  	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> >  
+> >  	/*
+> > -	 * Don't remove the slot if it is queued for freeing or unoptimization;
+> > +	 * Don't remove the slot if it is queued for freeing, unoptimization, or cooling;
+> >  	 * the optimizer will reclaim it after the quiescence period.
+> >  	 */
+> >  	if (!optprobe_queued_freeing(op) && !optprobe_queued_unopt(op) &&
 > 
 > [Severity: High]
-> What happens if the rollback call to arm_kprobe_ftrace(ap) in
-> register_aggr_kprobe() also fails (for example, with -ENOMEM in
-> ftrace_set_filter_ip() -> alloc_and_copy_ftrace_hash())?
-> 
-> Because the return value of the rollback arm_kprobe_ftrace(ap) is ignored and
-> KPROBE_FLAG_DISABLED is not set on ap->flags, ap remains marked as enabled
-> even though it is no longer registered in kprobe_ftrace_ops's filter hash.
+> Does deferring arch_remove_optimized_kprobe(op) here leak op->optinsn.insn or
+> reuse a stale optinsn trampoline if a new kprobe is registered at the same
+> virtual address before cooling completes?
 
-Ah, indeed. OK, let me add KPROBE_FLAG_DISABLED if rollback fails.
+Ah, yes, and we don't need to defer the killing gone kprobes because
+that should not hit anymore. (which is in unloaded modules)
+OK, let me drop deferring it.
 
 Thanks!
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
