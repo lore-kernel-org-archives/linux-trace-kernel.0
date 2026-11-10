@@ -1,86 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.225
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794321799;
-	b=Tp/+/ePyLrtTI2zp2d4uBPedR8jk4dHiWu/CY9fSUJtPebYI/P8S0l8W3wqpzbx0ixgF
-	 M9yQANlPqrwmON/fN0ZI/6U3a9WTO/wY/R8mJ9E1ayD0aZw3AL1QXgthC+Uy+I4A+TrA3
-	 ROQ0w3SnHR9Ojd7lZXO8FPvyMquQUVhTNDz37AGADfY8scsWGG2gloOPeAPav7mun9B5F
-	 Epz+K3MfkwKbpfoa1+33uK7bASHx6F7R8K93Pd1UUPscVi+LykfzmD+LQ5XT3/Eg39YNq
-	 wTxM8V6IRFLFHOou2bSIK+ztYB9hUwiIVAaglACWnc/iPMNtptBsoKfXDUF2gfoS/bA==
+	t=1794325089;
+	b=y3uR5yHtrRYQizdxRT07rEe8XFqsVJA7Xe5MksFW3mpNsr+n3yy5T0OqKRuu+aDOz6Za
+	 AZNMfzi1f77NCls2ul/DCG6OJZgKt09uc99X4Yi+RxpVNChTgfgP7JyGXw8QL1aH8EJQn
+	 A4Nn378S1Mj99TUgnDc13gk+BJm/uI7f5bCJIOIvTqv6JO49D7YAYu2gu23GY8+ARVTy4
+	 eUOUhslhEppqCC/Lav4tlM5o3+y6MpWYSvlKsUzybuUooDSqcEQx7qhUZb7gWuwSGC6QC
+	 HxOFyN6J62g3mH3x87mryeWBLb1vvV0ijT8GI7L0mlBtZjSiBi9P8HoeviCheTjjkag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794321799;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794325089;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ONtiqfBY7XF9tcsGZa6BGd36+aq3hcBRWhYmk4rQLvM=;
-	b=Rb+GnQgq+J4Yq5MV2FI+7fDDq40tMQ9z3SRVF3uiWLNoWvYQ2gfuDxlkKbGnUQFsioj/
-	 z0nXvl6+2IdIyPgP8xjhj8AXkJPSjeDTohu+6dEs4iOdiKXtPOr9lyYqlhLk48qZxOL1c
-	 TorrPbCO9jSm/4O6PZfa9Z8xFlEZzPKe7J92EzRncOHbUi/yF4+HFPkNnwNjjmdNtb61Q
-	 0tWJn5hFvtxolqckpAYocCxF3LUwC6o2188I41qw4afgPqO4Bl6BI0auoWe8++DMXMuvw
-	 K8hfZd5yu3wyaYic/LhMFWjgiPNRq8yUmrNcfyJNpgLd8psDqZyru6Fe650/mTbK2wg==
+	bh=IVo53ZWRUxUZncXLcouJ/TarKckoa/ysa4d9WVjKI9w=;
+	b=C6oUnB/wh4YI3vdij68QjELPhXR864bIvKfEtORTJ0eGod+vB93poHrkszND/hlG6HaE
+	 Ulu7YRAAjN9ZqIJud7VLdx4BvfgvCeyd2D2/finqwVK2q0CTdY8GGfWxiqxUMD+3MYOGw
+	 YZQs/xH8eRhTYYE9el8/O9rG/jGfsMqBKfP0iKvr0SvZgude9wLsxQDP0G0vuUtOmyhW+
+	 /6BqR0S2SXjM2CTvXjTSdb4iQwbmZsS6u2uayzqR2Y//FucrlcDHiktKStoNIm3NjmjHd
+	 Z7E++i9DTuLLASCVHsLk5iqlih7JMeWp3dVWg3rhjDfL8zc3aj0yDFAQL9cezUB4okA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nhgEZOPf;
-	arc=none smtp.remote-ip=91.218.175.225
-Received: from mta0.migadu.com (out-225.mta0.migadu.com [91.218.175.225])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpxYX4HJ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F2E60A260E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 14:43:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79F2E60A260E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F232606A31C;
+	Tue, 10 Nov 2026 15:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nhgEZOPf
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=x8taPRgwxDpWF2n1mLGTs5sZSctanW78ZPHgi3RsjbQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794321796; v=1; x=1794926596;
- b=nhgEZOPfXyqrxK2Kd1sLKf8FyfBDXX+1LFf24hZCfiaUOAcahMUM/FDuRhq2kChjnO9QxCA3
- lyrgx86DoLqc/s3VNrURV0k2XAzR56ufMbKCCTkYAglq/+K4rUsrFx9lcize8UCNPNOl/57UMWH
- K6rC3IhRAMJ4Cd+6mwySI7xQ=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id c0dc64717c01038c;
-	Tue, 10 Nov 2026 14:43:16 +0000
-X-Mizu-Trace-ID: c0dc64717c01038c
-X-Migadu-Flow: FLOW_OUT
-From: Qiliang Yuan <qiliang.yuan@linux.dev>
-To: Vlastimil Babka <vbabka@kernel.org>
-Cc: Qiliang Yuan <qiliang.yuan@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm/compaction: defer failed async direct compaction
-Date: Tue, 10 Nov 2026 09:42:56 -0500
-Message-ID: <20261110144256.3841504-1-qiliang.yuan@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261102-bug-mm-thp-async-compact-defer-v2-2-b407e974db54@gmail.com>
-References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com> <20261102-bug-mm-thp-async-compact-defer-v2-2-b407e974db54@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpxYX4HJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F011F008A1;
+	Tue, 10 Nov 2026 15:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794325088;
+	bh=IVo53ZWRUxUZncXLcouJ/TarKckoa/ysa4d9WVjKI9w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=VpxYX4HJfpGO3in5SPsTkLkztMer+aY4KhEdu4iJt4LxMLP6GYp5AQStRQi8bGNTZ
+	 +Lva1wWNVdUP8kN4bWaKG2te4boPLWczOKmXofNhsbtqFqyHjaa73+Q+zdozZQxeEQ
+	 x3IKkdM3ttweOOZTdd9KYRFJi2OVVyrqtPWEf7Z1gggMJmyLqTY+dLP5YW1ESu9xo1
+	 3eeNj+M1zD+YSeQCCG89K++LjDaUiZHIhiXLIucTKEsdo45AXqsP1eDMyW0wOPLbg2
+	 AwyEWZLcm+Twz2HUfB3N5aq9ssbBBOsz1bhGvsXSr29Ocg9eVvgGb8lm9k7Ud5kzzG
+	 +kwZO5mWWwmbg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>, x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 04/13] kprobes: Maintain an rbtree of registered probes
+Date: Wed, 11 Nov 2026 00:38:03 +0900
+Message-ID: <undine-1794325083765212173-9c2dd2a4d5c010fe@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <avLz8k0gdZwYTeA5@krava>
+References: <20261109194916.1089703-1-jolsa@kernel.org> <20261109195517.1090787-1-jolsa@kernel.org> <undine-1794298339502831052-1b6960b8f9b38e7d@undined.local> <avLz8k0gdZwYTeA5@krava>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -90,266 +58,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Nov 2026 01:01:08 -0500, Qiliang Yuan wrote:
-> @@ -2600,9 +2600,12 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
->  
->  	/*
->  	 * Clear pageblock skip if there were failures recently and compaction
-> -	 * is about to be retried after being deferred.
-> +	 * is about to be retried after being deferred. Leave this to sync
-> +	 * compaction: async compaction relies on the skip hints, and clearing
-> +	 * them on its retries would rescan the whole zone each time.
->  	 */
-> -	if (compaction_restarting(cc->zone, cc->order))
-> +	if (cc->mode != MIGRATE_ASYNC &&
-> +	    compaction_restarting(cc->zone, cc->order))
->  		__reset_isolation_suitable(cc->zone);
+On Tue, 10 Nov 2026 11:37:38 +0100, Jiri Olsa <olsajiri@gmail.com> wrote:
+> On Tue, Nov 10, 2026 at 08:12:19AM +0000, Masami Hiramatsu (Google) wrote:
+> > On Mon,  9 Nov 2026 20:55:17 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
+> > > Add an address-ordered rbtree for registered probes. Keep it synchronized
+> > > with the hash table when probes are added, removed, or replaced by
+> > > aggregator probes.
+> > 
+> > Could you tell me why don't you use hlist (get_kprobe) instead?
+> > I would NOT like 2 different lists which is basically doing the
+> > same thing.
+> 
+> The speedup comes from finding the first relevant kprobe, then iterating
+> over the remaining probes in address order. The hash table supports
+> exact-address lookups, but it doesn’t provide that ordering.
+> 
+> I agree that maintaining both indexes is less convenient. What do you think
+> about centralizing their updates as in the change below? untested
 
-As was pointed out to me off-list, this test removes a recovery path.
-I'm not asking to reconsider the series, only leaving the analysis and
-a reproducer here in case they help when you look at the issue.
+If you can replace the hash table with other faster design, it is OK to me.
+But I would like to avoid this simple-adding another lookup table for the
+rare usage case (because of the maintenance cost, and duplicating a list
+makes it difficult to handle cases where discrepancies arise between the
+two lists.)
 
-The async run a THP fault does on the local node is never deferred:
-try_to_compact_pages() calls defer_compaction() only for sync
-priorities, because the deferral state is shared and deferring it
-after an async failure would defer sync compaction too. The async path
-checks that same sync state in compaction_deferred(), so as long as
-sync isn't deferred, every fault scans the zone again. Patch 1 splits
-the state so that async can be deferred on its own.
-
-Skip hints are cleared in two places: in compact_zone(), when
-compaction_restarting() sees the sync deferral at its maximum, and by
-kswapd before it sleeps. Madvised THP faults don't wake kswapd, and
-with proactive compaction off nothing else resets the hints, so once
-the pinned pages become movable again, the reset in compact_zone() is
-what lets local THP attempts use those pageblocks. After sync reaches
-the maximum deferral, that reset comes from an async retry, which is
-what the test in this patch blocks.
-
-I reproduced it on the same QEMU guest as the series: 32 vCPUs,
-node 0 with 16 CPUs and 24 GiB, node 1 with 16 CPUs and 8 GiB,
-compaction_proactiveness set to 0 and defrag left at madvise:
-
-  1. Fill node 0 with anonymous memory, free every other 4K page and
-     long-term pin the rest through io_uring fixed buffers.
-  2. With defrag set to always, fault in a 1 GiB MADV_HUGEPAGE buffer
-     bound to node 0, so THP faults there run sync direct compaction
-     and fail until sync compaction reaches the maximum deferral.
-  3. Close the io_uring rings. The pins are gone, the memory stays in
-     use and is movable again.
-  4. Populate a 4 GiB MADV_HUGEPAGE buffer from a CPU of node 0.
-
-Compactions that succeeded in step 4, one boot per number:
-
-  mainline              1184, 963
-  v2                    8, 0, 516, 400, 534, 521, 495
-  v2 without the test   1025, 994, 906, 957
-
-v2 recovered in five of seven boots without resetting any skip hint
-(no call to __reset_isolation_suitable() in the two boots I traced):
-with async compaction deferred, it scans few pageblocks while they are
-pinned and leaves most of them unmarked. In the other two boots the
-marked pageblocks kept it from recovering at all. Without the test,
-the reset after the maximum sync deferral recovers every boot, as on
-mainline, and the steady pinned case stays as cheap as with v2 (7.8
-to 20 ms in compaction against 310 to 332 ms on mainline).
-
-The reproducer is below, run as CPUS=0-15 sh thp-recover.sh.
+Can you change the size of the hashtable and measure how the performance
+is changed? I need more options.
 
 Thanks,
-Qiliang
 
----8<--- thp-recover.sh
-#!/bin/sh
-# Run as root on a two-node machine; CPUS lists the CPUs of node 0.
-CPUS=${CPUS:-0}
-D=/sys/kernel/mm/transparent_hugepage/defrag
-echo 0 > /proc/sys/vm/compaction_proactiveness
-echo madvise > $D
-echo 1 > /proc/sys/vm/drop_caches
+> 
+> jirka
+> 
+> 
 
-M=/sys/devices/system/node/node0/meminfo
-free=$(awk '/MemFree/ { print int($4 / 1024) }' $M)
-./thp-recover hog $((free - 300)) > hog.log &
-hog=$!
-until grep -q ready hog.log; do sleep 1; done
-
-echo "steady, pinned:"
-for i in 1 2 3; do taskset -c $CPUS ./thp-recover fault 4096; done
-
-# Fail sync compaction on node 0 until it reaches the maximum deferral
-echo always > $D
-echo "bound to node 0:"
-taskset -c $CPUS ./thp-recover bfault 1024
-echo madvise > $D
-
-kill -USR1 $hog
-until grep -q unpinned hog.log; do sleep 1; done
-echo "after dropping the pins:"
-for i in 1 2 3 4 5; do taskset -c $CPUS ./thp-recover fault 4096; done
-kill $hog
-
----8<--- thp-recover.c
-// SPDX-License-Identifier: GPL-2.0
-/*
- * thp-recover hog <mb>     fill node 0, free every other page and long-term
- *                          pin the rest; SIGUSR1 drops the pins and keeps
- *                          the memory in use
- * thp-recover fault <mb>   populate a MADV_HUGEPAGE buffer and print how
- *                          much of it got THPs and on which node
- * thp-recover bfault <mb>  the same, bound to node 0
- */
-#define _GNU_SOURCE
-#include <linux/io_uring.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/syscall.h>
-#include <sys/uio.h>
-#include <time.h>
-#include <unistd.h>
-
-#define MB		(1UL << 20)
-#define MPOL_BIND	2
-#define RING_BUFS	16384
-
-static volatile sig_atomic_t unpin;
-
-static void on_usr1(int sig)
-{
-	unpin = sig;
-}
-
-static void bind_node0(void)
-{
-	unsigned long mask = 1;
-
-	if (syscall(__NR_set_mempolicy, MPOL_BIND, &mask, 64))
-		perror("set_mempolicy"), exit(1);
-}
-
-static long vmstat(const char *key)
-{
-	char name[64];
-	long v, ret = 0;
-	FILE *f = fopen("/proc/vmstat", "r");
-
-	while (f && fscanf(f, "%63s %ld", name, &v) == 2)
-		if (!strcmp(name, key))
-			ret = v;
-	if (f)
-		fclose(f);
-	return ret;
-}
-
-static long thp_mb(void)
-{
-	const char *key = "AnonHugePages:";
-	char line[256];
-	long kb = 0;
-	FILE *f = fopen("/proc/self/smaps_rollup", "r");
-
-	while (f && fgets(line, sizeof(line), f))
-		if (!strncmp(line, key, strlen(key)))
-			kb = atol(line + strlen(key));
-	if (f)
-		fclose(f);
-	return kb / 1024;
-}
-
-static int hog(size_t size)
-{
-	size_t npages = size / 8192, done = 0, i, off;
-	struct iovec *iov = calloc(RING_BUFS, sizeof(*iov));
-	int fds[4096], nr = 0, r;
-	char *buf;
-
-	bind_node0();
-	buf = mmap(NULL, size, PROT_READ | PROT_WRITE,
-		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-	madvise(buf, size, MADV_NOHUGEPAGE);
-	memset(buf, 1, size);
-	/* Plenty of free memory, but no free 2M block */
-	for (off = 4096; off < size; off += 8192)
-		madvise(buf + off, 4096, MADV_DONTNEED);
-	/* Long-term pin the pages left, as RDMA registration does */
-	while (done < npages) {
-		struct io_uring_params p = { 0 };
-		size_t n = npages - done > RING_BUFS ? RING_BUFS : npages - done;
-		int fd = syscall(__NR_io_uring_setup, 4, &p);
-
-		for (i = 0; i < n; i++) {
-			iov[i].iov_base = buf + (done + i) * 8192;
-			iov[i].iov_len = 4096;
-		}
-		if (fd < 0 || syscall(__NR_io_uring_register, fd,
-				      IORING_REGISTER_BUFFERS, iov, n))
-			perror("pin"), exit(1);
-		fds[nr++] = fd;
-		done += n;
-	}
-	printf("ready\n");
-	fflush(stdout);
-	signal(SIGUSR1, on_usr1);
-	while (!unpin)
-		pause();
-	for (r = 0; r < nr; r++)
-		close(fds[r]);
-	printf("unpinned\n");
-	fflush(stdout);
-	for (;;)
-		pause();
-}
-
-static int fault(size_t size)
-{
-	size_t n = size / (2 * MB), i, node[2] = { 0 };
-	long stall = vmstat("compact_stall"), ok = vmstat("compact_success");
-	void **pages = malloc(n * sizeof(*pages));
-	int *status = malloc(n * sizeof(*status));
-	struct timespec t0, t1;
-	double ms;
-	char *buf;
-
-	buf = mmap(NULL, size + 2 * MB, PROT_READ | PROT_WRITE,
-		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-	buf = (char *)(((unsigned long)buf + 2 * MB - 1) & ~(2 * MB - 1));
-	madvise(buf, size, MADV_HUGEPAGE);
-	clock_gettime(CLOCK_MONOTONIC, &t0);
-	for (i = 0; i < size; i += 4096)
-		buf[i] = 1;
-	clock_gettime(CLOCK_MONOTONIC, &t1);
-	ms = (t1.tv_sec - t0.tv_sec) * 1e3 + (t1.tv_nsec - t0.tv_nsec) / 1e6;
-
-	for (i = 0; i < n; i++)
-		pages[i] = buf + i * 2 * MB;
-	syscall(__NR_move_pages, 0, n, pages, NULL, status, 0);
-	for (i = 0; i < n; i++)
-		if (status[i] == 0 || status[i] == 1)
-			node[status[i]]++;
-	printf("%zu MB in %.0f ms, %ld MB in THPs, 2M ranges on node 0/1: %zu/%zu, ",
-	       size / MB, ms, thp_mb(), node[0], node[1]);
-	printf("compactions: %ld, succeeded: %ld\n",
-	       vmstat("compact_stall") - stall, vmstat("compact_success") - ok);
-	return 0;
-}
-
-int main(int argc, char **argv)
-{
-	size_t size;
-
-	if (argc != 3) {
-		fprintf(stderr, "usage: %s hog|fault|bfault <mb>\n", argv[0]);
-		return 1;
-	}
-	size = strtoul(argv[2], NULL, 0) * MB;
-	if (!strcmp(argv[1], "hog"))
-		return hog(size);
-	if (!strcmp(argv[1], "bfault"))
-		bind_node0();
-	return fault(size);
-}
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
