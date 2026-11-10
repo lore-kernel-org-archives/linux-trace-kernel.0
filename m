@@ -1,44 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794273590;
-	b=WR2NecbQc0FgQIPhB8hhDozg5RA3YtBuXBY+g20aSCDHKkphqB6WFbWJ9Owy19nf4Aut
-	 3U2T+/ZTksVlZVEbF6wTcK5/G8fpNiNz2rQezYr973FPgjaoHro5xkpaFjaoqD48ZIlFS
-	 Ur4WsERCQuCFPMy3HGo1X2Llw+ucOJGpXWZrZQJ+l2Wjakzt+KtIvYfdZDuiX7MvVD/jc
-	 oSK7mx3b/A+TU4VLLSwy87s7bfPUGDaCZmPq/HnuQHCoZDPEEXkKh8TaMaLOIoLacdn7d
-	 JQnLjsVDK8Ctoqq0WnB2MTIlIFAJ4AvqmILC+pZaQ/E8n+8KwzaULpJUuQFt+quud1w==
+	t=1794273599;
+	b=h186smiU9mrq1gZppHXmEAGExp/z4NoRYANXSRHxh6UZnkfFsofqmqO0ywk/w7YlA8d1
+	 qVNpATVyGGKmiR4hazRNfoWQvd9JE61xt2wBeILcKBx/bnMnAbk/QbA491w+YPPbIYXwI
+	 rEN4ew1mjAcOuoJwo1LQG5NeWaWo4STegyfPOeYdhyUesE4V9VgzxkVgkEv2CFhoTVylI
+	 i82rGaVRZkthnbH37fLYSbKlnefnAY5tGOCS3KelZKzXhbMXGpPUSQv6zG+n2098LqEHV
+	 4sNEB7JUcqsp0sThCvfwmZM7JwYmXb87Mbu1Ge6pOwwS1l4I7mo68foeOS9Dzhq3Myg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794273590;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794273599;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 User-Agent:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=U05+Mie79PyeWtUEBw0kGiOkIb8tSC2Jl/FhrH9xV8w=;
-	b=hmwdp7Tn1sM8NbHwxaosjaDEHW/6+Y2RJN1zVn/L9xf7YjOFUDWJPbA3xY3DzBuoxYMx
-	 7taTOlGk7otLRGbmG6typfO1tU51rI5yHvVtMIoyBPTRXxU4Zn3QFkaIQTV0V6xEEhnoA
-	 zh5Zj4U6+KVgSWY/mVecsThQ2cdF66avahegdKTBg53wJhRLreWczg8UiqEddKXAPK2RU
-	 PoAuYhvwGH0/aM0iAMCTM+4CtAQCYKbxlAZODB7gWA36HAiIQhzCUUA/1+aRRNxsQfppp
-	 5WGBrzbTAl5LdE7CKO70akEwuMJHyFpnZwI3BeoD2pVGT3ukJjym4fKRxEpulKJLpkw==
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=7B57yFhhoC7EhQeanlpezdJDPtjATDROjKxXttsKNQY=;
+	b=l7I50Kloh6HQP8ggNVAtASTUKujkvDL0SHJ9cA5xBEHI3lNxNH0x06b8MoD5+rJjdDKJ
+	 GgRughXDH+a1w8k/9RKBhDBAGjTfDKqONKGvT74TYyb9wcq5s09GhIbg47sTrpvH2p/JS
+	 dUYpD9aT68odHgClvac3mzHhIrdGQEyJwAx/fIe+0tYj9pyNDKr3loYgHULIk/ohTIJni
+	 368y/IhAY/Dhh9f3kX/nz8/RdlCEe/rM8THHbn2+5ksGu1brgP7wxmVsB6jjuiETfjy2Z
+	 NRQ5Exy8h0R95uiZtWsskPJ9pyRjkjgOOJSMt87z1DCVVHLXZ3kymPlS70AKHubK/ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="mQE/ilfw";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OH9LwNge;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FEC606A31C;
-	Tue, 10 Nov 2026 01:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994E606A33C;
+	Tue, 10 Nov 2026 01:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mQE/ilfw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF111F008A1;
-	Tue, 10 Nov 2026 01:19:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OH9LwNge
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDD91F008A4;
+	Tue, 10 Nov 2026 01:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794273590;
-	bh=U05+Mie79PyeWtUEBw0kGiOkIb8tSC2Jl/FhrH9xV8w=;
-	h=From:To:Cc:Subject:Date;
-	b=mQE/ilfwO3xKy/hq0LTNskUiGiU7//zIIPekBJGuoyasIlUW4SE1HbkgZO3nVvYWG
-	 qYeEgxkgO57brh0Pl9ScfJUWDc1us+EQ6CShiZhtfcAW5UsyGC8g4rHyLcVpy96I8I
-	 nNCxuoJCutEEeLuSboTVrLSrcPBAkWGWrp0exzvVlqfKfpCxvLNGPLxNFXxiW0jiVb
-	 XFwnnGioZGsyZWP/mA7YNqhNeL3pu2XW7KEossCqTeXV4EeQovdDiTMryNXdq437SM
-	 CAQz5DcVAyVO2w+2gGd7r9uJKNu0DUJuzDSdhY0PLt+gPfr5yXWEdo6QO8jEEGuGhi
-	 H5WpefTi1RY2g==
+	s=k20260515; t=1794273598;
+	bh=7B57yFhhoC7EhQeanlpezdJDPtjATDROjKxXttsKNQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=OH9LwNge3xc/nNGY54nhm6TFLxj3fuo45JfTAhot/qihd/pbvSXKjqXhO3DwLwCXG
+	 6tqRZPRMovw1FKwvgda0WX2AUn4Q6UvXhudTE7EU2OkFwSlB5Y+Y1NeddZt1Tv4eID
+	 5VlNCIqY+Sdg+OdhlyWhdsqFJQCjneX72hQzW2/xHR2ae/0hRTyxOt7PWJKsY0iAnL
+	 juZrozBibudvDi04DQaFGNyRC4XHTgKZFOwkeJqqC8u8bmaqm+Ff9bhOl1KR1MInOc
+	 pwIN1sKIKZt5svK33RHfQqzXi4mf/Qm3c0Ixy3tTRT4u1irKB1eh4kCqL0VbwJZXRr
+	 0eD70wtajijJw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,10 +48,12 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Mani Tofigh <mt4022@columbia.edu>
-Subject: [PATCH v2 0/4] kprobes: Fixes for ftrace ops and optprobe state machine
-Date: Tue, 10 Nov 2026 10:19:47 +0900
-Message-ID: <179427358690.291326.2078291446658598883.stgit@devnote2>
+Subject: [PATCH v2 1/4] kprobes: Switch ftrace ops when adding probe with post_handler
+Date: Tue, 10 Nov 2026 10:19:56 +0900
+Message-ID: <179427359597.291326.2717264793607044000.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <179427358690.291326.2078291446658598883.stgit@devnote2>
+References: <179427358690.291326.2078291446658598883.stgit@devnote2>
 User-Agent: StGit/0.19
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,79 +67,143 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is v2 of the remaining bug fixes for kprobes and optprobes, rebased
-on the latest probes/fixes branch (which already includes patches 1-3 from
-v1 and Mani Tofigh's optprobe state fixes that superseded patch 6 from v1).
-The previous version is here:
+When an ftrace-based kprobe is registered without a post_handler, it is
+armed using kprobe_ftrace_ops. If a second probe with a post_handler is
+subsequently registered at the same address, register_aggr_kprobe() sets
+ap->post_handler to aggr_post_handler, but leaves the probe armed using
+kprobe_ftrace_ops.
 
-  https://lore.kernel.org/all/179375029807.247640.13024754173032838618.stgit@devnote2/
+When the probe is later disarmed or disabled, disarm_kprobe_ftrace()
+checks whether p->post_handler is non-NULL and attempts to disarm from
+kprobe_ipmodify_ops. This fails with -ENOENT, decrements
+kprobe_ipmodify_enabled below zero, leaves the probe armed on
+kprobe_ftrace_ops, and aborts unregistration, leading to a use-after-free
+if the probe module is unloaded.
 
-This includes following fixes.
+Switch the armed probe from kprobe_ftrace_ops to kprobe_ipmodify_ops in
+register_aggr_kprobe() outside of text_mutex and cpus_read_lock to avoid
+lockdep and deadlock issues when modifying ftrace code. Defer adding the
+new probe onto ap->list until the ftrace ops switch completes so that the
+new probe's handlers are not published prematurely while ap is still on
+kprobe_ftrace_ops, and mark ap disabled if rollback re-arming fails.
+Also restore ftrace ops registration and counter if ftrace_set_filter_ip()
+fails in __disarm_kprobe_ftrace().
 
-1. Ftrace Ops Switching for Post-Handlers (Patch 1):
-   - When adding a second probe with a post_handler to an existing ftrace
-     kprobe, the aggregate probe's post_handler was set but remained armed
-     on kprobe_ftrace_ops. Subsequent disarming attempted to disarm from
-     kprobe_ipmodify_ops, failing with -ENOENT and leaking the armed probe.
-     Switch ftrace ops safely in register_aggr_kprobe() outside of
-     text_mutex and cpus_read_lock.
-
-2. Optprobe State Machine & Tasks RCU Quiescence (Patches 2-3):
-   - Forcibly unoptimized probes (unoptimize_kprobe(force = true)) were
-     not queued to cooling_list, causing kprobe_disarmed() to return true
-     prematurely and risking use-after-free in the optinsn detour buffer
-     before Tasks RCU completed.
-   - When a disabled cooling probe finishes cooling and transitions to
-     safely disarmed in optprobe_finalize_generation(), re-optimize any
-     blocked sibling probe whose jump range covers its address.
-
-3. KUnit Regression Tests (Patch 4):
-   - Add KUnit test cases to lib/tests/test_kprobes.c covering the recent
-     kprobes, kretprobes, ftrace ops, and optprobe fixes.
-
+Fixes: 5dd7caf0bdc5 ("kprobes: Skip clearing aggrprobe's post_handler in kprobe-on-ftrace case")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
 Changes in v2:
- - Rebased on the latest probes/fixes branch (v1 patches 1-3 merged;
-   v1 patch 6 superseded by Mani Tofigh's optprobe fixes).
-[01/04]
  - Defer add_new_kprobe() until after ftrace_switch_ops completes so
    that p is not visible on ap->list if switching ftrace ops fails.
  - Set KPROBE_FLAG_DISABLED on ap if rollback arm_kprobe_ftrace() fails.
-[02/04]
- - Drop the unreachable kprobe_unused(&op->kp) branch when force is true
-   and list_empty(&op->list) in unoptimize_kprobe().
-[03/04]
- - Drop the unoptimize_kprobe() and reuse_unused_kprobe() hunks which
-   were superseded by commits 0be7a931c5e4 and 1ffd6efb1b58 in
-   probes/fixes.
- - Drop the kill_optimized_kprobe() cooling deferral since kill_kprobe()
-   runs at MODULE_STATE_GOING when no tasks execute the module text.
-[04/04]
- - Probe a notrace target function (kprobe_opt_target) in
-   test_optprobe_rearm_unoptimizing() so that jump optimization is tested
-   even when CONFIG_KPROBES_ON_FTRACE=y.
- - Guard test_optprobe_rearm_unoptimizing() with
-   !IS_MODULE(CONFIG_KPROBES_SANITY_TEST) since
-   wait_for_kprobe_optimizer() is not exported to modules.
- - Replace KUNIT_ASSERT_EQ() with KUNIT_EXPECT_EQ() while stack-allocated
-   probes are registered to prevent stack use-after-free on test failure.
-
-Thank you,
-
 ---
-base-commit: 1ffd6efb1b58e596ed70f660182803264a4c84d9
+ kernel/kprobes.c |   55 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 45 insertions(+), 10 deletions(-)
 
-Masami Hiramatsu (Google) (4):
-      kprobes: Switch ftrace ops when adding probe with post_handler
-      kprobes: Fix UAF and queue cooling probes on forced unoptimization
-      kprobes: Re-optimize blocked sibling probe when cooling finishes
-      kprobes: Add KUnit test cases for kprobes regressions
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index dddad1e01866..b6ff971df451 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1444,9 +1444,14 @@ static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+ 	(*cnt)--;
+ 
+ 	ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
+-	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (error %d)\n",
+-		  p->addr, ret);
+-	return ret;
++	if (WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (error %d)\n",
++		      p->addr, ret)) {
++		if (*cnt == 0)
++			register_ftrace_function(ops);
++		(*cnt)++;
++		return ret;
++	}
++	return 0;
+ }
+ 
+ static int disarm_kprobe_ftrace(struct kprobe *p)
+@@ -1575,17 +1580,13 @@ void kprobe_busy_end(void)
+ }
+ 
+ /* Add the new probe to 'ap->list'. */
+-static int add_new_kprobe(struct kprobe *ap, struct kprobe *p)
++static void add_new_kprobe(struct kprobe *ap, struct kprobe *p)
+ {
+ 	/* A reused cooling probe is already unoptimized */
+ 	if (p->post_handler && !kprobe_unused(ap))
+ 		unoptimize_kprobe(ap, true);	/* Fall back to normal kprobe */
+ 
+ 	list_add_rcu(&p->list, &ap->list);
+-	if (p->post_handler && !ap->post_handler)
+-		ap->post_handler = aggr_post_handler;
+-
+-	return 0;
+ }
+ 
+ /*
+@@ -1618,6 +1619,8 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
+ {
+ 	int ret = 0;
+ 	struct kprobe *ap = orig_p;
++	bool reset_post_handler = false;
++	bool ftrace_switch_ops = false;
+ 
+ 	scoped_guard(cpus_read_lock) {
+ 		/* For preparing optimization, jump_label_text_reserved() is called */
+@@ -1664,18 +1667,50 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
+ 					| KPROBE_FLAG_DISABLED;
+ 		}
+ 
++		if (p->post_handler && !ap->post_handler) {
++			reset_post_handler = true;
++			if (kprobe_ftrace(ap) && !kprobes_all_disarmed &&
++			    !kprobe_disabled(ap))
++				ftrace_switch_ops = true;
++			else
++				ap->post_handler = aggr_post_handler;
++		}
++
+ 		/* Copy the insn slot of 'p' to 'ap'. */
+ 		copy_kprobe(ap, p);
+-		ret = add_new_kprobe(ap, p);
++		if (!ftrace_switch_ops)
++			add_new_kprobe(ap, p);
++	}
++
++	if (ftrace_switch_ops) {
++		/*
++		 * Must switch ftrace ops outside of text_mutex and cpus_read_lock
++		 * to prevent deadlocks when ftrace code modification acquires text_mutex.
++		 */
++		ret = disarm_kprobe_ftrace(ap);
++		if (ret)
++			return ret;
++
++		ap->post_handler = aggr_post_handler;
++		ret = arm_kprobe_ftrace(ap);
++		if (ret) {
++			ap->post_handler = NULL;
++			if (arm_kprobe_ftrace(ap))
++				ap->flags |= KPROBE_FLAG_DISABLED;
++			return ret;
++		}
++		add_new_kprobe(ap, p);
+ 	}
+ 
+-	if (ret == 0 && kprobe_disabled(ap) && !kprobe_disabled(p)) {
++	if (kprobe_disabled(ap) && !kprobe_disabled(p)) {
+ 		ap->flags &= ~KPROBE_FLAG_DISABLED;
+ 		if (!kprobes_all_disarmed) {
+ 			/* Arm the breakpoint again. */
+ 			ret = arm_kprobe(ap);
+ 			if (ret) {
+ 				ap->flags |= KPROBE_FLAG_DISABLED;
++				if (reset_post_handler)
++					ap->post_handler = NULL;
+ 				list_del_rcu(&p->list);
+ 				synchronize_rcu();
+ 			}
 
-
- kernel/kprobes.c         |   85 ++++++++++++++++++++++-------
- lib/tests/test_kprobes.c |  136 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 200 insertions(+), 21 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
