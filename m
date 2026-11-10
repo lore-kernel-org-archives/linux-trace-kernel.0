@@ -1,77 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794329543;
-	b=MqUrDRKNkm5LTuWw/p72EmWMN8y5gRS7IKO9coqAv0GrbEWIJsBAT987R4Icfg+VWKI2
-	 uo4ni/3H9tbkzcfyK89ILbPx2po3H4aJt8bADreecaLh6FLcAahbfvoewTUJCStR54Bk0
-	 JkbQES+PqiCgbMDyF1EAIJilLbna8+LZHRvL2MPVmcTpyKzzbXa2rQF+IWXQEj0blP8ym
-	 WgivW55NuDvwXCrregevCDHueABXJ1HvJA+1Z++6bstcMbA/95HTL3+D31s3o6SMuwFgR
-	 VlIH7aw/1GBxOdCm8o9fF+QmMVKT9YNCFkJQeswK5esi27KX1ayMXXTXdDTj4VVAQYA==
+	t=1794330506;
+	b=VpG1Qn2QTEGUNE4JiVMI0gHUs4kmLoSTyeNLWTyOIOMB57Jx7nMzJjLsJBBwKJ8UCgKr
+	 rulZZnds138gQ4hNfX44+oAFNRiFRJ+vjgqFUjAD3kFBYdlUikL4QhZp6/ACwLcrrNfKD
+	 jA2NiWq6gtT2XG10aSUqIExGM/Ec6BGIM9v4s02RLyT0pRcSQkIi6FvDpb+T7VzBJbzgR
+	 TPVO+rS/a8dI8a7JY8iQ2C7IyD8VrFBMzIgALpjDB/ZAVispjbooIHfPYS3TF5tNMt4lp
+	 Vbf40nTbDPfLuCgBFfKEunU73+DrKxC88zT2yEJTBg2A/62v54lW30DxrIhhlikFIlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794329543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794330506;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=KyDcpTwF2G84cUTe+PVKDz9G3rULU78GRC2w0kOsrLc=;
-	b=l4aw2tre8GbBz5g9LuX5bM4yQTz96CFbLG8LsM7VKIXayuVmXV30ZQ32DPTyLKLklvnF
-	 fYFQ3zY+xdGIl+RC9ylnA/C7J49VUkApYGigBDyRkZo5czIM8Cqw8hUKbFZyn1/IgtQ3m
-	 Z/RGVRymJUJsoZqE4xFLoNPCFQbl09Pa3uiRQy/26ID/0+MFb3/zKlbTzp+JvVrStnzwK
-	 eWITQsh2iQT/0NCBfg5oKIZVh3Q6CWsgmG0dT0HwHYfcy3NvJnhpa5fox9BM20Ijf/wdi
-	 YYcsCHji+6Oik6v5hEeEl7hh1kCC4piXf0Q3DTWANagDf07zGSFRMlxB9cJ+9m6KinQ==
+	bh=W4toJnlwxo6gYnBNO7MZe8ejf7vNnhvthFCmzNs0KII=;
+	b=ZIMzwV4CqCpBUOA+zSN8oqh9uRvjlUEriI5sj54XhDYEt46Dwk3l2QmpicUpjsehURWN
+	 3tUlgVAJMj8Z2aOgPsAjtdPMUYHaOVCIu7HLaax9vLP2cVPgP3+vL6aWe8vpxoqqhGzMc
+	 bnORc63e09fqz87BKt1I27OTk0LPh4vWYIZWaoeDWErRUQd99ue5AxNSs4asR28pjiuKY
+	 EDCNKciNnrkLg2ftlxWoPGnCzgNCA850pfGR+KAlE8kPI/tFSGKXJ0zDSem6YehICp9M5
+	 9Mrsz+cfd65dp81ZmUiIWHY7r2rvqck5xDDZiZJoHrvyRyLaYnkeQ+7GXxb7Dv4Jsfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="WSR4/meg";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2lMMVu0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DB6606A330;
-	Tue, 10 Nov 2026 16:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DAC606A31C;
+	Tue, 10 Nov 2026 17:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WSR4/meg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6B21F0089F;
-	Tue, 10 Nov 2026 16:52:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2lMMVu0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DA21F0089F;
+	Tue, 10 Nov 2026 17:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794329543;
-	bh=KyDcpTwF2G84cUTe+PVKDz9G3rULU78GRC2w0kOsrLc=;
+	s=k20260515; t=1794330505;
+	bh=W4toJnlwxo6gYnBNO7MZe8ejf7vNnhvthFCmzNs0KII=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WSR4/megdggMO9wsDWOY+uoQSmNtO3j2yfbZkG8wNi5rB7hE651wqOzDxlgDXK7Ew
-	 RmAWiz2VBpllg4ynVFTcPIjgzyk7nAxhySjvb+byysmSgsCnpkfEzxkJqRWKHq9/mc
-	 YNAQhE0ikpxZ0sqlywqGqK0vnkiWmSjRjigl1fL7x76Q0lUOnOc+fEhl7WUDNrnt2X
-	 Hda+VOxkwzLr8arHFGMZFn9v/vCdMOGy5b+eY24hGBQ3e42uhb8xHhCF/aPlSMJPft
-	 3tCywwxXOQqTXxdhv8EqxUpg5QCSLRW2i8oyD+4B0ftty6ddfdgKmdarmtnmAcuyq1
-	 heVa4ehNncfYw==
-Date: Tue, 10 Nov 2026 17:52:03 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Cai Xinchen <caixinchen1@huawei.com>
-Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com, 
-	jmorris@namei.org, serge@hallyn.com, corbet@lwn.net, skhan@linuxfoundation.org, 
-	utilityemal77@gmail.com, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
-	rdunlap@infradead.org, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
-	johan@kernel.org, dlemoal@kernel.org, hch@lst.de, axboe@kernel.dk, 
-	viro@zeniv.linux.org.uk, jack@suse.cz, dhowells@redhat.com, code@tyhicks.com, 
-	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
-	hirofumi@mail.parknet.co.jp, cel@kernel.org, jlayton@kernel.org, neil@brown.name, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, hyc.lee@gmail.com, 
-	miklos@szeredi.hu, amir73il@gmail.com, senozhatsky@chromium.org, 
-	chenxiaosong@chenxiaosong.com, dsterba@suse.com, mason@kernel.org, kpsingh@kernel.org, 
-	matt@bobrowski.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, john.johansen@canonical.com, georgia.garcia@canonical.com, 
-	zohar@linux.ibm.com, roberto.sassu@huawei.com, dmitry.kasatkin@gmail.com, 
-	eric.snowberg@oracle.com, stephen.smalley.work@gmail.com, omosnacek@gmail.com, 
-	casey@schaufler-ca.com, takedakn@nttdata.co.jp, penguin-kernel@i-love.sakura.ne.jp, 
-	xiujianfeng@huawei.com, nanx95726@gmail.com, djwong@kernel.org, lujialin4@huawei.com, 
-	bpf@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, driver-core@lists.linux.dev, linux-block@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
-	ecryptfs@vger.kernel.org, exfat@lists.linux.dev, linux-nfs@vger.kernel.org, 
-	ntfs@lists.linux.dev, linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, apparmor@lists.ubuntu.com, linux-integrity@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 -next 00/18] landlock: Add READ_METADATA and
- WRITE_METADATA access rights
-Message-ID: <20261110-rekonstruieren-erbfolge-vollversammlung-26be74966211@brauner>
-References: <20261027121151.1887650-1-caixinchen1@huawei.com>
+	b=k2lMMVu0DXMibVy3EmJeXu1BBP9LzaZ+qFOkFKbiyyr7I71yF6EsgqCzDR8pdSBIo
+	 qecPgaS/MhiunL7X1SEnw3lR2lTP6BwoqZk6uefjwRjRbQpIt3Utr6+IQq3CSj7pCQ
+	 XuEgxQRvnh4tbyEQ9lTeLUeqX5tcFuGX7BoqIWr9+3bzH3FYABV5RskZjyVzl/TwRL
+	 NC/8/5/TdYHyIGoySa9+EKyv2VRc5c3liUe3/jVGmom9XU6RvUbD5a3HLqd5U+224c
+	 6gvIde6SvgNeiem1HcakWSaA3CtHngQNEUb1XPQY4lYKzm3SV68pAXSyJlGO0ENOi7
+	 JSCCNvxWyTW+A==
+Date: Tue, 10 Nov 2026 17:08:15 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Peter Xu <peterx@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/khugepaged: check for empty PTE tables before
+ retracting
+Message-ID: <avNO1pvPuMYIdYTE@gremlin>
+References: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
+ <20261107-b4-uffd_marker_loss-v1-2-82926b22704c@kernel.org>
+ <sashiko-outbox-203403@kernel.org>
+ <28b818cb-f038-43ce-a2e2-a9c97befba09@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -81,27 +71,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261027121151.1887650-1-caixinchen1@huawei.com>
+In-Reply-To: <28b818cb-f038-43ce-a2e2-a9c97befba09@kernel.org>
 
-On Tue, Oct 27, 2026 at 08:11:33PM +0800, Cai Xinchen wrote:
-> - The idmap is passed separately from the struct path again, instead
->   of being derived from path->mnt inside the helpers and the hooks.
->   As Christian explains in his review of patch 1, the idmap must be
->   taken of the mount at the time it was checked and passed down to
->   the filesystem so that the VFS and the filesystem are guaranteed
->   to see the same idmap.
+On Mon, Nov 09, 2026 at 04:08:23PM +0100, David Hildenbrand (Arm) wrote:
+> On 11/8/26 00:51, sashiko-bot@kernel.org wrote:
+> > [Severity: Medium]
+> > Can removing the VM_COPY_ON_FORK flag checks here cause retract_page_tables()
+> > to race with copy_page_range() during fork()?
+> >
+> > In dup_mmap(), the child VMA is linked into mapping->i_mmap and
+> > i_mmap_unlock_write(mapping) is dropped before copy_page_range() runs.
+> > vma_needs_copy() copies page tables not only when vma_has_anon_rmap() is set,
+> > but also when VM_COPY_ON_FORK flags (VM_MAYBE_GUARD, VM_MAYBE_UFFD_POISON,
+> > VM_UFFD_WP, or VM_UFFD_RWP) are set on a file or shmem VMA whose anon_vma is
+> > still NULL.
+>
+> Ah, try_collapse_pte_mapped_thp() runs withe the mmap lock, whereby
+> retract_page_tables() only holds the rmap lock.
 
-This regresses AT_EMPTY_PATH. fchmodat2(), fchownat() and utimensat()
-with an empty path now go through CLASS(fd) which is fdget() and that 
-refuses O_PATH file descriptors. IOW, this is very very broken.
+[ ... ]
 
-Please also go through Sashiko's review of v3 (cf. [1]). The new struct
-file arguments need __nullable or bpf programs can dereference NULL,
-and the ntfs3 stream setattr and overlayfs fileattr paths that bypass
-the hooks need treatment.
+> > Once the PMD is pmd_none, the next fault in finish_fault() installs a huge
+> > PMD before checking userfaultfd_armed(vma):
+> >
+> > mm/memory.c:finish_fault() {
+> > 	if (pmd_none(*vmf->pmd)) {
+> > 		if (!needs_fallback && folio_test_pmd_mappable(folio)) {
+> > 			ret = do_set_pmd(vmf, folio, page);
+> > 			if (ret != VM_FAULT_FALLBACK)
+> > 				return ret;
+> > 		}
+> >     ...
+> > 	/* Using per-page fault to maintain the uffd semantics */
+> > 	if (unlikely(userfaultfd_armed(vma)) || unlikely(needs_fallback)) {
+> > 		nr_pages = 1;
+> > }
+> >
+> > When userspace later issues UFFDIO_RWPROTECT on that file or shmem VMA,
+> > change_pmd_range() sees pgtable_split_needed() is true and calls
+> > __split_huge_pmd(), which zaps the file huge PMD back to pmd_none without
+> > populating a PTE table (since pgtable_populate_needed() is false for
+> > MM_CP_UFFD_RWP), so RWP protection is lost and subsequent accesses fault the
+> > unprotected huge PMD back in without delivering RWP faults.  Installing a
+> > huge PMD also causes PAGEMAP_SCAN to report all 512 pages as accessed or
+> > written after a single 4KB page fault.
+>
+> "Since pgtable_populate_needed() is false for MM_CP_UFFD_RWP" I think RWP also
+> needs proper uffd marker support, independent of the change here.
 
-[1]: https://sashiko.dev/#/patchset/20261027121151.1887650-1-caixinchen1%40huawei.com
+Hey,
 
--- 
+Wondered if you planned to do a respin on this? Want to know whether to delay
+review for that or not, thanks!
+
+--
+Cheers, Lorenzo
