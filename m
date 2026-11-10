@@ -1,56 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794293129;
-	b=bTk3jjidYTT3znib6uiyDw4yZizJ6q4uDNuTXLDzoFyulEPkQZPCpYxQU6KshQbM8gYd
-	 XUDJny6fT5+ve3Fnl6HbMde3M3NEo6a+YIU8CJOAr+7r3r1kP1WTxAqkdzdGof1Vd0ZUa
-	 qAAYrpZ291VGKQ2hqIpPPfEGeCeiSaL7j8UPGn5pxk13TCVXagt0uxoXusRqWpOUFWYF+
-	 YVq+52PkUB3TgvR3t10EdcI612DIkd4lCV2STUGscLUBG5dYuasUaTwYo8NrrsMo56GnI
-	 nFkRgsTA1DbbTnMxglEvB1EmvI+wNi6M6HUPRl33Rz7fcZTfjyNjbpW5TlGd6EM6z9w==
+	t=1794297141;
+	b=3ygovBQ8tKszFwu8Ci6/Ir0TecOwbcFwsfXho+JeJllQwQ7tKYAjlY19zPXNxWw8nI/q
+	 yKx4YbZ8IZx365lxLKGE9koTkqK6MRPhCtGsArFy3EyFtJCc1GTPWEpIH68NuuO0NwPA4
+	 KX9BjeVNcNGan/J0rcwnEenspYpKru+tsgc/lSluXa4laT7XEn6sxCZFAcjx5r3x2cQ8z
+	 bV6bQPR/gTaqAQc4TqR5vwexpEwf8ZSMd613ZV85GjZ/GNtewSiB+C1G4Dm82pg+RSiSM
+	 HxJPp7rTfnsseJtQEwcYqPPXxHyGZb2HtSVdAT+7aqYX2ULbNfGFyzmvMGzjO1zcMtg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794293129;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794297141;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=zWbrffbK2ezJuYqmT2VVu4kuubCH5WGTAKTy2AnfvOQ=;
-	b=UexByGuRL3SbahCgnBlRTdT3lb5Z6oMkEuigI4fv1tidbh9Y6jwo23EGTppB9Sp0/Xm+
-	 SRjVB2FSvNavo+yO6RS+wOL5b1vNx73Y189/X4VzKO1NMUIelW/URbkc6WsadbQ972dWq
-	 ltf0ydDd3hFe7EQbaKwMbljwvDFrCuV+ge0gMXlFOUEtIo6oEtnd/dR7Ot8PUsQMfnBOg
-	 6Xi0VoS6oFYhU+YCvF8HQxB7Wm2tK9e2Vy9m/DuxkN410ZQuDaYts/6la5Px2dQjcBzw5
-	 fs4pr/0ZBG9v55CYqc8ozJO99yocOl73B+oPIkGK27xMJssaXorco4gedcgjrIwI6GQ==
+	bh=HOR1+kqQhwJITF9mrUMDzf7ZzPSccks+bMhcYnxMQ/k=;
+	b=PeGn8Ho6Q/S8GWzZSWGQfXdPDZjAp02QMTXJ6KXD9UzQjLcldDfcgTtAP7kI4z07PXAk
+	 dQT83PDF5EYvA1c+VKdHs+qCLJzf5XNybKDA91mpYaU6qHqep6wTWYxRr5CX6++ZLmxdG
+	 ewiJCXa2tLnZT8Qu2J32H5VZKKtrpptbDoicDaDbvXqDnUiB1trA93OkTEEliSn2PeLVi
+	 fnfJ0EQYSXnm3W63FTEbnqjFxa4/U1/QptpQuMkjzk2Xsn0bFznbO0BFmBPLWPk4vmvAg
+	 gUGxucemTURr7kh1umB/r8rmNwCGmqlxC7Sd0vEjoEcZHiTUKcSApFX/jIQ0EcOAOTg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=SlMldNAO;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Wo0WadD1;
+	arc=none smtp.remote-ip=216.40.44.14
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0034A606CB17
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 06:45:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0034A606CB17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B41606A334;
+	Tue, 10 Nov 2026 07:52:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1B41606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=SlMldNAO
-Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 2BFD51208B5;
-	Tue, 10 Nov 2026 06:45:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 4DE692002C;
-	Tue, 10 Nov 2026 06:45:18 +0000 (UTC)
-Date: Tue, 10 Nov 2026 01:45:11 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Wo0WadD1
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 6959A140503;
+	Tue, 10 Nov 2026 07:52:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 1BA702002B;
+	Tue, 10 Nov 2026 07:52:07 +0000 (UTC)
+Date: Tue, 10 Nov 2026 02:52:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Haoli Zhang"
- <26031212468@stu.xidian.edu.cn>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: ring_buffer: wait for writers before removing
- pages
-Message-ID: <20261110014511.6e724f4f@fedora>
-In-Reply-To: <sashiko-outbox-206337@kernel.org>
-References: <20261110045850.2786-1-26031212468@stu.xidian.edu.cn>
-	<sashiko-outbox-206337@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Breno Leitao <leitao@debian.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <srostedt@redhat.com>, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] ring-buffer: Handle a reader taking the new head in
+ rb_handle_head_page()
+Message-ID: <20261110025202.78c8c03a@fedora>
+In-Reply-To: <avGQnBjyUMwunknT@google.com>
+References: <20261105-ring-buffer-head-moved-v2-1-05da40cebccc@debian.org>
+	<20261105155729.0f9c7e4d@gandalf.local.home>
+	<avGQnBjyUMwunknT@google.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,123 +66,119 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 6ox6haocbta5nbke7wa5pb89ktdxp6dg
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 4DE692002C
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 1BA702002B
+X-Stat-Signature: erqs333doy343w6acayxmgdjtkgouj9d
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/COKrdZA1V9yLguhOCHo/y2Jw3DiulTmo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=zWbrffbK2ezJuYqmT2VVu4kuubCH5WGTAKTy2AnfvOQ=; b=SlMldNAOeS49J621qVqE10axFJjonZP7ucA9o8hoIE4bnVy9koyVyF2KmPUeo6BzQoH2w+2U4S/YUEj+LSyGncJEqVRlAZVe0NN0UN2NAnhb5+q3Wl/zYFFYEYvGT8buKC/6SP+5vXdlItjxHnI289RvfRqjCa2x+MrJYgr6IBo=
-X-HE-Tag: 1794293118-24425
-X-HE-Meta: U2FsdGVkX18AnirAGflLCZQzo94O2KKAshkt4Q0FTjILxQHoWGPR9+Hbqm9yCQ/+PVZ5evyZm1ppicKpvOctG8l8TkHU3UKlxAqbY044Uty9nz/TEvJcw9EStAuhaGNV+rGYUzn1Jj0ig84/wUDDx2Rf0YZGlZwgpY2KEjl3AiJs0KS5P50OLOWk1EWPe5Cfq6GiW0Y/Q9fEaRYWp5kNrpVEX7ZYIyuXe7OLf6Cw0DiMWT0AzPtWOTQXtzrAJVHzS6k8tlgFDsgcEghqgQXXBO7xxSeatC9HWoq8kXPYuQ9bo/g32rRoxyCeUXidEroJ8JR8V6LQZf93g35u77MNnO9iK65hzYFfYbwzXv5gN4tcWknvdlCjRIAqbuELa6+YNmdgOhEU/uosGpQo0IRjghvwXGhqHHiCaVrTHcvhoQCgYEgJz/thN1EsBiqsDIY7WRCm7bIUvfShchEqEuBqWg==
+X-Session-ID: U2FsdGVkX1+YQOdajhCDf1ZjZQfnHpfSD5rLF0zgf5s=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=HOR1+kqQhwJITF9mrUMDzf7ZzPSccks+bMhcYnxMQ/k=; b=Wo0WadD1kJznyFIlA6jRp+DI7L2vl/XdShuuFurlVUnOZW8enSWCf4tTmX8XqPYhIYO+74AuaTtTUfTsxtk6eyVW9RZrG29QbG9n/6kOUVsBN48xeHTGhpLh3F8SHLikyRWKwLMOjIyzUX2hJlUozCfOqyvc3ya0n8MGTvAebyQ=
+X-HE-Tag: 1794297127-995168
+X-HE-Meta: U2FsdGVkX1+hTXjhiPB/SOj4L/XPStP7ECk2j9J4x/CsE0t8QgKNpm9izosUDHdljRIJTbLF4rRiA/aFukUGls7Y9P9meRaZDRHrmTc/xDDJdHrsuzRqcTU+YviHj0930OyYBGYD6NOguoAf1ebrXF1wnnqJ5356UB0WiNN+M6paW1SRvUgubYwabm7Po6e/6/zL0gkjPvzJ3QRW9zQPr8VOzhr/U5mcSJpcXaynm6/RKPuj8L5Db6hBNIX/85+RESUCtwW3UShT7Zrw9bTGeC3ViAdQxqVQDCfrmKq4a5ZvF1R6X7nAL6b5EQyTRdAvknI1oj35S5XMUGHaQFBvUYl52H0jLw/1
 
-On Tue, 10 Nov 2026 05:44:54 +0000
-sashiko-bot@kernel.org wrote:
+On Mon, 9 Nov 2026 09:21:32 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> Thank you for your contribution! Sashiko AI review found 2 potential
-> issues to consider:
-> - [Medium] tracing: ring_buffer: ineffective synchronize_rcu() in
->   rb_remove_pages()
-> - [Low] tracing: ring_buffer: missing Fixes trailer for
->   rb_remove_pages() fix
-> --
+> > The issue I think you hit was that we have two HEAD pages, when interrupts
+> > come in. That is, we can get a state of:
+> >   
+> >   --> subbuf --UPDATE--> subbuf --> subbuf --HEAD--> subbuf -->  
 > 
-> commit 47d13d1f3cd83bf8e86c2d2c4091f144764c4470
-> Author: Haoli Zhang <26031212468@stu.xidian.edu.cn>
-> 
-> > tracing: ring_buffer: wait for writers before removing pages
-> >
-> > A writer can still be using the ring buffer page list when a concurrent
-> > resize removes and frees pages. Disabling recording prevents new writers
-> > from entering, but it does not wait for writers that are already in the
-> > reserve/commit path. The reader lock protects reader-side page operations
-> > and does not provide that writer-side synchronization.
-> >
-> > Disable recording before waiting for a grace period, then wait for
-> > pre-existing writers to finish before taking the reader lock and changing
-> > the page list. Keep recording disabled until after the page list has been
-> > updated and the reader lock has been released. The removed pages are
-> > unlinked and subsequently freed.
-> >
-> > This adds a grace-period wait to the resize path; it does not add
-> > synchronization to the normal ring-buffer write path.
-> >
-> > Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=37e1793bdb0061ea3a47
-> > Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> > Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> > Co-developed-by: Bin Yu <byu@xidian.edu.cn>
-> > Signed-off-by: Bin Yu <byu@xidian.edu.cn>
-> > Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>  
-> 
-> [Severity: Low]
-> This is a bug fix for rb_remove_pages().  Should it include:
-> 
->   Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atomic")
-> 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index e760d2fe386fb..7ec0e12493f52 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -3080,8 +3080,11 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
-> >  
-> >  	head_bit = 0;
-> >  
-> > -	raw_spin_lock_irq(&cpu_buffer->reader_lock);
-> >  	atomic_inc(&cpu_buffer->record_disabled);
-> > +	/* Wait for in-flight writers to finish before unlinking pages. */
-> > +	synchronize_rcu();
-> > +
-> > +	raw_spin_lock_irq(&cpu_buffer->reader_lock);  
-> 
-> [Severity: Medium]
-> Can any writer on cpu_buffer actually be in flight when rb_remove_pages()
-> reaches synchronize_rcu()?
-> 
-> ring_buffer_lock_reserve() and ring_buffer_write() disable preemption with
-> preempt_disable_notrace() across the entire reserve/commit path and only
-> write to the local CPU's cpu_buffer.  Meanwhile, ring_buffer_resize() only
-> runs rb_update_pages() -> rb_remove_pages() in task context on the target
-> CPU itself (via schedule_work_on() or directly under migrate_disable()) or
-> while the CPU is offline under cpus_read_lock():
-> 
-> kernel/trace/ring_buffer.c:ring_buffer_resize() {
->     ...
-> 			if (!cpu_online(cpu)) {
-> 				rb_update_pages(cpu_buffer);
-> 				cpu_buffer->nr_pages_to_update = 0;
-> 			} else {
-> 				/* Run directly if possible. */
-> 				migrate_disable();
-> 				if (cpu != smp_processor_id()) {
-> 					migrate_enable();
-> 					schedule_work_on(cpu,
-> 							 &cpu_buffer->update_pages_work);
-> 				} else {
-> 					update_pages_handler(&cpu_buffer->update_pages_work);
-> 					migrate_enable();
-> 				}
-> 			}
->     ...
-> }
-> 
-> Because rb_remove_pages() runs in task context on cpu_buffer->cpu, no
-> task-context writer on that CPU can be inside its preempt-disabled
-> reserve/commit section, and any interrupting softirq, hardirq, or NMI
-> writer that started before atomic_inc(&cpu_buffer->record_disabled) has
-> already finished before returning to task context.
-> 
-> Calling synchronize_rcu() here therefore does not wait for any writer.
-> Instead, it stalls recording on cpu_buffer for an entire RCU grace period,
-> blocks ring_buffer_resize() under migrate_disable() before scheduling work
-> on remaining CPUs, and leaves the use-after-free unfixed when
-> __rb_get_reader_page() leaves cpu_buffer->reader_page->list.prev pointing
-> to a buffer_page that rb_remove_pages() subsequently unlinks and frees
-> before a writer checks rb_is_reader_page() in rb_move_tail() or
-> rb_set_commit_to_write().
-> 
+> How we can end-up in this situation? The cmpxch will only swap HEAD for UPDATE. 
 
-Exactly, this "fix" is bogus.
+The cpu_buffer->head_page is only updated by the reader, when it did its last read.
+
+Let's look at it one at a time:
+
+                              cpu_buffer->head_page
+                     tail               |
+                      v                 v
+  +--> subbuf ----> subbuf --HEAD--> subbuf ----> subbuf ----> subbuf --+
+  |                                                                     |
+  +---------------------------------------------------------------------+
+
+Then the writer moves the HEAD page around the buffer while there are
+no reads happening
+
+
+                              cpu_buffer->head_page
+                                tail |
+                                  v  v
+  +--> subbuf ----> subbuf ----> subbuf --HEAD--> subbuf ----> subbuf --+
+  |                                                                     |
+  +---------------------------------------------------------------------+
+
+                              cpu_buffer->head_page
+                                    |          tail
+                                    v            v
+  +--> subbuf ----> subbuf ----> subbuf ----> subbuf --HEAD--> subbuf --+
+  |                                                                     |
+  +---------------------------------------------------------------------+
+
+                              cpu_buffer->head_page
+                                        |                      tail
+                                        v                        v
+  +-HEAD-> subbuf ----> subbuf ----> subbuf ----> subbuf ----> subbuf --+
+  |                                                                     |
+  +---------------------------------------------------------------------+
+
+                              cpu_buffer->head_page
+        tail                             |
+          v                              v
+  +--> subbuf --HEAD--> subbuf ----> subbuf ----> subbuf ----> subbuf --+
+  |                                                                     |
+  +---------------------------------------------------------------------+
+
+Now, I'll break up the update part:
+
+                              cpu_buffer->head_page
+        tail                             |
+          v                              v
+  +--> subbuf --UPDATE--> subbuf ----> subbuf ----> subbuf ----> subbuf --+
+  |                                                                       |
+  +-----------------------------------------------------------------------+
+
+                                 cpu_buffer->head_page
+        tail                                |
+          v                                 v
+  +--> subbuf --UPDATE--> subbuf --HEAD--> subbuf ----> subbuf ----> subbuf --+
+  |                                                                           |
+  +---------------------------------------------------------------------------+
+
+An interrupt comes in and moves the head even more.
+
+                                 cpu_buffer->head_page
+        tail                              |
+          v                               v
+  +--> subbuf --UPDATE--> subbuf ----> subbuf --HEAD--> subbuf ----> subbuf --+
+  |                                                                           |
+  +---------------------------------------------------------------------------+
+
+Now  the reader decides to read again and starts between the UPDATE and the HEAD
+
+
+                                                 cpu_buffer->head_page
+        tail                                              |
+          v                                               v
+  +--> subbuf --UPDATE--> subbuf ----> subbuf --HEAD--> subbuf ----> subbuf --+
+  |                                                                           |
+  +---------------------------------------------------------------------------+
+
+It finds a page with the HEAD pointer set but not the UPDATE pointer and does a swap!
+
+
+                                                        reader_page -----+
+                                                                         |
+                                                 cpu_buffer->head_page   |
+        tail                                                         |   |
+          v                                                          v   v
+  +--> subbuf --UPDATE--> subbuf ----> subbuf ----> subbuf --HEAD--> subbuf --+
+  |                                                                           |
+  +---------------------------------------------------------------------------+
+
+Now the commit finishes and moves forward and will even hit a blank
+page but the last write is now on the reader page. This breaks the
+entire integrity of the ring buffer.
+
+Does this make sense?
 
 -- Steve
-
-
