@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794317127;
-	b=TtKXC8dB68MUUGuX+OO47U4mc6ObHwyFP39vZRV8688nhjtgI1eHpAZjWhHEX7PVHzkL
-	 BZblqS1max4t0RsD4NjYKOVTEDLtMfJacQal0/MwA4SaBvo8pE1XK7zWNSzQG1D5EsXHR
-	 Bsxst5Rh92ey10Sge9VFNYZkdiMkHmlG2rBtWUwQUmhqP4VPBXhMAlTPWnieMvu+SH/wQ
-	 6AQ8ustxOT9jUw/ZqUrPMsAixy7CM0fc3SAge36wdx7ryRnd6pW5XZb5xOc0PjLOLWw1y
-	 gLWLyF0uYalzoEAOOio6fecw+11zYMMvJ04sVKxioDoWO4ZmBt4aQNppbo2JjbKzxZw==
+	b=yEX+a47jY90gYe/bwh4k/IglMr+g7cwG1N5obQ/wLZxfqCNMfha5gtnLB2ne9DKmqZjH
+	 vMrE6qM4OkeXBLKNJYwQ/5lukJXAGME23ozMUU0YIVGHT6YEIOztIj7B/Ei0+AL+EzFMc
+	 8E6VhFVcn0KjIbPTbtUXLnbaHyzFSuDKX3PzXmaQg5GcVZ25Tmosi11PQjeX8r90aH7YS
+	 v15HNlinw9vt3qEvC+QmXNCxaOBYWjcN65tKIgI94KdgbOZHtGjhV+0L6vnUU2mSK//fr
+	 U82e2NHlHDlm4BWGigbRxKP+NfGxeILGpB9q7pmd7pj8Njx/ZCcDT+UX621J8iGU+pg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794317127;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,50 +13,50 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=gAgUm+zu4ouAPHk2ltR9YWlOESQgVA+D9Wg1zFD55wo=;
-	b=fdpGjMJA+cETIX4wztd7F9RiaMl9i1L9UArIQJSdpZCKWwebzjKEK79FemcZG4pInrDN
-	 Uw+zkPxT1cav/3piRs+wjYBtbOSPpjZmeXsRaOYUeGOKWSLJnQwOV+oetz78Q2ki7w8Yp
-	 Y7eFS3ws3fVcDY8Kf/IbIsMSnqOfNPYJjq9SOF/dAL0ZZ3jF6FIV1oCJMECS93xMinN8A
-	 oi2r8OPe5wdSjep3iETMnG1yOm1wIOIK8a1KuqmOtGW01PZ5tW6h8LCbm3Og1ZrAwl1Y6
-	 YIbwjHzt3d9iHY79mIfgIWmzm+qhHsEYX9sYBSDtrywXHgWU8v+kNmXIa9kCYrl6hNA==
+	bh=4FMAuWBrqgwOPsdp0mVXAaEVFwnsyImbjiqIUcEpunM=;
+	b=v7iEN5CKVykuF+NyAzVfwb1AeXXCEJRGoaQvqLZGKsYTZBwva+vuumeGcs36S3FnLSiq
+	 vcvJ5V9+9Vcsn4RR368nPj5Pjqx0Dp3GO5wklNPqa0j+shdmm2Hb+dkr+S2EmtHynxOhU
+	 kGE8ucg5yCx+t678iBD+Z7qVzfhNxJXgUgQXzH7uNjOjvcDtUagRVQngmKMX4qK1ee8Ra
+	 kejbq+23AVFcA2OUMiP/PxOqnj9iEt02MKejyEhKVKo1WyrgtPQlBd6pMj4pEUYj6kf8n
+	 XR0B7noEVjG1LtjKJM6aEDdr08LQFwKFp5suK+jQvsRR/q8Sgpa7+MDg9pTxICHi55g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
 	arc=none smtp.remote-ip=207.54.77.50
 Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB3D606A7D8;
-	Tue, 10 Nov 2026 13:25:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BAB3D606A7D8
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64714606A338;
+	Tue, 10 Nov 2026 13:25:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64714606A338
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794317125; x=1825853125;
+  t=1794317123; x=1825853123;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=coFMHXrP0qcF3S1aGstc7G6RDhIOeADEJJLQLLJLVZU=;
-  b=A7j+Bngtd5dZam/hE0IRY21iqWf4RJs/NcFA9J8jX75rdqpLvLQrRo+I
-   QdeOAMQzxwNTtsU1EOTx1GtIAzkQi+ypWFfq7RGLPt6GBKYhx3ekzMVtJ
-   6e/Yxn0T7SQzo/tBNMTWbfVBBIClBTt7nMvt4JWm+h8VIzY9Z2v+Lzm1+
-   r6kj0taJ5W42rohokm9Gvn5cCZTnLWwh5qqtk8oQ9l4pgrl3pw28N7ltW
-   iY9MnOK+H03oXKv6dZ4hny0MU114CneTGaGjxaDqPtOOALfC/WBUQ7Fea
-   tFiER32hIE9kDIcZDGdjryqRetT6ms3zH5QrtYyhZfLe2RULy1Iu5Uy/y
-   g==;
+  bh=L3zGOwCrEzfPFM2n3MQKHzeJZx/dRxHQYbMLSMc6Ouk=;
+  b=V0kg3afN2I43JgGGnbgXPmx98gM2lWebTEQyGkdTCdM0QkNAhF1hL39h
+   4gjcgdy2+FSO0bD+uCFqjmSjUV9+glbW4EBGvxMSbCRwHNcXMfucai5Ru
+   Yh8fsQ62H/I779tSZDp7P+mewAIWs08S55k0X0u7pmCa4ni5FuCS2lBqE
+   xql+vaVoG4LSKnasGjm+EYt1K8YwZ66eDRqb/ghUTdTGYj0uJ34uXsbI8
+   E/bpeSfgg2fT1Gm8YgiFjoptBO20OZyOnRoaYrmpiUJgK/VIQ2Zqhpl0S
+   olSBFp9fTonV5dG5jFDrMH/BfOUj7CekmPnI5j12OSjTjwjjZcMX1sk0W
+   A==;
 X-CSE-ConnectionGUID: 1X3Eq3HWSwW2H+8428Svhg==
-X-CSE-MsgGUID: 6AcQ3tuKR8GVRB3ZXNk3AQ==
+X-CSE-MsgGUID: ButTyVF4Tb+dKrATDMjbIw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
   by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 15:22:53 +0200
-X-CSE-ConnectionGUID: xsgB36dIQoWRmHm+zOXwPg==
-X-CSE-MsgGUID: gyu9GASCTaWhK0lgF45j3Q==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
-  by ces02_data.me-corp.lan with SMTP; 10 Nov 2026 15:30:58 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Nov 2026 15:22:52 +0200
+X-CSE-ConnectionGUID: 3rGpzVSPRgian0EVCvcgFA==
+X-CSE-MsgGUID: vRks8qPuQauHDpNDFZpK5Q==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
+  by ces02_data.me-corp.lan with SMTP; 10 Nov 2026 15:30:57 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Nov 2026 15:22:51 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Tue, 10 Nov 2026 15:20:59 +0200
-Subject: [PATCH v6 2/6] riscv: build kernel atomics from LR/SC when Zaamo
- is disabled
+Date: Tue, 10 Nov 2026 15:20:58 +0200
+Subject: [PATCH v6 1/6] riscv: probes: reject probes inside an LR/SC
+ sequence
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -68,7 +68,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-lrsc-only-v6-2-bafc3cc0fcae@mobileye.com>
+Message-Id: <20261110-lrsc-only-v6-1-bafc3cc0fcae@mobileye.com>
 References: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
 In-Reply-To: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
 To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
@@ -112,622 +112,351 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 X-Mailer: b4 0.16.0
 
-The A extension is Zaamo plus Zalrsc. On some CPUs Zaamo is present
-only formally. MIPS P8700 traps every AMO instruction into M-mode and
-emulates it there, so the extension is supported but very slow. A
-typical uncontended atomic increment costs:
+A kprobe or uprobe replaces an instruction with a breakpoint. The trap
+clears the hart's reservation, so if the breakpoint sits on the lr, on
+the sc, or on any instruction between them, the sc fails, the loop
+branches back to the lr and the probe fires again. The sequence never
+completes.
 
-  native AMO                                     2..5 cycles
-  LR/SC, private L1 reservation monitor         6..12 cycles
-  LR/SC, PoC (L2) reservation monitor       about 40 cycles
-  AMO emulated by an M-mode trap           about 600 cycles
+This has always been possible on RISC-V, because cmpxchg and the
+conditional atomics are LR/SC loops. Once Zaamo is disabled every
+kernel atomic is such a loop, and so is every atomic in userspace built
+for the same hart, so the chance of a probe landing in one grows
+accordingly. arm64 has the same problem and rejects probes inside an
+exclusive-load/store-exclusive region.
 
-The last two were measured on the eyeq7h hardware. On such a CPU the
-kernel must use LR/SC for every atomic.
+Teach the shared instruction decoder to reject lr and sc themselves.
+This covers both kprobes and uprobes.
 
-Add RISCV_ISA_ZAAMO, default y. The default keeps "a" in -march and
-the generated code unchanged. When it is disabled, -march carries
-_zalrsc instead of "a", and atomic_*, bitops, xchg, futex and the
-early boot code use LR/SC loops. The sequence is chosen with the
-preprocessor, on CONFIG_RISCV_ISA_ZAAMO like the other ISA options in
-the headers, because the assembler rejects AMO mnemonics once -march
-lacks Zaamo. A kernel built this way runs on any hart that implements
-A; it just does not use AMO. It is therefore a plain option, not a
-NONPORTABLE one, and the hart keeps advertising "a" to userspace,
-which is true.
+For the instructions between them, use the rules for a constrained
+LR/SC sequence: at most 16 instructions between lr and sc, all base
+integer instructions other than loads, stores, JALR, FENCE, SYSTEM and
+backward jumps or branches, or their compressed forms. Scan forward
+from the probed instruction. Reaching an sc through permitted
+instructions only means the probe sits inside a sequence; any other
+instruction, an lr, the end of the window or the end of the readable
+text means it does not. Only a sequence that follows these rules is
+guaranteed to make progress, so a probe inside any other one is
+already on unsupported ground. Scanning forward rather than tracking
+state from the start of the function also keeps an lr that has no sc,
+such as the one in __cmpwait() before wrs.nto, from affecting probes
+later in the same function.
 
-The LR/SC loops follow the ordering convention of the existing ones
-in cmpxchg.h, from commit 5ce6c1f3535f ("riscv/atomic: Strengthen
-implementations with fences") and commit 1d84afaf0252 ("riscv: Fix
-fully ordered LR/SC xchg[8|16]() implementations"): a fully ordered
-operation is lr, sc.rl and a trailing fence rw,rw; acquire is lr.aq
-with a plain sc; release is a plain lr with sc.rl. The futex loop is
-bounded to 128 retries and returns -EAGAIN after that, as arm64 does,
-because userspace can keep the word changing from another thread and
-futex_wake_op() retries on -EAGAIN anyway.
+kprobes scan the kernel text up to the end of the enclosing symbol.
+uprobes have only the probed instruction copied, so they read the
+text that follows it from the task, which the caller's mmap_lock
+allows.
 
-Zabha, Zacas and the ssamoswap instruction of Zicfiss are AMO
-instructions, so RISCV_ISA_ZABHA, RISCV_ISA_ZACAS and RISCV_USER_CFI
-depend on RISCV_ISA_ZAAMO. The riscv64imac Rust target emits AMO too,
-so RUSTC_SUPPORTS_RISCV depends on it as well.
+This is independent of the rest of the series. cmpxchg is already an
+LR/SC loop today, so the problem exists on every kernel; it only
+becomes easier to hit once every atomic is such a loop.
 
-The choice is made at compile time rather than with alternatives.
-Nearly every CPU has a native A extension, and an alternative would
-inflate all those kernels with the nops needed to pad one AMO to the
-size of an LR/SC loop, at every atomic site, for the benefit of a few.
-
-Turning Zaamo off needs a compiler that accepts _zaamo and _zalrsc in
--march. GCC 15.1 is the first release that does.
-TOOLCHAIN_HAS_ZALRSC_ZAAMO checks for it; with an older compiler the
-option stays at y.
-
-Three sets of extensions provide every atomic Linux needs. "a" is what
-the kernel supports today. Zalrsc plus Ziccrse is what this patch adds:
-every atomic is a constrained LR/SC loop, and Ziccrse is the
-forward-progress guarantee for such loops. Zaamo plus Zacas would do
-as well, with CAS loops in place of LR/SC as on x86, and is left for
-whoever has such hardware.
-
-Suggested-by: Chao-ying Fu <chao-ying.fu@globalfoundries.com>
-Nacked-by: Conor Dooley <conor.dooley@microchip.com>
-Link: https://lore.kernel.org/linux-riscv/20261106-smock-headband-d6a7d568c228@spud/
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- arch/riscv/Kconfig               | 36 +++++++++++++++++++
- arch/riscv/Makefile              | 15 +++++---
- arch/riscv/include/asm/atomic.h  | 53 +++++++++++++++++++++++++++-
- arch/riscv/include/asm/bitops.h  | 76 ++++++++++++++++++++++++++++++++++++++--
- arch/riscv/include/asm/cmpxchg.h | 39 +++++++++++++++++----
- arch/riscv/include/asm/futex.h   | 58 ++++++++++++++++++++++++++++++
- arch/riscv/kernel/entry.S        |  7 ++++
- arch/riscv/kernel/head.S         | 12 +++++++
- 8 files changed, 281 insertions(+), 15 deletions(-)
+ arch/riscv/include/asm/insn.h          | 28 ++++++++++
+ arch/riscv/kernel/probes/decode-insn.c | 94 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/probes/decode-insn.h |  7 +++
+ arch/riscv/kernel/probes/kprobes.c     | 15 ++++--
+ arch/riscv/kernel/probes/uprobes.c     | 31 +++++++++++
+ 5 files changed, 172 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 5874ca30f4f6..3c3679701a60 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -237,6 +237,8 @@ config RISCV
- config RUSTC_SUPPORTS_RISCV
- 	def_bool y
- 	depends on 64BIT
-+	# The riscv64imac target emits AMO instructions
-+	depends on RISCV_ISA_ZAAMO
+diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
+index c3005573e8c9..f5de81753bec 100644
+--- a/arch/riscv/include/asm/insn.h
++++ b/arch/riscv/include/asm/insn.h
+@@ -10,11 +10,16 @@
  
- config CLANG_SUPPORTS_DYNAMIC_FTRACE
- 	def_bool CC_IS_CLANG
-@@ -706,6 +708,7 @@ config RISCV_ISA_ZABHA
- 	bool "Zabha extension support for atomic byte/halfword operations"
- 	depends on TOOLCHAIN_HAS_ZABHA
- 	depends on RISCV_ALTERNATIVE
-+	depends on RISCV_ISA_ZAAMO
- 	default y
- 	help
- 	  Enable the use of the Zabha ISA-extension to implement kernel
-@@ -723,6 +726,7 @@ config TOOLCHAIN_HAS_ZACAS
- config RISCV_ISA_ZACAS
- 	bool "Zacas extension support for atomic CAS"
- 	depends on RISCV_ALTERNATIVE
-+	depends on RISCV_ISA_ZAAMO
- 	default y
- 	help
- 	  Enable the use of the Zacas ISA-extension to implement kernel atomic
-@@ -730,6 +734,36 @@ config RISCV_ISA_ZACAS
+ #define RV_INSN_FUNCT3_MASK	GENMASK(14, 12)
+ #define RV_INSN_FUNCT3_OPOFF	12
++#define RV_INSN_FUNCT5_MASK	GENMASK(31, 27)
++#define RV_INSN_FUNCT5_OPOFF	27
++#define RV_INSN_FUNCT7_MASK	GENMASK(31, 25)
++#define RV_INSN_FUNCT7_OPOFF	25
+ #define RV_INSN_OPCODE_MASK	GENMASK(6, 0)
+ #define RV_INSN_OPCODE_OPOFF	0
+ #define RV_INSN_FUNCT12_OPOFF	20
  
- 	  If you don't know what to do here, say Y.
+ #define RV_ENCODE_FUNCT3(f_)	(RVG_FUNCT3_##f_ << RV_INSN_FUNCT3_OPOFF)
++#define RV_ENCODE_FUNCT5(f_)	(RVG_FUNCT5_##f_ << RV_INSN_FUNCT5_OPOFF)
+ #define RV_ENCODE_FUNCT12(f_)	(RVG_FUNCT12_##f_ << RV_INSN_FUNCT12_OPOFF)
  
-+config TOOLCHAIN_HAS_ZALRSC_ZAAMO
-+	bool
-+	default y
-+	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64im_zaamo_zalrsc)
-+	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32im_zaamo_zalrsc)
+ /* The bit field of immediate value in I-type instruction */
+@@ -136,7 +141,13 @@
+ 
+ /* parts of opcode for RVG*/
+ #define RVG_OPCODE_FENCE	0x0f
++#define RVG_OPCODE_OP_IMM	0x13
+ #define RVG_OPCODE_AUIPC	0x17
++#define RVG_OPCODE_OP_IMM_32	0x1b
++#define RVG_OPCODE_AMO		0x2f
++#define RVG_OPCODE_OP		0x33
++#define RVG_OPCODE_LUI		0x37
++#define RVG_OPCODE_OP_32	0x3b
+ #define RVG_OPCODE_BRANCH	0x63
+ #define RVG_OPCODE_JALR		0x67
+ #define RVG_OPCODE_JAL		0x6f
+@@ -188,6 +199,17 @@
+ #define RVG_FUNCT12_EBREAK	0x1
+ #define RVG_FUNCT12_SRET	0x102
+ 
++/* parts of funct5 code for A extension */
++#define RVG_FUNCT5_LR		0x02
++#define RVG_FUNCT5_SC		0x03
 +
-+config RISCV_ISA_ZAAMO
-+	bool "Zaamo extension support for AMO atomics" if TOOLCHAIN_HAS_ZALRSC_ZAAMO
-+	default y
-+	help
-+	  Use AMO instructions for kernel atomic memory operations. When
-+	  disabled, those operations are built from LR/SC and the kernel
-+	  is compiled with zalrsc instead of the A extension.
-+
-+	  Disable this for a CPU where AMO is much slower than LR/SC. That
-+	  is the case when AMO instructions are emulated by a trap into
-+	  M-mode, as on the MIPS P8700: an emulated atomic costs hundreds
-+	  of cycles where LR/SC costs tens.
-+
-+	  A kernel built without Zaamo runs on any CPU that implements the
-+	  A extension. Zabha, Zacas, userspace control flow integrity and
-+	  Rust need Zaamo and are unavailable without it.
-+
-+	  The compiler must accept _zaamo and _zalrsc in -march to make
-+	  this choice. GCC 15.1 is the first release that does. With an
-+	  older compiler the option stays enabled and -march keeps the A
-+	  extension.
-+
-+	  If you don't know what to do here, say Y.
-+
- config TOOLCHAIN_HAS_ZBB
- 	bool
- 	default y
-@@ -1206,6 +1240,8 @@ config RISCV_USER_CFI
- 	depends on 64BIT && MMU && \
- 		$(cc-option,-mabi=lp64 -march=rv64ima_zicfiss_zicfilp -fcf-protection=full)
- 	depends on RISCV_ALTERNATIVE
-+	# ssamoswap is an AMO instruction
-+	depends on RISCV_ISA_ZAAMO
- 	select RISCV_SBI
- 	select ARCH_HAS_USER_SHADOW_STACK
- 	select ARCH_USES_HIGH_VMA_FLAGS
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 44f5a439741a..59c5123c5485 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -58,8 +58,9 @@ ifeq ($(CONFIG_SHADOW_CALL_STACK),y)
- endif
- 
- # ISA string setting
--riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
--riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
-+riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32im
-+riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64im
-+riscv-march-$(CONFIG_RISCV_ISA_ZAAMO)	:= $(riscv-march-y)a
- riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
- riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
- riscv-march-$(CONFIG_RISCV_ISA_V)	:= $(riscv-march-y)v
-@@ -75,9 +76,15 @@ else
- riscv-march-$(CONFIG_TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI) := $(riscv-march-y)_zicsr_zifencei
- endif
- 
--KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-+KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima?|rv64ima?)fd([^v_]*)v?/\1\2/')
- export KBUILD_BASE_ISA
- 
-+# Without Zaamo only the LR/SC half of "a" is used. The compiler accepts
-+# _zalrsc here, see TOOLCHAIN_HAS_ZALRSC_ZAAMO.
-+ifneq ($(CONFIG_RISCV_ISA_ZAAMO),y)
-+riscv-march-y := $(riscv-march-y)_zalrsc
-+endif
-+
- # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
- # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
- KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
-@@ -85,7 +92,7 @@ KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
- KBUILD_AFLAGS += -march=$(riscv-march-y)
- 
- # For C code built with floating-point support, exclude V but keep F and D.
--CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)([^v_]*)v?/\1\2/')
-+CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima?|rv64ima?)([^v_]*)v?/\1\2/')
- 
- KBUILD_CFLAGS += -mno-save-restore
- 
-diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
-index 616b8b332ac5..cca1fc3a68ff 100644
---- a/arch/riscv/include/asm/atomic.h
-+++ b/arch/riscv/include/asm/atomic.h
-@@ -50,6 +50,7 @@ static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
-  * have the AQ or RL bits set.  These don't return anything, so there's only
-  * one version to worry about.
-  */
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- #define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)		\
- static __always_inline							\
- void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
-@@ -59,7 +60,23 @@ void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
- 		: "+A" (v->counter)					\
- 		: "r" (I)						\
- 		: "memory");						\
--}									\
-+}
-+#else
-+#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)		\
-+static __always_inline							\
-+void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)	\
-+{									\
-+	register c_type ret, temp;					\
-+	__asm__ __volatile__ (						\
-+		"1:	lr." #asm_type " %1, %0\n"			\
-+		"	" #asm_op " %2, %1, %3\n"			\
-+		"	sc." #asm_type " %2, %2, %0\n"			\
-+		"	bnez %2, 1b\n"					\
-+		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
-+		: "r" (I)						\
-+		: "memory");						\
-+}
-+#endif
- 
- #ifdef CONFIG_GENERIC_ATOMIC64
- #define ATOMIC_OPS(op, asm_op, I)					\
-@@ -84,6 +101,7 @@ ATOMIC_OPS(xor, xor,  i)
-  * There's two flavors of these: the arithmetic ops have both fetch and return
-  * versions, while the logical ops only have fetch versions.
-  */
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- #define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)	\
- static __always_inline							\
- c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,		\
-@@ -108,6 +126,39 @@ c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *v)	\
- 		: "memory");						\
- 	return ret;							\
- }
-+#else
-+#define ATOMIC_FETCH_OP(op, asm_op, I, asm_type, c_type, prefix)	\
-+static __always_inline							\
-+c_type arch_atomic##prefix##_fetch_##op##_relaxed(c_type i,		\
-+					     atomic##prefix##_t *v)	\
-+{									\
-+	register c_type ret, temp;					\
-+	__asm__ __volatile__ (						\
-+		"1:	lr." #asm_type " %1, %0\n"			\
-+		"	" #asm_op " %2, %1, %3\n"			\
-+		"	sc." #asm_type " %2, %2, %0\n"			\
-+		"	bnez %2, 1b\n"					\
-+		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
-+		: "r" (I)						\
-+		: "memory");						\
-+	return ret;							\
-+}									\
-+static __always_inline							\
-+c_type arch_atomic##prefix##_fetch_##op(c_type i, atomic##prefix##_t *v)	\
-+{									\
-+	register c_type ret, temp;					\
-+	__asm__ __volatile__ (						\
-+		"1:	lr." #asm_type " %1, %0\n"			\
-+		"	" #asm_op " %2, %1, %3\n"			\
-+		"	sc." #asm_type ".rl %2, %2, %0\n"		\
-+		"	bnez %2, 1b\n"					\
-+		RISCV_FULL_BARRIER					\
-+		: "+A" (v->counter), "=&r" (ret), "=&r" (temp)		\
-+		: "r" (I)						\
-+		: "memory");						\
-+	return ret;							\
-+}
-+#endif
- 
- #define ATOMIC_OP_RETURN(op, asm_op, c_op, I, asm_type, c_type, prefix)	\
- static __always_inline							\
-diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
-index 3c1a15be54d8..adcd70525774 100644
---- a/arch/riscv/include/asm/bitops.h
-+++ b/arch/riscv/include/asm/bitops.h
-@@ -170,12 +170,17 @@ static __always_inline int variable_fls(unsigned int x)
- 
- #if (BITS_PER_LONG == 64)
- #define __AMO(op)	"amo" #op ".d"
-+#define __LR	"lr.d"
-+#define __SC	"sc.d"
- #elif (BITS_PER_LONG == 32)
- #define __AMO(op)	"amo" #op ".w"
-+#define __LR	"lr.w"
-+#define __SC	"sc.w"
- #else
- #error "Unexpected BITS_PER_LONG"
- #endif
- 
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- #define __test_and_op_bit_ord(op, mod, nr, addr, ord)		\
- ({								\
- 	unsigned long __res, __mask;				\
-@@ -195,10 +200,58 @@ static __always_inline int variable_fls(unsigned int x)
- 		: "r" (mod(BIT_MASK(nr)))			\
- 		: "memory");
- 
--#define __test_and_op_bit(op, mod, nr, addr) 			\
-+#define __test_and_op_bit(op, mod, nr, addr)			\
- 	__test_and_op_bit_ord(op, mod, nr, addr, .aqrl)
-+#define __test_and_op_bit_acquire(op, mod, nr, addr)		\
-+	__test_and_op_bit_ord(op, mod, nr, addr, .aq)
- #define __op_bit(op, mod, nr, addr)				\
- 	__op_bit_ord(op, mod, nr, addr, )
-+#define __op_bit_release(op, mod, nr, addr)			\
-+	__op_bit_ord(op, mod, nr, addr, .rl)
-+#else
 +/*
-+ * Fully ordered LR/SC is lr, sc.rl and a full fence; acquire is lr.aq and
-+ * release is sc.rl, with no ordering on the other instruction. This is how
-+ * the LR/SC loops in asm/atomic.h and asm/cmpxchg.h are built.
++ * The AMO funct3 field holds the access width: 010 for .w, 011 for .d.
++ * Matching bits 14:13 alone accepts both and nothing else.
 + */
-+#define __test_and_op_bit_lrsc(op, mod, nr, addr, lr_sfx, sc_sfx, append)	\
-+({								\
-+	unsigned long __res, __mask, __temp;			\
-+	__mask = BIT_MASK(nr);					\
-+	__asm__ __volatile__ (					\
-+		"1: " __LR lr_sfx " %0, %1\n"			\
-+		#op " %2, %0, %3\n"				\
-+		__SC sc_sfx " %2, %2, %1\n"			\
-+		"bnez %2, 1b\n"					\
-+		append						\
-+		: "=&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=&r" (__temp)	\
-+		: "r" (mod(__mask))				\
-+		: "memory");					\
-+	((__res & __mask) != 0);				\
-+})
++#define RVG_AMO_WIDTH_MASK	GENMASK(14, 13)
++#define RVG_AMO_WIDTH_WD	BIT(13)
 +
-+#define __op_bit_lrsc(op, mod, nr, addr, lr_sfx, sc_sfx)	\
-+do {								\
-+	unsigned long __res, __temp;				\
-+	__asm__ __volatile__ (					\
-+		"1: " __LR lr_sfx " %0, %1\n"			\
-+		#op " %2, %0, %3\n"				\
-+		__SC sc_sfx " %2, %2, %1\n"			\
-+		"bnez %2, 1b\n"					\
-+		: "=&r" (__res), "+A" (addr[BIT_WORD(nr)]), "=&r" (__temp)	\
-+		: "r" (mod(BIT_MASK(nr)))			\
-+		: "memory");					\
-+} while (0)
-+
-+#define __test_and_op_bit(op, mod, nr, addr)			\
-+	__test_and_op_bit_lrsc(op, mod, nr, addr, "", ".rl", RISCV_FULL_BARRIER)
-+#define __test_and_op_bit_acquire(op, mod, nr, addr)		\
-+	__test_and_op_bit_lrsc(op, mod, nr, addr, ".aq", "", "")
-+#define __op_bit(op, mod, nr, addr)				\
-+	__op_bit_lrsc(op, mod, nr, addr, "", "")
-+#define __op_bit_release(op, mod, nr, addr)			\
-+	__op_bit_lrsc(op, mod, nr, addr, "", ".rl")
-+#endif
+ #define RVG_MATCH_AUIPC		(RVG_OPCODE_AUIPC)
+ #define RVG_MATCH_JALR		(RV_ENCODE_FUNCT3(JALR) | RVG_OPCODE_JALR)
+ #define RVG_MATCH_JAL		(RVG_OPCODE_JAL)
+@@ -200,6 +222,8 @@
+ #define RVG_MATCH_BGEU		(RV_ENCODE_FUNCT3(BGEU) | RVG_OPCODE_BRANCH)
+ #define RVG_MATCH_EBREAK	(RV_ENCODE_FUNCT12(EBREAK) | RVG_OPCODE_SYSTEM)
+ #define RVG_MATCH_SRET		(RV_ENCODE_FUNCT12(SRET) | RVG_OPCODE_SYSTEM)
++#define RVG_MATCH_LR		(RV_ENCODE_FUNCT5(LR) | RVG_AMO_WIDTH_WD | RVG_OPCODE_AMO)
++#define RVG_MATCH_SC		(RV_ENCODE_FUNCT5(SC) | RVG_AMO_WIDTH_WD | RVG_OPCODE_AMO)
+ #define RVC_MATCH_C_BEQZ	(RVC_ENCODE_FUNCT3(C_BEQZ) | RVC_OPCODE_C1)
+ #define RVC_MATCH_C_BNEZ	(RVC_ENCODE_FUNCT3(C_BNEZ) | RVC_OPCODE_C1)
+ #define RVC_MATCH_C_J		(RVC_ENCODE_FUNCT3(C_J) | RVC_OPCODE_C1)
+@@ -227,6 +251,8 @@
+ #define RVC_MASK_C_EBREAK	0xffff
+ #define RVG_MASK_EBREAK		0xffffffff
+ #define RVG_MASK_SRET		0xffffffff
++#define RVG_MASK_LR		(RV_INSN_FUNCT5_MASK | RVG_AMO_WIDTH_MASK | RV_INSN_OPCODE_MASK)
++#define RVG_MASK_SC		(RV_INSN_FUNCT5_MASK | RVG_AMO_WIDTH_MASK | RV_INSN_OPCODE_MASK)
  
- /* Bitmask modifiers */
- #define __NOP(x)	(x)
-@@ -297,7 +350,7 @@ static __always_inline void arch_change_bit(int nr, volatile unsigned long *addr
- static __always_inline int arch_test_and_set_bit_lock(
- 	unsigned long nr, volatile unsigned long *addr)
- {
--	return __test_and_op_bit_ord(or, __NOP, nr, addr, .aq);
-+	return __test_and_op_bit_acquire(or, __NOP, nr, addr);
- }
+ #define __INSN_LENGTH_MASK	_UL(0x3)
+ #define __INSN_LENGTH_GE_32	_UL(0x3)
+@@ -262,6 +288,8 @@ __RISCV_INSN_FUNCS(c_ebreak, RVC_MASK_C_EBREAK, RVC_MATCH_C_EBREAK)
+ __RISCV_INSN_FUNCS(ebreak, RVG_MASK_EBREAK, RVG_MATCH_EBREAK)
+ __RISCV_INSN_FUNCS(sret, RVG_MASK_SRET, RVG_MATCH_SRET)
+ __RISCV_INSN_FUNCS(fence, RVG_MASK_FENCE, RVG_MATCH_FENCE);
++__RISCV_INSN_FUNCS(lr, RVG_MASK_LR, RVG_MATCH_LR)
++__RISCV_INSN_FUNCS(sc, RVG_MASK_SC, RVG_MATCH_SC)
  
- /**
-@@ -310,7 +363,7 @@ static __always_inline int arch_test_and_set_bit_lock(
- static __always_inline void arch_clear_bit_unlock(
- 	unsigned long nr, volatile unsigned long *addr)
- {
--	__op_bit_ord(and, __NOT, nr, addr, .rl);
-+	__op_bit_release(and, __NOT, nr, addr);
- }
+ /* special case to catch _any_ system instruction */
+ static __always_inline bool riscv_insn_is_system(u32 code)
+diff --git a/arch/riscv/kernel/probes/decode-insn.c b/arch/riscv/kernel/probes/decode-insn.c
+index 433d9035b888..6a4f55b07d04 100644
+--- a/arch/riscv/kernel/probes/decode-insn.c
++++ b/arch/riscv/kernel/probes/decode-insn.c
+@@ -4,11 +4,99 @@
+ #include <linux/kprobes.h>
+ #include <linux/module.h>
+ #include <linux/kallsyms.h>
++#include <linux/bug.h>
+ #include <asm/sections.h>
  
- /**
-@@ -337,20 +390,37 @@ static __always_inline void arch___clear_bit_unlock(
- static __always_inline bool arch_xor_unlock_is_negative_byte(unsigned long mask,
- 		volatile unsigned long *addr)
- {
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- 	unsigned long res;
- 	__asm__ __volatile__ (
- 		__AMO(xor) ".rl %0, %2, %1"
- 		: "=r" (res), "+A" (*addr)
- 		: "r" (__NOP(mask))
- 		: "memory");
-+#else
-+	unsigned long res, temp;
-+
-+	__asm__ __volatile__ (
-+		"1: " __LR " %0, %1\n"
-+		"xor %2, %0, %3\n"
-+		__SC ".rl %2, %2, %1\n"
-+		"bnez %2, 1b\n"
-+		: "=&r" (res), "+A" (*addr), "=&r" (temp)
-+		: "r" (__NOP(mask))
-+		: "memory");
-+#endif
- 	return (res & BIT(7)) != 0;
- }
+ #include "decode-insn.h"
+ #include "simulate-insn.h"
  
- #undef __test_and_op_bit
-+#undef __test_and_op_bit_acquire
- #undef __op_bit
-+#undef __op_bit_release
- #undef __NOP
- #undef __NOT
- #undef __AMO
-+#undef __LR
-+#undef __SC
- 
- #include <asm-generic/bitops/instrumented-atomic.h>
- #include <asm-generic/bitops/instrumented-lock.h>
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 662e160b0522..f0199432948a 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -57,16 +57,39 @@
- 	}									\
- })
- 
--#define __arch_xchg(sfx, prepend, append, r, p, n)			\
 +/*
-+ * Word and double-word xchg is one amoswap, or an LR/SC loop without
-+ * Zaamo. Each form uses its own pair of ordering arguments, as in
-+ * __arch_xchg_masked() above.
++ * Can insn sit between the lr and the sc of a constrained LR/SC sequence?
++ * The ISA allows base integer instructions there, except loads, stores,
++ * JALR, FENCE, SYSTEM, backward jumps and taken backward branches, plus
++ * their compressed forms. Backward branches are treated as not allowed:
++ * the retry branch follows the sc, so one inside the body is not a
++ * constrained sequence.
 + */
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
-+#define __arch_xchg(w, sc_sfx, swap_sfx, prepend, sc_append,		\
-+		    swap_append, r, p, n)				\
- ({									\
- 	__asm__ __volatile__ (						\
- 		prepend							\
--		"	amoswap" sfx " %0, %2, %1\n"			\
--		append							\
-+		"	amoswap" w swap_sfx " %0, %2, %1\n"		\
-+		swap_append						\
- 		: "=r" (r), "+A" (*(p))					\
- 		: "r" (n)						\
- 		: "memory");						\
- })
-+#else
-+#define __arch_xchg(w, sc_sfx, swap_sfx, prepend, sc_append,		\
-+		    swap_append, r, p, n)				\
-+({									\
-+	__typeof__(*(p)) __temp;					\
-+	__asm__ __volatile__ (						\
-+		prepend							\
-+		"1:	lr" w " %0, %1\n"				\
-+		"	sc" w sc_sfx " %2, %3, %1\n"			\
-+		"	bnez %2, 1b\n"					\
-+		sc_append						\
-+		: "=&r" (r), "+A" (*(p)), "=&r" (__temp)		\
-+		: "r" (n)						\
-+		: "memory");						\
-+})
-+#endif
- 
- #define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend,			\
- 		   sc_append, swap_append)				\
-@@ -87,12 +110,14 @@
- 				   __ret, __ptr, __new);		\
- 		break;							\
- 	case 4:								\
--		__arch_xchg(".w" swap_sfx, prepend, swap_append,	\
--			      __ret, __ptr, __new);			\
-+		__arch_xchg(".w", sc_sfx, swap_sfx,			\
-+			    prepend, sc_append, swap_append,		\
-+			    __ret, __ptr, __new);			\
- 		break;							\
- 	case 8:								\
--		__arch_xchg(".d" swap_sfx, prepend, swap_append,	\
--			      __ret, __ptr, __new);			\
-+		__arch_xchg(".d", sc_sfx, swap_sfx,			\
-+			    prepend, sc_append, swap_append,		\
-+			    __ret, __ptr, __new);			\
- 		break;							\
- 	default:							\
- 		BUILD_BUG();						\
-diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/futex.h
-index 6f3bc9bdb85e..e79d28af55cd 100644
---- a/arch/riscv/include/asm/futex.h
-+++ b/arch/riscv/include/asm/futex.h
-@@ -12,6 +12,7 @@
- #include <linux/errno.h>
- #include <asm/asm.h>
- #include <asm/asm-extable.h>
-+#include <asm/fence.h>
- 
- /* We don't even really need the extable code, but for now keep it simple */
- #ifndef CONFIG_MMU
-@@ -19,6 +20,7 @@
- #define __disable_user_access()		do { } while (0)
- #endif
- 
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)	\
- {								\
- 	__enable_user_access();					\
-@@ -32,6 +34,39 @@
- 	: "memory");						\
- 	__disable_user_access();				\
- }
-+#else
-+/*
-+ * Bound the number of LR/SC retries, as arm64 does for LL/SC: a user can
-+ * keep the word changing from another thread forever. futex_wake_op()
-+ * retries on -EAGAIN after dropping the hash bucket locks.
-+ */
-+#define FUTEX_MAX_LOOPS	128
++static bool __kprobes riscv_insn_is_lrsc_body(u32 insn)
++{
++	u32 funct3;
 +
-+#define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)	\
-+{								\
-+	int temp, loops = FUTEX_MAX_LOOPS;			\
-+								\
-+	__enable_user_access();					\
-+	__asm__ __volatile__ (					\
-+	"1:	lr.w %[ov], %[u]			\n"	\
-+	"	" insn "				\n"	\
-+	"2:	sc.w.rl %[t], %[t], %[u]		\n"	\
-+	"	beqz %[t], 3f				\n"	\
-+	"	addi %[l], %[l], -1			\n"	\
-+	"	bnez %[l], 1b				\n"	\
-+	"	li %[r], %[ea]				\n"	\
-+	"3:						\n"	\
-+	RISCV_FULL_BARRIER					\
-+	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %[r])			\
-+	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %[r])			\
-+	: [r] "+r" (ret), [ov] "=&r" (oldval),			\
-+	  [t] "=&r" (temp), [l] "+&r" (loops),			\
-+	  [u] "+m" (*(uaddr))					\
-+	: [op] "Jr" (oparg), [ea] "I" (-EAGAIN)			\
-+	: "memory");						\
-+	__disable_user_access();				\
++	if (GET_INSN_LENGTH(insn) == 2) {
++		switch (insn & RVC_INSN_OPCODE_MASK) {
++		case RVC_OPCODE_C0:
++			/* c.addi4spn; the rest of the quadrant is loads and stores */
++			return (insn & RVC_INSN_FUNCT3_MASK) == 0;
++		case RVC_OPCODE_C1:
++			/* Arithmetic, c.j, c.jal and branches, bit 12 is the offset sign */
++			if (riscv_insn_is_c_j(insn) || riscv_insn_is_c_jal(insn) ||
++			    riscv_insn_is_c_beqz(insn) || riscv_insn_is_c_bnez(insn))
++				return !(insn & BIT(12));
++			return true;
++		case RVC_OPCODE_C2:
++			funct3 = (insn & RVC_INSN_FUNCT3_MASK) >> RVC_INSN_FUNCT3_OPOFF;
++			if (funct3 == 0)	/* c.slli */
++				return true;
++			if (funct3 == 4)	/* c.mv, c.add, but not c.jr, c.jalr, c.ebreak */
++				return !riscv_insn_is_c_jr(insn) &&
++				       !riscv_insn_is_c_jalr(insn) &&
++				       !riscv_insn_is_c_ebreak(insn);
++			return false;	/* stack loads and stores */
++		}
++		return false;
++	}
++
++	switch (insn & RV_INSN_OPCODE_MASK) {
++	case RVG_OPCODE_OP_IMM:
++	case RVG_OPCODE_OP_IMM_32:
++	case RVG_OPCODE_LUI:
++	case RVG_OPCODE_AUIPC:
++		return true;
++	case RVG_OPCODE_OP:
++	case RVG_OPCODE_OP_32:
++		/* funct7 0 or 0x20 is base I; anything else is M, B or another extension */
++		return !((insn & RV_INSN_FUNCT7_MASK) & ~(0x20U << RV_INSN_FUNCT7_OPOFF));
++	case RVG_OPCODE_BRANCH:
++	case RVG_OPCODE_JAL:
++		/* forward only, bit 31 is the offset sign */
++		return !(insn & BIT(31));
++	}
++	return false;
 +}
-+#endif
- 
- static inline int
- arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
-@@ -43,6 +78,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	uaddr = untagged_addr(uaddr);
- 
- 	switch (op) {
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- 	case FUTEX_OP_SET:
- 		__futex_atomic_op("amoswap.w.aqrl %[ov],%z[op],%[u]",
- 				  ret, oldval, uaddr, oparg);
-@@ -63,6 +99,28 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		__futex_atomic_op("amoxor.w.aqrl %[ov],%z[op],%[u]",
- 				  ret, oldval, uaddr, oparg);
- 		break;
-+#else
-+	case FUTEX_OP_SET:
-+		__futex_atomic_op("mv %[t], %z[op]",
-+				  ret, oldval, uaddr, oparg);
-+		break;
-+	case FUTEX_OP_ADD:
-+		__futex_atomic_op("add %[t], %[ov], %z[op]",
-+				  ret, oldval, uaddr, oparg);
-+		break;
-+	case FUTEX_OP_OR:
-+		__futex_atomic_op("or %[t], %[ov], %z[op]",
-+				  ret, oldval, uaddr, oparg);
-+		break;
-+	case FUTEX_OP_ANDN:
-+		__futex_atomic_op("and %[t], %[ov], %z[op]",
-+				  ret, oldval, uaddr, ~oparg);
-+		break;
-+	case FUTEX_OP_XOR:
-+		__futex_atomic_op("xor %[t], %[ov], %z[op]",
-+				  ret, oldval, uaddr, oparg);
-+		break;
-+#endif
- 	default:
- 		ret = -ENOSYS;
- 	}
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 61b7a7716697..ba2db6804a6c 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -73,7 +73,14 @@
- 	beq	a2, zero, .Lnew_valid_map_cpus_restore_context
- 
- 	/* Atomically reset the current cpu bit in new_valid_map_cpus */
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- 	amoxor.d	a0, a1, (a0)
-+#else
-+1:	lr.d	a2, (a0)
-+	xor	a2, a1, a2
-+	sc.d	a2, a2, (a0)
-+	bnez	a2, 1b
-+#endif
++
++/*
++ * Does the instruction at the start of buf lie inside a constrained LR/SC
++ * sequence? Such a sequence holds at most RISCV_LRSC_MAX_BODY instructions
++ * between the lr and the sc, all from the set above. Walk forward from the
++ * probed instruction: reaching an sc through permitted instructions only
++ * means the probe sits in the body; anything else, including an lr that
++ * opens a new sequence, means it does not. The walk stops at the end of
++ * buf, so a short buffer only makes the answer more permissive.
++ */
++bool __kprobes riscv_probe_in_lrsc_body(const u16 *buf, size_t len)
++{
++	size_t off = 0;
++	u32 insn;
++	int n;
++
++	for (n = 0; n <= RISCV_LRSC_MAX_BODY; n++) {
++		if (off + 2 > len)
++			return false;
++		insn = buf[off / 2];
++		if (GET_INSN_LENGTH(insn) == 4) {
++			if (off + 4 > len)
++				return false;
++			insn |= (u32)buf[off / 2 + 1] << 16;
++		}
++		if (riscv_insn_is_sc(insn))
++			return true;
++		if (!riscv_insn_is_lrsc_body(insn))
++			return false;
++		off += GET_INSN_LENGTH(insn);
++	}
++	return false;
++}
++
+ /* Return:
+  *   INSN_REJECTED     If instruction is one not allowed to kprobe,
+  *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use its slot.
+@@ -23,6 +111,12 @@ riscv_probe_decode_insn(probe_opcode_t *addr, struct arch_probe_insn *api)
+ 	 */
+ 	RISCV_INSN_REJECTED(system,		insn);
+ 	RISCV_INSN_REJECTED(fence,		insn);
++	/*
++	 * The breakpoint trap drops the reservation, so a probe on either
++	 * end of an LR/SC sequence makes the SC fail on every retry.
++	 */
++	RISCV_INSN_REJECTED(lr,			insn);
++	RISCV_INSN_REJECTED(sc,			insn);
  
  	/*
- 	 * A sfence.vma is required here. Even if we had Svvptc, there's no
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index f6a8ca49e627..dc3862ed29c4 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -265,7 +265,19 @@ SYM_CODE_START(_start_kernel)
- 	/* Pick one hart to run the main boot sequence */
- 	la a3, hart_lottery
- 	li a2, 1
-+#ifdef CONFIG_RISCV_ISA_ZAAMO
- 	amoadd.w a3, a2, (a3)
-+#else
-+	/*
-+	 * hart_lottery is a small 32-bit counter. add is valid on RV32
-+	 * and RV64; sc.w stores the low 32 bits.
-+	 */
-+1:	lr.w t0, (a3)
-+	add t1, t0, a2
-+	sc.w t1, t1, (a3)
-+	bnez t1, 1b
-+	mv a3, t0
-+#endif
- 	bnez a3, .Lsecondary_start
- #endif /* CONFIG_RISCV_BOOT_SPINWAIT */
+ 	 * Simulate instructions list:
+diff --git a/arch/riscv/kernel/probes/decode-insn.h b/arch/riscv/kernel/probes/decode-insn.h
+index 42269a7d676d..aa1b0d363545 100644
+--- a/arch/riscv/kernel/probes/decode-insn.h
++++ b/arch/riscv/kernel/probes/decode-insn.h
+@@ -15,4 +15,11 @@ enum probe_insn {
+ enum probe_insn __kprobes
+ riscv_probe_decode_insn(probe_opcode_t *addr, struct arch_probe_insn *asi);
+ 
++/* A constrained LR/SC sequence has at most this many instructions between lr and sc */
++#define RISCV_LRSC_MAX_BODY	16
++/* Bytes from the probed instruction through the farthest possible sc */
++#define RISCV_LRSC_SCAN_BYTES	((RISCV_LRSC_MAX_BODY + 1) * 4)
++
++bool __kprobes riscv_probe_in_lrsc_body(const u16 *buf, size_t len);
++
+ #endif /* _RISCV_KERNEL_KPROBES_DECODE_INSN_H */
+diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
+index 9e2afabf94e8..1ade363910c9 100644
+--- a/arch/riscv/kernel/probes/kprobes.c
++++ b/arch/riscv/kernel/probes/kprobes.c
+@@ -49,19 +49,28 @@ static void __kprobes arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
+ 	post_kprobe_handler(p, kcb, regs);
+ }
+ 
++/*
++ * Walk the instructions from the enclosing symbol up to addr to check that
++ * addr is an instruction boundary. Then reject a probe inside an LR/SC
++ * sequence: the breakpoint trap drops the reservation, so the SC would fail
++ * and the loop would hit the probe again on every retry. The sequence is
++ * recognised by a forward scan with the constrained-sequence rules, as for
++ * uprobes, so an lr that is not followed by an sc (as in __cmpwait()) does
++ * not taint the rest of the function.
++ */
+ static bool __kprobes arch_check_kprobe(unsigned long addr)
+ {
+-	unsigned long tmp, offset;
++	unsigned long tmp, size, offset;
+ 
+ 	/* start iterating at the closest preceding symbol */
+-	if (!kallsyms_lookup_size_offset(addr, NULL, &offset))
++	if (!kallsyms_lookup_size_offset(addr, &size, &offset))
+ 		return false;
+ 
+ 	tmp = addr - offset;
+ 
+ 	while (tmp <= addr) {
+ 		if (tmp == addr)
+-			return true;
++			return !riscv_probe_in_lrsc_body((u16 *)addr, size - offset);
+ 
+ 		tmp += GET_INSN_LENGTH(*(u16 *)tmp);
+ 	}
+diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
+index eb177d0ce8ab..d97a10262166 100644
+--- a/arch/riscv/kernel/probes/uprobes.c
++++ b/arch/riscv/kernel/probes/uprobes.c
+@@ -28,6 +28,34 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
+ 	return instruction_pointer(regs);
+ }
+ 
++/*
++ * Is the instruction at addr inside a constrained LR/SC sequence? Only the
++ * probed instruction was copied, so read the text that follows it from the
++ * task. The caller holds mmap_lock, as uprobe_write_opcode() requires too.
++ * Text that cannot be read ends the scan early, which accepts the probe.
++ */
++static bool uprobe_in_lrsc_body(struct mm_struct *mm, unsigned long addr)
++{
++	u16 buf[RISCV_LRSC_SCAN_BYTES / sizeof(u16)];
++	struct vm_area_struct *vma;
++	struct page *page;
++	size_t got = 0;
++	int len;
++
++	while (got < sizeof(buf)) {
++		len = min_t(size_t, sizeof(buf) - got,
++			    PAGE_SIZE - offset_in_page(addr + got));
++		page = get_user_page_vma_remote(mm, addr + got, FOLL_FORCE, &vma);
++		if (IS_ERR(page))
++			break;
++		uprobe_copy_from_page(page, addr + got, (void *)buf + got, len);
++		put_page(page);
++		got += len;
++	}
++
++	return riscv_probe_in_lrsc_body(buf, got);
++}
++
+ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 			     unsigned long addr)
+ {
+@@ -53,6 +81,9 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 		return -EINVAL;
+ 	}
+ 
++	if (uprobe_in_lrsc_body(mm, addr))
++		return -EINVAL;
++
+ 	return 0;
+ }
  
 
 -- 
