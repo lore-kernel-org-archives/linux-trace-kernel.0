@@ -1,60 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794273625;
-	b=ahz/MoYCAXJZbDx7tRHkug94Uw7CWMgxOI2S7YEujfk7nx2S6S/rN7uEBabIjkQUulWL
-	 0k4Q2nnZKCtihN57NY4Xk38AAi2Re54tvRCDWOUbasZurGtRC/Af/m8RpTaMQ0pmJEHAv
-	 9BNw6y+icY6tavBLfjF2WF4lyEMnxOSnAfdwP+Y2AUZfsgTW+H1v98X7MHpq8DKt98gh0
-	 W1WGsTY1NMjJv5+Cp+LktCuOfDYNyRnfnpI2wBZH1s7GLLW3NimUdA8SeB6X0Axy2+tpE
-	 Tdtz4LYIF4OFI0N3Jf6fzYFrjPBQCp6cYt8A3QquSKHxPLYgqzt9jfpamZgvQx+oApA==
+	t=1794274682;
+	b=I+7anf1MuMBYS/VUHuSXxnR5aqWwyJk2dYOWMyGeFmwjdYYbwt5RB3jt7r1wPRHJc/kS
+	 tbph13dcYJZ/R0CMZQbKgVB7YNORcvAylacd6CegDOtmYXt+wJhjoJo2TP5IUaypLvnpd
+	 VAXDjbEmiPfPg3GwqGoZ6BlTqAb09u9dT+oy2bxouZbDJwTSoOIsJesZpGR2HP3XRhxX9
+	 1E2Qjun6BmjEqLSVgxXJgLqQaeY2SsAhdMjbVEZQmPut+9XbqR10cNY0jR8qOVc6+/Hxg
+	 dzC+NWB+JkCe6XOa6yOHt31tbxeZUr3BxJCOpYysLuNDqlwvwIUXEhXSqDUpuHAQJ/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794273625;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274682;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=nUMlmqHbsT1a6wxY8WGJYQj0ylZGPkN3vbel3uxdAAc=;
-	b=VUgtOhvB79jPgilcBa7Hcz0aAVaEuIvlcJwSf0N6OcgY9ba9sre20lij+lmiE9zGbUi1
-	 IN1Jrl7WpPTowEOrjUDyicPCjnUpLMCeTZ6irg94PC8jIL09B4tBnrWV+QUD3zbk9snR3
-	 ycyoVKQtKpmXbDr3Anrzg8V7kzYijarxud/fZeDLRIcCfckm0u1CyXQG8ypan3O5oG0aW
-	 +azVEZwMTrVfhB+wo4hC+7jFTBB+xWtwjOBAUkJ1vhIQXXxqgr666BlNmM1u1lcJhS5BQ
-	 IyJeBZuwdilxq7nlj7xSDg9d7G+4P7x+rzGMcC4QNVXD2nlBMfuPE/+sPZlCM3BJMqg==
+	bh=gxJalAltFJ+mzwybO3QEc8bbloiNp6J964VtBr6AK/M=;
+	b=cZY0EOqvnGBsgffLysEd2FJYds5NWGOFTwAezbk55xbM62O/cH9veEalzl6aaGsEfn9v
+	 BBQ88dfJpDmNshwqk3cNx0BKPvLpGshnstJZSnmDTmX0fbW21W7TbNXyKHjSJ0D/3vjvL
+	 Z7F9pWjZI7/XUFsYGGyObpvTPoFlUzKuL94fTKJD1Ip3U0au4w/M1M9h90dA0fab41MX1
+	 jL8LjuAtk/A1oj3Asuj+1f6wgc2lwlUyQ00T3K2l7BmqJfCuzRSF/2v9jH5ZrHDtO+ynG
+	 L9WD1NN8/N60lvlMbkqZOqElOeYR8tWcx8pmLWXQjbCvKQOSzvC7wQtLyrQGIC+oaGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I0EJKiQB;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d4l7ZaYo;
+	arc=none smtp.remote-ip=115.124.30.100
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C71560A2607;
-	Tue, 10 Nov 2026 01:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1E1606A321;
+	Tue, 10 Nov 2026 01:37:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E1E1606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I0EJKiQB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD5261F008A1;
-	Tue, 10 Nov 2026 01:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794273624;
-	bh=nUMlmqHbsT1a6wxY8WGJYQj0ylZGPkN3vbel3uxdAAc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=I0EJKiQBhCNkrHlZOOO/nubMoNYmbn28L4LGrv03ahKTAielt9pHLFZKryUdx41Mn
-	 nT6brCQM13dkNB1QAIoVpR19StpfQZ+6O+YAIhKCmnHCjzhSnllalfUm6lX5q5Vz2X
-	 RwgQD0rPrfkx3/R9f5Iu2PWV60cWmpOMHXYXxdLjlb6qcrM/y4q6Js6s21DWbMaLrm
-	 AW1I9/uquQxAK69+CmIK/ZHWRFcPJEqdotk+FQrpqmTGTJtSnjNylQaK6Q5HPxsF5T
-	 t7Wk9C8iK2+m89dqgizJO4/YVJKKDgsupRNwnG89nULAqME/x4CCb7pa9c0oJXdr7B
-	 BgOQRCOASRv0w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d4l7ZaYo
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1794274678; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=gxJalAltFJ+mzwybO3QEc8bbloiNp6J964VtBr6AK/M=;
+	b=d4l7ZaYo2DtEK8kYTAca12mqQ2CZhYxlTdTbfQ0o8sMq9pNsMJWeuEaEhaIeXDE6HPuyV8dqn2FnqV1wAoyjASolMbc3Aa1U5oPN60Jom+2uNkBR/jwggZ0qm2vETAtauEPdf5lEKmVU0MufI3AuRSfUxGXxVW89LJ/xZ9cs9GY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0XETOX1E_1794274674;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XETOX1E_1794274674 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 10 Nov 2026 09:37:56 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: palmer@dabbelt.com,
+	pjw@kernel.org,
+	aou@eecs.berkeley.edu
+Cc: alex@ghiti.fr,
+	linux-riscv@lists.infradead.org,
+	oleg@redhat.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	shuah@kernel.org,
+	mpdesouza@suse.com,
+	martin@kaiser.cx,
+	kmehltretter@gmail.com,
+	oliver.yang@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com,
+	xueshuai@linux.alibaba.com,
+	jkchen@linux.alibaba.com,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Mani Tofigh <mt4022@columbia.edu>
-Subject: [PATCH v2 4/4] kprobes: Add KUnit test cases for kprobes regressions
-Date: Tue, 10 Nov 2026 10:20:20 +0900
-Message-ID: <179427362063.291326.12590758885048682193.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <179427358690.291326.2078291446658598883.stgit@devnote2>
-References: <179427358690.291326.2078291446658598883.stgit@devnote2>
-User-Agent: StGit/0.19
+	linux-perf-users@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 01/10] riscv: stacktrace: do not report the walker's own frame from arch_stack_walk()
+Date: Tue, 10 Nov 2026 09:37:41 +0800
+Message-Id: <20261110013750.36800-2-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -64,215 +95,134 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Karl Mehltretter <kmehltretter@gmail.com>
 
-Add KUnit test cases to lib/tests/test_kprobes.c to verify that the
-recent regressions in kprobes registration, ftrace ops switching, and
-optimization state transitions are resolved:
+stack_trace_save() uses skipnr + 1 because arch_stack_walk() is expected
+to first report the return into stack_trace_save(). With FRAME_POINTER,
+the RISC-V arch_stack_walk() calls walk_stackframe(), which starts from
+its own frame and first reports the return into arch_stack_walk().
+stack_trace_save() therefore starts one frame too early. For example,
+page_owner records begin at __set_page_owner() instead of the allocation
+site.
 
-1. test_kretprobe_unregistered_cleanup:
-   Verifies that unregistering an uninitialized or already-unregistered
-   kretprobe does not cause a NULL pointer dereference or double free.
+Move the walker into an always-inlined helper and call it directly from
+arch_stack_walk(). Keep walk_stackframe() as a wrapper for its existing
+callers.
 
-2. test_kretprobe_rereg_by_symbol:
-   Verifies that attempting to re-register an active kretprobe by symbol
-   name fails with -EINVAL and does not destroy the active probe's
-   underlying rethook state.
+return_address() skips level + 3 entries, while the arm64 implementation
+skips level + 2. After removing the extra frame, use level + 2 so
+ftrace_return_address() and CALLER_ADDR results do not shift by one caller.
 
-3. test_kprobe_ftrace_post_handler_switch:
-   Verifies that adding a second kprobe with a post_handler to a probe
-   point armed with kprobe_ftrace_ops correctly switches to
-   kprobe_ipmodify_ops and both probes cleanly unregister without
-   disarming errors (-ENOENT).
-
-4. test_optprobe_rearm_unoptimizing:
-   Verifies that disabling an optimized kprobe on a notrace target and
-   immediately re-enabling it before the optimizer thread runs works
-   cleanly without corrupting the jump instruction or crashing.
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: 6a00ef449370 ("riscv: eliminate unreliable __builtin_frame_address(1)")
+Link: https://lore.kernel.org/r/20261010132712.46931-1-kmehltretter@gmail.com
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Tested-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
-Changes in v2:
- - Probe a notrace target function (kprobe_opt_target) in
-   test_optprobe_rearm_unoptimizing() so that jump optimization is tested
-   even when CONFIG_KPROBES_ON_FTRACE=y.
- - Guard test_optprobe_rearm_unoptimizing() with
-   !IS_MODULE(CONFIG_KPROBES_SANITY_TEST) since
-   wait_for_kprobe_optimizer() is not exported to modules.
- - Replace KUNIT_ASSERT_EQ() with KUNIT_EXPECT_EQ() while stack-allocated
-   probes are registered to prevent stack use-after-free on test failure.
----
- lib/tests/test_kprobes.c |  136 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 136 insertions(+)
+ arch/riscv/kernel/return_address.c |  2 +-
+ arch/riscv/kernel/stacktrace.c     | 40 ++++++++++++++++++++++++++----
+ 2 files changed, 36 insertions(+), 6 deletions(-)
 
-diff --git a/lib/tests/test_kprobes.c b/lib/tests/test_kprobes.c
-index 06e729e4de05..d692612bc224 100644
---- a/lib/tests/test_kprobes.c
-+++ b/lib/tests/test_kprobes.c
-@@ -358,8 +358,133 @@ static void test_stacktrace_on_nested_kretprobe(struct kunit *test)
- }
- #endif /* CONFIG_ARCH_CORRECT_STACKTRACE_ON_KRETPROBE */
- 
-+/* Test for: kprobes: Fix double free and NULL deref in unregister_kretprobes() */
-+static void test_kretprobe_unregistered_cleanup(struct kunit *test)
-+{
-+	struct kretprobe unreg_rp = {
-+		.kp.symbol_name = "kprobe_target",
-+	};
-+
-+	current_test = test;
-+
-+	/* Unregistering a probe that was never registered must return cleanly */
-+	unregister_kretprobe(&unreg_rp);
-+
-+	/* Double unregister of a valid registered probe */
-+	KUNIT_ASSERT_EQ(test, 0, register_kretprobe(&unreg_rp));
-+	unregister_kretprobe(&unreg_rp);
-+	/* Second unregister must not cause double-free or NULL pointer dereference */
-+	unregister_kretprobe(&unreg_rp);
-+}
-+
-+/* Test for: kprobes: Validate re-registration earlier in register_kretprobe() */
-+static void test_kretprobe_rereg_by_symbol(struct kunit *test)
-+{
-+	struct kretprobe test_rp = {
-+		.kp.symbol_name = "kprobe_target",
-+		.handler = return_handler,
-+		.entry_handler = entry_handler,
-+	};
-+
-+	current_test = test;
-+	KUNIT_ASSERT_EQ(test, 0, register_kretprobe(&test_rp));
-+
-+	/* Verify the probe is live and functional */
-+	krph_val = 0;
-+	target(rand1);
-+	KUNIT_EXPECT_EQ(test, krph_val, rand1);
-+
-+	/*
-+	 * Attempt re-registration with symbol_name (with kp.addr cleared).
-+	 * Must fail with -EINVAL and NOT destroy the live probe's rethook.
-+	 */
-+	test_rp.kp.addr = NULL;
-+	KUNIT_EXPECT_EQ(test, -EINVAL, register_kretprobe(&test_rp));
-+
-+	/* The original kretprobe must still be functional */
-+	krph_val = 0;
-+	target(rand1);
-+	KUNIT_EXPECT_EQ(test, krph_val, rand1);
-+
-+	unregister_kretprobe(&test_rp);
-+}
-+
- #endif /* CONFIG_KRETPROBES */
- 
-+#if defined(CONFIG_KPROBES_ON_FTRACE)
-+/* Test for: kprobes: Switch ftrace ops when adding probe with post_handler */
-+static void test_kprobe_ftrace_post_handler_switch(struct kunit *test)
-+{
-+	struct kprobe kp_entry = {
-+		.symbol_name = "kprobe_target",
-+		.pre_handler = kp_pre_handler,
-+	};
-+	struct kprobe kp_post = {
-+		.symbol_name = "kprobe_target",
-+		.post_handler = kp_post_handler,
-+	};
-+	int ret;
-+
-+	current_test = test;
-+
-+	/* 1. Register first probe without post_handler (armed with kprobe_ftrace_ops) */
-+	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&kp_entry));
-+
-+	/* 2. Register second probe with post_handler at same IP (must switch ops) */
-+	ret = register_kprobe(&kp_post);
-+	KUNIT_EXPECT_EQ(test, 0, ret);
-+	if (!ret) {
-+		/* 3. Execute target function to trigger both */
-+		preh_val = 0;
-+		posth_val = 0;
-+		target(rand1);
-+		KUNIT_EXPECT_NE(test, 0, preh_val);
-+		KUNIT_EXPECT_NE(test, 0, posth_val);
-+
-+		/* 4. Unregistering must successfully disarm without -ENOENT */
-+		unregister_kprobe(&kp_post);
-+	}
-+	unregister_kprobe(&kp_entry);
-+}
-+#endif
-+
-+#if defined(CONFIG_OPTPROBES) && !IS_MODULE(CONFIG_KPROBES_SANITY_TEST)
-+static u32 (*opt_target)(u32 value);
-+
-+static noinline notrace u32 kprobe_opt_target(u32 value)
-+{
-+	return (value / div_factor) + 2;
-+}
-+
-+/* Test for: kprobes: Do not overwrite jump instruction when re-arming unoptimizing probe */
-+static void test_optprobe_rearm_unoptimizing(struct kunit *test)
-+{
-+	struct kprobe opt_kp = {
-+		.symbol_name = "kprobe_opt_target",
-+		.pre_handler = kp_pre_handler,
-+	};
-+
-+	current_test = test;
-+	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&opt_kp));
-+
-+	/* Allow background optimizer thread to jump-optimize the probe */
-+	wait_for_kprobe_optimizer();
-+
-+	/* Temporarily disable probe (queues on unoptimizing_list, leaves jump) */
-+	KUNIT_EXPECT_EQ(test, 0, disable_kprobe(&opt_kp));
-+
-+	/* Immediately re-enable (re-arm) before optimizer thread unoptimizes */
-+	KUNIT_EXPECT_EQ(test, 0, enable_kprobe(&opt_kp));
-+
-+	/* Verify jump opcode was not corrupted by an unaligned INT3 overwrite */
-+	preh_val = 0;
-+	opt_target(rand1);
-+	KUNIT_EXPECT_NE(test, 0, preh_val);
-+
-+	unregister_kprobe(&opt_kp);
-+}
-+#endif
-+
- static int kprobes_test_init(struct kunit *test)
+diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
+index c8115ec8fb30..4da1cfd249d3 100644
+--- a/arch/riscv/kernel/return_address.c
++++ b/arch/riscv/kernel/return_address.c
+@@ -33,7 +33,7 @@ noinline void *return_address(unsigned int level)
  {
- 	KP_CLEAR(kp);
-@@ -380,6 +505,9 @@ static int kprobes_test_init(struct kunit *test)
- 	stacktrace_target = kprobe_stacktrace_target;
- 	internal_target = kprobe_stacktrace_internal_target;
- 	stacktrace_driver = kprobe_stacktrace_driver;
-+#if defined(CONFIG_OPTPROBES) && !IS_MODULE(CONFIG_KPROBES_SANITY_TEST)
-+	opt_target = kprobe_opt_target;
-+#endif
- 	rand1 = get_random_u32_above(div_factor);
- 	return 0;
+ 	struct return_address_data data;
+ 
+-	data.level = level + 3;
++	data.level = level + 2;
+ 	data.addr = NULL;
+ 
+ 	arch_stack_walk(save_return_addr, &data, current, NULL);
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index c7555447149b..28c5744889ba 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -45,8 +45,16 @@ static inline int fp_is_valid(unsigned long fp, unsigned long sp)
+ 	return !(fp < low || fp > high || fp & 0x07);
  }
-@@ -391,10 +519,18 @@ static struct kunit_case kprobes_testcases[] = {
- #ifdef CONFIG_KRETPROBES
- 	KUNIT_CASE(test_kretprobe),
- 	KUNIT_CASE(test_kretprobes),
-+	KUNIT_CASE(test_kretprobe_unregistered_cleanup),
-+	KUNIT_CASE(test_kretprobe_rereg_by_symbol),
- #ifdef CONFIG_ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
- 	KUNIT_CASE(test_stacktrace_on_kretprobe),
- 	KUNIT_CASE(test_stacktrace_on_nested_kretprobe),
- #endif
-+#endif
-+#if defined(CONFIG_KPROBES_ON_FTRACE)
-+	KUNIT_CASE(test_kprobe_ftrace_post_handler_switch),
-+#endif
-+#if defined(CONFIG_OPTPROBES) && !IS_MODULE(CONFIG_KPROBES_SANITY_TEST)
-+	KUNIT_CASE(test_optprobe_rearm_unoptimizing),
- #endif
- 	{}
- };
+ 
+-void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+-			     bool (*fn)(void *, unsigned long), void *arg)
++/*
++ * Always inlined so that the frame the walk starts from is the caller's own,
++ * and the first entry reported for the current task is the caller's return
++ * address.  arch_stack_walk() relies on that to report the same frames as
++ * the other architectures, see the comment there.
++ */
++static __always_inline void __walk_stackframe(struct task_struct *task,
++					      struct pt_regs *regs,
++					      bool (*fn)(void *, unsigned long),
++					      void *arg)
+ {
+ 	unsigned long fp, sp, pc;
+ 	int graph_idx = 0;
+@@ -59,6 +67,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+ 	} else if (task == NULL || task == current) {
+ 		fp = (unsigned long)__builtin_frame_address(0);
+ 		sp = current_stack_pointer;
++		/* Placeholder for the frame the walk starts from, never reported. */
+ 		pc = (unsigned long)walk_stackframe;
+ 		level = -1;
+ 	} else {
+@@ -102,10 +111,18 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+ 	}
+ }
+ 
++void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
++			     bool (*fn)(void *, unsigned long), void *arg)
++{
++	__walk_stackframe(task, regs, fn, arg);
++}
++
+ #else /* !CONFIG_FRAME_POINTER */
+ 
+-void notrace walk_stackframe(struct task_struct *task,
+-	struct pt_regs *regs, bool (*fn)(void *, unsigned long), void *arg)
++static __always_inline void __walk_stackframe(struct task_struct *task,
++					      struct pt_regs *regs,
++					      bool (*fn)(void *, unsigned long),
++					      void *arg)
+ {
+ 	unsigned long sp, pc;
+ 	unsigned long *ksp;
+@@ -133,6 +150,12 @@ void notrace walk_stackframe(struct task_struct *task,
+ 	}
+ }
+ 
++void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
++			     bool (*fn)(void *, unsigned long), void *arg)
++{
++	__walk_stackframe(task, regs, fn, arg);
++}
++
+ #endif /* CONFIG_FRAME_POINTER */
+ 
+ static bool print_trace_address(void *arg, unsigned long pc)
+@@ -176,10 +199,17 @@ unsigned long __get_wchan(struct task_struct *task)
+ 	return pc;
+ }
+ 
++/*
++ * The generic code expects the first entry for the current task to be the
++ * return address of arch_stack_walk() itself, the way x86 and arm64 report
++ * it, and stack_trace_save() sizes its skip count accordingly.  Walking from
++ * inside a called walk_stackframe() adds that function's own frame on top,
++ * so inline the walker here and start from this frame instead.
++ */
+ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 		     struct task_struct *task, struct pt_regs *regs)
+ {
+-	walk_stackframe(task, regs, consume_entry, cookie);
++	__walk_stackframe(task, regs, consume_entry, cookie);
+ }
+ 
+ /*
+-- 
+2.39.3
 
