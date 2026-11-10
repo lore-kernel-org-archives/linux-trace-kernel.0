@@ -1,67 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794330506;
-	b=VpG1Qn2QTEGUNE4JiVMI0gHUs4kmLoSTyeNLWTyOIOMB57Jx7nMzJjLsJBBwKJ8UCgKr
-	 rulZZnds138gQ4hNfX44+oAFNRiFRJ+vjgqFUjAD3kFBYdlUikL4QhZp6/ACwLcrrNfKD
-	 jA2NiWq6gtT2XG10aSUqIExGM/Ec6BGIM9v4s02RLyT0pRcSQkIi6FvDpb+T7VzBJbzgR
-	 TPVO+rS/a8dI8a7JY8iQ2C7IyD8VrFBMzIgALpjDB/ZAVispjbooIHfPYS3TF5tNMt4lp
-	 Vbf40nTbDPfLuCgBFfKEunU73+DrKxC88zT2yEJTBg2A/62v54lW30DxrIhhlikFIlA==
+	t=1794333972;
+	b=F68A4rigoMfoq7JKxEmxRyIdG3yVNmrI+7x94mzhlyEtC0zvCPHRxEzceWlub5yg6SxM
+	 a6vMS603VlYK87RRNncT/WymGcxrKJGA8TbPaU54zXBf5Vn0LJC1FkxwlB7+k/km+xK1P
+	 7GDQo38DnK78PSf4ZtDxty7PyrMVYl0XSNPR42yqEpjVsksW+OBXETUSKbAh9fKP2Eq6/
+	 zRKrZHtgeUlpLQDF9yni95IfyquoKy+gUm0AkrEms0uidpbBY3U6rmCvf5jROIKkd+KIx
+	 tCVLCFAk3HA9+AOADn2WbjTFQElwsT4qpNKh6a6vqQq0RN/cABnz0mXT0Ud8lqNXXug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794330506;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=W4toJnlwxo6gYnBNO7MZe8ejf7vNnhvthFCmzNs0KII=;
-	b=ZIMzwV4CqCpBUOA+zSN8oqh9uRvjlUEriI5sj54XhDYEt46Dwk3l2QmpicUpjsehURWN
-	 3tUlgVAJMj8Z2aOgPsAjtdPMUYHaOVCIu7HLaax9vLP2cVPgP3+vL6aWe8vpxoqqhGzMc
-	 bnORc63e09fqz87BKt1I27OTk0LPh4vWYIZWaoeDWErRUQd99ue5AxNSs4asR28pjiuKY
-	 EDCNKciNnrkLg2ftlxWoPGnCzgNCA850pfGR+KAlE8kPI/tFSGKXJ0zDSem6YehICp9M5
-	 9Mrsz+cfd65dp81ZmUiIWHY7r2rvqck5xDDZiZJoHrvyRyLaYnkeQ+7GXxb7Dv4Jsfw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794333972;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=W/ljMR4xePjF+MmRD+P76X/dGy8g1SjPxGW0noQ2CqQ=;
+	b=HUxYV8muLA90iwQGkIS8Ty1Uu9EafMKlGKkdicVDsoGc4f+Rz1JMbZ84Q/Q9BawtBUJ4
+	 pOdK4wdyoEozpgGgK+IGPx6DDPOtMR6JdbyeQdPJfFqa6fcSo5h7BlHfcwDDWiKUnl3kf
+	 jrDXtukTvPfKAbTWEfRW8V3Qyx0tvpyNCt2VjEXX/17J9qhUgQVUusQlhlPLOB2vWWLrT
+	 /eibUsJcoFYd2U48UMHkktU1KWq7/r1A7Md81qothCJVsPEufkci+P687bhe0FUCIPZY9
+	 Q9KpxHIohjZCV3W2EQHY7Gxq6iRoHmfpK2mSqN9m+Yl5z6vyxAw5wPUzjVeEA75smjQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2lMMVu0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TLldxySr;
+	arc=none smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DAC606A31C;
-	Tue, 10 Nov 2026 17:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75E6606A323
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 18:06:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D75E6606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k2lMMVu0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DA21F0089F;
-	Tue, 10 Nov 2026 17:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794330505;
-	bh=W4toJnlwxo6gYnBNO7MZe8ejf7vNnhvthFCmzNs0KII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=k2lMMVu0DXMibVy3EmJeXu1BBP9LzaZ+qFOkFKbiyyr7I71yF6EsgqCzDR8pdSBIo
-	 qecPgaS/MhiunL7X1SEnw3lR2lTP6BwoqZk6uefjwRjRbQpIt3Utr6+IQq3CSj7pCQ
-	 XuEgxQRvnh4tbyEQ9lTeLUeqX5tcFuGX7BoqIWr9+3bzH3FYABV5RskZjyVzl/TwRL
-	 NC/8/5/TdYHyIGoySa9+EKyv2VRc5c3liUe3/jVGmom9XU6RvUbD5a3HLqd5U+224c
-	 6gvIde6SvgNeiem1HcakWSaA3CtHngQNEUb1XPQY4lYKzm3SV68pAXSyJlGO0ENOi7
-	 JSCCNvxWyTW+A==
-Date: Tue, 10 Nov 2026 17:08:15 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Peter Xu <peterx@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/khugepaged: check for empty PTE tables before
- retracting
-Message-ID: <avNO1pvPuMYIdYTE@gremlin>
-References: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
- <20261107-b4-uffd_marker_loss-v1-2-82926b22704c@kernel.org>
- <sashiko-outbox-203403@kernel.org>
- <28b818cb-f038-43ce-a2e2-a9c97befba09@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=TLldxySr
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a207b02a2cso16336955e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 10:06:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794333970; x=1794938770; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=W/ljMR4xePjF+MmRD+P76X/dGy8g1SjPxGW0noQ2CqQ=;
+        b=TLldxySr1OjK3JsgfFfim9ttHsN7YfVYNshcRm145+NJRGMRNa6iX4WH/LFxP0kdVo
+         gdAjdi/AtB9VKrdPwGvKo/biHsE4wHbHIbW5e6WD5DRBU/sFAM+oEwolt6DjyUCSUYPL
+         x4v/ZnSoMmWxt5KCdvyOpqeroeOqrDgxUt6qs76MtANO5lBxM3f3kRRPM//pnWJk1kSz
+         7XYk12pGubCWLfTz9JCnF8B+thjKlGR9byzqWPnY+59pJO5aVb3bN6lDOgRkCz5FoANB
+         Z0sEskv2vmMhJ7qWMfBU4wPrCFxreqxREu7E9QIc/v6P0CplkYom7XlkSar4xc0OIGW4
+         +unQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794333970; x=1794938770;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=W/ljMR4xePjF+MmRD+P76X/dGy8g1SjPxGW0noQ2CqQ=;
+        b=lFruv13KGJIEVzeFX4rcFwuBFyvaNyY4E02m/PM+Tnxi6om/G1k/V22rCZEB91uQ7j
+         eqnUxs0E0OjTLzPMDzaYaVTobqmwWxYUjbL0sthOHEzPvA56eklrj/dDnghZAdXVpj3k
+         lk88CxDYC/07K+MIlMIUmVqDCwzi+igSKpoPU2zNw2trVjgLwthbVvTCN6QW7NrZfSJb
+         S3YTc5HqYuz3tu0rF/m6p8gpWScfHt7ufTST7uxqSr/zOvQ8FuhEueDpNAdV2jjh4B+p
+         pIAays8Mg6O30uJc2yTgse1/gj9cCOArv7orD1JBsplmFeuKyUmQf5Vawc+5xeaASNWf
+         F2jQ==
+X-Forwarded-Encrypted: i=1; AL+hErERaSQbwdbhHgIFzYF2Qvi8PFhaOXWqtdiT2P9usDfyuChgJVsZy21SjymqJBx3lJ2INmPloy0CVFstdE3Vh8txaqE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8T9SVs/hY3FB7swj1EX0w0QXXZsiFxZZVWJD6JOQOEplTzCPTE
+	ib5cqivJLTYUq8WRoXUa4vTtkfXhT4i8x/6jcoTPljsuzzT7BOfCRKJ/
+X-Gm-Gg: AYBFou1/siNrc2JZzLWBVDOSLQnXfAW1On2Cgj3DGSgbeEIb64mL4UfduqQB6MVLTON
+	YbL1+bkDx4t8i8qzqFj1yk/269txFeIkbZRc9sB9Tz9jF5EcHG8fjSUTuRJi2OvRtR9rzfn+LJz
+	Qg7YkeqHnJVZRXOinPfqoU/Uc0TDJb20xB21TeBfOOer8n2luLhC1ygX98tt5CvtRCQ/yM3Lr1e
+	xaQhdtP31p6RKMNcpriMslHuTQR7Jw5YFY5M8q8hNxo0e4rS50/nNjKFeSRNJJiLFvqRvRc/2hx
+	VjiPGS4Ll5uOC6wTIsLa8H6Gd7Iq+NoCQ6EjZVmUdjBTtdNgrYuvNfNUMLP6UtgMAc2Y3+zJWm4
+	1ImxYSw2r7Mn57e5auj1s5aYzSiDuPuDsPb3u1MpcypzJSWIlgvMfEZmK9kMXvuQwkfUYzGlJGw
+	qOLI3HAczW+6WMkYVBOp+jcbL991iDSj7/9U9uii9tFncf6gCR4lCYmP+UO9nVl/vEWRlBq8AXk
+	RSSj5PIyi3mrOYzkVo4h5L65q/mraGUJOwQ3A86Xk8HjLa76IyiZMDIC4ra5KaErgLg+WqvSsL/
+	TVIZxuul1C9xcGH035u8Ry8F733rlmNmYWY6IWKx57+kuXlNHMFmLmxuWht8nuE6DBcQbg8liyJ
+	UNCDQP88bJoxQ+zlMv40Rg+g40SasLDbhYcL0x7GXaw4o3KO1RSngtVFEEa8l4CRHq+zyGr5FGi
+	MCf4J+oBuucIXtFImo7QZpQlxq4BI/4XrvolliIqUQyZLOXmjg6qqJVBmC2BteTo/8Cwt3Nnw6l
+	ybu1pap/Nd1SAT5Ow==
+X-Received: by 2002:a05:600c:a013:b0:4a3:18ca:806 with SMTP id 5b1f17b1804b1-4ba0234a0b2mr57198205e9.20.1794333970060;
+        Tue, 10 Nov 2026 10:06:10 -0800 (PST)
+Received: from longitude (2a02-8434-fda5-4201-64a2-5e9b-f89e-f448.rev.sfr.net. [2a02:8434:fda5:4201:64a2:5e9b:f89e:f448])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-498366c500asm6270450f8f.48.2026.11.10.10.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 10:06:09 -0800 (PST)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] bootconfig: Preserve values and key paths during parsing and output
+Date: Tue, 10 Nov 2026 19:05:58 +0100
+Message-ID: <cover.1794333957.git.edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -71,60 +99,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28b818cb-f038-43ce-a2e2-a9c97befba09@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 09, 2026 at 04:08:23PM +0100, David Hildenbrand (Arm) wrote:
-> On 11/8/26 00:51, sashiko-bot@kernel.org wrote:
-> > [Severity: Medium]
-> > Can removing the VM_COPY_ON_FORK flag checks here cause retract_page_tables()
-> > to race with copy_page_range() during fork()?
-> >
-> > In dup_mmap(), the child VMA is linked into mapping->i_mmap and
-> > i_mmap_unlock_write(mapping) is dropped before copy_page_range() runs.
-> > vma_needs_copy() copies page tables not only when vma_has_anon_rmap() is set,
-> > but also when VM_COPY_ON_FORK flags (VM_MAYBE_GUARD, VM_MAYBE_UFFD_POISON,
-> > VM_UFFD_WP, or VM_UFFD_RWP) are set on a file or shmem VMA whose anon_vma is
-> > still NULL.
->
-> Ah, try_collapse_pte_mapped_thp() runs withe the mmap lock, whereby
-> retract_page_tables() only holds the rmap lock.
+Hi Masami,
 
-[ ... ]
+Thanks again for reviewing and picking up the earlier script fixes.
+Here are three fixes for the bootconfig parser and command-line tool,
+based on bootconfig/for-next.
 
-> > Once the PMD is pmd_none, the next fault in finish_fault() installs a huge
-> > PMD before checking userfaultfd_armed(vma):
-> >
-> > mm/memory.c:finish_fault() {
-> > 	if (pmd_none(*vmf->pmd)) {
-> > 		if (!needs_fallback && folio_test_pmd_mappable(folio)) {
-> > 			ret = do_set_pmd(vmf, folio, page);
-> > 			if (ret != VM_FAULT_FALLBACK)
-> > 				return ret;
-> > 		}
-> >     ...
-> > 	/* Using per-page fault to maintain the uffd semantics */
-> > 	if (unlikely(userfaultfd_armed(vma)) || unlikely(needs_fallback)) {
-> > 		nr_pages = 1;
-> > }
-> >
-> > When userspace later issues UFFDIO_RWPROTECT on that file or shmem VMA,
-> > change_pmd_range() sees pgtable_split_needed() is true and calls
-> > __split_huge_pmd(), which zaps the file huge PMD back to pmd_none without
-> > populating a PTE table (since pgtable_populate_needed() is false for
-> > MM_CP_UFFD_RWP), so RWP protection is lost and subsequent accesses fault the
-> > unprotected huge PMD back in without delivering RWP faults.  Installing a
-> > huge PMD also causes PAGEMAP_SCAN to report all 512 pages as accessed or
-> > written after a single 4KB page fault.
->
-> "Since pgtable_populate_needed() is false for MM_CP_UFFD_RWP" I think RWP also
-> needs proper uffd marker support, independent of the change here.
+The first fixes compact output closing a brace too early when a key has
+both a value and a subkey. Reading the output back can turn a.z into z.
 
-Hey,
+The second trims unquoted trailing whitespace at EOF, so adding a final
+newline does not change the parsed value. The third keeps accepted values
+containing both quote types readable when the tool prints them again.
 
-Wondered if you planned to do a respin on this? Want to know whether to delay
-review for that or not, thanks!
+Each fix has regression coverage. I tested them independently and
+together on my Ubuntu machine, building the tool with -Werror and
+checking the parser results, compact and list output, command-line
+rendering, and test initrd images. The full bootconfig test suite passes
+after each patch as well as for the complete series.
 
---
-Cheers, Lorenzo
+The three fixes are independent and can be applied separately.
+Feedback is welcome.
+
+Thanks,
+Eduardo
+
+Eduardo Mucelli Rezende Oliveira (3):
+  tools/bootconfig: Close only opened braces in compact output
+  bootconfig: Trim unquoted values at end of file
+  tools/bootconfig: Preserve values containing both types of quotes
+
+ lib/bootconfig.c                              |  5 ++--
+ tools/bootconfig/main.c                       | 29 ++++++++++---------
+ .../samples/exp-good-mixed-kv1.bconf          |  5 ++++
+ tools/bootconfig/samples/good-mixed-kv1.bconf |  5 ++++
+ tools/bootconfig/test-bootconfig.sh           | 29 +++++++++++++++++++
+ 5 files changed, 57 insertions(+), 16 deletions(-)
+
+
+base-commit: 677f83795fdfc25ddc51b665a9111f5ff199f7ca
+-- 
+2.53.0
+
