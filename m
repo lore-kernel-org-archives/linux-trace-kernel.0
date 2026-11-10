@@ -1,57 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794319468;
-	b=AAmJltJik0E0wmHIu8e4T6dI0tDSctv3id2gfqFGmiyQYT0vmeHzs8i4xKckmGaXhpU7
-	 ccchFwGS0ljOUSl4mr/0XqUovBgmMgWsjGnXDVzKveZq2Q5XYRdo669wUu0wrzFABhLrl
-	 vz72lNMzik1L/dWxCGQeHft1QiouXljrOM+wRuF1gqTEeMlCAI5Qih/XP4RzjTI/+XgVS
-	 CF/EKCFxz7oB+Xum1EmJdkWoXCwAoQGdgXAHLAv8Z425t+jjEIHRXwoNhdTFHkR7Q5YYx
-	 nhpdN4fqUAcElfMsmsr6KxQihobQrqEs4QGzQyHppo70yQuEOi0dxYlydXAWVv2R6Sg==
+	t=1794320041;
+	b=xamPkmsb34oiN0nyoN3tceR8tIx68+0W4qsvlG8VbOQGcWicRWP/jZSc2d8oFw2Uzeu4
+	 RnCbKQ5aA7jT1Fxt3tQv4yYHICAkC+rAzO1QgNFBM4HjYUrSe74OGW84/5Uoqosk6lmsx
+	 reKNwAZDNl/AnYi6jzTWGgSXqS4lxUNDs5RqR8CgbgINeDxuWqqJHuokib6BZPongQTDo
+	 WfPfTVGtL7RwJIQf9d8X3DP++BUINQBG4EvLxG+IU5YRRTgHu0sqGFGO4Ii2rTOvnJ6ob
+	 llKCUOPjtLUXxcLZgeuzNUFTQqjSSQuVX/hlVXBCOC9ptxY0zKlIPlaNaydiAJ/U3gg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794319468;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=V8t9jhz351xKTmcFjayYlilTTZur1zaK0N2Io8W5JAU=;
-	b=DWyCIWg648jwJwY/We78L1uXtuWhiYdvQfDGhmc9Qu4wxtI7qZ2gTiGWTkuOd/XAXQ1l
-	 Kmr1yoUJ3dFQA3QVS61HYlc7G3v/77yTmQ8v1rcdrOADUvs2jw91AqF3fMd5N0eBlOhVL
-	 RAAZi1pTAnxiAHRdm+X0RPPhSHQWEEdUHBQXX65UoNFVIlRDNRTECT4vZe7GqM0+gTJ2J
-	 o9Y/RJr/f9yg7hAT7twB8ipB7Tcq40qSlSd24tmqiQdc7okLHZm0E+MbIt7Iire+xqQ7M
-	 qZHLHGP9vdHGytRQiu/9SQxWjUEPdOphrGS2DCsgR+GlHWHFCQJie4PkWHVuA5fO1NQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794320041;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=Ivmt603po3d3E2NVVoR2W5ORstU9Dg9rTKeWn3hg5so=;
+	b=eBC+rz4ytBZNY7R6ixW2MZymLDkbxu0KEn9XxwDt64js9GNMzC7ALSW5dNjkBIh8iw4r
+	 OCkGuYlg+uB8+o0ZmSJWGi3p5jbWZglf/5VM8eukoBbJpHLvwAPOhenYGoSnxpYNKGnAu
+	 0RsX9xl5ILPT9GyqfgDnmlPQqn/ht6r5TEsuTRuBrvckUU3UFxS45+bVQenH8nAzETFRZ
+	 Uky+R8ISw4Nu8HxlY6GkgGwb32ppFDNAPit3mcfkVHrF9aNyCA4x3u2kQgbfqXRbYJgbq
+	 axA6YJwcasEuZ4CjS/PcurGi5cv1qOtvlRLE+dJw1GxhjKUqm40wGSz65COAwLwDtoA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GcygYArj;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jir9xEzU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D20606A337;
-	Tue, 10 Nov 2026 14:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE85606A337;
+	Tue, 10 Nov 2026 14:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GcygYArj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 744101F008A2;
-	Tue, 10 Nov 2026 14:04:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jir9xEzU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABAB1F008A2;
+	Tue, 10 Nov 2026 14:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794319468;
-	bh=V8t9jhz351xKTmcFjayYlilTTZur1zaK0N2Io8W5JAU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GcygYArjMFSf9OwD4DQqSfVyl0miUi14dmAXnlY3hFvsdilSH0K9PQRaVK7BMzVz8
-	 uTHUahEsTwt4VfYX1GOGDIQbKfmDVXSs/HqjSiY9bbI5rgH/5dMSIBxP+1iOry2a2N
-	 zJBf9JJuAHYqgAuSVW7V7HT5nBExY+M1pm5Ena2Vda93iuigsOTpLc+t1PvK+lj3Na
-	 LGcotnCEzUpWMfMYOMq1apG6Q9yDvPdkvZGAU273whKy4rmHPyaG/2dRVcooh3G0c4
-	 wroQA5VrUqp/ZRyu/bsaIlHLm1/TmTFqGZFtS/jXYp1z0Jc0LTRRuFkojXFluWb9XG
-	 zMP+2vjo9mL5Q==
-Message-ID: <sashiko-outbox-207174@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 6/6] riscv: hwprobe: report whether AMO is faster
- than LR/SC
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, ojeda@kernel.org, gary@garyguo.net
-In-Reply-To: <20261110-lrsc-only-v6-6-bafc3cc0fcae@mobileye.com>
-References: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
- <20261110-lrsc-only-v6-6-bafc3cc0fcae@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 14:04:25 +0000
+	s=k20260515; t=1794320041;
+	bh=Ivmt603po3d3E2NVVoR2W5ORstU9Dg9rTKeWn3hg5so=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=jir9xEzUa4uLP6tZoo+roz29YPgHORGT7V/V/D0xiwZU22ph1bKqdE78bL0dNUGNn
+	 lFjpngEiey7fMGra+q9S1NVnzbVDfEa7ZX6SIR4ff+lX3FoZSGG3Puhw/Xfa6DNGRQ
+	 LotPXVBtzyYJp6lYcrWSWcqKarHVtWVzf0rqc9qS3upIUt3nohdWAqM4PwxQc1V6SM
+	 +19rn4gp0RTNUmTnPFVJwmO3t84ctQpVwvZKxojsQG2ocpZume8rk9otqAe2Ew5pgr
+	 ZWh+i2qSW2Us59HlS0PjLklxdNYwS2RSwuT7xFbetacDE/MWvsUkxPw6o3gdc9TcPd
+	 fPf9OqmV1ukyg==
+Message-ID: <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
+Date: Tue, 10 Nov 2026 15:13:53 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,131 +50,91 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async
+ compaction on every THP fault
+Content-Language: en-US
+To: Qiliang Yuan <qiliang.yuan@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Brendan Jackman <brendan.jackman@linux.dev>, Zi Yan <ziy@nvidia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
+ <20261110135824.3264904-1-qiliang.yuan@linux.dev>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <20261110135824.3264904-1-qiliang.yuan@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issues to consider:
-- [High] riscv: hwprobe: stale vDSO cache for AMO_PERF in
-  check_amo_speed_all_cpus()
-- [Low] riscv: hwprobe: set_amo_speed_param() returns -EINVAL in
-  __setup() handler
-- [Low] riscv: hwprobe: amo_speed=3D override skips Zaamo check in
-  check_amo_speed_all_cpus()
---
+On 11/10/26 14:58, Qiliang Yuan wrote:
+> Hi Vlastimil, Johannes,
+> 
+> Could you share your view on this series when you have time?
 
-commit cbf5a1a3f9510f96205199ac1c58f59ae0d5cfb9
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+The series was nacked twice by senior maintainers. Due to dealing with
+urgent issues [1] we might perhaps find time later to see if it reports a
+real issue, and in that case fix it ourselves. We have currently no time to
+help those who need AI assistance to contribute instead of having own knowledge.
 
-riscv: hwprobe: report whether AMO is faster than LR/SC
+[1]
+https://lore.kernel.org/linux-mm/a2f584f6-e382-4876-aa6d-d5a34de6ee59@kernel.org/
 
-This commit measures the relative speed of uncontended AMO instructions
-versus LR/SC loops on each CPU at boot and exposes the result to userspace
-via the RISCV_HWPROBE_KEY_AMO_PERF hwprobe key.
+> One known issue in v2: the cc->mode != MIGRATE_ASYNC check added to
+> 2/2 blocks clearing stale skip hints once sync compaction is fully
+> deferred, so local THP may not recover after the pins are released.
+> I'd drop it in v3, but won't send one before hearing from you.
+> 
+> Thanks,
+> Qiliang
 
-> diff --git a/arch/riscv/kernel/amo_speed.c b/arch/riscv/kernel/amo_speed.c
-> new file mode 100644
-> index 0000000000000..933891b69db62
-> --- /dev/null
-> +++ b/arch/riscv/kernel/amo_speed.c
-
-[ ... ]
-
-> +static int amo_speed_online_cpu(unsigned int cpu)
-> +{
-> +	if (per_cpu(amo_speed, cpu) !=3D RISCV_HWPROBE_AMO_UNKNOWN)
-> +		return 0;
-> +
-> +	if (amo_speed_param !=3D RISCV_HWPROBE_AMO_UNKNOWN)
-> +		per_cpu(amo_speed, cpu) =3D amo_speed_param;
-> +	else
-> +		check_amo_speed(NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init set_amo_speed_param(char *str)
-> +{
-> +	if (!strcmp(str, "slow"))
-> +		amo_speed_param =3D RISCV_HWPROBE_AMO_SLOW;
-> +	else if (!strcmp(str, "fast"))
-> +		amo_speed_param =3D RISCV_HWPROBE_AMO_FAST;
-> +	else
-> +		return -EINVAL;
-> +
-> +	return 1;
-> +}
-> +__setup("amo_speed=3D", set_amo_speed_param);
-
-[Severity: Low]
-Does returning -EINVAL from a __setup() callback cause invalid amo_speed=3D
-values to be treated as handled?  obsolete_checksetup() treats any
-non-zero return value from setup_func() as success, so an unrecognized
-argument is silently accepted instead of being reported as an unknown
-boot option.  __setup() handlers return 0 on failure.
-
-> +static int __init check_amo_speed_all_cpus(void)
-> +{
-> +	int cpu;
-> +
-> +	if (amo_speed_param !=3D RISCV_HWPROBE_AMO_UNKNOWN) {
-> +		pr_info("AMO speed set to '%s' (%lu) by command line\n",
-> +			amo_speed_param =3D=3D RISCV_HWPROBE_AMO_FAST ? "fast" : "slow",
-> +			amo_speed_param);
-> +		for_each_online_cpu(cpu)
-> +			per_cpu(amo_speed, cpu) =3D amo_speed_param;
-
-[Severity: Low]
-Does the amo_speed=3D command-line override bypass the Zaamo extension check
-in check_amo_speed_all_cpus() and amo_speed_online_cpu()?  If amo_speed=3D
-is passed on a CPU without RISCV_ISA_EXT_ZAAMO, per_cpu(amo_speed, cpu) is
-set to RISCV_HWPROBE_AMO_FAST or RISCV_HWPROBE_AMO_SLOW instead of
-RISCV_HWPROBE_AMO_UNSUPPORTED, reporting to userspace that AMO
-instructions are usable on hardware where they trap as illegal
-instructions.
-
-> +	} else {
-> +		on_each_cpu(check_amo_speed, NULL, 1);
-> +	}
-> +
-> +	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:amo_speed",
-> +				  amo_speed_online_cpu, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Same level as the unaligned access probe: after clocksource_done_boot=
-ing()
-> + * so that amo_speed_measure() uses a stable clocksource, but before
-> + * rootfs_initcall() enables usermode helpers that can reach hwprobe.
-> + */
-> +fs_initcall_sync(check_amo_speed_all_cpus);
-
-[Severity: High]
-Does running check_amo_speed_all_cpus() at fs_initcall_sync leave the vDSO
-hwprobe table with a stale RISCV_HWPROBE_AMO_UNKNOWN value for
-RISCV_HWPROBE_KEY_AMO_PERF?
-
-init_hwprobe_vdso_data() populates avd->all_cpu_hwprobe_values[] earlier
-at arch_initcall_sync:
-
-arch/riscv/kernel/sys_hwprobe.c:init_hwprobe_vdso_data() {
-    ...
-	for (key =3D 0; key <=3D RISCV_HWPROBE_MAX_KEY; key++) {
-		pair.key =3D key;
-		hwprobe_one_pair(&pair, cpu_online_mask);
-
-		WARN_ON_ONCE(pair.key < 0);
-
-		avd->all_cpu_hwprobe_values[key] =3D pair.value;
-    ...
-}
-
-Because per_cpu(amo_speed, cpu) is still RISCV_HWPROBE_AMO_UNKNOWN when
-init_hwprobe_vdso_data() runs, and check_amo_speed_all_cpus() does not
-update vdso_k_arch_data->all_cpu_hwprobe_values[RISCV_HWPROBE_KEY_AMO_PERF]
-after probing, userspace queries routed through __vdso_riscv_hwprobe()
-always receive RISCV_HWPROBE_AMO_UNKNOWN.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110-lrsc-only-=
-v6-0-bafc3cc0fcae@mobileye.com?part=3D6
