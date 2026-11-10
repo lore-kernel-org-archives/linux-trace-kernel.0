@@ -1,62 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794316990;
-	b=0oqI80IJQkkcWNiwHDcgCY2MI+QuzJaPP2jEJZi3U/Fen8VblHeuUJZqmKet5Tbva3+Z
-	 3jfg29bEafw5ZQXmHf1JM8e4rxeSUyr/KhdhmW/zq1WR3wTGy5ReLJhz240tuqMEZlE/6
-	 SXd9sqLePy90Ad33+eoME37yRVbU0K3pS6sWDo6x48Z6Xf04RHctXe5+8q8l5QZjtuB8M
-	 wbxmpODPIHfrJutLacmCDjfHteNzxb0PQtYWP1P0ofKQfQpwFdx0I6gXi6jNQi8eCeDVD
-	 Y057juBMAvlYgvOZG3st0Bft4VVl/KgLfj2XYLR73TenCbvF0zypb9RNWoJoJ/AvIsQ==
+	t=1794317123;
+	b=4HyXou7zCwUcrrgkRIFQ8Zgp0EVxGd7ZkRx1+YdcSQczaXLZqXMVQygw/bUplKdz0DK1
+	 4/gQpLE/R1uO9WNMXHVaCNEcpABNdyRvvK2T6HMX4YiH8GyXGiHtxQ7UnJMvb1U0MPVCt
+	 9STCbyfSiCKFUvEHOjFHa3tCV4Nc8cHGbeLORjzXNpLJEKZxKcRo2WG+/HSH2jte3rXXZ
+	 ynd9IFgpWE7YB++lyaR58gReHD1oTOdk6dqxZ9WdIgZxpHlHkMLzGy0LzD9BGVLpwwroN
+	 vM9qV7463YiT/LZnDjP1mk16OSqQu6k/q+DmZifd2XzYXgFDdi2J1i5TiDCUZ6sc7/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794316990;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794317123;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=lJXYqaKatt00/W9XQdJefYtCIBSZeqpG+bH7pn/jzc8=;
-	b=JRvxNtblIJKfRE1IHOqOA3irbgOiHGoSWz4ieeTJ6nfxlicdagLRRHkIzYL63CIQvfh6
-	 N7/gVJT+lgF+EsMhERPs7PLs74N6rlWwRfK1L+CM4S3Ajzk+uIX1UWaSe8Okfk4/AKXwM
-	 akJTQnpBjdc305nOWCjrAmt+NIrsrYgpn87w41Scthv92TkWkPh7/Zhjz75DliU2eXp34
-	 ENoKOTXQMvVVgA6DwK2Aa3IMCCg2sURsuLagHZYeNRkx8U7jsShTVFeMHfSzFsGjAtMCA
-	 CtZubDkWH5Y8yIme6R8UGJnN+OndkgyfcJQw3BGN/56UrdixWo6kuA6MrR4IMU3SxhQ==
+	 X-CSE-MsgGUID:Received:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer;
+	bh=1HcQRU24a1N1wxCF46Q1BL7VR4te5rMjnRwtqwYW0C8=;
+	b=i4S0LZzORFTmYMP3l0Ly8mD+SRaectW0TGzozRIAyr3YCk2XH0JvOsCr2Mtx00UFbIs4
+	 eZjmuAWAe+53lkkgVpOhlQ51CZvjH7PzGsrZvtsCcVT7xPAu37sRKsrcJFTj3GK9xEI5H
+	 ykAo27d/btSdkQoGeArZEDPdT93ykLdttIPnxfntWKLbIYsZ98fGdatN5vlTq8Rst1gWW
+	 izYLJjTSdfbujwUMNuChLrylEYvXoREqhOQUYvIgmlEhdjNP+wzitgc7591FSKtZedC6O
+	 ZnMINgCxEOXUdMdARTVPWwzyg+jo+Jz9v8pggP7WBcXJqYkUgaoVVLYZYmPTy76RJcw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=207.54.77.171
-Received: from esa4.hc555-34.eu.iphmx.com (esa4.hc555-34.eu.iphmx.com [207.54.77.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5056071E45;
-	Tue, 10 Nov 2026 13:23:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C5056071E45
+	arc=none smtp.remote-ip=207.54.77.50
+Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81396606A330;
+	Tue, 10 Nov 2026 13:25:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81396606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794316988; x=1825852988;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=LzlVl625yDZ4KTdVb3j9o7R28lsiqGG9g7XtN8d/VNo=;
-  b=ZcPMK0UH5x0ls58wDcBiqk+/+f07crmVXuFkRJGveXXAVjYPC/p3YmRm
-   4v/YHBhgr5WPNBvAYfPqVAjihag8P2d7OtoyEFXBUGnzphuF7oBzjeABI
-   J8UjUVSZ/P2UNJelzMZkYytemwjFCxDu7lWrlFjmpCr+0Vb2fYpzKCJ1W
-   wecz5pHcVgsZFHhFntrZSGt0IHE0BZLvwZSRf/5tSi8zJmjd9YTG5jrBw
-   Nro+xAaN/DbbW7IOz0blh44lILPHf0FSOQ1EDqPFUBhjSl+orevlHFr5b
-   VJKiT0D1RQXmkAyfTtd2I73tAKu1fZyhJEb37QVecS5azWWUYhz74+tss
-   Q==;
-X-CSE-ConnectionGUID: REa7wYvdRtuMLxsABJvMYA==
-X-CSE-MsgGUID: JUuian0OQwmqvZrHZAP/9g==
+  t=1794317120; x=1825853120;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=qxIEV334y6g+Esme3fGjY9OI+Q/y/cHPKzSPAq+HTVw=;
+  b=HuSoegsZtvwFfn4o9dp3mfnZC9OU83PmhlKaO6Qs+EtDcmMPf5Bd7I65
+   7xB9L1zKY3vWAB9RQ2rcthDK8ZoKZUC2AsYS9DBr8a/7npIjcEpysahKA
+   8FY50pBkY2z4K7o8HXcexeyq4LWASOQstq/CYWPtcbBITCfWNp+lglCin
+   ugrH3cI2i7HpEhmMoMoF8BEMQgY+dhF7n7G+C+Ij5MLBTLGc4SxIog5sS
+   dDd0bMO6dhtiQMTC13Jh4IgXv6Bhc+yME/bS/nbuHP2e2kQ/wtwXHaXAe
+   iH5dDJQUBUkwFtA1IvWe6ojhOVrBrH5U5l61BDZrL+e/IxRDH9O5on9+0
+   g==;
+X-CSE-ConnectionGUID: TL0qhKkNTlGU3QBxuWKb7w==
+X-CSE-MsgGUID: r82APvrTSaOi9k7UOj4kDQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 15:22:59 +0200
-X-CSE-ConnectionGUID: OzexV7RbQdKSEsivlOUlUQ==
-X-CSE-MsgGUID: k/r52ngBQkSqNOOf0j+0gw==
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 15:22:52 +0200
+X-CSE-ConnectionGUID: YORbQvFuRaCxS+lZwqw9qA==
+X-CSE-MsgGUID: 8uon9bWISS2zxiLTME+BrQ==
 Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces04_data.me-crop.lan with SMTP; 10 Nov 2026 15:31:01 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Nov 2026 15:22:57 +0200
+  by ces01_data.me-corp.lan with SMTP; 10 Nov 2026 15:31:01 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Nov 2026 15:22:50 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Tue, 10 Nov 2026 15:21:03 +0200
-Subject: [PATCH v6 6/6] riscv: hwprobe: report whether AMO is faster than
- LR/SC
+Subject: [PATCH v6 0/6] riscv: restrict the ISA used for atomics to avoid
+ unsupported or slow AMO
+Date: Tue, 10 Nov 2026 15:20:57 +0200
+Message-Id: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -68,9 +69,11 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-lrsc-only-v6-6-bafc3cc0fcae@mobileye.com>
-References: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
-In-Reply-To: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
+X-B4-Tracking: v=1; b=H4sIADka82oC/22PQQ6CMBBFr0K6tmamtAiuvIdxYctUmgA1rSESw
+ t0tbGyMi1n8ybw3+QuLFBxFdi4WFmhy0fkxhepQMNPdxwdx16bMBIgKUADvQzTcj/3MjYFKCmG
+ V1sjS/TOQde/ddb2l3Ln48mHe1VO5bXcLpsksU8mBkxGNqbEBq/EyeO16mulo/MA20SS/MALms
+ EywJGwBQValLv/AKodVDqsE29ShtuqkBf1+Xtf1A7m7HtYfAQAA
+X-Change-ID: 20260120-lrsc-only-cc06422f5bb1
 To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
  Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
  Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
@@ -112,446 +115,242 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 X-Mailer: b4 0.16.0
 
-On a CPU that traps AMO instructions into firmware and emulates them
-there, such as MIPS P8700, an uncontended AMO costs about 600 cycles
-where the equivalent LR/SC sequence costs about 40. Userspace built for
-the A extension uses AMO for every atomic and pays that on every one.
-It cannot tell from the ISA string: such a CPU still has Zaamo, and
-correctly so.
+The A extension is Zaamo (AMO*.w/d) plus Zalrsc (LR/SC). The kernel
+requires all of it: -march has "a", atomic_add, bitops, xchg and the
+like are AMO instructions, cmpxchg is an LR/SC loop.
 
-Give userspace the same kind of hint the kernel gives for misaligned
-access. At boot, time AMO_SPEED_ITERS amoadd.w against the same number
-of lr.w/addi/sc.w loops on each CPU, take the best sample from an 8 ms
-window of each, and report the result through a new hwprobe key,
-RISCV_HWPROBE_KEY_AMO_PERF:
+This series lets the kernel restrict the ISA it uses for atomics to
+Zalrsc, when the toolchain can express that, for CPUs where AMO is
+missing or slow. MIPS P8700 [1] traps every AMO instruction into
+M-mode and emulates it there. The extension is formally present, but a
+typical uncontended atomic increment costs:
 
-  RISCV_HWPROBE_AMO_FAST         AMO is at least as fast as LR/SC
-  RISCV_HWPROBE_AMO_SLOW         LR/SC is faster; use it where possible
-  RISCV_HWPROBE_AMO_UNSUPPORTED  the CPU has no Zaamo
-  RISCV_HWPROBE_AMO_UNKNOWN      not measured, or differs across CPUs
+  native AMO                                    2..5 cycles
+  LR/SC, private L1 reservation monitor        6..12 cycles
+  LR/SC, PoC (L2) reservation monitor       about 40 cycles
+  AMO emulated by an M-mode trap           about 600 cycles
 
-Only the direction of the difference is reported, not its size: the
-question a program can act on is which sequence to pick. Each CPU logs
-its ratio, and a kernel whose own atomics are AMO warns once when the
-CPU turns out to be slow, pointing at RISCV_ISA_ZAAMO.
+The last two were measured on Mobileye's eyeq7h, which is built on
+this CPU for ADAS and autonomous driving. Kernel atomics are on its
+scheduling, memory-management and driver paths, so the emulated AMO
+cost is not acceptable there. perf bench on eyeq7h, same tree built
+with RISCV_ISA_ZAAMO=y and =n, same userspace, built with LR/SC
+atomics in both cases so that only the kernel changes:
 
-The amoadd.w is spelled with .insn through a new AMOADD_W() in
-insn-def.h, so the file assembles when -march has no Zaamo, and the
-probe is skipped on a CPU whose ISA lacks the extension. CPUs that come
-online later are measured by a hotplug callback. amo_speed={slow|fast}
-on the command line skips the measurement, as unaligned_scalar_speed=
-does. The probe runs at the same initcall level as the misaligned
-access probe, for the same reasons.
+                                     ZAAMO=y     ZAAMO=n
+  sched messaging, 400 processes     0.653 s     0.536 s    -18%
+  futex hash, 24 threads          64131 op/s  79142 op/s    +23%
+  futex wake, 24 threads            0.221 ms    0.168 ms    -24%
+  futex requeue, 24 threads         0.064 ms    0.036 ms    -44%
+  futex lock-pi, 24 threads         435 op/s    478 op/s    +10%
 
-Tested on the eyeq7h hardware, with the DT advertising "a":
+futex wake-parallel swings by an order of magnitude between runs on
+both kernels and is left out. With the ZAAMO=y kernel the firmware
+counter of emulated instructions, fw_illegal_insn, runs at about
+4000 per second per CPU at idle, and at about 85000 per second on
+CPU0, where network Rx runs, under iperf3 Rx traffic.
 
-  [    0.163714] cpu10: AMO speed is 0.07x LR/SC speed (slow)
-  [    0.163727] cpu11: AMO speed is 0.07x LR/SC speed (slow)
-  [    0.163724] cpu6: AMO speed is 0.07x LR/SC speed (slow)
+Patch 1 makes kprobes and uprobes reject a probe inside an LR/SC
+sequence, where the breakpoint trap drops the reservation and the loop
+never completes. Both scan forward from the probed instruction using
+the constrained-sequence rules of the ISA. The problem exists today,
+since cmpxchg is already LR/SC. The patch is independent of the others
+and can be merged on its own.
 
-and, with CONFIG_RISCV_ISA_ZAAMO set:
+Patch 2 adds RISCV_ISA_ZAAMO, default y, with no change to the default
+build. With it off, -march carries _zalrsc instead of "a" and every
+kernel atomic is an LR/SC loop, selected with the preprocessor like
+the other ISA options. The loops use the ordering convention of the
+existing LR/SC code: lr, sc.rl and a full fence when fully ordered,
+lr.aq for acquire, sc.rl for release. The choice is made at compile
+time rather than with alternatives, so the many kernels for CPUs with
+native AMO do not pay for nop padding at every atomic site. Such a
+kernel runs on any hart with A, so there is no NONPORTABLE dependency.
+It needs a compiler that accepts _zaamo and _zalrsc in -march, GCC
+15.1 or later; TOOLCHAIN_HAS_ZALRSC_ZAAMO keeps the option fixed at y
+otherwise. Zabha, Zacas, userspace CFI and Rust emit AMO instructions
+and depend on RISCV_ISA_ZAAMO. Zalrsc stays mandatory: cmpxchg, the
+conditional atomics and futex CAS are LR/SC sequences. Zaamo plus
+Zacas, with CAS loops as on x86, would also provide every atomic and
+is left for whoever has such hardware.
 
-  [    0.163729] AMO is slow but kernel atomics use it, consider disabling RISCV_ISA_ZAAMO
+Patch 3 makes the boot-time check accept a hart that lists "zalrsc"
+alone, or "zaamo" and "zalrsc" instead of "a", when the kernel was
+built for that. Userspace sees whatever the hart advertises.
+
+Patch 4 sets A when a hart lists "zaamo" and "zalrsc" instead of "a",
+so ELF hwcap and /proc/cpuinfo report the same ISA either way.
+
+Patch 5 makes the BPF JIT emit LR/SC loops when Zaamo is off, so BPF
+programs do not trap either.
+
+Patch 6 measures at boot whether an uncontended AMO is faster than the
+equivalent LR/SC sequence on each CPU and reports the answer to
+userspace through a new hwprobe key, RISCV_HWPROBE_KEY_AMO_PERF, the
+way the misaligned access speed is reported. On P8700 it says "slow";
+a program or a runtime that can choose then knows to use LR/SC. This
+patch is optional. eyeq7h does not need it: it is an embedded platform
+whose userspace is built for the hardware, not a generic distribution
+that has to find out at run time. It is here for whoever has to run
+generic userspace on such a CPU.
+
+How the pieces fit together, with "..." for the rest of -march:
+
+  Hardware AMO  DT, cpuinfo  RISCV_ISA_ZAAMO  Userspace -march
+  ------------  -----------  ---------------  ---------------------------
+  native        a            y (default)      ...a, unchanged
+  native        a            n                ...a; only the kernel
+                                              switches to LR/SC
+  emulated      a            y                ...a or ..._zalrsc; the
+                                              kernel traps on every
+                                              AMO. This is today.
+  emulated      a            n                ...a runs but traps on
+                                              every AMO; ..._zalrsc
+                                              does not
+  emulated      zalrsc       n (y: hart       ..._zalrsc; ...a still
+                             rejected)        runs, slowly
+  absent        zalrsc       n (y: hart       ..._zalrsc; ...a dies
+                             rejected)        with SIGILL
+
+The kernel expands "a" to zaamo and zalrsc, and with patch 4 folds
+the two back into "a", so userspace sees the same ISA in hwcap,
+hwprobe and /proc/cpuinfo whether the DT lists "a" or both
+sub-extensions. For an emulating CPU the firmware chooses between
+"a", which is formally true and keeps every existing binary running,
+and "zalrsc" alone, which lets userspace that checks hwcap or hwprobe
+know not to use AMO; with patch 6, hwprobe says so in either case.
+Nothing in the series depends on the last column:
+a kernel built without Zaamo runs userspace built either way. Building
+userspace without "a" needs the same GCC 15.1 as the kernel and an
+-march that spells out the base, e.g. rv64imfdc_zicsr_zifencei_zalrsc,
+since "g" implies "a".
+
+Tested on the eyeq7h hardware running locktorture for a several hours.
+
+Conor Dooley NAKed the v5 Kconfig option [2] on the grounds that
+Zalrsc-only hardware does not exist and the kernel should not carry
+an option for an emulation workaround. The trailer is kept on patch 2.
+The option is for hardware that exists, P8700 based eyeq7h, where the
+alternative is a kernel that is unusably slow; the series is small,
+compile-time only and leaves the default build untouched.
+
+[1] https://mips.com/products/hardware/p8700/
+[2] https://lore.kernel.org/linux-riscv/20261106-smock-headband-d6a7d568c228@spud/
+
+Changes in v6:
+- Fully ordered LR/SC loops in atomic_fetch_*, test_and_*_bit, xchg
+  and futex are now lr, sc.rl and a trailing fence rw,rw, following
+  commit 5ce6c1f3535f ("riscv/atomic: Strengthen implementations with
+  fences"), instead of lr.aqrl/sc.aqrl.
+- test_and_set_bit_lock uses lr.aq with a plain sc, and
+  clear_bit_unlock and xor_unlock_is_negative_byte use a plain lr
+  with sc.rl, instead of putting the ordering bit on both.
+- Bound the futex LR/SC loop to 128 retries and return -EAGAIN, as
+  arm64 does; futex_wake_op() retries.
+- RISCV_ISA_ZABHA, RISCV_ISA_ZACAS, RISCV_USER_CFI and
+  RUSTC_SUPPORTS_RISCV depend on RISCV_ISA_ZAAMO, since Zabha, Zacas,
+  ssamoswap and the Rust target emit AMO instructions.
+- Drop RISCV_ISA_ZALRSC and RISCV_ISA_A. The Makefile and the boot
+  check key on RISCV_ISA_ZAAMO alone.
+- kprobes scan forward with the same constrained-sequence rules as
+  uprobes, so an lr without an sc, as in __cmpwait(), no longer
+  rejects every later probe in the function.
+- Move the probes patch first.
+- Bring back the boot-time extension check as patch 3, keyed on
+  RISCV_ISA_ZAAMO. A hart may list "zalrsc" alone, or "zaamo" and
+  "zalrsc" instead of "a".
+- Add patch 4: a hart that lists "zaamo" and "zalrsc" gets A set,
+  so hwcap and /proc/cpuinfo match a hart that lists "a".
+- Add patch 6: probe AMO speed against LR/SC at boot and report it
+  through hwprobe, RISCV_HWPROBE_KEY_AMO_PERF.
+- Record Conor Dooley's NAK on patch 2.
+- Rewrite the cover letter; add perf bench results and a table of
+  hardware, DT, Kconfig and userspace combinations.
+- Link to v5: https://patch.msgid.link/20261105-lrsc-only-v5-0-f0648f57b2e1@mobileye.com
+
+Changes in v5:
+- Treat Zaamo as supported but slow rather than absent. The hart keeps
+  advertising "a" and the kernel keeps accepting it, so the boot-time
+  extension check patch is dropped.
+- Drop the NONPORTABLE dependency. A kernel built without Zaamo runs
+  on any hart that implements A.
+- Rename TOOLCHAIN_HAS_ZALRSC to TOOLCHAIN_HAS_ZALRSC_ZAAMO and test
+  both _zaamo and _zalrsc in -march.
+- Explain why RISCV_ISA_ZALRSC and RISCV_ISA_A exist, and why the
+  choice is made at compile time rather than with alternatives.
+- Add the BPF JIT patch. Without Zaamo the JIT emits LR/SC loops for
+  the BPF read-modify-write atomics on RV32 and RV64, and reserves a
+  second exception-table entry for the sc of an arena atomic.
+- Reject kprobes and uprobes on lr and sc, and on any instruction
+  between them.
+- Link to v4: https://patch.msgid.link/20261101-lrsc-only-v4-0-4e1d010463b3@mobileye.com
+
+Changes in v4:
+- Require a compiler that accepts _zalrsc in -march before Zaamo can
+  be disabled. GCC 15.1 introduces that support. Older compilers keep
+  Zaamo enabled and -march keeps "a".
+- Link to v3: https://patch.msgid.link/20261026-lrsc-only-v3-0-ec29c8190fb1@mobileye.com
+
+Changes in v3:
+- Make Zalrsc mandatory. cmpxchg and the conditional atomics already
+  use LR/SC, so RISCV_ISA_ZALRSC can no longer be turned off.
+- Check AMO and LR/SC support independently. A kernel that emits both
+  requires "a", or both "zaamo" and "zalrsc".
+- Put the LR/SC bitop sequence in its own block so two inlined
+  set_bit or clear_bit calls compile.
+- Remove the LR/SC loop that ran after the hart lottery and accessed
+  address 1. Build the lottery increment with add so RV32 assembles.
+- Add an exception-table entry for sc as well as lr in the futex
+  LR/SC helper.
+
+Changes in v2:
+- Switch from a runtime choice of atomic implementation to a
+  compile-time one, gated by NONPORTABLE.
 
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
+Vladimir Kondratiev (6):
+      riscv: probes: reject probes inside an LR/SC sequence
+      riscv: build kernel atomics from LR/SC when Zaamo is disabled
+      riscv: accept the atomic extensions this kernel was built with
+      riscv: report the A extension when Zaamo and Zalrsc are both present
+      riscv, bpf: emit LR/SC loops when Zaamo is disabled
+      riscv: hwprobe: report whether AMO is faster than LR/SC
+
  Documentation/admin-guide/kernel-parameters.txt |   7 +
  Documentation/arch/riscv/hwprobe.rst            |  18 +++
- arch/riscv/Kconfig                              |  13 ++
+ arch/riscv/Kconfig                              |  49 +++++++
+ arch/riscv/Makefile                             |  15 +-
+ arch/riscv/include/asm/atomic.h                 |  53 ++++++-
+ arch/riscv/include/asm/bitops.h                 |  76 +++++++++-
+ arch/riscv/include/asm/cmpxchg.h                |  39 ++++-
  arch/riscv/include/asm/cpufeature.h             |   4 +
+ arch/riscv/include/asm/futex.h                  |  58 ++++++++
  arch/riscv/include/asm/hwprobe.h                |   2 +-
  arch/riscv/include/asm/insn-def.h               |   5 +
+ arch/riscv/include/asm/insn.h                   |  28 ++++
  arch/riscv/include/uapi/asm/hwprobe.h           |   5 +
  arch/riscv/kernel/Makefile                      |   1 +
  arch/riscv/kernel/amo_speed.c                   | 183 ++++++++++++++++++++++++
+ arch/riscv/kernel/cpu.c                         |  23 ++-
+ arch/riscv/kernel/cpufeature.c                  |   9 ++
+ arch/riscv/kernel/entry.S                       |   7 +
+ arch/riscv/kernel/head.S                        |  12 ++
+ arch/riscv/kernel/probes/decode-insn.c          |  94 ++++++++++++
+ arch/riscv/kernel/probes/decode-insn.h          |   7 +
+ arch/riscv/kernel/probes/kprobes.c              |  15 +-
+ arch/riscv/kernel/probes/uprobes.c              |  31 ++++
  arch/riscv/kernel/sys_hwprobe.c                 |  37 +++++
- 10 files changed, 274 insertions(+), 1 deletion(-)
+ arch/riscv/net/bpf_jit.h                        |   1 +
+ arch/riscv/net/bpf_jit_comp32.c                 |  81 ++++++++++-
+ arch/riscv/net/bpf_jit_comp64.c                 | 108 +++++++++++++-
+ arch/riscv/net/bpf_jit_core.c                   |  29 ++++
+ 28 files changed, 969 insertions(+), 28 deletions(-)
+---
+base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+change-id: 20260120-lrsc-only-cc06422f5bb1
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e75344f4e0cd..9bc5baff20ff 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -513,6 +513,13 @@ Kernel parameters
- 			Format: <a>,<b>
- 			See also Documentation/input/joydev/joystick.rst
- 
-+	amo_speed=	[RISCV]
-+			Format: {slow | fast}
-+			Allow skipping the AMO instruction speed test. This is
-+			useful for testing alternative code paths and to skip
-+			the test in environments where it runs too slowly. All
-+			CPUs must have the same AMO speed.
-+
- 	analog.map=	[HW,JOY] Analog joystick and gamepad support
- 			Specifies type or capabilities of an analog joystick
- 			connected to one of 16 gameports
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index bb1e0cbab36f..51ecb836f491 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -423,3 +423,21 @@ The following keys are defined:
-   * :c:macro:`RISCV_HWPROBE_EXT_ZA64RS`: The Za64rs extension is supported,
-     as defined in the RISC-V Profiles specification starting from commit
-     b1d80660 ("Updated to ratified state.")
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_AMO_PERF`: An enum value describing the
-+  performance of the AMO instructions of the Zaamo extension, relative to
-+  the equivalent LR/SC sequence, on the selected set of processors.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_UNKNOWN`: The performance of AMO instructions
-+    is unknown.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_SLOW`: An uncontended AMO instruction takes
-+    longer than the equivalent LR/SC sequence. This is the case when AMO
-+    instructions are trapped and emulated by firmware. Code that can choose
-+    should use LR/SC.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_FAST`: An uncontended AMO instruction is at
-+    least as fast as the equivalent LR/SC sequence.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_UNSUPPORTED`: AMO instructions are not
-+    supported, the Zaamo extension is absent.
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 3c3679701a60..dfd6237f879b 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -764,6 +764,19 @@ config RISCV_ISA_ZAAMO
- 
- 	  If you don't know what to do here, say Y.
- 
-+config RISCV_PROBE_AMO_SPEED
-+	bool "Probe AMO instruction speed at boot"
-+	default y
-+	help
-+	  During boot, time an uncontended AMO instruction against the
-+	  equivalent LR/SC sequence on every CPU, and report which one is
-+	  faster to userspace through the hwprobe syscall, as
-+	  RISCV_HWPROBE_KEY_AMO_PERF. On a CPU that traps AMO instructions
-+	  into firmware and emulates them there, LR/SC is much faster, and
-+	  code that can choose should use it.
-+
-+	  If you don't know what to do here, say Y.
-+
- config TOOLCHAIN_HAS_ZBB
- 	bool
- 	default y
-diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-index 5efa72823475..92cab4a7a0f1 100644
---- a/arch/riscv/include/asm/cpufeature.h
-+++ b/arch/riscv/include/asm/cpufeature.h
-@@ -83,6 +83,10 @@ static inline bool unaligned_ctl_available(void)
- }
- #endif
- 
-+#ifdef CONFIG_RISCV_PROBE_AMO_SPEED
-+DECLARE_PER_CPU(long, amo_speed);
-+#endif
-+
- #if defined(CONFIG_RISCV_MISALIGNED)
- DECLARE_PER_CPU(long, misaligned_access_speed);
- bool misaligned_traps_can_delegate(void);
-diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-index 9b04377c0f98..b700852ac42f 100644
---- a/arch/riscv/include/asm/hwprobe.h
-+++ b/arch/riscv/include/asm/hwprobe.h
-@@ -8,7 +8,7 @@
- 
- #include <uapi/asm/hwprobe.h>
- 
--#define RISCV_HWPROBE_MAX_KEY		16
-+#define RISCV_HWPROBE_MAX_KEY		17
- 
- static inline bool riscv_hwprobe_key_is_valid(__s64 key)
- {
-diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
-index 8fcc848c196e..5ca5c0b8ad66 100644
---- a/arch/riscv/include/asm/insn-def.h
-+++ b/arch/riscv/include/asm/insn-def.h
-@@ -219,6 +219,11 @@ ALTERNATIVE("nop", "fence rw, rw", SIFIVE_VENDOR_ID,			\
- 	__ASM_STR(.error "hlv.d requires 64-bit support")
- #endif
- 
-+/* Spelled out so that it assembles when -march lacks Zaamo */
-+#define AMOADD_W(dest, addr, val)				\
-+	INSN_R(OPCODE_AMO, FUNC3(2), FUNC7(0),			\
-+	       RD(dest), RS1(addr), RS2(val))
-+
- #define LB_AQ(dest, addr)					\
- 	INSN_R(OPCODE_AMO, FUNC3(0), FUNC7(26),			\
- 	       RD(dest), RS1(addr), __RS2(0))
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index e6a394fbe7fc..a5f726f94204 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -122,6 +122,11 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_EXT_ZICCIF	_BITULL(3)
- #define		RISCV_HWPROBE_EXT_ZICCRSE	_BITULL(4)
- #define		RISCV_HWPROBE_EXT_ZA64RS	_BITULL(5)
-+#define RISCV_HWPROBE_KEY_AMO_PERF	17
-+#define		RISCV_HWPROBE_AMO_UNKNOWN	0
-+#define		RISCV_HWPROBE_AMO_SLOW		1
-+#define		RISCV_HWPROBE_AMO_FAST		2
-+#define		RISCV_HWPROBE_AMO_UNSUPPORTED	3
- 
- /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
- 
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index ebe1c3588177..fc935c877e82 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_RISCV_MISALIGNED)	+= traps_misaligned.o
- obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
- obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)		+= copy-unaligned.o
- obj-$(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)	+= vec-copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_AMO_SPEED)	+= amo_speed.o
- 
- obj-$(CONFIG_FPU)		+= fpu.o
- obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
-diff --git a/arch/riscv/kernel/amo_speed.c b/arch/riscv/kernel/amo_speed.c
-new file mode 100644
-index 000000000000..933891b69db6
---- /dev/null
-+++ b/arch/riscv/kernel/amo_speed.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Measure whether AMO instructions are faster than the equivalent LR/SC
-+ * sequence. They are not on a CPU that traps them into firmware and
-+ * emulates them there, such as MIPS P8700, where an AMO costs hundreds of
-+ * cycles and LR/SC tens. The result goes to userspace through hwprobe,
-+ * so code that can choose between the two knows which one to use.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/smp.h>
-+#include <linux/timekeeping.h>
-+#include <asm/cpufeature.h>
-+#include <asm/hwprobe.h>
-+#include <asm/insn-def.h>
-+#include <asm/timex.h>
-+
-+/* Time window for each measurement, and atomics per sample within it */
-+#define AMO_SPEED_NS		8000000
-+#define AMO_SPEED_ITERS		1024
-+
-+DEFINE_PER_CPU(long, amo_speed) = RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+static DEFINE_PER_CPU_ALIGNED(u32, amo_speed_word);
-+static long amo_speed_param = RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+static void amo_speed_amo(u32 *word, unsigned long n)
-+{
-+	unsigned long tmp;
-+
-+	asm volatile(
-+		"1:\n"
-+		AMOADD_W(%[tmp], %[word], %[one])
-+		"	addi %[n], %[n], -1\n"
-+		"	bnez %[n], 1b\n"
-+		: [tmp] "=&r" (tmp), [n] "+&r" (n), "+m" (*word)
-+		: [word] "r" (word), [one] "r" (1UL)
-+		: "memory");
-+}
-+
-+static void amo_speed_lrsc(u32 *word, unsigned long n)
-+{
-+	unsigned long tmp;
-+
-+	asm volatile(
-+		"1:	lr.w %[tmp], (%[word])\n"
-+		"	addi %[tmp], %[tmp], 1\n"
-+		"	sc.w %[tmp], %[tmp], (%[word])\n"
-+		"	bnez %[tmp], 1b\n"
-+		"	addi %[n], %[n], -1\n"
-+		"	bnez %[n], 1b\n"
-+		: [tmp] "=&r" (tmp), [n] "+&r" (n), "+m" (*word)
-+		: [word] "r" (word)
-+		: "memory");
-+}
-+
-+/*
-+ * For a fixed amount of time, repeatedly run func and take the best time
-+ * in cycles as the measurement.
-+ */
-+static u64 amo_speed_measure(void (*func)(u32 *word, unsigned long n),
-+			     u32 *word)
-+{
-+	u64 start_cycles, end_cycles, cycles = -1ULL;
-+	u64 start_ns;
-+
-+	/* Do a warmup. */
-+	func(word, AMO_SPEED_ITERS);
-+
-+	preempt_disable();
-+
-+	start_ns = ktime_get_mono_fast_ns();
-+	while (ktime_get_mono_fast_ns() < start_ns + AMO_SPEED_NS) {
-+		start_cycles = get_cycles64();
-+		/* Ensure the CSR read can't reorder WRT to the atomics. */
-+		mb();
-+		func(word, AMO_SPEED_ITERS);
-+		/* Ensure the atomics end before the end time is snapped. */
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < cycles)
-+			cycles = end_cycles - start_cycles;
-+	}
-+
-+	preempt_enable();
-+
-+	return cycles;
-+}
-+
-+static void check_amo_speed(void *unused)
-+{
-+	int cpu = smp_processor_id();
-+	u32 *word = this_cpu_ptr(&amo_speed_word);
-+	u64 amo_cycles, lrsc_cycles;
-+	long speed;
-+	int ratio;
-+
-+	if (per_cpu(amo_speed, cpu) != RISCV_HWPROBE_AMO_UNKNOWN)
-+		return;
-+
-+	if (!riscv_cpu_has_extension_unlikely(cpu, RISCV_ISA_EXT_ZAAMO)) {
-+		per_cpu(amo_speed, cpu) = RISCV_HWPROBE_AMO_UNSUPPORTED;
-+		return;
-+	}
-+
-+	amo_cycles = amo_speed_measure(amo_speed_amo, word);
-+	lrsc_cycles = amo_speed_measure(amo_speed_lrsc, word);
-+
-+	/* Don't divide by zero. */
-+	if (!amo_cycles || !lrsc_cycles) {
-+		pr_warn("cpu%d: rdtime lacks granularity needed to measure AMO speed\n",
-+			cpu);
-+		return;
-+	}
-+
-+	if (amo_cycles <= lrsc_cycles)
-+		speed = RISCV_HWPROBE_AMO_FAST;
-+	else
-+		speed = RISCV_HWPROBE_AMO_SLOW;
-+
-+	ratio = div64_u64(lrsc_cycles * 100, amo_cycles);
-+	pr_info("cpu%d: AMO speed is %d.%02dx LR/SC speed (%s)\n",
-+		cpu, ratio / 100, ratio % 100,
-+		speed == RISCV_HWPROBE_AMO_FAST ? "fast" : "slow");
-+
-+	per_cpu(amo_speed, cpu) = speed;
-+
-+	if (speed == RISCV_HWPROBE_AMO_SLOW && IS_ENABLED(CONFIG_RISCV_ISA_ZAAMO))
-+		pr_warn_once("AMO is slow but kernel atomics use it, consider disabling RISCV_ISA_ZAAMO\n");
-+}
-+
-+static int amo_speed_online_cpu(unsigned int cpu)
-+{
-+	if (per_cpu(amo_speed, cpu) != RISCV_HWPROBE_AMO_UNKNOWN)
-+		return 0;
-+
-+	if (amo_speed_param != RISCV_HWPROBE_AMO_UNKNOWN)
-+		per_cpu(amo_speed, cpu) = amo_speed_param;
-+	else
-+		check_amo_speed(NULL);
-+
-+	return 0;
-+}
-+
-+static int __init set_amo_speed_param(char *str)
-+{
-+	if (!strcmp(str, "slow"))
-+		amo_speed_param = RISCV_HWPROBE_AMO_SLOW;
-+	else if (!strcmp(str, "fast"))
-+		amo_speed_param = RISCV_HWPROBE_AMO_FAST;
-+	else
-+		return -EINVAL;
-+
-+	return 1;
-+}
-+__setup("amo_speed=", set_amo_speed_param);
-+
-+static int __init check_amo_speed_all_cpus(void)
-+{
-+	int cpu;
-+
-+	if (amo_speed_param != RISCV_HWPROBE_AMO_UNKNOWN) {
-+		pr_info("AMO speed set to '%s' (%lu) by command line\n",
-+			amo_speed_param == RISCV_HWPROBE_AMO_FAST ? "fast" : "slow",
-+			amo_speed_param);
-+		for_each_online_cpu(cpu)
-+			per_cpu(amo_speed, cpu) = amo_speed_param;
-+	} else {
-+		on_each_cpu(check_amo_speed, NULL, 1);
-+	}
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:amo_speed",
-+				  amo_speed_online_cpu, NULL);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Same level as the unaligned access probe: after clocksource_done_booting()
-+ * so that amo_speed_measure() uses a stable clocksource, but before
-+ * rootfs_initcall() enables usermode helpers that can reach hwprobe.
-+ */
-+fs_initcall_sync(check_amo_speed_all_cpus);
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index 7818e1d32622..47836ecbd9af 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -257,6 +257,39 @@ static u64 hwprobe_misaligned(const struct cpumask *cpus)
- }
- #endif
- 
-+#ifdef CONFIG_RISCV_PROBE_AMO_SPEED
-+static u64 hwprobe_amo(const struct cpumask *cpus)
-+{
-+	int cpu;
-+	u64 perf = -1ULL;
-+
-+	for_each_cpu(cpu, cpus) {
-+		int this_perf = per_cpu(amo_speed, cpu);
-+
-+		if (perf == -1ULL)
-+			perf = this_perf;
-+
-+		if (perf != this_perf) {
-+			perf = RISCV_HWPROBE_AMO_UNKNOWN;
-+			break;
-+		}
-+	}
-+
-+	if (perf == -1ULL)
-+		return RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+	return perf;
-+}
-+#else
-+static u64 hwprobe_amo(const struct cpumask *cpus)
-+{
-+	if (!hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZAAMO))
-+		return RISCV_HWPROBE_AMO_UNSUPPORTED;
-+
-+	return RISCV_HWPROBE_AMO_UNKNOWN;
-+}
-+#endif
-+
- #ifdef CONFIG_RISCV_VECTOR_MISALIGNED
- static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
- {
-@@ -332,6 +365,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
- 		pair->value = hwprobe_vec_misaligned(cpus);
- 		break;
- 
-+	case RISCV_HWPROBE_KEY_AMO_PERF:
-+		pair->value = hwprobe_amo(cpus);
-+		break;
-+
- 	case RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE:
- 		if (hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZICBOZ))
- 			pair->value = riscv_cboz_block_size;
-
--- 
-2.43.0
+Best regards,
+--  
+Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
