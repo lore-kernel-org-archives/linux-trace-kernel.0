@@ -1,95 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794333975;
-	b=02Km4q9RuOXjGCiBVjsf4xJyiEid2ThbQc0kt1Dj0MQZw5R57UGQgmQIjQPSzD36QqZ+
-	 UqHiiwujhCQlyee0TSQMEU87aR52qS2HqeO9yN5CmY4fzBuXkTjRBacW0ciC/pmGQE/v3
-	 5o543tMb/Mq1qXtfQGFDXEKhkMYU98EcuWleyspiqXzAPMLvxYD1M62wp6kfBFWbAMwym
-	 HnNaVIxSZDyBKU+/1xF75bS/rhjsnxMw+mj53sv3flNVsTVzxsN3mFBNj8YCm9YtjgHvg
-	 Ow+HELpC7U7Ylf5CPBa5pJpIhCOOeEOk9xeL5iLEZ3JXAWByZ6ShKCdJom7B/EdEt+g==
+	t=1794333979;
+	b=JnUjsNcFXXPIwFv2OAODsKkEv1wWbHCCL8+RS61Gi6W9AB/f6k4bty2LGIenuem8S0Od
+	 Dt0YvvoucLa6s+3pDShtIcPv6o3MocuhoMjAUJW7xb9B1ANV/6dnwt5cE1woj0nn3A9cY
+	 8IbwiwoLQKu3ChF/ut7O91AlUw4Kl3S7gmWDe30unbWceiGXhbnQkkkWXGnTThYal7Dpp
+	 5m5W4Edwq29hHZT63CoFpb3lyJs/iWpADqCl8biAQxUh6OB+eIi0qU48xbzPilW1M1J1s
+	 Ci/c4ZcZwHb84B10E8qzGIArbwsRdKAZad7coce5fAJGpimlMouSUvdIBB8t8yoE2NA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794333975;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794333979;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=kh/vtHBDVyy6lDmv/ABEp8V4+nHln7H1JafS5dcRL2k=;
-	b=MJ8eroh0dMJ43QFMgwZ9MxAYKP12t0sVUFBDkeX7jIUU7OL1QQptc/IaaFkOZxnKXWbS
-	 G0HaCCHcSEe7oL0SFfFAe5JYOF20I2cyqlSQjIsCUgP5AZicOV+0zLT8/v5rGMqZ2ImIX
-	 cQbkGwSq4SnHzrr3Gi0KjI/LM6qmPzlsMVvJXGMpFmRuQyY4ymLPRwFaIkXxPxIG79sty
-	 NtGTToMCehjJ387zbiJ64YJlRm6I7U9mkY5ddLvrtck5mJnISUOUU3lr46RBDA4GyOpJT
-	 A7yfgqRK4rFVjABZtbzWB2d+Xf3jtIu7L27RIb7KIl1iBmIhUmQ4ZzoyXHTx0t1aAeA==
+	bh=jkqdsLITYk8zKnoFddRh/o2WJGEOQO1+s840CvxG/Sc=;
+	b=vhuxakyay0z++VT0qGBktoXjz+G01vBV9EjFjna+EZNcuDgaKBswVnbLY4DpFPR49pbr
+	 08ZA9zEhcYyO3VCKmUjMwV48l9GvFi5n1W+XLasPmCF70jQGXzKvTLBHsgoP3pK5aBvdP
+	 XMSW77Y27xQRBv8I1oSf1qY1RkVlhrLAKcTg+93VSFOZJoqgpoEKB2oxy5r2ditW+iNgm
+	 sGUVG5q2LBZ/SQjW+7PoTW5b+KXkvAakZIhjNB1HA7DtAfvfztyyX7Sw9QBFNnefsVnoW
+	 +MbreFr9Wx84hjj0ekyyVSNlUU9SIt5mOAaWTNuVG3ZCHKruUshMmDI3PpqRucQJHUw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Qn7PoTYa;
-	arc=none smtp.remote-ip=209.85.128.41
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=amSO1ZbQ;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FBE606A337
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 18:06:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88FBE606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB18B606A33E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 18:06:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB18B606A33E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Qn7PoTYa
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a210470b49so18605215e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 10:06:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=amSO1ZbQ
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a2000d5fb1so13747895e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 10:06:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794333974; x=1794938774; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794333977; x=1794938777; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=kh/vtHBDVyy6lDmv/ABEp8V4+nHln7H1JafS5dcRL2k=;
-        b=Qn7PoTYaQaGcb6bzyVHmgPuaMfD6+Nc6gXjR/4fcXdcc4SBBjva73z9UJkxkt2u49+
-         sWigh7L+1aJQudacLTniAUiNp6VooLmlAfEfikul11tqcHm29f2aDH+rTKtZwK26AOw2
-         NRZCxLSS6ltvuTEdWW0IVsTR0xh0CIL31oPFtt988t9SZnTtwUdwEykcXw58VDYII75j
-         gdAvP8cPNdKyRnM7t/+XeRAyZiDSPzGqPN1+WMvsvUcK7b9Gk3/R7Tc25xlcBtBJmBFO
-         DO2SSahp/JyqYjXZw5Q02XiXJZP6aao/w2321UdbC1AHBmhY53gyAeJXbxn0GefSaWm8
-         8I0w==
+        bh=jkqdsLITYk8zKnoFddRh/o2WJGEOQO1+s840CvxG/Sc=;
+        b=amSO1ZbQHtnTZxNAFRbohBeeOIU1DuaSBF2/upBYkRmkLbe3g2ZoiBDAmZ3CTIuvIe
+         7RlKGDSph78lMZPCOW2urdlIjt/8FgOPfD2djcIfed72a8AyQN6kMo4Yvfi6hIcsp1hH
+         7c0339aeiGRs08VRlZi6ZvmD3AAlzCfX9xH2HhJnOV4VOSaMv62CyTdsBEEaOnIFrHZf
+         XlzC9ZkMVv8xmyFAZsePXZsU9zPnGz7jNd+53IMhbT5NxRg9wwMr13/w7zaoIXywBzwk
+         MCRLevSNd9BlELR6ZaQpWskZZknx0MrSTDm80Iw576AhO2x/VJk/ezul0pstnj68Qwz4
+         6FNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794333974; x=1794938774;
+        d=1e100.net; s=20260707; t=1794333977; x=1794938777;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=kh/vtHBDVyy6lDmv/ABEp8V4+nHln7H1JafS5dcRL2k=;
-        b=Ij4wt+N7jFxN3pk08ORCOUKHC+N/YY/lPiYVVD+P8VQWa17BrLDMWpPGQ/iFsvIyfy
-         Gbo8S2ldLlgBot5vkUQFZwkaCNYVmTgDx6Nc9IVjv2XTW3eo+SEBPkE+3W+VWnz0tgDu
-         v9HSYQS93cbmTfweSlmuK/T4EKRLMMLYJv50O57uZLfDJxG6VEeKJrsM8PTBpXOdkRpO
-         p3Xg8lDIrvW77MoTsyEIe+znuJ0KWA5/MVgsO09npjwhZnqxLqNJmEQDa4TjqVsPn50U
-         M28A7t0A52Xk+tQSMIQCxZk/pwLv9RYoHFSfB3tGn4AhwC4kD9v1ZZLRn3H7Q5UVCdft
-         wQ1Q==
-X-Forwarded-Encrypted: i=1; AL+hErG5u0OMf/DwcJUvkWY0M/YyGONOnPCvRXUd4DFEAraXmBuHK6+b/SFT1GnbcArBK/7L4088+YqxlvgpqxVKUh8Bi+s=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8WiKu9FqyClZucl7iKqPHzONNup95eX9Shn1/b2ZrdTV5KeCLe
-	/cgg2HOJU0hG8uMYo67iUCwA5ZfjiM2gr5yGRR2NGnpSSH3drawbTrjq
-X-Gm-Gg: AYBFou0UxT8it4ksfVQQjrog5LwK6pOZ4fdgKOlX8PVUC53H+nGKX6SjaeHDwhzJ115
-	S2iG8muQCe8bXFzFbXIXfrXDa+hLsh9bZ5GKZ7OAcH5jZOZxkI/qzehJNJ4HAsNgbOSp/bvR+1D
-	Y4nXBSp1CQiqn3fkbYJNqCM7CQAmLg6UhZiIVahFJKYUymHvfNIwAZDkiJlDMjAooGzMW+5wDlC
-	o3gRsk6FMD+ZY4aA1Ygv/3LsAjla1KngfJr3b/GsYwJm+4MEfXIeZanfMypZ9BiWMA8n9cbctkW
-	qDNZaVSUYg46sasilHxS6WjTALQ0iZQGofE8w6WCWJd46gPbDxaYBSm3oAPfd+wSx2Y+XnjV6aO
-	swkIt05ljDU2ZRrg3MagIlGLvlBKYPn2Sggsd0H5VEHAzlatJmp/dW2u7VYJVA8QVwZ1Z884m3m
-	URNEAuUlldEaSoK22Fowe283p9drAvAx5vmXv5GQT7p4BwlCa/BiUR45zlz2ElM7qIo9bR+wmuX
-	ppDqMX0OmmSD4unRAjl/J8U0h7DZ7dQcc1Es4pNoPeIrhDUYN3515BI0IzqFSz9QN1jo1L9BsII
-	Pb78oUYEgZXlPE4gJpVAevJ+hnGzQD8ESqmxxTAjsY7eSZuICEfj4aD6FTchpE++C3t0mv9U8tr
-	LtodakXZpysWJGt7QcIPudwfvZDAkA79y5O5SG7nuhuksIZB9FnW9G2uk9IpHQnv7vazg3IfrXD
-	G6WgZJlPCztKoYZCpOMFf900rINvten2qRyTX8vXma9YFm/a+I+9GwTrPKBd5bwfFmOx0aWnLds
-	RdF00soZu95+4SWug==
-X-Received: by 2002:a05:600c:190f:b0:4a6:30c3:1114 with SMTP id 5b1f17b1804b1-4ba0233c53fmr57779775e9.12.1794333973819;
-        Tue, 10 Nov 2026 10:06:13 -0800 (PST)
+        bh=jkqdsLITYk8zKnoFddRh/o2WJGEOQO1+s840CvxG/Sc=;
+        b=qi8owipJ+lCtwizuHvVzIqa171J2g7NuxzG0YwKA22PKppsbEewV0NNjkJgjX+Uxkh
+         s9RsgcsBwx5XsUQxHV6smgZrp/VAkiEGRQubs/4tBgZPKO2BPcZO6Kn/I3JACZeC4A57
+         gY0ciiJpD/UA/uDsdyRXV/DwQsx/jDEI/e0t/Ggu+Wt/3GgFE4kyC75gKvhnjCnOJX/1
+         4DZCKXt/V4HLU1GHaQtqGWGcvzisVp/t5EuEB5dT4g4U6BcE5fwn/l7ksuyve0Lzxocl
+         UyP3ExeB5JKgsaP77vSej2KGahTeNbm48T47gf8Y5MIyJOfvGA83Q3cIYkUDlMcwl7U1
+         U0WQ==
+X-Forwarded-Encrypted: i=1; AL+hErFt+nSFi3OR45QERteuxG2YP86MA33NPTXCxttIicL6mW1WgoiIGGySMSjUFiXZMHa3KtP9yZ4wgxwVCKUO/thcW9A=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+QgLKmOMlzUpkqdvJUFOtTVmBv99cBHV8cYXqLXk2XXRbJX7Jl
+	vR9dkdtmgcaw3cdcDlsacONS+4r2ov+Wtb2BJtsjZviKPCVaWWBthEup
+X-Gm-Gg: AYBFou1tNn9wL5T/X8GTmjeuRAWEYMbLNnd/DjzcISihh4A9ei+5Ou+hiOLeQS3PPvY
+	1TBDExLD8QwrhGCrGxz7zWk+8FqHWVWMNPYZzoUmdEKedV2i6Ky2yWIXPBlHADSgEmeKI5i/3aU
+	pzhghgKB/H8qIxXBMe8hm/ThCiB2d7Xibg0aKz0MEAa65dzqBodDpuHP+oHKGRmu8AzDzew6qGI
+	By1t3dqg/ca54D8HYMdu+Bs+1XpZcyR+jxVm1/ZsYVH2b+Xse7urF3ZJPu2UxVKBRHJmVu+MSND
+	MSN/unZXTZwIYiWXdaCEKuzajzgwn4yCWM3nvX8zfkVVgmLJGb5bAx/BybQvBmf7TFvLxTn9sbS
+	eUy7f1xs5l0YAZM5biXpUFhICcc91RXUE2i2Mt4wq9ZRUDFLYIx3RG5GUdyNIC7W1KFGQmQoYE7
+	fawPv+3KiJccD9AnMpMBEIOoaAB2Bvi2YCF0cNQpY/y0wUgqDK+OR8Z9D9MWBJMmpUna8DMsWOn
+	LPWeZtpmLS5Lr3srlJBsUJA38AiK6GNok8feb3mmbHuxtUHr6X9SMpAIAxgfSrTKM8N5VQA/UhP
+	/aIc182MvZ0ir3G+rheAvntEHEFA4zs0iPnOsm3AHVpyl1EGhJs0JzOBrrc7n52AhlgPpYK55iR
+	QnBNiX7MB7mErGflvBrlkvbPrcnRFr0Wc92R7A3w5wNopY/80cGJia65Qi8F2Tr8wzfig68HqZP
+	G42p86rsRl3tjYag7Yh5dSmZxLJfDAnlLQFaAFIS2bYD654LEwF07ZzsLYfJ2TziFqfOdccY/Wd
+	LCmXiS8S8H4Motgiw==
+X-Received: by 2002:a05:600d:82e4:b0:4a7:9044:a87 with SMTP id 5b1f17b1804b1-4ba0234efc4mr66874305e9.27.1794333977040;
+        Tue, 10 Nov 2026 10:06:17 -0800 (PST)
 Received: from longitude (2a02-8434-fda5-4201-64a2-5e9b-f89e-f448.rev.sfr.net. [2a02:8434:fda5:4201:64a2:5e9b:f89e:f448])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-498366c500asm6270450f8f.48.2026.11.10.10.06.12
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-498366c500asm6270450f8f.48.2026.11.10.10.06.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 10:06:12 -0800 (PST)
+        Tue, 10 Nov 2026 10:06:15 -0800 (PST)
 From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 To: mhiramat@kernel.org
 Cc: akpm@linux-foundation.org,
 	rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] tools/bootconfig: Close only opened braces in compact output
-Date: Tue, 10 Nov 2026 19:05:59 +0100
-Message-ID: <f2bad80ef771708417b75bf7f1286f9f2521ee97.1794333957.git.edumucelli@gmail.com>
+Subject: [PATCH 2/3] bootconfig: Trim unquoted values at end of file
+Date: Tue, 10 Nov 2026 19:06:00 +0100
+Message-ID: <4ca280f8050ab5313515a5e4e73025c0a9e0f2af.1794333957.git.edumucelli@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1794333957.git.edumucelli@gmail.com>
 References: <cover.1794333957.git.edumucelli@gmail.com>
@@ -104,110 +104,86 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A key may have both a value and subkeys. When it has only one subkey,
-xbc_show_compact_tree() can print that subkey using dotted notation
-without opening a brace. During backtracking, however, it treats the
-value node followed by a subkey as evidence that a brace was opened.
+__xbc_parse_value() trims an unquoted value when it encounters a
+delimiter, but leaves trailing whitespace intact when it reaches the end
+of the input. Thus "key = value   " has a different value depending on
+whether the file ends with a newline. The extra whitespace also reaches
+the rendered kernel command line.
 
-For example, a.b=v, a.b.c=w and a.z=q are printed with the brace for a
-closed before z. Reading that output back changes a.z into the root key
-z, silently changing the configuration.
+Trim unquoted values after the scan finishes, including at end of input.
+Skip trimming after a closing quote so intentional whitespace in quoted
+values remains unchanged. Add checks for scalars, arrays and quoted
+values without a final newline.
 
-Remember the nodes for which opening braces were actually printed and
-close a brace only when backtracking through the matching node. Extend
-the existing mixed-value/subkey sample to cover a sibling after a valued
-parent with one subkey.
-
-Fixes: e5efaeb8a8f5 ("bootconfig: Support mixing a value and subkeys under a key")
+Fixes: 76db5a27a827 ("bootconfig: Add Extra Boot Config support")
 Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 ---
-With this valid configuration:
+I tested inputs ending in unquoted spaces, tabs and carriage returns,
+including arrays and appended or overridden values. The checks compare
+the parser's actual values and the tool's rendered kernel command line.
+Quoted whitespace and inputs ending in delimiters are controls.
 
-  a.b = v
-  a.b.c = w
-  a.z = q
+The original parser fails nine of the 18 focused checks. With the fix,
+all 18 pass, independently and in the combined series. The full
+bootconfig test suite also passes with the regression checks added.
 
-the original compact output closes the brace for a before printing z.
-Reparsing it turns a.z into the root key z. Values and subkeys under
-the same key are allowed by the documented syntax:
-https://docs.kernel.org/admin-guide/bootconfig.html#same-key-values
+ lib/bootconfig.c                    |  5 +++--
+ tools/bootconfig/test-bootconfig.sh | 18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-I checked parser round trips for valued parents, bare subkeys, arrays,
-deeper trees and a test initrd image. All 94 focused checks pass with
-the fix, independently and in the combined series. The full bootconfig
-test suite also passes.
-
- tools/bootconfig/main.c                           | 15 +++++++--------
- tools/bootconfig/samples/exp-good-mixed-kv1.bconf |  5 +++++
- tools/bootconfig/samples/good-mixed-kv1.bconf     |  5 +++++
- 3 files changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 56d76bdeaa09..1bab0e685e2d 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -71,6 +71,7 @@ static int xbc_show_value(struct xbc_node *node, bool semicolon)
- static void xbc_show_compact_tree(void)
- {
- 	struct xbc_node *node, *cnode = NULL, *vnode;
-+	struct xbc_node *parent[XBC_DEPTH_MAX];
- 	int depth = 0, i;
- 
- 	node = xbc_root_node();
-@@ -100,7 +101,7 @@ static void xbc_show_compact_tree(void)
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 819685d6c68d..bd071c394c36 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -793,16 +793,17 @@ static int __init __xbc_parse_value(char **__v, char **__n)
+ 				return xbc_parse_error("No value delimiter", p);
+ 			if (*p)
+ 				p++;
+-			break;
++			goto skip_trim;
  		}
- 		if (cnode && xbc_node_is_key(cnode)) {
- 			printf("%s {\n", xbc_node_get_data(node));
--			depth++;
-+			parent[depth++] = node;
- 			node = cnode;
- 			cnode = NULL;
- 			continue;
-@@ -128,14 +129,12 @@ static void xbc_show_compact_tree(void)
- 			node = xbc_node_get_parent(node);
- 			if (!node)
- 				return;
--			if (!xbc_node_get_child(node)->next)
-+			if (!depth || parent[depth - 1] != node)
- 				continue;
--			if (depth) {
--				depth--;
--				for (i = 0; i < depth; i++)
--					printf("\t");
--				printf("}\n");
--			}
-+			depth--;
-+			for (i = 0; i < depth; i++)
-+				printf("\t");
-+			printf("}\n");
+ 		if (strchr(",;\n#}", c)) {
+ 			*p++ = '\0';
+-			v = strim(v);
+ 			break;
  		}
- 		node = xbc_node_get_next(node);
  	}
-diff --git a/tools/bootconfig/samples/exp-good-mixed-kv1.bconf b/tools/bootconfig/samples/exp-good-mixed-kv1.bconf
-index 8346287d9251..0b8b2f59da31 100644
---- a/tools/bootconfig/samples/exp-good-mixed-kv1.bconf
-+++ b/tools/bootconfig/samples/exp-good-mixed-kv1.bconf
-@@ -1,2 +1,7 @@
- key = "value";
- key.subkey = "another-value";
-+a {
-+	b = "v";
-+	b.c = "w";
-+	z = "q";
-+}
-diff --git a/tools/bootconfig/samples/good-mixed-kv1.bconf b/tools/bootconfig/samples/good-mixed-kv1.bconf
-index 1761547dd05c..35442ee62b75 100644
---- a/tools/bootconfig/samples/good-mixed-kv1.bconf
-+++ b/tools/bootconfig/samples/good-mixed-kv1.bconf
-@@ -1,3 +1,8 @@
- # value -> subkey pattern
- key = value
- key.subkey = another-value
+ 	if (quotes)
+ 		return xbc_parse_error("No closing quotes", p);
++	v = strim(v);
++skip_trim:
+ 	if (c == '#') {
+ 		p = skip_comment(p);
+ 		c = '\n';	/* A comment must be treated as a newline */
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 530ce7e28d63..a2e8311d4d19 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -171,6 +171,24 @@ $BOOTCONF $INITRD > $OUTFILE
+ xfail grep -q 'val[[:space:]]' $OUTFILE
+ xpass grep -q 'val2[[:space:]]' $OUTFILE
+ 
++echo "Remove unquoted trailing whitespace at end of file"
++printf 'foo = val \t' > $TEMPCONF
++$BOOTCONF -l $TEMPCONF > $OUTFILE
++printf 'foo = "val"\n' > $TEMPCONF
++xpass cmp $TEMPCONF $OUTFILE
 +
-+# A valued parent with one subkey must not close its enclosing brace.
-+a.b = v
-+a.b.c = w
-+a.z = q
++echo "Remove trailing whitespace from the last array value at end of file"
++printf 'foo = first, last \t' > $TEMPCONF
++$BOOTCONF -l $TEMPCONF > $OUTFILE
++printf 'foo = "first", "last"\n' > $TEMPCONF
++xpass cmp $TEMPCONF $OUTFILE
++
++echo "Keep quoted trailing whitespace at end of file"
++printf 'foo = "val "' > $TEMPCONF
++$BOOTCONF -l $TEMPCONF > $OUTFILE
++printf 'foo = "val "\n' > $TEMPCONF
++xpass cmp $TEMPCONF $OUTFILE
++
+ echo "Showing correct line:column of no closing brace"
+ cat > $TEMPCONF << EOF
+ foo {
 -- 
 2.53.0
 
