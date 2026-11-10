@@ -1,56 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794314757;
-	b=zVBFO1bEklw2gGZM88PPhmcqNagxoM3eTeBk6h+iRVAnttZCqO2qn87tIqpbU+pGwWcP
-	 ObJ23KmsrSpM/Tc91o4d69dXdjUKXLkFR4DnlnjPnBRm7EK8JLiNcVLORelHw43BzOkI8
-	 Hjs4ywFHrqQ9JDduO9vAqflx7SQyo57+W3+i5esqfQ0H95wVPZNykpPkaYSlMcMIOeqgk
-	 aqWSnf8JpZVvX7bHphAZkgUcjel/EhUlAm9cfLl9j+teI1PS2svIo4aImD+q6LWfaofZm
-	 +l4sioPmZgKkQeDE0R3ugcsk0g+GbSU1K48gnB4+wJrmybcEey7UitNJD9SztZ5Iukg==
+	t=1794316846;
+	b=EkOtD4NRvv3j2ipBZ/QwojrikrZ1Psm275VFqobTSPcaNnHyoEqBqZ5Y/6is0+w0LzaU
+	 uNPIPdTOekkro4rvV3Tq/prL3MLBnDjgxMq7ut+R9Yaup5EIczw1Yv19PbU0G5N60Ne5F
+	 hhHUO0wBZ8PqwStrq7CyjvGVrHqcjhbNwbwbQnlVFBjZvBX8ur1f9PFKtBMeCBdNB81yR
+	 OG4GgLNFlHNo3Pf85s3938jbgDDQPKrk0qodJQG3mSC8FGhiGjDoQwedC1SjL6ASet8W3
+	 UPCGSyBb07f/xeJCK/3O+qIyU/fT5YEbq92UHJTQnyL/sbP1wKiq7morovJ+/P7bzPg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794314757;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hirW6C3469OrMbRII0zqoqHpsRAarkqmX6lIehqNN6A=;
-	b=3Z0baKwUis2FR7pPyKBo5eoXYJ7LG0xpcq50131wFfwTQinv7M0zhBY0DCN687rJ3m5S
-	 mgDlY3XdaQDYtjefgZyd2RD2+BVxkhtE3OmuQtGOS+jQKXp7nAB94GqFu45Qv0U6g4VsZ
-	 h7eJZJf5Z4QRsMAi7DDSOdSDO2ENJ/PRidgAzFvK4OOWMqPPv5aC3dS0JFz8yjYSux4+t
-	 ++o6eMzG/Tbzj4oTZEQdJb2GKnCWHHT0vXeew2DW0pDIDf13ioIjwQqELB0sSRSXAEoaV
-	 ClRY/hM+mdmqsljEgwX8QFwBZ3yX0uP2ThT7fahTIAeDVj0Un9qkc9Qc5SU2hcNwkiw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794316846;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=nOV6h0PZaqwHwVMl2GxvCHfQDmp289bzmQPwDxXJnZ0=;
+	b=5iIRI4T8wzlI7CXJc2Relc2vwor0DsvkhkjQdZAn9tVoFxveBy7qttKZ5Qtb4aujuH4B
+	 ODLlCPau/xVp7FiPyQC0VwZ5YypNEDeh7KsR8QMi+c0bT8PSXi9jJeoUuGduITTSkohA6
+	 /MXCiByAl0/r69yRQgw3hcHZfm+W97boh9bbHkd2GL0htmv15j7d3kYJynXXJjcN9q7bs
+	 EOuxcDHCSmhtiW3zTDuPEPCCYqpoPSzv1L4+6n9isZhD5sFLvBkCK66lhCvkRLIVTY54O
+	 rp0oItw9XiOtpnIh7Y9XhFy/KTyYsyDjIGrOrjd0DGuCPAKjhgqb0WiwCaekhNCIs5w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kXf0e8Ab;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VMfdCrHB;
+	arc=none smtp.remote-ip=209.85.128.46
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC4606A325
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 12:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2CD60A6F4E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 13:20:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE2CD60A6F4E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kXf0e8Ab
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F078C1F0089F;
-	Tue, 10 Nov 2026 12:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794314757;
-	bh=hirW6C3469OrMbRII0zqoqHpsRAarkqmX6lIehqNN6A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kXf0e8AbJz1KMaOR0GrrESU4GPS71ZAtnQ5XJqSWlzPzP4+0P9ReqzHeeaOcMfYcS
-	 xX7oMfDTtYWAmR5gYIVV2vxvjWmnWkLsoxaji2F380qMu6mZ4PlfXl7eVje6AbofbS
-	 AM3FAaVKlAxYzXOJnTxCRTbmSE332ui0GxXGCP1ypfet1WM2OVWWO7TgdY9sSPyfcS
-	 BYCaciJDy5WHcxMpZg7zmVKseGcsMGrFb4juhnqiaodAGQiu85sNR3lDoJ3OpeaZRT
-	 MF8AU6r631I/AcZy9awpRpxeuZEV8EXcR+eoGRTqaZ+9jE0wFbn7LcfVXGy3f8S38o
-	 52vb/T7kquZbA==
-Message-ID: <sashiko-outbox-207040@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] tracing: ring_buffer: serialize shrink with NMI
- readers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haoli Zhang" <26031212468@stu.xidian.edu.cn>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261110122610.655756-1-26031212468@stu.xidian.edu.cn>
-References: <20261110122610.655756-1-26031212468@stu.xidian.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 12:45:56 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VMfdCrHB
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4afe2d546f9so27033845e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 05:20:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794316844; x=1794921644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=nOV6h0PZaqwHwVMl2GxvCHfQDmp289bzmQPwDxXJnZ0=;
+        b=VMfdCrHBw2dfp6abCT5rVeYVHN0aZKjAE8RDXt5VvgNtzo6LeoUbcNxkJjTkymNzLm
+         fdHeygnzwD0bqmE7+K478UL3kPfaxtQ2NHMjNHV4ZezRWeDlLK9pEK7bsPSdGds88wq4
+         KZSUinfmHGlcYgqCuC/e8j7qdy30r4XeOvsGDQRMzkFZhSH0++4Ik2S9rx991hw0a8tU
+         YQQ8I+BoMK+fhwQFksgN5i0vTIQTWrfM/u4SZw43iZul0GfZkvsE0MuIORUcLFIZYZ8d
+         qZfjDV0fcCp5N8OCRO3gb3KGNmG7nma0uKqRmhixoDK8WYv4H6AHJvJVweOSljthRDIF
+         A26w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794316844; x=1794921644;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=nOV6h0PZaqwHwVMl2GxvCHfQDmp289bzmQPwDxXJnZ0=;
+        b=mk7IO/iToaR5sbC8NV8kjmde1VOpRIvjVmmbpA6yl5ARO6cZ0T8hJ3cSPmCeXUkQRv
+         QNbtIWDHeSDHSSBGjKqhMotW4G00lOFHMuqXF1CJ9SwvyszZmXxaWE9VfectXKjwC0hM
+         DJdJIcT5SMv8O2d+Z4X8FLt09E2JJuPGcUgraqP0+qt/rZ9kFBu9YMDQeTXNEDigTxlF
+         YAFFpNQXQlQZX15Yaf6cUkkFqCgWQ6soEg9Qijcvx02qY11nrd03pof82Fx+da8UTp/f
+         kxvqUIDMlLmT2AhQnshgqavrSOIJ1D0Rx6/WrvoCU4ZavSNW+P+R1p469ktekneAKFwz
+         Y0yg==
+X-Forwarded-Encrypted: i=1; AL+hErHOYjALXbLLhcS9z4tqfRktxM6LiBo691f57HbtwtuWwU7hwtjzwVEjrEfyJCNQJlSxMMKomlXTh4yHRWjX70y7GNQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+o+VXRGdwBDoot/y9TObseMZHoLJ44vekK85HQvYJVUG9R/xt/
+	JqpZbVCjsMDnArCaYKVCECsbR+8PZpCxefrEOr/TKPug2lGOTwN6w/5b
+X-Gm-Gg: AYBFou13Dlmz1ukaWpweN1Zv24msavP46ukHTzNIwruVTIQ475HedRtdf6Tx5cTniM1
+	sHq5P/ERMTeBtNe2th8Ss0DaX8k2oIRh8wDw/+pF9opAr8PoLoD5KJdMa2EJQaVdyJ2a1HP4eMD
+	dDlbD1TqWoMouw24wolhlgdpopAgPCC3fjLZyyN+ArN0vmgIxwMiSpAvWLLyOiQtDWZwACBJc3Y
+	s0FrG5gDclRt6T6VVd+0I//e254bmDbpVTcma3XnTqTiYbA2NbcWvx+4mm3qz8tBBG9DSAXwgXP
+	3fEveUPhUuXXRmFl7ANqxEiQ6uiziKJNWxZru7BY7DwlMiLcPxsc4yoB5qHmjSLIKe9RRUFVjS8
+	cxrwTsVuv6LNZ2WlnGEW9v8aI5oj2jZl280UjeMCYWe5aProaKuJT3kzPNK4G3mjP+gd56nxZsX
+	sjW5RpdCMXVJ+D3G5Tm40IBUI5TQt7g9x8na2R2rYGMO6SuKJFA3w271JFuP4g2IUB7rVGQoqbX
+	uMG4D1nOqutXYA9OHsKPAvgvKG3MbRhyf55Bbr1DshLdh/v2zrreUIKJvxPRXZsggo27UBr3ob0
+	LqY7sslEyM39q6vuO0d1eEyZgDc/fqxPHR4PhyEiFPw9tb3xukzwg8BYdl8MCwrv7lkrLix7VKz
+	qT3+dVZA+bjlV3uuNijCxGsmJPNwFJm6sDU7nyTwd
+X-Received: by 2002:a05:600c:1f87:b0:4a2:a9:ed87 with SMTP id 5b1f17b1804b1-4ba023485ffmr42762735e9.19.1794316844000;
+        Tue, 10 Nov 2026 05:20:44 -0800 (PST)
+Received: from DESKTOP-0KSTGNI.localdomain ([197.45.135.182])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4983585c4fdsm5043287f8f.10.2026.11.10.05.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 05:20:43 -0800 (PST)
+From: Temitope obabi <obabitemitope765@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Temitope obabi <obabitemitope765@gmail.com>,
+	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: Remove unused sst_ipc_inbox_rdata tracepoint
+Date: Tue, 10 Nov 2026 15:20:07 +0200
+Message-ID: <20261110132013.732-1-obabitemitope765@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,199 +100,40 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issues to consider:
-- [High] tracing: ring_buffer: infinite NMI loop when empty checks
-  return false on skip
-- [Medium] tracing: ring_buffer: stale event pointer in
-  ring_buffer_consume() on skip
-- [Low] tracing: ring_buffer: missing Fixes trailer on bug-fix commit
---
+The sst_ipc_inbox_rdata tracepoint has had no callers since commit
+970d299b0a0a ("ASoC: Intel: Remove unused code") removed the last one.
 
-commit baa028f41be3b1534303fc3f33ecfebadca9debf
-Author: Haoli Zhang <26031212468@stu.xidian.edu.cn>
+Tracepoints that are defined take up around 5K each, even if they are
+not used. Remove this unused tracepoint.
 
-> tracing: ring_buffer: serialize shrink with NMI readers
->
-> The syzbot report shows a use-after-free in rb_is_reader_page(), reached
-> from rb_move_tail(), with the freed page released by rb_remove_pages().
-> Source inspection suggests that a detached reader page can retain a link
-> into the range removed during a shrink. This patch addresses that possible
-> stale-link path and coordinates NMI readers with page removal.
->
-> When an NMI reader cannot acquire reader_lock, rb_reader_lock() falls back
-> to reading the ring buffer without the lock. Gate lockless NMI readers
-> while rb_remove_pages() removes pages. Track readers that entered before
-> the gate and drain them before changing the page list; new NMI readers th=
-at
-> fail reader_lock while the gate is closed skip that CPU. The gate and
-> reader-count protocol uses ordering barriers and release/acquire accesses.
-> Readers that successfully acquire reader_lock remain serialized by it.
->
-> The NMI fallback increment of record_disabled is intentionally retained.
-> The pre-existing fallback comment says an unlocked NMI read may corrupt t=
-he
-> buffer and that recording must remain disabled afterward; the existing
-> unlock path does not undo that disable. The new nmi_readers counter is
-> separate: it tracks only the temporary lifetime of the lockless NMI read
-> and is decremented when that read exits.
->
-> During shrink, redirect reader_page->list.prev if it points to a page bei=
-ng
-> removed. Detect a stale reader_page->list.next as well, and after reconne=
-cting
-> the ring redirect it to the surviving successor link, including the
-> transferred head flag. Treat skipped empty-buffer queries as non-empty, a=
-nd
-> clear the timestamp output when peek or consume skips the read.
->
-> Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspotmail.com/bug?extid=3D37e1793bdb0061ea3a47
-> Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> Co-developed-by: Bin Yu <byu@xidian.edu.cn>
-> Signed-off-by: Bin Yu <byu@xidian.edu.cn>
-> Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>
+Fixes: 970d299b0a0a ("ASoC: Intel: Remove unused code")
+Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
+---
+ include/trace/events/intel-sst.h | 8 --------
+ 1 file changed, 8 deletions(-)
 
-[Severity: Low]
-Since this fixes live page unlinking in rb_remove_pages(), should this
-include:
+diff --git a/include/trace/events/intel-sst.h b/include/trace/events/intel-sst.h
+index 0416e91f8181..ae7c269b0824 100644
+--- a/include/trace/events/intel-sst.h
++++ b/include/trace/events/intel-sst.h
+@@ -69,14 +69,6 @@ DECLARE_EVENT_CLASS(sst_ipc_mailbox,
+ 		(unsigned int)__entry->offset, (unsigned int)__entry->val)
+ );
+ 
+-DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_inbox_rdata,
+-
+-	TP_PROTO(unsigned int offset, unsigned int val),
+-
+-	TP_ARGS(offset, val)
+-
+-);
+-
+ DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_inbox_wdata,
+ 
+ 	TP_PROTO(unsigned int offset, unsigned int val),
+-- 
+2.53.0
 
-  Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atom=
-ic")
-
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index e760d2fe386fb..e947ac629e67f 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-
-[ ... ]
-
-> @@ -6416,7 +6475,7 @@ ring_buffer_consume(struct trace_buffer *buffer, in=
-t cpu, u64 *ts,
->  	struct ring_buffer_per_cpu *cpu_buffer;
->  	struct ring_buffer_event *event =3D NULL;
->  	unsigned long flags;
-> -	bool dolock;
-> +	enum rb_reader_lock_state state;
-> =20
->   again:
->  	/* might be called in atomic */
-> @@ -6427,15 +6486,18 @@ ring_buffer_consume(struct trace_buffer *buffer, =
-int cpu, u64 *ts,
-> =20
->  	cpu_buffer =3D buffer->buffers[cpu];
->  	local_irq_save(flags);
-> -	dolock =3D rb_reader_lock(cpu_buffer);
-> +	state =3D rb_reader_lock(cpu_buffer);
-> =20
-> -	event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
-> +	if (state !=3D RB_READER_SKIP)
-> +		event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
-> +	else if (ts)
-> +		*ts =3D 0;
->  	if (event) {
->  		cpu_buffer->lost_events =3D 0;
->  		rb_advance_reader(cpu_buffer);
->  	}
-> =20
-> -	rb_reader_unlock(cpu_buffer, dolock);
-> +	rb_reader_unlock(cpu_buffer, state);
->  	local_irq_restore(flags);
-> =20
->   out:
-
-[Severity: Medium]
-Can event retain a stale non-NULL pointer when ring_buffer_consume()
-retries at again: and then hits RB_READER_SKIP?
-
-event is initialized to NULL only before the again: label.  If the first
-pass peeks a RINGBUF_TYPE_PADDING event and jumps back to again: at the
-end of ring_buffer_consume(), and the retry sees state =3D=3D RB_READER_SKI=
-P,
-event is not cleared to NULL (unlike in ring_buffer_peek()).  if (event)
-then calls rb_advance_reader(cpu_buffer) without reader_lock or an
-nmi_readers reference while rb_remove_pages() is unlinking and freeing
-pages, and the trailing RINGBUF_TYPE_PADDING check loops back to again:.
-
-[ ... ]
-
-> @@ -6848,7 +6910,7 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer;
->  	unsigned long flags;
-> -	bool dolock;
-> +	enum rb_reader_lock_state state;
->  	bool ret;
->  	int cpu;
-> =20
-> @@ -6856,9 +6918,10 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
->  	for_each_buffer_cpu(buffer, cpu) {
->  		cpu_buffer =3D buffer->buffers[cpu];
->  		local_irq_save(flags);
-> -		dolock =3D rb_reader_lock(cpu_buffer);
-> -		ret =3D rb_per_cpu_empty(cpu_buffer);
-> -		rb_reader_unlock(cpu_buffer, dolock);
-> +		state =3D rb_reader_lock(cpu_buffer);
-> +		ret =3D state =3D=3D RB_READER_SKIP ? false :
-> +			rb_per_cpu_empty(cpu_buffer);
-> +		rb_reader_unlock(cpu_buffer, state);
->  		local_irq_restore(flags);
-> =20
->  		if (!ret)
-> @@ -6878,7 +6941,7 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buf=
-fer, int cpu)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer;
->  	unsigned long flags;
-> -	bool dolock;
-> +	enum rb_reader_lock_state state;
->  	bool ret;
-> =20
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> @@ -6886,9 +6949,10 @@ bool ring_buffer_empty_cpu(struct trace_buffer *bu=
-ffer, int cpu)
-> =20
->  	cpu_buffer =3D buffer->buffers[cpu];
->  	local_irq_save(flags);
-> -	dolock =3D rb_reader_lock(cpu_buffer);
-> -	ret =3D rb_per_cpu_empty(cpu_buffer);
-> -	rb_reader_unlock(cpu_buffer, dolock);
-> +	state =3D rb_reader_lock(cpu_buffer);
-> +	ret =3D state =3D=3D RB_READER_SKIP ? false :
-> +		rb_per_cpu_empty(cpu_buffer);
-> +	rb_reader_unlock(cpu_buffer, state);
->  	local_irq_restore(flags);
-> =20
->  	return ret;
-
-[Severity: High]
-Does returning false from ring_buffer_empty() and ring_buffer_empty_cpu()
-on RB_READER_SKIP cause ftrace_dump_one() to spin forever in NMI context?
-
-rb_remove_pages()
-  atomic_set_release(&cpu_buffer->resize_in_progress, 1)
-  raw_spin_lock_irq(&cpu_buffer->reader_lock)
-  <NMI>
-    ftrace_dump_one()
-      while (!trace_empty(&iter))
-        ring_buffer_empty_cpu()  --> false (RB_READER_SKIP)
-        trace_find_next_entry_inc(&iter)
-          ...
-            ring_buffer_peek()   --> NULL (RB_READER_SKIP)
-        touch_nmi_watchdog()     <-- spins forever
-
-rb_reader_lock() only returns RB_READER_SKIP in NMI context when
-reader_lock is held and resize_in_progress is set.  If ftrace_dump_one()
-interrupts rb_remove_pages() (or runs on another CPU during a panic after
-stopping the resizing CPU), rb_remove_pages() cannot resume to release
-reader_lock or clear resize_in_progress until the NMI dump finishes.
-Because ring_buffer_empty_cpu() reports the skipped CPU buffer as
-non-empty while ring_buffer_peek() returns NULL, trace_empty(&iter) stays
-false and the while (!trace_empty(&iter)) loop in ftrace_dump_one() never
-terminates.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110122610.6557=
-56-1-26031212468@stu.xidian.edu.cn?part=3D1
