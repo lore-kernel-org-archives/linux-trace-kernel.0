@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274832;
-	b=vDdyTmCBSUWKShJgYYLuwWJ+1xYKf7dQ4mB16Jz4klwG/hFRkoD64e66pS6SMrHM2C48
-	 K8wtC8722S6/R+HTBMaMDJYwiuR8FH0vf3PSvJ/5uHSbg7V0ratkbY5ZFhyqyL5AO5Wb/
-	 qsaxTuig0vD97aotCEa0uk6ig5zvsTFfyw2DQIiJoA+x9y/hus2JHzI2SAJemd/C7ah+i
-	 HkvtIGjIBgpEu/9SDCXHieJxlEwRcNvRL5nyjdkLSt8GLwG+MBGK2WNikSt0BN2qBdlF1
-	 m73Sa4+0wKDiuq3g4BayTDtWgh8KjKzk5WHQLEqgOO8BTXanM+jPJUSRVRHdBHgDHyg==
+	t=1794275458;
+	b=0cqNxWsEfpq2hWOplgrzrQErXBmIvC0blQH5J9Rh1oAvT9b/VE3TvbTsovddzad/OLQv
+	 ezXnP26YCOD8HuYJN4JrkR3Lu5UJQzgU3wyVObfZvTBbR2a+UWHhW2jPE7Q9ltQ6XVjgr
+	 OrqG5Q7GUJH6t+dH37Pk5L3WkDIf8CUbrOaHSWOZqANM67DJ9pepCLNnt8Xu/dUxtBcbD
+	 uIfERvY8hmmH5eATNRqtGr//g17e3fg/h8TKOX/t9tCgST11KHP7sU0f9sHBdQ97VCTJF
+	 AuLF6R1dSsMjYAD9S3TIBtSY+W5Isn4PJUzCGNXH6/R0W7znHdLUP694QQdM+x0NDvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274832;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794275458;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=UMZmxeT8DrkfoX8iPkUmOMynSFGrCqoB3ITufkHW3bs=;
-	b=H717HJvYjrOSGh03PHdLFEputf2sW3sVL5qOCwL1bbOy+S/apBPCieXQCgPLnTKfH8xQ
-	 LjgBWpHEP5FMK8+Uy2P0lDPkAUTdrIWnOEXO4rcPSUiHIzcm64wgCZjnUJcrlGlpuFrxV
-	 7PiN4lPY2uHtOF/UBYk6vot8KQ3auR+MzFzAipARvoJu8Wq/knw7KkCASVZaNV0X/cAKp
-	 4Kw+XUtPAbdZwLUYPb8LUYRJiDvHbuNdZlJ/A7JQwOTKPwifNuZPbjFl3KP2IZWpo/jPW
-	 TcW/PyWHqSvPOaFHA5VNnnG9yf0qJIhHVFTlhLpgiV6pRIKbvDJL/uV0wNhYxZtf0sA==
+	bh=iBevaI+ckIf1/X2GXL2TLVM1xgMW2RuCaaIi3r/F4RQ=;
+	b=f/bls5MtekGrW9q6FsulMiPmIkCmzqOlDsvfZp54uCVKPX6fVGyAFAhbcpdK7jfcyl58
+	 oLF3ykaXM2YAt80WfT5GI3oxlTs/iTI/UzybmnA402LWX8E057MPbEzZ2Pv0cES630I24
+	 ezsl390pbw2KNl6hu8e0/DOVBPo96BfcDEGvwLqIK/f4zQbWCJYQraRE25DrgotdOTXv4
+	 uXS7magVAj66PgT9hBz86zesYX6pjpG2SdKNudaDBUDYa1RC0m23F9u1Cc9m6DejsydfR
+	 zAUqp0S8Bfe/D7E6rMk62g8enuZxVVigNTTwbUPAfBNYTXvKXt5XB44Y4GB/sTpX5wQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LVTJUOb9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KTjVQwha;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A32606A325
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 01:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFF6606A321;
+	Tue, 10 Nov 2026 01:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LVTJUOb9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABC61F0089F;
-	Tue, 10 Nov 2026 01:40:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KTjVQwha
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACB21F0089F;
+	Tue, 10 Nov 2026 01:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794274831;
-	bh=UMZmxeT8DrkfoX8iPkUmOMynSFGrCqoB3ITufkHW3bs=;
+	s=k20260515; t=1794275457;
+	bh=iBevaI+ckIf1/X2GXL2TLVM1xgMW2RuCaaIi3r/F4RQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LVTJUOb9c4t1OehyV5+7A+cmULgvrsTFTvm5MYsFqzOvdI6QwVRnWmEvdB4Huel6X
-	 wNU++jf/XWkjOz3DsWLbTqBVfwkCoFpG1yUbDf7prjPaBTbBMMrVZXe7el9Ii7/muf
-	 tOXE40rCgkk9amt41/PfmeByu/VA6lIy7YX8QbBChiO3PiHYrR/8OWUK0tVBnqPSy8
-	 dCMJgGcNLDntQD9ZeK2zVILpY6dlvlREQnsK9XKu/E82TaloJ6l9XghqxOzIj/CDkN
-	 KecuL4b0Z0WR5X8zplqcsxc35XICG4d5cm1DwM++OF8lmdUZelW+nnB3aMiRHOrZ5o
-	 9E7OXyMD0kZSA==
-Message-ID: <sashiko-outbox-205975@kernel.org>
+	b=KTjVQwhar9Qw2cuX3deiD2c51K1HmRUuDLfB/fXlepswcWI3ToAm1LsIFreURu/gx
+	 Cl98FMlk9DdK1gEwm7A3OPQ2SIAPPXzqY+vpSjPOn6URvwNggXP9DgGsMhF1uNAN9g
+	 xkg/opYNPGqq+OUEPrkhNdpTsrNwU6Vxp8WdBUtVRFcGum+Rx2rBrzk4fNOc4flw8h
+	 0uC9NN6QpzmraPAIenqy5DxUhgggaqiOfyZSCSdmG4mOeCArKeh7WqAOJHatRbgSEI
+	 wN1LPl3D6s4cbs050M+in7aw3IYEHKCCXCc1vSVfLNQO1Dtyl/qbo/JUTnZO92WOPL
+	 zkbTEYx0cCQ7w==
+Message-ID: <sashiko-outbox-205995@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/4] kprobes: Add KUnit test cases for kprobes
- regressions
+Subject: Re: [PATCH v7 02/10] riscv: Add KUnit test for stack trace start
+ frames
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179427362063.291326.12590758885048682193.stgit@devnote2>
-References: <179427358690.291326.2078291446658598883.stgit@devnote2>
- <179427362063.291326.12590758885048682193.stgit@devnote2>
+To: "Shuai Xue" <xueshuai@linux.alibaba.com>, palmer@dabbelt.com, pjw@kernel.org, aou@eecs.berkeley.edu
+Cc: alex@ghiti.fr, oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, shuah@kernel.org, mpdesouza@suse.com, martin@kaiser.cx, kmehltretter@gmail.com, oliver.yang@linux.alibaba.com, zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org
+In-Reply-To: <20261110013750.36800-3-xueshuai@linux.alibaba.com>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-3-xueshuai@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 01:40:30 +0000
+Date: Tue, 10 Nov 2026 01:50:55 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,81 +64,49 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] kprobes: test_optprobe_rearm_unoptimizing() misses jump
-  overwrite on re-arm
+- [Medium] riscv: vmlinux link failure when CONFIG_KUNIT=3Dm with
+  RISCV_STACKTRACE_KUNIT_TEST
 --
 
-commit d9ce37575f42c89c2d4a066b90a06cb4ee50df98
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+commit 88e1ac2e959d970cabee9d276d02925cc3d44f40
+Author: Karl Mehltretter <kmehltretter@gmail.com>
 
-kprobes: Add KUnit test cases for kprobes regressions
+riscv: Add KUnit test for stack trace start frames
 
-This commit adds four KUnit test cases to lib/tests/test_kprobes.c covering
-regressions in kprobes registration, ftrace ops switching, and optimization
-state transitions.
+This commit adds a KUnit test suite to verify the starting frame and skip
+counts of stack_trace_save() and ftrace_return_address() on RISC-V.
 
-> diff --git a/lib/tests/test_kprobes.c b/lib/tests/test_kprobes.c
-> index 06e729e4de051..d692612bc2245 100644
-> --- a/lib/tests/test_kprobes.c
-> +++ b/lib/tests/test_kprobes.c
-[ ... ]
-> +/* Test for: kprobes: Do not overwrite jump instruction when re-arming u=
-noptimizing probe */
-> +static void test_optprobe_rearm_unoptimizing(struct kunit *test)
-> +{
-> +	struct kprobe opt_kp =3D {
-> +		.symbol_name =3D "kprobe_opt_target",
-> +		.pre_handler =3D kp_pre_handler,
-> +	};
-> +
-> +	current_test =3D test;
-> +	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&opt_kp));
-> +
-> +	/* Allow background optimizer thread to jump-optimize the probe */
-> +	wait_for_kprobe_optimizer();
-> +
-> +	/* Temporarily disable probe (queues on unoptimizing_list, leaves jump)=
- */
-> +	KUNIT_EXPECT_EQ(test, 0, disable_kprobe(&opt_kp));
-> +
-> +	/* Immediately re-enable (re-arm) before optimizer thread unoptimizes */
-> +	KUNIT_EXPECT_EQ(test, 0, enable_kprobe(&opt_kp));
-> +
-> +	/* Verify jump opcode was not corrupted by an unaligned INT3 overwrite =
-*/
-> +	preh_val =3D 0;
-> +	opt_target(rand1);
-> +	KUNIT_EXPECT_NE(test, 0, preh_val);
-> +
-> +	unregister_kprobe(&opt_kp);
-> +}
-> +#endif
+Link: https://lore.kernel.org/r/20261010132712.46931-2-kmehltretter@gmail.c=
+om
+
+> diff --git a/arch/riscv/kernel/tests/Kconfig.debug b/arch/riscv/kernel/te=
+sts/Kconfig.debug
+> index 40f8dafffa0ab..eb79df5b2c5a4 100644
+> --- a/arch/riscv/kernel/tests/Kconfig.debug
+> +++ b/arch/riscv/kernel/tests/Kconfig.debug
+> @@ -42,6 +42,18 @@ config RISCV_KPROBES_KUNIT
+> =20
+>           If unsure, say N.
+> =20
+> +config RISCV_STACKTRACE_KUNIT_TEST
+> +	bool "KUnit tests for RISC-V stack trace start frames"
+> +	depends on KUNIT && STACKTRACE && FRAME_POINTER && KALLSYMS
 
 [Severity: Medium]
-Does test_optprobe_rearm_unoptimizing() pass even when enable_kprobe()
-overwrites the jump instruction at opt_kp.addr with a breakpoint?
+Does declaring RISCV_STACKTRACE_KUNIT_TEST as bool while depending on
+tristate KUNIT break the vmlinux link when CONFIG_KUNIT=3Dm and
+CONFIG_RISCV_STACKTRACE_KUNIT_TEST=3Dy (such as under allmodconfig)?
 
-When disable_kprobe() runs on the optimized probe, __disarm_kprobe() queues
-it on unoptimizing_list and skips arch_disarm_kprobe(), leaving the jump in
-place.  However, enable_kprobe() calls __arm_kprobe(), which unconditionally
-calls arch_arm_kprobe() before optimize_kprobe():
+In that configuration, stacktrace_test.o is built into vmlinux while the
+KUnit core symbols it calls (__kunit_do_failed_assertion, kunit_log_append,
+etc.) live in kunit.ko, similar to the issue fixed for RISCV_KPROBES_KUNIT
+in 5fada1605733 ("riscv: tests: Make RISCV_KPROBES_KUNIT tristate").
 
-kernel/kprobes.c:__arm_kprobe() {
-    ...
-	arch_arm_kprobe(p);
-	optimize_kprobe(p);	/* Try to optimize (add kprobe to a list) */
-}
-
-arch_arm_kprobe() overwrites the jump opcode at p->addr with a breakpoint,
-while optimize_kprobe() sees KPROBE_FLAG_OPTIMIZED and
-optprobe_queued_unopt(op), dequeues the probe from unoptimizing_list, and
-returns early without re-optimizing it.  This leaves the probe permanently
-de-optimized with a breakpoint at p->addr while KPROBE_FLAG_OPTIMIZED
-remains set.  Because hitting that breakpoint still invokes kp_pre_handler(=
-),
-checking only that preh_val is non-zero does not detect that the jump opcode
-was overwritten.
+Should this depend on KUNIT=3Dy instead (since building stacktrace_test as a
+module would also cause sprint_symbol_no_offset() in
+riscv_stacktrace_check_skip() and riscv_return_address_check() to append
+" [stacktrace_test]" to the symbol names)?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179427358690.291326=
-.2078291446658598883.stgit@devnote2?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110013750.3680=
+0-1-xueshuai@linux.alibaba.com?part=3D2
