@@ -1,98 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=81.19.149.116
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794337745;
-	b=5oTadSlkEdowS2Cyg/uMx3lHWs6YJ+o3j0I5W9bNuGQUhU/osFm38vDM610gqJO/n0n4
-	 roD1CCCuGanD0VO06qF8CFCuYCjzXMgLmZcoNo7pRQnsNY1Or8DyAE2/6pGc4562YcSm2
-	 zZBzlwJ+yR8xA07/1gOWkJEHJpIYa6Z3kBZaIolcDDPjbKIRqSVERoApBjJrURMBFcHVI
-	 4h/cy6pbfqbXU2UQ8Utu+Q4A73RPEv8DCu1faCK+UDYZlziZ1tvExnYg1Kdyd7aWE+jBx
-	 /PR4JrynU5OBFUCHVdrpeF4c6tEGRpXNlWD31NeoqpJjWFE6M6CWq1ubiFVBV3jmD8Q==
+	t=1794339191;
+	b=3MDRvvWodgfhuuBZgcRhx1lHOMsTSToaHkOkxMbsLMPODbuZMwmmZMnnm1K5x6OxAbzd
+	 kOkB6q+FnGZiX4imFWWLwj0SC2L1NWdz+R2vw8gMZ8Zcxt2UQer4gbhq9CspQ6vq5grtd
+	 6ctYl0Wf0xdjhF9aHvkmGOrvHyOJK8ukB0miyANII0a5IkUsvezki00gMYJInfaEgbBqV
+	 lzEI2ZfSwGkmcBhcFO2ULWHYm4Lx+uXT4b1ltfwgWcEI7cJZz8pDcK4uQj9QBvMNLFOi1
+	 5Fnh+3Gp/HQLc0suCuWpWadpwGFXG6rv+nbKPprAEpBZTXkQsfxh/W30GjNstRwoVsQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794337745;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=NO2sdAez8S6n83liUUR9377K8rTnW+Jzv2+weGto1Hs=;
-	b=ZZ+RkPzqXEqj3Y/UUt0VhbnBw+QokUDoSQl9NuoXzO6TCRrwqdSJgbRgIC8pMqRVOQtJ
-	 xPYCvfKZ9CgNS/0R0F+H0EllLbJsD3i80+pPd/DrLGpv2EP93sUErN6KOxVT37tDQmMef
-	 3csMYX3rE0IGJdk/zKPa3mmmECaUb3JsAzU4cPjp4lMv/fsYZ+Edp+IuoyFBZW2VxIIgY
-	 jArH8rRSmHZ5zh5YWCfsDr8u0DHm/GKhgnR1UNLn+5G9WnVYyZo9I6RoIYKFcjyKnwaWY
-	 h90u4KekrIBP6SqqDC4k3q6CqWB82UAlfTSsDCRJm1pVf4f+14Ybg7YfGVEVtpCaxIQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794339191;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-AV-Do-Run;
+	bh=Kb6tsHIuCpbK8Ynd/HxIwOkPQSLfGDHhz1xSOv1kM98=;
+	b=z85ScK4HhuU7Ld6XbqE1pOMcadJDWmpz9RmfemokuiqO9aSe/BW1mLkrlZ6Wof0WZLs7
+	 8Q/b+J6xThmjz8InWm34XMaRscFuF+doihkOHw0HzJDWQT5/0++LJG6hv42EWNvJ2PbeU
+	 rivRakWy0Ha+WeM4qyxS3yQeVLu9Aqp3hpTV8Xmu2zSb3tOpQQa4yWoyhsHxlDqkwN6UN
+	 kLo80l7EaUiU8kMt20D1Pjx13X7OD8lEQqPXK1Ee+qdHdt2KvNmYlSDN/Wtp8X700ogbc
+	 rk04bZVW6nDAA+D83xCDw65FMnBsqMVwjwwFNyo3Bme9+pTQbHko4Z6b8kVQRA5oZFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="d8O/6G9y";
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=engleder-embedded.com;
+	spf=pass smtp.mailfrom=engleder-embedded.com;
+	dkim=pass header.d=engleder-embedded.com header.i=@engleder-embedded.com header.a=rsa-sha256 header.s=dkim11 header.b=d1g97xJ3;
+	arc=none smtp.remote-ip=81.19.149.116
+Received: from mx06lb.world4you.com (mx06lb.world4you.com [81.19.149.116])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2723760A260F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 19:09:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2723760A260F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFB3606A321;
+	Tue, 10 Nov 2026 19:33:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9BFB3606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=d8O/6G9y
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4b4571ff080so27729955e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 11:09:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794337743; x=1794942543; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NO2sdAez8S6n83liUUR9377K8rTnW+Jzv2+weGto1Hs=;
-        b=d8O/6G9yk4Q96PxRTmpH3fURC/KUFi7ptm0Vg270N59SiKN2q6kNgcFB1R9KGL7kZJ
-         kswEhaDNNFR2HLx3TRnu9NaQ9Twkj16uunHvhd0ohq47FHKXLXuLEnb31WFNlofpsUKE
-         vf3AHQgikKwXC4zGkpOOnT5Q+F1s+4evHm1lATUNcedREXf1T267XOHp/8L5QBA51+8B
-         dWxCyK1qOMONxp8OsWTQd3LAzaVIFNfSOliol6GaqJRRXRT1oHeq8spzP8isW6xXeBSN
-         ySX57FeaKZWNxRXN5XJWs2/XEEFnEWLSM8q8odPL4FpwGTYS+kCPkXo69Zv7SxHYbdDG
-         ZjWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794337743; x=1794942543;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NO2sdAez8S6n83liUUR9377K8rTnW+Jzv2+weGto1Hs=;
-        b=mwBqpNrFHIwxmUb+4W/JuQo/5OyiZyce959zRHKOyvDNjBR7QjasIlMWHz/gvE3q3X
-         PBAtl2MPjebJIazifi9niB1/0iePFf/bW2DkdGbhcOOaAa0TLNx0GX7xm+3hTTaTscjO
-         yyGhtTvjjDA15jOMacnsmuo5Q8dS0a9fuMzKQpHUEml8VhGtdYp2M0x2LqVlrNydUdE+
-         970YLunbqNRd52vQcMv97KAPWrxQhcCOdzy9SPrMk9BF9NXbcNfsTxu4n6mM4jwAuQDv
-         KK8v06FxMmBREn9fyjXOVdHIpThIA4cHlfyRuz20GzKaX5RagE2uM1GQEjygRSvOWvpG
-         ZfMQ==
-X-Forwarded-Encrypted: i=1; AL+hErEhYpeUmK+K0Z20P6zFqmgDIZgKuJ/Ey0/NmQ01b3rP9mO/qOgw2hKxLbh7dmPk6bQ6UPvkA8B+biJPJrTjhM9oaxE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+9OeSfaT4XgHFKh4ABnaHQWRZjkHiNhLcK2Os9wvp/3TIPNowB
-	981qkXH8Ut2KNNoLr6QspCNMK6pRRWDJIIrDHQS+a18y2TzOQ5c5v4d1
-X-Gm-Gg: AYBFou28fnbqDhuTChkSatYe2MdBRK9ji5zZxyqD7Q6KGDEfu+DfIE1YK4TW+fpyrei
-	PTfq9osNWRqUc7ba3inpLTmDE2fMixfBh3LYFUgQmQfSqxZKoZUK2BCQq5IanmKQhSFeIP/3cQ7
-	xdSmgkwxpefAgCoY0dPI2LiVlbdSgApGhZ7V3RNLimEZ09WEn0s9VS7/M0iMFHS9y+ANst27fEp
-	qxbi/CviL8aU4bMulZdMJhHSsg2vrWNpJYgS2oiYPp/dpXi3lTI641UJKPbPfLXRmK6EF8YB7xP
-	Eu32zubXfEs7LRZGHZ/bqZQamGPnMS6WXenV9CE5Gw1INfLRrWqyFcoy+arznRu9okl+N6D0NdD
-	wSjj4Zh0ok+FjihfpCSGuJU8VAMKTSaKtZ20ndS2rtGo/Ik+NkhYcv20ev08/DUeQ6zjp7aOMGk
-	QvKZeYd/x/JGRsGN8ds89l1xuqQD8kjj/NhgRGcFUgOn/0xjXNKIKaCQ0yWJPl3r14nnxc4Vzp6
-	ZQA46Jl/SpxGAN5lDmdDICRfp1WEChDKWpyDEPbZq+QNajAQPj1mXIMGEsdwu3N86L247lgNBPv
-	UkgWhx/i5OiyZma9tUbMbf2brA1GMSGvC/MPfJ7oYo0qff3VGrgspLG0KT/gIMtKa/7hg1wbFhj
-	B70mMJij4SU51oswvZm/apFkW/ODpdGp/s3V/fkktOx4sHa26gPl6SFDcMmaf6iixdCL3nlw30t
-	Xi2usorrdr1KUGg6I908U85E4FiZ2cbo0S6uGdeCd2D2K8BRLzHTKhLPRotG7TX5yEXnMCwAryW
-	Ry3lNVpMVUkRY0Lpw==
-X-Received: by 2002:a05:600c:4f81:b0:4a0:1c94:7042 with SMTP id 5b1f17b1804b1-4ba09377c5amr1349305e9.8.1794337743494;
-        Tue, 10 Nov 2026 11:09:03 -0800 (PST)
-Received: from longitude (2a02-8434-fda5-4201-64a2-5e9b-f89e-f448.rev.sfr.net. [2a02:8434:fda5:4201:64a2:5e9b:f89e:f448])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba08e35e44sm4309775e9.1.2026.11.10.11.09.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 11:09:03 -0800 (PST)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: akpm@linux-foundation.org,
-	rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] tools/bootconfig: Preserve values containing both types of quotes
-Date: Tue, 10 Nov 2026 20:08:47 +0100
-Message-ID: <6ad95c1a6eb524143a38ef9a0d4fd87b92ef1daa.1794337724.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1794337724.git.edumucelli@gmail.com>
-References: <cover.1794333957.git.edumucelli@gmail.com> <cover.1794337724.git.edumucelli@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.a=rsa-sha256 header.s=dkim11 header.b=d1g97xJ3
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Kb6tsHIuCpbK8Ynd/HxIwOkPQSLfGDHhz1xSOv1kM98=; b=d1g97xJ3xONMX6Y0uhEkV2nclq
+	p94D0CK0/HqOVSFQN/q93V4n+JQcgogScPzbbhsf2EK7esCKzDxZEgkMgUB6sIh+omV2rTIjst7Z0
+	1AaIrfpKHAAZNHW79ihGxgwuRF6OiZ6PY4zaH6ySBztj3AOjznbKEkNkN3gkr2+8BAaE=;
+Received: from [80.121.72.134] (helo=[10.0.0.160])
+	by mx06lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1xQraO-000000000Ux-3taX;
+	Tue, 10 Nov 2026 20:32:53 +0100
+Message-ID: <cb785718-02cd-442b-a236-c1bce6971d60@engleder-embedded.com>
+Date: Tue, 10 Nov 2026 20:32:50 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -102,93 +58,238 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: mark skb NAPI IDs independently of busy polling
+To: Ding Meng <meng.ding@siemens.com>, netdev@vger.kernel.org
+Cc: florian.bezdeka@siemens.com, jan.kiszka@siemens.com, wq.wang@siemens.com,
+ p@1g4.org, Jason Xing <kerneljasonxing@gmail.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>
+References: <20261105071706.7043-1-meng.ding@siemens.com>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20261105071706.7043-1-meng.ding@siemens.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-An unquoted bootconfig value can contain both single and double quote
-characters, for example:
+On 05.11.26 08:16, Ding Meng wrote:
+> Commit 97dc7cd92ac6 ("ptp: Support late timestamp determination")
+> added support for deferring RX timestamp conversion to
+> ndo_get_tstamp(). When the timestamp is consumed, get_timestamp()
+> uses the skb's NAPI ID to find the device that owns the timestamp
+> cookie and invoke its callback.
+> 
+> Commit e68b6e50fa35 ("udp: enable busy polling for all sockets")
+> gated NAPI ID bookkeeping with CONFIG_NET_RX_BUSY_POLL. As a result,
+> when busy polling is disabled, the skb may not carry a usable NAPI ID.
+> The device lookup then fails, so the driver callback is not invoked.
+> get_timestamp() falls back to hwtstamp, which does not contain the
+> converted timestamp, resulting in an incorrect RX hardware timestamp.
+> 
+> Record skb NAPI IDs independently of busy-poll support to support
+> drivers that use deferred timestamp conversion and future driver
+> features that need to look up a device by its NAPI ID.
+> 
+> Signed-off-by: Ding Meng <meng.ding@siemens.com>
+> Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
+> ---
+> In the discussion of the issue reported at
+> https://lore.kernel.org/netdev/20260630112056.885071-1-meng.ding@siemens.com/
+> this previous patch added an igc-specific fallback for configurations
+> with CONFIG_NET_RX_BUSY_POLL disabled. It populated skb's hwtstamp
+> field with a timestamp converted using the default hardware timer,
+> allowing get_timestamp() to return it without invoking ndo_get_tstamp().
+> But Jakub Kicinski noted that the proposed fix appeared to be a
+> driver-specific workaround for a generic problem. The engleder driver
+> would also be affected by the same issue.
+> 
+> This patch introduces a new configuration option to enable NAPI ID
+> bookkeeping independently of busy polling. The option is enabled
+> whenever busy polling is enabled, preserving the existing behavior.
+> It is also selected by the igc and engleder drivers, ensuring that
+> skbs carry a NAPI ID even when busy polling is disabled.
+> 
+> Another approach considered was to require drivers using deferred
+> timestamp conversion, such as igc and engleder, to enable busy polling.
+> However, this would introduce an unnecessary dependency between two
+> independent features: hardware timestamp reporting should not require
+> busy polling to be enabled.
+> 
+> Timestamping has been tested only with igc; it has not been tested
+> with engleder.
+> 
+>   Documentation/networking/timestamping.rst | 11 ++++++++---
+>   drivers/net/ethernet/engleder/Kconfig     |  1 +
+>   drivers/net/ethernet/intel/Kconfig        |  1 +
+>   include/linux/skbuff.h                    |  4 ++--
+>   include/net/busy_poll.h                   |  2 +-
+>   include/trace/events/net.h                |  2 +-
+>   net/Kconfig                               |  4 ++++
+>   net/core/filter.c                         |  2 +-
+>   net/core/skbuff.c                         |  2 +-
+>   9 files changed, 20 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/networking/timestamping.rst b/Documentation/networking/timestamping.rst
+> index 2162c4f2b28a6..dbe40a1972639 100644
+> --- a/Documentation/networking/timestamping.rst
+> +++ b/Documentation/networking/timestamping.rst
+> @@ -278,9 +278,14 @@ SOF_TIMESTAMPING_OPT_PKTINFO:
+>     packets with hardware timestamps. The message contains struct
+>     scm_ts_pktinfo, which supplies the index of the real interface which
+>     received the packet and its length at layer 2. A valid (non-zero)
+> -  interface index will be returned only if CONFIG_NET_RX_BUSY_POLL is
+> -  enabled and the driver is using NAPI. The struct contains also two
+> -  other fields, but they are reserved and undefined.
+> +  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
+> +  enabled and the driver is using NAPI. This hidden configuration is
+> +  selected automatically by busy-poll support and by drivers that need
+> +  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
+> +  use deferred timestamp conversion must select it so the networking
+> +  stack can find the device and call its timestamp callback even when
+> +  busy polling is disabled. The struct contains also two other fields,
+> +  but they are reserved and undefined.
+>   
+>   SOF_TIMESTAMPING_OPT_TX_SWHW:
+>     Request both hardware and software timestamps for outgoing packets
+> diff --git a/drivers/net/ethernet/engleder/Kconfig b/drivers/net/ethernet/engleder/Kconfig
+> index 3df6bf476ae7e..9700a243bea11 100644
+> --- a/drivers/net/ethernet/engleder/Kconfig
+> +++ b/drivers/net/ethernet/engleder/Kconfig
+> @@ -22,6 +22,7 @@ config TSNEP
+>   	depends on PTP_1588_CLOCK_OPTIONAL
+>   	select PHYLIB
+>   	select PAGE_POOL
+> +	select SKB_MARK_NAPI_ID
+>   	help
+>   	  Support for the Engleder TSN endpoint Ethernet MAC IP Core.
+>   
+> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+> index 780f113986ea8..7fb63f351fc20 100644
+> --- a/drivers/net/ethernet/intel/Kconfig
+> +++ b/drivers/net/ethernet/intel/Kconfig
+> @@ -376,6 +376,7 @@ config IGC
+>   	depends on PCI
+>   	depends on PTP_1588_CLOCK_OPTIONAL
+>   	depends on ETHTOOL_NETLINK
+> +	select SKB_MARK_NAPI_ID
+>   	help
+>   	  This driver supports Intel(R) Ethernet Controller I225-LM/I225-V
+>   	  family of adapters.
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 6787fcf6ac3e4..164c862f7a403 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1059,7 +1059,7 @@ struct sk_buff {
+>   			__u16	vlan_tci;
+>   		};
+>   	};
+> -#if defined(CONFIG_NET_RX_BUSY_POLL) || defined(CONFIG_XPS)
+> +#if defined(CONFIG_SKB_MARK_NAPI_ID) || defined(CONFIG_XPS)
+>   	union {
+>   		unsigned int	napi_id;
+>   		unsigned int	sender_cpu;
+> @@ -1267,7 +1267,7 @@ static inline bool skb_pkt_type_ok(u32 ptype)
+>    */
+>   static inline unsigned int skb_napi_id(const struct sk_buff *skb)
+>   {
+> -#ifdef CONFIG_NET_RX_BUSY_POLL
+> +#ifdef CONFIG_SKB_MARK_NAPI_ID
+>   	return skb->napi_id;
+>   #else
+>   	return 0;
+> diff --git a/include/net/busy_poll.h b/include/net/busy_poll.h
+> index 6e172d0f6ef5f..f7c0e62c6a7d7 100644
+> --- a/include/net/busy_poll.h
+> +++ b/include/net/busy_poll.h
+> @@ -130,7 +130,7 @@ static inline void sk_busy_loop(struct sock *sk, int nonblock)
+>   static inline void __skb_mark_napi_id(struct sk_buff *skb,
+>   				      const struct gro_node *gro)
+>   {
+> -#ifdef CONFIG_NET_RX_BUSY_POLL
+> +#ifdef CONFIG_SKB_MARK_NAPI_ID
+>   	/* If the skb was already marked with a valid NAPI ID, avoid overwriting
+>   	 * it.
+>   	 */
+> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
+> index dbc2c5598e35a..99ed7645242eb 100644
+> --- a/include/trace/events/net.h
+> +++ b/include/trace/events/net.h
+> @@ -208,7 +208,7 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
+>   
+>   	TP_fast_assign(
+>   		__assign_str(name);
+> -#ifdef CONFIG_NET_RX_BUSY_POLL
+> +#ifdef CONFIG_SKB_MARK_NAPI_ID
+>   		__entry->napi_id = napi_id_valid(skb->napi_id) ?
+>   				   skb->napi_id : 0;
+>   #else
+> diff --git a/net/Kconfig b/net/Kconfig
+> index 76ab44aa439a6..8fa7586dc08ca 100644
+> --- a/net/Kconfig
+> +++ b/net/Kconfig
+> @@ -346,9 +346,13 @@ config CGROUP_NET_CLASSID
+>   	  Cgroup subsystem for use as general purpose socket classid marker that is
+>   	  being used in cls_cgroup and for netfilter matching.
+>   
+> +config SKB_MARK_NAPI_ID
+> +	bool
+> +
+>   config NET_RX_BUSY_POLL
+>   	bool
+>   	default y if !PREEMPT_RT || (PREEMPT_RT && !NETCONSOLE)
+> +	select SKB_MARK_NAPI_ID
+>   
+>   config BQL
+>   	bool
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index b7ac145b68b1f..e2218c18622b8 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -10274,7 +10274,7 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
+>   		break;
+>   
+>   	case offsetof(struct __sk_buff, napi_id):
+> -#if defined(CONFIG_NET_RX_BUSY_POLL)
+> +#if defined(CONFIG_SKB_MARK_NAPI_ID)
+>   		*insn++ = BPF_LDX_MEM(BPF_W, si->dst_reg, si->src_reg,
+>   				      bpf_target_off(struct sk_buff, napi_id, 4,
+>   						     target_size));
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index eb9fcc4b1fd1a..386a32cdc0cc8 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -1581,7 +1581,7 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
+>   #ifdef CONFIG_NETWORK_SECMARK
+>   	CHECK_SKB_FIELD(secmark);
+>   #endif
+> -#ifdef CONFIG_NET_RX_BUSY_POLL
+> +#ifdef CONFIG_SKB_MARK_NAPI_ID
+>   	CHECK_SKB_FIELD(napi_id);
+>   #endif
+>   #ifdef CONFIG_XPS
+> 
+> base-commit: d135ab453a7400a34930bdda1ef4bdc8acfac80e
 
-  message = He said "it's fine"
-
-xbc_show_value() surrounds any value containing a double quote with
-single quotes. If the value also contains a single quote, both compact
-and list output become invalid bootconfig syntax and cannot be parsed
-again.
-
-Print values containing both quote types without outer quotes. Such
-values can only come from unquoted input, so they do not contain the
-delimiters that would require quoting. Keep using single or double
-quotes for the other values. Add round-trip checks for compact and list
-output, including an array containing the mixed-quote value.
-
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
----
-The parser accepts message = He said "it's fine", but the original tool
-prints a value surrounded by single quotes. The apostrophe in "it's"
-then makes that output invalid.
-
-I checked scalar and array values through compact and list output,
-including literal backslashes, quote controls, and a test initrd image.
-With the fix, all 25 focused checks pass, independently and in the
-combined series, and the parsed values survive those round trips.
-The full bootconfig test suite also passes.
-
- tools/bootconfig/main.c             | 14 ++++++++------
- tools/bootconfig/test-bootconfig.sh | 11 +++++++++++
- 2 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 75516e9e4ac3..e7513742fd2f 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -52,17 +52,19 @@ static int init_xbc_with_error(char *buf, int len)
- 
- static int xbc_show_value(struct xbc_node *node, bool semicolon)
- {
--	const char *val, *eol;
--	char q;
-+	const char *val, *eol, *q;
- 	int i = 0;
- 
- 	eol = semicolon ? ";\n" : "\n";
- 	xbc_array_for_each_value(node, val) {
--		if (strchr(val, '"'))
--			q = '\'';
-+		if (!strchr(val, '"'))
-+			q = "\"";
-+		else if (!strchr(val, '\''))
-+			q = "'";
- 		else
--			q = '"';
--		printf("%c%s%c%s", q, val, q, xbc_node_is_array(node) ? ", " : eol);
-+			/* Both types of quotes can only occur in unquoted values. */
-+			q = "";
-+		printf("%s%s%s%s", q, val, q, xbc_node_is_array(node) ? ", " : eol);
- 		i++;
- 	}
- 	return i;
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index a2e8311d4d19..a0578013e731 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -146,6 +146,17 @@ $BOOTCONF $INITRD > $TEMPCONF
- cat $TEMPCONF
- xpass grep \'\"string\"\' $TEMPCONF
- 
-+echo "Round-trip values containing both types of quotes"
-+cat > $TEMPCONF << 'EOF'
-+key = "first", He said "it's fine", "last"
-+EOF
-+for mode in "" "-l"; do
-+  $BOOTCONF $mode $TEMPCONF > $OUTFILE
-+  xpass $BOOTCONF -a $OUTFILE $INITRD
-+  $BOOTCONF -l $INITRD > $OUTFILE
-+  xpass cmp $TEMPCONF $OUTFILE
-+done
-+
- echo "Repeat same-key tree"
- cat > $TEMPCONF << EOF
- foo
--- 
-2.53.0
-
+Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
