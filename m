@@ -1,54 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794325089;
-	b=y3uR5yHtrRYQizdxRT07rEe8XFqsVJA7Xe5MksFW3mpNsr+n3yy5T0OqKRuu+aDOz6Za
-	 AZNMfzi1f77NCls2ul/DCG6OJZgKt09uc99X4Yi+RxpVNChTgfgP7JyGXw8QL1aH8EJQn
-	 A4Nn378S1Mj99TUgnDc13gk+BJm/uI7f5bCJIOIvTqv6JO49D7YAYu2gu23GY8+ARVTy4
-	 eUOUhslhEppqCC/Lav4tlM5o3+y6MpWYSvlKsUzybuUooDSqcEQx7qhUZb7gWuwSGC6QC
-	 HxOFyN6J62g3mH3x87mryeWBLb1vvV0ijT8GI7L0mlBtZjSiBi9P8HoeviCheTjjkag==
+	t=1794325188;
+	b=QXkXLqjeTi6tZ61sKRA6yfDM681oOFzlO7o7AEGeYaXp5o9Img/cqA4l69wz6wIBN++I
+	 b+QCm5t/SnSaU4FVTIj2Zbm+syjHQTAoH4umDnDu5c5c3A2X8IO4WxQjx/BYrhTqdlPdK
+	 Bey3/HbMTfThG2cqGwJnCdn89L2ZOd5WnjoXxqY/DjTmONTRGnzKmt3DtHxOmQ/dCEg12
+	 nO37h1QOx73rqZcvx+3pgAyX8UzzoWXWi4SCsWM4RH862cLtmvvBjh1pSx5/jHiDM0c/C
+	 kRq7aXtL5GGpb5ErXkaxnVwu9QdSWY4h7Cp8wH8Lw0oG2UA9tjF8p8g5i9mfUwTj9lQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794325089;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794325188;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=IVo53ZWRUxUZncXLcouJ/TarKckoa/ysa4d9WVjKI9w=;
-	b=C6oUnB/wh4YI3vdij68QjELPhXR864bIvKfEtORTJ0eGod+vB93poHrkszND/hlG6HaE
-	 Ulu7YRAAjN9ZqIJud7VLdx4BvfgvCeyd2D2/finqwVK2q0CTdY8GGfWxiqxUMD+3MYOGw
-	 YZQs/xH8eRhTYYE9el8/O9rG/jGfsMqBKfP0iKvr0SvZgude9wLsxQDP0G0vuUtOmyhW+
-	 /6BqR0S2SXjM2CTvXjTSdb4iQwbmZsS6u2uayzqR2Y//FucrlcDHiktKStoNIm3NjmjHd
-	 Z7E++i9DTuLLASCVHsLk5iqlih7JMeWp3dVWg3rhjDfL8zc3aj0yDFAQL9cezUB4okA==
+	bh=/Dc+JwsdmgyYxqvZQmyNcFdizNnWnNQRrjUAX8hzcoU=;
+	b=v2zC5xycdpLJj0px1j1RRuPkg7BfEqOusBzBia9VExlArCcMXxFx90gVdXolxQNiqsAd
+	 TFSIVvx1FXgKQ3ZgHQrbbU4pGPZ6b9ZRsbWVP3gewEjvd2KqY9/CD0IJeBJ6PSRSdtz9+
+	 Bz9sPcpQf3VyLV4iiFqyQQDnSVperXLYuAlULc8r5r4lQZtFBlohqKVG0lF84MjItoD1e
+	 tUifFJByYPinawjdO9JL/Ne+9k3BuEfhxMlXYWhOMps5Kjd4WGjtupEQh/pHLhtjJYbl5
+	 AD8bbOaBsk/2FyL4fJ/VoeDZPAkfcopqT+fD0rGiRrHiyrH/fyUwJGVbGUuiMx+P4gA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpxYX4HJ;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=SsQSQlHy;
+	arc=none smtp.remote-ip=95.215.58.177
+Received: from mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F232606A31C;
-	Tue, 10 Nov 2026 15:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946BB606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 15:39:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 946BB606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VpxYX4HJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F011F008A1;
-	Tue, 10 Nov 2026 15:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794325088;
-	bh=IVo53ZWRUxUZncXLcouJ/TarKckoa/ysa4d9WVjKI9w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VpxYX4HJfpGO3in5SPsTkLkztMer+aY4KhEdu4iJt4LxMLP6GYp5AQStRQi8bGNTZ
-	 +Lva1wWNVdUP8kN4bWaKG2te4boPLWczOKmXofNhsbtqFqyHjaa73+Q+zdozZQxeEQ
-	 x3IKkdM3ttweOOZTdd9KYRFJi2OVVyrqtPWEf7Z1gggMJmyLqTY+dLP5YW1ESu9xo1
-	 3eeNj+M1zD+YSeQCCG89K++LjDaUiZHIhiXLIucTKEsdo45AXqsP1eDMyW0wOPLbg2
-	 AwyEWZLcm+Twz2HUfB3N5aq9ssbBBOsz1bhGvsXSr29Ocg9eVvgGb8lm9k7Ud5kzzG
-	 +kwZO5mWWwmbg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>, x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 04/13] kprobes: Maintain an rbtree of registered probes
-Date: Wed, 11 Nov 2026 00:38:03 +0900
-Message-ID: <undine-1794325083765212173-9c2dd2a4d5c010fe@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <avLz8k0gdZwYTeA5@krava>
-References: <20261109194916.1089703-1-jolsa@kernel.org> <20261109195517.1090787-1-jolsa@kernel.org> <undine-1794298339502831052-1b6960b8f9b38e7d@undined.local> <avLz8k0gdZwYTeA5@krava>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=SsQSQlHy
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=U8k35pxEd0m+x8ZKDuQMkZMM3+/gIzGlGIc3CscMOqM=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794325185; v=1; x=1794929985;
+ b=SsQSQlHyp7V5Z0CCbhyiGrxvJPcWe9+dkoM1G2BZx1xIyZDJVnejZeMb1MALH+7xItNzDytf
+ u6MYKWta7tzzj39/69e7aCn1s1eozEAGLBrWMUMof7KcaaGsU2MKtoOWyxFwM3nG5Xw1DiOl67M
+ zyLFvGH+f39e5KhEBw8n8fu8=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 0bcc4bd1f1aaf32a;
+	Tue, 10 Nov 2026 15:39:45 +0000
+X-Mizu-Trace-ID: 0bcc4bd1f1aaf32a
+X-Migadu-Flow: FLOW_OUT
+From: Qiliang Yuan <qiliang.yuan@linux.dev>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Qiliang Yuan <qiliang.yuan@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
+Date: Tue, 10 Nov 2026 10:39:28 -0500
+Message-ID: <20261110153928.4039653-1-qiliang.yuan@linux.dev>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
+References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com> <20261110135824.3264904-1-qiliang.yuan@linux.dev> <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,42 +90,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Nov 2026 11:37:38 +0100, Jiri Olsa <olsajiri@gmail.com> wrote:
-> On Tue, Nov 10, 2026 at 08:12:19AM +0000, Masami Hiramatsu (Google) wrote:
-> > On Mon,  9 Nov 2026 20:55:17 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
-> > > Add an address-ordered rbtree for registered probes. Keep it synchronized
-> > > with the hash table when probes are added, removed, or replaced by
-> > > aggregator probes.
-> > 
-> > Could you tell me why don't you use hlist (get_kprobe) instead?
-> > I would NOT like 2 different lists which is basically doing the
-> > same thing.
-> 
-> The speedup comes from finding the first relevant kprobe, then iterating
-> over the remaining probes in address order. The hash table supports
-> exact-address lookups, but it doesn’t provide that ordering.
-> 
-> I agree that maintaining both indexes is less convenient. What do you think
-> about centralizing their updates as in the change below? untested
+On 11/10/26 15:13, Vlastimil Babka wrote:
+> The series was nacked twice by senior maintainers. Due to dealing with
+> urgent issues [1] we might perhaps find time later to see if it reports a
+> real issue, and in that case fix it ourselves. We have currently no time to
+> help those who need AI assistance to contribute instead of having own knowledge.
+>
+> [1]
+> https://lore.kernel.org/linux-mm/a2f584f6-e382-4876-aa6d-d5a34de6ee59@kernel.org/
 
-If you can replace the hash table with other faster design, it is OK to me.
-But I would like to avoid this simple-adding another lookup table for the
-rare usage case (because of the maintenance cost, and duplicating a list
-makes it difficult to handle cases where discrepancies arise between the
-two lists.)
+I'm only spending time on this because it gets in the way of AI
+training and inference, which long-term pin large buffers for RDMA.
+Mooncake, the KV cache store used with vLLM and SGLang, hit it with
+8 ranks x 190GB taking ~38 minutes to register. The stall and the
+numbers are real, also measured on my own test setup.
 
-Can you change the size of the hashtable and measure how the performance
-is changed? I need more options.
+Async failures have not been deferred since commit 66199712e9ee ("mm:
+page allocator: do not call direct reclaim for THP allocations while
+compaction is deferred"), which explained:
+
+	/*
+	 * As async compaction considers a subset of pageblocks, only
+	 * defer if the failure was a sync compaction failure.
+	 */
+
+That still holds, so the series has no Fixes tag: it isn't a bug in
+that commit. What the rule doesn't cover is long-term pinned memory,
+much less common in 2012, where async fails the same way on every
+fault and is never deferred. The series leaves sync deferral as it is
+and gives async a state of its own. The analysis and a reproducer are
+in [2].
+
+If you look at it later, I'm happy to test whatever you come up with.
+
+[2] https://lore.kernel.org/r/20261110144256.3841504-1-qiliang.yuan@linux.dev
 
 Thanks,
-
-> 
-> jirka
-> 
-> 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Qiliang
