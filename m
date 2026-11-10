@@ -1,47 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.225
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794320041;
-	b=xamPkmsb34oiN0nyoN3tceR8tIx68+0W4qsvlG8VbOQGcWicRWP/jZSc2d8oFw2Uzeu4
-	 RnCbKQ5aA7jT1Fxt3tQv4yYHICAkC+rAzO1QgNFBM4HjYUrSe74OGW84/5Uoqosk6lmsx
-	 reKNwAZDNl/AnYi6jzTWGgSXqS4lxUNDs5RqR8CgbgINeDxuWqqJHuokib6BZPongQTDo
-	 WfPfTVGtL7RwJIQf9d8X3DP++BUINQBG4EvLxG+IU5YRRTgHu0sqGFGO4Ii2rTOvnJ6ob
-	 llKCUOPjtLUXxcLZgeuzNUFTQqjSSQuVX/hlVXBCOC9ptxY0zKlIPlaNaydiAJ/U3gg==
+	t=1794321799;
+	b=Tp/+/ePyLrtTI2zp2d4uBPedR8jk4dHiWu/CY9fSUJtPebYI/P8S0l8W3wqpzbx0ixgF
+	 M9yQANlPqrwmON/fN0ZI/6U3a9WTO/wY/R8mJ9E1ayD0aZw3AL1QXgthC+Uy+I4A+TrA3
+	 ROQ0w3SnHR9Ojd7lZXO8FPvyMquQUVhTNDz37AGADfY8scsWGG2gloOPeAPav7mun9B5F
+	 Epz+K3MfkwKbpfoa1+33uK7bASHx6F7R8K93Pd1UUPscVi+LykfzmD+LQ5XT3/Eg39YNq
+	 wTxM8V6IRFLFHOou2bSIK+ztYB9hUwiIVAaglACWnc/iPMNtptBsoKfXDUF2gfoS/bA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794320041;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=Ivmt603po3d3E2NVVoR2W5ORstU9Dg9rTKeWn3hg5so=;
-	b=eBC+rz4ytBZNY7R6ixW2MZymLDkbxu0KEn9XxwDt64js9GNMzC7ALSW5dNjkBIh8iw4r
-	 OCkGuYlg+uB8+o0ZmSJWGi3p5jbWZglf/5VM8eukoBbJpHLvwAPOhenYGoSnxpYNKGnAu
-	 0RsX9xl5ILPT9GyqfgDnmlPQqn/ht6r5TEsuTRuBrvckUU3UFxS45+bVQenH8nAzETFRZ
-	 Uky+R8ISw4Nu8HxlY6GkgGwb32ppFDNAPit3mcfkVHrF9aNyCA4x3u2kQgbfqXRbYJgbq
-	 axA6YJwcasEuZ4CjS/PcurGi5cv1qOtvlRLE+dJw1GxhjKUqm40wGSz65COAwLwDtoA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794321799;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=ONtiqfBY7XF9tcsGZa6BGd36+aq3hcBRWhYmk4rQLvM=;
+	b=Rb+GnQgq+J4Yq5MV2FI+7fDDq40tMQ9z3SRVF3uiWLNoWvYQ2gfuDxlkKbGnUQFsioj/
+	 z0nXvl6+2IdIyPgP8xjhj8AXkJPSjeDTohu+6dEs4iOdiKXtPOr9lyYqlhLk48qZxOL1c
+	 TorrPbCO9jSm/4O6PZfa9Z8xFlEZzPKe7J92EzRncOHbUi/yF4+HFPkNnwNjjmdNtb61Q
+	 0tWJn5hFvtxolqckpAYocCxF3LUwC6o2188I41qw4afgPqO4Bl6BI0auoWe8++DMXMuvw
+	 K8hfZd5yu3wyaYic/LhMFWjgiPNRq8yUmrNcfyJNpgLd8psDqZyru6Fe650/mTbK2wg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jir9xEzU;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nhgEZOPf;
+	arc=none smtp.remote-ip=91.218.175.225
+Received: from mta0.migadu.com (out-225.mta0.migadu.com [91.218.175.225])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE85606A337;
-	Tue, 10 Nov 2026 14:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F2E60A260E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 14:43:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79F2E60A260E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jir9xEzU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABAB1F008A2;
-	Tue, 10 Nov 2026 14:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794320041;
-	bh=Ivmt603po3d3E2NVVoR2W5ORstU9Dg9rTKeWn3hg5so=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jir9xEzUa4uLP6tZoo+roz29YPgHORGT7V/V/D0xiwZU22ph1bKqdE78bL0dNUGNn
-	 lFjpngEiey7fMGra+q9S1NVnzbVDfEa7ZX6SIR4ff+lX3FoZSGG3Puhw/Xfa6DNGRQ
-	 LotPXVBtzyYJp6lYcrWSWcqKarHVtWVzf0rqc9qS3upIUt3nohdWAqM4PwxQc1V6SM
-	 +19rn4gp0RTNUmTnPFVJwmO3t84ctQpVwvZKxojsQG2ocpZume8rk9otqAe2Ew5pgr
-	 ZWh+i2qSW2Us59HlS0PjLklxdNYwS2RSwuT7xFbetacDE/MWvsUkxPw6o3gdc9TcPd
-	 fPf9OqmV1ukyg==
-Message-ID: <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
-Date: Tue, 10 Nov 2026 15:13:53 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=nhgEZOPf
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=x8taPRgwxDpWF2n1mLGTs5sZSctanW78ZPHgi3RsjbQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794321796; v=1; x=1794926596;
+ b=nhgEZOPfXyqrxK2Kd1sLKf8FyfBDXX+1LFf24hZCfiaUOAcahMUM/FDuRhq2kChjnO9QxCA3
+ lyrgx86DoLqc/s3VNrURV0k2XAzR56ufMbKCCTkYAglq/+K4rUsrFx9lcize8UCNPNOl/57UMWH
+ K6rC3IhRAMJ4Cd+6mwySI7xQ=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id c0dc64717c01038c;
+	Tue, 10 Nov 2026 14:43:16 +0000
+X-Mizu-Trace-ID: c0dc64717c01038c
+X-Migadu-Flow: FLOW_OUT
+From: Qiliang Yuan <qiliang.yuan@linux.dev>
+To: Vlastimil Babka <vbabka@kernel.org>
+Cc: Qiliang Yuan <qiliang.yuan@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm/compaction: defer failed async direct compaction
+Date: Tue, 10 Nov 2026 09:42:56 -0500
+Message-ID: <20261110144256.3841504-1-qiliang.yuan@linux.dev>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261102-bug-mm-thp-async-compact-defer-v2-2-b407e974db54@gmail.com>
+References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com> <20261102-bug-mm-thp-async-compact-defer-v2-2-b407e974db54@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -51,90 +90,266 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async
- compaction on every THP fault
-Content-Language: en-US
-To: Qiliang Yuan <qiliang.yuan@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Brendan Jackman <brendan.jackman@linux.dev>, Zi Yan <ziy@nvidia.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
- <20261110135824.3264904-1-qiliang.yuan@linux.dev>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSNWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBrZXJuZWwub3JnPsLBsAQTAQoAWhYhBKlA1DSZLC6OmRA9UCJPp+fM
- gqZkBQJqFFy6GxSAAAAAAAQADm1hbnUyLDIuNSsxLjEyLDIsMgIbAwUJGtCBUAULCQgHAwUV
- CgkICwUWAgMBAAIeBQIXgAAKCRAiT6fnzIKmZJIUEADFx/tREzUImHrEwVHeSvDFmA7tJysI
- UVrlvrM09E7GIuzphzv7jYmo8n3ANpCczLEVr4G0syYQdTigaZgv3+FQDIIzhKih1IHhu1Ei
- XHlywNWKnQxxQEUNi5Mwx43wQz5XVw9F1A7gtKBKNtfogO511hAbrzagrYajyQacEJ/+sfhZ
- 9Da8ltHIXD8pcYaHUfQgEusCgmEd9+KrUwrTbckFKmYq5chuE6yJ4J0EmWknL096jIE6CnzF
- FRslQ3B1UKDjxVsm1ZHfir5NeWszLkTvGFsddFaWTgh8UycESG6VQzKXjjewXu2pG7YQYRpj
- QKm1W5X2TkwWkXRBZTmfmbhxIUMh3+zf5wQ463rSmDN/8v81tdqBtAW6rH/kzg1GvkaTHXn0
- 507yEHFzBksk2viAuIxxr7km8+/KARYLIdGtx30EG8cKzAUZOK6WqxtNCsXUJNrVE8CWrCaD
- icoNu7Fs1c5hmPHdSTnU48ce67449DdnO4neLSNhRiGlMHJgfJUmgrxu/hcYeOZ3haWmEQ2w
- uW1Mh01OHi8QZHCEyAbABrPs9GUgccc/4eYXX9hIgxfSkYzn8f+8NuIFPWl/0uTvjgqU29FQ
- SbzOLxHq9439Ox40G5mS5eZXRGxITYR+6TXvRGI6P/264jvflnr/pDGUttaikU+0W+1uxgKH
- cmYbEc7ATQRbGTU1AQgAn0H6UrFiWcovkh6EXVcl+SeqyO6JHOPm+e9Wu0Vw+VIUvXZVUVVQ
- La1PQDUi6j00ChlcR66g9/V0sPIcSutacPKfdKYOBvzd4rlhL8rfrdEsQw5ApZxrA8kYZVMh
- FmBRKAa6wos25moTlMKpCWzTH84+WO5+ziCTsTUZASAToz3RdunTD+vQcHj0GqNTPAHK63sf
- bAB2I0BslZkXkY1RLb/YhuA6E7JyEd2pilZOrIuBGl/5q2qSakgnAVFWFBR/DO27JuAksYnq
- +aH8vI0xGvwn75KqSk4UzAkDzWSmO4ZHuahKtQgZNsMYV+PGayRBX9b9zbldzopoLBdqHc4n
- jQARAQABwsF8BBgBCgAmAhsMFiEEqUDUNJksLo6ZED1QIk+n58yCpmQFAmfIHFQFCRYU6J8A
- CgkQIk+n58yCpmS2PA//bqN1LfcotmArgElsa+0EGZSQlYgK48pm8WAeTXTngudP9IJ4SuKY
- HR5RNjHcBeqN+Me0zxRqYzRb8nGanHEkDyf4Im8DQM8d6vbyU+FcPmG4skud4kgS1zMHnlVd
- SXfSIwKC/hKgdHG8aBV7545Lz9X6Iohea+94wneD0aw/hqF+QWewGZhWJriWAZtvEkzNjQOi
- 4U9F/trLten/x7bpphDSnDMKJtITbtzATT1Dq7o7VpIUK1nCTQALMuMjKCdi8OdU/+V+R3O4
- 0PXWvX8qrvqYapVbZ+9KqT74FsuB0Ya9uXwgBF2Q6cRuETZk5vqaqKxzqoQZCO8AOz/58j6O
- 2RHNy/mZEN+7tJ5Tsq42zVJ4jxsT8b9YplavCMsnBgDeRWhcbYhCyttoL7nYISyWg4kQYZ/P
- wIV3OuNv2f8iKYsxNsRuClOAF82+gvqOy1/1pprFjy8uo2pkoOrb63aOP3vO5VHnRKgra6dq
- NcaZ+c6J4H+nEJGi2SkHAUJz5oBzuThvPudLvPA/SK8sKoM01IRxSihev/S/5WLazXB1PGem
- OCbvzC1IjWJJraxiDJ5IygokapUa2RP7+WBR22skQ3SSl6G107QgWKSyTOGWEaRmV53vxQLV
- jXuCmzSSasTL60zq5yGrT4/DYQVSNEUiUbG4pYekxJujNeEDkUlky0Y=
-In-Reply-To: <20261110135824.3264904-1-qiliang.yuan@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/10/26 14:58, Qiliang Yuan wrote:
-> Hi Vlastimil, Johannes,
-> 
-> Could you share your view on this series when you have time?
+On Mon, 02 Nov 2026 01:01:08 -0500, Qiliang Yuan wrote:
+> @@ -2600,9 +2600,12 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+>  
+>  	/*
+>  	 * Clear pageblock skip if there were failures recently and compaction
+> -	 * is about to be retried after being deferred.
+> +	 * is about to be retried after being deferred. Leave this to sync
+> +	 * compaction: async compaction relies on the skip hints, and clearing
+> +	 * them on its retries would rescan the whole zone each time.
+>  	 */
+> -	if (compaction_restarting(cc->zone, cc->order))
+> +	if (cc->mode != MIGRATE_ASYNC &&
+> +	    compaction_restarting(cc->zone, cc->order))
+>  		__reset_isolation_suitable(cc->zone);
 
-The series was nacked twice by senior maintainers. Due to dealing with
-urgent issues [1] we might perhaps find time later to see if it reports a
-real issue, and in that case fix it ourselves. We have currently no time to
-help those who need AI assistance to contribute instead of having own knowledge.
+As was pointed out to me off-list, this test removes a recovery path.
+I'm not asking to reconsider the series, only leaving the analysis and
+a reproducer here in case they help when you look at the issue.
 
-[1]
-https://lore.kernel.org/linux-mm/a2f584f6-e382-4876-aa6d-d5a34de6ee59@kernel.org/
+The async run a THP fault does on the local node is never deferred:
+try_to_compact_pages() calls defer_compaction() only for sync
+priorities, because the deferral state is shared and deferring it
+after an async failure would defer sync compaction too. The async path
+checks that same sync state in compaction_deferred(), so as long as
+sync isn't deferred, every fault scans the zone again. Patch 1 splits
+the state so that async can be deferred on its own.
 
-> One known issue in v2: the cc->mode != MIGRATE_ASYNC check added to
-> 2/2 blocks clearing stale skip hints once sync compaction is fully
-> deferred, so local THP may not recover after the pins are released.
-> I'd drop it in v3, but won't send one before hearing from you.
-> 
-> Thanks,
-> Qiliang
+Skip hints are cleared in two places: in compact_zone(), when
+compaction_restarting() sees the sync deferral at its maximum, and by
+kswapd before it sleeps. Madvised THP faults don't wake kswapd, and
+with proactive compaction off nothing else resets the hints, so once
+the pinned pages become movable again, the reset in compact_zone() is
+what lets local THP attempts use those pageblocks. After sync reaches
+the maximum deferral, that reset comes from an async retry, which is
+what the test in this patch blocks.
 
+I reproduced it on the same QEMU guest as the series: 32 vCPUs,
+node 0 with 16 CPUs and 24 GiB, node 1 with 16 CPUs and 8 GiB,
+compaction_proactiveness set to 0 and defrag left at madvise:
+
+  1. Fill node 0 with anonymous memory, free every other 4K page and
+     long-term pin the rest through io_uring fixed buffers.
+  2. With defrag set to always, fault in a 1 GiB MADV_HUGEPAGE buffer
+     bound to node 0, so THP faults there run sync direct compaction
+     and fail until sync compaction reaches the maximum deferral.
+  3. Close the io_uring rings. The pins are gone, the memory stays in
+     use and is movable again.
+  4. Populate a 4 GiB MADV_HUGEPAGE buffer from a CPU of node 0.
+
+Compactions that succeeded in step 4, one boot per number:
+
+  mainline              1184, 963
+  v2                    8, 0, 516, 400, 534, 521, 495
+  v2 without the test   1025, 994, 906, 957
+
+v2 recovered in five of seven boots without resetting any skip hint
+(no call to __reset_isolation_suitable() in the two boots I traced):
+with async compaction deferred, it scans few pageblocks while they are
+pinned and leaves most of them unmarked. In the other two boots the
+marked pageblocks kept it from recovering at all. Without the test,
+the reset after the maximum sync deferral recovers every boot, as on
+mainline, and the steady pinned case stays as cheap as with v2 (7.8
+to 20 ms in compaction against 310 to 332 ms on mainline).
+
+The reproducer is below, run as CPUS=0-15 sh thp-recover.sh.
+
+Thanks,
+Qiliang
+
+---8<--- thp-recover.sh
+#!/bin/sh
+# Run as root on a two-node machine; CPUS lists the CPUs of node 0.
+CPUS=${CPUS:-0}
+D=/sys/kernel/mm/transparent_hugepage/defrag
+echo 0 > /proc/sys/vm/compaction_proactiveness
+echo madvise > $D
+echo 1 > /proc/sys/vm/drop_caches
+
+M=/sys/devices/system/node/node0/meminfo
+free=$(awk '/MemFree/ { print int($4 / 1024) }' $M)
+./thp-recover hog $((free - 300)) > hog.log &
+hog=$!
+until grep -q ready hog.log; do sleep 1; done
+
+echo "steady, pinned:"
+for i in 1 2 3; do taskset -c $CPUS ./thp-recover fault 4096; done
+
+# Fail sync compaction on node 0 until it reaches the maximum deferral
+echo always > $D
+echo "bound to node 0:"
+taskset -c $CPUS ./thp-recover bfault 1024
+echo madvise > $D
+
+kill -USR1 $hog
+until grep -q unpinned hog.log; do sleep 1; done
+echo "after dropping the pins:"
+for i in 1 2 3 4 5; do taskset -c $CPUS ./thp-recover fault 4096; done
+kill $hog
+
+---8<--- thp-recover.c
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * thp-recover hog <mb>     fill node 0, free every other page and long-term
+ *                          pin the rest; SIGUSR1 drops the pins and keeps
+ *                          the memory in use
+ * thp-recover fault <mb>   populate a MADV_HUGEPAGE buffer and print how
+ *                          much of it got THPs and on which node
+ * thp-recover bfault <mb>  the same, bound to node 0
+ */
+#define _GNU_SOURCE
+#include <linux/io_uring.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <sys/uio.h>
+#include <time.h>
+#include <unistd.h>
+
+#define MB		(1UL << 20)
+#define MPOL_BIND	2
+#define RING_BUFS	16384
+
+static volatile sig_atomic_t unpin;
+
+static void on_usr1(int sig)
+{
+	unpin = sig;
+}
+
+static void bind_node0(void)
+{
+	unsigned long mask = 1;
+
+	if (syscall(__NR_set_mempolicy, MPOL_BIND, &mask, 64))
+		perror("set_mempolicy"), exit(1);
+}
+
+static long vmstat(const char *key)
+{
+	char name[64];
+	long v, ret = 0;
+	FILE *f = fopen("/proc/vmstat", "r");
+
+	while (f && fscanf(f, "%63s %ld", name, &v) == 2)
+		if (!strcmp(name, key))
+			ret = v;
+	if (f)
+		fclose(f);
+	return ret;
+}
+
+static long thp_mb(void)
+{
+	const char *key = "AnonHugePages:";
+	char line[256];
+	long kb = 0;
+	FILE *f = fopen("/proc/self/smaps_rollup", "r");
+
+	while (f && fgets(line, sizeof(line), f))
+		if (!strncmp(line, key, strlen(key)))
+			kb = atol(line + strlen(key));
+	if (f)
+		fclose(f);
+	return kb / 1024;
+}
+
+static int hog(size_t size)
+{
+	size_t npages = size / 8192, done = 0, i, off;
+	struct iovec *iov = calloc(RING_BUFS, sizeof(*iov));
+	int fds[4096], nr = 0, r;
+	char *buf;
+
+	bind_node0();
+	buf = mmap(NULL, size, PROT_READ | PROT_WRITE,
+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	madvise(buf, size, MADV_NOHUGEPAGE);
+	memset(buf, 1, size);
+	/* Plenty of free memory, but no free 2M block */
+	for (off = 4096; off < size; off += 8192)
+		madvise(buf + off, 4096, MADV_DONTNEED);
+	/* Long-term pin the pages left, as RDMA registration does */
+	while (done < npages) {
+		struct io_uring_params p = { 0 };
+		size_t n = npages - done > RING_BUFS ? RING_BUFS : npages - done;
+		int fd = syscall(__NR_io_uring_setup, 4, &p);
+
+		for (i = 0; i < n; i++) {
+			iov[i].iov_base = buf + (done + i) * 8192;
+			iov[i].iov_len = 4096;
+		}
+		if (fd < 0 || syscall(__NR_io_uring_register, fd,
+				      IORING_REGISTER_BUFFERS, iov, n))
+			perror("pin"), exit(1);
+		fds[nr++] = fd;
+		done += n;
+	}
+	printf("ready\n");
+	fflush(stdout);
+	signal(SIGUSR1, on_usr1);
+	while (!unpin)
+		pause();
+	for (r = 0; r < nr; r++)
+		close(fds[r]);
+	printf("unpinned\n");
+	fflush(stdout);
+	for (;;)
+		pause();
+}
+
+static int fault(size_t size)
+{
+	size_t n = size / (2 * MB), i, node[2] = { 0 };
+	long stall = vmstat("compact_stall"), ok = vmstat("compact_success");
+	void **pages = malloc(n * sizeof(*pages));
+	int *status = malloc(n * sizeof(*status));
+	struct timespec t0, t1;
+	double ms;
+	char *buf;
+
+	buf = mmap(NULL, size + 2 * MB, PROT_READ | PROT_WRITE,
+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	buf = (char *)(((unsigned long)buf + 2 * MB - 1) & ~(2 * MB - 1));
+	madvise(buf, size, MADV_HUGEPAGE);
+	clock_gettime(CLOCK_MONOTONIC, &t0);
+	for (i = 0; i < size; i += 4096)
+		buf[i] = 1;
+	clock_gettime(CLOCK_MONOTONIC, &t1);
+	ms = (t1.tv_sec - t0.tv_sec) * 1e3 + (t1.tv_nsec - t0.tv_nsec) / 1e6;
+
+	for (i = 0; i < n; i++)
+		pages[i] = buf + i * 2 * MB;
+	syscall(__NR_move_pages, 0, n, pages, NULL, status, 0);
+	for (i = 0; i < n; i++)
+		if (status[i] == 0 || status[i] == 1)
+			node[status[i]]++;
+	printf("%zu MB in %.0f ms, %ld MB in THPs, 2M ranges on node 0/1: %zu/%zu, ",
+	       size / MB, ms, thp_mb(), node[0], node[1]);
+	printf("compactions: %ld, succeeded: %ld\n",
+	       vmstat("compact_stall") - stall, vmstat("compact_success") - ok);
+	return 0;
+}
+
+int main(int argc, char **argv)
+{
+	size_t size;
+
+	if (argc != 3) {
+		fprintf(stderr, "usage: %s hog|fault|bfault <mb>\n", argv[0]);
+		return 1;
+	}
+	size = strtoul(argv[2], NULL, 0) * MB;
+	if (!strcmp(argv[1], "hog"))
+		return hog(size);
+	if (!strcmp(argv[1], "bfault"))
+		bind_node0();
+	return fault(size);
+}
