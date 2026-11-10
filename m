@@ -1,91 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274706;
-	b=RrhgwIlMNyeTMthQiC2ot3kCTipeBlGoB3SrSdHMYit82IrYSwisoQnuceRBomCGBlgJ
-	 pHEkMSO6SXDaXR5QmagX7rGfO1qt+hRVSTkHfG5rb1Ftqev5pgrGDnmCdbtcL5JLHm9VT
-	 OvQDOq5vEro2zaYR+FvwKwqs3u5hU6sLCDC/HX5Xai86WFqeSEkuz2/oQHrqGbuxyJVz3
-	 rL5FeUEssvzR+tpoKsW7dQxUb5O+skGkhJUilUn4ZGg2tzCJSgaDvj0iH25r5Q4k0wdnH
-	 +zGqn4NykhgxzeArbhMbY0xt/U6K2UxsnBhEySM/tbcaM3xBRFmQdPDho7km8I/gSFQ==
+	t=1794274832;
+	b=vDdyTmCBSUWKShJgYYLuwWJ+1xYKf7dQ4mB16Jz4klwG/hFRkoD64e66pS6SMrHM2C48
+	 K8wtC8722S6/R+HTBMaMDJYwiuR8FH0vf3PSvJ/5uHSbg7V0ratkbY5ZFhyqyL5AO5Wb/
+	 qsaxTuig0vD97aotCEa0uk6ig5zvsTFfyw2DQIiJoA+x9y/hus2JHzI2SAJemd/C7ah+i
+	 HkvtIGjIBgpEu/9SDCXHieJxlEwRcNvRL5nyjdkLSt8GLwG+MBGK2WNikSt0BN2qBdlF1
+	 m73Sa4+0wKDiuq3g4BayTDtWgh8KjKzk5WHQLEqgOO8BTXanM+jPJUSRVRHdBHgDHyg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274706;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
-	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=KA065hgUfmTVnISzUpxCY2dMzNQDUES0Dk4O5rmJ7Ak=;
-	b=UY982qVSlwBWqBkRoMybnZTvT3SIyH8w7v5NPQjUwRz5PnHKHXWC2z3oESNa5uRo7DIQ
-	 8nEUt5Nboj5+4lSOsGTWvAhUdja0i6TVH2U1hrAeq09Cx+fYXxIjiXK5fr7AsezaFV9uF
-	 vcDgdU7E4tPGJagLvz0rsCiWspHMqXb5pHR1t7sV4mIx/DjTk0y8EkQ81aZeN9iRRPodB
-	 EdXMN5JOimGTMwxF1lQYEhkvcpZovBsJ+GbmBHHyxNhkFKTT3+hbrNZZI4LqoP4TStyQ6
-	 crIBFldq+DyIsAzNeQa8M8uSiAqrmW5nSSvBRhV0bIp3vmaKYkMI1xwwCVEALCI219Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274832;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=UMZmxeT8DrkfoX8iPkUmOMynSFGrCqoB3ITufkHW3bs=;
+	b=H717HJvYjrOSGh03PHdLFEputf2sW3sVL5qOCwL1bbOy+S/apBPCieXQCgPLnTKfH8xQ
+	 LjgBWpHEP5FMK8+Uy2P0lDPkAUTdrIWnOEXO4rcPSUiHIzcm64wgCZjnUJcrlGlpuFrxV
+	 7PiN4lPY2uHtOF/UBYk6vot8KQ3auR+MzFzAipARvoJu8Wq/knw7KkCASVZaNV0X/cAKp
+	 4Kw+XUtPAbdZwLUYPb8LUYRJiDvHbuNdZlJ/A7JQwOTKPwifNuZPbjFl3KP2IZWpo/jPW
+	 TcW/PyWHqSvPOaFHA5VNnnG9yf0qJIhHVFTlhLpgiV6pRIKbvDJL/uV0wNhYxZtf0sA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.alibaba.com;
-	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=goqDVIjH;
-	arc=none smtp.remote-ip=115.124.30.130
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LVTJUOb9;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA97606A337;
-	Tue, 10 Nov 2026 01:38:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8BA97606A337
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A32606A325
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 01:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=goqDVIjH
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1794274702; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=KA065hgUfmTVnISzUpxCY2dMzNQDUES0Dk4O5rmJ7Ak=;
-	b=goqDVIjHZtfWxuBa9AQ/BDM33mg6OTpuRFyL5CwERRi4+lngfmP9jXOZbT016qJNyTHScVWbv+Wq1lPvSy7UKRTPtTyt8XDHSPpFo2j0kePenc3uObcpI83exkWLdePtB8O6Fr0ozkaLUmT8E6stzDKib4TWR0YtFOHmYB6PgxA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0XETOXBV_1794274698;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XETOXBV_1794274698 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 10 Nov 2026 09:38:20 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: palmer@dabbelt.com,
-	pjw@kernel.org,
-	aou@eecs.berkeley.edu
-Cc: alex@ghiti.fr,
-	linux-riscv@lists.infradead.org,
-	oleg@redhat.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	jpoimboe@kernel.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com,
-	shuah@kernel.org,
-	mpdesouza@suse.com,
-	martin@kaiser.cx,
-	kmehltretter@gmail.com,
-	oliver.yang@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v7 10/10] selftests/livepatch: Add RISC-V syscall wrapper prefix
-Date: Tue, 10 Nov 2026 09:37:50 +0800
-Message-Id: <20261110013750.36800-11-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
-References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
- <20261110013750.36800-1-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LVTJUOb9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABC61F0089F;
+	Tue, 10 Nov 2026 01:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794274831;
+	bh=UMZmxeT8DrkfoX8iPkUmOMynSFGrCqoB3ITufkHW3bs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=LVTJUOb9c4t1OehyV5+7A+cmULgvrsTFTvm5MYsFqzOvdI6QwVRnWmEvdB4Huel6X
+	 wNU++jf/XWkjOz3DsWLbTqBVfwkCoFpG1yUbDf7prjPaBTbBMMrVZXe7el9Ii7/muf
+	 tOXE40rCgkk9amt41/PfmeByu/VA6lIy7YX8QbBChiO3PiHYrR/8OWUK0tVBnqPSy8
+	 dCMJgGcNLDntQD9ZeK2zVILpY6dlvlREQnsK9XKu/E82TaloJ6l9XghqxOzIj/CDkN
+	 KecuL4b0Z0WR5X8zplqcsxc35XICG4d5cm1DwM++OF8lmdUZelW+nnB3aMiRHOrZ5o
+	 9E7OXyMD0kZSA==
+Message-ID: <sashiko-outbox-205975@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 4/4] kprobes: Add KUnit test cases for kprobes
+ regressions
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <179427362063.291326.12590758885048682193.stgit@devnote2>
+References: <179427358690.291326.2078291446658598883.stgit@devnote2>
+ <179427362063.291326.12590758885048682193.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Nov 2026 01:40:30 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -94,43 +60,84 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Wang Han <wanghan@linux.alibaba.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] kprobes: test_optprobe_rearm_unoptimizing() misses jump
+  overwrite on re-arm
+--
 
-The syscall livepatch selftest resolves and patches a syscall wrapper
-symbol. To use that test for RISC-V livepatch validation, add the
-RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
+commit d9ce37575f42c89c2d4a066b90a06cb4ee50df98
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Without this macro, the syscall livepatch selftest cannot resolve the
-RISC-V target symbol, and the syscall-related livepatch test fails on
-RISC-V.
+kprobes: Add KUnit test cases for kprobes regressions
 
-Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Martin Kaiser <martin@kaiser.cx>
-Tested-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- .../testing/selftests/livepatch/test_modules/test_klp_syscall.c | 2 ++
- 1 file changed, 2 insertions(+)
+This commit adds four KUnit test cases to lib/tests/test_kprobes.c covering
+regressions in kprobes registration, ftrace ops switching, and optimization
+state transitions.
 
-diff --git a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-index 08aacc0e14de..9baa2a5f84c9 100644
---- a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-+++ b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-@@ -24,6 +24,8 @@
-     #define FN_PREFIX __s390x_
-   #elif defined(__aarch64__)
-     #define FN_PREFIX __arm64_
-+  #elif defined(__riscv)
-+    #define FN_PREFIX __riscv_
-   #elif defined(__powerpc__)
-     #define FN_PREFIX
-   #else
--- 
-2.39.3
+> diff --git a/lib/tests/test_kprobes.c b/lib/tests/test_kprobes.c
+> index 06e729e4de051..d692612bc2245 100644
+> --- a/lib/tests/test_kprobes.c
+> +++ b/lib/tests/test_kprobes.c
+[ ... ]
+> +/* Test for: kprobes: Do not overwrite jump instruction when re-arming u=
+noptimizing probe */
+> +static void test_optprobe_rearm_unoptimizing(struct kunit *test)
+> +{
+> +	struct kprobe opt_kp =3D {
+> +		.symbol_name =3D "kprobe_opt_target",
+> +		.pre_handler =3D kp_pre_handler,
+> +	};
+> +
+> +	current_test =3D test;
+> +	KUNIT_ASSERT_EQ(test, 0, register_kprobe(&opt_kp));
+> +
+> +	/* Allow background optimizer thread to jump-optimize the probe */
+> +	wait_for_kprobe_optimizer();
+> +
+> +	/* Temporarily disable probe (queues on unoptimizing_list, leaves jump)=
+ */
+> +	KUNIT_EXPECT_EQ(test, 0, disable_kprobe(&opt_kp));
+> +
+> +	/* Immediately re-enable (re-arm) before optimizer thread unoptimizes */
+> +	KUNIT_EXPECT_EQ(test, 0, enable_kprobe(&opt_kp));
+> +
+> +	/* Verify jump opcode was not corrupted by an unaligned INT3 overwrite =
+*/
+> +	preh_val =3D 0;
+> +	opt_target(rand1);
+> +	KUNIT_EXPECT_NE(test, 0, preh_val);
+> +
+> +	unregister_kprobe(&opt_kp);
+> +}
+> +#endif
 
+[Severity: Medium]
+Does test_optprobe_rearm_unoptimizing() pass even when enable_kprobe()
+overwrites the jump instruction at opt_kp.addr with a breakpoint?
+
+When disable_kprobe() runs on the optimized probe, __disarm_kprobe() queues
+it on unoptimizing_list and skips arch_disarm_kprobe(), leaving the jump in
+place.  However, enable_kprobe() calls __arm_kprobe(), which unconditionally
+calls arch_arm_kprobe() before optimize_kprobe():
+
+kernel/kprobes.c:__arm_kprobe() {
+    ...
+	arch_arm_kprobe(p);
+	optimize_kprobe(p);	/* Try to optimize (add kprobe to a list) */
+}
+
+arch_arm_kprobe() overwrites the jump opcode at p->addr with a breakpoint,
+while optimize_kprobe() sees KPROBE_FLAG_OPTIMIZED and
+optprobe_queued_unopt(op), dequeues the probe from unoptimizing_list, and
+returns early without re-optimizing it.  This leaves the probe permanently
+de-optimized with a breakpoint at p->addr while KPROBE_FLAG_OPTIMIZED
+remains set.  Because hitting that breakpoint still invokes kp_pre_handler(=
+),
+checking only that preh_val is non-zero does not detect that the jump opcode
+was overwritten.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179427358690.291326=
+.2078291446658598883.stgit@devnote2?part=3D4
