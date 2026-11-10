@@ -1,104 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.243.164.118
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794307062;
-	b=XN9ppf/lDCFAHgzjONhECu6DesBk/ZQ5605nHgBhGIm0vC2raNDdejAbtO6BeeDD4GrR
-	 Z6tl/Lzc0QxUfTzzDFAQB+4JHJuiJCPMEeXsLOCWoPSjSv4hcUoBl2lidP8IgdOez2exx
-	 0M/bJJzLydKC+iZagNZ1g8CvhKeFny2Q89SzkTbQvaxfuveiU7YZEZiNPqOQ5TkCuGd40
-	 37CyNzcxb64rMM/0t6QngEn1Ng8o8z/hYztwdUfhMB63Cy5KPeSPnHchcCsR8wfwBqSW+
-	 TIxjTFsyhK1oPAb6RgLRPYC4zfxLv1c86Gl5F7i8Fqq+yP7P2QejzlmiVR6F7b2cZVQ==
+	t=1794313606;
+	b=1EYhjcZmvIiA/YIGXk17csiu/S81DaqlmlIe1SqH6O7VtZCwtRrtdgagjanpWFPyV70E
+	 LCjBjTHxfOkyeylMBdsStQRUdFz+8/O1nxrhNa/wnaRCsg1MkSFNAuJfHlKQZ94so7Z89
+	 zklXca4v4VsAOFucP4gQ0x+MkQINaGrgGda8htZlTqcmdU/eYqAFqAaP9bHA5nzL+ZzJB
+	 AHRA1FH/20d/MXDto4k9/wG1/USXelL5QFnNwa4MVdyathrJQNeEtIkcn0S13wf3iAnqB
+	 wZqbBA9DU2s87cSHqrD7lQsiQ1uTsk2PRDgDRjxfR4aWczzRBVksbv5f59dNYtUR3Kg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794307062;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=UWfUyS5pNdj6oGPmU6Tego6EBeTteaLYVvaKra+iOlw=;
-	b=Q1m3srd8oscDD2dxpASNwrsTaLdQ3qnxhakFeGR2ZSayALWYJj/Sp+gvCW/hfCo13GaY
-	 KefrkYYR5OEtSxiDZJBK5UVysKGuCBFeHQnzkHMa3UTl/FOr4smRHZY8ihmAk3CuRUBr5
-	 rBfB1+4ik+CJZ+VhB9Vjh06GyZLtjN2t4o6aeRob2cDWx4YPMQv5rsCEQD0CXXCKWjzI4
-	 gsPlRfH3PtgziFEWi4lp0zZMnQQ/1lcMZl1XrSlNYVb9gy7rKC4FEYTmv6sC5sJxy+NrT
-	 r5aAlkTTGNJ6jzYsubfQTgstxPUBD1VjNehFiks6Xx+BC3ZFsXWU61iuo3pEagn5VhQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794313606;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=m/zc8VQ5i8OTJTFWtOSXiNvCf+tvwTCGi9I9oRB87AA=;
+	b=4WnTVR+zq3M8QFLgwyELiZ9Ib51vb1rd8Z82/k4Vz5DQw4sAnGwQhM5ULCBM0XS6CQxS
+	 E84z2HUtu1fZbRuZj2WEAqEH2dQaylEEgpn5N6fGc/WrcZYKemE70DUP081999LvfMM0w
+	 wOUmrVqCa8Nmq/Az1LMgDw8mANyY1pCpFMJCOPWJ7J0ewJ1YPTVpcN94QvtX6dkjI8vaK
+	 TNUZQjY+OqNFY4wzUOLnsSeGS12Afkn+j8sTH7O8NrZZALKUWbv2kKiq7am8rWmcbHh+X
+	 Lb6xgnQWD2WXDbTuU90wbfFGCj/wtIukpanCV+AuKNrwWekpDcTAbOk1AU9waKMtuKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sMXrt5F0;
-	arc=none smtp.remote-ip=209.85.128.49
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB78C606A325
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 10:37:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB78C606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sMXrt5F0
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4b467581b98so16976645e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 02:37:41 -0800 (PST)
+	dmarc=pass header.from=stu.xidian.edu.cn;
+	spf=pass smtp.mailfrom=stu.xidian.edu.cn;
+	arc=none smtp.remote-ip=162.243.164.118
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36256606A31C;
+	Tue, 10 Nov 2026 12:26:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36256606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stu.xidian.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xidian.edu.cn
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794307060; x=1794911860; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UWfUyS5pNdj6oGPmU6Tego6EBeTteaLYVvaKra+iOlw=;
-        b=sMXrt5F0qVWXeoWNYGKl9tNuxKHgK49EsgCbR47Fb6TJIYHmUahrGXrsOpg85q2+1O
-         g1CqV8TYrU98E8sTMPAcF15bnvDTmNwr2uJDapMlHEAqEouUUMopU8ocuwQn+vvTPOZa
-         u8Ota0bb+WC4oJefzbjxGqHQtpN+9VkUXCkhDpmnygB8+HUHLf/Lh+TIfDc4ZeUR6JiL
-         27Z0FcnWj7c6G+iPF0cf+0lNvRceyi5LxbU7bOwcpJ/+NUvUDLsczKmTX4/YXoZF2jvC
-         fTladr7vVtdb2jKtSvdON+BuFmo3U6j7CLHx/QBCsbkG7mFZHmkMIb41MnjFi107Tkcv
-         D0tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794307060; x=1794911860;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=UWfUyS5pNdj6oGPmU6Tego6EBeTteaLYVvaKra+iOlw=;
-        b=mP1YMl+3AWA4t6K4rjIZ9MFTv47Wb8yt1mEcJpY+b44Z1raiavgiP6IN6oYN5Sdymb
-         wMJV6T4aS3y/3AtEkRr9E5A7VtfLTOoI/qDSIgr2qdgPstTIV6/5CH5BSPxdnbuYEaOj
-         m0aoDFgzT4r1o7fcnOXjtfOA0z4oUWrYE2V81tXpJ0dgGvjE1QRZ1/Dr66GjfXIdho1Q
-         /1LIFGXiMIVfzu38RUzqfTJPhAimWHckPdTRasWrAGTD5cPHXSWbSZQpjNLaO1Q2mphF
-         RLaznlj5T09KNr7Y/oAAL0aiT5G/wmQxNG9CAXKadE1xH6gu7oRaVYPaTdH4aYS7dzGe
-         iztA==
-X-Forwarded-Encrypted: i=1; AL+hErGjRaSpt2R9UebuTfhDnmha4/BfFCD9ggQ5IeuGLWg34U3mBtCUnhv5WnWwk9u4SYhROc4Dun7az6ZI0ecngncp8SU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9Xn5R23Xa/waF22Xa+z887diYL75elzNjb7RGS6dS8wIyYUR2m
-	ZfvQeQ+RIg9cBPLqLssulmHIRIxG81jeUfCjK3szIdaipAxRigeC/E1H
-X-Gm-Gg: AYBFou17OGr2GO0LjxMPzBwVicCu3Q4r1yJtPWfhVTFCTstxpiCVEPJbJLxnVAlqkff
-	aoYGlZd2G+QwB70hEcp6WC8cCjA5LI5pGCWiHPEJbTpWBNsGSZQ7XcC1plPcaRCYVCQSQ8k6XeX
-	NndRyEtl3mSX1B+ri6WE1rtd13ehcD7leCpdOjG3nUMgiVXiS5mLw4oqUmUZB8yHWI+Z9j8ReCO
-	v+wyp7MfA6yJFNeO5XuP7PX+BSy4vv+QBkRo8dxy9mID76lMbvXMAOLDnkUGtlGPMSUFoHUYD7K
-	OXGuoSVsJaWahm5i9heFTd0YPdbO3L+anl5TcXq7bbSxpbdKbuJ4VfGPUQB685f4i73SA68sIxa
-	Pnbp8QJmNLjgudXcNAixo2kjpflSL8jAQFQOWTm3UVzSv7AlAevIfN8P8L7f3fCvwwxl58dM9k7
-	nL71iks5uZGnMnD0YiLoVMl4LHvP7TNntSKAxKrqAzKXfTwJ0Ampj+wPhaGTgsdzM1/kSPyFfWA
-	9khCjgFExnyatZ5z4ZJtVkWdxxGeg3FJmYBAXMDAcy6OBOKNS+dacayq8Y6Gp65XIQ5C6R2tPIq
-	fN8=
-X-Received: by 2002:a05:600c:4f10:b0:4a1:992f:d0e7 with SMTP id 5b1f17b1804b1-4ba023410d8mr40201335e9.16.1794307060048;
-        Tue, 10 Nov 2026 02:37:40 -0800 (PST)
-Received: from krava ([2a02:8308:a00c:e200::25dc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba01fe2c5asm90643975e9.5.2026.11.10.02.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 02:37:39 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 10 Nov 2026 11:37:38 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>,
-	x86@kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 04/13] kprobes: Maintain an rbtree of registered probes
-Message-ID: <avLz8k0gdZwYTeA5@krava>
-References: <20261109194916.1089703-1-jolsa@kernel.org>
- <20261109195517.1090787-1-jolsa@kernel.org>
- <undine-1794298339502831052-1b6960b8f9b38e7d@undined.local>
+	d=stu.xidian.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+	Message-Id:MIME-Version:Content-Transfer-Encoding; bh=m/zc8VQ5i8
+	OTJTFWtOSXiNvCf+tvwTCGi9I9oRB87AA=; b=JLkws2CXA4Di/uUQ7y6pE1SxLk
+	vbBq6evD1YeQDwdhOYLX8aDPH/6b+aafhjq/oNNQgGT8JpM0fDu2xYRufko95YK/
+	BZZ4W5XhlyMmKbe30va6P4wPxow/LtN4iSqZuAONegLl45eI8lyzeshG7G3vak0w
+	DVKIdOcAHOgyn+cfE=
+Received: from LAPTOP-FRMFRHCN.localdomain (unknown [2408:8670:ae1:0:3c71:2a19:707f:720e])
+	by hzbj-edu-front-3.icoremail.net (Coremail) with UTF8SMTPA id BbQMCkB2e_5lDfNq4TdoAQ--.50986S2;
+	Tue, 10 Nov 2026 20:26:15 +0800 (CST)
+From: Haoli Zhang <26031212468@stu.xidian.edu.cn>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com,
+	Haoli Zhang <26031212468@stu.xidian.edu.cn>,
+	Jinning Zhang <25031212117@stu.xidian.edu.cn>,
+	Bin Yu <byu@xidian.edu.cn>
+Subject: [PATCH v2] tracing: ring_buffer: serialize shrink with NMI readers
+Date: Tue, 10 Nov 2026 20:26:10 +0800
+Message-Id: <20261110122610.655756-1-26031212468@stu.xidian.edu.cn>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -108,157 +60,310 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <undine-1794298339502831052-1b6960b8f9b38e7d@undined.local>
+X-CM-TRANSID:BbQMCkB2e_5lDfNq4TdoAQ--.50986S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3CFWUZF1xKw4kGr1UuFy3urg_yoWkGFyDpa
+	y5KFZ8ta1DXr18Zwn7Cr15AF18tF1DZ3W7CrWxXw13XF47XFnIq34fJF9rCrWYkFW2qr9x
+	Zr15Wa4rCr1UXrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjNtx3UUUUU==
+X-CM-SenderInfo: yswqjiasrskluy6v33wo0lvxldqovvfxof0/1tbiAQUNEWrx4dbSogAAsE
 
-On Tue, Nov 10, 2026 at 08:12:19AM +0000, Masami Hiramatsu (Google) wrote:
-> On Mon,  9 Nov 2026 20:55:17 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
-> > Add an address-ordered rbtree for registered probes. Keep it synchronized
-> > with the hash table when probes are added, removed, or replaced by
-> > aggregator probes.
-> 
-> Could you tell me why don't you use hlist (get_kprobe) instead?
-> I would NOT like 2 different lists which is basically doing the
-> same thing.
+The syzbot report shows a use-after-free in rb_is_reader_page(), reached
+from rb_move_tail(), with the freed page released by rb_remove_pages().
+Source inspection suggests that a detached reader page can retain a link
+into the range removed during a shrink. This patch addresses that possible
+stale-link path and coordinates NMI readers with page removal.
 
-The speedup comes from finding the first relevant kprobe, then iterating
-over the remaining probes in address order. The hash table supports
-exact-address lookups, but it doesn’t provide that ordering.
+When an NMI reader cannot acquire reader_lock, rb_reader_lock() falls back
+to reading the ring buffer without the lock. Gate lockless NMI readers
+while rb_remove_pages() removes pages. Track readers that entered before
+the gate and drain them before changing the page list; new NMI readers that
+fail reader_lock while the gate is closed skip that CPU. The gate and
+reader-count protocol uses ordering barriers and release/acquire accesses.
+Readers that successfully acquire reader_lock remain serialized by it.
 
-I agree that maintaining both indexes is less convenient. What do you think
-about centralizing their updates as in the change below? untested
+The NMI fallback increment of record_disabled is intentionally retained.
+The pre-existing fallback comment says an unlocked NMI read may corrupt the
+buffer and that recording must remain disabled afterward; the existing
+unlock path does not undo that disable. The new nmi_readers counter is
+separate: it tracks only the temporary lifetime of the lockless NMI read
+and is decremented when that read exits.
 
-jirka
+During shrink, redirect reader_page->list.prev if it points to a page being
+removed. Detect a stale reader_page->list.next as well, and after reconnecting
+the ring redirect it to the surviving successor link, including the
+transferred head flag. Treat skipped empty-buffer queries as non-empty, and
+clear the timestamp output when peek or consume skips the read.
 
+Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspotmail.com/bug?extid=37e1793bdb0061ea3a47
+Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
+Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
+Co-developed-by: Bin Yu <byu@xidian.edu.cn>
+Signed-off-by: Bin Yu <byu@xidian.edu.cn>
+Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>
 
 ---
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 371ecc7d5b54..7868d8610b5f 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -435,6 +435,30 @@ static void kprobe_tree_replace(struct kprobe *old, struct kprobe *new)
- 	RB_CLEAR_NODE(&old->rb_node);
- }
+v2:
+  - Add NMI-reader gate and ordered reader-count drain.
+  - Repair both detached reader-page links when they enter the shrink range.
+  - Treat skipped empty queries as non-empty and clear skipped peek/consume timestamps.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 04bb94c..f07160e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -522,6 +522,8 @@ struct ring_buffer_per_cpu {
+ 	int				cpu;
+ 	atomic_t			record_disabled;
+ 	atomic_t			resize_disabled;
++	atomic_t			resize_in_progress;
++	atomic_t			nmi_readers;
+ 	struct trace_buffer		*buffer;
+ 	raw_spinlock_t			reader_lock;	/* serialize readers */
+ 	arch_spinlock_t			lock;
+@@ -2578,6 +2580,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, unsigned long nr_pages, int
  
-+static void add_kprobe(struct kprobe *p)
-+{
-+	lockdep_assert_held(&kprobe_mutex);
-+	INIT_HLIST_NODE(&p->hlist);
-+	hlist_add_head_rcu(&p->hlist,
-+			   &kprobe_table[hash_ptr(p->addr, KPROBE_HASH_BITS)]);
-+	kprobe_tree_insert(p);
-+}
+ 	cpu_buffer->cpu = cpu;
+ 	cpu_buffer->buffer = buffer;
++	atomic_set(&cpu_buffer->resize_in_progress, 0);
++	atomic_set(&cpu_buffer->nmi_readers, 0);
+ 	raw_spin_lock_init(&cpu_buffer->reader_lock);
+ 	lockdep_set_class(&cpu_buffer->reader_lock, buffer->reader_lock_key);
+ 	cpu_buffer->lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
+@@ -3074,10 +3078,18 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 	struct buffer_page *last_page, *first_page;
+ 	unsigned long nr_removed;
+ 	unsigned long head_bit;
++	bool reader_page_next_removed;
+ 	int page_entries;
+ 
+ 	head_bit = 0;
++	reader_page_next_removed = false;
+ 
++	/* Stop lockless NMI readers before unlinking pages. */
++	atomic_set_release(&cpu_buffer->resize_in_progress, 1);
++	/* Pair with the NMI reader's count increment and gate check. */
++	smp_mb();
++	while (atomic_read_acquire(&cpu_buffer->nmi_readers))
++		cpu_relax();
+ 	raw_spin_lock_irq(&cpu_buffer->reader_lock);
+ 	atomic_inc(&cpu_buffer->record_disabled);
+ 	/*
+@@ -3106,6 +3118,19 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 	for (nr_removed = 0; nr_removed < nr_pages; nr_removed++) {
+ 		to_remove = rb_list_head(to_remove)->next;
+ 		head_bit |= (unsigned long)to_remove & RB_PAGE_HEAD;
 +
-+static void remove_kprobe(struct kprobe *p)
-+{
-+	lockdep_assert_held(&kprobe_mutex);
-+	hlist_del_init_rcu(&p->hlist);
-+	kprobe_tree_erase(p);
-+}
++		/*
++		 * The reader page is not part of the ring buffer list, so its
++		 * previous pointer may still point to a page being removed.
++		 * rb_is_reader_page() follows this pointer, so redirect it to a
++		 * page that will remain in the ring buffer.
++		 */
++		if (cpu_buffer->reader_page->list.prev == rb_list_head(to_remove))
++			cpu_buffer->reader_page->list.prev = tail_page;
++		/* The detached reader page can also retain a stale forward link. */
++		if (rb_list_head(cpu_buffer->reader_page->list.next) ==
++		    rb_list_head(to_remove))
++			reader_page_next_removed = true;
+ 	}
+ 	/* Read iterators need to reset themselves when some pages removed */
+ 	cpu_buffer->pages_removed += nr_removed;
+@@ -3119,6 +3144,9 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 	 */
+ 	tail_page->next = (struct list_head *)((unsigned long)next_page |
+ 						head_bit);
++	/* Keep the detached reader page's forward link off removed pages too. */
++	if (reader_page_next_removed)
++		cpu_buffer->reader_page->list.next = tail_page->next;
+ 	next_page = rb_list_head(next_page);
+ 	next_page->prev = tail_page;
+ 
+@@ -3134,6 +3162,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 	/* pages are removed, resume tracing and then free the pages */
+ 	atomic_dec(&cpu_buffer->record_disabled);
+ 	raw_spin_unlock_irq(&cpu_buffer->reader_lock);
++	atomic_set_release(&cpu_buffer->resize_in_progress, 0);
+ 
+ 	RB_WARN_ON(cpu_buffer, list_empty(cpu_buffer->pages));
+ 
+@@ -6293,11 +6322,18 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_peek);
+ 
+-static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
++enum rb_reader_lock_state {
++	RB_READER_LOCKED,
++	RB_READER_NMI,
++	RB_READER_SKIP,
++};
 +
-+static void replace_kprobe(struct kprobe *old, struct kprobe *new)
-+{
-+	lockdep_assert_held(&kprobe_mutex);
-+	INIT_HLIST_NODE(&new->hlist);
-+	hlist_replace_rcu(&old->hlist, &new->hlist);
-+	kprobe_tree_replace(old, new);
-+}
-+
- struct kprobe *kprobe_iter_start(struct kprobe_iter *iter, unsigned long start,
- 				 unsigned long end)
++static inline enum rb_reader_lock_state
++rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
  {
-@@ -751,8 +775,7 @@ static void do_unoptimize_kprobes(struct list_head *unopt_list,
- 			 * for synchronization, these probes are reclaimed.
- 			 * (reclaiming is done by do_free_cleaned_kprobes().)
- 			 */
--			hlist_del_init_rcu(&op->kp.hlist);
--			kprobe_tree_erase(&op->kp);
-+			remove_kprobe(&op->kp);
- 		} else {
- 			/*
- 			 * Keep on cooling_list until the quiescence period
-@@ -831,8 +854,7 @@ static void optprobe_finalize_generation(struct optprobe_generation *gen)
- 			 * Unhash it now and move to cur_gen's freeing list so
- 			 * it will be reclaimed after the next quiescence period.
- 			 */
--			hlist_del_init_rcu(&op->kp.hlist);
--			kprobe_tree_erase(&op->kp);
-+			remove_kprobe(&op->kp);
- 			list_move(&op->list, &optprobe_gens[optprobe_cur_gen].freeing_list);
- 			kick_kprobe_optimizer();
- 		} else {
-@@ -1116,8 +1138,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
- 				if (kprobe_unused(&op->kp)) {
- 					if (!kprobe_gone(&op->kp))
- 						arch_disarm_kprobe(&op->kp);
--					hlist_del_init_rcu(&op->kp.hlist);
--					kprobe_tree_erase(&op->kp);
-+					remove_kprobe(&op->kp);
- 					list_move(&op->list, &cur->freeing_list);
- 				} else {
- 					list_move(&op->list, &cur->cooling_list);
-@@ -1132,8 +1153,7 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
- 				 */
- 				if (!kprobe_gone(&op->kp))
- 					arch_disarm_kprobe(&op->kp);
--				hlist_del_init_rcu(&op->kp.hlist);
--				kprobe_tree_erase(&op->kp);
-+				remove_kprobe(&op->kp);
- 				list_move(&op->list, &cur->freeing_list);
- 				kick_kprobe_optimizer();
- 			}
-@@ -1188,8 +1208,7 @@ static void kill_optimized_kprobe(struct kprobe *p)
- 	if (!list_empty(&op->list)) {
- 		if (kprobe_unused(p)) {
- 			if (optprobe_queued_unopt(op) || optprobe_queued_cooling(op)) {
--				hlist_del_init_rcu(&op->kp.hlist);
--				kprobe_tree_erase(&op->kp);
-+				remove_kprobe(&op->kp);
- 				list_move(&op->list,
- 					  &optprobe_gens[optprobe_cur_gen].freeing_list);
- 				kick_kprobe_optimizer();
-@@ -1709,11 +1728,9 @@ static void init_aggr_kprobe(struct kprobe *ap, struct kprobe *p)
- 		ap->post_handler = aggr_post_handler;
+ 	if (likely(!in_nmi())) {
+ 		raw_spin_lock(&cpu_buffer->reader_lock);
+-		return true;
++		return RB_READER_LOCKED;
+ 	}
  
- 	INIT_LIST_HEAD(&ap->list);
--	INIT_HLIST_NODE(&ap->hlist);
+ 	/*
+@@ -6310,18 +6346,35 @@ static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 * Reading from NMI is a oneshot deal.
+ 	 */
+ 	if (raw_spin_trylock(&cpu_buffer->reader_lock))
+-		return true;
++		return RB_READER_LOCKED;
++
++	/*
++	 * A resize cannot wait for an NMI that interrupted the CPU doing the
++	 * resize. Track lockless NMI readers so page removal can stop new ones
++	 * and wait for existing readers before changing the page list.
++	 */
++	atomic_inc(&cpu_buffer->nmi_readers);
++	/* Pair with the resize gate before deciding to read without the lock. */
++	smp_mb__after_atomic();
++	if (atomic_read_acquire(&cpu_buffer->resize_in_progress)) {
++		atomic_dec_return_release(&cpu_buffer->nmi_readers);
++		return RB_READER_SKIP;
++	}
  
- 	list_add_rcu(&p->list, &ap->list);
--	hlist_replace_rcu(&p->hlist, &ap->hlist);
--	kprobe_tree_replace(p, ap);
-+	replace_kprobe(p, ap);
+ 	/* Continue without locking, but disable the ring buffer */
+ 	atomic_inc(&cpu_buffer->record_disabled);
+-	return false;
++
++	return RB_READER_NMI;
  }
  
- /*
-@@ -2052,16 +2069,12 @@ static int __register_kprobe(struct kprobe *p)
- 			return ret;
+ static inline void
+-rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer, bool locked)
++rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer,
++		 enum rb_reader_lock_state state)
+ {
+-	if (likely(locked))
++	if (likely(state == RB_READER_LOCKED))
+ 		raw_spin_unlock(&cpu_buffer->reader_lock);
++	else if (state == RB_READER_NMI)
++		atomic_dec_return_release(&cpu_buffer->nmi_readers);
+ }
+ 
+ /**
+@@ -6341,18 +6394,24 @@ ring_buffer_peek(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+ 	struct ring_buffer_event *event;
+ 	unsigned long flags;
+-	bool dolock;
++	enum rb_reader_lock_state state;
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
+ 
+  again:
+ 	local_irq_save(flags);
+-	dolock = rb_reader_lock(cpu_buffer);
+-	event = rb_buffer_peek(cpu_buffer, ts, lost_events);
++	state = rb_reader_lock(cpu_buffer);
++	if (state == RB_READER_SKIP) {
++		if (ts)
++			*ts = 0;
++		event = NULL;
++	} else {
++		event = rb_buffer_peek(cpu_buffer, ts, lost_events);
++	}
+ 	if (event && event->type_len == RINGBUF_TYPE_PADDING)
+ 		rb_advance_reader(cpu_buffer);
+-	rb_reader_unlock(cpu_buffer, dolock);
++	rb_reader_unlock(cpu_buffer, state);
+ 	local_irq_restore(flags);
+ 
+ 	if (event && event->type_len == RINGBUF_TYPE_PADDING)
+@@ -6416,7 +6475,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_event *event = NULL;
+ 	unsigned long flags;
+-	bool dolock;
++	enum rb_reader_lock_state state;
+ 
+  again:
+ 	/* might be called in atomic */
+@@ -6427,15 +6486,18 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 
+ 	cpu_buffer = buffer->buffers[cpu];
+ 	local_irq_save(flags);
+-	dolock = rb_reader_lock(cpu_buffer);
++	state = rb_reader_lock(cpu_buffer);
+ 
+-	event = rb_buffer_peek(cpu_buffer, ts, lost_events);
++	if (state != RB_READER_SKIP)
++		event = rb_buffer_peek(cpu_buffer, ts, lost_events);
++	else if (ts)
++		*ts = 0;
+ 	if (event) {
+ 		cpu_buffer->lost_events = 0;
+ 		rb_advance_reader(cpu_buffer);
  	}
  
--	INIT_HLIST_NODE(&p->hlist);
--	hlist_add_head_rcu(&p->hlist,
--		       &kprobe_table[hash_ptr(p->addr, KPROBE_HASH_BITS)]);
--	kprobe_tree_insert(p);
-+	add_kprobe(p);
+-	rb_reader_unlock(cpu_buffer, dolock);
++	rb_reader_unlock(cpu_buffer, state);
+ 	local_irq_restore(flags);
  
- 	if (!kprobes_all_disarmed && !kprobe_disabled(p)) {
- 		ret = arm_kprobe(p);
- 		if (ret) {
--			hlist_del_rcu(&p->hlist);
--			kprobe_tree_erase(p);
-+			remove_kprobe(p);
- 			synchronize_rcu();
- 		}
- 	}
-@@ -2191,8 +2204,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
- 		 * !disarmed could be happen if the probe is under delayed
- 		 * unoptimizing.
- 		 */
--		hlist_del_rcu(&ap->hlist);
--		kprobe_tree_erase(ap);
-+		remove_kprobe(ap);
- 		return 0;
- 	}
+  out:
+@@ -6843,7 +6905,7 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	unsigned long flags;
+-	bool dolock;
++	enum rb_reader_lock_state state;
+ 	bool ret;
+ 	int cpu;
  
+@@ -6851,9 +6913,10 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
+ 	for_each_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
+ 		local_irq_save(flags);
+-		dolock = rb_reader_lock(cpu_buffer);
+-		ret = rb_per_cpu_empty(cpu_buffer);
+-		rb_reader_unlock(cpu_buffer, dolock);
++		state = rb_reader_lock(cpu_buffer);
++		ret = state == RB_READER_SKIP ? false :
++			rb_per_cpu_empty(cpu_buffer);
++		rb_reader_unlock(cpu_buffer, state);
+ 		local_irq_restore(flags);
+ 
+ 		if (!ret)
+@@ -6873,7 +6936,7 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	unsigned long flags;
+-	bool dolock;
++	enum rb_reader_lock_state state;
+ 	bool ret;
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+@@ -6881,9 +6944,10 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu)
+ 
+ 	cpu_buffer = buffer->buffers[cpu];
+ 	local_irq_save(flags);
+-	dolock = rb_reader_lock(cpu_buffer);
+-	ret = rb_per_cpu_empty(cpu_buffer);
+-	rb_reader_unlock(cpu_buffer, dolock);
++	state = rb_reader_lock(cpu_buffer);
++	ret = state == RB_READER_SKIP ? false :
++		rb_per_cpu_empty(cpu_buffer);
++	rb_reader_unlock(cpu_buffer, state);
+ 	local_irq_restore(flags);
+ 
+ 	return ret;
 
