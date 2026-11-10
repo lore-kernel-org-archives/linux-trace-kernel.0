@@ -1,86 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794325188;
-	b=QXkXLqjeTi6tZ61sKRA6yfDM681oOFzlO7o7AEGeYaXp5o9Img/cqA4l69wz6wIBN++I
-	 b+QCm5t/SnSaU4FVTIj2Zbm+syjHQTAoH4umDnDu5c5c3A2X8IO4WxQjx/BYrhTqdlPdK
-	 Bey3/HbMTfThG2cqGwJnCdn89L2ZOd5WnjoXxqY/DjTmONTRGnzKmt3DtHxOmQ/dCEg12
-	 nO37h1QOx73rqZcvx+3pgAyX8UzzoWXWi4SCsWM4RH862cLtmvvBjh1pSx5/jHiDM0c/C
-	 kRq7aXtL5GGpb5ErXkaxnVwu9QdSWY4h7Cp8wH8Lw0oG2UA9tjF8p8g5i9mfUwTj9lQ==
+	t=1794326138;
+	b=DTaQuXnm3Ze04WFzxSIBebVBk9DhwuN6U9VJWOQr4RmHPPCQ0TloESphV/4Tz3OH1MUa
+	 l/hyjErqDHGmKxJA8cwjI2n4j1/D4xAwRu51dnwxo23UAImQYZ0egtl4BTDo/jpmonhpE
+	 UZJCNRxgZEeRW2WBers/A2QwqtzfG55DJ1W6mS1YKG8WoFN8SS/nCmmJw3cHtBpC5rIga
+	 y7JzZTXRh/71hD0TES8rRhhIqoI3tZk05eZo5PEvGQT16Kxt7InCrDBp4adkfxewxoBle
+	 1Hu/dDx5c/zOKhG1zW1pfI46L8vjG+QMwppLJQGGTXsuvK/gb+kPknhJGBuQOpwVLhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794325188;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=/Dc+JwsdmgyYxqvZQmyNcFdizNnWnNQRrjUAX8hzcoU=;
-	b=v2zC5xycdpLJj0px1j1RRuPkg7BfEqOusBzBia9VExlArCcMXxFx90gVdXolxQNiqsAd
-	 TFSIVvx1FXgKQ3ZgHQrbbU4pGPZ6b9ZRsbWVP3gewEjvd2KqY9/CD0IJeBJ6PSRSdtz9+
-	 Bz9sPcpQf3VyLV4iiFqyQQDnSVperXLYuAlULc8r5r4lQZtFBlohqKVG0lF84MjItoD1e
-	 tUifFJByYPinawjdO9JL/Ne+9k3BuEfhxMlXYWhOMps5Kjd4WGjtupEQh/pHLhtjJYbl5
-	 AD8bbOaBsk/2FyL4fJ/VoeDZPAkfcopqT+fD0rGiRrHiyrH/fyUwJGVbGUuiMx+P4gA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794326138;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=SvIe1dTA5bgP0oOOky8Z1uVZhZTsydnSnODkTILXkXw=;
+	b=p/g4jx9xwtDMDKuklICSM6fK0KcGcKByPt/CKqep6ufHRILEuHHScLXikD0VZ2UWQgwl
+	 7EAjNOWq8LyMJSBX+ChtXJINOj0lmO13LoX5ncqan22r3M/W+qm/I6JZN3kFa+DxWC684
+	 4Ee8NDFFxmEVh2fiWqdq6iFMLhNTKQvEzxHG9QiknyLv0KSHblhZV1Np45wpzFzy4FujL
+	 SpWVg2110lz4JY1inmTUSNP0Mdo3UUx8eW1xpsfWwX0t5WEt8hCxiiGP/QIkIPl097SN8
+	 bIG8E6+Mx4oxYNzvxme86Ukcj2sRlgFILQqvot5VhGqbUKDJXDEr+3/3RBobsm4Ok7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=SsQSQlHy;
-	arc=none smtp.remote-ip=95.215.58.177
-Received: from mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hxozIhHm;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946BB606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 15:39:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 946BB606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370BB606A323;
+	Tue, 10 Nov 2026 15:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=SsQSQlHy
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=U8k35pxEd0m+x8ZKDuQMkZMM3+/gIzGlGIc3CscMOqM=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794325185; v=1; x=1794929985;
- b=SsQSQlHyp7V5Z0CCbhyiGrxvJPcWe9+dkoM1G2BZx1xIyZDJVnejZeMb1MALH+7xItNzDytf
- u6MYKWta7tzzj39/69e7aCn1s1eozEAGLBrWMUMof7KcaaGsU2MKtoOWyxFwM3nG5Xw1DiOl67M
- zyLFvGH+f39e5KhEBw8n8fu8=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 0bcc4bd1f1aaf32a;
-	Tue, 10 Nov 2026 15:39:45 +0000
-X-Mizu-Trace-ID: 0bcc4bd1f1aaf32a
-X-Migadu-Flow: FLOW_OUT
-From: Qiliang Yuan <qiliang.yuan@linux.dev>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Qiliang Yuan <qiliang.yuan@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kairui Song <kasong@tencent.com>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Barry Song <baohua@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <brendan.jackman@linux.dev>,
-	Zi Yan <ziy@nvidia.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
-Date: Tue, 10 Nov 2026 10:39:28 -0500
-Message-ID: <20261110153928.4039653-1-qiliang.yuan@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
-References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com> <20261110135824.3264904-1-qiliang.yuan@linux.dev> <0a850ec1-d45d-463e-829a-e782290ef864@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hxozIhHm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD06D1F0089F;
+	Tue, 10 Nov 2026 15:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794326138;
+	bh=SvIe1dTA5bgP0oOOky8Z1uVZhZTsydnSnODkTILXkXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hxozIhHmmpI0orJHynU5GErfujgQcajB7c5xDfVJaCwJou8oudZLuQk/PhicbS0K7
+	 XNmgvLHiXxVpurT9ttEcApD8O0aIbqdrPmJHZNjpuRaLyqXmSQ5+Uf32xSIiKjIic0
+	 Ic5+0xgvDdFUuxitJ/dzD6YM7jV20SLaKKRi2ebOQPBPACLThIMab3dl3LbKXvLZUz
+	 5irq6W8mI0FPPZB7SGVHrNurymQtdA7AXHGWGNoomKzVQFgiiPkAq4bW2qx7B3fFcs
+	 pkwz/3s/25vWVBP7mKxlgp5d8PcnhH6WqiIQkZRln0vpFOV8I/KugDXhXFIZ9Qc4qc
+	 SvD8pzcRJX39Q==
+Date: Tue, 10 Nov 2026 16:55:32 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Eneshan Karaca <Eneshan-Karaca@yandex.com>
+Cc: kees@kernel.org, rostedt@goodmis.org, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	jkoolstra@xs4all.nl, farid.m.zakaria@gmail.com, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: Re: [RFC PATCH v2] binfmt_misc: add binfmt_misc_select tracepoint
+Message-ID: <20261110-gefruchtet-singt-allabendlich-ff8653eb8631@brauner>
+References: <20261029185849.8016-1-Eneshan-Karaca@yandex.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -90,43 +60,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261029185849.8016-1-Eneshan-Karaca@yandex.com>
 
-On 11/10/26 15:13, Vlastimil Babka wrote:
-> The series was nacked twice by senior maintainers. Due to dealing with
-> urgent issues [1] we might perhaps find time later to see if it reports a
-> real issue, and in that case fix it ourselves. We have currently no time to
-> help those who need AI assistance to contribute instead of having own knowledge.
->
-> [1]
-> https://lore.kernel.org/linux-mm/a2f584f6-e382-4876-aa6d-d5a34de6ee59@kernel.org/
+On Thu, Oct 29, 2026 at 09:58:49PM +0300, Eneshan Karaca wrote:
+> From: Eneshan Erdoğan Karaca <BoxStrikesTeam@proton.me>
+> 
+> A binfmt_misc entry can select an interpreter for an exec.  With a BPF
+> 'B' handler, that selection can be made by a BPF struct_ops program.
+> The kernel commits the decision in bprm->interp and bprm->flags, but it
+> does not emit an event at the selection point.
+> 
+> Existing observers have to reconstruct the decision from
+> /proc/PID/exe, AT_EXECFD, AT_FLAGS, or /proc/PID/maps.  These sources
+> are mode-dependent: a transparent dispatch still reports the original
+> binary in /proc/PID/exe, and a short-lived process can exit before the
+> observer reads it.  A classic dispatch reports the interpreter, but
+> not which handler selected it or which invocation flags were used.
+> 
+> Add a tracepoint after the interpreter and the invocation flags are
+> selected.  The caller passes the matched entry and the raw flags; the
+> trace event resolves the handler name and masks the flags with
+> MISC_FMT_INVOCATION_FLAGS.  The event reports the binary filename, the
+> selected interpreter, the handler name, the invocation flags, and the
+> pid.
+> 
+> The tracepoint is observability only; it does not change exec
+> behavior.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Eneshan Erdoğan Karaca <BoxStrikesTeam@proton.me>
+> ---
 
-I'm only spending time on this because it gets in the way of AI
-training and inference, which long-term pin large buffers for RDMA.
-Mooncake, the KV cache store used with vLLM and SGLang, hit it with
-8 ranks x 190GB taking ~38 minutes to register. The stall and the
-numbers are real, also measured on my own test setup.
-
-Async failures have not been deferred since commit 66199712e9ee ("mm:
-page allocator: do not call direct reclaim for THP allocations while
-compaction is deferred"), which explained:
-
-	/*
-	 * As async compaction considers a subset of pageblocks, only
-	 * defer if the failure was a sync compaction failure.
-	 */
-
-That still holds, so the series has no Fixes tag: it isn't a bug in
-that commit. What the rule doesn't cover is long-term pinned memory,
-much less common in 2012, where async fails the same way on every
-fault and is never deferred. The series leaves sync deferral as it is
-and gives async a state of its own. The analysis and a reproducer are
-in [2].
-
-If you look at it later, I'm happy to test whatever you come up with.
-
-[2] https://lore.kernel.org/r/20261110144256.3841504-1-qiliang.yuan@linux.dev
-
-Thanks,
-Qiliang
+This is whitespace damaged. So Sashiko can't look at it.
+Resend it properly, please.
