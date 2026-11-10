@@ -1,75 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794347143;
-	b=do3XZy9icFCgxE0JP76XCdJUmtgMcagPDyI7CPISjoBeN2lfVKq1DoJHlEis1hwygQku
-	 XgX4KC1ET8cwqsLnid4nZj1J4mvdN9JoupZJdIX8atiVK2uV0ka6BlHTeEC0A2bOBGcGb
-	 CJ+ZdGXed4klNxXlqOYTr5qjH1oIp2NU+2G0ZE8vEYJsIC7AseiBQ02Btto/TaPxrydGY
-	 7M49u/pXs6RNtIwpN9m2OUCiTyxVw6DNmdx9iYp3rDbLSeZpCa78z+27Y2KU9eGXd7J8P
-	 0KW5wplB+eQwt617fvceoJNeYj2wdE+5oI/tcietgbXjHca1JKCCiguKkXrK1TQ3nlw==
+	t=1794351007;
+	b=Bpe7EuzPgkjztca+MWTNfIPENfDYaraLK9jTqW5ptQEX2LHhOZhg+A8SzKHXcWZYX+9g
+	 lerE5bTfau1YLcgpChiCuNR0rrJHC6TVcE+/0GJmH+rf8L1q700Z3rGbD6JM/TDmMw3Gu
+	 tXJ6iAkWwy+voKVRXIBvM2fwWAVKS4OKWwCDzLE15mcbpsfNJ6A8iU0SAUzXHssYAJ6GD
+	 pw/gzdkukcKSTUVP2wwiG8qX+Hi7jvqAxeng/McSaX5KzN+azH6Dum1xayqi+OfcPf1m8
+	 sMYxpAewoO5QWPLzWuikZZ0cvh6qh0wiJ5+cVauXR4TVNDsitbBYXf2HlsYHtqwEOqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794347143;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=35fQk2prx0lBB02/47r4mEUB8fpBOI29YWOfBrE+Kf0=;
-	b=kMaNSjdu44hStqcU+0GE+wmxhODw62KKr+FO3Be+rLExyefVf3YJcE2STcTnpahaKsRh
-	 Owe08Bn89tNsI1FGm9EXZ7jLNLwpOg9Qgm39BJmfBnZrO1Bvs6r03/VNhnjYsUGHbsc07
-	 Jb2pkTtAmogcC/0pG5vghz02GbEz/bsEItTOZYecctCoIMTuHVtA969NSo3fYZ//7E2EA
-	 rzqgQLJl1eMseubAsPz3XtCzUPF3wF099sV/xFodcDr7xUx8BlPGApzve3Amvr6DLgWAw
-	 Z7P2wFiusyrsj7iTrdsNL2UDzAIH25RW7snzROfEYZfuRsO8h1o1nzfG9Yq4y2Km8wg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794351007;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
+	 Message-ID:In-Reply-To:References:Subject:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Content-Disposition:
+	 X-Spam-Status:X-Spam-Checker-Version;
+	bh=503JFiVK8vn/l3FW+t3kwxWFWPpMbnFzjHjaQEpu2Vo=;
+	b=eiglvQLH9rP9sBx1r3IYEOB4ofhtDFOWpMdkR0XKLzZ2Qi6Y4wwHHqwEs3FcrtWw4FKn
+	 kpKq+RRsghe0XL2/exQEVE/WUxkFnaXCgDQmYkW5SNJo47leq4BW8SAHglHE0oFiJRk4t
+	 D7JcLqxUpGk8WWM2EnoGvb17r2POo7zTQr+nseeGi945qykgsMOzA5cYrxwFF1lMKZ/7S
+	 bW6F2m028tEpC7As6R52VIEhqlQgjrFZHDz8fd4flfTXrSGEdk1ID8a43Du5S5O1Ayx+/
+	 Ph7DjO71te3vKTaKxfmmssL7twRurXW9X5FFuQh8yA8gUNU6+SY/cCjuoF7yqiB9APg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kymx3Z5Q;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85DF606A321;
-	Tue, 10 Nov 2026 21:45:42 +0000 (UTC)
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=jISbMcXW;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A0A606A320;
+	Tue, 10 Nov 2026 22:50:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48A0A606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kymx3Z5Q
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBBE1F0089F;
-	Tue, 10 Nov 2026 21:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794347142;
-	bh=35fQk2prx0lBB02/47r4mEUB8fpBOI29YWOfBrE+Kf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kymx3Z5QuLjhVt9c5TXAk+kfoV9+Q69m2rh6gKaY2iciQySjWz776ENyyzO76ntE/
-	 /uzWTdV8hdYbQdh1l4IyeQ5fyyv9r2cCWu0qjO5wH2a+J4S0bzy6nNaTA6trhTE0GW
-	 /L1dwdPvEztraG/h+sVCOy641h7Uk/TMwO2q4hRzVBg/Rkxmb7cReJ+LatfFNQPTkP
-	 6patrVaXaDmYcM/GxuvUQx3acPjDDOm/3QA23frVW+hN4rGRkeHMgbj+Hzf1wrVZRK
-	 Mzim6bafAA11Nz4YojXw6wG9MXECjIaGYV2Ai4JM+kIAL0NrS4PfdlrklEcr67vMyR
-	 y6wV8M99tyxhQ==
-Date: Tue, 10 Nov 2026 13:45:39 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ding Meng <meng.ding@siemens.com>
-Cc: netdev@vger.kernel.org, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, Tony
- Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, Andrii
- Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar
- Kartikeya Dwivedi <memxor@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, florian.bezdeka@siemens.com,
- jan.kiszka@siemens.com, wq.wang@siemens.com, p@1g4.org,
- gerhard@engleder-embedded.com, Jason Xing <kerneljasonxing@gmail.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Martin KaFai Lau <martin.lau@linux.dev>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri
- Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, Ihor
- Solodrai <ihor.solodrai@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH] net: mark skb NAPI IDs independently of busy polling
-Message-ID: <20261110134539.12d860ef@kernel.org>
-In-Reply-To: <20261105071706.7043-1-meng.ding@siemens.com>
-References: <20261105071706.7043-1-meng.ding@siemens.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=jISbMcXW
+Received: from [100.96.64.102] (unknown [52.179.129.152])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B7F3420B7169;
+	Tue, 10 Nov 2026 14:50:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B7F3420B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1794351003;
+	bh=503JFiVK8vn/l3FW+t3kwxWFWPpMbnFzjHjaQEpu2Vo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=jISbMcXWAnWYOIBzcxe98miqDGDviywoQ+eXNQEp82At+GPcFejJCC2bL6+ZyXaUa
+	 qYoBSzDBtLPFSKe2Guo/hr5GK3+oMHvjBB48m/3WhtIBxz4rWrcwLl3eALk8VRqO0B
+	 xtGI+YgU8i69Jzg9xxpMV6I83VSm6dvSaoy0qwIw=
+Date: Tue, 10 Nov 2026 17:50:03 -0500
+From: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "=?utf-8?Q?mhiramat=40kernel.org?=" <mhiramat@kernel.org>, 
+ "=?utf-8?Q?shuah=40kernel.org?=" <shuah@kernel.org>, 
+ "=?utf-8?Q?beaub=40linux.microsoft.com?=" <beaub@linux.microsoft.com>, 
+ "=?utf-8?Q?mathieu.desnoyers=40efficios.com?="
+ <mathieu.desnoyers@efficios.com>, 
+ "=?utf-8?Q?linux-trace-kernel=40vger.kernel.org?="
+ <linux-trace-kernel@vger.kernel.org>, 
+ "=?utf-8?Q?linux-kselftest=40vger.kernel.org?="
+ <linux-kselftest@vger.kernel.org>, 
+ "=?utf-8?Q?linux-kernel=40vger.kernel.org?="
+ <linux-kernel@vger.kernel.org>
+Message-ID: <40C83F97-D53F-4050-9CE4-19449912FB20@getmailspring.com>
+In-Reply-To: <20261019103957.69759ee3@gandalf.local.home>
+References: <20261019103957.69759ee3@gandalf.local.home>
+Subject: Re: [PATCH v2 0/3] tracing/user_events: Share state with
+ existing threads
+X-Mailer: Mailspring
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -79,20 +71,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-On Thu,  5 Nov 2026 15:16:08 +0800 Ding Meng wrote:
-> +  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
-> +  enabled and the driver is using NAPI. This hidden configuration is
-> +  selected automatically by busy-poll support and by drivers that need
-> +  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
-> +  use deferred timestamp conversion must select it so the networking
-> +  stack can find the device and call its timestamp callback even when
-> +  busy polling is disabled. The struct contains also two other fields,
-> +  but they are reserved and undefined.
 
-Just take napi_id from under CONFIG_NET_RX_BUSY_POLL instead of
-complicating everyone's lives.
--- 
-pw-bot: cr
+Hi Steve, Beau,
+
+Gentle ping on this v2 series. I don't have any outstanding changes to
+make at this point.
+Just to clarify, this is a separate patch from the Fail fork one.
+Please let me know if anything further is needed from my side. 
+
+Thanks, Jeff
+
+
+On Oct 19 2026, at 10:39 am, Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Mon, 19 Oct 2026 10:23:01 -0400
+> Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+> 
+>> Gentle ping on this series.
+>> 
+>> Please let me know if there are any further comments or changes you'd
+>> like me to make.
+> 
+> Hi Jeff,
+> 
+> FYI, always start a new thread when sending out a new series. Don't
+> make it
+> a reply to an old one. That makes it confusing to know which series to look
+> at.
+> 
+> Also, I've was traveling between September 14th and October 10th and my
+> backlog built up quite a bit.
+> 
+> If Beau can review this series, that would be great. I'm currently putting
+> together several branches for the merge window. Unfortunately, due to my
+> backlog, there's patches that have been sent this month that will need to
+> be postponed to the next window.
+> 
+> As user_events are agnostic to other changes, there's still a chance your
+> changes can get added this window.
+> 
+> -- Steve
+> 
