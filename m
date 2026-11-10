@@ -1,57 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.2
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794318707;
-	b=hVcmXCb9MnInx3oNd8L5UPR2BKfMaAeiMcgiEVWyM4wnmp45QlAvyYbSfvhdamEyJn6i
-	 PO9RnaNcStGyCv0zAzU1VbqRjl/cSWf5N6YRhzVx4WxtnMmAw6SwroWEi7dr5GqbaMMv0
-	 djALbNUlX23S2OFMeEeGb4aaZEWSOKBwZN3h5LDXY3gKu0/k8aseWniOfxOmWZ/5ETyrV
-	 gCcOjVGuhLjshmfrQRjqhbV4MNcWbb233BPikUed/TP7b/iaZdoUn2xtawJpMZbBMm1Fw
-	 U6XuiwftIYTW6cFYMOk9KScn+4UhIXVDkasfZ5vzQtQtRnZ9i2U4ORFGKDGkl8C+7fg==
+	t=1794319124;
+	b=a7XNT19pgiRgc5Qe31Bdy23ZG9Yt9It8h/3JFh79hwDPAJ6KlR0HO8Nu/ey00xu5Mmna
+	 msR0BMMKuzxmQuMY23hS3EVPU7jfK0aKSmDAh7DNWk/lJic/aMd6UVly/sRya8ZopUTlf
+	 evwmfAos5dpDr+F2cHVh3WeQnuuzve0S0drImTF0DxUH0k9EnceTFv5Q9HKh0x3yUrdAx
+	 CxQ05jLVEnT3YvxXpldvqLuFzOZHN/t/uSP/ENziMZmd1M49jhhPbM2KPNjnn5jeMoJtn
+	 0YqrEydcs0whXZPMsBCS6qpVvpadeygxONaKnbUBOPB10cNQWD5BNagPIOAXYURV11w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794318707;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DgMB87bjjOhJubk+hnBQVvUaHtmOByTmAGnQuDuOPkc=;
-	b=uVfbG7lzFZTKwJ1oRQQWEx67TYtpN5NsADfg82sD9/bD8VB0G5wtrmw1mpltS/9aEg2u
-	 gLRPqOT+pKfzCF+DlSxfEdqL3gpjp7HN3FifZHXpmXhhP/LkrVoryX+CGdKxu+WQGcbJH
-	 wQ6qfLEgSK9iA8PXjUk6pE1FGygrvBys0YMtPdFIQL2nG4aIV4CLAZR5PXJWduRbw+8dM
-	 W9brjOZ3SMefYvLvxnPTTI7NjRaBnfrDCjB1l38ODCoTVMTTOnPlSkeSDUUGKNHHGsV4s
-	 VwnXqwVp1Ec9BbeGaBqPeR8Wws+jiGW1pf2RkqLAPt+54oJFIB4J8vs/YXIXYAcdKAg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794319124;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=4AuBCb/I7k73HlQgjzDYi07i0QVcp76kIK/7/UWRP9M=;
+	b=5XgesfvtT7V+jK8ZVlDpptjRiVEgUVgWe9dcQsyEnNeAZ4TRz23R6AUJ+17fiZuQp/aM
+	 NBf2C9Ct7XiRrRnOBP3enLWlS5x3xA/2JXEFsE5LzW9LfETaiwd3dPfpnpJ3Ebya8V6dp
+	 dMoLVLQPneBXXkmwsidWzQq3wMmKGW2zgFWk/48CdGc54kNjJv0GAfuq+46wQjJ/5ghC2
+	 zN9X4Kj1euh0whjzv1ig3vlR97fiBw1/mP2NkXnlcEjw/3h3dCthYPbaQUgGYbAX/7n2G
+	 4HjJyhUM8L/u0sxrcEevS4us4jDsbJP0DZ+XnpQiVnbNynM/B88zUmpYa9XdMfml2WQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L35YLwyk;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=g7jmzUK0;
+	arc=none smtp.remote-ip=95.215.58.2
+Received: from mta1.migadu.com (out-2.mta1.migadu.com [95.215.58.2])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE29606A32E;
-	Tue, 10 Nov 2026 13:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F9E606A321
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 13:58:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7F9E606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L35YLwyk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5968F1F0089F;
-	Tue, 10 Nov 2026 13:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794318706;
-	bh=DgMB87bjjOhJubk+hnBQVvUaHtmOByTmAGnQuDuOPkc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=L35YLwykVOSrGxvbsrb1u3khnVzNXdXgakJy4Rkd8urakgak65Pxog7+j9n13CK34
-	 oRXOCloZFEVBh8KHZtaASdAn7zOxHwlsMKpYDKZEjz+2xdMk3RHSg5SZjzrFO4cudu
-	 KGKXJGspaknuLBzI44niWPugCnd0bp/kCSgeQ0Y6REwQGNV7kcCuJaV8weXy+EERYN
-	 /PUHMwKxtwy7/Jkpju2j1tUoSPXz4Mr4CbbJJssA+A3UfX7gpcw4Jhb8xRTxOJCWCo
-	 p1eSmUoVXOTAWGk6Gz5VbeeR8JwJZ0dkwfxiLhwru5TtiaQX6nyYqgcickCDQVOqRo
-	 UvQfdeWId7beA==
-Message-ID: <sashiko-outbox-207157@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 3/6] riscv: accept the atomic extensions this kernel
- was built with
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, ojeda@kernel.org, gary@garyguo.net
-In-Reply-To: <20261110-lrsc-only-v6-3-bafc3cc0fcae@mobileye.com>
-References: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
- <20261110-lrsc-only-v6-3-bafc3cc0fcae@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 13:51:45 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=g7jmzUK0
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=4AuBCb/I7k73HlQgjzDYi07i0QVcp76kIK/7/UWRP9M=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794319120; v=1; x=1794923920;
+ b=g7jmzUK0d/G3BvqcNkqamkKsfKfjCzjV+abGar/cbKfi8lCffnKVGlS+BDf9zv+dSjxtSI+q
+ CvBjp53iEChofoerEKpjDOV14gGPTeuNCTU4ZShT1gKUKrWKjy3OVvLQNeQRcEMHNKKu8XXJckr
+ O7zs8C9P+sBOxpKZY42/axD4=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 68181a37af8247a7;
+	Tue, 10 Nov 2026 13:58:38 +0000
+X-Mizu-Trace-ID: 68181a37af8247a7
+X-Migadu-Flow: FLOW_OUT
+From: Qiliang Yuan <qiliang.yuan@linux.dev>
+To: Vlastimil Babka <vbabka@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>
+Cc: Qiliang Yuan <qiliang.yuan@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] mm/compaction: stop repeating failed async compaction on every THP fault
+Date: Tue, 10 Nov 2026 08:58:24 -0500
+Message-ID: <20261110135824.3264904-1-qiliang.yuan@linux.dev>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
+References: <20261102-bug-mm-thp-async-compact-defer-v2-0-b407e974db54@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,80 +89,18 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] riscv: hwprobe_one_pair() falsely reports IMA base on
-  zalrsc-only harts
---
+Hi Vlastimil, Johannes,
 
-commit 28e749f3a8a1535f66a4515b72ef2377c9c49282
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Could you share your view on this series when you have time?
 
-riscv: accept the atomic extensions this kernel was built with
+One known issue in v2: the cc->mode != MIGRATE_ASYNC check added to
+2/2 blocks clearing stale skip hints once sync compaction is fully
+deferred, so local THP may not recover after the pins are released.
+I'd drop it in v3, but won't send one before hearing from you.
 
-This commit updates riscv_early_of_processor_hartid() to accept harts
-whose riscv,isa-extensions property lists "zalrsc" (and "zaamo" when
-CONFIG_RISCV_ISA_ZAAMO is enabled) instead of "a".
-
-> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-> index 3dbc8cc557dd1..9ba0d49c87bc3 100644
-> --- a/arch/riscv/kernel/cpu.c
-> +++ b/arch/riscv/kernel/cpu.c
-> @@ -82,12 +82,29 @@ int __init riscv_early_of_processor_hartid(struct dev=
-ice_node *node, unsigned lo
->  		return -ENODEV;
-> =20
->  	if (of_property_match_string(node, "riscv,isa-extensions", "i") < 0 ||
-> -	    of_property_match_string(node, "riscv,isa-extensions", "m") < 0 ||
-> -	    of_property_match_string(node, "riscv,isa-extensions", "a") < 0) {
-> -		pr_warn("CPU with hartid=3D%lu does not support ima", *hart);
-> +	    of_property_match_string(node, "riscv,isa-extensions", "m") < 0) {
-> +		pr_warn("CPU with hartid=3D%lu does not support im", *hart);
->  		return -ENODEV;
->  	}
-> =20
-> +	/*
-> +	 * Require the atomic extensions this kernel was built with. "a"
-> +	 * covers both; otherwise LR/SC is always needed and AMO is needed
-> +	 * when the kernel uses it.
-> +	 */
-> +	if (of_property_match_string(node, "riscv,isa-extensions", "a") < 0) {
-> +		if (of_property_match_string(node, "riscv,isa-extensions", "zalrsc") <=
- 0) {
-> +			pr_warn("CPU with hartid=3D%lu does not support zalrsc", *hart);
-> +			return -ENODEV;
-> +		}
-> +
-> +		if (IS_ENABLED(CONFIG_RISCV_ISA_ZAAMO) &&
-> +		    of_property_match_string(node, "riscv,isa-extensions", "zaamo") < =
-0) {
-> +			pr_warn("CPU with hartid=3D%lu does not support zaamo", *hart);
-> +			return -ENODEV;
-> +		}
-> +	}
-
-[Severity: Medium]
-As reported by Conor Dooley on v4 [1], when CONFIG_RISCV_ISA_ZAAMO is
-disabled and a hart boots with only "zalrsc" (without "a" or "zaamo"),
-does hwprobe_one_pair() still report RISCV_HWPROBE_BASE_BEHAVIOR_IMA for
-RISCV_HWPROBE_KEY_BASE_BEHAVIOR?
-
-arch/riscv/kernel/sys_hwprobe.c:hwprobe_one_pair() {
-    ...
-	case RISCV_HWPROBE_KEY_BASE_BEHAVIOR:
-		pair->value =3D RISCV_HWPROBE_BASE_BEHAVIOR_IMA;
-		break;
-    ...
-}
-
-RISCV_HWPROBE_BASE_BEHAVIOR_IMA advertises full rv32ima or rv64ima
-support, including Zaamo AMO instructions, so userspace querying hwprobe
-on a zalrsc-only hart will be told that AMO instructions are supported and
-can fault with SIGILL when executing them.
-
-[1] https://lore.kernel.org/r/20261103-pushcart-very-04a34d0ffb0e@spud
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110-lrsc-only-=
-v6-0-bafc3cc0fcae@mobileye.com?part=3D3
+Thanks,
+Qiliang
