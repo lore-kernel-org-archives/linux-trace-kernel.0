@@ -1,96 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794371945;
-	b=vBelab7YtP1j5bMk0KLDcWiT+3fIfe/GiUFl9KWq/gOy4blS7V8mRsNF15/gYTUAbc7S
-	 wD+QXvSFmHde7q67oEtvYAolvSJVAyeWsWOzqIjGAOoRUxsCVbEzFFDG/0kKQTKEltqfJ
-	 7Hvs4Y/lkZeBjbMBwhB1w9qGapC4ZfhXDA+J31vmOsGikTTlVefStIPqCoBjvfA0+Xboe
-	 jRpnPQbqQAC5IuHbBxStAUfmZYUL8vKBo3jF2Zo8tkUDUyc1Hs+Gh3yzycct9ulJlvr6j
-	 caOuPlwAEMwsKvcvfkOxu90S6ysw+7XKVfjayHZxesVrhshpaQBiRz8IJAg7ntEyqNA==
+	t=1794378568;
+	b=CxQLIQN7T6mKKUnOclxsLljLEgwe0oauwteN77qZS5Dd4wi0bCGfWb2gmLxJ1SsZ5Sut
+	 hkFhnK+T7R81Afx3ExavEa8XvK8fBgeH0JYrFW/0zm0h3KLf3R9+FgPIRyf5389yJJKxg
+	 ThXxx6n/H04VZkZuRRFMV2D7ALt6zBiNZjpXuxAUPNwLM6UIslqIWqsxBeA5ZoNrk9XFa
+	 8Y+jWmZJ+mGPLnzduRrc2wj/Q3IVZTKf43+x2iw8PM4eiCqlKLbFo0FmolC+RFo2WWf/P
+	 6S0f/G1/H4hrIy7VsPWmjpECYhed6l2zw4/YzTNHyM71IKWdGRaxG60E45h+0IPuxaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794371945;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=siZmirI+f1Pyy8EXeDTuyyN9Ke8UwfOLkM0owVcLHTc=;
-	b=EY2GG1HlylUjcgKtqEi/XbIyeBPZAmxvz1BK4tYUNyzPr6nchaq9FukOn3PRvBgDJUDA
-	 zPjPJujCbuL03Xt6VjYCpABWDHikkTe/L6o+ZkxKYlzkW/YvJuMTrzWXwKeDCKzZaVdql
-	 VYRTER1j8t7MWAb5Vjirxs43U7yeGLjM9smgplYjaBhcLoGsoip8W+h8TuNEljKVYU6zC
-	 LT9lNgXGb3CZJITcPdQPh8kC/dvFxIZWSNg06VKZB/XW/vjoMN1XeWhHLEP3d2yC1LR0Z
-	 AU0UDjo1QMJVAVJX7sujJYlZK7Xc/4/ga6RC3McffVHfG3qU3VqTxSHdHTUykwm4+SQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794378568;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=29lrC8bgDl0asZcXETXCpInEQQnGtGzK8+PnFUeH/0U=;
+	b=HM5Zel0alpvUcONp2E8W9QAOTfWyj//1+KiwONmuaxmr5bWN53FLgSo3qE6pDv9KD2du
+	 I4J7RbR1RzDWRrVkdZO8ZRK9I3kaT2DDToNHYYtAHnPVgX1So33WIg/H01bVE+2mMXauq
+	 D72PlaDkhquwnpK0TZ1Bo3kx/fvwjqpIThRIyzIVbc4ABG+ZITEtUTFb5++9vbkP13azU
+	 20a11eWiRuY1kA/FybCGIxzV9s1pxqeSCKpJRbhTVR0muky1tBQjTI7xKgEHydKQiU43Q
+	 g4ZilxubpODEGXBLRFrB78DUMrcb3i5cN4E7bHymhvpJ7xPAFVhc9trtVtkLvLjW+yA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ihi7Z3mW;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UuuPy5+h;
+	arc=none smtp.remote-ip=74.125.82.177
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF72606A321;
-	Wed, 11 Nov 2026 04:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA39E606A333
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 06:29:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA39E606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ihi7Z3mW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0221F0089F;
-	Wed, 11 Nov 2026 04:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794371945;
-	bh=siZmirI+f1Pyy8EXeDTuyyN9Ke8UwfOLkM0owVcLHTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ihi7Z3mWuOUA+kXYCdelMQfc0wNHEyM63cO8JoyRFYBXxLRj8v9SXEXjRfpt4HZsv
-	 II8l7k07UN+GKvuGkYa8T9S1h38HBW19Rc0o9Hxs5BkXX0G2sL3QNUJqiwVXXT5ZSO
-	 41eAboMlgACcl6rcoxul6g6au1reU9+lgHoppdBVGDiUeRgoQeUpuPIInwj97STiaz
-	 qrj49xx01AHBcnRPjlhs2SzAiXgvOgz7ILb1AnMtBVoA0VaOOFVv0XcS/9vr86vOqh
-	 wVb5zsw2OiBPHuZn/vrAQEVMXB94uXx3SwfFKg4196+omMgSgdfscT1mCVx2pZ0y4o
-	 ip2vQIxoEvWbw==
-Date: Wed, 11 Nov 2026 12:18:36 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>, Gary Guo <gary@garyguo.net>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Chao-ying Fu <chao-ying.fu@globalfoundries.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	torvalds@linux-foundation.org, olof@lixom.net,
-	aleksa.paunovic@htecgroup.com, arikalo@gmail.com,
-	Boqun Feng <boqun@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-	Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Charlie Jenkins <thecharlesjenkins@gmail.com>,
-	Nam Cao <namcao@linutronix.de>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v6 2/6] riscv: build kernel atomics from LR/SC when Zaamo
- is disabled
-Message-ID: <avPsnAlbfEsNa5zq@xhacker>
-References: <20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com>
- <20261110-lrsc-only-v6-2-bafc3cc0fcae@mobileye.com>
- <20261110-revivable-saint-9bcfaa2fd0e7@spud>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UuuPy5+h
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-36e795af1d4so2396758eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 22:29:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794378567; x=1794983367; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=29lrC8bgDl0asZcXETXCpInEQQnGtGzK8+PnFUeH/0U=;
+        b=UuuPy5+hNF86O2JNZmFe8f/FXhxLltUhrt+zCn1z0YbE1SSVTBC5ek7hzRhwqx9s5Z
+         MVFS410HupyAUkJOGfqkwdvRj7GLSrQjaFJC+eSCU8LfkC0WZmo6RR4lvv4dttW2m2Br
+         AiqgQaqJZIsFfZEebVasM8n6SYTOmSCTbvFWoW0BduMx60q+7ac+/1RdULDc/5v/52Hm
+         JNZwAATLhSIw0nC+rX2AdkJ1OqYp9/AK/R5Lmtta6ukI8/s1ohRzBc/mh6ABpqmRQc51
+         IKirqnkFKuSpFiy72INVOzo528f3aybVASzE1wE48GgeLCsVJ+zwpSsax/wAtQ8NAmy4
+         JogA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794378567; x=1794983367;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=29lrC8bgDl0asZcXETXCpInEQQnGtGzK8+PnFUeH/0U=;
+        b=TRDTLvM+1/LGGLbDCgZCw947lcPyI3vORtESKcGuTDdmYk1wwmz9sFs+7qjSB2NIYX
+         qy3mS5DQCwaY8mo66SimSzGUo/QV4/KWw5wfKhvPOA9aBK73ecik0PR/KgrZoG+OmOhB
+         qtvXr7PKJHtWdEDTUL8c6uerIUlWY4WdizaOYLzdbdcZXTa3L0aZHkDZpkSbkastn0NY
+         mtWyyvsXrBwJ0AEyhOcMtKeoG6S19qaWSIwMd3ZEh/MbBB7RHyrfrMlgI72XLDeIVsLr
+         af+moOVvnbUwXRHXnbjUbHAgy9omkyu42XPYyw/xIyMV4MKjaXcoCqWbIe6zhcA/eAqe
+         f6og==
+X-Gm-Message-State: APuU4Z/LvHPeiuu/hz6449I7jUbXNXBkKH8aG2kNgGbaNofwW57cr3ST
+	BH+XE6W6QIk4Zi4Z5IxtSb5vm/k2gCRlK6Z51Yd0Z6fs1jsxLOli9DlY45Of64cA
+X-Gm-Gg: AYBFou2nS8qSNBwXxQobtCpME/mYKrMsBZgQhg7zC3u4ZAn+IhrtqVHOH026+dy57aW
+	RnvzUUHwIa0z4EOqFj8uSIGKlFK90mEJptDsrNns9mfUkSTQKI5ctl+OjTJvuKFhNWwfRUR2d3s
+	AVDXembhbHH9vIBppiB3ahOSnppkbCKAEyyCQiH36eg9HUp7ukozQ6plZo6kWcDSzyrN+Pd5Iz0
+	lBt62a8BbkIwtAsggPerH3wnmzVHIPo3BneNQ5nf8Y9BXCTbrxWmbFekdfi3Uk7WfMrLKyUNVIu
+	X7HEv/f3TZgEczY14fiagEQuusnbImm5gUmGUtUq+dBunzLSDGb1FAY0/kZq+GUw5YUl0pUl1oo
+	wPXCFTvJdGsRD/6IJxfQ9JxPLd5wlPbP535ci6dGO5wrF9qBYOJ7dnHiu3HDzcwuYEqrsGoOMaY
+	BZCIRvKdMIpr9powRFo3bBt90/6UaQDIjlM/3Lu5RP7RklsfaeXeA36fASxnDSqzDVUSoKfP7Zx
+	Oodg1OeKpQ0kyE6DUTG7/p5qhA5K8QZyNqFSnleDQFTSa6ZvtzuGjygKRzNGpVL3vZGzPKUbxHK
+	iWTyb1I07vYudwgKsW++mzK2ClVyOeH7cbheIcDexw==
+X-Received: by 2002:a05:7300:560d:b0:361:a195:c46e with SMTP id 5a478bee46e88-3766763b79emr2353464eec.1.1794378566704;
+        Tue, 10 Nov 2026 22:29:26 -0800 (PST)
+Received: from [127.0.1.1] ([183.242.161.82])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37520cfe07dsm12963137eec.20.2026.11.10.22.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 22:29:26 -0800 (PST)
+From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rtla: clean up tracefs instances on SIGTERM, and test the abnormal exits
+Date: Wed, 11 Nov 2026 12:10:00 +0800
+Message-ID: <1794300001.11111.1234567890@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -100,89 +92,350 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261110-revivable-saint-9bcfaa2fd0e7@spud>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 10, 2026 at 07:02:48PM +0000, Conor Dooley wrote:
-> On Tue, Nov 10, 2026 at 03:20:59PM +0200, Vladimir Kondratiev wrote:
-> > The A extension is Zaamo plus Zalrsc. On some CPUs Zaamo is present
-> > only formally. MIPS P8700 traps every AMO instruction into M-mode and
-> > emulates it there, so the extension is supported but very slow. A
-> > typical uncontended atomic increment costs:
-> > 
-> >   native AMO                                     2..5 cycles
-> >   LR/SC, private L1 reservation monitor         6..12 cycles
-> >   LR/SC, PoC (L2) reservation monitor       about 40 cycles
-> >   AMO emulated by an M-mode trap           about 600 cycles
-> > 
-> > The last two were measured on the eyeq7h hardware. On such a CPU the
-> > kernel must use LR/SC for every atomic.
-> > 
-> > Add RISCV_ISA_ZAAMO, default y. The default keeps "a" in -march and
-> > the generated code unchanged. When it is disabled, -march carries
-> > _zalrsc instead of "a", and atomic_*, bitops, xchg, futex and the
-> > early boot code use LR/SC loops. The sequence is chosen with the
-> > preprocessor, on CONFIG_RISCV_ISA_ZAAMO like the other ISA options in
-> > the headers, because the assembler rejects AMO mnemonics once -march
-> > lacks Zaamo. A kernel built this way runs on any hart that implements
-> > A; it just does not use AMO. It is therefore a plain option, not a
-> > NONPORTABLE one, and the hart keeps advertising "a" to userspace,
-> > which is true.
-> > 
-> > The LR/SC loops follow the ordering convention of the existing ones
-> > in cmpxchg.h, from commit 5ce6c1f3535f ("riscv/atomic: Strengthen
-> > implementations with fences") and commit 1d84afaf0252 ("riscv: Fix
-> > fully ordered LR/SC xchg[8|16]() implementations"): a fully ordered
-> > operation is lr, sc.rl and a trailing fence rw,rw; acquire is lr.aq
-> > with a plain sc; release is a plain lr with sc.rl. The futex loop is
-> > bounded to 128 retries and returns -EAGAIN after that, as arm64 does,
-> > because userspace can keep the word changing from another thread and
-> > futex_wake_op() retries on -EAGAIN anyway.
-> > 
-> > Zabha, Zacas and the ssamoswap instruction of Zicfiss are AMO
-> > instructions, so RISCV_ISA_ZABHA, RISCV_ISA_ZACAS and RISCV_USER_CFI
-> > depend on RISCV_ISA_ZAAMO. The riscv64imac Rust target emits AMO too,
-> > so RUSTC_SUPPORTS_RISCV depends on it as well.
-> > 
-> > The choice is made at compile time rather than with alternatives.
-> > Nearly every CPU has a native A extension, and an alternative would
-> > inflate all those kernels with the nops needed to pad one AMO to the
-> > size of an LR/SC loop, at every atomic site, for the benefit of a few.
-> > 
-> > Turning Zaamo off needs a compiler that accepts _zaamo and _zalrsc in
-> > -march. GCC 15.1 is the first release that does.
-> > TOOLCHAIN_HAS_ZALRSC_ZAAMO checks for it; with an older compiler the
-> > option stays at y.
-> > 
-> > Three sets of extensions provide every atomic Linux needs. "a" is what
-> > the kernel supports today. Zalrsc plus Ziccrse is what this patch adds:
-> > every atomic is a constrained LR/SC loop, and Ziccrse is the
-> > forward-progress guarantee for such loops. Zaamo plus Zacas would do
-> > as well, with CAS loops in place of LR/SC as on x86, and is left for
-> > whoever has such hardware.
-> > 
-> > Suggested-by: Chao-ying Fu <chao-ying.fu@globalfoundries.com>
-> > Nacked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Link: https://lore.kernel.org/linux-riscv/20261106-smock-headband-d6a7d568c228@spud/
-> 
-> I had a quick glance at this revision, and I think you've at least tried
-> to resolve the things I was pointing out. Did I miss something, or why
-> have you kept the NAK after having resolved the things that I was
-> objecting to?
-> 
+rtla: clean up tracefs instances on SIGTERM, and test the abnormal exits
 
-I searched the maillist for this errata, or workaround or downgrading 'A'
-or anything else it's named, found something interesting:
+rtla creates a tracefs instance for each run and removes it on the normal
+exit path. If the process is interrupted, killed by its own -d timer, or if
+an --on-threshold shell action fails, the instance is left behind and the
+next invocation finds it in use.
 
-IIUC, Paul has rejected the series, at least call for "hold off on merging them"
-see
-https://lore.kernel.org/linux-riscv/8afa0702-4d30-86e2-5afb-a7c113a92dec@kernel.org/
+Install a SIGTERM handler next to the existing SIGINT one, so the same
+cleanup runs for both, and add a test that walks each of those paths and
+checks that the instance is gone afterwards.
 
-and 
+The test harness had two bugs, both reported by sashiko:
 
-https://lore.kernel.org/linux-riscv/6201870b-b50d-f6e2-814b-7a1fdbf064db@kernel.org/
+  - The availability probe ran "$RTLA" --version. rtla has no --version:
+    main() only understands -h/--help and the three subcommands, and
+    anything else falls through to rtla_usage(), which exits 129. The probe
+    therefore always failed and the whole suite reported SKIP, so none of
+    these cases ever ran. Probe --help instead, require exit 129 and the
+    version banner, which is what the other rtla tests already do.
 
-But I'm not sure why the same series is still continuously sent out but
-in different titles. I think this series can be ignored until riscv
-maintainers agree to downgrade the 'A' to subset of 'A', I.E zalrsc
+  - The TAP wrapper treated any line starting with "SKIP: " from the helper
+    as a group-level skip. A subtest that could not cross the threshold on
+    an idle machine printed one of those, which marked the entire test as
+    skipped and left the loop below it unreachable. Per-case skips now say
+    "note:", and only real group-level skips keep the SKIP: prefix.
+
+Assisted-by: LLM
+Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+
+---
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 8c7f5e7..b86a600 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -39,6 +39,7 @@ static void stop_trace(int sig)
+ static void set_signals(struct common_params *params)
+ {
+ 	signal(SIGINT, stop_trace);
++	signal(SIGTERM, stop_trace);
+ 	if (params->duration) {
+ 		signal(SIGALRM, stop_trace);
+ 		alarm(params->duration);
+@@ -51,6 +52,7 @@ static void set_signals(struct common_params *params)
+ static void unset_signals(struct common_params *params)
+ {
+ 	signal(SIGINT, SIG_DFL);
++	signal(SIGTERM, SIG_DFL);
+ 	if (params->duration) {
+ 		alarm(0);
+ 		signal(SIGALRM, SIG_DFL);
+diff --git a/tools/tracing/rtla/tests/cleanup.t b/tools/tracing/rtla/tests/cleanup.t
+new file mode 100644
+index 0000000..176b1a9
+--- /dev/null
++++ b/tools/tracing/rtla/tests/cleanup.t
+@@ -0,0 +1,70 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Verify that rtla removes the tracefs instance it created on the abnormal
++# exit paths users actually hit:
++#
++#   - SIGINT during a run            (interactive Ctrl-C)
++#   - SIGTERM during a run
++#   - rtla's own -d/--duration timer
++#   - a failing --on-threshold shell action
++#   - several interrupted runs in a row, followed by a normal run
++#
++# A leaked instance pollutes the next invocation.
++source tests/engine.sh
++test_begin
++
++set_timeout 2m
++
++#
++# These cases need to run rtla in the background and signal it, which
++# engine.sh's check() (one foreground command) cannot express.
++#
++run_cleanup_cases() {
++	local helper="$testdir/scripts/check-cleanup.sh"
++	local out rc timeout_cmd skip
++
++	ctr=$((ctr + 1))
++	[ -z "$TEST_COUNT" ] && return
++
++	if [ ! -x "$helper" ]; then
++		echo "not ok $ctr - cleanup helper is not executable"
++		return
++	fi
++
++	# check() normally does this before every test. Do the same here, both to
++	# leave a clean tracer state and to make a hung helper terminate.
++	reset_osnoise || {
++		echo "ok $ctr - instances cleaned up on SIGINT, timeout and action failure # SKIP tracefs is not writable"
++		return
++	}
++	timeout_cmd=${TIMEOUT:-timeout -v -k 15s 2m}
++
++	out=$($timeout_cmd "$helper" "$RTLA" 2>&1)
++	rc=$?
++	if [ $rc -eq 0 ]; then
++		# "SKIP:" is what the helper prints when it could not run at all
++		# (no writable tracefs, or the binary is unusable); a per-case skip
++		# says "note:" instead. So the first SKIP: line means nothing ran.
++		skip=$(printf '%s\n' "$out" | sed -n 's/^SKIP: //p' | head -n 1)
++		if [ -n "$skip" ]; then
++			echo "ok $ctr - instances cleaned up on SIGINT, timeout and action failure # SKIP $skip"
++			return
++		fi
++		printf '%s\n' "$out" | sed -n 's/^note: /# note: /p'
++		echo "ok $ctr - instances cleaned up on SIGINT, timeout and action failure"
++	elif [ $rc -eq 124 ] || [ $rc -eq 137 ]; then
++		echo "not ok $ctr - instances cleaned up on SIGINT, timeout and action failure"
++		echo "# helper timed out after 2m"
++	else
++		echo "not ok $ctr - instances cleaned up on SIGINT, timeout and action failure"
++		echo "# helper exited $rc"
++		printf '%s\n' "$out" | while read -r line; do
++			echo "# $line"
++		done
++	fi
++}
++
++run_cleanup_cases
++
++test_end
+diff --git a/tools/tracing/rtla/tests/scripts/check-cleanup.sh b/tools/tracing/rtla/tests/scripts/check-cleanup.sh
+new file mode 100755
+index 0000000..c27db96
+--- /dev/null
++++ b/tools/tracing/rtla/tests/scripts/check-cleanup.sh
+@@ -0,0 +1,211 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Verify that rtla removes the tracefs instances it created, even when it is
++# interrupted (SIGINT/SIGTERM), killed by its own timeout, or when a shell
++# action fails.
++#
++# This is a *test* for tools/tracing/rtla; it does not change rtla behaviour.
++#
++# Requires: root, tracefs mounted at /sys/kernel/tracing, CONFIG_OSNOISE_TRACER.
++# Usage: rtla_cleanup_test.sh /path/to/rtla
++
++RTLA=${1:-rtla}
++TRACEFS=${TRACEFS:-/sys/kernel/tracing}
++INSTANCES=$TRACEFS/instances
++FAIL=0
++PASS=0
++
++log()  { printf '%s\n' "$*"; }
++pass() { PASS=$((PASS+1)); log "PASS: $*"; }
++fail() { FAIL=$((FAIL+1)); log "FAIL: $*"; }
++cleanup_all() {
++	for i in osnoise_top osnoise_hist timerlat_top timerlat_hist hwnoise_top; do
++		[ -d "$INSTANCES/$i" ] && rmdir "$INSTANCES/$i" 2>/dev/null
++	done
++}
++
++# Wait up to $2 ms for $1 to disappear.
++wait_gone() {
++	_path=$1
++	_ms=${2:-5000}
++	_i=0
++	while [ -d "$_path" ] && [ $_i -lt $_ms ]; do
++		sleep 0.05
++		_i=$((_i+50))
++	done
++	[ ! -d "$_path" ]
++}
++
++# Wait until $1 exists (up to $2 ms).
++wait_present() {
++	_path=$1
++	_ms=${2:-10000}
++	_i=0
++	while [ ! -d "$_path" ] && [ $_i -lt $_ms ]; do
++		sleep 0.05
++		_i=$((_i+50))
++	done
++	[ -d "$_path" ]
++}
++
++if [ ! -d "$INSTANCES" ] || [ ! -w "$INSTANCES" ] ||
++   [ ! -d "$TRACEFS/osnoise" ]; then
++	log "SKIP: tracefs, writable instances or CONFIG_OSNOISE_TRACER unavailable"
++	exit 0
++fi
++
++# Leave nothing behind from the test before it starts, and make sure the
++# command under test is actually usable.
++#
++# rtla has no --version: main() only knows -h/--help and -usage, and anything
++# else falls through to rtla_usage(), which exits 129 after printing the
++# version banner. Probing --version therefore always failed and the whole test
++# suite silently reported SKIP. Accept 129 as "this binary works".
++cleanup_all
++if [ ! -x "$RTLA" ]; then
++	log "SKIP: $RTLA is not executable"
++	exit 0
++fi
++help_out=$("$RTLA" --help 2>&1)
++rtla_rc=$?
++if [ "$rtla_rc" -ne 129 ] ||
++   ! printf '%s\n' "$help_out" | grep -q 'rtla version'; then
++	log "SKIP: $RTLA is not usable (--help exited $rtla_rc, no version banner)"
++	exit 0
++fi
++
++# Kill a background rtla if a case fails before reaping it.
++stop_pid() {
++	[ -n "$1" ] || return
++	kill -KILL "$1" 2>/dev/null
++	wait "$1" 2>/dev/null
++}
++
++# Wait for an rtla instance and its signal handler.  The instance appears
++# before set_signals() runs, so wait for rtla to start its workload (or at
++# least for it to survive a short grace period) before sending SIGINT.
++wait_running() {
++	_path=$1
++	_pid=$2
++	wait_present "$_path" 10000 || return 1
++	sleep 1
++	kill -0 "$_pid" 2>/dev/null
++}
++
++# ---------------------------------------------------------------------------
++# 1. SIGINT during a long run
++# ---------------------------------------------------------------------------
++cleanup_all
++$RTLA osnoise top -q -d 30s -P F:1 >/dev/null 2>&1 &
++pid=$!
++if ! wait_running "$INSTANCES/osnoise_top" "$pid"; then
++	fail "SIGINT: instance was never created (rtla did not start?)"
++	stop_pid "$pid"
++else
++	kill -INT "$pid" 2>/dev/null
++	wait "$pid" 2>/dev/null
++	if wait_gone "$INSTANCES/osnoise_top"; then
++		pass "SIGINT: instance removed after interrupt"
++	else
++		fail "SIGINT: instance still present after interrupt"
++	fi
++fi
++
++# ---------------------------------------------------------------------------
++# 2. SIGTERM during a long run
++# ---------------------------------------------------------------------------
++cleanup_all
++$RTLA osnoise top -q -d 30s -P F:1 >/dev/null 2>&1 &
++pid=$!
++if ! wait_running "$INSTANCES/osnoise_top" "$pid"; then
++	fail "SIGTERM: instance was never created (rtla did not start)"
++	stop_pid "$pid"
++else
++	kill -TERM "$pid" 2>/dev/null
++	wait "$pid" 2>/dev/null
++	if wait_gone "$INSTANCES/osnoise_top"; then
++		pass "SIGTERM: instance removed after terminate"
++	else
++		fail "SIGTERM: instance still present after terminate"
++	fi
++fi
++
++# ---------------------------------------------------------------------------
++# 3. rtla's own -d timeout path
++# ---------------------------------------------------------------------------
++cleanup_all
++$RTLA osnoise top -q -d 2s -P F:1 >/dev/null 2>&1
++rc=$?
++if [ "$rc" -ne 0 ]; then
++	fail "self-timeout: rtla failed to start or run (exit=$rc)"
++elif wait_gone "$INSTANCES/osnoise_top"; then
++	pass "self-timeout: instance removed (exit=$rc)"
++else
++	fail "self-timeout: instance still present (exit=$rc)"
++fi
++
++# ---------------------------------------------------------------------------
++# 4. shell action failure (-a / --on-threshold shell,command=...)
++# ---------------------------------------------------------------------------
++# -S is the stop-total threshold and yields exit 2 when the action fails.
++# A shell action only runs if that threshold is crossed; an idle machine may
++# never do so.  Do not call the no-threshold case a pass.
++cleanup_all
++action_rc=0
++for n in 1 2 3; do
++	$RTLA osnoise top -q -d 5s -P F:1 -r 900000 -S 1 \
++		--on-threshold 'shell,command="/bin/false"' >/dev/null 2>&1
++	rc=$?
++	action_rc=$rc
++	[ "$rc" -eq 2 ] && break
++done
++if [ "$action_rc" -eq 0 ]; then
++	# Not a group-level skip: the other cases still ran. Prefix it so the
++	# TAP wrapper does not report the whole test as skipped.
++	log "note: action-failure: stop-total threshold was not crossed"
++elif [ "$action_rc" -ne 2 ]; then
++	fail "action-failure: unexpected exit=$action_rc (wanted 2)"
++elif wait_gone "$INSTANCES/osnoise_top"; then
++	pass "action-failure: instance removed (exit=$action_rc)"
++else
++	fail "action-failure: instance still present (exit=$action_rc)"
++fi
++
++# ---------------------------------------------------------------------------
++# 5. repeated interrupted runs must not poison the next run
++# ---------------------------------------------------------------------------
++cleanup_all
++for n in 1 2 3; do
++	$RTLA osnoise top -q -d 20s -P F:1 >/dev/null 2>&1 &
++	pid=$!
++	if ! wait_running "$INSTANCES/osnoise_top" "$pid"; then
++		fail "repeated interrupts: run $n never created an instance"
++		stop_pid "$pid"
++		continue
++	fi
++	kill -INT "$pid" 2>/dev/null
++	wait "$pid" 2>/dev/null
++	if ! wait_gone "$INSTANCES/osnoise_top"; then
++		fail "repeated interrupts: run $n left an instance behind"
++		cleanup_all
++	fi
++done
++
++$RTLA osnoise top -q -d 2s -P F:1 >/dev/null 2>&1
++rc=$?
++if [ "$rc" -eq 0 ]; then
++	pass "repeated interrupts: following run still succeeds"
++else
++	fail "repeated interrupts: following run failed (exit=$rc)"
++fi
++if wait_gone "$INSTANCES/osnoise_top"; then
++	pass "repeated interrupts: no leftover instance"
++else
++	fail "repeated interrupts: leftover instance"
++fi
++
++cleanup_all
++log ""
++log "SUMMARY: $PASS passed, $FAIL failed"
++[ "$FAIL" -eq 0 ]
+
