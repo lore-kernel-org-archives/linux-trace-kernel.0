@@ -1,85 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.224
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794409625;
-	b=1gg3j/+tGdYQ0ugrWfKEUJS/4AuSJbGFZ4/9VlgQbfL1QxQgwLUbKP6/lU1HCxndB8fl
-	 B04Z2yyorKTBz02AWNYwrWmLz8gX+stTKdkHZYYdDWbZhKdXqIamjPvVdoGSU2bfQ87ZZ
-	 4NBVMymc6cmR8+IIXjbOLxH3F6Xu3/uAYQVWvcpcRgJDadCitfAjkVm1K3tGxWjM4kW7W
-	 OQYoZE12kj/v0mHQE1ZxCjV8P/XqiHC0reZdAw2kTUb5n+A74ZrXfBJXi/ConEv5YHjbR
-	 S5bcG4cOsVu66lDxB1l2mOggYVlpYEzoSAcB0dAGIGQ5/Vyrc0LIY5/xVQKmvg2hTgA==
+	t=1794411110;
+	b=KoyOaMlEihw0T5ubl0qcbyYsFdD5eJy1jqK92JruEI8id/tLpxu9nHYjI6CsJ8ub1ZXW
+	 BLanvBRdu9Yip+4pt8yiggV0AUQUcR+/ip+xCFJHj0w8TGu2/FYlKDZxJ5aI6JD7tiEfs
+	 flr/0nBSXPeftUunlWiZxzgXay2Gwt+/ZD9pwp/tth5cq5hEfNVuMO4B67Lgzyr0PHGfu
+	 Sb4hq613qWXZK3AtjqhaNhbSnomoQoHvSzSG4EBw/H02Xsgow5brgKTouaeKwH0Z5bGmm
+	 ZUUXyXO2aZ2r8+xt+39D8U6nikjF1VcmpxvFZWPE3mL+xFg980MC/LmC7PQDiPwVXpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794409625;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:In-Reply-To:X-Scanned-By:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Disposition;
-	bh=B4vmEo6JeWk7kI+Rbno6KTwqomkHC0TPZQ7Gp154qJo=;
-	b=NKxKkZ8mY9hauQ5pazCD+qYVE2yOhvyWOLjDGTU7QR1jl/TP5rRtXhO64uklCCyNTYJ+
-	 WARnTuR1WqVq4DHvh3045x4StIFcg9cRS4VTuknaEYxPzLD9WxLlDHTnbqo4QIS2Aixil
-	 TNq55lcHcAZw2r0hQqTUvW9dPfhulszFiCQys54DgZoEFhiZ0SYPxAj3XPHcPRHc2GfVf
-	 1rmwqrrUeS1YgteUx3jCrsmUhWAKUSwy+bzZAg6eqQaa6ZhXoK3lMdHlT0YLN8WpM5Zyp
-	 QxKGCVDN6zVbO3iGwsQ2trvtb2TWp4lBbnRA0XNkh1170xU88JfcDHjEXuG3os9zLXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794411110;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=yEIA6Zmz02BTCzQZDjg7NRu0QFN0RHxgpEwj9oihF+4=;
+	b=u0sWk5MR8/Kvk1qJu27+yJx5HIt9P49wpLxXbNjlofZwidTZ+4718AnjcHkD+BSxVJij
+	 O60OoPbWF3YY+Jy0jze31UfSVGBTSjVn6RHOe2w5OfGsifRRwJBuosy/9LJxJMzoX22ZG
+	 In/2YzeE9WvdhOmQ/q0jHNjFkKPQ4G3GJzS1O3qDeFxNH3oIY/OgskLGbLYz/y+qMohHN
+	 6ogAHQ7fgV2UvcCLEarpwYWJ4Umv+WAb6hBNtFEn2yuwfHL/rqiPNhI4+nFxxfp2ph6Xg
+	 lkQ3+xNS5TVe4MCtM/uCJA851XY/UB1x/sRo9RU2iJWWASXyxdgvHTAlp7YcriHdkew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PqzR6Uwe;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dBZM5A4l;
+	arc=none smtp.remote-ip=95.215.58.224
+Received: from mta1.migadu.com (out-224.mta1.migadu.com [95.215.58.224])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02B9606A899
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 15:07:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C02B9606A899
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276DB606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 15:31:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 276DB606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PqzR6Uwe
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794409624;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B4vmEo6JeWk7kI+Rbno6KTwqomkHC0TPZQ7Gp154qJo=;
-	b=PqzR6UweFSF/N9BPbRq6DAbgJSHCizeAf+L2XXcvhci53SVoybbGSh90p9IIuOWedC2ui5
-	8IyTAlYTfaq4xK3BWAQPfBXdQ8ecgjbn07Z56Lz6xy26rTJFhtkS8WFkpZwKvsHjt+dGWZ
-	9eJ7afBKmoK2K3jYSufYeLdxGdIqiTU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-AisQuOWnM4mok3IeGCsEUQ-1; Wed,
- 11 Nov 2026 10:06:58 -0500
-X-MC-Unique: AisQuOWnM4mok3IeGCsEUQ-1
-X-Mimecast-MFC-AGG-ID: AisQuOWnM4mok3IeGCsEUQ_1794409616
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E603319540F2;
-	Wed, 11 Nov 2026 15:06:55 +0000 (UTC)
-Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CED3330000E8;
-	Wed, 11 Nov 2026 15:06:51 +0000 (UTC)
-Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
-	oleg@redhat.com; Wed, 11 Nov 2026 16:06:55 +0100 (CET)
-Date: Wed, 11 Nov 2026 16:06:50 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: Use flexible array for xol_area bitmap
-Message-ID: <avSEikCPEn_Q3KpI@redhat.com>
-References: <20261111022605.66010-1-rosenp@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=dBZM5A4l
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=NjcZ2vs086wrkeO3l/vjfd5QbHjdbw8ASBFYAH9BBjE=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1794411107; v=1; x=1795015907;
+ b=dBZM5A4lIIKKb7ticjEP2eL/HioI0Hp1LgmI4yAus5DfyRQ2BAewrMRWVlfwISZ0fmb5ZrnN
+ vMNRzU8i3WB6GJV3ama9V+u83WeUZTapB9u0P6+zbS9LqJHyYmZlmd2Sk9adM6zZuot1RHI561Y
+ H4C/KL00Vc2UzkOB9/croRyg=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 59aee4a50207fa8f;
+	Wed, 11 Nov 2026 15:31:47 +0000
+X-Mizu-Trace-ID: 59aee4a50207fa8f
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <28d1e284-501f-47f8-b155-bbc2255f7a06@linux.dev>
+Date: Wed, 11 Nov 2026 23:31:35 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -89,34 +58,82 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <20261111022605.66010-1-rosenp@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: XnUtwZg1EFl_VFvrlj_ta0z5OuYi5fg1a1IxYu4Z6Gw_1794409616
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next 1/9] bpf: Add log support for tracing link_create
+To: bot+bpf-ci@kernel.org, bpf@vger.kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
+ martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+ jolsa@kernel.org, emil@etsalapatis.com, ihor.solodrai@linux.dev,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ kpsingh@kernel.org, matt@bobrowski.net, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+ martin.lau@kernel.org, mason@kernel.org
+References: <20261109140816.5196-2-leon.hwang@linux.dev>
+ <5ed2ec09ce8a3ce5477a658b68c6315499ef67793014be27de18ee57ec968e12@mail.kernel.org>
+Content-Language: en-US
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <5ed2ec09ce8a3ce5477a658b68c6315499ef67793014be27de18ee57ec968e12@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 11/10, Rosen Penev wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
->   */
->  struct xol_area {
->  	wait_queue_head_t		wq;		/* if all slots are busy */
-> -	unsigned long			*bitmap;	/* 0 = free slot */
->  
->  	struct page			*page;
->  	/*
-> @@ -117,6 +116,7 @@ struct xol_area {
->  	 * the vma go away, and we must handle that reasonably gracefully.
->  	 */
->  	unsigned long			vaddr;		/* Page(s) of instruction slots */
-> +	unsigned long			bitmap[];	/* 0 = free slot */
+On 2026/11/9 22:47, bot+bpf-ci@kernel.org wrote:
+>> bpf: Add log support for tracing link_create
+> 
+> TL;DR: Logging is incomplete: the freplace max_ctx_offset check in
+> bpf_tracing_prog_attach() still returns -EINVAL with an empty log, and the
+> saved_dst type mismatch may too. No functional regression.
+> 
+>> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+>> --- a/kernel/bpf/syscall.c
+>> +++ b/kernel/bpf/syscall.c
+> 
+> [ ... ]
+> 
+>> @@ -3843,6 +3849,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+>>  	 */
+>>  	if (prog->type == BPF_PROG_TYPE_EXT &&
+>>  	    prog->aux->kprobe_write_ctx != tgt_prog->aux->kprobe_write_ctx) {
+>> +		bpf_log(log, "Invalid kprobe_write_ctx.\n");
+>>  		err = -EINVAL;
+>>  		goto out_unlock;
+>>  	}
+> 
+> The check right after this one still returns -EINVAL without writing
+> anything to the log:
+> 
+> 	if (prog->type == BPF_PROG_TYPE_EXT &&
+> 	    (tgt_prog->type == BPF_PROG_TYPE_RAW_TRACEPOINT ||
+> 	     tgt_prog->type == BPF_PROG_TYPE_TRACEPOINT ||
+> 	     tgt_prog->type == BPF_PROG_TYPE_SYSCALL) &&
+> 	    prog->aux->max_ctx_offset > tgt_prog->aux->max_ctx_offset) {
+> 		err = -EINVAL;
+> 		goto out_unlock;
+> 	}
+> 
+> An freplace program whose max_ctx_offset is larger than that of a
+> RAW_TRACEPOINT, TRACEPOINT or SYSCALL target will get -EINVAL from
+> link_create with an empty log and log_true_size of 0.  That is the same
+> kind of invalid freplace target as the kprobe_write_ctx mismatch above,
+> which now logs.  This isn't a functional regression, but was this check
+> missed?
+> 
+> Would something like this cover it?
+> 
+> 	bpf_log(log, "Extension accesses more ctx than its target.\n");
 
-I agree with Peter, you can just use
-	
-	unsigned long			bitmap[BITS_TO_LONGS(UINSNS_PER_PAGE)];
+Will add such log in the next revision.
 
-Oleg.
+> 
+> Also, bpf_check_attach_target() still returns a bare -EINVAL for the
+> saved_dst_prog_type / saved_dst_attach_type mismatch, which is the
+> "freplace attachment to a new target" case the commit message mentions.
+> That code is in verifier.c, so it is outside this patch, but is it intended
+> to be left without a message?
+
+It was intentional to avoid touching bpf_check_attach_target() code.
+
+Thanks,
+Leon
 
