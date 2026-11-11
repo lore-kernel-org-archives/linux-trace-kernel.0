@@ -1,55 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794362397;
-	b=YFA1sHJslg3D21+9/wyhwfCrC/oY3S8IG4DGQ5/Jcxe/cLI4hxTbcLT3HkG+ra2qDnX9
-	 /BHgbs5lIYTxPhuHavq9af087tuyItRSyBAwSYqCAVYepZTskG8WZNhZ1nBKwIq+i6OU4
-	 hthNdrkfIxKBPIDxThhwvdyLruhklMAmpE0fSWl5Al42tp+Q9io31U9O7aZkHrcec7wQo
-	 GE0W9HDzHwjmOnDL9c42eFedTyk3ZwlvQa6btqniqznjPVp1kcDhuBdCZzBoakIV4Lgf2
-	 6yAnzAgcCKP3ejM43lsUAxv1l6IZBi26BeWLX9AwbxQuc5bN/z62Ik9oKr0SIU/Sk+A==
+	t=1794362925;
+	b=N/+jE3cANgXnrpJi7lsvw7zi3ia4QwVc1Cryh0Inp5hiEs43tUkunCP5hOqoeGC73ISP
+	 DFHFK8EXlMyanj7uAqEoL/uYF8yRBRaCH9HZWHCiDI5njTxXuaEggbsT+2/zOm+5WGXs9
+	 N+rDnmhLAJcRdzum1X24ftsquL45SdxoqACigoWDSIil0B5vuA4EZZ38caqNv5PZreoFi
+	 woAXWzWgwFC5tpsmWPEMWS2yc9+XYVgUVztPcC3vtfGzma+5IQpR/3djrKDFLfEqH0C4g
+	 kw7NnmX4A3mq4QCbEx+KR+m71tFiS9OlwRULOwJTMD+2cPBPhzXme15rNB8KmAGVH1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794362397;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=dmVHxG1GtdEPSKN6PpqEzxIrLNE5uPRF+L/rSJvJ1bk=;
-	b=HEf8/58CKKST8IDYxWmaIh5Y4GqldURpvgf+IeKWl4gKdBES26tUt00dioAHi4X6Thbk
-	 oWkdNoEKYWsX7Wub8nJsvEfc8UoPpXutZ61QHHoZfySNV2sIeLIQQpWbEcfAxadA3zoa0
-	 QwSqwXRmvkuoOq9T2tAeHVqM/jc7No/5XiRCokbd7XWLlE71XzWrDEMwae+UTotcl4m0g
-	 nNLl6M+B0BptTOGgeMuZyIkuKa4xaNJIx2kU4GrSbEmXuLimpiaYr1hXHrJT0dkv124W7
-	 B3RiPToon+ux4FdqcNLruU+avEIbCRqXcIzSQ5btFF016++NuU9182o/7htUA3poYkA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794362925;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=IqRkQAWA6x79NK/foSAYp+LfNrOBVrF5NDpnzdsePVo=;
+	b=4drRuQSjmjivkVui5bc47EHBaZZxy4r87EowDEJYmRgANwk3YYhL2kIEI5aS5CFJYO4U
+	 DaQOb1iaSW9RR87CP8Zz6ib7a1YU7xBAlvzlxTKzHKOyY7D+emj4mQhTnJxv1g1C51daU
+	 6y3IyDMPjwR855a94HkrbuRmvqBZub8zGneF6ocwNzduDyUgtEtVT7Ha8DLFR+SbMXfHm
+	 63jy20S5t4XRCT5mWqVMcKf5RQuPG+KfSC+ARMwbSo0wMepcWvpkKICmCDQUAEB7b7fZx
+	 h/LGwDJqao575WhNbnpq4vmF4JoJrCwbhX90aYdotSPtq6GZzKopTpPCG0oQaImbQKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AXLBwNNZ;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Y/RzuCcz";
+	arc=none smtp.remote-ip=74.125.82.170
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1D9606A320
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 01:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B746606A324
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 02:08:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B746606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AXLBwNNZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF181F0089F;
-	Wed, 11 Nov 2026 01:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794362396;
-	bh=dmVHxG1GtdEPSKN6PpqEzxIrLNE5uPRF+L/rSJvJ1bk=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=AXLBwNNZBo1l8bmJE1El12+SfVCiW6mkizP5Ax0QufsBlBAbi0qrtfvLOTz6kQ4e5
-	 JLcpD0hEA1ZH0pzpmKyEP/eRrlRy3KQuah5gp0do8nGKrny7VSw01EVNPdagmPnT9J
-	 5LbT/e/l2XeQCaMW73BYPWPumk2u06eFK0NyuAKdwx/Xjtajx3idrOulcR2FspEJNC
-	 x6jvI0tMISSEXMDPEwD77AXBir+gKeHmtX1m5UGufBIlXMbGtrD/qfZu8oduhtWH+H
-	 M2/nlyhVP6OH6foZdxyz7yPShftbsdVpoz1ECGk0gSyiIUa2DuLQTgdNatNK7EN2jw
-	 c4Ekxk7yYLmWw==
-Message-ID: <sashiko-outbox-208063@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] ASoC: Intel: Remove unused sst_ipc_inbox_rdata
- tracepoint
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Temitope obabi" <obabitemitope765@gmail.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261110132013.732-1-obabitemitope765@gmail.com>
-References: <20261110132013.732-1-obabitemitope765@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 01:59:56 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Y/RzuCcz
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-3719e3cb82bso7406eec.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Nov 2026 18:08:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794362924; x=1794967724; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IqRkQAWA6x79NK/foSAYp+LfNrOBVrF5NDpnzdsePVo=;
+        b=Y/RzuCcz11gPiJ4voG226bkg8toO3K9UlJWCo6HoE5c4W9tW4fL1ED84UmKoUc8Zu7
+         tBfUzu3oObPhDBJOUpY1HzB5owa8Tz9wFdmGoOo9aga8JPTAxoLQoMMNwtizl0iHD/dI
+         L2UAyV6V3DV5OtOq1K9ZQRqdMUqphgZu5u850yXGYA4wUDn/ajyvB9ZbveC10Zp2pSve
+         /eULW8xTqz3yWc4EQoVlhFXMbQQBVbjQKsvqnesPnHzzf8A5aUWG8keijou05OsplmCf
+         2ckmmhCAIuU24zVnf6llkJcprGLCjdw3uPtvgjjQyK37KX9BqUNkNS6a7fJkHxr6iKzX
+         A59A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794362924; x=1794967724;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IqRkQAWA6x79NK/foSAYp+LfNrOBVrF5NDpnzdsePVo=;
+        b=q3Mc0zfTdImWwNW8Ts9HyxtRjJRK/tCp4YQtGMJb4uqxFk1Bu1jtm2Z4gK7xu7uF00
+         yd/xhPaTUhRFCGrLjwXrBS2+dWgqiwpokZ+w7QVAzY4WW2S8cv+2BXBayBewCGZmzfS7
+         VbzCMkkj6NhQ/tI4zIDvIRb5klAxAS+KlAqeqPJjM2cAP6Yf54FJU3xg9NXf/guzVKoZ
+         UcYc3CpnIEAWaA3UPCb839lwEBdmRTHcjNCc+/yEgnfary5w72POxQL8PYL+r5gh0NK+
+         ZMWMPSmGK7vQu1KbHoeOKF1iLdNPsxlFz26e59+BxGtOtY3ve/Ibo8r7vAFszkcDYIgN
+         jA/g==
+X-Gm-Message-State: APuU4Z8xD4bKj35OUtNtQ/Wt/ooLc8wb81cDQLNDXlCc7OuM5JCdTaj9
+	j+4gUBNn5MUOJj4rjeR3lZV6xhmEHGeqPgP3iFqChMZamhiBWNKzrgfedID6boDxm24=
+X-Gm-Gg: AYBFou2A1w8wOkuczo2DRRm0A3dv0V4bjTiifgj8ew07VxEwCwphF25k/zqrBdlTQWh
+	KwdRrfDVaKDbED24GTfylBzbcE6Sw39Ya7eZMZ7RW25srNWMstKCMqmWlzvoZyQWROgeqmimmkz
+	8Eup13lNzwc46bh0rTXZBRUsZMbm0ij8gil+yQ4psJrQM6Y1yi9T2xir1KB/gFx3LGnVALvrOLu
+	/FB5WQwgj5R+xueUXOFZnb/YrfM+rEl73zuKq2JH9+kGyQZwNP/1Syf9W93+HHz3CtvJsAkv66B
+	jQOZxY/9hy18kStu6vWUEjBtY3JYMtSgPW9wlDLZGyIQt5zjdTnGAwWgSCGx0glG1T0zSPgdgAh
+	ukG1X+MhDiOxPFIIjSNKZ7FrToCz+wz4L6BBAd8mWsITxOpUdl8/HLBMI+fkJPmA1iBfKiyjqig
+	77SVMyYlHpi/7pCqDck+EVzhSrZAF+HWNZJPXn1ePwpaJMRDyiNqQMri+Ibzqzy5bPuBS6BAEWs
+	usXYvwTDp+OeLlpPjRQy8AsYkI/2lJ19oi/6OGK9aGcFdKz99s9PRbFhr/ZuH79X1kD6xEk2qLX
+	Wmmh7Wh7rQwbLe6ZqwGjJOX/X+GffH9mmFZahu0VIcCjhzUawLAjEEo=
+X-Received: by 2002:a05:693c:20cd:20b0:375:f846:5b3f with SMTP id 5a478bee46e88-3767fe8f34bmr2355849eec.0.1794362924193;
+        Tue, 10 Nov 2026 18:08:44 -0800 (PST)
+Received: from mi-ThinkCentre-M760t.mioffice.cn ([43.224.245.234])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3752060dc0csm12644625eec.14.2026.11.10.18.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 18:08:43 -0800 (PST)
+From: Wenwu Hou <hwenwur@gmail.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	frederic@kernel.org,
+	Wenwu Hou <hwenwur@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing/hwlat: Bind the sampler kthread instead of setting its affinity
+Date: Wed, 11 Nov 2026 10:07:55 +0800
+Message-ID: <20261111020755.1422284-1-hwenwur@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,61 +96,92 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] ASoC: Intel: incomplete removal of unused intel-sst.h tracepoint
-  header
---
+start_single_kthread() sets the affinity of the kthread it just created
+before waking it up, but kthread_affine_node() overrides that mask on the
+first wake-up. See commit 60ba9c38b931 ("kthread: Comment on the purpose
+and placement of kthread_affine_node() call").
 
-commit 47a1bdb679fab28a368c73c42b9adeadd92a9bea
-Author: Temitope obabi <obabitemitope765@gmail.com>
+In round-robin mode, move_to_next_cpu() compares save_cpumask against
+current->cpus_ptr, sees the replaced mask, and switches the tracer to
+MODE_NONE on its very first iteration:
 
-> ASoC: Intel: Remove unused sst_ipc_inbox_rdata tracepoint
->
-> The sst_ipc_inbox_rdata tracepoint has had no callers since commit
-> 970d299b0a0a ("ASoC: Intel: Remove unused code") removed the last one.
->
-> Tracepoints that are defined take up around 5K each, even if they are
-> not used. Remove this unused tracepoint.
->
-> Fixes: 970d299b0a0a ("ASoC: Intel: Remove unused code")
-> Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
+  hwlat_detector: cpumask changed while in round-robin mode,
+  switching to mode none
 
-> diff --git a/include/trace/events/intel-sst.h b/include/trace/events/inte=
-l-sst.h
-> index 0416e91f81817..ae7c269b0824f 100644
-> --- a/include/trace/events/intel-sst.h
-> +++ b/include/trace/events/intel-sst.h
-> @@ -69,14 +69,6 @@ DECLARE_EVENT_CLASS(sst_ipc_mailbox,
->  		(unsigned int)__entry->offset, (unsigned int)__entry->val)
->  );
-> =20
-> -DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_inbox_rdata,
-> -
-> -	TP_PROTO(unsigned int offset, unsigned int val),
-> -
-> -	TP_ARGS(offset, val)
-> -
-> -);
-> -
->  DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_inbox_wdata,
-> =20
->  	TP_PROTO(unsigned int offset, unsigned int val),
+So the tracer no longer migrates across tracing_cpumask. More importantly,
+tracing_cpumask is not honoured at all, and with isolcpus=/nohz_full= the
+thread cannot run on the isolated CPUs it is meant to sample.
 
-[Severity: Low]
-Should the entire include/trace/events/intel-sst.h header be removed
-instead of just sst_ipc_inbox_rdata?
+Use kthread_bind_mask() instead. hwlat requires exactly the CPUs in
+tracing_cpumask, isolated ones included, so a hard binding is the correct
+semantics; the PF_NO_SETAFFINITY it sets is precisely what tells
+kthread_affine_node() to leave the thread alone. The in-thread
+set_cpus_allowed_ptr() in move_to_next_cpu() keeps working, since
+PF_NO_SETAFFINITY only gates the user-facing SCA_CHECK path.
 
-Commit 970d299b0a0a ("ASoC: Intel: Remove unused code") deleted
-sound/soc/intel/common/sst-dsp.c, which was the only file in the tree that
-defined CREATE_TRACE_POINTS and included trace/events/intel-sst.h.  The
-remaining nine DEFINE_EVENT definitions and three DECLARE_EVENT_CLASS
-definitions in this header also have no callers.  Because no translation
-unit includes trace/events/intel-sst.h, none of these tracepoints are
-compiled into the kernel image or consume memory, so the commit message
-claim and the Fixes: tag are also inaccurate for this cleanup.
+The mask is now computed and validated before kthread_create(), which also
+avoids creating a thread when tracing_cpumask has no online CPU in common:
+cpumask_first() returned nr_cpu_ids there and cpumask_set_cpu() then wrote
+past the end of the mask.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110132013.732-=
-1-obabitemitope765@gmail.com?part=3D1
+Tested on a 4-vCPU KVM guest, bit 0 of the mask is CPU 0:
+
+  mode        mask    before                    after
+  none        0b0101  Cpus_allowed_list: 0-3    0,2
+  round-robin 0b1111  mode -> none, no migrate  migrates 1 2 3 0
+  round-robin 0b0101  mask 0-3, no migrate      migrates 0 2
+  per-cpu     0b0110  2 threads, cpus 1,2      2 threads, cpus 1,2
+
+Fixes: d1a89197589c4 ("kthread: Default affine kthread to its preferred NUMA node")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wenwu Hou <hwenwur@gmail.com>
+---
+ kernel/trace/trace_hwlat.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 3fe274b84f1c2..65e184d800ff1 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -423,15 +423,12 @@ static int start_single_kthread(struct trace_array *tr)
+ 	if (kdata->kthread)
+ 		goto out_put_cpus;
+ 
+-	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
+-	if (IS_ERR(kthread)) {
+-		pr_err(BANNER "could not start sampling thread\n");
+-		cpus_read_unlock();
+-		return -ENOMEM;
+-	}
+-
+ 	/* Just pick the first CPU on first iteration */
+ 	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
++	if (cpumask_empty(current_mask)) {
++		cpus_read_unlock();
++		return -EINVAL;
++	}
+ 
+ 	if (hwlat_data.thread_mode == MODE_ROUND_ROBIN) {
+ 		next_cpu = cpumask_first(current_mask);
+@@ -440,7 +437,14 @@ static int start_single_kthread(struct trace_array *tr)
+ 
+ 	}
+ 
+-	set_cpus_allowed_ptr(kthread, current_mask);
++	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
++	if (IS_ERR(kthread)) {
++		pr_err(BANNER "could not start sampling thread\n");
++		cpus_read_unlock();
++		return -ENOMEM;
++	}
++
++	kthread_bind_mask(kthread, current_mask);
+ 
+ 	kdata->kthread = kthread;
+ 	wake_up_process(kthread);
+-- 
+2.43.0
+
