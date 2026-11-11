@@ -1,54 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794392234;
-	b=wVeViIJnTwVu8kl0GqWJoiXxIKxNXvEN/RDYGXloNgkhRCmF4N9Qf+82MY3GTG4iqmcx
-	 yVSnbvgNuCGffDrRn4S9FMZpJU7hMxCSHLy4i8IiQxf4r4l2coCRjcN0q241P3pk3sG9Z
-	 8hbVKlD5//XQpgbRpF3ArsHiSQ1EkwzvWx4uOxwWXEdsmwQno4Nu/iMY0o4bQXkH7DNaO
-	 1vc61d2G1oclOomt2RB3j/U3INCHbtj6vHazXShvg9Gf4rAFgGEj9wjl8tPXMNdpHiJ9s
-	 4S/MxZnV1Ea5ZMvHT3cnlADUHmpurz3+VHUfGCyZG/BP9hHrsXVAEuDrlPRonaXH0LA==
+	t=1794392503;
+	b=E/PjzpMATdjNcrnFwoKhK/+cjFnsxiko0v9X/2T4ncEH6FJ2pUBsTZN65LsW22pUnrkY
+	 wbZXYTsa3EiSTwfeP/s+16Joz3jXKhLlh73s/VyDl65N+O/4PoIvXYi5k0XrXNvpScDGg
+	 KRn8R3ar83GrqaVBeOGWbkm6V664b1n75nMsmIzMY/WGIbIDAKQ4MJIA/KaRcp+KYjEu5
+	 TsYqtiZWO7MKw4r471nxRf9rLRFg2vHEsts+eEhmoXVobbjh7nR5ilLpT3yN7mN+IWwq3
+	 X8EIU0J0OQzIBJ/khcSRGp0Yx1VsLbBYFQJOazrxFGlGcpnYyOjNY6ClRc/ifjGrM/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794392234;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=oe/wzp1CGQlS9WtnjEoMuXxeq+pW6LuZSUlg8W2K9No=;
-	b=lDT1uMWyepxLLCNXoqfHs86ScTzC6mDB/Yp2OopqYddpRwRGOzsn/uGoVBI0XbhAtvcC
-	 gn+dLgch3uufV+EL7noOZTdUjHaLA3qXdpee55BgQz4AT3DFZP0IWNK+rOqdLRfPiEYF6
-	 Ns/GJx7lXe9TJdyZOssZ9yCNpUANn81OHYvGuuQcvOoKouFSv466HZwnA1JLl1DurQ/ul
-	 8spmSUl44IKnMOtNN6/7x9noVkNlv11XJn60UAkqgEVH3anoZUGeBxyIqln63gJP1urGk
-	 0lJkymW4DBJTBA/4A4vV/9Xlba/+s+1SSo7mfDg6vz6wcI2klIMIRlR6RaUfhGoMV3g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794392503;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=JtrPYK+FM9dETXT0UUIo4WchhydeZWLFCoX5Dma6wiA=;
+	b=5ay+0tmNK4iYoxp5brdHGVrXcXRAhYA1e7ae7khaeHjcY2lrrM8QzVa9SkUTNvj8IRC8
+	 zNC3j3IFxrRvkka3Wd9ueLjVlDzEYpLXF5ImwCW1QS0CHJsxFwiVCxxodyMYJmTNjugcG
+	 wKADWVtE8ipXvDiZ7LOsnmgCxC6l+JfAs8jlh/g2BV/asyVPsrABbDsyBDZ3bSf3gdRvI
+	 RYuRIegIxz/QxtkumeiiHHnr0P7H+Q5j/e9KsfYP+jOqASmV7cJF3b5H3HhdcRlFcF6/w
+	 6fg6JB4edSHxJ8yOYwD86sbB9OzgOtkupfB0SKnujONP0XwFbkfjzetlhM3/xIAxzcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oxCM44Ni;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ZyDiGjKa;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DA1606A321
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 10:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B7F606A326;
+	Wed, 11 Nov 2026 10:21:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30B7F606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oxCM44Ni
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE0D1F00A05;
-	Wed, 11 Nov 2026 10:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794392233;
-	bh=oe/wzp1CGQlS9WtnjEoMuXxeq+pW6LuZSUlg8W2K9No=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=oxCM44Ni5wNLyFilP/I2eQr3tpKWuUgoRvgJBqux+4hqRyneKo2gWuOlW9WyW1I9S
-	 CD46pALNccfrYnQaIlU/V1XNIf7XAgpys/j7nilCqS48P05eJ26xM/FW55+cwF7CDZ
-	 eIU2e4WGIv9H2EWWalfEK39q/uhKEjIEqnyB/1KB3EQUzY7mXLEwcYbX8QoSidPS/v
-	 aUxn5p8DGkrEjVvs2JUwGvV32lnBexWOt8qiDYKxrd+pezKWuhtHpbaP5pTr9LsVjB
-	 co0wAoyqV8oS1mpSbyx5YZFVzPWlesMeriD292mr1xflPRerhWy1dbmt8O5nsTxSVm
-	 6VPqVg1+pQDwA==
-Message-ID: <sashiko-outbox-208768@kernel.org>
-From: sashiko-bot@kernel.org
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ZyDiGjKa
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 685051C2B74;
+	Wed, 11 Nov 2026 10:21:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 4AAB72002D;
+	Wed, 11 Nov 2026 10:21:31 +0000 (UTC)
+Date: Wed, 11 Nov 2026 05:21:27 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
 Subject: Re: [PATCH] tracing/probes: Zero out faulted dereferenced fields
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux trace kernel" <linux-trace-kernel@vger.kernel.org>
+Message-ID: <20261111052127.218225f9@fedora>
 In-Reply-To: <20261111050322.49bbebfa@fedora>
 References: <20261111050322.49bbebfa@fedora>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 10:17:13 +0000
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,100 +59,23 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 36rqcuoqkzb9dqa4rhamztxf7jmarezr
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 4AAB72002D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/E2exMzSYLvMVJ8EmszwVO4UN8f/gcFAs=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=JtrPYK+FM9dETXT0UUIo4WchhydeZWLFCoX5Dma6wiA=; b=ZyDiGjKagsGpySSFbZ5vN6vRq+IPYhrQh21CYhS+KzkVlgOEzld5AwZMsqle6b6rbIzf6klITkHsjI+GQLZGmttUkhokRBnuGVv6RwnH211kVS3egmvBEralwk4LrGonNX8SNcSWrubsefa8MrhoZiGKrR8BjHzcm3Pxnx9/D28=
+X-HE-Tag: 1794392491-33375
+X-HE-Meta: U2FsdGVkX1+m/N+bfEgKFwLOz7ed298zl64XcvzUNBZqafH5fmtVoWOzrImpljfSyz1fgnvHhcNHa8w90fNN7nYO24yZ48JTjpSyv0Q8B4hO60W0xjJnKsY+wyPEiMzMqGmZ0It8EBf4DvUU+OpSnkfzbPY1UPQjBnssnN9DSuOpv/1Yytk+MkY+rCDjz292a5pHDm2KPYRl6TdeyBh3yninjDTcF1r769/RCfzds8XFjoOWLLIyx9YS6q/X9qS+WKLyZPzyRGoLNRiZvIrWpJ9bM6KaztYCgdTLY7BluhG4LYiCccM/9/0AbbYEFgK92QLfQ8BPaaG3Sk0+GNpa0rcCc3ig5T//XNKWHO0DtXmuBOtv1A10CyqCg0t4a1Mr6gf7m/mrWiq0I3tvGA+YVQ==
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] tracing/probes: uninitialized field on stage 2 fault in
-  store_trace_args()
---
+On Wed, 11 Nov 2026 05:03:22 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-commit 721571368356f203544d8ff8abc91509e1c7eea8
-Author: Steven Rostedt <rostedt@goodmis.org>
+> Now all gdb are zero when mm is zero.
 
-tracing/probes: Zero out faulted dereferenced fields
+That's supposed to be: Now all pgd are zero ...
 
-This commit zeroes the destination buffer in probe_mem_read() and
-probe_mem_read_user() when a nofault memory read fails so that failed
-dereferences do not leave stale ring buffer contents in trace event fields.
-
-> diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe=
-_kernel.h
-> index 4eb4acfa09ba1..00542a162d307 100644
-> --- a/kernel/trace/trace_probe_kernel.h
-> +++ b/kernel/trace/trace_probe_kernel.h
-> @@ -102,18 +102,27 @@ static nokprobe_inline int
->  probe_mem_read_user(void *dest, void *src, size_t size)
->  {
->  	const void __user *uaddr =3D  (__force const void __user *)src;
-> +	int ret;
-> =20
-> -	return copy_from_user_nofault(dest, uaddr, size);
-> +	ret =3D copy_from_user_nofault(dest, uaddr, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
->  }
-> =20
->  static nokprobe_inline int
->  probe_mem_read(void *dest, void *src, size_t size)
->  {
-> +	int ret;
-> +
->  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->  	if ((unsigned long)src < TASK_SIZE)
->  		return probe_mem_read_user(dest, src, size);
->  #endif
-> -	return copy_from_kernel_nofault(dest, src, size);
-> +	ret =3D copy_from_kernel_nofault(dest, src, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
->  }
-
-[Severity: Medium]
-Does this still leave the trace event field uninitialized in the ring
-buffer when an intermediate dereference faults in stage 2 of
-process_fetch_insn_bottom()?
-
-In the commit message's "(task_struct)prev->mm->pgd" example, prev is
-valid and prev->mm is NULL, so stage 2 (FETCH_OP_DEREF) succeeds and loads
-val =3D 0, and the fault happens on the final dereference in stage 3
-(FETCH_OP_ST_MEM), where dest points to the ring buffer field.
-
-However, if a chain has another dereference after the NULL pointer (such as
-"(task_struct)prev->mm->exe_file->f_inode" when prev->mm is NULL), the
-fault happens in stage 2:
-
-kernel/trace/trace_probe_tmpl.h:process_fetch_insn_bottom() {
-    ...
-stage2:
-	/* 2nd stage: dereference memory if needed */
-	do {
-		lval =3D val;
-		switch (code->op) {
-		case FETCH_OP_DEREF:
-			ret =3D probe_mem_read(&val, (void *)val + code->offset,
-					     sizeof(val));
-			break;
-		case FETCH_OP_UDEREF:
-			ret =3D probe_mem_read_user(&val,
-				 (void *)val + code->offset, sizeof(val));
-			break;
-    ...
-		}
-		if (ret)
-			return ret;
-    ...
-}
-
-Here probe_mem_read() only zeroes the stack variable val, and
-process_fetch_insn_bottom() returns early before reaching stage 3.
-Because store_trace_args() ignores a negative return value from
-process_fetch_insn(), the destination field in the ring buffer is never
-written to and retains stale ring buffer data (or, for a dynamic string
-argument, keeps the pre-initialized *dl =3D make_data_loc(maxlen, ...)
-header without calling set_data_loc()).
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111050322.49bb=
-ebfa@fedora?part=3D1
+-- Steve
