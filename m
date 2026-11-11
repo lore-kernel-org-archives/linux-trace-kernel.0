@@ -1,71 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794388202;
-	b=vyVJMLw9zLWBxPXQrmnBgkVlGUFApVX2g2KG9Fk4CBDBT/1GzFL0QI3HuEm06acJIOv9
-	 qmlrvxEQ5IRzZX+t+tbnU5KnoT24/Fm1cY46ShTQ+zKKIossJhmVSqg4OFnKuhNZFCucg
-	 RWGKXrdyS85g9OjYnZlUCRYe4wk3q5h6o1I0NFhJsWJr2AUvdVmvnSUv5XMQB7h1MXXAE
-	 sKwfllH/INgrIGjo83XCIyCJIMcjVVrEtkfe3v7PuKv/uGZ2ZxBi2wqCzimtK44EmUDI1
-	 wCCb4FakN8nWmhOSYkRodUKRIRd6rqcqxCJupmhTMeMumgUXeNNiTMyaN5tnWc0gzdw==
+	t=1794388203;
+	b=Q+QV4K+vSD6346njP0NMHnqc3J/I4f2w2LTGioc2cgY+aqT06y/ut92EvIYrz5Xq3vjv
+	 njzJljI/B13QbEl6cEw6MSJdk3k+jn9YByDk4S6O6HDvyy4df2Bxsj/pUIXpni2C1IzTK
+	 kyssMGrQzN52kq/5lrk0RxwOJ+qjPGsrHlKqWmHVdyn9t9HRPIrvNKZZ/dFnI80E4353N
+	 3l6T8YT1HTlgLNoNSvih3jKMnfKShZpjILalVWJRFY4bQ7GK8NWTSskcur4Q6/856tv+Q
+	 h7eBo56nHkOoEGd2BGVdGOM9FnUhUAt3kuZmy+5aM/ZkWDYmkds+sHBlQB0TUxlfCyw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794388202;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=t+vKK3K8G/SPqdLLDE+tBceKxRVp95UdVCgcrDLkoto=;
-	b=Q8IEL+4Zhjx3d7sfdYoHK1m4t9VVzBTEToq91sScOIlYZaGTpTipcmbccr/5lfJP9WnD
-	 cHSVNKKzhVC0hzvjSOGv2N2B9hrvYjgv++j6C0jRyNDEztmjbH7HwEOrXjQzFbXhFA8iS
-	 oSPa54lJVtWgb+IrEx84jiCjV/L/3acY9lHlGP9N23HuFgN7G5/GfxRcK7uaPn28FOCbo
-	 D/rNLhK7RaXV8I1qSTJKEUAuzl3Ct2zC4iLyGXrNDLSCaDX3bEW3MoMV574mo/jerYOzy
-	 t7+wf6pdxLiG6OZvA5+wuHm9fvHqSngcyw4YNujE/8++0jwfA37MzMihFeQD873feYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794388203;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=1fU/3RUJzMH3qQmy+kIUd3ACnOcdNF6yRxLT+tx8+dY=;
+	b=jobO8WOlrb5SzpX4NXvddKm/7mt/NdhOJG6jG1+Pdeo3iRxiSnHyKlKWKUdUgGdzyLDZ
+	 pkSsKqcRBXu4yRHxOI5RYlrbWChUjFqAwt31lOsQROP9Phuzf8TdNOr5VaVT3j49K3pUp
+	 RBomvRjH6aOI3tH8nV8lky3ASxiJguGWc1moe6cw0hGTdmQsxxsb0IAVW8GUy2LQ0wUsc
+	 QtFcpZwuRlgfHXQ3Ko5Z/DTx/jBtEUdKWYI+VEB5FwgW2w7wIvTOdR+9DzuKPqhP1eQAc
+	 PbNET+m/aprBFiTy1W/LAC9FI8qW255X4IzDeoPt1jfWlvfnG9YJo3H2W0WayB37SXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=YFCa6EzB;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R+GyvV8e;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8B4606A321;
-	Wed, 11 Nov 2026 09:10:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C8B4606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFD660A2604
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 09:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=YFCa6EzB
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=t+vKK3K8G/SPqdLLDE+tBceKxRVp95UdVCgcrDLkoto=; b=YFCa6EzBrVC/en7V2mI8fs9Dx7
-	0YPbhN3gAEkJ3+UXWiE6IDI17eyJYW5eBh5TKyEAG2spovF/8QIeGxD+jachH/d59+PWHcryjW9mV
-	tTYNXrggbvfiwJDX5NRyei2dB+VpQOGKAV90Aj8tOia3xykzwbIkuia3KwAfuXRWwWEFbNIb17lmO
-	98xJv7nenB68tad867vy7+T/74ubVacDUz3g+XDTzMlrRymrtLuVDZqK9qsMLiFp6o22AaAXBwZ2f
-	B5GY4hSsvPhbxa9bksT+3fJdAK4ImbnPeIaRLMt00bslWJYLzjyPIJS0xl5hP1S4iknK4xerbNPQj
-	ErBk/zcg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xR4L6-00000008Avs-0ihc;
-	Wed, 11 Nov 2026 09:09:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B5EF930025D; Wed, 11 Nov 2026 10:09:55 +0100 (CET)
-Date: Wed, 11 Nov 2026 10:09:55 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: Use flexible array for xol_area bitmap
-Message-ID: <20261111090955.GV2668804@noisy.programming.kicks-ass.net>
-References: <20261111022605.66010-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R+GyvV8e
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B410C1F00A0A;
+	Wed, 11 Nov 2026 09:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794388202;
+	bh=1fU/3RUJzMH3qQmy+kIUd3ACnOcdNF6yRxLT+tx8+dY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=R+GyvV8eC5Tjc63ryXLS4Wr4e6YxfVMOhX6pz4lCHldrLUpC8C2ZPlOBxwLYi6aEY
+	 i8HRRYT/uqqd5CyublL/wzR/c1atcehVN0PCGe3XjLzhx5ZDOI1tQ9kYcqWbwE0y1S
+	 UnErpkaeE78pNC/PV1G4kDXspLyutouZW7qGagDipzXP2EstyyvoZsHvKVNAFxfTxW
+	 zHT5wm8g96YfYiddN4kOzubvn96jnXR/TCLMubvqNuSSZI1MQGJoYjsmpOnKG4qpYD
+	 LqWvxnCyEe+6DEMMLQN+mhm2PgxYiMgB4KRXzuzwG8m8upiHE5KkbRc8TJcwlWhLos
+	 OqDn8aTzE2Gvw==
+Message-ID: <sashiko-outbox-208667@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] ring-buffer: Annotate the speculative iterator event
+ copy
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Zhu Jun" <zhujun2@cmss.chinamobile.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261111084201.80984-1-zhujun2@cmss.chinamobile.com>
+References: <20261111084201.80984-1-zhujun2@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Nov 2026 09:10:02 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -74,55 +59,62 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261111022605.66010-1-rosenp@gmail.com>
 
-On Tue, Nov 10, 2026 at 06:26:05PM -0800, Rosen Penev wrote:
-> The XOL slot bitmap has the same lifetime as struct xol_area, but it
-> is currently allocated separately.  That adds another allocation
-> failure path and a matching cleanup branch without buying any extra
-> flexibility.
-> 
-> Store the bitmap as a flexible array member and allocate it together
-> with the xol_area using kzalloc_flex().  The bitmap remains
-> zero-initialized, while the allocation and error handling become
-> simpler.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  v2: add Acked-by. remove Assisted-by
->  kernel/events/uprobes.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 853fc952331c..876c3cfe8031 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
->   */
->  struct xol_area {
->  	wait_queue_head_t		wq;		/* if all slots are busy */
-> -	unsigned long			*bitmap;	/* 0 = free slot */
->  
->  	struct page			*page;
->  	/*
-> @@ -117,6 +116,7 @@ struct xol_area {
->  	 * the vma go away, and we must handle that reasonably gracefully.
->  	 */
->  	unsigned long			vaddr;		/* Page(s) of instruction slots */
-> +	unsigned long			bitmap[];	/* 0 = free slot */
->  };
->  
->  static void uprobe_warn(struct task_struct *t, const char *msg)
-> @@ -1760,18 +1760,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  	struct xol_area *area;
->  	void *insns;
->  
-> -	area = kzalloc_obj(*area);
-> +	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] ring-buffer: unannotated speculative reads in
+  rb_iter_head_event()
+--
 
-I am confused; this is a compile time constant. Why are we using flex
-arrays?
+commit a821b9e5782f64ce12600813e637e78c35dbbee8
+Author: Zhu Jun <zhujun2@cmss.chinamobile.com>
+
+ring-buffer: Annotate the speculative iterator event copy
+
+This commit wraps the speculative memcpy() in rb_iter_head_event() with
+data_race() to silence KCSAN warnings when a concurrent writer overwrites
+the page being read by a non-consuming iterator.
+
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index e760d2fe386fb..6e51a7a75d6b1 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -3562,7 +3562,8 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+>  		/* Writer corrupted the read? */
+>  		goto reset;
+> =20
+> -	memcpy(iter->event, event, length);
+> +	/* The page stamp below detects a concurrent overwrite of this copy. */
+> +	data_race(memcpy(iter->event, event, length));
+
+[Severity: Low]
+Can KCSAN still trigger on the adjacent speculative reads of event and
+iter_head_page->page->time_stamp in rb_iter_head_event()?
+
+kernel/trace/ring_buffer.c:rb_iter_head_event() {
+    ...
+	event =3D __rb_page_index(iter_head_page, iter->head);
+	length =3D rb_event_length(event);
+    ...
+	data_race(memcpy(iter->event, event, length));
+	smp_rmb();
+
+	/* Make sure the page didn't change since we read this */
+	if (iter->page_stamp !=3D iter_head_page->page->time_stamp ||
+    ...
+}
+
+Before the annotated memcpy(), rb_event_length(event) reads
+event->type_len, event->time_delta, and event->array[0] from the same
+shared page while a concurrent writer updates the header in
+rb_update_event(). Because rb_event_length() and rb_event_data_length()
+read the event->type_len bitfield via plain loads across multiple checks,
+the compiler can also reload inconsistent values if a writer modifies the
+header mid-evaluation. Likewise, the plain loads of
+iter_head_page->page->time_stamp in the validation check and reset path
+race with the writer updating tail_page->page->time_stamp in
+__rb_reserve_next().
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111084201.8098=
+4-1-zhujun2@cmss.chinamobile.com?part=3D1
