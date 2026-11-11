@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794429413;
-	b=HNP0p6HVPSjb2I6gNBrTQXbsAwlTV1c8lxO3q2lo+kl+K4n4xaIRAzU2fr6ua99dR7qs
-	 oR3xtTHuoqL67FXc/iKq3AZuEtcebl0226MnzndUaPfWHe1om01n/PcH711SdxQIxwsJf
-	 Av4ezbqcx0K47ZbMVaKVVbtNB89DAVi9suiHIPJ2ai0je0g32nghX8DU2flg7v/REJYmM
-	 Ti6FCRrhKvFl1SM/3tNacaW1gVUaOLegJd8u8jfn9dTuzzT71KEKfNy7U0X5WyWjXFsS5
-	 U4JwwW/LDbcmijfUkGUX7oEtLSF1SsgTzMdtkSrBahNPF0cda//+I3yZ7LLAzZ76ghA==
+	t=1794429414;
+	b=jSyC4Vm3BgdASA3an8qJ7GBYpGshiS8aRiOX04RHIYd5xuZ2DMav8kpONjyOECnMb4Kv
+	 qy0Jooh+CCteN8MTkJJXlEY6Gfpng0Ju/XPVELNj90XIGOVWG3sHVAJaKKWIheP9VFvcd
+	 +mgN6Zf4ejyz5GnWhbOs6QwtbXc6U2RBRMLnlCHVJxH/7UsYIlz6zwbM66UYjNSgsENx1
+	 gE8UaMniFM8yJJ9KA9knRst0OQoAXtevtlT2JORRmBG+EFgJVEOZNKZp29SqUi4xictA3
+	 YMzoXCZCKL372Kzdc4+Dwhg9SHcy98QZnykC4eAGOhjmxEzEDXHUlh2l2EtjtpcX6Ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794429413;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794429414;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=TeAzJ/6PxX/EiyOcqhupLSmk0JpHUX7VkQI6aqMHKIk=;
-	b=G9zqQpjyGjOGgwSW68HT98/fLb/Fly8IKVR5pPsBksXK6kaNXVUIUfr86uvOk3BPWsKL
-	 B30XFqj6btz3coLFzZzXrWORz5TL0LDPUq13tgG4DWJAR87iL7y8wH5z8jqtkw7eEyi/G
-	 bF+X+/EP8NiS8MTsASTE+KOwzuAOXRnifpIeZ6wqj4RGFXgwnC4zZJUuTMYvogC0BZE55
-	 WVN44ZE8NddpAqwBV6i5n3b9r2Njnax9RaF3S9x3MrwSxJfEhtfdhpVdi8MlYSf0fxXaA
-	 6RIeAfha4aWWqb5lcqCI+a2Tmtwvo4ZCOOm859fI2AqE9csMuE71/TmRQ0U/VM2AA4g==
+	bh=uMBcwn1n2dpUHT/6uEIYq3oHlPCno4BFZR7u/G8+ALE=;
+	b=ouwlL1yVs37F/ryVlNT+mOaMK/zzrejw+A55PtgX9CtppMzPuH3SL/n2uI4QCaDb0opi
+	 JVEzckWiDQLJ2xJwoJC7UXCPPPsiX2S2xGe9yH7og7IeTv//kHpBz96PLin5P24QVcVn8
+	 a92U7YMAomMyZosqPY5syXqlc60iQwZdmuHSq9JXio2t9JQXm+zW6yrlLjFlEYTL5ReGM
+	 6jtJZTgss/E+ySsPqBvIQX8aNBGKntkI4Sl+YAzP5uL3k2GKtakms6/UzKE9w6Rlan5K6
+	 TdXLn3zfnQBlppsLOMHddj+IBgaqzqx3V5IkEhZ54UoT8dk/2XiMKvTZVBlZezELtsw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=nye2+H3E;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=bHBzg8Vx;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8C8606A88A;
-	Wed, 11 Nov 2026 20:36:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF8C8606A88A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FABD606A899;
+	Wed, 11 Nov 2026 20:36:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4FABD606A899
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=nye2+H3E
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=bHBzg8Vx
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1794429407;
-	bh=TeAzJ/6PxX/EiyOcqhupLSmk0JpHUX7VkQI6aqMHKIk=;
+	s=smtpout1; t=1794429406;
+	bh=uMBcwn1n2dpUHT/6uEIYq3oHlPCno4BFZR7u/G8+ALE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nye2+H3EJLZJYQ8gB8BHZ0Ydjrp37faimyetkTtdBVAXBXAGpV/kYD06T1Po/lpib
-	 I/pbeFEsup1T/5JidY6tTpr+/4yqrJj7GF1UCcfjW+t+aEpfuS++dnP3lEFXtHA4K7
-	 r1/b5TJiqLW67VhuIV7afNiUhkvbZmY+g+/fw+pqpUWfW9ShU0M+0PKnJ+wHl5FTWw
-	 Ku0GEMDm8MCsiMBe494pe+lw1H3IuXmIrEjtcFuL7vUG4kz1xeda9KRYP8VER4D7SR
-	 LdH0VBcympzIwzV9xWJpP5pqRIfGBGyXUvU8KbqGBlXVzDi+VLkfKfajoTE5KkZsXg
-	 uhSUGV0hfAZLA==
+	b=bHBzg8Vxmh50pUZdQN5tXZZosoPErK4Ix+6o15lxqI6zCqT20Hy0ad5QfyjgSqjPV
+	 bNpuQSHkxEQnAIF6EWk6kOirLBYbAinwVW6yWUJ6qNAGsOiEiQqw9pDfT4O1Hwi2cw
+	 5uVyusc5KdTi/fk/81A2Hvk4r0B2ysFbRmFJs0GQvHCYj4GW06zSzorcgjULICkbEq
+	 R6bJXUzGoxahC+ZVYSVFLRtJexHpXRDCIKu5s424ctMUD/elqyb0Y/+S7eJfxYzrir
+	 WHZRIpt/3MRbbuyed6borILZDndv0ii+zYyOsqYYboixVj3RxouIlzRJlecs4qNuEo
+	 8XZvnFRXtXTiQ==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKq5D41zNlm;
-	Wed, 11 Nov 2026 15:36:47 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKp2wqvzNh0;
+	Wed, 11 Nov 2026 15:36:46 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -107,9 +107,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Boqun Feng <boqun@kernel.org>,
 	Hugh Dickins <hughd@google.com>
-Subject: [RFC PATCH v25 14/14] lib: add a benchmark of hierarchical per-cpu counters
-Date: Wed, 11 Nov 2026 15:36:26 -0500
-Message-Id: <20261111203626.95838-15-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v25 09/14] lib: percpu_counter_tree: test the limit counters
+Date: Wed, 11 Nov 2026 15:36:21 -0500
+Message-Id: <20261111203626.95838-10-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
 References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
@@ -124,724 +124,657 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a KUnit benchmark comparing the hierarchical per-cpu counters with
-struct percpu_counter, so their performance can be compared on various
-machines:
+Test the limit counters of the previous patch. These tests cover them:
 
-- update: cost of an update with a kthread on each online CPU, on one
-  shared counter, on one counter per thread, on groups of 4 counters
-  initialized together like the RSS counters of an mm, and on one lazily
-  initialized counter per thread updated by its owner, like a
-  single-threaded process, with increments of +1, alternating +1/-1, and
-  random increments up to 32 and 512.
-- lifecycle: cost of initializing and destroying 4 counters together,
-  like fork and exit of an mm, eagerly or lazily, from one thread or from
-  all online CPUs.
-- churn: like lifecycle, with a few updates, keeping some of the
-  counters alive until the end, like long-lived processes.
+- The userspace harness checks each decision and the bounds of each
+  counter.
+- The harness also stalls an addition right after its carry fills an
+  item, at each level and at the root. Then the other CPUs of that item
+  add near the limit. An item holding such a carry must take no new
+  arrival. Without this rule, they exceed the limit in 105 of the 191
+  configurations.
+- A harness test makes an addition fail because of another one in
+  flight, and checks that it retries and fits. Another one checks that
+  a large amount which cannot fit is not added.
+- The harness runs these tests again with both counters about to wrap,
+  as unsigned and as signed values. It passes as a 32-bit build too.
+- A KUnit test runs workers on all CPUs near the limit. An exact shadow
+  of the successful additions never exceeds it.
 
-The batch size of the hierarchical counters is selected with the
-percpu_counter_tree_bench.batch= parameter (32 by default, like the RSS
-counters), and the tree shape with the percpu_counter_tree.arity= boot
-parameter.  The struct percpu_counter variants use their default batch
-size, like the RSS counters before the hierarchical counters.
-
-The benchmark reports the accuracy of both counter implementations along
-with the timings.  It runs for a few minutes on large machines, so it
-has its own config option, CONFIG_PERCPU_COUNTER_TREE_BENCH.
-
-For example:
-
-  ./tools/testing/kunit/kunit.py run --arch=x86_64 \
-	--kconfig_add CONFIG_PERCPU_COUNTER_TREE_BENCH=y \
-	--kconfig_add CONFIG_NR_CPUS=256 --qemu_args="-smp 64 -m 8192" \
-	--kernel_args percpu_counter_tree.arity=8,8 \
-	--kernel_args percpu_counter_tree_bench.batch=16 \
-	--timeout 3000 percpu_counter_tree_bench
-
-or, on a running kernel with CONFIG_PERCPU_COUNTER_TREE_BENCH=m:
-
-  modprobe percpu_counter_tree_bench batch=16
+For the stall test, the shim gains a stall hook. It runs a function
+right after the next fully ordered or release update of a chosen item.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
-Changes since v23:
-- Keep the lifecycle and churn sets of counters in struct bench_thread
-  rather than on the stack, where debugobjects warns about a struct
-  percpu_counter. (Reported by Sashiko.)
----
- MAINTAINERS                           |   1 +
- lib/Kconfig                           |  15 +
- lib/tests/Makefile                    |   1 +
- lib/tests/percpu_counter_tree_bench.c | 610 ++++++++++++++++++++++++++
- 4 files changed, 627 insertions(+)
- create mode 100644 lib/tests/percpu_counter_tree_bench.c
+ lib/tests/percpu_counter_tree_kunit.c  | 172 +++++++++++++
+ tools/testing/hpcc/include/hpcc_shim.h |  42 ++-
+ tools/testing/hpcc/main.c              | 342 +++++++++++++++++++++++++
+ 3 files changed, 553 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c9b266a5df54..8392c9ceea0f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11958,6 +11958,7 @@ S:	Supported
- F:	Documentation/core-api/percpu-counter-tree.rst
- F:	include/linux/percpu_counter_tree.h
- F:	lib/percpu_counter_tree.c
-+F:	lib/tests/percpu_counter_tree_bench.c
- F:	lib/tests/percpu_counter_tree_kunit.c
- F:	tools/testing/hpcc/
+diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_counter_tree_kunit.c
+index 12bd5a4bbb45..bd99ab7ca1c0 100644
+--- a/lib/tests/percpu_counter_tree_kunit.c
++++ b/lib/tests/percpu_counter_tree_kunit.c
+@@ -612,6 +612,177 @@ static void hpcc_test_contended_carries(struct kunit *test)
+ 		do_hpcc_test_contended_carries(test, 1UL << batch_size_order);
+ }
  
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 3921177a0d24..6ab9644a4cb8 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -53,6 +53,21 @@ config PERCPU_COUNTER_TREE_KUNIT_TEST
- 
- 	  When in doubt, say N.
- 
-+config PERCPU_COUNTER_TREE_BENCH
-+	tristate "Benchmark of hierarchical per-cpu counters"
-+	depends on KUNIT && SMP
-+	help
-+	  This builds a KUnit benchmark comparing the hierarchical per-cpu
-+	  counters with struct percpu_counter: update cost with all online
-+	  CPUs updating shared and private counters, and init/destroy cost.
-+	  It runs for a few minutes on large machines.
++#define LIMIT_NR_OPS	100000
 +
-+	  The batch size and the tree shape can be changed with the
-+	  percpu_counter_tree_bench.batch= and percpu_counter_tree.arity=
-+	  parameters, see lib/tests/percpu_counter_tree_bench.c.
-+
-+	  When in doubt, say N.
-+
- config BITREVERSE
- 	tristate
- 	select GENERIC_BITREVERSE if !HAVE_ARCH_BITREVERSE
-diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-index e98687da8706..d158a8be8a19 100644
---- a/lib/tests/Makefile
-+++ b/lib/tests/Makefile
-@@ -60,5 +60,6 @@ obj-$(CONFIG_RATELIMIT_KUNIT_TEST) += test_ratelimit.o
- obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
- 
- obj-$(CONFIG_PERCPU_COUNTER_TREE_KUNIT_TEST) += percpu_counter_tree_kunit.o
-+obj-$(CONFIG_PERCPU_COUNTER_TREE_BENCH) += percpu_counter_tree_bench.o
- 
- obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
-diff --git a/lib/tests/percpu_counter_tree_bench.c b/lib/tests/percpu_counter_tree_bench.c
-new file mode 100644
-index 000000000000..e041ba8ba8c7
---- /dev/null
-+++ b/lib/tests/percpu_counter_tree_bench.c
-@@ -0,0 +1,610 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Benchmark of hierarchical per-CPU counters against struct percpu_counter.
-+ *
-+ * update: ns per percpu_counter_tree_add() per thread, one kthread pinned
-+ *         on each online CPU, on one shared counter, on one counter per
-+ *         thread, or on the counters of a few mm-like groups of 4 counters
-+ *         initialized together. The "single" variant gives each thread a
-+ *         lazily initialized counter updated with
-+ *         percpu_counter_tree_add_owner(), like a single-threaded process.
-+ *         The "percpu_counter" variants use percpu_counter_add() with the
-+ *         default batch, like the RSS counters before hierarchical counters.
-+ * lifecycle: ns per init_many(4) + destroy_many(4), like fork + exit of an
-+ *         mm, from one thread or from all online CPUs at once; "lazy" uses
-+ *         init_many_lazy(4), like a single-threaded process.
-+ * churn: like lifecycle with a few updates, keeping one in @pin_period sets
-+ *         of counters alive until the end, like long-lived processes.
-+ *
-+ * Each result ends with the implementation measured: "tree" for the
-+ * hierarchical counters, "percpu_counter" for struct percpu_counter.
-+ *
-+ * The knobs to try on a given machine are:
-+ * - the batch size: percpu_counter_tree_bench.batch=<2..128> (power of 2),
-+ *   or "modprobe percpu_counter_tree_bench batch=<n>",
-+ * - the tree shape: percpu_counter_tree.arity=<fan-out>,... on the kernel
-+ *   command line, from level 0 to the root. The product of the fan-outs
-+ *   is nr_cpu_ids rounded up to a power of 2, e.g. "16" (flat) or "4,4"
-+ *   when nr_cpu_ids is 16. The shape in use is shown in
-+ *   /sys/module/percpu_counter_tree/parameters/arity.
-+ *
-+ * For example, in a VM:
-+ *   ./tools/testing/kunit/kunit.py run --arch=x86_64 \
-+ *	--kconfig_add CONFIG_PERCPU_COUNTER_TREE_BENCH=y \
-+ *	--kconfig_add CONFIG_NR_CPUS=256 --qemu_args="-smp 64 -m 8192" \
-+ *	--kernel_args percpu_counter_tree.arity=8,8 \
-+ *	--kernel_args percpu_counter_tree_bench.batch=16 \
-+ *	--timeout 3000 percpu_counter_tree_bench
-+ */
-+#include <kunit/test.h>
-+#include <linux/percpu_counter_tree.h>
-+#include <linux/percpu_counter.h>
-+#include <linux/kthread.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/ktime.h>
-+#include <linux/math64.h>
-+#include <linux/sched/task.h>
-+#include <linux/cpuhplock.h>
-+#include <linux/moduleparam.h>
-+
-+/* Like the RSS counters by default. */
-+static unsigned int batch = 32;
-+module_param(batch, uint, 0444);
-+MODULE_PARM_DESC(batch, "Batch size of the hierarchical counters (power of 2, 2 to 128)");
-+
-+#define BENCH_MS	300
-+#define LIFECYCLE_NR	4	/* Counters per mm. */
-+#define LIFECYCLE_ITER	2000
-+#define CHURN_ITER	4096
-+
-+enum { W_MONO, W_BOUNCE, W_RAND32, W_RAND512, NR_W };
-+static const char * const wname[] = { "monotonic +1", "bounce +-1", "random +-32", "random +-512" };
-+
-+enum bench_impl { IMPL_TREE, IMPL_PERCPU_COUNTER };
-+static const char * const impl_name[] = { "tree", "percpu_counter" };
-+
-+struct bench_shared {
-+	atomic_t ready;
-+	int wl;
-+	unsigned int pin_period;	/* churn: keep one in pin_period sets, 0: none. */
-+	enum bench_impl impl;
-+	bool go, stop;
-+	bool owner;		/* update: percpu_counter_tree_add_owner(). */
-+	bool lifecycle;
-+	bool lazy;		/* lifecycle: percpu_counter_tree_init_many_lazy(). */
++struct limit_shared {
++	struct percpu_counter_tree_limit limit;
++	unsigned long max;
++	unsigned long target;		/* Amount each worker tries to hold. */
++	unsigned long batch_size;
++	atomic_long_t charged;		/* Exact total of the successful additions held. */
++	atomic_long_t nr_over;		/* Times charged exceeded max. */
++	atomic_long_t nr_added, nr_failed;
++	atomic_t nr_ready;
++	unsigned int nr_workers;
++	bool started;
 +};
 +
-+struct bench_thread {
-+	u64 ns;
-+	unsigned long ops;
-+	struct bench_shared *sh;
-+	struct percpu_counter_tree *c;
-+	struct percpu_counter *pc;	/* update: IMPL_PERCPU_COUNTER. */
-+	struct percpu_counter_tree *pinned;	/* churn: IMPL_TREE sets kept alive. */
-+	struct percpu_counter *pinned_pc;	/* churn: IMPL_PERCPU_COUNTER sets kept alive. */
-+	struct task_struct *task;
-+	unsigned int nr_pinned;
++struct limit_data {
++	struct limit_shared *sh;
++	unsigned long held;
 +	u32 seed;
-+	/*
-+	 * lifecycle and churn: sets not kept alive. They are not on the
-+	 * stack, where debugobjects warns about a struct percpu_counter.
-+	 */
-+	struct percpu_counter_tree tmp[LIFECYCLE_NR];
-+	struct percpu_counter tmp_pc[LIFECYCLE_NR];
 +} ____cacheline_aligned_in_smp;
 +
++static DECLARE_WAIT_QUEUE_HEAD(limit_wq);
++
++static u32 limit_rnd(struct limit_data *ld)
++{
++	u32 x = ld->seed;
++
++	x ^= x << 13;
++	x ^= x >> 17;
++	x ^= x << 5;
++	ld->seed = x;
++	return x;
++}
++
 +/*
-+ * Buffers are allocated through KUnit, which frees them if an assertion
-+ * aborts the test, and are freed explicitly otherwise, since the benchmark
-+ * runs many steps within one test.
++ * Each worker adds to the limit counter until it holds its target. Then
++ * it frees part of what it holds. Together, the workers hold about 1.5
++ * times the limit, so additions fail. A successful addition is added to
++ * charged after it succeeds. A free subtracts from charged before it
++ * reaches the limit counter. So charged is never above the value of the
++ * limit counter. Charged above max means the limit was exceeded.
 + */
-+KUNIT_DEFINE_ACTION_WRAPPER(bench_kvfree, kvfree, const void *);
-+
-+static void *bench_kvzalloc(struct kunit *test, size_t size)
++static int limit_worker_fn(void *data)
 +{
-+	void *p = kvzalloc(size, GFP_KERNEL);
++	struct limit_data *ld = data;
++	struct limit_shared *sh = ld->sh;
++	unsigned int i;
 +
-+	if (p && kunit_add_action_or_reset(test, bench_kvfree, p))
-+		return NULL;
-+	return p;
-+}
++	/* Pairs with the release of started: max, target and nr_workers are set. */
++	wait_event(limit_wq, smp_load_acquire(&sh->started));
++	/* Start together, so that the workers hold their amounts at the same time. */
++	atomic_inc(&sh->nr_ready);
++	while (atomic_read(&sh->nr_ready) < sh->nr_workers)
++		cpu_relax();
++	for (i = 0; i < LIMIT_NR_OPS; i++) {
++		u32 x = limit_rnd(ld);
++		unsigned long amount;
 +
-+static void bench_kvfree_now(struct kunit *test, void *p)
-+{
-+	kunit_release_action(test, bench_kvfree, p);
-+}
++		if (ld->held < sh->target) {
++			/* Mostly small amounts, and one in 16 of a huge page. */
++			if ((x >> 4) & 15)
++				amount = 1 + (x >> 8) % (4 * sh->batch_size);
++			else
++				amount = 512;
++			if (percpu_counter_tree_limit_add(&sh->limit, sh->max, amount)) {
++				unsigned long charged;
 +
-+/* Wait for the start signal; return true if the benchmark is cancelled. */
-+static bool bench_wait_go(struct bench_shared *sh)
-+{
-+	atomic_inc(&sh->ready);
-+	/* Pairs with bench_start(): a cancellation sets stop before go. */
-+	while (!smp_load_acquire(&sh->go))
-+		cond_resched();
-+	return READ_ONCE(sh->stop);
-+}
-+
-+static int bench_update_fn(void *data)
-+{
-+	struct bench_thread *t = data;
-+	struct bench_shared *sh = t->sh;
-+	unsigned long ops = 0;
-+	long sign = -1;
-+	u32 x = t->seed;
-+	int i;
-+
-+	if (bench_wait_go(sh))
-+		return 0;
-+	while (!READ_ONCE(sh->stop)) {
-+		for (i = 0; i < 1024; i++) {
-+			long inc;
-+
-+			switch (sh->wl) {
-+			case W_MONO:
-+				inc = 1;
-+				break;
-+			case W_BOUNCE:
-+				inc = sign;
-+				sign = -sign;
-+				break;
-+			default:
-+				x ^= x << 13;
-+				x ^= x >> 17;
-+				x ^= x << 5;
-+				inc = sh->wl == W_RAND32 ? 32 : 512;
-+				if (x & 1)
-+					inc = -inc;
-+				break;
++				charged = atomic_long_add_return(amount, &sh->charged);
++				if (charged > sh->max)
++					atomic_long_inc(&sh->nr_over);
++				ld->held += amount;
++				atomic_long_inc(&sh->nr_added);
++			} else {
++				atomic_long_inc(&sh->nr_failed);
 +			}
-+			if (sh->impl == IMPL_PERCPU_COUNTER)
-+				percpu_counter_add(t->pc, inc);
-+			else if (sh->owner)
-+				percpu_counter_tree_add_owner(t->c, inc);
-+			else
-+				percpu_counter_tree_add(t->c, inc);
++		} else if (ld->held) {
++			amount = 1 + (x >> 8) % ld->held;
++			atomic_long_sub(amount, &sh->charged);
++			percpu_counter_tree_limit_sub(&sh->limit, amount);
++			ld->held -= amount;
 +		}
-+		ops += 1024;
-+		cond_resched();
++		if (!(i & 63))
++			cond_resched();
 +	}
-+	t->ops = ops;
++	atomic_long_sub(ld->held, &sh->charged);
++	percpu_counter_tree_limit_sub(&sh->limit, ld->held);
++	ld->held = 0;
++	complete_work();
 +	return 0;
 +}
 +
-+static int bench_lifecycle_fn(void *data)
++static void do_hpcc_test_limit(struct kunit *test, unsigned long batch_size)
 +{
-+	struct bench_thread *t = data;
-+	struct percpu_counter_tree *c = t->tmp;
-+	struct percpu_counter *pc = t->tmp_pc;
-+	u64 t0;
-+	int i;
++	struct limit_shared *sh;
++	struct limit_data *ld;
++	struct task_struct **task;
++	const struct cpumask *cpus;
++	unsigned int nr_workers = 0;
++	unsigned long accuracy;
++	int ret, cpu;
 +
-+	if (bench_wait_go(t->sh))
-+		return 0;
-+	t0 = ktime_get_ns();
-+	for (i = 0; t->sh->impl == IMPL_PERCPU_COUNTER && i < LIFECYCLE_ITER; i++) {
-+		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
-+			break;
-+		percpu_counter_add(&pc[0], 1);
-+		percpu_counter_add(&pc[0], -1);
-+		percpu_counter_destroy_many(pc, LIFECYCLE_NR);
-+		cond_resched();
-+	}
-+	for (; t->sh->impl == IMPL_TREE && t->sh->lazy && i < LIFECYCLE_ITER; i++) {
-+		if (percpu_counter_tree_init_many_lazy(c, LIFECYCLE_NR, batch))
-+			break;
-+		percpu_counter_tree_add_owner(&c[0], 1);
-+		percpu_counter_tree_add_owner(&c[0], -1);
-+		percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
-+		cond_resched();
-+	}
-+	for (; t->sh->impl == IMPL_TREE && !t->sh->lazy && i < LIFECYCLE_ITER; i++) {
-+		if (percpu_counter_tree_init_many(c, LIFECYCLE_NR, batch, GFP_KERNEL))
-+			break;
-+		percpu_counter_tree_add(&c[0], 1);
-+		percpu_counter_tree_add(&c[0], -1);
-+		percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
-+		cond_resched();
-+	}
-+	t->ns = ktime_get_ns() - t0;
-+	t->ops = i;
-+	return 0;
-+}
-+
-+static int bench_churn_fn(void *data)
-+{
-+	struct bench_thread *t = data;
-+	unsigned int pin_period = t->sh->pin_period;
-+	struct percpu_counter_tree *c;
-+	struct percpu_counter *pc;
-+	u64 t0;
-+	int i;
-+
-+	if (bench_wait_go(t->sh))
-+		return 0;
-+	t0 = ktime_get_ns();
-+	for (i = 0; t->sh->impl == IMPL_PERCPU_COUNTER && i < CHURN_ITER; i++) {
-+		bool pin = pin_period && !(i % pin_period);
-+
-+		pc = pin ? &t->pinned_pc[t->nr_pinned * LIFECYCLE_NR] : t->tmp_pc;
-+		if (percpu_counter_init_many(pc, 0, GFP_KERNEL, LIFECYCLE_NR))
-+			break;
-+		percpu_counter_add(&pc[0], 100);
-+		percpu_counter_add(&pc[1], -77);
-+		percpu_counter_add(&pc[2], 1);
-+		if (pin)
-+			t->nr_pinned++;
-+		else
-+			percpu_counter_destroy_many(pc, LIFECYCLE_NR);
-+		cond_resched();
-+	}
-+	for (; t->sh->impl == IMPL_TREE && i < CHURN_ITER; i++) {
-+		bool pin = pin_period && !(i % pin_period);
-+
-+		c = pin ? &t->pinned[t->nr_pinned * LIFECYCLE_NR] : t->tmp;
-+		if (percpu_counter_tree_init_many(c, LIFECYCLE_NR, batch, GFP_KERNEL))
-+			break;
-+		percpu_counter_tree_add(&c[0], 100);
-+		percpu_counter_tree_add(&c[1], -77);
-+		percpu_counter_tree_add(&c[2], 1);
-+		if (pin)
-+			t->nr_pinned++;
-+		else
-+			percpu_counter_tree_destroy_many(c, LIFECYCLE_NR);
-+		cond_resched();
-+	}
-+	t->ns = ktime_get_ns() - t0;
-+	t->ops = i;
-+	return 0;
-+}
-+
-+/* List at most @max online CPUs in @cpus, and return their number. */
-+static unsigned int bench_cpus(int *cpus, unsigned int max)
-+{
-+	unsigned int n = 0;
-+	int cpu;
-+
-+	for_each_online_cpu(cpu) {
-+		if (n == max)
-+			break;
-+		cpus[n++] = cpu;
-+	}
-+	return n;
-+}
-+
-+static void bench_stop(struct bench_thread *t, unsigned int n)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < n; i++)
-+		kthread_stop_put(t[i].task);
-+}
-+
-+/*
-+ * Start a thread on each of the @n CPUs of @cpus, waiting for the start
-+ * signal. On failure, cancel and join the threads already started.
-+ */
-+static int bench_start(struct bench_shared *sh, struct bench_thread *t, const int *cpus,
-+		       unsigned int n)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < n; i++) {
-+		t[i].sh = sh;
-+		t[i].task = kthread_create_on_cpu(sh->pin_period != UINT_MAX ? bench_churn_fn :
-+						  sh->lifecycle ? bench_lifecycle_fn :
-+						  bench_update_fn, &t[i], cpus[i], "hpcc_bench/%u");
-+		if (IS_ERR(t[i].task)) {
-+			int ret = PTR_ERR(t[i].task);
-+
-+			WRITE_ONCE(sh->stop, true);
-+			/* Pairs with bench_wait_go(): the threads see stop with go. */
-+			smp_store_release(&sh->go, true);
-+			bench_stop(t, i);
-+			return ret;
-+		}
-+		get_task_struct(t[i].task);
-+		wake_up_process(t[i].task);
-+	}
-+	while (atomic_read(&sh->ready) < n)
-+		usleep_range(1000, 2000);
-+	return 0;
-+}
-+
-+enum bench_mode { BENCH_SHARED, BENCH_PRIVATE, BENCH_MM, BENCH_SINGLE };
-+static const char * const mode_name[] = { "shared", "private", "mm", "single" };
-+
-+/*
-+ * BENCH_SHARED: all threads update one counter.
-+ * BENCH_PRIVATE: each thread updates its own counter (a separate mm).
-+ * BENCH_MM: blocks of n / LIFECYCLE_NR threads each update one counter of
-+ * one mm. Its counters share the cache lines of their tree items, and
-+ * CPUs sharing an item are strided, so each line is updated for every
-+ * counter.
-+ * BENCH_SINGLE: each thread owns a lazily initialized counter, like a
-+ * single-threaded process, never activated. Its IMPL_PERCPU_COUNTER
-+ * comparison is BENCH_PRIVATE.
-+ */
-+/* Counters @i of bench_update(), @c_stride and @pc_stride bytes apart. */
-+#define BENCH_C(i)	((struct percpu_counter_tree *)((char *)c + (i) * c_stride))
-+#define BENCH_PC(i)	((struct percpu_counter *)((char *)pc + (i) * pc_stride))
-+
-+static void bench_update(struct kunit *test, enum bench_mode mode, int wl,
-+			 enum bench_impl impl)
-+{
-+	bool shared = mode == BENCH_SHARED || mode == BENCH_MM;
-+	unsigned int n, i, nr_counters, nr_init = 0;
-+	struct bench_shared sh = { .wl = wl, .pin_period = UINT_MAX, .impl = impl,
-+				   .owner = mode == BENCH_SINGLE };
-+	struct percpu_counter_tree *c;
-+	struct percpu_counter *pc;
-+	struct bench_thread *t;
-+	unsigned long ops = 0;
-+	unsigned int *perm;
-+	size_t c_stride, pc_stride;
-+	void *c_mem, *pc_mem;
-+	u64 t0, t1;
-+	int *cpus;
-+	int ret;
-+
-+	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
-+	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
-+	perm = kunit_kcalloc(test, nr_cpu_ids, sizeof(*perm), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, cpus);
-+	KUNIT_ASSERT_NOT_NULL(test, t);
-+	KUNIT_ASSERT_NOT_NULL(test, perm);
-+	/*
-+	 * Set up the counters for the CPUs online now, before taking
-+	 * cpus_read_lock(), which a failed assertion would leave held. The
-+	 * threads then run on the CPUs online under the lock, at most as many.
-+	 */
-+	n = num_online_cpus();
-+	nr_counters = mode == BENCH_SHARED ? 1 : mode == BENCH_MM ? LIFECYCLE_NR : n;
-+	/*
-+	 * Each private counter is written by its own thread: give each its
-+	 * own cache line, as the RSS counters of separate mms, to avoid false
-+	 * sharing. The counters of one mm stay packed, as in mm_struct.
-+	 */
-+	c_stride = shared ? sizeof(*c) : ALIGN(sizeof(*c), SMP_CACHE_BYTES);
-+	pc_stride = shared ? sizeof(*pc) : ALIGN(sizeof(*pc), SMP_CACHE_BYTES);
-+	c_mem = kunit_kzalloc(test, nr_counters * c_stride + SMP_CACHE_BYTES, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, c_mem);
-+	c = PTR_ALIGN(c_mem, SMP_CACHE_BYTES);
-+	pc_mem = kunit_kzalloc(test, nr_counters * pc_stride + SMP_CACHE_BYTES, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, pc_mem);
-+	pc = PTR_ALIGN(pc_mem, SMP_CACHE_BYTES);
-+	/*
-+	 * Each private counter stands for a separate mm: initialize them
-+	 * separately so they do not share the cache lines of their tree items.
-+	 */
-+	if (impl == IMPL_PERCPU_COUNTER && mode == BENCH_MM) {
-+		if (!percpu_counter_init_many(pc, 0, GFP_KERNEL, nr_counters))
-+			nr_init = nr_counters;
-+	} else if (impl == IMPL_PERCPU_COUNTER) {
-+		for (; nr_init < nr_counters; nr_init++)
-+			if (percpu_counter_init(BENCH_PC(nr_init), 0, GFP_KERNEL))
-+				break;
-+	} else if (mode == BENCH_MM) {
-+		if (!percpu_counter_tree_init_many(c, nr_counters, batch, GFP_KERNEL))
-+			nr_init = nr_counters;
-+	} else {
-+		for (; nr_init < nr_counters; nr_init++) {
-+			if (mode == BENCH_SINGLE ?
-+			    percpu_counter_tree_init_many_lazy(BENCH_C(nr_init), 1, batch) :
-+			    percpu_counter_tree_init(BENCH_C(nr_init), batch, GFP_KERNEL))
-+				break;
-+		}
-+	}
-+	if (nr_init < nr_counters) {
-+		KUNIT_FAIL(test, "cannot initialize %u counters", nr_counters);
-+		goto destroy;
-+	}
-+	cpus_read_lock();
-+	n = bench_cpus(cpus, n);
-+	/* Random placement of the private counters. */
-+	for (i = 0; i < n; i++)
-+		perm[i] = mode == BENCH_SHARED ? 0 : mode == BENCH_MM ? i * LIFECYCLE_NR / n : i;
-+	for (i = n - 1; !shared && i > 0; i--)
-+		swap(perm[i], perm[get_random_u32_below(i + 1)]);
-+	for (i = 0; i < n; i++) {
-+		t[i].c = BENCH_C(perm[i]);
-+		t[i].pc = BENCH_PC(perm[i]);
-+		t[i].seed = get_random_u32() | 1;
-+	}
-+	ret = bench_start(&sh, t, cpus, n);
-+	if (ret) {
-+		cpus_read_unlock();
-+		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
-+		goto destroy;
-+	}
-+	t0 = ktime_get_ns();
-+	WRITE_ONCE(sh.go, true);
-+	msleep(BENCH_MS);
-+	WRITE_ONCE(sh.stop, true);
-+	t1 = ktime_get_ns();
-+	bench_stop(t, n);
-+	cpus_read_unlock();
-+	for (i = 0; i < n; i++)
-+		ops += t[i].ops;
-+	for (i = 0; impl == IMPL_TREE && i < nr_counters; i++)
-+		KUNIT_EXPECT_EQ(test, 0, percpu_counter_tree_check_residuals(BENCH_C(i)));
-+	kunit_info(test, "update %-8s %-14s %3u thr %10llu ns/op/thr %s\n",
-+		   mode_name[mode], wname[wl], n,
-+		   ops ? div64_ul((t1 - t0) * n, ops) : 0, impl_name[impl]);
-+destroy:
-+	if (impl == IMPL_PERCPU_COUNTER && mode == BENCH_MM) {
-+		if (nr_init)
-+			percpu_counter_destroy_many(pc, nr_counters);
-+	} else if (impl == IMPL_PERCPU_COUNTER) {
-+		for (i = 0; i < nr_init; i++)
-+			percpu_counter_destroy(BENCH_PC(i));
-+	} else if (mode == BENCH_MM) {
-+		if (nr_init)
-+			percpu_counter_tree_destroy_many(c, nr_counters);
-+	} else {
-+		for (i = 0; i < nr_init; i++)
-+			percpu_counter_tree_destroy(BENCH_C(i));
-+	}
-+	kunit_kfree(test, pc_mem);
-+	kunit_kfree(test, c_mem);
-+	kunit_kfree(test, perm);
-+	bench_kvfree_now(test, t);
-+	kunit_kfree(test, cpus);
-+}
-+
-+static void bench_lifecycle(struct kunit *test, bool all, enum bench_impl impl, bool lazy)
-+{
-+	struct bench_shared sh = { .lifecycle = true, .pin_period = UINT_MAX,
-+				   .impl = impl, .lazy = lazy };
-+	unsigned int n, i;
-+	struct bench_thread *t;
-+	unsigned long ops = 0;
-+	u64 ns = 0;
-+	int *cpus;
-+	int ret;
-+
-+	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
-+	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
-+	KUNIT_ASSERT_NOT_NULL(test, cpus);
-+	KUNIT_ASSERT_NOT_NULL(test, t);
-+	cpus_read_lock();
-+	n = bench_cpus(cpus, all ? num_online_cpus() : 1);
-+	ret = bench_start(&sh, t, cpus, n);
-+	if (ret) {
-+		cpus_read_unlock();
-+		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
++	sh = kzalloc_obj(*sh);
++	ld = kvcalloc(nr_cpu_ids, sizeof(*ld), GFP_KERNEL);
++	task = kvcalloc(nr_cpu_ids, sizeof(*task), GFP_KERNEL);
++	KUNIT_EXPECT_NOT_NULL(test, sh);
++	KUNIT_EXPECT_NOT_NULL(test, ld);
++	KUNIT_EXPECT_NOT_NULL(test, task);
++	if (!sh || !ld || !task)
 +		goto free;
-+	}
-+	WRITE_ONCE(sh.go, true);
-+	bench_stop(t, n);
-+	cpus_read_unlock();
-+	for (i = 0; i < n; i++) {
-+		ops += t[i].ops;
-+		ns += t[i].ns;
-+	}
-+	KUNIT_EXPECT_EQ(test, ops, (unsigned long)n * LIFECYCLE_ITER);
-+	kunit_info(test, "lifecycle init_many%s(%d)+destroy_many %3u thr %10llu ns/op %s\n",
-+		   lazy ? "_lazy" : "", LIFECYCLE_NR, n, ops ? div64_ul(ns, ops) : 0,
-+		   impl_name[impl]);
-+free:
-+	bench_kvfree_now(test, t);
-+	kunit_kfree(test, cpus);
-+}
-+
-+static void bench_churn(struct kunit *test, bool all, unsigned int pin_period,
-+			enum bench_impl impl)
-+{
-+	struct bench_shared sh = { .pin_period = pin_period, .impl = impl };
-+	unsigned int n, i, j, max_pinned = pin_period ? DIV_ROUND_UP(CHURN_ITER, pin_period) : 0;
-+	unsigned long ops = 0, live = 0;
-+	unsigned int nr_alloc;
-+	struct bench_thread *t;
-+	u64 ns = 0;
-+	int *cpus;
-+	int ret;
-+
-+	cpus = kunit_kcalloc(test, nr_cpu_ids, sizeof(*cpus), GFP_KERNEL);
-+	t = bench_kvzalloc(test, array_size(nr_cpu_ids, sizeof(*t)));
-+	KUNIT_ASSERT_NOT_NULL(test, cpus);
-+	KUNIT_ASSERT_NOT_NULL(test, t);
-+	/* Allocate before taking cpus_read_lock(), as in bench_update(). */
-+	nr_alloc = all ? num_online_cpus() : 1;
-+	for (i = 0; i < nr_alloc; i++) {
-+		t[i].pinned = bench_kvzalloc(test, array_size(max_pinned * LIFECYCLE_NR + 1,
-+							      sizeof(*t[i].pinned)));
-+		t[i].pinned_pc = bench_kvzalloc(test, array_size(max_pinned * LIFECYCLE_NR + 1,
-+								 sizeof(*t[i].pinned_pc)));
-+		KUNIT_ASSERT_NOT_NULL(test, t[i].pinned_pc);
-+		KUNIT_ASSERT_NOT_NULL(test, t[i].pinned);
-+	}
++	ret = percpu_counter_tree_limit_init(&sh->limit, batch_size, GFP_KERNEL);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++	if (ret)
++		goto free;
++	accuracy = percpu_counter_tree_approximate_accuracy(&sh->limit.counters[0]);
++	/* A limit of twice the accuracy, oversubscribed twice: mostly within its accuracy. */
++	sh->max = 2 * accuracy + 1;
++	sh->batch_size = batch_size;
++	init_kthreads();
 +	cpus_read_lock();
-+	n = bench_cpus(cpus, nr_alloc);
-+	ret = bench_start(&sh, t, cpus, n);
-+	if (ret) {
-+		cpus_read_unlock();
-+		KUNIT_FAIL(test, "cannot start the benchmark threads: %d", ret);
-+		goto destroy;
++	cpus = select_worker_cpus();
++	sh->target = 2 * sh->max / cpumask_weight(cpus) + 512;
++	for_each_cpu(cpu, cpus) {
++		ld[cpu].sh = sh;
++		ld[cpu].seed = get_random_u32() | 1;
++		task[cpu] = kthread_create_on_cpu(limit_worker_fn, &ld[cpu], cpu,
++						  "kunit_hpcc_limit/%u");
++		KUNIT_EXPECT_FALSE(test, IS_ERR(task[cpu]));
++		if (IS_ERR(task[cpu]))
++			break;
++		atomic_inc(&kernel_threads_to_run);
++		get_task_struct(task[cpu]);
++		wake_up_process(task[cpu]);
++		nr_workers++;
 +	}
-+	WRITE_ONCE(sh.go, true);
-+	bench_stop(t, n);
++	sh->nr_workers = nr_workers;
++	/* Start the workers once their number is known, see limit_worker_fn(). */
++	smp_store_release(&sh->started, true);
++	wake_up_all(&limit_wq);
++	fini_kthreads();
++	for_each_cpu(cpu, cpus) {
++		if (!IS_ERR_OR_NULL(task[cpu]))
++			kthread_stop_put(task[cpu]);
++	}
 +	cpus_read_unlock();
-+	for (i = 0; i < n; i++) {
-+		ops += t[i].ops;
-+		ns += t[i].ns;
-+		live += t[i].nr_pinned * LIFECYCLE_NR;
-+	}
-+	KUNIT_EXPECT_EQ(test, ops, (unsigned long)n * CHURN_ITER);
-+	kunit_info(test, "churn pin 1/%-4u %3u thr %8llu ns/op live %6lu %s\n",
-+		   pin_period, n, ops ? div64_ul(ns, ops) : 0, live, impl_name[impl]);
-+destroy:
-+	for (i = 0; i < nr_alloc; i++) {
-+		for (j = 0; j < t[i].nr_pinned; j++) {
-+			if (impl == IMPL_PERCPU_COUNTER)
-+				percpu_counter_destroy_many(&t[i].pinned_pc[j * LIFECYCLE_NR],
-+							    LIFECYCLE_NR);
-+			else
-+				percpu_counter_tree_destroy_many(&t[i].pinned[j * LIFECYCLE_NR],
-+								 LIFECYCLE_NR);
-+		}
-+		bench_kvfree_now(test, t[i].pinned_pc);
-+		bench_kvfree_now(test, t[i].pinned);
-+	}
-+	bench_kvfree_now(test, t);
-+	kunit_kfree(test, cpus);
++
++	kunit_info(test, "batch_size=%lu workers=%u max=%lu added=%ld failed=%ld over=%ld\n",
++		   batch_size, nr_workers, sh->max, atomic_long_read(&sh->nr_added),
++		   atomic_long_read(&sh->nr_failed), atomic_long_read(&sh->nr_over));
++	KUNIT_EXPECT_EQ(test, atomic_long_read(&sh->nr_over), 0);
++	KUNIT_EXPECT_GT(test, atomic_long_read(&sh->nr_failed), 0);
++	KUNIT_EXPECT_EQ(test, percpu_counter_tree_limit_precise_sum(&sh->limit), 0);
++	percpu_counter_tree_limit_destroy(&sh->limit);
++free:
++	kvfree(task);
++	kvfree(ld);
++	kfree(sh);
 +}
 +
-+static void hpcc_bench(struct kunit *test)
++/*
++ * Workers on all the worker CPUs add to and subtract from a limit counter
++ * held near its limit. The limit is never exceeded, and the value is back
++ * to 0 once all the workers freed what they held.
++ */
++static void hpcc_test_limit(struct kunit *test)
 +{
-+	static const unsigned int pin_periods[] = { 0, 256, 64, 16, 4 };
-+	struct percpu_counter_tree probe;
-+	unsigned int p;
-+	int wl;
++	if (num_online_cpus() < 2)
++		kunit_skip(test, "needs at least 2 online CPUs");
++	do_hpcc_test_limit(test, 2);
++	do_hpcc_test_limit(test, 32);
++}
 +
-+	if (batch < 2 || !is_power_of_2(batch) || batch > PERCPU_COUNTER_TREE_MAX_BATCH)
-+		kunit_skip(test, "invalid batch size %u", batch);
-+	KUNIT_ASSERT_EQ(test, 0, percpu_counter_tree_init(&probe, batch, GFP_KERNEL));
-+	kunit_info(test, "%u CPUs online, nr_cpu_ids %u\n", num_online_cpus(), nr_cpu_ids);
-+	kunit_info(test, "%s batch %u, accuracy +-%lu\n", impl_name[IMPL_TREE], batch,
-+		   percpu_counter_tree_approximate_accuracy(&probe));
-+	kunit_info(test, "%s batch %d, accuracy +-%lu\n", impl_name[IMPL_PERCPU_COUNTER],
-+		   percpu_counter_batch, (unsigned long)nr_cpu_ids * (percpu_counter_batch - 1));
-+	percpu_counter_tree_destroy(&probe);
-+	bench_lifecycle(test, false, IMPL_TREE, false);
-+	bench_lifecycle(test, false, IMPL_TREE, true);
-+	bench_lifecycle(test, false, IMPL_PERCPU_COUNTER, false);
-+	bench_lifecycle(test, true, IMPL_TREE, false);
-+	bench_lifecycle(test, true, IMPL_TREE, true);
-+	bench_lifecycle(test, true, IMPL_PERCPU_COUNTER, false);
-+	for (p = 0; p < ARRAY_SIZE(pin_periods); p++) {
-+		bench_churn(test, false, pin_periods[p], IMPL_TREE);
-+		bench_churn(test, false, pin_periods[p], IMPL_PERCPU_COUNTER);
-+		bench_churn(test, true, pin_periods[p], IMPL_TREE);
-+		bench_churn(test, true, pin_periods[p], IMPL_PERCPU_COUNTER);
-+	}
-+	for (wl = 0; wl < NR_W; wl++) {
-+		bench_update(test, BENCH_SHARED, wl, IMPL_TREE);
-+		bench_update(test, BENCH_SHARED, wl, IMPL_PERCPU_COUNTER);
-+		bench_update(test, BENCH_PRIVATE, wl, IMPL_TREE);
-+		bench_update(test, BENCH_PRIVATE, wl, IMPL_PERCPU_COUNTER);
-+		bench_update(test, BENCH_MM, wl, IMPL_TREE);
-+		bench_update(test, BENCH_MM, wl, IMPL_PERCPU_COUNTER);
-+		bench_update(test, BENCH_SINGLE, wl, IMPL_TREE);
+ static void hpcc_test_init_one(struct kunit *test)
+ {
+ 	struct percpu_counter_tree pct, zeroed = {};
+@@ -1038,6 +1209,7 @@ static struct kunit_case hpcc_test_cases[] = {
+ 	KUNIT_CASE(hpcc_test_set),
+ 	KUNIT_CASE(hpcc_test_saturated_compare),
+ 	KUNIT_CASE(hpcc_test_contended_carries),
++	KUNIT_CASE_SLOW(hpcc_test_limit),
+ 	KUNIT_CASE(hpcc_test_lazy),
+ 	KUNIT_CASE(hpcc_test_lazy_activation_race),
+ 	{}
+diff --git a/tools/testing/hpcc/include/hpcc_shim.h b/tools/testing/hpcc/include/hpcc_shim.h
+index a455e6432b5c..5d96d68f79bd 100644
+--- a/tools/testing/hpcc/include/hpcc_shim.h
++++ b/tools/testing/hpcc/include/hpcc_shim.h
+@@ -86,9 +86,45 @@ static inline bool atomic_long_try_cmpxchg_relaxed(atomic_long_t *v, long *old,
+ 	return false;
+ }
+ 
+-#define atomic_long_add_return(i, v)		((v)->counter += (i))
+-#define atomic_long_add_return_release(i, v)	((v)->counter += (i))
+-#define atomic_long_try_cmpxchg(v, old, new)	atomic_long_try_cmpxchg_relaxed(v, old, new)
++/*
++ * Stall hook. hpcc_stall_fn() runs once, right after the next ordered
++ * update of hpcc_stall_item. An ordered update is fully ordered or a
++ * release, not relaxed. This simulates an updater interrupted there while
++ * the other CPUs keep running.
++ */
++extern atomic_long_t *hpcc_stall_item;
++extern void (*hpcc_stall_fn)(void);
++
++static inline void hpcc_stall(atomic_long_t *v)
++{
++	void (*fn)(void) = hpcc_stall_fn;
++
++	if (fn && v == hpcc_stall_item) {
++		hpcc_stall_fn = NULL;
++		fn();
 +	}
 +}
 +
-+static struct kunit_case hpcc_bench_cases[] = {
-+	KUNIT_CASE_SLOW(hpcc_bench),
-+	{}
-+};
++static inline long atomic_long_add_return(long i, atomic_long_t *v)
++{
++	long r = (v->counter += i);
 +
-+static struct kunit_suite hpcc_bench_suite = {
-+	.name = "percpu_counter_tree_bench",
-+	.test_cases = hpcc_bench_cases,
-+};
++	hpcc_stall(v);
++	return r;
++}
 +
-+kunit_test_suite(hpcc_bench_suite);
++static inline long atomic_long_add_return_release(long i, atomic_long_t *v)
++{
++	return atomic_long_add_return(i, v);
++}
 +
-+MODULE_DESCRIPTION("Benchmark for hierarchical per-CPU counters");
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++static inline bool atomic_long_try_cmpxchg(atomic_long_t *v, long *old, long new)
++{
++	if (!atomic_long_try_cmpxchg_relaxed(v, old, new))
++		return false;
++	hpcc_stall(v);
++	return true;
++}
+ 
+ /* Simulated topology, and CPU on which the current code runs. */
+ extern unsigned int nr_cpu_ids;
+diff --git a/tools/testing/hpcc/main.c b/tools/testing/hpcc/main.c
+index 1b86fea543e5..8046fb3a59eb 100644
+--- a/tools/testing/hpcc/main.c
++++ b/tools/testing/hpcc/main.c
+@@ -23,6 +23,12 @@
+  *   counter, exact before its tree is activated halfway, with the same
+  *   checks after each increment.
+  *
++ * - Limit counters: random additions and subtractions near the limit,
++ *   which must fit exactly when the value stays within it. Hooks stall an
++ *   addition in flight to check the cases where the sums race with it.
++ *   Each test runs again with both counters about to wrap, as unsigned and
++ *   as signed values.
++ *
+  * The test is single-threaded, so it only covers settled counters.
+  */
+ 
+@@ -33,6 +39,8 @@ unsigned int nr_cpu_ids;
+ unsigned int hpcc_current_cpu;
+ unsigned long hpcc_nr_warnings;
+ long hpcc_nr_allocs;
++atomic_long_t *hpcc_stall_item;
++void (*hpcc_stall_fn)(void);
+ 
+ #include "../../../lib/percpu_counter_tree.c"
+ 
+@@ -389,6 +397,320 @@ static void test_lazy(unsigned long batch_size, unsigned long nr_steps)
+ 	CHECK(hpcc_nr_allocs == nr_allocs);
+ }
+ 
++/*
++ * Both counters of a limit counter only grow, so they wrap after enough
++ * updates. The limit tests start both roots at limit_base, which leaves
++ * the value at 0. When limit_wrap is set, the base is a random distance
++ * below the wrap point limit_wrap_at, within the range the tests cover.
++ * A check which compares the roots without taking their difference then
++ * fails while one side of the comparison has wrapped and the other has
++ * not.
++ */
++static bool limit_wrap;
++static unsigned long limit_wrap_at, limit_base;
++
++static int limit_init(struct percpu_counter_tree_limit *l, unsigned long batch_size)
++{
++	unsigned long accuracy;
++
++	if (percpu_counter_tree_limit_init(l, batch_size, GFP_KERNEL))
++		return -ENOMEM;
++	limit_base = 0;
++	if (limit_wrap) {
++		accuracy = percpu_counter_tree_approximate_accuracy(&l->counters[0]);
++		limit_base = limit_wrap_at - 1 - rnd() % (8 * accuracy);
++	}
++	atomic_long_set(l->counters[0].approx_sum, limit_base);
++	atomic_long_set(l->counters[1].approx_sum, limit_base);
++	return 0;
++}
++
++/* Each counter of a limit counter errs in one direction only. */
++static void check_limit(struct percpu_counter_tree_limit *l, unsigned long add_total,
++			unsigned long sub_total)
++{
++	struct percpu_counter_tree *add = &l->counters[0], *sub = &l->counters[1];
++	unsigned long accuracy = percpu_counter_tree_approximate_accuracy(add);
++	unsigned long root_add = atomic_long_read(add->approx_sum);
++	unsigned long root_sub = atomic_long_read(sub->approx_sum);
++
++	CHECK(percpu_counter_tree_precise_sum_upper(add) == add_total);
++	CHECK((unsigned long)percpu_counter_tree_precise_sum(sub) == sub_total);
++	/* Modulo the wrap: a root above its total gives a huge difference. */
++	CHECK(add_total - root_add <= accuracy);
++	CHECK(sub_total - root_sub <= accuracy);
++	CHECK(percpu_counter_tree_limit_precise_sum(l) == add_total - sub_total);
++}
++
++/*
++ * Without concurrency, an addition must fit exactly when the value stays
++ * within the limit. The limit is a few accuracies wide, so the walk often
++ * runs within the accuracy of the limit, where the precise sums decide.
++ */
++static void test_limit(unsigned long batch_size, unsigned long nr_steps)
++{
++	unsigned long value = 0, add_total, sub_total, accuracy, max, step, amount;
++	struct percpu_counter_tree_limit l;
++	bool added;
++
++	if (limit_init(&l, batch_size)) {
++		CHECK(0);
++		return;
++	}
++	add_total = limit_base;
++	sub_total = limit_base;
++	accuracy = percpu_counter_tree_approximate_accuracy(&l.counters[0]);
++	max = 3 * accuracy + rnd() % (accuracy + 1) + 1;
++	for (step = 0; step < nr_steps; step++) {
++		hpcc_current_cpu = rnd() % nr_cpu_ids;
++		if (value && !(rnd() % 3)) {
++			amount = 1 + rnd() % value;
++			percpu_counter_tree_limit_sub(&l, amount);
++			value -= amount;
++			sub_total += amount;
++		} else {
++			amount = 1 + rnd() % ((rnd() & 1) ? batch_size : 8 * batch_size);
++			added = percpu_counter_tree_limit_add(&l, max, amount);
++			CHECK(added == (value + amount <= max));
++			if (added) {
++				value += amount;
++				add_total += amount;
++			} else if (amount <= batch_size) {
++				/* Added, then undone by a subtraction. */
++				add_total += amount;
++				sub_total += amount;
++			}	/* A larger amount which cannot fit is not added. */
++		}
++		check_limit(&l, add_total, sub_total);
++	}
++	/* Fill up: the value stops exactly at the limit. */
++	while (value < max) {
++		hpcc_current_cpu = rnd() % nr_cpu_ids;
++		amount = (max - value + 1) / 2;
++		CHECK(percpu_counter_tree_limit_add(&l, max, amount));
++		value += amount;
++		add_total += amount;
++	}
++	CHECK(!percpu_counter_tree_limit_add(&l, max, 1));
++	add_total++;
++	sub_total++;
++	CHECK(value == max);
++	check_limit(&l, add_total, sub_total);
++	percpu_counter_tree_limit_destroy(&l);
++}
++
++/* State of test_limit_stall(), shared with its stall hook. */
++static struct {
++	struct percpu_counter_tree_limit l;
++	unsigned long max, value;
++	unsigned int stalled_cpu, share_mask;
++} stall;
++
++/*
++ * While one addition is stalled, the CPUs sharing its stalled item add.
++ * Their carries meet its pending items, and go straight to the root.
++ */
++static void stall_others_add(void)
++{
++	struct percpu_counter_tree *add = &stall.l.counters[0];
++	unsigned long batch_size = percpu_counter_tree_batch_size(add);
++	unsigned long root = atomic_long_read(add->approx_sum);
++	unsigned int saved = hpcc_current_cpu, cpu, i;
++	bool others = false;
++
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		if (cpu == stall.stalled_cpu ||
++		    (cpu & stall.share_mask) != (stall.stalled_cpu & stall.share_mask))
++			continue;
++		others = true;
++		hpcc_current_cpu = cpu;
++		for (i = 0; i < batch_size; i++) {
++			if (percpu_counter_tree_limit_add(&stall.l, stall.max, 1))
++				stall.value++;
++		}
++		CHECK(stall.value <= stall.max);
++		CHECK(percpu_counter_tree_limit_precise_sum(&stall.l) >= stall.value);
++	}
++	if (others)
++		CHECK((long)(atomic_long_read(add->approx_sum) - root) > 0);
++	hpcc_current_cpu = saved;
++}
++
++/*
++ * Fill each residual of the additions to its largest value. The value is
++ * then the accuracy, and the root is 0. The limit is set to the value.
++ * Then an addition on CPU 0 carries up to the root through all the
++ * levels. Stall it right after it arrives at its item of @stall_level,
++ * or at the root when @stall_level is nr_levels. Its items below the
++ * root then hold their carries on the way up. The CPUs sharing the
++ * stalled item add while it is stalled, and must fail.
++ */
++static void test_limit_stall(unsigned long batch_size, unsigned int stall_level)
++{
++	unsigned int nr_levels = tree_topology.config->nr_levels, level, level_items, i, cpu;
++	unsigned long step, bit_mask;
++	struct percpu_counter_tree *add;
++	atomic_long_t *item;
++
++	if (limit_init(&stall.l, batch_size)) {
++		CHECK(0);
++		return;
++	}
++	add = &stall.l.counters[0];
++	stall.max = percpu_counter_tree_approximate_accuracy(add);
++	stall.value = 0;
++	/*
++	 * An amount of bit_mask - step is a multiple of the batch sizes of the
++	 * levels below. It goes through them and stays in item i of this
++	 * level. CPU i updates that item.
++	 */
++	level_items = 1U << tree_topology.nr_cpus_order;
++	bit_mask = batch_size;
++	item = percpu_counter_tree_items(add);
++	stall.share_mask = 0;		/* At the root, all CPUs share it. */
++	for (level = 1; level < nr_levels; level++) {
++		step = bit_mask;
++		level_items >>= tree_topology.config->n_arity_order[level - 1];
++		bit_mask <<= tree_topology.config->n_arity_order[level - 1];
++		if (level == stall_level) {
++			hpcc_stall_item = item;		/* CPU 0's item. */
++			stall.share_mask = level_items - 1;
++		}
++		for (i = 0; i < level_items; i++) {
++			hpcc_current_cpu = i;
++			CHECK(percpu_counter_tree_limit_add(&stall.l, stall.max, bit_mask - step));
++			stall.value += bit_mask - step;
++		}
++		item += level_items * add->items_stride;
++	}
++	if (stall_level >= nr_levels)
++		hpcc_stall_item = add->approx_sum;
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		hpcc_current_cpu = cpu;
++		CHECK(percpu_counter_tree_limit_add(&stall.l, stall.max, batch_size - 1));
++		stall.value += batch_size - 1;
++	}
++	CHECK(stall.value == stall.max);
++	CHECK((unsigned long)atomic_long_read(add->approx_sum) == limit_base);
++
++	stall.stalled_cpu = 0;
++	hpcc_stall_fn = stall_others_add;
++	hpcc_current_cpu = stall.stalled_cpu;
++	if (percpu_counter_tree_limit_add(&stall.l, stall.max, 1))
++		stall.value++;
++	CHECK(!hpcc_stall_fn);	/* The stall happened. */
++	hpcc_stall_fn = NULL;
++	CHECK(stall.value <= stall.max);
++	CHECK(percpu_counter_tree_limit_precise_sum(&stall.l) == stall.value);
++	percpu_counter_tree_limit_destroy(&stall.l);
++}
++
++/* State of test_limit_retry(), shared with its stall hook. */
++static struct {
++	struct percpu_counter_tree_limit l;
++	unsigned long in_flight;
++	unsigned int in_flight_cpu;
++} retry;
++
++/* The concurrent addition in flight fails, and is undone. */
++static void retry_undo_in_flight(void)
++{
++	unsigned int saved = hpcc_current_cpu;
++
++	hpcc_current_cpu = retry.in_flight_cpu;
++	percpu_counter_tree_limit_sub(&retry.l, retry.in_flight);
++	hpcc_current_cpu = saved;
++}
++
++/*
++ * With one unit free, CPU 0 adds 1 while another addition of 1 is in
++ * flight, about to fail. CPU 0 fails, and that addition is undone while
++ * CPU 0 undoes its own. CPU 0 must then retry, and fit.
++ */
++static void test_limit_retry(unsigned long batch_size)
++{
++	struct percpu_counter_tree *add = &retry.l.counters[0], *sub = &retry.l.counters[1];
++	unsigned long max, value = 0, amount;
++
++	if (limit_init(&retry.l, batch_size)) {
++		CHECK(0);
++		return;
++	}
++	max = 2 * percpu_counter_tree_approximate_accuracy(add) + 1;
++	hpcc_current_cpu = 1 % nr_cpu_ids;
++	while (value < max - 1) {
++		amount = max - 1 - value < batch_size ? max - 1 - value : batch_size;
++		CHECK(percpu_counter_tree_limit_add(&retry.l, max, amount));
++		value += amount;
++	}
++	/* CPU 0's subtractions at batch_size - 1: its undo carries. */
++	hpcc_current_cpu = 0;
++	percpu_counter_tree_limit_sub(&retry.l, batch_size - 1);
++	hpcc_current_cpu = 1 % nr_cpu_ids;
++	CHECK(percpu_counter_tree_limit_add(&retry.l, max, batch_size - 1));
++	/* The addition in flight, from another CPU. */
++	retry.in_flight = 1;
++	retry.in_flight_cpu = 2 % nr_cpu_ids;
++	hpcc_current_cpu = retry.in_flight_cpu;
++	percpu_counter_tree_add_arrive_first(add, retry.in_flight);
++	/* CPU 0's undo carries to the first item of the subtractions. */
++	hpcc_stall_item = tree_topology.config->nr_levels > 1 ?
++			  percpu_counter_tree_items(sub) : sub->approx_sum;
++	hpcc_stall_fn = retry_undo_in_flight;
++	hpcc_current_cpu = 0;
++	CHECK(percpu_counter_tree_limit_add(&retry.l, max, 1));
++	CHECK(!hpcc_stall_fn);	/* The other addition was undone during the check. */
++	hpcc_stall_fn = NULL;
++	CHECK(percpu_counter_tree_limit_precise_sum(&retry.l) == max);
++	percpu_counter_tree_limit_destroy(&retry.l);
++}
++
++/*
++ * An amount larger than the batch size which cannot fit fails before it
++ * is added. The additions do not change, and a fitting amount still fits.
++ */
++static void test_limit_precheck(unsigned long batch_size)
++{
++	struct percpu_counter_tree_limit l;
++	unsigned long max, value = 0, amount, before;
++
++	if (limit_init(&l, batch_size)) {
++		CHECK(0);
++		return;
++	}
++	max = 2 * percpu_counter_tree_approximate_accuracy(&l.counters[0]) + 1;
++	hpcc_current_cpu = 1 % nr_cpu_ids;
++	while (value < max - batch_size) {
++		amount = max - batch_size - value;
++		if (amount > batch_size)
++			amount = batch_size;
++		CHECK(percpu_counter_tree_limit_add(&l, max, amount));
++		value += amount;
++	}
++	before = percpu_counter_tree_precise_sum_upper(&l.counters[0]);
++	hpcc_current_cpu = 0;
++	CHECK(!percpu_counter_tree_limit_add(&l, max, 2 * batch_size));
++	CHECK(percpu_counter_tree_precise_sum_upper(&l.counters[0]) == before);
++	CHECK(percpu_counter_tree_limit_add(&l, max, batch_size));
++	CHECK(percpu_counter_tree_limit_precise_sum(&l) == max);
++	percpu_counter_tree_limit_destroy(&l);
++}
++
++/* The batch size chosen for an accuracy is the largest within it. */
++static void test_batch_for_accuracy(void)
++{
++	unsigned long multiplier = tree_topology.accuracy_multiplier, accuracy, batch_size;
++
++	for (accuracy = 1; accuracy < 512 * multiplier; accuracy = accuracy * 3 + 1) {
++		batch_size = percpu_counter_tree_batch_for_accuracy(accuracy);
++		CHECK(batch_size >= 2 && batch_size <= PERCPU_COUNTER_TREE_MAX_BATCH);
++		if (batch_size > 2)
++			CHECK(batch_size * multiplier - nr_cpu_ids <= accuracy);
++		if (batch_size < PERCPU_COUNTER_TREE_MAX_BATCH)
++			CHECK(2 * batch_size * multiplier - nr_cpu_ids > accuracy);
++	}
++}
++
+ static const unsigned int test_nr_cpus[] = {
+ 	1, 2, 3, 4, 5, 8, 9, 16, 17, 32, 33, 64, 65, 100, 128, 256, 512,
+ 	1000, 1024, 2048, 4096, 8192, 16384, 32768, 65536,
+@@ -405,6 +727,12 @@ static int test_num;
+ 
+ static int run_case(unsigned int nr_cpus, unsigned long batch_size)
+ {
++	/* No wrap, then below the unsigned and the signed wrap points. */
++	const struct {
++		bool wrap;
++		unsigned long at;
++	} wraps[] = { { false, 0 }, { true, 0 }, { true, 1UL << (BITS_PER_LONG - 1) } };
++	unsigned int level, i;
+ 	/* Each check iterates over all CPUs: bound the random walk cost. */
+ 	unsigned long nr_steps = 10000000 / nr_cpus;
+ 
+@@ -420,6 +748,20 @@ static int run_case(unsigned int nr_cpus, unsigned long batch_size)
+ 	test_saturated(batch_size, -1);
+ 	test_random_walk(batch_size, nr_steps);
+ 	test_lazy(batch_size, nr_steps / 2);
++	for (i = 0; i < ARRAY_SIZE(wraps); i++) {
++		limit_wrap = wraps[i].wrap;
++		limit_wrap_at = wraps[i].at;
++		test_limit(batch_size, nr_steps / 2);
++		/* These fill the tree near the limit, where each addition sums all CPUs. */
++		if (nr_cpus > 4096)
++			continue;
++		for (level = 1; level <= tree_topology.config->nr_levels; level++)
++			test_limit_stall(batch_size, level);
++		test_limit_retry(batch_size);
++		test_limit_precheck(batch_size);
++	}
++	limit_wrap = false;
++	test_batch_for_accuracy();
+ 	CHECK(!hpcc_nr_warnings);
+ 	printf("%sok %d - nr_cpus=%u batch_size=%lu\n", nr_case_failures ? "not " : "",
+ 	       ++test_num, nr_cpus, batch_size);
 -- 
 2.47.3
 
