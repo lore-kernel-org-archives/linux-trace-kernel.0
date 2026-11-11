@@ -1,50 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794429412;
-	b=jBGXO2LddKSjck+3FcxjyQ2u244z8C+AARauHQ/O6DETCVR3F9WzH53c9a6XrsoVvwtN
-	 rygoymw8DZaX3JttTVul6KUM4ZFn/F/EfgS6ESLctmYuTt6znD4jyjwCZwsmyJ7cUlYGL
-	 053IbOKjQkX955JIj0TuRTTml5WctM8iLlFNeAC7SYf+J/iI5CpSHNEnv+CXY6DyhMfgZ
-	 kPub2BEIRPDAk8+FaEIYoHvMhUk7EqZm3HaM2/8fdVFLNpzvWR7mTGXa4d2x0N0zbHkjQ
-	 lYVgvvDesLTDBCrmmNyS1x20JA5Cu3sEmAkE/9OyrfpWFvAtZTvgri4MC1y8AbYzWaA==
+	b=qsgZdlhDLesScKfnHEM2aQiX29pjmy+k1w46+tNxqqgRVUDkIyV+Oe3mVGJaKooSGGd6
+	 6anZYlIfD9i44kxDevJeCQxRidmzVckq4ZN9qZVTpOIdMLpECqsIK8SBfn2ttAg4ROE3M
+	 CyOljKvxRNICjLb8AupDKetdJT/VyjdsxhR54iZ8ofYa8RTyoNoRYujYEfTyOrZdsjuES
+	 FjvJ+IYh1ceALyE0od0kw8FSjIgi466GO+Id1pZ2dhzNrn/gg8OG6PIp0I7Va6eYf4DOe
+	 KvpS8fMwfTHNm9KW9vomos+tr00FmDMQSEo/VdiLxo5LjniAMGz96j7zqsEL0fUYpiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794429412;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=uiPGc2n2/BGHMqpLuvgSG4/0QiY/CLJ19HEnna2L/fE=;
-	b=KPeebRCYbU234Qb3u5/Slkl2RhrONamUmvn0D1miKHBp1R/OzRl7yObxW+OBkPfZv29h
-	 EFPxCzzXqFoNMa2yPfWMb+peNCxtgd2jjWLhmd2RPGpR6fMsjwmWQI8L10jL1XKk0mZNH
-	 CRNPuSqgQC+aTT15cdeS+sFUtcnR0qNtV0KJcQjVq5iqZKCXCd4Q0KPKSGWKHuornjElp
-	 tNWrlrVTpctFeXEexSD9OnvtaP+1qRXXSJSSFjwzflPfYt4KK/vKvDM+etJlhP45KNAXU
-	 w6+bJAfg7JlqnRJlYpMUOsm+t7+BmxxX2szLQ5NqHDeuJctO0Hk8GYiKGlMBuekHl1g==
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=iNelVVVQ6UGMHgjtzzgPBEP9I9g97zvZFPWu2zPDn+Q=;
+	b=uIOSIXu60bTF99hHIWDzvUY4aC5EnRjrtD+/apOqYS4NACLti5iJ65PLNqiZGzALPb0o
+	 Ci7boyiCbhQUYPWmkLDyR00Rg2og2ctBlypBcQ1jZwDdxEVNVmvUNtn+bYY/CgioSp/dd
+	 Va45uJENhCKpaaRnpkAvWuSHA9V+ZZGNSVNx0S7ZUUWyMa3K1uD9Thg4zXKp7B/Moysuq
+	 FmgwQ6KnsLs75hs/dks/qUMRkHDBVQVWPTPb24rOJNwGstaTDzMiBv3Qd462TPJ4vBbpQ
+	 AA/l4iq2kPRK1ZDoLiLriuHngWEq5rC7EqTLlwVbI7IE0FpMn3hEV4GTCDwNPtVJU5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=gO2IBJoY;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=DysndmlN;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CD6606A32A;
-	Wed, 11 Nov 2026 20:36:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 83CD6606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF7606A324;
+	Wed, 11 Nov 2026 20:36:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0EFF7606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=gO2IBJoY
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=DysndmlN
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1794429405;
-	bh=uiPGc2n2/BGHMqpLuvgSG4/0QiY/CLJ19HEnna2L/fE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gO2IBJoYm8igvrjkzx9dzgvirhseWfahzJqIhIpUysJEn7FX2KUp6GE/5DcGBh5Ll
-	 10xcKMskngtdeX0oekmL6y1dut1WvGqhwN7sDODD36rEE9RvF1CXI2klIe/S/zBhLM
-	 Z5egJEt9FuBEJ5uUz8OnG4rZSt+OSbrIjkd4tkkaFIIYPVeTJ8A+Ux377gTDFfCTNA
-	 5T3CenAsbuwSSdNodKayGcaykVS9C6Az8ygX7UyK92kHEA1ayRsrpij0PKkDr/DTKg
-	 nGZfvHmsYYM1PsNkoVn2cWzsXj6C2SfNoIOWMK2ZmvASia5jW8FEjjrnUQ5NUT0TSq
-	 hrCt4emA+VEJg==
+	s=smtpout1; t=1794429404;
+	bh=iNelVVVQ6UGMHgjtzzgPBEP9I9g97zvZFPWu2zPDn+Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DysndmlNPCYGZnFFIoSjZ6ntTNq+Fb5zqeWwYA4WwXJJbIF6d/3NBzeJiokBOC8u5
+	 0w+9FKhpwCK7S++HYy2dE+3EmSvWT4DN4yW3o1yOzO+leAaTh9BcWFLicG4+51A61U
+	 gHYJH2iW1Dhv+SZZGZcwSvj976YuWLvTlNRIhqwoO8/RajIOcdW8G5GdZJOP/5B9Z/
+	 R+J8zPI5rnU8KfOJhcfr0wBGhhqVekwO+sT1kH9VaqNUM0HvjalfGsqR6qwkfXIZET
+	 71DGVmLe3WXMzGZk01c8z5sYu5Hy8toc+SwEMkDfnABYH9+mQB0ciW/xWVSOQeeaLp
+	 D1SmjIga6Ez3g==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKm626CzN2x;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKm0dZZzNJW;
 	Wed, 11 Nov 2026 15:36:44 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
@@ -107,12 +106,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Boqun Feng <boqun@kernel.org>,
 	Hugh Dickins <hughd@google.com>
-Subject: [RFC PATCH v25 03/14] mm: use hierarchical per-cpu counters for the RSS counters
-Date: Wed, 11 Nov 2026 15:36:15 -0500
-Message-Id: <20261111203626.95838-4-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v25 00/14] Hierarchical Percpu Counters for RSS and tmpfs
+Date: Wed, 11 Nov 2026 15:36:12 -0500
+Message-Id: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
-References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -124,334 +121,329 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use hierarchical per-cpu counters for RSS tracking to bound the inaccuracy
-of the per-mm RSS approximation on large many-core systems [1].
+Hi David,
 
-The approximation is read by /proc/PID/stat (rss), by the RSS high
-watermark (VmHWM in /proc/PID/status, getrusage() ru_maxrss, taskstats
-hiwater_rss), by the taskstats integral RSS, by NUMA balancing to scale
-its scan period, and by the mark_victim OOM tracepoint.
-/proc/PID/status, /proc/PID/statm, the OOM killer and the rss_stat
-tracepoint use precise sums, which iterate over all CPUs for each read:
-the tracepoint since commit f1a7941243c1 ("mm: convert mm's rss stats
-into percpu_counter"), and the others since commit 82241a83cd15 ("mm:
-fix the inaccurate memory statistics issue for users") and
-commit 5898aa8f9a0b ("mm: fix OOM killer inaccuracy on large many-core
-systems").
+Here is the hierarchical per-cpu counters series, based on v7.4-rc2.
+After your review of v24 [3], v25 adds a second user in patches 8 to
+11. This user is the tmpfs size limit. It is still an RFC because of the
+questions at the end.
 
-Here is a (possibly incomplete) list of the prior approaches that were
-used or proposed, along with their downside:
+The problem
+-----------
 
-1) Per-thread rss tracking: large error on many-thread processes.
+The RSS counters are struct percpu_counter since
+commit f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter").
+Their batch size is max(32, 2 * nr_cpus). So their error grows with
+nr_cpus^2. At 384 logical CPUs, it reaches 1.1GB per counter.
 
-2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
-   increased system time in make test workloads [1]. Moreover, the
-   inaccuracy increases with O(n^2) with the number of CPUs.
+/proc/PID/status, /proc/PID/statm and the OOM killer now use precise
+sums (commits 82241a83cd15 and 5898aa8f9a0b). Other readers still use
+the approximation:
 
-3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
-   error is high with systems that have lots of NUMA nodes (32 times
-   the number of NUMA nodes).
+- the RSS high watermark (VmHWM, ru_maxrss, taskstats);
+- /proc/PID/stat (ps, top, monitoring agents);
+- the taskstats RSS-time integral (coremem);
+- NUMA balancing and the mark_victim tracepoint.
 
-4) Use a precise per-cpu counter sum for each counter value query:
-   Requires iteration on each possible CPU for each sum, which
-   adds overhead on large many-core systems running many processes.
+On the test machine below, /proc/PID/stat was off by 17MB for a
+single-threaded process. It was off by up to 134MB with 64 threads.
 
-The approach proposed here is to replace the per-cpu counters by the
-hierarchical per-cpu counters, which bounds the inaccuracy based on the
-system topology with O(N*logN).
+Precise sums cannot fix the high watermark or the integral. They are
+sampled on every unmap and at each tick. A precise sum reads every
+possible CPU: about 4us per counter at 384 logical CPUs. A smaller batch
+takes the counter spinlock on every carry. At batch 32, an update of a
+shared mm costs 4.4 to 69us with one thread per CPU. With this series,
+it costs 26ns to 1.2us.
 
-* Testing results:
+The tmpfs size limit has the same problem in another form.
+percpu_counter_limited_add() takes no lock only while the mount is more
+than batch * nr_cpus pages below its size. This is 1.1GB at 384 logical
+CPUs. A smaller mount, such as a 64MB /dev/shm, takes the counter
+spinlock and sums all CPUs for each page.
 
-Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical CPUs)
+The series
+----------
 
-Methodology:
+Patches 1 to 5 use hierarchical per-cpu counters for the RSS counters.
+Per-cpu bytes carry into a tree of atomic counters. The tree is shaped
+at boot from nr_cpu_ids. The batch is 32 and the error bound is in
+O(n*log(n)). There is no global lock. A follow-up will use the
+comparison functions for the OOM killer task selection.
 
-Comparing the current upstream implementation with the hierarchical
-counters is done with a debug patch, which keeps both implementations
-wired up in parallel, and a test program, neither part of this series.
-The single-process, single-threaded program hops randomly across CPUs in
-the system, calling mmap(2) and munmap(2) on random CPUs, keeping track of
-an array of 100000 mapping slots, randomly choosing slots to either map 1
-to 16 pages or unmap them.
+Patches 6 and 7 keep the RSS counters of single-threaded processes
+exact, without per-cpu memory. Until a second thread shares the mm, the
+counters are a plain bias and an atomic bias. Creating the second
+thread allocates the per-cpu counters and activates the tree. Most
+processes never need that per-cpu memory, so process creation gets
+cheaper. In a 384-vCPU guest, posix_spawn() of a static program gains
+22 to 42% over patches 1 to 5.
 
-get_mm_counter() is instrumented to compare both counter approximations
-to the precise value, and to record the largest delta of each.  The test
-runs in a KVM guest with 384 vCPUs, each pinned to its own CPU of the test
-hardware, with the NUMA topology of the host.
+Patch 8 adds limit counters on the tree. A limit counter splits the
+value into two counters which only grow: the additions and the
+subtractions. Their carries are ordered so that each sum errs in one
+direction only. An addition then checks the limit without a lock. It
+sums the CPUs only within the accuracy of the limit. The limit stays
+strict. Patch 9 tests the limit counters, and patch 10 checks their
+memory ordering with litmus tests. Patch 11 uses a limit counter for
+the tmpfs size limit.
 
-With the counters of this patch, before the single-threaded mode added
-later in the series, the upstream implementation counter approximation
-reaches an 830MB delta from the precise value within the first seconds,
-while the mappings accumulate, compared to a 106MB delta with the
-hierarchical counter.  The hierarchical counter approximation is
-guaranteed to be within 158.5MB of the precise value in both directions
-on that hardware topology, compared to 1.1GB for the upstream
-implementation (384 CPUs * 767 pages).
+Patches 12 to 14 are tools to check the tree shape on other hardware:
+two boot parameters and a KUnit benchmark. I measured the defaults on
+one machine only, so results from other hardware are welcome.
 
-* Fast path implementation comparison
+Results
+-------
 
-The new percpu_counter_tree_add() updates a per-cpu byte with a
-this_cpu_try_cmpxchg() loop on the fast path, like the upstream
-percpu_counter_add_batch().  When the per-cpu residual reaches the batch
-size, it calls a slow path which "trickles up" the carry to upper level
-counters with atomic_add_return(), each of them keeping its own residual.
+The machine is a 2-socket AMD EPYC 9654 with 384 logical CPUs. The
+tree is 8,8,8 with batch 32. Patches 3, 7 and 11 have the details. The
+bare-metal results were measured on v7.3.
 
-In comparison, the upstream percpu_counter_add_batch() takes a global
-raw_spin_lock_irqsave() when reaching the batch size, and flushes the
-whole per-cpu count into the global count.
+  Accuracy per counter, bound and largest error seen, while a process
+  hops across all CPUs (384-vCPU guest pinned to the host):
 
-The hierarchical implementation is therefore expected to have less
-contention on mid-sized allocations than the upstream counters because
-the atomic counters tracking those bits are each shared by a fraction of
-the CPUs.
+                                        hpcc   upstream
+    bound                            158.5MB      1.1GB
+    measured, single-threaded      0 (exact)      841MB
+    measured, with a second thread      96MB      845MB
 
-* Benchmarks
+  Update cost, ns per update, one thread per CPU, bare metal (mm: the 4
+  counters of one mm; private: one counter per thread):
 
-Using will-it-scale page_fault1 benchmarks to compare the upstream
-counters to the hierarchical counters of this patch.  This is done with
-hyperthreading disabled at runtime, so the counter tree keeps its shape
-for 384 logical CPUs, while the upstream batch size follows the 192
-online ones (384 instead of 768).  The differences are within the
-boot-to-boot spread of up to 3%, and the multi-threaded runs, bound by
-the mmap_lock, have a standard deviation of 5% to 11%: no regression is
-measured, and no gain is claimed.  The numbers with the whole series are
-in patch 7 and the cover letter.
+                                              upstream   upstream
+                                       hpcc  batch 768   batch 32
+    mm, +1                               26        288       4370
+    mm, random +-32                     135        385      69171
+    mm, random +-512                   1174      20229      69186
+    private, random +-32                 31         20          -
 
-                                          upstream   hierarchical     delta
-page_fault1_processes -s 100 -t 1           544932         557092     +2.2%
-page_fault1_threads -s 100 -t 1             547501         557742     +1.9%
-page_fault1_processes -s 100 -t 96        37374404       37580199     +0.6%
-page_fault1_threads -s 100 -t 96           2311884        2299998     -0.5%
-page_fault1_processes -s 100 -t 192       69491758       70590309     +1.6%
-page_fault1_threads -s 100 -t 192          2284108        2271423     -0.6%
+  Memory per mm, in bytes (guest, v7.4-rc1):
 
-* Memory Use
+                  single-threaded   threaded   upstream
+    16 CPUs                  1820       1948       2076
+    384 CPUs                 1928       8145       8072
+    1024 CPUs                2185      17204      18569
 
-Each mm_struct holds NR_MM_COUNTERS (4) counters, initialized together
-by percpu_counter_tree_init_many() with a batch size of 32, so their tree
-items share cache lines.  Per mm, on a 64-bit arch with 64-byte cache
-lines, compared to the upstream percpu counters, along with the maximum
-inaccuracy of each counter in pages:
+  tmpfs, fallocate() of one page at a time, in thousands of calls per
+  second (384-vCPU guest, v7.4-rc2):
 
-                  Bytes per mm         Accuracy (pages)
-  nr_cpus fan-out    hpcc  upstream      hpcc    upstream
-        2 2           200       192      +-62        +-62
-       16 16          256       416     +-496       +-496
-       64 16,4        704      1184    +-3904      +-8128
-      128 8,16       1728      2208    +-7552     +-32640
-      256 8,4,8      3776      4256   +-21248    +-130816
-      384 8,8,8      6336      6304   +-40576    +-294528
-      512 8,8,8      6848      8352   +-44544    +-523776
-     1024 8,8,16    13504     16544   +-89088   +-2096128
-     4096 8,8,8,8   53952     65696  +-471040  +-33550336
+    size=  processes   upstream    hpcc
+    64MB           1        208     483
+    64MB         384        126   54275
+    1GB          384        125   93879
+    2GB          384      93851   93476
 
-This counts the 4 counter structures, their per-cpu data, and the tree
-items, without the rounding of the slab cache holding them.  The
-fan-out is listed from the per-cpu counters to the root.  Up to 32 CPUs,
-the tree is flat.  Up to 16 CPUs, its accuracy matches the upstream
-counters, whose batch size of max(32, 2 * nr_cpus) grows beyond, making
-them less accurate than the hierarchical counters, except from 33 to 39
-CPUs, where the intermediate counters of the 16,4 tree make the
-hierarchical counters up to 1.37 times less accurate.
+Behavior changes
+----------------
 
-The hierarchical counters use less memory than the upstream counters
-from 3 to 64 CPUs.  The tree is shaped for nr_cpus rounded up to a power
-of 2: when nr_cpus is a power of 2, they also use less memory beyond 64
-CPUs (at most 0.89 times as much).  Between powers of 2, fewer CPUs
-share the cost of the tree items: 1.01 times at 384 logical CPUs, 1.09
-at 192 and 0.94 at 96, and up to 1.47 times just above a power of 2 (at
-129 CPUs, 1.23 at 65 and 1.36 at 257).
+- The per-cpu counters are allocated by the second thread, not by
+  fork(). So clone() with CLONE_VM can now fail with -ENOMEM.
+- mm_struct gains rss_owner and rss_stat_mutex. rss_owner is the task
+  running on the mm. It is never dereferenced.
+- The precise sums take no lock. Under concurrent updates, they can miss
+  a carry on its way up the tree. They are exact for a process at rest.
+- The rss_stat tracepoint reports the approximation (patch 5).
+- tmpfs (patch 11): an allocation near a full mount can fail although
+  it fits. This happens while a concurrent allocation which does not
+  fit is undone. A remount keeps the batch size of the first size.
 
-* mm_struct layout
+Caveats
+-------
 
-percpu_counter_tree_init_many() allocates the per-cpu data and the tree
-items of the RSS counters, so their size in mm_struct does not depend on
-the number of CPUs: struct mm_struct shrinks by 32 bytes, as a struct
-percpu_counter_tree is 32 bytes, compared to 40 for a struct
-percpu_counter.
+- From 33 to 39 CPUs, the RSS counters are up to 1.37 times less
+  accurate than upstream.
+- Just above a power of 2 CPUs, a threaded process uses up to 1.50
+  times the memory of upstream for its RSS counters.
+- A multi-threaded process which ran on few CPUs can hold more error
+  than upstream.
+- With 384 threads created at once, the per-cpu allocator serializes
+  the allocations, as it does upstream at every fork.
+- tmpfs: in the last 1/4 of the size, each allocation sums all CPUs.
+  With one process, this is 37% slower than upstream.
 
-* rss_stat tracepoint
+Changes since v24 [2]
+---------------------
 
-The rss_stat tracepoint keeps reporting the precise sum, now computed
-from the hierarchical per-cpu counter.
+- Rebased onto v7.4-rc2.
+- New patches 8 to 11: the tmpfs size limit. In my reply to your review
+  [3], I wrote that mounts of 2GB and above lose 1 to 2%. Measured
+  again on v7.4-rc2, they are within 1%.
+- New litmus tests in patch 10, in tools/testing/hpcc/litmus. They check
+  the memory ordering of the limit counters, of the carries and of the
+  publication of the tree. Variants without an ordering show that it is
+  needed.
+- Patch 6 (Sashiko): the activation race test releases its workers with
+  release/acquire.
+- Patches 12 to 14 were patches 8 to 10, unchanged.
 
-Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
-Link: https://lkml.kernel.org/r/20260227153730.1556542-4-mathieu.desnoyers@efficios.com
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@gentwo.org>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Liam R. Howlett <liam@infradead.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Cc: David Carlier <devnexen@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
----
-Changes since v22:
-- The library allocates the per-cpu counters and the tree items of the
-  RSS counters: mm_struct holds no tree items, and the static init_mm
-  and efi_mm need no change.
-- check_mm(): sum each RSS counter once.
-- Keep reporting the precise sum in the rss_stat tracepoint. Switching
-  it to the approximation is done by a separate patch.
-- Initialize the 4 RSS counters together so their tree items share cache
-  lines.
-- Fix checkpatch warnings.
----
- include/linux/mm.h          | 10 +++++-----
- include/linux/mm_types.h    |  3 ++-
- include/trace/events/kmem.h |  3 +--
- kernel/fork.c               | 13 +++++++++----
- 4 files changed, 17 insertions(+), 12 deletions(-)
+The v24 cover letter [2] lists the earlier changes, since v22 [1].
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6af3b7008f1a..2b40f382da35 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3611,33 +3611,33 @@ static inline bool get_user_page_fast_only(unsigned long addr,
-  */
- static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- {
--	return percpu_counter_read_positive(&mm->rss_stat[member]);
-+	return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
- }
- 
- static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
- {
--	return percpu_counter_sum_positive(&mm->rss_stat[member]);
-+	return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
- }
- 
- void mm_trace_rss_stat(struct mm_struct *mm, int member);
- 
- static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
- {
--	percpu_counter_add(&mm->rss_stat[member], value);
-+	percpu_counter_tree_add(&mm->rss_stat[member], value);
- 
- 	mm_trace_rss_stat(mm, member);
- }
- 
- static inline void inc_mm_counter(struct mm_struct *mm, int member)
- {
--	percpu_counter_inc(&mm->rss_stat[member]);
-+	percpu_counter_tree_add(&mm->rss_stat[member], 1);
- 
- 	mm_trace_rss_stat(mm, member);
- }
- 
- static inline void dec_mm_counter(struct mm_struct *mm, int member)
- {
--	percpu_counter_dec(&mm->rss_stat[member]);
-+	percpu_counter_tree_add(&mm->rss_stat[member], -1);
- 
- 	mm_trace_rss_stat(mm, member);
- }
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 1ed35d258d2e..20b4517b7329 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -19,6 +19,7 @@
- #include <linux/workqueue.h>
- #include <linux/seqlock.h>
- #include <linux/percpu_counter.h>
-+#include <linux/percpu_counter_tree.h>
- #include <linux/types.h>
- #include <linux/futex_types.h>
- #include <linux/rseq_types.h>
-@@ -1350,7 +1351,7 @@ struct mm_struct {
- 		unsigned long saved_e_flags;
- #endif
- 
--		struct percpu_counter rss_stat[NR_MM_COUNTERS];
-+		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
- 
- 		struct linux_binfmt *binfmt;
- 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index cd7920c81f85..ac4c96db7638 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -448,8 +448,7 @@ TRACE_EVENT(rss_stat,
- 		 */
- 		__entry->curr = current->mm == mm && !(current->flags & PF_KTHREAD);
- 		__entry->member = member;
--		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
--							    << PAGE_SHIFT);
-+		__entry->size = get_mm_counter_sum(mm, member) << PAGE_SHIFT;
- 	),
- 
- 	TP_printk("mm_id=%u curr=%d type=%s size=%ldB",
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 5efceb8d58a7..d9bdaf2bd998 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -137,6 +137,11 @@
-  */
- #define MAX_THREADS FUTEX_TID_MASK
- 
-+/*
-+ * Batch size of rss stat approximation
-+ */
-+#define RSS_STAT_BATCH_SIZE	32
-+
- /*
-  * Protected counters by write_lock_irq(&tasklist_lock)
-  */
-@@ -633,7 +638,7 @@ static void check_mm(struct mm_struct *mm)
- 			 "Please make sure 'struct resident_page_types[]' is updated as well");
- 
- 	for (i = 0; i < NR_MM_COUNTERS; i++) {
--		long x = percpu_counter_sum(&mm->rss_stat[i]);
-+		long x = percpu_counter_tree_precise_sum(&mm->rss_stat[i]);
- 
- 		if (unlikely(x)) {
- 			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld Comm:%s Pid:%d\n",
-@@ -738,7 +743,7 @@ void __mmdrop(struct mm_struct *mm)
- 	check_mm(mm);
- 	mm_pasid_drop(mm);
- 	mm_destroy_cid(mm);
--	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
-+	percpu_counter_tree_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
- 
- 	free_mm(mm);
- }
-@@ -1143,8 +1148,8 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
- 	if (mm_alloc_sched(mm))
- 		goto fail_sched;
- 
--	if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
--				     NR_MM_COUNTERS))
-+	if (percpu_counter_tree_init_many(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE,
-+					  GFP_KERNEL_ACCOUNT))
- 		goto fail_pcpu;
- 
- 	lru_gen_init_mm(mm);
+These tests pass on v7.4-rc2:
+
+- Every commit builds without warnings on x86_64 (SMP and UP), arm64,
+  ppc64le, 32-bit powerpc and sparc64. Sparse adds no warnings.
+- KUnit passes in guests with 1, 16 and 384 vCPUs. It also passes with
+  lockdep with 16 and 64 vCPUs.
+- The userspace test passes on simulated topologies up to 65536 CPUs,
+  as a 64-bit and a 32-bit build.
+- The RSS counters match a page table walk from 1 to 64 threads.
+- herd7 checks the memory ordering of the limit counters with litmus
+  tests.
+
+I wrote v22. Starting from it, an LLM coding assistant drove the
+implementation of this revision from my design decisions. It wrote the
+code, the tests, the benchmark and the measurement scripts. It ran the
+measurements in guests and prepared the bare-metal ones. It drafted the
+comments, the changelogs and this letter. I made the design decisions,
+reviewed every change and directed the rework through my review
+comments.
+
+Questions
+---------
+
+David answered the questions of v24 [3]. These remain open:
+
+1. Fork and exit reviewers: is mm->rss_owner acceptable (patch 7)? The
+   alternative is current->mm == mm and an "activated" flag.
+2. Martin: the rss_stat tracepoint now reports the approximation (patch
+   5). Is that fine for its users, such as Perfetto?
+3. Who could run the benchmark of patch 14 on non-AMD, arm64 or POWER
+   machines? The defaults were only measured on one machine.
+4. tmpfs maintainers: are the behavior changes of patch 11 acceptable?
+
+Thanks,
+
+Mathieu
+
+[1] https://lore.kernel.org/lkml/20260227153730.1556542-1-mathieu.desnoyers@efficios.com/
+[2] https://lore.kernel.org/lkml/20261105203639.1459524-1-mathieu.desnoyers@efficios.com/
+[3] https://lore.kernel.org/lkml/88a96126-11be-41cc-ab0d-372d32189e79@kernel.org/
+
+Mathieu Desnoyers (14):
+  lib: introduce hierarchical per-cpu counters
+  lib: test hierarchical per-cpu counters
+  mm: use hierarchical per-cpu counters for the RSS counters
+  tools/testing/hpcc: add userspace test of hierarchical per-CPU
+    counters
+  mm: report the approximate RSS in the rss_stat tracepoint
+  lib: percpu_counter_tree: add lazy tree activation
+  mm: keep the RSS counters of single-threaded processes exact
+  lib: percpu_counter_tree: add limit counters
+  lib: percpu_counter_tree: test the limit counters
+  tools/testing/hpcc: add litmus tests of the memory ordering
+  mm: shmem: use a limit counter for the tmpfs size limit
+  lib: percpu_counter_tree: add the arity boot parameter
+  mm: add the rss_stat_batch boot parameter
+  lib: add a benchmark of hierarchical per-cpu counters
+
+ .../admin-guide/kernel-parameters.txt         |   24 +
+ Documentation/core-api/index.rst              |    1 +
+ .../core-api/percpu-counter-tree.rst          |  145 ++
+ MAINTAINERS                                   |   12 +
+ fs/exec.c                                     |    5 +
+ include/linux/mm.h                            |   28 +-
+ include/linux/mm_types.h                      |   19 +-
+ include/linux/percpu_counter_tree.h           |  445 +++++
+ include/linux/shmem_fs.h                      |    3 +-
+ include/trace/events/kmem.h                   |    3 +-
+ init/main.c                                   |    3 +
+ kernel/exit.c                                 |    3 +
+ kernel/fork.c                                 |   61 +-
+ lib/Kconfig                                   |   27 +
+ lib/Makefile                                  |    1 +
+ lib/percpu_counter_tree.c                     | 1776 +++++++++++++++++
+ lib/tests/Makefile                            |    3 +
+ lib/tests/percpu_counter_tree_bench.c         |  610 ++++++
+ lib/tests/percpu_counter_tree_kunit.c         | 1240 ++++++++++++
+ mm/shmem.c                                    |   33 +-
+ tools/testing/hpcc/.gitignore                 |    2 +
+ tools/testing/hpcc/Makefile                   |   18 +
+ tools/testing/hpcc/include/hpcc_shim.h        |  253 +++
+ tools/testing/hpcc/include/kunit/visibility.h |    2 +
+ tools/testing/hpcc/include/linux/args.h       |    4 +
+ tools/testing/hpcc/include/linux/atomic.h     |    2 +
+ tools/testing/hpcc/include/linux/bug.h        |    2 +
+ tools/testing/hpcc/include/linux/cache.h      |    2 +
+ tools/testing/hpcc/include/linux/cpumask.h    |    2 +
+ tools/testing/hpcc/include/linux/errno.h      |    3 +
+ tools/testing/hpcc/include/linux/limits.h     |    2 +
+ tools/testing/hpcc/include/linux/math.h       |    2 +
+ .../testing/hpcc/include/linux/moduleparam.h  |   12 +
+ tools/testing/hpcc/include/linux/percpu.h     |    2 +
+ .../hpcc/include/linux/percpu_counter_tree.h  |    2 +
+ tools/testing/hpcc/include/linux/preempt.h    |    2 +
+ tools/testing/hpcc/include/linux/slab.h       |    2 +
+ tools/testing/hpcc/litmus/README              |   61 +
+ .../leave-first-precise-sum-relaxed.litmus    |   37 +
+ .../litmus/leave-first-precise-sum.litmus     |   41 +
+ .../litmus/limit-arrive-first-acquire.litmus  |   38 +
+ .../limit-arrive-first-unordered.litmus       |   37 +
+ .../hpcc/litmus/limit-arrive-first.litmus     |   41 +
+ .../hpcc/litmus/limit-free-level0-nomb.litmus |   40 +
+ .../hpcc/litmus/limit-free-level0.litmus      |   43 +
+ .../hpcc/litmus/limit-free-root.litmus        |   42 +
+ .../litmus/limit-last-checker-nomb.litmus     |   28 +
+ .../hpcc/litmus/limit-last-checker.litmus     |   33 +
+ .../hpcc/litmus/limit-undo-level0.litmus      |   35 +
+ .../hpcc/litmus/limit-undo-root-rmb.litmus    |   30 +
+ .../litmus/limit-undo-root-unordered.litmus   |   29 +
+ .../hpcc/litmus/limit-undo-root.litmus        |   32 +
+ .../litmus/publish-approximate-sum.litmus     |   40 +
+ .../hpcc/litmus/publish-carry-normb.litmus    |   36 +
+ .../testing/hpcc/litmus/publish-carry.litmus  |   43 +
+ .../publish-precise-sum-noacquire.litmus      |   38 +
+ .../hpcc/litmus/publish-precise-sum.litmus    |   44 +
+ .../litmus/publish-update-norelease.litmus    |   34 +
+ .../testing/hpcc/litmus/publish-update.litmus |   40 +
+ tools/testing/hpcc/main.c                     |  892 +++++++++
+ 60 files changed, 6467 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/core-api/percpu-counter-tree.rst
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
+ create mode 100644 lib/tests/percpu_counter_tree_bench.c
+ create mode 100644 lib/tests/percpu_counter_tree_kunit.c
+ create mode 100644 tools/testing/hpcc/.gitignore
+ create mode 100644 tools/testing/hpcc/Makefile
+ create mode 100644 tools/testing/hpcc/include/hpcc_shim.h
+ create mode 100644 tools/testing/hpcc/include/kunit/visibility.h
+ create mode 100644 tools/testing/hpcc/include/linux/args.h
+ create mode 100644 tools/testing/hpcc/include/linux/atomic.h
+ create mode 100644 tools/testing/hpcc/include/linux/bug.h
+ create mode 100644 tools/testing/hpcc/include/linux/cache.h
+ create mode 100644 tools/testing/hpcc/include/linux/cpumask.h
+ create mode 100644 tools/testing/hpcc/include/linux/errno.h
+ create mode 100644 tools/testing/hpcc/include/linux/limits.h
+ create mode 100644 tools/testing/hpcc/include/linux/math.h
+ create mode 100644 tools/testing/hpcc/include/linux/moduleparam.h
+ create mode 100644 tools/testing/hpcc/include/linux/percpu.h
+ create mode 100644 tools/testing/hpcc/include/linux/percpu_counter_tree.h
+ create mode 100644 tools/testing/hpcc/include/linux/preempt.h
+ create mode 100644 tools/testing/hpcc/include/linux/slab.h
+ create mode 100644 tools/testing/hpcc/litmus/README
+ create mode 100644 tools/testing/hpcc/litmus/leave-first-precise-sum-relaxed.litmus
+ create mode 100644 tools/testing/hpcc/litmus/leave-first-precise-sum.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first-acquire.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first-unordered.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-free-level0-nomb.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-free-level0.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-free-root.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-last-checker-nomb.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-last-checker.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-undo-level0.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-undo-root-rmb.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-undo-root-unordered.litmus
+ create mode 100644 tools/testing/hpcc/litmus/limit-undo-root.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-approximate-sum.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-carry-normb.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-carry.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-precise-sum-noacquire.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-precise-sum.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-update-norelease.litmus
+ create mode 100644 tools/testing/hpcc/litmus/publish-update.litmus
+ create mode 100644 tools/testing/hpcc/main.c
+
+
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
 -- 
 2.47.3
 
