@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794429413;
-	b=FZR5GoJVh8KjEmr5pcLfjeqIyhk1oXCRp8TQn0MJopgxFBRLwyVfrJf8bW+W9GtxBvd7
-	 eSAE5prIqJozn9xVZ0HEE5HiOqIBUPmoNLcVlg9QgAYiDAfNaIGo2sv7seyQcZf/o1NOk
-	 xcm6wrADWq5TFOZgnVL/w5DALICjJpQxCmQ8cmdKtOs4iuiJlA/0hmKdUryv81BJdc+mM
-	 vz5mGPxCODRpJsi19cpIUzm2F0G/r6FTdljRG5JRki3qwh12wBk1hWIlGB3mMlKrM9Ot3
-	 D+F/DQgkA/yk7AOpo+nHTAsQJVcdtWaUOlykO3iCbByD8B0Y3DMdI4N4aJzU4u7F0sg==
+	b=sfh0HjogNu8h9VM+aQlx8goaVbwWWn31//VT/ke61hiTFIMZ+pYdoKv0Je4h4q586MIl
+	 fchKJol4DvgT4S89cC0CW4tJ+wHUA4pcoH0zH8/JYse28bSpC3kvGS/0svUR97g5pk/+C
+	 plfTLaj7tZhQWAd2cB3D3G7XEYQoVVuzLPqC/v11lBnAGu7IOSLMhUyWKHqBTaBqMk76w
+	 12hjQFueoLfTdF5+95W6FC7QdZXe3c7IwyuLnt3tVD0s2gGzEEJZ8U+bj79jqy37Dr8vh
+	 spiFQnIJPPjOUqlIvB4L8ZJ8AfRjRGe6wKI7PIOTcMAU/iLrlw4n6gzzGKvT/WC+eNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794429413;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=101mrooLZWOPsx7/vp2ktPFHBHOgSH902fjsFmKKJSA=;
-	b=NM4eV8ZdydMDAbb5ri3bcRhODzXQNsUlQW7SEZt/8TAfekLXrCfRkXBobvC+2k02dA/G
-	 tL0f32ALNZoE7Kkq86NmgrXfCKhu1dNqKSSZj9QmPDCBkQ2GdWwNZVr7CljMe3yPJpwTc
-	 udr2/sLh7xP6yoFPebQO0tKFOWJYZACTeBtbcI523aZvoi3+p5zUGBTz83yM4mo6a189S
-	 QGlJo4F1jGPJ669lyPGSy5f2rOwvd3rkH8ZOdosYA2K7Iel/9h76AQPc/jzuaKCuQo83x
-	 TywwqDoMo7pyWg5nqi2a7yB/77KWPgQL1Or4diA+stm7EvPzsKzSx1KnP4nZRSfX1bg==
+	bh=IG2i4eM11A8lVv+NbNC7CjJ7zEpmOtNYGqSnK/Rh/6Y=;
+	b=W4sK46/dbqO4xMA6cjlmGS27PUm6TPx97Y5ilmtH68vU40S9k+PD1FYCMWx9pR8rnIJI
+	 6rs1/evUuPO0yGpdHOOs/o2lCUyNv9T3psrVfH82Ar8vcW99hYMliRcW7Ze+0qVSdCvIm
+	 VDaZpxjzA3igr1LsiIplZgzeOwESufMLLaa5P+jvNnydsknPHMxX13YjW04itgTS2H57o
+	 op828LW1bM3w5pBTQ+autvAN8deM/aprG3vcLj2T8wvYRlqjeVdC8Z2UzeBGL//2eSMOX
+	 xnG6lmC0FXnXfRjSTKCx61lNAXd7LyS4UJvkPKwlgjBHxcpg70kosCFeIABB8ozbKrg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=skiL+GSZ;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=ALp+ZqNe;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15B7606A88B;
-	Wed, 11 Nov 2026 20:36:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F15B7606A88B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E1D606A88E;
+	Wed, 11 Nov 2026 20:36:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11E1D606A88E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=skiL+GSZ
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=ALp+ZqNe
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
 	s=smtpout1; t=1794429407;
-	bh=101mrooLZWOPsx7/vp2ktPFHBHOgSH902fjsFmKKJSA=;
+	bh=IG2i4eM11A8lVv+NbNC7CjJ7zEpmOtNYGqSnK/Rh/6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=skiL+GSZod4k/p/6ZwtYyDiXQ4Ju6wFgaVzD1PJEuPmuIxvByK7d9pU3TilgV34p9
-	 eWDXDMGKBL7uN9txJqB/n7n99RxxM/Dn1KLjnapFsoPyZkxlBDbWUyLB8X4rJyrK61
-	 7c8IigN83ypBo23h9EFz+oB23pjdeLX3aahOXwWDWqgApNMSI3lRkUKVfN80qj8pFO
-	 ijYktGFBW0vfmT252gDfU+PiTWrnQ97HrgvUy/Tzjf9JL+lBPxuR4nV1OgFIjm39wk
-	 uynHUtXVuyxcEX5YTtvRXRaEf+ficELQFDhxN6wYzcR690u+lqmfZtIlpzbZRLV0fV
-	 g+rLoc5bDihag==
+	b=ALp+ZqNezrOAxayzvPcDAUX20E5pghRS59g6lOQSA2zej8fZoYWUwg6rL1ZSV17YD
+	 sGTIIb+53qYGxyuLe2xHUY+6lASwNHa5sjz3rdQNed6KddL9rF7kfx5JssGDJIY4XS
+	 0BjSNkXziuJ/WZYP5NXR+SfzipTUGkBp2fxNM40Vpo/AAQ4/GZDsZ2+bxV9/iNxgSc
+	 kLvqwkGfDppndZrqnnfVeGy5nvWt0KBCaK259IxQ1mKycTcqHLfxYTnG/pIvrCH8ye
+	 9AU+ieilBaQ/IECjOJs27hzUhF41Y9GEqlYFX1Yr2P3hu3pPeqWaxh3DsAIXjwGwDS
+	 9sU6gb9AQ/mNA==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKq3VtjzNll;
-	Wed, 11 Nov 2026 15:36:47 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKp6tFLzP3s;
+	Wed, 11 Nov 2026 15:36:46 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -107,9 +107,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Boqun Feng <boqun@kernel.org>,
 	Hugh Dickins <hughd@google.com>
-Subject: [RFC PATCH v25 13/14] mm: add the rss_stat_batch boot parameter
-Date: Wed, 11 Nov 2026 15:36:25 -0500
-Message-Id: <20261111203626.95838-14-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v25 11/14] mm: shmem: use a limit counter for the tmpfs size limit
+Date: Wed, 11 Nov 2026 15:36:23 -0500
+Message-Id: <20261111203626.95838-12-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
 References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
@@ -124,85 +124,170 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RSS counters use a batch size of 32: each CPU accumulates up to 31
-pages in either direction before propagating a carry into the counter
-tree.  A smaller batch improves the accuracy of the approximate RSS, and
-a larger batch reduces the cost of updates.
+The size limit of tmpfs (the size= mount option) is a struct
+percpu_counter. Each block allocation checks it with
+percpu_counter_limited_add(). That check takes no lock only while the
+mount is more than batch * nr_cpus pages below its size. With the
+default batch size of 768 at 384 CPUs, this is 294912 pages, 1.1 GB.
+A smaller mount, such as a 64 MB /dev/shm, takes the counter spinlock
+and sums all CPUs on every page. On a 384-CPU host with 384 processes
+allocating, 99.5% of the time goes to that spinlock.
 
-Add the rss_stat_batch= boot parameter to compare batch sizes on a
-given machine, along with the percpu_counter_tree.arity= boot parameter
-for the tree shape.  It accepts a power of 2 between 2 and 128, and is
-ignored with a warning otherwise.
+Use a hierarchical limit counter instead. Its batch size is chosen from
+the size. When the size allows, its accuracy is within 1/4 of the size.
+Block allocations then sum the CPUs only in the last 1/4 of the size.
+They take no lock. The limit stays strict.
+
+Near a full mount, an allocation can fail although it fits. This
+happens while a concurrent allocation of a few pages, which does not
+fit, is being undone. A large folio is checked before it is added, so a
+large folio which does not fit has no such effect.
+
+A mount without a size limit never counts its blocks. A remount cannot
+add a limit. So such a mount no longer allocates the counter.
+
+A remount keeps the batch size. A mount grown by remount thus keeps the
+smaller batch size of its first size. Under concurrent allocations, a
+remount to a smaller size can be refused although the use fits.
+
+Test: fallocate() of one page at a time into one file per process, all
+on one mount. This is a will-it-scale variant. It ran in a 384-vCPU
+guest pinned to a 2-socket AMD EPYC 9654 host, on v7.4-rc2. In
+thousands of calls per second:
+
+  size=  processes   before    after
+  64 MB          1      208      483
+  64 MB         64      256    17771
+  64 MB        384      126    54275
+  1 GB         384      125    93879
+  2 GB         384    93851    93476
+  16 GB        384    93737    94806
+
+Below 1.1 GB, the mount scales again with the number of processes. At
+2 GB and above, the results are within 1% of before. Within the last
+1/4 of the size, each allocation sums both counters over all CPUs. With
+one process, this is 37% slower than before. With 384 processes, it is
+about 100 times faster.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
- .../admin-guide/kernel-parameters.txt         | 10 ++++++++
- kernel/fork.c                                 | 23 ++++++++++++++++---
- 2 files changed, 30 insertions(+), 3 deletions(-)
+ include/linux/shmem_fs.h |  3 ++-
+ mm/shmem.c               | 33 +++++++++++++++++++++++----------
+ 2 files changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c368affa2115..ba2bdeb1480b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6792,6 +6792,16 @@ Kernel parameters
- 			debug mode. Defaults to CONFIG_RSEQ_DEBUG_DEFAULT_ENABLE.
- 			Format: <bool>
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index f89b4b151133..b37adf32e4ef 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -7,6 +7,7 @@
+ #include <linux/mempolicy.h>
+ #include <linux/pagemap.h>
+ #include <linux/percpu_counter.h>
++#include <linux/percpu_counter_tree.h>
+ #include <linux/xattr.h>
+ #include <linux/fs_parser.h>
+ #include <linux/userfaultfd_k.h>
+@@ -76,7 +77,7 @@ struct shmem_quota_limits {
  
-+	rss_stat_batch=	[KNL,SMP]
-+			Format: <integer>
-+			Batch size of the per-mm RSS counters: the number of
-+			pages a CPU accumulates before propagating them into
-+			the counter tree. A power of 2 between 2 and 128.
-+			A smaller batch improves the accuracy of the
-+			approximate RSS, a larger batch reduces the update
-+			cost. Default: 32.
-+			This parameter is meant for performance comparison.
-+
- 	rt_group_sched=	[KNL] Enable or disable SCHED_RR/FIFO group scheduling
- 			when CONFIG_RT_GROUP_SCHED=y. Defaults to
- 			!CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED.
-diff --git a/kernel/fork.c b/kernel/fork.c
-index dc1db6cb5da0..f582c1b073fe 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -138,9 +138,26 @@
- #define MAX_THREADS FUTEX_TID_MASK
+ struct shmem_sb_info {
+ 	unsigned long max_blocks;   /* How many blocks are allowed */
+-	struct percpu_counter used_blocks;  /* How many are allocated */
++	struct percpu_counter_tree_limit used_blocks; /* How many are allocated */
+ 	unsigned long max_inodes;   /* How many inodes are allowed */
+ 	unsigned long free_ispace;  /* How much ispace left for allocation */
+ 	raw_spinlock_t stat_lock;   /* Serialize shmem_sb_info changes */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index b8399bb71997..2e368d7b0e41 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -231,13 +231,13 @@ int shmem_inode_acct_blocks(struct inode *inode, long pages)
  
- /*
-- * Batch size of rss stat approximation
-+ * Batch size of rss stat approximation, tunable with the rss_stat_batch=
-+ * boot parameter to compare batch sizes on a given machine.
-  */
--#define RSS_STAT_BATCH_SIZE	32
-+static unsigned int rss_stat_batch_size __ro_after_init = 32;
-+
-+static int __init setup_rss_stat_batch(char *str)
-+{
-+	unsigned int batch;
-+
-+	if (kstrtouint(str, 0, &batch) || batch < 2 || !is_power_of_2(batch) ||
-+	    batch > PERCPU_COUNTER_TREE_MAX_BATCH) {
-+		pr_warn("rss_stat_batch: expecting a power of 2 between 2 and %u\n",
-+			PERCPU_COUNTER_TREE_MAX_BATCH);
-+		return 1;
+ 	might_sleep();	/* when quotas */
+ 	if (sbinfo->max_blocks) {
+-		if (!percpu_counter_limited_add(&sbinfo->used_blocks,
+-						sbinfo->max_blocks, pages))
++		if (!percpu_counter_tree_limit_add(&sbinfo->used_blocks,
++						   sbinfo->max_blocks, pages))
+ 			goto unacct;
+ 
+ 		err = dquot_alloc_block_nodirty(inode, pages);
+ 		if (err) {
+-			percpu_counter_sub(&sbinfo->used_blocks, pages);
++			percpu_counter_tree_limit_sub(&sbinfo->used_blocks, pages);
+ 			goto unacct;
+ 		}
+ 	} else {
+@@ -262,7 +262,7 @@ static void shmem_inode_unacct_blocks(struct inode *inode, long pages)
+ 	dquot_free_block_nodirty(inode, pages);
+ 
+ 	if (sbinfo->max_blocks)
+-		percpu_counter_sub(&sbinfo->used_blocks, pages);
++		percpu_counter_tree_limit_sub(&sbinfo->used_blocks, pages);
+ 	shmem_unacct_blocks(info->flags, pages);
+ }
+ 
+@@ -4048,9 +4048,11 @@ static int shmem_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	buf->f_namelen = NAME_MAX;
+ 	if (sbinfo->max_blocks) {
+ 		buf->f_blocks = sbinfo->max_blocks;
++		/* Under concurrent allocations, the sum can be above the size. */
+ 		buf->f_bavail =
+ 		buf->f_bfree  = sbinfo->max_blocks -
+-				percpu_counter_sum(&sbinfo->used_blocks);
++				min(percpu_counter_tree_limit_precise_sum(&sbinfo->used_blocks),
++				    sbinfo->max_blocks);
+ 	}
+ 	if (sbinfo->max_inodes) {
+ 		buf->f_files = sbinfo->max_inodes;
+@@ -5020,8 +5022,8 @@ static int shmem_reconfigure(struct fs_context *fc)
+ 			err = "Cannot retroactively limit size";
+ 			goto out;
+ 		}
+-		if (percpu_counter_compare(&sbinfo->used_blocks,
+-					   ctx->blocks) > 0) {
++		if (percpu_counter_tree_limit_precise_sum(&sbinfo->used_blocks) >
++		    ctx->blocks) {
+ 			err = "Too small a size for current use";
+ 			goto out;
+ 		}
+@@ -5187,7 +5189,7 @@ static void shmem_put_super(struct super_block *sb)
+ 	shmem_disable_quotas(sb);
+ #endif
+ 	free_percpu(sbinfo->ino_batch);
+-	percpu_counter_destroy(&sbinfo->used_blocks);
++	percpu_counter_tree_limit_destroy(&sbinfo->used_blocks);
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	list_lru_destroy(&sbinfo->shrinklist);
+ #endif
+@@ -5212,6 +5214,7 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	static struct lock_class_key shmem_unused_huge_lock_key;
+ #endif
+ 	struct shmem_options *ctx = fc->fs_private;
++	unsigned long batch;
+ 	struct inode *inode;
+ 	struct shmem_sb_info *sbinfo;
+ 	int error = -ENOMEM;
+@@ -5286,8 +5289,18 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	ctx->mpol = NULL;
+ 
+ 	raw_spin_lock_init(&sbinfo->stat_lock);
+-	if (percpu_counter_init(&sbinfo->used_blocks, 0, GFP_KERNEL))
+-		goto failed;
++	/*
++	 * A mount without a size limit never counts its blocks. A remount
++	 * cannot add a limit. Otherwise, pick the batch size from the size.
++	 * When the size allows, its accuracy is within 1/4 of the size. A
++	 * block allocation then sums all CPUs only within the last 1/4 of the
++	 * size. A remount keeps the batch size.
++	 */
++	if (sbinfo->max_blocks) {
++		batch = percpu_counter_tree_batch_for_accuracy(sbinfo->max_blocks / 4);
++		if (percpu_counter_tree_limit_init(&sbinfo->used_blocks, batch, GFP_KERNEL))
++			goto failed;
 +	}
-+	rss_stat_batch_size = batch;
-+	pr_info("rss_stat_batch: %u\n", batch);
-+	return 1;
-+}
-+__setup("rss_stat_batch=", setup_rss_stat_batch);
  
- /*
-  * Protected counters by write_lock_irq(&tasklist_lock)
-@@ -1149,7 +1166,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
- 	if (mm_alloc_sched(mm))
- 		goto fail_sched;
- 
--	if (percpu_counter_tree_init_many_lazy(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE))
-+	if (percpu_counter_tree_init_many_lazy(mm->rss_stat, NR_MM_COUNTERS, rss_stat_batch_size))
- 		goto fail_pcpu;
- 
- 	lru_gen_init_mm(mm);
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	if (list_lru_init_memcg_key(&sbinfo->shrinklist, sb->s_shrink,
 -- 
 2.47.3
 
