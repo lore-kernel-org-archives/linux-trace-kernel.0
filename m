@@ -1,56 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794390209;
-	b=LIjQQmsJICh2wwVzIRHTKsFJebYBlfBFfhm70tmnsAzM7it0s2or+f1z27D6upjtHbs6
-	 qzA/kluCIzUOrU15IZ/wz8+WheKb2Vp4AIOiUNq4PA3TmeYnDwjtTQ5KKxyEXWOnkRQXA
-	 qr5IDRPkM41xsEwQOLwANZWt6f5SJWXe8r+KZ/R8SZSgvaRaSuMORGftuVvktwFgQJFTi
-	 is7s0mh1pCMmlG8GsgM9TT8fZj8nYBX+7SL6H55AfBvoLQZb0i6Q/4GAKQY7RwtIiB/5q
-	 3yyX0xJALggC0J2yd8cwcf0sd93L+wrM1acmvo51Xp3l7GwU+wtoToc5ytBsM67krug==
+	t=1794391419;
+	b=OuPVMu/Lu/a52ygKvYdNffIuF9sFGXHCSo+XEUnyR+w1CGoiutVcwBm0X6uI57UkLqjO
+	 d6IaeXnro1kLaQEfjA2NN91qLGSme3eco/Urg4l07W50Ca/P5hdGnWq0W1laLQiZx8c8e
+	 djAONBGkEzsM7ITy1QN7zTiHsAtvV9kvFmWd7g87yOsNmyNQJaSc0jcPdeW096V0J+Xkw
+	 TAUUqhWLCaNiEGifzjnysW8c6O4sd20HewxdvgGSWT3RvTJl4yihWl1hXunKV1XFehqXl
+	 J79HbC7IFQdepvk8QHtoBq6+Zyggo4EUbdeGtl+4jHr6LpKUEd8csVy/CbSD/2sUD5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794390209;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=8m+LWT3dsJ22s2lOX+FPdI7LDB8BSPNdUrrDzj19p9k=;
-	b=nPP/2h54bNipw2Y4wLuMeOq4x1DERQ4j5krfjAf1dYeX1E6lECRqTFoS+B8zPZTk63F3
-	 3K4tVMTrX4oN76YJUnZ9FmL7YSDUYV4CPs4OqmFf53+wBwkH5JhyKFLi9CkNVvSnpa25M
-	 zDJFQZVx/zWQIW4j5e6DMGQGVMghVnomlTa6qDnWKqRqDOlfDIxLNiNxASKuWoFUvqF4n
-	 i8FjAC7vUpvR+u825uS3DanE77Qtfdz53n6I+rMEy0i3dyj7v92ly/A6djxGeWeex+nUG
-	 Y+pixxrTOvUmmZPKBGJdBxAizbO9fTK15v8LfTY/ykzUK1xQd5j2p6yhowst/IoHDRQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794391419;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=nxPODO96ooeOFk6g2gU7/c+Ex4GmNCqkv9X+bjevByQ=;
+	b=3IvHb2rVQrA80vMwz0etQ/Dc6IaT7xBLhrjZXDLMluTTZ0/YHr3X8U21y2o4JNlMfAr6
+	 GqvKZqqCnE/pk8f2EE5D8DR8tu7xCI+wj3XWIzFHUp5mW/2PMFmhLesv7Jm0KE98nAeLj
+	 rC/eNTv4n9yNEQGT7YO40VdqiCOTIeaRdQyt+a8TYCQYt+l65FAo9Lb59yysqHV6j+8LK
+	 hDMYph+YfmD5gUvG7JmKGpKaNAlMiixrit447WyiBh2x2r+aEf5FY67Xa53fo9b3jmrah
+	 j5ZWi11CFYQ4pPIjk+1dyLekpqGKrM248f1sJn0e44pDiq/5BW0xeHF28vZDGllZtFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=stu.xidian.edu.cn;
-	spf=pass smtp.mailfrom=stu.xidian.edu.cn;
-	arc=none smtp.remote-ip=162.243.164.118
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8F7A606A31C;
-	Wed, 11 Nov 2026 09:43:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8F7A606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stu.xidian.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xidian.edu.cn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=stu.xidian.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-	Message-Id:MIME-Version:Content-Transfer-Encoding; bh=8m+LWT3dsJ
-	22s2lOX+FPdI7LDB8BSPNdUrrDzj19p9k=; b=RniVeHw0KuaOa5MLRf6VxBt6+w
-	X0B+KQDOqH7Uisa7OFhnwEGTAxa7OP1PyvKOJDnKdy523si0mfCtSztPeybqQI3L
-	wihIxdD43+IRQMGUD0V16rxhIC9ljfjmre+VgmsO6I6zqV4R0QZGn+ekjz7aCsxn
-	my4xCzYbIBv340S7U=
-Received: from LAPTOP-FRMFRHCN.localdomain (unknown [240e:457:1010:6360:78ac:e18c:3618:4a0b])
-	by hzbj-edu-front-2.icoremail.net (Coremail) with UTF8SMTPA id BLQMCkD2OwGqOPRqtBh3AQ--.23819S2;
-	Wed, 11 Nov 2026 17:43:08 +0800 (CST)
-From: Haoli Zhang <26031212468@stu.xidian.edu.cn>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com,
-	25031212117@stu.xidian.edu.cn,
-	byu@xidian.edu.cn,
-	Haoli Zhang <26031212468@stu.xidian.edu.cn>
-Subject: [PATCH v3] tracing: ring-buffer: serialize shrink with NMI readers
-Date: Wed, 11 Nov 2026 17:43:01 +0800
-Message-Id: <20261111094301.2213435-1-26031212468@stu.xidian.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="hv/aZhys";
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1BB606A891;
+	Wed, 11 Nov 2026 10:03:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC1BB606A891
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=hv/aZhys
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id B129E12025E;
+	Wed, 11 Nov 2026 10:03:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id D0EA719;
+	Wed, 11 Nov 2026 10:03:27 +0000 (UTC)
+Date: Wed, 11 Nov 2026 05:03:22 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracing/probes: Zero out faulted dereferenced fields
+Message-ID: <20261111050322.49bbebfa@fedora>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,355 +57,94 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:BLQMCkD2OwGqOPRqtBh3AQ--.23819S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3CFWUAF1rXw4rJr4DGr1kAFb_yoW8Jr1UGo
-	Z3Xw4Sqw1xtryUGFyvkF48XF1UGw17tF9rAF4rCryDZryxAryav3s8Zr1ayFyrXa1fA34Y
-	va48XrZrWF4UJFyfn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYL7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
-	YI8I648v4I1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6IIF6r4fMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUDGYPUUUUU==
-X-CM-SenderInfo: yswqjiasrskluy6v33wo0lvxldqovvfxof0/1tbiAQUOEWrzM1bTOQAAsN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: D0EA719
+X-Stat-Signature: n971ugsmikxw4qo3d4gp7iy3a5w4d59b
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX187LOXOvnlUwba75FnJkjrRJvsphm/oBvM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=nxPODO96ooeOFk6g2gU7/c+Ex4GmNCqkv9X+bjevByQ=; b=hv/aZhysHnZpNpVqmnLZPYq7QULWBWXyKL0StqiMcJ1S6N3DygwqS3WZwJa26BX+Yv1+r6k4SPU3neXom9e50kZtH+Vm1rnaHbC6Uz6cPTUMn+HXtEWoPHC17k1+4kH8+gewADI209ZwcuLngNdRbSdKBq91AggrBHhf7qFXp1o=
+X-HE-Tag: 1794391407-275707
+X-HE-Meta: U2FsdGVkX188mOS6vxNQO29vO9nGP3G2ppzsqqxZfhscu/SwOszW7BamPGtoWWi6aLpUZboUh04A0+yym919beMxthXbS0mvuMxIqj/SpoJZcuI3fvnUmcSdx6OWRIOukG3lmM3PNX4Cgehepnbm6fJHCNZEQWZJm2cxgUABmz/rqAmEvqrpB22hUSQEVgqZsnpXiRlt+/BdWL4CQXAuVBcEqA6j33ZgejScM6UhM+feVSaPfR8Q+Ph+95uD14+oYDe6iTgScqZM1xRFGlG1eAcJ9nhKaavHRWCGeA+GRM4JjGOT3XLT7k1jHagKtc3LAMe0+xGCCNkcrNDf16nX1NW6pYsnYZH4xtzPKG8ZflYjhBQN76GqL089xT/NQVIYuNm8RFLAkPTgGR7lHdXuLA==
 
-The syzbot report shows a use-after-free in rb_is_reader_page(), reached
-from rb_move_tail(), with the freed page released by rb_remove_pages().
-Source inspection suggests that a detached reader page can retain a link
-into the range removed during a shrink. This patch addresses that possible
-stale-link path and coordinates NMI readers with page removal.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-When an NMI reader cannot acquire reader_lock, rb_reader_lock() falls back
-to reading the ring buffer without the lock. Gate lockless NMI readers
-while rb_remove_pages() removes pages. Drain readers that entered before
-the gate before changing the page list. New NMI readers that cannot acquire
-reader_lock while the gate is closed skip that CPU. Readers that acquire=0D
-reader_lock remain serialized by it. The drain loop calls cond_resched()=0D
-while waiting for readers to exit.
+While looking at tasks global descriptor tables, I discovered the
+following anomaly:
 
-During shrink, redirect reader_page->list.prev if it points to a page being
-removed. Also detect a stale reader_page->list.next and redirect it after
-reconnecting the ring to the surviving successor link, including the
-transferred head flag.
+~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
 
-When an NMI reader skips a CPU while resize_in_progress is set, treat that
-CPU buffer as empty in the empty-query helpers. This lets ftrace_dump_one()
-make progress instead of retrying forever when peek/consume also skip the b=
-uffer. Entries on a skipped CPU may be omitted from the dump.=0D
-Clear event on every consume retry. Cache whether it is padding
-before unlocking. This avoids reading event fields after unlock.
-Clear timestamps on skipped peek and consume operations.
+The above creates a tprobe on the sched_switch tracepoint and records the
+previous task_struct pointer, it's mm_struct and the pgd the mm_struct
+points to.
 
-The NMI fallback increment of record_disabled is intentionally retained.
-The existing fallback comment says an unlocked NMI read may corrupt the
-buffer and that recording must remain disabled afterward; the existing
-unlock path does not undo that disable. The nmi_readers counter is separate
-and tracks only the temporary lifetime of a lockless NMI read.
+~# trace-cmd start -e tracepoints:sched
 
-Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atomic=
-")
-Reported-by: syzbot+37e1793bdb0061ea3a47@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=3D37e1793bdb0061ea3a47
-Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-Co-developed-by: Bin Yu <byu@xidian.edu.cn>
-Signed-off-by: Bin Yu <byu@xidian.edu.cn>
-Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>
+            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
+          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
+     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
 
+The first event has is a user task that has both a valid mm_struct and a pgd.
+The second event is a kernel task where the mm_struct is NULL and so is the
+dereferenced pgd pointer.
+
+The third event is where things looked strange. The mm_struct is NULL but
+the dereferenced pgd has a value! That is: NULL->pgd produced something
+other than zero.
+
+The reason for this is that the probe_mem_read() and probe_mem_read_user()
+do not write to the destination on failure. The process_fetch_insn_bottom()
+loop does not check the return value of the dereference (as it is the last
+one), and does not update the event. That leaves the value for that failed
+field to be whatever was in the ring buffer at that time.
+
+Have both probe_mem_read() and probe_mem_read_user() set the destination to
+zero on failure to read the address.
+
+Now all gdb are zero when mm is zero.
+
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 ---
-v3:
-  - Treat skipped empty-buffer queries as empty so NMI trace dumps can prog=
-ress.
-  - Clear the event pointer before each consume retry.
-  - Cache padding retry decisions before dropping reader protection.=0D
-  - Document that dumps may omit records from CPUs skipped while the gate i=
-s set.
-  - Call cond_resched() while draining NMI readers in the shrink slow path.
-  - Add the Fixes tag.
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 04bb94c..9e52506 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -522,6 +522,8 @@ struct ring_buffer_per_cpu {
- 	int				cpu;
- 	atomic_t			record_disabled;
- 	atomic_t			resize_disabled;
-+	atomic_t			resize_in_progress;
-+	atomic_t			nmi_readers;
- 	struct trace_buffer		*buffer;
- 	raw_spinlock_t			reader_lock;	/* serialize readers */
- 	arch_spinlock_t			lock;
-@@ -2578,6 +2580,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, u=
-nsigned long nr_pages, int
-=20
- 	cpu_buffer->cpu =3D cpu;
- 	cpu_buffer->buffer =3D buffer;
-+	atomic_set(&cpu_buffer->resize_in_progress, 0);
-+	atomic_set(&cpu_buffer->nmi_readers, 0);
- 	raw_spin_lock_init(&cpu_buffer->reader_lock);
- 	lockdep_set_class(&cpu_buffer->reader_lock, buffer->reader_lock_key);
- 	cpu_buffer->lock =3D (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-@@ -3074,10 +3078,18 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buf=
-fer, unsigned long nr_pages)
- 	struct buffer_page *last_page, *first_page;
- 	unsigned long nr_removed;
- 	unsigned long head_bit;
-+	bool reader_page_next_removed;
- 	int page_entries;
-=20
- 	head_bit =3D 0;
-+	reader_page_next_removed =3D false;
-=20
-+	/* Stop lockless NMI readers before unlinking pages. */
-+	atomic_set_release(&cpu_buffer->resize_in_progress, 1);
-+	/* Pair with the NMI reader's count increment and gate check. */
-+	smp_mb();
-+	while (atomic_read_acquire(&cpu_buffer->nmi_readers))
-+		cond_resched();
- 	raw_spin_lock_irq(&cpu_buffer->reader_lock);
- 	atomic_inc(&cpu_buffer->record_disabled);
- 	/*
-@@ -3106,6 +3118,19 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buff=
-er, unsigned long nr_pages)
- 	for (nr_removed =3D 0; nr_removed < nr_pages; nr_removed++) {
- 		to_remove =3D rb_list_head(to_remove)->next;
- 		head_bit |=3D (unsigned long)to_remove & RB_PAGE_HEAD;
-+
-+		/*
-+		 * The reader page is not part of the ring buffer list, so its
-+		 * previous pointer may still point to a page being removed.
-+		 * rb_is_reader_page() follows this pointer, so redirect it to a
-+		 * page that will remain in the ring buffer.
-+		 */
-+		if (cpu_buffer->reader_page->list.prev =3D=3D rb_list_head(to_remove))
-+			cpu_buffer->reader_page->list.prev =3D tail_page;
-+		/* The detached reader page can also retain a stale forward link. */
-+		if (rb_list_head(cpu_buffer->reader_page->list.next) =3D=3D
-+		    rb_list_head(to_remove))
-+			reader_page_next_removed =3D true;
- 	}
- 	/* Read iterators need to reset themselves when some pages removed */
- 	cpu_buffer->pages_removed +=3D nr_removed;
-@@ -3119,6 +3144,9 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffe=
-r, unsigned long nr_pages)
- 	 */
- 	tail_page->next =3D (struct list_head *)((unsigned long)next_page |
- 						head_bit);
-+	/* Keep the detached reader page's forward link off removed pages too. */
-+	if (reader_page_next_removed)
-+		cpu_buffer->reader_page->list.next =3D tail_page->next;
- 	next_page =3D rb_list_head(next_page);
- 	next_page->prev =3D tail_page;
-=20
-@@ -3134,6 +3162,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffe=
-r, unsigned long nr_pages)
- 	/* pages are removed, resume tracing and then free the pages */
- 	atomic_dec(&cpu_buffer->record_disabled);
- 	raw_spin_unlock_irq(&cpu_buffer->reader_lock);
-+	atomic_set_release(&cpu_buffer->resize_in_progress, 0);
-=20
- 	RB_WARN_ON(cpu_buffer, list_empty(cpu_buffer->pages));
-=20
-@@ -6293,11 +6322,18 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ kernel/trace/trace_probe_kernel.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
+index 4eb4acfa09ba..00542a162d30 100644
+--- a/kernel/trace/trace_probe_kernel.h
++++ b/kernel/trace/trace_probe_kernel.h
+@@ -102,18 +102,27 @@ static nokprobe_inline int
+ probe_mem_read_user(void *dest, void *src, size_t size)
+ {
+ 	const void __user *uaddr =  (__force const void __user *)src;
++	int ret;
+ 
+-	return copy_from_user_nofault(dest, uaddr, size);
++	ret = copy_from_user_nofault(dest, uaddr, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
  }
- EXPORT_SYMBOL_GPL(ring_buffer_iter_peek);
-=20
--static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
-+enum rb_reader_lock_state {
-+	RB_READER_LOCKED,
-+	RB_READER_NMI,
-+	RB_READER_SKIP,
-+};
-+
-+static inline enum rb_reader_lock_state
-+rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ static nokprobe_inline int
+ probe_mem_read(void *dest, void *src, size_t size)
  {
- 	if (likely(!in_nmi())) {
- 		raw_spin_lock(&cpu_buffer->reader_lock);
--		return true;
-+		return RB_READER_LOCKED;
- 	}
-=20
- 	/*
-@@ -6310,18 +6346,35 @@ static inline bool rb_reader_lock(struct ring_buffe=
-r_per_cpu *cpu_buffer)
- 	 * Reading from NMI is a oneshot deal.
- 	 */
- 	if (raw_spin_trylock(&cpu_buffer->reader_lock))
--		return true;
-+		return RB_READER_LOCKED;
++	int ret;
 +
-+	/*
-+	 * A resize cannot wait for an NMI that interrupted the CPU doing the
-+	 * resize. Track lockless NMI readers so page removal can stop new ones
-+	 * and wait for existing readers before changing the page list.
-+	 */
-+	atomic_inc(&cpu_buffer->nmi_readers);
-+	/* Pair with the resize gate before deciding to read without the lock. */
-+	smp_mb__after_atomic();
-+	if (atomic_read_acquire(&cpu_buffer->resize_in_progress)) {
-+		atomic_dec_return_release(&cpu_buffer->nmi_readers);
-+		return RB_READER_SKIP;
-+	}
-=20
- 	/* Continue without locking, but disable the ring buffer */
- 	atomic_inc(&cpu_buffer->record_disabled);
--	return false;
-+
-+	return RB_READER_NMI;
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	if ((unsigned long)src < TASK_SIZE)
+ 		return probe_mem_read_user(dest, src, size);
+ #endif
+-	return copy_from_kernel_nofault(dest, src, size);
++	ret = copy_from_kernel_nofault(dest, src, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
  }
-=20
- static inline void
--rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer, bool locked)
-+rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer,
-+		 enum rb_reader_lock_state state)
- {
--	if (likely(locked))
-+	if (likely(state =3D=3D RB_READER_LOCKED))
- 		raw_spin_unlock(&cpu_buffer->reader_lock);
-+	else if (state =3D=3D RB_READER_NMI)
-+		atomic_dec_return_release(&cpu_buffer->nmi_readers);
- }
-=20
- /**
-@@ -6341,21 +6394,30 @@ ring_buffer_peek(struct trace_buffer *buffer, int c=
-pu, u64 *ts,
- 	struct ring_buffer_per_cpu *cpu_buffer =3D buffer->buffers[cpu];
- 	struct ring_buffer_event *event;
- 	unsigned long flags;
--	bool dolock;
-+	enum rb_reader_lock_state state;
-+	bool retry;
-=20
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return NULL;
-=20
-  again:
-+	retry =3D false;
- 	local_irq_save(flags);
--	dolock =3D rb_reader_lock(cpu_buffer);
--	event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
--	if (event && event->type_len =3D=3D RINGBUF_TYPE_PADDING)
-+	state =3D rb_reader_lock(cpu_buffer);
-+	if (state =3D=3D RB_READER_SKIP) {
-+		if (ts)
-+			*ts =3D 0;
-+		event =3D NULL;
-+	} else {
-+		event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
-+	}
-+	retry =3D event && event->type_len =3D=3D RINGBUF_TYPE_PADDING;
-+	if (retry)
- 		rb_advance_reader(cpu_buffer);
--	rb_reader_unlock(cpu_buffer, dolock);
-+	rb_reader_unlock(cpu_buffer, state);
- 	local_irq_restore(flags);
-=20
--	if (event && event->type_len =3D=3D RINGBUF_TYPE_PADDING)
-+	if (retry)
- 		goto again;
-=20
- 	return event;
-@@ -6416,9 +6478,12 @@ ring_buffer_consume(struct trace_buffer *buffer, int=
- cpu, u64 *ts,
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_event *event =3D NULL;
- 	unsigned long flags;
--	bool dolock;
-+	enum rb_reader_lock_state state;
-+	bool retry;
-=20
-  again:
-+	retry =3D false;
-+	event =3D NULL;
- 	/* might be called in atomic */
- 	preempt_disable();
-=20
-@@ -6427,21 +6492,25 @@ ring_buffer_consume(struct trace_buffer *buffer, in=
-t cpu, u64 *ts,
-=20
- 	cpu_buffer =3D buffer->buffers[cpu];
- 	local_irq_save(flags);
--	dolock =3D rb_reader_lock(cpu_buffer);
-+	state =3D rb_reader_lock(cpu_buffer);
-=20
--	event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
-+	if (state !=3D RB_READER_SKIP)
-+		event =3D rb_buffer_peek(cpu_buffer, ts, lost_events);
-+	else if (ts)
-+		*ts =3D 0;
-+	retry =3D event && event->type_len =3D=3D RINGBUF_TYPE_PADDING;
- 	if (event) {
- 		cpu_buffer->lost_events =3D 0;
- 		rb_advance_reader(cpu_buffer);
- 	}
-=20
--	rb_reader_unlock(cpu_buffer, dolock);
-+	rb_reader_unlock(cpu_buffer, state);
- 	local_irq_restore(flags);
-=20
-  out:
- 	preempt_enable();
-=20
--	if (event && event->type_len =3D=3D RINGBUF_TYPE_PADDING)
-+	if (retry)
- 		goto again;
-=20
- 	return event;
-@@ -6843,7 +6912,7 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	unsigned long flags;
--	bool dolock;
-+	enum rb_reader_lock_state state;
- 	bool ret;
- 	int cpu;
-=20
-@@ -6851,9 +6920,10 @@ bool ring_buffer_empty(struct trace_buffer *buffer)
- 	for_each_buffer_cpu(buffer, cpu) {
- 		cpu_buffer =3D buffer->buffers[cpu];
- 		local_irq_save(flags);
--		dolock =3D rb_reader_lock(cpu_buffer);
--		ret =3D rb_per_cpu_empty(cpu_buffer);
--		rb_reader_unlock(cpu_buffer, dolock);
-+		state =3D rb_reader_lock(cpu_buffer);
-+		/* Do not make an NMI dumper spin on a buffer being resized. */
-+		ret =3D state =3D=3D RB_READER_SKIP || rb_per_cpu_empty(cpu_buffer);
-+		rb_reader_unlock(cpu_buffer, state);
- 		local_irq_restore(flags);
-=20
- 		if (!ret)
-@@ -6873,7 +6943,7 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffe=
-r, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	unsigned long flags;
--	bool dolock;
-+	enum rb_reader_lock_state state;
- 	bool ret;
-=20
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-@@ -6881,9 +6951,10 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buff=
-er, int cpu)
-=20
- 	cpu_buffer =3D buffer->buffers[cpu];
- 	local_irq_save(flags);
--	dolock =3D rb_reader_lock(cpu_buffer);
--	ret =3D rb_per_cpu_empty(cpu_buffer);
--	rb_reader_unlock(cpu_buffer, dolock);
-+	state =3D rb_reader_lock(cpu_buffer);
-+	/* Do not make an NMI dumper spin on a buffer being resized. */
-+	ret =3D state =3D=3D RB_READER_SKIP || rb_per_cpu_empty(cpu_buffer);
-+	rb_reader_unlock(cpu_buffer, state);
- 	local_irq_restore(flags);
-=20
- 	return ret;
+ 
+ #endif /* __TRACE_PROBE_KERNEL_H_ */
+-- 
+2.55.0
 
