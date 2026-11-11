@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794429414;
-	b=FcOTByFHdxaporbtQRi1GWRksSDjjvVbEjB2q/Q+o1UVo4cVWKWiuKDkomlakwjRIICC
-	 qxCWgrEB6Bg+z3AGJuODALu4mZ2lEqry3CcLUtPNjZTwuCVp8sT8nkT+DeSrV8u8ybIPP
-	 1tRs24TMVFrOXID0XFyUNeM12W1p1YMDLsn9P2X/I41h0qLDS0Apra5lwVjJtdMO7SIVo
-	 oN3ExruF5aAHmew8eT0vQqT/ZE64z6wQJqw3T1h/MVZkqQhXjpnMtREvS8QfLV5iWCYFd
-	 xGQjkZaeEXa7wMVgZaE85N2e5PYffAO29PZkJwdbSpWQ4nLSjTpghsvxICqqoeuomKQ==
+	b=aZDy6YVe9iPL60mE0UqipRM4RYjEXSnji2GmsgU/LyG6/sxp94mFIliMKkYEhtHtaMcW
+	 z6Pp6s6XA9/00qTYM+8exUzDegjE+B+jQ1jhiSFXO0FppniECC+Jh0ibJvAIW9GxsVxSa
+	 w1nq0ou4J0Bh2fh3QWUmshrSXqG3eKXXXlwkEoaiEzMGowwiaDZyH9yjH7cAqKGfjmF56
+	 xvy1rBT9RYaOW7rQ8rtAqBeYKmH3K6vwJJ72hSbq9RTi+ZrphJq6i6iM7+Ci//XY42Iz0
+	 IY9CvB8xDp3O8cPdOhzr4vrhWevwarqb2GN7Hq1b10G/kQFWSgPevnSfK2kVa9aYkxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794429414;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Y5GmfaraUSzG6I7apP/vydGSTWdg5q1e+3BsITKjagU=;
-	b=ouewfbiERi5R/DvjEcUs2SPvd4LvPx88MdbpxknLkhtVNEgUcb8vzJt8AeqWfm3NjQ46
-	 uipQJUS9UXU45q/nFlrmiCmzmUD4yqgtyRebX5l17mD7eB5Z/0VgXiZnuXGQ9QxG1Jy3C
-	 73p2awQwMo9F+CnHbR2zTV3Z2rDW8okGBiqukAmmj+15ddY5P7S/2zoJ5Bf6xZqyk6fE4
-	 1K3vbYTJLmVNG+h1LjZikBlwx5gENWmxwPr4BXEJo+Ex0w29K9EiaTM8fSzc8WxoN4qIu
-	 plgueHYmIikGgT/4MtG2t72loMjdxCj1LiSxDZa/KHb5llELVZjkTY4lGNwy1yk6dLA==
+	bh=mb0qHmH8xZVBF31GoHXvIcJB91cbFnuRAr+MrEKKva0=;
+	b=s2AT7IFXZTpOmK30hAXVy7rmc7gwSyyNqWN4w9hIeIs/DTVWMSAo1JPrDT0WFht/ua+q
+	 rn9ASr5+RTk6DYjwcWaDqW/pmXwUd0mhwAw12PwT+m0NGsbMRMYQSWNMOvsb8oXIwVHx9
+	 +6JLnxJ/HRdz6AXYSNz5taSFhfW69Nm0L0RDMqPt4vzpwa/yNu/zPHIUL0c2USgEqKs45
+	 bCSf7gSuFf+2osaCIqAeoS2F/J++noFUoqjCgUCD7SY5PBmcjy2ApRT+WlKIKjgUC1EIB
+	 nkT3YyCkKZe3gBWthN3r9ksC67KDPVCtYE0iiKj88qx3zjaXS2n8FnQ5Mp7UpD0+k8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=thMALZNH;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b="v7/51tjy";
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516B5606A89A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC10460A2600;
 	Wed, 11 Nov 2026 20:36:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 516B5606A89A
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC10460A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=thMALZNH
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=v7/51tjy
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
 	s=smtpout1; t=1794429406;
-	bh=Y5GmfaraUSzG6I7apP/vydGSTWdg5q1e+3BsITKjagU=;
+	bh=mb0qHmH8xZVBF31GoHXvIcJB91cbFnuRAr+MrEKKva0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=thMALZNHU/78v+q0Qq3MjVgoqSRM8zhR31a+JUn/DSBtQkui37FCHGhJlq6NoUVN6
-	 Yx9zpJJPMBPf+bZYYPLiBBArQhf2uDNDKPovGkKfXxQz4RxWDZNicSGwXezVsmu4+K
-	 4945/NA8slfdp0feA97lU5B5xbE7QE10Bi0L6oJGTbYo5ZjNcHW1SV8lfrjtdUZa1y
-	 3dmQM8+GjtfyeeyJ2QogQO34b/1kIqYhIjK1L3jgE0sLM5HdNu1Psgadm+4IA/cTfN
-	 2N7BmG5rpmGsVBE/xLZYY3zOxhVM8T8SR0qaDlCUZdsbtQQI7PZZV093nvpC761ZMf
-	 omcgOhY3/sFlQ==
+	b=v7/51tjyseOn9JsJPN+jIenbIG1dOD8e2q6QCg0dN5Gzktl0KLfFmLSjH1edqtfZ1
+	 SPOL84xzvsAW52iECzCZVytxICPx80DNAf0TLJaO2DsosdPkSYprZzGsRpG1JD5LJD
+	 QBEPHfPh3BgAx4aoBQn0dFjLwNEu40xMRcHgY9OHrN3cNlC/vJCfOmmiYIRC0XGe0J
+	 A51eNeNO6cY47fbEyxPLBabTImKhdofhzRKnEPpvridO4taPry4t8OS5rg7UUIEvQ4
+	 jgl/l9Hv10lf/0JsnaalmHXUH/Iz6phsRGK3lxMvloX0tyWQh266vo5VqkRg/5Kk10
+	 3U0z44OV9+H6g==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKp4lFBzNh1;
-	Wed, 11 Nov 2026 15:36:46 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jPwKn6WhmzNZW;
+	Wed, 11 Nov 2026 15:36:45 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: David Hildenbrand <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -107,9 +107,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Boqun Feng <boqun@kernel.org>,
 	Hugh Dickins <hughd@google.com>
-Subject: [RFC PATCH v25 10/14] tools/testing/hpcc: add litmus tests of the memory ordering
-Date: Wed, 11 Nov 2026 15:36:22 -0500
-Message-Id: <20261111203626.95838-11-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH v25 07/14] mm: keep the RSS counters of single-threaded processes exact
+Date: Wed, 11 Nov 2026 15:36:19 -0500
+Message-Id: <20261111203626.95838-8-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
 References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
@@ -124,1074 +124,325 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The limit counters rely on memory ordering. So do the carries and the
-publication of the tree by lazy activation. A test on real hardware
-cannot show that an ordering is needed: a missing barrier may never
-fail in practice. The userspace test runs on one thread only.
+Until a second thread shares the mm, initialize the RSS counters lazily,
+without their counter tree: the task owning the mm adds to a plain
+counter, and other tasks, such as reclaim, khugepaged, the OOM reaper or
+remote GUP, add atomically.  The RSS counters of single-threaded
+processes are therefore exact, their precise sums for /proc/PID/status,
+/proc/PID/statm and the OOM killer take O(1), and they use no per-cpu
+memory.  The readers of the approximation, such as /proc/PID/stat, the
+RSS high watermark and the rss_stat tracepoint, get the exact value for
+these processes.
 
-Check each of these orderings with the Linux kernel memory model
-instead. The litmus tests cover:
+The owner, mm->rss_owner, is the task running on the mm: the child in
+dup_mm(), or the task in exec_mmap(), which also clears it from the mm
+it leaves, as exit_mm() does.  It stays NULL, which matches no task, in
+the mm of exec() until exec_mmap() and in those of the other users of
+mm_alloc(): all their updates are atomic.  It is only compared with
+current, never dereferenced, so a single task writes the plain counter,
+including while a vfork() child shares the mm.  mm->owner (CONFIG_MEMCG)
+is not used, because mm_update_next_owner() hands it over to another
+task while a vfork() child may still update the counters.
 
-- The publication of the tree: the update fast path, the carry slow
-  path, the precise sum and the approximate sum.
-- The carries of percpu_counter_tree_add(), against the precise sum.
-- The limit counters: the carries of the additions, an addition undone,
-  an amount freed on another CPU, and two concurrent checks.
+copy_mm() activates the counter tree when a thread is created with
+CLONE_VM, except for vfork(), whose parent waits while the child shares
+the mm.  mm->rss_stat_mutex serializes the activations, as
+mm->mm_cid.mutex serializes the mode changes of mm_cid at fork and exit,
+without relying on which tasks can create threads.  Once the tree is
+active, thread creation no longer takes the mutex.  This moves the
+allocation of the per-cpu counters and tree items of the RSS counters
+from fork() to the creation of the second thread of a process, which
+returns -ENOMEM if it fails, as fork() could before.  The tasks the
+kernel creates with CLONE_VM for a process, such as the io_uring workers
+and the vhost tasks, also share its mm: a single-threaded process using
+them gets the counter tree.  The updates made before the activation stay
+in the single counters, which the sums keep reading, so updates racing
+with the activation are not lost.  Once the tree is active,
+__add_mm_counter() no longer reads rss_owner, so the updates of the
+threads of a process do not pull in its cache line, which other
+mm_struct fields share.
 
-herd7 reports "Never" for the 12 tests of the code as it is. 9 variants
-drop one ordering each, and herd7 reports "Sometimes" for them. This
-shows that these orderings are needed. The README explains how to run
-the tests, and the comments of the library now point at them.
+The tree stays active when the process returns to a single thread:
+going back to the single counters would need a grace period for the
+remote updaters, and a process alternating between one and two threads
+would pay for each switch.
+
+Before the activation, the updates of tasks other than the owner are
+atomic additions to one word per counter: concurrent remote updates
+of the same single-threaded process from many CPUs, such as direct
+reclaim unmapping its pages, contend on it.
+
+* Testing results:
+
+Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical
+CPUs).
+
+With the test program and the instrumentation described in the patch
+switching the RSS counters to hierarchical counters, in a KVM guest with
+384 vCPUs, each pinned to its own CPU of the host, with the NUMA topology
+of the host, the approximation of the RSS counters of the single-threaded
+program is exact, compared to an 841MB delta for the upstream counters.
+With an idle second thread, which activates the counter tree, the
+hierarchical counters reach a 96MB delta, compared to 845MB for the
+upstream counters.
+
+On bare metal, with 1000 to 16000 single-threaded processes alive, a
+read of /proc/PID/statm, which computes 3 precise sums, takes 5.3 to
+6.5us, compared to 16.5 to 19.0us with the upstream counters, and a read
+of /proc/PID/status, which computes 4 precise sums, takes 11.4 to
+13.1us, compared to 26.6 to 28.6us.  A fork + exit of a child touching
+no pages takes 116us, compared to 139us (219us compared to 247us when it
+touches 64 pages): its counters are destroyed without 4 precise sums
+over 384 logical CPUs in check_mm(), and neither per-cpu memory nor tree
+items are allocated or freed.
+
+On bare metal with SMT disabled at runtime, where the upstream batch
+size is 384, will-it-scale page_fault2 with one process is 5.1% faster
+than with the upstream counters, and page_fault3 1.3% faster (one boot
+each, the upstream one on the previous day; the boot-to-boot spread
+reaches 3%, so neither is claimed as a gain).
+
+* Memory Use
+
+Per mm, on a 64-bit arch with 64-byte cache lines, including the
+rss_owner pointer and the 24-byte activation mutex, for a
+single-threaded and a multi-threaded process, compared to the upstream
+percpu counters:
+
+                    Bytes per mm
+  nr_cpus fan-out  1 thread  threads  upstream
+        2 2             192      264       192
+       16 16            192      320       416
+       64 16,4          192      768      1184
+      384 8,8,8         192     6400      6304
+     1024 8,8,16        192    13568     16544
+
+A single-threaded process uses 192 bytes for its RSS counters whatever
+the number of CPUs: the 4 counter structures, rss_owner and the mutex in
+mm_struct, compared to the 4 upstream counter structures (160 bytes) and
+their per-cpu memory.  On x86_64 with 16, 384 and 1024 possible CPUs,
+the mm_struct slab object keeps its upstream size (1752, 1872 and 2112
+bytes in /proc/slabinfo).  A multi-threaded process adds nr_cpus bytes
+of per-cpu memory per counter (1536 per mm at 384 logical CPUs),
+compared to 4 * nr_cpus bytes per counter (6144 per mm) for the upstream
+counters, and the tree items, without the rounding of their slab cache.
+fork() no longer allocates memory for the RSS counters.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 ---
- lib/percpu_counter_tree.c                     |  8 ++-
- tools/testing/hpcc/litmus/README              | 61 +++++++++++++++++++
- .../leave-first-precise-sum-relaxed.litmus    | 37 +++++++++++
- .../litmus/leave-first-precise-sum.litmus     | 41 +++++++++++++
- .../litmus/limit-arrive-first-acquire.litmus  | 38 ++++++++++++
- .../limit-arrive-first-unordered.litmus       | 37 +++++++++++
- .../hpcc/litmus/limit-arrive-first.litmus     | 41 +++++++++++++
- .../hpcc/litmus/limit-free-level0-nomb.litmus | 40 ++++++++++++
- .../hpcc/litmus/limit-free-level0.litmus      | 43 +++++++++++++
- .../hpcc/litmus/limit-free-root.litmus        | 42 +++++++++++++
- .../litmus/limit-last-checker-nomb.litmus     | 28 +++++++++
- .../hpcc/litmus/limit-last-checker.litmus     | 33 ++++++++++
- .../hpcc/litmus/limit-undo-level0.litmus      | 35 +++++++++++
- .../hpcc/litmus/limit-undo-root-rmb.litmus    | 30 +++++++++
- .../litmus/limit-undo-root-unordered.litmus   | 29 +++++++++
- .../hpcc/litmus/limit-undo-root.litmus        | 32 ++++++++++
- .../litmus/publish-approximate-sum.litmus     | 40 ++++++++++++
- .../hpcc/litmus/publish-carry-normb.litmus    | 36 +++++++++++
- .../testing/hpcc/litmus/publish-carry.litmus  | 43 +++++++++++++
- .../publish-precise-sum-noacquire.litmus      | 38 ++++++++++++
- .../hpcc/litmus/publish-precise-sum.litmus    | 44 +++++++++++++
- .../litmus/publish-update-norelease.litmus    | 34 +++++++++++
- .../testing/hpcc/litmus/publish-update.litmus | 40 ++++++++++++
- 23 files changed, 848 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/hpcc/litmus/README
- create mode 100644 tools/testing/hpcc/litmus/leave-first-precise-sum-relaxed.litmus
- create mode 100644 tools/testing/hpcc/litmus/leave-first-precise-sum.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first-acquire.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first-unordered.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-arrive-first.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-free-level0-nomb.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-free-level0.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-free-root.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-last-checker-nomb.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-last-checker.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-undo-level0.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-undo-root-rmb.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-undo-root-unordered.litmus
- create mode 100644 tools/testing/hpcc/litmus/limit-undo-root.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-approximate-sum.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-carry-normb.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-carry.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-precise-sum-noacquire.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-precise-sum.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-update-norelease.litmus
- create mode 100644 tools/testing/hpcc/litmus/publish-update.litmus
+ .../core-api/percpu-counter-tree.rst          |  7 ++++
+ fs/exec.c                                     |  5 +++
+ include/linux/mm.h                            | 24 +++++++++++--
+ include/linux/mm_types.h                      | 16 +++++++++
+ kernel/exit.c                                 |  3 ++
+ kernel/fork.c                                 | 35 +++++++++++++++++--
+ 6 files changed, 85 insertions(+), 5 deletions(-)
 
-diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
-index 9c172fc3e4d7..fcffc3d073ca 100644
---- a/lib/percpu_counter_tree.c
-+++ b/lib/percpu_counter_tree.c
-@@ -552,7 +552,9 @@ EXPORT_SYMBOL_GPL(percpu_counter_tree_init_many_lazy);
-  * The read barriers between the levels of the precise sum are unrelated
-  * to the publication: they order carries, see
-  * percpu_counter_tree_precise_sum_unbiased().
--
-+ *
-+ * The litmus tests in tools/testing/hpcc/litmus check these orderings
-+ * with the Linux kernel memory model, and those of the carries.
-  */
+diff --git a/Documentation/core-api/percpu-counter-tree.rst b/Documentation/core-api/percpu-counter-tree.rst
+index 138e9b74b0c8..87babe2276c4 100644
+--- a/Documentation/core-api/percpu-counter-tree.rst
++++ b/Documentation/core-api/percpu-counter-tree.rst
+@@ -102,6 +102,13 @@ The activations of the same counters must be serialized by the caller:
+ a concurrent activation would publish a second tree and lose the
+ updates made to the first.
  
- /**
-@@ -1261,7 +1263,9 @@ EXPORT_SYMBOL_GPL(percpu_counter_tree_batch_for_accuracy);
-  * retries once when the value leaves room for it.
-  *
-  * Both counters wrap around: all the arithmetic is modular.
--
-+ *
-+ * The litmus tests in tools/testing/hpcc/litmus check these orderings
-+ * with the Linux kernel memory model.
-  */
++The RSS counters of an mm use this: the task owning the mm updates the
++plain counter, and other tasks, such as reclaim, update the atomic
++counter. The tree is activated when a second thread shares the mm,
++under mm->rss_stat_mutex, which serializes the activations.
++A single-threaded process therefore has exact RSS counters, cheap
++precise sums, and neither per-cpu memory nor tree items for them.
++
+ Use Cases
+ =========
  
- /*
-diff --git a/tools/testing/hpcc/litmus/README b/tools/testing/hpcc/litmus/README
-new file mode 100644
-index 000000000000..16c234a76786
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/README
-@@ -0,0 +1,61 @@
-+Litmus tests of lib/percpu_counter_tree.c. They check its memory
-+ordering arguments with the Linux kernel memory model. Each test models
-+one argument. A test with the result "Sometimes" drops one ordering of
-+the code, to show that the argument needs it.
-+
-+The model has no atomic_long_t: the tests use atomic_t, with the same
-+ordering. The per-CPU counters are plain int.
-+
-+Run them from tools/memory-model, with herd7 installed:
-+
-+  cd tools/memory-model
-+  for f in ../testing/hpcc/litmus/*.litmus; do
-+	herd7 -conf linux-kernel.cfg $f | grep Observation
-+  done
-+
-+Each observation must match the "Result" in the comment of its test.
-+
-+Publication of the tree, see "Publication of the tree":
-+
-+  publish-update.litmus, publish-update-norelease.litmus
-+    The update fast path reads level0, then its per-CPU counter.
-+
-+  publish-carry.litmus, publish-carry-normb.litmus
-+    The carry slow path reads approx_sum after a read barrier.
-+
-+  publish-precise-sum.litmus, publish-precise-sum-noacquire.litmus
-+    The precise sum reads level0 with an acquire.
-+
-+  publish-approximate-sum.litmus
-+    The approximate sum reads the root through approx_sum.
-+
-+Carries of percpu_counter_tree_add(), see
-+percpu_counter_tree_precise_sum_unbiased():
-+
-+  leave-first-precise-sum.litmus, leave-first-precise-sum-relaxed.litmus
-+    A carry leaves each level before it arrives at the next one. The
-+    precise sum, read from the root down, never counts it twice.
-+
-+Limit counters, see "Limit counters":
-+
-+  limit-arrive-first.litmus, limit-arrive-first-acquire.litmus,
-+  limit-arrive-first-unordered.litmus
-+    A carry of the additions arrives at each level before it leaves the
-+    level below. The precise sum, read from level 0 up, never misses it.
-+    The root update must be fully ordered.
-+
-+  limit-undo-root.litmus, limit-undo-root-rmb.litmus,
-+  limit-undo-root-unordered.litmus, limit-undo-level0.litmus
-+    An addition undone on the same CPU. The check reads the
-+    subtractions, then the additions. It never sees the subtraction
-+    without the addition.
-+
-+  limit-free-root.litmus, limit-free-level0.litmus,
-+  limit-free-level0-nomb.litmus
-+    An amount added on one CPU and subtracted on another one, which
-+    found it through a release and an acquire. The full barrier after
-+    the addition orders it before a subtraction which stays in level 0.
-+
-+  limit-last-checker.litmus, limit-last-checker-nomb.litmus
-+    Two concurrent additions, each checked after a full barrier. At
-+    least one check sees the other addition.
-diff --git a/tools/testing/hpcc/litmus/leave-first-precise-sum-relaxed.litmus b/tools/testing/hpcc/litmus/leave-first-precise-sum-relaxed.litmus
-new file mode 100644
-index 000000000000..951b7c39bbbc
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/leave-first-precise-sum-relaxed.litmus
-@@ -0,0 +1,37 @@
-+C leave-first-precise-sum-relaxed
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like leave-first-precise-sum, with a relaxed arrival at the middle
-+ * item. The precise sum can then count the carry twice.
-+ *)
-+
+diff --git a/fs/exec.c b/fs/exec.c
+index 8d2b14e1d455..7a6f07a6d482 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -875,6 +875,8 @@ static int exec_mmap(struct linux_binprm *bprm)
+ 		}
+ 	}
+ 
++	/* This task owns the RSS counters of the new mm, see __add_mm_counter(). */
++	WRITE_ONCE(mm->rss_owner, tsk);
+ 	task_lock(tsk);
+ 	membarrier_exec_mmap(mm);
+ 
+@@ -903,6 +905,9 @@ static int exec_mmap(struct linux_binprm *bprm)
+ 	if (old_mm) {
+ 		mmap_read_unlock(old_mm);
+ 		BUG_ON(active_mm != old_mm);
++		/* Updates of the old mm by this task are now atomic. */
++		if (READ_ONCE(old_mm->rss_owner) == tsk)
++			WRITE_ONCE(old_mm->rss_owner, NULL);
+ 		/* Defer teardown to setup_new_exec(), outside the exec locks. */
+ 		bprm->old_mm = old_mm;
+ 	} else {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 2b40f382da35..99a21a7c69b8 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3621,23 +3621,41 @@ static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
+ 
+ void mm_trace_rss_stat(struct mm_struct *mm, int member);
+ 
++/*
++ * Until a second thread shares the mm, the RSS counters are exact single
++ * counters: the task which owns the mm updates a plain counter, and other
++ * tasks (reclaim, khugepaged, the OOM reaper, remote GUP, ...) an atomic
++ * one. See copy_mm(). Once the tree is active, all updates go to it:
++ * rss_owner is not read, so the updates of the threads of a process do not
++ * touch its cache line.
++ */
++static inline void __add_mm_counter(struct mm_struct *mm, int member, long value)
 +{
-+	l0=1;
++	struct percpu_counter_tree *counter = &mm->rss_stat[member];
++
++	if (!percpu_counter_tree_active(counter) && current == READ_ONCE(mm->rss_owner))
++		percpu_counter_tree_add_owner(counter, value);
++	else
++		percpu_counter_tree_add(counter, value);
 +}
 +
-+P0(int *l0, atomic_t *item, atomic_t *root)
+ static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+ {
+-	percpu_counter_tree_add(&mm->rss_stat[member], value);
++	__add_mm_counter(mm, member, value);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void inc_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_tree_add(&mm->rss_stat[member], 1);
++	__add_mm_counter(mm, member, 1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void dec_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_tree_add(&mm->rss_stat[member], -1);
++	__add_mm_counter(mm, member, -1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 20b4517b7329..f0d315d72adb 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1352,6 +1352,22 @@ struct mm_struct {
+ #endif
+ 
+ 		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
++		/*
++		 * Task updating rss_stat with percpu_counter_tree_add_owner()
++		 * until the counter tree is activated by a second thread: the
++		 * task running on this mm, set by dup_mm() and exec_mmap(),
++		 * cleared when that task exits or execs, NULL for the other
++		 * users of mm_alloc(). Only compared with current, never
++		 * dereferenced. Not mm->owner, which depends on CONFIG_MEMCG
++		 * and which mm_update_next_owner() hands over to another task
++		 * while a vfork() child may still update the counters.
++		 */
++		struct task_struct *rss_owner;
++		/*
++		 * Serializes the activations of the rss_stat counter tree,
++		 * until the tree is active. See mm_activate_rss_stat().
++		 */
++		struct mutex rss_stat_mutex;
+ 
+ 		struct linux_binfmt *binfmt;
+ 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d5e7bc2af804..c153cd064987 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -582,6 +582,9 @@ static void exit_mm(void)
+ 	local_irq_enable();
+ 	task_unlock(current);
+ 	mmap_read_unlock(mm);
++	/* From now on, this task updates the RSS counters of @mm atomically. */
++	if (READ_ONCE(mm->rss_owner) == current)
++		WRITE_ONCE(mm->rss_owner, NULL);
+ 	mm_update_next_owner(mm);
+ 	mmput(mm);
+ 	if (test_thread_flag(TIF_MEMDIE))
+diff --git a/kernel/fork.c b/kernel/fork.c
+index d9bdaf2bd998..dc1db6cb5da0 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1108,6 +1108,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
+ 	memset(&mm->rss_stat, 0, sizeof(mm->rss_stat));
+ 	spin_lock_init(&mm->page_table_lock);
+ 	spin_lock_init(&mm->arg_lock);
++	mutex_init(&mm->rss_stat_mutex);
+ 	mm_init_cpumask(mm);
+ 	mm_init_aio(mm);
+ 	mm_init_owner(mm, p);
+@@ -1148,8 +1149,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p)
+ 	if (mm_alloc_sched(mm))
+ 		goto fail_sched;
+ 
+-	if (percpu_counter_tree_init_many(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE,
+-					  GFP_KERNEL_ACCOUNT))
++	if (percpu_counter_tree_init_many_lazy(mm->rss_stat, NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE))
+ 		goto fail_pcpu;
+ 
+ 	lru_gen_init_mm(mm);
+@@ -1550,6 +1550,8 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 		mmap_write_unlock(oldmm);
+ 		goto fail_uprobe;
+ 	}
++	/* The child owns its RSS counters, see __add_mm_counter(). */
++	mm->rss_owner = tsk;
+ 
+ 	err = dup_mmap(mm, oldmm);
+ 	if (err)
+@@ -1577,6 +1579,23 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+ 	return NULL;
+ }
+ 
++/*
++ * Serialize the activations of the RSS counter tree, whichever tasks create
++ * threads. Once the last counter is active, the activation is complete and
++ * thread creation skips the mutex. That check needs no acquire: the updates
++ * and the sums of the counters order their own accesses to the tree. Not
++ * observing the other counters active yet only delays their updates going
++ * to the tree.
++ */
++static int mm_activate_rss_stat(struct mm_struct *mm)
 +{
-+	int r;
-+
-+	r = cmpxchg_relaxed(l0, 1, 0);
-+	r = atomic_add_return_relaxed(1, item);
-+	r = atomic_cmpxchg_relaxed(item, 1, 0);
-+	r = atomic_add_return_release(1, root);
++	if (percpu_counter_tree_active(&mm->rss_stat[NR_MM_COUNTERS - 1]))
++		return 0;
++	guard(mutex)(&mm->rss_stat_mutex);
++	return percpu_counter_tree_activate_many(mm->rss_stat, NR_MM_COUNTERS,
++						 GFP_KERNEL_ACCOUNT);
 +}
 +
-+P1(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r0;
-+	int r1;
-+	int r2;
-+
-+	r2 = atomic_read(root);
-+	smp_rmb();
-+	r1 = atomic_read(item);
-+	smp_rmb();
-+	r0 = READ_ONCE(*l0);
-+}
-+
-+exists ((1:r2=1 /\ 1:r1=1) \/ (1:r2=1 /\ 1:r0=1) \/ (1:r1=1 /\ 1:r0=1))
-diff --git a/tools/testing/hpcc/litmus/leave-first-precise-sum.litmus b/tools/testing/hpcc/litmus/leave-first-precise-sum.litmus
-new file mode 100644
-index 000000000000..a80ddb605d4e
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/leave-first-precise-sum.litmus
-@@ -0,0 +1,41 @@
-+C leave-first-precise-sum
-+
-+(*
-+ * Result: Never
-+ *
-+ * A carry of percpu_counter_tree_add(), from the level 0 counter l0 to
-+ * the root through a middle item. It leaves each level before it
-+ * arrives at the next one, with a release. The precise sum reads the
-+ * root, the item and level 0, with read barriers. It never counts the
-+ * carry twice. This also keeps the sum of the subtractions of a limit
-+ * counter from being above their value.
-+ *)
-+
-+{
-+	l0=1;
-+}
-+
-+P0(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r;
-+
-+	r = cmpxchg_relaxed(l0, 1, 0);
-+	r = atomic_add_return_release(1, item);
-+	r = atomic_cmpxchg_relaxed(item, 1, 0);
-+	r = atomic_add_return_release(1, root);
-+}
-+
-+P1(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r0;
-+	int r1;
-+	int r2;
-+
-+	r2 = atomic_read(root);
-+	smp_rmb();
-+	r1 = atomic_read(item);
-+	smp_rmb();
-+	r0 = READ_ONCE(*l0);
-+}
-+
-+exists ((1:r2=1 /\ 1:r1=1) \/ (1:r2=1 /\ 1:r0=1) \/ (1:r1=1 /\ 1:r0=1))
-diff --git a/tools/testing/hpcc/litmus/limit-arrive-first-acquire.litmus b/tools/testing/hpcc/litmus/limit-arrive-first-acquire.litmus
-new file mode 100644
-index 000000000000..f5f06dd0ff08
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-arrive-first-acquire.litmus
-@@ -0,0 +1,38 @@
-+C limit-arrive-first-acquire
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like limit-arrive-first, with an acquire add at the root. The acquire
-+ * only orders the read of the add. The departures can then be seen
-+ * before the arrival at the root, and the sum misses the carry.
-+ *)
-+
-+{
-+	l0 = 1;
-+}
-+
-+P0(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r;
-+
-+	r = atomic_cmpxchg(item, 0, 1);
-+	r = atomic_add_return_acquire(1, root);
-+	atomic_sub(1, item);
-+	WRITE_ONCE(*l0, 0);
-+}
-+
-+P1(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r0;
-+	int r1;
-+	int r2;
-+
-+	r0 = READ_ONCE(*l0);
-+	smp_rmb();
-+	r1 = atomic_read(item);
-+	smp_rmb();
-+	r2 = atomic_read(root);
-+}
-+
-+exists (1:r0=0 /\ 1:r1=0 /\ 1:r2=0)
-diff --git a/tools/testing/hpcc/litmus/limit-arrive-first-unordered.litmus b/tools/testing/hpcc/litmus/limit-arrive-first-unordered.litmus
-new file mode 100644
-index 000000000000..9d870c2e0aa2
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-arrive-first-unordered.litmus
-@@ -0,0 +1,37 @@
-+C limit-arrive-first-unordered
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like limit-arrive-first, with an unordered add at the root. The sum
-+ * can miss the carry.
-+ *)
-+
-+{
-+	l0 = 1;
-+}
-+
-+P0(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r;
-+
-+	r = atomic_cmpxchg(item, 0, 1);
-+	atomic_add(1, root);
-+	atomic_sub(1, item);
-+	WRITE_ONCE(*l0, 0);
-+}
-+
-+P1(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r0;
-+	int r1;
-+	int r2;
-+
-+	r0 = READ_ONCE(*l0);
-+	smp_rmb();
-+	r1 = atomic_read(item);
-+	smp_rmb();
-+	r2 = atomic_read(root);
-+}
-+
-+exists (1:r0=0 /\ 1:r1=0 /\ 1:r2=0)
-diff --git a/tools/testing/hpcc/litmus/limit-arrive-first.litmus b/tools/testing/hpcc/litmus/limit-arrive-first.litmus
-new file mode 100644
-index 000000000000..9d9f6efdf0aa
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-arrive-first.litmus
-@@ -0,0 +1,41 @@
-+C limit-arrive-first
-+
-+(*
-+ * Result: Never
-+ *
-+ * A carry of the additions of a limit counter, from the level 0 counter
-+ * l0 to the root through a middle item, as in
-+ * percpu_counter_tree_add_arrive_first(). It arrives at the item with a
-+ * fully ordered cmpxchg, and at the root with a fully ordered add. Then
-+ * it leaves the item and level 0. The precise sum reads level 0, the
-+ * item and the root, with read barriers. It never misses the carry.
-+ *)
-+
-+{
-+	l0 = 1;
-+}
-+
-+P0(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r;
-+
-+	r = atomic_cmpxchg(item, 0, 1);
-+	r = atomic_add_return(1, root);
-+	atomic_sub(1, item);
-+	WRITE_ONCE(*l0, 0);
-+}
-+
-+P1(int *l0, atomic_t *item, atomic_t *root)
-+{
-+	int r0;
-+	int r1;
-+	int r2;
-+
-+	r0 = READ_ONCE(*l0);
-+	smp_rmb();
-+	r1 = atomic_read(item);
-+	smp_rmb();
-+	r2 = atomic_read(root);
-+}
-+
-+exists (1:r0=0 /\ 1:r1=0 /\ 1:r2=0)
-diff --git a/tools/testing/hpcc/litmus/limit-free-level0-nomb.litmus b/tools/testing/hpcc/litmus/limit-free-level0-nomb.litmus
-new file mode 100644
-index 000000000000..d220bab401ac
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-free-level0-nomb.litmus
-@@ -0,0 +1,40 @@
-+C limit-free-level0-nomb
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like limit-free-level0, without the full barrier after the addition.
-+ * The release of the page does not order the addition before the
-+ * unordered subtraction of CPU 1, for CPU 2. The precise sum can then
-+ * see the subtraction without the addition.
-+ *)
-+
-+{}
-+
-+P0(int *l0p, int *page)
-+{
-+	WRITE_ONCE(*l0p, 1);
-+	smp_store_release(page, 1);
-+}
-+
-+P1(int *l0n, int *page)
-+{
-+	int r0;
-+	int r;
-+
-+	r0 = smp_load_acquire(page);
-+	if (r0 == 1)
-+		r = cmpxchg_relaxed(l0n, 0, 1);
-+}
-+
-+P2(int *l0p, int *l0n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*l0n);
-+	smp_rmb();
-+	r1 = READ_ONCE(*l0p);
-+}
-+
-+exists (1:r0=1 /\ 2:r0=1 /\ 2:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-free-level0.litmus b/tools/testing/hpcc/litmus/limit-free-level0.litmus
-new file mode 100644
-index 000000000000..cb5d6b083ecf
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-free-level0.litmus
-@@ -0,0 +1,43 @@
-+C limit-free-level0
-+
-+(*
-+ * Result: Never
-+ *
-+ * CPU 0 adds to its level 0 counter of the additions l0p. The full
-+ * barrier of percpu_counter_tree_limit_add() follows. Then CPU 0
-+ * publishes the page it charged. CPU 1 finds the page and frees it: the
-+ * subtraction stays in its level 0 counter of the subtractions l0n,
-+ * without ordering. The precise sum of CPU 2 reads l0n, then l0p after a
-+ * read barrier. It never sees the subtraction without the addition.
-+ *)
-+
-+{}
-+
-+P0(int *l0p, int *page)
-+{
-+	WRITE_ONCE(*l0p, 1);
-+	smp_mb();
-+	smp_store_release(page, 1);
-+}
-+
-+P1(int *l0n, int *page)
-+{
-+	int r0;
-+	int r;
-+
-+	r0 = smp_load_acquire(page);
-+	if (r0 == 1)
-+		r = cmpxchg_relaxed(l0n, 0, 1);
-+}
-+
-+P2(int *l0p, int *l0n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*l0n);
-+	smp_rmb();
-+	r1 = READ_ONCE(*l0p);
-+}
-+
-+exists (1:r0=1 /\ 2:r0=1 /\ 2:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-free-root.litmus b/tools/testing/hpcc/litmus/limit-free-root.litmus
-new file mode 100644
-index 000000000000..d3f267311411
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-free-root.litmus
-@@ -0,0 +1,42 @@
-+C limit-free-root
-+
-+(*
-+ * Result: Never
-+ *
-+ * CPU 0 adds to the root of the additions p, then publishes the page it
-+ * charged. CPU 1 finds the page and frees it: its carry reaches the root
-+ * of the subtractions n with a release. CPU 2 checks: it reads n with an
-+ * acquire, then p. It never sees the subtraction without the
-+ * addition.
-+ *)
-+
-+{}
-+
-+P0(atomic_t *p, int *page)
-+{
-+	int r;
-+
-+	r = atomic_add_return(1, p);
-+	smp_store_release(page, 1);
-+}
-+
-+P1(atomic_t *n, int *page)
-+{
-+	int r0;
-+	int r;
-+
-+	r0 = smp_load_acquire(page);
-+	if (r0 == 1)
-+		r = atomic_add_return_release(1, n);
-+}
-+
-+P2(atomic_t *p, atomic_t *n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = atomic_read_acquire(n);
-+	r1 = atomic_read(p);
-+}
-+
-+exists (1:r0=1 /\ 2:r0=1 /\ 2:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-last-checker-nomb.litmus b/tools/testing/hpcc/litmus/limit-last-checker-nomb.litmus
-new file mode 100644
-index 000000000000..2690fdf6e868
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-last-checker-nomb.litmus
-@@ -0,0 +1,28 @@
-+C limit-last-checker-nomb
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like limit-last-checker, without the full barrier. Both checks can
-+ * miss the other addition, and both pass.
-+ *)
-+
-+{}
-+
-+P0(int *a, int *b)
-+{
-+	int r0;
-+
-+	WRITE_ONCE(*a, 1);
-+	r0 = READ_ONCE(*b);
-+}
-+
-+P1(int *a, int *b)
-+{
-+	int r0;
-+
-+	WRITE_ONCE(*b, 1);
-+	r0 = READ_ONCE(*a);
-+}
-+
-+exists (0:r0=0 /\ 1:r0=0)
-diff --git a/tools/testing/hpcc/litmus/limit-last-checker.litmus b/tools/testing/hpcc/litmus/limit-last-checker.litmus
-new file mode 100644
-index 000000000000..891f20ec86a0
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-last-checker.litmus
-@@ -0,0 +1,33 @@
-+C limit-last-checker
-+
-+(*
-+ * Result: Never
-+ *
-+ * Two CPUs add to their level 0 counters a and b, then check with a
-+ * precise sum, which reads the other counter. With a full barrier
-+ * between the addition and the check, at least one of them sees the
-+ * other addition. Of the additions which pass their check, the one
-+ * checked last thus sees all of them.
-+ *)
-+
-+{}
-+
-+P0(int *a, int *b)
-+{
-+	int r0;
-+
-+	WRITE_ONCE(*a, 1);
-+	smp_mb();
-+	r0 = READ_ONCE(*b);
-+}
-+
-+P1(int *a, int *b)
-+{
-+	int r0;
-+
-+	WRITE_ONCE(*b, 1);
-+	smp_mb();
-+	r0 = READ_ONCE(*a);
-+}
-+
-+exists (0:r0=0 /\ 1:r0=0)
-diff --git a/tools/testing/hpcc/litmus/limit-undo-level0.litmus b/tools/testing/hpcc/litmus/limit-undo-level0.litmus
-new file mode 100644
-index 000000000000..1bda7b3835de
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-undo-level0.litmus
-@@ -0,0 +1,35 @@
-+C limit-undo-level0
-+
-+(*
-+ * Result: Never
-+ *
-+ * An addition which does not fit is undone on the same CPU. Both stay
-+ * in the level 0 counters, l0p for the additions and l0n for the
-+ * subtractions. The full barrier of percpu_counter_tree_limit_add()
-+ * comes between them. The precise sum of the limit counter reads l0n,
-+ * then l0p after a read barrier. It never sees the subtraction without
-+ * the addition.
-+ *)
-+
-+{}
-+
-+P0(int *l0p, int *l0n)
-+{
-+	int r;
-+
-+	WRITE_ONCE(*l0p, 1);
-+	smp_mb();
-+	r = cmpxchg_relaxed(l0n, 0, 1);
-+}
-+
-+P1(int *l0p, int *l0n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*l0n);
-+	smp_rmb();
-+	r1 = READ_ONCE(*l0p);
-+}
-+
-+exists (0:r=0 /\ 1:r0=1 /\ 1:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-undo-root-rmb.litmus b/tools/testing/hpcc/litmus/limit-undo-root-rmb.litmus
-new file mode 100644
-index 000000000000..3b43afbeb8e9
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-undo-root-rmb.litmus
-@@ -0,0 +1,30 @@
-+C limit-undo-root-rmb
-+
-+(*
-+ * Result: Never
-+ *
-+ * Like limit-undo-root, with a read barrier between the two reads
-+ * instead of the acquire.
-+ *)
-+
-+{}
-+
-+P0(atomic_t *p, atomic_t *n)
-+{
-+	int r;
-+
-+	r = atomic_add_return(1, p);
-+	r = atomic_add_return_release(1, n);
-+}
-+
-+P1(atomic_t *p, atomic_t *n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = atomic_read(n);
-+	smp_rmb();
-+	r1 = atomic_read(p);
-+}
-+
-+exists (1:r0=1 /\ 1:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-undo-root-unordered.litmus b/tools/testing/hpcc/litmus/limit-undo-root-unordered.litmus
-new file mode 100644
-index 000000000000..65bc0f2900b2
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-undo-root-unordered.litmus
-@@ -0,0 +1,29 @@
-+C limit-undo-root-unordered
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like limit-undo-root, without ordering between the two reads. The
-+ * check can then see the subtraction without the addition.
-+ *)
-+
-+{}
-+
-+P0(atomic_t *p, atomic_t *n)
-+{
-+	int r;
-+
-+	r = atomic_add_return(1, p);
-+	r = atomic_add_return_release(1, n);
-+}
-+
-+P1(atomic_t *p, atomic_t *n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = atomic_read(n);
-+	r1 = atomic_read(p);
-+}
-+
-+exists (1:r0=1 /\ 1:r1=0)
-diff --git a/tools/testing/hpcc/litmus/limit-undo-root.litmus b/tools/testing/hpcc/litmus/limit-undo-root.litmus
-new file mode 100644
-index 000000000000..72335ee2ee6c
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/limit-undo-root.litmus
-@@ -0,0 +1,32 @@
-+C limit-undo-root
-+
-+(*
-+ * Result: Never
-+ *
-+ * An addition which does not fit is undone on the same CPU. Its carry
-+ * reaches the root of the additions p. Then the undo reaches the root of
-+ * the subtractions n, with a release. The check reads n with an acquire,
-+ * then p. It never sees the subtraction without the addition, which
-+ * would take the difference below the value.
-+ *)
-+
-+{}
-+
-+P0(atomic_t *p, atomic_t *n)
-+{
-+	int r;
-+
-+	r = atomic_add_return(1, p);
-+	r = atomic_add_return_release(1, n);
-+}
-+
-+P1(atomic_t *p, atomic_t *n)
-+{
-+	int r0;
-+	int r1;
-+
-+	r0 = atomic_read_acquire(n);
-+	r1 = atomic_read(p);
-+}
-+
-+exists (1:r0=1 /\ 1:r1=0)
-diff --git a/tools/testing/hpcc/litmus/publish-approximate-sum.litmus b/tools/testing/hpcc/litmus/publish-approximate-sum.litmus
-new file mode 100644
-index 000000000000..be4396a96ebc
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-approximate-sum.litmus
-@@ -0,0 +1,40 @@
-+C publish-approximate-sum
-+
-+(*
-+ * Result: Never
-+ *
-+ * percpu_counter_tree_activate_many() zeroes the per-CPU counter l0mem
-+ * and the root rootmem, which held stale values, then publishes approx_sum
-+ * and level0 with releases. See "Publication of the tree" in
-+ * lib/percpu_counter_tree.c.
-+ *
-+ * The approximate sum reads approx_sum, then the root through it. The
-+ * address dependency orders the two reads. It never sees the stale
-+ * root.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*approx_sum);
-+	r1 = READ_ONCE(*r0);
-+}
-+
-+exists (1:r0=rootmem /\ 1:r1=1)
-diff --git a/tools/testing/hpcc/litmus/publish-carry-normb.litmus b/tools/testing/hpcc/litmus/publish-carry-normb.litmus
-new file mode 100644
-index 000000000000..bc5fa4a6aaad
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-carry-normb.litmus
-@@ -0,0 +1,36 @@
-+C publish-carry-normb
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like publish-carry, without the read barrier. The carry slow path can
-+ * then see approx_sum unpublished.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int *r1;
-+	int r2;
-+
-+	r0 = READ_ONCE(*level0);
-+	r1 = READ_ONCE(*approx_sum);
-+	r2 = READ_ONCE(*r1);
-+}
-+
-+exists (1:r0=l0mem /\ (1:r1=noroot \/ 1:r2=1))
-diff --git a/tools/testing/hpcc/litmus/publish-carry.litmus b/tools/testing/hpcc/litmus/publish-carry.litmus
-new file mode 100644
-index 000000000000..b316ade6d647
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-carry.litmus
-@@ -0,0 +1,43 @@
-+C publish-carry
-+
-+(*
-+ * Result: Never
-+ *
-+ * percpu_counter_tree_activate_many() zeroes the per-CPU counter l0mem
-+ * and the root rootmem, which held stale values, then publishes approx_sum
-+ * and level0 with releases. See "Publication of the tree" in
-+ * lib/percpu_counter_tree.c.
-+ *
-+ * The carry slow path has read level0. Then it reads approx_sum after a
-+ * read barrier, and the root through it. It never sees approx_sum
-+ * unpublished or the stale root.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int *r1;
-+	int r2;
-+
-+	r0 = READ_ONCE(*level0);
-+	smp_rmb();
-+	r1 = READ_ONCE(*approx_sum);
-+	r2 = READ_ONCE(*r1);
-+}
-+
-+exists (1:r0=l0mem /\ (1:r1=noroot \/ 1:r2=1))
-diff --git a/tools/testing/hpcc/litmus/publish-precise-sum-noacquire.litmus b/tools/testing/hpcc/litmus/publish-precise-sum-noacquire.litmus
-new file mode 100644
-index 000000000000..b3fcfad22a61
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-precise-sum-noacquire.litmus
-@@ -0,0 +1,38 @@
-+C publish-precise-sum-noacquire
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like publish-precise-sum, with a plain read of level0. The precise sum
-+ * can then see approx_sum unpublished.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int *r1;
-+	int r2;
-+	int r3;
-+
-+	r0 = READ_ONCE(*level0);
-+	r1 = READ_ONCE(*approx_sum);
-+	r2 = READ_ONCE(*r1);
-+	r3 = READ_ONCE(*r0);
-+}
-+
-+exists (1:r0=l0mem /\ (1:r1=noroot \/ 1:r2=1 \/ 1:r3=1))
-diff --git a/tools/testing/hpcc/litmus/publish-precise-sum.litmus b/tools/testing/hpcc/litmus/publish-precise-sum.litmus
-new file mode 100644
-index 000000000000..0649b75b0bdc
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-precise-sum.litmus
-@@ -0,0 +1,44 @@
-+C publish-precise-sum
-+
-+(*
-+ * Result: Never
-+ *
-+ * percpu_counter_tree_activate_many() zeroes the per-CPU counter l0mem
-+ * and the root rootmem, which held stale values, then publishes approx_sum
-+ * and level0 with releases. See "Publication of the tree" in
-+ * lib/percpu_counter_tree.c.
-+ *
-+ * The precise sum reads level0 with an acquire, then approx_sum, the
-+ * root and the per-CPU counter. It never sees approx_sum unpublished or
-+ * a stale value.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int *r1;
-+	int r2;
-+	int r3;
-+
-+	r0 = smp_load_acquire(level0);
-+	r1 = READ_ONCE(*approx_sum);
-+	r2 = READ_ONCE(*r1);
-+	r3 = READ_ONCE(*r0);
-+}
-+
-+exists (1:r0=l0mem /\ (1:r1=noroot \/ 1:r2=1 \/ 1:r3=1))
-diff --git a/tools/testing/hpcc/litmus/publish-update-norelease.litmus b/tools/testing/hpcc/litmus/publish-update-norelease.litmus
-new file mode 100644
-index 000000000000..44a3d387b760
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-update-norelease.litmus
-@@ -0,0 +1,34 @@
-+C publish-update-norelease
-+
-+(*
-+ * Result: Sometimes
-+ *
-+ * Like publish-update, with plain stores instead of the releases. The
-+ * update fast path can then see the stale per-CPU counter.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	WRITE_ONCE(*approx_sum, rootmem);
-+	WRITE_ONCE(*level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*level0);
-+	r1 = READ_ONCE(*r0);
-+}
-+
-+exists (1:r0=l0mem /\ 1:r1=1)
-diff --git a/tools/testing/hpcc/litmus/publish-update.litmus b/tools/testing/hpcc/litmus/publish-update.litmus
-new file mode 100644
-index 000000000000..55603a274b28
---- /dev/null
-+++ b/tools/testing/hpcc/litmus/publish-update.litmus
-@@ -0,0 +1,40 @@
-+C publish-update
-+
-+(*
-+ * Result: Never
-+ *
-+ * percpu_counter_tree_activate_many() zeroes the per-CPU counter l0mem
-+ * and the root rootmem, which held stale values, then publishes approx_sum
-+ * and level0 with releases. See "Publication of the tree" in
-+ * lib/percpu_counter_tree.c.
-+ *
-+ * The update fast path reads level0, then its per-CPU counter through
-+ * it. The address dependency orders the two reads. It never sees the
-+ * stale per-CPU counter.
-+ *)
-+
-+{
-+	level0=nolevel0;
-+	approx_sum=noroot;
-+	l0mem=1;
-+	rootmem=1;
-+}
-+
-+P0(int **level0, int **approx_sum, int *l0mem, int *rootmem)
-+{
-+	WRITE_ONCE(*l0mem, 0);
-+	WRITE_ONCE(*rootmem, 0);
-+	smp_store_release(approx_sum, rootmem);
-+	smp_store_release(level0, l0mem);
-+}
-+
-+P1(int **level0, int **approx_sum)
-+{
-+	int *r0;
-+	int r1;
-+
-+	r0 = READ_ONCE(*level0);
-+	r1 = READ_ONCE(*r0);
-+}
-+
-+exists (1:r0=l0mem /\ 1:r1=1)
+ static int copy_mm(u64 clone_flags, struct task_struct *tsk)
+ {
+ 	struct mm_struct *mm, *oldmm;
+@@ -1601,6 +1620,18 @@ static int copy_mm(u64 clone_flags, struct task_struct *tsk)
+ 		return 0;
+ 
+ 	if (clone_flags & CLONE_VM) {
++		int err = 0;
++
++		/*
++		 * A second thread shares the mm: activate the RSS counter
++		 * tree. A vfork child shares the mm while the parent waits,
++		 * so the single counters still fit. The tree stays active if
++		 * the clone fails later, which is harmless.
++		 */
++		if (!(clone_flags & CLONE_VFORK))
++			err = mm_activate_rss_stat(oldmm);
++		if (err)
++			return err;
+ 		mmget(oldmm);
+ 		mm = oldmm;
+ 	} else {
 -- 
 2.47.3
 
