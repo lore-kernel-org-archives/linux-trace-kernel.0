@@ -1,57 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794417716;
-	b=3JMr+mWsF8kb99YzeBhhvvXejMfD6Sr2/GVrOiwXFFEuwtSgoWyIgLE1E4VkdUbkgNX8
-	 5Woh+J8dBS5AKQ37pf+tjZ5ZSIrq67rtUBwaZNjqPcBUIzoBG16Tdj8FZIIW7kaOdDsNQ
-	 RYe7wpwgV2yaEG4EtvzwpSJTDtIOVRrzYAilxSoY/VTp8xAiYdNoX/GHGgRrAq15j2Pby
-	 jkokKchUnu7qM7Z8dP7psq+qhUr6toHUwLT0hQzUPzU8kAwM5uPTg2L78hnc43ebkF8zr
-	 z2ALhouep0zWg2M+JnrXT01L1IpG9lP6/4uddxXWZQqniOb1etTLqaGWBr1Ir5Gevsw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794417716;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Fnb4qeT9Yt4MhBhSS789gXYc6c2xVlpbBHsVmn3Exbw=;
-	b=qgAADkcQFMqx3Tr5MsVNQSRh/3stXDkP0bq347oLUiGSvcOWrKKQHgfHwioLNsZzzhHR
-	 5pcEnNNkCIDWSQIPIFAdxBk3fiRIS5zqEWmhrRv2dGtvJNVLi0BJlK7az4WJg3C2GWuA+
-	 pVdGdt/se3rhuBTkaXTfb2RXBfGfyyTsviSkgNtRx1Ym6qB/fS3sE95WUleqwjn8ip6Cy
-	 aYsfr4BFEmwgCY2BbzEt+S8N3FRG7K+T66qNW0rcvEXTfPnTyZ5+3O8C8QSM0MrC0TKr6
-	 XJGB6IeL0NDac4jVReL2GJw3mXAr3oZs7QIT+KLPDT8WK0rbzKBF6eT+xXLJCGPOg7w==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iScpH8R5;
-	arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794425991;
+	b=FqCe+XgplwMMcY+5fUr60wykhnmKPfDvqdELu75b4aV3pmyC8wBa8nbcnrfLpQpdNkfz
+	 E+cwf+XA08X0TP9dXpgLDqltMRmkJwTqMOzoC9CLNxxuJ/iIG/OU4rmLsxiBP18x8eNex
+	 fHIWG+FR+GbWSMEL7dmuFCh1utB3ga1Kj9V7hAw4uBV5+9WgHSGennoKB81JzO8wjd1rj
+	 StK2B9XmzvJxseduE3+KLeMXKKJzOEDQvajah/cqi8YDiIasWDkbnAJ4R8dKqMHnwOGpq
+	 60HKv8S3XJ6BVT+QMYmqK6do53FJ0ziWvygJQxYZCpJIxfT1dRzP9HeMQlL40LWLIBA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794425991;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=FEQamrsPo6urht7cJ67TRsra9oOnDxC/CoYlG8i+IMU=;
+	b=sLlTYQcgGrQlWurPb+SmMcqn8/wnaBV3aet339P54wZJ9LAvWlF82NfCnrNNJnTQRKbH
+	 iWPJLRKnyydqUGKAMLJlEVhbXhFFry9XicB42wCebUfv8BIM6sqglHSHL6BfnNbVr1gW5
+	 CcZ4RRJh+UwSU4smJKKfZDqQ8OumPQ1CGTp0qxvbrdcIBLQpCnW5COll87nNpGv/zHEo2
+	 smFwCh3qylPuGaOsCZQnK3el0puQWSDhR6lvmHHK3nVJ7OCohfNUgEdH/knUST9Xwsk2R
+	 uDvRca32N3F5J4E7yp0uF/p4Q7gYI+igGqtfcsJI7wZGQ5ERmvdd0YGv5GF3QV+okvA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oyhm0Qjq;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BA0606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 17:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7A0606A32A;
+	Wed, 11 Nov 2026 19:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iScpH8R5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5863F1F00A06;
-	Wed, 11 Nov 2026 17:21:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oyhm0Qjq
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794425991;
+	b=g24p0YPxV8xO+RpwEsyaGthXbZ+IiV5gs+hHdxWZhAPAy9+55nJjNLefFGuIJ+YHM4V0
+	 SXZAPEQ+HXpPqsiz6LTouImxl3DSdXE1lREpPAV/IjeonqSnryROh8dfMW+MdBm0ewAYZ
+	 qph3Rndo7jquec5bBw3MjNOp42wn2Kdkkf5WneNzVGnQuJdDgXnu2vTvvafIPN+h402s7
+	 bZlEfU2j88JbgURK6dDsdioDpk/qM1ZsDmznhDuB4K++sWtgy0TngJXIUmXO4FxaHjRo2
+	 8usib6lL6UpY/G6gr1ctj9Sh5zy5+u6Q/EIxZ1hUNAMSdqD4a2orcPvBRUMHYfuh3NQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794425991;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=FEQamrsPo6urht7cJ67TRsra9oOnDxC/CoYlG8i+IMU=;
+	b=DHWJziBb76vt2OJ4rSX6BHpT2iPkpeRLQqCHPvo3gGjONm+zuLSseJOUqj+8nrBvM1P+
+	 8bEgxzl3RKSinhuWRhzURCNXdOIcZt7Kim8Y6hz6ZfinOGDqd/jkQy3VKBSV4YrSlQlDy
+	 vU+n8Kh1NB8QM6keuHPGMpSkoTr01tqyyz9GMlia8F5R/RZqdYmEBG9/WdMljameu9Sw+
+	 QS4IeLy2FAFRV2dXcmpSbVS2KW882pZbgFMrov3VlqKUI8H6pGOeER9GRcGOkn2Rf7uJe
+	 jDLhK4c1Br126Itkf/wIiysQ1zACqkb/KSy45BggwuUK79aVfyjInjbEx3OdoXkCU0w==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id BA1601F00A06;
+	Wed, 11 Nov 2026 19:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794417716;
-	bh=Fnb4qeT9Yt4MhBhSS789gXYc6c2xVlpbBHsVmn3Exbw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iScpH8R5H+4ZbktthjJ6Bt2hatO2Un5US6oZ0oP7lcYE5Bua+RwV1lLSPNVBvi0EV
-	 yZwfY1XNmo2c/0UmMTOdd2xy3O6og2qkJsl6fnQILqcHAsYOpbG696drUGrhUcpetc
-	 GNKMZSiejZscAqe+mUwYmN2MY1UhGoDwQi0+VddL19Oxq/F15t+d0vhfCLyYaAxWSE
-	 E/JZggZtBX4R4P4Jhn06OoTp9W/gY4DtNJ4DHq2aaMXOATKEJog12l8eHxvqXpvx2K
-	 0tQQXmYi0Uk978osdmTOGbgBDG5gMcaeFLIQbjZehdJdXHIgSiANic7TYhM3xhexRl
-	 aBnWGIFI3Y9IA==
-Message-ID: <sashiko-outbox-209404@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] riscv: probes: reject probes inside an LR/SC
- sequence
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261111-probes-in-lrsc-v2-2-b2525b7e1e8e@mobileye.com>
-References: <20261111-probes-in-lrsc-v2-0-b2525b7e1e8e@mobileye.com>
- <20261111-probes-in-lrsc-v2-2-b2525b7e1e8e@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 17:21:55 +0000
+	s=k20260515; t=1794425991;
+	bh=FEQamrsPo6urht7cJ67TRsra9oOnDxC/CoYlG8i+IMU=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=oyhm0Qjqbr4EGrx8e025NMs2iHvXqJmXdkifm86oz4nTkhqezQuflI3npRwEi9rSj
+	 T8nWMd2MWlwu4aaKnEYoyqapT6b6LaybVKR55MFWmoK8Zd17ZuJfO6KZQskzpiT9og
+	 lCCwiUEAwsilr/ENGTuXdW9gL2joqDb9HwnBZPAw/C+JzKO/heDjl/HkDTbe90Pmdm
+	 nBBwHZSD9a5qBDoVuRvNrr62UT6XI7ro2PmQMFrH+Sf5mzXSa32+WCg/znLM9P0RGK
+	 IcH0rhW9dvp45Zpb87pWb7iNJiG3OMu1iJAEOGrB5YlUqDQegnQFhzwoe1X6DIW5gX
+	 sVCUAP4HELFXQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 457E3490BA;
+	Wed, 11 Nov 2026 19:39:50 +0000 (UTC)
+From: Mike Bazov via B4 Relay <devnull+mikeba.sentinelone.com@kernel.org>
+Subject: [PATCH bpf-next v2 0/5] bpf: Check recursion per task for
+ preemptible programs
+Date: Wed, 11 Nov 2026 21:39:46 +0200
+Message-Id: <20261111-bpf-preempt-v2-r2-v2-0-9d8f6b952ad2@sentinelone.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,180 +83,180 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAILE9GoC/x2MwQqEMAxEf0VyNqBhXXB/RTy0NtUctltSEUH8d
+ 9Od28ybmQsKq3CBT3OB8iFFfskMtQ0sm0srowTzQB29exP6HDEr8zfveBAqYRzj6LrgwxBeYDu
+ jUc7/5wS1nvjcYTbiXWH06tKy1U+b1wTu+wEeWWynhwAAAA==
+To: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, 
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Emil Tsalapatis <emil@etsalapatis.com>, 
+ Ihor Solodrai <ihor.solodrai@linux.dev>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ JP Kobryn <jp.kobryn@linux.dev>, linux-trace-kernel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mike Bazov <mikeba@sentinelone.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794425986; l=7090;
+ i=mikeba@sentinelone.com; s=20261022; h=from:subject:message-id;
+ bh=LnQxenO2766xlJbzVCrrwOOFPUjVzlBWWREwY5b6Gkw=;
+ b=Dn6g7Cnpd+M2gnaHODrGbsuqgZ2AsyoQ16gWyQpXx1aDsAJSq9CUqKtv2Xji2GAVNBv+T7v2u
+ sDmRS2JTvCpCbHDMPiTLMnfiNzstDSRPy7rlzn7vPlCL9ozZ1XzP+MK
+X-Developer-Key: i=mikeba@sentinelone.com; a=ed25519;
+ pk=DBXcQ0qoCkgacRsRwT1JU7oOWpWSYuTyLiXMfNLcP+A=
+X-Endpoint-Received: by B4 Relay for mikeba@sentinelone.com/20261022 with
+ auth_id=1284
+X-Original-From: Mike Bazov <mikeba@sentinelone.com>
+Reply-To: mikeba@sentinelone.com
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [High] riscv: probes: riscv_probe_in_lrsc_body() returns false when
-  probing lr
-- [Low] riscv: probes: missing Fixes trailer on LR/SC probe rejection
-  fix
---
+Tracing programs run preemptibly: trampoline programs only disable
+migration, tracepoint probes run under SRCU-fast, and syscall tracepoint
+and sleepable programs can fault. Their recursion check is a per-CPU
+counter:
 
-commit fa1e6ee354b2fc2997caf3fb258fcb6a4fda3097
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+  CPU N
+  -----
+  task A enters prog -> prog->active on CPU N becomes 1
+  task A is preempted inside prog
+  task B enters prog on CPU N -> prog->active is already raised:
+    the run is dropped and counted as a recursion miss
+  task A resumes and finishes -> prog->active drops to 0
 
-> riscv: probes: reject probes inside an LR/SC sequence
->
-> A kprobe or uprobe replaces an instruction with a breakpoint. The trap
-> clears the hart's reservation, so if the breakpoint sits on the lr, on
-> the sc, or on any instruction between them, the sc fails, the loop
-> branches back to the lr and the probe fires again. The sequence never
-> completes.
->
-> This has always been possible on RISC-V, because cmpxchg and the
-> conditional atomics are LR/SC loops. arm64 has the same problem and
-> rejects probes inside an exclusive-load/store-exclusive region.
->
-> Breakpoint can be on the lr unless it is part of the LR/SC loop.
->
-> For the instructions between LR and SC, use the rules for a constrained
-> LR/SC sequence: at most 16 instructions between lr and sc, all base
-> integer instructions other than loads, stores, JALR, FENCE, SYSTEM and
-> backward jumps or branches, or their compressed forms. Scan forward
-> from the probed instruction. Reaching an sc through permitted
-> instructions only means the probe sits inside a sequence; any other
-> instruction, an lr, the end of the window or the end of the readable
-> text means it does not. Only a sequence that follows these rules is
-> guaranteed to make progress, so a probe inside any other one is
-> already on unsupported ground. Scanning forward rather than tracking
-> state from the start of the function also keeps an lr that has no sc,
-> such as the one in __cmpwait() before wrs.nto, from affecting probes
-> later in the same function.
->
-> kprobes scan the kernel text up to the end of the enclosing symbol.
-> uprobes have only the probed instruction copied, so they read the
-> text that follows it from the task, which the caller's mmap_lock
-> allows.
->
-> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Nothing recursed, but task B's event is lost. Before 7.0 this was mostly
+hidden, because distribution kernels used PREEMPT_VOLUNTARY. Commit
+7dadeaa6e851 ("sched: Further restrict the preemption modes") left only
+lazy and full preemption on x86 and arm64, so 7.0+ distribution kernels
+drop such events in normal operation. Programs can't work around it: the
+counter is checked before their first instruction.
 
-[Severity: Low]
-Since this fixes a livelock present since kprobes and uprobes support was
-added on RISC-V, should this include Fixes tags?
+In a production security agent with paired fentry/fexit programs on
+inet_sendmsg() and inet_recvmsg(), a dropped half breaks the entry/exit
+pairing and desynchronizes stateful protocol parsing. On a stock 7.0
+kernel, 4,063 of 38.0M runs were dropped under 10 minutes of HTTP load.
+v1 has the detailed analysis and a standalone reproducer.
 
-  Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
-  Fixes: 74784081aac8 ("riscv: Add uprobes supported")
+This series checks recursion per task instead. Each run already links a
+run context into the task's chain (current->bpf_ctx); the run context
+now records the program, and the check walks the task's chain. Real
+recursion, including through interrupts and NMIs, which run on top of
+the interrupted task's chain, is still rejected; a second task is not.
+Programs that keep a private stack keep the per-CPU check.
 
-[ ... ]
+Patch 1 comes first and stands on its own. A per-CPU private stack is
+only safe if a program never runs in two tasks at once on one CPU, and
+that already happens on bpf-next today: two raw_tp dispatchers
+tail-calling one handler, or one tracepoint program attached to a
+syscall and a regular tracepoint, let a second task overwrite the
+preempted task's stack. The selftests reproduce both. Patch 1 stops
+giving tracing, raw_tp and tracepoint programs a private stack. Without
+it, the per-task check would let a dispatcher in while its tail-call
+target still uses a per-CPU stack.
 
-> diff --git a/arch/riscv/kernel/probes/decode-insn.c b/arch/riscv/kernel/p=
-robes/decode-insn.c
-> index 433d9035b8882..0789754f682cb 100644
-> --- a/arch/riscv/kernel/probes/decode-insn.c
-> +++ b/arch/riscv/kernel/probes/decode-insn.c
-> @@ -4,11 +4,102 @@
->  #include <linux/kprobes.h>
->  #include <linux/module.h>
->  #include <linux/kallsyms.h>
-> +#include <linux/bug.h>
->  #include <asm/sections.h>
-> =20
->  #include "decode-insn.h"
->  #include "simulate-insn.h"
-> =20
-> +/*
-> + * Can insn sit between the lr and the sc of a constrained LR/SC sequenc=
-e?
-> + * The ISA allows base integer instructions there, except loads, stores,
-> + * JALR, FENCE, SYSTEM, backward jumps and taken backward branches, plus
-> + * their compressed forms. Backward branches are treated as not allowed:
-> + * the retry branch follows the sc, so one inside the body is not a
-> + * constrained sequence.
-> + */
-> +static bool __kprobes riscv_insn_is_lrsc_body(u32 insn)
-> +{
-> +	u32 funct3;
-> +
-> +	if (GET_INSN_LENGTH(insn) =3D=3D 2) {
-> +		switch (insn & RVC_INSN_OPCODE_MASK) {
-> +		case RVC_OPCODE_C0:
-> +			/* c.addi4spn; the rest of the quadrant is loads and stores */
-> +			return (insn & RVC_INSN_FUNCT3_MASK) =3D=3D 0;
-> +		case RVC_OPCODE_C1:
-> +			/* Arithmetic, c.j, c.jal and branches, bit 12 is the offset sign */
-> +			if (riscv_insn_is_c_j(insn) || riscv_insn_is_c_jal(insn) ||
-> +			    riscv_insn_is_c_beqz(insn) || riscv_insn_is_c_bnez(insn))
-> +				return !(insn & BIT(12));
-> +			return true;
-> +		case RVC_OPCODE_C2:
-> +			funct3 =3D (insn & RVC_INSN_FUNCT3_MASK) >> RVC_INSN_FUNCT3_OPOFF;
-> +			if (funct3 =3D=3D 0)	/* c.slli */
-> +				return true;
-> +			if (funct3 =3D=3D 4)	/* c.mv, c.add, but not c.jr, c.jalr, c.ebreak */
-> +				return !riscv_insn_is_c_jr(insn) &&
-> +				       !riscv_insn_is_c_jalr(insn) &&
-> +				       !riscv_insn_is_c_ebreak(insn);
-> +			return false;	/* stack loads and stores */
-> +		}
-> +		return false;
-> +	}
-> +
-> +	switch (insn & RV_INSN_OPCODE_MASK) {
-> +	case RVG_OPCODE_OP_IMM:
-> +	case RVG_OPCODE_OP_IMM_32:
-> +	case RVG_OPCODE_LUI:
-> +	case RVG_OPCODE_AUIPC:
-> +		return true;
-> +	case RVG_OPCODE_OP:
-> +	case RVG_OPCODE_OP_32:
-> +		/* funct7 0 or 0x20 is base I; anything else is M, B or another extens=
-ion */
-> +		return !((insn & RV_INSN_FUNCT7_MASK) & ~(0x20U << RV_INSN_FUNCT7_OPOF=
-F));
-> +	case RVG_OPCODE_BRANCH:
-> +	case RVG_OPCODE_JAL:
-> +		/* forward only, bit 31 is the offset sign */
-> +		return !(insn & BIT(31));
-> +	}
-> +	return false;
-> +}
-> +
-> +/*
-> + * Does the instruction at the start of buf lie inside a constrained LR/=
-SC
-> + * sequence? Such a sequence holds at most RISCV_LRSC_MAX_BODY instructi=
-ons
-> + * between the lr and the sc, all from the set above. Walk forward from =
-the
-> + * probed instruction: reaching an sc through permitted instructions only
-> + * means the probe sits in the body; anything else, including an lr that
-> + * opens a new sequence, means it does not. The walk stops at the end of
-> + * buf, so a short buffer only makes the answer more permissive.
-> + */
-> +bool __kprobes riscv_probe_in_lrsc_body(const u16 *buf, size_t len)
-> +{
-> +	size_t off =3D 0;
-> +	u32 insn;
-> +	int n;
-> +
-> +	for (n =3D 0; n < RISCV_LRSC_MAX_BODY + 2; n++) { // 2 for LR and SC it=
-self
-> +		if (off + 2 > len)
-> +			return false;
-> +		insn =3D buf[off / 2];
-> +		if (GET_INSN_LENGTH(insn) =3D=3D 4) {
-> +			if (off + 4 > len)
-> +				return false;
-> +			insn |=3D (u32)buf[off / 2 + 1] << 16;
-> +		}
-> +		/* if probed instruction is not lr, scan one instruction less */
-> +		if (n =3D=3D 0 && !riscv_insn_is_lr(insn))
-> +			n++;
-> +		if (riscv_insn_is_sc(insn))
-> +			return true;
-> +		if (!riscv_insn_is_lrsc_body(insn))
-> +			return false;
+  1. bpf: Avoid per-CPU private stack in preemptible tracing progs
+  2. bpf: Check program recursion per task via bpf_ctx
+  3. bpf: Check recursion per task for programs on syscall tracepoints
+  4. selftests/bpf: Add trampoline and raw_tp preemption recursion test
+  5. selftests/bpf: Test syscall tracepoint programs under preemption
 
-[Severity: High]
-Does riscv_probe_in_lrsc_body() always return false when the probed
-instruction at n =3D=3D 0 is lr?
+Behavior changes worth a look:
 
-When riscv_insn_is_lr(insn) is true at n =3D=3D 0, execution still falls
-through to riscv_insn_is_lrsc_body(insn).  Because riscv_insn_is_lrsc_body()
-rejects RVG_OPCODE_AMO, it returns false on the first iteration without
-scanning for a matching sc, allowing probes on lr inside an LR/SC loop to
-be accepted and livelock when single-stepped.
+- On the kernel stack, the frames of a call chain share one stack
+  budget, while a private stack checks each frame on its own. Programs
+  whose frames only fit separately no longer load, e.g. a raw_tp program
+  with two 2000-byte frames: "combined stack size of 2 calls is 4000.
+  Too large". Is that acceptable, or would an opt-in private stack, which
+  would keep the per-CPU check, be preferred as a follow-up?
+- Raw tracepoint programs were the only ones with a private stack that
+  BPF_PROG_TEST_RUN runs, so unwinding on a private stack is now checked
+  in the generated code only. A run-time test could use bpf_testmod's
+  struct_ops that requests a private stack: wanted in this series or as
+  a follow-up?
+- The same program can now run in two tasks at once on one CPU, so a
+  program using a per-CPU map as scratch space can see another run's
+  data.
+- Timed may_goto keeps its budget per program and CPU, as before: a run
+  in another task can renew the budget of a preempted run.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-probes-in-=
-lrsc-v2-0-b2525b7e1e8e@mobileye.com?part=3D2
+Testing:
+
+x86-64 VM with 4 vCPUs, full preemption, bpf-next 0fb18ce8a2e9 with and
+without the series.
+
+- The same test_progs binary on both kernels:
+
+                                            bpf-next    series
+  trampoline_preempt, 14 preemption         all fail    all pass
+    subtests (20 rounds each, the
+    overlap is checked in every round)
+  trampoline_preempt, 4 recursion           all pass    all pass
+    subtests
+  verifier_unwind, may_goto_priv_stack,     pass        pass
+    timed_may_goto, test_global_funcs,
+    recursion, task_local_storage
+
+  On bpf-next the second task is dropped in every round of every
+  preemption subtest, and two_dispatchers and tp_dual also corrupt the
+  preempted task's stack.
+
+- HTTP load: nginx -> gunicorn -> Redis on the VM, the production
+  fentry/fexit probe (8 programs on inet[6]_{send,recv}msg()), 4
+  CPU-bound tasks, and 200,000 requests from wrk on each kernel:
+
+                probe runs    recursion misses
+  bpf-next       7,966,760               9,254
+  series         7,976,662                   0
+
+Changes in v2:
+- v1 kept recursion-checked trampoline programs non-preemptible. As
+  discussed on v1, v2 checks recursion per task instead, using the
+  bpf_ctx chain, so programs stay preemptible.
+- Cover raw_tp/tp_btf, sleepable trampoline programs, BPF_PROG_TEST_RUN
+  and syscall tracepoints, not only trampolines.
+- New patch 1: no per-CPU private stack for these program types, which
+  also fixes two existing stack corruptions.
+- New deterministic selftests: every round forces a second task into the
+  program while the first is preempted inside it, proves the overlap,
+  and checks the preempted task's stack; plus true-recursion tests.
+
+v1: https://lore.kernel.org/bpf/20261025-b4-bpf-trampoline-preempt-v1-0-198dcdc0c6ac@sentinelone.com/
+
+---
+Mike Bazov (5):
+      bpf: Avoid per-CPU private stack in preemptible tracing progs
+      bpf: Check program recursion per task via bpf_ctx
+      bpf: Check recursion per task for programs on syscall tracepoints
+      selftests/bpf: Add trampoline and raw_tp preemption recursion test
+      selftests/bpf: Test syscall tracepoint programs under preemption
+
+ include/linux/bpf.h                                |  54 ++-
+ kernel/bpf/trampoline.c                            |  28 +-
+ kernel/bpf/verifier.c                              |  43 +-
+ kernel/trace/bpf_trace.c                           |  12 +-
+ net/bpf/test_run.c                                 |   4 +-
+ net/ipv4/bpf_tcp_ops.c                             |   6 +-
+ .../selftests/bpf/prog_tests/may_goto_priv_stack.c |   6 +-
+ .../selftests/bpf/prog_tests/timed_may_goto.c      |   6 +-
+ .../selftests/bpf/prog_tests/trampoline_preempt.c  | 464 +++++++++++++++++++++
+ .../selftests/bpf/progs/may_goto_priv_stack.c      |  14 +-
+ .../selftests/bpf/progs/test_global_func3.c        |   9 +
+ .../selftests/bpf/progs/timed_may_goto_user.c      |  16 +-
+ .../selftests/bpf/progs/trampoline_preempt.c       | 302 ++++++++++++++
+ .../selftests/bpf/progs/verifier_private_stack.c   |  65 +--
+ .../testing/selftests/bpf/progs/verifier_unwind.c  |  33 +-
+ 15 files changed, 975 insertions(+), 87 deletions(-)
+---
+base-commit: 0fb18ce8a2e9de830433923cf65838933d615359
+change-id: 20261111-bpf-preempt-v2-r2-f9f9a0dbd5d4
+
+Best regards,
+-- 
+Mike Bazov <mikeba@sentinelone.com>
+
+
