@@ -1,54 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794416155;
-	b=gZOOKU04lLyp72PLGxn7q5+DfQ2owuuWFllKt+kSMC/tq2bseo3057P9gRyePIfHsTaN
-	 UVR3XC1vEiXjGT2jJ2lXPsArF3Cl8INd+L7vXy1tWDSVBdDywHaodMhe5i43mt8AAMZnO
-	 dWKE0swE2EnOG+ibcnWrhGM6CnoUOKDUtmDtYsjuq9x5wSAXVzoQo7RQxWk4WZYT1Lvzq
-	 ETYzKpykSxWA+iYyeqPHPkdh/1VIVy24Wd78zqKR3jac1LroEmBubj8bq9eSAWbYB2BeJ
-	 pURFZef9isUN1Kkg+AdpQUe1Zgmz9E94NvWtg+kBWEVHiCN9sNjijToWWRGgLDlecQQ==
+	t=1794416535;
+	b=if1EBnXKp0GFrA/djnXnWNei6rLqlvUsNR4oKM/12hy83gdb18So7yqjJ46i0FYgLPyi
+	 VCHzuLlNcFEX6tNLHezVgy4dgsgFjVCHsZkRkRwnyiGX5PwpyUj61osFxUOYACV11keCU
+	 pkYBtaSSNcnVMt4kb+yxuMxMnr8fpSbvsI/OCxxdb0BEVZCgiv0qERCfzHGm8qSDV09nm
+	 iQVSv9ERBeKhjf7Ygvu675n9SjhAsxOUfMGBnwZFxr2p+u+DuakHRChB8iMDuT5j0H5Ev
+	 84MR3B4BR9CFlz9GRdXL/vCR7wrZh4tJewgiDSmTLHEG9FQZRp2MmQlgHXOInCT1MUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794416155;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=COoFrKVjSGSQ3/0fRhMjTaGkJn0JhD3svPFFXROqO7k=;
-	b=Tmvv/V6DsFX8w91M0ITq/fPZ29jou2tS/2imnCJhDyTWXOSLrbsu4FNsPisNNsN38nqR
-	 4Z0abx8Ty7+/R3XIUWayVVvZ8J9/f6upz31ChK740o4aZazvZi3IRuBN2V+jh6UMI2XNp
-	 O04Jeq9gGwhN9tNMszONF/i0F8ak/NjlU4DNsq6sPkydoA3LG5P2ts3OKOXhCud3NSrNc
-	 rmMVaI7IfExB6YQGuxq0i1vj0aOic3NaReA8dMx1gyY803gTVJgamMuIv7s1QDXllkwD0
-	 d8eXL2ll4vaP9vGUk98YipTWIDYFVaDv7q47w1XsO+vxAc5IRYCCkDAmZWus1hIvncA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794416535;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:Received:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer;
+	bh=f4aBxUGI/i9IEXmcYaWufy/MGpOz2B+4nsSppFFrS+8=;
+	b=p65eCBWWW600qQ2I81E/Oz/+2GTXlOeNO+A4trKrgqbTP83eFsXRL9u/xSv071khFB5Y
+	 6qojIk3klL51Y5CtYmy+Selfm05HIk7pVnFmXDo1Oc6KlfW6R82Sgz35TVKEUksoouXYZ
+	 aME1NEMF0t6V19Qkc/JWNjhh8uCzmaNFEv3xXEDkIPCY5lR2d1mxfzyU4qxIKiH6jV4y1
+	 Gvnq5/HJOtovzwhHbeoiaOppFIBPIlw17wEfybArLS4O1wv2jWIgaK8unueVSAV4GPdmD
+	 hpdNY+kqK23CTGKY0ZYqMZejt+4+2HDoEvPSHhUD4ppHjJbBfaM35WwBLFKwOwFuX4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QTLcH7v0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FAD606A324
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 16:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QTLcH7v0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359691F00A05;
-	Wed, 11 Nov 2026 16:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794416155;
-	bh=COoFrKVjSGSQ3/0fRhMjTaGkJn0JhD3svPFFXROqO7k=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=QTLcH7v00+SmUDmF7Z0hbnZOOJpiJNE2IjGuq/QW3N0pxY6rUuPGptXf0L81Pk5FD
-	 DnmVCRXDI8xqaKZ4vRVluox0CrtDa/YFxSiIktXk6vpihAvb9MX1Ju3mPNybjW8pND
-	 Koik/gYbZyKDcB7n8EsZBOJBW2EmXnVC56JzqSgBQ6wHscElZJJxi9PD/GLTvyighO
-	 vR3Sa3wUPqs3XAjorWtlkXBZO+EvPAoPU8I/tMxI6VuMORkCGjC0gGvrclnwE6QUl9
-	 2x+pQPluvm7a/EfhdJy0WcYkEji4wtpI60D/uNUZJx8sFKHYAwhaWA4DUH2qQX0MPE
-	 z3ECQxQYvdvMQ==
-Message-ID: <sashiko-outbox-209343@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] ring-buffer: Let the reader spin on head page update
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261111160624.1294946-1-vdonnefort@google.com>
-References: <20261111160624.1294946-1-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 16:55:54 +0000
+	dmarc=pass header.from=mobileye.com;
+	spf=pass smtp.mailfrom=mobileye.com;
+	arc=none smtp.remote-ip=207.54.77.50
+Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB8AB606A321;
+	Wed, 11 Nov 2026 17:02:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB8AB606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1794416532; x=1825952532;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=IxwxnDIA+/sk0ZQAuVTz9Rbo8EW+wUc/VXSIbwOtVmg=;
+  b=heV+4Yz7B150muGizQT0rjEIp6Yg85LqmBKw9Tlhvbupy8j30zJfXrpu
+   ulduKVG0aQt4EG555A1MVxjdb6iQinPzdnnRHYg/fGFiXAhZ+ri6AESiW
+   i2y3gSMNlf1MRyeuwv1lkynpedPI3wAQNgR6TAGgHJJXNDaqvz/6F4FAS
+   VPYSF5A0D13tSIXahIPFJpJrFbtm37hDu1sqaMszSI9Aznz5ONjA1iZZd
+   neTbVdDelRc899ILnTBH0GnwJdr/z4o1TTyjj9lhi+lFF98qLRHxVxWVz
+   hQft8ARCcRDxbtk0LLa7PQGxcXziEYgTBV2JOMu+h9PHC6KHr3MOzZ00h
+   g==;
+X-CSE-ConnectionGUID: SstvAGBKSkGBgrDjF7ev4A==
+X-CSE-MsgGUID: NHw9QPdIRly4uX2HLMRIqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
+  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 19:02:05 +0200
+X-CSE-ConnectionGUID: 6qT7i9r2SxWwP4clXhYOwg==
+X-CSE-MsgGUID: Ss41W1xXRjCBviLuEz8/JA==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
+  by ces02_data.me-corp.lan with SMTP; 11 Nov 2026 19:10:10 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Wed, 11 Nov 2026 19:02:03 +0200
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Subject: [PATCH v2 0/2] riscv: probes: reject probes inside an LR/SC
+ sequence
+Date: Wed, 11 Nov 2026 19:01:06 +0200
+Message-Id: <20261111-probes-in-lrsc-v2-0-b2525b7e1e8e@mobileye.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,114 +66,74 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFKf9GoC/3WNwQ6CMBBEf4X07BqL2Ign/8NwoNutrAFKukgkh
+ H+34Nm5vWTmzaKEIpOoW7aoSBMLhz5BfsgUNnX/JGCXWOWn3OgUGGKwJMA9tFEQCkRHBq0vzka
+ l0RDJ82cXPqofy9u+CMfNsjUaljHEeX+c9Nb7K580aCh8WTpH9cWb670Lllua6YihU9W6rl9e0
+ DwzwQAAAA==
+X-Change-ID: 20261111-probes-in-lrsc-4ccde6cbf436
+To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Sashiko <sashiko-bot@kernel.org>
+X-Mailer: b4 0.16.0
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] ring-buffer: stale list.prev dereference in
-  rb_handle_head_page() writer loop
---
+Patch 1 fixes page fault reported by sashiko-bot@kernel.org that
+existed before this patch series
 
-commit 42f758b28dc946f5aa06647c36c046a615ee80cf
-Author: Vincent Donnefort <vdonnefort@google.com>
+Patch 2 rejects probes inside the LR/SC sequence. This commit was
+submitted as patch 1 of the series [1].
+Detaching it from that series with slightly edited commit message,
+because it is not depending on other stuff.
 
-ring-buffer: Let the reader spin on head page update
+[1] https://patch.msgid.link/20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com
 
-This commit introduces the RB_PAGE_HEAD_UPDATE flag to mark newly moved head
-page links while a writer update is in progress, converting the final link
-to RB_PAGE_HEAD only when the outer writer finishes rb_handle_head_page().
+---
+Changes in v2:
+- Allow kprobe on the LR itself unless it is part of the LR/SC loop.
+- Fix error (reported by sashiko-bot@kernel.org) where
+  arch_prepare_kprobe() returns -EILSEQ for LR/SC probes.
+  Make codes returned by arch_check_kprobe to indicate -EINVAL
+  if probe falls within the LR/SC loop, consistent with the case when
+  INSN_REJECTED returned by riscv_probe_decode_insn
+- add patch fixing out-of-bounds read in riscv_probe_decode_insn()
+  reported by sashiko-bot@kernel.org (as patch 1)
+- Link to v1: https://patch.msgid.link/20261111-probes-in-lrsc-v1-1-4f99ddea5f68@mobileye.com
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 1fd28a72e6ee1..73f31e6719f98 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
+To: Paul Walmsley <pjw@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+To: Albert Ou <aou@eecs.berkeley.edu>
+To: Alexandre Ghiti <alex@ghiti.fr>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
-[ ... ]
+---
+Vladimir Kondratiev (2):
+      riscv: kprobes: fix out-of-bounds read in riscv_probe_decode_insn
+      riscv: probes: reject probes inside an LR/SC sequence
 
-> @@ -3833,6 +3849,24 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cp=
-u_buffer,
->  			return -1;
->  	}
-> =20
-> +	if (type =3D=3D RB_PAGE_HEAD) {
-> +		struct buffer_page *prev_page;
-> +
-> +		do {
-> +			/* Interrupts might have moved the head further  */
-> +			while (!rb_is_head_page(new_head, new_head->list.prev))
-> +				rb_inc_page(&new_head);
-> +
-> +			prev_page =3D new_head;
-> +			rb_dec_page(&prev_page);
-> +
-> +			/* Try to release the reader */
-> +			ret =3D rb_head_page_set_head(cpu_buffer, new_head, prev_page,
-> +						    RB_PAGE_HEAD_UPDATE);
-> +
-> +		} while (ret !=3D (RB_PAGE_HEAD_UPDATE));
-> +	}
-> +
->  	return 0;
->  }
+ arch/riscv/include/asm/insn.h          | 28 +++++++++++
+ arch/riscv/kernel/probes/decode-insn.c | 91 ++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/probes/decode-insn.h |  7 +++
+ arch/riscv/kernel/probes/kprobes.c     | 29 +++++++----
+ arch/riscv/kernel/probes/uprobes.c     | 31 ++++++++++++
+ 5 files changed, 177 insertions(+), 9 deletions(-)
+---
+base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
+change-id: 20261111-probes-in-lrsc-4ccde6cbf436
 
-[Severity: Medium]
-Can reading new_head->list.prev and rb_dec_page(&prev_page) here inspect a
-stale predecessor page and spin in rb_handle_head_page()?
+Best regards,
+--  
+Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
-Lockless writers cannot rely on the head page's list.prev pointer because
-__rb_get_reader_page() and rb_insert_pages() update the forward list.next
-pointer via cmpxchg before updating the following page's list.prev pointer:
-
-kernel/trace/ring_buffer.c:__rb_get_reader_page() {
-	...
-	ret =3D rb_head_page_replace(reader, cpu_buffer->reader_page);
-	if (!ret)
-		goto spin;
-	...
-	rb_list_head(reader->list.next)->prev =3D &cpu_buffer->reader_page->list;
-	...
-}
-
-If a writer enters rb_handle_head_page() in the window after a reader swaps
-the head page (or after rb_insert_pages() splices in new pages) but before
-list.prev is updated, new_head->list.prev still points to the old predecess=
-or:
-
-CPU0 (reader)                     CPU1 (writer)
-__rb_get_reader_page()
-  rb_head_page_replace(reader,
-    cpu_buffer->reader_page)
-                                  rb_handle_head_page()
-                                    /* tail_page is reader_page->prev,
-                                     * next_page is reader_page,
-                                     * new_head is reader->next
-                                     */
-                                    rb_head_page_set_head_update(...,
-                                      new_head, next_page, ...)
-                                    rb_head_page_set_normal(...,
-                                      next_page, tail_page, ...)
-                                    rb_is_head_page(new_head,
-                                      new_head->list.prev)
-                                      /* inspects reader->list.next
-                                       * (RB_PAGE_NORMAL) instead of
-                                       * reader_page->list.next
-                                       * (RB_PAGE_HEAD_UPDATE)
-                                       */
-                                    rb_inc_page(&new_head)  <-- misses head
-  rb_list_head(reader->list.next)->prev =3D
-    &cpu_buffer->reader_page->list;
-
-Because every other link in the ring has RB_PAGE_NORMAL, the inner while lo=
-op
-wraps around the ring buffer until CPU0 updates list.prev, or deadlocks if =
-the
-writer is an NMI that interrupted __rb_get_reader_page() or rb_insert_pages=
-()
-on the same CPU.
-
-Since new_head starts as the page right after next_page, tracking prev_page
-forward from next_page as new_head advances via rb_inc_page() would avoid
-touching list.prev on the writer path.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111160624.1294=
-946-1-vdonnefort@google.com?part=3D1
