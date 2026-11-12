@@ -1,71 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794474461;
-	b=HV/o82gpW3MwxWk48y1ISbVmecnNkSdDuzGK8Hrur8VDcpBDhMV1v7cfQY3AwH30N0Jh
-	 Wg/VpnE03WKPKnnG0Iz12HIzSAP9a7KTFjPXTjbK2s/oYYHnzWayECf5MDjvGBmFy/eJ/
-	 3QgOJzbauJvlT9ZIWExxWkP5Lt115Pd9etP4a2yBQRQDhuDsEk2g6CUZFjiqHou2im+N1
-	 x9MBBQuY6cBgUna6p43UvtvPV/cf+NfaZEsyncBmD8KMneuBtq5UbpUsauBkVBKQlC+Ao
-	 nI6R+bvJP1GHFiO5yeAz393oRyu7Gdq16bdGWDuhzNWIbM9HE/72Ub+JeOQuj3G6KXw==
+	t=1794475535;
+	b=5GeINLvVf3pNcyUZ30W4y86tpcWC22XrPoB+qNIHSThtpJa+r3GGmHsh/HwN/1M8m18N
+	 WFZZmXS4hjL9EkMGioaQukCXPSgqzRr6BrINosOPTh/Rgxj1+y2KttJbcM+8uZKf4gvY4
+	 qjcUVolBhB07tVK4VBNh0XteRpU5n6OfrGNrJSgbIDMkKvM92X9MPa2zXhxWSrUmjpkLH
+	 ZRmo/KEFDILJqyha0cysDFfOQ8OjVySzbomoyFfiZrFcOXu3pe9gIV9ISzjBL0mVwhQad
+	 HOfykKwSQlEWr8SVXXv4YFtZf4bMvbvSzblGZci9TRQehU91J1iOlrZ1H1xR1o21FBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794474461;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=RJOHiin0akz7cf0NYu9hMIx8uHfnzW8Hz3TOsh9r0Gg=;
-	b=mvi91V4/lqBRJaMmSEMAJ84Kc9kbSPXSTLr85vKabnhNQcv58XXzHYVGRUpACXRxcVhB
-	 qCdy2/M8RKu4uF2UKPgujox9ovo/oSFa7eH0UHO6PVYo64ILm1d69IVb1MNH9qgFDQ9mZ
-	 1i9sk0J7JuqGfktG7iKey7t+tgGPJIVAauOQVB4xqMb2cmBc7f3A3MD30HB5UtJ6E/wx0
-	 2XoRYCmAQ2unDtblmDchiYjAvguLioqA8FT1XEGqDuidTVVbie1kRgK6dmPd9RuWAAJA1
-	 zVNZTkkI935uamd4p1Cl+RvRtc9LFoYR0mnLOqWjL9IpZ0YFSUpo5rJmyLUEv6A1pJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794475535;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=TChqlxgvxyj/oh1Lld7CEgRxX8/6eci9KR66ZAyb5Kk=;
+	b=lJZzYvMRsI2FcVU6aPPC913FEIA/Zze25rk3+8x0qusj0J88GttvvMAesqdBE31u9a4d
+	 Y0KS+hXf7TaMYBWtkoQrPzmsfdIApfOfBBMqvwHyxsuMQHGFWS/h3yfrYHjsbYOTgmhmH
+	 9Cu3IGEPAiZoDZwZY2BppzxY7SuuZ7wgKxtkBq8it81wOU05oowtC6BP3A6w0JCcOml3u
+	 GxiEAgnQghykL23u1bvl94q418JqFDNd3yQ3fwkrfu4v1Nb0mwCE6ddKHu638WURREtIS
+	 Yi4pX5msEF+tq8ytDkHfV8Mpbm+g/WADG5Uf+j11Rb/61bMKdWljhNQenMjnKTo7now==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=SB6O+iXm;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ErQTPuJZ;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02000606A321;
-	Thu, 12 Nov 2026 09:07:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02000606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFCC606A323;
+	Thu, 12 Nov 2026 09:25:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6CFCC606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=SB6O+iXm
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RJOHiin0akz7cf0NYu9hMIx8uHfnzW8Hz3TOsh9r0Gg=; b=SB6O+iXmZP/Zhda1NdyUdZrS7x
-	Fw/vd9KXhBeHb3KFbZP0lKJcnxaD+nVTr3l5nfzMEYGKWWqwGiHdBf0+QQhRz3JtbKYls5yxMwcyY
-	1JvUDMdIf1LNaT0q4QpqYCNMH8BZIZgz5TFdMYuBqjHSzac6G+ipwlxgHAWGpo8R9N1kCaHOHISkG
-	e4Gx///yhtK2cvLU4iMXu799KLaZvRKrXS4nmB9zaGXMFYGOxP83OsSkD+LrH4J68ATYOrjIeEgzP
-	moVwBVZlsSgcl5yMn79Pj0EnofedO+w/2cjqIRdC16IkgZH3T6yF9dquFMGFY7o7lqUbHXCtrjdxd
-	sNW7G11A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRQmN-0000000A6ZG-1w7N;
-	Thu, 12 Nov 2026 09:07:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 313BD300400; Thu, 12 Nov 2026 10:07:34 +0100 (CET)
-Date: Thu, 12 Nov 2026 10:07:34 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>,
-	x86@kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 01/13] static_call: Index code text reservation lookups
-Message-ID: <20261112090734.GH2668804@noisy.programming.kicks-ass.net>
-References: <20261109194916.1089703-1-jolsa@kernel.org>
- <20261109194916.1089703-2-jolsa@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ErQTPuJZ
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id A85981604A1;
+	Thu, 12 Nov 2026 09:25:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 6486120032;
+	Thu, 12 Nov 2026 09:25:22 +0000 (UTC)
+Date: Thu, 12 Nov 2026 04:25:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+Cc: "mhiramat@kernel.org" <mhiramat@kernel.org>, "shuah@kernel.org"
+ <shuah@kernel.org>, "beaub@linux.microsoft.com"
+ <beaub@linux.microsoft.com>, "mathieu.desnoyers@efficios.com"
+ <mathieu.desnoyers@efficios.com>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+ <linux-kselftest@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] tracing/user_events: Share state with existing
+ threads
+Message-ID: <20261112042506.0fca0524@fedora>
+In-Reply-To: <40C83F97-D53F-4050-9CE4-19449912FB20@getmailspring.com>
+References: <20261019103957.69759ee3@gandalf.local.home>
+	<40C83F97-D53F-4050-9CE4-19449912FB20@getmailspring.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,132 +66,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261109194916.1089703-2-jolsa@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 6486120032
+X-Stat-Signature: jow8xa7w71ereiwss7xhb9afire7wobj
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+wyEA/6qs15cbEwMshE+EHhJIrhG577H4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TChqlxgvxyj/oh1Lld7CEgRxX8/6eci9KR66ZAyb5Kk=; b=ErQTPuJZgpc0/aspmIiC9J7VR3R84yBQrxWvNBTkAQptb4flOQz6l3UY1wawXhBg38JY0K4XUR3Lduq2isHioMUc/tGaPgVr5tkrE+TB//oah+2iP0Hah5ehJKQ+my6mAH/UB+RmOwPz4baGLrW0YTwvT9r2tdAWsmBXbxTV5yg=
+X-HE-Tag: 1794475522-153039
+X-HE-Meta: U2FsdGVkX19xrPjEKLEELVikxxzKhCkvoJHJwZQMyLGKIU/POjt95rFi9ozkmWpYFDdzLDG2U2MVFuvYK4gnt4944h8HczwIUDrPTfLeQSyY3FVJhqpefE2HkBl2lZHIzDhSqMd5uxgb7w5Vqi9umgCnpTcD/6ngM8rO5lPl9fxft1dUoYs+mgbiSTpKUTQsIkKv+DBrZLb4z8RLqhgwctZWpv4w3vK1ecV+qTzp0vRopuDMZ4NQOK/0nMKvmdiMNb6YytQa6IsCenXRKWdMK6/nn+wftLc3lpFAthC9+CSKUUjsYw2UcXYxQBf1BFmZ1DqanLMAWXq3iSuEsBcB7bl4J0tgDbMw
 
-On Mon, Nov 09, 2026 at 08:49:04PM +0100, Jiri Olsa wrote:
-> --- a/kernel/static_call_inline.c
-> +++ b/kernel/static_call_inline.c
-> @@ -15,6 +15,18 @@ extern struct static_call_site __start_static_call_sites[],
->  extern struct static_call_tramp_key __start_static_call_tramp_key[],
->  				    __stop_static_call_tramp_key[];
->  
-> +struct static_call_site_index {
-> +	struct static_call_site *base;
-> +	unsigned int nr;
-> +	u32 entries[];
-> +};
-> +
-> +/*
-> + * Index static call sites by code address for text reservation lookups.
-> + * The site table itself is sorted by static-call-key address.
-> + */
-> +static struct static_call_site_index *static_call_site_index;
-> +
->  int static_call_initialized;
->  
->  /*
-> @@ -41,7 +53,7 @@ static void static_call_unlock(void)
->  	mutex_unlock(&static_call_mutex);
->  }
->  
-> -static inline void *static_call_addr(struct static_call_site *site)
-> +static inline void *static_call_addr(const struct static_call_site *site)
->  {
->  	return (void *)((long)site->addr + (long)&site->addr);
->  }
-> @@ -301,6 +313,79 @@ static int addr_conflict(struct static_call_site *site, void *start, void *end)
->  	return 0;
->  }
->  
-> +static int static_call_site_index_cmp(const void *a, const void *b, const void *priv)
-> +{
-> +	const struct static_call_site *base = priv;
-> +	unsigned int ia = *(u32 *)a;
-> +	unsigned int ib = *(u32 *)b;
-> +	unsigned long ca = (unsigned long)static_call_addr(base + ia);
-> +	unsigned long cb = (unsigned long)static_call_addr(base + ib);
-> +
-> +	return cmp_int(ca, cb);
-> +}
-> +
-> +static struct static_call_site_index *
-> +static_call_site_index_alloc(struct static_call_site *start,
-> +			     struct static_call_site *stop)
-> +{
-> +	struct static_call_site_index *index;
-> +	unsigned int nr = stop - start;
-> +	unsigned int i;
-> +
-> +	if (!nr)
-> +		return NULL;
-> +
-> +	index = kvmalloc_flex(*index, entries, nr, GFP_KERNEL);
-> +	if (!index)
-> +		return NULL;
-> +
-> +	index->nr = nr;
-> +	index->base = start;
-> +	for (i = 0; i < nr; i++)
-> +		index->entries[i] = i;
-> +
-> +	sort_r(index->entries, nr, sizeof(index->entries[0]),
-> +	       static_call_site_index_cmp, NULL, start);
-> +
-> +	return index;
-> +}
-> +
-> +static int
-> +static_call_site_index_text_reserved(struct static_call_site_index *index,
-> +				     void *start, void *end, bool init)
-> +{
-> +	unsigned int low = 0, high = index->nr, i;
-> +
-> +	/* Find the first site after @start. */
-> +	while (low < high) {
-> +		unsigned int mid = low + (high - low) / 2;
-> +		void *addr = static_call_addr(index->base + index->entries[mid]);
-> +
-> +		if (addr <= start)
-> +			low = mid + 1;
-> +		else
-> +			high = mid;
-> +	}
-> +
-> +	/* The preceding site may overlap @start. */
-> +	if (low)
-> +		low--;
-> +
-> +	for (i = low; i < index->nr; i++) {
-> +		struct static_call_site *site = index->base + index->entries[i];
-> +		void *addr = static_call_addr(site);
-> +
-> +		/* Later sites cannot overlap once this address is past @end. */
-> +		if (addr > end)
-> +			break;
-> +		if ((init || !static_call_is_init(site)) &&
-> +		    addr_conflict(site, start, end))
-> +			return 1;
-> +	}
-> +
-> +	return 0;
-> +}
+On Tue, 10 Nov 2026 17:50:03 -0500
+Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
 
-Looking at this in a little more detail; I'm confused. 
+> Hi Steve, Beau,
+> 
+> Gentle ping on this v2 series. I don't have any outstanding changes to
+> make at this point.
+> Just to clarify, this is a separate patch from the Fail fork one.
+> Please let me know if anything further is needed from my side. 
+> 
 
-You're literally adding an index, so that you can find the
-static_call_size, while all you really need is static_call_addr().
+Hi Jeff,
 
-That is, you could have just created an array of relocated site->addr
-and sorted that, that would safe you a ton of indirection all around.
+I'm currently traveling back home and will be taking the rest of the
+week off. My backlog is a bit behind and I'm trying to get through
+them. I do have a 4 hour layover, and I expect to work on triaging
+patches. Hopefully I can get to yours, otherwise, it may have to wait
+until next week.
 
-That is:
-
-	index->entries[i] = (long)static_call_addr(start + i) - (long)&index->entries[i];
-
-That will make your lookup take at least half the amount of loads.
-
-
-Also, you really should support modules, there is no point being fast
-until you load a module.
+-- Steve
