@@ -1,58 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794515483;
-	b=Q0NpyhRu3jDD1ihxZ4ZIo1j3Za5Sp2heYtsVo3SjOFg4lTVpb1lG189jaPrTHK1BEYWg
-	 Z/yN+XTrkGNUGUN1s/sCNIGrs/wu/Smi0jYr+yrElOz70oN0cxL/+ZWOX+kS52uYuShKU
-	 qJMq/trlafQekVSr8o0TycYDzs513jUQRB7iTDw3C/fhdHUEafKukCpEHABK/0t/adGp1
-	 ksyZZ+vJcpToFvuEQqc/mRFSHl1+KBD48w7GF74PwVFd8fyPFT5PB5rsJcmKPE7jOx50n
-	 x6kZQLxwgtkf3Z2Lx1GwJ3QT/joZifzWI28Iryh+nR+lnpo1kwYd4CuAz0uOD4s4kaA==
+	t=1794515864;
+	b=ccjRB7aLDAHo62hNc6uADAYx9ZPqNWTsL3kfbWENIfmgtTJzYttBcPIsSQsO4La637fa
+	 /AqkY0C7tN9dFUyoytRFrapJtWeFOpacsi8iaA6IA5NmzcRgcSZwoIj5IHtP81UaMOhoK
+	 30yDU+/4m3IaKQEm1RO8k/x/hf/rSAk3OiJRZMzh+iFGgpAQzjTAFWjc8aDQxpRN/WakL
+	 UvY7K1LuSXoXu1ccYm1qM/q6yKajlUp1h0wBfusN5xAuf6JckZpGN2E/YM+EYevi8IQ7l
+	 hc84P8NLlmLKTAvrLGBvLDoT+HoyQR4cljHC0mIkN6k4d3MhLKg71kF3rs1Lmtle0Zw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794515483;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Spam-Status:X-Spam-Checker-Version;
-	bh=+Mws4qymTJcNUhGtjGCXpJPWsRTgs5A+EyptBbipnB0=;
-	b=3wuRNpJG4tGE8SkJbY8pW7TQyjz4EIUCWYURJCT1mwgOE17NUGcppD2el3266qpDIsb7
-	 A6lEe8YCK6wu0KFMOrM/penk3ynjwMJjdciaDISOzxNuuZeC8YhorcSL2iAjomig/BVPY
-	 rxRRIhQK58Cj/Ywse5i5XApZWdwIF75zfhRrTUw+Dmw60LNcCQH3VM03jHgJxCtBSPanZ
-	 BZkMbT4F+2Wg4O8rqoriGeljzs4srbSIk1FoumgGfNXhoCLqrARxxXGRJuHWEYmBBZ7xj
-	 fd12FnagAbnTu0sQg95pIVxQFNyjfFDvexha221Mg56GbCurRNDPeA9B6pXxfU6E2Hg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794515864;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=KtLiidr5VBC14PgQKVf13G9N3QIxkXRWFwpONObXDvg=;
+	b=3ebMbQPBTRRrdJMjN8HVe5f16n3w3BR7WPpPhyVEK7bKNHpgUSSR2qAEKMSUrwZqoR22
+	 rZaw/fJQvZx1Kwu/AngfJr7BHVEyF9dcBdwKvWmERa/qL912giWOZRZL9RgQsmxggVELY
+	 hBAv0aC6jnsayUupbkcYWV1yBdWBqpmVWxqZInbpqJwwb77jT0jYb7AT2GUAhWmMMY6Wn
+	 7RS6DU382eEYTXOJ8eWtgHEh0NW8fd6QBHwC3hPxT3Ph8BpoJcjOGzmV/x8S01vdEs9K9
+	 Zrzgf7qLwSXwH49tN9w/Tw0r2lzWpIr4GxMmFzDFos0g5mh+7aDqAOcqh+b7gMW2Zfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.microsoft.com;
-	spf=pass smtp.mailfrom=linux.microsoft.com;
-	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=Y9xqWS1S;
-	arc=none smtp.remote-ip=13.77.154.182
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 618FD606A31C;
-	Thu, 12 Nov 2026 20:31:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 618FD606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jnvEyjYh;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5C5606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=Y9xqWS1S
-Received: from vm-dev.d0aziqou4eyuzblxqhi51nu2sc.xx.internal.cloudapp.net (unknown [4.246.87.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0314420B716D;
-	Thu, 12 Nov 2026 12:31:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0314420B716D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1794515479;
-	bh=+Mws4qymTJcNUhGtjGCXpJPWsRTgs5A+EyptBbipnB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y9xqWS1SHJtm6kzo6v68NpWz9uL1VyJqdkBy5Dg7SdryNv5X5lvE9J5l1uOJ5zJnk
-	 wwadLzUgubsnPQmKuNkSGjFA6Fbz93R1vRXQkpa9/IsJITdUmL6VlNcQX/X8B01J06
-	 421NIuMwU/RchtxPc3+lfKw/AddPabV4NY6cfoE8=
-Date: Thu, 12 Nov 2026 13:31:07 -0700
-From: Tahera Fahimi <taherafahimi@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>, axboe@kernel.dk,
-	mathieu.desnoyers@efficios.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] Tracing: Accelerate Kernel Boot by Asynchronizing
-Message-ID: <avYiC0Csf45o44CQ@vm-dev.d0aziqou4eyuzblxqhi51nu2sc.xx.internal.cloudapp.net>
-References: <20260204015103.155025-1-tianyaxiong@kylinos.cn>
- <20260204191552.881a00764093cf63557a372a@kernel.org>
- <20260206152511.41782db1@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jnvEyjYh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F4E1F000C4;
+	Thu, 12 Nov 2026 20:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794515864;
+	bh=KtLiidr5VBC14PgQKVf13G9N3QIxkXRWFwpONObXDvg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jnvEyjYhH510uW4MKIXNvaU9dtuncx+lTjfCm23DYoH31UutWiVa9ZhdpjrV5z5vo
+	 dHGoIUBMA4kJXoUrZV5aZXd/PhZtx9t7lI7AihbAdB17YJxlIrQWlNTq+8MUiTDIOw
+	 PYluf7eiiCWUyZGZw/Wh8pBO1c9gBQXzszi2yiZjIiWnPPb5MSiWWsNnEaNkkjqO9o
+	 uST0GOo0T78AJn4whWqdrOqFljsJHbUbBpyqhkhPl4Sk0Cj7o2bdeUwl4iFE8yGMUp
+	 H/m3+EksQSs1UGP03oOa2L/s62YS8R015WDnFaAtecubtZd+VhqASudwmm2N5NfwxX
+	 n8UrRz0AdqshQ==
+Message-ID: <sashiko-outbox-211801@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v25 06/14] lib: percpu_counter_tree: add lazy tree
+ activation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
+ Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
+ Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
+ Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
+ Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
+ Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
+ Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
+ Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
+ Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
+ Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
+ Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan Corbet" <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Harry
+ Yoo" <harry@kernel.org>, "Hao Li" <hao.li@linux.dev>, "Kees Cook" <kees@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
+ Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
+ Prateek Nayak" <kprateek.nayak@amd.com>, linux-trace-kernel@vger.kernel.org, "Jan
+ Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>, "Alan Stern" <stern@rowland.harvard.edu>, "Andrea
+ Parri" <parri.andrea@gmail.com>, "Will Deacon" <will@kernel.org>, "Boqun
+ Feng" <boqun@kernel.org>, "Hugh Dickins" <hughd@google.com>
+In-Reply-To: <20261111203626.95838-7-mathieu.desnoyers@efficios.com>
+References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
+ <20261111203626.95838-7-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 12 Nov 2026 20:37:41 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,26 +83,75 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260206152511.41782db1@gandalf.local.home>
 
-On Fri, Feb 06, 2026 at 03:25:11PM -0500, Steven Rostedt wrote:
-> On Wed, 4 Feb 2026 19:15:52 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > Looks good to me.
-> > 
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Hello all,
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] lib: percpu_counter_tree_kunit: lazy_race_fn() serializes
+  remote updates
+--
 
-Following up on this series, I am evaluating the series on x86_64, with base kernel 6.1.192 and I
-see boot time improvement.
+commit 5130476e081ef221464be8ba2bb48a1905d08dcd
+Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-> Thanks, I'll add this to tracing/core.
-Steve, would this series be suitable for queueing for an upcoming merge window?
+lib: percpu_counter_tree: add lazy tree activation
 
-Thanks,
-Tahera
-> -- Steve
+This commit adds lazy tree initialization and activation for hierarchical
+per-CPU counters, along with KUnit and userspace tests.
+
+> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
+nter_tree_kunit.c
+> index 5774278ea1403..12bd5a4bbb459 100644
+> --- a/lib/tests/percpu_counter_tree_kunit.c
+> +++ b/lib/tests/percpu_counter_tree_kunit.c
+> @@ -796,6 +798,225 @@ static void hpcc_test_saturated_compare(struct kuni=
+t *test)
+
+[ ... ]
+
+> +static void lazy_race_fn(struct work_struct *work)
+> +{
+> +	struct lazy_race_work *w =3D container_of(work, struct lazy_race_work, =
+work);
+> +	struct lazy_race_shared *sh =3D w->sh;
+> +	long sum =3D 0;
+> +	int i;
+> +
+> +	for (i =3D 0; i < LAZY_RACE_NR_INC; i++) {
+> +		long inc =3D (long)(get_random_u32() % 65) - 32;
+> +
+> +		if (i =3D=3D LAZY_RACE_NR_FIRST) {
+> +			/* Fully ordered: the first updates are visible before the pause. */
+> +			atomic_long_add_return(sum, &sh->first_sum);
+> +			atomic_inc_return(&sh->paused);
+> +			/* Pairs with the test's release of go. */
+> +			while (!smp_load_acquire(&sh->go))
+> +				cond_resched();
+> +			if (!w->owner) {
+> +				mutex_lock(&sh->activate_lock);
+> +				if (percpu_counter_tree_activate_many(sh->c, 1, GFP_KERNEL) ||
+> +				    !percpu_counter_tree_active(sh->c))
+> +					atomic_inc(&sh->activate_errors);
+> +				mutex_unlock(&sh->activate_lock);
+> +			}
+> +		}
+> +		if (w->owner)
+> +			percpu_counter_tree_add_owner(sh->c, inc);
+> +		else
+> +			percpu_counter_tree_add(sh->c, inc);
+
+[Severity: Medium]
+Does acquiring sh->activate_lock in every non-owner worker right after
+sh->go becomes true prevent percpu_counter_tree_add() from ever racing
+with percpu_counter_tree_activate_many()?
+
+Because both the main test thread and all non-owner workers serialize on
+sh->activate_lock immediately upon release, the first caller to take the
+mutex finishes activating and publishing the tree while the remaining
+non-owner workers wait on the mutex.  None of the non-owner workers can
+reach percpu_counter_tree_add() until activation is already complete, so
+only the owner worker's percpu_counter_tree_add_owner() calls actually
+race with tree publication.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111203626.9583=
+8-1-mathieu.desnoyers@efficios.com?part=3D6
