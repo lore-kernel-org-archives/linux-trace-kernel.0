@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446812;
-	b=FOd6/LoxpH8skjPHdSVO73Qbv5+aTBBpaWX+yzLqXsusylzrJlVI19ATeut/p2XoxUyM
-	 ONrsTV7YVIHKhuuVKgZPgSFXo7bpGXBXRxLVeyZrRSEsapAnhf0lcZ+47GB3G4KyVwRh9
-	 1s/QO6WiZ+OOCii/YIk6ZhqqiOw+eiwxM26yIMzcVwGOrR1mFNKdAD4QSS8/U6tEu1vC2
-	 QOkuU1x7rZFZUxn/wjodAuDZsaNnsmAXNAlJSuFIFcx3BvxlqmLDy4c26Mknf+/iZhHIm
-	 0Ihqk0X3gGSh6CQy2yKrN4t0Eccqbx/jLv1DPxH33DhX2DOgFesZZirIkBwRjB8yffw==
+	t=1794446821;
+	b=QCGXRf4ZSkYZrHPmpYPGEwBjLYFsXuGKuj44FN0lrPs6gqorAy4ZSpQfItQIiWSVhELU
+	 Jq+cO87TYhHu3QWJ7f8ujimY2XuFCqLeZX99oA1GuIsro1EY2jmjU+jnOb+fp8Pm+bCKY
+	 q1lTwFuR21oAwbD8R1gj5mumWd+hV4Wchp3/Xp2OwQpErWMp7Q9RL2jNLpV5h5OuJgEj+
+	 0MZtCFTNINnt+le3s5m9ZKUrUyhcrnmcwSGYySD7/B/DJgjx3Gp53ghOcNEurhwvPothm
+	 FeL0F8Xj933dCujV7b2k5RhWhET1o5tiHoyBC/5k6dnjeup/BgA+GRmuCDXu9P8UJag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446812;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446821;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=oDBZSd2HMkUrgeR+h9U1/zObKN23+ppb2T0hvywk+YU=;
-	b=RI6rWBgUpPLmN/CKtP0//6foOrHVihX8MV3IgKeEyC2lUFjc2T6U78fEG9MYmd+wmH2c
-	 jY0mCSBlFM6m0V0Kk0iSeJtqMJMtfG/HBBG2r17gvWiDBGnSZxfULlS1iIvJdAL0t/81n
-	 GPnQRb0jLGSu95QgsW5xk4m0S1BMUmTLUFnKkzM5klqXAevgDadGFdCjeDN/haDiCvZ/m
-	 IcU4P6WZi9TWJntUW2QZCQrc9tkKMbkIAg9ufaVTyxyosrz7EsxsjuRpwrjtcvhUHciEa
-	 XJhWlqOX/AG9ilVuw/9l8DwWg8rgtF67nuModEHH9Y9+C/Ojg9ksS4lVpbLbha3uCXQ==
+	bh=5jglcQFJC9C0X33JDWPhDFdh4yOjWn4U5A67CJ3/7pE=;
+	b=gO++k1/l6a5XcJZrSIKg3BVcxCRARbL+A7oYoRRRLhxQv8M4BnaRzsxT5B7bSBXjlW24
+	 4bUcRCdR6oV1lfCY0oYaH74Q6j7HbxC4hasbQiMZ/eHQvs1ElCf9lw44KkNX64880ypKI
+	 gFdZ1mOvLS6fA/g7IoIBTVPog8wta6UZGe4Ws3IfeG/fpFxowaeR9MOSsucuA7228qsw8
+	 DJnj7wrWA9KVyXS3Eyq+uj7nUUA7+vBm7rTcdOfKBorIMrXoiKOk+/UP8Cp2IpUKIi2E4
+	 aOfTL83aRQ3B7D9D7m4N1yhNwYDB5oLFkJ7MZFeZrq0ilVd0DAVjo/nIghL21g3ah9Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=itkbYuAo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CpBO6Y2a;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72876606A31C;
-	Thu, 12 Nov 2026 01:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2514606A31C;
+	Thu, 12 Nov 2026 01:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=itkbYuAo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C6E41F00A05;
-	Thu, 12 Nov 2026 01:26:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CpBO6Y2a
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A963B1F00A05;
+	Thu, 12 Nov 2026 01:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446812;
-	bh=oDBZSd2HMkUrgeR+h9U1/zObKN23+ppb2T0hvywk+YU=;
+	s=k20260515; t=1794446821;
+	bh=5jglcQFJC9C0X33JDWPhDFdh4yOjWn4U5A67CJ3/7pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=itkbYuAo2f6eUGLpORZdoFh/Lve+A6mRLYMke8puYIYxfyMJNmwaLceLhBbElvs5F
-	 pHKFHfdWnbaiJmPNna9fb5H60+idXlHavbOdpqe7gtgKjRdo0d2lX3oXc9dwebpvTt
-	 zY9xn1/eeAXxSpnpRwDE8OTsmV505PkUHzdrQwZz2nggVxRfh4XIhfDylz7NEJURjg
-	 q3Ci/vPPS30bcqWc4e3wxjAjl3ktaBNUuvLCPh6EI8yA8c53APXcbofAzdWwaifzGn
-	 soVrIN88Aim+YnzABoY6wvlSit8PeshWDU+lV0wQM9xrmZ278D2V/Yod4Se8+g/8uA
-	 8zvc+HxzXgpog==
+	b=CpBO6Y2aC63x8G3TLlt5L9B134o9vBxRH+Oxv1RwYbVRHBqTmUXsFtHRsAegYqVpd
+	 5Ngjgw5BSdbjSIj6KYAdzTGQmtVjd8cX1Rv/exlrQ0C5zsNCVI95PJZX5EVWxdqX93
+	 LNQP92DzLpoxPmgQNc7gAJFsTOpnb8W8VMYtn8FsFYFIncuCrLPcdP0eIpFS+sC6/Q
+	 oPx/ftVpP2GpJZCSuAvWZxdDam3L6NxJxnr6AsgmQo0Y4GHBtgKiUaT9/zgWU3BXem
+	 iruxSswJe3rL3va8bRQY9oc4Bf6rGhClfwoDAllHy6WWN1loyKC8GlAIPl0hW+qOiz
+	 A1ZusqEc4jAJg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 01/13] tracing/probes: Check enabled and busy state before unlinking sibling probes
-Date: Thu, 12 Nov 2026 10:26:48 +0900
-Message-ID: <179444680826.345731.12254468152780307145.stgit@devnote2>
+Subject: [PATCH v2 02/13] tracing/probes: Enable newly appended probe when target event is enabled
+Date: Thu, 12 Nov 2026 10:26:57 +0900
+Message-ID: <179444681738.345731.16552746027049016745.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179444679892.345731.5271591537517106679.stgit@devnote2>
 References: <179444679892.345731.5271591537517106679.stgit@devnote2>
@@ -67,133 +67,142 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When a multiprobe event is enabled or referenced (for example, by an
-eprobe, trigger, or open tracefs file) and a user attempts to delete the
-event or one of its probes via dynamic_events, checking
-trace_probe_has_sibling() before the enabled and busy checks allows the
-first probe to be unlinked and freed while the event is still active,
-only returning -EBUSY on the last sibling probe. For uprobe events,
-unlinking and freeing an enabled sibling probe without unregistering its
-uprobe_consumer also causes a use-after-free.
+Unlike kprobe events, fprobe and uprobe events only register their
+underlying probes when the trace event is enabled. When a new probe is
+appended to an existing multiprobe fprobe or uprobe event that is
+already enabled, the appended probe is linked into the event's probe
+list without being registered.
 
-Ensure all four probe types (kprobe, fprobe, uprobe, and eprobe) verify
-that the event is neither enabled nor busy before unlinking any sibling
-probe.
+As a result, the newly appended probe never fires until the event is
+disabled and re-enabled. Moreover, disabling an fprobe event calls
+unregister_fprobe() on the unregistered fprobe, and opening or closing a
+perf event on an enabled uprobe event dereferences a NULL tu->uprobe in
+uprobe_apply().
 
-Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+Register and enable the newly appended fprobe or uprobe immediately when
+the target event is already enabled.
+
 Fixes: 41af3cf587f4 ("tracing/uprobe: Add multi-probe per uprobe event support")
-Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-Fixes: 334e5519c375 ("tracing/probes: Add fprobe events for tracing function entry and exit.")
+Fixes: 2db832ec9090 ("tracing: fprobe-events: Register fprobe-events only when it is enabled")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_eprobe.c |   12 ++++++++----
- kernel/trace/trace_fprobe.c |    8 ++++----
- kernel/trace/trace_kprobe.c |    8 ++++----
- kernel/trace/trace_uprobe.c |    8 ++++++--
- 4 files changed, 22 insertions(+), 14 deletions(-)
+ kernel/trace/trace_fprobe.c |   14 +++++------
+ kernel/trace/trace_uprobe.c |   56 ++++++++++++++++++++++++++++---------------
+ 2 files changed, 43 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index 474be2f5ccd9..f1590c9af6b2 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -94,14 +94,18 @@ static int eprobe_dyn_event_show(struct seq_file *m, struct dyn_event *ev)
- 
- static int unregister_trace_eprobe(struct trace_eprobe *ep)
- {
--	/* If other probes are on the event, just unregister eprobe */
--	if (trace_probe_has_sibling(&ep->tp))
--		goto unreg;
--
- 	/* Enabled event can not be unregistered */
- 	if (trace_probe_is_enabled(&ep->tp))
- 		return -EBUSY;
- 
-+	/* If there's a reference to the dynamic event */
-+	if (trace_event_dyn_busy(trace_probe_event_call(&ep->tp)))
-+		return -EBUSY;
-+
-+	/* If other probes are on the event, just unregister eprobe */
-+	if (trace_probe_has_sibling(&ep->tp))
-+		goto unreg;
-+
- 	/* Will fail if probe is being used by ftrace or perf */
- 	if (trace_probe_unregister_event_call(&ep->tp))
- 		return -EBUSY;
 diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 4e9034ebc3fb..77f2228d44ba 100644
+index 77f2228d44ba..9ab0871a6461 100644
 --- a/kernel/trace/trace_fprobe.c
 +++ b/kernel/trace/trace_fprobe.c
-@@ -853,10 +853,6 @@ static void __unregister_trace_fprobe(struct trace_fprobe *tf)
- /* Unregister a trace_probe and probe_event */
- static int unregister_trace_fprobe(struct trace_fprobe *tf)
- {
--	/* If other probes are on the event, just unregister fprobe */
--	if (trace_probe_has_sibling(&tf->tp))
--		goto unreg;
--
- 	/* Enabled event can not be unregistered */
- 	if (trace_probe_is_enabled(&tf->tp))
- 		return -EBUSY;
-@@ -865,6 +861,10 @@ static int unregister_trace_fprobe(struct trace_fprobe *tf)
- 	if (trace_event_dyn_busy(trace_probe_event_call(&tf->tp)))
- 		return -EBUSY;
- 
-+	/* If other probes are on the event, just unregister fprobe */
-+	if (trace_probe_has_sibling(&tf->tp))
-+		goto unreg;
-+
- 	/* Will fail if probe is being used by ftrace or perf */
- 	if (unregister_fprobe_event(tf))
- 		return -EBUSY;
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index e41a7c113646..a42af0e66009 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -548,10 +548,6 @@ static void __unregister_trace_kprobe(struct trace_kprobe *tk)
- /* Unregister a trace_probe and probe_event */
- static int unregister_trace_kprobe(struct trace_kprobe *tk)
- {
--	/* If other probes are on the event, just unregister kprobe */
--	if (trace_probe_has_sibling(&tk->tp))
--		goto unreg;
--
- 	/* Enabled event can not be unregistered */
- 	if (trace_probe_is_enabled(&tk->tp))
- 		return -EBUSY;
-@@ -560,6 +556,10 @@ static int unregister_trace_kprobe(struct trace_kprobe *tk)
- 	if (trace_event_dyn_busy(trace_probe_event_call(&tk->tp)))
- 		return -EBUSY;
- 
-+	/* If other probes are on the event, just unregister kprobe */
-+	if (trace_probe_has_sibling(&tk->tp))
-+		goto unreg;
-+
- 	/* Will fail if probe is being used by ftrace or perf */
- 	if (unregister_kprobe_event(tk))
- 		return -EBUSY;
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 22cc3c8181b8..146da04b93a8 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -396,13 +396,17 @@ static int unregister_trace_uprobe(struct trace_uprobe *tu)
- {
- 	int ret;
- 
--	if (trace_probe_has_sibling(&tu->tp))
--		goto unreg;
-+	/* Enabled event can not be unregistered */
-+	if (trace_probe_is_enabled(&tu->tp))
-+		return -EBUSY;
- 
- 	/* If there's a reference to the dynamic event */
- 	if (trace_event_dyn_busy(trace_probe_event_call(&tu->tp)))
- 		return -EBUSY;
- 
-+	if (trace_probe_has_sibling(&tu->tp))
-+		goto unreg;
-+
- 	ret = unregister_uprobe_event(tu);
+@@ -933,7 +933,10 @@ static int append_trace_fprobe_event(struct trace_fprobe *tf, struct trace_fprob
  	if (ret)
  		return ret;
+ 
+-	ret = trace_fprobe_verify_target(tf);
++	if (trace_probe_is_enabled(&tf->tp))
++		ret = __register_trace_fprobe(tf);
++	else
++		ret = trace_fprobe_verify_target(tf);
+ 	if (ret)
+ 		trace_probe_unlink(&tf->tp);
+ 	else
+@@ -1520,13 +1523,8 @@ static int disable_trace_fprobe(struct trace_event_call *call,
+ 		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
+ 
+ 	if (!trace_probe_is_enabled(tp)) {
+-		list_for_each_entry(tf, trace_probe_probe_list(tp), tp.list) {
+-			unregister_fprobe(&tf->fp);
+-			if (tf->tuser) {
+-				tracepoint_user_put(tf->tuser);
+-				tf->tuser = NULL;
+-			}
+-		}
++		list_for_each_entry(tf, trace_probe_probe_list(tp), tp.list)
++			__unregister_trace_fprobe(tf);
+ 	}
+ 
+  out:
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 146da04b93a8..14ac52aebe34 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -447,6 +447,28 @@ static bool trace_uprobe_has_same_uprobe(struct trace_uprobe *orig,
+ 	return false;
+ }
+ 
++typedef bool (*filter_func_t)(struct uprobe_consumer *self, struct mm_struct *mm);
++
++#ifdef CONFIG_PERF_EVENTS
++static bool uprobe_perf_filter(struct uprobe_consumer *uc, struct mm_struct *mm);
++#else
++#define uprobe_perf_filter NULL
++#endif
++
++static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
++{
++	struct inode *inode = d_real_inode(tu->path.dentry);
++	struct uprobe *uprobe;
++
++	tu->consumer.filter = filter;
++	uprobe = uprobe_register(inode, tu->offset, tu->ref_ctr_offset, &tu->consumer);
++	if (IS_ERR(uprobe))
++		return PTR_ERR(uprobe);
++
++	tu->uprobe = uprobe;
++	return 0;
++}
++
+ static int append_trace_uprobe(struct trace_uprobe *tu, struct trace_uprobe *to)
+ {
+ 	int ret;
+@@ -466,10 +488,22 @@ static int append_trace_uprobe(struct trace_uprobe *tu, struct trace_uprobe *to)
+ 
+ 	/* Append to existing event */
+ 	ret = trace_probe_append(&tu->tp, &to->tp);
+-	if (!ret)
+-		dyn_event_add(&tu->devent, trace_probe_event_call(&tu->tp));
++	if (ret)
++		return ret;
+ 
+-	return ret;
++	if (trace_probe_is_enabled(&tu->tp)) {
++		ret = trace_uprobe_enable(tu,
++			trace_probe_test_flag(&tu->tp, TP_FLAG_PROFILE) ?
++			uprobe_perf_filter : NULL);
++		if (ret) {
++			trace_probe_unlink(&tu->tp);
++			return ret;
++		}
++	}
++
++	dyn_event_add(&tu->devent, trace_probe_event_call(&tu->tp));
++
++	return 0;
+ }
+ 
+ /*
+@@ -1105,22 +1139,6 @@ print_uprobe_event(struct trace_iterator *iter, int flags, struct trace_event *e
+ 	return trace_handle_return(s);
+ }
+ 
+-typedef bool (*filter_func_t)(struct uprobe_consumer *self, struct mm_struct *mm);
+-
+-static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
+-{
+-	struct inode *inode = d_real_inode(tu->path.dentry);
+-	struct uprobe *uprobe;
+-
+-	tu->consumer.filter = filter;
+-	uprobe = uprobe_register(inode, tu->offset, tu->ref_ctr_offset, &tu->consumer);
+-	if (IS_ERR(uprobe))
+-		return PTR_ERR(uprobe);
+-
+-	tu->uprobe = uprobe;
+-	return 0;
+-}
+-
+ static void __probe_event_disable(struct trace_probe *tp)
+ {
+ 	struct trace_uprobe *tu;
 
