@@ -1,78 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794461181;
-	b=4km+CsyuB07UTSFXPUq8VVxqQlKohHN5W3WSPJVDuyqLixAqRQ8Y4dJ2wnUF+0WYflsd
-	 7B4TL9KMnl2UY/BMPUvT8g6t720lQXQ3QwONDx4M90d5iaC7EDkJrutlConA/SOxg0khD
-	 zJ7BGNg67JOe6TV1lwH9Q9C6zrz0AjeQmHe2lZDqFdCkmUxjBpAOUi3ttcWwAMTSqUH3m
-	 tXQ7PHM/JwglQSZwH2ZFU6AX6Nkx+KeLNpAgNxNdZtvR3sp5UsKnIs713FEIY6rHaWniB
-	 ezZWUZ2m6ZscE7CRUrjTB4CtxEWYbwmSgqFL5dHIyqp9742lB4uUGF/SEAQ7q7srXLA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794461181;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
-	b=AboIcMVGgN59VbfnTg9TGOJSNny2DaWLoeH5xCOukGYmMfhxPaoJLFeKUmoXJY3Zdp6y
-	 7BI9xKdV0QU7EJx4GJZVxTDKr8gqeBxxoL6HSE11G2hyuAMhajQjJKG9sN2b4Ej8rQjle
-	 wovi5Lm40hcVJGjQfodSexKVOMMh58RN8rgM30DD1L850ZrUgNptwLMd+bJhqacaX5Mwa
-	 1W+2SJ/+Ay/LW0qH67xwRhAI0r3lHAgfrOWC3hsLSLgQbl9G4kieaHN5LNZMlpxvvYE/J
-	 8EUhWduvN3i4BZA8fBXL37VhdvMtJrkB1Vl8Zh7UWwBOQB8aAY9/R/5uGAaw7HrLwoA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGHaQ7FJ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0DD606A32E;
-	Thu, 12 Nov 2026 05:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGHaQ7FJ
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794461180;
-	b=j9/YNr7eyoNxFIDxoS9YMpNgJ3tcm58HmcTWtuhkk5j9jZ8tgY0Dtk2w7lYkLN8FmZcG
-	 RIdZ+hATrM0XZ0rIeFpzj9JDSaF9Bw1Eqg/3m7/bW3yYiEdSYN9bNFEBeCbX4DxWY7kUX
-	 XqG2EHKUSPZ5FGeP0MTJbRtfKcxQS05pQAoNiw23tRlK/6Xf6DTZGdb0RspR8KnKz1Toq
-	 c4izU/raeoVzqwp1XV9t3xI2dICLDCeocPIcU/w6YPJXPAHfzcqCrxk/evZKXlVxm4UpK
-	 PKSpXNhp7wHlRf+gcnk/bMY1+sdbZRw1oQUIjOoa4VGlY+kpNIbLWjWWyLnWiCze1/w==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794461180;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
-	b=IkmWsrF+t/qZ++kzcCzGwQpeOoWdgXOsBNIvzdorOHxLo22+FV6RnmLY3ARiM5vJQYqs
-	 POy20+tlPklDIU0S4AhfHvKyUIya65aYmyYm8GGqipI63klNsVKHYomslewZ2d5DiNyxy
-	 6wF/3JNraXetOkYqBhI5kam9K3ZF0PI+MkgzG0JRmhVRr0ysyeBuZ3WY/bjumTSjgPRPh
-	 YkpbtfoUR8dDTZXIVb25t8wGgSyu9J2ssJBZ3jVyNtK726Tj/akhB5tc6HR3+/ZKlPCLu
-	 IpNWPoH8OXK2/JumZKGgf6bf5IPw19KQcUyFRYRX2nL0dCgB9sFBdkpBXwwn5sN9ytg==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.180
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794461790;
+	b=MAWYzqRN4DLtKnhjk+WzeCebph3JhLCkYka4aSW201W2Lqubp55XfTpD2LnQtIZmDIA3
+	 oc9APTrNP3nV2F1aIu4XlH/n6qaX3wtL3JxzK6SV9uB8GA0V3atPgEWapOlWrP5pQzKHj
+	 Ki1wHCNneJ4vfCw7phAgkdXS9aC9jaTue1g8ksETKb76TxDXg/3rukDhkywmCHUvdbWp3
+	 xJdN6rz9wC/9ea48WCvtuhLZ/q98aF/+TgWNlXj9aj/Icdw4wlSn4Fdj0ZW2XRLHCgzsa
+	 rX9fy+d8tyervR9HGPcYkvR8i8ovZE/JaHBu4B2VO+PEXxPIISSchv9erajdfyH1uBw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794461790;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
+	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
+	bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+	b=D8byIHhJtus3tc5e1oRHe7YdJeE0OhXn5VQK7Ra0mvd8WaZo8VJw/cdqCB7T/+ojoUp8
+	 JRXBddW6zG6zau3vDNclAtKuHOuZRn5P2VNaE1MTAdLNIVazWJGXu7ttyBRsUBaRzIRRP
+	 236HEp0dJRTouoWnt231Bp6QvMqC/x8OMV5toy0XazoDAR8z7TVARPjVovPsk8kKUuGZ9
+	 diPvEDL1VrmLtZZZkoO2sOY7OGJGTrdCokz+L5n7/UXxdqlUhZNi+8iDCwsV4xiYF1mB+
+	 R8aVm+gvPytsob6wWsMTg+RrksGIAStu5CgcpD6B9iL4BnQETJufg4LUK80bSBP8e2Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EzLeINlq;
+	arc=none smtp.remote-ip=209.85.222.180
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id D8FB61F00A07;
-	Thu, 12 Nov 2026 05:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794461180;
-	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=JGHaQ7FJtNZrTzDKX+gZa+c6FlIT1I7rJpEnoXL8DNaBKNXUJI6jV/SE30EoY4LdP
-	 mb2WJLBNvLL+bmhszYxKLYkJhsxNThpZ+JbDFje9KMJoMljj9QuqRsbvA8jUZQynoE
-	 usWYptV01o6/NbAilHRwfS9YZfe7GapyRxi5KALBL+frkA1WXLH5UprMYsiyE8oKjf
-	 WWlXEcmqg0h0y2G8rUL13yD0o79K+2FTd5jgfJSs8Dxd9ZocbBZLUKb1I7R25D3YUd
-	 e6jowfgqNbxwkAkfgs+Pi9mGwFt98JQEk6nh/C7W0fVywJRD8J9tsUwEPj0Tk/8rMJ
-	 BFW3LqKECmJFQ==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 3A964492C4;
-	Thu, 12 Nov 2026 05:26:19 +0000 (UTC)
-From: Hang Zhengyang via B4 Relay <devnull+hang.zhengyang1010.gmail.com@kernel.org>
-Date: Thu, 12 Nov 2026 13:26:18 +0800
-Subject: [PATCH] uprobes/x86: Emulate ENDBR as a NOP
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7A1606A331
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 05:36:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E7A1606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EzLeINlq
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-94937a33cfbso25596885a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 21:36:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1794461788; x=1795066588; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+        b=EzLeINlqWKLSrVyAYeG69cub/PpkhXEpvLI85c2/Wn4DBrX36De6eOjOc825yh2/s8
+         /BMocYYbFGCIGlSENImF1edskqevAV/Kuf1SeaFnM5vAAp8DG8IO1FgayCsUEWs73OHL
+         1RmURtZJc9D4dd17Nf7TyLA18R4yata5cpiLNB4SZ3wXp+wb6mfksV9V6NYOJLevPnzx
+         KS0lFdrtd+eUvcxCI5cIGAuAdA3+x/lK/g0n6XOLpuLtAwXE7FSdI5GYz16DwRhEZcI+
+         e0xi/xTmcXSNKhZMTs2dmsnafffo4Jcsb0EhR1rdi49ZUTTTqLCosCyqFBij3UK+VNvA
+         tckg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794461788; x=1795066588;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+        b=kbdya1MlR5ZU4pufvnwxXfdczfVM8PHnGwnFQ1+jzuwqihGhYHxQcagLpmzEUvNpzR
+         8rAe73o+Ogkd9pRwff6Ru9u7xz02yP7/e0mIFoDZuSoadaHG4uQFHDwrsAvnIKFW9fP5
+         fTJx7nEYmtYHduDjm34BojtaooYCQMmslkZR1v9ZzbxYfRgA16zf722TcmSGHryq9q0O
+         uV3b1Td6uc9nCYyUWruXmao2G3c7G85FoF4IMAWPhsOY5/6pXs/hPmatQiQEKCgIX+FO
+         uM4Ig/athVH1liaJZifVX+TPagZ5PEjYvLH4ovtvRikDgodMg7tpwJ94n9/B4ziG1yK2
+         yKlQ==
+X-Forwarded-Encrypted: i=1; AL+hErFT638DLJId3IIQJC5eGJNoUIcNLukXVnUJnJ7HWUeEucRojEqii4cbJl3p5JOzb+fSvyjaqbGIajN+xduQRFA/6QE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9SQk2fGyumbc1Bkk9DORkojSyBqE9F9EWCsV++Ya64GaH6tvr2
+	gl/0hfSP1FRcV/yP8aGQ4YqPZK423JkacrfkACWtaxif2nuDXT2t4azVB3kL91IyfnM=
+X-Gm-Gg: AYBFou1RJ21yZv5Vd1q7aYfJGnsjBq7j6xVvUqJyvijjlROmVaPBW8/pWK9OPFBHoSA
+	kbzREa/NnS5jn8XgFiCU+Ho0FTd+yVhptAiDZlLyzoOvqVvX2QIkTIOs/p1ucwgvqp8lu51gJ+P
+	IGLif/Dx1U5oqhXNA09JVmUghRLW+8jIXuzCLxi4nR820JYHJSm7g4eNtmI9A4n4EToNaSCujIZ
+	Zr487Rrm6C3Ah9imMUZcgWNUCjmwREEFepFmOMtysuPbKqMqirs/OK7ix/TrYe8vKyHiEDlK/CT
+	5mRa4pTr/mIjO9XE0v5yA9e0PRKe2YsRU6BCMRG41c/3kAbzgKVy6meoCk7n7Gbs308zj2VG/S0
+	xNrO7XX2CtO/iEOECMYh3s5jJ80/SCivQYHw93r9p5dndD6YWJF5e1opgSClBC9Fq8KmbzwFSMd
+	LROhOp3WOMfgPQlNNBvXVDpsKOoD3FDPckj5iq24RKFPpu8GAZWIqsBhI01BkXlqlmvh0eRg8iK
+	dDY1Y2xJX2yk40Yf8fVqv66sVSkaJkOMnRc/CUpIrZFKgFOIzaIkd7/Jfee+sPXTyEknu7rAWJq
+	fQrh/vyViCt1K7Y2ZdjTKggNf38+25ewBkG+SK6uMq1faW61yphdy2M60V2I+nzePnu/hpCAWZu
+	n0/xyhJw=
+X-Received: by 2002:a05:620a:4481:b0:93c:c2c2:40eb with SMTP id af79cd13be357-947b0046fb4mr764496385a.66.1794461787830;
+        Wed, 11 Nov 2026 21:36:27 -0800 (PST)
+Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9479e4fa312sm647786285a.0.2026.11.11.21.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2026 21:36:27 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,111 +90,84 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261112-uprobe-endbr-v1-1-284a47a5ae3e@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MPQqAMAxA4atIZgumg0WvIg79iZqlLSmKUHp3i
- +M3vFehkDAVWIcKQg8XTrEDxwH8ZeNJikM36EnPiKjVnSU5UhSDE2W8sQ6dtbgg9CQLHfz+u21
- v7QN5bbihXgAAAA==
-X-Change-ID: 20261112-uprobe-endbr-7c7ab1baa191
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
- Jiri Olsa <jolsa@kernel.org>, Hang Zhengyang <hang.zhengyang1010@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794461178; l=3044;
- i=hang.zhengyang1010@gmail.com; s=20261008; h=from:subject:message-id;
- bh=Me7MxAd288UOXLmc+8UseLP8mB9LDZJcffXOE/7xdVk=;
- b=TYjmkiZhMPeL5rzT4xkvGnJ3DrsPvjpjIzFhdsZncNT4coF1yOvINPkolyEN3eedeLaarMkxV
- TvgA7qBX2+nADm5DZKncRYHiVsy1Wxkr1FyW/V8C3gZGGVMbd/cTrPZ
-X-Developer-Key: i=hang.zhengyang1010@gmail.com; a=ed25519;
- pk=5drRny3PqRPLhKVB0YIQXN5YyD8miKCpXWhnEPvafAI=
-X-Endpoint-Received: by B4 Relay for hang.zhengyang1010@gmail.com/20261008
- with auth_id=1133
-X-Original-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-Reply-To: hang.zhengyang1010@gmail.com
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 08/13] mm: convert miscellaneous VMA flag tests to use
+ vma_flags_t
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+ Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
+ Shakeel Butt <shakeel.butt@linux.dev>, 
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
+ SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, 
+ David Rientjes <rientjes@google.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ John Johansen <john.johansen@canonical.com>, 
+ Georgia Garcia <georgia.garcia@canonical.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+ Roberto Sassu <roberto.sassu@huawei.com>, 
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+ Stephen Smalley <stephen.smalley.work@gmail.com>, 
+ =?utf-8?q?Ondrej_Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ kvm@vger.kernel.org, damon@lists.linux.dev, 
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+In-Reply-To: <20261105-late-2026-vma-flags-v1-8-0d3cd15ab75f@kernel.org>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
+ <20261105-late-2026-vma-flags-v1-8-0d3cd15ab75f@kernel.org>
+Date: Thu, 12 Nov 2026 00:36:24 -0500
+Message-Id: <179446178440.482102.12362401790016415292.b4-reply@b4>
+X-Mailer: b4 0.17-dev
 
-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+On 2026-11-05 21:30 +0000, Lorenzo Stoakes (ARM) wrote:
+> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
+> remaining straightforward VMA flag tests scattered throughout core mm, HMM
+> (and its test module), DAMON and the OOM reaper.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-A uprobe on ENDBR64 is single-stepped, so it takes two traps instead of
-one: insn_is_nop() doesn't recognize ENDBR, and it isn't a branch or a
-push either.  That makes the most common case slow.  With
--fcf-protection, the default for gcc on Ubuntu, every function starts
-with ENDBR64, so every uprobe on a function entry pays for the
-single-step.  PUSH had the same problem until commit e7ed9d9bd037
-("uprobes/x86: Emulate push insns for uprobe on x86").
+Acked-by: Gregory Price (Meta) <gourry@gourry.net>
 
-Userspace IBT is not supported, so ENDBR is just a NOP in user mode.
-Emulate it like the other NOPs.  Don't use is_endbr() for the check: it
-always returns false without CONFIG_X86_KERNEL_IBT.  If userspace IBT
-is ever enabled, uprobes on ENDBR will need rework anyway, since the
-int3 replaces the ENDBR at an indirect branch target.
-
-The numbers below are from the selftests/bpf trigger benchmarks, with
-an extra target that starts with ENDBR64 (the existing ones are built
-with __nocf_check, so they don't have it).  On a Ryzen 7 PRO 5850U,
-without this patch, a probe on ENDBR64 is as slow as a single-stepped
-one:
-
-             nop       endbr64   ret (single-step)
-  uprobe     1.33 M/s  0.65 M/s  0.65 M/s
-  uretprobe  0.66 M/s  0.43 M/s  0.43 M/s
-
-With this patch ENDBR64 is emulated like a NOP.  I could only boot the
-patched kernel in a KVM guest, where uprobe went from 0.19 to 0.99 M/s
-(nop: 1.00) and uretprobe from 0.17 to 0.61 M/s (nop: 0.61).
-
-Signed-off-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
----
-Found and measured with Claude; I reviewed it and ran the measurement.
----
- arch/x86/kernel/uprobes.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 0f60c0d076b6..879ce918ebea 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1484,13 +1484,28 @@ static const struct uprobe_xol_ops push_xol_ops = {
- 	.emulate  = push_emulate_op,
- };
- 
-+/*
-+ * ENDBR64/ENDBR32 (f3 0f 1e fa/fb).  Userspace IBT is not supported, so
-+ * in a user task they are NOPs, and they start most functions in
-+ * binaries built with -fcf-protection.  Revisit if userspace IBT is
-+ * ever enabled.
-+ */
-+static bool insn_is_endbr(struct insn *insn)
-+{
-+	return insn->length == 4 &&
-+	       insn->prefixes.nbytes == 1 && insn->prefixes.bytes[0] == 0xf3 &&
-+	       insn->opcode.nbytes == 2 && insn->opcode.bytes[0] == 0x0f &&
-+	       insn->opcode.bytes[1] == 0x1e &&
-+	       (insn->modrm.bytes[0] & ~1) == 0xfa;
-+}
-+
- /* Returns -ENOSYS if branch_xol_ops doesn't handle this insn */
- static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
- {
- 	u8 opc1 = OPCODE1(insn);
- 	insn_byte_t p;
- 
--	if (insn_is_nop(insn))
-+	if (insn_is_nop(insn) || insn_is_endbr(insn))
- 		goto setup;
- 
- 	switch (opc1) {
-
----
-base-commit: 9d66f26fefacebfeed15de31c1123451a17ff119
-change-id: 20261112-uprobe-endbr-7c7ab1baa191
-
-Best regards,
 -- 
-Hang Zhengyang <hang.zhengyang1010@gmail.com>
-
+~Gregory
 
