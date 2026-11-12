@@ -1,72 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478275;
-	b=yNwYGB6S2Eb38WHmsLrlSGTnhhcgExdUXiDPiWVicmOnLRnSwVLjuY53oSpp1SRuaevL
-	 7Nq/lI4nai6H8nSTxtgz+w+IQ+856+Mvo1x/9BmF5A+Z1V/UYpnODzmqMGMk+Jer8ZAZk
-	 lWnPbVJVVrbeJ82CM7bH6NkjWtFFk7MnIjnf3eCzdBJaDXVSuQliefZ/bXapaxxPMGpAP
-	 Img62o93G8nkg1tXQSaIItwFPjkdtPZvrqZKbJiAIlGjYEOl5eincP0A1HuGp10OOqtqF
-	 0dRaFRJperSH5xk5Jm9TvHyiTyw36NN3dRHWIZNISFTRjLB7Y65Vo/hkshcSsyotb6g==
+	t=1794478393;
+	b=i3m0WwzcphB3eOOizcJ4KgJCR+novJkdJt1TJmq8vmMSbQRoFg33AQR2eWyUNEGVj/vW
+	 hY+Wf/W1Au3QridhOXxKSuStyrt5hT58wz3/ULj+0z/AQRU3yx7aWmYWCGBRgI/47qS5V
+	 yK6C6R+otqQbKKvDwJQQeuBfFMdvot8lddVnZKryLv3/WMe8yQZk0vHI4l2XpJSlY9CVR
+	 8AS3Ysd7MSmnZq7phu7nc7Mn6pLFM/7Ej1jBt+tc0nVbUxaWJ/Ood+AekdqNNIvCDq/zf
+	 rCaQIH43od0zqVii3sLuKIck3qiDXBp+WTZ6wKRlMX+Q6zGwWg3dCP9lAIKWKkBmvcg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478275;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=7Q0PBfVVJl39z4M/NZGwQrOiJIvhiLbfabOfTbTalbs=;
-	b=HhtLyD0EDwGcurLhsDIz+2XA7wO/TBuFuRFyhvEbCHqmrxpY3FPdpVNnHXmRVV7scpUK
-	 NIzeRhnepvbZs9xUSWm4mx5Eo8N/EAb0WRsC9I5vmPu66UqCPVR587dKpwwHURU/2Td7H
-	 bcD5mrGDF2pIq2SxoxiJo6M0cVRXU2BXzlOHBCh/IUbT5GNMGt/PF+gmNtop4o/YiSmQY
-	 3BSSnpCIjB40SvWZysr2VKNbs80JCDoW6Je1mCAvQf0i/AyApRDG32zczxSnk2WIeFsBP
-	 sVhaLkOlaQiuLo318zv8XJV8sPmn68I8nMIRaosP44sfQVy0zdb2x6ooI8h/7vX/Nfg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794478393;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=2BmWYKOiyjIsi4QXb/VAu1SFL4RNR0NUHUQfqyXSb28=;
+	b=Ot5xTx6+HX2NgvRpSvOlrSP2WQARgUsowmxNVGMgj3NOXWWdc3BcG+xO3RkoVWbkFVSA
+	 163hUzqiBwqV/EaZTwsf7rYuPz8+P+uf1iYv6KCKZ1lxUyEJ7gHdAMnWXrMX3L2Y66HDW
+	 lwtlVihE8drisFUEoMD0GbWOJAxwZekvxhrA4uYcQGjSAHecckYD8tchDYimhAMz3Afy4
+	 IoyUVzM0szdDadXdQoN6upWfyDnLxvN8UxK/JUc1ALdFlu8320VAWDH6EKLrRJOW3whg8
+	 WayHChyk+NSjJugkt7NDVgEUkRSsmxBHc7lTO+wMtsleDILxim/rnKs8NBUkOcd7+ng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=LqMs+jU7;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=q0TPU5yP;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0418606A327;
-	Thu, 12 Nov 2026 10:11:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D0418606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9604B606A323;
+	Thu, 12 Nov 2026 10:13:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9604B606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=LqMs+jU7
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7Q0PBfVVJl39z4M/NZGwQrOiJIvhiLbfabOfTbTalbs=; b=LqMs+jU7fv6JRVCZaBJAjZvZVW
-	mxpqLYwG9rQez3RkdF+5Ue2RvIjCYhd17DMzbFTCLuVRGgqKJRQcnzxSCp8n7xY5Pw9MNDYuQ0R0i
-	PpyKWu4aUqkNstOi9kJdqxxGehZUtZR0EUJ8/pfrYytIUsO4UchNeu9+LZgQfA9Il4Jgs8yGFbeJl
-	YfBk8LLuY7VncB1UQ4xLX6RRQghGD/uawN8m8xxJ3wvd8crFNRm/U5iIZbRExYLN5+E5rLw6F7XEB
-	gSv89dd/eQBvCO6xuUaNBXr7bJBy0RRWhqZQQ0ggInoCHIkLSaIBH2Khc1BAnt9y2l3lUSveO2IIr
-	r9m2XCcQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRRlt-0000000AB67-2HST;
-	Thu, 12 Nov 2026 10:11:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5C70530066A; Thu, 12 Nov 2026 11:11:08 +0100 (CET)
-Date: Thu, 12 Nov 2026 11:11:08 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>,
-	x86@kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 01/13] static_call: Index code text reservation lookups
-Message-ID: <20261112101108.GE2669272@noisy.programming.kicks-ass.net>
-References: <20261109194916.1089703-1-jolsa@kernel.org>
- <20261109194916.1089703-2-jolsa@kernel.org>
- <20261112090734.GH2668804@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=q0TPU5yP
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id C61571A055D;
+	Thu, 12 Nov 2026 10:13:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 14D266000F;
+	Thu, 12 Nov 2026 10:13:03 +0000 (UTC)
+Date: Thu, 12 Nov 2026 05:12:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wenwu Hou <hwenwur@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/hwlat: Store the maximum latency in nanoseconds
+Message-ID: <20261112051249.7c19f22e@fedora>
+In-Reply-To: <20261111031304.1442318-1-hwenwur@gmail.com>
+References: <20261111031304.1442318-1-hwenwur@gmail.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -76,34 +59,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261112090734.GH2668804@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4fy5uz88u5rz8yxckudtndmo5esdexp6
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 14D266000F
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX198Fmx32fbNpCc2swGmT014WFRtB7xiuzE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=2BmWYKOiyjIsi4QXb/VAu1SFL4RNR0NUHUQfqyXSb28=; b=q0TPU5yPLZ947aX3Sv3isuOYZBA7m2KqP762P/02ChGLc6vvPi3+qhkwOX7XLjBCSH1wp2Wxihf264VSdeWIX1XHdIsIqWoH5B3Bww0FFqONTl5WPZWRLDRi61cw/bwR1zvdWYxJACh5iXbWtX0OcK2qlavTYf6dXp1CiJ/GPGY=
+X-HE-Tag: 1794478383-904335
+X-HE-Meta: U2FsdGVkX1+Afnel4CygBPUzz6ifRPiBAp2WGZmEnf5aajhccC3buV9ITyD0sRbT2qBarctUj7GMLNH0pEmdUy8M+YF7/AFduefpXVF7Ngd7ytBKF7XnY7lg5vBy1Nq9F2MRpa5MaOS1dEKhekwfqoyQkudIJfTU27ify8xrU6sU2FcgXP+fC4t03pLcfcIaTi1URKGjlcAfy54/3Mos5uL+ZofYT0kAc3pzP9gjt/2wqMGOQbaEumEtNyGEOAZWVP5MYQY3lnFhuQqYf64D/K/Z7XsItUMKLw1SmSVdVT7rU05CVvZt4e/Y4uyDFVBOKvu7XsoOESQZeLdyIRb72EugCaEQY9ag
 
-On Thu, Nov 12, 2026 at 10:07:34AM +0100, Peter Zijlstra wrote:
-> Looking at this in a little more detail; I'm confused. 
+On Wed, 11 Nov 2026 11:13:04 +0800
+Wenwu Hou <hwenwur@gmail.com> wrote:
+
+> tr->max_latency is expected to hold nanoseconds: tracing_max_lat_read()
+> converts it with nsecs_to_usecs() to print the usecs documented in
+> hwlat_detector.rst, and the other latency tracers store nanoseconds there
+> too.
 > 
-> You're literally adding an index, so that you can find the
-> static_call_size, while all you really need is static_call_addr().
+> Fixes: e7c15cd8a1133 ("tracing: Added hardware latency tracer")
+> Signed-off-by: Wenwu Hou <hwenwur@gmail.com>
 
-/size/site/ obviously :-)
+Amazing that this bug has been here for 10 years and nobody noticed.
 
-> That is, you could have just created an array of relocated site->addr
-> and sorted that, that would safe you a ton of indirection all around.
+> ---
+>  kernel/trace/trace_hwlat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> That is:
-> 
-> 	index->entries[i] = (long)static_call_addr(start + i) - (long)&index->entries[i];
+> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+> index 65e184d800ff1..701b6a542e51a 100644
+> --- a/kernel/trace/trace_hwlat.c
+> +++ b/kernel/trace/trace_hwlat.c
+> @@ -293,7 +293,7 @@ static int get_sample(void)
+>  		s.count = count;
+>  		trace_hwlat_sample(&s);
+>  
+> -		latency = max(sample, outer_sample);
+> +		latency = max(sample, outer_sample) * NSEC_PER_USEC;
 
-Should be:
+The real fix is to just use nanoseconds in the calculations. The only
+reason it was doing the conversions was to match max_latency anyway.
 
- 	index->entries[i] = (long)static_call_addr(start + i) - (long)index->entries;
+The time recorded in the events would need to be converted to
+microseconds too, if the raw numbers are in nanos.
 
-They have to all be relative to one location in order for sorting to
-make sense.
+Thanks,
 
-> That will make your lookup take at least half the amount of loads.
-> 
-> 
-> Also, you really should support modules, there is no point being fast
-> until you load a module.
+-- Steve
+
+
+>  
+>  		/* Keep a running maximum ever recorded hardware latency */
+>  		if (latency > tr->max_latency) {
+
