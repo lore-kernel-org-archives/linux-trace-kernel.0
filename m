@@ -1,54 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794500789;
-	b=5f/blrCGmsa+tYckgF8FVCmKSqA9ElKLXmbLS/qxtPNFYF82tOqV4fE8P/Po0gPLJllw
-	 ANE0z9EA4BZQDMbkkFEuoU/rPFoGu3Rw+HkfVSpNkvfce9CxdUv1nzSiJ1d621ECFO3om
-	 tkp/vjTsM32RqENaojhN95wxGgZZ1/jBisSuX8dYOmHQq8Vod/3YRU8VFX22AQ7RfkR4D
-	 xzWqJfRmcocXmBAsFdsg6wLVZlNb8uAk6WpU56XClOz80a7ou6WH4HJpRM3sCTnLsw+Aj
-	 WRUNf3uBs1bJ2IFury8j8PDgS18MFyT3L167hxdlC60727840mAfFRVKoiiGRV/J0RQ==
+	t=1794508390;
+	b=m+7N/KuErAuLcjN9jaTtr2khuqPQyfcvOfNYFBiDTUlqKbjYM+75+Sb6qIB7FbWHhSx4
+	 pRhhy9QAS9fguRNAx/h2qK3sB4FuhBh5cUHhhNvF9V1zsHO9kG+gp+iBlsIEj7jvDlx1d
+	 UifGpcWo8AgSxllhVJol881y6DrJrw12vXhb7UBpMVgsv4j6YTjimnDVp9LWDLGilPZ3B
+	 iOnvAgpGMJqbcvQMnHfN3jp2AMIYb9uDy5rA8oS5YPJ1NgJ21Z4dEp03mslp48toCF8Fu
+	 GSGdMHyy0MjRD94ELMM0ZHYoXazBH+iXjeeu0mq3D1EwDM2mc60xXxXcmF19y7neFlw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794500789;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yxXrtliWeSJ717XUx9PvrC1CitvRE+/KB+qyxrdt/AA=;
-	b=jE+FmgWFz9M9aC2nFYlIKEwz8ZvdIHuOAMx4vcIPJRZ/IWgeLMRYszHi11USmGVSyds7
-	 ZMgKPVJuObhPuHDelKkeBr53qeuTKyOEb0tlO6VWEFg+G0QVEMylR3UdwfVCQuGlg4itz
-	 pFj7a59Go9/XV7eTqcNwzESvgJ0FdcfRnbf1rGlHaCloz0HrzeX4ez+FTZUZBwFCT6Zbs
-	 JKcK7ZoQRramsYRKRdOvih7Bm727DLQHOw1VOlN5Jlr3qYWp4uX63DmTlfOzy3GbADTyk
-	 Zesz467zlZ6Mz5bItclPDu1d1bIxl+tzYlzkhcqFKlSmLjELoksobHQ3WLomHkKLXxg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794508390;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=7XTaMBSJocX7R1q9IiXe5TvK1ts0/2rtoQ55kCQz38Q=;
+	b=Yo3DJ2PUXQO6Wy/tElvE9cFcdxmFszBdv2/3ydq6zaAj4QvMeTRYFmqvyEWNWxbwmYv4
+	 YmV/w7RQ4yO4zF0zNSr30vbhA82oDluhy5jTe37+boY/YXRZszruUzFObAxFxmQ8I5haJ
+	 woZLW5ZP3akl2Hw4Xlbq1ur61xx90/vwO+Uymcm68XIxofifSEWiRCocbgI7FdAjaAHxN
+	 Y9Zi04NrS1XcCMjeBAazBXrl8VAwIAMY6+slL9aKXT2MAreZcwcWZyNammMDzE/1M6snX
+	 s6qCtusFTnUUldiHu35vSA4HOoLH7fNNhsB1o7NLsxMMTJiHq4uAM76tTBIiycSxWWA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bx4dMrWm;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=L+hCYSRp;
+	arc=none smtp.remote-ip=209.85.218.54
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775FF606A321
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 16:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898BA606A8BB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 18:33:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 898BA606A8BB
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bx4dMrWm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D551F000C4;
-	Thu, 12 Nov 2026 16:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794500789;
-	bh=yxXrtliWeSJ717XUx9PvrC1CitvRE+/KB+qyxrdt/AA=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=Bx4dMrWmXh/O9T4iweMo9A/Nano0DQCU0Q1T1pyAMwHCxLdfH2uZ52g5aPbZLhoMa
-	 AsMaAFSi/Ar4Q7pvqJa7tHapHZ7Ml7M7eWNbgaYrpsB9/9jb26NKefevwpf1hHlqNY
-	 paiZTM9uQOHqBsW1Sm1DL1FuwupiJn0islojMPYcM30rtP7AVU+co7s+PKlNuAbOIo
-	 rN4knMehVj2aMmy1Wt8Jv4cIS2yKCAlgwFkCAwMm/oWcV2TpX4RzuE2EPwJRSQOhfH
-	 goza1rj8Z4D0TQbXuic/Xv1Qro42DiChW+wgTXJImuTqdORVAzPRlal0JVoiBoEt39
-	 JR0CXvIhhYQUA==
-Message-ID: <sashiko-outbox-211496@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] tracing/probes: Zero out faulted dereferenced fields
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux trace kernel" <linux-trace-kernel@vger.kernel.org>
-In-Reply-To: <20261112105853.38bd39be@fedora>
-References: <20261112105853.38bd39be@fedora>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 16:26:27 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=L+hCYSRp
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c50933bdf4bso31443566b.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 10:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794508389; x=1795113189; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=7XTaMBSJocX7R1q9IiXe5TvK1ts0/2rtoQ55kCQz38Q=;
+        b=L+hCYSRpqtbZvvzfTPM51bNUhMq2BbuykAG5oFAhxSmlmrzcY9wgwVFlr9REQwSZ3x
+         wFQ6aD5XkVDSlS/t58e2UDg4YJLULKoeISY6s48Uc8/WoP71bu8tnqwwhKrweZaLpmyV
+         dIFkAlIIk/2ibebZ6Clb/IQ1VW9uBuNzs3oRGC3Cy/4rIjM8ybiqZ+dPvrCsX7ObOkTu
+         3yV5Ycwm05puJ4S++T/NemezOeH+JiHw7TmJPBFnw7JNh6J4/wpJgrdWY4J5FQsB6Gkq
+         ctxI8c7X7ypxK7cTPvieH4Y2A3rpTI2NqPrPISkBK53e2xSFbKFOl1D6Pa39J3FtUw6v
+         egfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794508389; x=1795113189;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=7XTaMBSJocX7R1q9IiXe5TvK1ts0/2rtoQ55kCQz38Q=;
+        b=wI0PmmwuidbfvECK6JuXaidjBdloYwNNmmOBpR0opMvhGsC9wVuR4Gg6ZAAggS4tQu
+         uUGTPJJkZEqCkHAj4+UUyVI83iQIXxbiWg9U80gfzXYsY24Cff3Vj7Aq03rkDI2zUkBq
+         7r5FMLh9L0g1QE6pxdckc2fIefd4hSeVPNlNblr2Qg7e30u1PC5BVEPsCx1ugeWiiRcp
+         jj57juZS5GY0pnUk4LszA47YkTOaDh7BEQw/nuDhi87eztd3X1TZ2fKmhq5irLYqxInn
+         oAFyt9M9oVVfgqyWFx3g5CKkotpmWoPPv/l1PeofQBUE4kWhwj7cacUELEw00+CfD/0L
+         6yQw==
+X-Forwarded-Encrypted: i=1; AL+hErGeRrwWzFml9r/dTBuCcix3ZwxaPr4KG5S2/GJvgzHlW9/0bmgu71hDkYV4bPO8jDmrKplA1VK6iS0QkvMHSraK7OE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/zac6FPmtsFZO4mP5TA5+EDC3dM+vbX+WlEO0Dr8XpgQj7zbBk
+	F5QBZHA6s3jdaTiS5Z+nWTPYWrpwdRPlxCrR4wHNE4VQr+AI6E1+15FB
+X-Gm-Gg: AYBFou1+5HyOtf+v1JVsEtH/NFJY8nW0oPMjJZMmjGM1zV9VEoGSd/9RY8uZ6Nbrla6
+	o8vcLf2uKkoByFJcF6ubke49wFB7zBWEmfZIGAK5yf8e9/wA0Z9wE0+rVvWLvOL68nUPwIPyJcl
+	OhCg8ysuJr4vAtPbU13/IwMYEkVC/XVfIO17f0VMMePaUjPKf0g155PbMdAFidGpLuvv8raakhd
+	FVnpphj7c28D5mnXkB7JvX0OmaKQsIl2fY8e0ClfXmmBmjzynJY9w2ymjzdUb3CQXtZJgHmwVlx
+	LTqsVhVRyUcEdRs96XuH+glB8NqcVyF+57VqX55efZhqsQdS0P6hoasV+CvcPbrlC+1UsTphDUc
+	+ZOFHdenCYBZqH8ulhUC3c59uWh4XabI60gfMYBe+pilZ9WYEoy/023TiX/IApD9jdjAJ6eqVgc
+	WuX+wPrr79FE2VAeEZJztebHl3u5fK2PoB8MXhzaJGby0qy6/8zKXh39MkhW0OcXR1jHd1jeR87
+	P1Lzw7X3Z77W7+XF34gA9Ijgq6uHjKjghmlpHjoj6j5/d77uS6zQZGqXGyEospH3lC+vfyuqoI0
+	DtzJj8VlYvLBVZqyvYSt1XOkyHFu+JLcOadW+A==
+X-Received: by 2002:a17:907:c0f:b0:c2e:2275:1168 with SMTP id a640c23a62f3a-c507c3fd35fmr333753066b.19.1794508388705;
+        Thu, 12 Nov 2026 10:33:08 -0800 (PST)
+Received: from krava ([173.38.220.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c5095b2369asm6139766b.25.2026.11.12.10.33.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 10:33:07 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 12 Nov 2026 19:33:03 +0100
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>,
+	x86@kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 01/13] static_call: Index code text reservation lookups
+Message-ID: <avYGX1UpGlvbvHO5@krava>
+References: <20261109194916.1089703-1-jolsa@kernel.org>
+ <20261109194916.1089703-2-jolsa@kernel.org>
+ <20261112090734.GH2668804@noisy.programming.kicks-ass.net>
+ <20261112101108.GE2669272@noisy.programming.kicks-ass.net>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,216 +108,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261112101108.GE2669272@noisy.programming.kicks-ass.net>
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issues to consider:
-- [Medium] tracing/probes: stage 3 in process_fetch_insn_bottom()
-  dereferences NULL val
-- [Medium] tracing/probes: FETCH_OP_CPU_PTR in
-  process_fetch_insn_bottom() shifts NULL
-- [Medium] tracing/probes: FETCH_OP_LP_ARRAY in
-  process_fetch_insn_bottom() advances NULL
-- [Low] tracing/probes: trace_uprobe probe_mem_read() leaves partial
-  bytes on fault
---
+On Thu, Nov 12, 2026 at 11:11:08AM +0100, Peter Zijlstra wrote:
+> On Thu, Nov 12, 2026 at 10:07:34AM +0100, Peter Zijlstra wrote:
+> > Looking at this in a little more detail; I'm confused. 
+> > 
+> > You're literally adding an index, so that you can find the
+> > static_call_size, while all you really need is static_call_addr().
+> 
+> /size/site/ obviously :-)
+> 
+> > That is, you could have just created an array of relocated site->addr
+> > and sorted that, that would safe you a ton of indirection all around.
+> > 
+> > That is:
+> > 
+> > 	index->entries[i] = (long)static_call_addr(start + i) - (long)&index->entries[i];
+> 
+> Should be:
+> 
+>  	index->entries[i] = (long)static_call_addr(start + i) - (long)index->entries;
+> 
+> They have to all be relative to one location in order for sorting to
+> make sense.
+> 
+> > That will make your lookup take at least half the amount of loads.
 
-commit 0adbcc076a7e0ebaeea272396034e57fe028eb89
-Author: Steven Rostedt <rostedt@goodmis.org>
+hum, but we still need the site’s init flag for static_call_is_init
 
-tracing/probes: Zero out faulted dereferenced fields
+I could store site pointer directly instead of the index and see how
+much faster it is
 
-This commit zeroes the destination buffer in probe_mem_read() and
-probe_mem_read_user() on read failure, and updates stage 2 of
-process_fetch_insn_bottom() to skip NULL pointer dereferences and continue
-instead of returning on fault.
 
-> diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe=
-_kernel.h
-> index 4eb4acfa09ba1..00542a162d307 100644
-> --- a/kernel/trace/trace_probe_kernel.h
-> +++ b/kernel/trace/trace_probe_kernel.h
-> @@ -102,18 +102,27 @@ static nokprobe_inline int
->  probe_mem_read_user(void *dest, void *src, size_t size)
->  {
->  	const void __user *uaddr =3D  (__force const void __user *)src;
-> +	int ret;
-> =20
-> -	return copy_from_user_nofault(dest, uaddr, size);
-> +	ret =3D copy_from_user_nofault(dest, uaddr, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
->  }
-> =20
->  static nokprobe_inline int
->  probe_mem_read(void *dest, void *src, size_t size)
->  {
-> +	int ret;
-> +
->  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->  	if ((unsigned long)src < TASK_SIZE)
->  		return probe_mem_read_user(dest, src, size);
->  #endif
-> -	return copy_from_kernel_nofault(dest, src, size);
-> +	ret =3D copy_from_kernel_nofault(dest, src, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
->  }
+> > 
+> > 
+> > Also, you really should support modules, there is no point being fast
+> > until you load a module.
 
-[Severity: Low]
-Does probe_mem_read() in kernel/trace/trace_uprobe.c also need to zero dest
-when copy_from_user() fails?
+I had that, but decided to remove it because my follow up changes
+did not support modules as well.. I will include it
 
-kernel/trace/trace_uprobe.c defines its own probe_mem_read() and includes
-kernel/trace/trace_probe_tmpl.h:
-
-kernel/trace/trace_uprobe.c:probe_mem_read() {
-	void __user *vaddr =3D (void __force __user *)src;
-
-	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
-}
-
-On a partial fault across a page boundary, _inline_copy_from_user() only
-zeroes the uncopied tail bytes, leaving the initial copied bytes in dest.
-Because stage 2 in process_fetch_insn_bottom() now ignores the return value
-of probe_mem_read(), an unaligned uprobe dereference that faults partway
-through a pointer leaves a partially written val that subsequent stage 2 or
-stage 3 operations continue to dereference or store.
-
-> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_t=
-mpl.h
-> index 8db12f758fdae..210a75ed5a92f 100644
-> --- a/kernel/trace/trace_probe_tmpl.h
-> +++ b/kernel/trace/trace_probe_tmpl.h
-> @@ -137,23 +137,24 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
-unsigned long val,
->  		lval =3D val;
->  		switch (code->op) {
->  		case FETCH_OP_DEREF:
-> -			ret =3D probe_mem_read(&val, (void *)val + code->offset,
-> -					     sizeof(val));
-> +			/* Do not dereference NULL pointers */
-> +			if (val)
-> +				probe_mem_read(&val, (void *)val + code->offset,
-> +					       sizeof(val));
->  			break;
->  		case FETCH_OP_UDEREF:
-> -			ret =3D probe_mem_read_user(&val,
-> -				 (void *)val + code->offset, sizeof(val));
-> +			/* Do not dereference NULL pointers */
-> +			if (val)
-> +				probe_mem_read_user(&val, (void *)val + code->offset,
-> +						    sizeof(val));
->  			break;
-
-[Severity: Medium]
-When val is 0 (or becomes 0 after a stage 2 fault), doesn't stage 3 still
-dereference (void *)0 + code->offset?
-
-finalize_fetch_insn() converts the final FETCH_OP_DEREF or FETCH_OP_UDEREF
-of a dereference chain (such as ->pgd in prev->mm->pgd) into
-FETCH_OP_ST_MEM, FETCH_OP_ST_UMEM, FETCH_OP_ST_STRING, or
-FETCH_OP_ST_USTRING in stage 3, which do not check if (val):
-
-kernel/trace/trace_probe_tmpl.h:process_fetch_insn_bottom() {
-    ...
-	switch (code->op) {
-	case FETCH_OP_ST_RAW:
-		fetch_store_raw(val, code, dest);
-		break;
-	case FETCH_OP_ST_MEM:
-		probe_mem_read(dest, (void *)val + code->offset, code->size);
-		break;
-	case FETCH_OP_ST_UMEM:
-		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
-		break;
-	case FETCH_OP_ST_STRING:
-		loc =3D *(u32 *)dest;
-		ret =3D fetch_store_string(val + code->offset, dest, base);
-		break;
-    ...
-}
-
-When val is 0, stage 3 still attempts to read from (void *)0 + code->offset.
-On architectures with CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE,
-probe_mem_read(), fetch_store_strlen(), and fetch_store_string() see
-(unsigned long)src < TASK_SIZE for positive offsets and redirect this NULL
-kernel pointer dereference to user space via probe_mem_read_user() or
-fetch_store_string_user(), which raises a page fault on every NULL pointer
-event and copies unrelated user-space memory into the trace event if that
-address is mapped in current.  In addition, when a stage 2 dereference
-preceding FETCH_OP_ST_SYMSTR faults, continuing to stage 3 with val =3D=3D 0
-passes 0 + code->offset to fetch_store_symstrlen() and
-fetch_store_symstring(), formatting 0x0 instead of failing.
-
->  		case FETCH_OP_CPU_PTR:
->  			val =3D (unsigned long)this_cpu_ptr((void __percpu *)val);
-> -			ret =3D 0;
->  			break;
-
-[Severity: Medium]
-Should FETCH_OP_CPU_PTR also check if (val) before calling this_cpu_ptr()?
-
-In expressions such as this_cpu_ptr(+0($arg1)) or this_cpu_read(+0($arg1)),
-unwind_parse_states() emits FETCH_OP_DEREF followed by FETCH_OP_CPU_PTR.
-Now that stage 2 continues with val =3D=3D 0 when the preceding FETCH_OP_DE=
-REF
-reads NULL or faults, FETCH_OP_CPU_PTR computes this_cpu_ptr(NULL), turning
-val into the non-zero per-CPU base offset (my_cpu_offset on SMP) so
-subsequent instructions record or dereference my_cpu_offset + code->offset
-instead of 0.
-
->  		default:
->  			lval =3D llval;
->  			goto out;
->  		}
-> -		if (ret)
-> -			return ret;
->  		llval =3D lval;
->  		code++;
->  	} while (1);
-
-[Severity: Medium]
-Can continuing past stage 2 when val is 0 cause FETCH_OP_LP_ARRAY to advance
-from NULL into non-zero addresses on subsequent array elements?
-
-kernel/trace/trace_probe_tmpl.h:process_fetch_insn_bottom() {
-    ...
-array:
-	/* the last stage: Loop on array */
-	if (code->op =3D=3D FETCH_OP_LP_ARRAY) {
-		if (ret < 0)
-			ret =3D 0;
-		total +=3D ret;
-		if (++i < code->param) {
-			code =3D s3;
-			if (s3->op !=3D FETCH_OP_ST_STRING &&
-			    s3->op !=3D FETCH_OP_ST_USTRING) {
-				dest +=3D s3->size;
-				val +=3D s3->size;
-				goto stage3;
-			}
-			code--;
-			val =3D lval + sizeof(char *);
-			if (dest) {
-				dest +=3D sizeof(u32);
-				*(u32 *)dest =3D update_data_loc(loc, ret);
-			}
-			goto stage2;
-		}
-    ...
-}
-
-When the base pointer of an array argument is NULL or a stage 2 dereference
-faults, execution now reaches array: with val =3D=3D 0 (or lval =3D=3D 0). =
- On the
-next iteration, scalar arrays increment val by s3->size and jump to stage3,
-while string arrays set val =3D lval + sizeof(char *) and jump to stage2 wh=
-ere
-val is now non-zero, bypassing the if (val) check and dereferencing
-sizeof(char *) + code->offset.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112105853.38bd=
-39be@fedora?part=3D1
+jirka
