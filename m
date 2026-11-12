@@ -1,71 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.151
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794473434;
-	b=PnpQ1Ouc8Cwa91UGRAcePCj7NB1RGCXt3kNaxXUD+jP1FqVVacdG4jz/aDDohdaGC8N7
-	 ocu32QePJt2mVJfKlR/84B8lEUJiNfHfVGnfpwRTnXMH4Rd6tbln2gyB/f3tHqBo5RO2O
-	 CPnXXKypCpOjaoW6OZW8fqMX502krFSG3nrnlAW2WMHxJ2J+rzAxD77Xp0ZDO5Ko/kh4Q
-	 dFe3VtiyDMJuypzqcmi4NSKpxzeKr0Pxh4BL9IgCPaTwHJroHdfM/h991C1PD/5m6iNkV
-	 2a2KQ1zKZn34wTNLQfpIpPQ98AbvqNi3bEQvEUGcBZBahYeN2W1gidzSmYXOT2LtBQg==
+	t=1794473443;
+	b=hlt4fPl5faPZONew4U03b9CP/4UUg5ozn2HDnNdHo15O7f1hjuq0e62dNKx3FIzzTLbD
+	 emuI3xq14AmlNH1E+dT8p96HXprMYrXNzNAoHbZnefV2BSASlVUgiLSCJY9ZZQl2vCV06
+	 mtK8aT+aPq+3Ug5PZaNxdh8zY2ieXb7nwSSqoml8P185XNqO/Vd+Y8ziHpWDzG//fybC4
+	 7bWppn4l04qLftdfATg32VE6ysMsSbDpmhq2ArkYrLt25JICs774OjfkoOQKfbLCY3W2S
+	 5ul+EAFK3j8URJ8W0v0GUzck7RRcIZ/2t6JUrGewiuVkw9QcPWpt5bjJO0sc/VlqHBg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794473434;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=gZlHEGAkiA3aSI6vvQcwGeSxtcrkyd/SxdRwzYrp61c=;
-	b=pOpro5H6zBgYeisRccuqKhGRvW0LfIe0FhxUsmcQvZSFZhbBm8TQtcbSVmf3NuZlEdUH
-	 4Lkjx9rKn26n3SH4fa9yJDKiKCVRJx/mK8etZtXza8NhdDChtvQmU1B7gJ07Nt71LOyJN
-	 RjEfRIYjaWQ+/XoeGYLxWac8qI2qft2G3zAIxMlcFPQik7kY7e3fxMpFpJTaeonN8hCPr
-	 fyop4KAmNylCXaISB6o2Qw8FK8YisNtkIdQfuXSXae0AtZUf5bm8Y+OTwNUiVxvaQeYGR
-	 IVvNjYO413lvbDazU7URys0krFtExAdIhYoGaGLrnk1W5Pdbb5hn0zaINR/kc0IouTw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794473443;
+	h=DMARC-Filter:Received:DKIM-Signature:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-MBO-RS-ID:X-MBO-RS-META;
+	bh=Jl6qvweGQpW+nbs6axEr2+kW3talX+zQg1ftatVYsHs=;
+	b=pRsj9AR8KACMD9OtMphPCCsf+GaboSOjBM61vXHMXOcpNjDwKfWx1JY/bbiDphJ41bfO
+	 Rq3/HJ+n8OVRKctlfeY3jMk+nOrtfVxql88456udubbqRPj3G50c4/+/LjEH9J4aZ93Y8
+	 S3vDNg66p35i362ZFGBsiQ+y1mfVN0cH5vSVnxNgiCYsn4wDEtxR7hjXtEAgrurZ74LfA
+	 eWR1wPOxBmEx8gcJwh548qQAPJUyTQWs9l6c9CMU3nEjX/SaPmE5jyJSZK8NdfR9E5gy4
+	 ftjLPw0jbvOpUawWnv0CuOZxwTE5H5jxof60V+fKotGTZ1uUbPSSE869XtJXYkGYTlg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=mAV4VJfb;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dmarc=pass header.from=mailbox.org;
+	spf=pass smtp.mailfrom=mailbox.org;
+	dkim=pass header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=o1+ctg3A;
+	arc=none smtp.remote-ip=80.241.56.151
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097C8606A323;
-	Thu, 12 Nov 2026 08:50:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 097C8606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7165E606A323;
+	Thu, 12 Nov 2026 08:50:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7165E606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=mAV4VJfb
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gZlHEGAkiA3aSI6vvQcwGeSxtcrkyd/SxdRwzYrp61c=; b=mAV4VJfbyjcbaHfIGNGASfGWnp
-	Z3uR3/UYX/1apdwDSFpjOEbwtlS/Cu3fo2gK/vmqZVpi4H/+HXt9Ffaqg5Uli1TnlkijO4ow9Kd68
-	yTYZVcPDD2LkvFfnKo5CbuFJI4LR4o39XyjshMUAT65FJHITeFpeCWw6V8q7CG/a6CxDSyBKN9QPa
-	Ksm3UgH0lY/XwqxWDaJpaGSqwRFarSgoOoZgyCChREpcUsjrVUjZFuxvVci1V6Ouose7KVok+7X6I
-	IISqN519mFRG9HhC9qiSohSrSjp7lgOsm0zjPG9c12GTAb6vWZUcIQKTTg4NpaXmD6HyjivBF/qjF
-	J5N3rr4Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xRQVo-0000000A5Rh-2kyG;
-	Thu, 12 Nov 2026 08:50:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8178E300400; Thu, 12 Nov 2026 09:50:27 +0100 (CET)
-Date: Thu, 12 Nov 2026 09:50:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.a=rsa-sha256 header.s=mail20150812 header.b=o1+ctg3A
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4jQDcZ3V5jz8scj;
+	Thu, 12 Nov 2026 09:50:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1794473438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Jl6qvweGQpW+nbs6axEr2+kW3talX+zQg1ftatVYsHs=;
+	b=o1+ctg3AI8mAuDCIAekF0xijzSx8q/PNpGDgu/XD/6NaMvyv9KWODOzBW5mwvew57Sau0T
+	5gQryaRnse9hE4/Su7IXk6oOgkOcDse6qI4B296/APurNYArbqRhwhxYqUENsPkqzqN2LB
+	1vip+Qz6qrT2YjWVstbOlvb+Gh9tmwOd3ECTq3CmUVjiIW514r0HavXPKndaXIzmxMxeRo
+	dDdmuHgEXeCJiUN7/RbZE9eM9ZfLlj2P0nql8qfpKkdgigIhDjVz1Uq2406c1jYd0BxmzC
+	0WM0Hz7M8y9I/ZVwdPBkD/0PELsbp9gPEYKmJ5W6Sllrz3QcwofCYR7il64/Tg==
+From: Manuel Ebner <manuelebnerli@mailbox.org>
+To: Naveen N Rao <naveen@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Alice Ryhl <aliceryhl@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Alan Maguire <almagui@kernel.org>,
-	x86@kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 04/13] kprobes: Maintain an rbtree of registered probes
-Message-ID: <20261112085027.GG2668804@noisy.programming.kicks-ass.net>
-References: <20261109194916.1089703-1-jolsa@kernel.org>
- <20261109195517.1090787-1-jolsa@kernel.org>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Cc: Manuel Ebner <manuelebnerli@mailbox.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] docs, kprobes: Fix bracket
+Date: Thu, 12 Nov 2026 09:50:16 +0100
+Message-ID: <20261112085017.690228-1-manuelebnerli@mailbox.org>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,35 +76,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261109195517.1090787-1-jolsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: ecb4fad61c4526f25ba
+X-MBO-RS-META: cpakoubau8wcpqht9m9798awgf3c1z4d
 
-On Mon, Nov 09, 2026 at 08:55:17PM +0100, Jiri Olsa wrote:
+Remove needless ')'
 
-> +static void kprobe_tree_insert(struct kprobe *p)
-> +{
-> +	struct rb_node **link = &kprobe_tree.rb_node, *parent = NULL;
-> +	unsigned long addr = (unsigned long)p->addr;
-> +
-> +	lockdep_assert_held(&kprobe_mutex);
-> +	while (*link) {
-> +		struct kprobe *kp = rb_entry(*link, struct kprobe, rb_node);
-> +		unsigned long kp_addr = (unsigned long)kp->addr;
-> +
-> +		parent = *link;
-> +		if (addr < kp_addr)
-> +			link = &(*link)->rb_left;
-> +		else if (addr > kp_addr)
-> +			link = &(*link)->rb_right;
-> +		else {
-> +			WARN_ON_ONCE(1);
-> +			return;
-> +		}
-> +	}
-> +
-> +	rb_link_node(&p->rb_node, parent, link);
-> +	rb_insert_color(&p->rb_node, &kprobe_tree);
-> +}
+Fixing: a1dac767622c
+Signed-off-by: Manuel Ebner <manuelebnerli@mailbox.org>
+---
+ Documentation/trace/kprobes.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You probably want to use rb_add() here.
+diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+index 19c04a91a6..91b76ed435 100644
+--- a/Documentation/trace/kprobes.rst
++++ b/Documentation/trace/kprobes.rst
+@@ -31,7 +31,7 @@ can trap at almost any kernel code address [1]_, specifying a handler
+ routine to be invoked when the breakpoint is hit.
+ 
+ .. [1] some parts of the kernel code can not be trapped, see
+-       :ref:`kprobes_blacklist`)
++       :ref:`kprobes_blacklist`
+ 
+ There are currently two types of probes: kprobes, and kretprobes
+ (also called return probes).  A kprobe can be inserted on virtually
+-- 
+2.56.0
+
