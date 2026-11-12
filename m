@@ -1,73 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794438928;
-	b=Lw8P8O3u9gaU8fWvOPyk9qW14uvyTOSu6DJ3vzWimedSkcVPXAKtl+t17+VJldYvzsKp
-	 1VEVrA4HCCbMjczMpXDEaOyaU8DmlLaW9gsOYMhK19piujBEYlOSZxmV31Z/eY1ZdSIN4
-	 LQrvTl3/+E0VUleUhhozc4oelCihZFs9RUfNcgjo/NPQdpEq4UhPc4KTeR4PIdXZGqaYC
-	 QPgPYR/5Ck5NKIb5AU0G3CuVMugf6qziLWfxh9CzzdmUq0jZHHAR+rucny4dPlBVuqzHL
-	 gZ2BaG+WVmqfi1Hf3DmmfbFj/SeC2Y2LJ21Ee1B71ZoPfO8AllHEBJs6WPJpo47IQvQ==
+	t=1794444529;
+	b=I9aK0n0WXjk9xxRK0EtZcbmJJu4y0dS0lsIvhbUZQBAb6G0LOkeLbd/Isdn6/aClrT6q
+	 Aj7Grgy7LIRqWIsfxM7yLmcS579iuSRECSau9JQz3Fr0PPTtd69ULMGGM4/qnsi6QxTYJ
+	 z91p6M/CL2TcH6pLqt/ed96TW8D2AIBvAzAbeIkBOvtb8fJhQXciRNNvWWolkN4xrivoS
+	 3DQ0V0T8nb/axSlD63XcAaWC7pGC6H0OdeLh6AgwfnZLF9Ou3Xo3Ltd6Ea/EvoC37Olyl
+	 TA6D0BfZ82iiSC5dx7DB7Jod+oDbHi/kk+Jz4100x2iemNSnMc20MDvrmS3wSxmftjw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794438928;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=gmDNsQ8h2wciKasKQCbqVP3maaL4qbrw5sZmT7BnjeA=;
-	b=ad9zTcEOvfB01rrFDqzazNxSbDqW5SUq7SpYouQB1u89uZuRuGAOl7YC+VGvuPf0XwLU
-	 CIqcT5VwHPvB3dbKyDeZps9xMPhjGaiw5Y0e6eD7JLJyQ/SuR8lnBUcxnTl4FCE9wIT6r
-	 cNnLaEtoNtIvPhNkfgrP744QDeIax2z8pDSRutZka5ShTD/KclMgLfG6CKHzZhlhb1gbR
-	 Xesxi7Pabh2fAlqoYnCj2kLj7uU1sqTUNAIgRQNyregfAGqWanzUNVVLf8G27Lwp3SPQe
-	 0jVMhALLKRQ9hIwUa5j1Fv5zKNeh7ztpxgtZs5fGxeKD7iG8jw2WtgkjGIBlG9HylIw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794444529;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=1zyXYhT4ZOjKHFljY1yybFov03hN4yF4aUJ996zXCJ4=;
+	b=HKTGRID99Lq2ogVVvieyttAY3tKXjuvFvCSsp6fGyovhQvPnYDBg4R5+L4BtA/Yq6Rqc
+	 JBVNDaSqDLosC7MdKd9zie+4Xga+K/b53IxgUaVxqBSms/FkNSKyKjWwMzTfq6/K0uH2O
+	 s1sDTtd0IpF/VqbpBvMSCBOIN1l1lq+xJ+MjgYvl8XanB6GkRjZ2sHJtbN9WRFfY8mCXY
+	 uAgCcDZAo+iaB4O537ZgcFmM35XJEncw12HhJSnrt/emihTA0uMm2HxxBfM4+Cknronr8
+	 ZqXAug1wTsU08GdsCf91ep9Zr609JSk819Fu1aoOTcxTIk+d2ayuqH5gkbSpH3b7rTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="7BpeV/CN";
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+JHv7OI;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E69606A337;
-	Wed, 11 Nov 2026 23:15:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1E69606A337
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC69606A33C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 00:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=7BpeV/CN
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 42BF340216;
-	Wed, 11 Nov 2026 23:15:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 7DEE41A;
-	Wed, 11 Nov 2026 23:14:54 +0000 (UTC)
-Date: Wed, 11 Nov 2026 18:14:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Tao Cui <cui.tao@linux.dev>, akpm@linux-foundation.org,
- dgilbert@interlog.com, mkp@kernel.org, loberman@redhat.com,
- jmeneghi@redhat.com, kraxel@redhat.com, vivek.kasireddy@intel.com,
- mst@redhat.com, jasowangio@gmail.com, eperezma@redhat.com,
- stefanha@redhat.com, sgarzare@redhat.com, mhiramat@kernel.org,
- jgg@ziepe.ca, kevin.tian@intel.com, axboe@kernel.dk, linux-mm@kvack.org,
- James.Bottomley@hansenpartnership.com, sumit.semwal@linaro.org,
- christian.koenig@amd.com, phasta@kernel.org, joro@8bytes.org,
- will@kernel.org, linux-scsi@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
- iommu@lists.linux.dev, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, bobbyeshleman@meta.com,
- mathieu.desnoyers@efficios.com, robin.murphy@arm.com, mason@kernel.org,
- aesteve@redhat.com, tjmercier@google.com, harry@kernel.org, vbabka@suse.cz,
- cuitao@kylinos.cn
-Subject: Re: [PATCH 4/7] tracing: account ring buffer pages and trace_array
- metadata to memcg
-Message-ID: <20261111181447.3c483a50@fedora>
-In-Reply-To: <avScKhR22kFOQ1z4@google.com>
-References: <20261106131829.3228926-1-cui.tao@linux.dev>
-	<20261106131829.3228926-5-cui.tao@linux.dev>
-	<avScKhR22kFOQ1z4@google.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+JHv7OI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3611F00A05;
+	Thu, 12 Nov 2026 00:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794444528;
+	bh=1zyXYhT4ZOjKHFljY1yybFov03hN4yF4aUJ996zXCJ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=m+JHv7OIeAbAAse7E20Hi0qCd2GSgf5mattKcaMGhM8+wdKo4BzRY/e3TFbkmtepn
+	 Y8DBx0bndD6l9nbiU4iVK8BZOKH//GpZwK2qF5B4oBVovMSbUtoc4H0j6mvVtEQZ1e
+	 yySOBEQU41eSIC9EG2qYVkYrvFKnLQf61LIpt38VGdUEgTzyKBqFiP+5trYl5Zwal2
+	 e3zmgZGTjAlmTXNSvmlbnfmWXia92mUpF8GCxwMUkG6T+2ywiuPTBk57yRRipJ/kEw
+	 O/mS29QlY2h8eR8lTX9jxwRiuvx0ZA40DwOc14gO3Z2j1NgzqjwGw8H19gFyltjWyZ
+	 7HghHgZ1nAD6Q==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/12] tracing/probes: Propagate error codes in eprobe and fprobe creation
+Date: Thu, 12 Nov 2026 09:48:46 +0900
+Message-ID: <undine-1794444526180508856-8b12d389a453b4cc@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <sashiko-outbox-204255@kernel.org>
+References: <179418408457.227715.1485179201014819821.stgit@devnote2> <179418419198.227715.15433232608137637935.stgit@devnote2> <sashiko-outbox-204255@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -77,88 +58,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 7DEE41A
-X-Stat-Signature: d4cfzmoxk13pg5m5ihp4akmy4hyu64j7
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18kGGg1w/ZySP1UptBt2yyJGC8WbNBioPU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=gmDNsQ8h2wciKasKQCbqVP3maaL4qbrw5sZmT7BnjeA=; b=7BpeV/CNBK0xn7L5qTZRDTfRvQV7U2cQp/mCdojV1+x96AlRZ9rtulOhbTPnbSonEkl9dmgz3eGjHb8p+E0h3XDjeebpimn+FH/g477dsAXlpcaBL9IKpa4sWBqls3LUz3Nl8QeSDhvVfF3uaAU+FhhTMPtyWJPI5tA4IvX91lQ=
-X-HE-Tag: 1794438894-129449
-X-HE-Meta: U2FsdGVkX1+FAoSScfo676HReBJlhh89iBeR1SRWVaCqtKRtwKahRcTeRtp0PW6X+8tP0+cIcuPmi2dveZHq+M/PfpnjBQfOKdRrGrE6L6XJMKcHrkYMPwWfT5W0HZpH0ZA4Tjcgp99PZuSv7mPL4a7u5MFDGa5PSeaKjEeGZ88gtDz4qBX9Zmj8tooxKlDTcIzzVtZdHTNqYaysHU8krqFFZhQV25li+r73imgz99krf7wx8TB68OGyy17GR6OQunJdYHkV2EjKXilR7+DL4H7NvH48tc6IGNBrCqnO6wIQzDRZ3F+KJfPb6Hec+mdDc+COvRxaHejVamxGg/o8L4iQ0lpkg48J
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 11 Nov 2026 16:47:38 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> On Fri, Nov 06, 2026 at 09:18:26PM +0800, Tao Cui wrote:
-> > From: Tao Cui <cuitao@kylinos.cn>
-> > 
-> > Creating an instance immediately allocates two full sets of per-cpu
-> > ring buffers, array buffer plus snapshot, about 1.375MB per cpu per set
-> > on the default config, plus the trace_array and its name.  None of it
-> > is charged: neither trace.c nor ring_buffer.c passes __GFP_ACCOUNT,
-> > while user_events in the same directory accounts everything it
-> > allocates.
-
-As the name suggests, "user_events" are for users and are special.
-
-> > 
-> > Instance creation is currently gated by tracefs file permissions
-> > alone, so a
-> > rootful container with the host tracefs bound in can create instances
-> > until the host runs out of memory.
-
-You mean, "works as expected"?
-
->  Charge the ring buffer pages and
-> > the trace_array metadata to the creating cgroup.
-> > 
-> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> > ---
-> >  kernel/trace/ring_buffer.c | 8 +++++++-
-> >  kernel/trace/trace.c       | 6 +++---
-> >  2 files changed, 10 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 1fd28a72e6ee..676c059c112c 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -441,7 +441,13 @@ static struct buffer_data_page *alloc_cpu_data(int cpu, int order)
-> >  	 * gracefully without invoking oom-killer and the system is not
-> >  	 * destabilized.
-> >  	 */
-> > -	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO;
-> > +	/*
-> > +	 * The subbuffers are charged to the memcg of whoever caused the
-> > +	 * allocation: the creator of a trace instance, or root at boot for
-> > +	 * the global trace.
-> > +	 */
-> > +	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO |
-> > +		  __GFP_ACCOUNT;
-> >  
-> >  	page = alloc_pages_node(cpu_to_node(cpu), mflags, order);
-> >  	if (!page)  
+On Mon, 09 Nov 2026 00:46:05 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Low] tracing/probes: missing Fixes trailers for overwritten error
+>   codes
+> --
 > 
-> Hum, by default tracefs is root only. 
+> commit 435aff670b6c20ffbcde000e1c0b092b53b663a8
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> And even if made accessible to other users: 
+> > tracing/probes: Propagate error codes in eprobe and fprobe creation
+> >
+> > In __trace_eprobe_create() and trace_fprobe_create_internal(), error
+> > codes returned by helper and registration functions (such as -ENOMEM or
+> > -EEXIST) are overwritten with -EINVAL.
+> >
+> > Propagate the actual error codes to the caller.
+> >
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
->   1. The life span of a trace instance is not tied to the caller.
->   2. The ring buffer is shared by multiple users.
+> [Severity: Low]
+> Since this fixes overwritten error codes in __trace_eprobe_create() and
+> trace_fprobe_create_internal(), should it include the following Fixes:
+> tags?
+> 
+>   Fixes: 752be5c5c910 ("tracing/eprobe: Add eprobe filter support")
+>   Fixes: 08c9306fc2e3 ("tracing/fprobe-event: Assume fprobe is a return event by $retval")
+>   Fixes: 8275637215bd ("tracing: Adopt __free() and guard() for trace_fprobe.c")
 
-Right. Is there a use case out there that allows non-admin to create an
-instance? Tracing ring buffers can expose a lot and should not be given
-to unprivileged users.
+OK, I think this is a kind of improvement because anyway it returns an
+error with error log.
 
-What exactly is this trying to achieve?
-
--- Steve
-
+Thanks,
 
 > 
-> Overall I am not convinced charging the creator makes much sense.
-> 
-> Eventually a few allocations for iterators could be GFP_ACCOUNT.
-> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/179418408457.227715.1485179201014819821.stgit@devnote2?part=12
+>
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
