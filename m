@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794493327;
-	b=USoHtesxJAg2PJzLLdWUZoAVWkEV1Vs3YfQUTPmIV8q9HnTJ9bZslqdUtFNTkWRtuauT
-	 7SL8/V0uIyAVcgrsuw/fNew+i1/EjbBBEpztvSyQSUQcTKYg7u0fH1YdQw5gNbuznTLCl
-	 V52pep83lerBg3QHtLj0jkrE1Rxq6t2wZr0L4va58ucmbud4Gjt1E/S64J+S6mgqvlJ9J
-	 64SGzeo1/dMSpNwTz4uSaJMEAGW/ckrykZdcyYR8QmY1K4Y2UWSIQMfjwUDTnOl03ahqG
-	 OKdIciWy/hud/psuHGLfUhMno3qC3WOWteyiA1nfKONpjJ+HsfR4sbwwg0pLCtpyNTg==
+	t=1794493555;
+	b=a1e3p+mTNK+xLgvN3denU+a+8eaXxs9B6VEHjNAq3skCE2C7gnRDfrwLiccZEUA45QO2
+	 bmWoI8tdSLAxnHwIqSTEWIY6YoPAcq63YKxJOBZahxtGneQjgCnUX5sXABvr5TcBjjrX5
+	 xg7VAC38qcILTNqfMMtwHMop4xaKVdau/90JQxvzDKyVSrPxMgHQCvxmvLokU4vyyPXbA
+	 7yzldNqT9zgjCvcgZwzJq+91pCRBtPBzfsZgVq6UVne8MUw+BV8MYSNGdjR/xnEWw89h6
+	 HWreejpjNiDvdG18JCOzjvDH6WKbtPXwg24o4T5btvI+PH677TduIHDkZ4/f6vVnieQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794493327;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794493555;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=PIVTWE/VNxYGvZ0T63r4PexYkFdzwPboycCILQz/wKY=;
-	b=iaGLcYKmJK6z6PJRDXg3u/YQCU8fvmzEUij5TwIwN/tto+jL9XjskL14GJ/LfoG7eT5/
-	 9YdCJyZRtvhoGoeQg2w6Mg56XyPxVRNmSOpIOAlC19OMm9YFqOPiNkmtdtwm3o+AFVtH6
-	 8QAmhPtxSr5aUfNlRPW/Cyjql0IqwdIuUVf4dqvGMAy0AYUlyJmo+mQj5gPU1q2kZ4mv/
-	 R9h0Vma3hWSWVqgDgOxY8/dJNjhLwL0kZiR4hzQNGqfcac59T2kdcYKevILOJDCTk/ueO
-	 E1cAJ14LFENjWH7qVK8109xsoyMJ9kplW+8sBKMa5kc5aPNQlFgfrF/5qu5SxJW7gCA==
+	bh=qC9ssOMm2iP6KgLcDa1jRKWVaO8OXpMM2x5cERwms9M=;
+	b=2YcfVrxOFXMgpq9BPh4ZAjmgCNH3lOmWsw1tXLRuXm21fQb/PAJ29UeVXwokC9XhFxWK
+	 EzP9sW1Q3l19BnzpS9eZruRskd/KRbcWBl9t53ErEclHeIVCOB928DSOE7+txQ4UnB3Em
+	 9h5g73u/rdKXZ2YYh1HS564LYCfxnu2GfW5Gt7qzTU8DV/yoF/eq/rmMVCnF6hVZnz5LU
+	 3q9+UqzM5xGQuy7WFzOdgKgSZCtclobyezIDUvBZAvZGebTI1/mbfpMmqYvpPYOno/biZ
+	 lt8BPtzWdclrBzfCaE5ybxs9D6MpIaOU9tsygiPC2oEAsR6RUeslNryY2HHMLS/I8Og==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S6MS1acs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KAIuE6rB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59189606D565
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED4260703A1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S6MS1acs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E591F00A0B;
-	Thu, 12 Nov 2026 14:22:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KAIuE6rB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B9C1F00A05;
+	Thu, 12 Nov 2026 14:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794493327;
-	bh=PIVTWE/VNxYGvZ0T63r4PexYkFdzwPboycCILQz/wKY=;
+	s=k20260515; t=1794493555;
+	bh=qC9ssOMm2iP6KgLcDa1jRKWVaO8OXpMM2x5cERwms9M=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=S6MS1acsQ0b9I4FCYWZHA9mXsl58gYw+HzbQrIyAbk8huFxntC5jElMYzzRR7SBK7
-	 3ZtQoy71bp4wi9AAC8BFDiEbadQZ9gRlHu49znMzNjoZXsvORMJ5Q2b+U5bmlcSYN4
-	 8PkVdMKEJthOkfhm2kDGebwdFS/GGbtFim54B/WdvpaAj1D/ComophJCCd17FbPJQ/
-	 9p3AuvS0U+gRmFbCkXAGrCR8yK7Hj4qNFVFCDMuJ6Nhxn3MGCaobB+pkjI7oIuM8GJ
-	 VAK2HoPg/fm7N5lT6GSbIhp7FLTPvdX7ClWRky/TpvtCfbDZwbhQqrdCQLI2/7Z8T5
-	 AgJbJ41XklhVw==
-Message-ID: <sashiko-outbox-211307@kernel.org>
+	b=KAIuE6rBLyiotoTs8bs3XT4vgI0F5HfciydgbysCNm1ZdXFP2aTHCTxGlXqCLrHV4
+	 0DtPYuxt+6f8GQEn7HBi0LWrXeYiZiUscZVoT5qhR04Z1nOEaCg8qCP3Zge8zJPgKj
+	 cLDzE/rLohtBJLh0b3gG8YLSr9pf/GTMrQUgDkpDHWfkezBnpu6Qrbof6hnXh2eGaN
+	 dxnDtA5EQYAQTHzbSQ1k1g0ITv5QacpL0faXM9Ohu3d0ILhkNSzgmY5WHMfDIj3Jn1
+	 HGDpWqa8Ot8qRzkCyXnTHk/EbAym5TLS3DqIeQkZKGnk8jndDWHJJ4y79dWikwovBY
+	 CbWNCXzYSpJyg==
+Message-ID: <sashiko-outbox-211313@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/9] ring-buffer: Always read buffer->buffers after
- testing the cpumask
+Subject: Re: [PATCH v1 4/9] tracing: Cache ring_buffer_max_event_size() for
+ trace_marker
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261112141440.3050124-2-vdonnefort@google.com>
+In-Reply-To: <20261112141440.3050124-5-vdonnefort@google.com>
 References: <20261112141440.3050124-1-vdonnefort@google.com>
- <20261112141440.3050124-2-vdonnefort@google.com>
+ <20261112141440.3050124-5-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 14:22:06 +0000
+Date: Thu, 12 Nov 2026 14:25:54 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,77 +60,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [High] ring-buffer: atomic counter underflow in ring_buffer_reset()
-  [1]
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] tracing: inaccurate Fixes trailer in write_marker_to_buffer()
+  commit
 --
 
-commit fbf1784e6b7f3202f4d6898704fb8180140b6da5
+commit fc0aa729f88ae3461e4964c8c56c6c6eee40f687
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-ring-buffer: Always read buffer->buffers after testing the cpumask
+> tracing: Cache ring_buffer_max_event_size() for trace_marker
+>
+> write_marker_to_buffer() calls ring_buffer_max_event_size() twice
+> without synchronisation against ring_buffer_subbuf_order_set(). If
+> subbuf_order grows between the two calls, cnt may expand past
+> TRACE_MARKER_MAX_SIZE. Read the maximum event size once so cnt can only
+> shrink, and drop the now-unreachable WARN_ON_ONCE().
+>
+> Fixes: 2808e31ec12e ("ring-buffer: Add interface for configuring trace su=
+b buffer size")
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-This commit moves the load of buffer->buffers[cpu] after the
-cpumask_test_cpu() check in ring_buffer_peek(), ring_buffer_reset_cpu(),
-and ring_buffer_read_page() to avoid reading a stale per-CPU buffer
-pointer when racing with trace_rb_cpu_prepare().
+[Severity: Low]
+In 2808e31ec12e ("ring-buffer: Add interface for configuring trace sub
+buffer size"), ring_buffer_max_event_size() still read
+buffer->max_data_size, which was initialized once at buffer allocation
+and not updated by ring_buffer_subbuf_order_set().  It only started
+computing the size dynamically from buffer->subbuf_order in 472ac478b14d
+("ring-buffer: Dynamically calculate max_data_size").  Should the Fixes:
+tag be:
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 1fd28a72e6ee1..bd8126f6353b7 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-
-[ ... ]
-
-> @@ -6740,11 +6742,13 @@ static void reset_disabled_cpu_buffer(struct ring=
-_buffer_per_cpu *cpu_buffer)
->   */
->  void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
->  {
-> -	struct ring_buffer_per_cpu *cpu_buffer =3D buffer->buffers[cpu];
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> =20
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->  		return;
-> =20
-> +	cpu_buffer =3D buffer->buffers[cpu];
-> +
->  	/* prevent another thread from changing buffer sizes */
->  	mutex_lock(&buffer->mutex);
-
-[Severity: High]
-This problem wasn't introduced by this patch, but can a concurrent
-trace_rb_cpu_prepare() race with ring_buffer_reset() [1] and
-underflow cpu_buffer->record_disabled and cpu_buffer->resize_disabled?
-
-Unlike ring_buffer_reset_online_cpus(), which marks each disabled
-cpu_buffer with RESET_BIT before sleeping in synchronize_rcu(),
-ring_buffer_reset() iterates over buffer->cpumask twice without tracking
-which CPUs were disabled in the first loop or holding cpus_read_lock():
-
-CPU0                                  CPU1
-ring_buffer_reset()
-  for_each_buffer_cpu(buffer, cpu)
-    atomic_inc(&cpu_buffer->resize_disabled);
-    atomic_inc(&cpu_buffer->record_disabled);
-  synchronize_rcu();
-                                      trace_rb_cpu_prepare()
-                                        rb_allocate_cpu_buffer()
-                                        cpumask_set_cpu(cpu, buffer->cpumas=
-k);
-  for_each_buffer_cpu(buffer, cpu)
-    reset_disabled_cpu_buffer(cpu_buffer);
-    atomic_dec(&cpu_buffer->record_disabled);  <-- underflows to -1
-    atomic_dec(&cpu_buffer->resize_disabled);  <-- underflows to -1
-
-For the newly prepared CPU, reset_disabled_cpu_buffer() runs while
-recording is still enabled and both atomic counters underflow from 0 to
--1, corrupting the per-CPU ring buffer state.
-
-[1] https://sashiko.dev/#/bug/linux-2557ac4d-25af-4832-a2c9-c12af32c7a04
+  Fixes: 472ac478b14d ("ring-buffer: Dynamically calculate max_data_size")
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112141440.3050=
-124-1-vdonnefort@google.com?part=3D1
+124-1-vdonnefort@google.com?part=3D4
