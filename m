@@ -1,63 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794477722;
-	b=w3nHsY1KdTxk71RAU2GpgWx97vBXlcMwftJwMpf8gfkFgMp/CHmlzu1H/67o5PhPER8L
-	 +iufyAhz4PGR6fS0JW3mA1nVhvzajBGHNHxYDQx0i0x/IgIdpZO4AwFJoP2OTmJ8Qq46l
-	 z8Q/coCRutggGupJXYHp3B02SPlZfsZYFwPRDde+w7VIYKtaufsMdJUnqTQw5DToXEPCq
-	 u5k5AQiYR1fs20xHxuJO2YW+yccylR7tzOPrCSY3qPYOcr39XoyS1u+djV0PfWbr2fbcW
-	 yNNlzzPB/I09tSsMBN8Cd6By4FQnIR1rSshAO/RPVXiP4462DS3NEQaZ1BDVTe3ueZw==
+	t=1794477724;
+	b=2sXh6jJDEhcZT9NBOaSAW/KFVDz6VYvjUBz7mj7SeXJrmlxMRG/rcpJA5lVI2PxmH82v
+	 Pt1EnjoNVNeGi9Qn1BHLUuAypjqUH4BaOvo8qi3LuUaSsydHd+ZcoxSvtPwuavdi+DkMI
+	 v27lhaN0p1bM/GblEKeeI7LTu9BWHWMT5B6SNsLJwKUDL0yw4m0H90G3BfvLX5Z+T7Rjj
+	 ANiX3Qc6kT4B0fQf21xTdb+XwbAgWXivfp3uK4bflC5fM4wkHSMTtEKWUnKP87hEYIjXM
+	 jDFcunlVT0J76mWm+Cecxn+wK6nTR0ZtNku8+9uEeJPh5vH/zHQXBJzZlYoQikiO9gQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794477722;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794477724;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer;
-	bh=1FXEgYcxxXJgy5WPQEF/P/pK5xzBtD9gYmvBHS9U4mU=;
-	b=e3fp2wuFaI9aR3APAchD93DJBS51MBy4anbt5LPuvPyKjfYUrUYtpmG8JPYjYJY4OaOJ
-	 K6duj4/f3Xr+g2ZxVDuMjrZec0YXAgmczemu86daMPrVUUueRG5cJ6gesuF2kiJ9W00TG
-	 FZET9nNHwZ7DKIJwHgEmc2472gGFG3S6Rr+7VZRwplQ7H2UQmahoKseNl8nQi9FEEhhYg
-	 uXACCdSkMdb7XK1NkDOMlTRngILKpctR1FvOBWvXRx7JVe2UlcF6z+9X74YY9Fo7OwJvO
-	 wFws6/FM6WV54df9Y+HSAwNu85wHZ0o1rjZwkL1xSPDTDnRv2ZTIRs9/F2HoY0Exc4w==
+	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer;
+	bh=T0xvwAVAd10uIQD8+xR+pDRuZoC0p5eQwbtZ97QSn9g=;
+	b=WwqIyMQvT82C6pmIs/nYiG6xWDKrLqzfXWZyOcdc2lZqgVq0i8RReQnbNKBM88R1/ViC
+	 DENXS7FEZFBtV7gn0L4WWiZ9dki8zV98HlyyI951sQ8PZ2jbQaUI9qnXUaMGck/4Vf1XG
+	 hxR8kExZD22uAH8I7KiJxxflHY9fAqUw9AnHwQs3xw8oMWbzNttboFsm2/a21B3d9BhHA
+	 B/Wl9yVsotMSgVvvC0qeSkpwWqPB41Aas40l2xKoHFJNQB/t9wfvZk1o2i22dcqrbFueZ
+	 aA+bRFfzKryzxe1EwbxMAg8zF2AN5+pMdK0s+DIr2HlvSxRXoPTr7q3d9TE4DeKDdCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
 	arc=none smtp.remote-ip=23.90.104.144
 Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB97606A31C;
-	Thu, 12 Nov 2026 10:02:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1AB97606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464F4606A32D;
+	Thu, 12 Nov 2026 10:02:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 464F4606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794477722; x=1826013722;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=mMjEjjNBNeQ3hphvJgHcDnn3rGQSMsTx89cdVFhbk/I=;
-  b=uq+Yd8xSUrtZbj4sz7D1Xp70Jk9h09KTiHuimHq5hX2aRt/i3a64ncFt
-   wDTxxXh4usabTds3lFnR/LDfiChaxL8U9wkiu65+7S25Swl0Kq7pShLw2
-   1DwMbdtlNbMI1cp1Clnred10bt84BvNcGAaTO3rPbHooEgSE20sc+MxQt
-   p1OnzPCjn6kHGZcotz8x25FLJ8fTqAKyKIlHgK0DNTb7W/gHTkA+O4aOJ
-   WOX4UjPjLlpf+ke+bYa1nIs8YGUoYc+YEUvltGPIqUu7Z9l41p3dCSzV6
-   VyiXyeMh1IUkChKtyqmgq/5avaDK6ACTpHq1FBs7e2ZqzYlb/7h2wEVaS
-   A==;
+  t=1794477724; x=1826013724;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=YpC0OEjDp61x4WrPRvwkNA3r5ASkUlU6edCKs+rSt+c=;
+  b=OqkeHBB9CjX32zYpDSL/VZe4BQy51gdUYt8cLN0juAUPo9/deoUlcnSV
+   LIKIBpz8Esn2icrUFDaoDAH/IpTe+o23HCyh7tsirtRhBE8N6Ndmh9XyH
+   UCVuHg40AQ2kQ1oYJtqHrWsqN+82SXtZz0UfczLJLQMhog6QKueezq9Yd
+   Z4+aoroj/klAvIlC3u2luF9KVd1Jw4F6RKWny6yTtiO985YOouIpmXBiY
+   jMuLLB+VGyXgQOzpovmagQMSoTekU8eVzi8drcyIfK6r0t6Sk8to/k066
+   zjDoj0CkO+SC82U5zQRYUtwnABNlO3rbGFdmmgiGsqtC4n97ULapdcPDt
+   Q==;
 X-CSE-ConnectionGUID: 282oaaNjRsSWk8RHbGxu9Q==
-X-CSE-MsgGUID: Zp/gv4PYSiqnf0PE5BH9ew==
+X-CSE-MsgGUID: 2tmaI4BSQPmzEEvjnNLLug==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
-  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 12:01:59 +0200
-X-CSE-ConnectionGUID: tqG99rijSfOKtEoICM7JmA==
-X-CSE-MsgGUID: FJ0d8Z2lTPmSSo5/ZwY//Q==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
-  by ces03_data.me-corp.lan with SMTP; 12 Nov 2026 12:09:55 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 12:01:57 +0200
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 12:02:00 +0200
+X-CSE-ConnectionGUID: SjyM7SAtQ+OlhWgK67J13Q==
+X-CSE-MsgGUID: hU6RHL/aQ0qgRa4niEPqMA==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
+  by ces03_data.me-corp.lan with SMTP; 12 Nov 2026 12:09:56 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 12:01:58 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Subject: [PATCH v3 0/2] riscv: probes: reject probes inside an LR/SC
- sequence
-Date: Thu, 12 Nov 2026 12:01:43 +0200
-Message-Id: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com>
+Date: Thu, 12 Nov 2026 12:01:44 +0200
+Subject: [PATCH v3 1/2] riscv: kprobes: fix out-of-bounds read in
+ riscv_probe_decode_insn
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -68,12 +67,10 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAIeO9WoC/33NQQ6CMBAF0KuQrh1DC1Rw5T2MC9pOpQYoabGRE
- O5uizsTnd1P/n+zEo/OoCfnbCUOg/HGjjEUh4zIrh3vCEbFTFjOOI0Hk7MCPZgReucllFIq5FL
- osuAkjiaH2rx28Hr7ZP8UD5RzUlKjM362btk/Bpp6P/FAgUKpm0YpbCvN68tghelxwaO0A0l+Y
- P8FBjkIVrFKnJBijV/Ctm1vFN9chAMBAAA=
-X-Change-ID: 20261111-probes-in-lrsc-4ccde6cbf436
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261112-probes-in-lrsc-v3-1-a95089852a17@mobileye.com>
+References: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com>
+In-Reply-To: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com>
 To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
  Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
  Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
@@ -87,65 +84,43 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Sashiko <sashiko-bot@kernel.org>
 X-Mailer: b4 0.16.0
 
-Patch 1 fixes page fault reported by sashiko-bot@kernel.org that
-existed before this patch series
+riscv_probe_decode_insn() can trigger an out-of-bounds page fault
+when probing a 16-bit compressed instruction at the end of a page.
 
-Patch 2 rejects probes inside the LR/SC sequence. This commit was
-submitted as patch 1 of the series [1].
-Detaching it from that series with slightly edited commit message,
-because it is not depending on other stuff.
+arch_prepare_kprobe() safely reads 16-bit parcels into p->opcode, but then
+passes p->addr to riscv_probe_decode_insn(), which unconditionally
+dereferences *addr as a 32-bit probe_opcode_t
 
-[1] https://patch.msgid.link/20261110-lrsc-only-v6-0-bafc3cc0fcae@mobileye.com
+If a 16-bit instruction sits in the last two bytes of a mapped page next
+to an unmapped page, the 32-bit read of *addr crosses the page boundary
+and faults.
 
----
-Changes in v3:
-- Fix lr/sc loop detection logic for lr at probe position
-- Add "Fixes" trailers as suggested by sashiko-bot@kernel.org
-- Link to v2: https://patch.msgid.link/20261111-probes-in-lrsc-v2-0-b2525b7e1e8e@mobileye.com
+Passing &p->opcode instead of p->addr to riscv_probe_decode_insn()
+(as arch_uprobe_analyze_insn() already does) avoid reading past the
+instruction.
 
-Changes in v2:
-- Allow kprobe on the LR itself unless it is part of the LR/SC loop.
-- Fix error (reported by sashiko-bot@kernel.org) where
-  arch_prepare_kprobe() returns -EILSEQ for LR/SC probes.
-  Make codes returned by arch_check_kprobe to indicate -EINVAL
-  if probe falls within the LR/SC loop, consistent with the case when
-  INSN_REJECTED returned by riscv_probe_decode_insn
-- add patch fixing out-of-bounds read in riscv_probe_decode_insn()
-  reported by sashiko-bot@kernel.org (as patch 1)
-- Link to v1: https://patch.msgid.link/20261111-probes-in-lrsc-v1-1-4f99ddea5f68@mobileye.com
-
-To: Paul Walmsley <pjw@kernel.org>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-To: Albert Ou <aou@eecs.berkeley.edu>
-To: Alexandre Ghiti <alex@ghiti.fr>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Guo Ren <guoren@kernel.org>
-To: Pekka Enberg <penberg@kernel.org>
-To: Patrick Stählin <me@packi.ch>
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmerdabbelt@google.com>
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://sashiko.dev/#/bug/linux-812af091-20d1-4915-97a6-741f51e07022
+Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-
 ---
-Vladimir Kondratiev (2):
-      riscv: kprobes: fix out-of-bounds read in riscv_probe_decode_insn
-      riscv: probes: reject probes inside an LR/SC sequence
+ arch/riscv/kernel/probes/kprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/riscv/include/asm/insn.h          | 28 +++++++++++
- arch/riscv/kernel/probes/decode-insn.c | 91 ++++++++++++++++++++++++++++++++++
- arch/riscv/kernel/probes/decode-insn.h |  7 +++
- arch/riscv/kernel/probes/kprobes.c     | 29 +++++++----
- arch/riscv/kernel/probes/uprobes.c     | 31 ++++++++++++
- 5 files changed, 177 insertions(+), 9 deletions(-)
----
-base-commit: c03c1a14507dfaf8b856c2608f9ac216021fc222
-change-id: 20261111-probes-in-lrsc-4ccde6cbf436
+diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
+index 9e2afabf94e8..63ee5066def5 100644
+--- a/arch/riscv/kernel/probes/kprobes.c
++++ b/arch/riscv/kernel/probes/kprobes.c
+@@ -85,7 +85,7 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+ 		p->opcode |= (kprobe_opcode_t)(*insn) << 16;
+ 
+ 	/* decode instruction */
+-	switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
++	switch (riscv_probe_decode_insn(&p->opcode, &p->ainsn.api)) {
+ 	case INSN_REJECTED:	/* insn not supported */
+ 		return -EINVAL;
+ 
 
-Best regards,
---  
-Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+-- 
+2.43.0
 
