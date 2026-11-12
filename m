@@ -1,100 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.178
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794524367;
-	b=497uwvegtnRFVOlypvuwSKCArJr4+J4rrdje8Na/0Ym0lH0LTXlJr6rzvPOBVKqFozYj
-	 2dOba1maRPr4m8UXgHkdSoOLTzX4bu2ATo8C2C4qppklocN5OO5YzfFTXm1L8NdkWOBsM
-	 nD93xwvAEz0oZf/w03raQ1aR3QlyEkDC3UpEAJc5poN1kGJEB/fJj63HzZzRsA3hpe7Ar
-	 3T1NrussBm1sd7i+rn6bzjEOu7me8r90O4cmreq4o4ZWsYcqy3JH4fMWNTGq+OrSpthBQ
-	 69vxKJSYQ5aAFlvL8H+rT6TyxDG7tSCjRx7iwAUUouOaQMnWrquI4A5ghF0pw5ic0YA==
+	t=1794524823;
+	b=Y1dk0uFYB0UGEOcQFLi3vg+I6qxRkvJMCwCiMkGVBd7GItIpuQKi7+rVYSPraA4lj20L
+	 +4/OboW7WhH6UxyyWPxu+StLju9DZ42O0T55KlCo+YsCZFrQ/jvq/rVTqHsxhJ7P7Qcty
+	 t0r3rSEa0NOA5Yy/2+B3HE8W9dppvwC9qaKKwFsCvqJOSVgSzNZOlulMf7dWoqzgZNkdr
+	 k+J8ghHxr1q8BjASNJtqa163DIdGEaXbDOdF6PGn8x5Juey5vCMo6JAOzjTgHILIfUq4J
+	 AEH8Ie0LQcNpQje3hThC6N9kbyRoDd0Exlbpj/dcJp17B5RXn0c2JDjhblTPGWwyxkw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794524367;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794524823;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=ZsSjLqJE2zg5KnRT+r/w8Y0ianrVtar664vxU/qkfmw=;
-	b=BDZYkYFwgcoAFzjxXNjLk0yZb3xkPYw/XfKugHkX/mNRyUfhxCp+2ZNzlMSRfz8/BQic
-	 OdlJJxzik15cS0I2CA33VIOW8Zggg6u8HHRbTsnCvzPuXOTFDyqMUXnkEyC1u+xU2iy2j
-	 iAcpUmNC+8obLGJdt3FBoX8P3rZxvIIO+ZsaIsID2XbKcv7bGbT+wgkY0OwCkb3hVrar0
-	 ZsSjxfZ20JjqTXofK1j06ksY+RFsvS8F37C1YV8Obd0+/8IYa2RbbcqoKfWur9jTD0FKk
-	 h1bnONUE4bjYvGP2ADg44lLHiPuzO/BrrOgk6vz2420Mc+D3qW3rOta8FAQmIm2Ie+Q==
+	bh=iq7zuX4mescGycMYtdVsnHt3n8ea5BUsLeUaRpIODWM=;
+	b=hMUHdtY+9Bc8aO4zv8pBiyXIjKUppdd9ZqOXHLMtS2VX39ORQqhys2kKhLclgnbru0TU
+	 GHfs6/8BT0m2jqxmZ+c6wNsMseP9VSlgvoSx0yCSa+pC16mq7Y0S6ixJTEmF2Rlctrw1u
+	 GoU0z5ZAS8rkHIla65qK+PlhWNOZC897ozwl4nuczj98bqUfjMi2hjP8wRTtU9FYacQHt
+	 dHq5nDvgKitjRf+5tiEZljZQEkNDA2bWUWTEmOO2NTIofSrvUBCahHjzLPdupNLUHuNIf
+	 xOrW5x76bPnKab/2U7gdKPa9aHxzo+bV5vvJOw2YUT3zGqWLkc3I/sCLSztk00i446Q==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NRwZn7LS;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.182
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=irICtOrg;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.178
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D27260A5BDA
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:59:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D27260A5BDA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E209E606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 23:07:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E209E606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NRwZn7LS
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-54492d8a988so14431cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:59:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794524366; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=irICtOrg
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5383c97c8cfso10581cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 15:07:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794524822; cv=none;
         d=google.com; s=arc-20260327;
-        b=N6sHv0JF2KyNGqGelP3Emak50M9iZlgTbl+PNOcQ7BvH/v+e6Vk4WKweTZ8Tpb1lSL
-         u8G1uQ0janiqBm1HibpgwLIvtJiVtHDrmUDjB6YGnD/NfQAiOfPDLipWWggrMXMFpUil
-         2gtU3vn919AdyE8cAqSccp1tAfp5FupORZ0IEmNB3LiMZN6/jwc2o/jSQcUihUrqRstP
-         WJ2PmCFJlAGW8XY5HOLrd5m9Ud/ACVHlSN6lcvk2ta4HZUOJTlyy6URGx946b63Pj4BO
-         bONDohWTvLl0uvSSrgFxUVRni3il8smfqXpH7qRa8ciruDofXzaWSb7dYngOdSSc4weO
-         8C3g==
+        b=YSnn1rt4xtznluSs5qy8wgcPLqdAq6Du0FnpBMQ5hyNkXHuwMZDlARGWyIaTHc05Vp
+         ak+dYY6g6OBdh94SkSCSFfJtmcmtTerLHsBkfzTWbVNsvlXVY1sE30o+auADy4YWY3he
+         S2uCz3Nx3yfl6e1kZMI1l90JW1RzTtjiB2V84/5s/BDDO3mriD5wkz59Q4RTCDmOc4PW
+         Cmc4buXANmW3O5SYXGBDkAl/UyzIbC40RiPq7v0CtNS44M7pxOe0/6PbIyP6Lz31iqwp
+         lyoydmtzZPFk7c2Lu4p5vK2MQxzJmnAyUnoRZcUaug2RHEcEfva7SxyGLXJgIos+xPQf
+         ughg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZsSjLqJE2zg5KnRT+r/w8Y0ianrVtar664vxU/qkfmw=;
-        fh=0S017pvkerXOh7FLHM2Db2tQU0MPXIVFkp3HLGpxo+U=;
-        b=HPj0uTvDuO6mvloPODgP6Rm6wWquK7KZull2keowOhszjuymF8m5e6lzDILZkXcEDb
-         SL6tzimOWDzolt0Yt6cdc53NMuVzgaS4zAliEQajLhmVf6C96stEfVze+dSM/a+c4JQT
-         RaqN7TpdvVLklgz5HqwGSe+7DI7aKZn701b+YbvgFkOhoCA3zbgs3N+QCPLXwU9gjbmu
-         yssmQ/i7J0aLIcOvwMhG9aReqLcOYLfB6runkAzMk5mqiS2qDCvbMTqnkBq8KCxMTO5M
-         iszm8Vbzx958TYM+W6EoFzp44jRH6DoPw7SdISwy1SNrZIXR5VDOb+dYQyv2ZdL9WRh/
-         WLog==;
+        bh=iq7zuX4mescGycMYtdVsnHt3n8ea5BUsLeUaRpIODWM=;
+        fh=XHAfYCgTPsUt1HUQE+1Ct87c0iettbIPn5QCSoDv+Hc=;
+        b=GpEPmIqeyEjmuBY4eP8MbuXinJJGH8LcsBuea/cxeYqOwOFjBvFNGuPfeWdhTqxuVP
+         ty75jaL2Wq1OaDYHz1itKe7YLKopdSe5e7Y/z45QVLh7tO2HsuLio2+7hj3IVO4bXRKi
+         x11TBRdc4lUnIBn0XXijA36G7VpeMBRB7m+KUjBi+VSgCO5dITNQYrWF547vahUCfU8j
+         C8wSUgynTzdSJy62KflGHnXWCYk6K9MotL3D3/b8WvP0+4eF2yGG3/1f3/sPxL243/BI
+         5yo2FfjCaVCUj50hqx2BIKvg0XGaEYVvEBVJZF2Tp2+M63/pGlEgHZ15sdj46ymPeAnY
+         e2eQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794524366; x=1795129166; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794524822; x=1795129622; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=ZsSjLqJE2zg5KnRT+r/w8Y0ianrVtar664vxU/qkfmw=;
-        b=NRwZn7LSFGPxX3NtvX3Y7sFS2xItJxs0r16isV8pawPhbKhy9B1louAe6i72I/3N2P
-         UniuOLDEYa6TVxl3FcjF+9fSBbbE6bEf8pNLK7WB6YbLd65ecGFIrlmSNUlXyyjpJ8vf
-         ohFZkafmiEpB/6QdOpX3lVI6mIhmWqe6T/e+zzki4c0Prg7mBZOQ6GWxsjlHiixSscXX
-         A2EnFSV9dgOF5i1DaoquT+PzW0SfWsEl1uNHbNVAhiQrzGs9Og4DdpgCz+Yv7QqLqs4H
-         +ukKqWpoNHIUUbHnQO7MzVkr7o1J4ZHyugW+l4ektn2xy8z/xNEMyuKzLtfe2JdeXdLm
-         aMkQ==
+        bh=iq7zuX4mescGycMYtdVsnHt3n8ea5BUsLeUaRpIODWM=;
+        b=irICtOrgRGFSY53WuIyzu8TvH4VAFbp2Bm9vZ4Z1Z94hZozwaMXLPxyJx/tlti2mVi
+         ctcdxtiTUfyI8LFpkjubrWADm37oXauz/yIIo60ytVeIRG1VBoLNFIiuy0k+6Ju3jFQd
+         7REtp4u2l3gQJoyCxJncqUbeCGAoNHXHbZ6REFJqvzb2PcXCrmukCEXpQXNOYn1sLXrs
+         ICu8svIF5y41B/8N5MbGb9qnQrAt5rMNJoRqqozkRerVUe62lhc7jCnCfoDqB6sF60RT
+         LV5VmLgNaudkTgH3dH1fHWPWHdcavn/h+HTTkV/FsVRJr8IIipcHA5Up6ArQIs0x8H9P
+         b6ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794524366; x=1795129166;
+        d=1e100.net; s=20260707; t=1794524822; x=1795129622;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ZsSjLqJE2zg5KnRT+r/w8Y0ianrVtar664vxU/qkfmw=;
-        b=eAK64I3HGRgIrPfCNrfLC6IifGLWP8RWUs2o8sM1kxtbeeXCEKyED57SS8VP2iI27q
-         u71leHypB1kVb0KnsFvNXFJvvoWCgJFUjbw/9Bq905shCqDdsz3lsSRPe0A/VDFX/Dae
-         nhTEbupH1pWFGPLewpaCFSo0VaFNmufl/vpmLk+9iwUc+Ksx3eqZFm1cy31Q2WC29RxW
-         YskUOOe/dX59C1j3Xg3cVcu70DLv3hUnEguWZP8QZsDmPdZ7NCtPRmWntf80mX4cKlLu
-         eyNJLSSIbO7f9UHq27S2edlGMkx85EqPVAJnVdcIJJt1JolbFoeFoURh7Ik+Qt/a+qfD
-         WoZg==
-X-Forwarded-Encrypted: i=1; AL+hErE1EI22FcdXgH9Zup42YwRjsG3/xGIfuXFmK3DkuNNWK9u5vXdyj/lx9mmmU17uvMsGDYklUOKdKEo2KaWI13uRCZw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/yoZrarP4b4j6enfNdZUAgPb9/xgSIlaq1chU75wth5a2m73eD
-	515wPJ/SKRMBbBQ43U52kuWcIRNIP2Ezk+aBY0RZF6o1eQ35njnkGGerzzhPwBbKsySN+m7aSUH
-	c56DqwZSZ0nYtq5ELWLrNj335zkiTvyE920CkRTFU
-X-Gm-Gg: AYBFou2fqX+EaG8cC9wFCySdQv+XoQm1vf+rfTGuV/rNXLzYOyKFLpZBHu7QGgFy35b
-	whNsl0kaeAZMNEdWfvRx8kxwjj9Mz5Tu6USM6hmB/eT/pt2RjNUD3l5/3zrE3DqRK/IBaimdHKo
-	nRrg5LNFwOUpf2UwwYysClgkD6ydn2anSnlioVtIKii8PpkPjvIe7biFrGTkIp4bvI6ePMsWNnG
-	Gi/71o3C3TJmXjorMNaPdh8U595w7xRo4wFqQiIVY2q/xgVwgGR9ALFp9TaBLXMS37FB3wkEJbZ
-	IyksQE+2F7x5wKWhgXGP7KsBlSKNoLHszMnCwZt4roeKDt0sbKS4nyG0ODYyTtdEvYsY+K3EnVF
-	SauR0zX5Y5MKcrs6/F2NI8bPoocw/AvZCuueEYH168yesWUWQlP8VxWZ5/RIjolVpe4Q=
-X-Received: by 2002:a05:622a:98c:b0:532:eff9:ca08 with SMTP id
- d75a77b69052e-55afcbede04mr2871271cf.12.1794524364998; Thu, 12 Nov 2026
- 14:59:24 -0800 (PST)
+        bh=iq7zuX4mescGycMYtdVsnHt3n8ea5BUsLeUaRpIODWM=;
+        b=HkbI2UMjdv9u/Dtb+l5MhEZyrIPQKDZ5i48A2uPDpBRhmhgrwGNar3TDYDGqHsZ/0a
+         ahoTg8t9lRSimUspeaTunGEwwPWLp3W+784iyGOK6lqyb99tm3g1tD4Hy0A/iNYVJ82y
+         /nUl3eO9M+ekE2FWS9IT+vq4g7WAm6J84lRLPFvEViGICykNKxzmgcvXcRGNXsajsAIj
+         lvCkHdn2ryCT30LS4e0nH/uoSxY2u2NOuJGR5IrF4uWVl1DWxXuvi+jqWnVO0d992ubg
+         JMi6olXDBZTkcIAUmpnxfE6wu4dhcqe7aEjdACLkd2x9ZQmTKYymMthdqnxuVKaFMKKH
+         E3SA==
+X-Forwarded-Encrypted: i=1; AL+hErHwX4qYAqHMf5u/f32rVqgCXv1koc53HGS+EeNRzYiW/QOkS3sZBZMCvQaSYxBLYdeR4UQYRV6C153rVhZRGeB08CY=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9EQQRDQzREZ0p29a45pHsvD5uHtc3wH8JPKA+C0BlT0AOduxfV
+	h0Gmz4JU1+TtbgC0tgTYq9Fc7yJQyw3kypm5iSr0I2BLoRtm37HbSBHMry+xnAAVB9CM7qKBsvB
+	EU+hAGKl6fu9kLVHiDju7cwlNUZYQF5NbQiiTyqpD
+X-Gm-Gg: AYBFou0oe6T8VAC9jW0SsUwvN9VKxpkaXeFgeDDqvC0il6Rv9UP4f9FMZVOxfWCpemW
+	YaAPcUq9fyAntac9FPNltoE8MNTALqfe3G9brB3sfAhqxZwqJuya/bjieWMXpi5HfTOk7oU7c+7
+	7yRqn1J1kpT5dBrCzEHFiw8qLiQZt9NyZzsc7llQna//NFXtjfb8mtlujM8H8vFSdqDf6D/vXx6
+	uAITTC+BvCs2HOJoWK4fjqyazJVl9mfWhhqV2qdxwag1loJkANjxVwcGeQEaxi2e+DsfvBebee0
+	J0i6MiXp0soYJhY9pWTYJPVevxFH0WO0CBHBkf3XxDjoZ2toKfoDCp1t1yNNYDG/VdIx1xePOOW
+	ES11uIYcedFwr+vCvF8t4tu/dePI+Oqrshw2tKYAfTJ/2hn/bgYNCjgKPMRToCI9t1uER1P8DVa
+	WlAJfN5lqwat1u
+X-Received: by 2002:a05:622a:4885:b0:536:3ee4:81cd with SMTP id
+ d75a77b69052e-55adb2a6457mr5607171cf.4.1794524821197; Thu, 12 Nov 2026
+ 15:07:01 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,80 +105,84 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261103223025.2482227-1-nhuhuan@google.com> <20261106085019.90487-1-lizhe.67@bytedance.com>
-In-Reply-To: <20261106085019.90487-1-lizhe.67@bytedance.com>
+References: <20260730-rfc-nt-demote-v2-0-452dbe3b5073@zptcorp.com>
+ <20261103223025.2482227-1-nhuhuan@google.com> <7CF5AD15-B833-44E1-A9FE-C8E12F8C9E82@nvidia.com>
+In-Reply-To: <7CF5AD15-B833-44E1-A9FE-C8E12F8C9E82@nvidia.com>
 From: Huan Nguyen <nhuhuan@google.com>
-Date: Thu, 12 Nov 2026 14:58:48 -0800
-X-Gm-Features: AclHuK_MjdqInx2d6Ru3Fw1h0wqnaU6otNi9RKFyMPSDK4f5OfZNd4Zh3wXDlV8
-Message-ID: <CALwWd5tttbaNWoaXnPZjHFgYhG8yMyT67_9nhRKN336EHOVhqg@mail.gmail.com>
+Date: Thu, 12 Nov 2026 15:06:23 -0800
+X-Gm-Features: AclHuK8R0WzJXR4yHYxHSMICSWxLr-x7bnN-BX27nSJiTtbJXgPCv-FYzS8TYcg
+Message-ID: <CALwWd5vAtSSuFoex37AzDBcK0RaBP3fbbst_fy9BGBQ5jr-K1g@mail.gmail.com>
 Subject: Re: [RFC PATCH v3 0/3] mm: use non-temporal stores for demotion
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
-	alirad.malek@zptcorp.com, anna@kernel.org, apopple@nvidia.com, 
-	bharata@amd.com, bp@alien8.de, byungchul@sk.com, dave.hansen@linux.intel.com, 
-	dave@stgolabs.net, david@kernel.org, dimitrios.palyvos@zptcorp.com, 
-	fvdl@google.com, gourry@gourry.net, hannes@cmpxchg.org, hpa@zytor.com, 
-	jackmanb@google.com, jic23@kernel.org, joshua.hahnjy@gmail.com, 
+To: Zi Yan <ziy@nvidia.com>
+Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
+	Liam.Howlett@oracle.com, vbabka@kernel.org, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, trondmy@kernel.org, anna@kernel.org, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
+	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
+	apopple@nvidia.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, jackmanb@google.com, hannes@cmpxchg.org, 
+	shivankg@amd.com, rientjes@google.com, dave@stgolabs.net, nifan.cxl@gmail.com, 
+	fvdl@google.com, jic23@kernel.org, rkodsara@amd.com, bharata@amd.com, 
+	sj@kernel.org, weixugc@google.com, xuezhengchu@huawei.com, 
+	yiannis@zptcorp.com, yiannis.nikolakop@gmail.com, 
+	dimitrios.palyvos@zptcorp.com, alirad.malek@zptcorp.com, ryan.roberts@arm.com, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ljs@kernel.org, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, 
-	mhocko@suse.com, mingo@redhat.com, nifan.cxl@gmail.com, rakie.kim@sk.com, 
-	rientjes@google.com, rkodsara@amd.com, rostedt@goodmis.org, rppt@kernel.org, 
-	ryan.roberts@arm.com, shivankg@amd.com, sj@kernel.org, surenb@google.com, 
-	tglx@kernel.org, trondmy@kernel.org, vbabka@kernel.org, weixugc@google.com, 
-	x86@kernel.org, xuezhengchu@huawei.com, yiannis.nikolakop@gmail.com, 
-	yiannis@zptcorp.com, ying.huang@linux.alibaba.com, ziy@nvidia.com
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 6, 2026 at 12:51=E2=80=AFAM Li Zhe <lizhe.67@bytedance.com> wro=
-te:
+On Tue, Nov 3, 2026 at 4:09=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
 >
-> On Tue, 3 Nov 2026 14:30:22 -0800, Huan Nguyen wrote:
+> On 3 Nov 2026, at 17:30, Huan Nguyen wrote:
 >
+> > This series continues the non-temporal demotion work originally posted
+> > by Yiannis Nikolakopoulos [1].
+> >
+> > Motivation
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > Memory tier demotion moves cold folios from local DRAM to slower memory
+> > tiers, such as CXL or remote NUMA nodes. Standard store instructions
+> > force the CPU to allocate cache lines for cold data that is unlikely to
+> > be referenced in the near term.
+> >
 > > Using non-temporal stores and prefetching on x86 bypasses CPU cache
 > > allocation, protecting active workload working sets and improving
 > > demotion throughput.
->
-> Could you show some real workload numbers for this? I am wondering
-> whether the reduced cache allocation and improved demotion throughput
-> also translate into visible application-level benefits.
-
-I do not have direct benchmark numbers for non-temporal demotion with
-this implementation yet. As far as I know, Alirad and Yiannis (cc'd)
-are currently evaluating its real-workload impact and may share
-results once available.
-
->
+> >
+> > Changes in v3
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > - Unified MCE-safe NT copy (addressing v2 Open #1):
+> >   Implement copy_mc_page_nt() in x86 assembly to provide machine-check
+> >   safe copying using non-temporal stores (movnti) and prefetchnta.
+> >
+> > - Architecture abstraction (addressing v2 Open #2):
+> >   v2 relied on memcpy_flushcache(), which lacks non-temporal stores on
+> >   architectures like arm64. RFC v3 replaces this with a dedicated
+> >   __HAVE_ARCH_COPY_PAGE_NT interface and generic fallback, enabling
+> >   architectures to plug in native non-temporal routines independently.
+> >
 > > - Memory ordering:
 > >   Add a wmb() barrier at the end of folio_mc_copy_nt() to ensure weakly
 > >   ordered non-temporal stores are drained before page tables are update=
 d.
+> >
+> > Discussions
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > 1. Migration mode vs. migration control refactoring:
+> >    Currently, this series introduces MIGRATE_ASYNC_NONTEMPORAL into
+> >    enum migrate_mode. In parallel, Shivank Garg's migration refactoring
+> >    series [2] consolidates migration arguments into migrate_control.
+> >    Once that lands, demotion can simply rely on the migration reason
+> >    instead of adding a dedicated migration mode and helper.
 >
-> I have not looked into all the details here, so I may be missing
-> something. But before migration completes, there should eventually be a
-> publication step that makes the new folio visible. In theory, that
-> publication step should already provide the required ordering before
-> userspace can observe the new folio. So I wonder whether the wmb() in
-> folio_mc_copy_nt() is really needed here.
+> If that is the ultimate goal, why not do it in this series to avoid
+> code churn? You probably can coordinate with Shivank on how to move
+> the migration control refactoring code to this series.
 
-On weakly-ordered architectures like arm64, the publication step
-indeed provides the required ordering, because smp_wmb() and
-smp_store_release() emit real hardware barriers before the new folio
-becomes visible.
+Thanks for the suggestion. I reached out to Shivank and we are
+coordinating on this.
 
-On x86_64, however, those primitives compile down to a compiler
-barrier() with no CPU instructions, since x86 assumes TSO. Because
-movnti bypasses TSO, the standard publication barriers do not order
-non-temporal writes on x86_64, which is why folio_mc_copy_nt() needs
-an explicit wmb() at the end.
-
-Right now __HAVE_ARCH_COPY_PAGE_NT is only defined on x86_64, so that
-the wmb() is effectively x86-only today. If another architecture
-implements __HAVE_ARCH_COPY_PAGE_NT in the future, we can move the
-wmb() into an x86-specific scope in v4 so weakly-ordered architectures
-do not pay for an unnecessary barrier.
-
->
-> Thanks,
-> Zhe
+Best,
+Huan
