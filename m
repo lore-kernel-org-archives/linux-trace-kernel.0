@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446839;
-	b=Jq7MWbOKZh/UgBgO57oxS0JdzzBIHyRIMzx7SNY3Wglj6Xu/hRjuYNG/bEH5tNAmYEaE
-	 wvz9bqbWaKsgN0+QjYt0hy24P9CDWGG777Tv6EAL9kCavRqtRWURikGOT6BYL1oTyJT6o
-	 dPyVCUS14JUcfRwddauN76LvZ2Ye8KWlvYm4qonDBgcWkyQgGapHxRIRRKt0rCzHuAZKy
-	 T/BHRNrMiNAdgj7ZdSb+bRTJw002Rw4GcVIm5VcxwF2poTYnociuM8r3TydRgetFu76jl
-	 O4jJBvmCGcsA/rFU1I3dTs7DXQXWqN0ad+yu78aAEsBrGbJ0FQuCR1EtXT4yknLHydw==
+	t=1794446848;
+	b=ZjYDEA+0e64727qAZB3BCfTgMTrGHSumKYL558M9ky+miqcrZaXhdVQ2rFeq5Xxgj0lE
+	 luFh5lXWlEsQ8wDEHLsXEQs3SZs5JRJMAqc6JqLEZZ2yOFqiFydCxz7jvkKDOzin5uL7N
+	 Q2ahHsn+Nvsr4qCwnpcVbpAChTxqpSc43nCKI1h3JQWpwlprHxI5j+/FU7N3dXCpIdIiG
+	 sZx7Vx1v0vpL+ogHga0/QJeQqQEhtZaBkuBaDjfzSvm/t2uncJl6oBhWrBgBTv14tsm+H
+	 Qz4bTL6SuRiVMyEsHZIOBd6lshaVYPLGALOKth1VQA4+ZCJFbr+MsAXldTM7+Zz8AhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446839;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446848;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=eLPKV+XG/NDVIPVGtVsCkLYRyrN/OgHbO9MTpDsW/Zo=;
-	b=p2V2gmQ2/YAwpBHKAu9fWfyXhQMC82SDElAu5GBgzE0+dUCVbaG60XGIEzdK8mdUdril
-	 7f1NsaQ1lx1IJKJKk1ZoFWHpsj48Y13kpglENhYasTZBWLVTXOgHn17F6BOJSqiBfXQEm
-	 1nfGbrbLb0mHcOTe5+ZY47p/pNqkz0DOjexURzvwaC2Mk+TaS8F9wO5nmr+uHfA3rUTQE
-	 J6Ds4fgI5Ra9r96yE0bGYtR+ioMG24jQjL/YCqNDSMM0J9yTzMtb6tngpaGcgAhhXIn1/
-	 szxWtsJLlDYV0rJvx16S968yOsvSEImnsPTL8IRFowJ58YszPB1+bWrsfhL1x6SXrAw==
+	bh=gCrBj/L0nVk0Y4rofc9IruZOjajTmVyTiEHWsaHrV40=;
+	b=ZrlAuyKbf5VGrTEdC2bCQgsg3QE43OyHG6Ia4GQW13k5PnHJOphibZjNmcsd2RhUcKfi
+	 xijd36l4l808FYdQVSa06KwbHOsf4vnRoQfr5LM36hvAFhdWf5h6bJ9rgRJZ+grm86clA
+	 ylTxZvjcaE3T9LqAcLeaHUsNqwE+mzvcqh4VFsi2DyWSJDk9wV/GpDgzNw/kUvbzgSgE4
+	 IST5WZ48QgtUrX+BhWKPlOcBvg0suTF4ljIblpslkNDmgXTbY8CJnPidFSi+dmWZo31Uu
+	 GCdBFNAZC4/SD0CkeVc1rB1nCWtyMh7ce1q/mWDvlvMWFWNTv9v+db5uNWFFOwZqUwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X1ObL4vM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oeizNkiE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AA6606A321;
-	Thu, 12 Nov 2026 01:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421B8606A31C;
+	Thu, 12 Nov 2026 01:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X1ObL4vM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104CF1F00A05;
-	Thu, 12 Nov 2026 01:27:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oeizNkiE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97EBC1F00A0A;
+	Thu, 12 Nov 2026 01:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446839;
-	bh=eLPKV+XG/NDVIPVGtVsCkLYRyrN/OgHbO9MTpDsW/Zo=;
+	s=k20260515; t=1794446847;
+	bh=gCrBj/L0nVk0Y4rofc9IruZOjajTmVyTiEHWsaHrV40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=X1ObL4vMedeEeMQHtzNiIiZR8ZE417joAJkDIKoV5+9V0WUJE5p4vkBeavzZEABiW
-	 8LCs0SFyBrlPFQ+mrBEzHJd2bbkZXi+qQ/SzhrQXlXFtD2/VFX+W9DFq4JRted0vRy
-	 KNMEfadnDd0r9cgO/sQoEya3/+O4n1/Yt3Kjy5ArTWoPstQ4PHEI6UATj6qlwE+aAy
-	 QV0vacGHmZZbQqICUX98r9HGh/9LjHuhovjRCL7UQnD5y5azZ8XPGWTUHgeqngYmvx
-	 Kb1AMKGvf3UAxsly8jzM/Hi3nXrHUzrrlfuyDjPfsMhfVpN9cEGuqrAPhmKDPMhFQt
-	 rGjNPM/MJCoFA==
+	b=oeizNkiEanCwVfNBW8cDUMRCoudYoAXgDzGG5RkrrJX052IikEJOfbSPZ8VTo93Au
+	 s5b5pjHSKOo9Jis0XUbivT2BCOehjwMgcHPcGIlvS0hf4EQGK2FrqE15Flv6CueGkS
+	 bMzxFEGRRWdp6knvGp7UthDL59bjCaOAWc3xBQYH/ONPH+AHUvdFUofvM/Ch5thLBT
+	 N8db2pKn8zRZdodgl4gAv5Cer1af3EBUJLtEF+7vMYtnGXL/XLU3u5xcd+xf3rsaxY
+	 sUxaa3tMk5S/924Ua6ewi81UG/wHNzZZzjcbQFaWswWuqEmgsLkXAW4Q8tMt94EJCp
+	 fbOwV6bkDKFww==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 04/13] tracing/probes: Fix missing BTF kind checks in char pointer/array helpers
-Date: Thu, 12 Nov 2026 10:27:15 +0900
-Message-ID: <179444683590.345731.13726797901135918302.stgit@devnote2>
+Subject: [PATCH v2 05/13] tracing/eprobe: Fix 1-byte signed field fetch in get_event_field()
+Date: Thu, 12 Nov 2026 10:27:24 +0900
+Message-ID: <179444684450.345731.8324000135791531252.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179444679892.345731.5271591537517106679.stgit@devnote2>
 References: <179444679892.345731.5271591537517106679.stgit@devnote2>
@@ -67,49 +67,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In struct btf_type, the type ID and byte size share a union, and only
-BTF_KIND_INT types are followed by a 32-bit integer encoding word.
-Because btf_type_is_char_ptr() and btf_type_is_char_array() do not
-verify that the outer type is BTF_KIND_PTR or that the resolved element
-type is a non-NULL BTF_KIND_INT before inspecting it, non-pointer BTF
-types can have their byte size misinterpreted as a BTF type ID, and
-arrays of non-integer types read out-of-bounds or misinterpret trailing
-BTF metadata as BTF_INT_* encoding bits.
+Because the kernel is built with -funsigned-char, plain 'char' is
+unsigned on all architectures. Reading 1-byte signed trace event fields
+via *(char *)addr in get_event_field() therefore zero-extends instead of
+sign-extending negative s8 values.
 
-Validate the BTF type kinds and NULL pointers before reading inner type
-metadata in both helpers.
+Use explicit fixed-width integer types (s8/u8, s16/u16, s32/u32) when
+reading event fields.
 
-Fixes: 27973e5c64b9 ("tracing/probes: Add string type check with BTF")
+Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/trace/trace_eprobe.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 3a57fe6b67cc..232d1deecb20 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -411,6 +411,9 @@ static bool btf_type_is_char_ptr(struct btf *btf, const struct btf_type *type)
- 	const struct btf_type *real_type;
- 	u32 intdata;
- 
-+	if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR)
-+		return false;
-+
- 	real_type = btf_type_skip_modifiers(btf, type->type, NULL);
- 	if (!real_type)
- 		return false;
-@@ -435,6 +438,11 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
- 	array = (const struct btf_array *)(type + 1);
- 
- 	real_type = btf_type_skip_modifiers(btf, array->type, NULL);
-+	if (!real_type)
-+		return false;
-+
-+	if (BTF_INFO_KIND(real_type->info) != BTF_KIND_INT)
-+		return false;
- 
- 	intdata = btf_type_int(real_type);
- 	return !(BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED)
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index f1590c9af6b2..9defe86f4e8f 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -334,21 +334,21 @@ get_event_field(struct fetch_insn *code, void *rec)
+ 	switch (field->size) {
+ 	case 1:
+ 		if (field->is_signed)
+-			val = *(char *)addr;
++			val = *(s8 *)addr;
+ 		else
+-			val = *(unsigned char *)addr;
++			val = *(u8 *)addr;
+ 		break;
+ 	case 2:
+ 		if (field->is_signed)
+-			val = *(short *)addr;
++			val = *(s16 *)addr;
+ 		else
+-			val = *(unsigned short *)addr;
++			val = *(u16 *)addr;
+ 		break;
+ 	case 4:
+ 		if (field->is_signed)
+-			val = *(int *)addr;
++			val = *(s32 *)addr;
+ 		else
+-			val = *(unsigned int *)addr;
++			val = *(u32 *)addr;
+ 		break;
+ 	default:
+ 		if (field->size == sizeof(long)) {
 
