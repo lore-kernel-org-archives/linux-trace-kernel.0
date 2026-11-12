@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794515867;
-	b=Cgl8nY2rdtxzp0slueIb+I+Ctl5bbYA/NdsNnF5uHLTTIS0P3r5+JL5ZuOokd11YXWYm
-	 MTW/4wxFzBbK2K73z5j0HigX/TIfuDqurfgBWRGTX77K57+thqE1IK0y1q9xwqNb7TXgj
-	 zjZCfm1WXVdv1ob6+T8E5SWJW0WrLbRdDqpxgBOve2yJPssG3UeR6wCqwkODmKb4SJRxF
-	 0LuduszT2I+ae/rdN4I2PJm/4hajnx+40/A38q6atNkedaTnY3wtJaFAcwPt8sAKyYhfm
-	 Buq7q0Jvr8acH2FNhce820z4xOVgVLwV3Ft6tUWZzUk1z5tDNg7n/2wpHmYT7m4kRAw==
+	t=1794515870;
+	b=qJl9RdLZ5UneZqhyaCWcKaMjO3XlPbveEk/h416aONIsuQiX23jquVfe9cSqq7GimRVS
+	 ZFOm0NR4gaFbYmEuV/2dfLGj9wzkEsd07x1swwoTLyrM5Heiv7cyxm/n5MWiaxywVbmBX
+	 UD09v/q9tAsh/60nhoV8A2RgdvAMy4Knw6a8b+I+G1a1d2P8KN+qEwUjqFP1F/8NuPM1C
+	 +3MCfAJBFcSpO9JDfv4y9YIiGBkioZQ+O07tiACvTyu84yltjYftS26mx7VZxWUosNntE
+	 WVA705J0Pl5Sv2ZDV0z05+xovL6CQSF4Gra50Qr5g5rro+JJKszFKhtWi3PkeKrM2eA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794515867;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794515870;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yee+wxcLaXMSXZcwc3mnTan8zJx8NOKtHj/C/GekHBg=;
-	b=ZySopy+ne9vD1BPwkLugrC0w9LiffXZgfnVoysw69YoCc1Yd8A2lGIsKxcfzVDH9JIDW
-	 Fp4geSkEiAO54WnmcEdihmrDhoBE3IFdlHye+bQI7PwgWn+Q/XoE+M/nc+rZ1m0vHIRb/
-	 D8NK+fll8RS1ojBzja5xoaTy54ZcMemKi0gYophAI5vpOOlXiNf0apKnPowY6+khcqEEK
-	 pwuNOnS5FgEKlht6uLvNkrHk74QQ2vNvzWse6x4QoNM/8qDS9qO886sidsiAzcaOCQWsi
-	 mIPmTFPMEnw664WslYVG56mOCUXL8/EVZS59HxYmlxHbgY4/4XBqFji5c/m89BVzMtw==
+	bh=Yw2gO9XL3QanNi7jpRFSX/t+Ag1YoMoaq3Ti9/EqKMY=;
+	b=yJnToL6dPEb+vm/Lgs4AcgrPaypQLBgnP/8Na9cv1EuBKxxqvUpRUu3YwUEMpCM8wZs3
+	 7oBGjKpR1DkQoj+yjKGZfsYU7x3cfiu2NOjsw9Nm8i8rmCa8uzypmm4kjmemmrkhrCf5F
+	 /5MMVqyynFHpNx93gA4FCQxY7b3vNSvwgyr3sKry1enXOw6OSen+q7krTYPbYP1nqTY4w
+	 e71WIW5FWg9W80Ozr+6qzrZtfKt+/mBKJPfNnN/dmCWrSwhWEhOTW6zSxIBW471ragZij
+	 FdhD7qs58YFg7PLGsKyhrq2sLaEyF7EN1fVWnQS8xvCRtF3Gx8htsqFMuBruKqdRlwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IoRSmR+k;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KxFH9toQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E14606A338
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13499606A884
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IoRSmR+k
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E0F1F000C5;
-	Thu, 12 Nov 2026 20:37:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KxFH9toQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7541F000C6;
+	Thu, 12 Nov 2026 20:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794515867;
-	bh=yee+wxcLaXMSXZcwc3mnTan8zJx8NOKtHj/C/GekHBg=;
+	s=k20260515; t=1794515869;
+	bh=Yw2gO9XL3QanNi7jpRFSX/t+Ag1YoMoaq3Ti9/EqKMY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IoRSmR+kSj4t/yBRXD+H8lf//npdr/Xr68eYsaOAz6GDvcFvZ/ZqwhuNzkVL4a1PJ
-	 OidEi1luy3UhjDAlKJ7831WAn0fWy/LDON7P2uQY5kTW6BMrRj8MUQFyjSkDpC/Lkw
-	 gwwBnaUgJsq0dDPVSXukBmMnNo8z/F6EP6ZPI2AbZYVuSc8+uL7z3j1sz3bHHdKCss
-	 dq+t59wspSicDf9lOXft45H2wexa2Ryl3RLGfnhi4PdhKz98oL6TCyTrgFkserg4/T
-	 nwAqkxMdtUqT/xF2p71USeugqkMyBT+A+dBTrCc0/uRHEaW+beBW96U0Bb66pjFfQB
-	 pSxczSib9uYlA==
-Message-ID: <sashiko-outbox-211802@kernel.org>
+	b=KxFH9toQ1aZCGgiWlOxNjazfYj92Kin92TfhRQFwVjl4/zIas4wKqNPfnPowoKUzk
+	 zzqHuzB3XQMakiR+1j90TLR6jZxbCgNhj4XyUZ/EacHloc75At2+pkof3qTLPDMc/b
+	 2+r/n+5B2gYgjt7Ox+qcRnmGQfehEpgPm21vcmiVRFrbxRq+6tazW8nUAiTQEBFB/c
+	 ngkpUnSvWQZ3XWfYgabV4gYGX1qLibs6K9k+1uCKS1KqZLeeECZtahSz1I5ITZ2grN
+	 ht8R+EiGV+0rosu2kmRl+odRTsYEpjGDwlzoUSsp52wn2KlpruZtjbMmzaW4tkFs++
+	 0F+6ynx50P5ZQ==
+Message-ID: <sashiko-outbox-211804@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v25 07/14] mm: keep the RSS counters of
- single-threaded processes exact
+Subject: Re: [RFC PATCH v25 09/14] lib: percpu_counter_tree: test the limit
+ counters
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
@@ -69,12 +69,12 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.o
  Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>, "Alan Stern" <stern@rowland.harvard.edu>, "Andrea
  Parri" <parri.andrea@gmail.com>, "Will Deacon" <will@kernel.org>, "Boqun
  Feng" <boqun@kernel.org>, "Hugh Dickins" <hughd@google.com>
-In-Reply-To: <20261111203626.95838-8-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20261111203626.95838-10-mathieu.desnoyers@efficios.com>
 References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
- <20261111203626.95838-8-mathieu.desnoyers@efficios.com>
+ <20261111203626.95838-10-mathieu.desnoyers@efficios.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 20:37:44 +0000
+Date: Thu, 12 Nov 2026 20:37:47 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -84,79 +84,149 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] mm: clear mm->rss_owner on fork failure in dup_mm() and
-  copy_process()
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] lib: percpu_counter_tree: unreachable subtraction in
+  limit_worker_fn()
+- [Low] lib: percpu_counter_tree: unordered sh->charged sub in
+  limit_worker_fn()
 --
 
-commit 388976e575ede4fc50ab3cc88ddde7c67d80cb2e
+commit ffee3ed89eb2ac6dc7c1033ea104470f2a5faf4e
 Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-mm: keep the RSS counters of single-threaded processes exact
+lib: percpu_counter_tree: test the limit counters
 
-This commit initializes the RSS counter tree lazily when a second thread
-shares the mm, using a plain owner counter and an atomic counter for
-single-threaded processes.
+This commit adds KUnit and userspace hpcc harness tests for
+percpu_counter_tree_limit, along with a stall hook in the userspace shim
+to simulate concurrent updates while an addition carry is in flight.
 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index d9bdaf2bd9984..dc1db6cb5da04 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
+> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
+nter_tree_kunit.c
+> index 12bd5a4bbb459..bd99ab7ca1c07 100644
+> --- a/lib/tests/percpu_counter_tree_kunit.c
+> +++ b/lib/tests/percpu_counter_tree_kunit.c
+> @@ -612,6 +612,177 @@ static void hpcc_test_contended_carries(struct kuni=
+t *test)
+>  		do_hpcc_test_contended_carries(test, 1UL << batch_size_order);
+>  }
+> =20
+> +#define LIMIT_NR_OPS	100000
 
 [ ... ]
 
-> @@ -1550,6 +1550,8 @@ static struct mm_struct *dup_mm(struct task_struct =
-*tsk,
->  		mmap_write_unlock(oldmm);
->  		goto fail_uprobe;
->  	}
-> +	/* The child owns its RSS counters, see __add_mm_counter(). */
-> +	mm->rss_owner =3D tsk;
-> =20
->  	err =3D dup_mmap(mm, oldmm);
->  	if (err)
+> +static int limit_worker_fn(void *data)
+> +{
+> +	struct limit_data *ld =3D data;
+> +	struct limit_shared *sh =3D ld->sh;
+> +	unsigned int i;
+> +
+> +	/* Pairs with the release of started: max, target and nr_workers are se=
+t. */
+> +	wait_event(limit_wq, smp_load_acquire(&sh->started));
+> +	/* Start together, so that the workers hold their amounts at the same t=
+ime. */
+> +	atomic_inc(&sh->nr_ready);
+> +	while (atomic_read(&sh->nr_ready) < sh->nr_workers)
+> +		cpu_relax();
+> +	for (i =3D 0; i < LIMIT_NR_OPS; i++) {
+> +		u32 x =3D limit_rnd(ld);
+> +		unsigned long amount;
+> +
+> +		if (ld->held < sh->target) {
+> +			/* Mostly small amounts, and one in 16 of a huge page. */
+> +			if ((x >> 4) & 15)
+> +				amount =3D 1 + (x >> 8) % (4 * sh->batch_size);
+> +			else
+> +				amount =3D 512;
+> +			if (percpu_counter_tree_limit_add(&sh->limit, sh->max, amount)) {
+> +				unsigned long charged;
+> +
+> +				charged =3D atomic_long_add_return(amount, &sh->charged);
+> +				if (charged > sh->max)
+> +					atomic_long_inc(&sh->nr_over);
+> +				ld->held +=3D amount;
+> +				atomic_long_inc(&sh->nr_added);
+> +			} else {
+> +				atomic_long_inc(&sh->nr_failed);
+> +			}
+> +		} else if (ld->held) {
+> +			amount =3D 1 + (x >> 8) % ld->held;
+> +			atomic_long_sub(amount, &sh->charged);
+> +			percpu_counter_tree_limit_sub(&sh->limit, amount);
+> +			ld->held -=3D amount;
+> +		}
+> +		if (!(i & 63))
+> +			cond_resched();
+> +	}
+> +	atomic_long_sub(ld->held, &sh->charged);
+> +	percpu_counter_tree_limit_sub(&sh->limit, ld->held);
+
+[Severity: Low]
+Can the relaxed atomic_long_sub() on sh->charged be reordered after
+percpu_counter_tree_limit_sub() on weakly ordered architectures?
+
+The comment above limit_worker_fn() notes that a free subtracts from
+sh->charged before it reaches the limit counter so sh->charged never
+exceeds the limit counter.  However, non-value-returning atomic_long_sub()
+is unordered, and percpu_counter_tree_limit_sub() updates the per-CPU
+level 0 counter via this_cpu_try_cmpxchg() without a barrier when there is
+no carry:
+
+CPU0                              CPU1
+limit_worker_fn()                 limit_worker_fn()
+  atomic_long_sub(..., &sh->charged) (reordered)
+  percpu_counter_tree_limit_sub()
+                                    percpu_counter_tree_limit_add() -> true
+                                    charged =3D atomic_long_add_return(...,
+                                                              &sh->charged)
+                                    if (charged > sh->max)
+                                      atomic_long_inc(&sh->nr_over);
+  /* sh->charged sub becomes visible */
+
+This can cause a false-positive KUnit failure on sh->nr_over.  Using
+atomic_long_sub_return() or smp_mb__after_atomic() before
+percpu_counter_tree_limit_sub() in both the loop and the final cleanup
+would enforce the intended ordering.
+
+> +	ld->held =3D 0;
+> +	complete_work();
+> +	return 0;
+> +}
+> +
+> +static void do_hpcc_test_limit(struct kunit *test, unsigned long batch_s=
+ize)
+> +{
+
+[ ... ]
+
+> +	accuracy =3D percpu_counter_tree_approximate_accuracy(&sh->limit.counte=
+rs[0]);
+> +	/* A limit of twice the accuracy, oversubscribed twice: mostly within i=
+ts accuracy. */
+> +	sh->max =3D 2 * accuracy + 1;
+> +	sh->batch_size =3D batch_size;
+> +	init_kthreads();
+> +	cpus_read_lock();
+> +	cpus =3D select_worker_cpus();
+> +	sh->target =3D 2 * sh->max / cpumask_weight(cpus) + 512;
 
 [Severity: Medium]
-Can a failed fork leave mm->rss_owner pointing to a freed task_struct?
+Does setting sh->target to 2 * sh->max / cpumask_weight(cpus) + 512 prevent
+limit_worker_fn() from reaching its in-loop subtraction branch?
 
-Once dup_mmap() succeeds, the new mm is reachable by external
-mmget_not_zero() callers such as userfaultfd or swapoff.  If the fork then
-fails in dup_mm() at try_module_get() or later in copy_process() (for
-example when put_user(pidfd, args->pidfd) returns -EFAULT), both error
-paths clear mm->owner before mmput(), but neither clears mm->rss_owner:
-
-kernel/fork.c:dup_mm() {
-	...
-free_pt:
-	/* don't put binfmt in mmput, we haven't got module yet */
-	mm->binfmt =3D NULL;
-	mm_init_owner(mm, NULL);
-	mmput(mm);
-	...
-}
-
-kernel/fork.c:copy_process() {
-	...
-bad_fork_cleanup_mm:
-	sched_cache_fork_cleanup(p);
-	if (p->mm) {
-		mm_clear_owner(p->mm, p);
-		mmput(p->mm);
-	}
-	...
-}
-
-If an external reference holds mm->mm_users > 1 across that mmput(), mm
-outlives tsk.  A new task allocated at the same slab address as tsk can
-then match current =3D=3D READ_ONCE(mm->rss_owner) in __add_mm_counter() and
-perform unsynchronized non-atomic updates via
-percpu_counter_tree_add_owner(), losing counter updates or triggering a
-Bad rss-counter state report in check_mm().
-
-Clearing mm->rss_owner alongside mm->owner on both error paths before
-mmput() would avoid leaving the dangling pointer.
+In limit_worker_fn(), a worker only subtracts when ld->held >=3D sh->target
+and never frees any held amount when percpu_counter_tree_limit_add()
+fails.  Because the total held across all workers cannot exceed sh->max,
+no single worker can ever reach ld->held >=3D sh->target when
+sh->target > sh->max (which holds on 2 to 8 CPUs for both batch sizes, and
+up to 64 CPUs for batch_size =3D 2 due to the + 512 offset).  Even with more
+CPUs where sh->target <=3D sh->max, all workers start together at
+sh->nr_ready and average sh->max / nr_workers each when the counter fills,
+so once total held reaches sh->max with every worker below sh->target, no
+further addition can succeed and no worker can subtract for the rest of
+LIMIT_NR_OPS.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111203626.9583=
-8-1-mathieu.desnoyers@efficios.com?part=3D7
+8-1-mathieu.desnoyers@efficios.com?part=3D9
