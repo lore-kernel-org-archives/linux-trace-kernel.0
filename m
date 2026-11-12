@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794515864;
-	b=ccjRB7aLDAHo62hNc6uADAYx9ZPqNWTsL3kfbWENIfmgtTJzYttBcPIsSQsO4La637fa
-	 /AqkY0C7tN9dFUyoytRFrapJtWeFOpacsi8iaA6IA5NmzcRgcSZwoIj5IHtP81UaMOhoK
-	 30yDU+/4m3IaKQEm1RO8k/x/hf/rSAk3OiJRZMzh+iFGgpAQzjTAFWjc8aDQxpRN/WakL
-	 UvY7K1LuSXoXu1ccYm1qM/q6yKajlUp1h0wBfusN5xAuf6JckZpGN2E/YM+EYevi8IQ7l
-	 hc84P8NLlmLKTAvrLGBvLDoT+HoyQR4cljHC0mIkN6k4d3MhLKg71kF3rs1Lmtle0Zw==
+	t=1794515867;
+	b=Cgl8nY2rdtxzp0slueIb+I+Ctl5bbYA/NdsNnF5uHLTTIS0P3r5+JL5ZuOokd11YXWYm
+	 MTW/4wxFzBbK2K73z5j0HigX/TIfuDqurfgBWRGTX77K57+thqE1IK0y1q9xwqNb7TXgj
+	 zjZCfm1WXVdv1ob6+T8E5SWJW0WrLbRdDqpxgBOve2yJPssG3UeR6wCqwkODmKb4SJRxF
+	 0LuduszT2I+ae/rdN4I2PJm/4hajnx+40/A38q6atNkedaTnY3wtJaFAcwPt8sAKyYhfm
+	 Buq7q0Jvr8acH2FNhce820z4xOVgVLwV3Ft6tUWZzUk1z5tDNg7n/2wpHmYT7m4kRAw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794515864;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794515867;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=KtLiidr5VBC14PgQKVf13G9N3QIxkXRWFwpONObXDvg=;
-	b=3ebMbQPBTRRrdJMjN8HVe5f16n3w3BR7WPpPhyVEK7bKNHpgUSSR2qAEKMSUrwZqoR22
-	 rZaw/fJQvZx1Kwu/AngfJr7BHVEyF9dcBdwKvWmERa/qL912giWOZRZL9RgQsmxggVELY
-	 hBAv0aC6jnsayUupbkcYWV1yBdWBqpmVWxqZInbpqJwwb77jT0jYb7AT2GUAhWmMMY6Wn
-	 7RS6DU382eEYTXOJ8eWtgHEh0NW8fd6QBHwC3hPxT3Ph8BpoJcjOGzmV/x8S01vdEs9K9
-	 Zrzgf7qLwSXwH49tN9w/Tw0r2lzWpIr4GxMmFzDFos0g5mh+7aDqAOcqh+b7gMW2Zfg==
+	bh=yee+wxcLaXMSXZcwc3mnTan8zJx8NOKtHj/C/GekHBg=;
+	b=ZySopy+ne9vD1BPwkLugrC0w9LiffXZgfnVoysw69YoCc1Yd8A2lGIsKxcfzVDH9JIDW
+	 Fp4geSkEiAO54WnmcEdihmrDhoBE3IFdlHye+bQI7PwgWn+Q/XoE+M/nc+rZ1m0vHIRb/
+	 D8NK+fll8RS1ojBzja5xoaTy54ZcMemKi0gYophAI5vpOOlXiNf0apKnPowY6+khcqEEK
+	 pwuNOnS5FgEKlht6uLvNkrHk74QQ2vNvzWse6x4QoNM/8qDS9qO886sidsiAzcaOCQWsi
+	 mIPmTFPMEnw664WslYVG56mOCUXL8/EVZS59HxYmlxHbgY4/4XBqFji5c/m89BVzMtw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jnvEyjYh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IoRSmR+k;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5C5606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E14606A338
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jnvEyjYh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F4E1F000C4;
-	Thu, 12 Nov 2026 20:37:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IoRSmR+k
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E0F1F000C5;
+	Thu, 12 Nov 2026 20:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794515864;
-	bh=KtLiidr5VBC14PgQKVf13G9N3QIxkXRWFwpONObXDvg=;
+	s=k20260515; t=1794515867;
+	bh=yee+wxcLaXMSXZcwc3mnTan8zJx8NOKtHj/C/GekHBg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jnvEyjYhH510uW4MKIXNvaU9dtuncx+lTjfCm23DYoH31UutWiVa9ZhdpjrV5z5vo
-	 dHGoIUBMA4kJXoUrZV5aZXd/PhZtx9t7lI7AihbAdB17YJxlIrQWlNTq+8MUiTDIOw
-	 PYluf7eiiCWUyZGZw/Wh8pBO1c9gBQXzszi2yiZjIiWnPPb5MSiWWsNnEaNkkjqO9o
-	 uST0GOo0T78AJn4whWqdrOqFljsJHbUbBpyqhkhPl4Sk0Cj7o2bdeUwl4iFE8yGMUp
-	 H/m3+EksQSs1UGP03oOa2L/s62YS8R015WDnFaAtecubtZd+VhqASudwmm2N5NfwxX
-	 n8UrRz0AdqshQ==
-Message-ID: <sashiko-outbox-211801@kernel.org>
+	b=IoRSmR+kSj4t/yBRXD+H8lf//npdr/Xr68eYsaOAz6GDvcFvZ/ZqwhuNzkVL4a1PJ
+	 OidEi1luy3UhjDAlKJ7831WAn0fWy/LDON7P2uQY5kTW6BMrRj8MUQFyjSkDpC/Lkw
+	 gwwBnaUgJsq0dDPVSXukBmMnNo8z/F6EP6ZPI2AbZYVuSc8+uL7z3j1sz3bHHdKCss
+	 dq+t59wspSicDf9lOXft45H2wexa2Ryl3RLGfnhi4PdhKz98oL6TCyTrgFkserg4/T
+	 nwAqkxMdtUqT/xF2p71USeugqkMyBT+A+dBTrCc0/uRHEaW+beBW96U0Bb66pjFfQB
+	 pSxczSib9uYlA==
+Message-ID: <sashiko-outbox-211802@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v25 06/14] lib: percpu_counter_tree: add lazy tree
- activation
+Subject: Re: [RFC PATCH v25 07/14] mm: keep the RSS counters of
+ single-threaded processes exact
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
@@ -69,12 +69,12 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.o
  Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>, "Alan Stern" <stern@rowland.harvard.edu>, "Andrea
  Parri" <parri.andrea@gmail.com>, "Will Deacon" <will@kernel.org>, "Boqun
  Feng" <boqun@kernel.org>, "Hugh Dickins" <hughd@google.com>
-In-Reply-To: <20261111203626.95838-7-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20261111203626.95838-8-mathieu.desnoyers@efficios.com>
 References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
- <20261111203626.95838-7-mathieu.desnoyers@efficios.com>
+ <20261111203626.95838-8-mathieu.desnoyers@efficios.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 20:37:41 +0000
+Date: Thu, 12 Nov 2026 20:37:44 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,72 +86,77 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] lib: percpu_counter_tree_kunit: lazy_race_fn() serializes
-  remote updates
+- [Medium] mm: clear mm->rss_owner on fork failure in dup_mm() and
+  copy_process()
 --
 
-commit 5130476e081ef221464be8ba2bb48a1905d08dcd
+commit 388976e575ede4fc50ab3cc88ddde7c67d80cb2e
 Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-lib: percpu_counter_tree: add lazy tree activation
+mm: keep the RSS counters of single-threaded processes exact
 
-This commit adds lazy tree initialization and activation for hierarchical
-per-CPU counters, along with KUnit and userspace tests.
+This commit initializes the RSS counter tree lazily when a second thread
+shares the mm, using a plain owner counter and an atomic counter for
+single-threaded processes.
 
-> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
-nter_tree_kunit.c
-> index 5774278ea1403..12bd5a4bbb459 100644
-> --- a/lib/tests/percpu_counter_tree_kunit.c
-> +++ b/lib/tests/percpu_counter_tree_kunit.c
-> @@ -796,6 +798,225 @@ static void hpcc_test_saturated_compare(struct kuni=
-t *test)
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index d9bdaf2bd9984..dc1db6cb5da04 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
 
 [ ... ]
 
-> +static void lazy_race_fn(struct work_struct *work)
-> +{
-> +	struct lazy_race_work *w =3D container_of(work, struct lazy_race_work, =
-work);
-> +	struct lazy_race_shared *sh =3D w->sh;
-> +	long sum =3D 0;
-> +	int i;
-> +
-> +	for (i =3D 0; i < LAZY_RACE_NR_INC; i++) {
-> +		long inc =3D (long)(get_random_u32() % 65) - 32;
-> +
-> +		if (i =3D=3D LAZY_RACE_NR_FIRST) {
-> +			/* Fully ordered: the first updates are visible before the pause. */
-> +			atomic_long_add_return(sum, &sh->first_sum);
-> +			atomic_inc_return(&sh->paused);
-> +			/* Pairs with the test's release of go. */
-> +			while (!smp_load_acquire(&sh->go))
-> +				cond_resched();
-> +			if (!w->owner) {
-> +				mutex_lock(&sh->activate_lock);
-> +				if (percpu_counter_tree_activate_many(sh->c, 1, GFP_KERNEL) ||
-> +				    !percpu_counter_tree_active(sh->c))
-> +					atomic_inc(&sh->activate_errors);
-> +				mutex_unlock(&sh->activate_lock);
-> +			}
-> +		}
-> +		if (w->owner)
-> +			percpu_counter_tree_add_owner(sh->c, inc);
-> +		else
-> +			percpu_counter_tree_add(sh->c, inc);
+> @@ -1550,6 +1550,8 @@ static struct mm_struct *dup_mm(struct task_struct =
+*tsk,
+>  		mmap_write_unlock(oldmm);
+>  		goto fail_uprobe;
+>  	}
+> +	/* The child owns its RSS counters, see __add_mm_counter(). */
+> +	mm->rss_owner =3D tsk;
+> =20
+>  	err =3D dup_mmap(mm, oldmm);
+>  	if (err)
 
 [Severity: Medium]
-Does acquiring sh->activate_lock in every non-owner worker right after
-sh->go becomes true prevent percpu_counter_tree_add() from ever racing
-with percpu_counter_tree_activate_many()?
+Can a failed fork leave mm->rss_owner pointing to a freed task_struct?
 
-Because both the main test thread and all non-owner workers serialize on
-sh->activate_lock immediately upon release, the first caller to take the
-mutex finishes activating and publishing the tree while the remaining
-non-owner workers wait on the mutex.  None of the non-owner workers can
-reach percpu_counter_tree_add() until activation is already complete, so
-only the owner worker's percpu_counter_tree_add_owner() calls actually
-race with tree publication.
+Once dup_mmap() succeeds, the new mm is reachable by external
+mmget_not_zero() callers such as userfaultfd or swapoff.  If the fork then
+fails in dup_mm() at try_module_get() or later in copy_process() (for
+example when put_user(pidfd, args->pidfd) returns -EFAULT), both error
+paths clear mm->owner before mmput(), but neither clears mm->rss_owner:
+
+kernel/fork.c:dup_mm() {
+	...
+free_pt:
+	/* don't put binfmt in mmput, we haven't got module yet */
+	mm->binfmt =3D NULL;
+	mm_init_owner(mm, NULL);
+	mmput(mm);
+	...
+}
+
+kernel/fork.c:copy_process() {
+	...
+bad_fork_cleanup_mm:
+	sched_cache_fork_cleanup(p);
+	if (p->mm) {
+		mm_clear_owner(p->mm, p);
+		mmput(p->mm);
+	}
+	...
+}
+
+If an external reference holds mm->mm_users > 1 across that mmput(), mm
+outlives tsk.  A new task allocated at the same slab address as tsk can
+then match current =3D=3D READ_ONCE(mm->rss_owner) in __add_mm_counter() and
+perform unsynchronized non-atomic updates via
+percpu_counter_tree_add_owner(), losing counter updates or triggering a
+Bad rss-counter state report in check_mm().
+
+Clearing mm->rss_owner alongside mm->owner on both error paths before
+mmput() would avoid leaving the dangling pointer.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111203626.9583=
-8-1-mathieu.desnoyers@efficios.com?part=3D6
+8-1-mathieu.desnoyers@efficios.com?part=3D7
