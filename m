@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794492894;
-	b=Tl36LLpj1QBVTd7S9Qgo8P2d+7GlJmxzA8OfytPrtjTRd/AbGA+V78mN7VyBKXMBfgpo
-	 a3xAZbAAtSwbHxOPYGGIkjwptxkDVnL0fvCOiMBmVrtj0ypPR3Ou/0z+ugOzce2F6Q/sJ
-	 QqmXzKFxpMSWEdQvkELZ8GLJXH4x/7+e7a12XA2zEkZj5YHDE0WbqUg5+aVGwiqag63W1
-	 tC7OgbC+kd4lZbVguEDyehpyiHjjZoszMqeMr67cXX7LKddXo21bCBYMcyHOUwE917bHP
-	 dcjzu+9sF7AMkas289auleQI0+QySOGhTfM40HBclUXi7zaSaUJUfr84vxdROTl8oZQ==
+	t=1794492895;
+	b=eWyMwp3Wd+H3E/5EI3dtYJIJ+q9fACSiu6D2cWF2pDRoTEpiiV5il7csLm7ceKJuf2ob
+	 aeCUvI4fAWZHmX4E0E0oxIIo9VQODYuq9SfqlTyPNv1U+KIk9fVO5NoJ6G+l7oelATQis
+	 DSNUcsX87sDRIn5F/otKh8XdNvjnhBl2dSmDQ2V3oBBoaAcQi9WKG/K/PMoBilvm0u1rR
+	 XGJbwnWhkpnU+XsU9nODt6JIjnX8pBF4NotdVuzIV/ebQao9iqg5PClJ0BVrfFMd3fCBv
+	 tTBi91yy1eprU18eUwo/UsFgjFF5TLesN/rRqLc67zvCk9wRqQkG1PWMs6ItL2tvwjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794492894;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794492895;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=xAClSiqpxgiWtN6dUqngBZJDx0kh28kPHWYf1nhrDXA=;
-	b=HKEaty60RniTKnbIYgIq2pPr0UCZ5oXYCOxZaVKNks3Co8mxK3A/cyUA2252rCmjILMF
-	 95eyYqkDI2P9dHpgiL9HeKoQfuqhRrY4DTNec1kci4Gmo4x4cafW+8bEBrub55nwdBTWy
-	 1+9P2uEsBIdOEMYknmnWuVPyZQ1wuulPBzDfi1+PTZe5QIRKh/Qpa5tdn1pkAm7sXNhCD
-	 oS5oilMO6azc+Sk1hpPNSZAGoqSC/AoMOB9l13DZMslU/cy+v4j3tWeN6YCbd0B7N+pEq
-	 5rGiKYjeTQinhPmkySIQ2yoI94TCgtTt3spjn8es0Fi7LRMYqECuqx8ciysZA55iNRQ==
+	bh=nOnTfPlOL03qOmHIzh6thEjDQQkJdnopMg7V/l7FapQ=;
+	b=GtVIwQ/rIosOBKTf9NyGIbvyvxYBQkVmXt3OBMnKymMopxjlsgVQFKoloQlapFkjQ2la
+	 wX2HX0aJ5KWYkOh20CG0q8P567JG5mf0t8Wb+gfw55TQxdnhVvXD4gHEUGk8Rb1ZbTbQS
+	 ysYI9lDF3tfeBDG+1WE/qn5/sQroMHvq0pO1YoA88gkK+enQEy78f+BpHAbxoW5hQLG9a
+	 LD0nKaUGNDLV/l1DlWilbbQ5J6ELTw3ok8o0uqAjfudHGTabXopQW5kBJQrQmP3k8GamV
+	 IplCrj3DepDAaK5P18GeDUqp5Yb+BLxhc5ncIM6lK+B0KLFduRSHxCDvIBti/T6RA1Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jfrnVgTz;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZyzCL0KH;
 	arc=none smtp.remote-ip=209.85.221.70
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4D6606A33E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:14:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C4D6606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51357606A8AD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:14:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51357606A8AD
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jfrnVgTz
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-49034831bb3so3692346f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 06:14:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZyzCL0KH
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4931c89d228so2918210f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 06:14:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794492893; x=1795097693; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794492894; x=1795097694; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=xAClSiqpxgiWtN6dUqngBZJDx0kh28kPHWYf1nhrDXA=;
-        b=jfrnVgTzpxLUTf/eoqYwvOS2cAv8xZz8nodQW6ZnOEkjIqMsKK4HwbX/AnnnP9uFa3
-         fjJ49ZWwutbFXu0cKoML/jqLSjljRv/B7n8VsCpnuymjV57R+pj1L49nqUgzWiU1AuVA
-         /eLPWVmcEewRSMj0OTTkezz89TJbNUwpnsazNv9gdOEVQee8s7yjwepxaTCBPXYc4acs
-         jHsymJXwk9Z/NelXTT1L0yQn6Am27pOkRbeeKrKwDHO1weQ9m/7NoTSKKb9fV9MKi6Q9
-         fDnhCEct5mNFMIri322dAkKoDQwQJbIXvtQF8d1ZkiGHsVrP/ipAFqReRfw2tHXT7Hpk
-         5FkQ==
+        bh=nOnTfPlOL03qOmHIzh6thEjDQQkJdnopMg7V/l7FapQ=;
+        b=ZyzCL0KHYmPmV1rv1fa56vVy/dEPis6EwEF3uqKSca8RkkiNnLxY/Bm8eOY9ffwQm4
+         RxveEMoq/wkjeLR54UtRoKMH0gWCcAekuoOgrnxktjWaiLA+VRFG8vLUEd4HI2lDzIVS
+         W+XBNOPvaodQFvLnKmVurVBYRokWifVamJQAxqWClUCRWEwnEk4jTET10wuhaEs1kPL9
+         neDxH5kkBLNu9YJyBIQCFAe9UreEnXQER996j1HFSNaCZeN+mHAm4KwDxePgWbg9SIML
+         b+ymMn6cfQ8JhAzVvpUivJt6CTU8pb/BzyID1StdA2ofRKtbhlNoal3bn1AZOLxpPF9f
+         Gi/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794492893; x=1795097693;
+        d=1e100.net; s=20260707; t=1794492894; x=1795097694;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xAClSiqpxgiWtN6dUqngBZJDx0kh28kPHWYf1nhrDXA=;
-        b=n5K5SG0fB74NIgvmPd89gbaZ9S/XWKwa5mZSp3r4bpXuLF9MIYFZX9Zry078p5bAE+
-         WWGsDzI4v8PLz9RUSZVoqJrxMsq8WVEW3CpFgqbmbgY6XaK27k9VhtkUCSDuyyU+OlUH
-         Pfn0D09Wct27yav23ZkZgPnOcwhG1XsYdek9BXCvPMIO8Qbhv00SEAqnBwbdujLvIyaJ
-         h/SR9DDU7AUB/nMfwZvdLSRn9RutiTtuTGxKhe6w0CxFjBWuw9888oYB2+XyjXrRpwPm
-         2jTRbM7JPfl8c4AE/Q53H2UqQHBuvYNfZ+Q2Aq362x1XTbSDxR2nIU5jkOGpUhYmUvUU
-         0PvQ==
-X-Forwarded-Encrypted: i=1; AL+hErGAIXHX2IaAGslmyIkR5mRJ4r1jn/9dQ6BfN9BK52PLIWuPCXXdxIBl6e9YxC2FkBcLOSXcpSsqZobFrrZik2kuoEA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8BvLHDWHbkD5qUchZsmhQ6I4Mr8ZDnob+8Xp4/5HVt3CQOJH2t
-	yvgn0hBiDsbeZs9h4+NYQXomQ4WUE4eElAvkV278C9/PyUskhbWcJ5oqHXF0qw9Hx7kvesJ5uou
-	spqXOrhTe+wT/X2/e3odG+g==
-X-Received: from wrol12.prod.google.com ([2002:adf:f48c:0:b0:48e:55f9:4a97])
+        bh=nOnTfPlOL03qOmHIzh6thEjDQQkJdnopMg7V/l7FapQ=;
+        b=ssFhodMudrf5FJ9CxFbSpxfk8yUyUHAmAzyXOrJX08fS9i0QzZTh9NpYLkDIz56U0U
+         AIgpAflYcSO4fTziQQaDpb3Kv3j0ccQfTP20/9p8+CBd2lHpb1sL6so4SaKmNIyAYEub
+         EwFR9ZEUK9zLJ+nXNNLyc9Cp+Gk6qZt/M8JSYp2yzmVwSzZPxe+C/YVn/ufi5O/s+c9K
+         lBl4lxXZiPwiRn9bNkihOAMivokUkmJeicPlFfKXniWmd0tlNb5sqKM9o590lw8QFCk7
+         Xv4L6E5HS2jGlqPQN/vEkVtM+EKN+4H81Echugk9Q30HmGxdZ6+KabdS702uzZxHzsMV
+         wyEg==
+X-Forwarded-Encrypted: i=1; AL+hErGmGZuPzT5hSp7hXra9fqdZdU0KnPA5uo7ggy4Gd9kUrSFrjinboGaQUu0Cm9dCi2Orcx5xyhpUfN+bhjUERy6jisI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z90OZMk+lsXHnofidaAhx7gcJ+eQjxDLZdQ47bZaLw93fh5H7nW
+	wfoT9+vwtqmE6bF9YkJtjfvTZq6VRmRtal7BdbZAwJNwYbUtQ2e2OIaDYvFwH7NvPjifiNvn1pW
+	ylzsCZAIZEoJ2dS77fTiJew==
+X-Received: from wrpb11.prod.google.com ([2002:adf:f24b:0:b0:48e:1312:61f9])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4013:b0:48e:d27:bef2 with SMTP id ffacd0b85a97d-499c77414eemr9585917f8f.21.1794492892370;
- Thu, 12 Nov 2026 06:14:52 -0800 (PST)
-Date: Thu, 12 Nov 2026 14:14:34 +0000
+ 2002:a05:6000:25c6:b0:491:6c24:65f5 with SMTP id ffacd0b85a97d-499c5e3c13dmr10477013f8f.17.1794492893477;
+ Thu, 12 Nov 2026 06:14:53 -0800 (PST)
+Date: Thu, 12 Nov 2026 14:14:35 +0000
 In-Reply-To: <20261112141440.3050124-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261112141440.3050124-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.0.567.gdb80ae8cd5-goog
-Message-ID: <20261112141440.3050124-4-vdonnefort@google.com>
-Subject: [PATCH v1 3/9] ring-buffer: Hold buffer->mutex in trace_rb_cpu_prepare()
+Message-ID: <20261112141440.3050124-5-vdonnefort@google.com>
+Subject: [PATCH v1 4/9] tracing: Cache ring_buffer_max_event_size() for trace_marker
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -90,77 +90,42 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-ring_buffer_reset() walks buffer->cpumask twice across synchronize_rcu()
-under buffer->mutex. If trace_rb_cpu_prepare() adds a CPU in between,
-the second loop resets an undisabled buffer.
+write_marker_to_buffer() calls ring_buffer_max_event_size() twice
+without synchronisation against ring_buffer_subbuf_order_set(). If
+subbuf_order grows between the two calls, cnt may expand past
+TRACE_MARKER_MAX_SIZE. Read the maximum event size once so cnt can only
+shrink, and drop the now-unreachable WARN_ON_ONCE().
 
-Hold buffer->mutex in trace_rb_cpu_prepare() to synchronise it with the
-ring buffer reset instead of locking the entire hotplug path. As a
-consequence, the cpus_read_lock() in ring_buffer_subbuf_order_set() can
-be dropped. The one in ring_buffer_resize() still stands because it
-schedules insertion or deletion of ring buffer pages on each CPU.
-
-Fixes: b23d7a5f4a07 ("ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU")
+Fixes: 2808e31ec12e ("ring-buffer: Add interface for configuring trace sub buffer size")
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/ring_buffer.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ kernel/trace/trace.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 32d3c47dbdf0..80f500ffd7ac 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2824,10 +2824,10 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
- 
-+	mutex_init(&buffer->mutex);
- 	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
- 	init_waitqueue_head(&buffer->irq_work.waiters);
- 
--
- 	bsize = sizeof(void *) * nr_cpu_ids;
- 	buffer->buffers = kzalloc(ALIGN(bsize, cache_line_size()),
- 				  GFP_KERNEL);
-@@ -2923,8 +2923,6 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	if (ret < 0)
- 		goto fail_free_buffers;
- 
--	mutex_init(&buffer->mutex);
--
- 	/* Persistent ring buffer needs to flush cache before reboot. */
- 	if (start && end) {
- 		buffer->flush_nb.notifier_call = rb_flush_buffer_cb;
-@@ -3330,8 +3328,9 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		return 0;
- 
- 	/*
--	 * Keep CPUs from coming online while resizing to synchronize
--	 * with new per CPU buffers being created.
-+	 * Insertion or removal of pages in a ring buffer is scheduled on its
-+	 * own CPU if online, so cpu_online_mask must stay stable. Must be taken
-+	 * before buffer->mutex.
- 	 */
- 	guard(cpus_read_lock)();
- 
-@@ -7475,8 +7474,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	if (psize > RB_WRITE_MASK + 1)
- 		return -EINVAL;
- 
--	guard(cpus_read_lock)();
--
- 	/* prevent another thread from changing buffer sizes */
- 	guard(mutex)(&buffer->mutex);
- 
-@@ -8077,6 +8074,8 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 	if (cpumask_test_cpu(cpu, buffer->cpumask))
- 		return 0;
- 
-+	guard(mutex)(&buffer->mutex);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e8c4efa8107b..f44bde7c51b7 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5962,15 +5962,14 @@ static ssize_t write_marker_to_buffer(struct trace_array *tr, const char *buf,
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
+ 					    tracing_gen_ctx());
+ 	if (unlikely(!event)) {
++		size_t max_event_size = ring_buffer_max_event_size(buffer);
 +
- 	nr_pages = 0;
- 	nr_pages_same = 1;
- 	/* check if all cpu sizes are same */
+ 		/*
+ 		 * If the size was greater than what was allowed, then
+ 		 * make it smaller and try again.
+ 		 */
+-		if (size > ring_buffer_max_event_size(buffer)) {
+-			cnt = ring_buffer_max_event_size(buffer) - meta_size;
+-			/* The above should only happen once */
+-			if (WARN_ON_ONCE(cnt + meta_size == size))
+-				return -EBADF;
++		if (size > max_event_size) {
++			cnt = max_event_size - meta_size;
+ 			goto again;
+ 		}
+ 
 -- 
 2.56.0.567.gdb80ae8cd5-goog
 
