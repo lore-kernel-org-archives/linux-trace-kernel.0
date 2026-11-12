@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446884;
-	b=4YSn5hJc2YFQQZvL1086YLNZwI56eRIpIQS18cUhybmxfXSFbVVTLTG0aglBdOwRmqFd
-	 Ae2GSiP1oQs5j68YrzSjOsqCvBhWhQZioZjqzQ9gRqaeEeoazW3/qHt4vHoMcFkYI+tbM
-	 4hZzJ0VLaoyG180nHnjKe7rKE1kgpHlyVl/rU21m/vvpaLc10HX5BEjq8c/6g+Cy1mPgk
-	 zH9F2ZnxGKq29qwyjtoPlKnz6j7jrzChnXKnXjLKLt7H/s9qe/ZemI7fNFHaTw/hMkDnf
-	 s0d/K/1zAIQMhQsqDJfuN+7wl+XgcXYzXLgT1Et1whDerJaP/xRiUixGIt2GgaF8AHw==
+	t=1794446893;
+	b=GOGx1NtxJdPFLCLarOqkwu+usyEJsopXcNPHuNw0ffO76BReU9j3bhNQCnjG4nXKl7lJ
+	 tc5sImlMMWHOtGj5BLqSzA04+YrNrc/48CwtBySgPzHYQXcDFXJSbEsABBFKDiWgIVRDz
+	 EmevxoEY0ziZho4I/tSyl8P/484SG+sdsHMV2LuEeDpdi71yjz6Ysa8QPulOtQPeXfM5F
+	 6WtvB2cb6iyp8i5ezgpKpZORdsJk6twXSFBH3nKsfJNBqKpGMdEnClUBL194NAlDgny1E
+	 /rW/gVHmSLV4BRkSrcaO82q1j1ULjhVuKndCaJvjGdXpHGS5EjCWW5+zxO00kCJSpaA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446884;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446893;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=z9GgusmlU10VYCUu7LsiHTqFJ2RVaMIYAS6xl76o+Fs=;
-	b=LXbK1sxfH7tS8FBz6ndQHtInI7nvO5oJsrogcNRko2NQGb8Q6/5PFiSTGQehfeJ1uM1A
-	 i3s5JF1oJ6ECcY5T+7pmijDoZriBS9AspYSHvmuaw5yk5YlduaCcInFaOy3HmS/BWU9rx
-	 KOSIcom8HYDjZF94yas1H5RbETQA2HSgRpHjrWU2vf+lt0DeKbLwlh2SLTPcge+IBLVCK
-	 16ZxuG3gKjA2aS0vzMwpZeTzjHD0qWXwqzWgI8ZMSKvpSq3I6PdOBOyAQe4XB4ZZx1oY+
-	 5glQqGIXDHsrA9IDPrZONOEPxWQMrCDkd2Gr/cSk8Dw9+li/HhiC1VnbZ8XmdKXfxUQ==
+	bh=rWWW59Q/ezlTNLCcJslwzdBdYcLA3PiSzf5gryNJ8hM=;
+	b=GwhPhSoBMOAX68RX4xldABT+igBvTI/LhC1+KORf21y3dosljJYJsMVXkn8SJXiTcaax
+	 KL7NcN/tJ36DpqtY+Yfatb/SVqlDV7EMxSydsTHnS/6nvzxAlLJrWGkzgsE8IugFLp5Sz
+	 caBFHVdoIveri+7yPyZhz7kIc4vWSinv8moM+ovx2fq8AmctFAt+C3b/xT+W8YviS2rRj
+	 Q0KU6VUfryz6dn03mXVuOWVB6l8BrkgBokriurWyyFZGRXhLM/zQCEMePuMl9K+htrhMk
+	 F1MJsMphR9HlffS63HxWr0KHJ6l9ckfztFBJ47lyKDxpH3GvG7AVWnlVR7UPAWUEq0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VtbnvNxS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FYG33QPd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4615606A321;
-	Thu, 12 Nov 2026 01:28:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F907606A31C;
+	Thu, 12 Nov 2026 01:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VtbnvNxS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24911F00A06;
-	Thu, 12 Nov 2026 01:28:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FYG33QPd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2111F00A05;
+	Thu, 12 Nov 2026 01:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446884;
-	bh=z9GgusmlU10VYCUu7LsiHTqFJ2RVaMIYAS6xl76o+Fs=;
+	s=k20260515; t=1794446893;
+	bh=rWWW59Q/ezlTNLCcJslwzdBdYcLA3PiSzf5gryNJ8hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VtbnvNxS4Gn/l32oMwCwscqL/809xVZdXvvzVEepX6u13cOO2tNoeOUaLopeUP/I/
-	 R9PVH3Rj4u3nAKASM9DV5n5Hoe8SeAotJmcuvrtmmc0hhi8r78Rg/bnyFnnsCaDMN7
-	 6iN1H3b2vK7fyOTg+mb26LpAVqJaKuMvB9gnRzFRpsOTMNLFfZ/I0H6H9JY6KUtnIv
-	 h8HPI0DARDRBoDsMOxQIu2xamGq8wRwy4qKAIenogZxQvizBzTEX0regrE5Cz7L+PA
-	 dhS+9zpMHCMHCTqt1y7Aj0hspFiS0R/hDhvD5geU997s9Ptru+AEFFPJhiqXnqM+kw
-	 4ozH+08y8HJyA==
+	b=FYG33QPdMkpvypdKUkWrflaPpCnOqw+eV0WlGVAHKLCl+FwV8vgJz9d3D7D5fa83I
+	 s4OriUtGXH21UGHsLHrJEBX8C2Y2xD3JtQaxUN3SAYxvmx6SjqCgV/D65pae0Tb5R+
+	 R1FkVBUJAptFmkIOtpIytmHmjWM2wyTCpDfzMN9sy6g3cV8hlKVbgcGQFGSTv39Lc9
+	 Uuzb3QChfkqYwWArvzDhl1r8OBHlVVoxZx17YEMhpBbBBCgUE+yBX8CY6upHmQlPYw
+	 shA7IqOY+4pcVioooaVbat2lFBoMXjJ+6gR6E1QRH1lye/OXqeiQP2ZJb9CkVWGuVc
+	 QR+Q5m3d07jYw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 09/13] tracing/uprobes: Fix memory leak of tail in __trace_uprobe_create()
-Date: Thu, 12 Nov 2026 10:28:00 +0900
-Message-ID: <179444688044.345731.12892767299503363577.stgit@devnote2>
+Subject: [PATCH v2 10/13] tracing/probes: Allow symstr type for function entry arguments in return probes
+Date: Thu, 12 Nov 2026 10:28:09 +0900
+Message-ID: <179444688986.345731.2259328518477342348.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179444679892.345731.5271591537517106679.stgit@devnote2>
 References: <179444679892.345731.5271591537517106679.stgit@devnote2>
@@ -67,45 +67,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When generating a default event name in __trace_uprobe_create(), tail is
-allocated with kstrdup() without __free(kfree). If the subsequent
-kmalloc() for buf fails, the function returns -ENOMEM immediately and
-leaks tail.
+Function entry arguments accessed in return probes ($argN or BTF entry
+arguments) are fetched from the entry data buffer via FETCH_OP_EDATA,
+which was omitted from the allowed operations for the "symstr" type and
+rejected with BAD_SYMSTRING.
 
-Declare tail with __free(kfree) so it is automatically freed on all
-exit paths.
+Allow FETCH_OP_EDATA to be formatted as "symstr".
 
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/all/sashiko-outbox-204240@kernel.org/
-Fixes: 97e8230f89a3 ("tracing: uprobe-event: Allocate string buffers from heap")
-Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v2:
- - Newly added.
----
- kernel/trace/trace_uprobe.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/trace/trace_probe.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 14ac52aebe34..fb7991543db7 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -701,7 +701,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	}
- 
- 	if (!event) {
--		char *tail;
-+		char *tail __free(kfree) = NULL;
- 		char *ptr;
- 
- 		tail = kstrdup(kbasename(filename), GFP_KERNEL);
-@@ -717,7 +717,6 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 			return -ENOMEM;
- 		snprintf(buf, MAX_EVENT_NAME_LEN, "%c_%s_0x%lx", 'p', tail, offset);
- 		event = buf;
--		kfree(tail);
- 	}
- 
- 	argc -= 2;
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 9be546f12053..f0837db354a9 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1959,7 +1959,8 @@ static int finalize_fetch_insn(struct fetch_insn *code,
+ 		if (!strcmp(parg->type->name, "symstr")) {
+ 			if (code->op != FETCH_OP_REG && code->op != FETCH_OP_STACK &&
+ 			    code->op != FETCH_OP_RETVAL && code->op != FETCH_OP_ARG &&
+-			    code->op != FETCH_OP_DEREF && code->op != FETCH_OP_TP_ARG) {
++			    code->op != FETCH_OP_DEREF && code->op != FETCH_OP_TP_ARG &&
++			    code->op != FETCH_OP_EDATA) {
+ 				trace_probe_log_err(ctx->offset + type_offset,
+ 						    BAD_SYMSTRING);
+ 				return -EINVAL;
 
