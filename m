@@ -1,56 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794480375;
-	b=vLLCAhSo0WBBoQYS119rqklThdcsDJnS0L6GOPWUsxlXinicfBX/drCfmWSLhhQZjQ0I
-	 jx6H53vz2pnCsg0Uzk8apgQxEiUs2/HLX+Ri3OoWB+QM49XzjyauzdvcdHL8QxheITfri
-	 Q4zLE9633TJsu45fPJBpBtfzZEVPXh0CEZLqfR+hb1X4NkcnJe0CrtA9wTQPm0pZ5Ut8d
-	 6YZcxEgbwXw+eVgFuE6S04CWHH/g9VA3gdq+jjd6SEoSec09SwfFwmVf5o+81stN4L4Xs
-	 uyoct5nk09FtnGieHCk9SdhVolRDgesrmYzzsnRM7R+MkMltf9sULxldGWAHwziF3bg==
+	t=1794480598;
+	b=fvNRAsmJNRv/NSNood4eQPYO+ErlkKKMTgjN5XxZeTgXaDR3g+20i9hKwYVmErh1oW6y
+	 /xwQyrtVq+qkzAucDOxGbYAnMEa0Tz0yTrKxtq92S73j/1H7Qk3o6rIFqXD37XLvucn4v
+	 mI3Xe0mn6TCviExVhDyx0+RPzaZjvNM4Vat/g8BceHn1bUj3y5k9poeN3IdWeowHILrE6
+	 xvxEmBHmOR2en2EQ/n/3fxhYjfBalrbh0qYDeu2fhqTywTrujcYGWt0vblEYwTKlzC8SD
+	 A+eYClKiNnqI07bE4kZtCempeAv6q6ALROKrjkuWVHiBc7C76LrUnPvHi8C1dzD3pmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794480375;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794480598;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=4jX3n0IQNsJJSebGl5jsOUkEUs41MB88RY8wsSX2rZ8=;
-	b=t1kYpbC4dee/ZBkwHtSDsX3ipl1rtvUvH6Mm0waVpa7lhJAF7kUsBzj+dGEsQBhrpJEM
-	 kuZV52qEFkxHd27VoSpMp/nEUPS/tZfG73Q3Bylwz5XS5aoyTxi8u8xv+L3MSbgolksDN
-	 2xXTjm91b2tkDqVcnibROEym0giIp4mvX28uiA/xglQFsPW3LFXLPeuaNvU/GPT5V7hDW
-	 6VOnZhZFudU08UVyyp5eFMHvAmEXpNBNRmXodC0ksc/S8jLraTlBVp3yj+Y4mocFKx6A6
-	 38S/FNk6ZTBz81oB6myuRGsjqmpcLkR+Z3O4FRdX6Ahl12dRi3qeDzUapj3IVN8rLqA==
+	bh=xlyHtrM/8CIMGkyqqq2BQJqRqEall6ba5k+uGkeakxY=;
+	b=GDKp7QO/HIbxI+q1ME1cSpJd6uS+M4ccnHPGf+sTVDyipr86dE2LCXBp3RHCCTS2AgFK
+	 L1C+BJtTQZGT7YoJVrasALfFvzFUBYR76i0PDB0Zhr0lWzmhEfl25hzR1tHI10XER/gQy
+	 VW9+TAeaSHbSleDCnKyIf+ustZbY0aZiIyMRvCW8MgKzaHcFqkmctcP7uQDZ9ehsWBUCc
+	 oaa+DqQWGJ+LO38Epsxcez16SI279pfBq4AqBgSZoJDy0J3ovZEAO7xc0Hw9OfAxrgJOo
+	 IH9SwTi9qX/aR4KNdMEvunLTkuW77PRZQxbHBKl7IDCZpQu4lc0A13HwR4WCJ7MneYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Lt57riGj;
-	arc=none smtp.remote-ip=216.40.44.16
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=uPWZcocG;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9311606A32A;
-	Thu, 12 Nov 2026 10:46:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9311606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D74606A327;
+	Thu, 12 Nov 2026 10:49:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D8D74606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Lt57riGj
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1D54BC052E;
-	Thu, 12 Nov 2026 10:46:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 6234F18;
-	Thu, 12 Nov 2026 10:45:57 +0000 (UTC)
-Date: Thu, 12 Nov 2026 05:45:42 -0500
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=uPWZcocG
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id B5319A0248;
+	Thu, 12 Nov 2026 10:49:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id B320720025;
+	Thu, 12 Nov 2026 10:49:40 +0000 (UTC)
+Date: Thu, 12 Nov 2026 05:49:27 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Zhu Jun <zhujun2@cmss.chinamobile.com>
 Cc: vdonnefort@google.com, mhiramat@kernel.org,
  mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org,
- syzbot+53ab168fdda7fba508ba@syzkaller.appspotmail.com
-Subject: Re: [PATCH] ring-buffer: Mark concurrent accesses to waiter flags
-Message-ID: <20261112054542.63b29e3d@fedora>
-In-Reply-To: <20261111084137.80941-1-zhujun2@cmss.chinamobile.com>
-References: <20261111084137.80941-1-zhujun2@cmss.chinamobile.com>
+ syzbot+530af6f1e5c230588975@syzkaller.appspotmail.com
+Subject: Re: [PATCH] ring-buffer: Annotate the speculative iterator event
+ copy
+Message-ID: <20261112054927.4f80674c@fedora>
+In-Reply-To: <20261111084201.80984-1-zhujun2@cmss.chinamobile.com>
+References: <20261111084201.80984-1-zhujun2@cmss.chinamobile.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,30 +64,30 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 6234F18
-X-Stat-Signature: hk6uimtb77artkm8irgdw7r6jydi5o5d
+X-Stat-Signature: kseqsr1o1xy7qoonsqsmmwagus747irh
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: B320720025
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18/nl8pFVqTmrcJK8eLcjmxGhEeLuHz1Wg=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=4jX3n0IQNsJJSebGl5jsOUkEUs41MB88RY8wsSX2rZ8=; b=Lt57riGjbO+Psp+UTt4upS26k3EFr3HFO1wdYtg4nHDOgK3ES+fYITRLYfSOJovRIFfbrb1sGSA9ATjQzE+XXonEXZtka90YsmuTNJpHkRgd4obu0diFAzAw/ZAO0Fa8oApLUa88bcx+jgHy4u8ykS5Ahe9dWXJx1usnV9L9zHw=
-X-HE-Tag: 1794480357-426971
-X-HE-Meta: U2FsdGVkX1+eIOTWXKADAjXWWOcoYfYM3njnhOsbJZUsJ3xR/8aWoUxt7uEND4yfBzmDOVtqm0imddAE8bvm1jgaFyZwm51rXSFRmihr5EIxRcJqXfG0hmqd3pvMGDiFwnFD/bQ8si/lyMxS3Nce94NVPicv13EqG92HuV6xtaFXGykjfNgOua0jppwycSPp+rUDg1Dm8KKooLacNJD3TaZIjgP8cOa1qV4dzrhW56Uk21KVygVGmuf3LS1yULruMAXtYJGLh6yt6YNh6fzcjGb0uSRpvpnDYEAoMPIzn9zCmL1no0yIrkYAC27jsH3vtXa/n7qV/1LYQ1FlDqrqzaO0n6gizP/q
+X-Session-ID: U2FsdGVkX18TZKnsSNTkFG78deU+UQllWq3qlgmV2gE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=xlyHtrM/8CIMGkyqqq2BQJqRqEall6ba5k+uGkeakxY=; b=uPWZcocG/yBDsfxuWDadakh8HoZXvnsnSl3wCb3b4BQ3DytqtibMc1qmuNQm8J3c+M6WqzCxFNcUPKM6WiEAGBHqbK6eudrncUs77mhriytKDby7XccB/dYt+pcC1raFBeAb9WRwSj9fn02/yifvi79WFejF0ptNxIllVJUuLzs=
+X-HE-Tag: 1794480580-600931
+X-HE-Meta: U2FsdGVkX19BmBj4eEI7nVwdGTTT7dofRZmMN3KmuSyIfVPOHdXGFfrsCWjR/Wq3uJZq0uU2usfCDKO7SQ88R6BFEa1fZY3TyvoHpoeHRTZGyH+SxniuWSXybZPQCK0pF+XVV+3e5DyEWhALcQlfyj+svs3/s0a4n/sEfXDTrp86/c4c3cPxRb4CHg4FvC7pd6EymqsX2tlku/z3V2/E7/8yWwnsMyb5RFELarU6CCLVLIE7T8ldjag/pg9E++yOwUvKLUDRxarhnSBxixDCa+Sw7sJRTsEKJ9gVkiEPYw1Olnw2b5Qy4xuqqQSMaoJPuXUKtN9Ay+CvXc1UkbVue2QP5c8iVTeN
 
-On Wed, 11 Nov 2026 16:41:37 +0800
+On Wed, 11 Nov 2026 16:42:01 +0800
 Zhu Jun <zhujun2@cmss.chinamobile.com> wrote:
 
-> Poll and wait paths set the pending waiter flags while ring buffer
-> writers test and clear them without a common lock. The irq_work callback
-> also accesses the full-buffer wakeup flags concurrently. These plain
-> accesses cause KCSAN reports.
+> A non-consuming iterator can copy an event while the writer overwrites
+> its page. The reader lock only excludes other readers, so KCSAN reports
+> the memcpy() racing with event reservation.
 > 
-> Use READ_ONCE() and WRITE_ONCE() for the shared waiter and wakeup flags.
-> Keep the existing barriers and irq_work wakeup protocol unchanged.
+> The iterator already checks the page stamp and committed size after the
+> copy and retries if the writer entered the page. Mark the speculative
+> copy as an intentional race; only the validated private copy is used.
 > 
-> Fixes: 15693458c4bc ("tracing/ring-buffer: Move poll wake ups into ring buffer code")
-> Fixes: 1e0d6714aceb ("ring-buffer: Do not wake up a splice waiter when page is not full")
-> Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+> Fixes: 785888c544e0 ("ring-buffer: Have rb_iter_head_event() handle concurrent writer")
 
-Is this simply to prevent read/write tearing?
+I agree with the change but this isn't a fix. It's just to hide a false
+positive from KCSAN. You want to add a fixes tag, add the commit that
+introduced KCSAN.
 
 -- Steve
