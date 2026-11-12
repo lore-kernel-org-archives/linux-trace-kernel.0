@@ -1,52 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794499139;
-	b=1F3IS4fNoWgcS+6wuJP5bB4BZ6Ln3r7PAD4vQ0UOWgJkU4+E6G/BonnWsSAwIlhNi5pv
-	 zfBvCpRLk9HAtwAS8+6RqWSbi6LfitW9g3vDm6erKh1jRzJ8NO9gRCd1iJ0IQ9zpPH7pn
-	 ZkwOd+NJu+R7JIgG7WFwjcsec5S72X4P+BT3+RTwLrBAdGv5QcZWOfGyz5QSfAy6decSV
-	 oTZwPtaAGk6ZEfb9uYohN8a07PrRg9It060raC4WsXimOkv9dp1lBz96LnVjfZKZv33hU
-	 nc9leae/qbGrnfeeojJ66atY376kTyiIZlvQU1qyWnkmXckqHziIe8AG/OV+pKt8oQQ==
+	t=1794499915;
+	b=B6q12GVlYDfDHwDhi2iKsVAUWqE079o/IM7QACQUyLzTELGwKyCvwJ2Dt70cwweYlXZJ
+	 M4Dtz8a7la77SL7WilmfdX45mI+mF77+4NMZthDiSC+Yw/vge0dD8hvQ9ju0UogMVMtOq
+	 33MXoqkYVEuTOSULH6FmF2+ybUNhcTJ9zTTznPKYHHAs6G73VtnVSYkz/2/ktDeSRrYHJ
+	 3sbUa2ZVz76uT+j2pgrsQDg8gxoV2IoYoZ+rqfyXm/uHKCKDZQWWZNOCabADpad72i3F1
+	 rqrwU0K5JEAOMyo5xht9tOsHFz3EGFRCOA7Afa6xFiElE+bP/FBTBsXkmnO7sqx7QbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794499139;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794499915;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Rspamd-Queue-Id:X-Rspamd-Server:X-Stat-Signature:X-Spam-Status:
-	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=RA4Zm7BEMm8rMWMw7WpSJymch0xY2+ETcvG+vYOO778=;
-	b=BL4pTaIANa2fpAoEFNGDCWsaLBcL9gofxL7vrRZd9aMRrN15tFxtQCXQrcEeXovSnuYn
-	 SoFdWeHEwx8EVY1nV2FYP+wi/LgJm2QwF7VD8R48t1z9bUIDefJrBWwMX9b4LArLhx2zD
-	 UgD62KJ6DA4QVD8zuT1qAB3Qg88sQnx9AmCvrVYE6ieUHGQ7eL/HK3w/DjG0nlYjByMoh
-	 YGByQPLu+8w305maVv4TH8Tl3yPrnfWRunojPwnWCa4V3j9W1rtiOKTLYJ4YQvJYdvXtp
-	 qCy/tVJk19V3fWh4wbrUZz/FfwyLCQvGVdY1tGjcFvLsGm7nQ/CWfWtJLvLvrkQBSkw==
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=0sScZLnu1TmY3yWO4GbI6auwI6UD8n/C/vabFRqYDbQ=;
+	b=jsAn+qWcZDQqty4xl7SNFpyMV19qJ/g5XRqgEjbdQ2RclW0JJC0VXtdiECzBF7fgFUvl
+	 X15p2j/jgDxKGlQDDaUwbM6c3RNg7KrCHFK1QkZL6d1Wt2dIljL3+yMcG7TSVDE47txSS
+	 Bhq0QsUiQLbKhP4iO+fN6Yii9gWRmAd7lM1f4JNUKQ8muIgcn2J+24AqWPDkOUh50edg0
+	 KwIxOR81NJblSion+6KV5TjY/WvFD2aRnx+UWyiKCGuIkNVDPjXFlfKPJVmlUBiZK4Hci
+	 oWb5sI5kcATS8oxOQq1L80dvL9J1DznBeNTi7vD5VZkh9xQ0/U3jEhVNry23RveYNRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QpEBqYGD;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PLAAf2By;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20303606A323;
-	Thu, 12 Nov 2026 15:58:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20303606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB076606A32D;
+	Thu, 12 Nov 2026 16:11:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB076606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QpEBqYGD
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id BD17E1A0684;
-	Thu, 12 Nov 2026 15:58:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 313D52002B;
-	Thu, 12 Nov 2026 15:58:55 +0000 (UTC)
-Date: Thu, 12 Nov 2026 10:58:53 -0500
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=PLAAf2By
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id A8C581605B2;
+	Thu, 12 Nov 2026 16:11:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id A56AA1C;
+	Thu, 12 Nov 2026 16:11:50 +0000 (UTC)
+Date: Thu, 12 Nov 2026 11:11:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing/probes: Zero out faulted dereferenced fields
-Message-ID: <20261112105853.38bd39be@fedora>
+To: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Temitope obabi <obabitemitope765@gmail.com>, <mhiramat@kernel.org>,
+ <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?=
+ <amadeuszx.slawinski@linux.intel.com>, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: Intel: Remove unused intel-sst.h trace header
+Message-ID: <20261112111149.1e759122@fedora>
+In-Reply-To: <675a6f5a-879f-49c4-a608-d7a82d09d36c@intel.com>
+References: <20261111223102.1310-1-obabitemitope765@gmail.com>
+	<675a6f5a-879f-49c4-a608-d7a82d09d36c@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,142 +62,78 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 313D52002B
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: 4dzcu1t787i6shzwzxdjaxxutfjow5zq
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: 4e3zsobqqsdkdfybo5nx1zorw4ghtqi6
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: A56AA1C
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/TDRtc4a3gZTgU+8DPOX3+8Aw1OT4g16k=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=RA4Zm7BEMm8rMWMw7WpSJymch0xY2+ETcvG+vYOO778=; b=QpEBqYGDXIOZbgB0T8jEfN7EsSp1WwhrrXHhTP5AEORWoZVlJjrL7p31F9bv1oHn06pBvRB3xt9mpB/N48W/GNQWocIYDlyhFEdL2YBagvMsgcrfWU5CCTRqZE819peCWlweKf6W7hT3RkLsu1IfplAv421xsNTwJtiSMHd7lM8=
-X-HE-Tag: 1794499135-890381
-X-HE-Meta: U2FsdGVkX1+TPCutRuhTmth3nWP+OcwBHqQwhwKiUc7RO+6E+p7zoV8ptm/LvdJNpCUseMB0od+f3VT6ZZHk9kC14NMA0s158XKEsMNKZaC+Il1sYpMa234EWndeb84nt2RYX62aBjWVZTS2s0UbioyKD3bhQzDJ38Nas3jGrew8y9ToDqGp13Cj2z+ReTKM+HgBFDAkapPnvPR3lel2XG564Nw4nLc3ezrTx3N67b1XhEANcayzwlkiTe8HgGnqc2DZTCsr3nWxtZ0MOEYLeE76lUEcmG/0kNqdx7Fxa7BQ3QggHoh3iuyIsTZoXFYLWzW1GnFoTIidHunvzVQanBmuGnvhxKMI5OWENfrrco58taH9+rDJWlJy5/x7QygSslwL8aLYTQfFVU9WMU4KfScr5MEIPL0ZhE/wJAKHiRmleOcnHnUeFprHcYW3W2pbYztoRI3eqBineu6DoYqtkORjVthO1tAbLsiCh/RNZ34=
+X-Session-ID: U2FsdGVkX1+vTdWOvtl8k59nbeb9jUlNDXxxl4TQN40=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=0sScZLnu1TmY3yWO4GbI6auwI6UD8n/C/vabFRqYDbQ=; b=PLAAf2BybX+ZaqB8ppDX+jb3cZVVOeY4TGSJIZGiM1TRn+5bgIftpNWaTGmOPhjPQJfGhjq6ELMrUO1/wU2ATA60VVu7nHV9335YdtJkjnEM5POubyKczTReKN8UPrNKDa+Oo8NF6Sdsi15MwsWUg73zGhEbg5IArxx6xkMhk14=
+X-HE-Tag: 1794499910-440281
+X-HE-Meta: U2FsdGVkX19URGP3wO9F8g60L8gOCKNcO8VyZsEhbkkjYANhYnq0wIKLdhIywbt+LfrVWDKskG+2lpNaFYliZJHAupimTZ4oe/gKasqlgvqg+5FwUkJH5/eMWKGMFRig6lqsNx1bL/7eVjqb2fevnWqo2m7x60gPsteQLSqgnorHhR46Ce3b5bteETHQcRFPfL7s3ApBxLxhawBc8pj8n/akHWx+b1G2NwPJCMUCe2hkvIfI04X8SWp4ujIPZIwy4wFTSQgNCSG+JCTLqXt5BFAkWNcne6UtLFjmfd8eP4VdzyPWbT7qj+V19AxUfpdCLRkdLew7HRVaeLmhZCkzzsM73xkcboWQIUIt8kw7wj7c56FORqVXL/ulCJfZ2cJ44aQ2PfaO9duTEfHKsOytppXWywoAWgT93X77yZm1rFJDdkmUVWQCh+3Vin971X7mYRI36RQUF0LhM18IFc3JgO9S6SelBCiJ
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 12 Nov 2026 10:53:04 +0100
+Cezary Rojewski <cezary.rojewski@intel.com> wrote:
 
-While looking at tasks global descriptor tables, I discovered the
-following anomaly:
+> On 11/11/2026 11:31 PM, Temitope obabi wrote:
+> > Commit 970d299b0a0a ("ASoC: Intel: Remove unused code") removed
+> > sound/soc/intel/common/sst-dsp.c, the only file that defined
+> > CREATE_TRACE_POINTS and included trace/events/intel-sst.h.
+> >=20
+> > Nothing includes this header anymore, so none of its tracepoints are
+> > built. Remove the unused header.
+> >=20
+> > Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Remove the whole header instead of only sst_ipc_inbox_rdata, since
+> >   nothing includes it (reported by the Sashiko review of v1).
+> > - Drop the Fixes tag and the claim about memory used per tracepoint.
+> > - This also replaces the earlier sst_ipc_msg_tx patch for the same head=
+er. =20
+> Next time, please CC sound/soc/intel maintainers. The very commit starts
+> with "ASoC: Intel:".
+>=20
+> Nitpick: if trace-subsystem maintainers permit ASoC-scoping for
+> include/trace, please update the title to: "ASoC: Intel: atom:" to
+> highlight which driver it does relate to.
 
-~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
+I can make these updates.
 
-The above creates a tprobe on the sched_switch tracepoint and records the
-previous task_struct pointer, it's mm_struct and the pgd the mm_struct
-points to.
+>=20
+> The nitpick alone is not a reason for re-send.
+>=20
+> Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
 
-~# trace-cmd start -e tracepoints:sched
+Thanks for the Ack.
 
-            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
-          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
-     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
+Temitope,
 
-The first event has is a user task that has both a valid mm_struct and a pgd.
-The second event is a kernel task where the mm_struct is NULL and so is the
-dereferenced pgd pointer.
+Files in include/trace/events/ are special and unfortunately, the
+get-maintainers.pl script doesn't usually work for them. That's because
+the headers in that directory really belong to the subsystems that
+define tracepoints for.
 
-The third event is where things looked strange. The mm_struct is NULL but
-the dereferenced pgd has a value! That is: NULL->pgd produced something
-other than zero.
+The best way to find out who to Cc is to find a file where the
+tracepoint is used and run get-maintainers on that. Unfortunately, the
+file that had them was removed so that wouldn't work either. The next
+best thing is to look at the commit that removed the file, and Cc those
+that were involved in the removal. In general, you should always Cc
+those involved with anything in the commit of the fixes tag (which this
+commit should have had for 970d299b0a0a).
 
-The reason for this is that the probe_mem_read() and probe_mem_read_user()
-do not write to the destination on failure. The process_fetch_insn_bottom()
-loop does not check the return value of the dereference (as it is the last
-one), and does not update the event. That leaves the value for that failed
-field to be whatever was in the ring buffer at that time.
+ $ git show 970d299b0a0a
+[..]
+    Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+    Signed-off-by: Amadeusz S=C5=82awi=C5=84ski <amadeuszx.slawinski@linux.=
+intel.com>
+    Link: https://patch.msgid.link/20241009083419.319038-1-amadeuszx.slawin=
+ski@linux.intel.com
+    Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Have both probe_mem_read() and probe_mem_read_user() set the destination to
-zero on failure to read the address.
+All the emails in the above should be Cc'd on changes like this.
 
-Now all pgd are zero when mm is zero.
+Thanks,
 
-Also update the stage 2 of process_fetch_insn_bottom() to not return on
-fault but to just set the value to zero and also do not even bother
-dereferencing the address if the value is already zero. This allows the
-code to continue and fill in the zero into the memory location on the
-ring buffer.
-
-Cc: stable@vger.kernel.org
-Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changse since v1: https://patch.msgid.link/20261111050322.49bbebfa@fedora
-
-- Have stage two handle faults as well, and just ignore dereferencing NULL
-  pointers. (sashiko)
-
- kernel/trace/trace_probe_kernel.h | 13 +++++++++++--
- kernel/trace/trace_probe_tmpl.h   | 15 ++++++++-------
- 2 files changed, 19 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index 4eb4acfa09ba..00542a162d30 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -102,18 +102,27 @@ static nokprobe_inline int
- probe_mem_read_user(void *dest, void *src, size_t size)
- {
- 	const void __user *uaddr =  (__force const void __user *)src;
-+	int ret;
- 
--	return copy_from_user_nofault(dest, uaddr, size);
-+	ret = copy_from_user_nofault(dest, uaddr, size);
-+	if (ret < 0)
-+		memset(dest, 0, size);
-+	return ret;
- }
- 
- static nokprobe_inline int
- probe_mem_read(void *dest, void *src, size_t size)
- {
-+	int ret;
-+
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	if ((unsigned long)src < TASK_SIZE)
- 		return probe_mem_read_user(dest, src, size);
- #endif
--	return copy_from_kernel_nofault(dest, src, size);
-+	ret = copy_from_kernel_nofault(dest, src, size);
-+	if (ret < 0)
-+		memset(dest, 0, size);
-+	return ret;
- }
- 
- #endif /* __TRACE_PROBE_KERNEL_H_ */
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index 8db12f758fda..210a75ed5a92 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -137,23 +137,24 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 		lval = val;
- 		switch (code->op) {
- 		case FETCH_OP_DEREF:
--			ret = probe_mem_read(&val, (void *)val + code->offset,
--					     sizeof(val));
-+			/* Do not dereference NULL pointers */
-+			if (val)
-+				probe_mem_read(&val, (void *)val + code->offset,
-+					       sizeof(val));
- 			break;
- 		case FETCH_OP_UDEREF:
--			ret = probe_mem_read_user(&val,
--				 (void *)val + code->offset, sizeof(val));
-+			/* Do not dereference NULL pointers */
-+			if (val)
-+				probe_mem_read_user(&val, (void *)val + code->offset,
-+						    sizeof(val));
- 			break;
- 		case FETCH_OP_CPU_PTR:
- 			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
--			ret = 0;
- 			break;
- 		default:
- 			lval = llval;
- 			goto out;
- 		}
--		if (ret)
--			return ret;
- 		llval = lval;
- 		code++;
- 	} while (1);
--- 
-2.53.0
-
+-- Steve
