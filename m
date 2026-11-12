@@ -1,80 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=49.12.199.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794515870;
-	b=qJl9RdLZ5UneZqhyaCWcKaMjO3XlPbveEk/h416aONIsuQiX23jquVfe9cSqq7GimRVS
-	 ZFOm0NR4gaFbYmEuV/2dfLGj9wzkEsd07x1swwoTLyrM5Heiv7cyxm/n5MWiaxywVbmBX
-	 UD09v/q9tAsh/60nhoV8A2RgdvAMy4Knw6a8b+I+G1a1d2P8KN+qEwUjqFP1F/8NuPM1C
-	 +3MCfAJBFcSpO9JDfv4y9YIiGBkioZQ+O07tiACvTyu84yltjYftS26mx7VZxWUosNntE
-	 WVA705J0Pl5Sv2ZDV0z05+xovL6CQSF4Gra50Qr5g5rro+JJKszFKhtWi3PkeKrM2eA==
+	t=1794518610;
+	b=3Ph9mPxMZHzQgd5zVkfCLxKgdVpPJ7cEmL7zYGqA9BU2CJzAaALFfyrpTMKCVJfQkG3U
+	 hP1ua4cb3Qays8hCw7EifsAbnFAu4/ePaQGx+R0RBDo0SLowJzaYz7uAfW7LGIxEKB4IV
+	 bQ07wsuYnAFZc5vtpGqwYTaitOFOR6sOz5rt1Hr1kb8IGIiT1y1tb4/mT9zxJ276nEXE6
+	 3F9tu8jlQYL7KC9/qMutvubcCHTedqmShYJfQVCwK97dx2V8TNzK20oIYzPWgNmfJyJYp
+	 71uIWp0Gnl6saKeJdR3ibCmX7FXlYl0hU5UcZ938bKSWcD2oshDJpOZncYIl6Ci+Iwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794515870;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Yw2gO9XL3QanNi7jpRFSX/t+Ag1YoMoaq3Ti9/EqKMY=;
-	b=yJnToL6dPEb+vm/Lgs4AcgrPaypQLBgnP/8Na9cv1EuBKxxqvUpRUu3YwUEMpCM8wZs3
-	 7oBGjKpR1DkQoj+yjKGZfsYU7x3cfiu2NOjsw9Nm8i8rmCa8uzypmm4kjmemmrkhrCf5F
-	 /5MMVqyynFHpNx93gA4FCQxY7b3vNSvwgyr3sKry1enXOw6OSen+q7krTYPbYP1nqTY4w
-	 e71WIW5FWg9W80Ozr+6qzrZtfKt+/mBKJPfNnN/dmCWrSwhWEhOTW6zSxIBW471ragZij
-	 FdhD7qs58YFg7PLGsKyhrq2sLaEyF7EN1fVWnQS8xvCRtF3Gx8htsqFMuBruKqdRlwg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794518610;
+	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:From:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
+	bh=VKqu1LDK1DyR5uT5qK1U0I5HptGHmXgz5DOcJEJsV4c=;
+	b=BN4qBn6H3QEihwa/Zn9YPvRFeloyqG3mp3w/Le/XjRnHlx/twrzNUMeFXhJEUQWU4OXy
+	 Xu70G3C1EpqpZ40rHK59WPwmH+Zuf3Vi+Y3B4pchefioHyFIZOOuot8ZMeoUnLA52LtSW
+	 m4J4csTV8SsB1wnn8g5R/3FTi1ll3oQPinu+IE9gI6VF/HmjBKz2yrhuUrO3r1rghEgr+
+	 6CdN/9UgYIRrYltEEkL1GjbNk2G4oH7sasy9tDGA25fjooxfYO3IFv40AxJYjQx6muUTR
+	 dAncuYCs1CZyYgtYqzyGHZEK+xo8aHxMzDS5PmXP5zjJY2K82FOV6NxC+1XhDV7/RUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KxFH9toQ;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=monom.org;
+	spf=pass smtp.mailfrom=monom.org;
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=vhNUORO0;
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=eni4VG+e;
+	arc=none smtp.remote-ip=49.12.199.46
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13499606A884
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 20:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56D4606A8BE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 21:23:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D56D4606A8BE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KxFH9toQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7541F000C6;
-	Thu, 12 Nov 2026 20:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794515869;
-	bh=Yw2gO9XL3QanNi7jpRFSX/t+Ag1YoMoaq3Ti9/EqKMY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KxFH9toQ1aZCGgiWlOxNjazfYj92Kin92TfhRQFwVjl4/zIas4wKqNPfnPowoKUzk
-	 zzqHuzB3XQMakiR+1j90TLR6jZxbCgNhj4XyUZ/EacHloc75At2+pkof3qTLPDMc/b
-	 2+r/n+5B2gYgjt7Ox+qcRnmGQfehEpgPm21vcmiVRFrbxRq+6tazW8nUAiTQEBFB/c
-	 ngkpUnSvWQZ3XWfYgabV4gYGX1qLibs6K9k+1uCKS1KqZLeeECZtahSz1I5ITZ2grN
-	 ht8R+EiGV+0rosu2kmRl+odRTsYEpjGDwlzoUSsp52wn2KlpruZtjbMmzaW4tkFs++
-	 0F+6ynx50P5ZQ==
-Message-ID: <sashiko-outbox-211804@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v25 09/14] lib: percpu_counter_tree: test the limit
- counters
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David Hildenbrand" <david@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Dennis Zhou" <dennis@kernel.org>, "Tejun
- Heo" <tj@kernel.org>, "Christoph Lameter" <cl@gentwo.org>, "Martin Liu" <liumartin@google.com>, "David
- Rientjes" <rientjes@google.com>, christian.koenig@amd.com, "Shakeel Butt" <shakeel.butt@linux.dev>, "SeongJae
- Park" <sj@kernel.org>, "Michal Hocko" <mhocko@suse.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Sweet
- Tea Dorminy" <sweettea-kernel@dorminy.me>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam
- R. Howlett" <liam@infradead.org>, "Mike Rapoport" <rppt@kernel.org>, "Suren
- Baghdasaryan" <surenb@google.com>, "Vlastimil Babka" <vbabka@kernel.org>, "Christian
- Brauner" <brauner@kernel.org>, "Wei Yang" <richard.weiyang@gmail.com>, "Miaohe
- Lin" <linmiaohe@huawei.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Yu Zhao" <yuzhao@google.com>, "Roman
- Gushchin" <roman.gushchin@linux.dev>, "Mateusz Guzik" <mjguzik@gmail.com>, "Matthew
- Wilcox" <willy@infradead.org>, "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Aboorva
- Devarajan" <aboorvad@linux.ibm.com>, "David Carlier" <devnexen@gmail.com>, "Andrew
- Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org, "Jonathan Corbet" <corbet@lwn.net>, "Shuah
- Khan" <skhan@linuxfoundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Harry
- Yoo" <harry@kernel.org>, "Hao Li" <hao.li@linux.dev>, "Kees Cook" <kees@kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "Juri
- Lelli" <juri.lelli@redhat.com>, "Vincent Guittot" <vincent.guittot@linaro.org>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, "Ben Segall" <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, "Valentin Schneider" <vschneid@redhat.com>, "K
- Prateek Nayak" <kprateek.nayak@amd.com>, linux-trace-kernel@vger.kernel.org, "Jan
- Kara" <jack@suse.cz>, "Oleg Nesterov" <oleg@redhat.com>, "Alan Stern" <stern@rowland.harvard.edu>, "Andrea
- Parri" <parri.andrea@gmail.com>, "Will Deacon" <will@kernel.org>, "Boqun
- Feng" <boqun@kernel.org>, "Hugh Dickins" <hughd@google.com>
-In-Reply-To: <20261111203626.95838-10-mathieu.desnoyers@efficios.com>
-References: <20261111203626.95838-1-mathieu.desnoyers@efficios.com>
- <20261111203626.95838-10-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 20:37:47 +0000
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=vhNUORO0;
+	dkim=pass (2048-bit key, unprotected) header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=eni4VG+e
+DKIM-Signature: v=1; a=ed25519-sha256; s=v1-ed25519-20260726; d=monom.org; c=relaxed/relaxed; r=y;
+	h=To:Message-Id:Subject:Date:From; t=1794518602; bh=VKqu1LDK1DyR5uT5qK1U0I5
+	HptGHmXgz5DOcJEJsV4c=; b=vhNUORO0VzoDrhJq2z0XXAnKs4rZm4bO/q6oM9ks2V+4SJrjx9
+	K5V3rjLL6BWeRvyVnsiVo/Cbs3HMYgah5SAQ==;
+DKIM-Signature: v=1; a=rsa-sha256; s=v1-rsa-20260726; d=monom.org; c=relaxed/relaxed; r=y;
+	h=To:Message-Id:Subject:Date:From; t=1794518602; bh=VKqu1LDK1DyR5uT5qK1U0I5
+	HptGHmXgz5DOcJEJsV4c=; b=eni4VG+ekc1f46wbH9+Od+xPcfswVlAdKqb/c7hSFz6JALxYSB
+	HOVhbr8sU3ABn4/+hJV7mBlZoqY6e4n2mUp24QMqo0OKxKtL1s+4kQn5Hs6gbfN2I2wPGGRh8Dj
+	T3O5M8gEPPvSHSpMVrcv/L/Np1BGysH70fmtt9D+WFczUxL/mowvN+CMhWmyBiwoF1enc6nNSNX
+	qgXEEZXajJVxrPlPvY4kEOLYKvacwByk+C7KiSrY6jNx7rwH2h0Th6pIK/cc16cMY3KdW4t2KhV
+	TTbKxyyyKmjSsBJavhl9D0oYhV2dgGhaeiqykl+rSmClJ809akB3f9Efz7mBhbu48Nw==;
+From: Daniel Wagner <wagi@monom.org>
+Date: Thu, 12 Nov 2026 22:23:18 +0100
+Subject: [PATCH] rtla/timerlat: Lock the memory of the user-space threads
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,150 +57,78 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMTQ5AMBBA4avIrDUxI0hcRSyqBuM/LSIRd1csv
+ 8V7Fzi2wg7y4ALLhzhZZg8MAzCdnltWUnsDRZQiIim7jVpN42IGRTrJqMEoiWMGH6yWGzm/WVH
+ +dnvVs9neA9z3A5GEOSVuAAAA
+X-Change-ID: 20261112-rtla-mlock-2a572f10533e
+To: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Clark Williams <clrkwllms@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+ Daniel Wagner <wagi@monom.org>
+X-Mailer: b4 0.16.0
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] lib: percpu_counter_tree: unreachable subtraction in
-  limit_worker_fn()
-- [Low] lib: percpu_counter_tree: unordered sh->charged sub in
-  limit_worker_fn()
---
+With -u, the latency timerlat reports runs until the measuring thread
+is back in user space. Nothing keeps that thread's memory resident,
+so under memory pressure the kernel reclaims its code, stack and libc
+pages, and the page faults on the way back to user space count as
+latency.
 
-commit ffee3ed89eb2ac6dc7c1033ea104470f2a5faf4e
-Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+On a Raspberry Pi 3 (PREEMPT_RT 6.12) under stress-ng --class memory,
+timerlat reported up to 40 ms for the user-space threads, which took
+283 major faults, while the kernel threads' latency stayed below
+1 ms. cyclictest under the same load: 133 ms without -m (mlockall),
+0.9 ms with it.
 
-lib: percpu_counter_tree: test the limit counters
+With this change timerlat reports 0.9 ms for the user-space threads
+under the same load, and they take no major faults.
 
-This commit adds KUnit and userspace hpcc harness tests for
-percpu_counter_tree_limit, along with a stall hook in the userspace shim
-to simulate concurrent updates while an addition carry is in flight.
+Lock the user-space threads' memory before they start measuring, as
+cyclictest -m does.
 
-> diff --git a/lib/tests/percpu_counter_tree_kunit.c b/lib/tests/percpu_cou=
-nter_tree_kunit.c
-> index 12bd5a4bbb459..bd99ab7ca1c07 100644
-> --- a/lib/tests/percpu_counter_tree_kunit.c
-> +++ b/lib/tests/percpu_counter_tree_kunit.c
-> @@ -612,6 +612,177 @@ static void hpcc_test_contended_carries(struct kuni=
-t *test)
->  		do_hpcc_test_contended_carries(test, 1UL << batch_size_order);
->  }
-> =20
-> +#define LIMIT_NR_OPS	100000
+Signed-off-by: Daniel Wagner <wagi@monom.org>
+---
+ tools/tracing/rtla/src/timerlat_u.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-[ ... ]
+diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
+index c80edaf07b00..42aaf1d7f216 100644
+--- a/tools/tracing/rtla/src/timerlat_u.c
++++ b/tools/tracing/rtla/src/timerlat_u.c
+@@ -15,6 +15,7 @@
+ #include <pthread.h>
+ #include <sys/wait.h>
+ #include <sys/prctl.h>
++#include <sys/mman.h>
+ 
+ #include "common.h"
+ #include "timerlat_u.h"
+@@ -69,6 +70,15 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+ 		}
+ 	}
+ 
++	/*
++	 * Keep the measuring process in memory: the latency it reports
++	 * runs until it is back in user space, and a page fault on the way
++	 * (its code, stack or libc pages reclaimed under memory pressure)
++	 * would count as latency. cyclictest does the same with -m.
++	 */
++	if (mlockall(MCL_CURRENT | MCL_FUTURE))
++		err_msg("Could not lock timerlat u memory: %s\n", strerror(errno));
++
+ 	/*
+ 	 * This is the tool's loop. If you want to use as base for your own tool...
+ 	 * go ahead.
 
-> +static int limit_worker_fn(void *data)
-> +{
-> +	struct limit_data *ld =3D data;
-> +	struct limit_shared *sh =3D ld->sh;
-> +	unsigned int i;
-> +
-> +	/* Pairs with the release of started: max, target and nr_workers are se=
-t. */
-> +	wait_event(limit_wq, smp_load_acquire(&sh->started));
-> +	/* Start together, so that the workers hold their amounts at the same t=
-ime. */
-> +	atomic_inc(&sh->nr_ready);
-> +	while (atomic_read(&sh->nr_ready) < sh->nr_workers)
-> +		cpu_relax();
-> +	for (i =3D 0; i < LIMIT_NR_OPS; i++) {
-> +		u32 x =3D limit_rnd(ld);
-> +		unsigned long amount;
-> +
-> +		if (ld->held < sh->target) {
-> +			/* Mostly small amounts, and one in 16 of a huge page. */
-> +			if ((x >> 4) & 15)
-> +				amount =3D 1 + (x >> 8) % (4 * sh->batch_size);
-> +			else
-> +				amount =3D 512;
-> +			if (percpu_counter_tree_limit_add(&sh->limit, sh->max, amount)) {
-> +				unsigned long charged;
-> +
-> +				charged =3D atomic_long_add_return(amount, &sh->charged);
-> +				if (charged > sh->max)
-> +					atomic_long_inc(&sh->nr_over);
-> +				ld->held +=3D amount;
-> +				atomic_long_inc(&sh->nr_added);
-> +			} else {
-> +				atomic_long_inc(&sh->nr_failed);
-> +			}
-> +		} else if (ld->held) {
-> +			amount =3D 1 + (x >> 8) % ld->held;
-> +			atomic_long_sub(amount, &sh->charged);
-> +			percpu_counter_tree_limit_sub(&sh->limit, amount);
-> +			ld->held -=3D amount;
-> +		}
-> +		if (!(i & 63))
-> +			cond_resched();
-> +	}
-> +	atomic_long_sub(ld->held, &sh->charged);
-> +	percpu_counter_tree_limit_sub(&sh->limit, ld->held);
+---
+base-commit: ee83899302a0457a3ba47464a13e8682bd7ba27d
+change-id: 20261112-rtla-mlock-2a572f10533e
 
-[Severity: Low]
-Can the relaxed atomic_long_sub() on sh->charged be reordered after
-percpu_counter_tree_limit_sub() on weakly ordered architectures?
+Best regards,
+--  
+Daniel Wagner <wagi@monom.org>
 
-The comment above limit_worker_fn() notes that a free subtracts from
-sh->charged before it reaches the limit counter so sh->charged never
-exceeds the limit counter.  However, non-value-returning atomic_long_sub()
-is unordered, and percpu_counter_tree_limit_sub() updates the per-CPU
-level 0 counter via this_cpu_try_cmpxchg() without a barrier when there is
-no carry:
-
-CPU0                              CPU1
-limit_worker_fn()                 limit_worker_fn()
-  atomic_long_sub(..., &sh->charged) (reordered)
-  percpu_counter_tree_limit_sub()
-                                    percpu_counter_tree_limit_add() -> true
-                                    charged =3D atomic_long_add_return(...,
-                                                              &sh->charged)
-                                    if (charged > sh->max)
-                                      atomic_long_inc(&sh->nr_over);
-  /* sh->charged sub becomes visible */
-
-This can cause a false-positive KUnit failure on sh->nr_over.  Using
-atomic_long_sub_return() or smp_mb__after_atomic() before
-percpu_counter_tree_limit_sub() in both the loop and the final cleanup
-would enforce the intended ordering.
-
-> +	ld->held =3D 0;
-> +	complete_work();
-> +	return 0;
-> +}
-> +
-> +static void do_hpcc_test_limit(struct kunit *test, unsigned long batch_s=
-ize)
-> +{
-
-[ ... ]
-
-> +	accuracy =3D percpu_counter_tree_approximate_accuracy(&sh->limit.counte=
-rs[0]);
-> +	/* A limit of twice the accuracy, oversubscribed twice: mostly within i=
-ts accuracy. */
-> +	sh->max =3D 2 * accuracy + 1;
-> +	sh->batch_size =3D batch_size;
-> +	init_kthreads();
-> +	cpus_read_lock();
-> +	cpus =3D select_worker_cpus();
-> +	sh->target =3D 2 * sh->max / cpumask_weight(cpus) + 512;
-
-[Severity: Medium]
-Does setting sh->target to 2 * sh->max / cpumask_weight(cpus) + 512 prevent
-limit_worker_fn() from reaching its in-loop subtraction branch?
-
-In limit_worker_fn(), a worker only subtracts when ld->held >=3D sh->target
-and never frees any held amount when percpu_counter_tree_limit_add()
-fails.  Because the total held across all workers cannot exceed sh->max,
-no single worker can ever reach ld->held >=3D sh->target when
-sh->target > sh->max (which holds on 2 to 8 CPUs for both batch sizes, and
-up to 64 CPUs for batch_size =3D 2 due to the + 512 offset).  Even with more
-CPUs where sh->target <=3D sh->max, all workers start together at
-sh->nr_ready and average sh->max / nr_workers each when the counter fills,
-so once total held reaches sh->max with every worker below sh->target, no
-further addition can succeed and no worker can subtract for the rest of
-LIMIT_NR_OPS.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111203626.9583=
-8-1-mathieu.desnoyers@efficios.com?part=3D9
