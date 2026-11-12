@@ -1,102 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794484296;
-	b=0NKnH9KD+5H1sY7UlsrG1Ya00Zp3tN4rCuonevndpT8fW9Hv0cqwoBp8EPWWq03/S0z/
-	 jsxpnoLGTYjZddxtykcSqEcaU50ZbbIYZBWf//gfx/+k3Qg679SQRIvPcIf4wNRKSB87j
-	 m+q3J4qY1lC1GfF1caivaYxkd5S2Dsu2CF5IcKcZ/DDDR4dIZfMALiVFhGUMuQQkCeciT
-	 baO8Bk52mhrbzX15fdxfRc8fuSpQeUDOcvZS9I5COTCUf8iGciZGbq9/dszwAXbFU5Lxb
-	 7JxPnxZw19alZUPMm94oknt+xJ5qd7eKuSrR5QZFBH1ttVOysQfj1qDdzdWrp4Tl48A==
+	t=1794485756;
+	b=kxHDsT9gMLxVSJZNYNyAMWmspyV58q5nb7kS6p3Fqt19HIbwMrkW31XjMjDp2XSmZBfC
+	 869SucgshjLNisr9soj1pqBQV9gEoTJJqZEpdckQRt8+tKPBXPpGTAKbCdoHOl1WEHTV2
+	 nosYakULeE6vo4SSyTI3VsVIN3YyeQGVZByolHrAirkQ7e1BiMai1CzQ5zWMQ7r9dkwdi
+	 OpJgABaA3MHn8xlCAbhP4BaTdgyRQM/UmSK9zWi/7gjo2vlw2L/3sVFyaN2dU7lpVUFp7
+	 CQk24CfgKsJBJaZlBVlvhTqzllfBqn8xM8myUs+rFXDoyyw52TRh9YCCcADA+FyKPEw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794484296;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794485756;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=L+9OvAGkA5co8PTaVpf/WHREVpFJgAvJ9utwws7KxK0=;
-	b=pE/r2YzySY1g5rTZANpG8kAFjsWdWEP4LhuWlCyi2IrHd9Id4BNxEUOqIdC0FbtzJccB
-	 vr1wL+Y12L4dmJna08+Ke0Hco497k8oDywm7iNDtVyxhTu5xLWQtUy+dsIrsmlRcqXIM8
-	 QLu/6lCdRZhuLnaQ34AqX2pKGcvxY7eKkOB4v0mbRXb6GuFkLVIM4maSLTms31/M3sgUt
-	 VHfKuoMR+sNFPy/XALgcs2lNbQqca95xgvWHc+Uaw7/0C6sZH+mGuIHN2ec4V0gRVX3Y6
-	 7Qt95rye3YLnAOUyljZuXVf8kvRshxR6XFQh1+F1LcSiTw/t6rFu9a7iPVTSC5Jv2CQ==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=B5dwS+JSg4KVRmJk8D3bUXhM4YDMd6Zv8kscnFZDGw0=;
+	b=r+aCNgVG/u0XPXOb0YaM/GgDzLBuwC9zhiqDuEheMZs0lmSBDvNS79s3oZexhdYjkNh3
+	 Zfz5czSvensAqXqPcC4cLsfKmh3drD0/+DpF02jbwWGBuOw+ck/m7nUsdYkp6LRJ5M/+U
+	 t2+PaLnibjnzcS39CTZB6ZPiHagFIm+pTcuGoPWpiUb93S5us4u64c1frbkNa8Geeyi3l
+	 muybNTFdAsnIX0uqEc9kMXI2uoHfgrdFxgrFwbSRsiw1XIrXKa+/nUaAi8DZcdV2J4Qs+
+	 B9/jyFOoj71cSV7m5UI6O8Ra84bztpPkc7AuA5ktr/KyJ8Wflidg56DmN+FH/Fn2LYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=D7pI2T9a;
-	arc=none smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ojOTqk+E;
+	arc=none smtp.remote-ip=74.125.82.173
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DC8606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 11:51:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79DC8606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24C0606A321
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 12:15:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E24C0606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=D7pI2T9a
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a549cd7fd2so7313705e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 03:51:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ojOTqk+E
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-36dc4797082so216076eec.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 04:15:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794484295; x=1795089095; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=L+9OvAGkA5co8PTaVpf/WHREVpFJgAvJ9utwws7KxK0=;
-        b=D7pI2T9aUlHUPB3rv6sO+Ov1nRrCVtdz1sKmcQ207kMrfnwO5xoLhaLFuNbGbc5clW
-         clwEAKnGyjMJ2LLwb2wh1aM4aMxl+rixQrXW3MY1icYmfNkt/ZzMeI9ao7dxVIxRO4He
-         8jZnfMnsZIvSeGrZPU9MRqkyZB+W65uY7ohwyGDLOVxP6CDhoUpMjEs3F082Pgy/GG9j
-         FHtKk3iaMvmV18s+orFsSOOfahlQcJ1lss+O8QKnEJ3P+4mJsi0GrbznkXGj7jy1KX4c
-         uDCuazl+Hz/TkjbQH4xBiEveaqiAKiFvr3OELpZjTq1APfpIx9l2vrbyPXv4LFYobk1b
-         do0A==
+        d=gmail.com; s=20260707; t=1794485755; x=1795090555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=B5dwS+JSg4KVRmJk8D3bUXhM4YDMd6Zv8kscnFZDGw0=;
+        b=ojOTqk+EuQHLzkYchUS8u1NhiDCGXK6+ZTCp8wr8E8MxxCh6KGaOgiWkpF9wEo+Aq5
+         9Oycc0UkhL75g3VBdDtUpJCTnJSC1961/Ty9O1jYte/X+dRsz+xqcfSrjIcKf1ktYBSg
+         yvi8ppQpABu72JEff7Nh7ulrGWgNHwO74ICgPLrmHDqi8h0LBdXi2KFgRYqOFXW+zsTV
+         gKbECRsgfuHX9IZdhPZhwYHiYwByF08YDUIdizh9MpdBNl3bgqBxoDpzMEEL+JNJUxb8
+         pVxAyZD40+j7XJ2C9YUzyWlSHctrH2XTkZzJb4cPoZvBn0+WviVhYPraFFQKGUBZ7rBT
+         D/4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794484295; x=1795089095;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=L+9OvAGkA5co8PTaVpf/WHREVpFJgAvJ9utwws7KxK0=;
-        b=b3O6tCcaswsRNM6jwbWtWo7JhXXYiy25bCE1p5Q1l+OhTOZnXIynWoOr1rR+GY2/0K
-         Lb3ayT1kHrndm+2tYuK2/pQys58zaHuH0enLZozsu/4OQ/J2u4gOiqFU98h7fqWCmdTY
-         8KnBEKGVr9hcHMwdh6Mn55jtNEKnmP/lUvAOX/n530FXFqgRXFF+IJP4KuJTW1+ynJLj
-         AokPa83uGGulSiPgE3OFiPSdACnZirg9Nfx3l/tS3+Ysai/4D4qLGBVSOup1erkes0YO
-         W527xMAEipFhETAni/l/RJ7Mx2sUHfAAvdUu8fN9Mo3Z0ZJMKbaWQkZ/VCsWwaes7QIF
-         74RA==
-X-Forwarded-Encrypted: i=1; AL+hErGuLkVOEepCaLkyg2OYEJKOelWWZwNS+Tuic7R0LJit2xdrf18of3rkPCFjq/4GqhEGWCDrG4FUMJtJqMSz5kM1cSA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+T8IlKEVqOAtzCPCvN9uAYk/h1I0lvs+C+Hur01YCFaLGohQE7
-	JyNj4aSH2HYTSJ0j+UZrS3TtD4AtvJEZyZ76b5ALc/ccv0Lm/R5YMjcr5FvcKDhM9w==
-X-Gm-Gg: AYBFou1z4Ej95oJMtsWKlrCn+xgJElcrBTH/kpUrXCCjJz+u0DdLfYlRJSm2P9AwE6g
-	Q4uMgeWFqkG87eR09bRaS0W+X9YVUVnAncV2iW2mGw0lvDmMMqTPaQhUID1VF1vPUH0RBmzPzZb
-	wQK+8tRpGYEP9CZlRR2iKCKfYNCbpRUWswxglh08L3TBB4eMHiEXUzbbCkr3mIHsI/lVg28GAKD
-	2e5NQIu/9r/RXeuftPl0h84zlBslbpD1caGNvVHcizw0HZQuB5FkCu+tAPmZhrrXSTRkPme+yXh
-	yAx9qH3LOXv8HNxuvXBdnlfMxl6qWQJ43WJrd5A9XF5F1kFC7LVakXfdB5rvA9OugyJYt2gx0GG
-	1Bw+IxwqM+/6U0lHWnkaEJrj0/W2i/iJX0woSyhrOLGFbjQqE0PmQ3sHouSXdTGwb+A20eCrcpW
-	R+IhtE8p0RZq2VVNp3a7Fp/oCThvKnGZRiAOn4JkUHEQ4GuYyznVN4IVI4Uyt8twRx8DJ2XrqiZ
-	ftjPgotkhV/GG9USD02pca0dslRPHSmkx5OTMBIMWy4axLOM28aI45RyLZQay1Pi8jIQXnfOvTQ
-	pH/ZF7yJYQHIqFw+BDgKz5yXhoADUREYrE0dneQwgl8lM8pHMM7LDyal47hkMMPqOA==
-X-Received: by 2002:a05:600c:a31c:b0:4bb:53e4:a7c5 with SMTP id 5b1f17b1804b1-4bb53e4a861mr3753135e9.14.1794484294459;
-        Thu, 12 Nov 2026 03:51:34 -0800 (PST)
-Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb4e251c26sm63991125e9.1.2026.11.12.03.51.31
+        d=1e100.net; s=20260707; t=1794485755; x=1795090555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=B5dwS+JSg4KVRmJk8D3bUXhM4YDMd6Zv8kscnFZDGw0=;
+        b=niseaantmW8k5pfeDfH8CZFZUJwY48S9M8qQPdhR3xuqgAcHzuYtbB657gyeCZ2b1q
+         B44tjb0/HTZdxSfZAYeVYGq7WXG6N9BrPElPGl/fQKvh+QrB6RDCB4qeCDprzOClegX8
+         eRaDWumNaOI2sBgqQ1c7zA7cFuBnMp61Phoc5ulCjLMvcNy8grFeBUdSKQJfk+UNS/WI
+         oUn4ufH7w/46ILUv44puppq8JpYFbKFqQ0POTUWbg3PmUQXhsNMPb2wTgpmx3Nuzuiyh
+         PF34aURd5nweQ8e2X9TotFLb9Oz+ZWb9JuRp/KaxxZHy+weR/YtcY8sMFzYVzPegvlZK
+         o8lA==
+X-Forwarded-Encrypted: i=1; AL+hErF9fiIYQDD0YXSt4f4Eo3STl/UMF8h5Qbbgq1fJlagW1W5Aq96a2ViCM4vpz+SPtKiYmj63hSXQQi7+JlOuf2gTmMk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z968E4Pw89CWLyqCuMQAFri9wWNjsa4qWiffYqAb4flk+7EXgQ2
+	a1npGxSvV9/qEBPbh1CUxjgFvpuWEXU2bLOoM1AQ2oVhZlJYxLBFz/fv
+X-Gm-Gg: AYBFou3PAy3an1jqqT2PAJDQmdB/T0fKRYpHZKNan0QPnDFKllUfVcgX2m41kAsiG9B
+	FMJiozHVn+7QgEDTMswHNI9LN//6apUjDdmfDtGxia2Q+9P6gC6THwmhmkgezo1Os0/3gZk1jpi
+	GWnAN+efILaI8ZgjXJzNocgLKqigadee7LOCm8XVyjwUYdKn17TdCnRSJPG+PgmqepFS/UgC7Ym
+	GxCuwtlfPgypKcfffP0tfP/tQycEym0AqbRxRAJEyaWzHomAfP1A4jETwtlgM2OU9cmd48tuoru
+	yy8wNRJOkUZoZhL3Ni9rpSNYqjitrL3KeTtPc71L7CsiuHEq27ol73NjlFW51WTXDtLxwsWIB6V
+	luO5e46oLv2ZmJbhmxfK4mJ9JzUKwzCp1tUVDD7d3WgxaBP6HpL545T2e40XjugZIekZ78inYkh
+	1nJ7VZSC2zQp2PXC9sqmCjfnam92z+HlDMz78rqZm526oVkg3LK0G9vNvGCCC9Sv/01ZLs0vW+b
+	AZjeMcMIL/yyAbDY2+HThcANRsOG4h3m6iTcqSFYcoMJlW4UComJjrwEr7vE2wKEOr+r42ic+qw
+	ftNJiv7VX4aNKD7+5wrLurQ90edetJ0AtiAPU6JsTDbHfAKx1zSjHwxVDAlDAQ3B5Myo5l26B2h
+	+
+X-Received: by 2002:a05:7300:7aa5:b0:36a:e7a:e89 with SMTP id 5a478bee46e88-37685c76d17mr8719831eec.2.1794485754829;
+        Thu, 12 Nov 2026 04:15:54 -0800 (PST)
+Received: from mi-ThinkCentre-M760t.mioffice.cn ([43.224.245.234])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3752060dc0csm29740235eec.14.2026.11.12.04.15.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 03:51:31 -0800 (PST)
-Date: Thu, 12 Nov 2026 11:51:28 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
+        Thu, 12 Nov 2026 04:15:54 -0800 (PST)
+From: Wenwu Hou <hwenwur@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Breno Leitao <leitao@debian.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <srostedt@redhat.com>, kernel-team@meta.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] ring-buffer: Handle a reader taking the new head in
- rb_handle_head_page()
-Message-ID: <avWoQGaDrrY9z9Cr@google.com>
-References: <20261105-ring-buffer-head-moved-v2-1-05da40cebccc@debian.org>
- <20261105155729.0f9c7e4d@gandalf.local.home>
- <avGQnBjyUMwunknT@google.com>
- <20261110025202.78c8c03a@fedora>
- <avRuXVxVrp-Kjiqj@google.com>
- <20261112061423.59e02261@fedora>
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wenwu Hou <hwenwur@gmail.com>
+Subject: [PATCH v2] tracing/hwlat: Do the latency calculations in nanoseconds
+Date: Thu, 12 Nov 2026 20:15:01 +0800
+Message-ID: <20261112121502.2070755-1-hwenwur@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -106,40 +98,89 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261112061423.59e02261@fedora>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 12, 2026 at 06:14:23AM -0500, Steven Rostedt wrote:
-> On Wed, 11 Nov 2026 13:32:13 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > Yes, now I spent more time on it, I believe it makes sense. I looked at what we
-> > could do and I'm trying to use a temporary RB_PAGE_HEAD | RB_PAGE_UPDATE. This
-> > link flag is then only converted to RB_PAGE_HEAD by the outer writer. I believe
-> > this would fix the race entirely... However that means the reader spins as long
-> > as the buffer writing is interrupted, which I admit is far from ideal.
-> 
-> But it is only interrupted by interrupts ;-) which should be fast.
-> 
-> No different than waiting for a spin lock whose owner got interrupted
-> by an interrupt.
-> 
-> -- Steve
+tr->max_latency is expected to hold nanoseconds: tracing_max_lat_read()
+converts it with nsecs_to_usecs() to print the usecs documented in
+hwlat_detector.rst, and the other latency tracers store nanoseconds there
+too.
 
-Yes hopefully it shouldn't be too terrible. But, as we disable interrupts on the
-CPU doing the read, it's sort of propagating the latency from one CPU to the
-other, which I believe wasn't the case so far, since an interrupt could
-"release" the reader by setting HEAD.
+Do all the latency calculations in nanoseconds instead, and only convert
+the durations to microseconds when recording the hwlat event.
 
-Perhaps I could propagate a -EAGAIN back to ring_buffer_consume to temporarily
-release rb_reader_lock() and try again there? But that would be a bit intrusive
-as most of the functions are returning a ring_buffer_event * and not an int.
+Fixes: e7c15cd8a1133 ("tracing: Added hardware latency tracer")
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Wenwu Hou <hwenwur@gmail.com>
+---
+Tested in a 4-vCPU KVM guest; all three hwlat modes worked as expected.
 
-The attempt is here [1]. Sashiko had something to say but I haven't processed
-yet how bad it is.
+Changes in v2:
+- Perform the latency calculations in nanoseconds instead of converting
+  only the maximum latency, as suggested by Steven Rostedt.
+- Convert the durations to microseconds only when recording the hwlat event
+  to preserve the existing event format.
 
-[1] https://lore.kernel.org/all/20261111160624.1294946-1-vdonnefort@google.com/
+ kernel/trace/trace_hwlat.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 65e184d800ff1..a16905ac12b0d 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -203,14 +203,12 @@ static int get_sample(void)
+ 	time_type start, t1, t2, last_t2;
+ 	s64 diff, outer_diff, total, last_total = 0;
+ 	u64 sample = 0;
+-	u64 sample_width = READ_ONCE(hwlat_data.sample_width);
++	u64 sample_width = READ_ONCE(hwlat_data.sample_width) * NSEC_PER_USEC;
+ 	u64 thresh = tracing_thresh;
+ 	u64 outer_sample = 0;
+ 	int ret = -1;
+ 	unsigned int count = 0;
+ 
+-	do_div(thresh, NSEC_PER_USEC); /* modifies interval value */
+-
+ 	kdata->nmi_total_ts = 0;
+ 	kdata->nmi_count = 0;
+ 	/* Make sure NMIs see this first */
+@@ -229,7 +227,7 @@ static int get_sample(void)
+ 
+ 		if (time_u64(last_t2)) {
+ 			/* Check the delta from outer loop (t2 to next t1) */
+-			outer_diff = time_to_us(time_sub(t1, last_t2));
++			outer_diff = time_sub(t1, last_t2);
+ 			/* This shouldn't happen */
+ 			if (outer_diff < 0) {
+ 				hwlat_err(BANNER "time running backwards\n");
+@@ -240,7 +238,7 @@ static int get_sample(void)
+ 		}
+ 		last_t2 = t2;
+ 
+-		total = time_to_us(time_sub(t2, start)); /* sample width */
++		total = time_sub(t2, start); /* sample width */
+ 
+ 		/* Check for possible overflows */
+ 		if (total < last_total) {
+@@ -250,7 +248,7 @@ static int get_sample(void)
+ 		last_total = total;
+ 
+ 		/* This checks the inner loop (t1 to t2) */
+-		diff = time_to_us(time_sub(t2, t1));     /* current diff */
++		diff = time_sub(t2, t1);     /* current diff */
+ 
+ 		if (diff > thresh || outer_diff > thresh) {
+ 			if (!count)
+@@ -286,8 +284,8 @@ static int get_sample(void)
+ 			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
+ 
+ 		s.seqnum = atomic64_inc_return(&hwlat_data.count);
+-		s.duration = sample;
+-		s.outer_duration = outer_sample;
++		s.duration = time_to_us(sample);
++		s.outer_duration = time_to_us(outer_sample);
+ 		s.nmi_total_ts = kdata->nmi_total_ts;
+ 		s.nmi_count = kdata->nmi_count;
+ 		s.count = count;
 -- 
-Vincent
+2.43.0
+
