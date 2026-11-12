@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446893;
-	b=GOGx1NtxJdPFLCLarOqkwu+usyEJsopXcNPHuNw0ffO76BReU9j3bhNQCnjG4nXKl7lJ
-	 tc5sImlMMWHOtGj5BLqSzA04+YrNrc/48CwtBySgPzHYQXcDFXJSbEsABBFKDiWgIVRDz
-	 EmevxoEY0ziZho4I/tSyl8P/484SG+sdsHMV2LuEeDpdi71yjz6Ysa8QPulOtQPeXfM5F
-	 6WtvB2cb6iyp8i5ezgpKpZORdsJk6twXSFBH3nKsfJNBqKpGMdEnClUBL194NAlDgny1E
-	 /rW/gVHmSLV4BRkSrcaO82q1j1ULjhVuKndCaJvjGdXpHGS5EjCWW5+zxO00kCJSpaA==
+	t=1794446902;
+	b=JFzgTZ2K5T93Z9s0m/tOntjtAPuM+lFFlI0BksOVuJQu8KjgrFgSyhdNYXIuIyNhHZvi
+	 aFEW5vu5lNTdl3VqIXjZ8qo/Dkfiq7xcQtKoWLVGytco0DBiEfRXqsPjDqL8iL6Z6Jtql
+	 zc3VzQNydqO8hB+qh1xnMgNfRZqoMHz0Tfybu7YcyMZvKj0rG2/Gt7/ajxL//ECeT944Y
+	 xKkVBW1dTASFnCdsSmzHg/jYphrSdkxAC+tjxPaoVXIqYMoQe37IUGXq0gecgXNBuHzDd
+	 MxNKyJ6icC6tHfTYvDdY8dztFybySORb2DCBi/fSFtfv8Diic+ihi9z14w61m/0MuWw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446893;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446902;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=rWWW59Q/ezlTNLCcJslwzdBdYcLA3PiSzf5gryNJ8hM=;
-	b=GwhPhSoBMOAX68RX4xldABT+igBvTI/LhC1+KORf21y3dosljJYJsMVXkn8SJXiTcaax
-	 KL7NcN/tJ36DpqtY+Yfatb/SVqlDV7EMxSydsTHnS/6nvzxAlLJrWGkzgsE8IugFLp5Sz
-	 caBFHVdoIveri+7yPyZhz7kIc4vWSinv8moM+ovx2fq8AmctFAt+C3b/xT+W8YviS2rRj
-	 Q0KU6VUfryz6dn03mXVuOWVB6l8BrkgBokriurWyyFZGRXhLM/zQCEMePuMl9K+htrhMk
-	 F1MJsMphR9HlffS63HxWr0KHJ6l9ckfztFBJ47lyKDxpH3GvG7AVWnlVR7UPAWUEq0g==
+	bh=PdZExvG0BZOdOgdAjYgOqhMOGgABh34fNpA//58IchI=;
+	b=NeABt7oEEHlRVvEdI7ocETLMeABgswhL6qfPEIYw8k3+oo98Tk+kHcWS3VtTIKmRqlBQ
+	 cQKt6CoF6hQd57eX0Q6oZttrjjN46AKtDC7hSAubpUXX57AHZ+dPEX6cAFDjSM5oy91kj
+	 xoFyMcvyTf3zcFL8Hso4R1WePzfPSzRyfYenHiWm9NANwDf3pWsUvZgKRj1XaRUYCRA4I
+	 qnz6r7OBW50+0CeD2QC43hX77s+ijtku3WK3549VpXQGhHDkeYcJdPpaYathCXpqgRsSQ
+	 wN29DEpVn9XIbND4P63goU8/T5it9skz7FEwsys7bQtJO7ipfnHCOgrnIR9kG+1CM4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FYG33QPd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aAcbLP6C;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F907606A31C;
-	Thu, 12 Nov 2026 01:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6E8606A321;
+	Thu, 12 Nov 2026 01:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FYG33QPd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2111F00A05;
-	Thu, 12 Nov 2026 01:28:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aAcbLP6C
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F230F1F00A05;
+	Thu, 12 Nov 2026 01:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446893;
-	bh=rWWW59Q/ezlTNLCcJslwzdBdYcLA3PiSzf5gryNJ8hM=;
+	s=k20260515; t=1794446902;
+	bh=PdZExvG0BZOdOgdAjYgOqhMOGgABh34fNpA//58IchI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FYG33QPdMkpvypdKUkWrflaPpCnOqw+eV0WlGVAHKLCl+FwV8vgJz9d3D7D5fa83I
-	 s4OriUtGXH21UGHsLHrJEBX8C2Y2xD3JtQaxUN3SAYxvmx6SjqCgV/D65pae0Tb5R+
-	 R1FkVBUJAptFmkIOtpIytmHmjWM2wyTCpDfzMN9sy6g3cV8hlKVbgcGQFGSTv39Lc9
-	 Uuzb3QChfkqYwWArvzDhl1r8OBHlVVoxZx17YEMhpBbBBCgUE+yBX8CY6upHmQlPYw
-	 shA7IqOY+4pcVioooaVbat2lFBoMXjJ+6gR6E1QRH1lye/OXqeiQP2ZJb9CkVWGuVc
-	 QR+Q5m3d07jYw==
+	b=aAcbLP6CYpE6G61QbhYQTCVWNqHzy1KOzFTEnxshlqi6xpW0Z2JKeLCyL9j8rkx9m
+	 +2oaCn0WIOiLo81HMX9chtMyE4fz3qmW9SvkhRiX9uzsokNVDJnizCdT0s7AEmFtc4
+	 wAncrJMBKCbHQJUKnn19qFLW+rXs8I8rk1zrcCWonx1JP8OYnxxFU92+yK6Cs/8CRb
+	 9SlgDyEcTg+Z3TBE7kUJ3eew2LKJar+n4APomy5vA+yaD2vX+wgSTCigPti2g3NOWl
+	 ExFg1DmilV21qITEAKgzFFoVolOQyXKmXG11NPsQzu+PNg1L80VD70RClsrr2gUcxn
+	 vq/XzEn66i57g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 10/13] tracing/probes: Allow symstr type for function entry arguments in return probes
-Date: Thu, 12 Nov 2026 10:28:09 +0900
-Message-ID: <179444688986.345731.2259328518477342348.stgit@devnote2>
+Subject: [PATCH v2 11/13] tracing/probes: Reject empty fetch expression for %pd and %pD
+Date: Thu, 12 Nov 2026 10:28:18 +0900
+Message-ID: <179444689878.345731.3181785472635784583.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179444679892.345731.5271591537517106679.stgit@devnote2>
 References: <179444679892.345731.5271591537517106679.stgit@devnote2>
@@ -67,30 +67,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Function entry arguments accessed in return probes ($argN or BTF entry
-arguments) are fetched from the entry data buffer via FETCH_OP_EDATA,
-which was omitted from the allowed operations for the "symstr" type and
-rejected with BAD_SYMSTRING.
+When an argument ends with :%pd or :%pD but has an empty target fetch
+expression (such as ":%pd" or "name=:%pd"), traceprobe_expand_dentry_args()
+still expands it into an invalid nested dereference expression. The
+subsequent parser failure then logs an error position pointing into the
+expanded internal string past the end of the user's command.
 
-Allow FETCH_OP_EDATA to be formatted as "symstr".
+Reject empty %pd and %pD fetch expressions upfront before expansion.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_probe.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 9be546f12053..f0837db354a9 100644
+index f0837db354a9..9f29b3333ff8 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -1959,7 +1959,8 @@ static int finalize_fetch_insn(struct fetch_insn *code,
- 		if (!strcmp(parg->type->name, "symstr")) {
- 			if (code->op != FETCH_OP_REG && code->op != FETCH_OP_STACK &&
- 			    code->op != FETCH_OP_RETVAL && code->op != FETCH_OP_ARG &&
--			    code->op != FETCH_OP_DEREF && code->op != FETCH_OP_TP_ARG) {
-+			    code->op != FETCH_OP_DEREF && code->op != FETCH_OP_TP_ARG &&
-+			    code->op != FETCH_OP_EDATA) {
- 				trace_probe_log_err(ctx->offset + type_offset,
- 						    BAD_SYMSTRING);
- 				return -EINVAL;
+@@ -2435,11 +2435,17 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+ 		if (!tmp)
+ 			return -ENOMEM;
+ 
++		arg_len = strlen(argv[i]);
++		tmp[arg_len - 4] = '\0';
+ 		equal = strchr(tmp, '=');
+ 		if (equal)
+ 			*equal = '\0';
+-		arg_len = strlen(argv[i]);
+-		tmp[arg_len - 4] = '\0';
++		if (*(equal ? equal + 1 : tmp) == '\0') {
++			trace_probe_log_set_index(i + 2);
++			trace_probe_log_err(equal ? equal + 1 - tmp : 0,
++					    BAD_FETCH_ARG);
++			return -EINVAL;
++		}
+ 		if (argv[i][arg_len - 1] == 'd')
+ 			ret = snprintf(tmpbuf + used, bufsize - used,
+ 				       "%s%s+0x0(+0x%zx(%s)):string",
 
