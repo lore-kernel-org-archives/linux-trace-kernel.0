@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794493555;
-	b=a1e3p+mTNK+xLgvN3denU+a+8eaXxs9B6VEHjNAq3skCE2C7gnRDfrwLiccZEUA45QO2
-	 bmWoI8tdSLAxnHwIqSTEWIY6YoPAcq63YKxJOBZahxtGneQjgCnUX5sXABvr5TcBjjrX5
-	 xg7VAC38qcILTNqfMMtwHMop4xaKVdau/90JQxvzDKyVSrPxMgHQCvxmvLokU4vyyPXbA
-	 7yzldNqT9zgjCvcgZwzJq+91pCRBtPBzfsZgVq6UVne8MUw+BV8MYSNGdjR/xnEWw89h6
-	 HWreejpjNiDvdG18JCOzjvDH6WKbtPXwg24o4T5btvI+PH677TduIHDkZ4/f6vVnieQ==
+	t=1794493705;
+	b=FLO91bVzeCENekF7N80erNffpi4+zqHI2cNyKqTHwN4iZF2h9ZHhBcRslTtAe6Vy/bf9
+	 fPM26ATbueTDOrcGRSgYy0KeRV6f6b/L78dna06EfXPoNYA4CstirTM50myOHHvmL9Kkt
+	 GaHzsw1Cvwx2taqCVaoqTxhJWUqcYAz/L23JfHC3VDGloF7tBj9VNuNFq0IWowA0E+cv2
+	 ghYTWDIqcmnyHS5VHvaxXnUO4DNwzfNc5qtYxJ5mEBM80ueduoIIMO6vj1oAl31JOlqLR
+	 LmNeGbtI1lYi60/j85pm+CW9J9LYGm6a45Liy1y9877OG4J6whE4QYpyV0uHqmoRFMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794493555;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794493705;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=qC9ssOMm2iP6KgLcDa1jRKWVaO8OXpMM2x5cERwms9M=;
-	b=2YcfVrxOFXMgpq9BPh4ZAjmgCNH3lOmWsw1tXLRuXm21fQb/PAJ29UeVXwokC9XhFxWK
-	 EzP9sW1Q3l19BnzpS9eZruRskd/KRbcWBl9t53ErEclHeIVCOB928DSOE7+txQ4UnB3Em
-	 9h5g73u/rdKXZ2YYh1HS564LYCfxnu2GfW5Gt7qzTU8DV/yoF/eq/rmMVCnF6hVZnz5LU
-	 3q9+UqzM5xGQuy7WFzOdgKgSZCtclobyezIDUvBZAvZGebTI1/mbfpMmqYvpPYOno/biZ
-	 lt8BPtzWdclrBzfCaE5ybxs9D6MpIaOU9tsygiPC2oEAsR6RUeslNryY2HHMLS/I8Og==
+	bh=TJtSuWfEotizr4YyAeBtFGMT3cr+79OrTmJTZ+Qcylo=;
+	b=NZdt2TYTNjo+EYnIc0Ft4pb7HSDd2cHw305RCnfADuCvdLwERSdQKFPlAXHL6bdTVPLo
+	 Z57KtSAfVu4tsnWeWX+5RdiMxSdQFP+5ntUDPJTEzd+FUo0DS20hyB8GANHVAgzKxk1qr
+	 cVF2G/HIH80/F+kunwVrcqFgN2E+7kc0ieqg62Oam6KHgAGqkDH1diQDdlXHaATOjzeru
+	 jbdEabg9fUia0zNlx5xKUuUM7zZ7x0RMuyLzt4P2q9Z8LFN1BV6ATawWyTpsfqDgYo697
+	 E/vwnoXszhgkuHNj4Z0iqqu3WMwC75UvjKNSxTXtKOOisqqmKzZ5i+vFSnEmp70/pCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KAIuE6rB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cOYTYFMh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED4260703A1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE80606A321
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 14:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KAIuE6rB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B9C1F00A05;
-	Thu, 12 Nov 2026 14:25:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cOYTYFMh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24ED31F00A05;
+	Thu, 12 Nov 2026 14:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794493555;
-	bh=qC9ssOMm2iP6KgLcDa1jRKWVaO8OXpMM2x5cERwms9M=;
+	s=k20260515; t=1794493705;
+	bh=TJtSuWfEotizr4YyAeBtFGMT3cr+79OrTmJTZ+Qcylo=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=KAIuE6rBLyiotoTs8bs3XT4vgI0F5HfciydgbysCNm1ZdXFP2aTHCTxGlXqCLrHV4
-	 0DtPYuxt+6f8GQEn7HBi0LWrXeYiZiUscZVoT5qhR04Z1nOEaCg8qCP3Zge8zJPgKj
-	 cLDzE/rLohtBJLh0b3gG8YLSr9pf/GTMrQUgDkpDHWfkezBnpu6Qrbof6hnXh2eGaN
-	 dxnDtA5EQYAQTHzbSQ1k1g0ITv5QacpL0faXM9Ohu3d0ILhkNSzgmY5WHMfDIj3Jn1
-	 HGDpWqa8Ot8qRzkCyXnTHk/EbAym5TLS3DqIeQkZKGnk8jndDWHJJ4y79dWikwovBY
-	 CbWNCXzYSpJyg==
-Message-ID: <sashiko-outbox-211313@kernel.org>
+	b=cOYTYFMhDOPbQiCGn1TmNiE3v4CstsGDjt7WyiL26wT8ra5mPy+2vWzj53zz1zlLg
+	 RAJ3UzvlDq1Uo7ta0hBnQOtBqAELd3vo3p/2AiDRaqunqSgcs44d7Ro5ecvHM3ML97
+	 yOa/FUzj5gawk2zLiw9SB0zUxY9n0yEISi6zT48azYQZyjAs3PVuzt+TTmI+WW+sSQ
+	 hfaaERYBRBBXxevUGeiSalGbC7/a3cg9OmYpNak/Je1PwmtgpJLGO9dyI2bxhPtw6A
+	 FMSr4xQEkon6QoqZYL/WlQvmtZgT0cOURbmvPBt3KKMHVZl61LRdzSPoS6thVndQOe
+	 lKc22+29rOYOQ==
+Message-ID: <sashiko-outbox-211316@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 4/9] tracing: Cache ring_buffer_max_event_size() for
- trace_marker
+Subject: Re: [PATCH v1 8/9] ring-buffer: Enable context analysis
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261112141440.3050124-5-vdonnefort@google.com>
+In-Reply-To: <20261112141440.3050124-9-vdonnefort@google.com>
 References: <20261112141440.3050124-1-vdonnefort@google.com>
- <20261112141440.3050124-5-vdonnefort@google.com>
+ <20261112141440.3050124-9-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 14:25:54 +0000
+Date: Thu, 12 Nov 2026 14:28:24 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,38 +59,72 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] tracing: inaccurate Fixes trailer in write_marker_to_buffer()
-  commit
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Medium] ring-buffer: overwritten lost events count in
+  __rb_get_reader_page() [1]
 --
 
-commit fc0aa729f88ae3461e4964c8c56c6c6eee40f687
+commit 07222abe396def21c907e79ee32f4784cd985857
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-> tracing: Cache ring_buffer_max_event_size() for trace_marker
->
-> write_marker_to_buffer() calls ring_buffer_max_event_size() twice
-> without synchronisation against ring_buffer_subbuf_order_set(). If
-> subbuf_order grows between the two calls, cnt may expand past
-> TRACE_MARKER_MAX_SIZE. Read the maximum event size once so cnt can only
-> shrink, and drop the now-unreachable WARN_ON_ONCE().
->
-> Fixes: 2808e31ec12e ("ring-buffer: Add interface for configuring trace su=
-b buffer size")
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+ring-buffer: Enable context analysis
 
-[Severity: Low]
-In 2808e31ec12e ("ring-buffer: Add interface for configuring trace sub
-buffer size"), ring_buffer_max_event_size() still read
-buffer->max_data_size, which was initialized once at buffer allocation
-and not updated by ring_buffer_subbuf_order_set().  It only started
-computing the size dynamically from buffer->subbuf_order in 472ac478b14d
-("ring-buffer: Dynamically calculate max_data_size").  Should the Fixes:
-tag be:
+This commit enables compiler context analysis for kernel/trace/ring_buffer.=
+c,
+adding lock annotations and inlining rb_get_mapped_buffer() and
+rb_put_mapped_buffer() into ring_buffer_map_get_reader().
 
-  Fixes: 472ac478b14d ("ring-buffer: Dynamically calculate max_data_size")
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 82f6e3df46276..99ade8b41b536 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+
+[ ... ]
+
+> @@ -8031,7 +8023,7 @@ int ring_buffer_map_get_reader(struct trace_buffer =
+*buffer, int cpu)
+>  	rb_update_meta_page(cpu_buffer);
+> =20
+>  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> -	rb_put_mapped_buffer(cpu_buffer);
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> =20
+>  	return 0;
+>  }
+
+[Severity: Medium]
+This problem wasn't introduced by this patch, but can __rb_get_reader_page()
+overwrite an unconsumed cpu_buffer->lost_events count [1]?
+
+When __rb_get_reader_page() swaps in a new reader page after an overrun, it
+assigns the delta directly to cpu_buffer->lost_events and loops back to
+"again:":
+
+kernel/trace/ring_buffer.c:__rb_get_reader_page() {
+	...
+	if (overwrite !=3D cpu_buffer->last_overrun) {
+		cpu_buffer->lost_events =3D overwrite - cpu_buffer->last_overrun;
+		cpu_buffer->last_overrun =3D overwrite;
+	}
+
+	goto again;
+}
+
+If the swapped page is empty (or the reader catches up to commit_page on the
+next iteration), __rb_get_reader_page() returns NULL with
+cpu_buffer->lost_events still non-zero. Callers such as
+ring_buffer_map_get_reader() and ring_buffer_read_page() then jump to their
+"out:" paths without consuming or clearing cpu_buffer->lost_events. If
+another overrun happens before the next page swap, the direct assignment in
+__rb_get_reader_page() overwrites the earlier unconsumed count instead of
+accumulating it with +=3D, under-reporting dropped events to trace readers =
+and
+user-space meta-page mappings.
+
+[1] https://sashiko.dev/#/bug/linux-6817998d-f7d9-427c-82e8-fac5ea6dfa8c
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112141440.3050=
-124-1-vdonnefort@google.com?part=3D4
+124-1-vdonnefort@google.com?part=3D8
