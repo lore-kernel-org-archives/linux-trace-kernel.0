@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446848;
-	b=ZjYDEA+0e64727qAZB3BCfTgMTrGHSumKYL558M9ky+miqcrZaXhdVQ2rFeq5Xxgj0lE
-	 luFh5lXWlEsQ8wDEHLsXEQs3SZs5JRJMAqc6JqLEZZ2yOFqiFydCxz7jvkKDOzin5uL7N
-	 Q2ahHsn+Nvsr4qCwnpcVbpAChTxqpSc43nCKI1h3JQWpwlprHxI5j+/FU7N3dXCpIdIiG
-	 sZx7Vx1v0vpL+ogHga0/QJeQqQEhtZaBkuBaDjfzSvm/t2uncJl6oBhWrBgBTv14tsm+H
-	 Qz4bTL6SuRiVMyEsHZIOBd6lshaVYPLGALOKth1VQA4+ZCJFbr+MsAXldTM7+Zz8AhQ==
+	t=1794446857;
+	b=ZeI/RHuHL0Xswf6wgETLPLbqsPAwOAP9ZdIQaUIVUn86K53NW+Uri0vz+ncXTbIs8WrY
+	 m1w48SuXUgrmqV5baB2bSxdxRyOTOI0JVTIK9ODdbvxJwJ0So3+cPo6a9lX8NzHJT/tTR
+	 a4q6XB/0wZqbPGvt92HAB1rEs2A0GHe8kfnNo24xUv4g4k19fWI7y/rhnQFSrU3BlCoO1
+	 zlBJy9ueYueLTzTjrogYPUWx7yLd6c1shConnjyaoQzm3vA+lWGW94nbBEIa6WBxl5avL
+	 8dHKE0rDnoODG9akypIxrHx76sR4dNpYIcQ82de92/FTacEhyLTk68zXcZReKJaH56Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446848;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446857;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=gCrBj/L0nVk0Y4rofc9IruZOjajTmVyTiEHWsaHrV40=;
-	b=ZrlAuyKbf5VGrTEdC2bCQgsg3QE43OyHG6Ia4GQW13k5PnHJOphibZjNmcsd2RhUcKfi
-	 xijd36l4l808FYdQVSa06KwbHOsf4vnRoQfr5LM36hvAFhdWf5h6bJ9rgRJZ+grm86clA
-	 ylTxZvjcaE3T9LqAcLeaHUsNqwE+mzvcqh4VFsi2DyWSJDk9wV/GpDgzNw/kUvbzgSgE4
-	 IST5WZ48QgtUrX+BhWKPlOcBvg0suTF4ljIblpslkNDmgXTbY8CJnPidFSi+dmWZo31Uu
-	 GCdBFNAZC4/SD0CkeVc1rB1nCWtyMh7ce1q/mWDvlvMWFWNTv9v+db5uNWFFOwZqUwg==
+	bh=hrc31r43l/ddBqmzi23AaElB9YOcZwjk1KgJOeh5OAk=;
+	b=P/2OjEhgI1ILi3ACdPJyROIzMTeBwJHpbUMn4dmLwkZfFBa8dWbi+qhEQK1dZAnKDg/u
+	 YUfjEe2SN0tWJuLELFVXGFo6xLO/G0HGw+QoqGp39j1c2bOzU/Z1poTp3EPns8cHtA5Et
+	 DtOa+gtKL+SDMrO6CqD0xDkqwaY5WRe7Shr4i6Ba7dCx/cxRYUyWHeeX5ZiKudzhn3STr
+	 c2xvoMFdPOZQbaAb6UzhgkR8JR/3g63NNbjIXmLZTSMEkyOIqgV75naN7RyUUk+M4JF5h
+	 RJCzhUdzgWoh1YyCL77w0X2CxLKtybC7kx9MPB7Q4Xv/Z8Z0nbl+Xetr82rZKHsGALQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oeizNkiE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cRsuFmqC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421B8606A31C;
-	Thu, 12 Nov 2026 01:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1359D606A31C;
+	Thu, 12 Nov 2026 01:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oeizNkiE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97EBC1F00A0A;
-	Thu, 12 Nov 2026 01:27:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cRsuFmqC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DB91F00A05;
+	Thu, 12 Nov 2026 01:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446847;
-	bh=gCrBj/L0nVk0Y4rofc9IruZOjajTmVyTiEHWsaHrV40=;
+	s=k20260515; t=1794446856;
+	bh=hrc31r43l/ddBqmzi23AaElB9YOcZwjk1KgJOeh5OAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oeizNkiEanCwVfNBW8cDUMRCoudYoAXgDzGG5RkrrJX052IikEJOfbSPZ8VTo93Au
-	 s5b5pjHSKOo9Jis0XUbivT2BCOehjwMgcHPcGIlvS0hf4EQGK2FrqE15Flv6CueGkS
-	 bMzxFEGRRWdp6knvGp7UthDL59bjCaOAWc3xBQYH/ONPH+AHUvdFUofvM/Ch5thLBT
-	 N8db2pKn8zRZdodgl4gAv5Cer1af3EBUJLtEF+7vMYtnGXL/XLU3u5xcd+xf3rsaxY
-	 sUxaa3tMk5S/924Ua6ewi81UG/wHNzZZzjcbQFaWswWuqEmgsLkXAW4Q8tMt94EJCp
-	 fbOwV6bkDKFww==
+	b=cRsuFmqCMz695Um+x9D+bp/xqrW7MiW7zpxVTpIJhQgOyFO3O35M59H3n3p+NHAkd
+	 O8RffNHR1Em6Pf0b6vBU2iWhRNqjWX2qJMz81iQjm4+iAerYsuhZAI0BHhIFKTT0Hh
+	 QpPRGXNVa5EznC986EKxYVPYYJQv8d42H0QEUgo/2GE07gmSIlMTIx9b8BGHyXNLQN
+	 uSmZ9UT7qDpC5/mRXOnFBgjxb/eqHfCnwtOMPbhnJNJ1qIHXazozI4g2wfbPe2inaX
+	 H6wIGeGqBnIsBU8kUIg3yLlEJ3qXQse8A+t5WqZWbtYJ7or0aisB7L1owvmXa+0xWs
+	 nRf505XpmQBAw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 05/13] tracing/eprobe: Fix 1-byte signed field fetch in get_event_field()
-Date: Thu, 12 Nov 2026 10:27:24 +0900
-Message-ID: <179444684450.345731.8324000135791531252.stgit@devnote2>
+Subject: [PATCH v2 06/13] tracing/eprobe: Disallow attaching eprobes to fprobe events
+Date: Thu, 12 Nov 2026 10:27:33 +0900
+Message-ID: <179444685330.345731.15745036038049281337.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179444679892.345731.5271591537517106679.stgit@devnote2>
 References: <179444679892.345731.5271591537517106679.stgit@devnote2>
@@ -67,51 +67,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Because the kernel is built with -funsigned-char, plain 'char' is
-unsigned on all architectures. Reading 1-byte signed trace event fields
-via *(char *)addr in get_event_field() therefore zero-extends instead of
-sign-extending negative s8 values.
+Event probes (eprobes) are not allowed to attach to other dynamic probe
+events (kprobes, uprobes, and eprobes) to avoid recursive probe chains
+and lifecycle dependencies. However, when fprobe events were introduced,
+TRACE_EVENT_FL_FPROBE was omitted from the exclusion mask in
+find_and_get_event(), allowing eprobes to attach to fprobe and tprobe
+events.
 
-Use explicit fixed-width integer types (s8/u8, s16/u16, s32/u32) when
-reading event fields.
+Exclude TRACE_EVENT_FL_FPROBE events in find_and_get_event().
 
-Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+Fixes: 334e5519c375 ("tracing/probes: Add fprobe events for tracing function entry and exit.")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_eprobe.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/trace/trace_eprobe.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index f1590c9af6b2..9defe86f4e8f 100644
+index 9defe86f4e8f..f65393fb1c10 100644
 --- a/kernel/trace/trace_eprobe.c
 +++ b/kernel/trace/trace_eprobe.c
-@@ -334,21 +334,21 @@ get_event_field(struct fetch_insn *code, void *rec)
- 	switch (field->size) {
- 	case 1:
- 		if (field->is_signed)
--			val = *(char *)addr;
-+			val = *(s8 *)addr;
- 		else
--			val = *(unsigned char *)addr;
-+			val = *(u8 *)addr;
- 		break;
- 	case 2:
- 		if (field->is_signed)
--			val = *(short *)addr;
-+			val = *(s16 *)addr;
- 		else
--			val = *(unsigned short *)addr;
-+			val = *(u16 *)addr;
- 		break;
- 	case 4:
- 		if (field->is_signed)
--			val = *(int *)addr;
-+			val = *(s32 *)addr;
- 		else
--			val = *(unsigned int *)addr;
-+			val = *(u32 *)addr;
- 		break;
- 	default:
- 		if (field->size == sizeof(long)) {
+@@ -762,7 +762,8 @@ find_and_get_event(const char *system, const char *event_name)
+ 		    (TRACE_EVENT_FL_IGNORE_ENABLE |
+ 		     TRACE_EVENT_FL_KPROBE |
+ 		     TRACE_EVENT_FL_UPROBE |
+-		     TRACE_EVENT_FL_EPROBE))
++		     TRACE_EVENT_FL_EPROBE |
++		     TRACE_EVENT_FL_FPROBE))
+ 			continue;
+ 		if (!tp_event->class->system ||
+ 		    strcmp(system, tp_event->class->system))
 
