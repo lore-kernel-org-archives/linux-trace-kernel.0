@@ -1,57 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.64.228
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794448625;
-	b=Kp+rHTmmi8tnMkOPK8DBAZOGBGFA6hcygOhDlxiwLEAMcCI8Me7XWcn9sTOdQuVVGt8w
-	 Avvyz/ByqkVOHp9/Oa85+yN9IIrIAJ9CZEgNb/Uy+uioVl2Zu1mRCrYr1+O3dm6OdBmMw
-	 y/zOu+Dg/hs7/P74ODA6wTe3Wy+2PobeD8d7+QqUb5zYOKlAvi9dq59G9tygCLSgAoXpx
-	 gFDs53I3P4qpM2RlqjEZz4Z3rrU/G+hC7XrVWtsNtfcEGAh7yQZ6QzwXKjbSg0ZSOnJmZ
-	 OKFsaG2tjPrRIvSiHcurmj+d0DCXwgf8PPQ3v18Q94vqjYOhqKX+1STDwT88BwEMSUQ==
+	t=1794458064;
+	b=UpFEcAJv99GquQi1xSTcikJEal7jwU1PkhXJVoqoD74Bmz6l2iostYsp6N8xFQsGNqYt
+	 bBSCgb89LThQ4n9GY1etnrdPUuG0GE4dA9Dlm+1n6ORWKUpZZIlPJ8k58VuwkZosjLXnk
+	 z4VR/IE2uusWzHQT563XN1Q6O1vIXH1JeULRlr1xMi0l2BfhGvhiTD8UXI19SM/h/liA3
+	 xmcC6//wZeHT4R0DTRztiFbAv+TTWI2eIu2nIkp9EqOIte+ol9aePXDZMHn8PX9y4UFTc
+	 zVM8ttbTwGQvewVuFzlTIemYleqXDqWUe2sVczOhnHnSMhsS2CKafAOs8xYo5CvwQMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794448625;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=5tVrpnSnYawFKbxnVswfSEykWDGab2cU3kO/w7VCiY0=;
-	b=2NWCTdDtFxGMBE1qrD6hO1moORBa/zZRp66EOAEMVcFuGnL+TBJYW3Bp+LwSG2epXN1V
-	 NFNG2bD1rp30LIDtaicT+JtFo6ZLFedRdXq0qANrl9gjYeEU/I5Rv7MucY1/HUzm2c63m
-	 I0CdKDKMDBNh4RbpgBoVvXfKWaNek1bcdtDUnDAwiMhd10Rs/qlRtuJJQUc8tr4T1xdZI
-	 9L7ETOEyjQQALZzc9qhFVNxP7eGMesaWd4b0nlIA2zIM+MXQCiUJv7DLY8tQNDbnJa+y7
-	 rn41qevgkKTHis72dUhg7NM8Xy/jRP0V4PbaywmW/9wo6zh+Kf+9ZoT6xGs10CX7R2w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794458064;
+	h=DMARC-Filter:Received:DKIM-Signature:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Flowmailer-Platform:Feedback-ID;
+	bh=RARPdGFOpymjJpoSOvkZ7QwTFzh+akN3FwghGunS9+o=;
+	b=ke91g04P+xtzedq9Kem9s4pQxKvd9mUxsrbgGiLsEJX/yuACfbyHS4nbWbMCzjPnXjGM
+	 KHRAd224lXrfhz1xtThhHbsjCiF38KtOt73vSmqw5K+4COPDUtSLuFyRW3QhV/NrgitkW
+	 yhKIoyn/ERNX3BdgfV9/KvEmCBn98biwhxH+0eglfDIarPZYXfTdm04UWGDs9tqpxYS+Q
+	 V8g7wLCPCQae5duun7RO0HOPCICuF1UxnnDZCrFEfI85DKeNTtBkJ+QXQGxM686gA7MHo
+	 V99b4zaohn2uWAGQ9oSMNRGxqrJHxadAf9K2UQCgYP0alBvis5NNYDuGqGJD7BZbrIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Bf/pSIyF";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=siemens.com;
+	spf=pass smtp.mailfrom=rts-flowmailer.siemens.com;
+	dkim=pass header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=RTxMQDBd;
+	arc=none smtp.remote-ip=185.136.64.228
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5A3606A881
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F065A606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 04:34:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F065A606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bf/pSIyF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD56E1F00A05;
-	Thu, 12 Nov 2026 01:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794448624;
-	bh=5tVrpnSnYawFKbxnVswfSEykWDGab2cU3kO/w7VCiY0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Bf/pSIyF/7wT5f4e5qeo3OciVTOFpM9kZtqY05g6YwQKvZWB9DrYa9/vPudP89Klo
-	 eVMuk493BJ93F6D0ZSxVteag6BYiF2Sk2a6XvoChrqGoCZ53EPNp2t1UuZhVASUUn2
-	 Tz0/XWSi3IRPy6TCDtLy7UFLXcBIcwuqegtwtC8+dvM62NiR041P4FzyRGhbcPudqT
-	 jzYG+MjyTtzPqHy55vr7Yd/PRFxLbvUNmXfHEcy7i4OIlsmRzCTKPvMCBq3OGI7O75
-	 aG3lpmYhcQpGcbTF4MrwyFBhHy0Uybva5OvGX1zjovBHTMl0ypqmoPG62SUh7Vi1WL
-	 TtEtJ0Kr/bkOA==
-Message-ID: <sashiko-outbox-210125@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 03/13] tracing/probes: Fix BTF bitfield parsing and
- out-of-bounds buffer write
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <179444682679.345731.13247927117747302891.stgit@devnote2>
-References: <179444679892.345731.5271591537517106679.stgit@devnote2>
- <179444682679.345731.13247927117747302891.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 01:57:04 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=RTxMQDBd
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 2026111204341526ad16c553000207e7
+        for <linux-trace-kernel@vger.kernel.org>;
+        Thu, 12 Nov 2026 05:34:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=meng.ding@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Cc:References:In-Reply-To;
+ bh=RARPdGFOpymjJpoSOvkZ7QwTFzh+akN3FwghGunS9+o=;
+ b=RTxMQDBdADI8ovC2WPdHk/BquO6khlSuF/w9iJcD14LD1Q/WpUmD52lDbgUHOzR5ne8BGx
+ xCEGlCZSb8N8GeM+3SZ8ztY9hRyIaQu6eK8NDmnUChRlwn7RaCA5KQLXdUi3bWCYD/v0j9Er
+ /y2kK8taxTDcxmeMbgUTUn9xl4JesRDDVenzYKIzl0o6n2plX6JNtgzJirgu2LsONLMGnRAD
+ UbJ/SKwBojpF7Tapnv9vACFg5zO8S3SYm3iI5lHU2q56ZZptBjrTTtyUVEYT9RhdiJT5Re7Y
+ AgilNrGtYvJZS+iVdSKVNWIIYdbiE1ekVZEso+vnZuctJFKZ3g+33oTQ==;
+Date: Thu, 12 Nov 2026 12:33:57 +0800
+From: Ding Meng <meng.ding@siemens.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, Tony
+ Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar
+ Kartikeya Dwivedi <memxor@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, florian.bezdeka@siemens.com,
+ jan.kiszka@siemens.com, wq.wang@siemens.com, p@1g4.org,
+ gerhard@engleder-embedded.com, Jason Xing <kerneljasonxing@gmail.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Martin KaFai Lau <martin.lau@linux.dev>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri
+ Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, Ihor
+ Solodrai <ihor.solodrai@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH] net: mark skb NAPI IDs independently of busy polling
+Message-ID: <4pqljild2fp6eotiicvwbwu2wfw66fzd4qamwt6utirdjxlaok@iiu2f3k7azrp>
+References: <20261105071706.7043-1-meng.ding@siemens.com>
+ <20261110134539.12d860ef@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,83 +82,37 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261110134539.12d860ef@kernel.org>
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1335312:519-21489:flowmailer
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] tracing/probes: wrong bitfield lshift on big-endian in
-  parse_btf_bitfield()
---
+On Tue, Nov 10, 2026 at 01:45:39PM -0800, Jakub Kicinski wrote:
+> On Thu,  5 Nov 2026 15:16:08 +0800 Ding Meng wrote:
+> > +  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
+> > +  enabled and the driver is using NAPI. This hidden configuration is
+> > +  selected automatically by busy-poll support and by drivers that need
+> > +  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
+> > +  use deferred timestamp conversion must select it so the networking
+> > +  stack can find the device and call its timestamp callback even when
+> > +  busy polling is disabled. The struct contains also two other fields,
+> > +  but they are reserved and undefined.
+> 
+> Just take napi_id from under CONFIG_NET_RX_BUSY_POLL instead of
+> complicating everyone's lives.
+> -- 
+> pw-bot: cr
 
-commit e5cd5bf4ce18aa0d644893f624a1f1a581f88aeb
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+When BUSY_POLL is n under PREEMPT_RT && NETCONSOLE, igc fails to get RX
+hardware timestamps.
 
-tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
+Then, drivers that use deferred timestamp conversion (e.g. igc, engleder) must
+specify a busy poll dependency if they want to obtain the original net
+device upon consuming the skb. However, this dependency is far from
+obvious, and annotating it for future features of this kind will be very
+hard to discover.
 
-This commit updates BTF bitfield parsing in trace_probe.c to compute byte
-and bit offsets consistently, select a matching unsigned fetch type, and
-size FETCH_OP_MOD_BF shifts to the selected fetch type.
-
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index a880a90642d7c..3a57fe6b67cce 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-
-[ ... ]
-
-> @@ -858,13 +876,22 @@ static const struct fetch_type *find_fetch_type_fro=
-m_btf_type(
->  }
-> =20
->  static int parse_btf_bitfield(struct fetch_insn **pcode,
-> +			      const struct fetch_type *t,
->  			      struct traceprobe_parse_context *ctx)
->  {
->  	struct fetch_insn *code =3D *pcode;
-> =20
-> -	if ((ctx->last_bitsize % 8 =3D=3D 0) && ctx->last_bitoffs =3D=3D 0)
-> +	if ((ctx->last_bitsize =3D=3D 0 ||
-> +	     ctx->last_bitsize =3D=3D BYTES_TO_BITS(t->size)) &&
-> +	    ctx->last_bitoffs =3D=3D 0)
->  		return 0;
-> =20
-> +	if (ctx->last_bitsize =3D=3D 0 ||
-> +	    BYTES_TO_BITS(t->size) < (ctx->last_bitsize + ctx->last_bitoffs)) {
-> +		trace_probe_log_err(ctx->offset, BAD_BITFIELD);
-> +		return -EINVAL;
-> +	}
-> +
->  	code++;
->  	if (code->op !=3D FETCH_OP_NOP) {
->  		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-> @@ -873,9 +900,9 @@ static int parse_btf_bitfield(struct fetch_insn **pco=
-de,
->  	*pcode =3D code;
-> =20
->  	code->op =3D FETCH_OP_MOD_BF;
-> -	code->lshift =3D 64 - (ctx->last_bitsize + ctx->last_bitoffs);
-> -	code->rshift =3D 64 - ctx->last_bitsize;
-> -	code->basesize =3D 64 / 8;
-> +	code->lshift =3D BYTES_TO_BITS(t->size) - (ctx->last_bitsize + ctx->las=
-t_bitoffs);
-> +	code->rshift =3D BYTES_TO_BITS(t->size) - ctx->last_bitsize;
-> +	code->basesize =3D t->size;
->  	return 0;
->  }
-
-[Severity: Medium]
-Does this calculate the wrong code->lshift on __BIG_ENDIAN_BITFIELD
-architectures?
-
-At runtime, FETCH_OP_ST_MEM copies t->size bytes starting at bitoffs / 8
-into buf, and fetch_apply_bitfield() shifts that native-endian integer left
-by code->lshift and right by code->rshift.  On big-endian systems, BTF bit
-offsets are numbered from the most significant bit of the first byte, which
-is loaded into the most significant byte of the integer in buf, so there
-are ctx->last_bitoffs bits above the bitfield rather than
-BYTES_TO_BITS(t->size) - (ctx->last_bitsize + ctx->last_bitoffs).  Using
-the little-endian formula shifts out the bitfield bits and records
-corrupted values in the trace buffer on big-endian architectures.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179444679892.345731=
-.5271591537517106679.stgit@devnote2?part=3D3
+Configuring the skb napi ID separately
+from busy poll seems cleaner and more reasonable.
