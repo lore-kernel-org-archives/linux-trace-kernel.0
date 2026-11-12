@@ -1,54 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794444529;
-	b=I9aK0n0WXjk9xxRK0EtZcbmJJu4y0dS0lsIvhbUZQBAb6G0LOkeLbd/Isdn6/aClrT6q
-	 Aj7Grgy7LIRqWIsfxM7yLmcS579iuSRECSau9JQz3Fr0PPTtd69ULMGGM4/qnsi6QxTYJ
-	 z91p6M/CL2TcH6pLqt/ed96TW8D2AIBvAzAbeIkBOvtb8fJhQXciRNNvWWolkN4xrivoS
-	 3DQ0V0T8nb/axSlD63XcAaWC7pGC6H0OdeLh6AgwfnZLF9Ou3Xo3Ltd6Ea/EvoC37Olyl
-	 TA6D0BfZ82iiSC5dx7DB7Jod+oDbHi/kk+Jz4100x2iemNSnMc20MDvrmS3wSxmftjw==
+	t=1794445473;
+	b=JxjLmenfuIhm/SWNhELDXvP4GsxbRUK7+gfqZ2pjfzlnauSPmAFyb63ULQBdv/y8NhPk
+	 d/qB3fkTY4COEhGRhNbCZgLyEJ1WapfbcfKYd5r9xmJFWGaEhKondH74bClH0HA9IxOVs
+	 1J2j61UZaSDdVlYS0abPk1gXsZiY/Fs6lbdzovjI9+ZLiJv61PEqWoELNn/PzFbwgPnuC
+	 zdukokS5yvA343RSOO843WnqeY/h129zPUTT2v8e06fWxtUa+NQinZbhuXph3R1hEX9ze
+	 P7A2/VkusX7SXjon6TzOHxlc6Uzpry65UAwqxnV2DoHRrpvHFjtbQPjbnbZiuJuF+lw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794444529;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=1zyXYhT4ZOjKHFljY1yybFov03hN4yF4aUJ996zXCJ4=;
-	b=HKTGRID99Lq2ogVVvieyttAY3tKXjuvFvCSsp6fGyovhQvPnYDBg4R5+L4BtA/Yq6Rqc
-	 JBVNDaSqDLosC7MdKd9zie+4Xga+K/b53IxgUaVxqBSms/FkNSKyKjWwMzTfq6/K0uH2O
-	 s1sDTtd0IpF/VqbpBvMSCBOIN1l1lq+xJ+MjgYvl8XanB6GkRjZ2sHJtbN9WRFfY8mCXY
-	 uAgCcDZAo+iaB4O537ZgcFmM35XJEncw12HhJSnrt/emihTA0uMm2HxxBfM4+Cknronr8
-	 ZqXAug1wTsU08GdsCf91ep9Zr609JSk819Fu1aoOTcxTIk+d2ayuqH5gkbSpH3b7rTQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794445473;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=ImXBWGlfZVszV/Tkddt3FR7QWzPa65TkJvi8WUZhBmU=;
+	b=SnIp5v5h1pJT/PD2ai7QbRE48yKxP/hkWAKH6a6dawZKnfRVs+fd5Vo9lKLEOHMMT0te
+	 Mor8XeGAKnD+8NZvcdd45SRFw7CcfvN0cNBaFM4vXMX6gslaArvNcQCf+Br+Rpg3OzxXv
+	 3nou2oONGK2BfzSbAfWrSygErRHsMJVGkUVDySItdZ4XQmyIWP9nQaYp7PhgI7fp+C/u6
+	 0qVasHG+VBUvUCY8Z21lMSc8QT/vE81l/BLrSNEcQImTFKSrAlYkkQ8dxbcWBaKJSzEe+
+	 X5GmIUDmtst9KmR8hEQAvVbgTMGbT0ie1pnF8l7tMwoO2hRveq/Q0Uso/Pn+1HqEaDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+JHv7OI;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AISAJ9bb;
+	arc=none smtp.remote-ip=209.85.215.173
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC69606A33C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 00:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30926606A338
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:04:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30926606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m+JHv7OI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3611F00A05;
-	Thu, 12 Nov 2026 00:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794444528;
-	bh=1zyXYhT4ZOjKHFljY1yybFov03hN4yF4aUJ996zXCJ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m+JHv7OIeAbAAse7E20Hi0qCd2GSgf5mattKcaMGhM8+wdKo4BzRY/e3TFbkmtepn
-	 Y8DBx0bndD6l9nbiU4iVK8BZOKH//GpZwK2qF5B4oBVovMSbUtoc4H0j6mvVtEQZ1e
-	 yySOBEQU41eSIC9EG2qYVkYrvFKnLQf61LIpt38VGdUEgTzyKBqFiP+5trYl5Zwal2
-	 e3zmgZGTjAlmTXNSvmlbnfmWXia92mUpF8GCxwMUkG6T+2ywiuPTBk57yRRipJ/kEw
-	 O/mS29QlY2h8eR8lTX9jxwRiuvx0ZA40DwOc14gO3Z2j1NgzqjwGw8H19gFyltjWyZ
-	 7HghHgZ1nAD6Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: sashiko-bot@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] tracing/probes: Propagate error codes in eprobe and fprobe creation
-Date: Thu, 12 Nov 2026 09:48:46 +0900
-Message-ID: <undine-1794444526180508856-8b12d389a453b4cc@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <sashiko-outbox-204255@kernel.org>
-References: <179418408457.227715.1485179201014819821.stgit@devnote2> <179418419198.227715.15433232608137637935.stgit@devnote2> <sashiko-outbox-204255@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AISAJ9bb
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cdba1bbde0bso1418922a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 17:04:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794445472; x=1795050272; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ImXBWGlfZVszV/Tkddt3FR7QWzPa65TkJvi8WUZhBmU=;
+        b=AISAJ9bbeU8GfdfXc0hLt7sMbDWH+hMBgyUtmeidknJQeLdeCBSqQ++3Ab4McAJkWR
+         cyjHGHKPWZzGDjet/7z2iDyQHRyGnIe0HOdif98bx4pz+lYySI0+lCGOf7CeW2pHWIzv
+         tpEDH/VJX+VnjRJHCVZeNsYXOyzUXqAldn6kkUhTXMYZ+sWD0fa4Fc+tKpTZu0IWHlFt
+         irjynHqGN/7GuyKtbmfM4Qje2w8qHPEyAIAcozxd1LS8veIrrThANyqqXGD3oVTjmZiB
+         HOIJg46NX89zi+SYaRrcx29ZvLGnCEStm56k8tduYDPHOn//AwYmnhWpqU28Qgdby59I
+         wSLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794445472; x=1795050272;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:to
+         :from:subject:cc:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ImXBWGlfZVszV/Tkddt3FR7QWzPa65TkJvi8WUZhBmU=;
+        b=NC+D0/75Q4YbaBkL3Fo4a4vgUkO8wcmU8dKOZtkPAfcasdDijDiLF/MTWxqyY++tT9
+         wJrvkMl67r+t4X3H0ic04nFhWB/hsPOTSJe4kjhVcfP2HG0fBNShOAqapL3fKjfYL9GC
+         aDmlRheU9s91iWfYwSNxv3+/vwx9cbfMHESdVQ2qnovrxB+vpFnTw4YMsuRcU1N63Ao3
+         FsmzMbIOu7c74r+2YU8FLTv+o1H7yrXjGldtqMg1GzcqxrMRgm7kOinDueftimEUq0Ur
+         VbieKpXDq9byhSmoSQmleC4P1cb8yW6khKcSspcUz74iaT+f/xmUR9XTLXKqksdRswhP
+         v+rw==
+X-Forwarded-Encrypted: i=1; AL+hErH0LtCnPFqHOIVrfjCR4UuFriCJMKZLGHDGOH/y/b9s9NU5UyjnEIxKN9ZCuvFM8hstZAIUI7TJVIwEgHN9L9w3bz8=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8XYWm8w98SEMgG0N8buz3TdfJBMM+dBkgVEWiM6668sYMzH7j1
+	BzmRFBWPQBmC+eUzXdT7VhVBoslGBrHptkrJYlB7UZI8UKKKauwD84s7drVrYQ==
+X-Gm-Gg: AYBFou0/fN/QHDDFUczqsK4k7GvETqHhzPoC95GPS6oMgTzctpFyBVpnp2VTuLvQa63
+	Hd3cUDvWEp19nOBUcSXOJFy4RZIGjrRyJA2bENQtsKgzjO4gkvVGL/LbtYvx4hAJXMfvfd7A05w
+	FdSJNr63OYX+NzZ4ue0hRE5AbPrMqC6JLkZhWzDmAv8wdFVqrDFUpEd2JjWlhrAH4/wmD0OvAYC
+	EPVH0OA3a07gG9Nbej0wgSe4ewd/9nVfYjpK3Zke7oRkh/+azPY6GFe4GJ8K2OSiMaNY9rUX9BZ
+	Xyoc83Zl7cIg4wRq8NW+SpI723j15i7/x1UJoAxah0+2mkHtSPmbTCy+esAH2IMWU+UvC9qYi6w
+	/W5ALQo0FwNFmwaShKw+PRxWCHztoG9oNwZRynYPUwY6and60vcfcy9GapUycRDs9lU84AfyCsZ
+	skA1LzbY25UZbdyYgNWCZte/YtHFukjR2LYrh4btJwZk1/0jhavVSV0p+mYIsAaJdYKlW21ytlv
+	+Wv/Gk3IjCgxk7nRHV9umQ24OCPL/PTDgHuUW6w9SgLfursJW2eDM9aP4NO2UItNPiMkwA9+FrW
+	BnZPj6GoJxGMAW+PU+zxWXhoG1Vq/4r0JEeEfn8/FNtARolA+afxm4vIyf/7EJrs9/pYb8n1XD1
+	4nVxqlVb/gNsBF5AQi6G+W3mSwjlB0cgFxA==
+X-Received: by 2002:a17:90b:590c:b0:3a8:699f:959d with SMTP id 98e67ed59e1d1-3b182f28bd7mr3487343a91.31.1794445472226;
+        Wed, 11 Nov 2026 17:04:32 -0800 (PST)
+Received: from localhost ([153.61.198.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cdd8d7a26e5sm2247647a12.18.2026.11.11.17.04.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Nov 2026 17:04:31 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Nov 2026 01:04:30 +0000
+Message-Id: <DMSTTWR4MAET.1VEV3R66S7ZFY@gmail.com>
+Cc: "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman"
+ <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Song
+ Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "Jiri
+ Olsa" <jolsa@kernel.org>, "John Fastabend" <john.fastabend@gmail.com>,
+ "Emil Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
+ <ihor.solodrai@linux.dev>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "JP Kobryn" <jp.kobryn@linux.dev>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 2/5] bpf: Check program recursion per task
+ via bpf_ctx
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: <mikeba@sentinelone.com>, <bpf@vger.kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>
+In-Reply-To: <20261111-bpf-preempt-v2-r2-v2-2-9d8f6b952ad2@sentinelone.com>
+References: <20261111-bpf-preempt-v2-r2-v2-0-9d8f6b952ad2@sentinelone.com> <20261111-bpf-preempt-v2-r2-v2-2-9d8f6b952ad2@sentinelone.com>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,47 +109,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-On Mon, 09 Nov 2026 00:46:05 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Low] tracing/probes: missing Fixes trailers for overwritten error
->   codes
-> --
-> 
-> commit 435aff670b6c20ffbcde000e1c0b092b53b663a8
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> > tracing/probes: Propagate error codes in eprobe and fprobe creation
-> >
-> > In __trace_eprobe_create() and trace_fprobe_create_internal(), error
-> > codes returned by helper and registration functions (such as -ENOMEM or
-> > -EEXIST) are overwritten with -EINVAL.
-> >
-> > Propagate the actual error codes to the caller.
-> >
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> [Severity: Low]
-> Since this fixes overwritten error codes in __trace_eprobe_create() and
-> trace_fprobe_create_internal(), should it include the following Fixes:
-> tags?
-> 
->   Fixes: 752be5c5c910 ("tracing/eprobe: Add eprobe filter support")
->   Fixes: 08c9306fc2e3 ("tracing/fprobe-event: Assume fprobe is a return event by $retval")
->   Fixes: 8275637215bd ("tracing: Adopt __free() and guard() for trace_fprobe.c")
+On Wed, Nov 11, 2026 at 11:39 AM Mike Bazov via B4 Relay <devnull+mikeba.sentinelone.com@kernel.org> wrote:
+> As a result, the same program can now run in two tasks at once on one
+> CPU. Programs that use a per-CPU map as scratch space across helper
+> calls may see another run's data, where the run was dropped before.
 
-OK, I think this is a kind of improvement because anyway it returns an
-error with error log.
+The kernel has such scratch space too: bpf_raw_tp_regs.
+bpf_get_stack(), bpf_get_stackid() and bpf_perf_event_output() of fentry,
+raw_tp and tp_btf progs take a slot of it with get_bpf_raw_tp_regs().
+It doesn't disable preemption. Three tasks on one cpu:
 
-Thanks,
+  task A              task B              task C
+  level 1, regs[0]
+  <preempted>
+                      level 2, regs[1]
+                      <preempted>
+  put: level 1
+                                          level 2, regs[1]
+                      uses the regs of C
 
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/179418408457.227715.1485179201014819821.stgit@devnote2?part=12
->
+B sends a sample or a stack trace with the regs of C.
+This is an existing bug. Today it takes two or more progs.
+With this patch A, B and C can be in one prog.
+Doesn't hold the series, but I had to mention.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Fixes: ca06f55b9002 ("bpf: Add per-program recursion prevention mechanism")
+> Fixes: a46023d5616e ("tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast")
+> Fixes: 439ebd5b5708 ("bpf: Add sleepable support for raw tracepoint programs")
+
+I don't think we will be sending them to stable soon.
+This is a big behavior change.
+Backports only after next merge window.
