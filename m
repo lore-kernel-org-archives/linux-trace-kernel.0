@@ -1,105 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446325;
-	b=sC3D6GMotVdEpAZsJpbGynelS3jw7YcXvtl5HE98xIvpmy1skUBhLCVRNZ1LsDwnvYIk
-	 5zu1DeKTMJS4/dCv7rf47Q2VgFOGu5BnzxZdSwpzEr4tuLXoyWQtzbkHEU2dxx6ki9KG3
-	 tqby/CyVSTmlbgQb1luLY5WNO7MQiqGFtXMuGbRFoEZCc9FmFpyIpX30RECDWdh4JhDb9
-	 KVWVGxwUd+NVV70tBmYYVR8CzKzAoH0HWqj2X3NtQfUVvRBTkcLmseaPN1ZvX/CrtXvTH
-	 d+G1+qrsjgV3QkZnmmCtnCwJESGIkMobTGO8gG0I6tb4MzFsGHjgecjZpCigxA3xPNg==
+	t=1794446554;
+	b=IghJJvLFcbpGXFBNB9idAsk+PGtkLybuluSb08L5VxDNDR4C0NiA9YU8JQWwbxn7HuAN
+	 gRpztZck6Vct/uqXO7HezicEDR5u4BEKcYrgAFvb780kEm51u5uk7GWh75woPXoFRYAnh
+	 +YKp4tNQiBAE7NGFFtDKBYs55to+eIQA5wBPIoeF7Rp7CW2AiV5PxKA66o8ALsyyC6WJs
+	 RA7219sDBXLGERuEczQI3PzL1qGjTACIj2e+v07zjBb++dtXha2Qi/PH+g9e4oevIb5q9
+	 sUS6Ofa3VLY2fRhDtjIzG2+4Ukw2u0l+taPrrHRFKP2CS4s1iUzco/RZ09VZ0kOJ0zA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446325;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:In-Reply-To:
-	 References:Content-Transfer-Encoding:MIME-Version;
-	bh=BbOODuGG0FNPjmT+T9b+kLN1Jw1z3hyQyq3dad9XfLI=;
-	b=PM9XT2QS/i9ZXfPZWyQOHMDZxqIxBhcEXNKxW/Ot53fJQT6TrGPbLk2RCqlHQLoktrYV
-	 w7UUIO0urpvCYceDqyEEWzND5PLv0NxHViLzGLhCOO2zFW/7DNz+y3OS25InGhX3Q4MJ7
-	 8my2be4kaSKv/pS+LD0Meqit1KjKekv6hduK0jGvboU3Mcu+qiaHKFQfW7gUDZi6lowEw
-	 WAzHkiUm+l5nsFPW00bbnpuaLsSjUZ9J/AOJ/DKbreFPrVuTjk87rK8Q/f0WdePzdO3sj
-	 m4VGc4Gmk8+q27jbyNM4uvQ8p+E3qM/uKsY/ANdKrBtfG5n+PvFbLzIIy9aJWa/mXMg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446554;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=uiuo7ZnY00zP445Je9zLEnYRUY6zzQ21kf+OCKEn2vM=;
+	b=UXkbr4opHYSNmy40MJfVY61zs2VgIB30c8WhfUhQuE/k1Aq+vB3nP6iUvWWJ9wd6DzP3
+	 X8S9bOYVKTxNqaV4ylDv3lOeI3xy2cF8NlQXCylnhERAVqiiKG8s53xcdIPx/HGhcj0fp
+	 2dB0eSTYJ1l6u6WYIIkKARxxaLue3d2tqlpJyyVNyp2BedgJlZ1Z5tUYy1HR2iJ3qrPwz
+	 qUmM0OHsDKuik7cv72ppn7e6R8xH3O/Rmy9awDvoOll9PcyqZePRanr/exUV4fWWjDzMv
+	 eh/TgcRkh3HiIFS/jz9FwdbjR+PeKDyk3hWjNX6MrzBEglwdLamt4f9x29hB4QiuhVQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="x/N4LmaU";
-	arc=none smtp.remote-ip=209.85.214.171
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bLOsK9aQ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4390606A331
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:18:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4390606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56420606A321
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=x/N4LmaU
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2ed1e9ae5a8so12157905ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Nov 2026 17:18:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794446324; x=1795051124; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=BbOODuGG0FNPjmT+T9b+kLN1Jw1z3hyQyq3dad9XfLI=;
-        b=x/N4LmaUUINrFgwptBM8QAlvbesRfu4BGD9yFRk/riBmXpTFAwL8LzBrtMivIx/h5M
-         nnokgp4EAATpf3aI/KwuCHbZyiVUYrODGsx2gtQV/ThZX83DqA7Eb/P+fukzYMu6Gw7K
-         XRqNTLL2ANJwV2q/XTaTBREHRukfZvTGYYmw8wU8EzmrLlMae4xXOqn1E7oDo2eAEvHF
-         LHMMehFrGb1dJCVfV4StrJ5qftCuWhMd4iBMU8LC7pCNY6O7EaiqWXaclHbgUjralz8V
-         R5SwrqA2tY47XgsCnvTJH2xUTV5REZbP7tX9Mseb+JP+Vb4EABFuxvzNc0K6WCp21vKb
-         bunA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794446324; x=1795051124;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:to
-         :from:subject:cc:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BbOODuGG0FNPjmT+T9b+kLN1Jw1z3hyQyq3dad9XfLI=;
-        b=DYZc2+Xae5SXHRS+F6dIaKyGc15Q48VGtVL5PzqHl8v4IOk+SYFBdKPwG/aZ5vFLsk
-         dQjafkyYPbYenPozYxjiYmiU9eahQe8Z1nkUqQSR8rjeR3qwaMJvr3Tm+ToSSwg3qxKo
-         Huwql2ANlersUYP6RX6XbJZ9nM/SeeLx2Tp1DkJlLlKpDnfxyO32RHllo1qvt38NtVa+
-         vFnokIiIxT/CzCpgnRqGEVXrRD6cmNkkoHNVyl4X1cGhSRImJDIsDZWjVcLDRxLd+oeG
-         P2n2g7yqCQGTmgs9Zs69bnCL7OOU+URQlWkRLUGwx9AbeGnF1oqDqmZkfFYppEOMXTy/
-         Y+FQ==
-X-Forwarded-Encrypted: i=1; AL+hErGo2xoQXxOSbV7K0EOxXxdZuqxVv/Z5UhzJtKHafCWTh2rlBVwzzXuHSXqT9AEaxOR3CcqYgM1QPbAYRy74ShMA/lE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9To8jOZYC6rMyDaP6vTZsu79K48SmHJTv5ivswACNzk+DbZ3Bx
-	fG2ZDAZK5sTPpybebmUnXV6wrjWucPKFWmJN30zirnrq0DmAPp2YJUEv
-X-Gm-Gg: AYBFou0PnWIrGYzNJn9FtmUEg/57olxKPhIulZY4HoY8UukZhWZQPPtMKPUsekijJuO
-	Fsdl/8wmbGF1ixcGqMCTg2VkVsbzOdX7bXu8xM3DfpudK57d7tJXCsgfB5EYzxdJ7el153ripdF
-	7q7ylPsF8lUnWnluH6L0lTjjOqVZk900VP443QMy3RJJd2sbinuzZeV/sN3k4Aim3oRvBodjRvq
-	RG/h93Pz0QzqpMuj3vL9FvD5bCUJPJxIQZogWlTslmNEh4WrEsoXcbCbfp7RqqhhtcSyqVXqQBd
-	7AJeLslW/343g5jUpby7O9YjeY00zfM6qvKo834tx74TTXdrMPCfTRlpVUKL5GZKfvNo/vlJujA
-	m+BGCQrHUqvcpKTMFFAIvSs/AWWKPhC+Ls2/l8fd3R5Tjau84fE5CtwuxxT80Xd2VJMo1eKQmvn
-	uyz1ME8sYGPbpgQmxIsS4CL0KGmO82HrALn9SC79csR0XVFIS+avokXbUK0vzNvB7mtS6vle2bi
-	oiA7Lv51x5k3gTjB64B3lrf1Z/7Tm8V0/e1eNBM8slzHzQdZy66v0WMXmPCBWtHSWVEbysdvaoA
-	cQv6wjcs3zDk7Eu0uhHHXkAqDqAPdLey6V3mmHaVphKeCzy7pFJTYd6VjAJ2U5ElzOrE+0vSsco
-	Vcu1gfnvJPgMhkvKjNzJLVZYZuRkG3wDNuA==
-X-Received: by 2002:a17:902:cf4a:b0:2dd:ad74:ac28 with SMTP id d9443c01a7336-2edd7752fa1mr45783595ad.26.1794446323913;
-        Wed, 11 Nov 2026 17:18:43 -0800 (PST)
-Received: from localhost ([153.61.198.248])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2edb6d7d964sm25621155ad.32.2026.11.11.17.18.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Nov 2026 17:18:43 -0800 (PST)
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Nov 2026 01:18:42 +0000
-Message-Id: <DMSU4S7392QQ.357Y29RMDZ8BJ@gmail.com>
-Cc: "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman"
- <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Song
- Liu" <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "Jiri
- Olsa" <jolsa@kernel.org>, "John Fastabend" <john.fastabend@gmail.com>,
- "Emil Tsalapatis" <emil@etsalapatis.com>, "Ihor Solodrai"
- <ihor.solodrai@linux.dev>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "JP Kobryn" <jp.kobryn@linux.dev>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 0/5] bpf: Check recursion per task for
- preemptible programs
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: <mikeba@sentinelone.com>, <bpf@vger.kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>
-In-Reply-To: <20261111-bpf-preempt-v2-r2-v2-0-9d8f6b952ad2@sentinelone.com>
-References: <20261111-bpf-preempt-v2-r2-v2-0-9d8f6b952ad2@sentinelone.com>
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bLOsK9aQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 885C81F00A06;
+	Thu, 12 Nov 2026 01:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794446554;
+	bh=uiuo7ZnY00zP445Je9zLEnYRUY6zzQ21kf+OCKEn2vM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bLOsK9aQx8LqfVLTyunZWulFIGxJ3w1QWqW+XDB70sBjktlFddrxcHeita6oZiieW
+	 Q92bfSSWQmw8JQkNFQ7u1FxC1JcUKQnylThl53IjxCVWHP2CokbPpNVwJPGaURz4kN
+	 UUWZs0cx2huI8T9QbSi2/03k2lB+z0N7F3mCqc33UGmlwJ1UI7yofhS48qVMHot4qI
+	 JRe73QSDL+/2om/96tSFsK+l19ZG6Potfq1xEo/s+jbjmMTPW4Vs625nu3BBPxJXPM
+	 eleRLOy+pkHorH95OFJtb0PQl0LKvkbGj7XPGZEjmbOAvUj8J9Xnl+EiYVJqdvP4NN
+	 ZJy7x7LaOv1LA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
+Date: Thu, 12 Nov 2026 10:22:31 +0900
+Message-ID: <undine-1794446551468718251-cc1df84c836b0c27@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <sashiko-outbox-204254@kernel.org>
+References: <179418408457.227715.1485179201014819821.stgit@devnote2> <179418411197.227715.5577722703946865281.stgit@devnote2> <sashiko-outbox-204254@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -109,71 +58,90 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 11, 2026 at 11:39 AM Mike Bazov via B4 Relay <devnull+mikeba.sentinelone.com@kernel.org> wrote:
-> This series checks recursion per task instead. Each run already links a
-> run context into the task's chain (current->bpf_ctx); the run context
-> now records the program, and the check walks the task's chain.
+On Mon, 09 Nov 2026 00:45:45 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] tracing/probes: unaligned kflag=0 bitfields fail in
+>   get_bitoffset_of_field()
+> --
+> 
+> commit 2e4831ec2095ef67023431da46d322fba9d204db
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
+> 
+> This commit fixes BTF bitfield offset calculation, selects an unsigned fetch
+> type wide enough to cover the bit offset and width, and derives the
+> FETCH_OP_MOD_BF shift and basesize parameters from the selected fetch type.
+> 
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index a880a90642d7c..26e02929f1ffb 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> 
+> [ ... ]
+> 
+> > @@ -653,6 +661,12 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+> >  		/* Add anonymous structure/union offset */
+> >  		bitoffs += anon_offs;
+> >  
+> > +		type = btf_type_skip_modifiers(btf, field->type, NULL);
+> > +		if (!type) {
+> > +			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> >  		/* Accumulate the bit-offsets of the dot-connected fields */
+> >  		if (btf_type_kflag(container_type)) {
+> >  			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
+> > @@ -660,12 +674,15 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+> >  		} else {
+> >  			bitoffs += field->offset;
+> >  			ctx->last_bitsize = 0;
+> > -		}
+> > +			if (BTF_INFO_KIND(type->info) == BTF_KIND_INT) {
+> > +				u32 intdata = btf_type_int(type);
+> >  
+> > -		type = btf_type_skip_modifiers(btf, field->type, NULL);
+> > -		if (!type) {
+> > -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > -			return -EINVAL;
+> > +				if (BTF_INT_OFFSET(intdata) ||
+> > +				    BTF_INT_BITS(intdata) != BYTES_TO_BITS(type->size)) {
+> > +					bitoffs += BTF_INT_OFFSET(intdata);
+> > +					ctx->last_bitsize = BTF_INT_BITS(intdata);
+> > +				}
+> > +			}
+> >  		}
+> 
+> [Severity: Medium]
+> Does this leave ctx->last_bitsize as 0 when a kflag=0 bitfield has a bit
+> width matching its underlying integer type size (such as an 8-bit bitfield
+> backed by a 1-byte BTF_KIND_INT with BTF_INT_OFFSET(intdata) == 0) at a
+> non-byte-aligned member offset (bitoffs % 8 != 0)?
 
-The link walk doesn't look too bad,
-but pls share bench trig-fentry/exit/rawtp numbers.
-Maybe we should do a per-task array of progs instead to detect recursion?
-It's likely more cache efficient than link list walk.
+Ah, good catch! Yeah, it might happen.
 
-Just for the record here is the illustration of
-the case I was concerned about earlier:
+> 
+> When that happens, parse_btf_field() sets a non-zero ctx->last_bitoffs while
+> ctx->last_bitsize remains 0.  fetch_type_from_btf_type() then does not widen
+> the fetch type to cover the unaligned field across the byte boundary, and
+> parse_btf_bitfield() rejects the probe with BAD_BITFIELD (-EINVAL) because
+> ctx->last_bitsize == 0 while ctx->last_bitoffs != 0.
 
-  task A, cpu 0                     task B, cpu 0
-  buf = lookup(&percpu_scratch)
-  fill buf
-  <preempted>
-                                    buf = lookup(&percpu_scratch)
-                                    fill buf
-                                    output(buf)
-  output(buf)   <- data of B
+Indeed.
 
-               today              with the series
-  -----------  -----------------  -----------------
-  run of B     skipped            runs
-  event of A   correct            has the data of B
-  who sees it  recursion_misses   nobody
+> 
+> Checking bitoffs % 8 != 0 alongside BTF_INT_OFFSET(intdata) and
+> BTF_INT_BITS(intdata) != BYTES_TO_BITS(type->size) would record
+> ctx->last_bitsize for unaligned byte-sized kflag=0 bitfields as well.
 
-A prog with a scratch map of its own is correct today and
-that's what plenty of production bpf progs use today.
+OK, let me add that check.
 
-This patch set will make them send corrupted events, and nothing counts
-this corrupted events. Today, at least, you have a miss count.
+Thanks,
 
-Please add it to commit log, so that trade-offs are clear.
-Commit log here and in cover letter talk about 'what'.
-It needs 'why' and 'trade offs'.
-
-Also should we add an verbose warning to the verifier that
-when the tracing prog that uses per-cpu maps might have corrupted
-per-cpu data? I know, no one is reading the warnings unless they
-are verifier errors, but above scenario really worries me.
-I thought about automatic insertion of bpf_preempt_disable() for such lookups
-and bpf_preempt_enable() in epilogue.
-Maybe that's the way?
-
-> - Timed may_goto keeps its budget per program and CPU, as before: a run
->   in another task can renew the budget of a preempted run.
-
-Not quite.
-Today prog->active rejects B before the first insns of the prog.
-These insns set count and timestamp.
-With the link list approach every B gives A 250 ms more:
-
-  task A, cpu 0                task B, cpu 0
-  spins on may_goto
-  <preempted>
-                               enters the prog:
-                               count = BPF_MAX_TIMED_LOOPS
-                               timestamp = 0
-  spins for 250 ms more
-
-On a hot function A never ends, and it holds rcu_read_lock.
-So the promise of may_goto that I just fixed a week or so ago
-will be borken again.
-
-pw-bot: cr
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
