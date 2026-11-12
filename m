@@ -1,58 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794496788;
-	b=I3IGjUVuvOGoEJIeI+m1uynYrSoYEn14Fku2cLr8KfS8VDW6CbFaqLkEZ7tEdw4CGvs0
-	 ve6BuGAdBeNF4G7xfHUJKanPXQydVTujRpOek64ubLzR2kGG4/jQmR3mIFDr33hc03HUY
-	 2YQcYuFMfdtapHgi5hnPtGU5VFD1POOqhKS14kBkUjstX8l0B/RSMAuUaLRZGQEdj6qvY
-	 +Gv30BlCP2/3fLfwb0qTi4tQtdiWliWfqX7WUqlyfb9hp/exSw92apXtr3R6wsYgVrcj5
-	 zOqvcLoX3w6PMHMJU0lmVZxr3DC82ha+Q3W+zx7pjCsthnssIHG0fo8IE6w3wJJm8qQ==
+	t=1794499139;
+	b=1F3IS4fNoWgcS+6wuJP5bB4BZ6Ln3r7PAD4vQ0UOWgJkU4+E6G/BonnWsSAwIlhNi5pv
+	 zfBvCpRLk9HAtwAS8+6RqWSbi6LfitW9g3vDm6erKh1jRzJ8NO9gRCd1iJ0IQ9zpPH7pn
+	 ZkwOd+NJu+R7JIgG7WFwjcsec5S72X4P+BT3+RTwLrBAdGv5QcZWOfGyz5QSfAy6decSV
+	 oTZwPtaAGk6ZEfb9uYohN8a07PrRg9It060raC4WsXimOkv9dp1lBz96LnVjfZKZv33hU
+	 nc9leae/qbGrnfeeojJ66atY376kTyiIZlvQU1qyWnkmXckqHziIe8AG/OV+pKt8oQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794496788;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Debian-User;
-	bh=03AJzptY//ZjOsx7gciWrj84OyhOQNNWsyWVo7nSKNQ=;
-	b=14bbOl8dvwsZIUMlYcQrylQGlivgcwSYmMvr7RFVGvckMVltilP4Ge8SB/hLqzCamPeO
-	 FUPIWcHBKJIrKx7RdVh827DjNQfuipeMqtA5/fze15+hiMm4fltzS7B+0wRco+kn2TuD9
-	 ASbyhjSJGK3/ggnDo2FPLR6nMOs749R+HGBEODXJGg6TOvSrsLWQ22pRXoMPPnerTHiyM
-	 4P15rfYUk7dJdDk1KSEn/XgKDq51MH8pGejrEaGq91s93PqchUdGavwFm7usx5UwKznB6
-	 iLOhapT840GCdDsv03MqaYcrvBeOqAVBYNL2uz4qG28nwL2vRLw7UC9llg9JjNiwxcA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794499139;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Rspamd-Queue-Id:X-Rspamd-Server:X-Stat-Signature:X-Spam-Status:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=RA4Zm7BEMm8rMWMw7WpSJymch0xY2+ETcvG+vYOO778=;
+	b=BL4pTaIANa2fpAoEFNGDCWsaLBcL9gofxL7vrRZd9aMRrN15tFxtQCXQrcEeXovSnuYn
+	 SoFdWeHEwx8EVY1nV2FYP+wi/LgJm2QwF7VD8R48t1z9bUIDefJrBWwMX9b4LArLhx2zD
+	 UgD62KJ6DA4QVD8zuT1qAB3Qg88sQnx9AmCvrVYE6ieUHGQ7eL/HK3w/DjG0nlYjByMoh
+	 YGByQPLu+8w305maVv4TH8Tl3yPrnfWRunojPwnWCa4V3j9W1rtiOKTLYJ4YQvJYdvXtp
+	 qCy/tVJk19V3fWh4wbrUZz/FfwyLCQvGVdY1tGjcFvLsGm7nQ/CWfWtJLvLvrkQBSkw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=debian.org;
-	spf=pass smtp.mailfrom=debian.org;
-	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=jvVfGcJs;
-	arc=none smtp.remote-ip=82.195.75.108
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QpEBqYGD;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7DE60A2607;
-	Thu, 12 Nov 2026 15:19:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A7DE60A2607
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20303606A323;
+	Thu, 12 Nov 2026 15:58:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20303606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=jvVfGcJs
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=03AJzptY//ZjOsx7gciWrj84OyhOQNNWsyWVo7nSKNQ=; b=jvVfGcJsZhkzStKD59dPSOxzNo
-	fARmju5vLQ1l8p3aJ+6SapfL8ZtaH4uOxSHv3amdOuAU8fIsh1dEQzLPSXWKnfSmDqWsFPcZYGvh5
-	22FXsyN2cBgCKWhVIzpsbWKG8fn07OwZZVgYLaDNbTWu1R9i+V2PC6WKlLVgAzUBEturBwFnlxyaG
-	Y/afOsEFeS29O+7PFUWCTXKN00Q28XjntcFUDBaR+nOxuMS4UvoUPXmqevWxi8gAYDrD6GP+oPMLN
-	k1lGEgfxQ8NAY+UZ7v4JEGkiJLiPnA0ceB4pDouLPmwJZrXb9v0HkZkvSLwrpooyhMaqGT6So5huo
-	O4gWx5gg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1xRWaS-00E3vX-04;
-	Thu, 12 Nov 2026 15:19:40 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 12 Nov 2026 07:18:42 -0800
-Subject: [PATCH] fgraph: Do not mark index 0 in every shadow stack frame
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QpEBqYGD
+Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id BD17E1A0684;
+	Thu, 12 Nov 2026 15:58:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 313D52002B;
+	Thu, 12 Nov 2026 15:58:55 +0000 (UTC)
+Date: Thu, 12 Nov 2026 10:58:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracing/probes: Zero out faulted dereferenced fields
+Message-ID: <20261112105853.38bd39be@fedora>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,95 +57,142 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261112-fgraph-bit0-v1-1-695ad14f4b1e@debian.org>
-X-B4-Tracking: v=1; b=H4sIANLY9WoC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzNDQ0Mj3bT0osSCDN2kzBID3eQ042QTC/PUNEvLZCWgjoKi1LTMCrBp0bG
- 1tQDiK60eXQAAAA==
-X-Change-ID: 20261112-fgraph-bit0-cf3c487ef99c
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2103; i=leitao@debian.org;
- h=from:subject:message-id; bh=UvXPZ58gPt8YzT13/CIaQfnnCc0bbexfQdodr77XTHs=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBq9dkID+lRC3775ZUeSqACpCKtcL5oXbV6zPLX/
- 1kdmxnNOlaJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCavXZCAAKCRA1o5Of/Hh3
- bddID/4qsiGosEYT5qBMmr7/l8CgQgfE6ruPjtKC+VT8Mnn0VaI8i9F/dro/tVw2ic/ltC4mooy
- v1d/RlpnHfCDrMbiRObumLCLDpKvNdPbfJSFTfEXR/AFCBpEGsn5k61C505OmYi334mn/2mPats
- 9F9nFucKoaUSUnOChqAkKsaGtauIIhgS1jNqRbR1LuREtL55qkMdntWfxuQ3NR/cvaUwaCBsCSy
- K0qWwE60srPIU3LEV9EDYAycu23cgSkHETntnGlDRPEQoZM2o3dLKflkiPYfPH2mG4C1cQadfp2
- fGGlhV63wD8Hpu0I8F4kKzEWN7hYpkhW7kCr0my+/1Rl71bk+nvSjzgHU2Uy8peBK14hXYsb5Ut
- 6adF14F7cuBdPogJOcUr9vtc64nxNW1Tzw440E88WKDEAlI3RZqWHeM7vakujwyyC0uKOa+DY3w
- ANayqge3PZ3oogYAz8wP+Oi0dXtCt3GfPw3GGAh0zKyMH2vR7+Kj9bGPMnfzv+UbPvWiUxSg4nZ
- ibO+yRIT2ijkCrvDfSeqGYPP0oHM5LX90x91wNzaxeOLj5he4pXFERAZQnUyFDRiHUKpJePrjAY
- ARFfU+I3G6MgHDyiC8A546IYMgx97yFm7VPw8lvikmaR5uHQaD0hoghRvklY1tScP3EVHTp4edT
- gIgzZYLsNWQ1lPQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+X-Rspamd-Queue-Id: 313D52002B
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: 4dzcu1t787i6shzwzxdjaxxutfjow5zq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/TDRtc4a3gZTgU+8DPOX3+8Aw1OT4g16k=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=RA4Zm7BEMm8rMWMw7WpSJymch0xY2+ETcvG+vYOO778=; b=QpEBqYGDXIOZbgB0T8jEfN7EsSp1WwhrrXHhTP5AEORWoZVlJjrL7p31F9bv1oHn06pBvRB3xt9mpB/N48W/GNQWocIYDlyhFEdL2YBagvMsgcrfWU5CCTRqZE819peCWlweKf6W7hT3RkLsu1IfplAv421xsNTwJtiSMHd7lM8=
+X-HE-Tag: 1794499135-890381
+X-HE-Meta: U2FsdGVkX1+TPCutRuhTmth3nWP+OcwBHqQwhwKiUc7RO+6E+p7zoV8ptm/LvdJNpCUseMB0od+f3VT6ZZHk9kC14NMA0s158XKEsMNKZaC+Il1sYpMa234EWndeb84nt2RYX62aBjWVZTS2s0UbioyKD3bhQzDJ38Nas3jGrew8y9ToDqGp13Cj2z+ReTKM+HgBFDAkapPnvPR3lel2XG564Nw4nLc3ezrTx3N67b1XhEANcayzwlkiTe8HgGnqc2DZTCsr3nWxtZ0MOEYLeE76lUEcmG/0kNqdx7Fxa7BQ3QggHoh3iuyIsTZoXFYLWzW1GnFoTIidHunvzVQanBmuGnvhxKMI5OWENfrrco58taH9+rDJWlJy5/x7QygSslwL8aLYTQfFVU9WMU4KfScr5MEIPL0ZhE/wJAKHiRmleOcnHnUeFprHcYW3W2pbYztoRI3eqBineu6DoYqtkORjVthO1tAbLsiCh/RNZ34=
 
-We are seeing this warning on an arm64 host:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-  WARNING: kernel/trace/fprobe.c:676 at fprobe_return+0x260/0x2c8, CPU#16: FuncSched/3281330
-  Call trace:
-   fprobe_return+0x260/0x2c8 (P)
-   ftrace_return_to_handler+0x2bc/0x5a8
-   return_to_handler+0x20/0x48
-   futex_wait+0xa4/0x218
-   do_futex+0xb4/0x1d0
-   __arm64_sys_futex+0x15c/0x278
+While looking at tasks global descriptor tables, I discovered the
+following anomaly:
 
-The theory is that function_graph_enter_regs() sets BIT(0) in the bitmap
-of every frame, a leftover of an old tail-call check, while the return
-path calls the retfunc of every set bit.
+~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
 
-A reproducer on linux-next supports the theory. On a fresh boot, with no
-other fgraph user yet:
+The above creates a tprobe on the sched_switch tracepoint and records the
+previous task_struct pointer, it's mm_struct and the pgd the mm_struct
+points to.
 
-  cd /sys/kernel/tracing
-  echo 'f:fpexit vfs_read%return' >> dynamic_events
-  echo 1 > events/fprobes/fpexit/enable	# fprobe_graph_ops: index 0
-  echo vfs_write > set_ftrace_filter
-  echo function_graph > current_tracer	# function_graph: index 1
-  echo x > /dev/null			# WARN on vfs_write return
+~# trace-cmd start -e tracepoints:sched
 
-Removing the bit was agreed in the review of the series that added it
-[0], but the line stayed. Drop it now.
+            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
+          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
+     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
 
-Link: https://lore.kernel.org/all/20240527093436.7060d358a64cc2ea3213b07b@kernel.org/ [0]
-Fixes: 7aa1eaef9f42 ("function_graph: Allow multiple users to attach to function graph")
-Signed-off-by: Breno Leitao <leitao@debian.org>
+The first event has is a user task that has both a valid mm_struct and a pgd.
+The second event is a kernel task where the mm_struct is NULL and so is the
+dereferenced pgd pointer.
+
+The third event is where things looked strange. The mm_struct is NULL but
+the dereferenced pgd has a value! That is: NULL->pgd produced something
+other than zero.
+
+The reason for this is that the probe_mem_read() and probe_mem_read_user()
+do not write to the destination on failure. The process_fetch_insn_bottom()
+loop does not check the return value of the dereference (as it is the last
+one), and does not update the event. That leaves the value for that failed
+field to be whatever was in the ring buffer at that time.
+
+Have both probe_mem_read() and probe_mem_read_user() set the destination to
+zero on failure to read the address.
+
+Now all pgd are zero when mm is zero.
+
+Also update the stage 2 of process_fetch_insn_bottom() to not return on
+fault but to just set the value to zero and also do not even bother
+dereferencing the address if the value is already zero. This allows the
+code to continue and fill in the zero into the memory location on the
+ring buffer.
+
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Changse since v1: https://patch.msgid.link/20261111050322.49bbebfa@fedora
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 6d87143b3ddb5f..a674874e6a05a6 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -700,11 +700,7 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
- 	if (!bitmap)
- 		goto out_ret;
+- Have stage two handle faults as well, and just ignore dereferencing NULL
+  pointers. (sashiko)
+
+ kernel/trace/trace_probe_kernel.h | 13 +++++++++++--
+ kernel/trace/trace_probe_tmpl.h   | 15 ++++++++-------
+ 2 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
+index 4eb4acfa09ba..00542a162d30 100644
+--- a/kernel/trace/trace_probe_kernel.h
++++ b/kernel/trace/trace_probe_kernel.h
+@@ -102,18 +102,27 @@ static nokprobe_inline int
+ probe_mem_read_user(void *dest, void *src, size_t size)
+ {
+ 	const void __user *uaddr =  (__force const void __user *)src;
++	int ret;
  
--	/*
--	 * Since this function uses fgraph_idx = 0 as a tail-call checking
--	 * flag, set that bit always.
--	 */
--	set_bitmap(current, offset, bitmap | BIT(0));
-+	set_bitmap(current, offset, bitmap);
- 	ftrace_test_recursion_unlock(bit);
- 	return 0;
-  out_ret:
-
----
-base-commit: aaa2f954c21b205a0bcd0961e5b2be4e82e58455
-change-id: 20261112-fgraph-bit0-cf3c487ef99c
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+-	return copy_from_user_nofault(dest, uaddr, size);
++	ret = copy_from_user_nofault(dest, uaddr, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
+ }
+ 
+ static nokprobe_inline int
+ probe_mem_read(void *dest, void *src, size_t size)
+ {
++	int ret;
++
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	if ((unsigned long)src < TASK_SIZE)
+ 		return probe_mem_read_user(dest, src, size);
+ #endif
+-	return copy_from_kernel_nofault(dest, src, size);
++	ret = copy_from_kernel_nofault(dest, src, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
+ }
+ 
+ #endif /* __TRACE_PROBE_KERNEL_H_ */
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 8db12f758fda..210a75ed5a92 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -137,23 +137,24 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 		lval = val;
+ 		switch (code->op) {
+ 		case FETCH_OP_DEREF:
+-			ret = probe_mem_read(&val, (void *)val + code->offset,
+-					     sizeof(val));
++			/* Do not dereference NULL pointers */
++			if (val)
++				probe_mem_read(&val, (void *)val + code->offset,
++					       sizeof(val));
+ 			break;
+ 		case FETCH_OP_UDEREF:
+-			ret = probe_mem_read_user(&val,
+-				 (void *)val + code->offset, sizeof(val));
++			/* Do not dereference NULL pointers */
++			if (val)
++				probe_mem_read_user(&val, (void *)val + code->offset,
++						    sizeof(val));
+ 			break;
+ 		case FETCH_OP_CPU_PTR:
+ 			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
+-			ret = 0;
+ 			break;
+ 		default:
+ 			lval = llval;
+ 			goto out;
+ 		}
+-		if (ret)
+-			return ret;
+ 		llval = lval;
+ 		code++;
+ 	} while (1);
+-- 
+2.53.0
 
