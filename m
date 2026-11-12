@@ -1,79 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.136.64.228
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794458064;
-	b=UpFEcAJv99GquQi1xSTcikJEal7jwU1PkhXJVoqoD74Bmz6l2iostYsp6N8xFQsGNqYt
-	 bBSCgb89LThQ4n9GY1etnrdPUuG0GE4dA9Dlm+1n6ORWKUpZZIlPJ8k58VuwkZosjLXnk
-	 z4VR/IE2uusWzHQT563XN1Q6O1vIXH1JeULRlr1xMi0l2BfhGvhiTD8UXI19SM/h/liA3
-	 xmcC6//wZeHT4R0DTRztiFbAv+TTWI2eIu2nIkp9EqOIte+ol9aePXDZMHn8PX9y4UFTc
-	 zVM8ttbTwGQvewVuFzlTIemYleqXDqWUe2sVczOhnHnSMhsS2CKafAOs8xYo5CvwQMw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794458064;
-	h=DMARC-Filter:Received:DKIM-Signature:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Flowmailer-Platform:Feedback-ID;
-	bh=RARPdGFOpymjJpoSOvkZ7QwTFzh+akN3FwghGunS9+o=;
-	b=ke91g04P+xtzedq9Kem9s4pQxKvd9mUxsrbgGiLsEJX/yuACfbyHS4nbWbMCzjPnXjGM
-	 KHRAd224lXrfhz1xtThhHbsjCiF38KtOt73vSmqw5K+4COPDUtSLuFyRW3QhV/NrgitkW
-	 yhKIoyn/ERNX3BdgfV9/KvEmCBn98biwhxH+0eglfDIarPZYXfTdm04UWGDs9tqpxYS+Q
-	 V8g7wLCPCQae5duun7RO0HOPCICuF1UxnnDZCrFEfI85DKeNTtBkJ+QXQGxM686gA7MHo
-	 V99b4zaohn2uWAGQ9oSMNRGxqrJHxadAf9K2UQCgYP0alBvis5NNYDuGqGJD7BZbrIg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=siemens.com;
-	spf=pass smtp.mailfrom=rts-flowmailer.siemens.com;
-	dkim=pass header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=RTxMQDBd;
-	arc=none smtp.remote-ip=185.136.64.228
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794461181;
+	b=4km+CsyuB07UTSFXPUq8VVxqQlKohHN5W3WSPJVDuyqLixAqRQ8Y4dJ2wnUF+0WYflsd
+	 7B4TL9KMnl2UY/BMPUvT8g6t720lQXQ3QwONDx4M90d5iaC7EDkJrutlConA/SOxg0khD
+	 zJ7BGNg67JOe6TV1lwH9Q9C6zrz0AjeQmHe2lZDqFdCkmUxjBpAOUi3ttcWwAMTSqUH3m
+	 tXQ7PHM/JwglQSZwH2ZFU6AX6Nkx+KeLNpAgNxNdZtvR3sp5UsKnIs713FEIY6rHaWniB
+	 ezZWUZ2m6ZscE7CRUrjTB4CtxEWYbwmSgqFL5dHIyqp9742lB4uUGF/SEAQ7q7srXLA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794461181;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
+	b=AboIcMVGgN59VbfnTg9TGOJSNny2DaWLoeH5xCOukGYmMfhxPaoJLFeKUmoXJY3Zdp6y
+	 7BI9xKdV0QU7EJx4GJZVxTDKr8gqeBxxoL6HSE11G2hyuAMhajQjJKG9sN2b4Ej8rQjle
+	 wovi5Lm40hcVJGjQfodSexKVOMMh58RN8rgM30DD1L850ZrUgNptwLMd+bJhqacaX5Mwa
+	 1W+2SJ/+Ay/LW0qH67xwRhAI0r3lHAgfrOWC3hsLSLgQbl9G4kieaHN5LNZMlpxvvYE/J
+	 8EUhWduvN3i4BZA8fBXL37VhdvMtJrkB1Vl8Zh7UWwBOQB8aAY9/R/5uGAaw7HrLwoA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGHaQ7FJ;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F065A606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 04:34:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F065A606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0DD606A32E;
+	Thu, 12 Nov 2026 05:26:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=siemens.com header.i=meng.ding@siemens.com header.a=rsa-sha256 header.s=fm1 header.b=RTxMQDBd
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 2026111204341526ad16c553000207e7
-        for <linux-trace-kernel@vger.kernel.org>;
-        Thu, 12 Nov 2026 05:34:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=meng.ding@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Cc:References:In-Reply-To;
- bh=RARPdGFOpymjJpoSOvkZ7QwTFzh+akN3FwghGunS9+o=;
- b=RTxMQDBdADI8ovC2WPdHk/BquO6khlSuF/w9iJcD14LD1Q/WpUmD52lDbgUHOzR5ne8BGx
- xCEGlCZSb8N8GeM+3SZ8ztY9hRyIaQu6eK8NDmnUChRlwn7RaCA5KQLXdUi3bWCYD/v0j9Er
- /y2kK8taxTDcxmeMbgUTUn9xl4JesRDDVenzYKIzl0o6n2plX6JNtgzJirgu2LsONLMGnRAD
- UbJ/SKwBojpF7Tapnv9vACFg5zO8S3SYm3iI5lHU2q56ZZptBjrTTtyUVEYT9RhdiJT5Re7Y
- AgilNrGtYvJZS+iVdSKVNWIIYdbiE1ekVZEso+vnZuctJFKZ3g+33oTQ==;
-Date: Thu, 12 Nov 2026 12:33:57 +0800
-From: Ding Meng <meng.ding@siemens.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, Tony
- Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, Andrii
- Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar
- Kartikeya Dwivedi <memxor@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, florian.bezdeka@siemens.com,
- jan.kiszka@siemens.com, wq.wang@siemens.com, p@1g4.org,
- gerhard@engleder-embedded.com, Jason Xing <kerneljasonxing@gmail.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Martin KaFai Lau <martin.lau@linux.dev>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Jiri
- Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, Ihor
- Solodrai <ihor.solodrai@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@fomichev.me>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH] net: mark skb NAPI IDs independently of busy polling
-Message-ID: <4pqljild2fp6eotiicvwbwu2wfw66fzd4qamwt6utirdjxlaok@iiu2f3k7azrp>
-References: <20261105071706.7043-1-meng.ding@siemens.com>
- <20261110134539.12d860ef@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGHaQ7FJ
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794461180;
+	b=j9/YNr7eyoNxFIDxoS9YMpNgJ3tcm58HmcTWtuhkk5j9jZ8tgY0Dtk2w7lYkLN8FmZcG
+	 RIdZ+hATrM0XZ0rIeFpzj9JDSaF9Bw1Eqg/3m7/bW3yYiEdSYN9bNFEBeCbX4DxWY7kUX
+	 XqG2EHKUSPZ5FGeP0MTJbRtfKcxQS05pQAoNiw23tRlK/6Xf6DTZGdb0RspR8KnKz1Toq
+	 c4izU/raeoVzqwp1XV9t3xI2dICLDCeocPIcU/w6YPJXPAHfzcqCrxk/evZKXlVxm4UpK
+	 PKSpXNhp7wHlRf+gcnk/bMY1+sdbZRw1oQUIjOoa4VGlY+kpNIbLWjWWyLnWiCze1/w==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794461180;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
+	b=IkmWsrF+t/qZ++kzcCzGwQpeOoWdgXOsBNIvzdorOHxLo22+FV6RnmLY3ARiM5vJQYqs
+	 POy20+tlPklDIU0S4AhfHvKyUIya65aYmyYm8GGqipI63klNsVKHYomslewZ2d5DiNyxy
+	 6wF/3JNraXetOkYqBhI5kam9K3ZF0PI+MkgzG0JRmhVRr0ysyeBuZ3WY/bjumTSjgPRPh
+	 YkpbtfoUR8dDTZXIVb25t8wGgSyu9J2ssJBZ3jVyNtK726Tj/akhB5tc6HR3+/ZKlPCLu
+	 IpNWPoH8OXK2/JumZKGgf6bf5IPw19KQcUyFRYRX2nL0dCgB9sFBdkpBXwwn5sN9ytg==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id D8FB61F00A07;
+	Thu, 12 Nov 2026 05:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794461180;
+	bh=2+bd0lclXJFZZ9odaFbNz2RPwwgq5nV2oUMBTYnLjs0=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=JGHaQ7FJtNZrTzDKX+gZa+c6FlIT1I7rJpEnoXL8DNaBKNXUJI6jV/SE30EoY4LdP
+	 mb2WJLBNvLL+bmhszYxKLYkJhsxNThpZ+JbDFje9KMJoMljj9QuqRsbvA8jUZQynoE
+	 usWYptV01o6/NbAilHRwfS9YZfe7GapyRxi5KALBL+frkA1WXLH5UprMYsiyE8oKjf
+	 WWlXEcmqg0h0y2G8rUL13yD0o79K+2FTd5jgfJSs8Dxd9ZocbBZLUKb1I7R25D3YUd
+	 e6jowfgqNbxwkAkfgs+Pi9mGwFt98JQEk6nh/C7W0fVywJRD8J9tsUwEPj0Tk/8rMJ
+	 BFW3LqKECmJFQ==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 3A964492C4;
+	Thu, 12 Nov 2026 05:26:19 +0000 (UTC)
+From: Hang Zhengyang via B4 Relay <devnull+hang.zhengyang1010.gmail.com@kernel.org>
+Date: Thu, 12 Nov 2026 13:26:18 +0800
+Subject: [PATCH] uprobes/x86: Emulate ENDBR as a NOP
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -83,36 +82,112 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261110134539.12d860ef@kernel.org>
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1335312:519-21489:flowmailer
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261112-uprobe-endbr-v1-1-284a47a5ae3e@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MPQqAMAxA4atIZgumg0WvIg79iZqlLSmKUHp3i
+ +M3vFehkDAVWIcKQg8XTrEDxwH8ZeNJikM36EnPiKjVnSU5UhSDE2W8sQ6dtbgg9CQLHfz+u21
+ v7QN5bbihXgAAAA==
+X-Change-ID: 20261112-uprobe-endbr-7c7ab1baa191
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+ Jiri Olsa <jolsa@kernel.org>, Hang Zhengyang <hang.zhengyang1010@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794461178; l=3044;
+ i=hang.zhengyang1010@gmail.com; s=20261008; h=from:subject:message-id;
+ bh=Me7MxAd288UOXLmc+8UseLP8mB9LDZJcffXOE/7xdVk=;
+ b=TYjmkiZhMPeL5rzT4xkvGnJ3DrsPvjpjIzFhdsZncNT4coF1yOvINPkolyEN3eedeLaarMkxV
+ TvgA7qBX2+nADm5DZKncRYHiVsy1Wxkr1FyW/V8C3gZGGVMbd/cTrPZ
+X-Developer-Key: i=hang.zhengyang1010@gmail.com; a=ed25519;
+ pk=5drRny3PqRPLhKVB0YIQXN5YyD8miKCpXWhnEPvafAI=
+X-Endpoint-Received: by B4 Relay for hang.zhengyang1010@gmail.com/20261008
+ with auth_id=1133
+X-Original-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+Reply-To: hang.zhengyang1010@gmail.com
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 10, 2026 at 01:45:39PM -0800, Jakub Kicinski wrote:
-> On Thu,  5 Nov 2026 15:16:08 +0800 Ding Meng wrote:
-> > +  interface index will be returned only if CONFIG_SKB_MARK_NAPI_ID is
-> > +  enabled and the driver is using NAPI. This hidden configuration is
-> > +  selected automatically by busy-poll support and by drivers that need
-> > +  skb NAPI IDs to resolve deferred hardware timestamps. Drivers that
-> > +  use deferred timestamp conversion must select it so the networking
-> > +  stack can find the device and call its timestamp callback even when
-> > +  busy polling is disabled. The struct contains also two other fields,
-> > +  but they are reserved and undefined.
-> 
-> Just take napi_id from under CONFIG_NET_RX_BUSY_POLL instead of
-> complicating everyone's lives.
-> -- 
-> pw-bot: cr
+From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
 
-When BUSY_POLL is n under PREEMPT_RT && NETCONSOLE, igc fails to get RX
-hardware timestamps.
+A uprobe on ENDBR64 is single-stepped, so it takes two traps instead of
+one: insn_is_nop() doesn't recognize ENDBR, and it isn't a branch or a
+push either.  That makes the most common case slow.  With
+-fcf-protection, the default for gcc on Ubuntu, every function starts
+with ENDBR64, so every uprobe on a function entry pays for the
+single-step.  PUSH had the same problem until commit e7ed9d9bd037
+("uprobes/x86: Emulate push insns for uprobe on x86").
 
-Then, drivers that use deferred timestamp conversion (e.g. igc, engleder) must
-specify a busy poll dependency if they want to obtain the original net
-device upon consuming the skb. However, this dependency is far from
-obvious, and annotating it for future features of this kind will be very
-hard to discover.
+Userspace IBT is not supported, so ENDBR is just a NOP in user mode.
+Emulate it like the other NOPs.  Don't use is_endbr() for the check: it
+always returns false without CONFIG_X86_KERNEL_IBT.  If userspace IBT
+is ever enabled, uprobes on ENDBR will need rework anyway, since the
+int3 replaces the ENDBR at an indirect branch target.
 
-Configuring the skb napi ID separately
-from busy poll seems cleaner and more reasonable.
+The numbers below are from the selftests/bpf trigger benchmarks, with
+an extra target that starts with ENDBR64 (the existing ones are built
+with __nocf_check, so they don't have it).  On a Ryzen 7 PRO 5850U,
+without this patch, a probe on ENDBR64 is as slow as a single-stepped
+one:
+
+             nop       endbr64   ret (single-step)
+  uprobe     1.33 M/s  0.65 M/s  0.65 M/s
+  uretprobe  0.66 M/s  0.43 M/s  0.43 M/s
+
+With this patch ENDBR64 is emulated like a NOP.  I could only boot the
+patched kernel in a KVM guest, where uprobe went from 0.19 to 0.99 M/s
+(nop: 1.00) and uretprobe from 0.17 to 0.61 M/s (nop: 0.61).
+
+Signed-off-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+---
+Found and measured with Claude; I reviewed it and ran the measurement.
+---
+ arch/x86/kernel/uprobes.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 0f60c0d076b6..879ce918ebea 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1484,13 +1484,28 @@ static const struct uprobe_xol_ops push_xol_ops = {
+ 	.emulate  = push_emulate_op,
+ };
+ 
++/*
++ * ENDBR64/ENDBR32 (f3 0f 1e fa/fb).  Userspace IBT is not supported, so
++ * in a user task they are NOPs, and they start most functions in
++ * binaries built with -fcf-protection.  Revisit if userspace IBT is
++ * ever enabled.
++ */
++static bool insn_is_endbr(struct insn *insn)
++{
++	return insn->length == 4 &&
++	       insn->prefixes.nbytes == 1 && insn->prefixes.bytes[0] == 0xf3 &&
++	       insn->opcode.nbytes == 2 && insn->opcode.bytes[0] == 0x0f &&
++	       insn->opcode.bytes[1] == 0x1e &&
++	       (insn->modrm.bytes[0] & ~1) == 0xfa;
++}
++
+ /* Returns -ENOSYS if branch_xol_ops doesn't handle this insn */
+ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+ {
+ 	u8 opc1 = OPCODE1(insn);
+ 	insn_byte_t p;
+ 
+-	if (insn_is_nop(insn))
++	if (insn_is_nop(insn) || insn_is_endbr(insn))
+ 		goto setup;
+ 
+ 	switch (opc1) {
+
+---
+base-commit: 9d66f26fefacebfeed15de31c1123451a17ff119
+change-id: 20261112-uprobe-endbr-7c7ab1baa191
+
+Best regards,
+-- 
+Hang Zhengyang <hang.zhengyang1010@gmail.com>
+
+
