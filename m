@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446554;
-	b=IghJJvLFcbpGXFBNB9idAsk+PGtkLybuluSb08L5VxDNDR4C0NiA9YU8JQWwbxn7HuAN
-	 gRpztZck6Vct/uqXO7HezicEDR5u4BEKcYrgAFvb780kEm51u5uk7GWh75woPXoFRYAnh
-	 +YKp4tNQiBAE7NGFFtDKBYs55to+eIQA5wBPIoeF7Rp7CW2AiV5PxKA66o8ALsyyC6WJs
-	 RA7219sDBXLGERuEczQI3PzL1qGjTACIj2e+v07zjBb++dtXha2Qi/PH+g9e4oevIb5q9
-	 sUS6Ofa3VLY2fRhDtjIzG2+4Ukw2u0l+taPrrHRFKP2CS4s1iUzco/RZ09VZ0kOJ0zA==
+	t=1794446664;
+	b=ZqF6tIl1did6Lt8dF6eNSbYpx9k5hXRGILShCfV/gBcca32INqssvLhuXf7Gm4JIl/4S
+	 qh3fcqBfqqz962LAYE9+EQHuUGkwxybZSBtfXA61RI9LFPggYUc7Hicm1scG/uWWfz7St
+	 LqjpVd68U8bVp1d4ZdVNUc0EafMdL3FWqOkwpqqYUoqGq4k4XW8l46jGObxTMAY0mNJhy
+	 awD9D08qrr3eESzu9q8mTixDwRqiwh2tcFe+/qmTQpSNa/HWgJCSIkqfYQTTX8zee47XU
+	 nxCITiW5zw4rtlvhZ7peOGNMIooW6DCqUeht3yc5qGnq7UMG8poUzm11RpsfJBLiZtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446554;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446664;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=uiuo7ZnY00zP445Je9zLEnYRUY6zzQ21kf+OCKEn2vM=;
-	b=UXkbr4opHYSNmy40MJfVY61zs2VgIB30c8WhfUhQuE/k1Aq+vB3nP6iUvWWJ9wd6DzP3
-	 X8S9bOYVKTxNqaV4ylDv3lOeI3xy2cF8NlQXCylnhERAVqiiKG8s53xcdIPx/HGhcj0fp
-	 2dB0eSTYJ1l6u6WYIIkKARxxaLue3d2tqlpJyyVNyp2BedgJlZ1Z5tUYy1HR2iJ3qrPwz
-	 qUmM0OHsDKuik7cv72ppn7e6R8xH3O/Rmy9awDvoOll9PcyqZePRanr/exUV4fWWjDzMv
-	 eh/TgcRkh3HiIFS/jz9FwdbjR+PeKDyk3hWjNX6MrzBEglwdLamt4f9x29hB4QiuhVQ==
+	bh=8Ykmtahhytsp3A9KXBQzHiI9jKjzeRibnDdGIikAvNs=;
+	b=wEFj/qZJSYmUmsYBwvc1joZUIpYANze68NzCn5wjej0kNTa7ukx2MQyJKa5Jx2ATZYMm
+	 ipKKOCEOXth5iO72toUbUYqWX8RiVKPOM64eFBTGArCX+iAY0XzL4nWQnAYn8dQz88MnW
+	 o3Ltdi0pAw3NkPbaiCcFwA1TNsOsFv8/3J226ls6HHnmQFlf+xM24S326RpB5gMWIHbN2
+	 KcJSaBLTg2nZyUkxJITO7DCeHYoCoq5sTV4F6ERG2NEcxT2gQmcVuD+swvz0avzvXgObR
+	 4+rNKPvvHnaXmiQC65Xp415KSe1sz6VPlQG4XWP3/lBKOfb6F2YjkQ6gsatxLfbkHig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bLOsK9aQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TMRTp5Ib;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56420606A321
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCAE606A321
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 01:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bLOsK9aQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 885C81F00A06;
-	Thu, 12 Nov 2026 01:22:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TMRTp5Ib
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E179E1F00A05;
+	Thu, 12 Nov 2026 01:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794446554;
-	bh=uiuo7ZnY00zP445Je9zLEnYRUY6zzQ21kf+OCKEn2vM=;
+	s=k20260515; t=1794446663;
+	bh=8Ykmtahhytsp3A9KXBQzHiI9jKjzeRibnDdGIikAvNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bLOsK9aQx8LqfVLTyunZWulFIGxJ3w1QWqW+XDB70sBjktlFddrxcHeita6oZiieW
-	 Q92bfSSWQmw8JQkNFQ7u1FxC1JcUKQnylThl53IjxCVWHP2CokbPpNVwJPGaURz4kN
-	 UUWZs0cx2huI8T9QbSi2/03k2lB+z0N7F3mCqc33UGmlwJ1UI7yofhS48qVMHot4qI
-	 JRe73QSDL+/2om/96tSFsK+l19ZG6Potfq1xEo/s+jbjmMTPW4Vs625nu3BBPxJXPM
-	 eleRLOy+pkHorH95OFJtb0PQl0LKvkbGj7XPGZEjmbOAvUj8J9Xnl+EiYVJqdvP4NN
-	 ZJy7x7LaOv1LA==
+	b=TMRTp5IbSzABGtMFBJpvbXmY7rJ/OH7Bj7Oz/9n2il7jCuzVim5UAIemE5di4y0fn
+	 j0BoDydc4M5A3MSbUfcgrEKTD12OLAtbdV2+L0GTpnbTRhcAyxyI2Paxd9mMuNNQo0
+	 bLuPgWTH/FH8KgXMoMEg9Hj4GZY5ICceCU+83StjnFBGPzygTFuprZo9xrYntECHYs
+	 fkTzEKdKwYKIAbMD1gBAOi+vwftmIyluODWkg8XnnZCOHOhdyUJh5UK+fVPaad3z+y
+	 25hE/x+QMz46uDwu7qCtuYKA/9qM6G04DK4+/B3ui/NUbMm+k2u56F3QWuUvX0sXPY
+	 5X7zdpkF+2wmw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: sashiko-bot@kernel.org
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/12] tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
-Date: Thu, 12 Nov 2026 10:22:31 +0900
-Message-ID: <undine-1794446551468718251-cc1df84c836b0c27@undined.local>
+Subject: Re: [PATCH 11/12] tracing/probes: Validate command prefix in kprobe, uprobe, and eprobe
+Date: Thu, 12 Nov 2026 10:24:21 +0900
+Message-ID: <undine-1794446661417300537-4e515beebdcd7bb3@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <sashiko-outbox-204254@kernel.org>
-References: <179418408457.227715.1485179201014819821.stgit@devnote2> <179418411197.227715.5577722703946865281.stgit@devnote2> <sashiko-outbox-204254@kernel.org>
+In-Reply-To: <sashiko-outbox-204257@kernel.org>
+References: <179418408457.227715.1485179201014819821.stgit@devnote2> <179418418328.227715.10680131052179044845.stgit@devnote2> <sashiko-outbox-204257@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,85 +61,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 09 Nov 2026 00:45:45 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Medium] tracing/probes: unaligned kflag=0 bitfields fail in
->   get_bitoffset_of_field()
+On Mon, 09 Nov 2026 00:47:27 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found no new issues
+> in this patch, but noticed 1 related pre-existing issue it does not
+> introduce:
+> - [Medium] tracing/uprobes: memory leak in __trace_uprobe_create() [1]
 > --
 > 
-> commit 2e4831ec2095ef67023431da46d322fba9d204db
+> commit d4f1d831d5c45144f78113e0b3ef37e7d6dc9844
 > Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
+> tracing/probes: Validate command prefix in kprobe, uprobe, and eprobe
 > 
-> This commit fixes BTF bitfield offset calculation, selects an unsigned fetch
-> type wide enough to cover the bit offset and width, and derives the
-> FETCH_OP_MOD_BF shift and basesize parameters from the selected fetch type.
+> This commit validates trailing characters after the command prefix in
+> kprobe, uprobe, and eprobe creation, rejecting invalid characters with
+> BAD_MAXACT instead of silently ignoring them.
 > 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index a880a90642d7c..26e02929f1ffb 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> 
-> [ ... ]
-> 
-> > @@ -653,6 +661,12 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
-> >  		/* Add anonymous structure/union offset */
-> >  		bitoffs += anon_offs;
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index 14ac52aebe346..3745eb07bd14e 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -616,9 +616,6 @@ static int __trace_uprobe_create(int argc, const char **argv)
+> >  		return -E2BIG;
+> >  	}
 > >  
-> > +		type = btf_type_skip_modifiers(btf, field->type, NULL);
-> > +		if (!type) {
-> > +			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+> > -	if (argv[0][1] == ':')
+> > -		event = &argv[0][2];
+> > -
+> >  	if (!strchr(argv[1], '/'))
+> >  		return -ECANCELED;
+> >  
+> > @@ -631,6 +628,15 @@ static int __trace_uprobe_create(int argc, const char **argv)
+> >  	if (!arg || !isdigit(arg[1]))
+> >  		return -ECANCELED;
+> >  
+> > +	if (argv[0][1] != '\0') {
+> > +		if (argv[0][1] != ':') {
+> > +			trace_probe_log_set_index(0);
+> > +			trace_probe_log_err(1, BAD_MAXACT);
 > > +			return -EINVAL;
 > > +		}
-> > +
-> >  		/* Accumulate the bit-offsets of the dot-connected fields */
-> >  		if (btf_type_kflag(container_type)) {
-> >  			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
-> > @@ -660,12 +674,15 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
-> >  		} else {
-> >  			bitoffs += field->offset;
-> >  			ctx->last_bitsize = 0;
-> > -		}
-> > +			if (BTF_INFO_KIND(type->info) == BTF_KIND_INT) {
-> > +				u32 intdata = btf_type_int(type);
-> >  
-> > -		type = btf_type_skip_modifiers(btf, field->type, NULL);
-> > -		if (!type) {
-> > -			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-> > -			return -EINVAL;
-> > +				if (BTF_INT_OFFSET(intdata) ||
-> > +				    BTF_INT_BITS(intdata) != BYTES_TO_BITS(type->size)) {
-> > +					bitoffs += BTF_INT_OFFSET(intdata);
-> > +					ctx->last_bitsize = BTF_INT_BITS(intdata);
-> > +				}
-> > +			}
-> >  		}
+> > +		event = &argv[0][2];
+> > +	}
 > 
 > [Severity: Medium]
-> Does this leave ctx->last_bitsize as 0 when a kflag=0 bitfield has a bit
-> width matching its underlying integer type size (such as an 8-bit bitfield
-> backed by a 1-byte BTF_KIND_INT with BTF_INT_OFFSET(intdata) == 0) at a
-> non-byte-aligned member offset (bitoffs % 8 != 0)?
+> This problem wasn't introduced by this patch, but can __trace_uprobe_create()
+> leak tail [1] when generating a default event name?
 
-Ah, good catch! Yeah, it might happen.
-
-> 
-> When that happens, parse_btf_field() sets a non-zero ctx->last_bitoffs while
-> ctx->last_bitsize remains 0.  fetch_type_from_btf_type() then does not widen
-> the fetch type to cover the unaligned field across the byte boundary, and
-> parse_btf_bitfield() rejects the probe with BAD_BITFIELD (-EINVAL) because
-> ctx->last_bitsize == 0 while ctx->last_bitoffs != 0.
-
-Indeed.
-
-> 
-> Checking bitoffs % 8 != 0 alongside BTF_INT_OFFSET(intdata) and
-> BTF_INT_BITS(intdata) != BYTES_TO_BITS(type->size) would record
-> ctx->last_bitsize for unaligned byte-sized kflag=0 bitfields as well.
-
-OK, let me add that check.
+Ah, indeed. I think we should add __free(kfree) to tail.
+Let me add another fix for this issue.
 
 Thanks,
 
