@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794583656;
-	b=bUm8evxo8AYr1AnsjOmgifRSwqmbcmPm/PEU9+TGG5Uhr5igBTw9RLkNE24BkFOIA/8t
-	 LsFSp8gfU1Q9PN75Vxqyi9FFpXH1Hpb3AYXnEuMvfmRjK6M5rCu9jNkPozBOLWhX7gxEY
-	 8K3FGL8XlNKiiy0daKcYgZYQRPDu/EIx6bCfeGPOVPPZN5E+xBocGRepeMsOws/0DPyTe
-	 KPw1FQ7bVog2nYHiDyrrdgMo7PKFMwmDAqBRVyj715qIS5Ozbsel3tPVQ9Y+DFlb0RnqO
-	 6UbDWsHefnC5gq/zpPYtD56GCvE2PEtwFAN8/oZi0h926/hTTK9GclxOyuNsYBc2Qkg==
+	t=1794583657;
+	b=yjzAaAvlFcKBeGzF9UXKVjedz97xycsfryr5dtpUZS5+ol4Z4mzTPKygpROzkqPdWaDg
+	 ic4ZNyFrYACoyIx1XdDzo3eY+2Fs4VU1rGmTi9rmKyQp2jtjPnUwsUlfZ8sPkTfnMgXzo
+	 AljiYJLJ95gf/tMNQcEpPHGnaw0kJQ2OiPhvFP5W1zfmN+bSH/WNTI7qzSo8Axy/qW2IR
+	 CFE4LEo9A5Hc4TQ8oxC7t0Mns59aI2AQxxvFNIW55ettl7e6cj41Fiw32+RVIhnddKtCg
+	 uS40/P8g+E1H3+xFThHzN29IJyuDsjuSCP+sSwfM9FQRkYZT0E+LUMzjtV1QsBHzWwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794583656;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794583657;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=J8tODDDg+oRlJgSbcauN+OLw9+JoOimiRLTslZN/5/Q=;
-	b=T/lb1Qx+nzVxz+R+1ivKC9Kjwby8xNABoFUh/ygkQZOxLJJX0nSiynaeimTgBCK5srZI
-	 A46k21sShBKw7IEuM434Ft/BAf/Gg3XaQe5mZwKMfjwsLPQS8dahNtl+3zEWXBtJOzOlP
-	 ao9WJpK0JgNR/m+JS7rKoo3onMF5miTTzZ1F1hNnx/+QASPXRtkYd2CYUYcycySkWez/L
-	 2gSa/4C69kppX0e9Jel5H/H84SnUzoD2AETTKfCPmzzvdNByF/N+vaB0HSOPH9MALPp22
-	 Bfg9eD0edUVTQlncBokpocdn1cJXdv7n74SoL3aQXhiruG0dAGd676WRetg0NNNNXUA==
+	bh=FrGK4LQCQBqx0hUtkMsYYjxe3VECT+KAsWnhnUDOZDM=;
+	b=vo4ZA0fl/QnJfp2pN+PBWyrR+Rj2YYg5X97PZCw8QpVNKIgl0qCLzZV62E8zJZ3YdEl/
+	 5ptNrexqSsR1YtB+f59f3ouD8oQ3IRED4MhnSQKlUiJdIiGnzE/NoqWsgJs8/A2COLqE+
+	 9MsI+84LaetvIgzEX7YXhrMpEsjVRYvZyHWn6XMnTLgZPCRmVBl80TPSa6IvRV0YKB1mH
+	 A41YESnYrQckBQJWVbQFLaOIun4LJtyQ8D1XcHfbdnpHtkZSBeyMZWDSUSCstVIa8dk/G
+	 dd0jfYy2Mcfk6hERh6JLa826AxUqFfgI+Y/2lcajECwyvMFGwHtuo1VE2+xjDqv9x+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MUY0ag+3;
-	arc=none smtp.remote-ip=209.85.128.69
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=lbGQVyka;
+	arc=none smtp.remote-ip=209.85.128.72
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F42606A881
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:27:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24F42606A881
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1639606A89B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:27:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1639606A89B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MUY0ag+3
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a009f82bedso6256385e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:27:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=lbGQVyka
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4ba078f26f4so6705925e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:27:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794583653; x=1795188453; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794583655; x=1795188455; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=J8tODDDg+oRlJgSbcauN+OLw9+JoOimiRLTslZN/5/Q=;
-        b=MUY0ag+3drApR0/owjvS5DlYawrTQidRx/vwIEe7rC2cl1HxL+hCLtJztLHLG7rJNC
-         JOjkvEZeLPmDU9S0ZOMaEbOfevdkejYozVx0eP8/nnQzYF15JoRW9kS6+gk5hOw0jp3j
-         dxl9am6aZVGOy3NQX3Js3IArjsgDmmfwoKzAdfYfEsQ3+U6z176rAbl4MH0svxtv1scV
-         fXLOJ98Aa/6niA+D2pOohutNyk3khgl6q3qjvO3FTDPONnqkTPfYEvHmbIX4K1KAPJ3b
-         cPo8kju1ADYQM6dxyTJt6AdGzi5VZfY114cku3Yh+GG0iquWtKnxs2RYECNvn0zvV5WL
-         Erxg==
+        bh=FrGK4LQCQBqx0hUtkMsYYjxe3VECT+KAsWnhnUDOZDM=;
+        b=lbGQVykauPq3rzPl+rYk4kEwNYQrN/P4fG033HJrEKxLSymRIV+nR2A0z67u7F+1PW
+         vZlF0WX9pVUANdVwBtolDAbdNeaLB2eXYIU8GoZzR3+6lTCUsrJfSwlw5fkkPYQuSGYC
+         rrbPKT/ZIFjXQlqQDk9t/UYO62wGzMAiLO3Ej6gTzW7QF9F48hR01asi7RQLjcchiKpW
+         mmAzUVBlVgCmRilly/l4ik1UsdOO7SDMtY2ZgUfKfNdYYGyTKFJNa1nFCQL3enIhGXW3
+         qVD+YewRBkpy8v0ERnp5zgLq9zhdKwELXSDqwfjkV+sCQz8O5pIAIDIoTdL6f+VCJfgM
+         4b5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794583653; x=1795188453;
+        d=1e100.net; s=20260707; t=1794583655; x=1795188455;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=J8tODDDg+oRlJgSbcauN+OLw9+JoOimiRLTslZN/5/Q=;
-        b=sC21IAu+Os2lB10hRvosallBdr/GKx8ktKiueq3QkqFtNTZzcMQDE6KxLaP7MFGJfE
-         KeKertSGg+0Q0GuXIrUP9ZUEyzrqWIPScp0rE0SzgvxEKZQ/Ie5N4CU6Hw6Rdfqhx+Zq
-         qAAIZueGgP0eRkm7ehGyQRpCKauyFEGZY7EkJYefK7BFVfJMeaM7J3nmcGnCbI7dMJMt
-         wcbppOGyMxgxjoa+NsuNgJ5IQ+r2QICyRytTuK5cltTJ5FMtJrUEPO5y0QRTqvpoVCjA
-         0l9QKB5DJ4PQY38e/eGc8FT9UMZHyE5x3g5FwWaQVdw4Ui0dZsEacwdkntdgJ1aburR/
-         7Oxw==
-X-Forwarded-Encrypted: i=1; AL+hErG6exFoIX+JFBw9MPE0IAPRiG8/8qFjlqQ9aczBskOgZFkJjcbR1EB3uL+qcUWJpz45MOFVCc7GzLpi6/lSMf+4pHE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/psSZ+Lc5hKSN51plQ9OCa1/kRgpA13c3bej2RepgAut1u1GR4
-	8eAY2YretXKGyMG0tBulLZx0QBfnuz+GKMhleWmo1NxzJd5VXPo0doRwO3Dojm4yq9ep3Wf5KGk
-	hsXzRs+JW6ee4bDiDc3FDTQ==
-X-Received: from wrpe2.prod.google.com ([2002:adf:f342:0:b0:48d:f857:4141])
+        bh=FrGK4LQCQBqx0hUtkMsYYjxe3VECT+KAsWnhnUDOZDM=;
+        b=OEaNBugnN4lCW6ajBLboEqP1KI5YN8WmGEIWTLZUs25OLp3XqGkI5G4Sc2GNWHON7W
+         +6ENwyJxH6XIJhNIQgLCPO3+Bk/MQKEzt1C42OY2jRL1SwxXzNiBMSogYwYbgfjuIovk
+         VgnHEcEHvGLITiMmkmvO6DcalER4I15FEhdEw+q4TI30HJ6ShhfvHD+x7GOhk5oWJtgC
+         vk1DkJTrrMW3tfSkbzOmeJJTBBjQmw/kxn6A/OBBe2swBhMM9cUN/mTZNtMcTgesjeWs
+         KD81ZkubBZ2DD4Q3yHCGyNzFaqNprAEL1iRZhQxvUHuz72DxMttl82KwnhtzxAfu91Q0
+         7FWw==
+X-Forwarded-Encrypted: i=1; AL+hErFV1XZgIOyOlYEiDPO0hZD5fW4UYQfyimV9I8V97+pIetrYcG420pP/VtfsQ2KovGsQmYZ3WKHA2Th12JH+nDBaTAM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+C8+HsN+OPiv9QSlqeI+P+u/rf6btetxCOCrMym9hKKBDjynOj
+	739UcaYZuBaAupIWbyikQDSpLevnYFabKk03W9CjGsqxNTzfGeJP79YFt9MqlgRXNsjFXqYpR3j
+	nt+QoWGIEl4lVjxty8aBoXQ==
+X-Received: from wmfv1.prod.google.com ([2002:a05:600c:15c1:b0:4a1:fe2c:3323])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4e13:b0:4ba:38a9:85e3 with SMTP id 5b1f17b1804b1-4bb55a47fabmr58539355e9.12.1794583653324;
- Fri, 13 Nov 2026 07:27:33 -0800 (PST)
-Date: Fri, 13 Nov 2026 15:27:11 +0000
+ 2002:a05:600c:1c0d:b0:4ba:59f7:9032 with SMTP id 5b1f17b1804b1-4bb55c5f60dmr71390435e9.10.1794583654644;
+ Fri, 13 Nov 2026 07:27:34 -0800 (PST)
+Date: Fri, 13 Nov 2026 15:27:12 +0000
 In-Reply-To: <20261113152729.837429-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113152729.837429-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.0.611.g1030f0b940-goog
-Message-ID: <20261113152729.837429-3-vdonnefort@google.com>
-Subject: [PATCH v1 2/4] ring-buffer: Check remote reader page commit before
- meta entries
+Message-ID: <20261113152729.837429-4-vdonnefort@google.com>
+Subject: [PATCH v1 3/4] ring-buffer: Order remote page commit with data and timestamp
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -92,118 +91,80 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Vincent Donnefort <vdonnefort@google.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-__rb_get_reader_page_from_remote() bails out when rb_num_of_entries() is
-zero before verifying if there is more data committed on the current
-reader_page (rb_page_size()), while simple_ring_buffer updates
-page::commit before meta::entries. As a consequence, a race between the
-writer and reader could lead to __rb_get_reader_page_from_remote()
-returning NULL, while more data is available for reading on the ring
-buffer.
-
-  CPU0 (writer)                       CPU1 (reader)
-  -------------                       -------------
-  local_set(&page->commit, write);
-                                      __rb_get_reader_page_from_remote()
-                                        !rb_read_remote_meta_page()
-                                          return NULL;
-  simple_rb_meta_inc(meta->entries, 1);
-
-This is an issue for rb_advance_reader() which always expects
-rb_get_reader_page() to return a page.
-
-Fix this issue by swapping the checks in
-__rb_get_reader_page_from_remote(): first it verifies if there is more
-to read in the current reader page, then it verifies if there's anything
-at all in the ring buffer.
-
-Also, if the reader observes the meta::entries update before
-page::commit while the writer moves tail_page, it could swap reader_page
-out and drop unread events. Order page::commit before meta::entries on
-the writer and rb_read_remote_meta_page() before rb_page_size() on the
-reader size.
+__rb_get_reader_page_from_remote() uses page::commit to check if more
+data is available for consumption. However, it needs to make sure that
+data and page::time_stamp are not stale. Enforce page::commit order with
+page::data and page::time_stamp, and defer updating read_stamp on page
+swap until rb_page_size() confirms committed data is present.
 
 Cc: stable@vger.kernel.org
 Fixes: 2e67fabd8b77 ("ring-buffer: Introduce ring-buffer remotes")
 Fixes: 34e5b958bdad ("tracing: Introduce simple_ring_buffer")
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/ring_buffer.c        | 19 +++++++++++++------
- kernel/trace/simple_ring_buffer.c |  6 ++++++
- 2 files changed, 19 insertions(+), 6 deletions(-)
+ kernel/trace/ring_buffer.c        | 23 ++++++++++++++++-------
+ kernel/trace/simple_ring_buffer.c |  5 +++++
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 3c7aa982d43e..f70010e2ede7 100644
+index f70010e2ede7..6016d16d1566 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -5615,14 +5615,12 @@ unsigned long ring_buffer_overruns(struct trace_buffer *buffer)
- }
- EXPORT_SYMBOL_GPL(ring_buffer_overruns);
- 
--static bool rb_read_remote_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+static void rb_read_remote_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	local_set(&cpu_buffer->entries, READ_ONCE(cpu_buffer->meta_page->entries));
- 	local_set(&cpu_buffer->overrun, READ_ONCE(cpu_buffer->meta_page->overrun));
- 	local_set(&cpu_buffer->pages_touched, READ_ONCE(cpu_buffer->meta_page->pages_touched));
- 	local_set(&cpu_buffer->pages_lost, READ_ONCE(cpu_buffer->meta_page->pages_lost));
--
--	return rb_num_of_entries(cpu_buffer);
- }
- 
- static void rb_update_remote_head(struct ring_buffer_per_cpu *cpu_buffer)
-@@ -5825,8 +5823,13 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *new_reader, *prev_reader, *prev_head, *new_head, *last;
- 
--	if (!rb_read_remote_meta_page(cpu_buffer))
--		return NULL;
-+	rb_read_remote_meta_page(cpu_buffer);
-+
-+	/*
-+	 * Order meta::entries read before page::commit, most likely paired with
-+	 * simple_ring_buffer_commit().
-+	 */
-+	smp_rmb();
+@@ -5832,11 +5832,8 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
+ 	smp_rmb();
  
  	/* More to read on the reader page */
- 	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page)) {
-@@ -5835,6 +5838,9 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
- 		return cpu_buffer->reader_page;
- 	}
+-	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page)) {
+-		if (!cpu_buffer->reader_page->read)
+-			cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
+-		return cpu_buffer->reader_page;
+-	}
++	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page))
++		goto out;
  
-+	if (!rb_num_of_entries(cpu_buffer))
+ 	if (!rb_num_of_entries(cpu_buffer))
+ 		return NULL;
+@@ -5883,10 +5880,22 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
+ 	cpu_buffer->reader_page = new_reader;
+ 	cpu_buffer->reader_page->read = 0;
+ 	cpu_buffer->pages = &new_head->list;
+-	cpu_buffer->read_stamp = new_reader->page->time_stamp;
+ 	cpu_buffer->lost_events = cpu_buffer->meta_page->reader.lost_events;
+ 
+-	return rb_page_size(cpu_buffer->reader_page) ? cpu_buffer->reader_page : NULL;
++	if (!rb_page_size(cpu_buffer->reader_page))
 +		return NULL;
 +
- 	prev_reader = cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
++out:
++	/*
++	 * Order page::commit read before page::data and page::time_stamp, most
++	 * likely paired with simple_ring_buffer_commit().
++	 */
++	smp_rmb();
++
++	if (!cpu_buffer->reader_page->read)
++		cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
++
++	return cpu_buffer->reader_page;
+ }
  
- 	if (cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu,
-@@ -6909,7 +6915,8 @@ int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
- 		cpu_buffer = buffer->buffers[cpu];
- 
- 		guard(raw_spinlock)(&cpu_buffer->reader_lock);
--		if (rb_read_remote_meta_page(cpu_buffer))
-+		rb_read_remote_meta_page(cpu_buffer);
-+		if (rb_num_of_entries(cpu_buffer))
- 			rb_wakeups(buffer, cpu_buffer);
- 
- 		return 0;
+ static struct buffer_page *
 diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-index d5c84af01925..5f14ba152fba 100644
+index 5f14ba152fba..2dddaef638dc 100644
 --- a/kernel/trace/simple_ring_buffer.c
 +++ b/kernel/trace/simple_ring_buffer.c
-@@ -309,6 +309,12 @@ void simple_ring_buffer_commit(struct simple_rb_per_cpu *cpu_buffer)
+@@ -307,6 +307,11 @@ EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
+  */
+ void simple_ring_buffer_commit(struct simple_rb_per_cpu *cpu_buffer)
  {
- 	local_set(&cpu_buffer->tail_page->page->commit,
- 		  cpu_buffer->tail_page->write);
-+
 +	/*
-+	 * Order page::commit before meta::entries. Paired with
-+	 * __rb_get_reader_page_from_remote().
++	 * Order page::data and page::time_stamp before page::commit. Paired
++	 * with __rb_get_reader_page_from_remote().
 +	 */
 +	smp_wmb();
- 	simple_rb_meta_inc(cpu_buffer->meta->entries, 1);
+ 	local_set(&cpu_buffer->tail_page->page->commit,
+ 		  cpu_buffer->tail_page->write);
  
- 	/*
 -- 
 2.56.0.611.g1030f0b940-goog
 
