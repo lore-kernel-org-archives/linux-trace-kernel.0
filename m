@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794552080;
-	b=esJhaCOsOs31qxRS+76V6NgY373TnG8AD9b+nKKp45XqNMCoezmOgb50RpMC8ZtajQNj
-	 Lgk0HpcQALPhUaOhHK3/M7QolTy6zwPjTCToRYfkyWdMTOtkOffJ2cUvfsbTQWhS7G8fe
-	 8e8VVR1desf3XQ9IeguA4HO4lXFE9m6ssEf9Z/5oQpDJKVaA1UNqJkkHS16GrfJKgRXZe
-	 EMcBVy8d2uPuLlJBFy1D9l3QaEA8IB0akyNQjVzed7Qw/CybQdLmSL0cnz6NjEUnozU5L
-	 ZGMsBn5PrG5JCsb4+39qVs4n55KURYE/uONa9ZQYPqyvS6Gcfsw8K+f2I+mb5LBqWWA==
+	b=ZnyUR2Th+ljbYQeOI1cc/Aa0uTfFKyfVvyMYGPReEk63yZTmgR+p7z1sIiuzRd96kQiM
+	 140SRAPhMOxQrJx2joBjhBcvqZfuiVQAVhI3+BnpwUgyPaAw7UdRrwfE61/euLcqIEUPF
+	 2uKNxXkDRq9Edl7W75cTAYQcQI8mckxAIqiMFaKssRGl1g16fkHk2l7cOB16fT6O/JQA4
+	 PrCWT2PxMKKwz7yUOf3eky7qd3ot/mZD8HiukGCWE7Beg/w1tsg7ptXr4Uz3BwyBY2Yir
+	 UdKCqJoJs22XZmmP5lZiHaNQszBVdxYnQXUkAmJb8/VMdwz6qpeFLBpQLljLXTqSX+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794552080;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
@@ -15,87 +15,87 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 In-Reply-To:References:MIME-Version:X-Mimecast-Spam-Score:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Transfer-Encoding:content-type;
-	bh=zkZb7IuPg1tVs8hEcDW3HebBdAtBVWkpBNBed58KdRc=;
-	b=JoAop2XwTafl6nO6Pz6D+IeD0uDWCsRod9AW0+rgWG1uEA+mxNLalrFZnVlm3mm8D80w
-	 LxrNXJ3zSlKbvppANFZ9NrKKAmH5zzg3p5fLAfLRP7uCdw93QTogMjlrRBhJTyNQlU8Rv
-	 E3i85uNgyzqWNbLFHxG6RXQLSIMTogbtVvKV/Ane2MGu9Fj+8xfImbFKzAbKlpL7kwTW2
-	 uELDrkpIuvQCsBpGBfaIUe6rQcZO4/j3NvtzhAaCozTg4BhIHhNM7f/ZZSgcMFt171zKB
-	 1eITWNiX1mUOwi5+9kbeh3RdtJbRp4frEyuZqtCgGD1QKByFL2g3V7zs3KJtnHFRsLA==
+	bh=ulyNEHI0NfvAmJM2VicEHDkL7u4WeoOuQtnZDofp7x4=;
+	b=1LKgpaNWilnl4oLoJrF6yKLubkXFSrnO4ZlGfLIDOLyghlmrhL93fRY1+4t7ogf382xQ
+	 g0t2whNgzTEUJP0IJTScdczF9V38bgcHsGHNwFItmwdkE2X58zpGJa1UTtMVsaABffzwD
+	 MS0oQIF+JH5gnkpipmFd3LJ9nKR33YQh3KuxXTKllgdmvAeNY+tVGVgbo01tXr6LrpNeP
+	 GyZMy1u1NoeytzIsCkoSa3cC2WV8ha3gCpSZbmSa/7JESQPd+iDXgqZzB8IkwSDWGqvR2
+	 zBfOyYFYBVSJLjhspe3Ez1hxzjyCRN9cYZOUidz9M2fZTKssbJsZY5kg9qRCrAOv6dA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IDNghujc;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Td+OY17b;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95823606A333
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 95823606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE3B606A338
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2FE3B606A338
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IDNghujc
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Td+OY17b
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794552078;
+	s=mimecast20190719; t=1794552077;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zkZb7IuPg1tVs8hEcDW3HebBdAtBVWkpBNBed58KdRc=;
-	b=IDNghujcPrzUJgW/VEsIWPEje7ixVrq4LM9r1v6Gh8GlB91TOkTWy89Zo0XfMafpKCtOWO
-	ajM7gJC+bjKj2UQ0S3RskdwXoLzt8fYZG75d96K6rxXAuuP6bVuCC6TGyOqT26tiCQvJHU
-	OUE8m8f0sphkg+uS3fm6ha4EwljCF0s=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ulyNEHI0NfvAmJM2VicEHDkL7u4WeoOuQtnZDofp7x4=;
+	b=Td+OY17bIcxW7u6l2xPZ7/2L4PgXDrWAhKc+vRu2Tv1WS+pW+xtRUS18S796jEcrsYd4Sr
+	UJrTGkHP2SrUudH1DOm7s4VuSyCQMRRIUOkH9yrTNz1hoPT7qfBatq7J9JBFA+RmkL+K/L
+	7Lh4YdAaN2XdRhKN62edwR/WfsrACOw=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-282-JwdDoVg6NjyMRYzrXzlejA-1; Fri, 13 Nov 2026 01:41:17 -0500
-X-MC-Unique: JwdDoVg6NjyMRYzrXzlejA-1
-X-Mimecast-MFC-AGG-ID: JwdDoVg6NjyMRYzrXzlejA_1794552076
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-860e65f42a5so733198a34.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:16 -0800 (PST)
+ us-mta-632-1xpNIfUcMn-luyNlA4KJiw-1; Fri, 13 Nov 2026 01:41:10 -0500
+X-MC-Unique: 1xpNIfUcMn-luyNlA4KJiw-1
+X-Mimecast-MFC-AGG-ID: 1xpNIfUcMn-luyNlA4KJiw_1794552070
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-8615cc92488so592992a34.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794552076; x=1795156876;
+        d=1e100.net; s=20260707; t=1794552070; x=1795156870;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zkZb7IuPg1tVs8hEcDW3HebBdAtBVWkpBNBed58KdRc=;
-        b=ENVlM+rQPXdnGk5UK32LedV7uSdzz8Y22XGXBw2qDiTJ5e3XVApBLICypcS+piQbfn
-         nl/GTSzTY3PKRNdH1f6FGy+yIcRA8L/wqfGueeG1uGJomNL9YWs3ZY1pFJkWQDOY1cGE
-         QAweEqDhsELGrlH45bheNuwZ5TeWyeapGDDhKUISeTHVnNN/JeLb80BRR9WAfmay1DlP
-         KU6b2v9tfAWHZGHI91iXue7WA6HUYlvNlF4zz6cj6/mvcSDjbexKjEFewUVnMV/OZsQ1
-         6XL8kQ36PJYPKkqSK5kbV1vcBo5U4bTpJwIPL16ndxkAppEt5m+YbB/0edpC4+pn4JEx
-         GoeA==
-X-Forwarded-Encrypted: i=1; AL+hErFduXcWTxR9XvUQpU05097HGW/yNJk9mZ4o+/O3/rRWDZH6oaxMCbElkbtHCa1Yf2pI15mECgRXXLtxZ4xDjml+HzQ=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/zdjWD5gKrtVlJYV2N9ElMrnUU406Ub0QHQFfXYPU+CXAda51q
-	7fWoDxKXTlfS2wEYQ+WBSLCouJWWyH4NXdbUhdrcVF+jtZQ82uH7o+x+GN5saNn5x9rIjJyXCuQ
-	kxwqP0dgvkTJ2hHbQWJqg3Hxp+6v5YqI2NmxhP+y/aVUjd2r9llyWJXGbrWb7u7I2I+aZmFMpOA
+        bh=ulyNEHI0NfvAmJM2VicEHDkL7u4WeoOuQtnZDofp7x4=;
+        b=eI3iWUC6Rw3Qxf2P/qX8MkgpTlCXv1XYX/E+TIYCQX/Vqox/wwy/LU9SFg0ddiug3F
+         2B5IRokbijw4JYKB6WX8MYC7G8ZAnybpCl+r0hMCU9HcaanFi5E3IguAWM4ppe3GkCQU
+         uk7P8t/7+K9CvmUQD5kf3cf2wFG330CJl2nuAFjmwGwjyNTCb/8AY9uND7MK0CM+Cy1w
+         fI922ehmjQkspYxjs208112i9X89RkoQTYd+0YcqiYJ/NcYff78KTPDbKpW8dvmMgwuZ
+         kf3MbmPm/9MvMb0xtF2Ov65sZmKJiEitQFG77i1terejoia3rjA3lc44zCcWoyHKwK2k
+         4+Ug==
+X-Forwarded-Encrypted: i=1; AL+hErGEl67nUTZbLLjpnGQwRs2/yyaV8fH83MMRwspWb+9Xto/c64Iv1qotuREvYQTRIavpVdfSlqwzfHwOh17WE3uaYho=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/9ZZbfxXqjqheaQgaDoxlRo4VQmoYsgBf7FoB5lZW3JNCVzO4c
+	cJF7kda5mi4c3u9zZ2/JFRz2ddJJecjTHjoaz+QAeWF//gK+dVw59QCRt7tQ9OysuPe10MtYEGX
+	V69kyNfe8fyYfviUc0bWYo8ygmN9RDrJHqOfJlMDrkXA2uMptgLXpK5pcCp5yRBl7Vx1yi4AQGw
 	==
-X-Gm-Gg: AYBFou1FMHHV4+4QBErJvIqsNcIUk2SjjCODH92gi/0NYl9UUGtYIBj7t4aclNEMvsi
-	g0Y+x9XnElCrYJTstG2/YuJ+dCfVoqTgBKRNf7lOOBF1g8ha5VgIG8yGiio1lUgv9opkEZrEQvN
-	ITE7JnDiA8HBSoewj8Ju46Ft82pSiczdVG1paLuGYnnrdITC+lGKiT5HI+M3RtK1AP1OfeoNb2s
-	NywoEyACtpzGdiy4fES/saVIEV39EJ4c/mH+v0jKW205ZvM1vWip5kz9+Zd8qNDHRfTqKQksCN9
-	vsRNGzc7Yfaqi/72z/nxCuK0HcZ7FV8vBhVbyPBkzbY++O5l257L8+ZxTTbK32KwJbZzs8aabi9
-	Ijr0kzohPwTEbNKOwPv1AmVBVcRGSgx5TIBnC9g0xcDkR7khbYnV11CHASxaDtrooWd7ck5tooU
-	xzJmvNXumTYYI/jjHdWA9wny3+Fb7j
-X-Received: by 2002:a05:6830:91d:b0:80c:d34f:5f65 with SMTP id 46e09a7af769-8628991f062mr1743226a34.30.1794552075830;
-        Thu, 12 Nov 2026 22:41:15 -0800 (PST)
-X-Received: by 2002:a05:6830:91d:b0:80c:d34f:5f65 with SMTP id 46e09a7af769-8628991f062mr1743212a34.30.1794552075399;
-        Thu, 12 Nov 2026 22:41:15 -0800 (PST)
+X-Gm-Gg: AYBFou1uidVpzzV8Xbna/grK99kJY1mcm25Nnxk/649CIMBx5PidphifqpO1fXihR1k
+	OuopP5lZ5Y91k5AhQOeWBVy/XDD4y9NuncSFErdjy1LpNygLCx9vD6OVbPrH2+blfxJDd+jENKO
+	MEhKGde8hRiYhqAgfRqBls8/wEl9khWmpQ7KGSLIYYaTLxiShXdJdzRKuaM2PfxEuAE+qg0FB9x
+	V3+s+XxQ7TF1ul+lEtcM/3hnrkqwOdDkvTSTTxIsm5dcv5SNDlpWsPuLkbHLua/zViW7+63AEqC
+	fgP6QHSv02jVSGilxUe/ltusjWeTD3z8JRpGRi3KCKpYbW7A8yLzVSLSKnAAvHkub4G1IgO9Ym3
+	MhYAm0Cbq5gvWKPusCmSz/B7iGca/lxqTGGmM/gTfT2x5Tpwy57QyEeFGULZKiTW3NpZCl9Q8vv
+	PL1HzHTI+7dc4Ow3PMyiggk9sNdZEj
+X-Received: by 2002:a05:6808:1527:b0:4a3:3108:866a with SMTP id 5614622812f47-56e637950e9mr1418828b6e.17.1794552069727;
+        Thu, 12 Nov 2026 22:41:09 -0800 (PST)
+X-Received: by 2002:a05:6808:1527:b0:4a3:3108:866a with SMTP id 5614622812f47-56e637950e9mr1418814b6e.17.1794552069298;
+        Thu, 12 Nov 2026 22:41:09 -0800 (PST)
 Received: from crwood-thinkpadp16vgen1.minnmso.csb (71-34-16-191.mpls.qwest.net. [71.34.16.191])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.14
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 22:41:14 -0800 (PST)
+        Thu, 12 Nov 2026 22:41:08 -0800 (PST)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH v7 06/10] tracing/osnoise: Reset cleanup
-Date: Fri, 13 Nov 2026 00:40:59 -0600
-Message-ID: <20261113064103.3041704-7-crwood@redhat.com>
+Subject: [PATCH v7 01/10] tracing/osnoise: Variable cleanup
+Date: Fri, 13 Nov 2026 00:40:54 -0600
+Message-ID: <20261113064103.3041704-2-crwood@redhat.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261113064103.3041704-1-crwood@redhat.com>
 References: <20261113064103.3041704-1-crwood@redhat.com>
@@ -109,271 +109,224 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 6kXb6_KuRJodipaDHJsH8KSk9vh3kAbKLf8VKyRAw5U_1794552076
+X-Mimecast-MFC-PROC-ID: szRIH-OzOSd-zmPMDwZxTDqgLZ-SlEsFc4CghZdyMo8_1794552070
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Reset per-cpu timerlat state every time we stop a kthread or detach an
-fd, rather than assume everything gets cleaned up properly, and avoiding
-the need to explicitly zero individual fields.
+Add cpu_osn_var/cpu_tmr_var() accessors and use them.
 
-Also, stop initializing tlat->thread lazily, add some debug checks to
-detect an unclean state, and clear osnoise_data.tainted in
-osn_var_reset().
+Timerlat threads aren't always kthreads, so rename the variable to just
+"thread".
 
-Combine the per-cpu tlat cleanup and clearing osn->sampling and osn->pid into
-osn_reset_cpu(), which is called consistently regardless of the tracer mode.
-
-Don't clear the rest of the osnoise per-cpu state except when the full
-tracer has been reset, to avoid racing with interrupt trace hooks.
+rel_period isn't used at all, so remove it.
 
 Signed-off-by: Crystal Wood <crwood@redhat.com>
 ---
-v2: New patch.  Without this, I was seeing sampling = 1 leaking from a
-kthread context to an fd context, which confused the latter into
-operating with tlat->thread set to the old kernel thread, causing the fd
-thread to hang.
-
-v3: Reset the per-cpu context unconditionally in stop_kthread(), so sampling
-gets cleared as noted in patch 3/9
-
-v4: Only reset the cpu data if the fdd is a match
-
-v6: Revive patch, but remove the interrupt counters from the zeroed area
-
-v7:
- - Go back to clearing interrupt counters on full tracer reset, explicily clearing
-   osn->sampling and osn->pid only during cpu detachment.  The issue
-   pointed out by Sashiko in v6, where we could have stale data after a
-   detach, is still there but it is not a new issue and is out of scope
-   for this patchset, and unlike v6 it doesn't persist across full tracer
-   resets.
- - Use WARN_ON_ONCE consistently
+v7: Add osn variable to start_kthread(), replacing individual calls to
+    cpu_osn_var(), which previously happened later in the patch set.
+    This avoids a temporary build break in the next patch.
 ---
- kernel/trace/trace_osnoise.c | 117 ++++++++++++++++++-----------------
- 1 file changed, 61 insertions(+), 56 deletions(-)
+ kernel/trace/trace_osnoise.c | 54 +++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index e61f57230eef..8db0697b69e4 100644
+index 995da9e0b548..2f3cbe71d313 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -237,9 +237,10 @@ struct osnoise_variables {
- 	struct mutex		lock; /* covers kthread and fdd changes */
- 	struct task_struct	*kthread;
- 	struct fd_data		*fdd;
-+	bool			sampling;
- 
-+	/* reset only when the entire tracer is restarted */
- 	struct_group(zero,
--		bool			sampling;
- 		pid_t			pid;
- 		struct osn_nmi		nmi;
- 		struct osn_irq		irq;
-@@ -287,6 +288,7 @@ struct timerlat_variables {
- 	 */
- 	struct mutex		detach_lock;
- 
-+	/* reset on per-cpu detachment */
- 	struct_group(zero,
- 		struct task_struct	*thread;
- 		struct hrtimer		timer;
-@@ -318,23 +320,19 @@ static inline struct timerlat_variables *cpu_tmr_var(int cpu)
- 	return per_cpu_ptr(&per_cpu_timerlat_var, cpu);
+@@ -251,6 +251,11 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
+ 	return this_cpu_ptr(&per_cpu_osnoise_var);
  }
  
-+static inline void tlat_reset_cpu(int cpu)
++static inline struct osnoise_variables *cpu_osn_var(int cpu)
 +{
-+	struct timerlat_variables *tlat = cpu_tmr_var(cpu);
-+
-+	WARN_ON_ONCE(tlat->thread);
-+	memset(&tlat->zero, 0, sizeof(tlat->zero));
++	return per_cpu_ptr(&per_cpu_osnoise_var, cpu);
 +}
 +
  /*
-- * tlat_var_reset - Reset the values of the given timerlat_variables
-+ * tlat_var_reset - Reset non-per-cpu state
+  * Protect the interface.
   */
- static inline void tlat_var_reset(void)
- {
--	struct timerlat_variables *tlat_var;
--	int cpu;
--
--	/*
--	 * So far, all the values are initialized as 0, so
--	 * zeroing the structure is perfect.
--	 */
--	for_each_online_cpu(cpu) {
--		tlat_var = cpu_tmr_var(cpu);
--		WARN_ON_ONCE(tlat_var->thread);
--		memset(&tlat_var->zero, 0, sizeof(tlat_var->zero));
--	}
- 	/*
- 	 * Reset also align_next, to be filled by a new offset by the first timerlat
- 	 * thread that wakes up, if TIMERLAT_ALIGN is set.
-@@ -342,38 +340,12 @@ static inline void tlat_var_reset(void)
- 	atomic64_set(&align_next, 0);
- }
- #else /* CONFIG_TIMERLAT_TRACER */
--#define tlat_var_reset()	do {} while (0)
--#endif /* CONFIG_TIMERLAT_TRACER */
--
--/*
-- * osn_var_reset - Reset the values of the given osnoise_variables
-- */
--static inline void osn_var_reset(void)
-+static inline void tlat_reset_cpu(int cpu)
- {
--	struct osnoise_variables *osn_var;
--	int cpu;
--
--	/*
--	 * So far, all the values are initialized as 0, so
--	 * zeroing the structure is perfect.
--	 */
--	for_each_online_cpu(cpu) {
--		osn_var = cpu_osn_var(cpu);
--
--		WARN_ON_ONCE(osn_var->kthread);
--		WARN_ON_ONCE(osn_var->fdd);
--		memset(&osn_var->zero, 0, sizeof(osn_var->zero));
--	}
+@@ -261,9 +266,8 @@ static struct mutex interface_lock;
+  * Runtime information for the timer mode.
+  */
+ struct timerlat_variables {
+-	struct task_struct	*kthread;
++	struct task_struct	*thread;
+ 	struct hrtimer		timer;
+-	u64			rel_period;
+ 	u64			abs_period;
+ 	bool			tracing_thread;
+ 	u64			count;
+@@ -285,6 +289,11 @@ static inline struct timerlat_variables *this_cpu_tmr_var(void)
+ 	return this_cpu_ptr(&per_cpu_timerlat_var);
  }
  
--/*
-- * osn_var_reset_all - Reset the value of all per-cpu osnoise_variables
-- */
--static inline void osn_var_reset_all(void)
--{
--	osn_var_reset();
--	tlat_var_reset();
--}
-+#define tlat_var_reset()	do {} while (0)
-+#endif /* CONFIG_TIMERLAT_TRACER */
- 
++static inline struct timerlat_variables *cpu_tmr_var(int cpu)
++{
++	return per_cpu_ptr(&per_cpu_timerlat_var, cpu);
++}
++
  /*
-  * Tells NMIs to call back to the osnoise tracer to record timestamps.
-@@ -408,6 +380,39 @@ static struct osnoise_data {
- #endif
- };
+  * tlat_var_reset - Reset the values of the given timerlat_variables
+  */
+@@ -301,8 +310,8 @@ static inline void tlat_var_reset(void)
+ 	 * zeroing the structure is perfect.
+ 	 */
+ 	for_each_online_cpu(cpu) {
+-		tlat_var = per_cpu_ptr(&per_cpu_timerlat_var, cpu);
+-		if (tlat_var->kthread)
++		tlat_var = cpu_tmr_var(cpu);
++		if (tlat_var->thread)
+ 			hrtimer_cancel(&tlat_var->timer);
+ 		memset(tlat_var, 0, sizeof(*tlat_var));
+ 	}
+@@ -331,7 +340,7 @@ static inline void osn_var_reset(void)
+ 	 * zeroing the structure is perfect.
+ 	 */
+ 	for_each_online_cpu(cpu) {
+-		osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
++		osn_var = cpu_osn_var(cpu);
+ 		memset(osn_var, 0, sizeof(*osn_var));
+ 	}
+ }
+@@ -1227,9 +1236,9 @@ static void trace_sched_migrate_callback(void *data, struct task_struct *p, int
+ 	struct osnoise_variables *osn_var;
+ 	long cpu = task_cpu(p);
  
-+static inline void osn_reset_cpu(int cpu)
-+{
-+	struct osnoise_variables *osn = cpu_osn_var(cpu);
-+
-+	WARN_ON_ONCE(osn->kthread);
-+	WARN_ON_ONCE(osn->fdd);
-+
-+	osn->sampling = false;
-+	osn->pid = 0;
-+	tlat_reset_cpu(cpu);
-+}
-+
-+/*
-+ * osn_var_reset - Reset non-per-cpu state, and check for stale data
-+ */
-+static inline void osn_var_reset(void)
-+{
-+	struct osnoise_variables *osn;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		osn = cpu_osn_var(cpu);
-+
-+		WARN_ON_ONCE(osn->kthread);
-+		WARN_ON_ONCE(osn->fdd);
-+		WARN_ON_ONCE(osn->sampling);
-+		memset(&osn->zero, 0, sizeof(osn->zero));
-+	}
-+
-+	tlat_var_reset();
-+	osnoise_data.tainted = false;
-+}
-+
- #ifdef CONFIG_TIMERLAT_TRACER
- static inline bool timerlat_enabled(void)
- {
-@@ -2024,7 +2029,7 @@ static void stop_kthread(unsigned int cpu)
- 		osn_var->kthread = NULL;
+-	osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
++	osn_var = cpu_osn_var(cpu);
+ 	if (osn_var->pid == p->pid && dest_cpu != cpu) {
+-		per_cpu_ptr(&per_cpu_timerlat_var, cpu)->uthread_migrate = 1;
++		cpu_tmr_var(cpu)->uthread_migrate = 1;
+ 		osnoise_taint("timerlat user-thread migrated\n");
+ 		osnoise_stop_exception("timerlat user-thread migrated", cpu);
+ 	}
+@@ -1827,13 +1836,13 @@ static enum hrtimer_restart timerlat_irq(struct hrtimer *timer)
+ 			osnoise_stop_tracing();
+ 			notify_new_max_latency(diff);
+ 
+-			wake_up_process(tlat->kthread);
++			wake_up_process(tlat->thread);
+ 
+ 			return HRTIMER_NORESTART;
+ 		}
  	}
  
--	osn_var->sampling = false;
-+	osn_reset_cpu(cpu);
- 	mutex_unlock(&osn_var->lock);
- }
+-	wake_up_process(tlat->kthread);
++	wake_up_process(tlat->thread);
  
-@@ -2452,23 +2457,19 @@ static void timerlat_fd_detach(struct fd_data *fdd)
- 	if (WARN_ON_ONCE(fdd != osn->fdd))
- 		return;
+ 	if (osnoise_data.print_stack)
+ 		timerlat_save_stack(0);
+@@ -1926,7 +1935,7 @@ static int timerlat_main(void *data)
+ 	tlat->tracing_thread = false;
  
--	WARN_ON_ONCE(osn->kthread);
- 	WARN_ON_ONCE(fdd->thread != tlat->thread);
- 	tlat->detach = true;
- 	wake_up_process(tlat->thread);
- 
- 	mutex_lock(&tlat->detach_lock);
- 
--	osn->sampling = 0;
--	osn->pid = 0;
--
- 	WARN_ON_ONCE(hrtimer_active(&tlat->timer));
- 	hrtimer_cancel(&tlat->timer);
- 	put_task_struct(fdd->thread);
- 
- 	fdd->thread = NULL;
-+	tlat->thread = NULL;
- 	osn->fdd = NULL;
--	memset(&tlat->zero, 0, sizeof(tlat->zero));
- 
- 	mutex_unlock(&tlat->detach_lock);
- }
-@@ -2531,13 +2532,17 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	fdd->cpu = cpu;
- 	file->private_data = fdd;
- 
--	tlat->tracing_thread = false;
--	tlat->thread = current;
- 	get_task_struct(current);
- 
- 	osn_var->pid = current->pid;
- 	osn_var->fdd = fdd;
- 
-+	WARN_ON_ONCE(tlat->thread);
-+	WARN_ON_ONCE(tlat->count != 0);
-+	WARN_ON_ONCE(tlat->tracing_thread);
-+	WARN_ON_ONCE(osn_var->sampling);
-+	tlat->thread = current;
-+
  	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 
+-	tlat->kthread = current;
++	tlat->thread = current;
+ 	osn_var->pid = current->pid;
  	/*
-@@ -2682,13 +2687,13 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
- static int timerlat_fd_release(struct inode *inode, struct file *file)
+ 	 * Annotate the arrival time.
+@@ -1981,7 +1990,7 @@ static void stop_kthread(unsigned int cpu)
  {
- 	struct fd_data *fdd = file->private_data;
--	struct osnoise_variables *osn_var;
--
--	osn_var = cpu_osn_var(fdd->cpu);
-+	struct osnoise_variables *osn_var = cpu_osn_var(fdd->cpu);
+ 	struct task_struct *kthread;
  
- 	mutex_lock(&osn_var->lock);
--	if (fdd == osn_var->fdd)
-+	if (fdd == osn_var->fdd) {
- 		timerlat_fd_detach(fdd);
-+		osn_reset_cpu(fdd->cpu);
-+	}
- 	mutex_unlock(&osn_var->lock);
+-	kthread = xchg_relaxed(&(per_cpu(per_cpu_osnoise_var, cpu).kthread), NULL);
++	kthread = xchg_relaxed(&cpu_osn_var(cpu)->kthread, NULL);
+ 	if (kthread) {
+ 		if (cpumask_test_and_clear_cpu(cpu, &kthread_cpumask) &&
+ 		    !WARN_ON(!test_bit(OSN_WORKLOAD, &osnoise_options))) {
+@@ -2001,7 +2010,7 @@ static void stop_kthread(unsigned int cpu)
+ 			/*
+ 			 * This is set in the osnoise tracer case.
+ 			 */
+-			per_cpu(per_cpu_osnoise_var, cpu).sampling = false;
++			cpu_osn_var(cpu)->sampling = false;
+ 			barrier();
+ 		}
+ 	}
+@@ -2030,12 +2039,13 @@ static void stop_per_cpu_kthreads(void)
+  */
+ static int start_kthread(unsigned int cpu)
+ {
++	struct osnoise_variables *osn = cpu_osn_var(cpu);
+ 	struct task_struct *kthread;
+ 	void *main = osnoise_main;
+ 	char comm[24];
  
- 	kfree(fdd);
-@@ -3002,7 +3007,7 @@ static int osnoise_workload_start(void)
- 	if (osnoise_has_registered_instances())
+ 	/* Do not start a new thread if it is already running */
+-	if (per_cpu(per_cpu_osnoise_var, cpu).kthread)
++	if (osn->kthread)
  		return 0;
  
--	osn_var_reset_all();
-+	osn_var_reset();
+ 	if (timerlat_enabled()) {
+@@ -2044,7 +2054,7 @@ static int start_kthread(unsigned int cpu)
+ 	} else {
+ 		/* if no workload, just return */
+ 		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
+-			per_cpu(per_cpu_osnoise_var, cpu).sampling = true;
++			osn->sampling = true;
+ 			barrier();
+ 			return 0;
+ 		}
+@@ -2058,7 +2068,7 @@ static int start_kthread(unsigned int cpu)
+ 		return -ENOMEM;
+ 	}
  
- 	retval = osnoise_hook_events();
- 	if (retval)
+-	per_cpu(per_cpu_osnoise_var, cpu).kthread = kthread;
++	osn->kthread = kthread;
+ 	cpumask_set_cpu(cpu, &kthread_cpumask);
+ 
+ 	return 0;
+@@ -2091,7 +2101,7 @@ static int start_per_cpu_kthreads(void)
+ 		if (cpumask_test_and_clear_cpu(cpu, &kthread_cpumask)) {
+ 			struct task_struct *kthread;
+ 
+-			kthread = xchg_relaxed(&(per_cpu(per_cpu_osnoise_var, cpu).kthread), NULL);
++			kthread = xchg_relaxed(&cpu_osn_var(cpu)->kthread, NULL);
+ 			if (!WARN_ON(!kthread))
+ 				kthread_stop(kthread);
+ 		}
+@@ -2520,7 +2530,7 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 			return -EINVAL;
+ 		}
+ 	} else {
+-		per_cpu_ptr(&per_cpu_timerlat_var, cpu)->uthread_migrate = 1;
++		cpu_tmr_var(cpu)->uthread_migrate = 1;
+ 		osnoise_taint("timerlat user thread migrate\n");
+ 		osnoise_stop_tracing();
+ 		migrate_enable();
+@@ -2564,7 +2574,7 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 		}
+ 	} else {
+ 		tlat->tracing_thread = false;
+-		tlat->kthread = current;
++		tlat->thread = current;
+ 
+ 		/* Annotate now to drift new period */
+ 		tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
+@@ -2613,10 +2623,10 @@ static int timerlat_fd_release(struct inode *inode, struct file *file)
+ 	migrate_disable();
+ 	mutex_lock(&interface_lock);
+ 
+-	osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
+-	tlat_var = per_cpu_ptr(&per_cpu_timerlat_var, cpu);
++	osn_var = cpu_osn_var(cpu);
++	tlat_var = cpu_tmr_var(cpu);
+ 
+-	if (tlat_var->kthread)
++	if (tlat_var->thread)
+ 		hrtimer_cancel(&tlat_var->timer);
+ 	memset(tlat_var, 0, sizeof(*tlat_var));
+ 
+@@ -3096,7 +3106,7 @@ static void timerlat_tracer_stop(struct trace_array *tr)
+ 	 */
+ 	if (!osnoise_has_registered_instances()) {
+ 		for_each_online_cpu(cpu)
+-			per_cpu(per_cpu_osnoise_var, cpu).sampling = 0;
++			cpu_osn_var(cpu)->sampling = 0;
+ 	}
+ 
+ 	osnoise_workload_stop();
 -- 
 2.56.0
 
