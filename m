@@ -1,61 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794567781;
-	b=hdflBjmX0ZWp0/sufrOHcNzCN3qgsN+1VslF1d8jGMBAvB4OYsHYkfuQZIZnxj06D6Dg
-	 CA2/NUQvQwUmiMPj+JyEEtSsyd1Bus/lMR/ZboRc/2+tuxaJzGnPTyAqzPKiye9mM0MXE
-	 oAlDZrkjVWVlyQOaQxarJHpSBYhuqw8MtQryhJygRlzZ+jtc5P4lkb+aDRfn7XinMD719
-	 4It9hH8JoMiJMWPETDnXbdxT4kKpE97VL/arsVX5Hq6LaFn4YqkvYXm3T6byWeFkVo+wY
-	 V5VgwX+J+3eGCloL/sBoVk7berFeiqwmL42w8HSFfMXRYWajmKA8r9ABWVcRHmOYuog==
+	t=1794567937;
+	b=dp0QsINqv2JavWIYLDo4HkhMcbCbCKPWMUaVma+A9guPlvhRBPLLmp+PF8c4c3AtsNI1
+	 5B7BVq+JOg8D0NEfDM3BMULvADriwHGM1LgdaxMPlf0POVF+LZo76BfzZj3au+Roie5TM
+	 RJstQDKGQectSFN7RZStwCDOEdsEd79MX6sljEHGq03zVNljlHDjacDqOkG+Yp8PeHYGF
+	 7YJasf8EVjSowAzyykuYjaSGt1j27Uin2nqDZFWWDgjVr+rvjjLLjoOdB7/7Y4pQfAXI5
+	 xBvLS2kCHJ+WX0BDXeeyaX4+TAV5gBzy4X0frcaC47ZGoXZ9I2G1tmQY4eYHH/TLL3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794567781;
-	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=TF0d1i8iIVpJF8ntw0uYDMU0Ege7WR8OSZLCcU/WZq0=;
-	b=1s7Lz+hoHGJGAy/FgkDIkCRmrl90FdT06fi8QPgQaiRko8IEWjhjl66rEy9wsr9QIgfM
-	 6L4OjpJ4Gl5cZFMR8y1sszTxwsyxU29McXRKkfqHaBElg3mlshosVYVULW+W0PckMdDoo
-	 AINCTTx2gtxSo7lh2waFNq69CHWkuhp/NMGbRRumR1RIoGJfziuhYLddJAO+gv0nyzijS
-	 +VzI202soPOQz8O266YBbpX31W+Y/49UYdbP3yD8o85lHO3cUihRm3fFP2yZCNP7syEcy
-	 adE26+Nue7RhtxYZuCB8flSHPYcmryIgM5peZ9G9vCW39M0lPKCi0X/7dwG9zY+iPcQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794567937;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:In-Reply-To:X-Scanned-By:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Disposition;
+	bh=hDulsKUXTiaWl7ljBHKiX3WkjYxWKjQtrQrwS29EqM0=;
+	b=frYsLMtD1QEw7ctk0YHOPiq/ybmOT0XEMqOejrlTVi8As/etm110KnCrEn0gDbnVgs/W
+	 PoqwPQ/ZOasPwXrkDFsyx6CeQ+j96bQjWEsExs27cYo5FYE757Vz4Mf/8UmjAhbOFwGlb
+	 DuIJTXRKl612iGhDG5UrXF+YoBlpoM4n0UdGhmkBNZpZR8dllyPcz/9aJGd9nOXqcQPxa
+	 s37bQGJINW47vVXJk1lSi49qkYAGyp6HUiou3fJRuHZZ5cABl88O+Aj7oW2lhWhmOTdEt
+	 5PULU1nQMNmCO5vAgeCrX8jgyssrJrzCTNApMPJm3s8oZ8m8fpD3MG26uMPAsNUtJNA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=monom.org;
-	spf=pass smtp.mailfrom=monom.org;
-	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=ulyDssWL;
-	dkim=pass header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=lukz+5yH;
-	arc=none smtp.remote-ip=49.12.199.46
-Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="TpQosCQ/";
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2013606B255
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 11:03:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2013606B255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7A0606A338
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 11:05:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8F7A0606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=ulyDssWL;
-	dkim=pass (2048-bit key, unprotected) header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=lukz+5yH
-DKIM-Signature: v=1; a=ed25519-sha256; s=v1-ed25519-20260726; d=monom.org; c=relaxed/relaxed; r=y;
-	h=Message-ID:Subject:To:From:Date; t=1794567765; bh=TF0d1i8iIVpJF8ntw0uYDMU
-	0Ege7WR8OSZLCcU/WZq0=; b=ulyDssWLMzd24kIHbM8kH/XMGZ/RZ1xaE+UNjJaPJwbRzjSG8w
-	Znr6QsFzvuDRs7FHvWNG3e4upwZiP/h5ULAQ==;
-DKIM-Signature: v=1; a=rsa-sha256; s=v1-rsa-20260726; d=monom.org; c=relaxed/relaxed; r=y;
-	h=Message-ID:Subject:To:From:Date; t=1794567765; bh=TF0d1i8iIVpJF8ntw0uYDMU
-	0Ege7WR8OSZLCcU/WZq0=; b=lukz+5yH0RVntm+2aqoO44i/qEZXOCQN+psVJnbxsP6ADDnK5e
-	qF0uYn8Tx0SbgPHZb9/0NstkOc3Icd3r6oUCYEFhLJyVt/V25l+5GV7r0iR7N4GsMHhRACX9RL7
-	0r/wk/NLn4upd/mW6DHN4VxIkn21xQk88MSszo9dc4bJGXs/mhFas27UBEYeQYzU0DIy0ZWwmfh
-	RydeDR4Py06H1WCTTKxAH6SYKy+OIPjiRAZL66MrOFA76j0hUhcLiJaZOjVXYxJbhEqw6ZGPvNW
-	gTZQAvbnVTsXQDoPgVxV9Ktaf7MmNxrc94eM7YwpIgq3EhbyMD5IC6mmudbTToyWbGw==;
-Date: Fri, 13 Nov 2026 12:02:45 +0100
-From: Daniel Wagner <wagi@monom.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] rtla/timerlat: Lock the memory of the user-space threads
-Message-ID: <4dc4d513-f632-4c1a-a866-51143424c409@monom.org>
-References: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
- <CAP4=nvRQE+GKPT1-KgZ4OgcVV7eKqnkURaELutSMgK4T8YAZMg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TpQosCQ/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1794567935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hDulsKUXTiaWl7ljBHKiX3WkjYxWKjQtrQrwS29EqM0=;
+	b=TpQosCQ/5BnOpTeAYYSkjGD+adTiVQCbCuJw8LZ0fz1ToFUdjY4fUrlc/oTSsq5+XziuFP
+	l/mVSa0EhgiFyPEun2lW4h1h/xSNqYHmpYFLZ+3etsdsuLpyHGKy0KFTsF+prYEC3xWKqK
+	Y/g13dqpXkRW1IAdhbBT8483Sa1kWjs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-RwV99ItdM5y-209Xr24W6Q-1; Fri,
+ 13 Nov 2026 06:05:31 -0500
+X-MC-Unique: RwV99ItdM5y-209Xr24W6Q-1
+X-Mimecast-MFC-AGG-ID: RwV99ItdM5y-209Xr24W6Q_1794567929
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 560A1195608B;
+	Fri, 13 Nov 2026 11:05:29 +0000 (UTC)
+Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C94E1341;
+	Fri, 13 Nov 2026 11:05:24 +0000 (UTC)
+Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
+	oleg@redhat.com; Fri, 13 Nov 2026 12:05:29 +0100 (CET)
+Date: Fri, 13 Nov 2026 12:05:23 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3] uprobes: Use flexible array for xol_area bitmap
+Message-ID: <avbu0HiCiDE9AVHs@redhat.com>
+References: <20261113052948.2668076-1-rosenp@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,23 +89,26 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+In-Reply-To: <20261113052948.2668076-1-rosenp@gmail.com>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: p35omSWiQcRmCRwQJXIQ7kn7t9ZD5HO2748m8Ri6i1g_1794567929
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP4=nvRQE+GKPT1-KgZ4OgcVV7eKqnkURaELutSMgK4T8YAZMg@mail.gmail.com>
 
-On Fri, Nov 13, 2026 at 10:30:33AM +0100, Tomas Glozar wrote:
-> > Lock the user-space threads' memory before they start measuring, as
-> > cyclictest -m does.
-> >
-> 
-> Thank you for measuring this.
+On 11/12, Rosen Penev wrote:
+>
+> The XOL slot bitmap has the same lifetime as struct xol_area, but it
+> is currently allocated separately.  That adds another allocation
+> failure path and a matching cleanup branch without buying any extra
+> flexibility.
+>
+> Store the bitmap as a regular array and allocate it together
+> with the xol_area. The bitmap remains zero-initialized, while the
+> allocation and error handling become simpler.
+>
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-FWIW, I am updating/improving my homelab which involves my RT test
-setup. I only have older and smaller HW hooked up in my lab. The switch
-to rtla and using stress-ng was on the TODO list. stress-ng has a bunch
-of stressors which exhaust memory or CPU time. You might be able to
-reproduce this as well and bigger machines. Let me know if you want some
-tips.
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-Cheers,
-Daniel
