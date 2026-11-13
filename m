@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794536882;
-	b=3a2qLPKSItWuCQDtH2x9JsJMqWPGw1khnYrA21NSV+Ft4/jfJtKJ3HxM1/2/B1I9j7rV
-	 +vs0CehJ3vuEBkd8Y7uQxy6emYvEm336gEcVv1QyLe314sY8G/9qZPL88ScAY/s1Gc5ql
-	 zjDPCDpx49sGKqXDpn5aLQe80PPvU+YGmBXBDU81mvCTnZCdvu5mOTJIzhcP8lmOBEw2b
-	 S/9vh44auWJw9RBtJQoNkxIaHFI5QeHrbmtS6OqOIkUhzMLirda5q5PWe0/FDoLv0kw+8
-	 ap1YwprQW48Eh4qQ6NeNS+8g5PBw+Re8HTLWkdz+TeJGkY+aBb5GrrtDVr5j0N+fX9A==
+	t=1794536935;
+	b=TAolmy1UroNyjGiNRfIdh6S+T/JxQAPNlyIYbY7xQEeF/OXFaQGn4rSclyB3figsA0d7
+	 uMkWIZKqpKdY0myEJJ26p4kswYcdPz0a4tLh0g9uDZ0q2Z74MlmicSaN3wiGmJCCXtVv1
+	 MhWNsMnKO/gyW6HsMj7OU3D9IsNIrAuLcdZk9uKTUGQKod7ZjAuWNEWzsDJyni0z2NeFE
+	 HQw7zwmFJzYP8YensaQ1Sdhfeu1QvaCRrFfqN9wPEuetCpxP/rcou70HwQlpJNDHV2LLq
+	 LRF/QZTZjAPvHLSYrQF4J1d2ybUpon0BXl9ZUxyoRHnKxBhczbIY0wEmWLXg4tDsLEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794536882;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794536935;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=2qW4WKjboBuDMx75ZmNMnV4KAw3QtqmLiMlJ1bN7aOg=;
-	b=DWMGp8HqQYiQONQ2hIVHHem9nVGfneGH0Nk3pEeC3G2ZvN2w+TsifRPgRlL/84HHEcT4
-	 rknpRnhgMvS1gHl3gUPJHGpxXoURAR/+nK03ylZsjBLckepVOLU8Ltsd1sEQNk3PMWdMA
-	 7blH/HDUGe+qSy/jAT3juWdxLSg15S0fsYp9zBPd2EvpMXunafo/nK8bEkEoS+qwMY5Pl
-	 W/nvUJ8OXh58Ez+FTCZLRm5+zT7zVYq+S2JaVkUMtkJrRsV7bhNTbB8Baxe6+neZnilZj
-	 azTnvPkFzeMaPz0uuXcIYJ0+bM7Gummuqge1F1sQR5aR7GwueGAemUkS02gR3uPFbjA==
+	bh=AHgBCXI1TGb8hEAyobjrNops8F8v2gDESK7c0ZGONpc=;
+	b=1zPTeYrWjCJqltCbDsQtvBZ4/xpf2cXh/M7nloKEFlRcZ25Z/LJKm3gGEp8BPm45tc3/
+	 OQZuqGu+rN8O22c2larPrROAK650reh1kZTSIAkbVoqwfLoMepdufmN/y6l70emHdRwi8
+	 sSg4wEAcOREjZh0aFNYfBbWA3tafHxLEu9mMi7jB2QR0nNzU4OpWfr/0FFks7BiwI6n6A
+	 0Se6/QKHaJbQXgyqA94G7/SXi1491R2/U0+fYwZNZQMFqeEv2rCMjux/CcIY452WECYJl
+	 fOJKwNz8pA2I0CarKGo/bpSo6aIQXXzwjiA61t3A0GJEj2MeUThvPMjtmc+kBa559ag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bEQPWvtU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ha+3WiIm;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E10606A31C;
-	Fri, 13 Nov 2026 02:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7E5606A321;
+	Fri, 13 Nov 2026 02:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bEQPWvtU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747181F000C4;
-	Fri, 13 Nov 2026 02:28:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ha+3WiIm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A9A31F000C4;
+	Fri, 13 Nov 2026 02:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794536882;
-	bh=2qW4WKjboBuDMx75ZmNMnV4KAw3QtqmLiMlJ1bN7aOg=;
+	s=k20260515; t=1794536935;
+	bh=AHgBCXI1TGb8hEAyobjrNops8F8v2gDESK7c0ZGONpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bEQPWvtUWlcGhjK0xOe5IAC7JOPOg/SxeO9ML5DvmcqQTgrjVVFjhXE/jfsZaT8M3
-	 W66r7L7O4eCpKI4+eoKwInHhgmH8BqfEjtFg7RUa2aVp3eA4zQmnO0IMGTU2kI8HYD
-	 3Ug2U8jaCWGNnAk0o3kU/rx6oVBw+3Xh0wEe77XeO/w2UQ582UBr153peJ66XeeZKb
-	 5R6oXxhQR0r8CJleqI2IT3LL1Re7l1ZJj1lcCzcNZIEuBt4vkShviSZtjJ1LbKDJ/+
-	 kTSh5e9wH81sI9fDNgRmHobEtjUEQIGP7sugDUNMbgOcp1RhHuLsVE80hcLEabcvzE
-	 AapxdaEqeIEfA==
+	b=ha+3WiImmHrHVVg5jbbSbNES/G7LB9J+2ADswAepkKUmqMM0WtxT+duKyNw2yUPps
+	 RTR8EK5QZXDMZ/WGeTIcvJM2WJjQabuS9Zv9m7MK9v3ksDmclmkctwoSe+iLhkaDpr
+	 9r6t/8ikEPXuNMqL8LKxZMtSeSZQt5VUs1mTMOdOVx20Qh5FFrVAzSNOb9qYgWzUps
+	 CzCReYrlJd2Yho1bbj++DRpS9AREeXqxySX66OXp40Hnufqc7PG670Z/RgdVShs43M
+	 LleXar2CB8PFfN7AM36gVUFioJYOvS+D/Exqc65ZYa9pZDWl8mLjJ6fJAyh9fqOlj2
+	 7P/5iH8UyeO0A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] tools/bootconfig: Fix tracing script filters and histogram dependencies
-Date: Fri, 13 Nov 2026 11:27:59 +0900
-Message-ID: <undine-1794536879791872271-52b7971cdf78b6ad@undined.local>
+Cc: akpm@linux-foundation.org, rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] bootconfig: Preserve values and key paths during parsing and output
+Date: Fri, 13 Nov 2026 11:28:52 +0900
+Message-ID: <undine-1794536932799279555-f9c303a1aba9ec59@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <cover.1793471731.git.edumucelli@gmail.com>
-References: <cover.1793471731.git.edumucelli@gmail.com>
+In-Reply-To: <cover.1794337724.git.edumucelli@gmail.com>
+References: <cover.1794333957.git.edumucelli@gmail.com> <cover.1794337724.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,55 +61,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Sat, 31 Oct 2026 19:35:29 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
+On Tue, 10 Nov 2026 20:08:44 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
 > Hi Masami,
 > 
-> Thanks for the reviews and for picking up the previous fixes. Here are
-> five more script fixes, based on bootconfig/core as you suggested.
+> Thanks again for reviewing the earlier fixes. This v2 addresses the
+> issue Sashiko reported in the first patch.
 > 
-> They address:
-> - The documented ftrace.notraces setting being ignored by bconf2ftrace.sh.
-> - Single quotes in event actions producing invalid exported bootconfig.
-> - Literal filter text being mistaken for histogram variable syntax.
-> - Valid histogram dependency chains exceeding the exporter's retry limit.
-> - Helper key lookups matching unrelated bootconfig keys.
+> The parent array in v1 assumed that the parser always enforced
+> XBC_DEPTH_MAX. I reproduced the reported overflow with AddressSanitizer
+> using a 20-component chain where each parent also has a value. The
+> existing verifier skips the subkeys in that case, so the parser accepts
+> a deeper tree than the formatter's array can hold.
 > 
-> The action-quoting patch follows up on the trigger-filter fix you picked
-> up. It uses the same warning approach for unrepresentable values that
-> you suggested for event filters. The histogram scan uses POSIX sed.
+> Patch 1 now checks the key children to determine whether a node opened
+> braces, using the same conditions as the forward walk. It no longer
+> keeps a depth-indexed array. The existing verifier gap is a separate
+> issue; this revision removes the formatter's dependency on that check.
 > 
-> I tested the conversion and export fixes in temporary tracefs instances
-> on my Ubuntu machine, running kernel 7.0.0-38-generic, with recording
-> disabled. The tests cover each relevant step and the combined series.
-> The helper fix has focused checks, and all 81 combined fixture checks
-> also pass with POSIX sed.
+> Changes in v2:
+> - Patch 1: derive brace ownership from the key children.
+> - Patches 2 and 3: unchanged.
 > 
-> Feedback is welcome.
+> I tested this on my Ubuntu machine. All 137 focused checks pass for the
+> combined series, and the full bootconfig suite passes after each patch
+> (86 passed, zero failed for the complete series). I also checked the
+> revised first patch and the combined series with AddressSanitizer and
+> UBSan using value-bearing chains up to 95 components.
+> 
+> Review: https://lore.kernel.org/all/sashiko-outbox-207566@kernel.org/
+> V1: https://lore.kernel.org/all/cover.1794333957.git.edumucelli@gmail.com/
 
-OK, these looks good to me.
+These looks good to me too.
+
+BTW, what checker did you use?
 
 Thanks,
 
 > 
+> Feedback is welcome.
+> 
 > Thanks,
 > Eduardo
 > 
-> Eduardo Mucelli Rezende Oliveira (5):
->   tools/bootconfig: Read the documented ftrace.notraces key
->   tools/bootconfig: Preserve quotes in exported event actions
->   tools/bootconfig: Ignore filter strings when resolving histogram
->     variables
->   tools/bootconfig: Resolve histogram dependencies until no progress is
->     made
->   tools/bootconfig: Match literal keys in tracing script helpers
+> Eduardo Mucelli Rezende Oliveira (3):
+>   tools/bootconfig: Close only opened braces in compact output
+>   bootconfig: Trim unquoted values at end of file
+>   tools/bootconfig: Preserve values containing both types of quotes
 > 
->  tools/bootconfig/scripts/bconf2ftrace.sh |  2 +-
->  tools/bootconfig/scripts/ftrace2bconf.sh | 27 ++++++++++++++++++------
->  tools/bootconfig/scripts/xbc.sh          | 13 ++++++++----
->  3 files changed, 31 insertions(+), 11 deletions(-)
+>  lib/bootconfig.c                              |  5 ++-
+>  tools/bootconfig/main.c                       | 43 +++++++++++++------
+>  .../samples/exp-good-mixed-kv1.bconf          |  5 +++
+>  tools/bootconfig/samples/good-mixed-kv1.bconf |  5 +++
+>  tools/bootconfig/test-bootconfig.sh           | 29 +++++++++++++
+>  5 files changed, 72 insertions(+), 15 deletions(-)
 > 
 > 
-> base-commit: a52ceed51e9bf8f1ca9c2c868b14bf6861986c65
+> base-commit: 677f83795fdfc25ddc51b665a9111f5ff199f7ca
 > -- 
 > 2.53.0
 > 
