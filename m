@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794558539;
-	b=T4JMI1YMN5ZULoYiNPv+7Ghq763YbvpU0A3Quf02NVZzdwtCfOOmejWnmxiefT+2zrpu
-	 dorkzCpY2fQq6onCcVeIsQO1yTxdfgQ6bY3lqgO4C2d/sjugNIAiDY/DyqZFkybdKVG1s
-	 itvK9l3nBbGESS0Mv+J5HV3Ljo7IWOQ8guLkpdTZ61KSSVzeneXywJAPgRC44NIuE3OfH
-	 z6KI3wav9GxcCEu8Df4VNkAyATX0YuJZ8+qMyXXZkNNo2uzezS2vZe52MwSAj6uKSjQNx
-	 iUgsBWyQCJMv0DDP2PyPVpjCXTcjSvaVP0OuIpc+p8zvyT97YJW2TsbVJyo9O2Kyz1g==
+	t=1794558548;
+	b=ZWUA/46A4MVvgC0VK9LXD5ZzU0WOk/kB8HA28SJ+fEs8t4X2fAkT2+pIacSu7XklKCiV
+	 MzYuB5UhCuZC4cMX8lRmO/25z580kIDK5ZMWu2Dv4UsjEXZr9slRo6L2EM1Q31qGIKwwJ
+	 l+5DItFKH7NR1hw+DCh4ow5hFFWKwszfbf6k+X7V0nLGDs/I5gBUL4eehb6UwT1XdYdiX
+	 z9hrhfOB4XJZbdvxSFJsSej21xPABVUc5Stud8TiFkSjwqCQQHRiGWtoZuj1YSZx9dxSL
+	 QYkXdWMO4xXoW9z84JQ6DgwEXGWSu1ATchpL+T3Q8bCgqXosAaxy/BK6lNlWR3NeD2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794558539;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794558548;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=hrc31r43l/ddBqmzi23AaElB9YOcZwjk1KgJOeh5OAk=;
-	b=paovYbUOBTCrDvK2jZgQvnf2Qoe6Egx9GnEb8GFo6a6xHzmMhV7L6CdWuPAH7VUoblNK
-	 pUKDXf6twIJo+siMMzMl1tdRo8qehzHHz3r0QD+o09EwTYRvTofr6LXThZRsyCzmlMZmy
-	 YSHLBPw8N6ZTlLRqN03dSh5LQxwJeE304xS6GAE6e99zO54amirQ5LTcdYeuf0uFN0Smr
-	 lhcLdQi4cev2A88ty9oIXMmGTEtYeWNahd8UE6lhTIgx13M/6xWd5W/s9k3ECUGRSZ7bh
-	 z9ULXXK518+USaLmbE4TF5M6x3eIn0VmGqWBvVi4YI7lEsnNS1rvQhHGjmfK4F1+1hQ==
+	bh=1AwWcvkeRud93GDBMae6LrZrlFU0fyzvM6nJxF8yh7w=;
+	b=QiQcR8KtCUXCjBxeXQ7MwkPA3LwLZyb5SaJEfIKAR1RFPImQBkEl0dBF+TvpxAmn6iVW
+	 Pz5qsthq+C/GLzcaj4dmZfIHi9P+S8BwfDSo2hWRPSbgZohzzydCrFZjAUAXfzhsKLv7c
+	 pB9XsUdLlRxfyT0mWmcsQYYBKz2cRKuHFXW+RpV4L5bMCtxKtY7fw1hC4fr2KYaf67osL
+	 A9255abBuf/j8u2F/KnCHjMaVCwo6sKbDM81YunM1YKH++sUDk9JpIRZuthsZ/qY8euWW
+	 uJU5zi1CLlNz6IRWMooQPOyDCvDAfZqLVYMJSQLYFIMt7uF1qIe04/AirXqrWuRrz1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R+H0u2zp;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="R5B/pbVL";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3F1606A881;
-	Fri, 13 Nov 2026 08:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7588E606A8A7;
+	Fri, 13 Nov 2026 08:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R+H0u2zp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358821F000C4;
-	Fri, 13 Nov 2026 08:28:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R5B/pbVL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517041F000D3;
+	Fri, 13 Nov 2026 08:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794558538;
-	bh=hrc31r43l/ddBqmzi23AaElB9YOcZwjk1KgJOeh5OAk=;
+	s=k20260515; t=1794558547;
+	bh=1AwWcvkeRud93GDBMae6LrZrlFU0fyzvM6nJxF8yh7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R+H0u2zpKFyWDkJw290YVZP4EQNJcdWfBoo+idV954Rtf6fjCXrVvq5TLTgYWGH0F
-	 AEsj9giKqH1H2Q7Iy2izQtWySW8kCixINCpayV0omsXVItoln/8K63ivbtDyg8rnCx
-	 VSFLl774ByooUkCAfjUZuDjmXUmjKWu1jaw8p/4WoLWpiBv3p0l1lcKyeVPUz558LI
-	 Zh0LA2tD1Fq3tE3P9S8edb3EAJ+4IoX8hxq/Qy/Ebnw+qA2nOGjWCRJDkyogN3KgnZ
-	 pvs+jtbCqGglgQbyzTHggg3TtD8hc9RUfJMgRGDsoE8t5Be0+xm7ZfK5vBQwmWC/v7
-	 FirWUehxrZYpA==
+	b=R5B/pbVLN7KrBsm1Op8rM+yUjmiz/o5MLwgaYxxjd05LhSXl7zxYtwJQWApOH2fdD
+	 t2/EzxKHNqu7M4aAIV88CnIkiv0pYOmyIteX4qGWlaEz4NtewDCAy9c36V0rmOJsBw
+	 0WZhxu8ZbMcO/g6S1tbIFOxPcgPOqO3iEbC4brww3HulRXm04jw5mCzhRRDtuprnGQ
+	 RE3LYEIHytD7/fHkn4lNUh4RkeXeQZXvvWJhDAWVaKIi3KNCodFHWu4cdWOKpug0RH
+	 81EV+cW82OeuUixHxbbg1iJS8S3DLfCm4m6t2TAeE8ZZnqfotYyLhKrxqGdq+AqkPm
+	 90E1b+AO7CJkw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 06/13] tracing/eprobe: Disallow attaching eprobes to fprobe events
-Date: Fri, 13 Nov 2026 17:28:54 +0900
-Message-ID: <179455853457.403392.14549390017750529531.stgit@devnote2>
+Subject: [PATCH v3 07/13] tracing/probes: Fix user-space dereference string array store type
+Date: Fri, 13 Nov 2026 17:29:04 +0900
+Message-ID: <179455854396.403392.18073771811100192405.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179455847934.403392.15146485751358774349.stgit@devnote2>
 References: <179455847934.403392.15146485751358774349.stgit@devnote2>
@@ -67,34 +67,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Event probes (eprobes) are not allowed to attach to other dynamic probe
-events (kprobes, uprobes, and eprobes) to avoid recursive probe chains
-and lifecycle dependencies. However, when fprobe events were introduced,
-TRACE_EVENT_FL_FPROBE was omitted from the exclusion mask in
-find_and_get_event(), allowing eprobes to attach to fprobe and tprobe
-events.
+When finalizing a string array argument (e.g. +0u(%reg):string[N]),
+finalize_fetch_insn() advances the instruction pointer to a new slot
+for the store operation before checking whether the preceding operation
+was FETCH_OP_UDEREF. As a result, user-space dereference string arrays
+with type "string" emit FETCH_OP_ST_STRING (kernel memory read) instead
+of FETCH_OP_ST_USTRING.
 
-Exclude TRACE_EVENT_FL_FPROBE events in find_and_get_event().
+Check for FETCH_OP_UDEREF before advancing the instruction pointer.
 
-Fixes: 334e5519c375 ("tracing/probes: Add fprobe events for tracing function entry and exit.")
+Fixes: e65f7ae7f4da ("tracing/probe: Support user-space dereference")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_eprobe.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_probe.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index 9defe86f4e8f..f65393fb1c10 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -762,7 +762,8 @@ find_and_get_event(const char *system, const char *event_name)
- 		    (TRACE_EVENT_FL_IGNORE_ENABLE |
- 		     TRACE_EVENT_FL_KPROBE |
- 		     TRACE_EVENT_FL_UPROBE |
--		     TRACE_EVENT_FL_EPROBE))
-+		     TRACE_EVENT_FL_EPROBE |
-+		     TRACE_EVENT_FL_FPROBE))
- 			continue;
- 		if (!tp_event->class->system ||
- 		    strcmp(system, tp_event->class->system))
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index b8f6a36ee0d4..eee5353ef5c7 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1956,6 +1956,8 @@ static int finalize_fetch_insn(struct fetch_insn *code,
+ 
+ 	/* Store operation */
+ 	if (parg->type->is_string) {
++		bool is_uderef;
++
+ 		/* Check bad combination of the type and the last fetch_insn. */
+ 		if (!strcmp(parg->type->name, "symstr")) {
+ 			if (code->op != FETCH_OP_REG && code->op != FETCH_OP_STACK &&
+@@ -1975,6 +1977,7 @@ static int finalize_fetch_insn(struct fetch_insn *code,
+ 			}
+ 		}
+ 
++		is_uderef = (code->op == FETCH_OP_UDEREF);
+ 		if (!strcmp(parg->type->name, "symstr") ||
+ 		    (code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM ||
+ 		     code->op == FETCH_OP_IMMSTR) || code->op == FETCH_OP_TP_ARG ||
+@@ -1995,8 +1998,7 @@ static int finalize_fetch_insn(struct fetch_insn *code,
+ 		}
+ 
+ 		/* If op == DEREF, replace it with STRING */
+-		if (!strcmp(parg->type->name, "ustring") ||
+-		    code->op == FETCH_OP_UDEREF)
++		if (!strcmp(parg->type->name, "ustring") || is_uderef)
+ 			code->op = FETCH_OP_ST_USTRING;
+ 		else if (!strcmp(parg->type->name, "symstr"))
+ 			code->op = FETCH_OP_ST_SYMSTR;
 
