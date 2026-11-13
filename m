@@ -1,57 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794581224;
-	b=WAoi+bHTxytjnRBDY6FDyqEsJXUi7b6UOIDZQ9C0hdwdwE6n5vRqwBTF7M0NvdAZea1/
-	 Q77t27j1m494kJD98Z74/wsE2D2xHnGA1/kmODT1ye2z6XzX6mnMIkrF7PA+VCV5uO1YN
-	 O/Og791g2HTzj0+k2OiPhjwYhN1z4yF8U2o/Z4JJBfuGmtDlTgnR/MUQ4GKqeGZc+Cz0E
-	 XdmsRKKo4RC244VVuH+/xxv17VFxLUVQc92KcZigS6GWzgGkUgq/vBV2ksFCL8FPIC6qP
-	 k4u23KEre/FkUhQ+cj6NzEJsANmwqSKVL7znCu+fVREJ/YifjiFE3oc0KpGGvESGtzA==
+	t=1794581790;
+	b=t7e8ZATj135yn2pyKAt9dFD9eV2pviWcELZC9mdfmAse44G8UEVb+Fj+cGzPqGIyziiD
+	 8JwxIzv84DIG1skv9SyIRvWBfV53zhs5pc6SlzG7hy/AT5/+c/AaPxR9ORq5HUihnApcl
+	 N0OCCjSTR1xGI9sg4ja4VXckpoUervuPqUrisnYNhe0DdkPZqbzuI6xwmeRx5wUBKrNij
+	 pIiyqmlu9UmmEGoK+5v9TwN82+uzch0wz2Tf32dX8shxoPyajlkQQkoRHPzzIX76zVR8g
+	 ICyB7QeQReF0e7PXLzUxS3WxUL9mpUnQQmm+C1a8Py1UpVVMHPYSNpQ5ZKOJ1jNNrqQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794581224;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8iFhNS/cSZy/uT9a2k3GwnpqRtfU1LnF+wkm5Z/CvKI=;
-	b=rpMU/+891VykZmYirlx0kb1cGOpd8jNWthfd2ys72je4TX59iG/MJPuY/jSyO4VZ23a+
-	 icSPGfp1+x0K1FlcIISzH3JnJ0DdNc1u/DUrd2XSo2HkclQEwmgWAT+xv5NohG6wTFa/j
-	 bmiSut/796vtLlgBPS/hNu2xcWpJCpabWxq0vUdz1lDCJrshdoPvxTnbf6Xyr5yaadxf3
-	 /E5cToodAcjewUhvBgTSobK1qxxICdXHL528q8f0mLhWq/zgE1Jjl0bVLpCjeYX56Sa+T
-	 nUJ6UdwJeidYD80mAXnHuJaHXUeJD3kmmEbVQKo+/ZOlrd4ucjBnQJWkYqrMgv9rccw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794581790;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=djMQ9Rq5O2IwlxIxPHVCe+0cQ6bgchm1ltqKDGJGPWA=;
+	b=oXbJzCZKJx9m0mfsuv+Qp3/QfzjYu56IMCEQiqHKAgKvwlTjNYUaY2WncKAooVKk0Nfy
+	 0jhoAISr5T41qBxVumqsDSfjK82y4od1qANgYJG9P2Yf9hGrRsQqsPAz0Ca85fmWfkoAE
+	 DoOYb2Tv8rNmDBvbSO4NYqYHFcBdVXJp3wmUE/UC50qUzwCInJE8qEnVCf7uGBoPaUyHL
+	 OMN30EoZoBuD+50RRFzcglYWRG0cI5RUswpJigLrV2Wnb3vpV6K/13heX+vRy2cgPsz0m
+	 yAvGiDRuZ0grDBscp3KNW9mCHyFGM5M+27vRxq9wJ5gCLTH8QH/Z2wAtKXtdrXUXQuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cRU7JR69;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=OfSh6y5X;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VPzeeLFP;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB76606A327;
-	Fri, 13 Nov 2026 14:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32449606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 14:56:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32449606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cRU7JR69
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E501F000C4;
-	Fri, 13 Nov 2026 14:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794581223;
-	bh=8iFhNS/cSZy/uT9a2k3GwnpqRtfU1LnF+wkm5Z/CvKI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cRU7JR698Ixq3jmRduWLbxHJtGfzgjeYsQmj6AmxBN6rYHa9iw3TkHJR9ZkgGz4ud
-	 BIiHF7+rWJS0JSzU9p7HtY2+NZ0kwsghbDWlXFVGODppuiQASCJSU61L7ucmdlDjoJ
-	 OOwcuGQTdDApA6Ba28JKJk5b+1s0yWbpk8nuJNZbnOJQR278M/AcFRgec/lzd8CYum
-	 pBwT0EKhNzOBzSHcIo/zx97Zb5jmiBv/9EjZowkfnqBALUleSTIRN2kFR9l2MRIIBR
-	 D4tCUITTKq+RDH5aGjdE2rw5coY2rjWqH5zxUBWdNlWgwIDp0XM7jRPWF9nzjUEj8I
-	 o+/mJrPaY2wVg==
-Message-ID: <sashiko-outbox-213010@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/4] sparc64: kprobes: Resume after a delay slot at
- the saved next PC
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Stian Halseth" <stian@itx.no>
-Cc: sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113144057.1697874-4-stian@itx.no>
-References: <20261113144057.1697874-1-stian@itx.no>
- <20261113144057.1697874-4-stian@itx.no>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 14:47:03 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=OfSh6y5X;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VPzeeLFP
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794581787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=djMQ9Rq5O2IwlxIxPHVCe+0cQ6bgchm1ltqKDGJGPWA=;
+	b=OfSh6y5XzvXKLPTJeaMP0FyKaS9E2vtYZLt5MnIeAbTMsmKCdFh9DS2BTPZyU9Kz06yJd0
+	Bs1b1wNcHTOI8vys+pfMetmYmvw0GtivY/t+ddUW9TeFmNRceYfuGURlxwH9twefBrMN/7
+	UzcihZ3IRhWVXK7/auuXatE0LIQ1WTuDqeQhx3ZOmo76hXxZ+/clN+4OzOmCJuIKGF1wwp
+	c7miIvWZ0oBqfN1GbF7/0JCbl1I+DOOStKblQj67SnpIC7bPicidI0lOmrPTmAxkio+E/R
+	38HczTTa4FZF6woRp4qnQ2jzLgFIY4tCHXtdbQXnudWgA2idin4UxZxypXGf+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794581787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=djMQ9Rq5O2IwlxIxPHVCe+0cQ6bgchm1ltqKDGJGPWA=;
+	b=VPzeeLFP7y6FGPj3vf4/kARuHJXyXcVpgKHn09dDFHlkCQ16d8vPzQhLvMLIxPHQNWb4SC
+	VrinhYJOuW94bKAQ==
+To: Daniel Wagner <wagi@monom.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Tomas Glozar <tglozar@redhat.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Daniel Wagner <wagi@monom.org>
+Subject: Re: [PATCH v2] rtla/timerlat: Lock the memory of the user-space
+ threads
+In-Reply-To: <20261113-rtla-mlock-v2-1-14382f140da0@monom.org>
+References: <20261113-rtla-mlock-v2-1-14382f140da0@monom.org>
+Date: Fri, 13 Nov 2026 16:02:26 +0106
+Message-ID: <87o6bswzj9.fsf@jogness.linutronix.de>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,36 +73,32 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] sparc64: kprobes: missing Fixes trailer for relbranch_fixup()
-  delay slot fix
---
+Hi Daniel,
 
-commit a946035b56bae1c0df38ae8f1a539756818bbb78
-Author: Stian Halseth <stian@itx.no>
+On 2026-11-13, Daniel Wagner <wagi@monom.org> wrote:
+> diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
+> index c80edaf07b00..5e7a23fb9fc3 100644
+> --- a/tools/tracing/rtla/src/timerlat_u.c
+> +++ b/tools/tracing/rtla/src/timerlat_u.c
+> @@ -37,6 +38,13 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+>  	cpu_set_t set;
+>  	int retval;
+>  
+> +	/*
+> +	 * Fault in and lock all memory before switching to a real-time
+> +	 * priority, so that page faults don't show up as latency.
+> +	 */
 
-> sparc64: kprobes: Resume after a delay slot at the saved next PC
->
-> After single-stepping an instruction that does not branch, execution
-> resumes at the saved next PC. The probed address plus 8 comes next.
-> For an instruction in the delay slot of a taken branch the saved next
-> PC is the branch target. Execution then goes back to the probed
-> address plus 8. It should continue at the target plus 4.
->
-> Use the saved next PC plus 4. For any other instruction that is the
-> probed address plus 8.
->
-> Link: https://github.com/sparclinux/issues/issues/110
-> Signed-off-by: Stian Halseth <stian@itx.no>
+It isn't because the page faults show up as latencies. It is because
+doing non-real-time work with a real-time priority is stealing the CPU
+away from other real-time tasks that presumably have actual real-time
+work to do.
 
-[Severity: Low]
-This fixes the real_pc + 0x8UL return value in relbranch_fixup().  Should
-this include:
+This program peforms severeal non-real-time activities with the
+real-time priority, which is not setting a good example. But I am only
+reviewing your patch, not the full source.
 
-  Fixes: f08825896664 ("[SPARC64]: Fix several kprobes bugs.")
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113144057.1697=
-874-1-stian@itx.no?part=3D3
+John
