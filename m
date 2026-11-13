@@ -1,69 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794573741;
-	b=fTcje9EyHF07nTlTkpiPElYzTUX8fmBByS3ABfwmhOdmgEu/GTSroXG/RBuhtSaSJVFN
-	 +0axu0ck0mRZXyPyRhHCykWA+Xa16H34hMMTVJ0gdI+R6Ufl9LGF1An0vVtxFgNvnHbmI
-	 Uybu6aeFuXi/KLuKOxHPPXv+CmzQ6HKHYVauts2xwZHZq6c7Tu5EmZI/kP5UNHrOFbplc
-	 faAdVWxa5TKOrg+pqChtqgh94M955jJwfBWrPgvdCHXQrEzr0h9aq9RkD/tN6zuzlMKPa
-	 h9zuK0eQ8VA9bTQIJZ6V1gKOONUUz4EcfHTpxV8UAtq86uFvBsYtNWGlpAv25H98m1Q==
+	t=1794575730;
+	b=C9kTA2ukID5eb2k/nW0lQyOFty6wTdkFVku7cd7ENFVHtQtfrql8E2MiwoKMNXAX37T3
+	 rN6noR2PcTxEYBtpRXssq4s8CBhbOUNh2xXbFe7vI+d1MiA2yAbsFn3iZf+yah+n5uGkr
+	 y5wmFisxb7aL/Q8CLXMcBXHTPYvf1ZsCO5hPHEKYUKC2pz394FyJupL3s9GrZrmDG0qE2
+	 7nWOvjgiQAJBqfBUIrOUDsjIRHtIT5xyNuCVFXLJE5Qe6/1xyTJ69G8xJP5A7h2VXhTCB
+	 xE8vr0YQo+gjlCBBKxqGSi7BMaxfhjppWT9XekLVeRE+rx6UDlOojj6ZTm+S0ahjauQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794573741;
-	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
-	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=JLUI7FK8wijRXIgsxgkbmCRNaskdZBcmIaMMGBQKBFo=;
-	b=fozSivSCHabCCwYjZ4QNMV8dE9wVdkC/t6Z/h7BaHBIwQXPiImag6MiER7P+tR3RVeiX
-	 OS4roPtpgFbgYYy/J7Jt6TWjNMZ2C4IkY7g0PGKN8t6kDDQRDEPwTmFu0U0r8/Nya0BfH
-	 YUUtUR/QdNg8S43OcR4instb6GoEUOBbgyhKnQxD0Zq5dSfa0nD79ttA7JBd58+OXd+uK
-	 LesfOx9tPpUu5I1zTrEdrBCyh2ZZUFyfBTnW7oDVIbre0d0R1UCCOaioe8+nYy9MSqCaB
-	 B2wy/1Z37JEobJYrb5whkOJdACMvgNfsBmpLZvZzL+CqvbiBHDotk62/4e0PWlN7DMA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794575730;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=Ov3eL+Et/ov+O0Hl/xByme7JtYRj7vSS7D9mWSeeDmA=;
+	b=ElMzqkRf2an+ebG8aDsZoKPdISsXuZLtliTMup6qCzgrtGa7Yv0XJuqt/9UwBiBIfG4n
+	 FJCWu+Me2iss93jX97+oNzkV4+ztRc3L8HFtp9zcEzCPUrJCZEUEM4fyTNCYlvFajbGkQ
+	 +hOyqCU6EU/a5xAjKqa25LvtwHhNDVZSMdGPFlpy8pVwq3is4Vj5J4EOI1U1gasnG1Fzj
+	 owM7DtQE9cD8sVT+jNVaddmrxLUe8JyDk18jzcz6WXpQtuGYwcypmPvaaNh4TmDDKjqfq
+	 UIMPOMHXK19zC+GL2s8eYkSkKuleUHBPyCf9foz8oUf5O1jDOR/wVNDxhBE8rEXo0MA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b="V/ZRW2Sr";
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=WQ+iY6r2;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="lz8/bc9f";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57805606A330
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 12:42:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 57805606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E790606A331
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 13:15:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=V/ZRW2Sr;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=WQ+iY6r2
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794573739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JLUI7FK8wijRXIgsxgkbmCRNaskdZBcmIaMMGBQKBFo=;
-	b=V/ZRW2Sr4yciOmhEqKh2Wr1h5IpHV6FzTfysv3zuhAiKC7kPk1PefBs1o2DQ2YDeODwZj9
-	aZF/zHRVxSqCYPmd31yVdBQFe5i16+ugTLYUcgE0e/RPoPn8Q9S+yj9PQMMF9+nNDfvDV2
-	VykiqWfFS4d8YgFJz2SggSaijvj4Kd/FhdZifmEAve+wUGDw2gKlC6VbVCjTJEZ2kAG3om
-	v33l1FW0SAd/yxiasEqtGU/4GJdIK4FIiK1s3qwLqm3Pa56bO+gf/vaxffXIqdQ9GkojZ9
-	j0JQbNVvozDe42uDins0Kck6bdnL9CQCamk+2kJNmP7D/sttPzrH5Gkcjn9sWw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794573739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JLUI7FK8wijRXIgsxgkbmCRNaskdZBcmIaMMGBQKBFo=;
-	b=WQ+iY6r28A4zagAf1Bp6obxiNpjdBrGY788qf6Sl5OYqe2EAc4atdVr+LEWlWW+PLfudX9
-	xV6IJg2PAUMEy+Cg==
-To: Daniel Wagner <wagi@monom.org>, Steven Rostedt <rostedt@goodmis.org>,
- Tomas Glozar <tglozar@redhat.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Daniel Wagner <wagi@monom.org>
-Subject: Re: [PATCH] rtla/timerlat: Lock the memory of the user-space threads
-In-Reply-To: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
-References: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
-Date: Fri, 13 Nov 2026 13:48:18 +0106
-Message-ID: <87qzgox5qt.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lz8/bc9f
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8777C1F000C6;
+	Fri, 13 Nov 2026 13:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794575730;
+	bh=Ov3eL+Et/ov+O0Hl/xByme7JtYRj7vSS7D9mWSeeDmA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lz8/bc9fB8UTBPNuZUXdjiPagd1KVyluh9KLFbknckOiGIKVGdI1JkpLTv5Pghqld
+	 9nNV85R5wnPtV/laqwum934UStlhG3Z4X9U4nv44TgUM5am7RmFEGhP+gGVYmIW2ur
+	 I1B/kIE4ODoD+g9i2zM/INNbfLPDEpRQMvkrBb0lkOxNGFiQA8aKuQ+Wu7mmFAe+3/
+	 T9aDKZyKjQuuOyveGPNWWKG7ReXikAw5FMuO397yjzma0S6Agl5hWTyGUpZLeJxVhR
+	 zTfCmZm/Falzb42LqyZ/zID6OHtwEjD37FAQKtfcR+jPXdGEyf833b6HypvBXp8BlB
+	 bBGQXlwI2sUNg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: sashiko-bot@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/13] tracing/probes: Allow symstr type for function entry arguments in return probes
+Date: Fri, 13 Nov 2026 22:15:27 +0900
+Message-ID: <undine-1794575727580751187-e4a7ce5a5f04f1c3@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <sashiko-outbox-212435@kernel.org>
+References: <179455847934.403392.15146485751358774349.stgit@devnote2> <179455857080.403392.10171666250083335438.stgit@devnote2> <sashiko-outbox-212435@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -73,32 +58,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hi Daniel,
+On Fri, 13 Nov 2026 08:39:42 +0000, sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Low] tracing/probes: missing Fixes trailer for FETCH_OP_EDATA symstr
+>   fix
 
-On 2026-11-12, Daniel Wagner <wagi@monom.org> wrote:
-> diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
-> index c80edaf07b00..42aaf1d7f216 100644
-> --- a/tools/tracing/rtla/src/timerlat_u.c
-> +++ b/tools/tracing/rtla/src/timerlat_u.c
-> @@ -69,6 +70,15 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
->  		}
->  	}
->  
-> +	/*
-> +	 * Keep the measuring process in memory: the latency it reports
-> +	 * runs until it is back in user space, and a page fault on the way
-> +	 * (its code, stack or libc pages reclaimed under memory pressure)
-> +	 * would count as latency. cyclictest does the same with -m.
-> +	 */
-> +	if (mlockall(MCL_CURRENT | MCL_FUTURE))
-> +		err_msg("Could not lock timerlat u memory: %s\n", strerror(errno));
-> +
+Note that this is not a fix, but extending ability.
+Let me pick this to probes/core (and then for-next)
 
-Page faulting should happen _before_ the task has a real-time
-priority. Real-time priorities are for real-time workloads.
+Thank you,
 
-Just move this up 30 lines.
+> --
+> 
+> commit 48b9066b7edfcc25acab7912c4c55cf34cf5c88d
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> > tracing/probes: Allow symstr type for function entry arguments in return probes
+> >
+> > Function entry arguments accessed in return probes ($argN or BTF entry
+> > arguments) are fetched from the entry data buffer via FETCH_OP_EDATA,
+> > which was omitted from the allowed operations for the "symstr" type and
+> > rejected with BAD_SYMSTRING.
+> >
+> > Allow FETCH_OP_EDATA to be formatted as "symstr".
+> >
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> [Severity: Low]
+> FETCH_OP_EDATA was introduced after the symstr type check in
+> finalize_fetch_insn() already existed.  Should this include:
+> 
+>   Fixes: 25f00e40ce79 ("tracing/probes: Support $argN in return probe (kprobe and fprobe)")
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/179455847934.403392.15146485751358774349.stgit@devnote2?part=10
+>
 
-John Ogness
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
