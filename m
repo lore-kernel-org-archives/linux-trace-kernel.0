@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794535897;
-	b=M26rnBdLLg73pVuPmA0Js645JpKWkDckDXsXAQCzOBtbKJrTQCRT0B/7LXR8jNjLC8Z4
-	 6KBolmSxgeAZ7DCvEWXOgoVVPXthjfdCeN7Mw85dmsDfxP6YNS6bc5ul31dJlx3HVhZuT
-	 8fYHuxUKNaVXhEOPDRzNcn7MiiAzuSFsheQIFv0jjJrIrBqQQ6HLFVFwtzqeiwzzFuEDm
-	 f8c9w4Va+063BP0gjEkv6XgE3FMDJHPPFCHZmtpjiFUur4d2uq+b7GVCrXdbdBCnxVwsk
-	 s7hbqz8Jmlrg3mDu3/5spbJ/9Pex1U5KSJmQ9kTsIA9T2gfLiOZ3oTYmoFVr50AaKow==
+	t=1794536882;
+	b=3a2qLPKSItWuCQDtH2x9JsJMqWPGw1khnYrA21NSV+Ft4/jfJtKJ3HxM1/2/B1I9j7rV
+	 +vs0CehJ3vuEBkd8Y7uQxy6emYvEm336gEcVv1QyLe314sY8G/9qZPL88ScAY/s1Gc5ql
+	 zjDPCDpx49sGKqXDpn5aLQe80PPvU+YGmBXBDU81mvCTnZCdvu5mOTJIzhcP8lmOBEw2b
+	 S/9vh44auWJw9RBtJQoNkxIaHFI5QeHrbmtS6OqOIkUhzMLirda5q5PWe0/FDoLv0kw+8
+	 ap1YwprQW48Eh4qQ6NeNS+8g5PBw+Re8HTLWkdz+TeJGkY+aBb5GrrtDVr5j0N+fX9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794535897;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794536882;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=jkHQBq5gRQDHu+wxTZ/fIcabmGhG1mmG2RhVjrNHPYs=;
-	b=3l/n7xMZXYWRdIDDINiUAm0ahNOlSz4qdE41ViZWx1CkBUJhYPqWXH57orDML1BODlMS
-	 VN5e52bj4TgT/tfCXPL9ccGFtRiipVrkVfXig9/zpwc0W7F1vlphAtDPEz7V3zGzfJxBP
-	 zt+4JyETP0n856XmKLnS/DYLiTGwPb74h1CCwsSXAAuZEf0F9g8vivBoNW1HKzSs2P2mh
-	 MRP3JhKFsG2Ul/M+UlgKRq2ghR7sYMptao9HMKKA6+SnTm2YLXdXfE3fdvh9sicviqiQ7
-	 GridTFcCtzRKC6Vl111BXFoQ9cAN+o0FG3t4sg0cKhJRcx2RS5wlxbsVM0H0k5VJd8g==
+	bh=2qW4WKjboBuDMx75ZmNMnV4KAw3QtqmLiMlJ1bN7aOg=;
+	b=DWMGp8HqQYiQONQ2hIVHHem9nVGfneGH0Nk3pEeC3G2ZvN2w+TsifRPgRlL/84HHEcT4
+	 rknpRnhgMvS1gHl3gUPJHGpxXoURAR/+nK03ylZsjBLckepVOLU8Ltsd1sEQNk3PMWdMA
+	 7blH/HDUGe+qSy/jAT3juWdxLSg15S0fsYp9zBPd2EvpMXunafo/nK8bEkEoS+qwMY5Pl
+	 W/nvUJ8OXh58Ez+FTCZLRm5+zT7zVYq+S2JaVkUMtkJrRsV7bhNTbB8Baxe6+neZnilZj
+	 azTnvPkFzeMaPz0uuXcIYJ0+bM7Gummuqge1F1sQR5aR7GwueGAemUkS02gR3uPFbjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEcXxZ7u;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bEQPWvtU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B39F606A321;
-	Fri, 13 Nov 2026 02:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E10606A31C;
+	Fri, 13 Nov 2026 02:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEcXxZ7u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E7B1F000C4;
-	Fri, 13 Nov 2026 02:11:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bEQPWvtU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747181F000C4;
+	Fri, 13 Nov 2026 02:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794535896;
-	bh=jkHQBq5gRQDHu+wxTZ/fIcabmGhG1mmG2RhVjrNHPYs=;
+	s=k20260515; t=1794536882;
+	bh=2qW4WKjboBuDMx75ZmNMnV4KAw3QtqmLiMlJ1bN7aOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OEcXxZ7ux+0IAh2zdQppHphMmgIJfQdjEx57j8DfqLdDMsNOR0WMS79p+sNPR1RrT
-	 ExbC5OzzD1uTYrSNxyP1N3fDed89yhyMyozkT54v1sF2IuR61GDXFi/ryHtyFwFzgy
-	 l6d1Gs1Sad/gYehrXO34AS+wcF+EJtcTSxxnvsa/KSNjVZO6yBPCocnxWvD9/83W1L
-	 9HeeDEjqb9lY5o4XbOb4PkVpqQFx87nJL8hDRCONPLm7npljKO35LTflxMY52zDwKd
-	 BT0RTR3hQslIrTcAHsWFgN3Uai91fLdOYNGbb6HAYaJcLUDKRUB/IGE8DWtbWD0SY3
-	 Uak9CHbE9BWrw==
+	b=bEQPWvtUWlcGhjK0xOe5IAC7JOPOg/SxeO9ML5DvmcqQTgrjVVFjhXE/jfsZaT8M3
+	 W66r7L7O4eCpKI4+eoKwInHhgmH8BqfEjtFg7RUa2aVp3eA4zQmnO0IMGTU2kI8HYD
+	 3Ug2U8jaCWGNnAk0o3kU/rx6oVBw+3Xh0wEe77XeO/w2UQ582UBr153peJ66XeeZKb
+	 5R6oXxhQR0r8CJleqI2IT3LL1Re7l1ZJj1lcCzcNZIEuBt4vkShviSZtjJ1LbKDJ/+
+	 kTSh5e9wH81sI9fDNgRmHobEtjUEQIGP7sugDUNMbgOcp1RhHuLsVE80hcLEabcvzE
+	 AapxdaEqeIEfA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Wenwen Fu <wenwfu@qti.qualcomm.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: skip boot kprobe setup when no events were requested
-Date: Fri, 13 Nov 2026 11:11:33 +0900
-Message-ID: <undine-1794535893601698549-753ef018e21da197@undined.local>
+To: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] tools/bootconfig: Fix tracing script filters and histogram dependencies
+Date: Fri, 13 Nov 2026 11:27:59 +0900
+Message-ID: <undine-1794536879791872271-52b7971cdf78b6ad@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <20261106021457.2648231-1-wenwfu@qti.qualcomm.com>
-References: <20261106021457.2648231-1-wenwfu@qti.qualcomm.com>
+In-Reply-To: <cover.1793471731.git.edumucelli@gmail.com>
+References: <cover.1793471731.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,49 +61,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Fri,  6 Nov 2026 10:14:57 +0800, Wenwen Fu <wenwfu@qti.qualcomm.com> wrote:
-> setup_boot_kprobe_events() calls enable_boot_kprobe_events() even when
-> the kprobe_event= boot parameter was not supplied. That call takes
-> event_mutex without any command-line probes to enable.
+On Sat, 31 Oct 2026 19:35:29 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
+> Hi Masami,
 > 
-> Asynchronous eval-map updates also hold event_mutex. A normal boot can
-> therefore wait in init_kprobe_trace() for this background work despite
-> having no boot probes to set up.
+> Thanks for the reviews and for picking up the previous fixes. Here are
+> five more script fixes, based on bootconfig/core as you suggested.
 > 
-> Return early when the boot-event buffer is empty. Keep the mutex
-> protection in trace_event_update_all() and retain setup for explicit
-> kprobe_event= parameters. Bootconfig handles its own probe enablement,
-> and the existing trace_eval_sync() still waits for background work
-> before init memory is freed.
+> They address:
+> - The documented ftrace.notraces setting being ignored by bconf2ftrace.sh.
+> - Single quotes in event actions producing invalid exported bootconfig.
+> - Literal filter text being mistaken for histogram variable syntax.
+> - Valid histogram dependency chains exceeding the exporter's retry limit.
+> - Helper key lookups matching unrelated bootconfig keys.
+> 
+> The action-quoting patch follows up on the trigger-filter fix you picked
+> up. It uses the same warning approach for unrepresentable values that
+> you suggested for event filters. The histogram scan uses POSIX sed.
+> 
+> I tested the conversion and export fixes in temporary tracefs instances
+> on my Ubuntu machine, running kernel 7.0.0-38-generic, with recording
+> disabled. The tests cover each relevant step and the combined series.
+> The helper fix has focused checks, and all 81 combined fixture checks
+> also pass with POSIX sed.
+> 
+> Feedback is welcome.
 
-Nice catch! This looks good to me. Let me pick it with below tag.
-
-Fixes: 970988e19eb0 ("tracing/kprobe: Add kprobe_event= boot parameter")
+OK, these looks good to me.
 
 Thanks,
 
 > 
-> Signed-off-by: Wenwen Fu <wenwfu@qti.qualcomm.com>
-> ---
->  kernel/trace/trace_kprobe.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Thanks,
+> Eduardo
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index ee8171b19bee..52ec16d8d838 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1995,6 +1995,9 @@ static __init void setup_boot_kprobe_events(void)
->  	char *p, *cmd = kprobe_boot_events_buf;
->  	int ret;
->  
-> +	if (!kprobe_boot_events_buf[0])
-> +		return;
-> +
->  	strreplace(kprobe_boot_events_buf, ',', ' ');
->  
->  	while (cmd && *cmd != '\0') {
+> Eduardo Mucelli Rezende Oliveira (5):
+>   tools/bootconfig: Read the documented ftrace.notraces key
+>   tools/bootconfig: Preserve quotes in exported event actions
+>   tools/bootconfig: Ignore filter strings when resolving histogram
+>     variables
+>   tools/bootconfig: Resolve histogram dependencies until no progress is
+>     made
+>   tools/bootconfig: Match literal keys in tracing script helpers
+> 
+>  tools/bootconfig/scripts/bconf2ftrace.sh |  2 +-
+>  tools/bootconfig/scripts/ftrace2bconf.sh | 27 ++++++++++++++++++------
+>  tools/bootconfig/scripts/xbc.sh          | 13 ++++++++----
+>  3 files changed, 31 insertions(+), 11 deletions(-)
+> 
+> 
+> base-commit: a52ceed51e9bf8f1ca9c2c868b14bf6861986c65
+> -- 
+> 2.53.0
+> 
 >
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
