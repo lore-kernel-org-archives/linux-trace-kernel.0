@@ -1,56 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=49.12.199.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794584101;
-	b=fABppmQm7W+OVcZP79kw9DHKug1VmdwIIwiAJzNWfQ55co783pvWCQla6+Mu5LF8DfIo
-	 +wuNf+7Y2rNArXr+kEMz80WYxHX7x3PwvyaQzFNXKYqnW0zwHNx9pQazDuVU7RTSs76t/
-	 xXu7bW6eQn0D5dwC7Q5axs/8KT7FBeqID5m36D29oBL/xaG8yr2OETTYWW+pNYkRoIxhG
-	 G/hQiFN+0FmmYbAF9jBc20SVO5dfInSWpO2klA07KFXcZb7bmCBmcsRnltaWr+bmBvPe6
-	 22fXUZgPQe5UeY+r2d+ltaBDt8Jn/vzpZ8eruNCGVpvcWXVflx3dvG0UZD88BMfaVXA==
+	t=1794584195;
+	b=LGLh7KtCDI2UIH+t1moIXfaUxFAkSo1Xx1y8OSqCqAeigX2Y+kUuH10t1y6VUZYocak0
+	 j5u4e3xe7GhISsXlJGG/WiwloZlVZysumcP+olCj/gJCzQnseHajQdoPMQbXtgKSGor+q
+	 Llypzot21Cu439mHK3+GyBI6ZhYo/+yXxW7Lih9nN8PsNDhM39xgueFhTK/UIsfmth0pX
+	 ayKZoqYqFsApr88YKDZZQYQ5lhzpItht0V6MGj/GsXpUcsfit/9apKgChlIQ0h3tBC2Ed
+	 RUqpEsGxAhApW13ZWDGX0vndHKRm+7/y89KB5A4fQYIyzSHKKp0+R0N2xAvIbx/bWSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794584101;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ex9H280pJD2h2Gzs6IZptzHWpDjeu15cL1MfkhM3C4I=;
-	b=iohuLKicgXIPsDSJSWgHl34yi+5bUNOsyYz926DOW54kkAZ+6l0vv/qj5QtW/dzPLtUf
-	 t/UVNzLcbwvJ2vCYiTObYVCt3wC1wayq5TNWU+X4AV2JuC40xGVp4Lbvle7+g8tHJPGxC
-	 uHhTDikJCHBUOdpmB3yGQF57mea/iGmo3LsKYb5KntGdDzUK/OhkDmuQKaitzq0h3Mzly
-	 ffrbClPpYlpKDmSbIAHmIQKgMvuZ8ClZhbnE3BrLhF8stCjGLzKgfQIjK5T2Q6DnIDtqQ
-	 hJ75kDPVhjkoTyjeRVotTMsAWf3whsm8Aa9dCLGZ9V5Dc2k+hskoRwGXbK/it5CBOJQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794584195;
+	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=3E4hoJgeYLkmHhsZ2LNac3QT1JsQyx88dzf4YBG6OZo=;
+	b=WAEOT+e6yDubMU6JAjJFDeLKW99HTtEeFWDIQNy3tPPxGdjp3llRXxCP2ClHgBTlZWBd
+	 DBK4T/5+rNcl2ujJLUBrsIw5BJrda7Ch32tMqQ7b4ZrrYEEw2tB0qw59Rc61WOCHa/TKb
+	 0Gh5YyrleCyoncbnZ1m9C7mlJeyYhuAPELXmdgcobR9/ZQjV7pXjYglp7H8nfXi/JBvoa
+	 p5l4dpI2fU2MOfoXlyWxD2+3iYJMfBlKk3Z+irWQ6l7H/uTAf9INGU5RbSJB6591I5iEo
+	 40Hz4ZTfXIlTDwbZ0EuFUzBT8PjTW4NqkGMZ7Q7B3Kniv8mFbveD50l0Nb6rPXGzt/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnQLhKSX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=monom.org;
+	spf=pass smtp.mailfrom=monom.org;
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=eVH7VlJk;
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=uPtPwYPj;
+	arc=none smtp.remote-ip=49.12.199.46
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0023B606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA3A606A323
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:36:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EEA3A606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnQLhKSX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6556C1F000C4;
-	Fri, 13 Nov 2026 15:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794584100;
-	bh=ex9H280pJD2h2Gzs6IZptzHWpDjeu15cL1MfkhM3C4I=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=KnQLhKSXMPDwx5MQ84MAaiGvmg7bCOMDXVuLNxjHsHEl+yQEMlMWlWx/UAxuEBdj8
-	 3WRlsqGGn7CeM8IK0PbsoVM48ZF4O7iH6ISOlYtuklxVgcsp1vHDOglev0H+gZMcWC
-	 vlkv5I0OYOoR05Y68WK7Uh2aEvxkvtYXZ0Wsz32Ipf/GN8JtOYBeQeNkJztpDEg6m6
-	 QDhcF5JhQaaTHVApDWu0tg9NEJPmRidsAH8aICwmV4CmM0qmIBQtFtqO86+bP3zHUy
-	 pUNsqsLudM8M7Gr/AN8X1RHMn+8OXN+2+X1bUbxhtxytkpLIXd57oNqG7wwrLaiEGc
-	 bzU8LiGPjOrQQ==
-Message-ID: <sashiko-outbox-213099@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 3/4] ring-buffer: Order remote page commit with data
- and timestamp
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113152729.837429-4-vdonnefort@google.com>
-References: <20261113152729.837429-1-vdonnefort@google.com>
- <20261113152729.837429-4-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 15:34:59 +0000
+	dkim=pass header.d=monom.org header.i=@monom.org header.a=ed25519-sha256 header.s=v1-ed25519-20260726 header.b=eVH7VlJk;
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.a=rsa-sha256 header.s=v1-rsa-20260726 header.b=uPtPwYPj
+DKIM-Signature: v=1; a=ed25519-sha256; s=v1-ed25519-20260726; d=monom.org; c=relaxed/relaxed; r=y;
+	h=Message-ID:Subject:To:From:Date; t=1794584180; bh=3E4hoJgeYLkmHhsZ2LNac3Q
+	T1JsQyx88dzf4YBG6OZo=; b=eVH7VlJkHQioJEbas+RiSDumPZMM8UwlJgP6Dc/2NoJuPX+ZXM
+	UsO92KtnW5QtOsqYfgOLREmJEWS8lipeyECQ==;
+DKIM-Signature: v=1; a=rsa-sha256; s=v1-rsa-20260726; d=monom.org; c=relaxed/relaxed; r=y;
+	h=Message-ID:Subject:To:From:Date; t=1794584180; bh=3E4hoJgeYLkmHhsZ2LNac3Q
+	T1JsQyx88dzf4YBG6OZo=; b=uPtPwYPj/vEM2Omc3k4hRCByxodL1Tnc9bP3ws/m3dcgAixJHc
+	hSdlHml5KrEeJxE/f5IdsHs9djg7s9rnJxdKKFj9ANTPpXNYrdoyQny9M5rQhOSAcsBJQWqSf6a
+	F8NmCCBlqd4lDr7sCp3CaG7dkzvzYocq0IqDdk+ALHiQw80r1D3kppfhK7n01kOdyQd60HU7zsA
+	3X9PXN3e91vtGi4excXPzTMsb57Xbs1GxnbASP2Bs9w2PcUvhfRkuCA/kAUzRRGZPS6289Vi4d0
+	QKFyWRSJoR0WXgmfUkYJ0OwA7Fbn85t0vwKbc0Fy3lhJFzNNIhLNyQxCu2DB0p6d+qA==;
+Date: Fri, 13 Nov 2026 16:36:20 +0100
+From: Daniel Wagner <wagi@monom.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Tomas Glozar <tglozar@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Clark Williams <clrkwllms@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v2] rtla/timerlat: Lock the memory of the user-space
+ threads
+Message-ID: <4dc4d513-f632-4c1a-a866-51143424c409@monom.org>
+References: <20261113-rtla-mlock-v2-1-14382f140da0@monom.org>
+ <87o6bswzj9.fsf@jogness.linutronix.de>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,72 +66,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6bswzj9.fsf@jogness.linutronix.de>
+Message-ID: <20261113153620.8p-_TZ1J0o6BLchmVePClKi4b7YVLTUCJfgUfvQd9_w@z>
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Critical] tracing: out-of-bounds write in simple_rb_reserve_next()
-  [1]
---
+Hi John,
 
-commit b0c88540d75d93c7a85149df8d188a1bfaa9a89e
-Author: Vincent Donnefort <vdonnefort@google.com>
+On Fri, Nov 13, 2026 at 04:02:26PM +0106, John Ogness wrote:
+> On 2026-11-13, Daniel Wagner <wagi@monom.org> wrote:
+> > diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
+> > index c80edaf07b00..5e7a23fb9fc3 100644
+> > --- a/tools/tracing/rtla/src/timerlat_u.c
+> > +++ b/tools/tracing/rtla/src/timerlat_u.c
+> > @@ -37,6 +38,13 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+> >  	cpu_set_t set;
+> >  	int retval;
+> >  
+> > +	/*
+> > +	 * Fault in and lock all memory before switching to a real-time
+> > +	 * priority, so that page faults don't show up as latency.
+> > +	 */
+> 
+> It isn't because the page faults show up as latencies.
 
-ring-buffer: Order remote page commit with data and timestamp
+Page faults happened during the measurement.
+ 
+> It is because
+> doing non-real-time work with a real-time priority is stealing the CPU
+> away from other real-time tasks that presumably have actual real-time
+> work to do.
 
-This commit adds memory barriers between page::commit, page::data, and
-page::time_stamp for remote ring-buffers and defers updating read_stamp
-until committed data is present on the reader page.
+Could be but I think it's more likely the faulting measurement thread is
+seeing the latency.
 
-> diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring=
-_buffer.c
-> index 5f14ba152fba6..2dddaef638dc6 100644
-> --- a/kernel/trace/simple_ring_buffer.c
-> +++ b/kernel/trace/simple_ring_buffer.c
-> @@ -307,6 +307,11 @@ EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
->   */
->  void simple_ring_buffer_commit(struct simple_rb_per_cpu *cpu_buffer)
->  {
-> +	/*
-> +	 * Order page::data and page::time_stamp before page::commit. Paired
-> +	 * with __rb_get_reader_page_from_remote().
-> +	 */
-> +	smp_wmb();
->  	local_set(&cpu_buffer->tail_page->page->commit,
->  		  cpu_buffer->tail_page->write);
+> This program peforms severeal non-real-time activities with the
+> real-time priority, which is not setting a good example. But I am only
+> reviewing your patch, not the full source.
 
-[Severity: Critical]
-This problem wasn't introduced by this patch, but can
-simple_ring_buffer_reserve() return a pointer whose reservation overflows
-tail->page->data [1]?
+The only thing I see which could be moved is the
+tracefs_instance_file_open part. Not really sure if this is worth it,
+though I am fine with restructuring. I don't have a strong opinion.
 
-In simple_rb_reserve_next(), when an event exceeds PAGE_SIZE -
-BUF_PAGE_HDR_SIZE, simple_rb_move_tail() rotates to an empty page where
-!tail->entries is true, and event_size is assigned to tail->write without
-checking that it fits on a fresh page:
-
-kernel/trace/simple_ring_buffer.c:simple_rb_reserve_next() {
-	...
-	if (unlikely(write > (PAGE_SIZE - BUF_PAGE_HDR_SIZE)))
-		tail =3D simple_rb_move_tail(cpu_buffer);
-
-	if (!tail->entries) {
-		tail->page->time_stamp =3D timestamp;
-		time_delta =3D 0;
-		ts_ext_size =3D 0;
-		write =3D event_size;
-		prev_write =3D 0;
-	}
-
-	tail->write =3D write;
-	...
-}
-
-Writing the caller's payload to the returned event pointer then writes past
-the end of the page buffer and corrupts adjacent memory.
-
-[1] https://sashiko.dev/#/bug/linux-b2128783-1787-4f13-b863-090db5378e74
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113152729.8374=
-29-1-vdonnefort@google.com?part=3D3
+Thanks,
+Daniel
