@@ -1,100 +1,104 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794552073;
-	b=BeiMZxVtky0flMXAT/NxekGD5ZW8ufnrdbnzwdFtdPzYHdyDiqID1uqRlGn6dHiMTPdD
-	 UhS6ftbr62CMywErQLEt8yZ9EENcLq52mv869Fvq0zBm3DFBOe9w1wovHtkAj9ez3BAGf
-	 osqE3g2+obcAN4P1nOaKAjVTHDhpkvQhL+5IpdE6hASmXXpntNgO2q/3O71ysff24HkbE
-	 yKjPW4qGQEfGC+zX3Wm10zDL1fdU3ZUvVikgdIFG/WT6IqHGMa21Z41yzVwNjfGm6qtqO
-	 2ScdO42kQWXwaqnQK6+/onq3QU9+sfgFjsgUuRa2syFHohmV+vLvzwRozrY49wEfe/w==
+	t=1794552074;
+	b=PMNvqY7VoZ5ffZlskWufZK5soO+yfSlQWbBBuJxdBdMOcpPfK+AWy2v2xgjHbZ5jdOLr
+	 nnY6ZQTJriYyX4X64uN8OVeDFeWphmc7RqcSsNp/OM/RlWSkF/jRLmioOefaBVRp1q4IH
+	 PvHOrfjDfV2iYond4yxrOeYq5B1MscguIKVCIRszDsvqtSOtcc3A9dsQ0V3SottZ87+qZ
+	 sqXbBJA6wV/SonfvHoxq0gnsVoru8u/0Y2yiqP7iC/vTqusaQHWgZp3ReVeQJ0oBL5IwD
+	 ZLkhdOus3QNSxfySooXhIhUI32uHsdWilT2xu5871GVWpuYbT8QeYWOgdWXlqjDG4Aw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794552073;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794552074;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 X-Received:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Transfer-Encoding:content-type;
-	bh=0gKedmemQ1u4V+B0DJ0y0gXQkOv+yPBdtW4+Ey1vA1s=;
-	b=y52oNqX5Z7/HPUABoJA1OCtuSbfkrRn4ywcRsW/99dXAOGC7PE6ldqV6z4vPB4D5GYC9
-	 rjKDgfyQQOoqzaCTxntwCsn5bhUguYPMlvEtFZJ0QApM1lmKo2joTfQ6QZ7g6x6OwkEwE
-	 uhYDdlvmIyZpIR20VvH+Ru33DEDijAV1IIBy7qGN5RI5JLBLuSXM/e38AIQImfbX2iHlv
-	 haIY+6VrC/XovXAIpEdflRiKooM5xzlw6DMLUCfTndliwKA71jhlWP1wRjQjoWKw7XtJU
-	 Vph+3PnjvERvc3iUCY8j7a59NXWm3Us5H6Vni2fAeOF7pOF1wittH5QzYe9nC62xalw==
+	 In-Reply-To:References:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
+	 Content-Transfer-Encoding:content-type;
+	bh=s/VBD7km5Cmk+gKBpoU0bODC1xhj9yZHHKpWtMFA8XE=;
+	b=Ogz7YqAxz5DXbpVMhEQHEHaRP/U/cREE76wMicJmSTrG5eoC/PGpTmKd6eQLJ0Bxyyxd
+	 KRSdM6ODzWcRMZ4q4a3xQNinUm3PbuVyvYH1XVB+fpiXowNuHmly4Tn9jmPyGGSJ35Y0t
+	 0ziLT/ApPVO65718hG5Aa+anTax0/feZz4hbguhI1h2VKm2wpjSLx/SBmuICdMg1aB4sx
+	 obXa6+BKEgXMZy49HgunoZjTIeEFY4QMIBpsGKMlIptpTwsHPO1+CVaxJn0lM+yQIvWjl
+	 toUvejJdZ/8HqtcPKKZRKyqbRQj/XEUfRjGUS09Z02EKMn4ydV1XkSAIDcREGEI/sRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V2jRoJ1A;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IzMOIcBk;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67121606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 67121606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEFD606A327
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0DEFD606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=V2jRoJ1A
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IzMOIcBk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794552071;
+	s=mimecast20190719; t=1794552073;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0gKedmemQ1u4V+B0DJ0y0gXQkOv+yPBdtW4+Ey1vA1s=;
-	b=V2jRoJ1AbWTo9o+WGD/nQW+kvzWAHX1b9xDd9ZTGDk7tQme+g6+/qjG+xWvZ6xIV/DZgzp
-	SII/OGII2Xw8ZkImmiGxkan3Gn7FVurqag4QmEbDfjSyMTP0gljyr64i5d3+GHQ8M5NAx2
-	sU31EC7sST+GOUNW9ANCZ+vFKy7CTpU=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s/VBD7km5Cmk+gKBpoU0bODC1xhj9yZHHKpWtMFA8XE=;
+	b=IzMOIcBkBkDUX2WxgSZyWbFdvw2f6V12JnrQ4QGXs4xAlYBsyxrwB93Xmz96bhjORSGSkZ
+	33SXWqxcSnuAKH5TSonQ8+nTJdo+LFsbfT3bHIxjEfW371NV6/NfZhR0plnDyvtG6DKqgH
+	9oBSfFXLpdUL4VFiFhW3EeKabCLrrtI=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-zJd9YkvwMmKMp6fl3FPiRQ-1; Fri, 13 Nov 2026 01:41:09 -0500
-X-MC-Unique: zJd9YkvwMmKMp6fl3FPiRQ-1
-X-Mimecast-MFC-AGG-ID: zJd9YkvwMmKMp6fl3FPiRQ_1794552069
-Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-7035f069837so634904eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:09 -0800 (PST)
+ us-mta-622-Ue74epwJO62kySLD9gH8IA-1; Fri, 13 Nov 2026 01:41:11 -0500
+X-MC-Unique: Ue74epwJO62kySLD9gH8IA-1
+X-Mimecast-MFC-AGG-ID: Ue74epwJO62kySLD9gH8IA_1794552071
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-843cf077bf7so894442a34.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794552068; x=1795156868;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0gKedmemQ1u4V+B0DJ0y0gXQkOv+yPBdtW4+Ey1vA1s=;
-        b=kHErLB9V/oKsIwRUza19JL4CBk78J9c3vxOg2+j++2DMghoAEuycDpNYBB9P2dXtsi
-         h0G9CfQ66ChZLIOnJmtza6mGeSOW33DSTHQt5/lNO0feylt+fd51MrBI/N8vpIxQXn85
-         1a3RvQnKqxGk2BhJ7dgPLP+g6o+X+yXYIQy3RwKPxrUle/cmiB7bMPdwvObWkwKT26Nx
-         10MAcxuyicx9IyO1D0cPRzWzd5NPBX1MsWGCgCJiEE3vt0V3UqLvh8MdCKj5tF3YJRxE
-         4UG989543stehA45xd7UAS9kvgNfaJX3i+ZwlOfNDkaI5pXWwS2wQBXm5/1il9H3eUr/
-         dtEA==
-X-Forwarded-Encrypted: i=1; AL+hErGtr6p9c1qA/Hnz3lbJUujUw+lZGAGtHNxY8bogFddpcnBvIJkPE3RJ0Wdt/8jy5Y0HKc9FqhPL1RRkgmGFw02kPuQ=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+iHUBVQNAeKTuMMH3aUc0MyT9IRdNdwgmiHe6R/igfEWuMWa/v
-	fJSYKCJr34mTQei2eW4H48Zc1ApfLrBN89lnyFqPqA39j/y/CTHfl4uAZpc+1umWvnnMoTEUsG0
-	jRynnlYQ09/XvG/fJdjUEyHWGuMGN7zwSKq/nZnlPMQDdCSfT1HawBy8+Ms2sG1F4776O/wT8Kg
-	==
-X-Gm-Gg: AYBFou2vP7brnn79/8LjK4FHxzZGZ4yRkdVIdJKzRLBhO/76Dep6SBqMv6KeQhTRThI
-	5yynm6Y4ncBzJ6yBMs2hc/2gmdxI/o4OK8BBQzFN5COPsbG7ObzuvJQCgGrfzpvOm0ffhufKjG7
-	zJWN2tWjC2teGbfdNEKLEFISD3JNdMCj5C88hJVyOAB6iPm1PWKQOQRXpK0r5ZCyoj/4BBQe9NA
-	CHKSvjTa+t4VzKeObCbyn56R1/Era8joR+3rKY3CMYsU/kqHmkxUH/IJLgG2BH0hhBmBp9gxjEW
-	gwKWMBHvld5cb/AmjEubpxm7HY/LSSNygYz/Jbf0bp+Jb0kDP3i8U3kyy3mJkcRo6YjiaBfMU33
-	+ALrEKzIBHE6npsggUvYYOM7cyiUHYg/IG7yXw2QQfPzdU380vVFfKJl3kLwmP1qW26mSzah7vL
-	vg4dtLRjdemLa1K0Rp4uY8QE/a0XZ9
-X-Received: by 2002:a05:6820:4306:b0:719:150a:4369 with SMTP id 006d021491bc7-71ab508c7b6mr860832eaf.50.1794552068548;
-        Thu, 12 Nov 2026 22:41:08 -0800 (PST)
-X-Received: by 2002:a05:6820:4306:b0:719:150a:4369 with SMTP id 006d021491bc7-71ab508c7b6mr860826eaf.50.1794552068139;
-        Thu, 12 Nov 2026 22:41:08 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794552071; x=1795156871;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=s/VBD7km5Cmk+gKBpoU0bODC1xhj9yZHHKpWtMFA8XE=;
+        b=iyxO4aRjly/VmsAsykW1w5/I5cNusEgIN+kOByBfGOWWPKBIY9JqDmwY5O0l3efaBw
+         3kZRwwcJ27o3Oz+Z1481qImWMO2JzGVjw5fxINfrDGWaC8+nJsbROCIgQln1kACvjA7V
+         Lve749IC8388jRRZNQ2g0uKZ+AtJlNE3XpS/fW1tifHDJwtlzpUQ/wfRJj91/PsvSvBl
+         EwEMxquwZb1CaDyg+UBM+QxG7hJCkWKJS9zKKnGtSiZyBPyP+7zTSPpFjg5OY6i+wPTK
+         Cy7AeJA4jOSoo3F3LuX+R3m8jom/aEov5F6ZY70oIH8wYKWpsJVUgXR6ZLkAnQ+z3sV9
+         Kvbg==
+X-Forwarded-Encrypted: i=1; AL+hErEJHTid4ih/vDwHomug1hoG5MfehsUv05Njmcrntc6VLtW84H16HZM6Zi6p2HZfQeHJamO9yUBGRM+JC0sRu9s/WLk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/1TJK5p3atXLs+dK/DfNB9fNFmRUrJYj+TxHfBiASxler+ydCp
+	R/tDuC0bz1ViMcnezA1HqfsH0tys1of4xSq6FjpyVmGkRBCvCN05FMT71hBvO9ysbCJXaD/92f/
+	Pv4FmYb5q9JMmdRUSGCS2tXiShXZwoFMMIydUlasOceBb0Pzi/nHPnQADqd/qPOLo/8eXA/zZnY
+	8EIRm/Ow==
+X-Gm-Gg: AYBFou3EJxS8SpL8/rEYrfxZ07A7XXQIbXTJFEoDTFshU0WMJ0jUvGe1Djs+3g77WTX
+	cIxXXG6zLibAIVH9pYcU+5vavIr/AEVdo/nKV4E8WNyrXjcHm1csX8WKC+iIj/4SlDXyJn5qA0s
+	LmVcMZzRN4adtCfGRdHjeEONAHSXesqbeqb+1kDebhgPFMRXAMLUIlLMb92y0nBClRUOU84iH0d
+	JirAZlusVnD2pkIsN3N9yBlCu4S2idEj2xM6EJE/mAECxBFntZiWZoLl880NknEXgITcaEUdwna
+	u40j79AWm4bsP2s6O2Czszk90a5KkMd6chBQCvLK1JE2Rwf8l6uZLZ5xa7264olLH1qTPkTDGvi
+	FCPwq76ZcvWg/ZYZPZKPS0Yfl/bfIvD+6NAVF6OLjU+yddMnP9qzjrlydwR+OaxHRUdxTjByCyG
+	73jTd3MSAJDk1RJ+aHJnCfqcXnWCmW
+X-Received: by 2002:a05:6830:6411:b0:85e:f659:3a7 with SMTP id 46e09a7af769-862898e2cf0mr1386855a34.24.1794552070873;
+        Thu, 12 Nov 2026 22:41:10 -0800 (PST)
+X-Received: by 2002:a05:6830:6411:b0:85e:f659:3a7 with SMTP id 46e09a7af769-862898e2cf0mr1386847a34.24.1794552070483;
+        Thu, 12 Nov 2026 22:41:10 -0800 (PST)
 Received: from crwood-thinkpadp16vgen1.minnmso.csb (71-34-16-191.mpls.qwest.net. [71.34.16.191])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.07
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 22:41:07 -0800 (PST)
+        Thu, 12 Nov 2026 22:41:09 -0800 (PST)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH v7 00/10] tracing/osnoise: Synchronization fixes
-Date: Fri, 13 Nov 2026 00:40:53 -0600
-Message-ID: <20261113064103.3041704-1-crwood@redhat.com>
+Subject: [PATCH v7 02/10] tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
+Date: Fri, 13 Nov 2026 00:40:55 -0600
+Message-ID: <20261113064103.3041704-3-crwood@redhat.com>
 X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261113064103.3041704-1-crwood@redhat.com>
+References: <20261113064103.3041704-1-crwood@redhat.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,73 +109,51 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Cci7MXLiCr68qhQXCKOmqgtpS9SNSgzrumSrKl1IQSo_1794552069
+X-Mimecast-MFC-PROC-ID: lQ-LhGUv-o1cHv_gcgyqrYDB_0AqwYGK6o6pC8isnqY_1794552071
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Various improvements to synchronization in osnoise/timerlat.
+We can get here on timerlat with OSN_WORKLOAD cleared via
+osnoise_hotplug_workfn().
 
-v7:
- - Fix temporary build break in patch 2, with a change in patch 1
- - Other Sashiko-driven updates to patches 5 and 6
+While we're moving this code, remove the pointless compiler barrier
+immediately before returning from a function.  Even if it's inlined,
+it's not doing anything useful.
 
-v6:
- - Revived the "Always check OSN_WORKLOAD" and "Split out per-cpu
-   variable resets" patches, with fixes, to address minor issues raised
-   by Sashiko
- - Other minor Sashiko-requseted fixes
+Signed-off-by: Crystal Wood <crwood@redhat.com>
+---
+ kernel/trace/trace_osnoise.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-https://lore.kernel.org/all/20261028220120.4005187-1-crwood@redhat.com/
-
-v5:
- - Removed "Split out per-cpu variable resets" due to Sashiko feedback
-   about races with NMIs and other tracing hooks; the main motivation
-   for that patch was problems with osn->sampling and tlat->thread,
-   both of which are now explicitly cleared.
-
- - Fixed some patch shuffling bugs in fd detachment that were revealed
-   by dropping the reset patch
-
- - Added "Start all eligible cpus from hotplug workfn"
-
- - Removed "Always check OSN_WORKLOAD" which is no longer needed after the
-   hotplug workfn patch
-
-https://lore.kernel.org/all/20261024015614.3095251-1-crwood@redhat.com/
-
-v4: fixed a problem with the v3 fix spotted by Sashiko
-
-https://lore.kernel.org/all/20261014220759.908839-1-crwood@redhat.com/
-
-v3: make sure osn->sampling gets cleared on stop, even for non-workload
-osnoise (reported by Sashiko)
-
-https://lore.kernel.org/all/20261014022640.695786-1-crwood@redhat.com/
-
-v2: addresses issues raised by Sashiko, as well as a few more problems
-discovered in additional testing.
-
-https://lore.kernel.org/all/20261010022338.2507589-1-crwood@redhat.com/
-
-v1: https://lore.kernel.org/all/20260824211544.3984835-1-crwood@redhat.com/
-
-Crystal Wood (10):
-  tracing/osnoise: Variable cleanup
-  tracing/osnoise: start_kthread: Always check OSN_WORKLOAD
-  tracing/osnoise: Start all eligible cpus from hotplug workfn
-  tracing/osnoise: Hold a ref on osn->kthread
-  tracing/osnoise: Per-cpu mutexes and fd detachment
-  tracing/osnoise: Reset cleanup
-  tracing/osnoise: kthreads: Verify CPU after migrate_disable()
-  tracing/osnoise: Take trace_types_lock in timerlat_fd_open
-  tracing/osnoise: Print taint message for timerlat
-  tracing/osnoise: Refuse timerlat fd open if tracer inactive
-
- Documentation/trace/timerlat-tracer.rst |   5 +-
- kernel/trace/trace_osnoise.c            | 497 ++++++++++++++----------
- 2 files changed, 290 insertions(+), 212 deletions(-)
-
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 2f3cbe71d313..b812a73fa5da 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2048,16 +2048,17 @@ static int start_kthread(unsigned int cpu)
+ 	if (osn->kthread)
+ 		return 0;
+ 
++	/* Can still happen with timerlat via cpu hotplug */
++	if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
++		if (!timerlat_enabled())
++			osn->sampling = true;
++		return 0;
++	}
++
+ 	if (timerlat_enabled()) {
+ 		snprintf(comm, 24, "timerlat/%d", cpu);
+ 		main = timerlat_main;
+ 	} else {
+-		/* if no workload, just return */
+-		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
+-			osn->sampling = true;
+-			barrier();
+-			return 0;
+-		}
+ 		snprintf(comm, 24, "osnoise/%d", cpu);
+ 	}
+ 
 -- 
 2.56.0
 
