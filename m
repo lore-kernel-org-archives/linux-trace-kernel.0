@@ -1,56 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794585817;
-	b=3PwNNHV+we0peuxBB0HaiKzlzhArfmcMLbcnKFarEgY2kzzKANnmpP9OOrigJ0Qq38xv
-	 Y1kK5AfIIBp0Ex95eQOUrpD9kq5RsG7n7DoBzbpvN6o+49ahrW2JrRGqRppOY8lvcA6Nf
-	 yMaajhSL+1kO7TpSZoUl7hrt2NNwP1DDKpOOWeisXlDQnTuuh03Cqpw3FsKfF0sjrWCtj
-	 KXR8fZX/EjrnHWrA6KL9aUqbV8q+qtd+GKPnzoZuS2YHEW0waTGDBvdcRA4pNjvSPhkIe
-	 yBa1rsRQUu2n/XywahtcP+UAlhMdN2GoSkVToiAMcKjMDOpSxdprBNqbs9JkBy7d0SQ==
+	t=1794586660;
+	b=5Si1diTDRxwkWsbIqmRTV8WdP2vJ6ywpd4qZdri6oSnj5SHpl2WfmfGcscTKMQE4UGeY
+	 XqdjQ+I4tJNcV+1AmHmtddPnOHFYYLl9X7DsOfsmPJt+d9oBQ4Fgn3DSsK0dobSEly1Br
+	 cOR1R7hf2/A8SeEPuHL9vcAOcTeLHaVyKeE4FkoQIVYLj6rSqE2eDZNFnQpWwLCe+yraH
+	 WilIja+mjMaepRJdr7+w9s7agELEffbeIBFui0wWxn9Adk8XOsbB/xrUsMc3wEBugyg08
+	 pFCyd3VAB1hCnIkllAN3Oc8x6sPCDaJxAYLpx6nnAgyo2ohNTPWRF/XGGiHvdURnj4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794585817;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=XeENNbwPh9bLkMXZ7EhqeqDPUfhlLCVs65BML8PC5/Y=;
-	b=kzvNPLec4CFNa88/M9dHN2v4uQtdnE4tgI98GZ4QlHNyKFg6EaUNvaSCuzWikbmO0KJk
-	 OkrFzEArA/lVlCnjH+eXtC+9/2oqEPshU1V46jN6dNZimXrkJk+tL5rndeSZ/MvWZvyk3
-	 xuCXrkcUA4zJ+v33PuotFcBSrQn8xwjmBvjZfVdR2tYPfMRmHkZJ4Z9GyQK7c4GpZypsK
-	 /tjALlPWCr1dzb1D4ecbNN3/jMHfjTc0KjDUBealAJ5fUiYiXLW25RDTs7h7QgjeyPhg7
-	 3eOzpQwYjOG6bWRckoV4qyNlG7+3SoO/RaSNn+yg90m8RK020YGkw+hVKpNoCtwSqQw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794586660;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=YmKdqa9PN50e2UkKt3EfBiqD0YdHB3OU7Jqo14mmKwc=;
+	b=qF1DRkqf3st+npOWMAchyRugZDilP8icWyD7ORZ1noLoxqSS7l2VMnYuIbC76ihPg52I
+	 Ga70C7MmOVO2CpH6Q9FuNed82yYkmARuFjkcV1lQOY+kB8T8ccUjs08eakBzls7FfT8L6
+	 nANXXHiRwlP9oSfNSMQ8SwSTBTnTAhIax3XXP+A8+8vwCblC9wdPYsN7H2iglyS6DHzPJ
+	 9ljep0A8Yy8Oxu/9PorzM2FZQxeMjVi4RHXP1eoe8eLflJcKpnqgkTJC4HDZtmad/WEBb
+	 BQo0ZRya5jLp1HRvTC6u7KCicYg03k1yYMjcYT4nMGQjIihW2Qn2IES8bg0b9oqsoxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GHNfONeA;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2re49ded;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=joVtIRfd;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1632960A2616
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 16:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A8A606B2FD
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 16:17:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51A8A606B2FD
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GHNfONeA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B63251F000C5;
-	Fri, 13 Nov 2026 16:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794585816;
-	bh=XeENNbwPh9bLkMXZ7EhqeqDPUfhlLCVs65BML8PC5/Y=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=GHNfONeATYMtFKfLSVyi6Q51G0XW4nkrwYuq3m9Vdmee52/6wVUaiKHLfdFvLEBje
-	 xj0j+hZW1VCizj/uQfVLc/z/LRv3/YcnEK85E+iAt/qlJxIlssPZFW2/MdE2VQhO18
-	 LlAAzdfpBsKGMUKeNU1Rn1WdA9PMG7AhUNCQmayqF7RGO/3q1oJK9G9zYbabgPT83s
-	 yBew12JlfCMMGaoXk7BFa/RFaqTNXMubvriRGWDohmAnNqZ+FO4SdlahBk2gYNNqgS
-	 ixGoKSoV+Wt4Pu1Xa6ea16v5L6WoB0aHyfN8TcsAUe8McxUtEuh/i/YHHJHsy4uDSI
-	 jz2tgVjn2POFQ==
-Message-ID: <sashiko-outbox-213147@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/4] ring-buffer: Check remote reader page commit
- before meta entries
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113152729.837429-3-vdonnefort@google.com>
-References: <20261113152729.837429-1-vdonnefort@google.com>
- <20261113152729.837429-3-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 16:03:36 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2re49ded;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=joVtIRfd
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794586657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmKdqa9PN50e2UkKt3EfBiqD0YdHB3OU7Jqo14mmKwc=;
+	b=2re49ded+Le750cmPbDqpI3zJEZ/u0Oc7eONWJd3Qs/wtWtK95vs/WF8CGMR/eXxk4XVxy
+	vBmdimlh5qDREKfn+ZDsJcpUO5asyP0EFbiPqTymVB/ifkj8SLDM1tYEqdyn49+lT9njUx
+	Cvyca1ho1k17KvAYgKwuiWa7RJt6so0FJNZxljAqhQtYLRoa0v9k7L5mQEKI21ignQ9SLY
+	RiFFLObI/YzTSciLd3SyhqndDhv/JlsPfP2xpcoJ/NoKebE6MuCZlYk9GLE66fIpEx0raR
+	KAC8L6eMZDsH+XVVxed0tiUc9WoZXOhH4UcRiwp60bypCM/93MOcs0KzEzhqGg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794586657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmKdqa9PN50e2UkKt3EfBiqD0YdHB3OU7Jqo14mmKwc=;
+	b=joVtIRfdyNUPxYkkHCdBB1CAhkPjdGqwiluEKQIbr3TaCE7+KYxzMSj6Rw5thx1FJyuZzU
+	Tczgj9z1Yp0y12DQ==
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Daniel Wagner <wagi@monom.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams
+ <clrkwllms@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v2] rtla/timerlat: Lock the memory of the user-space
+ threads
+In-Reply-To: <CAP4=nvTswKUTSJiFRJK7KXAvc3JMLDCgXW=mSV6BO3mMucyWnA@mail.gmail.com>
+References: <20261113-rtla-mlock-v2-1-14382f140da0@monom.org>
+ <87o6bswzj9.fsf@jogness.linutronix.de>
+ <CAP4=nvTswKUTSJiFRJK7KXAvc3JMLDCgXW=mSV6BO3mMucyWnA@mail.gmail.com>
+Date: Fri, 13 Nov 2026 17:23:37 +0106
+Message-ID: <87ld6wwvry.fsf@jogness.linutronix.de>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,92 +75,30 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] ring-buffer: rb_num_of_entries() underflow when commit
-  precedes meta entries
---
+On 2026-11-13, Tomas Glozar <tglozar@redhat.com> wrote:
+> The only other activities the user thread performs with RT priority on
+> before entering the timerlat interface read loop are setting the
+> cgroup and opening the timerlat interface file descriptor. I agree
+> that ideally, setting the priority should be done just before the
+> loop.
 
-commit 1d2d0e6ae01d518c30dc9986893db113c38a4caf
-Author: Vincent Donnefort <vdonnefort@google.com>
+If you say it is ideal to do X, then why not do X? Real-time tasks
+(especially running at rtprio 95!) need to respect other real-time tasks
+on the system. Developers new to RT might see this code and copy it. The
+code even has a comment:
 
-ring-buffer: Check remote reader page commit before meta entries
+"If you want to use as base for your own tool... go ahead."
 
-This commit reorders the checks in __rb_get_reader_page_from_remote() to
-inspect the current reader page commit offset before checking if
-rb_num_of_entries() is zero, and adds memory barriers pairing page::commit
-and meta::entries between simple_ring_buffer_commit() and the remote reader.
+For me there are two issues here:
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 3c7aa982d43e9..f70010e2ede77 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
+1. RT latency measurement tooling needs to be a little intrusive to a
+system as practical. Otherwise it may not be possible for developers to
+use the tooling on their real environment.
 
-[ ... ]
+2. Official RT tooling should set the example of how to program for RT
+Linux correctly.
 
-> @@ -5825,8 +5823,13 @@ __rb_get_reader_page_from_remote(struct ring_buffe=
-r_per_cpu *cpu_buffer)
->  {
->  	struct buffer_page *new_reader, *prev_reader, *prev_head, *new_head, *l=
-ast;
-> =20
-> -	if (!rb_read_remote_meta_page(cpu_buffer))
-> -		return NULL;
-> +	rb_read_remote_meta_page(cpu_buffer);
-> +
-> +	/*
-> +	 * Order meta::entries read before page::commit, most likely paired with
-> +	 * simple_ring_buffer_commit().
-> +	 */
-> +	smp_rmb();
-> =20
->  	/* More to read on the reader page */
->  	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_pag=
-e)) {
-> @@ -5835,6 +5838,9 @@ __rb_get_reader_page_from_remote(struct ring_buffer=
-_per_cpu *cpu_buffer)
->  		return cpu_buffer->reader_page;
->  	}
-> =20
-> +	if (!rb_num_of_entries(cpu_buffer))
-> +		return NULL;
-
-[Severity: Medium]
-Can rb_num_of_entries() underflow to ULONG_MAX when an event is consumed in
-the window between the page->commit update and the meta->entries increment?
-
-CPU0 (writer)                       CPU1 (reader)
--------------                       -------------
-simple_ring_buffer_commit()
-  local_set(&page->commit, write);
-                                    ring_buffer_consume()
-                                      ...
-                                      __rb_get_reader_page_from_remote()
-                                        rb_read_remote_meta_page()
-                                          /* caches entries =3D N */
-                                        reader_page->read < rb_page_size()
-                                          return reader_page;
-                                      rb_advance_reader()
-                                        cpu_buffer->read++; /* N + 1 */
-  simple_rb_meta_inc(meta->entries, 1);
-
-At this point cpu_buffer->read is N + 1 while cpu_buffer->entries is still =
-N,
-so rb_num_of_entries() evaluates N - (N + 1) =3D ULONG_MAX:
-
-kernel/trace/ring_buffer.c:rb_num_of_entries() {
-	return local_read(&cpu_buffer->entries) -
-		(local_read(&cpu_buffer->overrun) + cpu_buffer->read);
-}
-
-Until rb_read_remote_meta_page() runs again, ring_buffer_entries() returns
-ULONG_MAX and ring_buffer_empty() returns false on an empty buffer (which
-also prevents trace_remote_try_unload() from unloading an idle buffer).  If
-__rb_get_reader_page_from_remote() is called again before CPU0 increments
-meta->entries, !rb_num_of_entries() evaluates to false and it proceeds to
-swap_reader_page() on an empty buffer.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113152729.8374=
-29-1-vdonnefort@google.com?part=3D2
+John
