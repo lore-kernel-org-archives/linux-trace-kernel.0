@@ -1,54 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794560699;
-	b=PaQynP1Klxj7dj9Av92gLMQAMB3ubdGdPLRF98TiMwgSP/rt8b/rg3VXHvsZlq2KRwZ7
-	 72H0fSzD61jfJlMjziPw445eoh1kcv4hpMHJrXYl+V7YsT2rvDMMr8gLNHtsJSIKgqIAy
-	 MjG7MD9S7fBjQFC4LgE4JdJEk/cZB1olunxG7n1CnU6Cdxw7VNJTiNFgN6cA2/iqiByHv
-	 fE492gIGqMjF9JouglHkJ3FSPi3N0jGyNSzGUpd1c/JIiToc9MpH/NEEzAdxtkoV2sF3I
-	 R/fNAo5mdU2WI+lwa2marI9r3VbihX9FjgHApELncYvMQdr/AWUgSCUX91Bd9DcH1pw==
+	t=1794562252;
+	b=dI4GKQxeZzl0U5qnlyPful7hvjXoSetHqxgYxuqF8aQ2VaiN7BHqK9HnL9TRYnakgAKj
+	 gmyW4Vgzl8vdvx8QLa40XWSOYBqamanJOqD0+yD1plQs0990dZGpMsz0oRc63vEDD3O42
+	 mhVNz2IRVHoZYKl/CNOf9h1l3REfc2FFdM+4+sydp1FdBOxoxloZgyV5BheGDQKCwDgSp
+	 Su5PTmYc0sChLHLLfpQ9TZFpHzmjYFc+J0BrX9EHuqXf/g6rx0e6SJ0FpfxMrLhIpETb8
+	 SM1d/6l1Z0diGhbV6lwHcUL1hlvONVKc5agP+B/kr+/AcR/Q2EpnvvNbfY4svBcCP4w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794560699;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794562252;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ECWVDz4uWDGG3HIRoRbtYePnz4o73iDqInasMcSuczg=;
-	b=EBWwz6vXAaTYST6n9buXmr0X7LjqrablOKY7y0ZlCCSzM1NFFPbzUtC7dx7MSIYyJ4uv
-	 Q1ygj1AhSDS7dsYgG2ry4Y0MaG2+NcjXi7wm1sRZa2CBgSYwR93N1VnbSU1VEMedxWmOU
-	 2MiSuhOhVszX2VGM9ZKrHHMPrfIq56RygSmHhf0DEO1lryv5kMkc3A7iITRieOkZdlbEG
-	 TDimuZbZM1ywHvAKP4eUq2bhf14us5rX1bA8NTt/jLSE0JCRm0rS8rtIvBcX3pCla9Uyy
-	 0k9okG0gsLmsPB6tZ5fzq7x0N5oUyoZdcirow0VNgQChcC1Q1C9Ehe8vdQkfzA0kd+A==
+	bh=d/B3bFcJIpgiK/QVNwmE+oAB6Y1O3QJe1L6ZlDUNHHQ=;
+	b=f8ljxN/RVCks3rRD5QGNHVg6EFZHPZKvFgqB/qS8wDaYRisxCQYaFcxflOm+7LTI2ux+
+	 3sj6HqUtsvdhTMVN29WCgedIdWmaz/JpuHweF28WQL/fZ6BPt5tQXFflX35Jlr2LHVysY
+	 zHF4g67ViEDsmEnCRadCBnjvDyIV0L6tVy4kn/CS039ofqpyfYL7wPfdZohSs1bveO7DV
+	 NmS/XJ1PaB1zZY37C7j402dZizP9BykHJMTFqYElVFtv1LjL/tcFlQebt0kvLrEmGFuQ9
+	 6j7rqPVNhr1ImiStJ863y2hB6WLTbvYhDJlB05yQsfeqzc29iKLRZrv1pCfxcZHjjRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dYflUxDi;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dhuoKB0t;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E9D606A323;
-	Fri, 13 Nov 2026 09:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEF6606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 09:30:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DEF6606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dYflUxDi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4161F000C4;
-	Fri, 13 Nov 2026 09:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794560699;
-	bh=ECWVDz4uWDGG3HIRoRbtYePnz4o73iDqInasMcSuczg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dYflUxDiGCfGTvv2/1TqWIJVU0BXlGKrfrU0aoW2tnfg42tpVsm3Ox12EZXjx/Kq4
-	 DFsb4UgjtyTGqY7ehS4QyxIAn9IocdPBggUFtR6e8rrfO6QpFyPo652K5qOputcGVt
-	 VZXhajBgV2W7Uf2dOFymB3jGqMLE20bCXmGD+v9lCKiyMrMzhanyURvLhBjdKbEqHl
-	 qPcrDc6Lvumdc6NNnUj62V5WiV3usE8zGt3nrdbQEMhI1T/aHVmqJEyxz12Pl212dc
-	 eDdPwqHR9WNiLW1ZRTO/EQAKXQX4ifGF3pxQFWH61wWBWxgxEn8sq+JL+n4cR/xtCy
-	 d8sk+1cf7Tu3Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Sahil Siddiq <sahilcdq0@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com, naveen@kernel.org, davem@davemloft.net, pjw@kernel.org, wangruikang@iscas.ac.cn, namcao@linutronix.de, kees@kernel.org, linux-openrisc@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] openrisc: Add support for KProbes and Kretprobes
-Date: Fri, 13 Nov 2026 18:04:54 +0900
-Message-ID: <undine-1794560694824423564-2986102e2a604795@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261026201240.107462-1-sahilcdq0@gmail.com>
-References: <20260930202744.50489-1-sahilcdq0@gmail.com> <20261026201240.107462-1-sahilcdq0@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dhuoKB0t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1794562250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d/B3bFcJIpgiK/QVNwmE+oAB6Y1O3QJe1L6ZlDUNHHQ=;
+	b=dhuoKB0txEpa0lTDDDj/Nx5Mghb27HtayjzVf0dyQSbJLB29a4I5WmAKjOdSJIGwCORJWb
+	H4M8pgMnPhhLcn4k+OjkyEEpXAs5sXLxBqkHMXhKtZ5xvCT6EqwWtYaJuEsbmo5gg3aG3G
+	0kymkGAi6le9rUfSwkLN94cPc2UrwjI=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-329-4iEysWl6OCymDRSQgkEoLw-1; Fri, 13 Nov 2026 04:30:47 -0500
+X-MC-Unique: 4iEysWl6OCymDRSQgkEoLw-1
+X-Mimecast-MFC-AGG-ID: 4iEysWl6OCymDRSQgkEoLw_1794562245
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8b6463f95a4so630469b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 01:30:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794562245; x=1795167045;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=d/B3bFcJIpgiK/QVNwmE+oAB6Y1O3QJe1L6ZlDUNHHQ=;
+        b=ibA1a1QVtzUXZ5U9R0vJOlRnTsCjPoGWmKh5ThbDE1jd/ilpsJBL2Ek08ZOnJ0TtcI
+         URSWlOTtQuT9x1VXsjJ1yWNtu/wYk4HH+d+lEBOik4jE35Os/hkmuunNitqHKYgEhYrf
+         QKKeQAd3NhJkgNuHntEVtVvnH0actcViW77OYm0bLLVhCZ5icU6zXwdIaZs95ClaHkwT
+         WpU8MvexbLRA6Rz/3lHqL0XgaZva6DG5fBX477VEhpUIChynVLKo6jgMhrxhuQzSgO+d
+         E4kmoHngHXdKeKJPHlv95iSi8Q3dso8Tv9mmJ4fO/SWZBcB8b9pRv+3zU24dU+LU3eKW
+         anxg==
+X-Forwarded-Encrypted: i=1; AL+hErFUIzZVkPxk2Eo5bj2Le2EwW6htzoLMMUuDT+kLx1R2LLrKileGlNrBoDdSkR6y973SFoBo95V3547jozpStFEPTtg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9e7iSyH8qkZfA/BItJKvKPoBCkgr8OMAKfktQvThSfRi7ebJft
+	Bu5h96O8si/AydPMG4Ysjx3LfZ4GmEzQqUaXYmIIFpZNFRETab5MRLAncdvIjnmF/CkzUdNmiAd
+	RgqWkP1X1+5NDyETjw1fZVkuR5UuvMRJyzcqJ3ZAwN72Y3CUearN76hETY7eot7nWBDKpkZQTSu
+	tXSu51eZP3H02KpRXCD5m0+r3TGqX5tVa4nDohe806i33FDWaS
+X-Gm-Gg: AYBFou2RKDrAb08QK9oYmFgZOUNkjTuopNfkemCBzCRCvKZIUj9u2TeVvakoBTffBZi
+	uBeFy3761oKnBFS414hH7B51Pqw59EHoagAd38mLFdoq1I1ud1Ev771lvopkU+xRqI8+kTqHsFF
+	zlGextHR7+3rIR9i4sINC6WDabeCF7laB/HPuwkpDR/Sme7AQT8vHs9cf/lPfv3YRaLyWtvi6us
+	VEI59eE7WfD/rY=
+X-Received: by 2002:a05:6a00:4191:b0:881:e626:74a0 with SMTP id d2e1a72fcca58-8beb7929222mr1804873b3a.47.1794562245121;
+        Fri, 13 Nov 2026 01:30:45 -0800 (PST)
+X-Received: by 2002:a05:6a00:4191:b0:881:e626:74a0 with SMTP id
+ d2e1a72fcca58-8beb7929222mr1804847b3a.47.1794562244585; Fri, 13 Nov 2026
+ 01:30:44 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,180 +91,111 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
+In-Reply-To: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 13 Nov 2026 10:30:33 +0100
+X-Gm-Features: AclHuK_XcAHaq3tn3ZycuByNMRaNhY9m6Xm00lSot4Kx5hwaAAm1rOPSYdVSGFc
+Message-ID: <CAP4=nvRQE+GKPT1-KgZ4OgcVV7eKqnkURaELutSMgK4T8YAZMg@mail.gmail.com>
+Subject: Re: [PATCH] rtla/timerlat: Lock the memory of the user-space threads
+To: Daniel Wagner <wagi@monom.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Clark Williams <clrkwllms@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: O-89sRgQ8I8GKlCfdQqpCfV1ur6hVEYGF8rfTImWWXo_1794562245
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sahil,
+On Thu, Nov 12, 2026 at 10:26=E2=80=AFPM Daniel Wagner <wagi@monom.org> wro=
+te:
+>
+> With -u, the latency timerlat reports runs until the measuring thread
+> is back in user space. Nothing keeps that thread's memory resident,
+> so under memory pressure the kernel reclaims its code, stack and libc
+> pages, and the page faults on the way back to user space count as
+> latency.
+>
+> On a Raspberry Pi 3 (PREEMPT_RT 6.12) under stress-ng --class memory,
+> timerlat reported up to 40 ms for the user-space threads, which took
+> 283 major faults, while the kernel threads' latency stayed below
+> 1 ms. cyclictest under the same load: 133 ms without -m (mlockall),
+> 0.9 ms with it.
+>
 
-Can you update the series according to the Sashiko's comment[1]?
+Yes, this is a known problem. I have just not seen the timerlat user
+thread faulting in practice, maybe because I use rtla mostly on
+servers with an "absurd" amount of RAM. Or maybe I just have not
+noticed it yet.
 
-[1] https://sashiko.dev/#/patchset/20261026201240.107462-3-sahilcdq0%40gmail.com
+> With this change timerlat reports 0.9 ms for the user-space threads
+> under the same load, and they take no major faults.
+>
+> Lock the user-space threads' memory before they start measuring, as
+> cyclictest -m does.
+>
 
-Also, can you check your git email settings, so that the next
-version does *NOT* reply to the previous version.
+Thank you for measuring this.
 
-This mail has 
+> Signed-off-by: Daniel Wagner <wagi@monom.org>
+> ---
+>  tools/tracing/rtla/src/timerlat_u.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src=
+/timerlat_u.c
+> index c80edaf07b00..42aaf1d7f216 100644
+> --- a/tools/tracing/rtla/src/timerlat_u.c
+> +++ b/tools/tracing/rtla/src/timerlat_u.c
+> @@ -15,6 +15,7 @@
+>  #include <pthread.h>
+>  #include <sys/wait.h>
+>  #include <sys/prctl.h>
+> +#include <sys/mman.h>
+>
+>  #include "common.h"
+>  #include "timerlat_u.h"
+> @@ -69,6 +70,15 @@ static int timerlat_u_main(int cpu, struct timerlat_u_=
+params *params)
+>                 }
+>         }
+>
+> +       /*
+> +        * Keep the measuring process in memory: the latency it reports
+> +        * runs until it is back in user space, and a page fault on the w=
+ay
+> +        * (its code, stack or libc pages reclaimed under memory pressure=
+)
+> +        * would count as latency. cyclictest does the same with -m.
+> +        */
+> +       if (mlockall(MCL_CURRENT | MCL_FUTURE))
+> +               err_msg("Could not lock timerlat u memory: %s\n", strerro=
+r(errno));
+> +
 
-  Message-ID: <20261026201240.107462-1-sahilcdq0@gmail.com>
-  X-Mailer: git-send-email 2.55.0
-  In-Reply-To: <20260930202744.50489-1-sahilcdq0@gmail.com>
-  References: <20260930202744.50489-1-sahilcdq0@gmail.com>
+Can we make this opt-in, gated by a -m/--mlockall option, like cyclictest?
 
-But I can not find "20260930202744.50489-1-sahilcdq0@gmail.com" in 
-the LKML archive.
+We can add it as a boolean field into struct timerlat_params and pass
+down to struct timerlat_u_params. See e.g. 2ff4464e3283
+("rtla/osnoise: Add IPI tracking cmdline option") for reference.
 
-Also "[PATCH v3 2/4] openrisc: Add KProbes" has
-
-  Message-ID: <20261026201240.107462-3-sahilcdq0@gmail.com>
-  X-Mailer: git-send-email 2.55.0
-  In-Reply-To: <20260930202744.50489-1-sahilcdq0@gmail.com>
-  References: <20260930202744.50489-1-sahilcdq0@gmail.com>
-
-This should be in reply to the cover mail 
-"20261026201240.107462-1-sahilcdq0@gmail.com"
-
-Thank you,
-
-On Tue, 27 Oct 2026 01:42:36 +0530, Sahil Siddiq <sahilcdq0@gmail.com> wrote:
-> Hi,
+>         /*
+>          * This is the tool's loop. If you want to use as base for your o=
+wn tool...
+>          * go ahead.
 >
-> This is v3 of the patch series to add KProbe and Kretprobe support for
-> OpenRISC. KProbes was introduced in v1 [1] while Kretprobes was introduced
-> in v2 [2].
+> ---
+> base-commit: ee83899302a0457a3ba47464a13e8682bd7ba27d
+> change-id: 20261112-rtla-mlock-2a572f10533e
 >
-> In order to build the kernel with Kprobes and Kretprobes enabled, the
-> following config options are required:
-> 1. CONFIG_HAVE_KPROBES=y
-> 2. CONFIG_KPROBES=y
-> 3. CONFIG_RETHOOK=y
-> 4. CONFIG_KRETPROBES=y
->
-> I tested the generic functionality of Kprobes and Kretprobes using the
-> tests located at "lib/tests" [3], samples located at "samples/kprobes" [4],
-> as well as a few test modules that I have published here [5]. The following
-> options are required to build the samples and tests:
-> 1. CONFIG_SAMPLES=y
-> 2. CONFIG_SAMPLE_KPROBES=m
-> 3. CONFIG_SAMPLE_KRETPROBES=m
-> 4. CONFIG_KPROBES_SANITY_TEST=m
->
-> I have also added unit tests at "arch/openrisc/kernel/tests" to verify
-> that Kprobes work properly when inserted at branch instructions, and
-> that delay slots are handled correctly. The tests are based on the Kprobe
-> testsuite added for RISC-V. The following options need to be enabled to
-> build the tests:
-> 1. CONFIG_KUNIT=y
-> 2. CONFIG_RUNTIME_KERNEL_TESTING_MENU=y
-> 3. CONFIG_OR_KPROBES_KUNIT=m
->
-> Below are the results of the tests and sample modules when run in my
-> environment.
->
-> - kretprobe_example:
->
-> /home # insmod kretprobe_example.ko 
-> Planted return probe at kernel_clone: (ptrval)
-> /home # ls >/dev/null
-> kernel_clone returned 35 and took 1302450 ns to execute
-> /home # rmmod kretprobe_example.ko 
-> kernel_clone returned 36 and took 1121200 ns to execute
-> kretprobe at (ptrval) unregistered
-> Missed probing 0 instances of kernel_clone
->
-> - test_kprobes:
->
-> /home # insmod test_kprobes.ko 
-> KTAP version 1
-> 1..1
->     KTAP version 1
->     # Subtest: kprobes_test
->     # module: test_kprobes
->     1..5
->     ok 1 test_kprobe
->     ok 2 test_kprobes
->     ok 3 test_kprobe_missed
->     ok 4 test_kretprobe
->     ok 5 test_kretprobes
-> # kprobes_test: pass:5 fail:0 skip:0 total:5
-> # Totals: pass:5 fail:0 skip:0 total:5
-> ok 1 kprobes_test
->
-> - openrisc_test_kprobes:
->
-> /home # insmod openrisc_test_kprobes.ko 
-> KTAP version 1
-> 1..1
->     KTAP version 1
->     # Subtest: kprobes_openrisc
->     # module: openrisc_test_kprobes
->     1..1
->     ok 1 test_kprobe_openrisc
-> ok 1 kprobes_openrisc
->
-> v3 adds a few fixes to the patch series based on Sachiko's review comments [6]. I
-> have listed out the differences introduced in each iteration in the following emails.
->
-> Thanks,
-> Sahil
->
-> [1] https://lkml.org/lkml/2026/4/8/21
-> [2] https://lkml.org/lkml/2026/10/1/28
-> [3] https://github.com/torvalds/linux/tree/master/lib/tests
-> [4] https://github.com/torvalds/linux/tree/master/samples/kprobes
-> [5] https://github.com/valdaarhun/or-dev
-> [6] https://sashiko.dev/#/patchset/20260930203129.51048-1-sahilcdq0%40gmail.com
->
-> Sahil Siddiq (4):
->   openrisc: Add utilities and clean up simulation of instructions
->   openrisc: Add KProbes
->   openrisc: Add unit tests for KProbes on branch instructions
->   openrisc: Add Kretprobes
->
->  arch/openrisc/Kconfig                         |   3 +
->  arch/openrisc/Kconfig.debug                   |  30 +-
->  arch/openrisc/configs/or1ksim_defconfig       |   2 +
->  arch/openrisc/configs/virt_defconfig          |   2 +
->  arch/openrisc/include/asm/asm.h               |  22 +
->  arch/openrisc/include/asm/break.h             |  19 +
->  arch/openrisc/include/asm/cpuinfo.h           |   3 +
->  arch/openrisc/include/asm/insn-def.h          |  64 ++-
->  arch/openrisc/include/asm/kprobes.h           |  77 ++++
->  arch/openrisc/include/asm/spr_defs.h          |   1 +
->  arch/openrisc/kernel/Makefile                 |   5 +-
->  arch/openrisc/kernel/entry.S                  |  16 +
->  arch/openrisc/kernel/insn.c                   |  88 ++++
->  arch/openrisc/kernel/kprobes.c                | 426 ++++++++++++++++++
->  arch/openrisc/kernel/rethook.c                |  32 ++
->  arch/openrisc/kernel/rethook.h                |   8 +
->  arch/openrisc/kernel/rethook_trampoline.S     | 111 +++++
->  arch/openrisc/kernel/setup.c                  |   4 +
->  arch/openrisc/kernel/tests/Makefile           |   3 +
->  arch/openrisc/kernel/tests/test_kprobes.c     |  59 +++
->  arch/openrisc/kernel/tests/test_kprobes.h     |  24 +
->  arch/openrisc/kernel/tests/test_kprobes_asm.S | 157 +++++++
->  arch/openrisc/kernel/traps.c                  |  82 ++--
->  arch/openrisc/lib/memcpy.c                    |   2 +
->  arch/openrisc/lib/memset.S                    |   4 +
->  arch/openrisc/mm/fault.c                      |   5 +
->  samples/kprobes/kprobe_example.c              |   8 +
->  27 files changed, 1206 insertions(+), 51 deletions(-)
->  create mode 100644 arch/openrisc/include/asm/asm.h
->  create mode 100644 arch/openrisc/include/asm/break.h
->  create mode 100644 arch/openrisc/include/asm/kprobes.h
->  create mode 100644 arch/openrisc/kernel/insn.c
->  create mode 100644 arch/openrisc/kernel/kprobes.c
->  create mode 100644 arch/openrisc/kernel/rethook.c
->  create mode 100644 arch/openrisc/kernel/rethook.h
->  create mode 100644 arch/openrisc/kernel/rethook_trampoline.S
->  create mode 100644 arch/openrisc/kernel/tests/Makefile
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.c
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes.h
->  create mode 100644 arch/openrisc/kernel/tests/test_kprobes_asm.S
->
-> -- 
-> 2.55.0
+> Best regards,
+> --
+> Daniel Wagner <wagi@monom.org>
 >
 >
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+
+Tomas
+
