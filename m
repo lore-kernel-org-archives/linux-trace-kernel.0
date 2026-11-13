@@ -1,75 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794583657;
-	b=WoEurdJlUHZDzN8Q/n3zPnh6Ic0iDiDpD3LT1LmUP2o6hPXg2Y/EfbPlhKlPiNSmPlVl
-	 pklkDwCMb1FrHUgbL/xwSgsyswCpW9b1uS6IfVYMD7jiCamUJCP+5PEjirj0gziR9GPAn
-	 7FyKLZ7IIrrydHCLsqxp+QHOMYNw/Xf1YrYig53ju5VAL444aHuA3xIuoEC5oGHnt9dmB
-	 7k5v50/AilEhr1fjYAsG8fOdi5BlEKyGnC6wE4PKYs4d9I2M3xLDmVGEimVMntsMDnMn0
-	 x44eRdVGQldUmIk/O5bH85VNtZvdIuArLTqZuH3Sn8XZgOyfR8GePpGoE4KFvNJ9SrA==
+	t=1794584101;
+	b=fABppmQm7W+OVcZP79kw9DHKug1VmdwIIwiAJzNWfQ55co783pvWCQla6+Mu5LF8DfIo
+	 +wuNf+7Y2rNArXr+kEMz80WYxHX7x3PwvyaQzFNXKYqnW0zwHNx9pQazDuVU7RTSs76t/
+	 xXu7bW6eQn0D5dwC7Q5axs/8KT7FBeqID5m36D29oBL/xaG8yr2OETTYWW+pNYkRoIxhG
+	 G/hQiFN+0FmmYbAF9jBc20SVO5dfInSWpO2klA07KFXcZb7bmCBmcsRnltaWr+bmBvPe6
+	 22fXUZgPQe5UeY+r2d+ltaBDt8Jn/vzpZ8eruNCGVpvcWXVflx3dvG0UZD88BMfaVXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794583657;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=FO88jd7JN6r4cNWqmQOa06AmPT79EvpBEfyhLQB3b0Q=;
-	b=bgAj+VgI4xui30yGpN1VaklgJS1wPZ72CGCYx0p34ikESgg31Dq+q4SsMvt/Eh5PaHeP
-	 LyIfhTld57MFvhSW7zK1FILgod2KaDfT+tVNbEZ2WplA0VET2aUD37HKGb4CEva2ihYAM
-	 96kJ0wbao9St/R8gylziyzwSxx88vxRJybULu21+k8ulDLZQ0u5d5d3clEeOWRDGagSu2
-	 NPHNN5r9LSt9KcxdlYSmfgFFxvvpMhDLh/iBy+wBfkbqYMQY9dHyJW6PT6ziLAussuDl7
-	 eB5Z3Ak2yJaMg0baY72bp7PITrRHJvTibuXBGk8X3gLkJuJLXjJzlpfdQgDtbKdLZAg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794584101;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=ex9H280pJD2h2Gzs6IZptzHWpDjeu15cL1MfkhM3C4I=;
+	b=iohuLKicgXIPsDSJSWgHl34yi+5bUNOsyYz926DOW54kkAZ+6l0vv/qj5QtW/dzPLtUf
+	 t/UVNzLcbwvJ2vCYiTObYVCt3wC1wayq5TNWU+X4AV2JuC40xGVp4Lbvle7+g8tHJPGxC
+	 uHhTDikJCHBUOdpmB3yGQF57mea/iGmo3LsKYb5KntGdDzUK/OhkDmuQKaitzq0h3Mzly
+	 ffrbClPpYlpKDmSbIAHmIQKgMvuZ8ClZhbnE3BrLhF8stCjGLzKgfQIjK5T2Q6DnIDtqQ
+	 hJ75kDPVhjkoTyjeRVotTMsAWf3whsm8Aa9dCLGZ9V5Dc2k+hskoRwGXbK/it5CBOJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PcrZlBQu;
-	arc=none smtp.remote-ip=209.85.221.71
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnQLhKSX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB08606A8AD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:27:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8FB08606A8AD
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0023B606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PcrZlBQu
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4916bd6e3baso1027435f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:27:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794583656; x=1795188456; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FO88jd7JN6r4cNWqmQOa06AmPT79EvpBEfyhLQB3b0Q=;
-        b=PcrZlBQuxK13YnpNxig77ucJSRNONnlD2i+0hJt+iom3id1f9v5yBLIwZBF4MZQEma
-         HWnDtuJZC2DPYUEwRgtmoJBQexndmBrfPwxrG3CVU6RGitWOqToDqK18YzAJ6IxBI5LM
-         HGuzo7fdMspDDpKFVrNIZ6d9CThvqA4OVIW/QYLrl+8XtzeaqIm9rsEGGzrb5ErvomJD
-         Via6T3f1lDjZ7fzTBP5AFlv/UEOeTOphyFe5jkPaeTO7K/1mwi9+wS+74Unj3+HOicc1
-         xDpCTjI5Om44li5IdJHzJLP3EzVj/uK6j5TQ//VnTFEVBbpH8xakS3oXeQHL/vzE59bZ
-         CUeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794583656; x=1795188456;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FO88jd7JN6r4cNWqmQOa06AmPT79EvpBEfyhLQB3b0Q=;
-        b=qbMe7Qb2sRcRHJSlRwPx8FAEA6DLw8T4OoYquu/uZDAJyYSou9DgJJg/+6CGCh/C0q
-         VtjW2dm7YEK5PeHm3cPEGnTJbwgU7vVrGKirtoqfd7s9cEb96LSEi2oPwNJaz902ELwd
-         xWepTGzUEHxeqxrxBKucCImb0AEFckzlg94xrJvSVbFZT+H3Fia3wUPThG5TBfNLcwX/
-         Glgo8dISv0a0G2DeTiuEDFsSVrWcIha2nCC7OqY8Ups6l0QYnq/1ZGa7eXGTcKdsZamX
-         Z9Qp3NfC96D+AONtNjH/x5KXkgmZAKn+xA/tNx8XenOjd6Yu4xUiHcxOEiZ/nEeIeUI7
-         NItQ==
-X-Forwarded-Encrypted: i=1; AL+hErGgmwiHLRS7GwveQW77xSixToiduBpxzw76zIDqXscrb/lGPPSVqQ/3vv/T/8J3ZXBo8Zp+uBRG3WFNPbrFWnhpptw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/1KXayPzIzqEgygXeFsOCs+aT9385604yyWasJApGvgZbFqSOv
-	s4T1dU/1wugT9F5dQAlB5weA8hHJR9OGuXQ8NFOyYT94xYaSO0k2B/kUdglmUycM927G8R2vT5O
-	pLn2zJi4P6XbQ1l6iqs7z1g==
-X-Received: from wrwc2.prod.google.com ([2002:a5d:63c2:0:b0:48e:a11:b240])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:5c05:0:b0:49d:8d2e:40e with SMTP id ffacd0b85a97d-49d8d2e0438mr1425299f8f.16.1794583655709;
- Fri, 13 Nov 2026 07:27:35 -0800 (PST)
-Date: Fri, 13 Nov 2026 15:27:13 +0000
-In-Reply-To: <20261113152729.837429-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KnQLhKSX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6556C1F000C4;
+	Fri, 13 Nov 2026 15:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794584100;
+	bh=ex9H280pJD2h2Gzs6IZptzHWpDjeu15cL1MfkhM3C4I=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=KnQLhKSXMPDwx5MQ84MAaiGvmg7bCOMDXVuLNxjHsHEl+yQEMlMWlWx/UAxuEBdj8
+	 3WRlsqGGn7CeM8IK0PbsoVM48ZF4O7iH6ISOlYtuklxVgcsp1vHDOglev0H+gZMcWC
+	 vlkv5I0OYOoR05Y68WK7Uh2aEvxkvtYXZ0Wsz32Ipf/GN8JtOYBeQeNkJztpDEg6m6
+	 QDhcF5JhQaaTHVApDWu0tg9NEJPmRidsAH8aICwmV4CmM0qmIBQtFtqO86+bP3zHUy
+	 pUNsqsLudM8M7Gr/AN8X1RHMn+8OXN+2+X1bUbxhtxytkpLIXd57oNqG7wwrLaiEGc
+	 bzU8LiGPjOrQQ==
+Message-ID: <sashiko-outbox-213099@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 3/4] ring-buffer: Order remote page commit with data
+ and timestamp
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261113152729.837429-4-vdonnefort@google.com>
+References: <20261113152729.837429-1-vdonnefort@google.com>
+ <20261113152729.837429-4-vdonnefort@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Nov 2026 15:34:59 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,42 +59,72 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261113152729.837429-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.56.0.611.g1030f0b940-goog
-Message-ID: <20261113152729.837429-5-vdonnefort@google.com>
-Subject: [PATCH v1 4/4] ring-buffer: Increment pages_read on remote ring
- buffer page swap
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, bgrzesik@google.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-__rb_get_reader_page_from_remote() swaps in a new reader page without
-incrementing cpu_buffer->pages_read. While this isn't an issue now as
-trace remotes do not use buffer_percent, add this missing increment for
-consistency.
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Critical] tracing: out-of-bounds write in simple_rb_reserve_next()
+  [1]
+--
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
----
- kernel/trace/ring_buffer.c | 1 +
- 1 file changed, 1 insertion(+)
+commit b0c88540d75d93c7a85149df8d188a1bfaa9a89e
+Author: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6016d16d1566..ae33e64c7daa 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5881,6 +5881,7 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
- 	cpu_buffer->reader_page->read = 0;
- 	cpu_buffer->pages = &new_head->list;
- 	cpu_buffer->lost_events = cpu_buffer->meta_page->reader.lost_events;
-+	local_inc(&cpu_buffer->pages_read);
- 
- 	if (!rb_page_size(cpu_buffer->reader_page))
- 		return NULL;
--- 
-2.56.0.611.g1030f0b940-goog
+ring-buffer: Order remote page commit with data and timestamp
 
+This commit adds memory barriers between page::commit, page::data, and
+page::time_stamp for remote ring-buffers and defers updating read_stamp
+until committed data is present on the reader page.
+
+> diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring=
+_buffer.c
+> index 5f14ba152fba6..2dddaef638dc6 100644
+> --- a/kernel/trace/simple_ring_buffer.c
+> +++ b/kernel/trace/simple_ring_buffer.c
+> @@ -307,6 +307,11 @@ EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
+>   */
+>  void simple_ring_buffer_commit(struct simple_rb_per_cpu *cpu_buffer)
+>  {
+> +	/*
+> +	 * Order page::data and page::time_stamp before page::commit. Paired
+> +	 * with __rb_get_reader_page_from_remote().
+> +	 */
+> +	smp_wmb();
+>  	local_set(&cpu_buffer->tail_page->page->commit,
+>  		  cpu_buffer->tail_page->write);
+
+[Severity: Critical]
+This problem wasn't introduced by this patch, but can
+simple_ring_buffer_reserve() return a pointer whose reservation overflows
+tail->page->data [1]?
+
+In simple_rb_reserve_next(), when an event exceeds PAGE_SIZE -
+BUF_PAGE_HDR_SIZE, simple_rb_move_tail() rotates to an empty page where
+!tail->entries is true, and event_size is assigned to tail->write without
+checking that it fits on a fresh page:
+
+kernel/trace/simple_ring_buffer.c:simple_rb_reserve_next() {
+	...
+	if (unlikely(write > (PAGE_SIZE - BUF_PAGE_HDR_SIZE)))
+		tail =3D simple_rb_move_tail(cpu_buffer);
+
+	if (!tail->entries) {
+		tail->page->time_stamp =3D timestamp;
+		time_delta =3D 0;
+		ts_ext_size =3D 0;
+		write =3D event_size;
+		prev_write =3D 0;
+	}
+
+	tail->write =3D write;
+	...
+}
+
+Writing the caller's payload to the returned event pointer then writes past
+the end of the page buffer and corrupts adjacent memory.
+
+[1] https://sashiko.dev/#/bug/linux-b2128783-1787-4f13-b863-090db5378e74
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113152729.8374=
+29-1-vdonnefort@google.com?part=3D3
