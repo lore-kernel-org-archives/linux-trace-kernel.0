@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794554094;
-	b=DFTrcHAcNJP31y+k9A01oasod7BghOeWM4f64i8Cc8DIATFhizjNHp2emQcFYIIPCyX+
-	 NIgHZTOJQvTGEBa4l+e6Zhgr+KVmEy2mohDfSf/rSYkiKMtB0a3jQ+8r/0hYfM78hV4KF
-	 bMavyLWPO1j6AK+rkaM5fGZGrfbkBt8ZjMpPhsDcXogfUNjfa/33TrC+GDPl+608Pjso1
-	 vEXVb8F5oRfYMtDG1XpZjwRcR7P+Yhsj6wfYyKO6ABxl8DQPpWvgHCCZc5o3872XCWLjZ
-	 rt3nhdE5weJOsix79oIJAlDrub/ppbIgopmULz0wjvEteuTdmQCilI0YeWflZaodjJw==
+	t=1794554431;
+	b=hX6pxNkOFssZY9+0rZXkkflPEz70P8NmTzU2DYw6pkckKgdQhG3p3DKdJqPqUP7itLhD
+	 T40zsGrAgNBJOHipMixvQrK0oL9Srj8PI6StTtMZIPP9PCTBfd+eNRLwxfz+2kjwNNYY2
+	 +9kPtDz4QdBbN8UGNTnSaXCSOT6a2igqjoZijUZEra+bF4AVr9+vvNhfPGSS8z9pfRlY2
+	 gjHz+FC1xLV0CAVI4xnMNEZHjIU/3fcTg6EUK6cpJJPoApYo16LNKL3I2i7cadZC7LBto
+	 PXtQoof2/627XaYXprX+hWl5VVHfz+Y2WCMntPmM83vdEDffRLPkf+bp558WJEKbcZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794554094;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794554431;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=1XzOzpinKAvWK/3tEYAMx8JxARuETBPVq5jOzUIWRWA=;
-	b=B9UawoiiI6rDsj059pO/DOH4+xW0VPZqn++9jN17A4AsQ/f8UFu+pv2zP0Z/n79LOgnc
-	 78+PkdkOir6nk7OWDGy6QjqicjRqcd3RMSV3JCb/UqyJqhYyv5C8Fr/cmgPQUWqg+41Yi
-	 JCcE8pqNymKwByyuc9ZURrAj60VzLv2ZWAUzUyVL+Nd5uMDdSeMTin0vA3TMQvC5sUCxH
-	 jp31l2n125Z0Mt2I4wCX3F52mCn5ShE4Xy/R+gPJ592ZddO3uZt6pIvtApsn2YRrRl2dh
-	 BuNiW/jRIDqjOZlTZg/nUjTcKRXqtezoJotnl4auFN1f72CB/X9JxthjaWukNePqZTA==
+	bh=1A5ctWx2jqRRheH67fYqQltUBkey/x3w8cm7hG/LOYg=;
+	b=M6+NQ+1DaPn6FGj84m+7UI+4FBGCNeqpIoH8tmK4RUz2c/J6eemFLvrWH/0KlMjPTys4
+	 ncceGdnbp7TBgV3AfDM7/tokbCayAX8W1GAtXUrDuier+pNxc+bLcE14V36vW0SL8yaF2
+	 qI7oVjyIvDpnAALOIaRnQL7ZxpLhyKhMQFNkhws7rD9CrvfrVqycOFh8VmQrItN5+PKNh
+	 JV9W5n6PHnk4XrJaEIZlAdqMwqmsEorR6TnTCVEsPnW9+KoooJ+spyMZtlCI+AfNIBkwg
+	 lXYa3iCykVxkaboKpGVtDTncXfqg2tolhW8JsirKHdqHc3RdBXMLy7W+UdHbubO+aJw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BKr98lqJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AFsayrsX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F96606A334
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15541606A321
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BKr98lqJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A685A1F000C4;
-	Fri, 13 Nov 2026 07:14:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AFsayrsX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8331F000C4;
+	Fri, 13 Nov 2026 07:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794554093;
-	bh=1XzOzpinKAvWK/3tEYAMx8JxARuETBPVq5jOzUIWRWA=;
+	s=k20260515; t=1794554430;
+	bh=1A5ctWx2jqRRheH67fYqQltUBkey/x3w8cm7hG/LOYg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BKr98lqJJ+F3+NlzEOmQ35CWBZCaO+wP+FiGLF63hUic8E4cly3mmAIcR7tXb8nhB
-	 8mL4pVg1N36O/Hm1BbqywZ3b2teXXS2zJ8wxXcrq+WPbA0n7GpFFUEOJjB7xoW5qO1
-	 MfXb49quk90vFiIQ+2Px3sK2dYEatbUwryFX9VuNoq2Eay3uqSBm7JMwkYdaQ9e8aI
-	 YjE3DX2JG9Zs3kNsfOJypy1FgsZ5rN8QZmj3c1YRIybsOWoYR+4Wmp9cTg2RrwLw5x
-	 qIIIuzhyeBKDVQw87KBF8VbFcrgfgZ49aqK1p6xkOaNDH9FGJkRCGwXeJrJBVA3ckL
-	 UC63ZqGBwL88A==
-Message-ID: <sashiko-outbox-212329@kernel.org>
+	b=AFsayrsXwqX/gDX1B7yUmGa4+dpqYL94jeYlR5QQlmWCpGVtPYtrvOy0umzy69N+s
+	 EWwBXZV4X0uGyNKvi2NBwr441xKTvaKu6EvhupRtITC51Lky3b//GyC9xbAzBCjcZn
+	 zitcXH9ay6Y02Zsao2WCbuplkmKfzeLufxgPYwd/XCCSIdLKMrvM+zC8E5yrGlAzwd
+	 088GoZRL6drZlqJGDV1RKSc62WMJk2if962W/LhV4A75yoFjtIkmaaNB7m2Icnjx0H
+	 k48AkQfnhWa8UbPKsYscFxr85oPKCslHdgr2u1t87SMx9/4vz4BYFgkLyyxOzqDkvO
+	 b/V3JfPQQByDw==
+Message-ID: <sashiko-outbox-212339@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 05/10] tracing/osnoise: Per-cpu mutexes and fd
- detachment
+Subject: Re: [PATCH v7 06/10] tracing/osnoise: Reset cleanup
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Crystal Wood" <crwood@redhat.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113064103.3041704-6-crwood@redhat.com>
+In-Reply-To: <20261113064103.3041704-7-crwood@redhat.com>
 References: <20261113064103.3041704-1-crwood@redhat.com>
- <20261113064103.3041704-6-crwood@redhat.com>
+ <20261113064103.3041704-7-crwood@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 07:14:53 +0000
+Date: Fri, 13 Nov 2026 07:20:30 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,45 +62,92 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] tracing/osnoise: missing migration detection in
-  timerlat_fd_read()
+- [Low] tracing/osnoise: CPU hotplug race in timerlat_fd_open() leaves
+  stale fdd
 --
 
-commit d34bc9208d90b4be9c903307f53e72248c2ac3b7
+commit 25ee38a6983ff50cb9227e203eed4ba8758cefa4
 Author: Crystal Wood <crwood@redhat.com>
 
-tracing/osnoise: Per-cpu mutexes and fd detachment
+tracing/osnoise: Reset cleanup
 
-This commit introduces per-cpu mutexes to protect kthread and timerlat file
-descriptor state, replacing the SIGKILL mechanism for user-space timerlat
-threads with a mutex-protected detachment mechanism.
+This commit reorganizes per-CPU and global state resets in the osnoise and
+timerlat tracers when stopping kthreads, detaching file descriptors, or
+restarting the tracer.
 
-[Severity: Medium]
-In kernel/trace/trace_osnoise.c, timerlat_fd_read() removes the
-cpu !=3D smp_processor_id() migration handling (which set
-cpu_tmr_var(cpu)->uthread_migrate =3D 1, tainted osnoise, and stopped
-tracing) and instead locks this_cpu_tmr_var()->detach_lock before checking
-fdd !=3D osn_var->fdd or tlat->uthread_migrate.
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index e61f57230eefb..8db0697b69e4a 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+[ ... ]
+> @@ -408,6 +380,39 @@ static struct osnoise_data {
+>  #endif
+>  };
+> =20
+> +static inline void osn_reset_cpu(int cpu)
+> +{
+> +	struct osnoise_variables *osn =3D cpu_osn_var(cpu);
+> +
+> +	WARN_ON_ONCE(osn->kthread);
+> +	WARN_ON_ONCE(osn->fdd);
+> +
+> +	osn->sampling =3D false;
+> +	osn->pid =3D 0;
+> +	tlat_reset_cpu(cpu);
+> +}
+> +
+> +/*
+> + * osn_var_reset - Reset non-per-cpu state, and check for stale data
+> + */
+> +static inline void osn_var_reset(void)
+> +{
+> +	struct osnoise_variables *osn;
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		osn =3D cpu_osn_var(cpu);
+> +
+> +		WARN_ON_ONCE(osn->kthread);
+> +		WARN_ON_ONCE(osn->fdd);
+> +		WARN_ON_ONCE(osn->sampling);
+> +		memset(&osn->zero, 0, sizeof(osn->zero));
+> +	}
+> +
+> +	tlat_var_reset();
+> +	osnoise_data.tainted =3D false;
+> +}
 
-Can this miss user-space thread migrations when NO_OSNOISE_WORKLOAD is
-enabled after the timerlat tracer has already been started?
+[Severity: Low]
+Can osn_var_reset() hit WARN_ON_ONCE(osn->fdd) if timerlat_fd_open() races
+with CPU hotplug takedown?
 
-By default, OSN_WORKLOAD is set in osnoise_options. If the user enables
-timerlat first and then writes NO_OSNOISE_WORKLOAD to osnoise/options (as
-shown in Documentation/trace/timerlat-tracer.rst), osnoise_options_write()
-does not call register_migration_monitor(), which only runs during initial
-tracer startup in osnoise_workload_start() -> osnoise_hook_events() ->
-hook_thread_events() -> register_migration_monitor() and skips registering
-trace_sched_migrate_callback() when OSN_WORKLOAD is set.
+timerlat_fd_open() disables migration without holding cpus_read_lock() or
+checking whether the CPU is still active under osn_var->lock.  If a task
+pinned to CPU0 enters timerlat_fd_open() just as CPU0 is being offlined,
+balance_push() skips the task while migration is disabled, allowing
+osnoise_cpu_die() to run before timerlat_fd_open() attaches osn_var->fdd:
 
-Without trace_sched_migrate_callback() registered and with the migration
-handling removed from timerlat_fd_read(), a thread that migrates to
-another CPU and calls timerlat_fd_read() acquires the destination CPU's
-tlat->detach_lock rather than fdd->cpu's lock, never sets
-cpu_tmr_var(fdd->cpu)->uthread_migrate, and does not taint or stop
-tracing; if the thread later migrates back to fdd->cpu, subsequent reads
-continue succeeding instead of failing with -EINVAL.
+CPU0 (user task)                  CPU0 (cpuhp/0)
+timerlat_fd_open()
+  migrate_disable()
+                                  sched_cpu_deactivate()
+                                  ...
+                                  osnoise_cpu_die()
+                                    stop_kthread(0)
+                                  sched_cpu_wait_empty()
+                                    balance_hotplug_wait()
+  mutex_lock(&osn_var->lock)
+  osn_var->fdd =3D fdd
+  tlat->thread =3D current
+  mutex_unlock(&osn_var->lock)
+  migrate_enable()
+                                  <takedown completes>
+
+When the tracer is later stopped and restarted, stop_per_cpu_kthreads()
+only iterates over online CPUs and misses offline CPU0, so osn_var_reset()
+iterating over for_each_possible_cpu() will trigger WARN_ON_ONCE(osn->fdd)
+with stale fdd and tlat->thread state left attached on the offline CPU.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113064103.3041=
-704-1-crwood@redhat.com?part=3D5
+704-1-crwood@redhat.com?part=3D6
