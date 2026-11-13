@@ -1,61 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.189.121.228
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794591416;
-	b=D+u6RmLKZvpbQlQ5B8nSmz6lgF10xyzovNP/qpDT0o4lNERVO/a+Swe1sOlQQDu/WvpM
-	 JjmjVVchZxeuR/3A4Te8/rx+7iNQx/vBL9DNgxlgyDBq5srVmeTsy7UvlnOVbyGkeOtTe
-	 pkGyvT3P3ainE0264WlOQT6QDw6MKGQe6zz/Jn17G9Q9Im3vkANxecuynsaYkc/U4rWDT
-	 Hfj6xnuvFU8Eyzw1icSyI35bh8esob99aL8/ncrj6szvvbDam3jGxO8i1OuRVvhkqU0r+
-	 A4317Vm7RNEgft5b6GGLwKR6gpDHHgXW69h4At9e9RywR/gVfeeqRcqLC0MDPuWea0Q==
+	t=1794596716;
+	b=wVjHSEB7dJ+fXftbsm1lGSClnkpzWouuBDj8FRO+QwHyIUjRvJNo7NluRRTuBmlyMKLI
+	 CI5RxPtB0l/elQPfXCxObXjJcAKALWfrfMc0uQAcu9dLd+wuqncrijeJpIVUGdjAVgxuC
+	 FmsoqyusludMnG1/pjUSuUly4M48RJhGOSc8uUPUmLciWpS28sPyBVYqcPSODJyNjMNaz
+	 QyK9F890EO7BibO3gaifqNk0D5odU9Jc9+EgQR0K4TnyX/ezJqaDPIsDJ8yeu0XqU9vhc
+	 hgyDuZe9O4KklGAUutlCLU2lYjVUSLeMns9CgfG4sbgrdIf82nIBfeZptccN+6Md7Xw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794591416;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
-	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=LQiCIvonuLx8A220NEYPOfjw1OhsHbpg/4uyaQR8I7o=;
-	b=OUhuDP5WzQNBggzbtJQMlbB6EXwIT9HpyM+307ut7MS8a17cULaIJnSUsJLn750klROH
-	 l5IZwQ7JsvaIKX48fgz7kGweFpDcOtcyONABzsob586F8Ff570cd2H8IG4ukBaDi5r2Zk
-	 uUwGRcexHL0RExFU1gTpnB1oBg+LquNDERvRPZyt8hUvXm2UIJqu10j/XtIncrYpVpA+z
-	 F6Sf5wAbGTlGOc2Tu6jcpLWj1kiTpe8f9tYiatRlGBTHwWdqM4Ugxe6YiLAZC9nnb+yA+
-	 jjzkK7k5+6VZFyhJKHWWmwesp1G1TdLZbv+oJKWL4VN6yLPqq90B093i7wj66dq7qoA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794596716;
+	h=DMARC-Filter:Message-ID:DKIM-Signature:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:MIME-Version;
+	bh=m68+6e9UYsTpn2Djyyl8Zzpu9k08LsLIJVCjz15Adpg=;
+	b=WQ84DquMHSAbyjAMB0SV5c6t6Uw28ylkN2yI8rAwPcbM598VY90RrqLLrAZB+RzD19ii
+	 cewdh/luC6AwiOBmHpxZ5iYtn5/EvKzH1I8fLPNVA8GP1s/DaOdZbfhew5oegfrWFKy/y
+	 sXj52hz7Xuh8Mg5ygEJOl3vScMTjqBy1kASIWdkFQs3I4uH9TwVYVmKHDGMaJ58FBC2wj
+	 BGtqzbB/xQBdtlw3ekyKth6c84mLNgnn6oN2Y3BpQ2m/dRW9auosOFDgnVfce2jbwCAmF
+	 wlg2XvWIs/fbvIWynoLKUguFa6M5BGioOnrL3lunkc4luy5yo5lRGsXemhCOEOTaJwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=vQfFN0Dz;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dmarc=pass header.from=itx.no;
+	spf=pass smtp.mailfrom=itx.no;
+	dkim=pass header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=JHuzPPA8;
+	arc=none smtp.remote-ip=91.189.121.228
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39FE6079D79;
-	Fri, 13 Nov 2026 17:36:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E39FE6079D79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64918606A323;
+	Fri, 13 Nov 2026 19:05:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64918606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=vQfFN0Dz
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4DA96160293;
-	Fri, 13 Nov 2026 17:36:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 3C77620013;
-	Fri, 13 Nov 2026 17:36:45 +0000 (UTC)
-Date: Fri, 13 Nov 2026 12:36:39 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tahera Fahimi <taherafahimi@linux.microsoft.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Yaxiong Tian
- <tianyaxiong@kylinos.cn>, axboe@kernel.dk, mathieu.desnoyers@efficios.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] Tracing: Accelerate Kernel Boot by
- Asynchronizing
-Message-ID: <20261113123639.1c014478@gandalf.local.home>
-In-Reply-To: <avYiC0Csf45o44CQ@vm-dev.d0aziqou4eyuzblxqhi51nu2sc.xx.internal.cloudapp.net>
-References: <20260204015103.155025-1-tianyaxiong@kylinos.cn>
-	<20260204191552.881a00764093cf63557a372a@kernel.org>
-	<20260206152511.41782db1@gandalf.local.home>
-	<avYiC0Csf45o44CQ@vm-dev.d0aziqou4eyuzblxqhi51nu2sc.xx.internal.cloudapp.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=itx.no header.i=@itx.no header.a=rsa-sha256 header.s=mx.itx.no header.b=JHuzPPA8
+Message-ID: <a675c53a48b90c621510217500c81602f6709101.camel@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1794596713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m68+6e9UYsTpn2Djyyl8Zzpu9k08LsLIJVCjz15Adpg=;
+	b=JHuzPPA8x2KETQDtfGUrbK5qd/18R7obE881vdXZt2S8UCcK51ohaN4ZssAIffhPqdMODu
+	6oXYisiOVAg2InhYRh795AnS0ySPogh7EXDliVS+z9PHbp8my1MNUtWWmkJbRmobOL2TqK
+	8+G0rmvdwT3A+J0oF4te0UYEpexF9p4=
+Subject: Re: [PATCH v2 3/4] sparc64: kprobes: Resume after a delay slot at
+ the saved next PC
+From: Stian Halseth <stian@itx.no>
+To: "David S. Miller" <davem@davemloft.net>, Andreas Larsson
+	 <andreas@gaisler.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Naveen N Rao
+ <naveen@kernel.org>,  Danish Khateeb <danishkhateeb03@gmail.com>,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Fri, 13 Nov 2026 20:05:10 +0100
+In-Reply-To: <20261113144057.1697874-4-stian@itx.no>
+References: <20261113144057.1697874-1-stian@itx.no>
+	 <20261113144057.1697874-4-stian@itx.no>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-H0qdPGyXuTHWzNHFg9v8"
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,32 +66,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: wq41m8hqon5hnrrodestcu99stsj7nrr
-X-Rspamd-Queue-Id: 3C77620013
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ylmP1ak2tkDT7FvdGPbP5uW0RhH9pqu4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=LQiCIvonuLx8A220NEYPOfjw1OhsHbpg/4uyaQR8I7o=; b=vQfFN0DzJvcUWnImL7rjiativNqgZwosel7ruGW1Y5os1Qp8Eod0DcP4HEPj6BeV5yn993g0UOHEiTlilUYD/UbQWBFMCHDmvzvx9oUUQSScMMGw1AkQEH4CAuhfuSNF97Hq4vcc1rgsRjmKSf6/m7IBqFySRkW0kfNSDojrRew=
-X-HE-Tag: 1794591405-292952
-X-HE-Meta: U2FsdGVkX19CIcf+vibfiCDVNnrOn6Q61iRgCn9nVowSUXmxZzXsha4XyNgpzcaP7CiNHwwS5skg60gjt49GyTQhLydTQ3JRzyUUSOhyWWVi82d3WLKRBGCz6O3PTJV84Y4tr08Wn7ox1vu738gNh8QEH602Nlf3A6cblyl77ntupz/J0evdq1OfXiMEUK0c5oXKpLpTxNUOHYPw64eGDMqSsgFkSWSwFw8eoGtbbPClrXzNSUhnaEOaPMlzue/t1FZZtNO8txh4sb1n30HPOIgyt6olCOLWLJ9/egZuyO9wis2BJ/MEo3BOpxKmjNV2JNKpl+2ymWmBUmwAIaZogkG/R2cpJ2ru5lWFIs8LyOvfoUGWL/qn1g==
 
-On Thu, 12 Nov 2026 13:31:07 -0700
-Tahera Fahimi <taherafahimi@linux.microsoft.com> wrote:
 
-> > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>  
-> Hello all,
-> 
-> Following up on this series, I am evaluating the series on x86_64, with base kernel 6.1.192 and I
-> see boot time improvement.
-> 
-> > Thanks, I'll add this to tracing/core.  
-> Steve, would this series be suitable for queueing for an upcoming merge window?
+--=-H0qdPGyXuTHWzNHFg9v8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, I'm working on it. With the AI bug fix explosion, I got buried and
-fell behind. I'm trying to triage all the patches I have, which is over 160 :-p
+On Fri, 2026-11-13 at 15:40 +0100, Stian Halseth wrote:
+> After single-stepping an instruction that does not branch, execution
+> resumes at the saved next PC. The probed address plus 8 comes next.
+> For an instruction in the delay slot of a taken branch the saved next
+> PC is the branch target. Execution then goes back to the probed
+> address plus 8. It should continue at the target plus 4.
+>=20
+> Use the saved next PC plus 4. For any other instruction that is the
+> probed address plus 8.
+>=20
+> Link: https://github.com/sparclinux/issues/issues/110
+> Signed-off-by: Stian Halseth <stian@itx.no>
 
-But it's not forgotten.
+Fixes: f08825896664 ("[SPARC64]: Fix several kprobes bugs.")
 
--- Steve
+Andreas, please add it when applying, or I'll fold it into a v3 if one
+is needed.
+
+/Stian
+
+
+--=-H0qdPGyXuTHWzNHFg9v8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCavdfZgAKCRDoeAEuJe36
+VtjUAP96Nm2zKmTai0WBwiBREhmrGaPJwUB81LwTjE/pOSUoUwEA/YkzZoS2cQI7
+0Oe2iTxdI0XEYbR8PZZMysWUoVf2HAo=
+=0moT
+-----END PGP SIGNATURE-----
+
+--=-H0qdPGyXuTHWzNHFg9v8--
