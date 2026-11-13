@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794552082;
-	b=vPbM4vasD9mtczTcDTpDlc4bsn4B0b6HU2LpoMtKyMDK476i2lQyPIzmb7wOBpIgR/Tr
-	 OFkVaO85tyNS72K2bszm0tleK4gqlp7kcIwX5zvwQ0hwkHAU+VVsDTI+LA3i8PMf3LHjK
-	 E9XIcmgAgTeawG+pt/bm69cdcE3N2jn5De35a0mwkqdEqClS8QXWAiBVRux42Tb16x8I8
-	 hZXoe5/2J71Jc7ntfY4T3MhMy78wGAe+gkuLWK3vCL3pGo2Z6U1ETK+VCQLq+8XJuvhdL
-	 zoC+oQh5kSIn8cdPeInYwlJ0iaFddACsRx+mXEgh7EdOPZzLniq7gaAMd+UcMfPB7Cw==
+	t=1794552084;
+	b=C1s06SBpxJSsYqc1rZ4WMiFg5hAFpYx3/Rb/kZaepWeDQFDLk2zmSC4ZN3oMpLCtfF/q
+	 xCOs3rYmZ0XIPKEwm00gj/SDbDONdbOplbhRO29dB8lG9rDBLejJOrkOnS4sso/IaMCIa
+	 pFuzznVDMea7pKEAS24S9uDXeXpJBxKmLgY7NpJAWrJ+S9UZPYSKquz09zhtsTjfAtrH0
+	 USXS5VnU7kKpSj0XaQQylqfmgSGvy26H+1FHddA/GiYmEjWOule6NmOmTGfObVKyGgfw5
+	 xZ7mgwQfcSowGQPY8NXS/2BOLNdtyUYdEcHQ862hWuEEFsBtwRk/zXSC+lFHMA3wKmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794552082;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794552084;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
@@ -15,87 +15,87 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 In-Reply-To:References:MIME-Version:X-Mimecast-Spam-Score:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Transfer-Encoding:content-type;
-	bh=pNqu1q1BPP3r/nLQrdHSO/Pf61FJosz3Noh/oBK0wrY=;
-	b=QRIJK61Pkoh1fMKszESZM4yNRyL8esb0KLsqfW9Vw5mVwqTaW235bFFfExPigt/k8LB4
-	 acGCVqejMdDgE0XDibciArwR5RENjlqozq2+LBU4iiGrmcAPf8wJPlLel0SfvOPOulS4+
-	 oVjdry+1VB7jz44Aem3PSTXMw5PmbvHD1hMUhGFWs5vaN7bcSuFgLRe1S0iTbIE405Tyb
-	 b77udMt+oIy2EWObZJ9JTwu4P7/L2bhwqeJXrw92kDNAUI26vf9+r2AUj5eyOVOu2GWi0
-	 ACIac382BRCYmrIMw+Wc6clOIsA/lNnxUGjx82VI7RQYmxmZFZWpkzScFOCGGtp0gIg==
+	bh=HsTg2RAwYgCXTCZ0mBZpLn2I6dfTUd1MDf7T5bGpkWo=;
+	b=xy07/hIv2NTfqDPDYlL24kj9CGhl9gg/ml6cGpbewxW/3aJiuVS19K2lWOCthm5LgIYx
+	 f6Nl7flkAev1ZbhvPqeVkkVcCcUEKG47jOdrjGG0Z0orb35rdfVs8MCK2vijAO0NcXXeq
+	 Yr90sAl9Nuy+KuMgxk2x7Sr242Sca3EpJNAvyWtkBiCuf/ItNXaQUGqHvEfJ9pMMiLHVI
+	 CLxWg4YIOZIiq/t8djSd6JdtCiSWzeDVfilt+qZ/RlKUyx6Aa6kRxNEdz8hHoOrUVhG9Q
+	 DDcYLxpPmQiAzC98hKS9r9WZrGntRYIZckWkhxsinE9+gxB+MlQxweoyFR5E9CDWbKQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=J98v5kmj;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bfPnTSH7;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9143D606A883
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9143D606A883
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F234C606A323
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:41:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F234C606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=J98v5kmj
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bfPnTSH7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794552080;
+	s=mimecast20190719; t=1794552083;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pNqu1q1BPP3r/nLQrdHSO/Pf61FJosz3Noh/oBK0wrY=;
-	b=J98v5kmjUyKC/f2dIVAfw/bCtdCMJfmVX9d8TB5WCj9quiGmNKqvh9eHLCyySKx+qMCxOI
-	p2zlc+3jPqhheI3JlPNDowpXLQCY1RmGHUeVaqQjJ7Bxi6TUC3iHMHnugyIqGLFOmM241s
-	JJ16P1glb3ltJHteTz86mk/ph74iRs0=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=HsTg2RAwYgCXTCZ0mBZpLn2I6dfTUd1MDf7T5bGpkWo=;
+	b=bfPnTSH7VAUfXWbTsdCc31c6MO1po2KuoEHT7lRa7zOXZGCWjJ/hCuRYmn71jjpYjfP2FZ
+	dPaFtbPHvKCfUkXyPHeAcSQ1i8sVAFhRnPDOpSxYmf8bRhENAKbHV+KylgEOxua5nCRgCl
+	NGQUZe4Huh/qoGENXu3rWm/hMAVdfxk=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-135-JD3IfNOVMKe4XqCwAB3qIQ-1; Fri, 13 Nov 2026 01:41:19 -0500
-X-MC-Unique: JD3IfNOVMKe4XqCwAB3qIQ-1
-X-Mimecast-MFC-AGG-ID: JD3IfNOVMKe4XqCwAB3qIQ_1794552078
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-717000c7761so408386eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:19 -0800 (PST)
+ us-mta-164-M8d5KR60N1CpRwMeoY4bsA-1; Fri, 13 Nov 2026 01:41:21 -0500
+X-MC-Unique: M8d5KR60N1CpRwMeoY4bsA-1
+X-Mimecast-MFC-AGG-ID: M8d5KR60N1CpRwMeoY4bsA_1794552080
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-86289dc426aso667492a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 22:41:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794552078; x=1795156878;
+        d=1e100.net; s=20260707; t=1794552080; x=1795156880;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=pNqu1q1BPP3r/nLQrdHSO/Pf61FJosz3Noh/oBK0wrY=;
-        b=KoW/Sqam2Uz2JXySRLu5Av4A7PHVTDszPkdAtKmdB9RsX+TY8kW1yAKTUC5xtB/UJ6
-         mngF/Z1PvJlsKrZpqdK4kAPbTM3X3i6OvhzutwOylmVGouqqbc9DUppGPhG7hMNFSTGZ
-         ijlpfIYA1IOMWltxjxzqG3hUeruFaN5387O3689qcQV/6/B1qcCqcCUt7f8PJ2ZNs1vz
-         TfGoh19tJzwEjN/syCpZZ02KJ8ZvO/Im4m6ui0EcI2n23aV/a3xcyLsPPXP8AQ4YJbAm
-         KIk9cIilz96k1I/1TiEGLtOqUCN72NqH5CU3ZhlUFdPD5AK8mAdzykAIqVwmluOkfhZo
-         KJIg==
-X-Forwarded-Encrypted: i=1; AL+hErEIowy6O5Mxxei0t+h+IS6y0eB7WmR3e/CkiE9UvguoGVnkH4s1buPdVAnVX6un83j+cmKcuCZ1cRj8kS+7R4EpHsE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+PopgRUBp+DCPyjjFASIPwuCb0G29JMoQZ5hkyBHF5pZv5t9XC
-	80URz/hCa19Hmqv1jhWRzPwXfxTC44GlGEag/yQCragLuuU3B07JhHQ5SPt69UDQYvR4nBwUCGU
-	BowzMZlun9IedJC/PQgGzHTyiv6lhypTzQ+lFpmm7DiR2OZtInkR6boeZLlUfv/S5VqRTWpgGqg
+        bh=HsTg2RAwYgCXTCZ0mBZpLn2I6dfTUd1MDf7T5bGpkWo=;
+        b=URzZm+6/qEpbkEhnvrrJWgEC7Hzg6/JXTxDkjtObY35yG3DRB/xZi6O1uesFsy/He8
+         wqevpOsyotgLLWqu/fQvScX7c2nlCLi8cEudwV28L7gdsdKCsiQ3Pt0ehWsvan9XgMhD
+         8v75uSk+PhRU0w8cpuh1MMJrflvAOke5Ql2rg0a7bKEGnaeeOSUh3GtqAJn+7uxv0JZC
+         V0Wh2j81Wfgidy4fRgRp/5TN6xPcEIK3SQ8HZv+kC83AqkHvRgANzKexWsLh3a3Mwuqz
+         yAeLpAejzNdTKeiOWYzCq/nTuttxRwFB1avRWZCoIp39LS8EDjvesfFYk9L+8Jch+erX
+         MsCA==
+X-Forwarded-Encrypted: i=1; AL+hErEcOypKL5XSJk11nNUZAJ+4Yj9wyu4BoZXDbnB1AfsgJzKiHh1S6n5AAz/kg4mEFchjfXGah8ptZewxuO27ZP+4JD8=@vger.kernel.org
+X-Gm-Message-State: APuU4Z88LneZW6/o/4mRf/s/Uu9ttnh4L8q+uTLjL0ZKtR0t5esnCKtF
+	LZjn4SPwi2HLc2VasNQupVhS+hMre0cpqzhqv2hM9liNxLMHQ+tv6vQEdnTqdzLyRL9DOBRtXaD
+	TuU4Nxyk8+KIFuWQ0aLteune99NvBiyG1Ddjc9At5zcYJcyiZolxUHIMmqj+H8ODQrweBVZ4ZIQ
 	==
-X-Gm-Gg: AYBFou20Ke4JYJ5+FqZCCbOaSaHe+BbEORSEDizhdQJzi/4Meeh+9zrjUUfT5xMEMEw
-	sDbT7r1/nQTUA4WDvtPKJnmD51ZReAF8Cf1h2YNYf9rin7j2ifQrMe5aU/vkfr4qSlVz1wINv35
-	1e5MWvzlNH0yOGKxRmQUvRDeuqgZYijMT43ua4AW/oLLA18fb8CiXvFZJOitp28BaTkwVfTEQs1
-	p2+BxnwLIUWJ6mOgsw3S4byP2cFWGhOYfR2bKW64CTFQ88x8w84Hw+5q61Sig5NNv65YPnlMC6q
-	hWDC8T0Nd45ELstRztx+ynLAOA/SbsEiRnrX/cpdHdn8K/qjCTTmi848qnRswtaX8tm2Xip4D9y
-	I2axPG7EM0GCoLh3lWAZCTM5nB1mpyLfyb5U8v8OuchnrCE2ykcR6IVjrXvOvQlsU/NsEEGYQyd
-	XjUgT5G1ypIAl9RusF+wgTdZz8U+r+
-X-Received: by 2002:a05:6820:1c98:b0:716:d143:4692 with SMTP id 006d021491bc7-71ab50b23e5mr861175eaf.33.1794552078292;
-        Thu, 12 Nov 2026 22:41:18 -0800 (PST)
-X-Received: by 2002:a05:6820:1c98:b0:716:d143:4692 with SMTP id 006d021491bc7-71ab50b23e5mr861162eaf.33.1794552077791;
-        Thu, 12 Nov 2026 22:41:17 -0800 (PST)
+X-Gm-Gg: AYBFou1QxwBZet/HXCV0Dn/icbvzaSf22A1Wot6boHvu1YKYkEJt9NOQjHcpJ0HJXmy
+	s2Hj9A5DkqKyBzmFGFFyepGyFMdIpZQmm4SGTnjimk3nAnvs8YnUb00aCthYdo9rjAW39+RWffl
+	bWZs7/+tRj9NgxUUiQI1CJOzW84lsWJhJJfKaF0tFEnF+O654GMv8Zfkc0V+G08LYjeUBP6UcMG
+	FGAtdCxu7AYnMS2QwZE/HY/e2dl285WzcgDXGfj9iziJSQtG4aR9EAaykooScrLthYotNy4HCBE
+	S2fpEq7r3ZxitTfMbrfaqD2pFJIEDvnJeh+O9lEspz9VtV9G3AMORbfEkT4+4Zd2cgxzBna7myX
+	evjYechAEZO3/aoOgRP6W7qhQxHfx3ZZ+veztwPftJDP/CESLTTpl6C9edwTOouzRX2u6/G/Pne
+	2vmtENDdDATJ74/ZqjkuNZOs4qG2X8
+X-Received: by 2002:a05:6830:2b27:b0:817:c566:93a9 with SMTP id 46e09a7af769-86152750233mr3582881a34.22.1794552080487;
+        Thu, 12 Nov 2026 22:41:20 -0800 (PST)
+X-Received: by 2002:a05:6830:2b27:b0:817:c566:93a9 with SMTP id 46e09a7af769-86152750233mr3582876a34.22.1794552080065;
+        Thu, 12 Nov 2026 22:41:20 -0800 (PST)
 Received: from crwood-thinkpadp16vgen1.minnmso.csb (71-34-16-191.mpls.qwest.net. [71.34.16.191])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.16
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862881a965esm1643339a34.25.2026.11.12.22.41.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 22:41:17 -0800 (PST)
+        Thu, 12 Nov 2026 22:41:19 -0800 (PST)
 From: Crystal Wood <crwood@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>
-Subject: [PATCH v7 08/10] tracing/osnoise: Take trace_types_lock in timerlat_fd_open
-Date: Fri, 13 Nov 2026 00:41:01 -0600
-Message-ID: <20261113064103.3041704-9-crwood@redhat.com>
+Subject: [PATCH v7 10/10] tracing/osnoise: Refuse timerlat fd open if tracer inactive
+Date: Fri, 13 Nov 2026 00:41:03 -0600
+Message-ID: <20261113064103.3041704-11-crwood@redhat.com>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261113064103.3041704-1-crwood@redhat.com>
 References: <20261113064103.3041704-1-crwood@redhat.com>
@@ -109,120 +109,36 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fxWNMNcvnDWH9ScLSnJhZfOz-pe_BMDQy4ZxwlVyX4U_1794552078
+X-Mimecast-MFC-PROC-ID: yXn1eCXbsK88iStCv0KS0Acz1eyNnEyuemDsg8blpcw_1794552080
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-This prevents a user fd from being opened when osnoise_options_write()
-has already stopped threads but not yet set OSN_WORKLOAD, and matches what
-all callers of start_kthread() do.
-
-The original intent was probably for interface_lock to cover things like
-this, but it never covered the full race window, and currently can't
-due to lock order issues stemming from using interface_lock in
-osnoise_sleep().  There does not appear to be any remaining reason
-to take interface_lock in timerlat_fd_open(), so remove it.
+Besides being generally bad, allowing an fd open when there are no active
+instances means that osnoise_options_write() and osnoise_cpus_write() will
+leave it active during reconfiguration, causing at least WARN splats.
 
 Signed-off-by: Crystal Wood <crwood@redhat.com>
 ---
-v2: convert rest of function to guards
-
-Do we really need that interface_lock in osnoise_sleep()?  Technically
-we should probably be grabbing it every time we access osnoise_data, but
-we don't seem to do so anywhere else.  Perhaps this was due to concerns
-about the atomicity of "period - runtime", but that's just synchronization
-theater given that userspace has no way of writing to both atomically.
-
-In any case, we shouldn't use the same lock for protecting osnoise_data
-members that we use for major reconfiguration procedures.
+v2: new patch
 ---
- kernel/trace/trace_osnoise.c | 43 +++++++++---------------------------
- 1 file changed, 10 insertions(+), 33 deletions(-)
+ kernel/trace/trace_osnoise.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index a81992c937fb..b2b9db69692d 100644
+index 4fbad6ab2adf..3876e8cb51d8 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -2494,29 +2494,24 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	struct osnoise_variables *osn_var;
- 	struct timerlat_variables *tlat;
- 	long cpu = (long) inode->i_cdev;
--	int ret = 0;
- 
--	mutex_lock(&interface_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	/*
+@@ -2507,7 +2507,8 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
  	 * This file is accessible only if timerlat is enabled, and
  	 * NO_OSNOISE_WORKLOAD is set.
  	 */
--	if (!timerlat_enabled() || test_bit(OSN_WORKLOAD, &osnoise_options)) {
--		mutex_unlock(&interface_lock);
-+	if (!timerlat_enabled() || test_bit(OSN_WORKLOAD, &osnoise_options))
+-	if (!timerlat_enabled() || test_bit(OSN_WORKLOAD, &osnoise_options))
++	if (!osnoise_has_registered_instances() || !timerlat_enabled() ||
++	    test_bit(OSN_WORKLOAD, &osnoise_options))
  		return -EINVAL;
--	}
  
--	migrate_disable();
-+	guard(migrate)();
- 
- 	osn_var = this_cpu_osn_var();
- 	tlat = this_cpu_tmr_var();
--	mutex_lock(&osn_var->lock);
-+	guard(mutex)(&osn_var->lock);
- 
--	if (osn_var->fdd) {
--		ret = -EBUSY;
--		goto err;
--	}
-+	if (osn_var->fdd)
-+		return -EBUSY;
- 
- 	WARN_ON_ONCE(osn_var->kthread);
- 
-@@ -2527,16 +2522,12 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	 * worth doing this basic acceptance test to avoid obviusly wrong
- 	 * setup.
- 	 */
--	if (current->nr_cpus_allowed > 1 ||  cpu != smp_processor_id()) {
--		ret = -EPERM;
--		goto err;
--	}
-+	if (current->nr_cpus_allowed > 1 ||  cpu != smp_processor_id())
-+		return -EPERM;
- 
- 	fdd = kmalloc(sizeof(*fdd), GFP_KERNEL);
--	if (!fdd) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!fdd)
-+		return -ENOMEM;
- 
- 	/*
- 	 * From now on, it is good to go.
-@@ -2558,21 +2549,7 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
- 	tlat->thread = current;
- 
- 	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
--
--	/*
--	 * Setup is done.
--	 */
--	mutex_unlock(&osn_var->lock);
--	mutex_unlock(&interface_lock);
--
--	migrate_enable();
- 	return 0;
--
--err:
--	mutex_unlock(&osn_var->lock);
--	mutex_unlock(&interface_lock);
--	migrate_enable();
--	return ret;
- };
- 
- /*
+ 	guard(migrate)();
 -- 
 2.56.0
 
