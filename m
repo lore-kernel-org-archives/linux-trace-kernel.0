@@ -1,102 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.181
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794558686;
-	b=eq6MIpV92ZUMOvPbKiKtrwlA4UlA7A7dgapkOBzbTsfyo2YORLTzgXh/SZnu+jhPqNiz
-	 /l5D1qpAT0S7CkK/RM87VWmrlUFgQUHXN1ud7hI8gzbD7bG3rY0aKhs9NS9AmbFJiCYJ5
-	 6VM6CfWCx1PhvAgaYCaB4EYTyvcBScGzGRKunmOiIrG7LO70QMo62iUerARrmNRDrpiO0
-	 knN5lCgBKfusevCS72pRer7W8I6L/CwV93t77zjphmQ+AQcQvcDb6iLdeHENLIlX35/CY
-	 G9UQLbIMd0hVRooH67/VRPjaNnbcIi7HBCm5/3wbx5xWyCFNSGUaW4oO/y5qvn+yMPg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794558686;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=qh9VAxc0yOf7sHhKeEjPhh6+juHQS4PhRPr6V8+HsDM=;
-	b=aKe3sjhmQ6yYEOtq6yLCFVpTG+nfc8CITvHJKxKVXUKb9MMYIl3fjJ83RMB8W7NTTdb1
-	 LGXsy4luJr6M4FJiFGNU0rN9IBqEV4kI03G+nDmtFygzOaezeg+pIF9Jf7/KZggoJRHZR
-	 fhURhx3zWQI3J3fRb4Y60h1KiTDawMOItzIH/FSiEXA/IsVBnLRMwUWedfylaMp+fXbhu
-	 iZS0tlhgnQGQRh18U/aDxxnBBHL6Jpp/Kmb1PRuhBZow0rjqj2EpsQBv0BcVtyZeKyDD/
-	 x3Q+w4uDD0P8bnAkoAudZI1BzXkjYUXdkd5FprhoF4OZhwM2YIonrRTRYCfwMmjOIng==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vwvHdXcj;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.181
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A9C606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 08:31:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72A9C606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794558892;
+	b=BCmQLY8Cwfvl7P6sg327Ti3FShgC4NG+1xy9zrXAy4LjdawzrFLIWI+myAU97RL5NoKq
+	 1BDGBPxh2fr273Nm1aPd4cDqt1ADvOOFexpWyEtYJe6qYvBLbFurbe/1n0BH01+kt3ZkB
+	 1PN919nlF5fyQeCUWZk7vH05YyzWCcwkp/CVNCa54Ql0GUfgrLMCALIs68gLeNsHubeBQ
+	 SNGHey10e8M5MJB96up8jncwN/HqsFu7cQTKKKfmTujXv5UFzj9OUpKkeHcUHTOv5FFXS
+	 USWeR7P4ctw0vijR3vqyvjfZAqtbJGF4r6Pnx+JX73jycS3y+cHEjdhCnc7r/tuEynw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794558892;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=qJUhahjYxSxQSjcMRLMidLIYmQnKPYEISxd4xBB/oKU=;
+	b=n+yQzP1JFZrdFQ+SWrVgB7JJBvQMYrQTkKkATEfohSPeO4QMXkqhkaU2szros+YXclmr
+	 DxVRnSbex+5Co8nAsnK/whcZAD+o+RQDgIj5cQKsCuMotGPZ4+4vGFQH2W/tQdMr8LMYm
+	 qi98M657Mrh5q3u2Aq+1EG9RMP1sRSJFFFYaqLCVuJk/ZdFzx0Ve4j6TIu7AtKRZHjeci
+	 lSKVWshRhW9S72cmeRwUAUHf8cYhZtQtY87zIhPBFvnVEU6QdePv9XLrs4drZUOvZ0VGJ
+	 7vKy2a21+ySCErQRARWmCNDQEBQzfbJmM9Te2KXXVt1+fLNxu+L5mqwuwjZvy09Cebg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=ip6TbRnT;
+	arc=none smtp.remote-ip=111.22.67.139
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F94606B1DA;
+	Fri, 13 Nov 2026 08:34:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62F94606B1DA
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vwvHdXcj
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5eafb65e169so1046180e0c.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 00:31:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794558685; cv=none;
-        d=google.com; s=arc-20260327;
-        b=a44/Z76DLlVHVjNgMMfDkCfAOmuF131xFUkZL4MGnW9XEIKHyCT2hTcbRlqTHy72NO
-         ZSUMDaSdcHnmhQcNAwaAZ7KFm40J2LWUaqOhCVXIoEKqiLy2jETAN7tbPF2/6lvOIkeG
-         TaD7l//Kk0cdyx815kt+uiGdIu/Xr+g6EErUVFoh8tR8PksbBIgG3UffUsb/arQ0Idy5
-         W2kynOq8kIEXflDXj+WnRsCNtPnokYf8tefGU9J8+QVzYZd3FXSyoAeOyp39B71R9Zvf
-         SvQGjhvRq1cRSWi3Vyn4gE8A194ctr5qts9HxMAo0FsZdbZZNHj4VZOJNexxMx+fM1Z1
-         HK+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=qh9VAxc0yOf7sHhKeEjPhh6+juHQS4PhRPr6V8+HsDM=;
-        fh=MwLf2CZeDIEsGV3+HzMVd6ouOdXRgCGb6B3Mp8jK5HI=;
-        b=EUN2bBlhbHOtN2+jj0QogcWu7NFOhugPXrP4qQwDUGv4gU4PnF/217hVJdirjfDdR4
-         x5NFizkJmLGDjN6MXAovvXt45bQjXeN7/gkQT5ISa1dlvUaQShtmlftuEYn766+n5fap
-         GTFYlF8+SeLQ+Rr/5j8cfdSq30HO/WwPoRw6xBgiMnEBMuys/LiFeMZBWKAvugoqxdJu
-         rkW6waHY7z6qR5LrKn1/7Qdbb7GVUB+nyk5HhZfl8il6xYKAglhAT7vZvCerjgOnKPDn
-         opgSF5NgTYke6PibEVJJAZ7hzve/CV8aiNF7AO7ODw1zHko3gFzItH42bs1MwM+IMuzf
-         cA3w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=ip6TbRnT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794558685; x=1795163485; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=qh9VAxc0yOf7sHhKeEjPhh6+juHQS4PhRPr6V8+HsDM=;
-        b=vwvHdXcjDbzxcP1qAc4+OmygMV6ohjmaT4r5PuomOh6Bhv42hnUThdRbYnHJbsS7Mg
-         gtdCKhK345EGZAIzwvUI6uwiE4PzhzH6vGYAB1QbjXWdtONxBesrGEIVhLWb++vhtCw/
-         RPtIT5hAlZQfR9hjHicxQ4ql9bdGqpMDU9eBkxZttf48rDInvMMs6Z0mNbsh1sqoHMGt
-         0aKpMjflHl3Pw3Vd+58l2SzwKr2dSoQigJBrZPIiLxVYJzwnMBHMBvEFhilnE+mIhwPi
-         N0YR/9DTKvEH5FynQY3K13xwscohZ25m+WB+QCKDXqigoeV6hSlFoA2O1m+2xEDvGIfs
-         wHeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794558685; x=1795163485;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qh9VAxc0yOf7sHhKeEjPhh6+juHQS4PhRPr6V8+HsDM=;
-        b=FdnHDOS6z5h58snGcYU++JJbdCYfBZ5pbVbXL8ap92ji8ADX1anHUIEkE4DKGsZZyE
-         Ff1X6IytqeMotNdcXb6STZtYTF2+dlxnBtZuGdqk5ckAyWZQlcj8qu5eN5osIg+yb6N+
-         BAuroEayXHLJUE3YSeHS89TjeDtT7D+3uKs0xI3lJ07HzEp8HjmqJsrWQ/IUX4EEv8Bw
-         JYsw4Uc3+ww0XjMxt396LH2nYH3JrU01+W/jZGbfd1m1UxtpOInSCak8QW3kya7B7UlD
-         ni81K0CYfDcyPMeruYaNekYVLwTGnAHohtm4MHEDS47wHMOLb1T4m9IsMsl7/eDIdDTX
-         qg0g==
-X-Forwarded-Encrypted: i=1; AL+hErGgA55Q4B9PJlvCFrpnAolMZKC2m/qYAh2NMGnod5KoSlOX4BRHSB3sZlWeLEznFcszuD2SNAk4AwxWBTUtgUStmbw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+ZPXoNNC3ZiV2RgtFF1hJeRjkFllr3QrOhrw8aXp80mT+1ePrT
-	GbXGxvDG5rBMQqKG8CNaN288JK2VT0GwzacMuT3idbc/76tnJm3hWF0dfFRKiEHDXevjFUVM1cY
-	SFLvpFTr3ZSI7/HUaSbVhtgw7RlzFjRQ=
-X-Gm-Gg: AYBFou1gubXLxk9E567JsX0MjQhBNwpseCmzWmzFv7+NBqW9v826Gry4s+PHd5qzQ7u
-	mLmR3YyBL4kU4dYxYK5DkQLSnAYrsGKISQnOfdkQNOvkDvmVh32t5GqXQ97O5EBWf+stur4hVi9
-	7kr+MT7PSkrU5/qJ4MCalC7eMA0Olyi2o83sX33rILmCPnaJ5PXdIgliv2fqa03AK4hqRkjdB8q
-	WRrAO1M73bSXLRRpNmdkAwtM3j++d5azobqI4htTbh/b9GMkbXjIfkjVRTygclqY+YRlBx1gaS1
-	RejyuPH7U+yygJjIF8aBWhJTqRze43N4OnlFy8Vw9z8hbRVrbwRpOd4Sp5WoMOxceEm8+JyWEY+
-	6VNvQTDig3huLKjF2diPMfS7mlIMdvGitgnpZehheg8unmAl0ebDq6lxexNbaNnGe7WU4CEfugr
-	bH2bE7XNZ5J3ffQB0JRiJd7bVTa5nsNXsvnDPKncuNJqNhaCFZ4Zc3esDSdHOd40KumR67U+B67
-	U5uKlsBP5hTj4B+G4xGjJYdkYEXFfBOBWUamC4B/cOD1ioXfSXw5snkLCQRzHA0oM30f/C+
-X-Received: by 2002:a05:6122:512:b0:5cd:590:c22e with SMTP id
- 71dfb90a1353d-5ee34b160edmr531605e0c.21.1794558684447; Fri, 13 Nov 2026
- 00:31:24 -0800 (PST)
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=ip6TbRnTx2iXAHM4sNmfYX/WMMi3wvafFYcpMFePLwOKwD6gzuRTepAa+LU5i9aCHvFSWNbIQc3gR
+	 +WB01AxUbaxoejploAfNKNV1vmmAs7NbOjFTwyy8wE0D8c3p7N+FOgtakrDsWcvq9qC/euAWdcWI0l
+	 t8waT2D/R1/50wUA=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee96af6cba7584-efa45;
+	Fri, 13 Nov 2026 16:34:48 +0800 (CST)
+X-RM-TRANSID:2ee96af6cba7584-efa45
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from devin-VMware-Virtual-Platform.localdomain (unknown[10.55.1.72])
+	by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee66af6cba759a-1ed71;
+	Fri, 13 Nov 2026 16:34:48 +0800 (CST)
+X-RM-TRANSID:2ee66af6cba759a-1ed71
+From: Zhu Jun <zhujun2@cmss.chinamobile.com>
+To: rostedt@goodmis.org
+Cc: vdonnefort@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhujun2@cmss.chinamobile.com
+Subject: [PATCH v2] ring-buffer: Annotate the speculative iterator event copy
+Date: Fri, 13 Nov 2026 16:34:46 +0800
+Message-ID: <20261113083446.177306-1-zhujun2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -106,68 +71,46 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1794333957.git.edumucelli@gmail.com> <cover.1794337724.git.edumucelli@gmail.com>
- <6ad95c1a6eb524143a38ef9a0d4fd87b92ef1daa.1794337724.git.edumucelli@gmail.com>
- <undine-1794547280843201319-34d0935dcdc44d3a@undined.local>
-In-Reply-To: <undine-1794547280843201319-34d0935dcdc44d3a@undined.local>
-From: Eduardo Mucelli <edumucelli@gmail.com>
-Date: Fri, 13 Nov 2026 09:30:48 +0100
-X-Gm-Features: AclHuK8SskzkyE6lr5Bi-ArH1tX0oRKTmCUc2F5NgsXgtlf8OJuRKNQ5Xe9Uu6A
-Message-ID: <CAK0NWSO7ieSgooH94PY4g771CRHNXVas08cTrMnw_vt+Y3h+-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] tools/bootconfig: Preserve values containing both
- types of quotes
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: akpm@linux-foundation.org, rostedt@goodmis.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+A non-consuming iterator speculatively copies an event while a writer
+may overwrite its page. The reader lock excludes other readers, but not
+writers, so KCSAN reports the concurrent memcpy() and event reservation
+accesses.
 
-Thanks for the review.
+The iterator already validates the page stamp and committed size after
+the copy and retries if the page changed. This makes the race intentional
+and the KCSAN report a false positive. Mark the speculative copy with
+data_race() to document the allowed access and suppress the report.
 
-The parser currently accepts the value, but the tool prints an output
-that cannot be parsed again.
-I agree that rejecting it would be preferable than supporting it
-through the formatter.
+Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+---
+Changes in v2:
+- Describe this as an intentional-race annotation suppressing a KCSAN
+  false positive.
+- Drop the Fixes tag; the existing iterator validation already handles
+  concurrent writers correctly.
+- No code changes.
 
-I will drop this change. Would you prefer a patch that rejects mixed
-quote values with a clear parsing error?
+ kernel/trace/ring_buffer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-
-On Fri, Nov 13, 2026 at 6:21=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> On Tue, 10 Nov 2026 20:08:47 +0100, Eduardo Mucelli Rezende Oliveira <edu=
-mucelli@gmail.com> wrote:
-> > An unquoted bootconfig value can contain both single and double quote
-> > characters, for example:
-> >
-> >   message =3D He said "it's fine"
->
-> Nack, I would not like to support this unclear value in bootconfig file.
-> It is OK to *detect* this kind of mixing value as a wrong value, but to
-> support this, we should support escaped quotes and force user to quote th=
-e
-> string.
->
-> message =3D 'He said "it\'s fine"'
->
-> But is there any actual usage for supporting this syntax? I would like to
-> keep the bootconfig as simple as possible.
->
-> >
-> > xbc_show_value() surrounds any value containing a double quote with
-> > single quotes. If the value also contains a single quote, both compact
-> > [...]
->
-> Thanks,
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 75cd8df23c1b..950c42f1e849 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3566,7 +3566,8 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ 		/* Writer corrupted the read? */
+ 		goto reset;
+ 
+-	memcpy(iter->event, event, length);
++	/* The page stamp below detects a concurrent overwrite of this copy. */
++	data_race(memcpy(iter->event, event, length));
+ 	/*
+ 	 * If the page stamp is still the same after this rmb() then the
+ 	 * event was safely copied without the writer entering the page.
+-- 
+2.51.0
 
 
 
---=20
-Eduardo Mucelli R. Oliveira -- http://eduar.do
