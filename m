@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794552662;
-	b=3kT5Xld7DlYgWKFuvYYlia/HNqWX6DYcJC5CL6UGNcg3wLlKnZcbJ1xHV8Nd9Elq8OHC
-	 WqV4s3tzb3X1NYX1nM+Oyun9iIk7lD5xk5qMtAKpFaqrOVax3YzwG/sm7NX7/twrCHHPT
-	 IfKd3yph2cP8OAo2cZ/z7ks/bhRbLQUfOHMVNHtrJESdUTF2Noppjf3GX84uucn5TTfGq
-	 PqMXEQlrHjBys4RSm2SEx9P0pZeIi+SVut5dLeGhzldrsMrNX0La7YMpU7aY3iVsmhaL2
-	 Ww9b/P/z7KuvSkF5Y0QM5Ko4pVhxojEw6eRIQ6gHElpPGMU+14skowyZwplmCCsNixQ==
+	t=1794552942;
+	b=hoCgEJN1Lmbj/+KCLfRBG7vsShPuwKXLNigOPD02C0k5kAaREkBc5OPZRZH4Uw3PX1YI
+	 mJiCBPiGClcXp/OlGpIMy6INKMwNdEb3lMblKm4zUeM2TMNUFwdU/MCVTWmvK2Guq9Km7
+	 Ug0gO8gQPCD9/Fju7EUBK69BYMCncietdJ7IAgipyr6S/4QUtYrogF4R42xFUXfUKvp0G
+	 2Zyw/Vrz2ExzslnorSpzh2TKHuyDZQ6NbdVaV9LPEhqxGOyskWcnCAUAfOQhrtU4QmLGv
+	 X2dPiZJISwlwVf6g9JcC3X7nLydwJAMY9LpofrdwDFe7ZXgQhHWNUp99UQBMtdgzKaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794552662;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794552942;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=E9VnQKCg1dnous2inWWG9kqifWbv8MXcfZ5+Oz3mKsE=;
-	b=FBvNfS2XmX5DkDlZ6nVmeaeChQGjPXMLjmwwF7rZRj7cAHQQq6kglPL30bMAiv+u6sqh
-	 CWpbwMu1gqiDsMiuk0gPJ7rLMQarVDMfp5wmnMl0nEschzlx99fKJ8fuc2b3TG2/3MQp2
-	 VG5jVe+/v8DWkyvujnt7PAHHIdtyeLBtZTeLircysnR2TN44ff+MBv5Z5Cv75KfJvZrFq
-	 +mT03JBWHrKh9vYSvGVcDppZ51fYyhCP9MXUjPme9bz+Blngow2HUoDKg45SAXg5PVtao
-	 TZrge6I7ou7hzsHztLs0oZpKT4bmU+/rulXNB0OgSNHVUiR6+025w0tFtMrE1bQB64w==
+	bh=LcjQbU5MJBFFTvxN6E0jZwUzgtDuLBFpL4y5wg2SMkI=;
+	b=Qrjwq5Fm7Qko47Ib2JOoRetYLHmNyPnVskT+69jfrh2s0+fYHA7OMRD3azDq/GxRFiwe
+	 MxodaXRAIq6CZ+dO1r1cI6g1oRQ0vznMAQRPQEt7E4J/COGbYA9uTXMrlun/Nvt/SFBEG
+	 RJdsdsX+L2xQ/YtaR5KtmnGxcOkjy1Z7/jXFCaEl8R0mD5FbrTgTKHC9xMQ3fq8lDlnKo
+	 oxjZMJNbeYv/cPzzO811RRHOYiJqxFYYj5u6WK2+kS+iY12S8IHEjypHoU7NBGiObomZx
+	 5trIkF1gIOHpjLZpQdQk7m2lf1oJTezuWwpoYNSzW/DzMXm2/LoOSm8vCSHZrcs5Gsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTH1Ys0K;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jJEn5PUg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A88606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:51:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F9060A3825
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 06:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iTH1Ys0K
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBC81F000C4;
-	Fri, 13 Nov 2026 06:51:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jJEn5PUg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440DF1F000D3;
+	Fri, 13 Nov 2026 06:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794552661;
-	bh=E9VnQKCg1dnous2inWWG9kqifWbv8MXcfZ5+Oz3mKsE=;
+	s=k20260515; t=1794552942;
+	bh=LcjQbU5MJBFFTvxN6E0jZwUzgtDuLBFpL4y5wg2SMkI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iTH1Ys0KaafJDxpTrHpPvCgGYbGxCYmtdjrIVVIrrRvUHSGvPB6+F6PWzViyKrrYv
-	 8lWyMT7uW4FdAJx4uRq3ZBNTg4YTM0wJrkK/CcqQhOGVUUttWk9ZUxyUK5WsYoqQDX
-	 TB9y+gnUtcq0xw9GaW3RdBLH+/7iK3u0PISeI5lSSi4qVc2aiwN/AfUpNT/ldMmxKt
-	 0E4KWZ56lFGChhTk7rDaDHDWMzhj9YiKzaeMzAAHdj83dI0cc+NSKXybxIwyXiEsta
-	 kKjZawDSrztfRl6l8yaHus/neySKLwplIndyu5Aac3ebqwTaTwvGuPHT6mnNrdp/oy
-	 5S3xOijSne9OA==
-Message-ID: <sashiko-outbox-212290@kernel.org>
+	b=jJEn5PUgeQcxL35yZd4qN5SbLEIaXK/ymdYE9CRBKkSJEXJsFHU8BCepwKBx5D+az
+	 G3ICxCRsLBUR9mGAFIW9bk96Pc36f6fGsO2TCZ2AQjMBxA8/ZRzGRAmvfB86/gBj1c
+	 BmEnUxmTIonHgwrhsK1LfK2UcYAcqmliFfJ6O6/mZdh9iTdIx1p9BP7isKt1rmQvp3
+	 jzLCzAaWA6JH43PfD4CIfrOL+GMX9L3h4YjjnoTofWNIRrYPi6L5XBFtizlFGBPggE
+	 Md8WMBidXXDFBuxYtAvu6f+rjuIHCbRtB/mbQvGPG3mE11MCzJLfmXa1jetX6buoIN
+	 JclmIraB4+Nig==
+Message-ID: <sashiko-outbox-212297@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 03/10] tracing/osnoise: Start all eligible cpus from
- hotplug workfn
+Subject: Re: [PATCH v7 10/10] tracing/osnoise: Refuse timerlat fd open if
+ tracer inactive
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Crystal Wood" <crwood@redhat.com>
 Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113064103.3041704-4-crwood@redhat.com>
+In-Reply-To: <20261113064103.3041704-11-crwood@redhat.com>
 References: <20261113064103.3041704-1-crwood@redhat.com>
- <20261113064103.3041704-4-crwood@redhat.com>
+ <20261113064103.3041704-11-crwood@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 06:51:01 +0000
+Date: Fri, 13 Nov 2026 06:55:41 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,27 +63,27 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] tracing/osnoise: missing Fixes trailer for
-  osnoise_hotplug_workfn() race fix
+- [Low] tracing/osnoise: missing Fixes: trailer for timerlat_fd_open()
+  fix
 --
 
-commit 20aa2424de0f956e6a71e5fe659aee66ed386374
+commit 2b08a7c2950ae2b8e79253b75767a234cab88c0c
 Author: Crystal Wood <crwood@redhat.com>
 
-> tracing/osnoise: Start all eligible cpus from hotplug workfn
+> tracing/osnoise: Refuse timerlat fd open if tracer inactive
 >
-> Previously, a start could be lost if multiple cpus get onlined
-> before the workqueue has a chance to run.
+> Besides being generally bad, allowing an fd open when there are no active
+> instances means that osnoise_options_write() and osnoise_cpus_write() will
+> leave it active during reconfiguration, causing at least WARN splats.
 >
 > Signed-off-by: Crystal Wood <crwood@redhat.com>
 
 [Severity: Low]
-This fixes a race in the CPU hotplug workqueue handling where eligible CPUs
-can be left without a running kthread if multiple CPUs come online before
-osnoise_hotplug_work runs.  Should this include:
+This fixes a bug in timerlat_fd_open() where a user fd can be opened while
+no instances are registered.  Should this include:
 
-  Fixes: c8895e271f79 ("trace/osnoise: Support hotplug operations")
+  Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113064103.3041=
-704-1-crwood@redhat.com?part=3D3
+704-1-crwood@redhat.com?part=3D10
