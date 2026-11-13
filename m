@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794554431;
-	b=hX6pxNkOFssZY9+0rZXkkflPEz70P8NmTzU2DYw6pkckKgdQhG3p3DKdJqPqUP7itLhD
-	 T40zsGrAgNBJOHipMixvQrK0oL9Srj8PI6StTtMZIPP9PCTBfd+eNRLwxfz+2kjwNNYY2
-	 +9kPtDz4QdBbN8UGNTnSaXCSOT6a2igqjoZijUZEra+bF4AVr9+vvNhfPGSS8z9pfRlY2
-	 gjHz+FC1xLV0CAVI4xnMNEZHjIU/3fcTg6EUK6cpJJPoApYo16LNKL3I2i7cadZC7LBto
-	 PXtQoof2/627XaYXprX+hWl5VVHfz+Y2WCMntPmM83vdEDffRLPkf+bp558WJEKbcZA==
+	t=1794556415;
+	b=CnJXQPKYhP09hg4n57EFEdxdXcNL8REGIWwV5LUy4jVzxpfGQEPUHWnPrSHG31Dwaumc
+	 PtB/H5NH70BVOeNSmvgdG0P6+YfmAfEuMok5EdMJoSmgAKnJbUVS8RXjMcFuhPj8ufOo2
+	 U+ZbANKXrZP1hsndAoYmTVmSjluV8A9av6tanuFGzIzpEHRt8XlE7/tuT63MtVRRHoYb8
+	 +IU8+n7uyxK3oeHvd5IQCzTI0BpK4L++DQyjYYBfalVVBqbZQ5phUMXvVn8y2TB4YAnR5
+	 C1BuDLucx4hPvaUcwvHSTJe5dEHN8M5RCobN7IOLGE3zg5ZNOaYBbFb+s+9Zt3eN2DA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794554431;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=1A5ctWx2jqRRheH67fYqQltUBkey/x3w8cm7hG/LOYg=;
-	b=M6+NQ+1DaPn6FGj84m+7UI+4FBGCNeqpIoH8tmK4RUz2c/J6eemFLvrWH/0KlMjPTys4
-	 ncceGdnbp7TBgV3AfDM7/tokbCayAX8W1GAtXUrDuier+pNxc+bLcE14V36vW0SL8yaF2
-	 qI7oVjyIvDpnAALOIaRnQL7ZxpLhyKhMQFNkhws7rD9CrvfrVqycOFh8VmQrItN5+PKNh
-	 JV9W5n6PHnk4XrJaEIZlAdqMwqmsEorR6TnTCVEsPnW9+KoooJ+spyMZtlCI+AfNIBkwg
-	 lXYa3iCykVxkaboKpGVtDTncXfqg2tolhW8JsirKHdqHc3RdBXMLy7W+UdHbubO+aJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794556415;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=Pbc+EvL/kolpX1ANyxGTDhTo76dtFAMfqxanhYSvQ5w=;
+	b=qLAfMfSDo4cqEcp3e+6yY/wrAcoPoPchpME0hVHxEZ5sNNzdimB8Fx1WuAiHQFFv+WqT
+	 yeIyYcr3BdYSDaIgh6vhEYzliVGjSXyN5YzH41XmM5NzcSoap/T+IjM8/EX2vLJ1xfYBQ
+	 u5CJxoEWpyifvYw9+1foI9KRGEN+aw/7rI8WuNmdZj2R+1g0bCNJ4KR/vEGz6IMVpbHzk
+	 VyEe2oxGtJAvvQDrNb6auHmMEE+sDTPpNam0cseXpwGLBn+yhLpQeB1wEtpQ37m7xm3w+
+	 LQnXbAmCLGRw4/0lM7ODXRNiA3oKc/xE9L2cFJFGlzBlLVal17MUQ1x7Kwnb+y5aUJA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AFsayrsX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhnsFX9I;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15541606A321
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57BC606A321
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:53:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AFsayrsX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8331F000C4;
-	Fri, 13 Nov 2026 07:20:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhnsFX9I
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CBE1F000C7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794554430;
-	bh=1A5ctWx2jqRRheH67fYqQltUBkey/x3w8cm7hG/LOYg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AFsayrsXwqX/gDX1B7yUmGa4+dpqYL94jeYlR5QQlmWCpGVtPYtrvOy0umzy69N+s
-	 EWwBXZV4X0uGyNKvi2NBwr441xKTvaKu6EvhupRtITC51Lky3b//GyC9xbAzBCjcZn
-	 zitcXH9ay6Y02Zsao2WCbuplkmKfzeLufxgPYwd/XCCSIdLKMrvM+zC8E5yrGlAzwd
-	 088GoZRL6drZlqJGDV1RKSc62WMJk2if962W/LhV4A75yoFjtIkmaaNB7m2Icnjx0H
-	 k48AkQfnhWa8UbPKsYscFxr85oPKCslHdgr2u1t87SMx9/4vz4BYFgkLyyxOzqDkvO
-	 b/V3JfPQQByDw==
-Message-ID: <sashiko-outbox-212339@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 06/10] tracing/osnoise: Reset cleanup
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Crystal Wood" <crwood@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113064103.3041704-7-crwood@redhat.com>
-References: <20261113064103.3041704-1-crwood@redhat.com>
- <20261113064103.3041704-7-crwood@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 07:20:30 +0000
+	s=k20260515; t=1794556415;
+	bh=Pbc+EvL/kolpX1ANyxGTDhTo76dtFAMfqxanhYSvQ5w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=FhnsFX9IqOEqzm1fK0sNBHyJwBPNMf7/T2Q844/+KOgoLeRNe8Uvwfk9UXjYEh/YU
+	 0kFmgr6oVnS1TSt8tFJ59Sjxc6VvtbE63GPPevSOCeMjYSxs43SOTb7iewSByFZ+mv
+	 DGBmS55zCFniI0Ijg8MJ77/SzpPDL9UMtQ1XtJLIRf/jvOvF6C8KxR6OK2lXMktE6y
+	 op/KKva/v0i1zEkZ+ynGkafR39WtxXETbErAR/lbr1w/XSzlhHTzigeWj7MDfoJleZ
+	 mArTbVKENievzAd9bOUpgyIq/HDeNZ/yPdD3KcVxOl9GiTuFBfGcGTUeL/fXt5EgmS
+	 Xp2Mqnwcwhtxg==
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-498f5fa4f70so874888f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Nov 2026 23:53:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErEr4GjcKrPtq6qE7mroGOlENiLu7d5u9A/A6xCtXIbtVWBfaXEubCpH601lF20UX2Q4r3UZe+/Eo6MnJ+neVYRcwSI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8/tN2AtvC4qicf3LGtPxW+1MBa/41sIFc+JiyOCiEe+KxBeai5
+	fJAxXkZ3aZhnbl9sbF47QPneypE/frvfxFkgbcbRMYqfTVJx35dcOKlBbyms9fLHN+hOSDYow/E
+	S+gpci5gYXqS5e97fRwaWs755MndXY3c=
+X-Received: by 2002:a5d:5d07:0:b0:48f:e879:5890 with SMTP id
+ ffacd0b85a97d-49c727d1ea8mr4317788f8f.32.1794556413956; Thu, 12 Nov 2026
+ 23:53:33 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,95 +58,70 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com> <20261112-probes-in-lrsc-v3-1-a95089852a17@mobileye.com>
+In-Reply-To: <20261112-probes-in-lrsc-v3-1-a95089852a17@mobileye.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Fri, 13 Nov 2026 15:53:21 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQ9hBeHV_gwTgRpJTYLm4G_dNgdD3Qy6W7eJjpox=YUEw@mail.gmail.com>
+X-Gm-Features: AclHuK8fCN6hKllkO0ilkI7l-Lsw-a941NZB2lA8LguINRyjsCRWTEqXNvF9Gng
+Message-ID: <CAJF2gTQ9hBeHV_gwTgRpJTYLm4G_dNgdD3Qy6W7eJjpox=YUEw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] riscv: kprobes: fix out-of-bounds read in riscv_probe_decode_insn
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Pekka Enberg <penberg@kernel.org>, 
+	=?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>, 
+	Sashiko <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] tracing/osnoise: CPU hotplug race in timerlat_fd_open() leaves
-  stale fdd
---
+On Thu, Nov 12, 2026 at 6:02=E2=80=AFPM Vladimir Kondratiev
+<vladimir.kondratiev@mobileye.com> wrote:
+>
+> riscv_probe_decode_insn() can trigger an out-of-bounds page fault
+> when probing a 16-bit compressed instruction at the end of a page.
+>
+> arch_prepare_kprobe() safely reads 16-bit parcels into p->opcode, but the=
+n
+> passes p->addr to riscv_probe_decode_insn(), which unconditionally
+> dereferences *addr as a 32-bit probe_opcode_t
+>
+> If a 16-bit instruction sits in the last two bytes of a mapped page next
+> to an unmapped page, the 32-bit read of *addr crosses the page boundary
+> and faults.
+>
+> Passing &p->opcode instead of p->addr to riscv_probe_decode_insn()
+> (as arch_uprobe_analyze_insn() already does) avoid reading past the
+> instruction.
+>
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://sashiko.dev/#/bug/linux-812af091-20d1-4915-97a6-741f51e07=
+022
+> Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> ---
+>  arch/riscv/kernel/probes/kprobes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probe=
+s/kprobes.c
+> index 9e2afabf94e8..63ee5066def5 100644
+> --- a/arch/riscv/kernel/probes/kprobes.c
+> +++ b/arch/riscv/kernel/probes/kprobes.c
+> @@ -85,7 +85,7 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+>                 p->opcode |=3D (kprobe_opcode_t)(*insn) << 16;
+>
+>         /* decode instruction */
+> -       switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
+> +       switch (riscv_probe_decode_insn(&p->opcode, &p->ainsn.api)) {
+Yes, using &p->opcode is correct.
 
-commit 25ee38a6983ff50cb9227e203eed4ba8758cefa4
-Author: Crystal Wood <crwood@redhat.com>
-
-tracing/osnoise: Reset cleanup
-
-This commit reorganizes per-CPU and global state resets in the osnoise and
-timerlat tracers when stopping kthreads, detaching file descriptors, or
-restarting the tracer.
-
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index e61f57230eefb..8db0697b69e4a 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-[ ... ]
-> @@ -408,6 +380,39 @@ static struct osnoise_data {
->  #endif
->  };
-> =20
-> +static inline void osn_reset_cpu(int cpu)
-> +{
-> +	struct osnoise_variables *osn =3D cpu_osn_var(cpu);
-> +
-> +	WARN_ON_ONCE(osn->kthread);
-> +	WARN_ON_ONCE(osn->fdd);
-> +
-> +	osn->sampling =3D false;
-> +	osn->pid =3D 0;
-> +	tlat_reset_cpu(cpu);
-> +}
-> +
-> +/*
-> + * osn_var_reset - Reset non-per-cpu state, and check for stale data
-> + */
-> +static inline void osn_var_reset(void)
-> +{
-> +	struct osnoise_variables *osn;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		osn =3D cpu_osn_var(cpu);
-> +
-> +		WARN_ON_ONCE(osn->kthread);
-> +		WARN_ON_ONCE(osn->fdd);
-> +		WARN_ON_ONCE(osn->sampling);
-> +		memset(&osn->zero, 0, sizeof(osn->zero));
-> +	}
-> +
-> +	tlat_var_reset();
-> +	osnoise_data.tainted =3D false;
-> +}
-
-[Severity: Low]
-Can osn_var_reset() hit WARN_ON_ONCE(osn->fdd) if timerlat_fd_open() races
-with CPU hotplug takedown?
-
-timerlat_fd_open() disables migration without holding cpus_read_lock() or
-checking whether the CPU is still active under osn_var->lock.  If a task
-pinned to CPU0 enters timerlat_fd_open() just as CPU0 is being offlined,
-balance_push() skips the task while migration is disabled, allowing
-osnoise_cpu_die() to run before timerlat_fd_open() attaches osn_var->fdd:
-
-CPU0 (user task)                  CPU0 (cpuhp/0)
-timerlat_fd_open()
-  migrate_disable()
-                                  sched_cpu_deactivate()
-                                  ...
-                                  osnoise_cpu_die()
-                                    stop_kthread(0)
-                                  sched_cpu_wait_empty()
-                                    balance_hotplug_wait()
-  mutex_lock(&osn_var->lock)
-  osn_var->fdd =3D fdd
-  tlat->thread =3D current
-  mutex_unlock(&osn_var->lock)
-  migrate_enable()
-                                  <takedown completes>
-
-When the tracer is later stopped and restarted, stop_per_cpu_kthreads()
-only iterates over online CPUs and misses offline CPU0, so osn_var_reset()
-iterating over for_each_possible_cpu() will trigger WARN_ON_ONCE(osn->fdd)
-with stale fdd and tlat->thread state left attached on the offline CPU.
+Reviewed-by: GUO Ren (XuanTie) <guoren@kernel.org>
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113064103.3041=
-704-1-crwood@redhat.com?part=3D6
+Best Regards
+ GUO Ren
