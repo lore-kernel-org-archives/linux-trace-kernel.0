@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794558511;
-	b=FgtaM90S80wvhQVD19Fts+3DkJDXvRfTR/Fv7Q1nH9lFGJBIhsUikzl9ypOkzlDdQ5M/
-	 uwSPrBzIB8xOQh93kUPE92BjLETmMACpJMsordu+85weUzR+wLSlZ2S21jzV0BAyJsjQx
-	 YITC6Y5zQNOKYihx/HLXxwz+eGxMP/SBsXPS6E6CNMvBjmvvJNxApXTGOlioo+XaNhYvY
-	 U96x2UsnGEJUqHxJ2fj0ZVKQ670/KdajDb8CH59L4Q39/DKFvzWAnuqYAhQ8XYpq7wqiJ
-	 A/QJYgKIc5CPRJ5CW1ELjUG4/1wy7lFJBDg/MJkf7MMsEBcZ5WbnqEfHbGbPOuwNq5A==
+	t=1794558520;
+	b=HqWt1kgvVAkrBE1BHcAdvixX2oeOnYvhD5wQTEOspI5bZ1Fz0P139uTLn93fvlirNqzW
+	 KkUpLyhKJ5VomDs7IxuTetDid7J4zS0Mp4Xdjpq2Ufq0PwxyTHM29uxqzPIryBqQst5zx
+	 EaqFp4qF5JABU5CeL3M/+m5DN3YGO/emgda/usSgk0jg9VdVxHwGvC06MwacYHz+k4/yT
+	 9ozN5yyzmUpX7GDImi9JwKjxZUGq+9KMR7x4qz93vwYSB3rmtPZy7tB0t3pWDOxkdz4f0
+	 y6FQT7t3edy/KNi4iXRgcQpv8HYoJwJIsgq5IsDUMYmYVhLAQeEbGmx4D0ERKqeBlLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794558511;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794558520;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=C8iGJPQkgOp9klFTmgBec62xqq4e7YsKB+b3fh67mGg=;
-	b=1+BVpyBFJ5PqxX962XdkV25SGYIF17WkVHQEK4QDgtwDnDEuqYJlpR62iuKXYUy15IIg
-	 CdDBzHmTt2FSe31NK1qaqIFgDxnuRourph5xgd6G7ivsb7485l3KcgureiCH5m9moThv9
-	 TV+jDobfeY6OpMaXG8ab0ZTcm3MgvLoy28KCwQ7hZjMIdU9l8H0BPBZ72sk3DkXS6Q7ga
-	 CpYciEPExWar+3Jv/3bFHagDQy1NJhcgfW61Hsj1OGArs7uc8UPhZJGpC+O+JGnc/v4ur
-	 3Ave3zKQjTSMfN4licMvWbRvlHZ+PqAi/OiOZFdFfHUPHEMwOG1o7kzGwFVqpHnpLfQ==
+	bh=G6P8ksKwHMGkfAuloy0LApJAp04ZPu6qUfNJ844hiTQ=;
+	b=1MxWp4/S/otMy2if+hN7eQVefNF1PALpPGMDLwQXKuo5AIcTnPgL9XjFfwIALCmrAPb7
+	 eos8Q2KNU06k8oENtVEFNW5KFRDMZ4T0RTFT7HtFiro7kMYT+a8f5vMs49tB7LIXHjsHM
+	 jV2tq4AzrsyFV1sjpbjlZtJvcI91XZDQmq0JJP3fY+3wxXH6Fg8sZBU6j59FcoaX5l3VW
+	 JU7o07HBW8gpWJ1FaRdBdE1aKnNJAf6j6iT0A61BGM+dJChj0Nxx3KoVOPOUnMclpVAPX
+	 sPhIE6+15m7KpprRh1tx4+S5VUBHxGxk0GHqg42otK+XMrXaEFq5W+6bbZJZiX5RpGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Yob/7N7+";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OoKh8G8E;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE8C606BDF3;
-	Fri, 13 Nov 2026 08:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B67606A323;
+	Fri, 13 Nov 2026 08:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yob/7N7+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6F21F000C6;
-	Fri, 13 Nov 2026 08:28:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OoKh8G8E
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A71931F000C6;
+	Fri, 13 Nov 2026 08:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794558511;
-	bh=C8iGJPQkgOp9klFTmgBec62xqq4e7YsKB+b3fh67mGg=;
+	s=k20260515; t=1794558520;
+	bh=G6P8ksKwHMGkfAuloy0LApJAp04ZPu6qUfNJ844hiTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Yob/7N7+bnSfiD9Q+B7uON9rTFKOz/NjsYanZbu9oTGbw15xpMdBtei6ZtpiWtqut
-	 gz6BLResuQ2D6x3PcyI7c2ktnSDyITn3fiSHKNSMTkYZF0Yf2lRwI8lNpD8zkQTFjF
-	 IkG5uw0Jt75ia2J9VpIQp9uG3MOujZlxEn5Qsl+PdwCYfNetmcIC5hjB30K0LJCw7x
-	 KEQnSNZFj2EopwrTyl55qVhCf7rzStboV/bOnbVqdAx7+jmlymRC579xsbF1jqydZ1
-	 hJA+F0kZnL13rbNI2oeE1Qk4cCqey0RcTOg9v/tzijrnCXiy7hLMSWaWKw1sl2W6gB
-	 9e8xvA3X3avSA==
+	b=OoKh8G8E/Ee7WOzNOjcszSYoBnMCxNX7LCzri9JCJauoNTDZdPK2t7ChB74P5+TO2
+	 /FY6eBVZCBPlVD3xrrkp7F9N88ickUt6QTubQEC8gUI0hV6WVN2gjW/eRclOOMvhu/
+	 G/mN3c490DkAbvDX48LuCAZxmj0TbhGhS6OruyZilpfLA6Scesjz8+NeZY7JZ6gsHH
+	 nlIdzUFty6AskLxGLLNTUfYrM0K9TGWXi2aUQGIXFxhMv66UJPMTtDvoFNTdWt4pnU
+	 7UszfFe1oaeBTaZUeUkq4hjFrtVD1wrhmjAaugvCUu6xT+sAs+dXLeQRvzb/O/oUdi
+	 ICXqZMONNbm3w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 03/13] tracing/probes: Fix BTF bitfield parsing and out-of-bounds buffer write
-Date: Fri, 13 Nov 2026 17:28:27 +0900
-Message-ID: <179455850711.403392.10512730891220678403.stgit@devnote2>
+Subject: [PATCH v3 04/13] tracing/probes: Fix missing BTF kind checks in char pointer/array helpers
+Date: Fri, 13 Nov 2026 17:28:36 +0900
+Message-ID: <179455851632.403392.258264246782960594.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179455847934.403392.15146485751358774349.stgit@devnote2>
 References: <179455847934.403392.15146485751358774349.stgit@devnote2>
@@ -67,168 +67,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-BTF bitfield parsing in trace_probe.c assumes a 64-bit (8-byte) container
-when computing FETCH_OP_MOD_BF shift amounts and basesize, whereas the
-preceding store instruction only allocates and writes the field's fetch
-type size (which may be 1, 2, or 4 bytes when kflag=1). At runtime,
-fetch_apply_bitfield() performs an 8-byte read-modify-write on the
-smaller ring buffer slot, corrupting adjacent ring buffer data or writing
-past the end of the event record.
+In struct btf_type, the type ID and byte size share a union, and only
+BTF_KIND_INT types are followed by a 32-bit integer encoding word.
+Because btf_type_is_char_ptr() and btf_type_is_char_array() do not
+verify that the outer type is BTF_KIND_PTR or that the resolved element
+type is a non-NULL BTF_KIND_INT before inspecting it, non-pointer BTF
+types can have their byte size misinterpreted as a BTF type ID, and
+arrays of non-integer types read out-of-bounds or misinterpret trailing
+BTF metadata as BTF_INT_* encoding bits.
 
-In addition, signed bitfields with bit widths other than 8/16/32/64 fail
-to resolve a fetch type, bitfields whose width is a multiple of 8 inside
-a larger integer or spanning a byte boundary fail to emit FETCH_OP_MOD_BF
-or select a container wide enough for bitoffs + bitsize, kflag=0 bitfield
-offsets >= 8 bits are not folded into the byte offset, and big-endian
-architectures use the little-endian left-shift formula in
-parse_btf_bitfield().
+Validate the BTF type kinds and NULL pointers before reading inner type
+metadata in both helpers.
 
-Compute the bitfield byte and bit offsets consistently during field
-lookup, select the smallest unsigned fetch type that covers the bit
-offset and bit width, and calculate the FETCH_OP_MOD_BF parameters from
-the selected fetch type size for both big- and little-endian bitfields.
-
-Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure field access")
+Fixes: 27973e5c64b9 ("tracing/probes: Add string type check with BTF")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v3:
- - Use ctx->last_bitoffs as code->lshift on __BIG_ENDIAN_BITFIELD
-   architectures in parse_btf_bitfield().
- - Fold BTF_INT_OFFSET(intdata) into bitoffs before checking alignment
-   and check !is_power_of_2(type->size) in get_bitoffset_of_field().
-Changes in v2:
- - Check (bitoffs % 8) in get_bitoffset_of_field() so unaligned
-   byte-sized kflag=0 bitfields also record ctx->last_bitsize.
----
- kernel/trace/trace_probe.c |   61 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 46 insertions(+), 15 deletions(-)
+ kernel/trace/trace_probe.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index a880a90642d7..54cd3c2584a8 100644
+index 54cd3c2584a8..b8f6a36ee0d4 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -486,6 +486,18 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
- {
+@@ -411,6 +411,9 @@ static bool btf_type_is_char_ptr(struct btf *btf, const struct btf_type *type)
+ 	const struct btf_type *real_type;
  	u32 intdata;
  
-+	if (ctx->last_bitsize) {
-+		u32 bits = ctx->last_bitsize + ctx->last_bitoffs;
++	if (BTF_INFO_KIND(type->info) != BTF_KIND_PTR)
++		return false;
 +
-+		if (bits <= 8)
-+			return "u8";
-+		if (bits <= 16)
-+			return "u16";
-+		if (bits <= 32)
-+			return "u32";
-+		return "u64";
-+	}
+ 	real_type = btf_type_skip_modifiers(btf, type->type, NULL);
+ 	if (!real_type)
+ 		return false;
+@@ -435,6 +438,11 @@ static bool btf_type_is_char_array(struct btf *btf, const struct btf_type *type)
+ 	array = (const struct btf_array *)(type + 1);
+ 
+ 	real_type = btf_type_skip_modifiers(btf, array->type, NULL);
++	if (!real_type)
++		return false;
 +
- 	/* TODO: const char * could be converted as a string */
- 	switch (BTF_INFO_KIND(type->info)) {
- 	case BTF_KIND_ENUM:
-@@ -520,10 +532,6 @@ static const char *fetch_type_from_btf_type(struct btf *btf,
- 			case 64:
- 				return "u64";
- 			}
--			/* bitfield, size is encoded in the type */
--			ctx->last_bitsize = BTF_INT_BITS(intdata);
--			ctx->last_bitoffs += BTF_INT_OFFSET(intdata);
--			return "u64";
- 		}
- 	}
- 	/* TODO: support other types */
-@@ -653,6 +661,12 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
- 		/* Add anonymous structure/union offset */
- 		bitoffs += anon_offs;
++	if (BTF_INFO_KIND(real_type->info) != BTF_KIND_INT)
++		return false;
  
-+		type = btf_type_skip_modifiers(btf, field->type, NULL);
-+		if (!type) {
-+			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
-+			return -EINVAL;
-+		}
-+
- 		/* Accumulate the bit-offsets of the dot-connected fields */
- 		if (btf_type_kflag(container_type)) {
- 			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
-@@ -660,12 +674,15 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
- 		} else {
- 			bitoffs += field->offset;
- 			ctx->last_bitsize = 0;
--		}
--
--		type = btf_type_skip_modifiers(btf, field->type, NULL);
--		if (!type) {
--			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
--			return -EINVAL;
-+			if (BTF_INFO_KIND(type->info) == BTF_KIND_INT) {
-+				u32 intdata = btf_type_int(type);
-+
-+				bitoffs += BTF_INT_OFFSET(intdata);
-+				if ((bitoffs % 8) ||
-+				    BTF_INT_BITS(intdata) != BYTES_TO_BITS(type->size) ||
-+				    !is_power_of_2(type->size))
-+					ctx->last_bitsize = BTF_INT_BITS(intdata);
-+			}
- 		}
- 
- 		if (next)
-@@ -858,13 +875,22 @@ static const struct fetch_type *find_fetch_type_from_btf_type(
- }
- 
- static int parse_btf_bitfield(struct fetch_insn **pcode,
-+			      const struct fetch_type *t,
- 			      struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
- 
--	if ((ctx->last_bitsize % 8 == 0) && ctx->last_bitoffs == 0)
-+	if ((ctx->last_bitsize == 0 ||
-+	     ctx->last_bitsize == BYTES_TO_BITS(t->size)) &&
-+	    ctx->last_bitoffs == 0)
- 		return 0;
- 
-+	if (ctx->last_bitsize == 0 ||
-+	    BYTES_TO_BITS(t->size) < (ctx->last_bitsize + ctx->last_bitoffs)) {
-+		trace_probe_log_err(ctx->offset, BAD_BITFIELD);
-+		return -EINVAL;
-+	}
-+
- 	code++;
- 	if (code->op != FETCH_OP_NOP) {
- 		trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
-@@ -873,9 +899,13 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
- 	*pcode = code;
- 
- 	code->op = FETCH_OP_MOD_BF;
--	code->lshift = 64 - (ctx->last_bitsize + ctx->last_bitoffs);
--	code->rshift = 64 - ctx->last_bitsize;
--	code->basesize = 64 / 8;
-+#ifdef __BIG_ENDIAN_BITFIELD
-+	code->lshift = ctx->last_bitoffs;
-+#else
-+	code->lshift = BYTES_TO_BITS(t->size) - (ctx->last_bitsize + ctx->last_bitoffs);
-+#endif
-+	code->rshift = BYTES_TO_BITS(t->size) - ctx->last_bitsize;
-+	code->basesize = t->size;
- 	return 0;
- }
- 
-@@ -1085,6 +1115,7 @@ static int parse_btf_arg(char *varname,
- }
- 
- static int parse_btf_bitfield(struct fetch_insn **pcode,
-+			      const struct fetch_type *t,
- 			      struct traceprobe_parse_context *ctx)
- {
- 	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
-@@ -1995,7 +2026,7 @@ static int finalize_fetch_insn(struct fetch_insn *code,
- 	} else if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
- 		   ctx->last_type) {
- 		/* If user not specified the type, try parsing BTF bitfield. */
--		ret = parse_btf_bitfield(&code, ctx);
-+		ret = parse_btf_bitfield(&code, parg->type, ctx);
- 		if (ret)
- 			return ret;
- 	}
+ 	intdata = btf_type_int(real_type);
+ 	return !(BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED)
 
