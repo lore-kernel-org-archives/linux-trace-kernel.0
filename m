@@ -1,56 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794564158;
-	b=YZxqw7giGqR0vj7wn5VDeRvopoQ7s9gqqHeFbm8SUH9qhttFPhcKtQ/5MiKffAI5VaXL
-	 /T3ymA++EtX1+KzIQJDPu9t4Iv8oWpC5tvUhJlSZ9BLfr/c+3VaTNC1adiHhPHbngm20F
-	 EfaO6mwA4h0bNhv/d48mbiDMqkk/XH8OJBdVEFr9OXwcKbP5FtBA2uiwRPPGTGFvdeQ55
-	 euq0cVnQvO0Fc70Iu71u1DpczAVLhFjN5WRdqFHk93skktNWjjpvKrSSYFiVnFKigqlug
-	 mDo80TYHUQ6HSobiPD6pz2Vc4e18P6BJGUTKT/EtJ1aqCbmlZ6Nxfh++mnQoIJrV1oQ==
+	t=1794564452;
+	b=u4Z6YhvkLUI+XeF6uWSo1slV+VcAnOQB1Mz7eScGdiRaxe4LZGz0TPLLInJoewLVe5Na
+	 cegV8LdW2DqjalBmdQReSKfWV61uOQh1DczN066fwYnQ7XWqDGIIcP6cbYryfW/Jp47Pk
+	 Cnm4a8OqBYtO4zsXfF3OblcMm9uIEMrtGCOVg2bCxijA1SrcJC8dtKWdH59oJwAn+rkwk
+	 9s8xaPeJGmTx+Lu3gyMowsUmrJYM6bWHlJwC0NBSxJ64JTftotCW8hDFSRuMb51CQiyl9
+	 l0j3qy4Z6Tkf6dlmAiAzHCbfN8EniMaAfcjlgKhXwDwMDr6s4YcfQvTvWGMIfvytgbg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794564158;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=q4jz2rb+3ayaGjNpX/u7p+U/YjCSD8t8rMldoGiC75Y=;
-	b=23csMfjNIjgzOzVAdF+Zrt7C685wy3K/AHW8p1xz2hS4cp6pWkpZiA1TGB4TRSw369KY
-	 PO04tbA6vKxhl0uKBE4dIYh7vMx1m3DrPH+uZnf2Z9wXLpmAB5AACKq8496S5llQnIy1y
-	 33d8xz8J0u4zhAOHxl2AXssNQidBScheeLlpuKmsO9S7P/W6/9usxeImOGncmOvy6kI75
-	 KuYR/Kn2CGuDTvHmyxJO0Go41kSiGBXTVDZLD+Nwq603/EnOShbJKOMzfwL7LvQUx0+iJ
-	 KcS9xYlLQENW4+nQ+Z2/Is2nCdCaLXMOKy+5cOEnJp+7nLqYTToGzWLWrXGNnKMV5hw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794564452;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=kW9V6R8t9vC4O2koqm2kdeNC91zL+6JVsXCGsMvMxSg=;
+	b=4Z3TGzwekpQt1hjVUYdLElfxDSSe4jhZdQu6xE+5jvmW9mNBMfsnSiHJah0Tr0FxPu4+
+	 lAl/xlkN0EdNRAkRdpn0bjFEUCgfDZ88ilgNrmouLFDUykSFAUogGcfa/a9gg1kYqK/Hz
+	 bIXfNefwZDNuHr4p/eEiPJ7v6jrCriVmbRvlsbhtRZwM21nGeU6gx9pxg9ibtMWaGQTw7
+	 rfa5RF6tLFruKoxOs/1lB8CtNSegz6avzfoSPprnN5uQNijMp0rUDsV2wx1wrJYCDEpNk
+	 1c69TnN0pbIMnPyCzu9oNyS0RTzxBSvG3yHh3VPtgOlDJ5yC63JA9+0zjMXghxHPwGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MfXKuDhY;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cl8v9+P4;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EECA606A32E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 10:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D39F606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 10:07:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D39F606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MfXKuDhY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7533E1F000C4;
-	Fri, 13 Nov 2026 10:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794564157;
-	bh=q4jz2rb+3ayaGjNpX/u7p+U/YjCSD8t8rMldoGiC75Y=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MfXKuDhYwk5Tv+nLeEo81GYsk38q+9AnF4fAjGvtyapMMAHHPR5/sTkubbiANakF9
-	 92D/Q8SfeqXisClhB7eVO6ZsYNMBxsyZffF74lXn1MW/5YsGrrKeUw6LrYGG3c8nuJ
-	 ZHDzt/bVE0PiSIW2udvYIZnLcqpgG/XlUnVuvr5HXFvxqE8zDHOwtq9XT1puiemDwX
-	 znJfX/agFAhnbkbIKY0xlpJU47JUWy2jhYxaI8QuYRLmrP4YtSIUMLxGSyi0ScFaP3
-	 D6U87uui9isq/4hZTfZeeDhFImlewEl0CICHGSSHL30a47v0dUNz4Kt1yYoVFja8gj
-	 pC6w0F7upX7ZQ==
-Message-ID: <sashiko-outbox-212596@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] tracing/hwlat: Do the latency calculations in
- nanoseconds
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Wenwu Hou" <hwenwur@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261113094918.2402297-1-hwenwur@gmail.com>
-References: <20261113094918.2402297-1-hwenwur@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 10:02:37 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cl8v9+P4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1794564451;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kW9V6R8t9vC4O2koqm2kdeNC91zL+6JVsXCGsMvMxSg=;
+	b=Cl8v9+P4SifJh6ew3/5lAKQeOLQXUcmh/PoCgbaCQtIpEifeB+LiAnH7YWtoV0oXMTaaQi
+	a6+G51/ssaTUSisPrcifJL+x9/RqA7Hfr7N6iWv2ntF8pte+nMBAjo5uGPNaNNqWjBLkbu
+	OvaQGoQ39g+IpGbeFdkT5OiEPOsgSiY=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-540-irYC2llTOaiCVXREjSt9-Q-1; Fri, 13 Nov 2026 05:07:29 -0500
+X-MC-Unique: irYC2llTOaiCVXREjSt9-Q-1
+X-Mimecast-MFC-AGG-ID: irYC2llTOaiCVXREjSt9-Q_1794564448
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8b69b8c6dd5so1167427b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 02:07:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794564448; x=1795169248;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kW9V6R8t9vC4O2koqm2kdeNC91zL+6JVsXCGsMvMxSg=;
+        b=ewmnSDAoGvYsO9koeS5rCoGhVlQafvjj3SzYJCLAIlK471iOFxQ7SZaqrYAJgVN5wM
+         xWl6mOFj4x8zhwMCa4N8KnfsXO2Mk2jS3qLgAiUs868MQlpKNWDjUAsyDL7guYhAvnpk
+         ctTOOonzfiazEtk2TafLElEs0qxOvQ0PozkOdkKl3Gailfd2gbBS+87ouawvUbDLzYZ+
+         UAxMhWIBM3xbrd2FLgQeBrd2spglOcoEGuDQ0x/PHh9Ya/ND8PL28dkw8c9ZLtGgBoFh
+         PrEAVtFn7ebDM6SAeVw5LMKoUyEKBXBdzJM/S9+TYe+cLl3DUS09F5HicSqyKdeM4Nfk
+         PMLg==
+X-Forwarded-Encrypted: i=1; AL+hErHqjhIlYy3hZDNRWwIGfdyHMbTT1Us9mHvob9oHWeq2ZwMo//H1BWduOC49sh0QYrFZwdHG5RrUp4j/JrxIVJvfv0Q=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8D3ZRtAm1hy/Pwe1LcshL8T2K0EFAxGPIkq8ajVwme6O3B30sW
+	tyrz+k3wh7qqelv1WH4RAOz5cL8rcIlLgNWXmvBQ+G+0FG5IejIQMFt3Jnkfog/lkzm8px3un5v
+	oIWQjZ7garBzPLdNdr/uAQjcndaRUREJ4cdwU3aKDBCB2FGB4NlpBEsh87GGj4vkA64usWsxy4l
+	54IZ7vbv816jiQypJBHHDl4mmMjbrhSv2gcB357UB3LI99j2N0
+X-Gm-Gg: AYBFou2f3MA1fCv0tWkgvvRqfmwsUQqHDo1dJLj09UUF43Z4fSuaXghkyNetoSQZxNu
+	YtAuD/0NIa2Yt01M0xA+z2Dj7ElgURI9Tahskt9W1aLGm5eB0jDhrLz5uzt686/tcZjf24CsXTZ
+	yKPg/+dRpBROXNz5D1q0VWEdKvMg+hZwY7Q4BE/VHvjaWsxw1G6z6Ww0nl13h3hkNUYC5p8Vtwe
+	VE8zxOpo7Ru3kM=
+X-Received: by 2002:a05:6a00:a21e:b0:899:5183:acdb with SMTP id d2e1a72fcca58-8beb3b3e993mr1964428b3a.1.1794564448221;
+        Fri, 13 Nov 2026 02:07:28 -0800 (PST)
+X-Received: by 2002:a05:6a00:a21e:b0:899:5183:acdb with SMTP id
+ d2e1a72fcca58-8beb3b3e993mr1964410b3a.1.1794564447687; Fri, 13 Nov 2026
+ 02:07:27 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,84 +90,67 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261112-rtla-mlock-v1-1-418986711b20@monom.org>
+ <CAP4=nvRQE+GKPT1-KgZ4OgcVV7eKqnkURaELutSMgK4T8YAZMg@mail.gmail.com> <20261113094423.xgAx5Goo@linutronix.de>
+In-Reply-To: <20261113094423.xgAx5Goo@linutronix.de>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 13 Nov 2026 11:07:15 +0100
+X-Gm-Features: AclHuK_AIphtSlPLaANmNgJ9inZQe0fAf97a-Oppqika-haxwWPY2pS6Dz2kyJA
+Message-ID: <CAP4=nvSEfWgR1GQxVCctBVL_9HrAgkET--UhZ-mdx_uCpk_1_w@mail.gmail.com>
+Subject: Re: [PATCH] rtla/timerlat: Lock the memory of the user-space threads
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Daniel Wagner <wagi@monom.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Clark Williams <clrkwllms@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Yj_U6KpQOX5CaS3xtwM1z4TcCn6hl7g5AZb7W80E56E_1794564448
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] tracing/hwlat: broken backward-clock check order in
-  get_sample()
---
+On Fri, Nov 13, 2026 at 10:44=E2=80=AFAM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+> > > +       /*
+> > > +        * Keep the measuring process in memory: the latency it repor=
+ts
+> > > +        * runs until it is back in user space, and a page fault on t=
+he way
+> > > +        * (its code, stack or libc pages reclaimed under memory pres=
+sure)
+> > > +        * would count as latency. cyclictest does the same with -m.
+> > > +        */
+> > > +       if (mlockall(MCL_CURRENT | MCL_FUTURE))
+> > > +               err_msg("Could not lock timerlat u memory: %s\n", str=
+error(errno));
+> > > +
+> >
+> > Can we make this opt-in, gated by a -m/--mlockall option, like cyclicte=
+st?
+> >
+> > We can add it as a boolean field into struct timerlat_params and pass
+> > down to struct timerlat_u_params. See e.g. 2ff4464e3283
+> > ("rtla/osnoise: Add IPI tracking cmdline option") for reference.
+>
+> Why make this an option? I would prefer a RT task doing the right thing
+> right away. cyclictest has a history of several options to do the right
+> thing. Is the reason why lock should be disabled?
+>
+> Sebastian
+>
 
-commit e1ff23abe0f3e347e9f8fcfd5d38bde48773198a
-Author: Wenwu Hou <hwenwur@gmail.com>
+I agree, you are right. I was thinking about rtla setting
+/dev/cpu_dma_latency to 0 as an option rather than by default (unlike
+cyclictest, in that case). If rtla's idea is to measure the system in
+its current configuration, it makes sense not to tune it by default.
+But the rtla user thread not having mlockall is a misconfiguration of
+the rtla thread (i,e. the measurement tool), not of the system.
 
-tracing/hwlat: Do the latency calculations in nanoseconds
+Plus, cyclictest can run as a non-root user that might not have
+permissions to mlockall. That is not an issue with rtla, which always
+runs as root.
 
-This commit changes get_sample() to compute latency deltas in nanoseconds
-and fixes the backward-clock error paths to clear
-trace_hwlat_callback_enabled before returning.
+So I take that back. mlockall by default is fine.
 
-> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-> index 3fe274b84f1c2..d8540c24b1ca3 100644
-> --- a/kernel/trace/trace_hwlat.c
-> +++ b/kernel/trace/trace_hwlat.c
-> @@ -229,18 +227,19 @@ static int get_sample(void)
-> =20
->  		if (time_u64(last_t2)) {
->  			/* Check the delta from outer loop (t2 to next t1) */
-> -			outer_diff =3D time_to_us(time_sub(t1, last_t2));
-> +			outer_diff =3D time_sub(t1, last_t2);
->  			/* This shouldn't happen */
->  			if (outer_diff < 0) {
->  				hwlat_err(BANNER "time running backwards\n");
-> -				goto out;
-> +				ret =3D -1;
-> +				break;
->  			}
->  			if (outer_diff > outer_sample)
->  				outer_sample =3D outer_diff;
->  		}
->  		last_t2 =3D t2;
-> =20
-> -		total =3D time_to_us(time_sub(t2, start)); /* sample width */
-> +		total =3D time_sub(t2, start); /* sample width */
-> =20
->  		/* Check for possible overflows */
->  		if (total < last_total) {
-> @@ -250,7 +249,7 @@ static int get_sample(void)
->  		last_total =3D total;
-> =20
->  		/* This checks the inner loop (t1 to t2) */
-> -		diff =3D time_to_us(time_sub(t2, t1));     /* current diff */
-> +		diff =3D time_sub(t2, t1);     /* current diff */
-> =20
->  		if (diff > thresh || outer_diff > thresh) {
->  			if (!count)
-> @@ -261,7 +260,8 @@ static int get_sample(void)
->  		/* This shouldn't happen */
->  		if (diff < 0) {
->  			hwlat_err(BANNER "time running backwards\n");
-> -			goto out;
-> +			ret =3D -1;
-> +			break;
->  		}
+Tomas
 
-[Severity: Medium]
-Can a backward clock jump between t1 and t2 bypass the diff < 0 check and
-record uninitialized stack memory in s.timestamp?
-
-Because total < last_total is checked before diff =3D time_sub(t2, t1), any
-backward jump between t1 and t2 where t2 drops below the previous t2 (or
-below start on the first iteration) trips total < last_total first.  That
-logs "Time total overflowed" instead of "time running backwards" and breaks
-out of the loop with ret =3D=3D 0 before ktime_get_real_ts64(&s.timestamp) =
-runs.
-If outer_diff exceeded thresh earlier in the same iteration while count was
-still 0, outer_sample > thresh then causes trace_hwlat_sample(&s) to copy
-an uninitialized s.timestamp from the stack into the ring buffer.
-
-Also, diff > thresh is evaluated before diff < 0, which converts a negative
-s64 diff to a large u64 when comparing against unsigned u64 thresh.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113094918.2402=
-297-1-hwenwur@gmail.com?part=3D1
