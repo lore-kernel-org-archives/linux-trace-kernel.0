@@ -1,87 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582781;
-	b=bjm5Nd5TGe0AgNhq9E+SmwnMGrxFUpzhS/UeKWIoRZaTGglcoAzCXNvqFIQ4iC3ghxrx
-	 1YBFbWMyH/kTPFVaapLCLdk2JgZ+HZrEdAKLOeKxig6P6G/0A6VcdyLU3EpOFbFg+YJeF
-	 Mffk+rxtYUQiwxbUXs37893jJvRlzrReI3AjuKcLoxiZ8AHsMnweAB6c255N4sF6hDCEf
-	 P6taBubLpk3Vdi8S6YyAKDwR/bcXag587Gf1A+PsKlBpZ18ElD1ssGM2gBMji9UZZzZs+
-	 8LfHOXSxOLenBtfDqhrgLuvTEbLUPmnXrwsGpewJXExVxbxt12xAVFzaxPv96js2v/g==
+	t=1794583654;
+	b=Kxz3nwYk8EbWjakMS+HiAXZ/pk6ERo8EdnfwP7UQAXxaRY/7FMOve2hTpoi9y9XSStrR
+	 yBmj9vmw1TYVCXz5DkI36VgNmNIfFG36TyfQ1vMmdh/1x9LN9viKuu/Ln2AeAqx0i/vBF
+	 ot0shTPnaADWpa+rQ4ScoXztpbUUxWL/S2Wsmh4aw4bwBrRmB+LNEXsP9XhSkaZgFrGOO
+	 8L8YlGSdmubSHQyvg6V7nQwiszv+p7B2GTeyczT/AheZ7InO0ljrQGKCUgFxVm632NHD0
+	 UaPGvSm41QNVhV34B9JU6KaS9WHfE54n8dhI4lmBiRgkSJP9OFdSlcJJZ7urpR18OZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582781;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794583654;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=WDUSqIzvagAi6A91Fak+66DHMKH7R3y/uiOt+fyuEM8=;
-	b=NPYLkNbHHVqPwUI/s2mO2UTtxnpq/Duh6kWqkUfVYCd7bj9/3YNXwrCtIICjiLhWuzhL
-	 RssI4U3TaTi82rhrnhPwIpt9OOTGGznUX8Vi6/t0PtoLiNzvyc+HtLYVItEkUKP73W6ey
-	 Yu1C6OK0I264fcnWv6ch5z2WII8AiBb+JzAQMCGW7+xWzSzkYTSFe2qVheQ3ws625Qr+3
-	 md+0KgrBakFIafIMCS+TeszMM2n+gMw+FQg8YudmpGam0DgG2iwvmqtFQq6jX+gzsClgp
-	 1hITo0CMCkNbfOrkG9hQkZyw0SRaB0xz1d40wTsJp934+CqZ/b/Y2nIFUgoQi62kkYQ==
+	bh=Ufj3bjLDpGq20+8LFXkkxCdAXIxC5JGd/uesP7CXbSQ=;
+	b=uNkyxAeSrXfjqNrx1QF4VI+pCDbLkLnVLvWarlb4dQFgd/bMTL0aXPiu5TFASjC+IpSm
+	 gGFNKFaRzNlsqKOpbWcUJ0u22UCUtxuwLeQWQhQHOEQ8Hc/F1OEYgMIXa9zvYy5h+NsOV
+	 uuvZtuZHBR6feqjU7srr4mTfvZ1UGBM4l+KEfaDW65H+4+CzZk4L+GMcyvp4xo/cv9kvF
+	 zXU6V5yBhV1l5Yo3E1Z9Kt6fIw29b/c/vnRz67aU0FEv5e6y4/+1VnKsh5EI64VQwWzgn
+	 It4Q+eJmmO57IC50L5Runjlaaf7FT5h99NhTmv8BaF8jzxXwXweSlcEiYst0iZxh5sA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WMlaUr5A;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pp3EJHp1;
+	arc=none smtp.remote-ip=209.85.218.70
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F8A606A327
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:13:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1F8A606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A1F606A323
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 15:27:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 08A1F606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WMlaUr5A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794582779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDUSqIzvagAi6A91Fak+66DHMKH7R3y/uiOt+fyuEM8=;
-	b=WMlaUr5AJeIhzBDZgT0vCZ37Iudmd4ixkltoFZom+X0xcoziIZSrPeaihP/lTzJh8L2qYL
-	5r98Rrbvha1w4pS/No1ITpkod4+U0dnjTfOdPeeBdUnyoWFMXmDASrICeYxwVqnmNGbcv+
-	ND2BSvXtfDdkddyZBN0VGsS6+XjcVGM=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-511-Z2YOPezeOAmueAhZ9viqNw-1; Fri, 13 Nov 2026 10:12:58 -0500
-X-MC-Unique: Z2YOPezeOAmueAhZ9viqNw-1
-X-Mimecast-MFC-AGG-ID: Z2YOPezeOAmueAhZ9viqNw_1794582777
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cd3b9e70f88so1265889a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:12:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pp3EJHp1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c293e604f0eso41006866b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Nov 2026 07:27:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794583651; x=1795188451; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Ufj3bjLDpGq20+8LFXkkxCdAXIxC5JGd/uesP7CXbSQ=;
+        b=pp3EJHp1ttZ0m+dK7vaMjimBBXm2TQHLlVACJtfuO8Qp1b9UI2HpixPrU7LNr3M4kS
+         GHyHkPYJBftBWF+R/nsrHtml0rnVVY9Flq2FhRwsUI7J0Ota20FWFnmXhR1xjblUv+/3
+         CnnRS5unlW0pBDquMiZwieZRutJ8EvimuuMqo2RdYAIDIMacMourFb3Vb/Awn9WD6dIS
+         Y8e8tjnBf8XMT7BIVAMfxHXuqYsoVYnIJq5GFPDhoZQPKrhK63TnmJVQ1jvftevba2+J
+         NyPfVG1ClpLk+97wZ8s18Y9K3zO7jp0h4U85x+JEC15/jMR99/6SNYtjKRV07f0Ym/KR
+         J3EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794582777; x=1795187577;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WDUSqIzvagAi6A91Fak+66DHMKH7R3y/uiOt+fyuEM8=;
-        b=fFrs2QYOwFMpA0BP9MCceLuax8sVOvoymXDEW7YY2aGP80LN4xUzyMFtr5RUTiNu19
-         3pVRGkGzhkzBW6HBuq3QWNbDjHZU5CWVjhbh0HGU+O8i10FRuDHnfqIAaoDMsXRgGFRM
-         kk4ivIJYC0Pr0fAdCDymVuhQ7M4fWsHd/yG0Kf57/r4qy2mUiNzJWw+HjEXeYJtAf+Vx
-         7BFGnh7TUMao/Ti8Rw6Jvk3K3EqrUa5zw2+5BPHDn0WYuf2ldYx1OH4XxZTRcxpvRhhH
-         JT2Cy1p0vfK06BO4qylBWBf5B2yHg1VgcVlutg8niaTksrrp8Qpbf4NCju7d2RWxOy+U
-         IrbQ==
-X-Forwarded-Encrypted: i=1; AL+hErEkhLWWn/LQc85R+mVmATcncmZrapsRmvOEbQq/GcNXVsBflj5bpmM+Nte/enJtThKec6F897CSZ/q76H6d3Ij4KNY=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8d/zNt20eID8OL2j7np31OJ/fAqj7TMXX+a/kqJyMONukpDE3u
-	RwYJxaDpswGu6SuTQUv9h+d1hm0mv+CO/ONTFvD5thY//JUtKj6pVS2qGA6V2+5wmQEC5J6WbzU
-	SErNbxe4K3AdPXf6EXp5dwIrZoxTOayNzrGaHZvR46TPUAtM3uXO4tqgt1Mic6B+qU5CzpIvkg/
-	KG5wepOdlfMvXZKLq8nZyVQ0wTwg6xZdfn4Hr/YiH4Uu7S8EoY6D48Umt0XhU=
-X-Gm-Gg: AYBFou0m0tpg8vrckTvtWfCWlnDFqQmi+MuhkDYzeYO37mrI5ehgmTqYyS7/DhtOg02
-	CbQd1284XPj11652H/T8W7jta70jnzb1U5vdCVpjksw43Of3daIqKL5sllojsdRpLuiOOnWD12N
-	57qT2AiGUHiDBK5MT/iiS70WnclkkrwiLEZDlbJBaFN5twckT/Q8Vz643m6A+5caU5nNfJqmZMP
-	C0cVC+o2zMo8MI=
-X-Received: by 2002:a05:6a20:e68c:b0:3e2:a849:64c0 with SMTP id adf61e73a8af0-3f7a85d9479mr2660414637.51.1794582777344;
-        Fri, 13 Nov 2026 07:12:57 -0800 (PST)
-X-Received: by 2002:a05:6a20:e68c:b0:3e2:a849:64c0 with SMTP id
- adf61e73a8af0-3f7a85d9479mr2660388637.51.1794582776845; Fri, 13 Nov 2026
- 07:12:56 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794583651; x=1795188451;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Ufj3bjLDpGq20+8LFXkkxCdAXIxC5JGd/uesP7CXbSQ=;
+        b=DkF0ZYP4sWY/xklVIAj+q3U4hKmqCRgfqPRPJpUJ9yNk4TNgg4B40oG7RvQlBZI8bM
+         5dR6rU93zTYl3OMNwp6zLRUXPaS+R4GJ7rVKiTz7bm19RZMNHr9kHZprj9C6PuamOMgZ
+         ZZo0E1r/s0lRsL0XmZP6npVqjGNeh5QYTq3Oe6oVf+y0fHguM7WZr1G9qNMK0NUTa2mi
+         EEha3B14v6UoVNQUrg6sYukvTTKb/Ip5spmDJUre8EIohb3oWy7mcdtveBIbq2wkCnQq
+         Z8jzh5cBYS5Zos6WBm9H8JAwcgLzHQ8Uhi/fECf525SJlSuJHo8EdiHq9n4pAfp27EZK
+         m7NA==
+X-Forwarded-Encrypted: i=1; AL+hErFDincArzJ5XRucm7YtMDgZ/jUpEGn2r2z9FIK4KQ6onIqMcrvVMyQd4oie2GhZ8CHvnEpKS3avNpN87vnEnNwIFNc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9D9rBhB9aGiY8HrZCC6SRsnYpxFwoIAPAf3OZOrzJngbCQPdmz
+	3gWbDgdzsM3MIQ2PS1KGxNzdcGyYXVoq84x8iAwHS6MRXo1ZqxhefrDAWstK20RugitT0rpgsgB
+	b22KdKrrj2Ta8fn1tLEMpUg==
+X-Received: from ejbkh10.prod.google.com ([2002:a17:906:f80a:b0:c50:7d13:f19a])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:9485:b0:c40:b477:dfa0 with SMTP id a640c23a62f3a-c509637afb4mr264673666b.18.1794583650971;
+ Fri, 13 Nov 2026 07:27:30 -0800 (PST)
+Date: Fri, 13 Nov 2026 15:27:09 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -90,48 +77,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261113-rtla-mlock-v2-1-14382f140da0@monom.org> <87o6bswzj9.fsf@jogness.linutronix.de>
-In-Reply-To: <87o6bswzj9.fsf@jogness.linutronix.de>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 13 Nov 2026 16:12:42 +0100
-X-Gm-Features: AclHuK_feLH1S3_TxeYU0u90CBSg25p2KMxJp7qcgxlk7RF6fKY5CRJ6z7vGJXQ
-Message-ID: <CAP4=nvTswKUTSJiFRJK7KXAvc3JMLDCgXW=mSV6BO3mMucyWnA@mail.gmail.com>
-Subject: Re: [PATCH v2] rtla/timerlat: Lock the memory of the user-space threads
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Daniel Wagner <wagi@monom.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ofCy44UrQRMcWeGzVgkxxPYYda7RDfSSkG7-8nKctQ8_1794582777
-X-Mimecast-Originator: redhat.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.611.g1030f0b940-goog
+Message-ID: <20261113152729.837429-1-vdonnefort@google.com>
+Subject: [PATCH v1 0/4] ring-buffer: Fix remote reader page swap and memory ordering
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, bgrzesik@google.com, 
+	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 13, 2026 at 3:56=E2=80=AFPM John Ogness <john.ogness@linutronix=
-.de> wrote:
->
-> It isn't because the page faults show up as latencies. It is because
-> doing non-real-time work with a real-time priority is stealing the CPU
-> away from other real-time tasks that presumably have actual real-time
-> work to do.
->
-> This program peforms severeal non-real-time activities with the
-> real-time priority, which is not setting a good example. But I am only
-> reviewing your patch, not the full source.
->
-> John
->
+Bart=C5=82omiej reported a remote tracing issue on Android kernel branches.
+Although that code differs from mainline, investigating the report
+showed that upstream has the same underlying shortfalls:
 
-The only other activities the user thread performs with RT priority on
-before entering the timerlat interface read loop are setting the
-cgroup and opening the timerlat interface file descriptor. I agree
-that ideally, setting the priority should be done just before the
-loop.
+1. Potential corruption of a simple ring buffer because it does not
+   prevent swapping the reader page with the head when the reader page
+   is already the tail page (nor order the page::commit reset before
+   updating tail_page).
 
-However, I don't think either activity takes too long, so the
-difference is probably negligible in practice. Unlike mlockall, which
-(if I understand your point correctly) might pre-fault from disk
+2. Potential failure of rb_advance_reader() because
+   __rb_get_reader_page_from_remote() checks rb_num_of_entries() before
+   checking the reader page commit via rb_page_size(), and lacks memory
+   barriers ordering page::commit and meta::entries.
 
-Tomas
+While at it, order page::commit with page::data and page::time_stamp
+(patch 3) and add the missing pages_read increment on remote reader page
+swaps (patch 4).
+
+Vincent Donnefort (4):
+  ring-buffer: Skip remote reader page swap when on tail
+  ring-buffer: Check remote reader page commit before meta entries
+  ring-buffer: Order remote page commit with data and timestamp
+  ring-buffer: Increment pages_read on remote ring buffer page swap
+
+ kernel/trace/ring_buffer.c        | 46 +++++++++++++++++++++----------
+ kernel/trace/simple_ring_buffer.c | 26 ++++++++++++++++-
+ 2 files changed, 57 insertions(+), 15 deletions(-)
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+--=20
+2.56.0.611.g1030f0b940-goog
 
