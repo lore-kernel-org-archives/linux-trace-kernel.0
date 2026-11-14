@@ -1,50 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.244
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.209
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794668787;
-	b=NgOOW1FVA0sjV/az4yMCD/eCK7zyGAz0J9evo0ZPSgoUOXm4EzyTFXFKLmgFN2YA07nA
-	 FI8As0lydh9s5Mx9r4DD8jLCh8fxJHjHsA/HqrzOSPTiI4LI69mxEEASXTiN+sAVVxSMf
-	 lB7gte2zShyKWmEYysUH6WQdpUM2ETqXYp+/quEyaSJWGZDraQVkiJK/6oPzQIPVMxkgx
-	 aVJJOw+4NzKbX92ldM/OCUNDF4kpUf4hiLE6jtM0Nze8T/TjLFjx7XdnlSNQ6ENFujjft
-	 apW6m1CV25S7MKNkPfy9JAe5vmDArjBFcXQU13iE+LjoACPpv5yFYIl++mnNUpT74gg==
+	t=1794668795;
+	b=QeJC+qtssBKmaMP7S3MAB7+mS7YiCTosVZ5/2Hf3JaYustH1HfFPFgYEENMGFufTGxmb
+	 DLLyy4TlyX3Gf/4v4RXF73oZGhAtqjul8FP7zmv7N5EdArK6/F0Y4loWTg0yVXRaeMA8H
+	 3OGssaahqDNlPFDE5DBEdtUYMYka5Nn94YvfJlDlIW1LrcQ8CH2zFED9dcxZAem/qyN8d
+	 1cWD+gnRxy+EwnZjzThybha5N1hraNGhlQmvtYKIkhR9yi8lT+sdavdYtDIwNLE7FfQGT
+	 96kKbELdaZUZWnj10QhSibXtLYrwQ7XHPyMS3EQ9W9wSAdnXAIyIiPkWW80xsP5F3GA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794668787;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794668795;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=GqVfe+gMMe0HOFEnoFcjKGVxfj+tUTB2vMVxeIhcZK8=;
-	b=NiAhyd74uYW+j9WimV7SJPO8QSrSgmLnNUEAwaMWB1NgksCCwXsYp2PEdG1kYjWnNjR/
-	 dVpslG0n3EV0/4u9qXJdPNtTuQs1WydzuJSXNfH5UYndE3Q8V0X7z76fwbhyUPtGeQbjn
-	 856S4h4zhBALjivTZ6mdC5CUr9rlybaz6RrQxFlmkAUiMn0NVlptATDuodoFXWhQ/o+7+
-	 oEadhJVFnAomydH1qHTiATZAEemQmfMCSAJPH4t2UHja/Tu92KNVl/qowP/9qGFKZt6Y5
-	 06kyqQDmrR2DCSjQn0HqnjIWVg8OiZKnpbaCyihzdrXN5tQdEXusxoawcO1N3yMBSUw==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=8hoXA0ozN3gwIjzw6dYmmpeGCJhv4eVHbd/aitfqsyg=;
+	b=qF7sI2Cznxj2tgrt5D8aEapB1Xwq5swqe2MLJnENn0akMOetQqaKR+LCTaCzY/dvcYHF
+	 Z68GJ8pHZMplt9S2I/wACTDndFTm9cnayWanWRfClbNG+cnb+f5IhJN0xODzLf8Rb84L+
+	 DD2bh9WOXgJuEBdP526U0nFSYgx9TUVR95bX8upr9yVR5qAaH4udfoVwIM91f4F4OrRMm
+	 dPDvou0FPOy2abfZ8ZFDDLuI/h6Kf4bhK+GM+g2x+47tZMc2xKfp7klg7ab9sBsxa8+F7
+	 xs59v6PS8lwYMtb4LATT2xjG2Ke5J7/FASXdEdriob/v8b+EDSCwUkfZZMtNODa5hbg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="ab/7ZlsT";
-	arc=none smtp.remote-ip=91.218.175.244
-Received: from mta0.migadu.com (out-244.mta0.migadu.com [91.218.175.244])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=E56rfpwl;
+	arc=none smtp.remote-ip=95.215.58.209
+Received: from mta1.migadu.com (out-209.mta1.migadu.com [95.215.58.209])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B97606A327
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 15:06:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9B97606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5FE606A333
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 15:06:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E5FE606A333
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ab/7ZlsT
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=E56rfpwl
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=3EHbdy83rCpwpfT1fsnCR8rbfvn0CmloPXzAcMGse/I=;
+DKIM-Signature: a=rsa-sha256; bh=m5MKL4gzWmcPp3xQ829VTnO6NwAqmpOdJ4pSoxn+PB8=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1794668783; v=1; x=1795273583;
- b=ab/7ZlsTtiVY3VB3DcqUDjUiGrLBdgSEEQTEZoaETB8zKE925WeOA9gI0qnKv+BmMt2NIJ94
- /zeKbLuHocWwAOSZ0BQJB9CMzTwIpURnaKXhos6P0mWtRfB7IbU069drQAeJeZV1UDLqQG8BKpw
- bb9atwlvvcbLVQymyyWrYjb0=
+ t=1794668792; v=1; x=1795273592;
+ b=E56rfpwlR0Ysyk1VlP1WyyRscGkECdTh5DvK046vMzumUL0+viQpBJFYNRKY1m8Zd1Y7xhmI
+ H7/bEpPai+1NHykWepvCZ/ZHx/e/KcaThX9SfPS2v+NDm3y///RbJ3Zit8+uKSonPWIYJ+i1fVk
+ YbHsv+axCeRPGN8+mNyi/xws=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5012754fb9425d27;
-	Sat, 14 Nov 2026 15:06:23 +0000
-X-Mizu-Trace-ID: 5012754fb9425d27
+Received: by smtp.migadu.com with ESMTPS id 5c2156d3f847186b;
+	Sat, 14 Nov 2026 15:06:31 +0000
+X-Mizu-Trace-ID: 5c2156d3f847186b
 X-Migadu-Flow: FLOW_OUT
 From: Leon Hwang <leon.hwang@linux.dev>
 To: bpf@vger.kernel.org
@@ -71,10 +72,12 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH bpf-next v2 0/9] bpf: Add log support for tracing link_create
-Date: Sat, 14 Nov 2026 23:06:01 +0800
-Message-ID: <20261114150610.84507-1-leon.hwang@linux.dev>
+Subject: [PATCH bpf-next v2 1/9] bpf: Add log support for tracing link_create
+Date: Sat, 14 Nov 2026 23:06:02 +0800
+Message-ID: <20261114150610.84507-2-leon.hwang@linux.dev>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261114150610.84507-1-leon.hwang@linux.dev>
+References: <20261114150610.84507-1-leon.hwang@linux.dev>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,69 +89,128 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I'm planning to add syscall common attrs support for LINK_CREATE cmd.
+Tracing BPF_LINK_CREATE returns an error without explaining why attachment
+failed.
 
-This is the second series for the plan, that adds syscall common attrs
-support for LINK_CREATE of tracing prog and cgroup prog.
+Pass the BPF_LINK_CREATE log to the tracing attach path and report invalid
+attach parameters. Also pass it to bpf_check_attach_target() so freplace
+attachment to a new target can report target-check failures.
 
-BTW, address Andrii's review [1] in patch 5:
-1. Change if (!OPTS_ZEROED(opts, iter_info_len)) to if
-   (!OPTS_ZEROED(opts, log_opts)).
-2. Add comment to iter_info and iter_info_len that they are
-   deprecated, and use iter.info and iter.len instead.
+Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+---
+ kernel/bpf/syscall.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-Links:
-[1] https://lore.kernel.org/bpf/CAEf4BzbW4zwL-9j8e2B6KNXVNwsfWyMSAo_RsGCqv-nu_yGhTg@mail.gmail.com/
-
-Changes:
-v1 -> v2:
-* Add log_opts support for bpf_program__attach_iter() API in libbpf.
-* Add test to verify the log for freplace max_ctx_offset case.
-* Update a subtest to verify the log_opts in bpf_program__attach_iter()
-  API.
-* Add log for freplace max_ctx_offset case. (bot+bpf-ci)
-* Drop unnecessary bpf_verifier.h include. (bot+bpf-ci)
-* Change log to "Invalid tracing attach_type.\n" when the link
-  attach_type is not prog->expected_attach_type. (bot+bpf-ci)
-* Change BPF_XDP to BPF_TRACE_FEXIT in tracing link_create test.
-  (bot+bpf-ci)
-* Drop dead iter.len check in libbpf. (bot+bpf-ci, Sashiko)
-* Add OPTS_ZEROED(opts, iter) check. (bot+bpf-ci, Sashiko)
-* Swap log positions of iter_info and iter_info_len. (Sashiko)
-* Update bpf_program__attach_iter() to use iter.info and iter.len.
-  (Sashiko)
-* v1: https://lore.kernel.org/bpf/20261109140816.5196-1-leon.hwang@linux.dev/
-
-Leon Hwang (9):
-  bpf: Add log support for tracing link_create
-  bpf: Add log support for tracing_multi link_create
-  bpf: Add log support for iter link_create
-  bpf: Add log support for cgroup prog link_create
-  libbpf: Add log_opts support for BPF_TRACE_ITER
-  selftests/bpf: Verify tracing link_create logs
-  selftests/bpf: Verify tracing_multi link_create logs
-  selftests/bpf: Verify iter link_create logs
-  selftests/bpf: Verify cgroup prog link_create logs
-
- include/linux/bpf-cgroup.h                    |   6 +-
- include/linux/bpf.h                           |   3 +-
- include/linux/trace_events.h                  |   7 +-
- kernel/bpf/bpf_iter.c                         |  27 +-
- kernel/bpf/cgroup.c                           |  76 +++-
- kernel/bpf/syscall.c                          |  29 +-
- kernel/trace/bpf_trace.c                      |  26 +-
- tools/lib/bpf/bpf.c                           |  23 +-
- tools/lib/bpf/bpf.h                           |   8 +
- tools/lib/bpf/libbpf.c                        |   5 +-
- tools/lib/bpf/libbpf.h                        |   3 +-
- .../selftests/bpf/prog_tests/cgroup_link.c    | 324 +++++++++++++
- .../selftests/bpf/prog_tests/iter_link.c      | 156 +++++++
- .../selftests/bpf/prog_tests/tracing_link.c   | 429 ++++++++++++++++++
- .../selftests/bpf/progs/tracing_link_ctx.c    |  17 +
- 15 files changed, 1083 insertions(+), 56 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/iter_link.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_link.c
- create mode 100644 tools/testing/selftests/bpf/progs/tracing_link_ctx.c
-
---
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 04a3b3c80c74..cf6bf3765b3d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3674,7 +3674,8 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 				   int tgt_prog_fd,
+ 				   u32 btf_id,
+ 				   u64 bpf_cookie,
+-				   enum bpf_attach_type attach_type)
++				   enum bpf_attach_type attach_type,
++				   struct bpf_verifier_log *log)
+ {
+ 	struct bpf_link_primer link_primer;
+ 	struct bpf_prog *tgt_prog = NULL;
+@@ -3711,6 +3712,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 	}
+ 
+ 	if (!!tgt_prog_fd != !!btf_id) {
++		bpf_log(log, "tgt_prog_fd and btf_id must be both set or both unset.\n");
+ 		err = -EINVAL;
+ 		goto out_put_prog;
+ 	}
+@@ -3723,12 +3725,14 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 		 * attach_tracing_prog flag is set.
+ 		 */
+ 		if (prog->type != BPF_PROG_TYPE_EXT) {
++			bpf_log(log, "tgt_prog_fd is only allowed for freplace prog.\n");
+ 			err = -EINVAL;
+ 			goto out_put_prog;
+ 		}
+ 
+ 		tgt_prog = bpf_prog_get(tgt_prog_fd);
+ 		if (IS_ERR(tgt_prog)) {
++			bpf_log(log, "Invalid tgt_prog_fd.\n");
+ 			err = PTR_ERR(tgt_prog);
+ 			tgt_prog = NULL;
+ 			goto out_put_prog;
+@@ -3783,11 +3787,13 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 		 */
+ 		if (prog->type != BPF_PROG_TYPE_TRACING &&
+ 		    prog->type != BPF_PROG_TYPE_LSM) {
++			bpf_log(log, "Only allow re-attach for tracing and lsm progs.\n");
+ 			err = -EINVAL;
+ 			goto out_unlock;
+ 		}
+ 		/* We can allow re-attach only if we have valid attach_btf. */
+ 		if (!prog->aux->attach_btf) {
++			bpf_log(log, "Invalid attach_btf.\n");
+ 			err = -EINVAL;
+ 			goto out_unlock;
+ 		}
+@@ -3803,7 +3809,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 		 */
+ 		struct bpf_attach_target_info tgt_info = {};
+ 
+-		err = bpf_check_attach_target(NULL, prog, tgt_prog, btf_id,
++		err = bpf_check_attach_target(log, prog, tgt_prog, btf_id,
+ 					      &tgt_info);
+ 		if (err)
+ 			goto out_unlock;
+@@ -3843,6 +3849,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 	 */
+ 	if (prog->type == BPF_PROG_TYPE_EXT &&
+ 	    prog->aux->kprobe_write_ctx != tgt_prog->aux->kprobe_write_ctx) {
++		bpf_log(log, "Invalid kprobe_write_ctx.\n");
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -3856,6 +3863,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 	     tgt_prog->type == BPF_PROG_TYPE_TRACEPOINT ||
+ 	     tgt_prog->type == BPF_PROG_TYPE_SYSCALL) &&
+ 	    prog->aux->max_ctx_offset > tgt_prog->aux->max_ctx_offset) {
++		bpf_log(log, "Freplace prog accesses more ctx than its target.\n");
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -4374,7 +4382,7 @@ static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
+ 			tp_name = prog->aux->attach_func_name;
+ 			break;
+ 		}
+-		return bpf_tracing_prog_attach(prog, 0, 0, 0, attach_type);
++		return bpf_tracing_prog_attach(prog, 0, 0, 0, attach_type, NULL);
+ 	case BPF_PROG_TYPE_RAW_TRACEPOINT:
+ 	case BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE:
+ 		if (strncpy_from_user(buf, user_tp_name, sizeof(buf) - 1) < 0)
+@@ -5907,11 +5915,13 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_common_a
+ 					      attr->link_create.target_fd,
+ 					      attr->link_create.target_btf_id,
+ 					      attr->link_create.tracing.cookie,
+-					      attr->link_create.attach_type);
++					      attr->link_create.attach_type,
++					      log);
+ 		break;
+ 	case BPF_PROG_TYPE_LSM:
+ 	case BPF_PROG_TYPE_TRACING:
+ 		if (attr->link_create.attach_type != prog->expected_attach_type) {
++			bpf_log(log, "Invalid tracing attach_type.\n");
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+@@ -5929,7 +5939,8 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_common_a
+ 						      attr->link_create.target_fd,
+ 						      attr->link_create.target_btf_id,
+ 						      attr->link_create.tracing.cookie,
+-						      attr->link_create.attach_type);
++						      attr->link_create.attach_type,
++						      log);
+ 		break;
+ 	case BPF_PROG_TYPE_FLOW_DISSECTOR:
+ 	case BPF_PROG_TYPE_SK_LOOKUP:
+-- 
 2.55.0
+
