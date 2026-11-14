@@ -1,94 +1,93 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794663297;
-	b=RLvnosyrFyv0QTOH/5hqp9RhWypmZwiZjqq9yrSdfjifLArVz++KN9+oGstNgFGNaBZJ
-	 e1eNBAc0BrGwMCnQa1kF9fciyQCB0m0ukiIWnGr/+fx8ABMsVI83ZfJnreSw0FgZAufmK
-	 PTFZBOPmPOpwWIiQdIGqJpYy5BufMrxBzeXdVX8pJZAUbMv3EhayocbwC0tTZLGcw32FK
-	 Q/uJOwroHrI6WaMcLv2hgG36DmTEJvrWNtvOMdCjXsqxxOcxko7DPjr0U/9pP9V/eyUwT
-	 BFLYGfimlWVgyJDJFIHR2sl2lQKjcvI8Dk02kl2urXu+3HcJk96+NJAx83uyomks9hw==
+	t=1794664007;
+	b=2Lc/2c9GLZnIrQk8X09Rtp2KAQWIEy4LYqVoc6sv0BPEoTD8G0E3s+VPa8CRDAa98i9J
+	 6a/u44s7/FDIStQzIEO35BznhYkkKQucYruVVv5cOowrv+XTTm7T6Wd82AInfBOLi9Mfg
+	 Bz8C59nrBOW2lwxbCkj2icwo0P8Wj6hRZsLH0ED0aNbX49OizHSGIe36pUDK7r+4LBMxY
+	 BfOxZRoYNmINhds9a3R8bK+hJB3RgUfkXhIwHTDfDMUcfj/oRt8FjTVihV87rtYvtqTp7
+	 LpylCPT9GY57idAkEsANz0XTr7J4c/pA+74kmRgPHKnAi7sKD7QZHBhFBT4Xl+OebHg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794663297;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794664007;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
-	bh=iITVNj1hA8VysTM3SegZsQpdbGDdaeAWi8dvud7vL4Q=;
-	b=0O2hDrJlshFMTGCd0iRNMgx7PfhyBzemQl1mbvEgC37zI6rpu+doYQ7Dcoxsua9Sbgbf
-	 wAuY0Yn9J2pam+d0qx2lonzCyqBOUhOpmnn55ue7QPZLvckGhJRDAb5ZpyO3CKT0AdDik
-	 WOSi4psBrO626afWExjh2oBhEdF/ysJ9vyrLw7/5IHDvNpWDxZCKrMW/zq1RmnG7pwWf0
-	 c5iX5AsVMHbBRphqmlVvIZBsJn6zqFH/14HIh4DDo0qnNyI3cRhHuS/OQCtsTx4QyYhPi
-	 kg1g991TxqdCIYIWnkI674I2OLZ/jrkuIt8RVo3sApyma3AP8sx/KrJVZKDduQHZCfg==
+	bh=BR1VC/UzZxQOEPl73tQotgFkTmmM6Ug/uubSfLUCJn4=;
+	b=2UT6Ts0MgkGk7YOJvSdxqYW+xtIboGVYo72DepEWLHKR4MFDOF7n4yB28cqeZFhpkQRr
+	 x4yVInvwrrGQOgc4OsoKHe/nqNRPAz++bW4Z4O7cySxAbvW2v6wFM+Sl9hiF0MrHLaH4T
+	 3kUtSB+OLMpOcgbLHJurqTpvrw2Cj/Ap/hsG4cNul0pyfTgFMURQeHPjJRgFMvDJzdyDH
+	 JD+FkMXMdbDrMZk66OWytNo1ZeDzlw7f9vyN8ZaIFzzxtcoBtAB44ziLwSH1NOS7YDUTM
+	 lZCSgQe7XnWtUgRzaksHQwWyedG2+Cz1vH8xQcYsTTXKh52MIr75oOnRn1JOz4HdFTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hugtNYNL;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DiUDpDri;
 	arc=none smtp.remote-ip=209.85.128.50
 Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F804606A327
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 13:34:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F804606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1415606A323
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 13:46:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1415606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hugtNYNL
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4bb64c99d2fso4738715e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 05:34:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DiUDpDri
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a35a60499eso12866075e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 05:46:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794663295; x=1795268095; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794664005; x=1795268805; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=iITVNj1hA8VysTM3SegZsQpdbGDdaeAWi8dvud7vL4Q=;
-        b=hugtNYNLAMlBFGDbNiKjsl6/gjLlQ9FOn/PXyiCRua3kHES8n4nKD7kGcra2ssguCT
-         9pP4XOK1XQC1+H7kRly3Gjr5xGHoCE6S7vWkntXq5GNgq306NfW+exOUbmTnC/fw4mzr
-         3uVw6A+OWvgaqjrjX72Ycgigpmz+oTIpVA3pS/SuXAViIlD/PNoai8X4vHEJlCghZlPv
-         7ba7uA3a/FTMlHa5ziX093EAnMLLt4BrHoboZT6uSeOdz1vwZzfL3eRQgbGXkWUGgF8E
-         TymS74/xaqb+3C1WHxVWc8T1m/lCGAPVTguLpIaVAm5ER6i/vEut/fjXeKEnV7qpcms2
-         vntg==
+        bh=BR1VC/UzZxQOEPl73tQotgFkTmmM6Ug/uubSfLUCJn4=;
+        b=DiUDpDriUVe8FaK5aPKwNxHvujK5OsVc4ARx+MeXOF65nmFeW6WqejQladCA+lHv6Q
+         DXQK3WV7IuRGEo7EN+Wj7yJ2xqoZxHDRWCbUrK20b1d2DlLlw2hv/axpgUtB+8K5tkV/
+         Hza4+mglJKd2DrmK0zv4VyXqvyRoI3s29OzXfd8SEQVPTCZo10KwuOhTvhtl5eYdBfOs
+         JTIEhWY8IZUVDMTKwmYjvcGwOcgXKCeZd+qgbMiEO8VAKMHxFnjzTePNd51k+UPG3Ow0
+         ng7aIWQ+FnpNTx2fyKllgBppHYybkePwrMVfirbfK95Ws/WCpKqyStMkjL9YJppBI0Zg
+         3Ayw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794663295; x=1795268095;
+        d=1e100.net; s=20260707; t=1794664005; x=1795268805;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=iITVNj1hA8VysTM3SegZsQpdbGDdaeAWi8dvud7vL4Q=;
-        b=VT1C3hY7ysB8VwRFYkh4TId4G+PAvzRLiFfHG7y/sklxoBypVAIxDbgKFwKtuVxGPJ
-         4UshfZ3Y6UjpkDpaX0YhkpBXRXGHFULWlbocSgQ859A1k/UP6BGIXV/e/82eT8nhgmzj
-         /Q8+w2njMIGYz3MHVgM4nFzxzCLm0g4WWLrN5C+UkYc5SLUEOuFiu8BnwZABGJ3XqPh0
-         fj6umK6rJF/umw7CCRH4SG9eiAYRA5zPE0yA+OYEiXJHPLiro60EpcpDUo6inOeoVOjK
-         mkgU/fnlsyvQH8xChdDB2l/OvmUQR6pzfgbrel2nSNkJKIltTbIs2H+UK/0n++/vEiQs
-         5Skg==
-X-Gm-Message-State: APuU4Z+caAg/dh+84Zpe5oZsXcvR1imN3StQ9yyTrobN8IN/IRoeTKNG
-	4HnSzPaiYSlXjOI+JeOe1OG/oEuXXznshyot9l9a65iORTQerT/RsRu66O/pdTI0AgYwzZVSkGm
-	7CcURtw==
-X-Gm-Gg: AYBFou1xgwcDlf/yRt2AtouCsgp8vbP57dCXkMb8p13Ojv58JYtwecmapjdVPxCK2Yw
-	rb25HxJHwzPewY6I/6S17UdQDZuJXSbmf0zMuhkCE+T9SPs1U3AylwpbltUFu0mkiujfTuU2YKc
-	9FQn3KmTCJtIgYkTpWfjVfCIktPWi5sFOauGMfeuZSKPc3fT+D6CpcgAlAaerJrlJZnFWjS+x5P
-	H5VsWv1pxkVzW8GwDEZSGx8+//mnW/Q0EksuAoJFJ3y2VR+3onjUNZrauA/9mKQufoHZVqzi0tf
-	RTfM+xlZnr6OMOw/vVez516Us0ams8ayrd4yVcinHL9hv17um4lCnCZi/vyEkcrn+WEj+ie4wGF
-	wR1asEJYV8XETcDZJyZJK5llBGF3tqGaA1SioBBGpHCXOHsd+6zBTgcQ+xU0ViwqIsZ5zkxDS6j
-	HwTpgQ/9trw2wp7KPQ8hVTNnD3Sv5vQRZKIHmMZoIPF0SYDFxVjK408JCApKbsm+5CHU1KhMYph
-	0qUdpj/30CirV/PGer/rpzoCi8PKzQla+rvOVqLa8hxR5k+y4BbyGiKm/eajknUhCUX+cLc+ofd
-	1XZE3522l2QVBcjEuA2LxnWXUhK/k/QiVB8EGseXBePtuf13VroNHIyIdtpxJ/KgaA==
-X-Received: by 2002:a05:600c:3b9d:b0:4bb:5dbf:af06 with SMTP id 5b1f17b1804b1-4bb5dbfb103mr85932305e9.9.1794663294856;
-        Sat, 14 Nov 2026 05:34:54 -0800 (PST)
+        bh=BR1VC/UzZxQOEPl73tQotgFkTmmM6Ug/uubSfLUCJn4=;
+        b=TDXeX9m2h5qsZgv7IzWRbMVfm4Yo2FOSzelyM+uJw+Fxhz42yVeyB9JHc6KS1QGy3j
+         b3grofbRaNYLgr6DKzQXrNMnoa3/Ailq5QTwasp/8X3c1621mCC46MvdhXzANIMgpNBy
+         N7HXTSinaDa5Q+7JDDKdJ36SmO6kpFzVmRSHiTrt1Ui4wrX7W+kNwoy7xQOnCLoAJe+k
+         64qKHxOlLy7R1KDEyaL1hbZoWc71O64cv+9Ti/qgEUO+iBB8fopxCAImPS2LKqI/ax7W
+         c+GDSxNld+33qt+RDpaXoIB48Uclms0eeyIDoKpo0Xtz8uvQ3VHZwwEzgMzjOqIsmkeD
+         TEFg==
+X-Gm-Message-State: APuU4Z/S8jeeAtrIM+3nNYhbhlkg5oDPrgeIsjMf/NBgDydPrgSb+KZC
+	JKfqPSJxT79L7R3yvFaudGapTDBa2h5dfUl882fjmzoGmnqA94wYT2t7MTuwYO6tNw==
+X-Gm-Gg: AYBFou0nELJ0kbZ9K/8AD1zizeEe/UeH3919d48CEvP3vxzltv4swtppc6mL0kpX8WC
+	MaTuDruoqBQoWyAnuOu8HmoGDHu0H6s14H+1c2f1CcZklbxu6fZGSBNV36QfbenE1Gdk7JnBd0K
+	gFvFzi5ASIvwbGhO4DmRKUg7Hdwb1JErxLzQ5VDTqBpf5MfQHuhMSAaSYAzlQT9VEehIZcMJQnk
+	shKhmz2l6Dzur3h0Bqf9Y4pdZ+qnG9crUe/mMHwdkiSasxhsDa2PtAzp57mcPo4uan0MZ0sf6WR
+	k+24xTNvF7lvqOE+fq8zfQQUtNs/U2KU9seQEKRgMNmC23+S7hKocFL3bf9+8MaQslMH0GZyOrj
+	4aUI0x4Ul+75N1DXQ90up0zAtRCPybsFQp4dPFuzeNj0sgrckEV/5tFRp0ANy2vFC1LWrZhd/3L
+	I4Yl3hiHQ5huRP+RwrYSg3Pv6zdx5PxcrH3XZi2orWetSyme2fEiKs94ir+K7L1zbnS7KglqA3x
+	GROKbszR//jUqC5nSIEXGuBc0SPRPu+sGGLtB2uRyoA2gNSudWLHMkcBANrRJnFPMllq53wQKfU
+	4KCLGZDsXxmatooXU9zzwF0ezc1Fn6RaY5pjQrus0005xOwLu8u1Sl584oxgUxEJAQ==
+X-Received: by 2002:a05:600c:3f12:b0:4a1:dadf:9876 with SMTP id 5b1f17b1804b1-4bb55a644bfmr114753525e9.23.1794664004843;
+        Sat, 14 Nov 2026 05:46:44 -0800 (PST)
 Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb4e2adf53sm237952865e9.15.2026.11.14.05.34.54
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb609cc1b2sm53600795e9.11.2026.11.14.05.46.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 05:34:54 -0800 (PST)
-Date: Sat, 14 Nov 2026 13:34:50 +0000
+        Sat, 14 Nov 2026 05:46:44 -0800 (PST)
+Date: Sat, 14 Nov 2026 13:46:40 +0000
 From: Vincent Donnefort <vdonnefort@google.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] ring-buffer: Order remote page commit with data
- and timestamp
-Message-ID: <avhjevfc0CuHyvWv@google.com>
+Subject: Re: [PATCH v1 2/4] ring-buffer: Check remote reader page commit
+ before meta entries
+Message-ID: <avhmQDrQ5Y7RZc3i@google.com>
 References: <20261113152729.837429-1-vdonnefort@google.com>
- <20261113152729.837429-4-vdonnefort@google.com>
- <sashiko-outbox-213099@kernel.org>
+ <20261113152729.837429-3-vdonnefort@google.com>
+ <sashiko-outbox-213147@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -101,77 +100,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-213099@kernel.org>
+In-Reply-To: <sashiko-outbox-213147@kernel.org>
 
-On Fri, Nov 13, 2026 at 03:34:59PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found no new issues
-> in this patch, but noticed 1 related pre-existing issue it does not
-> introduce:
-> - [Critical] tracing: out-of-bounds write in simple_rb_reserve_next()
->   [1]
+On Fri, Nov 13, 2026 at 04:03:36PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] ring-buffer: rb_num_of_entries() underflow when commit
+>   precedes meta entries
 > --
 > 
-> commit b0c88540d75d93c7a85149df8d188a1bfaa9a89e
+> commit 1d2d0e6ae01d518c30dc9986893db113c38a4caf
 > Author: Vincent Donnefort <vdonnefort@google.com>
 > 
-> ring-buffer: Order remote page commit with data and timestamp
+> ring-buffer: Check remote reader page commit before meta entries
 > 
-> This commit adds memory barriers between page::commit, page::data, and
-> page::time_stamp for remote ring-buffers and defers updating read_stamp
-> until committed data is present on the reader page.
+> This commit reorders the checks in __rb_get_reader_page_from_remote() to
+> inspect the current reader page commit offset before checking if
+> rb_num_of_entries() is zero, and adds memory barriers pairing page::commit
+> and meta::entries between simple_ring_buffer_commit() and the remote reader.
 > 
-> > diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-> > index 5f14ba152fba6..2dddaef638dc6 100644
-> > --- a/kernel/trace/simple_ring_buffer.c
-> > +++ b/kernel/trace/simple_ring_buffer.c
-> > @@ -307,6 +307,11 @@ EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
-> >   */
-> >  void simple_ring_buffer_commit(struct simple_rb_per_cpu *cpu_buffer)
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 3c7aa982d43e9..f70010e2ede77 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> 
+> [ ... ]
+> 
+> > @@ -5825,8 +5823,13 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
 > >  {
+> >  	struct buffer_page *new_reader, *prev_reader, *prev_head, *new_head, *last;
+> >  
+> > -	if (!rb_read_remote_meta_page(cpu_buffer))
+> > -		return NULL;
+> > +	rb_read_remote_meta_page(cpu_buffer);
+> > +
 > > +	/*
-> > +	 * Order page::data and page::time_stamp before page::commit. Paired
-> > +	 * with __rb_get_reader_page_from_remote().
+> > +	 * Order meta::entries read before page::commit, most likely paired with
+> > +	 * simple_ring_buffer_commit().
 > > +	 */
-> > +	smp_wmb();
-> >  	local_set(&cpu_buffer->tail_page->page->commit,
-> >  		  cpu_buffer->tail_page->write);
+> > +	smp_rmb();
+> >  
+> >  	/* More to read on the reader page */
+> >  	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page)) {
+> > @@ -5835,6 +5838,9 @@ __rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
+> >  		return cpu_buffer->reader_page;
+> >  	}
+> >  
+> > +	if (!rb_num_of_entries(cpu_buffer))
+> > +		return NULL;
 > 
-> [Severity: Critical]
-> This problem wasn't introduced by this patch, but can
-> simple_ring_buffer_reserve() return a pointer whose reservation overflows
-> tail->page->data [1]?
+> [Severity: Medium]
+> Can rb_num_of_entries() underflow to ULONG_MAX when an event is consumed in
+> the window between the page->commit update and the meta->entries increment?
 > 
-> In simple_rb_reserve_next(), when an event exceeds PAGE_SIZE -
-> BUF_PAGE_HDR_SIZE, simple_rb_move_tail() rotates to an empty page where
-> !tail->entries is true, and event_size is assigned to tail->write without
-> checking that it fits on a fresh page:
+> CPU0 (writer)                       CPU1 (reader)
+> -------------                       -------------
+> simple_ring_buffer_commit()
+>   local_set(&page->commit, write);
+>                                     ring_buffer_consume()
+>                                       ...
+>                                       __rb_get_reader_page_from_remote()
+>                                         rb_read_remote_meta_page()
+>                                           /* caches entries = N */
+>                                         reader_page->read < rb_page_size()
+>                                           return reader_page;
+>                                       rb_advance_reader()
+>                                         cpu_buffer->read++; /* N + 1 */
+>   simple_rb_meta_inc(meta->entries, 1);
 > 
-> kernel/trace/simple_ring_buffer.c:simple_rb_reserve_next() {
-> 	...
-> 	if (unlikely(write > (PAGE_SIZE - BUF_PAGE_HDR_SIZE)))
-> 		tail = simple_rb_move_tail(cpu_buffer);
+> At this point cpu_buffer->read is N + 1 while cpu_buffer->entries is still N,
+> so rb_num_of_entries() evaluates N - (N + 1) = ULONG_MAX:
 > 
-> 	if (!tail->entries) {
-> 		tail->page->time_stamp = timestamp;
-> 		time_delta = 0;
-> 		ts_ext_size = 0;
-> 		write = event_size;
-> 		prev_write = 0;
-> 	}
-> 
-> 	tail->write = write;
-> 	...
+> kernel/trace/ring_buffer.c:rb_num_of_entries() {
+> 	return local_read(&cpu_buffer->entries) -
+> 		(local_read(&cpu_buffer->overrun) + cpu_buffer->read);
 > }
 > 
-> Writing the caller's payload to the returned event pointer then writes past
-> the end of the page buffer and corrupts adjacent memory.
-> 
-> [1] https://sashiko.dev/#/bug/linux-b2128783-1787-4f13-b863-090db5378e74
+> Until rb_read_remote_meta_page() runs again, ring_buffer_entries() returns
+> ULONG_MAX and ring_buffer_empty() returns false on an empty buffer (which
+> also prevents trace_remote_try_unload() from unloading an idle buffer).  If
+> __rb_get_reader_page_from_remote() is called again before CPU0 increments
+> meta->entries, !rb_num_of_entries() evaluates to false and it proceeds to
+> swap_reader_page() on an empty buffer.
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261113152729.837429-1-vdonnefort@google.com?part=3
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261113152729.837429-1-vdonnefort@google.com?part=2
 
-There's absolutely no existing event that is big enough to a ring buffer page!
+This underflow can happen if ring_buffer_consume() is called directly. But
+trace_remote always tests ring_buffer_empty_cpu() before calling
+ring_buffer_peek() or ring_buffer_iter_peek().
 
 -- 
 Vincent
