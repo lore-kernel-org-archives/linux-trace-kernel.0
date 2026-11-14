@@ -1,65 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794681660;
-	b=SHd0eFlsYLUtYpTAy4PLUNXOO2aR0glVdifO97w1XropLsnSoDbVV8eVVgZovKjWHLE+
-	 eZJeqAOFO9TBLKvEPFVjZzmu3SUpywBL0FOl9GOG4thQr3lcySOJibGC+AMvSdfz8QqmD
-	 IYQH69HjKUk5DXQTl97G9L/ciInvZysq7sgSdfZ964Rxle9y736XETOkXG+YEDnESEt72
-	 FvZUzw4FN6TK94msORWEfa0Lti++5j23X7UBjAiPLpX+U3Ldm+qcwah1ivSkcpYMNyk4F
-	 pBOoP13DAozSnYLyAPCAtlz8cvhH6+JRAiHG4qf7G8wmXYbZb3mxRujIp6QxkE3UcTA==
+	t=1794686361;
+	b=PB+wPSIHcjqfugfcL+Pm16aJQ5jbTQjr8Ztn2fcLOyF06QbUVauknfslBq7OktelPGD9
+	 GvYuR2mBG5ich/MbSz25yOoEAqma+3MBqSKOjPlt0evlVmGYcCINafpR1z219J7Lh369G
+	 sQWq31BJ4jqiWrXlWVF9daT0ZIGi9gYKfB8o3UZWzX8RYtiNiModaXhq8FIgylhlKoVW1
+	 +Nj2LQYhaZkr7FZuQeebFOHbyO0WH/VsLBAOWpsgJv9dHvcklIMVfGKo4CcsAbQLPCHQd
+	 x7QFMKQzzH7xUeCYMfCG953ZXCPKZSZR+y5IsKQlHtnL6q3un21gW2K4uvg1qO+nxaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794681660;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ZN1QbUvJ0Ta5b7Wx5sTaVkN8e7aeGbh4u4InECA0Qvs=;
-	b=wnwwVMYz8hkBg9+LeHz/vfyzv2sVo49aBr2FtC1TqZgRo4uWlmsHWTQ2q+NutgHIa62F
-	 60Q6Ek0M37egFvbTCK0mj74CrYtUb9u9AtQng6unu6gsEYZKSEXy1LXYqaGSv5LFY0nFg
-	 kwG4DZnF4B1CWNEV744O7dzZIJcnlVqbBxbaijn0aSsQ41bIpB4AchaSF4PP7xR4fhMBQ
-	 +Hw2RbDgURB7ih+pKejqhPyZ817tdVk66U7qjEOvMrC0Q7fE34S1pq0uJlJhfsnqb+vEQ
-	 G6Ttvgqa+tcaEB0A95EEqRLY2wG8A1vr3mBHwxyL9mNmzSb9nBvOUBtjXD57IqNWJ+g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794686361;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=kEf2B9QYpi3ckJDBCR/s09wzAUjGwxpz/3KtgUVx8/s=;
+	b=LuU6X88hiWNpMCYk4AkX1ZQiubiOP/6pRvywxQ5fsPZgbpY0DUcFtHyw+sjmtEzkbMQn
+	 c/k4xbZSKIXD6ldQaDTXetp+T0KDNdzaBr2/lsmCqTUWkfJc4PgyQQnyKy3XcYfxD0YWY
+	 s+IPqwNz6b1cwMPaFdoT0sy4mraZ1/D9PaurwBIy90SE1XiUhGA8SwrOGndq1ApanaIhw
+	 WDUvN3TXe2UXYSBwJsmC/cgY0aA+04AodgDn8t5lpSXfg83ypm+4NemAcq1fGyoKoNHaE
+	 eC6Qv4WOFBndIfG4tahTmb66iOaQVM8KbMutJTa9TLMakOGvxxrQRHuLGi6TF/cueKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iF7IiWjs;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=epNIjQ67;
+	arc=none smtp.remote-ip=209.85.221.44
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822E5606A330;
-	Sat, 14 Nov 2026 18:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D774C606A327
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 19:59:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D774C606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iF7IiWjs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6774A1F000C5;
-	Sat, 14 Nov 2026 18:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794681660;
-	bh=ZN1QbUvJ0Ta5b7Wx5sTaVkN8e7aeGbh4u4InECA0Qvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iF7IiWjso/zci79u9JHVp7i7xRhgz8V16nydDp7bMbf9Kq3OpcWlK6+UBGfSH0DGf
-	 OXTWi276kBIYaBiq5gLEHxqbMVUjAdWb8fC4FNonpZAiz5iMzgwpQOAGgbjM2IiAq/
-	 DdUmYiZBM3Ed513pnuKOJDroWL5gA0iN8SdtzggF2gFVK9DhZ4V6ijmQKyce6BY5DX
-	 NBJ5UvgnE3YdespSGDd85PM91HhhxWVZ+a3vvaJgfYd5AKiVSIC7jTWe2z4rkHopLH
-	 5dYYDycmtEaBAZIO/0hMLzfpXbOEBuwY7Xi6Ea+2T+jKn1OWLiZIsuyDuXq5vmg8OP
-	 pG3DGeUi21nDQ==
-Date: Sat, 14 Nov 2026 18:40:50 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Peter Xu <peterx@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/userfaultfd: prevent poison marker loss
-Message-ID: <avij463DZ_tSwgKy@gremlin>
-References: <20261107-b4-uffd_marker_loss-v1-0-82926b22704c@kernel.org>
- <20261107-b4-uffd_marker_loss-v1-1-82926b22704c@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=epNIjQ67
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48b001cd92bso1491992f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 11:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794686359; x=1795291159; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=kEf2B9QYpi3ckJDBCR/s09wzAUjGwxpz/3KtgUVx8/s=;
+        b=epNIjQ67nCN3j7wLAT7F/mQhaZcAZaFpGbT9sEyMcTUT10Ob81+mPa/O8MX3E1hUU5
+         jk5WPbgcZ9mhEoktRxGqidHA+EwmVOubKe4261DXsWhZ/LbKRj4vef6wVToiW8hxK5n8
+         7eCRornhAole6nBV/nY4TMAs08cTMpWYExHjwAiDKB4oTu8B0HGHRkpICP2Z+LgnopAn
+         k8HYEhBuaUkoqyka3MPupohJYTqB04ofUspDvdnGKr50YJdVnU/19aKaaHqQq2VlnY3i
+         UXpPIRDl0KIsZaeLYqUZj+naeNShP8N+7JlWp/THRL/i8QhPPNcOrliM3JgVlblvplmL
+         +CxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794686359; x=1795291159;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=kEf2B9QYpi3ckJDBCR/s09wzAUjGwxpz/3KtgUVx8/s=;
+        b=OhlVij7/ZyNWB9RUbx5+y5We6MzDR4/2jwb1YqI+INRXVFsuS+3flI8+2ioLCjhh7J
+         uU5ppI/v1RWE2oqGP62gZZO+dJz1MMv7LGWOIvgxYFJPIW9lTTPSNX0nlyAf//hUIYHH
+         bgUpcKpxSV9k1vtqqyGguk8rxgJgh4J2+5CWH0LpdohhGeURO8fwDaBh3Cpw4M5bd46Z
+         mGrGXf4e6sFkaesqZuIjcdlhoVzgcAIJb5p6e6RNmgb68D8C768Ipajlkkj3bPqGMy+7
+         nVY/egF+8lvc+7ZFmurkSM5L9Xi9oW8D17x8QV0OGY7tqXjlmrFk49we/EhK2B0p9iIb
+         sWRw==
+X-Forwarded-Encrypted: i=1; AL+hErE1d335KPbsezWzz28TlXT/Wt4DDLlxO1GYCc1D7SR18VHKMJibQ0Vx3zkYs+Wxiyj10XgRAv81jgPGre6G4bvnfAE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z94/WHJJ9wUKyrZLpCdMOG/H2avc2bSuJpE5BjqVP8nacUbloaO
+	+Khhmy41g/7nzSxPyT5slN8gk54vWOI4wD1PXOMOT5LzpBzxDFAw4jEIkZmAwQ==
+X-Gm-Gg: AYBFou0x2DIv5LQZHDid1KWiOndXaDzJhYQUilvbRFGrClq3OSSOTCus5ZCKpLhU4jn
+	3N+o9+tVWxgSssKbshDfMglabhQCSPangEBqzWx+wk2niWQI3XbOiSIunAsO5YU4IxLVPsFszWl
+	2ttubyMKBq6K7KRFTSWlkd9qu1j5kuTbFf5DqBKBGK5Ol12dPMVKVb9qaaSgwkNNZIJmqp7UTJV
+	hgK8YYEbmJtnFm1mYNauYcAWz/+XI5D+IHy4LYErtOqSO1xkgC00LI3vTCgUe99VUEr7l/Rjx2+
+	3g7fJygHRaQOCIKlFOrF+n/Rfq1Nhnv3KTagVe2eYxhAV/LWdaPRH24YtaQxiGT2wSMPfqp3T7m
+	OF3mRWPboZq+VYieRhQaq0YcFNHwpYJTUnNQKg5ZRmiY5WPJ2FFHjh289Ty4OxqpjfyEMpcITRE
+	SUn1sMEf5iyBd/3t3H555VByzmtOwenW7R3iwhS7N/TuWSmr8f1dzQvr6OH6N9+bmnYAdgueILM
+	oCtpz+1oWh3aTDIVIpeIqUvw6QEQB5ctZ8r4NHvYe+M4ULXZk8ebKcMe/kAUQWRcSHrS5CDQCem
+	e15s98WwFak0hulz0ueM1O25EpAkSiaMc6+aLOiEmx9fb/XLcWeKK2g5pu3NgMeWqR9qaD3ydv1
+	lVK8aKn9ITvxU58Ylg2hpIgEo8oIkukqJmwc=
+X-Received: by 2002:a05:6000:3103:b0:48e:5cd4:aa60 with SMTP id ffacd0b85a97d-49c71783077mr13999489f8f.42.1794686358935;
+        Sat, 14 Nov 2026 11:59:18 -0800 (PST)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5f782396sm12989691f8f.24.2026.11.14.11.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Nov 2026 11:59:17 -0800 (PST)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing: Reject .function on the function trace event
+Date: Sat, 14 Nov 2026 19:59:14 +0000
+Message-ID: <20261114195914.2678414-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -69,390 +99,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261107-b4-uffd_marker_loss-v1-1-82926b22704c@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Nov 07, 2026 at 12:51:05AM +0100, David Hildenbrand (Arm) wrote:
-> Unregistering userfaultfd leaves poison markers in the page tables.
-> However, once unregistered, hugetlb PMD tables can be shared again.
->
-> Further, shmem page-table retraction can discard poison markers even
-> while registered in missing mode, and fork() can skip copying page
-> tables containing poison markers.
->
-> To fix it, add VM_MAYBE_UFFD_POISON and set it before installing poison
-> markers. Preserve it across unregistration, splits, merges and fork(),
-> just like we do with guard markers.
->
-> Use the new atomic VMA flag to disable PMD sharing and page-table
-> retraction, and to force page-table copying during fork().
->
-> Move VM_UFFD_WP to bit 44 and make HAVE_ARCH_USERFAULTFD_WP depend on
-> 64BIT, freeing bit 12 for the new flag on both 32-bit and 64-bit systems.
-> Expose the flag as "up" in smaps.
->
-> Losing poison markers, while unpleasant, is not really fatal, and the
-> use case is rather a niche thing. In addition, we rely on the atomic
-> VMA flags infrastructure ... so let's not CC stable.
->
-> Fixes: fc71884a5f59 ("mm: userfaultfd: add new UFFDIO_POISON ioctl")
-> Fixes: 8a13897fb0da ("mm: userfaultfd: support UFFDIO_POISON for hugetlbfs")
+For the function event, parse_pred() handles the .function suffix
+before the ftrace_event_is_function() case, so "ip.function == schedule"
+builds a predicate with no regex. Setting it through perf then
+dereferences the NULL pred->regex in ftrace_function_set_filter_pred().
 
-Are we looking to cc: stable or this something for newer kernels only?
+The "ip" field of that event already takes a function name, so reject
+the suffix there.
 
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
+Cc: stable@vger.kernel.org
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+ kernel/trace/trace_events_filter.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Logic LGTM, some small nits below. Overall:
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index c10951bcfc5f..11bb751c4388 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1743,6 +1743,12 @@ static int parse_pred(const char *str, void *data,
+ 	pred->op = op;
+ 
+ 	if (function) {
++		/* Function events already take a function name on 'ip' */
++		if (ftrace_event_is_function(call)) {
++			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
++			goto err_free;
++		}
++
+ 		/* The field must be the same size as long */
+ 		if (field->size != sizeof(long)) {
+ 			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
+-- 
+2.55.0
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-
-> ---
->  Documentation/filesystems/proc.rst |  1 +
->  fs/proc/task_mmu.c                 |  3 +++
->  include/linux/mm.h                 | 45 ++++++++++++++++++++++++--------------
->  include/linux/userfaultfd_k.h      |  7 ++++--
->  include/trace/events/mmflags.h     |  9 +++++++-
->  mm/Kconfig                         |  1 +
->  mm/khugepaged.c                    |  9 ++++----
->  mm/userfaultfd.c                   |  3 +++
->  tools/testing/vma/include/dup.h    | 20 ++++++++++++-----
->  9 files changed, 70 insertions(+), 28 deletions(-)
->
-> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-> index fa7a468e8edf2..bcbcb41814d96 100644
-> --- a/Documentation/filesystems/proc.rst
-> +++ b/Documentation/filesystems/proc.rst
-> @@ -614,6 +614,7 @@ encoded manner. The codes are the following:
->      lf    lock on fault pages
->      dp    always lazily freeable mapping
->      gu    maybe contains guard regions (if not set, definitely doesn't)
-> +    up    maybe contains poison markers installed by userfaultfd
->      ==    =============================================================
->
->  Note that there is no guarantee that every flag and associated mnemonic will
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index e3d894ed2b913..d7f9934d0e499 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -1106,6 +1106,7 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  		[ilog2(VM_GROWSDOWN)]	= "gd",
->  		[ilog2(VM_PFNMAP)]	= "pf",
->  		[ilog2(VM_MAYBE_GUARD)]	= "gu",
-> +		[ilog2(VM_MAYBE_UFFD_POISON)]	= "up",
->  		[ilog2(VM_LOCKED)]	= "lo",
->  		[ilog2(VM_IO)]		= "io",
->  		[ilog2(VM_SEQ_READ)]	= "sr",
-> @@ -1131,7 +1132,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  		[ilog2(VM_NOHUGEPAGE)]	= "nh",
->  		[ilog2(VM_MERGEABLE)]	= "mg",
->  		[ilog2(VM_UFFD_MISSING)]= "um",
-> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
->  		[ilog2(VM_UFFD_WP)]	= "uw",
-> +#endif
->  #ifdef CONFIG_ARM64_MTE
->  		[ilog2(VM_MTE)]		= "mt",
->  		[ilog2(VM_MTE_ALLOWED)]	= "",
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 6a34dd3800f56..6cd9d86f7adac 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -302,7 +302,7 @@ enum {
->  	/* Page-ranges managed without "struct page", just pure PFN */
->  	DECLARE_VMA_BIT(PFNMAP, 10),
->  	DECLARE_VMA_BIT(MAYBE_GUARD, 11),
-> -	DECLARE_VMA_BIT(UFFD_WP, 12),	/* wrprotect pages tracking */
-> +	DECLARE_VMA_BIT(MAYBE_UFFD_POISON, 12),
->  	DECLARE_VMA_BIT(LOCKED, 13),
->  	DECLARE_VMA_BIT(IO, 14),	/* Memory mapped I/O or similar */
->  	DECLARE_VMA_BIT(SEQ_READ, 15),	/* App will access data sequentially */
-> @@ -346,6 +346,7 @@ enum {
->  	DECLARE_VMA_BIT(UFFD_MINOR, 41),
->  	DECLARE_VMA_BIT(SEALED, 42),
->  	DECLARE_VMA_BIT(UFFD_RWP, 43),
-> +	DECLARE_VMA_BIT(UFFD_WP, 44),	/* wrprotect pages tracking */
->  	/* Flags that reuse flags above. */
->  	DECLARE_VMA_BIT_ALIAS(PKEY_BIT0, HIGH_ARCH_0),
->  	DECLARE_VMA_BIT_ALIAS(PKEY_BIT1, HIGH_ARCH_1),
-> @@ -406,7 +407,12 @@ enum {
->  #endif
->  #define VM_PFNMAP	INIT_VM_FLAG(PFNMAP)
->  #define VM_MAYBE_GUARD	INIT_VM_FLAG(MAYBE_GUARD)
-> +#define VM_MAYBE_UFFD_POISON	INIT_VM_FLAG(MAYBE_UFFD_POISON)
-> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
->  #define VM_UFFD_WP	INIT_VM_FLAG(UFFD_WP)
-> +#else
-> +#define VM_UFFD_WP	VM_NONE
-> +#endif
-
-As per below, please move the VMA_UFFD_WP decls here.
-
-Also, could you also do:
-
-static inline bool userfaultfd_wp(struct vm_area_struct *vma)
-{
--	return vma_test_any_mask(vma, VMA_UFFD_WP);
-+	return vma_test_single_mask(vma, VMA_UFFD_WP);
-}
-
-To match convention for using vma_test_single_mask() for flags that aren't
-always defined. Thanks! :)
-
-
->  #define VM_LOCKED	INIT_VM_FLAG(LOCKED)
->  #define VM_IO		INIT_VM_FLAG(IO)
->  #define VM_SEQ_READ	INIT_VM_FLAG(SEQ_READ)
-> @@ -502,13 +508,17 @@ enum {
->  #endif
->
->  /*
-> - * vma_flags_t masks for the userfaultfd VMA flags. The two high-bit modes are
-> - * gated on the same configs as their VM_* flags above -- both of which imply
-> + * vma_flags_t masks for the userfaultfd VMA flags. The three high-bit modes are
-> + * gated on the same configs as their VM_* flags above -- all of which imply
->   * 64BIT -- so an out-of-range bit is never fed to mk_vma_flags() on a build
->   * whose bitmap cannot hold it.
->   */
->  #define VMA_UFFD_MISSING	mk_vma_flags(VMA_UFFD_MISSING_BIT)
-> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
->  #define VMA_UFFD_WP		mk_vma_flags(VMA_UFFD_WP_BIT)
-> +#else
-> +#define VMA_UFFD_WP		EMPTY_VMA_FLAGS
-> +#endif
-
-Could you just move these up to the block above to match the convention here?
-
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
->  #define VMA_UFFD_MINOR		mk_vma_flags(VMA_UFFD_MINOR_BIT)
->  #else
-> @@ -602,7 +612,8 @@ enum {
->  #define VMA_LOCKED_MASK	mk_vma_flags(VMA_LOCKED_BIT, VMA_LOCKONFAULT_BIT)
->
->  /* These flags can be updated atomically via VMA/mmap read lock. */
-> -#define VMA_ATOMIC_SET_ALLOWED mk_vma_flags(VMA_MAYBE_GUARD_BIT)
-> +#define VMA_ATOMIC_SET_ALLOWED mk_vma_flags(VMA_MAYBE_GUARD_BIT, \
-> +					    VMA_MAYBE_UFFD_POISON_BIT)
->
->  /* Arch-specific flags to clear when updating VM flags on protection change */
->  #ifndef VM_ARCH_CLEAR
-> @@ -620,16 +631,16 @@ enum {
->   *                       merged VMA should be considered soft-dirty also as it
->   *                       operates at a VMA granularity.
->   *
-> - * VMA_MAYBE_GUARD_BIT - If a VMA may have guard regions in place it implies
-> - *                       that mapped page tables may contain metadata not
-> - *                       described by the VMA and thus any merged VMA may also
-> - *                       contain this metadata, and thus we must make this flag
-> - *                       sticky.
-> + * VMA_MAYBE_GUARD_BIT / VMA_MAYBE_UFFD_POISON_BIT - Page tables may contain guard
-> + *                       or poison markers not described by the VMA. Any
-> + *                       merged VMA may also contain this metadata, so these
-> + *                       flags must be sticky.
->   */
->  #ifdef CONFIG_MEM_SOFT_DIRTY
-> -#define VMA_STICKY_FLAGS mk_vma_flags(VMA_SOFTDIRTY_BIT, VMA_MAYBE_GUARD_BIT)
-> +#define VMA_STICKY_FLAGS mk_vma_flags(VMA_SOFTDIRTY_BIT, VMA_MAYBE_GUARD_BIT, \
-> +				     VMA_MAYBE_UFFD_POISON_BIT)
->  #else
-> -#define VMA_STICKY_FLAGS mk_vma_flags(VMA_MAYBE_GUARD_BIT)
-> +#define VMA_STICKY_FLAGS mk_vma_flags(VMA_MAYBE_GUARD_BIT, VMA_MAYBE_UFFD_POISON_BIT)
->  #endif
->
->  /*
-> @@ -667,13 +678,15 @@ enum {
->   *                           retrieve from page cache, and skip copying
->   *                           will lose those info.
->   *
-> - *          VM_MAYBE_GUARD - Could contain page guard region markers which
-> - *                           by design are a property of the page tables
-> - *                           only and thus cannot be reconstructed on page
-> - *                           fault.
-> + *          VM_MAYBE_GUARD - Could contain guard markers which cannot be
-> + *                           reconstructed on page fault.
-> + *
-> + *   VM_MAYBE_UFFD_POISON - Could contain poison markers which cannot be
-> + *                           reconstructed on page fault, including after
-> + *                           userfaultfd unregister.
->   */
->  #define VM_COPY_ON_FORK (VM_PFNMAP | VM_MIXEDMAP | VM_UFFD_WP | VM_UFFD_RWP | \
-> -			 VM_MAYBE_GUARD)
-> +			 VM_MAYBE_GUARD | VM_MAYBE_UFFD_POISON)
->
->  /*
->   * mapping from the currently active vm_flags protection bits (the
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-> index dff9a5c9a0dfa..b8b7cc2f00388 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -167,11 +167,14 @@ static inline bool is_mergeable_vm_userfaultfd_ctx(struct vm_area_struct *vma,
->
->  /*
->   * Never enable huge pmd sharing on userfaultfd registered VMAs, because
-> - * userfaultfd state can be tracked per VMA or per page table entry.
-> + * userfaultfd state can be tracked per VMA or per page table entry. Similarly,
-> + * handle poison markers that stick around even after userfaultfd was
-> + * unregistered.
->   */
->  static inline bool uffd_disable_huge_pmd_share(struct vm_area_struct *vma)
->  {
-> -	return vma->vm_userfaultfd_ctx.ctx;
-> +	return vma->vm_userfaultfd_ctx.ctx ||
-> +	       vma_test_atomic_flag(vma, VMA_MAYBE_UFFD_POISON_BIT);
->  }
->
->  /*
-> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-> index 3c153b3ad8450..942746e4de15b 100644
-> --- a/include/trace/events/mmflags.h
-> +++ b/include/trace/events/mmflags.h
-> @@ -184,6 +184,12 @@ IF_HAVE_PG_ARCH_3(arch_3)
->  #define IF_HAVE_VM_SOFTDIRTY(flag,name)
->  #endif
->
-> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-> +# define IF_HAVE_UFFD_WP(flag, name) {flag, name},
-> +#else
-> +# define IF_HAVE_UFFD_WP(flag, name)
-> +#endif
-> +
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
->  # define IF_HAVE_UFFD_MINOR(flag, name) {flag, name},
->  #else
-> @@ -247,7 +253,8 @@ IF_HAVE_PG_ARCH_3(arch_3)
->  IF_HAVE_UFFD_MINOR(VM_UFFD_MINOR,	"uffd_minor"	)		\
->  	{VM_PFNMAP,			"pfnmap"	},		\
->  	{VM_MAYBE_GUARD,		"maybe_guard"	},		\
-> -	{VM_UFFD_WP,			"uffd_wp"	},		\
-> +	{VM_MAYBE_UFFD_POISON,		"maybe_uffd_poison"	},		\
-> +IF_HAVE_UFFD_WP(VM_UFFD_WP,		"uffd_wp")			\
->  IF_HAVE_UFFD_RWP(VM_UFFD_RWP,		"uffd_rwp"	)		\
->  	{VM_LOCKED,			"locked"	},		\
->  	{VM_IO,				"io"		},		\
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index afff1b25b5438..ad9236933aab3 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1357,6 +1357,7 @@ config ANON_VMA_NAME
->
->  config HAVE_ARCH_USERFAULTFD_WP
->  	bool
-> +	depends on 64BIT
-
-This is just saying out loud what was already the case effectively, which is
-nice to do as a side-effect! :)
-
->  	help
->  	  Arch has userfaultfd write protection support
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 42d9eb26d5fab..2a5ee8fc42335 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -2107,16 +2107,17 @@ static bool file_backed_vma_is_retractable(struct vm_area_struct *vma)
->  		return false;
->
->  	/*
-> -	 * If the VMA contains guard regions then we can't collapse it.
-> +	 * Preserve guard and poison markers when retracting page tables.
->  	 *
-> -	 * This is set atomically on guard marker installation under mmap/VMA
-> +	 * These flags are set atomically on marker installation under mmap/VMA
->  	 * read lock, and here we may not hold any VMA or mmap lock at all.
->  	 *
->  	 * This is therefore serialised on the PTE page table lock, which is
-> -	 * obtained on guard region installation after the flag is set, so this
-> +	 * obtained on marker installation after the flag is set, so this
->  	 * check being performed under this lock excludes races.
->  	 */
-> -	if (vma_test_atomic_flag(vma, VMA_MAYBE_GUARD_BIT))
-> +	if (vma_test_atomic_flag(vma, VMA_MAYBE_GUARD_BIT) ||
-> +	    vma_test_atomic_flag(vma, VMA_MAYBE_UFFD_POISON_BIT))
->  		return false;
->
->  	return true;
-> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> index 169f681f9849b..bb6069320b347 100644
-> --- a/mm/userfaultfd.c
-> +++ b/mm/userfaultfd.c
-> @@ -963,6 +963,9 @@ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
->  	if (err)
->  		goto out;
->
-> +	if (uffd_flags_mode_is(flags, MFILL_ATOMIC_POISON))
-> +		vma_set_atomic_flag(state.vma, VMA_MAYBE_UFFD_POISON_BIT);
-> +
->  	/*
->  	 * If this is a HUGETLB vma, pass off to appropriate routine
->  	 */
-> diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
-> index dc4927d26296c..f9bafe4e20158 100644
-> --- a/tools/testing/vma/include/dup.h
-> +++ b/tools/testing/vma/include/dup.h
-> @@ -117,7 +117,7 @@ enum {
->  	/* Page-ranges managed without "struct page", just pure PFN */
->  	DECLARE_VMA_BIT(PFNMAP, 10),
->  	DECLARE_VMA_BIT(MAYBE_GUARD, 11),
-> -	DECLARE_VMA_BIT(UFFD_WP, 12),	/* wrprotect pages tracking */
-> +	DECLARE_VMA_BIT(MAYBE_UFFD_POISON, 12),
->  	DECLARE_VMA_BIT(LOCKED, 13),
->  	DECLARE_VMA_BIT(IO, 14),	/* Memory mapped I/O or similar */
->  	DECLARE_VMA_BIT(SEQ_READ, 15),	/* App will access data sequentially */
-> @@ -160,6 +160,7 @@ enum {
->  #endif
->  	DECLARE_VMA_BIT(UFFD_MINOR, 41),
->  	DECLARE_VMA_BIT(SEALED, 42),
-> +	DECLARE_VMA_BIT(UFFD_WP, 44),	/* wrprotect pages tracking */
->  	/* Flags that reuse flags above. */
->  	DECLARE_VMA_BIT_ALIAS(PKEY_BIT0, HIGH_ARCH_0),
->  	DECLARE_VMA_BIT_ALIAS(PKEY_BIT1, HIGH_ARCH_1),
-> @@ -218,7 +219,12 @@ enum {
->  #endif
->  #define VM_PFNMAP	INIT_VM_FLAG(PFNMAP)
->  #define VM_MAYBE_GUARD	INIT_VM_FLAG(MAYBE_GUARD)
-> +#define VM_MAYBE_UFFD_POISON	INIT_VM_FLAG(MAYBE_UFFD_POISON)
-> +#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
->  #define VM_UFFD_WP	INIT_VM_FLAG(UFFD_WP)
-> +#else
-> +#define VM_UFFD_WP	VM_NONE
-> +#endif
->  #define VM_LOCKED	INIT_VM_FLAG(LOCKED)
->  #define VM_IO		INIT_VM_FLAG(IO)
->  #define VM_SEQ_READ	INIT_VM_FLAG(SEQ_READ)
-> @@ -367,7 +373,8 @@ enum {
->  #define VMA_LOCKED_MASK	mk_vma_flags(VMA_LOCKED_BIT, VMA_LOCKONFAULT_BIT)
->
->  /* These flags can be updated atomically via VMA/mmap read lock. */
-> -#define VMA_ATOMIC_SET_ALLOWED mk_vma_flags(VMA_MAYBE_GUARD_BIT)
-> +#define VMA_ATOMIC_SET_ALLOWED mk_vma_flags(VMA_MAYBE_GUARD_BIT, \
-> +					    VMA_MAYBE_UFFD_POISON_BIT)
->
->  #define RLIMIT_STACK		3	/* max stack size */
->  #define RLIMIT_MEMLOCK		8	/* max locked-in-memory address space */
-> @@ -375,14 +382,17 @@ enum {
->  #define CAP_IPC_LOCK         14
->
->  #ifdef CONFIG_MEM_SOFT_DIRTY
-> -#define VMA_STICKY_FLAGS mk_vma_flags(VMA_SOFTDIRTY_BIT, VMA_MAYBE_GUARD_BIT)
-> +#define VMA_STICKY_FLAGS mk_vma_flags(VMA_SOFTDIRTY_BIT, VMA_MAYBE_GUARD_BIT, \
-> +				      VMA_MAYBE_UFFD_POISON_BIT)
->  #else
-> -#define VMA_STICKY_FLAGS mk_vma_flags(VMA_MAYBE_GUARD_BIT)
-> +#define VMA_STICKY_FLAGS mk_vma_flags(VMA_MAYBE_GUARD_BIT, \
-> +				      VMA_MAYBE_UFFD_POISON_BIT)
->  #endif
->
->  #define VMA_IGNORE_MERGE_FLAGS VMA_STICKY_FLAGS
->
-> -#define VM_COPY_ON_FORK (VM_PFNMAP | VM_MIXEDMAP | VM_UFFD_WP | VM_MAYBE_GUARD)
-> +#define VM_COPY_ON_FORK (VM_PFNMAP | VM_MIXEDMAP | VM_UFFD_WP | \
-> +			 VM_MAYBE_GUARD | VM_MAYBE_UFFD_POISON)
->
->  #define pgprot_val(x)		((x).pgprot)
->  #define __pgprot(x)		((pgprot_t) { (x) } )
->
-> --
-> 2.43.0
->
-
---
-Cheers, Lorenzo
