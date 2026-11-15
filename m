@@ -1,100 +1,136 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794707575;
-	b=YczeE53oYSZzVtWfMfK+theEdlG5xuZBNEnLrAaw/xppN9SkHdiCjH9eYb9IbjDe3DYQ
-	 r/vQd1tkKvmEu7oZ6oVlQgssVuS3ADyxsxtv6qbRduhtlh6Qu29m8Y/gUs0Q8qZSeXbwB
-	 nLJBPAR7MvA+cuVzTIFCeoPp025P2t1LefT8G83DsWY374xj/l3+HYscyLpJT4VjXVg8+
-	 N+OCuvRw13VTZxKxkCVdG2spa9mDBhQjxuEJsT0DSQ46BelrJhqG9xCN3tqD6HcfTfV9a
-	 NU3yD3Yz051XUA+qBpENlVw1FSbEmNMCy1K3m1oaNb6tAt84KTD+n9lI8hjtLEZ0iSg==
+	t=1794716871;
+	b=CgDW6aP2GJ9FoFvN8/3McLYAUCQ0GfEU4u5TNzA0+83jeTk9Smar3UvOLhMwtxomo9jc
+	 SBjJW5+h/GXklko4vZatL5fSugCOrbxJIGZzLGfclsuBp+xQF0iU7M7f8Sp6K7f1MKpDY
+	 zUL/cFEcSwWSIMf7iKKG1oBKvE4MajLn/EfjOhvKDJBKYcpV09vHaBtNRUWuqUVw45CRs
+	 R4YCPJQZR3qFTKsGyWIyZQEmZ70S20+iY5SEZ3wFHDee9qsFrEzaVGvxHdZL6k3mnnkFA
+	 6AQtVfEXDqaiDlMJ5mkUC0PCoUUJfRSApunXyspd6b8tsRbypzkGw6vm0wdyRVlU2uw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794707575;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794716871;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=+ejYmTs6mWnDyApUtB1ZIDj1lWthS9/CwrgCU+uOWhs=;
-	b=GMZ1FHH8A4OI0T6aGF+/BK8anlZvS15MqdNxKVMas4q0+FV64ngHj2fjMkJMz+IJnbqu
-	 kANMZ2TaTgKQRseshrUzgLInoSCoqMkrrlfFPO65BgOu08K6XFR6JEW3Ffbrqsi2G4tn3
-	 rcsf3aMMfIcD/Ucozp+ua/bMA0VjNdKtlXb3kUlHHr7atrX4O/auB6cMIb+JTNGGIJuDk
-	 4nzjckxdempN0mJThfLob7k3m+XsUYkqEUzQ3g0WG5WUEIX+4XFO/r5zh9r9uv01faVVh
-	 kyT+bvw3bJvv3WrwE25uWlrmzVMnC2bNDkQDfqpsGIQbIeGdasMNs/YNi3fniToRKyA==
+	 From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type;
+	bh=lBVnC2BKavV2mvXAWvVCtFrvsJ4cH4FcPMsK31plLKI=;
+	b=0L6s288QYyhaBgHpWufrcXZyMmXPPWaj7rX7C5PQ93FInrxhTbCsVdYPyEFsklwntDKT
+	 Qd3l77ferL4zyXhDxMHfDbZCObvemKH9V8gHPzoeKbWbNU2Clg4QHrmlhyVI1CHvtTMsW
+	 i7p2dKI5tPuDF5iCk840UgXNL91e4NKwutfHSIlufusKLHGRkeBUmjPRFv4TLgsECP6Qq
+	 g983OX1UKOL8UzW3Od+vNqU0r8W+zQ7dDAqq6DpiStl14pB88RTAkXCBYZ9BylLKNSbGC
+	 uwuB2ILf6qFGdr8SlCSPAgrxvpTH8JJ4P1ylWNJx2jYHgsOqOBGXIIYcJWY8LrLVE/w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=krssnxES;
-	arc=none smtp.remote-ip=209.85.128.52
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rrlCOM14;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E44606A327
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 01:52:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 22E44606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6581C606A330
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 04:27:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6581C606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=krssnxES
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so12945385e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 17:52:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=rrlCOM14
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-36eb1cb7aabso2907602eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 20:27:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794707572; x=1795312372; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=+ejYmTs6mWnDyApUtB1ZIDj1lWthS9/CwrgCU+uOWhs=;
-        b=krssnxESzo9GaRXDH2qg++cHod8q/wIiofiMVhzU6IM3OLpyAG/Ozby9mU9ASLrBcV
-         WU3+jLr5T9C3o4JT0i0nKRudNXDOVRei2ySxN8WhWT6FFXFj2ioddNtAhcn4tGqqi/jR
-         K1w8K3GFcprQVHipESSL5qtuDsyG0u1KqIwjABdAk+NWFEVJOtsOOBeEDSab+HeCsETo
-         XvXmZ2NczFJNZdBJ+3H1m5zPe2TY8BOAXyv8ukeiqOW4zhwIgLLl3C+9xtc2b/2wQJkh
-         SLdhhZ+02lc24gwX5TQ0Y0a/SEnHNlNfODITC2y3BbjZL9gz8l86BRaxv7FuqGRKA5Mf
-         k9zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794707572; x=1795312372;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1794716870; x=1795321670; darn=vger.kernel.org;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+ejYmTs6mWnDyApUtB1ZIDj1lWthS9/CwrgCU+uOWhs=;
-        b=mBsdTCM22DwY+yr6Zo7x2mT2PVymF6iJi+oIsbSyujqO1HFXeH0bayovX+kAcZSfL2
-         tydZqpmE4tw5AmlUIyGrAw41Ps4x8foxvuvP7JxmvgXHfz7te+BAebKQ5Td+1vCfe8s3
-         oHP0IhdQ3a3dhnpyylRopwz3aY5nJYnPWmy1KV7niGPESVNi4VYFasw7/OSkW++qNW1p
-         2XLCTDtffBYdvqXlaDOfKCKgoQfpV781grmz1Qxwa1BLEZMzNfovVH3Kd9rkfJ2pw68/
-         YkN0y7XUqvwp2xjFErtMZn42ujDOka28ehtILftQ86xZhetDaxo9DZWE964oWmgGN7pd
-         7Jtw==
-X-Forwarded-Encrypted: i=1; AL+hErHYMicG9QvMY4UklaLyByuMmysKbXMfSkFEBc0pq/UdeBV4K2Amox6tQb1uTCnlCdrz5jTsfn6d26ewQhOHzp3+E6s=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8DWhN1j/b8RZStU/XwTWOhomhUXbcScmHKI3AocrUo+LjNBWpu
-	gOKdfKm1ZcMKtkh/b8UNhAwe2sol1AWU61tagYn4KOASeFgxsW/DnXSM
-X-Gm-Gg: AYBFou0Ee5DaySlJyxhvnLwDraDEh/5mcVGJBGQ67O7QUIMGvTaxVO+C7Y14uKoa+dG
-	CJsV2rTlH0K6sKf7knIlwPj2pLqRpI/8VLLXiAAQs5dz2UzfyZS1ehocdpv1SEF0I+xCRJtb4P0
-	F6DrII20DPcp2+yIEf7WKhaPZ7chmEl7wihQ53as/kmdtqKCevadko6qhEzfoaWkrVfQSyv8TiQ
-	8Amn08IwnajwmypEBVcsxqEPNi/eEp2KorrbvILeP5nG0sOQzNefhVBrkHuEtSQ3YZuYwDPYuGp
-	7d7seBLJXpJfH0FSe8DFJnMruxe6wnbDacv7mQJQn4XvXn7JJdG52WaA7U5TkvmHwdbhp/1L+w1
-	jG/ohvUL3ajCEAVKB54TIoSpiLZu05/iepAavdWKMTPoep71Abt4Cmpg3/pOYoWnSJDQxriPAPZ
-	X+VJxdzlwRNGMf+lkZFXJI1xdyKPjtBnEvSu5Q3HkpI397XinC9RGLHZxHXSB6OROx/TaphDD54
-	X6qMhJTMGAyT3q2n3hglv1nL5v5XmcsD1Czra7jYMciAu+nkGNuAl5Eik/BSYSHPT9hTBIe2O8k
-	Oa/D+fdgSO4ZsfD/aFvHkKlHrPBNNoZJdpYtNIOhstQLgNdQo4rlHi01az/4CYYGEgkzPhb7eSj
-	3MxfdiKIJUtBdjOS32a+XepebDrmJ
-X-Received: by 2002:a05:600c:548e:b0:4bb:5c92:ce12 with SMTP id 5b1f17b1804b1-4bb5c92cedemr107415355e9.17.1794707572354;
-        Sat, 14 Nov 2026 17:52:52 -0800 (PST)
-Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb679b7e1asm112112405e9.6.2026.11.14.17.52.50
+        bh=lBVnC2BKavV2mvXAWvVCtFrvsJ4cH4FcPMsK31plLKI=;
+        b=rrlCOM14U7o+M+TZUPRKm/0B5X33KfTWozBYOwW7G1T5mICv5uiTGRDZ8N/E/WkgPs
+         Slt3WdfVhPxLW/Dfkkb7/xGjvq8CIoTpYPwhvbdCG6Yvw1BgA2N1EVe8mN0kEHKHXyef
+         8tQmPjoZ87TzHMHH5DbiUhIVkAX/fu7oGi34+wAuHuH/TAi5YSfzTR1lg6qENJCTh/vf
+         bWlX56f+34OBBzkIC9iYt9wgmDyB8Cq+Fbc85HrZX5UgurcmY8nnkwgd3auzrRPvQadc
+         V+9t/jgoM5TmoX0d5ZETJARldRFhGcH0iXCu8yq6U0k0i+/1+kk//+frMRudpsSSkh05
+         Ua9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794716870; x=1795321670;
+        h=content-type:mime-version:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=lBVnC2BKavV2mvXAWvVCtFrvsJ4cH4FcPMsK31plLKI=;
+        b=w2JhTsvGSY3KQLO0Pwtn5VudOGS8v/bVIhak4lWB0gpZgNkrWs2emQRMmUS3V9Dl77
+         2th+KFOVWTzt6fpFmcLtymOiCG995g2UWu9rDekKtUBLGTOPbPx2Xw824pOQ41rnjGXZ
+         LSb6kyQbwo0PTFJs1I6x1Kow/QbHwhxwg/nt8Q/b0iiSFD0ugZu2nnTbSYDN//1TjMNT
+         lAeXkoCvTnSVrUm3r7FYQo3FFBRK9K0O/NmaCdi5djKA2WZdNpYWWqmwYBB6OUobtU3r
+         3tNuvf9snHNkd2A7v6Z8jljYeDGokS59kpMidCrMhCHdSvUUFeAqfn+rIDKVhsKz1vrm
+         OJRQ==
+X-Forwarded-Encrypted: i=1; AL+hErGasghJdizUa9OMv3F9kdUCM66tyJ+NnXF3Vd6HGa/vHwo7ib1F7lObs9t8HMExrzZVp6P/1SM29F6cXMdkaqRpOf0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+jzd2U6tV9TI4NaetONRQJF5VUaFGhOJlgdyY0GO+iLUBjO8+K
+	ea7ghci2FCofdnnX6P0RnRCTZ9aD1iKv14d1OnUZEnJkmOXPwFfIGduT
+X-Gm-Gg: AYBFou2veKe3SX8ZX++3Wqz+N9SMazFlZryYlsSS0KZIBcblDKvriFtpzJ1O2RlfJIN
+	LZeaHVRntbbqR9sRnrLe3cAdQph6XFDQGYwke9VmAZ1F2rcYAxUJtDn2EJQouTvq+pFB06Wc7PD
+	+BKa/NuAz0Pm+vqtbaMYWFmOcVbh25KaQmRS7mSqmFA5xFrgxPuxt+Okb7iDXbFyDDmmlMZl2jT
+	fF9rIaJ3E8a7RoAEYTwr5uKnKZg9s4hY3xMF9LjFofsK3LoYDPTt6eSfRC/HD/8/iMG+RhfJXvf
+	6wCQimcXXTeKu1hV8VS35ayU6TMnD81YoZSyTU2BRPH9udyznKbBpI2ajkcHpTGppxGr8lQ8Q/S
+	Q03dgk6wFnlLjL5eH9w9KlKYJKSqzNEjQR1Pjp/TSBmKo1kxvwLkAIaugnnSfvfTzi9jIdt/zb0
+	+A6R7RCPy5clCCyrdP4RWktifoBeMNvn3+L7L7DcoSIvpTCcYYcMCo0+BN0g0IU0ABIRX3Ipwun
+	/OiFOJsEFABP1jx+eytJZ8IC+k2EZHTf57zODgBj/Tfo6pVqcyeF5gQbXFXrr91Z7I8QUqetuis
+	+QTxSVNeQtW8+f+e7r2Meccd498=
+X-Received: by 2002:a05:7300:ff46:b0:37b:c89d:1d56 with SMTP id 5a478bee46e88-37bc89d354bmr1627673eec.12.1794716870280;
+        Sat, 14 Nov 2026 20:27:50 -0800 (PST)
+Received: from pve-server ([49.205.216.49])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3797f98b9b2sm20640706eec.6.2026.11.14.20.27.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 17:52:51 -0800 (PST)
-Date: Sun, 15 Nov 2026 01:52:50 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Sahil <sahilcdq0@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	naveen@kernel.org, davem@davemloft.net, mhiramat@kernel.org,
-	pjw@kernel.org, wangruikang@iscas.ac.cn, namcao@linutronix.de,
-	kees@kernel.org, linux-openrisc@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] openrisc: Add unit tests for KProbes on branch
- instructions
-Message-ID: <avkQctt0CKt3YcsH@antec>
-References: <20260930202744.50489-1-sahilcdq0@gmail.com>
- <20261026201240.107462-4-sahilcdq0@gmail.com>
- <avAsy43KVO-7Nm9z@antec>
- <dbfe2a41-c99d-4f00-ac0d-2b2b31a72986@gmail.com>
+        Sat, 14 Nov 2026 20:27:49 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe
+ <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
+ <peterx@redhat.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, "Liam R. Howlett"
+ <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Harry Yoo
+ <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang
+ <lance.yang@linux.dev>, Zi Yan <ziy@nvidia.com>, Matthew Brost
+ <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying
+ Huang <ying.huang@linux.alibaba.com>, Alistair Popple
+ <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Nico
+ Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev
+ Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, Usama Arif
+ <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin
+ <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)"
+ <chleroy@kernel.org>, Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro
+ Falcato <pfalcato@suse.de>, Kairui Song <kasong@tencent.com>, Qi Zheng
+ <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Axel
+ Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park
+ <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, David Rientjes
+ <rientjes@google.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, John
+ Johansen <john.johansen@canonical.com>, Georgia Garcia
+ <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Mimi
+ Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, Stephen Smalley
+ <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?=
+ <omosnacek@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, damon@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH 00/13] mm: continue vma_flags_t conversion
+In-Reply-To: <au-DXpEi4wHwsz0r@gremlin>
+Date: Sun, 15 Nov 2026 09:50:28 +0530
+Message-ID: <7bie914j.ritesh.list@gmail.com>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org> <d0ea7929-7c12-4245-ba3f-6dd5c0269e6b@kernel.org> <au3r0-geuwtRYPiC@gremlin> <1c0b1368-a381-4b25-bba9-7a4f8e92b764@kernel.org> <au-DXpEi4wHwsz0r@gremlin>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,105 +140,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbfe2a41-c99d-4f00-ac0d-2b2b31a72986@gmail.com>
+Content-Type: text/plain
 
-On Fri, Nov 13, 2026 at 10:45:03PM +0530, Sahil wrote:
-> On 11/8/26 1:33 PM, Stafford Horne wrote:
-> > On Tue, Oct 27, 2026 at 01:42:39AM +0530, Sahil Siddiq wrote:
-> > > Tests already exist lib/tests to verify the generic functionality of
-> > > KProbes. Add unit tests to verify that KProbes work on instructions
-> > > that require simulation in the OpenRISC ISA, and that the corresponding
-> > > delay slots are handled correctly.
-> > > 
-> > > Signed-off-by: Sahil Siddiq <sahilcdq0@gmail.com>
-> > > ---
-> > > Changes v2 -> v3:
-> > > - arch/openrisc/kernel/tests/test_kprobes_asm.S:
-> > >    - (test_kprobes_*): Set value in r11 register to 0 prior to running tests
-> > >    - (test_kprobes_adrp):
-> > >      Place function at page-aligned address
-> > >      Use PAGE_SIZE macro instead of magic number
-> > >      Move value in r13 to r11 before exiting
-> > > 
-> > > Changes v1 -> v2: New commit
-> > > 
-> > >   arch/openrisc/Kconfig.debug                   |  30 +++-
-> > >   arch/openrisc/kernel/Makefile                 |   1 +
-> > >   arch/openrisc/kernel/tests/Makefile           |   3 +
-> > >   arch/openrisc/kernel/tests/test_kprobes.c     |  59 +++++++
-> > >   arch/openrisc/kernel/tests/test_kprobes.h     |  24 +++
-> > >   arch/openrisc/kernel/tests/test_kprobes_asm.S | 157 ++++++++++++++++++
-> > >   6 files changed, 273 insertions(+), 1 deletion(-)
-> > >   create mode 100644 arch/openrisc/kernel/tests/Makefile
-> > >   create mode 100644 arch/openrisc/kernel/tests/test_kprobes.c
-> > >   create mode 100644 arch/openrisc/kernel/tests/test_kprobes.h
-> > >   create mode 100644 arch/openrisc/kernel/tests/test_kprobes_asm.S
-> > > 
-> > > [...]
-> > > diff --git a/arch/openrisc/kernel/tests/test_kprobes_asm.S b/arch/openrisc/kernel/tests/test_kprobes_asm.S
-> > > new file mode 100644
-> > > index 000000000000..bc87a5fb00d5
-> > > --- /dev/null
-> > > +++ b/arch/openrisc/kernel/tests/test_kprobes_asm.S
-> > > @@ -0,0 +1,157 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > > +/*
-> > > + * KProbes unit tests for OpenRISC
-> > > + *
-> > > + * Unit tests borrowed liberally from similar work of RISC-V. All
-> > > + * original copyrights apply as per the original source declaration.
-> > > + */
-> > > +
-> > > +#include <linux/linkage.h>
-> > > +#include <asm/asm.h>
-> > > +#include <asm/page.h>
-> > > +
-> > > +#include "test_kprobes.h"
-> > > +
-> > > +SYM_FUNC_START(test_kprobes_j)
-> > > +test_kprobes_j_addr1:
-> > > +	l.addi	r11,r0,0
-> > > +	l.j	2f
-> > > +	l.nop
-> > 
-> > Just a tiny comment here about indenting the delay slots.
-> 
-> Got it, I'll indent this.
-> 
-> > You could also use the delayslots here, for example:
-> > 
-> > 	l.j	2f
-> > 	 l.addi	r11,r0,0
-> 
-> I initially thought of that too. But then I thought by keeping l.addi
-> before l.j, I would also be able to test this for the case when
-> there are no delay slots. I can reshuffle the instructions if that
-> test isn't required. Please let me know what your thoughts are.
+"Lorenzo Stoakes (ARM)" <ljs@kernel.org> writes:
 
-I don't think it matters either way since these are tests.  But, it would be good
-to note that in a comment at the top of the files where you want to maintain
-that convention.
 
-However, thinking a bit further that may be hard to enforce down the line just
-for a handful of files.  We should assume the kernel code uses delayslots.
+>> > It's not really all over the place, it's converting vm_flags_t to
+>> > vma_flags_t across madvise.c, which involves changing a few function
+>> > signatures, whose callers must be updated.
+>>
+>> Ah, yeah. What on earth does arch/powerpc/kvm/book3s_hv_uvmem.c do with madvise :(
+>
+> Yeah it's quite worrying that... :)
+>
 
--Stafford
+Thanks David & Lorenzo, for pointing this out. I have changed this to
+use ksm_disable() instead [1], which then also removes vm_flags_t usage
+from there.
 
-> > > +1:	l.ori	r13,r13,KPROBE_TEST_MAGIC_LOWER
-> > > +	l.addi	r11,r13,0
-> > > +	l.jr	r9
-> > > +	l.nop
-> > > +2:	l.movhi	r13,KPROBE_TEST_MAGIC_UPPER
-> > > +test_kprobes_j_addr2:
-> > > +	l.j	1b
-> > > +	l.nop
-> > > +SYM_FUNC_END(test_kprobes_j)
-> > > [...]
-> > > -- 
-> > > 2.55.0
-> > > 
-> 
-> Regards,
-> Sahil
+Please take a look at it whenever you can. Since it also removes the
+EXPORT of ksm_madvise(), I think we will anyways need an Acked-by there.
+(note that: looking at those changes, it seems like it should go via
+powerpc tree)
+
+[1]: https://lore.kernel.org/linuxppc-dev/0500fbfbb98776091c89584155368610095b4dd5.1794537345.git.ritesh.list@gmail.com/
+
+-ritesh
