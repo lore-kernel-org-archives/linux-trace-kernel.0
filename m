@@ -1,101 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.84.64
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.230.74
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794727057;
-	b=klgc6hRgsAUV4D/gE1JMLgh7XZiIu4Uy1ksKUWdrlt/mQLp4EDpRAYF9/UgtZYn3v621
-	 6rSl3zg44A6M72JyucmwdvkkuSr8HkvrOUhdJuKIE8umB33usSB+NzNkWDMsqky2yI13B
-	 kTvS2KyyNx+6yLHN4Z3baAw2mzvCB+jZFqAvIrkH1qtfhAmg5h3EKNmYAkzZZYMCBNTPt
-	 YyL887chsoW2ak7Uti5vjP0FX7LyaoJMuBWnRrc+QWwb2uvaRbEVyJZPcBiMjR+2bc1eT
-	 0po0el8mFgNHyVzMcPdcpgqXUphtS+Dw7Faxj9cQftplD+ELiiL7RYs4NRvPgnkszng==
+	t=1794739133;
+	b=khuBHkxPXL5Qq4C02sYL/l63r3lvVVYYOYvaJqlEDM4fU6oxDO5bP22vyMM/kmS5pxfg
+	 0OWI/aeh0YUXu9sYEjUdFnwF1vwOFWCPu9usyI3BC6tZ3xD9kK7vRW/R4X6lMYGXoEbQy
+	 7Xa1nsyzerpAexBzBNXRd2PxqOMOpUUjN11VNofKbD8vqfx6DWmQagOVZ7VPNwbb7dGm+
+	 gMpTVS9KeWOn9KYs74DGjRdYvSLlbL6fd95aNgpuh10UNCyDeLFkZPpvGRO6yN7j+rsjo
+	 fbXwMWfE4DTigxHsEOmwBUpoJyRVEqxcgUUTmNS+bc/Euhp6oB6HlA7PjsYE9/kWUMA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794727057;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
-	b=AS2WUTfc2BxJ6I9Mg6mgjSDSpFNViStR6hUb+bhHkhLFLszJ0bK70FaJ1cE0Js4/zLnj
-	 F3LMAF+oxnVQBZBtMxhlXT5n/eFGjc7kliYbs69yZmjwJYHSyW6SOxgciryvOHMHDBnAT
-	 2zArFTgfxuO0OW/iuKlGI3+kyNcOoyzUhgaEToiU5z/FV5sQoFBPfjfBUHbki1P8ylza2
-	 3H2GHnB7NqTfyxiEIW6Pic0Jl3JDsXnU6wIdaKXKyxV3KQbMw/FaiOToP7uvRUAFuaxO5
-	 R3LGiHHjRJ/gKS+JO1GCOxLocX5+C6RrjWflx3G7ch5hT2uYm5fu31JnziBtXvXw10A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794739133;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=Ryb/wfZrmgOaxQ6NRfhb3Yyqal01lrdSf8WgQu2kxbs=;
+	b=nG9SDFVAMFiziRJH50sdVddfqumFSML9RN/VK1E5ZEWAuT92f6yV2310YBqEpOcGxb6g
+	 y8nku9ZvKKmvmsC6Oei6cycPLeLAwZ3qyXjG8RH7FFbIxHOkDItqfw/jH/Bd0PuO/X8MH
+	 28af11o+XAYZk4XE4+Sg4K7UksfCp78/qmAINeqVXwaB1X6nCPdPmVMJGlLjSsSr47+ha
+	 dP+WCzXMK/4zf/TEqgrK2BrD/p3Y0tWEBPktfMB1iRUE1vJhbfzIzu1StZO4LiHm42DQs
+	 vmQN9G5hgR3M1pV55km8ua7RnCEbIfVZIv9Qlj8RsSejpFHxBATmZtR84BgfJ02Clzw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	dkim=pass header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=ADwOqrq0;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.84.64
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010064.outbound.protection.outlook.com [52.101.84.64])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=V+vmJn2P;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.230.74
+Received: from mail-lr2-f10.google.com (mail-lr2-f10.google.com [74.125.230.74])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E0606A31D;
-	Sun, 15 Nov 2026 07:17:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A90E0606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97F4606A32E
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 10:38:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A97F4606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=ADwOqrq0
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F8xw4P2xoQkON1R58b8dSNsufu9QF1/1Zr4WbUWLv4mL1JShtl6wPcmo4UyhMs7tPm2VsqgL5PvFs49hqn4LOAhDX1lUN4H7xqmwyXhaZOPsz6QI/zuElAnBX8bF0c1U5pLvaD/l7Ho2vwLiI+qaNsRXVTMJbPrW/j44fguzlaXwXaZGd4Jsm8xLdgmuwVLeF8U948lYembqRz9WIsRn7om9Beofs/f2l6Bk4CCFhKChWK+BpOtroJWpiOgi6a293cceBfh2tq3PEk4z4gf3lbgqPbPOqTaVcz74Y+5yIhxV1veUK46fh5LAlYIxCPNWdGJUzO+/Jq6IVPuZoHTXHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
- b=BAcYdj/UF3Yp+nRVU43gkrdcOai271TZ9ur5z/E6HeReKOffr/tXEFc0vJS7EZb1VsDJSEuvj6uklsjcJCWo+y95qMZFRBeY2TbqYoEPbqldUduezZsJWrWQvgb61xK0uVDVSPJL18I+N0ART/ffdjiZNdSaA70M0fuUx8JlUCJgvicOhpbZ/XeUd61RVF9W/k4M0qGn4c0TMR/FcYmsuvFEvVmEkurhdlJyGrf9AAEgDq30hjeo1DRk/rSn3vN00IsBN7i4Ua3E+XWVd7LSa7XUy7vyZu8cZ2Hll/5qLyiw6GADy6Fb6yFTtWy1mUq+7IuC/bPXohu8Toc72suLFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mobileye.com; dmarc=pass action=none header.from=mobileye.com;
- dkim=pass header.d=mobileye.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mobileye.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
- b=ADwOqrq0Tmk0ZoG4C0eXv/hB9C17zdg30G5PCQWeHpF2+s5vlBQgzUXaSXmOpJqWenCym3KIZWV8RR7NrJjqa0rfeiAkpVDJ1UIPiKEMZ4k+JpC30+/urVL1csc4N5DeuXXXnugSjEJ8OenR5dPJ9Da0VuhH5HFeLyggZTaUu+A=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mobileye.com;
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22) by AM0PR09MB3940.eurprd09.prod.outlook.com
- (2603:10a6:208:196::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Sun, 15 Nov
- 2026 07:17:32 +0000
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2]) by ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2%4]) with mapi id 15.21.0615.012; Sun, 15 Nov 2026
- 07:17:31 +0000
-Message-ID: <cd92fe07-9a9b-4a21-b596-1b2d007b4c9f@mobileye.com>
-Date: Sun, 15 Nov 2026 09:17:28 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] riscv: probes: reject probes inside an LR/SC
- sequence
-To: Guo Ren <guoren@kernel.org>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Pekka Enberg <penberg@kernel.org>,
- =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>
-References: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com>
- <20261112-probes-in-lrsc-v3-2-a95089852a17@mobileye.com>
- <CAJF2gTTY5ODDH6XV2h1v+T7Sn5BK3L9x-Q_Qb_EXNmdCor5rPA@mail.gmail.com>
-Content-Language: en-US
-From: Vladimir Kondratiev <Vladimir.Kondratiev@mobileye.com>
-In-Reply-To: <CAJF2gTTY5ODDH6XV2h1v+T7Sn5BK3L9x-Q_Qb_EXNmdCor5rPA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TLZP290CA0004.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:9::15) To ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=V+vmJn2P
+Received: by mail-lr2-f10.google.com with SMTP id 38308e7fff4ca-3acff0d1090so15512821fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 02:38:52 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794739131; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Cw0s5NTM7HDNF1rrvM3lJxMOyJvOTuMmju8O9+e/HNpf6tNv38d+SoYMVieheaz2Ad
+         eOb+uXoCTFU4Y8eQhcmhfq289YE5NQDBPW7NMy4vNprH52INdkmyvoL1g3bat5TAsG0X
+         nzmp1MJoy88wgPmkeRmuYuSQFFYEOT1RrbfOlhsmHcYqRsIz+GVI0+ZrIOuMAg5eArk6
+         mjUWAsB8p+2y3eKtOPlI/AR7ys9B0xWqZRj/e0xxklQonuxTUjnJEO2alTACEgJ4C63P
+         xnhjCAwM4KbVkJyg2uvLN9fHiWajFI3/GAdCHcS8jQ9M9/9uVotWEV75hqnuvydN9YdF
+         nDZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=Ryb/wfZrmgOaxQ6NRfhb3Yyqal01lrdSf8WgQu2kxbs=;
+        fh=qJiO3+tW0AEB2lJAaagVfU3DElIgO7r+WWYcoumMY9Y=;
+        b=mLDE9I7KrtEN58P+EZUa+CPZjZtNgD8DEVtbCoWDqeFBvIHjNo9e6JtVFtBLNjgfqv
+         XDaB2/FGKm2VbzqUXafHn5MLv9lkqrjIU4dbc7+YyTQP4TpSA1VTFP3ZSr8adxyk1976
+         hqtxwMkwIDKI0/eVSdLGugZHtvImTf0I3GGMvdSI8xowjPsgr8ptV+J5REdu5x0Hal81
+         8jtXeyPL4gUnGxwYLvR7qLHzlxf53CTPJzz0zwpZvkrmRqSAzcY8iwtLekHMAF//aqy3
+         nyOS2w6RyuRF3mg12axz9t93v4aIubmilTApBT3CKCACS+Y6VBxDuOxYqF50bXC8YMVU
+         I/gg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794739131; x=1795343931; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ryb/wfZrmgOaxQ6NRfhb3Yyqal01lrdSf8WgQu2kxbs=;
+        b=V+vmJn2PgHtlcho8H3vKkEnloQ+Ch3/mRwRIHa38K1ZHpjPdokVXxd7Qiz15njf1fp
+         4GSwEETpcQBomyYRJuwl/DtOo1WEfVp8YLXF/8Yshp+ipovuPNC6LmI91uhVBYnS6uW2
+         wy3CcTROJ91nZL120kL/qtITW5WVbmEx4VaOuj0TBIU2Kpwe+YPWPyFsbGmtcFdaq+5O
+         4Kh9MrKsYSpUBYi1e6zxEF6kPlCNpaI4oG5RkUFkjKMvGLHLmd1182iM8WGFyEWFLpsJ
+         qU/uYCPds4t1CrYZKh7knky96GWMOQHw9Apzx2Egxz+capMCMuHUdqLWUpj0kLQl/PZk
+         50Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794739131; x=1795343931;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Ryb/wfZrmgOaxQ6NRfhb3Yyqal01lrdSf8WgQu2kxbs=;
+        b=XfgsT8EXSAlzbG13aEmdApw2bSfL6BrkxpdYq434T/OBfUygyQjZvtAdevPiC90DBM
+         heswaym8isWN4arfa08YfcYyfXlf8LzjHQBXeKkgZT3AWGzWOQmDCV9y7J+prXYQ4LTj
+         b2XJkYS9wOqc+aLIh1x1MDiXf74KfjRtDT7YG80cWO5tgbQQM3P1MsEunkWnbExuxHgg
+         Lf+LaJ+VYfen5bHRJn0HrjuVIjtlKKuQVQCVAHgoWt7KG2JCFlKIcw/PJ/bTKmiLd8Q5
+         LAwIF6DgzYUCQqZUhenp5J54785YeGOTcPiaklF597wmI4aQIK/gMI3tri6mLIOoGkmB
+         lBFQ==
+X-Forwarded-Encrypted: i=1; AL+hErH8WPnO7rBKKH9qf5wEoyP2LW6Z+zxBEqKQwcnkNYgz1HQOt4Hs07V9C94NgsObtcxyuAIrLoBoJ9NHK9uJecY1yK4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/T2Ebhf8mHCRB65J2AOoDTm6O9XZitHGduSrJds7cUojJuM7k8
+	tHd4GEewGSDVtrTEgvPBJSKYutcz2X8N4o/mBMHtU/IacsUbVuJupFdD2ZKgTd1CuMYTJQjbRYY
+	FnPq6cNj3TjljWT0bDXbhCgkzEgdd+NXeNzvCXQpv1Kh9
+X-Gm-Gg: AYBFou0LxVNhTdJc62jm4Q2aEOVmVHqFovMmIX/aymosNC7YKb9J+BHYx3ybjmo5HMJ
+	xnUsCPc4CgulJO/LcisXePZByC+xpGJ8OLQ45+rE2yHxjPxIBwGlFZVHHqbRh6XCNsgwcoDftzp
+	RU7w2l47mE3D04zkqWT+KRCxVv+wP6FNxhicdPCFOi8lvfdQz/3rgt8hyhVMZBJEhPZ0RwDemHy
+	azTZoi4FNCdx8oZC0SJv4AMuxYgs2Dv5YZJH6tTOwUbGfd4gDW7W6Lf7aEUufbaBx+cvHaxgC/H
+	va18tcbWlF/CpNXpvUWPWxsF/9n3jcfiQN2T3g94PaL2NlxPeCjW30ubZF2FhGMM1WnXhqe5SnU
+	qdoXtq6WqpnEkzZMK7Nr07zjUkV/YdXclvHhG8nbdAmiymugw/MN2A9Tt2PUSjedjBW3+623nre
+	MgKpnuXYdvul8=
+X-Received: by 2002:a05:651c:1616:b0:39c:624d:82b9 with SMTP id
+ 38308e7fff4ca-3ae2b4c7796mr23017721fa.4.1794739130352; Sun, 15 Nov 2026
+ 02:38:50 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,76 +104,166 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZR6PR09MB889505:EE_|AM0PR09MB3940:EE_
-X-MS-Office365-Filtering-Correlation-Id: 897cbec1-9b2f-439b-6b9a-08df42e88372
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|23010399003|10067099003|4143699003|11063799006|56012099006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	zw+6Tt1/fhaT5azyQk+8MR+psTDshm5GoRwuBjf1c2i7lkYtbQBCtkX/3rxjtHW1inxXlzqbibcMBS71zNOFHxqAMtS6Nr5ITgcLUgWu5WW3oIaoKcfu50WKdJnaIGQogR4WXHSbSx/BnMjmlgjroqCmCPRUTJvACzxMnGhUS8E464K1m+kLnj7qxmpj0zB5TjtZXuHb6Jyr1flYYSqnLD80vSvwIyJmopR3Qg/FmHVwQNallT/crWVzx4BaO/jvwj8gPH8jG3NXB4I9VXd+T5b1bQvEdrD2TE1riW394dKVVdZzH6hrKgrJQtnWauXqG0IoRdVQAIbTe3GWDcApvYgxFEwJooyaB+Q4spxMJqELWX+FTKjqzRY6a+j7s4AGYzBoxWycw1AzDGkJXCXmLUMu6/+hoam9nn9ckxbOuaH1xf9vqgKFbV07jb25UDlJWb9fhrhb2e6ZRhXjqOuAeqzb+T4G1URB6HCkIWFaZBcu5qrT6TAzQgO1++AMTsa2LCixgNjnvAL49SQyGvvYmTDwiOKpWLNM/cTrH1sTj4j8qv+lro08XAc3CywzpRNUufhgpFI8Yud4S4ZSMrj/lzs/U2ejTTN3wsMs5Q5ySgY7zowIdX1WI0catSEKr4tqAzJ/X5GAE2V/I0B7AnmJgFQziHYjyIPGdreLWKeUU48=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR6PR09MB889505.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(23010399003)(10067099003)(4143699003)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K09JdVZPMnJWVjBZNkwrcmlQb0FOaTNvTnd3S1MzYkloUXRyR2pmdWMrbkt0?=
- =?utf-8?B?ZTFyYW9KTE95b0RPQkZ1RUZCOWRhZkJETFgwcS9QUmpuSURPVVZQVzJWYjN4?=
- =?utf-8?B?K05uZDVtaDBsb0xqSzZ5YkRaL0JRbEZvWHlrclFQc2h3WEwreXVOMDBhOEdC?=
- =?utf-8?B?ZCtyRGhBelNCZ3pHUGdUZGxkQjJ3TjFCMjRURUJrdjFBWVhzRGx4SGc0NFFU?=
- =?utf-8?B?eGgrcXI2Y1FFbGdGZ2VUWkFDRzhGTnBCVUpCUFNqZ1lYcU56QTVtUWF2bmZu?=
- =?utf-8?B?WFNzVlhRQVcrdm5pKzRqb3MrYVJmMVYzT2FhRGppSXRZOU5oRzZka0N1VDdj?=
- =?utf-8?B?bVVUbVUzNVZaamxJdUZQTEhHbVM1MjhQbzlRdHVwbGFQdVFNK3Q4OE82TzdL?=
- =?utf-8?B?bVB1U1dZd0Q3WG1sNzZOV3h2RE5vNGdScEkycHFGc01LYW9DVmRiOXE3Mk9H?=
- =?utf-8?B?SVlyNDd6TWc4eWtoNWE1ODBZK2Nta3doeFZaZ0VTTjczRUY0MUlyMTRjNncz?=
- =?utf-8?B?eUJzV2tKZitITWNld0t3UG05VWErdFBrdTF3SmJ5VzZmRDdHY0NJRWRaR3J4?=
- =?utf-8?B?MVF4ckpLY2Z6MXQzQ09GYittaHpmOWROMnBnUXF1NHpCb3Zwek96b3hiTWtt?=
- =?utf-8?B?UG5OYWhnL1lFcGdPWElyRFcxcWRwK21jUFErZzY1RlpKcVZZQlNqTW9kZ3pq?=
- =?utf-8?B?T0hjWnRqSnFsRk8wL2hpNWF2VWlCbFYwOXNnS2pzaXV5ZUVwTWN1ckRzVTM2?=
- =?utf-8?B?cVoxdld5ZFdrdGhOVTkrMW5zOW9QWm9QRWNWVS8wSnFvVDdlWTYxU2psNE1a?=
- =?utf-8?B?UHJDZGlTOFZ5cnE4bzhQTE5aWGlBaUV3NzR3QVJhVzkzSzYyVGFWeCtlRzNm?=
- =?utf-8?B?dDRGd0Uxb0gzSjdGdSs0MSt6aUFPY0l4VGdtN3RXRmZ6aWNHWHk0MUM2c0FO?=
- =?utf-8?B?U1krVjI2bnVrcG9PVTNkdW03R1MrMFhBSVAxK28rd3ZkWGVTeXhNdlJoeVNs?=
- =?utf-8?B?MXFqcmZMb2QxTFUrN0R1S2g2cXU1Q0xmSVhYZmowVXZkRzloSzBIZy82Y1M5?=
- =?utf-8?B?TGxLTkVuZHZXcWxBOU9mRzgxOWNSN1FYRVEvNDRtY3lCRlAzdHVnU0lVTHV1?=
- =?utf-8?B?eENlNWpqazJ3NVVweVdTZHh3QjRXb3U3WVo2dlFLdWF4Skw4VktaaldtRFh1?=
- =?utf-8?B?YjNVS2NBSmx6V1JFRE1NZjIyRE9UZ3dESGFSalVMS3pWN2dkZGxUWlBTaUc5?=
- =?utf-8?B?K1hUNTZGTHVnb1FPdVp3L2VzMzdHK1lIK29JcTlwQ1JhWXpaN2NoSWgvek56?=
- =?utf-8?B?VmNNOE1JYjIyQzU5bFk1cy9xMlNUV3BucTlXSnJ5QVIzVWpHaW50eFRsL0Yv?=
- =?utf-8?B?MUJWQXlIbU8yVU9sWGxXTWd0TW42aCs4MUZJZ3Z2RUhXMFdIYStVZHFmZTg4?=
- =?utf-8?B?anp5RXNsS1pMRy9Zem1QLzM4VGNaTFNEK2RoQk5OelE3NVNHUVFkb1F3czA5?=
- =?utf-8?B?eFE4MWsyUUx2LzBrbldKRXhESVlha0tFcmhiNjRUSFZjeVg5QVdKWTNab0lN?=
- =?utf-8?B?N2N2dzRxKzIzdWsySmcrMC9CZ2ZNKzl6MlRiMWNuZVc0YWpMWXIxRzgxVkJQ?=
- =?utf-8?B?enZQd1BNWTZ6KzdYUWQ2VTl4WGh2U0QveXZUbFltc2REclBvUjRTRUVjODN0?=
- =?utf-8?B?d3JUYTM1b1Q2aHMzVmJnNzdnZUl2TG02MUZJQnE4Qi9oYnBDUm4zNXl6YVlu?=
- =?utf-8?B?b3dkTUM4QVRJWWhOUmJNellVcEpVcnVqcGtCbS9BYmhEYlBkWjJ4bzJnNG81?=
- =?utf-8?B?eXQzTWdESlN1WXk0V1I0QjNlNFJXYmlybk0xblpqbWZsUHlzbWtYdmJoaE9M?=
- =?utf-8?B?ejUwN1R6RmZyN0dZY0pzdi82YVcyRU00ZUJZNXVLay9vZXRPN1V4Tm5ldFJq?=
- =?utf-8?B?aE41RVd2eDRPSFlSbFNiSFRPbkVDR0NPTXpRRUdvVHQyNFZuOGRZY3owUHBo?=
- =?utf-8?B?RWRyQkllSHArSElERCtPZHNiNFYyMTg5STZSRDdvUjFFWmtCTlFGSnFxdGNv?=
- =?utf-8?B?RitDSEE0TE1IOFdZcGpUVk1vTU12SmJCbWZWMjVZSTdNVkc3SXg2NnNsNmIz?=
- =?utf-8?B?cHFhSXBTRkk5UlNIRWRyNmlDTVBxbXloKzlOdFBzM1grRE45RnF3NTgrZ3Zt?=
- =?utf-8?B?cTJscTJZT3NlVWVTbjdZKzc5YytmWkhncDFYY0FTdlRKSVpyNlU3R2tYaE8z?=
- =?utf-8?B?TThDaTV2UlMwZjFjcUNwSlZJb1JsM09XWGZoUDk4VjJldkVXcDhpU0FZcWFz?=
- =?utf-8?B?RHdLZ3pSTVBIN2R1Y0kxeWlJbDZXVERMaS9Kb1pLRVhYaU1XMFlNUT09?=
-X-OriginatorOrg: mobileye.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 897cbec1-9b2f-439b-6b9a-08df42e88372
-X-MS-Exchange-CrossTenant-AuthSource: ZR6PR09MB889505.eurprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2026 07:17:31.6365
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f85ba13-6953-46a6-9c5b-7599fd80e9aa
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R6MGx9KdbwMhUv7tuTTYMkedaEJpezzNokDBEb7KGNMahpmMp1S33L/cLt8SigslXHOdEZad43QgEDbgQSGLkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR09MB3940
+From: =?UTF-8?B?6ZOu?= <fengaojigui88@gmail.com>
+Date: Sun, 15 Nov 2026 18:38:37 +0800
+X-Gm-Features: AclHuK-fYt9ioa0lktiCE_vrn3KMWe83BvFzaVAXQXnSoIIgq1MmbSv-CgZhcBQ
+Message-ID: <CAO-4RZ11U=6F_oMmkRpH_KLqX51fMA048Z5eZTa=+dg0q0UjkA@mail.gmail.com>
+Subject: =?UTF-8?Q?=5BBUG=5D_WARNING_in_register=5Ffprobe=5Fips_=E2=80=94_large_kmall?=
+	=?UTF-8?Q?oc_during_fprobe_registration_=28mm=2Fslub=2Ec=3A5459=2C_v7=2E4=2Drc2=29?=
+To: mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/13/26 10:01, Guo Ren wrote:
->> Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
->> Fixes: 74784081aac8 ("riscv: Add uprobes supported")
-> One patch for one Fixes tag, is that okay?
-One for kprobes, 2-nd for uprobes. This is what sashiko-bot suggested, I
-thought it knows the policy better than me. If it should be different,
-just let me know.
+Hi Masami,
 
-Thanks, Vladimir
+We found a reproducible warning during BPF kprobe-multi link attachment
+on v7.4-rc2 with syzkaller:
+
+The following is an excerpt from the run-3 verification log in the reposito=
+ry,
+logs/external-verification/external-verification-serial-run3.log
+(selected call-trace frames):
+
+  [  135.891732][T14253] WARNING: mm/slub.c:5459 at
+___kmalloc_large_node+0x13f/0x180, CPU#0: syz.4.95/14253
+  [  135.909930][T14253] RDX: 00000000ffffffff RSI: 0000000000000dc0
+RDI: 0000000002000030
+  [  135.912869][T14253] R13: 0000000000100000 R14: dffffc0000000000
+R15: 0000000002000030
+  [  135.916749][T14253] Call Trace:
+  [  135.917020][T14253]  <TASK>
+  [  135.917261][T14253]  __kmalloc_large_node_noprof+0x1f/0x80
+  [  135.918112][T14253]  __kmalloc_noprof+0x53c/0x7f0
+  [  135.918959][T14253]  register_fprobe_ips+0x199/0x1df0
+  [  135.919866][T14253]  bpf_kprobe_multi_link_attach+0xf50/0x13f0
+  [  135.923516][T14253]  __sys_bpf+0x4a20/0x4ef0
+  [  135.931744][T14253]  __x64_sys_bpf+0xd0/0x140
+  [  135.932506][T14253]  do_syscall_64+0x132/0x7c0
+  [  135.932870][T14253]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  [  135.939128][T14253] Kernel panic - not syncing: kernel:
+panic_on_warn set ...
+
+The triggering program uses bpf$BPF_LINK_CREATE_XDP with the @kprobe_multi
+branch, specifying cnt =3D 0x100000 (1,048,576) =E2=80=94 exactly MAX_KPROB=
+E_MULTI_CNT
+(1U << 20, kernel/trace/bpf_trace.c:45). The count passes the existing
+limit check and proceeds to register_fprobe_ips(), which calls
+kzalloc_flex(*hlist_array, array, num) (kernel/trace/fprobe.c:918) with
+num =3D 0x100000. The resulting ~32 MiB kzalloc triggers the SLUB size
+check WARNING. Our guest runs with panic_on_warn=3D1, which escalates this
+warning to a kernel panic.
+
+A question for maintainers: should the BPF count limit also account for
+the actual memory footprint of the fprobe internal array, or is the SLUB
+warning expected for this allocation size?
+
+Kernel/config: 7.4.0-rc2-kernsight-kasan #1, built from v7.4-rc2 with
+CONFIG_KASAN=3Dy, booted with oops=3Dpanic and panic_on_warn=3D1.
+
+How to reproduce
+----------------
+
+The crash depends on kernel state built up by preceding operations. The
+reproducer is an ordered set of 84 programs; the triggering kprobe-multi
+operation is program 78 (0-based).
+
+1. Boot a fresh Debian trixie x86_64 VM (6 GiB RAM, 4 vCPU, KVM) with the
+   v7.4-rc2 kernel image described above (bzImage sha256
+   e47d1c181af5f2615519de03ffc7bf73dad36b8ffb84b86e50391ed53bb731d6) and th=
+e
+   QEMU command line in environment.txt.
+2. Copy syz-execprog and syz-executor (syzkaller commit
+   853b104bb454141a5b0fc0e4218ec78e9f34ffb1) and
+   reproducer/repro.kernsight.prog into the guest.
+3. In the guest, as root, run:
+
+  syz-execprog -procs=3D8 -threaded -repeat=3D1 -executor ./syz-executor
+repro.kernsight.prog
+
+The programs are replayed with 8 parallel workers (-repeat=3D1); runs 1-2 u=
+sed
+chunked single-pass replay of the same 84-program set. The warning appears
+about 2-13 minutes after boot. It was reproduced 3/3 times on fresh VMs, at
+384.3 s, 774.4 s and 135.9 s after boot for runs 1-3, respectively. The thr=
+ee
+full consoles are in logs/external-verification/.
+
+Related upstream work:
+
+We checked the earlier BPF fix:
+
+https://github.com/torvalds/linux/commit/d6d1e6c17cab2dcb7b8530c599f00e7de9=
+06d380
+
+The fix introduced MAX_KPROBE_MULTI_CNT (1U << 20) and rejects larger
+kprobe-multi counts with -E2BIG. We verified that both the limit and
+the corresponding check are present in our clean v7.4-rc2 source tree.
+
+However, the reproducer uses cnt =3D 0x100000, which is exactly the
+permitted maximum. The warning is reached later through
+bpf_kprobe_multi_link_attach() and register_fprobe_ips(), when
+fprobe_init() attempts to allocate its internal array using
+kzalloc_flex().
+
+The crash log shows an allocation request of 0x2000030 bytes (32 MiB +
+48 bytes).
+The earlier limit was sized for the `cnt * sizeof(*addrs)` array (8 MiB at =
+the
+maximum); `struct fprobe_hlist_node` is 32 bytes, so the same permitted cou=
+nt
+also drives a 32 MiB allocation, above the 4 MiB KMALLOC_MAX_SIZE of this
+configuration.
+
+We also noticed the following SLUB patch discussion:
+
+https://lists.openwall.net/linux-kernel/2026/08/31/138
+
+This describes an explicit KMALLOC_MAX_SIZE check that warns and
+returns NULL for unsupported allocation sizes.
+
+Our report therefore concerns an oversized allocation request reaching
+this check from the BPF/fprobe registration path, despite the existing
+kprobe-multi count limit.
+
+We have not established whether an additional count limit, a different
+allocation strategy, or warning suppression would be the preferred
+fix.
+
+A full write-up, the reproducer and the crash artifacts are available at:
+
+  https://github.com/Zheng-zheng-codes/fprobe-registration-kmalloc-warning
+
+Repository contents:
+  - README.md                      full bug report: phenomenon, stack trace=
+,
+                                   mechanism, verified reproduction runs
+  - reproducer/repro.kernsight.prog
+                                   pipeline-verified reproducer (84-program
+                                   ordered set)
+  - reproducer/repro.prog          single-program reproducer generated by t=
+he
+                                   original fuzzing pipeline; does not
+                                   independently reproduce this warning
+  - reproducer/repro.priming.prog  state-priming program set (pipeline reci=
+pe)
+  - kernel.config                  kernel configuration used
+  - environment.txt                kernel image info (sha256), QEMU command
+                                   line, syzkaller commit, reproducer comma=
+nd
+  - logs/log-0.txt, logs/report-0.txt
+                                   original syzkaller execution log and cra=
+sh
+                                   report from the fuzzing pipeline
+  - logs/machineInfo-*.txt, logs/title-stat.json
+                                   guest environment info and title statist=
+ics
+  - logs/external-verification/    external verification artifacts
+                                   (serial consoles of 3 verified runs)
+
+Happy to provide the kernel image, additional crash instances or raw
+artifacts if useful.
+
+Best regards,
+Zheng Zheng
