@@ -1,116 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794726812;
-	b=AmPzWkYByqqVDdLM5jkhCI0CNJwJ/A5SedJUVFq9kB4haolNawQoJY7d7cJa+rs60UVU
-	 x5dLkF+9u+vUz/hxZJ7qN5i3y1Art/EZKQeqIa9RXtwbMtE8VetSoO/qJfTSjv9xzap/A
-	 zCzhjNzNNi+Q+VNVk0Wxsb20leosMD2+Bq2y5K+mSxxIz1VuYCAFrAbTS42W4BpeWtLAV
-	 GHLpv/McLIBGvWngOwTbwPr2I+wEunPrHDRCDZ4fl06UgkGO3S9ngIavoSO1IKIDoMiOz
-	 9O4FNuv/8EN70Nz7JwIajU0UDQSotqWgQvZyqgXSSC4SmCb2afs9ES0a151E1bagiaQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794726812;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=i0sztYeDoa78GRxByi5DPGRDZ13zK/I8mczcB1W5Z+o=;
-	b=R4+j2J+/k+QoqTcSzGOs3qLBTBaux2ii9xbgsuMmziX9GX0d5Fvr888a0+JRV8y9iOeR
-	 W8DvYzU9njMKJRjzcup5B3KHCQ5xNslNh5G9pIyh0/y2cIhbgrWvB2jeaWHY2E0efGAbl
-	 KdQX3Sl2m1HdR9qtvC7lSRvJ0hwKDsOjNfzUX/Otq3bKb22FDP/yJ7otYI2gB/bYdA8bn
-	 o8Qr/O4MghD3cslKK9qfBMH3cmWbxsQPUbGSMoCtYOfKimxUb8S6JpqImDik5arycoW5A
-	 mvfyGLavMZ5Sderco3LJUjLNuTsG/X2EnciIl7ERsg35Bi/v4NIbSPFwHzkdGwBqF5A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=f0EKiv+f;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.84.64
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794727057;
+	b=klgc6hRgsAUV4D/gE1JMLgh7XZiIu4Uy1ksKUWdrlt/mQLp4EDpRAYF9/UgtZYn3v621
+	 6rSl3zg44A6M72JyucmwdvkkuSr8HkvrOUhdJuKIE8umB33usSB+NzNkWDMsqky2yI13B
+	 kTvS2KyyNx+6yLHN4Z3baAw2mzvCB+jZFqAvIrkH1qtfhAmg5h3EKNmYAkzZZYMCBNTPt
+	 YyL887chsoW2ak7Uti5vjP0FX7LyaoJMuBWnRrc+QWwb2uvaRbEVyJZPcBiMjR+2bc1eT
+	 0po0el8mFgNHyVzMcPdcpgqXUphtS+Dw7Faxj9cQftplD+ELiiL7RYs4NRvPgnkszng==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794727057;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
+	b=AS2WUTfc2BxJ6I9Mg6mgjSDSpFNViStR6hUb+bhHkhLFLszJ0bK70FaJ1cE0Js4/zLnj
+	 F3LMAF+oxnVQBZBtMxhlXT5n/eFGjc7kliYbs69yZmjwJYHSyW6SOxgciryvOHMHDBnAT
+	 2zArFTgfxuO0OW/iuKlGI3+kyNcOoyzUhgaEToiU5z/FV5sQoFBPfjfBUHbki1P8ylza2
+	 3H2GHnB7NqTfyxiEIW6Pic0Jl3JDsXnU6wIdaKXKyxV3KQbMw/FaiOToP7uvRUAFuaxO5
+	 R3LGiHHjRJ/gKS+JO1GCOxLocX5+C6RrjWflx3G7ch5hT2uYm5fu31JnziBtXvXw10A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=mobileye.com;
+	spf=pass smtp.mailfrom=mobileye.com;
+	dkim=pass header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=ADwOqrq0;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.84.64
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010064.outbound.protection.outlook.com [52.101.84.64])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCC1606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 07:13:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DCC1606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E0606A31D;
+	Sun, 15 Nov 2026 07:17:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A90E0606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=f0EKiv+f
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-36f8cdd30beso3116739eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Nov 2026 23:13:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794726811; x=1795331611; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :message-id:date:in-reply-to:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=i0sztYeDoa78GRxByi5DPGRDZ13zK/I8mczcB1W5Z+o=;
-        b=f0EKiv+f25sXRcQmBoiK+WsCsclD9PQHa+U5z3sGf3KR1sS3ZNEEroqRh6RNiac07P
-         vGJPEugwLNmQaWqJhCPHikaN8XT33PRVwWCxE9PqkkLJA6butk39sYE2ryU8qCsIMdGI
-         yo50td1Os6it0j1WrNa5HxnLEw4W7aO/qgSsYPJply/RpIro6UCSg0Mbr4ks/thyRkDc
-         jq1OBKLqGUt/bM6QVBsbrIsF1mbjoO/AbvtSri1zHl8+S2Sf3KoNhgqJldsJW2yIuTc5
-         6FJrXgJQKS6UwdWBKS3YQ4l597qJpRKbmN+vGilzta6Rl47F1I/gy3R+i3U13Lj6DU+d
-         z+8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794726811; x=1795331611;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=i0sztYeDoa78GRxByi5DPGRDZ13zK/I8mczcB1W5Z+o=;
-        b=qEBnOq50yzKUdXuIBpY4HGI17CnLGJWNr0ZGRQ2CgoCnCxMlBsK3BHNOZq9HrvTr6f
-         0h2ShXRXzlnKLkKB+4gtMWc/oFGla7G15cYdv8Xswk/VREUUO4nt7C701dnfw23u6q50
-         mxd7eMfEXCP4VZ87t4H+MdXA11nB+a0Zupvsq1K8wfsSXQcnEq+CgQVS4WOYJHYML0Wd
-         ZfhYwo0gJb6Hmjml+L3u69NogDMu8Jaytw5rKXjcFNRu/XBngLLuQrAT/MS3iAVhkKsv
-         59daHM9z3pKDOm5WofYLfmo7gpmueEq8Qg3d6iuGIawdEMJxorjVSLCPzHCkDxJtX288
-         ODwA==
-X-Forwarded-Encrypted: i=1; AL+hErGzoRc4Q/QPlKoLso3MXOjziL1Fk8OdyfpU0BZvscczMFV7IskRU5xDzrE6gSRkSOmCGdl7JQqDDV5VH1e6O+PmOME=@vger.kernel.org
-X-Gm-Message-State: APuU4Z91t/qTGjUKJVJLwrB7Vhdt6yfJWw3PbKZ2sHa0rbrL7dy2WqKO
-	RDq1gY9uBGsWU76PKq498Oxy4UYjxe1N+iZEUc2p4Vna76ml3C+5svfh
-X-Gm-Gg: AYBFou1QeRlHv2l6miqg4lWFjvuLNqJJmRWKAYi4eMRkHFhRu4rpgwbBgScGmQGtqnx
-	l5Kenz8zrCqu0oW2lbvOT99Pie6wh1eV1Z73WwYy+rPw/aG4Pv2TBJ10yoJOYS3grHj25v0GxLE
-	2RYPmpsRtEcEofDQ9ySo7xzOa7RuFZ7oicqQQ+QykRGYHswU+aB1GcS5YPFiDAltQwecUOv03YY
-	Ad6XKmIe6qM5s+o38lxYZgavw2xO402SGoNtoCKOzWLB8lEZcexulg6NyJk2+nlqXQ+bCTQzKNI
-	qPLzCqRE20IA/s/johJwMdBWBdHyAVLGRrQah+5ZKwH85Klx5SBu2+7dSi1Awj1/MoWtfkI8IEY
-	WgLyDEwaTwuA50xwa3hpiuLG6146eY5uArMwjv4ICvQj0QkgRmqB2+KyOhOYXAtGf2J/l7gzjZh
-	XrPh4tClPpOPM4O7HMJBpqIICufUpAlr0FjBqlKA/u7pYL4gCRUHM8/xK25FCtotJtNCJoCKnrx
-	n4F6vwvInNaz4Z8BZuS3sdOFRrTRb2NtZx7dHPn+3QvCDhYtxE0GMwNoDHOK1mOnR25ACOithc4
-	X41MlURPsqR7tiRlHEj0h4eNmUU=
-X-Received: by 2002:a05:7300:6148:b0:36a:7bb7:4609 with SMTP id 5a478bee46e88-37967dd7e1dmr11471490eec.34.1794726811302;
-        Sat, 14 Nov 2026 23:13:31 -0800 (PST)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-37956bad134sm27441185eec.27.2026.11.14.23.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 23:13:30 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S.
- Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, Donald
- Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, Heiko
- Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
- <chenhuacai@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
- Liviu Dudau <liviu@dudau.co.uk>, Luis Chamberlain <mcgrof@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit
- <nadav.amit@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, Peter
- Zijlstra <peterz@infradead.org>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@linaro.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell
- King <linux@armlinux.org.uk>, Sam Ravnborg <sam@ravnborg.org>, Song Liu
- <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
- <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- sparclinux@vger.kernel.org, x86@kernel.org, Madhavan Srinivasan
- <maddy@linux.ibm.com>
-Subject: Re: [PATCH RESEND v8 11/16] powerpc: extend execmem_params for kprobes allocations
-In-Reply-To: <avlTdlK9ErlqVRYl@kernel.org>
-Date: Sun, 15 Nov 2026 12:33:31 +0530
-Message-ID: <4idi8tks.ritesh.list@gmail.com>
-References: <20240505160628.2323363-1-rppt@kernel.org> <20240505160628.2323363-12-rppt@kernel.org> <3f7af771-87a7-4ae7-9919-bc4c23bd31c9@kernel.org> <avlTdlK9ErlqVRYl@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=ADwOqrq0
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F8xw4P2xoQkON1R58b8dSNsufu9QF1/1Zr4WbUWLv4mL1JShtl6wPcmo4UyhMs7tPm2VsqgL5PvFs49hqn4LOAhDX1lUN4H7xqmwyXhaZOPsz6QI/zuElAnBX8bF0c1U5pLvaD/l7Ho2vwLiI+qaNsRXVTMJbPrW/j44fguzlaXwXaZGd4Jsm8xLdgmuwVLeF8U948lYembqRz9WIsRn7om9Beofs/f2l6Bk4CCFhKChWK+BpOtroJWpiOgi6a293cceBfh2tq3PEk4z4gf3lbgqPbPOqTaVcz74Y+5yIhxV1veUK46fh5LAlYIxCPNWdGJUzO+/Jq6IVPuZoHTXHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
+ b=BAcYdj/UF3Yp+nRVU43gkrdcOai271TZ9ur5z/E6HeReKOffr/tXEFc0vJS7EZb1VsDJSEuvj6uklsjcJCWo+y95qMZFRBeY2TbqYoEPbqldUduezZsJWrWQvgb61xK0uVDVSPJL18I+N0ART/ffdjiZNdSaA70M0fuUx8JlUCJgvicOhpbZ/XeUd61RVF9W/k4M0qGn4c0TMR/FcYmsuvFEvVmEkurhdlJyGrf9AAEgDq30hjeo1DRk/rSn3vN00IsBN7i4Ua3E+XWVd7LSa7XUy7vyZu8cZ2Hll/5qLyiw6GADy6Fb6yFTtWy1mUq+7IuC/bPXohu8Toc72suLFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mobileye.com; dmarc=pass action=none header.from=mobileye.com;
+ dkim=pass header.d=mobileye.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mobileye.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jA3XxsFTm55bdn9xJgLUVE5bkeI9KRrqnLjY44lJZbY=;
+ b=ADwOqrq0Tmk0ZoG4C0eXv/hB9C17zdg30G5PCQWeHpF2+s5vlBQgzUXaSXmOpJqWenCym3KIZWV8RR7NrJjqa0rfeiAkpVDJ1UIPiKEMZ4k+JpC30+/urVL1csc4N5DeuXXXnugSjEJ8OenR5dPJ9Da0VuhH5HFeLyggZTaUu+A=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mobileye.com;
+Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
+ (2603:10a6:910:e0::22) by AM0PR09MB3940.eurprd09.prod.outlook.com
+ (2603:10a6:208:196::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.14; Sun, 15 Nov
+ 2026 07:17:32 +0000
+Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
+ ([fe80::9006:1164:b51f:23a2]) by ZR6PR09MB889505.eurprd09.prod.outlook.com
+ ([fe80::9006:1164:b51f:23a2%4]) with mapi id 15.21.0615.012; Sun, 15 Nov 2026
+ 07:17:31 +0000
+Message-ID: <cd92fe07-9a9b-4a21-b596-1b2d007b4c9f@mobileye.com>
+Date: Sun, 15 Nov 2026 09:17:28 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] riscv: probes: reject probes inside an LR/SC
+ sequence
+To: Guo Ren <guoren@kernel.org>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Pekka Enberg <penberg@kernel.org>,
+ =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>
+References: <20261112-probes-in-lrsc-v3-0-a95089852a17@mobileye.com>
+ <20261112-probes-in-lrsc-v3-2-a95089852a17@mobileye.com>
+ <CAJF2gTTY5ODDH6XV2h1v+T7Sn5BK3L9x-Q_Qb_EXNmdCor5rPA@mail.gmail.com>
+Content-Language: en-US
+From: Vladimir Kondratiev <Vladimir.Kondratiev@mobileye.com>
+In-Reply-To: <CAJF2gTTY5ODDH6XV2h1v+T7Sn5BK3L9x-Q_Qb_EXNmdCor5rPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TLZP290CA0004.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:9::15) To ZR6PR09MB889505.eurprd09.prod.outlook.com
+ (2603:10a6:910:e0::22)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -120,76 +105,76 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZR6PR09MB889505:EE_|AM0PR09MB3940:EE_
+X-MS-Office365-Filtering-Correlation-Id: 897cbec1-9b2f-439b-6b9a-08df42e88372
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|23010399003|10067099003|4143699003|11063799006|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	zw+6Tt1/fhaT5azyQk+8MR+psTDshm5GoRwuBjf1c2i7lkYtbQBCtkX/3rxjtHW1inxXlzqbibcMBS71zNOFHxqAMtS6Nr5ITgcLUgWu5WW3oIaoKcfu50WKdJnaIGQogR4WXHSbSx/BnMjmlgjroqCmCPRUTJvACzxMnGhUS8E464K1m+kLnj7qxmpj0zB5TjtZXuHb6Jyr1flYYSqnLD80vSvwIyJmopR3Qg/FmHVwQNallT/crWVzx4BaO/jvwj8gPH8jG3NXB4I9VXd+T5b1bQvEdrD2TE1riW394dKVVdZzH6hrKgrJQtnWauXqG0IoRdVQAIbTe3GWDcApvYgxFEwJooyaB+Q4spxMJqELWX+FTKjqzRY6a+j7s4AGYzBoxWycw1AzDGkJXCXmLUMu6/+hoam9nn9ckxbOuaH1xf9vqgKFbV07jb25UDlJWb9fhrhb2e6ZRhXjqOuAeqzb+T4G1URB6HCkIWFaZBcu5qrT6TAzQgO1++AMTsa2LCixgNjnvAL49SQyGvvYmTDwiOKpWLNM/cTrH1sTj4j8qv+lro08XAc3CywzpRNUufhgpFI8Yud4S4ZSMrj/lzs/U2ejTTN3wsMs5Q5ySgY7zowIdX1WI0catSEKr4tqAzJ/X5GAE2V/I0B7AnmJgFQziHYjyIPGdreLWKeUU48=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR6PR09MB889505.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(23010399003)(10067099003)(4143699003)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?K09JdVZPMnJWVjBZNkwrcmlQb0FOaTNvTnd3S1MzYkloUXRyR2pmdWMrbkt0?=
+ =?utf-8?B?ZTFyYW9KTE95b0RPQkZ1RUZCOWRhZkJETFgwcS9QUmpuSURPVVZQVzJWYjN4?=
+ =?utf-8?B?K05uZDVtaDBsb0xqSzZ5YkRaL0JRbEZvWHlrclFQc2h3WEwreXVOMDBhOEdC?=
+ =?utf-8?B?ZCtyRGhBelNCZ3pHUGdUZGxkQjJ3TjFCMjRURUJrdjFBWVhzRGx4SGc0NFFU?=
+ =?utf-8?B?eGgrcXI2Y1FFbGdGZ2VUWkFDRzhGTnBCVUpCUFNqZ1lYcU56QTVtUWF2bmZu?=
+ =?utf-8?B?WFNzVlhRQVcrdm5pKzRqb3MrYVJmMVYzT2FhRGppSXRZOU5oRzZka0N1VDdj?=
+ =?utf-8?B?bVVUbVUzNVZaamxJdUZQTEhHbVM1MjhQbzlRdHVwbGFQdVFNK3Q4OE82TzdL?=
+ =?utf-8?B?bVB1U1dZd0Q3WG1sNzZOV3h2RE5vNGdScEkycHFGc01LYW9DVmRiOXE3Mk9H?=
+ =?utf-8?B?SVlyNDd6TWc4eWtoNWE1ODBZK2Nta3doeFZaZ0VTTjczRUY0MUlyMTRjNncz?=
+ =?utf-8?B?eUJzV2tKZitITWNld0t3UG05VWErdFBrdTF3SmJ5VzZmRDdHY0NJRWRaR3J4?=
+ =?utf-8?B?MVF4ckpLY2Z6MXQzQ09GYittaHpmOWROMnBnUXF1NHpCb3Zwek96b3hiTWtt?=
+ =?utf-8?B?UG5OYWhnL1lFcGdPWElyRFcxcWRwK21jUFErZzY1RlpKcVZZQlNqTW9kZ3pq?=
+ =?utf-8?B?T0hjWnRqSnFsRk8wL2hpNWF2VWlCbFYwOXNnS2pzaXV5ZUVwTWN1ckRzVTM2?=
+ =?utf-8?B?cVoxdld5ZFdrdGhOVTkrMW5zOW9QWm9QRWNWVS8wSnFvVDdlWTYxU2psNE1a?=
+ =?utf-8?B?UHJDZGlTOFZ5cnE4bzhQTE5aWGlBaUV3NzR3QVJhVzkzSzYyVGFWeCtlRzNm?=
+ =?utf-8?B?dDRGd0Uxb0gzSjdGdSs0MSt6aUFPY0l4VGdtN3RXRmZ6aWNHWHk0MUM2c0FO?=
+ =?utf-8?B?U1krVjI2bnVrcG9PVTNkdW03R1MrMFhBSVAxK28rd3ZkWGVTeXhNdlJoeVNs?=
+ =?utf-8?B?MXFqcmZMb2QxTFUrN0R1S2g2cXU1Q0xmSVhYZmowVXZkRzloSzBIZy82Y1M5?=
+ =?utf-8?B?TGxLTkVuZHZXcWxBOU9mRzgxOWNSN1FYRVEvNDRtY3lCRlAzdHVnU0lVTHV1?=
+ =?utf-8?B?eENlNWpqazJ3NVVweVdTZHh3QjRXb3U3WVo2dlFLdWF4Skw4VktaaldtRFh1?=
+ =?utf-8?B?YjNVS2NBSmx6V1JFRE1NZjIyRE9UZ3dESGFSalVMS3pWN2dkZGxUWlBTaUc5?=
+ =?utf-8?B?K1hUNTZGTHVnb1FPdVp3L2VzMzdHK1lIK29JcTlwQ1JhWXpaN2NoSWgvek56?=
+ =?utf-8?B?VmNNOE1JYjIyQzU5bFk1cy9xMlNUV3BucTlXSnJ5QVIzVWpHaW50eFRsL0Yv?=
+ =?utf-8?B?MUJWQXlIbU8yVU9sWGxXTWd0TW42aCs4MUZJZ3Z2RUhXMFdIYStVZHFmZTg4?=
+ =?utf-8?B?anp5RXNsS1pMRy9Zem1QLzM4VGNaTFNEK2RoQk5OelE3NVNHUVFkb1F3czA5?=
+ =?utf-8?B?eFE4MWsyUUx2LzBrbldKRXhESVlha0tFcmhiNjRUSFZjeVg5QVdKWTNab0lN?=
+ =?utf-8?B?N2N2dzRxKzIzdWsySmcrMC9CZ2ZNKzl6MlRiMWNuZVc0YWpMWXIxRzgxVkJQ?=
+ =?utf-8?B?enZQd1BNWTZ6KzdYUWQ2VTl4WGh2U0QveXZUbFltc2REclBvUjRTRUVjODN0?=
+ =?utf-8?B?d3JUYTM1b1Q2aHMzVmJnNzdnZUl2TG02MUZJQnE4Qi9oYnBDUm4zNXl6YVlu?=
+ =?utf-8?B?b3dkTUM4QVRJWWhOUmJNellVcEpVcnVqcGtCbS9BYmhEYlBkWjJ4bzJnNG81?=
+ =?utf-8?B?eXQzTWdESlN1WXk0V1I0QjNlNFJXYmlybk0xblpqbWZsUHlzbWtYdmJoaE9M?=
+ =?utf-8?B?ejUwN1R6RmZyN0dZY0pzdi82YVcyRU00ZUJZNXVLay9vZXRPN1V4Tm5ldFJq?=
+ =?utf-8?B?aE41RVd2eDRPSFlSbFNiSFRPbkVDR0NPTXpRRUdvVHQyNFZuOGRZY3owUHBo?=
+ =?utf-8?B?RWRyQkllSHArSElERCtPZHNiNFYyMTg5STZSRDdvUjFFWmtCTlFGSnFxdGNv?=
+ =?utf-8?B?RitDSEE0TE1IOFdZcGpUVk1vTU12SmJCbWZWMjVZSTdNVkc3SXg2NnNsNmIz?=
+ =?utf-8?B?cHFhSXBTRkk5UlNIRWRyNmlDTVBxbXloKzlOdFBzM1grRE45RnF3NTgrZ3Zt?=
+ =?utf-8?B?cTJscTJZT3NlVWVTbjdZKzc5YytmWkhncDFYY0FTdlRKSVpyNlU3R2tYaE8z?=
+ =?utf-8?B?TThDaTV2UlMwZjFjcUNwSlZJb1JsM09XWGZoUDk4VjJldkVXcDhpU0FZcWFz?=
+ =?utf-8?B?RHdLZ3pSTVBIN2R1Y0kxeWlJbDZXVERMaS9Kb1pLRVhYaU1XMFlNUT09?=
+X-OriginatorOrg: mobileye.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 897cbec1-9b2f-439b-6b9a-08df42e88372
+X-MS-Exchange-CrossTenant-AuthSource: ZR6PR09MB889505.eurprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2026 07:17:31.6365
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f85ba13-6953-46a6-9c5b-7599fd80e9aa
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R6MGx9KdbwMhUv7tuTTYMkedaEJpezzNokDBEb7KGNMahpmMp1S33L/cLt8SigslXHOdEZad43QgEDbgQSGLkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR09MB3940
 
-Mike Rapoport <rppt@kernel.org> writes:
+On 11/13/26 10:01, Guo Ren wrote:
+>> Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
+>> Fixes: 74784081aac8 ("riscv: Add uprobes supported")
+> One patch for one Fixes tag, is that okay?
+One for kprobes, 2-nd for uprobes. This is what sashiko-bot suggested, I
+thought it knows the policy better than me. If it should be different,
+just let me know.
 
-> Hi Christophe,
->
-> On Fri, Nov 13, 2026 at 03:36:01PM +0100, Christophe Leroy (CS GROUP) wro=
-te:
->> Hi Mike,
->>=20
->> Looks like I missed this change ...
->>=20
-
-I didn't initially get what Christophe meant here. Then I came across this
-reply of from him[1]. So looks like somehow between v3 to v8, something got
-changed?=20
-
-    On powerpc book3s/32, vmalloc space is not executable. Only modules=20
-    space is executable. X/NX cannot be set on a per page basis, it can onl=
-y=20
-    be set on a 256 Mbytes segment basis.
-
-    See commit c49643319715 ("powerpc/32s: Only leave NX unset on segments=
-=20
-    used for modules") and 6ca055322da8 ("powerpc/32s: Use dedicated segmen=
-t=20
-    for modules with STRICT_KERNEL_RWX") and 7bee31ad8e2f ("powerpc/32s: Fi=
-x=20
-    is_module_segment() when MODULES_VADDR is defined").
-
-    So if your intention is still to have an executable kprobes, then you=20
-    can't use vmalloc address space.
-
-[1]: https://lore.kernel.org/all/1cb41761-29d0-5d33-b7c1-0ca3acaa810d@csgro=
-up.eu/
-
->> Le 05/05/2024 =C3=A0 18:06, Mike Rapoport a =C3=A9crit=C2=A0:
->> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->> >=20
->> > powerpc overrides kprobes::alloc_insn_page() to remove writable
->> > permissions when STRICT_MODULE_RWX is on.
->> >=20
->> > Add definition of EXECMEM_KRPOBES to execmem_params to allow using the
->> > generic kprobes::alloc_insn_page() with the desired permissions.
->> >=20
->> > As powerpc uses breakpoint instructions to inject kprobes, it does not
->> > need to constrain kprobe allocations to the modules area and can use t=
-he
->> > entire vmalloc address space.
->>=20
->> Using breakpoint means the segment must still be executable.
->> On book3s/32 VMALLOC segment is not executable, while module segment is.
->>=20
->> See commit 6ca055322da8 ("powerpc/32s: Use dedicated segment for modules
->> with STRICT_KERNEL_RWX")
->>=20
->> See report and fix at https://lore.kernel.org/all/ed03d290d440d579a81ae0=
-b7de5243721291d903.1794543909.git.ritesh.list@gmail.com/
->
-> I'll take a look, thanks!
->=20=20
-
-Thanks Mike for taking a look. Sorry, I should have ccd'd you there, I
-guess I missed it. However, the changes are these one here [2][3]
-
-[2]: https://lore.kernel.org/linuxppc-dev/82c4973addebd82923c460cb44221f5b7=
-6146afe.1794572365.git.ritesh.list@gmail.com/
-[3]: https://lore.kernel.org/linuxppc-dev/f75f2cf97f44375fd2c8820e0caeab703=
-cdb371c.1794572365.git.ritesh.list@gmail.com/
-
--ritesh
-
+Thanks, Vladimir
