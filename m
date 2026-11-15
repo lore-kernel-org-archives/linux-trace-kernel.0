@@ -1,98 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794758383;
-	b=oLnAkLryOWA/eA05ZGxAJbL0mxOAwKV/BCDdGNl/fb/gwBFaqf393zUSrHn/wqFKDjXy
-	 mXEMPKH1uWuPIJ+UyZ/ytI64pJbzvwv6vieK1EH6Bk3X5pbiY7PArxoSdkWsQRj++JGP8
-	 y3GUarZ2IZPOgWPPEa+7cZaZR37jAJReqZhRFCUr9LmzgU30yPq6yFSAhUBBcyJv/7k4H
-	 8/OqKMRs8fdEvxtRm1KNFJoEBHekUZKY4bidUj4Urj1qveiyZMckQDCPcVS4BYCaSJhCy
-	 0DHO1mNETDgqnsq2wVRpJP0nY3aSbzPfTVyeoY5fTyS6F6xgiglLzltl/962tZCQiMQ==
+	t=1794767297;
+	b=3ilhOPY8v7JrGNz7w7AMTD3KdfAgU70NVrLVE5IDZMu7T2CGKEfeaUKT6Ved8TCMPsHD
+	 eWcYCEG4InIMSm3FCizg1iLO79fJ46yWczcrKvnHeBp+V73WS7+pwg43jBz7mbfDA9EwT
+	 PoKpRzvAUHeLoU8GagqN8SK4AAsxQa4q/Kw/qgJVHnGNBkt1owlzbnjch4bVxzLbwKOej
+	 hPETsacIiBWnGQJ6xBVgBOvA2mcmprA3AAqZejI0ufrRCoGkuUtw+jiiGekIlVBJ33UnE
+	 4kfLb6s9VH7c7xNxU8aqI16gRaGWSaDUD153xZNYO1PgqF5VR29j24K4UjLnhphXLnQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794758383;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794767297;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
-	b=SUshswKeYe1DZ5nrtrBb0yuIErzM4hfGc+hUx3lwlBRClj+BjuXHZQ1lqZ26mhhnvNQT
-	 PhQ3gmNFnGml1bculwSRfWqRpsyBlzRG2QeNPhy0BlUzAUsgA6114XEm/xz74NyIrO6mV
-	 S0H5glpmCPyD5hdTkL04Sd4o2cb5qojUHV/Xwq4AR9itmqYzSbwCDIygqYQLAoaHMoRgb
-	 gxSFtw2tIlKFppbaQ9t0TCoAGpJggnRw5RwXSmjK1tjtUMngwmAoh3kpXoUO0Xhfa9duA
-	 EkfnCBMWL24YyEXCS4b/EjQnecW7UI78i88FEuREPApLfJEI0kmawvG4hxT5lVaHaoQ==
+	 Content-Type:Date:Message-Id:To:Cc:Subject:From:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=S2sqyuT4GDnGp9+dHpDjnGTvZCe15TFZq/xtAkotKkE=;
+	b=tAvs+pOzYME1XZsKj8emcyq0P03ccmhnZ6mR8lf/Y4RP95NAgRRmf02d6u4B5HKoHcmp
+	 oPZNnTDJmZ5iPLC6+5hJrex8zdPpmG9GQenD9ytH0JYQ7a33Xd+Xq6NXpZLZDIq7S1m8o
+	 h7yd+FE7nmMM5RPC5CAUFQ15X7fPf8nKJDKWs/dObfyR9bfefTya0fkiui5ACtfggOA/1
+	 iy/T21pXLA5F1h6ok3EACTN4qgxon56kP0Dr3oUldY4M3pqUA0xWbI6n7Iy1j7TkXuB5w
+	 I3VNDBzRdA2+Khw0m+XyTid+DZsaSpLRXfSkRvJyGaWL8PCgAPAz1HxOt7/u4hGd56w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygKzYaSv;
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HBV5nxYv;
+	arc=none smtp.remote-ip=209.85.210.177
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20239606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 15:59:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20239606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7EB606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 18:28:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B7EB606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygKzYaSv
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so27679925e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 07:59:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HBV5nxYv
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-8a06e79e152so1223948b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 10:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794758381; x=1795363181; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
-        b=ygKzYaSvRhuzclPrvO3frMENam1XSgQqd7Xx9HDScTKCo8NIirBjMJiwM8H2cUbGsP
-         O83Ax50tu+QQnbI40TxRpVBEgnveKIPH9iMgCGtcuy0JbVlDvcSuvtNkhBp911k90K/7
-         idl0x1HqblOmNZ/fuTPHAOqtVVCYmyZP0Y4ZlpITuGRu/CdCaQQDk80f805XYmuC6X++
-         DQZpxIuf76ogO7YxehSVTpbc0VorNB1MDesZnwNSI2pD4WAXuXo0kVGr1fCZ4Jwqp6Gu
-         Idk9JZxXmych7XxEJFCp+kyD4vi3OKMNbSgh8PiI835smjhw5Ila3ypE1OXgiztbGni3
-         OQUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794758381; x=1795363181;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1794767296; x=1795372096; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:from
+         :subject:cc:to:message-id:date:content-type:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
-        b=HH4L6EZZk36nZfvdqqkzOVfkUO8VQRqy1llfeCkRQREdSvcVRGbY4ToMOM3w/xrcCI
-         PkcaZ8gMOJDWhd9jfYGzh2S+oXlIknw5SV2oAyDMAoghczWGI2Jisy8EUv6jjiZaAW+I
-         EEXuRKoLUBbBC4GIdBe/lqfgGrKW2o9xGu3QzRcRbyceoV43cDNo/vbkFClvE0ea2uAU
-         egnsdY+ghVNHKWFEEQy4hCBKB/Tyii9F5Axf/QPl38MuQSssqTpUxem9lxP/UEfs+1KN
-         MgAfwEmDb0oTAfBDOGZbA5RK27zzJUshVYznsNqwMcGen6fZY1lKLl1nSil60dUGeca4
-         VzFQ==
-X-Forwarded-Encrypted: i=1; AL+hErHIJAd6jmbU2n2Y7B6hCXqRYkNmboHKXMCjrmjx/2HLmeWoUVkWUv/XwjYMrmL6Lthgco8mTPLmm4NyXzxdlSgr+8U=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/5wyNg6i6SQBlzmziCOoN9qzcYifp3yoIOTvOlFFbjvhE/L+Hq
-	maQAWfi72e1rUPpzkYZq34HwYhzuMTGZQxk+WxvE/Qk75o/Mp1gpCLTZ
-X-Gm-Gg: AYBFou2SxQ2/6DURYI7stAC9PlWhqmZOigKEj27fUxHY5GpT5hup6n50KgSMPUFFoK9
-	O7q4GiZ4knz8N2wiFuFnNAaozw1AK4kTqLHa+fF7Jza81fL7Ca12C3Zfl1gu+BMZKPH496t7nmB
-	LJ7sduadrEt/o5zkaAGQrTvULoFBnfkedH/XBxeHRSVplWqqbrX41d/hELNhpk7Y8hJCrKzJPR6
-	1qIt4F0+HO2j+/t3YXv1qyv2NGnJ/PQ/Cxy4JMSn5j+rfoCkCnwZOIjjn63gByhwqyNSapDPyh3
-	Tpt5EZEDuun9gagZtZa4x91nRC57F3+35jvCNgnbvc8z+xX0j1Pl+TS2LXpmHJBzY+yBCMJd4Xi
-	4Z9D23o2oUaPq6wexODQRXhevXHUD1M1MFNkRTghZmzF1TPoZrIe7VborruKcLN4sWJZfz6X8qn
-	mrEhR7jffKd8oFa9THQd0TWSNX5/9QMf/tOJ89CGwiLLuVst/UaME2D79T30IpitX4zwf2iGD72
-	3fLfXqII6EPHvBQ3xzEKtQLkgYKdo1LQf+7waun+EJAHqm6MB7AyRhnK5fPi0tnImck08gX9vAH
-	RXIwwBU20qIIRpW4SZc90wQjcMJhTcCPjg==
-X-Received: by 2002:a05:600c:8909:b0:4a1:f720:74cd with SMTP id 5b1f17b1804b1-4bb55a83e95mr127075265e9.24.1794758380829;
-        Sun, 15 Nov 2026 07:59:40 -0800 (PST)
-Received: from thinkpad.lan ([2a06:c701:474b:1700:f61b:bfec:b5f1:a453])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb55acdfebsm204511085e9.7.2026.11.15.07.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Nov 2026 07:59:40 -0800 (PST)
-From: Avi Weiss <thnkslprpt@gmail.com>
-To: mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org
-Cc: andrii@kernel.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avi Weiss <thnkslprpt@gmail.com>
-Subject: [PATCH] uprobes: avoid postponing return-probe SRCU lease expiration
-Date: Sun, 15 Nov 2026 17:59:21 +0200
-Message-ID: <20261115155921.260878-1-thnkslprpt@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=S2sqyuT4GDnGp9+dHpDjnGTvZCe15TFZq/xtAkotKkE=;
+        b=HBV5nxYvdpLlRvsxsYLbFKr5P34f8mj9a/XJil7dVolrFQomVVkyecHxP6BgFGwDxs
+         /19GzczoyqLC7fuxmwJyN2rwUymD2CerKLMnjfS/2CRMvt+ynLs5gkxwuVBuAu3q9J20
+         IzB2wBplZLjMFwEGGW7prCWCSa7Aywa/5h22qXYWy2au5OKH6AKODohFFnhhSeGrFYHI
+         n+FqPiDDYHHddi3JAW7aghC+X3tcMJhczYrIX5Hp62B1gpJjhhKWZLANouBkWkfFg5wA
+         r6zaGmjBjVlFtwZxS8OaoxZbnmYU5uIROK1UqsDLBtdOM41dsZCnP9Jsrl/zETDD4H/q
+         kP7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794767296; x=1795372096;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:from
+         :subject:cc:to:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=S2sqyuT4GDnGp9+dHpDjnGTvZCe15TFZq/xtAkotKkE=;
+        b=u5VKG2L88W/SsnJ9tVSeknq/lLqUMF2pAIAZ1JlypTO7HNPBtNx1vEGpfuu86wBQwn
+         n4Hi4fJlhntRYQyehRd0o9+7YJWV26xuCYZgk7lxpeYEatkGMlr0fk9Rz1vMK7Am4qWd
+         btRBOO1lfWUMK6EUz2Mo6yNAOT5tcc4FwjWnT0F7AVJ3GSCJn9bxKHFsnEniK4q8Jt/C
+         AjY4qtMUGVTsgxmY+NhqSa/kYfgjShTbxk5iKMGyuylYs3LQBlze7OUsR6jdH+f5XUIJ
+         MIgUhp12ThnvQpxOJGqlxcyhvmbvHRu/dMnccUWZO5MZpV7fH2pu2pBOfHFSet0oo/SJ
+         VIng==
+X-Forwarded-Encrypted: i=1; AL+hErHakCNVdGCpx1G3DZ5sJFzaKYcw7kk5puelB0L67ZTUakA5bNApFMf1E5is1jrCLkpMjyP93JRvxvRPnQuGKMemkxo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/tSj3OrvMFmSTAJRgikLoPEfJpoj/LlqCebrpsRUlELbpIj8oD
+	hJEDaYq1CspTs7sdOYxIK/oWqsyDFOCrjKuHY064xwJTLNB92Ic7Qng7
+X-Gm-Gg: AYBFou2/KqB6V8L4wi17Q15pAIw6oTeburDC/MOHtEd/1AZnXGWsvHuyudYmQIq5wS2
+	+xF8NMDvodPd/b4r05IWq/mCGguj5pTynv72jPF9QVSZl3dhp8VOyO51QEf7404sKQawNvOBQFI
+	1H5sdSseV4P015YG5qkM+JRXMs1NAVi9/kxmEgTz5DIuGIwDPZhM6oct9bchQEUi0aFVy/jpYIV
+	IlDHrNVvRncd7rzNmxiWZkrAmH/jSLl9TjsnzzFYNFiQdkXSdRDPJbFCkP+71BnN/BvZj6DrNDg
+	UZnI8tTIy7gwuWPpMZvMgEDyBLOljXXuVPUyNQSd928hwxTiffmrFSQ2mPklemVlyycUHURD+OC
+	y8f7HSj/jQYuS9OzUozbGvCOjaT3SfH9VAMl3Pc/GVOHJVcPkNvd3mfQNJHl9yqZwSRCPRL51zv
+	vKQDcx3QmwY0WlaoAdq2Q6TdQUnk96JH4V5WP/WKcOROyQaeKctvp6ZbBdgyEXiI/N+xzEeIeL9
+	bI/vD2QyBTwZih49dwe829FCQowZhA78W53bSn/sFcLGUrDzpxf4V6XPYOktIUpDFsHvo7L+x6Y
+	U6p7wjl/shaNNEtxoP0WmpZKUyJ62C79Q+9W6fMHJZjxzS0Ssndwnh2TAQUbe1T35PNThe79rzg
+	vCllI1Hopxzfh7fcyJ6SjmmFF6nV2qluItQ==
+X-Received: by 2002:a05:6a00:230c:b0:89f:d620:226 with SMTP id d2e1a72fcca58-8beb619bec4mr7100607b3a.24.1794767295502;
+        Sun, 15 Nov 2026 10:28:15 -0800 (PST)
+Received: from localhost ([153.61.198.242])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8bececcce6bsm2804318b3a.1.2026.11.15.10.28.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Nov 2026 10:28:14 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 15 Nov 2026 18:28:14 +0000
+Message-Id: <DMVZWOMFDBX6.3HVETC9L8RUEU@gmail.com>
+To: "Christian Brauner" <brauner@kernel.org>, "Amir Goldstein"
+ <amir73il@gmail.com>, <linux-fsdevel@vger.kernel.org>
+Cc: "Chris Down" <chris@chrisdown.name>, "Miklos Szeredi"
+ <mszeredi@redhat.com>, <linux-unionfs@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-security-module@vger.kernel.org>, <linux-mm@kvack.org>,
+ <stable@vger.kernel.org>, "Sashiko" <sashiko-bot@kernel.org>
+Subject: Re: [PATCH 00/13] fs: let d_real() fail
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+In-Reply-To: <20261115-work-ovl-d_real-v1-0-ca155efbcb2e@kernel.org>
+References: <20261115-work-ovl-d_real-v1-0-ca155efbcb2e@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -102,62 +105,14 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-prepare_uretprobe() reprograms the per-task return-instance timer on every
-successfully installed return probe. If a traced outer function remains
-active while nested traced calls arrive more frequently than the timeout,
-the shared timer keeps moving forward and the outer instance can hold its
-SRCU read-side lease indefinitely. This delays unrelated synchronous uprobe
-unregister operations that must wait for the same SRCU grace period.
+On Sun, Nov 15, 2026 at 06:01 AM Christian Brauner <brauner@kernel.org> wrote:
+> As Amir pointed out the correct fix is to teach the callers to deal with
+> an error. So d_real() may now fail for D_REAL_DATA and all callers
+> handle it: uprobes fail when they're created, IMA treats it like failing
+> to hash the file, IPE denies and the bpf kfunc returns NULL. Then
+> d_real_inode() goes away so nobody can ignore the error again. The first
+> patch only drops the WARN.
 
-Use timer_reduce() to preserve the earliest pending expiry. Pair a full
-memory barrier after publishing a return instance with one before the timer
-callback traverses the list. A publisher that observes the earlier timer
-as pending must then be visible to that callback - otherwise the producer
-rearms the expired timer.
-
-In an x86-64 QEMU reproducer with nested traced calls every 10 ms, an
-unrelated tracefs event disable took 7,740 ms on the baseline and 70 ms
-with the change. A corrected monotonic-clock regression run measured
-2,210 ms versus 79 ms, with 15 additional long-lived timer-boundary
-cases and process exit/exec checks passing. Narrow LKMM store-buffering
-litmus tests observed the lost-rearm outcome without both barriers and
-forbade it when both were present.
-
-Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
-Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
----
- kernel/events/uprobes.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index caf444762a27..82065863a6c1 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2052,6 +2052,9 @@ static void ri_timer(struct timer_list *timer)
- 	 */
- 	raw_write_seqcount_begin(&utask->ri_seqcount);
- 
-+	/* Pair with prepare_uretprobe() to avoid a missed rearm. */
-+	smp_mb();
-+
- 	for_each_ret_instance_rcu(ri, utask->return_instances)
- 		hprobe_expire(&ri->hprobe, false);
- 
-@@ -2304,7 +2307,9 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
- 	ri->next = utask->return_instances;
- 	rcu_assign_pointer(utask->return_instances, ri);
- 
--	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
-+	/* Pair with ri_timer() after publishing the instance. */
-+	smp_mb();
-+	timer_reduce(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
- 
- 	return;
- free:
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
--- 
-2.53.0
-
+For bpf bits:
+Acked-by: Alexei Starovoitov <ast@kernel.org>
