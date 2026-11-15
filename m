@@ -1,100 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.208.41
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1794754850;
-	b=OZIt+YXIcdx5fZTMyIZCECzktOAjoNnspN6/KdJQ8u3yjrxYSREMFWfKauXZMi8krEir
-	 KaGNQiYEYhDDbKaMvSXSyHvR+jKfQWPwvHvUz5CpiEV745TedpJ6/GtPGwMHy9sJ6kIGF
-	 A1cbbMSmIXupk4gNjgmnBSEbES8ciI9bbKN2CmlZSepW6ajiPMWNvyIK7nzy1gGyt6GAJ
-	 NqydRzVL7hBKyVhPBJ1x9A8S+hEB1UxcuSche/Zdsy6DriWDFfJFyUfxsiHHMl5bPFwl6
-	 LR5Hxv11WX2F4LYkaJeEYzZMThhsWXMQckE55pUyRsRof9f7QxU6Iph1FRj9/LCi+cw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794754850;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794758383;
+	b=oLnAkLryOWA/eA05ZGxAJbL0mxOAwKV/BCDdGNl/fb/gwBFaqf393zUSrHn/wqFKDjXy
+	 mXEMPKH1uWuPIJ+UyZ/ytI64pJbzvwv6vieK1EH6Bk3X5pbiY7PArxoSdkWsQRj++JGP8
+	 y3GUarZ2IZPOgWPPEa+7cZaZR37jAJReqZhRFCUr9LmzgU30yPq6yFSAhUBBcyJv/7k4H
+	 8/OqKMRs8fdEvxtRm1KNFJoEBHekUZKY4bidUj4Urj1qveiyZMckQDCPcVS4BYCaSJhCy
+	 0DHO1mNETDgqnsq2wVRpJP0nY3aSbzPfTVyeoY5fTyS6F6xgiglLzltl/962tZCQiMQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794758383;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=1MVRNS3ac0YlanU0Fwb5KpLyyO9U1oXwO9vfFA3eak4=;
-	b=pWL9TkTf/c/7is0zogjefxRhpH2WTyOu2lSiggUbFWMKhGXRt67eGfNzW/9mlvpycqMr
-	 +jl7wC22yV9dAQP8+TJV2f5L4Zn9LFty5O/kaHZusrPWkG79u7r5GRrCCjxBVwbu1/xXt
-	 eYwX3IpHnpAJjqZ55/j/8hCL+DUWNf479m0DfGWFghQEd/H1mbdBU3dS9KweuAD+jYnVe
-	 mhdxInMaK5wVT7nicMYfGmphg7oe47p49rEO3vkv6n7z2jqXiKcqwAWawHPbKV5P6O2pO
-	 UT5jY2+RZwhwwXowc4tbOPHO7hmrPHPQRe+RBO+8DZu7c/MofgHjoOLKoHIpkjhrTmg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
+	b=SUshswKeYe1DZ5nrtrBb0yuIErzM4hfGc+hUx3lwlBRClj+BjuXHZQ1lqZ26mhhnvNQT
+	 PhQ3gmNFnGml1bculwSRfWqRpsyBlzRG2QeNPhy0BlUzAUsgA6114XEm/xz74NyIrO6mV
+	 S0H5glpmCPyD5hdTkL04Sd4o2cb5qojUHV/Xwq4AR9itmqYzSbwCDIygqYQLAoaHMoRgb
+	 gxSFtw2tIlKFppbaQ9t0TCoAGpJggnRw5RwXSmjK1tjtUMngwmAoh3kpXoUO0Xhfa9duA
+	 EkfnCBMWL24YyEXCS4b/EjQnecW7UI78i88FEuREPApLfJEI0kmawvG4hxT5lVaHaoQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SHyOkxQw;
-	arc=fail smtp.remote-ip=209.85.208.41
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygKzYaSv;
+	arc=none smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443FE606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 15:00:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 443FE606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20239606A31F
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 15:59:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20239606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SHyOkxQw
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6b547d6c07bso3753841a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 07:00:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794754849; cv=none;
-        d=google.com; s=arc-20260327;
-        b=hpphNYYKujHYyyI+kdpUilPLEw06/dYFgLQa+nBqKJHvSt3CnuHuxLLvNH32XijnTs
-         V8X/EHCel+nDRehsHfsqyVNyIf/q/ZeRiy2e6nQQBV9ijI3pclxDGjbC65zSxJeSfvcd
-         HX2H/QUodVBqtxVkEJKzUv/62xFvH8gLHwj8Tkp/o0ETh9kPTuIZxolH39AdBgAC8JXd
-         pT7k09z2jb39g9t/MkHfpR2RQiJySan2fsZXlijw/bv620v7hekVCcnuUGf7PD2rjdXB
-         +XqLk+9REpOea+pFpt7fR3o+yDCw3dGEim2SX1ELXpnll92h9VScfzRbXTyHTQhRqrVT
-         2ozg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=1MVRNS3ac0YlanU0Fwb5KpLyyO9U1oXwO9vfFA3eak4=;
-        fh=W3cgIGVJSPC5Kly9HGhBfAIRSQ1ttnTNvxNSgceiBT8=;
-        b=hODmj1oXcG9iBKIwDwiXDQ0SFR3WpIKTdKgO7UMVmm+LR/538Z/On7iQEmtGOpyj0e
-         zPSSNyzs/z/jF9dWoPMBGbfsxhvVr/sKppWCo5QGYMcpDxev98hkzYaE2f4Qmq4udT3l
-         wFAjJZoI+1svLFr3LciZEVEnIEwwfRcERXs1yVb7p++8GtKeXvCyiIRaxW9x++TxIOtA
-         yCqk4bdPHYoLApBoCP/MF7CtQ6tEiJ1CWmC09P1YaSNLvtarPiuAN7FjQHqvTT3o/5NJ
-         yNJByMRkHHHwB/6negtofI26wfcb6BzCyFTcXWihaOEGAf63PUEhqhdDtYi8CvERU8Sj
-         aH7g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygKzYaSv
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so27679925e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 07:59:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794754849; x=1795359649; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=1MVRNS3ac0YlanU0Fwb5KpLyyO9U1oXwO9vfFA3eak4=;
-        b=SHyOkxQwYuLtL0+Qa53+jCNHfMYZrDoIhK10usTnr/SPlsQtxy3DYcaURrAaqZRP6p
-         j9KX2LwDO7WvpxAFvRbeGvPMOpBnbsJEvuh/a+pWnWLMDcViXZq6b/VVaPZ68EhpaptP
-         zHr4LucIEpdLZQDJogd72JZdMAkBHyXTxsReEVunL/+oJmqoO/hXoqxPt2Qr8UINUk8W
-         PKisRAodcZl5vzpIsG78e9fRi2Mkv3dgu35W/QqWyi6fF9QsZX61BfySIbEHZ7oFXuQb
-         7fuxV2YOwjcp9LUN7zRZYNpbm5Ey2kJzr2xgJrjMsYP1vCyRno2ESPfdF+IIuftfMTEI
-         HtQQ==
+        d=gmail.com; s=20260707; t=1794758381; x=1795363181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
+        b=ygKzYaSvRhuzclPrvO3frMENam1XSgQqd7Xx9HDScTKCo8NIirBjMJiwM8H2cUbGsP
+         O83Ax50tu+QQnbI40TxRpVBEgnveKIPH9iMgCGtcuy0JbVlDvcSuvtNkhBp911k90K/7
+         idl0x1HqblOmNZ/fuTPHAOqtVVCYmyZP0Y4ZlpITuGRu/CdCaQQDk80f805XYmuC6X++
+         DQZpxIuf76ogO7YxehSVTpbc0VorNB1MDesZnwNSI2pD4WAXuXo0kVGr1fCZ4Jwqp6Gu
+         Idk9JZxXmych7XxEJFCp+kyD4vi3OKMNbSgh8PiI835smjhw5Ila3ypE1OXgiztbGni3
+         OQUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794754849; x=1795359649;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1MVRNS3ac0YlanU0Fwb5KpLyyO9U1oXwO9vfFA3eak4=;
-        b=UdvcWH26of0fj/Mf8r6FyiCPO+4IDLthnHRvIXnHDvFgbBlNwitrlwWKYY5zBBvg63
-         pTU+6tMGPlHsnIs5d3xH8xIcGAyV/PWp+CvPhnTbjkmtx0Qr5/cJ4reYMG6gY40Kn4x9
-         CSLqoMBAGviafpY3XA6ZWSvNZV9n2wBm1saLLd1HxEvE7gh6Jr1WcRxbhUmm6HNlE3ls
-         RFF2BdNqhDDaaAioFpEnDNN+kIu3WiSiLPhzdGnYCgFsUtDOCe4zpvcDtahHM+bDeJEL
-         9OprKltKwR9uj8yM8iBtye88pPiggNGLZPuNIdqqhTWZ3c/FHtJGuF8QqWcizGGe7QAv
-         S2Tg==
-X-Forwarded-Encrypted: i=1; AL+hErH/cSF9IqMyKpmRRmonxSo8thlW3SEueLudxj229R3kTXe14+Ey5sQtsK7Z4L7JP8F30sIxBWrmslCxSEzp2STA6HU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+T8jaP1HUbbKasOvjk90Khcx/odE2znbl2IexdEPKtz+OoS1ss
-	wHShxpH16B47ujNHUYla+M/UQTC9KL6a/pGc+ZOdffOJ7KzpPlvphc52bsu0Oyj9ONNBDnHw2HJ
-	kLqQjLUSK/+NkLWjf8Fljl3hcyK6Zme8=
-X-Gm-Gg: AYBFou3PSoWZPDG9+wpSu+oYo+f1bcnD2CHlJJ1wqk4AifmysaThtemwNSKJKoIhJgt
-	mRiGWkplVViQgwAGEuCbO3h/YNCV63R+7Bnl8wlLgGO+6GVzHEY8wnLiq12NQfWNe1COCfFC25V
-	2+usCP9CTuJ4oq34FMIa764oDiBG+ZwGvfbiFCRajIlOCnVi5No6ffcMarvIQUde4ovkV2glREd
-	il8BM8pL9ryAf3k79rmPLeAGYEGo6bDcv3ILAe9BuaxfSDcWGYcHLj/IzzzdTuuTiaXYD2C6bSY
-	OMqaL19VS/tqhdO+k7G7cgCOz/QyAPuMPiLeMLJw3p3pM5nbWXG6u80k5DQQv7vQtRi3s5Gbegx
-	tzXbJXrvjpcmIzpr+rtuU8bATF1o9UFzRTpGJ6Zurf554gOW1F4CVslAD9C0aBDrg3H2phA==
-X-Received: by 2002:a17:907:6d11:b0:c26:2a2:b91d with SMTP id
- a640c23a62f3a-c509612a23fmr694079266b.6.1794754848470; Sun, 15 Nov 2026
- 07:00:48 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794758381; x=1795363181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xTFQQMhK3UJMqexJFys6E1k1C7+dAh9ayaPYXn833+U=;
+        b=HH4L6EZZk36nZfvdqqkzOVfkUO8VQRqy1llfeCkRQREdSvcVRGbY4ToMOM3w/xrcCI
+         PkcaZ8gMOJDWhd9jfYGzh2S+oXlIknw5SV2oAyDMAoghczWGI2Jisy8EUv6jjiZaAW+I
+         EEXuRKoLUBbBC4GIdBe/lqfgGrKW2o9xGu3QzRcRbyceoV43cDNo/vbkFClvE0ea2uAU
+         egnsdY+ghVNHKWFEEQy4hCBKB/Tyii9F5Axf/QPl38MuQSssqTpUxem9lxP/UEfs+1KN
+         MgAfwEmDb0oTAfBDOGZbA5RK27zzJUshVYznsNqwMcGen6fZY1lKLl1nSil60dUGeca4
+         VzFQ==
+X-Forwarded-Encrypted: i=1; AL+hErHIJAd6jmbU2n2Y7B6hCXqRYkNmboHKXMCjrmjx/2HLmeWoUVkWUv/XwjYMrmL6Lthgco8mTPLmm4NyXzxdlSgr+8U=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/5wyNg6i6SQBlzmziCOoN9qzcYifp3yoIOTvOlFFbjvhE/L+Hq
+	maQAWfi72e1rUPpzkYZq34HwYhzuMTGZQxk+WxvE/Qk75o/Mp1gpCLTZ
+X-Gm-Gg: AYBFou2SxQ2/6DURYI7stAC9PlWhqmZOigKEj27fUxHY5GpT5hup6n50KgSMPUFFoK9
+	O7q4GiZ4knz8N2wiFuFnNAaozw1AK4kTqLHa+fF7Jza81fL7Ca12C3Zfl1gu+BMZKPH496t7nmB
+	LJ7sduadrEt/o5zkaAGQrTvULoFBnfkedH/XBxeHRSVplWqqbrX41d/hELNhpk7Y8hJCrKzJPR6
+	1qIt4F0+HO2j+/t3YXv1qyv2NGnJ/PQ/Cxy4JMSn5j+rfoCkCnwZOIjjn63gByhwqyNSapDPyh3
+	Tpt5EZEDuun9gagZtZa4x91nRC57F3+35jvCNgnbvc8z+xX0j1Pl+TS2LXpmHJBzY+yBCMJd4Xi
+	4Z9D23o2oUaPq6wexODQRXhevXHUD1M1MFNkRTghZmzF1TPoZrIe7VborruKcLN4sWJZfz6X8qn
+	mrEhR7jffKd8oFa9THQd0TWSNX5/9QMf/tOJ89CGwiLLuVst/UaME2D79T30IpitX4zwf2iGD72
+	3fLfXqII6EPHvBQ3xzEKtQLkgYKdo1LQf+7waun+EJAHqm6MB7AyRhnK5fPi0tnImck08gX9vAH
+	RXIwwBU20qIIRpW4SZc90wQjcMJhTcCPjg==
+X-Received: by 2002:a05:600c:8909:b0:4a1:f720:74cd with SMTP id 5b1f17b1804b1-4bb55a83e95mr127075265e9.24.1794758380829;
+        Sun, 15 Nov 2026 07:59:40 -0800 (PST)
+Received: from thinkpad.lan ([2a06:c701:474b:1700:f61b:bfec:b5f1:a453])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb55acdfebsm204511085e9.7.2026.11.15.07.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Nov 2026 07:59:40 -0800 (PST)
+From: Avi Weiss <thnkslprpt@gmail.com>
+To: mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org
+Cc: andrii@kernel.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Avi Weiss <thnkslprpt@gmail.com>
+Subject: [PATCH] uprobes: avoid postponing return-probe SRCU lease expiration
+Date: Sun, 15 Nov 2026 17:59:21 +0200
+Message-ID: <20261115155921.260878-1-thnkslprpt@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,141 +102,62 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261115-work-ovl-d_real-v1-0-ca155efbcb2e@kernel.org> <20261115-work-ovl-d_real-v1-2-ca155efbcb2e@kernel.org>
-In-Reply-To: <20261115-work-ovl-d_real-v1-2-ca155efbcb2e@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sun, 15 Nov 2026 16:00:36 +0100
-X-Gm-Features: AclHuK_wHYShIpzO3KRe2QttGftKj9EtJqTGjYXExDCpgXdtVHvMQ3jGuPVE7gY
-Message-ID: <CAOQ4uxjoHbevvu8auB4m8AVcY9H6uHdDAP6mfi9OOMh+3775xA@mail.gmail.com>
-Subject: Re: [PATCH 02/13] fs: add d_real_data_inode() and d_real_metadata_inode()
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Chris Down <chris@chrisdown.name>, 
-	Miklos Szeredi <mszeredi@redhat.com>, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 15, 2026 at 3:02=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> Currently, d_real() can't fail. When overlayfs fails to look up the data
-> of a metacopy file in a data-only layer it hands back the overlayfs
-> dentry and callers silently work with the overlayfs inode. That's more
-> problematic than current callers realize.
->
-> For trace_uprobe and bpf's uprobe_multi it means uprobe_register() fails
-> with an -EIO that has nothing to do with the actual problem. For IMA it
-> means the stacked change detection is skipped and for IPE the file is
-> evaluated against an inode that has none of the properties of the real
-> file.
->
-> Teach d_real() to fail and teach all callers to handle errors. This adds
-> two helpers for the callers to switch over to:
->
-> - d_real_data_inode() returns the inode hosting the data or an ERR_PTR()
->   if that can't be resolved.
->
-> - d_real_metadata_inode() returns the inode hosting the metadata. It
->   never has to look anything up and so never fails (but no promises for
->   the future).
+prepare_uretprobe() reprograms the per-task return-instance timer on every
+successfully installed return probe. If a traced outer function remains
+active while nested traced calls arrive more frequently than the timeout,
+the shared timer keeps moving forward and the outer instance can hold its
+SRCU read-side lease indefinitely. This delays unrelated synchronous uprobe
+unregister operations that must wait for the same SRCU grace period.
 
-About those promises...
+Use timer_reduce() to preserve the earliest pending expiry. Pair a full
+memory barrier after publishing a return instance with one before the timer
+callback traverses the list. A publisher that observes the earlier timer
+as pending must then be visible to that callback - otherwise the producer
+rearms the expired timer.
 
->
-> d_real() can't fail yet so this is a pure preparation. d_real_inode()
-> stays around until all callers are converted.
->
-> No functional changes.
->
-> Suggested-by: Amir Goldstein <amir73il@gmail.com>
-> Link: https://lore.kernel.org/all/CAOQ4uxhGxpBtMZ5kfuzR1tQAewiecoX7UjXQRo=
-91QjJHH9T_Yw@mail.gmail.com
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
-> ---
->  include/linux/dcache.h | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index 84b0cfe4ed0e7..674bc50b81827 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -3,6 +3,7 @@
->  #define __LINUX_DCACHE_H
->
->  #include <linux/atomic.h>
-> +#include <linux/err.h>
->  #include <linux/list.h>
->  #include <linux/math.h>
->  #include <linux/rculist.h>
-> @@ -660,6 +661,49 @@ static inline struct inode *d_real_inode(const struc=
-t dentry *dentry)
->         return d_inode(d_real((struct dentry *) dentry, D_REAL_DATA));
->  }
->
-> +/**
-> + * d_real_data_inode - Return the real inode hosting the data
-> + * @dentry: The dentry to query
-> + *
-> + * If @dentry is a regular file on a union/overlay, then return the
-> + * underlying, real inode that hosts its data. Otherwise return d_inode(=
-).
-> + *
-> + * The union/overlay may have to look up the data first. This can sleep =
-and it
-> + * can fail, e.g., because the data is missing or because its verity dig=
-est
-> + * doesn't match.
-> + *
-> + * Return: The real inode hosting the data of @dentry, or an ERR_PTR() i=
-f it
-> + * can't be resolved.
-> + */
-> +static inline struct inode *d_real_data_inode(const struct dentry *dentr=
-y)
-> +{
-> +       struct dentry *real;
-> +
-> +       /* This usage of d_real() results in const dentry */
-> +       real =3D d_real((struct dentry *)dentry, D_REAL_DATA);
-> +       if (IS_ERR(real))
-> +               return ERR_CAST(real);
-> +       return d_inode(real);
-> +}
-> +
-> +/**
-> + * d_real_metadata_inode - Return the real inode hosting the metadata
-> + * @dentry: The dentry to query
-> + *
-> + * If @dentry is a regular file on a union/overlay, then return the
-> + * underlying, real inode that hosts its metadata. Otherwise return d_in=
-ode().
-> + *
-> + * Unlike d_real_data_inode() this never has to look anything up and so =
-it
-> + * never fails.
-> + *
-> + * Return: The real inode hosting the metadata of @dentry.
-> + */
-> +static inline struct inode *d_real_metadata_inode(const struct dentry *d=
-entry)
-> +{
-> +       /* This usage of d_real() results in const dentry */
-> +       return d_inode(d_real((struct dentry *)dentry, D_REAL_METADATA));
-> +}
-> +
+In an x86-64 QEMU reproducer with nested traced calls every 10 ms, an
+unrelated tracefs event disable took 7,740 ms on the baseline and 70 ms
+with the change. A corrected monotonic-clock regression run measured
+2,210 ms versus 79 ms, with 15 additional long-lived timer-boundary
+cases and process exit/exec checks passing. Narrow LKMM store-buffering
+litmus tests observed the lost-rearm outcome without both barriers and
+forbade it when both were present.
 
-Wondering out loud - since you needed to change IMA anyway and need
-IMA patches reviews, do you think it is hard to also gracefully deal with e=
-rrors
-from d_real_metadata_inode() and not have to promise that it never fails?
+Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
+Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
+---
+ kernel/events/uprobes.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-This question is not intended to block your patches.
-If there is a reason we should keep this promise for now,
-I have no problem with it, so
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index caf444762a27..82065863a6c1 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2052,6 +2052,9 @@ static void ri_timer(struct timer_list *timer)
+ 	 */
+ 	raw_write_seqcount_begin(&utask->ri_seqcount);
+ 
++	/* Pair with prepare_uretprobe() to avoid a missed rearm. */
++	smp_mb();
++
+ 	for_each_ret_instance_rcu(ri, utask->return_instances)
+ 		hprobe_expire(&ri->hprobe, false);
+ 
+@@ -2304,7 +2307,9 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
+ 	ri->next = utask->return_instances;
+ 	rcu_assign_pointer(utask->return_instances, ri);
+ 
+-	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
++	/* Pair with ri_timer() after publishing the instance. */
++	smp_mb();
++	timer_reduce(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
+ 
+ 	return;
+ free:
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.53.0
 
-Thanks,
-Amir.
