@@ -1,62 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794746336;
-	b=tCDLD3GPWoZe1Vf3xwBWnFJ9JH07H1cWlNPx+j3OrQcSCTUpo8OIZtROHLeiIt9cex/g
-	 Qh2u+hIVx3O0+0Yj/kKk3mKd/zYQha6jlw7yNP9wOatxWYSHbl/3tVnT4LyW/DmwzO0hv
-	 xEseaKrwcksqCoX1w07DHNpW944Yn2udrsvjK1zkyhXkVgD08WqHGZ5TgkZvk9CZUk9Sa
-	 EXzbVqu6YI91BbPeZ88CjNfKVu4c3a2pMl0pli9+AuBQVwE04jWRUK7h5we01txVOpnQJ
-	 4ePaC6suasxDeb+N8O5jlAIiAgnR1hzqdM8yTBPnIfHI1SRAXZLLpI3i+4i3tZ3odMA==
+	t=1794747700;
+	b=q44XnWK0CmIqxqEMo6Kb2x39D9HTi15AiIDfohqAaUUMfxhV+oe9YjVQ3je6XndFbPfQ
+	 WYlKozuVHjow6jffTbfllmXThezBVCA7c8erujGWdXTAGZ3JI0DBMx6e8Gn2ER7Ceyu0V
+	 H3CjGt5rVGfKNAdVmIB2aIRa2WHUMSN1cn6yriyami39cTIiBauB7OpMrWIHgqU40n5X+
+	 bKzm8uGUcybOjr5d7ONEMZfVjFUrD4MQOJPEfyIUCy1YaCGKyM4InbnrCPRUxf4Uw/NNt
+	 NzcCUljTn/5/9p4w/O0Nk+KY+7HuHMWTHCvX3/E3pgjtzURhCOi7Slh5Pz3PDp4z+JA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794746336;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=9jcJWN0NdKgEN4LDyk1MwP0Pevti1LkkFkttcpC7LC4=;
-	b=QmnvtTHEhGFR5WiGZ8/NdouVVI0krxgeHQMCfDz+jSR9/A0iCnSSPBqfDojNWQj35Ozn
-	 o9vP24FIcY4rc7sfzYK7U/uOrQVm/k+SiO/c/p55fYasYng+Dm76e/+QI6z2XetO8M5wC
-	 Vrhkqp8W7A1iL/bzj3Ll5osupzay9ZlKCHY02qF1Kx8eaEHkMmoqFXLWIwcJjRvHqoOtN
-	 uUXlDXU3E6eNFFSV+HR6fYErW5Mat4lhR+dYKz/mjsRRo4JVuSmz4IiOaRPN170Eu37Dk
-	 MUH8PX+EeUY0csdf19wcGb05I41GvQS+CTfrzv5fd5OpyAFdYE4AsFU1xJCVKS6K1nw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794747700;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=RKTInV6SNsPGRtW41siEsQUjvIqVTNTz+N2ulZmOutU=;
+	b=U+ihnnqr9tP7SmMQfG6VV4a6f0+LDjkvcESM0KqNXkv71RUe/3hlirb7vlKnzxkKnjsI
+	 TAwzkEjDBi+OmO9TMvSX8KhTSIpp4IL3ELiyWzeFHXuwaQpFMYRueBBtP9CYSkMT/96OH
+	 clHGqva+HHvkpDpLfKbUk8YUOk02cqiEi2fuuUOtJ5iWKIwAkEFdyMKTE2k5TThVcQv4x
+	 JqmmcCMbCjxLv+PtpSEZfQQWoftDzRWvjsGpwNnqL3x7f0q65Z0aosodrtJDHrxRwFncj
+	 7jq/db2gaxEw1wmQ+6qKyhZAoClz99EgO3e6GPybipqmtwqM0xzE2BZ+Y3oHzL7F9GA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=207.54.77.50
-Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC56606A33F;
-	Sun, 15 Nov 2026 12:38:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0FC56606A33F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794746344; x=1826282344;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=BUw7JeXvBZLkWxt5vkiT5i6cqwipH2FSgC84R9mmaUA=;
-  b=G9888Hd3/pGuPoczw6iX3Dl5f9sZ2jVEMIMqG/hTNNQhoAEa71h4DQR/
-   374dO/wQud45hviImsThLYUVMuIWrPIzt1lt9St8UCDsCm3Xn+MFCuIcC
-   1GSibJ+6R8fBSVg7ghwSHO9HSuAnvDTQDUzIKpGLg9CgufkbLU+jBu2Hj
-   PWov59HU11UEHe9fIhjw3zmGR+VSZ2hP4iQ8wxi2lqtD0SipKYM11g3dk
-   +ilF22HuBnHJ8YSVTfjHI7rfoTuzsCOEHIgDVCGOZ123oVYQL5zBP/vqQ
-   qoOdKpt9GymJ+lieJPcW5WgRv1ULQxGZ1HDgP16XeP+WXEpStLWwkKuhp
-   Q==;
-X-CSE-ConnectionGUID: aEAkvD/zReCyKrrAwScpaw==
-X-CSE-MsgGUID: Gl6xOM3wRZi07Moj1112gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2026 14:38:53 +0200
-X-CSE-ConnectionGUID: yxI1yTDiRGCBQZJr7fk+nA==
-X-CSE-MsgGUID: 5mDrb12bTFmvJxspl4pAPQ==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
-  by ces03_data.me-corp.lan with SMTP; 15 Nov 2026 14:46:46 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Sun, 15 Nov 2026 14:38:44 +0200
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Sun, 15 Nov 2026 14:37:35 +0200
-Subject: [PATCH v4 3/3] riscv: kprobes: add KUnit test for LR/SC sequence
- rejection
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Izp7oMqq;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC02606A31F
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 13:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Izp7oMqq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3C51F000C4;
+	Sun, 15 Nov 2026 13:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794747699;
+	bh=RKTInV6SNsPGRtW41siEsQUjvIqVTNTz+N2ulZmOutU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Izp7oMqqsmc3qHv97PXAqwJdC9P0yudHMy4Dpgvjoc8yyk2YO3cpTpCUK4wE/pf0A
+	 JuHNJcI9Qs4lB7wjE3iqBGB20nrnZyfrqdoquPx1K+RZNdj1gQcaPOOUW6nxBdvT/W
+	 r/b5P9UmGSckna0m3Z9dtIW0Sf9gwArPz6LUPyu5Toc37NSx0ktJIMXadZcsUNYuBw
+	 8SearbsrWrRI49DdDX0btV7RWVMgbEM+YD80q0g7fXL+mC3uCnmdMB+WMQbNLjEaC6
+	 E49da6tAhypAPEELtQ+8JeaebecV31D/uK8VPnPJZ4uYrGMB5C/O0QP0HCUv3WQ4i8
+	 LFaz+dpjfG/8Q==
+Message-ID: <sashiko-outbox-215511@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 2/3] riscv: probes: reject probes inside an LR/SC
+ sequence
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261115-probes-in-lrsc-v4-2-48b9b036bd1d@mobileye.com>
+References: <20261115-probes-in-lrsc-v4-0-48b9b036bd1d@mobileye.com>
+ <20261115-probes-in-lrsc-v4-2-48b9b036bd1d@mobileye.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 15 Nov 2026 13:01:39 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,179 +60,195 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261115-probes-in-lrsc-v4-3-48b9b036bd1d@mobileye.com>
-References: <20261115-probes-in-lrsc-v4-0-48b9b036bd1d@mobileye.com>
-In-Reply-To: <20261115-probes-in-lrsc-v4-0-48b9b036bd1d@mobileye.com>
-To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Guo Ren <guoren@kernel.org>, 
- Pekka Enberg <penberg@kernel.org>, 
- =?utf-8?q?Patrick_St=C3=A4hlin?= <me@packi.ch>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, 
- Palmer Dabbelt <palmerdabbelt@google.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-X-Mailer: b4 0.16.0
 
-Extend the kprobes KUnit test with a function containing an LR/SC
-sequence and assert that register_kprobe() accepts a probe placed right
-before or right after the sequence, and rejects a probe placed on the
-LR, on an instruction inside the sequence, or on the SC.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] riscv: probes: unbounded symbol scan and 0x0000 body match in
+  LR/SC check
+- [Medium] riscv: probes: uprobe_in_lrsc_body() accepts probe when first
+  page read fails
+--
 
-Add never-executed function that imitates s valid LR/SC section, one
-with short and one with maximum valis size body, and section with
-LR and no SC, mimicking __cmpwait where LR is followed by the
-conditional branch.
+commit adb0f0de869819463b6310d8616d49420ae15ca8
+Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
-Suggested-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
----
- arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S | 58 ++++++++++++++++++++++
- arch/riscv/kernel/tests/kprobes/test-kprobes.c     | 32 ++++++++++++
- arch/riscv/kernel/tests/kprobes/test-kprobes.h     |  6 +++
- 3 files changed, 96 insertions(+)
+riscv: probes: reject probes inside an LR/SC sequence
 
-diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S b/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
-index 15e50934bbd7..ca5b9223f885 100644
---- a/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
-+++ b/arch/riscv/kernel/tests/kprobes/test-kprobes-asm.S
-@@ -198,6 +198,44 @@ SYM_FUNC_END(test_kprobes_c_jal)
- 
- #endif /* CONFIG_RISCV_ISA_C */
- 
-+SYM_FUNC_START(test_kprobes_lrsc)
-+test_kprobes_lrsc_addr0:
-+	nop
-+	/* valid LR/SC sequence */
-+1:
-+test_kprobes_lrsc_addr1: /* expect: rejected */
-+	lr.w t0, 0(a0)
-+test_kprobes_lrsc_addr2: /* expect: rejected */
-+	addi t0, t0, 1
-+test_kprobes_lrsc_addr3: /* expect: rejected */
-+	sc.w t0, t0, 0(a0)
-+test_kprobes_lrsc_addr4:
-+	bnez t0, 1b
-+
-+	/* not a valid LR/SC sequence - no SC */
-+test_kprobes_lrsc_addr5:
-+	lr.w	t0, 0(a0)
-+test_kprobes_lrsc_addr6:
-+	and	t0, t0, a1
-+	xor	t0, t0, a2
-+	bnez	t0, 1f
-+test_kprobes_lrsc_addr7:
-+	nop
-+1:
-+	nop
-+
-+	/* valid LR/SC sequence */
-+test_kprobes_lrsc_addr8: /* expect: rejected */
-+	lr.w t0, 0(a0)
-+test_kprobes_lrsc_addr9: /* expect: rejected */
-+	.rept 16
-+	nop
-+	.endr
-+	sc.w t0, t0, 0(a0)
-+	nop
-+	ret
-+SYM_FUNC_END(test_kprobes_lrsc)
-+
- .section .rodata
- SYM_DATA_START(test_kprobes_addresses)
- 	RISCV_PTR test_kprobes_add_addr1
-@@ -253,3 +291,23 @@ SYM_DATA_START(test_kprobes_functions)
- #endif /* CONFIG_RISCV_ISA_C */
- 	RISCV_PTR 0
- SYM_DATA_END(test_kprobes_functions)
-+
-+.section .rodata
-+SYM_DATA_START(test_kprobes_lrsc_allowed_addresses)
-+	RISCV_PTR test_kprobes_lrsc_addr0
-+	RISCV_PTR test_kprobes_lrsc_addr4
-+	RISCV_PTR test_kprobes_lrsc_addr5
-+	RISCV_PTR test_kprobes_lrsc_addr6
-+	RISCV_PTR test_kprobes_lrsc_addr7
-+	RISCV_PTR 0
-+SYM_DATA_END(test_kprobes_lrsc_allowed_addresses)
-+
-+.section .rodata
-+SYM_DATA_START(test_kprobes_lrsc_rejected_addresses)
-+	RISCV_PTR test_kprobes_lrsc_addr1
-+	RISCV_PTR test_kprobes_lrsc_addr2
-+	RISCV_PTR test_kprobes_lrsc_addr3
-+	RISCV_PTR test_kprobes_lrsc_addr8
-+	RISCV_PTR test_kprobes_lrsc_addr9
-+	RISCV_PTR 0
-+SYM_DATA_END(test_kprobes_lrsc_rejected_addresses)
-diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes.c b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
-index 027424a3ff7b..ff9d5bb2b998 100644
---- a/arch/riscv/kernel/tests/kprobes/test-kprobes.c
-+++ b/arch/riscv/kernel/tests/kprobes/test-kprobes.c
-@@ -43,8 +43,40 @@ static void test_kprobe_riscv(struct kunit *test)
- 	kfree(kp);
- }
- 
-+static void test_kprobe_riscv_lrsc(struct kunit *test)
-+{
-+	/* probes outside the LR/SC sequence must be accepted */
-+	for (int i = 0; test_kprobes_lrsc_allowed_addresses[i]; i++) {
-+		struct kprobe kp = {};
-+		int ret;
-+
-+		kp.pre_handler = kprobe_dummy_handler;
-+		kp.addr = test_kprobes_lrsc_allowed_addresses[i];
-+
-+		ret = register_kprobe(&kp);
-+		KUNIT_EXPECT_EQ_MSG(test, ret, 0, "location %pS rejected", kp.addr);
-+		if (!ret)
-+			unregister_kprobe(&kp);
-+	}
-+
-+	/* probes on or inside the LR/SC sequence must be rejected */
-+	for (int i = 0; test_kprobes_lrsc_rejected_addresses[i]; i++) {
-+		struct kprobe kp = {};
-+		int ret;
-+
-+		kp.pre_handler = kprobe_dummy_handler;
-+		kp.addr = test_kprobes_lrsc_rejected_addresses[i];
-+
-+		ret = register_kprobe(&kp);
-+		KUNIT_EXPECT_LT_MSG(test, ret, 0, "location %pS accepted", kp.addr);
-+		if (!ret)
-+			unregister_kprobe(&kp);
-+	}
-+}
-+
- static struct kunit_case kprobes_testcases[] = {
- 	KUNIT_CASE(test_kprobe_riscv),
-+	KUNIT_CASE(test_kprobe_riscv_lrsc),
- 	{}
- };
- 
-diff --git a/arch/riscv/kernel/tests/kprobes/test-kprobes.h b/arch/riscv/kernel/tests/kprobes/test-kprobes.h
-index 537f44aa9d3f..93393e77a2cf 100644
---- a/arch/riscv/kernel/tests/kprobes/test-kprobes.h
-+++ b/arch/riscv/kernel/tests/kprobes/test-kprobes.h
-@@ -19,6 +19,12 @@ extern void *test_kprobes_addresses[];
- /* array of functions that return KPROBE_TEST_MAGIC */
- extern long (*test_kprobes_functions[])(void);
- 
-+/* probe points that must be accepted, terminated by NULL */
-+extern void *test_kprobes_lrsc_allowed_addresses[];
-+
-+/* probe points that must be rejected, terminated by NULL */
-+extern void *test_kprobes_lrsc_rejected_addresses[];
-+
- #endif /* __ASSEMBLER__ */
- 
- #endif /* TEST_KPROBES_H */
+This commit rejects kprobes and uprobes placed inside a constrained LR/SC
+atomic sequence by scanning forward up to 16 allowed body instructions for
+a matching SC instruction.
 
--- 
-2.43.0
+> diff --git a/arch/riscv/kernel/probes/decode-insn.c b/arch/riscv/kernel/p=
+robes/decode-insn.c
+> index 433d9035b8882..78a6f2ac6808c 100644
+> --- a/arch/riscv/kernel/probes/decode-insn.c
+> +++ b/arch/riscv/kernel/probes/decode-insn.c
+> @@ -4,11 +4,102 @@
+>  #include <linux/kprobes.h>
+>  #include <linux/module.h>
+>  #include <linux/kallsyms.h>
+> +#include <linux/bug.h>
+>  #include <asm/sections.h>
+> =20
+>  #include "decode-insn.h"
+>  #include "simulate-insn.h"
+> =20
+> +/*
+> + * Can insn sit between the lr and the sc of a constrained LR/SC sequenc=
+e?
+> + * The ISA allows base integer instructions there, except loads, stores,
+> + * JALR, FENCE, SYSTEM, backward jumps and taken backward branches, plus
+> + * their compressed forms. Backward branches are treated as not allowed:
+> + * the retry branch follows the sc, so one inside the body is not a
+> + * constrained sequence.
+> + */
+> +static bool __kprobes riscv_insn_is_lrsc_body(u32 insn)
+> +{
+> +	u32 funct3;
+> +
+> +	if (GET_INSN_LENGTH(insn) =3D=3D 2) {
+> +		switch (insn & RVC_INSN_OPCODE_MASK) {
+> +		case RVC_OPCODE_C0:
+> +			/* c.addi4spn; the rest of the quadrant is loads and stores */
+> +			return (insn & RVC_INSN_FUNCT3_MASK) =3D=3D 0;
 
+[ ... ]
+
+> diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probe=
+s/kprobes.c
+> index 63ee5066def5c..b8df722ac19f7 100644
+> --- a/arch/riscv/kernel/probes/kprobes.c
+> +++ b/arch/riscv/kernel/probes/kprobes.c
+> @@ -49,35 +49,49 @@ static void __kprobes arch_simulate_insn(struct kprob=
+e *p, struct pt_regs *regs)
+>  	post_kprobe_handler(p, kcb, regs);
+>  }
+> =20
+> -static bool __kprobes arch_check_kprobe(unsigned long addr)
+> +/*
+> + * Walk the instructions from the enclosing symbol up to addr to check t=
+hat
+> + * addr is an instruction boundary. Then reject a probe inside an LR/SC
+> + * sequence: the breakpoint trap drops the reservation, so the SC would =
+fail
+> + * and the loop would hit the probe again on every retry. The sequence is
+> + * recognised by a forward scan with the constrained-sequence rules, as =
+for
+> + * uprobes, so an lr that is not followed by an sc (as in __cmpwait()) d=
+oes
+> + * not taint the rest of the function.
+> + */
+> +static int __kprobes arch_check_kprobe(unsigned long addr)
+>  {
+>  	unsigned long tmp, offset;
+> =20
+>  	/* start iterating at the closest preceding symbol */
+>  	if (!kallsyms_lookup_size_offset(addr, NULL, &offset))
+> -		return false;
+> +		return -EILSEQ;
+> =20
+>  	tmp =3D addr - offset;
+> =20
+>  	while (tmp <=3D addr) {
+>  		if (tmp =3D=3D addr)
+> -			return true;
+> +			if (riscv_probe_in_lrsc_body((u16 *)addr, RISCV_LRSC_SCAN_BYTES))
+> +				return -EINVAL;
+> +			else
+> +				return 0;
+
+[Severity: Medium]
+Can arch_check_kprobe() scan past the end of the enclosing symbol and into
+an unmapped page?
+
+The commit message states that kprobes scan up to the end of the enclosing
+symbol, but arch_check_kprobe() passes NULL for symbolsize to
+kallsyms_lookup_size_offset() and always scans RISCV_LRSC_SCAN_BYTES (72
+bytes) from addr. In addition, the RVC_OPCODE_C0 check in
+riscv_insn_is_lrsc_body() only tests funct3 =3D=3D 0 without requiring a
+non-zero immediate in bits 12:5, so 0x0000 (illegal instruction and zero
+padding at the end of a module text section) is treated as a valid
+c.addi4spn body instruction. Probing near the end of a function can
+therefore scan across symbol boundaries or through trailing zero padding
+into an unmapped module vmalloc guard page, causing an unhandled kernel
+page fault while holding kprobe_mutex and text_mutex.
+
+Clamping the scan length to symbolsize - offset and rejecting nzuimm =3D=3D=
+ 0
+for c.addi4spn would prevent scanning past the symbol or across zero
+padding.
+
+[ ... ]
+
+> diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probe=
+s/uprobes.c
+> index eb177d0ce8ab0..d97a102621665 100644
+> --- a/arch/riscv/kernel/probes/uprobes.c
+> +++ b/arch/riscv/kernel/probes/uprobes.c
+> @@ -28,6 +28,34 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *reg=
+s)
+>  	return instruction_pointer(regs);
+>  }
+> =20
+> +/*
+> + * Is the instruction at addr inside a constrained LR/SC sequence? Only =
+the
+> + * probed instruction was copied, so read the text that follows it from =
+the
+> + * task. The caller holds mmap_lock, as uprobe_write_opcode() requires t=
+oo.
+> + * Text that cannot be read ends the scan early, which accepts the probe.
+> + */
+> +static bool uprobe_in_lrsc_body(struct mm_struct *mm, unsigned long addr)
+> +{
+> +	u16 buf[RISCV_LRSC_SCAN_BYTES / sizeof(u16)];
+> +	struct vm_area_struct *vma;
+> +	struct page *page;
+> +	size_t got =3D 0;
+> +	int len;
+> +
+> +	while (got < sizeof(buf)) {
+> +		len =3D min_t(size_t, sizeof(buf) - got,
+> +			    PAGE_SIZE - offset_in_page(addr + got));
+> +		page =3D get_user_page_vma_remote(mm, addr + got, FOLL_FORCE, &vma);
+> +		if (IS_ERR(page))
+> +			break;
+> +		uprobe_copy_from_page(page, addr + got, (void *)buf + got, len);
+> +		put_page(page);
+> +		got +=3D len;
+> +	}
+> +
+> +	return riscv_probe_in_lrsc_body(buf, got);
+> +}
+> +
+>  int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_stru=
+ct *mm,
+>  			     unsigned long addr)
+>  {
+> @@ -53,6 +81,9 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprob=
+e, struct mm_struct *mm,
+>  		return -EINVAL;
+>  	}
+> =20
+> +	if (uprobe_in_lrsc_body(mm, addr))
+> +		return -EINVAL;
+> +
+>  	return 0;
+>  }
+
+[Severity: Medium]
+Does uprobe_in_lrsc_body() accept a probe on an sc instruction or inside an
+LR/SC sequence if get_user_page_vma_remote() fails on the first page?
+
+When the first get_user_page_vma_remote() call fails (for example due to a
+pending fatal signal or -ENOMEM), the loop breaks with got =3D=3D 0 and
+riscv_probe_in_lrsc_body(buf, 0) returns false without even checking the
+probed instruction already copied in auprobe->insn.
+arch_uprobe_analyze_insn() then returns 0, so prepare_uprobe() sets
+UPROBE_COPY_INSN on the uprobe permanently; subsequent mappings or tasks
+skip prepare_uprobe() and install the breakpoint inside the LR/SC sequence,
+livelocking the target task when hit.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261115-probes-in-=
+lrsc-v4-0-48b9b036bd1d@mobileye.com?part=3D2
