@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794815686;
-	b=SLwZLJZGgNs9T3FKRD5iGN3ccHDkdf6ra48gXedd+darOLmsJard50DN7V0ile50AJCj
-	 mpKhJNS+JIliF2sMBfq4eGE2dl3Qt9AZWbpUAvnoS+8BJ4pCY/pJseeO5Lg6ctunLkZdt
-	 V8PCXT6cVovmhQtYoovOkk7TfC4So3J+3SvOeovOmRfewwhNqrv6nttMsXX89RJ2Rislw
-	 zFW6TF9AaC5+5JcbpX2oDoXuIMABjmSawKj2TC7MalkrjS83/5TJP1rgnyJun/7z9AO6Q
-	 z743+fBu3f2nu4BDgQDsAuJhcIZ+BVCVX7U/hsVS/Vj6Pwx/o/91Zd2JxaTQ1tzI90g==
+	t=1794815688;
+	b=2XJ9UafD3Nb+jT3UEH68GNs8b2xpFxszYufSQXpVFZcXsgEiFES2mNAGT+FayTnJfgYI
+	 UE4D092CXAaOVS9U01lWt/eSeP3tj1f0yaLtCCTHkJeBvhdJBewO5JaXA2/WPKCAAjyYc
+	 NNrcCzdp16jPaotmXvuP6zmh77F3XL5I2+Du2jHAUf+GrmTQZz/WLWzl0ZnALbZfTylss
+	 Spl0RfJylwCZafMsGSwf5grGxDBYqTpYC/ODKO2URT56pfE0OKlD6F73T6ZWGzJLOZxSX
+	 SC26pJNpgBE5CvLGgGdRxK/9zY+HlveLHTHlQ6Eds5QeD0OXaUZD7t0uPQL90OKtqJw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794815686;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794815688;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=iUzaZQp5S4tbvRPCNxK/bmUolbaZVx4k2EZhZDo+zsg=;
-	b=rAslK5frRIewx+O/yhz1EUIeN746x1CTNxVsv1IMQyhIQcRhrKdRkXxoghDzZ+vuPuBp
-	 XUjB1hd1VtC6aeGmbRz5eNVYLnW/NHZn6mLLANxol5Ip2vv0zhV/ogdnqpwQMsd2S9KRI
-	 q/T9IZWCg0o6UB1xR9AoXJH61uTY9zR+1ANBP6q/uIC3NvpI7KupCdPrAQfof0+eb8LMG
-	 Ik/KKG3V1qPib9VBCkYedvkIIlgWXYfPwopBsFs7mvxkD+eS32zhZtjsDSkc0S+7hlC3A
-	 hfM/C8HdJjOPPGgor6nqv9YRPiyiYn1LbQ4gRl95rCZLBXRD2ScHEC2TTqnMbXpio6w==
+	bh=V/ALRmUD/hAy570O2Xf1osysz7Ylv+AoJE5xebVPkiE=;
+	b=YNkmLftbO/xgyQMaYFXmPMkKqL7okTQAe07lumVvC1iIQYta/sM2co7qwQWS++eLtenu
+	 XHs8oiiepXTSAB65p5Xq0s2PdEWxtV7JwvKfOTgOO8MrFT9Zp+rggXZEkkKl+K2G+n9v6
+	 KX6UvT/ZCE9sHFJ2kqWwOyQO1Lg/552Z9Wd6+vzKr0x9jt/aTCSeu2PwIS2VTVktc8zh2
+	 kH5IKc6dAqMDb+EllTxWUOcD6Qm95Nw+fb8LovOh58ZxzTRdg7Ft49k7otgrANpsqjmg/
+	 hp/ewZ9Ic1J9b8KnnYbVrZ+7jImbf93/VtvTxbOyFX2dYRwD+bv9huTSrMat+gQupJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Zgj9aZ31;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fvZjNdHq;
+	arc=none smtp.remote-ip=209.85.128.50
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C97606A886
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 07:54:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58C97606A886
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4774606A894
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 07:54:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4774606A894
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Zgj9aZ31
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4bb64c99d2fso17756835e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 23:54:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fvZjNdHq
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4bb5b8ef642so17526425e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 23:54:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794815685; x=1795420485; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794815686; x=1795420486; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=iUzaZQp5S4tbvRPCNxK/bmUolbaZVx4k2EZhZDo+zsg=;
-        b=Zgj9aZ31u8m3FzsGEhEs7KO15dsARdwE1Gkc6+g5hd460kl94T88hNK4FMOkxBUB3J
-         V3pRBbkdWaNZvU5EzTndqpK2kgdqj5O85mjsYGd/zFwWD8aR0YRNFy129Yrd0meN3TW0
-         Rbfr1YpuiRjEYmfQ1oRxsg7YTZ1R1j2L7lE50MB6uGa3eu/CrhnVHTq/FPeUqKg/lbwJ
-         1/Pkmh3CjCqDun2aCVECmyaPf3HgLsKGiUR1WlKFSzyDA2FnHDrCafkka+rQVBjXtDK2
-         NOsqxyKdCIP0JQvz4xJhzI1wOfEBPZg0LozZuokQ/+GHuLGsXRdcBpV3g3WgDpOtShX0
-         wO4w==
+        bh=V/ALRmUD/hAy570O2Xf1osysz7Ylv+AoJE5xebVPkiE=;
+        b=fvZjNdHq+TzTFxD8WAWKmO3XhCPWghE4pID+d8gCU4kYBuG9N+vRpmIw2el5mQ2vgR
+         173Z+k08ZqqHeEfuS0p+Q7KxYhIlOGp5AiP0o2TMTdJtRgp3T/Egm6KHcRSiE3ZNW0TQ
+         8cFQZ1LlM4gHVxWHiH4ojeUbXTEgVXUWLL70LNPP9VL4/B4TzefBch/qZ2yekteG8c6p
+         z5GCH3H3Mhgn8rfVzvnmOSAgVWvuZOaIkGnd+sFc/DCBFIIHidQoyy4OiaBXzzC0Jk1r
+         VcfxEzctgflDlFSKtEHB9rLIqSMCeZoMBjZf1yZ0VR851oTEKzCuirCdjH+5MwCdWC6m
+         7e7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794815685; x=1795420485;
+        d=1e100.net; s=20260707; t=1794815686; x=1795420486;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=iUzaZQp5S4tbvRPCNxK/bmUolbaZVx4k2EZhZDo+zsg=;
-        b=CAlcyOeTonUNnVeGsST3ZhoGWx9tRVhcXrIdc/QjMIQfzURzJ8qeouMmgvfZUlmERw
-         O48xJ3SmmL763chV80XhfAS1e9e7ZaC6+jQRb+MR3r0HEMCPOnV8jHbeetpZoumHbr9L
-         cs6jp/AW/g9YBHo7YjLbWwdIwBYGkmvGCV1maA7IJcx5fRjnF1y5BT2OtL8BO/+SbgCq
-         Ol2iaKJM510qPxeXY1RCrfLAEMjD+8+kss6VpFSd3xhFUArj4/GtCUu30ZqwovnqNVv4
-         witIz0PlVojG6yWuAhey8iicTUhlN+Y1XPwtAwzx6fVTegXBsv5yNhgHXl+n/7H1FYTO
-         pC9A==
-X-Forwarded-Encrypted: i=1; AL+hErFrF0O7TW0dWrzpJWGmN9yzHK41vkW98tZ7oA5l9Iu0oPlytFTJh8FCqtxo7GF8O60WycJGWDrj0I2vV+7RCSK6M/c=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+S4M1GvB+QGXNP3BLhXNKoJAYcCRazo/DT2LSPol2K/mvp79QA
-	PM0ykhpjozl/Rgmltw7gqQIeKvHduo+jnqkNSCdaVQoeK2Zw92TAJ6R6
-X-Gm-Gg: AYBFou23On7Ck6m8A9xWgODPT9DtKC64pfmyyTqdkrId1Cb6qsq+y4hVtAGW3oIZusw
-	iZ2OAy/m3xknwBhNCcUaBnmDO0BRxN8yKh4FL0+14ETpYEhgjFnmwiT9iXOFq+LThj3xyL2J9vS
-	gIQw8RFE5Wc/m1YjPQ6SDTd+g07gjLfz2ix5EVthBsGdq2wGCYjvBBL3vxqSrLdGKPGBZ5c2gGt
-	08X9D8sr82uo9QGp+A+nSSzb8w6c36F+gyPQS+rAo/dul3HokEq/Ssvvl87MlrQ+v9vf1Dgo/V3
-	0NMvdiwI7/IqQPbbotoVSbrakLoN3uzNw1G346tQCP4C2JrKI7PqRx1WKh5VP/zA/JPV8/C7CCq
-	AGPYOZmdidaI9iuE6Z3Gzp4Qt1yfrdKRKPygtv6TQVSbm1VdEdrDAwT7md8SK+/aTFNW8UTtEAQ
-	+bjiImvGED+MPju8P/pDMkA75OpJA4y/XWTpgJ8iRkLUekFcBqsyhsF/8h1niw52k3X4YYQKmrR
-	o0S9pqOuo5Cg/2yuoJaNSnw4npxzD+rXQ9dIndeT0HfttLRiKHTt36u9qOTYCL3jJw6XEa1pXBv
-	QQKkcoD0WapM+99ku9k2nmGwwFoH8otH9YmrSJDe6wxfubQEUnyUeCV9RaJ4s1Atz+OchaH0Bm6
-	79fITJSr24uwj+h41oe2rKvo//4OXt5zEMmaBDIYenaD4iJiHfHqghrSgXPwvVyhg8HjwruAe4b
-	SKkyuUkw==
-X-Received: by 2002:a05:600c:4e88:b0:4bb:7033:c936 with SMTP id 5b1f17b1804b1-4bb7033cd72mr46814345e9.24.1794815684668;
-        Sun, 15 Nov 2026 23:54:44 -0800 (PST)
+        bh=V/ALRmUD/hAy570O2Xf1osysz7Ylv+AoJE5xebVPkiE=;
+        b=iyfctmyjNZbDsHCmyypTgTFP0rC5Pvavhrfh0OowE9+3R74VmCg1YGT8jkTCUgNJEv
+         vBVWQige+6JhDZmKdsbo2x8aUwbTuGW6ARldUXGGJXY4QLfX6f7QE0AqrBZHc1yN2VSJ
+         FDiemjspDw02VjaIhMuM1lkQQunkBmroD1gxCCTleJh56SdaUxsYtbu3Iz3T2Q1qPPce
+         9/T3ZrWAiUgkOa+6GKbrMZdpWDeSG/1lIcaJ2S7BfBwjmKV94ff3DSe8dM0QwebJtXi3
+         VJ4S4liknwu/ApQUqItbqfEg9SjIcdn9Pj9o6Vgsl67PipijeJBQkvJCtXgcizHF9ne8
+         qaAw==
+X-Forwarded-Encrypted: i=1; AL+hErEJ8Wrrzih42NIMOvwAefvdGSZxk9pi0+OfLIqjmENJoB4rEqFLWUcEyOLgybjnYHcMZdd0CzhmEKSHIzxG82ga3kU=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8QR0/CLyMtyV9gVMTfw+IcPd2jmAVBX0QeXd2gEYkIxqPXnjxB
+	anq1gD8Man7VwsE+xAZWKmtiG2bPeBhWPy0jHaE0mcXIvlNCYhfmLA9a
+X-Gm-Gg: AYBFou2mmSwBelHzRGLAOfen4dkZ5m45Ba3yrniJS5farcuJTMkwEyLYlWvnAcgUh1U
+	8LwFU4XR8yAljavk51P82rsS/wf/jE+Lf0bZ3dD6EKfC0ogy3zB06iF0ZL2s+NMooFru98NBI6E
+	uEDxFwfyMQNuGqwsnCGUKcv+w2gFPXPraJAHe7Tx8RTdQSGwyLQ1HkhgkQfocbKCo38IOTuFr3E
+	HfM3nXd29vKLQ/ZSvTki19TLylEwGQcW84v7At+s9ODQNe8GBV7dcOtPrJrdtqVvYX99N2povIj
+	/wyI41cNk6JVm8+jpgnpvlov/R3W+w297Fn6Anufp1w8KGdJEMfZcdBxUfmRO8BZpG9UIEJdcTA
+	dDjLzJViZLCjuHg63Bll091aFDmvA073faW62Lyo3WKDBJgJkRUUmkHFV3/yRqgymp/iPFgP71N
+	DA5BDiZh9kj3uy/7WRLXmleOJP/VxOV3hVAoh8rRl1plrTIcdyFnHfDB5+737HclsagF+Ms+302
+	ON8in8dMjSyDVTSkN/M/XvI6X7UaYJ6yrxqy/S1hCoMM3UqvKCVc8qPxnWoPlku6OYmLkR1LEvH
+	5cF3Zu0y6mOIYGba9dZJUfwCNA3bwfSa4Ogb2nY/CjftkNgQZMxUUj1kUfYxUMd5F+INXxRxHFS
+	qkxNxsQDA3c668jlcnr8NT/fc81sKaBPAx0GtFv79N++cCv5cmKYPt9b8aMfkW2XP8mr53jSzUu
+	Y0ZeJTeoX2fW3+kBDsFwskWTJkulSi
+X-Received: by 2002:a05:600c:a010:b0:4bb:6238:cd81 with SMTP id 5b1f17b1804b1-4bb6238d365mr123245015e9.10.1794815685909;
+        Sun, 15 Nov 2026 23:54:45 -0800 (PST)
 Received: from MacBook-Pro-von-Karl.localdomain (dynamic-095-117-148-032.95.117.pool.telefonica.de. [95.117.148.32])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5ba25b50sm210329875e9.14.2026.11.15.23.54.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5ba25b50sm210329875e9.14.2026.11.15.23.54.44
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 15 Nov 2026 23:54:44 -0800 (PST)
+        Sun, 15 Nov 2026 23:54:45 -0800 (PST)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -97,9 +97,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] arm64: Always inline preempt count and reschedule checks
-Date: Mon, 16 Nov 2026 08:54:23 +0100
-Message-Id: <80d8bdd8995a4b31a44e65bb9347b41c5be5226c.1794814699.git.kmehltretter@gmail.com>
+Subject: [PATCH 3/3] sched/preempt: Check preempt counts in notrace helpers
+Date: Mon, 16 Nov 2026 08:54:24 +0100
+Message-Id: <446e2bd042ce071da52ea80f577fe43c1b3dc031.1794814699.git.kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1794814699.git.kmehltretter@gmail.com>
 References: <cover.1794814699.git.kmehltretter@gmail.com>
@@ -114,46 +114,204 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The preempt count and reschedule checks are plain inline functions,
-which permits out-of-line copies in instrumentable text. The checked
-notrace helpers added by the following patch use preempt_count(), while
-preempt_enable_notrace() uses should_resched() with
-CONFIG_DEBUG_PREEMPT and __preempt_count_dec_and_test() without it.
+The notrace preemption macros use raw count updates even with
+CONFIG_DEBUG_PREEMPT enabled. They therefore skip the bounds checks
+which ordinary preemption operations provide.
 
-Force all three operations inline so noinstr callers keep them in their
-own section.
+Add checked noinstr preempt-count helpers and use them in
+preempt_disable_notrace(), preempt_enable_notrace() and
+preempt_enable_no_resched_notrace(). Export the out-of-line helpers
+for module callers. Keep raw updates when CONFIG_DEBUG_PREEMPT is
+disabled.
 
+Share the validation with preempt_count_add() and preempt_count_sub(),
+while leaving their preemption-latency tracing and ordering unchanged.
+DEBUG_LOCKS_WARN_ON() brackets its diagnostic work with
+instrumentation_begin() and instrumentation_end(), but evaluates its
+condition before that region. Branch profiling would therefore call
+ftrace_likely_update() from noinstr text.
+
+Compile core.o with branch profiling disabled when DEBUG_PREEMPT and
+TRACE_BRANCH_PROFILING are both enabled, as the scheduler Makefile already
+does for build_policy.o and build_utility.o. This keeps valid notrace count
+updates free of profiler calls while retaining the existing warning path.
+The tradeoff is loss of branch-profile data for the rest of core.o in that
+configuration; scheduler tracepoints and function tracing are unchanged.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20261029093219.GH1779021@noisy.programming.kicks-ass.net
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
- arch/arm64/include/asm/preempt.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/preempt.h | 22 ++++++++++++++++++----
+ kernel/sched/Makefile   |  3 +++
+ kernel/sched/core.c     | 40 ++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 57 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
-index f3a5c2cd1936d..805f7b33baf09 100644
---- a/arch/arm64/include/asm/preempt.h
-+++ b/arch/arm64/include/asm/preempt.h
-@@ -7,7 +7,7 @@
- #define PREEMPT_NEED_RESCHED	BIT(32)
- #define PREEMPT_ENABLED	(PREEMPT_NEED_RESCHED)
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index 06ff44a4b8b6a..42c585fd91d45 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -217,6 +217,17 @@ static __always_inline unsigned char interrupt_context_level(void)
+  */
+ #define in_atomic_preempt_off() (preempt_count() != PREEMPT_DISABLE_OFFSET)
  
--static inline int preempt_count(void)
-+static __always_inline int preempt_count(void)
- {
- 	return READ_ONCE(current_thread_info()->preempt.count);
- }
-@@ -75,13 +75,13 @@ static inline int __preempt_count_sub_return(int val)
- 	return pc;
++#ifdef CONFIG_DEBUG_PREEMPT
++void preempt_count_add_notrace(int val);
++void preempt_count_sub_notrace(int val);
++#define preempt_count_dec_and_test_notrace() \
++	({ preempt_count_sub_notrace(1); should_resched(0); })
++#else
++#define preempt_count_add_notrace(val)	__preempt_count_add(val)
++#define preempt_count_sub_notrace(val)	__preempt_count_sub(val)
++#define preempt_count_dec_and_test_notrace() __preempt_count_dec_and_test()
++#endif
++
+ #if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
+ extern void preempt_count_add(int val);
+ extern void preempt_count_sub(int val);
+@@ -231,6 +242,9 @@ extern void preempt_count_sub(int val);
+ #define __preempt_count_inc() __preempt_count_add(1)
+ #define __preempt_count_dec() __preempt_count_sub(1)
+ 
++#define preempt_count_inc_notrace() preempt_count_add_notrace(1)
++#define preempt_count_dec_notrace() preempt_count_sub_notrace(1)
++
+ #define preempt_count_inc() preempt_count_add(1)
+ #define preempt_count_dec() preempt_count_sub(1)
+ 
+@@ -263,7 +277,7 @@ do { \
+ #define preempt_enable_notrace() \
+ do { \
+ 	barrier(); \
+-	if (unlikely(__preempt_count_dec_and_test())) \
++	if (unlikely(preempt_count_dec_and_test_notrace())) \
+ 		__preempt_schedule_notrace(); \
+ } while (0)
+ 
+@@ -283,7 +297,7 @@ do { \
+ #define preempt_enable_notrace() \
+ do { \
+ 	barrier(); \
+-	__preempt_count_dec(); \
++	preempt_count_dec_notrace(); \
+ } while (0)
+ 
+ #define preempt_check_resched() do { } while (0)
+@@ -291,14 +305,14 @@ do { \
+ 
+ #define preempt_disable_notrace() \
+ do { \
+-	__preempt_count_inc(); \
++	preempt_count_inc_notrace(); \
+ 	barrier(); \
+ } while (0)
+ 
+ #define preempt_enable_no_resched_notrace() \
+ do { \
+ 	barrier(); \
+-	__preempt_count_dec(); \
++	preempt_count_dec_notrace(); \
+ } while (0)
+ 
+ #else /* !CONFIG_PREEMPT_COUNT */
+diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
+index b1f1a367034ff..d87f1bd3c28c3 100644
+--- a/kernel/sched/Makefile
++++ b/kernel/sched/Makefile
+@@ -27,6 +27,9 @@ endif
+ 
+ # Branch profiling isn't noinstr-safe
+ ifdef CONFIG_TRACE_BRANCH_PROFILING
++ifdef CONFIG_DEBUG_PREEMPT
++CFLAGS_core.o += -DDISABLE_BRANCH_PROFILING
++endif
+ CFLAGS_build_policy.o += -DDISABLE_BRANCH_PROFILING
+ CFLAGS_build_utility.o += -DDISABLE_BRANCH_PROFILING
+ endif
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1a088d4576f59..98ca93bc60887 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6040,7 +6040,7 @@ static inline void preempt_latency_start(int val)
+ 	}
  }
  
--static inline bool should_resched(int preempt_offset)
-+static __always_inline bool should_resched(int preempt_offset)
+-void preempt_count_add(int val)
++static __always_inline bool __preempt_count_add_checked(int val)
  {
- 	u64 pc = READ_ONCE(current_thread_info()->preempt_count);
- 	return unlikely(pc == preempt_offset);
- }
- 
--static inline bool __preempt_count_dec_and_test(void)
-+static __always_inline bool __preempt_count_dec_and_test(void)
- {
+ #ifdef CONFIG_DEBUG_PREEMPT
  	/*
- 	 * We must load the combined 'preempt_count' after decrementing
+@@ -6052,7 +6052,7 @@ void preempt_count_add(int val)
+ 	 */
+ 	if (!IS_ENABLED(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS) &&
+ 	    DEBUG_LOCKS_WARN_ON((preempt_count() < 0)))
+-		return;
++		return false;
+ #endif
+ 	__preempt_count_add(val);
+ #ifdef CONFIG_DEBUG_PREEMPT
+@@ -6062,6 +6062,21 @@ void preempt_count_add(int val)
+ 	DEBUG_LOCKS_WARN_ON((preempt_count() & PREEMPT_MASK) >=
+ 				PREEMPT_MASK - 10);
+ #endif
++	return true;
++}
++
++#ifdef CONFIG_DEBUG_PREEMPT
++void noinstr preempt_count_add_notrace(int val)
++{
++	__preempt_count_add_checked(val);
++}
++EXPORT_SYMBOL(preempt_count_add_notrace);
++#endif
++
++void preempt_count_add(int val)
++{
++	if (!__preempt_count_add_checked(val))
++		return;
+ 	preempt_latency_start(val);
+ }
+ EXPORT_SYMBOL(preempt_count_add);
+@@ -6077,7 +6092,7 @@ static inline void preempt_latency_stop(int val)
+ 		trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
+ }
+ 
+-void preempt_count_sub(int val)
++static __always_inline bool preempt_count_sub_debug_checks(int val)
+ {
+ #ifdef CONFIG_DEBUG_PREEMPT
+ 	/*
+@@ -6087,15 +6102,32 @@ void preempt_count_sub(int val)
+ 	unsigned int pc = preempt_count();
+ 
+ 	if (DEBUG_LOCKS_WARN_ON(pc - uval > pc))
+-		return;
++		return false;
+ 	/*
+ 	 * Is the spinlock portion underflowing?
+ 	 */
+ 	if (DEBUG_LOCKS_WARN_ON((val < PREEMPT_MASK) &&
+ 			!(preempt_count() & PREEMPT_MASK)))
++		return false;
++#endif
++	return true;
++}
++
++#ifdef CONFIG_DEBUG_PREEMPT
++void noinstr preempt_count_sub_notrace(int val)
++{
++	if (!preempt_count_sub_debug_checks(val))
+ 		return;
++	__preempt_count_sub(val);
++}
++EXPORT_SYMBOL(preempt_count_sub_notrace);
+ #endif
+ 
++void preempt_count_sub(int val)
++{
++	if (!preempt_count_sub_debug_checks(val))
++		return;
++
+ 	preempt_latency_stop(val);
+ 	__preempt_count_sub(val);
+ }
