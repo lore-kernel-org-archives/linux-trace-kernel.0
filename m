@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794816997;
-	b=Q9YHh/xlTds3PdPKKLYYfvhd6VMud9wI0KOAYFO5YsOo7EOqV3Usk3yjdybNa5IfYDKf
-	 LT/VcsmCRI4xsIpNDoXQIh3FwYd0loSk69/DxLAfWiF/uqK1rR5DWAUr+M2yF3Wd3K3+/
-	 0Vg3Zt/GGAAgpCPVUq83MXeHgFmbzpUebiKNcmUsNKFh5hAZaDBTpW3sqi/Kp7kAOTkMx
-	 aMYJC+jBIYMDP4Ba54vX+wuJ9rNN5W0E/iFOBZwmh2nNo6GH9IK3LKaF6areDw4jKSpdv
-	 GCP/htX+FCGZd2wsGMT7x27mE92P1RCBZtXWiAwp/wjSITaCvhGfvtrTUODcqrV04jA==
+	t=1794817177;
+	b=Bd6okJSs0G+9io7cuJSpUDsCgmrXTYpa1Hnxv0F+YcYDZ3GOF9MYwgyQkWB6UavVugWp
+	 dLeC6rGaMA5EIJRUTB4UByRnuPeL+QlpSOHDtmW3/jdFNHq8ybF+GwBdb641ddP96xiB5
+	 aHArQ/byV74XnReXEhYfxZdF4Fy1OaLxKcUDFMo9vSgv5hF+kU05rMx6h01Sce3HCKA1h
+	 H+sjuMr4m7bMZePW75wa8zD18T6BIhE+XSlnGdFO5ztpdXtGk2yte7nYIzL8P6hndPUcW
+	 dhxxAlKsCCHp88oyECfYyX7jLPLsZ8v0+OaiLkK+zKauMY8kPx3HjM5pSWB9VFUVYNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794816997;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9hUh1OVjqlDe3uFL9CPqttH6iazGr+Pi3oQ98WpM1NI=;
-	b=Kzs7hu5Mo1exMLJOSHNLuVm3hnLePcKnPLyE7GOT02kyRzonaBIDTvskXDyG1Vv2rBfr
-	 E5SVq4Xz7muRyz3qB64hbyEcGWyqqGT4etHzIXFmuGvhSC86vliiaYhVMzLXplpzTOtwN
-	 JzcwO2w0mNuMNn+jmx54taxJBQfj1FhYNJzdOeHmeLXXZDGHEARQ1/5qxxBxXtKKeonAU
-	 OeVPlJ2FHOff4xKy99cRpfvD8CPNx1I4pCRSTFkE7XHjtNEgQ5gfHF71EqQPAUq3BIfUj
-	 GZ8YYD/7VkVJYiOvjCvSZx8B5lwqZQ8XhzTn5b86oNywYic8aoDZ4voEpF5wJjkhAtA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794817177;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=dp6lgbEcVom79R8IDLgyLdypERcbXJQqocjZDGuwhxc=;
+	b=f1XU6FDBt08+jVwtY3hx2MdMlZGl54ClIvpz05uG16LH+T4j6VktY0lyZVOn7MBRpvVC
+	 UCgo4pvg2M0eK6y8o2FoslaDFxMvm041KBIycHbZFRpahRfEEwqphqjQ4zrKPMqqPRH8/
+	 EMo23xzkrJzqUOrsYPvdZg5xDaCJY1RxGc9RQhgaF8WNeZ0voe9eG6C+4zACHDA5RmSW1
+	 6i699Qy0LA9aC0cwVIRJMghtlYFsKMZn4KdbILIWgez6llP/uWZ0Y4djSpb7vkna5RNaZ
+	 YjY0yaiQmCHwFIUvtYyxm+bFqDYm484vhp9OOim2DFWyGReyrWM9tICC98XfwMTXcMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhRMFc7d;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owEn5WCA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB52606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 08:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD10606A323;
+	Mon, 16 Nov 2026 08:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FhRMFc7d
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F65A1F000C4;
-	Mon, 16 Nov 2026 08:16:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=owEn5WCA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 904791F000C4;
+	Mon, 16 Nov 2026 08:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794816997;
-	bh=9hUh1OVjqlDe3uFL9CPqttH6iazGr+Pi3oQ98WpM1NI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FhRMFc7dacTIg5cUxOelCFZWueCdQCYg7e1qAkrgFnnM1/UnR0N7tJPaf3hWEFW0G
-	 I5RvLzPqHsTPDAPOkkLqr6VoFdJzRZ6LmbgKuDoDl+RTPdNzj/ALX1FWv2yfo5rQRs
-	 1a1WxEFGmfu55zHxIk4cZh21tXBPbJow63DDr5oFrvXDLKr1H86cW416+UaQNcolBR
-	 99UZECJWJ45vucsywvCE8mGCDwMMZDoaiqcJ0H3BPqwlyzE+19+P8ZHUq443EuqEoJ
-	 CwpikZGQ0Cp5jEY6JM4mR1XwJ6k2bY2IhKRk3DX5NjCK+p/IkPaDpuoxrfe9gDkxhV
-	 7iAsot/wUwZxg==
-Message-ID: <sashiko-outbox-216519@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] arm64: Always inline raw preempt count updates
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Karl Mehltretter" <kmehltretter@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <23dc25d010cfeb8eddde12be5212fd73bf1cd5c4.1794814699.git.kmehltretter@gmail.com>
-References: <cover.1794814699.git.kmehltretter@gmail.com>
- <23dc25d010cfeb8eddde12be5212fd73bf1cd5c4.1794814699.git.kmehltretter@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 08:16:37 +0000
+	s=k20260515; t=1794817176;
+	bh=dp6lgbEcVom79R8IDLgyLdypERcbXJQqocjZDGuwhxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=owEn5WCAgSzoxVz51gzGvHS7spNutLxXk1ptEdUqtxQ40WnJHkMvfbkSkjtjpS1Qw
+	 Sx07ZZIzdwK7JNRq+q6AFvP5F1xw4+casI3I0hlKaavWpmRMYmvVpQFMoSHTkGi4ZA
+	 AmAj/BFY+NKH0vQNzT14oC6sEiq0RGSK/C4qk5aejO493Av+CqSy6I9DWrGSz3RHzm
+	 g+OwvnRGbFx91fKg3T2UEwaUkZcIB9/O2Nd60wwmEZRtxvaObWzl5eYVbDu31CydbB
+	 q8yShCstJ8F4xqMN6C/grxv5i5WImOKzeS2prsLIbAX6wZBjekmX0UYj5wtHcuMZk9
+	 MQwudfDlsRrOA==
+Date: Mon, 16 Nov 2026 09:19:30 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Fan Wu <wufan@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	Chris Down <chris@chrisdown.name>, Miklos Szeredi <mszeredi@redhat.com>, 
+	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 08/13] ipe: handle errors from resolving the real inode
+Message-ID: <20261116-ungeziefer-notdurft-scham-bdf3e3e4e43b@brauner>
+References: <20261115-work-ovl-d_real-v1-0-ca155efbcb2e@kernel.org>
+ <20261115-work-ovl-d_real-v1-8-ca155efbcb2e@kernel.org>
+ <4e9a39ac-9ad5-49d8-b0c4-09e665504609@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,37 +60,54 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4e9a39ac-9ad5-49d8-b0c4-09e665504609@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] arm64: preempt: missing Fixes trailer for commit 396244692232
---
+On Sun, Nov 15, 2026 at 01:00:55PM -0800, Fan Wu wrote:
+> On 11/15/2026 6:01 AM, Christian Brauner wrote:
+> 
+> ...
+> 
+> > 
+> > diff --git a/security/ipe/eval.c b/security/ipe/eval.c
+> > index 4a7be96c84f03..3751963509df4 100644
+> > --- a/security/ipe/eval.c
+> > +++ b/security/ipe/eval.c
+> > @@ -102,7 +102,11 @@ void ipe_build_eval_ctx(struct ipe_eval_ctx *ctx,
+> >  
+> >  	if (file) {
+> >  		build_ipe_sb_ctx(ctx, file);
+> > -		ino = d_real_inode(file->f_path.dentry);
+> > +		ino = d_real_data_inode(file->f_path.dentry);
+> > +		if (IS_ERR(ino)) {
+> > +			ctx->file_err = PTR_ERR(ino);
+> > +			return;
+> > +		}
+> >  		build_ipe_bdev_ctx(ctx, ino);
+> >  		build_ipe_inode_ctx(ctx, ino);
+> 
+> 
+> I think we only need to change this part like:
+> 
+> 	/*
+> 	 * If the real data inode cannot be resolved, leave the bdev
+> 	 * and inode fields unset so the file is evaluated without
+> 	 * dm-verity/fs-verity state.
+> 	 */
+> 	ino = d_real_data_inode(file->f_path.dentry);
+> 	if (!IS_ERR(ino)) {
+> 		build_ipe_bdev_ctx(ctx, ino);
+> 		build_ipe_inode_ctx(ctx, ino);
+> 	}
+> 
+> 
+> This also avoids the missing audit issue noted by the bpf bot, and we
+> don't need to add file_err to struct ipe_eval_ctx.
+> 
+> With the above change, feel free to add:
+> 
+> Acked-by: Fan Wu <wufan@kernel.org>
 
-commit 0e970117f0bbc0e074b2a0e827bc00ba6204a7cc
-Author: Hongyan Xia <hongyan.xia@transsion.com>
-
-> arm64: Always inline raw preempt count updates
->
-> Raw preempt count updates can be emitted out of line by the compiler.
-> For a noinstr caller, that puts the update in ordinary instrumentable
-> text. Force __preempt_count_add() and __preempt_count_sub() inline so
-> their code stays in the caller's section.
->
-> Link: https://lore.kernel.org/all/c3a90368dd6c096af9d918e036a27728696fb8a=
-4.1786603168.git.hongyan.xia@transsion.com/
-> Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
-> [kmehltretter: split out the arm64 preempt.h hunk and rewrite the changel=
-og]
-> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
-
-[Severity: Low]
-__preempt_count_add() and __preempt_count_sub() were defined as plain
-static inline when arm64 stopped using asm-generic/preempt.h.  Should this
-include:
-
-  Fixes: 396244692232 ("arm64: preempt: Provide our own implementation of a=
-sm/preempt.h")
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794814699.gi=
-t.kmehltretter@gmail.com?part=3D1
+Done, thanks, that's a good solution!
